@@ -118,7 +118,7 @@ def highBandMap (w Dlow delta T YS S:ℕ) :
 @[simp] theorem highBandMap_apply (w Dlow delta T YS S:ℕ)
     (P:MvPolynomial (Fin 4) K) (c:HighBandIndex delta T YS S) :
     highBandMap w Dlow delta T YS S P c =
-      MvPolynomial.coeff (highBandExponent w Dlow c) P:=rfl
+      P.coeff (highBandExponent w Dlow c):=rfl
 theorem nested_mem_global {D w T YS S:ℕ} {P:MvPolynomial (Fin 4) K}
     (hP:P ∈ nestedCoefficientBox K D w T YS S) :
     P ∈ RCN100.globalCoefficientBox K D w T S:=by
@@ -639,7 +639,7 @@ theorem mem_low_of_highBandMap_cut_eq_zero
     ext i
     fin_cases i <;> simp [highBandExponent, c] <;> omega
   have hc := congrFun hzero c
-  have hcoeff : MvPolynomial.coeff d P = 0 := by
+  have hcoeff : P.coeff d = 0 := by
     simpa only [highBandMap_apply, he, Pi.zero_apply] using hc
   exact (MvPolynomial.mem_support_iff.mp hd) hcoeff
 
@@ -4617,8 +4617,7 @@ theorem regularAggregateFlag_all_lt_of_ssubset (H : P4)
   have hnBA : ¬ B ⊆ A := by
     intro hBA
     exact hAB.ne (Finset.Subset.antisymm hAB.subset hBA)
-  simp only [Finset.subset_iff, not_forall, _root_.not_imp] at hnBA
-  obtain ⟨F, hFB, hFA⟩ := hnBA
+  obtain ⟨F, hFB, hFA⟩ := Finset.not_subset.mp hnBA
   simp only [regularAggregateFlag, sumFlag_all]
   exact Finset.sum_lt_sum_of_subset hAB.subset hFB hFA
     (regularCumulativeFlag_positive H F)
@@ -6955,11 +6954,11 @@ theorem flatEquiv_X (j : Fin 5) :
     rfl
 
 theorem flatEquiv_coeff (P : Poly (K := K)) (r h : ℕ) (d : Fin 3 →₀ ℕ) :
-    MvPolynomial.coeff d (((flatEquiv (K := K) P).coeff r).coeff h) =
-      MvPolynomial.coeff ((d.cons h).cons r) P := by
+    (((flatEquiv (K := K) P).coeff r).coeff h).coeff d =
+      P.coeff ((d.cons h).cons r) := by
   simp only [flatEquiv, AlgEquiv.trans_apply, Polynomial.coe_mapAlgEquiv, Polynomial.coeff_map]
-  change MvPolynomial.coeff d (((MvPolynomial.finSuccEquiv K 3)
-    (((MvPolynomial.finSuccEquiv K 4) P).coeff r)).coeff h) = _
+  change (((MvPolynomial.finSuccEquiv K 3)
+    (((MvPolynomial.finSuccEquiv K 4) P).coeff r)).coeff h).coeff d = _
   rw [MvPolynomial.finSuccEquiv_coeff_coeff, MvPolynomial.finSuccEquiv_coeff_coeff]
 
 def truncFlat (m : ℕ) : Poly (K := K) →ₗ[K] Poly (K := K) :=
@@ -6972,8 +6971,8 @@ theorem flatEquiv_truncFlat (m : ℕ) (P : Poly (K := K)) :
   simp [truncFlat]
 
 theorem coeff_truncFlat_cons (m r h : ℕ) (d : Fin 3 →₀ ℕ) (P : Poly (K := K)) :
-    MvPolynomial.coeff ((d.cons h).cons r) (truncFlat (K := K) m P) =
-      if r < m then MvPolynomial.coeff ((d.cons h).cons r) P else 0 := by
+    (truncFlat (K := K) m P).coeff ((d.cons h).cons r) =
+      if r < m then P.coeff ((d.cons h).cons r) else 0 := by
   rw [← flatEquiv_coeff, flatEquiv_truncFlat]
   by_cases hr : r < m
   · rw [if_pos hr, SecondJetBasis.truncateOuter_coeff m _ r hr, flatEquiv_coeff]
@@ -7081,7 +7080,7 @@ theorem reconstruct_apply (e : I → σ →₀ ℕ) (c : I → K) :
   simp [reconstruct]
 
 theorem coeff_reconstruct (e : I → σ →₀ ℕ) (he : Function.Injective e)
-    (c : I → K) (i : I) : MvPolynomial.coeff (e i) (reconstruct e c) = c i := by
+    (c : I → K) (i : I) : (reconstruct e c).coeff (e i) = c i := by
   classical
   rw [reconstruct_apply, MvPolynomial.coeff_sum]
   simp only [MvPolynomial.coeff_monomial, he.eq_iff]
@@ -7091,12 +7090,12 @@ theorem reconstruct_injective (e : I → σ →₀ ℕ) (he : Function.Injective
     Function.Injective (reconstruct (K := K) e) := by
   intro c d h
   funext i
-  have hh := congrArg (MvPolynomial.coeff (e i)) h
+  have hh := congrArg (fun p => AddMonoidAlgebra.coeff p (e i)) h
   simpa only [coeff_reconstruct e he] using hh
 
 theorem coeff_reconstruct_of_notmem (e : I → σ →₀ ℕ) (c : I → K)
     (d : σ →₀ ℕ) (hd : d ∉ Set.range e) :
-    MvPolynomial.coeff d (reconstruct e c) = 0 := by
+    (reconstruct e c).coeff d = 0 := by
   classical
   rw [reconstruct_apply, MvPolynomial.coeff_sum]
   apply Finset.sum_eq_zero
@@ -7190,7 +7189,8 @@ theorem mem_range_exponent (m L s1 s2 : ℕ) (d : Fin 5 →₀ ℕ) :
     let e : Index m L s1 s2 := ⟨fun k => ⟨d k,hb k⟩,h.2.1,h.2.2.2.2⟩
     refine ⟨e,?_⟩
     ext k
-    simp [e]
+    simp only [exponent_apply]
+    rfl
 
 def sourceMap (m L s1 s2 : ℕ) : (Index m L s1 s2 → K) →ₗ[K]
     Jet (MvPolynomial (Fin 3) K) :=
@@ -8028,14 +8028,14 @@ theorem specialization_degree (P : Poly (K := K)) (f : Polynomial K) (z : K) (w 
     (specialize f z P).natDegree < D := by
   classical
   have hterms : ∀ d ∈ P.support,
-      (specialize f z (MvPolynomial.monomial d (MvPolynomial.coeff d P))).natDegree ≤ D-1 := by
+      (specialize f z (MvPolynomial.monomial d (P.coeff d))).natDegree ≤ D-1 := by
     intro d hd
     have hw := hP d hd
-    have hh := monomial_degree f z w hf d (MvPolynomial.coeff d P)
+    have hh := monomial_degree f z w hf d (P.coeff d)
     omega
   rw [MvPolynomial.as_sum P, map_sum]
   have hh := Polynomial.natDegree_sum_le_of_forall_le P.support
-    (fun d => specialize f z (MvPolynomial.monomial d (MvPolynomial.coeff d P))) hterms
+    (fun d => specialize f z (MvPolynomial.monomial d (P.coeff d))) hterms
   exact lt_of_le_of_lt hh (by omega)
 
 end
@@ -8101,14 +8101,17 @@ theorem swap_lift (j : ℕ) (d : Fin 4 →₀ ℕ) :
 theorem lift_coordinates (j : ℕ) (d : Fin 4 →₀ ℕ) :
     liftExponent j d 0 = d 0 ∧ liftExponent j d 1 = j ∧
       liftExponent j d 2 = d 1 ∧ liftExponent j d 3 = d 2 ∧ liftExponent j d 4 = d 3 := by
-  simp [liftExponent, Finsupp.mapDomain_equiv_apply, Equiv.swap_apply_def, Fin.ext_iff]
-  exact ⟨rfl,rfl,rfl,rfl⟩
+  simp only [liftExponent, Finsupp.mapDomain_equiv_apply, Equiv.symm_swap]
+  change (d.cons j) 1 = d 0 ∧ (d.cons j) 0 = j ∧
+    (d.cons j) 2 = d 1 ∧ (d.cons j) 3 = d 2 ∧ (d.cons j) 4 = d 3
+  exact ⟨Finsupp.cons_succ 0 j d, Finsupp.cons_zero j d,
+    Finsupp.cons_succ 1 j d, Finsupp.cons_succ 2 j d, Finsupp.cons_succ 3 j d⟩
 
 theorem asS_coeff (P : Poly (K := K)) (j : ℕ) (d : Fin 4 →₀ ℕ) :
-    MvPolynomial.coeff d ((asS (K := K) P).coeff j) =
-      MvPolynomial.coeff (liftExponent j d) P := by
-  change MvPolynomial.coeff d (((MvPolynomial.finSuccEquiv K 4)
-    (MvPolynomial.rename (Equiv.swap (0 : Fin 5) 1) P)).coeff j) = _
+    ((asS (K := K) P).coeff j).coeff d =
+      P.coeff (liftExponent j d) := by
+  change (((MvPolynomial.finSuccEquiv K 4)
+    (MvPolynomial.rename (Equiv.swap (0 : Fin 5) 1) P)).coeff j).coeff d = _
   rw [MvPolynomial.finSuccEquiv_coeff_coeff, ← swap_lift j d,
     MvPolynomial.coeff_rename_mapDomain _ (Equiv.swap (0 : Fin 5) 1).injective]
 
@@ -10379,9 +10382,8 @@ theorem outside_sum (A B C H : ℕ) (hA : 0 < A) (hB : 0 < B)
     apply Finset.sum_bij (fun p _ => (A-1-p.1,B-1-p.2))
     · intro p hp
       simp only [s, Finset.mem_filter, Finset.mem_product, Finset.mem_range] at hp
-      simp only [t, Finset.mem_filter, Finset.mem_product, Finset.mem_range, corner,
-        Prod.fst, Prod.snd]
-      dsimp [corner] at hkA hkB
+      simp only [t, Finset.mem_filter, Finset.mem_product, Finset.mem_range]
+      dsimp only [corner] at hkA hkB ⊢
       omega
     · intro p hp q hq hpq
       simp only [s, Finset.mem_filter, Finset.mem_product, Finset.mem_range] at hp hq

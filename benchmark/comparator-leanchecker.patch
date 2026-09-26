@@ -5,9 +5,9 @@ index f77c3a1..0382491 100644
 @@ -152,2 +152,21 @@ def safeExport (module : Lean.Name) (decls : Array Lean.Name) : M String := do
  
 +/-- Recheck every declaration in the untrusted solution tree against its
-+trusted imports. This detects environment hacking while avoiding a fresh
-+replay of large trusted dependencies whose declarations were originally
-+checked with higher, declaration-local recursion limits. -/
++trusted imports as an additional sandboxed check. This does not replace the
++full exported-environment replay or quotient consistency checks performed
++by runKernel below. -/
 +def safeLeanCheck (modulePrefix : Lean.Name) : M Unit := do
 +  IO.println s!"Kernel-checking untrusted modules under {modulePrefix}"
 +  let leanPrefix ← getLeanPrefix
@@ -16,48 +16,22 @@ index f77c3a1..0382491 100644
 +  runSandBoxed {
 +    cmd := (leanPrefix / "bin" / "leanchecker").toString
 +    args := #[modulePrefix.toString]
-+    envPass := #["PATH", "HOME", "LEAN_PATH", "LEAN_ABORT_ON_PANIC"]
-+    envOverride := #[("LEAN_ABORT_ON_PANIC", some "1")]
++    envPass := #["PATH", "HOME", "LEAN_PATH", "LEAN_ABORT_ON_PANIC", "LEAN_NUM_THREADS"]
++    envOverride := #[("LEAN_ABORT_ON_PANIC", some "1"), ("LEAN_NUM_THREADS", some "4")]
 +    readablePaths := #[projectDir, dotLakeDir]
 +    writablePaths := #[]
 +    executablePaths := #[leanPrefix]
 +  }
 +
  def runNanoda (solutionExport : String) : M (Option String) := do
-@@ -199,29 +218,5 @@ def runNanoda (solutionExport : String) : M (Option String) := do
- def runKernel (solution : Export.ExportedEnv) : M (Option String) := do
--  IO.println "Running Lean default kernel on solution."
--  let env ← Lean.mkEmptyEnvironment
--  let mut kernelEnv := env.toKernelEnv
--  let origConstMap := solution.constMap
--  -- Lean's kernel interprets just the addition of `Quot as adding all of these so adding them
--  -- multiple times leads to errors.
--  let quotTargets := [`Quot.mk, `Quot.lift, `Quot.ind]
--  let kernelConstMap := quotTargets.foldl (init := origConstMap) (·.erase ·)
--  try
+@@ -207,5 +226,5 @@ def runKernel (solution : Export.ExportedEnv) : M (Option String) := do
+   let kernelConstMap := quotTargets.foldl (init := origConstMap) (·.erase ·)
+   try
 -    kernelEnv ← kernelEnv.replay kernelConstMap
--    IO.println "Lean default kernel accepts the solution"
--  catch e =>
--    IO.println "Lean default kernel rejects the solution"
--    return some e.toString
--
--  try
--    let verifyTargets := `Quot :: quotTargets
--    for quotTarget in verifyTargets do
--      if let some info := origConstMap[quotTarget]? then
--        let some info' := kernelEnv.find? quotTarget |
--          throw <| .userError s!"Could not find quotient constant in final kernel env: {quotTarget}"
--        if info != info' then
--          throw <| .userError s!"Quotient constant mismatch on: {quotTarget}"
--    return none
--  catch e =>
--    IO.println "Quotient post-check rejects the solution"
--    return some e.toString
-+  let _ := solution
-+  IO.println "Sandboxed leanchecker accepts every untrusted solution module"
-+  return none
- 
-@@ -296,2 +291,3 @@ def compareIt : M Unit := do
++    kernelEnv ← Lean.Kernel.Environment.replay kernelConstMap kernelEnv
+     IO.println "Lean default kernel accepts the solution"
+   catch e =>
+@@ -296,2 +315,3 @@ def compareIt : M Unit := do
    safeLakeBuild solutionModule
 +  safeLeanCheck solutionModule.getPrefix
    let solutionExport ← safeExport solutionModule exportTargets

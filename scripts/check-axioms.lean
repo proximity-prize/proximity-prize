@@ -11,7 +11,7 @@ open Lean Lean.Meta
 def trustedModulePrefixes : List String :=
   ["Init", "Lean", "Lake", "Std", "Batteries", "Aesop", "Qq", "Plausible", "Cslib",
    "ProofWidgets", "ImportGraph", "LeanSearchClient", "Mathlib", "ArkLib",
-   "VCVio", "CompPoly", "PolyFun", "Loom", "ToMathlib", "ProximityPrize"]
+   "VCVio", "CompPoly", "PolyFun", "ToCslib", "ToMathlib", "ProximityPrize"]
 
 open Elab.Command in
 run_cmd liftCoreM do

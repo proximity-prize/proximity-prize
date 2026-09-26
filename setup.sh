@@ -38,16 +38,15 @@ clone_at() {
 mkdir -p "${tools_dir}"
 clone_at https://github.com/leanprover/comparator.git "${comparator_rev}" "${comparator_dir}"
 
-# Comparator's fresh-environment replay ignores declaration-local recursion
-# limits and cannot replay CompPoly's checked KoalaBear.Ext6 irreducibility
-# certificate.  Keep Comparator's structural/axiom export checks, but recheck
-# every untrusted submission module with Lean's kernel against the already
-# audited imports in a read-only Landrun sandbox.  Build both tools with this
-# repository's exact Lean release so their olean format and kernel agree.
+# Keep Comparator's full exported-environment kernel replay and quotient checks.
+# Dependency replay failures must be fixed at their source, not bypassed here.
+# Add a read-only sandboxed check of submission modules as an additional check.
+# Build both tools with this repository's exact Lean release.
 cp lean-toolchain "${comparator_dir}/lean-toolchain"
 git -C "${comparator_dir}" apply --check "${root}/benchmark/comparator-leanchecker.patch"
 git -C "${comparator_dir}" apply "${root}/benchmark/comparator-leanchecker.patch"
 lake -d "${comparator_dir}" build lean4export comparator
+lake -d "${comparator_dir}" env lean --run "${root}/scripts/check-kernel-replay.lean"
 
 if [[ "$(uname -s)" == Linux && "${BENCHMARK_INSECURE_LOCAL:-0}" != 1 ]]; then
   command -v go >/dev/null 2>&1 || {

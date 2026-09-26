@@ -21,6 +21,32 @@ theorem interpolation_gate :
     262144 * localRankBound 124 171 36 < coefficientCount 22476860 131071 171 36 := by
   norm_num only [coefficientCount_exact, localRankBound_exact]
 
+-- Keep the reconstruction comparison generic so elaboration does not expand the
+-- large finite sum while comparing the two translation aliases.
+private theorem exists_seedless_interpolant_of_gate
+   (K:Type*) [Field K] {I:Type*} [Fintype I]
+   (D w L s m:ℕ) (nodes received:I → K)
+   (hgate:Fintype.card I*localRankBound m L s <
+     coefficientCount D w L s):
+   ∃ Q:MvPolynomial (Fin 4) K,
+     Q≠0∧
+     Q∈globalCoefficientBox K D w L s∧
+     ∀ (i:I) (r:ℕ),
+       RCN119.slopeDifference K^(m-r)∣
+         (RCN319.homogenizedTranslation K
+           (nodes i) (received i) 0 Q).coeff r:=by
+ obtain ⟨theta,htheta,hzero⟩:=exists_nonzero_kernel_array
+   K D w L s m nodes received hgate
+ refine ⟨reconstruct K D w L s theta,
+   reconstruct_ne_zero K D w L s theta htheta,
+   reconstruct_mem_box K D w L s theta,?_⟩
+ intro i r
+ have hdiv:=all_blocks_divisible_of_kernel K
+   D w L s m nodes received theta hzero i r
+ rw [←translation_reconstruct_coeff K D w L s
+   (nodes i) (received i) theta r] at hdiv
+ exact hdiv
+
 theorem exists_frozen_seedless_interpolant
    (received:IRSProfile.Index → IRSProfile.Field):
    ∃ Q:MvPolynomial (Fin 4) IRSProfile.Field,
@@ -31,22 +57,11 @@ theorem exists_frozen_seedless_interpolant
        RCN119.slopeDifference IRSProfile.Field^(124-r)∣
          (RCN319.homogenizedTranslation IRSProfile.Field
            (IRSProfile.domain i) (received i) 0 Q).coeff r:=by
- obtain ⟨theta,htheta,hzero⟩:=exists_nonzero_kernel_array
-   IRSProfile.Field 22476860 131071 171 36 124
-   IRSProfile.domain received (by
-     rw [show Fintype.card IRSProfile.Index=262144 by
-       norm_num [IRSProfile.Index]]
-     exact interpolation_gate)
- refine ⟨reconstruct IRSProfile.Field 22476860 131071 171 36 theta,
-   reconstruct_ne_zero IRSProfile.Field _ _ _ _ theta htheta,
-   reconstruct_mem_box IRSProfile.Field _ _ _ _ theta,?_⟩
- intro i r
- have hdiv:=all_blocks_divisible_of_kernel IRSProfile.Field
+ apply exists_seedless_interpolant_of_gate IRSProfile.Field
    22476860 131071 171 36 124 IRSProfile.domain received
-   theta hzero i r
- rw [←translation_reconstruct_coeff IRSProfile.Field 22476860 131071
-   171 36 (IRSProfile.domain i) (received i) theta r] at hdiv
- exact hdiv
+ rw [show Fintype.card IRSProfile.Index=262144 by
+   norm_num [IRSProfile.Index]]
+ exact interpolation_gate
 
 end ProximityPrize.SubmissionLower.MovingFiberScalar6811
 
@@ -540,7 +555,10 @@ theorem irs_scalar_finite_list_card_le
    funext i
    have hh:=congrArg (fun P:Polynomial IRSProfile.Field =>
      P.eval (IRSProfile.domain i)) h
-   simpa only [selected, ReedSolomon.toPolynomial_eval_at_domain] using hh
+   have h1:=ReedSolomon.toPolynomial_eval_at_domain (c:=codeword c) (i:=i)
+   have h2:=ReedSolomon.toPolynomial_eval_at_domain (c:=codeword d) (i:=i)
+   simp only [selected] at hh
+   exact h1.symm.trans (hh.trans h2)
  have hcard:Gamma.card = L.card:=by
    rw [show Gamma = Finset.univ.image selected by rfl,
      Finset.card_image_of_injective _ hselected, Finset.card_univ,
@@ -580,7 +598,9 @@ theorem irs_scalar_finite_list_card_le
        Finset.univ.filter (fun i => c.1 i = received i):=by
      apply Finset.filter_congr
      intro i hi
-     rw [ReedSolomon.toPolynomial_eval_at_domain]
+     simp only [selected,
+       ReedSolomon.toPolynomial_eval_at_domain (c:=codeword c) (i:=i)]
+     exact Iff.rfl
    rw [heq]
    exact hclose c.1 c.2
  have hbound:=seedless_list_card_le IRSProfile.Field Q hQ hbox hlegacy Gamma
