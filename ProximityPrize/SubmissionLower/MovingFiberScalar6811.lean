@@ -22,7 +22,7 @@ theorem interpolation_gate :
   norm_num only [coefficientCount_exact, localRankBound_exact]
 
 -- Keep the reconstruction comparison generic so elaboration does not expand the
--- concrete 22,476,860-column sum while comparing the two translation aliases.
+-- large finite sum while comparing the two translation aliases.
 private theorem exists_seedless_interpolant_of_gate
    (K:Type*) [Field K] {I:Type*} [Fintype I]
    (D w L s m:ℕ) (nodes received:I → K)
