@@ -15,8 +15,8 @@ def check (proof : Lean.Expr) : IO Unit := do
     value := proof
   }
   let constants := ({} : Std.HashMap Lean.Name Lean.ConstantInfo).insert ci.name ci
-  let env ← Lean.Environment.replay constants (← Lean.mkEmptyEnvironment)
-  unless env.toKernelEnv.find? ci.name |>.isSome do
+  let env ← Lean.Kernel.Environment.replay constants (← Lean.mkEmptyEnvironment).toKernelEnv
+  unless env.find? ci.name |>.isSome do
     throw <| IO.userError "Replay omitted the theorem"
 
 def main : IO Unit := do

@@ -28,7 +28,7 @@ index f77c3a1..0382491 100644
    let kernelConstMap := quotTargets.foldl (init := origConstMap) (·.erase ·)
    try
 -    kernelEnv ← kernelEnv.replay kernelConstMap
-+    kernelEnv := (← Lean.Environment.replay kernelConstMap env).toKernelEnv
++    kernelEnv ← Lean.Kernel.Environment.replay kernelConstMap kernelEnv
      IO.println "Lean default kernel accepts the solution"
    catch e =>
 @@ -296,2 +315,3 @@ def compareIt : M Unit := do

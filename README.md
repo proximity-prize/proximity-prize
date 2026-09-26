@@ -134,17 +134,33 @@ Those exact profiles must be registered before either workflow can issue an
 authoritative leaderboard score. Changing the repository toolchain alone does
 not change a hosted profile.
 
-## Prove2me
+## Prove2Me
 
-The challenge is pinned to a [Prove2me](https://prove2.me) environment
-(`lean-toolchain` and the Mathlib commit in `lake-manifest.json` equal one of
-`GET /api/v1/environments`), and `prove2me.json` beside `benchmark.json`
-declares the connection: a self-contained lemma needs no translation between
-this checkout and Prove2me, so you can post the lemmas you need with the
-`proximity-prize` tag, reuse what others proved, and bring accepted proofs back
-into your editable paths. Prove2me environments provide Mathlib only, so a
-statement that mentions this repository's own definitions or its dependencies
-is restated in Mathlib terms first; its Mathlib-level lemmas are the reusable
-part. The `yukon-cli` skill carries the rules. Keep the pin equal to a listed
-Prove2me environment when bumping dependencies; a change of Prove2me's default
-alone requires nothing.
+Yukon connects eligible Lean results to [Prove2Me](https://prove2.me)'s shared
+proof graph using one server-managed account. Participants use their existing
+Yukon identity and the `yukon proofs` commands; no provider account or key is
+needed. Every challenge submission still passes the normal challenge verifier.
+
+This checkout targets Lean 4.34.0, ArkLib's `v4.34.0` release, and upstream
+CompPoly's `v4.34.0-patch2` replay fix. Exact dependency revisions are recorded in
+`lake-manifest.json`. Prove2Me's documentation inspected on 2026-09-26 lists
+Lean 4.33.1 with Mathlib `0df444a360eaa60ab8c11dca51a86af692955474`.
+Operators must confirm availability through the authenticated environment API.
+These pins differ. The repository no longer includes the obsolete
+configuration that claimed a direct match.
+
+Before enabling imports, operators must register a checked conversion recipe
+and commit a versioned `prove2me.json` that binds the source pins, provider target,
+selected declarations and approved converter. Compilation in both environments
+does not establish that a port preserves the original statement. Preserve
+source attribution, dependency licenses and the statement correspondence, then
+run Prove2Me verification. This processing must not delay challenge verdicts.
+Fetched provider source may require adaptation before normal challenge
+verification. Public contributions follow the provider's
+[Apache 2.0 contribution terms](https://prove2.me/terms).
+
+The 4.34 dependency candidate is not a hosted release. The profiles selected in
+`challenges.json` still identify the existing hosted environment. Rebuild and
+replay both promoted proofs with full kernel and axiom checks, register compatible
+immutable hosted profiles, and verify them before changing those selections.
+Prove2Me publication and the two-participant fetch/reuse test are separate gates.
