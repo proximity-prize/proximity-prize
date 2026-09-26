@@ -65,7 +65,7 @@ theorem centre_height_le_two (ν : Valuation R ℤᵐ⁰) (y : Fin 3 → R)
   have h2 : (𝔪.height : WithBot ℕ∞) ≤ 3 := by
     refine (Ideal.height_le_ringKrullDim_of_isPrime (I := 𝔪)).trans (le_of_eq ?_)
     rw [MvPolynomial.ringKrullDim_of_isNoetherianRing, ringKrullDim_eq_zero_of_field, zero_add,
-      Nat.card_eq_fintype_card, Fintype.card_fin]
+      ENat.card_eq_coe_fintype_card, Fintype.card_fin]
     rfl
   have h3 : 𝔪.height ≤ 3 := WithBot.coe_le_coe.mp h2
   have h4 : 𝔮.height + 1 ≤ 3 := h1.trans h3
