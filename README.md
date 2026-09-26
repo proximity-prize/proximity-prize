@@ -37,17 +37,17 @@ The protected definitions are in
 [`TargetLower.lean`](ProximityPrize/Benchmark/TargetLower.lean) and
 [`TargetUpper.lean`](ProximityPrize/Benchmark/TargetUpper.lean).
 
-## Included baselines
+## Included candidates
 
 | Track | Score | Claim metadata |
 |:--|--:|:--|
-| lower | `53.00` bits | radius `1/4` |
-| upper | `128.00` bits | unsafe index `131072`, hence radius `1/2` |
+| lower | `68.13` bits | radius `331284479/1073741824` |
+| upper | `116.13` bits | unsafe index `122369`, hence radius `122369/262144` |
 
 These are editable starting points, not authoritative leaderboard results. The
-lower baseline certifies the extractor-error target at radius `1/4`; the upper
-baseline certifies that winning-set soundness exceeds the target throughout
-the required half-radius suffix.
+lower candidate certifies the extractor-error target at its stated radius; the
+upper candidate certifies that winning-set soundness exceeds the target
+throughout the suffix starting at its stated radius.
 
 ## Candidate layout
 
