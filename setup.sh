@@ -39,8 +39,7 @@ mkdir -p "${tools_dir}"
 clone_at https://github.com/leanprover/comparator.git "${comparator_rev}" "${comparator_dir}"
 
 # Keep Comparator's full exported-environment kernel replay and quotient checks.
-# The pinned CompPoly supplies explicit cardinality and field instances for its
-# Rabin certificates; dependency replay failures must be fixed at their source.
+# Dependency replay failures must be fixed at their source, not bypassed here.
 # Add a read-only sandboxed check of submission modules as an additional check.
 # Build both tools with this repository's exact Lean release.
 cp lean-toolchain "${comparator_dir}/lean-toolchain"
