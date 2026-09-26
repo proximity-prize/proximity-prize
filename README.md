@@ -142,12 +142,13 @@ Yukon identity and the `yukon proofs` commands; no provider account or key is
 needed. Every challenge submission still passes the normal challenge verifier.
 
 This checkout targets Lean 4.34.0 and ArkLib's `v4.34.0` release, with a pinned
-CompPoly instance-selection repair on top of `v4.34.0-patch2`. Exact dependency
-revisions are recorded in `lake-manifest.json`. The upstream patch2 release still
-hits the kernel recursion limit when replaying `KoalaBear.sexticPoly_irreducible`.
-The repaired revision passes the upper proof's full local comparator, including
-statement matching, axiom checks and fresh-kernel replay. It must be published
-to the configured fork before this branch can be built from a fresh remote clone.
+CompPoly instance-selection repair on top of `v4.34.0-patch2`. This adapts the
+[existing zkSecurity repair](https://github.com/zksecurity/CompPoly/pull/2)
+to the renamed 4.34 APIs. Exact dependency revisions are recorded in
+`lake-manifest.json`; the repaired commit is published in the configured fork.
+Both included proofs pass the full local comparator, including statement
+matching, axiom checks, module checking, fresh-kernel replay and quotient checks.
+These macOS diagnostic runs do not establish hosted acceptance.
 
 Prove2Me's documentation inspected on 2026-09-26 lists
 Lean 4.33.1 with Mathlib `0df444a360eaa60ab8c11dca51a86af692955474`.
