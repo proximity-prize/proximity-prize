@@ -141,12 +141,13 @@ proof graph using one server-managed account. Participants use their existing
 Yukon identity and the `yukon proofs` commands; no provider account or key is
 needed. Every challenge submission still passes the normal challenge verifier.
 
-This checkout targets Lean 4.34.0, ArkLib's `v4.34.0` release, and upstream
-CompPoly's `v4.34.0-patch2`. Exact dependency revisions are recorded in
-`lake-manifest.json`. That CompPoly release still fails full fresh-kernel replay
-of the upper proof at `KoalaBear.sexticPoly_irreducible`; its passing build alone
-is insufficient. A further instance-selection repair passes local replay, but
-must be published and pinned before this dependency candidate can be released.
+This checkout targets Lean 4.34.0 and ArkLib's `v4.34.0` release, with a pinned
+CompPoly instance-selection repair on top of `v4.34.0-patch2`. Exact dependency
+revisions are recorded in `lake-manifest.json`. The upstream patch2 release still
+hits the kernel recursion limit when replaying `KoalaBear.sexticPoly_irreducible`.
+The repaired revision passes the upper proof's full local comparator, including
+statement matching, axiom checks and fresh-kernel replay. It must be published
+to the configured fork before this branch can be built from a fresh remote clone.
 
 Prove2Me's documentation inspected on 2026-09-26 lists
 Lean 4.33.1 with Mathlib `0df444a360eaa60ab8c11dca51a86af692955474`.

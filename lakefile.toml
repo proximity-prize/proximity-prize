@@ -5,12 +5,12 @@ defaultTargets = ["ProximityPrize"]
 pp.unicode.fun = true
 autoImplicit = false
 
-# Pin the ArkLib 4.34.0 release and upstream CompPoly patch2. The direct
-# CompPoly requirement preserves its kernel-replay fix across `lake update`.
+# Pin the ArkLib 4.34.0 release and the CompPoly fresh-replay repair. Keep the
+# direct CompPoly requirement until ArkLib includes the repaired revision.
 [[require]]
 name = "CompPoly"
-git = "https://github.com/Verified-zkEVM/CompPoly"
-rev = "df591bb8c6745126d1d72f5243faae3022b0432a"
+git = "https://github.com/yudduy/CompPoly"
+rev = "da1e1b5d048d26eca4583ff930f248c5e2bb5d9e"
 
 [[require]]
 name = "Arklib"
