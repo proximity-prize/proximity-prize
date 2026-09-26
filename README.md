@@ -142,8 +142,13 @@ Yukon identity and the `yukon proofs` commands; no provider account or key is
 needed. Every challenge submission still passes the normal challenge verifier.
 
 This checkout targets Lean 4.34.0, ArkLib's `v4.34.0` release, and upstream
-CompPoly's `v4.34.0-patch2` replay fix. Exact dependency revisions are recorded in
-`lake-manifest.json`. Prove2Me's documentation inspected on 2026-09-26 lists
+CompPoly's `v4.34.0-patch2`. Exact dependency revisions are recorded in
+`lake-manifest.json`. That CompPoly release still fails full fresh-kernel replay
+of the upper proof at `KoalaBear.sexticPoly_irreducible`; its passing build alone
+is insufficient. A further instance-selection repair passes local replay, but
+must be published and pinned before this dependency candidate can be released.
+
+Prove2Me's documentation inspected on 2026-09-26 lists
 Lean 4.33.1 with Mathlib `0df444a360eaa60ab8c11dca51a86af692955474`.
 Operators must confirm availability through the authenticated environment API.
 These pins differ. The repository no longer includes the obsolete
