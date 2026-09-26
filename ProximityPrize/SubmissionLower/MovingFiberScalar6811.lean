@@ -21,6 +21,32 @@ theorem interpolation_gate :
     262144 * localRankBound 124 171 36 < coefficientCount 22476860 131071 171 36 := by
   norm_num only [coefficientCount_exact, localRankBound_exact]
 
+-- Keep the reconstruction comparison generic so elaboration does not expand the
+-- concrete 22,476,860-column sum while comparing the two translation aliases.
+private theorem exists_seedless_interpolant_of_gate
+   (K:Type*) [Field K] {I:Type*} [Fintype I]
+   (D w L s m:ℕ) (nodes received:I → K)
+   (hgate:Fintype.card I*localRankBound m L s <
+     coefficientCount D w L s):
+   ∃ Q:MvPolynomial (Fin 4) K,
+     Q≠0∧
+     Q∈globalCoefficientBox K D w L s∧
+     ∀ (i:I) (r:ℕ),
+       RCN119.slopeDifference K^(m-r)∣
+         (RCN319.homogenizedTranslation K
+           (nodes i) (received i) 0 Q).coeff r:=by
+ obtain ⟨theta,htheta,hzero⟩:=exists_nonzero_kernel_array
+   K D w L s m nodes received hgate
+ refine ⟨reconstruct K D w L s theta,
+   reconstruct_ne_zero K D w L s theta htheta,
+   reconstruct_mem_box K D w L s theta,?_⟩
+ intro i r
+ have hdiv:=all_blocks_divisible_of_kernel K
+   D w L s m nodes received theta hzero i r
+ rw [←translation_reconstruct_coeff K D w L s
+   (nodes i) (received i) theta r] at hdiv
+ exact hdiv
+
 theorem exists_frozen_seedless_interpolant
    (received:IRSProfile.Index → IRSProfile.Field):
    ∃ Q:MvPolynomial (Fin 4) IRSProfile.Field,
@@ -31,22 +57,11 @@ theorem exists_frozen_seedless_interpolant
        RCN119.slopeDifference IRSProfile.Field^(124-r)∣
          (RCN319.homogenizedTranslation IRSProfile.Field
            (IRSProfile.domain i) (received i) 0 Q).coeff r:=by
- obtain ⟨theta,htheta,hzero⟩:=exists_nonzero_kernel_array
-   IRSProfile.Field 22476860 131071 171 36 124
-   IRSProfile.domain received (by
-     rw [show Fintype.card IRSProfile.Index=262144 by
-       norm_num [IRSProfile.Index]]
-     exact interpolation_gate)
- refine ⟨reconstruct IRSProfile.Field 22476860 131071 171 36 theta,
-   reconstruct_ne_zero IRSProfile.Field _ _ _ _ theta htheta,
-   reconstruct_mem_box IRSProfile.Field _ _ _ _ theta,?_⟩
- intro i r
- have hdiv:=all_blocks_divisible_of_kernel IRSProfile.Field
+ apply exists_seedless_interpolant_of_gate IRSProfile.Field
    22476860 131071 171 36 124 IRSProfile.domain received
-   theta hzero i r
- rw [←translation_reconstruct_coeff IRSProfile.Field 22476860 131071
-   171 36 (IRSProfile.domain i) (received i) theta r] at hdiv
- exact hdiv
+ rw [show Fintype.card IRSProfile.Index=262144 by
+   norm_num [IRSProfile.Index]]
+ exact interpolation_gate
 
 end ProximityPrize.SubmissionLower.MovingFiberScalar6811
 
