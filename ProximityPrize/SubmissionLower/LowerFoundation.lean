@@ -113,6 +113,9 @@ import ProximityPrize.Benchmark.TargetLower
 
 /-! Compact lower-bound proof; prior work is credited in the enclosed components. -/
 
+-- Mathlib's linters run interpreted after every declaration; they only warn.
+set_option linter.all false
+
 section Compact_KernelEval
 /-
 Optional submission helper. Not part of the challenge; copy it into your
@@ -378,22 +381,27 @@ namespace ProximityPrize.SubmissionLower.RCN264
 open RCN072
 noncomputable section
 variable (K:Type) [Field K]
-def regularComponents (G T H:MvPolynomial (Fin 3) K):
+/-- Irreducible, so that the kernel never unfolds it while comparing components of
+different cuts (`regularComponentEquiv`): that failed unfolding cost ~20 s per check. -/
+irreducible_def regularComponents (G T H:MvPolynomial (Fin 3) K):
    Finset (Ideal (MvPolynomial (Fin 3) K)):=by
  classical
  exact (componentFamily K G T).filter (fun P => H∉P)
+theorem mem_regularComponents {G T H:MvPolynomial (Fin 3) K} {P:Ideal (MvPolynomial (Fin 3) K)}:
+   P∈regularComponents K G T H ↔ P∈componentFamily K G T ∧ H∉P:=by
+ classical
+ rw [regularComponents_def]
+ exact Finset.mem_filter
 abbrev RegularComponent (G T H:MvPolynomial (Fin 3) K):=
  {P:Ideal (MvPolynomial (Fin 3) K)//P∈regularComponents K G T H}
 variable (G T H:MvPolynomial (Fin 3) K)
 theorem regularComponent_mem (C:RegularComponent K G T H):
    C.1∈componentFamily K G T:=by
- classical
- exact (Finset.mem_filter.mp C.2).1
+ exact ((mem_regularComponents K).mp C.2).1
 instance regularComponent_isPrime (C:RegularComponent K G T H):C.1.IsPrime:=
  component_isPrime K G T C.1 (regularComponent_mem K G T H C)
 theorem regularComponent_H_not_mem (C:RegularComponent K G T H):H∉C.1:=by
- classical
- exact (Finset.mem_filter.mp C.2).2
+ exact ((mem_regularComponents K).mp C.2).2
 theorem regularComponent_G_mem (C:RegularComponent K G T H):G∈C.1:=
  cutIdeal_le_component K G T C.1 (regularComponent_mem K G T H C)
    (Ideal.subset_span (Set.mem_insert G {T}))
@@ -413,7 +421,7 @@ theorem exists_regular_component (v:Fin 3 → K)
  have hnot:H∉P:=by
    intro h
    exact hH (hv h)
- exact ⟨⟨P,Finset.mem_filter.mpr ⟨hP,hnot⟩⟩,hv⟩
+ exact ⟨⟨P,(mem_regularComponents K).mpr ⟨hP,hnot⟩⟩,hv⟩
 def componentSeeds {Seed:Type*} (S:Finset Seed) (v:Seed → Fin 3 → K)
    (C:RegularComponent K G T H):Finset Seed:=by
  classical
@@ -18806,22 +18814,18 @@ theorem regularComponents_eq_of_dvd_sub {G T T' H:Poly3 (K:=K)}
    regularComponents K G T H = regularComponents K G T' H:=by
  classical
  ext P
- simp only [regularComponents,Finset.mem_filter,mem_componentFamily,
+ simp only [regularComponents_def,Finset.mem_filter,mem_componentFamily,
    cutIdeal_eq_of_dvd_sub h]
-set_option maxHeartbeats 2000000 in
 def regularComponentEquiv {G T T' H:Poly3 (K:=K)}
    (h:G ∣ T - T') :
-   RegularComponent K G T H ≃ RegularComponent K G T' H where
- toFun C:=⟨C.1,(regularComponents_eq_of_dvd_sub h) ▸ C.2⟩
- invFun C:=⟨C.1,(regularComponents_eq_of_dvd_sub h).symm ▸ C.2⟩
- left_inv C:=by rfl
- right_inv C:=by rfl
+   RegularComponent K G T H ≃ RegularComponent K G T' H :=
+ Equiv.subtypeEquivRight (fun P => by rw [regularComponents_eq_of_dvd_sub h])
 @[simp] theorem regularComponentEquiv_val {G T T' H:Poly3 (K:=K)}
    (h:G ∣ T - T') (C:RegularComponent K G T H) :
-   (regularComponentEquiv h C).1 = C.1:=rfl
+   (regularComponentEquiv h C).1 = C.1:=Equiv.subtypeEquivRight_apply_coe _ _
 @[simp] theorem regularComponentEquiv_symm_val {G T T' H:Poly3 (K:=K)}
    (h:G ∣ T - T') (C:RegularComponent K G T' H) :
-   ((regularComponentEquiv h).symm C).1 = C.1:=rfl
+   ((regularComponentEquiv h).symm C).1 = C.1:=Equiv.subtypeEquivRight_symm_apply_coe _ _
 theorem eval_eq_of_sub_mem (P:Ideal (Poly3 (K:=K)))
    {A B:Poly3 (K:=K)} (h:A - B ∈ P) (v:Fin 3 → K)
    (hv:P ≤ RingHom.ker (MvPolynomial.aeval v).toRingHom) :
@@ -39056,8 +39060,7 @@ theorem actual_identityCurveCountProvider
        change (U.family.toPrimeFlagBudgetFamily.yzCost C:ℤ) ≤
          ((U.family.toPrimeFlagBudgetFamily.zCost C+
            U.family.toPrimeFlagBudgetFamily.yzCost C:ℕ):ℤ)
-       norm_cast
-       omega)
+       exact_mod_cast Nat.le_add_left _ _)
    have hcost:1≤cost C:=
      U.one_le_zCost_add_yzCost (polynomialEmbedding K) S.F rfl S.G_dvd_surface C
    apply prime_curve_card_le_of_coefficientPoleProfile

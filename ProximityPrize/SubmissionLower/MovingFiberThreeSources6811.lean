@@ -103,7 +103,7 @@ theorem pure_cut_three_sources
       dvd_mul_of_dvd_right (Finset.dvd_prod_of_mem (fun j => (source j).leading phi) (Finset.mem_univ j)) H
     exact regularComponent_H_not_mem Ω carrier N R C (C.1.mem_of_dvd hd h)
   let forget (j : Fin 3) (C : Family) : RegularComponent Ω carrier N (H*(source j).leading phi) :=
-    ⟨C.1,Finset.mem_filter.mpr ⟨regularComponent_mem Ω carrier N R C,by
+    ⟨C.1,(mem_regularComponents Ω).mpr ⟨regularComponent_mem Ω carrier N R C,by
       intro h
       exact ((inferInstance : C.1.IsPrime).mem_or_mem h).elim (hH C) (hL j C)⟩⟩
   have hinj (j : Fin 3) : Function.Injective (forget j) := by

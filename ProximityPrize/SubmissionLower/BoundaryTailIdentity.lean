@@ -80,8 +80,7 @@ theorem actual_identityCurveCountProvider
        change (U.family.toPrimeFlagBudgetFamily.yzCost C:ℤ) ≤
          ((U.family.toPrimeFlagBudgetFamily.zCost C+
            U.family.toPrimeFlagBudgetFamily.yzCost C:ℕ):ℤ)
-       norm_cast
-       omega)
+       exact_mod_cast Nat.le_add_left _ _)
    have hcost:1≤cost C:=
      U.one_le_zCost_add_yzCost (polynomialEmbedding K) S.F rfl S.G_dvd_surface C
    apply prime_curve_card_le_of_coefficientPoleProfile

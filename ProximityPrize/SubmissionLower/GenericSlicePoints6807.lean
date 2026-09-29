@@ -36,7 +36,7 @@ abbrev gateOneComponent (F A R : Poly) (C : RegularComponent K F A R) :
     RegularComponent K F (filteredCut 0 (fun _ : Fin 1 => A) 1 0) 1 :=
   ⟨C.1, by
     classical
-    apply Finset.mem_filter.mpr
+    apply (mem_regularComponents K).mpr
     constructor
     · simpa only [filteredCut_zero] using regularComponent_mem K F A R C
     · intro h

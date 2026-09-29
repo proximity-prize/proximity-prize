@@ -1,0 +1,10 @@
+import ProximityPrize.SubmissionLower.MovingFiberClosure6814
+import ProximityPrize.SubmissionLower.MovingFiberReceipt6814
+
+namespace ProximityPrize.SubmissionLower.MovingFiberCertificate6814
+
+theorem protocolClaim : ProximityPrize.Benchmark.ProtocolClaim 6814 331325439 1073741824 :=
+  MovingFiberCertificateCore6814.protocolClaim_of_receipt Lower80889.ReceiptProof.receipt
+
+#print axioms protocolClaim
+end ProximityPrize.SubmissionLower.MovingFiberCertificate6814

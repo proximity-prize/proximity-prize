@@ -2,6 +2,9 @@ import ProximityPrize.SubmissionLower.LowerFoundation
 
 /-! Compact lower-bound proof; prior work is credited in the enclosed components. -/
 
+-- Mathlib's linters run interpreted after every declaration; they only warn.
+set_option linter.all false
+
 section Compact_PackedLocatorTail
 /-! Packed: amortised derivative-chain caps. -/
 section PackedLocator_ChainAmort
