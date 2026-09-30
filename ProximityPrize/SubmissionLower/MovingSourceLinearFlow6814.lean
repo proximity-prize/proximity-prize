@@ -1,8 +1,4 @@
 import ProximityPrize.SubmissionLower.MovingSourceOwnerRouting6814
-
-/-! The actual linear curvature factor supplies a smaller rational flow.
-The carrier invariance and coefficient bounds are proved from the factor;
-no gamma-independence or rational-representative hypothesis is introduced. -/
 namespace ProximityPrize.SubmissionLower.MovingSourceLinearFlow6814
 noncomputable section
 set_option autoImplicit false
@@ -90,8 +86,5 @@ theorem flow_preserves_carrier (F H G : Poly)
     rw [flow_carrier]
     exact dvd_neg.mpr hcross
 
-#print axioms linear_coefficient_weights
-#print axioms carrier_cross_identity
-#print axioms flow_preserves_carrier
 end
 end ProximityPrize.SubmissionLower.MovingSourceLinearFlow6814

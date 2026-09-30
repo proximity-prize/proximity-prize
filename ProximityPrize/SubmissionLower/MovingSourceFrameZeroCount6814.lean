@@ -1,7 +1,4 @@
 import ProximityPrize.SubmissionLower.MovingSourceLinearCycleFamily6814
-
-/-! The constructed frame really bounds zeros of a proper cut on each
-prime. The budget below is proved from poles, not assumed as a supplier. -/
 namespace ProximityPrize.SubmissionLower.MovingSourceFrameZeroCount6814
 noncomputable section
 set_option autoImplicit false
@@ -97,6 +94,5 @@ def frame_prime_budget (a : A) : PrimeFlagZeroBudget (P a) (frameFlagCost D hz a
     (flagSupport r) (frameFlagCost D hz a r) hpole N
     ((support_subset_flagSupport_iff r N).mpr hN) hproper points hpointsP hpointsN
 
-#print axioms frame_prime_budget
 end
 end ProximityPrize.SubmissionLower.MovingSourceFrameZeroCount6814

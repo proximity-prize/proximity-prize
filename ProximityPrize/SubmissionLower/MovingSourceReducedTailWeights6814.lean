@@ -1,7 +1,4 @@
 import ProximityPrize.SubmissionLower.MovingSourceDenominatorChange6814
-
-/-! Degree bounds for the actual replacement tails, proved by the
-recurrence. No expansion of the 131072nd polynomial is performed. -/
 namespace ProximityPrize.SubmissionLower.MovingSourceReducedTailWeights6814
 noncomputable section
 set_option autoImplicit false
@@ -70,34 +67,5 @@ theorem numerator_weight
     change wt w (step H G n (numerators H G n))≤_
     convert hh using 1; ring
 
-theorem linear_tail_weights
-    (J : WholeSpaceCube6814.Poly (K:=K))
-    (hshape : ∀ e ∈ J.support, 2*e 1+e 3≤7 ∧ e 1+e 2+e 3≤25 ∧ e 1+e 2+e 3+e 4≤331)
-    (n : ℕ) :
-    wt residualSWeights (numerators (linearH J) (linearG J) n)≤11*n ∧
-    wt residualYSWeights (numerators (linearH J) (linearG J) n)≤1+48*n ∧
-    wt residualTotalWeights (numerators (linearH J) (linearG J) n)≤1+660*n := by
-  have hh := linear_coefficient_weights J 7 25 331 hshape
-  have hR := numerator_weight residualSWeights (linearH J) (linearG J) 5 6
-    hh.1.1 hh.2.1 (by decide) (by decide) n
-  have hY := numerator_weight residualYSWeights (linearH J) (linearG J) 24 24
-    hh.1.2.1 hh.2.2.1 (by decide) (by decide) n
-  have hT := numerator_weight residualTotalWeights (linearH J) (linearG J) 330 330
-    hh.1.2.2 hh.2.2.2 (by decide) (by decide) n
-  refine ⟨?_,?_,?_⟩
-  · simpa only [show residualSWeights 1=0 from rfl,zero_add,Nat.reduceAdd,Nat.mul_comm] using hR
-  · simpa only [show residualYSWeights 1=1 from rfl,Nat.reduceAdd,Nat.mul_comm] using hY
-  · simpa only [show residualTotalWeights 1=1 from rfl,Nat.reduceAdd,Nat.mul_comm] using hT
-
-theorem first_tail_weights
-    (J : WholeSpaceCube6814.Poly (K:=K))
-    (hshape : ∀ e ∈ J.support, 2*e 1+e 3≤7 ∧ e 1+e 2+e 3≤25 ∧ e 1+e 2+e 3+e 4≤331) :
-    wt residualSWeights (numerators (linearH J) (linearG J) 131072)≤1441792 ∧
-    wt residualYSWeights (numerators (linearH J) (linearG J) 131072)≤6291457 ∧
-    wt residualTotalWeights (numerators (linearH J) (linearG J) 131072)≤86507521 := by
-  exact linear_tail_weights J hshape 131072
-
-#print axioms linear_tail_weights
-#print axioms first_tail_weights
 end
 end ProximityPrize.SubmissionLower.MovingSourceReducedTailWeights6814

@@ -1,6 +1,5 @@
 import ProximityPrize.SubmissionLower.BoundaryTailFlags
 import ProximityPrize.SubmissionLower.BoundaryTailAlgebra
-
 namespace ProximityPrize.SubmissionLower.BoundaryTailAlgebra
 
 open RCN055 RCN056 RCN313

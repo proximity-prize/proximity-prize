@@ -1,5 +1,4 @@
 import ProximityPrize.SubmissionLower.SecondJetRefinements
-
 namespace ProximityPrize.SubmissionLower.MovingFiberLeadingCoefficient6811
 open MvPolynomial SecondJetSupport SecondJetGlobalSupport SecondJetSpecialize
 open SecondJetCoefficients SecondJetCoefficientSpecialization SecondJetDifferentiation

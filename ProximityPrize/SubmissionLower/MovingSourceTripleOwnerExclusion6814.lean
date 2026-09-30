@@ -1,11 +1,5 @@
 import ProximityPrize.SubmissionLower.MovingSourceTripleRootPolynomial6814
 import Mathlib.RingTheory.Polynomial.GaussLemma
-
-/-! A cubic/quartic factor of total residual weight <=995 cannot have a
-triple curvature root modulo the large carrier F. The degree-two/three
-invariants vanish modulo F, hence globally; Gauss's lemma then contradicts
-irreducibility. No discriminant determinant or multiplicity discount is
-assumed. -/
 namespace ProximityPrize.SubmissionLower.MovingSourceTripleOwnerExclusion6814
 noncomputable section
 set_option autoImplicit false
@@ -138,6 +132,5 @@ theorem small_cubic_quartic_rootMultiplicity_lt_three [CharP K 2130706433]
   have hp := (pow_dvd_pow _ hm).trans (Polynomial.pow_rootMultiplicity_dvd _ _)
   exact triple_owner_impossible F hFT J hJ hT hs hp
 
-#print axioms small_cubic_quartic_rootMultiplicity_lt_three
 end
 end ProximityPrize.SubmissionLower.MovingSourceTripleOwnerExclusion6814

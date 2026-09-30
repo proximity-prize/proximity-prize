@@ -1,8 +1,4 @@
-import ProximityPrize.SubmissionLower.MovingSourceThickGenericPair6814
-
-/-! Canonical carrier factors for the weighted pair count. Localization
-does not erase the chosen factor, and a relation containing a coprime
-pair cannot collapse to that single carrier equation. -/
+import ProximityPrize.SubmissionLower.MovingSourcePairResultant6814
 namespace ProximityPrize.SubmissionLower.MovingSourceLocalCarrier6814
 noncomputable section
 set_option autoImplicit false
@@ -92,8 +88,5 @@ theorem local_carrier_relation_bar_ne_bot
     exact hn
   exact hG.not_isUnit (hcop (hd P hP) (hd Q hQ))
 
-#print axioms exists_irreducible_divisor_mem_prime
-#print axioms local_carrier_prime_and_contract
-#print axioms local_carrier_relation_bar_ne_bot
 end
 end ProximityPrize.SubmissionLower.MovingSourceLocalCarrier6814

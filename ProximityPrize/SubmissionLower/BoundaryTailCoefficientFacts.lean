@@ -1,6 +1,5 @@
 import ProximityPrize.SubmissionLower.BoundaryTailRepresentation
 import ProximityPrize.SubmissionLower.BoundaryTailAlgebra
-
 namespace ProximityPrize.SubmissionLower.BoundaryTailCoefficientFacts
 
 open BoundaryTailAlgebra RCN055 RCN313

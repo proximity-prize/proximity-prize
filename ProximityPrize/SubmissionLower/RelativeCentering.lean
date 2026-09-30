@@ -1,5 +1,4 @@
 import ProximityPrize.SubmissionLower.RelativeBoundedFactor
-
 namespace ProximityPrize.SubmissionLower.RelativeBounded6814
 open scoped BigOperators
 open MvPolynomial RCN119 RCN100 RCN122 ContactOrderBridge
@@ -132,5 +131,3 @@ theorem center_relativeContact (x u0 u1 : K) (m : ℕ) (F Q : Poly4 K) :
 
 end
 end ProximityPrize.SubmissionLower.RelativeBounded6814
-
-#print axioms ProximityPrize.SubmissionLower.RelativeBounded6814.center_globalBox

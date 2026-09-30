@@ -1,23 +1,7 @@
 import ProximityPrize.SubmissionLower.BoundaryTailCounting
-
-/-!
-Fold-chain accounting. A seed at which both `F` and `F_R` vanish, and at
-which the `R`-free end of the derivative chain does not vanish, lies on the
-fold curve `V(g, F_R)` for a geometric factor `g` of `F`. On each component
-`C` of that curve take the first derivative `dR m F` outside `C`; then
-`m ≥ 2`, and every seed on `C` is either a regular solution of the carrier
-`dR (m-1) F` or a zero of `dR m F` on `C`. The first kind is counted by the
-sharp prime incidence bound, the second by the zero-point box bound. Both use
-the degree of `C`, so the fold curve is paid once for the whole chain rather
-than once per derivative stage.
--/
-
 namespace ProximityPrize.SubmissionLower.FoldChain6813
 open scoped Classical BigOperators
-open RCN260 RCN318 RCN294 RCN286 RCN169 RCN167 RCN290 RCN082 RCN081 RCN174
-  RCN319 RCN136 RCN137 RCN138 RCN135 RCN222 RCN243 RCN068 RCN238 RCN001 RCN052
-  RCN264 RCN007 RCN004 RCN072
-  LocatorDerivativeChain BoundaryTailSharedDegreeBudget AsymmetricHelper
+open RCN260 RCN318 RCN294 RCN286 RCN169 RCN167 RCN290 RCN082 RCN081 RCN174 RCN319 RCN136 RCN137 RCN138 RCN135 RCN222 RCN243 RCN068 RCN238 RCN001 RCN052 RCN264 RCN007 RCN004 RCN072 LocatorDerivativeChain BoundaryTailSharedDegreeBudget AsymmetricHelper
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 3000000
@@ -26,7 +10,6 @@ variable {K : Type} [Field K] {ι : Type*}
 local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq ι := Classical.decEq ι
 
-/-- Seeds on the fold curve of `F` that are not `R`-free tail seeds. -/
 def foldSeeds (F : MvPolynomial (Fin 4) K) (selected : K → Polynomial K)
     (Gamma : Finset K) : Finset K :=
   Gamma.filter fun γ => specialization K (selected γ) γ F = 0 ∧
@@ -39,7 +22,6 @@ theorem foldSeeds_subset (F : MvPolynomial (Fin 4) K) (selected : K → Polynomi
 theorem dR_one (F : MvPolynomial (Fin 4) K) :
     dR 1 F = MvPolynomial.pderiv (2 : Fin 4) F := dR_succ 0 F
 
-/-- A seed of `F` and `F_R` is a fold seed or a tail seed. -/
 theorem mem_fold_or_tail (F : MvPolynomial (Fin 4) K) (selected : K → Polynomial K)
     (Gamma : Finset K) (γ : K) (hγ : γ ∈ Gamma)
     (h0 : specialization K (selected γ) γ F = 0)
@@ -50,7 +32,6 @@ theorem mem_fold_or_tail (F : MvPolynomial (Fin 4) K) (selected : K → Polynomi
   · exact Finset.mem_union_left _
       (Finset.mem_filter.mpr ⟨hγ, h0, by rw [dR_one]; exact h1, hL⟩)
 
-/-- A factor of `R`-degree one has no fold seeds. -/
 theorem foldSeeds_eq_empty_of_degree_one (F : MvPolynomial (Fin 4) K)
     (hF : F.degreeOf 2 = 1) (selected : K → Polynomial K) (Gamma : Finset K) :
     foldSeeds F selected Gamma = ∅ := by
@@ -64,8 +45,6 @@ theorem foldSeeds_eq_empty_of_degree_one (F : MvPolynomial (Fin 4) K)
   rw [hL] at hne
   exact hne h1
 
-/-- Every seed of `Q` lies in the regular pair seeds, the fold seeds, the tail
-seeds or the `R`-free seeds. -/
 theorem cover_fold (Q T : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
     (selected : K → Polynomial K) (Gamma : Finset K)
     (hQsolution : ∀ γ ∈ Gamma, specialization K (selected γ) γ Q = 0)
@@ -110,7 +89,6 @@ section Components
 
 variable (K)
 
-/-- A seed on a component vanishes on every polynomial whose surface lies in it. -/
 theorem specialization_zero_of_component
     (C : Ideal (MvPolynomial (Fin 3) (GenericField K))) (selected : K → Polynomial K) (γ : K)
     (hC : C ≤ RingHom.ker
@@ -123,8 +101,6 @@ theorem specialization_zero_of_component
   rw [selectedPoint_surface_evaluation] at h
   exact (polynomialEmbedding_eq_zero_iff K _).mp h
 
-/-- One component of the fold curve: its seeds are regular seeds of one
-derivative carrier or zeros of the next derivative on the component. -/
 theorem fold_component_count
     (F : MvPolynomial (Fin 4) K) (G : MvPolynomial (Fin 3) (GenericField K))
     (hG : Irreducible G) (hdiv : G ∣ surfaceMap (polynomialEmbedding K) F)
@@ -188,7 +164,7 @@ theorem fold_component_count
       Finset.card_filter_add_card_filter_not _
     have hS₁ : S₁ ⊆ S := Finset.filter_subset _ _
     have hS₂ : S₂ ⊆ S := Finset.filter_subset _ _
-    -- regular seeds of the carrier `dR (m-1) F`
+
     have hcap : ∀ i ∈ nodes, ∀ j,
         (agreementPolynomial phi (dR (m - 1) F) w (x i) (u₀ i) (u₁ i)).degreeOf j ≤
           capAt (agreementCaps y r z w) j := by
@@ -210,7 +186,7 @@ theorem fold_component_count
       (fun γ hγ => hagreement γ (hsub (hS₁ hγ)))
       (noLargeSelectedPencil_mono selected Γ S₁ w e (hS₁.trans hsub) hnoPencil)
       (capAt (agreementCaps y r z w)) hcap
-    -- zeros of `dR m F` on the component
+
     let points := S₂.image (selectedPoint phi selected)
     have hjcap : ∀ i, (surfaceMap phi (dR m F)).degreeOf i ≤ capAt ⟨y, r, z⟩ i := by
       intro i
@@ -256,7 +232,6 @@ theorem fold_component_count
     rw [hempty, Finset.card_empty, Nat.zero_mul]
     exact Nat.zero_le _
 
-/-- All fold seeds on one geometric factor `G` of `F`. -/
 theorem fold_factor_count
     (F : MvPolynomial (Fin 4) K) (G : MvPolynomial (Fin 3) (GenericField K))
     (hG : Irreducible G) (hdiv : G ∣ surfaceMap (polynomialEmbedding K) F)
@@ -332,9 +307,6 @@ theorem fold_factor_count
 
 end Components
 
-/-- **Fold-chain bound.** All fold seeds of an irreducible `F` pay the fold
-curve `V(F, F_R)` once: the agreement numerator of the first derivative stage,
-plus the zero-point cost of the jump seeds. -/
 theorem foldSeeds_card_le_left
     (P : UnequalParameters) (F : MvPolynomial (Fin 4) K) (hF : Irreducible F)
     (p : ℕ) [CharP K p] (hpos : 0 < F.degreeOf 2) (hsmall : F.degreeOf 2 < p)

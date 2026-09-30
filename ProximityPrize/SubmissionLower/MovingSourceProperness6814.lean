@@ -1,8 +1,4 @@
 import ProximityPrize.SubmissionLower.MovingSourceClearing6814
-
-/-! Clearing cannot create a common prime factor away from the clearing
-denominator. This is proved by the inverse affine substitution, before
-specializing the moving target. -/
 namespace ProximityPrize.SubmissionLower.MovingSourceProperness6814
 noncomputable section
 set_option autoImplicit false
@@ -37,8 +33,6 @@ theorem targetPolynomial_ne_zero (P : Polynomial R) (n : ℕ) (h q : R)
   rw [hz,map_zero] at he
   exact mul_ne_zero (pow_ne_zero n (Polynomial.C_ne_zero.mpr hh)) hP he.symm
 
-/-- Any common prime of the two cleared polynomials divides the
-denominator itself. No coprimality of the cleared cuts is assumed. -/
 theorem common_prime_dvd_denominator (P Q : Polynomial R) (n m : ℕ) (h q : R)
     (hn : P.natDegree ≤ n) (hm : Q.natDegree ≤ m) (hh : h≠0)
     (hrel : IsRelPrime P Q) (D : Polynomial R) (hD : Prime D)
@@ -76,7 +70,5 @@ theorem common_prime_dvd_denominator (P Q : Polynomial R) (n m : ℕ) (h q : R)
 
 end Polynomial
 
-#print axioms targetPolynomial_ne_zero
-#print axioms common_prime_dvd_denominator
 end
 end ProximityPrize.SubmissionLower.MovingSourceProperness6814

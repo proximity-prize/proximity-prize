@@ -1,12 +1,6 @@
-/-
-UNCOMPILED. All THREE unit cuts are supplied by the actual generic-channel
-construction; none is a theorem premise here. The remaining pointwise moving
-inequality is the original actual-source output, consumed at the Stage entry.
--/
 import ProximityPrize.SubmissionLower.ActualGenericChannel6807
 import ProximityPrize.SubmissionLower.CommonLinearChannels6807
 import ProximityPrize.SubmissionLower.JointBudgetArithmetic6807
-
 namespace ProximityPrize.SubmissionLower.ThreeChannelJoint6807
 open RCN057 (WeightBound)
 open RCN086 RCN074

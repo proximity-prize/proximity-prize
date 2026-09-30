@@ -1,8 +1,4 @@
 import ProximityPrize.SubmissionLower.MovingSourcePairPrimary6814
-
-/-! A coprime source pair has a nonzero polynomial on every coefficient
-fibre in at least one orientation. Swap the resultant when necessary;
-no vertical fibre or zero outer-degree factor is discarded. -/
 namespace ProximityPrize.SubmissionLower.MovingSourcePairResultant6814
 noncomputable section
 set_option autoImplicit false
@@ -92,7 +88,5 @@ theorem grouped_pair_power_dvd
     rw [Polynomial.resultant_comm P Q m n]
     exact dvd_mul_of_dvd_right hb _
 
-#print axioms some_local_residue_ne_zero
-#print axioms grouped_pair_power_dvd
 end
 end ProximityPrize.SubmissionLower.MovingSourcePairResultant6814

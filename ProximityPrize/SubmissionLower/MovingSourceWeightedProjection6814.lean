@@ -1,8 +1,4 @@
 import ProximityPrize.SubmissionLower.MovingSourceIndexedPair6814
-
-/-! The weighted proper-pair projection theorem. Primary thickness is
-supplied uniformly on the original carrier; its irreducible local pieces
-are chosen here. No intersection multiplicity or degree sum is assumed. -/
 namespace ProximityPrize.SubmissionLower.MovingSourceWeightedProjection6814
 noncomputable section
 set_option autoImplicit false
@@ -165,7 +161,5 @@ theorem weighted_directional_degree
   rw [←Finset.mul_sum] at hb
   exact hb.trans (flag_resultant_degree_le axis lam mu nu B C p q hp hq hC)
 
-#print axioms planeMap_relPrime
-#print axioms weighted_directional_degree
 end
 end ProximityPrize.SubmissionLower.MovingSourceWeightedProjection6814

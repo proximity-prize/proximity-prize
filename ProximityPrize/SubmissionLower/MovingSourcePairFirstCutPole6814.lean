@@ -1,8 +1,5 @@
 import ProximityPrize.SubmissionLower.MovingSourceExtendedMovingDegrees6814
 import ProximityPrize.SubmissionLower.HFreeDir6813
-
-/-! Directional first-cut mass uses the actual moving pole budget directly.
-No source-flag bound is silently substituted for the new pair degree sum. -/
 namespace ProximityPrize.SubmissionLower.MovingSourcePairFirstCutPole6814
 noncomputable section
 set_option autoImplicit false
@@ -72,7 +69,7 @@ theorem first_pole_mass_of_moving_budget
     intro nu _
     simp only [theta, RCN204.flagPole_unitAll, RCN204.flagPole_unitYZ]
     rfl
-  -- zeros of `H` are bounded by its poles, hence by its flag
+
   have hHF := (BoundaryTailAlgebra.boundary_surfaceMap_flags phi F r v z (by omega) (by omega)
     hR hYR hAll).1
   have hpoleH (nu : Place E L) :
@@ -105,7 +102,7 @@ theorem first_pole_mass_of_moving_budget
       _ ≤ ∑ nu ∈ Pl, flagPole nu.val (coordinate E C) Hf := Finset.sum_le_sum (fun nu _ => hpoleH nu)
       _ ≤ _ := Finset.sum_le_sum_of_subset_of_nonneg Finset.subset_union_right
           (fun nu _ _ => RCN204.flagPole_nonneg nu.val (coordinate E C) Hf)
-  -- `2•flag(H) = cusp + cap`, and the cap is dominated by `infCap d`
+
   have hcusp : 2 * (∑ nu ∈ W', flagPole nu.val (coordinate E C) Hf) ≤
       (∑ nu ∈ W', flagPole nu.val (coordinate E C) (cuspFlag d r v z)) +
         ∑ nu ∈ W', flagPole nu.val (coordinate E C) (HFree6812.infCap d) := by
@@ -156,43 +153,7 @@ local notation "Omega" => GenericField K
 local notation "PE" => MvPolynomial (Fin 3) E
 local notation "phiE" => RingHom.comp (algebraMap Omega E) (polynomialEmbedding K)
 
-/-- Actual first-tail multiplicities, bounded using the constructed
-moving budget on the prime slice. This preserves the directional
-infinity saving in the submitted architecture. -/
-theorem first_cut_on_prime_slice_of_moving_budget
-    (S : Stage K I Gamma x p flag errorCap stageSupport)
-    (hproper : ¬S.G∣globalTailCut (polynomialEmbedding K) S.F (w+1))
-    (old : T → FirstTailComponent S)
-    (emb : ∀ i, CoordinateField Omega (old i).1 →ₐ[Omega] E)
-    (hinj : Function.Injective (fun i => embeddingPoint (old i).1 (emb i)))
-    (D : Ideal PE) [D.IsPrime] (sep : SeparableLiteralCoordinate D)
-    (hpoint : ∀ i, D≤RingHom.ker (MvPolynomial.aeval (embeddingPoint (old i).1 (emb i)) : PE →ₐ[E] E).toRingHom)
-    (hcarrier : scalarPolynomialMap Omega E S.G∈D)
-    (hisolated : scalarPolynomialMap Omega E (globalTailCut (polynomialEmbedding K) S.F (w+1))∉D)
-    (d : Fin 3) (r v z : ℕ) (hr : 3≤r) (hv : 2≤v)
-    (hR : WeightBound residualSWeights S.F (r : ℤ))
-    (hYR : WeightBound residualYSWeights S.F ((r+v : ℕ) : ℤ))
-    (hAll : WeightBound residualTotalWeights S.F ((r+v+z : ℕ) : ℤ))
-    (C0 : FlagDegree)
-    (hbudget : surfaceMap phiE S.F∈D → surfaceMap phiE (polyH K S.F)∉D →
-      HFreeSliceBudgetCap phiE S.F D C0 (HFree6812.infCap d))
-    (moving : RCN199.MovingPoleBudget D (surfaceMap phiE (polyH K S.F)) (surfaceMap phiE (polyG K S.F)))
-    (CX : ℕ)
-    (hX : ∀ W : Finset (Place E (CoordinateField E D)),
-      (∑ nu∈W, flagPole nu.val (coordinate E D) (hfreeFlagDir d r v z C0))≤(CX : ℤ)) :
-    3*(∑ i, localMultiplicity S (canonicalLocalDVRFamily S hproper) (old i))≤
-      CX+4*(w+1)*moving.movingCost := by
-  apply ActualWeightedFirstSlice6807.first_cut_on_prime_slice_of S hproper old emb hinj D sep
-    hpoint hcarrier hisolated (2*w-1) 3 (CX+4*(w+1)*moving.movingCost)
-  intro hFd hHd _ W
-  have hh := first_pole_mass_of_moving_budget phiE S.F D sep hHd d r v z hr hv hR hYR hAll
-    C0 (hbudget hFd hHd) 1 CX moving.movingCost hX
-    (fun U => by simpa only [Nat.cast_one,one_mul] using moving.movingPole U) W
-  simpa only [Nat.mul_one,Nat.cast_one,one_mul,Nat.cast_add,Nat.cast_mul] using hh
-
 end Stage
 
-#print axioms first_pole_mass_of_moving_budget
-#print axioms first_cut_on_prime_slice_of_moving_budget
 end
 end ProximityPrize.SubmissionLower.MovingSourcePairFirstCutPole6814

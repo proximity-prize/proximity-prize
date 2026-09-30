@@ -1,8 +1,4 @@
 import ProximityPrize.SubmissionLower.MovingSourceSharedFamily6814
-
-/-! Apply the shared bound to actual prime coordinate fields. Coordinate
-generation and distinct relation kernels are discharged by the canonical
-coordinate-field construction, rather than requested as count suppliers. -/
 namespace ProximityPrize.SubmissionLower.MovingSourcePrimeFamily6814
 noncomputable section
 set_option autoImplicit false
@@ -88,20 +84,5 @@ theorem finite_sum_prime_fields
     (flagEvaluation_kernel_family_injective K P hinj lam mu nu)
     B H hB hH hrel (hroot B hBmem) (hroot H hHmem) p q hp hq
 
-/-- The three shared bounds used by the new source pair. -/
-theorem source_pair_directional_prices (U T : ℕ) (hU : 25≤U) (hUmax : U≤30)
-    (hUT : U≤T) (hT : T≤331) :
-    flagMixed ⟨T-U,U-9+2,9⟩ ⟨1602,81,31⟩ unitZFlag ≤ 1721 ∧
-    flagMixed ⟨T-U,U-9+2,9⟩ ⟨1602,81,31⟩ unitYZFlag ≤ 25470 ∧
-    flagMixed ⟨T-U,U-9+2,9⟩ ⟨1602,81,31⟩ unitAllFlag ≤ 88560 := by
-  have hsub : T-U+U=T := Nat.sub_add_cancel hUT
-  have hu : U-9+9=U := Nat.sub_add_cancel (by omega)
-  simp only [flagMixed,unitZFlag,unitYZFlag,unitAllFlag]
-  constructor
-  · omega
-  constructor <;> omega
-
-#print axioms finite_sum_prime_fields
-#print axioms source_pair_directional_prices
 end
 end ProximityPrize.SubmissionLower.MovingSourcePrimeFamily6814

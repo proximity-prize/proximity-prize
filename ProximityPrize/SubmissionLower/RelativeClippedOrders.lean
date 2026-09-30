@@ -1,5 +1,4 @@
 import ProximityPrize.SubmissionLower.RelativeContactCap
-
 namespace ProximityPrize.SubmissionLower.RelativeBounded6814
 open scoped BigOperators
 open MvPolynomial RCN119 RCN100 RCN122 ContactOrderBridge
@@ -25,8 +24,6 @@ theorem clipped_affine_order_mass {I : Type*} (support : Finset I) (d : I → �
       _ ≤ _ := Finset.sum_le_sum fun i hi =>
         Nat.sub_le_sub_left (Nat.mul_le_mul_left beta (hcap i hi)) alpha
 
-/-- The clipped cutoff used by the existing certificates is justified on
-the full agreement set. Its upper-weight tail uses the proved contact cap. -/
 theorem regular_clipped_order_mass
     {I : Type*} {DF T R B : ℕ} (F : Poly4 K) (hF : Irreducible F)
     (hR : 0 < F.degreeOf 2) (hbox : F ∈ globalCoefficientBox K DF 1 T R)
@@ -50,5 +47,3 @@ theorem regular_clipped_order_mass
 
 end
 end ProximityPrize.SubmissionLower.RelativeBounded6814
-
-#print axioms ProximityPrize.SubmissionLower.RelativeBounded6814.regular_clipped_order_mass

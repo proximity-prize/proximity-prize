@@ -1,8 +1,4 @@
 import ProximityPrize.SubmissionLower.MovingFiberNativeBudget6811
-
-/-! Three actual source polynomials, one native component family. The record
-below contains only the existing source support/divisibility data, not any
-desired projection or zero-count inequality. -/
 namespace ProximityPrize.SubmissionLower.MovingFiberThreeSources6811
 open scoped Classical BigOperators
 open RCN002 RCN037 RCN039 RCN042 RCN046 RCN071 RCN076 RCN084 RCN095 RCN136 RCN207 RCN237 RCN264 RCN313 RCN340 RCN341 RCN344
@@ -258,7 +254,5 @@ theorem isolated_pure_cut_three_sources
     _ ≤ _ := Finset.sum_le_sum (fun j _ => Nat.mul_le_mul_left _
       (activeFactors_mixed_sum_le carrier N hcarrier p (direction j) (source j).flag hflag))
 
-#print axioms pure_cut_three_sources
-#print axioms isolated_pure_cut_three_sources
 end
 end ProximityPrize.SubmissionLower.MovingFiberThreeSources6811

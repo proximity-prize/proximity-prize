@@ -1,5 +1,4 @@
 import ProximityPrize.SubmissionLower.RelativeBoundedRealization
-
 namespace ProximityPrize.SubmissionLower.RelativeBounded6814
 open scoped BigOperators Pointwise
 open MvPolynomial RCN119 RCN100 RCN122 ContactOrderBridge
@@ -101,8 +100,6 @@ abbrev RelativeJetTarget {DF TF RF m L s : ℕ} (F : Poly4 K) (hF : F ≠ 0)
   LinearMap.range (boundedJetMap K m L s) ⧸
     LinearMap.range (boundedFactorMap K (m:=m) F hF hbox hT hR)
 
-/-- Exact bounded relative dimension: this is the subtraction appearing in
-the saved arithmetic certificates, with no extra rank hypothesis. -/
 theorem relativeJetTarget_finrank {DF TF RF m L s : ℕ} (F : Poly4 K) (hF : F ≠ 0)
     (hbox : F ∈ globalCoefficientBox K DF 1 TF RF) (hT : TF ≤ L) (hR : RF ≤ s) :
     Module.finrank K (RelativeJetTarget K (m:=m) F hF hbox hT hR) =
@@ -119,6 +116,3 @@ theorem relativeJetTarget_finrank {DF TF RF m L s : ℕ} (F : Poly4 K) (hF : F �
 
 end
 end ProximityPrize.SubmissionLower.RelativeBounded6814
-
-#print axioms ProximityPrize.SubmissionLower.RelativeBounded6814.boundedFactorMap_injective
-#print axioms ProximityPrize.SubmissionLower.RelativeBounded6814.relativeJetTarget_finrank

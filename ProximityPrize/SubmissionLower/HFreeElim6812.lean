@@ -4,17 +4,6 @@ import Mathlib.RingTheory.Polynomial.GaussLemma
 import Mathlib.RingTheory.Polynomial.UniqueFactorization
 import Mathlib.RingTheory.Polynomial.Resultant.Basic
 import Mathlib.RingTheory.AlgebraicIndependent.Transcendental
-
-/-!
-# H-free bridge, piece 2a (algebra): elimination on a generic slice
-
-If a point `y` of an irreducible surface `G = 0` over `Ω` also lies on `P = 0` with `G ∤ P`,
-and a linear form `ℓ = X_i + Σ c_m X_m` takes a value `t` transcendental over `Ω`, then every
-coordinate of `y` is algebraic over any field `E ∋ t`.  This is the core of the slice
-descent: a slice component (a curve over `E`) cannot lie on `G = P = 0`, so its contraction
-to `Ω[Y,Y',Γ]` is exactly `(G)`.
--/
-
 namespace ProximityPrize.SubmissionLower.HFree6812
 
 open MvPolynomial
@@ -44,7 +33,6 @@ end Resultant
 
 variable {Ω : Type*} [Field Ω]
 
-/-- Elimination of variable `0`. -/
 theorem exists_eliminant0 {R : Type*} [CommRing R] [Algebra Ω R]
     (G P : MvPolynomial (Fin 3) Ω) (hG : Irreducible G) (hGP : ¬ G ∣ P)
     (z : Fin 3 → R) (hGz : aeval z G = 0) (hPz : aeval z P = 0) :
@@ -83,7 +71,6 @@ theorem exists_eliminant0 {R : Type*} [CommRing R] [Algebra Ω R]
       AlgEquiv.symm_apply_apply, map_add, map_mul, map_mul, hGz, hPz, zero_mul, zero_mul,
       add_zero]
 
-/-- Elimination of the third variable, keeping `z m` and `z i`. -/
 theorem exists_eliminant {R : Type*} [CommRing R] [Algebra Ω R]
     (G P : MvPolynomial (Fin 3) Ω) (hG : Irreducible G) (hGP : ¬ G ∣ P)
     (z : Fin 3 → R) (hGz : aeval z G = 0) (hPz : aeval z P = 0) (m i : Fin 3) (hmi : m ≠ i) :
@@ -119,7 +106,6 @@ theorem exists_eliminant {R : Type*} [CommRing R] [Algebra Ω R]
   rw [hfun] at hQz
   exact ⟨Q, hQ, hQz⟩
 
-/-- A root of a nonzero bivariate relation with a transcendental second entry is algebraic. -/
 theorem isAlgebraic_of_eliminant {E R : Type*} [Field E] [Field R] [Algebra Ω E] [Algebra E R]
     [Algebra Ω R] [IsScalarTower Ω E R] (t : E) (ht : Transcendental Ω t) (a : R)
     (Q : MvPolynomial (Fin 2) Ω) (hQ : Q ≠ 0) (h : aeval ![a, algebraMap E R t] Q = 0) :
@@ -153,7 +139,6 @@ theorem isAlgebraic_of_eliminant {E R : Type*} [Field E] [Field R] [Algebra Ω E
   have h1 : Ψ Q = Polynomial.aeval a q := rfl
   rw [← h1, hΨ, h]
 
-/-- **Slice elimination.** -/
 theorem coordinates_algebraic_of_not_dvd {E R : Type*} [Field E] [Field R] [Algebra Ω E]
     [Algebra E R] [Algebra Ω R] [IsScalarTower Ω E R]
     (G P : MvPolynomial (Fin 3) Ω) (hG : Irreducible G) (hGP : ¬ G ∣ P)

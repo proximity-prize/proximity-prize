@@ -1,9 +1,4 @@
 import ProximityPrize.SubmissionLower.MovingSourceLinearSeedAssembly6814
-
-/-! Ordinary moving-cut flags for factors with arbitrary nested weights.
-Unlike the older coefficient-flag adapter, this does not assume B<=U
-for each factor. It uses the true necessary inequality B<=U+s and
-therefore preserves the shared source budget under factorization. -/
 namespace ProximityPrize.SubmissionLower.MovingSourceCoupledClearing6814
 noncomputable section
 set_option autoImplicit false
@@ -126,7 +121,5 @@ theorem movingCut_ordinaryFlag
   rw [hc.2.2,hc.2.1,hc.1]
   exact ⟨er,em,et⟩
 
-#print axioms source_nested
-#print axioms movingCut_ordinaryFlag
 end
 end ProximityPrize.SubmissionLower.MovingSourceCoupledClearing6814

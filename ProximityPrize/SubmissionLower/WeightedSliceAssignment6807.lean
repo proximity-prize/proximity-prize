@@ -1,11 +1,5 @@
 import ProximityPrize.SubmissionLower.ActualWeightedFirstSlice6807
-/-
-UNCOMPILED. Choose one actual factor/component for each embedded point.
-This supplies a disjoint weighted partition, including points lying on more
-than one component, rather than counting an overlapping cover as a partition.
--/
 import ProximityPrize.SubmissionLower.PureFlagSliceBudget6807
-
 namespace ProximityPrize.SubmissionLower.WeightedSliceAssignment6807
 open scoped Classical BigOperators
 open RCN002 RCN007 RCN072 RCN084 RCN095 RCN134 RCN264
@@ -36,7 +30,7 @@ theorem exists_point_assignment (F N R : Poly) (point : I → Fin 3 → E)
   exact ⟨fun i => (he i).choose, fun i => (he i).choose_spec⟩
 
 omit [Field E] [IsAlgClosed E] in
-/-- Exact weighted regrouping, valid for any finite target type. -/
+
 theorem weighted_assignment_sum {A : Type*} [Fintype A] [DecidableEq A]
     (assign : I → A) (mu : I → ℕ) :
     (∑ a, ∑ i with assign i = a, mu i) = ∑ i, mu i := by
@@ -45,8 +39,7 @@ theorem weighted_assignment_sum {A : Type*} [Fintype A] [DecidableEq A]
     (g := assign) (fun _ _ => Finset.mem_univ _) _
 
 omit [Field E] [IsAlgClosed E] in
-/-- Local bounds can be summed without multiplying a point's weight by the
-number of components through it. The local hypothesis is still visible. -/
+
 theorem sum_local_slice_bounds {A : Type*} [Fintype A] [DecidableEq A]
     (assign : I → A) (mu : I → ℕ) (cost : A → ℕ) (d : ℕ)
     (hlocal : ∀ a, d * (∑ i with assign i = a, mu i) ≤ cost a) :
@@ -54,8 +47,6 @@ theorem sum_local_slice_bounds {A : Type*} [Fintype A] [DecidableEq A]
   rw [← weighted_assignment_sum assign mu, Finset.mul_sum]
   exact Finset.sum_le_sum (fun a _ => hlocal a)
 
-/-- The old first-tail polynomial is nonzero on every assigned slice component
-through an embedding point, by the k=0 isolation certificate. -/
 theorem first_tail_not_mem_assigned (F N A R : Poly)
     (point : I → Fin 3 → E) (assign : I → SliceComponent F N R)
     (hpoint : ∀ i, (assign i).2.1 ≤ RingHom.ker

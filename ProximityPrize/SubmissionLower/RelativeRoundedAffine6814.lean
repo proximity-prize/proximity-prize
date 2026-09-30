@@ -1,8 +1,4 @@
 import ProximityPrize.SubmissionLower.RelativeWeightIntervals
-
-/-! The saved certificates interpolate helper totals and round upward.
-This lemma pays exactly their one-column reserve, for either sign of
-the dimension-margin slope. -/
 namespace ProximityPrize.SubmissionLower.RelativeCertificate6814
 set_option autoImplicit false
 set_option maxHeartbeats 600000
@@ -101,6 +97,4 @@ theorem ceilBlend_upper (T0 T1 L0 L1 T : ℕ)
   have hh := Nat.lt_of_mul_lt_mul_left hp
   omega
 
-#print axioms rounded_affine_positive
-#print axioms ceilBlend_bounds
 end ProximityPrize.SubmissionLower.RelativeCertificate6814

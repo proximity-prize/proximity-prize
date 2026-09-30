@@ -1,8 +1,4 @@
 import ProximityPrize.SubmissionLower.MovingSourceLocalCarrier6814
-
-/-! Weighted pair resultants on the original indexed curve family.
-Each curve may have its own irreducible carrier factor. All such pieces
-over a coefficient prime feed ONE resultant exponent. -/
 namespace ProximityPrize.SubmissionLower.MovingSourceIndexedPair6814
 noncomputable section
 set_option autoImplicit false
@@ -137,7 +133,5 @@ theorem indexed_pair_degree_sum_le
       (fun a => (hthick q hq a).1) (fun a => (hthick q hq a).2))
   exact C.sum_mul_cost_le
 
-#print axioms indexed_pair_grouped_power_dvd
-#print axioms indexed_pair_degree_sum_le
 end
 end ProximityPrize.SubmissionLower.MovingSourceIndexedPair6814

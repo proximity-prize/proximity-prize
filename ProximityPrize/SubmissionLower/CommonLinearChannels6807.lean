@@ -1,10 +1,5 @@
 import ProximityPrize.SubmissionLower.ActualGenericChannel6807
-/-
-UNCOMPILED. Structural common-linear-coordinate data for the SAME original unit
-family. These are equalities of rational functions, not requested cost bounds.
--/
 import ProximityPrize.SubmissionLower.LowerGeometry
-
 namespace ProximityPrize.SubmissionLower.CommonLinearChannels6807
 open scoped Classical BigOperators
 open RCN002 RCN022 RCN030 RCN037 RCN038 RCN040 RCN042 RCN046 RCN093
@@ -65,8 +60,6 @@ theorem eval_linearA (P : Ideal Poly) [P.IsPrime] (mu lam : Ω) :
 variable {G T H : MvPolynomial (Fin 3) Ω} {p q : FlagDegree}
   {base : ∀ C : RegularComponent Ω G T H, SeparableLiteralCoordinate C.1}
 
-/-- A generic AdaptiveUnitProjectionFamily alone does NOT imply this structure.
-The constructor below is for the original common activeNestedUnitFamily only. -/
 structure CommonLinearValues
     (unit : AdaptiveUnitProjectionFamily (Omega := Ω) (G := G) (T := T) (H := H) base p q) where
   lam : Ω
@@ -95,8 +88,6 @@ theorem common_a_value (unit : AdaptiveUnitProjectionFamily base p q)
   rw [eval_linearA]
   exact D.allValue C
 
-/-- The common parameters and the projections are the old constructor's actual
-ones. In particular no minimization over separately chosen families is made. -/
 def of_active_nested
     (base : ∀ C : RegularComponent Ω G T H, SeparableLiteralCoordinate C.1)
     (hactive : ∀ C : RegularComponent Ω G T H,
@@ -123,8 +114,6 @@ def of_active_nested
         (algebraMap (Polynomial Ω) (RatFunc Ω) Polynomial.X) = _
     exact elementEmbedding_variable Ω (CoordinateField Ω C.1) _ _
 
-/-- Congruent-cut transport preserves the actual common rational functions,
-not just their three numeric costs. The old and new component primes are defeq. -/
 def of_congruent_cut {T' : Poly} (h : G ∣ T-T')
     {base' : ∀ C : RegularComponent Ω G T' H, SeparableLiteralCoordinate C.1}
     (U : AdaptiveUnitProjectionFamily base' p q)

@@ -1,7 +1,4 @@
 import ProximityPrize.SubmissionLower.MovingSourceOuterChannel6814
-
-/-! Build the retained unit family from the supplied common outer frame,
-not from independent Classical.choice calls for each Stage. -/
 namespace ProximityPrize.SubmissionLower.MovingSourceSuppliedFrame6814
 noncomputable section
 set_option autoImplicit false
@@ -87,8 +84,5 @@ theorem supplied_a_value (lam mu : Ω) (hlam : geometry.data.lam=lam) (hmu : geo
   have hh := common_a_value (suppliedUnit S hp geometry) (suppliedCommon S hp geometry) C
   simpa only [suppliedCommon_lam,suppliedCommon_mu,hlam,hmu] using hh
 
-#print axioms supplied_u_value
-#print axioms suppliedBudget_yzPositive
-#print axioms suppliedBudget_yzPole
 end
 end ProximityPrize.SubmissionLower.MovingSourceSuppliedFrame6814

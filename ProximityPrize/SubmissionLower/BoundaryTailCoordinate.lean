@@ -1,6 +1,5 @@
 import ProximityPrize.SubmissionLower.BoundaryTailPole
 import ProximityPrize.SubmissionLower.BoundaryTailZeroCount
-
 namespace ProximityPrize.SubmissionLower.BoundaryTailAlgebra
 
 open RCN002 RCN055 RCN057 RCN064 RCN086 RCN095 RCN114 RCN136 RCN156

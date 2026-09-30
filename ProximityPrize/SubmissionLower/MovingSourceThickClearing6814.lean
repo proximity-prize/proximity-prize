@@ -1,10 +1,5 @@
 import ProximityPrize.SubmissionLower.MovingSourceMixedOwnerRouting6814
 import Mathlib.RingTheory.Ideal.Quotient.Nilpotent
-
-/-! Source contact survives denominator clearing as membership in an
-actual primary thickening. Work in its quotient, where the regular
-denominators are units and the moving-parameter difference is nilpotent.
-No field or reducedness assumption is made on that quotient. -/
 namespace ProximityPrize.SubmissionLower.MovingSourceThickClearing6814
 noncomputable section
 set_option autoImplicit false
@@ -37,9 +32,6 @@ theorem unit_mod_thickening
   have hm := hu.map (Ideal.Quotient.factor (show J^d≤Ideal.span {surface} ⊔ J^d from le_sup_right))
   simpa only [Ideal.Quotient.factor_mk] using hm
 
-/-- The two regular denominators may fail at other points; only their
-nonmembership in THIS component prime is needed. All lower source
-helpers genuinely lie in the carrier ideal. -/
 theorem cleared_mem_primary_of_helpers
     {R : Type*} [CommRing R] (J : Ideal R) [J.IsMaximal]
     (surface H G A B : R) (s d : ℕ) (P : Polynomial R)
@@ -93,6 +85,5 @@ theorem cleared_mem_primary_of_helpers
   change q (cleared P s A B)=0
   rw [map_cleared,cleared_eval _ _ (Polynomial.natDegree_map_le.trans hdegree) _ _ y hy,hz,mul_zero]
 
-#print axioms cleared_mem_primary_of_helpers
 end
 end ProximityPrize.SubmissionLower.MovingSourceThickClearing6814

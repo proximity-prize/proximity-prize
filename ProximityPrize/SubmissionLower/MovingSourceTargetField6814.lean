@@ -1,7 +1,4 @@
-import ProximityPrize.SubmissionLower.MovingSourceWholeCount6814
-
-/-! Identify the canonical generic target field with the rational-base
-structure expected by the existing embedding-point certificate. -/
+import ProximityPrize.SubmissionLower.MovingSourceAutomaticProjection6814
 namespace ProximityPrize.SubmissionLower.MovingSourceTargetField6814
 noncomputable section
 set_option autoImplicit false
@@ -44,7 +41,5 @@ theorem target_variable :
     algebraMap (RatFunc K) (GenericField K) (RCN202.rationalVariable K)=initialCoordinate K :=
   rationalEmbedding_variable K
 
-#print axioms target_tower
-#print axioms target_variable
 end
 end ProximityPrize.SubmissionLower.MovingSourceTargetField6814

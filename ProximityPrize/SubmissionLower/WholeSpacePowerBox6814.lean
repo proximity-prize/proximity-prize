@@ -1,7 +1,4 @@
 import ProximityPrize.SubmissionLower.WholeSpaceSourceKernel6814
-
-/-! Power avoidance in the existing contact kernel. The coefficient box is
-symbolic: no coefficient vectors or large finite bases are enumerated. -/
 namespace ProximityPrize.SubmissionLower.WholeSpacePowerBox6814
 noncomputable section
 set_option autoImplicit false
@@ -180,7 +177,5 @@ theorem exists_not_dvd_power
   have htwice := card_twice a hlin
   omega
 
-#print axioms card_twice
-#print axioms exists_not_dvd_power
 end
 end ProximityPrize.SubmissionLower.WholeSpacePowerBox6814

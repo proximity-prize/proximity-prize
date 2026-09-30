@@ -1,5 +1,4 @@
 import ProximityPrize.SubmissionLower.RelativeContactOrder
-
 namespace ProximityPrize.SubmissionLower.RelativeContactOrder6814
 open MvPolynomial ContactOrderBridge
 noncomputable section
@@ -7,7 +6,6 @@ set_option autoImplicit false
 set_option maxHeartbeats 2000000
 variable (K : Type*) [Field K]
 
-/-- The actual contact filtration at a received affine value. -/
 def contactSubmodule (x u0 u1 : K) (m : ℕ) : Submodule K (Poly4 K) :=
   (MvPolynomial.restrictSupport K {d | m ≤ Finsupp.weight localWeights d}).comap
     (localize K x u0 u1).toLinearMap
@@ -32,8 +30,6 @@ theorem factorMultiplication_ker (x u0 u1 : K) (m : ℕ) (F : Poly4 K) (hF : F �
     ContactAtLeast K x u0 u1 (m - contactOrder K x u0 u1 F) Q
   exact contact_mul_iff K x u0 u1 m F Q hF
 
-/-- Multiplication by F on the shifted contact-jet quotient. Its kernel
-has been computed exactly above, not supplied as an adapter hypothesis. -/
 def factorJetMap (x u0 u1 : K) (m : ℕ) (F : Poly4 K) (hF : F ≠ 0) :
     (Poly4 K ⧸ contactSubmodule K x u0 u1 (m - contactOrder K x u0 u1 F)) →ₗ[K]
       (Poly4 K ⧸ contactSubmodule K x u0 u1 m) :=
@@ -49,5 +45,3 @@ theorem factorJetMap_injective (x u0 u1 : K) (m : ℕ) (F : Poly4 K) (hF : F ≠
 
 end
 end ProximityPrize.SubmissionLower.RelativeContactOrder6814
-
-#print axioms ProximityPrize.SubmissionLower.RelativeContactOrder6814.factorJetMap_injective

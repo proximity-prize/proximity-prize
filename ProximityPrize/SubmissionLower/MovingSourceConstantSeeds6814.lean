@@ -1,8 +1,4 @@
 import ProximityPrize.SubmissionLower.MovingSourceProperSeedCount6814
-
-/-! Constant-parameter components have at most one selected seed apiece.
-Their number is charged once to the new coprime pair, without requiring
-separability in either of the two remaining literal coordinates. -/
 namespace ProximityPrize.SubmissionLower.MovingSourceConstantSeeds6814
 noncomputable section
 set_option autoImplicit false
@@ -12,7 +8,7 @@ open scoped BigOperators Classical
 open RCN002 RCN022 RCN093 RCN095 RCN135 RCN136 RCN238 RCN243 RCN264
 open MovingSourceProjectionFamily6814 MovingSourcePrimeFamily6814
 open MovingSourceProperSeedCount6814 MovingSourceReducedGamma6814
-open MovingSourceLinearFlow6814 MovingSourceReducedRoutes6814
+open MovingSourceLinearFlow6814
 
 theorem constant_parameter_seeds_le_one
     {K Ω : Type} [Field K] [Field Ω] [IsAlgClosed Ω]
@@ -37,8 +33,6 @@ theorem constant_parameter_seeds_le_one
   intro gamma hgamma eta heta
   exact (phi.comp Polynomial.C).injective ((hvalue gamma hgamma).trans (hvalue eta heta).symm)
 
-/-- A nonconstant literal projection counts components by their positive
-full field degrees. No separability hypothesis is introduced. -/
 theorem card_primes_le_direction
     {Ω : Type} [Field Ω] {A : Type} [Fintype A]
     (P : A → Ideal (MvPolynomial (Fin 3) Ω)) [∀ a,(P a).IsPrime]
@@ -103,38 +97,5 @@ variable {Gamma : Finset K} {x : I → K} {p : ℕ} {flag : FlagDegree}
 abbrev ConstantComponent (S : Stage K I Gamma x p flag errorCap stageSupport) :=
   {C : FirstTailComponent S // IsAlgebraic (GenericField K) (coordinate (GenericField K) C.1 2)}
 
-theorem constant_seed_sum_le
-    (S : Stage K I Gamma x p flag errorCap stageSupport) [Fact (Irreducible S.F)]
-    (hfirst : ¬S.G∣globalTailCut (polynomialEmbedding K) S.F (RCN326.w+1))
-    (J : WholeSpaceCube6814.Poly (K:=K)) (hroute : LinearRoute S.F J)
-    (hH : ¬S.G∣surfaceMap (polynomialEmbedding K) (linearH J))
-    (surfaceFlag : FlagDegree) (hS : PolynomialInFlag surfaceFlag S.G) :
-    (∑ C : ConstantComponent S, (stageSeeds S C.1).card)≤
-      flagMixed surfaceFlag reducedFirstFlag unitYZFlag+flagMixed surfaceFlag reducedFirstFlag unitAllFlag := by
-  have hproper := reducedTail_proper S hfirst (linearH J) (linearG J) (hroute.2.2.2.2 _).1 hH
-  have hcard := constant_prime_family_card_le (fun a : ConstantComponent S => a.1.1)
-    (fun a b h => Subtype.ext (Subtype.ext h))
-    (fun a => regularComponent_ne_point (GenericField K) S.G _ _ a.1) (fun a => a.2)
-    S.G (MovingSourceReducedCycle6814.reducedTailSurface (linearH J) (linearG J)) S.irreducible_G.ne_zero
-    (fun hz => hproper (hz ▸ dvd_zero _)) (S.irreducible_G.isRelPrime_iff_not_dvd.mpr hproper)
-    (fun a => regularComponent_G_mem (GenericField K) S.G _ _ a.1)
-    (fun a => reducedTail_mem_old_component S (linearH J) (linearG J) (hroute.2.2.2.2 _).1 a.1)
-    surfaceFlag reducedFirstFlag hS (reducedFirstFlag_of_route S.F J hroute)
-  calc
-    _≤∑ _ : ConstantComponent S, 1 := by
-      apply Finset.sum_le_sum
-      intro a _
-      exact constant_parameter_seeds_le_one (polynomialEmbedding K) S.selected _ a.1.1 a.2
-        (fun gamma hgamma => componentSeeds_on_prime (GenericField K) S.G _ _ Gamma
-          (selectedPoint (polynomialEmbedding K) S.selected) a.1 gamma hgamma)
-    _=Fintype.card (ConstantComponent S) := by simp
-    _≤_ := hcard
-
-theorem constant_checked_budget :
-    flagMixed ⟨3504,45,12⟩ reducedFirstFlag unitYZFlag+
-      flagMixed ⟨3504,45,12⟩ reducedFirstFlag unitAllFlag=33131204085 := by decide +kernel
-
-#print axioms constant_parameter_seeds_le_one
-#print axioms constant_seed_sum_le
 end
 end ProximityPrize.SubmissionLower.MovingSourceConstantSeeds6814

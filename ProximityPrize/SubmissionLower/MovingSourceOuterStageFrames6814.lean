@@ -1,8 +1,4 @@
-import ProximityPrize.SubmissionLower.MovingSourceOuterSliceLabels6814
-
-/-! Actual proper-first-tail Stages supply one common reduced geometry.
-The frame construction does not assume its bases or active-coordinate
-conditions: they come from each Stage's existing projection theorem. -/
+import ProximityPrize.SubmissionLower.MovingSourceOuterCommonFrame6814
 namespace ProximityPrize.SubmissionLower.MovingSourceOuterStageFrames6814
 noncomputable section
 set_option autoImplicit false
@@ -49,6 +45,5 @@ theorem exists_common_stage_geometry
     mu_poly := by rw [(heq j).2]; exact hmu }
   exact ⟨lam,mu,hlam,hmu,geometry,heq⟩
 
-#print axioms exists_common_stage_geometry
 end
 end ProximityPrize.SubmissionLower.MovingSourceOuterStageFrames6814

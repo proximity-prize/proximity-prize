@@ -1,6 +1,4 @@
-/- Private higher-target research: actual interpolation sources only. -/
 import ProximityPrize.SubmissionLower.SecondJetRefinements
-
 namespace ProximityPrize.SubmissionLower.MovingFiberInterpolation6811
 open SecondJetDifferentiation
 open MvPolynomial SecondJetSupport SecondJetGlobalSupport SecondJetSpecialize
@@ -45,7 +43,6 @@ theorem exists_of_dimension (m B s U L k n0 : ℕ) (hsB : 2*s ≤ B) (hkm : k < 
   dsimp [cutoff] at hb
   norm_num
   omega
-
 
 end
 end ProximityPrize.SubmissionLower.MovingFiberInterpolation6811

@@ -1,10 +1,4 @@
-/-
-UNCOMPILED. The point and isolation inputs of ActiveSliceAssembly6807 are supplied
-by the actual k=0 embedding certificate. No prescribed first-cut inequality is
-assumed. The projection is a single polynomial shared by the indexed old primes.
--/
 import ProximityPrize.SubmissionLower.ActiveSliceAssembly6807
-
 namespace ProximityPrize.SubmissionLower.ActualGenericChannel6807
 open RCN057 (WeightBound)
 open RCN086 RCN074
@@ -30,8 +24,6 @@ variable {Gamma : Finset K} {x : I → K} {p : ℕ} {flag : FlagDegree}
 local notation "Ω" => GenericField K
 local notation "w" => RCN326.w
 
-/-- Every coordinate is an actual finite separable map with the same value ell.
-Empty indexed families are allowed, and do not require an artificial basepoint. -/
 theorem first_cut_for_generic_channel
     (S : Stage K I Gamma x p flag errorCap stageSupport)
     (hproper : ¬ S.G ∣ globalTailCut (polynomialEmbedding K) S.F (w+1))
@@ -80,8 +72,7 @@ theorem first_cut_for_generic_channel
   have hsum := GenericSlicePoints6807.weighted_embedding_sum (E := E) oldPrime
     (fun a => localMultiplicity S (canonicalLocalDVRFamily S hproper) (old a))
   simpa only [oldT,embT,T,SeparableCoordinate.degree,oldPrime,hsum] using hmass
-/-- The constant branch of Coordinate has degree zero and is excluded BEFORE
-forming generic fibres. No finite extension is invented for a constant map. -/
+
 theorem first_cut_for_coordinate_channel
     (S : Stage K I Gamma x p flag errorCap stageSupport)
     (hproper : ¬ S.G ∣ globalTailCut (polynomialEmbedding K) S.F (w+1))

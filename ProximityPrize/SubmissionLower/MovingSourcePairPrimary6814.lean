@@ -1,8 +1,4 @@
 import ProximityPrize.SubmissionLower.MovingSourceThickCuts6814
-
-/-! Two source equations can be charged to primary pieces built from the
-ORIGINAL carrier, rather than asking either source to be the carrier.
-Carrier factors may vary between pieces. -/
 namespace ProximityPrize.SubmissionLower.MovingSourcePairPrimary6814
 noncomputable section
 set_option autoImplicit false
@@ -75,7 +71,5 @@ def swapCertificate {P Q : Polynomial R} {d : I → ℕ} (C : PrimaryPiecesCerti
   length_le := C.length_le
 end Certificates
 
-#print axioms sourcePairCertificate
-#print axioms thickPiece_finite
 end
 end ProximityPrize.SubmissionLower.MovingSourcePairPrimary6814

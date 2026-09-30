@@ -1,8 +1,4 @@
-import ProximityPrize.SubmissionLower.MovingSourceSameSourceCount6814
-
-/-! Low-degree coefficient identities for the remaining triple-root
-cubic/quartic band. These identities have coefficient degree two/three,
-unlike the much larger discriminant itself. -/
+import ProximityPrize.SubmissionLower.MovingSourceSameSourceBudget6814
 namespace ProximityPrize.SubmissionLower.MovingSourceTripleRootInvariants6814
 noncomputable section
 set_option autoImplicit false
@@ -90,8 +86,5 @@ theorem cubic_has_root_of_inv3
   dsimp only [inv3] at hJ
   linear_combination -hJ
 
-#print axioms triple_factor_invariants
-#print axioms quartic_has_root_of_invariants
-#print axioms cubic_has_root_of_inv3
 end
 end ProximityPrize.SubmissionLower.MovingSourceTripleRootInvariants6814

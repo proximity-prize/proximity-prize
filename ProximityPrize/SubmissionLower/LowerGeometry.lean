@@ -1,30 +1,9 @@
 import ProximityPrize.SubmissionLower.LowerFoundation
-
-/-! Compact lower-bound proof; prior work is credited in the enclosed components. -/
-
--- Mathlib's linters run interpreted after every declaration; they only warn.
 set_option linter.all false
 
 section Compact_PackedLocatorTail
-/-! Packed: amortised derivative-chain caps. -/
+
 section PackedLocator_ChainAmort
-
-/-!
-# Amortised chain caps
-
-The derivative chain over an irreducible factor `F` of `R`-degree `d` charges its
-level `j` to the coprime pair `(d_R^j F, F)`, whose LEFT `R`-degree is at most
-`d - j` (`dR_R_degree_le`); the RIGHT factor is `F` itself and does not descend.
-With a monotone level cap, `capSum cap d` is superadditive, so a family of factors
-whose `R`-degrees sum to at most `s` costs at most `capSum cap s`.
-
-Each factor also carries ONE slope-free tail, and there is one further global
-`R`-free tail.  Charging the chain at its `k = 1` maximum and the tails at their
-`k = s` maximum double-counts: with `tail <= cap 1` the augmented allowance
-`capSumT cap tail d = capSum cap d + tail` is still superadditive, so chains and
-tails together cost `capSum cap s + tail`, and the global tail brings the total to
-`capSum cap s + 2 * tail` in place of `capSum cap s + (s+1) * tail`.
--/
 
 open Finset
 
@@ -48,11 +27,8 @@ end ChainGroupMaj
 end PackedLocator_ChainAmort
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrierChainAmort : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorNestedProjection. -/
 section PackedLocator_LocatorNestedProjection
 namespace ProximityPrize.SubmissionLower.LocatorLowQuotient
 open scoped BigOperators
@@ -67,7 +43,6 @@ def nestedCoefficientBox (K:Type*) [Field K] (D w T YS S:ℕ) :
     Submodule K (MvPolynomial (Fin 4) K) :=
   MvPolynomial.restrictSupport K (nestedExponents D w T YS S)
 
-/-- The PR #437 kernel-cheap range sum. -/
 def kernelSumRange (f : ℕ → ℕ) : ℕ → ℕ := KernelEval.sumRange f
 
 theorem kernelSumRange_succ (f : ℕ → ℕ) (n : ℕ) :
@@ -171,11 +146,8 @@ end ProximityPrize.SubmissionLower.LocatorLowQuotient
 end PackedLocator_LocatorNestedProjection
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier01 : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorContact. -/
 section PackedLocator_LocatorContact
 namespace ProximityPrize.SubmissionLower.LocatorContact
 open scoped BigOperators
@@ -203,11 +175,8 @@ end ProximityPrize.SubmissionLower.LocatorContact
 end PackedLocator_LocatorContact
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier02 : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorLowQuotient. -/
 section PackedLocator_LocatorLowQuotient
 namespace ProximityPrize.SubmissionLower.LocatorLowQuotient
 open scoped BigOperators
@@ -257,11 +226,8 @@ end ProximityPrize.SubmissionLower.LocatorLowQuotient
 end PackedLocator_LocatorLowQuotient
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier03 : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorFifthPowerAvoidance. -/
 section PackedLocator_LocatorFifthPowerAvoidance
 
 namespace ProximityPrize.SubmissionLower.LocatorCoprimeQuotient
@@ -423,7 +389,7 @@ namespace ProximityPrize.SubmissionLower.LocatorFourthPowerAvoidance
 open scoped BigOperators
 open RCN081 RCN100 RCN119 RCN130 RCN156 RCN180 RCN234 RCN260
 open LocatorLowQuotient LocatorCoprimeQuotient
-open LocatorDoubleSquareAvoidance LocatorTripleCubeAvoidance
+open LocatorDoubleSquareAvoidance
 
 noncomputable section
 
@@ -456,8 +422,7 @@ namespace ProximityPrize.SubmissionLower.LocatorFifthPowerAvoidance
 open scoped BigOperators
 open RCN081 RCN100 RCN119 RCN130 RCN156 RCN180 RCN234 RCN260
 open LocatorLowQuotient LocatorCoprimeQuotient
-open LocatorDoubleSquareAvoidance LocatorTripleCubeAvoidance
-open LocatorFourthPowerAvoidance
+open LocatorDoubleSquareAvoidance
 
 noncomputable section
 
@@ -487,11 +452,8 @@ end ProximityPrize.SubmissionLower.LocatorFifthPowerAvoidance
 end PackedLocator_LocatorFifthPowerAvoidance
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier04 : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorQuotientMonotone. -/
 section PackedLocator_LocatorQuotientMonotone
 namespace ProximityPrize.SubmissionLower.LocatorLowQuotient
 open scoped BigOperators
@@ -522,29 +484,15 @@ end ProximityPrize.SubmissionLower.LocatorLowQuotient
 end PackedLocator_LocatorQuotientMonotone
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier05 : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorArbitraryPowerAvoidance. -/
 section PackedLocator_LocatorArbitraryPowerAvoidance
-
-/-!
-# Arbitrarily many successive locator quotient projections
-
-This is the recursive form of the explicitly unrolled second-through-ninth
-power-avoidance lemmas.  It deliberately concerns only the linear high-band
-selection.  Contact-order vanishing and extraction of the terminal quotient
-from an iterated derivative are independent consumers of the witness returned
-here.
--/
 
 namespace ProximityPrize.SubmissionLower.LocatorArbitraryPowerAvoidance
 
 open scoped BigOperators
 open RCN081 RCN100 RCN119 RCN130 RCN156 RCN180 RCN234 RCN260
-open LocatorLowQuotient LocatorCoprimeQuotient
-  LocatorDoubleSquareAvoidance
+open LocatorLowQuotient LocatorCoprimeQuotient LocatorDoubleSquareAvoidance
 
 noncomputable section
 
@@ -555,9 +503,6 @@ set_option maxHeartbeats 2000000
 variable {K V : Type*} [Field K]
 local instance : DecidableEq K := Classical.decEq K
 
-/-- The exact cumulative cost of `k` successive high-band projections.
-The decrement form is chosen so that removing the first projection is
-definitionally the same budget at the shifted quotient box. -/
 def powerBandBudget
     (delta dT dY dS T YS S : ℕ) : ℕ → ℕ
   | 0 => 0
@@ -566,8 +511,6 @@ def powerBandBudget
         powerBandBudget delta dT dY dS
           (T - dT) (YS - dY) (S - dS) k
 
-/-- Enlarging the current box and decreasing its per-stage losses can only
-increase the cumulative high-band budget. -/
 theorem powerBandBudget_mono
     (delta dT₁ dY₁ dS₁ T₁ Y₁ S₁ dT₂ dY₂ dS₂ T₂ Y₂ S₂ k : ℕ)
     (hT : T₁ ≤ T₂) (hY : Y₁ ≤ Y₂) (hS : S₁ ≤ S₂)
@@ -588,16 +531,6 @@ theorem powerBandBudget_mono
         · omega
         · omega
 
-/-! ## Contact-thinned band (lever S1)
-
-The band map reads coefficients at `highBandExponent w Dlow c`, `c : HighBandIndex`.  Every
-monomial of the `Dhigh` box has `w * d1 + (w-1) * d2 ≤ Dhigh - 1` and `d2 ≤ S`, hence
-`d1 + d2 ≤ (Dhigh + S - 1) / w`: index rows above that cut carry no monomial of the box, so
-the band map built on the cut index set keeps its kernel inside the `Dlow` box, and its
-rank bound is `delta * channelCount` of the cut caps.  The contact cap drops by
-`delta + wt_c F` per level, so the cut sharpens with the depth. -/
-
-/-- Largest `d 1 + d 2` a monomial of the `Dhigh` box (slope cap `S`) can have. -/
 def thinTop (w Dhigh S : ℕ) : ℕ := (Dhigh + S - 1) / w
 
 theorem thinTop_mono {w D D' S S' : ℕ} (hD : D ≤ D') (hS : S ≤ S') :
@@ -617,7 +550,6 @@ theorem ys_le_thinTop (Dhigh w T YS S : ℕ) (hw : 1 ≤ w) (d : Fin 4 →₀ �
     omega
   exact (Nat.le_div_iff_mul_le (by omega)).mpr hmul
 
-/-- `mem_low_of_highBandMap_eq_zero` for the band map built on the cut index set. -/
 theorem mem_low_of_highBandMap_cut_eq_zero
     (Dhigh Dlow w delta T YS S : ℕ) (hw : 1 ≤ w)
     (hwidth : Dhigh ≤ Dlow + delta) (P : MvPolynomial (Fin 4) K)
@@ -646,8 +578,6 @@ theorem mem_low_of_highBandMap_cut_eq_zero
     simpa only [highBandMap_apply, he, Pi.zero_apply] using hc
   exact (MvPolynomial.mem_support_iff.mp hd) hcoeff
 
-/-- The cell-side lower bound on the contact weight: the monomial attaining the
-`YS` weight has slope exponent at most `wt_S F`. -/
 theorem contact_ge_ys (w : ℕ) (hw : 1 ≤ w) (F : MvPolynomial (Fin 4) K) (hF : F ≠ 0) :
     w * wt residualYSWeights F - wt residualSWeights F ≤
       wt (contactWeights w) F := by
@@ -673,8 +603,6 @@ theorem contact_ge_ys (w : ℕ) (hw : 1 ≤ w) (F : MvPolynomial (Fin 4) K) (hF 
   rw [hys, Nat.mul_add, hwr]
   omega
 
-/-- The contact-aware budget: level `k+1` charges the cut band at contact cap `Dh` and
-recurses with the cap lowered by `delta + dc` (`dc` a lower bound on `wt_c F`). -/
 def powerBandBudgetThin
     (w Dh delta dc dT dY dS T YS S : ℕ) : ℕ → ℕ
   | 0 => 0
@@ -698,8 +626,6 @@ theorem powerBandBudgetThin_le (w delta dc dT dY dS : ℕ) :
           (channelCount_mono le_rfl (Nat.min_le_left _ _) le_rfl))
         (ih _ _ _ _)
 
-/-- Monotone: a larger cap, a smaller contact decrement, a larger box and smaller
-per-stage losses can only increase the thin budget. -/
 theorem powerBandBudgetThin_mono (w delta : ℕ) :
     ∀ (k Dh₁ dc₁ dT₁ dY₁ dS₁ T₁ Y₁ S₁ Dh₂ dc₂ dT₂ dY₂ dS₂ T₂ Y₂ S₂ : ℕ),
       Dh₁ ≤ Dh₂ → dc₂ ≤ dc₁ → T₁ ≤ T₂ → Y₁ ≤ Y₂ → S₁ ≤ S₂ →
@@ -763,25 +689,9 @@ end ProximityPrize.SubmissionLower.LocatorArbitraryPowerAvoidance
 end PackedLocator_LocatorArbitraryPowerAvoidance
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier06 : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorArbitraryPowerContact. -/
 section PackedLocator_LocatorArbitraryPowerContact
-
-/-!
-# Arbitrary-order locator contact and power extraction
-
-This module is the order-independent consumer for
-`LocatorArbitraryPowerAvoidance`.  It replaces the explicitly unrolled
-second-through-tenth derivative arguments by three reusable facts:
-
-* an `R`-derivative lowers contact order by at most one;
-* a nonzero `j`-fold `R`-derivative loses at least `j` times the `R` weight;
-* at derivative order `j`, the surviving term of `dR^[j] (F^j * Q)` is
-  `j! * Q * (dR F)^j` after specializing on `F = 0`.
--/
 
 namespace ProximityPrize.SubmissionLower.LocatorArbitraryPowerContact
 
@@ -800,7 +710,6 @@ local instance : DecidableEq K := Classical.decEq K
 
 abbrev P4 (K : Type*) [Field K] := MvPolynomial (Fin 4) K
 
-/-- The `j`-fold derivative in the received-coordinate variable. -/
 def iteratePderivR (j : ℕ) (Q : P4 K) : P4 K :=
   (fun H : P4 K => MvPolynomial.pderiv (2 : Fin 4) H)^[j] Q
 
@@ -819,8 +728,6 @@ theorem iteratePderivR_succ (j : ℕ) (Q : P4 K) :
   | succ j ih =>
       rw [iteratePderivR_succ, ih, map_zero]
 
-/-- Contact order falls by at most one at every received-coordinate
-derivative, uniformly in the number of iterations. -/
 theorem contactAtLeast_iteratePderivR
     (x u0 u1 : K) (m j : ℕ) (Q : P4 K)
     (hQ : ContactOrderBridge.ContactAtLeast K x u0 u1 m Q) :
@@ -834,7 +741,6 @@ theorem contactAtLeast_iteratePderivR
         K x u0 u1 (m - j) (iteratePderivR j Q) ih
       simpa only [Nat.sub_sub] using hnext
 
-/-- If a successor iterate is nonzero, its immediate predecessor is nonzero. -/
 theorem iteratePderivR_ne_zero_of_succ
     (Q : P4 K) (j : ℕ)
     (hne : iteratePderivR (j + 1) Q ≠ 0) :
@@ -843,9 +749,6 @@ theorem iteratePderivR_ne_zero_of_succ
   apply hne
   rw [iteratePderivR_succ, hz, map_zero]
 
-/-- A nonzero `j`-fold received-coordinate derivative pays `j` copies of
-the received-coordinate weight.  This is the generic replacement for all
-manually chained `pderiv_R_weight_add_le` calculations. -/
 theorem iteratePderivR_weight_add_le
     (weights : Fin 4 → ℕ) (Q : P4 K) (j : ℕ)
     (hne : iteratePderivR j Q ≠ 0) :
@@ -888,9 +791,6 @@ section KernelVanishing
 variable [Fintype I]
 local instance : DecidableEq I := Classical.decEq I
 
-/-- The generic contact/degree vanishing theorem at derivative order `j`.
-The capacity hypothesis is exactly the one used by each previously unrolled
-fixed-order theorem. -/
 theorem specialization_iteratePderivR_eq_zero_of_kernel_low_box
     (j D Dlow w L s m : ℕ) (nodes : I ↪ K) (u0 u1 : I → K)
     (v : ConstraintKernel (K := K) D w L s m nodes u0 u1)
@@ -981,8 +881,6 @@ theorem specialization_iteratePderivR_eq_zero_of_kernel_low_box
 
 end KernelVanishing
 
-/-- Local factorial divisibility criterion, kept here because `CH`'s
-corresponding helper is intentionally private. -/
 private theorem prime_dvd_factorial_local : ∀ {n p : ℕ},
     p.Prime → (p ∣ n.factorial ↔ p ≤ n)
   | 0, _, hp => iff_of_false hp.not_dvd_one (not_le_of_gt hp.pos)
@@ -992,7 +890,6 @@ private theorem prime_dvd_factorial_local : ∀ {n p : ℕ},
         fun h => (_root_.lt_or_eq_of_le h).elim
           (Or.inr ∘ Nat.le_of_lt_succ) fun h => Or.inl <| by rw [h]⟩
 
-/-- A prime characteristic larger than `j` does not annihilate `j!`. -/
 theorem factorial_ne_zero_of_lt_char
     (p j : ℕ) [CharP K p] (hp : p.Prime) (hj : j < p) :
     (j.factorial : K) ≠ 0 := by
@@ -1001,9 +898,6 @@ theorem factorial_ne_zero_of_lt_char
     (CharP.cast_eq_zero_iff K p j.factorial).mp hz
   exact (not_le_of_gt hj) ((prime_dvd_factorial_local hp).mp hdvd)
 
-/-- Generic extraction of the terminal quotient from a `j`th derivative.
-After specializing on `F = 0`, `RCN324.iterate_pow_mul_expansion` kills its
-error term and leaves `j! * Q * (dR F)^j`. -/
 theorem specialization_eq_zero_of_iteratePderivR_power_product
     (j : ℕ) (P : Polynomial K) (gamma : K) (F Q : P4 K)
     (hfactorial : (j.factorial : K) ≠ 0)
@@ -1059,40 +953,16 @@ end ProximityPrize.SubmissionLower.LocatorArbitraryPowerContact
 end PackedLocator_LocatorArbitraryPowerContact
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier07 : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorTwoFactorAvoidance. -/
 section PackedLocator_LocatorTwoFactorAvoidance
-
-/-!
-# A shared high-band route for two regular factors
-
-The one-factor power route pays for a high-band projection independently for
-every regular factor.  For two factors the projection can be shared.  On the
-resulting low subspace there are only four cases: neither divisibility
-condition is universal, exactly one is universal, or both are universal.  In
-the first case one vector avoids both divisors; in a one-universal case the
-other factor is finished and the universal factor continues through the
-one-factor route; in the both-universal case the product is divided out and
-the shared route continues.
-
-This file contains the linear-algebraic core.  It intentionally returns
-weight bounds rather than coefficient-box membership: those are precisely
-the data consumed by the derivative and unequal-pair arguments, and they are
-stable when the other factor is multiplied back into a recursively produced
-helper.
--/
 
 namespace ProximityPrize.SubmissionLower.LocatorTwoFactorAvoidance
 
 open scoped BigOperators
 open UniqueFactorizationMonoid
 open RCN081 RCN100 RCN119 RCN130 RCN140 RCN156 RCN180 RCN234 RCN260
-open LocatorLowQuotient LocatorCoprimeQuotient
-  LocatorDoubleSquareAvoidance LocatorArbitraryPowerAvoidance
-  LocatorArbitraryPowerContact
+open LocatorLowQuotient LocatorCoprimeQuotient LocatorDoubleSquareAvoidance LocatorArbitraryPowerAvoidance LocatorArbitraryPowerContact
 
 noncomputable section
 
@@ -1116,8 +986,6 @@ private theorem regular_mem_normalizedFactors
     (Finset.mem_filter.mp hactive).1
   exact Multiset.mem_toFinset.mp hnf
 
-/-- Distinct regular indices are represented by distinct normalized prime
-factors, hence are relatively prime. -/
 theorem regularIndex_isRelPrime_of_ne
     (H : P4 K) (F G : RCN266.RegularIndex H) (hne : F.1 ≠ G.1) :
     IsRelPrime F.1 G.1 := by
@@ -1130,8 +998,6 @@ theorem regularIndex_isRelPrime_of_ne
     (regular_mem_normalizedFactors H F) (regular_mem_normalizedFactors H G)
   exact (hFs.1.dvd_irreducible_iff_associated hGs.1).mp hd
 
-/-- Dividing an injective nested-box family by a universal divisor preserves
-injectivity and subtracts the four factor weights. -/
 theorem quotientLinear_nested_data
     [AddCommGroup V] [Module K V]
     (D w T YS S : ℕ) (q : V →ₗ[K] P4 K)
@@ -1169,7 +1035,6 @@ theorem quotientLinear_nested_data
     exact quotient_mem_nestedCoefficientBox_of_mul_eq
       (q v) F (qF v) D w T YS S hqv hF hqFv (hmem v) (hprod v)
 
-/-- Exact weighted degree of a nonzero power. -/
 theorem wt_pow_eq (weights : Fin 4 → ℕ) (F : P4 K) (hF : F ≠ 0)
     (j : ℕ) : wt weights (F ^ j) = j * wt weights F := by
   unfold wt
@@ -1187,11 +1052,8 @@ end ProximityPrize.SubmissionLower.LocatorTwoFactorAvoidance
 end PackedLocator_LocatorTwoFactorAvoidance
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier08 : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorFactorAggregate. -/
 section PackedLocator_LocatorFactorAggregate
 namespace ProximityPrize.SubmissionLower.LocatorFactorAggregate
 open scoped BigOperators
@@ -1305,24 +1167,9 @@ end ProximityPrize.SubmissionLower.LocatorFactorAggregate
 end PackedLocator_LocatorFactorAggregate
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier09 : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorHybridCost. -/
 section PackedLocator_LocatorHybridCost
-
-/-!
-# Hybrid second-surface cost
-
-The ordinary cost of a regular factor with cumulative flag `p` is the padded
-two-tail Bezout count `paddedCost 131072 131073 p`.  When the padded slope is at
-least `2` and the padded middle exceeds the padded slope by at least `2`, the
-delayed second tail can be replaced by the hybrid coordinate surface, giving
-`hybridCost p`, which is smaller by roughly a fifth on the binding cells.  All
-tail flags are monotone in the padded cumulative degrees, so the cost is
-monotone under `Below`, exactly like `paddedCost`.
--/
 
 namespace ProximityPrize.SubmissionLower.LocatorHybridCost
 
@@ -1343,8 +1190,6 @@ def movingFiber (p : FlagDegree) : FlagDegree :=
 def movingCut (p : FlagDegree) : FlagDegree :=
   rationalFlag p + ⟨0, 131072, 262144⟩
 
-/-- The hybrid branch applies when the slope is at least `2` and the middle
-exceeds the slope by at least `2`. -/
 def HybridApplies (p : FlagDegree) : Prop := 2 ≤ p.all ∧ p.all + 2 ≤ middle p
 
 instance (p : FlagDegree) : Decidable (HybridApplies p) := by
@@ -1390,27 +1235,10 @@ theorem movingCut_mono {p q : FlagDegree} (h : Below p q) :
   rw [hp.1, hp.2.1, hp.2.2, hq.1, hq.2.1, hq.2.2]
   omega
 
-/-! `ordinaryCostOf` and `OwnBound` are defined by `LocatorHybridCostSelect` (C2). -/
-
 end ProximityPrize.SubmissionLower.LocatorHybridCost
 end PackedLocator_LocatorHybridCost
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorHybridCostC1. -/
 section PackedLocator_LocatorHybridCostC1
-/-
-HYBRID SECOND-SURFACE COST — C1 VARIANT (flag level).
-
-Differences from `LocatorHybridCost`:
-  * the hybrid coordinate is the bare `rationalFlag` (the half-tail offset
-    `⟨0, 65536, 196608⟩` is gone);
-  * the moving term's outer factor is `131076 = w + 5` instead of `131072`;
-  * `HybridApplies` requires `3 ≤ p.all` (i.e. `r ≥ 3`) rather than `2 ≤ p.all`;
-  * `ordinaryCostOf` takes the MINIMUM of the hybrid and padded costs on the
-    hybrid branch, so a cell can never be made worse by the branch.
-
-`sharpTail`, `rationalFlag`, `movingFiber` and `movingCut` are reused verbatim
-from `LocatorHybridCost`, together with their cumulative and monotonicity lemmas.
--/
 
 namespace ProximityPrize.SubmissionLower.LocatorHybridCostC1
 
@@ -1420,10 +1248,8 @@ open RCN095 LocatorFactorAggregate LocatorHybridCost
 set_option maxRecDepth 4096
 set_option maxHeartbeats 400000
 
-/-- C1: the hybrid coordinate is the rational coordinate. -/
 def hybridCoordinateC1 (p : FlagDegree) : FlagDegree := rationalFlag p
 
-/-- The hybrid branch now needs slope at least `3`. -/
 def HybridAppliesC1 (p : FlagDegree) : Prop := 3 ≤ p.all ∧ p.all + 2 ≤ middle p
 
 instance (p : FlagDegree) : Decidable (HybridAppliesC1 p) := by
@@ -1457,25 +1283,7 @@ theorem hybridCoordinateC1_mono {p q : FlagDegree} (h : Below p q) :
 end ProximityPrize.SubmissionLower.LocatorHybridCostC1
 end PackedLocator_LocatorHybridCostC1
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorHybridCostC2. -/
 section PackedLocator_LocatorHybridCostC2
-/-
-HYBRID SECOND-SURFACE COST — C2 VARIANT (flag level).
-
-C2 = C1 plus the REDUCED first tail.  The first tail flag drops from
-
-  sharpTail p   = ⟨2(padT-padY)·d, 1+(2(padY-padS)-1)·d, (2padS-1)·d⟩
-to
-  reducedTail p = ⟨2(padT-padY)·d, 1+2(padY-padS)·d, 2(padS-1)·d⟩ = paddedTail p d
-
-with `d = 131072`.  The two agree on `yz + all` and on the total, and the
-reduced one is smaller by `d` in the `all` column, so it is strictly `Below` the
-sharp one and `flagMixed` drops.  Worth about 1.29% on the binding cells.
-
-Everything else is inherited from C1: the coordinate is `rationalFlag`, the
-moving factor is `131076 = w + 5`, the branch needs `3 ≤ p.all`, and
-`ordinaryCostOf` takes the minimum against the padded two-tail cost.
--/
 
 namespace ProximityPrize.SubmissionLower.LocatorHybridCostC2
 
@@ -1485,7 +1293,6 @@ open RCN095 LocatorFactorAggregate LocatorHybridCost LocatorHybridCostC1
 set_option maxRecDepth 4096
 set_option maxHeartbeats 400000
 
-/-- The reduced first tail at `d = 131072`; it is literally `paddedTail p 131072`. -/
 def reducedTail (p : FlagDegree) : FlagDegree := paddedTail p 131072
 
 theorem reducedTail_cumulative (p : FlagDegree) :
@@ -1505,12 +1312,10 @@ theorem reducedTail_mono {p q : FlagDegree} (h : Below p q) :
   rw [hp.1, hp.2.1, hp.2.2, hq.1, hq.2.1, hq.2.2]
   omega
 
-/-- The C2 hybrid cost. -/
 def hybridCostC2 (p : FlagDegree) : ℕ :=
   flagMixed p (reducedTail p) (hybridCoordinateC1 p) +
     131076 * flagMixed p (movingFiber p) (movingCut p)
 
-/-- The hybrid branch condition, unchanged from C1. -/
 def HybridAppliesC2 (p : FlagDegree) : Prop := 3 ≤ p.all ∧ p.all + 2 ≤ middle p
 
 instance (p : FlagDegree) : Decidable (HybridAppliesC2 p) := by
@@ -1529,18 +1334,7 @@ theorem hybridCostC2_mono {p q : FlagDegree} (h : Below p q) :
 end ProximityPrize.SubmissionLower.LocatorHybridCostC2
 end PackedLocator_LocatorHybridCostC2
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorHybridCostSelect. -/
 section PackedLocator_LocatorHybridCostSelect
-/-!
-# The ordinary cost of the 6800 certificate (C2 selection)
-
-`LocatorHybridCost.ordinaryCostOf` is the C2 hybrid cost on the C2 branch
-(`3 ≤ slope` and `slope + 2 ≤ middle`) and the padded two-tail cost otherwise.
-There is deliberately no `min` against the padded cost: on the narrow box
-`hybridCostC2 ≤ paddedCost 131072 131073` holds pointwise, and the `if` shape
-is what `LocatorOrdinaryZConvex` needs (affine in `z`, not merely concave).
-`OwnBound` is `OwnBoundC2`, produced by `LocatorFixedOwnBoundC2`.
--/
 
 namespace ProximityPrize.SubmissionLower.LocatorHybridCost
 
@@ -1553,42 +1347,16 @@ end ProximityPrize.SubmissionLower.LocatorHybridCost
 end PackedLocator_LocatorHybridCostSelect
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier10 : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorBatchProductRoute. -/
 section PackedLocator_LocatorBatchProductRoute
-/-!
-# Collision-free extraction from a batch of regular factors
-
-Let `A` be a finite set of distinct regular factors and let `P` be their
-product.  Suppose a shared power route has reached a quotient family `q` at
-depth `j`, so an original row has the form `P^j * q v`.  At the first stage
-where not every factor divides every value of `q`, the nonuniversal
-divisibility conditions are proper submodules.  A finite-union argument
-chooses one `v` avoiding all of them simultaneously.
-
-For `F ∈ A` put `G_F = ∏ (A.erase F)` and retain the cofactor in the
-helper:
-
-`Q_F = G_F^j * q v`.
-
-Then `P^j * q v = F^j * Q_F`.  Consequently the order-`j` derivative
-extraction makes `Q_F` vanish on every `F`-regular seed, including seeds at
-which another factor vanishes.  There is no internal-collision error term or
-collision charge.  Pairwise coprimality also gives `IsRelPrime F Q_F`, and
-the cofactor exactly restores all residual weight lost to the other factors.
--/
 
 namespace ProximityPrize.SubmissionLower.LocatorBatchProductRoute
 
 open scoped BigOperators
 open UniqueFactorizationMonoid
 open RCN081 RCN100 RCN119 RCN130 RCN140 RCN156 RCN180 RCN234 RCN260
-open LocatorLowQuotient LocatorCoprimeQuotient
-  LocatorArbitraryPowerAvoidance LocatorArbitraryPowerContact
-  LocatorTwoFactorAvoidance
+open LocatorLowQuotient LocatorCoprimeQuotient LocatorArbitraryPowerAvoidance LocatorArbitraryPowerContact LocatorTwoFactorAvoidance
 
 noncomputable section
 
@@ -1603,10 +1371,6 @@ local instance : StrongNormalizationMonoid (MvPolynomial (Fin 4) K) :=
 
 abbrev P4 (K : Type) [Field K] := MvPolynomial (Fin 4) K
 
-/-! ## Divisibility subspaces and simultaneous avoidance -/
-
-/-- The preimage under a linear polynomial family of the principal ideal
-generated by `F`. -/
 def dvdSubmodule [AddCommGroup V] [Module K V]
     (q : V →ₗ[K] P4 K) (F : P4 K) : Submodule K V where
   carrier := {v | F ∣ q v}
@@ -1640,9 +1404,6 @@ theorem dvdSubmodule_ne_top_of_not_universal
   have hv : v ∈ dvdSubmodule q F := by rw [htop]; trivial
   exact hv
 
-/-- A field with more elements than the number of nonuniversal factors
-contains one vector avoiding every corresponding divisibility subspace.
-The vector is automatically nonzero when the factor set is nonempty. -/
 theorem exists_avoiding_nonuniversal_factors
     [AddCommGroup V] [Module K V]
     {A : Type} [DecidableEq A] (s : Finset A) (hs : s.Nonempty)
@@ -1678,13 +1439,9 @@ theorem exists_avoiding_nonuniversal_factors
   intro a ha
   simpa only [bad, mem_dvdSubmodule] using havoid ⟨a, ha⟩
 
-/-! ## Products of distinct regular factors -/
-
-/-- The squarefree product represented by a finite set of regular indices. -/
 def regularProduct (H : P4 K) (A : Finset (RCN266.RegularIndex H)) : P4 K :=
   ∏ F ∈ A, F.1
 
-/-- The complementary product after removing one regular index. -/
 def regularCofactor (H : P4 K) (A : Finset (RCN266.RegularIndex H))
     (F : RCN266.RegularIndex H) : P4 K :=
   ∏ G ∈ A.erase F, G.1
@@ -1710,7 +1467,6 @@ theorem regularCofactor_ne_zero (H : P4 K)
   intro G hG
   exact regularFactor_ne_zero H G
 
-/-- Exact factor/cofactor decomposition of the batch product. -/
 theorem regularFactor_mul_cofactor
     (H : P4 K) (A : Finset (RCN266.RegularIndex H))
     (F : RCN266.RegularIndex H) (hFA : F ∈ A) :
@@ -1719,8 +1475,6 @@ theorem regularFactor_mul_cofactor
   simpa only [regularProduct, regularCofactor] using
     Finset.mul_prod_erase A (fun G => G.1) hFA
 
-/-- A regular factor is coprime to the product of all the other regular
-factors in the same finite set. -/
 theorem regularFactor_isRelPrime_cofactor
     (H : P4 K) (A : Finset (RCN266.RegularIndex H))
     (F : RCN266.RegularIndex H) (hFA : F ∈ A) :
@@ -1735,7 +1489,6 @@ theorem regularFactor_isRelPrime_cofactor
   apply hGe.1
   exact Subtype.ext heq.symm
 
-/-- Splitting a batch power around one selected factor. -/
 theorem regularProduct_power_split
     (H : P4 K) (A : Finset (RCN266.RegularIndex H))
     (F : RCN266.RegularIndex H) (hFA : F ∈ A)
@@ -1745,8 +1498,6 @@ theorem regularProduct_power_split
   rw [← regularFactor_mul_cofactor H A F hFA, mul_pow]
   ring
 
-/-- Avoiding `F` in the common residual witness makes the cofactor-retaining
-helper coprime to `F`. -/
 theorem regularFactor_isRelPrime_liftedHelper
     (H : P4 K) (A : Finset (RCN266.RegularIndex H))
     (F : RCN266.RegularIndex H) (hFA : F ∈ A)
@@ -1759,10 +1510,6 @@ theorem regularFactor_isRelPrime_liftedHelper
   exact ((regularFactor_isRelPrime_cofactor H A F hFA).pow_right)
     |>.dvd_of_dvd_mul_left hd
 
-/-! ## Exact restoration of residual weights -/
-
-/-- Multiplying the common residual witness by the complementary product
-restores precisely the weight spent on all factors other than `F`. -/
 theorem cofactor_power_mul_weight_le_sub
     (weights : Fin 4 → ℕ) (B j : ℕ) (F C J : P4 K)
     (hF : F ≠ 0) (hC : C ≠ 0) (hJ : J ≠ 0)
@@ -1793,7 +1540,6 @@ theorem cofactor_power_mul_weight_le_sub
     simpa only [Nat.add_comm] using htotal
   exact Nat.le_sub_of_add_le htotal'
 
-/-- The three residual bounds for every lifted helper. -/
 theorem liftedHelper_residual_bounds
     (H : P4 K) (A : Finset (RCN266.RegularIndex H))
     (F : RCN266.RegularIndex H) (hFA : F ∈ A)
@@ -1825,11 +1571,6 @@ theorem liftedHelper_residual_bounds
     cofactor_power_mul_weight_le_sub residualSWeights S j F.1
       (regularCofactor H A F) J hF0 hC0 hJ hSfeasible hS⟩
 
-/-! ## One common witness and all collision-free helpers -/
-
-/-! ## The current post-projection split -/
-
-/-- Factors whose divisibility subspace is the whole *current* domain. -/
 noncomputable def universalFactors
     [AddCommGroup V] [Module K V]
     (H : P4 K) (A : Finset (RCN266.RegularIndex H))
@@ -1852,8 +1593,6 @@ theorem universalFactors_subset
   intro F hF
   exact (mem_universalFactors H A q F).mp hF |>.1
 
-/-- Individual universal divisibility combines to divisibility by the entire
-squarefree regular product. -/
 theorem regularProduct_dvd_of_each
     (H : P4 K) (A : Finset (RCN266.RegularIndex H)) (Q : P4 K)
     (hdiv : ∀ F ∈ A, F.1 ∣ Q) : regularProduct H A ∣ Q := by
@@ -1882,10 +1621,6 @@ theorem regularProduct_dvd_of_each
       rw [hprod]
       exact hrel.mul_dvd hFdiv hAdiv
 
-/-- The squarefree product of any set of regular indices divides the
-ambient carrier polynomial.  This is the bridge used after a universal
-source split: the source controls the product's narrow coordinates, while
-the selected carrier still controls its total coordinate. -/
 theorem regularProduct_dvd_carrier
     (H : P4 K) (A : Finset (RCN266.RegularIndex H)) :
     regularProduct H A ∣ H := by
@@ -1893,8 +1628,6 @@ theorem regularProduct_dvd_carrier
   intro F _hFA
   exact (RCN167.positiveRFactors_spec H F.1 F.2).2.1
 
-/-- The product of the current universal subset divides every value of the
-current family. -/
 theorem universalProduct_dvd
     [AddCommGroup V] [Module K V]
     (H : P4 K) (A : Finset (RCN266.RegularIndex H))
@@ -1905,10 +1638,6 @@ theorem universalProduct_dvd
   intro F hF
   exact (mem_universalFactors H A q F).mp hF |>.2 v
 
-/-! ## Quotienting a fully universal batch -/
-
-/-- A raw constraint-kernel reconstruction lies in the nested source box as
-soon as the usual contact/slope shape inequality supplies its YS cap. -/
 theorem kernelReconstruct_mem_nested
     {I:Type} [Fintype I]
     (D w L S m YS:ℕ) (nodes u0 u1:I → K)
@@ -1927,10 +1656,6 @@ theorem kernelReconstruct_mem_nested
   refine ⟨hb.1,?_,hb.2.1,hb.2.2⟩
   simpa [residualYSWeights] using hy
 
-/-- Source-entry adapter for a universally divisible squarefree regular
-product.  This is the batch analogue of the single-factor private
-`quotient_nested` construction: it builds the injective quotient family and
-subtracts the product's four weights exactly once. -/
 theorem kernelQuotient_regularProduct_nested
     {I:Type} [Fintype I]
     (D w L S m YS:ℕ) (nodes u0 u1:I → K)
@@ -1961,13 +1686,6 @@ theorem kernelQuotient_regularProduct_nested
     simpa only [recon,kernelReconstructLinear_apply,q] using hprod v
   · exact hbox
 
-/-! ## First strict exit in a shared product-power chain -/
-
-/-- A shared band chain exits when the post-projection universal factors form
-a strict subset `U` of the current batch.  The index `j` counts additional
-whole-product quotients after the displayed input family `q`; thus a source
-which was quotiented once before calling this interface has original power
-`j+1` at the exit. -/
 def HasBatchExitStage
     [AddCommGroup V] [Module K V]
     (fuel Dlow w delta T YS S : ℕ)
@@ -1983,8 +1701,6 @@ def HasBatchExitStage
         (YS - j.val * wt residualYSWeights (regularProduct H A))
         (S - j.val * wt residualSWeights (regularProduct H A)) ∧
       ∀ F ∈ A \ U, ¬ F.1 ∣ J
-
-/-! ## Contact-thinned batch selector (lever S1) -/
 
 theorem exists_batchExitStage_of_bandBudgetThin_succ
     [AddCommGroup V] [Module K V] [FiniteDimensional K V]
@@ -2326,11 +2042,6 @@ theorem exists_batchExitStage_of_bandBudgetThin_succ
         · simpa only [Fin.val_zero, zero_mul, Nat.sub_zero] using hqOneBox v
         · exact havoid
 
-/-! ## Derivative extraction has no internal-collision locus -/
-
-/-- The retained complementary product is part of the helper passed to the
-power-extraction lemma.  Hence this conclusion holds on every regular seed,
-without assuming that the complementary product specializes nonzero. -/
 theorem specialization_eq_zero_of_batch_power
     (H : P4 K) (A : Finset (RCN266.RegularIndex H))
     (F : RCN266.RegularIndex H) (hFA : F ∈ A)
@@ -2348,9 +2059,6 @@ theorem specialization_eq_zero_of_batch_power
     j P gamma F.1 (regularCofactor H A F ^ j * J)
     hfactorial hFzero hregular hpower
 
-/-- Kernel/contact wrapper for the collision-free batch extraction.  The
-only capacity cost is the derivative order `j`; no specialization condition
-on any other regular factor appears. -/
 theorem batch_helper_zero_on_regularSeeds
     {I : Type} [Fintype I] [DecidableEq I]
     (j D Dlow w L S m agreements p : ℕ)
@@ -2397,144 +2105,20 @@ theorem batch_helper_zero_on_regularSeeds
     (factorial_ne_zero_of_lt_char p j hp hjchar)
     hFzero hregular hder
 
-/-! ## Numerical one-split interface -/
-
-/-! ## Abstract recursion by a phase potential
-
-The state type below is deliberately indexed by an arbitrary well-founded
-phase rank.  A state may therefore carry the current quotient space, its
-post-projection linear family, the product identity, and all box receipts;
-none of those data has to be compressed into a flag.  Its `factors` are
-exactly the factors universal immediately after the preceding projection.
-
-At a successor state a consumer has two choices.
-
-* Stop, by showing that the sum of ordinary per-factor caps fits the current
-  potential.
-* Produce a child state on the universal subset `U`.  All factors in `A \ U`
-  must receive helper bounds from the *current* post-projection family.  The
-  child potential plus those helper caps must fit the parent potential.
-
-The child may have `U = A`; the phase rank then records one fewer band of the
-same source.  When `U ⊂ A`, the child may instead reset to a fresh source and
-the phase rank can encode a lexicographic measure such as aggregate positive
-R-weight followed by that source's remaining bands.  At rank zero `hbase` is the
-terminal receipt (usually the fact that no nonempty universal subset fits the
-residual box, followed by one last simultaneous-avoidance split).
--/
-
-/-! ## Complete descent through one source phase
-
-The rank-indexed interface above is convenient while constructing one
-particular algebraic route.  Numerical prefix certificates use a different
-view: keep applying the same source while it routes the current aggregate,
-and stop at the first nonrouteable strict subaggregate.  The next two lemmas
-are the finite-set induction engine for that view.
-
-Crucially, a routed step must return a *strict* child.  Thus its algebraic
-implementation may restart from a fresh source on that child; no claim about
-mixed powers in the preceding source family is hidden in this bookkeeping.
--/
-
-/-- Repeatedly remove a helper-charged complement while `routeable` holds.
-At the terminal subaggregate the single shared `defect` bounds what remains
-above the additive charge. -/
-theorem sum_count_le_charge_add_defect_of_strict_routes
-    {A : Type} [DecidableEq A]
-    (count charge : A → ℕ)
-    (routeable : Finset A → Prop)
-    (ambient : Finset A) (defect : ℕ)
-    (hterminal : ∀ B, B ⊆ ambient → ¬ routeable B →
-      (∑ a ∈ B, count a) ≤ (∑ a ∈ B, charge a) + defect)
-    (hroute : ∀ B, B ⊆ ambient → routeable B →
-      ∃ U, U ⊂ B ∧
-        (∑ a ∈ B \ U, count a) ≤ (∑ a ∈ B \ U, charge a)) :
-    (∑ a ∈ ambient, count a) ≤
-      (∑ a ∈ ambient, charge a) + defect := by
-  classical
-  have aux : ∀ B : Finset A, B ⊆ ambient →
-      (∑ a ∈ B, count a) ≤ (∑ a ∈ B, charge a) + defect := by
-    intro B
-    induction B using Finset.strongInduction with
-    | H B ih =>
-        intro hB
-        by_cases hr : routeable B
-        · obtain ⟨U, hUB, hexit⟩ := hroute B hB hr
-          have hUsub : U ⊆ B := hUB.subset
-          have hUambient : U ⊆ ambient := hUsub.trans hB
-          have hUbound := ih U hUB hUambient
-          let exited := B \ U
-          have hexit' : (∑ a ∈ exited, count a) ≤
-              (∑ a ∈ exited, charge a) := by
-            simpa only [exited] using hexit
-          have hsplit : B = U ∪ exited := by
-            dsimp only [exited]
-            exact (Finset.union_sdiff_of_subset hUsub).symm
-          have hdisjoint : Disjoint U exited := by
-            apply Finset.disjoint_left.mpr
-            intro a hau had
-            change a ∈ B \ U at had
-            exact (Finset.mem_sdiff.mp had).2 hau
-          calc
-            (∑ a ∈ B, count a) =
-                (∑ a ∈ U, count a) + (∑ a ∈ exited, count a) := by
-              rw [hsplit, Finset.sum_union hdisjoint]
-            _ ≤ ((∑ a ∈ U, charge a) + defect) +
-                (∑ a ∈ exited, charge a) :=
-              Nat.add_le_add hUbound hexit'
-            _ = (∑ a ∈ B, charge a) + defect := by
-              rw [hsplit, Finset.sum_union hdisjoint]
-              omega
-        · exact hterminal B hB hr
-  exact aux ambient (fun _ ha => ha)
-
-/-- One numerical phase transition.  `previous` is the already certified
-bound before adding this source.  A nonrouteable terminal row bounds the
-previous excess over the new additive charge, while a routeable row supplies
-a strict child and helper-charged complement.  The resulting bound is the
-minimum of retaining the previous certificate and using the new phase. -/
-theorem sum_count_le_min_previous_onePhase
-    {A : Type} [DecidableEq A]
-    (count charge : A → ℕ)
-    (routeable : Finset A → Prop)
-    (previous : Finset A → ℕ)
-    (ambient : Finset A) (defect : ℕ)
-    (hprevious : ∀ B, B ⊆ ambient →
-      (∑ a ∈ B, count a) ≤ previous B)
-    (hterminal : ∀ B, B ⊆ ambient → ¬ routeable B →
-      previous B ≤ (∑ a ∈ B, charge a) + defect)
-    (hroute : ∀ B, B ⊆ ambient → routeable B →
-      ∃ U, U ⊂ B ∧
-        (∑ a ∈ B \ U, count a) ≤ (∑ a ∈ B \ U, charge a)) :
-    (∑ a ∈ ambient, count a) ≤
-      min (previous ambient) ((∑ a ∈ ambient, charge a) + defect) := by
-  classical
-  apply le_min
-  · exact hprevious ambient (fun _ ha => ha)
-  · apply sum_count_le_charge_add_defect_of_strict_routes
-      count charge routeable ambient defect
-    · intro B hB hnroute
-      exact (hprevious B hB).trans (hterminal B hB hnroute)
-    · exact hroute
-
 end
 
 end ProximityPrize.SubmissionLower.LocatorBatchProductRoute
 end PackedLocator_LocatorBatchProductRoute
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier11 : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorGenericHelperFactorSwitch. -/
 section PackedLocator_LocatorGenericHelperFactorSwitch
 
 namespace ProximityPrize.SubmissionLower.LocatorGenericHelperFactorSwitch
 
 open ProximityPrize.Benchmark
-open RCN081 RCN100 RCN101 RCN119 RCN130 RCN140 RCN156 RCN180 RCN234
-  RCN238 RCN260 RCN266 RCN319
+open RCN081 RCN100 RCN101 RCN119 RCN130 RCN140 RCN156 RCN180 RCN234 RCN238 RCN260 RCN266 RCN319
 open LocatorCoprimeQuotient LocatorLowQuotient
 
 open scoped Classical
@@ -2559,32 +2143,15 @@ end ProximityPrize.SubmissionLower.LocatorGenericHelperFactorSwitch
 end PackedLocator_LocatorGenericHelperFactorSwitch
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier12 : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorGenericPowerRoute. -/
 section PackedLocator_LocatorGenericPowerRoute
-
-/-!
-# A generic arbitrary-power locator route
-
-This file packages the three generic ingredients needed by the replacement
-grid.  A source first supplies either an immediate helper-pair bound or a
-common factor.  In the common-factor branch, arbitrary many high-band
-projections select an `F`-adic stage.  The arbitrary contact and product
-lemmas then make its terminal quotient vanish on every regular seed, and the
-same unequal-pair count charges that stage.
-
-There is no hard-coded maximum power and no source-specific arithmetic here.
--/
 
 namespace ProximityPrize.SubmissionLower.LocatorGenericPowerRoute
 
 open ProximityPrize.Benchmark
 open scoped BigOperators
-open RCN081 RCN100 RCN101 RCN119 RCN130 RCN140 RCN156 RCN180 RCN234
-  RCN238 RCN260 RCN266 RCN319
+open RCN081 RCN100 RCN101 RCN119 RCN130 RCN140 RCN156 RCN180 RCN234 RCN238 RCN260 RCN266 RCN319
 open LocatorCoprimeQuotient LocatorLowQuotient
 open LocatorArbitraryPowerAvoidance LocatorArbitraryPowerContact
 open LocatorGenericHelperFactorSwitch
@@ -2609,26 +2176,9 @@ end ProximityPrize.SubmissionLower.LocatorGenericPowerRoute
 end PackedLocator_LocatorGenericPowerRoute
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier13 : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorPhase6800Oracle. -/
 section PackedLocator_LocatorPhase6800Oracle
-
-/-!
-# Compact numerical oracle for the 6800 regular-factor phases
-
-This module contains only the small, reusable interface of the numerical
-certificate.  The generated receipt rows live in separate modules.  A raw
-state `⟨z,v,r⟩` represents cumulative degrees
-`(total, middle, slope) = (z+v+r,v+r,r)`.
-
-The four source phases are, in order, R1200, C, Split500 and Split390.  Three
-prefixes forget `z`.  The C prefix retains 304-wide buckets (offset 64) only
-on the critical rectangle `r ≤ 17, v ≤ 64`; outside that rectangle it too
-forgets `z`.  This is a sound weakening of the exact prefix recurrence.
--/
 
 namespace ProximityPrize.SubmissionLower.LocatorPhase6800Oracle
 
@@ -2640,7 +2190,6 @@ open LocatorGenericPowerRoute LocatorGenericHelperFactorSwitch
 set_option autoImplicit false
 set_option maxRecDepth 100000
 
-/-- Coefficients of an additive potential in cumulative coordinates. -/
 structure Potential where
   totalCoeff : ℕ
   middleCoeff : ℕ
@@ -2650,7 +2199,6 @@ structure Potential where
 def Potential.eval (q : Potential) (p : FlagDegree) : ℕ :=
   q.totalCoeff * total p + q.middleCoeff * middle p + q.slopeCoeff * p.all
 
-/-- The cumulative boxes used by a power source. -/
 structure SourceNumbers where
   totalCap : ℕ
   middleCap : ℕ
@@ -2679,11 +2227,6 @@ def SourceNumbers.band (s : SourceNumbers) (p : FlagDegree) : ℕ :=
     (s.totalCap - total p) (s.middleCap - middle p)
     (s.slopeCap - p.all) (s.fuel p)
 
-/-- Lever S1.  The product of the routed factors has contact weight at least
-`131071 * middle p - p.all` (`contact_ge_ys` with the exact aggregate weights), and the
-source's kernel degree satisfies `D + slopeCap ≤ 131071 * (middleCap + 1)`; so the level-1
-contact cap of the band ladder is at most `contactCap`, and it drops by `50293 + contactDec`
-per level.  `bandThin` is the ladder charged on the rows that can carry a monomial. -/
 def contactDec (p : FlagDegree) : ℕ := 131071 * middle p - p.all
 
 def SourceNumbers.contactCap (s : SourceNumbers) (p : FlagDegree) : ℕ :=
@@ -2702,7 +2245,6 @@ def SourceNumbers.Routeable (s : SourceNumbers) (p : FlagDegree) : Prop :=
 instance (s : SourceNumbers) (p : FlagDegree) : Decidable (s.Routeable p) :=
   by unfold SourceNumbers.Routeable; infer_instance
 
-/-- Raw-to-cumulative flag constructor. -/
 def rawFlag (r v z : ℕ) : FlagDegree := ⟨z, v, r⟩
 
 @[simp] theorem rawFlag_all (r v z : ℕ) : (rawFlag r v z).all = r := rfl
@@ -2729,8 +2271,6 @@ def sumFlag {ι : Type} (s : Finset ι) (p : ι → FlagDegree) : FlagDegree :=
     total (sumFlag s p) = ∑ i ∈ s, total (p i) := by
   simp only [sumFlag, total, Finset.sum_add_distrib]
 
-/-- A threshold row says at which `z` each source becomes routeable for fixed
-positive slope `r` and residual middle coordinate `v`. -/
 structure ThresholdReceipt where
   r : ℕ
   v : ℕ
@@ -2765,13 +2305,6 @@ instance (q : ThresholdReceipt) : Decidable q.Valid := by
   unfold ThresholdReceipt.Valid
   infer_instance
 
-/-! ## Compact exact base table
-
-For fixed raw `(r,v)`, the ordinary partition maximum is stored explicitly at
-`z=0,1,2`.  From `z=3` onward it is the maximum of affine carrier lines.  A
-segment stores its value at its first integer, avoiding signed intercepts.
--/
-
 structure BaseSegment where
   start : ℕ
   valueAtStart : ℕ
@@ -2801,8 +2334,6 @@ def BaseRow.evalAt (q : BaseRow) (z : ℕ) : ℕ :=
   else if z = 2 then q.z2
   else evalBaseSegments q.segments z
 
-/-- Row order used by the generated array: increasing `r`, then increasing
-`v`, over `1 ≤ r ≤ 29` and `r+v ≤ 135`. -/
 def baseRowIndex (r v : ℕ) : ℕ :=
   (r - 1) * 136 - ((r - 1) * r) / 2 + v
 
@@ -2835,24 +2366,18 @@ instance (q : BaseRow) : Decidable q.ExpectedShape := by
   unfold BaseRow.ExpectedShape
   infer_instance
 
-/-- Componentwise raw containment used by the defect-prefix recurrence. -/
 def RawBelow (q p : FlagDegree) : Prop :=
   q.all ≤ p.all ∧ q.yz ≤ p.yz ∧ q.zOnly ≤ p.zOnly
 
 def RawStrictSlopeBelow (q p : FlagDegree) : Prop :=
   RawBelow q p ∧ q.all < p.all
 
-/-! ## Generic finite-set transition consumed by the batch route -/
-
 end ProximityPrize.SubmissionLower.LocatorPhase6800Oracle
 end PackedLocator_LocatorPhase6800Oracle
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier14 : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorOrdinaryZConvex. -/
 section PackedLocator_LocatorOrdinaryZConvex
 
 namespace ProximityPrize.SubmissionLower.LocatorOrdinaryZConvex
@@ -3259,21 +2784,9 @@ end ProximityPrize.SubmissionLower.LocatorOrdinaryZConvex
 end PackedLocator_LocatorOrdinaryZConvex
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier15 : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorOrdinaryConcentration. -/
 section PackedLocator_LocatorOrdinaryConcentration
-
-/-!
-# Concentrating ordinary-factor excess total degree
-
-Discrete convexity lets all raw `z` weight in a finite nonempty family be
-moved to one carrier without decreasing the upper bound.  This reduces the
-three-coordinate ordinary partition problem to a two-coordinate zero-`z`
-knapsack plus one carrier line.
--/
 
 namespace ProximityPrize.SubmissionLower.LocatorOrdinaryConcentration
 
@@ -3286,21 +2799,9 @@ end ProximityPrize.SubmissionLower.LocatorOrdinaryConcentration
 end PackedLocator_LocatorOrdinaryConcentration
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier16 : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorPhase6800Audit. -/
 section PackedLocator_LocatorPhase6800Audit
-
-/-!
-# Soundness utilities for the compact 6800 phase receipt
-
-These lemmas are deliberately separate from the generated receipt data.  The
-first records the correlated (rather than independent-maxima) initial-A
-ledger.  The remaining lemmas justify interpreting a checked threshold row as
-an exact routeability cutoff in the raw total coordinate.
--/
 
 namespace ProximityPrize.SubmissionLower.LocatorPhase6800Audit
 
@@ -3311,7 +2812,6 @@ open LocatorPhase6800Oracle
 set_option autoImplicit false
 set_option maxRecDepth 100000
 
-/-- Taking one more high-band projection only adds a nonnegative summand. -/
 theorem powerBandBudget_le_succ
     (delta dT dY dS T YS S k : ℕ) :
     powerBandBudget delta dT dY dS T YS S k ≤
@@ -3325,7 +2825,6 @@ theorem powerBandBudget_le_succ
       exact Nat.add_le_add_left
         (ih (T := T - dT) (YS := YS - dY) (S := S - dS)) _
 
-/-- The cumulative high-band cost is monotone in the number of projections. -/
 theorem powerBandBudget_mono_fuel
     (delta dT dY dS T YS S : ℕ) {k₁ k₂ : ℕ} (hk : k₁ ≤ k₂) :
     powerBandBudget delta dT dY dS T YS S k₁ ≤
@@ -3343,27 +2842,17 @@ theorem powerBandBudget_mono_fuel
         _ = powerBandBudget delta dT dY dS T YS S (k₁ + d.succ) := by
           congr 1
 
-/-! ## Noncircular semantics of a prefix receipt -/
-
-/-! ## State-local base semantics -/
-
-/-- The zero-`z` two-coordinate table.  The zero-slope state represents the
-empty family; positive-slope states are the `z = 0` entries of the base rows. -/
 def baseZeroCap (rows : Array BaseRow) (r v : ℕ) : ℕ :=
   if r = 0 then 0 else baseTableCap rows (rawFlag r v 0)
 
-/-- Slope of the carrier's affine ordinary-cost tail, valid from `z = 3`. -/
 def candidateSlope (r v : ℕ) : ℕ :=
   LocatorOrdinaryZConvex.rawCost r v 4 -
     LocatorOrdinaryZConvex.rawCost r v 3
 
-/-- Carrier line after adding the exact zero-`z` residual-table value. -/
 def candidateLine (rows : Array BaseRow) (R V r v z : ℕ) : ℕ :=
   LocatorOrdinaryZConvex.rawCost r v 3 +
     baseZeroCap rows (R - r) (V - v) + candidateSlope r v * (z - 3)
 
-/-- Finite arithmetic checked for one aggregate row and one candidate
-carrier.  Every generated row has one or two useful affine segments. -/
 def CandidateRowCheck (rows : Array BaseRow) (R V r v : ℕ) : Prop :=
   let q := lookupBaseRow rows R V
   let zero := baseZeroCap rows (R - r) (V - v)
@@ -3406,7 +2895,6 @@ instance (rows : Array BaseRow) (R V r v : ℕ) :
               simp only [hs, ht, hu]
               infer_instance
 
-/-- One finite `R` layer of the carrier-row checker. -/
 def CandidateRCheck (rows : Array BaseRow) (R : ℕ) : Prop :=
   ∀ V ∈ List.range (136 - R),
     ∀ r ∈ List.range (R + 1), 1 ≤ r →
@@ -3417,8 +2905,6 @@ instance (rows : Array BaseRow) (R : ℕ) : Decidable (CandidateRCheck rows R) :
   unfold CandidateRCheck
   infer_instance
 
-/-- Complete finite base-table checker.  Its executable domain has only the
-2.443-million aggregate/carrier splits, not a `z` grid. -/
 def BaseCandidateChecks (rows : Array BaseRow) : Prop :=
   ∀ R ∈ List.range 30, 1 ≤ R → CandidateRCheck rows R
 
@@ -3430,32 +2916,16 @@ end ProximityPrize.SubmissionLower.LocatorPhase6800Audit
 end PackedLocator_LocatorPhase6800Audit
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier17 : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorBatchPowerRoute. -/
 section PackedLocator_LocatorBatchPowerRoute
-
-/-!
-# Counting consumer for shared regular-product power routes
-
-`LocatorBatchProductRoute` selects the first strict post-projection factor
-subset.  This file turns that algebraic stage into the helper bounds used by
-the numerical phase recursion.  Source-specific gaps and receipt arithmetic
-remain parameters here and are instantiated in the phase bridge.
--/
 
 namespace ProximityPrize.SubmissionLower.LocatorBatchPowerRoute
 
 open ProximityPrize.Benchmark
 open scoped BigOperators
-open RCN081 RCN100 RCN101 RCN119 RCN130 RCN140 RCN156 RCN180 RCN234
-  RCN238 RCN260 RCN266 RCN319
-open LocatorLowQuotient LocatorCoprimeQuotient
-  LocatorArbitraryPowerAvoidance LocatorArbitraryPowerContact
-  LocatorGenericHelperFactorSwitch LocatorGenericPowerRoute
-  LocatorBatchProductRoute
+open RCN081 RCN100 RCN101 RCN119 RCN130 RCN140 RCN156 RCN180 RCN234 RCN238 RCN260 RCN266 RCN319
+open LocatorLowQuotient LocatorCoprimeQuotient LocatorArbitraryPowerAvoidance LocatorArbitraryPowerContact LocatorGenericHelperFactorSwitch LocatorGenericPowerRoute LocatorBatchProductRoute
 
 noncomputable section
 
@@ -3471,31 +2941,15 @@ local instance : DecidableEq I := Classical.decEq I
 local instance : CharP K 2130706433 := by
   simpa [RCN223.prime] using RCN128.challenge_field_characteristic6600
 
-/-! ## Contact-thinned consumer (lever S1): the band hypothesis is the thin budget. -/
-
 end
 
 end ProximityPrize.SubmissionLower.LocatorBatchPowerRoute
 end PackedLocator_LocatorBatchPowerRoute
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier18 : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorFastKernelArithmetic. -/
 section PackedLocator_LocatorFastKernelArithmetic
-
-/-!
-# Kernel-cheap arithmetic for large locator sources
-
-The contact-rank bound is definitionally a sum of nested `Finset.range` sums.
-For the larger replacement sources, evaluating that definition directly would
-expand hundreds of millions of summands.  This file closes each rectangular
-block symbolically and leaves only one primitive recursion over the contact
-rows.  It also provides a primitive-recursive evaluator for coefficient
-counts after the weighted cutoff has removed the long zero tail.
--/
 
 namespace ProximityPrize.SubmissionLower.LocatorFastKernelArithmetic
 
@@ -3508,8 +2962,6 @@ set_option autoImplicit false
 set_option maxRecDepth 100000
 set_option maxHeartbeats 5000000
 
-/-- Number of entries in a rectangular block, weighted by the descending
-affine function `L + 1 - offset - i - j`. -/
 def rectangularCount (ni nj offset L : ℕ) : ℕ :=
   ni * nj * (L + 1 - offset) -
     (nj * (ni * (ni - 1) / 2) + ni * (nj * (nj - 1) / 2))
@@ -3617,8 +3069,6 @@ theorem contactRankBound_eq_rectangularCount (M L s h : ℕ)
   rw [blockInputCount_eq_rectangularCount M L s hbound,
     blockKernelLowerBound_eq_rectangularCount M L s h hbound]
 
-/-- The same local rank as `RCN119.localRankBound`, but every rectangular
-block is closed and the sole remaining sum uses primitive recursion. -/
 def fastLocalRankBound (m L s : ℕ) : ℕ :=
   kernelSumRange (fun r =>
     let M := min r L
@@ -3639,23 +3089,6 @@ theorem localRankBound_eq_fastLocalRankBound (m L s : ℕ)
     omega
   exact contactRankBound_eq_rectangularCount
     (min r L) L s (min (r + 1) (m - r)) hb
-
-/-! The primitive evaluator above is already much cheaper than the original
-nested `Finset` computation, but it still performs `cutoff * (s + 1)` steps.
-The inner summand is quadratic, so the following evaluator closes each row and
-performs only `cutoff` primitive steps. -/
-
-/-! ## Constant-time coefficient count in the one-residue regime
-
-For the large power sources used by the 6800 locator, write `D = q*w+r`.
-Their entire slope range satisfies `r+s <= w`.  Hence, in slope row `j`,
-the nonzero weighted columns are exactly `0,...,q-j`.  Reflecting those
-columns and summing the resulting quadratic gives a linear combination of
-`choose (q+1-j) 1`, `choose (q+1-j) 2`, and `choose (q+1-j) 3`.
-The hockey-stick identity then closes the remaining slope sum.  Numerical
-evaluation below uses descending factorials, so its cost depends only on the
-fixed indices `2,3,4`, rather than on `q` or `s`.
--/
 
 private theorem two_mul_choose_two_add (n : ℕ) :
     2 * n.choose 2 + n = n * n := by
@@ -3741,8 +3174,6 @@ private theorem oneResidueRow_algebra
   rw [hCz, ← hwz, hqz]
   linear_combination (U : ℤ) * hsqz + hcubz
 
-/-- The three binomial coefficients of one slope row after reflecting its
-weighted columns. -/
 private def oneResidueCoefficientRow (q r w L j : ℕ) : ℕ :=
   let U := L + 1 - q
   let N := q + 1 - j
@@ -3881,9 +3312,6 @@ private theorem sum_range_choose_descending (N s k : ℕ)
   have h := sum_range_choose_descending_add N s k hs
   omega
 
-/-- `Nat.choose` evaluated through a descending factorial.  In this file it
-is used only at indices at most four, so closed source receipts do not recurse
-through a thousand Pascal rows. -/
 def smallChoose (n k : ℕ) : ℕ :=
   n.descFactorial k / Nat.factorial k
 
@@ -3892,8 +3320,6 @@ private theorem choose_eq_smallChoose (n k : ℕ) :
   simpa only [smallChoose] using
     Nat.choose_eq_descFactorial_div_factorial n k
 
-/-- Constant-time coefficient count for `D=q*w+r` when the complete slope
-range remains in the first residue regime. -/
 def oneResidueCoefficientCount (q r w L s : ℕ) : ℕ :=
   let U := L + 1 - q
   let c1 := U * (r + q)
@@ -3953,8 +3379,6 @@ theorem coefficientCount_eq_oneResidueCoefficientCount
 abbrev K := IRSProfile.Field
 abbrev I := IRSProfile.Index
 
-/-- A numerical nullity receipt for any source profile gives the dimension
-needed by the arbitrary-power route, uniformly in the two received words. -/
 theorem challengeConstraintKernel_finrank_lower_bound_of_numeric
     (D L s m gap : ℕ) (u0 u1 : I → K)
     (hnumeric : gap ≤ coefficientCount D 131071 L s -
@@ -3973,569 +3397,247 @@ end ProximityPrize.SubmissionLower.LocatorFastKernelArithmetic
 end PackedLocator_LocatorFastKernelArithmetic
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier19 : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200Parameters. -/
-
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_R1200P : True := by trivial
 end ProximityPrize.SubmissionLower
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200Coefficient. -/
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_R1200C : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankA. -/
-
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_R1200RA : True := by trivial
 end ProximityPrize.SubmissionLower
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankB. -/
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_R1200RB : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankC. -/
-
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_R1200RC : True := by trivial
 end ProximityPrize.SubmissionLower
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankD. -/
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_R1200RD : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankE. -/
-
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_R1200RE : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankF. -/
-
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_R1200RF : True := by trivial
 end ProximityPrize.SubmissionLower
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankG. -/
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_R1200RG : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankH. -/
-
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_R1200RH : True := by trivial
 end ProximityPrize.SubmissionLower
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankI. -/
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_R1200RI : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankJ. -/
-
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_R1200RJ : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankK. -/
-
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_R1200RK : True := by trivial
 end ProximityPrize.SubmissionLower
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankL. -/
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_R1200RL : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankM. -/
-
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_R1200RM : True := by trivial
 end ProximityPrize.SubmissionLower
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankN. -/
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_R1200RN : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankO. -/
-
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_R1200RO : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankP. -/
-
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_R1200RP : True := by trivial
 end ProximityPrize.SubmissionLower
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankQ. -/
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_R1200RQ : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankR. -/
-
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_R1200RR : True := by trivial
 end ProximityPrize.SubmissionLower
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankS. -/
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_R1200RS : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankT. -/
-
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_R1200RT : True := by trivial
 end ProximityPrize.SubmissionLower
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankU. -/
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_R1200RU : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankV. -/
-
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_R1200RV : True := by trivial
 end ProximityPrize.SubmissionLower
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankW. -/
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_R1200RW : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankX. -/
-
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_R1200RX : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200RankY. -/
-
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_R1200RY : True := by trivial
 end ProximityPrize.SubmissionLower
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200Rank. -/
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_R1200RankAsm : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1200Source. -/
-
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_R1200S : True := by trivial
 end ProximityPrize.SubmissionLower
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1Parameters. -/
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_R1P : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1Coefficient. -/
-
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_R1C : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1RankA. -/
-
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_R1RA : True := by trivial
 end ProximityPrize.SubmissionLower
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1RankB. -/
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_R1RB : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1RankC. -/
-
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_R1RC : True := by trivial
 end ProximityPrize.SubmissionLower
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1RankD. -/
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_R1RD : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1RankE. -/
-
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_R1RE : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1RankF. -/
-
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_R1RF : True := by trivial
 end ProximityPrize.SubmissionLower
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1RankG. -/
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_R1RG : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1RankH. -/
-
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_R1RH : True := by trivial
 end ProximityPrize.SubmissionLower
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1RankI. -/
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_R1RI : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1RankJ. -/
-
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_R1RJ : True := by trivial
 end ProximityPrize.SubmissionLower
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1RankK. -/
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_R1RK : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1RankL. -/
-
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_R1RL : True := by trivial
 end ProximityPrize.SubmissionLower
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1RankM. -/
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_R1RM : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1RankN. -/
-
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_R1RN : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1RankO. -/
-
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_R1RO : True := by trivial
 end ProximityPrize.SubmissionLower
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1Rank. -/
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_R1RankAsm : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorR1Source. -/
-
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_R1S : True := by trivial
 end ProximityPrize.SubmissionLower
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorChainArithmetic. -/
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier28 : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorArithmetic. -/
-
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier29 : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorSourceCGap. -/
-
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier30 : True := by trivial
 end ProximityPrize.SubmissionLower
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit500Parameters. -/
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_Split500P : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit500Coefficient. -/
-
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_Split500C : True := by trivial
 end ProximityPrize.SubmissionLower
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit500RankA. -/
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_Split500RA : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit500RankB. -/
-
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_Split500RB : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit500RankC. -/
-
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_Split500RC : True := by trivial
 end ProximityPrize.SubmissionLower
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit500RankD. -/
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_Split500RD : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit500RankE. -/
-
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_Split500RE : True := by trivial
 end ProximityPrize.SubmissionLower
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit500RankF. -/
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_Split500RF : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit500RankG. -/
-
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_Split500RG : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit500RankH. -/
-
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_Split500RH : True := by trivial
 end ProximityPrize.SubmissionLower
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit500Rank. -/
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_Split500RankAsm : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit500Source. -/
-
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_Split500S : True := by trivial
 end ProximityPrize.SubmissionLower
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit390Parameters. -/
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_Split390P : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit390Coefficient. -/
-
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_Split390C : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit390RankA. -/
-
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_Split390RA : True := by trivial
 end ProximityPrize.SubmissionLower
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit390RankB. -/
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_Split390RB : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit390Rank. -/
-
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_Split390RankAsm : True := by trivial
 end ProximityPrize.SubmissionLower
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit390Source. -/
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_Split390S : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit1200Parameters. -/
-
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_Split1200P : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit1200Coefficient. -/
-
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_Split1200C : True := by trivial
 end ProximityPrize.SubmissionLower
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit1200RankA. -/
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_Split1200RA : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit1200RankB. -/
-
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_Split1200RB : True := by trivial
 end ProximityPrize.SubmissionLower
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit1200RankC. -/
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_Split1200RC : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit1200RankD. -/
-
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_Split1200RD : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit1200Rank. -/
-
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_Split1200RankAsm : True := by trivial
 end ProximityPrize.SubmissionLower
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorSplit1200Source. -/
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier6803_Split1200S : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorBatchPhase6800. -/
 section PackedLocator_LocatorBatchPhase6800
-
-/-!
-# Semantic batch phases for the 6800 certificate
-
-This module identifies a finset's cumulative flag with the three exact
-weights of its squarefree regular product and connects the numerical
-`SourceNumbers.Routeable` predicate to the shared batch source theorem.
--/
 
 namespace ProximityPrize.SubmissionLower.LocatorBatchPhase6800
 
 open ProximityPrize.Benchmark
 open scoped BigOperators
-open RCN071 RCN081 RCN095 RCN100 RCN101 RCN119 RCN130 RCN140 RCN156
-  RCN180 RCN234 RCN238 RCN260 RCN266
-open LocatorFactorAggregate LocatorArbitraryPowerAvoidance
-  LocatorBatchProductRoute LocatorBatchPowerRoute
-  LocatorGenericHelperFactorSwitch LocatorPhase6800Oracle
+open RCN071 RCN081 RCN095 RCN100 RCN101 RCN119 RCN130 RCN140 RCN156 RCN180 RCN234 RCN238 RCN260 RCN266
+open LocatorFactorAggregate LocatorArbitraryPowerAvoidance LocatorBatchProductRoute LocatorBatchPowerRoute LocatorGenericHelperFactorSwitch LocatorPhase6800Oracle
 
 noncomputable section
 
@@ -4550,7 +3652,6 @@ abbrev P4 := MvPolynomial (Fin 4) K
 local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq I := Classical.decEq I
 
-/-- Additive flag of a finite batch of regular factors. -/
 def regularAggregateFlag (H : P4) (A : Finset (RegularIndex H)) : FlagDegree :=
   sumFlag A (regularCumulativeFlag H)
 
@@ -4627,14 +3728,6 @@ theorem regularAggregateFlag_all_lt_of_ssubset (H : P4)
     (regularCumulativeFlag_positive H F)
     (fun _ _ _ => Nat.zero_le _)
 
-/-! ## State-local phase semantics
-
-The numerical receipt is indexed by the exact aggregate raw flag.  These
-lemmas keep that state intact while the algebraic route repeatedly replaces a
-routeable batch by a strict universal sub-batch.
--/
-
-/-- Raw-coordinate monotonicity of the aggregate flag. -/
 theorem regularAggregateFlag_raw_mono (H : P4)
     {A B : Finset (RegularIndex H)} (hAB : A ⊆ B) :
     RawBelow (regularAggregateFlag H A) (regularAggregateFlag H B) := by
@@ -4649,7 +3742,6 @@ theorem regularAggregateFlag_raw_mono (H : P4)
       ∑ F ∈ B, (regularCumulativeFlag H F).zOnly
     exact Finset.sum_le_sum_of_subset hAB
 
-/-- An additive phase potential commutes with aggregation. -/
 theorem sum_phasePotential_eval (q : Potential) (H : P4)
     (A : Finset (RegularIndex H)) :
     (∑ F ∈ A, q.eval (regularCumulativeFlag H F)) =
@@ -4663,62 +3755,31 @@ end ProximityPrize.SubmissionLower.LocatorBatchPhase6800
 end PackedLocator_LocatorBatchPhase6800
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier43 : True := by trivial
-end ProximityPrize.SubmissionLower
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorPhase6800SourceSound. -/
-
-namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier44 : True := by trivial
-end ProximityPrize.SubmissionLower
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorPhase6800Kernels. -/
-
-namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier45 : True := by trivial
-end ProximityPrize.SubmissionLower
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorFixedStage. -/
-
-namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier46 : True := by trivial
-end ProximityPrize.SubmissionLower
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorFixed. -/
-
-namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier47 : True := by trivial
 end ProximityPrize.SubmissionLower
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier48 : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorHybridCells. -/
+namespace ProximityPrize.SubmissionLower
+end ProximityPrize.SubmissionLower
+
+namespace ProximityPrize.SubmissionLower
+end ProximityPrize.SubmissionLower
+
+namespace ProximityPrize.SubmissionLower
+end ProximityPrize.SubmissionLower
+
+namespace ProximityPrize.SubmissionLower
+end ProximityPrize.SubmissionLower
+
 section PackedLocator_LocatorHybridCells
-/-
-LOCATOR HYBRID CELLS (port of ContactRouterCellCosts6750Research + the pure
-flag arithmetic of ContactHybridTailProvider6751Research §1 from pr359).
 
-Cells are parameterised by (t y r) with the atoms
-  a = cellA t y = t - y,  b = cellB y r = y - r - 1,  s = cellS r = r - 2,
-so that (for 2 ≤ r < y ≤ t) t = a+b+s+3, y = b+s+3, r = s+2 and the stage
-support is `support a b s`.  `w` is the Locator's `RCN327.w = 131071`.
--/
 namespace ProximityPrize.SubmissionLower.LocatorHybridCells
 open scoped Classical BigOperators
 open RCN095 RCN198 RCN206 RCN287 RCN327 RCN263 RCN237 RCN264 RCN275 RCN084
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 1000000
-
-/-! ### Cell atoms and flags -/
 
 def cellA (t y : Nat) : Nat := t - y
 def cellB (y r : Nat) : Nat := y - r - 1
@@ -4744,17 +3805,10 @@ def cellMovingFiber (t y r : Nat) : FlagDegree :=
 def cellMovingCut (t y r : Nat) : FlagDegree :=
   cellRational t y r + ⟨0, w + 1, 2 * (w + 1)⟩
 
-/-! ### Pure flag arithmetic (pr359 §1)
-
-All lemmas are subtraction-free: they are stated over the cell atoms
-a = cellA t y, b = cellB y r, s = cellS r. -/
-
 theorem flag_ext {f g : FlagDegree} (h1 : f.zOnly = g.zOnly)
     (h2 : f.yz = g.yz) (h3 : f.all = g.all) : f = g := by
   cases f; cases g; simp_all
 
-/-- cellMovingCut = center + (w+1) • surfaceFlag — the flag under which
-    exists_firstTail_cut_budgets bounds the movingCost sum. -/
 theorem cellMovingCut_eq_center_add (t y r : Nat) :
     cellMovingCut t y r =
       center (cellA t y) (cellB y r) (cellS r) +
@@ -4764,7 +3818,6 @@ theorem cellMovingCut_eq_center_add (t y r : Nat) :
       cellDirection, RCN206.directionFlag, RCN206.surfaceFlag,
       add_zOnly, add_yz, add_all, nsmul_zOnly, nsmul_yz, nsmul_all] <;> ring
 
-/-- weightedCost is monotone under coordinate-wise flag dominance. -/
 theorem weightedCost_mono
     {Omega : Type} [Field Omega]
     {G T H : MvPolynomial (Fin 3) Omega}
@@ -4778,16 +3831,11 @@ theorem weightedCost_mono
   simp only [PrimeFlagBudgetFamily.weightedCost]
   gcongr
 
-/-! ### Numeric gates for the cell coordinates -/
-
-/-- The rational coordinate's yz-column in closed form. -/
 theorem cellRational_yz (t y r : Nat) :
     (cellRational t y r).yz = 131074 * cellB y r + 2 := by
   simp only [cellRational, cellDirection, RCN206.directionFlag, w]
   omega
 
-/-- In the hybrid branch `r + 2 ≤ y` the atom `b = cellB y r` is positive, so any
-    error cap below 131075 passes the rational gate. -/
 theorem rationalGate_of_le (t y r errorCap : Nat) (hb : r + 2 ≤ y)
     (hcap : errorCap + 1 ≤ 131076) :
     errorCap + 1 ≤ (cellRational t y r).yz := by
@@ -4798,37 +3846,12 @@ theorem rationalGate_of_le (t y r errorCap : Nat) (hb : r + 2 ≤ y)
   have := Nat.mul_le_mul_left 131074 hB
   omega
 
-/-! ### Closed forms in the atoms (a, b, s) = (cellA t y, cellB y r, cellS r)
-
-These match the subtraction-free shapes `sharpABS / rationalABS / hybABS /
-mfibABS / mcutABS` used elsewhere in the Locator, so the hybrid bound can be
-rewritten into that form by `hybridBound_eq`. -/
-
 end
 end ProximityPrize.SubmissionLower.LocatorHybridCells
 end PackedLocator_LocatorHybridCells
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorHybridCellsC1. -/
 section PackedLocator_LocatorHybridCellsC1
-/-
-LOCATOR HYBRID CELLS — C1 VARIANT.
 
-C1 drops the half-tail offset from the hybrid coordinate:
-
-  cellHybridCoordinateC1 t y r = cellRational t y r      (was  cellRational + ⟨0, (w+1)/2, 3·((w+1)/2)⟩)
-
-which is affordable once the *flag* route is restricted to components of local
-multiplicity at least 6.  Components of multiplicity 1..5 are charged instead
-through the moving engine at cut level `w + mult`, so the moving term's outer
-factor grows from `w + 1` to `w + 5`.  The branch condition gains `3 ≤ r`
-(equivalently `1 ≤ cellS r`); at `r = 2` the padded two-tail cost is already
-cheaper than the current hybrid cost, so nothing is lost there.
-
-This file only ADDS the C1 pieces on top of `LocatorHybridCells`; every flag and
-lemma that is unchanged (cellA/cellB/cellS, cellSupport, cellSharpTail,
-cellRational, cellMovingFiber, cellMovingCut, cellMovingCut_eq_center_add,
-weightedCost_mono, the closed forms) is reused verbatim.
--/
 namespace ProximityPrize.SubmissionLower.LocatorHybridCellsC1
 open scoped Classical BigOperators
 open RCN095 RCN198 RCN206 RCN287 RCN327 RCN263 RCN237 RCN264 RCN275 RCN084
@@ -4837,21 +3860,8 @@ noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 1000000
 
-/-! ### The C1 hybrid coordinate -/
-
-/-- C1: the hybrid coordinate is the bare rational coordinate. -/
 def cellHybridCoordinateC1 (t y r : Nat) : FlagDegree := cellRational t y r
 
-/-! ### Absorption at the bare rational coordinate, threshold `6 ≤ mult`
-
-The three lemmas below replace `LocatorHybridCells.sharp_absorbs_all` /
-`sharp_absorbs_ysall` / `sharp_absorbs_total`.  The offsets `196608` and
-`262144` are gone; in exchange `2 ≤ mult` becomes `6 ≤ mult` and the branch
-positivity hypotheses `1 ≤ s`, `1 ≤ b + s`, `1 ≤ a + b + s` are required.  All
-three follow from `r + 2 ≤ y` and `3 ≤ r`. -/
-
-/-- z-cumulative absorption.
-    sharp.all = (2s+3)·(131072+delay);  rational.all = 131072·s + (2s+3). -/
 theorem sharp_absorbs_all_C1 (s delay mult : ℕ) (hs : 1 ≤ s)
     (hdm : delay ≤ mult) (hm6 : 6 ≤ mult) :
     (2 * s + 3) * (131072 + delay) ≤ mult * (131072 * s + (2 * s + 3)) := by
@@ -4866,8 +3876,6 @@ theorem sharp_absorbs_all_C1 (s delay mult : ℕ) (hs : 1 ≤ s)
     _ ≤ mult * (131072 * s) + mult * (2 * s + 3) := Nat.add_le_add_right key _
     _ = mult * (131072 * s + (2 * s + 3)) := by ring
 
-/-- yz-cumulative absorption, with `B = b + s`.
-    sharp.(yz+all) = 1 + (2B+4)·(131072+delay);  rational.(yz+all) = 131072·B + 2B + 5. -/
 theorem sharp_absorbs_ysall_C1 (B delay mult : ℕ) (hB : 1 ≤ B)
     (hdm : delay ≤ mult) (hm6 : 6 ≤ mult) :
     1 + (2 * B + 4) * (131072 + delay) ≤ mult * (131072 * B + 2 * B + 5) := by
@@ -4892,67 +3900,25 @@ theorem sharp_absorbs_ysall_C1 (B delay mult : ℕ) (hB : 1 ≤ B)
       Nat.add_le_add_right key _
     _ = mult * (131072 * B + 2 * B + 5) := by ring
 
-/-- total-cumulative absorption; the `yz` shape with `A = a + b + s`. -/
 theorem sharp_absorbs_total_C1 (A delay mult : ℕ) (hA : 1 ≤ A)
     (hdm : delay ≤ mult) (hm6 : 6 ≤ mult) :
     1 + (2 * A + 4) * (131072 + delay) ≤ mult * (131072 * A + 2 * A + 5) :=
   sharp_absorbs_ysall_C1 A delay mult hA hdm hm6
 
-/-! ### The multiplicity 1..5 route fits inside `mult` copies of the coordinate
-
-`weightedCost` is linear in the *raw* flag components, so the moving route's flag
-part must be dominated componentwise (not just cumulatively). -/
-
-/-- The single numeric gate: in the hybrid branch `r + 2 ≤ y` we have `b ≥ 1`, so
-any error cap below `131076` passes. -/
 theorem hybridC1Gate_of_le (t y r errorCap : Nat) (hb : r + 2 ≤ y)
     (hcap : errorCap + 1 ≤ 131076) :
     errorCap + 1 ≤ (cellHybridCoordinateC1 t y r).yz :=
   rationalGate_of_le t y r errorCap hb hcap
-
-/-! ### The C1 cell cost -/
 
 end
 end ProximityPrize.SubmissionLower.LocatorHybridCellsC1
 end PackedLocator_LocatorHybridCellsC1
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier49 : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorHybridTailProvider. -/
 section PackedLocator_LocatorHybridTailProvider
-/-
-LOCATOR HYBRID TAIL PROVIDER (port of ContactHybridTailProvider6751Research, pr359).
 
-Covers the `r + 2 ≤ y` ("hybrid second-surface") branch of `cellRegularCost`.
-The delayed branch keeps the Locator's reduced-tail discharge (Q2.lean) verbatim.
-
-§0 defines the *bounded* provider `HybridTailMultiplicityProvider`: it is
-pr359's refactored `DelayedTailMultiplicityProvider` (an extra
-`divisorBound` optParam and a single field `cost_sum_le : ∑ cost ≤ divisorBound`
-in place of `cost_le`/`divisor_le`), kept as a NEW structure so that the
-existing B3.lean structure and its constructors (Q2.lean, GZ.lean) stay
-untouched.  `stage_card_le_divisorBound` is the generalized
-`stage_card_le_flagMixed`.
-
-Conclusion shape of §3:
-
-  Nonempty (HybridTailMultiplicityProvider
-    (tailFlag1 := cellSharpTail t y r) (tailFlag2 := cellHybridCoordinate t y r) S
-    (flagMixed flag (cellSharpTail t y r) (cellHybridCoordinate t y r)
-      + (w + 1) * flagMixed flag (cellMovingFiber t y r) (cellMovingCut t y r)))
-
-Caller-side obligations (discharged in LocatorHybridTailRealization.lean):
-  B            : sharp unit family (activeNestedUnitFamily on T1 in the sharp
-                 flag DIRECTLY — no congruent-cut transport)
-  budget/hcost/hmovingSum : outputs of exists_firstTail_cut_budgets
-  hresultants  : sharp-family certificate (activeNestedWeightedCertificate on T1)
-  htangent     : the tangent count vs B.yzCost
-  htangentGate / hrationalGate : numeric gates errors+1 ≤ hybrid.yz / rational.yz
-                 (rational.yz = 131074·b + 2 ≥ 131076 whenever b ≥ 1, i.e. r+2 ≤ y).
--/
 namespace ProximityPrize.SubmissionLower.LocatorHybridTailProvider
 open scoped Classical BigOperators
 open RCN135 RCN136 RCN159 RCN264 RCN074 RCN086 RCN243 RCN238 RCN095 RCN237 RCN198 RCN275 RCN244 RCN327 RCN263 RCN334 RCN332 RCN336 RCN312 RCN339 RCN330 RCN174 RCN319
@@ -4962,8 +3928,6 @@ noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 100000
-
-/-! ### 0. The bounded provider (pr359's refactored DelayedTailMultiplicityProvider) -/
 
 section BoundedProvider
 variable {K0 Omega Iota : Type} [Field K0] [Field Omega] [IsAlgClosed Omega]
@@ -4996,8 +3960,6 @@ structure HybridTailMultiplicityProvider
         (selectedPoint phi S.selected) C).card ≤
           (errorCap + 1) * budgetFamily.yzCost C)
 
-/-- The generalized `stage_card_le_flagMixed`: any bounded provider bounds the
-seed count by its `divisorBound`. -/
 theorem stage_card_le_divisorBound
     (S : ResidualStage phi Gamma0 x0 pchar errorCap flag0 d support0)
     {divisorBound : ℕ}
@@ -5040,56 +4002,20 @@ variable {Gamma : Finset K} {x : I → K} {p : ℕ} {flag : FlagDegree}
 variable [CharP (GenericField K) p]
 variable {stageErrorCap : ℕ}
 
-/-! ### 1. L1 — the delayed cut lands in mult • hybrid (mult ≥ 2)
-
-Direct containment (no mod-G reduction): the (w+1+delay)-th tail cut lies in the
-sharp flag at degree w+1+delay, and the three cumulative absorptions of
-LocatorHybridCells push that into `mult • cellHybridCoordinate` whenever
-1 ≤ delay ≤ mult and 2 ≤ mult. -/
-
-/-! ### 2. L2 — the multiplicity-1 moving count
-
-For a component whose (w+2)-cut is proper, the seeds are bounded by
-wc(rational) + (w+1)·movingCost, via the filteredCut decomposition of the (w+2)
-cut and the MovingPoleBudget zero bound at C := center, k := w+1. -/
-
-/-! ### 3. The hybrid provider from a local DVR family -/
-
 end
 end ProximityPrize.SubmissionLower.LocatorHybridTailProvider
 end PackedLocator_LocatorHybridTailProvider
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier50 : True := by trivial
 end ProximityPrize.SubmissionLower
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier51 : True := by trivial
 end ProximityPrize.SubmissionLower
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorFactorReplacement. -/
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier52 : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorDerivativeChain. -/
 section PackedLocator_LocatorDerivativeChain
-
-/-!
-# Derivative chain for singular seeds
-
-For an irreducible factor `F` with positive `R`-degree, a seed at which both `F`
-and `∂_R F` specialise to zero is either a regular seed of some iterated
-`R`-derivative `∂_R^j F` (`1 ≤ j`), or a zero of the `R`-free polynomial
-`∂_R^m F` obtained when the `R`-degree is exhausted.  Regular seeds of a
-derivative are counted by the coprime pair `(∂_R^j F, F)`; the `R`-free tail is
-counted by the singular-seed bound at slope cap `1`, whose characteristic gate is
-`2 * ((D - 1) / w) * L < p`.
--/
 
 namespace ProximityPrize.SubmissionLower.LocatorDerivativeChain
 
@@ -5107,7 +4033,6 @@ local instance : DecidableEq K := Classical.decEq K
 local instance : StrongNormalizationMonoid (MvPolynomial (Fin 4) K) :=
   UniqueFactorizationMonoid.strongNormalizationMonoid
 
-/-- Iterated `R`-derivative. -/
 def dR (j : ℕ) (F : MvPolynomial (Fin 4) K) : MvPolynomial (Fin 4) K :=
   (MvPolynomial.pderiv (2 : Fin 4))^[j] F
 
@@ -5118,7 +4043,6 @@ theorem dR_succ (j : ℕ) (F : MvPolynomial (Fin 4) K) :
   unfold dR
   exact Function.iterate_succ_apply' _ _ _
 
-/-- The `R`-derivative stays inside every coefficient box. -/
 theorem pderiv_R_mem_box (Q : MvPolynomial (Fin 4) K) (D w L s : ℕ)
     (hbox : Q ∈ globalCoefficientBox K D w L s) :
     MvPolynomial.pderiv (2 : Fin 4) Q ∈ globalCoefficientBox K D w L s := by
@@ -5155,7 +4079,6 @@ theorem dR_R_degree_le (j : ℕ) (F : MvPolynomial (Fin 4) K) :
       have h := pderiv_same_degree_bound (2 : Fin 4) (dR k F) (F.degreeOf 2 - k) ih
       omega
 
-/-- A box with slope cap `s` and no `R`-dependence lies in the slope-`1` box. -/
 theorem mem_box_slope_one (Q : MvPolynomial (Fin 4) K) (D w L s : ℕ)
     (hbox : Q ∈ globalCoefficientBox K D w L s) (hR : Q.degreeOf 2 = 0) :
     Q ∈ globalCoefficientBox K D w L 1 := by
@@ -5164,7 +4087,6 @@ theorem mem_box_slope_one (Q : MvPolynomial (Fin 4) K) (D w L s : ℕ)
   have hd2 : d 2 ≤ Q.degreeOf 2 := MvPolynomial.monomial_le_degreeOf (2 : Fin 4) hd
   exact ⟨ht, by omega, hc⟩
 
-/-- Exhaustion index of the `R`-degree along the derivative chain. -/
 theorem exists_dR_R_degree_zero (F : MvPolynomial (Fin 4) K) :
     ∃ j, (dR j F).degreeOf 2 = 0 :=
   ⟨F.degreeOf 2, Nat.eq_zero_of_le_zero (by simpa using dR_R_degree_le (F.degreeOf 2) F)⟩
@@ -5206,64 +4128,6 @@ theorem dR_ne_zero (F : MvPolynomial (Fin 4) K) (hF : F ≠ 0) (p : ℕ) [CharP 
         omega
       exact R_derivative_nonzero (dR k F) p hpos hle
 
-/-- Seeds along the chain: either some derivative is regular, or every
-derivative up to the exhaustion index vanishes. -/
-theorem chain_split (F : MvPolynomial (Fin 4) K) (P : Polynomial K) (γ : K)
-    (h0 : specialization K P γ F = 0)
-    (h1 : specialization K P γ (MvPolynomial.pderiv (2 : Fin 4) F) = 0)
-    (m : ℕ) (hm : 1 ≤ m) :
-    (∃ j, 1 ≤ j ∧ j < m ∧ RegularSolution (dR j F) P γ) ∨
-      (∀ i ≤ m, specialization K P γ (dR i F) = 0) := by
-  induction m with
-  | zero => omega
-  | succ k ih =>
-      by_cases hk : k = 0
-      · subst hk
-        right
-        intro i hi
-        interval_cases i
-        · simpa using h0
-        · rw [dR_succ]; simpa using h1
-      · have hk1 : 1 ≤ k := Nat.pos_of_ne_zero hk
-        rcases ih hk1 with ⟨j, hj1, hjk, hreg⟩ | hall
-        · exact Or.inl ⟨j, hj1, by omega, hreg⟩
-        · by_cases hnext : specialization K P γ (dR (k + 1) F) = 0
-          · right
-            intro i hi
-            rcases Nat.lt_or_ge i (k + 1) with hlt | hge
-            · exact hall i (by omega)
-            · have : i = k + 1 := by omega
-              subst this
-              exact hnext
-          · left
-            refine ⟨k, hk1, by omega, hall k le_rfl, ?_⟩
-            rw [← dR_succ]
-            exact hnext
-
-/-- A regular seed of `G` is a regular seed of one of its irreducible factors
-of positive `R`-degree. -/
-theorem exists_regular_positive_factor (G : MvPolynomial (Fin 4) K) (hG : G ≠ 0)
-    (P : Polynomial K) (γ : K) (hreg : RegularSolution G P γ) :
-    ∃ F' ∈ positiveRFactors G, RegularSolution F' P γ := by
-  classical
-  let ψ : MvPolynomial (Fin 4) K →+* Polynomial K := (specialization K P γ).toRingHom
-  obtain ⟨F', hmem, hzero⟩ := exists_normalized_factor_of_map_zero ψ G hG hreg.1
-  have hdiv : F' ∣ G := UniqueFactorizationMonoid.dvd_of_mem_normalizedFactors hmem
-  have hregF' : ψ (MvPolynomial.pderiv (2 : Fin 4) F') ≠ 0 :=
-    factor_derivative_regular_at_zero ψ G F' hdiv hzero hreg.2
-  have hpos : 0 < F'.degreeOf 2 := by
-    apply Nat.pos_of_ne_zero
-    intro hzeroDeg
-    apply hregF'
-    rw [pderiv_zero_of_degree_zero (2 : Fin 4) F' hzeroDeg, map_zero]
-  have hactive : F' ∈ activeFactors G := by
-    unfold activeFactors
-    exact Finset.mem_filter.mpr ⟨Multiset.mem_toFinset.mpr hmem, by omega⟩
-  refine ⟨F', ?_, hzero, hregF'⟩
-  unfold positiveRFactors
-  exact Finset.mem_filter.mpr ⟨hactive, hpos⟩
-
-/-- Every seed of `Q` is a seed of an active irreducible factor of `Q`. -/
 theorem exists_active_factor_of_solution (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
     (P : Polynomial K) (γ : K) (hsol : specialization K P γ Q = 0) :
     ∃ F ∈ activeFactors Q, specialization K P γ F = 0 := by
@@ -5287,28 +4151,15 @@ theorem irreducible_not_dvd_dR (F : MvPolynomial (Fin 4) K) (hF : Irreducible F)
   have hdeg := dR_R_degree_le j F
   omega
 
-theorem isRelPrime_dR (F : MvPolynomial (Fin 4) K) (hF : Irreducible F)
-    (p : ℕ) [CharP K p] (hpos : 0 < F.degreeOf 2) (hsmall : F.degreeOf 2 < p)
-    (j : ℕ) (hj1 : 1 ≤ j) (hj : j ≤ chainLength F) : IsRelPrime (dR j F) F :=
-  (hF.isRelPrime_iff_not_dvd.mpr (irreducible_not_dvd_dR F hF p hpos hsmall j hj1 hj)).symm
-
 section Counting
 
 variable {Iota : Type}
 local instance : DecidableEq Iota := Classical.decEq Iota
 
-/-- Seeds that are regular for `dR j F` and at which `F` vanishes. -/
-def chainSeeds (F : MvPolynomial (Fin 4) K) (j : ℕ)
-    (selected : K → Polynomial K) (Gamma : Finset K) : Finset K :=
-  Gamma.filter fun γ => RegularSolution (dR j F) (selected γ) γ ∧
-    specialization K (selected γ) γ F = 0
-
-/-- Seeds of the `R`-free tail of the chain of `F`. -/
 def tailSeeds (F : MvPolynomial (Fin 4) K)
     (selected : K → Polynomial K) (Gamma : Finset K) : Finset K :=
   Gamma.filter fun γ => specialization K (selected γ) γ (dR (chainLength F) F) = 0
 
-/-- Product of the `R`-free active factors of `Q`. -/
 def rfreeProduct (Q : MvPolynomial (Fin 4) K) : MvPolynomial (Fin 4) K :=
   ∏ F ∈ (activeFactors Q).filter (fun F => F.degreeOf 2 = 0), F
 
@@ -5346,74 +4197,6 @@ theorem rfreeProduct_R_degree (Q : MvPolynomial (Fin 4) K) :
   intro F hF
   exact (Finset.mem_filter.mp hF).2
 
-/-- Every seed of `Q` lies in the regular pair seeds, the chain seeds, the tail
-seeds or the `R`-free seeds. -/
-theorem cover (Q T : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
-    (p : ℕ) [CharP K p] (s : ℕ) (hsmall : s < p)
-    (hR : ∀ F ∈ positiveRFactors Q, F.degreeOf 2 ≤ s)
-    (selected : K → Polynomial K) (Gamma : Finset K)
-    (hQsolution : ∀ γ ∈ Gamma, specialization K (selected γ) γ Q = 0)
-    (hTsolution : ∀ γ ∈ Gamma, specialization K (selected γ) γ T = 0) :
-    Gamma ⊆
-      (Finset.univ.biUnion fun F : RegularIndex Q =>
-          regularPairSeeds Q T selected Gamma F) ∪
-        ((positiveRFactors Q).biUnion fun F =>
-          (Finset.Ico 1 (chainLength F)).biUnion fun j => chainSeeds F j selected Gamma) ∪
-        ((positiveRFactors Q).biUnion fun F => tailSeeds F selected Gamma) ∪
-        rfreeSeeds Q selected Gamma := by
-  classical
-  intro γ hγ
-  obtain ⟨F, hFactive, hFzero⟩ :=
-    exists_active_factor_of_solution Q hQ (selected γ) γ (hQsolution γ hγ)
-  by_cases hRfree : F.degreeOf 2 = 0
-  · apply Finset.mem_union_right
-    apply Finset.mem_filter.mpr ⟨hγ, ?_⟩
-    have hdiv : F ∣ rfreeProduct Q := by
-      unfold rfreeProduct
-      exact Finset.dvd_prod_of_mem _ (Finset.mem_filter.mpr ⟨hFactive, hRfree⟩)
-    obtain ⟨c, hc⟩ := hdiv
-    rw [hc, map_mul, hFzero, zero_mul]
-  · have hpos : 0 < F.degreeOf 2 := Nat.pos_of_ne_zero hRfree
-    have hFpos : F ∈ positiveRFactors Q := by
-      unfold positiveRFactors
-      exact Finset.mem_filter.mpr ⟨hFactive, hpos⟩
-    by_cases hreg : specialization K (selected γ) γ (MvPolynomial.pderiv (2 : Fin 4) F) = 0
-    · have hm := chainLength_pos F hpos
-      rcases chain_split F (selected γ) γ hFzero hreg (chainLength F) hm with
-        ⟨j, hj1, hjm, hjreg⟩ | hall
-      · apply Finset.mem_union_left
-        apply Finset.mem_union_left
-        apply Finset.mem_union_right
-        apply Finset.mem_biUnion.mpr ⟨F, hFpos, ?_⟩
-        apply Finset.mem_biUnion.mpr ⟨j, Finset.mem_Ico.mpr ⟨hj1, hjm⟩, ?_⟩
-        exact Finset.mem_filter.mpr ⟨hγ, hjreg, hFzero⟩
-      · apply Finset.mem_union_left
-        apply Finset.mem_union_right
-        apply Finset.mem_biUnion.mpr ⟨F, hFpos, ?_⟩
-        exact Finset.mem_filter.mpr ⟨hγ, hall (chainLength F) le_rfl⟩
-    · apply Finset.mem_union_left
-      apply Finset.mem_union_left
-      apply Finset.mem_union_left
-      apply Finset.mem_biUnion.mpr ⟨⟨F, hFpos⟩, Finset.mem_univ _, ?_⟩
-      exact Finset.mem_filter.mpr ⟨hγ, ⟨hFzero, hreg⟩, hTsolution γ hγ⟩
-
-/-- The chain seeds at stage `j` are covered by the regular pair seeds of
-`(dR j F, F)`. -/
-theorem chainSeeds_subset_regularPairSeeds (F : MvPolynomial (Fin 4) K) (j : ℕ)
-    (hne : dR j F ≠ 0) (selected : K → Polynomial K) (Gamma : Finset K) :
-    chainSeeds F j selected Gamma ⊆
-      Finset.univ.biUnion fun F' : RegularIndex (dR j F) =>
-        regularPairSeeds (dR j F) F selected Gamma F' := by
-  classical
-  intro γ hγ
-  obtain ⟨hγΓ, hreg, hFzero⟩ := Finset.mem_filter.mp hγ
-  obtain ⟨F', hF'mem, hF'reg⟩ :=
-    exists_regular_positive_factor (dR j F) hne (selected γ) γ hreg
-  apply Finset.mem_biUnion.mpr ⟨⟨F', hF'mem⟩, Finset.mem_univ _, ?_⟩
-  exact Finset.mem_filter.mpr ⟨hγΓ, hF'reg, hFzero⟩
-
-/-- Seeds of a nonzero `R`-free polynomial in the slope-`1` box are bounded by
-the singular-seed count of the slope-`1` Tight parameters. -/
 theorem rfree_seed_count_le
     (S : TightParameters) (J : MvPolynomial (Fin 4) K) (hJ : J ≠ 0)
     (p : ℕ) [CharP K p]
@@ -5469,34 +4252,14 @@ end ProximityPrize.SubmissionLower.LocatorDerivativeChain
 end PackedLocator_LocatorDerivativeChain
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier53 : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorFixedChain. -/
 section PackedLocator_LocatorFixedChain
-/-!
-# Derivative chain on the fixed stage
-
-`LocatorDerivativeChain.residual_chain_count_le` counts the seeds of a
-polynomial `Q` by its regular seeds (through a coprime partner `T`), the
-derivative-chain pairs `(∂_R^j F, F)` of its positive-slope factors, and the
-R-free tails.  On the fixed stage the regular seeds of the common divisor `H`
-are already charged by the phase certificate through
-`LocatorFixedConsumer.initial_A_regularSeeds_sum_le`, so this file restates that
-lemma with `T := Q` and the regular block replaced by a hypothesis: no second
-polynomial of the selected pair is needed.  The chain pairs are coprime by the
-R-degree drop (`isRelPrime_dR`) and, as in `chainSeeds_card_le`, the
-differentiated left factor only needs slope `s - 1`; the tails use
-`card_le_regular_sum_add_singular J J`.  The only new mathematics is the
-inclusion `regularPairSeeds Q Q ⊆ regularSeeds Q`.
--/
 
 namespace ProximityPrize.SubmissionLower.LocatorFixedChain
 
 open scoped Classical BigOperators
-open RCN174 RCN319 RCN081 RCN082 RCN167 RCN286 RCN052 RCN260 RCN318 RCN267 RCN313 RCN135
-  RCN138 RCN136 RCN238 RCN293 RCN231 RCN243 RCN140 LocatorDerivativeChain
+open RCN174 RCN319 RCN081 RCN082 RCN167 RCN286 RCN052 RCN260 RCN318 RCN267 RCN313 RCN135 RCN138 RCN136 RCN238 RCN293 RCN231 RCN243 RCN140 LocatorDerivativeChain
 
 noncomputable section
 
@@ -5511,8 +4274,6 @@ local instance : StrongNormalizationMonoid (MvPolynomial (Fin 4) K) :=
 variable {Iota : Type}
 local instance : DecidableEq Iota := Classical.decEq Iota
 
-/-- With `T := Q`, the regular pair seeds of `(Q, Q)` are the regular seeds of the
-factors of `Q` (RCN140.regularSeeds, the set the grid bounds by `bound`). -/
 theorem regularPairSeeds_self_subset (Q : MvPolynomial (Fin 4) K)
     (selected : K → Polynomial K) (Gamma : Finset K) (F : RegularIndex Q) :
     regularPairSeeds Q Q selected Gamma F ⊆ regularSeeds Q selected Gamma F := by
@@ -5526,30 +4287,10 @@ end ProximityPrize.SubmissionLower.LocatorFixedChain
 end PackedLocator_LocatorFixedChain
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier54 : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorFixedConsumer. -/
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorHybridTailProviderC1. -/
 section PackedLocator_LocatorHybridTailProviderC1
-/-
-LOCATOR HYBRID TAIL PROVIDER — C1 VARIANT.
 
-Same architecture as `LocatorHybridTailProvider`, with the C1 trade:
-
-  * the FLAG route (charge `mult · weightedCost hybrid`) is restricted to
-    components of local multiplicity at least 6, which lets the coordinate drop
-    from `cellRational + ⟨0,(w+1)/2,3·((w+1)/2)⟩` all the way to `cellRational`;
-  * components of multiplicity 1..5 go through the MOVING engine at cut level
-    `w + mult` (the dichotomy's `delay` satisfies `delay ≤ mult`), charging
-    `weightedCost (cellRationalAt (w + mult)) + (w + mult) · movingCost`;
-  * the moving term's outer factor therefore becomes `w + 5` instead of `w + 1`.
-
-The structure `HybridTailMultiplicityProvider` and `stage_card_le_divisorBound`
-are reused unchanged from `LocatorHybridTailProvider`.
--/
 namespace ProximityPrize.SubmissionLower.LocatorHybridTailProviderC1
 open scoped Classical BigOperators
 open RCN135 RCN136 RCN159 RCN264 RCN074 RCN086 RCN243 RCN238 RCN095 RCN237 RCN198 RCN275 RCN244 RCN327 RCN263 RCN334 RCN332 RCN336 RCN312 RCN339 RCN330 RCN174 RCN319
@@ -5567,9 +4308,6 @@ variable {Gamma : Finset K} {x : I → K} {p : ℕ} {flag : FlagDegree}
 variable [CharP (GenericField K) p]
 variable {stageErrorCap : ℕ}
 
-/-! ### 0. Arithmetic helpers -/
-
-/-- `sharp_absorbs_total_C1` in the `(a, b + s)` shape used by the containment proof. -/
 theorem sharp_absorbs_total_abs (a B delay mult : ℕ) (hA : 1 ≤ a + B)
     (hdm : delay ≤ mult) (hm6 : 6 ≤ mult) :
     1 + (2 * a + 2 * B + 4) * (131072 + delay) ≤
@@ -5580,8 +4318,6 @@ theorem sharp_absorbs_total_abs (a B delay mult : ℕ) (hA : 1 ≤ a + B)
       131074 * a + 131072 * B + 2 * B + 5 := by ring
   rw [e1, e2] at h
   exact h
-
-/-! ### 1. L1 (C1) — the delayed cut lands in `mult • cellRational` for `mult ≥ 6` -/
 
 theorem laterTail_in_hybridFlagC1
     (t y r : Nat) (hr3 : 3 ≤ r) (_hry : r < y)
@@ -5671,41 +4407,11 @@ theorem laterTail_in_hybridFlagC1
       sharp_absorbs_total_abs (cellA t y) (cellB y r + cellS r) delay mult
         hA1 hdm hm6)
 
-/-! ### 2. L2 (C1) — the moving count at an arbitrary delay -/
-
-/-! ### 3. The C1 provider from a local DVR family -/
-
 end
 end ProximityPrize.SubmissionLower.LocatorHybridTailProviderC1
 end PackedLocator_LocatorHybridTailProviderC1
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorHybridTransportC2. -/
 section PackedLocator_LocatorHybridTransportC2
-/-
-C2 FOUNDATION: transporting the unit family across a congruent cut, and the
-moving-budget existence at an ARBITRARY first-tail flag.
-
-C2 replaces the sharp first tail `sharpResidualAgreementFlag (support a b s) (w+1)`
-by the reduced one `reducedResidualAgreementFlag (support a b s) (w+1)`, which is
-strictly `Below` it (same `yz + all` and total, `all` smaller by `w + 1`).  The
-reduced geometry lives over the components of `reducedFirstCut`, so it has to be
-transported to the components of `globalTailCut (w+1)`.
-
-`PrimeFlagBudgetFamily.ofCongruentCut` (B1.lean:108) already transports the
-budget family, and `RCN335` uses it for the certificate.  What is missing for the
-hybrid moving route is the transport of the whole `AdaptiveUnitProjectionFamily`,
-because `exists_moving_pole_budget_family` needs the projections themselves in
-order to produce a `MovingPoleBudget` whose costs agree with the family's.
-
-§1 supplies that transport.  Every field of `AdaptiveUnitProjectionFamily`
-mentions the component only through `C.1`, and `regularComponentEquiv h C` has
-`.1 = C.1` definitionally, so the transport is a precomposition.
-
-§2 generalises `RCN085.exists_firstTail_cut_budgets` (J3.lean:13) in the
-first-tail flag.  J3 hard-codes the sharp flag purely to state the three
-`z / yz / all` sum bounds through `mixed_sharp_le_padded`; the hybrid route uses
-only the cost equalities and the moving sum, both of which are flag-agnostic.
--/
 
 namespace ProximityPrize.SubmissionLower.LocatorHybridTransportC2
 open scoped Classical BigOperators
@@ -5717,16 +4423,10 @@ set_option maxHeartbeats 4000000
 set_option maxRecDepth 50000
 set_option synthInstance.maxHeartbeats 300000
 
-/-! ### 1. Transport of a unit family across a congruent cut -/
-
 section Transport
 variable {Omega : Type} [Field Omega] [IsAlgClosed Omega]
   {G T T' H : MvPolynomial (Fin 3) Omega}
 
-/-- An `AdaptiveUnitProjectionFamily` over the components of `T'` transports to
-the components of `T` whenever `G ∣ T - T'`, for any choice of `base`.  All the
-structure's fields see the component only through `C.1`, and the equivalence
-preserves `C.1` definitionally. -/
 def unitFamilyOfCongruentCut (h : G ∣ T - T')
     {base' : ∀ C : RegularComponent Omega G T' H, SeparableLiteralCoordinate C.1}
     {p q : FlagDegree}
@@ -5751,8 +4451,6 @@ def unitFamilyOfCongruentCut (h : G ∣ T - T')
     refine Eq.trans_le ?_ U.sum_allDegree_le
     exact Fintype.sum_equiv (regularComponentEquiv h) _ _ (fun _ => rfl)
 
-/-- The transported unit family carries exactly the costs of the transported
-budget family, so the hybrid provider can use the two interchangeably. -/
 theorem unitFamilyOfCongruentCut_costs (h : G ∣ T - T')
     {base' : ∀ C : RegularComponent Omega G T' H, SeparableLiteralCoordinate C.1}
     {p q : FlagDegree}
@@ -5772,17 +4470,11 @@ theorem unitFamilyOfCongruentCut_costs (h : G ∣ T - T')
 
 end Transport
 
-/-! ### 2. Moving budgets at an arbitrary first-tail flag -/
-
 section Budgets
 variable {K Ω E : Type} [Field K] [Field Ω] [IsAlgClosed Ω]
   [Field E] [IsAlgClosed E] [Algebra Ω E] [Algebra (RatFunc Ω) E]
   [IsScalarTower Ω (RatFunc Ω) E]
 
-/-- `RCN085.exists_firstTail_cut_budgets` with the first-tail flag left free.
-Only the cost equalities and the moving sum are produced; the three `z / yz /
-all` sum bounds of J3 are exactly the parts that needed the sharp flag, and the
-hybrid route never uses them. -/
 theorem exists_firstTail_moving_budgets
     (φ : Polynomial K →+* Ω) (F : MvPolynomial (Fin 4) K)
     (G T : MvPolynomial (Fin 3) Ω) (a b s w : ℕ) (hw : 1 ≤ w)
@@ -5833,24 +4525,8 @@ end
 end ProximityPrize.SubmissionLower.LocatorHybridTransportC2
 end PackedLocator_LocatorHybridTransportC2
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorHybridTailProviderC2. -/
 section PackedLocator_LocatorHybridTailProviderC2
-/-
-LOCATOR HYBRID TAIL PROVIDER — C2 (first-tail flag left free).
 
-C1's provider proof never touches the sharp flag except through the type of its
-budget family, so this file re-states it with the first-tail flag `tail1` as a
-parameter.  Instantiating `tail1 := cellSharpTail t y r` recovers C1 exactly;
-instantiating `tail1 := cellFirstTail t y r` (the REDUCED agreement flag, which
-is strictly `Below` the sharp one) is the C2 tightening, worth about 1.29% on
-the binding cells.
-
-The C2 instantiation needs the reduced geometry transported to the components of
-`globalTailCut (w+1)`; `LocatorHybridTransportC2` supplies the missing piece
-(the unit-family transport and the moving budgets at a free first-tail flag),
-while `RCN332` already supplies `reducedBudgetFamily`, `reducedBaseOrd` and
-`transportedWeightedResultantsGeneral`.
--/
 namespace ProximityPrize.SubmissionLower.LocatorHybridTailProviderC2
 open scoped Classical BigOperators
 open RCN135 RCN136 RCN159 RCN264 RCN074 RCN086 RCN243 RCN238 RCN095 RCN237 RCN198 RCN275 RCN244 RCN327 RCN263 RCN334 RCN332 RCN336 RCN312 RCN339 RCN330 RCN174 RCN319
@@ -5873,34 +4549,15 @@ end
 end ProximityPrize.SubmissionLower.LocatorHybridTailProviderC2
 end PackedLocator_LocatorHybridTailProviderC2
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorHybridTailRealizationC2. -/
 section PackedLocator_LocatorHybridTailRealizationC2
-/-
-LOCATOR HYBRID TAIL REALIZATION — C2 VARIANT.
 
-C2 runs the hybrid provider on the REDUCED first tail
-`cellFirstTail t y r = reducedResidualAgreementFlag (cellSupport t y r) (w+1)`
-instead of the sharp one.  Three pieces come from `RCN332` unchanged:
-
-  reducedBudgetFamily                  the budget family over the T1-components
-  reducedBaseOrd                       the separable base, transported
-  transportedWeightedResultantsGeneral the certificate at the reduced flag
-
-and the missing fourth — a `MovingPoleBudget` whose costs agree with that budget
-family — is built here from `LocatorHybridTransportC2`: the reduced unit family
-is transported to the T1-components, and `exists_firstTail_moving_budgets`
-consumes it at the reduced first-tail flag.
-
-The provider itself is `exists_hybridTailMultiplicityProviderGen_of_localDVR`,
-the C1 proof with the first-tail flag left free.
--/
 namespace ProximityPrize.SubmissionLower.LocatorHybridTailRealizationC2
 open scoped Classical BigOperators
 open RCN135 RCN136 RCN159 RCN264 RCN074 RCN086 RCN243 RCN238 RCN095 RCN237 RCN198 RCN275 RCN244 RCN327 RCN263 RCN334 RCN332 RCN336 RCN312 RCN339 RCN330 RCN174 RCN319
 open RCN206 RCN287 RCN066 RCN338 RCN199 RCN207 RCN271 RCN313 RCN234 RCN156 RCN341 RCN085
 open RCN331 RCN027 RCN030 RCN029 RCN037 RCN038 RCN042 RCN002 RCN344 RCN277 RCN003 RCN314 RCN315 RCN093 RCN046 RCN001
 open LocatorHybridCells LocatorHybridCellsC1 LocatorHybridTailProvider
-open LocatorHybridTailProviderC1 LocatorHybridTailProviderC2 LocatorHybridTransportC2
+open LocatorHybridTailProviderC1 LocatorHybridTransportC2
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 8000000
@@ -5918,77 +4575,36 @@ end
 end ProximityPrize.SubmissionLower.LocatorHybridTailRealizationC2
 end PackedLocator_LocatorHybridTailRealizationC2
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorHybridIdentityC2. -/
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorHybridGatesC2. -/
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorFixedHybridC2. -/
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorHybridRealizeC2. -/
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorFixedOwnBoundC2. -/
-
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier55 : True := by trivial
 end ProximityPrize.SubmissionLower
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier56 : True := by trivial
 end ProximityPrize.SubmissionLower
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier57 : True := by trivial
 end ProximityPrize.SubmissionLower
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier58 : True := by trivial
 end ProximityPrize.SubmissionLower
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier59 : True := by trivial
 end ProximityPrize.SubmissionLower
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorSourceArithmetic. -/
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier60 : True := by trivial
 end ProximityPrize.SubmissionLower
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorSingletonSource. -/
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier61 : True := by trivial
 end ProximityPrize.SubmissionLower
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorSelection. -/
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier62 : True := by trivial
 end ProximityPrize.SubmissionLower
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorCaps. -/
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier63 : True := by trivial
 end ProximityPrize.SubmissionLower
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorSelectedCaps. -/
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier64 : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.LocatorCover. -/
 section PackedLocator_LocatorCover
 namespace ProximityPrize.SubmissionLower.LocatorCover
 open RCN259
@@ -6034,53 +4650,25 @@ end ProximityPrize.SubmissionLower.LocatorCover
 end PackedLocator_LocatorCover
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier65 : True := by trivial
 end ProximityPrize.SubmissionLower
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorFixedBridge. -/
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier66 : True := by trivial
 end ProximityPrize.SubmissionLower
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorPhase6800Bridge. -/
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier67 : True := by trivial
 end ProximityPrize.SubmissionLower
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorPhase6800Composition. -/
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier68 : True := by trivial
 end ProximityPrize.SubmissionLower
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorPhase6800ReceiptCellCore. -/
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier69 : True := by trivial
 end ProximityPrize.SubmissionLower
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorPhase6800ReceiptRowData01. -/
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier70 : True := by trivial
 end ProximityPrize.SubmissionLower
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorPhase6800ReceiptRowData02. -/
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLocatorBarrier71 : True := by trivial
 end ProximityPrize.SubmissionLower
-
-/-! Packed from ProximityPrize.SubmissionLower.LocatorPhase6800ReceiptRowData03. -/
 
 end Compact_PackedLocatorTail
 
@@ -6165,61 +4753,19 @@ open RCN260
 set_option autoImplicit false
 set_option maxHeartbeats 1000000
 
-/-- A linear allowance for a carrier confined to a fixed degree box. -/
-theorem leftRegularCountCap_le_linear (P : UnequalParameters)
-    (ay ar az qT qM qR : ℕ) (hgap : 0 < P.gap)
-    (hy : P.leftAgreement.y ≤ ay) (hr : P.leftAgreement.r ≤ ar)
-    (hz : P.leftAgreement.z ≤ az)
-    (hT : (P.n-P.w)*(ay*P.rightR+ar*P.rightY) ≤ P.gap*qT)
-    (hM : (P.n-P.w)*(ar*P.rightZ+az*P.rightR) +
-      (P.errors+1)*P.gap*P.rightR ≤ P.gap*qM)
-    (hR : (P.n-P.w)*(ay*P.rightZ+az*P.rightY) +
-      (P.errors+1)*P.gap*P.rightY ≤ P.gap*qR) :
-    leftRegularCountCap P ≤ qT*P.leftZ+qM*P.leftY+qR*P.leftR := by
-  have hd : RCN294.dot P.leftAgreement P.mixedCost ≤
-      ay*P.mixedCost.y+ar*P.mixedCost.r+az*P.mixedCost.z := by
-    unfold RCN294.dot
-    exact Nat.add_le_add
-      (Nat.add_le_add (Nat.mul_le_mul_right _ hy) (Nat.mul_le_mul_right _ hr))
-      (Nat.mul_le_mul_right _ hz)
-  have hn : leftRegularNumerator P ≤
-      (P.n-P.w)*(ay*P.mixedCost.y+ar*P.mixedCost.r+az*P.mixedCost.z) +
-        (P.errors+1)*P.gap*P.mixedCost.z :=
-    Nat.add_le_add_right (Nat.mul_le_mul_left _ hd) _
-  have he : (P.n-P.w)*(ay*P.mixedCost.y+ar*P.mixedCost.r+az*P.mixedCost.z) +
-        (P.errors+1)*P.gap*P.mixedCost.z =
-      ((P.n-P.w)*(ay*P.rightR+ar*P.rightY))*P.leftZ +
-      ((P.n-P.w)*(ar*P.rightZ+az*P.rightR)+(P.errors+1)*P.gap*P.rightR)*P.leftY +
-      ((P.n-P.w)*(ay*P.rightZ+az*P.rightY)+(P.errors+1)*P.gap*P.rightY)*P.leftR := by
-    simp only [UnequalParameters.mixedCost]
-    ring
-  rw [he] at hn
-  have hh := Nat.add_le_add
-    (Nat.add_le_add (Nat.mul_le_mul_right P.leftZ hT) (Nat.mul_le_mul_right P.leftY hM))
-    (Nat.mul_le_mul_right P.leftR hR)
-  have hb : leftRegularNumerator P ≤
-      P.gap*(qT*P.leftZ+qM*P.leftY+qR*P.leftR) := by
-    calc
-      _ ≤ _ := hn.trans hh
-      _ = _ := by ring
-  have hdiv := Nat.div_le_div_right (c := P.gap) hb
-  simpa only [leftRegularCountCap, Nat.mul_div_right _ hgap] using hdiv
-
 end ProximityPrize.SubmissionLower.AsymmetricHelper
 
 end Compact_AsymmetricLinear
 
 section Compact_Helpers80791
-/-! Error-80791 phase ingredient, adapted from the promoted shared-product machinery.
-No protocol claim is asserted in this module. -/
+
 set_option Elab.async false
 
 section Adapted_LocatorGenericHelperFactorSwitch
 namespace ProximityPrize.SubmissionLower.Lower80791.FactorSwitch
 
 open ProximityPrize.Benchmark
-open RCN081 RCN100 RCN101 RCN119 RCN130 RCN140 RCN156 RCN180 RCN234
-  RCN238 RCN260 RCN266 RCN319
+open RCN081 RCN100 RCN101 RCN119 RCN130 RCN140 RCN156 RCN180 RCN234 RCN238 RCN260 RCN266 RCN319
 open LocatorCoprimeQuotient LocatorLowQuotient
 
 open scoped Classical
@@ -6249,8 +4795,7 @@ namespace ProximityPrize.SubmissionLower.Lower80791.PowerRoute
 
 open ProximityPrize.Benchmark
 open scoped BigOperators
-open RCN081 RCN100 RCN101 RCN119 RCN130 RCN140 RCN156 RCN180 RCN234
-  RCN238 RCN260 RCN266 RCN319
+open RCN081 RCN100 RCN101 RCN119 RCN130 RCN140 RCN156 RCN180 RCN234 RCN238 RCN260 RCN266 RCN319
 open LocatorCoprimeQuotient LocatorLowQuotient
 open LocatorArbitraryPowerAvoidance LocatorArbitraryPowerContact
 open Lower80791.FactorSwitch
@@ -6280,12 +4825,8 @@ namespace ProximityPrize.SubmissionLower.Lower80791.BatchPowerRoute
 
 open ProximityPrize.Benchmark
 open scoped BigOperators
-open RCN081 RCN100 RCN101 RCN119 RCN130 RCN140 RCN156 RCN180 RCN234
-  RCN238 RCN260 RCN266 RCN319
-open LocatorLowQuotient LocatorCoprimeQuotient
-  LocatorArbitraryPowerAvoidance LocatorArbitraryPowerContact
-  Lower80791.FactorSwitch Lower80791.PowerRoute
-  LocatorBatchProductRoute
+open RCN081 RCN100 RCN101 RCN119 RCN130 RCN140 RCN156 RCN180 RCN234 RCN238 RCN260 RCN266 RCN319
+open LocatorLowQuotient LocatorCoprimeQuotient LocatorArbitraryPowerAvoidance LocatorArbitraryPowerContact Lower80791.FactorSwitch Lower80791.PowerRoute LocatorBatchProductRoute
 
 noncomputable section
 
@@ -6301,8 +4842,6 @@ local instance : DecidableEq I := Classical.decEq I
 local instance : CharP K 2130706433 := by
   simpa [RCN223.prime] using RCN128.challenge_field_characteristic6600
 
-/-! ## Contact-thinned consumer (lever S1): the band hypothesis is the thin budget. -/
-
 end
 
 end ProximityPrize.SubmissionLower.Lower80791.BatchPowerRoute
@@ -6312,8 +4851,7 @@ end Adapted_LocatorBatchPowerRoute
 end Compact_Helpers80791
 
 section Compact_Oracle80791
-/-! Error-80791 phase ingredient, adapted from the promoted shared-product machinery.
-No protocol claim is asserted in this module. -/
+
 set_option Elab.async false
 namespace ProximityPrize.SubmissionLower.Lower80791.Oracle
 open RCN095 LocatorFactorAggregate LocatorLowQuotient LocatorArbitraryPowerAvoidance
@@ -6321,7 +4859,7 @@ open Lower80791.PowerRoute Lower80791.FactorSwitch
 open LocatorPhase6800Oracle (Potential rawFlag sumFlag RawBelow RawStrictSlopeBelow)
 set_option autoImplicit false
 set_option maxRecDepth 100000
-/-- The cumulative boxes used by a power source. -/
+
 structure SourceNumbers where
   totalCap : ℕ
   middleCap : ℕ
@@ -6338,11 +4876,6 @@ def SourceNumbers.band (s : SourceNumbers) (p : FlagDegree) : ℕ :=
     (s.totalCap - total p) (s.middleCap - middle p)
     (s.slopeCap - p.all) (s.fuel p)
 
-/-- Lever S1.  The product of the routed factors has contact weight at least
-`131071 * middle p - p.all` (`contact_ge_ys` with the exact aggregate weights), and the
-source's kernel degree satisfies `D + slopeCap ≤ 131071 * (middleCap + 1)`; so the level-1
-contact cap of the band ladder is at most `contactCap`, and it drops by `50283 + contactDec`
-per level.  `bandThin` is the ladder charged on the rows that can carry a monomial. -/
 def contactDec (p : FlagDegree) : ℕ := 131071 * middle p - p.all
 
 def SourceNumbers.contactCap (s : SourceNumbers) (p : FlagDegree) : ℕ :=
@@ -6366,18 +4899,14 @@ end ProximityPrize.SubmissionLower.Lower80791.Oracle
 end Compact_Oracle80791
 
 section Compact_BatchPhase80791
-/-! Error-80791 phase ingredient, adapted from the promoted shared-product machinery.
-No protocol claim is asserted in this module. -/
+
 set_option Elab.async false
 namespace ProximityPrize.SubmissionLower.Lower80791.BatchPhase
 
 open ProximityPrize.Benchmark
 open scoped BigOperators
-open RCN071 RCN081 RCN095 RCN100 RCN101 RCN119 RCN130 RCN140 RCN156
-  RCN180 RCN234 RCN238 RCN260 RCN266
-open LocatorFactorAggregate LocatorArbitraryPowerAvoidance
-  LocatorBatchProductRoute Lower80791.BatchPowerRoute
-  Lower80791.FactorSwitch Lower80791.Oracle
+open RCN071 RCN081 RCN095 RCN100 RCN101 RCN119 RCN130 RCN140 RCN156 RCN180 RCN234 RCN238 RCN260 RCN266
+open LocatorFactorAggregate LocatorArbitraryPowerAvoidance LocatorBatchProductRoute Lower80791.BatchPowerRoute Lower80791.FactorSwitch Lower80791.Oracle
 
 open LocatorPhase6800Oracle (Potential sumFlag sumFlag_all sumFlag_middle sumFlag_total RawBelow RawStrictSlopeBelow)
 open LocatorBatchPhase6800 (regularAggregateFlag regularAggregateFlag_all
@@ -6396,13 +4925,6 @@ abbrev I := IRSProfile.Index
 local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq I := Classical.decEq I
 
-/-! ## State-local phase semantics
-
-The numerical receipt is indexed by the exact aggregate raw flag.  These
-lemmas keep that state intact while the algebraic route repeatedly replaces a
-routeable batch by a strict universal sub-batch.
--/
-
 end
 
 end ProximityPrize.SubmissionLower.Lower80791.BatchPhase
@@ -6410,8 +4932,7 @@ end ProximityPrize.SubmissionLower.Lower80791.BatchPhase
 end Compact_BatchPhase80791
 
 section Compact_ClosedRank
-/-! Symbolic rank arithmetic for large first-jet interpolation profiles.
-The purpose is to replace long finite evaluations by polynomial identities. -/
+
 namespace ProximityPrize.SubmissionLower.ClosedRank
 open scoped BigOperators
 open LocatorFastKernelArithmetic
@@ -6620,9 +5141,7 @@ end ProximityPrize.SubmissionLower.ClosedRank
 end Compact_ClosedRank
 
 section Compact_OneResidueLower
-/-! The closed one-residue expression is still a lower bound after residue
-crossings: discard only the extra positive columns. This avoids a large finite
-sum while giving a conservative source dimension. -/
+
 namespace ProximityPrize.SubmissionLower.OneResidueLower
 open scoped BigOperators
 open RCN100 RCN302 LocatorFastKernelArithmetic LocatorLowQuotient
@@ -6634,8 +5153,7 @@ end ProximityPrize.SubmissionLower.OneResidueLower
 end Compact_OneResidueLower
 
 section Compact_Kernels80791
-/-! Checked kernel ingredients for the proposed error-80791 certificate.
-These receipts alone do not assert a protocol claim. -/
+
 namespace ProximityPrize.SubmissionLower.Kernels80791
 open ProximityPrize.Benchmark
 open scoped BigOperators
@@ -6686,8 +5204,7 @@ end ProximityPrize.SubmissionLower.Kernels80791
 end Compact_Kernels80791
 
 section Compact_Sources80791
-/-! Error-80791 phase ingredient, adapted from the promoted shared-product machinery.
-No protocol claim is asserted in this module. -/
+
 set_option Elab.async false
 namespace ProximityPrize.SubmissionLower.Lower80791.SourceSound
 
@@ -6729,9 +5246,7 @@ end ProximityPrize.SubmissionLower.Lower80791.SourceSound
 end Compact_Sources80791
 
 section Compact_SecondJetHybridProvider
-/-! The existing C2 local-DVR argument with an explicit active component set
-and a separately proved moving-degree total. Components outside the set must
-have no selected seeds; all original normal and tangent charges are retained. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetHybridProvider
 open scoped Classical BigOperators
 open RCN135 RCN136 RCN159 RCN264 RCN074 RCN086 RCN243 RCN238 RCN095 RCN237 RCN198 RCN275 RCN244 RCN327 RCN263 RCN334 RCN332 RCN336 RCN312 RCN339 RCN330 RCN174 RCN319
@@ -6756,9 +5271,7 @@ end ProximityPrize.SubmissionLower.SecondJetHybridProvider
 end Compact_SecondJetHybridProvider
 
 section Compact_TriangularKernel
-/-! Linear algebra for checking a kernel family one initial component at a
-time. This is intended for the second-jet construction, whose lowest epsilon
-coefficient has an injective diagonal map. -/
+
 namespace ProximityPrize.SubmissionLower.TriangularKernel
 noncomputable section
 set_option autoImplicit false
@@ -6806,9 +5319,7 @@ end ProximityPrize.SubmissionLower.TriangularKernel
 end Compact_TriangularKernel
 
 section Compact_SecondJetBasis
-/-! A triangular polynomial family for second-jet interpolation. The outer
-polynomial variable is epsilon; the inner one is the second Hasse derivative.
-This module checks independence before imposing the finite support bounds. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetBasis
 open scoped BigOperators
 noncomputable section
@@ -6842,8 +5353,6 @@ def truncate : Jet B →ₗ[K] (Fin m → Fin s → B) :=
 theorem truncate_apply (P : Jet B) (r : Fin m) (h : Fin s) :
     truncate (K := K) P r h = (P.coeff r.val).coeff h.val := rfl
 
-/-- The chosen exponents attain the requested contact without exceeding the
-available second-derivative degree. -/
 theorem exponent_budget (m r s h : ℕ) (hr : r ≤ m) (hh : h ≤ s) :
     let q := max ((m-r+1)/2) (m-r-(s-h))
     let a := min q (s-h)
@@ -6858,8 +5367,7 @@ end ProximityPrize.SubmissionLower.SecondJetBasis
 end Compact_SecondJetBasis
 
 section Compact_SecondJetTruncate
-/-! Truncation preserves the triangular kernel construction and its contact.
-The concrete finite monomial support bounds are still separate obligations. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetBasis
 open scoped BigOperators
 noncomputable section
@@ -6911,8 +5419,7 @@ end ProximityPrize.SubmissionLower.SecondJetBasis
 end Compact_SecondJetTruncate
 
 section Compact_SecondJetSupport
-/-! Support bounds for the explicit second-jet kernel family. Variables are
-ordered epsilon, S, A, R, Z, matching two successive `finSuccEquiv`s. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetSupport
 open scoped BigOperators Pointwise
 open MvPolynomial
@@ -7003,8 +5510,7 @@ end ProximityPrize.SubmissionLower.SecondJetSupport
 end Compact_SecondJetSupport
 
 section Compact_SecondJetLocal
-/-! The explicit local substitution A = R - epsilon*S + epsilon^2*T.
-Here S is the second Hasse derivative, and T records the remaining contact. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetLocal
 open scoped BigOperators
 open SecondJetBasis SecondJetSupport
@@ -7067,7 +5573,7 @@ end ProximityPrize.SubmissionLower.SecondJetLocal
 end Compact_SecondJetLocal
 
 section Compact_FiniteMonomials
-/-! Finite coefficient families embedded into a multivariate polynomial ring. -/
+
 namespace ProximityPrize.SubmissionLower.FiniteMonomials
 open scoped BigOperators
 noncomputable section
@@ -7129,7 +5635,7 @@ end ProximityPrize.SubmissionLower.FiniteMonomials
 end Compact_FiniteMonomials
 
 section Compact_SecondJetSpace
-/-! The finite source space for the local second-jet map. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetSpace
 open scoped BigOperators
 open SecondJetBasis SecondJetSupport
@@ -7212,7 +5718,7 @@ end ProximityPrize.SubmissionLower.SecondJetSpace
 end Compact_SecondJetSpace
 
 section Compact_SecondJetFacetSupport
-/-! A shared R/S degree bound for the second-jet kernel family. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetFacetSupport
 open scoped BigOperators Pointwise
 open MvPolynomial SecondJetSupport
@@ -7227,7 +5733,7 @@ end ProximityPrize.SubmissionLower.SecondJetFacetSupport
 end Compact_SecondJetFacetSupport
 
 section Compact_SecondJetFacetSpace
-/-! The second-jet source space with a shared R/S degree cap. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetFacetSpace
 open scoped BigOperators
 open SecondJetBasis SecondJetSupport SecondJetFacetSupport
@@ -7263,8 +5769,7 @@ end ProximityPrize.SubmissionLower.SecondJetFacetSpace
 end Compact_SecondJetFacetSpace
 
 section Compact_SecondJetGlobalSupport
-/-! Global-to-local substitution preserving the shared derivative cap.
-Global variables are X, S, Y, R, Z; local variables epsilon, S, A, R, Z. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetGlobalSupport
 open scoped BigOperators Pointwise
 open MvPolynomial SecondJetSupport SecondJetBasis
@@ -7372,7 +5877,7 @@ end ProximityPrize.SubmissionLower.SecondJetGlobalSupport
 end Compact_SecondJetGlobalSupport
 
 section Compact_SecondJetRank
-/-! Finite independent kernel vectors for the local second-jet contact map. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetRank
 open scoped BigOperators
 open SecondJetBasis SecondJetSupport SecondJetLocal SecondJetSpace
@@ -7433,7 +5938,7 @@ end ProximityPrize.SubmissionLower.SecondJetRank
 end Compact_SecondJetRank
 
 section Compact_SecondJetFacetRank
-/-! Local rank saving with a shared R/S degree cap. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetFacetRank
 open scoped BigOperators
 open SecondJetBasis SecondJetSupport SecondJetLocal SecondJetFacetSpace
@@ -7449,8 +5954,7 @@ end ProximityPrize.SubmissionLower.SecondJetFacetRank
 end Compact_SecondJetFacetRank
 
 section Compact_SecondJetCounts
-/-! Efficient counting interfaces for the local second-jet source and kernel.
-The finite index types used in the rank proof are never evaluated directly. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetCounts
 open scoped BigOperators
 open SecondJetSpace SecondJetRank
@@ -7560,7 +6064,7 @@ end ProximityPrize.SubmissionLower.SecondJetCounts
 end Compact_SecondJetCounts
 
 section Compact_SecondJetFacetCounts
-/-! Closed rank counts for the shared R/S degree cap. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetFacetCounts
 open scoped BigOperators
 open SecondJetFacetSpace SecondJetFacetRank
@@ -7578,8 +6082,7 @@ end ProximityPrize.SubmissionLower.SecondJetFacetCounts
 end Compact_SecondJetFacetCounts
 
 section Compact_SecondJetGlobalMap
-/-! Global interpolation from finite monomial families and the checked local
-rank bound. Concrete coefficient counts and specialization are separate. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetGlobalMap
 open scoped BigOperators
 open SecondJetSupport SecondJetBasis SecondJetGlobalSupport
@@ -7611,7 +6114,7 @@ end ProximityPrize.SubmissionLower.SecondJetGlobalMap
 end Compact_SecondJetGlobalMap
 
 section Compact_SecondJetGlobalIndex
-/-! Finite coefficient indices for the weighted global second-jet space. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetGlobalIndex
 open scoped BigOperators
 noncomputable section
@@ -7626,7 +6129,7 @@ end ProximityPrize.SubmissionLower.SecondJetGlobalIndex
 end Compact_SecondJetGlobalIndex
 
 section Compact_SecondJetGlobalCounts
-/-! Closed coefficient counts for the weighted global second-jet space. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetGlobalCounts
 open scoped BigOperators
 open SecondJetGlobalIndex
@@ -7683,7 +6186,7 @@ end ProximityPrize.SubmissionLower.SecondJetGlobalCounts
 end Compact_SecondJetGlobalCounts
 
 section Compact_SecondJetFacetReceipt
-/-! Checked local-rank receipt for the shared R/S degree cap. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetFacetReceipt
 open SecondJetFacetCounts SecondJetFacetRank
 set_option autoImplicit false
@@ -7697,8 +6200,7 @@ end ProximityPrize.SubmissionLower.SecondJetFacetReceipt
 end Compact_SecondJetFacetReceipt
 
 section Compact_SecondJetGlobalReceipt
-/-! Concrete global second-jet interpolation receipt at the proposed 68.04
-agreement threshold. The geometric counting argument is not included. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetGlobalReceipt
 open scoped BigOperators
 open SecondJetGlobalIndex SecondJetGlobalCounts
@@ -7713,8 +6215,7 @@ end ProximityPrize.SubmissionLower.SecondJetGlobalReceipt
 end Compact_SecondJetGlobalReceipt
 
 section Compact_SecondJetDifferentiation
-/-! Differentiation in S loses at most one unit of second-jet contact.
-The flat target variables are epsilon, S, T, R, Z. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetDifferentiation
 open scoped BigOperators
 open MvPolynomial SecondJetSupport
@@ -7804,7 +6305,7 @@ end ProximityPrize.SubmissionLower.SecondJetDifferentiation
 end Compact_SecondJetDifferentiation
 
 section Compact_SecondJetGlobalDifferentiation
-/-! Support and local-contact behavior of global S derivatives. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetGlobalDifferentiation
 open MvPolynomial SecondJetSupport SecondJetGlobalSupport SecondJetDifferentiation
 noncomputable section
@@ -7869,8 +6370,7 @@ end ProximityPrize.SubmissionLower.SecondJetGlobalDifferentiation
 end Compact_SecondJetGlobalDifferentiation
 
 section Compact_SecondJet6804
-/-! A concrete interpolant and its first three S derivatives have enough
-contact and sufficiently small weight at 181353 agreements. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJet6804
 open MvPolynomial SecondJetSupport SecondJetGlobalSupport SecondJetDifferentiation
 open SecondJetGlobalDifferentiation
@@ -7885,10 +6385,7 @@ end ProximityPrize.SubmissionLower.SecondJet6804
 end Compact_SecondJet6804
 
 section Compact_SecondJetContact
-/-! The contact identity behind the exploratory second-derivative space.
-This establishes the local algebra only, not the rank calculations or a
-stronger protocol claim. Hasse derivatives avoid a characteristic-two
-exception in the identity itself. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetContact
 open Polynomial
 noncomputable section
@@ -7925,7 +6422,7 @@ end ProximityPrize.SubmissionLower.SecondJetContact
 end Compact_SecondJetContact
 
 section Compact_SecondJetSpecialize
-/-! From formal second-jet contact to ordinary polynomial root multiplicity. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetSpecialize
 open MvPolynomial SecondJetSupport SecondJetGlobalSupport SecondJetDifferentiation
 noncomputable section
@@ -8047,7 +6544,7 @@ end ProximityPrize.SubmissionLower.SecondJetSpecialize
 end Compact_SecondJetSpecialize
 
 section Compact_SecondJetVanish
-/-! A second-jet interpolant vanishes on every codeword with enough agreements. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetVanish
 open MvPolynomial SecondJetSupport SecondJetGlobalSupport SecondJetDifferentiation SecondJetSpecialize
 noncomputable section
@@ -8081,8 +6578,7 @@ end ProximityPrize.SubmissionLower.SecondJetVanish
 end Compact_SecondJetVanish
 
 section Compact_SecondJetCoefficients
-/-! Viewing the interpolant as a polynomial in its second derivative variable.
-Coefficient variables are X, Y, R, Z. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetCoefficients
 open MvPolynomial SecondJetSupport
 noncomputable section
@@ -8125,8 +6621,7 @@ end ProximityPrize.SubmissionLower.SecondJetCoefficients
 end Compact_SecondJetCoefficients
 
 section Compact_RootMultiplicityValuation
-/-! Coefficient bounds after removing a rational root. This is the local
-valuation ingredient for a proposed root-multiplicity height estimate. -/
+
 namespace ProximityPrize.SubmissionLower.RootMultiplicityValuation
 open scoped BigOperators
 noncomputable section
@@ -8144,8 +6639,7 @@ end ProximityPrize.SubmissionLower.RootMultiplicityValuation
 end Compact_RootMultiplicityValuation
 
 section Compact_RootMultiplicityHeight
-/-! A rational root of high multiplicity has bounded height. The coefficient
-pole bound is summed over places using the principal-divisor identity. -/
+
 namespace ProximityPrize.SubmissionLower.RootMultiplicityHeight
 open scoped Classical BigOperators WithZero
 open RCN026 RCN187 RootMultiplicityValuation
@@ -8181,8 +6675,7 @@ end ProximityPrize.SubmissionLower.RootMultiplicityHeight
 end Compact_RootMultiplicityHeight
 
 section Compact_RootMultiplicityFlag
-/-! Interface from bounded polynomial coefficients to the moving-coordinate
-height bound used in the lower submission's flag geometry. -/
+
 namespace ProximityPrize.SubmissionLower.RootMultiplicityFlag
 open scoped Classical BigOperators WithZero
 open RCN026 RCN095 RCN187 RCN204
@@ -8202,7 +6695,7 @@ end ProximityPrize.SubmissionLower.RootMultiplicityFlag
 end Compact_RootMultiplicityFlag
 
 section Compact_SecondJetFlagCoefficients
-/-! Frozen coefficient flags for the second-jet interpolant. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetFlagCoefficients
 open scoped BigOperators
 open MvPolynomial RCN095 SecondJetCoefficients SecondJetSupport
@@ -8241,8 +6734,7 @@ end ProximityPrize.SubmissionLower.SecondJetFlagCoefficients
 end Compact_SecondJetFlagCoefficients
 
 section Compact_RootMultiplicityWeightedValuation
-/-! Weighted coefficient bounds retain the degree of the remaining factor.
-This is a valuation lemma, not a lower-track protocol claim. -/
+
 namespace ProximityPrize.SubmissionLower.RootMultiplicityWeightedValuation
 open scoped BigOperators WithZero
 open RootMultiplicityValuation
@@ -8372,9 +6864,7 @@ end ProximityPrize.SubmissionLower.RootMultiplicityWeightedValuation
 end Compact_RootMultiplicityWeightedValuation
 
 section Compact_RootMultiplicityWeightedHeight
-/-! Weighted root height, including the contribution of the remaining degree.
-All coefficient and budget hypotheses are explicit. This module does not
-construct a new interpolation space or establish a protocol claim. -/
+
 namespace ProximityPrize.SubmissionLower.RootMultiplicityWeightedHeight
 open scoped Classical BigOperators WithZero
 open RCN026 RCN187 RootMultiplicityValuation RootMultiplicityHeight
@@ -8454,8 +6944,6 @@ variable (K : Type*) [Field K] [Algebra K L] [IsAlgClosed K]
   [IsScalarTower (Polynomial K) (RatFunc K) L]
   [FiniteDimensional (RatFunc K) L] [Algebra.IsSeparable (RatFunc K) L]
 
-/-- A moving-pole estimate using the affine coefficient bound with weight
-`2*alpha-beta`. Its budget hypothesis retains the cofactor degree exactly. -/
 theorem moving_height_bound (P : Polynomial L) (hP : P ≠ 0) (t : L) (d : ℕ)
     (hd : (Polynomial.X-Polynomial.C t)^d ∣ P)
     (B alpha beta : Place K L → ℤ) (C : ℤ)
@@ -8497,8 +6985,6 @@ theorem moving_height_bound (P : Polynomial L) (hP : P ≠ 0) (t : L) (d : ℕ)
   intro v _ _
   exact (by have := ha v; omega : 0 ≤ 2*alpha v).trans (le_max_left _ _)
 
-/-- A lower bound on the polynomial degree is enough to reserve a uniform
-cofactor contribution in a family of component budgets. -/
 theorem moving_height_bound_of_degree (P : Polynomial L) (hP : P ≠ 0)
     (t : L) (d n0 : ℕ) (hn : n0 ≤ P.natDegree)
     (hd : (Polynomial.X-Polynomial.C t)^d ∣ P)
@@ -8528,9 +7014,7 @@ end ProximityPrize.SubmissionLower.RootMultiplicityWeightedHeight
 end Compact_RootMultiplicityWeightedHeight
 
 section Compact_SecondJetRelaxedFlag
-/-! The weighted R+2S source gives affine coefficient pole budgets. The final
-height application still requires a nonzero component polynomial, its root
-multiplicity, and a geometric budget for the resulting flag. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetRelaxedFlag
 open scoped BigOperators WithZero
 open ProximityPrize.SubmissionLower.RootMultiplicityValuation
@@ -8612,8 +7096,6 @@ variable [Algebra K L] [IsAlgClosed K]
   [IsScalarTower (Polynomial K) (RatFunc K) L]
   [FiniteDimensional (RatFunc K) L] [Algebra.IsSeparable (RatFunc K) L]
 
-/-- The numerical weighted flag used by the scout is sufficient for the generic
-moving-height theorem. Nonvanishing and multiplicity are explicit premises. -/
 theorem moving_bound (P : Poly (K := K)) (freezeX : K) (B U T d n0 : ℕ)
     (hBU : B ≤ U) (hUT : U ≤ T) (hdn : d ≤ n0) (hB : 2*(n0-d) ≤ B)
     (hP : ∀ e ∈ P.support, 2*e 1+e 3 ≤ B ∧ e 1+e 2+e 3 ≤ U ∧
@@ -8653,7 +7135,7 @@ end ProximityPrize.SubmissionLower.SecondJetRelaxedFlag
 end Compact_SecondJetRelaxedFlag
 
 section Compact_SecondJetSurfaceMap
-/-! Transporting coefficient flags to the generic carrier surface. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetSurfaceMap
 open MvPolynomial SecondJetSupport SecondJetCoefficients SecondJetFlagCoefficients
 open RCN136
@@ -8699,7 +7181,7 @@ end ProximityPrize.SubmissionLower.SecondJetSurfaceMap
 end Compact_SecondJetSurfaceMap
 
 section Compact_SecondJetCoefficientSpecialization
-/-! Coefficient and evaluation identities for the second-derivative variable. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetCoefficientSpecialization
 open MvPolynomial SecondJetSupport SecondJetCoefficients SecondJetSpecialize
 noncomputable section
@@ -8763,8 +7245,7 @@ end ProximityPrize.SubmissionLower.SecondJetCoefficientSpecialization
 end Compact_SecondJetCoefficientSpecialization
 
 section Compact_SecondJetClearedHelper
-/-! Clearing the second-derivative denominator preserves the interpolant's
-vanishing on every regular codeword carried by F. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetClearedHelper
 open scoped BigOperators
 open MvPolynomial SecondJetSupport SecondJetCoefficients SecondJetSpecialize
@@ -8839,8 +7320,7 @@ end ProximityPrize.SubmissionLower.SecondJetClearedHelper
 end Compact_SecondJetClearedHelper
 
 section Compact_SecondJetHelperWeights
-/-! Exact cumulative degree bounds for the cleared helper. The S-coefficient
-slope cancels the numerator's excess weight over the denominator. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetHelperWeights
 open scoped BigOperators
 open MvPolynomial SecondJetSupport SecondJetCoefficients SecondJetCoefficientSpecialization
@@ -8955,7 +7435,7 @@ end ProximityPrize.SubmissionLower.SecondJetHelperWeights
 end Compact_SecondJetHelperWeights
 
 section Compact_RootMultiplicityDichotomy
-/-! The algebraic split behind the second-jet helper/height argument. -/
+
 namespace ProximityPrize.SubmissionLower.RootMultiplicityDichotomy
 noncomputable section
 set_option autoImplicit false
@@ -8981,8 +7461,7 @@ end ProximityPrize.SubmissionLower.RootMultiplicityDichotomy
 end Compact_RootMultiplicityDichotomy
 
 section Compact_SecondJetCarrierDichotomy
-/-! Over a carrier field, either a cleared derivative is proper or the
-interpolant has the required high-multiplicity root. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetCarrierDichotomy
 open MvPolynomial SecondJetSupport SecondJetCoefficients
 open SecondJetCoefficientSpecialization SecondJetClearedHelper SecondJetHelperWeights
@@ -9043,8 +7522,7 @@ end ProximityPrize.SubmissionLower.SecondJetCarrierDichotomy
 end Compact_SecondJetCarrierDichotomy
 
 section Compact_SecondJetCoefficientAvoidance
-/-! The conservative coefficient avoidance gate makes every nonzero S
-coefficient proper with respect to a carrier of larger Z degree. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetCoefficientAvoidance
 open MvPolynomial SecondJetSupport SecondJetCoefficients
 noncomputable section
@@ -9068,8 +7546,7 @@ end ProximityPrize.SubmissionLower.SecondJetCoefficientAvoidance
 end Compact_SecondJetCoefficientAvoidance
 
 section Compact_SecondJetComponentRoots
-/-! The fixed leading coefficient isolates exactly the components on which
-mapped degree and high root multiplicity are retained. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetComponentRoots
 open MvPolynomial SecondJetSupport SecondJetCoefficients SecondJetClearedHelper
 open RCN002 RCN136
@@ -9147,8 +7624,7 @@ end ProximityPrize.SubmissionLower.SecondJetComponentRoots
 end Compact_SecondJetComponentRoots
 
 section Compact_SecondJetMovingDegree
-/-! Turning the weighted root-height estimate into the integer degree of a
-separable moving coordinate; no rounding is charged per component. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetMovingDegree
 open scoped BigOperators
 open RCN026 RCN095 RCN187 RCN204 RCN344
@@ -9168,7 +7644,7 @@ end ProximityPrize.SubmissionLower.SecondJetMovingDegree
 end Compact_SecondJetMovingDegree
 
 section Compact_SecondJetPoleScaling
-/-! A nonzero constant factor in the second derivative does not change poles. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetPoleScaling
 open RCN026 RCN187
 noncomputable section
@@ -9191,8 +7667,7 @@ end ProximityPrize.SubmissionLower.SecondJetPoleScaling
 end Compact_SecondJetPoleScaling
 
 section Compact_SecondJetActiveMovingBudget
-/-! Moving budgets for the retained components, using their actual integer
-projection degrees and the second-jet weighted root bound. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetActiveMovingBudget
 open scoped BigOperators
 open RCN005 RCN006 RCN064 RCN002 RCN095 RCN187 RCN204 RCN207 RCN264 RCN341 RCN046 RCN199
@@ -9209,8 +7684,7 @@ end ProximityPrize.SubmissionLower.SecondJetActiveMovingBudget
 end Compact_SecondJetActiveMovingBudget
 
 section Compact_SecondJetRetainedBudgets
-/-! The weighted moving-degree estimate on the actual first-tail components,
-assuming the proper derivative-helper alternatives have been excluded. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetRetainedBudgets
 open scoped Classical BigOperators
 open MvPolynomial SecondJetSupport SecondJetCoefficients SecondJetClearedHelper
@@ -9228,8 +7702,7 @@ end ProximityPrize.SubmissionLower.SecondJetRetainedBudgets
 end Compact_SecondJetRetainedBudgets
 
 section Compact_SecondJetExceptionalComponents
-/-! Components containing a fixed coefficient have no seeds after excluding
-that coefficient's vanishing codewords. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetExceptionalComponents
 open MvPolynomial RCN264
 open scoped Classical
@@ -9259,9 +7732,7 @@ end ProximityPrize.SubmissionLower.SecondJetExceptionalComponents
 end Compact_SecondJetExceptionalComponents
 
 section Compact_SecondJetRetainedStage
-/-! A scaled C2 stage bound from the actual second-jet component budgets.
-The selected seeds avoid the global leading coefficient. Keeping the scaling
-through the estimate permits summing geometric factors before rounding. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetRetainedStage
 open scoped Classical BigOperators
 open RCN135 RCN136 RCN159 RCN264 RCN074 RCN086 RCN243 RCN238 RCN095 RCN237 RCN198 RCN275 RCN244 RCN327 RCN263 RCN334 RCN332 RCN336 RCN312 RCN339 RCN330 RCN174 RCN319
@@ -9286,8 +7757,7 @@ end ProximityPrize.SubmissionLower.SecondJetRetainedStage
 end Compact_SecondJetRetainedStage
 
 section Compact_C2Geometry80788
-/-! C2 geometric ingredients retuned to error 80788.
-Adapted from the promoted submission. These are not a protocol claim. -/
+
 set_option Elab.async false
 
 section Adapted_LocatorFixedStage
@@ -9383,11 +7853,8 @@ open LocatorHybridCostC1 LocatorHybridCostC2 RCN198
 set_option maxRecDepth 100000
 set_option maxHeartbeats 5000000
 
-/-! ### Row constants for 6800 -/
-
 def w : ℕ := 131071
 
-/-- Local restatement of `Lower80788.FixedStage.identityDegree_linear`. -/
 theorem identityDegree_linear (flag : FlagDegree) (a b s : ℕ) :
     identityCurveDegree flag a b s w =
       flag.zOnly * (393219 + 262146 * s) +
@@ -9399,17 +7866,12 @@ theorem identityDegree_linear (flag : FlagDegree) (a b s : ℕ) :
     nsmul_zOnly, nsmul_yz, nsmul_all, w]
   ring
 
-/-! ### Subtraction-free C2 tails in the support coordinates `a, b, s` -/
-
-/-- The reduced first tail at `w + 1 = 131072`. -/
 def reducedABS (a b s : ℕ) : FlagDegree :=
   ⟨2 * a * 131072, 1 + (2 * b + 2) * 131072, (2 * s + 2) * 131072⟩
 def rationalABS (a b s : ℕ) : FlagDegree :=
   ⟨131072 * a + 2 * a, 131072 * b + 2 * b + 2, 131072 * s + 2 * s + 3⟩
 def mfibABS (a b s : ℕ) : FlagDegree := ⟨a, b + 1, s + 3⟩
 def mcutABS (a b s : ℕ) : FlagDegree := rationalABS a b s + ⟨0, 131072, 262144⟩
-
-/-! ### Slack polynomials for `errors = 80788` (regenerated for the C2 cost) -/
 
 end ProximityPrize.SubmissionLower.Lower80788.HybridIdentityC2
 
@@ -9430,7 +7892,7 @@ open scoped Classical BigOperators
 open RCN174 RCN319 RCN286 RCN081 RCN135 RCN095 RCN238 RCN243 RCN222 RCN266 RCN221 RCN268 RCN140 RCN275 RCN130 RCN156 RCN159 RCN234 RCN137 RCN198 RCN263 RCN146 RCN287 RCN136 RCN086 RCN087 RCN203 RCN084 RCN313 RCN074 RCN335
 open LocatorFactorAggregate LocatorHybridCost LocatorHybridCostC1 LocatorHybridCostC2
 open Lower80788.HybridIdentityC2 LocatorHybridCells LocatorHybridCellsC1
-open LocatorHybridTailProvider LocatorHybridTailProviderC1 LocatorHybridTailProviderC2
+open LocatorHybridTailProvider LocatorHybridTailProviderC1
 open Lower80788.HybridGatesC2 Lower80788.Fixed
 noncomputable section
 set_option autoImplicit false
@@ -9457,9 +7919,9 @@ open RCN206 RCN287 RCN066 RCN338 RCN199 RCN207 RCN271 RCN313 RCN234 RCN156 RCN34
 open RCN331 RCN027 RCN030 RCN029 RCN037 RCN038 RCN042 RCN002 RCN344 RCN277 RCN003 RCN314 RCN315 RCN093 RCN046 RCN001
 open LocatorHybridCells LocatorHybridCellsC1 LocatorHybridTailProvider
 open LocatorFactorAggregate LocatorHybridCost LocatorHybridCostC1 LocatorHybridCostC2
-open LocatorHybridTailProviderC1 LocatorHybridTailProviderC2
-open LocatorHybridTailRealizationC2 Lower80788.HybridGatesC2
-open Lower80788.Fixed Lower80788.FixedHybridC2
+open LocatorHybridTailProviderC1
+open Lower80788.HybridGatesC2
+open Lower80788.Fixed
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 6000000
@@ -9481,7 +7943,7 @@ namespace ProximityPrize.SubmissionLower.Lower80788.FixedOwnBoundC2
 open ProximityPrize.Benchmark
 open scoped Classical BigOperators
 open RCN174 RCN275 RCN238 RCN243 RCN266 RCN140 RCN130 RCN156 RCN234 RCN159 RCN137 RCN198 RCN095
-open LocatorFactorAggregate LocatorHybridCostC2 Lower80788.Fixed Lower80788.FixedHybridC2
+open LocatorFactorAggregate LocatorHybridCostC2 Lower80788.Fixed
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 2000000
@@ -9500,9 +7962,7 @@ end Adapted_LocatorFixedOwnBoundC2
 end Compact_C2Geometry80788
 
 section Compact_SecondJetIdentity
-/-! The identity-tail branch at 80791 errors is covered by the normal C2
-cost alone. These are polynomial identities over naturals, with all slack
-coefficients nonnegative. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetIdentity
 open RCN146 RCN086 RCN095 RCN198 RCN206 RCN263 RCN327 LocatorHybridCells LocatorHybridCellsC1
 open Lower80788.HybridIdentityC2
@@ -9528,9 +7988,7 @@ end ProximityPrize.SubmissionLower.SecondJetIdentity
 end Compact_SecondJetIdentity
 
 section Compact_SecondJetFixedStage
-/-! A scaled C2 stage bound from the actual second-jet component budgets.
-The selected seeds avoid the global leading coefficient. Keeping the scaling
-through the estimate permits summing geometric factors before rounding. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetFixedStage
 open scoped Classical BigOperators
 open RCN135 RCN136 RCN159 RCN264 RCN074 RCN086 RCN243 RCN238 RCN095 RCN237 RCN198 RCN275 RCN244 RCN327 RCN263 RCN334 RCN332 RCN336 RCN312 RCN339 RCN330 RCN174 RCN319
@@ -9555,9 +8013,7 @@ end ProximityPrize.SubmissionLower.SecondJetFixedStage
 end Compact_SecondJetFixedStage
 
 section Compact_SecondJetRegularGeometry
-/-! A scaled C2 stage bound from the actual second-jet component budgets.
-The selected seeds avoid the global leading coefficient. Keeping the scaling
-through the estimate permits summing geometric factors before rounding. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetRegularGeometry
 open scoped Classical BigOperators
 open RCN135 RCN136 RCN159 RCN264 RCN074 RCN086 RCN243 RCN238 RCN095 RCN237 RCN198 RCN275 RCN244 RCN327 RCN263 RCN334 RCN332 RCN336 RCN312 RCN339 RCN330 RCN174 RCN319
@@ -9584,13 +8040,10 @@ end ProximityPrize.SubmissionLower.SecondJetRegularGeometry
 end Compact_SecondJetRegularGeometry
 
 section Compact_SecondJetProperCounting
-/-! The proper intersection bound stated directly for a regular irreducible
-carrier, so it can count one global exceptional set or a proper helper branch. -/
 
 namespace ProximityPrize.SubmissionLower.SecondJetProperCounting
 open scoped Classical BigOperators
-open RCN260 RCN318 RCN294 RCN286 RCN169 RCN167 RCN290 RCN082 RCN081 RCN174
-  RCN319 RCN136 RCN137 RCN138 RCN135 RCN222 RCN243 RCN068 RCN238 RCN001 RCN052
+open RCN260 RCN318 RCN294 RCN286 RCN169 RCN167 RCN290 RCN082 RCN081 RCN174 RCN319 RCN136 RCN137 RCN138 RCN135 RCN222 RCN243 RCN068 RCN238 RCN001 RCN052
 noncomputable section
 set_option maxHeartbeats 3000000
 set_option maxRecDepth 20000
@@ -9787,7 +8240,7 @@ end ProximityPrize.SubmissionLower.SecondJetProperCounting
 end Compact_SecondJetProperCounting
 
 section Compact_SecondJetPairBounds
-/-! Degree and numerical interfaces for the global proper-intersection count. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetPairBounds
 open MvPolynomial RCN260 RCN052 RCN294 RCN234 RCN156
 noncomputable section
@@ -9835,8 +8288,7 @@ end ProximityPrize.SubmissionLower.SecondJetPairBounds
 end Compact_SecondJetPairBounds
 
 section Compact_SecondJetRegularData
-/-! A common context for counting the retained seeds and the one global
-proper-helper or leading-coefficient exceptional set. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetRegularData
 open scoped Classical BigOperators
 open MvPolynomial RCN135 RCN136 RCN319 RCN238 RCN243 RCN260 RCN174 RCN275 RCN327
@@ -9859,11 +8311,7 @@ end ProximityPrize.SubmissionLower.SecondJetRegularData
 end Compact_SecondJetRegularData
 
 section Compact_SecondJetWeightedContact
-/-! A second contact-two generator for weighted second-jet spaces.
-The generator J = R*(A-R) + epsilon*A*S has the same contact as U, but
-its leading coefficient contains an additional R. This checks the algebraic
-ingredient found by the weighted-space matrix experiments. It does not assert
-a new interpolation rank receipt or a stronger protocol claim. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetWeightedContact
 noncomputable section
 set_option autoImplicit false
@@ -9936,8 +8384,7 @@ end ProximityPrize.SubmissionLower.SecondJetWeightedContact
 end Compact_SecondJetWeightedContact
 
 section Compact_SecondJetWeightedBasis
-/-! Independence of the U/J/V family with J powers selected per monomial.
-This proves independence only. Finite support and counting remain separate. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetWeightedBasis
 open scoped BigOperators
 open SecondJetBasis SecondJetSupport SecondJetRank SecondJetLocal
@@ -9951,7 +8398,6 @@ theorem C_smul_base (c : K) (v : Base (K := K)) :
     Polynomial.C (c • v) = c • (Polynomial.C v : Polynomial (Base (K := K))) :=
   map_smul (Polynomial.CAlgHom (R := K) (A := Base (K := K))) c v
 
-/-- The inner polynomial variable is S and the outer variable is epsilon. -/
 def weightedTerm (r h a b : ℕ) (e : Fin 3 →₀ ℕ) : Jet (Base (K := K)) :=
   SecondJetWeightedContact.family
     (Polynomial.C (MvPolynomial.X 0)) (Polynomial.C (MvPolynomial.X 1))
@@ -10058,8 +8504,6 @@ theorem truncateOuter_weightedMake_injective (a b : Fin m → Fin s → ℕ)
   have hh := congrArg (truncate (K := K) (m := m) (s := s)) hpq
   simpa only [LinearMap.comp_apply, truncate_truncateOuter] using hh
 
-/-- Every concretely embedded and vanishing instance of this independent family
-saves its full cardinality in the local rank bound. -/
 theorem finite_source_rank {T : Type*} [AddCommGroup T] [Module K T]
     (W : Submodule K (Jet (Base (K := K)))) [FiniteDimensional K W]
     (f : W →ₗ[K] T) (a b : Fin m → Fin s → ℕ)
@@ -10093,7 +8537,7 @@ end ProximityPrize.SubmissionLower.SecondJetWeightedBasis
 end Compact_SecondJetWeightedBasis
 
 section Compact_SecondJetWeightedSupport
-/-! Signed linear support bounds for the weighted second-jet kernel family. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetWeightedSupport
 open scoped BigOperators Pointwise
 open MvPolynomial SecondJetSupport
@@ -10204,7 +8648,7 @@ end ProximityPrize.SubmissionLower.SecondJetWeightedSupport
 end Compact_SecondJetWeightedSupport
 
 section Compact_SecondJetWeightedLocal
-/-! The weighted independent family in flat coordinates and under contact. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetWeightedLocal
 open SecondJetBasis SecondJetSupport SecondJetLocal SecondJetWeightedBasis
 open SecondJetWeightedSupport MvPolynomial
@@ -10249,7 +8693,7 @@ end ProximityPrize.SubmissionLower.SecondJetWeightedLocal
 end Compact_SecondJetWeightedLocal
 
 section Compact_SecondJetRelaxedSpace
-/-! The clipped local source for degree-sensitive weighted second jets. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetRelaxedSpace
 open scoped BigOperators
 open SecondJetBasis SecondJetSupport SecondJetWeightedSupport SecondJetWeightedLocal
@@ -10353,8 +8797,7 @@ end ProximityPrize.SubmissionLower.SecondJetRelaxedSpace
 end Compact_SecondJetRelaxedSpace
 
 section Compact_SecondJetClippedRectangle
-/-! A clipped rectangle is an ordinary rectangle minus its small reflected
-corner. The closed expression only sums over the removed corner. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetClippedRectangle
 open scoped BigOperators
 open SecondJetCounts
@@ -10441,7 +8884,7 @@ end ProximityPrize.SubmissionLower.SecondJetClippedRectangle
 end Compact_SecondJetClippedRectangle
 
 section Compact_SecondJetRelaxedSourceCounts
-/-! Closed source counts when the varying middle caps contain the uniform cap. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetRelaxedSourceCounts
 open scoped BigOperators
 open SecondJetRelaxedSpace SecondJetClippedRectangle
@@ -10556,8 +8999,7 @@ end ProximityPrize.SubmissionLower.SecondJetRelaxedSourceCounts
 end Compact_SecondJetRelaxedSourceCounts
 
 section Compact_SecondJetRelaxedRank
-/-! A rank bound for the clipped second-jet space using the independent U/J/V
-family. Its finite cardinalities are explicit; numerical receipts are separate. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetRelaxedRank
 open scoped BigOperators
 open SecondJetBasis SecondJetSupport SecondJetLocal SecondJetRelaxedSpace
@@ -10690,7 +9132,7 @@ end ProximityPrize.SubmissionLower.SecondJetRelaxedRank
 end Compact_SecondJetRelaxedRank
 
 section Compact_SecondJetRelaxedKernelCounts
-/-! Closed kernel counts for the independent weighted second-jet family. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetRelaxedKernelCounts
 open scoped BigOperators
 open SecondJetRelaxedRank SecondJetClippedRectangle
@@ -10831,7 +9273,7 @@ end ProximityPrize.SubmissionLower.SecondJetRelaxedKernelCounts
 end Compact_SecondJetRelaxedKernelCounts
 
 section Compact_SecondJetRelaxedGlobalSupport
-/-! Localization preserves the degree-sensitive clipped second-jet source. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetRelaxedGlobalSupport
 open scoped BigOperators
 open MvPolynomial SecondJetSupport SecondJetBasis SecondJetGlobalSupport
@@ -10889,8 +9331,6 @@ theorem localize_support (x u0 u1 : K) (e d : Fin 5 →₀ ℕ) (c : K)
     Matrix.cons_val_four] at hs hl hB hM
   omega
 
-/-- The global weighted cutoff induces the local middle-degree cap used by
-all three numerical profiles. -/
 theorem middle_cap (e : Fin 5 →₀ ℕ) (w B D : ℕ) (hw : 2 ≤ w)
     (hB : 2*e 1+e 3 ≤ B)
     (hD : e 0+w*e 2+(w-1)*e 3+(w-2)*e 1 < D) :
@@ -10925,7 +9365,7 @@ end ProximityPrize.SubmissionLower.SecondJetRelaxedGlobalSupport
 end Compact_SecondJetRelaxedGlobalSupport
 
 section Compact_SecondJetRelaxedGlobalMap
-/-! Global interpolation from the clipped weighted local rank bound. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetRelaxedGlobalMap
 open scoped BigOperators
 open SecondJetSupport SecondJetBasis SecondJetGlobalSupport
@@ -11025,7 +9465,7 @@ end ProximityPrize.SubmissionLower.SecondJetRelaxedGlobalMap
 end Compact_SecondJetRelaxedGlobalMap
 
 section Compact_SecondJetRelaxedCounts
-/-! The closed local rank expression used by the concrete interpolation receipts. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetRelaxedCounts
 open scoped BigOperators
 open SecondJetRelaxedSourceCounts SecondJetRelaxedKernelCounts
@@ -11050,7 +9490,7 @@ end ProximityPrize.SubmissionLower.SecondJetRelaxedCounts
 end Compact_SecondJetRelaxedCounts
 
 section Compact_SecondJetRelaxedGlobalIndex
-/-! A finite global monomial family with separate weight budgets by S degree. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetRelaxedGlobalIndex
 open scoped BigOperators
 noncomputable section
@@ -11139,7 +9579,7 @@ end ProximityPrize.SubmissionLower.SecondJetRelaxedGlobalIndex
 end Compact_SecondJetRelaxedGlobalIndex
 
 section Compact_SecondJetRelaxedGlobalCounts
-/-! Closed coefficient sums for the relaxed global monomial family. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetRelaxedGlobalCounts
 open scoped BigOperators
 open SecondJetRelaxedGlobalIndex
@@ -11184,9 +9624,7 @@ end ProximityPrize.SubmissionLower.SecondJetRelaxedGlobalCounts
 end Compact_SecondJetRelaxedGlobalCounts
 
 section Compact_SecondJetRelaxedDifferentiation
-/-! Degree-sensitive S budgets preserve the required derivative vanishings.
-This module is conditional on the source support and contact hypotheses; it
-makes no claim that the new interpolation source has positive nullity. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetRelaxedDifferentiation
 open MvPolynomial SecondJetSupport SecondJetGlobalSupport SecondJetDifferentiation
 open SecondJetGlobalDifferentiation SecondJetSpecialize
@@ -11195,8 +9633,6 @@ set_option autoImplicit false
 set_option maxHeartbeats 3000000
 variable {K N : Type*} [Field K]
 
-/-- Low S coefficients reserve their own derivative order. Higher coefficients
-reserve the common requested order. The cutoff is strictly above that order. -/
 def reserve (k n0 h : ℕ) : ℕ := if h < n0 then h else k
 
 theorem reserve_ge_order (k n0 h d : ℕ) (hdk : d ≤ k) (hdh : d ≤ h) :
@@ -11220,8 +9656,6 @@ theorem derivative_weight (P : Poly (K := K)) (m a w k n0 d : ℕ)
     rw [← Nat.add_mul, Nat.sub_add_cancel hdm]
   nlinarith
 
-/-- Every requested derivative vanishes after codeword specialization whenever
-its contact and degree-sensitive support bounds are supplied. -/
 theorem derivative_vanish (P : Poly (K := K)) (m a w k n0 d : ℕ)
     (ha : 0 < a) (hwa : w-2 ≤ a) (hdm : d < m) (hdk : d ≤ k)
     (hP : ∀ e ∈ P.support,
@@ -11247,8 +9681,7 @@ end ProximityPrize.SubmissionLower.SecondJetRelaxedDifferentiation
 end Compact_SecondJetRelaxedDifferentiation
 
 section Compact_SecondJetRelaxedCoefficientsReceipt
-/-! Exact global coefficient dimensions for the three exploratory profiles.
-Local rank values and geometric use are separate obligations. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetRelaxedCoefficientsReceipt
 open SecondJetRelaxedGlobalIndex SecondJetRelaxedGlobalCounts
 open SecondJetRelaxedDifferentiation
@@ -11261,8 +9694,7 @@ end ProximityPrize.SubmissionLower.SecondJetRelaxedCoefficientsReceipt
 end Compact_SecondJetRelaxedCoefficientsReceipt
 
 section Compact_SecondJetRelaxedRanksReceipt
-/-! Kernel-checked concrete local rank counts. The geometric use of the
-resulting interpolants is a separate theorem obligation. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetRelaxedRanksReceipt
 open SecondJetRelaxedCounts SecondJetRelaxedCoefficientsReceipt
 set_option autoImplicit false
@@ -11274,9 +9706,7 @@ end ProximityPrize.SubmissionLower.SecondJetRelaxedRanksReceipt
 end Compact_SecondJetRelaxedRanksReceipt
 
 section Compact_SecondJetRelaxedInterpolation
-/-! The three concrete relaxed second-jet interpolants. Their nonzero source,
-all requested derivative vanishings, and degree budgets are unconditional
-consequences of the checked dimensions. Geometric counting is separate. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetRelaxedInterpolation
 open MvPolynomial SecondJetSupport SecondJetGlobalSupport SecondJetSpecialize SecondJetDifferentiation
 open SecondJetRelaxedCoefficientsReceipt SecondJetRelaxedDifferentiation
@@ -11291,8 +9721,7 @@ end ProximityPrize.SubmissionLower.SecondJetRelaxedInterpolation
 end Compact_SecondJetRelaxedInterpolation
 
 section Compact_SecondJetLeadingCoefficient
-/-! The low-degree alternative: if higher S coefficients vanish on a codeword,
-the surviving leading coefficient has enough contact to vanish as well. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetLeadingCoefficient
 open MvPolynomial SecondJetSupport SecondJetGlobalSupport SecondJetSpecialize
 open SecondJetCoefficients SecondJetCoefficientSpecialization SecondJetDifferentiation
@@ -11308,9 +9737,7 @@ end ProximityPrize.SubmissionLower.SecondJetLeadingCoefficient
 end Compact_SecondJetLeadingCoefficient
 
 section Compact_SecondJetProperAlternatives
-/-! The actual proper-helper alternatives for a relaxed interpolant. If none
-applies, its global S degree is large and every cleared derivative is divisible
-by the carrier, precisely the hypotheses of the retained-component theorem. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetProperAlternatives
 open MvPolynomial SecondJetSupport SecondJetCoefficients SecondJetCoefficientSpecialization
 open SecondJetClearedHelper SecondJetHelperWeights SecondJetRelaxedInterpolation
@@ -11326,7 +9753,7 @@ end ProximityPrize.SubmissionLower.SecondJetProperAlternatives
 end Compact_SecondJetProperAlternatives
 
 section Compact_SecondJetRounding
-/-! Scale once and round only after summing all geometric components. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetRounding
 set_option autoImplicit false
 
@@ -11335,12 +9762,11 @@ end ProximityPrize.SubmissionLower.SecondJetRounding
 end Compact_SecondJetRounding
 
 section Compact_SecondJetCombinedCount
-/-! The full second-jet count for a regular irreducible carrier. All geometric
-cases are included; the remaining profile-specific inequalities are numeric. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetCombinedCount
 open scoped Classical
 open MvPolynomial RCN135 RCN136 RCN319 RCN327 RCN238 RCN222
-open SecondJetRegularData SecondJetRegularData.Data SecondJetCoefficients
+open SecondJetCoefficients
 open SecondJetRelaxedInterpolation SecondJetProperAlternatives SecondJetExceptionalComponents
 noncomputable section
 set_option autoImplicit false
@@ -11357,7 +9783,7 @@ end ProximityPrize.SubmissionLower.SecondJetCombinedCount
 end Compact_SecondJetCombinedCount
 
 section Compact_SecondJetNumericGeometry
-/-! Arithmetic interfaces for the three geometric profiles. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetNumericGeometry
 open RCN260 RCN095 RCN294
 set_option autoImplicit false
@@ -11369,10 +9795,10 @@ end ProximityPrize.SubmissionLower.SecondJetNumericGeometry
 end Compact_SecondJetNumericGeometry
 
 section Compact_SecondJetOwnShape
-/-! Connecting an actual carrier's cumulative flag to its numerical cell. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetOwnShape
 open MvPolynomial RCN130 RCN234 RCN156 RCN095 RCN347 RCN135
-open SecondJetRegularData SecondJetRegularData.Data LocatorHybridCells LocatorHybridCellsC1
+open LocatorHybridCells LocatorHybridCellsC1
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 2000000
@@ -11392,8 +9818,7 @@ end ProximityPrize.SubmissionLower.SecondJetOwnShape
 end Compact_SecondJetOwnShape
 
 section Compact_SecondJetUniformReceipts
-/-! Common characteristic and exceptional-count receipts for all three
-second-jet profiles. The maximum source caps are (47,157,2233,21). -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetUniformReceipts
 open SecondJetNumericGeometry RCN260 RCN294
 set_option autoImplicit false
@@ -11405,8 +9830,7 @@ end ProximityPrize.SubmissionLower.SecondJetUniformReceipts
 end Compact_SecondJetUniformReceipts
 
 section Compact_SecondJetProperReceipts
-/-! Exact nonnegative slack identities put every proper-helper branch under
-its normal C2 cost. No finite enumeration or native evaluation is involved. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetProperReceipts
 open SecondJetNumericGeometry RCN260 RCN095 RCN294
 set_option autoImplicit false
@@ -11418,10 +9842,9 @@ end ProximityPrize.SubmissionLower.SecondJetProperReceipts
 end Compact_SecondJetProperReceipts
 
 section Compact_SecondJetProfileBounds
-/-! Concrete second-jet bounds, with all profile arithmetic, exceptional
-counts, characteristic conditions, and interpolation hypotheses discharged. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetProfileBounds
-open RCN135 SecondJetRegularData SecondJetRegularData.Data SecondJetOwnShape
+open RCN135 SecondJetOwnShape
 open SecondJetNumericGeometry SecondJetUniformReceipts SecondJetRelaxedInterpolation
 open SecondJetProperReceipts
 noncomputable section
@@ -11438,8 +9861,7 @@ end ProximityPrize.SubmissionLower.SecondJetProfileBounds
 end Compact_SecondJetProfileBounds
 
 section Compact_SecondJetAffineCeiling
-/-! Affine upper bounds for the rounded moving cost. They allow checking a
-piecewise affine base certificate with no residue-class enumeration. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetAffineCeiling
 open RCN095
 set_option autoImplicit false
@@ -11450,9 +9872,9 @@ end ProximityPrize.SubmissionLower.SecondJetAffineCeiling
 end Compact_SecondJetAffineCeiling
 
 section Compact_SecondJetSingleCap
-/-! Affine, conservatively rounded costs for the three concrete profiles. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetSingleCap
-open RCN095 LocatorFactorAggregate SecondJetRegularData SecondJetRegularData.Data
+open RCN095 LocatorFactorAggregate
 open SecondJetOwnShape SecondJetAffineCeiling
 noncomputable section
 set_option autoImplicit false
@@ -11466,8 +9888,7 @@ end ProximityPrize.SubmissionLower.SecondJetSingleCap
 end Compact_SecondJetSingleCap
 
 section Compact_SecondJetRowIntervals
-/-! Interval checking for arbitrary finite piecewise-affine rows, including
-activation jumps of a second-jet profile. -/
+
 namespace ProximityPrize.SubmissionLower.SecondJetRowIntervals
 open LocatorPhase6800Oracle
 set_option autoImplicit false
@@ -11477,11 +9898,6 @@ def pickTail (z : ℕ) (a : BaseSegment) : List BaseSegment → BaseSegment
   | [] => a
   | s::ss => pickTail z (if s.start ≤ z then s else a) ss
 
-def baseSlopeAt (q : BaseRow) (lo : ℕ) : ℕ :=
-  match q.segments with
-  | [] => 0
-  | a::ss => (pickTail lo a ss).slope
-
 def BaseCell (q : BaseRow) (lo hi : ℕ) : Prop :=
   lo=hi ∨ (3 ≤ lo ∧ match q.segments with
     | [] => True
@@ -11489,65 +9905,6 @@ def BaseCell (q : BaseRow) (lo hi : ℕ) : Prop :=
 instance (q : BaseRow) (lo hi : ℕ) : Decidable (BaseCell q lo hi) := by
   unfold BaseCell
   cases q.segments <;> infer_instance
-
-theorem fold_pick (z : ℕ) (a : BaseSegment) (ss : List BaseSegment) :
-    ss.foldl (fun best next => if next.start ≤ z then next else best) a = pickTail z a ss := by
-  induction ss generalizing a with
-  | nil => rfl
-  | cons s ss ih =>
-    simp only [List.foldl_cons,pickTail]
-    exact ih _
-
-theorem pick_stable (lo hi z : ℕ) (a : BaseSegment) (ss : List BaseSegment)
-    (h : ∀ s ∈ ss, s.start ≤ lo ∨ hi < s.start) (hz : lo ≤ z) (hhi : z ≤ hi) :
-    pickTail z a ss = pickTail lo a ss := by
-  induction ss generalizing a with
-  | nil => rfl
-  | cons s ss ih =>
-    have hs := h s (by simp)
-    have hss : ∀ s ∈ ss, s.start ≤ lo ∨ hi < s.start := fun s hs => h s (by simp [hs])
-    rcases hs with hs | hs
-    · simp only [pickTail,if_pos hs,if_pos (hs.trans hz)]
-      exact ih _ hss
-    · simp only [pickTail,if_neg (show ¬s.start ≤ z by omega),if_neg (show ¬s.start ≤ lo by omega)]
-      exact ih _ hss
-
-theorem pick_start (lo : ℕ) (a : BaseSegment) (ss : List BaseSegment) (ha : a.start ≤ lo) :
-    (pickTail lo a ss).start ≤ lo := by
-  induction ss generalizing a with
-  | nil => exact ha
-  | cons s ss ih =>
-    simp only [pickTail]
-    split
-    · exact ih _ (by assumption)
-    · exact ih _ ha
-
-theorem segment_evalAt_shift (s : BaseSegment) (lo z : ℕ)
-    (hs : s.start ≤ lo) (hz : lo ≤ z) :
-    s.evalAt z = s.evalAt lo+s.slope*(z-lo) := by
-  have hsplit : z-s.start = (lo-s.start)+(z-lo) := by omega
-  simp only [BaseSegment.evalAt,hsplit,Nat.mul_add]
-  omega
-
-theorem baseAt_affine (q : BaseRow) (lo hi z : ℕ)
-    (hcell : BaseCell q lo hi) (hlo : lo ≤ z) (hhi : z ≤ hi) :
-    q.evalAt z = q.evalAt lo+baseSlopeAt q lo*(z-lo) := by
-  rcases hcell with heq | ⟨hlo3,hcell⟩
-  · have hz : z=lo := by omega
-    subst z
-    simp
-  · have hz3 : 3 ≤ z := hlo3.trans hlo
-    simp only [BaseRow.evalAt,if_neg (show z≠0 by omega),if_neg (show z≠1 by omega),
-      if_neg (show z≠2 by omega),if_neg (show lo≠0 by omega),if_neg (show lo≠1 by omega),
-      if_neg (show lo≠2 by omega)]
-    cases hs : q.segments with
-    | nil => simp [hs,evalBaseSegments,baseSlopeAt]
-    | cons a ss =>
-      rw [hs] at hcell
-      simp only at hcell
-      simp only [hs,evalBaseSegments,baseSlopeAt,fold_pick]
-      rw [pick_stable lo hi z a ss hcell.2 hlo hhi]
-      exact segment_evalAt_shift _ lo z (pick_start lo a ss hcell.1) hlo
 
 end ProximityPrize.SubmissionLower.SecondJetRowIntervals
 

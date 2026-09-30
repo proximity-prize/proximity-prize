@@ -1,16 +1,13 @@
-import ProximityPrize.SubmissionLower.MovingSourceGeometricBudget6814
-import ProximityPrize.SubmissionLower.WholeSpaceSourceAlternative6814
-
-/-! The faithful field of the original four-variable carrier. Its kernel
-is proved to be exactly (F), so the source alternative produces global
-helper divisibility, not a root identity at a special closed point. -/
+import ProximityPrize.SubmissionLower.MovingSourcePoleBudget6814
+import ProximityPrize.SubmissionLower.MovingSourceCarrierZeros6814
+import ProximityPrize.SubmissionLower.WholeSpaceSourceKernel6814
 namespace ProximityPrize.SubmissionLower.MovingSourceCarrierField6814
 noncomputable section
 set_option autoImplicit false
 set_option maxRecDepth 20000
 set_option maxHeartbeats 2000000
 open MvPolynomial SecondJetCoefficients SecondJetClearedHelper
-open WholeSpaceCube6814 WholeSpaceCubeUniform6814 WholeSpaceSourceAlternative6814
+open WholeSpaceCube6814 WholeSpaceCubeUniform6814
 open MovingSourceCarrierZeros6814 RCN234 RCN156
 
 variable {K : Type} [Field K]
@@ -62,53 +59,5 @@ theorem carrier_polynomial_nonzero
     exact fun hz => hh.2 ((carrierMap_zero_iff F _).mp hz)
   exact (SecondJetCoefficientAvoidance.map_degree_preserved (asS P) (carrierMap F) hl).1
 
-/-- Received-word data and the actual simple-quadratic branch yield both
-global carrier identities. Neither a faithful-map assumption nor either
-helper-divisibility conclusion is a premise. -/
-theorem exists_helper_or_global_pair
-    {N : Type} [Fintype N] [CharP K 2130706433]
-    (nodes : N ↪ K) (u0 u1 : N → K) (hN : Fintype.card N=262144)
-    (J : WholeSpaceCube6814.Poly (K := K)) (hJi : Irreducible J)
-    (hmid : 25≤weightedTotalDegree middleWeights J)
-    (hB : weightedTotalDegree slopeWeights J=9)
-    (hJdegree : J.degreeOf 1≤2)
-    (U T : ℕ) (hJbounds : ∀ e ∈ J.support,
-      2*e 1+e 3≤9 ∧ e 1+e 2+e 3≤U ∧ e 1+e 2+e 3+e 4≤T)
-    (hT : T≤1700)
-    (F : MvPolynomial (Fin 4) K) [Fact (Irreducible F)]
-    (hFT : 1700<wt residualTotalWeights F)
-    (r y t : ℕ) (hr : 1≤r) (hy : 1≤y) (ht : 1≤t)
-    (hF : wt residualSWeights F≤r ∧ wt residualYSWeights F≤y ∧ wt residualTotalWeights F≤t)
-    (hpos : 0<F.degreeOf 2) (hsmall : F.degreeOf 2<2130706433)
-    (hroot : ((asS J).map (carrierMap F)).rootMultiplicity
-      (SecondJetCarrierDichotomy.ratio (carrierMap F) F)=1) :
-    (∃ Q, ProperHelper F Q r y t nodes u0 u1) ∨
-    ∃ Q : WholeSpaceCube6814.Poly (K := K), Q≠0 ∧ IsRelPrime J Q ∧
-      F∣helper J F 2 0 ∧ F∣helper Q F 14 0 ∧
-      (∀ e ∈ Q.support, 2*e 1+e 3≤31 ∧ e 1+e 2+e 3≤98 ∧ e 1+e 2+e 3+e 4≤1700) ∧
-      Q.degreeOf 1≤14 := by
-  have hH := carrier_H_nonzero F hpos hsmall
-  have hJne := carrier_polynomial_nonzero F J hJi.ne_zero T
-    (fun e he => (hJbounds e he).2.2) (hT.trans_lt hFT)
-  rcases exists_helper_or_curvature_pair nodes u0 u1 hN J hJi hmid hB F Fact.out
-    hFT r y t hr hy ht hF (carrierMap F) (carrierMap_self F) hH hJne hroot with hhelp | hp
-  · exact Or.inl hhelp
-  obtain ⟨Q,hQ,hcop,hzero,hTotal,hMid,hSlope,hDegree⟩ := hp
-  right
-  refine ⟨Q,hQ,hcop,?_,?_,?_,hDegree⟩
-  · exact helper_dvd_of_generic_root J F (carrierMap F) (carrierMap_zero_iff F) 2
-      (MvPolynomial.degreeOf_le_iff.mp hJdegree) hH (simple_root_vanishes _ _ hroot)
-  · exact helper_dvd_of_generic_root Q F (carrierMap F) (carrierMap_zero_iff F) 14
-      (MvPolynomial.degreeOf_le_iff.mp hDegree) hH hzero
-  · intro e he
-    have hs := (MvPolynomial.le_weightedTotalDegree slopeWeights he).trans hSlope
-    have hm := (MvPolynomial.le_weightedTotalDegree middleWeights he).trans hMid
-    have ht := (MvPolynomial.le_weightedTotalDegree totalWeights he).trans hTotal
-    exact ⟨by simpa [weight_coords,slopeWeights,Nat.mul_comm] using hs,
-      by simpa [weight_coords,middleWeights] using hm,
-      by simpa [weight_coords,totalWeights] using ht⟩
-
-#print axioms carrierMap_zero_iff
-#print axioms exists_helper_or_global_pair
 end
 end ProximityPrize.SubmissionLower.MovingSourceCarrierField6814

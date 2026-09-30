@@ -1,8 +1,4 @@
-import ProximityPrize.SubmissionLower.MovingSourceThickGenericPair6814
-
-/-! First-cut slices extend the frozen code field once more. The actual
-source polynomials remain nonzero and coprime through that extension;
-the code variable is not reinterpreted as a new slicing parameter. -/
+import ProximityPrize.SubmissionLower.MovingSourcePairResultant6814
 namespace ProximityPrize.SubmissionLower.MovingSourceExtendedCoefficients6814
 noncomputable section
 set_option autoImplicit false
@@ -61,6 +57,5 @@ theorem extended_coefficients_relPrime (f : GenericField K →+* E)
     (MvPolynomial.finSuccEquiv E 3 (sourceMap K (codeMap f) Q)) at hv
   simpa only [view_sourceMap] using hv
 
-#print axioms extended_coefficients_relPrime
 end
 end ProximityPrize.SubmissionLower.MovingSourceExtendedCoefficients6814

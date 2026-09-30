@@ -1,8 +1,4 @@
 import ProximityPrize.SubmissionLower.LowerFoundation
-
-/-! Refined coefficient data for the correlated differential-tail recurrence.
-Only definitions and elementary exponent side conditions live here. -/
-
 namespace ProximityPrize.SubmissionLower.BoundaryTailAlgebra
 
 open RCN055 RCN056 RCN313

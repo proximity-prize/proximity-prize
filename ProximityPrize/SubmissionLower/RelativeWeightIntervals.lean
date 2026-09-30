@@ -1,13 +1,10 @@
 import ProximityPrize.SubmissionLower.RelativeProfileSupplier
-
 namespace ProximityPrize.SubmissionLower.RelativeBounded6814
 open scoped BigOperators
 open RCN100
 set_option autoImplicit false
 set_option maxHeartbeats 2000000
 
-/-- Increasing the code cutoff enlarges the coefficient box. This identity
-is proved about the original finite sum, not an unverified fast evaluator. -/
 theorem coefficientCount_mono_cutoff (w L s : ℕ) :
     Monotone (fun D => coefficientCount D w L s) := by
   intro D1 D2 hD
@@ -38,5 +35,3 @@ theorem clipped_cutoff_antitone (alpha beta w B R A : ℕ) :
   exact min_le_min (Nat.add_le_add_right (Nat.sub_le_sub_right h w) 1) le_rfl
 
 end ProximityPrize.SubmissionLower.RelativeBounded6814
-
-#print axioms ProximityPrize.SubmissionLower.RelativeBounded6814.profile_rows_mono_weight

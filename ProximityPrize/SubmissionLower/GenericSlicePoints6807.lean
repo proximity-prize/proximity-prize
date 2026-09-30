@@ -1,11 +1,4 @@
-/-
-UNCOMPILED. Concrete generic-fiber point construction from the pinned APIs.
-The nonlinear elimination theorem RCN202.embedding_point_certificate is used
-at k=0, H=U=1, G=0. Its equation becomes t-ell and its cut becomes A.
-In particular IsolatedPoint is a conclusion here, not an assumed cut budget.
--/
 import ProximityPrize.SubmissionLower.LowerFoundation
-
 namespace ProximityPrize.SubmissionLower.GenericSlicePoints6807
 open scoped Classical BigOperators
 open RCN002 RCN072 RCN264 RCN207 RCN208 RCN134 RCN084
@@ -29,9 +22,6 @@ def sliceEquation (ell : Poly) : PE :=
   MvPolynomial.C (algebraMap (RatFunc K) E (RCN202.rationalVariable K)) -
     scalarPolynomialMap K E ell
 
-/-- Drop only the auxiliary regularity gate; the underlying prime is unchanged.
-This is what permits the old k=0 theorem to use H=1 while preserving the original
-H*c exclusion separately in the resulting point certificate. -/
 abbrev gateOneComponent (F A R : Poly) (C : RegularComponent K F A R) :
     RegularComponent K F (filteredCut 0 (fun _ : Fin 1 => A) 1 0) 1 :=
   ⟨C.1, by
@@ -115,8 +105,6 @@ variable {I : Type} [Fintype I]
   [∀ i, FiniteDimensional (RatFunc K) (CoordinateField K (P i))]
   [∀ i, Algebra.IsSeparable (RatFunc K) (CoordinateField K (P i))]
 
-/-- The left side is weighted embeddings, not merely a number of points.
-Separability is indispensable for AlgHom.card = finrank. -/
 theorem weighted_embedding_sum (weight : I → ℕ) :
     (∑ z : (Σ i, CoordinateField K (P i) →ₐ[RatFunc K] E), weight z.1) =
       ∑ i, weight i * Module.finrank (RatFunc K) (CoordinateField K (P i)) := by

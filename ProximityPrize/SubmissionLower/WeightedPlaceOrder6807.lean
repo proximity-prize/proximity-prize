@@ -1,12 +1,5 @@
 import ProximityPrize.SubmissionLower.PureFlagSliceBudget6807
-/-
-UNCOMPILED. Ideal-power multiplicities at the original affine-model places.
-No equality of multiplicities after base change is required. A point valuation
-is nonpositive on the affine coordinate ring and strictly positive in order on
-the point's maximal ideal. Ideal powers then give the full lower bound mu.
--/
 import ProximityPrize.SubmissionLower.LowerFoundation
-
 namespace ProximityPrize.SubmissionLower.WeightedPlaceOrder6807
 open scoped Classical BigOperators WithZero
 open IsDedekindDomain
@@ -20,8 +13,6 @@ variable {A L : Type*} [CommRing A] [Field L]
   (iota : A →+* L) (v : Valuation L (WithZero (Multiplicative ℤ)))
   (hbound : ∀ a : A, v (iota a) ≤ 1)
 
-/-- Functions having order at least n. All affine functions have order >= 0,
-so this subset really is an ideal, not just an additive subgroup. -/
 def orderIdeal (n : ℕ) : Ideal A where
   carrier := {a | v (iota a) ≤ WithZero.exp (-(n : ℤ))}
   zero_mem' := by simp
@@ -72,8 +63,7 @@ theorem order_ge_of_value_le (x : L) (hx : x ≠ 0) (n : ℕ)
   omega
 
 include hbound in
-/-- A denominator nonvanishing at the point has valuation exactly one.
-It need not already have an inverse inside the affine coordinate ring. -/
+
 theorem normalized_order_ge_pow {K : Type*} [Field K] [Algebra K A]
     (phi : A →ₐ[K] K)
     (hpoint : ∀ a, v (iota a) < 1 ↔ phi a = 0)
@@ -109,8 +99,6 @@ local instance : IsScalarTower K (RatFunc K) L :=
       ← IsScalarTower.algebraMap_apply (Polynomial K) (RatFunc K) L,
       ← IsScalarTower.algebraMap_apply K (Polynomial K) L]
 
-/-- Multiplicity at the same actualPointPlace used by the pinned zero-counting
-infrastructure. This does not posit a new low-cost abstract place. -/
 theorem actual_normalized_order_ge_pow (phi : A →ₐ[K] K)
     (n : ℕ) (a b : A) (ha : a ∈ (RingHom.ker phi.toRingHom)^n)
     (hb : phi b ≠ 0)

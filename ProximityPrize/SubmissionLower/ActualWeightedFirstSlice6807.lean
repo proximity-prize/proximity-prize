@@ -1,14 +1,7 @@
-/-
-UNCOMPILED. Per-prime-slice integration of actual Stage multiplicities, generic
-embedding points, the frozen helper-root theorem, and the original product formula.
-The two remaining budget inputs are PURE FLAG finite-place bounds; they are
-provided by PureFlagSliceBudget6807, not a hypothesized first-cut inequality.
--/
 import ProximityPrize.SubmissionLower.ActualSliceMultiplicity6807
 import ProximityPrize.SubmissionLower.FirstSlicePoleBudget6807
 import ProximityPrize.SubmissionLower.PureFlagSliceBudget6807
 import ProximityPrize.SubmissionLower.WeightedZeroMass6807
-
 namespace ProximityPrize.SubmissionLower.ActualWeightedFirstSlice6807
 open RCN057 (WeightBound)
 open RCN204 (flagPole)
@@ -35,8 +28,6 @@ local notation "w" => RCN326.w
 
 local notation "φE" => RingHom.comp (algebraMap (GenericField K) E) (polynomialEmbedding K)
 
-/-- The per-slice zero count for ANY exponent `e` of the counted function
-`baseNumerator/H^e` (denominator `c*H^(e+3)`), given its pole mass. -/
 theorem first_cut_on_prime_slice_of
     (S : Stage K I Gamma x p flag errorCap stageSupport)
     (hproper : ¬ S.G ∣ globalTailCut (polynomialEmbedding K) S.F (w+1))

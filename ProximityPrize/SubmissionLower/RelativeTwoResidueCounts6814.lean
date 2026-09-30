@@ -1,9 +1,5 @@
 import ProximityPrize.SubmissionLower.RelativeWeightIntervals
 import ProximityPrize.SubmissionLower.LowerGeometry
-
-/-! Extend the existing closed coefficient formula across the one residue
-boundary occurring in the saved relative certificates. No large source
-coefficient space is enumerated. -/
 namespace ProximityPrize.SubmissionLower.RelativeCertificate6814
 open scoped BigOperators
 open RCN100 LocatorFastKernelArithmetic
@@ -74,5 +70,4 @@ theorem coefficientCount_eq_twoResidue (q r w L s : ℕ)
       (coefficientCount_eq_oneResidueCoefficientCount (q+1-(w-r)) 0 w (L-(w-r)) (s-(w-r))
         hw (by omega) (by omega) (by omega))
 
-#print axioms coefficientCount_eq_twoResidue
 end ProximityPrize.SubmissionLower.RelativeCertificate6814

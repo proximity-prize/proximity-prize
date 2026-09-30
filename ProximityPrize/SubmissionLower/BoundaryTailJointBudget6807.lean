@@ -1,15 +1,6 @@
 import ProximityPrize.SubmissionLower.SecondJetPointwiseBudgets6807
-/-
-UNCOMPILED CONDITIONAL REFACTOR. This file does not prove the new geometry.
-The premise `hjoint` is precisely the obligation to be discharged by the
-same-graph, multiplicity-preserving double-cut theorem. It is not an axiom.
-All low-delay, high-multiplicity and tangent pointwise branches below are
-copied unchanged from the pinned BoundaryTailProvider.lean. The only proof
-change is the final sum interface.
--/
 import ProximityPrize.SubmissionLower.BoundaryTailComponent
 import ProximityPrize.SubmissionLower.BoundaryTailNormalArithmetic
-
 namespace ProximityPrize.SubmissionLower.BoundaryTailJointBudget6807
 open scoped Classical BigOperators
 open RCN135 RCN136 RCN159 RCN264 RCN074 RCN086 RCN243 RCN238 RCN095 RCN237 RCN198 RCN275 RCN244 RCN327 RCN263 RCN334 RCN332 RCN336 RCN312 RCN339 RCN330 RCN174 RCN319
@@ -196,7 +187,6 @@ theorem exists_provider_of_joint_curve_budget
     cost_sum_le := hsum
     componentBound := hactiveBound
     dichotomy := providerDichotomy }⟩
-
 
 end
 end ProximityPrize.SubmissionLower.BoundaryTailJointBudget6807

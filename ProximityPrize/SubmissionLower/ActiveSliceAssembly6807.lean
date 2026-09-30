@@ -1,13 +1,6 @@
-/-
-UNCOMPILED. All active slice factors, actual Stage multiplicities, and empty
-fibres are assembled here. The only geometric point inputs are incidence with
-the slice and isolation; GenericSlicePoints6807 constructs both from embeddings.
-There is no input CJ, CV, first-cut budget, or joint budget.
--/
 import ProximityPrize.SubmissionLower.ActualWeightedFirstSlice6807
 import ProximityPrize.SubmissionLower.WeightedSliceAssignment6807
 import ProximityPrize.SubmissionLower.SmallSliceBudgets6807
-
 namespace ProximityPrize.SubmissionLower.ActiveSliceAssembly6807
 open RCN057 (WeightBound)
 open RCN086 RCN074
@@ -35,9 +28,6 @@ local notation "Ω" => GenericField K
 local notation "PE" => MvPolynomial (Fin 3) E
 local notation "w" => RCN326.w
 
-/-- Regularity of the original F forces regularity of the chosen carrier at
-an old prime; it is stronger than merely saying the derivative polynomial is
-not identically zero. -/
 theorem carrier_derivative_not_mem
     (S : Stage K I Gamma x p flag errorCap stageSupport) (C : FirstTailComponent S) :
     MvPolynomial.pderiv (1 : Fin 3) S.G ∉ C.1 := by
@@ -52,9 +42,6 @@ theorem carrier_derivative_not_mem
     (C.1.mul_mem_right (MvPolynomial.pderiv (1 : Fin 3) Q)
       (regularComponent_G_mem Ω S.G _ _ C))
 
-/-- A per-prime-slice first-cut charge: on every prime slice component `D ∋ G, N`
-through the embedding points of a `Good` family, `c*Σμ ≤ m*CJ+n*CV` whenever the
-flags `J` and `V` have slice pole budgets `CJ` and `CV`. -/
 def SliceCharge (S : Stage K I Gamma x p flag errorCap stageSupport)
     (hproper : ¬ S.G ∣ globalTailCut (polynomialEmbedding K) S.F (w+1))
     (Good : FirstTailComponent S → Prop) (N : PE) (c m n : ℕ) (J V : FlagDegree) : Prop :=
@@ -73,8 +60,6 @@ def SliceCharge (S : Stage K I Gamma x p flag errorCap stageSupport)
       (∑ nu ∈ W, flagPole nu.val (coordinate E D) V) ≤ (CV : ℤ)) →
     c * (∑ i, localMultiplicity S (canonicalLocalDVRFamily S hproper) (old i)) ≤ m*CJ+n*CV
 
-/-- This theorem actually constructs the pure-flag budgets and disjoint point
-assignment. Repeated components and empty fibres do not add multiplicity. -/
 theorem first_cut_on_all_active_slices
     (S : Stage K I Gamma x p flag errorCap stageSupport)
     (hproper : ¬ S.G ∣ globalTailCut (polynomialEmbedding K) S.F (w+1))

@@ -1,6 +1,5 @@
 import ProximityPrize.SubmissionLower.HigherInitialArithmetic6810
 import ProximityPrize.SubmissionLower.LowerGeometry
-
 namespace ProximityPrize.SubmissionLower.SecondJetTotalAvoidance
 open MvPolynomial SecondJetSupport SecondJetCoefficients RCN234 RCN156
 noncomputable section
@@ -8,7 +7,6 @@ set_option autoImplicit false
 set_option maxHeartbeats 5000000
 variable {K : Type*} [Field K]
 
-/-- A coefficient loses one unit of residual total weight per S power. -/
 theorem coefficient_total_weight (P : Poly (K := K)) (L j : ℕ)
     (hP : ∀ e ∈ P.support, e 1+e 2+e 3+e 4 ≤ L) :
     wt residualTotalWeights ((asS P).coeff j) ≤ L-j := by
@@ -54,7 +52,6 @@ end ProximityPrize.SubmissionLower.SecondJetTotalAvoidance
 namespace ProximityPrize.SubmissionLower.SecondJetPairBounds
 open RCN260 RCN052 RCN294
 
-/-- The regular-seed inequality only needs the carrier's agreement vector. -/
 theorem count_le_left_cap {K : Type} [Field K]
     (P : UnequalParameters) (F : MvPolynomial (Fin 4) K)
     (hY : F.degreeOf 1 ≤ P.leftY) (hR : F.degreeOf 2 ≤ P.leftR)
@@ -91,7 +88,7 @@ end ProximityPrize.SubmissionLower.SecondJetRegularData.Data
 namespace ProximityPrize.SubmissionLower.SecondJetAsymmetric
 open scoped Classical
 open MvPolynomial RCN135 RCN136 RCN319 RCN327 RCN238 RCN222 RCN234 RCN156
-open SecondJetRegularData SecondJetRegularData.Data SecondJetCoefficients
+open SecondJetCoefficients
 open SecondJetRelaxedInterpolation SecondJetProperAlternatives SecondJetExceptionalComponents
 open AsymmetricHelper
 noncomputable section
@@ -108,7 +105,6 @@ end ProximityPrize.SubmissionLower.SecondJetAsymmetric
 
 namespace ProximityPrize.SubmissionLower.SecondJetOwnShape
 open MvPolynomial RCN130 RCN234 RCN156 RCN095 RCN347 RCN135
-open SecondJetRegularData SecondJetRegularData.Data
 noncomputable section
 set_option autoImplicit false
 variable {K I : Type} [Field K] [CharP K 2130706433] [Fintype I]
@@ -121,7 +117,7 @@ namespace ProximityPrize.SubmissionLower.SecondJetProfile114
 open SecondJetRelaxedGlobalIndex SecondJetRelaxedGlobalCounts SecondJetRelaxedCounts
 open SecondJetRelaxedCoefficientsReceipt SecondJetRelaxedInterpolation
 open SecondJetNumericGeometry RCN260 RCN294 RCN135
-open SecondJetRegularData SecondJetRegularData.Data SecondJetOwnShape
+open SecondJetOwnShape
 noncomputable section
 set_option autoImplicit false
 set_option maxRecDepth 100000
@@ -143,7 +139,7 @@ set_option maxHeartbeats 5000000
 end ProximityPrize.SubmissionLower.SecondJetRefinedCap
 
 namespace ProximityPrize.SubmissionLower.SecondJetRefinedCap
-open RCN130 RCN234 RCN156 RCN347 SecondJetRegularData SecondJetRegularData.Data SecondJetOwnShape
+open RCN130 RCN234 RCN156 RCN347 SecondJetOwnShape
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 4000000

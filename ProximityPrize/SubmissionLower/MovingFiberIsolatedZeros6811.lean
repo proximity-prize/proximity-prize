@@ -1,9 +1,4 @@
 import ProximityPrize.SubmissionLower.MovingFiberSourceZeros6811
-
-/-! The source-sensitive count on all components of an actual pure slice.
-Component coverage, empty components, pure pole budgets, and the final mixed
-budget are constructed here; no desired projection-degree bound is a premise.
--/
 namespace ProximityPrize.SubmissionLower.MovingFiberIsolatedZeros6811
 open scoped Classical BigOperators WithZero
 open RCN002 RCN005 RCN006 RCN007 RCN026 RCN039 RCN046 RCN084 RCN095
@@ -148,6 +143,5 @@ theorem isolated_moving_points_scaled
     _ ≤ ∑ g : ↥(activeFactors carrier N), flagMixed (exactFlag g.1) q V := Finset.sum_le_sum (fun g _ => hcount g)
     _ ≤ _ := activeFactors_mixed_sum_le carrier N hcarrier p q V hflag
 
-#print axioms isolated_moving_points_scaled
 end
 end ProximityPrize.SubmissionLower.MovingFiberIsolatedZeros6811

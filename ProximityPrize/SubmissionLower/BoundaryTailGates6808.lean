@@ -1,12 +1,10 @@
 import ProximityPrize.SubmissionLower.BoundaryTailRealization
 import ProximityPrize.SubmissionLower.LowerGeometry
-
 namespace ProximityPrize.SubmissionLower.BoundaryTailGates6808
 open RCN095 RCN198 RCN263 RCN287 RCN327 LocatorHybridCells
 set_option maxHeartbeats 1000000
 set_option maxRecDepth 10000
 
-/-- Exact characteristic gates for the actual row, instead of a rectangular cap. -/
 def Safe (r y : ℕ) : Prop :=
   r * (cellFirstTail y y r).yz + y * (cellFirstTail y y r).all < 2130706433 ∧
   r * (sharpResidualAgreementFlag (cellSupport y y r) w).yz +

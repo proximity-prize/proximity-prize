@@ -1,5 +1,4 @@
 import ProximityPrize.SubmissionLower.RelativeCentering
-
 namespace ProximityPrize.SubmissionLower.RelativeBounded6814
 open scoped BigOperators
 open MvPolynomial RCN119 RCN100 RCN122 ContactOrderBridge
@@ -157,9 +156,6 @@ private theorem exists_not_dvd_kernel
     exact (Nat.add_le_add hrange hupperCount).trans_eq (Nat.add_comm _ _)
   exact (Nat.not_le_of_gt hdim) hcount
 
-/-- A proper helper from the exact relative dimension inequality. The
-factor is fixed across all nodes; no selected-factor or rank hypothesis
-is smuggled into the conclusion. -/
 theorem exists_proper_relative_helper
     {I : Type*} [Fintype I] {DF TF RF D w L s nu : ℕ}
     (F : Poly4 K) (hF : F ≠ 0)
@@ -194,5 +190,3 @@ theorem exists_proper_relative_helper
 
 end
 end ProximityPrize.SubmissionLower.RelativeBounded6814
-
-#print axioms ProximityPrize.SubmissionLower.RelativeBounded6814.exists_proper_relative_helper

@@ -1,5 +1,4 @@
 import ProximityPrize.SubmissionLower.RelativeClippedOrders
-
 namespace ProximityPrize.SubmissionLower.RelativeBounded6814
 open scoped BigOperators
 open MvPolynomial RCN119 RCN100 RCN122 ContactOrderBridge
@@ -15,8 +14,6 @@ def profileRowRank (alpha beta L s T R mu : ℕ) : ℕ :=
   localRankBound (alpha-beta*(mu-1)) L s-
     localRankBound (alpha-beta*(mu-1)-mu) (L-T) (s-R)
 
-/-- A finite envelope of scalar contact rows bounds the actual node sum.
-The contact cap is derived from irreducibility, not assumed for the nodes. -/
 theorem profile_dimension_test
     {I : Type*} [Fintype I] {DF T R B D w L s nu : ℕ}
     (F : Poly4 K) (hF : Irreducible F) (hR : 0 < F.degreeOf 2)
@@ -49,8 +46,6 @@ theorem profile_dimension_test
   rw [heq] at hs
   exact (Nat.add_le_add_left hs _).trans_lt hc
 
-/-- The profile-facing proper-helper theorem: exactly the finite row
-inequalities and clipped cutoff used by the saved arithmetic checks. -/
 theorem exists_profile_helper
     {I : Type*} [Fintype I] [DecidableEq I] {DF T R B D w L s nu : ℕ}
     (F : Poly4 K) (hF : Irreducible F) (hRpos : 0 < F.degreeOf 2)
@@ -95,5 +90,3 @@ theorem exists_profile_helper
 
 end
 end ProximityPrize.SubmissionLower.RelativeBounded6814
-
-#print axioms ProximityPrize.SubmissionLower.RelativeBounded6814.exists_profile_helper

@@ -1,10 +1,6 @@
 import ProximityPrize.SubmissionLower.RelativeGeneralRank6814
 import ProximityPrize.SubmissionLower.RelativeCoefficientAffine6814
 import ProximityPrize.SubmissionLower.RelativeRoundedAffine6814
-
-/-! Exact signed affine margins for the original coefficient and rank
-counts. Rearranging the row test avoids assuming that a Nat subtraction
-can be treated as signed subtraction. -/
 namespace ProximityPrize.SubmissionLower.RelativeCertificate6814
 open RCN100 ClosedRank
 set_option autoImplicit false
@@ -75,5 +71,4 @@ theorem row_test_of_margin (D nu L s T R m mu : ℕ)
   apply row_test_of_rearranged _ _ _ _ 262144 (multiple_count_lt_source _ _ _ _ _ _ _ hD hnu)
   exact_mod_cast hi
 
-#print axioms row_test_of_margin
 end ProximityPrize.SubmissionLower.RelativeCertificate6814

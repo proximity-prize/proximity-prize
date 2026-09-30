@@ -1,7 +1,6 @@
 import ProximityPrize.SubmissionLower.BoundaryTailComponent
 import ProximityPrize.SubmissionLower.BoundaryTailPole
 import ProximityPrize.SubmissionLower.LowerGeometry
-
 namespace ProximityPrize.SubmissionLower.BoundaryTailAlgebra
 set_option maxRecDepth 10000
 set_option maxHeartbeats 1000000

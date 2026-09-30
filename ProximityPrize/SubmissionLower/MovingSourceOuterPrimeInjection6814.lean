@@ -1,8 +1,4 @@
 import ProximityPrize.SubmissionLower.MovingSourceOuterMovingBudget6814
-
-/-! The actual normalized geometric Stage labels give disjoint original
-first-tail primes. This supplies the injectivity required by both outer
-generic-fibre counts; it is not a cardinality assumption. -/
 namespace ProximityPrize.SubmissionLower.MovingSourceOuterPrimeInjection6814
 noncomputable section
 set_option autoImplicit false
@@ -63,6 +59,5 @@ theorem outer_stage_primes_injective
   exact congrArg (fun C : FirstTailComponent (S i) => (⟨i,C⟩ : (j : J) × FirstTailComponent (S j)))
     (Subtype.ext he)
 
-#print axioms outer_stage_primes_injective
 end
 end ProximityPrize.SubmissionLower.MovingSourceOuterPrimeInjection6814

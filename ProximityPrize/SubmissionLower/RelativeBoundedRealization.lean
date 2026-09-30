@@ -1,6 +1,5 @@
 import ProximityPrize.SubmissionLower.RelativeContactRank
 import ProximityPrize.SubmissionLower.RelativeContactVanish
-
 namespace ProximityPrize.SubmissionLower.RelativeBounded6814
 open scoped BigOperators
 open MvPolynomial RCN119 RCN100 RCN122 ContactOrderBridge
@@ -161,8 +160,6 @@ theorem boundedJetMap_ker (m L s : ℕ) :
   rw [Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero, mem_contactSubmodule,
     ← sourceJet_eq_zero_iff]
 
-/-- The bounded space has the exact dimension used by the numeric certificates,
-now as an image in the actual contact-jet quotient. -/
 theorem boundedJetMap_finrank (m L s : ℕ) :
     Module.finrank K (LinearMap.range (boundedJetMap K m L s)) = localRankBound m L s := by
   have hfull := LinearMap.range_eq_top.mpr (sourceJet_surjective K m L s)
@@ -174,5 +171,3 @@ theorem boundedJetMap_finrank (m L s : ℕ) :
 
 end
 end ProximityPrize.SubmissionLower.RelativeBounded6814
-
-#print axioms ProximityPrize.SubmissionLower.RelativeBounded6814.boundedJetMap_finrank

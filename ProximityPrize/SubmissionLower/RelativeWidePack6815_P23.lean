@@ -1,0 +1,277 @@
+import ProximityPrize.SubmissionLower.RelativeWideBlocks6815
+set_option Elab.async false
+set_option autoImplicit false
+set_option maxHeartbeats 6000000
+set_option maxRecDepth 100000
+
+namespace ProximityPrize.SubmissionLower.RelativeCompact6815_R138
+open RelativeWideBlocks6815 RelativeCertificate6815 RelativeCompactBlocks6815
+noncomputable section
+def band : Band := ⟨15,52,3013,3310,43532346559267973⟩
+private def profiles : ℕ → Profile
+  | 0 => ⟨24763,147,5079⟩
+  | 1 => ⟨24820,148,5079⟩
+  | 2 => ⟨24728,149,5079⟩
+  | 3 => ⟨24634,150,5079⟩
+  | 4 => ⟨24784,150,5079⟩
+  | 5 => ⟨24852,146,5079⟩
+  | 6 => ⟨24794,145,5079⟩
+  | 7 => ⟨24939,145,5079⟩
+  | 8 => ⟨24880,144,5079⟩
+  | 9 => ⟨24334,159,5079⟩
+  | 10 => ⟨24444,155,5079⟩
+  | 11 => ⟨24546,154,5079⟩
+  | 12 => ⟨24592,152,5079⟩
+  | 13 => ⟨24904,142,5079⟩
+  | 14 => ⟨24985,141,5079⟩
+  | 15 => ⟨25002,139,5079⟩
+  | 16 => ⟨25078,138,5079⟩
+  | 17 => ⟨25152,137,5079⟩
+  | 18 => ⟨25159,135,5079⟩
+  | _ => ⟨0,0,0⟩
+private theorem c0 : WideCovered band 6815677 7145524 := wide_block_sound band profiles 6815677 7145524 (wideData 16 0xd96c163d80068a2e0000000006f7d029bff02068a300000000004bde03f3e001a28b80000000019f2806ea80068a300020000007f6b1ba80068a2e0000020000aff3107fdfa001a28c02000000001fb8a41d29a80068a2e0000000801b7b09876001a28c00000000003b3827ce00068a2e0000000000a1d0ba28001a28c00000080014b4db3e001a28b80080000006f79472f80068a300000000005e2f5b826001a28b82000000006e696b1f80068a300000000802b0c09fac001a28b82a82a84982a82a0498bf73a02e7097800d868928) (by decide +kernel)
+private theorem c1 : WideCovered band 7145525 7475372 := wide_block_sound band profiles 7145525 7475372 (wideData 16 0x6bf843e980068a2e00000000006cd741fafc0068a30000000000072e179ba001a28b82080080006cb9a55b720c1a28c03000000001aade03b73f02068a2e080000000060eac1b1880068a30000000080524e129b0001a28b8000000000bb281bfe00068a3000000000037eb0697e001a28b8000000000da696e6800068a30000002000266a0ad26001a28b800800000029f6c41f22c80068a3008000000012b854fb0001a28b8000000001b9f043ef80068a300000000802e0809a28001a28b82b82b84982b82b0498cb6de0397ef7410dd6caf8) (by decide +kernel)
+private theorem c2 : WideCovered band 7475373 7805220 := wide_block_sound band profiles 7475373 7805220 (wideData 16 0x2000064ff506ef3a001a28b800000000018b0901d30001a28c02080000003f26942ff9e80068a2e000000000062eb417bf00068a3000000000006e8bc52ed00068a2e000000080439816fb8001a28c00000000002fede03a6fa82068a2e000000000379e02f7eec5068a300000000003a390ffa6001a28b80000080004abef41f6ca82068a300820000000aed790a0c2a001a28b8000000001ca782f8e00068a30000000000063f3c4f1e00068a2e000000000079c300efcea081a28c00000002001a77d02d3a001a28b82c82c84982c82c0498adbbb03c3ab7810ea70ce8) (by decide +kernel)
+private theorem c3 : WideCovered band 7805221 8135067 := wide_block_sound band profiles 7805221 8135067 (wideData 16 0x688bc1209ff141a28b8208008000daf6c46cb2f82068a2e000000000073b7c06befe0c1a28b80000000001e21e0aff3081a28c00000000002fbc904bed902068a2e000000080072b78120de9141a28c00000000001c39d048aa804068a2e0000000002fbe03ae3ac5068a300000020001f9d3d0ee9ac081a28b800800000018a8e419a5800068a300800000001f3d018f4e80068a2e00000000006ef205a6d00068a3000000000007dfa077f903068a2e0000000000aef2417c9c0068a30000000080472d0ec3e001a28b82d82d84982d82d04989bf2a0483dbf220ef74eb8) (by decide +kernel)
+private theorem c4 : WideCovered band 8135068 8464915 := wide_block_sound band profiles 8135068 8464915 (wideData 16 0x6e9f02abd00068a2e00000000007aea41f5800068a3000000008007e9b4061de4001a28b8000000001fbec0f2900068a300000020003bd941a2ee80068a2e000000000071db012e9c0068a30000000000071f6107dbfe001a28b80000000003ae9c1ef2f001a28c02080000007e7ad44fb9b80068a2e00000000006dea0371d80068a30000000000079c3806f880068a2e0000000000afcfc5f3880068a3000000008007edbc1aec40068a2e000000000325a16d64001a28c00000000002fa9b1db21001a28b82e82e84982e82e04986cac804b71b7a10fc798a6) (by decide +kernel)
+private theorem c5 : WideCovered band 8464916 8794763 := wide_block_sound band profiles 8464916 8794763 (wideData 16 0x2f38c05a7c80b068a2e000002080539f4492ea4a068a30000000000069bbd07cbe4001a28b8000000001f95b968001a28c00000000008d6d7f6900068a2e000000000067e29070b7e001a28c02080000001a77f41ce1d00068a2e00000000006caac2a8800068a30000000000077f241f4a00068a2e0000000000a9a28121d80068a300000000800b0e247f8d80068a2e000000000070d200ed940068a300000000000adb6046fc40068a2e000000000568e04bb5f43068a3008200200037e8f9068aa00c1a28b82f02f04982f02f049948f1a04e21fee11097da76) (by decide +kernel)
+private theorem c6 : WideCovered band 8794764 9165842 := wide_block_sound band profiles 8794764 9165842 (wideData 16 0x1eefa81bde4e400b0c3e00000008006e86e914eafcf0082c30f80000000001b27e07c30001a28b80000000003f21a018ffcc0068a300000000000a1ae017cb25081a28b8208008000fdb7e48971f02068a300000000000778e4579800068a2e0000000000a6b34578900068a300000000806ea915e2c001a28b80000000001fb8b12975001a28c0000000001dd68327a00068a2e00000000006cbf8178900068a300000000000b3f7c337c40068a2e0000000000fd9260f9ea1001a28c0208008000fe7d8c1cab301a28b83803804983803804992d23f04fb0db8010ea1c66) (by decide +kernel)
+private theorem c7 : WideCovered band 9165843 9825537 := wide_block_sound band profiles 9165843 9825537 (wideData 16 0xbdf58c5dbc8c00b0c3e082000000461aeb27ddfd302c30f80000000006febd13ba5002c30f8000000000d9bfb05b6ab400b0c3e0000020801bfbb0060fe8c450b0c3e082000000063eafb4892fbc30b0c3e0000000001fcf242abcf20c2c30f8000000000aaa5b0cb3dfc20b0c3e000000000476fb20ac96c002c30f8000008201bcf4c41fbac6f4c2c30f02080000011ffadc19fad2f082c30f8000000000cd61d08eefc800b0c3e0000000005ecde84afcf3002c30f80000000002960c630b8e22cc20b0c3e08200208056c923237a33dc20b0c3e0e40e41260e40e41260e8db6919875e3c491c7eca2) (by decide +kernel)
+private theorem c8 : WideCovered band 9825538 10485233 := wide_block_sound band profiles 9825538 10485233 (wideData 16 0xebff827ada7082c30f80000082005d72b01b27c000b0c3e0000000000e2f64724a000b0c3e0000000002fab66121f2b002c30f82080000018ba1fcab26b420b0c3e0000000001b6ab863da400b0c3e0000020802bb87807f93a002c30f82080000017967941968fc20b0c3e0000000000ed8604f5ac00b0c3e000000000172c24064ff2002c30f80000000009df3f0fbbb002c30f80000000012ff4b4dfb39ca0b0c3e00000000006effc067ffa002c30f82080082001e6490da7dc440b0c3e000000000227ff807bfff002c30f83b03b04983b03b049939bfa089239ec312ea7860) (by decide +kernel)
+private theorem c9 : WideCovered band 10485234 11144928 := wide_block_sound band profiles 10485234 11144928 (wideData 16 0xabfa01298f0002c30f80000000001f24802ca29800b0c3e0000000000b883d139c34002c30f82080082002e750a2f7e002c30f80000000001ee9c02c23f800b0c3e0000000000a28b0620d800b0c3e0000000000bf8700a3a76002c30f80000000003faac11c77002c30f80000000006d25e1af3c002c30f8000000000cdae905c32ec00b0c3c0820020806a48e1173bbb082c30f80000000003cb1e0e9ea002c30f80000000005bf0919e27002c30f80000000007dfea438e28420b0c3e00000000012193c5a48c00b0c3e0f40f41260f40f4126539fe01b7a38a818148afc20) (by decide +kernel)
+private theorem c10 : WideCovered band 11144929 11804624 := wide_block_sound band profiles 11144929 11804624 (wideData 16 0x7abe81e1f6e002c30f80000000002963908d66d800b0c3e00000000007dda81baa38002c30f80000000002aaa808d25f800b0c3e0000000001f7a06eb8d800b0c3e0820020800e0e06eb5a800b0c3e00000000006ea2c133da0002c30f80000000001e2c905ffb8000b0c3e000000000074a60130932002c30f80000000002867b068f1c800b0c3e000000000076f24132afa002c30f82080082002a76c45df8a000b0c3e000000000069da80e7eb0002c30f80000000001afba02ea5b000b0c3e000000000078970124c6a002c30f83e03e04983e03e0498186cd301be862c01915ab7fbe) (by decide +kernel)
+private theorem c11 : WideCovered band 11804625 12093240 := wide_block_sound band profiles 11804625 12093240 (wideData 7 0xb3b302f6960002c30f00000000002fb1e0dc2fb000b0c3e0000000000b19e42bbf2e002c30f80000000002e67e0c869d000b0c3e0000000000b6ba02e4dee002c30f8000000000b8b92a6fea002c30f83f83f84983f83f84981db18ac27ddade81916ce0b7e) (by decide +kernel)
+theorem covered : WideCovered band (minimumWeight band) (tail band) := (wide_covered_join band 6815677 7145524 12093240 c0 (wide_covered_join band 7145525 7475372 12093240 c1 (wide_covered_join band 7475373 7805220 12093240 c2 (wide_covered_join band 7805221 8135067 12093240 c3 (wide_covered_join band 8135068 8464915 12093240 c4 (wide_covered_join band 8464916 8794763 12093240 c5 (wide_covered_join band 8794764 9165842 12093240 c6 (wide_covered_join band 9165843 9825537 12093240 c7 (wide_covered_join band 9825538 10485233 12093240 c8 (wide_covered_join band 10485234 11144928 12093240 c9 (wide_covered_join band 11144929 11804624 12093240 c10 c11)))))))))))
+open MvPolynomial RCN100 RCN119 ContactOrderBridge
+open RCN234 (wt)
+variable (K I : Type) [Field K] [CharP K 2130706433] [Fintype I] [DecidableEq I]
+local instance : DecidableEq K := Classical.decEq K
+theorem regular_count {DF T nu : ℕ} {H : Poly4 K} (F : RCN266.RegularIndex H)
+    (hbox : F.val∈globalCoefficientBox K DF 1 T 15)
+    (hcode : wt (RCN081.contactWeights 131071) F.val=nu)
+    (htotal : T≤wt RCN156.residualTotalWeights F.val)
+    (hslope : 15≤wt RCN156.residualSWeights F.val) (hB : wt RCN156.residualYSWeights F.val≤52)
+    (hT0 : 3013≤T) (hT1 : T≤3310) (hnu : 6815677≤nu)
+    (nodes : I ↪ K) (u0 u1 : I → K) (hcard : Fintype.card I=262144)
+    (selected : K → Polynomial K) (Gamma : Finset K)
+    (hdegree : ∀ gamma∈Gamma, (selected gamma).natDegree≤131071)
+    (hagreement : ∀ gamma∈Gamma, 181245≤
+      ((Finset.univ : Finset I).filter (fun i => (selected gamma).eval (nodes i)=u0 i+gamma*u1 i)).card)
+    (hno : RCN238.NoLargeSelectedPencil selected Gamma 131071 80899) :
+    (RCN140.regularSeeds H selected Gamma F).card≤43532346559267973 :=
+  RelativeWideBlocks6815.regular_count K I band covered (by decide) F hbox hcode htotal
+    hslope hB hT0 hT1 hnu nodes u0 u1 hcard selected Gamma hdegree hagreement hno
+end
+end ProximityPrize.SubmissionLower.RelativeCompact6815_R138
+
+namespace ProximityPrize.SubmissionLower.RelativeCompact6815_R139
+open RelativeWideBlocks6815 RelativeCertificate6815 RelativeCompactBlocks6815
+noncomputable section
+def band : Band := ⟨15,53,2960,3015,41932601061619585⟩
+private def profiles : ℕ → Profile
+  | 0 => ⟨24820,148,5079⟩
+  | 1 => ⟨24728,149,5079⟩
+  | 2 => ⟨24634,150,5079⟩
+  | 3 => ⟨24689,151,5079⟩
+  | 4 => ⟨24592,152,5079⟩
+  | 5 => ⟨24763,147,5079⟩
+  | 6 => ⟨24794,145,5079⟩
+  | 7 => ⟨24880,144,5079⟩
+  | 8 => ⟨24273,161,5079⟩
+  | 9 => ⟨24334,159,5079⟩
+  | 10 => ⟨24444,155,5079⟩
+  | 11 => ⟨24546,154,5079⟩
+  | 12 => ⟨24904,142,5079⟩
+  | 13 => ⟨24985,141,5079⟩
+  | 14 => ⟨25002,139,5079⟩
+  | 15 => ⟨25141,139,5079⟩
+  | 16 => ⟨25078,138,5079⟩
+  | 17 => ⟨25152,137,5079⟩
+  | 18 => ⟨25159,135,5079⟩
+  | 19 => ⟨25228,134,5079⟩
+  | _ => ⟨0,0,0⟩
+private theorem c0 : WideCovered band 6946748 7279731 := wide_block_sound band profiles 6946748 7279731 (wideData 16 0x777d0cde0001a34d80000082001c219468690c1a34e02080000001925c4187ae00068d36000000000138d0eee4001a34e00000000005d341a7b00068d3600000000026cd02fbcc82068d3800000000026a907b62001a34d8000000000d87c327d80068d380000000004f1f14dba001a34d8000000000ec72132800068d38000002080328ec19e1880068d36082000000078d7906b9a4001a34e00000000004ba81aba00068d36000000000177d0f878001a34e00000000008d2c0a5a2c081a34d82b02b04a02b02b04a01ee3902f7e8e800da68c2e) (by decide +kernel)
+private theorem c1 : WideCovered band 7279732 7612715 := wide_block_sound band profiles 7279732 7612715 (wideData 16 0x39b4e46dab001a34d80000002002d6de42926dc3068d380820020000fde2e167ba6001a34d80000000009e380edb6c081a34e000000000098b4521001a34d8000000000cda0379800068d380000000004a880f8f0001a34d8000000001cd7c477c00068d380000000007f2fd7cf0001a34d80000002002ea085aafd001a34e000000800019e6b018e4880068d3608200000032a9839eab00068d380000000001eae0f8a0001a34d80000000009cb4439a80068d38000000000364813c2a001a34d82c02c04a02c02c04a01ca8d03af8ea410df72efe) (by decide +kernel)
+private theorem c2 : WideCovered band 7612716 7945699 := wide_block_sound band profiles 7612716 7945699 (wideData 16 0x67a38065ba0001a34d8208000000ecf60f98b2001a34e0000000000bfa00fac70081a34d8000000000bdec139dc0068d38000000000436e07af4001a34d8000000001983c222e80068d380000000004a48849aa001a34d80000000002d34e45ba5001a34e020800820099a707db3b141a34d800000000069ac3fdd80068d380000000001f681092a001a34d8000000000faf01f9afc101a34e0000000000cab0336980068d3600000000046d80cf62001a34e0000000001abbc461cc0068d360b40b41280b40b4128527a03e6fab810ec7d9ee) (by decide +kernel)
+private theorem c3 : WideCovered band 7945700 8278682 := wide_block_sound band profiles 7945700 8278682 (wideData 16 0x9a28570d80068d360000000002fbb169e4001a34d8000000000fef85ebd00068d360000000005a4a0aca9001a34e000000000018e0b13fbe001a34d8000000000183aed5b6c001a34e00000082003c77859e66001a34d80000000002a2ab01e2f800068d380820000002eecc3a6ad80068d3600000000023fb07e3c001a34e0000000000bf603e4a80068d36000000000427a0ee20001a34e00000000017d203a3c00068d36000000000065f2c363980068d380000000000a4fb7075ba7001a34d82e02e04a02e02e04a029b5e84a6682010f9a7cbe) (by decide +kernel)
+private theorem c4 : WideCovered band 8278683 8611666 := wide_block_sound band profiles 8278683 8611666 (wideData 16 0x370e07b71001a34d8000000001392043dd00068d380000000006b1e03b349c3068d36000000000732c868fd001a34e00000082001dfce41e68800068d360000000000708a70f2d3c001a34e0208000000f8069fa001a34d80000000008fa056d880068d380000000002e9d15c74001a34d8000000000eb301eadc0068d38000000000536c11d7a001a34d8000000001f83c436c00068d38000002080379074a6d0c1a34d82080000002feee42939f00068d3800000000017bb07eec001a34d82e82e84a02e82e84a03d28a04ce486410feb1fac) (by decide +kernel)
+private theorem c5 : WideCovered band 8611667 8944649 := wide_block_sound band profiles 8611667 8944649 (wideData 16 0x5b2c01bf2001a34d800000000018a5c0dcae001a34d800000000178af2b1ec0068d360820020800b7ca712bfb9081a34e00000000007a2c060d22001a34d800000000089a82f2d00068d380000000002ac911aba001a34d8000000000dc2467ae00068d38000000000476f03da0001a34d80000000019e280638f6001a34e000000000019f1d038ab001a34d80000000001f23cdbf6d001a34e000000000058b5d5fee8001a34d80000082004ee6e01b7feca068d38082000000067d6b0e1e670c1a34d82f82f84a02f82f84a03c39a04fe2dba090bbca7c) (by decide +kernel)
+private theorem c6 : WideCovered band 8944650 9402502 := wide_block_sound band profiles 8944650 9402502 (wideData 16 0x820000001bad3a3f2e32002c69b80000000001cfed0283cdf7082c69b800000000078acd1de34c400b1a6e0000020807fcc272a4865b420b1a6e082000000732af256f93ba040b1a6e000000000267f0edee001a34d8000000001caf2e41bf0ba7b43068d3800000000077af7806fc68e7a082c69b8000000001e9bc0f4b40068d36000002080163e41ae4b42068d380000000000b1bed07bdee001a34d82080000004e61530f00068d380000000001f8b0da68001a34d80000000009c742e6a80068d38000000000324d089b4001a34d83883884a03883884a02ea3c04eaeaf03118e6d6a) (by decide +kernel)
+private theorem c7 : WideCovered band 9402503 10068469 := wide_block_sound band profiles 9402503 10068469 (wideData 16 0x1dfce15f2584a0b1a6e00000000006aceb234f77002c69b82080082002cf4cc4bab082c69b8000000000186ba1ede8002c69b80000000001e2ad01bb1ac00b1a6e0000000000b1bb216a87d002c69b80000082002f73a4fda08420b1a6e0820000000a6ee71bfd3c002c69b80000000001c2bb07fea002c69b80000000002de2e01971aef202c69b82080082006da0e48df0fc30b1a6e000000000730c08afc002c69b00000000001ba5d01962f000b1a6e0000000000b4ca066dc400b1a6e0000000006adcc29a8ebd142c69b83a03a04a03a03a04a04926c8c9fba2421282dc7a) (by decide +kernel)
+private theorem c8 : WideCovered band 10068470 10734437 := wide_block_sound band profiles 10068470 10734437 (wideData 16 0x3b6f02c61002c69b80000000016960067b2c002c69b8000000001caec1eddad082c69b80000000001fe3802a329800b1a6e00000000007bdfb06dc78002c69b8000008200ad3f1e7f2d082c69b8208000000aca92ec9020b1a6e000000000073c600ea930002c69b800000000019ebe83a3f8400b1a6e08200208012affb3259b7082c69b8000000001b9a807be62002c69b80000000001a70a02a27c400b1a6e0000000000b2ca4124a6b082c69b82080082004fab846ae3f800b1a6e0000000005abd109b6002c69b83b83b84a03b83b84a04f62e0797d866613a62a38) (by decide +kernel)
+private theorem c9 : WideCovered band 10734438 11400404 := wide_block_sound band profiles 10734438 11400404 (wideData 16 0x9db80b7966002c69b8000000000cd7c126cba002c69b8000000000ddb80b2a2e002c69b80000000012fb4130836002c69b80000000015f610b2920002c69b82080082003ce90b6ffe002c69b8000000000bc3c07eae0002c69b8000000000dfb0060afe002c69b80000000013e2407c83a002c69b8000000001ba24062fef002c69b80000000001bf0b01c26002c69b8208008200392be42a35082c69b00000000010eec063ab6002c69b80000000016bac0a09ef002c69b800000000019a8a01c7db400b1a6e0f60f61280f60f61280af9281aabaa801914c76ff8) (by decide +kernel)
+private theorem c10 : WideCovered band 11400405 12066371 := wide_block_sound band profiles 11400405 12066371 (wideData 16 0x82002080178e48da6a000b1a6e00000000033e8098efe000b1a6e0000000002e8f0797e8000b1a6e000000000369d08e7fb000b1a6e000000000376c08e2b8800b1a6e000000000330f06f7ff000b1a6e082002080223a47ee8b800b1a6e000000000232f04e31e000b1a6e0000000002abb068b0b000b1a6e00000000026df04ca98000b1a6e0000000002f49068b2f800b1a6e0000000002e4b04c398000b1a6c0000000003a4906abeb800b1a6e082002080474844e73d800b1a6e0000000001fa902f76c800b1a6e0fa0fa1280fa0fa1281b7df81e3936981995eabdb6) (by decide +kernel)
+private theorem c11 : WideCovered band 12066372 12274485 := wide_block_sound band profiles 12066372 12274485 (wideData 5 0x4b390eaefe800b1a6c0000000003fb80bc6ad000b1a6e0000000004a1d0dba3d800b1a6e0000000003f5e0aea7f000b1a6e1201201281201201282b39fc2b1bf8a819978e0b74) (by decide +kernel)
+theorem covered : WideCovered band (minimumWeight band) (tail band) := (wide_covered_join band 6946748 7279731 12274485 c0 (wide_covered_join band 7279732 7612715 12274485 c1 (wide_covered_join band 7612716 7945699 12274485 c2 (wide_covered_join band 7945700 8278682 12274485 c3 (wide_covered_join band 8278683 8611666 12274485 c4 (wide_covered_join band 8611667 8944649 12274485 c5 (wide_covered_join band 8944650 9402502 12274485 c6 (wide_covered_join band 9402503 10068469 12274485 c7 (wide_covered_join band 10068470 10734437 12274485 c8 (wide_covered_join band 10734438 11400404 12274485 c9 (wide_covered_join band 11400405 12066371 12274485 c10 c11)))))))))))
+open MvPolynomial RCN100 RCN119 ContactOrderBridge
+open RCN234 (wt)
+variable (K I : Type) [Field K] [CharP K 2130706433] [Fintype I] [DecidableEq I]
+local instance : DecidableEq K := Classical.decEq K
+theorem regular_count {DF T nu : ℕ} {H : Poly4 K} (F : RCN266.RegularIndex H)
+    (hbox : F.val∈globalCoefficientBox K DF 1 T 15)
+    (hcode : wt (RCN081.contactWeights 131071) F.val=nu)
+    (htotal : T≤wt RCN156.residualTotalWeights F.val)
+    (hslope : 15≤wt RCN156.residualSWeights F.val) (hB : wt RCN156.residualYSWeights F.val≤53)
+    (hT0 : 2960≤T) (hT1 : T≤3015) (hnu : 6946748≤nu)
+    (nodes : I ↪ K) (u0 u1 : I → K) (hcard : Fintype.card I=262144)
+    (selected : K → Polynomial K) (Gamma : Finset K)
+    (hdegree : ∀ gamma∈Gamma, (selected gamma).natDegree≤131071)
+    (hagreement : ∀ gamma∈Gamma, 181245≤
+      ((Finset.univ : Finset I).filter (fun i => (selected gamma).eval (nodes i)=u0 i+gamma*u1 i)).card)
+    (hno : RCN238.NoLargeSelectedPencil selected Gamma 131071 80899) :
+    (RCN140.regularSeeds H selected Gamma F).card≤41932601061619585 :=
+  RelativeWideBlocks6815.regular_count K I band covered (by decide) F hbox hcode htotal
+    hslope hB hT0 hT1 hnu nodes u0 u1 hcard selected Gamma hdegree hagreement hno
+end
+end ProximityPrize.SubmissionLower.RelativeCompact6815_R139
+
+namespace ProximityPrize.SubmissionLower.RelativeCompact6815_R140
+open RelativeWideBlocks6815 RelativeCertificate6815 RelativeCompactBlocks6815
+noncomputable section
+def band : Band := ⟨16,37,4029,4058,12658818582334196⟩
+private def profiles : ℕ → Profile
+  | 0 => ⟨4134,1,1270⟩
+  | 1 => ⟨8268,2,2540⟩
+  | 2 => ⟨16536,4,5080⟩
+  | 3 => ⟨33072,8,10160⟩
+  | 4 => ⟨24136,152,5079⟩
+  | 5 => ⟨29457,179,5971⟩
+  | _ => ⟨0,0,0⟩
+private theorem c0 : WideCovered band 4849611 8599864 := wide_block_sound band profiles 4849611 8599864 (wideData 16 0x172805ca1f000a7e7e0000000001fa808f358000a7ea0082002080275c46b71d000a7e7e0000000000f1d03fb4e800a7e7e000000000138c05fa1d000a7e7e000000000174a06ce4e000a7ea00000000001a4a05b6cf800a7e7e082002080268a44ebee000a7e7e0000000000e4a03abfa000a7e7e000000000126b05832f000a7e7e2490092400bc9341eeba3f820a7e7e2cb00b2c02b4072f620829f9f80000000006919bb0084bf3f80000000005e0cda6091fafd01881880064064002802e80063f3f982a02a03a82982983a86d14dbe00ddf3e6c) (by decide +kernel)
+private theorem c1 : WideCovered band 8599865 9188139 := wide_block_sound band profiles 8599865 9188139 (wideData 16 0x9b2c378f2c0029f9f8000000000c92c4b7e640029fa80000000000be283afb660029f9f8208008200c9fd337aac0029f9f80000000007cb82feefe0029f9f80000000006efc238f620029fa800000000009b34368e2a0029f9f8000000000b8603b6c7c0029f9f8208008200cae91bbde80029f9f80000000005fec239fa00029f9f80000000006d6c26adf40029f9f80000000006c281e28e00029f9f800000000099242e58660029f9f8208008200b8e51a1e600029fa800000000004f641ba8600029f9f82f02f03a82f02f03a83e30f09c65ae2210be4b6e) (by decide +kernel)
+private theorem c2 : WideCovered band 9188140 9555810 := wide_block_sound band profiles 9188140 9555810 (wideData 10 0xc9304abe740029f9f8000000000dbb44e59ba0029f9f80000000002a785338e40029f9f82080082003e39322e6a0029f9f8000000000a87442beb40029f9f800000000099f8335e7a0029f9f8000000000aba836bee60029f9f8000000000ca283affb00029fa8020800820019218419389b30829f9f83883883a83883883a868fed0f97eafe211ce1b34) (by decide +kernel)
+theorem covered : WideCovered band (minimumWeight band) (tail band) := (wide_covered_join band 4849611 8599864 9555810 c0 (wide_covered_join band 8599865 9188139 9555810 c1 c2))
+open MvPolynomial RCN100 RCN119 ContactOrderBridge
+open RCN234 (wt)
+variable (K I : Type) [Field K] [CharP K 2130706433] [Fintype I] [DecidableEq I]
+local instance : DecidableEq K := Classical.decEq K
+theorem regular_count {DF T nu : ℕ} {H : Poly4 K} (F : RCN266.RegularIndex H)
+    (hbox : F.val∈globalCoefficientBox K DF 1 T 16)
+    (hcode : wt (RCN081.contactWeights 131071) F.val=nu)
+    (htotal : T≤wt RCN156.residualTotalWeights F.val)
+    (hslope : 16≤wt RCN156.residualSWeights F.val) (hB : wt RCN156.residualYSWeights F.val≤37)
+    (hT0 : 4029≤T) (hT1 : T≤4058) (hnu : 4849611≤nu)
+    (nodes : I ↪ K) (u0 u1 : I → K) (hcard : Fintype.card I=262144)
+    (selected : K → Polynomial K) (Gamma : Finset K)
+    (hdegree : ∀ gamma∈Gamma, (selected gamma).natDegree≤131071)
+    (hagreement : ∀ gamma∈Gamma, 181245≤
+      ((Finset.univ : Finset I).filter (fun i => (selected gamma).eval (nodes i)=u0 i+gamma*u1 i)).card)
+    (hno : RCN238.NoLargeSelectedPencil selected Gamma 131071 80899) :
+    (RCN140.regularSeeds H selected Gamma F).card≤12658818582334196 :=
+  RelativeWideBlocks6815.regular_count K I band covered (by decide) F hbox hcode htotal
+    hslope hB hT0 hT1 hnu nodes u0 u1 hcard selected Gamma hdegree hagreement hno
+end
+end ProximityPrize.SubmissionLower.RelativeCompact6815_R140
+
+namespace ProximityPrize.SubmissionLower.RelativeCompact6815_R141
+open RelativeWideBlocks6815 RelativeCertificate6815 RelativeCompactBlocks6815
+noncomputable section
+def band : Band := ⟨16,38,3933,4033,12576171010368727⟩
+private def profiles : ℕ → Profile
+  | 0 => ⟨4134,1,1270⟩
+  | 1 => ⟨16536,4,5080⟩
+  | 2 => ⟨24236,151,5079⟩
+  | 3 => ⟨29532,177,5971⟩
+  | _ => ⟨0,0,0⟩
+private theorem c0 : WideCovered band 4980682 8473644 := wide_block_sound band profiles 4980682 8473644 (wideData 16 0x374804cecc800a8cae0000000003fdd0586cd800a8cae000000000461b03fb39000a8cae082002080665f459e2f800a8cae0000000002b5903d72a000a8cae000000000327a03fbff000a8cb00000000003aea04b36b800a8cae00000000022ca0496bd000a8cae08200208047bb438e7b000a8cae0000000002759039eac800a8cb00000000002e6803c38b800a8cae00000000036ac03fac9800a8cae08200208046da43d359800a8cae1c70071c0239aa41a3a319020a8cb04d30134c0066c01971d02064a67983b03b03b03b03b03b16d14b6600e864e68) (by decide +kernel)
+private theorem c1 : WideCovered band 8473645 9068191 := wide_block_sound band profiles 8473645 9068191 (wideData 16 0x149e4235b74002a32b800000000168fc260c62002a32b800000000179f422cb7e002a32b8000000001a92422b868002a32b8208008201aa6d2badf6002a32b80000000010b641b2cfe002a32c000000000129b01bcfe6002a32b80000000014e281ecfe2002a32b800000000158e017297c002a32b82080082019c652398ea002a32c0000000000dea8167960002a32b8000000000fc3c17183a002a32b80000000011fa417fdf4002a32b80000000012dec132ce6002a32c020800820199e91bd9f4002a32b82e82e83b02e82e83b0ba68807f7bf3a1109eed66) (by decide +kernel)
+private theorem c2 : WideCovered band 9068192 9662737 := wide_block_sound band profiles 9068192 9662737 (wideData 16 0x82002080065ef1463c78002a32b8000000001b8382f087e002a32b8000000001d8782f5830002a32b8000000000182180c82ff800a8cae00000000006ac2046b972002a32b80000000017aa43a5e32002a32c020800820018fad499769800a8cae0000000005e4c08bade800a8cae00000000067dc08e33d000a8cae000000000065d2106396afc20a8cae0820020807bcf4f9baf000a8cae0000000006a4a0c8668000a8cae000000000723c0cb2c9000a8cae0000000006738098318000a8cb00000000000638b4377eae002a32b83883883b03883883b0fab1d0bdf4e76111af7f2c) (by decide +kernel)
+private theorem c3 : WideCovered band 9662738 9737055 := wide_block_sound band profiles 9662738 9737055 (wideData 2 0x6f93c570a7c002a32b83a03a03b03a03a03b16ae7f10d6eeac192c218f0) (by decide +kernel)
+theorem covered : WideCovered band (minimumWeight band) (tail band) := (wide_covered_join band 4980682 8473644 9737055 c0 (wide_covered_join band 8473645 9068191 9737055 c1 (wide_covered_join band 9068192 9662737 9737055 c2 c3)))
+open MvPolynomial RCN100 RCN119 ContactOrderBridge
+open RCN234 (wt)
+variable (K I : Type) [Field K] [CharP K 2130706433] [Fintype I] [DecidableEq I]
+local instance : DecidableEq K := Classical.decEq K
+theorem regular_count {DF T nu : ℕ} {H : Poly4 K} (F : RCN266.RegularIndex H)
+    (hbox : F.val∈globalCoefficientBox K DF 1 T 16)
+    (hcode : wt (RCN081.contactWeights 131071) F.val=nu)
+    (htotal : T≤wt RCN156.residualTotalWeights F.val)
+    (hslope : 16≤wt RCN156.residualSWeights F.val) (hB : wt RCN156.residualYSWeights F.val≤38)
+    (hT0 : 3933≤T) (hT1 : T≤4033) (hnu : 4980682≤nu)
+    (nodes : I ↪ K) (u0 u1 : I → K) (hcard : Fintype.card I=262144)
+    (selected : K → Polynomial K) (Gamma : Finset K)
+    (hdegree : ∀ gamma∈Gamma, (selected gamma).natDegree≤131071)
+    (hagreement : ∀ gamma∈Gamma, 181245≤
+      ((Finset.univ : Finset I).filter (fun i => (selected gamma).eval (nodes i)=u0 i+gamma*u1 i)).card)
+    (hno : RCN238.NoLargeSelectedPencil selected Gamma 131071 80899) :
+    (RCN140.regularSeeds H selected Gamma F).card≤12576171010368727 :=
+  RelativeWideBlocks6815.regular_count K I band covered (by decide) F hbox hcode htotal
+    hslope hB hT0 hT1 hnu nodes u0 u1 hcard selected Gamma hdegree hagreement hno
+end
+end ProximityPrize.SubmissionLower.RelativeCompact6815_R141
+
+namespace ProximityPrize.SubmissionLower.RelativeCompact6815_R142
+open RelativeWideBlocks6815 RelativeCertificate6815 RelativeCompactBlocks6815
+noncomputable section
+def band : Band := ⟨16,39,3841,4008,13230930021958327⟩
+private def profiles : ℕ → Profile
+  | 0 => ⟨4134,1,1270⟩
+  | 1 => ⟨8268,2,2540⟩
+  | 2 => ⟨16536,4,5080⟩
+  | 3 => ⟨24281,149,5079⟩
+  | 4 => ⟨29656,176,5971⟩
+  | _ => ⟨0,0,0⟩
+private theorem c0 : WideCovered band 5111753 8228499 := wide_block_sound band profiles 5111753 8228499 (wideData 16 0x18d280fd930002a6af820800820018ee943b2aa000a9abe000000000329801fabf000a9ae0000000000423902eefa800a9abe0000000004e3b039a28800a9abe0000000003edd42dad9000a9abe0820020804e40adb7a002a6af8000000000d8e00add24002a6af8000000000dcf407faa8002a6af80000000011cb00becb0002a6af82080082019b3d0b08be002a6b800000000009ce8072c6c002a6af8514014500ca79a058b4b34082a6af8924024900187c636b02132d7e14500514046032b982265afa0e20e20ee0e20e20ee06e813ff600eab5e64) (by decide +kernel)
+private theorem c1 : WideCovered band 8228500 8829317 := wide_block_sound band profiles 8228500 8829317 (wideData 16 0x6e5f05ba3a800a9abe0000000007faa05fb0a800a9abe000000000062a64136966002a6b802080082001cefe45bf7f000a9abe000000000562904a20e000a9abe00000000053ff039a3d800a9abe000000000732904fb6f000a9abe000000000238a45da18000a9abe0820020802a9d42ea9c000a9abe0000000004bbd03ce08800a9abe00000000057e903f6a9800a9ae00000000005eec038aef000a9abe082002080061f2513df28002a6af8000000000f9600bef26002a6af80000000011ab80e6a20002a6af82e02e03b82e02e03b8ec679069b9bec18fe30d24) (by decide +kernel)
+private theorem c2 : WideCovered band 8829318 9430136 := wide_block_sound band profiles 8829318 9430136 (wideData 16 0x1af1e0bcebb800a9abe00000000006f9a432197e002a6af80000000001b28c09967d000a9ae00000000007a994dd6a9800a9abe0820020807a6908a2dc000a9abe000000000730a068a28800a9abe000000000065da4239bb8002a6af80000000001ab7809b6ea000a9abe00000000006bb341ea976002a6af82080082001db1d48862e000a9abe000000000725b06bb4a000a9ae00000000006b7904e2ba000a9abe0000000000649701e8964002a6af80000000001ae88088bfd000a9abe082002080075b6d1a8a7a002a6b802f82f83b82f82f83b9487c808ab3cae190f668e8) (by decide +kernel)
+private theorem c3 : WideCovered band 9430137 9918300 := wide_block_sound band profiles 9430137 9918300 (wideData 13 0x2a7ea11e70d800a9abe0000000000e0f686648fa002a6af82080082002aeda4fc3c9000a9abe00000000006fa202ebea4002a6af80000000001bedc57dffec20a9abe0000000000adb7c52f92c002a6af82080082001971d53867f800a9abe000000000078b6c439b7a002a6b800000000001c21a0cbfff000a9abe00000000007e9e4467cee002a6af800000000028f1d11fe0e000a9abe082002080063b2d3e9e20002a6af83903903b83903903b9ef6580cca6bb419287bcae) (by decide +kernel)
+theorem covered : WideCovered band (minimumWeight band) (tail band) := (wide_covered_join band 5111753 8228499 9918300 c0 (wide_covered_join band 8228500 8829317 9918300 c1 (wide_covered_join band 8829318 9430136 9918300 c2 c3)))
+open MvPolynomial RCN100 RCN119 ContactOrderBridge
+open RCN234 (wt)
+variable (K I : Type) [Field K] [CharP K 2130706433] [Fintype I] [DecidableEq I]
+local instance : DecidableEq K := Classical.decEq K
+theorem regular_count {DF T nu : ℕ} {H : Poly4 K} (F : RCN266.RegularIndex H)
+    (hbox : F.val∈globalCoefficientBox K DF 1 T 16)
+    (hcode : wt (RCN081.contactWeights 131071) F.val=nu)
+    (htotal : T≤wt RCN156.residualTotalWeights F.val)
+    (hslope : 16≤wt RCN156.residualSWeights F.val) (hB : wt RCN156.residualYSWeights F.val≤39)
+    (hT0 : 3841≤T) (hT1 : T≤4008) (hnu : 5111753≤nu)
+    (nodes : I ↪ K) (u0 u1 : I → K) (hcard : Fintype.card I=262144)
+    (selected : K → Polynomial K) (Gamma : Finset K)
+    (hdegree : ∀ gamma∈Gamma, (selected gamma).natDegree≤131071)
+    (hagreement : ∀ gamma∈Gamma, 181245≤
+      ((Finset.univ : Finset I).filter (fun i => (selected gamma).eval (nodes i)=u0 i+gamma*u1 i)).card)
+    (hno : RCN238.NoLargeSelectedPencil selected Gamma 131071 80899) :
+    (RCN140.regularSeeds H selected Gamma F).card≤13230930021958327 :=
+  RelativeWideBlocks6815.regular_count K I band covered (by decide) F hbox hcode htotal
+    hslope hB hT0 hT1 hnu nodes u0 u1 hcard selected Gamma hdegree hagreement hno
+end
+end ProximityPrize.SubmissionLower.RelativeCompact6815_R142
+
+namespace ProximityPrize.SubmissionLower.RelativeCompact6815_R143
+open RelativeWideBlocks6815 RelativeCertificate6815 RelativeCompactBlocks6815
+noncomputable section
+def band : Band := ⟨16,40,3754,3982,17488788244871693⟩
+private def profiles : ℕ → Profile
+  | 0 => ⟨4134,1,1270⟩
+  | 1 => ⟨16536,4,5080⟩
+  | 2 => ⟨24376,148,5079⟩
+  | 3 => ⟨29724,174,5971⟩
+  | _ => ⟨0,0,0⟩
+private theorem c0 : WideCovered band 5242824 7974730 := wide_block_sound band profiles 5242824 7974730 (wideData 16 0x425802828b000aa8ee0000000004b9b029a98000aa8ee00000000052b901e6bb800aa8ee082002080060ca10b2cfe002aa3c0000000000dbfc077da8002aa3b8000000000fbe407cae6002aa3b800000000129600a2e60002aa3b82080082018dbd0aafbc002aa3c0000000000ba3c06fc30002aa3b8000000000bf6006af20002aa3b8000000000efe0079dbe002aa3b8924024900ecf9f04b74ff2082aa3b820800820028b0064c6a089a2de9b6c06db006b019404b0ef20bc0bc002f02f001240b8001961de45140f05140f0072d13cb200caa3ab8) (by decide +kernel)
+private theorem c1 : WideCovered band 7974731 8581820 := wide_block_sound band profiles 7974731 8581820 (wideData 16 0x1a27d049f7f000aa8ee08200208007aa79130e76002aa3b80000000016aa00bbdae002aa3b80000000019ef00e2e30002aa3b8000000001ef640eda2c002aa3b8000000001bbf00b5d64002aa3b82080082001d31843bebe000aa8ee000000000536f02c64f000aa8f0000000000628f02e2f8800aa8ee00000000076cd038e7d000aa8ee08200208006ae250edcac002aa3b800000000118a00a5e64002aa3b80000000011b6c075ca6002aa3b800000000179300b1b6c002aa3b800000000078340bcd7e002aa3b82d82d83c02d82d83c10cf78059e4a7410fa61e24) (by decide +kernel)
+private theorem c2 : WideCovered band 8581821 9188910 := wide_block_sound band profiles 8581821 9188910 (wideData 16 0x1baaa06f268000aa8ee000000000075f681ef9a4002aa3b8000000001f8a9178afa002aa3b82080082007945ae8e000aa8ee000000000063864162ce0002aa3b80000000001a25905b749000aa8ee00000000006fce417ec60002aa3b82080082001e62d46d35e800aa8f00000000006a9e03d35e800aa8ee0000000006f8e039b2b000aa8ee000000000063f2012ea28002aa3b80000000001ae8904f7d8000aa8ee082002080079aed172c78002aa3b80000000018be80eac34002aa3b8000000001c8640f1d2a002aa3b82f02f03c02f02f03c15d61b06de58b6110ba3be8) (by decide +kernel)
+private theorem c3 : WideCovered band 9188911 9796000 := wide_block_sound band profiles 9188911 9796000 (wideData 16 0x2080082005836c5ebe88c20aa8ee0000000000bb96c4a1e70002aa3b8208008201b9794b28ae002aa3b80000000001e6ac0bdb9e800aa8ee00000000007bf202f9e64002aa3b80000000001d2f808d77a800aa8ee0000000000a4ef832baac002aa3b80000000002b3bb0d8b8d000aa8f008200208007cfb12bacf8002aa3b80000000001ba4b08b2da000aa8ee000000000071fb0234e68002aa3b80000000001dec8098b28000aa8ee000000000075ff01b9ff6002aa3b82080082001e3fd49e7be000aa8ee000000000065aa41a7ffc002aa3b83883883c03883883c1f963d09abdca8111ce59ac) (by decide +kernel)
+private theorem c4 : WideCovered band 9796001 10099545 := wide_block_sound band profiles 9796001 10099545 (wideData 8 0x3dbec16eb7d800aa8ee0000000000f0868479dea002aa3b82080082003830b52a75e800aa8ee0000000000a0d7c2bfaba002aa3b8000000000297790b8318000aa8ee0000000000bba2c3f6fa0002aa3b80000000002e60a0c8a6c000aa8ee0ea0ea0f00ea0ea0f0068ee5f0dcf18fe192e26f70) (by decide +kernel)
+theorem covered : WideCovered band (minimumWeight band) (tail band) := (wide_covered_join band 5242824 7974730 10099545 c0 (wide_covered_join band 7974731 8581820 10099545 c1 (wide_covered_join band 8581821 9188910 10099545 c2 (wide_covered_join band 9188911 9796000 10099545 c3 c4))))
+open MvPolynomial RCN100 RCN119 ContactOrderBridge
+open RCN234 (wt)
+variable (K I : Type) [Field K] [CharP K 2130706433] [Fintype I] [DecidableEq I]
+local instance : DecidableEq K := Classical.decEq K
+theorem regular_count {DF T nu : ℕ} {H : Poly4 K} (F : RCN266.RegularIndex H)
+    (hbox : F.val∈globalCoefficientBox K DF 1 T 16)
+    (hcode : wt (RCN081.contactWeights 131071) F.val=nu)
+    (htotal : T≤wt RCN156.residualTotalWeights F.val)
+    (hslope : 16≤wt RCN156.residualSWeights F.val) (hB : wt RCN156.residualYSWeights F.val≤40)
+    (hT0 : 3754≤T) (hT1 : T≤3982) (hnu : 5242824≤nu)
+    (nodes : I ↪ K) (u0 u1 : I → K) (hcard : Fintype.card I=262144)
+    (selected : K → Polynomial K) (Gamma : Finset K)
+    (hdegree : ∀ gamma∈Gamma, (selected gamma).natDegree≤131071)
+    (hagreement : ∀ gamma∈Gamma, 181245≤
+      ((Finset.univ : Finset I).filter (fun i => (selected gamma).eval (nodes i)=u0 i+gamma*u1 i)).card)
+    (hno : RCN238.NoLargeSelectedPencil selected Gamma 131071 80899) :
+    (RCN140.regularSeeds H selected Gamma F).card≤17488788244871693 :=
+  RelativeWideBlocks6815.regular_count K I band covered (by decide) F hbox hcode htotal
+    hslope hB hT0 hT1 hnu nodes u0 u1 hcard selected Gamma hdegree hagreement hno
+end
+end ProximityPrize.SubmissionLower.RelativeCompact6815_R143

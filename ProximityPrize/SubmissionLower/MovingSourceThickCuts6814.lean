@@ -1,7 +1,4 @@
 import ProximityPrize.SubmissionLower.MovingSourceThickClearing6814
-
-/-! Apply the primary-thickening lemma to actual Source helper identities,
-then show that removing the clearing gcd preserves the SAME thickness. -/
 namespace ProximityPrize.SubmissionLower.MovingSourceThickCuts6814
 noncomputable section
 set_option autoImplicit false
@@ -65,9 +62,6 @@ theorem source_cut_mem_primary
     (ev (2*A)) (ev (MvPolynomial.C target-Q)) S.s d P hdegree hH hA hm hf hhelpers
   simpa only [movingCut,map_cleared,coefficients,Polynomial.map_map,P,psi] using hh
 
-/-- A Source may store a conservative S-degree cap. Removing the extra
-clearing powers is legitimate on this primary piece, so the sharp
-ordinary factor flags do not need an equality assumption on that cap. -/
 theorem source_cut_at_degree_mem_primary
     {K Ω R : Type} [Field K] [CharP K 2130706433] [Field Ω] [CommRing R]
     (phi : Polynomial K →+* Ω) (ev : MvPolynomial (Fin 3) Ω →+* R)
@@ -94,8 +88,6 @@ variable {A : Type*} [CommRing A] [IsDomain A]
   [GCDMonoid (Polynomial A)] [NormalizationMonoid (Polynomial A)]
   [UniqueFactorizationMonoid (Polynomial A)]
 
-/-- Removing the common clearing gcd loses neither membership nor local
-multiplicity: the gcd is a unit modulo the primary thickening. -/
 theorem normalized_pair_mem_primary
     (P Q : Polynomial A) (n m : ℕ) (h q : A)
     (hP : P≠0) (hn : P.natDegree≤n) (hm : Q.natDegree≤m) (hh : h≠0) (hrel : IsRelPrime P Q)
@@ -130,8 +122,5 @@ theorem normalized_pair_mem_primary
     htransfer _ C (RCN259.right_eq_gcd_mul_rightGCDQuotient B C) hright⟩
 end Normalization
 
-#print axioms source_cut_mem_primary
-#print axioms source_cut_at_degree_mem_primary
-#print axioms normalized_pair_mem_primary
 end
 end ProximityPrize.SubmissionLower.MovingSourceThickCuts6814

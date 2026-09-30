@@ -1,8 +1,4 @@
-import ProximityPrize.SubmissionLower.MovingSourceExtendedPoleFamily6814
-
-/-! Distinct regular slice components cannot hide the same prime under
-different geometric factor labels. This is the injectivity needed to sum
-their generic moving degrees against one shared pair budget. -/
+import ProximityPrize.SubmissionLower.MovingSourcePairFirstCutPole6814
 namespace ProximityPrize.SubmissionLower.MovingSourceSlicePrimeFamily6814
 noncomputable section
 set_option autoImplicit false
@@ -58,6 +54,5 @@ theorem slice_prime_injective (F N R : Poly) (hFne : F≠0)
   cases hgeq
   exact congrArg (fun C : RegularComponent E ga.1 N R => (⟨ga,C⟩ : SliceComponent F N R)) (Subtype.ext he)
 
-#print axioms slice_prime_injective
 end
 end ProximityPrize.SubmissionLower.MovingSourceSlicePrimeFamily6814

@@ -1,11 +1,5 @@
-/-
-UNCOMPILED. First-cut pole mass from the ORIGINAL finite-set source theorem.
-A slice component does not need its own moving projection construction:
-SecondJetRelaxedFlag.moving_bound already bounds every finite theta sum.
--/
 import ProximityPrize.SubmissionLower.LowerGeometry
 import ProximityPrize.SubmissionLower.ActualFirstCutPole6807
-
 namespace ProximityPrize.SubmissionLower.FirstSlicePoleBudget6807
 open scoped Classical BigOperators WithZero
 open RCN057 (WeightBound)

@@ -1,10 +1,5 @@
 import ProximityPrize.SubmissionLower.FirstSlicePoleBudget6807
-/-
-UNCOMPILED. Pure-flag budgets for slice components, using the actual pinned
-AdaptiveUnitProjectionFamily. No surface moving class is introduced.
--/
 import ProximityPrize.SubmissionLower.LowerFoundation
-
 namespace ProximityPrize.SubmissionLower.PureFlagSliceBudget6807
 open scoped Classical BigOperators WithZero
 open RCN002 RCN005 RCN006 RCN026 RCN046 RCN084 RCN095 RCN114
@@ -17,7 +12,6 @@ variable {E : Type} [Field E] [IsAlgClosed E]
   {G T H : MvPolynomial (Fin 3) E} {p q : FlagDegree}
   {base : ∀ C : RegularComponent E G T H, SeparableLiteralCoordinate C.1}
 
-/-- These are the SAME three integer costs as the old prime budget. -/
 theorem sum_flagPole_le (U : AdaptiveUnitPoleBudget base p q)
     (C : RegularComponent E G T H) (r : FlagDegree)
     (W : Finset (Place E (CoordinateField E C.1))) :
@@ -48,8 +42,6 @@ theorem weightedCost_add_smul (U : AdaptiveUnitPoleBudget base p q)
   dsimp only [AdaptiveUnitPoleBudget.toPrimeFlagBudgetFamily]
   ring
 
-/-- Sum over actual active geometric factors using cumulative flag budgets.
-It does not assume the three difference coordinates are separately additive. -/
 theorem all_active_slice_costs_le (F N R : MvPolynomial (Fin 3) E)
     (hF : F ≠ 0) (p q r : FlagDegree) (hFp : PolynomialInFlag p F)
     (base : ∀ g : ↥(activeFactors F N), ∀ C : RegularComponent E g.1 N R,

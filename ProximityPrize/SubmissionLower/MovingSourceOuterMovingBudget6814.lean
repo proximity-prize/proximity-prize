@@ -1,8 +1,4 @@
 import ProximityPrize.SubmissionLower.MovingSourceCommonChannelBudget6814
-
-/-! The unweighted moving term also uses one shared source-pair price
-across all outer carrier factors. Preserve each supplied ordinary unit
-family's pole costs when constructing the new moving budgets. -/
 namespace ProximityPrize.SubmissionLower.MovingSourceOuterMovingBudget6814
 noncomputable section
 set_option autoImplicit false
@@ -102,7 +98,5 @@ theorem exists_outer_first_tail_pair_budget
   change scale*(∑ i∈active, SeparableCoordinate.degree Ω (CoordinateField Ω (old i).1) (projection i))≤_
   rwa [Finset.sum_coe_sort active (fun i => SeparableCoordinate.degree Ω (CoordinateField Ω (old i).1) (projection i))] at hb
 
-#print axioms outer_first_tail_pair_degrees
-#print axioms exists_outer_first_tail_pair_budget
 end
 end ProximityPrize.SubmissionLower.MovingSourceOuterMovingBudget6814

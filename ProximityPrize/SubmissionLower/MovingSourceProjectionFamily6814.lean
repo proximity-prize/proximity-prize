@@ -1,7 +1,4 @@
 import ProximityPrize.SubmissionLower.MovingSourceVerticalFamily6814
-
-/-! Shared projection degree for an irreducible plane cut, without assuming
-that its degree in the chosen outer variable is positive. -/
 namespace ProximityPrize.SubmissionLower.MovingSourceProjectionFamily6814
 noncomputable section
 set_option autoImplicit false
@@ -73,8 +70,6 @@ theorem finite_sum_finrank_projection
   · letI : IsEmpty I := ⟨fun i => hI ⟨i⟩⟩
     exact ⟨fun i => isEmptyElim i,by simp⟩
 
-/-- Every factor is charged to the original cumulative flags once.
-No derivative-active restriction drops the vertical components. -/
 theorem all_factors_mixed_sum_le
     {K : Type} [Field K] (B : MvPolynomial (Fin 3) K) (hB : B≠0)
     (p q r : FlagDegree) (hsupport : RCN095.PolynomialInFlag p B) :
@@ -123,8 +118,5 @@ theorem flag_resultant_degree_le
   | u => exact RCN112.flagPlaneResultant_u_degree_le p q lam mu nu hGs hHs hHne
   | v => exact RCN112.flagPlaneResultant_v_degree_le p q lam mu nu hGs hHs hHne
 
-#print axioms finite_sum_finrank_projection
-#print axioms all_factors_mixed_sum_le
-#print axioms flag_resultant_degree_le
 end
 end ProximityPrize.SubmissionLower.MovingSourceProjectionFamily6814

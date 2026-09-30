@@ -1,8 +1,4 @@
 import ProximityPrize.SubmissionLower.MovingSourceFrameZeroCount6814
-
-/-! Actual seed vanishing and proper-delay transport. Seed vanishing does
-not require Hnew nonzero at the seed. A component lying in Hnew=0 is a
-separate exception; no point on the other components is discarded. -/
 namespace ProximityPrize.SubmissionLower.MovingSourceReducedSeedTails6814
 noncomputable section
 set_option autoImplicit false
@@ -10,7 +6,7 @@ set_option maxRecDepth 20000
 set_option maxHeartbeats 400000
 open RCN002 RCN135 RCN136 RCN074 RCN086 RCN095 RCN238 RCN243 RCN244 RCN264 RCN313 RCN330
 open MovingSourceFlowNumerator6814 MovingSourceLinearTailTransport6814
-open MovingSourceReducedGamma6814 MovingSourceLinearFlow6814 MovingSourceReducedRoutes6814
+open MovingSourceReducedGamma6814 MovingSourceLinearFlow6814
 
 variable {K I : Type} [Field K]
 variable {Gamma : Finset K} {x : I → K} {p : ℕ} {flag : FlagDegree}
@@ -71,40 +67,5 @@ theorem reduced_tail_proper_on_component
   rw [(he _).mpr hmem,zero_dvd_iff] at hh
   exact hproper ((he _).mp hh)
 
-def reducedDelayFlag : FlagDegree := ⟨80216676,4849702,1441803⟩
-
-theorem reduced_delay_flag_of_route
-    (F : MvPolynomial (Fin 4) K) [Fact (Irreducible F)]
-    (J : WholeSpaceCube6814.Poly (K:=K)) (hroute : LinearRoute F J)
-    (mu delay : ℕ) (hmu : 1≤mu) (hdelay : delay≤mu) :
-    RCN095.PolynomialInFlag (mu • reducedDelayFlag)
-      (surfaceMap (polynomialEmbedding K)
-        (numerators (linearH J) (linearG J) (RCN326.w+1+delay))) := by
-  have hw := (hroute.2.2.2.2 (RCN326.w+1+delay)).2
-  have hr : RCN234.wt RCN156.residualSWeights
-      (numerators (linearH J) (linearG J) (RCN326.w+1+delay))≤1441803*mu := by
-    dsimp only [RCN326.w] at hw ⊢
-    nlinarith [hw.1]
-  have hy : RCN234.wt RCN156.residualYSWeights
-      (numerators (linearH J) (linearG J) (RCN326.w+1+delay))≤6291505*mu := by
-    dsimp only [RCN326.w] at hw ⊢
-    nlinarith [hw.2.1]
-  have ht : RCN234.wt RCN156.residualTotalWeights
-      (numerators (linearH J) (linearG J) (RCN326.w+1+delay))≤86508181*mu := by
-    dsimp only [RCN326.w] at hw ⊢
-    nlinarith [hw.2.2]
-  have hh := surface_flag_of_caps (polynomialEmbedding K) _ (1441803*mu) (6291505*mu) (86508181*mu)
-    (by omega) (by omega) hr hy ht
-  have he : (⟨86508181*mu-6291505*mu,6291505*mu-1441803*mu,1441803*mu⟩ : FlagDegree)=
-      mu • reducedDelayFlag := by
-    change (⟨86508181*mu-6291505*mu,6291505*mu-1441803*mu,1441803*mu⟩ : FlagDegree)=
-      ⟨mu*80216676,mu*4849702,mu*1441803⟩
-    congr 1 <;> omega
-  rw [←he]
-  exact hh
-
-#print axioms reduced_selected_tail_zero
-#print axioms reduced_tail_proper_on_component
-#print axioms reduced_delay_flag_of_route
 end
 end ProximityPrize.SubmissionLower.MovingSourceReducedSeedTails6814

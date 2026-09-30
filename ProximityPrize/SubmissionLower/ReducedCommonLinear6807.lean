@@ -1,12 +1,6 @@
 import ProximityPrize.SubmissionLower.ThreeChannelJoint6807
-/-
-UNCOMPILED. The shared linear values are constructed for the actual reduced
-family and transported to the ORIGINAL first-tail components. No new budget
-family is chosen and no first-cut cost bound is assumed.
--/
 import ProximityPrize.SubmissionLower.CommonLinearChannels6807
 import ProximityPrize.SubmissionLower.BoundaryTailReduced
-
 namespace ProximityPrize.SubmissionLower.ReducedCommonLinear6807
 open scoped Classical BigOperators
 open RCN159 RCN263 RCN086 RCN327
@@ -51,8 +45,6 @@ def original_common
     (reducedUnitFamily S hp hc hm) (reducedBaseOrd S hp hc hm)
     (reduced_common S hp hc hm)
 
-/-- The common flag coefficients lie in the image of `K[X]` (needed by the H-free bridge:
-the derivation `d/dX` extends to them). -/
 theorem original_common_lam_poly
     (S : ResidualStage (polynomialEmbedding K) Gamma x p stageErrorCap flag
       w (support a b s))

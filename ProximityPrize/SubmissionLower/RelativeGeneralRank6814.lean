@@ -1,8 +1,4 @@
 import ProximityPrize.SubmissionLower.RelativeCountMonotone6814
-
-/-! The existing rank polynomial with the correct truncated removal
-range min(s,m/2). This also covers the eleven saved profile instances
-outside the old 2*s<=m simplification. -/
 namespace ProximityPrize.SubmissionLower.RelativeCertificate6814
 open scoped BigOperators
 open LocatorFastKernelArithmetic ClosedRank
@@ -98,5 +94,4 @@ theorem localRankBound_twelve (m L s : ℕ) (hshape : m+s≤L+1) :
   unfold rankTwelve
   nlinarith only [hh]
 
-#print axioms localRankBound_twelve
 end ProximityPrize.SubmissionLower.RelativeCertificate6814

@@ -1,8 +1,4 @@
 import ProximityPrize.SubmissionLower.MovingSourceReducedGamma6814
-
-/-! Common pole-exact affine projections for an arbitrary finite subfamily
-of gamma-nonconstant old primes. Gamma alone supplies the separating
-base. The Y and R projection degrees need not be below the characteristic. -/
 namespace ProximityPrize.SubmissionLower.MovingSourceGammaProjections6814
 noncomputable section
 set_option autoImplicit false
@@ -74,8 +70,6 @@ structure GammaFrame {A : Type} [Fintype A]
   directional : MvPolynomial.pderiv (0 : Fin 3) surface-
     MvPolynomial.C mu*MvPolynomial.pderiv (1 : Fin 3) surface≠0
 
-/-- Construct the two common projections, not an assumption that they
-exist on the subfamily. -/
 theorem exists_gamma_frame
     {A : Type} [Fintype A]
     (P : A → Ideal (MvPolynomial (Fin 3) Ω)) [∀ a,(P a).IsPrime]
@@ -152,6 +146,5 @@ theorem exists_gamma_frame
   · intro a v
     rw [hvEq a,hvPole a v,huPole a v]
 
-#print axioms exists_gamma_frame
 end
 end ProximityPrize.SubmissionLower.MovingSourceGammaProjections6814

@@ -1,7 +1,6 @@
 import ProximityPrize.SubmissionLower.BoundaryTailArithmetic
 import Mathlib.RingTheory.Valuation.Basic
 import Mathlib.Algebra.Order.GroupWithZero.Canonical
-
 namespace ProximityPrize.SubmissionLower.BoundaryTail
 
 open scoped BigOperators
@@ -10,7 +9,6 @@ noncomputable section
 
 variable {L : Type*} [Field L]
 
--- Resolve equality case splits directly in the larger serialized import environment.
 local instance : DecidableEq L := Classical.decEq L
 
 def refinedMonomial (n j : ℕ) (H G J C : L) : L :=

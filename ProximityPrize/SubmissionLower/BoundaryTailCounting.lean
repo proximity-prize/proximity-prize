@@ -1,9 +1,7 @@
 import ProximityPrize.SubmissionLower.LowerGeometry
-
 namespace ProximityPrize.SubmissionLower.BoundaryTailDegreeAwareChain
 open scoped Classical BigOperators
-open RCN174 RCN319 RCN081 RCN082 RCN167 RCN286 RCN052 RCN260 RCN318 RCN267 RCN313
-  RCN135 RCN138 RCN136 RCN238 RCN293 RCN231 RCN243 LocatorDerivativeChain
+open RCN174 RCN319 RCN081 RCN082 RCN167 RCN286 RCN052 RCN260 RCN318 RCN267 RCN313 RCN135 RCN138 RCN136 RCN238 RCN293 RCN231 RCN243 LocatorDerivativeChain
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 3000000
@@ -15,28 +13,9 @@ local instance : StrongNormalizationMonoid (MvPolynomial (Fin 4) K) :=
 variable {Iota : Type}
 local instance : DecidableEq Iota := Classical.decEq _
 
-/-- Keep the derivative stages and the one tail of each factor correlated. -/
-theorem factor_charge_le
-    (F : MvPolynomial (Fin 4) K) (selected : K → Polynomial K) (Gamma : Finset K)
-    (stage : ℕ → ℕ) (tail unit : ℕ)
-    (hstages : ∀ j ∈ Finset.Ico 1 (chainLength F),
-      (chainSeeds F j selected Gamma).card ≤ stage j)
-    (htail : (tailSeeds F selected Gamma).card ≤ tail)
-    (hreceipt : (∑ j ∈ Finset.Ico 1 (F.degreeOf 2), stage j) + tail ≤
-      F.degreeOf 2 * unit) :
-    (∑ j ∈ Finset.Ico 1 (chainLength F), (chainSeeds F j selected Gamma).card) +
-      (tailSeeds F selected Gamma).card ≤ F.degreeOf 2 * unit := by
-  have hsub : Finset.Ico 1 (chainLength F) ⊆ Finset.Ico 1 (F.degreeOf 2) := by
-    intro j hj
-    exact Finset.mem_Ico.mpr ⟨(Finset.mem_Ico.mp hj).1,
-      (Finset.mem_Ico.mp hj).2.trans_le (chainLength_le F)⟩
-  exact (Nat.add_le_add
-    ((Finset.sum_le_sum hstages).trans (Finset.sum_le_sum_of_subset hsub)) htail).trans hreceipt
-
 end
 end ProximityPrize.SubmissionLower.BoundaryTailDegreeAwareChain
 
-/-! Shared factor budgets and derivative counts using actual coordinate degrees. -/
 namespace ProximityPrize.SubmissionLower.BoundaryTailSharedDegreeBudget
 open scoped Classical BigOperators
 open RCN238 RCN081 RCN071 RCN167 RCN174 RCN319 RCN052 RCN260 RCN313 LocatorDerivativeChain
@@ -47,7 +26,6 @@ set_option maxRecDepth 20000
 variable {K : Type} [Field K]
 local instance : DecidableEq K := Classical.decEq _
 
-/-- A common factor and the quotient use the same slope budget of the selected polynomial. -/
 theorem split_slope_charge {A B : Type*} [DecidableEq A] [DecidableEq B]
     (fs us : Finset A) (bs : Finset B) (hus : us ⊆ fs)
     (f : A → MvPolynomial (Fin 4) K) (g : B → MvPolynomial (Fin 4) K)
@@ -77,7 +55,6 @@ theorem split_slope_charge {A B : Type*} [DecidableEq A] [DecidableEq B]
   have hcs := Finset.sum_sdiff hus (f := costA)
   omega
 
-/-- Coordinate degrees suffice for the mixed-degree budget; no ambient box is needed. -/
 theorem regularVector_budgets_actual
     (P : UnequalParameters) (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
     (hY : Q.degreeOf 1 ≤ P.leftY) (hR : Q.degreeOf 2 ≤ P.leftR)
@@ -116,22 +93,10 @@ local instance : DecidableEq I := Classical.decEq _
 end
 end ProximityPrize.SubmissionLower.BoundaryTailSharedDegreeBudget
 
-/-!
-Sharper derivative-chain accounting. The derivative polynomial supplies the
-agreement equations, so its own degrees suffice in the agreement numerator.
-The right-hand polynomial supplies the geometric intersection only. The Y/Z
-caps below apply to the derivative itself and may therefore also use the
-weighted degree lost under repeated R differentiation.
-
-The aggregation structure is adapted from the promoted submission and the
-actual-degree chain proof from jsign's PR506; the asymmetric numerator and
-separate derivative caps are the changes made here.
--/
 namespace ProximityPrize.SubmissionLower.BoundaryTailChainHelper
 open AsymmetricHelper
 open scoped Classical BigOperators
-open RCN238 RCN081 RCN071 RCN167 RCN174 RCN319 RCN052 RCN260 RCN313 RCN294
-  LocatorDerivativeChain BoundaryTailSharedDegreeBudget
+open RCN238 RCN081 RCN071 RCN167 RCN174 RCN319 RCN052 RCN260 RCN313 RCN294 LocatorDerivativeChain BoundaryTailSharedDegreeBudget
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 3000000
@@ -181,55 +146,9 @@ theorem sum_regular_counts_bound_left
      · exact Nat.mul_le_mul_left _ hcost.2.2
    _=leftRegularNumerator P:=rfl
 
-theorem chainSeeds_card_le_left
-    (P : UnequalParameters) (F : MvPolynomial (Fin 4) K) (hF : Irreducible F)
-    (p : ℕ) [CharP K p] (hpos : 0 < F.degreeOf 2) (hsmall : F.degreeOf 2 < p)
-    (j : ℕ) (hj1 : 1 ≤ j) (hj : j ≤ chainLength F)
-    (hgap : 0 < P.gap)
-    (hY : (dR j F).degreeOf 1 ≤ P.leftY) (hR : F.degreeOf 2 - j ≤ P.leftR)
-    (hZ : (dR j F).degreeOf 3 ≤ P.leftZ)
-    (hY' : F.degreeOf 1 ≤ P.rightY) (hR' : F.degreeOf 2 ≤ P.rightR)
-    (hZ' : F.degreeOf 3 ≤ P.rightZ)
-    (hleftR : 1 ≤ P.leftR)
-    (hleftYSmall : P.leftY < p) (hleftRSmall : P.leftR < p) (hleftZSmall : P.leftZ < p)
-    (hmixedYSmall : P.mixedCost.y < p) (hmixedRSmall : P.mixedCost.r < p)
-    (hmixedZSmall : P.mixedCost.z < p)
-    (selected : K → Polynomial K) (Gamma : Finset K)
-    (nodes : Finset I) (x u0 u1 : I → K) (hinj : Set.InjOn x nodes)
-    (hnodes : nodes.card = P.n) (hw : 1 ≤ P.w) (hchar : P.w < p)
-    (hwa : P.w < P.a) (han : P.a ≤ P.n)
-    (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ P.w)
-    (hagreement : ∀ gamma ∈ Gamma, P.a ≤ (nodes.filter (fun i =>
-      (selected gamma).eval (x i) = u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma P.w P.errors) :
-    (chainSeeds F j selected Gamma).card ≤ leftRegularCountCap P := by
-  have hne := dR_ne_zero F hF.ne_zero p hsmall j hj
-  have hrel := isRelPrime_dR F hF p hpos hsmall j hj1 hj
-  have hy := hY
-  have hr := (dR_R_degree_le j F).trans hR
-  have hz := hZ
-  have hcount (G : RegularIndex (dR j F)) := regularPairSeeds_bound_left P (dR j F) F hrel G p
-    ((degreeOf_le_of_dvd 1 G.1 (dR j F) (positiveRFactors_spec _ _ G.2).2.1 hne).trans hy)
-    ((degreeOf_le_of_dvd 2 G.1 (dR j F) (positiveRFactors_spec _ _ G.2).2.1 hne).trans hr)
-    ((degreeOf_le_of_dvd 3 G.1 (dR j F) (positiveRFactors_spec _ _ G.2).2.1 hne).trans hz)
-    hY' hR' hZ' hleftR hleftYSmall hleftRSmall hleftZSmall
-    hmixedYSmall hmixedRSmall hmixedZSmall selected Gamma nodes x u0 u1
-    hinj hnodes hw hchar hwa han hdegree hagreement hno
-  have hsum := sum_regular_counts_bound_left P (dR j F) F selected Gamma
-    (regularVector_budgets_actual P (dR j F) hne hy hr hz) hcount
-  have hc : (∑ G : RegularIndex (dR j F),
-      (regularPairSeeds (dR j F) F selected Gamma G).card) ≤ leftRegularCountCap P :=
-    (Nat.le_div_iff_mul_le hgap).mpr hsum
-  exact (Finset.card_le_card (chainSeeds_subset_regularPairSeeds F j hne selected Gamma)).trans
-    (Finset.card_biUnion_le.trans hc)
-
 end
 end ProximityPrize.SubmissionLower.BoundaryTailChainHelper
 
-/-! Carrier-only chain accounting at error 80811. The polynomial endpoint
-argument is adapted from jsign PR506's shared-chain proof. Using the derivative
-carrier's agreement degrees replaces its old cross term by the smaller one
-proved in `stageNumerator` below. This file alone is not a protocol claim. -/
 namespace ProximityPrize.SubmissionLower.AsymmetricChainPolynomial80811
 open scoped BigOperators
 open RCN238 RCN223 RCN260 RCN313 RCN294 BoundaryTailChainHelper AsymmetricHelper
@@ -239,16 +158,10 @@ set_option maxHeartbeats 5000000
 
 end ProximityPrize.SubmissionLower.AsymmetricChainPolynomial80811
 
-/-! Shared factor-family counting for the proposed error-80811 profile.
-The aggregation framework is adapted from jsign PR506. Its AsymmetricChainPolynomial80811.stage count is
-replaced by the checked derivative-carrier numerator and polynomial bound.
-This module does not assert a protocol claim. -/
-
 namespace ProximityPrize.SubmissionLower.Lower80811.Counting
 open ProximityPrize.Benchmark
 open scoped Classical BigOperators
-open RCN081 RCN100 RCN130 RCN140 RCN156 RCN167 RCN174 RCN234 RCN238
-  RCN243 RCN260 RCN267 RCN275 RCN286 RCN294 RCN303 RCN313 RCN318 RCN319
+open RCN081 RCN100 RCN130 RCN140 RCN156 RCN167 RCN174 RCN234 RCN238 RCN243 RCN260 RCN267 RCN275 RCN286 RCN294 RCN303 RCN313 RCN318 RCN319
 open LocatorDerivativeChain BoundaryTailSharedDegreeBudget AsymmetricChainPolynomial80811 BoundaryTailChainHelper AsymmetricHelper
 noncomputable section
 set_option autoImplicit false

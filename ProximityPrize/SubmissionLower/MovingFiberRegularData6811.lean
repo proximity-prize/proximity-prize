@@ -2,7 +2,6 @@ import ProximityPrize.SubmissionLower.LowerGeometry
 import ProximityPrize.SubmissionLower.SecondJetRefinements
 import ProximityPrize.SubmissionLower.BoundaryTailProvider
 import ProximityPrize.SubmissionLower.MovingFiberRegularGeometry6811
-
 namespace ProximityPrize.SubmissionLower.MovingFiberRegularData6811
 open scoped Classical BigOperators
 open MvPolynomial RCN135 RCN136 RCN319 RCN238 RCN243 RCN260 RCN174 RCN275 RCN327

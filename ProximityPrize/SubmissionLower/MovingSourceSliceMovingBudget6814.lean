@@ -1,8 +1,4 @@
 import ProximityPrize.SubmissionLower.MovingSourceIndexedMovingDegrees6814
-
-/-! One moving budget across ALL assigned slice factors. Ordinary flag
-costs are those of the existing slice budgets, while the moving degrees
-are summed once using prime injectivity and a common projection. -/
 namespace ProximityPrize.SubmissionLower.MovingSourceSliceMovingBudget6814
 noncomputable section
 set_option autoImplicit false
@@ -88,6 +84,5 @@ theorem exists_slice_moving_budget
   · letI : IsEmpty active := ⟨fun a => hactive ⟨a⟩⟩
     simp
 
-#print axioms exists_slice_moving_budget
 end
 end ProximityPrize.SubmissionLower.MovingSourceSliceMovingBudget6814

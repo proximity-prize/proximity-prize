@@ -1,10 +1,4 @@
-/-
-UNCOMPILED. Weighted zero/pole counting at the pinned actual model places.
-The multiplicity sum is retained throughout. The product formula is applied to
-a nonzero rational function, and all of its finite and infinite places remain.
--/
 import ProximityPrize.SubmissionLower.WeightedPlaceOrder6807
-
 namespace ProximityPrize.SubmissionLower.WeightedZeroMass6807
 open scoped Classical BigOperators WithZero
 open RCN026
@@ -18,8 +12,6 @@ variable (K L : Type*) [Field K] [Field L] [Algebra K L] [IsAlgClosed K]
   [IsScalarTower (Polynomial K) (RatFunc K) L]
   [FiniteDimensional (RatFunc K) L] [Algebra.IsSeparable (RatFunc K) L]
 
-/-- An injective indexed family of places pays its actual positive weights.
-The positivity premise is used only to put those places into placesFor. -/
 theorem weighted_places_le_poleMass {I : Type*} [Fintype I]
     (x : L) (hx : x ≠ 0) (place : I → Place K L)
     (hinj : Function.Injective place) (mu : I → ℕ)
@@ -57,8 +49,6 @@ variable (A : Type*) [CommRing A] [IsDomain A]
   [IsScalarTower K (Polynomial K) A] [IsScalarTower K A L]
   [IsScalarTower (Polynomial K) A L]
 
-/-- Fully concrete affine-model version. The only point data are distinct
-K-algebra evaluations, their ideal-power memberships, and nonzero denominators. -/
 theorem weighted_affine_points_le_poleMass {I : Type*} [Fintype I]
     (phi : I → (A →ₐ[K] K)) (hinj : Function.Injective phi)
     (mu : I → ℕ) (hmu : ∀ i, 1 ≤ mu i) (a b : A)
@@ -75,8 +65,6 @@ theorem weighted_affine_points_le_poleMass {I : Type*} [Fintype I]
   exact WeightedPlaceOrder6807.actual_normalized_order_ge_pow K A L
     (phi i) (mu i) a b (ha i) (hb i) hx
 
-/-- Useful final interface for one slice component: a local rational pole
-bound, not a global intersection bound, pays all embedded old multiplicities. -/
 theorem weighted_affine_points_scaled {I : Type*} [Fintype I]
     (phi : I → (A →ₐ[K] K)) (hinj : Function.Injective phi)
     (mu : I → ℕ) (hmu : ∀ i, 1 ≤ mu i) (a b : A)

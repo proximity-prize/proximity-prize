@@ -1,6 +1,5 @@
 import ProximityPrize.SubmissionLower.BoundaryTailGates6808
 import ProximityPrize.SubmissionLower.BoundaryTailProjection
-
 namespace ProximityPrize.SubmissionLower.BoundaryTailIdentity
 open scoped Classical BigOperators
 open RCN146

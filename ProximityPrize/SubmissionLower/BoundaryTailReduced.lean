@@ -1,5 +1,4 @@
 import ProximityPrize.SubmissionLower.BoundaryTailProjection
-
 namespace ProximityPrize.SubmissionLower.BoundaryTailReduced
 open scoped Classical BigOperators
 open RCN332 BoundaryTailProjection

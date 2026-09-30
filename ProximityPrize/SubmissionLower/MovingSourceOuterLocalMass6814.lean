@@ -1,8 +1,4 @@
 import ProximityPrize.SubmissionLower.MovingSourceOuterStageFrames6814
-
-/-! First-cut multiplicities from different geometric Stages are orders
-of one original first-tail function. Count that function once on a prime
-slice; no equality of the Stages or their DVR choices is needed. -/
 namespace ProximityPrize.SubmissionLower.MovingSourceOuterLocalMass6814
 noncomputable section
 set_option autoImplicit false
@@ -125,6 +121,5 @@ theorem outer_first_cut_on_prime_slice
   rw [hrepr]
   exact hpole hFd hHd W
 
-#print axioms outer_first_cut_on_prime_slice
 end
 end ProximityPrize.SubmissionLower.MovingSourceOuterLocalMass6814

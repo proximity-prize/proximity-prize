@@ -1,5 +1,4 @@
 import ProximityPrize.SubmissionLower.RelativeTwoResidueCounts6814
-
 namespace ProximityPrize.SubmissionLower.RelativeCertificate6814
 open scoped BigOperators
 open RCN100
@@ -55,6 +54,4 @@ theorem row_test_of_rearranged (source multiple outer inner n : ℕ)
   · rw [Nat.sub_eq_zero_of_le (by omega : outer ≤ inner),mul_zero,add_zero]
     exact hbase
 
-#print axioms multiple_count_lt_source
-#print axioms row_test_of_rearranged
 end ProximityPrize.SubmissionLower.RelativeCertificate6814

@@ -1,5 +1,4 @@
 import ProximityPrize.SubmissionLower.BoundaryTailRecurrence
-
 namespace ProximityPrize.SubmissionLower.BoundaryTailAlgebra
 
 open RCN055 RCN056 RCN313

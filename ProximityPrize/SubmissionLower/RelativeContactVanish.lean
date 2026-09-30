@@ -1,5 +1,4 @@
 import ProximityPrize.SubmissionLower.RelativeContactInjection
-
 namespace ProximityPrize.SubmissionLower.RelativeContactOrder6814
 open scoped BigOperators
 open MvPolynomial ContactOrderBridge RCN122
@@ -8,13 +7,9 @@ set_option autoImplicit false
 set_option maxHeartbeats 2000000
 variable (K : Type*) [Field K]
 
-/-- Relative vanishing modulo the fixed original factor, without dividing
-by its slope derivative or assuming any agreement node is nonsingular. -/
 def RelativeContactAtLeast (x u0 u1 : K) (m : ℕ) (F Q : Poly4 K) : Prop :=
   ∃ B : Poly4 K, ContactAtLeast K x u0 u1 m (Q - F * B)
 
-/-- The relative condition is exactly membership in the image of the
-injective, shifted jet map, so it is the condition used by the quotient. -/
 theorem relative_contact_iff_jet_range
     (x u0 u1 : K) (m : ℕ) (F Q : Poly4 K) (hF : F ≠ 0) :
     RelativeContactAtLeast K x u0 u1 m F Q ↔
@@ -46,8 +41,6 @@ theorem relative_contact_specialization_dvd
   exact (RCN185.shifted_power_dvd_iff_taylor_coeff_zero
     (specialization K f gamma Q) x m).mpr (Polynomial.X_pow_dvd_iff.mp ht)
 
-/-- Nonuniform relative contact orders give an actual vanishing theorem
-for every selected polynomial solution, not just for a chosen parameter. -/
 theorem relative_contact_specialization_eq_zero
     {I : Type*} (F Q : Poly4 K) (f : Polynomial K) (gamma : K)
     (nodes : I ↪ K) (u0 u1 : I → K) (support : Finset I) (m : I → ℕ)
@@ -78,6 +71,3 @@ theorem relative_contact_specialization_eq_zero
 
 end
 end ProximityPrize.SubmissionLower.RelativeContactOrder6814
-
-#print axioms ProximityPrize.SubmissionLower.RelativeContactOrder6814.relative_contact_specialization_eq_zero
-#print axioms ProximityPrize.SubmissionLower.RelativeContactOrder6814.relative_contact_iff_jet_range

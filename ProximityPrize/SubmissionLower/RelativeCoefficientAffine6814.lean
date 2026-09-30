@@ -1,5 +1,4 @@
 import ProximityPrize.SubmissionLower.RelativeTwoResidueCounts6814
-
 namespace ProximityPrize.SubmissionLower.RelativeCertificate6814
 open LocatorFastKernelArithmetic RCN100
 set_option autoImplicit false
@@ -52,5 +51,4 @@ theorem coefficientCount_affine (q r w L s : ℕ)
       Nat.cast_sub (show w-r≤L by omega),Nat.cast_sub (show r≤w by omega),Nat.cast_add]
     ring
 
-#print axioms coefficientCount_affine
 end ProximityPrize.SubmissionLower.RelativeCertificate6814

@@ -1,5 +1,4 @@
 import ProximityPrize.SubmissionLower.MovingSourceTripleRootInvariants6814
-
 namespace ProximityPrize.SubmissionLower.MovingSourceTripleRootPolynomial6814
 noncomputable section
 set_option autoImplicit false
@@ -87,7 +86,5 @@ theorem irreducible_small_invariants_not_both_zero {K : Type} [Field K]
   rw [natDegree_X_sub_C] at hd
   omega
 
-#print axioms invariants_of_triple_root
-#print axioms irreducible_small_invariants_not_both_zero
 end
 end ProximityPrize.SubmissionLower.MovingSourceTripleRootPolynomial6814

@@ -1,8 +1,4 @@
 import ProximityPrize.SubmissionLower.MovingSourceMovingDegrees6814
-
-/-! Turn an actual curvature-root factor into the existing native source
-record. Its helper divisibilities are proved from root multiplicity in
-the faithful carrier field, not postulated as a counting supplier. -/
 namespace ProximityPrize.SubmissionLower.MovingSourceNativeFactor6814
 noncomputable section
 set_option autoImplicit false
@@ -72,7 +68,5 @@ theorem canonical_source_of_root [CharP K 2130706433]
   source_of_root_multiplicity J F (carrierMap F) (carrierMap_zero_iff F)
     (carrier_H_nonzero F hpos hsmall) m s B U T hm hs h2s hBU hUT hshape hroot
 
-#print axioms source_of_root_multiplicity
-#print axioms canonical_source_of_root
 end
 end ProximityPrize.SubmissionLower.MovingSourceNativeFactor6814

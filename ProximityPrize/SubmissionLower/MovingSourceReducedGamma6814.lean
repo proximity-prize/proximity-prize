@@ -1,10 +1,6 @@
 import ProximityPrize.SubmissionLower.MovingSourceReducedCycle6814
 import ProximityPrize.SubmissionLower.MovingSourceAutomaticProjection6814
-import ProximityPrize.SubmissionLower.MovingSourceReducedRoutes6814
-
-/-! Actual suppliers for the reduced cycle: old-prime membership,
-properness, the small first-tail flag, and a separating gamma coordinate.
-Only gamma's degree is compared to the characteristic. -/
+import ProximityPrize.SubmissionLower.MovingSourceLinearTailTransport6814
 namespace ProximityPrize.SubmissionLower.MovingSourceReducedGamma6814
 noncomputable section
 set_option autoImplicit false
@@ -14,15 +10,13 @@ open RCN135 RCN136 RCN074 RCN086 RCN095 RCN244 RCN264 RCN313
 open RCN002 RCN022 RCN037 RCN042 RCN093 RCN341
 open MovingSourceFlowNumerator6814 MovingSourceReducedCycle6814
 open MovingSourceProjectionFamily6814 MovingSourceAutomaticProjection6814
-open MovingSourceLinearFlow6814 MovingSourceReducedRoutes6814
+open MovingSourceLinearFlow6814
 
 variable {K I : Type} [Field K]
 variable {Gamma : Finset K} {x : I → K} {p : ℕ} {flag : FlagDegree}
   [CharP (GenericField K) p] {errorCap : ℕ}
   {stageSupport : RCN275.ResidualSupportParameters}
 
-/-- Even old components contained in Hnew=0 occur in the new first cut.
-They are not silently removed from the shared cycle. -/
 theorem reducedTail_mem_old_component
     (S : Stage K I Gamma x p flag errorCap stageSupport)
     (H G : MvPolynomial (Fin 4) K)
@@ -46,8 +40,6 @@ theorem reducedTail_mem_old_component
       (hprime.mem_of_pow_mem _ hh)
   exact (hprime.mem_or_mem hm).resolve_left hOld
 
-/-- New properness follows from old properness and the only relevant
-surface-level denominator exclusion. -/
 theorem reducedTail_proper
     (S : Stage K I Gamma x p flag errorCap stageSupport)
     (hfirst : ¬S.G∣globalTailCut (polynomialEmbedding K) S.F (RCN326.w+1))
@@ -86,18 +78,6 @@ theorem surface_flag_of_caps
   change d 2≤B ∧ d 1+d 2≤A-B+B ∧ d 1+d 2+d 3≤C-A+(A-B)+B
   omega
 
-def reducedFirstFlag : FlagDegree := ⟨80216064,4849665,1441792⟩
-
-theorem reducedFirstFlag_of_route
-    (F : MvPolynomial (Fin 4) K) [Fact (Irreducible F)]
-    (J : WholeSpaceCube6814.Poly (K:=K)) (hroute : LinearRoute F J) :
-    PolynomialInFlag reducedFirstFlag (reducedTailSurface (linearH J) (linearG J)) := by
-  have hw := (hroute.2.2.2.2 (RCN326.w+1)).2
-  exact surface_flag_of_caps (polynomialEmbedding K) _ 1441792 6291457 86507521
-    (by decide) (by decide) hw.1 hw.2.1 hw.2.2
-
-/-- Automatic separating parameter coordinate on the nonconstant-gamma
-part of the original family. No Y- or R-projection degree gate is used. -/
 theorem reduced_gamma_gate
     (S : Stage K I Gamma x p flag errorCap stageSupport)
     (H G : MvPolynomial (Fin 4) K)
@@ -122,12 +102,5 @@ theorem reduced_gamma_gate
   rw [he] at hh
   exact hh
 
-theorem checked_gamma_budget : flagMixed ⟨3504,45,12⟩ reducedFirstFlag unitZFlag=140378124 ∧
-    flagMixed ⟨3504,45,12⟩ reducedFirstFlag unitZFlag<2130706433 := by decide +kernel
-
-#print axioms reducedTail_mem_old_component
-#print axioms reducedTail_proper
-#print axioms reducedFirstFlag_of_route
-#print axioms reduced_gamma_gate
 end
 end ProximityPrize.SubmissionLower.MovingSourceReducedGamma6814

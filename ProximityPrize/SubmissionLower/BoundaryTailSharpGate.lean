@@ -1,14 +1,10 @@
 import ProximityPrize.SubmissionLower.BoundaryTailProvider
 import ProximityPrize.SubmissionLower.LowerFoundation
-
 namespace ProximityPrize.SubmissionLower.BoundaryTailSharpGate
 set_option maxHeartbeats 1000000
 open RCN002 RCN004 RCN005 RCN095 RCN125 RCN371
 open scoped BigOperators
 
-/-- A prime curve with two proper equations and a transcendental Z coordinate
-has separating Z projection whenever its sharp flag-trapezoid degree is below
-the characteristic. No rectangular coordinate-degree gate is required. -/
 theorem finite_separable_z_of_flag_gate {Omega : Type} [Field Omega]
     (P : Ideal (MvPolynomial (Fin 3) Omega)) [P.IsPrime]
     (hZ : Transcendental Omega (coordinate Omega P 2))

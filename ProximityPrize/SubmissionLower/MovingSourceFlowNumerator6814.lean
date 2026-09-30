@@ -1,7 +1,4 @@
 import ProximityPrize.SubmissionLower.MovingSourceLinearFlow6814
-
-/-! Actual numerator recurrence for an arbitrary rational curvature flow.
-Its field semantics and the original numerator specialization are proved. -/
 namespace ProximityPrize.SubmissionLower.MovingSourceFlowNumerator6814
 noncomputable section
 set_option autoImplicit false
@@ -72,7 +69,5 @@ theorem numerator_cross_eq
     simpa only [div_eq_mul_inv,inv_pow] using hh
   exact (div_eq_div_iff (pow_ne_zero _ hH) (pow_ne_zero _ hH')).mp he
 
-#print axioms iterate_eq_fraction
-#print axioms numerator_cross_eq
 end
 end ProximityPrize.SubmissionLower.MovingSourceFlowNumerator6814

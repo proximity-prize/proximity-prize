@@ -1,9 +1,4 @@
 import ProximityPrize.SubmissionLower.LowerGeometry
-
-/-! Source-sensitive zero counting for a moving coordinate on one prime slice.
-The only cost input is the existing pure source-flag pole budget. No moving
-fiber projection-degree inequality is assumed or asserted in this module.
--/
 namespace ProximityPrize.SubmissionLower.MovingFiberSourceZeros6811
 open scoped BigOperators WithZero
 open RCN002 RCN005 RCN006 RCN007 RCN026 RCN095 RCN136 RCN187 RCN204 RCN207 RCN257 RCN313 RCN341
@@ -115,8 +110,6 @@ theorem source_moving_pole_mass
     Q A target hQ hA
   simpa only [coordinateEvaluation_eq_aeval,MvPolynomial.aeval_eq_eval₂Hom] using hh
 
-/-- Actual finite zero counting, not just a pole estimate. A moving equation
-that is nonzero on this slice has at most CV/(k+1) regular zero points. -/
 theorem finite_moving_zeros_of_source
     (phi : Polynomial K →+* E) (F : MvPolynomial (Fin 4) K)
     (C : Ideal (MvPolynomial (Fin 3) E)) [C.IsPrime]
@@ -168,10 +161,6 @@ theorem finite_moving_zeros_of_source
   rw [Int.natCast_ediv]
   apply (Int.le_ediv_iff_mul_le (by positivity : (0 : ℤ) < ((k+1 : ℕ) : ℤ))).mpr
   simpa only [H,G,mul_comm] using hsource
-
-#print axioms moving_difference_pole_le
-#print axioms source_moving_pole_mass
-#print axioms finite_moving_zeros_of_source
 
 end
 end ProximityPrize.SubmissionLower.MovingFiberSourceZeros6811

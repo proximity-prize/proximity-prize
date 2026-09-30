@@ -1,7 +1,4 @@
 import ProximityPrize.SubmissionLower.MovingSourceProperness6814
-
-/-! Transport properness through the injective flat coefficient changes
-used by the generic moving-fiber construction. -/
 namespace ProximityPrize.SubmissionLower.MovingSourceFlatBaseChange6814
 noncomputable section
 set_option autoImplicit false
@@ -69,7 +66,5 @@ theorem isRelPrime_equiv (e : A ≃+* B) (P Q : A) (h : IsRelPrime P Q) :
 
 end Equivalence
 
-#print axioms map_isRelPrime_of_flat
-#print axioms coefficient_map_flat
 end
 end ProximityPrize.SubmissionLower.MovingSourceFlatBaseChange6814

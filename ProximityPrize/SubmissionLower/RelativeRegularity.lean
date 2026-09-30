@@ -1,5 +1,4 @@
 import ProximityPrize.SubmissionLower.RelativeCentering
-
 namespace ProximityPrize.SubmissionLower.RelativeBounded6814
 open scoped BigOperators
 open MvPolynomial RCN119 RCN100 RCN122 ContactOrderBridge
@@ -9,8 +8,6 @@ set_option autoImplicit false
 set_option maxHeartbeats 2000000
 variable (K : Type*) [Field K]
 
-/-- Regularity bounds the total derivative-contact loss on the actual
-agreement set, including nodes where the slope derivative itself vanishes. -/
 theorem regular_contact_mass
     {I : Type*} (F : Poly4 K) (hF : F ≠ 0) (f : Polynomial K) (gamma : K)
     (nodes : I ↪ K) (u0 u1 : I → K) (support : Finset I) (w nu : ℕ)
@@ -60,21 +57,5 @@ theorem affine_order_mass {I : Type*} (support : Finset I) (d : I → ℕ)
   have hm := Nat.mul_le_mul_left beta hmass
   omega
 
-theorem regular_affine_order_mass
-    {I : Type*} (F : Poly4 K) (hF : F ≠ 0) (f : Polynomial K) (gamma : K)
-    (nodes : I ↪ K) (u0 u1 : I → K) (support : Finset I) (w nu alpha beta A : ℕ)
-    (hdegree : f.natDegree ≤ w)
-    (hweight : MvPolynomial.weightedTotalDegree (RCN081.contactWeights w) F ≤ nu)
-    (hregular : specialization K f gamma (MvPolynomial.pderiv (2 : Fin 4) F) ≠ 0)
-    (hagrees : ∀ i ∈ support, f.eval (nodes i) = u0 i+gamma*u1 i)
-    (hcard : A ≤ support.card) :
-    alpha*A-beta*(nu+1-w) ≤
-      ∑ i ∈ support, (alpha-beta*(contactOrder K (nodes i) (u0 i) (u1 i) F-1)) := by
-  have hm := regular_contact_mass K F hF f gamma nodes u0 u1 support w nu hdegree hweight
-    hregular hagrees
-  exact affine_order_mass support _ alpha beta A (nu+1-w) hcard (by omega)
-
 end
 end ProximityPrize.SubmissionLower.RelativeBounded6814
-
-#print axioms ProximityPrize.SubmissionLower.RelativeBounded6814.regular_affine_order_mass

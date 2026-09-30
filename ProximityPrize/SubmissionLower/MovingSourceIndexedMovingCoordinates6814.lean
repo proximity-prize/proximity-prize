@@ -1,7 +1,4 @@
 import ProximityPrize.SubmissionLower.MovingSourceSlicePrimeFamily6814
-
-/-! One pole-exact moving coordinate shared by an indexed family of
-primes, even when their geometric carrier labels differ. -/
 namespace ProximityPrize.SubmissionLower.MovingSourceIndexedMovingCoordinates6814
 noncomputable section
 set_option autoImplicit false
@@ -75,6 +72,5 @@ theorem exists_indexed_moving_coordinates
     have hp0 := le_antisymm hp (le_max_left _ _)
     simpa [movingPoleTarget,hcoord,hw] using hp0
 
-#print axioms exists_indexed_moving_coordinates
 end
 end ProximityPrize.SubmissionLower.MovingSourceIndexedMovingCoordinates6814

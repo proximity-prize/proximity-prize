@@ -1,5 +1,4 @@
 import ProximityPrize.SubmissionLower.LowerFoundation
-
 namespace ProximityPrize.SubmissionLower.RelativeContactOrder6814
 open MvPolynomial ContactOrderBridge
 noncomputable section
@@ -56,8 +55,6 @@ theorem atLeast_x_iff_dvd (m : ℕ) (P : Poly4 K) :
     rw [he, MvPolynomial.coeff_zero] at hc
     exact MvPolynomial.mem_support_iff.mp hd hc
 
-/-- The actual local substitution, embedded in a one-variable polynomial
-ring over a domain. Two blow-ups turn contact weight (1,2,0,0) into X-order. -/
 def contactPolynomial (x u0 u1 : K) :
     Poly4 K →+* Polynomial (MvPolynomial (Fin 3) K) :=
   (MvPolynomial.finSuccEquiv K 3).toRingHom.comp
@@ -127,8 +124,6 @@ theorem contactOrder_mul (x u0 u1 : K) (P Q : Poly4 K) (hP : P ≠ 0) (hQ : Q �
     (contactPolynomial_ne_zero K x u0 u1 hP)
     (contactPolynomial_ne_zero K x u0 u1 hQ)]
 
-/-- The exact order cancellation needed by the relative local factor image.
-No simple-root, separability, or nonsingular-node hypothesis is present. -/
 theorem contact_mul_iff (x u0 u1 : K) (m : ℕ) (P Q : Poly4 K) (hP : P ≠ 0) :
     ContactAtLeast K x u0 u1 m (P * Q) ↔
       ContactAtLeast K x u0 u1 (m - contactOrder K x u0 u1 P) Q := by
@@ -141,5 +136,3 @@ theorem contact_mul_iff (x u0 u1 : K) (m : ℕ) (P Q : Poly4 K) (hP : P ≠ 0) :
 
 end
 end ProximityPrize.SubmissionLower.RelativeContactOrder6814
-
-#print axioms ProximityPrize.SubmissionLower.RelativeContactOrder6814.contact_mul_iff

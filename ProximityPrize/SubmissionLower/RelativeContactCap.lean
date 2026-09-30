@@ -1,5 +1,4 @@
 import ProximityPrize.SubmissionLower.RelativeHelperRegularFamily
-
 namespace ProximityPrize.SubmissionLower.RelativeBounded6814
 open scoped BigOperators
 open MvPolynomial RCN119 RCN100 RCN122 ContactOrderBridge
@@ -42,8 +41,6 @@ theorem translated_zero_coeff (F : Poly4 K) (d : Fin 4 →₀ ℕ) :
   change Finsupp.mapDomain blowupExponent (AddMonoidAlgebra.coeff F) (blowupExponent d) = _
   exact Finsupp.mapDomain_apply blowupExponent_injective _ _
 
-/-- Excess contact would force an X-factor. This uses actual coefficient
-blocks, so cancellation between Taylor blocks cannot evade the bound. -/
 theorem X_dvd_of_contact_large {DF T R B : ℕ} (F : Poly4 K)
     (hbox : F ∈ globalCoefficientBox K DF 1 T R) (hY : F.degreeOf 1 ≤ B)
     (hcontact : ContactAtLeast K 0 0 0 (B+R+1) F) :
@@ -125,8 +122,6 @@ theorem X_not_dvd_center_of_irreducible (F : Poly4 K) (hF : Irreducible F)
     simpa [MvPolynomial.degreeOf_X] using hh
   omega
 
-/-- The finite contact cap required by the saved profiles, for the actual
-irreducible positive-slope factor at every received affine value. -/
 theorem contactOrder_le_middle_add_slope {DF T R B : ℕ} (F : Poly4 K)
     (hF : Irreducible F) (hR : 0 < F.degreeOf 2)
     (hbox : F ∈ globalCoefficientBox K DF 1 T R)
@@ -147,5 +142,3 @@ theorem contactOrder_le_middle_add_slope {DF T R B : ℕ} (F : Poly4 K)
 
 end
 end ProximityPrize.SubmissionLower.RelativeBounded6814
-
-#print axioms ProximityPrize.SubmissionLower.RelativeBounded6814.contactOrder_le_middle_add_slope

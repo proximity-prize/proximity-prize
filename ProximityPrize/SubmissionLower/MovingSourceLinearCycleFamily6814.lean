@@ -1,8 +1,4 @@
 import ProximityPrize.SubmissionLower.MovingSourceGammaProjections6814
-
-/-! Construct the projections and all three weighted degree bounds on the
-actual gamma-nonconstant subfamily. This closes the shared first-tail
-cycle, not the final seed count or its exceptional/persistent branches. -/
 namespace ProximityPrize.SubmissionLower.MovingSourceLinearCycleFamily6814
 noncomputable section
 set_option autoImplicit false
@@ -77,9 +73,6 @@ variable {Gamma : Finset K} {x : I → K} {p : ℕ} {flag : FlagDegree}
   [CharP (GenericField K) p] {errorCap : ℕ}
   {stageSupport : RCN275.ResidualSupportParameters}
 
-/-- The selected frame has all three weighted shared budgets, supplied by
-the actual stage and denominator-change identity. Only the parameter
-mixed degree must be below characteristic. -/
 theorem exists_reduced_cycle_family
     (S : Stage K I Gamma x p flag errorCap stageSupport)
     (hfirst : ¬S.G∣globalTailCut (polynomialEmbedding K) S.F (RCN326.w+1))
@@ -126,32 +119,5 @@ theorem exists_reduced_cycle_family
     coordinateOfGate_degree_of_transcendental _ _ (frame_trans D hz axis a)
   simpa only [F,he] using hb
 
-/-- Checked-cell specialization consumes the actual exhaustive owner's
-LinearRoute. Its recurrence, first-tail support, projection construction,
-and all three weighted resultant inequalities are supplied, not assumed. -/
-theorem checked_linear_owner_cycle
-    (S : Stage K I Gamma x p flag errorCap stageSupport)
-    [Fact (Irreducible S.F)] (hp : p=2130706433)
-    (hfirst : ¬S.G∣globalTailCut (polynomialEmbedding K) S.F (RCN326.w+1))
-    (J : WholeSpaceCube6814.Poly (K:=K))
-    (hroute : MovingSourceReducedRoutes6814.LinearRoute S.F J)
-    (hH : ¬S.G∣surfaceMap (polynomialEmbedding K) (MovingSourceLinearFlow6814.linearH J))
-    {A : Type} [Fintype A] (component : A → FirstTailComponent S)
-    (hinj : Function.Injective component)
-    (hz : ∀ a, Transcendental (GenericField K) (coordinate (GenericField K) (component a).1 2))
-    (hS : RCN095.PolynomialInFlag ⟨3504,45,12⟩ S.G) :
-    ∃ D : GammaFrame (fun a => (component a).1) S.G, ∀ axis : Axis,
-      (∑ a, localMultiplicity S (canonicalLocalDVRFamily S hfirst) (component a)*frameCost D hz axis a) ≤
-        flagMixed ⟨3504,45,12⟩ reducedFirstFlag axis.flag := by
-  have hs : flagMixed ⟨3504,45,12⟩ reducedFirstFlag unitZFlag<p := by
-    rw [hp]
-    exact checked_gamma_budget.2
-  exact exists_reduced_cycle_family S hfirst
-    (MovingSourceLinearFlow6814.linearH J) (MovingSourceLinearFlow6814.linearG J)
-    (hroute.2.2.2.2 (RCN326.w+1)).1 hH component hinj hz
-    ⟨3504,45,12⟩ reducedFirstFlag hS (reducedFirstFlag_of_route S.F J hroute) hs
-
-#print axioms exists_reduced_cycle_family
-#print axioms checked_linear_owner_cycle
 end
 end ProximityPrize.SubmissionLower.MovingSourceLinearCycleFamily6814

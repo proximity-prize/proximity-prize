@@ -1,7 +1,6 @@
 import ProximityPrize.SubmissionLower.BoundaryTailFlags
 import ProximityPrize.SubmissionLower.BoundaryTailRepresentation
 import ProximityPrize.SubmissionLower.BoundaryTailCoefficientFacts
-
 namespace ProximityPrize.SubmissionLower.BoundaryTailAlgebra
 
 open RCN055 RCN057 RCN095 RCN136 RCN156 RCN204 RCN234 RCN313

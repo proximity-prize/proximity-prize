@@ -1,8 +1,4 @@
 import ProximityPrize.SubmissionLower.MovingSourceHybridCount6814
-
-/-! Restrict the constructed projections to a smaller regular locus,
-without paying their shared budget again. This allows the old Z source's
-leading coefficient to be excluded on exactly the counted family. -/
 namespace ProximityPrize.SubmissionLower.MovingSourceRegularRestriction6814
 noncomputable section
 set_option autoImplicit false
@@ -60,62 +56,8 @@ def restrict_projection_family [IsAlgClosed K]
   sum_allDegree_le := (sum_pullback_le (forgetExtra L) (forgetExtra_injective L)
     (fun C => coordinateDegree K (CoordinateField K C.1) (unit.allProjection C))).trans unit.sum_allDegree_le
 
-/-- Explicit source-31 direction: its old sevenfold bound is the 4491
-numerator used by the checked-cell hybrid, not the larger new Z price. -/
-theorem source31_z_price :
-    flagMixed ⟨3504,45,12⟩ unitZFlag ⟨3252,132,51⟩=4491 := by
-  norm_num [flagMixed,unitZFlag]
-
 open RCN084 RCN136 RCN207
 open MovingFiberThreeSources6811 MovingSourceHybridCount6814
 
-/-- Check the projection restriction and hybrid handoff over an abstract
-field, before instantiating the nested generic fields in the packet. -/
-theorem restricted_source_point_count
-    {K0 : Type} [Field K0] [IsAlgClosed K]
-    (phi : Polynomial K0 →+* K) (F : MvPolynomial (Fin 4) K0) (S : Source F)
-    (carrier : MvPolynomial (Fin 3) K) (p : FlagDegree)
-    (hcarrier : carrier≠0) (hcarrierF : carrier∣surfaceMap phi F) (hp : PolynomialInFlag p carrier)
-    (c : ℕ) [CharP K c] (hunit : 2*(p.zOnly+p.yz+p.all)<c)
-    (h2 : (2 : K)≠0) (hfact : (S.k.factorial : K)≠0)
-    (quadratic A : MvPolynomial (Fin 3) K) (target : K)
-    (hquadratic : PolynomialInFlag (2 • unitAllFlag) quadratic) (hA : PolynomialInFlag unitYZFlag A)
-    (R : MvPolynomial (Fin 3) K) (hHdiv : surfaceMap phi (RCN313.polyH K0 F)∣R)
-    (base : ∀ C : RegularComponent K carrier
-      (movingEquation (surfaceMap phi (RCN313.polyH K0 F)) (surfaceMap phi (RCN313.polyG K0 F))
-        quadratic A target) R, SeparableLiteralCoordinate C.1)
-    (pNew qNew : FlagDegree) (unit : AdaptiveUnitProjectionFamily base pNew qNew)
-    (W : FlagDegree) (cut : MvPolynomial (Fin 3) K) (hcut : PolynomialInFlag W cut)
-    (points : Finset (Fin 3 → K))
-    (hG : ∀ x ∈ points, MvPolynomial.eval x carrier=0)
-    (hM : ∀ x ∈ points, MvPolynomial.eval x
-      (movingEquation (surfaceMap phi (RCN313.polyH K0 F)) (surfaceMap phi (RCN313.polyG K0 F))
-        quadratic A target)=0)
-    (hR : ∀ x ∈ points, MvPolynomial.eval x (R*S.leading phi)≠0)
-    (hzero : ∀ x ∈ points, MvPolynomial.aeval x cut=0)
-    (hisolated : ∀ x ∈ points, IsolatedPoint carrier
-      (movingEquation (surfaceMap phi (RCN313.polyH K0 F)) (surfaceMap phi (RCN313.polyG K0 F))
-        quadratic A target) cut x) :
-    S.d*points.card≤W.zOnly*flagMixed p unitZFlag S.flag+
-      S.d*(W.yz*flagMixed pNew qNew unitYZFlag+W.all*flagMixed pNew qNew unitAllFlag) := by
-  let M := movingEquation (surfaceMap phi (RCN313.polyH K0 F))
-    (surfaceMap phi (RCN313.polyG K0 F)) quadratic A target
-  let base' := fun C : RegularComponent K carrier M (R*S.leading phi) =>
-    base (forgetExtra (S.leading phi) C)
-  let unit' := restrict_projection_family base pNew qNew unit (S.leading phi)
-  have hH (C : RegularComponent K carrier M (R*S.leading phi)) :
-      surfaceMap phi (RCN313.polyH K0 F)∉C.1 := by
-    intro hz
-    exact regularComponent_H_not_mem K carrier M (R*S.leading phi) C
-      (C.1.mem_of_dvd (dvd_mul_of_dvd_left hHdiv _) hz)
-  have hZ := old_z_bound_on_new_projections phi F S carrier p hcarrier hcarrierF hp
-    c hunit h2 hfact quadratic A target hquadratic hA (R*S.leading phi)
-    hH (extra_not_mem (S.leading phi)) base' pNew qNew unit'
-  exact hybrid_isolated_points base' pNew qNew unit' S.d (flagMixed p unitZFlag S.flag)
-    hZ W cut hcut points hG hM hR hzero hisolated
-
-#print axioms restrict_projection_family
-#print axioms source31_z_price
-#print axioms restricted_source_point_count
 end
 end ProximityPrize.SubmissionLower.MovingSourceRegularRestriction6814

@@ -1,9 +1,4 @@
 import ProximityPrize.SubmissionLower.MovingSourceLinearTailTransport6814
-
-/-! The smaller tail inherits the OLD intersection multiplicities on the
-same primes. Only the OLD denominator must be regular for this one-way
-inequality. No hypothesis about the new denominator, no equality of curve
-families, and no assumed weighted count is used. -/
 namespace ProximityPrize.SubmissionLower.MovingSourceReducedPrimary6814
 noncomputable section
 set_option autoImplicit false
@@ -13,8 +8,6 @@ open RCN135 RCN136 RCN074 RCN086 RCN095 RCN244 RCN245 RCN246 RCN248
 open RCN002 RCN011 RCN021 RCN093 RCN106 RCN107 RCN120 RCN313
 open MovingSourceFlowNumerator6814
 
-/-- Cancellation in a primary thickening, not merely on its reduced
-support. This is what retains the multiplicity in the resultant. -/
 theorem primary_cross_transfer
     {R : Type*} [CommRing R] (J : Ideal R) [J.IsMaximal]
     (surface oldTail newTail a b : R) (n : ℕ) (hn : 1≤n)
@@ -35,9 +28,6 @@ variable {Gamma : Finset K} {x : I → K} {p : ℕ} {flag : FlagDegree}
   [CharP (GenericField K) p] {errorCap : ℕ}
   {stageSupport : RCN275.ResidualSupportParameters}
 
-/-- An actual stage supplies the old multiplicity; the proved denominator
-cross-identity transfers it to the new numerator in every projected
-primary piece. In particular the new denominator is NOT assumed a unit. -/
 theorem reduced_tail_mem_projected_primary
     {B : Type*} [CommRing B]
     (S : Stage K I Gamma x p flag errorCap stageSupport)
@@ -72,8 +62,6 @@ theorem reduced_tail_mem_projected_primary
   exact primary_cross_transfer J surface _ _ _ _ _
     (one_le_localMultiplicity S hfirst C) hsurface hpow hold hdiff
 
-/-- The indexed primary pieces are exactly the existing resultant
-machinery's input, with the original component and multiplicity. -/
 theorem indexed_reduced_tail_mem_primary
     (S : Stage K I Gamma x p flag errorCap stageSupport)
     (hfirst : ¬S.G∣globalTailCut (polynomialEmbedding K) S.F (RCN326.w+1))
@@ -108,8 +96,5 @@ theorem indexed_reduced_tail_mem_primary
     (indexedFiberSurface q hq (stageSurfacePlane S lam mu nu order)) _
     D.factor_mem D.surface_mem D.contract
 
-#print axioms primary_cross_transfer
-#print axioms reduced_tail_mem_projected_primary
-#print axioms indexed_reduced_tail_mem_primary
 end
 end ProximityPrize.SubmissionLower.MovingSourceReducedPrimary6814

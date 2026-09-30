@@ -1,10 +1,5 @@
-import ProximityPrize.SubmissionLower.MovingSourceCrossSourceCount6814
+import ProximityPrize.SubmissionLower.MovingSourceWeightedPairPoints6814
 import ProximityPrize.SubmissionLower.MovingSourceMovingDegrees6814
-
-/-! Generic points from one geometric carrier factor can be charged to
-the whole carrier. Nonvanishing of the original derivative rules out
-the other factors at that point, preserving isolation without multiplying
-the whole-carrier budget by the number of factors. -/
 namespace ProximityPrize.SubmissionLower.MovingSourceFactorIsolation6814
 noncomputable section
 set_option autoImplicit false
@@ -39,6 +34,5 @@ theorem isolated_whole_of_factor (F G N A : Poly) (hdiv : G∣F)
     exact (hprime.mem_or_mem hFmem).resolve_right hQnot
   exact hisolated P hprime hnotpoint hpoint hGmem hNmem
 
-#print axioms isolated_whole_of_factor
 end
 end ProximityPrize.SubmissionLower.MovingSourceFactorIsolation6814

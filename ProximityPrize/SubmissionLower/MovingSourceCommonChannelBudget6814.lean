@@ -1,8 +1,4 @@
 import ProximityPrize.SubmissionLower.MovingSourceSuppliedFrame6814
-
-/-! Discharge H-free for the common frame and supply the actual coprime
-Sources to the OUTER coordinate count. No first-cut or pair-count budget
-is a premise at the endpoint. -/
 namespace ProximityPrize.SubmissionLower.MovingSourceCommonChannelBudget6814
 noncomputable section
 set_option autoImplicit false
@@ -119,7 +115,5 @@ theorem outer_first_cut_from_sources
     (fun Q U hden hQf hUf => extended_sources_point_budget (algebraMap Ω E) F hF hpos hcharF
       SP SQ hcop delta hd hP hQ hchar SZ hZchar parent (hp _ _) hlinear Q U hden hQf hUf hz hu)
 
-#print axioms common_channel_hfree
-#print axioms outer_first_cut_from_sources
 end
 end ProximityPrize.SubmissionLower.MovingSourceCommonChannelBudget6814

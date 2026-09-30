@@ -1,7 +1,4 @@
 import ProximityPrize.SubmissionLower.MovingSourceWeightedProjection6814
-
-/-! One pole-exact projection family carries both the ordinary zero
-budget and the proved multiplicity-weighted pair budget. -/
 namespace ProximityPrize.SubmissionLower.MovingSourceWeightedPairFamily6814
 noncomputable section
 set_option autoImplicit false
@@ -100,7 +97,5 @@ theorem exists_weighted_pair_family
     (fun V => (mems V).1) (fun V => (mems V).2) p q hp hq
   exact ⟨base,unit,⟨weighted_pair_certificate base hY hZ hderiv D hG hB hC hcop d hd thick p q hp hq⟩⟩
 
-#print axioms weighted_pair_certificate
-#print axioms exists_weighted_pair_family
 end
 end ProximityPrize.SubmissionLower.MovingSourceWeightedPairFamily6814

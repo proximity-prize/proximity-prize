@@ -1,8 +1,4 @@
 import ProximityPrize.SubmissionLower.MovingSourceCheckedPairStage6814
-
-/-! The outer packet can share one ordinary flag frame across all its
-geometric Stages. Both coefficients are chosen in the polynomial image;
-the finitely many forbidden directional coefficients are excluded at once. -/
 namespace ProximityPrize.SubmissionLower.MovingSourceOuterCommonFrame6814
 noncomputable section
 set_option autoImplicit false
@@ -210,6 +206,5 @@ theorem exists_common_outer_frames
    directional := hmudir i }
  exact ⟨lam,mu,hlamS,hmuS.1,data,fun _ => ⟨rfl,rfl⟩⟩
 
-#print axioms exists_common_outer_frames
 end
 end ProximityPrize.SubmissionLower.MovingSourceOuterCommonFrame6814

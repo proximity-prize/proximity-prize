@@ -1,9 +1,4 @@
 import ProximityPrize.SubmissionLower.MovingSourceGenericCuts6814
-
-/-! The vertical arm of the shared plane-family bound. When the irreducible
-first equation is constant in the outer variable, the second equation is
-nonzero on that fibre. Swap the equations in the existing resultant count;
-the cost is exactly outerDegree(Q) * degree(p), with no separability gate. -/
 namespace ProximityPrize.SubmissionLower.MovingSourceVerticalFamily6814
 noncomputable section
 set_option autoImplicit false
@@ -113,8 +108,6 @@ theorem sum_finrank_vertical
     hQ hroot hspecial hres
   simpa only [Polynomial.resultant_C_right,pow_zero,one_mul,Polynomial.natDegree_pow] using hb
 
-/-- All irreducible plane components, including vertical ones. The target is
-one resultant degree for the entire family, not one budget per field. -/
 theorem finite_sum_finrank_irreducible
     {I : Type*} [Fintype I] (E : I → Type)
     [∀ i, Field (E i)] [∀ i, Algebra K (E i)]
@@ -154,6 +147,5 @@ theorem finite_sum_finrank_irreducible
     exact ⟨hfinite,RCN124.sum_finrank_le_ordinary_resultant_without_separability
       E P Q hP hpositive hproper y r hgen hkernels hProot hQroot⟩
 
-#print axioms finite_sum_finrank_irreducible
 end
 end ProximityPrize.SubmissionLower.MovingSourceVerticalFamily6814

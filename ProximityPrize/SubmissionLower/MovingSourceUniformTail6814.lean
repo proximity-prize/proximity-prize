@@ -1,7 +1,4 @@
 import ProximityPrize.SubmissionLower.MovingSourceIdentityFirstCharge6814
-
-/-! An irreducible arithmetic carrier cannot mix proper and identity
-geometric first-tail Stages. Flat base change makes the split uniform. -/
 namespace ProximityPrize.SubmissionLower.MovingSourceUniformTail6814
 noncomputable section
 set_option autoImplicit false
@@ -28,23 +25,5 @@ theorem geometric_tail_dvd_iff_original
   · intro hdiv
     exact S.G_dvd_surface.trans (map_dvd (surfaceMap (polynomialEmbedding K)) hdiv)
 
-theorem uniform_geometric_tail_split {J : Type}
-    (Gamma : J → Finset K) (flag : J → FlagDegree)
-    (S : ∀ j, Stage K I (Gamma j) x p (flag j) errorCap stageSupport)
-    (F : MvPolynomial (Fin 4) K) (hF : Irreducible F) (hSF : ∀ j, (S j).F=F) (n : ℕ) :
-    (∀ j, (S j).G∣globalTailCut (polynomialEmbedding K) (S j).F n) ∨
-      (∀ j, ¬(S j).G∣globalTailCut (polynomialEmbedding K) (S j).F n) := by
-  classical
-  by_cases hn : F∣numerator K F n
-  · left
-    intro j
-    apply (geometric_tail_dvd_iff_original (S j) (by rw [hSF]; exact hF) n).mpr
-    simpa only [hSF] using hn
-  · right
-    intro j hj
-    apply hn
-    simpa only [hSF] using (geometric_tail_dvd_iff_original (S j) (by rw [hSF]; exact hF) n).mp hj
-
-#print axioms uniform_geometric_tail_split
 end
 end ProximityPrize.SubmissionLower.MovingSourceUniformTail6814

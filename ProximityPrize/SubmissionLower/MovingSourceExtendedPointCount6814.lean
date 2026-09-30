@@ -1,8 +1,5 @@
 import ProximityPrize.SubmissionLower.MovingSourceExtendedThickPair6814
-import ProximityPrize.SubmissionLower.MovingSourcePairPoleFamily6814
-
-/-! One shared weighted count survives the additional field extension used
-by first-cut slicing. No new degree allowance is introduced. -/
+import ProximityPrize.SubmissionLower.MovingSourcePairMovingDegrees6814
 namespace ProximityPrize.SubmissionLower.MovingSourceExtendedPointCount6814
 noncomputable section
 set_option autoImplicit false
@@ -47,9 +44,6 @@ theorem extended_source_pair_family
     (ordinaryFlag S.P) (ordinaryFlag T.P) hBflag hCflag 2130706433 hz hu
     (extendedCarrier_derivative_nonzero f F hpos hsmall)
 
-/-- Keep the old Z-source price and pay the two new directions with their
-proved common contact multiplicity. All geometric suppliers are built
-from S and T; no shared-degree or intersection-count premise remains. -/
 theorem extended_source_pair_point_count
     (F : MvPolynomial (Fin 4) K) (hF : F≠0)
     (hpos : 0<F.degreeOf 2) (hsmall : F.degreeOf 2<2130706433)
@@ -88,7 +82,6 @@ theorem extended_source_pair_point_count
     (inFlag_map _ hQ) (inFlag_map _ hA) (extendedDenominator f F A) hHdiv base unit d cert
     W cut hcut points hG hM hregular hzero hisolated
 
-
 def ExtendedPointBudget (F : MvPolynomial (Fin 4) K) (SZ : Source F)
     (Q A : Poly3) (scale z u v : ℕ) : Prop :=
   ∀ (W : FlagDegree) (cut : Poly3T), PolynomialInFlag W cut →
@@ -120,7 +113,5 @@ theorem extended_sources_point_budget
     SZ hZchar p hp hunit Q A hden hQ hA hz hu W cut hcut points hG hM hregular hzero hisolated
   convert hh using 1 <;> ring
 
-#print axioms extended_source_pair_point_count
-#print axioms extended_sources_point_budget
 end
 end ProximityPrize.SubmissionLower.MovingSourceExtendedPointCount6814

@@ -1,8 +1,4 @@
 import ProximityPrize.SubmissionLower.MovingSourceZSupplier6814
-
-/-! The new pair itself supplies finite/separable projections on the WHOLE
-carrier family. The carrier need not be irreducible, and its flag is not
-charged separately for each geometric factor. -/
 namespace ProximityPrize.SubmissionLower.MovingSourceAutomaticProjection6814
 noncomputable section
 set_option autoImplicit false
@@ -47,47 +43,5 @@ theorem prime_projection_gate
     simpa only [Fintype.sum_unique] using hfamily.2
   exact ⟨inferInstance,separable_of_finrank_lt_char c (hdegree.trans_lt hsmall)⟩
 
-/-- A reducible old carrier receives one projection budget from the actual
-coprime pair. Only the pair's two mixed bounds are compared with the
-characteristic; no degree gate or irreducibility of the carrier is used. -/
-theorem exists_whole_projection_family
-    {K : Type} [Field K] [IsAlgClosed K]
-    (G M R B H : MvPolynomial (Fin 3) K)
-    (hB : B≠0) (hH : H≠0) (hrel : IsRelPrime B H)
-    (hBmem : ∀ C : RegularComponent K G M R, B∈C.1)
-    (hHmem : ∀ C : RegularComponent K G M R, H∈C.1)
-    (p q : FlagDegree) (hp : PolynomialInFlag p B) (hq : PolynomialInFlag q H)
-    (c : ℕ) [CharP K c]
-    (hZsmall : flagMixed p q unitZFlag<c) (hYsmall : flagMixed p q unitYZFlag<c)
-    (hderiv : MvPolynomial.pderiv (1 : Fin 3) G≠0) :
-    ∃ base : ∀ C : RegularComponent K G M R, SeparableLiteralCoordinate C.1,
-      Nonempty (AdaptiveUnitProjectionFamily base p q) := by
-  have hY (C : RegularComponent K G M R) : LiteralProjectionGate C 0 := by
-    intro ht
-    have ht' : Transcendental K (flagEvaluation K C.1 0 0 0 (MvPolynomial.X (Axis.u.order 0))) := by
-      simpa [Axis.order,RCN125.uOrder,affineU] using ht
-    have he := elementEmbedding_congr ht' ht (by simp [Axis.order,RCN125.uOrder,affineU])
-    have hh := prime_projection_gate C.1 .u 0 0 0 ht' B H hB hH hrel (hBmem C) (hHmem C)
-      p q hp hq c hYsmall
-    rw [he] at hh
-    exact hh
-  have hZ (C : RegularComponent K G M R) : LiteralProjectionGate C 2 := by
-    intro ht
-    have ht' : Transcendental K (flagEvaluation K C.1 0 0 0 (MvPolynomial.X (Axis.z.order 0))) := by
-      simpa [Axis.order,RCN125.zOrder] using ht
-    have he := elementEmbedding_congr ht' ht (by simp [Axis.order,RCN125.zOrder])
-    have hh := prime_projection_gate C.1 .z 0 0 0 ht' B H hB hH hrel (hBmem C) (hHmem C)
-      p q hp hq c hZsmall
-    rw [he] at hh
-    exact hh
-  let base (C : RegularComponent K G M R) : SeparableLiteralCoordinate C.1 :=
-    Classical.choice (exists_separableLiteralCoordinate_of_YZ_gates C.1
-      (regularComponent_ne_point K G M R C) (hY C) (hZ C))
-  obtain ⟨D⟩ := exists_adaptiveNestedProjectionData base hY hZ hderiv
-  exact ⟨base,⟨projectionFamily_of_coprime_pair base hY hZ hderiv D
-    B H hB hH hrel hBmem hHmem p q hp hq⟩⟩
-
-#print axioms separable_of_finrank_lt_char
-#print axioms exists_whole_projection_family
 end
 end ProximityPrize.SubmissionLower.MovingSourceAutomaticProjection6814

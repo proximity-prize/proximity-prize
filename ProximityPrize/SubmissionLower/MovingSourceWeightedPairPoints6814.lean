@@ -1,7 +1,4 @@
 import ProximityPrize.SubmissionLower.MovingSourceWeightedPairFamily6814
-
-/-! Convert the proved weighted pair certificate to actual isolated-point
-counts, retaining the better old Z-source estimate on the SAME family. -/
 namespace ProximityPrize.SubmissionLower.MovingSourceWeightedPairPoints6814
 noncomputable section
 set_option autoImplicit false
@@ -125,7 +122,5 @@ theorem restricted_weighted_source_point_count
   exact weighted_hybrid_isolated_points base' unit' d cert' S.d (flagMixed pOld unitZFlag S.flag)
     hZ W cut hcut points hG hM hR hzero hisolated
 
-#print axioms weighted_hybrid_isolated_points
-#print axioms restricted_weighted_source_point_count
 end
 end ProximityPrize.SubmissionLower.MovingSourceWeightedPairPoints6814

@@ -1,9 +1,4 @@
 import ProximityPrize.SubmissionLower.MovingFiberThreeSources6811
-
-/-! Return from a generic moving fiber to the actual sum of moving degrees.
-Use the repository's existing filtered-cut representation and clearing flag.
-No multiplicity-weighted moving-degree estimate is required.
--/
 namespace ProximityPrize.SubmissionLower.MovingFiberDegreeSum6811
 open scoped Classical BigOperators
 open RCN002 RCN005 RCN006 RCN007 RCN046 RCN072 RCN084 RCN095 RCN134 RCN136 RCN202
@@ -237,8 +232,5 @@ theorem exists_first_tail_budget
   rw [hsum]
   simpa only [Nat.mul_comm] using hb
 
-#print axioms sum_moving_degrees_three_sources
-#print axioms actual_first_tail_moving_degrees
-#print axioms exists_first_tail_budget
 end
 end ProximityPrize.SubmissionLower.MovingFiberDegreeSum6811

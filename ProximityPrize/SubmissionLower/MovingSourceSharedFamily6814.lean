@@ -1,8 +1,4 @@
 import ProximityPrize.SubmissionLower.MovingSourceProjectionFamily6814
-
-/-! A whole finite curve family is bounded by ONE mixed flag budget of
-the actual coprime pair. The first cut may be reducible, repeated, or
-independent of the chosen outer variable. -/
 namespace ProximityPrize.SubmissionLower.MovingSourceSharedFamily6814
 noncomputable section
 set_option autoImplicit false
@@ -78,6 +74,5 @@ theorem finite_sum_finrank_coprime_flags
       Finset.sum_le_sum (fun g _ => (hgroup g).2)
     _ ≤ flagMixed p q axis.flag := all_factors_mixed_sum_le B hB p q axis.flag hp
 
-#print axioms finite_sum_finrank_coprime_flags
 end
 end ProximityPrize.SubmissionLower.MovingSourceSharedFamily6814

@@ -1,10 +1,5 @@
 import ProximityPrize.SubmissionLower.WeightedSliceAssignment6807
-/-
-UNCOMPILED research overlay. Construct the actual slice budgets from the frozen
-small-projection theorem. No first-cut or joint-cost inequality is an input.
--/
 import ProximityPrize.SubmissionLower.PureFlagSliceBudget6807
-
 namespace ProximityPrize.SubmissionLower.SmallSliceBudgets6807
 open scoped Classical BigOperators
 open RCN095 RCN237 RCN264 RCN340 RCN341 RCN084 RCN039 RCN046
@@ -15,15 +10,12 @@ set_option maxRecDepth 40000
 variable {E : Type} [Field E] [IsAlgClosed E]
 local notation "Poly" => MvPolynomial (Fin 3) E
 
-/-- Unlike a presumed first-cut bound, this structure records the original
-three coordinate pole budgets on all actual active slice factors. -/
 structure SliceBudgets (F N R : Poly) (q : FlagDegree) where
   base : ∀ g : ↥(activeFactors F N), ∀ C : RegularComponent E g.1 N R,
     SeparableLiteralCoordinate C.1
   unit : ∀ g : ↥(activeFactors F N),
     AdaptiveUnitPoleBudget (base g) (exactFlag g.1) q
 
-/-- The old generic low-degree gates construct every required pure budget. -/
 theorem exists_sliceBudgets (F N R : Poly) (p q : FlagDegree)
     (hF : F ≠ 0) (hFp : PolynomialInFlag p F) (hNq : PolynomialInFlag q N)
     (c : ℕ) [CharP E c] (hdeg : p.zOnly+p.yz+p.all < c)
@@ -41,7 +33,6 @@ theorem exists_sliceBudgets (F N R : Poly) (p q : FlagDegree)
       ((support_subset_flagSupport_iff _ _).mpr hNq)
   exact ⟨⟨base, fun g => (Classical.choice (he g)).toAdaptiveUnitPoleBudget⟩⟩
 
-/-- Pure-flag aggregation keeps the original cumulative factor inequalities. -/
 theorem sum_cost_le (F N R : Poly) (p q r : FlagDegree)
     (hF : F ≠ 0) (hFp : PolynomialInFlag p F) (B : SliceBudgets F N R q) :
     (∑ g : ↥(activeFactors F N), ∑ C : RegularComponent E g.1 N R,

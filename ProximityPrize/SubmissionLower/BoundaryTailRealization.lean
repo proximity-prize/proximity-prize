@@ -1,13 +1,12 @@
 import ProximityPrize.SubmissionLower.BoundaryTailProvider
 import ProximityPrize.SubmissionLower.BoundaryTailReduced
-
 namespace ProximityPrize.SubmissionLower.BoundaryTailRealization
 open scoped Classical BigOperators
 open RCN135 RCN136 RCN159 RCN264 RCN074 RCN086 RCN243 RCN238 RCN095 RCN237 RCN198 RCN275 RCN244 RCN327 RCN263 RCN334 RCN332 RCN336 RCN312 RCN339 RCN330 RCN174 RCN319
 open RCN206 RCN287 RCN066 RCN338 RCN199 RCN207 RCN271 RCN313 RCN234 RCN156 RCN341 RCN085
 open RCN331 RCN027 RCN030 RCN029 RCN037 RCN038 RCN042 RCN002 RCN344 RCN277 RCN003 RCN314 RCN315 RCN093 RCN046 RCN001
 open LocatorHybridCells LocatorHybridCellsC1 LocatorHybridTailProvider
-open LocatorHybridTailProviderC1 LocatorHybridTailProviderC2 LocatorHybridTransportC2
+open LocatorHybridTailProviderC1 LocatorHybridTransportC2
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 8000000
@@ -75,8 +74,7 @@ theorem exists_provider
         RCN206.fiberFlag (cellA t y) (cellB y r) (cellS r) := rfl
     rw [hfib, hcut]
     exact hmov
-  -- route the cost equalities through `unitFamilyOfCongruentCut_costs` rather
-  -- than through a single large defeq check, which overruns `maxRecDepth`
+
   have hcost' : ∀ C : FirstTailComponent S,
       (budget C).zCost =
         (BoundaryTailReduced.reducedBudgetFamily S hfirstProper hflagChar hmixedRed).zCost C ∧

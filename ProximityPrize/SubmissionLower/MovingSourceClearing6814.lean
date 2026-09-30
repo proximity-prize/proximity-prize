@@ -1,7 +1,4 @@
-import ProximityPrize.SubmissionLower.WholeSpaceSourceAlternative6814
-
-/-! The actual denominator-cleared moving cut for a second-jet source.
-No assumption of a new degree budget or of post-clearing properness. -/
+import ProximityPrize.SubmissionLower.WholeSpaceSourceKernel6814
 namespace ProximityPrize.SubmissionLower.MovingSourceClearing6814
 noncomputable section
 set_option autoImplicit false
@@ -14,7 +11,6 @@ open SecondJetCoefficients SecondJetClearedHelper
 section Polynomial
 variable {R : Type*} [CommRing R]
 
-/-- Clear P((T-q)/h), with the moving target T still indeterminate. -/
 def targetPolynomial (P : Polynomial R) (n : ℕ) (h q : R) : Polynomial R :=
   cleared (P.map Polynomial.C) n (Polynomial.C h) (Polynomial.X-Polynomial.C q)
 
@@ -66,16 +62,6 @@ def movingCut (phi : Polynomial K →+* E) (P : WholeSpaceCube6814.Poly (K := K)
     (s : ℕ) (Q A : Poly3) (target : E) : Poly3 :=
   cleared (coefficients phi P) s (2*A) (MvPolynomial.C target-Q)
 
-theorem coefficient_flag (phi : Polynomial K →+* E) (P : WholeSpaceCube6814.Poly (K := K))
-    (B U T : ℕ) (hBU : B ≤ U) (hUT : U ≤ T)
-    (hP : ∀ e ∈ P.support, 2*e 1+e 3 ≤ B ∧ e 1+e 2+e 3 ≤ U ∧ e 1+e 2+e 3+e 4 ≤ T)
-    (j : ℕ) : PolynomialInFlag (SecondJetRelaxedFlag.coefficientFlag B U T j)
-      ((coefficients phi P).coeff j) := by
-  rw [coefficients,Polynomial.coeff_map,←SecondJetSurfaceMap.frozen_mapped_coefficient phi P j]
-  exact SecondJetRelaxedFlag.frozen_coefficient_flag
-    (MvPolynomial.map (phi.comp Polynomial.C) P) (phi Polynomial.X) B U T hBU hUT
-    (SecondJetSurfaceMap.mapped_support_bounds _ P B U T hP) j
-
 theorem twice_linear_flag (A : Poly3) (hA : PolynomialInFlag unitYZFlag A) :
     PolynomialInFlag unitYZFlag (2*A) := by
   intro e he
@@ -83,69 +69,6 @@ theorem twice_linear_flag (A : Poly3) (hA : PolynomialInFlag unitYZFlag A) :
     simpa only [MvPolynomial.smul_eq_C_mul,map_ofNat] using he
   exact hA e (MvPolynomial.support_smul he')
 
-theorem movingCut_flag (phi : Polynomial K →+* E) (P : WholeSpaceCube6814.Poly (K := K))
-    (B U T s : ℕ) (hBU : B ≤ U) (hUT : U ≤ T) (hsB : 2*s ≤ B)
-    (hP : ∀ e ∈ P.support, 2*e 1+e 3 ≤ B ∧ e 1+e 2+e 3 ≤ U ∧ e 1+e 2+e 3+e 4 ≤ T)
-    (Q A : Poly3) (target : E)
-    (hQ : PolynomialInFlag (2 • unitAllFlag) Q) (hA : PolynomialInFlag unitYZFlag A) :
-    PolynomialInFlag ⟨T-U,U-B+s,B⟩ (movingCut phi P s Q A target) := by
-  change PolynomialInFlag _
-    (eliminatedCut s (fun j => (coefficients phi P).coeff j.val) Q (2*A) target)
-  apply eliminatedCut_inFlag s _ Q (2*A) target
-    (fun j => SecondJetRelaxedFlag.coefficientFlag B U T j.val) _
-    (fun j => coefficient_flag phi P B U T hBU hUT hP j.val) hQ (twice_linear_flag A hA)
-  intro j
-  have hj := j.isLt
-  have hsub : B-2*j.val+2*j.val=B := Nat.sub_add_cancel (by omega)
-  change (⟨T-U+(s-j.val)*0+j.val*(2*0),
-    U-B+j.val+(s-j.val)*1+j.val*(2*0),
-    B-2*j.val+(s-j.val)*0+j.val*(2*1)⟩ : FlagDegree)=_
-  congr 1 <;> omega
-
-theorem moving_root_relation {L : Type*} [Field L]
-    (ev : Poly3 →+* L) (H G Q A : Poly3) (target : E) (sigma : L)
-    (hH : ev H≠0) (hN : ev (movingEquation H G Q A target)=0)
-    (hsigma : ev (2*H)*sigma=ev G) :
-    ev (2*A)*sigma=ev (MvPolynomial.C target-Q) := by
-  have hn : ev H*ev (MvPolynomial.C target-Q)=ev A*ev G := by
-    simpa only [movingEquation,map_sub,map_mul,sub_eq_zero] using hN
-  apply mul_left_cancel₀ hH
-  rw [hn]
-  simp only [map_mul,map_ofNat] at hsigma ⊢
-  calc
-    ev H*(2*ev A*sigma) = ev A*(2*ev H*sigma) := by ring
-    _ = ev A*ev G := by rw [hsigma]
-
-theorem movingCut_value {L : Type*} [Field L]
-    (phi : Polynomial K →+* E) (ev : Poly3 →+* L)
-    (P : WholeSpaceCube6814.Poly (K := K)) (s : ℕ)
-    (hS : ∀ e ∈ P.support, e 1 ≤ s)
-    (H G Q A : Poly3) (target : E) (sigma : L)
-    (hH : ev H≠0) (hN : ev (movingEquation H G Q A target)=0)
-    (hsigma : ev (2*H)*sigma=ev G) :
-    ev (movingCut phi P s Q A target)=
-      (ev (2*A))^s * ((asS P).map (ev.comp (surfaceMap phi))).eval sigma := by
-  have hn : (asS P).natDegree ≤ s := by
-    simpa using SecondJetHelperWeights.asS_derivative_degree P s 0 hS
-  rw [movingCut,map_cleared,coefficients,Polynomial.map_map]
-  exact cleared_eval _ s (Polynomial.natDegree_map_le.trans hn) _ _ sigma
-    (moving_root_relation ev H G Q A target sigma hH hN hsigma)
-
-theorem movingCut_zero_iff {L : Type*} [Field L]
-    (phi : Polynomial K →+* E) (ev : Poly3 →+* L)
-    (P : WholeSpaceCube6814.Poly (K := K)) (s : ℕ)
-    (hS : ∀ e ∈ P.support, e 1 ≤ s)
-    (H G Q A : Poly3) (target : E) (sigma : L)
-    (hH : ev H≠0) (hN : ev (movingEquation H G Q A target)=0)
-    (hsigma : ev (2*H)*sigma=ev G) (hA : ev (2*A)≠0) :
-    ev (movingCut phi P s Q A target)=0 ↔
-      ((asS P).map (ev.comp (surfaceMap phi))).eval sigma=0 := by
-  rw [movingCut_value phi ev P s hS H G Q A target sigma hH hN hsigma]
-  exact mul_eq_zero.trans (or_iff_right (pow_ne_zero s hA))
-
 end Surface
-#print axioms inverseSubstitution_target
-#print axioms movingCut_flag
-#print axioms movingCut_zero_iff
 end
 end ProximityPrize.SubmissionLower.MovingSourceClearing6814

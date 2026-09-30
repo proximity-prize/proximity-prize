@@ -1,8 +1,4 @@
 import ProximityPrize.SubmissionLower.MovingSourceOuterLocalMass6814
-
-/-! One first-cut count over ALL outer geometric Stages. The carrier is
-the original surface, not one selected factor, so the moving pair price
-is paid once. Individual Stage multiplicities are retained unchanged. -/
 namespace ProximityPrize.SubmissionLower.MovingSourceOuterAllSlices6814
 noncomputable section
 set_option autoImplicit false
@@ -204,6 +200,5 @@ theorem outer_first_cut_all_slices
     _=scale*(∑ a : active, CX a.val)+4*(w+1)*(scale*∑ a : active, (moving a).movingCost) := by ring
     _≤_ := Nat.add_le_add (Nat.mul_le_mul_left scale hCX) (Nat.mul_le_mul_left (4*(w+1)) hMoving)
 
-#print axioms outer_first_cut_all_slices
 end
 end ProximityPrize.SubmissionLower.MovingSourceOuterAllSlices6814

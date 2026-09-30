@@ -1,8 +1,4 @@
 import ProximityPrize.SubmissionLower.MovingSourcePrimeFamily6814
-
-/-! Use the new coprime pair to price the old curve family itself. We keep
-its existing separable projections and pole identities; we do not assert
-that the old family equals the minimal components of the new pair. -/
 namespace ProximityPrize.SubmissionLower.MovingSourcePoleBudget6814
 noncomputable section
 set_option autoImplicit false
@@ -44,8 +40,6 @@ theorem sum_coordinateOfGate_le
 variable {K : Type} [Field K] [IsAlgClosed K]
     {G T R : MvPolynomial (Fin 3) K}
 
-/-- Reprice the original family using an actual second pair containing it.
-The hypothesis is polynomial membership, not a desired degree inequality. -/
 def projectionFamily_of_coprime_pair
     (base : ∀ C : RegularComponent K G T R, SeparableLiteralCoordinate C.1)
     (hY : ∀ C : RegularComponent K G T R, LiteralProjectionGate C 0)
@@ -138,21 +132,5 @@ def projectionFamily_of_coprime_pair
     rw [hv C,←D.allValue C]
     exact (D.allPole C v).symm
 
-theorem exists_primeFlagBudget_of_coprime_pair
-    (base : ∀ C : RegularComponent K G T R, SeparableLiteralCoordinate C.1)
-    (hY : ∀ C : RegularComponent K G T R, LiteralProjectionGate C 0)
-    (hZ : ∀ C : RegularComponent K G T R, LiteralProjectionGate C 2)
-    (hderiv : MvPolynomial.pderiv (1 : Fin 3) G≠0)
-    (B H : MvPolynomial (Fin 3) K) (hB : B≠0) (hH : H≠0) (hrel : IsRelPrime B H)
-    (hBmem : ∀ C : RegularComponent K G T R, B∈C.1)
-    (hHmem : ∀ C : RegularComponent K G T R, H∈C.1)
-    (p q : FlagDegree) (hp : PolynomialInFlag p B) (hq : PolynomialInFlag q H) :
-    Nonempty (PrimeFlagBudgetFamily (G:=G) (T:=T) (H:=R) p q) := by
-  obtain ⟨D⟩ := exists_adaptiveNestedProjectionData base hY hZ hderiv
-  exact ⟨(projectionFamily_of_coprime_pair base hY hZ hderiv D
-    B H hB hH hrel hBmem hHmem p q hp hq).toPrimeFlagBudgetFamily⟩
-
-#print axioms sum_coordinateOfGate_le
-#print axioms exists_primeFlagBudget_of_coprime_pair
 end
 end ProximityPrize.SubmissionLower.MovingSourcePoleBudget6814

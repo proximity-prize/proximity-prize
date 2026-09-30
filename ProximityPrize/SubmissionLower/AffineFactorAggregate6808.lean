@@ -1,15 +1,10 @@
 import Mathlib.Algebra.Order.BigOperators.Group.Finset
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Tactic
-
-/-! A finite max-plus receipt carries affine single-factor bounds to an entire
-factor family. No convexity or monotonicity of the single-factor cost is assumed.
-The theorem has no mathematical source assumptions beyond its explicit inputs. -/
 namespace ProximityPrize.SubmissionLower.AffineFactorAggregate6808
 open scoped BigOperators
 set_option autoImplicit false
 
-/-- Each row absorbs one factor into the remaining coordinate budgets. -/
 def BellmanRows (Rcap Ycap : ℕ) (b B : ℕ → ℕ → ℕ) : Prop :=
   ∀ r v R V, 1 ≤ r → r + R ≤ Rcap → r + v + R + V ≤ Ycap →
     b r v + B R V ≤ B (r + R) (v + V)
@@ -36,7 +31,6 @@ theorem sum_intercepts_le {ι : Type*} [DecidableEq ι]
     rw [Finset.sum_insert ha, Finset.sum_insert ha, Finset.sum_insert ha]
     exact (Nat.add_le_add_left hrec _).trans hrow
 
-/-- Single-factor affine receipts imply a bound for every finite factor family. -/
 theorem sum_count_le {ι : Type*} [DecidableEq ι]
     (Rcap Ycap slope : ℕ) (b B : ℕ → ℕ → ℕ)
     (hrows : BellmanRows Rcap Ycap b B)
@@ -54,7 +48,6 @@ theorem sum_count_le {ι : Type*} [DecidableEq ι]
       rw [Finset.sum_add_distrib, Finset.mul_sum]
     _ ≤ _ := Nat.add_le_add_left (sum_intercepts_le Rcap Ycap b B hrows s r v hr hR hY) _
 
-/-- On a singleton, a strict helper split charges the only factor directly. -/
 theorem singleton_helper {ι : Type*} [DecidableEq ι] (a : ι)
     (count helper : ι → ℕ)
     (hsplit : ∃ U : Finset ι, U ⊂ {a} ∧ ∀ i ∈ ({a} : Finset ι) \ U,
@@ -66,7 +59,4 @@ theorem singleton_helper {ι : Type*} [DecidableEq ι] (a : ι)
     exact Finset.singleton_subset_iff.mpr ha
   exact hcount a (Finset.mem_sdiff.mpr ⟨Finset.mem_singleton_self a, ha⟩)
 
-#print axioms sum_intercepts_le
-#print axioms sum_count_le
-#print axioms singleton_helper
 end ProximityPrize.SubmissionLower.AffineFactorAggregate6808

@@ -1,6 +1,5 @@
 import ProximityPrize.SubmissionLower.BoundaryTailComponent
 import ProximityPrize.SubmissionLower.BoundaryTailNormalArithmetic
-
 namespace ProximityPrize.SubmissionLower.BoundaryTailProvider
 open scoped Classical BigOperators
 open RCN135 RCN136 RCN159 RCN264 RCN074 RCN086 RCN243 RCN238 RCN095 RCN237 RCN198 RCN275 RCN244 RCN327 RCN263 RCN334 RCN332 RCN336 RCN312 RCN339 RCN330 RCN174 RCN319
@@ -203,7 +202,6 @@ theorem exists_provider_on_active_components
     cost_sum_le := hsum
     componentBound := hactiveBound
     dichotomy := providerDichotomy }⟩
-
 
 end
 end ProximityPrize.SubmissionLower.BoundaryTailProvider

@@ -1,15 +1,8 @@
-/-
-UNCOMPILED. Actual retained proper-first-tail Stage adapter. The joint budget is
-built inside the body from actual-source pointwise budgets and three actual
-common linear channels. Neither hcut nor hjoint is a theorem premise.
-This is not an unconditional ProtocolClaim or a full mixed-branch regular bound.
--/
 import ProximityPrize.SubmissionLower.BoundaryTailProvider
 import ProximityPrize.SubmissionLower.ThreeChannelJoint6807
 import ProximityPrize.SubmissionLower.ReducedCommonLinear6807
 import ProximityPrize.SubmissionLower.SecondJetPointwiseBudgets6807
 import ProximityPrize.SubmissionLower.BoundaryTailJointBudget6807
-
 namespace ProximityPrize.SubmissionLower.BoundaryTailDualRetained6807
 open RCN057 (WeightBound)
 open scoped Classical BigOperators

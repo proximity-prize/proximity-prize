@@ -1,5 +1,4 @@
 import ProximityPrize.SubmissionLower.LowerFoundation
-
 namespace ProximityPrize.SubmissionLower.RelativeContactRank6814
 open scoped BigOperators
 open MvPolynomial RCN119
@@ -173,6 +172,3 @@ theorem localTarget_finrank_eq (m L s : ℕ) :
 
 end
 end ProximityPrize.SubmissionLower.RelativeContactRank6814
-
-#print axioms ProximityPrize.SubmissionLower.RelativeContactRank6814.blockJet_rank_add_quotient_finrank_eq
-#print axioms ProximityPrize.SubmissionLower.RelativeContactRank6814.localTarget_finrank_eq

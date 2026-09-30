@@ -1,8 +1,4 @@
 import ProximityPrize.SubmissionLower.MovingSourceOuterAllSlices6814
-
-/-! The outer joint count consumes actual common coordinate projections.
-Generic fibres, their isolation and multiplicities are constructed here.
-Constant coordinates contribute zero and are retained correctly. -/
 namespace ProximityPrize.SubmissionLower.MovingSourceOuterChannel6814
 noncomputable section
 set_option autoImplicit false
@@ -141,7 +137,5 @@ theorem outer_first_cut_coordinate_channel
   rw [hsum]
   exact hb
 
-#print axioms outer_first_cut_generic_channel
-#print axioms outer_first_cut_coordinate_channel
 end
 end ProximityPrize.SubmissionLower.MovingSourceOuterChannel6814

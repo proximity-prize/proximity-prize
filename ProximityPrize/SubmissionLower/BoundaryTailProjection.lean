@@ -1,5 +1,4 @@
 import ProximityPrize.SubmissionLower.BoundaryTailSharpGate
-
 namespace ProximityPrize.SubmissionLower.BoundaryTailProjection
 open scoped Classical BigOperators
 open BoundaryTailSharpGate

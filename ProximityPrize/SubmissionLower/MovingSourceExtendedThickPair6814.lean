@@ -1,7 +1,4 @@
 import ProximityPrize.SubmissionLower.MovingSourceExtendedCoefficients6814
-
-/-! The actual thick source pair over an extension of the frozen code
-field. This supplies the additional field layer used by first-cut slices. -/
 namespace ProximityPrize.SubmissionLower.MovingSourceExtendedThickPair6814
 noncomputable section
 set_option autoImplicit false
@@ -108,7 +105,5 @@ theorem exists_extended_thick_pair
       simpa only [ev0,rawU,U,RingHom.comp_apply,generic_target_is_movingCut] using hright
     exact normalized_pair_mem_primary P U _ _ (2*A) Q hp hnp hnu hden hPU ev0 J surface d hden0 hl hr
 
-
-#print axioms exists_extended_thick_pair
 end
 end ProximityPrize.SubmissionLower.MovingSourceExtendedThickPair6814

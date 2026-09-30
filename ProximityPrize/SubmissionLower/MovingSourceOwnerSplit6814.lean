@@ -1,8 +1,4 @@
 import ProximityPrize.SubmissionLower.MovingSourceNativeFactor6814
-
-/-! Exhaustive algebraic owner split for two actual source polynomials.
-The unique-owner arm produces nonvanishing cofactors; the mixed arm
-produces genuinely coprime root-owning factors. -/
 namespace ProximityPrize.SubmissionLower.MovingSourceOwnerSplit6814
 noncomputable section
 set_option autoImplicit false
@@ -62,8 +58,6 @@ def rootPolynomialMap (phi : MvPolynomial (Fin 4) K →+* E) : Poly →+* Polyno
 def rootEvaluation (phi : MvPolynomial (Fin 4) K →+* E) (z : E) : Poly →+* E :=
   (Polynomial.evalRingHom z).comp (rootPolynomialMap phi)
 
-/-- Both the multiplicity charge and every degree charge belong to the
-SAME exponent e. No independent degree allocations are substituted. -/
 theorem unique_owner_charges
     (phi : MvPolynomial (Fin 4) K →+* E) (z : E) (P J : Poly)
     (hP : P≠0) (hJ : Irreducible J) (hu : UniqueOwner (rootEvaluation phi z) J P)
@@ -88,7 +82,5 @@ theorem unique_owner_charges
       MvPolynomial.degreeOf_pow_eq _ _ _ hJ.ne_zero]
     omega
 
-#print axioms two_source_owner_split
-#print axioms unique_owner_charges
 end
 end ProximityPrize.SubmissionLower.MovingSourceOwnerSplit6814

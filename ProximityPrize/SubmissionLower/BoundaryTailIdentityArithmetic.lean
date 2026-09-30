@@ -1,6 +1,5 @@
 import ProximityPrize.SubmissionLower.BoundaryTailIdentity
 import ProximityPrize.SubmissionLower.LowerGeometry
-
 namespace ProximityPrize.SubmissionLower.BoundaryTailIdentityArithmetic
 
 open RCN095 RCN146

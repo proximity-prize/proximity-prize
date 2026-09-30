@@ -1,8 +1,4 @@
 import ProximityPrize.SubmissionLower.MovingSourceIndexedMovingCoordinates6814
-
-/-! One generic-point count across differently labelled carrier factors.
-Prime injectivity, rather than an injection of dependent component
-records, keeps the whole source-pair budget shared. -/
 namespace ProximityPrize.SubmissionLower.MovingSourceIndexedMovingDegrees6814
 noncomputable section
 set_option autoImplicit false
@@ -113,9 +109,5 @@ theorem sum_indexed_moving_degrees
   have hcard := genericFiberPoints_card (B:=RatFunc Omega) (L:=OmegaT) prime hinj
   simpa only [points,hcard,SeparableCoordinate.degree,prime] using hb
 
-
-
-
-#print axioms sum_indexed_moving_degrees
 end
 end ProximityPrize.SubmissionLower.MovingSourceIndexedMovingDegrees6814

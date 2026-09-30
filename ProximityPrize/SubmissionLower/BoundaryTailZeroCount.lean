@@ -1,6 +1,5 @@
 import ProximityPrize.SubmissionLower.BoundaryTailPole
 import ProximityPrize.SubmissionLower.LowerFoundation
-
 namespace ProximityPrize.SubmissionLower.RCN199
 open scoped Classical BigOperators WithZero
 open RCN002 RCN344 RCN341 RCN095 RCN114 RCN295 RCN187 RCN207 RCN064 RCN204 RCN271 RCN257

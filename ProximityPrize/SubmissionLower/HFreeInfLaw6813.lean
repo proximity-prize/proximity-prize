@@ -1,22 +1,4 @@
 import ProximityPrize.SubmissionLower.HFreeBudget6812
-
-/-!
-# H-free first cut: the per-direction law at infinity
-
-At a place over infinity let `P` be the largest pole of `Y, Y', Γ`, `t = max (pole Y, pole Γ)`,
-`pσ = pole σ`, `T = max (2P, t + pσ)` and `s = pole (D ℓ)` for the slice form `ℓ`.
-
-* `infinity_theta_signed`: `infinity_theta` without the truncation `max 0`; with a coordinate of
-  pole `P` it gives `θ = max (s, pσ - P)`.
-* The slice form bounds `s` by direction (`sliceLinearL_dir`): `s = 0` for `ℓ = Γ`,
-  `s ≤ P` for `ℓ = Y + λΓ`, and `s ≤ max (P, pσ)` for `ℓ = Y' + μY + μλΓ`.
-* Together (`place_bound_dir`): `3θ ≤ 4T - capPole d`, with `capPole = 3t + 5P, 5P, 3t + 2P`
-  (the flags `infCap d`).  Affine places (`P = t = 0`) keep `place_bound`.
-
-Summed over a finite set of places (`hfree_slice_budget_dir`), the H-free budget gains the term
-`(w+1) · flagPole (infCap d)`.
--/
-
 namespace ProximityPrize.SubmissionLower.HFree6812
 
 open WithZero MvPolynomial
@@ -27,8 +9,6 @@ section Signed
 variable {K L : Type*} [Field K] [Field L] [Algebra K L]
 variable (v : Valuation L ℤᵐ⁰) (D : Derivation K L L)
 
-/-- Places at infinity, signed form: if a coordinate `c` has a pole of order `P` (`P` a unit in
-`K`) and `pole (D c) ≤ Q`, then `θ := max (s, Q - P)` works.  `Q - P` may be negative. -/
 theorem infinity_theta_signed [v.IsTrivialOn K] (π : L) (hπ : v π = exp (-1)) (s : ℤ)
     (hs : 0 ≤ s) (C : ℤ) (hcont : CrudeBound v D C) (hsep : ResiduallySeparable v D (exp s))
     (c : L) (P : ℕ) (hP : (P : K) ≠ 0) (hc : v c = exp (P : ℤ)) (Q : ℤ)
@@ -47,20 +27,14 @@ theorem infinity_theta_signed [v.IsTrivialOn K] (π : L) (hπ : v π = exp (-1))
 
 end Signed
 
-/-- The cap at infinity, per slice direction, as a flag: `3t + 5P` (`ℓ = Γ`), `5P`
-(`ℓ = Y + λΓ`) and `3t + 2P` (`ℓ = Y' + μY + μλΓ`). -/
 def infCap (d : Fin 3) : FlagDegree := ![⟨0,3,5⟩, ⟨0,0,5⟩, ⟨0,3,2⟩] d
 
 theorem infCap_zOnly (d : Fin 3) : (infCap d).zOnly = 0 := by fin_cases d <;> rfl
 
-/-- `flagPole (infCap d)` in terms of `P` and `t`. -/
 def capPole (d : Fin 3) (P t : ℤ) : ℤ := ((infCap d).yz : ℤ) * t + ((infCap d).all : ℤ) * P
 
-/-- The tame exponent of the slice form, per direction. -/
 def dirS (d : Fin 3) (P pσ : ℤ) : ℤ := ![0, P, max P pσ] d
 
-/-- The slice form `ℓ = Σ q_m c_m` of direction `d`: `ℓ = q₂ Γ` with `q₂` constant, `ℓ` free of
-`Y'`, or arbitrary. -/
 def DirShape {K : Type} [Field K] (d : Fin 3) (q : Fin 3 → Polynomial K) : Prop :=
   ![q 0 = 0 ∧ q 1 = 0 ∧ Polynomial.derivative (q 2) = 0, q 1 = 0, True] d
 
@@ -70,13 +44,11 @@ variable {K : Type} [Field K] (F F₀ : MvPolynomial (Fin 4) K) [hF₀ : Fact (I
   (hdvd : F₀ ∣ F)
 set_option linter.unusedSectionVars false
 
-/-- `t = max (pole Y, pole Γ)` (`flagPole` of `unitYZFlag`). -/
 noncomputable def placeYZ (v : Valuation (SliceField F₀) ℤᵐ⁰) : ℤ :=
   max (vpole v (sliceCoord F₀ 0)) (vpole v (sliceCoord F₀ 2))
 
 variable (v : Valuation (SliceField F₀) ℤᵐ⁰)
 
-/-- The derivative of the slice form of direction `d` has pole at most `dirS d P pσ`. -/
 theorem sliceLinearL_dir (hH : sliceProj F₀ (polyH K F) ≠ 0)
     (hK : ∀ a : K, a ≠ 0 → v (algebraMap K (SliceField F₀) a) = 1)
     (hX0 : v (sliceProj F₀ (MvPolynomial.X 0)) ≤ 1) (d : Fin 3) (q : Fin 3 → Polynomial K)
@@ -129,8 +101,6 @@ theorem sliceLinearL_dir (hH : sliceProj F₀ (polyH K F) ≠ 0)
     · rw [exp_le_exp]; exact le_max_left _ _
     · exact (v_le_exp_vpole v _).trans (by rw [exp_le_exp]; exact le_max_right _ _)
 
-/-- **Per-place bound on `L0`, per direction.**  As `place_bound`, with the cap at infinity:
-`3 pole (D^m Y') + m · capPole d P t ≤ m (4T + 2h) + 3P`. -/
 theorem place_bound_dir (d : Fin 3) (hH : sliceProj F₀ (polyH K F) ≠ 0)
     (hnorm : ∃ x, v x = exp (-1))
     (hK : ∀ a : K, a ≠ 0 → v (algebraMap K (SliceField F₀) a) = 1)
@@ -178,14 +148,14 @@ theorem place_bound_dir (d : Fin 3) (hH : sliceProj F₀ (polyH K F) ≠ 0)
   have hTσ : t + pσ ≤ T := le_max_right _ _
   have hold := place_bound F F₀ hdvd v hH hnorm hK hX0 ℓ hℓ C hcrude hsep h2 hchar hgen m
   rcases eq_or_lt_of_le (le_max_of_le_left hp1 : 0 ≤ P) with hPz | hPpos
-  · -- affine places: `P = t = 0`, the cap vanishes
+  ·
     have hcap : capPole d P t = 0 := by
       have hPz' : P = 0 := hPz.symm
       have htz : t = 0 := by omega
       rw [capPole, htz, hPz']; ring
     rw [hcap, mul_zero, add_zero]
     exact hold
-  · -- places at infinity
+  ·
     have hPpos : 0 < P := hPpos
     obtain ⟨π₀, hπ₀⟩ := hnorm
     obtain ⟨j, hj⟩ : ∃ j : Fin 3, vpole v (sliceCoord F₀ j) = P := by
@@ -222,7 +192,7 @@ theorem place_bound_dir (d : Fin 3) (hH : sliceProj F₀ (polyH K F) ≠ 0)
     rw [hPn] at hθ
     set θ := max s (max P pσ - P) with hθdef
     have hθ0 : 0 ≤ θ := le_max_of_le_left hs0
-    -- the per-direction law `3θ + capPole ≤ 4T`
+
     have hlaw : 3 * θ + capPole d P t ≤ 4 * T := by
       rw [hθdef]
       fin_cases d <;> simp only [capPole, infCap, dirS] at hdir ⊢ <;> simp at hdir ⊢ <;> omega
@@ -244,7 +214,7 @@ variable {K : Type} [Field K] {E : Type} [Field E] [IsAlgClosed E]
 local notation "w" => RCN326.w
 
 omit [IsAlgClosed E] in
-/-- `flagPole (infCap d)` is at most `4T`, since `t ≤ P` and `2P ≤ T`. -/
+
 theorem infCap_le_target (D : Ideal (MvPolynomial (Fin 3) E)) [D.IsPrime]
     (H G : MvPolynomial (Fin 3) E) (ν : RCN026.Place E (CoordinateField E D)) (d : Fin 3) :
     flagPole ν.val (coordinate E D) (infCap d) ≤ 4 * RCN064.movingPoleTarget D H G ν := by
@@ -260,8 +230,6 @@ theorem infCap_le_target (D : Ideal (MvPolynomial (Fin 3) E)) [D.IsPrime]
   unfold RCN064.movingPoleTarget
   fin_cases d <;> simp only [flagPole, infCap] <;> simp <;> omega
 
-/-- **Per-place bound at a slice place, per direction**, in the consumer's quantities:
-`nu_place_bound` with `(w+1) · flagPole (infCap d)` on the left. -/
 theorem nu_place_bound_dir (d : Fin 3) (F : MvPolynomial (Fin 4) K)
     (D : Ideal (MvPolynomial (Fin 3) E))
     [D.IsPrime] (F₀ : MvPolynomial (Fin 4) K) [Fact (Irreducible F₀)] (hdvd : F₀ ∣ F)
@@ -370,7 +338,7 @@ theorem nu_place_bound_dir (d : Fin 3) (F : MvPolynomial (Fin 4) K)
   obtain ⟨⟨C, hcrude⟩, hsep⟩ := hdefer e v he hvn hwve
   have hℓ := sliceLinearL_bound F F₀ hdvd v hH hK hX0 q
   have hdir := sliceLinearL_dir F F₀ hdvd v hH hK hX0 d q hqd
-  -- the consumer quantities scale by `e`
+
   have hcoordν : ∀ j, RCN187.poleOrder ν.val (coordinate E D j) =
       e * vpole v (sliceCoord F₀ j) := by
     intro j; rw [← psi_coord D F₀ hker j, ← hψdef, hpole]
@@ -487,8 +455,6 @@ theorem nu_place_bound_dir (d : Fin 3) (F : MvPolynomial (Fin 4) K)
   push_cast at hk ⊢
   linarith
 
-/-- **The H-free per-slice budget, per direction**: `hfree_slice_budget` with
-`Σ (w+1) · flagPole (infCap d)` subtracted, for a slice of direction `d` (`DirShape d q`). -/
 theorem hfree_slice_budget_dir (d : Fin 3) (F : MvPolynomial (Fin 4) K)
     (D : Ideal (MvPolynomial (Fin 3) E))
     [D.IsPrime] (sep : SeparableLiteralCoordinate D)

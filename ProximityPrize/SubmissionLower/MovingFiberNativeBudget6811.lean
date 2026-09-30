@@ -1,9 +1,4 @@
 import ProximityPrize.SubmissionLower.MovingFiberProjection6811
-
-/-! Feed the source-sensitive projection bounds into the actual native curve
-budget. This bounds a pure polynomial cut on the moving fiber and charges no
-multiplicity-weighted moving-degree term that the consumer does not need.
--/
 namespace ProximityPrize.SubmissionLower.MovingFiberNativeBudget6811
 open scoped Classical BigOperators
 open RCN002 RCN022 RCN037 RCN039 RCN042 RCN046 RCN071 RCN076 RCN084 RCN093 RCN095 RCN135 RCN136 RCN207
@@ -93,6 +88,5 @@ theorem exists_common_native_unit {G N R : Poly3} (p q : FlagDegree)
     rw [hv,coordinateEvaluation_eq_aeval]
     simp only [linearA,affineV,map_add,map_mul,MvPolynomial.aeval_X,MvPolynomial.aeval_C,Algebra.smul_def]
 
-#print axioms exists_common_native_unit
 end
 end ProximityPrize.SubmissionLower.MovingFiberNativeBudget6811

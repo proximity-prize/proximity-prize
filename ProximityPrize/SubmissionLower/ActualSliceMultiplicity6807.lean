@@ -1,12 +1,5 @@
-/-
-UNCOMPILED. Concrete original multiplicity transfer into a prime slice quotient.
-Unlike the former generic-ring adapter, factor=0 and contraction are derived
-from the actual Stage originalData, an embedding point, and its slice prime.
-The underlying prime D may be singular; no multiplicity equality is assumed.
--/
 import ProximityPrize.SubmissionLower.GenericSlicePoints6807
 import ProximityPrize.SubmissionLower.FirstCutMultiplicityTransport6807
-
 namespace ProximityPrize.SubmissionLower.ActualSliceMultiplicity6807
 open scoped Classical BigOperators
 open RCN002 RCN005 RCN006 RCN007 RCN055 RCN074 RCN086 RCN095
@@ -98,7 +91,6 @@ theorem firstTailInSlice_factorization
   simp only [firstTailInSlice, firstTailScalarInSlice, originalToSlice,
     globalTailCut_eq, map_mul, RingHom.comp_apply]
 
-/-- Full old multiplicity in the actual slice quotient and point ideal. -/
 theorem actual_first_tail_mem_point_power
     (S : Stage K I Gamma x p flag errorCap stageSupport)
     (hproper : ¬ S.G ∣ globalTailCut (polynomialEmbedding K) S.F (RCN326.w+1))
@@ -122,7 +114,6 @@ theorem actual_first_tail_mem_point_power
     (J.zero_mem) hc (firstTailInSlice_factorization S D)
   simpa [J] using h
 
-/-- Nonzero at the chosen point, not globally invertible in the affine ring. -/
 theorem original_H_point_ne_zero
     (S : Stage K I Gamma x p flag errorCap stageSupport)
     (C : FirstTailComponent S) (emb : CoordinateField Ω C.1 →ₐ[Ω] E)
@@ -138,8 +129,6 @@ theorem original_H_point_ne_zero
   rw [← coordinateEvaluation_ker Ω C.1]
   exact he
 
-
-/-- Scalar extension commutes with freezing the original X-coordinate. -/
 theorem scalar_surfaceMap (F : PK4) :
     scalarPolynomialMap Ω E (surfaceMap (polynomialEmbedding K) F) =
       surfaceMap ((algebraMap Ω E).comp (polynomialEmbedding K)) F := by
@@ -160,7 +149,6 @@ theorem firstTailScalar_point_ne_zero
   exact (map_ne_zero (algebraMap Ω E)).mpr (tail_scalar_ne_zero (polynomialEmbedding K)
     (polynomialEmbedding_injective K) (RCN326.w+1))
 
-/-- The normalization is derived from the frozen numerator_H_cube identity. -/
 theorem firstTailInSlice_normal_form
     (S : Stage K I Gamma x p flag errorCap stageSupport) (D : Ideal PE) :
     firstTailInSlice S D = firstTailScalarInSlice (K := K) D *
@@ -171,8 +159,6 @@ theorem firstTailInSlice_normal_form
     numerator_eq_H_cube, map_mul, map_pow]
   ring
 
-/-- Coordinate evaluation of an original polynomial is the fraction-field
-image of its concrete quotient-ring representative. -/
 theorem originalToSlice_fraction_value (D : Ideal PE) [D.IsPrime] (F : PK4) :
     algebraMap (CoordinateRing E D) (CoordinateField E D)
       (originalToSlice (K := K) D F) =
@@ -182,8 +168,6 @@ theorem originalToSlice_fraction_value (D : Ideal PE) [D.IsPrime] (F : PK4) :
     (scalarPolynomialMap Ω E (surfaceMap (polynomialEmbedding K) F)) = _
   rw [scalar_surfaceMap]
 
-/-- Membership of the first tail in a prime slice is equivalent to vanishing
-of its quotient representative; isolation provides the negated membership. -/
 theorem firstTailInSlice_ne_zero
     (S : Stage K I Gamma x p flag errorCap stageSupport) (D : Ideal PE)
     (hproper : scalarPolynomialMap Ω E
@@ -192,7 +176,6 @@ theorem firstTailInSlice_ne_zero
   intro hz
   exact hproper (Ideal.Quotient.eq_zero_iff_mem.mp hz)
 
-/-- Keep the exponent w+3 explicitly, before cancelling in the function field. -/
 theorem normalized_first_tail_identity {A L : Type*}
     [CommRing A] [Field L] (ev : A →+* L)
     (tail base H kappa : A) (w : ℕ)

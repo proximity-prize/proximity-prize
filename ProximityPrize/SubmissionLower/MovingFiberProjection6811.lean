@@ -1,9 +1,4 @@
 import ProximityPrize.SubmissionLower.MovingFiberIsolatedZeros6811
-
-/-! Source-sensitive projection degrees on a moving fiber. Generic embedding
-points supply isolation in the order required by the compiled source count.
-No interchange of algebraic closures or presumed degree budget is used.
--/
 namespace ProximityPrize.SubmissionLower.MovingFiberProjection6811
 open scoped Classical BigOperators
 open RCN002 RCN005 RCN006 RCN007 RCN072 RCN076 RCN084 RCN095 RCN134 RCN136
@@ -229,7 +224,5 @@ theorem sum_coordinate_projection_degrees {ι : Type} [Fintype ι]
     c hdeg hmix P B U T s k n0 hS hP hBU hUT hdn hB hn hdiv h2 hfact Q A target hQ hA
     old0 hi0 sep hv0
 
-#print axioms sum_separable_projection_degrees
-#print axioms sum_coordinate_projection_degrees
 end
 end ProximityPrize.SubmissionLower.MovingFiberProjection6811

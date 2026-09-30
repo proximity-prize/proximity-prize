@@ -1,10 +1,5 @@
 import ProximityPrize.SubmissionLower.MovingSourceReducedPrimary6814
 import ProximityPrize.SubmissionLower.MovingSourceProjectionFamily6814
-
-/-! Shared resultant multiplicities for the reduced flow. The indices are
-the original stage's components, not a conjecturally equal new family.
-The primary-power input is proved from the old stage and the flow identity.
-No separability or characteristic bound is needed for the power theorem. -/
 namespace ProximityPrize.SubmissionLower.MovingSourceReducedCycle6814
 noncomputable section
 set_option autoImplicit false
@@ -16,8 +11,6 @@ open RCN002 RCN011 RCN021 RCN093 RCN106 RCN107 RCN108 RCN109 RCN111 RCN112 RCN11
 open RCN120 RCN125 RCN313 RCN333 RCN102
 open MovingSourceFlowNumerator6814 MovingSourceReducedPrimary6814
 
-/-- The old component witnesses that localizing the surface in the chosen
-coordinate does not turn a different, proper tail into a multiple of it. -/
 theorem plane_not_dvd_replacement
     {Ω : Type} [Field Ω] {F T R : MvPolynomial (Fin 3) Ω}
     (C : RCN264.RegularComponent Ω F T R)
@@ -68,8 +61,6 @@ theorem reduced_resultant_ne
   exact resultant_ne_replacement (F.component a) F.lam F.mu F.nu F.order (F.ht a)
     S.irreducible_G (reducedTailSurface H G) hproper F.positive
 
-/-- A single resultant pays the sum of the OLD multiplicities times the
-residue degrees of ALL components over q. No per-component degree charge. -/
 theorem reduced_grouped_power_dvd
     (S : Stage K I Gamma x p flag errorCap stageSupport)
     (hfirst : ¬S.G∣globalTailCut (polynomialEmbedding K) S.F (RCN326.w+1))
@@ -113,9 +104,6 @@ theorem reduced_grouped_power_dvd
     (fun a => localMultiplicity S (canonicalLocalDVRFamily S hfirst) (F.component a.1))
     htail Polynomial.natDegree_map_le Polynomial.natDegree_map_le hres hmod
 
-/-- The shared geometric degree estimate for a chosen separating
-projection. Separability belongs to the chosen projection, NOT to a
-characteristic gate on this resultant's degree. -/
 theorem reduced_projection_sum_le
     (S : Stage K I Gamma x p flag errorCap stageSupport)
     (hfirst : ¬S.G∣globalTailCut (polynomialEmbedding K) S.F (RCN326.w+1))
@@ -162,8 +150,5 @@ theorem reduced_projection_sum_le
   · letI : IsEmpty A := ⟨fun a => hA ⟨a⟩⟩
     simp
 
-#print axioms reduced_resultant_ne
-#print axioms reduced_grouped_power_dvd
-#print axioms reduced_projection_sum_le
 end
 end ProximityPrize.SubmissionLower.MovingSourceReducedCycle6814

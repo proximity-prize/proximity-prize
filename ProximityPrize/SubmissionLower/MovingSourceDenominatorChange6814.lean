@@ -1,8 +1,4 @@
 import ProximityPrize.SubmissionLower.MovingSourceFlowNumerator6814
-
-/-! A denominator change on the faithful carrier field preserves every
-tail. The field derivation is constructed here from the original carrier;
-it is not assumed to act correctly on the replacement flow. -/
 namespace ProximityPrize.SubmissionLower.MovingSourceDenominatorChange6814
 noncomputable section
 set_option autoImplicit false
@@ -86,8 +82,6 @@ theorem linear_denominator_change [CharP K 2130706433]
     (linearH_nonzero_on_carrier J hJ hs F T hshape hFT)
     (carrier_cross_identity J hs F hpos hsmall hroot) n
 
-/-- In a local domain where both denominators are units, the old and new
-tails are associated. This preserves local multiplicities as well as zeros. -/
 theorem tails_associated {R : Type} [CommRing R] [IsDomain R]
     (ev : Poly →+* R) (F H G : Poly) (n : ℕ) (hF : ev F=0)
     (hOld : IsUnit (ev (polyH K F))) (hNew : IsUnit (ev H))
@@ -105,7 +99,5 @@ theorem tails_associated {R : Type} [CommRing R] [IsDomain R]
     rw [he]
     exact dvd_mul_right _ _
 
-#print axioms linear_denominator_change
-#print axioms tails_associated
 end
 end ProximityPrize.SubmissionLower.MovingSourceDenominatorChange6814

@@ -1,17 +1,6 @@
 import ProximityPrize.SubmissionLower.HFreeBudget6812
 import ProximityPrize.SubmissionLower.ActualFirstCutPole6807
 import Mathlib.Algebra.MvPolynomial.Funext
-
-/-!
-# H-free bridge: pole and zero orders on a slice component are below the characteristic
-
-On a slice component `D ∋ F, t - ℓ` the slice form `t - ℓ` is irreducible and does not divide
-the surface (`t` is transcendental over `Ω`), so `original_finite_separable_finrank_bound`
-bounds every transcendental coordinate's degree by `2N` (`N` the total `(Y,Y',Γ)`-degree of
-`F`).  Hence every coordinate pole is `≤ 2N`, and
-`zero_ν H ≤ Σ pole H ≤ N·Σ_j deg y_j ≤ 6N²`.
--/
-
 namespace ProximityPrize.SubmissionLower.HFree6812
 open WithZero MvPolynomial
 open RCN002 RCN005 RCN006 RCN095 RCN135 RCN136 RCN202 RCN204 RCN208 RCN313 RCN341
@@ -21,7 +10,6 @@ set_option autoImplicit false
 section SliceForm
 variable {Ω E : Type} [Field Ω] [Field E] [Algebra Ω E] [Algebra (RatFunc Ω) E]
 
-/-- The slice form `t - Σ c_m Y_m` over `E`. -/
 abbrev sliceForm (c : Fin 3 → Ω) : MvPolynomial (Fin 3) E :=
   C (sliceValue Ω E) - scalarPolynomialMap Ω E (∑ m, C (c m) * MvPolynomial.X m)
 
@@ -73,7 +61,6 @@ theorem sliceForm_irreducible (c : Fin 3 → Ω) (i : Fin 3) (hci : c i = 1) :
     · exact Or.inl (isUnit_of_totalDegree_zero ha h)
     · exact Or.inr (isUnit_of_totalDegree_zero hb (by omega))
 
-/-- `t` is transcendental over `Ω`, so the slice form divides no nonzero polynomial over `Ω`. -/
 theorem sliceForm_not_dvd [IsScalarTower Ω (RatFunc Ω) E] [Infinite Ω] (c : Fin 3 → Ω)
     (i : Fin 3) (hci : c i = 1)
     (A : MvPolynomial (Fin 3) Ω) (hA : A ≠ 0) :
@@ -114,7 +101,6 @@ end SliceForm
 section Gate
 variable {E : Type} [Field E]
 
-/-- `original_finite_separable_finrank_bound` at a literal coordinate `j`. -/
 theorem coordinate_gate (P : Ideal (MvPolynomial (Fin 3) E)) [P.IsPrime] (j : Fin 3)
     (hj : Transcendental E (coordinate E P j)) (p : ℕ) [CharP E p]
     (G H : MvPolynomial (Fin 3) E) (hG : Irreducible G) (hGP : G ∈ P) (hHP : H ∈ P)
@@ -150,7 +136,6 @@ variable {K : Type} [Field K] {E : Type} [Field E] [IsAlgClosed E]
   [Algebra (GenericField K) E] [Algebra (RatFunc (GenericField K)) E]
   [IsScalarTower (GenericField K) (RatFunc (GenericField K)) E]
 
-/-- A total `(Y,Y',Γ)`-degree bound puts the surface image in the flag `⟨0,0,N⟩`. -/
 theorem inFlag_total {L : Type} [Field L] (φ : Polynomial K →+* L) (P : MvPolynomial (Fin 4) K)
     (N : ℕ) (h : MvPolynomial.weightedTotalDegree ![0,1,1,1] P ≤ N) :
     PolynomialInFlag ⟨0,0,N⟩ (surfaceMap φ P) := by
@@ -162,8 +147,6 @@ theorem inFlag_total {L : Type} [Field L] (φ : Polynomial K →+* L) (P : MvPol
     show Fin.succ (1 : Fin 3) = 2 from rfl, show Fin.succ (2 : Fin 3) = 3 from rfl]
   omega
 
-/-- **hchar.** On a slice component of a surface of total `(Y,Y',Γ)`-degree `≤ N ≤ 9678`, every
-coordinate pole is `≤ 2N` and every zero of `H` is `≤ 6N²`, both below the characteristic. -/
 theorem hchar_holds [CharP K 2130706433] (F : MvPolynomial (Fin 4) K)
     (D : Ideal (MvPolynomial (Fin 3) E)) [D.IsPrime] (sep : SeparableLiteralCoordinate D)
     (hFD : surfaceMap (phiE K E) F ∈ D) (hHD : surfaceMap (phiE K E) (polyH K F) ∉ D)
@@ -193,7 +176,7 @@ theorem hchar_holds [CharP K 2130706433] (F : MvPolynomial (Fin 4) K)
     (degreeOf_le_totalDegree _ k).trans (sliceForm_totalDegree c i hci).le
   have hdegF : ∀ k, Fp.degreeOf k ≤ N := fun k => by
     simpa using RCN084.degreeOf_le_flag_total Fp _ hFflag k
-  -- every coordinate has at most `2N` poles
+
   have hpole : ∀ j (W : Finset (RCN026.Place E L)),
       (∑ ν ∈ W, RCN187.poleOrder ν.val (y j)) ≤ 2 * N := by
     intro j W
@@ -213,7 +196,7 @@ theorem hchar_holds [CharP K 2130706433] (F : MvPolynomial (Fin 4) K)
       positivity
   have hp (j) (ν : RCN026.Place E L) : RCN187.poleOrder ν.val (y j) ≤ 2 * N := by
     simpa using hpole j {ν}
-  -- zeros of `H` are bounded by its poles
+
   set Hev := SecondJetComponentRoots.coefficientMap (phiE K E) D (polyH K F)
   have hHne : Hev ≠ 0 := fun h => hHD ((SecondJetComponentRoots.evaluation_zero_iff D _).mp h)
   letI := polynomialBaseAlgebra E D sep.index
