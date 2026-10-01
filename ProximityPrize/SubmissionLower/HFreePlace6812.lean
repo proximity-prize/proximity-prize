@@ -2,21 +2,6 @@ import ProximityPrize.SubmissionLower.HFreeSlice6812
 import ProximityPrize.SubmissionLower.HFreeValuation6812
 import ProximityPrize.SubmissionLower.HFreeLocal6812
 import ProximityPrize.SubmissionLower.HFreeRegular6812
-
-/-!
-# H-free bridge: the per-place bound on `L0`
-
-For a normalized valuation `v` of `L0 = Frac(K[X,Y,Y',γ]/(F₀))` trivial on `K` with `X`
-integral, the first cut `τ_m = D^m (Y')` satisfies
-
-  `3 pole_v τ_m ≤ m (4 T_v + 2 h_v) + 3 P_v`,
-
-where `P_v` is the largest pole of `Y, Y', Γ`, `T_v` the moving pole target, and `h_v` the
-zero order of `H`.  Affine places (`P_v = 0`) use lemma (c) and the multiplicity theorem;
-places at infinity use `infinity_theta`.  `CrudeBound` and `ResiduallySeparable` are
-hypotheses (pieces 3 and 4); `hgen` is the two-generator property of the centre (piece 1).
--/
-
 namespace ProximityPrize.SubmissionLower.HFree6812
 
 open WithZero MvPolynomial
@@ -26,10 +11,8 @@ section Helpers
 
 variable {K L : Type*} [Field K] [Field L] [Algebra K L] (v : Valuation L ℤᵐ⁰)
 
-/-- Pole order (as in `RCN187.poleOrder`). -/
 def vpole (x : L) : ℤ := max 0 (v x).log
 
-/-- Zero order (as in `RCN026.zeroOrder`). -/
 def vzero (x : L) : ℤ := max 0 (-(v x).log)
 
 theorem vpole_nonneg (x : L) : 0 ≤ vpole v x := le_max_left _ _
@@ -81,10 +64,8 @@ variable {K : Type} [Field K] (F F₀ : MvPolynomial (Fin 4) K) [hF₀ : Fact (I
   (hdvd : F₀ ∣ F)
 set_option linter.unusedSectionVars false
 
-/-- The coordinates `Y, Y', Γ` in `L0`. -/
 noncomputable def sliceCoord (j : Fin 3) : SliceField F₀ := sliceProj F₀ (MvPolynomial.X j.succ)
 
-/-- `σ = G / H` in `L0`. -/
 noncomputable def sliceSigma : SliceField F₀ := sliceProj F₀ (polyG K F) / sliceProj F₀ (polyH K F)
 
 theorem sliceProj_C (a : K) : sliceProj F₀ (C a) = algebraMap K (SliceField F₀) a := by
@@ -120,7 +101,6 @@ theorem sliceDerivation_X0 (hH : sliceProj F₀ (polyH K F) ≠ 0) :
   rw [sliceDerivation_proj_eq F F₀ hdvd hH]
   simp [pderiv_X]
 
-/-- The slice form in `L0`: `ℓ = Σ q_m(X) · c_m` for the coordinates `c_m = Y, Y', Γ`. -/
 noncomputable def sliceLinearL (q : Fin 3 → Polynomial K) : SliceField F₀ :=
   ∑ m, Polynomial.aeval (sliceProj F₀ (MvPolynomial.X 0)) (q m) * sliceCoord F₀ m
 
@@ -136,19 +116,15 @@ theorem v_aeval_le_one (hK : ∀ a : K, a ≠ 0 → v (algebraMap K (SliceField 
     rw [Polynomial.aeval_monomial, v.map_mul, v.map_pow]
     exact mul_le_one' (Valuation.IsTrivialOn.valuation_algebraMap_le_one v a) (pow_le_one' hX0 n)
 
-/-- Largest pole of the coordinates (`flagPole` of `unitAllFlag`). -/
 noncomputable def placeP : ℤ :=
   max (vpole v (sliceCoord F₀ 1)) (max (vpole v (sliceCoord F₀ 0)) (vpole v (sliceCoord F₀ 2)))
 
-/-- The moving pole target `T` (`movingPoleTarget`). -/
 noncomputable def placeT : ℤ :=
   max (2 * placeP F₀ v)
     (max (vpole v (sliceCoord F₀ 0)) (vpole v (sliceCoord F₀ 2)) + vpole v (sliceSigma F F₀))
 
-/-- The zero order of `H`. -/
 noncomputable def placeH : ℤ := vzero v (sliceProj F₀ (polyH K F))
 
-/-- At an affine place (`P = 0`) every polynomial is integral. -/
 theorem place_hint (hK : ∀ a : K, a ≠ 0 → v (algebraMap K (SliceField F₀) a) = 1)
     (hX0 : v (sliceProj F₀ (MvPolynomial.X 0)) ≤ 1) (hP0 : placeP F₀ v = 0) :
     ∀ g : MvPolynomial (Fin 4) K, v (sliceProj F₀ g) ≤ 1 := by
@@ -185,7 +161,6 @@ theorem place_hint (hK : ∀ a : K, a ≠ 0 → v (algebraMap K (SliceField F₀
     · exact hcint 1
     · exact hcint 2
 
-/-- The derivative of the slice form has pole at most `max (P, pole σ)`. -/
 theorem sliceLinearL_bound (hH : sliceProj F₀ (polyH K F) ≠ 0)
     (hK : ∀ a : K, a ≠ 0 → v (algebraMap K (SliceField F₀) a) = 1)
     (hX0 : v (sliceProj F₀ (MvPolynomial.X 0)) ≤ 1) (q : Fin 3 → Polynomial K) :
@@ -221,7 +196,6 @@ theorem sliceLinearL_bound (hH : sliceProj F₀ (polyH K F) ≠ 0)
     exact (mul_le_of_le_one_right' (v_aeval_le_one F₀ v hK hX0 _)).trans
       (le_max_of_le_left (hcoord m))
 
-/-- **Per-place bound on `L0`.** -/
 theorem place_bound (hH : sliceProj F₀ (polyH K F) ≠ 0)
     (hnorm : ∃ x, v x = exp (-1))
     (hK : ∀ a : K, a ≠ 0 → v (algebraMap K (SliceField F₀) a) = 1)
@@ -275,7 +249,7 @@ theorem place_bound (hH : sliceProj F₀ (polyH K F) ≠ 0)
     have := mul_le_mul_of_nonneg_left hθ (Nat.cast_nonneg (α := ℤ) m)
     linarith
   rcases eq_or_lt_of_le hP0 with hPz | hPpos
-  · -- affine places
+  ·
     have hPz' : P = 0 := hPz.symm
     have hq0 : p0 = 0 := by have := le_max_left p0 p2; have := le_max_right p1 (max p0 p2); omega
     have hq1 : p1 = 0 := by have := le_max_left p1 (max p0 p2); omega
@@ -318,7 +292,7 @@ theorem place_bound (hH : sliceProj F₀ (polyH K F) ≠ 0)
       exact hK 2 h2
     have hFz : sliceProj F₀ F₀ = 0 := (sliceProj_eq_zero_iff F₀ F₀).2 dvd_rfl
     obtain ⟨a, b, ha, hb, hgen'⟩ := hgen hPz'
-    -- the minimal order `n₁` of the centre
+
     obtain ⟨g₀, hg₀, hg₀0⟩ := center_nonzero v (sliceProj F₀) hint_all ⟨π₀, hπ₀⟩ hfrac
     have hex : ∃ n : ℕ, 0 < n ∧ ∃ g, v (sliceProj F₀ g) = exp (-(n : ℤ)) := by
       have hne : v (sliceProj F₀ g₀) ≠ 0 := (Valuation.ne_zero_iff v).2 hg₀0
@@ -360,7 +334,7 @@ theorem place_bound (hH : sliceProj F₀ (polyH K F) ≠ 0)
       · have : n₁ = 1 := by omega
         rw [this, Nat.cast_one]; exact one_ne_zero
       · exact hchar n₁ hn₁pos (by rw [hPz']; omega)
-    -- the affine target is `pσ`
+
     have hTa : T = pσ := by rw [hTeq, hPz', hq0, hq2]; omega
     have hsσ : s ≤ pσ := by have := hsP; rw [hPz'] at this; omega
     have hDf : v (Dd (sliceProj F₀ f₀)) ≤ exp pσ := by
@@ -375,7 +349,7 @@ theorem place_bound (hH : sliceProj F₀ (polyH K F) ≠ 0)
     have hmax : max s (pσ + n₁) = pσ + n₁ := max_eq_right (by omega)
     rw [hmax] at hθ
     by_cases hA : pσ = 0 ∧ n₁ = 1
-    · -- no pole at all
+    ·
       have hπ := pi_bound_general v Dd π₀ hπ₀ s pσ
         (integral_bound v Dd π₀ hπ₀ s hs0 C hcrude hsep) (sliceProj F₀ f₀) n₁ hn₁K hf₀ hDf
       have hs00 : s = 0 := by omega
@@ -392,7 +366,7 @@ theorem place_bound (hH : sliceProj F₀ (polyH K F) ≠ 0)
       have : 0 ≤ (m : ℤ) * (4 * T + 2 * h) :=
         mul_nonneg (Nat.cast_nonneg m) (by omega)
       omega
-    · -- the per-place law
+    ·
       have hσh : pσ ≤ h := by
         rw [hpσdef, vpole_le_iff _ _ _ hh0, sliceSigma, map_div₀]
         by_cases hG0 : v (sliceProj F₀ (polyG K F)) = 0
@@ -416,7 +390,7 @@ theorem place_bound (hH : sliceProj F₀ (polyH K F) ≠ 0)
       rw [hc1, zero_add] at hit
       rw [hPz']
       omega
-  · -- places at infinity
+  ·
     obtain ⟨j, hj⟩ : ∃ j : Fin 3, vpole v (sliceCoord F₀ j) = P := by
       rcases max_choice p1 (max p0 p2) with h1 | h1
       · exact ⟨1, by rw [hPeq, h1]⟩

@@ -3,22 +3,6 @@ import ProximityPrize.SubmissionLower.HFreePlace6812
 import ProximityPrize.SubmissionLower.HFreeNormalize6812
 import Mathlib.RingTheory.Nullstellensatz
 import Mathlib.RingTheory.KrullDimension.Polynomial
-
-/-!
-# H-free bridge: the per-slice budget `HFreeSliceBudget`
-
-Assembles the per-place bound on `L0` (HFreePlace6812) into the consumer's statement:
-for a slice component `D` (prime of `E[Y,Y',Γ]` with a separable literal coordinate,
-containing `F` and the slice equation `ℓ - t`, `H ∉ D`) and every finite set `W` of places,
-
-  `3 Σ pole_ν τ ≤ Σ [(w+1)(4 T_ν + 2 zero_ν H) + 3 flagPole_ν unitAllFlag]`.
-
-Each place `ν` restricts along `ψ : L0 → CoordinateField E D` to a trivial valuation (no
-pole) or to `v^e` with `v` normalized; all quantities scale by `e`.  The centre of an affine
-place has height `≤ 2` (Nullstellensatz, since `ℓ = t` is transcendental), which gives the two
-local generators.  Pieces 3 and 4 (`CrudeBound`, `ResiduallySeparable`) are hypotheses.
--/
-
 namespace ProximityPrize.SubmissionLower.HFree6812
 
 open WithZero MvPolynomial
@@ -28,8 +12,6 @@ section Centre
 
 variable {Ω R : Type*} [Field Ω] [IsAlgClosed Ω] [Field R] [Algebra Ω R]
 
-/-- The centre of a valuation on `Ω[Y,Y',Γ]` whose point has a coordinate combination
-transcendental over `Ω` has height at most `2`. -/
 theorem centre_height_le_two (ν : Valuation R ℤᵐ⁰) (y : Fin 3 → R)
     (𝔮 : Ideal (MvPolynomial (Fin 3) Ω)) [𝔮.IsPrime]
     (h𝔮 : ∀ P, P ∈ 𝔮 ↔ ν (aeval y P) < 1)
@@ -81,7 +63,6 @@ section ValCentre
 
 variable {R L : Type*} [CommRing R] [Field L]
 
-/-- The centre `{r | ν (f r) < 1}` of a valuation on an integral ring hom, as a prime ideal. -/
 def valCentre (f : R →+* L) (ν : Valuation L ℤᵐ⁰) (hint : ∀ r, ν (f r) ≤ 1) : Ideal R where
   carrier := {r | ν (f r) < 1}
   add_mem' := by
@@ -133,7 +114,6 @@ variable {K : Type} [Field K] {E : Type} [Field E] [IsAlgClosed E]
 
 local notation "w" => RCN326.w
 
-/-- The generic slice coefficient map `K[X] → E`. -/
 noncomputable abbrev phiE (K E : Type) [Field K] [Field E] [Algebra (GenericField K) E] :
     Polynomial K →+* E :=
   (algebraMap (GenericField K) E).comp (polynomialEmbedding K)
@@ -187,7 +167,6 @@ theorem scale_flag (e : ℤ) (he : 0 ≤ e) (a b c : ℤ) :
     max (e * a) (max (e * b) (e * c)) = e * max a (max b c) := by
   rw [mul_max_of_nonneg _ _ he, mul_max_of_nonneg _ _ he]
 
-/-- **Per-place bound at a slice place**, in the consumer's quantities. -/
 theorem nu_place_bound (F : MvPolynomial (Fin 4) K) (D : Ideal (MvPolynomial (Fin 3) E))
     [D.IsPrime] (F₀ : MvPolynomial (Fin 4) K) [Fact (Irreducible F₀)] (hdvd : F₀ ∣ F)
     (hker : RingHom.ker (sliceMap (K := K) D) = Ideal.span {F₀})
@@ -291,7 +270,7 @@ theorem nu_place_bound (F : MvPolynomial (Fin 4) K) (D : Ideal (MvPolynomial (Fi
     exact (zm_pow_le_one he0).1 h1
   obtain ⟨⟨C, hcrude⟩, hsep⟩ := hdefer e v he hvn hwve
   have hℓ := sliceLinearL_bound F F₀ hdvd v hH hK hX0 q
-  -- the consumer quantities scale by `e`
+
   have hcoordν : ∀ j, RCN187.poleOrder ν.val (coordinate E D j) =
       e * vpole v (sliceCoord F₀ j) := by
     intro j; rw [← psi_coord D F₀ hker j, ← hψdef, hpole]
@@ -405,10 +384,6 @@ theorem nu_place_bound (F : MvPolynomial (Fin 4) K) (D : Ideal (MvPolynomial (Fi
   push_cast at hk ⊢
   linarith
 
-/-- **The H-free per-slice budget** (the `pole_le` field of `HFreeSliceBudget` with
-`phi = phiE K E` and `C0 = unitAllFlag`), for a slice `C t - Σ c_m X_m` with `c_i = 1` and
-`c_m = q_m(X)` in the image of `K[X]`.  Open inputs: `hchar` (pole and zero orders below the
-characteristic) and `hdefer` (pieces 3 and 4 at every place of `L0` over the slice). -/
 theorem hfree_slice_budget (F : MvPolynomial (Fin 4) K) (D : Ideal (MvPolynomial (Fin 3) E))
     [D.IsPrime] (sep : SeparableLiteralCoordinate D)
     (hFD : surfaceMap (phiE K E) F ∈ D) (hHD : surfaceMap (phiE K E) (polyH K F) ∉ D)

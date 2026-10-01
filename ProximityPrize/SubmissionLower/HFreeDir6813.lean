@@ -1,24 +1,5 @@
 import ProximityPrize.SubmissionLower.HFreeInfLaw6813
 import ProximityPrize.SubmissionLower.HFreeDischarge6812
-
-/-!
-# H-free first cut, per slice direction
-
-`HFreeInfLaw6813` refines the per-place law at infinity by direction: a slice of direction `d`
-subtracts `(w+1) · flagPole (infCap d)` from the H-free budget.  Summing over `W ∪ {zeros of H}`,
-where the zeros of `H` are bounded by its flag `⟨z,v,r-1⟩`, the X-flag of direction `d` becomes
-
-  `hfreeFlagDir d r v z C0 = (w+1) • cuspFlag d r v z + 3 • C0`,
-
-with `cuspFlag d = 2•⟨z,v,r-1⟩ - capFlag d`, i.e. `⟨2z,2v-3,2r-7⟩`, `⟨2z,2v,2r-7⟩`,
-`⟨2z,2v-3,2r-4⟩` (at `r = 3` the unitAll part of the cap above `2r-2` moves to unitYZ, which is
-weaker since `t ≤ P`).  This replaces `2(w+1)•⟨z,v,r-1⟩ + 3•C0` of `HFreeFirstSlice6812.hfreeFlag`.
-
-The stage-level hypothesis `HFreeStageDir` is discharged by `hfree_stage_dir_of_gaps`, and
-`retained_stage_bound_dir` charges the retained stage `numeratorDir`, whose first-cut term is
-`Σ_j scale/3 · normal_j · flagMixed f (hfreeFirstDir t y r j) e_j`.
--/
-
 namespace ProximityPrize.SubmissionLower.HFreeDir6813
 open RCN057 (WeightBound)
 open RCN204 (flagPole)
@@ -41,11 +22,9 @@ theorem flag_eq_iff (p q : FlagDegree) :
     p = q ↔ p.zOnly = q.zOnly ∧ p.yz = q.yz ∧ p.all = q.all := by
   cases p; cases q; simp
 
-/-- The cusp flag of direction `d`, in half units. -/
 def cuspFlag (d : Fin 3) (r v z : ℕ) : FlagDegree :=
   ![⟨2*z, 2*v-3-(7-2*r), 2*r-7⟩, ⟨2*z, 2*v-(7-2*r), 2*r-7⟩, ⟨2*z, 2*v-3, 2*r-4⟩] d
 
-/-- The part of `infCap d` subtracted from `2•⟨z,v,r-1⟩` (all of it for `r ≥ 4`). -/
 def capFlag (d : Fin 3) (r : ℕ) : FlagDegree :=
   ![⟨0, 3+(7-2*r), 5-(7-2*r)⟩, ⟨0, 7-2*r, 5-(7-2*r)⟩, ⟨0, 3, 2⟩] d
 
@@ -54,7 +33,6 @@ theorem cusp_add_cap (d : Fin 3) (r v z : ℕ) (hr : 3 ≤ r) (hv : 2 ≤ v) :
   rw [flag_eq_iff]
   fin_cases d <;> simp [cuspFlag, capFlag] <;> omega
 
-/-- `capFlag d r` is dominated by `infCap d` at every place, since `t ≤ P`. -/
 theorem capFlag_pole_le {L : Type*} [Field L] (V : Valuation L (WithZero (Multiplicative ℤ)))
     (x : Fin 3 → L) (d : Fin 3) (r : ℕ) (hr : 3 ≤ r) :
     flagPole V x (capFlag d r) ≤ flagPole V x (HFree6812.infCap d) := by
@@ -66,7 +44,6 @@ theorem capFlag_pole_le {L : Type*} [Field L] (V : Valuation L (WithZero (Multip
   · fin_cases d <;> simp [flagPole, capFlag, HFree6812.infCap] <;> omega
   · fin_cases d <;> simp [flagPole, capFlag, HFree6812.infCap, h0]
 
-/-- The H-free first-cut flag of direction `d`. -/
 def hfreeFlagDir (d : Fin 3) (r v z : ℕ) (C0 : FlagDegree) : FlagDegree :=
   (w+1) • cuspFlag d r v z + 3 • C0
 
@@ -76,9 +53,6 @@ section Slice
 local notation "w" => RCN326.w
 variable {K E : Type} [Field K] [Field E] [IsAlgClosed E]
 
-/-- **The H-free per-slice pole budget with a cap at infinity (hypothesis).**  As
-`HFreeSliceBudget`, with `(w+1) · flagPole Cap` subtracted at every place; `Cap = 0` is
-`HFreeSliceBudget`. -/
 structure HFreeSliceBudgetCap (phi : Polynomial K →+* E) (F : MvPolynomial (Fin 4) K)
     (C : Ideal (MvPolynomial (Fin 3) E)) [C.IsPrime] (C0 Cap : FlagDegree) : Prop where
   pole_le : ∀ W : Finset (Place E (CoordinateField E C)),
@@ -92,7 +66,6 @@ structure HFreeSliceBudgetCap (phi : Polynomial K →+* E) (F : MvPolynomial (Fi
         flagPole nu.val (coordinate E C) Cap) +
       3*flagPole nu.val (coordinate E C) C0)
 
-/-- `hfree_source_pole_mass` per direction: the X-flag is `hfreeFlagDir d r v z C0`. -/
 theorem hfree_source_pole_mass_dir
     (phi : Polynomial K →+* E) (F : MvPolynomial (Fin 4) K)
     (C : Ideal (MvPolynomial (Fin 3) E)) [C.IsPrime]
@@ -145,7 +118,7 @@ theorem hfree_source_pole_mass_dir
     exact (SecondJetComponentRoots.evaluation_zero_iff C _).mp hz
   let Pl := RCN026.placesFor E L H hHne
   set W' := W ∪ Pl with hW'
-  -- the moving mass on `W'`, exactly as in `actual_first_source_pole_mass`
+
   have hdeg := SecondJetComponentRoots.degree_retained phi C P hlead
   have hroot := SecondJetComponentRoots.roots_retained phi C P F s k hS
     hF hH hlead hdiv h2 hfact
@@ -170,7 +143,7 @@ theorem hfree_source_pole_mass_dir
     intro nu _
     simp only [theta, RCN204.flagPole_unitAll, RCN204.flagPole_unitYZ]
     rfl
-  -- zeros of `H` are bounded by its poles, hence by its flag
+
   have hHF := (BoundaryTailAlgebra.boundary_surfaceMap_flags phi F r v z (by omega) (by omega)
     hR hYR hAll).1
   have hpoleH (nu : Place E L) :
@@ -203,7 +176,7 @@ theorem hfree_source_pole_mass_dir
       _ ≤ ∑ nu ∈ Pl, flagPole nu.val (coordinate E C) Hf := Finset.sum_le_sum (fun nu _ => hpoleH nu)
       _ ≤ _ := Finset.sum_le_sum_of_subset_of_nonneg Finset.subset_union_right
           (fun nu _ _ => RCN204.flagPole_nonneg nu.val (coordinate E C) Hf)
-  -- `2•flag(H) = cusp + cap`, and the cap is dominated by `infCap d`
+
   have hcusp : 2 * (∑ nu ∈ W', flagPole nu.val (coordinate E C) Hf) ≤
       (∑ nu ∈ W', flagPole nu.val (coordinate E C) (cuspFlag d r v z)) +
         ∑ nu ∈ W', flagPole nu.val (coordinate E C) (HFree6812.infCap d) := by
@@ -260,7 +233,6 @@ local notation "Ω" => GenericField K
 local notation "PE" => MvPolynomial (Fin 3) E
 local notation "φE" => RingHom.comp (algebraMap (GenericField K) E) (polynomialEmbedding K)
 
-/-- `first_cut_on_prime_slice_hfree` per direction. -/
 theorem first_cut_on_prime_slice_hfree_dir [Fintype T] [Nonempty T]
     (S : Stage K I Gamma x p flag errorCap stageSupport)
     (hproper : ¬ S.G ∣ globalTailCut (polynomialEmbedding K) S.F (w+1))
@@ -308,15 +280,12 @@ theorem first_cut_on_prime_slice_hfree_dir [Fintype T] [Nonempty T]
 variable [Algebra (RatFunc (GenericField K)) E]
   [IsScalarTower (GenericField K) (RatFunc (GenericField K)) E]
 
-/-- The H-free hypothesis for one slice direction `ell` of direction index `d`: every prime slice
-component `D ∋ F, T-ell` with `H ∉ D` carries an `HFreeSliceBudgetCap` with cap `infCap d`. -/
 def HFreeChannelDir (F : MvPolynomial (Fin 4) K) (ell : MvPolynomial (Fin 3) Ω)
     (C0 : FlagDegree) (d : Fin 3) : Prop :=
   ∀ (D : Ideal PE) [D.IsPrime], SeparableLiteralCoordinate D →
     surfaceMap φE F ∈ D → GenericSlicePoints6807.sliceEquation (E := E) ell ∈ D →
     surfaceMap φE (polyH K F) ∉ D → HFreeSliceBudgetCap φE F D C0 (HFree6812.infCap d)
 
-/-- The per-direction H-free slice charge `3(k+1) | (k+1)•hfreeFlagDir + 4(w+1)•V`. -/
 theorem hfree_slice_charge_dir
     (S : Stage K I Gamma x p flag errorCap stageSupport)
     (hproper : ¬ S.G ∣ globalTailCut (polynomialEmbedding K) S.F (w+1))
@@ -359,8 +328,6 @@ variable {Gamma : Finset K} {x : I → K} {p : ℕ} {flag : FlagDegree}
   [CharP K p] [CharP (GenericField K) p] {errorCap : ℕ}
 local notation "Ω" => GenericField K
 
-/-- The H-free hypothesis for a retained stage, per direction: `HFreeChannelDir` (with
-`C0 = unitAll`) in each slice direction `j`, with cap `infCap j`. -/
 def HFreeStageDir {t y r : ℕ}
     (S : ResidualStage (polynomialEmbedding K) Gamma x p errorCap flag w (cellSupport t y r)) :
     Prop :=
@@ -368,13 +335,9 @@ def HFreeStageDir {t y r : ℕ}
     HFreeChannelDir (E := AlgebraicClosure (RatFunc Ω)) S.F
       (channel S hproper hflagChar hmixedRed j) unitAllFlag j
 
-/-- H-free first-cut flag of the cell in direction `j`: `(w+1)•cuspFlag + 3•unitAll`. -/
 def hfreeFirstDir (t y r : ℕ) (j : Fin 3) : FlagDegree :=
   hfreeFlagDir j r (y-r) (t-y) unitAllFlag
 
-/-- The retained-stage numerator with the per-direction first cut:
-direction `j` is charged `(scale/3)·normal_j·mix(f,first_j,e_j) + 4(w+1)(scale/3d_j)·normal_j·
-mix(f,e_j,V_j)`, plus the unchanged moving term. -/
 def numeratorDir {F : MvPolynomial (Fin 4) K} (source : Fin 3 → Source F)
     (scale t y r : ℕ) (flag : FlagDegree) : ℕ :=
   ∑ j : Fin 3, (scale/3*weight (cellNormal t y r) j*
@@ -399,49 +362,6 @@ theorem sum_numeratorDir_le {J : Type*} [Fintype J] {F : MvPolynomial (Fin 4) K}
   refine Finset.sum_le_sum fun j _ => ?_
   rw [Finset.sum_add_distrib, ← Finset.mul_sum, ← Finset.mul_sum]
   exact Nat.add_le_add (Nat.mul_le_mul_left _ (hfirst j)) (Nat.mul_le_mul_left _ (hsource j))
-
-/-- `flagMixed` is monotone in its second argument. -/
-theorem flagMixed_mono_mid (f q q' g : FlagDegree) (hz : q.zOnly ≤ q'.zOnly) (hy : q.yz ≤ q'.yz)
-    (ha : q.all ≤ q'.all) : flagMixed f q g ≤ flagMixed f q' g := by
-  unfold flagMixed
-  gcongr
-
-/-- The per-direction first flag is below the shipped one, so `numeratorDir ≤ numerator`. -/
-theorem hfreeFirstDir_le (t y r : ℕ) (hr : 3 ≤ r) (hb : r+2 ≤ y) (j : Fin 3) :
-    (hfreeFirstDir t y r j).zOnly ≤ (hfreeFirst t y r).zOnly ∧
-      (hfreeFirstDir t y r j).yz ≤ (hfreeFirst t y r).yz ∧
-      (hfreeFirstDir t y r j).all ≤ (hfreeFirst t y r).all := by
-  have h := cusp_add_cap j r (y-r) (t-y) hr (by omega)
-  rw [flag_eq_iff] at h
-  simp only [add_zOnly, add_yz, add_all, nsmul_zOnly, nsmul_yz, nsmul_all] at h
-  obtain ⟨h1, h2, h3⟩ := h
-  simp only [hfreeFirstDir, hfreeFlagDir, hfreeFirst, HFreeFirstSlice6812.hfreeFlag, add_zOnly,
-    add_yz, add_all, nsmul_zOnly, nsmul_yz, nsmul_all]
-  refine ⟨?_, ?_, ?_⟩ <;> nlinarith
-
-theorem numeratorDir_le_numerator {F : MvPolynomial (Fin 4) K} (source : Fin 3 → Source F)
-    (scale t y r : ℕ) (hr : 3 ≤ r) (hb : r+2 ≤ y) (flag : FlagDegree) :
-    numeratorDir source scale t y r flag ≤
-      MovingFiberRetainedStage6811.numerator source scale t y r flag := by
-  have hmixed : flagMixed flag (hfreeFirst t y r) (cellNormal t y r) =
-      ∑ j : Fin 3, weight (cellNormal t y r) j *
-        flagMixed flag (hfreeFirst t y r) (MovingFiberThreeSources6811.direction j) := by
-    simp only [Fin.sum_univ_three, weight, MovingFiberThreeSources6811.direction,
-      Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_two, Matrix.vecHead,
-      Matrix.vecTail, Function.comp_apply, Matrix.cons_val_succ, flagMixed, unitZFlag,
-      unitYZFlag, unitAllFlag]
-    ring
-  unfold numeratorDir MovingFiberRetainedStage6811.numerator
-  rw [hmixed, Finset.mul_sum, ← Finset.sum_add_distrib]
-  refine Finset.sum_le_sum fun j _ => Nat.add_le_add_right ?_ _
-  obtain ⟨h1, h2, h3⟩ := hfreeFirstDir_le t y r hr hb j
-  have hm := flagMixed_mono_mid flag _ _ (MovingFiberThreeSources6811.direction j) h1 h2 h3
-  calc scale/3*weight (cellNormal t y r) j*
-        flagMixed flag (hfreeFirstDir t y r j) (MovingFiberThreeSources6811.direction j)
-      ≤ scale/3*weight (cellNormal t y r) j*
-        flagMixed flag (hfreeFirst t y r) (MovingFiberThreeSources6811.direction j) :=
-        Nat.mul_le_mul_left _ hm
-    _ = _ := by ring
 
 theorem retained_stage_bound_dir
     (t y r scale : ℕ) (hr3 : 3 ≤ r) (hb : r+2 ≤ y) (hyt : y ≤ t)
@@ -686,7 +606,7 @@ private theorem natCast_ne_zero_K {n : ℕ} (h0 : 0 < n) (hn : n < 2130706433) :
   exact absurd (Nat.le_of_dvd h0 ((CharP.cast_eq_zero_iff K 2130706433 n).1 h)) (by omega)
 
 omit [CharP (GenericField K) 2130706433] in
-/-- One slice direction: `hfree_slice_budget_dir` fed by the two gaps. -/
+
 private theorem channel_budget_dir {E : Type} [Field E] [IsAlgClosed E]
     [Algebra (GenericField K) E] [Algebra (RatFunc (GenericField K)) E]
     [IsScalarTower (GenericField K) (RatFunc (GenericField K)) E]
@@ -708,8 +628,6 @@ private theorem channel_budget_dir {E : Type} [Field E] [IsAlgClosed E]
     (hchar_gap F D sep hFD hHD c i hci hslice N hN hN9)
     (hdefer_gap F D hHD c i hci q hq hq1 hslice N hN hNK)⟩
 
-/-- The per-direction H-free stage hypothesis, from `hfree_slice_budget_dir`, `hchar_gap` and
-`hdefer_gap` (the same inputs as `hfree_stage_of_gaps`). -/
 theorem hfree_stage_dir_of_gaps {t y r : ℕ}
     (S : RCN159.ResidualStage (polynomialEmbedding K) Gamma x 2130706433 errorCap flag RCN326.w
       (cellSupport t y r)) (htot : (cellSupport t y r).total ≤ 9678) : HFreeStageDir S := by

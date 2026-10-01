@@ -110,38 +110,12 @@ import Mathlib.RingTheory.ZMod
 import Mathlib.Topology.JacobsonSpace
 import Mathlib.Topology.LocallyConstant.Basic
 import ProximityPrize.Benchmark.TargetLower
-
-/-! Compact lower-bound proof; prior work is credited in the enclosed components. -/
-
--- Mathlib's linters run interpreted after every declaration; they only warn.
 set_option linter.all false
 
 section Compact_KernelEval
-/-
-Optional submission helper. Not part of the challenge; copy it into your
-submission root and edit it freely.
--/
-
--- Only Mathlib: this file is identical for the lower and upper tracks.
-/-!
-# Kernel-cheap evaluation helpers
-
-`by decide` hands the goal to the **kernel**, which discharges it by unfolding
-definitions. It never runs `simp`. So no closed-form lemma -- yours, ours, or
-Mathlib's -- can make a `decide` cheaper; only the definition it unfolds can.
-
-`Finset.range n` is a `Multiset`, hence a `Quot` of a `List`, and `Finset.sum` is
-`Multiset.foldr`, so every summand costs the kernel a `Quot.lift`/`List.rec`
-traversal where a `Nat` recursion costs one addition. That is what `sumRange`
-below avoids, and what the closed forms remove entirely.
--/
 
 namespace KernelEval
 
-/-- `∑ i ∈ Finset.range n, f i`, by structural recursion on `ℕ`.
-
-Write this where you would write `∑ i ∈ Finset.range n, f i` inside a definition
-that a `decide` has to evaluate. -/
 def sumRange (f : ℕ → ℕ) : ℕ → ℕ
   | 0 => 0
   | n + 1 => sumRange f n + f n
@@ -151,23 +125,12 @@ def sumRange (f : ℕ → ℕ) : ℕ → ℕ
 @[simp] theorem sumRange_succ (f : ℕ → ℕ) (n : ℕ) :
     sumRange f (n + 1) = sumRange f n + f n := rfl
 
-/-- Stated in this direction on purpose: it rewrites *your* definition into the
-`Finset` form, so every existing Mathlib lemma about `Finset.sum` still applies.
-The kernel speedup comes from the definition; this lemma preserves your proofs. -/
 theorem sumRange_eq (f : ℕ → ℕ) (n : ℕ) :
     sumRange f n = ∑ i ∈ Finset.range n, f i := by
   induction n with
   | zero => simp [sumRange]
   | succ k ih => rw [sumRange_succ, ih, Finset.sum_range_succ]
 
-/-! ### Closed forms
-
-`sumRange` is cheaper per element than `Finset.sum`, but still linear in the
-number of elements. When the body is affine the sum has a closed form and the
-cost drops to O(1), which is a much larger difference than the one above. -/
-
-/-- Division-free form of `∑_{r=0}^{m} (a - r)`: holds in `ℕ` with no division
-and no side condition beyond `m ≤ a`. -/
 theorem sum_range_sub_add (a m : ℕ) (h : m ≤ a) :
     (∑ r ∈ Finset.range (m + 1), (a - r)) + (∑ r ∈ Finset.range (m + 1), r)
       = (m + 1) * a := by
@@ -178,8 +141,6 @@ theorem sum_range_sub_add (a m : ℕ) (h : m ≤ a) :
     omega
   rw [Finset.sum_congr rfl hpt, Finset.sum_const, Finset.card_range, Nat.nsmul_eq_mul]
 
-/-- Closed form of `∑_{r=0}^{m} (a - r)`. `m ≤ a` is exactly the condition under
-which the truncated subtraction is honest. -/
 theorem sum_range_sub (a m : ℕ) (h : m ≤ a) :
     ∑ r ∈ Finset.range (m + 1), (a - r) = (m + 1) * a - (m + 1) * m / 2 := by
   have hadd := sum_range_sub_add a m h
@@ -187,55 +148,12 @@ theorem sum_range_sub (a m : ℕ) (h : m ≤ a) :
     Finset.sum_range_id_mul_two (m + 1)
   omega
 
-/-! ### Nested sums: close the inner one
-
-A nested `Finset.range` sum is the worst case, because the inner traversal runs
-once per outer element. You do not need a closed form for the whole thing to get
-most of the win -- closing only the inner sum takes the work from `O(outer *
-inner)` to `O(outer)`, and where the inner body is affine that is just
-`sum_range_sub` applied pointwise.
-
-Given
-
-```lean
-def f (T YS S : ℕ) : ℕ :=
-  ∑ y ∈ Finset.range (min T YS + 1),
-    ∑ r ∈ Finset.range (min S (min (T-y) (YS-y)) + 1), (T+1-y-r)
-```
-
-define it with the inner sum already closed, and recover the original statement
-as a lemma so existing proofs still apply:
-
-```lean
-def f (T YS S : ℕ) : ℕ :=
-  sumRange (fun y =>
-    let M := min S (min (T-y) (YS-y))
-    (M+1) * (T+1-y) - (M+1) * M / 2) (min T YS + 1)
-
-theorem f_eq (T YS S : ℕ) :
-    f T YS S = ∑ y ∈ Finset.range (min T YS + 1),
-      ∑ r ∈ Finset.range (min S (min (T-y) (YS-y)) + 1), (T+1-y-r) := by
-  rw [f, sumRange_eq]
-  refine Finset.sum_congr rfl (fun y _ => ?_)
-  have h : min S (min (T-y) (YS-y)) ≤ T+1-y := by
-    have : min S (min (T-y) (YS-y)) ≤ T - y :=
-      le_trans (Nat.min_le_right _ _) (Nat.min_le_left _ _)
-    omega
-  exact (sum_range_sub (T+1-y) _ h).symm
-```
-
-Anything that previously unfolded `f` should be pointed at `f_eq` instead --
-typically one `simp` argument or one `rw` per site.
-
-Closing the outer sum too would need a case split on where `min` changes branch;
-that is a much larger proof for a much smaller further gain. -/
-
 end KernelEval
 
 end Compact_KernelEval
 
 section Compact_PackedLegacyCore0
-/-! Packed from ProximityPrize.SubmissionLower.I5. -/
+
 section PackedLegacy_I5
 namespace ProximityPrize.SubmissionLower.RCN072
 noncomputable section
@@ -375,14 +293,12 @@ end
 end ProximityPrize.SubmissionLower.RCN072
 end PackedLegacy_I5
 
-/-! Packed from ProximityPrize.SubmissionLower.E6. -/
 section PackedLegacy_E6
 namespace ProximityPrize.SubmissionLower.RCN264
 open RCN072
 noncomputable section
 variable (K:Type) [Field K]
-/-- Irreducible, so that the kernel never unfolds it while comparing components of
-different cuts (`regularComponentEquiv`): that failed unfolding cost ~20 s per check. -/
+
 irreducible_def regularComponents (G T H:MvPolynomial (Fin 3) K):
    Finset (Ideal (MvPolynomial (Fin 3) K)):=by
  classical
@@ -491,7 +407,6 @@ end
 end ProximityPrize.SubmissionLower.RCN264
 end PackedLegacy_E6
 
-/-! Packed from ProximityPrize.SubmissionLower.CM. -/
 section PackedLegacy_CM
 namespace ProximityPrize.SubmissionLower.RCN354
 noncomputable section
@@ -574,78 +489,17 @@ end
 end ProximityPrize.SubmissionLower.RCN354
 end PackedLegacy_CM
 
-/-! Packed from ProximityPrize.SubmissionLower.A. -/
 section PackedLegacy_A
 
 end PackedLegacy_A
 
-/- Library component CW is loaded from Mathlib.RingTheory.Finiteness.Quotient. -/
-
-/- Library component S0 is loaded from Mathlib.Algebra.CharP.Quotient. -/
-
-/- Library component HY is loaded from Mathlib.LinearAlgebra.FreeModule.Determinant. -/
-
-/- Library component HN is loaded from Mathlib.Data.Int.Associated. -/
-
-/- Library component HO is loaded from Mathlib.Data.Int.NatAbs. -/
-
-/- Library component IA is loaded from Mathlib.RingTheory.Int.Basic. -/
-
-/- Library component V8 is loaded from Mathlib.RingTheory.ZMod. -/
-
-/- Library component HQ is loaded from Mathlib.Data.ZMod.QuotientRing. -/
-
-/- Library component S2 is loaded from Mathlib.LinearAlgebra.Quotient.Pi. -/
-
-/- Library component CQ is loaded from Mathlib.LinearAlgebra.FreeModule.Finite.Quotient. -/
-
-/- Library component HZ is loaded from Mathlib.LinearAlgebra.FreeModule.Finite.CardQuotient. -/
-
-/- Library component U2 is loaded from Mathlib.RingTheory.Ideal.Basis. -/
-
-/- Library component F4 is loaded from Mathlib.RingTheory.Norm.Basic. -/
-
-/- Library component V1 is loaded from Mathlib.RingTheory.UniqueFactorizationDomain.Multiplicative. -/
-
-/- Library component CX is loaded from Mathlib.RingTheory.Ideal.Norm.AbsNorm. -/
-
-/- Library component CS is loaded from Mathlib.NumberTheory.RamificationInertia.Inertia. -/
-
-/-! Packed from ProximityPrize.SubmissionLower.CV. -/
 section PackedLegacy_CV
-/- Definitions supplied by the imported Mathlib boundary. -/
+
 end PackedLegacy_CV
 
-/- Library component T7 is loaded from Mathlib.RingTheory.Finiteness.NilpotentKer. -/
-
-/- Library component IF is loaded from Mathlib.RingTheory.Jacobson.Artinian. -/
-
-/- Library component IZ is loaded from Mathlib.RingTheory.Spectrum.Prime.TensorProduct. -/
-
-/- Library component AT is loaded from Mathlib.RingTheory.LocalRing.ResidueField.Fiber. -/
-
-/- Library component HX is loaded from Mathlib.GroupTheory.Submonoid.Inverses. -/
-
-/- Library component F2 is loaded from Mathlib.RingTheory.Localization.InvSubmonoid. -/
-
-/- Library component W0 is loaded from Mathlib.Topology.JacobsonSpace. -/
-
-/- Library component IY is loaded from Mathlib.RingTheory.Spectrum.Prime.Jacobson. -/
-
-/- Library component CR is loaded from Mathlib.LinearAlgebra.TensorProduct.Prod. -/
-
-/- Library component U9 is loaded from Mathlib.RingTheory.TensorProduct.Pi. -/
-
-/- Library component F5 is loaded from Mathlib.RingTheory.QuasiFinite.Basic. -/
-
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLegacyBarrier01 : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/- Library component F7 is loaded from Mathlib.RingTheory.RamificationInertia.Inertia. -/
-
-/-! Packed from ProximityPrize.SubmissionLower.JA. -/
 section PackedLegacy_JA
 namespace ProximityPrize.SubmissionLower.RCN373
 open scoped Classical
@@ -693,13 +547,6 @@ end
 end ProximityPrize.SubmissionLower.RCN373
 end PackedLegacy_JA
 
-/- Library component HV is loaded from Mathlib.FieldTheory.RatFunc.Degree. -/
-
-/- Library component AP is loaded from Mathlib.FieldTheory.RatFunc.Valuation. -/
-
-/- Library component G1 is loaded from Mathlib.RingTheory.Valuation.Discrete.IsDiscreteValuationRing. -/
-
-/-! Packed from ProximityPrize.SubmissionLower.CL. -/
 section PackedLegacy_CL
 namespace ProximityPrize.SubmissionLower.RCN353
 open scoped Classical
@@ -781,7 +628,6 @@ end
 end ProximityPrize.SubmissionLower.RCN353
 end PackedLegacy_CL
 
-/-! Packed from ProximityPrize.SubmissionLower.R8. -/
 section PackedLegacy_R8
 namespace ProximityPrize.SubmissionLower.RCN352
 open scoped Classical WithZero
@@ -904,9 +750,6 @@ end
 end ProximityPrize.SubmissionLower.RCN352
 end PackedLegacy_R8
 
-/- Library component V6 is loaded from Mathlib.RingTheory.Valuation.Integral. -/
-
-/-! Packed from ProximityPrize.SubmissionLower.W5. -/
 section PackedLegacy_W5
 namespace ProximityPrize.SubmissionLower.RCN359
 open scoped Classical nonZeroDivisors WithZero
@@ -1057,79 +900,12 @@ end
 end ProximityPrize.SubmissionLower.RCN359
 end PackedLegacy_W5
 
-/- Library component F8 is loaded from Mathlib.RingTheory.RingHom.Finite. -/
-
-/- Library component IR is loaded from Mathlib.RingTheory.Norm.Transitivity. -/
-
-/- Library component T1 is loaded from Mathlib.RingTheory.Discriminant. -/
-
-/- Library component IM is loaded from Mathlib.RingTheory.Localization.NormTrace. -/
-
-/- Library component IB is loaded from Mathlib.RingTheory.IntegralClosure.IntegralRestrict. -/
-
-/- Library component IC is loaded from Mathlib.RingTheory.Invariant.Galois. -/
-
-/- Library component U5 is loaded from Mathlib.RingTheory.Ideal.IsPrincipal. -/
-
-/- Library component T8 is loaded from Mathlib.RingTheory.Flat.TorsionFree. -/
-
-/- Library component HD is loaded from Mathlib.Algebra.GroupWithZero.Torsion. -/
-
-/- Library component AR is loaded from Mathlib.NumberTheory.RamificationInertia.Ramification. -/
-
-/- Library component AS is loaded from Mathlib.RingTheory.LocalRing.Length. -/
-
-/- Library component IJ is loaded from Mathlib.RingTheory.LocalRing.ResidueField.Instances. -/
-
-/- Library component V2 is loaded from Mathlib.RingTheory.Unramified.Finite. -/
-
-/- Library component V4 is loaded from Mathlib.RingTheory.Unramified.Locus. -/
-
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLegacyBarrier02 : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/- Library component G0 is loaded from Mathlib.RingTheory.Unramified.Field. -/
-
-/- Library component V3 is loaded from Mathlib.RingTheory.Unramified.LocalRing. -/
-
-/- Library component IU is loaded from Mathlib.RingTheory.RamificationInertia.Ramification. -/
-
-/- Library component II is loaded from Mathlib.RingTheory.LocalProperties.Projective. -/
-
-/- Library component IL is loaded from Mathlib.RingTheory.Localization.Free. -/
-
-/- Library component W1 is loaded from Mathlib.Topology.LocallyConstant.Basic. -/
-
-/- Library component U8 is loaded from Mathlib.RingTheory.TensorProduct.IsBaseChangePi. -/
-
-/- Library component IX is loaded from Mathlib.RingTheory.Spectrum.Prime.FreeLocus. -/
-
-/- Library component F6 is loaded from Mathlib.RingTheory.RamificationInertia.Basic. -/
-
-/- Library component S4 is loaded from Mathlib.NumberTheory.RamificationInertia.Galois. -/
-
-/- Library component V0 is loaded from Mathlib.RingTheory.UniqueFactorizationDomain.Finsupp. -/
-
-/- Library component S8 is loaded from Mathlib.RingTheory.DedekindDomain.Factorization. -/
-
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLegacyBarrier03 : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/- Library component T0 is loaded from Mathlib.RingTheory.DedekindDomain.PID. -/
-
-/- Library component S9 is loaded from Mathlib.RingTheory.DedekindDomain.Instances. -/
-
-/- Library component U4 is loaded from Mathlib.RingTheory.Ideal.Int. -/
-
-/- Library component IS is loaded from Mathlib.RingTheory.NormalClosure. -/
-
-/- Library component U6 is loaded from Mathlib.RingTheory.Ideal.Norm.RelNorm. -/
-
-/-! Packed from ProximityPrize.SubmissionLower.W9. -/
 section PackedLegacy_W9
 namespace ProximityPrize.SubmissionLower.RCN367
 noncomputable section
@@ -1220,7 +996,6 @@ end
 end ProximityPrize.SubmissionLower.RCN367
 end PackedLegacy_W9
 
-/-! Packed from ProximityPrize.SubmissionLower.G2. -/
 section PackedLegacy_G2
 namespace ProximityPrize.SubmissionLower.RCN356
 open scoped BigOperators nonZeroDivisors
@@ -1379,7 +1154,6 @@ end
 end ProximityPrize.SubmissionLower.RCN356
 end PackedLegacy_G2
 
-/-! Packed from ProximityPrize.SubmissionLower.W3. -/
 section PackedLegacy_W3
 namespace ProximityPrize.SubmissionLower.RCN357
 open scoped BigOperators Classical
@@ -1474,7 +1248,6 @@ end
 end ProximityPrize.SubmissionLower.RCN357
 end PackedLegacy_W3
 
-/-! Packed from ProximityPrize.SubmissionLower.W8. -/
 section PackedLegacy_W8
 namespace ProximityPrize.SubmissionLower.RCN366
 open scoped BigOperators Classical
@@ -1622,13 +1395,6 @@ end
 end ProximityPrize.SubmissionLower.RCN366
 end PackedLegacy_W8
 
-/- Library component HW is loaded from Mathlib.FieldTheory.RatFunc.IntermediateField. -/
-
-/- Library component S7 is loaded from Mathlib.RingTheory.Adjoin.Polynomial.Bivariate. -/
-
-/- Library component AQ is loaded from Mathlib.NumberTheory.FunctionField. -/
-
-/-! Packed from ProximityPrize.SubmissionLower.R5. -/
 section PackedLegacy_R5
 namespace ProximityPrize.SubmissionLower.RCN349
 open scoped BigOperators Classical nonZeroDivisors
@@ -1844,15 +1610,6 @@ end
 end ProximityPrize.SubmissionLower.RCN349
 end PackedLegacy_R5
 
-/- Library component HP is loaded from Mathlib.Data.Real.Embedding. -/
-
-/- Library component V7 is loaded from Mathlib.RingTheory.Valuation.RankOne. -/
-
-/- Library component V5 is loaded from Mathlib.RingTheory.Valuation.Discrete.RankOne. -/
-
-/- Library component S5 is loaded from Mathlib.NumberTheory.RamificationInertia.Valuation. -/
-
-/-! Packed from ProximityPrize.SubmissionLower.R1. -/
 section PackedLegacy_R1
 namespace ProximityPrize.SubmissionLower.RCN345
 open scoped Classical BigOperators WithZero
@@ -2083,7 +1840,6 @@ end
 end ProximityPrize.SubmissionLower.RCN345
 end PackedLegacy_R1
 
-/-! Packed from ProximityPrize.SubmissionLower.W4. -/
 section PackedLegacy_W4
 namespace ProximityPrize.SubmissionLower.RCN358
 open scoped Classical BigOperators WithZero
@@ -2197,7 +1953,6 @@ end
 end ProximityPrize.SubmissionLower.RCN358
 end PackedLegacy_W4
 
-/-! Packed from ProximityPrize.SubmissionLower.Z7. -/
 section PackedLegacy_Z7
 namespace ProximityPrize.SubmissionLower.RCN187
 open scoped BigOperators
@@ -2329,13 +2084,8 @@ end ProximityPrize.SubmissionLower.RCN187
 end PackedLegacy_Z7
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLegacyBarrier04 : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/- Library component S3 is loaded from Mathlib.NumberTheory.RamificationInertia.Basic. -/
-
-/-! Packed from ProximityPrize.SubmissionLower.R2. -/
 section PackedLegacy_R2
 namespace ProximityPrize.SubmissionLower.RCN346
 open scoped Classical BigOperators WithZero
@@ -2481,7 +2231,6 @@ end
 end ProximityPrize.SubmissionLower.RCN346
 end PackedLegacy_R2
 
-/-! Packed from ProximityPrize.SubmissionLower.DG. -/
 section PackedLegacy_DG
 namespace ProximityPrize.SubmissionLower.RCN026
 open scoped Classical BigOperators WithZero
@@ -2703,7 +2452,6 @@ end
 end ProximityPrize.SubmissionLower.RCN026
 end PackedLegacy_DG
 
-/-! Packed from ProximityPrize.SubmissionLower.H4. -/
 section PackedLegacy_H4
 namespace ProximityPrize.SubmissionLower.RCN017
 open IsDedekindDomain
@@ -2783,7 +2531,6 @@ end
 end ProximityPrize.SubmissionLower.RCN017
 end PackedLegacy_H4
 
-/-! Packed from ProximityPrize.SubmissionLower.H3. -/
 section PackedLegacy_H3
 namespace ProximityPrize.SubmissionLower.RCN016
 open IsDedekindDomain
@@ -2902,7 +2649,6 @@ end
 end ProximityPrize.SubmissionLower.RCN016
 end PackedLegacy_H3
 
-/-! Packed from ProximityPrize.SubmissionLower.H2. -/
 section PackedLegacy_H2
 namespace ProximityPrize.SubmissionLower.RCN015
 open IsDedekindDomain RCN017 RCN016
@@ -3013,7 +2759,6 @@ end
 end ProximityPrize.SubmissionLower.RCN015
 end PackedLegacy_H2
 
-/-! Packed from ProximityPrize.SubmissionLower.G8. -/
 section PackedLegacy_G8
 namespace ProximityPrize.SubmissionLower.RCN000
 open IsDedekindDomain
@@ -3056,7 +2801,6 @@ end
 end ProximityPrize.SubmissionLower.RCN000
 end PackedLegacy_G8
 
-/-! Packed from ProximityPrize.SubmissionLower.R0. -/
 section PackedLegacy_R0
 namespace ProximityPrize.SubmissionLower.RCN344
 open scoped Classical BigOperators WithZero
@@ -3216,7 +2960,6 @@ end
 end ProximityPrize.SubmissionLower.RCN344
 end PackedLegacy_R0
 
-/-! Packed from ProximityPrize.SubmissionLower.L. -/
 section PackedLegacy_L
 namespace ProximityPrize.SubmissionLower.RCN002
 noncomputable section
@@ -3313,7 +3056,6 @@ end
 end ProximityPrize.SubmissionLower.RCN002
 end PackedLegacy_L
 
-/-! Packed from ProximityPrize.SubmissionLower.Z. -/
 section PackedLegacy_Z
 namespace ProximityPrize.SubmissionLower.RCN005
 open RCN002
@@ -3384,7 +3126,6 @@ end
 end ProximityPrize.SubmissionLower.RCN005
 end PackedLegacy_Z
 
-/-! Packed from ProximityPrize.SubmissionLower.H0. -/
 section PackedLegacy_H0
 namespace ProximityPrize.SubmissionLower.RCN006
 open RCN002 RCN005
@@ -3447,7 +3188,6 @@ end
 end ProximityPrize.SubmissionLower.RCN006
 end PackedLegacy_H0
 
-/-! Packed from ProximityPrize.SubmissionLower.M. -/
 section PackedLegacy_M
 namespace ProximityPrize.SubmissionLower.RCN007
 open scoped Classical BigOperators
@@ -3587,44 +3327,9 @@ end
 end ProximityPrize.SubmissionLower.RCN007
 end PackedLegacy_M
 
-/- Library component S6 is loaded from Mathlib.Order.GameAdd. -/
-
-/- Library component HK is loaded from Mathlib.Data.DFinsupp.WellFounded. -/
-
-/- Library component HM is loaded from Mathlib.Data.Finsupp.WellFounded. -/
-
-/- Library component CP is loaded from Mathlib.Data.Finsupp.MonomialOrder. -/
-
-/- Library component S1 is loaded from Mathlib.Algebra.DirectSum.Algebra. -/
-
-/- Library component HA is loaded from Mathlib.Algebra.DirectSum.Internal. -/
-
-/- Library component T9 is loaded from Mathlib.RingTheory.GradedAlgebra.Basic. -/
-
-/- Library component U1 is loaded from Mathlib.RingTheory.GradedAlgebra.Homogeneous.Submodule. -/
-
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLegacyBarrier05 : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/- Library component U0 is loaded from Mathlib.RingTheory.GradedAlgebra.Homogeneous.Ideal. -/
-
-/- Library component IP is loaded from Mathlib.RingTheory.MvPolynomial.WeightedHomogeneous. -/
-
-/- Library component F3 is loaded from Mathlib.RingTheory.MvPolynomial.Homogeneous. -/
-
-/- Library component IO is loaded from Mathlib.RingTheory.MvPolynomial.MonomialOrder. -/
-
-/- Library component HL is loaded from Mathlib.Data.Finsupp.MonomialOrder.DegLex. -/
-
-/- Library component IN is loaded from Mathlib.RingTheory.MvPolynomial.MonomialOrder.DegLex. -/
-
-/- Library component HH is loaded from Mathlib.Algebra.MvPolynomial.Division. -/
-
-/- Library component AO is loaded from Mathlib.Algebra.MvPolynomial.NoZeroDivisors. -/
-
-/-! Packed from ProximityPrize.SubmissionLower.FI. -/
 section PackedLegacy_FI
 namespace ProximityPrize.SubmissionLower.RCN224
 open RCN002
@@ -3682,7 +3387,6 @@ end
 end ProximityPrize.SubmissionLower.RCN224
 end PackedLegacy_FI
 
-/-! Packed from ProximityPrize.SubmissionLower.BM. -/
 section PackedLegacy_BM
 namespace ProximityPrize.SubmissionLower.RCN147
 noncomputable section
@@ -3745,7 +3449,6 @@ end
 end ProximityPrize.SubmissionLower.RCN147
 end PackedLegacy_BM
 
-/-! Packed from ProximityPrize.SubmissionLower.E. -/
 section PackedLegacy_E
 namespace ProximityPrize.SubmissionLower.RCN136
 noncomputable section
@@ -3848,13 +3551,6 @@ end
 end ProximityPrize.SubmissionLower.RCN136
 end PackedLegacy_E
 
-/- Library component HF is loaded from Mathlib.Algebra.Lie.NonUnitalNonAssocAlgebra. -/
-
-/- Library component IQ is loaded from Mathlib.RingTheory.Nilpotent.Exp. -/
-
-/- Library component HE is loaded from Mathlib.Algebra.Lie.Derivation.Basic. -/
-
-/-! Packed from ProximityPrize.SubmissionLower.R3. -/
 section PackedLegacy_R3
 namespace ProximityPrize.SubmissionLower.RCN347
 open Finset
@@ -4018,7 +3714,6 @@ end NormalizedCoefficients
 end ProximityPrize.SubmissionLower.RCN347
 end PackedLegacy_R3
 
-/-! Packed from ProximityPrize.SubmissionLower.R4. -/
 section PackedLegacy_R4
 namespace ProximityPrize.SubmissionLower.RCN348
 open RCN347
@@ -4179,7 +3874,7 @@ end PackedLegacy_R4
 end Compact_PackedLegacyCore0
 
 section Compact_PackedLegacyCore1
-/-! Packed from ProximityPrize.SubmissionLower.B5. -/
+
 section PackedLegacy_B5
 namespace ProximityPrize.SubmissionLower.RCN077
 open RCN347
@@ -4363,7 +4058,6 @@ end PolynomialVectorField
 end ProximityPrize.SubmissionLower.RCN077
 end PackedLegacy_B5
 
-/-! Packed from ProximityPrize.SubmissionLower.W. -/
 section PackedLegacy_W
 namespace ProximityPrize.SubmissionLower.RCN313
 open RCN077 RCN347
@@ -4861,7 +4555,6 @@ end
 end ProximityPrize.SubmissionLower.RCN313
 end PackedLegacy_W
 
-/-! Packed from ProximityPrize.SubmissionLower.O1. -/
 section PackedLegacy_O1
 namespace ProximityPrize.SubmissionLower.RCN269
 open RCN077
@@ -5025,7 +4718,6 @@ end Coordinates
 end ProximityPrize.SubmissionLower.RCN269
 end PackedLegacy_O1
 
-/-! Packed from ProximityPrize.SubmissionLower.E0. -/
 section PackedLegacy_E0
 namespace ProximityPrize.SubmissionLower.RCN233
 open RCN347 RCN348 RCN077 RCN269
@@ -5203,7 +4895,6 @@ end ActualRegularPoint
 end ProximityPrize.SubmissionLower.RCN233
 end PackedLegacy_E0
 
-/-! Packed from ProximityPrize.SubmissionLower.A4. -/
 section PackedLegacy_A4
 namespace ProximityPrize.SubmissionLower.RCN047
 open RCN077 RCN269 RCN233 RCN313 RCN347
@@ -5435,7 +5126,6 @@ end
 end ProximityPrize.SubmissionLower.RCN047
 end PackedLegacy_A4
 
-/-! Packed from ProximityPrize.SubmissionLower.N4. -/
 section PackedLegacy_N4
 namespace ProximityPrize.SubmissionLower.RCN256
 open scoped BigOperators Pointwise
@@ -5543,7 +5233,6 @@ end
 end ProximityPrize.SubmissionLower.RCN256
 end PackedLegacy_N4
 
-/-! Packed from ProximityPrize.SubmissionLower.Y2. -/
 section PackedLegacy_Y2
 namespace ProximityPrize.SubmissionLower.RCN051
 open Finset
@@ -5564,7 +5253,6 @@ def unitZ:DegreeVector:=⟨0,0,1⟩
 end ProximityPrize.SubmissionLower.RCN051
 end PackedLegacy_Y2
 
-/-! Packed from ProximityPrize.SubmissionLower.Q. -/
 section PackedLegacy_Q
 namespace ProximityPrize.SubmissionLower.RCN174
 open RCN256 ProximityPrize.Benchmark
@@ -5671,7 +5359,6 @@ end
 end ProximityPrize.SubmissionLower.RCN174
 end PackedLegacy_Q
 
-/-! Packed from ProximityPrize.SubmissionLower.DC. -/
 section PackedLegacy_DC
 namespace ProximityPrize.SubmissionLower
 namespace BCHKSSubstitutionVanish
@@ -5711,7 +5398,6 @@ end BCHKSSubstitutionVanish
 end ProximityPrize.SubmissionLower
 end PackedLegacy_DC
 
-/-! Packed from ProximityPrize.SubmissionLower.C6. -/
 section PackedLegacy_C6
 namespace ProximityPrize.SubmissionLower.RCN185
 open Polynomial
@@ -5748,7 +5434,6 @@ end GlobalVanishing
 end ProximityPrize.SubmissionLower.RCN185
 end PackedLegacy_C6
 
-/-! Packed from ProximityPrize.SubmissionLower.K. -/
 section PackedLegacy_K
 namespace ProximityPrize.SubmissionLower.RCN319
 open RCN256 RCN174 ProximityPrize.Benchmark
@@ -5932,7 +5617,6 @@ end
 end ProximityPrize.SubmissionLower.RCN319
 end PackedLegacy_K
 
-/-! Packed from ProximityPrize.SubmissionLower.BJ. -/
 section PackedLegacy_BJ
 namespace ProximityPrize.SubmissionLower.RCN139
 open RCN077 RCN269 RCN233 RCN347 RCN174 RCN319
@@ -6057,7 +5741,6 @@ end
 end ProximityPrize.SubmissionLower.RCN139
 end PackedLegacy_BJ
 
-/-! Packed from ProximityPrize.SubmissionLower.D9. -/
 section PackedLegacy_D9
 namespace ProximityPrize.SubmissionLower.RCN231
 open RCN077 RCN269 RCN233 RCN313 RCN047 RCN319 RCN347
@@ -6183,7 +5866,6 @@ end
 end ProximityPrize.SubmissionLower.RCN231
 end PackedLegacy_D9
 
-/-! Packed from ProximityPrize.SubmissionLower.T. -/
 section PackedLegacy_T
 namespace ProximityPrize.SubmissionLower.RCN229
 open RCN077 RCN269 RCN233 RCN313 RCN047 RCN231 RCN139 RCN319 RCN347
@@ -6317,11 +5999,8 @@ end ProximityPrize.SubmissionLower.RCN229
 end PackedLegacy_T
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLegacyBarrier07 : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.B0. -/
 section PackedLegacy_B0
 namespace ProximityPrize.SubmissionLower.RCN065
 open RCN002 RCN136 RCN224 RCN139 RCN233 RCN231 RCN229 RCN313 RCN047 RCN147 RCN319
@@ -6507,9 +6186,6 @@ end
 end ProximityPrize.SubmissionLower.RCN065
 end PackedLegacy_B0
 
-/- Library component HJ is loaded from Mathlib.Combinatorics.Enumerative.DoubleCounting. -/
-
-/-! Packed from ProximityPrize.SubmissionLower.BX. -/
 section PackedLegacy_BX
 namespace ProximityPrize.SubmissionLower.RCN173
 theorem enlarge_exempt_card_bound
@@ -6586,7 +6262,6 @@ end FiniteIncidence
 end ProximityPrize.SubmissionLower.RCN173
 end PackedLegacy_BX
 
-/-! Packed from ProximityPrize.SubmissionLower.J. -/
 section PackedLegacy_J
 namespace ProximityPrize.SubmissionLower.RCN238
 open scoped Classical BigOperators
@@ -6758,7 +6433,6 @@ end
 end ProximityPrize.SubmissionLower.RCN238
 end PackedLegacy_J
 
-/-! Packed from ProximityPrize.SubmissionLower.X2. -/
 section PackedLegacy_X2
 namespace ProximityPrize.SubmissionLower.RCN371
 open RCN002
@@ -6904,7 +6578,6 @@ end
 end ProximityPrize.SubmissionLower.RCN371
 end PackedLegacy_X2
 
-/-! Packed from ProximityPrize.SubmissionLower.AX. -/
 section PackedLegacy_AX
 namespace ProximityPrize.SubmissionLower.RCN011
 open RCN002 RCN005 RCN371
@@ -7059,7 +6732,6 @@ end
 end ProximityPrize.SubmissionLower.RCN011
 end PackedLegacy_AX
 
-/-! Packed from ProximityPrize.SubmissionLower.DA. -/
 section PackedLegacy_DA
 namespace ProximityPrize.SubmissionLower
 open Polynomial Polynomial.Bivariate
@@ -7104,7 +6776,6 @@ theorem irreducible_isCoprime_derivative_of_natDegree_lt_char
 end ProximityPrize.SubmissionLower
 end PackedLegacy_DA
 
-/-! Packed from ProximityPrize.SubmissionLower.X8. -/
 section PackedLegacy_X8
 namespace ProximityPrize.SubmissionLower
 open Polynomial Polynomial.Bivariate
@@ -7116,7 +6787,6 @@ theorem bivariate_resultant_natDegree_le (B H:F[X][Y]) (n m:ℕ):
 end ProximityPrize.SubmissionLower
 end PackedLegacy_X8
 
-/-! Packed from ProximityPrize.SubmissionLower.W2. -/
 section PackedLegacy_W2
 namespace ProximityPrize.SubmissionLower.RCN355
 open scoped BigOperators
@@ -7254,7 +6924,6 @@ end
 end ProximityPrize.SubmissionLower.RCN355
 end PackedLegacy_W2
 
-/-! Packed from ProximityPrize.SubmissionLower.G5. -/
 section PackedLegacy_G5
 namespace ProximityPrize.SubmissionLower.RCN363
 open scoped BigOperators
@@ -7437,7 +7106,6 @@ end
 end ProximityPrize.SubmissionLower.RCN363
 end PackedLegacy_G5
 
-/-! Packed from ProximityPrize.SubmissionLower.W6. -/
 section PackedLegacy_W6
 namespace ProximityPrize.SubmissionLower.RCN362
 noncomputable section
@@ -7492,9 +7160,6 @@ end
 end ProximityPrize.SubmissionLower.RCN362
 end PackedLegacy_W6
 
-/- Library component IT is loaded from Mathlib.RingTheory.Polynomial.ContentIdeal. -/
-
-/-! Packed from ProximityPrize.SubmissionLower.G3. -/
 section PackedLegacy_G3
 namespace ProximityPrize.SubmissionLower.RCN360
 noncomputable section
@@ -7581,7 +7246,6 @@ end
 end ProximityPrize.SubmissionLower.RCN360
 end PackedLegacy_G3
 
-/-! Packed from ProximityPrize.SubmissionLower.G6. -/
 section PackedLegacy_G6
 namespace ProximityPrize.SubmissionLower.RCN364
 noncomputable section
@@ -7689,7 +7353,6 @@ end
 end ProximityPrize.SubmissionLower.RCN364
 end PackedLegacy_G6
 
-/-! Packed from ProximityPrize.SubmissionLower.G4. -/
 section PackedLegacy_G4
 namespace ProximityPrize.SubmissionLower.RCN361
 open RCN360
@@ -7842,7 +7505,6 @@ end
 end ProximityPrize.SubmissionLower.RCN361
 end PackedLegacy_G4
 
-/-! Packed from ProximityPrize.SubmissionLower.W7. -/
 section PackedLegacy_W7
 namespace ProximityPrize.SubmissionLower.RCN365
 open RCN361
@@ -7915,11 +7577,9 @@ end
 end ProximityPrize.SubmissionLower.RCN365
 end PackedLegacy_W7
 
-/-! Packed from ProximityPrize.SubmissionLower.X4. -/
 section PackedLegacy_X4
 namespace ProximityPrize.SubmissionLower.RCN010
-open RCN002 RCN005
- RCN371 RCN011
+open RCN002 RCN005 RCN371 RCN011
 noncomputable section
 theorem order_cover (order:Fin 3 ≃ Fin 3) (l:Fin 3):
    l=order 0∨l=order 2∨l=order 1:=by
@@ -8041,7 +7701,6 @@ end
 end ProximityPrize.SubmissionLower.RCN010
 end PackedLegacy_X4
 
-/-! Packed from ProximityPrize.SubmissionLower.H1. -/
 section PackedLegacy_H1
 namespace ProximityPrize.SubmissionLower.RCN009
 open RCN371 RCN011
@@ -8175,7 +7834,6 @@ end
 end ProximityPrize.SubmissionLower.RCN009
 end PackedLegacy_H1
 
-/-! Packed from ProximityPrize.SubmissionLower.X5. -/
 section PackedLegacy_X5
 namespace ProximityPrize.SubmissionLower.RCN013
 open RCN002 RCN371 RCN011 RCN009
@@ -8338,12 +7996,9 @@ end
 end ProximityPrize.SubmissionLower.RCN013
 end PackedLegacy_X5
 
-/-! Packed from ProximityPrize.SubmissionLower.G9. -/
 section PackedLegacy_G9
 namespace ProximityPrize.SubmissionLower.RCN004
-open RCN002 RCN005
- RCN371 RCN011
- RCN009 RCN013 RCN010
+open RCN002 RCN005 RCN371 RCN011 RCN009 RCN013 RCN010
 noncomputable section
 variable (K:Type) [Field K]
 theorem rationalBaseAlgebra_congr (P:Ideal (Original K)) [P.IsPrime]
@@ -8495,12 +8150,9 @@ end
 end ProximityPrize.SubmissionLower.RCN004
 end PackedLegacy_G9
 
-/-! Packed from ProximityPrize.SubmissionLower.AV. -/
 section PackedLegacy_AV
 namespace ProximityPrize.SubmissionLower.RCN001
-open RCN002 RCN005
- RCN371 RCN007 RCN013
- RCN004
+open RCN002 RCN005 RCN371 RCN007 RCN013 RCN004
 noncomputable section
 variable (K:Type) [Field K]
 section Family
@@ -8567,7 +8219,6 @@ end
 end ProximityPrize.SubmissionLower.RCN001
 end PackedLegacy_AV
 
-/-! Packed from ProximityPrize.SubmissionLower.F. -/
 section PackedLegacy_F
 namespace ProximityPrize.SubmissionLower.RCN243
 open RCN002 RCN007 RCN004 RCN001 RCN013 RCN136 RCN231 RCN319 RCN238 RCN264
@@ -8724,11 +8375,8 @@ end ProximityPrize.SubmissionLower.RCN243
 end PackedLegacy_F
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLegacyBarrier08 : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.AI. -/
 section PackedLegacy_AI
 namespace ProximityPrize.SubmissionLower.RCN301
 open RCN174 RCN256
@@ -8740,14 +8388,12 @@ end Profile
 end ProximityPrize.SubmissionLower.RCN301
 end PackedLegacy_AI
 
-/-! Packed from ProximityPrize.SubmissionLower.H. -/
 section PackedLegacy_H
 namespace ProximityPrize.SubmissionLower.RCN213
 open scoped BigOperators
 end ProximityPrize.SubmissionLower.RCN213
 end PackedLegacy_H
 
-/-! Packed from ProximityPrize.SubmissionLower.R. -/
 section PackedLegacy_R
 namespace ProximityPrize.SubmissionLower.RCN223
 open Finset
@@ -8762,7 +8408,6 @@ structure DegreeVector where
 end ProximityPrize.SubmissionLower.RCN223
 end PackedLegacy_R
 
-/-! Packed from ProximityPrize.SubmissionLower.CB. -/
 section PackedLegacy_CB
 namespace ProximityPrize.SubmissionLower.RCN294
 open scoped BigOperators
@@ -8786,7 +8431,6 @@ theorem dot_sum_left {I:Type} [Fintype I]
 end ProximityPrize.SubmissionLower.RCN294
 end PackedLegacy_CB
 
-/-! Packed from ProximityPrize.SubmissionLower.AK. -/
 section PackedLegacy_AK
 namespace ProximityPrize.SubmissionLower.RCN318
 open scoped BigOperators
@@ -8878,7 +8522,6 @@ end TightParameters
 end ProximityPrize.SubmissionLower.RCN318
 end PackedLegacy_AK
 
-/-! Packed from ProximityPrize.SubmissionLower.N5. -/
 section PackedLegacy_N5
 namespace ProximityPrize.SubmissionLower.RCN260
 open scoped BigOperators
@@ -8915,19 +8558,10 @@ def mixedCost (P:UnequalParameters):RCN223.DegreeVector:=
  ⟨P.leftR*P.rightZ+P.leftZ*P.rightR,
    P.leftY*P.rightZ+P.leftZ*P.rightY,
    P.leftY*P.rightR+P.leftR*P.rightY⟩
-def regularNumerator (P:UnequalParameters):ℕ:=
- (P.n-P.w)*dot P.agreement P.mixedCost+
-   (P.errors+1)*P.gap*P.mixedCost.z
-def regularCountCap (P:UnequalParameters):ℕ:=P.regularNumerator/P.gap
-theorem regular_count_le (P:UnequalParameters) (count:ℕ)
-   (hgap:0 < P.gap) (hcount:count*P.gap ≤ P.regularNumerator):
-   count ≤ P.regularCountCap:=
- (Nat.le_div_iff_mul_le hgap).mpr hcount
 end UnequalParameters
 end ProximityPrize.SubmissionLower.RCN260
 end PackedLegacy_N5
 
-/-! Packed from ProximityPrize.SubmissionLower.C. -/
 section PackedLegacy_C
 namespace ProximityPrize.SubmissionLower.RCN081
 open RCN174
@@ -9154,7 +8788,6 @@ end
 end ProximityPrize.SubmissionLower.RCN081
 end PackedLegacy_C
 
-/-! Packed from ProximityPrize.SubmissionLower.J1. -/
 section PackedLegacy_J1
 namespace ProximityPrize.SubmissionLower.RCN082
 open UniqueFactorizationMonoid RCN136 RCN174
@@ -9240,7 +8873,6 @@ end
 end ProximityPrize.SubmissionLower.RCN082
 end PackedLegacy_J1
 
-/-! Packed from ProximityPrize.SubmissionLower.BH. -/
 section PackedLegacy_BH
 namespace ProximityPrize.SubmissionLower.RCN132
 open RCN136 RCN082
@@ -9373,7 +9005,6 @@ end
 end ProximityPrize.SubmissionLower.RCN132
 end PackedLegacy_BH
 
-/-! Packed from ProximityPrize.SubmissionLower.R6. -/
 section PackedLegacy_R6
 namespace ProximityPrize.SubmissionLower.RCN350
 noncomputable section
@@ -9458,7 +9089,6 @@ end
 end ProximityPrize.SubmissionLower.RCN350
 end PackedLegacy_R6
 
-/-! Packed from ProximityPrize.SubmissionLower.CG. -/
 section PackedLegacy_CG
 namespace ProximityPrize.SubmissionLower.RCN311
 open RCN077 RCN313 RCN047 RCN269 RCN233 RCN139 RCN347 RCN174 RCN319
@@ -9516,7 +9146,6 @@ end PolynomialFamily
 end ProximityPrize.SubmissionLower.RCN311
 end PackedLegacy_CG
 
-/-! Packed from ProximityPrize.SubmissionLower.EK. -/
 section PackedLegacy_EK
 namespace ProximityPrize.SubmissionLower.RCN135
 open RCN077 RCN269 RCN233 RCN231 RCN229 RCN139 RCN313 RCN319
@@ -9577,7 +9206,6 @@ end
 end ProximityPrize.SubmissionLower.RCN135
 end PackedLegacy_EK
 
-/-! Packed from ProximityPrize.SubmissionLower.EM. -/
 section PackedLegacy_EM
 namespace ProximityPrize.SubmissionLower.RCN138
 open RCN136 RCN132 RCN313 RCN311 RCN174 RCN319 RCN135
@@ -9642,7 +9270,6 @@ end
 end ProximityPrize.SubmissionLower.RCN138
 end PackedLegacy_EM
 
-/-! Packed from ProximityPrize.SubmissionLower.EL. -/
 section PackedLegacy_EL
 namespace ProximityPrize.SubmissionLower.RCN137
 open UniqueFactorizationMonoid RCN136 RCN082 RCN135 RCN138 RCN174 RCN319
@@ -9731,7 +9358,6 @@ end
 end ProximityPrize.SubmissionLower.RCN137
 end PackedLegacy_EL
 
-/-! Packed from ProximityPrize.SubmissionLower.AD. -/
 section PackedLegacy_AD
 namespace ProximityPrize.SubmissionLower.RCN267
 open RCN136 RCN313 RCN138 RCN132 RCN137
@@ -9893,7 +9519,6 @@ end
 end ProximityPrize.SubmissionLower.RCN267
 end PackedLegacy_AD
 
-/-! Packed from ProximityPrize.SubmissionLower.P5. -/
 section PackedLegacy_P5
 namespace ProximityPrize.SubmissionLower.RCN290
 open RCN082 RCN136 RCN267
@@ -10068,7 +9693,6 @@ end
 end ProximityPrize.SubmissionLower.RCN290
 end PackedLegacy_P5
 
-/-! Packed from ProximityPrize.SubmissionLower.CA. -/
 section PackedLegacy_CA
 namespace ProximityPrize.SubmissionLower.RCN293
 open RCN290 RCN081 RCN082
@@ -10338,7 +9962,6 @@ end
 end ProximityPrize.SubmissionLower.RCN293
 end PackedLegacy_CA
 
-/-! Packed from ProximityPrize.SubmissionLower.BS. -/
 section PackedLegacy_BS
 namespace ProximityPrize.SubmissionLower.RCN167
 open RCN081 RCN082 RCN293 RCN267 RCN313 RCN136 RCN319 RCN231
@@ -10594,7 +10217,6 @@ end
 end ProximityPrize.SubmissionLower.RCN167
 end PackedLegacy_BS
 
-/-! Packed from ProximityPrize.SubmissionLower.I9. -/
 section PackedLegacy_I9
 namespace ProximityPrize.SubmissionLower.RCN079
 open RCN136 RCN082 RCN290 RCN293 RCN081 RCN319
@@ -10810,7 +10432,6 @@ end
 end ProximityPrize.SubmissionLower.RCN079
 end PackedLegacy_I9
 
-/-! Packed from ProximityPrize.SubmissionLower.J0. -/
 section PackedLegacy_J0
 namespace ProximityPrize.SubmissionLower.RCN080
 open RCN136 RCN079 RCN319
@@ -10974,11 +10595,8 @@ end ProximityPrize.SubmissionLower.RCN080
 end PackedLegacy_J0
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLegacyBarrier09 : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.BU. -/
 section PackedLegacy_BU
 namespace ProximityPrize.SubmissionLower.RCN169
 open RCN079 RCN167 RCN081 RCN267 RCN174
@@ -11128,7 +10746,6 @@ end
 end ProximityPrize.SubmissionLower.RCN169
 end PackedLegacy_BU
 
-/-! Packed from ProximityPrize.SubmissionLower.V. -/
 section PackedLegacy_V
 namespace ProximityPrize.SubmissionLower.RCN286
 open RCN169 RCN167 RCN079 RCN080 RCN290 RCN293 RCN135 RCN136 RCN138 RCN082 RCN081 RCN174 RCN319
@@ -11291,21 +10908,18 @@ end
 end ProximityPrize.SubmissionLower.RCN286
 end PackedLegacy_V
 
-/-! Packed from ProximityPrize.SubmissionLower.FS. -/
 section PackedLegacy_FS
 namespace ProximityPrize.SubmissionLower.RCN242
 open RCN051
 end ProximityPrize.SubmissionLower.RCN242
 end PackedLegacy_FS
 
-/-! Packed from ProximityPrize.SubmissionLower.BT. -/
 section PackedLegacy_BT
 namespace ProximityPrize.SubmissionLower.RCN168
 open RCN051
 end ProximityPrize.SubmissionLower.RCN168
 end PackedLegacy_BT
 
-/-! Packed from ProximityPrize.SubmissionLower.P4. -/
 section PackedLegacy_P4
 namespace ProximityPrize.SubmissionLower.RCN289
 open RCN174 RCN081 RCN313
@@ -11316,7 +10930,6 @@ end
 end ProximityPrize.SubmissionLower.RCN289
 end PackedLegacy_P4
 
-/-! Packed from ProximityPrize.SubmissionLower.Y4. -/
 section PackedLegacy_Y4
 namespace ProximityPrize.SubmissionLower.RCN068
 open scoped Classical
@@ -11393,7 +11006,6 @@ end
 end ProximityPrize.SubmissionLower.RCN068
 end PackedLegacy_Y4
 
-/-! Packed from ProximityPrize.SubmissionLower.B2. -/
 section PackedLegacy_B2
 namespace ProximityPrize.SubmissionLower.RCN070
 open RCN051 RCN168
@@ -11401,7 +11013,6 @@ open scoped BigOperators
 end ProximityPrize.SubmissionLower.RCN070
 end PackedLegacy_B2
 
-/-! Packed from ProximityPrize.SubmissionLower.BV. -/
 section PackedLegacy_BV
 namespace ProximityPrize.SubmissionLower.RCN170
 open scoped Classical BigOperators
@@ -11483,7 +11094,6 @@ end
 end ProximityPrize.SubmissionLower.RCN170
 end PackedLegacy_BV
 
-/-! Packed from ProximityPrize.SubmissionLower.BW. -/
 section PackedLegacy_BW
 namespace ProximityPrize.SubmissionLower.RCN172
 open scoped Classical BigOperators
@@ -11681,7 +11291,6 @@ end
 end ProximityPrize.SubmissionLower.RCN172
 end PackedLegacy_BW
 
-/-! Packed from ProximityPrize.SubmissionLower.CD. -/
 section PackedLegacy_CD
 namespace ProximityPrize.SubmissionLower.RCN306
 open scoped Classical BigOperators
@@ -11698,7 +11307,6 @@ end
 end ProximityPrize.SubmissionLower.RCN306
 end PackedLegacy_CD
 
-/-! Packed from ProximityPrize.SubmissionLower.DB. -/
 section PackedLegacy_DB
 namespace ProximityPrize.SubmissionLower
 open Polynomial Polynomial.Bivariate Matrix
@@ -11893,7 +11501,6 @@ theorem bivariate_resultant_natDegree_le_totalDegree
 end ProximityPrize.SubmissionLower
 end PackedLegacy_DB
 
-/-! Packed from ProximityPrize.SubmissionLower.AY. -/
 section PackedLegacy_AY
 namespace ProximityPrize.SubmissionLower.RCN012
 open Polynomial Polynomial.Bivariate RCN002 RCN005 RCN371 RCN011 RCN009 RCN013
@@ -12039,13 +11646,9 @@ end
 end ProximityPrize.SubmissionLower.RCN012
 end PackedLegacy_AY
 
-/-! Packed from ProximityPrize.SubmissionLower.Y. -/
 section PackedLegacy_Y
 namespace ProximityPrize.SubmissionLower.RCN003
-open RCN002 RCN005
- RCN371 RCN011
- RCN009 RCN013 RCN010
- RCN004 RCN007 RCN001
+open RCN002 RCN005 RCN371 RCN011 RCN009 RCN013 RCN010 RCN004 RCN007 RCN001
 open RCN012
 noncomputable section
 variable (K:Type) [Field K]
@@ -12087,7 +11690,6 @@ end
 end ProximityPrize.SubmissionLower.RCN003
 end PackedLegacy_Y
 
-/-! Packed from ProximityPrize.SubmissionLower.K8. -/
 section PackedLegacy_K8
 namespace ProximityPrize.SubmissionLower.RCN176
 open RCN002 RCN007 RCN004 RCN001 RCN003 RCN136 RCN231 RCN319 RCN238 RCN264 RCN243
@@ -12103,27 +11705,22 @@ end ProximityPrize.SubmissionLower.RCN176
 end PackedLegacy_K8
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLegacyBarrier10 : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.K9. -/
 section PackedLegacy_K9
 namespace ProximityPrize.SubmissionLower.RCN177
 open scoped BigOperators
-open RCN174 RCN081 RCN313
- RCN136
+open RCN174 RCN081 RCN313 RCN136
 noncomputable section
 variable {K Ω:Type} [Field K] [Field Ω]
 end
 end ProximityPrize.SubmissionLower.RCN177
 end PackedLegacy_K9
 
-/-! Packed from ProximityPrize.SubmissionLower.L0. -/
 section PackedLegacy_L0
 namespace ProximityPrize.SubmissionLower.RCN178
 open scoped Classical BigOperators
-open RCN051 RCN068 RCN136 RCN238 RCN243 RCN065 RCN231 RCN319 RCN001 RCN174 RCN306 RCN176 RCN177 RCN003 RCN012 RCN011 RCN009 RCN013 RCN371
+open RCN051 RCN068 RCN136 RCN238 RCN243 RCN065 RCN231 RCN319 RCN001 RCN174 RCN177 RCN003 RCN012 RCN011 RCN009 RCN013 RCN371
 noncomputable section
 variable {K Ω:Type} [Field K] [Field Ω]
 local instance:DecidableEq K:=Classical.decEq K
@@ -12136,11 +11733,10 @@ end
 end ProximityPrize.SubmissionLower.RCN178
 end PackedLegacy_L0
 
-/-! Packed from ProximityPrize.SubmissionLower.Z9. -/
 section PackedLegacy_Z9
 namespace ProximityPrize.SubmissionLower.RCN222
 open scoped Classical BigOperators
-open RCN051 RCN068 RCN070 RCN135 RCN136 RCN138 RCN137 RCN267 RCN081 RCN306 RCN238 RCN243 RCN231 RCN174 RCN319 RCN178 RCN177
+open RCN051 RCN068 RCN070 RCN135 RCN136 RCN138 RCN137 RCN267 RCN081 RCN238 RCN243 RCN231 RCN174 RCN319 RCN177
 noncomputable section
 variable (K:Type) [Field K]
 local instance:DecidableEq K:=Classical.decEq K
@@ -12215,7 +11811,6 @@ end
 end ProximityPrize.SubmissionLower.RCN222
 end PackedLegacy_Z9
 
-/-! Packed from ProximityPrize.SubmissionLower.DW. -/
 section PackedLegacy_DW
 namespace ProximityPrize.SubmissionLower.RCN052
 open scoped Classical BigOperators
@@ -12380,259 +11975,6 @@ theorem sum_coordinateMixedDegree_geometricFactors_le
        (Nat.mul_le_mul hsum0 hT1)
 variable {ι:Type*}
 local instance:DecidableEq ι:=Classical.decEq ι
-theorem regularPairSeeds_bound
-   (P:UnequalParameters) (Q T:MvPolynomial (Fin 4) K)
-   (hrel:IsRelPrime Q T) (F:RegularIndex Q)
-   (p:ℕ) [CharP K p]
-   (hFY:F.1.degreeOf 1 ≤ P.leftY)
-   (hFR:F.1.degreeOf 2 ≤ P.leftR)
-   (hFZ:F.1.degreeOf 3 ≤ P.leftZ)
-   (hTY:T.degreeOf 1 ≤ P.rightY)
-   (hTR:T.degreeOf 2 ≤ P.rightR)
-   (hTZ:T.degreeOf 3 ≤ P.rightZ)
-   (hleftR:1 ≤ P.leftR)
-   (hleftYSmall:P.leftY < p) (hleftRSmall:P.leftR < p)
-   (hleftZSmall:P.leftZ < p)
-   (hmixedYSmall:P.mixedCost.y < p)
-   (hmixedRSmall:P.mixedCost.r < p)
-   (hmixedZSmall:P.mixedCost.z < p)
-   (selected:K → Polynomial K) (Gamma:Finset K)
-   (nodes:Finset ι) (x u₀ u₁:ι → K) (hinj:Set.InjOn x nodes)
-   (hnodes:nodes.card=P.n)
-   (hw:1 ≤ P.w) (hchar:P.w < p) (hwa:P.w < P.a)
-   (han:P.a ≤ P.n)
-   (hdegree:∀ gamma∈Gamma,(selected gamma).natDegree ≤ P.w)
-   (hagreement:∀ gamma∈Gamma,
-     P.a ≤ (nodes.filter (fun i =>
-       (selected gamma).eval (x i)=u₀ i+gamma*u₁ i)).card)
-   (hnoPencil:NoLargeSelectedPencil selected Gamma P.w P.errors):
-   (regularPairSeeds Q T selected Gamma F).card*P.gap ≤
-     (P.n-P.w)*dot P.agreement (regularVector P F.1)+
-       (P.errors+1)*P.gap*(regularVector P F.1).z:=by
- classical
- let phi:=polynomialEmbedding K
- let Delta:=regularPairSeeds Q T selected Gamma F
- let carrierCap:RCN051.DegreeVector:=
-   ⟨P.leftY,P.leftR,P.leftZ⟩
- let cutCap:RCN051.DegreeVector:=
-   ⟨P.rightY,P.rightR,P.rightZ⟩
- have hFspec:=positiveRFactors_spec Q F.1 F.2
- have hFne:F.1≠0:=hFspec.1.ne_zero
- have hDeltaSub:Delta ⊆ Gamma:=regularPairSeeds_subset Q T selected Gamma F
- have hDeltaData (gamma:K) (hgamma:gamma∈Delta):
-     RegularSolution F.1 (selected gamma) gamma∧
-       specialization K (selected gamma) gamma T=0:=
-   regularPairSeeds_data Q T selected Gamma F gamma hgamma
- have hcover:=card_le_sum_geometricSeeds K F.1 hFne selected Delta
-   (fun gamma hgamma => (hDeltaData gamma hgamma).1.1)
- letI:CharP (GenericField K) p:=genericField_charP K p
- have hsingle (g:GeometricFactor K F.1):
-     (geometricSeeds K F.1 selected Delta g).card*P.gap ≤
-       (P.n-P.w)*(∑ i:Fin 3,
-         regularCapAt P.agreement i*
-           coordinateMixedDegree (GenericField K) g.1
-             (surfaceMap phi T) i)+
-         (P.errors+1)*P.gap*
-           coordinateMixedDegree (GenericField K) g.1
-             (surfaceMap phi T) 2:=by
-   have hgSpec:=surfaceFactors_spec phi F.1 g.1 g.2
-   have hsub:=geometricSeeds_subset K F.1 selected Delta g
-   have hgCaps:HasCaps g.1 carrierCap:=by
-     intro i
-     have hi:=geometricFactor_degree_le K F.1 hFne g i
-     fin_cases i
-     · exact hi.trans hFY
-     · exact hi.trans hFR
-     · exact hi.trans hFZ
-   have hTCaps:HasCaps (surfaceMap phi T) cutCap:=by
-     intro i
-     fin_cases i
-     · exact (surfaceMap_degreeOf_le phi T 0).trans hTY
-     · exact (surfaceMap_degreeOf_le phi T 1).trans hTR
-     · exact (surfaceMap_degreeOf_le phi T 2).trans hTZ
-   have hcarrierSmall:∀ i,capAt carrierCap i < p:=by
-     intro i
-     fin_cases i
-     · exact hleftYSmall
-     · exact hleftRSmall
-     · exact hleftZSmall
-   have hgates:=actual_characteristic_gates g.1 (surfaceMap phi T)
-     carrierCap cutCap p hgCaps hTCaps hcarrierSmall
-     (by simpa [carrierCap,cutCap,RCN051.mixed,
-         RCN051.unitY,UnequalParameters.mixedCost,
-         capAt,Nat.add_comm,Nat.mul_comm] using hmixedYSmall)
-     (by simpa [carrierCap,cutCap,RCN051.mixed,
-         RCN051.unitR,UnequalParameters.mixedCost,
-         capAt,Nat.add_comm,Nat.mul_comm] using hmixedRSmall)
-     (by simpa [carrierCap,cutCap,RCN051.mixed,
-         RCN051.unitZ,UnequalParameters.mixedCost,
-         capAt,Nat.add_comm,Nat.mul_comm] using hmixedZSmall)
-   have hregular:∀ gamma∈geometricSeeds K F.1 selected Delta g,
-       MvPolynomial.eval₂Hom (phi.comp Polynomial.C)
-         (RCN231.polynomialPoint (phi.comp Polynomial.C)
-           (selected gamma) gamma (phi Polynomial.X))
-         (MvPolynomial.pderiv (2:Fin 4) F.1)≠0:=by
-     intro gamma hgamma
-     exact selectedPoint_regular_of_specialization K F.1 selected gamma
-       (hDeltaData gamma (hsub hgamma)).1.2
-   have hTpoint:∀ gamma∈geometricSeeds K F.1 selected Delta g,
-       MvPolynomial.eval (selectedPoint phi selected gamma) (surfaceMap phi T)=0:=by
-     intro gamma hgamma
-     rw [selectedPoint_surface_evaluation,
-       (hDeltaData gamma (hsub hgamma)).2,map_zero]
-   have hcap (node:ι):∀ j,
-       (agreementPolynomial phi F.1 P.w (x node) (u₀ node) (u₁ node)).degreeOf j ≤
-         regularCapAt P.agreement j:=by
-     have h:=surface_agreement_caps phi F.1 P.leftY P.leftR P.leftZ hleftR
-       hFY hFR hFZ P.w (fun j => (j.factorial:K)⁻¹)
-       (x node) (u₀ node) (u₁ node)
-     intro j
-     have hj:
-         (agreementPolynomial phi F.1 P.w (x node) (u₀ node) (u₁ node)).degreeOf j ≤
-           capAt (agreementCaps P.leftY P.leftR P.leftZ P.w) j:=by
-       simpa [agreementPolynomial] using h j
-     fin_cases j
-     · apply hj.trans
-       change P.leftAgreement.y ≤ max P.leftAgreement.y P.rightAgreement.y
-       exact le_max_left _ _
-     · apply hj.trans
-       change P.leftAgreement.r ≤ max P.leftAgreement.r P.rightAgreement.r
-       exact le_max_left _ _
-     · apply hj.trans
-       change P.leftAgreement.z ≤ max P.leftAgreement.z P.rightAgreement.z
-       exact le_max_left _ _
-   have hcount:=proper_cut_seed_bound phi F.1 g.1 (surfaceMap phi T)
-     hgSpec.1 hgSpec.2 (geometricFactor_not_dvd_second Q T hrel F g.1 g.2)
-     selected (geometricSeeds K F.1 selected Delta g) nodes x u₀ u₁ hinj
-     p P.w P.a P.errors hw hchar hwa (by simpa [hnodes] using han)
-     hgates.1 hgates.2
-     (fun gamma hgamma => hdegree gamma (hDeltaSub (hsub hgamma)))
-     (fun gamma hgamma => (hDeltaData gamma (hsub hgamma)).1.1)
-     hregular (fun gamma hgamma => (Finset.mem_filter.mp hgamma).2)
-     hTpoint
-     (fun gamma hgamma => hagreement gamma (hDeltaSub (hsub hgamma)))
-     (noLargeSelectedPencil_mono selected Gamma _ P.w P.errors
-       (fun _ hgamma => hDeltaSub (hsub hgamma)) hnoPencil)
-     (regularCapAt P.agreement) (fun node _ => hcap node)
-   simpa [hnodes,UnequalParameters.gap] using hcount
- have hbudget (i:Fin 3):=
-   sum_coordinateMixedDegree_geometricFactors_le P F.1 T hFne hTY hTR hTZ i
- have hfubini:
-     (∑ g:GeometricFactor K F.1,∑ i:Fin 3,
-         regularCapAt P.agreement i*
-           coordinateMixedDegree (GenericField K) g.1 (surfaceMap phi T) i)=
-       ∑ i:Fin 3,regularCapAt P.agreement i*
-         (∑ g:GeometricFactor K F.1,
-           coordinateMixedDegree (GenericField K) g.1 (surfaceMap phi T) i):=by
-   rw [Finset.sum_comm]
-   apply Finset.sum_congr rfl
-   intro i _
-   rw [Finset.mul_sum]
- calc
-   Delta.card*P.gap ≤
-       (∑ g:GeometricFactor K F.1,
-         (geometricSeeds K F.1 selected Delta g).card)*P.gap:=
-     Nat.mul_le_mul_right P.gap hcover
-   _=∑ g:GeometricFactor K F.1,
-       (geometricSeeds K F.1 selected Delta g).card*P.gap:=by
-     rw [Finset.sum_mul]
-   _ ≤ ∑ g:GeometricFactor K F.1,
-       ((P.n-P.w)*(∑ i:Fin 3,regularCapAt P.agreement i*
-         coordinateMixedDegree (GenericField K) g.1 (surfaceMap phi T) i)+
-         (P.errors+1)*P.gap*
-           coordinateMixedDegree (GenericField K) g.1 (surfaceMap phi T) 2):=
-     Finset.sum_le_sum (fun g _ => hsingle g)
-   _=(P.n-P.w)*(∑ i:Fin 3,regularCapAt P.agreement i*
-         (∑ g:GeometricFactor K F.1,
-           coordinateMixedDegree (GenericField K) g.1 (surfaceMap phi T) i))+
-       (P.errors+1)*P.gap*
-         (∑ g:GeometricFactor K F.1,
-           coordinateMixedDegree (GenericField K) g.1 (surfaceMap phi T) 2):=by
-     rw [Finset.sum_add_distrib, ←Finset.mul_sum, ←Finset.mul_sum,hfubini]
-   _ ≤ (P.n-P.w)*(∑ i:Fin 3,
-         regularCapAt P.agreement i*regularCapAt (regularVector P F.1) i)+
-       (P.errors+1)*P.gap*regularCapAt (regularVector P F.1) 2:=
-     Nat.add_le_add
-       (Nat.mul_le_mul_left _ (Finset.sum_le_sum
-         (fun i _ => Nat.mul_le_mul_left _ (hbudget i))))
-       (Nat.mul_le_mul_left _ (hbudget 2))
-   _=(P.n-P.w)*dot P.agreement (regularVector P F.1)+
-       (P.errors+1)*P.gap*(regularVector P F.1).z:=by
-     simp [Fin.sum_univ_three,regularCapAt,dot]
-theorem all_regularPairSeeds_bound
-   (P:UnequalParameters) (Q T:MvPolynomial (Fin 4) K)
-   (hQ:Q≠0) (hrel:IsRelPrime Q T)
-   (D w L s p:ℕ) [CharP K p]
-   (hbox:Q∈globalCoefficientBox K D w L s) (hwBox:1 ≤ w)
-   (hY:(D-1)/w ≤ P.leftY)
-   (hR:s ≤ P.leftR) (hZ:L ≤ P.leftZ)
-   (hTY:T.degreeOf 1 ≤ P.rightY)
-   (hTR:T.degreeOf 2 ≤ P.rightR)
-   (hTZ:T.degreeOf 3 ≤ P.rightZ)
-   (hleftR:1 ≤ P.leftR)
-   (hleftYSmall:P.leftY < p) (hleftRSmall:P.leftR < p)
-   (hleftZSmall:P.leftZ < p)
-   (hmixedYSmall:P.mixedCost.y < p)
-   (hmixedRSmall:P.mixedCost.r < p)
-   (hmixedZSmall:P.mixedCost.z < p)
-   (selected:K → Polynomial K) (Gamma:Finset K)
-   (nodes:Finset ι) (x u₀ u₁:ι → K) (hinj:Set.InjOn x nodes)
-   (hnodes:nodes.card=P.n)
-   (hw:1 ≤ P.w) (hchar:P.w < p) (hwa:P.w < P.a)
-   (han:P.a ≤ P.n)
-   (hdegree:∀ gamma∈Gamma,(selected gamma).natDegree ≤ P.w)
-   (hagreement:∀ gamma∈Gamma,
-     P.a ≤ (nodes.filter (fun i =>
-       (selected gamma).eval (x i)=u₀ i+gamma*u₁ i)).card)
-   (hnoPencil:NoLargeSelectedPencil selected Gamma P.w P.errors):
-   ∀ F:RegularIndex Q,
-     (regularPairSeeds Q T selected Gamma F).card*P.gap ≤
-       (P.n-P.w)*dot P.agreement (regularVector P F.1)+
-         (P.errors+1)*P.gap*(regularVector P F.1).z:=by
- intro F
- have hFbox:=(directFactor_data Q F.1 hQ D w L s hbox F.2).2.2
- have hFcaps:=degree_bounds_of_mem_box F.1 D w L s hwBox hFbox
- exact regularPairSeeds_bound P Q T hrel F p
-   (hFcaps.1.trans (by simpa using hY))
-   (hFcaps.2.1.trans hR) (hFcaps.2.2.trans hZ)
-   hTY hTR hTZ hleftR hleftYSmall hleftRSmall hleftZSmall
-   hmixedYSmall hmixedRSmall hmixedZSmall selected Gamma nodes x u₀ u₁
-   hinj hnodes hw hchar hwa han hdegree hagreement hnoPencil
-theorem regularVector_budgets
-   (P:UnequalParameters) (Q:MvPolynomial (Fin 4) K) (hQ:Q≠0)
-   (D w L s:ℕ) (hw:0 < w)
-   (hbox:Q∈globalCoefficientBox K D w L s)
-   (hY:(D-1)/w ≤ P.leftY)
-   (hR:s ≤ P.leftR) (hZ:L ≤ P.leftZ):
-   (∑ F:RegularIndex Q,(regularVector P F.1).y) ≤ P.mixedCost.y∧
-     (∑ F:RegularIndex Q,(regularVector P F.1).r) ≤ P.mixedCost.r∧
-     (∑ F:RegularIndex Q,(regularVector P F.1).z) ≤ P.mixedCost.z:=by
- classical
- have hb:=directFactor_input_budgets Q hQ D w L s hw hbox
- have hbY:(∑ F:RegularIndex Q,F.1.degreeOf (1:Fin 4)) ≤ (D-1)/w:=by
-   rw [←Finset.sum_subtype (positiveRFactors Q) (fun _↦Iff.rfl)]
-   exact hb.1
- have hbR:(∑ F:RegularIndex Q,F.1.degreeOf (2:Fin 4)) ≤ s:=by
-   rw [←Finset.sum_subtype (positiveRFactors Q) (fun _↦Iff.rfl)]
-   exact hb.2.1
- have hbZ:(∑ F:RegularIndex Q,F.1.degreeOf (3:Fin 4)) ≤ L:=by
-   rw [←Finset.sum_subtype (positiveRFactors Q) (fun _↦Iff.rfl)]
-   exact hb.2.2
- simp only [regularVector,Finset.sum_add_distrib]
- constructor
- · rw [←Finset.sum_mul, ←Finset.sum_mul]
-   exact Nat.add_le_add
-     (Nat.mul_le_mul_right P.rightZ (hbR.trans hR))
-     (Nat.mul_le_mul_right P.rightR (hbZ.trans hZ))
- constructor
- · rw [←Finset.sum_mul, ←Finset.sum_mul]
-   exact Nat.add_le_add
-     (Nat.mul_le_mul_right P.rightZ (hbY.trans hY))
-     (Nat.mul_le_mul_right P.rightY (hbZ.trans hZ))
- · rw [←Finset.sum_mul, ←Finset.sum_mul]
-   exact Nat.add_le_add
-     (Nat.mul_le_mul_right P.rightR (hbY.trans hY))
-     (Nat.mul_le_mul_right P.rightY (hbR.trans hR))
 theorem dot_sum_right {I:Type} [Fintype I]
    (v:I → RCN223.DegreeVector)
    (a:RCN223.DegreeVector):
@@ -12648,51 +11990,10 @@ theorem dot_sum_right {I:Type} [Fintype I]
      intro i _
      simp only [dot]
      ring
-theorem sum_regular_counts_bound
-   (P:UnequalParameters) (Q T:MvPolynomial (Fin 4) K)
-   (selected:K → Polynomial K) (Gamma:Finset K)
-   (hcost:
-     (∑ F:RegularIndex Q,(regularVector P F.1).y) ≤ P.mixedCost.y∧
-     (∑ F:RegularIndex Q,(regularVector P F.1).r) ≤ P.mixedCost.r∧
-     (∑ F:RegularIndex Q,(regularVector P F.1).z) ≤ P.mixedCost.z)
-   (hcount:∀ F:RegularIndex Q,
-     (regularPairSeeds Q T selected Gamma F).card*P.gap ≤
-       (P.n-P.w)*dot P.agreement (regularVector P F.1)+
-         (P.errors+1)*P.gap*(regularVector P F.1).z):
-   (∑ F:RegularIndex Q,(regularPairSeeds Q T selected Gamma F).card)*
-       P.gap ≤ P.regularNumerator:=by
- calc
-   _=∑ F:RegularIndex Q,
-       (regularPairSeeds Q T selected Gamma F).card*P.gap:=by
-     rw [Finset.sum_mul]
-   _ ≤ ∑ F:RegularIndex Q,
-       ((P.n-P.w)*dot P.agreement (regularVector P F.1)+
-         (P.errors+1)*P.gap*(regularVector P F.1).z):=
-     Finset.sum_le_sum fun F _↦hcount F
-   _=(P.n-P.w)*dot P.agreement
-         (RCN294.sumVector fun F:RegularIndex Q↦
-           regularVector P F.1)+
-       (P.errors+1)*P.gap*
-         (RCN294.sumVector fun F:RegularIndex Q↦
-           regularVector P F.1).z:=by
-     rw [Finset.sum_add_distrib, ←Finset.mul_sum, ←Finset.mul_sum,
-       ←dot_sum_right]
-     simp only [RCN294.sumVector]
-   _ ≤ (P.n-P.w)*dot P.agreement P.mixedCost+
-       (P.errors+1)*P.gap*P.mixedCost.z:=by
-     apply Nat.add_le_add
-     · exact Nat.mul_le_mul_left _ (Nat.add_le_add
-         (Nat.add_le_add
-           (Nat.mul_le_mul_left P.agreement.y hcost.1)
-           (Nat.mul_le_mul_left P.agreement.r hcost.2.1))
-         (Nat.mul_le_mul_left P.agreement.z hcost.2.2))
-     · exact Nat.mul_le_mul_left _ hcost.2.2
-   _=P.regularNumerator:=rfl
 end
 end ProximityPrize.SubmissionLower.RCN052
 end PackedLegacy_DW
 
-/-! Packed from ProximityPrize.SubmissionLower.BP. -/
 section PackedLegacy_BP
 namespace ProximityPrize.SubmissionLower.RCN157
 open RCN136 RCN319
@@ -12704,7 +12005,6 @@ end
 end ProximityPrize.SubmissionLower.RCN157
 end PackedLegacy_BP
 
-/-! Packed from ProximityPrize.SubmissionLower.AA. -/
 section PackedLegacy_AA
 namespace ProximityPrize.SubmissionLower.RCN234
 open scoped BigOperators
@@ -12804,7 +12104,6 @@ end
 end ProximityPrize.SubmissionLower.RCN234
 end PackedLegacy_AA
 
-/-! Packed from ProximityPrize.SubmissionLower.FO. -/
 section PackedLegacy_FO
 namespace ProximityPrize.SubmissionLower.RCN235
 open scoped BigOperators Matrix
@@ -12828,7 +12127,6 @@ end
 end ProximityPrize.SubmissionLower.RCN235
 end PackedLegacy_FO
 
-/-! Packed from ProximityPrize.SubmissionLower.AH. -/
 section PackedLegacy_AH
 namespace ProximityPrize.SubmissionLower.RCN295
 open scoped Classical BigOperators WithZero
@@ -12974,7 +12272,6 @@ end
 end ProximityPrize.SubmissionLower.RCN295
 end PackedLegacy_AH
 
-/-! Packed from ProximityPrize.SubmissionLower.D. -/
 section PackedLegacy_D
 namespace ProximityPrize.SubmissionLower.RCN095
 open scoped BigOperators
@@ -13122,7 +12419,6 @@ theorem flag_mixed_values:
 end ProximityPrize.SubmissionLower.RCN095
 end PackedLegacy_D
 
-/-! Packed from ProximityPrize.SubmissionLower.BO. -/
 section PackedLegacy_BO
 namespace ProximityPrize.SubmissionLower.RCN156
 open scoped Classical BigOperators
@@ -13138,14 +12434,12 @@ end
 end ProximityPrize.SubmissionLower.RCN156
 end PackedLegacy_BO
 
-/-! Packed from ProximityPrize.SubmissionLower.D5. -/
 section PackedLegacy_D5
 namespace ProximityPrize.SubmissionLower.RCN215
 open RCN095 RCN156 RCN213
 end ProximityPrize.SubmissionLower.RCN215
 end PackedLegacy_D5
 
-/-! Packed from ProximityPrize.SubmissionLower.D4. -/
 section PackedLegacy_D4
 namespace ProximityPrize.SubmissionLower.RCN214
 open scoped BigOperators
@@ -13154,7 +12448,6 @@ set_option maxHeartbeats 1000000
 end ProximityPrize.SubmissionLower.RCN214
 end PackedLegacy_D4
 
-/-! Packed from ProximityPrize.SubmissionLower.AC. -/
 section PackedLegacy_AC
 namespace ProximityPrize.SubmissionLower.RCN266
 open scoped BigOperators
@@ -13167,7 +12460,6 @@ end
 end ProximityPrize.SubmissionLower.RCN266
 end PackedLegacy_AC
 
-/-! Packed from ProximityPrize.SubmissionLower.I3. -/
 section PackedLegacy_I3
 namespace ProximityPrize.SubmissionLower.RCN069
 open RCN223 RCN174 RCN136 RCN068 RCN238
@@ -13177,7 +12469,6 @@ end
 end ProximityPrize.SubmissionLower.RCN069
 end PackedLegacy_I3
 
-/-! Packed from ProximityPrize.SubmissionLower.K6. -/
 section PackedLegacy_K6
 namespace ProximityPrize.SubmissionLower.RCN171
 open scoped Classical BigOperators
@@ -13191,11 +12482,10 @@ end
 end ProximityPrize.SubmissionLower.RCN171
 end PackedLegacy_K6
 
-/-! Packed from ProximityPrize.SubmissionLower.F1. -/
 section PackedLegacy_F1
 namespace ProximityPrize.SubmissionLower.RCN291
 open scoped BigOperators
-open RCN223 RCN294 RCN286 RCN169 RCN167 RCN290 RCN293 RCN174 RCN319 RCN171 RCN081 RCN238 RCN243
+open RCN223 RCN294 RCN286 RCN169 RCN167 RCN290 RCN293 RCN174 RCN319 RCN081 RCN238 RCN243
 noncomputable section
 variable {K:Type} [Field K]
 local instance:DecidableEq K:=Classical.decEq K
@@ -13242,7 +12532,6 @@ end
 end ProximityPrize.SubmissionLower.RCN291
 end PackedLegacy_F1
 
-/-! Packed from ProximityPrize.SubmissionLower.Z4. -/
 section PackedLegacy_Z4
 namespace ProximityPrize.SubmissionLower.RCN140
 open scoped Classical BigOperators
@@ -13266,11 +12555,8 @@ end ProximityPrize.SubmissionLower.RCN140
 end PackedLegacy_Z4
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLegacyBarrier11 : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.BC. -/
 section PackedLegacy_BC
 namespace ProximityPrize.SubmissionLower.RCN119
 open scoped BigOperators Pointwise
@@ -13585,7 +12871,6 @@ end
 end ProximityPrize.SubmissionLower.RCN119
 end PackedLegacy_BC
 
-/-! Packed from ProximityPrize.SubmissionLower.C1. -/
 section PackedLegacy_C1
 namespace ProximityPrize.SubmissionLower.RCN100
 open RCN119 ProximityPrize.Benchmark
@@ -13849,7 +13134,6 @@ end
 end ProximityPrize.SubmissionLower.RCN100
 end PackedLegacy_C1
 
-/-! Packed from ProximityPrize.SubmissionLower.BD. -/
 section PackedLegacy_BD
 namespace ProximityPrize.SubmissionLower.RCN122
 open RCN119 RCN100 ProximityPrize.Benchmark
@@ -14127,7 +13411,6 @@ end
 end ProximityPrize.SubmissionLower.RCN122
 end PackedLegacy_BD
 
-/-! Packed from ProximityPrize.SubmissionLower.C2. -/
 section PackedLegacy_C2
 namespace ProximityPrize.SubmissionLower.RCN101
 open ProximityPrize.Benchmark RCN100 RCN119 RCN122
@@ -14219,7 +13502,6 @@ end
 end ProximityPrize.SubmissionLower.RCN101
 end PackedLegacy_C2
 
-/-! Packed from ProximityPrize.SubmissionLower.I4. -/
 section PackedLegacy_I4
 namespace ProximityPrize.SubmissionLower.RCN071
 open scoped BigOperators
@@ -14359,7 +13641,6 @@ end
 end ProximityPrize.SubmissionLower.RCN071
 end PackedLegacy_I4
 
-/-! Packed from ProximityPrize.SubmissionLower.X3. -/
 section PackedLegacy_X3
 namespace ProximityPrize.SubmissionLower.RCN372
 open scoped Classical BigOperators
@@ -14495,7 +13776,6 @@ end
 end ProximityPrize.SubmissionLower.RCN372
 end PackedLegacy_X3
 
-/-! Packed from ProximityPrize.SubmissionLower.Z3. -/
 section PackedLegacy_Z3
 namespace ProximityPrize.SubmissionLower.RCN125
 open scoped Classical BigOperators
@@ -14720,7 +14000,6 @@ end
 end ProximityPrize.SubmissionLower.RCN125
 end PackedLegacy_Z3
 
-/-! Packed from ProximityPrize.SubmissionLower.B9. -/
 section PackedLegacy_B9
 namespace ProximityPrize.SubmissionLower.RCN094
 open scoped Classical BigOperators
@@ -14833,7 +14112,6 @@ end
 end ProximityPrize.SubmissionLower.RCN094
 end PackedLegacy_B9
 
-/-! Packed from ProximityPrize.SubmissionLower.K4. -/
 section PackedLegacy_K4
 namespace ProximityPrize.SubmissionLower.RCN161
 noncomputable section
@@ -14846,7 +14124,6 @@ end
 end ProximityPrize.SubmissionLower.RCN161
 end PackedLegacy_K4
 
-/-! Packed from ProximityPrize.SubmissionLower.EZ. -/
 section PackedLegacy_EZ
 namespace ProximityPrize.SubmissionLower.RCN160
 open RCN238
@@ -14858,10 +14135,9 @@ end
 end ProximityPrize.SubmissionLower.RCN160
 end PackedLegacy_EZ
 
-/-! Packed from ProximityPrize.SubmissionLower.EX. -/
 section PackedLegacy_EX
 namespace ProximityPrize.SubmissionLower.RCN155
-open RCN238 RCN161 RCN160
+open RCN238 RCN161
 noncomputable section
 variable {K ι:Type} [Field K]
 local instance:DecidableEq K:=Classical.decEq K
@@ -14870,11 +14146,10 @@ end
 end ProximityPrize.SubmissionLower.RCN155
 end PackedLegacy_EX
 
-/-! Packed from ProximityPrize.SubmissionLower.BQ. -/
 section PackedLegacy_BQ
 namespace ProximityPrize.SubmissionLower.RCN163
 open scoped Classical
-open RCN094 RCN157 RCN155 RCN160 RCN238 RCN125 RCN372
+open RCN094 RCN157 RCN238 RCN125 RCN372
 noncomputable section
 set_option maxHeartbeats 2000000
 set_option maxRecDepth 20000
@@ -14894,7 +14169,6 @@ end
 end ProximityPrize.SubmissionLower.RCN163
 end PackedLegacy_BQ
 
-/-! Packed from ProximityPrize.SubmissionLower.K5. -/
 section PackedLegacy_K5
 namespace ProximityPrize.SubmissionLower.RCN166
 open RCN002 RCN136 RCN224 RCN139 RCN233 RCN231 RCN229 RCN313 RCN047 RCN147 RCN319 RCN065
@@ -14909,7 +14183,6 @@ end
 end ProximityPrize.SubmissionLower.RCN166
 end PackedLegacy_K5
 
-/-! Packed from ProximityPrize.SubmissionLower.E8. -/
 section PackedLegacy_E8
 namespace ProximityPrize.SubmissionLower.RCN275
 open RCN136 RCN313 RCN174 RCN081 RCN234 RCN157 RCN156 RCN095
@@ -14979,11 +14252,10 @@ end
 end ProximityPrize.SubmissionLower.RCN275
 end PackedLegacy_E8
 
-/-! Packed from ProximityPrize.SubmissionLower.B. -/
 section PackedLegacy_B
 namespace ProximityPrize.SubmissionLower.RCN159
 open scoped Classical
-open RCN136 RCN231 RCN319 RCN313 RCN065 RCN238 RCN160 RCN157 RCN163 RCN166 RCN156 RCN275 RCN234 RCN094 RCN095 RCN125
+open RCN136 RCN231 RCN319 RCN313 RCN065 RCN238 RCN157 RCN163 RCN166 RCN156 RCN275 RCN234 RCN094 RCN095 RCN125
 noncomputable section
 set_option maxHeartbeats 3000000
 set_option maxRecDepth 20000
@@ -15072,7 +14344,6 @@ end
 end ProximityPrize.SubmissionLower.RCN159
 end PackedLegacy_B
 
-/-! Packed from ProximityPrize.SubmissionLower.D8. -/
 section PackedLegacy_D8
 namespace ProximityPrize.SubmissionLower.RCN221
 open scoped Classical BigOperators
@@ -15166,19 +14437,10 @@ end PackedLegacy_D8
 end Compact_PackedLegacyCore1
 
 section Compact_AsymmetricHelper
-/-!
-The proper-cut argument uses agreement polynomials of the regular carrier F.
-The auxiliary polynomial T supplies the intersection but does not supply an
-agreement polynomial. Consequently, only the carrier's agreement degrees
-enter the counting numerator; a maximum with the helper's degrees is unneeded.
-The proof below specializes the inherited regular-pair proof at this sharper
-agreement vector.
--/
 
 namespace ProximityPrize.SubmissionLower.AsymmetricHelper
 open scoped Classical BigOperators
-open RCN260 RCN318 RCN294 RCN286 RCN169 RCN167 RCN290 RCN082 RCN081 RCN174
-  RCN319 RCN136 RCN137 RCN138 RCN135 RCN222 RCN243 RCN068 RCN238 RCN001 RCN052
+open RCN260 RCN318 RCN294 RCN286 RCN169 RCN167 RCN290 RCN082 RCN081 RCN174 RCN319 RCN136 RCN137 RCN138 RCN135 RCN222 RCN243 RCN068 RCN238 RCN001 RCN052
 noncomputable section
 set_option maxHeartbeats 3000000
 set_option maxRecDepth 20000
@@ -15363,7 +14625,7 @@ end ProximityPrize.SubmissionLower.AsymmetricHelper
 end Compact_AsymmetricHelper
 
 section Compact_PackedLegacyCore2
-/-! Packed from ProximityPrize.SubmissionLower.BG. -/
+
 section PackedLegacy_BG
 namespace ProximityPrize.SubmissionLower.RCN130
 open scoped Classical BigOperators
@@ -15559,7 +14821,6 @@ end
 end ProximityPrize.SubmissionLower.RCN130
 end PackedLegacy_BG
 
-/-! Packed from ProximityPrize.SubmissionLower.AJ. -/
 section PackedLegacy_AJ
 namespace ProximityPrize.SubmissionLower.RCN302
 open RCN100 RCN119
@@ -15594,7 +14855,6 @@ theorem coefficientCount_eq_sum_range_of_weighted_cutoff
 end ProximityPrize.SubmissionLower.RCN302
 end PackedLegacy_AJ
 
-/-! Packed from ProximityPrize.SubmissionLower.L1. -/
 section PackedLegacy_L1
 namespace ProximityPrize.SubmissionLower.RCN180
 open scoped BigOperators
@@ -15993,7 +15253,6 @@ end
 end ProximityPrize.SubmissionLower.RCN180
 end PackedLegacy_L1
 
-/-! Packed from ProximityPrize.SubmissionLower.ContactOrderBridge. -/
 section PackedLegacy_ContactOrderBridge
 namespace ProximityPrize.SubmissionLower.ContactOrderBridge
 open scoped BigOperators Pointwise
@@ -16297,7 +15556,6 @@ end
 end ProximityPrize.SubmissionLower.ContactOrderBridge
 end PackedLegacy_ContactOrderBridge
 
-/-! Packed from ProximityPrize.SubmissionLower.CH. -/
 section PackedLegacy_CH
 namespace ProximityPrize.SubmissionLower.RCN324
 open IsLocalRing
@@ -16421,7 +15679,6 @@ theorem isDiscreteValuationRing_of_isRegularLocalRing_of_dimension_one
 end ProximityPrize.SubmissionLower.RCN324
 end PackedLegacy_CH
 
-/-! Packed from ProximityPrize.SubmissionLower.BI. -/
 section PackedLegacy_BI
 namespace ProximityPrize.SubmissionLower.RCN133
 open Function Set
@@ -16540,7 +15797,6 @@ end
 end ProximityPrize.SubmissionLower.RCN133
 end PackedLegacy_BI
 
-/-! Packed from ProximityPrize.SubmissionLower.AZ. -/
 section PackedLegacy_AZ
 namespace ProximityPrize.SubmissionLower
 open scoped NNReal ProbabilityTheory
@@ -16748,7 +16004,6 @@ theorem givenSetsBound_of_alignmentBound
 end ProximityPrize.SubmissionLower
 end PackedLegacy_AZ
 
-/-! Packed from ProximityPrize.SubmissionLower.DV. -/
 section PackedLegacy_DV
 namespace ProximityPrize.SubmissionLower.RCN050
 open ProximityPrize.Benchmark
@@ -16861,7 +16116,6 @@ end
 end ProximityPrize.SubmissionLower.RCN050
 end PackedLegacy_DV
 
-/-! Packed from ProximityPrize.SubmissionLower.K7. -/
 section PackedLegacy_K7
 namespace ProximityPrize.SubmissionLower.RCN175
 open RCN174 RCN256 RCN223 ProximityPrize.Benchmark
@@ -16872,7 +16126,6 @@ end
 end ProximityPrize.SubmissionLower.RCN175
 end PackedLegacy_K7
 
-/-! Packed from ProximityPrize.SubmissionLower.GR. -/
 section PackedLegacy_GR
 namespace ProximityPrize.SubmissionLower.RCN320
 open ProximityPrize.Benchmark RCN174 RCN175 RCN256 RCN223 RCN319
@@ -16883,7 +16136,6 @@ end
 end ProximityPrize.SubmissionLower.RCN320
 end PackedLegacy_GR
 
-/-! Packed from ProximityPrize.SubmissionLower.BF. -/
 section PackedLegacy_BF
 namespace ProximityPrize.SubmissionLower.RCN128
 open ProximityPrize.Benchmark RCN050 RCN174 RCN319 RCN320 RCN238 RCN223
@@ -16899,7 +16151,6 @@ end
 end ProximityPrize.SubmissionLower.RCN128
 end PackedLegacy_BF
 
-/-! Packed from ProximityPrize.SubmissionLower.BY. -/
 section PackedLegacy_BY
 namespace ProximityPrize.SubmissionLower.RCN179
 open scoped BigOperators
@@ -17131,7 +16382,6 @@ end
 end ProximityPrize.SubmissionLower.RCN179
 end PackedLegacy_BY
 
-/-! Packed from ProximityPrize.SubmissionLower.Z6. -/
 section PackedLegacy_Z6
 namespace ProximityPrize.SubmissionLower.RCN164
 open scoped Classical
@@ -17148,7 +16398,6 @@ end
 end ProximityPrize.SubmissionLower.RCN164
 end PackedLegacy_Z6
 
-/-! Packed from ProximityPrize.SubmissionLower.U. -/
 section PackedLegacy_U
 namespace ProximityPrize.SubmissionLower.RCN276
 open scoped BigOperators
@@ -17163,11 +16412,10 @@ end
 end ProximityPrize.SubmissionLower.RCN276
 end PackedLegacy_U
 
-/-! Packed from ProximityPrize.SubmissionLower.B8. -/
 section PackedLegacy_B8
 namespace ProximityPrize.SubmissionLower.RCN091
 open scoped Classical
-open RCN159 RCN164 RCN213 RCN275 RCN276 RCN238 RCN095
+open RCN159 RCN213 RCN275 RCN276 RCN238 RCN095
 noncomputable section
 set_option maxHeartbeats 1000000
 set_option maxRecDepth 50000
@@ -17181,11 +16429,8 @@ end ProximityPrize.SubmissionLower.RCN091
 end PackedLegacy_B8
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLegacyBarrier13 : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.EN. -/
 section PackedLegacy_EN
 namespace ProximityPrize.SubmissionLower.RCN141
 open scoped Classical BigOperators
@@ -17200,7 +16445,6 @@ end
 end ProximityPrize.SubmissionLower.RCN141
 end PackedLegacy_EN
 
-/-! Packed from ProximityPrize.SubmissionLower.AG. -/
 section PackedLegacy_AG
 namespace ProximityPrize.SubmissionLower.RCN292
 open scoped Classical BigOperators
@@ -17380,11 +16624,10 @@ end
 end ProximityPrize.SubmissionLower.RCN292
 end PackedLegacy_AG
 
-/-! Packed from ProximityPrize.SubmissionLower.J6. -/
 section PackedLegacy_J6
 namespace ProximityPrize.SubmissionLower.RCN092
 open scoped Classical BigOperators
-open RCN174 RCN319 RCN238 RCN266 RCN140 RCN291 RCN294 RCN318 RCN276 RCN141 RCN292
+open RCN174 RCN319 RCN238 RCN266 RCN140 RCN291 RCN294 RCN318 RCN276 RCN292
 noncomputable section
 set_option maxHeartbeats 6000000
 set_option maxRecDepth 35000
@@ -17395,11 +16638,10 @@ end
 end ProximityPrize.SubmissionLower.RCN092
 end PackedLegacy_J6
 
-/-! Packed from ProximityPrize.SubmissionLower.GQ. -/
 section PackedLegacy_GQ
 namespace ProximityPrize.SubmissionLower.RCN317
 open scoped Classical BigOperators
-open RCN174 RCN319 RCN238 RCN266 RCN140 RCN291 RCN294 RCN318 RCN276 RCN141 RCN092
+open RCN174 RCN319 RCN238 RCN266 RCN140 RCN291 RCN294 RCN318 RCN276
 noncomputable section
 set_option maxHeartbeats 4000000
 set_option maxRecDepth 35000
@@ -17410,11 +16652,10 @@ end
 end ProximityPrize.SubmissionLower.RCN317
 end PackedLegacy_GQ
 
-/-! Packed from ProximityPrize.SubmissionLower.AF. -/
 section PackedLegacy_AF
 namespace ProximityPrize.SubmissionLower.RCN287
 open scoped Classical BigOperators
-open RCN081 RCN313 RCN136 RCN234 RCN179 RCN095 RCN275 RCN275.ResidualSupportParameters RCN156 RCN174 RCN238 RCN266 RCN159 RCN164 RCN091 RCN276 RCN318 RCN141 RCN317
+open RCN081 RCN313 RCN136 RCN234 RCN179 RCN095 RCN275 RCN275.ResidualSupportParameters RCN156 RCN174 RCN238 RCN266 RCN159 RCN276 RCN318
 noncomputable section
 set_option maxHeartbeats 4000000
 set_option maxRecDepth 35000
@@ -17572,7 +16813,6 @@ end
 end ProximityPrize.SubmissionLower.RCN287
 end PackedLegacy_AF
 
-/-! Packed from ProximityPrize.SubmissionLower.N7. -/
 section PackedLegacy_N7
 namespace ProximityPrize.SubmissionLower.RCN262
 open scoped BigOperators
@@ -17718,7 +16958,6 @@ end
 end ProximityPrize.SubmissionLower.RCN262
 end PackedLegacy_N7
 
-/-! Packed from ProximityPrize.SubmissionLower.N6. -/
 section PackedLegacy_N6
 namespace ProximityPrize.SubmissionLower.RCN261
 open RCN290 RCN293 RCN081
@@ -17958,7 +17197,6 @@ end
 end ProximityPrize.SubmissionLower.RCN261
 end PackedLegacy_N6
 
-/-! Packed from ProximityPrize.SubmissionLower.N8. -/
 section PackedLegacy_N8
 namespace ProximityPrize.SubmissionLower.RCN262
 open scoped BigOperators
@@ -18175,7 +17413,6 @@ end
 end ProximityPrize.SubmissionLower.RCN262
 end PackedLegacy_N8
 
-/-! Packed from ProximityPrize.SubmissionLower.N9. -/
 section PackedLegacy_N9
 namespace ProximityPrize.SubmissionLower.RCN262
 open scoped BigOperators
@@ -18365,7 +17602,6 @@ end
 end ProximityPrize.SubmissionLower.RCN262
 end PackedLegacy_N9
 
-/-! Packed from ProximityPrize.SubmissionLower.Z5. -/
 section PackedLegacy_Z5
 namespace ProximityPrize.SubmissionLower.RCN162
 open scoped Classical
@@ -18496,7 +17732,6 @@ end
 end ProximityPrize.SubmissionLower.RCN162
 end PackedLegacy_Z5
 
-/-! Packed from ProximityPrize.SubmissionLower.AE. -/
 section PackedLegacy_AE
 namespace ProximityPrize.SubmissionLower.RCN272
 open scoped Classical BigOperators
@@ -18519,7 +17754,6 @@ end
 end ProximityPrize.SubmissionLower.RCN272
 end PackedLegacy_AE
 
-/-! Packed from ProximityPrize.SubmissionLower.BR. -/
 section PackedLegacy_BR
 namespace ProximityPrize.SubmissionLower.RCN165
 open scoped Classical
@@ -18538,12 +17772,10 @@ end
 end ProximityPrize.SubmissionLower.RCN165
 end PackedLegacy_BR
 
-/-! Packed from ProximityPrize.SubmissionLower.BE. -/
 section PackedLegacy_BE
 namespace ProximityPrize.SubmissionLower.RCN123
 open scoped Classical
-open RCN095 RCN125 RCN371 RCN011
- RCN009 RCN012
+open RCN095 RCN125 RCN371 RCN011 RCN009 RCN012
 noncomputable section
 variable {K:Type} [Field K]
 abbrev Poly3 (K:Type) [Field K]:=MvPolynomial (Fin 3) K
@@ -18620,7 +17852,6 @@ end
 end ProximityPrize.SubmissionLower.RCN123
 end PackedLegacy_BE
 
-/-! Packed from ProximityPrize.SubmissionLower.Z2. -/
 section PackedLegacy_Z2
 namespace ProximityPrize.SubmissionLower.RCN121
 open RCN095
@@ -18717,7 +17948,6 @@ theorem z_flag_trapezoid_budget
 end ProximityPrize.SubmissionLower.RCN121
 end PackedLegacy_Z2
 
-/-! Packed from ProximityPrize.SubmissionLower.I. -/
 section PackedLegacy_I
 namespace ProximityPrize.SubmissionLower.RCN237
 open scoped Classical BigOperators
@@ -18767,7 +17997,6 @@ end
 end ProximityPrize.SubmissionLower.RCN237
 end PackedLegacy_I
 
-/-! Packed from ProximityPrize.SubmissionLower.B1. -/
 section PackedLegacy_B1
 namespace ProximityPrize.SubmissionLower.RCN066
 open scoped Classical BigOperators
@@ -18875,7 +18104,6 @@ end
 end ProximityPrize.SubmissionLower.RCN066
 end PackedLegacy_B1
 
-/-! Packed from ProximityPrize.SubmissionLower.E5. -/
 section PackedLegacy_E5
 namespace ProximityPrize.SubmissionLower.RCN263
 open RCN136 RCN231 RCN313 RCN238 RCN156 RCN234 RCN095 RCN275 RCN262 RCN066
@@ -18982,7 +18210,6 @@ end
 end ProximityPrize.SubmissionLower.RCN263
 end PackedLegacy_E5
 
-/-! Packed from ProximityPrize.SubmissionLower.Y3. -/
 section PackedLegacy_Y3
 namespace ProximityPrize.SubmissionLower.RCN055
 open RCN077 RCN313 RCN347
@@ -19046,7 +18273,6 @@ end
 end ProximityPrize.SubmissionLower.RCN055
 end PackedLegacy_Y3
 
-/-! Packed from ProximityPrize.SubmissionLower.A6. -/
 section PackedLegacy_A6
 namespace ProximityPrize.SubmissionLower.RCN056
 open RCN077 RCN313 RCN347 RCN055
@@ -19186,7 +18412,6 @@ end
 end ProximityPrize.SubmissionLower.RCN056
 end PackedLegacy_A6
 
-/-! Packed from ProximityPrize.SubmissionLower.DX. -/
 section PackedLegacy_DX
 namespace ProximityPrize.SubmissionLower.RCN053
 open RCN077 RCN313 RCN055 RCN056
@@ -19283,11 +18508,8 @@ end ProximityPrize.SubmissionLower.RCN053
 end PackedLegacy_DX
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLegacyBarrier14 : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.DZ. -/
 section PackedLegacy_DZ
 namespace ProximityPrize.SubmissionLower.RCN057
 open RCN313 RCN055 RCN056 RCN234
@@ -19439,7 +18661,6 @@ end
 end ProximityPrize.SubmissionLower.RCN057
 end PackedLegacy_DZ
 
-/-! Packed from ProximityPrize.SubmissionLower.DY. -/
 section PackedLegacy_DY
 namespace ProximityPrize.SubmissionLower.RCN054
 open RCN313 RCN055 RCN056 RCN057 RCN053 RCN234 RCN095
@@ -19653,7 +18874,6 @@ end
 end ProximityPrize.SubmissionLower.RCN054
 end PackedLegacy_DY
 
-/-! Packed from ProximityPrize.SubmissionLower.D2. -/
 section PackedLegacy_D2
 namespace ProximityPrize.SubmissionLower.RCN207
 open scoped Classical BigOperators Pointwise
@@ -19821,7 +19041,6 @@ end
 end ProximityPrize.SubmissionLower.RCN207
 end PackedLegacy_D2
 
-/-! Packed from ProximityPrize.SubmissionLower.Z8. -/
 section PackedLegacy_Z8
 namespace ProximityPrize.SubmissionLower.RCN198
 open scoped Classical BigOperators
@@ -19869,7 +19088,6 @@ end
 end ProximityPrize.SubmissionLower.RCN198
 end PackedLegacy_Z8
 
-/-! Packed from ProximityPrize.SubmissionLower.BZ. -/
 section PackedLegacy_BZ
 namespace ProximityPrize.SubmissionLower.RCN184
 open scoped Classical BigOperators WithZero
@@ -20080,7 +19298,6 @@ end
 end ProximityPrize.SubmissionLower.RCN184
 end PackedLegacy_BZ
 
-/-! Packed from ProximityPrize.SubmissionLower.GA. -/
 section PackedLegacy_GA
 namespace ProximityPrize.SubmissionLower.RCN296
 open scoped Classical BigOperators WithZero
@@ -20160,7 +19377,6 @@ end
 end ProximityPrize.SubmissionLower.RCN296
 end PackedLegacy_GA
 
-/-! Packed from ProximityPrize.SubmissionLower.O4. -/
 section PackedLegacy_O4
 namespace ProximityPrize.SubmissionLower.RCN273
 open scoped Classical BigOperators WithZero
@@ -20185,12 +19401,10 @@ end
 end ProximityPrize.SubmissionLower.RCN273
 end PackedLegacy_O4
 
-/-! Packed from ProximityPrize.SubmissionLower.GU. -/
 section PackedLegacy_GU
 namespace ProximityPrize.SubmissionLower.RCN323
 open scoped Classical BigOperators WithZero
-open IsDedekindDomain RCN295 RCN002 RCN005
- RCN006 RCN007
+open IsDedekindDomain RCN295 RCN002 RCN005 RCN006 RCN007
 open RCN344 RCN264 RCN273
 noncomputable section
 variable {K L σ:Type} [Field K] [Field L] [Fintype σ]
@@ -20362,12 +19576,10 @@ end
 end ProximityPrize.SubmissionLower.RCN323
 end PackedLegacy_GU
 
-/-! Packed from ProximityPrize.SubmissionLower.B4. -/
 section PackedLegacy_B4
 namespace ProximityPrize.SubmissionLower.RCN075
 open scoped Classical BigOperators WithZero
-open IsDedekindDomain RCN187 RCN133 RCN184 RCN295 RCN002 RCN005
- RCN006 RCN007
+open IsDedekindDomain RCN187 RCN133 RCN184 RCN295 RCN002 RCN005 RCN006 RCN007
 open RCN344 RCN264 RCN273 RCN323
 noncomputable section
 variable {Ω:Type} [Field Ω] [IsAlgClosed Ω]
@@ -20528,14 +19740,10 @@ end
 end ProximityPrize.SubmissionLower.RCN075
 end PackedLegacy_B4
 
-/-! Packed from ProximityPrize.SubmissionLower.DO. -/
-
-/-! Packed from ProximityPrize.SubmissionLower.X. -/
 section PackedLegacy_X
 namespace ProximityPrize.SubmissionLower.RCN341
 open scoped Classical
-open RCN002 RCN005
- RCN006 RCN007
+open RCN002 RCN005 RCN006 RCN007
 open RCN344 RCN264 RCN295 RCN296
 noncomputable section
 set_option maxHeartbeats 2000000
@@ -20723,7 +19931,6 @@ end
 end ProximityPrize.SubmissionLower.RCN341
 end PackedLegacy_X
 
-/-! Packed from ProximityPrize.SubmissionLower.P. -/
 section PackedLegacy_P
 namespace ProximityPrize.SubmissionLower.RCN114
 open scoped Classical BigOperators WithZero
@@ -20882,12 +20089,10 @@ end
 end ProximityPrize.SubmissionLower.RCN114
 end PackedLegacy_P
 
-/-! Packed from ProximityPrize.SubmissionLower.Q8. -/
 section PackedLegacy_Q8
 namespace ProximityPrize.SubmissionLower.RCN340
 open scoped Classical BigOperators WithZero
-open IsDedekindDomain RCN002 RCN005
- RCN006
+open IsDedekindDomain RCN002 RCN005 RCN006
 open RCN344 RCN264 RCN095 RCN114 RCN295 RCN341 RCN237 RCN165
 noncomputable section
 set_option maxHeartbeats 2000000
@@ -21034,7 +20239,6 @@ end
 end ProximityPrize.SubmissionLower.RCN340
 end PackedLegacy_Q8
 
-/-! Packed from ProximityPrize.SubmissionLower.G. -/
 section PackedLegacy_G
 namespace ProximityPrize.SubmissionLower.RCN022
 open scoped Classical
@@ -21098,7 +20302,6 @@ end
 end ProximityPrize.SubmissionLower.RCN022
 end PackedLegacy_G
 
-/-! Packed from ProximityPrize.SubmissionLower.G7. -/
 section PackedLegacy_G7
 namespace ProximityPrize.SubmissionLower.RCN369
 open scoped Classical
@@ -21210,7 +20413,6 @@ end
 end ProximityPrize.SubmissionLower.RCN369
 end PackedLegacy_G7
 
-/-! Packed from ProximityPrize.SubmissionLower.X1. -/
 section PackedLegacy_X1
 namespace ProximityPrize.SubmissionLower.RCN370
 open scoped Classical
@@ -21235,7 +20437,6 @@ end
 end ProximityPrize.SubmissionLower.RCN370
 end PackedLegacy_X1
 
-/-! Packed from ProximityPrize.SubmissionLower.R7. -/
 section PackedLegacy_R7
 namespace ProximityPrize.SubmissionLower.RCN351
 open scoped Classical TensorProduct
@@ -21359,11 +20560,8 @@ end ProximityPrize.SubmissionLower.RCN351
 end PackedLegacy_R7
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLegacyBarrier15 : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.DE. -/
 section PackedLegacy_DE
 namespace ProximityPrize.SubmissionLower.RCN024
 open scoped BigOperators
@@ -21774,7 +20972,6 @@ end
 end ProximityPrize.SubmissionLower.RCN024
 end PackedLegacy_DE
 
-/-! Packed from ProximityPrize.SubmissionLower.DF. -/
 section PackedLegacy_DF
 namespace ProximityPrize.SubmissionLower.RCN025
 open scoped Classical BigOperators
@@ -22135,15 +21332,10 @@ end
 end ProximityPrize.SubmissionLower.RCN025
 end PackedLegacy_DF
 
-/-! Packed from ProximityPrize.SubmissionLower.AW. -/
 section PackedLegacy_AW
 namespace ProximityPrize.SubmissionLower.RCN008
 open scoped Classical BigOperators
-open RCN002 RCN005
- RCN371 RCN011
- RCN009 RCN013 RCN010
- RCN024
- RCN025
+open RCN002 RCN005 RCN371 RCN011 RCN009 RCN013 RCN010 RCN024 RCN025
 noncomputable section
 variable (K:Type) [Field K]
 section FixedOrder
@@ -22158,15 +21350,10 @@ end
 end ProximityPrize.SubmissionLower.RCN008
 end PackedLegacy_AW
 
-/-! Packed from ProximityPrize.SubmissionLower.X7. -/
 section PackedLegacy_X7
 namespace ProximityPrize.SubmissionLower.RCN021
 open scoped Classical BigOperators
-open RCN371 RCN011
- RCN009 RCN013
- RCN008
- RCN024
- RCN025 RCN022
+open RCN371 RCN011 RCN009 RCN013 RCN008 RCN024 RCN025 RCN022
 noncomputable section
 set_option maxHeartbeats 1000000
 variable (K:Type) [Field K]
@@ -22434,16 +21621,10 @@ end
 end ProximityPrize.SubmissionLower.RCN021
 end PackedLegacy_X7
 
-/-! Packed from ProximityPrize.SubmissionLower.EE. -/
 section PackedLegacy_EE
 namespace ProximityPrize.SubmissionLower.RCN124
 open scoped Classical BigOperators
-open RCN371 RCN011
- RCN009 RCN013
- RCN008
- RCN024
- RCN025 RCN022
- RCN021 RCN012
+open RCN371 RCN011 RCN009 RCN013 RCN008 RCN024 RCN025 RCN022 RCN021 RCN012
 noncomputable section
 theorem sum_finrank_le_ordinary_resultant_without_separability
    {F:Type} [Field F] {I:Type*} [Fintype I]
@@ -22587,13 +21768,10 @@ end
 end ProximityPrize.SubmissionLower.RCN124
 end PackedLegacy_EE
 
-/-! Packed from ProximityPrize.SubmissionLower.Y7. -/
 section PackedLegacy_Y7
 namespace ProximityPrize.SubmissionLower.RCN093
 open scoped Classical BigOperators
-open RCN002 RCN005
- RCN022 RCN011
- RCN371
+open RCN002 RCN005 RCN022 RCN011 RCN371
 open RCN125 RCN124
 noncomputable section
 set_option maxHeartbeats 2000000
@@ -22864,14 +22042,11 @@ end
 end ProximityPrize.SubmissionLower.RCN093
 end PackedLegacy_Y7
 
-/-! Packed from ProximityPrize.SubmissionLower.BB. -/
 section PackedLegacy_BB
 namespace ProximityPrize.SubmissionLower.RCN118
 open scoped Classical BigOperators WithZero
-open IsDedekindDomain RCN002 RCN005
- RCN006 RCN007
-open RCN344 RCN264 RCN272
- RCN273
+open IsDedekindDomain RCN002 RCN005 RCN006 RCN007
+open RCN344 RCN264 RCN272 RCN273
 open RCN323 RCN075 RCN095 RCN114 RCN187 RCN295
 noncomputable section
 variable {Ω:Type} [Field Ω] [IsAlgClosed Ω]
@@ -23122,7 +22297,6 @@ end
 end ProximityPrize.SubmissionLower.RCN118
 end PackedLegacy_BB
 
-/-! Packed from ProximityPrize.SubmissionLower.Y8. -/
 section PackedLegacy_Y8
 namespace ProximityPrize.SubmissionLower.RCN097
 open scoped Classical BigOperators WithZero TensorProduct
@@ -23130,8 +22304,7 @@ open Polynomial KaehlerDifferential IsDedekindDomain RCN022 RCN351 RCN344 RCN295
 noncomputable section
 set_option maxHeartbeats 1000000
 set_option synthInstance.maxHeartbeats 300000
-/-- Finite avoidance inside an infinite subset `S` (used to keep the flag coefficients in the
-image of `K[X]`, where the H-free derivation is defined). -/
+
 theorem exists_nonzero_avoiding_finite_subsingleton_in
    {K ι:Type*} [Field K] [Finite ι] (S:Set K) (hS:S.Infinite)
    (Bad:ι → K → Prop)
@@ -23263,12 +22436,10 @@ end
 end ProximityPrize.SubmissionLower.RCN097
 end PackedLegacy_Y8
 
-/-! Packed from ProximityPrize.SubmissionLower.DN. -/
 section PackedLegacy_DN
 namespace ProximityPrize.SubmissionLower.RCN035
 open scoped Classical BigOperators WithZero TensorProduct
-open Polynomial KaehlerDifferential RCN344 RCN369 RCN370
- RCN351
+open Polynomial KaehlerDifferential RCN344 RCN369 RCN370 RCN351
 open RCN022 RCN097
 noncomputable section
 set_option maxHeartbeats 2000000
@@ -23484,12 +22655,10 @@ end
 end ProximityPrize.SubmissionLower.RCN035
 end PackedLegacy_DN
 
-/-! Packed from ProximityPrize.SubmissionLower.Y1. -/
 section PackedLegacy_Y1
 namespace ProximityPrize.SubmissionLower.RCN042
 open scoped Classical TensorProduct
-open Polynomial KaehlerDifferential RCN344 RCN022 RCN369 RCN370
- RCN351
+open Polynomial KaehlerDifferential RCN344 RCN022 RCN369 RCN370 RCN351
 open RCN341
 noncomputable section
 variable {K:Type} {L:Type*} [Field K] [Field L] [Algebra K L] [IsAlgClosed K]
@@ -23615,7 +22784,6 @@ end
 end ProximityPrize.SubmissionLower.RCN042
 end PackedLegacy_Y1
 
-/-! Packed from ProximityPrize.SubmissionLower.A3. -/
 section PackedLegacy_A3
 namespace ProximityPrize.SubmissionLower.RCN046
 open scoped Classical BigOperators WithZero
@@ -23768,12 +22936,10 @@ end
 end ProximityPrize.SubmissionLower.RCN046
 end PackedLegacy_A3
 
-/-! Packed from ProximityPrize.SubmissionLower.DS. -/
 section PackedLegacy_DS
 namespace ProximityPrize.SubmissionLower.RCN044
 open scoped Classical WithZero
-open IsDedekindDomain RCN187 RCN002 RCN005
- RCN006
+open IsDedekindDomain RCN187 RCN002 RCN005 RCN006
 open RCN344 RCN341
 noncomputable section
 set_option maxHeartbeats 1000000
@@ -23849,7 +23015,6 @@ end
 end ProximityPrize.SubmissionLower.RCN044
 end PackedLegacy_DS
 
-/-! Packed from ProximityPrize.SubmissionLower.J7. -/
 section PackedLegacy_J7
 namespace ProximityPrize.SubmissionLower.RCN096
 open scoped Classical BigOperators WithZero TensorProduct
@@ -23899,7 +23064,6 @@ end
 end ProximityPrize.SubmissionLower.RCN096
 end PackedLegacy_J7
 
-/-! Packed from ProximityPrize.SubmissionLower.J8. -/
 section PackedLegacy_J8
 namespace ProximityPrize.SubmissionLower.RCN099
 open scoped Classical WithZero
@@ -24074,18 +23238,13 @@ end ProximityPrize.SubmissionLower.RCN099
 end PackedLegacy_J8
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLegacyBarrier16 : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.ED. -/
 section PackedLegacy_ED
 namespace ProximityPrize.SubmissionLower.RCN115
 open scoped Classical BigOperators
-open IsDedekindDomain RCN002 RCN005
- RCN006 RCN007
-open RCN344 RCN264 RCN075 RCN323 RCN118 RCN093 RCN125 RCN371 RCN011
- RCN022
+open IsDedekindDomain RCN002 RCN005 RCN006 RCN007
+open RCN344 RCN264 RCN075 RCN323 RCN118 RCN093 RCN125 RCN371 RCN011 RCN022
 noncomputable section
 variable {Omega:Type} [Field Omega] [IsAlgClosed Omega]
 structure SeparablePrincipalProjection
@@ -24302,14 +23461,11 @@ end
 end ProximityPrize.SubmissionLower.RCN115
 end PackedLegacy_ED
 
-/-! Packed from ProximityPrize.SubmissionLower.Z0. -/
 section PackedLegacy_Z0
 namespace ProximityPrize.SubmissionLower.RCN116
 open scoped Classical BigOperators WithZero
-open IsDedekindDomain RCN002 RCN005
- RCN006 RCN007
-open RCN344 RCN264 RCN187 RCN075 RCN295 RCN095 RCN114 RCN125 RCN093 RCN097 RCN099 RCN115 RCN118 RCN123 RCN272 RCN371 RCN011
- RCN022
+open IsDedekindDomain RCN002 RCN005 RCN006 RCN007
+open RCN344 RCN264 RCN187 RCN075 RCN295 RCN095 RCN114 RCN125 RCN093 RCN097 RCN099 RCN115 RCN118 RCN123 RCN272 RCN371 RCN011 RCN022
 noncomputable section
 set_option maxHeartbeats 3000000
 set_option synthInstance.maxHeartbeats 300000
@@ -24552,12 +23708,10 @@ end
 end ProximityPrize.SubmissionLower.RCN116
 end PackedLegacy_Z0
 
-/-! Packed from ProximityPrize.SubmissionLower.X9. -/
 section PackedLegacy_X9
 namespace ProximityPrize.SubmissionLower.RCN037
 open scoped Classical WithZero TensorProduct
-open Polynomial KaehlerDifferential RCN002 RCN005 RCN344 RCN264 RCN341 RCN042 RCN035 RCN044 RCN093 RCN099 RCN096 RCN114 RCN116 RCN295 RCN022 RCN369 RCN370
- RCN351
+open Polynomial KaehlerDifferential RCN002 RCN005 RCN344 RCN264 RCN341 RCN042 RCN035 RCN044 RCN093 RCN099 RCN096 RCN114 RCN116 RCN295 RCN022 RCN369 RCN370 RCN351
 noncomputable section
 set_option maxHeartbeats 4000000
 set_option synthInstance.maxHeartbeats 400000
@@ -24900,9 +24054,6 @@ end
 end ProximityPrize.SubmissionLower.RCN037
 end PackedLegacy_X9
 
-/-! Packed from ProximityPrize.SubmissionLower.C0. -/
-
-/-! Packed from ProximityPrize.SubmissionLower.BA. -/
 section PackedLegacy_BA
 namespace ProximityPrize.SubmissionLower.RCN117
 open scoped Classical
@@ -25003,7 +24154,6 @@ end
 end ProximityPrize.SubmissionLower.RCN117
 end PackedLegacy_BA
 
-/-! Packed from ProximityPrize.SubmissionLower.Y0. -/
 section PackedLegacy_Y0
 namespace ProximityPrize.SubmissionLower.RCN039
 open scoped Classical BigOperators WithZero
@@ -25341,11 +24491,10 @@ end
 end ProximityPrize.SubmissionLower.RCN039
 end PackedLegacy_Y0
 
-/-! Packed from ProximityPrize.SubmissionLower.E1. -/
 section PackedLegacy_E1
 namespace ProximityPrize.SubmissionLower.RCN240
 open scoped Classical BigOperators
-open RCN159 RCN164 RCN275 RCN276 RCN174 RCN286 RCN266 RCN238 RCN095
+open RCN159 RCN275 RCN276 RCN174 RCN286 RCN266 RCN238 RCN095
 set_option maxHeartbeats 1500000
 set_option maxRecDepth 50000
 noncomputable section
@@ -25358,11 +24507,10 @@ end
 end ProximityPrize.SubmissionLower.RCN240
 end PackedLegacy_E1
 
-/-! Packed from ProximityPrize.SubmissionLower.EI. -/
 section PackedLegacy_EI
 namespace ProximityPrize.SubmissionLower.RCN131
 open scoped Classical BigOperators
-open RCN095 RCN130 RCN240 RCN276 RCN266 RCN222 RCN275 RCN174 RCN319
+open RCN095 RCN130 RCN276 RCN266 RCN222 RCN275 RCN174 RCN319
 noncomputable section
 set_option maxHeartbeats 2000000
 set_option maxRecDepth 30000
@@ -25383,7 +24531,6 @@ end
 end ProximityPrize.SubmissionLower.RCN131
 end PackedLegacy_EI
 
-/-! Packed from ProximityPrize.SubmissionLower.Y5. -/
 section PackedLegacy_Y5
 namespace ProximityPrize.SubmissionLower.RCN084
 open scoped Classical BigOperators
@@ -25635,7 +24782,6 @@ end
 end ProximityPrize.SubmissionLower.RCN084
 end PackedLegacy_Y5
 
-/-! Packed from ProximityPrize.SubmissionLower.D1. -/
 section PackedLegacy_D1
 namespace ProximityPrize.SubmissionLower.RCN206
 open scoped Classical BigOperators
@@ -25658,9 +24804,6 @@ end
 end ProximityPrize.SubmissionLower.RCN206
 end PackedLegacy_D1
 
-/-! Packed from ProximityPrize.SubmissionLower.CommonShearDegreePrototype. -/
-
-/-! Packed from ProximityPrize.SubmissionLower.DD. -/
 section PackedLegacy_DD
 namespace ProximityPrize.SubmissionLower.RCN023
 open scoped Classical BigOperators
@@ -25673,7 +24816,6 @@ end
 end ProximityPrize.SubmissionLower.RCN023
 end PackedLegacy_DD
 
-/-! Packed from ProximityPrize.SubmissionLower.X0. -/
 section PackedLegacy_X0
 namespace ProximityPrize.SubmissionLower.RCN368
 open scoped Classical
@@ -25682,12 +24824,10 @@ end
 end ProximityPrize.SubmissionLower.RCN368
 end PackedLegacy_X0
 
-/-! Packed from ProximityPrize.SubmissionLower.I2. -/
 section PackedLegacy_I2
 namespace ProximityPrize.SubmissionLower.RCN067
 open scoped Classical
-open RCN002 RCN007
- RCN238
+open RCN002 RCN007 RCN238
 noncomputable section
 variable {K Ω:Type} [Field K] [Field Ω] [IsAlgClosed Ω]
  (φ:Polynomial K →+*Ω)
@@ -25699,18 +24839,14 @@ end ProximityPrize.SubmissionLower.RCN067
 end PackedLegacy_I2
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLegacyBarrier17 : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.DT. -/
 section PackedLegacy_DT
 namespace ProximityPrize.SubmissionLower.RCN045
 set_option maxHeartbeats 1000000
 open scoped Classical BigOperators
-open RCN002 RCN005 RCN006
- RCN007
-open RCN136 RCN231 RCN229 RCN313 RCN065 RCN319 RCN238 RCN264 RCN243 RCN306 RCN023 RCN001 RCN008 RCN369 RCN344 RCN368 RCN022 RCN067
+open RCN002 RCN005 RCN006 RCN007
+open RCN136 RCN231 RCN229 RCN313 RCN065 RCN319 RCN238 RCN264 RCN243 RCN023 RCN001 RCN008 RCN369 RCN344 RCN368 RCN022
 noncomputable section
 variable {K Ω:Type} [Field K] [Field Ω]
  (φ:Polynomial K →+*Ω)
@@ -25724,10 +24860,9 @@ end
 end ProximityPrize.SubmissionLower.RCN045
 end PackedLegacy_DT
 
-/-! Packed from ProximityPrize.SubmissionLower.EO. -/
 section PackedLegacy_EO
 namespace ProximityPrize.SubmissionLower.RCN142
-open RCN002 RCN007 RCN045 RCN023
+open RCN002 RCN007 RCN023
 noncomputable section
 variable (K:Type) [Field K] [IsAlgClosed K]
 variable (P:Ideal (MvPolynomial (Fin 3) K)) [P.IsPrime]
@@ -25744,15 +24879,6 @@ end
 end ProximityPrize.SubmissionLower.RCN142
 end PackedLegacy_EO
 
-/-! Packed from ProximityPrize.SubmissionLower.CommonShearFiberPrototype. -/
-
-/-! Packed from ProximityPrize.SubmissionLower.CommonShearFamilyPrototype. -/
-
-/-! Packed from ProximityPrize.SubmissionLower.CommonShearConsumerPrototype. -/
-
-/-! Packed from ProximityPrize.SubmissionLower.CommonShearTightPrototype. -/
-
-/-! Packed from ProximityPrize.SubmissionLower.L2. -/
 section PackedLegacy_L2
 namespace ProximityPrize.SubmissionLower.RCN181
 open scoped BigOperators
@@ -25972,7 +25098,6 @@ end
 end ProximityPrize.SubmissionLower.RCN181
 end PackedLegacy_L2
 
-/-! Packed from ProximityPrize.SubmissionLower.L4. -/
 section PackedLegacy_L4
 namespace ProximityPrize.SubmissionLower.RCN183
 open scoped BigOperators
@@ -26028,7 +25153,6 @@ end
 end ProximityPrize.SubmissionLower.RCN183
 end PackedLegacy_L4
 
-/-! Packed from ProximityPrize.SubmissionLower.Y6. -/
 section PackedLegacy_Y6
 namespace ProximityPrize.SubmissionLower.RCN086
 open scoped Classical BigOperators
@@ -26157,7 +25281,6 @@ end
 end ProximityPrize.SubmissionLower.RCN086
 end PackedLegacy_Y6
 
-/-! Packed from ProximityPrize.SubmissionLower.FD. -/
 section PackedLegacy_FD
 namespace ProximityPrize.SubmissionLower.RCN212
 open scoped Classical BigOperators WithZero
@@ -26368,7 +25491,6 @@ end
 end ProximityPrize.SubmissionLower.RCN212
 end PackedLegacy_FD
 
-/-! Packed from ProximityPrize.SubmissionLower.EJ. -/
 section PackedLegacy_EJ
 namespace ProximityPrize.SubmissionLower.RCN134
 open scoped BigOperators
@@ -26448,7 +25570,6 @@ end
 end ProximityPrize.SubmissionLower.RCN134
 end PackedLegacy_EJ
 
-/-! Packed from ProximityPrize.SubmissionLower.D3. -/
 section PackedLegacy_D3
 namespace ProximityPrize.SubmissionLower.RCN208
 open scoped Classical
@@ -26499,7 +25620,6 @@ end
 end ProximityPrize.SubmissionLower.RCN208
 end PackedLegacy_D3
 
-/-! Packed from ProximityPrize.SubmissionLower.A9. -/
 section PackedLegacy_A9
 namespace ProximityPrize.SubmissionLower.RCN064
 open scoped Classical BigOperators WithZero
@@ -26720,7 +25840,6 @@ end
 end ProximityPrize.SubmissionLower.RCN064
 end PackedLegacy_A9
 
-/-! Packed from ProximityPrize.SubmissionLower.M8. -/
 section PackedLegacy_M8
 namespace ProximityPrize.SubmissionLower.RCN204
 open scoped Classical BigOperators WithZero
@@ -26767,7 +25886,6 @@ end
 end ProximityPrize.SubmissionLower.RCN204
 end PackedLegacy_M8
 
-/-! Packed from ProximityPrize.SubmissionLower.O3. -/
 section PackedLegacy_O3
 namespace ProximityPrize.SubmissionLower.RCN271
 open scoped Classical
@@ -26828,7 +25946,6 @@ end
 end ProximityPrize.SubmissionLower.RCN271
 end PackedLegacy_O3
 
-/-! Packed from ProximityPrize.SubmissionLower.E3. -/
 section PackedLegacy_E3
 namespace ProximityPrize.SubmissionLower.RCN257
 open scoped Classical BigOperators WithZero
@@ -26959,7 +26076,7 @@ end PackedLegacy_E3
 end Compact_PackedLegacyCore2
 
 section Compact_PackedLegacy
-/-! Packed from ProximityPrize.SubmissionLower.M3. -/
+
 section PackedLegacy_M3
 namespace ProximityPrize.SubmissionLower.RCN199
 open scoped Classical BigOperators WithZero
@@ -27007,7 +26124,6 @@ end
 end ProximityPrize.SubmissionLower.RCN199
 end PackedLegacy_M3
 
-/-! Packed from ProximityPrize.SubmissionLower.I7. -/
 section PackedLegacy_I7
 namespace ProximityPrize.SubmissionLower.RCN076
 open RCN208
@@ -27058,7 +26174,6 @@ end
 end ProximityPrize.SubmissionLower.RCN076
 end PackedLegacy_I7
 
-/-! Packed from ProximityPrize.SubmissionLower.M6. -/
 section PackedLegacy_M6
 namespace ProximityPrize.SubmissionLower.RCN202
 open scoped Classical BigOperators
@@ -27324,7 +26439,6 @@ end
 end ProximityPrize.SubmissionLower.RCN202
 end PackedLegacy_M6
 
-/-! Packed from ProximityPrize.SubmissionLower.M9. -/
 section PackedLegacy_M9
 namespace ProximityPrize.SubmissionLower.RCN209
 open scoped Classical BigOperators WithZero
@@ -27410,7 +26524,6 @@ end
 end ProximityPrize.SubmissionLower.RCN209
 end PackedLegacy_M9
 
-/-! Packed from ProximityPrize.SubmissionLower.M4. -/
 section PackedLegacy_M4
 namespace ProximityPrize.SubmissionLower.RCN200
 open scoped Classical BigOperators WithZero
@@ -27486,7 +26599,6 @@ end
 end ProximityPrize.SubmissionLower.RCN200
 end PackedLegacy_M4
 
-/-! Packed from ProximityPrize.SubmissionLower.M5. -/
 section PackedLegacy_M5
 namespace ProximityPrize.SubmissionLower.RCN201
 open scoped Classical
@@ -27560,7 +26672,6 @@ end
 end ProximityPrize.SubmissionLower.RCN201
 end PackedLegacy_M5
 
-/-! Packed from ProximityPrize.SubmissionLower.M7. -/
 section PackedLegacy_M7
 namespace ProximityPrize.SubmissionLower.RCN203
 open scoped Classical BigOperators
@@ -27597,7 +26708,6 @@ end
 end ProximityPrize.SubmissionLower.RCN203
 end PackedLegacy_M7
 
-/-! Packed from ProximityPrize.SubmissionLower.J3. -/
 section PackedLegacy_J3
 namespace ProximityPrize.SubmissionLower.RCN085
 open scoped Classical BigOperators
@@ -27613,11 +26723,10 @@ end
 end ProximityPrize.SubmissionLower.RCN085
 end PackedLegacy_J3
 
-/-! Packed from ProximityPrize.SubmissionLower.ET. -/
 section PackedLegacy_ET
 namespace ProximityPrize.SubmissionLower.RCN151
 open scoped Classical
-open RCN136 RCN231 RCN319 RCN313 RCN065 RCN238 RCN160 RCN157 RCN163 RCN156 RCN275 RCN234 RCN094 RCN095 RCN125 RCN162
+open RCN136 RCN231 RCN319 RCN313 RCN065 RCN238 RCN157 RCN163 RCN156 RCN275 RCN234 RCN094 RCN095 RCN125 RCN162
 noncomputable section
 set_option maxHeartbeats 3000000
 set_option maxRecDepth 20000
@@ -27679,7 +26788,6 @@ end
 end ProximityPrize.SubmissionLower.RCN151
 end PackedLegacy_ET
 
-/-! Packed from ProximityPrize.SubmissionLower.EY. -/
 section PackedLegacy_EY
 namespace ProximityPrize.SubmissionLower.RCN158
 open RCN213
@@ -27705,14 +26813,12 @@ end Terminalization
 end ProximityPrize.SubmissionLower.RCN158
 end PackedLegacy_EY
 
-/-! Packed from ProximityPrize.SubmissionLower.D6. -/
 section PackedLegacy_D6
 namespace ProximityPrize.SubmissionLower.RCN216
 open RCN173 RCN213
 end ProximityPrize.SubmissionLower.RCN216
 end PackedLegacy_D6
 
-/-! Packed from ProximityPrize.SubmissionLower.EU. -/
 section PackedLegacy_EU
 namespace ProximityPrize.SubmissionLower.RCN152
 open scoped Classical
@@ -27732,7 +26838,6 @@ end
 end ProximityPrize.SubmissionLower.RCN152
 end PackedLegacy_EU
 
-/-! Packed from ProximityPrize.SubmissionLower.GJ. -/
 section PackedLegacy_GJ
 namespace ProximityPrize.SubmissionLower.RCN305
 open scoped Classical BigOperators
@@ -27750,11 +26855,10 @@ end
 end ProximityPrize.SubmissionLower.RCN305
 end PackedLegacy_GJ
 
-/-! Packed from ProximityPrize.SubmissionLower.ER. -/
 section PackedLegacy_ER
 namespace ProximityPrize.SubmissionLower.RCN148
 open scoped Classical BigOperators
-open RCN136 RCN231 RCN319 RCN238 RCN264 RCN243 RCN065 RCN095 RCN151 RCN152 RCN156 RCN165 RCN237 RCN305 RCN234 RCN215 RCN275
+open RCN136 RCN231 RCN319 RCN238 RCN264 RCN243 RCN065 RCN095 RCN151 RCN156 RCN165 RCN237 RCN234 RCN215 RCN275
 noncomputable section
 set_option maxHeartbeats 2500000
 set_option maxRecDepth 30000
@@ -27767,11 +26871,10 @@ end
 end ProximityPrize.SubmissionLower.RCN148
 end PackedLegacy_ER
 
-/-! Packed from ProximityPrize.SubmissionLower.BN. -/
 section PackedLegacy_BN
 namespace ProximityPrize.SubmissionLower.RCN149
 open scoped Classical BigOperators
-open RCN136 RCN231 RCN319 RCN238 RCN264 RCN243 RCN065 RCN095 RCN151 RCN152 RCN156 RCN165 RCN237 RCN305 RCN234 RCN215 RCN148 RCN275
+open RCN136 RCN231 RCN319 RCN238 RCN264 RCN243 RCN065 RCN095 RCN151 RCN156 RCN165 RCN237 RCN234 RCN215 RCN275
 noncomputable section
 set_option maxHeartbeats 3000000
 set_option maxRecDepth 30000
@@ -27784,14 +26887,10 @@ end
 end ProximityPrize.SubmissionLower.RCN149
 end PackedLegacy_BN
 
-/-! Packed from ProximityPrize.SubmissionLower.ES. -/
-
-/-! Packed from ProximityPrize.SubmissionLower.DP. -/
 section PackedLegacy_DP
 namespace ProximityPrize.SubmissionLower.RCN038
 open scoped Classical WithZero TensorProduct
-open Polynomial KaehlerDifferential RCN002 RCN005 RCN344 RCN264 RCN341 RCN042 RCN035 RCN044 RCN093 RCN099 RCN096 RCN114 RCN116 RCN295 RCN022 RCN369 RCN370
- RCN351
+open Polynomial KaehlerDifferential RCN002 RCN005 RCN344 RCN264 RCN341 RCN042 RCN035 RCN044 RCN093 RCN099 RCN096 RCN114 RCN116 RCN295 RCN022 RCN369 RCN370 RCN351
 open RCN037
 noncomputable section
 set_option maxHeartbeats 4000000
@@ -27865,8 +26964,7 @@ structure AdaptiveNestedProjectionDataActive
          (RCN187.poleOrder v.val (coordinate Omega C.1 2)))
  directional:MvPolynomial.pderiv (0:Fin 3) G-
    MvPolynomial.C mu*MvPolynomial.pderiv (1:Fin 3) G≠0
-/-- The flag coefficients `lam, mu` can be chosen inside any infinite subset `S` (for the
-H-free bridge: the image of `K[X]`, so that the derivation extends to them). -/
+
 theorem exists_adaptiveNestedProjectionDataActive_in
    (base:∀ C:RegularComponent Omega G T H,
      SeparableLiteralCoordinate C.1)
@@ -28064,7 +27162,6 @@ end
 end ProximityPrize.SubmissionLower.RCN038
 end PackedLegacy_DP
 
-/-! Packed from ProximityPrize.SubmissionLower.A2. -/
 section PackedLegacy_A2
 namespace ProximityPrize.SubmissionLower.RCN040
 open scoped Classical BigOperators WithZero
@@ -28388,7 +27485,6 @@ end
 end ProximityPrize.SubmissionLower.RCN040
 end PackedLegacy_A2
 
-/-! Packed from ProximityPrize.SubmissionLower.E7. -/
 section PackedLegacy_E7
 namespace ProximityPrize.SubmissionLower.RCN265
 open scoped Classical
@@ -28536,7 +27632,6 @@ end
 end ProximityPrize.SubmissionLower.RCN265
 end PackedLegacy_E7
 
-/-! Packed from ProximityPrize.SubmissionLower.DQ. -/
 section PackedLegacy_DQ
 namespace ProximityPrize.SubmissionLower.RCN041
 open scoped Classical
@@ -28591,11 +27686,8 @@ end ProximityPrize.SubmissionLower.RCN041
 end PackedLegacy_DQ
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLegacyBarrier19 : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.O6. -/
 section PackedLegacy_O6
 namespace ProximityPrize.SubmissionLower.RCN277
 open scoped Classical
@@ -28746,11 +27838,10 @@ end
 end ProximityPrize.SubmissionLower.RCN277
 end PackedLegacy_O6
 
-/-! Packed from ProximityPrize.SubmissionLower.EV. -/
 section PackedLegacy_EV
 namespace ProximityPrize.SubmissionLower.RCN153
 open scoped Classical
-open RCN159 RCN164 RCN213 RCN215 RCN214 RCN238 RCN095 RCN275
+open RCN159 RCN213 RCN215 RCN214 RCN238 RCN095 RCN275
 noncomputable section
 set_option maxHeartbeats 1000000
 set_option maxRecDepth 50000
@@ -28763,11 +27854,10 @@ end
 end ProximityPrize.SubmissionLower.RCN153
 end PackedLegacy_EV
 
-/-! Packed from ProximityPrize.SubmissionLower.EW. -/
 section PackedLegacy_EW
 namespace ProximityPrize.SubmissionLower.RCN154
 open scoped Classical
-open RCN136 RCN231 RCN319 RCN238 RCN264 RCN243 RCN065 RCN095 RCN159 RCN159.ResidualStage RCN151 RCN148 RCN149 RCN153 RCN156 RCN158 RCN275 RCN237 RCN213 RCN215 RCN214 RCN234 RCN276 RCN091
+open RCN136 RCN231 RCN319 RCN238 RCN264 RCN243 RCN065 RCN095 RCN159 RCN159.ResidualStage RCN151 RCN156 RCN158 RCN275 RCN237 RCN213 RCN215 RCN214 RCN234 RCN276
 noncomputable section
 set_option maxHeartbeats 3000000
 set_option maxRecDepth 40000
@@ -28781,11 +27871,10 @@ end
 end ProximityPrize.SubmissionLower.RCN154
 end PackedLegacy_EW
 
-/-! Packed from ProximityPrize.SubmissionLower.DR. -/
 section PackedLegacy_DR
 namespace ProximityPrize.SubmissionLower.RCN043
 open scoped Classical
-open RCN213 RCN231 RCN238 RCN264 RCN243 RCN095 RCN159 RCN151 RCN156 RCN154 RCN237 RCN215 RCN214 RCN341 RCN046
+open RCN213 RCN231 RCN238 RCN264 RCN243 RCN095 RCN159 RCN151 RCN156 RCN237 RCN215 RCN214 RCN341 RCN046
 noncomputable section
 set_option maxHeartbeats 2500000
 set_option maxRecDepth 30000
@@ -28799,7 +27888,6 @@ end
 end ProximityPrize.SubmissionLower.RCN043
 end PackedLegacy_DR
 
-/-! Packed from ProximityPrize.SubmissionLower.O5. -/
 section PackedLegacy_O5
 namespace ProximityPrize.SubmissionLower.RCN274
 open RCN136 RCN267 RCN159 RCN095
@@ -28811,11 +27899,10 @@ end
 end ProximityPrize.SubmissionLower.RCN274
 end PackedLegacy_O5
 
-/-! Packed from ProximityPrize.SubmissionLower.GN. -/
 section PackedLegacy_GN
 namespace ProximityPrize.SubmissionLower.RCN314
 open scoped Classical
-open RCN002 RCN005 RCN003 RCN001 RCN223 RCN238 RCN136 RCN243 RCN264 RCN095 RCN159 RCN158 RCN156 RCN037 RCN039 RCN043 RCN341 RCN274
+open RCN002 RCN005 RCN003 RCN001 RCN223 RCN238 RCN136 RCN243 RCN264 RCN095 RCN159 RCN158 RCN156 RCN037 RCN039 RCN341 RCN274
 noncomputable section
 set_option maxHeartbeats 3000000
 set_option synthInstance.maxHeartbeats 300000
@@ -28846,7 +27933,6 @@ end
 end ProximityPrize.SubmissionLower.RCN314
 end PackedLegacy_GN
 
-/-! Packed from ProximityPrize.SubmissionLower.GO. -/
 section PackedLegacy_GO
 namespace ProximityPrize.SubmissionLower.RCN315
 open scoped Classical
@@ -28875,15 +27961,6 @@ end
 end ProximityPrize.SubmissionLower.RCN315
 end PackedLegacy_GO
 
-/-! Packed from ProximityPrize.SubmissionLower.GP. -/
-
-/-! Packed from ProximityPrize.SubmissionLower.FR. -/
-
-/-! Packed from ProximityPrize.SubmissionLower.P3. -/
-
-/-! Packed from ProximityPrize.SubmissionLower.B6. -/
-
-/-! Packed from ProximityPrize.SubmissionLower.B7. -/
 section PackedLegacy_B7
 namespace ProximityPrize.SubmissionLower.RCN089
 open RCN136 RCN313 RCN238 RCN275 RCN095 RCN198 RCN086 RCN262 RCN263
@@ -28919,7 +27996,6 @@ end
 end ProximityPrize.SubmissionLower.RCN089
 end PackedLegacy_B7
 
-/-! Packed from ProximityPrize.SubmissionLower.J5. -/
 section PackedLegacy_J5
 namespace ProximityPrize.SubmissionLower.RCN090
 open scoped Classical BigOperators
@@ -29034,7 +28110,6 @@ end
 end ProximityPrize.SubmissionLower.RCN090
 end PackedLegacy_J5
 
-/-! Packed from ProximityPrize.SubmissionLower.CK. -/
 section PackedLegacy_CK
 namespace ProximityPrize.SubmissionLower.RCN337
 open scoped BigOperators
@@ -29149,7 +28224,6 @@ end
 end ProximityPrize.SubmissionLower.RCN337
 end PackedLegacy_CK
 
-/-! Packed from ProximityPrize.SubmissionLower.GY. -/
 section PackedLegacy_GY
 namespace ProximityPrize.SubmissionLower.RCN328
 open scoped Classical BigOperators
@@ -29165,7 +28239,6 @@ end
 end ProximityPrize.SubmissionLower.RCN328
 end PackedLegacy_GY
 
-/-! Packed from ProximityPrize.SubmissionLower.GX. -/
 section PackedLegacy_GX
 namespace ProximityPrize.SubmissionLower.RCN325
 open scoped Classical BigOperators
@@ -29180,7 +28253,6 @@ end
 end ProximityPrize.SubmissionLower.RCN325
 end PackedLegacy_GX
 
-/-! Packed from ProximityPrize.SubmissionLower.P7. -/
 section PackedLegacy_P7
 namespace ProximityPrize.SubmissionLower.RCN330
 open scoped Classical
@@ -29228,7 +28300,6 @@ end
 end ProximityPrize.SubmissionLower.RCN330
 end PackedLegacy_P7
 
-/-! Packed from ProximityPrize.SubmissionLower.B3. -/
 section PackedLegacy_B3
 namespace ProximityPrize.SubmissionLower.RCN074
 open scoped Classical BigOperators
@@ -29309,7 +28380,6 @@ end
 end ProximityPrize.SubmissionLower.RCN074
 end PackedLegacy_B3
 
-/-! Packed from ProximityPrize.SubmissionLower.AM. -/
 section PackedLegacy_AM
 namespace ProximityPrize.SubmissionLower.RCN338
 open scoped Classical BigOperators
@@ -29371,7 +28441,6 @@ end
 end ProximityPrize.SubmissionLower.RCN338
 end PackedLegacy_AM
 
-/-! Packed from ProximityPrize.SubmissionLower.Q3. -/
 section PackedLegacy_Q3
 namespace ProximityPrize.SubmissionLower.RCN336
 open scoped Classical BigOperators
@@ -29449,7 +28518,6 @@ end
 end ProximityPrize.SubmissionLower.RCN336
 end PackedLegacy_Q3
 
-/-! Packed from ProximityPrize.SubmissionLower.X6. -/
 section PackedLegacy_X6
 namespace ProximityPrize.SubmissionLower.RCN014
 open RCN002 RCN005 RCN011 RCN010
@@ -29548,7 +28616,6 @@ end
 end ProximityPrize.SubmissionLower.RCN014
 end PackedLegacy_X6
 
-/-! Packed from ProximityPrize.SubmissionLower.FJ. -/
 section PackedLegacy_FJ
 namespace ProximityPrize.SubmissionLower.RCN226
 open RCN011 RCN021 RCN022 RCN014
@@ -29638,7 +28705,6 @@ end
 end ProximityPrize.SubmissionLower.RCN226
 end PackedLegacy_FJ
 
-/-! Packed from ProximityPrize.SubmissionLower.C7. -/
 section PackedLegacy_C7
 namespace ProximityPrize.SubmissionLower.RCN191
 open RCN011 RCN021 RCN022 RCN226
@@ -29771,7 +28837,6 @@ end
 end ProximityPrize.SubmissionLower.RCN191
 end PackedLegacy_C7
 
-/-! Packed from ProximityPrize.SubmissionLower.DM. -/
 section PackedLegacy_DM
 namespace ProximityPrize.SubmissionLower.RCN034
 open RCN002 RCN005 RCN011 RCN010 RCN371
@@ -29783,7 +28848,6 @@ end
 end ProximityPrize.SubmissionLower.RCN034
 end PackedLegacy_DM
 
-/-! Packed from ProximityPrize.SubmissionLower.L7. -/
 section PackedLegacy_L7
 namespace ProximityPrize.SubmissionLower.RCN189
 noncomputable section
@@ -29796,11 +28860,8 @@ end ProximityPrize.SubmissionLower.RCN189
 end PackedLegacy_L7
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLegacyBarrier20 : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.L8. -/
 section PackedLegacy_L8
 namespace ProximityPrize.SubmissionLower.RCN190
 open RCN189
@@ -29813,7 +28874,6 @@ end
 end ProximityPrize.SubmissionLower.RCN190
 end PackedLegacy_L8
 
-/-! Packed from ProximityPrize.SubmissionLower.EC. -/
 section PackedLegacy_EC
 namespace ProximityPrize.SubmissionLower.RCN113
 open RCN002 RCN011 RCN371 RCN021 RCN125 RCN093 RCN034 RCN190
@@ -29836,7 +28896,6 @@ end
 end ProximityPrize.SubmissionLower.RCN113
 end PackedLegacy_EC
 
-/-! Packed from ProximityPrize.SubmissionLower.Z1. -/
 section PackedLegacy_Z1
 namespace ProximityPrize.SubmissionLower.RCN120
 open RCN002 RCN011 RCN371 RCN021 RCN022 RCN125 RCN093
@@ -29905,7 +28964,6 @@ end
 end ProximityPrize.SubmissionLower.RCN120
 end PackedLegacy_Z1
 
-/-! Packed from ProximityPrize.SubmissionLower.S. -/
 section PackedLegacy_S
 namespace ProximityPrize.SubmissionLower.RCN225
 noncomputable section
@@ -30019,7 +29077,6 @@ end
 end ProximityPrize.SubmissionLower.RCN225
 end PackedLegacy_S
 
-/-! Packed from ProximityPrize.SubmissionLower.N. -/
 section PackedLegacy_N
 namespace ProximityPrize.SubmissionLower.RCN102
 open RCN011
@@ -30043,7 +29100,6 @@ end
 end ProximityPrize.SubmissionLower.RCN102
 end PackedLegacy_N
 
-/-! Packed from ProximityPrize.SubmissionLower.Y9. -/
 section PackedLegacy_Y9
 namespace ProximityPrize.SubmissionLower.RCN106
 open scoped Classical BigOperators
@@ -30186,7 +29242,6 @@ end
 end ProximityPrize.SubmissionLower.RCN106
 end PackedLegacy_Y9
 
-/-! Packed from ProximityPrize.SubmissionLower.C8. -/
 section PackedLegacy_C8
 namespace ProximityPrize.SubmissionLower.RCN193
 open RCN011 RCN021 RCN022 RCN226 RCN191 RCN120
@@ -30377,11 +29432,6 @@ end
 end ProximityPrize.SubmissionLower.RCN193
 end PackedLegacy_C8
 
-/-! Packed from ProximityPrize.SubmissionLower.M0. -/
-
-/- Library component D7 is loaded from Mathlib.RingTheory.OrderOfVanishing.Basic. -/
-
-/-! Packed from ProximityPrize.SubmissionLower.M2. -/
 section PackedLegacy_M2
 namespace ProximityPrize.SubmissionLower.RCN196
 open scoped Classical BigOperators
@@ -30525,7 +29575,6 @@ end
 end ProximityPrize.SubmissionLower.RCN196
 end PackedLegacy_M2
 
-/-! Packed from ProximityPrize.SubmissionLower.CE. -/
 section PackedLegacy_CE
 namespace ProximityPrize.SubmissionLower.RCN307
 noncomputable section
@@ -30545,7 +29594,6 @@ end
 end ProximityPrize.SubmissionLower.RCN307
 end PackedLegacy_CE
 
-/-! Packed from ProximityPrize.SubmissionLower.CF. -/
 section PackedLegacy_CF
 namespace ProximityPrize.SubmissionLower.RCN309
 open scoped Classical BigOperators
@@ -30638,7 +29686,6 @@ end
 end ProximityPrize.SubmissionLower.RCN309
 end PackedLegacy_CF
 
-/-! Packed from ProximityPrize.SubmissionLower.C9. -/
 section PackedLegacy_C9
 namespace ProximityPrize.SubmissionLower.RCN197
 noncomputable section
@@ -30702,7 +29749,6 @@ end
 end ProximityPrize.SubmissionLower.RCN197
 end PackedLegacy_C9
 
-/-! Packed from ProximityPrize.SubmissionLower.L9. -/
 section PackedLegacy_L9
 namespace ProximityPrize.SubmissionLower.RCN192
 open RCN011 RCN021 RCN022 RCN226 RCN191 RCN193 RCN120 RCN014 RCN197
@@ -30908,7 +29954,6 @@ end
 end ProximityPrize.SubmissionLower.RCN192
 end PackedLegacy_L9
 
-/-! Packed from ProximityPrize.SubmissionLower.FP. -/
 section PackedLegacy_FP
 namespace ProximityPrize.SubmissionLower.RCN236
 open RCN014 RCN225 RCN307
@@ -30963,7 +30008,6 @@ end
 end ProximityPrize.SubmissionLower.RCN236
 end PackedLegacy_FP
 
-/-! Packed from ProximityPrize.SubmissionLower.C3. -/
 section PackedLegacy_C3
 namespace ProximityPrize.SubmissionLower.RCN107
 open scoped Classical BigOperators
@@ -31109,7 +30153,6 @@ end
 end ProximityPrize.SubmissionLower.RCN107
 end PackedLegacy_C3
 
-/-! Packed from ProximityPrize.SubmissionLower.I6. -/
 section PackedLegacy_I6
 namespace ProximityPrize.SubmissionLower.RCN073
 open RCN324
@@ -31292,7 +30335,6 @@ end
 end ProximityPrize.SubmissionLower.RCN073
 end PackedLegacy_I6
 
-/-! Packed from ProximityPrize.SubmissionLower.O2. -/
 section PackedLegacy_O2
 namespace ProximityPrize.SubmissionLower.RCN270
 open IsLocalRing Ideal
@@ -31429,7 +30471,6 @@ theorem quotient_span_singleton_isRegularLocalRing
 end ProximityPrize.SubmissionLower.RCN270
 end PackedLegacy_O2
 
-/-! Packed from ProximityPrize.SubmissionLower.L5. -/
 section PackedLegacy_L5
 namespace ProximityPrize.SubmissionLower.RCN186
 variable {A:Type*} [CommRing A]
@@ -31522,7 +30563,6 @@ noncomputable def quotientAmbientEquivLocalizedQuotient
 end ProximityPrize.SubmissionLower.RCN186
 end PackedLegacy_L5
 
-/-! Packed from ProximityPrize.SubmissionLower.I8. -/
 section PackedLegacy_I8
 namespace ProximityPrize.SubmissionLower.RCN078
 def DualNumber (R:Type*):=R × R
@@ -31613,7 +30653,6 @@ end DualNumber
 end ProximityPrize.SubmissionLower.RCN078
 end PackedLegacy_I8
 
-/-! Packed from ProximityPrize.SubmissionLower.L6. -/
 section PackedLegacy_L6
 namespace ProximityPrize.SubmissionLower.RCN188
 open RCN078
@@ -31684,7 +30723,6 @@ theorem localizationDerivation_algebraMap (D:Derivation K R R) (r:R):
 end ProximityPrize.SubmissionLower.RCN188
 end PackedLegacy_L6
 
-/-! Packed from ProximityPrize.SubmissionLower.FM. -/
 section PackedLegacy_FM
 namespace ProximityPrize.SubmissionLower.RCN230
 open IsLocalRing Polynomial Ideal
@@ -31851,7 +30889,6 @@ end
 end ProximityPrize.SubmissionLower.RCN230
 end PackedLegacy_FM
 
-/-! Packed from ProximityPrize.SubmissionLower.FF. -/
 section PackedLegacy_FF
 namespace ProximityPrize.SubmissionLower.RCN218
 open RCN313 RCN077 RCN136 RCN055 RCN188 RCN270 RCN186 RCN230 IsLocalRing
@@ -32112,7 +31149,6 @@ theorem factorLocal_image_isUnit_of_not_mem
 end ProximityPrize.SubmissionLower.RCN218
 end PackedLegacy_FF
 
-/-! Packed from ProximityPrize.SubmissionLower.CJ. -/
 section PackedLegacy_CJ
 namespace ProximityPrize.SubmissionLower.RCN326
 open ProximityPrize.Benchmark RCN095 RCN100 RCN119
@@ -32128,7 +31164,6 @@ end
 end ProximityPrize.SubmissionLower.RCN326
 end PackedLegacy_CJ
 
-/-! Packed from ProximityPrize.SubmissionLower.Q7. -/
 section PackedLegacy_Q7
 namespace ProximityPrize.SubmissionLower.RCN339
 open RCN095 RCN237 RCN264 RCN326
@@ -32152,11 +31187,9 @@ end
 end ProximityPrize.SubmissionLower.RCN339
 end PackedLegacy_Q7
 
-/-! Packed from ProximityPrize.SubmissionLower.FE. -/
 section PackedLegacy_FE
 namespace ProximityPrize.SubmissionLower.RCN217
-open RCN077 RCN313
- RCN347 RCN055
+open RCN077 RCN313 RCN347 RCN055
 noncomputable section
 variable {K:Type*} [CommRing K]
 private abbrev factorIdeal (F:Poly4 K):Ideal (Poly4 K):=Ideal.span {F}
@@ -32276,7 +31309,6 @@ end
 end ProximityPrize.SubmissionLower.RCN217
 end PackedLegacy_FE
 
-/-! Packed from ProximityPrize.SubmissionLower.A5. -/
 section PackedLegacy_A5
 namespace ProximityPrize.SubmissionLower.RCN048
 open scoped BigOperators
@@ -32358,7 +31390,6 @@ end
 end ProximityPrize.SubmissionLower.RCN048
 end PackedLegacy_A5
 
-/-! Packed from ProximityPrize.SubmissionLower.FH. -/
 section PackedLegacy_FH
 namespace ProximityPrize.SubmissionLower.RCN220
 open RCN136 RCN135 RCN138 RCN137 RCN082 RCN350 RCN313 RCN159 RCN217 RCN002 RCN048 RCN095 RCN275 RCN065
@@ -32477,7 +31508,6 @@ end
 end ProximityPrize.SubmissionLower.RCN220
 end PackedLegacy_FH
 
-/-! Packed from ProximityPrize.SubmissionLower.FL. -/
 section PackedLegacy_FL
 namespace ProximityPrize.SubmissionLower.RCN228
 open RCN077 RCN269 RCN233 RCN313 RCN047 RCN231 RCN139 RCN229 RCN319 RCN347 RCN311 RCN174
@@ -32507,7 +31537,6 @@ end
 end ProximityPrize.SubmissionLower.RCN228
 end PackedLegacy_FL
 
-/-! Packed from ProximityPrize.SubmissionLower.E4. -/
 section PackedLegacy_E4
 namespace ProximityPrize.SubmissionLower.RCN258
 open RCN077 RCN269 RCN233 RCN313 RCN047 RCN231 RCN139 RCN229 RCN319 RCN347
@@ -32605,7 +31634,6 @@ end
 end ProximityPrize.SubmissionLower.RCN258
 end PackedLegacy_E4
 
-/-! Packed from ProximityPrize.SubmissionLower.J2. -/
 section PackedLegacy_J2
 namespace ProximityPrize.SubmissionLower.RCN083
 open RCN077 RCN313 RCN269 RCN233 RCN139 RCN347 RCN047 RCN217 RCN048 RCN136 RCN258
@@ -32672,7 +31700,6 @@ end
 end ProximityPrize.SubmissionLower.RCN083
 end PackedLegacy_J2
 
-/-! Packed from ProximityPrize.SubmissionLower.EF. -/
 section PackedLegacy_EF
 namespace ProximityPrize.SubmissionLower.RCN126
 open RCN077 RCN231 RCN229 RCN139 RCN319 RCN258
@@ -32783,7 +31810,6 @@ end
 end ProximityPrize.SubmissionLower.RCN126
 end PackedLegacy_EF
 
-/-! Packed from ProximityPrize.SubmissionLower.GS. -/
 section PackedLegacy_GS
 namespace ProximityPrize.SubmissionLower.RCN321
 noncomputable section
@@ -32840,7 +31866,6 @@ end
 end ProximityPrize.SubmissionLower.RCN321
 end PackedLegacy_GS
 
-/-! Packed from ProximityPrize.SubmissionLower.A7. -/
 section PackedLegacy_A7
 namespace ProximityPrize.SubmissionLower.RCN062
 open RCN126
@@ -32877,11 +31902,8 @@ end ProximityPrize.SubmissionLower.RCN062
 end PackedLegacy_A7
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLegacyBarrier21 : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.EH. -/
 section PackedLegacy_EH
 namespace ProximityPrize.SubmissionLower.RCN129
 noncomputable section
@@ -32916,14 +31938,9 @@ end
 end ProximityPrize.SubmissionLower.RCN129
 end PackedLegacy_EH
 
-/-! Packed from ProximityPrize.SubmissionLower.GT. -/
 section PackedLegacy_GT
 namespace ProximityPrize.SubmissionLower.RCN322
-open RCN371 RCN011 RCN009
- RCN013
- RCN022 RCN021
- RCN024
- RCN129
+open RCN371 RCN011 RCN009 RCN013 RCN022 RCN021 RCN024 RCN129
 noncomputable section
 variable (K L:Type) [Field K] [Field L] [Algebra K L]
 set_option maxHeartbeats 1000000
@@ -33010,14 +32027,9 @@ end
 end ProximityPrize.SubmissionLower.RCN322
 end PackedLegacy_GT
 
-/-! Packed from ProximityPrize.SubmissionLower.EG. -/
 section PackedLegacy_EG
 namespace ProximityPrize.SubmissionLower.RCN127
-open RCN077 RCN319 RCN136
- RCN132 RCN126
- RCN062
- RCN322 RCN129
- RCN022
+open RCN077 RCN319 RCN136 RCN132 RCN126 RCN062 RCN322 RCN129 RCN022
 noncomputable section
 variable {k L:Type} [Field k] [Field L] [Algebra k L]
 private def freshJet (P:Polynomial L) (γ:L) (i:Fin 4):
@@ -33188,7 +32200,6 @@ end
 end ProximityPrize.SubmissionLower.RCN127
 end PackedLegacy_EG
 
-/-! Packed from ProximityPrize.SubmissionLower.H9. -/
 section PackedLegacy_H9
 namespace ProximityPrize.SubmissionLower.RCN059
 open scoped BigOperators
@@ -33314,7 +32325,6 @@ end
 end ProximityPrize.SubmissionLower.RCN059
 end PackedLegacy_H9
 
-/-! Packed from ProximityPrize.SubmissionLower.I0. -/
 section PackedLegacy_I0
 namespace ProximityPrize.SubmissionLower.RCN060
 open scoped BigOperators
@@ -33550,7 +32560,6 @@ end
 end ProximityPrize.SubmissionLower.RCN060
 end PackedLegacy_I0
 
-/-! Packed from ProximityPrize.SubmissionLower.I1. -/
 section PackedLegacy_I1
 namespace ProximityPrize.SubmissionLower.RCN061
 open scoped BigOperators
@@ -33595,7 +32604,6 @@ end
 end ProximityPrize.SubmissionLower.RCN061
 end PackedLegacy_I1
 
-/-! Packed from ProximityPrize.SubmissionLower.D0. -/
 section PackedLegacy_D0
 namespace ProximityPrize.SubmissionLower.RCN205
 open scoped Classical WithZero
@@ -33645,7 +32653,6 @@ end
 end ProximityPrize.SubmissionLower.RCN205
 end PackedLegacy_D0
 
-/-! Packed from ProximityPrize.SubmissionLower.H8. -/
 section PackedLegacy_H8
 namespace ProximityPrize.SubmissionLower.RCN058
 open RCN062 RCN061 RCN187 RCN205 RCN002
@@ -33754,7 +32761,6 @@ end
 end ProximityPrize.SubmissionLower.RCN058
 end PackedLegacy_H8
 
-/-! Packed from ProximityPrize.SubmissionLower.A8. -/
 section PackedLegacy_A8
 namespace ProximityPrize.SubmissionLower.RCN063
 open scoped Classical BigOperators WithZero
@@ -33882,7 +32888,6 @@ end
 end ProximityPrize.SubmissionLower.RCN063
 end PackedLegacy_A8
 
-/-! Packed from ProximityPrize.SubmissionLower.BK. -/
 section PackedLegacy_BK
 namespace ProximityPrize.SubmissionLower.RCN144
 open scoped Classical BigOperators
@@ -34073,7 +33078,6 @@ end
 end ProximityPrize.SubmissionLower.RCN144
 end PackedLegacy_BK
 
-/-! Packed from ProximityPrize.SubmissionLower.BL. -/
 section PackedLegacy_BL
 namespace ProximityPrize.SubmissionLower.RCN145
 open scoped Classical BigOperators
@@ -34155,7 +33159,6 @@ end
 end ProximityPrize.SubmissionLower.RCN145
 end PackedLegacy_BL
 
-/-! Packed from ProximityPrize.SubmissionLower.GM. -/
 section PackedLegacy_GM
 namespace ProximityPrize.SubmissionLower.RCN312
 open scoped Classical BigOperators
@@ -34491,7 +33494,6 @@ end
 end ProximityPrize.SubmissionLower.RCN312
 end PackedLegacy_GM
 
-/-! Packed from ProximityPrize.SubmissionLower.GZ. -/
 section PackedLegacy_GZ
 namespace ProximityPrize.SubmissionLower.RCN329
 open scoped Classical BigOperators
@@ -34511,7 +33513,6 @@ end
 end ProximityPrize.SubmissionLower.RCN329
 end PackedLegacy_GZ
 
-/-! Packed from ProximityPrize.SubmissionLower.FG. -/
 section PackedLegacy_FG
 namespace ProximityPrize.SubmissionLower.RCN219
 open scoped Classical TensorProduct
@@ -34621,7 +33622,6 @@ end
 end ProximityPrize.SubmissionLower.RCN219
 end PackedLegacy_FG
 
-/-! Packed from ProximityPrize.SubmissionLower.AL. -/
 section PackedLegacy_AL
 namespace ProximityPrize.SubmissionLower.RCN327
 open ProximityPrize.Benchmark RCN095 RCN275 RCN198 RCN206 RCN263
@@ -34638,7 +33638,6 @@ end
 end ProximityPrize.SubmissionLower.RCN327
 end PackedLegacy_AL
 
-/-! Packed from ProximityPrize.SubmissionLower.FT. -/
 section PackedLegacy_FT
 namespace ProximityPrize.SubmissionLower.RCN244
 open scoped Classical BigOperators
@@ -34973,7 +33972,6 @@ end
 end ProximityPrize.SubmissionLower.RCN244
 end PackedLegacy_FT
 
-/-! Packed from ProximityPrize.SubmissionLower.GL. -/
 section PackedLegacy_GL
 namespace ProximityPrize.SubmissionLower.RCN310
 noncomputable section
@@ -35056,7 +34054,6 @@ end
 end ProximityPrize.SubmissionLower.RCN310
 end PackedLegacy_GL
 
-/-! Packed from ProximityPrize.SubmissionLower.FX. -/
 section PackedLegacy_FX
 namespace ProximityPrize.SubmissionLower.RCN248
 open RCN244 RCN135 RCN095 RCN074 RCN218 RCN186 RCN310 RCN313 RCN086 RCN217
@@ -35184,7 +34181,6 @@ end
 end ProximityPrize.SubmissionLower.RCN248
 end PackedLegacy_FX
 
-/-! Packed from ProximityPrize.SubmissionLower.FU. -/
 section PackedLegacy_FU
 namespace ProximityPrize.SubmissionLower.RCN245
 open RCN244 RCN135 RCN136 RCN074 RCN095 RCN102 RCN113 RCN120 RCN086 RCN313 RCN002 RCN011 RCN125
@@ -35225,7 +34221,6 @@ end
 end ProximityPrize.SubmissionLower.RCN245
 end PackedLegacy_FU
 
-/-! Packed from ProximityPrize.SubmissionLower.FV. -/
 section PackedLegacy_FV
 namespace ProximityPrize.SubmissionLower.RCN246
 open RCN244 RCN248 RCN135 RCN136 RCN095 RCN074 RCN106 RCN107 RCN102 RCN245 RCN113 RCN120 RCN086 RCN264 RCN218 RCN313 RCN002 RCN011 RCN021 RCN125 RCN093
@@ -35341,7 +34336,6 @@ end
 end ProximityPrize.SubmissionLower.RCN246
 end PackedLegacy_FV
 
-/-! Packed from ProximityPrize.SubmissionLower.FW. -/
 section PackedLegacy_FW
 namespace ProximityPrize.SubmissionLower.RCN247
 open RCN244 RCN248 RCN074 RCN106 RCN107 RCN102 RCN245 RCN246 RCN120 RCN086 RCN218 RCN135 RCN313 RCN095 RCN093 RCN002 RCN021
@@ -35407,7 +34401,6 @@ end
 end ProximityPrize.SubmissionLower.RCN247
 end PackedLegacy_FW
 
-/-! Packed from ProximityPrize.SubmissionLower.O. -/
 section PackedLegacy_O
 namespace ProximityPrize.SubmissionLower.RCN111
 open RCN011 RCN021 RCN002 RCN264 RCN093 RCN120 RCN226
@@ -35441,7 +34434,6 @@ end
 end ProximityPrize.SubmissionLower.RCN111
 end PackedLegacy_O
 
-/-! Packed from ProximityPrize.SubmissionLower.FY. -/
 section PackedLegacy_FY
 namespace ProximityPrize.SubmissionLower.RCN249
 open scoped Classical BigOperators
@@ -35507,7 +34499,6 @@ end
 end ProximityPrize.SubmissionLower.RCN249
 end PackedLegacy_FY
 
-/-! Packed from ProximityPrize.SubmissionLower.J9. -/
 section PackedLegacy_J9
 namespace ProximityPrize.SubmissionLower.RCN102
 open scoped Classical BigOperators
@@ -35525,7 +34516,6 @@ end
 end ProximityPrize.SubmissionLower.RCN102
 end PackedLegacy_J9
 
-/-! Packed from ProximityPrize.SubmissionLower.C5. -/
 section PackedLegacy_C5
 namespace ProximityPrize.SubmissionLower.RCN103
 open RCN002 RCN011 RCN021 RCN264 RCN125 RCN093
@@ -35573,7 +34563,6 @@ end
 end ProximityPrize.SubmissionLower.RCN103
 end PackedLegacy_C5
 
-/-! Packed from ProximityPrize.SubmissionLower.K0. -/
 section PackedLegacy_K0
 namespace ProximityPrize.SubmissionLower.RCN103
 open RCN002 RCN011 RCN021 RCN264 RCN125 RCN093 RCN120 RCN102 RCN226
@@ -35590,7 +34579,6 @@ end
 end ProximityPrize.SubmissionLower.RCN103
 end PackedLegacy_K0
 
-/-! Packed from ProximityPrize.SubmissionLower.K3. -/
 section PackedLegacy_K3
 namespace ProximityPrize.SubmissionLower.RCN108
 open RCN002 RCN011 RCN021 RCN264 RCN125 RCN093 RCN120 RCN102 RCN103 RCN106 RCN226
@@ -35711,7 +34699,6 @@ end
 end ProximityPrize.SubmissionLower.RCN108
 end PackedLegacy_K3
 
-/-! Packed from ProximityPrize.SubmissionLower.FK. -/
 section PackedLegacy_FK
 namespace ProximityPrize.SubmissionLower.RCN227
 open UniqueFactorizationMonoid
@@ -35804,11 +34791,8 @@ end ProximityPrize.SubmissionLower.RCN227
 end PackedLegacy_FK
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLegacyBarrier22 : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.GK. -/
 section PackedLegacy_GK
 namespace ProximityPrize.SubmissionLower.RCN308
 open scoped Classical
@@ -35957,7 +34941,6 @@ end
 end ProximityPrize.SubmissionLower.RCN308
 end PackedLegacy_GK
 
-/-! Packed from ProximityPrize.SubmissionLower.GB. -/
 section PackedLegacy_GB
 namespace ProximityPrize.SubmissionLower.RCN297
 open RCN307 RCN308
@@ -36020,7 +35003,6 @@ end
 end ProximityPrize.SubmissionLower.RCN297
 end PackedLegacy_GB
 
-/-! Packed from ProximityPrize.SubmissionLower.EP. -/
 section PackedLegacy_EP
 namespace ProximityPrize.SubmissionLower.RCN143
 open scoped Classical BigOperators
@@ -36123,7 +35105,6 @@ end
 end ProximityPrize.SubmissionLower.RCN143
 end PackedLegacy_EP
 
-/-! Packed from ProximityPrize.SubmissionLower.FN. -/
 section PackedLegacy_FN
 namespace ProximityPrize.SubmissionLower.RCN232
 open RCN225 RCN197
@@ -36322,7 +35303,6 @@ end
 end ProximityPrize.SubmissionLower.RCN232
 end PackedLegacy_FN
 
-/-! Packed from ProximityPrize.SubmissionLower.EB. -/
 section PackedLegacy_EB
 namespace ProximityPrize.SubmissionLower.RCN110
 open RCN011 RCN021 RCN002 RCN264 RCN093 RCN120 RCN102 RCN106 RCN107 RCN232 RCN197 RCN192 RCN111 RCN191
@@ -36456,7 +35436,6 @@ end
 end ProximityPrize.SubmissionLower.RCN110
 end PackedLegacy_EB
 
-/-! Packed from ProximityPrize.SubmissionLower.EA. -/
 section PackedLegacy_EA
 namespace ProximityPrize.SubmissionLower.RCN109
 open scoped Classical BigOperators
@@ -36597,7 +35576,6 @@ end
 end ProximityPrize.SubmissionLower.RCN109
 end PackedLegacy_EA
 
-/-! Packed from ProximityPrize.SubmissionLower.M1. -/
 section PackedLegacy_M1
 namespace ProximityPrize.SubmissionLower.RCN195
 open RCN011 RCN021 RCN022 RCN226 RCN191 RCN193
@@ -36641,7 +35619,6 @@ end
 end ProximityPrize.SubmissionLower.RCN195
 end PackedLegacy_M1
 
-/-! Packed from ProximityPrize.SubmissionLower.E2. -/
 section PackedLegacy_E2
 namespace ProximityPrize.SubmissionLower.RCN251
 open scoped Classical BigOperators
@@ -36663,7 +35640,6 @@ end
 end ProximityPrize.SubmissionLower.RCN251
 end PackedLegacy_E2
 
-/-! Packed from ProximityPrize.SubmissionLower.N3. -/
 section PackedLegacy_N3
 namespace ProximityPrize.SubmissionLower.RCN255
 open RCN135 RCN136 RCN244 RCN249 RCN245 RCN106 RCN103 RCN093 RCN095 RCN125 RCN011 RCN021
@@ -36717,7 +35693,6 @@ end
 end ProximityPrize.SubmissionLower.RCN255
 end PackedLegacy_N3
 
-/-! Packed from ProximityPrize.SubmissionLower.C4. -/
 section PackedLegacy_C4
 namespace ProximityPrize.SubmissionLower.RCN112
 open RCN095 RCN125 RCN093 RCN123 RCN121 RCN103 RCN012 RCN011 RCN264
@@ -36804,7 +35779,6 @@ end
 end ProximityPrize.SubmissionLower.RCN112
 end PackedLegacy_C4
 
-/-! Packed from ProximityPrize.SubmissionLower.N2. -/
 section PackedLegacy_N2
 namespace ProximityPrize.SubmissionLower.RCN254
 open RCN135 RCN136 RCN086 RCN244 RCN245 RCN249 RCN112 RCN103 RCN113 RCN093 RCN095 RCN011
@@ -36823,11 +35797,10 @@ end
 end ProximityPrize.SubmissionLower.RCN254
 end PackedLegacy_N2
 
-/-! Packed from ProximityPrize.SubmissionLower.FZ. -/
 section PackedLegacy_FZ
 namespace ProximityPrize.SubmissionLower.RCN250
 open scoped Classical BigOperators
-open RCN135 RCN086 RCN244 RCN245 RCN249 RCN251 RCN254 RCN102 RCN106 RCN107 RCN109 RCN120 RCN095
+open RCN135 RCN086 RCN244 RCN245 RCN249 RCN102 RCN106 RCN107 RCN109 RCN120 RCN095
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 2000000
@@ -36850,7 +35823,6 @@ end
 end ProximityPrize.SubmissionLower.RCN250
 end PackedLegacy_FZ
 
-/-! Packed from ProximityPrize.SubmissionLower.N0. -/
 section PackedLegacy_N0
 namespace ProximityPrize.SubmissionLower.RCN252
 open RCN135 RCN136 RCN074 RCN244 RCN249 RCN245 RCN106 RCN107 RCN108 RCN103 RCN102 RCN195 RCN255 RCN250 RCN093 RCN095 RCN002 RCN011 RCN021
@@ -36885,13 +35857,10 @@ end
 end ProximityPrize.SubmissionLower.RCN252
 end PackedLegacy_N0
 
-/-! Packed from ProximityPrize.SubmissionLower.N1. -/
-
-/-! Packed from ProximityPrize.SubmissionLower.Q0. -/
 section PackedLegacy_Q0
 namespace ProximityPrize.SubmissionLower.RCN333
 open scoped Classical BigOperators
-open RCN135 RCN136 RCN086 RCN244 RCN074 RCN249 RCN251 RCN252 RCN255 RCN250 RCN247 RCN245 RCN106 RCN107 RCN108 RCN102 RCN103 RCN109 RCN112 RCN113 RCN264 RCN120 RCN243 RCN111 RCN093 RCN095 RCN125 RCN066 RCN336 RCN226 RCN002 RCN011 RCN021
+open RCN135 RCN136 RCN086 RCN244 RCN074 RCN249 RCN252 RCN255 RCN250 RCN247 RCN245 RCN106 RCN107 RCN108 RCN102 RCN103 RCN109 RCN112 RCN113 RCN264 RCN120 RCN243 RCN111 RCN093 RCN095 RCN125 RCN066 RCN336 RCN226 RCN002 RCN011 RCN021
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 800000
@@ -37210,7 +36179,6 @@ end
 end ProximityPrize.SubmissionLower.RCN333
 end PackedLegacy_Q0
 
-/-! Packed from ProximityPrize.SubmissionLower.A1. -/
 section PackedLegacy_A1
 namespace ProximityPrize.SubmissionLower.RCN031
 open RCN002 RCN264 RCN341 RCN037 RCN038 RCN093 RCN125 RCN116 RCN120 RCN021 RCN022
@@ -37393,7 +36361,6 @@ end
 end ProximityPrize.SubmissionLower.RCN031
 end PackedLegacy_A1
 
-/-! Packed from ProximityPrize.SubmissionLower.A0. -/
 section PackedLegacy_A0
 namespace ProximityPrize.SubmissionLower.RCN029
 open scoped Classical BigOperators
@@ -37465,7 +36432,6 @@ end
 end ProximityPrize.SubmissionLower.RCN029
 end PackedLegacy_A0
 
-/-! Packed from ProximityPrize.SubmissionLower.P8. -/
 section PackedLegacy_P8
 namespace ProximityPrize.SubmissionLower.RCN331
 open scoped Classical BigOperators
@@ -37542,7 +36508,6 @@ end
 end ProximityPrize.SubmissionLower.RCN331
 end PackedLegacy_P8
 
-/-! Packed from ProximityPrize.SubmissionLower.DJ. -/
 section PackedLegacy_DJ
 namespace ProximityPrize.SubmissionLower.RCN030
 open RCN002 RCN264 RCN341 RCN042 RCN344 RCN037 RCN038 RCN040 RCN046 RCN237 RCN095 RCN093 RCN125 RCN116 RCN022 RCN031
@@ -37645,7 +36610,6 @@ end
 end ProximityPrize.SubmissionLower.RCN030
 end PackedLegacy_DJ
 
-/-! Packed from ProximityPrize.SubmissionLower.K2. -/
 section PackedLegacy_K2
 namespace ProximityPrize.SubmissionLower.RCN105
 open RCN002 RCN011 RCN264 RCN093 RCN120 RCN042 RCN344 RCN106 RCN111 RCN226 RCN113 RCN021 RCN014
@@ -37736,7 +36700,6 @@ end
 end ProximityPrize.SubmissionLower.RCN105
 end PackedLegacy_K2
 
-/-! Packed from ProximityPrize.SubmissionLower.AN. -/
 section PackedLegacy_AN
 namespace ProximityPrize.SubmissionLower.RCN343
 open scoped Classical BigOperators
@@ -37787,7 +36750,6 @@ end
 end ProximityPrize.SubmissionLower.RCN343
 end PackedLegacy_AN
 
-/-! Packed from ProximityPrize.SubmissionLower.K1. -/
 section PackedLegacy_K1
 namespace ProximityPrize.SubmissionLower.RCN104
 open scoped Classical BigOperators
@@ -37887,7 +36849,6 @@ end
 end ProximityPrize.SubmissionLower.RCN104
 end PackedLegacy_K1
 
-/-! Packed from ProximityPrize.SubmissionLower.Q9. -/
 section PackedLegacy_Q9
 namespace ProximityPrize.SubmissionLower.RCN342
 open scoped Classical BigOperators
@@ -37929,7 +36890,6 @@ end
 end ProximityPrize.SubmissionLower.RCN342
 end PackedLegacy_Q9
 
-/-! Packed from ProximityPrize.SubmissionLower.DI. -/
 section PackedLegacy_DI
 namespace ProximityPrize.SubmissionLower.RCN028
 open scoped Classical BigOperators
@@ -38041,7 +37001,6 @@ end
 end ProximityPrize.SubmissionLower.RCN028
 end PackedLegacy_DI
 
-/-! Packed from ProximityPrize.SubmissionLower.DK. -/
 section PackedLegacy_DK
 namespace ProximityPrize.SubmissionLower.RCN032
 open scoped Classical BigOperators
@@ -38096,7 +37055,6 @@ end
 end ProximityPrize.SubmissionLower.RCN032
 end PackedLegacy_DK
 
-/-! Packed from ProximityPrize.SubmissionLower.DL. -/
 section PackedLegacy_DL
 namespace ProximityPrize.SubmissionLower.RCN033
 open scoped Classical BigOperators
@@ -38140,7 +37098,6 @@ end
 end ProximityPrize.SubmissionLower.RCN033
 end PackedLegacy_DL
 
-/-! Packed from ProximityPrize.SubmissionLower.DH. -/
 section PackedLegacy_DH
 namespace ProximityPrize.SubmissionLower.RCN027
 open scoped Classical BigOperators
@@ -38231,7 +37188,6 @@ end
 end ProximityPrize.SubmissionLower.RCN027
 end PackedLegacy_DH
 
-/-! Packed from ProximityPrize.SubmissionLower.Q1. -/
 section PackedLegacy_Q1
 namespace ProximityPrize.SubmissionLower.RCN334
 open scoped Classical BigOperators
@@ -38410,7 +37366,6 @@ end
 end ProximityPrize.SubmissionLower.RCN334
 end PackedLegacy_Q1
 
-/-! Packed from ProximityPrize.SubmissionLower.P9. -/
 section PackedLegacy_P9
 namespace ProximityPrize.SubmissionLower.RCN332
 open scoped Classical BigOperators
@@ -38629,7 +37584,6 @@ end
 end ProximityPrize.SubmissionLower.RCN332
 end PackedLegacy_P9
 
-/-! Packed from ProximityPrize.SubmissionLower.Q2. -/
 section PackedLegacy_Q2
 namespace ProximityPrize.SubmissionLower.RCN335
 open scoped Classical BigOperators
@@ -38755,7 +37709,6 @@ end
 end ProximityPrize.SubmissionLower.RCN335
 end PackedLegacy_Q2
 
-/-! Packed from ProximityPrize.SubmissionLower.J4. -/
 section PackedLegacy_J4
 namespace ProximityPrize.SubmissionLower.RCN087
 open scoped Classical BigOperators
@@ -38867,11 +37820,8 @@ end ProximityPrize.SubmissionLower.RCN087
 end PackedLegacy_J4
 
 namespace ProximityPrize.SubmissionLower
-set_option Elab.async false in
-theorem PackedLegacyBarrier23 : True := by trivial
 end ProximityPrize.SubmissionLower
 
-/-! Packed from ProximityPrize.SubmissionLower.DU. -/
 section PackedLegacy_DU
 namespace ProximityPrize.SubmissionLower.RCN049
 open scoped Classical BigOperators
@@ -38963,7 +37913,6 @@ end
 end ProximityPrize.SubmissionLower.RCN049
 end PackedLegacy_DU
 
-/-! Packed from ProximityPrize.SubmissionLower.EQ. -/
 section PackedLegacy_EQ
 namespace ProximityPrize.SubmissionLower.RCN146
 open scoped Classical BigOperators
@@ -39102,7 +38051,6 @@ end
 end ProximityPrize.SubmissionLower.RCN146
 end PackedLegacy_EQ
 
-/-! Packed from ProximityPrize.SubmissionLower.O0. -/
 section PackedLegacy_O0
 namespace ProximityPrize.SubmissionLower.RCN268
 open scoped Classical
@@ -39147,9 +38095,6 @@ end
 end ProximityPrize.SubmissionLower.RCN268
 end PackedLegacy_O0
 
-/-! Packed from ProximityPrize.SubmissionLower.FQ. -/
-
-/-! Packed from ProximityPrize.SubmissionLower.AB. -/
 section PackedLegacy_AB
 namespace ProximityPrize.SubmissionLower.RCN259
 noncomputable section
@@ -39208,7 +38153,6 @@ end
 end ProximityPrize.SubmissionLower.RCN259
 end PackedLegacy_AB
 
-/-! Packed from ProximityPrize.SubmissionLower.L3. -/
 section PackedLegacy_L3
 namespace ProximityPrize.SubmissionLower.RCN182
 open ProximityPrize.Benchmark RCN174 RCN256 RCN319
@@ -39218,7 +38162,6 @@ end
 end ProximityPrize.SubmissionLower.RCN182
 end PackedLegacy_L3
 
-/-! Packed from ProximityPrize.SubmissionLower.GF. -/
 section PackedLegacy_GF
 namespace ProximityPrize.SubmissionLower.RCN300
 open ProximityPrize.Benchmark RCN174 RCN256 RCN319 RCN182 RCN301
@@ -39231,10 +38174,9 @@ end
 end ProximityPrize.SubmissionLower.RCN300
 end PackedLegacy_GF
 
-/-! Packed from ProximityPrize.SubmissionLower.GD. -/
 section PackedLegacy_GD
 namespace ProximityPrize.SubmissionLower.RCN299
-open ProximityPrize.Benchmark RCN174 RCN319 RCN259 RCN301 RCN300
+open ProximityPrize.Benchmark RCN174 RCN319 RCN259 RCN301
 noncomputable section
 abbrev GlobalPoly:=MvPolynomial (Fin 4) IRSProfile.Field
 local instance:DecidableEq IRSProfile.Field:=Classical.decEq _
@@ -39245,7 +38187,6 @@ end
 end ProximityPrize.SubmissionLower.RCN299
 end PackedLegacy_GD
 
-/-! Packed from ProximityPrize.SubmissionLower.CC. -/
 section PackedLegacy_CC
 namespace ProximityPrize.SubmissionLower.RCN304
 open ProximityPrize.Benchmark RCN319 RCN259 RCN299
@@ -39258,7 +38199,6 @@ end
 end ProximityPrize.SubmissionLower.RCN304
 end PackedLegacy_CC
 
-/-! Packed from ProximityPrize.SubmissionLower.GC. -/
 section PackedLegacy_GC
 namespace ProximityPrize.SubmissionLower.RCN298
 open ProximityPrize.Benchmark RCN174 RCN081 RCN259 RCN301
@@ -39270,11 +38210,10 @@ end
 end ProximityPrize.SubmissionLower.RCN298
 end PackedLegacy_GC
 
-/-! Packed from ProximityPrize.SubmissionLower.GH. -/
 section PackedLegacy_GH
 namespace ProximityPrize.SubmissionLower.RCN303
 open scoped Classical BigOperators
-open ProximityPrize.Benchmark RCN174 RCN319 RCN081 RCN238 RCN243 RCN259 RCN301 RCN299 RCN304 RCN298 RCN260 RCN318 RCN294 RCN291 RCN292 RCN052
+open ProximityPrize.Benchmark RCN174 RCN319 RCN081 RCN238 RCN243 RCN259 RCN301 RCN299 RCN298 RCN260 RCN318 RCN294 RCN291 RCN292 RCN052
 noncomputable section
 set_option maxHeartbeats 6000000
 set_option maxRecDepth 35000
@@ -39293,7 +38232,6 @@ end
 end ProximityPrize.SubmissionLower.RCN303
 end PackedLegacy_GH
 
-/-! Packed from ProximityPrize.SubmissionLower.P2. -/
 section PackedLegacy_P2
 namespace ProximityPrize.SubmissionLower.RCN285
 open scoped BigOperators Pointwise
@@ -39490,7 +38428,6 @@ end
 end ProximityPrize.SubmissionLower.RCN285
 end PackedLegacy_P2
 
-/-! Packed from ProximityPrize.SubmissionLower.E9. -/
 section PackedLegacy_E9
 namespace ProximityPrize.SubmissionLower.RCN279
 open scoped BigOperators
@@ -39795,7 +38732,6 @@ end
 end ProximityPrize.SubmissionLower.RCN279
 end PackedLegacy_E9
 
-/-! Packed from ProximityPrize.SubmissionLower.O9. -/
 section PackedLegacy_O9
 namespace ProximityPrize.SubmissionLower.RCN282
 open scoped Classical BigOperators
@@ -39966,7 +38902,6 @@ end
 end ProximityPrize.SubmissionLower.RCN282
 end PackedLegacy_O9
 
-/-! Packed from ProximityPrize.SubmissionLower.P0. -/
 section PackedLegacy_P0
 namespace ProximityPrize.SubmissionLower.RCN283
 open scoped Classical BigOperators
@@ -40065,7 +39000,6 @@ end
 end ProximityPrize.SubmissionLower.RCN283
 end PackedLegacy_P0
 
-/-! Packed from ProximityPrize.SubmissionLower.O8. -/
 section PackedLegacy_O8
 namespace ProximityPrize.SubmissionLower.RCN281
 open scoped Classical BigOperators
@@ -40245,7 +39179,6 @@ end
 end ProximityPrize.SubmissionLower.RCN281
 end PackedLegacy_O8
 
-/-! Packed from ProximityPrize.SubmissionLower.H7. -/
 section PackedLegacy_H7
 namespace ProximityPrize.SubmissionLower.RCN020
 noncomputable section Proofs
@@ -40255,7 +39188,6 @@ end Proofs
 end ProximityPrize.SubmissionLower.RCN020
 end PackedLegacy_H7
 
-/-! Packed from ProximityPrize.SubmissionLower.H6. -/
 section PackedLegacy_H6
 namespace ProximityPrize.SubmissionLower.RCN019
 open scoped BigOperators
@@ -40433,7 +39365,6 @@ end Proofs
 end ProximityPrize.SubmissionLower.RCN019
 end PackedLegacy_H6
 
-/-! Packed from ProximityPrize.SubmissionLower.H5. -/
 section PackedLegacy_H5
 namespace ProximityPrize.SubmissionLower.RCN018
 open ProximityPrize.Benchmark
@@ -40552,7 +39483,6 @@ end DraftProofs
 end ProximityPrize.SubmissionLower.RCN018
 end PackedLegacy_H5
 
-/-! Packed from ProximityPrize.SubmissionLower.F0. -/
 section PackedLegacy_F0
 namespace ProximityPrize.SubmissionLower.RCN280
 open scoped Classical NNReal
@@ -40609,7 +39539,6 @@ end
 end ProximityPrize.SubmissionLower.RCN280
 end PackedLegacy_F0
 
-/-! Packed from ProximityPrize.SubmissionLower.O7. -/
 section PackedLegacy_O7
 namespace ProximityPrize.SubmissionLower.RCN278
 open ProximityPrize.Benchmark
@@ -40619,7 +39548,6 @@ end
 end ProximityPrize.SubmissionLower.RCN278
 end PackedLegacy_O7
 
-/-! Packed from ProximityPrize.SubmissionLower.P1. -/
 section PackedLegacy_P1
 namespace ProximityPrize.SubmissionLower.RCN284
 open ProximityPrize.Benchmark CoreDefinitions ProximityGap ToyProblem

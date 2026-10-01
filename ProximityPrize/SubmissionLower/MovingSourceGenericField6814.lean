@@ -1,8 +1,5 @@
-import ProximityPrize.SubmissionLower.MovingSourceFlatBaseChange6814
+import ProximityPrize.SubmissionLower.MergedInfra6815_17
 import Mathlib.RingTheory.Flat.Localization
-
-/-! Properness of the actual five-variable source pair after freezing the
-code variable in the repository's canonical generic field. -/
 namespace ProximityPrize.SubmissionLower.MovingSourceGenericField6814
 noncomputable section
 set_option autoImplicit false
@@ -100,16 +97,5 @@ theorem view_sourceMap {E : Type*} [Field E] (phi : Polynomial K →+* E)
     simp only [map_mul,coefficients,Polynomial.map_mul] at hP ⊢
     rw [hP,hi]
 
-theorem generic_coefficients_relPrime (J Q : WholeSpaceCube6814.Poly (K := K))
-    (hJ : J≠0) (hrel : IsRelPrime J Q) :
-    IsRelPrime (coefficients (polynomialEmbedding K) J) (coefficients (polynomialEmbedding K) Q) := by
-  have h := isRelPrime_equiv (MvPolynomial.finSuccEquiv (GenericField K) 3).toRingEquiv
-    (genericSourceMap K J) (genericSourceMap K Q) (genericSourceMap_relPrime K J Q hJ hrel)
-  change IsRelPrime (MvPolynomial.finSuccEquiv (GenericField K) 3 (sourceMap K (polynomialEmbedding K) J))
-    (MvPolynomial.finSuccEquiv (GenericField K) 3 (sourceMap K (polynomialEmbedding K) Q)) at h
-  simpa only [view_sourceMap] using h
-
-#print axioms generic_coefficient_map_relPrime
-#print axioms generic_coefficients_relPrime
 end
 end ProximityPrize.SubmissionLower.MovingSourceGenericField6814

@@ -1,0 +1,47 @@
+import ProximityPrize.SubmissionLower.MergedPackingOwnRows6815_1
+namespace ProximityPrize.SubmissionLower.PackingOwnData6815
+open PackingOwnCheck6815 PackingOwnRows6815
+set_option autoImplicit false
+set_option maxHeartbeats 4000000
+theorem checked (r v : ℕ) (hr : 1≤r) (hR : r≤39) (hy : r+v≤182) : rowCheck r v=true := by
+  interval_cases r
+  · exact checked1 v (by omega)
+  · exact checked2 v (by omega)
+  · exact checked3 v (by omega)
+  · exact checked4 v (by omega)
+  · exact checked5 v (by omega)
+  · exact checked6 v (by omega)
+  · exact checked7 v (by omega)
+  · exact checked8 v (by omega)
+  · exact checked9 v (by omega)
+  · exact checked10 v (by omega)
+  · exact checked11 v (by omega)
+  · exact checked12 v (by omega)
+  · exact checked13 v (by omega)
+  · exact checked14 v (by omega)
+  · exact checked15 v (by omega)
+  · exact checked16 v (by omega)
+  · exact checked17 v (by omega)
+  · exact checked18 v (by omega)
+  · exact checked19 v (by omega)
+  · exact checked20 v (by omega)
+  · exact checked21 v (by omega)
+  · exact checked22 v (by omega)
+  · exact checked23 v (by omega)
+  · exact checked24 v (by omega)
+  · exact checked25 v (by omega)
+  · exact checked26 v (by omega)
+  · exact checked27 v (by omega)
+  · exact checked28 v (by omega)
+  · exact checked29 v (by omega)
+  · exact checked30 v (by omega)
+  · exact checked31 v (by omega)
+  · exact checked32 v (by omega)
+  · exact checked33 v (by omega)
+  · exact checked34 v (by omega)
+  · exact checked35 v (by omega)
+  · exact checked36 v (by omega)
+  · exact checked37 v (by omega)
+  · exact checked38 v (by omega)
+  · exact checked39 v (by omega)
+end ProximityPrize.SubmissionLower.PackingOwnData6815

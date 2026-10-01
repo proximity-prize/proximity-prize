@@ -2,16 +2,6 @@ import Mathlib.Algebra.MvPolynomial.Equiv
 import Mathlib.RingTheory.AlgebraicIndependent.Transcendental
 import Mathlib.RingTheory.MvPolynomial.WeightedHomogeneous
 import Mathlib.Algebra.Polynomial.BigOperators
-
-/-!
-# H-free bridge, piece 3 (algebra): the degree-`< p` relation on a slice
-
-For a surface `F(X₀, x₀, x₁, x₂) = 0` and a slice form `ℓ = Σ q_m(X₀) x_m` with `q_i = 1`, if
-`(x_a, ℓ, X₀)` is algebraically independent (`a ≠ i`), then the third coordinate `x_c` is a root
-of a nonzero polynomial `P` over `K[X₀, ℓ, x_a]` of degree at most the `(Y,Y',Γ)`-degree of `F`
-(`core_poly`): `P(Z) = F(X₀, …)` with `x_a` kept, `x_c ↦ Z`, `x_i ↦ ℓ - q_a x_a - q_c Z`.
--/
-
 namespace ProximityPrize.SubmissionLower.HFree6812
 
 open MvPolynomial
@@ -31,7 +21,6 @@ theorem eq_of_ne_of_ne {i a c m : Fin 3} (hia : i ≠ a) (hic : i ≠ c) (hac : 
   have := i.isLt; have := a.isLt; have := c.isLt; have := m.isLt
   ext; omega
 
-/-- Degree in the new variable after an affine substitution in `Y, Y', Γ`. -/
 theorem natDegree_aeval_le {R : Type*} [CommRing R] [Algebra K R] (F : MvPolynomial (Fin 4) K)
     (g : Fin 4 → Polynomial R) (N : ℕ) (hN : ∀ d ∈ F.support, d 1 + d 2 + d 3 ≤ N)
     (h0 : (g 0).natDegree = 0) (h1 : ∀ m, (g m).natDegree ≤ 1) : (aeval g F).natDegree ≤ N := by
@@ -58,8 +47,6 @@ theorem support_bound_of_weighted (F : MvPolynomial (Fin 4) K) (N : ℕ)
   rw [Finsupp.weight_apply, Finsupp.sum_fintype _ _ (by simp), Fin.sum_univ_four]
   simp
 
-/-- `MvPolynomial (Option ι) K → R[X]`, `none ↦ X`, `some j ↦ C (w j)`, is injective when `w` is
-algebraically independent. -/
 theorem aeval_optionElim_injective {ι R : Type*} [CommRing R] [Algebra K R] (w : ι → R)
     (hw : AlgebraicIndependent K w) :
     Function.Injective (aeval (R := K) (fun o : Option ι =>
@@ -74,7 +61,6 @@ theorem aeval_optionElim_injective {ι R : Type*} [CommRing R] [Algebra K R] (w 
   rw [h, AlgHom.coe_comp]
   exact (Polynomial.map_injective _ hw).comp (optionEquivLeft K ι).injective
 
-/-- The substitution `X₀ ↦ x0, x_a ↦ t, x_c ↦ z, x_i ↦ ℓ - q_a(x0) t - q_c(x0) z`. -/
 noncomputable def subVals {M : Type*} [CommRing M] [Algebra K M] (q : Fin 3 → Polynomial K)
     (a c : Fin 3) (x0 ℓ t z : M) : Fin 4 → M :=
   Fin.cons x0 fun m => if m = a then t else if m = c then z else
@@ -92,7 +78,6 @@ theorem map_subVals {M M' : Type*} [CommRing M] [Algebra K M] [CommRing M'] [Alg
     · rfl
     · simp only [map_sub, map_mul, Polynomial.aeval_algHom_apply]
 
-/-- With `q_i = 1`, the substitution at `ℓ = Σ q_m(x0) y_m` returns the point itself. -/
 theorem subVals_cons {M : Type*} [CommRing M] [Algebra K M] (q : Fin 3 → Polynomial K)
     (i a c : Fin 3) (hia : i ≠ a) (hic : i ≠ c) (hac : a ≠ c) (hqi : q i = 1) (x0 : M)
     (y : Fin 3 → M) :
@@ -108,7 +93,6 @@ theorem subVals_cons {M : Type*} [CommRing M] [Algebra K M] (q : Fin 3 → Polyn
         one_mul]
       ring
 
-/-- **The slice relation.** -/
 theorem core_poly (F : MvPolynomial (Fin 4) K) (hF : F ≠ 0) (N : ℕ)
     (hN : ∀ d ∈ F.support, d 1 + d 2 + d 3 ≤ N) (x0 : L) (x : Fin 3 → L)
     (hFx : aeval (Fin.cons x0 x : Fin 4 → L) F = 0) (q : Fin 3 → Polynomial K) (i a c : Fin 3)

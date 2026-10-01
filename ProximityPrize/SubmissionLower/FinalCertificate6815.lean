@@ -1,0 +1,6 @@
+import ProximityPrize.SubmissionLower.FinalClosure6815
+import ProximityPrize.SubmissionLower.FinalRulesData6815
+namespace ProximityPrize.SubmissionLower.FinalCertificate6815
+theorem protocolClaim : ProximityPrize.Benchmark.ProtocolClaim 6815 331366399 1073741824 :=
+  Lower80899.FinalClosure.protocolClaim_of_rules FinalRulesData6815.rule_bound
+end ProximityPrize.SubmissionLower.FinalCertificate6815

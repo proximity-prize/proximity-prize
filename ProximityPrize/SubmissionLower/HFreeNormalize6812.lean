@@ -1,21 +1,11 @@
 import Mathlib.RingTheory.Valuation.Basic
 import Mathlib.Algebra.Order.GroupWithZero.Canonical
-
-/-!
-# H-free bridge: normalizing a restricted valuation
-
-The restriction of a place `ν` of a slice function field to the subfield `L0` is a
-valuation `w` with value group `e ℤ`.  If it is nontrivial, `w = v ^ e` for a normalized
-valuation `v` (`∃ x, v x = exp (-1)`), and pole/zero orders scale by `e`.
--/
-
 namespace ProximityPrize.SubmissionLower.HFree6812
 
 open WithZero
 
 variable {L : Type*} [Field L]
 
-/-- Normalization of a nontrivial `ℤᵐ⁰`-valuation on a field. -/
 theorem exists_normalization (w : Valuation L ℤᵐ⁰) (hnt : ∃ x : L, w x ≠ 0 ∧ w x ≠ 1) :
     ∃ (e : ℕ) (v : Valuation L ℤᵐ⁰), 1 ≤ e ∧ (∃ x, v x = exp (-1)) ∧
       ∀ x, w x = v x ^ e := by
@@ -91,12 +81,10 @@ theorem exists_normalization (w : Valuation L ℤᵐ⁰) (hnt : ∃ x : L, w x �
     · rw [if_pos hx, hx, zero_pow (by omega)]
     · rw [if_neg hx, ← exp_nsmul, nsmul_eq_mul, Int.mul_ediv_cancel' (hdvd x hx), exp_log hx]
 
-/-- Pole orders scale by `e` under `w = v ^ e`. -/
 theorem poleOrder_pow (v w : Valuation L ℤᵐ⁰) (e : ℕ) (hw : ∀ x, w x = v x ^ e) (x : L) :
     max 0 (w x).log = e * max 0 (v x).log := by
   rw [hw, log_pow, nsmul_eq_mul, mul_max_of_nonneg _ _ (by positivity), mul_zero]
 
-/-- Zero orders scale by `e` under `w = v ^ e`. -/
 theorem zeroOrder_pow (v w : Valuation L ℤᵐ⁰) (e : ℕ) (hw : ∀ x, w x = v x ^ e) (x : L) :
     max 0 (-(w x).log) = e * max 0 (-(v x).log) := by
   rw [hw, log_pow, nsmul_eq_mul, mul_max_of_nonneg _ _ (by positivity), mul_zero, mul_neg]

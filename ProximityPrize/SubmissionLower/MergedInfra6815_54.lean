@@ -1,0 +1,268 @@
+import ProximityPrize.SubmissionLower.MergedLiteralThresholds6815_0
+import ProximityPrize.SubmissionLower.MergedInfra6815_53
+import ProximityPrize.SubmissionLower.LiteralFinalCurves6815
+import ProximityPrize.SubmissionLower.TriangularKernel6815
+import ProximityPrize.SubmissionLower.MergedInfra6815_49
+set_option Elab.async false
+section MergedPart0
+namespace ProximityPrize.SubmissionLower.LiteralThresholds6815
+set_option autoImplicit false
+set_option maxHeartbeats 5000000
+def row (r v : ℕ) : Array ℕ := match r with
+  | 1 => row1 v
+  | 2 => row2 v
+  | 3 => row3 v
+  | 4 => row4 v
+  | 5 => row5 v
+  | 6 => row6 v
+  | 7 => row7 v
+  | 8 => row8 v
+  | 9 => row9 v
+  | 10 => row10 v
+  | 11 => row11 v
+  | 12 => row12 v
+  | 13 => row13 v
+  | 14 => row14 v
+  | 15 => row15 v
+  | 16 => row16 v
+  | 17 => row17 v
+  | 18 => row18 v
+  | 19 => row19 v
+  | _ => #[]
+theorem row_eq (r v : ℕ) (hr : 1≤r) (hR : r≤19) (hv : v≤70) : row r v=SingletonCertificate6815.thresholds (FinalLookup6815.single r v) := by
+  interval_cases r
+  · exact row1_eq v hv
+  · exact row2_eq v hv
+  · exact row3_eq v hv
+  · exact row4_eq v hv
+  · exact row5_eq v hv
+  · exact row6_eq v hv
+  · exact row7_eq v hv
+  · exact row8_eq v hv
+  · exact row9_eq v hv
+  · exact row10_eq v hv
+  · exact row11_eq v hv
+  · exact row12_eq v hv
+  · exact row13_eq v hv
+  · exact row14_eq v hv
+  · exact row15_eq v hv
+  · exact row16_eq v hv
+  · exact row17_eq v hv
+  · exact row18_eq v hv
+  · exact row19_eq v hv
+def cut (r v j : ℕ) : ℕ := if 1≤r ∧ r≤19 ∧ v≤70 then MovingFiberSingleCore6815.thresholdAt (row r v) j else FinalPayment6815.fastCut r v j
+theorem cut_eq (r v j : ℕ) : cut r v j=FinalPayment6815.fastCut r v j := by
+  unfold cut
+  split_ifs with h
+  · rw [row_eq r v h.1 h.2.1 h.2.2]
+    rfl
+  · rfl
+end ProximityPrize.SubmissionLower.LiteralThresholds6815
+end MergedPart0
+section MergedPart1
+namespace ProximityPrize.SubmissionLower.FinalRulesCached6815
+open FinalCurves6815 FinalRulesRowCheck6815 FinalRuleCheck6815 FinalRemovalAlgebra6815
+open FinalPayment6815 FinalBaseCheck6815 PackingData6815 FinalRulesFast6815 FinalRulesCapped6815
+set_option autoImplicit false
+set_option maxHeartbeats 5000000
+set_option maxRecDepth 100000
+
+def sourceNums : ℕ → Lower80899.Oracle.SourceNumbers
+  | 0 => Lower80899.SourceSound.Phase00.source
+  | 1 => Lower80899.SourceSound.Phase01.source
+  | 2 => Lower80899.SourceSound.Phase02.source
+  | 3 => Lower80899.SourceSound.Phase03.source
+  | 4 => Lower80899.SourceSound.Phase04.source
+  | 5 => Lower80899.SourceSound.Phase05.source
+  | 6 => Lower80899.SourceSound.Phase06.source
+  | n+7 => src (n+7)
+theorem sourceNums_eq (j : ℕ) : sourceNums j=src j := by
+  by_cases h : j<7
+  · interval_cases j <;> rfl
+  · obtain ⟨k,hk⟩ : ∃ k, j=k+7 := ⟨j-7,by omega⟩
+    rw [hk]
+    rfl
+
+def exactPieceL (capL capU capS r y lo hi start : ℕ) (p : Piece) (cut cstart : ℕ) (c : Piece) : Bool :=
+  Bool.rec true
+    (TriangularKernel6815.triangle
+      (50174*c.base+ExactInitialCharge6815.num capL capU capS r y y+1) (50174*c.slope)
+      cstart (min c.stop cut-1) 0 (ExactRemovalPhase6815.tSlope capL capU capS r y)
+      (50174*(value p start lo+1)) (50174*p.slope) lo hi)
+    (Nat.blt cstart (min c.stop cut))
+theorem exactPieceL_eq (capL capU capS r y lo hi start : ℕ) (p : Piece) (cut cstart : ℕ) (c : Piece) :
+    exactPieceL capL capU capS r y lo hi start p cut cstart c=exactPieceCheck capL capU capS r y lo hi start p cut cstart c := by
+  by_cases h : cstart<min c.stop cut
+  · have hb : Nat.blt cstart (min c.stop cut)=true := by simpa only [Nat.blt_eq] using h
+    simp only [exactPieceL,hb,exactPieceCheck,if_pos h,TriangularKernel6815.triangle_eq]
+  · have hb : Nat.blt cstart (min c.stop cut)=false := by
+      apply Bool.eq_false_iff.mpr
+      intro he
+      apply h
+      simpa only [Nat.blt_eq] using he
+    simp only [exactPieceL,hb,exactPieceCheck,if_neg h]
+
+def childL (r v j lo hi start : ℕ) (p : Piece) (q u : ℕ) : Bool :=
+  cells (min (LiteralThresholds6815.cut q u j) (hi+1))
+    (fun cstart c => exactPieceL (sourceNums j).totalCap (sourceNums j).middleCap (sourceNums j).slopeCap (r-q) ((r-q)+(v-u))
+      lo hi start p (LiteralThresholds6815.cut q u j) cstart c) (LiteralFinalCurves6815.curve q u) 0
+theorem childL_eq (r v j lo hi start : ℕ) (p : Piece) (q u : ℕ) : childL r v j lo hi start p q u=exactChildC r v j lo hi start p q u := by
+  simp only [childL,exactChildC,exactPieceL_eq,LiteralThresholds6815.cut_eq,LiteralFinalCurves6815.curve_eq,sourceNums_eq]
+
+def exactL (r v j lo hi start : ℕ) (p : Piece) : Bool :=
+  Nat.blt j 7 && Nat.ble (fastCut r v j) lo && exactEmpty r v j lo hi start p &&
+    allK (fun i => allK (fun u => childL r v j lo hi start p (i+1) u) (v+1)) (r-1)
+theorem exactL_eq (r v j lo hi start : ℕ) (p : Piece) : exactL r v j lo hi start p=exactC r v j lo hi start p := by
+  simp only [exactL,exactC,childL_eq]
+
+def childP (slope charge lo hi start : ℕ) (p : Piece) (child : List Piece) : Bool :=
+  cells (hi+1) (fun clo c => TriangularKernel6815.triangle c.base c.slope clo (c.stop-1) charge slope
+    (value p start lo) p.slope lo hi) child 0
+theorem childP_eq (slope charge lo hi start : ℕ) (p : Piece) (child : List Piece) :
+    childP slope charge lo hi start p child=childC slope charge lo hi start p child := by
+  simp only [childP,childC,childPiece,TriangularKernel6815.triangle_eq]
+  rfl
+
+def heavyP (r v code lo hi start : ℕ) (p : Piece) : Bool :=
+  Nat.blt (digit code 0) 14 && lineCheck (light_slope (digit code 0)) (lightNum (digit code 0) r v) lo hi start p &&
+  allK (fun i => allK (fun u =>
+    let q := i+10
+    let j := heavyChoice code v q u
+    Nat.blt j 14 && childP (light_slope j) (lightNum j (r-q) (v-u)) lo hi start p
+      (FinalLookup6815.single q u).curve) (v+1)) (r-9)
+theorem heavyP_eq (r v code lo hi start : ℕ) (p : Piece) : heavyP r v code lo hi start p=heavyC r v code lo hi start p := by
+  simp only [heavyP,heavyC,childP_eq]
+def baseP (r v aux lo hi start : ℕ) (p : Piece) : Bool :=
+  if aux<8 then lineCheck (full_slope aux) (fullNum aux r v) lo hi start p
+  else decide (aux%16=15 ∧ 10≤r ∧ r≤19 ∧ v≤70 ∧ hi≤4500) && heavyP r v (aux/16) lo hi start p
+theorem baseP_eq (r v aux lo hi start : ℕ) (p : Piece) : baseP r v aux lo hi start p=baseC r v aux lo hi start p := by
+  simp only [baseP,baseC,heavyP_eq]
+
+def ruleL (r v code aux lo hi start : ℕ) (p : Piece) : Bool :=
+  if code=0 then baseP r v aux lo hi start p
+  else if code≤8 then phaseCheck r v (code-1) lo hi start p
+  else if code=9 then terminalCheck r v lo hi start p
+  else if code≤13 then exactL r v (code-7) lo hi start p else false
+theorem ruleL_eq (r v code aux lo hi start : ℕ) (p : Piece) : ruleL r v code aux lo hi start p=ruleC r v code aux lo hi start p := by
+  simp only [ruleL,ruleC,exactL_eq,baseP_eq]
+
+def pairL (r v rlo : ℕ) (rule : Piece) (start : ℕ) (p : Piece) : Bool :=
+  let lo := max rlo start
+  let stop := min rule.stop p.stop
+  if lo<stop then ruleL r v rule.base rule.slope lo (stop-1) start p else true
+theorem pairL_eq (r v rlo : ℕ) (rule : Piece) (start : ℕ) (p : Piece) : pairL r v rlo rule start p=pairC r v rlo rule start p := by
+  simp only [pairL,pairC,ruleL_eq]
+
+def indexL (r v : ℕ) (curve rules : List Piece) (i : ℕ) : Bool :=
+  if i<rules.length then cellsK (pairL r v (startAt 0 rules i) (get rules i)) curve 0 else true
+theorem indexL_eq (r v : ℕ) (curve rules : List Piece) (i : ℕ) (hR : r≤39) (hy : r+v≤182) : indexL r v curve rules i=indexCheck r v curve rules i := by
+  rw [←indexC_eq r v curve rules i hR hy]
+  have he := funext (fun start => funext (fun p => pairL_eq r v (startAt 0 rules i) (get rules i) start p))
+  simp only [indexL,indexC,he]
+
+def blockL (r v : ℕ) (curve rules : List Piece) (b : ℕ) : Bool :=
+  allK (fun j => indexL r v curve rules (8*b+j)) 8
+theorem blockL_eq (r v : ℕ) (curve rules : List Piece) (b : ℕ) (hR : r≤39) (hy : r+v≤182) : blockL r v curve rules b=blockCheck r v curve rules b := by
+  simp only [blockL,blockCheck,allK_eq,indexL_eq r v curve rules _ hR hy]
+
+end ProximityPrize.SubmissionLower.FinalRulesCached6815
+end MergedPart1
+section MergedPart2
+namespace ProximityPrize.SubmissionLower.FinalRulesCompact6815
+open FinalCurves6815 FinalRulesRowCheck6815 FinalRulesCached6815 SingletonCertificate6815 CompactAllN6815
+set_option autoImplicit false
+
+def rowL (r v : ℕ) (c w : List Piece) (n : ℕ) : Bool :=
+  validFrom (11193-r-v) 0 w && Nat.ble w.length (8*n) && allN (fun b => blockL r v c w b) n
+
+theorem row_of_rowL (r v : ℕ) (c w : List Piece) (n : ℕ) (hR : r≤39) (hy : r+v≤182)
+    (h : rowL r v c w n=true) : checkRow r v c w=true := by
+  simp only [rowL,Bool.and_eq_true,Nat.ble_eq] at h
+  refine of_blocks r v c w n h.1.1 h.1.2 (fun b hb => ?_)
+  rw [←blockL_eq r v c w b hR hy]
+  exact allN_sound _ n h.2 b hb
+
+theorem row_of_blocks (r v : ℕ) (c w : List Piece) (n : ℕ)
+    (hv : validFrom (11193-r-v) 0 w=true) (hn : w.length≤8*n)
+    (hb : allN (fun b => blockCheck r v c w b) n=true) : checkRow r v c w=true :=
+  of_blocks r v c w n hv hn (fun b hb' => allN_sound _ n hb b hb')
+
+theorem blk (r v : ℕ) (c w : List Piece) (b : ℕ) (hR : r≤39) (hy : r+v≤182)
+    (h : blockL r v c w b=true) : blockCheck r v c w b=true := by
+  rw [←blockL_eq r v c w b hR hy]; exact h
+
+theorem blk8 (r v : ℕ) (c w : List Piece) (b : ℕ) (hR : r≤39) (hy : r+v≤182)
+    (h0 : indexL r v c w (8*b+0)=true) (h1 : indexL r v c w (8*b+1)=true)
+    (h2 : indexL r v c w (8*b+2)=true) (h3 : indexL r v c w (8*b+3)=true)
+    (h4 : indexL r v c w (8*b+4)=true) (h5 : indexL r v c w (8*b+5)=true)
+    (h6 : indexL r v c w (8*b+6)=true) (h7 : indexL r v c w (8*b+7)=true) :
+    blockCheck r v c w b=true := by
+  apply block_of_indices
+  intro i hi
+  rw [←indexL_eq r v c w _ hR hy]
+  interval_cases i <;> assumption
+
+def rowC (r v : ℕ) (c w : List Piece) (n : ℕ) : Bool :=
+  validFrom (11193-r-v) 0 w && Nat.ble w.length (8*n) && allN (fun b => FinalRulesCapped6815.blockC r v c w b) n
+
+theorem row_of_rowC (r v : ℕ) (c w : List Piece) (n : ℕ) (hR : r≤39) (hy : r+v≤182)
+    (h : rowC r v c w n=true) : checkRow r v c w=true := by
+  simp only [rowC,Bool.and_eq_true,Nat.ble_eq] at h
+  refine of_blocks r v c w n h.1.1 h.1.2 (fun b hb => ?_)
+  rw [←FinalRulesCapped6815.blockC_eq r v c w b hR hy]
+  exact allN_sound _ n h.2 b hb
+
+theorem blkC (r v : ℕ) (c w : List Piece) (b : ℕ) (hR : r≤39) (hy : r+v≤182)
+    (h : FinalRulesCapped6815.blockC r v c w b=true) : blockCheck r v c w b=true := by
+  rw [←FinalRulesCapped6815.blockC_eq r v c w b hR hy]; exact h
+
+end ProximityPrize.SubmissionLower.FinalRulesCompact6815
+end MergedPart2
+section MergedPart3
+namespace ProximityPrize.SubmissionLower.FinalRulesRows6815_R01
+open FinalCurves6815 FinalRulesRowCheck6815 FinalRulesCached6815 FinalRulesCompact6815 SingletonCertificate6815 CompactAllN6815
+set_option autoImplicit false
+set_option maxHeartbeats 10000000
+set_option maxRecDepth 100000
+set_option linter.all false
+set_option Elab.async false
+private abbrev D : ℕ → List Piece := FinalRulesRowCheck6815.decode
+def row (v : ℕ) : List Piece := (#[D 0x22bb80015f720001874100403b10004,D 0x22bb70015f590001861100403c50004,D 0x22bb60015f40000184f100404980004,D 0x22bb50015f28000183c100407140004,D 0x22bb40015f10001182900018031004097d0005,D 0x22bb30015ef9001181600017f010040bed0005,D 0x22bb20015ee1001180300017dd10040e590005,D 0x22bb10015ec900117f000017ca100410c10005,D 0x22bb00015eb000117dd00017b7100413260005,D 0x22baf0015e9700117c900017a3100415850005,D 0x22bae0015e7e00117b610041790200400370005,D 0x22bad0015e6500117a21004177c200401d40005,D 0x22bac0015e4b001178e100417682004036e0005,D 0x22bab0015e31001177a10041754200405060005,D 0x22baa0015e16001176600057401004161c2004065f0006,D 0x22ba90015dfb0011752000572c10041609200407c60006,D 0x22ba80015de0001173e0005717100415f7200409420006,D 0x22ba70015dc500117290005703100415e520040abb0006,D 0x22ba60015da9001171400056ee100415d220040c320006,D 0x22ba50015d8c001170000056d9100415bf20040da60006,D 0x22ba40015d6f00116eb00056c4100415ac20040f170006,D 0x22ba30015d5200116d600056af10041599200410850006,D 0x22ba20015d3500116c0000569a10041586200411f10006,D 0x22ba10015d1700116ab0005685100415732004135b0006,D 0x22ba00015cf80011695000566f10041560200414c20006,D 0x22b9f0015cd9001168000056592004154c300400830006,D 0x22b9e0015cba001166a000564320041539300401620006,D 0x22b9d0015c9c0011654000562d20041525300402400006,D 0x22b9c0015c7f001163e0005617200415113004031c0006,D 0x22b9b0015c6300116270005601200414fd300403f70006,D 0x22b9a0015c46001161100055ea200414e9300404d00006,D 0x22b990015c2900115fa00055d3200414d4300405a70006,D 0x22b980015c0b00115e300055bc200414c03004067c0006,D 0x22b970015bec00115cc00055a5200414ab300407500006,D 0x22b960015bcd00115b4000558d20041496300408220006,D 0x22b950015bae001159c000557620041481300408f20006,D 0x22b940015b8e0011585000555e2004146b300409c00006,D 0x22b930015b6d001156c00055462004145630040a8c0006,D 0x22b920015b4c0011554000552d2004144030040b570006,D 0x22b910015b2a001153c00055152004142a30040c1f0006,D 0x22b900015b08001152300054fc2004141430040ce60006,D 0x22b8f0015ae5001150a00054e3200413fe30040dab0006,D 0x22b8e0015ac100114f000054c9200413e730040e6d0006,D 0x22b8d0015a9c00114d700054af200413d130040f2e0006,D 0x22b8c0015a7700114bd0005495200413ba30040fed0006,D 0x22b8b0015a5400114a3000547b200413a3300410a90006,D 0x22b8a0015a31001148800054612004138b300411630006,D 0x22b890015a0e001146d0005446200413733004121b0006,D 0x22b8800159ea0011452000542a2004135b300412d10006,D 0x22b8700159c50011437000540f30041343400400220006,D 0x22b86001599f001141b00053f33004132b400400870006,D 0x22b85001597900113ff00053d630041312400400eb0006,D 0x22b84001595100113e200053ba300412f94004014e0006,D 0x22b83001592900113c5000539d300412df400401af0006,D 0x22b82001590000113a8000537f300412c5400402100006,D 0x22b8100158d5001138a0005361300412ab400402700006,D 0x22b8000158aa001136b000534230041291400402ce0006,D 0x22b7f001587e001134d0005323300412764004032c0006,D 0x22b7e0015853001132d00053043004125b400403880006,D 0x22b7d0015828001130d00052e43004123f400403e30006,D 0x22b7c00157fc00112ed00052c3300412234004043d0006,D 0x22b7b00157ce00112cc00052a230041206400404950006,D 0x22b7a001579f00112aa0005280300411e9400404ec0006,D 0x22b79001576e0011288000525e300411cc400405420006,D 0x22b78001573c0011265000523a300411ae400405960006,D 0x22b770015708001124100052163004118f400405e90006,D 0x22b7600156d3001121d00051f1300411704004063b0006,D 0x22b75001569e00111f700051cc300411504004068b0006,D 0x22b74001566700111d100051a530041130400406d90006,D 0x22b73001562e00111aa000517d3004110f400407260006,D 0x22b7200155f300111810005154300410ed400407710006,D 0x22b7100155b60011158000512a300410ca400407ba0006,D 0x22b700015575001112d00050ff300410a7400408020006,D 0x22b6f0015533001110100050d230041082400408470006,D 0x22b6e00154ef00110d300050a33004105d4004088b0006,D 0x22b6d00154a600110a4000507330041036400408cc0006,D 0x22b6c001545b001107200050413004100f4004090c0006,D 0x22b6b001540c001103f000d00c0008fe130040fdb400409420007,D 0x22b6a00153b90011009001cfd630040efa400409410006,D 0x22b6900153630010fd2001cf9d30040ce74004093f0006,D 0x22b6800153090010f97001cf6130040ac54004093e0006,D 0x22b6700152ac0010f5a001cf23400408950005,D 0x22b66001524a0010f1b001cee2400406560005,D 0x22b6500151e50010ed9001ce9f400404090005,D 0x22b64001517c0010e94001ce58400401ae0005,D 0x22b6300151100010e4d001ce10400401080005,D 0x22b6200150a00010e03001cdc44004010b0005,D 0x22b61001502c0010db6001cd764004010d0005,D 0x22b600014fb40010d67001cd254004010f0005,D 0x22b5f0014f380010d14001ccd2400401120005,D 0x22b5e0014eb90010cc0001cc7b400401140005,D 0x22b5d0014e360010c68001cc23400401170005,D 0x22b5c0014db00010c0e001cbc7400401190005,D 0x22b5b0014d250010bb2001cb694004011b0005,D 0x22b5a0014c970010b52001cb084004011e0005,D 0x22b590014c060010af1001caa4400401200005,D 0x22b580014b700010a8c001ca3e400401220005,D 0x22b570014ad70010a25001c9d5400401250005,D 0x22b560014a3a00109bb001c96a40040124500400030006,D 0x22b550014999001094e001c8fc40040124500400060006,D 0x22b5400148f400108df001c88b40040123500400090006,D 0x22b53001084c001c817400401225004000c0005,D 0x22b52001c7a0400401215004000f0004,D 0x22b51001c6f040040121500400120004,D 0x22b50001c63d40040120500400150004,D 0x22b4f001c5874004011f500400180004,D 0x22b4e001c4cc4004011e5004001a0004,D 0x22b4d001c40d4004011e5004001d0004,D 0x22b4c001c34a4004011d500400200004,D 0x22b4b001c2834004011c500400230004,D 0x22b4a001c1b94004011b500400260004,D 0x22b49400400eb500400250003,D 0x22b48001809c500400190003,D 0x22b47001809b0002,D 0x22b46001809a0002,D 0x22b4500180990002,D 0x22b4400180980002,D 0x22b4300180970002,D 0x22b4200180950002,D 0x22b4100180940002,D 0x22b4000180930002,D 0x22b3f00180920002,D 0x22b3e00180910002,D 0x22b3d001808f0002,D 0x22b3c001808e0002,D 0x22b3b001808d0002,D 0x22b3a001808c0002,D 0x22b39001808b0002,D 0x22b3800180890002,D 0x22b3700180880002,D 0x22b3600180870002,D 0x22b3500180860002,D 0x22b3400180850002,D 0x22b3300180840002,D 0x22b3200180820002,D 0x22b3100180810002,D 0x22b3000180800002,D 0x22b2f001807f0002,D 0x22b2e001807e0002,D 0x22b2d001807c0002,D 0x22b2c001807b0002,D 0x22b2b001807a0002,D 0x22b2a00180790002,D 0x22b2900180780002,D 0x22b2800180770002,D 0x22b2700180750002,D 0x22b2600180740002,D 0x22b2500180730002,D 0x22b2400180720002,D 0x22b2300180710002,D 0x22b22001806f0002,D 0x22b21001806e0002,D 0x22b20001806d0002,D 0x22b1f001806c0002,D 0x22b1e001806b0002,D 0x22b1d001806a0002,D 0x22b1c00180680002,D 0x22b1b00180670002,D 0x22b1a00180660002,D 0x22b1900180650002,D 0x22b1800180640002,D 0x22b1700180620002,D 0x22b1600180610002,D 0x22b1500180600002,D 0x22b14001805f0002,D 0x22b13001805e0002,D 0x22b12001805d0002,D 0x22b11001805b0002,D 0x22b10001805a0002,D 0x22b0f00180590002,D 0x22b0e00180580002,D 0x22b0d00180570002,D 0x22b0c00180550002,D 0x22b0b00180540002,D 0x22b0a00180530002,D 0x22b0900180520002,D 0x22b0800180510002,D 0x22b07001804f0002,D 0x22b06001804e0002,D 0x22b05001804d0002,D 0x22b04001804c0002,D 0x22b03001804b0002][v]?).getD []
+private abbrev C (v : ℕ) : List Piece := FinalLedgerData6815.row 1 v
+private def nb (v : ℕ) : ℕ := (#[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1][v]?).getD 0
+private def H : List ℕ := []
+private def ok (v : ℕ) : Bool := if v∈H ∨ 182≤v then true else rowL 1 v (C v) (row v) (nb v)
+private abbrev I (v i : ℕ) : Prop := indexL 1 v (C v) (row v) i=true
+private theorem g0 : allN (fun j => ok (16*0+j)) 16=true := by decide +kernel
+private theorem g1 : allN (fun j => ok (16*1+j)) 16=true := by decide +kernel
+private theorem g2 : allN (fun j => ok (16*2+j)) 16=true := by decide +kernel
+private theorem g3 : allN (fun j => ok (16*3+j)) 16=true := by decide +kernel
+private theorem g4 : allN (fun j => ok (16*4+j)) 16=true := by decide +kernel
+private theorem g5 : allN (fun j => ok (16*5+j)) 16=true := by decide +kernel
+private theorem g6 : allN (fun j => ok (16*6+j)) 16=true := by decide +kernel
+private theorem g7 : allN (fun j => ok (16*7+j)) 16=true := by decide +kernel
+private theorem g8 : allN (fun j => ok (16*8+j)) 16=true := by decide +kernel
+private theorem g9 : allN (fun j => ok (16*9+j)) 16=true := by decide +kernel
+private theorem g10 : allN (fun j => ok (16*10+j)) 16=true := by decide +kernel
+private theorem g11 : allN (fun j => ok (16*11+j)) 16=true := by decide +kernel
+private theorem okAt (v : ℕ) (hv : v<192) : ok v=true := by
+  rcases (show (0≤v ∧ v<16) ∨ (16≤v ∧ v<32) ∨ (32≤v ∧ v<48) ∨ (48≤v ∧ v<64) ∨ (64≤v ∧ v<80) ∨ (80≤v ∧ v<96) ∨ (96≤v ∧ v<112) ∨ (112≤v ∧ v<128) ∨ (128≤v ∧ v<144) ∨ (144≤v ∧ v<160) ∨ (160≤v ∧ v<176) ∨ (176≤v ∧ v<192) by omega) with h0 | h1 | h2 | h3 | h4 | h5 | h6 | h7 | h8 | h9 | h10 | h11
+  · exact allN_block ok 0 g0 v (by omega) (by omega)
+  · exact allN_block ok 1 g1 v (by omega) (by omega)
+  · exact allN_block ok 2 g2 v (by omega) (by omega)
+  · exact allN_block ok 3 g3 v (by omega) (by omega)
+  · exact allN_block ok 4 g4 v (by omega) (by omega)
+  · exact allN_block ok 5 g5 v (by omega) (by omega)
+  · exact allN_block ok 6 g6 v (by omega) (by omega)
+  · exact allN_block ok 7 g7 v (by omega) (by omega)
+  · exact allN_block ok 8 g8 v (by omega) (by omega)
+  · exact allN_block ok 9 g9 v (by omega) (by omega)
+  · exact allN_block ok 10 g10 v (by omega) (by omega)
+  · exact allN_block ok 11 g11 v (by omega) (by omega)
+theorem checked (v : ℕ) (hv : v≤181) : checkRow 1 v (FinalLedgerData6815.row 1 v) (row v)=true := by
+  have hH : ¬(v∈H ∨ 182≤v) := by simp only [H,List.mem_cons,List.not_mem_nil,or_false,false_or]; omega
+  have h := okAt v (by omega)
+  simp only [ok,if_neg hH] at h
+  exact row_of_rowL 1 v _ _ (nb v) (by omega) (by omega) h
+end ProximityPrize.SubmissionLower.FinalRulesRows6815_R01
+end MergedPart3

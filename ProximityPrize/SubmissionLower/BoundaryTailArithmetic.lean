@@ -1,7 +1,6 @@
-import ProximityPrize.SubmissionLower.BoundaryTailDegrees
+import ProximityPrize.SubmissionLower.MergedInfra6815_1
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.Ring
-
 namespace ProximityPrize.SubmissionLower.BoundaryTail
 
 theorem weighted_tail_bound {n j a b c : ℤ}
