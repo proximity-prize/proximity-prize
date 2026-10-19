@@ -2,7 +2,7 @@
 Copyright (c) 2026 Proximity Prize Contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import ProximityPrize.SubmissionBinaryUpper.SubspacePoly
+import ProximityPrize.SubmissionBinaryUpper.LabelKey
 import Mathlib.Combinatorics.Pigeonhole
 
 /-!
@@ -10,12 +10,13 @@ import Mathlib.Combinatorics.Pigeonhole
 
 The subspace polynomial `Y` of the first `2^14` words is constant on the 128
 cosets `16384 h + W` of the domain, with value `y h`.  An agreement set is a
-fixed 16383-point core inside `W` together with 67 whole cosets with labels
-`U ⊆ [1, 128)`, so it has `16383 + 67 * 16384 = 1114111` points.
+fixed 16383-point core inside `W` together with 68 whole cosets with labels
+`U ⊆ [1, 128)`, so it has `16383 + 68 * 16384 = 1130495` points.
 
-Its vanishing polynomial is `R(x) V_U(Y(x))`.  Only the two top coefficients
+Its vanishing polynomial is `R(x) V_U(Y(x))`.  Only the three top coefficients
 of `V_U` below its leading one are prescribed.  Because the labels span a
-seven-dimensional `𝔽₂`-space, these lie in sets of size `2^7` and `2^49`.
+seven-dimensional `𝔽₂`-space, these are determined by a 35-bit key
+(`LabelKey.kappa`).
 A rational pencil with a generic extension-field point `α` absorbs one more
 coefficient, so every member of a key class gives a codeword
 `R(x) Q_U(Y(x))` with `deg Q_U ≤ 63`, i.e. of degree at most `2^20 - 1`, and a
@@ -55,15 +56,11 @@ theorem V_natDegree (U : Finset ℕ) : (V U).natDegree = U.card := by
   rw [V, natDegree_prod_of_monic _ _ (fun h _ => monic_X_sub_C (y h))]
   simp
 
-theorem V_coeff_66 {U : Finset ℕ} (hU : U.card = 67) :
-    (V U).coeff 66 = (-1) ^ 1 * (U.val.map y).esymm 1 := by
-  rw [V_eq_multiset, Multiset.prod_X_sub_C_coeff _ (by simp [hU])]
-  simp [hU]
-
-theorem V_coeff_65 {U : Finset ℕ} (hU : U.card = 67) :
-    (V U).coeff 65 = (-1) ^ 2 * (U.val.map y).esymm 2 := by
-  rw [V_eq_multiset, Multiset.prod_X_sub_C_coeff _ (by simp [hU])]
-  simp [hU]
+theorem V_coeff_top {U : Finset ℕ} (hU : U.card = 68) {k : ℕ} (hk : k ≤ 68) :
+    (V U).coeff (68 - k) = (-1) ^ k * LabelKey.e k U := by
+  rw [V_eq_multiset, Multiset.prod_X_sub_C_coeff _ (by simp [hU]), LabelKey.e, LabelKey.ys]
+  simp only [Multiset.card_map, Finset.card_val, hU]
+  rw [show 68 - (68 - k) = k by omega]
 
 theorem V_eval_zero_iff {U : Finset ℕ} (hU : U ⊆ Finset.range 128) {h : ℕ} (hh : h < 128) :
     (V U).eval (y h) = 0 ↔ h ∈ U := by
@@ -93,13 +90,13 @@ theorem V_injective {U W : Finset ℕ} (hU : U ⊆ Finset.range 128) (hW : W ⊆
 
 /-! ## The cheap key and its fibre -/
 
-noncomputable def Candidates : Finset (Finset ℕ) := (Finset.Ico 1 128).powersetCard 67
+noncomputable def Candidates : Finset (Finset ℕ) := (Finset.Ico 1 128).powersetCard 68
 
-theorem candidates_card : Candidates.card = Nat.choose 127 67 := by
+theorem candidates_card : Candidates.card = Nat.choose 127 68 := by
   rw [Candidates, Finset.card_powersetCard, Nat.card_Ico]
 
 theorem mem_candidates {U : Finset ℕ} (hU : U ∈ Candidates) :
-    U ⊆ Finset.Ico 1 128 ∧ U.card = 67 :=
+    U ⊆ Finset.Ico 1 128 ∧ U.card = 68 :=
   Finset.mem_powersetCard.mp hU
 
 theorem candidates_sub_range {U : Finset ℕ} (hU : U ∈ Candidates) : U ⊆ Finset.range 128 := by
@@ -109,46 +106,25 @@ theorem candidates_sub_range {U : Finset ℕ} (hU : U ∈ Candidates) : U ⊆ Fi
   simp only [Finset.mem_range]
   omega
 
-noncomputable def key (U : Finset ℕ) : K × K := ((V U).coeff 66, (V U).coeff 65)
-
-noncomputable def keySet : Finset (K × K) :=
-  (S1.image (fun z => (-1) ^ 1 * z)) ×ˢ (S2.image (fun z => (-1) ^ 2 * z))
-
-theorem keySet_card : keySet.card ≤ 2 ^ 56 := by
-  rw [keySet, Finset.card_product]
-  calc (S1.image (fun z => (-1) ^ 1 * z)).card * (S2.image (fun z => (-1) ^ 2 * z)).card
-      ≤ S1.card * S2.card := Nat.mul_le_mul Finset.card_image_le Finset.card_image_le
-    _ ≤ 2 ^ 7 * 2 ^ 49 := Nat.mul_le_mul S1_card S2_card
-    _ = 2 ^ 56 := by norm_num
-
-theorem key_mem {U : Finset ℕ} (hU : U ∈ Candidates) : key U ∈ keySet := by
-  have hlab : ∀ a ∈ U.val.map y, a ∈ S1 := by
-    intro a ha
-    obtain ⟨h, hh, rfl⟩ := Multiset.mem_map.mp ha
-    have : h < 128 := by simpa using candidates_sub_range hU hh
-    exact y_mem_S1 this
-  rw [key, keySet, Finset.mem_product, V_coeff_66 (mem_candidates hU).2,
-    V_coeff_65 (mem_candidates hU).2]
-  exact ⟨Finset.mem_image_of_mem _ (esymm_one_mem _ hlab),
-    Finset.mem_image_of_mem _ (esymm_two_mem _ hlab)⟩
+noncomputable def key (U : Finset ℕ) : (Fin 7 → ZMod 4) × (Fin 21 → ZMod 2) := LabelKey.kappa U
 
 set_option maxRecDepth 100000 in
-theorem fibre_count : 2 ^ 56 * 2 ^ 64 < Nat.choose 127 67 := by
+theorem fibre_count : 2 ^ 35 * 2 ^ 64 < Nat.choose 127 68 := by
   rw [Nat.choose_eq_fast_choose]
   decide
 
-set_option maxRecDepth 100000 in
 theorem exists_big_fiber :
-    ∃ σ ∈ keySet, 2 ^ 64 < (Candidates.filter fun U => key U = σ).card := by
-  refine Finset.exists_lt_card_fiber_of_mul_lt_card_of_maps_to (fun U hU => key_mem hU) ?_
-  rw [candidates_card]
-  exact lt_of_le_of_lt (Nat.mul_le_mul_right _ keySet_card) fibre_count
+    ∃ σ : (Fin 7 → ZMod 4) × (Fin 21 → ZMod 2),
+      2 ^ 64 < (Candidates.filter fun U => key U = σ).card := by
+  refine PrescribedTop.pigeonhole Candidates key _ ?_
+  rw [candidates_card, LabelKey.card_kappa_type]
+  exact fibre_count
 
-noncomputable def sigma0 : K × K := Classical.choose exists_big_fiber
+noncomputable def sigma0 : (Fin 7 → ZMod 4) × (Fin 21 → ZMod 2) := Classical.choose exists_big_fiber
 
 noncomputable def Fam : Finset (Finset ℕ) := Candidates.filter fun U => key U = sigma0
 
-theorem Fam_card_gt : 2 ^ 64 < Fam.card := (Classical.choose_spec exists_big_fiber).2
+theorem Fam_card_gt : 2 ^ 64 < Fam.card := Classical.choose_spec exists_big_fiber
 
 theorem Fam_mem {U : Finset ℕ} (hU : U ∈ Fam) : U ∈ Candidates := (Finset.mem_filter.mp hU).1
 
@@ -169,19 +145,23 @@ theorem Sel_cand {U : Finset ℕ} (hU : U ∈ Sel) : U ∈ Candidates := Fam_mem
 
 theorem V_sub_natDegree_le {U W : Finset ℕ} (hU : U ∈ Fam) (hW : W ∈ Fam) :
     (V U - V W).natDegree ≤ 64 := by
-  have hkey := (Fam_key hU).trans (Fam_key hW).symm
-  have h66 : (V U).coeff 66 = (V W).coeff 66 := congrArg Prod.fst hkey
-  have h65 : (V U).coeff 65 = (V W).coeff 65 := congrArg Prod.snd hkey
+  have hkey : LabelKey.kappa U = LabelKey.kappa W := (Fam_key hU).trans (Fam_key hW).symm
+  obtain ⟨h1, h2, h3⟩ := LabelKey.e_congr (candidates_sub_range (Fam_mem hU))
+    (candidates_sub_range (Fam_mem hW)) hkey
   have hcU := (mem_candidates (Fam_mem hU)).2
   have hcW := (mem_candidates (Fam_mem hW)).2
   rw [Polynomial.natDegree_le_iff_coeff_eq_zero]
   intro d hd
   have hd' : 64 < d := by exact_mod_cast hd
   rw [coeff_sub]
-  rcases Nat.lt_or_ge d 67 with hlt | hge
-  · interval_cases d
-    · rw [h65, sub_self]
-    · rw [h66, sub_self]
+  rcases Nat.lt_or_ge d 68 with hlt | hge
+  · obtain ⟨k, hk, rfl⟩ : ∃ k, k ≤ 3 ∧ d = 68 - k := ⟨68 - d, by omega, by omega⟩
+    rw [V_coeff_top hcU (by omega), V_coeff_top hcW (by omega), sub_eq_zero]
+    interval_cases k
+    · omega
+    · rw [h1]
+    · rw [h2]
+    · rw [h3]
   · rcases Nat.eq_or_lt_of_le hge with heq | hgt
     · subst heq
       have h1 := V_monic U
@@ -352,7 +332,7 @@ theorem core_card : core.card = 16383 := by
   have := congrArg Fin.val hac
   rwa [toIdx_val (by omega), toIdx_val (by omega)] at this
 
-theorem fib_card {U : Finset ℕ} (hU : U ∈ Candidates) : (fib U).card = 67 * 16384 := by
+theorem fib_card {U : Finset ℕ} (hU : U ∈ Candidates) : (fib U).card = 68 * 16384 := by
   have hsub := candidates_sub_range hU
   rw [fib, Finset.card_image_of_injOn, Finset.card_product, Finset.card_range,
     (mem_candidates hU).2]
@@ -378,7 +358,7 @@ theorem core_fib_disjoint {U : Finset ℕ} (hU : U ∈ Candidates) : Disjoint co
   rw [toIdx_val (by omega), toIdx_val (by omega)] at this
   omega
 
-theorem J_card {U : Finset ℕ} (hU : U ∈ Candidates) : (J U).card = 1114111 := by
+theorem J_card {U : Finset ℕ} (hU : U ∈ Candidates) : (J U).card = 1130495 := by
   rw [J, Finset.card_union_of_disjoint (core_fib_disjoint hU), core_card, fib_card hU]
 
 theorem RF_eval_core {j : Idx} (hj : j ∈ core) : RF.eval (BinaryIRSProfile.domain j) = 0 := by

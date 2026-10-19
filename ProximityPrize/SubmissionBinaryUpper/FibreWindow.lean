@@ -193,16 +193,16 @@ theorem epsilon_lt_fraction :
   norm_num [NN]
 
 theorem winningSetDensity_gt_epsilon_window (δ : ℝ≥0)
-    (hlo : (983041 / 2097152 : ℝ≥0) ≤ δ) (hhi : δ < (1015833 / 2097152 : ℝ≥0)) :
+    (hlo : (966657 / 2097152 : ℝ≥0) ≤ δ) (hhi : δ < (1015833 / 2097152 : ℝ≥0)) :
     ProximityPrize.Benchmark.Binary.Upper.epsilonStar <
       winningSetDensity BinaryIRSProfile.encoder δ := by
   classical
   have hcardI : Fintype.card Idx = 2097152 := PrescribedTop.card_Idx
-  have hd_lo : (983041 / 2097152 : ℝ) ≤ (δ : ℝ) := by exact_mod_cast hlo
+  have hd_lo : (966657 / 2097152 : ℝ) ≤ (δ : ℝ) := by exact_mod_cast hlo
   have hd_hi : (δ : ℝ) < 1015833 / 2097152 := by exact_mod_cast hhi
   have hx_lo : (1081319 : ℝ) < (1 - (δ : ℝ)) * 2097152 := by nlinarith
-  have hx_hi : (1 - (δ : ℝ)) * 2097152 ≤ 1114111 := by nlinarith
-  have ht_hi : Nat.ceil ((1 - (δ : ℝ)) * 2097152) ≤ 1114111 :=
+  have hx_hi : (1 - (δ : ℝ)) * 2097152 ≤ 1130495 := by nlinarith
+  have ht_hi : Nat.ceil ((1 - (δ : ℝ)) * 2097152) ≤ 1130495 :=
     Nat.ceil_le.mpr (by exact_mod_cast hx_hi)
   have hsub : ∀ a : Carrier, ∃ T ⊆ J a.val, T.card = Nat.ceil ((1 - (δ : ℝ)) * 2097152) := by
     intro a
