@@ -1,0 +1,10 @@
+import ProximityPrize.SubmissionBinaryLower.BCHKSLinearSelectedAdapter
+
+namespace ProximityPrize.SubmissionBinaryLower
+
+open Polynomial
+
+set_option maxRecDepth 1000000
+set_option maxHeartbeats 20000000
+
+end ProximityPrize.SubmissionBinaryLower
