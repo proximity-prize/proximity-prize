@@ -58,7 +58,7 @@ theorem source_coefficient_total_cap (J : MvPolynomial (Fin 5) K) (T : ℕ)
       e 1+e 2+e 3+e 4≤T := by
     intro e he
     refine ⟨?_,?_,?_⟩
-    · simpa [slope,weight_coords,slopeWeights,Nat.mul_comm] using le_weightedTotalDegree slopeWeights he
+    · simpa [MovingSourceCoupledClearing6814.slope,weight_coords,slopeWeights,Nat.mul_comm] using le_weightedTotalDegree slopeWeights he
     · simpa [middle,weight_coords,middleWeights] using le_weightedTotalDegree middleWeights he
     · have hh := (le_weightedTotalDegree totalWeights he).trans hT
       simpa [weight_coords,totalWeights] using hh

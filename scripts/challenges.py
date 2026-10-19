@@ -3,8 +3,11 @@
 
 `challenges.json` is the single source of truth: each challenge's version (the
 immutable name a release bump changes) and its submission root live here and
-nowhere else. The benchmark workflow and version guard read them back through
-this module: one schema, one parser.
+nowhere else. Versions are independent per slug; two slugs may share a version
+number, but neither must follow the other's numbering. Allocate a new number
+against the independent verifier's served history, which may be ahead of this
+repository. The benchmark workflow and version guard read the selected versions
+back through this module: one schema, one parser.
 
 CLI (for the shell/YAML callers):
 

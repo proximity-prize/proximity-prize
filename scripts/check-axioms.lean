@@ -1,17 +1,22 @@
 /-
 Environment and axiom audit for the protected IRS benchmark contract.
 
-Run after building both protected benchmark targets:
+Run after building all four protected benchmark targets:
 `lake env lean scripts/check-axioms.lean`.
 -/
 import ProximityPrize
 
 open Lean Lean.Meta
 
+-- Every top-level module prefix admitted into the environment. Two are easy to
+-- mistake for dead entries, so record where they come from: `ToMathlib` is
+-- VCVio's staging library for declarations bound for Mathlib, and `ToCslib` is
+-- PolyFun's equivalent for declarations bound for Cslib -- it ships in
+-- `PolyFun/ToCslib/`, not in a package of its own.
 def trustedModulePrefixes : List String :=
   ["Init", "Lean", "Lake", "Std", "Batteries", "Aesop", "Qq", "Plausible", "Cslib",
    "ProofWidgets", "ImportGraph", "LeanSearchClient", "Mathlib", "ArkLib",
-   "VCVio", "CompPoly", "PolyFun", "Loom", "ToMathlib", "ProximityPrize"]
+   "VCVio", "CompPoly", "PolyFun", "Loom", "ToMathlib", "ToCslib", "ProximityPrize"]
 
 open Elab.Command in
 run_cmd liftCoreM do
@@ -56,6 +61,25 @@ run_cmd liftTermElabM do
      ``ProximityPrize.Benchmark.Upper.epsilonStar,
      ``ProximityPrize.Benchmark.Upper.claimedUnsafeRadius,
      ``ProximityPrize.Benchmark.Upper.ProtocolClaimUpper]
+  let trustedDecls := trustedDecls ++
+    [``ProximityPrize.Benchmark.BinarySampling.baseSampleableType,
+     ``ProximityPrize.Benchmark.BinarySampling.sampleableType,
+     ``ProximityPrize.Benchmark.BinarySampling.evalDist_sample,
+     ``ProximityPrize.Benchmark.BinaryIRSProfile.domain,
+     ``ProximityPrize.Benchmark.BinaryIRSProfile.encoder_injective,
+     ``ProximityPrize.Benchmark.BinaryIRSProfile.encoder_range,
+     ``ProximityPrize.Benchmark.BinaryIRSProfile.dimension,
+     ``ProximityPrize.Benchmark.BinaryIRSProfile.alphabetRate,
+     ``ProximityPrize.Benchmark.BinaryIRSProfile.minDistance,
+     ``ProximityPrize.Benchmark.BinaryIRSProfile.base_minRelativeDistance,
+     ``ProximityPrize.Benchmark.BinaryIRSProfile.minRelativeDistance_eq,
+     ``ProximityPrize.Benchmark.Binary.claimedRadius,
+     ``ProximityPrize.Benchmark.Binary.claimedError,
+     ``ProximityPrize.Benchmark.Binary.reductionTarget,
+     ``ProximityPrize.Benchmark.Binary.ProtocolClaim,
+     ``ProximityPrize.Benchmark.Binary.Upper.epsilonStar,
+     ``ProximityPrize.Benchmark.Binary.Upper.claimedUnsafeRadius,
+     ``ProximityPrize.Benchmark.Binary.Upper.ProtocolClaimUpper]
   for decl in trustedDecls do
     let axioms ← collectAxioms decl
     let offending := axioms.toList.filter (fun a => !whitelist.contains a)

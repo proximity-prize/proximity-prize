@@ -8,6 +8,7 @@ import ArkLib.ProofSystem.ToyProblem.Leaderboard
 import ArkLib.Data.CodingTheory.ProximityGap.BCIKS20.AffineLines.UniqueDecoding
 import ArkLib.Data.CodingTheory.ProximityGap.GrandChallenges
 import CompPoly.Univariate.NTT.KoalaBear
+import ProximityPrize.Benchmark.CodeBridge
 
 /-!
 # The interleaved-RS challenge profile
@@ -54,7 +55,7 @@ def domain : Index ↪ Field where
     apply Fin.ext
     have hcoeff := congrArg
       (fun x : Field => CompPoly.Extension.Ext.coeff x (0 : Fin 6)) hij
-    simp only [CompPoly.Extension.Ext.coeff_ofBase, Fin.val_zero, if_pos] at hcoeff
+    change baseNttDomain.node i = baseNttDomain.node j at hcoeff
     exact baseNttDomain.primitive.pow_inj i.isLt j.isLt hcoeff
 
 def encoder :
@@ -108,48 +109,21 @@ theorem baseMinDistance :
 /-- The exact relative-distance value shared by the base and interleaved codes. -/
 noncomputable def minRelativeDistance : ℝ≥0 := (131073 : ℝ≥0) / 262144
 
+theorem card_index : Fintype.card Index = 262144 := by
+  norm_num [Index]
+
 theorem base_minRelativeDistance :
     (Code.minRelHammingDistCode (baseCode : Set (Index → Field)) : ℝ≥0) =
       minRelativeDistance := by
-  have hbridge := Code.minDist_div_card_eq_minRelHammingDistCode
-    (baseCode : Set (Index → Field))
-  rw [baseMinDistance] at hbridge
-  norm_num at hbridge
-  have hQ :
-      ((Code.minRelHammingDistCode (baseCode : Set (Index → Field)) : ℚ≥0) : ℚ) =
-        (((131073 : ℚ≥0) / 262144 : ℚ≥0) : ℚ) := by
-    rw [← hbridge]
-    norm_num
-  have hN :
-      Code.minRelHammingDistCode (baseCode : Set (Index → Field)) =
-        (131073 : ℚ≥0) / 262144 := by
-    exact_mod_cast hQ
-  unfold minRelativeDistance
-  rw [hN]
-  norm_num
+  rw [CodeBridge.minRelHammingDistCode_eq_div _ baseMinDistance card_index]
+  norm_num [minRelativeDistance]
 
 theorem minRelativeDistance_eq :
     (Code.minRelHammingDistCode
       (code : Set (Index → Fin interleaving → Field)) : ℝ≥0) =
       minRelativeDistance := by
-  have hbridge := Code.minDist_div_card_eq_minRelHammingDistCode
-    (code : Set (Index → Fin interleaving → Field))
-  rw [minDistance] at hbridge
-  norm_num at hbridge
-  have hQ :
-      ((Code.minRelHammingDistCode
-        (code : Set (Index → Fin interleaving → Field)) : ℚ≥0) : ℚ) =
-        (((131073 : ℚ≥0) / 262144 : ℚ≥0) : ℚ) := by
-    rw [← hbridge]
-    norm_num
-  have hN :
-      Code.minRelHammingDistCode
-        (code : Set (Index → Fin interleaving → Field)) =
-          (131073 : ℚ≥0) / 262144 := by
-    exact_mod_cast hQ
-  unfold minRelativeDistance
-  rw [hN]
-  norm_num
+  rw [CodeBridge.minRelHammingDistCode_eq_div _ minDistance card_index]
+  norm_num [minRelativeDistance]
 
 /-- ArkLib's stable fixed-radius façade for this exact protocol profile. -/
 noncomputable def parameters :

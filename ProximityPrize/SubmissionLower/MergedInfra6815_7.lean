@@ -49,7 +49,7 @@ theorem atLeast_x_iff_dvd (m : ℕ) (P : Poly4 K) :
     have hm' : d 0 < m := by
       rw [RCN081.weight_fin4] at hm
       simpa [xWeights] using hm
-    have hc := congrArg (MvPolynomial.coeff d.tail) (h (d 0) hm')
+    have hc := congrArg (AddMonoidAlgebra.coeff · d.tail) (h (d 0) hm')
     rw [MvPolynomial.finSuccEquiv_coeff_coeff] at hc
     have he : Finsupp.cons (d 0) d.tail = d := by
       ext i

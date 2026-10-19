@@ -8,3 +8,6 @@
 build.log
 __pycache__/
 *.pyc
+
+/ProximityPrize/Benchmark/BinaryChallenge.lean
+/ProximityPrize/Benchmark/BinaryChallengeUpper.lean

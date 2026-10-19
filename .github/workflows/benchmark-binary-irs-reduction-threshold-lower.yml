@@ -1,0 +1,15 @@
+name: Binary IRS Reduction Threshold Lower Benchmark
+
+on:
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+  actions: read
+
+jobs:
+  binary-irs-reduction-threshold-lower:
+    uses: ./.github/workflows/benchmark.yml
+    with:
+      profile: binary-lower

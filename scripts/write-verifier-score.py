@@ -7,10 +7,13 @@ import os
 from pathlib import Path
 import sys
 
+from benchmark_profiles import PROFILES
+
 from benchmark_contract import (
-    DOMAIN_SIZE,
+    arklib_revision,
+    comppoly_source,
+    lean_toolchain,
     MAX_FRACTION_COMPONENT,
-    MAX_UNSAFE_INDEX,
     atomic_write_json,
     load_json_object,
     parse_centibits,
@@ -22,19 +25,15 @@ from benchmark_contract import (
 )
 
 EXPECTED_SCALE = 100
-PROFILES = {
-    "lower": {
-        "challenge": "proximity-prize-reduction-lower",
-        "direction": "maximize",
-        "track": "irs-reduction-threshold-lower",
-        "root": Path("ProximityPrize/SubmissionLower"),
-    },
-    "upper": {
-        "challenge": "proximity-prize-reduction-upper",
-        "direction": "minimize",
-        "track": "irs-reduction-threshold-upper",
-        "root": Path("ProximityPrize/SubmissionUpper"),
-    },
+POLICIES = {
+    key: {
+        "challenge": p.challenge,
+        "direction": "maximize" if p.side == "lower" else "minimize",
+        "track": p.track,
+        "root": Path(p.submission),
+        "profile": p,
+    }
+    for key, p in PROFILES.items()
 }
 
 
@@ -47,10 +46,10 @@ def require_object(value: object, *, label: str) -> dict:
 def main() -> None:
     if len(sys.argv) != 3:
         raise SystemExit(
-            "usage: write-verifier-score.py lower|upper RESULT.json"
+            "usage: write-verifier-score.py lower|upper|binary-lower|binary-upper RESULT.json"
         )
     profile, result_path = sys.argv[1:]
-    policy = PROFILES.get(profile)
+    policy = POLICIES.get(profile)
     if policy is None:
         raise SystemExit(f"unknown benchmark profile: {profile}")
 
@@ -106,7 +105,7 @@ def main() -> None:
             raise ValueError("verified service score does not match the committed claim")
 
         proof_metrics = require_object(result.get("metrics"), label="result.metrics")
-        if profile == "lower":
+        if policy["profile"].side == "lower":
             numerator, denominator = parse_radius(read_scalar(root / "radius.txt"))
             verified_numerator = parse_json_nat(
                 proof_metrics.get("radius_numerator"),
@@ -133,12 +132,13 @@ def main() -> None:
             unsafe_index = parse_unsafe_index(
                 read_scalar(root / "unsafe-index.txt"),
                 label="committed unsafe index",
+                maximum=policy["profile"].max_unsafe_index,
             )
             verified_unsafe_index = parse_json_nat(
                 proof_metrics.get("unsafe_index"),
                 label="verified unsafe index",
                 minimum=1,
-                maximum=MAX_UNSAFE_INDEX,
+                maximum=policy["profile"].max_unsafe_index,
             )
             if verified_unsafe_index != unsafe_index:
                 raise ValueError(
@@ -146,8 +146,8 @@ def main() -> None:
                 )
             claim_metrics = {
                 "unsafeIndex": unsafe_index,
-                "unsafeRadiusExact": f"{unsafe_index}/{DOMAIN_SIZE}",
-                "unsafeRadius": unsafe_index / DOMAIN_SIZE,
+                "unsafeRadiusExact": f"{unsafe_index}/{policy['profile'].domain_size}",
+                "unsafeRadius": unsafe_index / policy["profile"].domain_size,
             }
 
         resolved_value = status.get("resolved_commit") or status.get("commit")
@@ -162,12 +162,18 @@ def main() -> None:
         submission_id = status.get("id")
         if not isinstance(submission_id, str) or not submission_id:
             raise ValueError("service result has no submission id")
+        comppoly_url, comppoly_rev = comppoly_source()
     except (KeyError, OSError, TypeError, ValueError) as error:
         raise SystemExit(str(error)) from error
 
     output = {
         "score": value / scale,
         "metrics": {
+            **policy["profile"].metadata(),
+            "arklibRev": arklib_revision(),
+            "compPolyRev": comppoly_rev,
+            "compPolyUrl": comppoly_url,
+            "leanToolchain": lean_toolchain(),
             "verified": True,
             "locallyKernelChecked": True,
             "independentVerified": True,

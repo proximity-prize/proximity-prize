@@ -7,6 +7,15 @@ import ProximityPrize.Benchmark.IRSProfile
 import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.Benchmark.TargetUpper
 
+import ProximityPrize.Benchmark.BinaryIRSProfile
+import ProximityPrize.Benchmark.BinaryCodegen
+import ProximityPrize.Benchmark.BinaryTargetLower
+import ProximityPrize.Benchmark.BinaryTargetUpper
+
+-- Not used by anything above: this import is what compiles the contract and
+-- geometry guards. Dropping it as unused would leave them unchecked.
+import ProximityPrize.Benchmark.ContractShape
+
 /-!
 # Proximity Prize — interleaved-RS reduction thresholds
 

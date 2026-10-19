@@ -40,14 +40,14 @@ theorem coefficient_degree (P : MvPolynomial (Fin 4) K) (f : Polynomial K)
     (coefficientSpecialize f z P).natDegree < D := by
   classical
   have ht : ∀ e ∈ P.support,
-      (coefficientSpecialize f z (MvPolynomial.monomial e (MvPolynomial.coeff e P))).natDegree ≤ D-1 := by
+      (coefficientSpecialize f z (MvPolynomial.monomial e (AddMonoidAlgebra.coeff P e))).natDegree ≤ D-1 := by
     intro e he
-    have hh := coefficient_monomial_degree f z w hf e (MvPolynomial.coeff e P)
+    have hh := coefficient_monomial_degree f z w hf e (AddMonoidAlgebra.coeff P e)
     have hb := hP e he
     omega
   rw [MvPolynomial.as_sum P, map_sum]
   have hh := Polynomial.natDegree_sum_le_of_forall_le P.support
-    (fun e => coefficientSpecialize f z (MvPolynomial.monomial e (MvPolynomial.coeff e P))) ht
+    (fun e => coefficientSpecialize f z (MvPolynomial.monomial e (AddMonoidAlgebra.coeff P e))) ht
   omega
 
 theorem iterate_derivative_top {R : Type*} [CommRing R] (P : Polynomial R) (d : ℕ)

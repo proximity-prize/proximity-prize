@@ -7,22 +7,96 @@
       "description": "Maximise the kernel-checked induced spot-check-bit floor at a certified-safe IRS reduction radius.",
       "category": "lean",
       "direction": "+",
-      "editablePaths": ["ProximityPrize/SubmissionLower"],
-      "setupCommand": ["bash", "-lc", "./setup.sh"],
-      "benchmarkCommand": ["bash", "-lc", "./benchmark.sh lower"],
+      "editablePaths": [
+        "ProximityPrize/SubmissionLower"
+      ],
+      "setupCommand": [
+        "bash",
+        "-lc",
+        "./setup.sh"
+      ],
+      "benchmarkCommand": [
+        "bash",
+        "-lc",
+        "./benchmark.sh lower"
+      ],
       "scorePath": ".yukon/irs-reduction-threshold-lower-score.json",
-      "runner": {"provider": "github-actions", "workflow": "benchmark-irs-reduction-threshold-lower.yml"}
+      "runner": {
+        "provider": "github-actions",
+        "workflow": "benchmark-irs-reduction-threshold-lower.yml"
+      }
     },
     {
       "name": "irs-reduction-threshold-upper",
       "description": "Minimise the kernel-checked induced spot-check-bit ceiling at a winning-set-unsafe IRS radius.",
       "category": "lean",
       "direction": "-",
-      "editablePaths": ["ProximityPrize/SubmissionUpper"],
-      "setupCommand": ["bash", "-lc", "./setup.sh"],
-      "benchmarkCommand": ["bash", "-lc", "./benchmark.sh upper"],
+      "editablePaths": [
+        "ProximityPrize/SubmissionUpper"
+      ],
+      "setupCommand": [
+        "bash",
+        "-lc",
+        "./setup.sh"
+      ],
+      "benchmarkCommand": [
+        "bash",
+        "-lc",
+        "./benchmark.sh upper"
+      ],
       "scorePath": ".yukon/irs-reduction-threshold-upper-score.json",
-      "runner": {"provider": "github-actions", "workflow": "benchmark-irs-reduction-threshold-upper.yml"}
+      "runner": {
+        "provider": "github-actions",
+        "workflow": "benchmark-irs-reduction-threshold-upper.yml"
+      }
+    },
+    {
+      "name": "binary-irs-reduction-threshold-lower",
+      "description": "Maximise the kernel-checked induced spot-check-bit floor at a certified-safe IRS reduction radius. Binary fields and additive domain match leanVM code geometry.",
+      "category": "lean",
+      "direction": "+",
+      "editablePaths": [
+        "ProximityPrize/SubmissionBinaryLower"
+      ],
+      "setupCommand": [
+        "bash",
+        "-lc",
+        "./setup.sh"
+      ],
+      "benchmarkCommand": [
+        "bash",
+        "-lc",
+        "./benchmark.sh binary-lower"
+      ],
+      "scorePath": ".yukon/binary-irs-reduction-threshold-lower-score.json",
+      "runner": {
+        "provider": "github-actions",
+        "workflow": "benchmark-binary-irs-reduction-threshold-lower.yml"
+      }
+    },
+    {
+      "name": "binary-irs-reduction-threshold-upper",
+      "description": "Minimise the kernel-checked induced spot-check-bit ceiling at a winning-set-unsafe IRS radius. Binary fields and additive domain match leanVM code geometry.",
+      "category": "lean",
+      "direction": "-",
+      "editablePaths": [
+        "ProximityPrize/SubmissionBinaryUpper"
+      ],
+      "setupCommand": [
+        "bash",
+        "-lc",
+        "./setup.sh"
+      ],
+      "benchmarkCommand": [
+        "bash",
+        "-lc",
+        "./benchmark.sh binary-upper"
+      ],
+      "scorePath": ".yukon/binary-irs-reduction-threshold-upper-score.json",
+      "runner": {
+        "provider": "github-actions",
+        "workflow": "benchmark-binary-irs-reduction-threshold-upper.yml"
+      }
     }
   ]
 }
