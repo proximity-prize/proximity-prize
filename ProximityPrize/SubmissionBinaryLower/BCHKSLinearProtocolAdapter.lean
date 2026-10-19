@@ -107,28 +107,28 @@ theorem bchksLinearProtocolAdapter
     (T : Finset BinaryIRSProfile.Field) (q : ℕ) (hq1 : 1 ≤ q)
     (hPdeg : ∀ z ∈ T, (P z).natDegree ≤ 1048575)
     (hvan : ∀ z ∈ T, triEval R z (P z) = 0)
-    (hrow : ∀ z ∈ T, 1484152 ≤ (Arow z).card)
+    (hrow : ∀ z ∈ T, 1483227 ≤ (Arow z).card)
     (hagree : ∀ z ∈ T, ∀ i ∈ Arow z,
       Polynomial.eval (BinaryIRSProfile.domain i) (P z) =
         U (0 : Fin 2) i + z ^ q * U (1 : Fin 2) i)
     (hRi : Irreducible R)
-    (hYZq : YZCapQ R q 87534)
+    (hYZq : YZCapQ R q 1180364)
     (hWeighted : ∀ j a, ((R.coeff j).coeff a) ≠ 0 →
-      a + 1048575 * j < 326513440)
+      a + 1048575 * j < 1351219797)
     (hRdeg : R.natDegree = 1)
-    (hTmargin : (613000 + 1) + 2 * 326513440 * 87534 < T.card) :
+    (hTmargin : (613925 + 1) + 2 * 1351219797 * 1180364 < T.card) :
     ∃ Tgood : Finset BinaryIRSProfile.Field, Tgood ⊆ T ∧
-      613000 + 1 < Tgood.card ∧
+      613925 + 1 < Tgood.card ∧
       ∃ p₀ p₁ : BinaryIRSProfile.Field[X], p₀.natDegree ≤ 1048575 ∧
         p₁.natDegree ≤ 1048575 ∧ ∀ z ∈ Tgood,
           P z = p₀ + Polynomial.C (z ^ q) * p₁ := by
   classical
-  have hYZ : YZCap R 87534 := hYZq.toYZCap hq1
+  have hYZ : YZCap R 1180364 := hYZq.toYZCap hq1
   obtain ⟨Res, hRes, hResdeg, hregular⟩ :=
     exists_linear_resultant_witness R hRi hRdeg hYZ hWeighted T P hvan
   let Bad : Finset BinaryIRSProfile.Field := Res.roots.toFinset
   let Tgood := T.filter fun z => z ∉ Bad
-  have hBad : Bad.card ≤ (2 * 326513440 - 1048575) * 87534 := by
+  have hBad : Bad.card ≤ (2 * 1351219797 - 1048575) * 1180364 := by
     calc
       Bad.card ≤ Res.roots.card := Multiset.toFinset_card_le _
       _ ≤ Res.natDegree := Polynomial.card_roots' Res
@@ -139,16 +139,18 @@ theorem bchksLinearProtocolAdapter
       (s := T) (p := fun z => z ∉ Bad)
   have hbadT : (T.filter fun z => z ∈ Bad).card ≤ Bad.card :=
     Finset.card_le_card (by intro z hz; exact (Finset.mem_filter.mp hz).2)
-  have hTgood : 613000 + 1 < Tgood.card := by omega
-  have hlarge : 2 * 326513440 + 613000 + 1 ≤ Tgood.card := by
-    have hsaved : 2 * 326513440 < 1048575 * 87534 := by norm_num
+  have hTgood : 613925 + 1 < Tgood.card := by omega
+  have hlarge : 2 * 1351219797 + 613925 + 1 ≤ Tgood.card := by
+    have hsaved : 2 * 1351219797 < 1048575 * 1180364 := by norm_num
     omega
   let PT : Tgood → BinaryIRSProfile.Field[X] := fun z => P z
   obtain ⟨Afield, hAfield, Fib, hFib, hinc⟩ :=
     exists_large_domain_fibers U Tgood Arow PT 1 1 1 q
-      (by intro z hz; exact hrow z (hsub hz)) hlarge
+      (by intro z hz; exact hrow z (hsub hz))
+      (by have : 5059283 * 1 * 1 * 1 ≤ 2 * 1351219797 := by norm_num
+          omega)
       (by intro z i hi; exact hagree z (hsub z.property) i hi)
-  have hFibBig : ∀ x : Afield, 87534 < (Fib x).card := by
+  have hFibBig : ∀ x : Afield, 1180364 < (Fib x).card := by
     intro x
     have := hFib x
     norm_num at this ⊢
@@ -175,7 +177,7 @@ theorem bchksLinearProtocolAdapter
   let QQ : BinaryIRSProfile.Field → BinaryIRSProfile.Field[X] := fun x =>
     Polynomial.eval (Polynomial.C (U₀f x) + Polynomial.X ^ q * Polynomial.C (U₁f x))
       (triSpecializeX R x)
-  have hQdeg : ∀ x, (QQ x).natDegree ≤ 87534 := by
+  have hQdeg : ∀ x, (QQ x).natDegree ≤ 1180364 := by
     intro x
     apply natDegree_eval_affineQ_le
     intro i hi
@@ -185,12 +187,12 @@ theorem bchksLinearProtocolAdapter
     rw [hspec] at hi ⊢
     exact evalX_coeff_le_of_yzCapQ x R hYZq i hi
   let Fibf : Afield → Finset BinaryIRSProfile.Field := fun x => (Fib x).image Subtype.val
-  have hFibfcard : ∀ x : Afield, 87534 < (Fibf x).card := by
+  have hFibfcard : ∀ x : Afield, 1180364 < (Fibf x).card := by
     intro x
     rw [show (Fibf x).card = (Fib x).card by
       exact Finset.card_image_iff.mpr fun a _ b _ h => Subtype.ext h]
     exact hFibBig x
-  have hcore := bchksLinearSelectedCore 1048575 87534 q Tgood Afield P U₀f U₁f
+  have hcore := bchksLinearSelectedCore 1048575 1180364 q Tgood Afield P U₀f U₁f
     QQ (linearHSpecialization R)
     (by intro z hz; exact hPdeg z (hsub hz)) hAfield Fibf hFibfcard
     (by intro x hx; exact hQdeg x)

@@ -1,4 +1,6 @@
-import ProximityPrize.SubmissionBinaryLower.BCHKSWeightedSelection
+import ProximityPrize.SubmissionBinaryLower.BCHKSFactorPigeon
+import ProximityPrize.SubmissionBinaryLower.BCHKSParameters
+import ProximityPrize.SubmissionBinaryLower.BCHKSInterpolation
 import ProximityPrize.SubmissionBinaryLower.BCHKSHenselSetup
 
 namespace ProximityPrize.SubmissionBinaryLower
@@ -68,19 +70,19 @@ theorem setup_selected_pair
     (hRQ : R ∈ UniqueFactorizationMonoid.normalizedFactors Q)
     (hHR : H ∈ UniqueFactorizationMonoid.normalizedFactors (triSpecializeX R x₀))
     (hHpos : 0 < H.natDegree)
-    (hQY : Q.natDegree ≤ 312)
+    (hQY : Q.natDegree ≤ 1289)
     (hRYZ : ∀ j a, ((R.coeff j).coeff a) ≠ 0 →
-      ((R.coeff j).coeff a).natDegree + j < 87534)
+      ((R.coeff j).coeff a).natDegree + j < 1180364)
     (hRweightedX : ∀ j a, ((R.coeff j).coeff a) ≠ 0 →
-      a + 1048575 * j < 326513440)
+      a + 1048575 * j < 1351219797)
     (hprim : (Polynomial.Bivariate.evalX (Polynomial.C x₀) R).IsPrimitive) :
     Irreducible R ∧ Irreducible H ∧ 0 < H.natDegree ∧
     H ∣ triSpecializeX R x₀ ∧
-    R.natDegree ≤ 312 ∧ H.natDegree ≤ 312 ∧
-    Polynomial.Bivariate.totalDegree H ≤ 87534 ∧
-    Polynomial.Bivariate.totalDegree (triSpecializeX R x₀) ≤ 87534 ∧
+    R.natDegree ≤ 1289 ∧ H.natDegree ≤ 1289 ∧
+    Polynomial.Bivariate.totalDegree H ≤ 1180364 ∧
+    Polynomial.Bivariate.totalDegree (triSpecializeX R x₀) ≤ 1180364 ∧
     (∀ j a, ((R.coeff j).coeff a) ≠ 0 →
-      a + 1048575 * j < 326513440) ∧
+      a + 1048575 * j < 1351219797) ∧
     RationalFunctions.HenselNumerators.Hypotheses x₀ R H := by
   have hRirr : Irreducible R :=
     (UniqueFactorizationMonoid.prime_of_normalized_factor R hRQ).irreducible
@@ -89,7 +91,7 @@ theorem setup_selected_pair
   have hRdvd : R ∣ Q := UniqueFactorizationMonoid.dvd_of_mem_normalizedFactors hRQ
   have hHd : H ∣ triSpecializeX R x₀ :=
     UniqueFactorizationMonoid.dvd_of_mem_normalizedFactors hHR
-  have hRdeg : R.natDegree ≤ 312 :=
+  have hRdeg : R.natDegree ≤ 1289 :=
     (Polynomial.natDegree_le_of_dvd hRdvd hQ).trans hQY
   have hRXeq : triSpecializeX R x₀ =
       Polynomial.Bivariate.evalX (Polynomial.C x₀) R := by
@@ -97,11 +99,11 @@ theorem setup_selected_pair
   have hRX0 : triSpecializeX R x₀ ≠ 0 := by
     rw [hRXeq]
     exact hprim.ne_zero
-  have hHdeg : H.natDegree ≤ 312 :=
+  have hHdeg : H.natDegree ≤ 1289 :=
     (Polynomial.natDegree_le_of_dvd hHd hRX0).trans
       ((triSpecializeX_natDegree_le R x₀).trans hRdeg)
-  have hRXtotal : Polynomial.Bivariate.totalDegree (triSpecializeX R x₀) ≤ 87534 :=
-    totalDegree_triSpecializeX_le R x₀ 87534 hRYZ
+  have hRXtotal : Polynomial.Bivariate.totalDegree (triSpecializeX R x₀) ≤ 1180364 :=
+    totalDegree_triSpecializeX_le R x₀ 1180364 hRYZ
   have totalDegree_le_of_dvd
       {A B : Polynomial (Polynomial F)} (hA : A ≠ 0) (hB : B ≠ 0) (hd : A ∣ B) :
       Polynomial.Bivariate.totalDegree A ≤ Polynomial.Bivariate.totalDegree B := by
@@ -110,7 +112,7 @@ theorem setup_selected_pair
     rw [Polynomial.Bivariate.totalDegree_mul hA hC]
     exact Nat.le_add_right _ _
   have hH0 : H ≠ 0 := Polynomial.ne_zero_of_natDegree_gt hHpos
-  have hHtotal : Polynomial.Bivariate.totalDegree H ≤ 87534 :=
+  have hHtotal : Polynomial.Bivariate.totalDegree H ≤ 1180364 :=
     (totalDegree_le_of_dvd hH0 hRX0 hHd).trans hRXtotal
   have hHyp : RationalFunctions.HenselNumerators.Hypotheses x₀ R H := by
     refine ⟨?_, hprim.ne_zero, ?_⟩

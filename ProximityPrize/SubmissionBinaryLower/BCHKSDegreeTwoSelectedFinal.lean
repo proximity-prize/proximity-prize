@@ -19,8 +19,8 @@ theorem exists_large_domain_fibers
     (A : BinaryIRSProfile.Field → Finset BinaryIRSProfile.Index)
     (P : T → Polynomial BinaryIRSProfile.Field)
     (dH d D q : ℕ)
-    (hrow : ∀ z ∈ T, 2097152 - 613000 ≤ (A z).card)
-    (hT : 2 * 326513440 * dH * d * D + 613000 + 1 ≤ T.card)
+    (hrow : ∀ z ∈ T, 2097152 - 613925 ≤ (A z).card)
+    (hT : 5059283 * dH * d * D + 613925 + 1 ≤ T.card)
     (hagree : ∀ z : T, ∀ i ∈ A z,
       Polynomial.eval (BinaryIRSProfile.domain i) (P z) = U 0 i + (z : BinaryIRSProfile.Field) ^ q * U 1 i) :
     ∃ A' : Finset BinaryIRSProfile.Field, 1048576 ≤ A'.card ∧
@@ -63,26 +63,33 @@ theorem exists_large_domain_fibers
     exact hagree z (idx x) hzA
 
 
+/-- Linear bookkeeping for the leading-coefficient filter, kept free of the
+large concrete constants so that `omega` never sees them. -/
+theorem degree_two_card_arith (X1 X2 Tc Tg bad DZ e : ℕ)
+    (h1 : X1 + e < Tc) (h2 : X2 + DZ ≤ X1) (h3 : Tg + bad = Tc) (h4 : bad ≤ DZ) :
+    X2 + e < Tg := by
+  omega
+
 theorem degree_two_selected_final
     (U : Fin 2 → BinaryIRSProfile.Index → BinaryIRSProfile.Field)
     (P : BinaryIRSProfile.Field → BinaryIRSProfile.Field[X])
     (Arow : BinaryIRSProfile.Field → Finset BinaryIRSProfile.Index)
     (R : BinaryIRSProfile.Field[X][X][Y]) (H : BinaryIRSProfile.Field[X][Y])
     (T : Finset BinaryIRSProfile.Field) (x₀ : BinaryIRSProfile.Field) (Bad : Finset BinaryIRSProfile.Field)
-    (q : ℕ) (hq : q ≤ 87534)
+    (q : ℕ) (hq : q ≤ 1180364)
     (hPdeg : ∀ z ∈ T, (P z).natDegree ≤ 1048575)
     (hvan : ∀ z ∈ T, triEval R z (P z) = 0 ∧ biEval H ((P z).eval x₀) z = 0)
     (hTbad : ∀ z ∈ T, z ∉ Bad)
-    (hmargin : 2 * 326513440 * 87534 * R.natDegree * H.natDegree +
-      (bchksErrors + 1) < T.card)
+    (hmargin : 5059283 * 1288 * 1180364 * H.natDegree +
+      (bchksErrors + 1) < T.card) (hRd : R.natDegree ≤ 1288)
     (hRi : Irreducible R) (hHi : Irreducible H) (hHpos : 0 < H.natDegree)
     (hHyp : Hypotheses x₀ R H)
-    (hHtot : Bivariate.totalDegree H ≤ 87534)
-    (hYZ : YZCap R 87534)
+    (hHtot : Bivariate.totalDegree H ≤ 1180364)
+    (hYZ : YZCap R 1180364)
     (hsimple : ∀ z ∉ Bad, ∀ y,
       Polynomial.eval y (biSpecializeZ (triSpecializeX R x₀) z) = 0 →
       Polynomial.eval y (biSpecializeZ (triSpecializeX R.derivative x₀) z) ≠ 0)
-    (hrow : ∀ z ∈ T, 2097152 - 613000 ≤ (Arow z).card)
+    (hrow : ∀ z ∈ T, 2097152 - 613925 ≤ (Arow z).card)
     (hagree : ∀ z ∈ T, ∀ i ∈ Arow z,
       Polynomial.eval (BinaryIRSProfile.domain i) (P z) = U 0 i + z ^ q * U 1 i)
     (hRdeg : 2 ≤ R.natDegree) :
@@ -93,16 +100,23 @@ theorem degree_two_selected_final
   classical
   letI : Fact (Irreducible H) := ⟨hHi⟩
   letI : Fact (0 < H.natDegree) := ⟨hHpos⟩
-  have hT : 2 * 326513440 * H.natDegree * R.natDegree * 87534 + 613000 + 1 ≤ T.card := by
+  have hle : 5059283 * H.natDegree * R.natDegree * 1180364 ≤
+      5059283 * 1288 * 1180364 * H.natDegree := by
+    calc 5059283 * H.natDegree * R.natDegree * 1180364 =
+          (5059283 * 1180364 * H.natDegree) * R.natDegree := by ring
+      _ ≤ (5059283 * 1180364 * H.natDegree) * 1288 := Nat.mul_le_mul_left _ hRd
+      _ = 5059283 * 1288 * 1180364 * H.natDegree := by ring
+  have hT : 5059283 * H.natDegree * R.natDegree * 1180364 + 613925 + 1 ≤ T.card := by
     dsimp [bchksErrors] at hmargin
-    ring_nf at hmargin ⊢
+    generalize 5059283 * 1288 * 1180364 * H.natDegree = X1 at hmargin hle
+    generalize 5059283 * H.natDegree * R.natDegree * 1180364 = X2 at hle ⊢
     omega
   obtain ⟨A, hA, Fib, hFib, hinc⟩ :=
     exists_large_domain_fibers U T Arow (fun z : T => P z) H.natDegree R.natDegree
-      87534 q hrow hT (fun z i hi => hagree z z.property i hi)
+      1180364 q hrow hT (fun z i hi => hagree z z.property i hi)
   let Tgood := T.filter fun z => H.leadingCoeff.eval z ≠ 0
   have hWne : H.leadingCoeff ≠ 0 := Polynomial.leadingCoeff_ne_zero.mpr hHi.ne_zero
-  have hbadW : (T.filter fun z => H.leadingCoeff.eval z = 0).card ≤ 87534 - H.natDegree := by
+  have hbadW : (T.filter fun z => H.leadingCoeff.eval z = 0).card ≤ 1180364 - H.natDegree := by
     calc
       _ ≤ H.leadingCoeff.roots.toFinset.card := by
         apply Finset.card_le_card
@@ -111,14 +125,15 @@ theorem degree_two_selected_final
         exact (Finset.mem_filter.mp hz).2
       _ ≤ H.leadingCoeff.roots.card := Multiset.toFinset_card_le _
       _ ≤ H.leadingCoeff.natDegree := Polynomial.card_roots' _
-      _ ≤ 87534 - H.natDegree := leadingCoeff_natDegree_le_of_totalDegree_le hHtot
+      _ ≤ 1180364 - H.natDegree := leadingCoeff_natDegree_le_of_totalDegree_le hHtot
   have hpart : Tgood.card + (T.filter fun z => H.leadingCoeff.eval z = 0).card = T.card := by
     simpa [Tgood] using Finset.filter_card_add_filter_neg_card_eq_card
       (s:=T) (p:=fun z => H.leadingCoeff.eval z ≠ 0)
-  have hprod : 87534 ≤ 2 * 326513440 * 87534 * R.natDegree * H.natDegree := by
-    nlinarith
+  have hprod : 1180364 ≤ 5059283 * 1288 * 1180364 * H.natDegree := by
+    calc 1180364 ≤ 5059283 * 1288 * 1180364 * 1 := by norm_num
+      _ ≤ 5059283 * 1288 * 1180364 * H.natDegree := Nat.mul_le_mul_left _ hHpos
   have hTgood_card : bchksErrors + 1 < Tgood.card := by
-    have hlarge : 87534 + (bchksErrors + 1) < T.card :=
+    have hlarge : 1180364 + (bchksErrors + 1) < T.card :=
       lt_of_le_of_lt (Nat.add_le_add_right hprod _) hmargin
     omega
   let Fibgood : A → Finset Tgood := fun x =>
@@ -133,10 +148,10 @@ theorem degree_two_selected_final
           exact congrArg (fun w => ((w : Tgood) : BinaryIRSProfile.Field)) hab⟩
     (((Fib x).filter fun z : T => H.leadingCoeff.eval (z : BinaryIRSProfile.Field) ≠ 0).attach).map E
   have hFibgood : ∀ x : A,
-      (((2 * 1048575 + 1) * Bivariate.natDegreeY R * 87534) + q) * H.natDegree <
+      (((2 * 1048575 + 1) * Bivariate.natDegreeY R * 1180364) + q) * H.natDegree <
         (Fibgood x).card := by
     intro x
-    have hc := coarse_fiber_filter_leadingCoeff_card_exact H 87534 1048577
+    have hc := coarse_fiber_filter_leadingCoeff_card_exact H 1180364 1048577
       R.natDegree H.natDegree rfl (by norm_num) (by omega) (by omega) hHtot
       ((Fib x).image fun z : T => (z : BinaryIRSProfile.Field)) (by
         rw [Finset.card_image_iff.mpr (fun a _ b _ hab => Subtype.ext hab)]
@@ -161,8 +176,8 @@ theorem degree_two_selected_final
     rw [Finset.card_map]
     change _ < (((Fib x).filter fun z : T => H.leadingCoeff.eval (z : BinaryIRSProfile.Field) ≠ 0).attach).card
     rw [Finset.card_attach]
-    calc (((2 * 1048575 + 1) * Bivariate.natDegreeY R * 87534) + q) * H.natDegree
-        ≤ (((2 * (1048577 - 1) + 1) * R.natDegree * 87534) + 1) * H.natDegree := by
+    calc (((2 * 1048575 + 1) * Bivariate.natDegreeY R * 1180364) + q) * H.natDegree
+        ≤ (((2 * (1048577 - 1) + 1) * R.natDegree * 1180364) + 1) * H.natDegree := by
           apply Nat.mul_le_mul_right
           unfold Bivariate.natDegreeY
           nlinarith [hRdeg, hq]
@@ -264,17 +279,39 @@ theorem degree_two_selected_final
     exact hRdeg
   have hRdegYle : Bivariate.natDegreeY R ≤ R.natDegree := by
     exact le_rfl
-  let S := selectedHenselData_of_pair x₀ R hHyp hzeta 87534 R.natDegree 1048575
-    326513440 Tgood PT hfactor hExact hsimp (hNP z₀).hsL
+  let S := selectedHenselData_of_pair x₀ R hHyp hzeta 1180364 R.natDegree 1048575
+    1048576 Tgood PT hfactor hExact hsimp (hNP z₀).hsL
     (fun z => (hNP z).hslope) (fun z => (Finset.mem_filter.mp z.property).2)
     (fun z => by simpa [root] using (hNP z).hxi)
     (fun _ _ _ z => by simpa [root] using (hNP z).hden _)
     hHtot hYZ hRdegY hRdegYle
-  have hcard : 2 * 326513440 * H.natDegree * R.natDegree * 87534 +
-      (bchksErrors - 87534) + 1 < Tgood.card := by
-    dsimp [bchksErrors] at *
-    ring_nf at hmargin ⊢
-    omega
+  have hcard : 2 * 1048576 * H.natDegree * R.natDegree * 1180364 +
+      (bchksErrors - 1180364) + 1 < Tgood.card := by
+    have hle2 : 2 * 1048576 * H.natDegree * R.natDegree * 1180364 + 1180364 ≤
+        5059283 * 1288 * 1180364 * H.natDegree := by
+      have h1 : 2 * 1048576 * H.natDegree * R.natDegree * 1180364 ≤
+          2 * 1048576 * 1288 * 1180364 * H.natDegree := by
+        calc 2 * 1048576 * H.natDegree * R.natDegree * 1180364 =
+              (2 * 1048576 * 1180364 * H.natDegree) * R.natDegree := by ring
+          _ ≤ (2 * 1048576 * 1180364 * H.natDegree) * 1288 := Nat.mul_le_mul_left _ hRd
+          _ = 2 * 1048576 * 1288 * 1180364 * H.natDegree := by ring
+      have h2 : 1180364 ≤ 2962131 * 1288 * 1180364 * H.natDegree := by
+        calc 1180364 ≤ 2962131 * 1288 * 1180364 * 1 := by norm_num
+          _ ≤ 2962131 * 1288 * 1180364 * H.natDegree := Nat.mul_le_mul_left _ hHpos
+      have h3 : 5059283 * 1288 * 1180364 * H.natDegree =
+          2 * 1048576 * 1288 * 1180364 * H.natDegree +
+            2962131 * 1288 * 1180364 * H.natDegree := by ring
+      generalize 5059283 * 1288 * 1180364 * H.natDegree = Y1 at h3 ⊢
+      generalize 2 * 1048576 * 1288 * 1180364 * H.natDegree = Y2 at h3 h1
+      generalize 2962131 * 1288 * 1180364 * H.natDegree = Y3 at h3 h2
+      generalize 2 * 1048576 * H.natDegree * R.natDegree * 1180364 = Y4 at h1 ⊢
+      omega
+    have hbad' : (T.filter fun z => H.leadingCoeff.eval z = 0).card ≤ 1180364 :=
+      hbadW.trans (Nat.sub_le _ _)
+    have he : bchksErrors - 1180364 = 0 := by norm_num [bchksErrors]
+    rw [he, Nat.add_zero]
+    have key := degree_two_card_arith _ _ _ _ _ _ _ hmargin hle2 hpart hbad'
+    exact lt_of_le_of_lt (Nat.add_le_add_left (Nat.le_add_left 1 bchksErrors) _) key
   have hPdegT : ∀ z : Tgood, (PT z).natDegree ≤ 1048575 := by
     intro z
     exact hPdeg z (Finset.mem_filter.mp z.property).1
@@ -300,7 +337,7 @@ theorem degree_two_selected_final
     subst i
     simpa [PT, U₀, U₁, x.property] using he
   obtain ⟨_, p₀, p₁, hp₀, hp₁, hp⟩ := hensel_baseZ_alignment_final_exact_yz
-    x₀ R hHyp hzeta 87534 R.natDegree 1048575 326513440 (bchksErrors - 87534) q
+    x₀ R hHyp hzeta 1180364 R.natDegree 1048575 1048576 (bchksErrors - 1180364) q
     (by norm_num) hHtot hYZ hRdegY Tgood S.root PT hPdegT S.hx S.hy S.hsL
     S.hsimple S.hExact S.hslope S.hW S.hxi (fun t _ z => (hNP z).hden t)
     S.hweight hcard (by norm_num [BinaryIRSProfile.Field]) A (by simpa using hA) U₀ U₁

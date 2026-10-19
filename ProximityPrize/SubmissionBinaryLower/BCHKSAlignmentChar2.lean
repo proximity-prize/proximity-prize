@@ -37,13 +37,13 @@ theorem single_factor_alignment (d : ℕ) :
     ∀ (q : ℕ) (U : Fin 2 → BinaryIRSProfile.Index → BFld) (P : BFld → BFld[X])
       (Arow : BFld → Finset BinaryIRSProfile.Index)
       (R : Polynomial (Polynomial (Polynomial BFld))) (S : Finset BFld),
-      1 ≤ q → q * d ≤ 312 → R.natDegree = d → Irreducible R → 0 < d →
+      1 ≤ q → q * d ≤ 1288 → R.natDegree = d → Irreducible R → 0 < d →
       (∀ j a, ((R.coeff j).coeff a) ≠ 0 →
-        ((R.coeff j).coeff a).natDegree + q * j < 87534) →
-      (∀ j a, ((R.coeff j).coeff a) ≠ 0 → a + 1048575 * j < 326513440) →
+        ((R.coeff j).coeff a).natDegree + q * j < 1180364) →
+      (∀ j a, ((R.coeff j).coeff a) ≠ 0 → a + 1048575 * j < 1351219797) →
       (∀ z ∈ S, (P z).natDegree ≤ 1048575) →
       (∀ z ∈ S, triEval R z (P z) = 0) →
-      (∀ z ∈ S, 1484152 ≤ (Arow z).card) →
+      (∀ z ∈ S, 1483227 ≤ (Arow z).card) →
       (∀ z ∈ S, ∀ i ∈ Arow z,
         Polynomial.eval (BinaryIRSProfile.domain i) (P z) = U 0 i + z ^ q * U 1 i) →
       sfCap d < S.card →
@@ -54,20 +54,20 @@ theorem single_factor_alignment (d : ℕ) :
   | _ d ih =>
   intro q U P Arow R S hq1 hqd hRd hRi hdpos hYZs hW hPdeg hvan hrow hagree hcard
   classical
-  have hd312 : d ≤ 312 := by nlinarith
+  have hd312 : d ≤ 1288 := by nlinarith
   by_cases hsep : R.derivative ≠ 0
   · exact single_factor_alignment_sep q hq1 (by nlinarith) U P Arow R S hRi (by omega)
       (by omega) hsep hYZs hW hPdeg hvan hrow hagree (by rw [hRd]; exact hcard)
   have hY : R.derivative = 0 := not_not.mp hsep
   by_cases hX : dXPoly R ≠ 0
   · exfalso
-    have hZcap : ∀ j a, ((R.coeff j).coeff a).natDegree ≤ 87534 := by
+    have hZcap : ∀ j a, ((R.coeff j).coeff a).natDegree ≤ 1180364 := by
       intro j a
       by_cases h0 : (R.coeff j).coeff a = 0
       · simp [h0]
       · have := hYZs j a h0
         omega
-    have hXcap : ∀ j, (R.coeff j).natDegree ≤ 326513440 := by
+    have hXcap : ∀ j, (R.coeff j).natDegree ≤ 1351219797 := by
       intro j
       by_cases h0 : R.coeff j = 0
       · simp [h0]
@@ -75,17 +75,17 @@ theorem single_factor_alignment (d : ℕ) :
           rw [Polynomial.coeff_natDegree]
           exact Polynomial.leadingCoeff_ne_zero.mpr h0)
         omega
-    have hF : 2 * R.natDegree * 326513440 < Fintype.card BFld := by
+    have hF : 2 * R.natDegree * 1351219797 < Fintype.card BFld := by
       rw [show Fintype.card BFld = 2 ^ (192 : ℕ) from BF64.card_ext3, hRd]
-      calc 2 * d * 326513440 ≤ 2 * 312 * 326513440 := by gcongr
+      calc 2 * d * 1351219797 ≤ 2 * 1288 * 1351219797 := by gcongr
         _ < 2 ^ (192 : ℕ) := by norm_num
-    have hdead := dead_factor_card_le R hRi (by omega) hY hX 87534 326513440
+    have hdead := dead_factor_card_le R hRi (by omega) hY hX 1180364 1351219797
       hZcap hXcap hF S P hvan
     rw [hRd] at hdead
     unfold sfCap at hcard
-    generalize 2 * 326513440 * 87534 * d ^ 2 = c₁ at hcard
+    generalize 5059283 * 1288 * 1180364 * d = c₁ at hcard
     generalize (bchksErrors + 1) * d = c₂ at hcard
-    generalize 2 * d * 87534 = c₃ at hcard hdead
+    generalize 2 * d * 1180364 = c₃ at hcard hdead
     omega
   have hX0 : dXPoly R = 0 := not_not.mp hX
   -- Frobenius twist.
@@ -108,7 +108,7 @@ theorem single_factor_alignment (d : ℕ) :
     intro a b hab
     exact frobenius_inj BFld 2 (by simpa [frobenius_def] using hab)
   have hYZsT : ∀ j a, ((T.coeff j).coeff a) ≠ 0 →
-      ((T.coeff j).coeff a).natDegree + (2 * q) * j < 87534 := by
+      ((T.coeff j).coeff a).natDegree + (2 * q) * j < 1180364 := by
     intro j a hja
     have hc := coeff_coeff_frobLift T j a
     rw [hTR] at hc
@@ -120,7 +120,7 @@ theorem single_factor_alignment (d : ℕ) :
     have := hYZs (j * 2) (a * 2) hne
     rw [hdeg] at this
     nlinarith
-  have hWT : ∀ j a, ((T.coeff j).coeff a) ≠ 0 → a + 1048575 * j < 326513440 := by
+  have hWT : ∀ j a, ((T.coeff j).coeff a) ≠ 0 → a + 1048575 * j < 1351219797 := by
     intro j a hja
     have hc := coeff_coeff_frobLift T j a
     rw [hTR] at hc
@@ -160,7 +160,7 @@ theorem bchksPolynomialAlignment_char2 : BCHKSPolynomialAlignment := by
   classical
   intro U S A P Q hScard hQ hPdeg hAcard hagree hQeval hcaps
   let PE : BFld → BFld[X] := fun z => if hz : z ∈ S then P ⟨z, hz⟩ else 0
-  have hQY : Q.natDegree ≤ 312 := by
+  have hQY : Q.natDegree ≤ 1289 := by
     have hlc : Q.leadingCoeff ≠ 0 := Polynomial.leadingCoeff_ne_zero.mpr hQ
     obtain ⟨a, ha⟩ := Polynomial.support_nonempty.mpr hlc
     have hca : (Q.coeff Q.natDegree).coeff a ≠ 0 := by
@@ -184,12 +184,31 @@ theorem bchksPolynomialAlignment_char2 : BCHKSPolynomialAlignment := by
       exists_positive_normalizedFactor_triEval_eq_zero Q z (PE z) (hQz z hz)
         (hQevalgood z hz)
     exact ⟨R, by simp [Rs, hRQ, hRpos], hzero⟩
+  have hQY' : Q.natDegree ≤ 1288 := by
+    have hlc : Q.leadingCoeff ≠ 0 := Polynomial.leadingCoeff_ne_zero.mpr hQ
+    obtain ⟨a, ha⟩ := Polynomial.support_nonempty.mpr hlc
+    have hca : (Q.coeff Q.natDegree).coeff a ≠ 0 := by
+      rw [Polynomial.coeff_natDegree]
+      exact Polynomial.mem_support_iff.mp ha
+    have := (hcaps Q.natDegree a hca).1
+    omega
+  have hadd : (∑ R ∈ Rs, sfCap R.natDegree) = sfCap (∑ R ∈ Rs, R.natDegree) := by
+    unfold sfCap
+    rw [Finset.sum_add_distrib, Finset.sum_add_distrib, ← Finset.mul_sum, ← Finset.mul_sum]
+    congr 1
+    rw [Finset.mul_sum, Finset.sum_mul]
+  have hdsum : (∑ R ∈ Rs, R.natDegree) ≤ 1288 := by
+    calc
+      (∑ R ∈ Rs, R.natDegree) ≤
+          ∑ R ∈ (UniqueFactorizationMonoid.normalizedFactors Q).toFinset, R.natDegree := by
+        exact Finset.sum_le_sum_of_subset_of_nonneg (Finset.filter_subset _ _) (by simp)
+      _ ≤ Q.natDegree := normalizedFactors_toFinset_sum_natDegree_le Q hQ
+      _ ≤ 1288 := hQY'
   have hsum : (∑ R ∈ Rs, sfCap R.natDegree) ≤
-      2 * 326513440 * 87534 * 312 ^ 2 + (bchksErrors + 1) * 312 + 2 * 87534 * 312 := by
-    have h := positive_normalizedFactors_staged_cap_le Q hQ
-      (fun R => 2 * R.natDegree * 87534) (2 * 326513440 * 87534) (bchksErrors + 1) 87534 312
-      hQY (fun R _ => le_refl _)
-    simpa [sfCap, Rs] using h
+      5059283 * 1288 * 1180364 * 1288 + (bchksErrors + 1) * 1288 + 2 * 1180364 * 1288 := by
+    rw [hadd]
+    calc sfCap (∑ R ∈ Rs, R.natDegree) ≤ sfCap 1288 := sfCap_mono hdsum
+      _ = _ := by unfold sfCap; ring
   obtain ⟨R, hRs, hRfib⟩ :=
     exists_rel_fiber_gt_capacity _ Rs RelR (fun R => sfCap R.natDegree) hRcover
       (hsum.trans_lt hlarge)
@@ -198,16 +217,16 @@ theorem bchksPolynomialAlignment_char2 : BCHKSPolynomialAlignment := by
   have hRpos : 0 < R.natDegree := hRm.2
   have hRirr : Irreducible R :=
     (UniqueFactorizationMonoid.prime_of_normalized_factor R hRQ).irreducible
-  have hRdeg : R.natDegree ≤ 312 := by
+  have hRdeg : R.natDegree ≤ 1288 := by
     calc
       R.natDegree ≤ ∑ B ∈ (UniqueFactorizationMonoid.normalizedFactors Q).toFinset,
           B.natDegree := Finset.single_le_sum (fun _ _ => Nat.zero_le _)
             (by simpa using hRQ)
       _ ≤ Q.natDegree := normalizedFactors_toFinset_sum_natDegree_le Q hQ
-      _ ≤ 312 := hQY
-  have hRYZ := YZFactorCap.normalizedFactor_YZ_cap Q R 87534 hQ hRQ
+      _ ≤ 1288 := hQY'
+  have hRYZ := YZFactorCap.normalizedFactor_YZ_cap Q R 1180364 hQ hRQ
     (fun j a ha => (hcaps j a ha).2.2)
-  have hRW := WeightedFactorCaps.normalizedFactor_weightedX_cap Q R 1048575 326513440 hQ hRQ
+  have hRW := WeightedFactorCaps.normalizedFactor_weightedX_cap Q R 1048575 1351219797 hQ hRQ
     (fun j a ha => (hcaps j a ha).2.1)
   let SR := (S.filter fun z => triSpecializeZ Q z ≠ 0).filter fun z => RelR z R
   have hSRS : SR ⊆ S := fun z hz =>

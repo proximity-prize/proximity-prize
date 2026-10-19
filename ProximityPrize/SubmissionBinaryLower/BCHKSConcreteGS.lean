@@ -27,10 +27,10 @@ structure GSParams where
 
 def n : ℕ := 2097152
 def k : ℕ := 1048575
-def m : ℕ := 220
-def DX : ℕ := 326513440
-def DY : ℕ := 312
-def DZ : ℕ := 87534
+def m : ℕ := 911
+def DX : ℕ := 1351219797
+def DY : ℕ := 1289
+def DZ : ℕ := 1180364
 
 
 def concreteParams : GSParams :=
@@ -484,14 +484,14 @@ theorem sumR_eq (f : ℕ → ℕ) (n : ℕ) : sumR f n = ∑ i ∈ Finset.range 
   | succ n ih => rw [Finset.sum_range_succ, ← ih]; rfl
 
 open scoped BigOperators in
-theorem card_var : Fintype.card (VarIndex concreteParams) = 4458916165369380 := by
+theorem card_var : Fintype.card (VarIndex concreteParams) = 1028057636685733260 := by
   rw [Fintype.card_sigma]
   simp only [Fintype.card_prod, Fintype.card_fin, Finset.sum_fin_eq_sum_range]
   rw [← sumR_eq]
   decide +kernel
 
 open scoped BigOperators in
-theorem card_con : Fintype.card (ConIndex concreteParams) = 4458916159160320 := by
+theorem card_con : Fintype.card (ConIndex concreteParams) = 1028057636597137408 := by
   rw [Fintype.card_prod, Fintype.card_sigma]
   simp only [Fintype.card_prod, Fintype.card_fin, Finset.sum_fin_eq_sum_range]
   rw [← sumR_eq]

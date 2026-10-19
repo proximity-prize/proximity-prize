@@ -47,10 +47,10 @@ lemma bchks_lambda_le :
   rw [hr] at hJ
   have hreal : (1 / (2 * η * (1 / 2 : ℝ))) ≤ bchksListBound := by
     dsimp [η, bchksListBound]
-    have hs : Real.sqrt (1 / 2 : ℝ) < 707107 / 1000000 := by
-      rw [Real.sqrt_lt' (by norm_num : (0 : ℝ) < 707107 / 1000000)]
+    have hs : Real.sqrt (1 / 2 : ℝ) < 70710679 / 100000000 := by
+      rw [Real.sqrt_lt' (by norm_num : (0 : ℝ) < 70710679 / 100000000)]
       norm_num
-    have heta : (1 : ℝ) / 1800 < η := by
+    have heta : (1 : ℝ) / 7000 < η := by
       dsimp [η]
       norm_num [bchksRadius] at hs ⊢
       linarith

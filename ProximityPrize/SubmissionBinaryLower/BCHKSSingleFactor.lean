@@ -32,15 +32,14 @@ set_option maxHeartbeats 20000000
 /-- First-stage capacity of a factor of `Y`-degree `d`: the second-stage
 pair budget, the error term, and the bad-specialization reserve. -/
 def sfCap (d : ℕ) : ℕ :=
-  2 * 326513440 * 87534 * d ^ 2 + (bchksErrors + 1) * d + 2 * d * 87534
+  5059283 * 1288 * 1180364 * d + (bchksErrors + 1) * d + 2 * d * 1180364
 
 theorem sfCap_mono {a b : ℕ} (h : a ≤ b) : sfCap a ≤ sfCap b := by
   unfold sfCap
-  have h2 : a ^ 2 ≤ b ^ 2 := Nat.pow_le_pow_left h 2
-  have h3 : 2 * a * 87534 ≤ 2 * b * 87534 := by omega
+  have h3 : 2 * a * 1180364 ≤ 2 * b * 1180364 := by omega
   have h4 : (bchksErrors + 1) * a ≤ (bchksErrors + 1) * b := Nat.mul_le_mul_left _ h
-  have h5 : 2 * 326513440 * 87534 * a ^ 2 ≤ 2 * 326513440 * 87534 * b ^ 2 :=
-    Nat.mul_le_mul_left _ h2
+  have h5 : 5059283 * 1288 * 1180364 * a ≤ 5059283 * 1288 * 1180364 * b :=
+    Nat.mul_le_mul_left _ h
   omega
 
 /-- Pair setup for one irreducible factor, without an ambient interpolant. -/
@@ -51,13 +50,13 @@ theorem setup_selected_pair_single
     (hRirr : Irreducible R)
     (hHR : H ∈ UniqueFactorizationMonoid.normalizedFactors (triSpecializeX R x₀))
     (hHpos : 0 < H.natDegree)
-    (hRdeg : R.natDegree ≤ 312)
+    (hRdeg : R.natDegree ≤ 1289)
     (hRYZ : ∀ j a, ((R.coeff j).coeff a) ≠ 0 →
-      ((R.coeff j).coeff a).natDegree + j < 87534)
+      ((R.coeff j).coeff a).natDegree + j < 1180364)
     (hprim : (Polynomial.Bivariate.evalX (Polynomial.C x₀) R).IsPrimitive) :
     Irreducible H ∧
-    H ∣ triSpecializeX R x₀ ∧ H.natDegree ≤ 312 ∧
-    Polynomial.Bivariate.totalDegree H ≤ 87534 ∧
+    H ∣ triSpecializeX R x₀ ∧ H.natDegree ≤ 1289 ∧
+    Polynomial.Bivariate.totalDegree H ≤ 1180364 ∧
     RationalFunctions.HenselNumerators.Hypotheses x₀ R H := by
   have hHirr : Irreducible H :=
     (UniqueFactorizationMonoid.prime_of_normalized_factor H hHR).irreducible
@@ -69,11 +68,11 @@ theorem setup_selected_pair_single
   have hRX0 : triSpecializeX R x₀ ≠ 0 := by
     rw [hRXeq]
     exact hprim.ne_zero
-  have hHdeg : H.natDegree ≤ 312 :=
+  have hHdeg : H.natDegree ≤ 1289 :=
     (Polynomial.natDegree_le_of_dvd hHd hRX0).trans
       ((triSpecializeX_natDegree_le R x₀).trans hRdeg)
-  have hRXtotal : Polynomial.Bivariate.totalDegree (triSpecializeX R x₀) ≤ 87534 :=
-    totalDegree_triSpecializeX_le R x₀ 87534 hRYZ
+  have hRXtotal : Polynomial.Bivariate.totalDegree (triSpecializeX R x₀) ≤ 1180364 :=
+    totalDegree_triSpecializeX_le R x₀ 1180364 hRYZ
   have totalDegree_le_of_dvd
       {A B : Polynomial (Polynomial F)} (hA : A ≠ 0) (hB : B ≠ 0) (hd : A ∣ B) :
       Polynomial.Bivariate.totalDegree A ≤ Polynomial.Bivariate.totalDegree B := by
@@ -82,7 +81,7 @@ theorem setup_selected_pair_single
     rw [Polynomial.Bivariate.totalDegree_mul hA hC]
     exact Nat.le_add_right _ _
   have hH0 : H ≠ 0 := Polynomial.ne_zero_of_natDegree_gt hHpos
-  have hHtotal : Polynomial.Bivariate.totalDegree H ≤ 87534 :=
+  have hHtotal : Polynomial.Bivariate.totalDegree H ≤ 1180364 :=
     (totalDegree_le_of_dvd hH0 hRX0 hHd).trans hRXtotal
   have hHyp : RationalFunctions.HenselNumerators.Hypotheses x₀ R H := by
     refine ⟨?_, hprim.ne_zero, ?_⟩
@@ -103,20 +102,20 @@ theorem setup_selected_pair_single
 
 /-- Single-factor alignment for a separable irreducible factor at level `q`. -/
 theorem single_factor_alignment_sep
-    (q : ℕ) (hq1 : 1 ≤ q) (hqD : q ≤ 87534)
+    (q : ℕ) (hq1 : 1 ≤ q) (hqD : q ≤ 1180364)
     (U : Fin 2 → BinaryIRSProfile.Index → BinaryIRSProfile.Field)
     (P : BinaryIRSProfile.Field → BinaryIRSProfile.Field[X])
     (Arow : BinaryIRSProfile.Field → Finset BinaryIRSProfile.Index)
     (R : Polynomial (Polynomial (Polynomial BinaryIRSProfile.Field)))
     (S : Finset BinaryIRSProfile.Field)
-    (hRi : Irreducible R) (hRpos : 0 < R.natDegree) (hRd : R.natDegree ≤ 312)
+    (hRi : Irreducible R) (hRpos : 0 < R.natDegree) (hRd : R.natDegree ≤ 1288)
     (hsep : R.derivative ≠ 0)
     (hYZs : ∀ j a, ((R.coeff j).coeff a) ≠ 0 →
-      ((R.coeff j).coeff a).natDegree + q * j < 87534)
-    (hW : ∀ j a, ((R.coeff j).coeff a) ≠ 0 → a + 1048575 * j < 326513440)
+      ((R.coeff j).coeff a).natDegree + q * j < 1180364)
+    (hW : ∀ j a, ((R.coeff j).coeff a) ≠ 0 → a + 1048575 * j < 1351219797)
     (hPdeg : ∀ z ∈ S, (P z).natDegree ≤ 1048575)
     (hvan : ∀ z ∈ S, triEval R z (P z) = 0)
-    (hrow : ∀ z ∈ S, 1484152 ≤ (Arow z).card)
+    (hrow : ∀ z ∈ S, 1483227 ≤ (Arow z).card)
     (hagree : ∀ z ∈ S, ∀ i ∈ Arow z,
       Polynomial.eval (BinaryIRSProfile.domain i) (P z) = U 0 i + z ^ q * U 1 i)
     (hcard : sfCap R.natDegree < S.card) :
@@ -124,13 +123,13 @@ theorem single_factor_alignment_sep
       ∃ p₀ p₁ : BinaryIRSProfile.Field[X], p₀.natDegree ≤ 1048575 ∧
         p₁.natDegree ≤ 1048575 ∧ ∀ z ∈ T, P z = p₀ + Polynomial.C (z ^ q) * p₁ := by
   classical
-  have hYZq : YZCapQ R q 87534 := by
+  have hYZq : YZCapQ R q 1180364 := by
     intro i a ha
     have := hYZs i a ha
     omega
-  have hYZ : YZCap R 87534 := hYZq.toYZCap hq1
+  have hYZ : YZCap R 1180364 := hYZq.toYZCap hq1
   have hRYZ : ∀ j a, ((R.coeff j).coeff a) ≠ 0 →
-      ((R.coeff j).coeff a).natDegree + j < 87534 := by
+      ((R.coeff j).coeff a).natDegree + j < 1180364 := by
     intro j a ha
     have := hYZs j a ha
     nlinarith
@@ -188,7 +187,7 @@ theorem single_factor_alignment_sep
     calc
       w.obstruction.natDegree + (factorXObstruction R).natDegree ≤
           2 * (BCHKSConcreteGS.DZ + 1) * BCHKSConcreteGS.DX +
-            (2 * 312 + 2) * BCHKSConcreteGS.DX := by
+            (2 * 1289 + 2) * BCHKSConcreteGS.DX := by
         exact Nat.add_le_add hwdeg
           (hfx.trans (Nat.mul_le_mul_right BCHKSConcreteGS.DX (by omega)))
       _ < Fintype.card BinaryIRSProfile.Field := by
@@ -197,9 +196,9 @@ theorem single_factor_alignment_sep
         norm_num [BCHKSConcreteGS.DZ, BCHKSConcreteGS.DX]
   have hfactorXDegree : ∀ x : BinaryIRSProfile.Field,
       (Polynomial.eval (Polynomial.C x) (factorXObstruction R)).natDegree ≤
-        2 * R.natDegree * 87534 := by
+        2 * R.natDegree * 1180364 := by
     intro x
-    have hcoeffCap : ∀ j, Polynomial.Bivariate.degreeX (R.coeff j) ≤ 87534 := by
+    have hcoeffCap : ∀ j, Polynomial.Bivariate.degreeX (R.coeff j) ≤ 1180364 := by
       intro j
       unfold Polynomial.Bivariate.degreeX
       apply Finset.sup_le
@@ -207,8 +206,8 @@ theorem single_factor_alignment_sep
       have := hRYZ j a (Polynomial.mem_support_iff.mp ha)
       omega
     have hevalCap : ∀ p : Polynomial (Polynomial BinaryIRSProfile.Field),
-        Polynomial.Bivariate.degreeX p ≤ 87534 →
-        (Polynomial.eval (Polynomial.C x) p).natDegree ≤ 87534 := by
+        Polynomial.Bivariate.degreeX p ≤ 1180364 →
+        (Polynomial.eval (Polynomial.C x) p).natDegree ≤ 1180364 := by
       intro p hpdeg
       have heq : (Polynomial.Bivariate.swap p).map
           (Polynomial.evalRingHom x) = Polynomial.eval (Polynomial.C x) p := by
@@ -220,7 +219,7 @@ theorem single_factor_alignment_sep
           Polynomial.Bivariate.natDegreeY (Polynomial.Bivariate.swap p) from rfl,
           Polynomial.Bivariate.natDegreeY_swap]
         exact hpdeg)
-    apply factorXObstruction_eval_natDegree_le R x R.natDegree 87534 hRpos (le_refl _)
+    apply factorXObstruction_eval_natDegree_le R x R.natDegree 1180364 hRpos (le_refl _)
     · unfold Polynomial.Bivariate.degreeX
       apply Finset.sup_le
       intro j hj
@@ -230,20 +229,20 @@ theorem single_factor_alignment_sep
         rw [← Polynomial.coeff_natDegree]
         exact hcoeffCap R.natDegree)
   obtain ⟨x₀, Bad, hBad, -, hRX0, hprim, hsimple⟩ :=
-    exists_single_factor_good_effective R hRi hRpos hsep w R.natDegree 87534
+    exists_single_factor_good_effective R hRi hRpos hsep w R.natDegree 1180364
       hcertDegree hfactorXDegree
   -- Second stage: choose a factor `H` of `R(x₀, Y, Z)`.
   let d := R.natDegree
-  let A := 2 * 326513440 * 87534
+  let A := 5059283 * 1288 * 1180364
   let e' := bchksErrors + 1
   let Uset := S \ Bad
-  have hUcard : A * d ^ 2 + e' * d < Uset.card := by
-    have hc : (Bad ∩ S).card ≤ 2 * d * 87534 :=
+  have hUcard : A * d + e' * d < Uset.card := by
+    have hc : (Bad ∩ S).card ≤ 2 * d * 1180364 :=
       (Finset.card_le_card Finset.inter_subset_left).trans hBad
-    have hcap : A * d ^ 2 + e' * d + 2 * d * 87534 < S.card := hcard
+    have hcap : A * d + e' * d + 2 * d * 1180364 < S.card := hcard
     rw [Finset.card_sdiff]
-    generalize A * d ^ 2 + e' * d = cA at hcap ⊢
-    generalize 2 * d * 87534 = cB at hcap hc
+    generalize A * d + e' * d = cA at hcap ⊢
+    generalize 2 * d * 1180364 = cB at hcap hc
     omega
   let Hs := (UniqueFactorizationMonoid.normalizedFactors
     (triSpecializeX R x₀)).toFinset.filter fun H => 0 < H.natDegree
@@ -286,15 +285,15 @@ theorem single_factor_alignment_sep
         exact Finset.sum_le_sum fun H hH => (Finset.mem_filter.mp hH).2
       _ ≤ d := hHsum
   let capH : Polynomial (Polynomial BinaryIRSProfile.Field) → ℕ :=
-    fun H => A * d * H.natDegree + e'
-  have hcapHsum : (∑ H ∈ Hs, capH H) ≤ A * d ^ 2 + e' * d := by
+    fun H => A * H.natDegree + e'
+  have hcapHsum : (∑ H ∈ Hs, capH H) ≤ A * d + e' * d := by
     dsimp [capH]
     rw [Finset.sum_add_distrib, ← Finset.mul_sum]
     simp only [Finset.sum_const, nsmul_eq_mul]
     calc
-      A * d * (∑ H ∈ Hs, H.natDegree) + Hs.card * e' ≤ A * d * d + d * e' :=
-        Nat.add_le_add (Nat.mul_le_mul_left (A * d) hHsum) (Nat.mul_le_mul_right e' hHcard)
-      _ = A * d ^ 2 + e' * d := by ring
+      A * (∑ H ∈ Hs, H.natDegree) + Hs.card * e' ≤ A * d + d * e' :=
+        Nat.add_le_add (Nat.mul_le_mul_left A hHsum) (Nat.mul_le_mul_right e' hHcard)
+      _ = A * d + e' * d := by ring
   obtain ⟨H, hHs, hHfib⟩ :=
     exists_rel_fiber_gt_capacity Uset Hs
       (fun z H => biEval H (Polynomial.eval x₀ (P z)) z = 0) capH hcover
@@ -307,19 +306,18 @@ theorem single_factor_alignment_sep
     rw [Polynomial.Bivariate.evalX_eq_map]
     exact hprim
   obtain ⟨hHirr, -, -, hHtot, hHyp⟩ :=
-    setup_selected_pair_single R H x₀ hRi hHR hHpos hRd hRYZ hprim'
+    setup_selected_pair_single R H x₀ hRi hHR hHpos (hRd.trans (by norm_num)) hRYZ hprim'
   have hTS : T ⊆ S := fun z hz => (Finset.mem_sdiff.mp (Finset.mem_filter.mp hz).1).1
   have hTbad : ∀ z ∈ T, z ∉ Bad :=
     fun z hz => (Finset.mem_sdiff.mp (Finset.mem_filter.mp hz).1).2
   have hvanT : ∀ z ∈ T, triEval R z (P z) = 0 ∧
       biEval H (Polynomial.eval x₀ (P z)) z = 0 :=
     fun z hz => ⟨hvan z (hTS hz), (Finset.mem_filter.mp hz).2⟩
-  have hmargin : A * d * H.natDegree + e' < T.card := hHfib
+  have hmargin : A * H.natDegree + e' < T.card := hHfib
   by_cases hdeg1 : R.natDegree = 1
-  · have hTmargin : (613000 + 1) + 2 * 326513440 * 87534 < T.card := by
-      have hm : 2 * 326513440 * 87534 ≤ A * d * H.natDegree := by
-        dsimp [A, d]
-        rw [hdeg1]
+  · have hTmargin : (613925 + 1) + 2 * 1351219797 * 1180364 < T.card := by
+      have hm : 2 * 1351219797 * 1180364 ≤ A * H.natDegree := by
+        dsimp [A]
         nlinarith
       dsimp [e', bchksErrors] at hmargin
       omega
@@ -333,7 +331,7 @@ theorem single_factor_alignment_sep
   · have hdeg2 : 2 ≤ R.natDegree := by omega
     obtain ⟨Tg, hTgT, hTgcard, p₀, p₁, hp₀, hp₁, hline⟩ :=
       degree_two_selected_final U P Arow R H T x₀ Bad q hqD
-        (fun z hz => hPdeg z (hTS hz)) hvanT hTbad hmargin
+        (fun z hz => hPdeg z (hTS hz)) hvanT hTbad hmargin hRd
         hRi hHirr hHpos hHyp hHtot hYZ hsimple
         (fun z hz => by have := hrow z (hTS hz); norm_num; exact this)
         (fun z hz => hagree z (hTS hz)) hdeg2

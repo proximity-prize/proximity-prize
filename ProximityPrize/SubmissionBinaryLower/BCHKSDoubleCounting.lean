@@ -120,8 +120,8 @@ theorem many_large_fibers
 /-- The numerical BCHKS parameters turn the stated pair-fiber lower bound
 into the strict inequality required by `many_large_fibers`. -/
 theorem concrete_incidence_inequality (dH d D tcard : ℕ)
-    (ht : 2 * 326513440 * dH * d * D + 613000 + 1 ≤ tcard) :
-    (2097152 - 613000 - 1048575) * tcard >
+    (ht : 5059283 * dH * d * D + 613925 + 1 ≤ tcard) :
+    (2097152 - 613925 - 1048575) * tcard >
       (2097152 - 1048575) * ((2 * 1048575 + 1) * dH * d * D) := by
   norm_num at ht ⊢
   nlinarith
@@ -132,12 +132,12 @@ theorem concrete_many_large_fibers
     {ι ζ : Type} [Fintype ι] [DecidableEq ι] [DecidableEq ζ]
     (T : Finset ζ) (A : ζ → Finset ι) (dH d D : ℕ)
     (hn : Fintype.card ι = 2097152)
-    (hrow : ∀ z ∈ T, 2097152 - 613000 ≤ (A z).card)
-    (hT : 2 * 326513440 * dH * d * D + 613000 + 1 ≤ T.card) :
+    (hrow : ∀ z ∈ T, 2097152 - 613925 ≤ (A z).card)
+    (hT : 5059283 * dH * d * D + 613925 + 1 ≤ T.card) :
     1048576 ≤ (Finset.univ.filter fun x : ι =>
       (2 * 1048575 + 1) * dH * d * D <
         (T.filter fun z => x ∈ A z).card).card := by
-  apply many_large_fibers T A 2097152 613000 1048575
+  apply many_large_fibers T A 2097152 613925 1048575
     ((2 * 1048575 + 1) * dH * d * D) hn hrow
   exact concrete_incidence_inequality dH d D T.card hT
 
@@ -253,8 +253,8 @@ theorem doubleCounting_exists_common_affine_set
 
 /-- The incidence arithmetic also absorbs the one-unit base-`Z` numerator overhead. -/
 theorem concrete_incidence_inequality_plus (dH d D tcard : ℕ)
-    (ht : 2 * 326513440 * dH * d * D + 613000 + 1 ≤ tcard) :
-    (2097152 - 613000 - 1048575) * tcard >
+    (ht : 5059283 * dH * d * D + 613925 + 1 ≤ tcard) :
+    (2097152 - 613925 - 1048575) * tcard >
       (2097152 - 1048575) * ((2 * 1048575 + 4) * dH * d * D) := by
   norm_num at ht ⊢
   nlinarith
@@ -263,12 +263,12 @@ theorem concrete_many_large_fibers_plus
     {ι ζ : Type} [Fintype ι] [DecidableEq ι] [DecidableEq ζ]
     (T : Finset ζ) (A : ζ → Finset ι) (dH d D : ℕ)
     (hn : Fintype.card ι = 2097152)
-    (hrow : ∀ z ∈ T, 2097152 - 613000 ≤ (A z).card)
-    (hT : 2 * 326513440 * dH * d * D + 613000 + 1 ≤ T.card) :
+    (hrow : ∀ z ∈ T, 2097152 - 613925 ≤ (A z).card)
+    (hT : 5059283 * dH * d * D + 613925 + 1 ≤ T.card) :
     1048576 ≤ (Finset.univ.filter fun x : ι =>
       (2 * 1048575 + 4) * dH * d * D <
         (T.filter fun z => x ∈ A z).card).card := by
-  apply many_large_fibers T A 2097152 613000 1048575
+  apply many_large_fibers T A 2097152 613925 1048575
     ((2 * 1048575 + 4) * dH * d * D) hn hrow
   exact concrete_incidence_inequality_plus dH d D T.card hT
 

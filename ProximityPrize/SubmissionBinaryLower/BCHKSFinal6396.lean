@@ -3,7 +3,7 @@ import ProximityPrize.SubmissionBinaryLower.BCHKSFinalConditional
 
 namespace ProximityPrize.Benchmark.Binary
 
-theorem protocolClaim6384 : ProtocolClaim 6384 313856511 1073741824 :=
+theorem protocolClaim6396 : ProtocolClaim 6396 314330111 1073741824 :=
   protocolClaim6358_of_polynomialAlignment
     ProximityPrize.SubmissionBinaryLower.bchksPolynomialAlignment_char2
 

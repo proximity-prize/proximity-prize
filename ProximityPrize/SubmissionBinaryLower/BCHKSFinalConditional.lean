@@ -27,7 +27,7 @@ open scoped NNReal
 is compiled with the optimized score `63.58`. -/
 theorem protocolClaim6358_of_polynomialAlignment
     (halg : ProximityPrize.SubmissionBinaryLower.BCHKSPolynomialAlignment) :
-    ProtocolClaim 6384 313856511 1073741824 where
+    ProtocolClaim 6396 314330111 1073741824 where
   admissible := by
     constructor <;>
       norm_num [claimedRadius, BinaryIRSProfile.minRelativeDistance]
@@ -36,7 +36,7 @@ theorem protocolClaim6358_of_polynomialAlignment
         ProximityPrize.SubmissionBinaryLower.bchksRadius ≤ reductionTarget :=
       (ProximityPrize.SubmissionBinaryLower.certifiedGammaError_bchks_le_of_polynomialAlignment halg).trans (by
         norm_num [reductionTarget, ProximityGap.prizeThreshold, div_le_iff₀])
-    have hr : claimedRadius 313856511 1073741824 =
+    have hr : claimedRadius 314330111 1073741824 =
         ProximityPrize.SubmissionBinaryLower.bchksRadius := by
       norm_num [claimedRadius, ProximityPrize.SubmissionBinaryLower.bchksRadius]
     have hc :
@@ -46,7 +46,7 @@ theorem protocolClaim6358_of_polynomialAlignment
     rw [ToyProblem.Impl.IRS.certifiedGammaError, hr, hc]
     exact h
   score := by
-    have hr : claimedRadius 313856511 1073741824 =
+    have hr : claimedRadius 314330111 1073741824 =
         ProximityPrize.SubmissionBinaryLower.bchksRadius := by
       norm_num [claimedRadius, ProximityPrize.SubmissionBinaryLower.bchksRadius]
     rw [hr]
