@@ -5,11 +5,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 import ProximityPrize.Benchmark.BinaryTargetLower
 
 /-!
-# Lower reduction-threshold baseline
+# Lower reduction-threshold certificate at radius `1/4`
 
 At radius `1/4`, the certified IRS combination-round error is below `2^-160`.
-The separate spot-check term `(3/4)^128` is below `2^-53`, giving the exact
-`53.00`-bit baseline required by the lower challenge.
+The separate spot-check term `(3/4)^128 = 2^-53.1248...` is below `2^-53.12`,
+which is certified through the rational bracket `1837/1000 ≤ 2^(88/100)`.
 -/
 
 namespace ProximityPrize.SubmissionBinaryLower
@@ -160,6 +160,21 @@ theorem certifiedGammaError_quarter_le_two_pow_neg_160 :
         ENNReal.toReal_div, ENNReal.toReal_div]
       norm_num [BinaryIRSProfile.Index, BinaryIRSProfile.Field, BF64.card_ext3]
 
+/-- Exact rational lower bound used for the 53.12-bit score certificate. -/
+theorem two_rpow_eighty_eight_hundred_ge :
+    (1837 : ℝ≥0) / 1000 ≤ (2 : ℝ≥0) ^ ((88 : ℝ) / 100) := by
+  have hroot :
+      (1837 : ℝ≥0) / 1000 ≤
+        ((2 : ℝ≥0) ^ (88 : ℕ)) ^ ((100 : ℝ)⁻¹) := by
+    rw [NNReal.le_rpow_inv_iff (by norm_num : (0 : ℝ) < 100)]
+    norm_num [div_pow, div_le_iff₀]
+  calc
+    (1837 : ℝ≥0) / 1000 ≤
+        ((2 : ℝ≥0) ^ (88 : ℕ)) ^ ((100 : ℝ)⁻¹) := hroot
+    _ = (2 : ℝ≥0) ^ ((88 : ℝ) / 100) := by
+      rw [← NNReal.rpow_natCast_mul]
+      norm_num [div_eq_mul_inv]
+
 end ProximityPrize.SubmissionBinaryLower
 
 namespace ProximityPrize.Benchmark.Binary
@@ -168,8 +183,8 @@ open scoped NNReal
 
 set_option maxRecDepth 100000
 
-/-- The exact lower baseline consumed by Comparator. -/
-theorem candidate : ProtocolClaim 5300 1 4 where
+/-- The 53.12-bit lower certificate at radius `1/4`. -/
+theorem candidate : ProtocolClaim 5312 1 4 where
   admissible := by
     constructor <;> norm_num [claimedRadius, BinaryIRSProfile.minRelativeDistance]
   reduction := by
@@ -187,12 +202,22 @@ theorem candidate : ProtocolClaim 5300 1 4 where
     rw [ToyProblem.Impl.IRS.certifiedGammaError, hr, hc]
     exact h
   score := by
-    have hError : claimedError 5300 = (1 : ℝ≥0) / 2 ^ (53 : ℕ) := by
-      unfold claimedError
-      rw [show -((((5300 : ℕ) : ℝ) / 100)) = -((53 : ℕ) : ℝ) by norm_num,
-        NNReal.rpow_neg, NNReal.rpow_natCast]
-      norm_num
-    rw [hError, ← NNReal.coe_le_coe]
-    norm_num [claimedRadius, BinaryIRSProfile.repetitions, div_le_iff₀]
+    calc
+      (1 - claimedRadius 1 4) ^ BinaryIRSProfile.repetitions ≤
+          ((1 : ℝ≥0) / 2 ^ (54 : ℕ)) * (1837 / 1000) := by
+        rw [← NNReal.coe_le_coe]
+        norm_num [claimedRadius, BinaryIRSProfile.repetitions, div_le_iff₀]
+      _ ≤ ((1 : ℝ≥0) / 2 ^ (54 : ℕ)) *
+            (2 : ℝ≥0) ^ ((88 : ℝ) / 100) := by
+        exact mul_le_mul_of_nonneg_left
+          ProximityPrize.SubmissionBinaryLower.two_rpow_eighty_eight_hundred_ge
+          (by positivity)
+      _ = claimedError 5312 := by
+        unfold claimedError
+        rw [show -((((5312 : ℕ) : ℝ) / 100)) =
+            -((54 : ℕ) : ℝ) + (88 : ℝ) / 100 by norm_num,
+          NNReal.rpow_add (by norm_num : (2 : ℝ≥0) ≠ 0),
+          NNReal.rpow_neg, NNReal.rpow_natCast]
+        norm_num
 
 end ProximityPrize.Benchmark.Binary
