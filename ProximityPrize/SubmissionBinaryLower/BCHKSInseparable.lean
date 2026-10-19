@@ -1,4 +1,4 @@
-import ProximityPrize.SubmissionBinaryLower.BCHKSSingleFactor
+import ProximityPrize.SubmissionBinaryLower.BCHKSUniversalSingleFactor
 
 /-!
 # Inseparable factors in characteristic two

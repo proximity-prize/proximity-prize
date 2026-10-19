@@ -113,10 +113,10 @@ theorem inter_badRootUnion_card_le_budget
     ((badRootUnion_card_le_sum_natDegree T p hne).trans hdeg)
 
 /-- The very coarse all-factor accounting is already far below the reserved
-budget.  It allows 1289 factors, one degree-1180364 survival obstruction and one
-`(2·1289-1)·1180364` resultant/discriminant obstruction per factor. -/
+budget.  It allows 6902 factors, one degree-21907324 survival obstruction and one
+`(2·6902-1)·21907324` resultant/discriminant obstruction per factor. -/
 theorem crude_concrete_bad_degree_budget :
-    1289 * (1180364 + (2 * 1289 - 1) * 1180364) ≤ bchksBadBudget := by
+    6902 * (21907324 + (2 * 6902 - 1) * 21907324) ≤ bchksBadBudget := by
   norm_num [bchksBadBudget]
 
 
@@ -126,16 +126,16 @@ theorem rat_discriminants_sum_degree_le_badBudget
     (T : Finset ρ)
     (R : ρ → Polynomial (Polynomial (Polynomial
       ProximityPrize.Benchmark.BinaryIRSProfile.Field)))
-    (hcard : T.card ≤ 1289)
+    (hcard : T.card ≤ 6902)
     (hdeg : ∀ r ∈ T,
-      (ratDiscr (R r)).natDegree ≤ 1180364 + (2 * 1289 - 1) * 1180364) :
+      (ratDiscr (R r)).natDegree ≤ 21907324 + (2 * 6902 - 1) * 21907324) :
     (∑ r ∈ T, (ratDiscr (R r)).natDegree) ≤ bchksBadBudget := by
   calc
     (∑ r ∈ T, (ratDiscr (R r)).natDegree) ≤
-        ∑ _r ∈ T, (1180364 + (2 * 1289 - 1) * 1180364) :=
+        ∑ _r ∈ T, (21907324 + (2 * 6902 - 1) * 21907324) :=
       Finset.sum_le_sum hdeg
-    _ = T.card * (1180364 + (2 * 1289 - 1) * 1180364) := by simp
-    _ ≤ 1289 * (1180364 + (2 * 1289 - 1) * 1180364) := by
+    _ = T.card * (21907324 + (2 * 6902 - 1) * 21907324) := by simp
+    _ ≤ 6902 * (21907324 + (2 * 6902 - 1) * 21907324) := by
       exact Nat.mul_le_mul_right _ hcard
     _ ≤ bchksBadBudget := crude_concrete_bad_degree_budget
 

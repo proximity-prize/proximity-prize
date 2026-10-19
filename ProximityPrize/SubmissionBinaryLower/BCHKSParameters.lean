@@ -6,17 +6,17 @@ open ProximityPrize.Benchmark ProximityPrize.Benchmark.Binary
 open CoreDefinitions ProximityGap
 open scoped NNReal
 
-/-- Radius chosen for a 63.58-bit claim after the specialized BCHKS extraction. -/
-noncomputable def bchksRadius : ℝ≥0 := (314330111 : ℝ≥0) / 1073741824
+/-- Radius chosen for a 63.99-bit claim after the specialized BCHKS extraction. -/
+noncomputable def bchksRadius : ℝ≥0 := (314458111 : ℝ≥0) / 1073741824
 
-def bchksErrors : ℕ := 613925
+def bchksErrors : ℕ := 614175
 
-def bchksNumerator : ℕ := 10000000000000000000
+def bchksNumerator : ℕ := 2000000000000000000
 
-def bchksListBound : ℕ := 7000
+def bchksListBound : ℕ := 32000
 
 /-- Slack reserved for bad specializations without changing the sharp multiplicity target. -/
-def bchksBadBudget : ℕ := 4000000000000
+def bchksBadBudget : ℕ := 4000000000000000
 
 lemma bchksRadius_floor :
     ⌊(bchksRadius : ℝ) * (Fintype.card BinaryIRSProfile.Index : ℝ)⌋₊ = bchksErrors := by
@@ -32,37 +32,37 @@ lemma bchks_budget_nat :
       2 ^ (192 : ℕ) := by
   norm_num [bchksNumerator, bchksListBound]
 
-/-- Rational lower approximation to `2^(4/100)`, used by the score certificate. -/
-theorem two_rpow_four_hundred_ge :
-    (10277 : ℝ≥0) / 10000 ≤ (2 : ℝ≥0) ^ ((4 : ℝ) / 100) := by
+/-- Rational lower approximation to `2^(1/100)`, used by the score certificate. -/
+theorem two_rpow_one_hundred_ge :
+    (10057 : ℝ≥0) / 10000 ≤ (2 : ℝ≥0) ^ ((1 : ℝ) / 100) := by
   have hroot :
-      (10277 : ℝ≥0) / 10000 ≤
-        ((2 : ℝ≥0) ^ (4 : ℕ)) ^ ((100 : ℝ)⁻¹) := by
+      (10057 : ℝ≥0) / 10000 ≤
+        ((2 : ℝ≥0) ^ (1 : ℕ)) ^ ((100 : ℝ)⁻¹) := by
     rw [NNReal.le_rpow_inv_iff (by norm_num : (0 : ℝ) < 100)]
     norm_num [div_pow, div_le_iff₀]
   calc
-    (10277 : ℝ≥0) / 10000 ≤
-        ((2 : ℝ≥0) ^ (4 : ℕ)) ^ ((100 : ℝ)⁻¹) := hroot
-    _ = (2 : ℝ≥0) ^ ((4 : ℝ) / 100) := by
+    (10057 : ℝ≥0) / 10000 ≤
+        ((2 : ℝ≥0) ^ (1 : ℕ)) ^ ((100 : ℝ)⁻¹) := hroot
+    _ = (2 : ℝ≥0) ^ ((1 : ℝ) / 100) := by
       rw [← NNReal.rpow_natCast_mul]
       norm_num [div_eq_mul_inv]
 
-/-- Standalone score arithmetic for the intended `ProtocolClaim 6396`. -/
+/-- Standalone score arithmetic for the intended `ProtocolClaim 6399`. -/
 lemma bchksRadius_score :
     (1 - bchksRadius) ^ BinaryIRSProfile.repetitions ≤
-      ProximityPrize.Benchmark.Binary.claimedError 6396 := by
+      ProximityPrize.Benchmark.Binary.claimedError 6399 := by
   calc
     (1 - bchksRadius) ^ BinaryIRSProfile.repetitions ≤
-        ((1 : ℝ≥0) / 2 ^ (64 : ℕ)) * (10277 / 10000) := by
+        ((1 : ℝ≥0) / 2 ^ (64 : ℕ)) * (10057 / 10000) := by
       rw [← NNReal.coe_le_coe]
       norm_num [bchksRadius, BinaryIRSProfile.repetitions, div_le_iff₀]
     _ ≤ ((1 : ℝ≥0) / 2 ^ (64 : ℕ)) *
-          (2 : ℝ≥0) ^ ((4 : ℝ) / 100) := by
-      exact mul_le_mul_of_nonneg_left two_rpow_four_hundred_ge (by positivity)
-    _ = ProximityPrize.Benchmark.Binary.claimedError 6396 := by
+          (2 : ℝ≥0) ^ ((1 : ℝ) / 100) := by
+      exact mul_le_mul_of_nonneg_left two_rpow_one_hundred_ge (by positivity)
+    _ = ProximityPrize.Benchmark.Binary.claimedError 6399 := by
       unfold ProximityPrize.Benchmark.Binary.claimedError
-      rw [show -((((6396 : ℕ) : ℝ) / 100)) =
-          -((64 : ℕ) : ℝ) + (4 : ℝ) / 100 by norm_num,
+      rw [show -((((6399 : ℕ) : ℝ) / 100)) =
+          -((64 : ℕ) : ℝ) + (1 : ℝ) / 100 by norm_num,
         NNReal.rpow_add (by norm_num : (2 : ℝ≥0) ≠ 0),
         NNReal.rpow_neg, NNReal.rpow_natCast]
       norm_num
@@ -87,7 +87,7 @@ lemma bchksBadBudget_lt_field :
   exact hb.trans_le hp
 
 lemma bchks_top_points_arithmetic (r T : ℕ)
-    (hT : 2 * 1351219797 * r + (bchksErrors + 1) < T) :
+    (hT : 2 * 7236927760 * r + (bchksErrors + 1) < T) :
     (2097152 - bchksErrors - 1048576) * T >
       (2097152 - 1048576) * ((2 * 1048575 + 1) * r) := by
   norm_num [bchksErrors] at hT ⊢

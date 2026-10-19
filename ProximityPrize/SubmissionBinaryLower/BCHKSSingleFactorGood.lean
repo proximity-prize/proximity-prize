@@ -185,7 +185,9 @@ theorem exists_single_factor_good_effective
       (∀ z ∉ Bad, ∀ y,
         Polynomial.eval y (biSpecializeZ (triSpecializeX R x₀) z) = 0 →
         Polynomial.eval y
-          (biSpecializeZ (triSpecializeX R.derivative x₀) z) ≠ 0) := by
+          (biSpecializeZ (triSpecializeX R.derivative x₀) z) ≠ 0) ∧
+      (∀ z ∉ Bad, Polynomial.eval z
+        (Polynomial.eval (Polynomial.C x₀) (factorXObstruction R)) ≠ 0) := by
   classical
   obtain ⟨x₀, hw, hxObs, hprim⟩ :=
     exists_single_factor_primitive_base_effective R hR hpos hchar w hxcap
@@ -210,14 +212,15 @@ theorem exists_single_factor_good_effective
     intro hz
     have : (triSpecializeX R x₀).natDegree = 0 := by rw [hz]; simp
     omega
-  refine ⟨x₀, Bad, hBadcard, hdegEq, hnonzero, hprim, ?_⟩
-  intro z hzBad y hy
-  have hzO : Polynomial.eval z zObs ≠ 0 := by
-    intro hz
+  have hzO' : ∀ z ∉ Bad, Polynomial.eval z zObs ≠ 0 := by
+    intro z hzBad hz
     apply hzBad
     dsimp [Bad]
     rw [Multiset.mem_toFinset, Polynomial.mem_roots hzObs]
     exact hz
+  refine ⟨x₀, Bad, hBadcard, hdegEq, hnonzero, hprim, ?_, hzO'⟩
+  intro z hzBad y hy
+  have hzO : Polynomial.eval z zObs ≠ 0 := hzO' z hzBad
   have hresEval : Polynomial.eval z
       (Polynomial.eval (Polynomial.C x₀) (rawSepResultant R)) ≠ 0 := by
     intro hzres
