@@ -1337,7 +1337,7 @@ theorem sum_factorCounts_mul_degree
    apply Finset.sum_subset hs
    intro q _ hq
    have hc:(normalizedFactors p).count q=0:=
-     Multiset.count_eq_zero.mpr (by simpa using hq)
+     Multiset.count_eq_zero.mpr (fun hmem => hq (Multiset.mem_toFinset.mpr hmem))
    simp [hc]
  rw [hsum] at h
  simpa only [Nat.mul_comm] using h
@@ -1558,7 +1558,8 @@ theorem mem_finiteOrderSupport (x:L) (hx:x≠0)
    (w:HeightOneSpectrum (FiniteNormalization K L)):
    w∈finiteOrderSupport K L x hx ↔
      fieldOrder (FiniteNormalization K L) L w x≠0:=by
- simp [finiteOrderSupport]
+ unfold finiteOrderSupport
+ exact Set.Finite.mem_toFinset _
 def baseRepresentative (w:HeightOneSpectrum (FiniteNormalization K L)):Polynomial K:=
  (RCN366.exists_monic_primePlace K
    (HeightOneSpectrum.under (Polynomial K) w)).choose
@@ -1973,7 +1974,7 @@ theorem valuation_monomial_le (v:Valuation L Γ₀) (coeff:K →+*L)
    v (coeff c)*(∏ i,v (x i)^d i) ≤
        1*(∏ i,max 1 (v (x i))^cap i):=by
      apply mul_le_mul' (hcoeff c)
-     apply Finset.prod_le_prod (fun _ _ => zero_le)
+     apply Finset.prod_le_prod₀ (fun _ _ => zero_le)
      intro i _
      exact (pow_le_pow_left₀ zero_le (le_max_right _ _) (d i)).trans
        (pow_le_pow_right₀ (le_max_left _ _) (hd i))
@@ -3522,7 +3523,7 @@ theorem support_surfaceMap_subset (φ:Polynomial K →+*L)
    (surfaceMap φ Q).support ⊆ Q.support.image Finsupp.tail:=by
  classical
  have hsum:surfaceMap φ Q=
-     ∑ d∈Q.support,surfaceMap φ (MvPolynomial.monomial d (MvPolynomial.coeff d Q)):=by
+     ∑ d∈Q.support,surfaceMap φ (MvPolynomial.monomial d (AddMonoidAlgebra.coeff Q d)):=by
    rw [←map_sum,MvPolynomial.support_sum_monomial_coeff]
  intro e he
  rw [hsum] at he
@@ -4229,13 +4230,14 @@ theorem pderiv_eq_zero_of_degree_bound_zero (i:Fin 4) (P:Poly4 K)
    (hP:P.degreeOf i ≤ 0):MvPolynomial.pderiv i P=0:=by
  ext d
  rw [MvPolynomial.coeff_zero,MvPolynomial.coeff_pderiv]
- have hzero:MvPolynomial.coeff (d+Finsupp.single i 1) P=0:=by
+ have hzero:AddMonoidAlgebra.coeff P (d+Finsupp.single i 1)=0:=by
    by_contra hne
    have hh:=MvPolynomial.degreeOf_le_iff.mp hP
      (d+Finsupp.single i 1) (MvPolynomial.mem_support_iff.mpr hne)
    simp only [Finsupp.add_apply,Finsupp.single_eq_same] at hh
    omega
  rw [hzero,zero_mul]
+ simp
 theorem degree_mul_bound (i:Fin 4) {P Q:Poly4 K} {a b:ℕ}
    (hP:P.degreeOf i ≤ a) (hQ:Q.degreeOf i ≤ b):
    (P*Q).degreeOf i ≤ a+b:=
@@ -5603,15 +5605,15 @@ theorem specialization_natDegree_lt
  have hsupport:∀ d∈Q.support,
      d 1+d 3 ≤ L∧d 2 ≤ s∧d 0+w*d 1+(w-1)*d 2 < D:=hcaps
  have hterms:∀ d∈Q.support,
-     (specialization K P γ (MvPolynomial.monomial d (MvPolynomial.coeff d Q))).natDegree ≤
+     (specialization K P γ (MvPolynomial.monomial d (AddMonoidAlgebra.coeff Q d))).natDegree ≤
        D-1:=by
    intro d hd
    have hweight:=(hsupport d hd).2.2
-   have hh:=specialization_monomial_natDegree_le K P γ w hP d (MvPolynomial.coeff d Q)
+   have hh:=specialization_monomial_natDegree_le K P γ w hP d (AddMonoidAlgebra.coeff Q d)
    omega
  rw [MvPolynomial.as_sum Q,map_sum]
  have hh:=Polynomial.natDegree_sum_le_of_forall_le Q.support
-   (fun d => specialization K P γ (MvPolynomial.monomial d (MvPolynomial.coeff d Q))) hterms
+   (fun d => specialization K P γ (MvPolynomial.monomial d (AddMonoidAlgebra.coeff Q d))) hterms
  exact lt_of_le_of_lt hh (by omega)
 end
 end ProximityPrize.SubmissionLower.RCN319
@@ -7742,7 +7744,7 @@ theorem support_firstMap_subset (φ:Polynomial K →+*A)
    (firstMap K φ F).support ⊆ F.support.image Finsupp.tail:=by
  classical
  have hsum:firstMap K φ F=
-     ∑ d∈F.support,firstMap K φ (MvPolynomial.monomial d (MvPolynomial.coeff d F)):=by
+     ∑ d∈F.support,firstMap K φ (MvPolynomial.monomial d (AddMonoidAlgebra.coeff F d)):=by
    rw [←map_sum,MvPolynomial.support_sum_monomial_coeff]
  intro e he
  rw [hsum] at he
@@ -7921,13 +7923,13 @@ theorem positive_degree_of_irreducible {A:Type} [Field A]
    intro i
    have hi:i=0∨i=1:=by omega
    rcases hi with rfl | rfl <;> omega
- have hconst:f=MvPolynomial.C (MvPolynomial.coeff 0 f):=by
+ have hconst:f=MvPolynomial.C (AddMonoidAlgebra.coeff f 0):=by
    apply MvPolynomial.ext
    intro d
    by_cases hd:d=0
    · subst d
      simp
-   · have hzero:MvPolynomial.coeff d f=0:=by
+   · have hzero:AddMonoidAlgebra.coeff f d=0:=by
        by_contra hne
        have hm:d∈f.support:=MvPolynomial.mem_support_iff.mpr hne
        apply hd
@@ -7937,7 +7939,7 @@ theorem positive_degree_of_irreducible {A:Type} [Field A]
        rw [hdeg i] at hle
        exact Nat.eq_zero_of_le_zero hle
      simp [hzero,Ne.symm hd]
- have ha:MvPolynomial.coeff 0 f≠0:=by
+ have ha:AddMonoidAlgebra.coeff f 0≠0:=by
    intro h
    apply hf.ne_zero
    rw [hconst,h,map_zero]
@@ -9392,8 +9394,9 @@ theorem pderiv_zero_iff_degree_zero_below_char
      (CharP.cast_eq_zero_iff K p (d i)).not.mpr (Nat.not_dvd_of_pos_of_lt hpos hsmall)
    have hcoef:(e i:K)+1≠0:=by
      simpa only [←hnat,Nat.cast_add,Nat.cast_one] using hcast
-   have hz:MvPolynomial.coeff e (MvPolynomial.pderiv i F)=0:=by
+   have hz:AddMonoidAlgebra.coeff (MvPolynomial.pderiv i F) e=0:=by
      rw [hzero,MvPolynomial.coeff_zero]
+     simp
    rw [MvPolynomial.coeff_pderiv,he] at hz
    exact mul_ne_zero (MvPolynomial.mem_support_iff.mp hd) hcoef hz
  · exact pderiv_zero_of_degree_zero i F
@@ -9751,11 +9754,11 @@ theorem liftedCoefficient_support
    exact Nat.zero_le _
  · have hev:e i=u ⟨i,hi⟩:=by
      rw [←heu]
-     exact Finsupp.mapDomain_apply Subtype.val_injective u ⟨i,hi⟩
+     exact Finsupp.mapDomain_apply_of_injective Subtype.val_injective u ⟨i,hi⟩
    have huv:=congrArg
      (fun f:Option RemainingCoordinates →₀ ℕ =>
        f ((Equiv.optionSubtypeNe (2:Fin 4)).symm i)) hdu
-   rw [Finsupp.mapDomain_apply (Equiv.optionSubtypeNe (2:Fin 4)).symm.injective] at huv
+   rw [Finsupp.mapDomain_apply_of_injective (Equiv.optionSubtypeNe (2:Fin 4)).symm.injective] at huv
    have hindex:(Equiv.optionSubtypeNe (2:Fin 4)).symm i=some ⟨i,hi⟩:=by
      simp [Equiv.optionSubtypeNe_symm_apply,hi]
    rw [hindex,Finsupp.optionElim_apply_some] at huv
@@ -12620,7 +12623,7 @@ theorem contactJet_mul_slopeDifference (h:ℕ) (q:Poly K):
  (contactJet_eq_zero_iff K h _).2 ⟨q,rfl⟩
 theorem contactJet_eq_zero_iff_coeff (h:ℕ) (f:Poly K):
    contactJet K h f=0 ↔
-     ∀ d:Fin 3 →₀ ℕ,d 0 < h → MvPolynomial.coeff d (shiftPlus K f)=0:=by
+     ∀ d:Fin 3 →₀ ℕ,d 0 < h → AddMonoidAlgebra.coeff (shiftPlus K f) d=0:=by
  constructor
  · intro hf d hd
    have hnot:¬ Finsupp.single (0:Fin 3) h ≤ d:=by
@@ -12628,7 +12631,7 @@ theorem contactJet_eq_zero_iff_coeff (h:ℕ) (f:Poly K):
      have hh:=hle 0
      simp only [Finsupp.single_eq_same] at hh
      omega
-   have hh:=congrArg (MvPolynomial.coeff d) hf
+   have hh:=congrArg (AddMonoidAlgebra.coeff · d) hf
    simpa [contactJet_apply,MvPolynomial.coeff_modMonomial_of_not_le _ hnot] using hh
  · intro hf
    ext d
@@ -12973,7 +12976,7 @@ def reconstruct (D w L s:ℕ) (θ:CoefficientIndex D w L s → K):
    MvPolynomial.monomial (columnExponent c) (θ c)
 theorem reconstruct_coeff (D w L s:ℕ)
    (θ:CoefficientIndex D w L s → K) (c:CoefficientIndex D w L s):
-   MvPolynomial.coeff (columnExponent c) (reconstruct K D w L s θ)=θ c:=by
+   AddMonoidAlgebra.coeff (reconstruct K D w L s θ) (columnExponent c)=θ c:=by
  classical
  simp [reconstruct,MvPolynomial.coeff_sum,
    (columnExponent_injective D w L s).eq_iff]
@@ -12984,7 +12987,7 @@ theorem reconstruct_injective (D w L s:ℕ):
    Function.Injective (reconstruct K D w L s):=by
  intro θ η h
  funext c
- have hh:=congrArg (MvPolynomial.coeff (columnExponent c)) h
+ have hh:=congrArg (AddMonoidAlgebra.coeff · (columnExponent c)) h
  simpa only [reconstruct_coeff] using hh
 theorem reconstruct_ne_zero (D w L s:ℕ)
    (θ:CoefficientIndex D w L s → K) (hθ:θ≠0):
@@ -13397,15 +13400,15 @@ theorem specialization_natDegree_lt
      d 1+d 2+d 3 ≤ L∧d 2 ≤ s∧
        d 0+w*d 1+(w-1)*d 2 < D:=hcaps
  have hterms:∀ d∈Q.support,
-     (specialization K P γ (MvPolynomial.monomial d (MvPolynomial.coeff d Q))).natDegree ≤
+     (specialization K P γ (MvPolynomial.monomial d (AddMonoidAlgebra.coeff Q d))).natDegree ≤
        D-1:=by
    intro d hd
    have hweight:=(hsupport d hd).2.2
-   have hh:=specialization_monomial_natDegree_le K P γ w hP d (MvPolynomial.coeff d Q)
+   have hh:=specialization_monomial_natDegree_le K P γ w hP d (AddMonoidAlgebra.coeff Q d)
    omega
  rw [MvPolynomial.as_sum Q,map_sum]
  have hh:=Polynomial.natDegree_sum_le_of_forall_le Q.support
-   (fun d => specialization K P γ (MvPolynomial.monomial d (MvPolynomial.coeff d Q))) hterms
+   (fun d => specialization K P γ (MvPolynomial.monomial d (AddMonoidAlgebra.coeff Q d))) hterms
  exact lt_of_le_of_lt hh (by omega)
 end
 end ProximityPrize.SubmissionLower.RCN122
@@ -14913,7 +14916,7 @@ theorem columnExponent_columnIndexOfExponent {D w L s:ℕ}
  fin_cases i <;> simp [columnIndexOfExponent]
 def encodeBox {D w L s:ℕ} (Q:globalCoefficientBox K D w L s) :
    CoefficientIndex D w L s → K :=
- fun c ↦ MvPolynomial.coeff (columnExponent c) Q.1
+ fun c ↦ AddMonoidAlgebra.coeff Q.1 (columnExponent c)
 theorem reconstruct_encodeBox {D w L s:ℕ}
    (Q:globalCoefficientBox K D w L s) :
    reconstruct K D w L s (encodeBox Q) = Q.1:=by
@@ -14925,12 +14928,11 @@ theorem reconstruct_encodeBox {D w L s:ℕ}
      columnExponent_columnIndexOfExponent d hd
    rw [← hc,reconstruct_coeff]
    rfl
- · have hQ:MvPolynomial.coeff d Q.1 = 0:=by
+ · have hQ:AddMonoidAlgebra.coeff Q.1 d = 0:=by
      by_contra hn
      exact hd (Q.2 (MvPolynomial.mem_support_iff.mpr hn))
    have hRmem:=reconstruct_mem_globalCoefficientBox K D w L s (encodeBox Q)
-   have hR:MvPolynomial.coeff d
-       (reconstruct K D w L s (encodeBox Q)) = 0:=by
+   have hR:AddMonoidAlgebra.coeff (reconstruct K D w L s (encodeBox Q)) d = 0:=by
      by_contra hn
      exact hd (hRmem (MvPolynomial.mem_support_iff.mpr hn))
    rw [hQ,hR]
@@ -15361,7 +15363,7 @@ theorem specialized_R_derivative_degree (F:Poly4 K) (P:Polynomial K) (γ:K)
       intro hz
       have hne:=MvPolynomial.mem_support_iff.mp he
       apply hne
-      change MvPolynomial.coeff e (MvPolynomial.pderiv (2:Fin 4) F) = 0
+      change AddMonoidAlgebra.coeff (MvPolynomial.pderiv (2:Fin 4) F) e = 0
       rw [MvPolynomial.coeff_pderiv, hz, zero_mul]
     have hh:=(MvPolynomial.le_weightedTotalDegree (contactWeights w) hbefore).trans hF
     simpa [map_add, Finsupp.weight_single, contactWeights] using hh
@@ -15375,17 +15377,17 @@ theorem specialized_R_derivative_degree (F:Poly4 K) (P:Polynomial K) (γ:K)
     have hh:=hsupport e he
     omega
   have hterms:∀ e ∈ H.support,
-      (specialization K P γ (MvPolynomial.monomial e (MvPolynomial.coeff e H))).natDegree ≤
+      (specialization K P γ (MvPolynomial.monomial e (AddMonoidAlgebra.coeff H e))).natDegree ≤
         d - (w - 1):=by
     intro e he
     have hw:=hsupport e he
     rw [contact_weight] at hw
-    have ht:=specialization_monomial_natDegree_le K P γ w hP e (MvPolynomial.coeff e H)
+    have ht:=specialization_monomial_natDegree_le K P γ w hP e (AddMonoidAlgebra.coeff H e)
     omega
   have hdegree:(specialization K P γ H).natDegree ≤ d - (w - 1):=by
     rw [MvPolynomial.as_sum H, map_sum]
     exact Polynomial.natDegree_sum_le_of_forall_le H.support
-      (fun e => specialization K P γ (MvPolynomial.monomial e (MvPolynomial.coeff e H))) hterms
+      (fun e => specialization K P γ (MvPolynomial.monomial e (AddMonoidAlgebra.coeff H e))) hterms
   change (specialization K P γ H).natDegree + w ≤ d + 1
   omega
 end LocalCoordinates
@@ -15500,7 +15502,7 @@ theorem collected_contactBlowup_localize (x u₀ u₁:K) (Q:Poly4 K) :
 theorem diagonalAtLeast_iff_coeff (m:ℕ) (Q:Poly4 K) :
     AtLeast diagonalWeights m Q ↔
       ∀ (r:ℕ) (d:Fin 3 →₀ ℕ), r + d 0 < m →
-        MvPolynomial.coeff d ((MvPolynomial.finSuccEquiv K 3 Q).coeff r) = 0:=by
+        AddMonoidAlgebra.coeff ((MvPolynomial.finSuccEquiv K 3 Q).coeff r) d = 0:=by
   classical
   constructor
   · intro h r d hsmall
@@ -15757,7 +15759,7 @@ def polynomialOfSupport (E:Finset (σ →₀ ℕ)) (c:E → K):
  ∑ d:E,MvPolynomial.monomial d.1 (c d)
 @[simp] theorem coeff_polynomialOfSupport
    (E:Finset (σ →₀ ℕ)) (c:E → K) (d:σ →₀ ℕ):
-   MvPolynomial.coeff d (polynomialOfSupport E c)=
+   AddMonoidAlgebra.coeff (polynomialOfSupport E c) d=
      if hd:d∈E then c ⟨d,hd⟩ else 0:=by
  classical
  rw [show polynomialOfSupport E c=
@@ -15815,7 +15817,7 @@ def AffineLineGivenSetsBound
      LinearCode.projectedWord (U j) (T z)∈LinearCode.projectedCodeSubmod C (T z)
 theorem mcaError_affineLine_le_of_givenSetsBound
    {ι F:Type} [Fintype ι] [Nonempty ι] [DecidableEq ι]
-   [Field F] [Fintype F] [DecidableEq F]
+   [Field F] [Fintype F] [DecidableEq F] [SampleableType F]
    (C:LinearCode ι F) (δ:ℝ) (a:ℕ)
    (hgiven:AffineLineGivenSetsBound C δ a):
    mcaError (AffineLineGenerator F) C δ ≤
@@ -15823,9 +15825,12 @@ theorem mcaError_affineLine_le_of_givenSetsBound
  classical
  unfold mcaError
  refine iSup_le fun U => ?_
- rw [Probability.prob_uniform_eq_ofReal]
- apply ENNReal.ofReal_le_ofReal
- apply div_le_div_of_nonneg_right
+ rw [SampleableType.prEvent_uniformSample,
+   show ENNReal.ofReal ((a:ℝ)/Fintype.card F)
+       = (a:ENNReal)/(Fintype.card F:ENNReal) from by
+     rw [ENNReal.ofReal_div_of_pos (by exact_mod_cast Fintype.card_pos),
+       ENNReal.ofReal_natCast, ENNReal.ofReal_natCast]]
+ refine ENNReal.div_le_div_right ?_ _
  · exact_mod_cast (show
      (Finset.univ.filter (fun z:F =>
        IsMCA (AffineLineGenerator F) C z U δ)).card ≤ a by
@@ -15855,7 +15860,6 @@ theorem mcaError_affineLine_le_of_givenSetsBound
        (fun z hz => (hTspec z hz).1) (fun z hz => (hTspec z hz).2.1)
      obtain ⟨j,hj⟩:=(hTspec z hzS).2.2
      exact hj (hall j))
- · positivity
 open Finset
 variable {ι F:Type} [Fintype ι] [DecidableEq ι]
  [Field F] [DecidableEq F]
@@ -17123,16 +17127,16 @@ theorem liftedCoefficient_support_exact
  · have huv:=congrArg
      (fun f:Option RemainingCoordinates →₀ ℕ =>
        f ((Equiv.optionSubtypeNe (2:Fin 4)).symm 2)) hdu
-   rw [Finsupp.mapDomain_apply (Equiv.optionSubtypeNe (2:Fin 4)).symm.injective] at huv
+   rw [Finsupp.mapDomain_apply_of_injective (Equiv.optionSubtypeNe (2:Fin 4)).symm.injective] at huv
    simpa [Equiv.optionSubtypeNe_symm_apply] using huv
  · intro i hi
    have hev:e i = u ⟨i,hi⟩:=by
      rw [← heu]
-     exact Finsupp.mapDomain_apply Subtype.val_injective u ⟨i,hi⟩
+     exact Finsupp.mapDomain_apply_of_injective Subtype.val_injective u ⟨i,hi⟩
    have huv:=congrArg
      (fun f:Option RemainingCoordinates →₀ ℕ =>
        f ((Equiv.optionSubtypeNe (2:Fin 4)).symm i)) hdu
-   rw [Finsupp.mapDomain_apply (Equiv.optionSubtypeNe (2:Fin 4)).symm.injective] at huv
+   rw [Finsupp.mapDomain_apply_of_injective (Equiv.optionSubtypeNe (2:Fin 4)).symm.injective] at huv
    have hindex:(Equiv.optionSubtypeNe (2:Fin 4)).symm i = some ⟨i,hi⟩:=by
      simp [Equiv.optionSubtypeNe_symm_apply,hi]
    rw [hindex,Finsupp.optionElim_apply_some] at huv
@@ -20358,7 +20362,7 @@ theorem isSeparable_iff_span_parameterDifferential
    apply top_unique
    rw [←hsurj]
    rintro x ⟨x,rfl⟩
-   induction x with
+   induction x using TensorProduct.induction_on with
    | zero => simp
    | add x y hx hy =>
        rw [map_add]
@@ -24459,7 +24463,8 @@ def adaptiveUnitProjectionFamily_of_nested
  · intro C v
    rw [exponentSetPoleWeight_unitZ]
    change _=RCN187.poleOrder v.val _
-   rw [coordinateOfGate_value]
+   simp only [zProj]
+   exact congrArg (RCN187.poleOrder v.val) (coordinateOfGate_value _ _).symm
  · intro C v
    rw [exponentSetPoleWeight_unitYZ]
    change _=RCN187.poleOrder v.val _
@@ -27469,7 +27474,8 @@ def adaptiveUnitProjectionFamily_of_active_nested
  · intro C v
    rw [exponentSetPoleWeight_unitZ]
    change _=RCN187.poleOrder v.val _
-   rw [coordinateOfGate_value]
+   simp only [zProj]
+   exact congrArg (RCN187.poleOrder v.val) (coordinateOfGate_value _ _).symm
  · intro C v
    rw [exponentSetPoleWeight_unitYZ]
    change _=RCN187.poleOrder v.val _
@@ -28825,7 +28831,7 @@ theorem localizedRelation_isMaximal
      (PlaneRing K)).IsMaximal:=hunder'.symm ▸ hJmax
  change (Ideal.map f J).IsMaximal
  rw [hf]
- exact Ideal.IsMaximal.of_isLocalization_of_disjoint
+ apply Ideal.IsMaximal.of_isLocalization_of_disjoint
    (p.primeCompl.map c.toMonoidHom)
 abbrev LocalizedPlane
    (hfinite:
@@ -29035,7 +29041,7 @@ theorem exponent_mul_residueDegree_le_length_quotient_maximal_pow
      (IsLocalRing.ResidueField L):ℕ):ℕ∞) ≤ Module.length R M:=by
    rw [Nat.cast_mul, ←hresidue,
      IsLocalRing.length_restrictScalars R L M]
-   exact mul_le_mul_right' hlocal _
+   gcongr
  let e:=IsLocalization.AtPrime.equivQuotMaximalIdealPow p L n
  have heq:Module.length R (S ⧸ p^n)=Module.length R M:=
    (e.toLinearEquiv.restrictScalars R).length_eq
@@ -29207,7 +29213,7 @@ theorem indexedFiberRelation_isMaximal
    change ((indexedFiberRelation component lam mu nu order ht q hq a).comap
      (algebraMap (PlaneRing Omega) (Polynomial R))).IsMaximal
    simpa only [fiberLocalizePlane] using hunder ▸ hJmax
- exact Ideal.IsMaximal.of_isLocalization_of_disjoint
+ apply Ideal.IsMaximal.of_isLocalization_of_disjoint
    (p.primeCompl.map c.toMonoidHom)
 include hcomponent in
 theorem indexedFiberRelation_injective
@@ -30610,9 +30616,17 @@ instance [CommRing R]:CommRing (DualNumber R) where
 def inlRingHom [CommRing R]:R →+*DualNumber R where
  toFun r:=(r,0)
  map_one':=rfl
- map_mul' _ _:=by ext <;> simp
+ map_mul' x y:=by
+  apply Prod.ext
+  · rfl
+  · show (0:R) = x * 0 + 0 * y
+    simp
  map_zero':=rfl
- map_add' _ _:=by ext <;> simp
+ map_add' x y:=by
+  apply Prod.ext
+  · rfl
+  · show (0:R) = 0 + 0
+    simp
 instance [CommRing K] [CommRing R] [Algebra K R]:Algebra K (DualNumber R) where
  algebraMap:=inlRingHom.comp (algebraMap K R)
  commutes' k x:=by ext <;> simp [mul_comm]
@@ -30647,8 +30661,18 @@ theorem isUnit_of_isUnit_fst [CommRing R] {x:DualNumber R} (hx:IsUnit x.1):
    inv:=((↑u⁻¹:R), -((↑u⁻¹:R)*b*(↑u⁻¹:R)))
    val_inv:=?_
    inv_val:=?_},rfl⟩
- · ext <;> simp [mul_assoc]
- · ext <;> simp [mul_assoc]
+ · apply Prod.ext
+   · show (↑u:R) * ↑u⁻¹ = 1
+     simp
+   · show (↑u:R) * -(↑u⁻¹ * b * ↑u⁻¹) + b * ↑u⁻¹ = (0:R)
+     have h : ((↑u:R)) * ↑u⁻¹ = 1 := u.mul_inv
+     linear_combination (-(b * (↑u⁻¹:R))) * h
+ · apply Prod.ext
+   · show (↑u⁻¹:R) * ↑u = 1
+     simp
+   · show (↑u⁻¹:R) * b + -(↑u⁻¹ * b * ↑u⁻¹) * ↑u = (0:R)
+     have h : ((↑u⁻¹:R)) * ↑u = 1 := u.inv_mul
+     linear_combination (-((↑u⁻¹:R) * b)) * h
 end DualNumber
 end ProximityPrize.SubmissionLower.RCN078
 end PackedLegacy_I8
@@ -30664,14 +30688,23 @@ def derivationDualAlgHom (D:Derivation K R R):R →ₐ[K] DualNumber S where
  map_one':=by
    apply DualNumber.ext <;> simp
  map_mul' x y:=by
-   apply DualNumber.ext
-   · simp
-   · simp [D.leibniz]
-     exact mul_comm _ _
+   apply Prod.ext
+   · show (algebraMap R S) (x*y) = (algebraMap R S) x * (algebraMap R S) y
+     simp
+   · show (algebraMap R S) (D (x*y)) = (algebraMap R S) x * (algebraMap R S) (D y)
+         + (algebraMap R S) (D x) * (algebraMap R S) y
+     rw [D.leibniz]
+     simp [Algebra.smul_def]
+     ring
+
  map_zero':=by
    apply DualNumber.ext <;> simp
  map_add' x y:=by
-   apply DualNumber.ext <;> simp
+   apply Prod.ext
+   · show (algebraMap R S) (x+y) = (algebraMap R S) x + (algebraMap R S) y
+     simp
+   · show (algebraMap R S) (D (x+y)) = (algebraMap R S) (D x) + (algebraMap R S) (D y)
+     simp
  commutes' k:=by
    apply DualNumber.ext
    · exact (IsScalarTower.algebraMap_apply K R S k).symm
@@ -30679,7 +30712,7 @@ def derivationDualAlgHom (D:Derivation K R R):R →ₐ[K] DualNumber S where
 theorem derivationDualAlgHom_isUnit (D:Derivation K R R) (y:M):
    IsUnit (derivationDualAlgHom (S:=S) D y):=by
  apply DualNumber.isUnit_of_isUnit_fst
- simpa [derivationDualAlgHom] using IsLocalization.map_units S y
+ exact IsLocalization.map_units S y
 noncomputable def localizedDualAlgHom (D:Derivation K R R):
    S →ₐ[K] DualNumber S:=
  IsLocalization.liftAlgHom (derivationDualAlgHom_isUnit M D)
@@ -30688,6 +30721,7 @@ theorem localizedDualAlgHom_algebraMap (D:Derivation K R R) (r:R):
    localizedDualAlgHom M D (algebraMap R S r)=
      (algebraMap R S r,algebraMap R S (D r)):=by
  simp [localizedDualAlgHom,derivationDualAlgHom]
+ rfl
 theorem localizedDualAlgHom_fst (D:Derivation K R R) (x:S):
    (localizedDualAlgHom M D x).fst=x:=by
  have hhom:
@@ -30700,6 +30734,7 @@ theorem localizedDualAlgHom_fst (D:Derivation K R R) (x:S):
      apply IsLocalization.ringHom_ext M
      ext r
      simp [DualNumber.fstHom]
+     rfl
    exact AlgHom.ext fun x => RingHom.congr_fun hr x
  exact AlgHom.congr_fun hhom x
 noncomputable def localizationDerivation (D:Derivation K R R):Derivation K S S:=
@@ -31679,8 +31714,8 @@ theorem globalPolynomial_mul_factor
    simp only [reconstructedPolynomial,jetPolynomial_coeff]
    by_cases hj:j<w+1
    · rw [if_pos hj,if_pos hj]
-     rw [jetCoefficient_eq_evaluated_numerator,
-       jetCoefficient_eq_evaluated_numerator]
+     rw [jetCoefficient_eq_evaluated_numerator c (F*Q) v hprod hregprod,
+       jetCoefficient_eq_evaluated_numerator c F v hF hregF]
      change ev (numerator K (F*Q) j)*(ev (polyH K (F*Q)))⁻¹^(2*j)/
          (j.factorial:L)=
        ev (numerator K F j)*(ev (polyH K F))⁻¹^(2*j)/
@@ -33486,8 +33521,7 @@ theorem tangent_component_card_le
      (selectedPoint (polynomialEmbedding K) S.selected) C gamma hgamma
  · intro gamma hgamma
    have hGamma:=hGcGamma hgamma
-   simpa only [ResidualStage.agreementFiber,ResidualStage.Agrees] using
-     hagreement gamma hGamma
+   exact hagreement gamma hGamma
  · exact noLargeSelectedPencil_mono S.selected Gamma Gc w errors
      hGcGamma S.no_large_pencil
 end
@@ -35608,7 +35642,7 @@ theorem localized_surface_residue_ne_zero
  have hmap:source.map eqv.toRingHom=target:=by
    apply Polynomial.ext
    intro n
-   simp only [source,target,Polynomial.coeff_map,Function.comp_apply]
+   simp only [eqv,q,source,target,Polynomial.coeff_map,IsLocalRing.residue,Function.comp_apply]
    exact coefficientResidueEquiv_mk K L order e ht hfinite (P₀.coeff n)
  intro hzero
  apply hspecial
@@ -36564,9 +36598,11 @@ theorem activeNestedUnitFamily_zCost_eq_flagCost
            (MvPolynomial.X (zOrder 0)))
          (activeNestedZGate base hactive hZ hSderiv D a)):=by
  rw [activeNestedUnitFamily_zCost]
- rw [coordinateOfGate_degree_of_transcendental _ _ a.2]
- rw [coordinateOfGate_degree_of_transcendental _ _
-   (activeNestedZTranscendental base hactive hSderiv D a)]
+ -- `rw` cannot unify the gate proof argument with the goal's; term-mode
+ -- elaboration of the same lemma can.
+ refine (coordinateOfGate_degree_of_transcendental _ _ a.2).trans ?_
+ refine Eq.trans ?_ (coordinateOfGate_degree_of_transcendental _ _
+   (activeNestedZTranscendental base hactive hSderiv D a)).symm
  rw [elementEmbedding_congr
    (activeNestedZTranscendental base hactive hSderiv D a) a.2
    (by simp [zOrder,flagEvaluation_X_two])]
@@ -38030,8 +38066,7 @@ theorem actual_identityCurveCountProvider
        (selectedPoint (polynomialEmbedding K) S.selected) C γ hγ
    · intro γ hγ
      have hΓ:=hGcΓ hγ
-     simpa only [ResidualStage.agreementFiber,ResidualStage.Agrees] using
-       hagreement γ hΓ
+     exact hagreement γ hΓ
    · exact noLargeSelectedPencil_mono S.selected Γ Gc w e hGcΓ S.no_large_pencil
  · have hz:=U.family.sum_zDegree_le
    have hyz:=U.family.sum_yzDegree_le
@@ -38509,7 +38544,7 @@ def reconstruct (D w L s:ℕ) (theta:CoefficientIndex D w L s → K):
    MvPolynomial.monomial (columnExponent c) (theta c)
 theorem reconstruct_coeff (D w L s:ℕ)
    (theta:CoefficientIndex D w L s → K) (c:CoefficientIndex D w L s):
-   MvPolynomial.coeff (columnExponent c) (reconstruct K D w L s theta)=
+   AddMonoidAlgebra.coeff (reconstruct K D w L s theta) (columnExponent c)=
      theta c:=by
  classical
  simp [reconstruct,MvPolynomial.coeff_sum,
@@ -38521,7 +38556,7 @@ theorem reconstruct_injective (D w L s:ℕ):
    Function.Injective (reconstruct K D w L s):=by
  intro theta eta h
  funext c
- have hh:=congrArg (MvPolynomial.coeff (columnExponent c)) h
+ have hh:=congrArg (AddMonoidAlgebra.coeff · (columnExponent c)) h
  simpa only [reconstruct_coeff] using hh
 theorem reconstruct_ne_zero (D w L s:ℕ)
    (theta:CoefficientIndex D w L s → K) (htheta:theta≠0):

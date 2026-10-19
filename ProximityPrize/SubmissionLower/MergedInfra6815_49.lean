@@ -81,8 +81,22 @@ theorem raw_count
     hcaps.1 hcaps.2.1 hcaps.2.2 F.1 hF.1.ne_zero hb
     (MovingFiberOrdinary6815.own_support F.1) selected Gamma u0 u1
     hdegree hagreement hno Fself hs
-  simpa only [RCN140.regularSeeds,regularCumulativeFlag,Fself,
-    LocatorCoprimeQuotient.regularIndexSelf_val] using hc
+  first
+  | simpa only [RCN140.regularSeeds,regularCumulativeFlag,Fself,
+      LocatorCoprimeQuotient.regularIndexSelf_val] using hc
+  | (simp only [RCN140.regularSeeds,regularCumulativeFlag,Fself,
+      LocatorCoprimeQuotient.regularIndexSelf_val]
+     convert hc using 1 <;> first | rfl | simp | exact Subsingleton.elim _ _ | omega)
+  | (simp only [RCN140.regularSeeds,regularCumulativeFlag,Fself,
+      LocatorCoprimeQuotient.regularIndexSelf_val]
+     convert hc using 2 <;> first | rfl | simp | exact Subsingleton.elim _ _ | omega)
+  | (simp only [RCN140.regularSeeds,regularCumulativeFlag,Fself,
+      LocatorCoprimeQuotient.regularIndexSelf_val]
+     convert hc using 3 <;> first | rfl | simp | exact Subsingleton.elim _ _ | omega)
+  | (simp only [RCN140.regularSeeds,regularCumulativeFlag,Fself,
+      LocatorCoprimeQuotient.regularIndexSelf_val]
+     convert hc using 4 <;> first | rfl | simp | exact Subsingleton.elim _ _ | omega)
+  | exact hc
 
 theorem root_count_group (g : Fin 21)
     (D : ℕ) (P : ResidualSupportParameters)

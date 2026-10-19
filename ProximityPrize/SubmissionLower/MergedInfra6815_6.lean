@@ -1112,8 +1112,7 @@ theorem actual_identityCurveCountProvider
        (selectedPoint (polynomialEmbedding K) S.selected) C γ hγ
    · intro γ hγ
      have hΓ:=hGcΓ hγ
-     simpa only [ResidualStage.agreementFiber,ResidualStage.Agrees] using
-       hagreement γ hΓ
+     exact hagreement γ hΓ
    · exact noLargeSelectedPencil_mono S.selected Γ Gc w e hGcΓ S.no_large_pencil
  · have hz:=U.family.sum_zDegree_le
    have hyz:=U.family.sum_yzDegree_le

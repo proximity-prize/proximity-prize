@@ -1404,15 +1404,14 @@ theorem homogenized_zero_eq (F : Poly4 K) :
   | mul_X F i hF => simpa only [map_mul] using congrArg₂ (· * ·) hF (hgen i)
 
 theorem translated_zero_coeff (F : Poly4 K) (d : Fin 4 →₀ ℕ) :
-    MvPolynomial.coeff d.tail
-        ((homogenizedTranslation K 0 0 0 F).coeff (d 0+d 1)) = MvPolynomial.coeff d F := by
+    AddMonoidAlgebra.coeff ((homogenizedTranslation K 0 0 0 F).coeff (d 0+d 1)) d.tail = AddMonoidAlgebra.coeff F d := by
   rw [homogenized_zero_eq, MvPolynomial.finSuccEquiv_coeff_coeff]
   have he : Finsupp.cons (d 0+d 1) d.tail = blowupExponent d := by
     ext i
     fin_cases i <;> simp [blowupExponent] <;> rfl
   rw [he]
   change Finsupp.mapDomain blowupExponent (AddMonoidAlgebra.coeff F) (blowupExponent d) = _
-  exact Finsupp.mapDomain_apply blowupExponent_injective _ _
+  exact Finsupp.mapDomain_apply_of_injective blowupExponent_injective _ _
 
 theorem X_dvd_of_contact_large {DF T R B : ℕ} (F : Poly4 K)
     (hbox : F ∈ globalCoefficientBox K DF 1 T R) (hY : F.degreeOf 1 ≤ B)
@@ -1435,7 +1434,7 @@ theorem X_dvd_of_contact_large {DF T R B : ℕ} (F : Poly4 K)
     have he := congrArg Subtype.val hp0
     rw [blocksOf_coeff] at he
     exact he
-  have hc (d : Fin 4 →₀ ℕ) (hd : d 0 = 0) : MvPolynomial.coeff d F = 0 := by
+  have hc (d : Fin 4 →₀ ℕ) (hd : d 0 = 0) : AddMonoidAlgebra.coeff F d = 0 := by
     by_contra hne
     have hd1 := MvPolynomial.degreeOf_le_iff.mp hY d (MvPolynomial.mem_support_iff.mpr hne)
     have he := translated_zero_coeff K F d

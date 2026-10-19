@@ -1,5 +1,5 @@
 name: version guard
-# The one cheap check kept when the heavy Lean CI was removed: fail if a served
+# Cheap contract checks kept when the heavy Lean CI was removed: fail if a served
 # challenge version is hardcoded anywhere but challenges.json, or if benchmark.yml
 # stops resolving it via challenges.py. Pure Python, seconds -- it exists so a
 # version bump stays a one-line challenges.json edit and drift is loud.
@@ -9,6 +9,8 @@ on:
     # so this workflow never runs on, or gates, a submission PR.
     paths:
       - challenges.json
+      - benchmark.json
+      - benchmark/comparator*.json
       - scripts/**
       - .github/workflows/**
   workflow_dispatch:
@@ -20,3 +22,7 @@ jobs:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
       - name: Version drift guard
         run: python3 scripts/check-versions.py
+      - name: Challenge isolation guard
+        run: python3 scripts/check-track-isolation.py
+      - name: Profile routing regressions
+        run: python3 scripts/test-benchmark-profiles.py

@@ -1,0 +1,13 @@
+{
+  "challenge_module": "ProximityPrize.Benchmark.BinaryChallenge",
+  "solution_module": "ProximityPrize.SubmissionBinaryLower.Solution",
+  "theorem_names": [
+    "ProximityPrize.Benchmark.Binary.candidate"
+  ],
+  "permitted_axioms": [
+    "propext",
+    "Quot.sound",
+    "Classical.choice"
+  ],
+  "enable_nanoda": false
+}

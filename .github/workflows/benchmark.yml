@@ -17,6 +17,8 @@ on:
         options:
           - lower
           - upper
+          - binary-lower
+          - binary-upper
 
 permissions:
   id-token: write
@@ -63,18 +65,7 @@ jobs:
       - name: Resolve immutable challenge policy
         shell: bash
         run: |
-          case "$PROFILE" in
-            lower)
-              challenge=proximity-prize-reduction-lower
-              ;;
-            upper)
-              challenge=proximity-prize-reduction-upper
-              ;;
-            *)
-              echo "unknown benchmark profile: $PROFILE" >&2
-              exit 2
-              ;;
-          esac
+          challenge="$(python3 scripts/benchmark_profiles.py challenge "$PROFILE")"
           echo "CHALLENGE=$challenge" >> "$GITHUB_ENV"
           echo "CHALLENGE_VERSION=$(python3 scripts/challenges.py version "$challenge")" >> "$GITHUB_ENV"
 

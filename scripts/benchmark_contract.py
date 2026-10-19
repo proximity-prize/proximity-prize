@@ -14,8 +14,6 @@ from typing import Any
 MAX_CENTIBITS = 100_000
 MAX_FRACTION_COMPONENT = 2**63 - 1
 MIN_UNSAFE_INDEX = 1
-MAX_UNSAFE_INDEX = 131_072
-DOMAIN_SIZE = 2**18
 MAX_SCALAR_BYTES = 128
 MAX_RESULT_BYTES = 4 * 1024 * 1024
 FULL_COMMIT_RE = re.compile(r"^[0-9a-f]{40}$")
@@ -71,12 +69,20 @@ def parse_radius(raw: str) -> tuple[int, int]:
     return numerator, denominator
 
 
-def parse_unsafe_index(raw: str, *, label: str = "unsafe index") -> int:
+def parse_unsafe_index(
+    raw: str, *, maximum: int, label: str = "unsafe index"
+) -> int:
+    """Parse an unsafe index against a caller-supplied per-profile ceiling.
+
+    `maximum` is deliberately required: the ceiling is `domainSize / 2`, which
+    differs per profile (2^17 for KoalaBear, 2^20 for the binary tracks). A
+    shared default here would silently reject valid binary claims.
+    """
     return parse_nat(
         raw,
         label=label,
         minimum=MIN_UNSAFE_INDEX,
-        maximum=MAX_UNSAFE_INDEX,
+        maximum=maximum,
     )
 
 
@@ -140,7 +146,14 @@ def parse_commit(value: object, *, label: str) -> str:
     return value
 
 
-def arklib_revision(manifest_path: str | Path = "lake-manifest.json") -> str:
+def manifest_package(
+    name: str, manifest_path: str | Path = "lake-manifest.json"
+) -> dict:
+    """The single manifest entry for `name`.
+
+    Exactly one is required: a duplicate entry would make "the pinned revision"
+    ambiguous, which is the one thing these accessors exist to answer.
+    """
     manifest = load_json_object(manifest_path)
     packages = manifest.get("packages")
     if not isinstance(packages, list):
@@ -148,11 +161,57 @@ def arklib_revision(manifest_path: str | Path = "lake-manifest.json") -> str:
     matches = [
         package
         for package in packages
-        if isinstance(package, dict) and package.get("name") == "Arklib"
+        if isinstance(package, dict) and package.get("name") == name
     ]
     if len(matches) != 1:
-        raise ValueError("lake-manifest.json must contain exactly one Arklib package")
-    return parse_commit(matches[0].get("rev"), label="Arklib revision")
+        raise ValueError(
+            f"lake-manifest.json must contain exactly one {name} package"
+        )
+    return matches[0]
+
+
+def arklib_revision(manifest_path: str | Path = "lake-manifest.json") -> str:
+    package = manifest_package("Arklib", manifest_path)
+    return parse_commit(package.get("rev"), label="Arklib revision")
+
+
+def lean_toolchain(path: str | Path = "lean-toolchain") -> str:
+    """The Lean toolchain a result was produced under.
+
+    Recorded in every score artifact so an accepted result stays interpretable
+    after the toolchain moves: a score verified under an older Lean is still a
+    fact about that Lean, and without this the artifact cannot say so.
+    """
+    value = read_scalar(path)
+    if not value.startswith("leanprover/lean4:"):
+        raise ValueError(f"{path} must name a leanprover/lean4 toolchain")
+    return value
+
+
+def comppoly_source(
+    manifest_path: str | Path = "lake-manifest.json",
+) -> tuple[str, str]:
+    """Which CompPoly a result was verified against: `(url, rev)`.
+
+    The revision is not sufficient on its own, and not merely as a
+    belt-and-braces matter. CompPoly has no require block here -- its URL comes
+    from ArkLib's lakefile -- but a manifest can name a *different* repository
+    than the lakefile it was resolved from, and production's does: ArkLib
+    e6519789 declares `Verified-zkEVM/CompPoly` at tag v4.32.2, while the
+    manifest beside it records `zksecurity/CompPoly` at branch
+    `rabin-explicit-q`. A commit hash means nothing outside the repository that
+    contains it, so recording the revision alone would describe those two
+    accepted results as verified against a library they never saw.
+
+    That also makes this the one dependency `arklibRev` cannot determine: every
+    other package in the manifest is fixed transitively by ArkLib's revision,
+    so the pair below plus `lean_toolchain` is the whole trusted base.
+    """
+    package = manifest_package("CompPoly", manifest_path)
+    url = package.get("url")
+    if not isinstance(url, str) or not url.startswith("https://"):
+        raise ValueError("CompPoly manifest entry has no https url")
+    return url.rstrip("/"), parse_commit(package.get("rev"), label="CompPoly revision")
 
 
 def submission_revision() -> str:

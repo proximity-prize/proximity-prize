@@ -50,6 +50,10 @@ TOKEN_REFRESH_SECONDS = 240      # well inside the service's 600s ceiling
 
 # Every state the service can stop in. `rejected` is a verdict about the proof;
 # the others are failures of everything around it, and mean something different.
+# `cancelled` is neither: the caller withdrew the request. It is here because
+# this set has to enumerate every state the service can stop in -- a status
+# missing from it is polled until the job's own timeout, long after the answer
+# arrived.
 TERMINAL = {"verified", "rejected", "failed", "source_failed", "timeout", "cancelled"}
 
 

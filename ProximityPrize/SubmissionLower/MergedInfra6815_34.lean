@@ -316,6 +316,7 @@ theorem wide_rows_all (b : Band) (d : Rectangle) (T nu : ℕ) (hshape : WideShap
 variable (K I : Type) [Field K] [CharP K 2130706433] [Fintype I] [DecidableEq I]
 local instance wideRectDecEqK : DecidableEq K := Classical.decEq K
 
+set_option maxRecDepth 1000000 in
 theorem regular_count_of_wide_rectangle (b : Band) (d : Rectangle) (hvalid : WideValid b d)
     {DF T nu : ℕ} {H : Poly4 K} (F : RCN266.RegularIndex H)
     (hbox : F.val∈globalCoefficientBox K DF 1 T b.R)

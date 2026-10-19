@@ -52,6 +52,7 @@ lemma dot_zero_fiber_card_mul {k : ℕ} {d : Fin k → F} (hd : d ≠ 0) :
   rw [hsum]
   simp_rw [hfiber]
   simp [K, φ, Nat.mul_comm]
+  rfl
 
 lemma exists_dot_offdiag_le {k : ℕ} (A : Finset (Fin k → F)) :
     ∃ v : Fin k → F,

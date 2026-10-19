@@ -69,10 +69,25 @@ fi
 lake exe cache get || true
 
 # Precompile the public library root and its locked dependency closure. The
-# public root imports both protected benchmark targets.
+# public root imports all four protected benchmark targets.
 lake build ProximityPrize
 
-# Audit both protected contracts independently of submitted theorems.
+# Audit all protected contracts independently of submitted theorems.
 lake env lean scripts/check-axioms.lean
+
+# The published geometry must be the geometry Lean has. Here for the same reason
+# the axiom audit is: this is the only place a built environment exists, and it
+# reads only `ProximityPrize`, already built above. A property of the repository
+# rather than of a submission, so it gives the same answer on every run -- about
+# 8s against a build that takes minutes.
+#
+# The claim/proof check is deliberately NOT here, for two reasons. Its emitter
+# imports all four `Submission*/Solution` modules, so running it would compile
+# the submitted solution and break the invariant above -- Comparator must be the
+# first process to compile it. And it would be redundant: `benchmark.sh` renders
+# the trusted statement from `score.txt` and the claim file, and Comparator
+# checks the submission against that, so the binding already holds here.
+lake env lean --run scripts/emit-profile-geometry.lean \
+  | python3 scripts/check-profile-geometry.py
 
 echo "benchmark setup complete"

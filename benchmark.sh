@@ -6,29 +6,20 @@ cd "${root}"
 
 export PATH="${HOME}/.elan/bin:${PATH}"
 
-[[ "$#" -eq 1 ]] || { echo "usage: ./benchmark.sh lower|upper" >&2; exit 2; }
+[[ "$#" -eq 1 ]] || { echo "usage: ./benchmark.sh lower|upper|binary-lower|binary-upper" >&2; exit 2; }
 
 profile="$1"
-case "${profile}" in
-  lower)
-    track="irs-reduction-threshold-lower"
-    submission_dir="${root}/ProximityPrize/SubmissionLower"
-    challenge_path="${root}/ProximityPrize/Benchmark/Challenge.lean"
-    claim_path="${submission_dir}/radius.txt"
-    comparator_config="benchmark/comparator.json"
-    ;;
-  upper)
-    track="irs-reduction-threshold-upper"
-    submission_dir="${root}/ProximityPrize/SubmissionUpper"
-    challenge_path="${root}/ProximityPrize/Benchmark/ChallengeUpper.lean"
-    claim_path="${submission_dir}/unsafe-index.txt"
-    comparator_config="benchmark/comparator-upper.json"
-    ;;
-  *)
-    echo "unknown benchmark profile: ${profile}" >&2
-    exit 2
-    ;;
-esac
+# Read line-by-line rather than with `mapfile`, which needs bash >= 4. macOS
+# ships bash 3.2, and these scripts are run by hand outside CI too.
+policy=()
+while IFS= read -r line; do policy+=("${line}"); done \
+  < <(python3 scripts/benchmark_profiles.py shell "${profile}")
+[[ "${#policy[@]}" -eq 5 ]] || { echo "invalid benchmark profile: ${profile}" >&2; exit 2; }
+track="${policy[0]}"
+submission_dir="${root}/${policy[1]}"
+challenge_path="${root}/${policy[2]}"
+claim_path="${submission_dir}/${policy[3]}"
+comparator_config="${policy[4]}"
 
 rm -f "${root}/.yukon/${track}-score.json" \
   "${root}/benchmark-results/${track}-summary.md"

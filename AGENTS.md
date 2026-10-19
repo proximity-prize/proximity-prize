@@ -10,6 +10,11 @@ When changing or preparing submissions for the reduction-threshold benchmarks:
    Ignore the umbrella `ProximityPrize.lean` when preparing a submission; do
    not import `ProximityPrize`.
 
+   Binary lower submissions use `ProximityPrize.Benchmark.BinaryTargetLower`
+   and `ProximityPrize.SubmissionBinaryLower`; binary upper submissions use
+   `ProximityPrize.Benchmark.BinaryTargetUpper` and
+   `ProximityPrize.SubmissionBinaryUpper`. Cross-profile imports are forbidden.
+
    **`Mathlib`, `ArkLib` and `CompPoly` may be imported freely**, at any depth.
 2. Keep each submission root flat. Put `Solution.lean`, every helper `.lean`
    file, `score.txt`, and the track-specific claim file directly in that root.

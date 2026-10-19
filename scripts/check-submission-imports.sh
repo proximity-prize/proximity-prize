@@ -8,22 +8,15 @@ fi
 
 profile="$1"
 submission_dir="$2"
-case "${profile}" in
-  lower)
-    submission_module="ProximityPrize.SubmissionLower."
-    target_module="ProximityPrize.Benchmark.TargetLower"
-    claim_file="radius.txt"
-    ;;
-  upper)
-    submission_module="ProximityPrize.SubmissionUpper."
-    target_module="ProximityPrize.Benchmark.TargetUpper"
-    claim_file="unsafe-index.txt"
-    ;;
-  *)
-    echo "unknown submission profile: ${profile}" >&2
-    exit 2
-    ;;
-esac
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# `mapfile` needs bash >= 4; macOS ships 3.2.
+policy=()
+while IFS= read -r line; do policy+=("${line}"); done \
+  < <(python3 "${script_dir}/benchmark_profiles.py" imports "${profile}")
+[[ "${#policy[@]}" -eq 3 ]] || { echo "invalid submission profile: ${profile}" >&2; exit 2; }
+submission_module="${policy[0]}"
+target_module="${policy[1]}"
+claim_file="${policy[2]}"
 
 [[ -d "${submission_dir}" && ! -L "${submission_dir}" ]] || {
   echo "missing submission directory: ${submission_dir}" >&2
