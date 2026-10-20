@@ -85,53 +85,65 @@ theorem pair_lower (A k i : ℕ) (hik : i ≤ k) :
   simp only [Nat.add_sub_cancel_left]
   nlinarith
 
-/-- Squared upper bound on the ascending factorial, via pairing. -/
-theorem prod_sq_up :
-    4 ^ 32743 * (∏ i ∈ Finset.range 32743, (1048576 + 1 + i)) ^ 2 ≤ 2129896 ^ 65486 := by
-  have hrefl : (∏ i ∈ Finset.range 32743, (1048576 + 1 + (32743 - 1 - i)))
-      = ∏ i ∈ Finset.range 32743, (1048576 + 1 + i) :=
-    Finset.prod_range_reflect (fun i => 1048576 + 1 + i) 32743
-  have hsq : (∏ i ∈ Finset.range 32743,
-        ((1048576 + 1 + i) * (1048576 + 1 + (32743 - 1 - i))))
-      = (∏ i ∈ Finset.range 32743, (1048576 + 1 + i)) ^ 2 := by
+/-- Squared upper bound on the ascending factorial, via pairing, for symbolic `A` and `k`. -/
+theorem prod_sq_up_gen (A k : ℕ) :
+    4 ^ k * (∏ i ∈ Finset.range k, (A + 1 + i)) ^ 2 ≤ ((2 * A + k + 1) ^ 2) ^ k := by
+  have hrefl : (∏ i ∈ Finset.range k, (A + 1 + (k - 1 - i))) = ∏ i ∈ Finset.range k, (A + 1 + i) :=
+    Finset.prod_range_reflect (fun i => A + 1 + i) k
+  have hsq : (∏ i ∈ Finset.range k, ((A + 1 + i) * (A + 1 + (k - 1 - i))))
+      = (∏ i ∈ Finset.range k, (A + 1 + i)) ^ 2 := by
     rw [Finset.prod_mul_distrib, hrefl, ← pow_two]
-  have h4 : (4 : ℕ) ^ 32743 = ∏ _i ∈ Finset.range 32743, (4 : ℕ) := by
+  have h4 : (4 : ℕ) ^ k = ∏ _i ∈ Finset.range k, (4 : ℕ) := by
     rw [Finset.prod_const, Finset.card_range]
-  have hR : (2129896 : ℕ) ^ 65486 = ∏ _i ∈ Finset.range 32743, ((2129896 : ℕ) ^ 2) := by
-    rw [Finset.prod_const, Finset.card_range, ← pow_mul]
+  have hR : ((2 * A + k + 1) ^ 2) ^ k = ∏ _i ∈ Finset.range k, (2 * A + k + 1) ^ 2 := by
+    rw [Finset.prod_const, Finset.card_range]
   rw [← hsq, h4, hR, ← Finset.prod_mul_distrib]
   refine Finset.prod_le_prod' ?_
   intro i hi
   have hik := Finset.mem_range.mp hi
-  have hsum : (1048576 + 1 + i) + (1048576 + 1 + (32743 - 1 - i)) = 2129896 := by omega
-  calc 4 * ((1048576 + 1 + i) * (1048576 + 1 + (32743 - 1 - i)))
-      ≤ ((1048576 + 1 + i) + (1048576 + 1 + (32743 - 1 - i))) ^ 2 := four_mul_le_sq _ _
-    _ = 2129896 ^ 2 := by rw [hsum]
+  have hsum : (A + 1 + i) + (A + 1 + (k - 1 - i)) = 2 * A + k + 1 := by omega
+  calc 4 * ((A + 1 + i) * (A + 1 + (k - 1 - i)))
+      ≤ ((A + 1 + i) + (A + 1 + (k - 1 - i))) ^ 2 := four_mul_le_sq _ _
+    _ = (2 * A + k + 1) ^ 2 := by rw [hsum]
 
-/-- Squared lower bound on the descending factorial, via pairing. -/
-theorem prod_sq_lo :
-    ((1048576 : ℕ) * 1015834) ^ 32743
-      ≤ (∏ i ∈ Finset.range 32743, (2097152 - 1048576 - i)) ^ 2 := by
-  have hrefl : (∏ i ∈ Finset.range 32743, (2097152 - 1048576 - (32743 - 1 - i)))
-      = ∏ i ∈ Finset.range 32743, (2097152 - 1048576 - i) :=
-    Finset.prod_range_reflect (fun i => 2097152 - 1048576 - i) 32743
-  have hsq : (∏ i ∈ Finset.range 32743,
-        ((2097152 - 1048576 - i) * (2097152 - 1048576 - (32743 - 1 - i))))
-      = (∏ i ∈ Finset.range 32743, (2097152 - 1048576 - i)) ^ 2 := by
+theorem prod_sq_up :
+    4 ^ 32743 * (∏ i ∈ Finset.range 32743, (1048576 + 1 + i)) ^ 2 ≤ 2129896 ^ 65486 := by
+  have h := prod_sq_up_gen 1048576 32743
+  have e1 : 2 * 1048576 + 32743 + 1 = 2129896 := by norm_num
+  have e2 : (2 : ℕ) * 32743 = 65486 := by norm_num
+  rw [e1, ← pow_mul, e2] at h
+  exact h
+
+/-- Squared lower bound on the descending factorial, via pairing, for symbolic `B` and `k`. -/
+theorem prod_sq_lo_gen (B k : ℕ) :
+    ((B + k) * B) ^ (k + 1) ≤ (∏ i ∈ Finset.range (k + 1), (B + k - i)) ^ 2 := by
+  have hrefl : (∏ i ∈ Finset.range (k + 1), (B + k - (k + 1 - 1 - i)))
+      = ∏ i ∈ Finset.range (k + 1), (B + k - i) :=
+    Finset.prod_range_reflect (fun i => B + k - i) (k + 1)
+  have hsq : (∏ i ∈ Finset.range (k + 1), ((B + k - i) * (B + k - (k + 1 - 1 - i))))
+      = (∏ i ∈ Finset.range (k + 1), (B + k - i)) ^ 2 := by
     rw [Finset.prod_mul_distrib, hrefl, ← pow_two]
-  have hL : ((1048576 : ℕ) * 1015834) ^ 32743
-      = ∏ _i ∈ Finset.range 32743, ((1048576 : ℕ) * 1015834) := by
+  have hL : ((B + k) * B) ^ (k + 1) = ∏ _i ∈ Finset.range (k + 1), ((B + k) * B) := by
     rw [Finset.prod_const, Finset.card_range]
   rw [← hsq, hL]
   refine Finset.prod_le_prod' ?_
   intro i hi
   have hik := Finset.mem_range.mp hi
-  have e1 : 2097152 - 1048576 - i = 1015834 + (32742 - i) := by omega
-  have e2 : 2097152 - 1048576 - (32743 - 1 - i) = 1015834 + i := by omega
-  have e3 : (1048576 : ℕ) * 1015834 = (1015834 + 32742) * 1015834 := by norm_num
-  rw [e1, e2, e3]
-  exact pair_lower 1015834 32742 i (by omega)
+  have e1 : B + k - i = B + (k - i) := by omega
+  have e2 : B + k - (k + 1 - 1 - i) = B + i := by omega
+  rw [e1, e2]
+  exact pair_lower B k i (by omega)
 
+theorem prod_sq_lo :
+    ((1048576 : ℕ) * 1015834) ^ 32743
+      ≤ (∏ i ∈ Finset.range 32743, (2097152 - 1048576 - i)) ^ 2 := by
+  have h := prod_sq_lo_gen 1015834 32742
+  have hp : (∏ i ∈ Finset.range (32742 + 1), (1015834 + 32742 - i))
+      = ∏ i ∈ Finset.range 32743, (2097152 - 1048576 - i) := by
+    refine Finset.prod_congr rfl fun i _ => ?_
+    omega
+  rw [hp] at h
+  exact h
 
 theorem choose_shift (N a : ℕ) : ∀ b : ℕ,
     N.choose (a + b) * (∏ i ∈ Finset.range b, (a + 1 + i))
