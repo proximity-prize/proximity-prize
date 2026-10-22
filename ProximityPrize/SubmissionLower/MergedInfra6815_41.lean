@@ -115,17 +115,17 @@ open MovingSourceCarrierField6814 MovingSourceCoupledClearing6814 MovingFiberThr
 open RCN234 RCN156
 
 def caps (p : Parameters) : PacketPortfolioAvoidance6815.SourceCaps :=
-  ⟨p.m*181245,p.L,p.B,p.s,p.U⟩
+  ⟨p.m*181235,p.L,p.B,p.s,p.U⟩
 
 variable {K N : Type} [Field K] [Fintype N]
 
 theorem weighted_bounds (p : Parameters) (hp : Shape p) (P : Poly (K:=K)) (hb : Bounds p P) :
     PacketPortfolioAvoidance6815.Bounds (caps p) P := by
-  have hc : weightedTotalDegree codeWeights P≤p.m*181245-1 := by
+  have hc : weightedTotalDegree codeWeights P≤p.m*181235-1 := by
     apply Finset.sup_le
     intro e he
     have hh := (hb e he).2.2.2.2
-    have hcut : p.cutoff (e 1)≤p.m*181245 := Nat.sub_le _ _
+    have hcut : p.cutoff (e 1)≤p.m*181235 := Nat.sub_le _ _
     simp [weight_coords,codeWeights]
     omega
   have hm : 0<p.m := lt_of_le_of_lt (Nat.zero_le _) hp.contact

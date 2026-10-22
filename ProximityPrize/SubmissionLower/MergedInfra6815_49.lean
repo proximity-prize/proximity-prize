@@ -29,9 +29,9 @@ theorem source_count
     (kernel : PhaseKernelRealization sound u0 u1)
     (H : P4) (selected : K → Polynomial K) (Gamma : Finset K)
     (hdegree : ∀ g ∈ Gamma, (selected g).natDegree ≤ 131071)
-    (hagreement : ∀ g ∈ Gamma, 181245 ≤ ((Finset.univ : Finset I).filter (fun i =>
+    (hagreement : ∀ g ∈ Gamma, 181235 ≤ ((Finset.univ : Finset I).filter (fun i =>
       (selected g).eval (IRSProfile.domain i)=u0 i+g*u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80899)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80909)
     (F : RegularIndex H)
     (hR : (regularCumulativeFlag H F).all ≤ 39)
     (hY : middle (regularCumulativeFlag H F) ≤ 182)
@@ -56,9 +56,9 @@ theorem raw_count
     (hbox : Q ∈ globalCoefficientBox K D 131071 P.total P.s)
     (selected : K → Polynomial K) (Gamma : Finset K) (u0 u1 : I → K)
     (hdegree : ∀ g ∈ Gamma, (selected g).natDegree ≤ 131071)
-    (hagreement : ∀ g ∈ Gamma, 181245 ≤ ((Finset.univ : Finset I).filter (fun i =>
+    (hagreement : ∀ g ∈ Gamma, 181235 ≤ ((Finset.univ : Finset I).filter (fun i =>
       (selected g).eval (IRSProfile.domain i)=u0 i+g*u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80899)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80909)
     (F : RegularIndex Q)
     (hr : (regularCumulativeFlag Q F).all ≤ 32)
     (hy : middle (regularCumulativeFlag Q F) ≤ 149)
@@ -105,9 +105,9 @@ theorem root_count_group (g : Fin 21)
     (hbox : Q ∈ globalCoefficientBox K D 131071 P.total P.s)
     (selected : K → Polynomial K) (Gamma : Finset K) (u0 u1 : I → K)
     (hdegree : ∀ g ∈ Gamma, (selected g).natDegree ≤ 131071)
-    (hagreement : ∀ g ∈ Gamma, 181245 ≤ ((Finset.univ : Finset I).filter (fun i =>
+    (hagreement : ∀ g ∈ Gamma, 181235 ≤ ((Finset.univ : Finset I).filter (fun i =>
       (selected g).eval (IRSProfile.domain i)=u0 i+g*u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80899)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80909)
     (F : RegularIndex Q)
     (hr : (regularCumulativeFlag Q F).all ≤ 31)
     (hy : middle (regularCumulativeFlag Q F) ≤ 142)
@@ -129,7 +129,7 @@ theorem root_count_group (g : Fin 21)
     (fun g hg => hdegree g (hsub hg)) (fun g hg => hagreement g (hsub hg))
     (fun g hg => (Finset.mem_filter.mp hg).2.1)
     (fun g hg => (Finset.mem_filter.mp hg).2.2)
-    (noLargeSelectedPencil_mono selected Gamma _ 131071 80899 hsub hno)
+    (noLargeSelectedPencil_mono selected Gamma _ 131071 80909 hsub hno)
     (by norm_num [I,IRSProfile.Index]) ha
   exact hcount
 
@@ -139,9 +139,9 @@ theorem root_count
     (Q : P4) (hQ : Q ≠ 0) (hbox : Q ∈ globalCoefficientBox K D 131071 P.total P.s)
     (selected : K → Polynomial K) (Gamma : Finset K) (u0 u1 : I → K)
     (hdegree : ∀ g ∈ Gamma, (selected g).natDegree ≤ 131071)
-    (hagreement : ∀ g ∈ Gamma, 181245 ≤ ((Finset.univ : Finset I).filter (fun i =>
+    (hagreement : ∀ g ∈ Gamma, 181235 ≤ ((Finset.univ : Finset I).filter (fun i =>
       (selected g).eval (IRSProfile.domain i)=u0 i+g*u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80899) (F : RegularIndex Q)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80909) (F : RegularIndex Q)
     (th : Array ℕ) (w : ℕ) (hw : 1≤w) (hw16 : w≤21)
     (ha : MovingFiberSingleCore6815.Active th w (regularCumulativeFlag Q F).all
       (regularCumulativeFlag Q F).yz (regularCumulativeFlag Q F).zOnly
@@ -275,9 +275,9 @@ theorem count_of_choice
     (Q : P4) (hQ : Q ≠ 0) (hbox : Q ∈ globalCoefficientBox K D 131071 P.total P.s)
     (selected : K → Polynomial K) (Gamma : Finset K) (u0 u1 : I → K)
     (hdegree : ∀ g ∈ Gamma, (selected g).natDegree ≤ 131071)
-    (hagreement : ∀ g ∈ Gamma, 181245 ≤ ((Finset.univ : Finset I).filter (fun i =>
+    (hagreement : ∀ g ∈ Gamma, 181235 ≤ ((Finset.univ : Finset I).filter (fun i =>
       (selected g).eval (IRSProfile.domain i)=u0 i+g*u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80899)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80909)
     (F : RegularIndex Q) (hr : (regularCumulativeFlag Q F).all≤39)
     (hy : middle (regularCumulativeFlag Q F)≤182) (ht : total (regularCumulativeFlag Q F)≤11192)
     (c : MovingFiberSingleCore6815.Carrier) (th : Array ℕ) (who : ℕ)
@@ -332,9 +332,9 @@ theorem count_of_curve
     (Q : P4) (hQ : Q ≠ 0) (hbox : Q ∈ globalCoefficientBox K D 131071 P.total P.s)
     (selected : K → Polynomial K) (Gamma : Finset K) (u0 u1 : I → K)
     (hdegree : ∀ g ∈ Gamma, (selected g).natDegree ≤ 131071)
-    (hagreement : ∀ g ∈ Gamma, 181245 ≤ ((Finset.univ : Finset I).filter (fun i =>
+    (hagreement : ∀ g ∈ Gamma, 181235 ≤ ((Finset.univ : Finset I).filter (fun i =>
       (selected g).eval (IRSProfile.domain i)=u0 i+g*u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80899)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80909)
     (F : RegularIndex Q) (hr : (regularCumulativeFlag Q F).all≤39)
     (hy : middle (regularCumulativeFlag Q F)≤182) (ht : total (regularCumulativeFlag Q F)≤11192)
     (th : Array ℕ) (curve runs : List FinalCurves6815.Piece)

@@ -33,13 +33,13 @@ theorem routeable_raw_mono_z
   have hbox : s.totalCap - (r + v + z₂) ≤
       s.totalCap - (r + v + z₁) := Nat.sub_le_sub_left htotal _
   have hsameFuel :
-      powerBandBudget 50175 (r + v + z₂) (r + v) r
+      powerBandBudget 50165 (r + v + z₂) (r + v) r
           (s.totalCap - (r + v + z₂)) (s.middleCap - (r + v))
           (s.slopeCap - r) (s.fuel (rawFlag r v z₂)) ≤
-        powerBandBudget 50175 (r + v + z₁) (r + v) r
+        powerBandBudget 50165 (r + v + z₁) (r + v) r
           (s.totalCap - (r + v + z₁)) (s.middleCap - (r + v))
           (s.slopeCap - r) (s.fuel (rawFlag r v z₂)) := by
-    exact powerBandBudget_mono 50175
+    exact powerBandBudget_mono 50165
       (r + v + z₂) (r + v) r
       (s.totalCap - (r + v + z₂)) (s.middleCap - (r + v))
       (s.slopeCap - r)
@@ -48,13 +48,13 @@ theorem routeable_raw_mono_z
       (s.slopeCap - r) (s.fuel (rawFlag r v z₂))
       hbox (le_refl _) (le_refl _) htotal (le_refl _) (le_refl _)
   have hmoreFuel :
-      powerBandBudget 50175 (r + v + z₁) (r + v) r
+      powerBandBudget 50165 (r + v + z₁) (r + v) r
           (s.totalCap - (r + v + z₁)) (s.middleCap - (r + v))
           (s.slopeCap - r) (s.fuel (rawFlag r v z₂)) ≤
-        powerBandBudget 50175 (r + v + z₁) (r + v) r
+        powerBandBudget 50165 (r + v + z₁) (r + v) r
           (s.totalCap - (r + v + z₁)) (s.middleCap - (r + v))
           (s.slopeCap - r) (s.fuel (rawFlag r v z₁)) :=
-    powerBandBudget_mono_fuel 50175 (r + v + z₁) (r + v) r
+    powerBandBudget_mono_fuel 50165 (r + v + z₁) (r + v) r
       (s.totalCap - (r + v + z₁)) (s.middleCap - (r + v))
       (s.slopeCap - r) hfuel
   refine ⟨hr, ?_, ?_, ?_, ?_⟩
@@ -68,11 +68,11 @@ theorem routeable_raw_mono_z
       exact (hsameFuel.trans hmoreFuel).trans_lt hband
     · right
       have hsameFuelT :
-          powerBandBudgetThin 131071 (s.contactCap (rawFlag r v z₂)) 50175
+          powerBandBudgetThin 131071 (s.contactCap (rawFlag r v z₂)) 50165
               (contactDec (rawFlag r v z₂)) (r + v + z₂) (r + v) r
               (s.totalCap - (r + v + z₂)) (s.middleCap - (r + v))
               (s.slopeCap - r) (s.fuel (rawFlag r v z₂)) ≤
-            powerBandBudgetThin 131071 (s.contactCap (rawFlag r v z₁)) 50175
+            powerBandBudgetThin 131071 (s.contactCap (rawFlag r v z₁)) 50165
               (contactDec (rawFlag r v z₁)) (r + v + z₁) (r + v) r
               (s.totalCap - (r + v + z₁)) (s.middleCap - (r + v))
               (s.slopeCap - r) (s.fuel (rawFlag r v z₂)) := by
@@ -81,7 +81,7 @@ theorem routeable_raw_mono_z
         have hdec : contactDec (rawFlag r v z₂) = contactDec (rawFlag r v z₁) := by
           simp only [contactDec, rawFlag_middle, rawFlag_all]
         rw [hcap, hdec]
-        exact powerBandBudgetThin_mono 131071 50175 (s.fuel (rawFlag r v z₂))
+        exact powerBandBudgetThin_mono 131071 50165 (s.fuel (rawFlag r v z₂))
           (s.contactCap (rawFlag r v z₁)) (contactDec (rawFlag r v z₁))
           (r + v + z₂) (r + v) r
           (s.totalCap - (r + v + z₂)) (s.middleCap - (r + v)) (s.slopeCap - r)
@@ -90,15 +90,15 @@ theorem routeable_raw_mono_z
           (s.totalCap - (r + v + z₁)) (s.middleCap - (r + v)) (s.slopeCap - r)
           le_rfl le_rfl hbox le_rfl le_rfl htotal le_rfl le_rfl
       have hmoreFuelT :
-          powerBandBudgetThin 131071 (s.contactCap (rawFlag r v z₁)) 50175
+          powerBandBudgetThin 131071 (s.contactCap (rawFlag r v z₁)) 50165
               (contactDec (rawFlag r v z₁)) (r + v + z₁) (r + v) r
               (s.totalCap - (r + v + z₁)) (s.middleCap - (r + v))
               (s.slopeCap - r) (s.fuel (rawFlag r v z₂)) ≤
-            powerBandBudgetThin 131071 (s.contactCap (rawFlag r v z₁)) 50175
+            powerBandBudgetThin 131071 (s.contactCap (rawFlag r v z₁)) 50165
               (contactDec (rawFlag r v z₁)) (r + v + z₁) (r + v) r
               (s.totalCap - (r + v + z₁)) (s.middleCap - (r + v))
               (s.slopeCap - r) (s.fuel (rawFlag r v z₁)) :=
-        powerBandBudgetThin_mono_fuel 131071 (s.contactCap (rawFlag r v z₁)) 50175
+        powerBandBudgetThin_mono_fuel 131071 (s.contactCap (rawFlag r v z₁)) 50165
           (contactDec (rawFlag r v z₁)) (r + v + z₁) (r + v) r
           (s.totalCap - (r + v + z₁)) (s.middleCap - (r + v)) (s.slopeCap - r) hfuel
       unfold SourceNumbers.bandThin at hthin ⊢
@@ -416,7 +416,7 @@ theorem evalPowerBandBudget_eq
       rw [← channelCount_eq_eval, ih]
 
 def evalBand (s : SourceNumbers) (p : FlagDegree) : ℕ :=
-  evalPowerBandBudget 50175 (total p) (middle p) p.all
+  evalPowerBandBudget 50165 (total p) (middle p) p.all
     (s.totalCap - total p) (s.middleCap - middle p)
     (s.slopeCap - p.all) (s.fuel p)
 
@@ -444,7 +444,7 @@ theorem evalPowerBandBudgetThin_eq
       rw [← channelCount_eq_eval, ih]
 
 def evalBandThin (s : SourceNumbers) (p : FlagDegree) : ℕ :=
-  evalPowerBandBudgetThin 131071 (s.contactCap p) 50175 (contactDec p)
+  evalPowerBandBudgetThin 131071 (s.contactCap p) 50165 (contactDec p)
     (total p) (middle p) p.all
     (s.totalCap - total p) (s.middleCap - middle p)
     (s.slopeCap - p.all) (s.fuel p)
@@ -528,7 +528,7 @@ theorem indexedThin_eq (w Dh delta dc dT dY dS T YS S fuel : ℕ) :
       rw [indexedThin_shift, evalPowerBandBudgetThin, ih]
 
 def indexedBand (s : SourceNumbers) (p : FlagDegree) : ℕ :=
-  indexedThin 131071 (s.contactCap p) 50175 (contactDec p)
+  indexedThin 131071 (s.contactCap p) 50165 (contactDec p)
     (total p) (middle p) p.all (s.totalCap-total p)
     (s.middleCap-middle p) (s.slopeCap-p.all) (s.fuel p)
 
@@ -970,11 +970,11 @@ open LocatorPhase6800Oracle (rawFlag)
 
 def ofSource (s : SourceNumbers) (p : FlagDegree) : Input :=
   ⟨s.totalCap-total p,s.middleCap-middle p,s.slopeCap-p.all,s.contactCap p,
-    total p,middle p,p.all,50175+contactDec p,s.fuel p⟩
+    total p,middle p,p.all,50165+contactDec p,s.fuel p⟩
 
-theorem indexed_sum (p : Input) (dc n : ℕ) (hd : p.dDh = 50175+dc) :
-    (indexedThin 131071 p.Dh 50175 dc p.dT p.dY p.dS p.T p.YS p.S n : ℤ) =
-      50175*∑ i ∈ Finset.range n, (p.count i : ℤ) := by
+theorem indexed_sum (p : Input) (dc n : ℕ) (hd : p.dDh = 50165+dc) :
+    (indexedThin 131071 p.Dh 50165 dc p.dT p.dY p.dS p.T p.YS p.S n : ℤ) =
+      50165*∑ i ∈ Finset.range n, (p.count i : ℤ) := by
   induction n with
   | zero => simp [indexedThin]
   | succ n ih =>
@@ -985,7 +985,7 @@ theorem indexed_sum (p : Input) (dc n : ℕ) (hd : p.dDh = 50175+dc) :
 
 theorem source_sum (s : SourceNumbers) (p : FlagDegree) :
     (indexedBand s p : ℤ) =
-      50175*∑ i ∈ Finset.range (ofSource s p).fuel, ((ofSource s p).count i : ℤ) :=
+      50165*∑ i ∈ Finset.range (ofSource s p).fuel, ((ofSource s p).count i : ℤ) :=
   indexed_sum (ofSource s p) (contactDec p) (s.fuel p) rfl
 
 def Sufficient (s : SourceNumbers) (r v threshold : ℕ) (runs : List Run) : Prop :=
@@ -993,7 +993,7 @@ def Sufficient (s : SourceNumbers) (r v threshold : ℕ) (runs : List Run) : Pro
     let p := rawFlag r v threshold
     1 ≤ p.all ∧ total p ≤ s.totalCap ∧ middle p ≤ s.middleCap ∧ p.all ≤ s.slopeCap ∧
       RunsValid (ofSource s p) 0 runs ∧
-      50175*runsUpper (ofSource s p) 0 runs < (s.gap : ℤ)*(72*131071^3)
+      50165*runsUpper (ofSource s p) 0 runs < (s.gap : ℤ)*(72*131071^3)
 instance (s : SourceNumbers) (r v threshold : ℕ) (runs : List Run) :
     Decidable (Sufficient s r v threshold runs) := by
   unfold Sufficient; infer_instance
@@ -1009,7 +1009,7 @@ theorem sufficient_sound (s : SourceNumbers) (r v threshold : ℕ) (runs : List 
   have he := source_sum s (rawFlag r v threshold)
   have hi : (indexedBand s (rawFlag r v threshold) : ℤ) < s.gap := by
     nlinarith only [hgap, congrArg (fun x : ℤ => (72*131071^3)*x) he,
-      mul_le_mul_of_nonneg_left hb (show (0 : ℤ) ≤ 50175 by norm_num)]
+      mul_le_mul_of_nonneg_left hb (show (0 : ℤ) ≤ 50165 by norm_num)]
   exact_mod_cast hi
 
 end ProximityPrize.SubmissionLower.Lower80899.CompressedBand
@@ -1064,7 +1064,7 @@ theorem thinLoopK_eq (w delta dc dT dY dS fuel Dh T YS S : ℕ) :
     rfl
 
 def bandThinK (s : SourceNumbers) (p : FlagDegree) : ℕ :=
-  thinLoopK 131071 50175 (contactDec p) (total p) (middle p) p.all (s.fuel p)
+  thinLoopK 131071 50165 (contactDec p) (total p) (middle p) p.all (s.fuel p)
     (s.contactCap p) (s.totalCap - total p) (s.middleCap - middle p) (s.slopeCap - p.all)
 
 theorem bandThinK_eq (s : SourceNumbers) (p : FlagDegree) : bandThinK s p = evalBandThin s p :=
@@ -1266,7 +1266,7 @@ def sufficientK (s : SourceNumbers) (r v threshold : ℕ) (runs : List Run) : Bo
     (let p := rawFlag r v threshold
      Nat.ble 1 p.all && Nat.ble (total p) s.totalCap && Nat.ble (middle p) s.middleCap &&
        Nat.ble p.all s.slopeCap && runsValidK (ofSource s p) runs 0 &&
-       zlt (50175*runsUpperK (ofSource s p) runs 0) ((s.gap*162125875761905592 : ℕ) : ℤ))
+       zlt (50165*runsUpperK (ofSource s p) runs 0) ((s.gap*162125875761905592 : ℕ) : ℤ))
 
 theorem sufficientK_sound (s : SourceNumbers) (r v threshold : ℕ) (runs : List Run)
     (h : sufficientK s r v threshold runs = true) : Sufficient s r v threshold runs := by
@@ -1846,10 +1846,10 @@ set_option maxRecDepth 100000
 set_option maxHeartbeats 5000000
 
 def stage (y z d j : ℕ) : UnequalParameters :=
-  ⟨262144,131071,181245,y,d-j,z,y,d,z⟩
+  ⟨262144,131071,181235,y,d-j,z,y,d,z⟩
 
 def kTerm (y z : ℕ) : ℕ :=
-  131073 * (z + y + 524284*y*z) + 50174*80900*y
+  131073 * (z + y + 524284*y*z) + 50164*80910*y
 def mTerm (y z : ℕ) : ℕ := 131073*131071*y*z
 
 theorem stageNumerator (y z d j : ℕ) (hj : j ≤ d) :
@@ -1862,15 +1862,15 @@ theorem stageNumerator (y z d j : ℕ) (hj : j ≤ d) :
   have hsub : (d-j)+d = 2*d-j := by omega
   dsimp [kTerm, mTerm]
   calc
-    _ = ((d-j)+d) * (131073*(z+y+524284*y*z)+50174*80900*y) +
+    _ = ((d-j)+d) * (131073*(z+y+524284*y*z)+50164*80910*y) +
         (2*(d-j)-1)*2*(131073*131071*y*z) := by ring
     _ = _ := by rw [hsub]
 
 def numerator (y z d : ℕ) : ℕ :=
-  (d-1)*(3*d*kTerm y z + 4*mTerm y z*(d-1)) + 2*50174*9000000000000
+  (d-1)*(3*d*kTerm y z + 4*mTerm y z*(d-1)) + 2*50164*9000000000000
 
 def constant (y d : ℕ) : ℕ :=
-  (d-1)*3*d*(131073+50174*80900)*y + 2*50174*9000000000000
+  (d-1)*3*d*(131073+50164*80910)*y + 2*50164*9000000000000
 
 private theorem le_roundUp_mul_MovingFiberCountingArithmetic6815 (a b : ℕ) (hb : 0 < b) : a ≤ (a/b+1)*b := by
   have hm := Nat.mod_lt a hb
@@ -1895,12 +1895,12 @@ theorem stageDot (y z d : ℕ) (hd : 1 ≤ d) :
   ring
 
 def foldNumerator (y z d : ℕ) : ℕ :=
-  leftRegularNumerator (stage y z d 1) + 50174*(y*z*(6*d-4)) + 50174*9000000000000
+  leftRegularNumerator (stage y z d 1) + 50164*(y*z*(6*d-4)) + 50164*9000000000000
 
 theorem foldNumerator_int (y z d : ℕ) (hd : 2 ≤ d) :
     (foldNumerator y z d : ℤ) =
-      (2*(kTerm y z : ℤ)+4*(mTerm y z : ℤ)+6*50174*(y : ℤ)*z)*d +
-        (50174*9000000000000-(kTerm y z : ℤ)-6*(mTerm y z : ℤ)-4*50174*(y : ℤ)*z) := by
+      (2*(kTerm y z : ℤ)+4*(mTerm y z : ℤ)+6*50164*(y : ℤ)*z)*d +
+        (50164*9000000000000-(kTerm y z : ℤ)-6*(mTerm y z : ℤ)-4*50164*(y : ℤ)*z) := by
   unfold foldNumerator
   rw [stageNumerator y z d 1 (by omega)]
   have e1 : ((2*d-1 : ℕ) : ℤ) = 2*(d : ℤ)-1 := by omega
@@ -1910,8 +1910,8 @@ theorem foldNumerator_int (y z d : ℕ) (hd : 2 ≤ d) :
   ring
 
 theorem foldNumerator_between (y z d r u : ℕ) (hd : 2 ≤ d) (hdr : d ≤ r)
-    (h2 : foldNumerator y z 2 ≤ 2*50174*u) (hr : foldNumerator y z r ≤ r*50174*u) :
-    foldNumerator y z d ≤ d*50174*u := by
+    (h2 : foldNumerator y z 2 ≤ 2*50164*u) (hr : foldNumerator y z r ≤ r*50164*u) :
+    foldNumerator y z d ≤ d*50164*u := by
   by_cases hr2 : r = 2
   · have hd2 : d = 2 := by omega
     subst hd2
@@ -1919,33 +1919,33 @@ theorem foldNumerator_between (y z d r u : ℕ) (hd : 2 ≤ d) (hdr : d ≤ r)
   have hk2 := foldNumerator_int y z 2 le_rfl
   have hkr := foldNumerator_int y z r (by omega)
   have hkd := foldNumerator_int y z d hd
-  have h2' : (foldNumerator y z 2 : ℤ) ≤ 2*50174*(u : ℤ) := by exact_mod_cast h2
-  have hr' : (foldNumerator y z r : ℤ) ≤ (r : ℤ)*50174*(u : ℤ) := by exact_mod_cast hr
-  have hid : ((r : ℤ)-2)*((foldNumerator y z d : ℤ)-(d : ℤ)*50174*u) =
-      ((r : ℤ)-d)*((foldNumerator y z 2 : ℤ)-2*50174*u) +
-        ((d : ℤ)-2)*((foldNumerator y z r : ℤ)-(r : ℤ)*50174*u) := by
+  have h2' : (foldNumerator y z 2 : ℤ) ≤ 2*50164*(u : ℤ) := by exact_mod_cast h2
+  have hr' : (foldNumerator y z r : ℤ) ≤ (r : ℤ)*50164*(u : ℤ) := by exact_mod_cast hr
+  have hid : ((r : ℤ)-2)*((foldNumerator y z d : ℤ)-(d : ℤ)*50164*u) =
+      ((r : ℤ)-d)*((foldNumerator y z 2 : ℤ)-2*50164*u) +
+        ((d : ℤ)-2)*((foldNumerator y z r : ℤ)-(r : ℤ)*50164*u) := by
     rw [hk2, hkr, hkd]
     push_cast
     ring
   have hA := mul_nonpos_of_nonneg_of_nonpos (show (0 : ℤ) ≤ (r : ℤ)-d by omega)
-    (show (foldNumerator y z 2 : ℤ)-2*50174*u ≤ 0 by linarith)
+    (show (foldNumerator y z 2 : ℤ)-2*50164*u ≤ 0 by linarith)
   have hB := mul_nonpos_of_nonneg_of_nonpos (show (0 : ℤ) ≤ (d : ℤ)-2 by omega)
-    (show (foldNumerator y z r : ℤ)-(r : ℤ)*50174*u ≤ 0 by linarith)
-  have hprod : ((r : ℤ)-2)*((foldNumerator y z d : ℤ)-(d : ℤ)*50174*u) ≤ 0 := by
+    (show (foldNumerator y z r : ℤ)-(r : ℤ)*50164*u ≤ 0 by linarith)
+  have hprod : ((r : ℤ)-2)*((foldNumerator y z d : ℤ)-(d : ℤ)*50164*u) ≤ 0 := by
     rw [hid]
     linarith
   have hpos : (0 : ℤ) < (r : ℤ)-2 := by omega
-  have hle : (foldNumerator y z d : ℤ)-(d : ℤ)*50174*u ≤ 0 := by
+  have hle : (foldNumerator y z d : ℤ)-(d : ℤ)*50164*u ≤ 0 := by
     by_contra hc
     have := mul_pos hpos (lt_of_not_ge hc)
     linarith
-  have hfin : (foldNumerator y z d : ℤ) ≤ (d : ℤ)*50174*u := by linarith
+  have hfin : (foldNumerator y z d : ℤ) ≤ (d : ℤ)*50164*u := by linarith
   exact_mod_cast hfin
 
 def foldZCoeff (y d : ℕ) : ℕ :=
-  (2*d-1)*131073*(1+524284*y) + (2*d-3)*2*131073*131071*y + 50174*y*(6*d-4)
+  (2*d-1)*131073*(1+524284*y) + (2*d-3)*2*131073*131071*y + 50164*y*(6*d-4)
 def foldConstant (y d : ℕ) : ℕ :=
-  (2*d-1)*(131073+50174*80900)*y + 50174*9000000000000
+  (2*d-1)*(131073+50164*80910)*y + 50164*9000000000000
 
 theorem foldNumerator_linear (y z d : ℕ) (hd : 1 ≤ d) :
     foldNumerator y z d = foldZCoeff y d*z + foldConstant y d := by
@@ -1954,8 +1954,8 @@ theorem foldNumerator_linear (y z d : ℕ) (hd : 1 ≤ d) :
   unfold kTerm mTerm foldZCoeff foldConstant
   ring
 
-def foldSlope (y d : ℕ) : ℕ := foldZCoeff y d / (50174*d) + 1
-def foldConst (y d : ℕ) : ℕ := foldConstant y d / (50174*d) + 1
+def foldSlope (y d : ℕ) : ℕ := foldZCoeff y d / (50164*d) + 1
+def foldConst (y d : ℕ) : ℕ := foldConstant y d / (50164*d) + 1
 def foldPiece (y z d : ℕ) : ℕ := foldSlope y d*z + foldConst y d
 
 def foldUnit (y z r : ℕ) : ℕ :=
@@ -1968,10 +1968,10 @@ private theorem le_roundUp_mul_FoldChainArithmetic6815 (a b : ℕ) (hb : 0 < b) 
   nlinarith
 
 theorem foldPiece_end (y z d : ℕ) (hd : 1 ≤ d) :
-    foldNumerator y z d ≤ d*50174*foldPiece y z d := by
-  have hb : 0 < 50174*d := by omega
-  have ha := le_roundUp_mul_FoldChainArithmetic6815 (foldZCoeff y d) (50174*d) hb
-  have hc := le_roundUp_mul_FoldChainArithmetic6815 (foldConstant y d) (50174*d) hb
+    foldNumerator y z d ≤ d*50164*foldPiece y z d := by
+  have hb : 0 < 50164*d := by omega
+  have ha := le_roundUp_mul_FoldChainArithmetic6815 (foldZCoeff y d) (50164*d) hb
+  have hc := le_roundUp_mul_FoldChainArithmetic6815 (foldConstant y d) (50164*d) hb
   have ham := Nat.mul_le_mul_right z ha
   rw [foldNumerator_linear y z d hd]
   unfold foldPiece foldSlope foldConst
@@ -1984,7 +1984,7 @@ theorem tail_le_foldUnit (y z r : ℕ) : 9000000000000 ≤ foldUnit y z r := by
   · exact le_max_left _ _
 
 theorem foldNumerator_le_unit (y z d r : ℕ) (hd : 2 ≤ d) (hdr : d ≤ r) :
-    foldNumerator y z d ≤ d*50174*foldUnit y z r := by
+    foldNumerator y z d ≤ d*50164*foldUnit y z r := by
   have hr : ¬ r < 2 := by omega
   have h2 : foldPiece y z 2 ≤ foldUnit y z r := by
     unfold foldUnit
@@ -2008,7 +2008,7 @@ set_option maxRecDepth 100000
 set_option maxHeartbeats 5000000
 
 def parameters (r y t : ℕ) : UnequalParameters :=
-  ⟨262144,131071,181245,229-y,50-r,15421-t,348-y,78-r,11193-t⟩
+  ⟨262144,131071,181235,229-y,50-r,15421-t,348-y,78-r,11193-t⟩
 
 def cap (r y t : ℕ) : ℕ := leftRegularCountCap (parameters r y t)
 
@@ -2029,21 +2029,21 @@ theorem numerator_affine (r y t : ℕ) (ht : t ≤ 11193) :
   ring
 
 def line (r y t : ℕ) : ℤ :=
-  ((constant r y / 50174 : ℕ) : ℤ) - ((slope r y / 50174 : ℕ) : ℤ) * (t : ℤ)
+  ((constant r y / 50164 : ℕ) : ℤ) - ((slope r y / 50164 : ℕ) : ℤ) * (t : ℤ)
 
 theorem cap_le_line (r y t : ℕ) (ht : t ≤ 11193) : (cap r y t : ℤ) ≤ line r y t := by
   have he := numerator_affine r y t ht
-  have h1 := Nat.div_mul_le_self (leftRegularNumerator (parameters r y t)) 50174
-  have h2 := Nat.div_add_mod (constant r y) 50174
-  have h3 := Nat.mod_lt (constant r y) (show 0 < 50174 by norm_num)
-  have h4 := Nat.mul_le_mul_right t (Nat.div_mul_le_self (slope r y) 50174)
-  have hn : cap r y t + slope r y / 50174 * t ≤ constant r y / 50174 := by
-    have hc : cap r y t = leftRegularNumerator (parameters r y t) / 50174 := by
+  have h1 := Nat.div_mul_le_self (leftRegularNumerator (parameters r y t)) 50164
+  have h2 := Nat.div_add_mod (constant r y) 50164
+  have h3 := Nat.mod_lt (constant r y) (show 0 < 50164 by norm_num)
+  have h4 := Nat.mul_le_mul_right t (Nat.div_mul_le_self (slope r y) 50164)
+  have hn : cap r y t + slope r y / 50164 * t ≤ constant r y / 50164 := by
+    have hc : cap r y t = leftRegularNumerator (parameters r y t) / 50164 := by
       simp only [cap, leftRegularCountCap, parameters, UnequalParameters.gap]
-    have h5 : slope r y / 50174 * 50174 * t = 50174 * (slope r y / 50174 * t) := by ring
+    have h5 : slope r y / 50164 * 50164 * t = 50164 * (slope r y / 50164 * t) := by ring
     rw [h5] at h4
     rw [hc]
-    generalize slope r y / 50174 * t = P at *
+    generalize slope r y / 50164 * t = P at *
     generalize slope r y * t = S at *
     omega
   unfold line

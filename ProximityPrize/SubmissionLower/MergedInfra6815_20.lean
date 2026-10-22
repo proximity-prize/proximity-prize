@@ -19,14 +19,14 @@ def cost (L U S r y t : ℕ) : ℕ :=
 theorem num_formula (L U S r y t : ℕ) :
     num L U S r y t =
       131073*((1+2*131071*y)*(r*L+t*S)+131071*(2*r-1)*(y*L+t*U)+
-        (1+2*131071*t)*(y*S+r*U))+80900*50174*(y*S+r*U) := by
+        (1+2*131071*t)*(y*S+r*U))+80910*50164*(y*S+r*U) := by
   simp only [num,leftRegularNumerator,PhasePotential6815.pair,
     UnequalParameters.errors,UnequalParameters.gap,UnequalParameters.leftAgreement,
     UnequalParameters.mixedCost,RCN294.dot]
   norm_num only [Nat.reduceSub,Nat.reduceAdd,Nat.reduceMul]
   ring
 
-theorem cost_eq (L U S r y t : ℕ) : cost L U S r y t=num L U S r y t/50174 := by
+theorem cost_eq (L U S r y t : ℕ) : cost L U S r y t=num L U S r y t/50164 := by
   simp only [cost,num,leftRegularCountCap,PhasePotential6815.pair,UnequalParameters.gap,Nat.reduceSub]
 
 theorem num_mono (L U S r y t capR capY capT : ℕ) (hr : r≤capR) (hy : y≤capY) (ht : t≤capT) :
@@ -48,7 +48,7 @@ theorem sum_num_le {ι : Type*} [DecidableEq ι] (s : Finset ι)
         131073*((1+2*131071*(∑ j∈s,y j))*(r i*L+t i*S)+
           131071*(2*(∑ j∈s,r j)-1)*(y i*L+t i*U)+
           (1+2*131071*(∑ j∈s,t j))*(y i*S+r i*U))+
-          80900*50174*(y i*S+r i*U) := by
+          80910*50164*(y i*S+r i*U) := by
     have hr := Finset.single_le_sum (fun j (_ : j∈s) => Nat.zero_le (r j)) hi
     have hy := Finset.single_le_sum (fun j (_ : j∈s) => Nat.zero_le (y j)) hi
     have ht := Finset.single_le_sum (fun j (_ : j∈s) => Nat.zero_le (t j)) hi
@@ -58,7 +58,7 @@ theorem sum_num_le {ι : Type*} [DecidableEq ι] (s : Finset ι)
     _≤∑ i∈s, (131073*((1+2*131071*(∑ j∈s,y j))*(r i*L+t i*S)+
           131071*(2*(∑ j∈s,r j)-1)*(y i*L+t i*U)+
           (1+2*131071*(∑ j∈s,t j))*(y i*S+r i*U))+
-          80900*50174*(y i*S+r i*U)) := Finset.sum_le_sum hterm
+          80910*50164*(y i*S+r i*U)) := Finset.sum_le_sum hterm
     _=_ := by
       rw [num_formula]
       simp only [Finset.sum_add_distrib,←Finset.mul_sum,←Finset.sum_mul]
@@ -68,9 +68,9 @@ theorem sum_cost_le {ι : Type*} [DecidableEq ι] (s : Finset ι)
     (∑ i∈s, cost L U S (r i) (y i) (t i))≤
       cost L U S (∑ i∈s, r i) (∑ i∈s, y i) (∑ i∈s, t i) := by
   conv_rhs => rw [cost_eq]
-  apply (Nat.le_div_iff_mul_le (by decide : 0<50174)).mpr
+  apply (Nat.le_div_iff_mul_le (by decide : 0<50164)).mpr
   calc
-    _=∑ i∈s, cost L U S (r i) (y i) (t i)*50174 := by rw [Finset.sum_mul]
+    _=∑ i∈s, cost L U S (r i) (y i) (t i)*50164 := by rw [Finset.sum_mul]
     _≤∑ i∈s, num L U S (r i) (y i) (t i) := by
       apply Finset.sum_le_sum
       intro i hi
@@ -260,7 +260,7 @@ theorem charged_split
       PowerRoute.stageCost sound.source.totalCap sound.source.middleCap sound.source.slopeCap
         (Oracle.exactRouteBox p) j≤charge p)
     (D m : ℕ)
-    (hweighted : D = m * 181245)
+    (hweighted : D = m * 181235)
     (hshape : D + sound.source.slopeCap ≤
       131071 * (sound.source.middleCap + 1))
     (hslopeM : sound.source.slopeCap ≤ m)
@@ -269,11 +269,11 @@ theorem charged_split
     (selected : K → Polynomial K) (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma,
       (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181245 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181235 ≤
       ((Finset.univ : Finset I).filter (fun i ↦
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80899)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80909)
     (hgap : sound.source.gap ≤ Module.finrank K
       (ConstraintKernel (K := K) D 131071 sound.source.totalCap
         sound.source.slopeCap m IRSProfile.domain u0 u1))
@@ -307,14 +307,14 @@ theorem charged_split
   have hfuelChar : sound.source.fuel p < 2130706433 :=
     hfuelM.trans_lt hmChar
   have hlowpos : ∀ j, 1 ≤ j → j ≤ sound.source.fuel p →
-      0 < D - j * 50175 := by
+      0 < D - j * 50165 := by
     intro j hj hjfuel
     have hjm : j ≤ m := hjfuel.trans hfuelM
     rw [hweighted]
     omega
   have hcapacity : ∀ j, 1 ≤ j → j ≤ sound.source.fuel p →
-      D - j * 50175 ≤
-        (m - j) * 181245 + j * (131071 - 1) := by
+      D - j * 50165 ≤
+        (m - j) * 181235 + j * (131071 - 1) := by
     intro j _hj hjfuel
     have hjm : j ≤ m := hjfuel.trans hfuelM
     rw [hweighted]
@@ -431,7 +431,7 @@ theorem charged_split
   have hDpos : 0 < D := by
     rw [hweighted]
     exact Nat.mul_pos hmpos (by decide)
-  have hDa : D ≤ m * 181245 := hweighted.le
+  have hDa : D ≤ m * 181235 := hweighted.le
   have hP : regularProduct H A ≠ 0 := regularProduct_ne_zero H A
   have hcP : contactDec p ≤ wt (contactWeights 131071) (regularProduct H A) := by
     have h := LocatorArbitraryPowerAvoidance.contact_ge_ys 131071 (by decide)
@@ -443,7 +443,7 @@ theorem charged_split
     unfold SourceNumbers.contactCap
     omega
   have hbandThin : LocatorArbitraryPowerAvoidance.powerBandBudgetThin 131071
-      (D - wt (contactWeights 131071) (regularProduct H A)) 50175
+      (D - wt (contactWeights 131071) (regularProduct H A)) 50165
       (wt (contactWeights 131071) (regularProduct H A))
       (wt residualTotalWeights (regularProduct H A))
       (wt residualYSWeights (regularProduct H A))
@@ -453,7 +453,7 @@ theorem charged_split
       (sound.source.slopeCap - wt residualSWeights (regularProduct H A))
       (sound.source.fuel p) < sound.source.gap := by
     rcases hroute.2.2.2.2 with hold | hthin
-    · have hold' : powerBandBudget 50175
+    · have hold' : powerBandBudget 50165
           (wt residualTotalWeights (regularProduct H A))
           (wt residualYSWeights (regularProduct H A))
           (wt residualSWeights (regularProduct H A))
@@ -466,7 +466,7 @@ theorem charged_split
       exact (LocatorArbitraryPowerAvoidance.powerBandBudgetThin_le
         _ _ _ _ _ _ _ _ _ _ _).trans_lt hold'
     · have hthin' : LocatorArbitraryPowerAvoidance.powerBandBudgetThin 131071
-          (sound.source.contactCap p) 50175 (contactDec p)
+          (sound.source.contactCap p) 50165 (contactDec p)
           (wt residualTotalWeights (regularProduct H A))
           (wt residualYSWeights (regularProduct H A))
           (wt residualSWeights (regularProduct H A))
@@ -476,12 +476,12 @@ theorem charged_split
           (sound.source.fuel p) < sound.source.gap := by
         simpa only [SourceNumbers.bandThin, p, regularAggregateFlag_total,
           regularAggregateFlag_middle, regularAggregateFlag_all] using hthin
-      exact (LocatorArbitraryPowerAvoidance.powerBandBudgetThin_mono 131071 50175
+      exact (LocatorArbitraryPowerAvoidance.powerBandBudgetThin_mono 131071 50165
         (sound.source.fuel p) _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
         hDcap hcP le_rfl le_rfl le_rfl le_rfl le_rfl le_rfl).trans_lt hthin'
   apply exists_strict_helper_split_of_batch_source_thin D
     sound.source.totalCap sound.source.slopeCap m sound.source.middleCap
-    sound.source.gap 50175 (sound.source.fuel p)
+    sound.source.gap 50165 (sound.source.fuel p)
   · exact hDpos
   · exact hDa
   · exact hshape
@@ -505,7 +505,7 @@ theorem charged_split
 
 theorem exact_split
     (sound : PhaseSourceSound) (D m : ℕ)
-    (hweighted : D = m * 181245)
+    (hweighted : D = m * 181235)
     (hshape : D + sound.source.slopeCap ≤
       131071 * (sound.source.middleCap + 1))
     (hslopeM : sound.source.slopeCap ≤ m)
@@ -514,11 +514,11 @@ theorem exact_split
     (selected : K → Polynomial K) (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma,
       (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181245 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181235 ≤
       ((Finset.univ : Finset I).filter (fun i ↦
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80899)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80909)
     (hgap : sound.source.gap ≤ Module.finrank K
       (ConstraintKernel (K := K) D 131071 sound.source.totalCap
         sound.source.slopeCap m IRSProfile.domain u0 u1))

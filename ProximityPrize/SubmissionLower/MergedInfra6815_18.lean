@@ -73,23 +73,23 @@ theorem low_coefficient_vanish (P : Poly (K := K)) (m k n0 d : ℕ)
     (hdm : d < m) (hdn : d < n0) (hfact : (d.factorial : K) ≠ 0)
     (hP : ∀ e ∈ P.support,
       e 0+131071*e 2+131070*e 3+131069*e 1+
-        reserve k n0 (e 1)*50176 < m*181245)
+        reserve k n0 (e 1)*50166 < m*181235)
     (nodes : N ↪ K) (u0 u1 : N → K)
     (hcontact : ∀ i, MvPolynomial.X 0^m ∣ substitute (K := K)
       (localize (nodes i) (u0 i) (u1 i) P))
     (f : Polynomial K) (hf : f.natDegree ≤ 131071) (z : K) (S : Finset N)
-    (hS : 181245 ≤ S.card) (hvalues : ∀ i ∈ S, f.eval (nodes i) = u0 i+u1 i*z)
+    (hS : 181235 ≤ S.card) (hvalues : ∀ i ∈ S, f.eval (nodes i) = u0 i+u1 i*z)
     (hh : ∀ j, d < j → coefficientSpecialize f z ((asS P).coeff j) = 0) :
     coefficientSpecialize f z ((asS P).coeff d) = 0 := by
   have hweight : ∀ e ∈ ((asS P).coeff d).support,
-      e 0+131071*e 1+131070*e 2 < (m-d)*181245 := by
+      e 0+131071*e 1+131070*e 2 < (m-d)*181235 := by
     intro e he
     have hb := hP _ (coefficient_support P d e he)
     obtain ⟨h0,h1,h2,h3,h4⟩ := lift_coordinates d e
     rw [h0,h1,h2,h3] at hb
     simp only [reserve,if_pos hdn] at hb
     omega
-  have hdeg := coefficient_degree ((asS P).coeff d) f z 131071 ((m-d)*181245)
+  have hdeg := coefficient_degree ((asS P).coeff d) f z 131071 ((m-d)*181235)
     hf (by omega) hweight
   have htop := specialize_top P f z d hh
   have hv : specialize f z ((pderiv 1)^[d] P) = 0 := by
@@ -127,7 +127,7 @@ def ProperHelper (F Q : MvPolynomial (Fin 4) K) (B U L s capR capY capT : ℕ)
     wt residualYSWeights Q ≤ U+s*(capY-1) ∧
     wt residualTotalWeights Q ≤ L+s*(capT-1)) ∧
   ∀ f : Polynomial K, f.natDegree ≤ 131071 → ∀ z : K, ∀ S : Finset N,
-    181245 ≤ S.card → (∀ i ∈ S, f.eval (nodes i) = u0 i+u1 i*z) →
+    181235 ≤ S.card → (∀ i ∈ S, f.eval (nodes i) = u0 i+u1 i*z) →
     RCN319.specialization K f z F = 0 → RCN319.specialization K f z Q = 0
 
 theorem helper_or_divisibility (P : Poly (K := K)) (F : MvPolynomial (Fin 4) K)
@@ -167,7 +167,7 @@ theorem helper_or_divisibility (P : Poly (K := K)) (F : MvPolynomial (Fin 4) K)
     · intro f hf z S hSc hvalues _hFzero
       have hweight : ∀ e ∈ P.support,
           e 0+131071*e 2+131070*e 3+131069*e 1+
-            SecondJetRelaxedDifferentiation.reserve k n0 (e 1)*50176 < m*181245 := by
+            SecondJetRelaxedDifferentiation.reserve k n0 (e 1)*50166 < m*181235 := by
         intro e he
         have hw := (hP.2.1 e he).2.2.2.2
         dsimp [MovingFiberInterpolation6815.cutoff] at hw
@@ -257,7 +257,7 @@ structure SelectedPair (u0 u1:I → K) where
     gcd QA QB ∣ reconstruct K 30086670 131071 15421 50 v.1
   universal_vanishing:
     ∀ (gamma:K) (P:Polynomial K) (points:Finset I),
-      P.natDegree ≤ 131071 → 181245 ≤ points.card →
+      P.natDegree ≤ 131071 → 181235 ≤ points.card →
       (∀ i ∈ points,P.eval (IRSProfile.domain i) =u0 i + gamma * u1 i) →
       RCN319.specialization K P gamma QA=0 ∧
         RCN319.specialization K P gamma QB=0
@@ -354,12 +354,12 @@ theorem exists_selected_pair (u0 u1:I → K):Nonempty (SelectedPair u0 u1):=by
     · dsimp only [QA]
       rw [submoduleReconstructLinear_apply]
       exact specialization_eq_zero_of_agreements K
-        45673740 131071 11193 78 252 181245 IRSProfile.domain u0 u1
+        45673740 131071 11193 78 252 181235 IRSProfile.domain u0 u1
         vA.1 vA.2 (by decide +kernel) (by decide +kernel) P gamma points hP hcard hvalues
     · dsimp only [QB]
       rw [submoduleReconstructLinear_apply]
       exact specialization_eq_zero_of_agreements K
-        30086670 131071 15421 50 166 181245 IRSProfile.domain u0 u1
+        30086670 131071 15421 50 166 181235 IRSProfile.domain u0 u1
         vB.1 vB.2 (by decide +kernel) (by decide +kernel) P gamma points hP hcard hvalues
 end
 end ProximityPrize.SubmissionLower.Lower80899.Selection

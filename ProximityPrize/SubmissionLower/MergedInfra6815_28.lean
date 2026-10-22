@@ -17,28 +17,28 @@ def gLo0 (b c : ℕ) : ℕ :=
     3135405621545*b +
     25727621663120
 def identitySlackLo0 (b c : ℕ) : ℕ :=
-    157315841655398830*b +
-    1228313421222158380
+    157284487599183380*b +
+    1228048413946429130
 def helperSlackLo0 (b c : ℕ) : ℕ :=
     1555253576188380108*b^2 +
     3110746502314217772*b*c +
-    233674099995305746062*b +
+    233674099997820258222*b +
     27799225870370845752*c +
-    661960166432127738678
+    661960166450974131798
 def gLo1 (b c : ℕ) : ℕ :=
     3135405621545*b +
     3135405621545*c +
     222013137897940
 def identitySlackLo1 (b c : ℕ) : ℕ :=
-    157315841655398830*b +
-    157315841655398830*c +
-    11014198644684792560
+    157284487599183380*b +
+    157284487599183380*c +
+    11011963051187617060
 def helperSlackLo1 (b c : ℕ) : ℕ :=
     1555253576188380108*b^2 +
     3110746502314217772*b*c +
-    233674099995305746062*b +
+    233674099997820258222*b +
     27799225870370845752*c +
-    661960166432127738678
+    661960166450974131798
 def gLo2 (b c : ℕ) : ℕ :=
     103080787968*b^2 +
     206161575936*b*c +
@@ -46,17 +46,41 @@ def gLo2 (b c : ℕ) : ℕ :=
     9852907357087*c +
     340507472465668
 def identitySlackLo2 (b c : ℕ) : ℕ :=
-    5171975455506432*b^2 +
-    10343950911012864*b*c +
-    4785380839919782894*b +
-    469342066493193338*c +
-    16884480074693605232
+    5170944647626752*b^2 +
+    10341889295253504*b*c +
+    4784410925600187644*b +
+    469240444995983248*c +
+    16881050260556241652
 def helperSlackLo2 (b c : ℕ) : ℕ :=
     1555253576188380108*b^2 +
     3110746502314217772*b*c +
-    233674099995305746062*b +
+    233674099997820258222*b +
     27799225870370845752*c +
-    661960166432127738678
+    661960166450974131798
+def fullSlackLo (b c : ℕ) : ℕ :=
+    310018318690410*b^2 +
+    620036637380820*b*c +
+    46566253490589450*b +
+    5540143947972390*c +
+    131899415922487080
+def fullSlackHi (a b c : ℕ) : ℕ :=
+    9277270917120*a^3 +
+    27831812751360*a^2*b +
+    27831812751360*a^2*c +
+    8747783418188250*a^2 +
+    27831812751360*a*b^2 +
+    55663625502720*a*b*c +
+    17495566836376500*a*b +
+    1935875565325260*a*c +
+    91481243434605630*a +
+    333211495983210*b^2 +
+    666422991966420*b*c +
+    64020072537060030*b +
+    7434271723391730*c +
+    214632875797346700
+def fullSlack : ℕ → ℕ → ℕ → ℕ
+  | 0, b, c => fullSlackLo b c
+  | a+1, b, c => fullSlackHi a b c
 def conductorLo (b c : ℕ) : ℕ :=
     7013928574530*b^2 +
     14027857149060*b*c +
@@ -77,26 +101,26 @@ def gHi0 (a b c : ℕ) : ℕ :=
     3290026803497*b +
     35786689809711
 def identitySlackHi0 (a b c : ℕ) : ℕ :=
-    5171975455506432*a^2 +
-    10343950911012864*a*b +
-    487443980587465850*a +
-    165073804838658478*b +
-    1707999399167925414
+    5170944647626752*a^2 +
+    10341889295253504*a*b +
+    487338751262676880*a +
+    165040904570623508*b +
+    1707630708787091034
 def helperSlackHi0 (a b c : ℕ) : ℕ :=
     46314528136772580*a^3 +
     139177368070160004*a^2*b +
     139411151730002268*a^2*c +
-    43900452410897763864*a^2 +
+    43900452411594856344*a^2 +
     139411151730002268*a*b^2 +
     279056087119846800*a*b*c +
-    87791206440214734408*a*b +
+    87791206440911826888*a*b +
     9712390124912171688*a*c +
-    459106978471847710506*a +
+    459106978481333147466*a +
     1671390838368603432*b^2 +
     3343254810334506684*b*c +
-    321256307043675031122*b +
+    321256307046886635762*b +
     37302382819777725828*c +
-    1077166458531862994988
+    1077166458559497732588
 def gHi1 (a b c : ℕ) : ℕ :=
     103080787968*a^2 +
     206161575936*a*b +
@@ -106,28 +130,28 @@ def gHi1 (a b c : ℕ) : ℕ :=
     3290026803497*c +
     318437624737173
 def identitySlackHi1 (a b c : ℕ) : ℕ :=
-    5171975455506432*a^2 +
-    10343950911012864*a*b +
-    10343950911012864*a*c +
-    4795724790830795758*a +
-    165073804838658478*b +
-    165073804838658478*c +
-    15802165432873889502
+    5170944647626752*a^2 +
+    10341889295253504*a*b +
+    10341889295253504*a*c +
+    4794752814895441148*a +
+    165040904570623508*b +
+    165040904570623508*c +
+    15798959409661043232
 def helperSlackHi1 (a b c : ℕ) : ℕ :=
     46314528136772580*a^3 +
     139177368070160004*a^2*b +
     139411151730002268*a^2*c +
-    43900452410897763864*a^2 +
+    43900452411594856344*a^2 +
     139411151730002268*a*b^2 +
     279056087119846800*a*b*c +
-    87791206440214734408*a*b +
+    87791206440911826888*a*b +
     9712390124912171688*a*c +
-    459106978471847710506*a +
+    459106978481333147466*a +
     1671390838368603432*b^2 +
     3343254810334506684*b*c +
-    321256307043675031122*b +
+    321256307046886635762*b +
     37302382819777725828*c +
-    1077166458531862994988
+    1077166458559497732588
 def gHi2 (a b c : ℕ) : ℕ :=
     103080787968*a^2 +
     206161575936*a*b +
@@ -139,30 +163,30 @@ def gHi2 (a b c : ℕ) : ℕ :=
     10059068933023*c +
     436983500485317
 def identitySlackHi2 (a b c : ℕ) : ℕ :=
-    5171975455506432*a^2 +
-    10343950911012864*a*b +
-    10343950911012864*a*c +
-    4795724790830795758*a +
-    5171975455506432*b^2 +
-    10343950911012864*b*c +
-    4795724790830795758*b +
-    479686017404206202*c +
-    21675032890068894558
+    5170944647626752*a^2 +
+    10341889295253504*a*b +
+    10341889295253504*a*c +
+    4794752814895441148*a +
+    5170944647626752*b^2 +
+    10341889295253504*b*c +
+    4794752814895441148*b +
+    479582334291236752*c +
+    21670632130804056048
 def helperSlackHi2 (a b c : ℕ) : ℕ :=
     46314528136772580*a^3 +
     139177368070160004*a^2*b +
     139411151730002268*a^2*c +
-    43900452410897763864*a^2 +
+    43900452411594856344*a^2 +
     139411151730002268*a*b^2 +
     279056087119846800*a*b*c +
-    87791206440214734408*a*b +
+    87791206440911826888*a*b +
     9712390124912171688*a*c +
-    459106978471847710506*a +
+    459106978481333147466*a +
     1671390838368603432*b^2 +
     3343254810334506684*b*c +
-    321256307043675031122*b +
+    321256307046886635762*b +
     37302382819777725828*c +
-    1077166458531862994988
+    1077166458559497732588
 def conductorHi (a b c : ℕ) : ℕ :=
     532697056956*a^3 +
     1598091170868*a^2*b +
@@ -211,17 +235,17 @@ theorem divides (j : Fin 3) : 3*(cfg j).d ∣ scale := by
   exact h j
 theorem graph_eq_lo (f : FlagDegree) (b c : ℕ) :
     graphDir cfg scale f 0 b c = f.zOnly*gLo0 b c+f.yz*gLo1 b c+f.all*gLo2 b c := by
-  norm_num [cfg,scale,source27,graphDir,normal,raw,MovingFiberThreeSources6811.weight,MovingFiberThreeSources6811.direction,Params.d,Params.flag,SecondJetRelaxedFlag.budgetFlag,flagMixed,unitZFlag,unitYZFlag,unitAllFlag,firstDir_zero,firstLo,gLo0,gLo1,gLo2,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
+  norm_num [cfg,scale,fullSlack,fullSlackLo,fullSlackHi,source27,graphDir,normal,raw,MovingFiberThreeSources6811.weight,MovingFiberThreeSources6811.direction,Params.d,Params.flag,SecondJetRelaxedFlag.budgetFlag,flagMixed,unitZFlag,unitYZFlag,unitAllFlag,firstDir_zero,firstLo,gLo0,gLo1,gLo2,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
   <;> ring
 theorem graph_eq_hi (f : FlagDegree) (a b c : ℕ) :
     graphDir cfg scale f (a+1) b c = f.zOnly*gHi0 a b c+f.yz*gHi1 a b c+f.all*gHi2 a b c := by
-  norm_num [cfg,scale,source27,graphDir,normal,raw,MovingFiberThreeSources6811.weight,MovingFiberThreeSources6811.direction,Params.d,Params.flag,SecondJetRelaxedFlag.budgetFlag,flagMixed,unitZFlag,unitYZFlag,unitAllFlag,firstDir_succ,firstHi,gHi0,gHi1,gHi2,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
+  norm_num [cfg,scale,fullSlack,fullSlackLo,fullSlackHi,source27,graphDir,normal,raw,MovingFiberThreeSources6811.weight,MovingFiberThreeSources6811.direction,Params.d,Params.flag,SecondJetRelaxedFlag.budgetFlag,flagMixed,unitZFlag,unitYZFlag,unitAllFlag,firstDir_succ,firstHi,gHi0,gHi1,gHi2,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
   <;> ring
 theorem identity_absorption (f : FlagDegree) (a b c : ℕ) :
-    scale*131073*80900*identityDegree f a b c ≤ 50174*graphDir cfg scale f a b c := by
+    scale*131073*80910*identityDegree f a b c ≤ 50164*graphDir cfg scale f a b c := by
   cases a with
   | zero =>
-    have he : 50174*graphDir cfg scale f 0 b c = scale*131073*80900*identityDegree f 0 b c+
+    have he : 50164*graphDir cfg scale f 0 b c = scale*131073*80910*identityDegree f 0 b c+
         (f.zOnly*identitySlackLo0 b c+f.yz*identitySlackLo1 b c+f.all*identitySlackLo2 b c) := by
       rw [graph_eq_lo]
       simp only [scale,identityDegree,gLo0,gLo1,gLo2,identitySlackLo0,identitySlackLo1,identitySlackLo2]
@@ -229,7 +253,7 @@ theorem identity_absorption (f : FlagDegree) (a b c : ℕ) :
     rw [he]
     exact Nat.le_add_right _ _
   | succ a =>
-    have he : 50174*graphDir cfg scale f (a+1) b c = scale*131073*80900*identityDegree f (a+1) b c+
+    have he : 50164*graphDir cfg scale f (a+1) b c = scale*131073*80910*identityDegree f (a+1) b c+
         (f.zOnly*identitySlackHi0 a b c+f.yz*identitySlackHi1 a b c+f.all*identitySlackHi2 a b c) := by
       rw [graph_eq_hi]
       simp only [scale,identityDegree,gHi0,gHi1,gHi2,identitySlackHi0,identitySlackHi1,identitySlackHi2]
@@ -237,67 +261,67 @@ theorem identity_absorption (f : FlagDegree) (a b c : ℕ) :
     rw [he]
     exact Nat.le_add_right _ _
 theorem full_eq (a b c : ℕ) : full a b c =
-    scale*50174*graphDir cfg scale ⟨c,b+2,a+3⟩ a b c+
-      scale^2*(∑ j : Fin 3, coeff (cfg j) a b c)+conductor a b c := by
+    scale*50164*graphDir cfg scale ⟨c,b+2,a+3⟩ a b c+
+      scale^2*(∑ j : Fin 3, coeff (cfg j) a b c)+conductor a b c+fullSlack a b c := by
   cases a with
   | zero =>
     rw [graph_eq_lo]
-    norm_num [cfg,scale,source27,full,slope,intercept,slopeLo,interceptLo,gLo0,gLo1,gLo2,coeff,pairNumerator,
+    norm_num [cfg,scale,fullSlack,fullSlackLo,fullSlackHi,source27,full,slope,intercept,slopeLo,interceptLo,gLo0,gLo1,gLo2,coeff,pairNumerator,
       conductor,conductorLo,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
     <;> ring
   | succ a =>
     rw [graph_eq_hi]
-    norm_num [cfg,scale,source27,full,slope,intercept,slopeHi,interceptHi,gHi0,gHi1,gHi2,coeff,pairNumerator,
+    norm_num [cfg,scale,fullSlack,fullSlackLo,fullSlackHi,source27,full,slope,intercept,slopeHi,interceptHi,gHi0,gHi1,gHi2,coeff,pairNumerator,
       conductor,conductorHi,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
     <;> ring
 theorem helper_cap (a b c : ℕ) (j : Fin 3) :
-    helper (cfg j) a b c/50174 ≤ full a b c/denominator := by
+    helper (cfg j) a b c/50164 ≤ full a b c/denominator := by
   have he : scale^2*helper (cfg j) a b c ≤ full a b c := by
     cases a with
     | zero =>
       fin_cases j
       · have h : full 0 b c = scale^2*helper (cfg 0) 0 b c+helperSlackLo0 b c := by
-          norm_num [cfg,scale,source27,full,slope,intercept,slopeLo,interceptLo,helper,pairNumerator,helperSlackLo0,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
+          norm_num [cfg,scale,fullSlack,fullSlackLo,fullSlackHi,source27,full,slope,intercept,slopeLo,interceptLo,helper,pairNumerator,helperSlackLo0,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
           <;> ring
         rw [h]
         exact Nat.le_add_right _ _
       · have h : full 0 b c = scale^2*helper (cfg 1) 0 b c+helperSlackLo1 b c := by
-          norm_num [cfg,scale,source27,full,slope,intercept,slopeLo,interceptLo,helper,pairNumerator,helperSlackLo1,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
+          norm_num [cfg,scale,fullSlack,fullSlackLo,fullSlackHi,source27,full,slope,intercept,slopeLo,interceptLo,helper,pairNumerator,helperSlackLo1,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
           <;> ring
         rw [h]
         exact Nat.le_add_right _ _
       · have h : full 0 b c = scale^2*helper (cfg 2) 0 b c+helperSlackLo2 b c := by
-          norm_num [cfg,scale,source27,full,slope,intercept,slopeLo,interceptLo,helper,pairNumerator,helperSlackLo2,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
+          norm_num [cfg,scale,fullSlack,fullSlackLo,fullSlackHi,source27,full,slope,intercept,slopeLo,interceptLo,helper,pairNumerator,helperSlackLo2,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
           <;> ring
         rw [h]
         exact Nat.le_add_right _ _
     | succ a =>
       fin_cases j
       · have h : full (a+1) b c = scale^2*helper (cfg 0) (a+1) b c+helperSlackHi0 a b c := by
-          norm_num [cfg,scale,source27,full,slope,intercept,slopeHi,interceptHi,helper,pairNumerator,helperSlackHi0,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
+          norm_num [cfg,scale,fullSlack,fullSlackLo,fullSlackHi,source27,full,slope,intercept,slopeHi,interceptHi,helper,pairNumerator,helperSlackHi0,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
           <;> ring
         rw [h]
         exact Nat.le_add_right _ _
       · have h : full (a+1) b c = scale^2*helper (cfg 1) (a+1) b c+helperSlackHi1 a b c := by
-          norm_num [cfg,scale,source27,full,slope,intercept,slopeHi,interceptHi,helper,pairNumerator,helperSlackHi1,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
+          norm_num [cfg,scale,fullSlack,fullSlackLo,fullSlackHi,source27,full,slope,intercept,slopeHi,interceptHi,helper,pairNumerator,helperSlackHi1,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
           <;> ring
         rw [h]
         exact Nat.le_add_right _ _
       · have h : full (a+1) b c = scale^2*helper (cfg 2) (a+1) b c+helperSlackHi2 a b c := by
-          norm_num [cfg,scale,source27,full,slope,intercept,slopeHi,interceptHi,helper,pairNumerator,helperSlackHi2,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
+          norm_num [cfg,scale,fullSlack,fullSlackLo,fullSlackHi,source27,full,slope,intercept,slopeHi,interceptHi,helper,pairNumerator,helperSlackHi2,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
           <;> ring
         rw [h]
         exact Nat.le_add_right _ _
   apply (Nat.le_div_iff_mul_le (show 0 < denominator by decide +kernel)).mpr
-  have hh := Nat.div_mul_le_self (helper (cfg j) a b c) 50174
+  have hh := Nat.div_mul_le_self (helper (cfg j) a b c) 50164
   dsimp only [denominator,scale] at he ⊢
   nlinarith
 theorem retained_cap (a b c : ℕ) :
     graphDir cfg scale ⟨c,b+2,a+3⟩ a b c/scale+
-      (∑ j : Fin 3, coeff (cfg j) a b c/50174) ≤ full a b c/denominator := by
+      (∑ j : Fin 3, coeff (cfg j) a b c/50164) ≤ full a b c/denominator := by
   apply (Nat.le_div_iff_mul_le (show 0 < denominator by decide +kernel)).mpr
   have hx := Nat.div_mul_le_self (graphDir cfg scale ⟨c,b+2,a+3⟩ a b c) scale
-  have hy : (∑ j : Fin 3, coeff (cfg j) a b c/50174)*50174 ≤ ∑ j : Fin 3, coeff (cfg j) a b c := by
+  have hy : (∑ j : Fin 3, coeff (cfg j) a b c/50164)*50164 ≤ ∑ j : Fin 3, coeff (cfg j) a b c := by
     rw [Finset.sum_mul]
     exact Finset.sum_le_sum (fun j _ => Nat.div_mul_le_self _ _)
   rw [full_eq]
@@ -324,28 +348,28 @@ def gLo0 (b c : ℕ) : ℕ :=
     4595731333555*b +
     37496182803960
 def identitySlackLo0 (b c : ℕ) : ℕ :=
-    230586223929788570*b +
-    1777093029167181540
+    230540266616453020*b +
+    1776705182240645190
 def helperSlackLo0 (b c : ℕ) : ℕ :=
     3845658939034219770*b^2 +
     7692361555121306790*b*c +
-    678480160084648492338*b +
+    678480160095021892338*b +
     67671072422978742294*c +
-    1926796317162342193788
+    1926796317239312821788
 def gLo1 (b c : ℕ) : ℕ :=
     4595731333555*b +
     4595731333555*c +
     386901582053470
 def identitySlackLo1 (b c : ℕ) : ℕ :=
-    230586223929788570*b +
-    230586223929788570*c +
-    19203919084273388780
+    230540266616453020*b +
+    230540266616453020*c +
+    19200024298255860580
 def helperSlackLo1 (b c : ℕ) : ℕ :=
     3845658939034219770*b^2 +
     7692361555121306790*b*c +
-    678480160084648492338*b +
+    678480160095021892338*b +
     67671072422978742294*c +
-    1926796317162342193788
+    1926796317239312821788
 def gLo2 (b c : ℕ) : ℕ :=
     171801313280*b^2 +
     343602626560*b*c +
@@ -353,17 +377,41 @@ def gLo2 (b c : ℕ) : ℕ :=
     14405689214281*c +
     595095629789680
 def identitySlackLo2 (b c : ℕ) : ℕ :=
-    8619959092510720*b^2 +
-    17239918185021440*b*c +
-    8365979275073708568*b +
-    681094871901851894*c +
-    29524758381069369320
+    8618241079377920*b^2 +
+    17236482158755840*b*c +
+    8364284953036975848*b +
+    680945660970310384*c +
+    29518766192416961020
 def helperSlackLo2 (b c : ℕ) : ℕ :=
     3845658939034219770*b^2 +
     7692361555121306790*b*c +
-    678480160084648492338*b +
+    678480160095021892338*b +
     67671072422978742294*c +
-    1926796317162342193788
+    1926796317239312821788
+def fullSlackLo (b c : ℕ) : ℕ :=
+    766670291009250*b^2 +
+    1533340582018500*b*c +
+    135194594151236400*b +
+    13485706967086950*c +
+    383863643083065000
+def fullSlackHi (a b c : ℕ) : ℕ :=
+    25770196992000*a^3 +
+    77310590976000*a^2*b +
+    77310590976000*a^2*c +
+    25466370944965800*a^2 +
+    77310590976000*a*b^2 +
+    154621181952000*a*b*c +
+    50932741889931600*a*b +
+    4772685211644300*a*c +
+    266420861409072600*a +
+    831095783489250*b^2 +
+    1662191566978500*b*c +
+    186011369958096000*b +
+    18142426095659250*c +
+    624818133153955800
+def fullSlack : ℕ → ℕ → ℕ → ℕ
+  | 0, b, c => fullSlackLo b c
+  | a+1, b, c => fullSlackHi a b c
 def conductorLo (b c : ℕ) : ℕ :=
     11097977276070*b^2 +
     22195954552140*b*c +
@@ -384,26 +432,26 @@ def gHi0 (a b c : ℕ) : ℕ :=
     4853433303475*b +
     52245473334081
 def identitySlackHi0 (a b c : ℕ) : ℕ :=
-    8619959092510720*a^2 +
-    17239918185021440*a*b +
-    711264728725639414*a +
-    243516162568554650*b +
-    2475427753489989594
+    8618241079377920*a^2 +
+    17236482158755840*a*b +
+    711109504748133104*a +
+    243467628235519900*b +
+    2474887259618753334
 def helperSlackHi0 (a b c : ℕ) : ℕ :=
     128326175633412960*a^3 +
     385952625482914980*a^2*b +
     386926724065591080*a^2*c +
-    127821140683801440438*a^2 +
+    127821140686705992438*a^2 +
     386926724065591080*a*b^2 +
     774827546713858260*a*b*c +
-    255594264198275342976*a*b +
+    255594264201179894976*a*b +
     23943378800113756068*a*c +
-    1337265026559225397926*a +
+    1337265026598298537926*a +
     4167935969905980450*b^2 +
     8337889715447504250*b*c +
-    933494521591398449934*b +
+    933494521604676401934*b +
     91033574432984436882*c +
-    3136239227854089945036
+    3136239227967229161036
 def gHi1 (a b c : ℕ) : ℕ :=
     171801313280*a^2 +
     343602626560*a*b +
@@ -413,28 +461,28 @@ def gHi1 (a b c : ℕ) : ℕ :=
     4853433303475*c +
     555388877192922
 def identitySlackHi1 (a b c : ℕ) : ℕ :=
-    8619959092510720*a^2 +
-    17239918185021440*a*b +
-    17239918185021440*a*c +
-    8383219193258730008*a +
-    243516162568554650*b +
-    243516162568554650*c +
-    27574208273129287428
+    8618241079377920*a^2 +
+    17236482158755840*a*b +
+    17236482158755840*a*c +
+    8381521435195731688*a +
+    243467628235519900*b +
+    243467628235519900*c +
+    27568618306081567308
 def helperSlackHi1 (a b c : ℕ) : ℕ :=
     128326175633412960*a^3 +
     385952625482914980*a^2*b +
     386926724065591080*a^2*c +
-    127821140683801440438*a^2 +
+    127821140686705992438*a^2 +
     386926724065591080*a*b^2 +
     774827546713858260*a*b*c +
-    255594264198275342976*a*b +
+    255594264201179894976*a*b +
     23943378800113756068*a*c +
-    1337265026559225397926*a +
+    1337265026598298537926*a +
     4167935969905980450*b^2 +
     8337889715447504250*b*c +
-    933494521591398449934*b +
+    933494521604676401934*b +
     91033574432984436882*c +
-    3136239227854089945036
+    3136239227967229161036
 def gHi2 (a b c : ℕ) : ℕ :=
     171801313280*a^2 +
     343602626560*a*b +
@@ -446,30 +494,30 @@ def gHi2 (a b c : ℕ) : ℕ :=
     14749291840841*c +
     763668826896492
 def identitySlackHi2 (a b c : ℕ) : ℕ :=
-    8619959092510720*a^2 +
-    17239918185021440*a*b +
-    17239918185021440*a*c +
-    8383219193258730008*a +
-    8619959092510720*b^2 +
-    17239918185021440*b*c +
-    8383219193258730008*b +
-    698334790086873334*c +
-    37899357615235588608
+    8618241079377920*a^2 +
+    17236482158755840*a*b +
+    17236482158755840*a*c +
+    8381521435195731688*a +
+    8618241079377920*b^2 +
+    17236482158755840*b*c +
+    8381521435195731688*b +
+    698182143129066224*c +
+    37891669386533314788
 def helperSlackHi2 (a b c : ℕ) : ℕ :=
     128326175633412960*a^3 +
     385952625482914980*a^2*b +
     386926724065591080*a^2*c +
-    127821140683801440438*a^2 +
+    127821140686705992438*a^2 +
     386926724065591080*a*b^2 +
     774827546713858260*a*b*c +
-    255594264198275342976*a*b +
+    255594264201179894976*a*b +
     23943378800113756068*a*c +
-    1337265026559225397926*a +
+    1337265026598298537926*a +
     4167935969905980450*b^2 +
     8337889715447504250*b*c +
-    933494521591398449934*b +
+    933494521604676401934*b +
     91033574432984436882*c +
-    3136239227854089945036
+    3136239227967229161036
 def conductorHi (a b c : ℕ) : ℕ :=
     887828428260*a^3 +
     2663485284780*a^2*b +
@@ -518,17 +566,17 @@ theorem divides (j : Fin 3) : 3*(cfg j).d ∣ scale := by
   exact h j
 theorem graph_eq_lo (f : FlagDegree) (b c : ℕ) :
     graphDir cfg scale f 0 b c = f.zOnly*gLo0 b c+f.yz*gLo1 b c+f.all*gLo2 b c := by
-  norm_num [cfg,scale,source28,graphDir,normal,raw,MovingFiberThreeSources6811.weight,MovingFiberThreeSources6811.direction,Params.d,Params.flag,SecondJetRelaxedFlag.budgetFlag,flagMixed,unitZFlag,unitYZFlag,unitAllFlag,firstDir_zero,firstLo,gLo0,gLo1,gLo2,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
+  norm_num [cfg,scale,fullSlack,fullSlackLo,fullSlackHi,source28,graphDir,normal,raw,MovingFiberThreeSources6811.weight,MovingFiberThreeSources6811.direction,Params.d,Params.flag,SecondJetRelaxedFlag.budgetFlag,flagMixed,unitZFlag,unitYZFlag,unitAllFlag,firstDir_zero,firstLo,gLo0,gLo1,gLo2,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
   <;> ring
 theorem graph_eq_hi (f : FlagDegree) (a b c : ℕ) :
     graphDir cfg scale f (a+1) b c = f.zOnly*gHi0 a b c+f.yz*gHi1 a b c+f.all*gHi2 a b c := by
-  norm_num [cfg,scale,source28,graphDir,normal,raw,MovingFiberThreeSources6811.weight,MovingFiberThreeSources6811.direction,Params.d,Params.flag,SecondJetRelaxedFlag.budgetFlag,flagMixed,unitZFlag,unitYZFlag,unitAllFlag,firstDir_succ,firstHi,gHi0,gHi1,gHi2,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
+  norm_num [cfg,scale,fullSlack,fullSlackLo,fullSlackHi,source28,graphDir,normal,raw,MovingFiberThreeSources6811.weight,MovingFiberThreeSources6811.direction,Params.d,Params.flag,SecondJetRelaxedFlag.budgetFlag,flagMixed,unitZFlag,unitYZFlag,unitAllFlag,firstDir_succ,firstHi,gHi0,gHi1,gHi2,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
   <;> ring
 theorem identity_absorption (f : FlagDegree) (a b c : ℕ) :
-    scale*131073*80900*identityDegree f a b c ≤ 50174*graphDir cfg scale f a b c := by
+    scale*131073*80910*identityDegree f a b c ≤ 50164*graphDir cfg scale f a b c := by
   cases a with
   | zero =>
-    have he : 50174*graphDir cfg scale f 0 b c = scale*131073*80900*identityDegree f 0 b c+
+    have he : 50164*graphDir cfg scale f 0 b c = scale*131073*80910*identityDegree f 0 b c+
         (f.zOnly*identitySlackLo0 b c+f.yz*identitySlackLo1 b c+f.all*identitySlackLo2 b c) := by
       rw [graph_eq_lo]
       simp only [scale,identityDegree,gLo0,gLo1,gLo2,identitySlackLo0,identitySlackLo1,identitySlackLo2]
@@ -536,7 +584,7 @@ theorem identity_absorption (f : FlagDegree) (a b c : ℕ) :
     rw [he]
     exact Nat.le_add_right _ _
   | succ a =>
-    have he : 50174*graphDir cfg scale f (a+1) b c = scale*131073*80900*identityDegree f (a+1) b c+
+    have he : 50164*graphDir cfg scale f (a+1) b c = scale*131073*80910*identityDegree f (a+1) b c+
         (f.zOnly*identitySlackHi0 a b c+f.yz*identitySlackHi1 a b c+f.all*identitySlackHi2 a b c) := by
       rw [graph_eq_hi]
       simp only [scale,identityDegree,gHi0,gHi1,gHi2,identitySlackHi0,identitySlackHi1,identitySlackHi2]
@@ -544,67 +592,67 @@ theorem identity_absorption (f : FlagDegree) (a b c : ℕ) :
     rw [he]
     exact Nat.le_add_right _ _
 theorem full_eq (a b c : ℕ) : full a b c =
-    scale*50174*graphDir cfg scale ⟨c,b+2,a+3⟩ a b c+
-      scale^2*(∑ j : Fin 3, coeff (cfg j) a b c)+conductor a b c := by
+    scale*50164*graphDir cfg scale ⟨c,b+2,a+3⟩ a b c+
+      scale^2*(∑ j : Fin 3, coeff (cfg j) a b c)+conductor a b c+fullSlack a b c := by
   cases a with
   | zero =>
     rw [graph_eq_lo]
-    norm_num [cfg,scale,source28,full,slope,intercept,slopeLo,interceptLo,gLo0,gLo1,gLo2,coeff,pairNumerator,
+    norm_num [cfg,scale,fullSlack,fullSlackLo,fullSlackHi,source28,full,slope,intercept,slopeLo,interceptLo,gLo0,gLo1,gLo2,coeff,pairNumerator,
       conductor,conductorLo,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
     <;> ring
   | succ a =>
     rw [graph_eq_hi]
-    norm_num [cfg,scale,source28,full,slope,intercept,slopeHi,interceptHi,gHi0,gHi1,gHi2,coeff,pairNumerator,
+    norm_num [cfg,scale,fullSlack,fullSlackLo,fullSlackHi,source28,full,slope,intercept,slopeHi,interceptHi,gHi0,gHi1,gHi2,coeff,pairNumerator,
       conductor,conductorHi,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
     <;> ring
 theorem helper_cap (a b c : ℕ) (j : Fin 3) :
-    helper (cfg j) a b c/50174 ≤ full a b c/denominator := by
+    helper (cfg j) a b c/50164 ≤ full a b c/denominator := by
   have he : scale^2*helper (cfg j) a b c ≤ full a b c := by
     cases a with
     | zero =>
       fin_cases j
       · have h : full 0 b c = scale^2*helper (cfg 0) 0 b c+helperSlackLo0 b c := by
-          norm_num [cfg,scale,source28,full,slope,intercept,slopeLo,interceptLo,helper,pairNumerator,helperSlackLo0,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
+          norm_num [cfg,scale,fullSlack,fullSlackLo,fullSlackHi,source28,full,slope,intercept,slopeLo,interceptLo,helper,pairNumerator,helperSlackLo0,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
           <;> ring
         rw [h]
         exact Nat.le_add_right _ _
       · have h : full 0 b c = scale^2*helper (cfg 1) 0 b c+helperSlackLo1 b c := by
-          norm_num [cfg,scale,source28,full,slope,intercept,slopeLo,interceptLo,helper,pairNumerator,helperSlackLo1,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
+          norm_num [cfg,scale,fullSlack,fullSlackLo,fullSlackHi,source28,full,slope,intercept,slopeLo,interceptLo,helper,pairNumerator,helperSlackLo1,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
           <;> ring
         rw [h]
         exact Nat.le_add_right _ _
       · have h : full 0 b c = scale^2*helper (cfg 2) 0 b c+helperSlackLo2 b c := by
-          norm_num [cfg,scale,source28,full,slope,intercept,slopeLo,interceptLo,helper,pairNumerator,helperSlackLo2,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
+          norm_num [cfg,scale,fullSlack,fullSlackLo,fullSlackHi,source28,full,slope,intercept,slopeLo,interceptLo,helper,pairNumerator,helperSlackLo2,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
           <;> ring
         rw [h]
         exact Nat.le_add_right _ _
     | succ a =>
       fin_cases j
       · have h : full (a+1) b c = scale^2*helper (cfg 0) (a+1) b c+helperSlackHi0 a b c := by
-          norm_num [cfg,scale,source28,full,slope,intercept,slopeHi,interceptHi,helper,pairNumerator,helperSlackHi0,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
+          norm_num [cfg,scale,fullSlack,fullSlackLo,fullSlackHi,source28,full,slope,intercept,slopeHi,interceptHi,helper,pairNumerator,helperSlackHi0,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
           <;> ring
         rw [h]
         exact Nat.le_add_right _ _
       · have h : full (a+1) b c = scale^2*helper (cfg 1) (a+1) b c+helperSlackHi1 a b c := by
-          norm_num [cfg,scale,source28,full,slope,intercept,slopeHi,interceptHi,helper,pairNumerator,helperSlackHi1,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
+          norm_num [cfg,scale,fullSlack,fullSlackLo,fullSlackHi,source28,full,slope,intercept,slopeHi,interceptHi,helper,pairNumerator,helperSlackHi1,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
           <;> ring
         rw [h]
         exact Nat.le_add_right _ _
       · have h : full (a+1) b c = scale^2*helper (cfg 2) (a+1) b c+helperSlackHi2 a b c := by
-          norm_num [cfg,scale,source28,full,slope,intercept,slopeHi,interceptHi,helper,pairNumerator,helperSlackHi2,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
+          norm_num [cfg,scale,fullSlack,fullSlackLo,fullSlackHi,source28,full,slope,intercept,slopeHi,interceptHi,helper,pairNumerator,helperSlackHi2,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
           <;> ring
         rw [h]
         exact Nat.le_add_right _ _
   apply (Nat.le_div_iff_mul_le (show 0 < denominator by decide +kernel)).mpr
-  have hh := Nat.div_mul_le_self (helper (cfg j) a b c) 50174
+  have hh := Nat.div_mul_le_self (helper (cfg j) a b c) 50164
   dsimp only [denominator,scale] at he ⊢
   nlinarith
 theorem retained_cap (a b c : ℕ) :
     graphDir cfg scale ⟨c,b+2,a+3⟩ a b c/scale+
-      (∑ j : Fin 3, coeff (cfg j) a b c/50174) ≤ full a b c/denominator := by
+      (∑ j : Fin 3, coeff (cfg j) a b c/50164) ≤ full a b c/denominator := by
   apply (Nat.le_div_iff_mul_le (show 0 < denominator by decide +kernel)).mpr
   have hx := Nat.div_mul_le_self (graphDir cfg scale ⟨c,b+2,a+3⟩ a b c) scale
-  have hy : (∑ j : Fin 3, coeff (cfg j) a b c/50174)*50174 ≤ ∑ j : Fin 3, coeff (cfg j) a b c := by
+  have hy : (∑ j : Fin 3, coeff (cfg j) a b c/50164)*50164 ≤ ∑ j : Fin 3, coeff (cfg j) a b c := by
     rw [Finset.sum_mul]
     exact Finset.sum_le_sum (fun j _ => Nat.div_mul_le_self _ _)
   rw [full_eq]
@@ -631,28 +679,28 @@ def gLo0 (b c : ℕ) : ℕ :=
     4406747922849*b +
     36826146147760
 def identitySlackLo0 (b c : ℕ) : ℕ :=
-    221104170281025726*b +
-    1743474609979002740
+    221060102801797236*b +
+    1743093463419028390
 def helperSlackLo0 (b c : ℕ) : ℕ :=
     3703427956731672666*b^2 +
     7407899590516212582*b*c +
-    734273386795577736642*b +
+    734273386805951136642*b +
     66455555295435346704*c +
-    2088448379710254628512
+    2088448379787017788512
 def gLo1 (b c : ℕ) : ℕ :=
     4406747922849*b +
     4406747922849*c +
     418874213305030
 def identitySlackLo1 (b c : ℕ) : ℕ :=
-    221104170281025726*b +
-    221104170281025726*c +
-    20808113884689160220
+    221060102801797236*b +
+    221060102801797236*c +
+    20803899372359116420
 def helperSlackLo1 (b c : ℕ) : ℕ :=
     3703427956731672666*b^2 +
     7407899590516212582*b*c +
-    734273386795577736642*b +
+    734273386805951136642*b +
     66455555295435346704*c +
-    2088448379710254628512
+    2088448379787017788512
 def gLo2 (b c : ℕ) : ℕ :=
     171801313280*b^2 +
     343602626560*b*c +
@@ -660,17 +708,41 @@ def gLo2 (b c : ℕ) : ℕ :=
     14216705803575*c +
     645348379004680
 def identitySlackLo2 (b c : ℕ) : ℕ :=
-    8619959092510720*b^2 +
-    17239918185021440*b*c +
-    9077133298730921868*b +
-    671612818253089050*c +
-    32046139820182779320
+    8618241079377920*b^2 +
+    17236482158755840*b*c +
+    9075297239136159648*b +
+    671465497155654600*c +
+    32039645104038221020
 def helperSlackLo2 (b c : ℕ) : ℕ :=
     3703427956731672666*b^2 +
     7407899590516212582*b*c +
-    734273386795577736642*b +
+    734273386805951136642*b +
     66455555295435346704*c +
-    2088448379710254628512
+    2088448379787017788512
+def fullSlackLo (b c : ℕ) : ℕ :=
+    738322779403350*b^2 +
+    1476645558806700*b*c +
+    146311983927086100*b +
+    13243463910627450*c +
+    416069168982879000
+def fullSlackHi (a b c : ℕ) : ℕ :=
+    25770196992000*a^3 +
+    77310590976000*a^2*b +
+    77310590976000*a^2*c +
+    27592434315408300*a^2 +
+    77310590976000*a*b^2 +
+    154621181952000*a*b*c +
+    55184868630816600*a*b +
+    4715990188432500*a*c +
+    288841217176952100*a +
+    802748271883350*b^2 +
+    1605496543766700*b*c +
+    201380886474830700*b +
+    17843488015987950*c +
+    677317951451206800
+def fullSlack : ℕ → ℕ → ℕ → ℕ
+  | 0, b, c => fullSlackLo b c
+  | a+1, b, c => fullSlackHi a b c
 def conductorLo (b c : ℕ) : ℕ :=
     10920406171626*b^2 +
     21840812343252*b*c +
@@ -691,26 +763,26 @@ def gHi0 (a b c : ℕ) : ℕ :=
     4664449892769*b +
     51386453267175
 def identitySlackHi0 (a b c : ℕ) : ℕ :=
-    8619959092510720*a^2 +
-    17239918185021440*a*b +
-    701782675076876570*a +
-    234034108919791806*b +
-    2432327280653047950
+    8618241079377920*a^2 +
+    17236482158755840*a*b +
+    701629340933477320*a +
+    233987464420864116*b +
+    2431795376982480750
 def helperSlackHi0 (a b c : ℕ) : ℕ :=
     128326175633412960*a^3 +
     385952625482914980*a^2*b +
     386926724065591080*a^2*c +
-    138493102921171883238*a^2 +
+    138493102924076435238*a^2 +
     386926724065591080*a*b^2 +
     774827546713858260*a*b*c +
-    276933550108336818576*a*b +
+    276933550111241370576*a*b +
     23658885911744132460*a*c +
-    1449802304631815149026*a +
+    1449802304670819133026*a +
     4025704987603433346*b^2 +
     8053427750842410042*b*c +
-    1010627034212389169838*b +
+    1010627034225667121838*b +
     89533564417071417684*c +
-    3399756606237221688060
+    3399756606350084280060
 def gHi1 (a b c : ℕ) : ℕ :=
     171801313280*a^2 +
     343602626560*a*b +
@@ -720,28 +792,28 @@ def gHi1 (a b c : ℕ) : ℕ :=
     4664449892769*c +
     601535264247432
 def identitySlackHi1 (a b c : ℕ) : ℕ :=
-    8619959092510720*a^2 +
-    17239918185021440*a*b +
-    17239918185021440*a*c +
-    9094373216915943308*a +
-    234034108919791806*b +
-    234034108919791806*c +
-    29889557097202272168
+    8618241079377920*a^2 +
+    17236482158755840*a*b +
+    17236482158755840*a*c +
+    9092533721294915488*a +
+    233987464420864116*b +
+    233987464420864116*c +
+    29883505666284006948
 def helperSlackHi1 (a b c : ℕ) : ℕ :=
     128326175633412960*a^3 +
     385952625482914980*a^2*b +
     386926724065591080*a^2*c +
-    138493102921171883238*a^2 +
+    138493102924076435238*a^2 +
     386926724065591080*a*b^2 +
     774827546713858260*a*b*c +
-    276933550108336818576*a*b +
+    276933550111241370576*a*b +
     23658885911744132460*a*c +
-    1449802304631815149026*a +
+    1449802304670819133026*a +
     4025704987603433346*b^2 +
     8053427750842410042*b*c +
-    1010627034212389169838*b +
+    1010627034225667121838*b +
     89533564417071417684*c +
-    3399756606237221688060
+    3399756606350084280060
 def gHi2 (a b c : ℕ) : ℕ :=
     171801313280*a^2 +
     343602626560*a*b +
@@ -753,30 +825,30 @@ def gHi2 (a b c : ℕ) : ℕ :=
     14560308430135*c +
     828095331914442
 def identitySlackHi2 (a b c : ℕ) : ℕ :=
-    8619959092510720*a^2 +
-    17239918185021440*a*b +
-    17239918185021440*a*c +
-    9094373216915943308*a +
-    8619959092510720*b^2 +
-    17239918185021440*b*c +
-    9094373216915943308*b +
-    688852736438110490*c +
-    41131893078006211908
+    8618241079377920*a^2 +
+    17236482158755840*a*b +
+    17236482158755840*a*c +
+    9092533721294915488*a +
+    8618241079377920*b^2 +
+    17236482158755840*b*c +
+    9092533721294915488*b +
+    688701979314410440*c +
+    41123560584253758588
 def helperSlackHi2 (a b c : ℕ) : ℕ :=
     128326175633412960*a^3 +
     385952625482914980*a^2*b +
     386926724065591080*a^2*c +
-    138493102921171883238*a^2 +
+    138493102924076435238*a^2 +
     386926724065591080*a*b^2 +
     774827546713858260*a*b*c +
-    276933550108336818576*a*b +
+    276933550111241370576*a*b +
     23658885911744132460*a*c +
-    1449802304631815149026*a +
+    1449802304670819133026*a +
     4025704987603433346*b^2 +
     8053427750842410042*b*c +
-    1010627034212389169838*b +
+    1010627034225667121838*b +
     89533564417071417684*c +
-    3399756606237221688060
+    3399756606350084280060
 def conductorHi (a b c : ℕ) : ℕ :=
     887828428260*a^3 +
     2663485284780*a^2*b +
@@ -825,17 +897,17 @@ theorem divides (j : Fin 3) : 3*(cfg j).d ∣ scale := by
   exact h j
 theorem graph_eq_lo (f : FlagDegree) (b c : ℕ) :
     graphDir cfg scale f 0 b c = f.zOnly*gLo0 b c+f.yz*gLo1 b c+f.all*gLo2 b c := by
-  norm_num [cfg,scale,source29,graphDir,normal,raw,MovingFiberThreeSources6811.weight,MovingFiberThreeSources6811.direction,Params.d,Params.flag,SecondJetRelaxedFlag.budgetFlag,flagMixed,unitZFlag,unitYZFlag,unitAllFlag,firstDir_zero,firstLo,gLo0,gLo1,gLo2,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
+  norm_num [cfg,scale,fullSlack,fullSlackLo,fullSlackHi,source29,graphDir,normal,raw,MovingFiberThreeSources6811.weight,MovingFiberThreeSources6811.direction,Params.d,Params.flag,SecondJetRelaxedFlag.budgetFlag,flagMixed,unitZFlag,unitYZFlag,unitAllFlag,firstDir_zero,firstLo,gLo0,gLo1,gLo2,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
   <;> ring
 theorem graph_eq_hi (f : FlagDegree) (a b c : ℕ) :
     graphDir cfg scale f (a+1) b c = f.zOnly*gHi0 a b c+f.yz*gHi1 a b c+f.all*gHi2 a b c := by
-  norm_num [cfg,scale,source29,graphDir,normal,raw,MovingFiberThreeSources6811.weight,MovingFiberThreeSources6811.direction,Params.d,Params.flag,SecondJetRelaxedFlag.budgetFlag,flagMixed,unitZFlag,unitYZFlag,unitAllFlag,firstDir_succ,firstHi,gHi0,gHi1,gHi2,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
+  norm_num [cfg,scale,fullSlack,fullSlackLo,fullSlackHi,source29,graphDir,normal,raw,MovingFiberThreeSources6811.weight,MovingFiberThreeSources6811.direction,Params.d,Params.flag,SecondJetRelaxedFlag.budgetFlag,flagMixed,unitZFlag,unitYZFlag,unitAllFlag,firstDir_succ,firstHi,gHi0,gHi1,gHi2,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
   <;> ring
 theorem identity_absorption (f : FlagDegree) (a b c : ℕ) :
-    scale*131073*80900*identityDegree f a b c ≤ 50174*graphDir cfg scale f a b c := by
+    scale*131073*80910*identityDegree f a b c ≤ 50164*graphDir cfg scale f a b c := by
   cases a with
   | zero =>
-    have he : 50174*graphDir cfg scale f 0 b c = scale*131073*80900*identityDegree f 0 b c+
+    have he : 50164*graphDir cfg scale f 0 b c = scale*131073*80910*identityDegree f 0 b c+
         (f.zOnly*identitySlackLo0 b c+f.yz*identitySlackLo1 b c+f.all*identitySlackLo2 b c) := by
       rw [graph_eq_lo]
       simp only [scale,identityDegree,gLo0,gLo1,gLo2,identitySlackLo0,identitySlackLo1,identitySlackLo2]
@@ -843,7 +915,7 @@ theorem identity_absorption (f : FlagDegree) (a b c : ℕ) :
     rw [he]
     exact Nat.le_add_right _ _
   | succ a =>
-    have he : 50174*graphDir cfg scale f (a+1) b c = scale*131073*80900*identityDegree f (a+1) b c+
+    have he : 50164*graphDir cfg scale f (a+1) b c = scale*131073*80910*identityDegree f (a+1) b c+
         (f.zOnly*identitySlackHi0 a b c+f.yz*identitySlackHi1 a b c+f.all*identitySlackHi2 a b c) := by
       rw [graph_eq_hi]
       simp only [scale,identityDegree,gHi0,gHi1,gHi2,identitySlackHi0,identitySlackHi1,identitySlackHi2]
@@ -851,67 +923,67 @@ theorem identity_absorption (f : FlagDegree) (a b c : ℕ) :
     rw [he]
     exact Nat.le_add_right _ _
 theorem full_eq (a b c : ℕ) : full a b c =
-    scale*50174*graphDir cfg scale ⟨c,b+2,a+3⟩ a b c+
-      scale^2*(∑ j : Fin 3, coeff (cfg j) a b c)+conductor a b c := by
+    scale*50164*graphDir cfg scale ⟨c,b+2,a+3⟩ a b c+
+      scale^2*(∑ j : Fin 3, coeff (cfg j) a b c)+conductor a b c+fullSlack a b c := by
   cases a with
   | zero =>
     rw [graph_eq_lo]
-    norm_num [cfg,scale,source29,full,slope,intercept,slopeLo,interceptLo,gLo0,gLo1,gLo2,coeff,pairNumerator,
+    norm_num [cfg,scale,fullSlack,fullSlackLo,fullSlackHi,source29,full,slope,intercept,slopeLo,interceptLo,gLo0,gLo1,gLo2,coeff,pairNumerator,
       conductor,conductorLo,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
     <;> ring
   | succ a =>
     rw [graph_eq_hi]
-    norm_num [cfg,scale,source29,full,slope,intercept,slopeHi,interceptHi,gHi0,gHi1,gHi2,coeff,pairNumerator,
+    norm_num [cfg,scale,fullSlack,fullSlackLo,fullSlackHi,source29,full,slope,intercept,slopeHi,interceptHi,gHi0,gHi1,gHi2,coeff,pairNumerator,
       conductor,conductorHi,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
     <;> ring
 theorem helper_cap (a b c : ℕ) (j : Fin 3) :
-    helper (cfg j) a b c/50174 ≤ full a b c/denominator := by
+    helper (cfg j) a b c/50164 ≤ full a b c/denominator := by
   have he : scale^2*helper (cfg j) a b c ≤ full a b c := by
     cases a with
     | zero =>
       fin_cases j
       · have h : full 0 b c = scale^2*helper (cfg 0) 0 b c+helperSlackLo0 b c := by
-          norm_num [cfg,scale,source29,full,slope,intercept,slopeLo,interceptLo,helper,pairNumerator,helperSlackLo0,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
+          norm_num [cfg,scale,fullSlack,fullSlackLo,fullSlackHi,source29,full,slope,intercept,slopeLo,interceptLo,helper,pairNumerator,helperSlackLo0,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
           <;> ring
         rw [h]
         exact Nat.le_add_right _ _
       · have h : full 0 b c = scale^2*helper (cfg 1) 0 b c+helperSlackLo1 b c := by
-          norm_num [cfg,scale,source29,full,slope,intercept,slopeLo,interceptLo,helper,pairNumerator,helperSlackLo1,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
+          norm_num [cfg,scale,fullSlack,fullSlackLo,fullSlackHi,source29,full,slope,intercept,slopeLo,interceptLo,helper,pairNumerator,helperSlackLo1,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
           <;> ring
         rw [h]
         exact Nat.le_add_right _ _
       · have h : full 0 b c = scale^2*helper (cfg 2) 0 b c+helperSlackLo2 b c := by
-          norm_num [cfg,scale,source29,full,slope,intercept,slopeLo,interceptLo,helper,pairNumerator,helperSlackLo2,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
+          norm_num [cfg,scale,fullSlack,fullSlackLo,fullSlackHi,source29,full,slope,intercept,slopeLo,interceptLo,helper,pairNumerator,helperSlackLo2,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
           <;> ring
         rw [h]
         exact Nat.le_add_right _ _
     | succ a =>
       fin_cases j
       · have h : full (a+1) b c = scale^2*helper (cfg 0) (a+1) b c+helperSlackHi0 a b c := by
-          norm_num [cfg,scale,source29,full,slope,intercept,slopeHi,interceptHi,helper,pairNumerator,helperSlackHi0,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
+          norm_num [cfg,scale,fullSlack,fullSlackLo,fullSlackHi,source29,full,slope,intercept,slopeHi,interceptHi,helper,pairNumerator,helperSlackHi0,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
           <;> ring
         rw [h]
         exact Nat.le_add_right _ _
       · have h : full (a+1) b c = scale^2*helper (cfg 1) (a+1) b c+helperSlackHi1 a b c := by
-          norm_num [cfg,scale,source29,full,slope,intercept,slopeHi,interceptHi,helper,pairNumerator,helperSlackHi1,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
+          norm_num [cfg,scale,fullSlack,fullSlackLo,fullSlackHi,source29,full,slope,intercept,slopeHi,interceptHi,helper,pairNumerator,helperSlackHi1,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
           <;> ring
         rw [h]
         exact Nat.le_add_right _ _
       · have h : full (a+1) b c = scale^2*helper (cfg 2) (a+1) b c+helperSlackHi2 a b c := by
-          norm_num [cfg,scale,source29,full,slope,intercept,slopeHi,interceptHi,helper,pairNumerator,helperSlackHi2,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
+          norm_num [cfg,scale,fullSlack,fullSlackLo,fullSlackHi,source29,full,slope,intercept,slopeHi,interceptHi,helper,pairNumerator,helperSlackHi2,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
           <;> ring
         rw [h]
         exact Nat.le_add_right _ _
   apply (Nat.le_div_iff_mul_le (show 0 < denominator by decide +kernel)).mpr
-  have hh := Nat.div_mul_le_self (helper (cfg j) a b c) 50174
+  have hh := Nat.div_mul_le_self (helper (cfg j) a b c) 50164
   dsimp only [denominator,scale] at he ⊢
   nlinarith
 theorem retained_cap (a b c : ℕ) :
     graphDir cfg scale ⟨c,b+2,a+3⟩ a b c/scale+
-      (∑ j : Fin 3, coeff (cfg j) a b c/50174) ≤ full a b c/denominator := by
+      (∑ j : Fin 3, coeff (cfg j) a b c/50164) ≤ full a b c/denominator := by
   apply (Nat.le_div_iff_mul_le (show 0 < denominator by decide +kernel)).mpr
   have hx := Nat.div_mul_le_self (graphDir cfg scale ⟨c,b+2,a+3⟩ a b c) scale
-  have hy : (∑ j : Fin 3, coeff (cfg j) a b c/50174)*50174 ≤ ∑ j : Fin 3, coeff (cfg j) a b c := by
+  have hy : (∑ j : Fin 3, coeff (cfg j) a b c/50164)*50164 ≤ ∑ j : Fin 3, coeff (cfg j) a b c := by
     rw [Finset.sum_mul]
     exact Finset.sum_le_sum (fun j _ => Nat.div_mul_le_self _ _)
   rw [full_eq]
@@ -938,28 +1010,28 @@ def gLo0 (b c : ℕ) : ℕ :=
     6056057045565*b +
     49049989550670
 def identitySlackLo0 (b c : ℕ) : ℕ :=
-    303856606204178310*b +
-    2315097550141126080
+    303796045633722660*b +
+    2314589011107723930
 def helperSlackLo0 (b c : ℕ) : ℕ :=
     7138723507332488010*b^2 +
     14280007811605655634*b*c +
-    1359830792374216671000*b +
+    1359830792400512548440*b +
     124092480563104145490*c +
-    3865958020349682371682
+    3865958020545410449122
 def gLo1 (b c : ℕ) : ℕ :=
     6056057045565*b +
     6056057045565*c +
     553937570150300
 def identitySlackLo1 (b c : ℕ) : ℕ :=
-    303856606204178310*b +
-    303856606204178310*c +
-    27501390393572771200
+    303796045633722660*b +
+    303796045633722660*c +
+    27495814939595477300
 def helperSlackLo1 (b c : ℕ) : ℕ :=
     7138723507332488010*b^2 +
     14280007811605655634*b*c +
-    1359830792374216671000*b +
+    1359830792400512548440*b +
     124092480563104145490*c +
-    3865958020349682371682
+    3865958020545410449122
 def gLo2 (b c : ℕ) : ℕ :=
     240521838592*b^2 +
     481043677184*b*c +
@@ -967,17 +1039,41 @@ def gLo2 (b c : ℕ) : ℕ :=
     18863979366122*c +
     853033970394692
 def identitySlackLo2 (b c : ℕ) : ℕ :=
-    12067942729515008*b^2 +
-    24135885459030016*b*c +
-    11993987978471448462*b +
-    888106650486129028*c +
-    42333128783386027408
+    12065537511129088*b^2 +
+    24131075022258176*b*c +
+    11991559799547042972*b +
+    887910795037309628*c +
+    42324540718385764388
 def helperSlackLo2 (b c : ℕ) : ℕ :=
     7138723507332488010*b^2 +
     14280007811605655634*b*c +
-    1359830792374216671000*b +
+    1359830792400512548440*b +
     124092480563104145490*c +
-    3865958020349682371682
+    3865958020545410449122
+def fullSlackLo (b c : ℕ) : ℕ :=
+    1423300737881610*b^2 +
+    2846601475763220*b*c +
+    270936557369915010*b +
+    24728348765434860*c +
+    770065526453469960
+def fullSlackHi (a b c : ℕ) : ℕ :=
+    50509586104320*a^3 +
+    151528758312960*a^2*b +
+    151528758312960*a^2*c +
+    51092776584706290*a^2 +
+    151528758312960*a*b^2 +
+    303057516625920*a*b*c +
+    102185553169412580*a*b +
+    8806789090596840*a*c +
+    534614756892839910*a +
+    1549574703142410*b^2 +
+    3099149406284820*b*c +
+    372894817016506470*b +
+    33307844333210580*c +
+    1253587505990900220
+def fullSlack : ℕ → ℕ → ℕ → ℕ
+  | 0, b, c => fullSlackLo b c
+  | a+1, b, c => fullSlackHi a b c
 def conductorLo (b c : ℕ) : ℕ :=
     15182025977610*b^2 +
     30364051955220*b*c +
@@ -998,26 +1094,26 @@ def gHi0 (a b c : ℕ) : ℕ :=
     6416839803453*b +
     68395010758968
 def identitySlackHi0 (a b c : ℕ) : ℕ :=
-    12067942729515008*a^2 +
-    24135885459030016*a*b +
-    930344450039431556*a +
-    321958520298450822*b +
-    3227339994016593732
+    12065537511129088*a^2 +
+    24131075022258176*a*b +
+    930140176326261436*a +
+    321894351900416292*b +
+    3226630789115950422
 def helperSlackHi0 (a b c : ℕ) : ℕ :=
     250973311851270960*a^3 +
     755374663982156652*a^2*b +
     757829392410500424*a^2*c +
-    256485131839194863646*a^2 +
+    256485131846514334686*a^2 +
     757829392410500424*a*b^2 +
     1518113513249344620*a*b*c +
-    512833259218966239048*a*b +
+    512833259226285710088*a*b +
     44179544752331505780*a*c +
-    2683853783752426198524*a +
+    2683853783851374603324*a +
     7769839501083080850*b^2 +
     15544694527535185086*b*c +
-    1871528534799757511412*b +
+    1871528534833372859892*b +
     167134053793581908862*c +
-    6293324214910518123888
+    6293324215197875135088
 def gHi1 (a b c : ℕ) : ℕ :=
     240521838592*a^2 +
     481043677184*a*b +
@@ -1027,28 +1123,28 @@ def gHi1 (a b c : ℕ) : ℕ :=
     6416839803453*c +
     795432590643501
 def identitySlackHi1 (a b c : ℕ) : ℕ :=
-    12067942729515008*a^2 +
-    24135885459030016*a*b +
-    24135885459030016*a*c +
-    12018123863930478478*a +
-    321958520298450822*b +
-    321958520298450822*c +
-    39501412251339285774
+    12065537511129088*a^2 +
+    24131075022258176*a*b +
+    24131075022258176*a*c +
+    12015690874569301148*a +
+    321894351900416292*b +
+    321894351900416292*c +
+    39493407415846743504
 def helperSlackHi1 (a b c : ℕ) : ℕ :=
     250973311851270960*a^3 +
     755374663982156652*a^2*b +
     757829392410500424*a^2*c +
-    256485131839194863646*a^2 +
+    256485131846514334686*a^2 +
     757829392410500424*a*b^2 +
     1518113513249344620*a*b*c +
-    512833259218966239048*a*b +
+    512833259226285710088*a*b +
     44179544752331505780*a*c +
-    2683853783752426198524*a +
+    2683853783851374603324*a +
     7769839501083080850*b^2 +
     15544694527535185086*b*c +
-    1871528534799757511412*b +
+    1871528534833372859892*b +
     167134053793581908862*c +
-    6293324214910518123888
+    6293324215197875135088
 def gHi2 (a b c : ℕ) : ℕ :=
     240521838592*a^2 +
     481043677184*a*b +
@@ -1060,30 +1156,30 @@ def gHi2 (a b c : ℕ) : ℕ :=
     19345023043306*c +
     1094649253642197
 def identitySlackHi2 (a b c : ℕ) : ℕ :=
-    12067942729515008*a^2 +
-    24135885459030016*a*b +
-    24135885459030016*a*c +
-    12018123863930478478*a +
-    12067942729515008*b^2 +
-    24135885459030016*b*c +
-    12018123863930478478*b +
-    912242535945159044*c +
-    54339184704586990878
+    12065537511129088*a^2 +
+    24131075022258176*a*b +
+    24131075022258176*a*c +
+    12015690874569301148*a +
+    12065537511129088*b^2 +
+    24131075022258176*b*c +
+    12015690874569301148*b +
+    912041870059567804*c +
+    54328166055443936448
 def helperSlackHi2 (a b c : ℕ) : ℕ :=
     250973311851270960*a^3 +
     755374663982156652*a^2*b +
     757829392410500424*a^2*c +
-    256485131839194863646*a^2 +
+    256485131846514334686*a^2 +
     757829392410500424*a*b^2 +
     1518113513249344620*a*b*c +
-    512833259218966239048*a*b +
+    512833259226285710088*a*b +
     44179544752331505780*a*c +
-    2683853783752426198524*a +
+    2683853783851374603324*a +
     7769839501083080850*b^2 +
     15544694527535185086*b*c +
-    1871528534799757511412*b +
+    1871528534833372859892*b +
     167134053793581908862*c +
-    6293324214910518123888
+    6293324215197875135088
 def conductorHi (a b c : ℕ) : ℕ :=
     1242959799564*a^3 +
     3728879398692*a^2*b +
@@ -1132,17 +1228,17 @@ theorem divides (j : Fin 3) : 3*(cfg j).d ∣ scale := by
   exact h j
 theorem graph_eq_lo (f : FlagDegree) (b c : ℕ) :
     graphDir cfg scale f 0 b c = f.zOnly*gLo0 b c+f.yz*gLo1 b c+f.all*gLo2 b c := by
-  norm_num [cfg,scale,source30,graphDir,normal,raw,MovingFiberThreeSources6811.weight,MovingFiberThreeSources6811.direction,Params.d,Params.flag,SecondJetRelaxedFlag.budgetFlag,flagMixed,unitZFlag,unitYZFlag,unitAllFlag,firstDir_zero,firstLo,gLo0,gLo1,gLo2,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
+  norm_num [cfg,scale,fullSlack,fullSlackLo,fullSlackHi,source30,graphDir,normal,raw,MovingFiberThreeSources6811.weight,MovingFiberThreeSources6811.direction,Params.d,Params.flag,SecondJetRelaxedFlag.budgetFlag,flagMixed,unitZFlag,unitYZFlag,unitAllFlag,firstDir_zero,firstLo,gLo0,gLo1,gLo2,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
   <;> ring
 theorem graph_eq_hi (f : FlagDegree) (a b c : ℕ) :
     graphDir cfg scale f (a+1) b c = f.zOnly*gHi0 a b c+f.yz*gHi1 a b c+f.all*gHi2 a b c := by
-  norm_num [cfg,scale,source30,graphDir,normal,raw,MovingFiberThreeSources6811.weight,MovingFiberThreeSources6811.direction,Params.d,Params.flag,SecondJetRelaxedFlag.budgetFlag,flagMixed,unitZFlag,unitYZFlag,unitAllFlag,firstDir_succ,firstHi,gHi0,gHi1,gHi2,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
+  norm_num [cfg,scale,fullSlack,fullSlackLo,fullSlackHi,source30,graphDir,normal,raw,MovingFiberThreeSources6811.weight,MovingFiberThreeSources6811.direction,Params.d,Params.flag,SecondJetRelaxedFlag.budgetFlag,flagMixed,unitZFlag,unitYZFlag,unitAllFlag,firstDir_succ,firstHi,gHi0,gHi1,gHi2,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
   <;> ring
 theorem identity_absorption (f : FlagDegree) (a b c : ℕ) :
-    scale*131073*80900*identityDegree f a b c ≤ 50174*graphDir cfg scale f a b c := by
+    scale*131073*80910*identityDegree f a b c ≤ 50164*graphDir cfg scale f a b c := by
   cases a with
   | zero =>
-    have he : 50174*graphDir cfg scale f 0 b c = scale*131073*80900*identityDegree f 0 b c+
+    have he : 50164*graphDir cfg scale f 0 b c = scale*131073*80910*identityDegree f 0 b c+
         (f.zOnly*identitySlackLo0 b c+f.yz*identitySlackLo1 b c+f.all*identitySlackLo2 b c) := by
       rw [graph_eq_lo]
       simp only [scale,identityDegree,gLo0,gLo1,gLo2,identitySlackLo0,identitySlackLo1,identitySlackLo2]
@@ -1150,7 +1246,7 @@ theorem identity_absorption (f : FlagDegree) (a b c : ℕ) :
     rw [he]
     exact Nat.le_add_right _ _
   | succ a =>
-    have he : 50174*graphDir cfg scale f (a+1) b c = scale*131073*80900*identityDegree f (a+1) b c+
+    have he : 50164*graphDir cfg scale f (a+1) b c = scale*131073*80910*identityDegree f (a+1) b c+
         (f.zOnly*identitySlackHi0 a b c+f.yz*identitySlackHi1 a b c+f.all*identitySlackHi2 a b c) := by
       rw [graph_eq_hi]
       simp only [scale,identityDegree,gHi0,gHi1,gHi2,identitySlackHi0,identitySlackHi1,identitySlackHi2]
@@ -1158,67 +1254,67 @@ theorem identity_absorption (f : FlagDegree) (a b c : ℕ) :
     rw [he]
     exact Nat.le_add_right _ _
 theorem full_eq (a b c : ℕ) : full a b c =
-    scale*50174*graphDir cfg scale ⟨c,b+2,a+3⟩ a b c+
-      scale^2*(∑ j : Fin 3, coeff (cfg j) a b c)+conductor a b c := by
+    scale*50164*graphDir cfg scale ⟨c,b+2,a+3⟩ a b c+
+      scale^2*(∑ j : Fin 3, coeff (cfg j) a b c)+conductor a b c+fullSlack a b c := by
   cases a with
   | zero =>
     rw [graph_eq_lo]
-    norm_num [cfg,scale,source30,full,slope,intercept,slopeLo,interceptLo,gLo0,gLo1,gLo2,coeff,pairNumerator,
+    norm_num [cfg,scale,fullSlack,fullSlackLo,fullSlackHi,source30,full,slope,intercept,slopeLo,interceptLo,gLo0,gLo1,gLo2,coeff,pairNumerator,
       conductor,conductorLo,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
     <;> ring
   | succ a =>
     rw [graph_eq_hi]
-    norm_num [cfg,scale,source30,full,slope,intercept,slopeHi,interceptHi,gHi0,gHi1,gHi2,coeff,pairNumerator,
+    norm_num [cfg,scale,fullSlack,fullSlackLo,fullSlackHi,source30,full,slope,intercept,slopeHi,interceptHi,gHi0,gHi1,gHi2,coeff,pairNumerator,
       conductor,conductorHi,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
     <;> ring
 theorem helper_cap (a b c : ℕ) (j : Fin 3) :
-    helper (cfg j) a b c/50174 ≤ full a b c/denominator := by
+    helper (cfg j) a b c/50164 ≤ full a b c/denominator := by
   have he : scale^2*helper (cfg j) a b c ≤ full a b c := by
     cases a with
     | zero =>
       fin_cases j
       · have h : full 0 b c = scale^2*helper (cfg 0) 0 b c+helperSlackLo0 b c := by
-          norm_num [cfg,scale,source30,full,slope,intercept,slopeLo,interceptLo,helper,pairNumerator,helperSlackLo0,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
+          norm_num [cfg,scale,fullSlack,fullSlackLo,fullSlackHi,source30,full,slope,intercept,slopeLo,interceptLo,helper,pairNumerator,helperSlackLo0,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
           <;> ring
         rw [h]
         exact Nat.le_add_right _ _
       · have h : full 0 b c = scale^2*helper (cfg 1) 0 b c+helperSlackLo1 b c := by
-          norm_num [cfg,scale,source30,full,slope,intercept,slopeLo,interceptLo,helper,pairNumerator,helperSlackLo1,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
+          norm_num [cfg,scale,fullSlack,fullSlackLo,fullSlackHi,source30,full,slope,intercept,slopeLo,interceptLo,helper,pairNumerator,helperSlackLo1,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
           <;> ring
         rw [h]
         exact Nat.le_add_right _ _
       · have h : full 0 b c = scale^2*helper (cfg 2) 0 b c+helperSlackLo2 b c := by
-          norm_num [cfg,scale,source30,full,slope,intercept,slopeLo,interceptLo,helper,pairNumerator,helperSlackLo2,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
+          norm_num [cfg,scale,fullSlack,fullSlackLo,fullSlackHi,source30,full,slope,intercept,slopeLo,interceptLo,helper,pairNumerator,helperSlackLo2,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
           <;> ring
         rw [h]
         exact Nat.le_add_right _ _
     | succ a =>
       fin_cases j
       · have h : full (a+1) b c = scale^2*helper (cfg 0) (a+1) b c+helperSlackHi0 a b c := by
-          norm_num [cfg,scale,source30,full,slope,intercept,slopeHi,interceptHi,helper,pairNumerator,helperSlackHi0,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
+          norm_num [cfg,scale,fullSlack,fullSlackLo,fullSlackHi,source30,full,slope,intercept,slopeHi,interceptHi,helper,pairNumerator,helperSlackHi0,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
           <;> ring
         rw [h]
         exact Nat.le_add_right _ _
       · have h : full (a+1) b c = scale^2*helper (cfg 1) (a+1) b c+helperSlackHi1 a b c := by
-          norm_num [cfg,scale,source30,full,slope,intercept,slopeHi,interceptHi,helper,pairNumerator,helperSlackHi1,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
+          norm_num [cfg,scale,fullSlack,fullSlackLo,fullSlackHi,source30,full,slope,intercept,slopeHi,interceptHi,helper,pairNumerator,helperSlackHi1,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
           <;> ring
         rw [h]
         exact Nat.le_add_right _ _
       · have h : full (a+1) b c = scale^2*helper (cfg 2) (a+1) b c+helperSlackHi2 a b c := by
-          norm_num [cfg,scale,source30,full,slope,intercept,slopeHi,interceptHi,helper,pairNumerator,helperSlackHi2,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
+          norm_num [cfg,scale,fullSlack,fullSlackLo,fullSlackHi,source30,full,slope,intercept,slopeHi,interceptHi,helper,pairNumerator,helperSlackHi2,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
           <;> ring
         rw [h]
         exact Nat.le_add_right _ _
   apply (Nat.le_div_iff_mul_le (show 0 < denominator by decide +kernel)).mpr
-  have hh := Nat.div_mul_le_self (helper (cfg j) a b c) 50174
+  have hh := Nat.div_mul_le_self (helper (cfg j) a b c) 50164
   dsimp only [denominator,scale] at he ⊢
   nlinarith
 theorem retained_cap (a b c : ℕ) :
     graphDir cfg scale ⟨c,b+2,a+3⟩ a b c/scale+
-      (∑ j : Fin 3, coeff (cfg j) a b c/50174) ≤ full a b c/denominator := by
+      (∑ j : Fin 3, coeff (cfg j) a b c/50164) ≤ full a b c/denominator := by
   apply (Nat.le_div_iff_mul_le (show 0 < denominator by decide +kernel)).mpr
   have hx := Nat.div_mul_le_self (graphDir cfg scale ⟨c,b+2,a+3⟩ a b c) scale
-  have hy : (∑ j : Fin 3, coeff (cfg j) a b c/50174)*50174 ≤ ∑ j : Fin 3, coeff (cfg j) a b c := by
+  have hy : (∑ j : Fin 3, coeff (cfg j) a b c/50164)*50164 ≤ ∑ j : Fin 3, coeff (cfg j) a b c := by
     rw [Finset.sum_mul]
     exact Finset.sum_le_sum (fun j _ => Nat.div_mul_le_self _ _)
   rw [full_eq]
@@ -1249,28 +1345,28 @@ def gLo0 (b c : ℕ) : ℕ :=
     211060019056110*b +
     1854450095271620
 def identitySlackLo0 (b c : ℕ) : ℕ :=
-    10589725396121263140*b +
-    87207714057190641880
+    10587614795930702040*b +
+    87188447990722107680
 def helperSlackLo0 (b c : ℕ) : ℕ :=
     10110092451521858794692*b^2 +
     20261755113028677105384*b*c +
-    2394620472839352201274884*b +
+    2394620472876871267642884*b +
     187189713479449766250396*c +
-    6380530717927026198914814
+    6380530718214166336898814
 def gLo1 (b c : ℕ) : ℕ :=
     211060019056110*b +
     212004936109640*c +
     21565467406099540
 def identitySlackLo1 (b c : ℕ) : ℕ :=
-    10589725396121263140*b +
-    10637135664365077360*c +
-    1070350831587703079960
+    10587614795930702040*b +
+    10635015615003980960*c +
+    1070133733782610448560
 def helperSlackLo1 (b c : ℕ) : ℕ :=
     10107837738002491181892*b^2 +
     20259500399509309492584*b*c +
-    2394601295244087193201284*b +
+    2394601295288979948913284*b +
     187174039580710958984796*c +
-    6380490914251538740313214
+    6380490914597017773401214
 def gLo2 (b c : ℕ) : ℕ :=
     9620873543680*b^2 +
     19241747087360*b*c +
@@ -1278,17 +1374,41 @@ def gLo2 (b c : ℕ) : ℕ :=
     720542160717800*c +
     36047048873537170
 def identitySlackLo2 (b c : ℕ) : ℕ :=
-    482717709180600320*b^2 +
-    965435418361200640*b*c +
-    577448376855237138790*b +
-    33817496362667849200*c +
-    1789944724292964007580
+    482621500445163520*b^2 +
+    965243000890327040*b*c +
+    577331779682372933540*b +
+    33810002314854344000*c +
+    1789581944792375991880
 def helperSlackLo2 (b c : ℕ) : ℕ :=
     10103231334038191757892*b^2 +
     20254893995545010068584*b*c +
-    2394547030109225810161284*b +
+    2394547030169299690993284*b +
     187147273942781282610396*c +
-    6380334508076598278489214
+    6380334508516200287321214
+def fullSlackLo (b c : ℕ) : ℕ :=
+    2015350173372060000*b^2 +
+    4038637649993772000*b*c +
+    477065976793310478000*b +
+    37296726177012120000*c +
+    1270686117305399676000
+def fullSlackHi (a b c : ℕ) : ℕ :=
+    80815337766912000*a^3 +
+    242446013300736000*a^2*b +
+    242446013300736000*a^2*c +
+    79706968139719569600*a^2 +
+    242446013300736000*a*b^2 +
+    484892026601472000*a*b*c +
+    177810224021157579600*a*b +
+    13554300845278468800*a*c +
+    857269110599019871200*a +
+    2217388517789340000*b^2 +
+    4442714338828332000*b*c +
+    654512531177954265600*b +
+    50487357385776796800*c +
+    2048248258531574601600
+def fullSlack : ℕ → ℕ → ℕ → ℕ
+  | 0, b, c => fullSlackLo b c
+  | a+1, b, c => fullSlackHi a b c
 def conductorLo (b c : ℕ) : ℕ :=
     20076305040521892*b^2 +
     40152610081043784*b*c +
@@ -1309,26 +1429,26 @@ def gHi0 (a b c : ℕ) : ℕ :=
     225491329371630*b +
     2598391564711992
 def identitySlackHi0 (a b c : ℕ) : ℕ :=
-    482717709180600320*a^2 +
-    965435418361200640*a*b +
-    35715613525072732888*a +
-    11313801959892163620*b +
-    122199247335704818608
+    482621500445163520*a^2 +
+    965243000890327040*a*b +
+    35707741170334843568*a +
+    11311547046598447320*b +
+    122172253228335553488
 def helperSlackHi0 (a b c : ℕ) : ℕ :=
     401993413389517860960*a^3 +
     1209471409488864725280*a^2*b +
     1212962578809175867680*a^2*c +
-    400240286962861745768886*a^2 +
+    400240286973271660136886*a^2 +
     1212962578809175867680*a*b^2 +
     2429416326938662877760*a*b*c +
-    892458730502271549063132*a*b +
+    892458730512681463431132*a*b +
     68005121794272047306916*a*c +
-    4304640517079016345014952*a +
+    4304640517222586414006952*a +
     11120313592475182527972*b^2 +
     22285688564255635714344*b*c +
-    3285261504525025698438336*b +
+    3285261504572954679174336*b +
     253373645287803450515232*c +
-    10284927452393775350210640
+    10284927452814075642818640
 def gHi1 (a b c : ℕ) : ℕ :=
     9620873543680*a^2 +
     19241747087360*a*b +
@@ -1338,28 +1458,28 @@ def gHi1 (a b c : ℕ) : ℕ :=
     226436246425160*c +
     30982235559659664
 def identitySlackHi1 (a b c : ℕ) : ℕ :=
-    482717709180600320*a^2 +
-    965435418361200640*a*b +
-    965435418361200640*a*c +
-    468531033564910121736*a +
-    11313801959892163620*b +
-    11361212228135977840*c +
-    1538157784906054645536
+    482621500445163520*a^2 +
+    965243000890327040*a*b +
+    965243000890327040*a*c +
+    468436144317124707696*a +
+    11311547046598447320*b +
+    11358947865671726240*c +
+    1537845942167013758496
 def helperSlackHi1 (a b c : ℕ) : ℕ :=
     401266086447786372960*a^3 +
     1208016755605401749280*a^2*b +
     1212235251867444379680*a^2*c +
-    400229809056438011615286*a^2 +
+    400229809069016658143286*a^2 +
     1212235251867444379680*a*b^2 +
     2428688999996931389760*a*b*c +
-    892445270555386715808732*a*b +
+    892445270567965362336732*a*b +
     67996175671963898916516*a*c +
-    4304590448252494287062952*a +
+    4304590448425775986646952*a +
     11117331552014083427172*b^2 +
     22282706523794536613544*b*c +
-    3285230321636759320086336*b +
+    3285230321694230722326336*b +
     253349752593698226347232*c +
-    10284847330471247836322640
+    10284847330977429922466640
 def gHi2 (a b c : ℕ) : ℕ :=
     9620873543680*a^2 +
     19241747087360*a*b +
@@ -1371,30 +1491,30 @@ def gHi2 (a b c : ℕ) : ℕ :=
     739783907805160*c +
     45468627537269454
 def identitySlackHi2 (a b c : ℕ) : ℕ :=
-    482717709180600320*a^2 +
-    965435418361200640*a*b +
-    965435418361200640*a*c +
-    468531033564910121736*a +
-    482717709180600320*b^2 +
-    965435418361200640*b*c +
-    578413812273598339430*b +
-    34782931781029049840*c +
-    2257993040148693528996
+    482621500445163520*a^2 +
+    965243000890327040*a*b +
+    965243000890327040*a*c +
+    468436144317124707696*a +
+    482621500445163520*b^2 +
+    965243000890327040*b*c +
+    578297022683263260580*b +
+    34775245315744671040*c +
+    2257535467609055536056
 def helperSlackHi2 (a b c : ℕ) : ℕ :=
     399811432564323396960*a^3 +
     1205107447838475797280*a^2*b +
     1210780597983981403680*a^2*c +
-    400203325558833383999286*a^2 +
+    400203325575749494847286*a^2 +
     1210780597983981403680*a*b^2 +
     2427234346113468413760*a*b*c +
-    892412725999934325792732*a*b +
+    892412726016850436640732*a*b +
     67980029012007757706916*a*c +
-    4304436300571297238390952*a +
+    4304436300796194763382952*a +
     11111270494166321027172*b^2 +
     22276645465946774213544*b*c +
-    3285146421254212472982336*b +
+    3285146421331202464662336*b +
     253308294949695871739232*c +
-    10284561805458831490466640
+    10284561806106414913442640
 def conductorHi (a b c : ℕ) : ℕ :=
     1706998124734560*a^3 +
     5120994374203680*a^2*b +
@@ -1443,17 +1563,17 @@ theorem divides (j : Fin 3) : 3*(cfg j).d ∣ scale := by
   exact h j
 theorem graph_eq_lo (f : FlagDegree) (b c : ℕ) :
     graphDir cfg scale f 0 b c = f.zOnly*gLo0 b c+f.yz*gLo1 b c+f.all*gLo2 b c := by
-  norm_num [cfg,scale,source31,source32,source33,graphDir,normal,raw,MovingFiberThreeSources6811.weight,MovingFiberThreeSources6811.direction,Params.d,Params.flag,SecondJetRelaxedFlag.budgetFlag,flagMixed,unitZFlag,unitYZFlag,unitAllFlag,firstDir_zero,firstLo,gLo0,gLo1,gLo2,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
+  norm_num [cfg,scale,fullSlack,fullSlackLo,fullSlackHi,source31,source32,source33,graphDir,normal,raw,MovingFiberThreeSources6811.weight,MovingFiberThreeSources6811.direction,Params.d,Params.flag,SecondJetRelaxedFlag.budgetFlag,flagMixed,unitZFlag,unitYZFlag,unitAllFlag,firstDir_zero,firstLo,gLo0,gLo1,gLo2,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
   <;> ring
 theorem graph_eq_hi (f : FlagDegree) (a b c : ℕ) :
     graphDir cfg scale f (a+1) b c = f.zOnly*gHi0 a b c+f.yz*gHi1 a b c+f.all*gHi2 a b c := by
-  norm_num [cfg,scale,source31,source32,source33,graphDir,normal,raw,MovingFiberThreeSources6811.weight,MovingFiberThreeSources6811.direction,Params.d,Params.flag,SecondJetRelaxedFlag.budgetFlag,flagMixed,unitZFlag,unitYZFlag,unitAllFlag,firstDir_succ,firstHi,gHi0,gHi1,gHi2,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
+  norm_num [cfg,scale,fullSlack,fullSlackLo,fullSlackHi,source31,source32,source33,graphDir,normal,raw,MovingFiberThreeSources6811.weight,MovingFiberThreeSources6811.direction,Params.d,Params.flag,SecondJetRelaxedFlag.budgetFlag,flagMixed,unitZFlag,unitYZFlag,unitAllFlag,firstDir_succ,firstHi,gHi0,gHi1,gHi2,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
   <;> ring
 theorem identity_absorption (f : FlagDegree) (a b c : ℕ) :
-    scale*131073*80900*identityDegree f a b c ≤ 50174*graphDir cfg scale f a b c := by
+    scale*131073*80910*identityDegree f a b c ≤ 50164*graphDir cfg scale f a b c := by
   cases a with
   | zero =>
-    have he : 50174*graphDir cfg scale f 0 b c = scale*131073*80900*identityDegree f 0 b c+
+    have he : 50164*graphDir cfg scale f 0 b c = scale*131073*80910*identityDegree f 0 b c+
         (f.zOnly*identitySlackLo0 b c+f.yz*identitySlackLo1 b c+f.all*identitySlackLo2 b c) := by
       rw [graph_eq_lo]
       simp only [scale,identityDegree,gLo0,gLo1,gLo2,identitySlackLo0,identitySlackLo1,identitySlackLo2]
@@ -1461,7 +1581,7 @@ theorem identity_absorption (f : FlagDegree) (a b c : ℕ) :
     rw [he]
     exact Nat.le_add_right _ _
   | succ a =>
-    have he : 50174*graphDir cfg scale f (a+1) b c = scale*131073*80900*identityDegree f (a+1) b c+
+    have he : 50164*graphDir cfg scale f (a+1) b c = scale*131073*80910*identityDegree f (a+1) b c+
         (f.zOnly*identitySlackHi0 a b c+f.yz*identitySlackHi1 a b c+f.all*identitySlackHi2 a b c) := by
       rw [graph_eq_hi]
       simp only [scale,identityDegree,gHi0,gHi1,gHi2,identitySlackHi0,identitySlackHi1,identitySlackHi2]
@@ -1469,67 +1589,67 @@ theorem identity_absorption (f : FlagDegree) (a b c : ℕ) :
     rw [he]
     exact Nat.le_add_right _ _
 theorem full_eq (a b c : ℕ) : full a b c =
-    scale*50174*graphDir cfg scale ⟨c,b+2,a+3⟩ a b c+
-      scale^2*(∑ j : Fin 3, coeff (cfg j) a b c)+conductor a b c := by
+    scale*50164*graphDir cfg scale ⟨c,b+2,a+3⟩ a b c+
+      scale^2*(∑ j : Fin 3, coeff (cfg j) a b c)+conductor a b c+fullSlack a b c := by
   cases a with
   | zero =>
     rw [graph_eq_lo]
-    norm_num [cfg,scale,source31,source32,source33,full,slope,intercept,slopeLo,interceptLo,gLo0,gLo1,gLo2,coeff,pairNumerator,
+    norm_num [cfg,scale,fullSlack,fullSlackLo,fullSlackHi,source31,source32,source33,full,slope,intercept,slopeLo,interceptLo,gLo0,gLo1,gLo2,coeff,pairNumerator,
       conductor,conductorLo,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
     <;> ring
   | succ a =>
     rw [graph_eq_hi]
-    norm_num [cfg,scale,source31,source32,source33,full,slope,intercept,slopeHi,interceptHi,gHi0,gHi1,gHi2,coeff,pairNumerator,
+    norm_num [cfg,scale,fullSlack,fullSlackLo,fullSlackHi,source31,source32,source33,full,slope,intercept,slopeHi,interceptHi,gHi0,gHi1,gHi2,coeff,pairNumerator,
       conductor,conductorHi,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
     <;> ring
 theorem helper_cap (a b c : ℕ) (j : Fin 3) :
-    helper (cfg j) a b c/50174 ≤ full a b c/denominator := by
+    helper (cfg j) a b c/50164 ≤ full a b c/denominator := by
   have he : scale^2*helper (cfg j) a b c ≤ full a b c := by
     cases a with
     | zero =>
       fin_cases j
       · have h : full 0 b c = scale^2*helper (cfg 0) 0 b c+helperSlackLo0 b c := by
-          norm_num [cfg,scale,source31,source32,source33,full,slope,intercept,slopeLo,interceptLo,helper,pairNumerator,helperSlackLo0,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
+          norm_num [cfg,scale,fullSlack,fullSlackLo,fullSlackHi,source31,source32,source33,full,slope,intercept,slopeLo,interceptLo,helper,pairNumerator,helperSlackLo0,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
           <;> ring
         rw [h]
         exact Nat.le_add_right _ _
       · have h : full 0 b c = scale^2*helper (cfg 1) 0 b c+helperSlackLo1 b c := by
-          norm_num [cfg,scale,source31,source32,source33,full,slope,intercept,slopeLo,interceptLo,helper,pairNumerator,helperSlackLo1,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
+          norm_num [cfg,scale,fullSlack,fullSlackLo,fullSlackHi,source31,source32,source33,full,slope,intercept,slopeLo,interceptLo,helper,pairNumerator,helperSlackLo1,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
           <;> ring
         rw [h]
         exact Nat.le_add_right _ _
       · have h : full 0 b c = scale^2*helper (cfg 2) 0 b c+helperSlackLo2 b c := by
-          norm_num [cfg,scale,source31,source32,source33,full,slope,intercept,slopeLo,interceptLo,helper,pairNumerator,helperSlackLo2,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
+          norm_num [cfg,scale,fullSlack,fullSlackLo,fullSlackHi,source31,source32,source33,full,slope,intercept,slopeLo,interceptLo,helper,pairNumerator,helperSlackLo2,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
           <;> ring
         rw [h]
         exact Nat.le_add_right _ _
     | succ a =>
       fin_cases j
       · have h : full (a+1) b c = scale^2*helper (cfg 0) (a+1) b c+helperSlackHi0 a b c := by
-          norm_num [cfg,scale,source31,source32,source33,full,slope,intercept,slopeHi,interceptHi,helper,pairNumerator,helperSlackHi0,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
+          norm_num [cfg,scale,fullSlack,fullSlackLo,fullSlackHi,source31,source32,source33,full,slope,intercept,slopeHi,interceptHi,helper,pairNumerator,helperSlackHi0,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
           <;> ring
         rw [h]
         exact Nat.le_add_right _ _
       · have h : full (a+1) b c = scale^2*helper (cfg 1) (a+1) b c+helperSlackHi1 a b c := by
-          norm_num [cfg,scale,source31,source32,source33,full,slope,intercept,slopeHi,interceptHi,helper,pairNumerator,helperSlackHi1,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
+          norm_num [cfg,scale,fullSlack,fullSlackLo,fullSlackHi,source31,source32,source33,full,slope,intercept,slopeHi,interceptHi,helper,pairNumerator,helperSlackHi1,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
           <;> ring
         rw [h]
         exact Nat.le_add_right _ _
       · have h : full (a+1) b c = scale^2*helper (cfg 2) (a+1) b c+helperSlackHi2 a b c := by
-          norm_num [cfg,scale,source31,source32,source33,full,slope,intercept,slopeHi,interceptHi,helper,pairNumerator,helperSlackHi2,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
+          norm_num [cfg,scale,fullSlack,fullSlackLo,fullSlackHi,source31,source32,source33,full,slope,intercept,slopeHi,interceptHi,helper,pairNumerator,helperSlackHi2,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
           <;> ring
         rw [h]
         exact Nat.le_add_right _ _
   apply (Nat.le_div_iff_mul_le (show 0 < denominator by decide +kernel)).mpr
-  have hh := Nat.div_mul_le_self (helper (cfg j) a b c) 50174
+  have hh := Nat.div_mul_le_self (helper (cfg j) a b c) 50164
   dsimp only [denominator,scale] at he ⊢
   nlinarith
 theorem retained_cap (a b c : ℕ) :
     graphDir cfg scale ⟨c,b+2,a+3⟩ a b c/scale+
-      (∑ j : Fin 3, coeff (cfg j) a b c/50174) ≤ full a b c/denominator := by
+      (∑ j : Fin 3, coeff (cfg j) a b c/50164) ≤ full a b c/denominator := by
   apply (Nat.le_div_iff_mul_le (show 0 < denominator by decide +kernel)).mpr
   have hx := Nat.div_mul_le_self (graphDir cfg scale ⟨c,b+2,a+3⟩ a b c) scale
-  have hy : (∑ j : Fin 3, coeff (cfg j) a b c/50174)*50174 ≤ ∑ j : Fin 3, coeff (cfg j) a b c := by
+  have hy : (∑ j : Fin 3, coeff (cfg j) a b c/50164)*50164 ≤ ∑ j : Fin 3, coeff (cfg j) a b c := by
     rw [Finset.sum_mul]
     exact Finset.sum_le_sum (fun j _ => Nat.div_mul_le_self _ _)
   rw [full_eq]
@@ -1567,12 +1687,12 @@ structure Receipt (g : Fin 21) where
   positive : 0 < scale
   divides : ∀ j : Fin 3, 3*(groups g j).d ∣ scale
   identity : ∀ (f : FlagDegree) (a b c : ℕ),
-    scale*131073*80900*identityDegree f a b c ≤ 50174*graphDir (groups g) scale f a b c
+    scale*131073*80910*identityDegree f a b c ≤ 50164*graphDir (groups g) scale f a b c
   helper : ∀ (a b c : ℕ) (j : Fin 3),
-    MovingFiberArithmeticBase6815.helper (groups g j) a b c/50174 ≤ full a b c/denominator
+    MovingFiberArithmeticBase6815.helper (groups g j) a b c/50164 ≤ full a b c/denominator
   retained : ∀ a b c,
     graphDir (groups g) scale ⟨c,b+2,a+3⟩ a b c/scale+
-      (∑ j : Fin 3, coeff (groups g j) a b c/50174) ≤ full a b c/denominator
+      (∑ j : Fin 3, coeff (groups g j) a b c/50164) ≤ full a b c/denominator
   rounded_bound : ∀ a b c, full a b c/denominator ≤ rounded a b c
 
 def receipt0 : Receipt 0 where
@@ -1901,13 +2021,13 @@ def sourceLimit (g : Fin 21) : ℕ := Finset.univ.sup (fun j : Fin 3 => (groups 
 theorem scale_positive (g : Fin 21) : 0 < scales g := (receipt g).positive
 theorem scale_divides (g : Fin 21) (j : Fin 3) : 3*(groups g j).d ∣ scales g := (receipt g).divides j
 theorem identity_absorption (g : Fin 21) (f : FlagDegree) (a b c : ℕ) :
-    scales g*131073*80900*identityDegree f a b c ≤ 50174*graphDir (groups g) (scales g) f a b c :=
+    scales g*131073*80910*identityDegree f a b c ≤ 50164*graphDir (groups g) (scales g) f a b c :=
   (receipt g).identity f a b c
 theorem helper_cap (g : Fin 21) (a b c : ℕ) (j : Fin 3) :
-    helper (groups g j) a b c/50174 ≤ fulls g a b c/denominators g := (receipt g).helper a b c j
+    helper (groups g j) a b c/50164 ≤ fulls g a b c/denominators g := (receipt g).helper a b c j
 theorem retained_cap (g : Fin 21) (a b c : ℕ) :
     graphDir (groups g) (scales g) ⟨c,b+2,a+3⟩ a b c/scales g+
-      (∑ j : Fin 3, coeff (groups g j) a b c/50174) ≤ fulls g a b c/denominators g :=
+      (∑ j : Fin 3, coeff (groups g j) a b c/50164) ≤ fulls g a b c/denominators g :=
   (receipt g).retained a b c
 theorem rounded_cap (g : Fin 21) (a b c : ℕ) :
     fulls g a b c/denominators g ≤ roundedCaps g a b c := (receipt g).rounded_bound a b c
@@ -1926,12 +2046,12 @@ theorem bound_le_full (S : Data nodes u0 u1) (hown : Own S) (g : Fin 21) :
   have har : S.r-3=a := by omega
   have hbr : S.y-S.r-2=b := by omega
   have hp (R U T : ℕ) : AsymmetricHelper.leftRegularCountCap (S.pair R U T)=
-      pairNumerator a b c U R T/50174 := by
+      pairNumerator a b c U R T/50164 := by
     unfold AsymmetricHelper.leftRegularCountCap
     rw [pair_numerator S a b c ha hb hc]
     norm_num only [Data.pair,UnequalParameters.gap]
-  have hcoeff (j : Fin 3) : coefficientCap S (groups g j)=coeff (groups g j) a b c/50174 := hp _ _ _
-  have hhelper (j : Fin 3) : helperCap S (groups g j)=helper (groups g j) a b c/50174 := by
+  have hcoeff (j : Fin 3) : coefficientCap S (groups g j)=coeff (groups g j) a b c/50164 := hp _ _ _
+  have hhelper (j : Fin 3) : helperCap S (groups g j)=helper (groups g j) a b c/50164 := by
     unfold helperCap
     rw [hp,ha,hb,hc]
     have h1 : a+3-1=a+2 := by omega
@@ -1954,7 +2074,7 @@ theorem bound_le_full (S : Data nodes u0 u1) (hown : Own S) (g : Fin 21) :
 
 theorem hfree_stage_gap (S : Data nodes u0 u1) :
     ∀ (G : Finset K) (fl : FlagDegree) (S' : RCN159.ResidualStage (RCN135.polynomialEmbedding K) G
-      ⇑nodes 2130706433 80899 fl w (LocatorHybridCells.cellSupport S.t S.y S.r)), S'.F = S.F →
+      ⇑nodes 2130706433 80909 fl w (LocatorHybridCells.cellSupport S.t S.y S.r)), S'.F = S.F →
       HFreeDir6813.HFreeStageDir S' := by
   intro G fl S' _
   haveI : CharP (RCN135.GenericField K) 2130706433 := RCN135.genericField_charP K 2130706433
@@ -1971,10 +2091,10 @@ theorem count_group (S : Data nodes u0 u1) (hI : Fintype.card I = 262144)
   have hLt (j : Fin 3) : (groups g j).L < RCN234.wt RCN156.residualTotalWeights S.F := by
     rw [own_total S hown]
     exact (Finset.le_sup (f := fun j : Fin 3 => (groups g j).L) (Finset.mem_univ j)).trans_lt hL
-  have hid (f : FlagDegree) : scales g*131073*80900*
+  have hid (f : FlagDegree) : scales g*131073*80910*
       identityCurveDegree f (LocatorHybridCells.cellA S.t S.y)
         (LocatorHybridCells.cellB S.y S.r) (LocatorHybridCells.cellS S.r) w ≤
-        50174*numberDir (groups g) (scales g) S.t S.y S.r f := by
+        50164*numberDir (groups g) (scales g) S.t S.y S.r f := by
     obtain ⟨a,ha⟩ : ∃ a, S.r=a+3 := ⟨S.r-3,by have := S.rpos; omega⟩
     obtain ⟨b,hb⟩ : ∃ b, S.y=a+3+(b+2) := ⟨S.y-S.r-2,by have := S.ry; omega⟩
     obtain ⟨c,hc⟩ : ∃ c, S.t=a+3+(b+2)+c := ⟨S.t-S.y,by have := S.yt; omega⟩
@@ -2023,12 +2143,12 @@ def ofCarrier (D L s : ℕ) (F : MvPolynomial (Fin 4) K)
     (hyt : wt residualYSWeights F+2 ≤ wt residualTotalWeights F)
     (selected : K → Polynomial K) (seeds : Finset K)
     (hdegree : ∀ gamma ∈ seeds, (selected gamma).natDegree ≤ w)
-    (hagreement : ∀ gamma ∈ seeds, 181245 ≤
+    (hagreement : ∀ gamma ∈ seeds, 181235 ≤
       (Finset.univ.filter (fun i => (selected gamma).eval (nodes i) = u0 i+gamma*u1 i)).card)
     (hsolution : ∀ gamma ∈ seeds, specialization K (selected gamma) gamma F=0)
     (hregular : ∀ gamma ∈ seeds,
       specialization K (selected gamma) gamma (pderiv (2:Fin 4) F)≠0)
-    (hno : NoLargeSelectedPencil selected seeds w 80899) :
+    (hno : NoLargeSelectedPencil selected seeds w 80909) :
     MovingFiberRegularData6815.Data nodes u0 u1 where
   D := D
   t := wt residualTotalWeights F
@@ -2072,12 +2192,12 @@ theorem carrier_count_le_ledger (g : Fin 21) (D L s : ℕ) (F : MvPolynomial (Fi
     (hr : wt residualSWeights F ≤ 31)
     (selected : K → Polynomial K) (seeds : Finset K)
     (hdegree : ∀ gamma ∈ seeds, (selected gamma).natDegree ≤ w)
-    (hagreement : ∀ gamma ∈ seeds, 181245 ≤
+    (hagreement : ∀ gamma ∈ seeds, 181235 ≤
       (Finset.univ.filter (fun i => (selected gamma).eval (nodes i) = u0 i+gamma*u1 i)).card)
     (hsolution : ∀ gamma ∈ seeds, specialization K (selected gamma) gamma F=0)
     (hregular : ∀ gamma ∈ seeds,
       specialization K (selected gamma) gamma (pderiv (2:Fin 4) F)≠0)
-    (hno : NoLargeSelectedPencil selected seeds w 80899)
+    (hno : NoLargeSelectedPencil selected seeds w 80909)
     (hI : Fintype.card I=262144)
     (ha : Active g (originalCumulativeFlag F)) :
     seeds.card ≤ ledgerCap g (originalCumulativeFlag F) := by
