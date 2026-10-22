@@ -150,7 +150,7 @@ theorem repeated_weights (J D Q : Poly (K:=K)) (hQ : Q≠0) (hJ : J≠0) (hD : D
   obtain ⟨E,he⟩ := hdiv
   have hE : E≠0 := by intro hz; exact hQ (by rw [he,hz,mul_zero])
   have hJD := mul_ne_zero (pow_ne_zero 2 hJ) hD
-  dsimp only [MovingSourceCoupledClearing6814.slope,middle,total,order] at *
+  dsimp only [slope,middle,total,order] at *
   rw [he,weight_mul _ _ _ hJD hE,weight_mul _ _ _ (pow_ne_zero 2 hJ) hD,weight_pow _ _ hJ] at hB hU hL
   rw [he,degreeOf_mul_eq hJD hE,degreeOf_mul_eq (pow_ne_zero 2 hJ) hD,degreeOf_pow_eq _ _ _ hJ] at hs
   omega
@@ -164,7 +164,7 @@ theorem triple_weights (J D E Q : Poly (K:=K)) (hQ : Q≠0) (hJ : J≠0) (hD : D
   have hG : G≠0 := by intro hz; exact hQ (by rw [he,hz,mul_zero])
   have hJD := mul_ne_zero hJ hD
   have hJDE := mul_ne_zero hJD hE
-  dsimp only [MovingSourceCoupledClearing6814.slope,middle,total,order] at *
+  dsimp only [slope,middle,total,order] at *
   rw [he,weight_mul _ _ _ hJDE hG,weight_mul _ _ _ hJD hE,weight_mul _ _ _ hJ hD] at hB hU hL
   rw [he,degreeOf_mul_eq hJDE hG,degreeOf_mul_eq hJD hE,degreeOf_mul_eq hJ hD] at hs
   omega

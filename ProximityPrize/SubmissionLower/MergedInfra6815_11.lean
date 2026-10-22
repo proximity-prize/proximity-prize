@@ -155,7 +155,9 @@ theorem regular_factor_count
     have hag:∀ gamma ∈ geometricSeeds K R.1 selected
         (regularSeeds Q selected Gamma R) g,181245 ≤ (S.agreementFiber gamma).card:=by
       intro gamma hgamma
-      exact hagreement gamma (hsub hgamma)
+      simpa [S,S0,ResidualStage.agreementFiber,ResidualStage.Agrees,
+        reflagResidualStage,regularGeometricResidualStageOfSupport,
+        geometricResidualStageOfSupport] using hagreement gamma (hsub hgamma)
     have hf:=geometricCumulativeFlag_le_support R.1 hRdata.1.ne_zero hRsupport g
     have hcount:=MovingFiberOrdinaryLow6815.fixedStageBound D a b s
       hDlow hDhigh hparam.1 hparam.2.1 hparam.2.2 hlow S hnodes hag hRbox hf
@@ -259,7 +261,9 @@ theorem regular_factor_count_high
         (regularSeeds Q selected Gamma R) g,
         181245 ≤ (S.agreementFiber gamma).card := by
       intro gamma hgamma
-      exact hagreement gamma (hsub hgamma)
+      simpa [S, S0, ResidualStage.agreementFiber, ResidualStage.Agrees,
+        reflagResidualStage, regularGeometricResidualStageOfSupport,
+        geometricResidualStageOfSupport] using hagreement gamma (hsub hgamma)
     have hf := geometricCumulativeFlag_le_support R.1 hRdata.1.ne_zero hRsupport g
     have hf1 : (geometricCumulativeFlag K g).all ≤ padSlope p+2 := hf.1
     have hf2 : (geometricCumulativeFlag K g).yz+

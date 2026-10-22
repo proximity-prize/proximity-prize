@@ -163,7 +163,7 @@ theorem source_nested (P : Poly5) :
       e 1+e 2+e 3≤middle P ∧ 2*e 1+e 3≤slope P ∧ e 1≤order P := by
     refine ⟨?_,?_,MvPolynomial.monomial_le_degreeOf _ he⟩
     · simpa [middle,weight_coords,middleWeights] using MvPolynomial.le_weightedTotalDegree middleWeights he
-    · simpa [MovingSourceCoupledClearing6814.slope,weight_coords,slopeWeights,Nat.mul_comm] using MvPolynomial.le_weightedTotalDegree slopeWeights he
+    · simpa [slope,weight_coords,slopeWeights,Nat.mul_comm] using MvPolynomial.le_weightedTotalDegree slopeWeights he
   refine ⟨?_,?_,?_,?_⟩
   · apply Finset.sup_le
     intro e he
@@ -223,7 +223,7 @@ theorem coefficient_weights
       e 1+e 2+e 3+e 4≤total P := by
     intro e he
     refine ⟨?_,?_,?_⟩
-    · simpa [MovingSourceCoupledClearing6814.slope,weight_coords,slopeWeights,Nat.mul_comm] using MvPolynomial.le_weightedTotalDegree slopeWeights he
+    · simpa [slope,weight_coords,slopeWeights,Nat.mul_comm] using MvPolynomial.le_weightedTotalDegree slopeWeights he
     · simpa [middle,weight_coords,middleWeights] using MvPolynomial.le_weightedTotalDegree middleWeights he
     · simpa [total,weight_coords,totalWeights] using MvPolynomial.le_weightedTotalDegree totalWeights he
   have hw := SecondJetHelperWeights.derivative_coefficient_weights P (slope P) (middle P) (total P) 0 j hb

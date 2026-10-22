@@ -12,14 +12,6 @@ set_option maxRecDepth 20000
 set_option maxHeartbeats 5000000
 set_option Elab.async false
 
-/-- `RCN319.homogenizedTranslation _ x u 0` and `RCN279.homogenizedTranslation _ x u`
-are distinct constants with identical bodies. Bridging them here, over variables,
-keeps the delta step small; doing it inside the proof below forces the check on a
-huge applied term. -/
-theorem homogenizedTranslation_rcn319 (x u : IRSProfile.Field) :
-    RCN319.homogenizedTranslation IRSProfile.Field x u 0
-      = homogenizedTranslation IRSProfile.Field x u := rfl
-
 theorem coefficientCount_exact : coefficientCount 23924340 131071 182 39 = 70451272760 := by decide +kernel
 
 theorem localRankBound_exact : localRankBound 132 182 39 = 268700 := by decide +kernel
@@ -36,8 +28,8 @@ theorem exists_frozen_seedless_interpolant
        23924340 131071 182 39∧
      ∀ (i:IRSProfile.Index) (r:ℕ),
        RCN119.slopeDifference IRSProfile.Field^(132-r)∣
-         (homogenizedTranslation IRSProfile.Field
-           (IRSProfile.domain i) (received i) Q).coeff r:=by
+         (RCN319.homogenizedTranslation IRSProfile.Field
+           (IRSProfile.domain i) (received i) 0 Q).coeff r:=by
  obtain ⟨theta,htheta,hzero⟩:=exists_nonzero_kernel_array
    IRSProfile.Field 23924340 131071 182 39 132
    IRSProfile.domain received (by
@@ -51,8 +43,8 @@ theorem exists_frozen_seedless_interpolant
  have hdiv:=all_blocks_divisible_of_kernel IRSProfile.Field
    23924340 131071 182 39 132 IRSProfile.domain received
    theta hzero i r
- rw [translation_reconstruct_coeff IRSProfile.Field 23924340 131071
-   182 39 (IRSProfile.domain i) (received i) theta r]
+ rw [←translation_reconstruct_coeff IRSProfile.Field 23924340 131071
+   182 39 (IRSProfile.domain i) (received i) theta r] at hdiv
  exact hdiv
 
 end ProximityPrize.SubmissionLower.MovingFiberScalar6815
@@ -94,12 +86,8 @@ theorem exists_seedless_interpolant (received : IRSProfile.Index → IRSProfile.
      ∀ (i : IRSProfile.Index) (r : ℕ),
        RCN119.slopeDifference IRSProfile.Field ^ (multiplicity-r) ∣
          (RCN319.homogenizedTranslation IRSProfile.Field
-           (IRSProfile.domain i) (received i) 0 Q).coeff r := by
-  obtain ⟨Q, hQ0, hQbox, hQdvd⟩ :=
-    MovingFiberScalar6815.exists_frozen_seedless_interpolant received
-  refine ⟨Q, hQ0, hQbox, fun i r => ?_⟩
-  rw [MovingFiberScalar6815.homogenizedTranslation_rcn319]
-  exact hQdvd i r
+           (IRSProfile.domain i) (received i) 0 Q).coeff r :=
+  MovingFiberScalar6815.exists_frozen_seedless_interpolant received
 end
 end ProximityPrize.SubmissionLower.MovingFiberScalarList6815Arithmetic
 
@@ -549,8 +537,7 @@ theorem irs_scalar_finite_list_card_le
    funext i
    have hh:=congrArg (fun P:Polynomial IRSProfile.Field =>
      P.eval (IRSProfile.domain i)) h
-   exact ReedSolomon.toPolynomial_eval_at_domain.symm.trans
-     (hh.trans ReedSolomon.toPolynomial_eval_at_domain)
+   simpa only [selected, ReedSolomon.toPolynomial_eval_at_domain] using hh
  have hcard:Gamma.card = L.card:=by
    rw [show Gamma = Finset.univ.image selected by rfl,
      Finset.card_image_of_injective _ hselected, Finset.card_univ,
@@ -590,8 +577,7 @@ theorem irs_scalar_finite_list_card_le
        Finset.univ.filter (fun i => c.1 i = received i):=by
      apply Finset.filter_congr
      intro i hi
-     rw [show (selected c).eval (IRSProfile.domain i) = c.1 i from
-       ReedSolomon.toPolynomial_eval_at_domain]
+     rw [ReedSolomon.toPolynomial_eval_at_domain]
    rw [heq]
    exact hclose c.1 c.2
  have hbound:=seedless_list_card_le IRSProfile.Field Q hQ hbox hlegacy Gamma
@@ -2058,7 +2044,6 @@ theorem final_pass_raw (r y t : ℤ)
   dsimp [numerator]
   nlinarith
 
-set_option maxRecDepth 1000000 in
 theorem half_middle_count (r y t : ℕ) (hr : 1≤r)
     (hR : r≤39) (hY : y≤182) (hT : t≤11192) :
     leftRegularCountCap (pair 531000 11062 2470 r y t) ≤
@@ -2073,7 +2058,6 @@ theorem half_middle_count (r y t : ℕ) (hr : 1≤r)
   have hd := Nat.div_le_div_right (c:=50174) hn
   simpa [leftRegularCountCap,pair,UnequalParameters.gap] using hd
 
-set_option maxRecDepth 1000000 in
 theorem final_pass_count (r y t : ℕ) (hr : 1≤r)
     (hY : y≤182) (hT : t≤11192) :
     leftRegularCountCap (pair 88902 1382 308 r y t) ≤
@@ -2117,7 +2101,6 @@ theorem box_product (x y capX capY : ℤ) (hx : 0≤x) (hy : 0≤y) (hX : x≤ca
     2*x*y≤capX*y+capY*x := by
   nlinarith [mul_nonneg (sub_nonneg.mpr hX) hy,mul_nonneg (sub_nonneg.mpr hY) hx]
 
-set_option maxRecDepth 1000000 in
 theorem count_le (L U S Rcap Ycap Tcap qt qy qr r y t : ℕ)
     (hf : CoefficientsFit L U S Rcap Ycap Tcap qt qy qr)
     (hr : 1≤r) (hR : r≤Rcap) (hY : y≤Ycap) (hT : t≤Tcap) :

@@ -647,7 +647,6 @@ def fixedNumerator (t y r : ℕ) (p : FlagDegree) : ℕ :=
   ∑ j : Fin 3, weight (cellNormal t y r) j*
     flagMixed p (HFreeDir6813.hfreeFirstDir t y r j) (direction j)
 
-set_option maxRecDepth 1000000 in
 theorem pairNumerator_eq (scale z u v t y r : ℕ) (p : FlagDegree) :
     pairNumerator scale z u v t y r p=
       scale*fixedNumerator t y r p+coefficient t y r 0*z+

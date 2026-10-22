@@ -718,7 +718,7 @@ theorem root_factor_data (F : MvPolynomial (Fin 4) K) [Fact (Irreducible F)]
   rw [hEq,degreeOf_mul_eq hJ.ne_zero hQ] at hs
   refine ⟨hJne,hm,hms,?_,?_,?_,?_⟩
   all_goals
-    dsimp only [MovingSourceCoupledClearing6814.slope,middle,total,order]
+    dsimp only [slope,middle,total,order]
     omega
 
 theorem ramified_order_ge_three (F : MvPolynomial (Fin 4) K) [Fact (Irreducible F)]

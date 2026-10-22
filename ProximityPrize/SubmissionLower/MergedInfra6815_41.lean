@@ -208,7 +208,7 @@ theorem helper_or_coprime_sources_retained [CharP K 2130706433]
   · rwa [hSJ,hSQ]
   · simpa only [hSQ,caps,total] using hT
   · simpa only [hSQ,caps,middle] using hU
-  · simpa only [hSQ,caps,MovingSourceCoupledClearing6814.slope] using hB
+  · simpa only [hSQ,caps,slope] using hB
   · simpa only [hSQ,caps,order] using hS
 
 end

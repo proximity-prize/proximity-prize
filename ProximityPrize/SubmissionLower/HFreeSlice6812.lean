@@ -262,8 +262,8 @@ noncomputable def sliceEmbedding (hker : RingHom.ker (sliceMap (K := K) D) = Ide
 theorem sliceEmbedding_proj (hker : RingHom.ker (sliceMap (K := K) D) = Ideal.span {F₀})
     (A : MvPolynomial (Fin 4) K) :
     sliceEmbedding D F₀ hker (sliceProj F₀ A) = sliceMap (K := K) D A := by
-  rw [sliceEmbedding, sliceProj, RingHom.comp_apply, IsFractionRing.lift_algebraMap]
-  rfl
+  rw [sliceEmbedding, sliceProj, RingHom.comp_apply, IsFractionRing.lift_algebraMap,
+    Ideal.Quotient.lift_mk]
 
 end Embedding
 
