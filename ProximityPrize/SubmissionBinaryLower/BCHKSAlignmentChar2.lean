@@ -43,7 +43,7 @@ theorem single_factor_alignment (d : ℕ) :
       (∀ j a, ((R.coeff j).coeff a) ≠ 0 → a + 1048575 * j < 7236927760) →
       (∀ z ∈ S, (P z).natDegree ≤ 1048575) →
       (∀ z ∈ S, triEval R z (P z) = 0) →
-      (∀ z ∈ S, 1482977 ≤ (Arow z).card) →
+      (∀ z ∈ S, 1482911 ≤ (Arow z).card) →
       (∀ z ∈ S, ∀ i ∈ Arow z,
         Polynomial.eval (BinaryIRSProfile.domain i) (P z) = U 0 i + z ^ q * U 1 i) →
       sfCapU d < S.card →
