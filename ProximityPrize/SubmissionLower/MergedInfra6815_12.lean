@@ -12,20 +12,12 @@ set_option maxRecDepth 20000
 set_option maxHeartbeats 5000000
 set_option Elab.async false
 
-/-- `RCN319.homogenizedTranslation _ x u 0` and `RCN279.homogenizedTranslation _ x u`
-are distinct constants with identical bodies. Bridging them here, over variables,
-keeps the delta step small; doing it inside the proof below forces the check on a
-huge applied term. -/
-theorem homogenizedTranslation_rcn319 (x u : IRSProfile.Field) :
-    RCN319.homogenizedTranslation IRSProfile.Field x u 0
-      = homogenizedTranslation IRSProfile.Field x u := rfl
-
-theorem coefficientCount_exact : coefficientCount 23924340 131071 182 39 = 70451272760 := by decide +kernel
+theorem coefficientCount_exact : coefficientCount 23923020 131071 182 39 = 70442639960 := by decide +kernel
 
 theorem localRankBound_exact : localRankBound 132 182 39 = 268700 := by decide +kernel
 
 theorem interpolation_gate :
-    262144 * localRankBound 132 182 39 < coefficientCount 23924340 131071 182 39 := by
+    262144 * localRankBound 132 182 39 < coefficientCount 23923020 131071 182 39 := by
   norm_num only [coefficientCount_exact, localRankBound_exact]
 
 theorem exists_frozen_seedless_interpolant
@@ -33,26 +25,26 @@ theorem exists_frozen_seedless_interpolant
    ∃ Q:MvPolynomial (Fin 4) IRSProfile.Field,
      Q≠0∧
      Q∈globalCoefficientBox IRSProfile.Field
-       23924340 131071 182 39∧
+       23923020 131071 182 39∧
      ∀ (i:IRSProfile.Index) (r:ℕ),
        RCN119.slopeDifference IRSProfile.Field^(132-r)∣
-         (homogenizedTranslation IRSProfile.Field
-           (IRSProfile.domain i) (received i) Q).coeff r:=by
+         (RCN319.homogenizedTranslation IRSProfile.Field
+           (IRSProfile.domain i) (received i) 0 Q).coeff r:=by
  obtain ⟨theta,htheta,hzero⟩:=exists_nonzero_kernel_array
-   IRSProfile.Field 23924340 131071 182 39 132
+   IRSProfile.Field 23923020 131071 182 39 132
    IRSProfile.domain received (by
      rw [show Fintype.card IRSProfile.Index=262144 by
        norm_num [IRSProfile.Index]]
      exact interpolation_gate)
- refine ⟨reconstruct IRSProfile.Field 23924340 131071 182 39 theta,
+ refine ⟨reconstruct IRSProfile.Field 23923020 131071 182 39 theta,
    reconstruct_ne_zero IRSProfile.Field _ _ _ _ theta htheta,
    reconstruct_mem_box IRSProfile.Field _ _ _ _ theta,?_⟩
  intro i r
  have hdiv:=all_blocks_divisible_of_kernel IRSProfile.Field
-   23924340 131071 182 39 132 IRSProfile.domain received
+   23923020 131071 182 39 132 IRSProfile.domain received
    theta hzero i r
- rw [translation_reconstruct_coeff IRSProfile.Field 23924340 131071
-   182 39 (IRSProfile.domain i) (received i) theta r]
+ rw [←translation_reconstruct_coeff IRSProfile.Field 23923020 131071
+   182 39 (IRSProfile.domain i) (received i) theta r] at hdiv
  exact hdiv
 
 end ProximityPrize.SubmissionLower.MovingFiberScalar6815
@@ -71,7 +63,7 @@ set_option Elab.async false
 
 def n : ℕ := 262144
 def w : ℕ := 131071
-def errors : ℕ := 80899
+def errors : ℕ := 80909
 def agreements : ℕ := n-errors
 def gap : ℕ := agreements-w
 def prime : ℕ := 2130706433
@@ -79,7 +71,7 @@ def multiplicity : ℕ := 132
 def yTotalCap : ℕ := 182
 def slopeCap : ℕ := 39
 def weightedCap : ℕ := multiplicity*agreements
-def listBudget : ℕ := 9659282057
+def listBudget : ℕ := 9661282057
 def capY : ℕ := 1+2*w*yTotalCap
 def capR : ℕ := w*(2*slopeCap-1)
 def regularListNumerator : ℕ := (n-w)*(capY*slopeCap+capR*yTotalCap)
@@ -94,12 +86,8 @@ theorem exists_seedless_interpolant (received : IRSProfile.Index → IRSProfile.
      ∀ (i : IRSProfile.Index) (r : ℕ),
        RCN119.slopeDifference IRSProfile.Field ^ (multiplicity-r) ∣
          (RCN319.homogenizedTranslation IRSProfile.Field
-           (IRSProfile.domain i) (received i) 0 Q).coeff r := by
-  obtain ⟨Q, hQ0, hQbox, hQdvd⟩ :=
-    MovingFiberScalar6815.exists_frozen_seedless_interpolant received
-  refine ⟨Q, hQ0, hQbox, fun i r => ?_⟩
-  rw [MovingFiberScalar6815.homogenizedTranslation_rcn319]
-  exact hQdvd i r
+           (IRSProfile.domain i) (received i) 0 Q).coeff r :=
+  MovingFiberScalar6815.exists_frozen_seedless_interpolant received
 end
 end ProximityPrize.SubmissionLower.MovingFiberScalarList6815Arithmetic
 
@@ -549,8 +537,7 @@ theorem irs_scalar_finite_list_card_le
    funext i
    have hh:=congrArg (fun P:Polynomial IRSProfile.Field =>
      P.eval (IRSProfile.domain i)) h
-   exact ReedSolomon.toPolynomial_eval_at_domain.symm.trans
-     (hh.trans ReedSolomon.toPolynomial_eval_at_domain)
+   simpa only [selected, ReedSolomon.toPolynomial_eval_at_domain] using hh
  have hcard:Gamma.card = L.card:=by
    rw [show Gamma = Finset.univ.image selected by rfl,
      Finset.card_image_of_injective _ hselected, Finset.card_univ,
@@ -590,8 +577,7 @@ theorem irs_scalar_finite_list_card_le
        Finset.univ.filter (fun i => c.1 i = received i):=by
      apply Finset.filter_congr
      intro i hi
-     rw [show (selected c).eval (IRSProfile.domain i) = c.1 i from
-       ReedSolomon.toPolynomial_eval_at_domain]
+     rw [ReedSolomon.toPolynomial_eval_at_domain]
    rw [heq]
    exact hclose c.1 c.2
  have hbound:=seedless_list_card_le IRSProfile.Field Q hQ hbox hlegacy Gamma
@@ -614,8 +600,8 @@ noncomputable section
 set_option maxRecDepth 20000
 set_option maxHeartbeats 5000000
 set_option Elab.async false
-def errors : ℕ := 80899
-def radiusNumerator:ℕ:=331366399
+def errors : ℕ := 80909
+def radiusNumerator:ℕ:=331407359
 def radiusDenominator:ℕ:=1073741824
 def radius:ℝ≥0:=claimedRadius radiusNumerator radiusDenominator
 theorem radius_floor:
@@ -626,51 +612,51 @@ theorem radius_admissible:
     radius ∈ Set.Ioo (0:ℝ≥0) IRSProfile.minRelativeDistance:=by
   constructor <;> norm_num [radius,claimedRadius,radiusNumerator,radiusDenominator,
     IRSProfile.minRelativeDistance]
-theorem score_root_integer:(2:ℕ)^15 * 100000000^100 ≤ 110956948^100:=by decide
+theorem score_root_integer:(2:ℕ)^16 * 100000000^100 ≤ 111728714^100:=by decide
 theorem score_radius_integer:
-    (742375425:ℕ)^128 * (2^68 * 110956948) ≤ 100000000 * 1073741824^128:=by decide
+    (742334465:ℕ)^128 * (2^68 * 111728714) ≤ 100000000 * 1073741824^128:=by decide
 theorem two_rpow_fraction_le:
-    (2:ℝ≥0)^((15:ℝ)/100) ≤ (110956948:ℝ≥0)/100000000:=by
-  have hroot:((2:ℝ≥0)^(15:ℕ))^((100:ℝ)⁻¹) ≤ (110956948:ℝ≥0)/100000000:=by
+    (2:ℝ≥0)^((16:ℝ)/100) ≤ (111728714:ℝ≥0)/100000000:=by
+  have hroot:((2:ℝ≥0)^(16:ℕ))^((100:ℝ)⁻¹) ≤ (111728714:ℝ≥0)/100000000:=by
     rw [NNReal.rpow_inv_le_iff (by norm_num:(0:ℝ) < 100)]
     rw [NNReal.rpow_ofNat,div_pow,le_div_iff₀ (by positivity)]
     exact_mod_cast score_root_integer
   calc
-    (2:ℝ≥0)^((15:ℝ)/100) = ((2:ℝ≥0)^(15:ℕ))^((100:ℝ)⁻¹):=by
+    (2:ℝ≥0)^((16:ℝ)/100) = ((2:ℝ≥0)^(16:ℕ))^((100:ℝ)⁻¹):=by
       rw [← NNReal.rpow_natCast_mul]
       norm_num [div_eq_mul_inv]
     _ ≤ _:=hroot
 theorem radius_power_bound:
     (1 - radius)^IRSProfile.repetitions ≤
-      ((1:ℝ≥0)/2^(68:ℕ)) * (100000000/110956948):=by
-  have hsub:(1 - radius:ℝ≥0) =742375425/1073741824:=by
+      ((1:ℝ≥0)/2^(68:ℕ)) * (100000000/111728714):=by
+  have hsub:(1 - radius:ℝ≥0) =742334465/1073741824:=by
     have hr:radius ≤ 1:=by
       rw [← NNReal.coe_le_coe]
       norm_num [radius,claimedRadius,radiusNumerator,radiusDenominator]
     apply NNReal.coe_injective
     rw [NNReal.coe_sub hr]
     norm_num [radius,claimedRadius,radiusNumerator,radiusDenominator]
-  change (1 - radius)^128 ≤ ((1:ℝ≥0)/2^(68:ℕ)) * (100000000/110956948)
+  change (1 - radius)^128 ≤ ((1:ℝ≥0)/2^(68:ℕ)) * (100000000/111728714)
   rw [hsub,div_pow,div_mul_div_comm,one_mul,
     div_le_div_iff₀ (by positivity) (by positivity)]
   exact_mod_cast score_radius_integer
 theorem score_target_le:
-    (1 - radius)^IRSProfile.repetitions ≤ claimedError 6815:=by
-  have hscale:(100000000:ℝ≥0)/110956948 ≤ (2:ℝ≥0)^(-((15:ℝ)/100)):=by
+    (1 - radius)^IRSProfile.repetitions ≤ claimedError 6816:=by
+  have hscale:(100000000:ℝ≥0)/111728714 ≤ (2:ℝ≥0)^(-((16:ℝ)/100)):=by
     calc
-      (100000000:ℝ≥0)/110956948=1/((110956948:ℝ≥0)/100000000):=by norm_num
-      _ ≤ 1/((2:ℝ≥0)^((15:ℝ)/100)) :=
+      (100000000:ℝ≥0)/111728714=1/((111728714:ℝ≥0)/100000000):=by norm_num
+      _ ≤ 1/((2:ℝ≥0)^((16:ℝ)/100)) :=
         one_div_le_one_div_of_le (by positivity) two_rpow_fraction_le
       _=_:=by rw [one_div,NNReal.rpow_neg]
   calc
     (1 - radius)^IRSProfile.repetitions ≤
-        ((1:ℝ≥0)/2^(68:ℕ)) * (100000000/110956948):=radius_power_bound
-    _ ≤ ((1:ℝ≥0)/2^(68:ℕ)) * (2:ℝ≥0)^(-((15:ℝ)/100)) :=
+        ((1:ℝ≥0)/2^(68:ℕ)) * (100000000/111728714):=radius_power_bound
+    _ ≤ ((1:ℝ≥0)/2^(68:ℕ)) * (2:ℝ≥0)^(-((16:ℝ)/100)) :=
       mul_le_mul_of_nonneg_left hscale (by positivity)
-    _=claimedError 6815:=by
+    _=claimedError 6816:=by
       unfold claimedError
-      rw [show -((((6815:ℕ):ℝ)/100)) =
-          -((68:ℕ):ℝ) + -((15:ℝ)/100) by norm_num,
+      rw [show -((((6816:ℕ):ℝ)/100)) =
+          -((68:ℕ):ℝ) + -((16:ℝ)/100) by norm_num,
         NNReal.rpow_add (by norm_num:(2:ℝ≥0) ≠ 0)]
       simp only [NNReal.rpow_neg,NNReal.rpow_natCast,one_div]
 end
@@ -685,10 +671,10 @@ set_option maxHeartbeats 5000000
 local instance:DecidableEq IRSProfile.Field:=Classical.decEq _
 local instance:DecidableEq IRSProfile.Index:=Classical.decEq _
 def n:ℕ:=262144
-def errors:ℕ:=80899
+def errors:ℕ:=80909
 def agreements:ℕ:=n-errors
-def listBudget:ℕ:=9659282057
-def mcaBudget:ℕ:=274980718452113030
+def listBudget:ℕ:=9661282057
+def mcaBudget:ℕ:=274980718450113030
 def radius:ℝ≥0:=MovingFiberProtocol6815Arithmetic.radius
 theorem sixteen_row_separation:
    15 * (listBudget + 1).choose 2 < Fintype.card IRSProfile.Field:=by
@@ -844,7 +830,7 @@ theorem certifiedGammaError_le_of_alignment
      · simpa only [Nat.mul_comm] using field_capacity_split
 theorem protocolClaim6815_of_alignment
    (halign:AffineLineAlignmentBound IRSProfile.baseCode errors mcaBudget) :
-   ProtocolClaim 6815 331366399 1073741824 where
+   ProtocolClaim 6816 331407359 1073741824 where
  admissible:=MovingFiberProtocol6815Arithmetic.radius_admissible
  reduction:=by
    change certifiedGammaError IRSProfile.code radius ≤ reductionTarget
@@ -852,7 +838,7 @@ theorem protocolClaim6815_of_alignment
      certifiedGammaError_le_of_alignment halign
  score:=by
    change (1 - MovingFiberProtocol6815Arithmetic.radius) ^
-     IRSProfile.repetitions ≤ claimedError 6815
+     IRSProfile.repetitions ≤ claimedError 6816
    exact MovingFiberProtocol6815Arithmetic.score_target_le
 end
 end ProximityPrize.SubmissionLower.MovingFiberProtocol6815
@@ -2008,13 +1994,13 @@ set_option autoImplicit false
 set_option maxHeartbeats 1000000
 
 def pair (capT capY capR r y t : ℕ) : UnequalParameters :=
-  ⟨262144,131071,181245,y,r,t,capY,capR,capT⟩
+  ⟨262144,131071,181235,y,r,t,capY,capR,capT⟩
 
 def numerator (capT capY capR r y t : ℤ) : ℤ :=
   4*131073*131071*(capT*r*y+capR*t*y+capY*t*r) +
   131073*(capR-131071*capY)*t +
-  (131073*(capR-131071*capT)+80900*50174*capR)*y +
-  (131073*(capT+capY)+80900*50174*capY)*r
+  (131073*(capR-131071*capT)+80910*50164*capR)*y +
+  (131073*(capT+capY)+80910*50164*capY)*r
 
 theorem numerator_eq (capT capY capR r y t : ℕ) (hr : 1≤r) :
     (leftRegularNumerator (pair capT capY capR r y t) : ℤ)=
@@ -2039,7 +2025,7 @@ theorem half_middle_raw (r y t : ℤ)
     (hr : 0≤r) (hy : 0≤y) (ht : 0≤t)
     (hR : r≤39) (hY : y≤182) (hT : t≤11192) :
     numerator 531000 11062 2470 r y t ≤
-      50174*(445577482556*t+42396791527856*y+150966183228926*r) := by
+      50164*(445577482556*t+42396791527856*y+150966183228926*r) := by
   have hry := box_product r y 39 182 hr hy hR hY
   have hrt := box_product r t 39 11192 hr ht hR hT
   have hty : 4*t*y≤182*t+3*11192*y := by
@@ -2051,14 +2037,13 @@ theorem final_pass_raw (r y t : ℤ)
     (hr : 0≤r) (hy : 0≤y) (ht : 0≤t)
     (hY : y≤182) (hT : t≤11192) :
     numerator 88902 1382 308 r y t ≤
-      50174*(4690861953401*y+43345274666350*r) := by
+      50164*(4690861953401*y+43345274666350*r) := by
   have hry : r*y≤182*r := by nlinarith [mul_nonneg (sub_nonneg.mpr hY) hr]
   have hty : t*y≤11192*y := by nlinarith [mul_nonneg (sub_nonneg.mpr hT) hy]
   have htr : t*r≤11192*r := by nlinarith [mul_nonneg (sub_nonneg.mpr hT) hr]
   dsimp [numerator]
   nlinarith
 
-set_option maxRecDepth 1000000 in
 theorem half_middle_count (r y t : ℕ) (hr : 1≤r)
     (hR : r≤39) (hY : y≤182) (hT : t≤11192) :
     leftRegularCountCap (pair 531000 11062 2470 r y t) ≤
@@ -2069,11 +2054,10 @@ theorem half_middle_count (r y t : ℕ) (hr : 1≤r)
   norm_num only [Nat.cast_ofNat] at he
   rw [← he] at hz
   have hn : leftRegularNumerator (pair 531000 11062 2470 r y t) ≤
-      50174*(445577482556*t+42396791527856*y+150966183228926*r) := by exact_mod_cast hz
-  have hd := Nat.div_le_div_right (c:=50174) hn
+      50164*(445577482556*t+42396791527856*y+150966183228926*r) := by exact_mod_cast hz
+  have hd := Nat.div_le_div_right (c:=50164) hn
   simpa [leftRegularCountCap,pair,UnequalParameters.gap] using hd
 
-set_option maxRecDepth 1000000 in
 theorem final_pass_count (r y t : ℕ) (hr : 1≤r)
     (hY : y≤182) (hT : t≤11192) :
     leftRegularCountCap (pair 88902 1382 308 r y t) ≤
@@ -2084,8 +2068,8 @@ theorem final_pass_count (r y t : ℕ) (hr : 1≤r)
   norm_num only [Nat.cast_ofNat] at he
   rw [← he] at hz
   have hn : leftRegularNumerator (pair 88902 1382 308 r y t) ≤
-      50174*(4690861953401*y+43345274666350*r) := by exact_mod_cast hz
-  have hd := Nat.div_le_div_right (c:=50174) hn
+      50164*(4690861953401*y+43345274666350*r) := by exact_mod_cast hz
+  have hd := Nat.div_le_div_right (c:=50164) hn
   simpa [leftRegularCountCap,pair,UnequalParameters.gap] using hd
 
 theorem count_mono_right (loT loY loR hiT hiY hiR r y t : ℕ)
@@ -2107,9 +2091,9 @@ set_option autoImplicit false
 set_option maxHeartbeats 1400000
 
 def CoefficientsFit (L U S Rcap Ycap Tcap qt qy qr : ℕ) : Prop :=
-  2*131073*131071*((S:ℤ)*Ycap+(U:ℤ)*Rcap)+131073*((S:ℤ)-131071*U)≤50174*(qt:ℤ) ∧
-  2*131073*131071*((L:ℤ)*Rcap+(S:ℤ)*Tcap)+131073*((S:ℤ)-131071*L)+80900*50174*S≤50174*(qy:ℤ) ∧
-  2*131073*131071*((L:ℤ)*Ycap+(U:ℤ)*Tcap)+131073*((L:ℤ)+U)+80900*50174*U≤50174*(qr:ℤ)
+  2*131073*131071*((S:ℤ)*Ycap+(U:ℤ)*Rcap)+131073*((S:ℤ)-131071*U)≤50164*(qt:ℤ) ∧
+  2*131073*131071*((L:ℤ)*Rcap+(S:ℤ)*Tcap)+131073*((S:ℤ)-131071*L)+80910*50164*S≤50164*(qy:ℤ) ∧
+  2*131073*131071*((L:ℤ)*Ycap+(U:ℤ)*Tcap)+131073*((L:ℤ)+U)+80910*50164*U≤50164*(qr:ℤ)
 instance (L U S Rcap Ycap Tcap qt qy qr : ℕ) : Decidable (CoefficientsFit L U S Rcap Ycap Tcap qt qy qr) := by
   unfold CoefficientsFit; infer_instance
 
@@ -2117,7 +2101,6 @@ theorem box_product (x y capX capY : ℤ) (hx : 0≤x) (hy : 0≤y) (hX : x≤ca
     2*x*y≤capX*y+capY*x := by
   nlinarith [mul_nonneg (sub_nonneg.mpr hX) hy,mul_nonneg (sub_nonneg.mpr hY) hx]
 
-set_option maxRecDepth 1000000 in
 theorem count_le (L U S Rcap Ycap Tcap qt qy qr r y t : ℕ)
     (hf : CoefficientsFit L U S Rcap Ycap Tcap qt qy qr)
     (hr : 1≤r) (hR : r≤Rcap) (hY : y≤Ycap) (hT : t≤Tcap) :
@@ -2134,12 +2117,12 @@ theorem count_le (L U S Rcap Ycap Tcap qt qy qr r y t : ℕ)
   have h4 := mul_le_mul_of_nonneg_right hf.1 (show (0:ℤ)≤t by positivity)
   have h5 := mul_le_mul_of_nonneg_right hf.2.1 (show (0:ℤ)≤y by positivity)
   have h6 := mul_le_mul_of_nonneg_right hf.2.2 (show (0:ℤ)≤r by positivity)
-  have hz : numerator L U S r y t≤50174*((qt:ℤ)*t+(qy:ℤ)*y+(qr:ℤ)*r) := by
+  have hz : numerator L U S r y t≤50164*((qt:ℤ)*t+(qy:ℤ)*y+(qr:ℤ)*r) := by
     unfold numerator
     nlinarith only [h1,h2,h3,h4,h5,h6]
   rw [←numerator_eq L U S r y t hr] at hz
-  have hn : leftRegularNumerator (pair L U S r y t)≤50174*(qt*t+qy*y+qr*r) := by exact_mod_cast hz
-  have hd := Nat.div_le_div_right (c:=50174) hn
+  have hn : leftRegularNumerator (pair L U S r y t)≤50164*(qt*t+qy*y+qr*r) := by exact_mod_cast hz
+  have hd := Nat.div_le_div_right (c:=50164) hn
   simpa [leftRegularCountCap,pair,UnequalParameters.gap] using hd
 
 end ProximityPrize.SubmissionLower.BalancedPhasePotential6815

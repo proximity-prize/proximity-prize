@@ -76,15 +76,15 @@ theorem complement_degrees (H G : P4) (hH : H ≠ 0) (hG : G ≠ 0)
 theorem pair_count_cell {u0 u1 : I → K} {selected : K → Polynomial K} {Gamma : Finset K}
     (inp : Input u0 u1 selected Gamma) (H Q T : P4) (hH : H ≠ 0) (hQ : Q ≠ 0) (hT : T ≠ 0)
     (hrel : IsRelPrime Q T)
-    (hQbox : H*Q ∈ RCN100.globalCoefficientBox K 30086670 131071 15421 50)
-    (hTbox : H*T ∈ RCN100.globalCoefficientBox K 45673740 131071 11193 78)
+    (hQbox : H*Q ∈ RCN100.globalCoefficientBox K 30085010 131071 15421 50)
+    (hTbox : H*T ∈ RCN100.globalCoefficientBox K 45671220 131071 11193 78)
     (U : Finset (RCN266.RegularIndex H)) (hr : (regularAggregateFlag H U).all < 50) :
     (∑ F : RCN052.RegularIndex Q, (regularPairSeeds Q T selected Gamma F).card) ≤
       PairCell6815.cap (regularAggregateFlag H U).all (middle (regularAggregateFlag H U))
         (total (regularAggregateFlag H U)) := by
-  obtain ⟨qY, qR, qZ⟩ := complement_degrees H Q hH hQ U 30086670 131071 15421 50
+  obtain ⟨qY, qR, qZ⟩ := complement_degrees H Q hH hQ U 30085010 131071 15421 50
     (by norm_num) (by norm_num) hQbox
-  obtain ⟨tY, tR, tZ⟩ := complement_degrees H T hH hT U 45673740 131071 11193 78
+  obtain ⟨tY, tR, tZ⟩ := complement_degrees H T hH hT U 45671220 131071 11193 78
     (by norm_num) (by norm_num) hTbox
   norm_num only at qY tY
   let P := PairCell6815.parameters (regularAggregateFlag H U).all
@@ -121,7 +121,7 @@ theorem pair_count_cell {u0 u1 : I → K} {selected : K → Polynomial K} {Gamma
     (by norm_num [P, PairCell6815.parameters]) (by norm_num [P, PairCell6815.parameters])
     inp.degree inp.agreement
     (by simpa only [P, PairCell6815.parameters, UnequalParameters.errors,
-      (show (262144 - 181245 : ℕ) = 80899 by decide +kernel)] using inp.noPencil)
+      (show (262144 - 181235 : ℕ) = 80909 by decide +kernel)] using inp.noPencil)
   have hsum := sum_regular_counts_bound_left P Q T selected Gamma
     (regularVector_budgets_actual P Q hQ qY qR qZ) hcount
   exact (Nat.le_div_iff_mul_le (by norm_num [P, PairCell6815.parameters, UnequalParameters.gap])).mpr hsum

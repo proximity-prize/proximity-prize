@@ -217,10 +217,10 @@ theorem graph_eq_hi (f : FlagDegree) (a b c : ℕ) :
   norm_num [cfg,scale,source0,graphDir,normal,raw,MovingFiberThreeSources6811.weight,MovingFiberThreeSources6811.direction,Params.d,Params.flag,SecondJetRelaxedFlag.budgetFlag,flagMixed,unitZFlag,unitYZFlag,unitAllFlag,firstDir_succ,firstHi,gHi0,gHi1,gHi2,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
   <;> ring
 theorem identity_absorption (f : FlagDegree) (a b c : ℕ) :
-    scale*131073*80900*identityDegree f a b c ≤ 50174*graphDir cfg scale f a b c := by
+    scale*131073*80910*identityDegree f a b c ≤ 50164*graphDir cfg scale f a b c := by
   cases a with
   | zero =>
-    have he : 50174*graphDir cfg scale f 0 b c = scale*131073*80900*identityDegree f 0 b c+
+    have he : 50164*graphDir cfg scale f 0 b c = scale*131073*80910*identityDegree f 0 b c+
         (f.zOnly*identitySlackLo0 b c+f.yz*identitySlackLo1 b c+f.all*identitySlackLo2 b c) := by
       rw [graph_eq_lo]
       simp only [scale,identityDegree,gLo0,gLo1,gLo2,identitySlackLo0,identitySlackLo1,identitySlackLo2]
@@ -228,7 +228,7 @@ theorem identity_absorption (f : FlagDegree) (a b c : ℕ) :
     rw [he]
     exact Nat.le_add_right _ _
   | succ a =>
-    have he : 50174*graphDir cfg scale f (a+1) b c = scale*131073*80900*identityDegree f (a+1) b c+
+    have he : 50164*graphDir cfg scale f (a+1) b c = scale*131073*80910*identityDegree f (a+1) b c+
         (f.zOnly*identitySlackHi0 a b c+f.yz*identitySlackHi1 a b c+f.all*identitySlackHi2 a b c) := by
       rw [graph_eq_hi]
       simp only [scale,identityDegree,gHi0,gHi1,gHi2,identitySlackHi0,identitySlackHi1,identitySlackHi2]
@@ -236,7 +236,7 @@ theorem identity_absorption (f : FlagDegree) (a b c : ℕ) :
     rw [he]
     exact Nat.le_add_right _ _
 theorem full_eq (a b c : ℕ) : full a b c =
-    scale*50174*graphDir cfg scale ⟨c,b+2,a+3⟩ a b c+
+    scale*50164*graphDir cfg scale ⟨c,b+2,a+3⟩ a b c+
       scale^2*(∑ j : Fin 3, coeff (cfg j) a b c)+conductor a b c := by
   cases a with
   | zero =>
@@ -250,7 +250,7 @@ theorem full_eq (a b c : ℕ) : full a b c =
       conductor,conductorHi,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
     <;> ring
 theorem helper_cap (a b c : ℕ) (j : Fin 3) :
-    helper (cfg j) a b c/50174 ≤ full a b c/denominator := by
+    helper (cfg j) a b c/50164 ≤ full a b c/denominator := by
   have he : scale^2*helper (cfg j) a b c ≤ full a b c := by
     cases a with
     | zero =>
@@ -288,15 +288,15 @@ theorem helper_cap (a b c : ℕ) (j : Fin 3) :
         rw [h]
         exact Nat.le_add_right _ _
   apply (Nat.le_div_iff_mul_le (show 0 < denominator by decide +kernel)).mpr
-  have hh := Nat.div_mul_le_self (helper (cfg j) a b c) 50174
+  have hh := Nat.div_mul_le_self (helper (cfg j) a b c) 50164
   dsimp only [denominator,scale] at he ⊢
   nlinarith
 theorem retained_cap (a b c : ℕ) :
     graphDir cfg scale ⟨c,b+2,a+3⟩ a b c/scale+
-      (∑ j : Fin 3, coeff (cfg j) a b c/50174) ≤ full a b c/denominator := by
+      (∑ j : Fin 3, coeff (cfg j) a b c/50164) ≤ full a b c/denominator := by
   apply (Nat.le_div_iff_mul_le (show 0 < denominator by decide +kernel)).mpr
   have hx := Nat.div_mul_le_self (graphDir cfg scale ⟨c,b+2,a+3⟩ a b c) scale
-  have hy : (∑ j : Fin 3, coeff (cfg j) a b c/50174)*50174 ≤ ∑ j : Fin 3, coeff (cfg j) a b c := by
+  have hy : (∑ j : Fin 3, coeff (cfg j) a b c/50164)*50164 ≤ ∑ j : Fin 3, coeff (cfg j) a b c := by
     rw [Finset.sum_mul]
     exact Finset.sum_le_sum (fun j _ => Nat.div_mul_le_self _ _)
   rw [full_eq]
@@ -524,10 +524,10 @@ theorem graph_eq_hi (f : FlagDegree) (a b c : ℕ) :
   norm_num [cfg,scale,source1,graphDir,normal,raw,MovingFiberThreeSources6811.weight,MovingFiberThreeSources6811.direction,Params.d,Params.flag,SecondJetRelaxedFlag.budgetFlag,flagMixed,unitZFlag,unitYZFlag,unitAllFlag,firstDir_succ,firstHi,gHi0,gHi1,gHi2,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
   <;> ring
 theorem identity_absorption (f : FlagDegree) (a b c : ℕ) :
-    scale*131073*80900*identityDegree f a b c ≤ 50174*graphDir cfg scale f a b c := by
+    scale*131073*80910*identityDegree f a b c ≤ 50164*graphDir cfg scale f a b c := by
   cases a with
   | zero =>
-    have he : 50174*graphDir cfg scale f 0 b c = scale*131073*80900*identityDegree f 0 b c+
+    have he : 50164*graphDir cfg scale f 0 b c = scale*131073*80910*identityDegree f 0 b c+
         (f.zOnly*identitySlackLo0 b c+f.yz*identitySlackLo1 b c+f.all*identitySlackLo2 b c) := by
       rw [graph_eq_lo]
       simp only [scale,identityDegree,gLo0,gLo1,gLo2,identitySlackLo0,identitySlackLo1,identitySlackLo2]
@@ -535,7 +535,7 @@ theorem identity_absorption (f : FlagDegree) (a b c : ℕ) :
     rw [he]
     exact Nat.le_add_right _ _
   | succ a =>
-    have he : 50174*graphDir cfg scale f (a+1) b c = scale*131073*80900*identityDegree f (a+1) b c+
+    have he : 50164*graphDir cfg scale f (a+1) b c = scale*131073*80910*identityDegree f (a+1) b c+
         (f.zOnly*identitySlackHi0 a b c+f.yz*identitySlackHi1 a b c+f.all*identitySlackHi2 a b c) := by
       rw [graph_eq_hi]
       simp only [scale,identityDegree,gHi0,gHi1,gHi2,identitySlackHi0,identitySlackHi1,identitySlackHi2]
@@ -543,7 +543,7 @@ theorem identity_absorption (f : FlagDegree) (a b c : ℕ) :
     rw [he]
     exact Nat.le_add_right _ _
 theorem full_eq (a b c : ℕ) : full a b c =
-    scale*50174*graphDir cfg scale ⟨c,b+2,a+3⟩ a b c+
+    scale*50164*graphDir cfg scale ⟨c,b+2,a+3⟩ a b c+
       scale^2*(∑ j : Fin 3, coeff (cfg j) a b c)+conductor a b c := by
   cases a with
   | zero =>
@@ -557,7 +557,7 @@ theorem full_eq (a b c : ℕ) : full a b c =
       conductor,conductorHi,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
     <;> ring
 theorem helper_cap (a b c : ℕ) (j : Fin 3) :
-    helper (cfg j) a b c/50174 ≤ full a b c/denominator := by
+    helper (cfg j) a b c/50164 ≤ full a b c/denominator := by
   have he : scale^2*helper (cfg j) a b c ≤ full a b c := by
     cases a with
     | zero =>
@@ -595,15 +595,15 @@ theorem helper_cap (a b c : ℕ) (j : Fin 3) :
         rw [h]
         exact Nat.le_add_right _ _
   apply (Nat.le_div_iff_mul_le (show 0 < denominator by decide +kernel)).mpr
-  have hh := Nat.div_mul_le_self (helper (cfg j) a b c) 50174
+  have hh := Nat.div_mul_le_self (helper (cfg j) a b c) 50164
   dsimp only [denominator,scale] at he ⊢
   nlinarith
 theorem retained_cap (a b c : ℕ) :
     graphDir cfg scale ⟨c,b+2,a+3⟩ a b c/scale+
-      (∑ j : Fin 3, coeff (cfg j) a b c/50174) ≤ full a b c/denominator := by
+      (∑ j : Fin 3, coeff (cfg j) a b c/50164) ≤ full a b c/denominator := by
   apply (Nat.le_div_iff_mul_le (show 0 < denominator by decide +kernel)).mpr
   have hx := Nat.div_mul_le_self (graphDir cfg scale ⟨c,b+2,a+3⟩ a b c) scale
-  have hy : (∑ j : Fin 3, coeff (cfg j) a b c/50174)*50174 ≤ ∑ j : Fin 3, coeff (cfg j) a b c := by
+  have hy : (∑ j : Fin 3, coeff (cfg j) a b c/50164)*50164 ≤ ∑ j : Fin 3, coeff (cfg j) a b c := by
     rw [Finset.sum_mul]
     exact Finset.sum_le_sum (fun j _ => Nat.div_mul_le_self _ _)
   rw [full_eq]
@@ -831,10 +831,10 @@ theorem graph_eq_hi (f : FlagDegree) (a b c : ℕ) :
   norm_num [cfg,scale,source2,graphDir,normal,raw,MovingFiberThreeSources6811.weight,MovingFiberThreeSources6811.direction,Params.d,Params.flag,SecondJetRelaxedFlag.budgetFlag,flagMixed,unitZFlag,unitYZFlag,unitAllFlag,firstDir_succ,firstHi,gHi0,gHi1,gHi2,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
   <;> ring
 theorem identity_absorption (f : FlagDegree) (a b c : ℕ) :
-    scale*131073*80900*identityDegree f a b c ≤ 50174*graphDir cfg scale f a b c := by
+    scale*131073*80910*identityDegree f a b c ≤ 50164*graphDir cfg scale f a b c := by
   cases a with
   | zero =>
-    have he : 50174*graphDir cfg scale f 0 b c = scale*131073*80900*identityDegree f 0 b c+
+    have he : 50164*graphDir cfg scale f 0 b c = scale*131073*80910*identityDegree f 0 b c+
         (f.zOnly*identitySlackLo0 b c+f.yz*identitySlackLo1 b c+f.all*identitySlackLo2 b c) := by
       rw [graph_eq_lo]
       simp only [scale,identityDegree,gLo0,gLo1,gLo2,identitySlackLo0,identitySlackLo1,identitySlackLo2]
@@ -842,7 +842,7 @@ theorem identity_absorption (f : FlagDegree) (a b c : ℕ) :
     rw [he]
     exact Nat.le_add_right _ _
   | succ a =>
-    have he : 50174*graphDir cfg scale f (a+1) b c = scale*131073*80900*identityDegree f (a+1) b c+
+    have he : 50164*graphDir cfg scale f (a+1) b c = scale*131073*80910*identityDegree f (a+1) b c+
         (f.zOnly*identitySlackHi0 a b c+f.yz*identitySlackHi1 a b c+f.all*identitySlackHi2 a b c) := by
       rw [graph_eq_hi]
       simp only [scale,identityDegree,gHi0,gHi1,gHi2,identitySlackHi0,identitySlackHi1,identitySlackHi2]
@@ -850,7 +850,7 @@ theorem identity_absorption (f : FlagDegree) (a b c : ℕ) :
     rw [he]
     exact Nat.le_add_right _ _
 theorem full_eq (a b c : ℕ) : full a b c =
-    scale*50174*graphDir cfg scale ⟨c,b+2,a+3⟩ a b c+
+    scale*50164*graphDir cfg scale ⟨c,b+2,a+3⟩ a b c+
       scale^2*(∑ j : Fin 3, coeff (cfg j) a b c)+conductor a b c := by
   cases a with
   | zero =>
@@ -864,7 +864,7 @@ theorem full_eq (a b c : ℕ) : full a b c =
       conductor,conductorHi,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
     <;> ring
 theorem helper_cap (a b c : ℕ) (j : Fin 3) :
-    helper (cfg j) a b c/50174 ≤ full a b c/denominator := by
+    helper (cfg j) a b c/50164 ≤ full a b c/denominator := by
   have he : scale^2*helper (cfg j) a b c ≤ full a b c := by
     cases a with
     | zero =>
@@ -902,15 +902,15 @@ theorem helper_cap (a b c : ℕ) (j : Fin 3) :
         rw [h]
         exact Nat.le_add_right _ _
   apply (Nat.le_div_iff_mul_le (show 0 < denominator by decide +kernel)).mpr
-  have hh := Nat.div_mul_le_self (helper (cfg j) a b c) 50174
+  have hh := Nat.div_mul_le_self (helper (cfg j) a b c) 50164
   dsimp only [denominator,scale] at he ⊢
   nlinarith
 theorem retained_cap (a b c : ℕ) :
     graphDir cfg scale ⟨c,b+2,a+3⟩ a b c/scale+
-      (∑ j : Fin 3, coeff (cfg j) a b c/50174) ≤ full a b c/denominator := by
+      (∑ j : Fin 3, coeff (cfg j) a b c/50164) ≤ full a b c/denominator := by
   apply (Nat.le_div_iff_mul_le (show 0 < denominator by decide +kernel)).mpr
   have hx := Nat.div_mul_le_self (graphDir cfg scale ⟨c,b+2,a+3⟩ a b c) scale
-  have hy : (∑ j : Fin 3, coeff (cfg j) a b c/50174)*50174 ≤ ∑ j : Fin 3, coeff (cfg j) a b c := by
+  have hy : (∑ j : Fin 3, coeff (cfg j) a b c/50164)*50164 ≤ ∑ j : Fin 3, coeff (cfg j) a b c := by
     rw [Finset.sum_mul]
     exact Finset.sum_le_sum (fun j _ => Nat.div_mul_le_self _ _)
   rw [full_eq]
@@ -1138,10 +1138,10 @@ theorem graph_eq_hi (f : FlagDegree) (a b c : ℕ) :
   norm_num [cfg,scale,source3,graphDir,normal,raw,MovingFiberThreeSources6811.weight,MovingFiberThreeSources6811.direction,Params.d,Params.flag,SecondJetRelaxedFlag.budgetFlag,flagMixed,unitZFlag,unitYZFlag,unitAllFlag,firstDir_succ,firstHi,gHi0,gHi1,gHi2,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
   <;> ring
 theorem identity_absorption (f : FlagDegree) (a b c : ℕ) :
-    scale*131073*80900*identityDegree f a b c ≤ 50174*graphDir cfg scale f a b c := by
+    scale*131073*80910*identityDegree f a b c ≤ 50164*graphDir cfg scale f a b c := by
   cases a with
   | zero =>
-    have he : 50174*graphDir cfg scale f 0 b c = scale*131073*80900*identityDegree f 0 b c+
+    have he : 50164*graphDir cfg scale f 0 b c = scale*131073*80910*identityDegree f 0 b c+
         (f.zOnly*identitySlackLo0 b c+f.yz*identitySlackLo1 b c+f.all*identitySlackLo2 b c) := by
       rw [graph_eq_lo]
       simp only [scale,identityDegree,gLo0,gLo1,gLo2,identitySlackLo0,identitySlackLo1,identitySlackLo2]
@@ -1149,7 +1149,7 @@ theorem identity_absorption (f : FlagDegree) (a b c : ℕ) :
     rw [he]
     exact Nat.le_add_right _ _
   | succ a =>
-    have he : 50174*graphDir cfg scale f (a+1) b c = scale*131073*80900*identityDegree f (a+1) b c+
+    have he : 50164*graphDir cfg scale f (a+1) b c = scale*131073*80910*identityDegree f (a+1) b c+
         (f.zOnly*identitySlackHi0 a b c+f.yz*identitySlackHi1 a b c+f.all*identitySlackHi2 a b c) := by
       rw [graph_eq_hi]
       simp only [scale,identityDegree,gHi0,gHi1,gHi2,identitySlackHi0,identitySlackHi1,identitySlackHi2]
@@ -1157,7 +1157,7 @@ theorem identity_absorption (f : FlagDegree) (a b c : ℕ) :
     rw [he]
     exact Nat.le_add_right _ _
 theorem full_eq (a b c : ℕ) : full a b c =
-    scale*50174*graphDir cfg scale ⟨c,b+2,a+3⟩ a b c+
+    scale*50164*graphDir cfg scale ⟨c,b+2,a+3⟩ a b c+
       scale^2*(∑ j : Fin 3, coeff (cfg j) a b c)+conductor a b c := by
   cases a with
   | zero =>
@@ -1171,7 +1171,7 @@ theorem full_eq (a b c : ℕ) : full a b c =
       conductor,conductorHi,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
     <;> ring
 theorem helper_cap (a b c : ℕ) (j : Fin 3) :
-    helper (cfg j) a b c/50174 ≤ full a b c/denominator := by
+    helper (cfg j) a b c/50164 ≤ full a b c/denominator := by
   have he : scale^2*helper (cfg j) a b c ≤ full a b c := by
     cases a with
     | zero =>
@@ -1209,15 +1209,15 @@ theorem helper_cap (a b c : ℕ) (j : Fin 3) :
         rw [h]
         exact Nat.le_add_right _ _
   apply (Nat.le_div_iff_mul_le (show 0 < denominator by decide +kernel)).mpr
-  have hh := Nat.div_mul_le_self (helper (cfg j) a b c) 50174
+  have hh := Nat.div_mul_le_self (helper (cfg j) a b c) 50164
   dsimp only [denominator,scale] at he ⊢
   nlinarith
 theorem retained_cap (a b c : ℕ) :
     graphDir cfg scale ⟨c,b+2,a+3⟩ a b c/scale+
-      (∑ j : Fin 3, coeff (cfg j) a b c/50174) ≤ full a b c/denominator := by
+      (∑ j : Fin 3, coeff (cfg j) a b c/50164) ≤ full a b c/denominator := by
   apply (Nat.le_div_iff_mul_le (show 0 < denominator by decide +kernel)).mpr
   have hx := Nat.div_mul_le_self (graphDir cfg scale ⟨c,b+2,a+3⟩ a b c) scale
-  have hy : (∑ j : Fin 3, coeff (cfg j) a b c/50174)*50174 ≤ ∑ j : Fin 3, coeff (cfg j) a b c := by
+  have hy : (∑ j : Fin 3, coeff (cfg j) a b c/50164)*50164 ≤ ∑ j : Fin 3, coeff (cfg j) a b c := by
     rw [Finset.sum_mul]
     exact Finset.sum_le_sum (fun j _ => Nat.div_mul_le_self _ _)
   rw [full_eq]
@@ -1450,10 +1450,10 @@ theorem graph_eq_hi (f : FlagDegree) (a b c : ℕ) :
   norm_num [cfg,scale,source4,source5,source6,graphDir,normal,raw,MovingFiberThreeSources6811.weight,MovingFiberThreeSources6811.direction,Params.d,Params.flag,SecondJetRelaxedFlag.budgetFlag,flagMixed,unitZFlag,unitYZFlag,unitAllFlag,firstDir_succ,firstHi,gHi0,gHi1,gHi2,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
   <;> ring
 theorem identity_absorption (f : FlagDegree) (a b c : ℕ) :
-    scale*131073*80900*identityDegree f a b c ≤ 50174*graphDir cfg scale f a b c := by
+    scale*131073*80910*identityDegree f a b c ≤ 50164*graphDir cfg scale f a b c := by
   cases a with
   | zero =>
-    have he : 50174*graphDir cfg scale f 0 b c = scale*131073*80900*identityDegree f 0 b c+
+    have he : 50164*graphDir cfg scale f 0 b c = scale*131073*80910*identityDegree f 0 b c+
         (f.zOnly*identitySlackLo0 b c+f.yz*identitySlackLo1 b c+f.all*identitySlackLo2 b c) := by
       rw [graph_eq_lo]
       simp only [scale,identityDegree,gLo0,gLo1,gLo2,identitySlackLo0,identitySlackLo1,identitySlackLo2]
@@ -1461,7 +1461,7 @@ theorem identity_absorption (f : FlagDegree) (a b c : ℕ) :
     rw [he]
     exact Nat.le_add_right _ _
   | succ a =>
-    have he : 50174*graphDir cfg scale f (a+1) b c = scale*131073*80900*identityDegree f (a+1) b c+
+    have he : 50164*graphDir cfg scale f (a+1) b c = scale*131073*80910*identityDegree f (a+1) b c+
         (f.zOnly*identitySlackHi0 a b c+f.yz*identitySlackHi1 a b c+f.all*identitySlackHi2 a b c) := by
       rw [graph_eq_hi]
       simp only [scale,identityDegree,gHi0,gHi1,gHi2,identitySlackHi0,identitySlackHi1,identitySlackHi2]
@@ -1469,7 +1469,7 @@ theorem identity_absorption (f : FlagDegree) (a b c : ℕ) :
     rw [he]
     exact Nat.le_add_right _ _
 theorem full_eq (a b c : ℕ) : full a b c =
-    scale*50174*graphDir cfg scale ⟨c,b+2,a+3⟩ a b c+
+    scale*50164*graphDir cfg scale ⟨c,b+2,a+3⟩ a b c+
       scale^2*(∑ j : Fin 3, coeff (cfg j) a b c)+conductor a b c := by
   cases a with
   | zero =>
@@ -1483,7 +1483,7 @@ theorem full_eq (a b c : ℕ) : full a b c =
       conductor,conductorHi,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
     <;> ring
 theorem helper_cap (a b c : ℕ) (j : Fin 3) :
-    helper (cfg j) a b c/50174 ≤ full a b c/denominator := by
+    helper (cfg j) a b c/50164 ≤ full a b c/denominator := by
   have he : scale^2*helper (cfg j) a b c ≤ full a b c := by
     cases a with
     | zero =>
@@ -1521,15 +1521,15 @@ theorem helper_cap (a b c : ℕ) (j : Fin 3) :
         rw [h]
         exact Nat.le_add_right _ _
   apply (Nat.le_div_iff_mul_le (show 0 < denominator by decide +kernel)).mpr
-  have hh := Nat.div_mul_le_self (helper (cfg j) a b c) 50174
+  have hh := Nat.div_mul_le_self (helper (cfg j) a b c) 50164
   dsimp only [denominator,scale] at he ⊢
   nlinarith
 theorem retained_cap (a b c : ℕ) :
     graphDir cfg scale ⟨c,b+2,a+3⟩ a b c/scale+
-      (∑ j : Fin 3, coeff (cfg j) a b c/50174) ≤ full a b c/denominator := by
+      (∑ j : Fin 3, coeff (cfg j) a b c/50164) ≤ full a b c/denominator := by
   apply (Nat.le_div_iff_mul_le (show 0 < denominator by decide +kernel)).mpr
   have hx := Nat.div_mul_le_self (graphDir cfg scale ⟨c,b+2,a+3⟩ a b c) scale
-  have hy : (∑ j : Fin 3, coeff (cfg j) a b c/50174)*50174 ≤ ∑ j : Fin 3, coeff (cfg j) a b c := by
+  have hy : (∑ j : Fin 3, coeff (cfg j) a b c/50164)*50164 ≤ ∑ j : Fin 3, coeff (cfg j) a b c := by
     rw [Finset.sum_mul]
     exact Finset.sum_le_sum (fun j _ => Nat.div_mul_le_self _ _)
   rw [full_eq]
@@ -1757,10 +1757,10 @@ theorem graph_eq_hi (f : FlagDegree) (a b c : ℕ) :
   norm_num [cfg,scale,source7,source8,source9,graphDir,normal,raw,MovingFiberThreeSources6811.weight,MovingFiberThreeSources6811.direction,Params.d,Params.flag,SecondJetRelaxedFlag.budgetFlag,flagMixed,unitZFlag,unitYZFlag,unitAllFlag,firstDir_succ,firstHi,gHi0,gHi1,gHi2,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
   <;> ring
 theorem identity_absorption (f : FlagDegree) (a b c : ℕ) :
-    scale*131073*80900*identityDegree f a b c ≤ 50174*graphDir cfg scale f a b c := by
+    scale*131073*80910*identityDegree f a b c ≤ 50164*graphDir cfg scale f a b c := by
   cases a with
   | zero =>
-    have he : 50174*graphDir cfg scale f 0 b c = scale*131073*80900*identityDegree f 0 b c+
+    have he : 50164*graphDir cfg scale f 0 b c = scale*131073*80910*identityDegree f 0 b c+
         (f.zOnly*identitySlackLo0 b c+f.yz*identitySlackLo1 b c+f.all*identitySlackLo2 b c) := by
       rw [graph_eq_lo]
       simp only [scale,identityDegree,gLo0,gLo1,gLo2,identitySlackLo0,identitySlackLo1,identitySlackLo2]
@@ -1768,7 +1768,7 @@ theorem identity_absorption (f : FlagDegree) (a b c : ℕ) :
     rw [he]
     exact Nat.le_add_right _ _
   | succ a =>
-    have he : 50174*graphDir cfg scale f (a+1) b c = scale*131073*80900*identityDegree f (a+1) b c+
+    have he : 50164*graphDir cfg scale f (a+1) b c = scale*131073*80910*identityDegree f (a+1) b c+
         (f.zOnly*identitySlackHi0 a b c+f.yz*identitySlackHi1 a b c+f.all*identitySlackHi2 a b c) := by
       rw [graph_eq_hi]
       simp only [scale,identityDegree,gHi0,gHi1,gHi2,identitySlackHi0,identitySlackHi1,identitySlackHi2]
@@ -1776,7 +1776,7 @@ theorem identity_absorption (f : FlagDegree) (a b c : ℕ) :
     rw [he]
     exact Nat.le_add_right _ _
 theorem full_eq (a b c : ℕ) : full a b c =
-    scale*50174*graphDir cfg scale ⟨c,b+2,a+3⟩ a b c+
+    scale*50164*graphDir cfg scale ⟨c,b+2,a+3⟩ a b c+
       scale^2*(∑ j : Fin 3, coeff (cfg j) a b c)+conductor a b c := by
   cases a with
   | zero =>
@@ -1790,7 +1790,7 @@ theorem full_eq (a b c : ℕ) : full a b c =
       conductor,conductorHi,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
     <;> ring
 theorem helper_cap (a b c : ℕ) (j : Fin 3) :
-    helper (cfg j) a b c/50174 ≤ full a b c/denominator := by
+    helper (cfg j) a b c/50164 ≤ full a b c/denominator := by
   have he : scale^2*helper (cfg j) a b c ≤ full a b c := by
     cases a with
     | zero =>
@@ -1828,15 +1828,15 @@ theorem helper_cap (a b c : ℕ) (j : Fin 3) :
         rw [h]
         exact Nat.le_add_right _ _
   apply (Nat.le_div_iff_mul_le (show 0 < denominator by decide +kernel)).mpr
-  have hh := Nat.div_mul_le_self (helper (cfg j) a b c) 50174
+  have hh := Nat.div_mul_le_self (helper (cfg j) a b c) 50164
   dsimp only [denominator,scale] at he ⊢
   nlinarith
 theorem retained_cap (a b c : ℕ) :
     graphDir cfg scale ⟨c,b+2,a+3⟩ a b c/scale+
-      (∑ j : Fin 3, coeff (cfg j) a b c/50174) ≤ full a b c/denominator := by
+      (∑ j : Fin 3, coeff (cfg j) a b c/50164) ≤ full a b c/denominator := by
   apply (Nat.le_div_iff_mul_le (show 0 < denominator by decide +kernel)).mpr
   have hx := Nat.div_mul_le_self (graphDir cfg scale ⟨c,b+2,a+3⟩ a b c) scale
-  have hy : (∑ j : Fin 3, coeff (cfg j) a b c/50174)*50174 ≤ ∑ j : Fin 3, coeff (cfg j) a b c := by
+  have hy : (∑ j : Fin 3, coeff (cfg j) a b c/50164)*50164 ≤ ∑ j : Fin 3, coeff (cfg j) a b c := by
     rw [Finset.sum_mul]
     exact Finset.sum_le_sum (fun j _ => Nat.div_mul_le_self _ _)
   rw [full_eq]
@@ -2064,10 +2064,10 @@ theorem graph_eq_hi (f : FlagDegree) (a b c : ℕ) :
   norm_num [cfg,scale,source10,graphDir,normal,raw,MovingFiberThreeSources6811.weight,MovingFiberThreeSources6811.direction,Params.d,Params.flag,SecondJetRelaxedFlag.budgetFlag,flagMixed,unitZFlag,unitYZFlag,unitAllFlag,firstDir_succ,firstHi,gHi0,gHi1,gHi2,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
   <;> ring
 theorem identity_absorption (f : FlagDegree) (a b c : ℕ) :
-    scale*131073*80900*identityDegree f a b c ≤ 50174*graphDir cfg scale f a b c := by
+    scale*131073*80910*identityDegree f a b c ≤ 50164*graphDir cfg scale f a b c := by
   cases a with
   | zero =>
-    have he : 50174*graphDir cfg scale f 0 b c = scale*131073*80900*identityDegree f 0 b c+
+    have he : 50164*graphDir cfg scale f 0 b c = scale*131073*80910*identityDegree f 0 b c+
         (f.zOnly*identitySlackLo0 b c+f.yz*identitySlackLo1 b c+f.all*identitySlackLo2 b c) := by
       rw [graph_eq_lo]
       simp only [scale,identityDegree,gLo0,gLo1,gLo2,identitySlackLo0,identitySlackLo1,identitySlackLo2]
@@ -2075,7 +2075,7 @@ theorem identity_absorption (f : FlagDegree) (a b c : ℕ) :
     rw [he]
     exact Nat.le_add_right _ _
   | succ a =>
-    have he : 50174*graphDir cfg scale f (a+1) b c = scale*131073*80900*identityDegree f (a+1) b c+
+    have he : 50164*graphDir cfg scale f (a+1) b c = scale*131073*80910*identityDegree f (a+1) b c+
         (f.zOnly*identitySlackHi0 a b c+f.yz*identitySlackHi1 a b c+f.all*identitySlackHi2 a b c) := by
       rw [graph_eq_hi]
       simp only [scale,identityDegree,gHi0,gHi1,gHi2,identitySlackHi0,identitySlackHi1,identitySlackHi2]
@@ -2083,7 +2083,7 @@ theorem identity_absorption (f : FlagDegree) (a b c : ℕ) :
     rw [he]
     exact Nat.le_add_right _ _
 theorem full_eq (a b c : ℕ) : full a b c =
-    scale*50174*graphDir cfg scale ⟨c,b+2,a+3⟩ a b c+
+    scale*50164*graphDir cfg scale ⟨c,b+2,a+3⟩ a b c+
       scale^2*(∑ j : Fin 3, coeff (cfg j) a b c)+conductor a b c := by
   cases a with
   | zero =>
@@ -2097,7 +2097,7 @@ theorem full_eq (a b c : ℕ) : full a b c =
       conductor,conductorHi,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
     <;> ring
 theorem helper_cap (a b c : ℕ) (j : Fin 3) :
-    helper (cfg j) a b c/50174 ≤ full a b c/denominator := by
+    helper (cfg j) a b c/50164 ≤ full a b c/denominator := by
   have he : scale^2*helper (cfg j) a b c ≤ full a b c := by
     cases a with
     | zero =>
@@ -2135,15 +2135,15 @@ theorem helper_cap (a b c : ℕ) (j : Fin 3) :
         rw [h]
         exact Nat.le_add_right _ _
   apply (Nat.le_div_iff_mul_le (show 0 < denominator by decide +kernel)).mpr
-  have hh := Nat.div_mul_le_self (helper (cfg j) a b c) 50174
+  have hh := Nat.div_mul_le_self (helper (cfg j) a b c) 50164
   dsimp only [denominator,scale] at he ⊢
   nlinarith
 theorem retained_cap (a b c : ℕ) :
     graphDir cfg scale ⟨c,b+2,a+3⟩ a b c/scale+
-      (∑ j : Fin 3, coeff (cfg j) a b c/50174) ≤ full a b c/denominator := by
+      (∑ j : Fin 3, coeff (cfg j) a b c/50164) ≤ full a b c/denominator := by
   apply (Nat.le_div_iff_mul_le (show 0 < denominator by decide +kernel)).mpr
   have hx := Nat.div_mul_le_self (graphDir cfg scale ⟨c,b+2,a+3⟩ a b c) scale
-  have hy : (∑ j : Fin 3, coeff (cfg j) a b c/50174)*50174 ≤ ∑ j : Fin 3, coeff (cfg j) a b c := by
+  have hy : (∑ j : Fin 3, coeff (cfg j) a b c/50164)*50164 ≤ ∑ j : Fin 3, coeff (cfg j) a b c := by
     rw [Finset.sum_mul]
     exact Finset.sum_le_sum (fun j _ => Nat.div_mul_le_self _ _)
   rw [full_eq]
@@ -2371,10 +2371,10 @@ theorem graph_eq_hi (f : FlagDegree) (a b c : ℕ) :
   norm_num [cfg,scale,source11,source12,source13,graphDir,normal,raw,MovingFiberThreeSources6811.weight,MovingFiberThreeSources6811.direction,Params.d,Params.flag,SecondJetRelaxedFlag.budgetFlag,flagMixed,unitZFlag,unitYZFlag,unitAllFlag,firstDir_succ,firstHi,gHi0,gHi1,gHi2,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
   <;> ring
 theorem identity_absorption (f : FlagDegree) (a b c : ℕ) :
-    scale*131073*80900*identityDegree f a b c ≤ 50174*graphDir cfg scale f a b c := by
+    scale*131073*80910*identityDegree f a b c ≤ 50164*graphDir cfg scale f a b c := by
   cases a with
   | zero =>
-    have he : 50174*graphDir cfg scale f 0 b c = scale*131073*80900*identityDegree f 0 b c+
+    have he : 50164*graphDir cfg scale f 0 b c = scale*131073*80910*identityDegree f 0 b c+
         (f.zOnly*identitySlackLo0 b c+f.yz*identitySlackLo1 b c+f.all*identitySlackLo2 b c) := by
       rw [graph_eq_lo]
       simp only [scale,identityDegree,gLo0,gLo1,gLo2,identitySlackLo0,identitySlackLo1,identitySlackLo2]
@@ -2382,7 +2382,7 @@ theorem identity_absorption (f : FlagDegree) (a b c : ℕ) :
     rw [he]
     exact Nat.le_add_right _ _
   | succ a =>
-    have he : 50174*graphDir cfg scale f (a+1) b c = scale*131073*80900*identityDegree f (a+1) b c+
+    have he : 50164*graphDir cfg scale f (a+1) b c = scale*131073*80910*identityDegree f (a+1) b c+
         (f.zOnly*identitySlackHi0 a b c+f.yz*identitySlackHi1 a b c+f.all*identitySlackHi2 a b c) := by
       rw [graph_eq_hi]
       simp only [scale,identityDegree,gHi0,gHi1,gHi2,identitySlackHi0,identitySlackHi1,identitySlackHi2]
@@ -2390,7 +2390,7 @@ theorem identity_absorption (f : FlagDegree) (a b c : ℕ) :
     rw [he]
     exact Nat.le_add_right _ _
 theorem full_eq (a b c : ℕ) : full a b c =
-    scale*50174*graphDir cfg scale ⟨c,b+2,a+3⟩ a b c+
+    scale*50164*graphDir cfg scale ⟨c,b+2,a+3⟩ a b c+
       scale^2*(∑ j : Fin 3, coeff (cfg j) a b c)+conductor a b c := by
   cases a with
   | zero =>
@@ -2404,7 +2404,7 @@ theorem full_eq (a b c : ℕ) : full a b c =
       conductor,conductorHi,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
     <;> ring
 theorem helper_cap (a b c : ℕ) (j : Fin 3) :
-    helper (cfg j) a b c/50174 ≤ full a b c/denominator := by
+    helper (cfg j) a b c/50164 ≤ full a b c/denominator := by
   have he : scale^2*helper (cfg j) a b c ≤ full a b c := by
     cases a with
     | zero =>
@@ -2442,15 +2442,15 @@ theorem helper_cap (a b c : ℕ) (j : Fin 3) :
         rw [h]
         exact Nat.le_add_right _ _
   apply (Nat.le_div_iff_mul_le (show 0 < denominator by decide +kernel)).mpr
-  have hh := Nat.div_mul_le_self (helper (cfg j) a b c) 50174
+  have hh := Nat.div_mul_le_self (helper (cfg j) a b c) 50164
   dsimp only [denominator,scale] at he ⊢
   nlinarith
 theorem retained_cap (a b c : ℕ) :
     graphDir cfg scale ⟨c,b+2,a+3⟩ a b c/scale+
-      (∑ j : Fin 3, coeff (cfg j) a b c/50174) ≤ full a b c/denominator := by
+      (∑ j : Fin 3, coeff (cfg j) a b c/50164) ≤ full a b c/denominator := by
   apply (Nat.le_div_iff_mul_le (show 0 < denominator by decide +kernel)).mpr
   have hx := Nat.div_mul_le_self (graphDir cfg scale ⟨c,b+2,a+3⟩ a b c) scale
-  have hy : (∑ j : Fin 3, coeff (cfg j) a b c/50174)*50174 ≤ ∑ j : Fin 3, coeff (cfg j) a b c := by
+  have hy : (∑ j : Fin 3, coeff (cfg j) a b c/50164)*50164 ≤ ∑ j : Fin 3, coeff (cfg j) a b c := by
     rw [Finset.sum_mul]
     exact Finset.sum_le_sum (fun j _ => Nat.div_mul_le_self _ _)
   rw [full_eq]
@@ -2683,10 +2683,10 @@ theorem graph_eq_hi (f : FlagDegree) (a b c : ℕ) :
   norm_num [cfg,scale,source11,source13,source14,graphDir,normal,raw,MovingFiberThreeSources6811.weight,MovingFiberThreeSources6811.direction,Params.d,Params.flag,SecondJetRelaxedFlag.budgetFlag,flagMixed,unitZFlag,unitYZFlag,unitAllFlag,firstDir_succ,firstHi,gHi0,gHi1,gHi2,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
   <;> ring
 theorem identity_absorption (f : FlagDegree) (a b c : ℕ) :
-    scale*131073*80900*identityDegree f a b c ≤ 50174*graphDir cfg scale f a b c := by
+    scale*131073*80910*identityDegree f a b c ≤ 50164*graphDir cfg scale f a b c := by
   cases a with
   | zero =>
-    have he : 50174*graphDir cfg scale f 0 b c = scale*131073*80900*identityDegree f 0 b c+
+    have he : 50164*graphDir cfg scale f 0 b c = scale*131073*80910*identityDegree f 0 b c+
         (f.zOnly*identitySlackLo0 b c+f.yz*identitySlackLo1 b c+f.all*identitySlackLo2 b c) := by
       rw [graph_eq_lo]
       simp only [scale,identityDegree,gLo0,gLo1,gLo2,identitySlackLo0,identitySlackLo1,identitySlackLo2]
@@ -2694,7 +2694,7 @@ theorem identity_absorption (f : FlagDegree) (a b c : ℕ) :
     rw [he]
     exact Nat.le_add_right _ _
   | succ a =>
-    have he : 50174*graphDir cfg scale f (a+1) b c = scale*131073*80900*identityDegree f (a+1) b c+
+    have he : 50164*graphDir cfg scale f (a+1) b c = scale*131073*80910*identityDegree f (a+1) b c+
         (f.zOnly*identitySlackHi0 a b c+f.yz*identitySlackHi1 a b c+f.all*identitySlackHi2 a b c) := by
       rw [graph_eq_hi]
       simp only [scale,identityDegree,gHi0,gHi1,gHi2,identitySlackHi0,identitySlackHi1,identitySlackHi2]
@@ -2702,7 +2702,7 @@ theorem identity_absorption (f : FlagDegree) (a b c : ℕ) :
     rw [he]
     exact Nat.le_add_right _ _
 theorem full_eq (a b c : ℕ) : full a b c =
-    scale*50174*graphDir cfg scale ⟨c,b+2,a+3⟩ a b c+
+    scale*50164*graphDir cfg scale ⟨c,b+2,a+3⟩ a b c+
       scale^2*(∑ j : Fin 3, coeff (cfg j) a b c)+conductor a b c := by
   cases a with
   | zero =>
@@ -2716,7 +2716,7 @@ theorem full_eq (a b c : ℕ) : full a b c =
       conductor,conductorHi,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
     <;> ring
 theorem helper_cap (a b c : ℕ) (j : Fin 3) :
-    helper (cfg j) a b c/50174 ≤ full a b c/denominator := by
+    helper (cfg j) a b c/50164 ≤ full a b c/denominator := by
   have he : scale^2*helper (cfg j) a b c ≤ full a b c := by
     cases a with
     | zero =>
@@ -2754,15 +2754,15 @@ theorem helper_cap (a b c : ℕ) (j : Fin 3) :
         rw [h]
         exact Nat.le_add_right _ _
   apply (Nat.le_div_iff_mul_le (show 0 < denominator by decide +kernel)).mpr
-  have hh := Nat.div_mul_le_self (helper (cfg j) a b c) 50174
+  have hh := Nat.div_mul_le_self (helper (cfg j) a b c) 50164
   dsimp only [denominator,scale] at he ⊢
   nlinarith
 theorem retained_cap (a b c : ℕ) :
     graphDir cfg scale ⟨c,b+2,a+3⟩ a b c/scale+
-      (∑ j : Fin 3, coeff (cfg j) a b c/50174) ≤ full a b c/denominator := by
+      (∑ j : Fin 3, coeff (cfg j) a b c/50164) ≤ full a b c/denominator := by
   apply (Nat.le_div_iff_mul_le (show 0 < denominator by decide +kernel)).mpr
   have hx := Nat.div_mul_le_self (graphDir cfg scale ⟨c,b+2,a+3⟩ a b c) scale
-  have hy : (∑ j : Fin 3, coeff (cfg j) a b c/50174)*50174 ≤ ∑ j : Fin 3, coeff (cfg j) a b c := by
+  have hy : (∑ j : Fin 3, coeff (cfg j) a b c/50164)*50164 ≤ ∑ j : Fin 3, coeff (cfg j) a b c := by
     rw [Finset.sum_mul]
     exact Finset.sum_le_sum (fun j _ => Nat.div_mul_le_self _ _)
   rw [full_eq]
@@ -2990,10 +2990,10 @@ theorem graph_eq_hi (f : FlagDegree) (a b c : ℕ) :
   norm_num [cfg,scale,source15,source16,source17,graphDir,normal,raw,MovingFiberThreeSources6811.weight,MovingFiberThreeSources6811.direction,Params.d,Params.flag,SecondJetRelaxedFlag.budgetFlag,flagMixed,unitZFlag,unitYZFlag,unitAllFlag,firstDir_succ,firstHi,gHi0,gHi1,gHi2,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
   <;> ring
 theorem identity_absorption (f : FlagDegree) (a b c : ℕ) :
-    scale*131073*80900*identityDegree f a b c ≤ 50174*graphDir cfg scale f a b c := by
+    scale*131073*80910*identityDegree f a b c ≤ 50164*graphDir cfg scale f a b c := by
   cases a with
   | zero =>
-    have he : 50174*graphDir cfg scale f 0 b c = scale*131073*80900*identityDegree f 0 b c+
+    have he : 50164*graphDir cfg scale f 0 b c = scale*131073*80910*identityDegree f 0 b c+
         (f.zOnly*identitySlackLo0 b c+f.yz*identitySlackLo1 b c+f.all*identitySlackLo2 b c) := by
       rw [graph_eq_lo]
       simp only [scale,identityDegree,gLo0,gLo1,gLo2,identitySlackLo0,identitySlackLo1,identitySlackLo2]
@@ -3001,7 +3001,7 @@ theorem identity_absorption (f : FlagDegree) (a b c : ℕ) :
     rw [he]
     exact Nat.le_add_right _ _
   | succ a =>
-    have he : 50174*graphDir cfg scale f (a+1) b c = scale*131073*80900*identityDegree f (a+1) b c+
+    have he : 50164*graphDir cfg scale f (a+1) b c = scale*131073*80910*identityDegree f (a+1) b c+
         (f.zOnly*identitySlackHi0 a b c+f.yz*identitySlackHi1 a b c+f.all*identitySlackHi2 a b c) := by
       rw [graph_eq_hi]
       simp only [scale,identityDegree,gHi0,gHi1,gHi2,identitySlackHi0,identitySlackHi1,identitySlackHi2]
@@ -3009,7 +3009,7 @@ theorem identity_absorption (f : FlagDegree) (a b c : ℕ) :
     rw [he]
     exact Nat.le_add_right _ _
 theorem full_eq (a b c : ℕ) : full a b c =
-    scale*50174*graphDir cfg scale ⟨c,b+2,a+3⟩ a b c+
+    scale*50164*graphDir cfg scale ⟨c,b+2,a+3⟩ a b c+
       scale^2*(∑ j : Fin 3, coeff (cfg j) a b c)+conductor a b c := by
   cases a with
   | zero =>
@@ -3023,7 +3023,7 @@ theorem full_eq (a b c : ℕ) : full a b c =
       conductor,conductorHi,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
     <;> ring
 theorem helper_cap (a b c : ℕ) (j : Fin 3) :
-    helper (cfg j) a b c/50174 ≤ full a b c/denominator := by
+    helper (cfg j) a b c/50164 ≤ full a b c/denominator := by
   have he : scale^2*helper (cfg j) a b c ≤ full a b c := by
     cases a with
     | zero =>
@@ -3061,15 +3061,15 @@ theorem helper_cap (a b c : ℕ) (j : Fin 3) :
         rw [h]
         exact Nat.le_add_right _ _
   apply (Nat.le_div_iff_mul_le (show 0 < denominator by decide +kernel)).mpr
-  have hh := Nat.div_mul_le_self (helper (cfg j) a b c) 50174
+  have hh := Nat.div_mul_le_self (helper (cfg j) a b c) 50164
   dsimp only [denominator,scale] at he ⊢
   nlinarith
 theorem retained_cap (a b c : ℕ) :
     graphDir cfg scale ⟨c,b+2,a+3⟩ a b c/scale+
-      (∑ j : Fin 3, coeff (cfg j) a b c/50174) ≤ full a b c/denominator := by
+      (∑ j : Fin 3, coeff (cfg j) a b c/50164) ≤ full a b c/denominator := by
   apply (Nat.le_div_iff_mul_le (show 0 < denominator by decide +kernel)).mpr
   have hx := Nat.div_mul_le_self (graphDir cfg scale ⟨c,b+2,a+3⟩ a b c) scale
-  have hy : (∑ j : Fin 3, coeff (cfg j) a b c/50174)*50174 ≤ ∑ j : Fin 3, coeff (cfg j) a b c := by
+  have hy : (∑ j : Fin 3, coeff (cfg j) a b c/50164)*50164 ≤ ∑ j : Fin 3, coeff (cfg j) a b c := by
     rw [Finset.sum_mul]
     exact Finset.sum_le_sum (fun j _ => Nat.div_mul_le_self _ _)
   rw [full_eq]
@@ -3297,10 +3297,10 @@ theorem graph_eq_hi (f : FlagDegree) (a b c : ℕ) :
   norm_num [cfg,scale,source18,source19,source20,graphDir,normal,raw,MovingFiberThreeSources6811.weight,MovingFiberThreeSources6811.direction,Params.d,Params.flag,SecondJetRelaxedFlag.budgetFlag,flagMixed,unitZFlag,unitYZFlag,unitAllFlag,firstDir_succ,firstHi,gHi0,gHi1,gHi2,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
   <;> ring
 theorem identity_absorption (f : FlagDegree) (a b c : ℕ) :
-    scale*131073*80900*identityDegree f a b c ≤ 50174*graphDir cfg scale f a b c := by
+    scale*131073*80910*identityDegree f a b c ≤ 50164*graphDir cfg scale f a b c := by
   cases a with
   | zero =>
-    have he : 50174*graphDir cfg scale f 0 b c = scale*131073*80900*identityDegree f 0 b c+
+    have he : 50164*graphDir cfg scale f 0 b c = scale*131073*80910*identityDegree f 0 b c+
         (f.zOnly*identitySlackLo0 b c+f.yz*identitySlackLo1 b c+f.all*identitySlackLo2 b c) := by
       rw [graph_eq_lo]
       simp only [scale,identityDegree,gLo0,gLo1,gLo2,identitySlackLo0,identitySlackLo1,identitySlackLo2]
@@ -3308,7 +3308,7 @@ theorem identity_absorption (f : FlagDegree) (a b c : ℕ) :
     rw [he]
     exact Nat.le_add_right _ _
   | succ a =>
-    have he : 50174*graphDir cfg scale f (a+1) b c = scale*131073*80900*identityDegree f (a+1) b c+
+    have he : 50164*graphDir cfg scale f (a+1) b c = scale*131073*80910*identityDegree f (a+1) b c+
         (f.zOnly*identitySlackHi0 a b c+f.yz*identitySlackHi1 a b c+f.all*identitySlackHi2 a b c) := by
       rw [graph_eq_hi]
       simp only [scale,identityDegree,gHi0,gHi1,gHi2,identitySlackHi0,identitySlackHi1,identitySlackHi2]
@@ -3316,7 +3316,7 @@ theorem identity_absorption (f : FlagDegree) (a b c : ℕ) :
     rw [he]
     exact Nat.le_add_right _ _
 theorem full_eq (a b c : ℕ) : full a b c =
-    scale*50174*graphDir cfg scale ⟨c,b+2,a+3⟩ a b c+
+    scale*50164*graphDir cfg scale ⟨c,b+2,a+3⟩ a b c+
       scale^2*(∑ j : Fin 3, coeff (cfg j) a b c)+conductor a b c := by
   cases a with
   | zero =>
@@ -3330,7 +3330,7 @@ theorem full_eq (a b c : ℕ) : full a b c =
       conductor,conductorHi,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
     <;> ring
 theorem helper_cap (a b c : ℕ) (j : Fin 3) :
-    helper (cfg j) a b c/50174 ≤ full a b c/denominator := by
+    helper (cfg j) a b c/50164 ≤ full a b c/denominator := by
   have he : scale^2*helper (cfg j) a b c ≤ full a b c := by
     cases a with
     | zero =>
@@ -3368,15 +3368,15 @@ theorem helper_cap (a b c : ℕ) (j : Fin 3) :
         rw [h]
         exact Nat.le_add_right _ _
   apply (Nat.le_div_iff_mul_le (show 0 < denominator by decide +kernel)).mpr
-  have hh := Nat.div_mul_le_self (helper (cfg j) a b c) 50174
+  have hh := Nat.div_mul_le_self (helper (cfg j) a b c) 50164
   dsimp only [denominator,scale] at he ⊢
   nlinarith
 theorem retained_cap (a b c : ℕ) :
     graphDir cfg scale ⟨c,b+2,a+3⟩ a b c/scale+
-      (∑ j : Fin 3, coeff (cfg j) a b c/50174) ≤ full a b c/denominator := by
+      (∑ j : Fin 3, coeff (cfg j) a b c/50164) ≤ full a b c/denominator := by
   apply (Nat.le_div_iff_mul_le (show 0 < denominator by decide +kernel)).mpr
   have hx := Nat.div_mul_le_self (graphDir cfg scale ⟨c,b+2,a+3⟩ a b c) scale
-  have hy : (∑ j : Fin 3, coeff (cfg j) a b c/50174)*50174 ≤ ∑ j : Fin 3, coeff (cfg j) a b c := by
+  have hy : (∑ j : Fin 3, coeff (cfg j) a b c/50164)*50164 ≤ ∑ j : Fin 3, coeff (cfg j) a b c := by
     rw [Finset.sum_mul]
     exact Finset.sum_le_sum (fun j _ => Nat.div_mul_le_self _ _)
   rw [full_eq]
@@ -3604,10 +3604,10 @@ theorem graph_eq_hi (f : FlagDegree) (a b c : ℕ) :
   norm_num [cfg,scale,source5,source21,source22,graphDir,normal,raw,MovingFiberThreeSources6811.weight,MovingFiberThreeSources6811.direction,Params.d,Params.flag,SecondJetRelaxedFlag.budgetFlag,flagMixed,unitZFlag,unitYZFlag,unitAllFlag,firstDir_succ,firstHi,gHi0,gHi1,gHi2,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
   <;> ring
 theorem identity_absorption (f : FlagDegree) (a b c : ℕ) :
-    scale*131073*80900*identityDegree f a b c ≤ 50174*graphDir cfg scale f a b c := by
+    scale*131073*80910*identityDegree f a b c ≤ 50164*graphDir cfg scale f a b c := by
   cases a with
   | zero =>
-    have he : 50174*graphDir cfg scale f 0 b c = scale*131073*80900*identityDegree f 0 b c+
+    have he : 50164*graphDir cfg scale f 0 b c = scale*131073*80910*identityDegree f 0 b c+
         (f.zOnly*identitySlackLo0 b c+f.yz*identitySlackLo1 b c+f.all*identitySlackLo2 b c) := by
       rw [graph_eq_lo]
       simp only [scale,identityDegree,gLo0,gLo1,gLo2,identitySlackLo0,identitySlackLo1,identitySlackLo2]
@@ -3615,7 +3615,7 @@ theorem identity_absorption (f : FlagDegree) (a b c : ℕ) :
     rw [he]
     exact Nat.le_add_right _ _
   | succ a =>
-    have he : 50174*graphDir cfg scale f (a+1) b c = scale*131073*80900*identityDegree f (a+1) b c+
+    have he : 50164*graphDir cfg scale f (a+1) b c = scale*131073*80910*identityDegree f (a+1) b c+
         (f.zOnly*identitySlackHi0 a b c+f.yz*identitySlackHi1 a b c+f.all*identitySlackHi2 a b c) := by
       rw [graph_eq_hi]
       simp only [scale,identityDegree,gHi0,gHi1,gHi2,identitySlackHi0,identitySlackHi1,identitySlackHi2]
@@ -3623,7 +3623,7 @@ theorem identity_absorption (f : FlagDegree) (a b c : ℕ) :
     rw [he]
     exact Nat.le_add_right _ _
 theorem full_eq (a b c : ℕ) : full a b c =
-    scale*50174*graphDir cfg scale ⟨c,b+2,a+3⟩ a b c+
+    scale*50164*graphDir cfg scale ⟨c,b+2,a+3⟩ a b c+
       scale^2*(∑ j : Fin 3, coeff (cfg j) a b c)+conductor a b c := by
   cases a with
   | zero =>
@@ -3637,7 +3637,7 @@ theorem full_eq (a b c : ℕ) : full a b c =
       conductor,conductorHi,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
     <;> ring
 theorem helper_cap (a b c : ℕ) (j : Fin 3) :
-    helper (cfg j) a b c/50174 ≤ full a b c/denominator := by
+    helper (cfg j) a b c/50164 ≤ full a b c/denominator := by
   have he : scale^2*helper (cfg j) a b c ≤ full a b c := by
     cases a with
     | zero =>
@@ -3675,15 +3675,15 @@ theorem helper_cap (a b c : ℕ) (j : Fin 3) :
         rw [h]
         exact Nat.le_add_right _ _
   apply (Nat.le_div_iff_mul_le (show 0 < denominator by decide +kernel)).mpr
-  have hh := Nat.div_mul_le_self (helper (cfg j) a b c) 50174
+  have hh := Nat.div_mul_le_self (helper (cfg j) a b c) 50164
   dsimp only [denominator,scale] at he ⊢
   nlinarith
 theorem retained_cap (a b c : ℕ) :
     graphDir cfg scale ⟨c,b+2,a+3⟩ a b c/scale+
-      (∑ j : Fin 3, coeff (cfg j) a b c/50174) ≤ full a b c/denominator := by
+      (∑ j : Fin 3, coeff (cfg j) a b c/50164) ≤ full a b c/denominator := by
   apply (Nat.le_div_iff_mul_le (show 0 < denominator by decide +kernel)).mpr
   have hx := Nat.div_mul_le_self (graphDir cfg scale ⟨c,b+2,a+3⟩ a b c) scale
-  have hy : (∑ j : Fin 3, coeff (cfg j) a b c/50174)*50174 ≤ ∑ j : Fin 3, coeff (cfg j) a b c := by
+  have hy : (∑ j : Fin 3, coeff (cfg j) a b c/50164)*50164 ≤ ∑ j : Fin 3, coeff (cfg j) a b c := by
     rw [Finset.sum_mul]
     exact Finset.sum_le_sum (fun j _ => Nat.div_mul_le_self _ _)
   rw [full_eq]
@@ -3916,10 +3916,10 @@ theorem graph_eq_hi (f : FlagDegree) (a b c : ℕ) :
   norm_num [cfg,scale,source5,source23,source24,graphDir,normal,raw,MovingFiberThreeSources6811.weight,MovingFiberThreeSources6811.direction,Params.d,Params.flag,SecondJetRelaxedFlag.budgetFlag,flagMixed,unitZFlag,unitYZFlag,unitAllFlag,firstDir_succ,firstHi,gHi0,gHi1,gHi2,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
   <;> ring
 theorem identity_absorption (f : FlagDegree) (a b c : ℕ) :
-    scale*131073*80900*identityDegree f a b c ≤ 50174*graphDir cfg scale f a b c := by
+    scale*131073*80910*identityDegree f a b c ≤ 50164*graphDir cfg scale f a b c := by
   cases a with
   | zero =>
-    have he : 50174*graphDir cfg scale f 0 b c = scale*131073*80900*identityDegree f 0 b c+
+    have he : 50164*graphDir cfg scale f 0 b c = scale*131073*80910*identityDegree f 0 b c+
         (f.zOnly*identitySlackLo0 b c+f.yz*identitySlackLo1 b c+f.all*identitySlackLo2 b c) := by
       rw [graph_eq_lo]
       simp only [scale,identityDegree,gLo0,gLo1,gLo2,identitySlackLo0,identitySlackLo1,identitySlackLo2]
@@ -3927,7 +3927,7 @@ theorem identity_absorption (f : FlagDegree) (a b c : ℕ) :
     rw [he]
     exact Nat.le_add_right _ _
   | succ a =>
-    have he : 50174*graphDir cfg scale f (a+1) b c = scale*131073*80900*identityDegree f (a+1) b c+
+    have he : 50164*graphDir cfg scale f (a+1) b c = scale*131073*80910*identityDegree f (a+1) b c+
         (f.zOnly*identitySlackHi0 a b c+f.yz*identitySlackHi1 a b c+f.all*identitySlackHi2 a b c) := by
       rw [graph_eq_hi]
       simp only [scale,identityDegree,gHi0,gHi1,gHi2,identitySlackHi0,identitySlackHi1,identitySlackHi2]
@@ -3935,7 +3935,7 @@ theorem identity_absorption (f : FlagDegree) (a b c : ℕ) :
     rw [he]
     exact Nat.le_add_right _ _
 theorem full_eq (a b c : ℕ) : full a b c =
-    scale*50174*graphDir cfg scale ⟨c,b+2,a+3⟩ a b c+
+    scale*50164*graphDir cfg scale ⟨c,b+2,a+3⟩ a b c+
       scale^2*(∑ j : Fin 3, coeff (cfg j) a b c)+conductor a b c := by
   cases a with
   | zero =>
@@ -3949,7 +3949,7 @@ theorem full_eq (a b c : ℕ) : full a b c =
       conductor,conductorHi,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
     <;> ring
 theorem helper_cap (a b c : ℕ) (j : Fin 3) :
-    helper (cfg j) a b c/50174 ≤ full a b c/denominator := by
+    helper (cfg j) a b c/50164 ≤ full a b c/denominator := by
   have he : scale^2*helper (cfg j) a b c ≤ full a b c := by
     cases a with
     | zero =>
@@ -3987,15 +3987,15 @@ theorem helper_cap (a b c : ℕ) (j : Fin 3) :
         rw [h]
         exact Nat.le_add_right _ _
   apply (Nat.le_div_iff_mul_le (show 0 < denominator by decide +kernel)).mpr
-  have hh := Nat.div_mul_le_self (helper (cfg j) a b c) 50174
+  have hh := Nat.div_mul_le_self (helper (cfg j) a b c) 50164
   dsimp only [denominator,scale] at he ⊢
   nlinarith
 theorem retained_cap (a b c : ℕ) :
     graphDir cfg scale ⟨c,b+2,a+3⟩ a b c/scale+
-      (∑ j : Fin 3, coeff (cfg j) a b c/50174) ≤ full a b c/denominator := by
+      (∑ j : Fin 3, coeff (cfg j) a b c/50164) ≤ full a b c/denominator := by
   apply (Nat.le_div_iff_mul_le (show 0 < denominator by decide +kernel)).mpr
   have hx := Nat.div_mul_le_self (graphDir cfg scale ⟨c,b+2,a+3⟩ a b c) scale
-  have hy : (∑ j : Fin 3, coeff (cfg j) a b c/50174)*50174 ≤ ∑ j : Fin 3, coeff (cfg j) a b c := by
+  have hy : (∑ j : Fin 3, coeff (cfg j) a b c/50164)*50164 ≤ ∑ j : Fin 3, coeff (cfg j) a b c := by
     rw [Finset.sum_mul]
     exact Finset.sum_le_sum (fun j _ => Nat.div_mul_le_self _ _)
   rw [full_eq]
@@ -4223,10 +4223,10 @@ theorem graph_eq_hi (f : FlagDegree) (a b c : ℕ) :
   norm_num [cfg,scale,source5,source24,source25,graphDir,normal,raw,MovingFiberThreeSources6811.weight,MovingFiberThreeSources6811.direction,Params.d,Params.flag,SecondJetRelaxedFlag.budgetFlag,flagMixed,unitZFlag,unitYZFlag,unitAllFlag,firstDir_succ,firstHi,gHi0,gHi1,gHi2,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
   <;> ring
 theorem identity_absorption (f : FlagDegree) (a b c : ℕ) :
-    scale*131073*80900*identityDegree f a b c ≤ 50174*graphDir cfg scale f a b c := by
+    scale*131073*80910*identityDegree f a b c ≤ 50164*graphDir cfg scale f a b c := by
   cases a with
   | zero =>
-    have he : 50174*graphDir cfg scale f 0 b c = scale*131073*80900*identityDegree f 0 b c+
+    have he : 50164*graphDir cfg scale f 0 b c = scale*131073*80910*identityDegree f 0 b c+
         (f.zOnly*identitySlackLo0 b c+f.yz*identitySlackLo1 b c+f.all*identitySlackLo2 b c) := by
       rw [graph_eq_lo]
       simp only [scale,identityDegree,gLo0,gLo1,gLo2,identitySlackLo0,identitySlackLo1,identitySlackLo2]
@@ -4234,7 +4234,7 @@ theorem identity_absorption (f : FlagDegree) (a b c : ℕ) :
     rw [he]
     exact Nat.le_add_right _ _
   | succ a =>
-    have he : 50174*graphDir cfg scale f (a+1) b c = scale*131073*80900*identityDegree f (a+1) b c+
+    have he : 50164*graphDir cfg scale f (a+1) b c = scale*131073*80910*identityDegree f (a+1) b c+
         (f.zOnly*identitySlackHi0 a b c+f.yz*identitySlackHi1 a b c+f.all*identitySlackHi2 a b c) := by
       rw [graph_eq_hi]
       simp only [scale,identityDegree,gHi0,gHi1,gHi2,identitySlackHi0,identitySlackHi1,identitySlackHi2]
@@ -4242,7 +4242,7 @@ theorem identity_absorption (f : FlagDegree) (a b c : ℕ) :
     rw [he]
     exact Nat.le_add_right _ _
 theorem full_eq (a b c : ℕ) : full a b c =
-    scale*50174*graphDir cfg scale ⟨c,b+2,a+3⟩ a b c+
+    scale*50164*graphDir cfg scale ⟨c,b+2,a+3⟩ a b c+
       scale^2*(∑ j : Fin 3, coeff (cfg j) a b c)+conductor a b c := by
   cases a with
   | zero =>
@@ -4256,7 +4256,7 @@ theorem full_eq (a b c : ℕ) : full a b c =
       conductor,conductorHi,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
     <;> ring
 theorem helper_cap (a b c : ℕ) (j : Fin 3) :
-    helper (cfg j) a b c/50174 ≤ full a b c/denominator := by
+    helper (cfg j) a b c/50164 ≤ full a b c/denominator := by
   have he : scale^2*helper (cfg j) a b c ≤ full a b c := by
     cases a with
     | zero =>
@@ -4294,15 +4294,15 @@ theorem helper_cap (a b c : ℕ) (j : Fin 3) :
         rw [h]
         exact Nat.le_add_right _ _
   apply (Nat.le_div_iff_mul_le (show 0 < denominator by decide +kernel)).mpr
-  have hh := Nat.div_mul_le_self (helper (cfg j) a b c) 50174
+  have hh := Nat.div_mul_le_self (helper (cfg j) a b c) 50164
   dsimp only [denominator,scale] at he ⊢
   nlinarith
 theorem retained_cap (a b c : ℕ) :
     graphDir cfg scale ⟨c,b+2,a+3⟩ a b c/scale+
-      (∑ j : Fin 3, coeff (cfg j) a b c/50174) ≤ full a b c/denominator := by
+      (∑ j : Fin 3, coeff (cfg j) a b c/50164) ≤ full a b c/denominator := by
   apply (Nat.le_div_iff_mul_le (show 0 < denominator by decide +kernel)).mpr
   have hx := Nat.div_mul_le_self (graphDir cfg scale ⟨c,b+2,a+3⟩ a b c) scale
-  have hy : (∑ j : Fin 3, coeff (cfg j) a b c/50174)*50174 ≤ ∑ j : Fin 3, coeff (cfg j) a b c := by
+  have hy : (∑ j : Fin 3, coeff (cfg j) a b c/50164)*50164 ≤ ∑ j : Fin 3, coeff (cfg j) a b c := by
     rw [Finset.sum_mul]
     exact Finset.sum_le_sum (fun j _ => Nat.div_mul_le_self _ _)
   rw [full_eq]
@@ -4530,10 +4530,10 @@ theorem graph_eq_hi (f : FlagDegree) (a b c : ℕ) :
   norm_num [cfg,scale,source5,source25,source26,graphDir,normal,raw,MovingFiberThreeSources6811.weight,MovingFiberThreeSources6811.direction,Params.d,Params.flag,SecondJetRelaxedFlag.budgetFlag,flagMixed,unitZFlag,unitYZFlag,unitAllFlag,firstDir_succ,firstHi,gHi0,gHi1,gHi2,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
   <;> ring
 theorem identity_absorption (f : FlagDegree) (a b c : ℕ) :
-    scale*131073*80900*identityDegree f a b c ≤ 50174*graphDir cfg scale f a b c := by
+    scale*131073*80910*identityDegree f a b c ≤ 50164*graphDir cfg scale f a b c := by
   cases a with
   | zero =>
-    have he : 50174*graphDir cfg scale f 0 b c = scale*131073*80900*identityDegree f 0 b c+
+    have he : 50164*graphDir cfg scale f 0 b c = scale*131073*80910*identityDegree f 0 b c+
         (f.zOnly*identitySlackLo0 b c+f.yz*identitySlackLo1 b c+f.all*identitySlackLo2 b c) := by
       rw [graph_eq_lo]
       simp only [scale,identityDegree,gLo0,gLo1,gLo2,identitySlackLo0,identitySlackLo1,identitySlackLo2]
@@ -4541,7 +4541,7 @@ theorem identity_absorption (f : FlagDegree) (a b c : ℕ) :
     rw [he]
     exact Nat.le_add_right _ _
   | succ a =>
-    have he : 50174*graphDir cfg scale f (a+1) b c = scale*131073*80900*identityDegree f (a+1) b c+
+    have he : 50164*graphDir cfg scale f (a+1) b c = scale*131073*80910*identityDegree f (a+1) b c+
         (f.zOnly*identitySlackHi0 a b c+f.yz*identitySlackHi1 a b c+f.all*identitySlackHi2 a b c) := by
       rw [graph_eq_hi]
       simp only [scale,identityDegree,gHi0,gHi1,gHi2,identitySlackHi0,identitySlackHi1,identitySlackHi2]
@@ -4549,7 +4549,7 @@ theorem identity_absorption (f : FlagDegree) (a b c : ℕ) :
     rw [he]
     exact Nat.le_add_right _ _
 theorem full_eq (a b c : ℕ) : full a b c =
-    scale*50174*graphDir cfg scale ⟨c,b+2,a+3⟩ a b c+
+    scale*50164*graphDir cfg scale ⟨c,b+2,a+3⟩ a b c+
       scale^2*(∑ j : Fin 3, coeff (cfg j) a b c)+conductor a b c := by
   cases a with
   | zero =>
@@ -4563,7 +4563,7 @@ theorem full_eq (a b c : ℕ) : full a b c =
       conductor,conductorHi,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
     <;> ring
 theorem helper_cap (a b c : ℕ) (j : Fin 3) :
-    helper (cfg j) a b c/50174 ≤ full a b c/denominator := by
+    helper (cfg j) a b c/50164 ≤ full a b c/denominator := by
   have he : scale^2*helper (cfg j) a b c ≤ full a b c := by
     cases a with
     | zero =>
@@ -4601,15 +4601,15 @@ theorem helper_cap (a b c : ℕ) (j : Fin 3) :
         rw [h]
         exact Nat.le_add_right _ _
   apply (Nat.le_div_iff_mul_le (show 0 < denominator by decide +kernel)).mpr
-  have hh := Nat.div_mul_le_self (helper (cfg j) a b c) 50174
+  have hh := Nat.div_mul_le_self (helper (cfg j) a b c) 50164
   dsimp only [denominator,scale] at he ⊢
   nlinarith
 theorem retained_cap (a b c : ℕ) :
     graphDir cfg scale ⟨c,b+2,a+3⟩ a b c/scale+
-      (∑ j : Fin 3, coeff (cfg j) a b c/50174) ≤ full a b c/denominator := by
+      (∑ j : Fin 3, coeff (cfg j) a b c/50164) ≤ full a b c/denominator := by
   apply (Nat.le_div_iff_mul_le (show 0 < denominator by decide +kernel)).mpr
   have hx := Nat.div_mul_le_self (graphDir cfg scale ⟨c,b+2,a+3⟩ a b c) scale
-  have hy : (∑ j : Fin 3, coeff (cfg j) a b c/50174)*50174 ≤ ∑ j : Fin 3, coeff (cfg j) a b c := by
+  have hy : (∑ j : Fin 3, coeff (cfg j) a b c/50164)*50164 ≤ ∑ j : Fin 3, coeff (cfg j) a b c := by
     rw [Finset.sum_mul]
     exact Finset.sum_le_sum (fun j _ => Nat.div_mul_le_self _ _)
   rw [full_eq]
@@ -4837,10 +4837,10 @@ theorem graph_eq_hi (f : FlagDegree) (a b c : ℕ) :
   norm_num [cfg,scale,source5,source21,source26,graphDir,normal,raw,MovingFiberThreeSources6811.weight,MovingFiberThreeSources6811.direction,Params.d,Params.flag,SecondJetRelaxedFlag.budgetFlag,flagMixed,unitZFlag,unitYZFlag,unitAllFlag,firstDir_succ,firstHi,gHi0,gHi1,gHi2,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
   <;> ring
 theorem identity_absorption (f : FlagDegree) (a b c : ℕ) :
-    scale*131073*80900*identityDegree f a b c ≤ 50174*graphDir cfg scale f a b c := by
+    scale*131073*80910*identityDegree f a b c ≤ 50164*graphDir cfg scale f a b c := by
   cases a with
   | zero =>
-    have he : 50174*graphDir cfg scale f 0 b c = scale*131073*80900*identityDegree f 0 b c+
+    have he : 50164*graphDir cfg scale f 0 b c = scale*131073*80910*identityDegree f 0 b c+
         (f.zOnly*identitySlackLo0 b c+f.yz*identitySlackLo1 b c+f.all*identitySlackLo2 b c) := by
       rw [graph_eq_lo]
       simp only [scale,identityDegree,gLo0,gLo1,gLo2,identitySlackLo0,identitySlackLo1,identitySlackLo2]
@@ -4848,7 +4848,7 @@ theorem identity_absorption (f : FlagDegree) (a b c : ℕ) :
     rw [he]
     exact Nat.le_add_right _ _
   | succ a =>
-    have he : 50174*graphDir cfg scale f (a+1) b c = scale*131073*80900*identityDegree f (a+1) b c+
+    have he : 50164*graphDir cfg scale f (a+1) b c = scale*131073*80910*identityDegree f (a+1) b c+
         (f.zOnly*identitySlackHi0 a b c+f.yz*identitySlackHi1 a b c+f.all*identitySlackHi2 a b c) := by
       rw [graph_eq_hi]
       simp only [scale,identityDegree,gHi0,gHi1,gHi2,identitySlackHi0,identitySlackHi1,identitySlackHi2]
@@ -4856,7 +4856,7 @@ theorem identity_absorption (f : FlagDegree) (a b c : ℕ) :
     rw [he]
     exact Nat.le_add_right _ _
 theorem full_eq (a b c : ℕ) : full a b c =
-    scale*50174*graphDir cfg scale ⟨c,b+2,a+3⟩ a b c+
+    scale*50164*graphDir cfg scale ⟨c,b+2,a+3⟩ a b c+
       scale^2*(∑ j : Fin 3, coeff (cfg j) a b c)+conductor a b c := by
   cases a with
   | zero =>
@@ -4870,7 +4870,7 @@ theorem full_eq (a b c : ℕ) : full a b c =
       conductor,conductorHi,Fin.sum_univ_three,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.cons_val_succ,Matrix.vecHead,Matrix.vecTail,Function.comp_apply]
     <;> ring
 theorem helper_cap (a b c : ℕ) (j : Fin 3) :
-    helper (cfg j) a b c/50174 ≤ full a b c/denominator := by
+    helper (cfg j) a b c/50164 ≤ full a b c/denominator := by
   have he : scale^2*helper (cfg j) a b c ≤ full a b c := by
     cases a with
     | zero =>
@@ -4908,15 +4908,15 @@ theorem helper_cap (a b c : ℕ) (j : Fin 3) :
         rw [h]
         exact Nat.le_add_right _ _
   apply (Nat.le_div_iff_mul_le (show 0 < denominator by decide +kernel)).mpr
-  have hh := Nat.div_mul_le_self (helper (cfg j) a b c) 50174
+  have hh := Nat.div_mul_le_self (helper (cfg j) a b c) 50164
   dsimp only [denominator,scale] at he ⊢
   nlinarith
 theorem retained_cap (a b c : ℕ) :
     graphDir cfg scale ⟨c,b+2,a+3⟩ a b c/scale+
-      (∑ j : Fin 3, coeff (cfg j) a b c/50174) ≤ full a b c/denominator := by
+      (∑ j : Fin 3, coeff (cfg j) a b c/50164) ≤ full a b c/denominator := by
   apply (Nat.le_div_iff_mul_le (show 0 < denominator by decide +kernel)).mpr
   have hx := Nat.div_mul_le_self (graphDir cfg scale ⟨c,b+2,a+3⟩ a b c) scale
-  have hy : (∑ j : Fin 3, coeff (cfg j) a b c/50174)*50174 ≤ ∑ j : Fin 3, coeff (cfg j) a b c := by
+  have hy : (∑ j : Fin 3, coeff (cfg j) a b c/50164)*50164 ≤ ∑ j : Fin 3, coeff (cfg j) a b c := by
     rw [Finset.sum_mul]
     exact Finset.sum_le_sum (fun j _ => Nat.div_mul_le_self _ _)
   rw [full_eq]

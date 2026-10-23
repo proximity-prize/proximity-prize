@@ -23,7 +23,7 @@ local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq I := Classical.decEq I
 variable {x : I → K} {t y r : ℕ}
 
-def pair (t y r b u l : ℕ) : UnequalParameters := ⟨262144,131071,181245,y,r,t,u,b,l⟩
+def pair (t y r b u l : ℕ) : UnequalParameters := ⟨262144,131071,181235,y,r,t,u,b,l⟩
 
 def Gates (t y r b u l : ℕ) : Prop :=
   (pair t y r b u l).mixedCost.y<2130706433 ∧
@@ -282,7 +282,7 @@ local instance : DecidableEq I := Classical.decEq I
 variable {x : I → K} {t y r : ℕ}
 
 def identityPrice (t y r : ℕ) : ℕ :=
-  131073*80900*identityCurveDegree ⟨t-y,y-r,r⟩ (cellA t y) (cellB y r) (cellS r) w/50174
+  131073*80910*identityCurveDegree ⟨t-y,y-r,r⟩ (cellA t y) (cellB y r) (cellS r) w/50164
 
 theorem packet_identity_count (P : Packet x t y r) (hidentity : P.F∣numerator K P.F (w+1)) :
     P.seeds.card ≤ identityPrice t y r := by
@@ -295,7 +295,7 @@ theorem packet_identity_count (P : Packet x t y r) (hidentity : P.F∣numerator 
   let cost := fun g : GeometricFactor K P.F =>
     identityCurveDegree (geometricCumulativeFlag K g) (cellA t y) (cellB y r) (cellS r) w
   have hsingle (g : GeometricFactor K P.F) :
-      (geometricSeeds K P.F P.selected P.seeds g).card*50174≤131073*80900*cost g := by
+      (geometricSeeds K P.F P.selected P.seeds g).card*50164≤131073*80910*cost g := by
     let S := P.stage g
     have hflag := P.stage_flag g
     have hflagChar : (geometricCumulativeFlag K g).yz+(geometricCumulativeFlag K g).all<2130706433 ∧
@@ -306,7 +306,7 @@ theorem packet_identity_count (P : Packet x t y r) (hidentity : P.F∣numerator 
     have hmixed := BoundaryTailGates.identity_gate (geometricCumulativeFlag K g) t y r
       (by omega) (by omega) (by omega) (by omega) (by omega) hflag.1 hflag.2.1
     have hnodes : S.nodes.card=262144 := P.nodeCount
-    have hprovider := BoundaryTailIdentity.actual_identityCurveCountProvider S 181245
+    have hprovider := BoundaryTailIdentity.actual_identityCurveCountProvider S 181235
       hnodes (P.stage_agreement g) (by decide) hTailNumerator P.D t r (by decide)
       P.Dlow P.Dchar P.box hflagChar hmixed
     have hpositive : 1≤cost g := by
@@ -314,7 +314,7 @@ theorem packet_identity_count (P : Packet x t y r) (hidentity : P.F∣numerator 
       have hh := S.y_dependent
       have hd := degreeOf_le_flag_total S.G (geometricCumulativeFlag K g) S.flag_support 1
       omega
-    have hinc := identity_surface_seed_bound S 181245 _ hprovider (P.stage_agreement g)
+    have hinc := identity_surface_seed_bound S 181235 _ hprovider (P.stage_agreement g)
       (by decide) (by rw [hnodes]; decide) hpositive
     simpa only [cost,hnodes,RCN326.w,Nat.reduceSub,Nat.reduceAdd] using hinc
   have hb := geometricCumulativeFlag_budgets P.F P.irreducible.ne_zero
@@ -334,9 +334,9 @@ theorem packet_identity_count (P : Packet x t y r) (hidentity : P.F∣numerator 
     simpa only [cost,identityCurveDegree,Finset.sum_add_distrib] using Nat.add_le_add hz hu
   have hsum := Finset.sum_le_sum (fun g (_ : g∈Finset.univ) => hsingle g)
   simp only [←Finset.sum_mul,←Finset.mul_sum] at hsum
-  have hfinal := (Nat.mul_le_mul_right 50174 P.seeds_cover).trans
-    (hsum.trans (Nat.mul_le_mul_left (131073*80900) hcost))
-  exact (Nat.le_div_iff_mul_le (by decide : 0<50174)).mpr hfinal
+  have hfinal := (Nat.mul_le_mul_right 50164 P.seeds_cover).trans
+    (hsum.trans (Nat.mul_le_mul_left (131073*80910) hcost))
+  exact (Nat.le_div_iff_mul_le (by decide : 0<50164)).mpr hfinal
 
 end
 end ProximityPrize.SubmissionLower.MovingSourceBandIdentity6815
@@ -389,10 +389,10 @@ theorem regular_pair_packet_count
         (∀ delay, globalTailCut (polynomialEmbedding K) S.F (w+1+delay)∈C.1) →
         (componentSeeds Ω S.G (globalTailCut (polynomialEmbedding K) S.F (w+1))
           (regularitySurface (polynomialEmbedding K) S.F) (geometricSeeds K P.F P.selected P.seeds g)
-          (selectedPoint (polynomialEmbedding K) S.selected) C).card≤(80899+1)*B.yzCost C := by
+          (selectedPoint (polynomialEmbedding K) S.selected) C).card≤(80909+1)*B.yzCost C := by
       intro C hall
       exact tangent_component_card_le S C (P.stage_proper hp g) (base C)
-        181245 P.D t r P.nodeCount (P.stage_agreement g) (by decide) (by decide)
+        181235 P.D t r P.nodeCount (P.stage_agreement g) (by decide) (by decide)
         P.Dlow P.Dchar P.box B
         (suppliedBudget_yzPositive S (P.stage_proper hp g) (geometry g) C) hall
         (suppliedBudget_yzPole S (P.stage_proper hp g) (geometry g) C)
@@ -501,10 +501,10 @@ theorem native_regular_packet_count
         (∀ delay, globalTailCut (polynomialEmbedding K) S.F (w+1+delay)∈C.1) →
         (componentSeeds Ω S.G (globalTailCut (polynomialEmbedding K) S.F (w+1))
           (regularitySurface (polynomialEmbedding K) S.F) (geometricSeeds K P.F P.selected P.seeds g)
-          (selectedPoint (polynomialEmbedding K) S.selected) C).card≤80900*B.yzCost C := by
+          (selectedPoint (polynomialEmbedding K) S.selected) C).card≤80910*B.yzCost C := by
       intro C hall
       exact tangent_component_card_le S C hproper (BoundaryTailReduced.reducedBaseOrd S hproper hc hm C)
-        181245 P.D t r P.nodeCount (P.stage_agreement g) (by decide) (by decide)
+        181235 P.D t r P.nodeCount (P.stage_agreement g) (by decide) (by decide)
         P.Dlow P.Dchar P.box B (BoundaryTailReduced.reducedBudgetFamily_yzPositive S hproper hc hm C) hall
         (BoundaryTailReduced.reducedBudgetFamily_yzPole S hproper hc hm C)
     have hh := retained_stage_bound_dir t y r (3*source.d) (by omega) (by omega) (by omega)
@@ -718,7 +718,7 @@ theorem root_factor_data (F : MvPolynomial (Fin 4) K) [Fact (Irreducible F)]
   rw [hEq,degreeOf_mul_eq hJ.ne_zero hQ] at hs
   refine ⟨hJne,hm,hms,?_,?_,?_,?_⟩
   all_goals
-    dsimp only [MovingSourceCoupledClearing6814.slope,middle,total,order]
+    dsimp only [slope,middle,total,order]
     omega
 
 theorem ramified_order_ge_three (F : MvPolynomial (Fin 4) K) [Fact (Irreducible F)]
@@ -836,7 +836,7 @@ theorem packet_count
     have hh := (Finset.sum_le_sum (fun g (_ : g∈Finset.univ) => hone g)).trans (hb.1.trans P.r_weight)
     simpa only [Finset.sum_const,Finset.card_univ,smul_eq_mul,mul_one] using hh
   let cost (fl : FlagDegree) := flagMixed fl first delay+
-    (flagMixed fl first unitYZFlag+flagMixed fl first unitAllFlag)+80900*flagMixed fl first unitYZFlag
+    (flagMixed fl first unitYZFlag+flagMixed fl first unitAllFlag)+80910*flagMixed fl first unitYZFlag
   have hsingle (g : GeometricFactor K P.F) :
       (geometricSeeds K P.F P.selected P.seeds g).card≤cap+cost (geometricCumulativeFlag K g) := by
     let S := P.stage g
@@ -857,14 +857,14 @@ theorem packet_count
     have hd := wide_proper_seeds_sum_le S hfirst J hroute (geometricCumulativeFlag K g) S.flag_support hsmall'
     have hz := wide_constant_seed_sum_le S hfirst J hroute hproper (geometricCumulativeFlag K g) S.flag_support
     have ht := wide_persistent_seed_sum_le S hfirst J hroute hproper (geometricCumulativeFlag K g)
-      S.flag_support hsmall' 181245 P.D t r P.nodeCount (P.stage_agreement g) (by decide) P.Dlow P.Dchar P.box
+      S.flag_support hsmall' 181235 P.D t r P.nodeCount (P.stage_agreement g) (by decide) P.Dlow P.Dchar P.box
     have hh := (linear_seed_cover S hfirst J).trans (Nat.add_le_add hden (Nat.add_le_add hd (Nat.add_le_add hz ht)))
     exact hh.trans_eq (by dsimp only [cost]; ring)
   have hcost : (∑ g : GeometricFactor K P.F, cost (geometricCumulativeFlag K g))≤cost ⟨t-y,y-r,r⟩ := by
     unfold cost
     simp only [Finset.sum_add_distrib,←Finset.mul_sum]
     exact Nat.add_le_add (Nat.add_le_add (hsum delay) (Nat.add_le_add (hsum unitYZFlag) (hsum unitAllFlag)))
-      (Nat.mul_le_mul_left 80900 (hsum unitYZFlag))
+      (Nat.mul_le_mul_left 80910 (hsum unitYZFlag))
   have htotal : P.seeds.card≤r*cap+cost ⟨t-y,y-r,r⟩ := by
     have hh := P.seeds_cover.trans (Finset.sum_le_sum (fun g (_ : g∈Finset.univ) => hsingle g))
     simp only [Finset.sum_add_distrib,Finset.sum_const,Finset.card_univ,smul_eq_mul] at hh
