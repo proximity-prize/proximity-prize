@@ -52,7 +52,7 @@ private theorem whole_regular_all_le
 def Rules : Prop := ∀ r v z : ℕ, 1≤r → r≤39 → r+v≤182 → r+v+z≤11192 →
   FinalRuleCheck6815.RuleBound r v z (FinalLedgerData6815.cap r v z)
 def finalCap (p : FlagDegree) := FinalLedgerData6815.cap p.all p.yz p.zOnly
-def initialUpper (p : FlagDegree) := FinalLedgerChord6815.initialNum p.all (middle p) p.zOnly / 50174
+def initialUpper (p : FlagDegree) := FinalLedgerChord6815.initialNum p.all (middle p) p.zOnly / 50164
 def carrierSupport : ResidualSupportParameters :=
   ⟨50,229,15421,by decide,by decide,by decide,by decide⟩
 
