@@ -842,10 +842,10 @@ local instance : DecidableEq I := Classical.decEq I
 structure Input (nodes : I ↪ K) (u0 u1 : I → K)
     (selected : K → Polynomial K) (Gamma : Finset K) : Prop where
   degree : ∀ gamma∈Gamma, (selected gamma).natDegree≤131071
-  agreement : ∀ gamma∈Gamma, 181245≤
+  agreement : ∀ gamma∈Gamma, 181235≤
     ((Finset.univ : Finset I).filter (fun i =>
       (selected gamma).eval (nodes i)=u0 i+gamma*u1 i)).card
-  noPencil : NoLargeSelectedPencil selected Gamma 131071 80899
+  noPencil : NoLargeSelectedPencil selected Gamma 131071 80909
 
 variable (nodes : I ↪ K) (u0 u1 : I → K) (hI : Fintype.card I=262144)
   (selected : K → Polynomial K) (Gamma : Finset K)

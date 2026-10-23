@@ -28,7 +28,7 @@ theorem combined_eq (p : FlagDegree) : combined p=
     finalCap p+initialUpper p+
       p.all*foldUnit (middle p) (total p) p.all+
       (50-p.all)*foldUnit (229-middle p) (15421-total p) (50-p.all)+
-      18000000000000+PairCell6815.cap p.all (middle p) (total p) := by
+      17500000000000+PairCell6815.cap p.all (middle p) (total p) := by
   simp only [combined,FinalLedgerChord6815.combined,initialUpper,middle,total,
     Nat.add_comm,Nat.add_left_comm,Nat.add_assoc]
 

@@ -25,9 +25,9 @@ theorem count_of_rules
     (Q : P4) (hQ : Q≠0) (hbox : Q∈globalCoefficientBox K D 131071 P.total P.s)
     (selected : K → Polynomial K) (Gamma : Finset K) (u0 u1 : I → K)
     (hdegree : ∀ g∈Gamma, (selected g).natDegree≤131071)
-    (hagreement : ∀ g∈Gamma, 181245≤((Finset.univ : Finset I).filter (fun i =>
+    (hagreement : ∀ g∈Gamma, 181235≤((Finset.univ : Finset I).filter (fun i =>
       (selected g).eval (IRSProfile.domain i)=u0 i+g*u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80899)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80909)
     (A : Finset (RegularIndex Q))
     (hR : (regularAggregateFlag Q A).all≤39) (hy : middle (regularAggregateFlag Q A)≤182)
     (ht : total (regularAggregateFlag Q A)≤11192)
