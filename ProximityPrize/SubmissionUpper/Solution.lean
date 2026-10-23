@@ -3,6 +3,7 @@ Copyright (c) 2026 Proximity Prize Contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import ProximityPrize.SubmissionUpper.OrbitPencil
+import ProximityPrize.SubmissionUpper.SignOrbit
 
 open ToyProblem
 open scoped NNReal
@@ -61,8 +62,12 @@ theorem candidate_score :
   rw [show ((12800 : ℕ) : ℝ) * (1 / 100) = ((128 : ℕ) : ℝ) by push_cast; norm_num] at hmono
   rwa [NNReal.rpow_natCast] at hmono
 
-/-- The 512-fibre rational pencil certifies the new narrow window, then hands
-off to the prescribed-top attack, giving a `116.13`-bit upper certificate. -/
+theorem signOrbit_pigeonhole :
+    ((2 ^ 31 - 2 ^ 24 + 1) ^ 6 * 128) *
+        ProximityPrize.SubmissionUpper.SignOrbit.densityNN <
+      Nat.choose 256 136 :=
+  ProximityPrize.SubmissionUpper.SignOrbit.sign_orbit_count
+
 theorem candidate : ProtocolClaimUpper 11613 122369 where
   admissible := by
     rw [claimedUnsafeRadius_122369_eq]
