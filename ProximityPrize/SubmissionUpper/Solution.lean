@@ -2,7 +2,7 @@
 Copyright (c) 2026 Proximity Prize Contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import ProximityPrize.SubmissionUpper.OrbitPencil
+import ProximityPrize.SubmissionUpper.Quotient1024
 
 open ToyProblem
 open scoped NNReal
@@ -47,8 +47,12 @@ theorem candidate_score :
       (1 - claimedUnsafeRadius 122369) ^ IRSProfile.repetitions := by
   rw [claimedUnsafeRadius_122369_eq]
   have hcross : (1 : ℝ≥0) - 122369 / 262144 = 139775 / 262144 := by
+    have hsplit := ProximityPrize.SubmissionUpper.OrbitPencil.disagreement_split
+    have hsum : (139775 : ℕ) + 122369 = 262144 := by
+      have h := Nat.sub_add_cancel (show 139775 ≤ 262144 by norm_num)
+      rwa [hsplit] at h
     rw [tsub_eq_of_eq_add]
-    norm_num
+    exact_mod_cast hsum.symm
   rw [show IRSProfile.repetitions = 128 from rfl, hcross]
   have hstart : (2 : ℝ≥0) ^ (-(((11613 : ℕ) : ℝ)))
       ≤ ((139775 : ℝ≥0) / 262144) ^ ((12800 : ℕ) : ℝ) := by
