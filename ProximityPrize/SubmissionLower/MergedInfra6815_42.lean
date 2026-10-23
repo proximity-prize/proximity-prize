@@ -906,11 +906,11 @@ structure Packet (x : I → K) (t y r : ℕ) where
   injective : Set.InjOn x nodes
   nodeCount : nodes.card=262144
   degree : ∀ gamma∈seeds, (selected gamma).natDegree≤w
-  agreement : ∀ gamma∈seeds, 181245≤
+  agreement : ∀ gamma∈seeds, 181235≤
     (nodes.filter (fun i => (selected gamma).eval (x i)=u0 i+gamma*u1 i)).card
   solution : ∀ gamma∈seeds, specialization K (selected gamma) gamma F=0
   regular : ∀ gamma∈seeds, specialization K (selected gamma) gamma (MvPolynomial.pderiv (2 : Fin 4) F)≠0
-  noPencil : NoLargeSelectedPencil selected seeds w 80899
+  noPencil : NoLargeSelectedPencil selected seeds w 80909
 
 namespace Packet
 variable {x : I → K} {t y r : ℕ} (P : Packet x t y r)
@@ -942,11 +942,11 @@ def restrict (Delta : Finset K) (hsub : Delta⊆P.seeds) : Packet x t y r :=
           agreement := fun gamma hg => P.agreement gamma (hsub hg)
           solution := fun gamma hg => P.solution gamma (hsub hg)
           regular := fun gamma hg => P.regular gamma (hsub hg)
-          noPencil := noLargeSelectedPencil_mono P.selected P.seeds Delta w 80899 hsub P.noPencil}
+          noPencil := noLargeSelectedPencil_mono P.selected P.seeds Delta w 80909 hsub P.noPencil}
 
 def stage (g : GeometricFactor K P.F) :
     ResidualStage (polynomialEmbedding K) (geometricSeeds K P.F P.selected P.seeds g) x
-      2130706433 80899 (geometricCumulativeFlag K g) w (cellSupport t y r) :=
+      2130706433 80909 (geometricCumulativeFlag K g) w (cellSupport t y r) :=
   reflagResidualStage
     (geometricResidualStageOfSupport K (cellSupport t y r) P.F P.irreducible P.rdegree
       (P.coordinate_bounds.2.1.trans_lt (by have := P.rhigh; omega : r<2130706433)) P.support
@@ -963,7 +963,7 @@ theorem stage_flag (g : GeometricFactor K P.F) :
     geometricCumulativeFlag_le_support P.F P.irreducible.ne_zero P.support g
 
 theorem stage_agreement (g : GeometricFactor K P.F) :
-    ∀ gamma∈geometricSeeds K P.F P.selected P.seeds g, 181245≤((P.stage g).agreementFiber gamma).card :=
+    ∀ gamma∈geometricSeeds K P.F P.selected P.seeds g, 181235≤((P.stage g).agreementFiber gamma).card :=
   fun gamma hg => P.agreement gamma (geometricSeeds_subset K P.F P.selected P.seeds g hg)
 
 theorem parent_flag (L : Type) [Field L] (phi : Polynomial K →+* L) :
@@ -1036,9 +1036,9 @@ def factorPacket {H : MvPolynomial (Fin 4) K} (F : RCN266.RegularIndex H)
     (nodes : I ↪ K) (u0 u1 : I → K) (hI : Fintype.card I=262144)
     (selected : K → Polynomial K) (Gamma : Finset K)
     (hdegree : ∀ gamma∈Gamma, (selected gamma).natDegree≤131071)
-    (hagreement : ∀ gamma∈Gamma, 181245≤
+    (hagreement : ∀ gamma∈Gamma, 181235≤
       ((Finset.univ : Finset I).filter (fun i => (selected gamma).eval (nodes i)=u0 i+gamma*u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80899) : Packet (nodes : I → K) t y r where
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80909) : Packet (nodes : I → K) t y r where
   rlow := hrlo
   rhigh := hrhi
   ylow := hylo
@@ -1071,7 +1071,7 @@ def factorPacket {H : MvPolynomial (Fin 4) K} (F : RCN266.RegularIndex H)
   agreement := fun gamma hg => hagreement gamma (RCN140.regularSeeds_subset H selected Gamma F hg)
   solution := fun _ hg => (Finset.mem_filter.mp hg).2.1
   regular := fun _ hg => (Finset.mem_filter.mp hg).2.2
-  noPencil := noLargeSelectedPencil_mono selected Gamma _ 131071 80899
+  noPencil := noLargeSelectedPencil_mono selected Gamma _ 131071 80909
     (RCN140.regularSeeds_subset H selected Gamma F) hno
 
 end
