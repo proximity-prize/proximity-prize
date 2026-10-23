@@ -125,21 +125,10 @@ noncomputable def productKey (U : Finset Small) : Small :=
 noncomputable def key (U : Finset Small) : (Fin 14 → K) × Small :=
   (topKey U, productKey U)
 
-/-- `Fintype.card (Fin n → K)` via `Nat.card`, which is instance-free.
-
-Going through `Fintype.card_fun` makes the kernel check two `Fintype (Fin n → K)`
-instances for defeq, which unfolds `Pi.fintype` and enumerates the function
-space -- `(2 ^ 31) ^ n` elements. Under Lean 4.34 that is a kernel deterministic
-timeout even at `n = 2`. `Nat.card` does not depend on a chosen `Fintype`, so no
-such check arises. -/
-theorem card_fun_K (n : ℕ) : Fintype.card (Fin n → K) =
-    (2 ^ 31 - 2 ^ 24 + 1) ^ n := by
-  rw [← Nat.card_eq_fintype_card, Nat.card_fun, Nat.card_eq_fintype_card,
-    Nat.card_eq_fintype_card, ZMod.card, Fintype.card_fin]
-
 theorem card_keys : Fintype.card ((Fin 14 → K) × Small) =
     (2 ^ 31 - 2 ^ 24 + 1) ^ 14 * 512 := by
-  rw [Fintype.card_prod, card_fun_K, Fintype.card_fin]
+  rw [Fintype.card_prod, Fintype.card_fun, PrescribedTop.card_K]
+  norm_num
 
 set_option maxHeartbeats 1000000 in
 set_option maxRecDepth 1000000 in
@@ -667,8 +656,13 @@ theorem zval_sub_alpha_ne_zero (j : Idx) : zval j - alpha ≠ 0 := by
   rw [← idx_aOf_bOf j]
   exact zval_idx_sub_alpha_ne_zero (aOf j) (bOf j)
 
-set_option maxHeartbeats 2000000 in
-set_option maxRecDepth 100000 in
+theorem T_card_gt_farness_degree {U : Finset Small} (hU : U ∈ Sel) :
+    131583 < (T U).card := by
+  rw [T_card hU]
+  norm_num
+
+set_option maxHeartbeats 1000000 in
+set_option maxRecDepth 10000 in
 theorem f2_far (δ : ℝ≥0) (hδ : δ < (122641 / 262144 : ℝ≥0)) :
     ¬ RelaxedRelationFor (ℓ := 2) IRSProfile.encoder δ (0 : Fin kk → FF)
       ![0, 0] ![f1, f2] := by
