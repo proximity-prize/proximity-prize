@@ -325,123 +325,123 @@ theorem quotient_count_exact : coefficientCount 45673740 131071 0 78=45673740 :=
 theorem quotient_count_lt : coefficientCount 45673740 131071 0 78<85333904 := by rw [quotient_count_exact]; decide +kernel
 end TCap
 namespace Source00
-theorem coefficient_exact : coefficientCount 11599498755 131071 3840000 19840=30707103195602755936705787 := by
-  rw [show 11599498755=88497*131071+108468 by decide +kernel]
-  rw [coefficientCount_eq_oneResidueCoefficientCount 88497 108468 131071 3840000 19840
+theorem coefficient_exact : coefficientCount 11598846163 131071 3840000 19840=30703246203056482477568417 := by
+  rw [show 11598846163=88492*131071+111231 by decide +kernel]
+  rw [coefficientCount_eq_oneResidueCoefficientCount 88492 111231 131071 3840000 19840
     (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel)]
   decide +kernel
 theorem rank_exact : localRankBound 63999 3840000 19840=116780376202356671680 := by
   rw [ClosedRank.localRankBound_eq_closed _ _ _ (by decide +kernel) (by decide +kernel)]
   decide +kernel
-theorem nullity_exact : coefficientCount 11599498755 131071 3840000 19840-262144*localRankBound 63999 3840000 19840=93828256412168595823867 := by
+theorem nullity_exact : coefficientCount 11598846163 131071 3840000 19840-262144*localRankBound 63999 3840000 19840=89971263865895136686497 := by
   norm_num only [coefficient_exact,rank_exact]
-theorem nullity_lower : 93828256412168595823867≤coefficientCount 11599498755 131071 3840000 19840-262144*localRankBound 63999 3840000 19840 := by rw [nullity_exact]
-theorem shape : 11599498755+19840≤131071*(88497+1) := by decide +kernel
+theorem nullity_lower : 89971263865895136686497≤coefficientCount 11598846163 131071 3840000 19840-262144*localRankBound 63999 3840000 19840 := by rw [nullity_exact]
+theorem shape : 11598846163+19840≤131071*(88497+1) := by decide +kernel
 theorem finrank_gap (u0 u1 : IRSProfile.Index → IRSProfile.Field) :
-    93828256412168595823867≤Module.finrank IRSProfile.Field (ConstraintKernel (K:=IRSProfile.Field) 11599498755 131071 3840000 19840 63999 IRSProfile.domain u0 u1) :=
-  challengeConstraintKernel_finrank_lower_bound_of_numeric 11599498755 3840000 19840 63999 93828256412168595823867 u0 u1 nullity_lower
+    89971263865895136686497≤Module.finrank IRSProfile.Field (ConstraintKernel (K:=IRSProfile.Field) 11598846163 131071 3840000 19840 63999 IRSProfile.domain u0 u1) :=
+  challengeConstraintKernel_finrank_lower_bound_of_numeric 11598846163 3840000 19840 63999 89971263865895136686497 u0 u1 nullity_lower
 end Source00
 namespace Source01
-theorem coefficient_exact : coefficientCount 5799840000 131071 3200000 9888=3203068458886446493984520 := by
-  rw [show 5799840000=44249*131071+79321 by decide +kernel]
-  rw [coefficientCount_eq_oneResidueCoefficientCount 44249 79321 131071 3200000 9888
+theorem coefficient_exact : coefficientCount 5799507398 131071 3200000 9888=3202657936119924288038032 := by
+  rw [show 5799507398=44247*131071+8861 by decide +kernel]
+  rw [coefficientCount_eq_oneResidueCoefficientCount 44247 8861 131071 3200000 9888
     (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel)]
   decide +kernel
 theorem rank_exact : localRankBound 32000 3200000 9888=12172764924613929328 := by
   rw [ClosedRank.localRankBound_eq_closed _ _ _ (by decide +kernel) (by decide +kernel)]
   decide +kernel
-theorem nullity_exact : coefficientCount 5799840000 131071 3200000 9888-262144*localRankBound 32000 3200000 9888=12051170488452604225288 := by
+theorem nullity_exact : coefficientCount 5799507398 131071 3200000 9888-262144*localRankBound 32000 3200000 9888=11640647721930398278800 := by
   norm_num only [coefficient_exact,rank_exact]
-theorem nullity_lower : 12051170488452604225288≤coefficientCount 5799840000 131071 3200000 9888-262144*localRankBound 32000 3200000 9888 := by rw [nullity_exact]
-theorem shape : 5799840000+9888≤131071*(44249+1) := by decide +kernel
+theorem nullity_lower : 11640647721930398278800≤coefficientCount 5799507398 131071 3200000 9888-262144*localRankBound 32000 3200000 9888 := by rw [nullity_exact]
+theorem shape : 5799507398+9888≤131071*(44249+1) := by decide +kernel
 theorem finrank_gap (u0 u1 : IRSProfile.Index → IRSProfile.Field) :
-    12051170488452604225288≤Module.finrank IRSProfile.Field (ConstraintKernel (K:=IRSProfile.Field) 5799840000 131071 3200000 9888 32000 IRSProfile.domain u0 u1) :=
-  challengeConstraintKernel_finrank_lower_bound_of_numeric 5799840000 3200000 9888 32000 12051170488452604225288 u0 u1 nullity_lower
+    11640647721930398278800≤Module.finrank IRSProfile.Field (ConstraintKernel (K:=IRSProfile.Field) 5799507398 131071 3200000 9888 32000 IRSProfile.domain u0 u1) :=
+  challengeConstraintKernel_finrank_lower_bound_of_numeric 5799507398 3200000 9888 32000 11640647721930398278800 u0 u1 nullity_lower
 end Source01
 namespace Source02
-theorem coefficient_exact : coefficientCount 5799840000 131071 2880000 9888=2880973021201531445984520 := by
-  rw [show 5799840000=44249*131071+79321 by decide +kernel]
-  rw [coefficientCount_eq_oneResidueCoefficientCount 44249 79321 131071 2880000 9888
+theorem coefficient_exact : coefficientCount 5799507398 131071 2880000 9888=2880603867329554648358032 := by
+  rw [show 5799507398=44247*131071+8861 by decide +kernel]
+  rw [coefficientCount_eq_oneResidueCoefficientCount 44247 8861 131071 2880000 9888
     (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel)]
   decide +kernel
 theorem rank_exact : localRankBound 32000 2880000 9888=10950008283031849328 := by
   rw [ClosedRank.localRankBound_eq_closed _ _ _ (by decide +kernel) (by decide +kernel)]
   decide +kernel
-theorem nullity_exact : coefficientCount 5799840000 131071 2880000 9888-262144*localRankBound 32000 2880000 9888=10494049854430335745288 := by
+theorem nullity_exact : coefficientCount 5799507398 131071 2880000 9888-262144*localRankBound 32000 2880000 9888=10124895982453538118800 := by
   norm_num only [coefficient_exact,rank_exact]
-theorem nullity_lower : 10494049854430335745288≤coefficientCount 5799840000 131071 2880000 9888-262144*localRankBound 32000 2880000 9888 := by rw [nullity_exact]
-theorem shape : 5799840000+9888≤131071*(44249+1) := by decide +kernel
+theorem nullity_lower : 10124895982453538118800≤coefficientCount 5799507398 131071 2880000 9888-262144*localRankBound 32000 2880000 9888 := by rw [nullity_exact]
+theorem shape : 5799507398+9888≤131071*(44249+1) := by decide +kernel
 theorem finrank_gap (u0 u1 : IRSProfile.Index → IRSProfile.Field) :
-    10494049854430335745288≤Module.finrank IRSProfile.Field (ConstraintKernel (K:=IRSProfile.Field) 5799840000 131071 2880000 9888 32000 IRSProfile.domain u0 u1) :=
-  challengeConstraintKernel_finrank_lower_bound_of_numeric 5799840000 2880000 9888 32000 10494049854430335745288 u0 u1 nullity_lower
+    10124895982453538118800≤Module.finrank IRSProfile.Field (ConstraintKernel (K:=IRSProfile.Field) 5799507398 131071 2880000 9888 32000 IRSProfile.domain u0 u1) :=
+  challengeConstraintKernel_finrank_lower_bound_of_numeric 5799507398 2880000 9888 32000 10124895982453538118800 u0 u1 nullity_lower
 end Source02
 namespace Source03
-theorem coefficient_exact : coefficientCount 2899920000 131071 1062000 4940=132437019288815010683775 := by
-  rw [show 2899920000=22124*131071+105196 by decide +kernel]
-  rw [coefficientCount_eq_oneResidueCoefficientCount 22124 105196 131071 1062000 4940
+theorem coefficient_exact : coefficientCount 2899747398 131071 1062000 4940=132419423296852250015097 := by
+  rw [show 2899747398=22123*131071+63665 by decide +kernel]
+  rw [coefficientCount_eq_oneResidueCoefficientCount 22123 63665 131071 1062000 4940
     (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel)]
   decide +kernel
 theorem rank_exact : localRankBound 16000 1062000 4940=503593395806461590 := by
   rw [ClosedRank.localRankBound_eq_closed _ _ _ (by decide +kernel) (by decide +kernel)]
   decide +kernel
-theorem nullity_exact : coefficientCount 2899920000 131071 1062000 4940-262144*localRankBound 16000 1062000 4940=423032138525943634815 := by
+theorem nullity_exact : coefficientCount 2899747398 131071 1062000 4940-262144*localRankBound 16000 1062000 4940=405436146563182966137 := by
   norm_num only [coefficient_exact,rank_exact]
-theorem nullity_lower : 423032138525943634815≤coefficientCount 2899920000 131071 1062000 4940-262144*localRankBound 16000 1062000 4940 := by rw [nullity_exact]
-theorem shape : 2899920000+4940≤131071*(22124+1) := by decide +kernel
+theorem nullity_lower : 405436146563182966137≤coefficientCount 2899747398 131071 1062000 4940-262144*localRankBound 16000 1062000 4940 := by rw [nullity_exact]
+theorem shape : 2899747398+4940≤131071*(22124+1) := by decide +kernel
 theorem finrank_gap (u0 u1 : IRSProfile.Index → IRSProfile.Field) :
-    423032138525943634815≤Module.finrank IRSProfile.Field (ConstraintKernel (K:=IRSProfile.Field) 2899920000 131071 1062000 4940 16000 IRSProfile.domain u0 u1) :=
-  challengeConstraintKernel_finrank_lower_bound_of_numeric 2899920000 1062000 4940 16000 423032138525943634815 u0 u1 nullity_lower
+    405436146563182966137≤Module.finrank IRSProfile.Field (ConstraintKernel (K:=IRSProfile.Field) 2899747398 131071 1062000 4940 16000 IRSProfile.domain u0 u1) :=
+  challengeConstraintKernel_finrank_lower_bound_of_numeric 2899747398 1062000 4940 16000 405436146563182966137 u0 u1 nullity_lower
 end Source03
 namespace Source04
-theorem coefficient_exact : coefficientCount 1449960000 131071 531000 2470=8279436385594675048202 := by
-  rw [show 1449960000=11062*131071+52598 by decide +kernel]
-  rw [coefficientCount_eq_oneResidueCoefficientCount 11062 52598 131071 531000 2470
+theorem coefficient_exact : coefficientCount 1449867398 131071 531000 2470=8278256068702730427303 := by
+  rw [show 1449867398=11061*131071+91067 by decide +kernel]
+  rw [coefficientCount_eq_oneResidueCoefficientCount 11061 91067 131071 531000 2470
     (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel)]
   decide +kernel
 theorem rank_exact : localRankBound 8000 531000 2470=31483869872329770 := by
   rw [ClosedRank.localRankBound_eq_closed _ _ _ (by decide +kernel) (by decide +kernel)]
   decide +kernel
-theorem nullity_exact : coefficientCount 1449960000 131071 531000 2470-262144*localRankBound 8000 531000 2470=26128801782659821322 := by
+theorem nullity_exact : coefficientCount 1449867398 131071 531000 2470-262144*localRankBound 8000 531000 2470=24948484890715200423 := by
   norm_num only [coefficient_exact,rank_exact]
-theorem nullity_lower : 26128801782659821322≤coefficientCount 1449960000 131071 531000 2470-262144*localRankBound 8000 531000 2470 := by rw [nullity_exact]
-theorem shape : 1449960000+2470≤131071*(11062+1) := by decide +kernel
+theorem nullity_lower : 24948484890715200423≤coefficientCount 1449867398 131071 531000 2470-262144*localRankBound 8000 531000 2470 := by rw [nullity_exact]
+theorem shape : 1449867398+2470≤131071*(11062+1) := by decide +kernel
 theorem finrank_gap (u0 u1 : IRSProfile.Index → IRSProfile.Field) :
-    26128801782659821322≤Module.finrank IRSProfile.Field (ConstraintKernel (K:=IRSProfile.Field) 1449960000 131071 531000 2470 8000 IRSProfile.domain u0 u1) :=
-  challengeConstraintKernel_finrank_lower_bound_of_numeric 1449960000 531000 2470 8000 26128801782659821322 u0 u1 nullity_lower
+    24948484890715200423≤Module.finrank IRSProfile.Field (ConstraintKernel (K:=IRSProfile.Field) 1449867398 131071 531000 2470 8000 IRSProfile.domain u0 u1) :=
+  challengeConstraintKernel_finrank_lower_bound_of_numeric 1449867398 531000 2470 8000 24948484890715200423 u0 u1 nullity_lower
 end Source04
 namespace Source05
-theorem coefficient_exact : coefficientCount 181245000 131071 88902 308=2717882477285942235 := by
-  rw [show 181245000=1382*131071+104878 by decide +kernel]
-  rw [coefficientCount_eq_oneResidueCoefficientCount 1382 104878 131071 88902 308
+theorem coefficient_exact : coefficientCount 181222398 131071 88902 308=2717125955233108155 := by
+  rw [show 181222398=1382*131071+82276 by decide +kernel]
+  rw [coefficientCount_eq_oneResidueCoefficientCount 1382 82276 131071 88902 308
     (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel)]
   decide +kernel
 theorem rank_exact : localRankBound 1000 88902 308=10336494078526 := by
   rw [ClosedRank.localRankBound_eq_closed _ _ _ (by decide +kernel) (by decide +kernel)]
   decide +kernel
-theorem nullity_exact : coefficientCount 181245000 131071 88902 308-262144*localRankBound 1000 88902 308=8232573564822491 := by
+theorem nullity_exact : coefficientCount 181222398 131071 88902 308-262144*localRankBound 1000 88902 308=7476051511988411 := by
   norm_num only [coefficient_exact,rank_exact]
-theorem nullity_lower : 8232573564822491≤coefficientCount 181245000 131071 88902 308-262144*localRankBound 1000 88902 308 := by rw [nullity_exact]
-theorem shape : 181245000+308≤131071*(1382+1) := by decide +kernel
+theorem nullity_lower : 7476051511988411≤coefficientCount 181222398 131071 88902 308-262144*localRankBound 1000 88902 308 := by rw [nullity_exact]
+theorem shape : 181222398+308≤131071*(1382+1) := by decide +kernel
 theorem finrank_gap (u0 u1 : IRSProfile.Index → IRSProfile.Field) :
-    8232573564822491≤Module.finrank IRSProfile.Field (ConstraintKernel (K:=IRSProfile.Field) 181245000 131071 88902 308 1000 IRSProfile.domain u0 u1) :=
-  challengeConstraintKernel_finrank_lower_bound_of_numeric 181245000 88902 308 1000 8232573564822491 u0 u1 nullity_lower
+    7476051511988411≤Module.finrank IRSProfile.Field (ConstraintKernel (K:=IRSProfile.Field) 181222398 131071 88902 308 1000 IRSProfile.domain u0 u1) :=
+  challengeConstraintKernel_finrank_lower_bound_of_numeric 181222398 88902 308 1000 7476051511988411 u0 u1 nullity_lower
 end Source05
 namespace Source06
-theorem coefficient_exact : coefficientCount 2537430000 131071 3640000 4267=303020312516603787210897 := by
-  rw [show 2537430000=19359*131071+26511 by decide +kernel]
-  rw [coefficientCount_eq_oneResidueCoefficientCount 19359 26511 131071 3640000 4267
+theorem coefficient_exact : coefficientCount 2537277398 131071 3640000 4267=302979594746985305678001 := by
+  rw [show 2537277398=19358*131071+4980 by decide +kernel]
+  rw [coefficientCount_eq_oneResidueCoefficientCount 19358 4980 131071 3640000 4267
     (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel)]
   decide +kernel
 theorem rank_exact : localRankBound 14000 3640000 4267=1150877542707512224 := by
   rw [ClosedRank.localRankBound_eq_closed _ _ _ (by decide +kernel) (by decide +kernel)]
   decide +kernel
-theorem nullity_exact : coefficientCount 2537430000 131071 3640000 4267-262144*localRankBound 14000 3640000 4267=1324669961085702762641 := by
+theorem nullity_exact : coefficientCount 2537277398 131071 3640000 4267-262144*localRankBound 14000 3640000 4267=1283952191467221229745 := by
   norm_num only [coefficient_exact,rank_exact]
-theorem nullity_lower : 1324669961085702762641≤coefficientCount 2537430000 131071 3640000 4267-262144*localRankBound 14000 3640000 4267 := by rw [nullity_exact]
-theorem shape : 2537430000+4267≤131071*(19359+1) := by decide +kernel
+theorem nullity_lower : 1283952191467221229745≤coefficientCount 2537277398 131071 3640000 4267-262144*localRankBound 14000 3640000 4267 := by rw [nullity_exact]
+theorem shape : 2537277398+4267≤131071*(19359+1) := by decide +kernel
 theorem finrank_gap (u0 u1 : IRSProfile.Index → IRSProfile.Field) :
-    1324669961085702762641≤Module.finrank IRSProfile.Field (ConstraintKernel (K:=IRSProfile.Field) 2537430000 131071 3640000 4267 14000 IRSProfile.domain u0 u1) :=
-  challengeConstraintKernel_finrank_lower_bound_of_numeric 2537430000 3640000 4267 14000 1324669961085702762641 u0 u1 nullity_lower
+    1283952191467221229745≤Module.finrank IRSProfile.Field (ConstraintKernel (K:=IRSProfile.Field) 2537277398 131071 3640000 4267 14000 IRSProfile.domain u0 u1) :=
+  challengeConstraintKernel_finrank_lower_bound_of_numeric 2537277398 3640000 4267 14000 1283952191467221229745 u0 u1 nullity_lower
 end Source06
 end ProximityPrize.SubmissionLower.MovingFiberKernels6815
 end MergedPart4
@@ -470,7 +470,7 @@ local instance : CharP K 2130706433 := by
   simpa [RCN223.prime] using RCN128.challenge_field_characteristic6600
 
 def helperPair (L YS S leftY leftR leftZ : ℕ) : UnequalParameters :=
-  ⟨262144, 131071, 181245, leftY, leftR, leftZ, YS, S, L⟩
+  ⟨262144, 131071, 181235, leftY, leftR, leftZ, YS, S, L⟩
 
 def HelperPairGates (L YS S leftY leftR leftZ : ℕ) : Prop :=
   let P := helperPair L YS S leftY leftR leftZ
@@ -509,16 +509,16 @@ private theorem degreeZ_le_totalWeight (Q : P4) :
   omega
 
 theorem divisor_or_helper_count
-    (D L S m YS : ℕ) (hD : 0 < D) (hDa : D ≤ m * 181245)
+    (D L S m YS : ℕ) (hD : 0 < D) (hDa : D ≤ m * 181235)
     (hshape : D + S ≤ 131071 * (YS + 1))
     {u0 u1 : I → K} {H : P4}
     (selected : K → Polynomial K) (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181245 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181235 ≤
       ((Finset.univ : Finset I).filter (fun i ↦
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80899)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80909)
     (F : RegularIndex H) (leftY leftR leftZ : ℕ)
     (hFY : F.1.degreeOf 1 ≤ leftY)
     (hFR : F.1.degreeOf 2 ≤ leftR)
@@ -570,7 +570,7 @@ theorem divisor_or_helper_count
       (by norm_num [helperPair]) (by norm_num [helperPair])
       (by simpa only [helperPair] using hdegree)
       (by simpa only [helperPair] using hagreement)
-      (by simpa only [helperPair, UnequalParameters.errors, (show (262144 - 181245 : ℕ) = 80899 by decide +kernel)] using hno)
+      (by simpa only [helperPair, UnequalParameters.errors, (show (262144 - 181235 : ℕ) = 80909 by decide +kernel)] using hno)
     intro gamma hgamma
     dsimp only [Q]
     apply specialization_eq_zero_of_mem_ker K
@@ -666,11 +666,11 @@ theorem regularSeeds_count_le_stageCost
     (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K)
     (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181245 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181235 ≤
       ((Finset.univ : Finset I).filter (fun i ↦
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80899)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80909)
     (F : RegularIndex H)
     (hFY : F.1.degreeOf 1 ≤ b.yHi)
     (hFR : F.1.degreeOf 2 ≤ b.rHi)
@@ -712,7 +712,7 @@ theorem regularSeeds_count_le_stageCost
     (by norm_num [stagePair, helperPair])
     hdegree hagreement
     (by simpa only [stagePair, helperPair, UnequalParameters.errors,
-      (show (262144 - 181245 : ℕ) = 80899 by decide +kernel)] using hno)
+      (show (262144 - 181235 : ℕ) = 80909 by decide +kernel)] using hno)
     hQzero
   simpa only [stageCost] using hcount
 
@@ -807,16 +807,16 @@ theorem counts_of_batchExitStage
     (hD : 0 < D) (hfuelChar : fuel < 2130706433)
     (hlowpos : ∀ j, 1 ≤ j → j ≤ fuel → 0 < D - j * delta)
     (hcapacity : ∀ j, 1 ≤ j → j ≤ fuel →
-      D - j * delta ≤ (m - j) * 181245 + j * (131071 - 1))
+      D - j * delta ≤ (m - j) * 181235 + j * (131071 - 1))
     (u0 u1 : I → K) (H : P4)
     (selected : K → Polynomial K) (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma,
       (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181245 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181235 ≤
       ((Finset.univ : Finset I).filter (fun i ↦
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80899)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80909)
     (A : Finset (RegularIndex H))
     (q : ConstraintKernel (K := K) D 131071 L S m
         IRSProfile.domain u0 u1 →ₗ[K] P4)
@@ -911,7 +911,7 @@ theorem counts_of_batchExitStage
   have hQzero : ∀ gamma ∈ regularSeeds H selected Gamma F,
       specialization K (selected gamma) gamma QF = 0 := by
     exact batch_helper_zero_on_regularSeeds j D (D - j * delta) 131071
-      L S m 181245 2130706433
+      L S m 181235 2130706433
       (CharP.char_prime_of_ne_zero (R := K) (by norm_num))
       IRSProfile.domain u0 u1 H A F hFA selected Gamma v J hj hjchar
       (by decide) hdegree hagreement (hcapacity j hj hjle) hlow
@@ -929,21 +929,21 @@ theorem counts_of_batchExitStage
 
 theorem exists_strict_helper_split_of_batch_source_thin
     (D L S m YS gap delta fuel : ℕ)
-    (hD : 0 < D) (hDa : D ≤ m * 181245)
+    (hD : 0 < D) (hDa : D ≤ m * 181235)
     (hshape : D + S ≤ 131071 * (YS + 1))
     (hfuel : 1 ≤ fuel) (hfuelChar : fuel < 2130706433)
     (hlowpos : ∀ j, 1 ≤ j → j ≤ fuel → 0 < D - j * delta)
     (hcapacity : ∀ j, 1 ≤ j → j ≤ fuel →
-      D - j * delta ≤ (m - j) * 181245 + j * (131071 - 1))
+      D - j * delta ≤ (m - j) * 181235 + j * (131071 - 1))
     (u0 u1 : I → K) (H : P4)
     (selected : K → Polynomial K) (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma,
       (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181245 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181235 ≤
       ((Finset.univ : Finset I).filter (fun i ↦
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80899)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80909)
     (A : Finset (RegularIndex H)) (hA : A.Nonempty)
     (hbandThin : LocatorArbitraryPowerAvoidance.powerBandBudgetThin 131071
       (D - wt (contactWeights 131071) (regularProduct H A)) delta
@@ -1237,7 +1237,7 @@ private theorem sourceFuel_terminal (s : SourceNumbers) (p : FlagDegree)
 
 theorem routeable_exists_strict_helper_split
     (sound : PhaseSourceSound) (D m : ℕ)
-    (hweighted : D = m * 181245)
+    (hweighted : D = m * 181235 - 12602)
     (hshape : D + sound.source.slopeCap ≤
       131071 * (sound.source.middleCap + 1))
     (hslopeM : sound.source.slopeCap ≤ m)
@@ -1246,11 +1246,11 @@ theorem routeable_exists_strict_helper_split
     (selected : K → Polynomial K) (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma,
       (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181245 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181235 ≤
       ((Finset.univ : Finset I).filter (fun i ↦
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80899)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80909)
     (hgap : sound.source.gap ≤ Module.finrank K
       (ConstraintKernel (K := K) D 131071 sound.source.totalCap
         sound.source.slopeCap m IRSProfile.domain u0 u1))
@@ -1291,7 +1291,7 @@ theorem routeable_exists_strict_helper_split
     omega
   have hcapacity : ∀ j, 1 ≤ j → j ≤ sound.source.fuel p →
       D - j * 50175 ≤
-        (m - j) * 181245 + j * (131071 - 1) := by
+        (m - j) * 181235 + j * (131071 - 1) := by
     intro j _hj hjfuel
     have hjm : j ≤ m := hjfuel.trans hfuelM
     rw [hweighted]
@@ -1407,8 +1407,8 @@ theorem routeable_exists_strict_helper_split
   have hmpos : 0 < m := by omega
   have hDpos : 0 < D := by
     rw [hweighted]
-    exact Nat.mul_pos hmpos (by decide)
-  have hDa : D ≤ m * 181245 := hweighted.le
+    omega
+  have hDa : D ≤ m * 181235 := by omega
   have hP : regularProduct H A ≠ 0 := regularProduct_ne_zero H A
   have hcP : contactDec p ≤ wt (contactWeights 131071) (regularProduct H A) := by
     have h := LocatorArbitraryPowerAvoidance.contact_ge_ys 131071 (by decide)
@@ -1484,7 +1484,7 @@ structure PhaseKernelRealization (sound : PhaseSourceSound)
     (u0 u1 : I → K) where
   D : ℕ
   m : ℕ
-  weighted : D = m * 181245
+  weighted : D = m * 181235 - 12602
   shape : D + sound.source.slopeCap ≤
     131071 * (sound.source.middleCap + 1)
   slope_le_m : sound.source.slopeCap ≤ m
@@ -1507,9 +1507,9 @@ set_option maxHeartbeats 2000000
 set_option maxRecDepth 100000
 
 theorem identity_absorption (f : FlagDegree) (a b s : ℕ) :
-    131073 * 80900 * ProximityPrize.SubmissionLower.RCN146.identityCurveDegree f a b s 131071 ≤
-      50174 * flagMixed f (firstTail a b s) (secondTail a b s) := by
-  change 131073 * 80900 * ProximityPrize.SubmissionLower.RCN146.identityCurveDegree f a b s Lower80788.FixedStage.w ≤ _
+    131073 * 80910 * ProximityPrize.SubmissionLower.RCN146.identityCurveDegree f a b s 131071 ≤
+      50164 * flagMixed f (firstTail a b s) (secondTail a b s) := by
+  change 131073 * 80910 * ProximityPrize.SubmissionLower.RCN146.identityCurveDegree f a b s Lower80788.FixedStage.w ≤ _
   rw [Lower80788.FixedStage.identityDegree_linear]
   norm_num [firstTail, secondTail, Lower80788.FixedStage.tail_support_formula,
     Lower80788.FixedStage.w, flagMixed]
@@ -1594,9 +1594,9 @@ set_option maxRecDepth 100000
 set_option maxHeartbeats 5000000
 def n:ℕ:=262144
 def w:ℕ:=131071
-def errors:ℕ:=80899
-def agreements:ℕ:=181245
-def gap:ℕ:=50174
+def errors:ℕ:=80909
+def agreements:ℕ:=181235
+def gap:ℕ:=50164
 def prime:ℕ:=2130706433
 abbrev K:=IRSProfile.Field
 abbrev I:=IRSProfile.Index
