@@ -125,21 +125,10 @@ noncomputable def productKey (U : Finset Small) : Small :=
 noncomputable def key (U : Finset Small) : (Fin 14 → K) × Small :=
   (topKey U, productKey U)
 
-/-- `Fintype.card (Fin n → K)` via `Nat.card`, which is instance-free.
-
-Going through `Fintype.card_fun` makes the kernel check two `Fintype (Fin n → K)`
-instances for defeq, which unfolds `Pi.fintype` and enumerates the function
-space -- `(2 ^ 31) ^ n` elements. Under Lean 4.34 that is a kernel deterministic
-timeout even at `n = 2`. `Nat.card` does not depend on a chosen `Fintype`, so no
-such check arises. -/
-theorem card_fun_K (n : ℕ) : Fintype.card (Fin n → K) =
-    (2 ^ 31 - 2 ^ 24 + 1) ^ n := by
-  rw [← Nat.card_eq_fintype_card, Nat.card_fun, Nat.card_eq_fintype_card,
-    Nat.card_eq_fintype_card, ZMod.card, Fintype.card_fin]
-
 theorem card_keys : Fintype.card ((Fin 14 → K) × Small) =
     (2 ^ 31 - 2 ^ 24 + 1) ^ 14 * 512 := by
-  rw [Fintype.card_prod, card_fun_K, Fintype.card_fin]
+  rw [Fintype.card_prod, Fintype.card_fun, PrescribedTop.card_K]
+  norm_num
 
 set_option maxHeartbeats 1000000 in
 set_option maxRecDepth 1000000 in
@@ -291,20 +280,13 @@ theorem projected_union_card_le : (projected ∪ {0}).card ≤ 513 := by
   calc (projected ∪ {0}).card ≤ projected.card + ({0} : Finset FF).card := Finset.card_union_le _ _
     _ = 513 := by rw [projected_card]; simp
 
-theorem collision_arith : 513 + Sel.offDiag.card * 257 ≤ NN^2 * 272 + 513 := by
+theorem collision_arith :
+    513 + Sel.offDiag.card * 257 ≤ NN * (NN - 1) * 257 + 513 := by
   rw [offdiag_card]
-  have h1 : NN * (NN - 1) ≤ NN * NN :=
-    Nat.mul_le_mul_left NN (Nat.sub_le NN 1)
-  have h2 : NN * (NN - 1) * 257 ≤ NN^2 * 257 := by
-    simpa [pow_two] using Nat.mul_le_mul_right 257 h1
-  have h3 : NN^2 * 257 ≤ NN^2 * 272 := Nat.mul_le_mul_left _ (by norm_num)
-  calc
-    513 + NN * (NN - 1) * 257 ≤ 513 + NN^2 * 257 := Nat.add_le_add_left h2 513
-    _ ≤ 513 + NN^2 * 272 := Nat.add_le_add_left h3 513
-    _ = NN^2 * 272 + 513 := Nat.add_comm _ _
+  exact le_of_eq (Nat.add_comm _ _)
 
 set_option maxRecDepth 10000 in
-theorem bad_card_le : bad.card ≤ NN^2 * 272 + 513 := by
+theorem bad_card_le : bad.card ≤ NN * (NN - 1) * 257 + 513 := by
   have hcoll := collision_union_card_le
   have hp := projected_union_card_le
   rw [bad]
@@ -313,12 +295,12 @@ theorem bad_card_le : bad.card ≤ NN^2 * 272 + 513 := by
         (projected ∪ {0}).card + (Sel.offDiag.biUnion collisionRoots).card :=
       Finset.card_union_le _ _
     _ ≤ 513 + Sel.offDiag.card * 257 := Nat.add_le_add hp hcoll
-    _ ≤ NN^2 * 272 + 513 := collision_arith
+    _ ≤ NN * (NN - 1) * 257 + 513 := collision_arith
 
 set_option maxHeartbeats 1000000 in
 set_option maxRecDepth 1000000 in
 set_option exponentiation.threshold 100000 in
-theorem alpha_count : NN^2 * 272 + 513 < (2 ^ 31 - 2 ^ 24 + 1)^6 := by
+theorem alpha_count : NN * (NN - 1) * 257 + 513 < (2 ^ 31 - 2 ^ 24 + 1)^6 := by
   dsimp [NN]
   decide
 
@@ -667,8 +649,8 @@ theorem zval_sub_alpha_ne_zero (j : Idx) : zval j - alpha ≠ 0 := by
   rw [← idx_aOf_bOf j]
   exact zval_idx_sub_alpha_ne_zero (aOf j) (bOf j)
 
-set_option maxHeartbeats 2000000 in
-set_option maxRecDepth 100000 in
+set_option maxHeartbeats 1000000 in
+set_option maxRecDepth 10000 in
 theorem f2_far (δ : ℝ≥0) (hδ : δ < (122641 / 262144 : ℝ≥0)) :
     ¬ RelaxedRelationFor (ℓ := 2) IRSProfile.encoder δ (0 : Fin kk → FF)
       ![0, 0] ![f1, f2] := by
