@@ -52,7 +52,7 @@ private theorem whole_regular_all_le
 def Rules : Prop := ∀ r v z : ℕ, 1≤r → r≤39 → r+v≤182 → r+v+z≤11192 →
   FinalRuleCheck6815.RuleBound r v z (FinalLedgerData6815.cap r v z)
 def finalCap (p : FlagDegree) := FinalLedgerData6815.cap p.all p.yz p.zOnly
-def initialUpper (p : FlagDegree) := FinalLedgerChord6815.initialNum p.all (middle p) p.zOnly / 50174
+def initialUpper (p : FlagDegree) := FinalLedgerChord6815.initialNum p.all (middle p) p.zOnly / 50164
 def carrierSupport : ResidualSupportParameters :=
   ⟨50,229,15421,by decide,by decide,by decide,by decide⟩
 
@@ -83,7 +83,7 @@ theorem regular_count
   have hPne : regularProduct H U ≠ 0 := regularProduct_ne_zero H U
   have hdivA : ∀ v : Caps.AKernel u0 u1,
       regularProduct H U ∣
-        reconstruct K 23924340 131071 76330 39 v.1 := by
+        reconstruct K 23923020 131071 76330 39 v.1 := by
     simpa only [U] using initialAUniversalProduct_dvd u0 u1 H
   have hpS : p.all ≤ 39 := by
     simp only [p, regularAggregateFlag_all]
@@ -176,12 +176,12 @@ theorem regular_count
   have inpD := inp.restrict Delta hsub
   have hwide : ResidualSupportData InitialSupports.wideSupport H :=
     ⟨S.common_slope_le,S.common_ys_le,S.common_total_le⟩
-  have hb := flag_box_to_ordinary K 30086670 131071 15421 50 S.QB S.QB_flag
-  have hHbox : H∈RCN174.globalCoefficientBox K 30086670 131071 15421 50 :=
-    mem_globalCoefficientBox_of_dvd H S.QB 30086670 131071 15421 50 S.QB_ne
+  have hb := flag_box_to_ordinary K 30085010 131071 15421 50 S.QB S.QB_flag
+  have hHbox : H∈RCN174.globalCoefficientBox K 30085010 131071 15421 50 :=
+    mem_globalCoefficientBox_of_dvd H S.QB 30085010 131071 15421 50 S.QB_ne
       (gcd_dvd_right S.QA S.QB) hb
   have hphaseU : (∑ F∈U,(regularSeeds H selected Delta F).card)≤finalCap p :=
-    FinalRegularCount6815.count_of_rules 30086670 carrierSupport (by decide) (by decide)
+    FinalRegularCount6815.count_of_rules 30085010 carrierSupport (by decide) (by decide)
       H hH hHbox selected Delta u0 u1 inpD.degree inpD.agreement inpD.noPencil U hpS hpY hpT hrules
   have hN : (∑ F ∈ N, (regularSeeds H selected Delta F).card) ≤ initialUpper p := by
     apply le_trans (Finset.sum_le_sum (fun F hF => ?_)) hhelperSum

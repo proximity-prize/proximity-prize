@@ -76,12 +76,12 @@ theorem selected_pair_count_le
   have hT : T ≠ 0 := by
     intro hz
     exact S.QA_ne (by rw [hTeq,hz,mul_zero])
-  have hb := flag_box_to_ordinary K 30086670 131071 15421 50 S.QB S.QB_flag
-  have hHbox : H ∈ RCN174.globalCoefficientBox K 30086670 131071 15421 50 :=
-    mem_globalCoefficientBox_of_dvd H S.QB 30086670 131071 15421 50 S.QB_ne
+  have hb := flag_box_to_ordinary K 30085010 131071 15421 50 S.QB S.QB_flag
+  have hHbox : H ∈ RCN174.globalCoefficientBox K 30085010 131071 15421 50 :=
+    mem_globalCoefficientBox_of_dvd H S.QB 30085010 131071 15421 50 S.QB_ne
       (gcd_dvd_right S.QA S.QB) hb
-  have hQbox : Q ∈ RCN174.globalCoefficientBox K 30086670 131071 15421 50 :=
-    mem_globalCoefficientBox_of_dvd Q S.QB 30086670 131071 15421 50 S.QB_ne
+  have hQbox : Q ∈ RCN174.globalCoefficientBox K 30085010 131071 15421 50 :=
+    mem_globalCoefficientBox_of_dvd Q S.QB 30085010 131071 15421 50 S.QB_ne
       ⟨H,hQeq.trans (mul_comm H Q)⟩ hb
   have hsubD : D ⊆ Gamma := by
     intro g hg
@@ -119,10 +119,10 @@ theorem selected_pair_count_le
   change p.all ≤ 39 ∧ middle p ≤ 182 ∧ total p ≤ 11192 ∧
     (∑ F : RegularIndex H, (regularSeeds H selected D F).card) ≤
       finalCap p+initialUpper p at hreg
-  have hprod : H*Q ∈ RCN100.globalCoefficientBox K 30086670 131071 15421 50 := by
+  have hprod : H*Q ∈ RCN100.globalCoefficientBox K 30085010 131071 15421 50 := by
     rw [← hQeq]
     exact S.QB_flag
-  have hprodA : H*T ∈ RCN100.globalCoefficientBox K 45673740 131071 11193 78 := by
+  have hprodA : H*T ∈ RCN100.globalCoefficientBox K 45671220 131071 11193 78 := by
     rw [← hTeq]
     exact S.QA_flag
   have hrE := PairCell.pair_count_cell inpE H Q T hH hQ hT
