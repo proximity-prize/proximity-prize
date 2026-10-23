@@ -39,9 +39,9 @@ def uDZ : ℕ := 21907324
 /-- `n - k`. -/
 def uNK : ℕ := 1048577
 /-- `n - e - k`. -/
-def uGap : ℕ := 434402
+def uGap : ℕ := 434336
 /-- Fused incidence coefficient: `(n - k) * 2E ≤ (n - e - k) * uC`. -/
-def uC : ℕ := 10124366
+def uC : ℕ := 10125904
 
 theorem uE_eq : uE = FiniteHenselWeight.denominatorExponent 1048575 := by
   norm_num [uE, FiniteHenselWeight.denominatorExponent]
@@ -138,10 +138,10 @@ theorem single_factor_alignment_univ
     (hsep : R.derivative ≠ 0)
     (hYZs : ∀ j a, ((R.coeff j).coeff a) ≠ 0 →
       ((R.coeff j).coeff a).natDegree + q * j < 21907324)
-    (hW : ∀ j a, ((R.coeff j).coeff a) ≠ 0 → a + 1048575 * j < 7236927760)
+    (hW : ∀ j a, ((R.coeff j).coeff a) ≠ 0 → a + 1048575 * j < 7237000000)
     (hPdeg : ∀ z ∈ S, (P z).natDegree ≤ 1048575)
     (hvan : ∀ z ∈ S, triEval R z (P z) = 0)
-    (hrow : ∀ z ∈ S, 1482977 ≤ (Arow z).card)
+    (hrow : ∀ z ∈ S, 1482911 ≤ (Arow z).card)
     (hagree : ∀ z ∈ S, ∀ i ∈ Arow z,
       Polynomial.eval (BinaryIRSProfile.domain i) (P z) = U 0 i + z ^ q * U 1 i)
     (hcard : sfCapU R.natDegree < S.card) :
@@ -342,7 +342,7 @@ theorem single_factor_alignment_univ
   let Coord : Finset BinaryIRSProfile.Index := Finset.univ.filter fun i =>
     rdeg H < (T.filter fun z => i ∈ Arow z).card
   have hCoord : 1048576 ≤ Coord.card := by
-    have h := many_large_fibers T Arow 2097152 614175 1048575 (rdeg H)
+    have h := many_large_fibers T Arow 2097152 614241 1048575 (rdeg H)
       BinaryIRSProfile.card_index
       (fun z hz => by have := hrow z (hTS hz); norm_num; exact this)
       (by

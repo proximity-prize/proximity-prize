@@ -12,7 +12,7 @@ from caller-chosen close RS codewords. -/
 theorem exists_bchks_interpolant_vanishing
     (U : Fin 2 → BinaryIRSProfile.Index → BinaryIRSProfile.Field)
     (S : Finset BinaryIRSProfile.Field) (A : BinaryIRSProfile.Field → Finset BinaryIRSProfile.Index)
-    (hA : ∀ z ∈ S, 1482977 ≤ (A z).card)
+    (hA : ∀ z ∈ S, 1482911 ≤ (A z).card)
     (hcomb : ∀ z ∈ S,
       LinearCode.projectedWord (fun i => U 0 i + z * U 1 i) (A z) ∈
         LinearCode.projectedCodeSubmod BinaryIRSProfile.baseCode (A z)) :
@@ -24,7 +24,7 @@ theorem exists_bchks_interpolant_vanishing
         Polynomial.eval (BinaryIRSProfile.domain i) (P z) = U 0 i + z.1 * U 1 i) ∧
       (∀ z : ↥S, BCHKSSubstitutionVanish.triEval Q z.1 (P z) = 0) ∧
       (∀ j a, ((Q.coeff j).coeff a) ≠ 0 →
-        j < 6902 ∧ a + 1048575 * j < 7236927760 ∧
+        j < 6902 ∧ a + 1048575 * j < 7237000000 ∧
           ((Q.coeff j).coeff a).natDegree + j < 21907324) := by
   classical
   have hw : ∀ z : ↥S, ∃ p : Polynomial BinaryIRSProfile.Field,
@@ -61,7 +61,7 @@ theorem exists_bchks_interpolant_vanishing
   apply triEval_eq_zero_of_many_shift_vanishing_of_weighted_X_cap
     Q z.1 (P z) BinaryIRSProfile.domain (A z.1)
     (fun i => Polynomial.C (U 0 i) + Polynomial.X * Polynomial.C (U 1 i))
-    4880 1048575 7236927759
+    4881 1048575 7236999999
   · intro i hi s t h hs
     have hz := congrArg (fun p : Polynomial BinaryIRSProfile.Field => p.coeff h)
       (hvan i s t hs)

@@ -27,8 +27,8 @@ structure GSParams where
 
 def n : ℕ := 2097152
 def k : ℕ := 1048575
-def m : ℕ := 4880
-def DX : ℕ := 7236927760
+def m : ℕ := 4881
+def DX : ℕ := 7237000000
 def DY : ℕ := 6902
 def DZ : ℕ := 21907324
 
@@ -484,23 +484,12 @@ theorem sumR_eq (f : ℕ → ℕ) (n : ℕ) : sumR f n = ∑ i ∈ Finset.range 
   | succ n ih => rw [Finset.sum_range_succ, ← ih]; rfl
 
 open scoped BigOperators in
-theorem card_var : Fintype.card (VarIndex concreteParams) = 547123831838379992245 := by
-  rw [Fintype.card_sigma]
-  simp only [Fintype.card_prod, Fintype.card_fin, Finset.sum_fin_eq_sum_range]
-  rw [← sumR_eq]
-  decide +kernel
-
-open scoped BigOperators in
-theorem card_con : Fintype.card (ConIndex concreteParams) = 547123831838007623680 := by
+theorem card_con_lt_var :
+    Fintype.card (ConIndex concreteParams) < Fintype.card (VarIndex concreteParams) := by
   rw [Fintype.card_prod, Fintype.card_sigma]
   simp only [Fintype.card_prod, Fintype.card_fin, Finset.sum_fin_eq_sum_range]
   rw [← sumR_eq]
   decide +kernel
-
-theorem card_con_lt_var :
-    Fintype.card (ConIndex concreteParams) < Fintype.card (VarIndex concreteParams) := by
-  rw [card_con, card_var]
-  norm_num
 
 /-- The concrete BCHKS interpolation polynomial. Besides nonzeroness and all
 multiplicity equations, its support satisfies the three strict integer caps. -/
