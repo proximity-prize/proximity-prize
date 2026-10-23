@@ -3,6 +3,7 @@ Copyright (c) 2026 Proximity Prize Contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import ProximityPrize.SubmissionUpper.OrbitPencil
+import ProximityPrize.SubmissionUpper.ExactFibre
 
 open ToyProblem
 open scoped NNReal
@@ -60,6 +61,12 @@ theorem candidate_score :
     push_cast; ring] at hmono
   rw [show ((12800 : ℕ) : ℝ) * (1 / 100) = ((128 : ℕ) : ℝ) by push_cast; norm_num] at hmono
   rwa [NNReal.rpow_natCast] at hmono
+
+theorem exact_fibre_ledger :
+    SubmissionUpper.crownAgreement = 139775 ∧
+      SubmissionUpper.nextCentibitAgreement = SubmissionUpper.crownAgreement + 7 := by
+  refine ⟨rfl, ?_⟩
+  simpa using SubmissionUpper.nextCentibitAgreement_eq
 
 /-- The 512-fibre rational pencil certifies the new narrow window, then hands
 off to the prescribed-top attack, giving a `116.13`-bit upper certificate. -/
