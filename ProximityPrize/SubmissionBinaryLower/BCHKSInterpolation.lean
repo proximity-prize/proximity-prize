@@ -12,7 +12,7 @@ from caller-chosen close RS codewords. -/
 theorem exists_bchks_interpolant_vanishing
     (U : Fin 2 → BinaryIRSProfile.Index → BinaryIRSProfile.Field)
     (S : Finset BinaryIRSProfile.Field) (A : BinaryIRSProfile.Field → Finset BinaryIRSProfile.Index)
-    (hA : ∀ z ∈ S, 1482977 ≤ (A z).card)
+    (hA : ∀ z ∈ S, 1482910 ≤ (A z).card)
     (hcomb : ∀ z ∈ S,
       LinearCode.projectedWord (fun i => U 0 i + z * U 1 i) (A z) ∈
         LinearCode.projectedCodeSubmod BinaryIRSProfile.baseCode (A z)) :

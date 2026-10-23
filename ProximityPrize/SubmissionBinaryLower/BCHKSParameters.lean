@@ -6,14 +6,14 @@ open ProximityPrize.Benchmark ProximityPrize.Benchmark.Binary
 open CoreDefinitions ProximityGap
 open scoped NNReal
 
-/-- Radius chosen for a 63.99-bit claim after the specialized BCHKS extraction. -/
-noncomputable def bchksRadius : ℝ≥0 := (314458111 : ℝ≥0) / 1073741824
+/-- Radius chosen for a 64.00-bit claim after the specialized BCHKS extraction. -/
+noncomputable def bchksRadius : ℝ≥0 := (314492415 : ℝ≥0) / 1073741824
 
-def bchksErrors : ℕ := 614175
+def bchksErrors : ℕ := 614242
 
 def bchksNumerator : ℕ := 2000000000000000000
 
-def bchksListBound : ℕ := 32000
+def bchksListBound : ℕ := 1000000000
 
 /-- Slack reserved for bad specializations without changing the sharp multiplicity target. -/
 def bchksBadBudget : ℕ := 4000000000000000
@@ -47,23 +47,19 @@ theorem two_rpow_one_hundred_ge :
       rw [← NNReal.rpow_natCast_mul]
       norm_num [div_eq_mul_inv]
 
-/-- Standalone score arithmetic for the intended `ProtocolClaim 6399`. -/
+/-- Standalone score arithmetic for the intended `ProtocolClaim 6400`. -/
 lemma bchksRadius_score :
     (1 - bchksRadius) ^ BinaryIRSProfile.repetitions ≤
-      ProximityPrize.Benchmark.Binary.claimedError 6399 := by
+      ProximityPrize.Benchmark.Binary.claimedError 6400 := by
   calc
     (1 - bchksRadius) ^ BinaryIRSProfile.repetitions ≤
-        ((1 : ℝ≥0) / 2 ^ (64 : ℕ)) * (10057 / 10000) := by
+        ((1 : ℝ≥0) / 2 ^ (64 : ℕ)) := by
       rw [← NNReal.coe_le_coe]
       norm_num [bchksRadius, BinaryIRSProfile.repetitions, div_le_iff₀]
-    _ ≤ ((1 : ℝ≥0) / 2 ^ (64 : ℕ)) *
-          (2 : ℝ≥0) ^ ((1 : ℝ) / 100) := by
-      exact mul_le_mul_of_nonneg_left two_rpow_one_hundred_ge (by positivity)
-    _ = ProximityPrize.Benchmark.Binary.claimedError 6399 := by
+    _ = ProximityPrize.Benchmark.Binary.claimedError 6400 := by
       unfold ProximityPrize.Benchmark.Binary.claimedError
-      rw [show -((((6399 : ℕ) : ℝ) / 100)) =
-          -((64 : ℕ) : ℝ) + (1 : ℝ) / 100 by norm_num,
-        NNReal.rpow_add (by norm_num : (2 : ℝ≥0) ≠ 0),
+      rw [show -((((6400 : ℕ) : ℝ) / 100)) =
+          -((64 : ℕ) : ℝ) by norm_num,
         NNReal.rpow_neg, NNReal.rpow_natCast]
       norm_num
 

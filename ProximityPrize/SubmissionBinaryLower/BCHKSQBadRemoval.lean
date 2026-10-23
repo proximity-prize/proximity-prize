@@ -25,7 +25,7 @@ theorem exists_bchks_Qbad_removal
       (∀ z ∈ Sgood, triEval Q z (P z) = 0) ∧
       (S.filter (fun z => triSpecializeZ Q z = 0)).card ≤
         2 * 21907324 * 6902 ∧
-      10124366 * 21907324 * 6901 +
+      10125927 * 21907324 * 6901 +
           (bchksErrors + 1) * 6901 + 2 * 21907324 * 6901 < Sgood.card := by
   classical
   -- Keep the cap hypotheses in the interface used by the staged-pair theorem.

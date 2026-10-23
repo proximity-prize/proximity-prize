@@ -43,7 +43,7 @@ theorem single_factor_alignment (d : ℕ) :
       (∀ j a, ((R.coeff j).coeff a) ≠ 0 → a + 1048575 * j < 7236927760) →
       (∀ z ∈ S, (P z).natDegree ≤ 1048575) →
       (∀ z ∈ S, triEval R z (P z) = 0) →
-      (∀ z ∈ S, 1482977 ≤ (Arow z).card) →
+      (∀ z ∈ S, 1482910 ≤ (Arow z).card) →
       (∀ z ∈ S, ∀ i ∈ Arow z,
         Polynomial.eval (BinaryIRSProfile.domain i) (P z) = U 0 i + z ^ q * U 1 i) →
       sfCapU d < S.card →
@@ -206,7 +206,7 @@ theorem bchksPolynomialAlignment_char2 : BCHKSPolynomialAlignment := by
       _ ≤ Q.natDegree := normalizedFactors_toFinset_sum_natDegree_le Q hQ
       _ ≤ 6901 := hQY'
   have hsum : (∑ R ∈ Rs, sfCapU R.natDegree) ≤
-      10124366 * 21907324 * 6901 + (bchksErrors + 1) * 6901 + 2 * 21907324 * 6901 := by
+      10125927 * 21907324 * 6901 + (bchksErrors + 1) * 6901 + 2 * 21907324 * 6901 := by
     rw [hadd]
     calc sfCapU (∑ R ∈ Rs, R.natDegree) ≤ sfCapU 6901 := sfCapU_mono hdsum
       _ = _ := by norm_num [sfCapU, uC, uDZ]
