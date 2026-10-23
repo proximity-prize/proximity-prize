@@ -86,9 +86,9 @@ theorem sourceNums_eq (j : ℕ) : sourceNums j=src j := by
 def exactPieceL (capL capU capS r y lo hi start : ℕ) (p : Piece) (cut cstart : ℕ) (c : Piece) : Bool :=
   Bool.rec true
     (TriangularKernel6815.triangle
-      (50174*c.base+ExactInitialCharge6815.num capL capU capS r y y+1) (50174*c.slope)
+      (50164*c.base+ExactInitialCharge6815.num capL capU capS r y y+1) (50164*c.slope)
       cstart (min c.stop cut-1) 0 (ExactRemovalPhase6815.tSlope capL capU capS r y)
-      (50174*(value p start lo+1)) (50174*p.slope) lo hi)
+      (50164*(value p start lo+1)) (50164*p.slope) lo hi)
     (Nat.blt cstart (min c.stop cut))
 theorem exactPieceL_eq (capL capU capS r y lo hi start : ℕ) (p : Piece) (cut cstart : ℕ) (c : Piece) :
     exactPieceL capL capU capS r y lo hi start p cut cstart c=exactPieceCheck capL capU capS r y lo hi start p cut cstart c := by

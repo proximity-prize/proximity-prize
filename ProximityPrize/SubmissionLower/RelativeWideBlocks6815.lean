@@ -74,9 +74,9 @@ theorem regular_count (b : Band) (hc : WideCovered b (minimumWeight b) (tail b))
     (nodes : I ↪ K) (u0 u1 : I → K) (hcard : Fintype.card I=262144)
     (selected : K → Polynomial K) (Gamma : Finset K)
     (hdegree : ∀ gamma∈Gamma, (selected gamma).natDegree≤131071)
-    (hagreement : ∀ gamma∈Gamma, 181245≤
+    (hagreement : ∀ gamma∈Gamma, 181235≤
       ((Finset.univ : Finset I).filter (fun i => (selected gamma).eval (nodes i)=u0 i+gamma*u1 i)).card)
-    (hno : RCN238.NoLargeSelectedPencil selected Gamma 131071 80899) :
+    (hno : RCN238.NoLargeSelectedPencil selected Gamma 131071 80909) :
     (RCN140.regularSeeds H selected Gamma F).card≤b.count := by
   obtain ⟨d,hd,hlo,hhi⟩ := hc (min nu (tail b)) (le_min hnu hrange) (min_le_right _ _)
   exact regular_count_of_wide_rectangle K I b d hd F hbox hcode htotal hslope hB hT0 hT1

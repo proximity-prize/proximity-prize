@@ -48,15 +48,15 @@ theorem num_linear (L U S r y t : ℕ) :
 theorem num_middle_diagonal (L U S r u : ℕ) :
     num L U S r u u=
       (4*131073*131071*S)*u^2+
-      (131073*(2*S+2*131071*r*(L+U)+131071*(2*r-1)*(L+U))+80900*50174*S)*u+
-      (131073*r*(L+U)+80900*50174*r*U) := by
+      (131073*(2*S+2*131071*r*(L+U)+131071*(2*r-1)*(L+U))+80910*50164*S)*u+
+      (131073*r*(L+U)+80910*50164*r*U) := by
   rw [num_formula]
   ring
 
 theorem num_diagonal (L U S u : ℕ) :
     num L U S u u u+(131073*131071*(L+U))*u=
       (4*131073*131071*(L+S+U))*u^2+
-      (131073*(L+2*S+U)+80900*50174*(S+U))*u := by
+      (131073*(L+2*S+U)+80910*50164*(S+U))*u := by
   rw [num_formula]
   cases u with
   | zero => simp
@@ -77,8 +77,8 @@ theorem num_middle_chord (L U S r lo hi K : ℕ) (hK : hi≤K) :
   have h : Chord lo hi (fun z => K-z) := by
     simpa only [Nat.zero_mul,Nat.one_mul,Nat.add_zero,Nat.zero_add] using sub_affine lo hi 0 K 1 0
   apply chord_congr (add (add (mul_left (square_sub lo hi K hK) (4*131073*131071*S))
-    (mul_left h (131073*(2*S+2*131071*r*(L+U)+131071*(2*r-1)*(L+U))+80900*50174*S)))
-    (constant lo hi (131073*r*(L+U)+80900*50174*r*U)))
+    (mul_left h (131073*(2*S+2*131071*r*(L+U)+131071*(2*r-1)*(L+U))+80910*50164*S)))
+    (constant lo hi (131073*r*(L+U)+80910*50164*r*U)))
   intro z _ _
   exact (num_middle_diagonal L U S r (K-z)).symm
 
@@ -88,7 +88,7 @@ theorem num_diagonal_chord (L U S lo hi K : ℕ) (hK : hi≤K) :
     simpa only [Nat.zero_mul,Nat.one_mul,Nat.add_zero,Nat.zero_add] using sub_affine lo hi 0 K 1 0
   apply cancel_sub_affine (131073*131071*(L+U)) hK
   apply chord_congr (add (mul_left (square_sub lo hi K hK) (4*131073*131071*(L+S+U)))
-    (mul_left h (131073*(L+2*S+U)+80900*50174*(S+U))))
+    (mul_left h (131073*(L+2*S+U)+80910*50164*(S+U))))
   intro z _ _
   exact (num_diagonal L U S (K-z)).symm
 
@@ -139,7 +139,7 @@ theorem fold_chord {lo hi : ℕ} {f : ℕ → ℕ} (hf : Chord lo hi f) (y r : �
   simpa only [foldUnit,if_neg hr] using
     PortfolioChord6815.max (constant lo hi 9000000000000) (PortfolioChord6815.max h2 hR)
 
-def pairLine (r y t : ℕ) := PairCell6815.constant r y/50174-(PairCell6815.slope r y/50174)*t
+def pairLine (r y t : ℕ) := PairCell6815.constant r y/50164-(PairCell6815.slope r y/50164)*t
 
 theorem pair_le (r y t : ℕ) (ht : t≤11193) : PairCell6815.cap r y t≤pairLine r y t := by
   have h := PairCell6815.cap_le_line r y t ht
@@ -149,7 +149,7 @@ theorem pair_le (r y t : ℕ) (ht : t≤11193) : PairCell6815.cap r y t≤pairLi
 
 def others (r y z : ℕ) : ℕ :=
   r*foldUnit y (y+z) r+(50-r)*foldUnit (229-y) (15421-(y+z)) (50-r)+
-    18000000000000+pairLine r y (y+z)
+    17500000000000+pairLine r y (y+z)
 
 theorem others_chord (r y lo hi : ℕ) : Chord lo hi (others r y) := by
   have hsum : Chord lo hi (fun z => y+z) := by
@@ -158,24 +158,24 @@ theorem others_chord (r y lo hi : ℕ) : Chord lo hi (others r y) := by
     simpa only [Nat.zero_mul,Nat.one_mul,Nat.add_zero,Nat.zero_add,Nat.add_comm] using sub_affine lo hi 0 15421 1 y
   have hpair : Chord lo hi (fun z => pairLine r y (y+z)) := by
     simpa only [pairLine,Nat.zero_mul,Nat.zero_add,Nat.mul_add,Nat.add_comm] using
-      sub_affine lo hi 0 (PairCell6815.constant r y/50174) (PairCell6815.slope r y/50174)
-        ((PairCell6815.slope r y/50174)*y)
+      sub_affine lo hi 0 (PairCell6815.constant r y/50164) (PairCell6815.slope r y/50164)
+        ((PairCell6815.slope r y/50164)*y)
   exact add (add (add (mul_left (fold_chord hsum y r) r)
       (mul_left (fold_chord hrem (229-y) (50-r)) (50-r)))
-    (constant lo hi 18000000000000)) hpair
+    (constant lo hi 17500000000000)) hpair
 
 def cleared (r y start base slope z : ℕ) :=
-  50174*(base+slope*(z-start)+others r y z)+initialNum r y z
+  50164*(base+slope*(z-start)+others r y z)+initialNum r y z
 
 def combined (cap r y z : ℕ) :=
-  cap+initialNum r y z/50174+
+  cap+initialNum r y z/50164+
     r*foldUnit y (y+z) r+(50-r)*foldUnit (229-y) (15421-(y+z)) (50-r)+
-    18000000000000+PairCell6815.cap r y (y+z)
+    17500000000000+PairCell6815.cap r y (y+z)
 
 theorem combined_le_cleared (r y start base slope z : ℕ) (ht : y+z≤11193) :
-    50174*combined (base+slope*(z-start)) r y z≤cleared r y start base slope z := by
+    50164*combined (base+slope*(z-start)) r y z≤cleared r y start base slope z := by
   have hp := pair_le r y (y+z) ht
-  have hi := Nat.div_mul_le_self (initialNum r y z) 50174
+  have hi := Nat.div_mul_le_self (initialNum r y z) 50164
   unfold combined cleared others
   nlinarith only [hp,hi]
 
@@ -183,12 +183,12 @@ theorem cleared_chord (r y start base slope lo hi mode : ℕ) (hm : Mode r y lo 
     Chord lo hi (cleared r y start base slope) := by
   have hsub : Chord lo hi (fun z => z-start) := by
     simpa only [Nat.zero_mul,Nat.one_mul,Nat.add_zero,Nat.zero_add] using sub_affine lo hi 1 0 0 start
-  exact add (mul_left (add (add (constant lo hi base) (mul_left hsub slope)) (others_chord r y lo hi)) 50174)
+  exact add (mul_left (add (add (constant lo hi base) (mul_left hsub slope)) (others_chord r y lo hi)) 50164)
     (initial_chord r y lo hi mode hm)
 
 def Fits (r y start base slope lo hi mode budget : ℕ) : Prop :=
-  Mode r y lo hi mode ∧ cleared r y start base slope lo≤50174*budget ∧
-    cleared r y start base slope hi≤50174*budget
+  Mode r y lo hi mode ∧ cleared r y start base slope lo≤50164*budget ∧
+    cleared r y start base slope hi≤50164*budget
 instance (r y start base slope lo hi mode budget : ℕ) : Decidable (Fits r y start base slope lo hi mode budget) := by
   unfold Fits; infer_instance
 
@@ -196,7 +196,7 @@ theorem fits_between (r y start base slope lo hi mode budget z : ℕ)
     (hf : Fits r y start base slope lo hi mode budget) (hz : lo≤z) (hh : z≤hi) :
     combined (base+slope*(z-start)) r y z≤budget := by
   have h := le_of_endpoints (cleared_chord r y start base slope lo hi mode hf.1)
-    (50174*budget) hf.2.1 hf.2.2 z hz hh
+    (50164*budget) hf.2.1 hf.2.2 z hz hh
   have ht : y+z≤11193 := by have := hf.1.1; have := hf.1.2.1; omega
   exact Nat.le_of_mul_le_mul_left ((combined_le_cleared r y start base slope z ht).trans h) (by decide)
 

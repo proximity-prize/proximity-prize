@@ -84,12 +84,12 @@ structure Data (nodes : I ↪ K) (u0 u1 : I → K) where
   selected : K → Polynomial K
   seeds : Finset K
   degree : ∀ gamma ∈ seeds, (selected gamma).natDegree ≤ w
-  agreement : ∀ gamma ∈ seeds, 181245 ≤
+  agreement : ∀ gamma ∈ seeds, 181235 ≤
     (Finset.univ.filter (fun i => (selected gamma).eval (nodes i) = u0 i+gamma*u1 i)).card
   solution : ∀ gamma ∈ seeds, specialization K (selected gamma) gamma F=0
   regular : ∀ gamma ∈ seeds,
     specialization K (selected gamma) gamma (pderiv (2:Fin 4) F)≠0
-  noPencil : NoLargeSelectedPencil selected seeds w 80899
+  noPencil : NoLargeSelectedPencil selected seeds w 80909
 
 namespace Data
 variable {nodes : I ↪ K} {u0 u1 : I → K}
@@ -101,10 +101,10 @@ def restrict (S : Data nodes u0 u1) (Delta : Finset K) (hsub : Delta ⊆ S.seeds
            agreement := fun gamma h => S.agreement gamma (hsub h)
            solution := fun gamma h => S.solution gamma (hsub h)
            regular := fun gamma h => S.regular gamma (hsub h)
-           noPencil := noLargeSelectedPencil_mono S.selected S.seeds Delta w 80899 hsub S.noPencil }
+           noPencil := noLargeSelectedPencil_mono S.selected S.seeds Delta w 80909 hsub S.noPencil }
 
 def pair (S : Data nodes u0 u1) (R capY T : ℕ) : UnequalParameters :=
-  ⟨262144,131071,181245,S.y,S.r,S.t,capY,R,T⟩
+  ⟨262144,131071,181235,S.y,S.r,S.t,capY,R,T⟩
 
 def PairGates (S : Data nodes u0 u1) (R capY T : ℕ) : Prop :=
   (S.pair R capY T).mixedCost.y < 2130706433 ∧
@@ -140,10 +140,10 @@ theorem proper_count_left (S : Data nodes u0 u1) (hI : Fintype.card I = 262144)
     nodes.injective.injOn (by simpa only [Finset.card_univ,pair] using hI)
     (by norm_num [pair]) (by norm_num [pair]) (by norm_num [pair]) (by norm_num [pair])
     S.degree S.agreement (by simpa only [pair,UnequalParameters.errors,
-      (show (262144 - 181245 : ℕ) = 80899 by decide),RCN327.w] using S.noPencil)
+      (show (262144 - 181235 : ℕ) = 80909 by decide),RCN327.w] using S.noPencil)
     S.solution S.regular hzero
   exact SecondJetPairBounds.count_le_left_cap (S.pair R capY T) S.F hF.1 hF.2.1 hF.2.2
-    S.seeds.card (by change 0 < (181245 - 131071 : ℕ); decide) hcount
+    S.seeds.card (by change 0 < (181235 - 131071 : ℕ); decide) hcount
 
 end Data
 end
@@ -379,7 +379,7 @@ def pairNumerator (a b c capY capR capT : ℕ) : ℕ :=
   131073*((1+262142*(a+b+5))*((a+3)*capT+(a+b+c+5)*capR)+
     131071*(2*a+5)*((a+b+5)*capT+(a+b+c+5)*capY)+
     (1+262142*(a+b+c+5))*((a+b+5)*capR+(a+3)*capY))+
-    80900*50174*((a+b+5)*capR+(a+3)*capY)
+    80910*50164*((a+b+5)*capR+(a+3)*capY)
 def coeff (P : Params) (a b c : ℕ) : ℕ := pairNumerator a b c P.U P.B P.L
 def helper (P : Params) (a b c : ℕ) : ℕ :=
   pairNumerator a b c (P.U+P.s*(a+b+4)) (P.B+P.s*(a+2)) (P.L+P.s*(a+b+c+4))
