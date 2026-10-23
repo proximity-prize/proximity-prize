@@ -17,7 +17,7 @@ theorem exists_bchks_Qbad_removal
     (hQYZ : ∀ j a, ((Q.coeff j).coeff a) ≠ 0 →
       ((Q.coeff j).coeff a).natDegree + j < 21907324)
     (hQweightedX : ∀ j a, ((Q.coeff j).coeff a) ≠ 0 →
-      a + 1048575 * j < 7236927760) :
+      a + 1048575 * j < 7244000000) :
     ∃ Sgood : Finset F,
       Sgood = S.filter (fun z => triSpecializeZ Q z ≠ 0) ∧
       Sgood ⊆ S ∧
@@ -25,7 +25,7 @@ theorem exists_bchks_Qbad_removal
       (∀ z ∈ Sgood, triEval Q z (P z) = 0) ∧
       (S.filter (fun z => triSpecializeZ Q z = 0)).card ≤
         2 * 21907324 * 6902 ∧
-      10124366 * 21907324 * 6901 +
+      10125904 * 21907324 * 6901 +
           (bchksErrors + 1) * 6901 + 2 * 21907324 * 6901 < Sgood.card := by
   classical
   -- Keep the cap hypotheses in the interface used by the staged-pair theorem.

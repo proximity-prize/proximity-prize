@@ -40,10 +40,10 @@ theorem single_factor_alignment (d : ℕ) :
       1 ≤ q → q * d ≤ 6901 → R.natDegree = d → Irreducible R → 0 < d →
       (∀ j a, ((R.coeff j).coeff a) ≠ 0 →
         ((R.coeff j).coeff a).natDegree + q * j < 21907324) →
-      (∀ j a, ((R.coeff j).coeff a) ≠ 0 → a + 1048575 * j < 7236927760) →
+      (∀ j a, ((R.coeff j).coeff a) ≠ 0 → a + 1048575 * j < 7244000000) →
       (∀ z ∈ S, (P z).natDegree ≤ 1048575) →
       (∀ z ∈ S, triEval R z (P z) = 0) →
-      (∀ z ∈ S, 1482977 ≤ (Arow z).card) →
+      (∀ z ∈ S, 1482911 ≤ (Arow z).card) →
       (∀ z ∈ S, ∀ i ∈ Arow z,
         Polynomial.eval (BinaryIRSProfile.domain i) (P z) = U 0 i + z ^ q * U 1 i) →
       sfCapU d < S.card →
@@ -67,7 +67,7 @@ theorem single_factor_alignment (d : ℕ) :
       · simp [h0]
       · have := hYZs j a h0
         omega
-    have hXcap : ∀ j, (R.coeff j).natDegree ≤ 7236927760 := by
+    have hXcap : ∀ j, (R.coeff j).natDegree ≤ 7244000000 := by
       intro j
       by_cases h0 : R.coeff j = 0
       · simp [h0]
@@ -75,11 +75,11 @@ theorem single_factor_alignment (d : ℕ) :
           rw [Polynomial.coeff_natDegree]
           exact Polynomial.leadingCoeff_ne_zero.mpr h0)
         omega
-    have hF : 2 * R.natDegree * 7236927760 < Fintype.card BFld := by
+    have hF : 2 * R.natDegree * 7244000000 < Fintype.card BFld := by
       rw [show Fintype.card BFld = 2 ^ (192 : ℕ) from BF64.card_ext3, hRd]
-      calc 2 * d * 7236927760 ≤ 2 * 6901 * 7236927760 := by gcongr
+      calc 2 * d * 7244000000 ≤ 2 * 6901 * 7244000000 := by gcongr
         _ < 2 ^ (192 : ℕ) := by norm_num
-    have hdead := dead_factor_card_le R hRi (by omega) hY hX 21907324 7236927760
+    have hdead := dead_factor_card_le R hRi (by omega) hY hX 21907324 7244000000
       hZcap hXcap hF S P hvan
     rw [hRd] at hdead
     have hdead' : S.card ≤ 2 * d * uDZ := hdead
@@ -121,7 +121,7 @@ theorem single_factor_alignment (d : ℕ) :
     have := hYZs (j * 2) (a * 2) hne
     rw [hdeg] at this
     nlinarith
-  have hWT : ∀ j a, ((T.coeff j).coeff a) ≠ 0 → a + 1048575 * j < 7236927760 := by
+  have hWT : ∀ j a, ((T.coeff j).coeff a) ≠ 0 → a + 1048575 * j < 7244000000 := by
     intro j a hja
     have hc := coeff_coeff_frobLift T j a
     rw [hTR] at hc
@@ -206,7 +206,7 @@ theorem bchksPolynomialAlignment_char2 : BCHKSPolynomialAlignment := by
       _ ≤ Q.natDegree := normalizedFactors_toFinset_sum_natDegree_le Q hQ
       _ ≤ 6901 := hQY'
   have hsum : (∑ R ∈ Rs, sfCapU R.natDegree) ≤
-      10124366 * 21907324 * 6901 + (bchksErrors + 1) * 6901 + 2 * 21907324 * 6901 := by
+      10125904 * 21907324 * 6901 + (bchksErrors + 1) * 6901 + 2 * 21907324 * 6901 := by
     rw [hadd]
     calc sfCapU (∑ R ∈ Rs, R.natDegree) ≤ sfCapU 6901 := sfCapU_mono hdsum
       _ = _ := by norm_num [sfCapU, uC, uDZ]
@@ -227,7 +227,7 @@ theorem bchksPolynomialAlignment_char2 : BCHKSPolynomialAlignment := by
       _ ≤ 6901 := hQY'
   have hRYZ := YZFactorCap.normalizedFactor_YZ_cap Q R 21907324 hQ hRQ
     (fun j a ha => (hcaps j a ha).2.2)
-  have hRW := WeightedFactorCaps.normalizedFactor_weightedX_cap Q R 1048575 7236927760 hQ hRQ
+  have hRW := WeightedFactorCaps.normalizedFactor_weightedX_cap Q R 1048575 7244000000 hQ hRQ
     (fun j a ha => (hcaps j a ha).2.1)
   let SR := (S.filter fun z => triSpecializeZ Q z ≠ 0).filter fun z => RelR z R
   have hSRS : SR ⊆ S := fun z hz =>
