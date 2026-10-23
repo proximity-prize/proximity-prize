@@ -58,7 +58,7 @@ open SecondJetCoefficients SecondJetGlobalSupport SecondJetCoefficientSpecializa
 open SecondJetClearedHelper SecondJetHelperWeights RCN234 RCN156
 
 def cutoff (h : ℕ) : ℕ :=
-  87*181245-SecondJetRelaxedDifferentiation.reserve 3 4 h*50176
+  87*181235-SecondJetRelaxedDifferentiation.reserve 3 4 h*50176
 
 theorem coefficients :
     coefficientCount cutoff 131071 1430 38 17 119=366765095606388 := by decide +kernel
@@ -92,10 +92,10 @@ theorem derivative_vanish (nodes : N ↪ K) (u0 u1 : N → K)
     (hc : ∀ i, MvPolynomial.X 0^87 ∣ SecondJetDifferentiation.substitute (K:=K)
       (localize (nodes i) (u0 i) (u1 i) P))
     (d : ℕ) (hd : d≤3) (f : Polynomial K) (hf : f.natDegree≤131071)
-    (z : K) (S : Finset N) (hS : 181245≤S.card)
+    (z : K) (S : Finset N) (hS : 181235≤S.card)
     (hvalues : ∀ i∈S, f.eval (nodes i)=u0 i+u1 i*z) :
     SecondJetSpecialize.specialize f z ((pderiv 1)^[d] P)=0 := by
-  apply SecondJetRelaxedDifferentiation.derivative_vanish P 87 181245 131071 3 4 d
+  apply SecondJetRelaxedDifferentiation.derivative_vanish P 87 181235 131071 3 4 d
     (by omega) (by omega) (by omega) hd ?_ nodes u0 u1 hc f hf z S hS hvalues
   intro e he
   have hh := (hb e he).2.2.2.2
@@ -162,7 +162,7 @@ structure Parameters where
   deriving DecidableEq
 
 def Parameters.cutoff (p : Parameters) (h : ℕ) : ℕ :=
-  p.m*181245-SecondJetRelaxedDifferentiation.reserve p.k p.n0 h*50176
+  p.m*181235-SecondJetRelaxedDifferentiation.reserve p.k p.n0 h*50176
 
 structure Shape (p : Parameters) : Prop where
   slope : 2*p.s≤p.B
@@ -230,12 +230,12 @@ theorem derivative_vanish (p : Parameters) (hp : Shape p)
     (nodes : N ↪ K) (u0 u1 : N → K) (P : Poly (K:=K))
     (hP : Interpolant p nodes u0 u1 P) (d : ℕ) (hd : d≤p.k)
     (f : Polynomial K) (hf : f.natDegree≤131071) (z : K) (A : Finset N)
-    (hA : 181245≤A.card) (hvalues : ∀ i∈A, f.eval (nodes i)=u0 i+u1 i*z) :
+    (hA : 181235≤A.card) (hvalues : ∀ i∈A, f.eval (nodes i)=u0 i+u1 i*z) :
     specialize f z ((pderiv 1)^[d] P)=0 := by
   have hs := hp.contact
   have hk := hp.retention
   have hn := hp.degree
-  apply SecondJetRelaxedDifferentiation.derivative_vanish P p.m 181245 131071 p.k p.n0 d
+  apply SecondJetRelaxedDifferentiation.derivative_vanish P p.m 181235 131071 p.k p.n0 d
     (by decide) (by decide) (by omega) hd ?_ nodes u0 u1 hP.2.2 f hf z A hA hvalues
   intro e he
   have hh := (hP.2.1 e he).2.2.2.2
@@ -248,12 +248,12 @@ theorem low_coefficient_vanish (p : Parameters) (hp : Shape p)
     (hP : Interpolant p nodes u0 u1 P) (d : ℕ) (hd : d<p.n0)
     (hfact : (d.factorial : K)≠0)
     (f : Polynomial K) (hf : f.natDegree≤131071) (z : K) (A : Finset N)
-    (hA : 181245≤A.card) (hvalues : ∀ i∈A, f.eval (nodes i)=u0 i+u1 i*z)
+    (hA : 181235≤A.card) (hvalues : ∀ i∈A, f.eval (nodes i)=u0 i+u1 i*z)
     (hh : ∀ j, d<j → coefficientSpecialize f z ((asS P).coeff j)=0) :
     coefficientSpecialize f z ((asS P).coeff d)=0 := by
   have hdm : d<p.m := lt_trans (lt_of_lt_of_le hd hp.degree) hp.contact
   have hweight : ∀ e∈((asS P).coeff d).support,
-      e 0+131071*e 1+131070*e 2<(p.m-d)*181245 := by
+      e 0+131071*e 1+131070*e 2<(p.m-d)*181235 := by
     intro e he
     have hb := (hP.2.1 _ (coefficient_support P d e he)).2.2.2.2
     obtain ⟨h0,h1,h2,h3,h4⟩ := lift_coordinates d e
@@ -261,7 +261,7 @@ theorem low_coefficient_vanish (p : Parameters) (hp : Shape p)
     simp only [Parameters.cutoff,SecondJetRelaxedDifferentiation.reserve,if_pos hd] at hb
     omega
   have hdeg := MovingFiberLeadingCoefficient6811.coefficient_degree ((asS P).coeff d)
-    f z 131071 ((p.m-d)*181245) hf (by omega) hweight
+    f z 131071 ((p.m-d)*181235) hf (by omega) hweight
   have htop := MovingFiberLeadingCoefficient6811.specialize_top P f z d hh
   have hv : specialize f z ((pderiv 1)^[d] P)=0 := by
     refine SecondJetVanish.eq_zero_of_contact_degree _ f z nodes u0 u1 A (p.m-d) ?_ hvalues ?_
@@ -281,7 +281,7 @@ def ProperHelper (p : Parameters) (F Q : MvPolynomial (Fin 4) K) (r y t : ℕ)
   (wt residualSWeights Q≤p.B+p.s*(r-1) ∧ wt residualYSWeights Q≤p.U+p.s*(y-1) ∧
     wt residualTotalWeights Q≤p.L+p.s*(t-1)) ∧
   ∀ f : Polynomial K, f.natDegree≤131071 → ∀ z : K, ∀ A : Finset N,
-    181245≤A.card → (∀ i∈A, f.eval (nodes i)=u0 i+u1 i*z) →
+    181235≤A.card → (∀ i∈A, f.eval (nodes i)=u0 i+u1 i*z) →
       RCN319.specialization K f z F=0 → RCN319.specialization K f z Q=0
 
 theorem helper_or_retained [CharP K 2130706433]

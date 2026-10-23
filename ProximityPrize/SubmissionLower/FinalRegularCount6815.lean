@@ -25,13 +25,13 @@ theorem count_of_rules
     (Q : P4) (hQ : Q≠0) (hbox : Q∈globalCoefficientBox K D 131071 P.total P.s)
     (selected : K → Polynomial K) (Gamma : Finset K) (u0 u1 : I → K)
     (hdegree : ∀ g∈Gamma, (selected g).natDegree≤131071)
-    (hagreement : ∀ g∈Gamma, 181245≤((Finset.univ : Finset I).filter (fun i =>
+    (hagreement : ∀ g∈Gamma, 181235≤((Finset.univ : Finset I).filter (fun i =>
       (selected g).eval (IRSProfile.domain i)=u0 i+g*u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80899)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80909)
     (A : Finset (RegularIndex Q))
     (hR : (regularAggregateFlag Q A).all≤39) (hy : middle (regularAggregateFlag Q A)≤182)
-    (ht : total (regularAggregateFlag Q A)≤11192)
-    (rules : ∀ capR capV capZ, 1≤capR → capR≤39 → capR+capV≤182 → capR+capV+capZ≤11192 →
+    (ht : total (regularAggregateFlag Q A)≤11783)
+    (rules : ∀ capR capV capZ, 1≤capR → capR≤39 → capR+capV≤182 → capR+capV+capZ≤11783 →
       FinalRuleCheck6815.RuleBound capR capV capZ (FinalLedgerData6815.cap capR capV capZ)) :
     (∑ F∈A,(regularSeeds Q selected Gamma F).card)≤FinalLedgerData6815.cap
       (regularAggregateFlag Q A).all (regularAggregateFlag Q A).yz (regularAggregateFlag Q A).zOnly := by
@@ -41,7 +41,7 @@ theorem count_of_rules
   let cnt := fun F : RegularIndex Q => (regularSeeds Q selected Gamma F).card
   have hY' : (∑ F∈A,rr F)+(∑ F∈A,vv F)≤182 := by
     simpa only [regularAggregateFlag,sumFlag,middle,rr,vv,Nat.add_comm] using hy
-  have hT' : (∑ F∈A,rr F)+(∑ F∈A,vv F)+(∑ F∈A,zz F)≤11192 := by
+  have hT' : (∑ F∈A,rr F)+(∑ F∈A,vv F)+(∑ F∈A,zz F)≤11783 := by
     simpa only [regularAggregateFlag,sumFlag,total,rr,vv,zz,Nat.add_comm,Nat.add_left_comm,Nat.add_assoc] using ht
   apply FinalFamilyAlgebra6815.family_count A rr vv zz cnt
     (fun F _ => regularCumulativeFlag_positive Q F) hR hY' hT' ?_ ?_ rules
@@ -55,9 +55,9 @@ theorem count_of_rules
     have hm := regularAggregateFlag_mono Q hs
     have hRs : p.all≤39 := hm.1.trans hR
     have hYs : middle p≤182 := hm.2.1.trans hy
-    have hTs : total p≤11192 := hm.2.2.trans ht
+    have hTs : total p≤11783 := hm.2.2.trans ht
     have hY : p.all+p.yz≤182 := by simpa only [middle,Nat.add_comm] using hYs
-    have hT : p.all+p.yz+p.zOnly≤11192 := by simpa only [total,Nat.add_comm,Nat.add_left_comm,Nat.add_assoc] using hTs
+    have hT : p.all+p.yz+p.zOnly≤11783 := by simpa only [total,Nat.add_comm,Nat.add_left_comm,Nat.add_assoc] using hTs
     have hpos' : 1≤p.all := hpos
     have hthreshold := SingletonCertificate6815.check_thresholds p.all p.yz _
       (SingletonData6815.checked p.all p.yz hpos' hRs hY) j.val j.isLt

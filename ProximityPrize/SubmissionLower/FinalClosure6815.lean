@@ -20,15 +20,15 @@ variable (hrules : Lower80899.FinalRegularBridge.Rules)
 include hrules
 
 theorem selectedNoLargePencilBound6815_tight :
-    SelectedNoLargePencilBound IRSProfile.domain 131071 80899 ledgerBudget := by
+    SelectedNoLargePencilBound IRSProfile.domain 131071 80909 ledgerBudget := by
   have hn : Fintype.card I = 262144 := Fintype.card_fin _
-  have he : 262144 - 80899 = 181245 := by decide +kernel
-  have hs : Fintype.card I - 80899 = 181245 :=
-    (congrArg (fun n : ℕ => n - 80899) hn).trans he
+  have he : 262144 - 80909 = 181235 := by decide +kernel
+  have hs : Fintype.card I - 80909 = 181235 :=
+    (congrArg (fun n : ℕ => n - 80909) hn).trans he
   simp only [SelectedNoLargePencilBound, hs]
   intro U seeds A selected hdegree hA hvalues hno
   obtain ⟨S⟩ := exists_selected_pair (U 0) (U 1)
-  have hagreement : ∀ gamma ∈ seeds, 181245 ≤
+  have hagreement : ∀ gamma ∈ seeds, 181235 ≤
       ((Finset.univ : Finset I).filter (fun i ↦
         (selected gamma).eval (IRSProfile.domain i) =
           U 0 i + gamma * U 1 i)).card := by
@@ -38,25 +38,25 @@ theorem selectedNoLargePencilBound6815_tight :
     intro i hi
     exact Finset.mem_filter.mpr
       ⟨Finset.mem_univ _, hvalues gamma hg i hi⟩
-  have hnoPrime : NoLargeSelectedPencil selected seeds 131071 80899 := by
+  have hnoPrime : NoLargeSelectedPencil selected seeds 131071 80909 := by
     intro P0 P1 h0 h1
     simpa only [pencilSeeds] using hno P0 P1 h0 h1
   exact FinalAssembly.selected_pair_count_le hrules
     (U 0) (U 1) S selected seeds ⟨hdegree,hagreement,hnoPrime⟩
 
 theorem selectedNoLargePencilBound6815 :
-    SelectedNoLargePencilBound IRSProfile.domain 131071 80899 MovingFiberProtocol6815.mcaBudget := by
+    SelectedNoLargePencilBound IRSProfile.domain 131071 80909 MovingFiberProtocol6815.mcaBudget := by
   intro U seeds A selected hdegree hA hvalues hno
   exact (selectedNoLargePencilBound6815_tight hrules
     U seeds A selected hdegree hA hvalues hno).trans ledgerBudget_le_mcaBudget
 
 theorem alignmentBound6815 :
     AffineLineAlignmentBound IRSProfile.baseCode MovingFiberProtocol6815.errors MovingFiberProtocol6815.mcaBudget := by
-  have h := alignmentBound_of_selected_count IRSProfile.domain 131071 80899
+  have h := alignmentBound_of_selected_count IRSProfile.domain 131071 80909
     MovingFiberProtocol6815.mcaBudget (selectedNoLargePencilBound6815 hrules)
   simpa [IRSProfile.baseCode, IRSProfile.baseDimension, MovingFiberProtocol6815.errors] using h
 
-theorem protocolClaim_of_rules : ProtocolClaim 6815 331366399 1073741824 :=
+theorem protocolClaim_of_rules : ProtocolClaim 6816 331407359 1073741824 :=
   MovingFiberProtocol6815.protocolClaim6815_of_alignment
     (alignmentBound6815 hrules)
 

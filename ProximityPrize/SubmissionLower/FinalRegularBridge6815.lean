@@ -49,12 +49,12 @@ private theorem whole_regular_all_le
     (regularProduct H (Finset.univ : Finset (RegularIndex H))) H
     (regularProduct_dvd_carrier H Finset.univ) hH).trans hS
 
-def Rules : Prop := ∀ r v z : ℕ, 1≤r → r≤39 → r+v≤182 → r+v+z≤11192 →
+def Rules : Prop := ∀ r v z : ℕ, 1≤r → r≤39 → r+v≤182 → r+v+z≤11783 →
   FinalRuleCheck6815.RuleBound r v z (FinalLedgerData6815.cap r v z)
 def finalCap (p : FlagDegree) := FinalLedgerData6815.cap p.all p.yz p.zOnly
-def initialUpper (p : FlagDegree) := FinalLedgerChord6815.initialNum p.all (middle p) p.zOnly / 50174
+def initialUpper (p : FlagDegree) := FinalLedgerChord6815.initialNum p.all (middle p) p.zOnly / 50164
 def carrierSupport : ResidualSupportParameters :=
-  ⟨50,229,15421,by decide,by decide,by decide,by decide⟩
+  ⟨50,229,17229,by decide,by decide,by decide,by decide⟩
 
 theorem regular_count
     (hrules : Rules)
@@ -65,7 +65,7 @@ theorem regular_count
     let Delta := LocatorCover.fixed phi Gamma S.QA S.QB
     let U := initialAUniversalFactors u0 u1 H
     let p := regularAggregateFlag H U
-    p.all ≤ 39 ∧ middle p ≤ 182 ∧ total p ≤ 11192 ∧
+    p.all ≤ 39 ∧ middle p ≤ 182 ∧ total p ≤ 11783 ∧
       (∑ F : RegularIndex H, (regularSeeds H selected Delta F).card) ≤
         finalCap p + initialUpper p := by
   classical
@@ -83,7 +83,7 @@ theorem regular_count
   have hPne : regularProduct H U ≠ 0 := regularProduct_ne_zero H U
   have hdivA : ∀ v : Caps.AKernel u0 u1,
       regularProduct H U ∣
-        reconstruct K 23924340 131071 76330 39 v.1 := by
+        reconstruct K 23923020 131071 221052 39 v.1 := by
     simpa only [U] using initialAUniversalProduct_dvd u0 u1 H
   have hpS : p.all ≤ 39 := by
     simp only [p, regularAggregateFlag_all]
@@ -93,15 +93,15 @@ theorem regular_count
     simp only [p, regularAggregateFlag_middle]
     exact Caps.common_A_ys_le u0 u1 (regularProduct H U)
       hPne hdivA
-  have hpT : total p ≤ 11192 := by
+  have hpT : total p ≤ 11783 := by
     simp only [p, regularAggregateFlag_total]
     exact (weightedTotalDegree_le_of_dvd residualTotalWeights
       (regularProduct H U) H
       (initialAUniversalProduct_dvd_carrier u0 u1 H) hH).trans
         S.common_total_le
-  have hwholeT : total (regularAggregateFlag H A) ≤ 11192 := by
+  have hwholeT : total (regularAggregateFlag H A) ≤ 11783 := by
     simpa only [H, A] using
-      whole_regular_total_le H hH 11192 S.common_total_le
+      whole_regular_total_le H hH 11783 S.common_total_le
   have hwholeY : middle (regularAggregateFlag H A) ≤ 229 := by
     simpa only [H, A] using
       whole_regular_middle_le H hH 229 S.common_ys_le
@@ -115,16 +115,16 @@ theorem regular_count
   have hsplitS := Finset.sum_sdiff hUsub
     (f := fun F : RegularIndex H => (regularCumulativeFlag H F).all)
   have hcomplementT : total p +
-      (∑ F ∈ N, total (regularCumulativeFlag H F)) ≤ 11192 := by
+      (∑ F ∈ N, total (regularCumulativeFlag H F)) ≤ 11783 := by
     have hpEq : total p =
         ∑ F ∈ U, total (regularCumulativeFlag H F) := by
       simp only [p, regularAggregateFlag, sumFlag_total]
     have hwhole : (∑ F ∈ A, total (regularCumulativeFlag H F)) ≤
-        11192 := by
+        11783 := by
       simpa only [regularAggregateFlag, sumFlag_total] using hwholeT
     rw [hpEq]
     change (∑ F ∈ U, total (regularCumulativeFlag H F)) +
-      (∑ F ∈ A \ U, total (regularCumulativeFlag H F)) ≤ 11192
+      (∑ F ∈ A \ U, total (regularCumulativeFlag H F)) ≤ 11783
     omega
   have hcomplementY : middle p +
       (∑ F ∈ N, middle (regularCumulativeFlag H F)) ≤ 229 := by
@@ -159,9 +159,9 @@ theorem regular_count
       (fun F _ => all_le_middle _) (fun F _ => middle_le_total _)
       hcomplementS hcomplementY hcomplementT
     have hcost : (∑ F∈N,initialAHelperCap (regularCumulativeFlag H F))≤
-        ExactInitialCharge6815.cost 76330 182 39
-          (min (min (11192-total p) (229-middle p)) (50-p.all))
-          (min (11192-total p) (229-middle p)) (11192-total p) := by
+        ExactInitialCharge6815.cost 221052 182 39
+          (min (min (11783-total p) (229-middle p)) (50-p.all))
+          (min (11783-total p) (229-middle p)) (11783-total p) := by
       dsimp only at h
       split_ifs at h with hz
       · exact h.trans (Nat.zero_le _)
@@ -176,12 +176,12 @@ theorem regular_count
   have inpD := inp.restrict Delta hsub
   have hwide : ResidualSupportData InitialSupports.wideSupport H :=
     ⟨S.common_slope_le,S.common_ys_le,S.common_total_le⟩
-  have hb := flag_box_to_ordinary K 30086670 131071 15421 50 S.QB S.QB_flag
-  have hHbox : H∈RCN174.globalCoefficientBox K 30086670 131071 15421 50 :=
-    mem_globalCoefficientBox_of_dvd H S.QB 30086670 131071 15421 50 S.QB_ne
+  have hb := flag_box_to_ordinary K 30085010 131071 17229 50 S.QB S.QB_flag
+  have hHbox : H∈RCN174.globalCoefficientBox K 30085010 131071 17229 50 :=
+    mem_globalCoefficientBox_of_dvd H S.QB 30085010 131071 17229 50 S.QB_ne
       (gcd_dvd_right S.QA S.QB) hb
   have hphaseU : (∑ F∈U,(regularSeeds H selected Delta F).card)≤finalCap p :=
-    FinalRegularCount6815.count_of_rules 30086670 carrierSupport (by decide) (by decide)
+    FinalRegularCount6815.count_of_rules 30085010 carrierSupport (by decide) (by decide)
       H hH hHbox selected Delta u0 u1 inpD.degree inpD.agreement inpD.noPencil U hpS hpY hpT hrules
   have hN : (∑ F ∈ N, (regularSeeds H selected Delta F).card) ≤ initialUpper p := by
     apply le_trans (Finset.sum_le_sum (fun F hF => ?_)) hhelperSum

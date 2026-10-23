@@ -11,7 +11,7 @@ section InitialGeometry
 namespace ProximityPrize.SubmissionLower.Lower80899.InitialSupports
 open RCN130 RCN238 RCN275
 
-def wideSupport : ResidualSupportParameters := ⟨50, 229, 11192, by decide +kernel, by decide +kernel, by decide +kernel, by decide +kernel⟩
+def wideSupport : ResidualSupportParameters := ⟨50, 229, 11783, by decide +kernel, by decide +kernel, by decide +kernel, by decide +kernel⟩
 end ProximityPrize.SubmissionLower.Lower80899.InitialSupports
 namespace ProximityPrize.SubmissionLower.Lower80899.InitialBridge
 
@@ -32,10 +32,10 @@ local instance:GCDMonoid P4:=UniqueFactorizationMonoid.toGCDMonoid P4
 
 def initialAHelperCap (p:FlagDegree):ℕ:=
   AsymmetricHelper.leftRegularCountCap (Lower80899.FactorSwitch.helperPair
-    76330 182 39 (middle p) p.all (total p))
+    221052 182 39 (middle p) p.all (total p))
 
 def initialAMap (u0 u1:I → K):Caps.AKernel u0 u1 →ₗ[K] P4:=
-  kernelReconstructLinear (K:=K) 23924340 131071 76330 39 132
+  kernelReconstructLinear (K:=K) 23923020 131071 221052 39 132
     IRSProfile.domain u0 u1
 
 def initialAUniversalFactors (u0 u1:I → K) (H:P4):
@@ -47,7 +47,7 @@ def initialAUniversalFactors (u0 u1:I → K) (H:P4):
     (u0 u1:I → K) (H:P4) (F:RegularIndex H):
     F ∈ initialAUniversalFactors u0 u1 H ↔
       ∀ v:Caps.AKernel u0 u1,
-        F.1 ∣ reconstruct K 23924340 131071 76330 39 v.1:=by
+        F.1 ∣ reconstruct K 23923020 131071 221052 39 v.1:=by
   simp only [initialAUniversalFactors,mem_universalFactors,Finset.mem_univ,
     true_and,initialAMap,kernelReconstructLinear_apply]
 
@@ -55,7 +55,7 @@ theorem initialAUniversalProduct_dvd
     (u0 u1:I → K) (H:P4):
     ∀ v:Caps.AKernel u0 u1,
       regularProduct H (initialAUniversalFactors u0 u1 H) ∣
-        reconstruct K 23924340 131071 76330 39 v.1:=by
+        reconstruct K 23923020 131071 221052 39 v.1:=by
   intro v
   have h:=universalProduct_dvd H
     (Finset.univ:Finset (RegularIndex H)) (initialAMap u0 u1) v
@@ -87,14 +87,14 @@ private theorem degreeZ_le_totalWeight (Q:P4):
 
 private theorem initialA_helper_gates (p:FlagDegree)
     (hr:1 ≤ p.all) (hs:p.all ≤ 50)
-    (hy:middle p ≤ 229) (ht:total p ≤ 11192):
+    (hy:middle p ≤ 229) (ht:total p ≤ 11783):
     Lower80899.FactorSwitch.HelperPairGates
-      76330 182 39 (middle p) p.all (total p):=by
+      221052 182 39 (middle p) p.all (total p):=by
   unfold Lower80899.FactorSwitch.HelperPairGates
   change 1 ≤ p.all ∧ middle p < 2130706433 ∧ p.all < 2130706433 ∧
     total p < 2130706433 ∧
-    p.all*76330+total p*39 < 2130706433 ∧
-    middle p*76330+total p*182 < 2130706433 ∧
+    p.all*221052+total p*39 < 2130706433 ∧
+    middle p*221052+total p*182 < 2130706433 ∧
     middle p*39+p.all*182 < 2130706433
   omega
 
@@ -103,10 +103,10 @@ theorem initialA_nonuniversal_count
     (hwide:ResidualSupportData InitialSupports.wideSupport H)
     (selected:K → Polynomial K) (Gamma:Finset K)
     (hdegree:∀ gamma ∈ Gamma,(selected gamma).natDegree ≤ 131071)
-    (hagreement:∀ gamma ∈ Gamma,181245 ≤
+    (hagreement:∀ gamma ∈ Gamma,181235 ≤
       ((Finset.univ:Finset I).filter (fun i=>
         (selected gamma).eval (IRSProfile.domain i)=u0 i+gamma*u1 i)).card)
-    (hno:NoLargeSelectedPencil selected Gamma 131071 80899)
+    (hno:NoLargeSelectedPencil selected Gamma 131071 80909)
     (F:RegularIndex H) (hFU:F ∉ initialAUniversalFactors u0 u1 H):
     (regularSeeds H selected Gamma F).card ≤
       initialAHelperCap (regularCumulativeFlag H F):=by
@@ -118,7 +118,7 @@ theorem initialA_nonuniversal_count
   have hy:middle (regularCumulativeFlag H F) ≤ 229:=by
     simpa only [regularCumulativeFlag,middle,hc.2.1,
       InitialSupports.wideSupport] using hFsupport.ys_weight
-  have ht:total (regularCumulativeFlag H F) ≤ 11192:=by
+  have ht:total (regularCumulativeFlag H F) ≤ 11783:=by
     simpa only [regularCumulativeFlag,total,hc.2.2,
       InitialSupports.wideSupport] using hFsupport.total_weight
   have hr:1 ≤ (regularCumulativeFlag H F).all:=
@@ -133,7 +133,7 @@ theorem initialA_nonuniversal_count
     rw [regularCumulativeFlag,total,hc.2.2]
     exact degreeZ_le_totalWeight F.1
   rcases Lower80899.FactorSwitch.divisor_or_helper_count
-      23924340 76330 39 132 182 (by decide +kernel) (by decide +kernel) (by decide +kernel)
+      23923020 221052 39 132 182 (by decide +kernel) (by decide +kernel) (by decide +kernel)
       selected Gamma hdegree hagreement hno F
       (middle (regularCumulativeFlag H F)) (regularCumulativeFlag H F).all
       (total (regularCumulativeFlag H F)) hFY hFR hFZ
@@ -175,21 +175,21 @@ local instance : StrongNormalizationMonoid P4 := UniqueFactorizationMonoid.stron
 
 structure Input (u0 u1 : I → K) (selected : K → Polynomial K) (Gamma : Finset K) : Prop where
   degree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071
-  agreement : ∀ gamma ∈ Gamma, 181245 ≤ ((Finset.univ : Finset I).filter (fun i =>
+  agreement : ∀ gamma ∈ Gamma, 181235 ≤ ((Finset.univ : Finset I).filter (fun i =>
     (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma*u1 i)).card
-  noPencil : NoLargeSelectedPencil selected Gamma 131071 80899
+  noPencil : NoLargeSelectedPencil selected Gamma 131071 80909
 
 variable {u0 u1 : I → K} {selected : K → Polynomial K} {Gamma : Finset K}
 
 theorem Input.restrict (inp : Input u0 u1 selected Gamma) (Delta : Finset K) (h : Delta ⊆ Gamma) :
     Input u0 u1 selected Delta :=
   ⟨fun g hg => inp.degree g (h hg), fun g hg => inp.agreement g (h hg),
-    noLargeSelectedPencil_mono selected Gamma Delta 131071 80899 h inp.noPencil⟩
+    noLargeSelectedPencil_mono selected Gamma Delta 131071 80909 h inp.noPencil⟩
 
-def tailParameters : TightParameters := ⟨262144,131071,181245,30086670,15421,1⟩
+def tailParameters : TightParameters := ⟨262144,131071,181235,30085010,17229,1⟩
 
 theorem freePolynomial_count (inp : Input u0 u1 selected Gamma)
-    (J : P4) (hJ : J ≠ 0) (hbox : J ∈ RCN174.globalCoefficientBox K 30086670 131071 15421 1)
+    (J : P4) (hJ : J ≠ 0) (hbox : J ∈ RCN174.globalCoefficientBox K 30085010 131071 17229 1)
     (hR : J.degreeOf 2 = 0) (hsol : ∀ g ∈ Gamma, specialization K (selected g) g J = 0) :
     Gamma.card ≤ 9000000000000+0 := by
   have h := rfree_seed_count_le tailParameters J hJ 2130706433 hbox hR (by rfl)
@@ -202,7 +202,7 @@ theorem freePolynomial_count (inp : Input u0 u1 selected Gamma)
     (by decide +kernel) (by decide +kernel) selected Gamma Finset.univ IRSProfile.domain u0 u1
     IRSProfile.domain.injective.injOn (by rw [Finset.card_univ]; exact Fintype.card_fin _)
     inp.degree hsol inp.agreement (by
-      simpa only [tailParameters, TightParameters.errors, (show (262144 - 181245 : ℕ) = 80899 by decide +kernel)] using inp.noPencil)
+      simpa only [tailParameters, TightParameters.errors, (show (262144 - 181235 : ℕ) = 80909 by decide +kernel)] using inp.noPencil)
   have ht : tailParameters.countCap ≤ 9000000000000+0 := by
     norm_num [tailParameters, TightParameters.countCap, TightParameters.gap,
       TightParameters.errors, TightParameters.kappa, TightParameters.algebraicCap,
@@ -212,21 +212,21 @@ theorem freePolynomial_count (inp : Input u0 u1 selected Gamma)
   exact h.trans ht
 
 theorem factor_tail_count (inp : Input u0 u1 selected Gamma)
-    (F : P4) (hF : F ≠ 0) (hbox : F ∈ RCN174.globalCoefficientBox K 30086670 131071 15421 50) :
+    (F : P4) (hF : F ≠ 0) (hbox : F ∈ RCN174.globalCoefficientBox K 30085010 131071 17229 50) :
     (tailSeeds F selected Gamma).card ≤ 9000000000000+0 := by
   have hsmall : F.degreeOf 2 < 2130706433 :=
-    (degreeOf_R_le_of_mem_box F 30086670 131071 15421 50 hbox).trans_lt (by decide +kernel)
+    (degreeOf_R_le_of_mem_box F 30085010 131071 17229 50 hbox).trans_lt (by decide +kernel)
   have hJ := dR_ne_zero F hF 2130706433 hsmall (chainLength F) le_rfl
-  have hb := mem_box_slope_one (dR (chainLength F) F) 30086670 131071 15421 50
-    (dR_mem_box _ F 30086670 131071 15421 50 hbox) (chainLength_spec F)
+  have hb := mem_box_slope_one (dR (chainLength F) F) 30085010 131071 17229 50
+    (dR_mem_box _ F 30085010 131071 17229 50 hbox) (chainLength_spec F)
   exact freePolynomial_count (inp.restrict _ (tailSeeds_subset F selected Gamma)) _ hJ hb
     (chainLength_spec F) (fun _ hg => (Finset.mem_filter.mp hg).2)
 
 theorem freePart_count (inp : Input u0 u1 selected Gamma)
-    (Q : P4) (hQ : Q ≠ 0) (hbox : Q ∈ RCN174.globalCoefficientBox K 30086670 131071 15421 50) :
+    (Q : P4) (hQ : Q ≠ 0) (hbox : Q ∈ RCN174.globalCoefficientBox K 30085010 131071 17229 50) :
     (rfreeSeeds Q selected Gamma).card ≤ 9000000000000+0 := by
-  have hb := mem_box_slope_one (rfreeProduct Q) 30086670 131071 15421 50
-    (mem_globalCoefficientBox_of_dvd _ Q 30086670 131071 15421 50 hQ
+  have hb := mem_box_slope_one (rfreeProduct Q) 30085010 131071 17229 50
+    (mem_globalCoefficientBox_of_dvd _ Q 30085010 131071 17229 50 hQ
       (rfreeProduct_dvd Q hQ) hbox) (rfreeProduct_R_degree Q)
   exact freePolynomial_count (inp.restrict _ (rfreeSeeds_subset Q selected Gamma)) _
     (rfreeProduct_ne_zero Q hQ) hb (rfreeProduct_R_degree Q)
@@ -294,11 +294,11 @@ theorem aggregate_pair_weight (H Q : P4) (hH : H ≠ 0) (hQ : Q ≠ 0) (weights 
     (weightedTotalDegree_le_of_dvd weights _ Q (regularProduct_dvd_carrier Q _) hQ)
 
 theorem aggregate_pair_caps (H Q : P4) (hH : H ≠ 0) (hQ : Q ≠ 0)
-    (hbox : H*Q ∈ RCN100.globalCoefficientBox K 30086670 131071 15421 50) :
+    (hbox : H*Q ∈ RCN100.globalCoefficientBox K 30085010 131071 17229 50) :
     (regularAggregateFlag H Finset.univ).all+(regularAggregateFlag Q Finset.univ).all ≤ 50 ∧
     middle (regularAggregateFlag H Finset.univ)+middle (regularAggregateFlag Q Finset.univ) ≤ 229 ∧
-    total (regularAggregateFlag H Finset.univ)+total (regularAggregateFlag Q Finset.univ) ≤ 15421 := by
-  have hc := (mem_flagGlobalCoefficientBox_iff (H*Q) 30086670 131071 15421 50 (by decide +kernel)).mp hbox
+    total (regularAggregateFlag H Finset.univ)+total (regularAggregateFlag Q Finset.univ) ≤ 17229 := by
+  have hc := (mem_flagGlobalCoefficientBox_iff (H*Q) 30085010 131071 17229 50 (by decide +kernel)).mp hbox
   have hw := residualYS_mul_le_contact_add_slope (H*Q) 131071 (by decide +kernel)
   have hy : wt residualYSWeights (H*Q) ≤ 229 := by omega
   rw [regularAggregateFlag_all, regularAggregateFlag_all,
@@ -344,8 +344,8 @@ def factorCharge' (F : P4) (selected : K → Polynomial K) (Gamma : Finset K) : 
 
 theorem factorCharge'_le_unit' (inp : Input u0 u1 selected Gamma)
     (F : P4) (hF : Irreducible F) (hpos : 0 < F.degreeOf 2)
-    (hbox : F ∈ RCN174.globalCoefficientBox K 30086670 131071 15421 50)
-    (y z r : ℕ) (hy : y ≤ 229) (hz : z ≤ 15421) (hr : r ≤ 50)
+    (hbox : F ∈ RCN174.globalCoefficientBox K 30085010 131071 17229 50)
+    (y z r : ℕ) (hy : y ≤ 229) (hz : z ≤ 17229) (hr : r ≤ 50)
     (hFY : F.degreeOf 1 ≤ y) (hFZ : F.degreeOf 3 ≤ z) (hFR : F.degreeOf 2 ≤ r) :
     factorCharge' F selected Gamma ≤ F.degreeOf 2 * (foldUnit y z r + 0) := by
   have htail := factor_tail_count inp F hF.ne_zero hbox
@@ -380,8 +380,8 @@ theorem factorCharge'_le_unit' (inp : Input u0 u1 selected Gamma)
     (by norm_num [stage]) (by norm_num [stage]) (by norm_num [stage]) (by norm_num [stage])
     inp.degree inp.agreement
     (by simpa only [stage, UnequalParameters.errors,
-      (show (262144 - 181245 : ℕ) = 80899 by decide +kernel)] using inp.noPencil)
-  have hgap : (stage y z (F.degreeOf 2) 1).gap = 50174 := by
+      (show (262144 - 181235 : ℕ) = 80909 by decide +kernel)] using inp.noPencil)
+  have hgap : (stage y z (F.degreeOf 2) 1).gap = 50164 := by
     simp [stage, UnequalParameters.gap]
   have hdot : dot ⟨(stage y z (F.degreeOf 2) 1).leftY, (stage y z (F.degreeOf 2) 1).leftR,
       (stage y z (F.degreeOf 2) 1).leftZ⟩ (stage y z (F.degreeOf 2) 1).mixedCost =
@@ -391,8 +391,8 @@ theorem factorCharge'_le_unit' (inp : Input u0 u1 selected Gamma)
   unfold foldNumerator at hnum
   have hs : 0 ≤ F.degreeOf 2 * 0 :=
     Nat.le_mul_of_pos_left _ (by omega)
-  have hmul : factorCharge' F selected Gamma * 50174 ≤
-      F.degreeOf 2 * (foldUnit y z r + 0) * 50174 := by
+  have hmul : factorCharge' F selected Gamma * 50164 ≤
+      F.degreeOf 2 * (foldUnit y z r + 0) * 50164 := by
     unfold factorCharge'
     nlinarith
   exact Nat.le_of_mul_le_mul_right hmul (by decide)
@@ -417,53 +417,53 @@ local instance : DecidableEq K := Classical.decEq _
 local instance : DecidableEq I := Classical.decEq _
 
 theorem joint_charge' (H Q : P4) (hH : H ≠ 0) (hQ : Q ≠ 0)
-    (hbox : H*Q ∈ RCN100.globalCoefficientBox K 30086670 131071 15421 50)
-    (hHbox : H ∈ RCN174.globalCoefficientBox K 30086670 131071 15421 50)
-    (hQbox : Q ∈ RCN174.globalCoefficientBox K 30086670 131071 15421 50)
+    (hbox : H*Q ∈ RCN100.globalCoefficientBox K 30085010 131071 17229 50)
+    (hHbox : H ∈ RCN174.globalCoefficientBox K 30085010 131071 17229 50)
+    (hQbox : Q ∈ RCN174.globalCoefficientBox K 30085010 131071 17229 50)
     (U : Finset (RegularIndex H)) (u0 u1 : I → K) (selected : K → Polynomial K)
     (Gamma Delta : Finset K) (inpH : Input u0 u1 selected Gamma) (inpQ : Input u0 u1 selected Delta)
     (hr : (regularAggregateFlag H U).all ≤ 39)
     (hy : middle (regularAggregateFlag H U) ≤ 182)
-    (ht : total (regularAggregateFlag H U) ≤ 11192) :
+    (ht : total (regularAggregateFlag H U) ≤ 11783) :
     let p := regularAggregateFlag H U
     (∑ F : RegularIndex H, factorCharge' F.1 selected Gamma) +
       (∑ F : RegularIndex Q, factorCharge' F.1 selected Delta) ≤
       p.all*foldUnit (middle p) (total p) p.all +
-      (50-p.all)*foldUnit (229-middle p) (15421-total p) (50-p.all) + 50*0 := by
+      (50-p.all)*foldUnit (229-middle p) (17229-total p) (50-p.all) + 50*0 := by
   let p := regularAggregateFlag H U
   let N := (Finset.univ : Finset (RegularIndex H)) \ U
   have hb := aggregate_pair_caps H Q hH hQ hbox
   have hs := split_aggregate H U
   have hnR : (regularAggregateFlag H N).all ≤ 50-p.all := by dsimp only [p,N]; omega
   have hnY : middle (regularAggregateFlag H N) ≤ 229-middle p := by dsimp only [p,N]; omega
-  have hnT : total (regularAggregateFlag H N) ≤ 15421-total p := by dsimp only [p,N]; omega
+  have hnT : total (regularAggregateFlag H N) ≤ 17229-total p := by dsimp only [p,N]; omega
   have hqR : (regularAggregateFlag Q Finset.univ).all ≤ 50-p.all := by dsimp only [p]; omega
   have hqY : middle (regularAggregateFlag Q Finset.univ) ≤ 229-middle p := by dsimp only [p]; omega
-  have hqT : total (regularAggregateFlag Q Finset.univ) ≤ 15421-total p := by dsimp only [p]; omega
+  have hqT : total (regularAggregateFlag Q Finset.univ) ≤ 17229-total p := by dsimp only [p]; omega
   have hsum : (∑ F ∈ U, F.1.degreeOf 2) = p.all := by
     simp only [p, regularAggregateFlag, sumFlag_all, regularCumulativeFlag, originalCumulativeFlag_all]
-  have hprodBox := RCN101.flag_box_to_ordinary K 30086670 131071 15421 50 (H*Q) hbox
+  have hprodBox := RCN101.flag_box_to_ordinary K 30085010 131071 17229 50 (H*Q) hbox
   have hc := split_slope_charge (Finset.univ : Finset (RegularIndex H)) U
     (Finset.univ : Finset (RegularIndex Q)) (Finset.subset_univ _) (fun F => F.1) (fun F => F.1)
     H Q hH hQ (regularProduct_dvd_carrier H _) (regularProduct_dvd_carrier Q _)
     50 (foldUnit (middle p) (total p) p.all + 0)
-    (foldUnit (229-middle p) (15421-total p) (50-p.all) + 0)
-    (degreeOf_R_le_of_mem_box (H*Q) 30086670 131071 15421 50 hprodBox)
+    (foldUnit (229-middle p) (17229-total p) (50-p.all) + 0)
+    (degreeOf_R_le_of_mem_box (H*Q) 30085010 131071 17229 50 hprodBox)
     (fun F => factorCharge' F.1 selected Gamma) (fun F => factorCharge' F.1 selected Delta)
     (fun F hF => by
-      have hf := directFactor_data H F.1 hH 30086670 131071 15421 50 hHbox F.2
+      have hf := directFactor_data H F.1 hH 30085010 131071 17229 50 hHbox F.2
       have hd := factor_coordinates H U F hF
       exact factorCharge'_le_unit' inpH F.1 hf.1 hf.2.1 hf.2.2 _ _ _
         (hy.trans (by decide +kernel)) (ht.trans (by decide +kernel))
         (hr.trans (by decide +kernel)) hd.1 hd.2.2 hd.2.1)
     (fun F hF => by
-      have hf := directFactor_data H F.1 hH 30086670 131071 15421 50 hHbox F.2
+      have hf := directFactor_data H F.1 hH 30085010 131071 17229 50 hHbox F.2
       have hd := factor_coordinates H N F hF
       exact factorCharge'_le_unit' inpH F.1 hf.1 hf.2.1 hf.2.2 _ _ _
         (Nat.sub_le _ _) (Nat.sub_le _ _) (Nat.sub_le _ _)
         (hd.1.trans hnY) (hd.2.2.trans hnT) (hd.2.1.trans hnR))
     (fun F _ => by
-      have hf := directFactor_data Q F.1 hQ 30086670 131071 15421 50 hQbox F.2
+      have hf := directFactor_data Q F.1 hQ 30085010 131071 17229 50 hQbox F.2
       have hd := factor_coordinates Q Finset.univ F (Finset.mem_univ _)
       exact factorCharge'_le_unit' inpQ F.1 hf.1 hf.2.1 hf.2.2 _ _ _
         (Nat.sub_le _ _) (Nat.sub_le _ _) (Nat.sub_le _ _)
@@ -473,7 +473,7 @@ theorem joint_charge' (H Q : P4) (hH : H ≠ 0) (hQ : Q ≠ 0)
   calc
     _ ≤ _ := hc
     _ = p.all*foldUnit (middle p) (total p) p.all +
-        (50-p.all)*foldUnit (229-middle p) (15421-total p) (50-p.all) +
+        (50-p.all)*foldUnit (229-middle p) (17229-total p) (50-p.all) +
           (p.all+(50-p.all))*0 := by ring
     _ = _ := by rw [hp]
 

@@ -291,38 +291,38 @@ set_option autoImplicit false
 set_option maxHeartbeats 3000000
 set_option maxRecDepth 100000
 namespace A
-theorem coefficient_exact : coefficientCount 23924340 131071 76330 39=5372513324094290 := by
-  rw [show 23924340=182*131071+69418 by decide +kernel]
-  rw [coefficientCount_eq_oneResidueCoefficientCount 182 69418 131071 76330 39
+theorem coefficient_exact : coefficientCount 23923020 131071 221052 39=15566454980365410 := by
+  rw [show 23923020=182*131071+68098 by decide +kernel]
+  rw [coefficientCount_eq_oneResidueCoefficientCount 182 68098 131071 221052 39
     (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel)]
   decide +kernel
-theorem rank_exact : localRankBound 132 76330 39=20494511840 := by
+theorem rank_exact : localRankBound 132 221052 39=59381313240 := by
   rw [ClosedRank.localRankBound_eq_closed _ _ _ (by decide +kernel) (by decide +kernel)]
   decide +kernel
 end A
 namespace B
-theorem coefficient_exact : coefficientCount 30086670 131071 15421 50=2165386041082735 := by
-  rw [show 30086670=229*131071+71411 by decide +kernel]
-  rw [coefficientCount_eq_oneResidueCoefficientCount 229 71411 131071 15421 50
+theorem coefficient_exact : coefficientCount 30085010 131071 17229 50=2420462776260055 := by
+  rw [show 30085010=229*131071+69751 by decide +kernel]
+  rw [coefficientCount_eq_oneResidueCoefficientCount 229 69751 131071 17229 50
     (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel)]
   decide +kernel
-theorem rank_exact : localRankBound 166 15421 50=8260292112 := by
+theorem rank_exact : localRankBound 166 17229 50=9233332400 := by
   rw [ClosedRank.localRankBound_eq_closed _ _ _ (by decide +kernel) (by decide +kernel)]
   decide +kernel
 end B
 namespace TCap
-theorem coefficient_exact : coefficientCount 45673740 131071 11193 78=5528547372439440 := by
-  rw [show 45673740=348*131071+61032 by decide +kernel]
-  rw [coefficientCount_eq_oneResidueCoefficientCount 348 61032 131071 11193 78
+theorem coefficient_exact : coefficientCount 45671220 131071 11784 78=5823403927980495 := by
+  rw [show 45671220=348*131071+58512 by decide +kernel]
+  rw [coefficientCount_eq_oneResidueCoefficientCount 348 58512 131071 11784 78
     (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel)]
   decide +kernel
-theorem rank_exact : localRankBound 252 11193 78=21089734219 := by
+theorem rank_exact : localRankBound 252 11784 78=22214518918 := by
   rw [ClosedRank.localRankBound_eq_closed _ _ _ (by decide +kernel) (by decide +kernel)]
   decide +kernel
-theorem nullity_exact : coefficientCount 45673740 131071 11193 78-262144*localRankBound 252 11193 78=85333904 := by
+theorem nullity_exact : coefficientCount 45671220 131071 11784 78-262144*localRankBound 252 11784 78=1080740303 := by
   norm_num only [coefficient_exact,rank_exact]
-theorem quotient_count_exact : coefficientCount 45673740 131071 0 78=45673740 := by decide +kernel
-theorem quotient_count_lt : coefficientCount 45673740 131071 0 78<85333904 := by rw [quotient_count_exact]; decide +kernel
+theorem quotient_count_exact : coefficientCount 45671220 131071 0 78=45671220 := by decide +kernel
+theorem quotient_count_lt : coefficientCount 45671220 131071 0 78<1080740303 := by rw [quotient_count_exact]; decide +kernel
 end TCap
 namespace Source00
 theorem coefficient_exact : coefficientCount 11599498755 131071 3840000 19840=30707103195602755936705787 := by
@@ -470,7 +470,7 @@ local instance : CharP K 2130706433 := by
   simpa [RCN223.prime] using RCN128.challenge_field_characteristic6600
 
 def helperPair (L YS S leftY leftR leftZ : ℕ) : UnequalParameters :=
-  ⟨262144, 131071, 181245, leftY, leftR, leftZ, YS, S, L⟩
+  ⟨262144, 131071, 181235, leftY, leftR, leftZ, YS, S, L⟩
 
 def HelperPairGates (L YS S leftY leftR leftZ : ℕ) : Prop :=
   let P := helperPair L YS S leftY leftR leftZ
@@ -509,16 +509,16 @@ private theorem degreeZ_le_totalWeight (Q : P4) :
   omega
 
 theorem divisor_or_helper_count
-    (D L S m YS : ℕ) (hD : 0 < D) (hDa : D ≤ m * 181245)
+    (D L S m YS : ℕ) (hD : 0 < D) (hDa : D ≤ m * 181235)
     (hshape : D + S ≤ 131071 * (YS + 1))
     {u0 u1 : I → K} {H : P4}
     (selected : K → Polynomial K) (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181245 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181235 ≤
       ((Finset.univ : Finset I).filter (fun i ↦
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80899)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80909)
     (F : RegularIndex H) (leftY leftR leftZ : ℕ)
     (hFY : F.1.degreeOf 1 ≤ leftY)
     (hFR : F.1.degreeOf 2 ≤ leftR)
@@ -570,7 +570,7 @@ theorem divisor_or_helper_count
       (by norm_num [helperPair]) (by norm_num [helperPair])
       (by simpa only [helperPair] using hdegree)
       (by simpa only [helperPair] using hagreement)
-      (by simpa only [helperPair, UnequalParameters.errors, (show (262144 - 181245 : ℕ) = 80899 by decide +kernel)] using hno)
+      (by simpa only [helperPair, UnequalParameters.errors, (show (262144 - 181235 : ℕ) = 80909 by decide +kernel)] using hno)
     intro gamma hgamma
     dsimp only [Q]
     apply specialization_eq_zero_of_mem_ker K
@@ -666,11 +666,11 @@ theorem regularSeeds_count_le_stageCost
     (u0 u1 : I → K) (H : P4) (selected : K → Polynomial K)
     (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181245 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181235 ≤
       ((Finset.univ : Finset I).filter (fun i ↦
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80899)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80909)
     (F : RegularIndex H)
     (hFY : F.1.degreeOf 1 ≤ b.yHi)
     (hFR : F.1.degreeOf 2 ≤ b.rHi)
@@ -712,7 +712,7 @@ theorem regularSeeds_count_le_stageCost
     (by norm_num [stagePair, helperPair])
     hdegree hagreement
     (by simpa only [stagePair, helperPair, UnequalParameters.errors,
-      (show (262144 - 181245 : ℕ) = 80899 by decide +kernel)] using hno)
+      (show (262144 - 181235 : ℕ) = 80909 by decide +kernel)] using hno)
     hQzero
   simpa only [stageCost] using hcount
 
@@ -807,16 +807,16 @@ theorem counts_of_batchExitStage
     (hD : 0 < D) (hfuelChar : fuel < 2130706433)
     (hlowpos : ∀ j, 1 ≤ j → j ≤ fuel → 0 < D - j * delta)
     (hcapacity : ∀ j, 1 ≤ j → j ≤ fuel →
-      D - j * delta ≤ (m - j) * 181245 + j * (131071 - 1))
+      D - j * delta ≤ (m - j) * 181235 + j * (131071 - 1))
     (u0 u1 : I → K) (H : P4)
     (selected : K → Polynomial K) (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma,
       (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181245 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181235 ≤
       ((Finset.univ : Finset I).filter (fun i ↦
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80899)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80909)
     (A : Finset (RegularIndex H))
     (q : ConstraintKernel (K := K) D 131071 L S m
         IRSProfile.domain u0 u1 →ₗ[K] P4)
@@ -911,7 +911,7 @@ theorem counts_of_batchExitStage
   have hQzero : ∀ gamma ∈ regularSeeds H selected Gamma F,
       specialization K (selected gamma) gamma QF = 0 := by
     exact batch_helper_zero_on_regularSeeds j D (D - j * delta) 131071
-      L S m 181245 2130706433
+      L S m 181235 2130706433
       (CharP.char_prime_of_ne_zero (R := K) (by norm_num))
       IRSProfile.domain u0 u1 H A F hFA selected Gamma v J hj hjchar
       (by decide) hdegree hagreement (hcapacity j hj hjle) hlow
@@ -929,21 +929,21 @@ theorem counts_of_batchExitStage
 
 theorem exists_strict_helper_split_of_batch_source_thin
     (D L S m YS gap delta fuel : ℕ)
-    (hD : 0 < D) (hDa : D ≤ m * 181245)
+    (hD : 0 < D) (hDa : D ≤ m * 181235)
     (hshape : D + S ≤ 131071 * (YS + 1))
     (hfuel : 1 ≤ fuel) (hfuelChar : fuel < 2130706433)
     (hlowpos : ∀ j, 1 ≤ j → j ≤ fuel → 0 < D - j * delta)
     (hcapacity : ∀ j, 1 ≤ j → j ≤ fuel →
-      D - j * delta ≤ (m - j) * 181245 + j * (131071 - 1))
+      D - j * delta ≤ (m - j) * 181235 + j * (131071 - 1))
     (u0 u1 : I → K) (H : P4)
     (selected : K → Polynomial K) (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma,
       (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181245 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181235 ≤
       ((Finset.univ : Finset I).filter (fun i ↦
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80899)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80909)
     (A : Finset (RegularIndex H)) (hA : A.Nonempty)
     (hbandThin : LocatorArbitraryPowerAvoidance.powerBandBudgetThin 131071
       (D - wt (contactWeights 131071) (regularProduct H A)) delta
@@ -1237,7 +1237,7 @@ private theorem sourceFuel_terminal (s : SourceNumbers) (p : FlagDegree)
 
 theorem routeable_exists_strict_helper_split
     (sound : PhaseSourceSound) (D m : ℕ)
-    (hweighted : D = m * 181245)
+    (hweighted : D = m * 181235)
     (hshape : D + sound.source.slopeCap ≤
       131071 * (sound.source.middleCap + 1))
     (hslopeM : sound.source.slopeCap ≤ m)
@@ -1246,11 +1246,11 @@ theorem routeable_exists_strict_helper_split
     (selected : K → Polynomial K) (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma,
       (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181245 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181235 ≤
       ((Finset.univ : Finset I).filter (fun i ↦
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80899)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80909)
     (hgap : sound.source.gap ≤ Module.finrank K
       (ConstraintKernel (K := K) D 131071 sound.source.totalCap
         sound.source.slopeCap m IRSProfile.domain u0 u1))
@@ -1291,7 +1291,7 @@ theorem routeable_exists_strict_helper_split
     omega
   have hcapacity : ∀ j, 1 ≤ j → j ≤ sound.source.fuel p →
       D - j * 50175 ≤
-        (m - j) * 181245 + j * (131071 - 1) := by
+        (m - j) * 181235 + j * (131071 - 1) := by
     intro j _hj hjfuel
     have hjm : j ≤ m := hjfuel.trans hfuelM
     rw [hweighted]
@@ -1408,7 +1408,7 @@ theorem routeable_exists_strict_helper_split
   have hDpos : 0 < D := by
     rw [hweighted]
     exact Nat.mul_pos hmpos (by decide)
-  have hDa : D ≤ m * 181245 := hweighted.le
+  have hDa : D ≤ m * 181235 := hweighted.le
   have hP : regularProduct H A ≠ 0 := regularProduct_ne_zero H A
   have hcP : contactDec p ≤ wt (contactWeights 131071) (regularProduct H A) := by
     have h := LocatorArbitraryPowerAvoidance.contact_ge_ys 131071 (by decide)
@@ -1484,7 +1484,7 @@ structure PhaseKernelRealization (sound : PhaseSourceSound)
     (u0 u1 : I → K) where
   D : ℕ
   m : ℕ
-  weighted : D = m * 181245
+  weighted : D = m * 181235
   shape : D + sound.source.slopeCap ≤
     131071 * (sound.source.middleCap + 1)
   slope_le_m : sound.source.slopeCap ≤ m
@@ -1507,9 +1507,9 @@ set_option maxHeartbeats 2000000
 set_option maxRecDepth 100000
 
 theorem identity_absorption (f : FlagDegree) (a b s : ℕ) :
-    131073 * 80900 * ProximityPrize.SubmissionLower.RCN146.identityCurveDegree f a b s 131071 ≤
-      50174 * flagMixed f (firstTail a b s) (secondTail a b s) := by
-  change 131073 * 80900 * ProximityPrize.SubmissionLower.RCN146.identityCurveDegree f a b s Lower80788.FixedStage.w ≤ _
+    131073 * 80910 * ProximityPrize.SubmissionLower.RCN146.identityCurveDegree f a b s 131071 ≤
+      50164 * flagMixed f (firstTail a b s) (secondTail a b s) := by
+  change 131073 * 80910 * ProximityPrize.SubmissionLower.RCN146.identityCurveDegree f a b s Lower80788.FixedStage.w ≤ _
   rw [Lower80788.FixedStage.identityDegree_linear]
   norm_num [firstTail, secondTail, Lower80788.FixedStage.tail_support_formula,
     Lower80788.FixedStage.w, flagMixed]
@@ -1594,9 +1594,9 @@ set_option maxRecDepth 100000
 set_option maxHeartbeats 5000000
 def n:ℕ:=262144
 def w:ℕ:=131071
-def errors:ℕ:=80899
-def agreements:ℕ:=181245
-def gap:ℕ:=50174
+def errors:ℕ:=80909
+def agreements:ℕ:=181235
+def gap:ℕ:=50164
 def prime:ℕ:=2130706433
 abbrev K:=IRSProfile.Field
 abbrev I:=IRSProfile.Index

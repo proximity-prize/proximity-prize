@@ -102,10 +102,10 @@ theorem regular_factor_count
     (HQ:ResidualSupportData P Q)
     (selected:K → Polynomial K) (Gamma:Finset K) (u0 u1:I → K)
     (hdegree:∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement:∀ gamma ∈ Gamma,181245 ≤
+    (hagreement:∀ gamma ∈ Gamma,181235 ≤
       ((Finset.univ:Finset I).filter (fun i=>
         (selected gamma).eval (IRSProfile.domain i) =u0 i + gamma * u1 i)).card)
-    (hno:NoLargeSelectedPencil selected Gamma 131071 80899)
+    (hno:NoLargeSelectedPencil selected Gamma 131071 80909)
     (R:RegularIndex Q)
     (hhyb : ¬ HybridAppliesC2 (regularCumulativeFlag Q R)) :
     (regularSeeds Q selected Gamma R).card ≤
@@ -149,11 +149,11 @@ theorem regular_factor_count
     have hsub:geometricSeeds K R.1 selected
         (regularSeeds Q selected Gamma R) g ⊆ Gamma:=
       (geometricSeeds_subset K R.1 selected _ g).trans (regularSeeds_subset Q selected Gamma R)
-    have hnodes:S.nodes.card=181245 + 80899:=by
+    have hnodes:S.nodes.card=181235 + 80909:=by
       change (Finset.univ:Finset I).card=_
       norm_num [I,IRSProfile.Index]
     have hag:∀ gamma ∈ geometricSeeds K R.1 selected
-        (regularSeeds Q selected Gamma R) g,181245 ≤ (S.agreementFiber gamma).card:=by
+        (regularSeeds Q selected Gamma R) g,181235 ≤ (S.agreementFiber gamma).card:=by
       intro gamma hgamma
       exact hagreement gamma (hsub hgamma)
     have hf:=geometricCumulativeFlag_le_support R.1 hRdata.1.ne_zero hRsupport g
@@ -183,10 +183,10 @@ theorem regular_factor_count_high
     (HQ : ResidualSupportData P Q)
     (selected : K → Polynomial K) (Gamma : Finset K) (u0 u1 : I → K)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181245 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181235 ≤
       ((Finset.univ : Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma*u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80899)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80909)
     (R : RegularIndex Q)
     (hSafe : BoundaryTailGates6808.Safe (regularCumulativeFlag Q R).all (middle (regularCumulativeFlag Q R)))
     (hhyb : HybridAppliesC2 (regularCumulativeFlag Q R)) :
@@ -252,12 +252,12 @@ theorem regular_factor_count_high
         (regularSeeds Q selected Gamma R) g ⊆ Gamma :=
       (geometricSeeds_subset K R.1 selected _ g).trans
         (regularSeeds_subset Q selected Gamma R)
-    have hnodes : S.nodes.card = 181245+80899 := by
+    have hnodes : S.nodes.card = 181235+80909 := by
       change (Finset.univ : Finset I).card = _
       norm_num [I, IRSProfile.Index]
     have hag : ∀ gamma ∈ geometricSeeds K R.1 selected
         (regularSeeds Q selected Gamma R) g,
-        181245 ≤ (S.agreementFiber gamma).card := by
+        181235 ≤ (S.agreementFiber gamma).card := by
       intro gamma hgamma
       exact hagreement gamma (hsub hgamma)
     have hf := geometricCumulativeFlag_le_support R.1 hRdata.1.ne_zero hRsupport g
@@ -306,10 +306,10 @@ theorem regular_factor_count_raw
     (HQ : ResidualSupportData P Q)
     (selected : K → Polynomial K) (Gamma : Finset K) (u0 u1 : I → K)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181245 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181235 ≤
       ((Finset.univ : Finset I).filter (fun i =>
         (selected gamma).eval (IRSProfile.domain i) = u0 i+gamma*u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80899)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80909)
     (R : RegularIndex Q)
     (hSafe : BoundaryTailGates6808.Safe (regularCumulativeFlag Q R).all (middle (regularCumulativeFlag Q R))) :
     (regularSeeds Q selected Gamma R).card ≤ rawCost (regularCumulativeFlag Q R) := by

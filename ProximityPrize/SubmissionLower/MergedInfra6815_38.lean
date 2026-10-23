@@ -48,9 +48,9 @@ theorem regular_count {DF T nu : ℕ} {H : Poly4 K} (F : RCN266.RegularIndex H)
     (nodes : I ↪ K) (u0 u1 : I → K) (hcard : Fintype.card I=262144)
     (selected : K → Polynomial K) (Gamma : Finset K)
     (hdegree : ∀ gamma∈Gamma, (selected gamma).natDegree≤131071)
-    (hagreement : ∀ gamma∈Gamma, 181245≤
+    (hagreement : ∀ gamma∈Gamma, 181235≤
       ((Finset.univ : Finset I).filter (fun i => (selected gamma).eval (nodes i)=u0 i+gamma*u1 i)).card)
-    (hno : RCN238.NoLargeSelectedPencil selected Gamma 131071 80899) :
+    (hno : RCN238.NoLargeSelectedPencil selected Gamma 131071 80909) :
     (RCN140.regularSeeds H selected Gamma F).card≤28585969548690279 :=
   RelativeWideBlocks6815.regular_count K I band covered (by decide) F hbox hcode htotal
     hslope hB hT0 hT1 hnu nodes u0 u1 hcard selected Gamma hdegree hagreement hno
@@ -269,9 +269,9 @@ theorem regular_count (i : Fin 190) {DF T nu : ℕ} {H : Poly4 K} (F : RCN266.Re
     (nodes : I ↪ K) (u0 u1 : I → K) (hcard : Fintype.card I=262144)
     (selected : K → Polynomial K) (Gamma : Finset K)
     (hdegree : ∀ gamma∈Gamma, (selected gamma).natDegree≤131071)
-    (hagreement : ∀ gamma∈Gamma, 181245≤
+    (hagreement : ∀ gamma∈Gamma, 181235≤
       ((Finset.univ : Finset I).filter (fun j => (selected gamma).eval (nodes j)=u0 j+gamma*u1 j)).card)
-    (hno : RCN238.NoLargeSelectedPencil selected Gamma 131071 80899) :
+    (hno : RCN238.NoLargeSelectedPencil selected Gamma 131071 80909) :
     (RCN140.regularSeeds H selected Gamma F).card≤(offer i).count := by
   fin_cases i
   · exact RelativeCompact6815_R000.regular_count K I F hbox hcode htotal hslope hB hT0 hT1 hnu

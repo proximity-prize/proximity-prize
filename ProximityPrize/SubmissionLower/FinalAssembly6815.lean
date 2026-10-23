@@ -27,7 +27,7 @@ def combined (p : FlagDegree) : ℕ :=
 theorem combined_eq (p : FlagDegree) : combined p=
     finalCap p+initialUpper p+
       p.all*foldUnit (middle p) (total p) p.all+
-      (50-p.all)*foldUnit (229-middle p) (15421-total p) (50-p.all)+
+      (50-p.all)*foldUnit (229-middle p) (17229-total p) (50-p.all)+
       18000000000000+PairCell6815.cap p.all (middle p) (total p) := by
   simp only [combined,FinalLedgerChord6815.combined,initialUpper,middle,total,
     Nat.add_comm,Nat.add_left_comm,Nat.add_assoc]
@@ -35,7 +35,7 @@ theorem combined_eq (p : FlagDegree) : combined p=
 theorem combined_bound (H : P4) (U : Finset (RegularIndex H))
     (hr : (regularAggregateFlag H U).all≤39)
     (hy : middle (regularAggregateFlag H U)≤182)
-    (ht : total (regularAggregateFlag H U)≤11192) :
+    (ht : total (regularAggregateFlag H U)≤11783) :
     combined (regularAggregateFlag H U)≤budget := by
   let p := regularAggregateFlag H U
   by_cases hp : p.all=0
@@ -76,12 +76,12 @@ theorem selected_pair_count_le
   have hT : T ≠ 0 := by
     intro hz
     exact S.QA_ne (by rw [hTeq,hz,mul_zero])
-  have hb := flag_box_to_ordinary K 30086670 131071 15421 50 S.QB S.QB_flag
-  have hHbox : H ∈ RCN174.globalCoefficientBox K 30086670 131071 15421 50 :=
-    mem_globalCoefficientBox_of_dvd H S.QB 30086670 131071 15421 50 S.QB_ne
+  have hb := flag_box_to_ordinary K 30085010 131071 17229 50 S.QB S.QB_flag
+  have hHbox : H ∈ RCN174.globalCoefficientBox K 30085010 131071 17229 50 :=
+    mem_globalCoefficientBox_of_dvd H S.QB 30085010 131071 17229 50 S.QB_ne
       (gcd_dvd_right S.QA S.QB) hb
-  have hQbox : Q ∈ RCN174.globalCoefficientBox K 30086670 131071 15421 50 :=
-    mem_globalCoefficientBox_of_dvd Q S.QB 30086670 131071 15421 50 S.QB_ne
+  have hQbox : Q ∈ RCN174.globalCoefficientBox K 30085010 131071 17229 50 :=
+    mem_globalCoefficientBox_of_dvd Q S.QB 30085010 131071 17229 50 S.QB_ne
       ⟨H,hQeq.trans (mul_comm H Q)⟩ hb
   have hsubD : D ⊆ Gamma := by
     intro g hg
@@ -116,13 +116,13 @@ theorem selected_pair_count_le
   have hfreeD := freePart_count inpD H hH hHbox
   have hfreeE := freePart_count inpE Q hQ hQbox
   have hreg := FinalRegularBridge.regular_count hrules u0 u1 S selected Gamma inp
-  change p.all ≤ 39 ∧ middle p ≤ 182 ∧ total p ≤ 11192 ∧
+  change p.all ≤ 39 ∧ middle p ≤ 182 ∧ total p ≤ 11783 ∧
     (∑ F : RegularIndex H, (regularSeeds H selected D F).card) ≤
       finalCap p+initialUpper p at hreg
-  have hprod : H*Q ∈ RCN100.globalCoefficientBox K 30086670 131071 15421 50 := by
+  have hprod : H*Q ∈ RCN100.globalCoefficientBox K 30085010 131071 17229 50 := by
     rw [← hQeq]
     exact S.QB_flag
-  have hprodA : H*T ∈ RCN100.globalCoefficientBox K 45673740 131071 11193 78 := by
+  have hprodA : H*T ∈ RCN100.globalCoefficientBox K 45671220 131071 11784 78 := by
     rw [← hTeq]
     exact S.QA_flag
   have hrE := PairCell.pair_count_cell inpE H Q T hH hQ hT
@@ -136,7 +136,7 @@ theorem selected_pair_count_le
   change (∑ F : RegularIndex H, factorCharge' F.1 selected D)+
     (∑ F : RegularIndex Q, factorCharge' F.1 selected E) ≤
       p.all*foldUnit (middle p) (total p) p.all +
-      (50-p.all)*foldUnit (229-middle p) (15421-total p) (50-p.all) + 50*0 at hcharge
+      (50-p.all)*foldUnit (229-middle p) (17229-total p) (50-p.all) + 50*0 at hcharge
   have hpart : D.card+E.card = Gamma.card := LocatorCover.partition_card phi Gamma S.QA S.QB
   have hcfixed : D.card ≤ (∑ F : RegularIndex H, (RCN052.regularPairSeeds H H selected D F).card) +
       (∑ F : RegularIndex H, factorCharge' F.1 selected D)+(rfreeSeeds H selected D).card := by

@@ -10,12 +10,12 @@ theorem count {ι : Type*} [DecidableEq ι]
     (s : Finset ι) (r v z count : ι → ℕ) (cap : ℕ)
     (hr : ∀ i∈s, 1≤r i)
     (hR : (∑ i∈s,r i)≤39) (hy : (∑ i∈s,r i)+(∑ i∈s,v i)≤182)
-    (ht : (∑ i∈s,r i)+(∑ i∈s,v i)+(∑ i∈s,z i)≤11192)
+    (ht : (∑ i∈s,r i)+(∑ i∈s,v i)+(∑ i∈s,z i)≤11783)
     (hsingle : ∀ i∈s, count i≤SingletonData6815.cap (r i) (v i) (z i))
     (hb : BaseBound (∑ i∈s,r i) (∑ i∈s,v i) (∑ i∈s,z i) cap) :
     (∑ i∈s,count i)≤cap := by
   have individual (i : ι) (hi : i∈s) :
-      r i≤39 ∧ r i+v i≤182 ∧ r i+v i+z i≤11192 := by
+      r i≤39 ∧ r i+v i≤182 ∧ r i+v i+z i≤11783 := by
     have hri := Finset.single_le_sum (fun k _ => Nat.zero_le (r k)) hi
     have hvi := Finset.single_le_sum (fun k _ => Nat.zero_le (v k)) hi
     have hzi := Finset.single_le_sum (fun k _ => Nat.zero_le (z k)) hi

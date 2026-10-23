@@ -12,12 +12,12 @@ theorem family_count {ι : Type*} [DecidableEq ι]
     (ambient : Finset ι) (r v z count : ι → ℕ)
     (hr : ∀ i∈ambient, 1≤r i)
     (hR : (∑ i∈ambient,r i)≤39) (hy : (∑ i∈ambient,r i)+(∑ i∈ambient,v i)≤182)
-    (ht : (∑ i∈ambient,r i)+(∑ i∈ambient,v i)+(∑ i∈ambient,z i)≤11192)
+    (ht : (∑ i∈ambient,r i)+(∑ i∈ambient,v i)+(∑ i∈ambient,z i)≤11783)
     (hsingle : ∀ i∈ambient, count i≤SingletonData6815.cap (r i) (v i) (z i))
     (hsplit : ∀ (j : Fin 7) (s : Finset ι), s⊆ambient →
       1≤(∑ i∈s,r i) → cut (∑ i∈s,r i) (∑ i∈s,v i) j.val≤(∑ i∈s,z i) →
       ∃ U, U⊂s ∧ ∀ i∈s\U, count i≤cost j.val (r i) (v i) (z i))
-    (hrules : ∀ capR capV capZ, 1≤capR → capR≤39 → capR+capV≤182 → capR+capV+capZ≤11192 →
+    (hrules : ∀ capR capV capZ, 1≤capR → capR≤39 → capR+capV≤182 → capR+capV+capZ≤11783 →
       RuleBound capR capV capZ (FinalLedgerData6815.cap capR capV capZ)) :
     (∑ i∈ambient,count i)≤FinalLedgerData6815.cap
       (∑ i∈ambient,r i) (∑ i∈ambient,v i) (∑ i∈ambient,z i) := by
@@ -28,7 +28,7 @@ theorem family_count {ι : Type*} [DecidableEq ι]
     (∑ i∈s,r i) (∑ i∈s,v i) (∑ i∈s,z i) (cap s)
   have narrow (s : Finset ι) (hs : s⊆ambient) :
       (∑ i∈s,r i)≤39 ∧ (∑ i∈s,r i)+(∑ i∈s,v i)≤182 ∧
-      (∑ i∈s,r i)+(∑ i∈s,v i)+(∑ i∈s,z i)≤11192 := by
+      (∑ i∈s,r i)+(∑ i∈s,v i)+(∑ i∈s,z i)≤11783 := by
     have h1 : (∑ i∈s,r i)≤∑ i∈ambient,r i := Finset.sum_le_sum_of_subset hs
     have h2 : (∑ i∈s,v i)≤∑ i∈ambient,v i := Finset.sum_le_sum_of_subset hs
     have h3 : (∑ i∈s,z i)≤∑ i∈ambient,z i := Finset.sum_le_sum_of_subset hs

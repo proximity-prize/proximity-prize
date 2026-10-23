@@ -31,23 +31,23 @@ def leadingNumerator (z : Degrees) (t y r : ℕ) : ℕ :=
   AsymmetricHelper.leftRegularNumerator (pair t y r (z.B-2*z.n0) (z.U-z.n0) (z.T-z.n0))
 
 def totalNumerator (z : Degrees) (delta : ℕ) (p q : FlagDegree) (t y r : ℕ) : ℕ :=
-  50174*numerator z delta p q t y r+3*(z.d*delta)*leadingNumerator z t y r
+  50164*numerator z delta p q t y r+3*(z.d*delta)*leadingNumerator z t y r
 
 theorem price_le_of_total (z : Degrees) (delta : ℕ) (hd : 0<delta)
     (p q : FlagDegree) (t y r cap : ℕ)
-    (h : totalNumerator z delta p q t y r≤50174*(3*(z.d*delta))*cap) :
+    (h : totalNumerator z delta p q t y r≤50164*(3*(z.d*delta))*cap) :
     pairCost z delta p q t y r+leading z t y r≤cap := by
   have hn : pairCost z delta p q t y r*(3*(z.d*delta))≤numerator z delta p q t y r :=
     Nat.div_mul_le_self _ _
-  have hl : leading z t y r*50174≤leadingNumerator z t y r := by
-    change AsymmetricHelper.leftRegularCountCap (pair t y r _ _ _)*50174≤_
+  have hl : leading z t y r*50164≤leadingNumerator z t y r := by
+    change AsymmetricHelper.leftRegularCountCap (pair t y r _ _ _)*50164≤_
     simpa only [AsymmetricHelper.leftRegularCountCap,pair,UnequalParameters.gap,Nat.reduceSub,
       leadingNumerator] using
-      Nat.div_mul_le_self (leadingNumerator z t y r) 50174
-  have h1 := Nat.mul_le_mul_left 50174 hn
+      Nat.div_mul_le_self (leadingNumerator z t y r) 50164
+  have h1 := Nat.mul_le_mul_left 50164 hn
   have h2 := Nat.mul_le_mul_left (3*(z.d*delta)) hl
   have hdz : 0<z.d := by dsimp [Degrees.d]; omega
-  apply Nat.le_of_mul_le_mul_left (c:=50174*(3*(z.d*delta))) ?_
+  apply Nat.le_of_mul_le_mul_left (c:=50164*(3*(z.d*delta))) ?_
     (by positivity)
   dsimp only [totalNumerator] at h
   nlinarith only [h,h1,h2]
@@ -64,7 +64,7 @@ theorem total_chord {lo hi : ℕ} {f g : ℕ → ℕ}
     (hf : Chord lo hi f) (hg : Chord lo hi g)
     (a b c d : ℕ) (z : Degrees) (delta t y r : ℕ) :
     Chord lo hi (fun x => totalNumerator z delta ⟨f x,a,b⟩ ⟨g x,c,d⟩ t y r) :=
-  add (mul_left (numerator_chord hf hg a b c d z delta t y r) 50174) (constant lo hi _)
+  add (mul_left (numerator_chord hf hg a b c d z delta t y r) 50164) (constant lo hi _)
 
 def ownerFlag (s b u x : ℕ) : FlagDegree := ⟨x-u,u+s-b,b⟩
 def cofactorFlag (B U L S e s b u x : ℕ) : FlagDegree :=
@@ -84,9 +84,9 @@ theorem cofactor_total_chord (lo hi s b u B U L S e : ℕ) (z : Degrees) (delta 
 theorem cofactor_interval_price (lo hi s b u B U L S e : ℕ) (z : Degrees)
     (delta t y r cap : ℕ) (hd : 0<delta)
     (hlo : totalNumerator z delta (ownerFlag s b u lo) (cofactorFlag B U L S e s b u lo) t y r≤
-      50174*(3*(z.d*delta))*cap)
+      50164*(3*(z.d*delta))*cap)
     (hhi : totalNumerator z delta (ownerFlag s b u hi) (cofactorFlag B U L S e s b u hi) t y r≤
-      50174*(3*(z.d*delta))*cap)
+      50164*(3*(z.d*delta))*cap)
     (x : ℕ) (hx : lo≤x) (hx' : x≤hi) :
     pairCost z delta (ownerFlag s b u x) (cofactorFlag B U L S e s b u x) t y r+
       leading z t y r≤cap :=
@@ -155,9 +155,9 @@ theorem count_of_endpoints
     (hpairZ : flagMixed (ownerFlag s b u tau) (cofactorFlag B U L S e s b u tau) unitZFlag<2130706433)
     (hpairU : flagMixed (ownerFlag s b u tau) (cofactorFlag B U L S e s b u tau) unitYZFlag<2130706433)
     (hlo : totalNumerator z delta (ownerFlag s b u lo) (cofactorFlag B U L S e s b u lo) t y r≤
-      50174*(3*(z.d*delta))*cap)
+      50164*(3*(z.d*delta))*cap)
     (hhi : totalNumerator z delta (ownerFlag s b u hi) (cofactorFlag B U L S e s b u hi) t y r≤
-      50174*(3*(z.d*delta))*cap) :
+      50164*(3*(z.d*delta))*cap) :
     P.seeds.card≤Max.max (identityPrice t y r) cap := by
   have hc := pair_count_of_bounds P SZ SJ SQ z hZ hFT hk hg hcop delta hd hdchar hSJ hSQ
     _ _ (owner_le SJ.P s b u tau hs hb hu ht) (cofactor_le SQ.P B U L S e s b u tau hB hU hL hS)
@@ -191,10 +191,10 @@ def EndpointChecks (p : Parameters) (z : Degrees) (m s b u lo hi t y r cap : ℕ
   ∀ e, e<(box p m s b u lo).q → active p m s b u e → lo≤upper p.L e hi →
     totalNumerator z (min m (p.k+1-e*m)) (ownerFlag s b u lo)
       (cofactorFlag p.B p.U p.L p.s e s b u lo) t y r≤
-        50174*(3*(z.d*min m (p.k+1-e*m)))*cap ∧
+        50164*(3*(z.d*min m (p.k+1-e*m)))*cap ∧
     totalNumerator z (min m (p.k+1-e*m)) (ownerFlag s b u (upper p.L e hi))
       (cofactorFlag p.B p.U p.L p.s e s b u (upper p.L e hi)) t y r≤
-        50174*(3*(z.d*min m (p.k+1-e*m)))*cap
+        50164*(3*(z.d*min m (p.k+1-e*m)))*cap
 
 theorem cofactor_total_small (p : Parameters) (hp : Shape p)
     (e s b u tau : ℕ) :
@@ -311,10 +311,10 @@ def checkExit (p : Parameters) (z : Degrees) (m s b u lo hi t y r cap e : ℕ) :
   if active p m s b u e ∧ lo≤upper p.L e hi then
     decide (totalNumerator z (min m (p.k+1-e*m)) (ownerFlag s b u lo)
         (cofactorFlag p.B p.U p.L p.s e s b u lo) t y r≤
-          50174*(3*(z.d*min m (p.k+1-e*m)))*cap ∧
+          50164*(3*(z.d*min m (p.k+1-e*m)))*cap ∧
       totalNumerator z (min m (p.k+1-e*m)) (ownerFlag s b u (upper p.L e hi))
         (cofactorFlag p.B p.U p.L p.s e s b u (upper p.L e hi)) t y r≤
-          50174*(3*(z.d*min m (p.k+1-e*m)))*cap)
+          50164*(3*(z.d*min m (p.k+1-e*m)))*cap)
   else true
 
 def checkEndpoints (p : Parameters) (z : Degrees) (m s b u lo hi t y r cap : ℕ) : Bool :=
