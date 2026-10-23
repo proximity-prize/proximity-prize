@@ -64,7 +64,7 @@ theorem card_emb : Fintype.card (Fin 3 ↪ NZ10) = 1023 * 1022 * 1021 := by
   rw [Fintype.card_embedding_eq, card_NZ10, Fintype.card_fin]
   rfl
 
-theorem card_Param : Fintype.card Param = 420 * 32 * 2047 * (1023 * 1022 * 1021) * 512 * 4 := by
+theorem card_Param : Fintype.card Param = 455 * 32 * 2047 * (1023 * 1022 * 1021) * 512 * 4 := by
   simp only [Param, Fintype.card_prod, Fintype.card_fin, ZMod.card, card_NZ11, card_emb,
     Fintype.card_fun]
   norm_num

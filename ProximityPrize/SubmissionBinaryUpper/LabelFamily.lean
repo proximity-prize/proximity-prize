@@ -75,7 +75,7 @@ abbrev NZ11 := {r : Yv // r ≠ 0}
 /-- Row, `ρ`-data `(j, a, e)`, the row `r`, the reduced `m_t`, the `ν`-slopes and two free
 constants. -/
 abbrev Param :=
-  Fin 420 × (Fin 8 × ZMod 2 × ZMod 2) × NZ11 × (Fin 3 ↪ NZ10) × (Fin 3 → Fin 8) × (ZMod 2 × ZMod 2)
+  Fin 455 × (Fin 8 × ZMod 2 × ZMod 2) × NZ11 × (Fin 3 ↪ NZ10) × (Fin 3 → Fin 8) × (ZMod 2 × ZMod 2)
 
 def row (p : Param) : QRow := qrow p.1
 def jr (p : Param) : Fin 8 := p.2.1.1
@@ -176,29 +176,49 @@ theorem qout (p : Param) (z : Z4) (h : (row p).isQ z) :
 
 theorem shape (p : Param) (z : Z4) (h : ¬(row p).isQ z) : Shape (row p) z := ((rok p).2.1 z).2 h
 
-theorem qcard (p : Param) : (Finset.univ.filter (row p).isQ).card = 3 := (rok p).2.2.2
+theorem qcard (p : Param) : (Finset.univ.filter (row p).isQ).card = 3 := (rok p).2.2.2.1
 
-theorem inH_zero_iff (p : Param) (t : Fin 3) : (row p).inH t 0 ↔ t ≠ 0 := by
+/-- The label `0` is never one of the reserved points. -/
+theorem not_isQ_zero (p : Param) : ¬(row p).isQ 0 := (rok p).2.2.2.2.2.2.2
+
+/-- The first two half spaces are distinct. -/
+theorem sig_ne01 (p : Param) : (row p).s0 ≠ (row p).s1 := (rok p).2.2.2.2.2.2.1
+
+/-- The affine function `ρ₁`, written with the constant `ee` split out. -/
+theorem rho_one_formula (p : Param) (z : Z4) :
+    rho p 1 z = (aa p + 1) + zdot (beta p) z + ee p * (1 + zdot (row p).s0 z) := by
+  simp only [rho, rhoC, rhoLin, coefL, Matrix.cons_val_zero, Matrix.cons_val_one,
+    Matrix.head_cons, Matrix.tail_cons, Matrix.cons_val_two]
+  ring
+
+/-- The half space `H₀` never contains `0`. -/
+theorem kap0 (p : Param) : kap (row p) 0 = 1 := (rok p).2.2.2.2.1
+
+/-- The three half spaces are the three cosets of one hyperplane. -/
+theorem sig_sum (p : Param) (z : Z4) :
+    zdot (row p).s0 z + zdot (row p).s1 z + zdot (row p).s2 z = 0 := (rok p).2.2.2.2.2.1 z
+
+theorem inH_zero_iff (p : Param) (t : Fin 3) : (row p).inH t 0 ↔ kap (row p) t = 0 := by
   simp only [QRow.inH, zdot_zero]
-  fin_cases t <;> simp [kap]
+  exact eq_comm
 
-theorem not_isQ_zero (p : Param) : ¬(row p).isQ 0 := fun h =>
-  (qout p 0 h).2.1 ((inH_zero_iff p 1).mpr (by decide))
-
-theorem inH0_iff (p : Param) (z : Z4) : (row p).inH 0 z ↔ zdot (row p).s0 z = 1 := Iff.rfl
+theorem inH0_iff (p : Param) (z : Z4) : (row p).inH 0 z ↔ zdot (row p).s0 z = 1 := by
+  simp only [QRow.inH, QRow.s, Matrix.cons_val_zero, kap0 p]
 
 theorem zmod2_ne_add_one (x : ZMod 2) : x ≠ x + 1 := by
   revert x; decide
 
 theorem two_z2 : (2 : ZMod 2) = 0 := rfl
 
-theorem rho_01 (p : Param) {z : Z4} (h0 : zdot (row p).s0 z = 1) : rho p 1 z = rho p 0 z + 1 := by
-  simp only [rho, rhoC, rhoLin, coefL, h0]
+theorem rho_01 (p : Param) {z : Z4} (h0 : (row p).inH 0 z) : rho p 1 z = rho p 0 z + 1 := by
+  have h0' : zdot (row p).s0 z = 1 := (inH0_iff p z).mp h0
+  simp only [rho, rhoC, rhoLin, coefL, h0']
   simp
   linear_combination ee p * two_z2
 
-theorem rho_02 (p : Param) {z : Z4} (h0 : zdot (row p).s0 z = 1) : rho p 2 z = rho p 0 z + 1 := by
-  simp only [rho, rhoC, rhoLin, coefL, h0]
+theorem rho_02 (p : Param) {z : Z4} (h0 : (row p).inH 0 z) : rho p 2 z = rho p 0 z + 1 := by
+  have h0' : zdot (row p).s0 z = 1 := (inH0_iff p z).mp h0
+  simp only [rho, rhoC, rhoLin, coefL, h0']
   simp
   linear_combination ee p * two_z2
 
@@ -217,7 +237,7 @@ theorem zdot0_of_12 (p : Param) {z : Z4} (h1 : (row p).inH 1 z) (h2 : (row p).in
   have hn := not_inH0_of_12 p h1 h2
   rcases zmod2_cases (zdot (row p).s0 z) with h | h
   · exact h
-  · exact absurd h hn
+  · exact absurd ((inH0_iff p z).mpr h) hn
 
 theorem ne01 (p : Param) {z : Z4} (h0 : (row p).inH 0 z) : rho p 0 z ≠ rho p 1 z := by
   rw [rho_01 p h0]; exact zmod2_ne_add_one _
@@ -265,25 +285,33 @@ theorem zero_not_mem (p : Param) : (0 : V) ∉ Sset p := by
   have hQ := not_isQ_zero p
   rintro (h | h | h | h)
   · exact hQ h
-  · exact (inH_zero_iff p 0).mp h.1 rfl
-  · obtain ⟨-, h1, h2⟩ := h
-    simp only [Prod.fst_zero, Prod.snd_zero, ydot_zero, rho, nu, rhoLin_zero, zdot_zero,
-      add_zero, rhoC, bC, Matrix.cons_val_one, Matrix.head_cons] at h1 h2
-    revert h1 h2
-    generalize aa p = a
-    generalize ee p = e
-    generalize e1 p = f
-    revert a e f
-    decide
-  · obtain ⟨-, h1, h2⟩ := h
-    simp only [Prod.fst_zero, Prod.snd_zero, ydot_zero, rho, nu, rhoLin_zero, zdot_zero,
-      add_zero, rhoC, bC, Matrix.cons_val_two, Matrix.tail_cons, Matrix.head_cons] at h1 h2
-    revert h1 h2
-    generalize aa p = a
-    generalize ee p = e
-    generalize e1 p = f
-    revert a e f
-    decide
+  · have hk0 : kap (row p) 0 = 0 := (inH_zero_iff p 0).mp h.1
+    rw [kap0 p] at hk0
+    exact one_ne_zero hk0
+  · obtain ⟨h0, h1, h2⟩ := h
+    by_cases hk : kap (row p) 1 = 0
+    · clear h0
+      simp only [Prod.fst_zero, Prod.snd_zero, ydot_zero, rho, nu, rhoLin_zero, zdot_zero,
+        add_zero, rhoC, bC, Matrix.cons_val_one, Matrix.head_cons] at h1 h2
+      revert h1 h2
+      generalize aa p = a
+      generalize ee p = e
+      generalize e1 p = f
+      revert a e f
+      decide
+    · exact hk ((inH_zero_iff p 1).mp h0)
+  · obtain ⟨h0, h1, h2⟩ := h
+    by_cases hk : kap (row p) 2 = 0
+    · clear h0
+      simp only [Prod.fst_zero, Prod.snd_zero, ydot_zero, rho, nu, rhoLin_zero, zdot_zero,
+        add_zero, rhoC, bC, Matrix.cons_val_two, Matrix.tail_cons, Matrix.head_cons] at h1 h2
+      revert h1 h2
+      generalize aa p = a
+      generalize ee p = e
+      generalize e1 p = f
+      revert a e f
+      decide
+    · exact hk ((inH_zero_iff p 2).mp h0)
 
 /-! ## Each `F_t` is a flat of size `2^12` -/
 
@@ -299,7 +327,7 @@ noncomputable def phi (p : Param) (t : Fin 3) : V →ₗ[ZMod 2] (Fin 3 → ZMod
     fin_cases k <;>
       simp [zdot_smul, ydot_smul, rhoLin_smul] <;> ring
 
-def tgt (p : Param) (t : Fin 3) : Fin 3 → ZMod 2 := ![kap t, rhoC p t, bC p t]
+def tgt (p : Param) (t : Fin 3) : Fin 3 → ZMod 2 := ![kap (row p) t, rhoC p t, bC p t]
 
 theorem zmod2_add_eq_iff (a b c : ZMod 2) : a + b = c ↔ a = c + b := by
   revert a b c; decide

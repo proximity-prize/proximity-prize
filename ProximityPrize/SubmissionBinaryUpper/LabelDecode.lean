@@ -451,34 +451,72 @@ theorem Sset_injective {p p' : Param} (hS : Sset p = Sset p') : p = p' := by
       · exact absurd ht (not_inH0_of_12 p h1 h2)
       · exact (V12 h1 h2).2.1
       · exact (V12 h1 h2).2.2
-  have hrho0 : ∀ z, (row p).inH 0 z → LabelFamily.rho p 0 z = LabelFamily.rho p' 0 z := by
-    intro z h0
-    rcases cover h0 with ⟨-, h1⟩ | ⟨-, h2⟩ | ⟨h1, h2⟩
-    · exact (V01 h0 h1).1
-    · exact (V02 h0 h2).1
-    · exact absurd h0 (not_inH0_of_12 p h1 h2)
-  have z0_1 : (row p).inH 1 0 := (inH_zero_iff p 1).mpr (by decide)
-  have z0_2 : (row p).inH 2 0 := (inH_zero_iff p 2).mpr (by decide)
-  have hrho1 : LabelFamily.rho p 1 0 = LabelFamily.rho p' 1 0 := (V12 z0_1 z0_2).1
+  have hrho : ∀ (t : Fin 3) z, (row p).inH t z → LabelFamily.rho p t z = LabelFamily.rho p' t z := by
+    intro t z ht
+    rcases cover ht with ⟨h0, h1⟩ | ⟨h0, h2⟩ | ⟨h1, h2⟩
+    · fin_cases t
+      · exact (V01 h0 h1).1
+      · show LabelFamily.rho p 1 z = LabelFamily.rho p' 1 z
+        rw [rho_01 p h0, rho_01 p' (hH 0 z h0), (V01 h0 h1).1]
+      · exact absurd ht (not_inH2_of_01 p h0 h1)
+    · fin_cases t
+      · exact (V02 h0 h2).1
+      · exact absurd ht (not_inH1_of_02 p h0 h2)
+      · show LabelFamily.rho p 2 z = LabelFamily.rho p' 2 z
+        rw [rho_02 p h0, rho_02 p' (hH 0 z h0), (V02 h0 h2).1]
+    · fin_cases t
+      · exact absurd ht (not_inH0_of_12 p h1 h2)
+      · exact (V12 h1 h2).1
+      · show LabelFamily.rho p 2 z = LabelFamily.rho p' 2 z
+        linear_combination -rho_12 p (zdot0_of_12 p h1 h2) +
+          rho_12 p' (zdot0_of_12 p' (hH 1 z h1) (hH 2 z h2)) + (V12 h1 h2).1
   -- read the parameters
   have hsig : ∀ t, sig p' t = sig p t := fun t => by simp only [sig, hrow]
   have hjr : jr p = jr p' ∧ aa p = aa p' := by
-    have hc : Clash (row p).s0 (kap 0) (jr p) (jr p') (aa p) (aa p') := by
+    have hc : Clash (row p).s0 (kap (row p) 0) (jr p) (jr p') (aa p) (aa p') := by
       intro z hz
-      have h := hrho0 z hz
+      have h := hrho 0 z hz
       have h' : aa p + (zdot (betaOf (row p).s0 (jr p)) z + 0 * zdot (row p).s0 z) =
           aa p' + (zdot (betaOf (row p').s0 (jr p')) z + 0 * zdot (row p').s0 z) := h
       rw [hrow] at h'
       simpa using h'
     obtain ⟨h1, h2⟩ := beta_inj (sok p 0) (jr p).isLt (jr p').isLt hc
     exact ⟨Fin.ext h1, h2⟩
+  have hbeta : LabelFamily.beta p' = LabelFamily.beta p := by
+    simp only [LabelFamily.beta, hrow, hjr.1]
+  have hfac : ∀ z, (row p).inH 1 z → (ee p + ee p') * (1 + zdot (row p).s0 z) = 0 := by
+    intro z hz
+    have h := hrho 1 z hz
+    rw [rho_one_formula p z, rho_one_formula p' z, hbeta, hrow, hjr.2] at h
+    have h' : ee p * (1 + zdot (row p).s0 z) = ee p' * (1 + zdot (row p).s0 z) :=
+      add_left_cancel h
+    calc (ee p + ee p') * (1 + zdot (row p).s0 z)
+        = ee p * (1 + zdot (row p).s0 z) + ee p' * (1 + zdot (row p).s0 z) := add_mul _ _ _
+      _ = ee p' * (1 + zdot (row p).s0 z) + ee p' * (1 + zdot (row p).s0 z) := by rw [h']
+      _ = 0 := CharTwo.add_self_eq_zero _
   have hee : ee p = ee p' := by
-    have h' : aa p + 1 + ee p + rhoLin p 1 0 = aa p' + 1 + ee p' + rhoLin p' 1 0 := hrho1
-    rw [rhoLin_zero, rhoLin_zero, hjr.2] at h'
-    linear_combination h'
+    by_cases hk : kap (row p) 1 = 0
+    · have hz : (row p).inH 1 0 := (inH_zero_iff p 1).mpr hk
+      have h := hfac 0 hz
+      rw [zdot_zero, add_zero, mul_one] at h
+      have h' : ee p = -ee p' := eq_neg_of_add_eq_zero_left h
+      rwa [CharTwo.neg_eq] at h'
+    · have hk1 : kap (row p) 1 = 1 := by
+        rcases zmod2_cases (kap (row p) 1) with h | h
+        · exact absurd h hk
+        · exact h
+      obtain ⟨z, hz1, hz0⟩ := zdot_pair (s := (row p).s1) (s' := (row p).s0)
+        (sok p 1) (sok p 0) (Ne.symm (sig_ne01 p)) (kap (row p) 1) 0
+      have hz : (row p).inH 1 z := by
+        simp only [QRow.inH, QRow.s, Matrix.cons_val_one, Matrix.cons_val_zero]
+        simpa [hk1] using hz1
+      have h := hfac z hz
+      rw [hz0, add_zero, mul_one] at h
+      have h' : ee p = -ee p' := eq_neg_of_add_eq_zero_left h
+      rwa [CharTwo.neg_eq] at h'
   have hjn : ∀ t, jn p t = jn p' t ∧ bC p t = bC p' t := by
     intro t
-    have hc : Clash (sig p t) (kap t) (jn p t) (jn p' t) (bC p t) (bC p' t) := by
+    have hc : Clash (sig p t) (kap (row p) t) (jn p t) (jn p' t) (bC p t) (bC p' t) := by
       intro z hz
       have h := hnu t z hz
       have h' : bC p t + zdot (betaOf (sig p t) (jn p t)) z =
