@@ -1157,11 +1157,11 @@ set_option maxRecDepth 100000
 
 theorem generic_absorption (f : FlagDegree) (a b s : ℕ) (_ha : 0 ≤ a)
     (hb : 1 ≤ b) (hs : 1 ≤ s) :
-    131073 * 80900 * ProximityPrize.SubmissionLower.RCN146.identityCurveDegree f a b s 131071 ≤
-      50174 * newCost f a b s := by
+    131073 * 80910 * ProximityPrize.SubmissionLower.RCN146.identityCurveDegree f a b s 131071 ≤
+      50164 * newCost f a b s := by
   obtain ⟨b',rfl⟩ : ∃ b', b = b'+1 := ⟨b-1,by omega⟩
   obtain ⟨s',rfl⟩ : ∃ s', s = s'+1 := ⟨s-1,by omega⟩
-  change 131073 * 80900 * ProximityPrize.SubmissionLower.RCN146.identityCurveDegree f a (b'+1) (s'+1)
+  change 131073 * 80910 * ProximityPrize.SubmissionLower.RCN146.identityCurveDegree f a (b'+1) (s'+1)
     Lower80788.HybridIdentityC2.w ≤ _
   rw [Lower80788.HybridIdentityC2.identityDegree_linear]
   simp [newCost, newNormal, reducedABS, rationalABS, mfibABS, mcutABS,
@@ -1227,10 +1227,10 @@ theorem stage_card_le (D t y r : ℕ)
     (hr3 : 3 ≤ r) (hb : r+2 ≤ y) (hyt : y ≤ t)
     (hRcap : r ≤ 32) (hYcap : y ≤ 149) (hTcap : t ≤ 8121)
     (hSafe : BoundaryTailGates6808.Safe r y)
-    (S : ResidualStage (polynomialEmbedding K) Gamma x 2130706433 80899 flag
+    (S : ResidualStage (polynomialEmbedding K) Gamma x 2130706433 80909 flag
       w (cellSupport t y r))
-    (hnodes : S.nodes.card = 181245+80899)
-    (hagreement : ∀ gamma ∈ Gamma, 181245 ≤ (S.agreementFiber gamma).card)
+    (hnodes : S.nodes.card = 181235+80909)
+    (hagreement : ∀ gamma ∈ Gamma, 181235 ≤ (S.agreementFiber gamma).card)
     (hbox : S.F ∈ globalCoefficientBox K D w t r)
     (hflag : flag.all ≤ r ∧ flag.yz+flag.all ≤ y ∧
       flag.zOnly+flag.yz+flag.all ≤ t) :
@@ -1247,7 +1247,7 @@ theorem stage_card_le (D t y r : ℕ)
         (polynomialEmbedding_injective K) S.F (w+1) S.G).mp hTail
     have hidentityGate := BoundaryTailGates6808.identity_gate flag t y r hSafe hflag.1 hflag.2.1
     have hprovider := BoundaryTailIdentity.actual_identityCurveCountProvider
-      (a := cellA t y) (b := cellB y r) (s := cellS r) S 181245 hnodes hagreement
+      (a := cellA t y) (b := cellB y r) (s := cellS r) S 181235 hnodes hagreement
       (by norm_num [RCN327.w]) hTailNumerator D t r
       (by norm_num [RCN327.w]) hshort hDchar hbox hflagChar hidentityGate
     have hpositive : 1 ≤ ProximityPrize.SubmissionLower.RCN146.identityCurveDegree flag (cellA t y) (cellB y r)
@@ -1256,25 +1256,25 @@ theorem stage_card_le (D t y r : ℕ)
       have hy : 0 < S.G.degreeOf 1 := S.y_dependent
       have hdeg := degreeOf_le_flag_total S.G flag S.flag_support 1
       omega
-    have hinc := identity_surface_seed_bound S 181245
+    have hinc := identity_surface_seed_bound S 181235
       (ProximityPrize.SubmissionLower.RCN146.identityCurveDegree flag (cellA t y) (cellB y r) (cellS r) w)
       hprovider hagreement (by norm_num [RCN327.w])
       (by rw [hnodes]; norm_num [RCN327.w]) hpositive
     have habsorb := MovingFiberIdentityArithmetic6815.generic_absorption flag
       (cellA t y) (cellB y r) (cellS r) (Nat.zero_le _) hb1 hs1
-    have hscaled : Gamma.card * 50174 ≤ 50174 * bound flag t y r := by
+    have hscaled : Gamma.card * 50164 ≤ 50164 * bound flag t y r := by
       calc
-        Gamma.card * 50174 = Gamma.card * (181245-w) := by norm_num [RCN327.w]
-        _ ≤ (S.nodes.card-w) * (80899+1) *
+        Gamma.card * 50164 = Gamma.card * (181235-w) := by norm_num [RCN327.w]
+        _ ≤ (S.nodes.card-w) * (80909+1) *
             ProximityPrize.SubmissionLower.RCN146.identityCurveDegree flag (cellA t y) (cellB y r) (cellS r) w := hinc
-        _ = 131073 * 80900 *
+        _ = 131073 * 80910 *
             ProximityPrize.SubmissionLower.RCN146.identityCurveDegree flag (cellA t y) (cellB y r) (cellS r) 131071 := by
           rw [hnodes]
           norm_num [RCN327.w]
-        _ ≤ 50174 * BoundaryTailIdentityArithmetic.newCost flag
+        _ ≤ 50164 * BoundaryTailIdentityArithmetic.newCost flag
             (cellA t y) (cellB y r) (cellS r) := habsorb
-        _ = 50174 * bound flag t y r := by rw [bound_eq_abs flag t y r hr3 hb]
-    apply Nat.le_of_mul_le_mul_right ?_ (by decide : 0 < 50174)
+        _ = 50164 * bound flag t y r := by rw [bound_eq_abs flag t y r hr3 hb]
+    apply Nat.le_of_mul_le_mul_right ?_ (by decide : 0 < 50164)
     simpa only [Nat.mul_comm] using hscaled
   · have hmixedRed := BoundaryTailGates6808.reduced_gate flag t y r hSafe hflag.1 hflag.2.1
     have hmix : 2 * (flag.zOnly+flag.yz+flag.all) *
@@ -1284,7 +1284,7 @@ theorem stage_card_le (D t y r : ℕ)
         dsimp [cellA, cellB, cellS]
         omega
       exact (Nat.mul_le_mul (Nat.mul_le_mul_left 2 hf) ht).trans_lt (by decide)
-    have hrationalGate : 80899+1 ≤ (BoundaryTailProvider.cellNormal t y r).yz := by
+    have hrationalGate : 80909+1 ≤ (BoundaryTailProvider.cellNormal t y r).yz := by
       have hv : 2 ≤ y-r := by omega
       simp only [BoundaryTailProvider.cellNormal, BoundaryTailAlgebra.normalFlag, RCN327.w]
       omega
@@ -1294,12 +1294,12 @@ theorem stage_card_le (D t y r : ℕ)
           (globalTailCut (polynomialEmbedding K) S.F (w+1))
           (regularitySurface (polynomialEmbedding K) S.F) Gamma
           (selectedPoint (polynomialEmbedding K) S.selected) C).card ≤
-            (80899+1) *
+            (80909+1) *
               (BoundaryTailReduced.reducedBudgetFamily S hTail hflagChar hmixedRed).yzCost C := by
       intro C hall
       exact tangent_component_card_le S C hTail
         (BoundaryTailReduced.reducedBaseOrd S hTail hflagChar hmixedRed C)
-        181245 D t r hnodes hagreement
+        181235 D t r hnodes hagreement
         (by norm_num [RCN327.w]) (by norm_num [RCN327.w]) hshort hDchar hbox
         (BoundaryTailReduced.reducedBudgetFamily S hTail hflagChar hmixedRed)
         (BoundaryTailReduced.reducedBudgetFamily_yzPositive S hTail hflagChar hmixedRed C)

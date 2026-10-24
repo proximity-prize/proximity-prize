@@ -32,10 +32,10 @@ local instance:GCDMonoid P4:=UniqueFactorizationMonoid.toGCDMonoid P4
 
 def initialAHelperCap (p:FlagDegree):ℕ:=
   AsymmetricHelper.leftRegularCountCap (Lower80899.FactorSwitch.helperPair
-    76330 182 39 (middle p) p.all (total p))
+    221052 182 39 (middle p) p.all (total p))
 
 def initialAMap (u0 u1:I → K):Caps.AKernel u0 u1 →ₗ[K] P4:=
-  kernelReconstructLinear (K:=K) 23924340 131071 76330 39 132
+  kernelReconstructLinear (K:=K) 23923020 131071 221052 39 132
     IRSProfile.domain u0 u1
 
 def initialAUniversalFactors (u0 u1:I → K) (H:P4):
@@ -47,7 +47,7 @@ def initialAUniversalFactors (u0 u1:I → K) (H:P4):
     (u0 u1:I → K) (H:P4) (F:RegularIndex H):
     F ∈ initialAUniversalFactors u0 u1 H ↔
       ∀ v:Caps.AKernel u0 u1,
-        F.1 ∣ reconstruct K 23924340 131071 76330 39 v.1:=by
+        F.1 ∣ reconstruct K 23923020 131071 221052 39 v.1:=by
   simp only [initialAUniversalFactors,mem_universalFactors,Finset.mem_univ,
     true_and,initialAMap,kernelReconstructLinear_apply]
 
@@ -55,7 +55,7 @@ theorem initialAUniversalProduct_dvd
     (u0 u1:I → K) (H:P4):
     ∀ v:Caps.AKernel u0 u1,
       regularProduct H (initialAUniversalFactors u0 u1 H) ∣
-        reconstruct K 23924340 131071 76330 39 v.1:=by
+        reconstruct K 23923020 131071 221052 39 v.1:=by
   intro v
   have h:=universalProduct_dvd H
     (Finset.univ:Finset (RegularIndex H)) (initialAMap u0 u1) v
@@ -89,12 +89,12 @@ private theorem initialA_helper_gates (p:FlagDegree)
     (hr:1 ≤ p.all) (hs:p.all ≤ 50)
     (hy:middle p ≤ 229) (ht:total p ≤ 11192):
     Lower80899.FactorSwitch.HelperPairGates
-      76330 182 39 (middle p) p.all (total p):=by
+      221052 182 39 (middle p) p.all (total p):=by
   unfold Lower80899.FactorSwitch.HelperPairGates
   change 1 ≤ p.all ∧ middle p < 2130706433 ∧ p.all < 2130706433 ∧
     total p < 2130706433 ∧
-    p.all*76330+total p*39 < 2130706433 ∧
-    middle p*76330+total p*182 < 2130706433 ∧
+    p.all*221052+total p*39 < 2130706433 ∧
+    middle p*221052+total p*182 < 2130706433 ∧
     middle p*39+p.all*182 < 2130706433
   omega
 
@@ -103,10 +103,10 @@ theorem initialA_nonuniversal_count
     (hwide:ResidualSupportData InitialSupports.wideSupport H)
     (selected:K → Polynomial K) (Gamma:Finset K)
     (hdegree:∀ gamma ∈ Gamma,(selected gamma).natDegree ≤ 131071)
-    (hagreement:∀ gamma ∈ Gamma,181245 ≤
+    (hagreement:∀ gamma ∈ Gamma,181235 ≤
       ((Finset.univ:Finset I).filter (fun i=>
         (selected gamma).eval (IRSProfile.domain i)=u0 i+gamma*u1 i)).card)
-    (hno:NoLargeSelectedPencil selected Gamma 131071 80899)
+    (hno:NoLargeSelectedPencil selected Gamma 131071 80909)
     (F:RegularIndex H) (hFU:F ∉ initialAUniversalFactors u0 u1 H):
     (regularSeeds H selected Gamma F).card ≤
       initialAHelperCap (regularCumulativeFlag H F):=by
@@ -133,7 +133,7 @@ theorem initialA_nonuniversal_count
     rw [regularCumulativeFlag,total,hc.2.2]
     exact degreeZ_le_totalWeight F.1
   rcases Lower80899.FactorSwitch.divisor_or_helper_count
-      23924340 76330 39 132 182 (by decide +kernel) (by decide +kernel) (by decide +kernel)
+      23923020 221052 39 132 182 (by decide +kernel) (by decide +kernel) (by decide +kernel)
       selected Gamma hdegree hagreement hno F
       (middle (regularCumulativeFlag H F)) (regularCumulativeFlag H F).all
       (total (regularCumulativeFlag H F)) hFY hFR hFZ
@@ -175,18 +175,18 @@ local instance : StrongNormalizationMonoid P4 := UniqueFactorizationMonoid.stron
 
 structure Input (u0 u1 : I → K) (selected : K → Polynomial K) (Gamma : Finset K) : Prop where
   degree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ 131071
-  agreement : ∀ gamma ∈ Gamma, 181245 ≤ ((Finset.univ : Finset I).filter (fun i =>
+  agreement : ∀ gamma ∈ Gamma, 181235 ≤ ((Finset.univ : Finset I).filter (fun i =>
     (selected gamma).eval (IRSProfile.domain i) = u0 i + gamma*u1 i)).card
-  noPencil : NoLargeSelectedPencil selected Gamma 131071 80899
+  noPencil : NoLargeSelectedPencil selected Gamma 131071 80909
 
 variable {u0 u1 : I → K} {selected : K → Polynomial K} {Gamma : Finset K}
 
 theorem Input.restrict (inp : Input u0 u1 selected Gamma) (Delta : Finset K) (h : Delta ⊆ Gamma) :
     Input u0 u1 selected Delta :=
   ⟨fun g hg => inp.degree g (h hg), fun g hg => inp.agreement g (h hg),
-    noLargeSelectedPencil_mono selected Gamma Delta 131071 80899 h inp.noPencil⟩
+    noLargeSelectedPencil_mono selected Gamma Delta 131071 80909 h inp.noPencil⟩
 
-def tailParameters : TightParameters := ⟨262144,131071,181245,30086670,15421,1⟩
+def tailParameters : TightParameters := ⟨262144,131071,181235,30086670,15421,1⟩
 
 theorem freePolynomial_count (inp : Input u0 u1 selected Gamma)
     (J : P4) (hJ : J ≠ 0) (hbox : J ∈ RCN174.globalCoefficientBox K 30086670 131071 15421 1)
@@ -202,7 +202,7 @@ theorem freePolynomial_count (inp : Input u0 u1 selected Gamma)
     (by decide +kernel) (by decide +kernel) selected Gamma Finset.univ IRSProfile.domain u0 u1
     IRSProfile.domain.injective.injOn (by rw [Finset.card_univ]; exact Fintype.card_fin _)
     inp.degree hsol inp.agreement (by
-      simpa only [tailParameters, TightParameters.errors, (show (262144 - 181245 : ℕ) = 80899 by decide +kernel)] using inp.noPencil)
+      simpa only [tailParameters, TightParameters.errors, (show (262144 - 181235 : ℕ) = 80909 by decide +kernel)] using inp.noPencil)
   have ht : tailParameters.countCap ≤ 9000000000000+0 := by
     norm_num [tailParameters, TightParameters.countCap, TightParameters.gap,
       TightParameters.errors, TightParameters.kappa, TightParameters.algebraicCap,
@@ -380,8 +380,8 @@ theorem factorCharge'_le_unit' (inp : Input u0 u1 selected Gamma)
     (by norm_num [stage]) (by norm_num [stage]) (by norm_num [stage]) (by norm_num [stage])
     inp.degree inp.agreement
     (by simpa only [stage, UnequalParameters.errors,
-      (show (262144 - 181245 : ℕ) = 80899 by decide +kernel)] using inp.noPencil)
-  have hgap : (stage y z (F.degreeOf 2) 1).gap = 50174 := by
+      (show (262144 - 181235 : ℕ) = 80909 by decide +kernel)] using inp.noPencil)
+  have hgap : (stage y z (F.degreeOf 2) 1).gap = 50164 := by
     simp [stage, UnequalParameters.gap]
   have hdot : dot ⟨(stage y z (F.degreeOf 2) 1).leftY, (stage y z (F.degreeOf 2) 1).leftR,
       (stage y z (F.degreeOf 2) 1).leftZ⟩ (stage y z (F.degreeOf 2) 1).mixedCost =
@@ -391,8 +391,8 @@ theorem factorCharge'_le_unit' (inp : Input u0 u1 selected Gamma)
   unfold foldNumerator at hnum
   have hs : 0 ≤ F.degreeOf 2 * 0 :=
     Nat.le_mul_of_pos_left _ (by omega)
-  have hmul : factorCharge' F selected Gamma * 50174 ≤
-      F.degreeOf 2 * (foldUnit y z r + 0) * 50174 := by
+  have hmul : factorCharge' F selected Gamma * 50164 ≤
+      F.degreeOf 2 * (foldUnit y z r + 0) * 50164 := by
     unfold factorCharge'
     nlinarith
   exact Nat.le_of_mul_le_mul_right hmul (by decide)

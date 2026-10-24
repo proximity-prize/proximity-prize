@@ -19,14 +19,14 @@ def cost (L U S r y t : ℕ) : ℕ :=
 theorem num_formula (L U S r y t : ℕ) :
     num L U S r y t =
       131073*((1+2*131071*y)*(r*L+t*S)+131071*(2*r-1)*(y*L+t*U)+
-        (1+2*131071*t)*(y*S+r*U))+80900*50174*(y*S+r*U) := by
+        (1+2*131071*t)*(y*S+r*U))+80910*50164*(y*S+r*U) := by
   simp only [num,leftRegularNumerator,PhasePotential6815.pair,
     UnequalParameters.errors,UnequalParameters.gap,UnequalParameters.leftAgreement,
     UnequalParameters.mixedCost,RCN294.dot]
   norm_num only [Nat.reduceSub,Nat.reduceAdd,Nat.reduceMul]
   ring
 
-theorem cost_eq (L U S r y t : ℕ) : cost L U S r y t=num L U S r y t/50174 := by
+theorem cost_eq (L U S r y t : ℕ) : cost L U S r y t=num L U S r y t/50164 := by
   simp only [cost,num,leftRegularCountCap,PhasePotential6815.pair,UnequalParameters.gap,Nat.reduceSub]
 
 theorem num_mono (L U S r y t capR capY capT : ℕ) (hr : r≤capR) (hy : y≤capY) (ht : t≤capT) :
@@ -48,7 +48,7 @@ theorem sum_num_le {ι : Type*} [DecidableEq ι] (s : Finset ι)
         131073*((1+2*131071*(∑ j∈s,y j))*(r i*L+t i*S)+
           131071*(2*(∑ j∈s,r j)-1)*(y i*L+t i*U)+
           (1+2*131071*(∑ j∈s,t j))*(y i*S+r i*U))+
-          80900*50174*(y i*S+r i*U) := by
+          80910*50164*(y i*S+r i*U) := by
     have hr := Finset.single_le_sum (fun j (_ : j∈s) => Nat.zero_le (r j)) hi
     have hy := Finset.single_le_sum (fun j (_ : j∈s) => Nat.zero_le (y j)) hi
     have ht := Finset.single_le_sum (fun j (_ : j∈s) => Nat.zero_le (t j)) hi
@@ -58,7 +58,7 @@ theorem sum_num_le {ι : Type*} [DecidableEq ι] (s : Finset ι)
     _≤∑ i∈s, (131073*((1+2*131071*(∑ j∈s,y j))*(r i*L+t i*S)+
           131071*(2*(∑ j∈s,r j)-1)*(y i*L+t i*U)+
           (1+2*131071*(∑ j∈s,t j))*(y i*S+r i*U))+
-          80900*50174*(y i*S+r i*U)) := Finset.sum_le_sum hterm
+          80910*50164*(y i*S+r i*U)) := Finset.sum_le_sum hterm
     _=_ := by
       rw [num_formula]
       simp only [Finset.sum_add_distrib,←Finset.mul_sum,←Finset.sum_mul]
@@ -68,9 +68,9 @@ theorem sum_cost_le {ι : Type*} [DecidableEq ι] (s : Finset ι)
     (∑ i∈s, cost L U S (r i) (y i) (t i))≤
       cost L U S (∑ i∈s, r i) (∑ i∈s, y i) (∑ i∈s, t i) := by
   conv_rhs => rw [cost_eq]
-  apply (Nat.le_div_iff_mul_le (by decide : 0<50174)).mpr
+  apply (Nat.le_div_iff_mul_le (by decide : 0<50164)).mpr
   calc
-    _=∑ i∈s, cost L U S (r i) (y i) (t i)*50174 := by rw [Finset.sum_mul]
+    _=∑ i∈s, cost L U S (r i) (y i) (t i)*50164 := by rw [Finset.sum_mul]
     _≤∑ i∈s, num L U S (r i) (y i) (t i) := by
       apply Finset.sum_le_sum
       intro i hi
@@ -88,7 +88,7 @@ theorem helpers_sum_le {ι : Type*} [DecidableEq ι] (s : Finset ι)
 
 theorem initial_helpers_sum_le {ι : Type*} [DecidableEq ι] (s : Finset ι)
     (pr py pt : ℕ) (r y t helper : ι → ℕ)
-    (hhelper : ∀ i∈s, helper i≤cost 76330 182 39 (r i) (y i) (t i))
+    (hhelper : ∀ i∈s, helper i≤cost 221052 182 39 (r i) (y i) (t i))
     (hrpos : ∀ i∈s, 1≤r i)
     (hry : ∀ i∈s, r i≤y i) (hyt : ∀ i∈s, y i≤t i)
     (hr : pr+(∑ i∈s, r i)≤50)
@@ -98,7 +98,7 @@ theorem initial_helpers_sum_le {ι : Type*} [DecidableEq ι] (s : Finset ι)
       let remT := 11192-pt
       let remY := min remT (229-py)
       let remR := min remY (50-pr)
-      if remR=0 then 0 else cost 76330 182 39 remR remY remT := by
+      if remR=0 then 0 else cost 221052 182 39 remR remY remT := by
   have hrySum := Finset.sum_le_sum hry
   have hytSum := Finset.sum_le_sum hyt
   have ht' : (∑ i∈s,t i)≤11192-pt := by omega
@@ -113,7 +113,7 @@ theorem initial_helpers_sum_le {ι : Type*} [DecidableEq ι] (s : Finset ι)
       have hiPos := hrpos i hi
       omega
     simp [hs]
-  · exact helpers_sum_le s 76330 182 39 _ _ _ r y t helper hhelper hr' hy' ht'
+  · exact helpers_sum_le s 221052 182 39 _ _ _ r y t helper hhelper hr' hy' ht'
 
 end ProximityPrize.SubmissionLower.ExactInitialCharge6815
 end MergedPart0
@@ -260,7 +260,7 @@ theorem charged_split
       PowerRoute.stageCost sound.source.totalCap sound.source.middleCap sound.source.slopeCap
         (Oracle.exactRouteBox p) j≤charge p)
     (D m : ℕ)
-    (hweighted : D = m * 181245)
+    (hweighted : D = m * 181235 - 12602)
     (hshape : D + sound.source.slopeCap ≤
       131071 * (sound.source.middleCap + 1))
     (hslopeM : sound.source.slopeCap ≤ m)
@@ -269,11 +269,11 @@ theorem charged_split
     (selected : K → Polynomial K) (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma,
       (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181245 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181235 ≤
       ((Finset.univ : Finset I).filter (fun i ↦
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80899)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80909)
     (hgap : sound.source.gap ≤ Module.finrank K
       (ConstraintKernel (K := K) D 131071 sound.source.totalCap
         sound.source.slopeCap m IRSProfile.domain u0 u1))
@@ -314,7 +314,7 @@ theorem charged_split
     omega
   have hcapacity : ∀ j, 1 ≤ j → j ≤ sound.source.fuel p →
       D - j * 50175 ≤
-        (m - j) * 181245 + j * (131071 - 1) := by
+        (m - j) * 181235 + j * (131071 - 1) := by
     intro j _hj hjfuel
     have hjm : j ≤ m := hjfuel.trans hfuelM
     rw [hweighted]
@@ -430,8 +430,8 @@ theorem charged_split
   have hmpos : 0 < m := by omega
   have hDpos : 0 < D := by
     rw [hweighted]
-    exact Nat.mul_pos hmpos (by decide)
-  have hDa : D ≤ m * 181245 := hweighted.le
+    omega
+  have hDa : D ≤ m * 181235 := by omega
   have hP : regularProduct H A ≠ 0 := regularProduct_ne_zero H A
   have hcP : contactDec p ≤ wt (contactWeights 131071) (regularProduct H A) := by
     have h := LocatorArbitraryPowerAvoidance.contact_ge_ys 131071 (by decide)
@@ -505,7 +505,7 @@ theorem charged_split
 
 theorem exact_split
     (sound : PhaseSourceSound) (D m : ℕ)
-    (hweighted : D = m * 181245)
+    (hweighted : D = m * 181235 - 12602)
     (hshape : D + sound.source.slopeCap ≤
       131071 * (sound.source.middleCap + 1))
     (hslopeM : sound.source.slopeCap ≤ m)
@@ -514,11 +514,11 @@ theorem exact_split
     (selected : K → Polynomial K) (Gamma : Finset K)
     (hdegree : ∀ gamma ∈ Gamma,
       (selected gamma).natDegree ≤ 131071)
-    (hagreement : ∀ gamma ∈ Gamma, 181245 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 181235 ≤
       ((Finset.univ : Finset I).filter (fun i ↦
         (selected gamma).eval (IRSProfile.domain i) =
           u0 i + gamma * u1 i)).card)
-    (hno : NoLargeSelectedPencil selected Gamma 131071 80899)
+    (hno : NoLargeSelectedPencil selected Gamma 131071 80909)
     (hgap : sound.source.gap ≤ Module.finrank K
       (ConstraintKernel (K := K) D 131071 sound.source.totalCap
         sound.source.slopeCap m IRSProfile.domain u0 u1))
@@ -550,20 +550,20 @@ section MergedPart4
 namespace ProximityPrize.SubmissionLower.TerminalPotentials6815
 open BalancedPhasePotential6815 PhasePotential6815 RCN260 AsymmetricHelper
 theorem count0 (r y t : ℕ) (hr : 1≤r) (hR : r≤39) (hY : y≤182) (hT : t≤11192) :
-    leftRegularCountCap (pair 88902 1382 308 r y t)≤0*t+4690861953401*y+43345274666350*r := by
+    leftRegularCountCap (pair 88902 1382 308 r y t)≤0*t+4691797056759*y+43353915371276*r := by
   simpa only [Nat.zero_mul,Nat.zero_add] using final_pass_count r y t hr hY hT
 theorem count1 (r y t : ℕ) (hr : 1≤r) (hR : r≤28) (hY : y≤131) (hT : t≤8092) :
-    leftRegularCountCap (pair 88902 1382 308 r y t)≤53657045892*t+3381036458565*y+15633886130566*r := by
-  exact count_le 88902 1382 308 28 131 8092 53657045892 3381036458565 15633886130566 r y t (by decide +kernel) hr hR hY hT
+    leftRegularCountCap (pair 88902 1382 308 r y t)≤53667742217*t+3381710453261*y+15637002677025*r := by
+  exact count_le 88902 1382 308 28 131 8092 53667742217 3381710453261 15637002677025 r y t (by decide +kernel) hr hR hY hT
 theorem count2 (r y t : ℕ) (hr : 1≤r) (hR : r≤26) (hY : y≤124) (hT : t≤7692) :
-    leftRegularCountCap (pair 88902 1382 308 r y t)≤50287772707*t+3174905420834*y+14829154405166*r := by
-  exact count_le 88902 1382 308 26 124 7692 50287772707 3174905420834 14829154405166 r y t (by decide +kernel) hr hR hY hT
+    leftRegularCountCap (pair 88902 1382 308 r y t)≤50297797381*t+3175538324102*y+14832110531458*r := by
+  exact count_le 88902 1382 308 26 124 7692 50297797381 3175538324102 14832110531458 r y t (by decide +kernel) hr hR hY hT
 theorem count3 (r y t : ℕ) (hr : 1≤r) (hR : r≤25) (hY : y≤117) (hT : t≤7692) :
-    leftRegularCountCap (pair 88902 1382 308 r y t)≤47864909186*t+3114024297937*y+14402986544890*r := by
-  exact count_le 88902 1382 308 25 117 7692 47864909186 3114024297937 14402986544890 r y t (by decide +kernel) hr hR hY hT
+    leftRegularCountCap (pair 88902 1382 308 r y t)≤47874450871*t+3114645064788*y+14405857716261*r := by
+  exact count_le 88902 1382 308 25 117 7692 47874450871 3114645064788 14405857716261 r y t (by decide +kernel) hr hR hY hT
 theorem count4 (r y t : ℕ) (hr : 1≤r) (hR : r≤24) (hY : y≤114) (hT : t≤7692) :
-    leftRegularCountCap (pair 88902 1382 308 r y t)≤46285733583*t+3053143175041*y+14220343176200*r := by
-  exact count_le 88902 1382 308 24 114 7692 46285733583 3053143175041 14220343176200 r y t (by decide +kernel) hr hR hY hT
+    leftRegularCountCap (pair 88902 1382 308 r y t)≤46294960466*t+3053751805475*y+14223177938320*r := by
+  exact count_le 88902 1382 308 24 114 7692 46294960466 3053751805475 14223177938320 r y t (by decide +kernel) hr hR hY hT
 end ProximityPrize.SubmissionLower.TerminalPotentials6815
 end MergedPart4
 section MergedPart5

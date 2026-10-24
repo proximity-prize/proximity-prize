@@ -121,7 +121,7 @@ theorem pair_count_cell {u0 u1 : I → K} {selected : K → Polynomial K} {Gamma
     (by norm_num [P, PairCell6815.parameters]) (by norm_num [P, PairCell6815.parameters])
     inp.degree inp.agreement
     (by simpa only [P, PairCell6815.parameters, UnequalParameters.errors,
-      (show (262144 - 181245 : ℕ) = 80899 by decide +kernel)] using inp.noPencil)
+      (show (262144 - 181235 : ℕ) = 80909 by decide +kernel)] using inp.noPencil)
   have hsum := sum_regular_counts_bound_left P Q T selected Gamma
     (regularVector_budgets_actual P Q hQ qY qR qZ) hcount
   exact (Nat.le_div_iff_mul_le (by norm_num [P, PairCell6815.parameters, UnequalParameters.gap])).mpr hsum

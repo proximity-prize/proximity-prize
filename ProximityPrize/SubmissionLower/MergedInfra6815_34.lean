@@ -104,7 +104,7 @@ set_option maxRecDepth 20000
 def hiRect (d : Rectangle) : Rectangle := {d with lo := d.hi}
 
 def cutAt (b : Band) (d : Rectangle) (nu : ℕ) : ℕ :=
-  d.alpha*181245-d.beta*min (nu-131071+1) ((b.B+b.R-1)*181245)
+  d.alpha*181235-d.beta*min (nu-131071+1) ((b.B+b.R-1)*181235)
 
 def tanK (b : Band) (d : Rectangle) : ℕ := cutAt b d d.lo-cutoff b d
 def tanE (b : Band) (d : Rectangle) : ℕ := cutAt b d d.lo-d.lo
@@ -200,8 +200,8 @@ theorem cutAt_affine (b : Band) (d : Rectangle) (nu : ℕ) (hshape : WideShape b
   unfold cutAt
   unfold cutoff at hDh ⊢
   unfold tail at htail
-  have hm1 : min (nu-131071+1) ((b.B+b.R-1)*181245)=nu-131071+1 := min_eq_left (by omega)
-  have hm2 : min (d.hi-131071+1) ((b.B+b.R-1)*181245)=d.hi-131071+1 := min_eq_left (by omega)
+  have hm1 : min (nu-131071+1) ((b.B+b.R-1)*181235)=nu-131071+1 := min_eq_left (by omega)
+  have hm2 : min (d.hi-131071+1) ((b.B+b.R-1)*181235)=d.hi-131071+1 := min_eq_left (by omega)
   rw [hm1]
   rw [hm2] at hDh ⊢
   have hsplit : d.beta*(d.hi-131071+1)=d.beta*(nu-131071+1)+d.beta*(d.hi-nu) := by
@@ -307,8 +307,8 @@ theorem wide_rows_all (b : Band) (d : Rectangle) (T nu : ℕ) (hshape : WideShap
     have heq : cutAt b d nu=cutAt b d d.hi := by
       unfold cutAt
       unfold tail at htail hht
-      rw [min_eq_right (show (b.B+b.R-1)*181245≤nu-131071+1 by omega),
-        min_eq_right (show (b.B+b.R-1)*181245≤d.hi-131071+1 by omega)]
+      rw [min_eq_right (show (b.B+b.R-1)*181235≤nu-131071+1 by omega),
+        min_eq_right (show (b.B+b.R-1)*181235≤d.hi-131071+1 by omega)]
     have hrows := wide_rows b d T d.hi hshape hT0 hT1 hcheck htan hshape.2.2.1 le_rfl
     rw [heq]
     exact profile_rows_mono_weight (by omega) hrows
@@ -328,9 +328,9 @@ theorem regular_count_of_wide_rectangle (b : Band) (d : Rectangle) (hvalid : Wid
     (nodes : I ↪ K) (u0 u1 : I → K) (hcard : Fintype.card I=262144)
     (selected : K → Polynomial K) (Gamma : Finset K)
     (hdegree : ∀ gamma∈Gamma, (selected gamma).natDegree≤131071)
-    (hagreement : ∀ gamma∈Gamma, 181245≤
+    (hagreement : ∀ gamma∈Gamma, 181235≤
       ((Finset.univ : Finset I).filter (fun i => (selected gamma).eval (nodes i)=u0 i+gamma*u1 i)).card)
-    (hno : RCN238.NoLargeSelectedPencil selected Gamma 131071 80899) :
+    (hno : RCN238.NoLargeSelectedPencil selected Gamma 131071 80909) :
     (RCN140.regularSeeds H selected Gamma F).card≤b.count := by
   classical
   rcases hvalid with ⟨hshape,hRpos,hBchar,hRchar,hTchar,hU,hgY,hgR,hgZ,hprice,hcheck,htan⟩
@@ -352,7 +352,7 @@ theorem regular_count_of_wide_rectangle (b : Band) (d : Rectangle) (hvalid : Wid
   have hTL : T≤total b d T := by omega
   have hupper : total b d T≤max d.L0 d.L1 := total_upper b (hiRect d) T hS hT0 hT1
   have hDle : cutAt b d nu≤cutAt b d d.lo :=
-    clipped_cutoff_antitone d.alpha d.beta 131071 b.B b.R 181245 hlo
+    clipped_cutoff_antitone d.alpha d.beta 131071 b.B b.R 181235 hlo
   have hDpos : 0<cutAt b d nu := by
     by_cases hn : nu≤d.hi
     · rw [cutAt_affine b d nu hshape hlo hn]; have := hshape.2.2.2.1; omega
@@ -363,12 +363,12 @@ theorem regular_count_of_wide_rectangle (b : Band) (d : Rectangle) (hvalid : Wid
       have heq : cutAt b d nu=cutAt b d d.hi := by
         unfold cutAt
         unfold tail at htail hht
-        rw [min_eq_right (show (b.B+b.R-1)*181245≤nu-131071+1 by omega),
-          min_eq_right (show (b.B+b.R-1)*181245≤d.hi-131071+1 by omega)]
+        rw [min_eq_right (show (b.B+b.R-1)*181235≤nu-131071+1 by omega),
+          min_eq_right (show (b.B+b.R-1)*181235≤d.hi-131071+1 by omega)]
       rw [heq, cutAt_affine b d d.hi hshape hshape.2.2.1 le_rfl]; have := hshape.2.2.2.1; omega
   obtain ⟨Q,hQ,hrel,hzero⟩ := exists_profile_helper K
     (D:=cutAt b d nu) (L:=total b d T) (s:=d.s) (nu:=nu) (B:=b.B)
-    F.val hF.1 hF.2.2 hbox hTL hRs hcode htotal hslope hB nodes u0 u1 d.alpha d.beta 181245
+    F.val hF.1 hF.2.2 hbox hTL hRs hcode htotal hslope hB nodes u0 u1 d.alpha d.beta 181235
     (by omega) hDpos le_rfl
     (by simpa only [hcard] using hrows)
     selected Delta (fun gamma hg => hdegree gamma (hsub hg)) hsol hreg
@@ -454,9 +454,9 @@ theorem regular_count_of_wide_cover (b : Band) (start : ℕ) (xs : List Rectangl
     (nodes : I ↪ K) (u0 u1 : I → K) (hcard : Fintype.card I=262144)
     (selected : K → Polynomial K) (Gamma : Finset K)
     (hdegree : ∀ gamma∈Gamma, (selected gamma).natDegree≤131071)
-    (hagreement : ∀ gamma∈Gamma, 181245≤
+    (hagreement : ∀ gamma∈Gamma, 181235≤
       ((Finset.univ : Finset I).filter (fun i => (selected gamma).eval (nodes i)=u0 i+gamma*u1 i)).card)
-    (hno : RCN238.NoLargeSelectedPencil selected Gamma 131071 80899) :
+    (hno : RCN238.NoLargeSelectedPencil selected Gamma 131071 80909) :
     (RCN140.regularSeeds H selected Gamma F).card≤b.count := by
   obtain ⟨d,hd,hlo,hhi⟩ := covers_spec xs start (tail b) hc.2.1
     (min nu (tail b)) (le_min hnu hc.2.2) (min_le_right _ _)

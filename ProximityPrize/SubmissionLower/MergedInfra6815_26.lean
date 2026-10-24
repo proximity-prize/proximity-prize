@@ -257,9 +257,9 @@ structure Rectangle where
   U : ℕ
   deriving DecidableEq
 
-def tail (b : Band) : ℕ := (b.B+b.R-1)*181245+131071-1
+def tail (b : Band) : ℕ := (b.B+b.R-1)*181235+131071-1
 def cutoff (b : Band) (d : Rectangle) : ℕ :=
-  d.alpha*181245-d.beta*min (d.hi-131071+1) ((b.B+b.R-1)*181245)
+  d.alpha*181235-d.beta*min (d.hi-131071+1) ((b.B+b.R-1)*181235)
 def lowerTotal (b : Band) (d : Rectangle) (T : ℕ) : ℕ :=
   max (T+d.alpha+d.s) (max (cutoff b d/131071+1) (T+(cutoff b d-d.lo)/131071+1))
 def total (b : Band) (d : Rectangle) (T : ℕ) : ℕ :=
@@ -377,7 +377,7 @@ set_option maxHeartbeats 1300000
 set_option maxRecDepth 25000
 
 def pair (b : Band) (d : Rectangle) : UnequalParameters :=
-  ⟨262144,131071,181245,b.B,b.R,b.T1,d.U,d.s,max d.L0 d.L1⟩
+  ⟨262144,131071,181235,b.B,b.R,b.T1,d.U,d.s,max d.L0 d.L1⟩
 
 def Valid (b : Band) (d : Rectangle) : Prop :=
   Shape b d ∧ 1≤b.R ∧ b.B<2130706433 ∧ b.R<2130706433 ∧ b.T1<2130706433 ∧
@@ -393,7 +393,7 @@ instance validDecidable (b : Band) (d : Rectangle) : Decidable (Valid b d) := by
 
 theorem cutoff_of_clipped_weight (b : Band) (d : Rectangle) (nu : ℕ)
     (hhi : min nu (tail b)≤d.hi) :
-    cutoff b d≤d.alpha*181245-d.beta*min (nu-131071+1) ((b.B+b.R-1)*181245) := by
+    cutoff b d≤d.alpha*181235-d.beta*min (nu-131071+1) ((b.B+b.R-1)*181235) := by
   unfold cutoff
   apply Nat.sub_le_sub_left
   apply Nat.mul_le_mul_left
@@ -401,7 +401,7 @@ theorem cutoff_of_clipped_weight (b : Band) (d : Rectangle) (nu : ℕ)
   · have hh : nu≤d.hi := by simpa only [min_eq_left hn] using hhi
     exact min_le_min (by omega) le_rfl
   · have hh : tail b≤d.hi := by simpa only [min_eq_right (by omega : tail b≤nu)] using hhi
-    have hc : (b.B+b.R-1)*181245≤d.hi-131071+1 := by unfold tail at hh; omega
+    have hc : (b.B+b.R-1)*181235≤d.hi-131071+1 := by unfold tail at hh; omega
     rw [min_eq_right hc]
     exact min_le_right _ _
 
@@ -419,9 +419,9 @@ theorem regular_count_of_rectangle (b : Band) (d : Rectangle) (hvalid : Valid b 
     (nodes : I ↪ K) (u0 u1 : I → K) (hcard : Fintype.card I=262144)
     (selected : K → Polynomial K) (Gamma : Finset K)
     (hdegree : ∀ gamma∈Gamma, (selected gamma).natDegree≤131071)
-    (hagreement : ∀ gamma∈Gamma, 181245≤
+    (hagreement : ∀ gamma∈Gamma, 181235≤
       ((Finset.univ : Finset I).filter (fun i => (selected gamma).eval (nodes i)=u0 i+gamma*u1 i)).card)
-    (hno : RCN238.NoLargeSelectedPencil selected Gamma 131071 80899) :
+    (hno : RCN238.NoLargeSelectedPencil selected Gamma 131071 80909) :
     (RCN140.regularSeeds H selected Gamma F).card≤b.count := by
   classical
   rcases hvalid with ⟨hshape,hRpos,hBchar,hRchar,hTchar,hU,hgY,hgR,hgZ,hprice,hcheck⟩
@@ -447,7 +447,7 @@ theorem regular_count_of_rectangle (b : Band) (d : Rectangle) (hvalid : Valid b 
     (s:=d.s) (T:=T) (R:=b.R) (B:=b.B) (N:=262144) (alpha:=d.alpha) (beta:=d.beta) hlo hrows
   obtain ⟨Q,hQ,hrel,hzero⟩ := exists_profile_helper K
     (D:=cutoff b d) (L:=total b d T) (s:=d.s) (nu:=nu) (B:=b.B)
-    F.val hF.1 hF.2.2 hbox hTL hRs hcode htotal hslope hB nodes u0 u1 d.alpha d.beta 181245
+    F.val hF.1 hF.2.2 hbox hTL hRs hcode htotal hslope hB nodes u0 u1 d.alpha d.beta 181235
     (by omega) hD (cutoff_of_clipped_weight b d nu hhi)
     (by simpa only [hcard] using hrowsNu)
     selected Delta (fun gamma hg => hdegree gamma (hsub hg)) hsol hreg
@@ -544,9 +544,9 @@ theorem regular_count_of_cover (b : Band) (xs : List Rectangle) (hc : VerifiedCo
     (nodes : I ↪ K) (u0 u1 : I → K) (hcard : Fintype.card I=262144)
     (selected : K → Polynomial K) (Gamma : Finset K)
     (hdegree : ∀ gamma∈Gamma, (selected gamma).natDegree≤131071)
-    (hagreement : ∀ gamma∈Gamma, 181245≤
+    (hagreement : ∀ gamma∈Gamma, 181235≤
       ((Finset.univ : Finset I).filter (fun i => (selected gamma).eval (nodes i)=u0 i+gamma*u1 i)).card)
-    (hno : RCN238.NoLargeSelectedPencil selected Gamma 131071 80899) :
+    (hno : RCN238.NoLargeSelectedPencil selected Gamma 131071 80909) :
     (RCN140.regularSeeds H selected Gamma F).card≤b.count := by
   obtain ⟨d,hd,hlo,hhi⟩ := covers_spec xs (minimumWeight b) (tail b) hc.2.1
     (min nu (tail b)) (le_min hnu hc.2.2) (min_le_right _ _)
@@ -899,9 +899,9 @@ theorem regular_count (b : Band) (hc : Covered b (minimumWeight b) (tail b))
     (nodes : I ↪ K) (u0 u1 : I → K) (hcard : Fintype.card I=262144)
     (selected : K → Polynomial K) (Gamma : Finset K)
     (hdegree : ∀ gamma∈Gamma, (selected gamma).natDegree≤131071)
-    (hagreement : ∀ gamma∈Gamma, 181245≤
+    (hagreement : ∀ gamma∈Gamma, 181235≤
       ((Finset.univ : Finset I).filter (fun i => (selected gamma).eval (nodes i)=u0 i+gamma*u1 i)).card)
-    (hno : RCN238.NoLargeSelectedPencil selected Gamma 131071 80899) :
+    (hno : RCN238.NoLargeSelectedPencil selected Gamma 131071 80909) :
     (RCN140.regularSeeds H selected Gamma F).card≤b.count := by
   obtain ⟨d,hd,hlo,hhi⟩ := hc (min nu (tail b)) (le_min hnu hrange) (min_le_right _ _)
   exact regular_count_of_rectangle K I b d hd F hbox hcode htotal hslope hB hT0 hT1

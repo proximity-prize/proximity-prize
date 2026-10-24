@@ -52,7 +52,7 @@ private theorem whole_regular_all_le
 def Rules : Prop := ∀ r v z : ℕ, 1≤r → r≤39 → r+v≤182 → r+v+z≤11192 →
   FinalRuleCheck6815.RuleBound r v z (FinalLedgerData6815.cap r v z)
 def finalCap (p : FlagDegree) := FinalLedgerData6815.cap p.all p.yz p.zOnly
-def initialUpper (p : FlagDegree) := FinalLedgerChord6815.initialNum p.all (middle p) p.zOnly / 50174
+def initialUpper (p : FlagDegree) := FinalLedgerChord6815.initialNum p.all (middle p) p.zOnly / 50164
 def carrierSupport : ResidualSupportParameters :=
   ⟨50,229,15421,by decide,by decide,by decide,by decide⟩
 
@@ -83,7 +83,7 @@ theorem regular_count
   have hPne : regularProduct H U ≠ 0 := regularProduct_ne_zero H U
   have hdivA : ∀ v : Caps.AKernel u0 u1,
       regularProduct H U ∣
-        reconstruct K 23924340 131071 76330 39 v.1 := by
+        reconstruct K 23923020 131071 221052 39 v.1 := by
     simpa only [U] using initialAUniversalProduct_dvd u0 u1 H
   have hpS : p.all ≤ 39 := by
     simp only [p, regularAggregateFlag_all]
@@ -159,7 +159,7 @@ theorem regular_count
       (fun F _ => all_le_middle _) (fun F _ => middle_le_total _)
       hcomplementS hcomplementY hcomplementT
     have hcost : (∑ F∈N,initialAHelperCap (regularCumulativeFlag H F))≤
-        ExactInitialCharge6815.cost 76330 182 39
+        ExactInitialCharge6815.cost 221052 182 39
           (min (min (11192-total p) (229-middle p)) (50-p.all))
           (min (11192-total p) (229-middle p)) (11192-total p) := by
       dsimp only at h

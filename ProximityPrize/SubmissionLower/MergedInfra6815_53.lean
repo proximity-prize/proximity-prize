@@ -291,9 +291,9 @@ theorem cost_terminal_le (k r y t : ℕ) (hk : k<5) (hr : 1≤r)
 
 def exactPieceCheck (L U S r y plo phi pstart : ℕ) (p : Piece) (cut cstart : ℕ) (c : Piece) : Bool :=
   if cstart<min c.stop cut then TriangularAffine6815.check
-    (50174*c.base+ExactInitialCharge6815.num L U S r y y+1) (50174*c.slope)
+    (50164*c.base+ExactInitialCharge6815.num L U S r y y+1) (50164*c.slope)
     cstart (min c.stop cut-1) 0 (ExactRemovalPhase6815.tSlope L U S r y)
-    (50174*(value p pstart plo+1)) (50174*p.slope) plo phi else true
+    (50164*(value p pstart plo+1)) (50164*p.slope) plo phi else true
 
 def exactChildCheck (L U S r y plo phi pstart : ℕ) (p : Piece) (cut : ℕ) (child : List Piece) : Bool :=
   allCells (exactPieceCheck L U S r y plo phi pstart p cut) 0 child
@@ -311,13 +311,13 @@ theorem exactPieceCheck_sound (L U S r y plo phi pstart : ℕ) (p : Piece) (cut 
     rw [show z-pstart=(plo-pstart)+(z-plo) by omega,Nat.mul_add]
     omega
   have hn := ExactRemovalPhase6815.num_shift L U S r y (z-x)
-  have ha : ExactInitialCharge6815.num L U S r y (y+(z-x))+50174*value c cstart x<
-      50174*(value p pstart z+1) := by
+  have ha : ExactInitialCharge6815.num L U S r y (y+(z-x))+50164*value c cstart x<
+      50164*(value p pstart z+1) := by
     unfold TriangularAffine6815.left TriangularAffine6815.right at htri
     rw [hn,←hp]
     dsimp only [value] at *
     nlinarith only [htri]
-  have hd : (ExactInitialCharge6815.num L U S r y (y+(z-x))+50174*value c cstart x)/50174<value p pstart z+1 := by
+  have hd : (ExactInitialCharge6815.num L U S r y (y+(z-x))+50164*value c cstart x)/50164<value p pstart z+1 := by
     exact (Nat.div_lt_iff_lt_mul (by decide)).mpr (by simpa only [Nat.mul_comm] using ha)
   rw [Nat.add_mul_div_left _ _ (by decide),←ExactInitialCharge6815.cost_eq] at hd
   omega
