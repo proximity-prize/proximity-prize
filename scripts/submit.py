@@ -135,7 +135,7 @@ def main() -> None:
     # Optional. Empty means the service picks the challenge's active version,
     # which is what every submission did before this existed.
     challenge_version = os.environ.get("CHALLENGE_VERSION", "").strip() or None
-    tokens = TokenSource(base)
+    tokens = TokenSource(os.environ.get("OIDC_AUDIENCE") or base)
 
     # The key is required, and scoped to this run. The service binds a key to
     # one request including its run id and attempt, so a key reused across two
