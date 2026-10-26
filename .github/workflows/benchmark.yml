@@ -50,7 +50,9 @@ jobs:
     # before reading a red benchmark as a proof failure.
     timeout-minutes: 360
     env:
-      BASE: https://proximity-prize.zksecurity.xyz
+      BASE: https://autoresearch.zksecurity.xyz
+      # The service still expects the old origin as the token audience.
+      OIDC_AUDIENCE: https://proximity-prize.zksecurity.xyz
       PROFILE: ${{ inputs.profile }}
 
     steps:

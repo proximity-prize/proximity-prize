@@ -54,7 +54,7 @@ def main() -> int:
         return 0
 
     try:
-        token = TokenSource(base).get()
+        token = TokenSource(os.environ.get("OIDC_AUDIENCE") or base).get()
     except (SystemExit, urllib.error.URLError, OSError) as exc:
         print(f"could not mint a token to cancel {submission_id}: {exc}", file=sys.stderr)
         return 0
