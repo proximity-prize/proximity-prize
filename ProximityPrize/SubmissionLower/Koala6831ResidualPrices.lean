@@ -1,3 +1,5 @@
+/- Derived from Lucieno (PR 618), and BitWonka (PR 581) for additional interpolation profiles.
+   New 68.32 source parameters, adaptive schedule, cell assignments and integer receipts. Apache-2.0. -/
 import ProximityPrize.SubmissionLower.LowerFoundation
 
 namespace ProximityPrize.SubmissionLower.Koala6831Residual
@@ -30,11 +32,11 @@ structure JetProfile where
 
 private def n : ℕ := 262144
 private def w : ℕ := 131071
-private def agreement : ℕ := 181084
+private def agreement : ℕ := 181078
 private def fieldPrime : ℕ := 2130706433
 def pencilBudget : ℕ := n - agreement + 1
 private def agreementGap : ℕ := agreement - w
-private def scale : ℕ := 271968319382760
+private def scale : ℕ := 271926681406380
 
 def residualPriceScale : ℕ := scale
 
@@ -204,9 +206,11 @@ def jetMonotoneWithCorrections (cuts : TailCorrections) (f : Envelope) (cfg : Fi
 
 def roomCredit (f : Envelope) : ℕ :=
   let credit : Envelope := ⟨f.slope, f.middle, f.middle⟩
-  pairPrice credit ⟨384,1717,107468⟩ ⟨80,360,53188⟩ +
-    pairPrice credit ⟨402,1805,601718⟩ ⟨54,245,15351⟩
+  pairPrice credit ⟨522,2318,153524⟩ ⟨93,418,41882⟩ +
+    pairPrice credit ⟨464,2084,816263⟩ ⟨52,231,15351⟩
 
-def paid : ℕ := 32460478451246707
+def paid : ℕ := 39317112195672787
 
 end ProximityPrize.SubmissionLower.Koala6831Residual
+
+/- Modified for the 68.32 KoalaBear soundness construction, November 2026. -/

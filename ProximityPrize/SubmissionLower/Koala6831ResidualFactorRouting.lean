@@ -58,7 +58,7 @@ theorem profile_totalCap_le_jetSourceCap (cfg : Fin 3 → JetProfile) (j : Fin 3
   · exact (le_max_left _ _).trans (le_max_right _ _)
   · exact (le_max_right _ _).trans (le_max_right _ _)
 
-def RetainedProfileSources (ids : Fin 9 × Fin 9 × Fin 9)
+def RetainedProfileSources (ids : Fin 18 × Fin 18 × Fin 18)
     (F : MvPolynomial (Fin 4) K) (nodes : N ↪ K) (u₀ u₁ : N → K) : Prop :=
   ∃ source : Fin 3 → MovingFiberThreeSources6811.Source F,
     ∀ j, let p := cellConfig ids j
@@ -69,7 +69,7 @@ def RetainedProfileSources (ids : Fin 9 × Fin 9 × Fin 9)
 
 theorem route_regular_factor [CharP K 2130706433]
     (H : MvPolynomial (Fin 4) K) (remaining : Finset (RegularIndex H))
-    (f : Envelope) (ids : Fin 9 × Fin 9 × Fin 9)
+    (f : Envelope) (ids : Fin 18 × Fin 18 × Fin 18)
     (hshape : f.slope ≤ f.middle ∧ f.middle ≤ f.total)
     (hfit : Below (originalCumulativeFlag (regularProduct H remaining)) f.flag)
     (hN : Fintype.card N ≤ 262144) (nodes : N ↪ K) (u₀ u₁ : N → K)
@@ -104,7 +104,7 @@ theorem route_regular_factor [CharP K 2130706433]
     (large.one_le_s.trans (large.s_le_ys.trans large.ys_le_total))
     ⟨hlarge.s_weight, hlarge.ys_weight, hlarge.total_weight⟩
 
-def terminalScale : ℕ := 271968319382760
+def terminalScale : ℕ := 271926681406380
 
 def jetFlagCharge (cuts : TailCorrections) (f : Envelope) (cfg : Fin 3 → JetProfile) (left : FlagDegree) : ℕ :=
   ((List.finRange 3).map
@@ -202,7 +202,7 @@ theorem jet_residue_card_le
 
 theorem routed_jet_residue_card_le [CharP K 2130706433]
     (H : MvPolynomial (Fin 4) K) (remaining : Finset (RegularIndex H))
-    (f : Envelope) (ids : Fin 9 × Fin 9 × Fin 9) (cuts : TailCorrections)
+    (f : Envelope) (ids : Fin 18 × Fin 18 × Fin 18) (cuts : TailCorrections)
     (hshape : f.slope ≤ f.middle ∧ f.middle ≤ f.total)
     (hfit : Below (originalCumulativeFlag (regularProduct H remaining)) f.flag)
     (hmono : jetMonotoneWithCorrections cuts f (cellConfig ids) = true)
@@ -238,3 +238,5 @@ theorem routed_jet_residue_card_le [CharP K 2130706433]
 end
 
 end ProximityPrize.SubmissionLower.Koala6831Residual
+
+/- Modified for the 68.32 KoalaBear soundness construction, November 2026. -/

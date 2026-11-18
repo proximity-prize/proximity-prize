@@ -97,11 +97,11 @@ theorem exists_nonzero_comparison_row {F : Type*} [Field F] [Fintype I]
 
 theorem exists_koalabear_comparison_rows {F : Type*} [Field F] [Fintype I]
     (x : I → F) (u v : Fin 2 → I → F) (hcard : Fintype.card I = 262144) :
-    (∃ θ : ComparisonSpace 181084 50013 4 x u v, θ.1 ≠ 0) ∧
-      (∃ θ : ComparisonSpace 181084 50013 200 x u v, θ.1 ≠ 0) := by
+    (∃ θ : ComparisonSpace 181078 50007 4 x u v, θ.1 ≠ 0) ∧
+      (∃ θ : ComparisonSpace 181078 50007 200 x u v, θ.1 ≠ 0) := by
   constructor
-  · exact exists_nonzero_comparison_row 181084 50013 4 81060 x u v hcard (by decide)
-  · exact exists_nonzero_comparison_row 181084 50013 200 81060 x u v hcard (by decide)
+  · exact exists_nonzero_comparison_row 181078 50007 4 81066 x u v hcard (by decide)
+  · exact exists_nonzero_comparison_row 181078 50007 200 81066 x u v hcard (by decide)
 
 private def seedMonomial {b c : ℕ} (z : K × K) (j : SeedIndex b c) : K :=
   z.1 ^ j.1.val * z.2 ^ j.2.val
@@ -434,3 +434,5 @@ end
 end ProximityPrize.SubmissionLower.Koala6831Comparison
 
 /- Modified for this joint-incidence adaptation of Lucieno’s PR 618, November 2026. -/
+
+/- Modified for the 68.32 KoalaBear soundness construction, November 2026. -/

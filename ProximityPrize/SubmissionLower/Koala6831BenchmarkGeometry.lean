@@ -26,7 +26,7 @@ theorem rank_four_retained_le_seed_budget
     {retained : Finset K} {selected : SelectionMap K}
     {q : SymbolicRow (SeedRing K)}
     (h : RetainedComparison x σ received retained selected q)
-    (hδ : primitiveExcess 131071 q ≤ 12503)
+    (hδ : primitiveExcess 131071 q ≤ 12501)
     (keys : Fin 4 → Koala6831CoefficientSystem.SeedMonomial)
     (hdet : (Koala6831RankFour.matrix q keys (primitiveExcess 131071 q)).det ≠ 0) :
     retained.card ≤ retainedSeedBudget := by
@@ -62,7 +62,7 @@ def RemainingGeometrySeedBound (x : I ↪ K) (σ : K →+* K) : Prop :=
   ∀ (received : Received K I) (retained : Finset K) (selected : SelectionMap K)
     (q : SymbolicRow (SeedRing K)),
     RetainedComparison x σ received retained selected q →
-    (primitiveExcess 131071 q ≤ 12503 →
+    (primitiveExcess 131071 q ≤ 12501 →
       ∀ keys : Fin 4 → Koala6831CoefficientSystem.SeedMonomial,
         (Koala6831RankFour.matrix q keys (primitiveExcess 131071 q)).det = 0) →
     retained.card ≤ retainedSeedBudget
@@ -71,7 +71,7 @@ theorem retained_bound_of_geometry
     (x : I ↪ K) (σ : K →+* K) (hGeometry : RemainingGeometrySeedBound x σ) :
     RetainedTwoSidedSeedBound x σ := by
   intro received retained selected q h
-  by_cases hRankFour : primitiveExcess 131071 q ≤ 12503 ∧
+  by_cases hRankFour : primitiveExcess 131071 q ≤ 12501 ∧
       ∃ keys : Fin 4 → Koala6831CoefficientSystem.SeedMonomial,
         (Koala6831RankFour.matrix q keys (primitiveExcess 131071 q)).det ≠ 0
   · obtain ⟨hδ, keys, hdet⟩ := hRankFour
@@ -93,13 +93,13 @@ private theorem koala_mixed_rows_bound :
     MixedRowsSeedBound IRSProfile.domain frobenius.toRingHom := by
   intro received first second hdet seeds selected support
   exact Koala6831BenchmarkCases.independent_rows_le_seed_budget
-    (received := received) (d₀ := 4) (d₁ := 62095) (by decide) (by decide)
+    (received := received) (d₀ := 4) (d₁ := 62150) (by decide) (by decide)
     first second hdet seeds selected support
 
-theorem protocolClaim_6831_of_geometry
+theorem protocolClaim_6832_of_geometry
     (hGeometry : RemainingGeometrySeedBound IRSProfile.domain frobenius.toRingHom) :
-    ProtocolClaim 6831 332025855 1073741824 :=
-  Koala6831Assembly.protocolClaim_6831_of_seed_bound
+    ProtocolClaim 6832 332050431 1073741824 :=
+  Koala6831Assembly.protocolClaim_6832_of_seed_bound
     (seed_bound_of_geometry IRSProfile.domain frobenius.toRingHom domain_fixed frobenius_apply
       IRSProfile.card_index koala_mixed_rows_bound hGeometry)
 
@@ -108,3 +108,5 @@ end
 end ProximityPrize.SubmissionLower.Koala6831BenchmarkGeometry
 
 /- Modified for this joint-incidence adaptation of Lucieno’s PR 618, November 2026. -/
+
+/- Modified for the 68.32 KoalaBear soundness construction, November 2026. -/

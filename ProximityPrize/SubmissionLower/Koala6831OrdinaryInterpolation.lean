@@ -86,7 +86,7 @@ theorem exists_ordinary_interpolant {I : Type*} [Fintype I]
 private theorem ordinaryProfiles_admissible (idx : Fin 9) :
     2 ≤ (ordinaryProfiles idx).1 ∧ 1 ≤ (ordinaryProfiles idx).2.1 ∧
       idx.val + 2 ≤ (ordinaryProfiles idx).2.2 ∧
-      131071 + 31357 < (ordinaryProfiles idx).1 * 181084 := by
+      131071 + 31357 < (ordinaryProfiles idx).1 * 181078 := by
   fin_cases idx <;> decide +kernel
 
 theorem exists_ordinary_interpolant_6831 {I : Type*} [Fintype I]
@@ -98,7 +98,7 @@ theorem exists_ordinary_interpolant_6831 {I : Type*} [Fintype I]
     (q_total : weightDegree totalWeights q = idx.val + 2)
     (q_order : ∀ i, (weightLift germWeights (centerAtNode (x i) (u₀ i) (v₀ i) (u₁ i) (v₁ i) q)).natTrailingDegree = 1) :
     let (m, y, L) := ordinaryProfiles idx
-    ∃ Q : Poly K, Q ∈ ordinaryBox K (m * 181084) 131071 y L ∧ ¬ q ∣ Q ∧
+    ∃ Q : Poly K, Q ∈ ordinaryBox K (m * 181078) 131071 y L ∧ ¬ q ∣ Q ∧
       ∀ i, ∃ B : Poly K, ∀ d ∈
         (centerAtNode (x i) (u₀ i) (v₀ i) (u₁ i) (v₁ i) Q -
           centerAtNode (x i) (u₀ i) (v₀ i) (u₁ i) (v₁ i) q * B).support,
@@ -110,10 +110,12 @@ theorem exists_ordinary_interpolant_6831 {I : Type*} [Fintype I]
       obtain ⟨y, L⟩ := caps
       simp only [profile] at gate admissible ⊢
       obtain ⟨m_pos, value_le, total_le, code_upper⟩ := admissible
-      exact exists_ordinary_interpolant x u₀ v₀ u₁ v₁ q q_ne (m * 181084) 131071 y L m δ (idx.val + 2)
+      exact exists_ordinary_interpolant x u₀ v₀ u₁ v₁ q q_ne (m * 181078) 131071 y L m δ (idx.val + 2)
         (by omega) value_le total_le m_pos q_code q_value q_total q_order
         ((Nat.add_le_add_left (Nat.mul_le_mul_right _ node_count) _).trans_lt gate)
 
 end
 
 end ProximityPrize.SubmissionLower.Koala6831Ordinary
+
+/- Modified for the 68.32 KoalaBear soundness construction, November 2026. -/

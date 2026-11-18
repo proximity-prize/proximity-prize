@@ -1,3 +1,5 @@
+/- Derived from Lucieno (PR 618), and BitWonka (PR 581) for additional interpolation profiles.
+   New 68.32 source parameters, adaptive schedule, cell assignments and integer receipts. Apache-2.0. -/
 import ProximityPrize.SubmissionLower.Koala6831ResidualInactive
 import ProximityPrize.SubmissionLower.Koala6831ResidualLocalTop
 import ProximityPrize.SubmissionLower.Koala6831ResidualLowerBlock
@@ -25,14 +27,14 @@ def ProfileInterpolant (p : JetProfile) (nodes : N ↪ K) (u0 u1 : N → K)
   (∀ i, MvPolynomial.X 0^p.order ∣ substitute (K := K)
     (localize (nodes i) (u0 i) (u1 i) P)) ∧
   ∀ d ≤ p.derivativeOrder, ∀ f : Polynomial K, f.natDegree ≤ 131071 →
-    ∀ z : K, ∀ S : Finset N, 181084 ≤ S.card →
+    ∀ z : K, ∀ S : Finset N, 181078 ≤ S.card →
       (∀ i ∈ S, f.eval (nodes i) = u0 i+u1 i*z) →
         specialize f z ((pderiv 1)^[d] P) = 0
 
 set_option maxRecDepth 20000 in
-set_option maxHeartbeats 4000000 in
+set_option maxHeartbeats 10000000 in
 
-theorem exists_profile_interpolant (j : Fin 9) (hN : Fintype.card N ≤ 262144)
+theorem exists_profile_interpolant (j : Fin 18) (hN : Fintype.card N ≤ 262144)
     (nodes : N ↪ K) (u0 u1 : N → K) :
     ∃ P, ProfileInterpolant (jetProfile j) nodes u0 u1 P := by
   classical
@@ -91,7 +93,7 @@ theorem exists_profile_interpolant (j : Fin 9) (hN : Fintype.card N ≤ 262144)
     SecondJetGlobalDifferentiation.nested_to_flat_contact _ p.order (hcontact i)
   refine ⟨P, hP, hbounds, hflat, ?_⟩
   intro d hd f hf z S hS hvalues
-  apply derivative_vanish P p.order 181084 131071 p.derivativeOrder p.minimumOrder
+  apply derivative_vanish P p.order 181078 131071 p.derivativeOrder p.minimumOrder
     d (by decide) (by decide) (lt_of_le_of_lt hd hkm) hd ?_ nodes u0 u1 hflat f hf z S hS hvalues
   intro e he
   have hcut := (hbounds e he).2.2.2.2
@@ -99,7 +101,7 @@ theorem exists_profile_interpolant (j : Fin 9) (hN : Fintype.card N ≤ 262144)
   norm_num
   omega
 
-theorem exists_cell_interpolants (ids : Fin 9 × Fin 9 × Fin 9)
+theorem exists_cell_interpolants (ids : Fin 18 × Fin 18 × Fin 18)
     (hN : Fintype.card N ≤ 262144) (nodes : N ↪ K) (u0 u1 : N → K) :
     ∃ P : Fin 3 → Poly (K := K), ∀ j, ProfileInterpolant (cellConfig ids j) nodes u0 u1 (P j) := by
   have h (j : Fin 3) : ∃ P, ProfileInterpolant (cellConfig ids j) nodes u0 u1 P := by
@@ -113,3 +115,7 @@ theorem exists_cell_interpolants (ids : Fin 9 × Fin 9 × Fin 9)
 end
 
 end ProximityPrize.SubmissionLower.Koala6831Residual
+
+#print axioms ProximityPrize.SubmissionLower.Koala6831Residual.exists_cell_interpolants
+
+/- Modified for the 68.32 KoalaBear soundness construction, November 2026. -/

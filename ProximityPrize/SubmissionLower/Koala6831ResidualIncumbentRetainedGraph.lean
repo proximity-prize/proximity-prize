@@ -1,3 +1,4 @@
+/- Retuned from Lucieno, Proximity Prize PR 618 (Apache-2.0). All moving derivative orders are allowed by the coefficient identity. -/
 import ProximityPrize.SubmissionLower.Koala6831ResidualIncumbentGraph
 import ProximityPrize.SubmissionLower.Koala6831ResidualIncumbentGraphPrice
 import ProximityPrize.SubmissionLower.Koala6831ResidualIncumbentHelpers
@@ -95,7 +96,7 @@ private theorem graph_mono (f : Envelope) (cfg : Fin 3 → JetProfile) {a b : Fl
     exact hsum _ _ _ fun _ => Nat.mul_le_mul_left _ (mixed_mono_first hab _ _)
   · exact hsum _ _ _ fun _ => Nat.mul_le_mul_left _ (mixed_mono_first hab _ _)
 
-private def identityWeight : ℕ := (residualPriceScale / 50013) * 131073 * 81061
+private def identityWeight : ℕ := (residualPriceScale / 50007) * 131073 * 81067
 
 private def graphAxis (f : Envelope) (cfg : Fin 3 → JetProfile) (i : Fin 3) : ℕ :=
   max (jetGraphNumerator TailCorrections.original (f.pad 2) cfg (unit i))
@@ -132,12 +133,12 @@ private theorem graph_le_axis (f : Envelope) (cfg : Fin 3 → JetProfile) (left 
 
 private theorem identity_le_axis (f : Envelope) (cfg : Fin 3 → JetProfile) (left : FlagDegree)
     (hr : 3 ≤ (f.pad 2).slope) (hy : (f.pad 2).slope + 2 ≤ (f.pad 2).middle) :
-    terminalScale * 131073 * 81061 *
+    terminalScale * 131073 * 81067 *
         identityCurveDegree left (cellA (f.pad 2).total (f.pad 2).middle)
           (cellB (f.pad 2).middle (f.pad 2).slope) (cellS (f.pad 2).slope) RCN327.w ≤
-      50013 * axisPrice (graphAxis f cfg) left := by
+      50007 * axisPrice (graphAxis f cfg) left := by
   rw [identityCurveDegree_eq_identityGraph _ _ hr hy]
-  have hscale : terminalScale * 131073 * 81061 = 50013 * identityWeight := by decide +kernel
+  have hscale : terminalScale * 131073 * 81067 = 50007 * identityWeight := by decide +kernel
   rw [hscale]
   have haux (g : FlagDegree) (a b : ℕ) :
       (a * b) * (left.zOnly * g.zOnly + left.yz * g.yz + left.all * g.all) =
@@ -167,14 +168,16 @@ private theorem leading_add_axis_le (f : Envelope) (cfg : Fin 3 → JetProfile) 
   unfold jetChargeAxisWithCorrections
   exact (le_max_left _ _).trans (le_max_right _ _)
 
-private theorem profile_order (ids : Fin 9 × Fin 9 × Fin 9) (j : Fin 3) :
-    (cellConfig ids j).derivativeOrder = 1 := by
-  let k : Fin 9 := (![ids.1, ids.2.1, ids.2.2] : Fin 3 → Fin 9) j
+private theorem profile_arithmetic (ids : Fin 18 × Fin 18 × Fin 18) (j : Fin 3) :
+    3 * ((cellConfig ids j).derivativeOrder+1) ∣ terminalScale ∧
+      (cellConfig ids j).derivativeOrder < 2130706433 := by
+  let k : Fin 18 := (![ids.1, ids.2.1, ids.2.2] : Fin 3 → Fin 18) j
   have hk : cellConfig ids j = jetProfile k := by fin_cases j <;> rfl
-  have hall (k : Fin 9) : (jetProfile k).derivativeOrder = 1 := by
-    fin_cases k <;> decide
+  have all (k : Fin 18) : 3 * ((jetProfile k).derivativeOrder+1) ∣ terminalScale ∧
+      (jetProfile k).derivativeOrder < 2130706433 := by
+    fin_cases k <;> decide +kernel
   rw [hk]
-  exact hall k
+  exact all k
 
 private theorem cover_graph_and_leading {K : Type} (seeds : Finset K)
     (zero : Fin 3 → K → Prop) :
@@ -196,12 +199,12 @@ private theorem cover_graph_and_leading {K : Type} (seeds : Finset K)
 variable {K I : Type} [Field K] [CharP K 2130706433] [Fintype I]
 
 theorem incumbent_retained_profile_seed_card_mul_le
-    (f : Envelope) (ids : Fin 9 × Fin 9 × Fin 9)
+    (f : Envelope) (ids : Fin 18 × Fin 18 × Fin 18)
     (hmin : 1 ≤ f.slope ∧ 2 ≤ f.middle) (hshape : f.slope ≤ f.middle ∧ f.middle ≤ f.total)
     (hTotal : f.total < 2130706433)
     (hg : jetGatesWithCorrections TailCorrections.original f (cellConfig ids) = true)
     (D : ℕ) (hDlow : 131072 ≤ D) (hDchar : D < 2130706433)
-    (ht : (f.pad 2).total ≤ 7501) (hy : (f.pad 2).middle ≤ 142) (hr : (f.pad 2).slope ≤ 31)
+    (ht : (f.pad 2).total ≤ 8870) (hy : (f.pad 2).middle ≤ 142) (hr : (f.pad 2).slope ≤ 31)
     (F : MvPolynomial (Fin 4) K) (hi : Irreducible F) (hpos : 0 < F.degreeOf (2 : Fin 4))
     (hbelow : Below (originalCumulativeFlag F) f.flag)
     (hbox : F ∈ globalCoefficientBox K D 131071 (f.pad 2).total (f.pad 2).slope)
@@ -212,9 +215,9 @@ theorem incumbent_retained_profile_seed_card_mul_le
     (selected : K → Polynomial K) (seeds : Finset K)
     (hdegree : ∀ g ∈ seeds, (selected g).natDegree ≤ 131071)
     (hregular : ∀ g ∈ seeds, RegularSolution F (selected g) g)
-    (hagreement : ∀ g ∈ seeds, 181084 ≤
+    (hagreement : ∀ g ∈ seeds, 181078 ≤
       (Finset.univ.filter (fun i => (selected g).eval (nodes i) = u₀ i + g * u₁ i)).card)
-    (hpencil : NoLargeSelectedPencil selected seeds 131071 81060) :
+    (hpencil : NoLargeSelectedPencil selected seeds 131071 81066) :
     seeds.card * terminalScale ≤
       jetFlagCharge TailCorrections.original f (cellConfig ids) (originalCumulativeFlag F) := by
   classical
@@ -243,21 +246,20 @@ theorem incumbent_retained_profile_seed_card_mul_le
     simp only [cellSupport, RCN198.support, hcellTotal]
     exact ht.trans (by decide)
   have hderiv (j : Fin 3) : (source j).k = (cfg j).derivativeOrder := (hsources j).2.2.2.2.2.1
-  have horder (j : Fin 3) : (cfg j).derivativeOrder = 1 ∧ (source j).d = 2 := by
-    have hk : (cfg j).derivativeOrder = 1 := profile_order ids j
-    exact ⟨hk, by simp only [Source.d, hderiv j, hk]⟩
+  have horder (j : Fin 3) : (cfg j).derivativeOrder + 1 = (source j).d := by
+    simp only [Source.d, hderiv j]
   have hsourceFlag (j : Fin 3) : (source j).flag = (cfg j).moving := by
     obtain ⟨_, hB, hU, hT, _, hk, hn⟩ := hsources j
     simp only [Source.flag, Source.d, SecondJetRelaxedFlag.budgetFlag, JetProfile.moving,
       hB, hU, hT, hk, hn, Nat.sub_sub]
     rfl
   have hsourceDiv (j : Fin 3) : 3 * (source j).d ∣ terminalScale := by
-    rw [(horder j).2]
-    decide +kernel
+    rw [←horder j]
+    exact (profile_arithmetic ids j).1
   have hfact (j : Fin 3) : ((source j).k.factorial : GenericField K) ≠ 0 := by
     apply SecondJetOwnShape.factorial_ne
-    rw [hderiv j, profile_order ids j]
-    decide
+    rw [hderiv j]
+    exact (profile_arithmetic ids j).2
   let zero (j : Fin 3) (g : K) := MvPolynomial.eval
     (selectedPoint (polynomialEmbedding K) selected g) ((source j).leading (polynomialEmbedding K)) = 0
   let good := seeds.filter (fun g => ∀ j, ¬ zero j g)
@@ -270,11 +272,11 @@ theorem incumbent_retained_profile_seed_card_mul_le
       nodes.injective.injOn (by simpa only [Finset.card_univ] using hI)
       (fun _ hg => hdegree _ (hGood hg)) (fun _ hg => hagreement _ (hGood hg))
       (fun _ hg => (hregular _ (hGood hg)).1) (fun _ hg => (hregular _ (hGood hg)).2)
-      (RCN243.noLargeSelectedPencil_mono selected seeds good 131071 81060 hGood hpencil)
+      (RCN243.noLargeSelectedPencil_mono selected seeds good 131071 81066 hGood hpencil)
       source (by decide) hsourceDiv (fun _ _ S _ => HFreeDir6813.hfree_stage_dir_of_gaps S hfreeTotal)
       SecondJetOwnShape.two_ne hfact (fun _ hg j => (Finset.mem_filter.mp hg).2 j)
       (graphAxis f cfg) (graphAxis_mono f cfg)
-      (fun q => (originalGraphNumerator_eq_numeratorDir s hr3 hry cfg source hsourceFlag horder q).symm.le.trans
+      (fun q => (originalGraphNumerator_eq_numeratorDir s hr3 hry cfg source hsourceFlag horder hsourceDiv q).symm.le.trans
         (graph_le_axis f cfg q))
       (fun q => identity_le_axis f cfg q hr3 hry)
     simpa only [Nat.mul_comm terminalScale] using hc
@@ -289,7 +291,7 @@ theorem incumbent_retained_profile_seed_card_mul_le
       selected (bad j) (fun g hg => hdegree g (hBad j hg))
       (fun g hg => hregular g (hBad j hg)) (fun g hg => (Finset.mem_filter.mp hg).2)
       (fun g hg => hagreement g (hBad j hg))
-      (RCN243.noLargeSelectedPencil_mono selected seeds (bad j) 131071 81060 (hBad j) hpencil)
+      (RCN243.noLargeSelectedPencil_mono selected seeds (bad j) 131071 81066 (hBad j) hpencil)
     exact hc
   calc
     _ ≤ (good.card + ∑ j : Fin 3, (bad j).card) * terminalScale :=
@@ -301,3 +303,5 @@ theorem incumbent_retained_profile_seed_card_mul_le
 
 end
 end ProximityPrize.SubmissionLower.Koala6831Residual
+
+/- Modified for the 68.32 KoalaBear soundness construction, November 2026. -/

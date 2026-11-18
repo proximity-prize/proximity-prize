@@ -1,3 +1,5 @@
+/- Originally by Lucieno, Proximity Prize PR 618, Apache-2.0. Retuned for 81,066 errors.
+-/
 import ProximityPrize.SubmissionLower.Koala6831MovingPartition
 import ProximityPrize.SubmissionLower.Koala6831MovingSources
 import ProximityPrize.SubmissionLower.Koala6831MovingLedger
@@ -59,10 +61,10 @@ theorem two_room_residue_caps (nodes u₀ u₁ : I → K) (hcard : Fintype.card 
       Stage.primary.numbers.totalCap Stage.primary.numbers.middleCap Stage.primary.numbers.slopeCap) :
     let first := stageRoomResidual Stage.room1 nodes u₀ u₁ H A
     let second := stageRoomResidual Stage.room2 nodes u₀ u₁ H first
-    Below (contactFlag (regularProduct H first)) ⟨15106, 191, 54⟩ ∧
+    Below (contactFlag (regularProduct H first)) ⟨15120, 179, 52⟩ ∧
       Below (contactFlag (regularProduct H second)) ⟨15213, 108, 30⟩ := by
   let first := stageRoomResidual Stage.room1 nodes u₀ u₁ H A
-  let firstCap : FlagDegree := ⟨15106, 191, 54⟩
+  let firstCap : FlagDegree := ⟨15120, 179, 52⟩
   obtain ⟨hT, hY, hR, _⟩ := nested_mem_weights hprimary hH
   have hproduct := contactFlag_below_of_dvd hH (regularProduct_dvd_carrier H A)
   have hincoming : Below (contactFlag (regularProduct H A)) (stageContactFlag Stage.primary) := by
@@ -86,8 +88,8 @@ theorem FlowData.exists_vanishing_stage_room_partner [CharP K 2130706433]
       B.a0.eval (nodes i) * normalized i)
     (h₁ : ∀ i, B.d0.eval (nodes i) * u₁ i + B.c1.eval (nodes i) =
       B.a1.eval (nodes i) * normalized i)
-    (hden : B.d0.natDegree + max B.a0.natDegree B.a1.natDegree ≤ 9554)
-    (hminor : (B.a1 * B.c0 - B.a0 * B.c1).natDegree ≤ weight + 9554)
+    (hden : B.d0.natDegree + max B.a0.natDegree B.a1.natDegree ≤ 9553)
+    (hminor : (B.a1 * B.c0 - B.a0 * B.c1).natDegree ≤ weight + 9553)
     (s : Stage) (H : P4 K) (A : Finset (RCN266.RegularIndex H))
     {F : RCN266.RegularIndex H} (hFA : F ∈ A) (htrans : ¬ F.1 ∣ B.flow F.1)
     (hremoved : F ∉ stageRoomResidual s nodes u₀ u₁ H A)
@@ -148,3 +150,5 @@ def transverseRoomFactors (B : FlowData K) (H : P4 K) : Finset (RCN266.RegularIn
 end
 
 end ProximityPrize.SubmissionLower.Koala6831Moving
+
+/- Modified for the 68.32 KoalaBear soundness construction, November 2026. -/

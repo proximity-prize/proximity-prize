@@ -1,3 +1,5 @@
+/- Originally by Lucieno, Proximity Prize PR 618, Apache-2.0. Retuned for 81,066 errors.
+-/
 import ProximityPrize.SubmissionLower.Koala6831MovingPaidCaps
 import ProximityPrize.SubmissionLower.Koala6831MovingSchedule
 
@@ -71,15 +73,15 @@ private theorem stage_support_small (incoming : FlagDegree) (hpos : 0 < incoming
     (stageSupport incoming hpos).total < 2130706433 ∧
       middle (stagePartnerFlag s gain) * (stageSupport incoming hpos).s +
         (stageSupport incoming hpos).ys * (stagePartnerFlag s gain).all < 2130706433 := by
-  have hT : (stageSupport incoming hpos).total ≤ 53188 :=
+  have hT : (stageSupport incoming hpos).total ≤ 41882 :=
     max_le (by decide +kernel) (hcap.2.2.trans_eq (by decide +kernel))
-  have hY : (stageSupport incoming hpos).ys ≤ 360 :=
+  have hY : (stageSupport incoming hpos).ys ≤ 418 :=
     max_le (by decide +kernel) (hcap.2.1.trans_eq (by decide +kernel))
-  have hR : (stageSupport incoming hpos).s ≤ 80 := hcap.1
-  have hy : middle (stagePartnerFlag s gain) ≤ 30394 := by
+  have hR : (stageSupport incoming hpos).s ≤ 93 := hcap.1
+  have hy : middle (stagePartnerFlag s gain) ≤ 41445 := by
     rw [(stagePartnerFlag_cumulative s gain).2.1]
     cases s <;> decide +kernel
-  have hr : (stagePartnerFlag s gain).all ≤ 6776 := by
+  have hr : (stagePartnerFlag s gain).all ≤ 9300 := by
     rw [(stagePartnerFlag_cumulative s gain).1]
     cases s <;> decide +kernel
   exact ⟨hT.trans_lt (by decide +kernel),
@@ -95,7 +97,7 @@ theorem regularFiber_le_paid_factor [CharP K 2130706433]
     (hdegree : ∀ γ ∈ Γ, (selected γ).natDegree ≤ weight)
     (hagreement : ∀ γ ∈ Γ, agreement ≤
       (nodes.filter (fun i => (selected γ).eval (x i) = u₀ i + γ * u₁ i)).card)
-    (hnoPencil : NoLargeSelectedPencil selected Γ weight 81060)
+    (hnoPencil : NoLargeSelectedPencil selected Γ weight 81066)
     (Q : P4 K) (hrel : IsRelPrime F.1 Q)
     (hbox : Q ∈ nestedCoefficientBox K (s.multiplicity * agreement) weight
       (s.numbers.totalCap + gain) s.numbers.middleCap s.numbers.slopeCap)
@@ -116,15 +118,15 @@ theorem regularFiber_le_paid_factor [CharP K 2130706433]
   have hsub : fiber ⊆ Γ := regularFiber_subset H Γ selected F
   have hcount := regular_carrier_seed_card_mul_le (stageSupport incoming hpos) F.1 Q hirr hnF
     2130706433 hr hRchar hData (stagePartnerFlag s gain) (surface_in_partner_flag s gain hnQ hbox)
-    selected fiber nodes x u₀ u₁ hx weight agreement 81060
+    selected fiber nodes x u₀ u₁ hx weight agreement 81066
     (by decide +kernel) (by decide +kernel) (by decide +kernel) hsize hT hmix
     (fun γ hγ => hdegree γ (hsub hγ))
     (fun γ hγ => (mem_regularFiber.mp hγ).2.1) (fun γ hγ => hsolution γ (hsub hγ))
     (fun γ hγ => (mem_regularFiber.mp hγ).2.2) (fun γ hγ => hagreement γ (hsub hγ))
-    (noLargeSelectedPencil_mono selected Γ fiber weight 81060 hsub hnoPencil)
+    (noLargeSelectedPencil_mono selected Γ fiber weight 81066 hsub hnoPencil)
   apply (Nat.le_div_iff_mul_le agreementScale_pos).mpr
   rw [hnodes] at hcount
-  rw [show weight = 131071 by decide +kernel, show agreement = 181084 by decide +kernel] at hcount
+  rw [show weight = 131071 by decide +kernel, show agreement = 181078 by decide +kernel] at hcount
   simpa only [agreementScale_eq, stageScaledCut, fiber] using hcount
 
 theorem paid_union_le_stagePrice
@@ -159,3 +161,5 @@ theorem paid_union_le_stagePrice
 end
 
 end ProximityPrize.SubmissionLower.Koala6831MovingPaid
+
+/- Modified for the 68.32 KoalaBear soundness construction, November 2026. -/

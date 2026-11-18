@@ -1,3 +1,5 @@
+/- Originally by Lucieno, Proximity Prize PR 618, Apache-2.0. Retuned for 81,066 errors.
+-/
 import ProximityPrize.SubmissionLower.Koala6831MovingAdaptive
 
 namespace ProximityPrize.SubmissionLower.Koala6831MovingAdaptive
@@ -89,8 +91,8 @@ theorem exists_exhausted_adaptive_pass [CharP K 2130706433]
       B.a0.eval (nodes i) * normalized i)
     (h₁ : ∀ i, B.d0.eval (nodes i) * u₁ i + B.c1.eval (nodes i) =
       B.a1.eval (nodes i) * normalized i)
-    (hden : B.d0.natDegree + max B.a0.natDegree B.a1.natDegree ≤ 9554)
-    (hminor : (B.a1 * B.c0 - B.a0 * B.c1).natDegree ≤ weight + 9554)
+    (hden : B.d0.natDegree + max B.a0.natDegree B.a1.natDegree ≤ 9553)
+    (hminor : (B.a1 * B.c0 - B.a0 * B.c1).natDegree ≤ weight + 9553)
     (H : MvPolynomial (Fin 4) K) (A : Finset (RegularIndex H))
     (hfield : A.card < ENat.card K) (hcap : Below (aggregateFlag H A) postRoomCap)
     (htrans : ∀ F ∈ A, ¬ F.1 ∣ B.flow F.1) :
@@ -114,3 +116,5 @@ theorem exists_exhausted_adaptive_pass [CharP K 2130706433]
 end
 
 end ProximityPrize.SubmissionLower.Koala6831MovingAdaptive
+
+/- Modified for the 68.32 KoalaBear soundness construction, November 2026. -/

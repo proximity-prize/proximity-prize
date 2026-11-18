@@ -42,7 +42,7 @@ theorem ordinary_retained_price [IsAlgClosed Ω] [CharP E 2130706433] [CharP Ω 
       (∀ d ∈ F.support, d 1 ≤ (koalaCarrierShape idx).1 ∧ d 1 + d 2 + d 3 ≤ (koalaCarrierShape idx).2) →
       HasOrdinaryAgreementTests φ ψ F x (U 0) (U 1) P retained Finset.univ 131071
         (koalaCarrierShape idx).1 (koalaCarrierShape idx).2) :
-    ∃ idx : Fin 9, retained.card ≤ ordinaryPrice 2130706433 262144 131071 181084 81060
+    ∃ idx : Fin 9, retained.card ≤ ordinaryPrice 2130706433 262144 131071 181078 81066
       (koalaCarrierShape idx).1 (koalaCarrierShape idx).2 := by
   classical
   let agree := agreementSet x U P
@@ -70,11 +70,11 @@ theorem ordinary_retained_price [IsAlgClosed Ω] [CharP E 2130706433] [CharP Ω 
         (MvPolynomial.C (σ (U 0 i.1)) + MvPolynomial.X 1 * MvPolynomial.C (σ (U 1 i.1))) ≠ 0 := hn
     simpa only [affineSeedWord, u, v, conjugateWord, zero_ne_one, one_ne_zero,
       ite_true, ite_false] using heq
-  have agreeing_count (g : ↥retained) : 181084 ≤ (agreement g).card := by
+  have agreeing_count (g : ↥retained) : 181078 ≤ (agreement g).card := by
     have havoid := Finset.disjoint_left.mp (hkeep g.1 g.2).2
     have eq : (agree g.1).filter (· ∉ bad) = agree g.1 :=
       Finset.filter_true_of_mem (fun i hi hb => havoid hi hb)
-    change 181084 ≤ ((agree g.1).subtype (· ∉ bad)).card
+    change 181078 ≤ ((agree g.1).subtype (· ∉ bad)).card
     rw [Finset.card_subtype, eq]
     exact selection.agreement g.1 g.2
   have natDegree (g : ↥retained) : (P g.1).natDegree ≤ 131071 := selection.degree_le g.1 g.2
@@ -104,7 +104,7 @@ theorem ordinary_retained_price [IsAlgClosed Ω] [CharP E 2130706433] [CharP Ω 
     simpa only [← hy', ← ht'] using support
   obtain ⟨hy, ht, hyt⟩ := ordinary_profile_caps idx
   have price := ordinary_carrier_seed_count φ hφ ψ F hF (koalaCarrierShape idx).1 (koalaCarrierShape idx).2
-    hy ht hyt support' x (U 0) (U 1) P retained Finset.univ 131071 181084 81060 (by decide) (by decide)
+    hy ht hyt support' x (U 0) (U 1) P retained Finset.univ 131071 181078 81066 (by decide) (by decide)
     (by rw [Finset.card_univ, hcard]; decide)
     selection.degree_le (fun g hg => zero ⟨g, hg⟩) selection.agreement
     selection.pencil (tests F hF idx support')
@@ -114,3 +114,5 @@ theorem ordinary_retained_price [IsAlgClosed Ω] [CharP E 2130706433] [CharP Ω 
 end
 
 end ProximityPrize.SubmissionLower.Koala6831Ordinary
+
+/- Modified for the 68.32 KoalaBear soundness construction, November 2026. -/

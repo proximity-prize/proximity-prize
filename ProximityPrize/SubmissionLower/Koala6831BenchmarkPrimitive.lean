@@ -22,7 +22,7 @@ abbrev Received (K I : Type) := Fin 2 → I → K
 abbrev SelectionMap (K : Type) [Semiring K] := K → Polynomial K
 
 abbrev Rows (x : I ↪ K) (σ : K →+* K) (received : Received K I) (d : ℕ) :=
-  ComparisonSpace 181084 50013 d x
+  ComparisonSpace 181078 50007 d x
     (fun j i => if j = 0 then received 0 i else σ (received 0 i))
     (fun j i => if j = 0 then received 1 i else σ (received 1 i))
 
@@ -41,9 +41,9 @@ theorem eval_eq_of_mem_agreementSet
 structure Selection (x : I ↪ K) (received : Received K I) (seeds : Finset K)
     (selected : SelectionMap K) : Prop where
   degree_le : ∀ g ∈ seeds, (selected g).natDegree ≤ 131071
-  agreement : ∀ g ∈ seeds, 181084 ≤ (agreementSet x received selected g).card
+  agreement : ∀ g ∈ seeds, 181078 ≤ (agreementSet x received selected g).card
   pencil : ∀ p₀ p₁ : Polynomial K, p₀.natDegree ≤ 131071 → p₁.natDegree ≤ 131071 →
-    (RCN050.pencilSeeds seeds selected p₀ p₁).card ≤ 81061
+    (RCN050.pencilSeeds seeds selected p₀ p₁).card ≤ 81067
 
 abbrev badNodes (x : I ↪ K) (σ : K →+* K) (received : Received K I)
     (q : SymbolicRow (SeedRing K)) :=
@@ -61,7 +61,7 @@ def TwoSidedPrimitiveSeedBound (x : I ↪ K) (σ : K →+* K) : Prop :=
       (q : SymbolicRow (SeedRing K)) (m : SeedCoefficients K),
       q.first ≠ 0 → q.second ≠ 0 → m ≠ 0 → IsPrimitiveRow q →
       RowFactors q (rankRow row.1) m →
-      primitiveExcess 131071 q + (badNodes x σ received q).card ≤ 31047 →
+      primitiveExcess 131071 q + (badNodes x σ received q).card ≤ 31059 →
       seeds.card ≤ mcaBudget
 
 private theorem one_sided_rows_le_seed_budget
@@ -73,14 +73,14 @@ private theorem one_sided_rows_le_seed_budget
     (seeds : Finset K) (selected : SelectionMap K)
     (support : Selection x received seeds selected) : seeds.card ≤ mcaBudget := by
   have bound := Koala6831OneSided.one_sided_comparison_card_le
-    (p := prime) (w := 131071) (e := 81060) (A := 181084) (a := 50013)
+    (p := prime) (w := 131071) (e := 81066) (A := 181078) (a := 50007)
     (by decide) (by decide) x received σ hfixed hpow (by decide) (by decide)
     (by rw [hcard]; decide) row hone seeds selected support.degree_le support.agreement support.pencil
   rw [hcard, Koala6831OneSided.koala_one_sided_budget] at bound
   exact bound.trans (by decide +kernel)
 
 def MixedRowsSeedBound (x : I ↪ K) (σ : K →+* K) : Prop :=
-  ∀ (received : Received K I) (row : Rows x σ received 4) (other : Rows x σ received 62095),
+  ∀ (received : Received K I) (row : Rows x σ received 4) (other : Rows x σ received 62150),
     coefficientDeterminant row.1 other.1 ≠ 0 →
     ∀ (seeds : Finset K) (selected : SelectionMap K),
       Selection x received seeds selected → seeds.card ≤ mcaBudget
@@ -108,7 +108,7 @@ def RankOneSeedBound (x : I ↪ K) (σ : K →+* K) : Prop :=
   ∀ (received : Received K I) (seeds : Finset K) (selected : SelectionMap K),
     Selection x received seeds selected →
     ∀ row : Rows x σ received 4, row.1 ≠ 0 →
-      (∀ other : Rows x σ received 62095, coefficientDeterminant row.1 other.1 = 0) →
+      (∀ other : Rows x σ received 62150, coefficientDeterminant row.1 other.1 = 0) →
       seeds.card ≤ mcaBudget
 
 private theorem seed_bound_of_rank_cases
@@ -116,8 +116,8 @@ private theorem seed_bound_of_rank_cases
     (hMixed : MixedRowsSeedBound x σ) (hRankOne : RankOneSeedBound x σ) :
     RCN050.SelectedNoLargePencilBound x 131071 errors mcaBudget := by
   intro received seeds A selected hdegree hnear hvalue hpencil
-  have hthreshold : Fintype.card I - errors = 181084 := by rw [hcard]; decide
-  have hagreement : ∀ g ∈ seeds, 181084 ≤ (agreementSet x received selected g).card := by
+  have hthreshold : Fintype.card I - errors = 181078 := by rw [hcard]; decide
+  have hagreement : ∀ g ∈ seeds, 181078 ≤ (agreementSet x received selected g).card := by
     intro g hg
     have hn := hnear g hg
     rw [hthreshold] at hn
@@ -129,7 +129,7 @@ private theorem seed_bound_of_rank_cases
   let u (j : Fin 2) (i : I) := if j = 0 then received 0 i else σ (received 0 i)
   let v (j : Fin 2) (i : I) := if j = 0 then received 1 i else σ (received 1 i)
   obtain ⟨row, hrow⟩ := (exists_koalabear_comparison_rows x u v hcard).1
-  by_cases hdet : ∃ other : Rows x σ received 62095, coefficientDeterminant row.1 other.1 ≠ 0
+  by_cases hdet : ∃ other : Rows x σ received 62150, coefficientDeterminant row.1 other.1 ≠ 0
   · obtain ⟨other, hother⟩ := hdet
     exact hMixed received row other hother seeds selected hselection
   exact hRankOne received seeds selected hselection row hrow
@@ -137,15 +137,15 @@ private theorem seed_bound_of_rank_cases
 
 private theorem card_le_from_primitive_cases
     (x : I ↪ K) (u v : Fin 2 → I → K) (hcard : Fintype.card I = 262144)
-    (row : ComparisonSpace 181084 50013 4 x u v) (hrow : row.1 ≠ 0)
-    (hdet : ∀ other : ComparisonSpace 181084 50013 62095 x u v,
+    (row : ComparisonSpace 181078 50007 4 x u v) (hrow : row.1 ≠ 0)
+    (hdet : ∀ other : ComparisonSpace 181078 50007 62150 x u v,
       coefficientDeterminant row.1 other.1 = 0)
     (seedCount : ℕ)
     (honeCase : (let r := symbolicRow row.1
       (r.first ≠ 0 ∧ r.second = 0) ∨ (r.first = 0 ∧ r.second ≠ 0)) → seedCount ≤ mcaBudget)
     (hbothCase : ∀ (q : SymbolicRow (SeedRing K)) (m : SeedCoefficients K),
       q.first ≠ 0 → q.second ≠ 0 → m ≠ 0 → IsPrimitiveRow q → RowFactors q (rankRow row.1) m →
-      primitiveExcess 131071 q + (primitiveBadNodes x u v q).card ≤ 31047 → seedCount ≤ mcaBudget) :
+      primitiveExcess 131071 q + (primitiveBadNodes x u v q).card ≤ 31059 → seedCount ≤ mcaBudget) :
     seedCount ≤ mcaBudget := by
   obtain ⟨q, m, hm, hactive, hprimitive, hfactor, hlarge⟩ :=
     exists_primitive_comparison_generator x u v row hrow (by rw [hcard]; decide)
@@ -156,7 +156,7 @@ private theorem card_le_from_primitive_cases
     rcases hactive with hf | hs
     · exact ⟨hf, fun hz => hone (Or.inl ⟨hf, hz⟩)⟩
     · exact ⟨fun hz => hone (Or.inr ⟨hz, hs⟩), hs⟩
-  have hcap := primitive_excess_add_badCard_le_31047 x u v q hboth.1 hboth.2 hcard hlarge
+  have hcap := primitive_excess_add_badCard_le_31059 x u v q hboth.1 hboth.2 hcard hlarge
   exact hbothCase q m hboth.1 hboth.2 hm hprimitive hfactor hcap
 
 private theorem rank_one_bound_of_primitive
@@ -183,3 +183,5 @@ end
 end ProximityPrize.SubmissionLower.Koala6831BenchmarkPrimitive
 
 /- Modified for this joint-incidence adaptation of Lucieno’s PR 618, November 2026. -/
+
+/- Modified for the 68.32 KoalaBear soundness construction, November 2026. -/

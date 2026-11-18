@@ -17,7 +17,7 @@ set_option maxRecDepth 20000
 variable {K N : Type} [Field K] [Fintype N]
 
 theorem incumbent_jet_endpoint_size {cell : Cell} (hcell : cell ∈ terminalCells)
-    {ids : Fin 9 × Fin 9 × Fin 9} (hids : incumbentProfileIds cell = some ids) :
+    {ids : Fin 18 × Fin 18 × Fin 18} (hids : incumbentProfileIds cell = some ids) :
     1 ≤ cell.envelope.slope ∧ 2 ≤ cell.envelope.middle ∧ cell.envelope.total < 2130706433 := by
   have h : terminalCells.all (fun c => match incumbentProfileIds c with
     | none => true
@@ -76,15 +76,15 @@ theorem incumbent_profile_helper_count [CharP K 2130706433]
     (hg : jetGatesWithCorrections TailCorrections.original f cfg = true)
     (F Q : MvPolynomial (Fin 4) K) (hirr : Irreducible F) (hpos : 0 < F.degreeOf (2 : Fin 4))
     (hF : Below (originalCumulativeFlag F) f.flag)
-    (nodes : N ↪ K) (u₀ u₁ : N → K) (hN : Fintype.card N ≤ 262144) (hn : 181084 ≤ Fintype.card N)
+    (nodes : N ↪ K) (u₀ u₁ : N → K) (hN : Fintype.card N ≤ 262144) (hn : 181078 ≤ Fintype.card N)
     (hQ : ProperProfileHelper F Q (cfg j) (f.paddedSupport 2).s
       (f.paddedSupport 2).ys (f.paddedSupport 2).total nodes u₀ u₁)
     (selected : K → Polynomial K) (seeds : Finset K)
     (hdegree : ∀ g ∈ seeds, (selected g).natDegree ≤ 131071)
     (hregular : ∀ g ∈ seeds, RegularSolution F (selected g) g)
-    (hagreement : ∀ g ∈ seeds, 181084 ≤
+    (hagreement : ∀ g ∈ seeds, 181078 ≤
       (Finset.univ.filter (fun i => (selected g).eval (nodes i) = u₀ i + g * u₁ i)).card)
-    (hpencil : NoLargeSelectedPencil selected seeds 131071 81060) :
+    (hpencil : NoLargeSelectedPencil selected seeds 131071 81066) :
     seeds.card * terminalScale ≤ jetFlagCharge TailCorrections.original f cfg (originalCumulativeFlag F) := by
   let supp := f.endpointSupport hmin hshape
   obtain ⟨h₁, h₂, _, hpair⟩ := incumbent_jet_pair_gates f cfg j hg
@@ -97,3 +97,5 @@ theorem incumbent_profile_helper_count [CharP K 2130706433]
 end
 
 end ProximityPrize.SubmissionLower.Koala6831Residual
+
+/- Modified for the 68.32 KoalaBear soundness construction, November 2026. -/

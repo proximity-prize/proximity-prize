@@ -18,21 +18,21 @@ theorem exists_long_separated_carrier_of_primitive {I Γ : Type*} [Fintype I]
     (nodes : I ↪ K) (u₀ v₀ u₁ v₁ : I → K) (node_count : Fintype.card I ≤ 262144)
     (q : SymbolicRow (SeedRing K)) (hprim : IsPrimitiveRow q)
     (hf : q.first ≠ 0) (hs : q.second ≠ 0)
-    (long : 9555 ≤ primitiveExcess 131071 q) (small : primitiveExcess 131071 q ≤ 31357)
+    (long : 9554 ≤ primitiveExcess 131071 q) (small : primitiveExcess 131071 q ≤ 31357)
     (N : NormalForm q 131071 (primitiveExcess 131071 q))
     (hgood : ∀ i, q.atNode (MvPolynomial.C (nodes i))
       (MvPolynomial.C (u₀ i) + MvPolynomial.X 0 * MvPolynomial.C (v₀ i))
       (MvPolynomial.C (u₁ i) + MvPolynomial.X 1 * MvPolynomial.C (v₁ i)) = 0)
     (σ : K →+* K) (p : ℕ) (P : K → Polynomial K) (seed : Γ → K)
     (agreement : Γ → Finset I) (hdegree : ∀ g, (P (seed g)).natDegree ≤ 131071)
-    (hsize : ∀ g, 181084 ≤ (agreement g).card)
+    (hsize : ∀ g, 181078 ≤ (agreement g).card)
     (h₀ : ∀ g i, i ∈ agreement g → (P (seed g)).eval (nodes i) = u₀ i + seed g * v₀ i)
     (h₁ : ∀ g i, i ∈ agreement g →
       ((P (seed g)).map σ).eval (nodes i) = u₁ i + (seed g) ^ p * v₁ i)
     (hzero : ∀ g, primitiveSelected σ p q P (seed g) = 0) :
     ∃ G : Carrier K, G ≠ 0 ∧
-      (∀ d ∈ G.support, d 1 ≤ 22 ∧ d 1 + d 2 ≤ 200 ∧ d 3 ≤ 162 ∧
-        d 0 + 131071 * d 1 ≤ 16 * 181084 - 1 + 22 * primitiveExcess 131071 q ∧
+      (∀ d ∈ G.support, d 1 ≤ 22 ∧ d 1 + d 2 ≤ 200 ∧ d 3 ≤ 165 ∧
+        d 0 + 131071 * d 1 ≤ 16 * 181078 - 1 + 22 * primitiveExcess 131071 q ∧
         d 0 + 131071 * d 1 < 2130706433) ∧
       ∀ g, Koala6831Intrinsic.graphSpecialize (P (seed g)) (seed g) ((seed g) ^ p) G = 0 := by
   let δ := primitiveExcess 131071 q
@@ -72,3 +72,5 @@ theorem exists_long_separated_carrier_of_primitive {I Γ : Type*} [Fintype I]
 end
 
 end ProximityPrize.SubmissionLower.Koala6831Separated
+
+/- Modified for the 68.32 KoalaBear soundness construction, November 2026. -/

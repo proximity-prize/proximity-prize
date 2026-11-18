@@ -1,6 +1,7 @@
+/- Adapted from Lucieno, Proximity Prize PR 618, commit dbaea1b59ca9d7311bc98b5fb6d18eb9e1b7603a. Changes for 81,066 errors, right cap 165 and sharper persistent-curve charge. Research pilot. -/
 import ProximityPrize.SubmissionLower.Koala6831IntrinsicChartPersistentIncidence
 import ProximityPrize.SubmissionLower.Koala6831IntrinsicSelectedComponents
-import ProximityPrize.SubmissionLower.Koala6831IntrinsicLongLiteral
+import ProximityPrize.SubmissionLower.LP32LongLiteral
 
 namespace ProximityPrize.SubmissionLower.Koala6831Intrinsic
 
@@ -21,11 +22,11 @@ local notation "φ" => polynomialEmbedding K
 local notation "w" => 131071
 local notation "p" => 2130706433
 
-theorem long_persistent_selected_sum_le_of_degree
+theorem long_persistent_selected_sum_le_of_degree_lp32
     (F : Carrier K) (G : MvPolynomial (Fin 3) Ω) (bound e : ℕ)
-    (hw : w + 1 ≤ bound) (hchar : bound < p) (he : e ≤ 81060)
+    (hw : w + 1 ≤ bound) (hchar : bound < p) (he : e ≤ 81066)
     (hweight : wt ![1, w, 0, 0] F < bound)
-    (hT : wt ![0, 1, 1, 0] F ≤ 200) (hZ : wt ![0, 0, 0, 1] F ≤ 162)
+    (hT : wt ![0, 1, 1, 0] F ≤ 200) (hZ : wt ![0, 0, 0, 1] F ≤ 165)
     (component : A → FirstTailComponent F w G)
     (charts : ∀ i, CurveChartData F w (component i).1)
     (base : ∀ i, SeparableLiteralCoordinate (component i).1)
@@ -38,18 +39,18 @@ theorem long_persistent_selected_sum_le_of_degree
       (∑ v ∈ W, RCN346.poleOrder Ω (CoordinateField Ω (component i).1) v
         (coordinate Ω (component i).1 2)) ≤ (d₁ i : ℤ))
     (x : I ↪ K) (u₀ u₁ : I → K) (nodes : Finset I)
-    (hAn : 181084 ≤ nodes.card) (haverage : nodeAverage nodes.card w 181084 ≤ 3)
+    (hAn : 181078 ≤ nodes.card) (haverage : nodeAverage nodes.card w 181078 ≤ 3)
     (seeds allSeeds : Finset K) (hsub : seeds ⊆ allSeeds)
     (selected : K → Polynomial K)
     (hdegree : ∀ g ∈ seeds, (selected g).natDegree ≤ w)
     (hgraph : ∀ g ∈ seeds, graphSpecialize (selected g) g (g ^ p) F = 0)
     (hreg : ∀ g ∈ seeds, graphSpecialize (selected g) g (g ^ p) (implicitRegularity F) ≠ 0)
-    (hagreements : ∀ g ∈ seeds, 181084 ≤
+    (hagreements : ∀ g ∈ seeds, 181078 ≤
       (nodes.filter (fun i => (selected g).eval (x i) = u₀ i + g * u₁ i)).card)
     (hpencil : ∀ P₀ P₁ : Polynomial K, P₀.natDegree ≤ w → P₁.natDegree ≤ w →
       (RCN050.pencilSeeds allSeeds selected P₀ P₁).card ≤ e + 1) :
     (∑ i, (selectedComponentPoints F w p G seeds selected (component i)).card) ≤
-      200000 * ((∑ i, d₀ i) + ∑ i, d₁ i) := by
+      82000 * ((∑ i, d₀ i) + ∑ i, d₁ i) := by
   classical
   letI : CharP Ω p := genericField_charP K p
   have hts : ∀ d ∈ F.support, d 2 ≤ 200 := by
@@ -59,14 +60,14 @@ theorem long_persistent_selected_sum_le_of_degree
     change d 0 * 0 + d 1 * 1 + d 2 * 1 + d 3 * 0 ≤ 200 at hl
     simp only [Nat.mul_zero, Nat.mul_one, Nat.zero_add, Nat.add_zero] at hl
     omega
-  have hzs : ∀ d ∈ F.support, d 3 ≤ 162 := by
+  have hzs : ∀ d ∈ F.support, d 3 ≤ 165 := by
     intro d hd
     have hl := (MvPolynomial.le_weightedTotalDegree (![0, 0, 0, 1] : Fin 4 → ℕ) hd).trans hZ
     rw [weight_fin4] at hl
-    change d 0 * 0 + d 1 * 0 + d 2 * 0 + d 3 * 1 ≤ 162 at hl
+    change d 0 * 0 + d 1 * 0 + d 2 * 0 + d 3 * 1 ≤ 165 at hl
     simpa only [Nat.mul_zero, Nat.mul_one, Nat.zero_add] using hl
   have hcount (i : A) : (selectedComponentPoints F w p G seeds selected (component i)).card ≤
-      200000 * (d₀ i + d₁ i) := by
+      82000 * (d₀ i + d₁ i) := by
     rw [selectedComponentPoints_card]
     let fiber := selectedOnComponent F w p G seeds selected (component i)
     have hmem (g : K) (hg : g ∈ fiber) :
@@ -74,10 +75,10 @@ theorem long_persistent_selected_sum_le_of_degree
           RingHom.ker (MvPolynomial.aeval (selectedGraphPoint p selected g)).toRingHom :=
       Finset.mem_filter.mp hg
     have hlocal :=
-      persistent_curve_selected_seed_bound F w bound p 200 162 (component i).1
+      persistent_curve_selected_seed_bound F w bound p 200 165 (component i).1
         (base i) (d₀ i) (d₁ i) (hd₀ i) (hd₁ i) (charts i).carrier_mem
         (charts i).separant_not_mem (hpersistent i) (by omega) hw hchar hweight hts hzs
-        x u₀ u₁ nodes 181084 e (by decide) hAn haverage fiber allSeeds
+        x u₀ u₁ nodes 181078 e (by decide) hAn haverage fiber allSeeds
         (fun g hg => hsub (hmem g hg).1) selected (fun g => g ^ p)
         (fun g hg => hdegree g (hmem g hg).1)
         (fun g hg => hgraph g (hmem g hg).1)
@@ -90,25 +91,25 @@ theorem long_persistent_selected_sum_le_of_degree
     have hp := hpos i
     omega
   calc
-    _ ≤ ∑ i, 200000 * (d₀ i + d₁ i) := Finset.sum_le_sum fun i _ => hcount i
+    _ ≤ ∑ i, 82000 * (d₀ i + d₁ i) := Finset.sum_le_sum fun i _ => hcount i
     _ = _ := by simp only [← Finset.mul_sum, Finset.sum_add_distrib]
 
-theorem long_literal_pole_le_actual_degree
+theorem long_literal_pole_le_actual_degree_lp32
     (F : Carrier K) (G : MvPolynomial (Fin 3) Ω) (hdiv : G ∣ surfaceMap φ F)
     (hG : Irreducible G) (hproper : ¬ G ∣ surfaceMap φ (tailNumerator F w))
-    (caps : LongLiteralSeedCaps G (surfaceMap φ (tailNumerator F w)))
+    (caps : LongLiteralSeedCaps_lp32 G (surfaceMap φ (tailNumerator F w)))
     (C : FirstTailComponent F w G) (useZ₁ : Bool)
     (W : Finset (Place Ω (CoordinateField Ω C.1))) :
-    let idx := longSeedOrder useZ₁ 0
+    let idx := longSeedOrder_lp32 useZ₁ 0
     (∑ v ∈ W, RCN346.poleOrder Ω (CoordinateField Ω C.1) v (coordinate Ω C.1 idx)) ≤
       (actualCoordinateDegree Ω C.1 idx : ℤ) := by
   classical
   letI : CharP Ω p := genericField_charP K p
-  let idx := longSeedOrder useZ₁ 0
+  let idx := longSeedOrder_lp32 useZ₁ 0
   let E := CoordinateField Ω C.1
   let s := coordinate Ω C.1 idx
   have hgate (hs : Transcendental Ω s) :=
-    long_literal_projection_gate F w hdiv hG hproper caps C useZ₁ hs
+    long_literal_projection_gate_lp32 F w hdiv hG hproper caps C useZ₁ hs
   have hd : coordinateDegree Ω E (coordinateOfGate s hgate) = actualCoordinateDegree Ω C.1 idx := by
     by_cases h : Transcendental Ω s
     · rw [coordinateOfGate_degree_of_transcendental s hgate h,
@@ -121,14 +122,14 @@ theorem long_literal_pole_le_actual_degree
     coordinateOfGate_value (K := Ω) (L := E) s hgate
   simpa only [hv, hd] using hb
 
-theorem long_literal_seed_degrees_pos
+theorem long_literal_seed_degrees_pos_lp32
     (F : Carrier K) (G : MvPolynomial (Fin 3) Ω) (hdiv : G ∣ surfaceMap φ F)
     (hG : Irreducible G) (hproper : ¬ G ∣ surfaceMap φ (tailNumerator F w))
-    (caps : LongLiteralSeedCaps G (surfaceMap φ (tailNumerator F w)))
+    (caps : LongLiteralSeedCaps_lp32 G (surfaceMap φ (tailNumerator F w)))
     (C : FirstTailComponent F w G) :
     1 ≤ actualCoordinateDegree Ω C.1 1 + actualCoordinateDegree Ω C.1 2 := by
   letI : CharP Ω p := genericField_charP K p
-  obtain ⟨seed, hseed⟩ := exists_long_literal_seed_projection F w hdiv hG hproper caps C
+  obtain ⟨seed, hseed⟩ := exists_long_literal_seed_projection_lp32 F w hdiv hG hproper caps C
   have hdeg : 1 ≤ actualCoordinateDegree Ω C.1 seed.index := by
     rw [actualCoordinateDegree_of_transcendental _ _ _ seed.transcendental]
     letI : Algebra (RatFunc Ω) (CoordinateField Ω C.1) :=
@@ -144,3 +145,5 @@ theorem long_literal_seed_degrees_pos
 end
 
 end ProximityPrize.SubmissionLower.Koala6831Intrinsic
+
+/- Modified for the 68.32 KoalaBear soundness construction, November 2026. -/

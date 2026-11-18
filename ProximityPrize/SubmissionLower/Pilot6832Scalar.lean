@@ -1,6 +1,6 @@
 import ProximityPrize.SubmissionLower.LowerFoundation
 
-namespace ProximityPrize.SubmissionLower.Koala6831ScalarListArithmetic
+namespace ProximityPrize.SubmissionLower.Pilot6832ScalarArithmetic
 open ProximityPrize.Benchmark
 open scoped BigOperators
 noncomputable section
@@ -11,15 +11,15 @@ set_option Elab.async false
 
 def n : ℕ := 262144
 def w : ℕ := 131071
-def errors : ℕ := 81060
+def errors : ℕ := 81066
 def agreements : ℕ := n-errors
 def gap : ℕ := agreements-w
 def prime : ℕ := 2130706433
-def multiplicity : ℕ := 214
-def yTotalCap : ℕ := 295
-def slopeCap : ℕ := 65
+def multiplicity : ℕ := 219
+def yTotalCap : ℕ := 302
+def slopeCap : ℕ := 67
 def weightedCap : ℕ := multiplicity*agreements
-def listBudget : ℕ := 26245772433
+def listBudget : ℕ := 27701793531
 def capY : ℕ := 1+2*w*yTotalCap
 def capR : ℕ := w*(2*slopeCap-1)
 def regularListNumerator : ℕ := (n-w)*(capY*slopeCap+capR*yTotalCap)
@@ -29,36 +29,36 @@ def listNumerator : ℕ := regularListNumerator+singularListCap*gap
 theorem list_numerator_fits : listNumerator < listBudget*gap := by decide
 
 private def coefficientRow (derivative : ℕ) : ℕ :=
-  let length := 296 - derivative
-  length * (38751976 - 131070 * derivative) -
+  let length := 303 - derivative
+  length * (39656082 - 131070 * derivative) -
     131071 * (length * (length - 1) / 2)
 
-private theorem coefficientRow_eq (derivative : ℕ) (hderivative : derivative < 66) :
-    (∑ value ∈ Finset.range 296,
-      min 1 (296 - value - derivative) *
-        (38751976 - 131071 * value - 131070 * derivative)) =
+private theorem coefficientRow_eq (derivative : ℕ) (hderivative : derivative < 68) :
+    (∑ value ∈ Finset.range 303,
+      min 1 (303 - value - derivative) *
+        (39656082 - 131071 * value - 131070 * derivative)) =
       coefficientRow derivative := by
   calc
-    _ = ∑ value ∈ Finset.range (296 - derivative),
-        min 1 (296 - value - derivative) *
-          (38751976 - 131071 * value - 131070 * derivative) := by
+    _ = ∑ value ∈ Finset.range (303 - derivative),
+        min 1 (303 - value - derivative) *
+          (39656082 - 131071 * value - 131070 * derivative) := by
       symm
       apply Finset.sum_subset (Finset.range_subset_range.mpr (Nat.sub_le _ _))
       intro value _ houtside
-      have hlength : 296 - derivative ≤ value :=
+      have hlength : 303 - derivative ≤ value :=
         Nat.le_of_not_gt (fun h => houtside (Finset.mem_range.mpr h))
-      have hzero : 296 - value - derivative = 0 := by omega
+      have hzero : 303 - value - derivative = 0 := by omega
       simp [hzero]
-    _ = ∑ value ∈ Finset.range (296 - derivative),
-        ((38751976 - 131070 * derivative) - 131071 * value) := by
+    _ = ∑ value ∈ Finset.range (303 - derivative),
+        ((39656082 - 131070 * derivative) - 131071 * value) := by
       apply Finset.sum_congr rfl
       intro value hvalue
       have hvalue' := Finset.mem_range.mp hvalue
-      have hone : min 1 (296 - value - derivative) = 1 := min_eq_left (by omega)
+      have hone : min 1 (303 - value - derivative) = 1 := min_eq_left (by omega)
       rw [hone, one_mul]
       omega
-    _ = (∑ _value ∈ Finset.range (296 - derivative), (38751976 - 131070 * derivative)) -
-        (∑ value ∈ Finset.range (296 - derivative), 131071 * value) := by
+    _ = (∑ _value ∈ Finset.range (303 - derivative), (39656082 - 131070 * derivative)) -
+        (∑ value ∈ Finset.range (303 - derivative), 131071 * value) := by
       apply Finset.sum_tsub_distrib
       intro value hvalue
       have hvalue' := Finset.mem_range.mp hvalue
@@ -69,13 +69,13 @@ private theorem coefficientRow_eq (derivative : ℕ) (hderivative : derivative <
       rfl
 
 private theorem coefficientCount_exact :
-    RCN279.coefficientCount weightedCap w yTotalCap slopeCap = 302245014071 := by
-  change (∑ value ∈ Finset.range 296, ∑ derivative ∈ Finset.range 66,
-    min 1 (296 - value - derivative) *
-      (38751976 - 131071 * value - 131070 * derivative)) = _
+    RCN279.coefficientCount weightedCap w yTotalCap slopeCap = 325518081208 := by
+  change (∑ value ∈ Finset.range 303, ∑ derivative ∈ Finset.range 68,
+    min 1 (303 - value - derivative) *
+      (39656082 - 131071 * value - 131070 * derivative)) = _
   rw [Finset.sum_comm]
   calc
-    _ = ∑ derivative ∈ Finset.range 66, coefficientRow derivative := by
+    _ = ∑ derivative ∈ Finset.range 68, coefficientRow derivative := by
       apply Finset.sum_congr rfl
       intro derivative hderivative
       exact coefficientRow_eq derivative (Finset.mem_range.mp hderivative)
@@ -97,30 +97,30 @@ private theorem seedlessInputCount_eq_mul {valueCap totalCap derivativeCap : ℕ
       rfl
 
 private def localRankRow (order : ℕ) : ℕ :=
-  let tail := 214 - order
-  (order + 1) * 66 -
-    if tail ≤ order ∧ tail ≤ 295 ∧ tail ≤ 65 then
-      (order - tail + 1) * (65 - tail + 1)
+  let tail := 219 - order
+  (order + 1) * 68 -
+    if tail ≤ order ∧ tail ≤ 302 ∧ tail ≤ 67 then
+      (order - tail + 1) * (67 - tail + 1)
     else 0
 
-private theorem localRankRow_eq (order : ℕ) (horder : order < 214) :
-    RCN285.seedlessContactRankBound (min order 295) 295 65 (214 - order) =
+private theorem localRankRow_eq (order : ℕ) (horder : order < 219) :
+    RCN285.seedlessContactRankBound (min order 302) 302 67 (219 - order) =
       localRankRow order := by
-  rw [min_eq_left (by omega : order ≤ 295)]
+  rw [min_eq_left (by omega : order ≤ 302)]
   unfold RCN285.seedlessContactRankBound RCN285.seedlessKernelLowerBound localRankRow
-  rw [seedlessInputCount_eq_mul (by omega : order + 65 ≤ 295)]
-  by_cases htail : 214 - order ≤ order ∧ 214 - order ≤ 295 ∧ 214 - order ≤ 65
-  · have hbox : order - (214 - order) + (65 - (214 - order)) ≤ 295 - (214 - order) := by
+  rw [seedlessInputCount_eq_mul (by omega : order + 67 ≤ 302)]
+  by_cases htail : 219 - order ≤ order ∧ 219 - order ≤ 302 ∧ 219 - order ≤ 67
+  · have hbox : order - (219 - order) + (67 - (219 - order)) ≤ 302 - (219 - order) := by
       omega
     simp only [ite_eq_left htail, seedlessInputCount_eq_mul hbox]
   · simp only [ite_eq_right htail]
 
 private theorem localRankBound_exact :
-    RCN279.localRankBound multiplicity yTotalCap slopeCap = 1152965 := by
-  change (∑ order ∈ Finset.range 214,
-    RCN285.seedlessContactRankBound (min order 295) 295 65 (214 - order)) = _
+    RCN279.localRankBound multiplicity yTotalCap slopeCap = 1241748 := by
+  change (∑ order ∈ Finset.range 219,
+    RCN285.seedlessContactRankBound (min order 302) 302 67 (219 - order)) = _
   calc
-    _ = ∑ order ∈ Finset.range 214, localRankRow order := by
+    _ = ∑ order ∈ Finset.range 219, localRankRow order := by
       apply Finset.sum_congr rfl
       intro order horder
       exact localRankRow_eq order (Finset.mem_range.mp horder)
@@ -175,33 +175,33 @@ theorem exists_seedless_interpolant (received : IRSProfile.Index → IRSProfile.
   exact hcontact i r
 
 end
-end ProximityPrize.SubmissionLower.Koala6831ScalarListArithmetic
+end ProximityPrize.SubmissionLower.Pilot6832ScalarArithmetic
 
-namespace ProximityPrize.SubmissionLower.Koala6831ScalarList
+namespace ProximityPrize.SubmissionLower.Pilot6832Scalar
 open scoped Classical BigOperators
 open ProximityPrize.Benchmark RCN319 RCN174 RCN231 RCN081 RCN167 RCN313 RCN136 RCN135 RCN138 RCN137 RCN267 RCN238 RCN243 RCN222 RCN290 RCN293 RCN286 RCN279 RCN282 RCN283 RCN001 RCN281 RCN019 RCN018
 noncomputable section
 set_option autoImplicit false
 set_option maxRecDepth 50000
 set_option maxHeartbeats 5000000
-private abbrev n:=Koala6831ScalarListArithmetic.n
-private abbrev w:=Koala6831ScalarListArithmetic.w
-private abbrev agreements:=Koala6831ScalarListArithmetic.agreements
-private abbrev gap:=Koala6831ScalarListArithmetic.gap
-private abbrev prime:=Koala6831ScalarListArithmetic.prime
-private abbrev multiplicity:=Koala6831ScalarListArithmetic.multiplicity
-private abbrev yTotalCap:=Koala6831ScalarListArithmetic.yTotalCap
-private abbrev slopeCap:=Koala6831ScalarListArithmetic.slopeCap
-private abbrev weightedCap:=Koala6831ScalarListArithmetic.weightedCap
-private abbrev listBudget:=Koala6831ScalarListArithmetic.listBudget
-private abbrev capY:=Koala6831ScalarListArithmetic.capY
-private abbrev capR:=Koala6831ScalarListArithmetic.capR
+private abbrev n:=Pilot6832ScalarArithmetic.n
+private abbrev w:=Pilot6832ScalarArithmetic.w
+private abbrev agreements:=Pilot6832ScalarArithmetic.agreements
+private abbrev gap:=Pilot6832ScalarArithmetic.gap
+private abbrev prime:=Pilot6832ScalarArithmetic.prime
+private abbrev multiplicity:=Pilot6832ScalarArithmetic.multiplicity
+private abbrev yTotalCap:=Pilot6832ScalarArithmetic.yTotalCap
+private abbrev slopeCap:=Pilot6832ScalarArithmetic.slopeCap
+private abbrev weightedCap:=Pilot6832ScalarArithmetic.weightedCap
+private abbrev listBudget:=Pilot6832ScalarArithmetic.listBudget
+private abbrev capY:=Pilot6832ScalarArithmetic.capY
+private abbrev capR:=Pilot6832ScalarArithmetic.capR
 private abbrev regularListNumerator :=
- Koala6831ScalarListArithmetic.regularListNumerator
-private abbrev singularListCap:=Koala6831ScalarListArithmetic.singularListCap
-private abbrev listNumerator:=Koala6831ScalarListArithmetic.listNumerator
+ Pilot6832ScalarArithmetic.regularListNumerator
+private abbrev singularListCap:=Pilot6832ScalarArithmetic.singularListCap
+private abbrev listNumerator:=Pilot6832ScalarArithmetic.listNumerator
 private theorem list_numerator_fits:listNumerator < listBudget * gap :=
- Koala6831ScalarListArithmetic.list_numerator_fits
+ Pilot6832ScalarArithmetic.list_numerator_fits
 private theorem w_pos:0 < w:=by decide
 private theorem prime_pos:0 < prime:=by decide
 private theorem w_lt_prime:w < prime:=by decide
@@ -213,9 +213,9 @@ private theorem slopeCap_pos:0 < slopeCap:=by decide
 private theorem weightedCap_pos:0 < weightedCap:=by decide
 private theorem gap_pos:0 < gap:=by decide
 private theorem base_dimension_exact:IRSProfile.baseDimension = w + 1:=by
- norm_num [IRSProfile.baseDimension, w, Koala6831ScalarListArithmetic.w]
+ norm_num [IRSProfile.baseDimension, w, Pilot6832ScalarArithmetic.w]
 private theorem index_card_exact:Fintype.card IRSProfile.Index = n:=by
- norm_num [IRSProfile.Index, n, Koala6831ScalarListArithmetic.n]
+ norm_num [IRSProfile.Index, n, Pilot6832ScalarArithmetic.n]
 section
 variable (K:Type) [Field K]
 local instance:DecidableEq K:=Classical.decEq K
@@ -250,10 +250,10 @@ private theorem agreement_cap
  intro j
  fin_cases j
  · exact (surfaceMap_degreeOf_le phi _ 0).trans
-     (by simpa [agreementCap, capY, Koala6831ScalarListArithmetic.capY]
+     (by simpa [agreementCap, capY, Pilot6832ScalarArithmetic.capY]
        using hb.1)
  · exact (surfaceMap_degreeOf_le phi _ 1).trans
-     (by simpa [agreementCap, capR, Koala6831ScalarListArithmetic.capR]
+     (by simpa [agreementCap, capR, Pilot6832ScalarArithmetic.capR]
        using hb.2.1)
  · exact (surfaceMap_degreeOf_le phi _ 2).trans
      (hb.2.2.trans (by simp [agreementCap]))
@@ -425,7 +425,7 @@ private theorem singular_seedless_card_le
  have hJY:J.degreeOf 1 ≤ singularListCap :=
    (RCN281.degreeY_le_yWeight K J).trans
      (hJYw.trans (by
-       simp only [singularListCap, Koala6831ScalarListArithmetic.singularListCap]
+       simp only [singularListCap, Pilot6832ScalarArithmetic.singularListCap]
        exact Nat.mul_le_mul_left _ hQY))
  have hJZ:J.degreeOf 3 = 0:=Nat.eq_zero_of_le_zero
    ((RCN281.degreeZ_le_zWeight K J).trans
@@ -548,7 +548,7 @@ theorem seedless_list_card_le
      _ ≤ singularListCap * gap + regularListNumerator :=
        Nat.add_le_add (Nat.mul_le_mul_right gap hsing) hregularScaled
      _ = listNumerator:=by
-       simp only [listNumerator, Koala6831ScalarListArithmetic.listNumerator,
+       simp only [listNumerator, Pilot6832ScalarArithmetic.listNumerator,
          regularListNumerator, singularListCap, gap]
        omega
  by_contra hnot
@@ -578,7 +578,7 @@ theorem exists_seedless_vanishing_interpolant
        RCN319.specialization IRSProfile.Field P 0 Q = 0:=by
  classical
  obtain ⟨Q, hQ, hbox, hcontact⟩ :=
-   Koala6831ScalarListArithmetic.exists_seedless_interpolant received
+   Pilot6832ScalarArithmetic.exists_seedless_interpolant received
  change Q ∈ RCN279.globalCoefficientBox IRSProfile.Field
    weightedCap w yTotalCap slopeCap at hbox
  have hlegacy:Q ∈ RCN174.globalCoefficientBox IRSProfile.Field
@@ -608,9 +608,9 @@ theorem irs_scalar_finite_list_card_le
    (received:IRSProfile.Index → IRSProfile.Field)
    (L:Finset (IRSProfile.Index → IRSProfile.Field))
    (hcode:∀ c ∈ L, c ∈ IRSProfile.baseCode)
-   (hclose:∀ c ∈ L, 181084 ≤
+   (hclose:∀ c ∈ L, 181078 ≤
      (Finset.univ.filter (fun i => c i = received i)).card) :
-   L.card ≤ 26245772433:=by
+   L.card ≤ 27701793531:=by
  classical
  let D:=↥L
  let codeword:D → IRSProfile.baseCode:=fun c => ⟨c.1, hcode c.1 c.2⟩
@@ -673,4 +673,8 @@ theorem irs_scalar_finite_list_card_le
    (by simpa using index_card_exact) hdegree hsolution hagreement
  rwa [hcard] at hbound
 end
-end ProximityPrize.SubmissionLower.Koala6831ScalarList
+end ProximityPrize.SubmissionLower.Pilot6832Scalar
+
+#print axioms ProximityPrize.SubmissionLower.Pilot6832Scalar.irs_scalar_finite_list_card_le
+
+/- Modified for the 68.32 KoalaBear soundness construction, November 2026. -/

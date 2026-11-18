@@ -1,3 +1,5 @@
+/- Originally by Lucieno, Proximity Prize PR 618, Apache-2.0. Retuned for 81,066 errors.
+-/
 import ProximityPrize.SubmissionLower.LowerGeometry
 
 namespace ProximityPrize.SubmissionLower.Koala6831MovingStages
@@ -23,7 +25,7 @@ theorem room_remaining_caps (roomOrder : ℕ) (remaining incoming source : FlagD
   · rw [Nat.mul_comm, total, Nat.mul_add, Nat.mul_add]
     exact hsource.2.2
 
-def weightGain : ℕ := 19108
+def weightGain : ℕ := 19106
 
 def adaptiveBand (source : SourceNumbers) (p : FlagDegree) : ℕ :=
   powerBandBudget weightGain (total p) (middle p) p.all
@@ -56,8 +58,10 @@ theorem adaptiveGate_mono (source : SourceNumbers) {p q : FlagDegree}
     adaptiveGate source q :=
   (adaptiveBand_antitone source h hs).trans_lt hactive
 
-def adaptiveSource1 : SourceNumbers := ⟨200000, 2763, 600, 67407476748605238⟩
-def adaptiveSource2 : SourceNumbers := ⟨1000000, 5526, 1200, 4238265449162044150⟩
-def adaptiveSource3 : SourceNumbers := ⟨2200000, 30394, 6776, 1259828272756259234820⟩
+def adaptiveSource1 : SourceNumbers := ⟨126000, 1657, 372, 8469781001465397⟩
+def adaptiveSource2 : SourceNumbers := ⟨572000, 3591, 806, 641107786271542526⟩
+def adaptiveSource3 : SourceNumbers := ⟨5100000, 41445, 9300, 9071824415736420630585⟩
 
 end ProximityPrize.SubmissionLower.Koala6831MovingStages
+
+/- Modified for the 68.32 KoalaBear soundness construction, November 2026. -/

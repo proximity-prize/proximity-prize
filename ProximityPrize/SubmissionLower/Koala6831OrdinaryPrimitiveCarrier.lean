@@ -21,7 +21,7 @@ theorem exists_ordinary_carrier_of_primitive {I Γ : Type*} [Fintype I]
       (MvPolynomial.C (u₁ i) + MvPolynomial.X 1 * MvPolynomial.C (v₁ i)) = 0)
     (σ : K →+* K) (p : ℕ) (P : K → Polynomial K) (seed : Γ → K)
     (agreement : Γ → Finset I) (hdegree : ∀ g, (P (seed g)).natDegree ≤ 131071)
-    (hsize : ∀ g, 181084 ≤ (agreement g).card)
+    (hsize : ∀ g, 181078 ≤ (agreement g).card)
     (h₀ : ∀ g i, i ∈ agreement g → (P (seed g)).eval (nodes i) = u₀ i + seed g * v₀ i)
     (h₁ : ∀ g i, i ∈ agreement g →
       ((P (seed g)).map σ).eval (nodes i) = u₁ i + (seed g) ^ p * v₁ i)
@@ -56,3 +56,5 @@ theorem exists_ordinary_carrier_of_primitive {I Γ : Type*} [Fintype I]
   exact (primitiveRowLift_specializes_eq σ p q P (seed g)).trans (hzero g)
 
 end ProximityPrize.SubmissionLower.Koala6831Ordinary
+
+/- Modified for the 68.32 KoalaBear soundness construction, November 2026. -/

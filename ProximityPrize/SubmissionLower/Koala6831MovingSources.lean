@@ -1,3 +1,5 @@
+/- Originally by Lucieno, Proximity Prize PR 618, Apache-2.0. Retuned for 81,066 errors.
+-/
 import ProximityPrize.SubmissionLower.Koala6831MovingStages
 
 namespace ProximityPrize.SubmissionLower.Koala6831MovingSources
@@ -16,30 +18,30 @@ inductive Stage where
   | adaptive2
   | adaptive3
 
-def agreement : ℕ := 181084
+def agreement : ℕ := 181078
 def weight : ℕ := 131071
 
 namespace Stage
 
 def numbers : Stage → SourceNumbers
-  | .primary => ⟨53188, 360, 80, 74645280⟩
-  | .room1 => ⟨107462, 1717, 384, 30014308170⟩
-  | .room2 => ⟨601706, 1805, 402, 11158591236⟩
+  | .primary => ⟨41882, 418, 93, 75072160⟩
+  | .room1 => ⟨153515, 2318, 522, 72953148141⟩
+  | .room2 => ⟨816249, 2084, 464, 183606490⟩
   | .adaptive1 => adaptiveSource1
   | .adaptive2 => adaptiveSource2
   | .adaptive3 => adaptiveSource3
 
 def multiplicity : Stage → ℕ
-  | .primary => 261
-  | .room1 => 1244
-  | .room2 => 1308
-  | .adaptive1 => 2000
-  | .adaptive2 => 4000
-  | .adaptive3 => 22000
+  | .primary => 303
+  | .room1 => 1679
+  | .room2 => 1510
+  | .adaptive1 => 1200
+  | .adaptive2 => 2600
+  | .adaptive3 => 30000
 
 def room : Stage → ℕ
-  | .room1 => 114648
-  | .room2 => 229296
+  | .room1 => 171954
+  | .room2 => 267484
   | _ => 0
 
 def cutoff (s : Stage) : ℕ := s.multiplicity * agreement - s.room
@@ -51,12 +53,12 @@ theorem room_cutoff (s : Stage) :
   cases s <;> decide +kernel
 
 private def remainder : Stage → ℕ
-  | .primary => 77364
-  | .room1 => 104941
-  | .room2 => 45421
-  | .adaptive1 => 18827
-  | .adaptive2 => 37654
-  | .adaptive3 => 76026
+  | .primary => 78956
+  | .room1 => 35430
+  | .room2 => 8332
+  | .adaptive1 => 108953
+  | .adaptive2 => 126839
+  | .adaptive3 => 102405
 
 private theorem cutoff_eq (s : Stage) :
     s.cutoff = s.numbers.middleCap * weight + s.remainder := by
@@ -160,3 +162,5 @@ theorem specialization_zero_of_box_and_agreement
 end
 
 end ProximityPrize.SubmissionLower.Koala6831MovingSources
+
+/- Modified for the 68.32 KoalaBear soundness construction, November 2026. -/

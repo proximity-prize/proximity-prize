@@ -98,18 +98,18 @@ theorem exists_separated_interpolant {I : Type*} [Fintype I]
     exact ⟨B.val, by simpa only [row, germ_weight] using high_of_truncate_eq m _ _ same.symm⟩
 
 theorem exists_long_interpolant {I : Type*} [Fintype I] (x u₀ v₀ u₁ v₁ : I → K)
-    (q : Poly K) (q_ne : q ≠ 0) (δ : ℕ) (large : 9555 ≤ δ) (small : δ ≤ 31357)
+    (q : Poly K) (q_ne : q ≠ 0) (δ : ℕ) (large : 9554 ≤ δ) (small : δ ≤ 31357)
     (node_count : Fintype.card I ≤ 262144)
     (q_code : weightDegree (codeWeights 131071) q = 131071 + δ)
     (q_value : weightDegree valueWeights q = 1) (q_second : weightDegree secondWeights q = 1)
     (q_left : weightDegree leftWeights q = 1) (q_right : weightDegree rightWeights q = 1)
     (q_order : ∀ i, (weightLift germWeights (centerAtNode (x i) (u₀ i) (v₀ i) (u₁ i) (v₁ i) q)).natTrailingDegree = 1) :
-    ∃ Q : Poly K, Q ∈ separatedBox K (16 * 181084) 131071 22 22 178 162 ∧ ¬ q ∣ Q ∧
+    ∃ Q : Poly K, Q ∈ separatedBox K (16 * 181078) 131071 22 22 178 165 ∧ ¬ q ∣ Q ∧
       ∀ i, ∃ B : Poly K, ∀ d ∈
         (centerAtNode (x i) (u₀ i) (v₀ i) (u₁ i) (v₁ i) Q -
           centerAtNode (x i) (u₀ i) (v₀ i) (u₁ i) (v₁ i) q * B).support,
         16 ≤ d 0 + d 1 + d 2 := by
-  exact exists_separated_interpolant x u₀ v₀ u₁ v₁ q q_ne (16 * 181084) 131071 22 22 178 162 16 δ
+  exact exists_separated_interpolant x u₀ v₀ u₁ v₁ q q_ne (16 * 181078) 131071 22 22 178 165 16 δ
     (by omega) (by decide) (by decide) (by decide) (by decide) (by decide)
     q_code q_value q_second q_left q_right q_order
     ((Nat.add_le_add_left (Nat.mul_le_mul_right _ node_count) _).trans_lt
@@ -118,3 +118,5 @@ theorem exists_long_interpolant {I : Type*} [Fintype I] (x u₀ v₀ u₁ v₁ :
 end
 
 end ProximityPrize.SubmissionLower.Koala6831Separated
+
+/- Modified for the 68.32 KoalaBear soundness construction, November 2026. -/

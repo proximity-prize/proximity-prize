@@ -49,22 +49,22 @@ theorem equation_of_good_node (q : SymbolicRow (SeedRing K)) (x : K) (word : Fin
 theorem retained_card_le [DecidableEq K] (domain : I ↪ K)
     (retained : Finset K) (agreement : K → Finset I) (selected : K → K[X])
     (q : SymbolicRow (SeedRing K)) (keys : Fin 4 → SeedMonomial) (word : I → Fin 4 → K)
-    (δ : ℕ) (hδ : δ ≤ 12503) (hdet : (matrix q keys δ).det ≠ 0)
+    (δ : ℕ) (hδ : δ ≤ 12501) (hdet : (matrix q keys δ).det ≠ 0)
     (hbeta : q.beta.natDegree ≤ 131071 + δ)
     (hfirst : q.first.natDegree ≤ δ) (hsecond : q.second.natDegree ≤ δ)
     (hdegree : ∀ g ∈ retained, (selected g).natDegree ≤ 131071)
-    (hcard : ∀ g ∈ retained, 181084 ≤ (agreement g).card)
+    (hcard : ∀ g ∈ retained, 181078 ≤ (agreement g).card)
     (hgood : ∀ g ∈ retained, ∀ i ∈ agreement g,
       q.atNode (MvPolynomial.C (domain i))
         (MvPolynomial.C (word i 0) + MvPolynomial.X 0 * MvPolynomial.C (word i 1))
         (MvPolynomial.C (word i 2) + MvPolynomial.X 1 * MvPolynomial.C (word i 3)) = 0)
     (hfit : ∀ g ∈ retained, ∀ i ∈ agreement g, (selected g).eval (domain i) = word i 0 + g * word i 1)
     (hno : ∀ P₀ P₁ : K[X], P₀.natDegree ≤ 131071 → P₁.natDegree ≤ 131071 →
-      (retained.filter (fun g ↦ selected g = P₀ + C g * P₁)).card ≤ 81061) :
-    retained.card ≤ 81061 := by
+      (retained.filter (fun g ↦ selected g = P₀ + C g * P₁)).card ≤ 81067) :
+    retained.card ≤ 81067 := by
   have hneg : (-q.beta).natDegree ≤ 131071 + δ := by simpa using hbeta
   apply Koala6831CoefficientSystem.card_le_of_nonsingular_coefficients domain retained agreement
-    selected (columns q) (-q.beta) keys word 131071 δ 81060 hdet
+    selected (columns q) (-q.beta) keys word 131071 δ 81066 hdet
     (columns_degree q δ hfirst hsecond) hneg hdegree ?_ ?_ hfit hno
   · intro g hg
     have hn := hcard g hg
@@ -72,3 +72,5 @@ theorem retained_card_le [DecidableEq K] (domain : I ↪ K)
   · exact fun g hg i hi ↦ equation_of_good_node q (domain i) (word i) (hgood g hg i hi)
 
 end ProximityPrize.SubmissionLower.Koala6831RankFour
+
+/- Modified for the 68.32 KoalaBear soundness construction, November 2026. -/

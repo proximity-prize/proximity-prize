@@ -286,11 +286,13 @@ theorem one_sided_comparison_card_le [Fintype I]
         _ (hagreement g hg) (fun _ hi => (Finset.mem_filter.mp hi).2)
 
 theorem koala_one_sided_budget :
-    max ((262144 - 131071 : ℕ) * (6 * (2130706433 + 1)) / (181084 - 131071))
-      ((131071 + 1) * (5 * (2130706433 + 1)) + (81060 + 1)) =
-      1396379768667301 := by
+    max ((262144 - 131071 : ℕ) * (6 * (2130706433 + 1)) / (181078 - 131071))
+      ((131071 + 1) * (5 * (2130706433 + 1)) + (81066 + 1)) =
+      1396379768667307 := by
   decide +kernel
 
 end
 
 end ProximityPrize.SubmissionLower.Koala6831OneSided
+
+/- Modified for the 68.32 KoalaBear soundness construction, November 2026. -/

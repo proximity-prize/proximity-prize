@@ -29,7 +29,7 @@ abbrev Selection (received : ReceivedWords) (seeds : Finset IRSProfile.Field)
   Koala6831BenchmarkPrimitive.Selection IRSProfile.domain received seeds selected
 
 theorem independent_rows_le_seed_budget
-    {received : ReceivedWords} {d₀ d₁ : ℕ} (hle₀ : d₀ ≤ 62095) (hle₁ : d₁ ≤ 62095)
+    {received : ReceivedWords} {d₀ d₁ : ℕ} (hle₀ : d₀ ≤ 62150) (hle₁ : d₁ ≤ 62150)
     (first : ComparisonRows received d₀) (second : ComparisonRows received d₁)
     (hdet : coefficientDeterminant (received := received) (d₀ := d₀) (d₁ := d₁) first second ≠ 0)
     (seeds : Finset IRSProfile.Field) (selected : IRSProfile.Field → Polynomial IRSProfile.Field)
@@ -37,8 +37,8 @@ theorem independent_rows_le_seed_budget
   unfold coefficientDeterminant Koala6831BenchmarkPrimitive.coefficientDeterminant at hdet
   have h := Koala6831RankTwo.independent_mixed_rows_card_le
     (K := IRSProfile.Field) (I := IRSProfile.Index)
-    (A := 181084) (a := 50013) (d₀ := d₀) (d₁ := d₁)
-    (p := prime) (D := 62095) (w := 131071) (e := 81060)
+    (A := 181078) (a := 50007) (d₀ := d₀) (d₁ := d₁)
+    (p := prime) (D := 62150) (w := 131071) (e := 81066)
     (by decide) (by decide) hle₀ hle₁ IRSProfile.domain received frobenius.toRingHom
     domain_fixed frobenius_apply (by decide) (by decide)
     (by rw [IRSProfile.card_index]; decide)
@@ -52,3 +52,5 @@ end
 end ProximityPrize.SubmissionLower.Koala6831BenchmarkCases
 
 /- Modified for this joint-incidence adaptation of Lucieno’s PR 618, November 2026. -/
+
+/- Modified for the 68.32 KoalaBear soundness construction, November 2026. -/

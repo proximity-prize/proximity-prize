@@ -10,10 +10,10 @@ noncomputable section
 
 variable {K I : Type} [Field K] [CharP K TangentList.prime] [Fintype I]
 
-def tangentSeedBudget : ℕ := 3931852647682899
+def tangentSeedBudget : ℕ := 5310562756451358
 
 theorem tangent_seed_budget_exact :
-    TangentList.listBudget * (81060 + 1) = tangentSeedBudget := by decide +kernel
+    TangentList.listBudget * (81066 + 1) = tangentSeedBudget := by decide +kernel
 
 theorem normalized_word_card_le_of_seed_independent_carrier
     (c : NormalizedCoeff K) (hc : c ≠ 0)
@@ -46,7 +46,7 @@ theorem FlowData.seed_card_le_of_seed_independent_carrier
       (nodes.filter (fun i => (normalized g).eval (points i) = received i)).card)
     (hvanishes : ∀ g ∈ seeds, evalNormalizedCoefficient (normalized g) c = 0)
     (hno : ∀ P₀ P₁ : Polynomial K, P₀.natDegree ≤ 131071 → P₁.natDegree ≤ 131071 →
-      (seeds.filter (fun g => selected g = P₀ + Polynomial.C g * P₁)).card ≤ 81060 + 1) :
+      (seeds.filter (fun g => selected g = P₀ + Polynomial.C g * P₁)).card ≤ 81066 + 1) :
     seeds.card ≤ tangentSeedBudget := by
   classical
   have hwords := normalized_word_card_le_of_seed_independent_carrier c hc hy hr
@@ -61,9 +61,9 @@ theorem FlowData.seed_card_le_of_seed_independent_carrier
       obtain ⟨g, hg, rfl⟩ := Finset.mem_image.mp hq
       exact hvanishes g hg)
   calc
-    seeds.card ≤ (seeds.image normalized).card * (81060 + 1) :=
-      B.normalized_seed_card_le seeds selected normalized 131071 81060 hd0 hselected hnorm hno
-    _ ≤ TangentList.listBudget * (81060 + 1) := Nat.mul_le_mul_right _ hwords
+    seeds.card ≤ (seeds.image normalized).card * (81066 + 1) :=
+      B.normalized_seed_card_le seeds selected normalized 131071 81066 hd0 hselected hnorm hno
+    _ ≤ TangentList.listBudget * (81066 + 1) := Nat.mul_le_mul_right _ hwords
     _ = tangentSeedBudget := tangent_seed_budget_exact
 
 private theorem degreeOf_le_normalized_weight
@@ -106,7 +106,7 @@ theorem FlowData.tangent_seed_card_le
       (nodes.filter (fun i => (normalized g).eval (points i) = received i)).card)
     (hvanishes : ∀ g ∈ seeds, ∃ F ∈ factors, RCN319.specialization K (selected g) g F = 0)
     (hno : ∀ P₀ P₁ : Polynomial K, P₀.natDegree ≤ 131071 → P₁.natDegree ≤ 131071 →
-      (seeds.filter (fun g => selected g = P₀ + Polynomial.C g * P₁)).card ≤ 81060 + 1) :
+      (seeds.filter (fun g => selected g = P₀ + Polynomial.C g * P₁)).card ≤ 81066 + 1) :
     seeds.card ≤ tangentSeedBudget := by
   classical
   have hfamily (F : ↥factors) :
@@ -164,3 +164,7 @@ theorem FlowData.tangent_seed_card_le
 end
 
 end ProximityPrize.SubmissionLower.Koala6831Moving
+
+/- Retuned for the full 68.32 domain and the m=303 primary, November 2026. -/
+
+/- Modified for the 68.32 KoalaBear soundness construction, November 2026. -/

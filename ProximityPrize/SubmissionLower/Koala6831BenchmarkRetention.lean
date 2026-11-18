@@ -14,7 +14,7 @@ set_option maxHeartbeats 5000000
 
 variable {K I : Type} [Field K] [Fintype I]
 
-def commonDiscardBudget : ℕ := 330770866814160
+def commonDiscardBudget : ℕ := 330898709200200
 def retainedSeedBudget : ℕ := 274430098954830993
 
 structure RetainedComparison (x : I ↪ K) (σ : K →+* K)
@@ -24,7 +24,7 @@ structure RetainedComparison (x : I ↪ K) (σ : K →+* K)
   first_ne : q.first ≠ 0
   second_ne : q.second ≠ 0
   primitive : IsPrimitiveRow q
-  xDegree : q.beta.natDegree ≤ 181083 ∧ q.first.natDegree ≤ 50012 ∧ q.second.natDegree ≤ 50012
+  xDegree : q.beta.natDegree ≤ 181077 ∧ q.first.natDegree ≤ 50006 ∧ q.second.natDegree ≤ 50006
   seedDegree : ∀ j, ((q.beta.coeff j).degreeOf 0 ≤ 5 ∧ (q.beta.coeff j).degreeOf 1 ≤ 5) ∧
     ((q.first.coeff j).degreeOf 0 ≤ 4 ∧ (q.first.coeff j).degreeOf 1 ≤ 5) ∧
     ((q.second.coeff j).degreeOf 0 ≤ 5 ∧ (q.second.coeff j).degreeOf 1 ≤ 4)
@@ -55,7 +55,7 @@ theorem primitive_bound_of_retained
     TwoSidedPrimitiveSeedBound x σ := by
   intro received seeds selected support row q m hfirst hsecond hm hprimitive hfactor hcap
   obtain ⟨retained, hsub, hseedCount, hrow⟩ := retain_primitive_rows
-    (A := 181084) (a := 50013) (w := 131071) (p := prime)
+    (A := 181078) (a := 50007) (w := 131071) (p := prime)
     x σ hfixed hpow (by decide) received (by decide) (by decide) row q m hm
     (Or.inl hfirst) hfactor seeds (agreementSet x received selected) selected
     support.degree_le support.agreement (fun _ _ _ hi => eval_eq_of_mem_agreementSet hi)
@@ -63,7 +63,7 @@ theorem primitive_bound_of_retained
   have hB := primitive_seed_degree_caps row.1 q m hm hfactor
   have hretained := hRetained received retained selected q
     ⟨selection_of_subset support hsub, hfirst, hsecond, hprimitive, hX, hB, by omega, hrow⟩
-  have hbad : (badNodes x σ received q).card + 1 ≤ 31048 := by omega
+  have hbad : (badNodes x σ received q).card + 1 ≤ 31060 := by omega
   have hdiscard : ((badNodes x σ received q).card + 1) * (5 * (prime + 1)) ≤ commonDiscardBudget :=
     (Nat.mul_le_mul_right (5 * (prime + 1)) hbad).trans_eq (by decide +kernel)
   have hsum : retainedSeedBudget + commonDiscardBudget = mcaBudget := by decide +kernel
@@ -77,3 +77,5 @@ end
 end ProximityPrize.SubmissionLower.Koala6831BenchmarkRetention
 
 /- Modified for this joint-incidence adaptation of Lucieno’s PR 618, November 2026. -/
+
+/- Modified for the 68.32 KoalaBear soundness construction, November 2026. -/

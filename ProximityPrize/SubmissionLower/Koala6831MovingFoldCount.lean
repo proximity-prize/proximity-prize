@@ -269,27 +269,27 @@ theorem folded_seed_card_le
     _ ≤ _ := hbudget
 
 private def primaryFoldSupport : ResidualSupportParameters :=
-  ⟨80, 360, 53188, by decide, by decide, by decide, by decide⟩
+  ⟨93, 418, 41882, by decide, by decide, by decide, by decide⟩
 
 open Koala6831MovingSources LocatorLowQuotient
 
 theorem primary_folded_seed_card_le [CharP K 2130706433]
     (H : MvPolynomial (Fin 4) K) (hH : H ≠ 0)
-    (hbox : H ∈ nestedCoefficientBox K Stage.primary.cutoff weight 53188 360 80)
+    (hbox : H ∈ nestedCoefficientBox K Stage.primary.cutoff weight 41882 418 93)
     (Γ : Finset K) (selected : K → Polynomial K)
     {Node : Type*} (nodes : Finset Node) (x u₀ u₁ : Node → K) (hx : Set.InjOn x nodes)
     (hnodes : nodes.card = 262144)
     (hdegree : ∀ γ ∈ Γ, (selected γ).natDegree ≤ weight)
     (hagreement : ∀ γ ∈ Γ, agreement ≤
       (nodes.filter (fun i => (selected γ).eval (x i) = u₀ i + γ * u₁ i)).card)
-    (hnoPencil : NoLargeSelectedPencil selected Γ weight 81060) :
-    (foldedSeeds H Γ selected).card ≤ 3045276013760647 := by
+    (hnoPencil : NoLargeSelectedPencil selected Γ weight 81066) :
+    (foldedSeeds H Γ selected).card ≤ 3237004435680818 := by
   have hweights := nested_mem_weights hbox hH
   have hData : ResidualSupportData primaryFoldSupport H :=
     ⟨hweights.2.2.1, hweights.2.1, hweights.1⟩
   have hAn : agreement ≤ nodes.card := by rw [hnodes]; decide +kernel
   have h := folded_seed_card_le primaryFoldSupport (by decide +kernel) (by decide +kernel)
-    H hH hData 2130706433 selected Γ nodes x u₀ u₁ hx weight agreement 81060
+    H hH hData 2130706433 selected Γ nodes x u₀ u₁ hx weight agreement 81066
     (by decide +kernel) (by decide +kernel) (by decide +kernel) hAn
     (by decide +kernel) (by decide +kernel) hdegree hagreement hnoPencil
   rw [hnodes] at h
@@ -297,7 +297,7 @@ theorem primary_folded_seed_card_le [CharP K 2130706433]
 
 theorem exists_primary_regular_seeds [CharP K 2130706433]
     (H : MvPolynomial (Fin 4) K) (hH : H ≠ 0)
-    (hbox : H ∈ nestedCoefficientBox K Stage.primary.cutoff weight 53188 360 80)
+    (hbox : H ∈ nestedCoefficientBox K Stage.primary.cutoff weight 41882 418 93)
     (Γ : Finset K) (selected : K → Polynomial K)
     {Node : Type} (nodes : Finset Node) (x u₀ u₁ : Node → K) (hx : Set.InjOn x nodes)
     (hnodes : nodes.card = 262144)
@@ -305,8 +305,8 @@ theorem exists_primary_regular_seeds [CharP K 2130706433]
     (hsolution : ∀ γ ∈ Γ, specialization K (selected γ) γ H = 0)
     (hagreement : ∀ γ ∈ Γ, agreement ≤
       (nodes.filter (fun i => (selected γ).eval (x i) = u₀ i + γ * u₁ i)).card)
-    (hnoPencil : NoLargeSelectedPencil selected Γ weight 81060) :
-    ∃ Γreg : Finset K, Γreg ⊆ Γ ∧ Γ.card ≤ Γreg.card + 3084745996799680 ∧
+    (hnoPencil : NoLargeSelectedPencil selected Γ weight 81066) :
+    ∃ Γreg : Finset K, Γreg ⊆ Γ ∧ Γ.card ≤ Γreg.card + 3273094414201559 ∧
       ∀ γ ∈ Γreg, ∃ F : RegularIndex H, specialization K (selected γ) γ F.1 = 0 ∧
         specialization K (selected γ) γ (RCN313.polyH K F.1) ≠ 0 := by
   classical
@@ -320,10 +320,10 @@ theorem exists_primary_regular_seeds [CharP K 2130706433]
   have hfree := freeAndTailCarrier_seed_count H hH hbox free selected nodes x u₀ u₁ hx hnodes
     (fun γ hγ => hdegree γ (hfreeSub hγ)) (fun γ hγ => (Finset.mem_filter.mp hγ).2)
     (fun γ hγ => hagreement γ (hfreeSub hγ))
-    (noLargeSelectedPencil_mono selected Γ free weight 81060 hfreeSub hnoPencil)
+    (noLargeSelectedPencil_mono selected Γ free weight 81066 hfreeSub hnoPencil)
   have hfold := primary_folded_seed_card_le H hH hbox Γ selected nodes x u₀ u₁ hx hnodes
     hdegree hagreement hnoPencil
-  have hdisc : discarded.card ≤ 3084745996799680 :=
+  have hdisc : discarded.card ≤ 3273094414201559 :=
     (Finset.card_union_le free fold).trans (Nat.add_le_add hfree hfold)
   refine ⟨regular, Finset.sdiff_subset, ?_, ?_⟩
   · have h := Finset.card_sdiff_of_subset hdiscSub
@@ -341,3 +341,7 @@ theorem exists_primary_regular_seeds [CharP K 2130706433]
 end
 
 end ProximityPrize.SubmissionLower.Koala6831MovingFoldCount
+
+/- Retuned for the full 68.32 domain and the m=303 primary, November 2026. -/
+
+/- Modified for the 68.32 KoalaBear soundness construction, November 2026. -/

@@ -1,3 +1,4 @@
+/- Retuned from Lucieno, Proximity Prize PR 618 (Apache-2.0). All moving derivative orders are allowed by the coefficient identity. -/
 import ProximityPrize.SubmissionLower.Koala6831ResidualIncumbentLedger
 import ProximityPrize.SubmissionLower.Koala6831ResidualIncumbentGraph
 import ProximityPrize.SubmissionLower.Koala6831ResidualIncumbentPrices
@@ -38,20 +39,27 @@ private theorem sum_finRange_three (g : Fin 3 → ℕ) :
   simp only [List.map_cons, List.map_nil, List.sum_cons, List.sum_nil]
   omega
 
-private theorem moving_coefficient_at_two (a b : ℕ) :
-    ((524288*a+3*65539*b)*(residualPriceScale/3))/2 =
-      524288*a*(residualPriceScale/(3*2))+65539*b*(residualPriceScale/2) := by
-  change ((524288*a+3*65539*b)*90656106460920)/2 =
-      524288*a*45328053230460+65539*b*135984159691380
-  simp only [Nat.add_mul]
-  omega
+private theorem moving_coefficient (a b d scale : ℕ) (hd : 0 < d) (hs : 3*d ∣ scale) :
+    ((524288*a+3*65539*b)*(scale/3))/d =
+      524288*a*(scale/(3*d))+65539*b*(scale/d) := by
+  obtain ⟨v,rfl⟩ := hs
+  have d3 : 0 < 3*d := by omega
+  have h3 : 3*d*v/3=d*v := by rw [Nat.mul_assoc]; exact Nat.mul_div_cancel_left _ (by decide)
+  have h3d : 3*d*v/(3*d)=v := Nat.mul_div_cancel_left _ d3
+  have hD : 3*d*v/d=3*v := by
+    rw [show 3*d*v=d*(3*v) by ring]
+    exact Nat.mul_div_cancel_left _ hd
+  rw [h3,h3d,hD,show (524288*a+3*65539*b)*(d*v)=d*((524288*a+3*65539*b)*v) by ring,
+    Nat.mul_div_cancel_left _ hd]
+  ring
 
 theorem originalGraphNumerator_eq_numeratorDir {K : Type} [Field K]
     {F : MvPolynomial (Fin 4) K} (f : Envelope)
     (hr : 3 ≤ f.slope) (hy : f.slope+2 ≤ f.middle)
     (cfg : Fin 3 → JetProfile) (source : Fin 3 → Source F)
     (hflag : ∀ j, (source j).flag = (cfg j).moving)
-    (horder : ∀ j, (cfg j).derivativeOrder = 1 ∧ (source j).d = 2)
+    (horder : ∀ j, (cfg j).derivativeOrder + 1 = (source j).d)
+    (hdiv : ∀ j, 3 * (source j).d ∣ residualPriceScale)
     (left : FlagDegree) :
     jetGraphNumerator TailCorrections.original f cfg left =
       HFreeDir6813.numeratorDir source residualPriceScale f.total f.middle f.slope left := by
@@ -70,8 +78,10 @@ theorem originalGraphNumerator_eq_numeratorDir {K : Type} [Field K]
     intro j _
     unfold movingCharge
     simp only [hn, originalGraphMovingTail_eq f hr hy, haxis, hdir,
-      ← hflag j, (horder j).1, (horder j).2]
+      ← hflag j, horder j]
     congr 1
-    apply moving_coefficient_at_two
+    exact moving_coefficient _ _ _ _ (by simp [Source.d]) (hdiv j)
 
 end ProximityPrize.SubmissionLower.Koala6831Residual
+
+/- Modified for the 68.32 KoalaBear soundness construction, November 2026. -/

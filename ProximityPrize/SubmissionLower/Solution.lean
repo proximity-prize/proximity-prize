@@ -1,19 +1,19 @@
-import ProximityPrize.SubmissionLower.Koala6831Final
+import ProximityPrize.SubmissionLower.Higher6832
 
 namespace ProximityPrize.Benchmark
 
-/- This proof adapts Lucieno’s publicly submitted Frobenius construction from PR 618
-   (dbaea1b59ca9d7311bc98b5fb6d18eb9e1b7603a). Lucieno first proposed 68.31.
-   This version adds a three-seed common-pencil incidence theorem, uses secondary
-   degree 62095 and proves a smaller bound for the number of seeds.
-   The upstream Proximity Prize project and its earlier contributors retain credit. -/
-theorem candidate : ProtocolClaim 6831 332025855 1073741824 :=
-  ProximityPrize.SubmissionLower.Koala6831Final.protocolClaim_6831
+/- Extends Bome2017's accepted 68.31 proof, commit 47747788e5e9b79f3bb5abad45fd63bc6fab40a3.
+   Lucieno's PR 618 supplies the two-sided Frobenius comparison and moving-factor framework.
+   BitWonka's PR 581 supplies the higher-derivative source construction and PR 582 supplies
+   inherited boundary-tail gates. This adaptation uses 81,066 errors, a new full-domain
+   primary and room schedule, 18 jet profiles and a retuned long separated regime. -/
+theorem candidate : ProtocolClaim 6832 332050431 1073741824 :=
+  ProximityPrize.SubmissionLower.higher6832
 
 #print axioms candidate
 end ProximityPrize.Benchmark
 
-/- Upstream license
+/- Upstream project license
 Apache License
                            Version 2.0, January 2004
                         http://www.apache.org/licenses/

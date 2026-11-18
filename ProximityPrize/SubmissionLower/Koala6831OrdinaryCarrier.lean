@@ -270,7 +270,7 @@ theorem exists_ordinary_carrier_6831 {I Γ : Type*} [Fintype I]
       (centerAtNode (nodes i) (u₀ i) (v₀ i) (u₁ i) (v₁ i) (comparisonRow β a b))).natTrailingDegree = 1)
     (P₀ P₁ : Γ → Polynomial K) (g₀ g₁ : Γ → K) (agreement : Γ → Finset I)
     (degree₀ : ∀ g, (P₀ g).natDegree ≤ 131071) (degree₁ : ∀ g, (P₁ g).natDegree ≤ 131071)
-    (number_agreeing : ∀ g, 181084 ≤ (agreement g).card)
+    (number_agreeing : ∀ g, 181078 ≤ (agreement g).card)
     (agree₀ : ∀ g i, i ∈ agreement g → (P₀ g).eval (nodes i) = u₀ i + g₀ g * v₀ i)
     (agree₁ : ∀ g i, i ∈ agreement g → (P₁ g).eval (nodes i) = u₁ i + g₁ g * v₁ i)
     (q_zero : ∀ g, specialize (P₀ g) (P₁ g) (g₀ g) (g₁ g) (comparisonRow β a b) = 0) :
@@ -292,7 +292,7 @@ theorem exists_ordinary_carrier_6831 {I Γ : Type*} [Fintype I]
         intro d hd
         have bound := (Q_cap d hd).1
         omega
-      have positive : 0 < m * 181084 := by
+      have positive : 0 < m * 181078 := by
         have Q_ne : Q ≠ 0 := fun hz => proper (by rw [hz]; exact dvd_zero _)
         obtain ⟨d, hd⟩ := MvPolynomial.support_nonempty.mpr Q_ne
         exact Nat.zero_lt_of_lt (support hd).1
@@ -304,10 +304,12 @@ theorem exists_ordinary_carrier_6831 {I Γ : Type*} [Fintype I]
       · intro g
         apply carrier_vanishes β a b y Q Q_y (P₀ g) (P₁ g) (g₀ g) (g₁ g) (q_zero g)
         apply specialization_zero_of_relative_contacts nodes (agreement g) u₀ v₀ u₁ v₁
-          (P₀ g) (P₁ g) (g₀ g) (g₁ g) m 131071 (m * 181084) Q (comparisonRow β a b)
+          (P₀ g) (P₁ g) (g₀ g) (g₁ g) m 131071 (m * 181078) Q (comparisonRow β a b)
           (degree₀ g) (degree₁ g) positive (Nat.mul_le_mul_left m (number_agreeing g))
           (fun d hd => (support hd).1) (q_zero g) (agree₀ g) (agree₁ g) (fun i _ => contacts i)
 
 end
 
 end ProximityPrize.SubmissionLower.Koala6831Ordinary
+
+/- Modified for the 68.32 KoalaBear soundness construction, November 2026. -/

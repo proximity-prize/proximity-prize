@@ -1,3 +1,5 @@
+/- Derived from Lucieno (PR 618), and BitWonka (PR 581) for additional interpolation profiles.
+   New 68.32 source parameters, adaptive schedule, cell assignments and integer receipts. Apache-2.0. -/
 import ProximityPrize.SubmissionLower.Koala6831ResidualLedger
 import ProximityPrize.SubmissionLower.Koala6831MovingStages
 import ProximityPrize.SubmissionLower.MergedInfra6815_13
@@ -264,3 +266,5 @@ theorem exists_terminalCell_of_failed_gates (f : FlagDegree)
     exact no_checked_gate h1 h2 h3 hr (c.envelope.total+1) hy' ht hcheck
 
 end ProximityPrize.SubmissionLower.Koala6831Residual
+
+/- Modified for the 68.32 KoalaBear soundness construction, November 2026. -/

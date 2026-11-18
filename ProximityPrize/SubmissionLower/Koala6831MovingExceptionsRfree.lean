@@ -139,26 +139,26 @@ section FixedProfile
 
 open RCN318
 
-def freeAndTailParameters : TightParameters := ⟨262144, weight, agreement, Stage.primary.cutoff, 53188, 1⟩
+def freeAndTailParameters : TightParameters := ⟨262144, weight, agreement, Stage.primary.cutoff, 41882, 1⟩
 
 set_option maxRecDepth 80000 in
 
 theorem freeAndTailCarrier_seed_count [CharP K 2130706433] {I : Type}
     (H : ExceptionPoly K) (hH : H ≠ 0)
-    (hbox : H ∈ nestedCoefficientBox K Stage.primary.cutoff weight 53188 360 80)
+    (hbox : H ∈ nestedCoefficientBox K Stage.primary.cutoff weight 41882 418 93)
     (seeds : Finset K) (selected : K → Polynomial K) (nodes : Finset I)
     (x u₀ u₁ : I → K) (hinj : Set.InjOn x nodes) (hnodes : nodes.card = 262144)
     (hdegree : ∀ g ∈ seeds, (selected g).natDegree ≤ weight)
     (hsol : ∀ g ∈ seeds, RCN319.specialization K (selected g) g (freeAndTailCarrier H) = 0)
     (hagree : ∀ g ∈ seeds, agreement ≤
       (nodes.filter fun i => (selected g).eval (x i) = u₀ i + g * u₁ i).card)
-    (hpencil : RCN238.NoLargeSelectedPencil selected seeds weight 81060) :
-    seeds.card ≤ 39469983039033 := by
+    (hpencil : RCN238.NoLargeSelectedPencil selected seeds weight 81066) :
+    seeds.card ≤ 36089978520741 := by
   let J := freeAndTailCarrier H
   let params := freeAndTailParameters
   have hweights := nested_mem_weights hbox hH
   have hsmall : H.degreeOf 2 < 2130706433 := by
-    apply lt_of_le_of_lt (b := 80) ?_ (by decide +kernel)
+    apply lt_of_le_of_lt (b := 93) ?_ (by decide +kernel)
     apply MvPolynomial.degreeOf_le_iff.mpr
     intro d hd
     exact (hbox hd).2.2.1
@@ -171,12 +171,12 @@ theorem freeAndTailCarrier_seed_count [CharP K 2130706433] {I : Type}
     have hr := (MvPolynomial.monomial_le_degreeOf (2 : Fin 4) hd).trans_eq hJR
     have hx := (MvPolynomial.le_weightedTotalDegree (contactWeights weight) hd).trans_lt
       ((freeAndTailCarrier_weight_le H hH (contactWeights weight)).trans_lt hweights.2.2.2)
-    have ht' : d 1 + d 2 + d 3 ≤ 53188 := by
+    have ht' : d 1 + d 2 + d 3 ≤ 41882 := by
       simpa [weight_fin4, residualTotalWeights] using ht
-    exact ⟨by change d 1 + d 3 ≤ 53188; omega,
+    exact ⟨by change d 1 + d 3 ≤ 41882; omega,
       hr.trans (by decide +kernel),
       by simpa [weight_fin4, contactWeights, Nat.mul_comm, params, freeAndTailParameters] using hx⟩
-  have herrors : params.errors = 81060 := by decide +kernel
+  have herrors : params.errors = 81066 := by decide +kernel
   have hpencil' : RCN238.NoLargeSelectedPencil selected seeds params.w params.errors := by
     rw [herrors]
     exact hpencil
@@ -192,3 +192,7 @@ end FixedProfile
 end
 
 end ProximityPrize.SubmissionLower.Koala6831Moving
+
+/- Retuned for the full 68.32 domain and the m=303 primary, November 2026. -/
+
+/- Modified for the 68.32 KoalaBear soundness construction, November 2026. -/

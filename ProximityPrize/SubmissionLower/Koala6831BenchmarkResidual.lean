@@ -97,8 +97,8 @@ structure LongCarrier (q : SymbolicRow (SeedRing K)) (retained : Finset K)
     (selected : SelectionMap K) where
   polynomial : Carrier K
   nonzero : polynomial ≠ 0
-  support : ∀ d ∈ polynomial.support, d 1 ≤ 22 ∧ d 1 + d 2 ≤ 200 ∧ d 3 ≤ 162 ∧
-    d 0 + 131071 * d 1 ≤ 16 * 181084 - 1 + 22 * primitiveExcess 131071 q ∧
+  support : ∀ d ∈ polynomial.support, d 1 ≤ 22 ∧ d 1 + d 2 ≤ 200 ∧ d 3 ≤ 165 ∧
+    d 0 + 131071 * d 1 ≤ 16 * 181078 - 1 + 22 * primitiveExcess 131071 q ∧
     d 0 + 131071 * d 1 < prime
   vanishes : ∀ g ∈ retained,
     Koala6831Intrinsic.graphSpecialize (selected g) g (g ^ prime) polynomial = 0
@@ -110,7 +110,7 @@ theorem long_carrier_of_retained
     (hfixed : ∀ i, σ (x i) = x i) (hpow : ∀ g : K, σ g = g ^ prime)
     (hcard : Fintype.card I = 262144)
     (h : RetainedComparison x σ received retained selected q)
-    (hlong : 9555 ≤ primitiveExcess 131071 q) (hsmall : primitiveExcess 131071 q ≤ 31357)
+    (hlong : 9554 ≤ primitiveExcess 131071 q) (hsmall : primitiveExcess 131071 q ≤ 31357)
     (N : NormalForm q 131071 (primitiveExcess 131071 q)) :
     Nonempty (LongCarrier q retained selected) := by
   let bad := badNodes x σ received q
@@ -126,12 +126,12 @@ theorem long_carrier_of_retained
         (MvPolynomial.C (received 0 i.1) + MvPolynomial.X 0 * MvPolynomial.C (received 1 i.1))
         (MvPolynomial.C (σ (received 0 i.1)) + MvPolynomial.X 1 * MvPolynomial.C (σ (received 1 i.1))) = 0 :=
     good_node_identity (x := x) (σ := σ) (received := received) (q := q) i.2
-  have hsize (g : ↥retained) : 181084 ≤ (agree g).card := by
+  have hsize (g : ↥retained) : 181078 ≤ (agree g).card := by
     have havoid := Finset.disjoint_left.mp (h.good g.1 g.2).2
     have heq : (agreementSet x received selected g.1).filter (· ∉ bad) =
         agreementSet x received selected g.1 :=
       Finset.filter_true_of_mem (fun i hi hb => havoid hi hb)
-    change 181084 ≤ ((agreementSet x received selected g.1).subtype (· ∉ bad)).card
+    change 181078 ≤ ((agreementSet x received selected g.1).subtype (· ∉ bad)).card
     rw [Finset.card_subtype, heq]
     exact h.selection.agreement g.1 g.2
   have h₀ (g : ↥retained) (i : Good) (hi : i ∈ agree g) :
@@ -163,7 +163,7 @@ def LongSeparatedRetainedCount (x : I ↪ K) (σ : K →+* K) : Prop :=
   ∀ (received : Received K I) (retained : Finset K) (selected : SelectionMap K)
     (q : SymbolicRow (SeedRing K)),
     RetainedComparison x σ received retained selected q →
-    9555 ≤ primitiveExcess 131071 q → primitiveExcess 131071 q ≤ 31357 →
+    9554 ≤ primitiveExcess 131071 q → primitiveExcess 131071 q ≤ 31357 →
     NormalForm q 131071 (primitiveExcess 131071 q) →
     LongCarrier q retained selected → retained.card ≤ retainedSeedBudget
 
@@ -171,7 +171,7 @@ def ShortSeparatedRetainedCount (x : I ↪ K) (σ : K →+* K) : Prop :=
   ∀ (received : Received K I) (retained : Finset K) (selected : SelectionMap K)
     (q : SymbolicRow (SeedRing K)),
     RetainedComparison x σ received retained selected q →
-    primitiveExcess 131071 q ≤ 9554 →
+    primitiveExcess 131071 q ≤ 9553 →
     NormalForm q 131071 (primitiveExcess 131071 q) → retained.card ≤ retainedSeedBudget
 
 theorem remaining_geometry_of_branches
@@ -193,19 +193,19 @@ theorem remaining_geometry_of_branches
     · exact Koala6831Separated.all_minors_singular_of_total_weight_le_one
         q h.first_ne h.second_ne δ hOne
     have hShort : δ ≤ 10999 := by omega
-    exact hminors (show δ ≤ 12503 by omega)
+    exact hminors (show δ ≤ 12501 by omega)
   obtain ⟨N⟩ := normal_form_of_retained_singular hcard h hs
-  by_cases hLong : 9555 ≤ δ
+  by_cases hLong : 9554 ≤ δ
   · obtain ⟨G⟩ := long_carrier_of_retained hfixed hpow hcard h hLong hδ N
     exact long received retained selected q h hLong hδ N G
-  · exact short received retained selected q h (show δ ≤ 9554 by omega) N
+  · exact short received retained selected q h (show δ ≤ 9553 by omega) N
 
-theorem protocolClaim_6831_of_counting_branches
+theorem protocolClaim_6832_of_counting_branches
     (ordinary : OrdinaryRetainedCount IRSProfile.domain frobenius.toRingHom)
     (long : LongSeparatedRetainedCount IRSProfile.domain frobenius.toRingHom)
     (short : ShortSeparatedRetainedCount IRSProfile.domain frobenius.toRingHom) :
-    ProtocolClaim 6831 332025855 1073741824 :=
-  protocolClaim_6831_of_geometry (remaining_geometry_of_branches IRSProfile.domain
+    ProtocolClaim 6832 332050431 1073741824 :=
+  protocolClaim_6832_of_geometry (remaining_geometry_of_branches IRSProfile.domain
     frobenius.toRingHom domain_fixed frobenius_apply IRSProfile.card_index ordinary long short)
 
 private theorem benchmark_ordinary_count :
@@ -214,12 +214,14 @@ private theorem benchmark_ordinary_count :
   exact Koala6831Ordinary.benchmark_ordinary_retained_le_seed_budget
     received retained selected q h hδ hc hc10
 
-theorem protocolClaim_6831_of_separated_counts
+theorem protocolClaim_6832_of_separated_counts
     (long : LongSeparatedRetainedCount IRSProfile.domain frobenius.toRingHom)
     (short : ShortSeparatedRetainedCount IRSProfile.domain frobenius.toRingHom) :
-    ProtocolClaim 6831 332025855 1073741824 :=
-  protocolClaim_6831_of_counting_branches benchmark_ordinary_count long short
+    ProtocolClaim 6832 332050431 1073741824 :=
+  protocolClaim_6832_of_counting_branches benchmark_ordinary_count long short
 
 end
 
 end ProximityPrize.SubmissionLower.Koala6831BenchmarkResidual
+
+/- Modified for the 68.32 KoalaBear soundness construction, November 2026. -/

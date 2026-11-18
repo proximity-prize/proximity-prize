@@ -1,3 +1,5 @@
+/- Originally by Lucieno, Proximity Prize PR 618, Apache-2.0. Retuned for 81,066 errors.
+-/
 import ProximityPrize.SubmissionLower.Koala6831MovingSources
 import ProximityPrize.SubmissionLower.Koala6831MovingPartner
 
@@ -167,8 +169,8 @@ theorem exists_adaptive_exit_partners {p : ℕ} [CharP K p]
       B.a0.eval (nodes i) * normalized i)
     (h₁ : ∀ i, B.d0.eval (nodes i) * u₁ i + B.c1.eval (nodes i) =
       B.a1.eval (nodes i) * normalized i)
-    (hden : B.d0.natDegree + max B.a0.natDegree B.a1.natDegree ≤ 9554)
-    (hminor : (B.a1 * B.c0 - B.a0 * B.c1).natDegree ≤ weight + 9554)
+    (hden : B.d0.natDegree + max B.a0.natDegree B.a1.natDegree ≤ 9553)
+    (hminor : (B.a1 * B.c0 - B.a0 * B.c1).natDegree ≤ weight + 9553)
     (H : MvPolynomial (Fin 4) K) (A : Finset (RegularIndex H))
     (hA : A.Nonempty) (hfield : A.card < ENat.card K)
     (hr : 0 < (originalCumulativeFlag (regularProduct H A)).all)
@@ -187,7 +189,7 @@ theorem exists_adaptive_exit_partners {p : ℕ} [CharP K p]
     have hf : s.numbers.fuel f ≤ s.numbers.slopeCap / f.all :=
       (min_le_right _ _).trans (min_le_right _ _)
     exact hj.trans (hf.trans (Nat.div_le_self _ _))
-  have hroom : (s.cutoff - j * weightGain) + j * (2 * 9554) ≤ s.multiplicity * agreement := by
+  have hroom : (s.cutoff - j * weightGain) + j * (2 * 9553) ≤ s.multiplicity * agreement := by
     obtain ⟨d, hd⟩ := MvPolynomial.support_nonempty.mpr hv
     have hpositive := (hb hd).2.2.2
     have hle : j * weightGain ≤ s.cutoff := by omega
@@ -239,3 +241,5 @@ theorem exhaust_finset_stage {α : Type*} [DecidableEq α] (initial : Finset α)
 end
 
 end ProximityPrize.SubmissionLower.Koala6831MovingAdaptive
+
+/- Modified for the 68.32 KoalaBear soundness construction, November 2026. -/

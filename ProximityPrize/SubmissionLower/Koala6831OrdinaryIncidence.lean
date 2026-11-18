@@ -184,9 +184,11 @@ def koalaCarrierShape (caseIndex : Fin 9) : ℕ × ℕ :=
     (4, 41), (4, 44), (2, 31)] caseIndex
 
 theorem koala_ordinary_price_le (caseIndex : Fin 9) :
-    ordinaryPrice 2130706433 262144 131071 181084 81060
+    ordinaryPrice 2130706433 262144 131071 181078 81066
       (koalaCarrierShape caseIndex).1 (koalaCarrierShape caseIndex).2 +
-      10 * 2130706433 * (262144 + 1) ≤ 249043081297781990 := by
+      10 * 2130706433 * (262144 + 1) ≤ 250000000000000000 := by
   fin_cases caseIndex <;> decide +kernel
 
 end ProximityPrize.SubmissionLower.Koala6831OrdinaryIncidence
+
+/- Modified for the 68.32 KoalaBear soundness construction, November 2026. -/

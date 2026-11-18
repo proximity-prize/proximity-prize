@@ -1,3 +1,5 @@
+/- Derived from Lucieno (PR 618), and BitWonka (PR 581) for additional interpolation profiles.
+   New 68.32 source parameters, adaptive schedule, cell assignments and integer receipts. Apache-2.0. -/
 import ProximityPrize.SubmissionLower.Koala6831MovingPaidNumericData
 import ProximityPrize.SubmissionLower.Koala6831ResidualPrices
 
@@ -164,12 +166,13 @@ private theorem fixed_credit_scale (left right cut : FlagDegree) :
     ring
   rw [h, Nat.mul_div_mul_right _ _ (by decide : 0 < 30030)]
 
+set_option maxHeartbeats 1000000 in
 theorem fixedRoomCredits_eq_certificate (f : Koala6831Residual.Envelope) :
     fixedRoomCredit₁ f.flag + fixedRoomCredit₂ f.flag = Koala6831Residual.roomCredit f := by
   let c : Koala6831Residual.Envelope := ⟨f.slope, f.middle, f.middle⟩
   have hc : c.flag = creditFlag f.flag := by
     simp [c, creditFlag, Koala6831Residual.Envelope.flag]
-  have h₁ : Koala6831Residual.pairPrice c ⟨384, 1717, 107468⟩ ⟨80, 360, 53188⟩ =
+  have h₁ : Koala6831Residual.pairPrice c ⟨522,2318,153524⟩ ⟨93,418,41882⟩ =
       fixedRoomCredit₁ f.flag := by
     unfold Koala6831Residual.pairPrice
     rw [hc]
@@ -177,7 +180,7 @@ theorem fixedRoomCredits_eq_certificate (f : Koala6831Residual.Envelope) :
       (30030 • stageScaledCut primaryIncoming (by decide +kernel)) /
       (agreementScale * 30030) = _
     exact fixed_credit_scale _ _ _
-  have h₂ : Koala6831Residual.pairPrice c ⟨402, 1805, 601718⟩ ⟨54, 245, 15351⟩ =
+  have h₂ : Koala6831Residual.pairPrice c ⟨464,2084,816263⟩ ⟨52,231,15351⟩ =
       fixedRoomCredit₂ f.flag := by
     unfold Koala6831Residual.pairPrice
     rw [hc]
@@ -189,3 +192,7 @@ theorem fixedRoomCredits_eq_certificate (f : Koala6831Residual.Envelope) :
   rfl
 
 end ProximityPrize.SubmissionLower.Koala6831MovingPaid
+
+#print axioms ProximityPrize.SubmissionLower.Koala6831MovingPaid.fixedRoomCredits_eq_certificate
+
+/- Modified for the 68.32 KoalaBear soundness construction, November 2026. -/

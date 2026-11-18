@@ -1,3 +1,5 @@
+/- Derived from Lucieno (PR 618), and BitWonka (PR 581) for additional interpolation profiles.
+   New 68.32 source parameters, adaptive schedule, cell assignments and integer receipts. Apache-2.0. -/
 import ProximityPrize.SubmissionLower.Koala6831ResidualLedger
 import ProximityPrize.SubmissionLower.LowerGeometry
 
@@ -59,10 +61,10 @@ theorem topColumnActive_card_le (D : ℕ → ℕ) (w L B s U m : ℕ) :
   simpa [Target] using Fintype.card_le_of_injective embedding hinj
 
 def profileCutoff (p : JetProfile) (h : ℕ) : ℕ :=
-  p.order*181084 - SecondJetRelaxedDifferentiation.reserve
-    p.derivativeOrder p.minimumOrder h * 50015
+  p.order*181078 - SecondJetRelaxedDifferentiation.reserve
+    p.derivativeOrder p.minimumOrder h * 50009
 
-abbrev ProfileIndex (j : Fin 9) :=
+abbrev ProfileIndex (j : Fin 18) :=
   let p := jetProfile j
   Index (profileCutoff p) 131071 p.totalCap p.secondCap p.slopeCap p.middleCap
 
@@ -78,26 +80,23 @@ def profileColumnCount (p : JetProfile) : ℕ :=
   SecondJetRelaxedGlobalCounts.coefficientCount (profileCutoff p) 131071
     p.totalCap p.secondCap p.slopeCap p.middleCap
 
-theorem profileMiddleCap_le_cutoff (j : Fin 9) (h : ℕ) :
+theorem profileMiddleCap_le_cutoff (j : Fin 18) (h : ℕ) :
     let p := jetProfile j
     p.middleCap ≤ (profileCutoff p h+p.secondCap-1)/131071 := by
   let p := jetProfile j
-  have hk : p.derivativeOrder = 1 := by
-    fin_cases j <;> decide
-  have hn : p.minimumOrder = 2 := by
-    fin_cases j <;> decide
-  have hre : SecondJetRelaxedDifferentiation.reserve p.derivativeOrder p.minimumOrder h ≤ 1 := by
-    rw [hk,hn,SecondJetRelaxedDifferentiation.reserve]
+  let cap := max p.derivativeOrder (p.minimumOrder-1)
+  have hre : SecondJetRelaxedDifferentiation.reserve p.derivativeOrder p.minimumOrder h ≤ cap := by
+    unfold SecondJetRelaxedDifferentiation.reserve cap
     split <;> omega
-  have hd : p.order*181084 - 50015 ≤ profileCutoff p h := by
+  have hd : p.order*181078 - cap*50009 ≤ profileCutoff p h := by
     unfold profileCutoff
-    exact Nat.sub_le_sub_left (by simpa using Nat.mul_le_mul_right 50015 hre) _
-  have hl : p.middleCap ≤ (p.order*181084-50015+p.secondCap-1)/131071 := by
+    exact Nat.sub_le_sub_left (Nat.mul_le_mul_right 50009 hre) _
+  have hl : p.middleCap ≤ (p.order*181078-cap*50009+p.secondCap-1)/131071 := by
     fin_cases j <;> decide
   change p.middleCap ≤ (profileCutoff p h + p.secondCap - 1) / 131071
   exact hl.trans (Nat.div_le_div_right (Nat.sub_le_sub_right (Nat.add_le_add_right hd _) _))
 
-theorem profileLowerRank_eq_rankBound (j : Fin 9) :
+theorem profileLowerRank_eq_rankBound (j : Fin 18) :
     let p := jetProfile j
     SecondJetRelaxedGlobalMap.rankBound p.order p.totalCap p.secondCap p.slopeCap
       (p.middleCap-1) (fun h => (profileCutoff p h+p.secondCap-1)/131071) =
@@ -110,25 +109,25 @@ theorem profileLowerRank_eq_rankBound (j : Fin 9) :
   · intro h _
     exact (Nat.sub_le _ _).trans (profileMiddleCap_le_cutoff j h)
 
-set_option maxHeartbeats 2000000 in
-set_option maxRecDepth 20000 in
-theorem profile_margin (j : Fin 9) :
+set_option maxHeartbeats 18000000 in
+set_option maxRecDepth 60000 in
+theorem profile_margin (j : Fin 18) :
     let p := jetProfile j
     262144 * profileLowerRank p + profileTopRankBound p < profileColumnCount p := by
   fin_cases j <;> decide +kernel
 
-theorem profileColumnCount_eq_card (j : Fin 9) :
+theorem profileColumnCount_eq_card (j : Fin 18) :
     profileColumnCount (jetProfile j) = Fintype.card (ProfileIndex j) := by
   have hUL : (jetProfile j).middleCap ≤ (jetProfile j).totalCap := by
     fin_cases j <;> decide
   exact (SecondJetRelaxedGlobalCounts.card_index_closed _ _ _ _ _ _ hUL).symm
 
-theorem profile_top_rank_bound (j : Fin 9) :
+theorem profile_top_rank_bound (j : Fin 18) :
     Fintype.card {i : ProfileIndex j // topColumnActive (jetProfile j).order i} ≤
       profileTopRankBound (jetProfile j) := by
   exact topColumnActive_card_le _ _ _ _ _ _ _
 
-theorem profile_rank_lt_columns (j : Fin 9) :
+theorem profile_rank_lt_columns (j : Fin 18) :
     262144 * profileLowerRank (jetProfile j) +
       Fintype.card {i : ProfileIndex j // topColumnActive (jetProfile j).order i} <
       Fintype.card (ProfileIndex j) := by
@@ -136,3 +135,7 @@ theorem profile_rank_lt_columns (j : Fin 9) :
   exact (Nat.add_le_add_left (profile_top_rank_bound j) _).trans_lt (profile_margin j)
 
 end ProximityPrize.SubmissionLower.Koala6831Residual
+
+#print axioms ProximityPrize.SubmissionLower.Koala6831Residual.profile_rank_lt_columns
+
+/- Modified for the 68.32 KoalaBear soundness construction, November 2026. -/

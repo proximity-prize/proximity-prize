@@ -21,18 +21,18 @@ theorem adaptivePrices_checked : AdaptivePrices where
 structure ReachedTerminal {x : I ↪ K} {original : Finset K} (R : Ready x original) where
   primary : P4 K
   primary_ne : primary ≠ 0
-  primary_box : primary ∈ nestedCoefficientBox K Stage.primary.cutoff weight 53188 360 80
+  primary_box : primary ∈ nestedCoefficientBox K Stage.primary.cutoff weight 41882 418 93
   regular : Finset K
   regular_subset : regular ⊆ R.seeds
   route : PaidRoute primary regular R.selected
   paid : original.card + fixedRoomCredit₁ (aggregateFlag primary route.residue) +
-    fixedRoomCredit₂ (aggregateFlag primary route.residue) ≤ route.seeds.card + 31621569077767686
+    fixedRoomCredit₂ (aggregateFlag primary route.residue) ≤ route.seeds.card + 39317112195672787
 
 theorem ReachedTerminal.paid_with_certificate_credit {x : I ↪ K} {original : Finset K}
     {R : Ready x original} (T : ReachedTerminal R) (f : Koala6831Residual.Envelope)
     (hs : f.slope = (aggregateFlag T.primary T.route.residue).all)
     (hm : f.middle = middle (aggregateFlag T.primary T.route.residue)) :
-    original.card + Koala6831Residual.roomCredit f ≤ T.route.seeds.card + 31621569077767686 := by
+    original.card + Koala6831Residual.roomCredit f ≤ T.route.seeds.card + 39317112195672787 := by
   let residual := aggregateFlag T.primary T.route.residue
   have hc : creditFlag f.flag = creditFlag residual := by
     change f.slope = residual.all at hs
@@ -77,14 +77,14 @@ theorem reaches_terminal_of_ready [CharP K 2130706433]
     R.fixedWord R.denominator_degree R.minor_degree H hH hbox regular R.selected
     (fun g hg => R.degree g (hsub hg)) (fun g hg => R.agreement g (hsub hg))
     (fun g hg => R.agree_good g (hsub hg))
-    (RCN243.noLargeSelectedPencil_mono R.selected R.seeds regular weight 81060 hsub R.pencil)
+    (RCN243.noLargeSelectedPencil_mono R.selected R.seeds regular weight 81066 hsub R.pencil)
     hregular
   refine ⟨⟨H, hH, hbox, regular, hsub, route, ?_⟩⟩
   have hready := R.count
   have hpaid := route.paid
   unfold normalizationBudget at hready
   change regular.card + fixedRoomCredit₁ (aggregateFlag H route.residue) +
-    fixedRoomCredit₂ (aggregateFlag H route.residue) ≤ route.seeds.card + 24584613663490380 at hpaid
+    fixedRoomCredit₂ (aggregateFlag H route.residue) ≤ route.seeds.card + 30713098255225143 at hpaid
   omega
 
 open Koala6831BenchmarkField (prime)
@@ -96,7 +96,7 @@ theorem reaches_terminal_of_retainedComparison [CharP K 2130706433]
     (hfixed : ∀ i, σ (x i) = x i) (hpower : ∀ g : K, σ g = g ^ prime)
     (hcard : Fintype.card I = 262144) (u : Received K I) (Γ : Finset K) (selected : SelectionMap K)
     (q : SymbolicRow (SeedRing K)) (hret : RetainedComparison x σ.toRingHom u Γ selected q)
-    (delta : ℕ) (hdelta : delta ≤ 9554) (N : NormalForm q 131071 delta) :
+    (delta : ℕ) (hdelta : delta ≤ 9553) (N : NormalForm q 131071 delta) :
     ∃ R : Ready x Γ, Nonempty (ReachedTerminal R) := by
   obtain ⟨R⟩ := ready_of_retainedComparison x σ hfixed hpower hcard u Γ selected q hret delta hdelta N
   exact ⟨R, reaches_terminal_of_ready prices R⟩
@@ -106,7 +106,7 @@ theorem reaches_terminal_checked [CharP K 2130706433]
     (hfixed : ∀ i, σ (x i) = x i) (hpower : ∀ g : K, σ g = g ^ prime)
     (hcard : Fintype.card I = 262144) (u : Received K I) (Γ : Finset K) (selected : SelectionMap K)
     (q : SymbolicRow (SeedRing K)) (hret : RetainedComparison x σ.toRingHom u Γ selected q)
-    (delta : ℕ) (hdelta : delta ≤ 9554) (N : NormalForm q 131071 delta) :
+    (delta : ℕ) (hdelta : delta ≤ 9553) (N : NormalForm q 131071 delta) :
     ∃ R : Ready x Γ, Nonempty (ReachedTerminal R) :=
   reaches_terminal_of_retainedComparison adaptivePrices_checked x σ hfixed hpower hcard u Γ selected
     q hret delta hdelta N
@@ -114,3 +114,5 @@ theorem reaches_terminal_checked [CharP K 2130706433]
 end
 
 end ProximityPrize.SubmissionLower.Koala6831MovingPaid
+
+/- Modified for the 68.32 KoalaBear soundness construction, November 2026. -/

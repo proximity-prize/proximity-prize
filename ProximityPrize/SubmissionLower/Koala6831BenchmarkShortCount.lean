@@ -49,7 +49,7 @@ theorem reachedTerminal_count
       simp [PaidRoute.seeds, hempty]
     have h := T.paid
     rw [hzero, zero_add] at h
-    have hb : 31621569077767686 ≤ retainedSeedBudget := by decide +kernel
+    have hb : 39317112195672787 ≤ retainedSeedBudget := by decide +kernel
     omega
   let f := aggregateFlag T.primary T.route.residue
   have hf : 0 < f.all := aggregateFlag_pos T.primary (Finset.nonempty_iff_ne_empty.mpr hempty)
@@ -65,7 +65,7 @@ theorem reachedTerminal_count
     omega
   have hcount := hterminal cell hc hshape.1 hshape.2 (flag_below_endpoint f cell.envelope hs hy ht)
   have hpaid := T.paid_with_certificate_credit cell.envelope hs hy
-  have hp : 31621569077767686 ≤ paid := by decide +kernel
+  have hp : 39317112195672787 ≤ paid := by decide +kernel
   have htotal := incumbentCellTotal_le_of_mem hc
   unfold incumbentCellTotal at htotal
   have hretained := incumbentCeiling_with_retained_fees
@@ -86,11 +86,11 @@ theorem shortSeparatedRetainedCount_of_terminal
   exact reachedTerminal_count T (hterminal T)
 
 private theorem small_padded_bounds (f : Envelope)
-    (hf : f.slope ≤ 15 ∧ f.middle ≤ 63 ∧ f.total ≤ 6473)
+    (hf : f.slope ≤ 16 ∧ f.middle ≤ 66 ∧ f.total ≤ 8870)
     (k : ℕ) (hk : k ≤ 2) :
     let a := f.pad k
     3 ≤ a.slope ∧ a.slope+2 ≤ a.middle ∧ a.middle+k ≤ a.total ∧
-      a.slope ≤ 31 ∧ a.middle ≤ 142 ∧ a.total ≤ 7501 := by
+      a.slope ≤ 31 ∧ a.middle ≤ 142 ∧ a.total ≤ 8870 := by
   simp only [Envelope.pad]
   omega
 
@@ -141,7 +141,7 @@ private theorem residual_support_of_endpoint (F : MvPolynomial (Fin 4) K)
 private theorem incumbent_raw_fiber
     {x : I ↪ K} {original : Finset K} {R : Ready x original} (T : ReachedTerminal R)
     (F : RegularIndex T.primary) (f : Envelope)
-    (hf : f.slope ≤ 15 ∧ f.middle ≤ 63 ∧ f.total ≤ 6473)
+    (hf : f.slope ≤ 16 ∧ f.middle ≤ 66 ∧ f.total ≤ 8870)
     (hgate : rawGatesWithCorrections TailCorrections.original (f.pad 0) = true)
     (hdata : ResidualSupportData (f.paddedSupport 0) F.1) :
     (regularFiber T.primary T.regular R.selected F).card ≤
@@ -149,7 +149,7 @@ private theorem incumbent_raw_fiber
   let a := f.pad 0
   have hg := small_padded_bounds f hf 0 (by decide)
   change 3 ≤ a.slope ∧ a.slope+2 ≤ a.middle ∧ a.middle+0 ≤ a.total ∧
-    a.slope ≤ 31 ∧ a.middle ≤ 142 ∧ a.total ≤ 7501 at hg
+    a.slope ≤ 31 ∧ a.middle ≤ 142 ∧ a.total ≤ 8870 at hg
   obtain ⟨h3, hy, ht, hs, hm, hT⟩ := hg
   have hbox := T.factor_global_box F hdata
   change F.1 ∈ globalCoefficientBox K Stage.primary.cutoff 131071 a.total a.slope at hbox
@@ -165,7 +165,7 @@ private theorem incumbent_raw_fiber
     x.injective.injOn hn
     (fun g hg => R.degree g (hsub hg)) (fun g hg => R.agreement g (hsub hg))
     (fun _ hg => (mem_regularFiber.mp hg).2.1) (fun _ hg => (mem_regularFiber.mp hg).2.2)
-    (RCN243.noLargeSelectedPencil_mono R.selected R.seeds seeds 131071 81060 hsub R.pencil)
+    (RCN243.noLargeSelectedPencil_mono R.selected R.seeds seeds 131071 81066 hsub R.pencil)
     (fun left => incumbent_raw_identity_absorbed a left h3 hy hgate)
   rw [rawChargeWithCorrections_original_eq_incumbent a _ h3 hy]
   exact hraw
@@ -174,7 +174,7 @@ private theorem incumbent_raw_residue
     {x : I ↪ K} {original : Finset K} {R : Ready x original} (T : ReachedTerminal R)
     (f : Envelope) (hshape : f.slope ≤ f.middle ∧ f.middle ≤ f.total)
     (hfit : Below (aggregateFlag T.primary T.route.residue) f.flag)
-    (hcaps : f.slope ≤ 15 ∧ f.middle ≤ 63 ∧ f.total ≤ 6473)
+    (hcaps : f.slope ≤ 16 ∧ f.middle ≤ 66 ∧ f.total ≤ 8870)
     (hgate : rawGatesWithCorrections TailCorrections.original (f.pad 0) = true) :
     T.route.seeds.card ≤ rawChargeWithCorrections TailCorrections.original (f.pad 0) f.flag := by
   let active := T.route.residue
@@ -230,7 +230,7 @@ private theorem incumbent_cell_count_of_graph
     have hj := incumbentJetGates_of_mem hc hids
     have hn := incumbent_jet_endpoint_size hc hids
     have hN : Fintype.card I ≤ 262144 := R.nodes_card.le
-    have hA : 181084 ≤ Fintype.card I := by rw [R.nodes_card]; decide
+    have hA : 181078 ≤ Fintype.card I := by rw [R.nodes_card]; decide
     have hsub (F : RegularIndex T.primary) : fiber F ⊆ R.seeds :=
       fun _ hg => T.regular_subset (mem_regularFiber.mp hg).1
     refine routed_jet_residue_card_le T.primary T.route.residue f ids TailCorrections.original
@@ -242,7 +242,7 @@ private theorem incumbent_cell_count_of_graph
         have h := hj.1
         simp only [jetGatesWithCorrections, Bool.and_eq_true, decide_eq_true_eq] at h
         exact h.1.1.2
-      have hs : small.slope ≤ 15 ∧ small.middle ≤ 63 ∧ small.total ≤ 6473 :=
+      have hs : small.slope ≤ 16 ∧ small.middle ≤ 66 ∧ small.total ≤ 8870 :=
         ⟨hcaps.1, hcaps.2.1, hlt.le.trans hcaps.2.2⟩
       exact incumbent_raw_fiber T F small hs hgate hdata
     · intro F hF _ _ j Q hQ
@@ -253,7 +253,7 @@ private theorem incumbent_cell_count_of_graph
         (fun g hg => R.degree g (hsub F hg))
         (fun _ hg => (mem_regularFiber.mp hg).2)
         (fun g hg => R.agreement g (hsub F hg))
-        (RCN243.noLargeSelectedPencil_mono R.selected R.seeds _ 131071 81060 (hsub F) R.pencil)
+        (RCN243.noLargeSelectedPencil_mono R.selected R.seeds _ 131071 81066 (hsub F) R.pencil)
 
 private theorem incumbent_cell_count
     {x : I ↪ K} {original : Finset K} {R : Ready x original} (T : ReachedTerminal R)
@@ -269,7 +269,7 @@ private theorem incumbent_cell_count
   have hpad := small_padded_bounds f hcaps 2 le_rfl
   change 3 ≤ (f.pad 2).slope ∧ (f.pad 2).slope+2 ≤ (f.pad 2).middle ∧
     (f.pad 2).middle+2 ≤ (f.pad 2).total ∧ (f.pad 2).slope ≤ 31 ∧
-    (f.pad 2).middle ≤ 142 ∧ (f.pad 2).total ≤ 7501 at hpad
+    (f.pad 2).middle ≤ 142 ∧ (f.pad 2).total ≤ 8870 at hpad
   obtain ⟨_, _, _, hpR, hpY, hpT⟩ := hpad
   have hsize := incumbent_jet_endpoint_size hc hids
   have hgate := (incumbentJetGates_of_mem hc hids).1
@@ -283,7 +283,7 @@ private theorem incumbent_cell_count
     hbox hdata hlarge x R.u₀ R.u₁ R.nodes_card hsources R.selected seeds
     (fun g hg => R.degree g (hsub hg)) (fun _ hg => (mem_regularFiber.mp hg).2)
     (fun g hg => R.agreement g (hsub hg))
-    (RCN243.noLargeSelectedPencil_mono R.selected R.seeds _ 131071 81060 hsub R.pencil)
+    (RCN243.noLargeSelectedPencil_mono R.selected R.seeds _ 131071 81066 hsub R.pencil)
 
 theorem shortSeparatedRetainedCount
     (x : I ↪ K) (σ : K ≃+* K) (hfixed : ∀ i, σ (x i) = x i)
@@ -305,3 +305,5 @@ theorem benchmark_short_separated_count :
 end
 
 end ProximityPrize.SubmissionLower.Koala6831BenchmarkShortCount
+
+/- Modified for the 68.32 KoalaBear soundness construction, November 2026. -/

@@ -1,3 +1,5 @@
+/- Originally by Lucieno, Proximity Prize PR 618, Apache-2.0. Retuned for 81,066 errors.
+-/
 import ProximityPrize.SubmissionLower.Koala6831MovingPaidStageCounts
 
 namespace ProximityPrize.SubmissionLower.Koala6831MovingPaid
@@ -15,13 +17,13 @@ variable {K I : Type} [Field K] [Fintype I]
 
 structure AdaptivePrices : Prop where
   first : ∀ f (hpos : 0 < f.all), Below f postRoomCap →
-    adaptiveGate Stage.adaptive1.numbers f → stagePrice f hpos Stage.adaptive1 600 ≤ 2243281056745829
+    adaptiveGate Stage.adaptive1.numbers f → stagePrice f hpos Stage.adaptive1 372 ≤ 1377281380362275
   second : ∀ f (hpos : 0 < f.all), Below f postRoomCap →
     ¬ adaptiveGate Stage.adaptive1.numbers f → adaptiveGate Stage.adaptive2.numbers f →
-    stagePrice f hpos Stage.adaptive2 1200 ≤ 824314952017431
+    stagePrice f hpos Stage.adaptive2 806 ≤ 602126487655617
   third : ∀ f (hpos : 0 < f.all), Below f postRoomCap →
     ¬ adaptiveGate Stage.adaptive1.numbers f → ¬ adaptiveGate Stage.adaptive2.numbers f →
-    adaptiveGate Stage.adaptive3.numbers f → stagePrice f hpos Stage.adaptive3 6776 ≤ 2334906151847889
+    adaptiveGate Stage.adaptive3.numbers f → stagePrice f hpos Stage.adaptive3 9300 ≤ 3901019902378291
 
 structure PaidRoute (H : P4 K) (Γ : Finset K) (selected : K → Polynomial K) where
   residue : Finset (RegularIndex H)
@@ -31,7 +33,7 @@ structure PaidRoute (H : P4 K) (Γ : Finset K) (selected : K → Polynomial K) w
     ¬ adaptiveGate Stage.adaptive2.numbers (aggregateFlag H residue) ∧
     ¬ adaptiveGate Stage.adaptive3.numbers (aggregateFlag H residue)
   paid : Γ.card + fixedRoomCredit₁ (aggregateFlag H residue) + fixedRoomCredit₂ (aggregateFlag H residue) ≤
-    (residue.biUnion (regularFiber H Γ selected)).card + 24584613663490380
+    (residue.biUnion (regularFiber H Γ selected)).card + 30713098255225143
 
 def PaidRoute.seeds {H : P4 K} {Γ : Finset K} {selected : K → Polynomial K} (route : PaidRoute H Γ selected) :
     Finset K := route.residue.biUnion (regularFiber H Γ selected)
@@ -76,16 +78,16 @@ theorem exists_paid_route [CharP K 2130706433]
     (hfixed : ∀ i ∈ good,
       B.d0.eval (x i) * u₀ i + B.c0.eval (x i) = B.a0.eval (x i) * word i ∧
       B.d0.eval (x i) * u₁ i + B.c1.eval (x i) = B.a1.eval (x i) * word i)
-    (hden : B.d0.natDegree + max B.a0.natDegree B.a1.natDegree ≤ 9554)
-    (hminor : (B.a1 * B.c0 - B.a0 * B.c1).natDegree ≤ weight + 9554)
+    (hden : B.d0.natDegree + max B.a0.natDegree B.a1.natDegree ≤ 9553)
+    (hminor : (B.a1 * B.c0 - B.a0 * B.c1).natDegree ≤ weight + 9553)
     (H : P4 K) (hH : H ≠ 0)
-    (hbox : H ∈ nestedCoefficientBox K Stage.primary.cutoff weight 53188 360 80)
+    (hbox : H ∈ nestedCoefficientBox K Stage.primary.cutoff weight 41882 418 93)
     (Γ : Finset K) (selected : K → Polynomial K)
     (hdegree : ∀ γ ∈ Γ, (selected γ).natDegree ≤ weight)
     (hagreement : ∀ γ ∈ Γ, agreement ≤
       (Finset.univ.filter (fun i => (selected γ).eval (x i) = u₀ i + γ * u₁ i)).card)
     (hgood : ∀ γ ∈ Γ, ∀ i, (selected γ).eval (x i) = u₀ i + γ * u₁ i → i ∈ good)
-    (hnoPencil : NoLargeSelectedPencil selected Γ weight 81060)
+    (hnoPencil : NoLargeSelectedPencil selected Γ weight 81066)
     (hregular : ∀ γ ∈ Γ, ∃ F : RegularIndex H,
       specialization K (selected γ) γ F.1 = 0 ∧
       specialization K (selected γ) γ (polyH K F.1) ≠ 0 ∧ ¬ F.1 ∣ B.flow F.1) :
@@ -186,7 +188,7 @@ theorem exists_paid_route [CharP K 2130706433]
   have hroom₁ := roomCount Stage.room1 A₀ Finset.Subset.rfl (hfinal₂.trans hA₂) primaryIncoming
     (by decide +kernel) hfit₀ ⟨le_rfl, le_rfl, le_rfl⟩
   have hroom₂ := roomCount Stage.room2 A₁ hA₁ hfinal₂ secondRoomIncoming
-    (by decide +kernel) hfit₁ (by change 54 ≤ 80 ∧ 245 ≤ 360 ∧ 15351 ≤ 53188; decide +kernel)
+    (by decide +kernel) hfit₁ (by change 52 ≤ 93 ∧ 231 ≤ 418 ∧ 15351 ≤ 41882; decide +kernel)
   have adaptiveCount (s : Stage) (A : Finset (RegularIndex H)) (hA : A ⊆ A₂)
       (pass : ExhaustedPass s xg ug₀ ug₁ H A)
       (hacts : pass.residue ≠ A → adaptiveGate s.numbers (aggregateFlag H A)) (limit : ℕ)
@@ -206,7 +208,7 @@ theorem exists_paid_route [CharP K 2130706433]
     have hfit : Below (aggregateFlag H A) (aggregateFlag H A) := ⟨le_rfl, le_rfl, le_rfl⟩
     have hcap : Below (aggregateFlag H A) primaryIncoming :=
       below_trans (below_trans (aggregateFlag_mono H hA) hfit₂)
-        (by change 30 ≤ 80 ∧ 138 ≤ 360 ∧ 15351 ≤ 53188; decide +kernel)
+        (by change 30 ≤ 93 ∧ 138 ≤ 418 ∧ 15351 ≤ 41882; decide +kernel)
     refine (paid_union_le_stagePrice H A (A \ pass.residue) Finset.sdiff_subset Γ selected
       (aggregateFlag H A) (aggregateFlag_pos H hne) hfit s s.numbers.slopeCap ?_).trans
       (hprice hne (hacts hsame))
@@ -219,14 +221,14 @@ theorem exists_paid_route [CharP K 2130706433]
     exact regularFiber_le_paid_factor H A F hin (aggregateFlag H A) (aggregateFlag_pos H hne)
       hfit hcap s s.numbers.slopeCap Γ selected Finset.univ x u₀ u₁ x.injective.injOn hnodes
       hdegree hagreement hnoPencil Q hrel hQbox hsolution
-  have had₁ := adaptiveCount Stage.adaptive1 A₂ Finset.Subset.rfl p₁ ha₁ 2243281056745829
+  have had₁ := adaptiveCount Stage.adaptive1 A₂ Finset.Subset.rfl p₁ ha₁ 1377281380362275
     (fun hne hgate => prices.first _ (aggregateFlag_pos H hne) hfit₂ hgate)
-  have had₂ := adaptiveCount Stage.adaptive2 p₁.residue p₁.subset_incoming p₂ ha₂ 824314952017431
+  have had₂ := adaptiveCount Stage.adaptive2 p₁.residue p₁.subset_incoming p₂ ha₂ 602126487655617
     (fun hne hgate => prices.second _ (aggregateFlag_pos H hne)
       (below_trans (aggregateFlag_mono H p₁.subset_incoming) hfit₂)
       (adaptive_failure_in_subset _ H Finset.Subset.rfl hne p₁.stopped) hgate)
   have had₃ := adaptiveCount Stage.adaptive3 p₂.residue (p₂.subset_incoming.trans p₁.subset_incoming)
-    p₃ ha₃ 2334906151847889 (fun hne hgate => prices.third _ (aggregateFlag_pos H hne)
+    p₃ ha₃ 3901019902378291 (fun hne hgate => prices.third _ (aggregateFlag_pos H hne)
       (below_trans (aggregateFlag_mono H (p₂.subset_incoming.trans p₁.subset_incoming)) hfit₂)
       (adaptive_failure_in_subset _ H p₂.subset_incoming hne p₁.stopped)
       (adaptive_failure_in_subset _ H Finset.Subset.rfl hne p₂.stopped) hgate)
@@ -240,12 +242,14 @@ theorem exists_paid_route [CharP K 2130706433]
   change ((A₁ \ A₂).biUnion fibers).card + fixedRoomCredit₂ (aggregateFlag H final) ≤ fixedRoomPrice₂ at hroom₂
   rw [fixedRoomPrice₁_value] at hroom₁
   rw [fixedRoomPrice₂_value] at hroom₂
-  change ((p₂.residue \ final).biUnion fibers).card ≤ 2334906151847889 at had₃
+  change ((p₂.residue \ final).biUnion fibers).card ≤ 3901019902378291 at had₃
   refine ⟨⟨final, hfitFinal, hstopFinal, ?_⟩⟩
   change Γ.card + fixedRoomCredit₁ (aggregateFlag H final) + fixedRoomCredit₂ (aggregateFlag H final) ≤
-    (final.biUnion fibers).card + 24584613663490380
+    (final.biUnion fibers).card + 30713098255225143
   omega
 
 end
 
 end ProximityPrize.SubmissionLower.Koala6831MovingPaid
+
+/- Modified for the 68.32 KoalaBear soundness construction, November 2026. -/

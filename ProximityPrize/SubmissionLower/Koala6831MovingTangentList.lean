@@ -13,13 +13,13 @@ set_option maxRecDepth 50000
 set_option maxHeartbeats 5000000
 
 abbrev n : ℕ := 262144
-abbrev w : ℕ := 140625
-abbrev agreements : ℕ := 181084
+abbrev w : ℕ := 140624
+abbrev agreements : ℕ := 181078
 abbrev gap : ℕ := agreements - w
 abbrev prime : ℕ := 2130706433
-abbrev yTotalCap : ℕ := 360
-abbrev slopeCap : ℕ := 80
-abbrev listBudget : ℕ := 48504862359
+abbrev yTotalCap : ℕ := 418
+abbrev slopeCap : ℕ := 93
+abbrev listBudget : ℕ := 65508317274
 
 private abbrev capY : ℕ := 1 + 2 * w * yTotalCap
 private abbrev capR : ℕ := w * (2 * slopeCap - 1)
@@ -355,3 +355,7 @@ theorem seedless_list_card_le
 end
 
 end ProximityPrize.SubmissionLower.Koala6831Moving.TangentList
+
+/- Retuned for the full 68.32 domain and the m=303 primary, November 2026. -/
+
+/- Modified for the 68.32 KoalaBear soundness construction, November 2026. -/

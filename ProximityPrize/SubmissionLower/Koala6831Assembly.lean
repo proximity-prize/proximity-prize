@@ -1,5 +1,5 @@
 import ProximityPrize.SubmissionLower.Koala6831Protocol
-import ProximityPrize.SubmissionLower.Koala6831ScalarList
+import ProximityPrize.SubmissionLower.Pilot6832Scalar
 
 namespace ProximityPrize.SubmissionLower.Koala6831Assembly
 
@@ -13,18 +13,20 @@ private theorem filter_card_le {I : Type*} (P : I → Prop)
 
 set_option maxHeartbeats 2000000 in
 
-theorem protocolClaim_6831_of_seed_bound
+theorem protocolClaim_6832_of_seed_bound
     (hseed : ScalarSeedBound) :
-    ProtocolClaim 6831 332025855 1073741824 := by
-  apply protocolClaim_6831_of_bounds hseed
+    ProtocolClaim 6832 332050431 1073741824 := by
+  apply protocolClaim_6832_of_bounds hseed
   intro received words hcode hclose
-  have hagreement : Fintype.card IRSProfile.Index - errors = 181084 := by
+  have hagreement : Fintype.card IRSProfile.Index - errors = 181078 := by
     rw [IRSProfile.card_index]
     decide
-  refine Koala6831ScalarList.irs_scalar_finite_list_card_le received words hcode ?_
+  refine Pilot6832Scalar.irs_scalar_finite_list_card_le received words hcode ?_
   intro word hword
   have hnear := hclose word hword
   rw [hagreement] at hnear
   exact hnear.trans (filter_card_le (fun i ↦ word i = received i) _ _ _)
 
 end ProximityPrize.SubmissionLower.Koala6831Assembly
+
+/- Modified for the 68.32 KoalaBear soundness construction, November 2026. -/
