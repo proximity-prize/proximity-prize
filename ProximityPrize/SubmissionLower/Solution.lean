@@ -1,20 +1,13 @@
-import ProximityPrize.SubmissionLower.Higher6832
+import ProximityPrize.SubmissionLower.Mid6833Candidate6833
 
 namespace ProximityPrize.Benchmark
-
-/- Extends Bome2017's accepted 68.31 proof, commit 47747788e5e9b79f3bb5abad45fd63bc6fab40a3.
-   Lucieno's PR 618 supplies the two-sided Frobenius comparison and moving-factor framework.
-   BitWonka's PR 581 supplies the higher-derivative source construction and PR 582 supplies
-   inherited boundary-tail gates. This adaptation uses 81,066 errors, a new full-domain
-   primary and room schedule, 18 jet profiles and a retuned long separated regime. -/
-theorem candidate : ProtocolClaim 6832 332050431 1073741824 :=
-  ProximityPrize.SubmissionLower.higher6832
-
+theorem candidate : ProtocolClaim 6833 332091391 1073741824 :=
+  ProximityPrize.SubmissionLower.Intermediate6833.candidate
 #print axioms candidate
 end ProximityPrize.Benchmark
 
-/- Upstream project license
-Apache License
+/-
+                                 Apache License
                            Version 2.0, January 2004
                         http://www.apache.org/licenses/
 
