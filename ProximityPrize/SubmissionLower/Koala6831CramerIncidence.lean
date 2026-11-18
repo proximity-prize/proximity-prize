@@ -1,4 +1,3 @@
-import ProximityPrize.SubmissionLower.JointIdentity
 import ProximityPrize.SubmissionLower.LowerFoundation
 import ProximityPrize.SubmissionLower.Koala6831ChartNormalization
 
@@ -97,37 +96,25 @@ theorem normalized_chart_bound
       (seeds.filter (fun g => (denominator i).eval g = 0)).card ≤ denominatorBudget)
     (hpencil : ∀ p₀ p₁ : Polynomial K, p₀.natDegree ≤ w → p₁.natDegree ≤ w →
       (RCN050.pencilSeeds seeds selected p₀ p₁).card ≤ e + 1) :
-    seeds.card ≤ max ((nodes.card - JointIdentity.splitPoint w a) * agreementBudget / (a - JointIdentity.splitPoint w a))
-      (nodes.card * denominatorBudget / (JointIdentity.tolerance w a + 1) + (e + 1)) := by
-  let k := JointIdentity.tolerance w a
-  let T := JointIdentity.splitPoint w a
-  have hT : T < a := by dsimp [T,JointIdentity.splitPoint,JointIdentity.tolerance]; omega
-  by_cases small : identities.card ≤ T
+    seeds.card ≤ max ((nodes.card - w) * agreementBudget / (a - w))
+      ((w + 1) * denominatorBudget + (e + 1)) := by
+  by_cases hsmall : identities.card ≤ w
   · apply le_trans _ (le_max_left _ _)
-    apply (Nat.le_div_iff_mul_le (Nat.sub_pos_of_lt hT)).mpr
+    apply (Nat.le_div_iff_mul_le (Nat.sub_pos_of_lt hwa)).mpr
     apply RCN173.sharp_incidence_bound
       (fun g i => (selected g).eval (x i) = u₀ i + g * u₁ i)
-      seeds nodes identities a T agreementBudget hsubset small hT han hagreement
+      seeds nodes identities a w agreementBudget hsubset hsmall hwa han hagreement
     intro i hi
     refine (Finset.card_le_card (t := seeds.filter (fun g => (numerator i).eval g =
       (denominator i).eval g * (u₀ i + g * u₁ i))) ?_).trans (hcut i hi)
     intro g hg
-    obtain ⟨hs,ag⟩ := Finset.mem_filter.mp hg
-    exact Finset.mem_filter.mpr ⟨hs, by rw [← hcramer g hs i, ag]⟩
+    obtain ⟨hseed, hfit⟩ := Finset.mem_filter.mp hg
+    apply Finset.mem_filter.mpr
+    refine ⟨hseed, ?_⟩
+    rw [← hcramer g hseed i, hfit]
   · apply le_trans _ (le_max_right _ _)
-    have large : w + 3*k < identities.card := Nat.lt_of_not_ge small
-    have paid := JointIdentity.many_identities seeds identities x u₀ u₁ selected w e k
-      denominatorBudget large hdegree (fun i hi => ?_) hpencil
-    · exact paid.trans (Nat.add_le_add_right (Nat.div_le_div_right
-        (Nat.mul_le_mul_right _ (Finset.card_le_card hsubset))) _)
-    · apply (Finset.card_le_card (t := seeds.filter (fun g => (denominator i).eval g=0)) ?_).trans (hzero i hi)
-      intro g hg
-      obtain ⟨hs,miss⟩ := Finset.mem_filter.mp hg
-      apply Finset.mem_filter.mpr
-      refine ⟨hs,?_⟩
-      by_contra nonzero
-      apply miss
-      exact mul_left_cancel₀ nonzero ((hcramer g hs i).trans (hidentity i hi g hs))
+    exact identity_nodes_bound x u₀ u₁ selected denominator numerator seeds identities
+      w e denominatorBudget (Nat.lt_of_not_ge hsmall) hdegree hidentity hcramer hzero hpencil
 
 theorem encoded_chart_bound
     (x : I ↪ K) (u₀ u₁ : I → K) (selected : K → Polynomial K)
@@ -145,8 +132,8 @@ theorem encoded_chart_bound
     (hpencil : ∀ p₀ p₁ : Polynomial K, p₀.natDegree ≤ w → p₁.natDegree ≤ w →
       (RCN050.pencilSeeds seeds selected p₀ p₁).card ≤ e + 1) :
     seeds.card ≤ max
-      ((nodes.card - JointIdentity.splitPoint w a) * max numeratorDegree (denominatorDegree + 1) / (a - JointIdentity.splitPoint w a))
-      (nodes.card * denominatorDegree / (JointIdentity.tolerance w a + 1) + (e + 1)) := by
+      ((nodes.card - w) * max numeratorDegree (denominatorDegree + 1) / (a - w))
+      ((w + 1) * denominatorDegree + (e + 1)) := by
   obtain ⟨D, N, hD, hDdegree, hNdegree, hnode⟩ := Koala6831ChartNormalization.exists_node_tests
     denominator numerator hden denominatorDegree numeratorDegree hdenDegree hnumDegree
   let test (i : I) := N (x i) - D (x i) * (Polynomial.C (u₀ i) + Polynomial.X * Polynomial.C (u₁ i))
@@ -231,8 +218,8 @@ theorem two_encoded_rows_card_le {d p : ℕ} (hp : 0 < p)
     (h₁ : ∀ g ∈ seeds, row₁.satisfied g (selected g) (secondValue g))
     (hpencil : ∀ p₀ p₁ : Polynomial K, p₀.natDegree ≤ w → p₁.natDegree ≤ w →
       (RCN050.pencilSeeds seeds selected p₀ p₁).card ≤ e + 1) :
-    seeds.card ≤ max ((nodes.card - JointIdentity.splitPoint w a) * ((2*d + 2) * (p + 1)) / (a - JointIdentity.splitPoint w a))
-      (nodes.card * ((2*d + 1) * (p + 1)) / (JointIdentity.tolerance w a + 1) + (e + 1)) := by
+    seeds.card ≤ max ((nodes.card - w) * ((2*d + 2) * (p + 1)) / (a - w))
+      ((w + 1) * ((2*d + 1) * (p + 1)) + (e + 1)) := by
   let denominator := row₀.first * row₁.second - row₀.second * row₁.first
   let numerator := row₀.second * row₁.beta - row₀.beta * row₁.second
   let denCap := (2*d + 1) * (p + 1)
@@ -275,5 +262,3 @@ theorem two_encoded_rows_card_le {d p : ℕ} (hp : 0 < p)
 end
 
 end ProximityPrize.SubmissionLower.Koala6831CramerIncidence
-
-/- Modified for this joint-incidence adaptation of Lucieno’s PR 618, November 2026. -/

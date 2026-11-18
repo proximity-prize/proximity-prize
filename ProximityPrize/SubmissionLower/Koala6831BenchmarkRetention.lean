@@ -14,7 +14,7 @@ set_option maxHeartbeats 5000000
 
 variable {K I : Type} [Field K] [Fintype I]
 
-def commonDiscardBudget : ℕ := 330770866814160
+def commonDiscardBudget : ℕ := 334073461786860
 def retainedSeedBudget : ℕ := 274430098954830993
 
 structure RetainedComparison (x : I ↪ K) (σ : K →+* K)
@@ -62,8 +62,8 @@ theorem primitive_bound_of_retained
   have hX := primitive_x_degree_caps row.1 q m hm hfactor
   have hB := primitive_seed_degree_caps row.1 q m hm hfactor
   have hretained := hRetained received retained selected q
-    ⟨selection_of_subset support hsub, hfirst, hsecond, hprimitive, hX, hB, by omega, hrow⟩
-  have hbad : (badNodes x σ received q).card + 1 ≤ 31048 := by omega
+    ⟨selection_of_subset support hsub, hfirst, hsecond, hprimitive, hX, hB, hcap, hrow⟩
+  have hbad : (badNodes x σ received q).card + 1 ≤ 31358 := by omega
   have hdiscard : ((badNodes x σ received q).card + 1) * (5 * (prime + 1)) ≤ commonDiscardBudget :=
     (Nat.mul_le_mul_right (5 * (prime + 1)) hbad).trans_eq (by decide +kernel)
   have hsum : retainedSeedBudget + commonDiscardBudget = mcaBudget := by decide +kernel
@@ -75,5 +75,3 @@ theorem primitive_bound_of_retained
 end
 
 end ProximityPrize.SubmissionLower.Koala6831BenchmarkRetention
-
-/- Modified for this joint-incidence adaptation of Lucieno’s PR 618, November 2026. -/

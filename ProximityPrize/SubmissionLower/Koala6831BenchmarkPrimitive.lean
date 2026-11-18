@@ -61,7 +61,7 @@ def TwoSidedPrimitiveSeedBound (x : I ↪ K) (σ : K →+* K) : Prop :=
       (q : SymbolicRow (SeedRing K)) (m : SeedCoefficients K),
       q.first ≠ 0 → q.second ≠ 0 → m ≠ 0 → IsPrimitiveRow q →
       RowFactors q (rankRow row.1) m →
-      primitiveExcess 131071 q + (badNodes x σ received q).card ≤ 31047 →
+      primitiveExcess 131071 q + (badNodes x σ received q).card ≤ 31357 →
       seeds.card ≤ mcaBudget
 
 private theorem one_sided_rows_le_seed_budget
@@ -80,7 +80,7 @@ private theorem one_sided_rows_le_seed_budget
   exact bound.trans (by decide +kernel)
 
 def MixedRowsSeedBound (x : I ↪ K) (σ : K →+* K) : Prop :=
-  ∀ (received : Received K I) (row : Rows x σ received 4) (other : Rows x σ received 62095),
+  ∀ (received : Received K I) (row : Rows x σ received 4) (other : Rows x σ received 200),
     coefficientDeterminant row.1 other.1 ≠ 0 →
     ∀ (seeds : Finset K) (selected : SelectionMap K),
       Selection x received seeds selected → seeds.card ≤ mcaBudget
@@ -108,7 +108,7 @@ def RankOneSeedBound (x : I ↪ K) (σ : K →+* K) : Prop :=
   ∀ (received : Received K I) (seeds : Finset K) (selected : SelectionMap K),
     Selection x received seeds selected →
     ∀ row : Rows x σ received 4, row.1 ≠ 0 →
-      (∀ other : Rows x σ received 62095, coefficientDeterminant row.1 other.1 = 0) →
+      (∀ other : Rows x σ received 200, coefficientDeterminant row.1 other.1 = 0) →
       seeds.card ≤ mcaBudget
 
 private theorem seed_bound_of_rank_cases
@@ -129,7 +129,7 @@ private theorem seed_bound_of_rank_cases
   let u (j : Fin 2) (i : I) := if j = 0 then received 0 i else σ (received 0 i)
   let v (j : Fin 2) (i : I) := if j = 0 then received 1 i else σ (received 1 i)
   obtain ⟨row, hrow⟩ := (exists_koalabear_comparison_rows x u v hcard).1
-  by_cases hdet : ∃ other : Rows x σ received 62095, coefficientDeterminant row.1 other.1 ≠ 0
+  by_cases hdet : ∃ other : Rows x σ received 200, coefficientDeterminant row.1 other.1 ≠ 0
   · obtain ⟨other, hother⟩ := hdet
     exact hMixed received row other hother seeds selected hselection
   exact hRankOne received seeds selected hselection row hrow
@@ -138,14 +138,14 @@ private theorem seed_bound_of_rank_cases
 private theorem card_le_from_primitive_cases
     (x : I ↪ K) (u v : Fin 2 → I → K) (hcard : Fintype.card I = 262144)
     (row : ComparisonSpace 181084 50013 4 x u v) (hrow : row.1 ≠ 0)
-    (hdet : ∀ other : ComparisonSpace 181084 50013 62095 x u v,
+    (hdet : ∀ other : ComparisonSpace 181084 50013 200 x u v,
       coefficientDeterminant row.1 other.1 = 0)
     (seedCount : ℕ)
     (honeCase : (let r := symbolicRow row.1
       (r.first ≠ 0 ∧ r.second = 0) ∨ (r.first = 0 ∧ r.second ≠ 0)) → seedCount ≤ mcaBudget)
     (hbothCase : ∀ (q : SymbolicRow (SeedRing K)) (m : SeedCoefficients K),
       q.first ≠ 0 → q.second ≠ 0 → m ≠ 0 → IsPrimitiveRow q → RowFactors q (rankRow row.1) m →
-      primitiveExcess 131071 q + (primitiveBadNodes x u v q).card ≤ 31047 → seedCount ≤ mcaBudget) :
+      primitiveExcess 131071 q + (primitiveBadNodes x u v q).card ≤ 31357 → seedCount ≤ mcaBudget) :
     seedCount ≤ mcaBudget := by
   obtain ⟨q, m, hm, hactive, hprimitive, hfactor, hlarge⟩ :=
     exists_primitive_comparison_generator x u v row hrow (by rw [hcard]; decide)
@@ -156,7 +156,7 @@ private theorem card_le_from_primitive_cases
     rcases hactive with hf | hs
     · exact ⟨hf, fun hz => hone (Or.inl ⟨hf, hz⟩)⟩
     · exact ⟨fun hz => hone (Or.inr ⟨hz, hs⟩), hs⟩
-  have hcap := primitive_excess_add_badCard_le_31047 x u v q hboth.1 hboth.2 hcard hlarge
+  have hcap := primitive_excess_add_badCard_le_31357 x u v q hboth.1 hboth.2 hcard hlarge
   exact hbothCase q m hboth.1 hboth.2 hm hprimitive hfactor hcap
 
 private theorem rank_one_bound_of_primitive
@@ -181,5 +181,3 @@ theorem seed_bound_of_two_sided_primitive
 end
 
 end ProximityPrize.SubmissionLower.Koala6831BenchmarkPrimitive
-
-/- Modified for this joint-incidence adaptation of Lucieno’s PR 618, November 2026. -/

@@ -15,7 +15,7 @@ private theorem atCenteredXZero_monomial (d : Fin 5 →₀ ℕ) (a : K) :
       if d 0 = 0 then MvPolynomial.monomial d a else 0 := by
   classical
   have constant : atCenteredXZero (C a : Koala6831Ordinary.Poly K) = C a := by simp [atCenteredXZero]
-  have var (i : Fin 5) : atCenteredXZero (MvPolynomial.X i : Koala6831Ordinary.Poly K) = if i = 0 then 0 else MvPolynomial.X i := by
+  have var (i : Fin 5) : atCenteredXZero (X i : Koala6831Ordinary.Poly K) = if i = 0 then 0 else X i := by
     fin_cases i <;> simp [atCenteredXZero]
   have idx₁ : (0 : Fin 4).succ = (1 : Fin 5) := by decide
   have idx₂ : (0 : Fin 3).succ.succ = (2 : Fin 5) := by decide
@@ -74,7 +74,7 @@ private theorem seedWord_deriv_zero (U : SeedRing K) (i : Fin 5) (hi : i = 1 ∨
   exact (Finsupp.mem_support_iff.mp active) (seedWord_support_at_contact U hd i (Or.inr hi))
 
 private theorem linear_seed_row_nonzero (U V : SeedRing K) (active : U ≠ 0 ∨ V ≠ 0) :
-    liftSeedWord U * MvPolynomial.X 1 + liftSeedWord V * MvPolynomial.X 2 ≠ 0 := by
+    liftSeedWord U * X 1 + liftSeedWord V * X 2 ≠ 0 := by
   intro zero
   rcases active with hU | hV
   · apply hU
@@ -102,16 +102,16 @@ theorem primitiveRowLift_germ_order_one (q : SymbolicRow (SeedRing K)) (primitiv
   let P := Koala6831Quotient.centerAtNode x u₀ v₀ u₁ v₁ (primitiveRowLift q)
   let U := q.first.eval (MvPolynomial.C x)
   let V := q.second.eval (MvPolynomial.C x)
-  have linear : atCenteredXZero P = liftSeedWord U * MvPolynomial.X 1 + liftSeedWord V * MvPolynomial.X 2 :=
+  have linear : atCenteredXZero P = liftSeedWord U * X 1 + liftSeedWord V * X 2 :=
     centered_primitive_row_at_x_zero x u₀ v₀ u₁ v₁ q good
   have linear_ne : atCenteredXZero P ≠ 0 := by
     rw [linear]
     exact linear_seed_row_nonzero U V (primitive_active_at_good_node q primitive x _ _ good)
   have linear_homogeneous : (atCenteredXZero P).IsWeightedHomogeneous germWeights 1 := by
     rw [linear]
-    have one₀ : (MvPolynomial.X 1 : Koala6831Ordinary.Poly K).IsWeightedHomogeneous germWeights 1 :=
+    have one₀ : (X 1 : Koala6831Ordinary.Poly K).IsWeightedHomogeneous germWeights 1 :=
       MvPolynomial.isWeightedHomogeneous_X K germWeights 1
-    have one₁ : (MvPolynomial.X 2 : Koala6831Ordinary.Poly K).IsWeightedHomogeneous germWeights 1 :=
+    have one₁ : (X 2 : Koala6831Ordinary.Poly K).IsWeightedHomogeneous germWeights 1 :=
       MvPolynomial.isWeightedHomogeneous_X K germWeights 2
     exact ((seedWord_isWeightedHomogeneous U).mul one₀).add
       ((seedWord_isWeightedHomogeneous V).mul one₁)
@@ -144,5 +144,3 @@ theorem primitiveRowLift_germ_order_one (q : SymbolicRow (SeedRing K)) (primitiv
 end
 
 end ProximityPrize.SubmissionLower.Koala6831Comparison
-
-/- Modified for this joint-incidence adaptation of Lucieno’s PR 618, November 2026. -/

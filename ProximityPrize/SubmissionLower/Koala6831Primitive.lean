@@ -1,3 +1,4 @@
+import Mathlib.RingTheory.Polynomial.UniqueFactorization
 import ProximityPrize.SubmissionLower.Koala6831PrimitiveBoxes
 import ProximityPrize.SubmissionLower.Koala6831ComparisonRank
 

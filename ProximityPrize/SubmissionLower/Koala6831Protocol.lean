@@ -15,7 +15,7 @@ local instance : DecidableEq IRSProfile.Field := Classical.decEq _
 local instance : DecidableEq IRSProfile.Index := Classical.decEq _
 
 def errors : ℕ := 81060
-def mcaBudget : ℕ := 274760869821645153
+def mcaBudget : ℕ := 274764172416617853
 def radiusNumerator : ℕ := 332025855
 def radiusDenominator : ℕ := 1073741824
 def radius : ℝ≥0 := claimedRadius radiusNumerator radiusDenominator
@@ -232,5 +232,3 @@ theorem protocolClaim_6831_of_bounds
 end
 
 end ProximityPrize.SubmissionLower.Koala6831Protocol
-
-/- Modified for this joint-incidence adaptation of Lucieno’s PR 618, November 2026. -/

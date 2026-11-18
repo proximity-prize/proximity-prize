@@ -93,7 +93,7 @@ private theorem koala_mixed_rows_bound :
     MixedRowsSeedBound IRSProfile.domain frobenius.toRingHom := by
   intro received first second hdet seeds selected support
   exact Koala6831BenchmarkCases.independent_rows_le_seed_budget
-    (received := received) (d₀ := 4) (d₁ := 62095) (by decide) (by decide)
+    (received := received) (d₀ := 4) (d₁ := 200) (by decide) (by decide)
     first second hdet seeds selected support
 
 theorem protocolClaim_6831_of_geometry
@@ -106,5 +106,3 @@ theorem protocolClaim_6831_of_geometry
 end
 
 end ProximityPrize.SubmissionLower.Koala6831BenchmarkGeometry
-
-/- Modified for this joint-incidence adaptation of Lucieno’s PR 618, November 2026. -/

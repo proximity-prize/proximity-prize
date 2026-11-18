@@ -1,10 +1,7 @@
+import Mathlib.Algebra.GCDMonoid.Basic
 import Mathlib.Algebra.MvPolynomial.NoZeroDivisors
-import ProximityPrize.Benchmark.TargetLower
-import Mathlib.Tactic
-import Mathlib.Algebra.MvPolynomial.Degrees
-import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
-import Mathlib.LinearAlgebra.Dimension.Finrank
 import Mathlib.Algebra.Polynomial.Roots
+import Mathlib.Tactic.LinearCombination
 
 namespace ProximityPrize.SubmissionLower.Koala6831Comparison
 
@@ -251,5 +248,3 @@ theorem multiplier_seed_coeff_degree_le {S : Type*}
   omega
 
 end ProximityPrize.SubmissionLower.Koala6831Comparison
-
-/- Modified for this joint-incidence adaptation of Lucieno’s PR 618, November 2026. -/

@@ -1,9 +1,11 @@
-import ProximityPrize.Benchmark.TargetLower
-import Mathlib.Tactic
 import Mathlib.Algebra.MvPolynomial.Degrees
-import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
-import Mathlib.LinearAlgebra.Dimension.Finrank
+import Mathlib.Algebra.MvPolynomial.Eval
+import Mathlib.Algebra.Polynomial.Eval.Degree
 import Mathlib.Algebra.Polynomial.Roots
+import Mathlib.LinearAlgebra.Dimension.Constructions
+import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
+import Mathlib.Tactic.Abel
+import Mathlib.Tactic.Ring
 
 namespace ProximityPrize.SubmissionLower.Koala6831Comparison
 
@@ -432,5 +434,3 @@ theorem specialize_selected_eq_zero [IsDomain K] {A a d w : ℕ}
 end
 
 end ProximityPrize.SubmissionLower.Koala6831Comparison
-
-/- Modified for this joint-incidence adaptation of Lucieno’s PR 618, November 2026. -/

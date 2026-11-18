@@ -132,8 +132,8 @@ theorem independent_mixed_rows_card_le {I : Type} [Fintype I]
       A ≤ (Finset.univ.filter (fun i => (selected g).eval (x i) = U 0 i + g * U 1 i)).card)
     (hpencil : ∀ p₀ p₁ : Polynomial K, p₀.natDegree ≤ w → p₁.natDegree ≤ w →
       (RCN050.pencilSeeds seeds selected p₀ p₁).card ≤ e + 1) :
-    seeds.card ≤ max ((Fintype.card I - JointIdentity.splitPoint w A) * ((2*D + 2) * (p + 1)) / (A - JointIdentity.splitPoint w A))
-      (Fintype.card I * ((2*D + 1) * (p + 1)) / (JointIdentity.tolerance w A + 1) + (e + 1)) := by
+    seeds.card ≤ max ((Fintype.card I - w) * ((2*D + 2) * (p + 1)) / (A - w))
+      ((w + 1) * ((2*D + 1) * (p + 1)) + (e + 1)) := by
   rw [← Finset.card_univ (α := I)]
   apply two_encoded_rows_card_le hp x (U 0) (U 1) selected (fun g => (selected g).map σ)
     (encodeRow θ.1 p hle₀) (encodeRow η.1 p hle₁)
@@ -154,5 +154,3 @@ theorem independent_mixed_rows_card_le {I : Type} [Fintype I]
 end
 
 end ProximityPrize.SubmissionLower.Koala6831RankTwo
-
-/- Modified for this joint-incidence adaptation of Lucieno’s PR 618, November 2026. -/

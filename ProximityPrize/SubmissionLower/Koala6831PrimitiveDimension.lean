@@ -132,12 +132,12 @@ theorem comparisonSpace_finrank_le_primitiveBox [Fintype I] {A a d w : ℕ}
   refine ⟨fun n hn => Polynomial.coeff_eq_zero_of_natDegree_lt (hx.trans_le hn), fun n => ?_⟩
   exact ⟨Nat.lt_succ_of_le (hd₀ n), Nat.lt_succ_of_le (hd₁ n)⟩
 
-theorem primitive_excess_add_badCard_le_31047 [Fintype I]
+theorem primitive_excess_add_badCard_le_31357 [Fintype I]
     (x : I ↪ K) (u v : Fin 2 → I → K) (q : SymbolicRow (SeedRing K))
     (h₀ : q.first ≠ 0) (h₁ : q.second ≠ 0) (hcard : Fintype.card I = 262144)
-    (h : ∀ θ : ComparisonSpace 181084 50013 62095 x u v, ∃ m, RowFactors q (rankRow θ.1) m) :
-    primitiveExcess 131071 q + (primitiveBadNodes x u v q).card ≤ 31047 := by
-  have hlo := comparisonSpace_finrank_lower_bound 181084 50013 62095 81060 x u v hcard
+    (h : ∀ θ : ComparisonSpace 181084 50013 200 x u v, ∃ m, RowFactors q (rankRow θ.1) m) :
+    primitiveExcess 131071 q + (primitiveBadNodes x u v q).card ≤ 31357 := by
+  have hlo := comparisonSpace_finrank_lower_bound 181084 50013 200 81060 x u v hcard
   have hhi := comparisonSpace_finrank_le_primitiveBox x u v q h₀ h₁ (by decide)
     (w := 131071) (by decide) h
   have hbound := hlo.trans hhi
@@ -147,5 +147,3 @@ theorem primitive_excess_add_badCard_le_31047 [Fintype I]
 end
 
 end ProximityPrize.SubmissionLower.Koala6831Comparison
-
-/- Modified for this joint-incidence adaptation of Lucieno’s PR 618, November 2026. -/
