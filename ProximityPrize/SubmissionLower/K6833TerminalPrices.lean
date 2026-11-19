@@ -34,11 +34,11 @@ structure JetProfile where
 
 private def n : ℕ := 262144
 private def w : ℕ := 131071
-private def agreement : ℕ := 181049
+private def agreement : ℕ := 181068
 private def fieldPrime : ℕ := 2130706433
 def pencilBudget : ℕ := n - agreement + 1
 private def agreementGap : ℕ := agreement - w
-private def scale : ℕ := 62705875769460
+private def scale : ℕ := 62736297596280
 
 def residualPriceScale : ℕ := scale
 

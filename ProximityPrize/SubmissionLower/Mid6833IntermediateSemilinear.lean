@@ -22,15 +22,15 @@ set_option maxRecDepth 30000
 theorem semilinear_6833
     (U : Received F IRSProfile.Index) (E : Finset F) (P : SelectionMap F)
     (q : SymbolicRow (SeedRing F)) (N : NormalForm q 131071 (primitiveExcess 131071 q))
-    (difficulty : Difficult U E P q N) (agree : ∀g∈E,181049≤(agreementSet Dmn U P g).card)
-    (paid : CanNormalize N 2222) :
-    E.card+(33735-primitiveExcess 131071 q+1)*6*(prime+1)≤274980690694301924 :=
+    (difficulty : Difficult U E P q N) (agree : ∀g∈E,181068≤(agreementSet Dmn U P g).card)
+    (paid : CanNormalize N 2243) :
+    E.card+(33735-primitiveExcess 131071 q+1)*6*(prime+1)≤274980697816613562 :=
   by
-    have sized : ScalarAt (131071+2222) 181049 274460153320229089 := by
-      change ScalarAt 133293 181049 274460153320229089
+    have sized : ScalarAt (131071+2243) 181068 269636151982671244 := by
+      change ScalarAt 133314 181068 269636151982671244
       intro x word
       exact Frontier.SeedFreeze.scalar_list_intermediatedegree6833 x word
-    exact semilinear_at (A:=181049) (C:=274460153320229089) (B:=274980690694301924) (k:=2222) (by decide +kernel) (by decide +kernel) sized
+    exact semilinear_at (A:=181068) (C:=269636151982671244) (B:=274980697816613562) (k:=2243) (by decide +kernel) (by decide +kernel) sized
       (by decide +kernel) U E P q N difficulty agree paid
 #print axioms semilinear_6833
 

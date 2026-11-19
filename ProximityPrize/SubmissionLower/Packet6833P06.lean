@@ -1,3 +1,4 @@
+/- Apache-2.0. 68.36 retuning by Bome2017. Packet construction from BitWonka’s PR 623 and the earlier Bome2017, Lucieno and 0xAndoroid proofs. -/
 import Mathlib.Algebra.BigOperators.Field
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Algebra.BigOperators.Intervals
@@ -6270,7 +6271,7 @@ theorem separable_form (P : Packet x t y r) (SZ : MovingFiberThreeSources6811.So
         simp only [LocatorHybridCells.cellA, LocatorHybridCells.cellB, LocatorHybridCells.cellS]
         omega)
   have hmix : 2 * t * (t + 1) < 2130706433 :=
-    calc 2 * t * (t + 1) ≤ 2 * 7200 * (7200 + 1) :=
+    calc 2 * t * (t + 1) ≤ 2 * 9352 * (9352 + 1) :=
           Nat.mul_le_mul (Nat.mul_le_mul_left 2 hthi) (Nat.add_le_add_right hthi 1)
       _ < 2130706433 := by norm_num
   exact finite_separable_of_degree (p := 2130706433) V.1 ℓ hℓ hX g (XC f P.F Q A) hg hgV
@@ -7528,7 +7529,7 @@ variable {x:I→K} {t y r:ℕ}
 def linearPrice (first delay:FlagDegree) (t y r b u l:ℕ):ℕ:=
   r*GB.FU (pair t y r b u l)+
     flagMixed ⟨t-y,y-r,r⟩ first delay+
-    81097*flagMixed ⟨t-y,y-r,r⟩ first unitYZFlag+
+    81107*flagMixed ⟨t-y,y-r,r⟩ first unitYZFlag+
     flagMixed ⟨t-y,y-r,r⟩ first unitAllFlag
 theorem packet_count
     (P:Packet x t y r) [Fact (Irreducible P.F)]
@@ -7576,7 +7577,7 @@ theorem packet_count
     have hh:=(Finset.sum_le_sum (fun g (_:g∈Finset.univ)=>hone g)).trans (hb.1.trans P.r_weight)
     simpa only [Finset.sum_const,Finset.card_univ,smul_eq_mul,mul_one] using hh
   let cost (fl:FlagDegree):=flagMixed fl first delay+
-    (flagMixed fl first unitYZFlag+flagMixed fl first unitAllFlag)+81096*flagMixed fl first unitYZFlag
+    (flagMixed fl first unitYZFlag+flagMixed fl first unitAllFlag)+81106*flagMixed fl first unitYZFlag
   have hsingle (g:RCN222.GeometricFactor K P.F):
       (KK K P.F P.selected P.seeds g).card≤cap+cost (CO K g):=by
     let S:=P.stage g
@@ -7597,14 +7598,14 @@ theorem packet_count
     have hd:=ENS S hfirst J hroute (CO K g) S.flag_support hsmall'
     have hz:=EJI S hfirst J hroute hproper (CO K g) S.flag_support
     have ht:=EEB S hfirst J hroute hproper (CO K g)
-      S.flag_support hsmall' 181049 P.D t r P.nodeCount (P.CVV g) (by decide) P.Dlow P.Dchar P.box
+      S.flag_support hsmall' 181039 P.D t r P.nodeCount (P.CVV g) (by decide) P.Dlow P.Dchar P.box
     have hh:=(FPI S hfirst J).trans (Nat.add_le_add hden (Nat.add_le_add hd (Nat.add_le_add hz ht)))
     exact hh.trans_eq (by dsimp only [cost];ring)
   have hcost:(∑ g:RCN222.GeometricFactor K P.F,cost (CO K g))≤cost ⟨t-y,y-r,r⟩:=by
     unfold cost
     simp only [Finset.sum_add_distrib,←Finset.mul_sum]
     exact Nat.add_le_add (Nat.add_le_add (hsum delay) (Nat.add_le_add (hsum unitYZFlag) (hsum unitAllFlag)))
-      (Nat.mul_le_mul_left 81096 (hsum unitYZFlag))
+      (Nat.mul_le_mul_left 81106 (hsum unitYZFlag))
   have htotal:P.seeds.card≤r*cap+cost ⟨t-y,y-r,r⟩:=by
     have hh:=P.seeds_cover.trans (Finset.sum_le_sum (fun g (_:g∈Finset.univ)=>hsingle g))
     simp only [Finset.sum_add_distrib,Finset.sum_const,Finset.card_univ,smul_eq_mul] at hh
@@ -7814,31 +7815,31 @@ theorem gates_mono (t y r b u l capT capY capR capB capU capL:ℕ)
   · apply lt_of_le_of_lt _ hZ
     dsimp only
     gcongr
-theorem DZN:Gates 7200 71 14 1088 4992 464832∧
-    GB.FU (pair 7200 71 14 1088 4992 464832)<3000000000000000:=by
+theorem DZN:Gates 9352 76 18 1344 5312 602560∧
+    GB.FU (pair 9352 76 18 1344 5312 602560)<4000000000000000:=by
   unfold Gates
   decide+kernel
 variable {K I:Type} [Field K] [CharP K 2130706433] [Fintype I]
 variable {x:I→K} {t y r:ℕ}
 theorem ESM (p:Parameters) (P:Packet x t y r)
     (hb:p.B≤256) (hu:p.U≤512) (hl:p.L≤4096) (hs:p.s≤64):
-    p.B+p.s*(r-1)≤1088∧p.U+p.s*(y-1)≤4992∧p.L+p.s*(t-1)≤464832:=by
+    p.B+p.s*(r-1)≤1344∧p.U+p.s*(y-1)≤5312∧p.L+p.s*(t-1)≤602560:=by
   have hr:=P.rhigh
   have hy:=P.yhigh
   have ht:=P.thigh
-  have hrr:p.s*(r-1)≤64*13:=Nat.mul_le_mul hs (by omega)
-  have hyy:p.s*(y-1)≤64*70:=Nat.mul_le_mul hs (by omega)
-  have htt:p.s*(t-1)≤64*7199:=Nat.mul_le_mul hs (by omega)
+  have hrr:p.s*(r-1)≤64*17:=Nat.mul_le_mul hs (by omega)
+  have hyy:p.s*(y-1)≤64*75:=Nat.mul_le_mul hs (by omega)
+  have htt:p.s*(t-1)≤64*9351:=Nat.mul_le_mul hs (by omega)
   omega
 theorem helper_count (p:Parameters) (nodes:I ↪ K) (P:Packet (nodes:I→K) t y r)
     (hb:p.B≤256) (hu:p.U≤512) (hl:p.L≤4096) (hs:p.s≤64)
     (Q:MvPolynomial (Fin 4) K) (hQ:ProperHelper p P.F Q r y t nodes P.u0 P.u1):
-    P.seeds.card<3000000000000000:=by
+    P.seeds.card<4000000000000000:=by
   obtain ⟨hr,hy,ht⟩:=ESM p P hb hu hl hs
-  have hg:=gates_mono t y r _ _ _ 7200 71 14 1088 4992 464832
+  have hg:=gates_mono t y r _ _ _ 9352 76 18 1344 5312 602560
     P.thigh P.yhigh P.rhigh hr hy ht DZN.1
   exact (AJR.helper_count p nodes P Q hQ hg).trans_lt
-    ((count_mono t y r _ _ _ 7200 71 14 1088 4992 464832
+    ((count_mono t y r _ _ _ 9352 76 18 1344 5312 602560
       P.thigh P.yhigh P.rhigh hr hy ht).trans_lt DZN.2)
 end
 end KY

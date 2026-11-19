@@ -1,3 +1,4 @@
+/- Apache-2.0. Built on the BitWonka 68.34 packet engine and Bome2017, Lucieno and 0xAndoroid contributions. Retuned for 81,095 errors. -/
 import Mathlib.Algebra.BigOperators.Field
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Algebra.BigOperators.Intervals

@@ -31,10 +31,10 @@ private theorem getIntermediateDegree6833 [Fintype F] {N : Type*} [Fintype N] (n
     (hc : ∀ e ∈ P.support, e 1≤s ∧ e 1+e 2+e 3≤U)
     (indexcap : ∀ e ∈ P.support, 2*e 1+e 3 ≤ 41)
     (sizes : ∀ e ∈ P.support, ∀ i, e i < Fintype.card F)
-    (hv : ∀ f : Polynomial F, f.natDegree≤133293 → ∀ z : F, ∀ S : Finset N, A≤S.card →
+    (hv : ∀ f : Polynomial F, f.natDegree≤133314 → ∀ z : F, ∀ S : Finset N, A≤S.card →
       (∀ i∈S, f.eval (nodes i)=u i) → SecondJetSpecialize.specialize f z P=0) :
     ∃ Q : MvPolynomial (Fin 4) F, Q≠0 ∧ Q.degreeOf 2 ≤ s ∧ weightedTotalDegree wt Q ≤ U ∧ weightedTotalDegree jetIndexWt Q ≤ 41 ∧
-      ∀ f : Polynomial F, f.natDegree≤133293 → ∀ S : Finset N, A≤S.card →
+      ∀ f : Polynomial F, f.natDegree≤133314 → ∀ S : Finset N, A≤S.card →
       (∀ i∈S, f.eval (nodes i)=u i) → differentialSpecialization (rename slot Q) f=0 := by
   classical
   obtain ⟨v,hv0⟩ : ∃ v, eval v P ≠ 0 := by
@@ -53,19 +53,19 @@ private theorem getIntermediateDegree6833 [Fintype F] {N : Type*} [Fintype N] (n
 
 theorem intermediatedegree6833_index {N : Type*} [Fintype N] (hn : Fintype.card N≤262144)
     (nodes : N ↪ KoalaBear.Ext6) (u : N → KoalaBear.Ext6) :
-    ∃ Q : MvPolynomial (Fin 4) KoalaBear.Ext6, Q≠0 ∧ Q.degreeOf 2 ≤ 19 ∧ weightedTotalDegree wt Q ≤ 134 ∧ weightedTotalDegree jetIndexWt Q ≤ 41 ∧
-      ∀ f : Polynomial KoalaBear.Ext6, f.natDegree≤133293 → ∀ S : Finset N, 181049≤S.card →
+    ∃ Q : MvPolynomial (Fin 4) KoalaBear.Ext6, Q≠0 ∧ Q.degreeOf 2 ≤ 19 ∧ weightedTotalDegree wt Q ≤ 132 ∧ weightedTotalDegree jetIndexWt Q ≤ 41 ∧
+      ∀ f : Polynomial KoalaBear.Ext6, f.natDegree≤133314 → ∀ S : Finset N, 181068≤S.card →
       (∀ i∈S, f.eval (nodes i)=u i) → differentialSpecialization (rename slot Q) f=0 := by
   obtain ⟨P,hp,hcaps,-,hvan⟩ := IntermediateDegree6833Profile.exists_profile_interpolant 0 hn nodes u (fun _ => 0)
-  apply getIntermediateDegree6833 nodes u 181049 19 134 P hp
+  apply getIntermediateDegree6833 nodes u 181068 19 132 P hp
   · intro e he
     exact ⟨(hcaps e he).2.1,(hcaps e he).2.2.1⟩
   · exact fun e he => (hcaps e he).1
   · intro e he i
     obtain ⟨_,_,_,ht,hx⟩ := hcaps e he
-    change e 1+e 2+e 3+e 4 ≤ 1219607 at ht
-    change e 0+133293*e 2+133292*e 3+133291*e 1 < _ at hx
-    have hcut : IntermediateDegree6833Profile.profileCutoff (IntermediateDegree6833Profile.jetProfile 0) (e 1) ≤ 181049*99 := Nat.sub_le _ _
+    change e 1+e 2+e 3+e 4 ≤ 1670971 at ht
+    change e 0+133314*e 2+133313*e 3+133312*e 1 < _ at hx
+    have hcut : IntermediateDegree6833Profile.profileCutoff (IntermediateDegree6833Profile.jetProfile 0) (e 1) ≤ 181068*98 := Nat.sub_le _ _
     rw [KoalaBear.card_ext6]
     change e i < (2130706433 : ℕ)^6
     have hi : i=0 ∨ i=1 ∨ i=2 ∨ i=3 ∨ i=4 := by omega

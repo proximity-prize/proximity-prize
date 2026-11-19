@@ -20,7 +20,7 @@ structure JetProfile where
   minimumOrder : ℕ
   deriving DecidableEq
 
-def jetProfile (_ : Fin 1) : JetProfile := ⟨99,41,19,134,1219607,0,1⟩
+def jetProfile (_ : Fin 1) : JetProfile := ⟨98,41,19,132,1670971,0,1⟩
 
 open scoped BigOperators
 open SecondJetRelaxedGlobalIndex
@@ -78,45 +78,45 @@ theorem topColumnActive_card_le (D : ℕ → ℕ) (w L B s U m : ℕ) :
   simpa [Target] using Fintype.card_le_of_injective embedding hinj
 
 def profileCutoff (p : JetProfile) (h : ℕ) : ℕ :=
-  p.order*181049 - SecondJetRelaxedDifferentiation.reserve
-    p.derivativeOrder p.minimumOrder h * 47758
+  p.order*181068 - SecondJetRelaxedDifferentiation.reserve
+    p.derivativeOrder p.minimumOrder h * 47756
 
 abbrev ProfileIndex (j : Fin 1) :=
   let p := jetProfile j
-  Index (profileCutoff p) 133293 p.totalCap p.secondCap p.slopeCap p.middleCap
+  Index (profileCutoff p) 133314 p.totalCap p.secondCap p.slopeCap p.middleCap
 
 def profileLowerRank (p : JetProfile) : ℕ :=
   SecondJetRelaxedCounts.rankBound p.order p.totalCap p.secondCap p.slopeCap (p.middleCap-1)
 
 def profileTopRankBound (p : JetProfile) : ℕ :=
   ∑ h : Fin (p.slopeCap+1), ∑ r : Fin (p.secondCap-2*h.val+1),
-    liveTopWidth (profileCutoff p) 133293 p.middleCap p.order h.val r.val *
+    liveTopWidth (profileCutoff p) 133314 p.middleCap p.order h.val r.val *
       (p.totalCap+1-p.middleCap)
 
 def profileColumnCount (p : JetProfile) : ℕ :=
-  SecondJetRelaxedGlobalCounts.coefficientCount (profileCutoff p) 133293
+  SecondJetRelaxedGlobalCounts.coefficientCount (profileCutoff p) 133314
     p.totalCap p.secondCap p.slopeCap p.middleCap
 
 theorem profileMiddleCap_le_cutoff (j : Fin 1) (h : ℕ) :
     let p := jetProfile j
-    p.middleCap ≤ (profileCutoff p h+p.secondCap-1)/133293 := by
+    p.middleCap ≤ (profileCutoff p h+p.secondCap-1)/133314 := by
   let p := jetProfile j
   let cap := max p.derivativeOrder (p.minimumOrder-1)
   have hre : SecondJetRelaxedDifferentiation.reserve p.derivativeOrder p.minimumOrder h ≤ cap := by
     unfold SecondJetRelaxedDifferentiation.reserve cap
     split <;> omega
-  have hd : p.order*181049 - cap*47758 ≤ profileCutoff p h := by
+  have hd : p.order*181068 - cap*47756 ≤ profileCutoff p h := by
     unfold profileCutoff
-    exact Nat.sub_le_sub_left (Nat.mul_le_mul_right 47758 hre) _
-  have hl : p.middleCap ≤ (p.order*181049-cap*47758+p.secondCap-1)/133293 := by
+    exact Nat.sub_le_sub_left (Nat.mul_le_mul_right 47756 hre) _
+  have hl : p.middleCap ≤ (p.order*181068-cap*47756+p.secondCap-1)/133314 := by
     fin_cases j <;> decide
-  change p.middleCap ≤ (profileCutoff p h + p.secondCap - 1) / 133293
+  change p.middleCap ≤ (profileCutoff p h + p.secondCap - 1) / 133314
   exact hl.trans (Nat.div_le_div_right (Nat.sub_le_sub_right (Nat.add_le_add_right hd _) _))
 
 theorem profileLowerRank_eq_rankBound (j : Fin 1) :
     let p := jetProfile j
     SecondJetRelaxedGlobalMap.rankBound p.order p.totalCap p.secondCap p.slopeCap
-      (p.middleCap-1) (fun h => (profileCutoff p h+p.secondCap-1)/133293) =
+      (p.middleCap-1) (fun h => (profileCutoff p h+p.secondCap-1)/133314) =
         profileLowerRank p := by
   apply SecondJetRelaxedCounts.rankBound_eq_closed
   · fin_cases j <;> decide
@@ -176,11 +176,11 @@ def ProfileInterpolant (p : JetProfile) (nodes : N ↪ K) (u0 u1 : N → K)
   P ≠ 0 ∧
   (∀ e ∈ P.support, 2*e 1+e 3 ≤ p.secondCap ∧ e 1 ≤ p.slopeCap ∧
     e 1+e 2+e 3 ≤ p.middleCap ∧ e 1+e 2+e 3+e 4 ≤ p.totalCap ∧
-    e 0+133293*e 2+133292*e 3+133291*e 1 < profileCutoff p (e 1)) ∧
+    e 0+133314*e 2+133313*e 3+133312*e 1 < profileCutoff p (e 1)) ∧
   (∀ i, MvPolynomial.X 0^p.order ∣ substitute (K := K)
     (localize (nodes i) (u0 i) (u1 i) P)) ∧
-  ∀ d ≤ p.derivativeOrder, ∀ f : Polynomial K, f.natDegree ≤ 133293 →
-    ∀ z : K, ∀ S : Finset N, 181049 ≤ S.card →
+  ∀ d ≤ p.derivativeOrder, ∀ f : Polynomial K, f.natDegree ≤ 133314 →
+    ∀ z : K, ∀ S : Finset N, 181068 ≤ S.card →
       (∀ i ∈ S, f.eval (nodes i) = u0 i+u1 i*z) →
         specialize f z ((pderiv 1)^[d] P) = 0
 
@@ -193,14 +193,14 @@ theorem exists_profile_interpolant (j : Fin 1) (hN : Fintype.card N ≤ 262144)
   have hid := profileLowerRank_eq_rankBound j
   have hdim : Fintype.card N *
         SecondJetRelaxedGlobalMap.rankBound p.order p.totalCap p.secondCap p.slopeCap (p.middleCap-1)
-        (fun h => (profileCutoff p h+p.secondCap-1)/133293) +
+        (fun h => (profileCutoff p h+p.secondCap-1)/133314) +
       Fintype.card {i : ProfileIndex j // topColumnActive p.order i} <
       Fintype.card (ProfileIndex j) := by
     change SecondJetRelaxedGlobalMap.rankBound p.order p.totalCap p.secondCap p.slopeCap (p.middleCap-1)
-        (fun h => (profileCutoff p h+p.secondCap-1)/133293) = profileLowerRank p at hid
+        (fun h => (profileCutoff p h+p.secondCap-1)/133314) = profileLowerRank p at hid
     rw [hid]
     exact (Nat.add_le_add_right (Nat.mul_le_mul_right _ hN) _).trans_lt hgate
-  exact FrontierGenericJet.exists_jet_of_dimension 181049 133293 p.order p.secondCap p.slopeCap
+  exact FrontierGenericJet.exists_jet_of_dimension 181068 133314 p.order p.secondCap p.slopeCap
     p.middleCap p.totalCap p.derivativeOrder p.minimumOrder (by decide) (by decide) (by decide)
     (by norm_num [p,jetProfile]) (by norm_num [p,jetProfile]) (profileCutoff p) (fun _ => rfl)
     nodes u0 u1 hdim

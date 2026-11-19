@@ -1,8 +1,8 @@
-/- P33Base: window infrastructure for the 68.33 packet route (DRAFT, not compiled).
-   Engine names are those of the port (lower-6833p/ProximityPrize/SubmissionLower/Packet6833P0*.lean);
-   every declaration cites the 68.19 declaration it transcribes (B = lower-6819 CoreB.lean, A = CoreA.lean)
-   and the port location (P07:<line>).  Requires the engine patch of MANIFEST.md §3 (QE : Fin 51, CN : Fin 2,
-   fallback = CN 0, thigh 7200, helper bound 3e15, A-literals 181059/81085/...). -/
+/- Apache-2.0. 68.36 retuning by Bome2017. Packet construction from BitWonka’s PR 623 and the earlier Bome2017, Lucieno and 0xAndoroid proofs. -/
+/- BitWonka's shared receipt and packet infrastructure, retuned at 181039 agreements.
+   The admissible packet has slope at most 18, middle degree at most 76 and total
+   degree at most 9352. Its two helper branches cost at most 8,000,000,000,000,000 in total.
+   New windows may choose separate height certificates on different owner boxes. -/
 import ProximityPrize.SubmissionLower.Packet6833P07
 
 set_option Elab.async false
@@ -40,13 +40,13 @@ def receiptBox (code : ℕ) : Box :=
   ⟨x % 4096, x / 4096 % 4096, x / 4096 ^ 2 % 4096, x / 4096 ^ 3 % 4096,
    x / 4096 ^ 4 % 4096, x / 4096 ^ 5 % 4096, x / 4096 ^ 6 % 4096, x / 4096 ^ 7 % 4096⟩
 
-/-- `ADD.root` (B 31447) with the repaired root source `QE0 = ⟨38,444,16,7,52,0,1⟩`: `thi` 365 → 444. -/
-def root (m : ℕ) : Box := ⟨max 1 m, 7, 2 * max 1 m, 16, 0, 52, 0, 444⟩
+/-- `ADD.root` (B 31447) with the repaired root source `QE0 = ⟨38,450,16,7,52,0,1⟩`: `thi` 365 → 450. -/
+def root (m : ℕ) : Box := ⟨max 1 m, 7, 2 * max 1 m, 16, 0, 52, 0, 450⟩
 
 /-! ### The BandValid split (AED.BandValid, B 31190 / P07:4206) -/
 
 /-- Window-independent part: checked once per shared leaf. -/
-def BandPart (a : DR.Box) (m : ℕ) (i : Fin 51) (N : ℕ) : Prop :=
+def BandPart (a : DR.Box) (m : ℕ) (i : Fin 52) (N : ℕ) : Prop :=
   let p := QE.profile i
   0 < m ∧ m ≤ a.slo ∧ 2 * a.slo ≤ a.bhi ∧
   a.shi ≤ 64 ∧ a.bhi ≤ 256 ∧ a.uhi ≤ 512 ∧ a.thi ≤ 4096 ∧
@@ -55,23 +55,23 @@ def BandPart (a : DR.Box) (m : ℕ) (i : Fin 51) (N : ℕ) : Prop :=
   flagMixed (ownerFlag a) (flag p.B p.U p.L p.s) unitZFlag < 2130706433 ∧
   flagMixed (ownerFlag a) (flag p.B p.U p.L p.s) unitYZFlag < 2130706433
 
-instance (a : DR.Box) (m : ℕ) (i : Fin 51) (N : ℕ) : Decidable (BandPart a m i N) := by
+instance (a : DR.Box) (m : ℕ) (i : Fin 52) (N : ℕ) : Decidable (BandPart a m i N) := by
   unfold BandPart; infer_instance
 
 /-- Window part. -/
-def PricePart (fixed : Degrees) (a : DR.Box) (m low t y r cap : ℕ) (i : Fin 51) (useOwner : Bool)
+def PricePart (fixed : Degrees) (a : DR.Box) (m low t y r cap : ℕ) (i : Fin 52) (useOwner : Bool)
     (Bh Ch qd : ℕ) : Prop :=
   let p := QE.profile i
   let z := AED.pricing fixed a m useOwner
   a.thi < low ∧ p.L < low ∧ SN.Common z low t y r ∧ MG t y r ≤ cap ∧
   FormalR.H2.pairCostEH z 1 (ownerFlag a) (flag p.B p.U p.L p.s) Bh Ch qd t y r + leading z t y r ≤ cap
 
-instance (fixed : Degrees) (a : DR.Box) (m low t y r cap : ℕ) (i : Fin 51) (useOwner : Bool) (Bh Ch qd : ℕ) :
+instance (fixed : Degrees) (a : DR.Box) (m low t y r cap : ℕ) (i : Fin 52) (useOwner : Bool) (Bh Ch qd : ℕ) :
     Decidable (PricePart fixed a m low t y r cap i useOwner Bh Ch qd) := by
   unfold PricePart SN.Common ER.Gates; infer_instance   -- as the BandValid instance (B 31205) unfolds `SN.Common Gates`
 
 /-- The split is a re-association of the conjunction of `AED.BandValid` (after the engine patch to `Fin 53`). -/
-theorem bandValid_of_parts (fixed : Degrees) (a : DR.Box) (m low t y r cap : ℕ) (i : Fin 51)
+theorem bandValid_of_parts (fixed : Degrees) (a : DR.Box) (m low t y r cap : ℕ) (i : Fin 52)
     (useOwner : Bool) (N Bh Ch qd : ℕ) (hb : BandPart a m i N)
     (hp : PricePart fixed a m low t y r cap i useOwner Bh Ch qd) :
     AED.BandValid fixed a m low t y r cap i useOwner N Bh Ch qd := by
@@ -84,7 +84,7 @@ theorem bandValid_of_parts (fixed : Degrees) (a : DR.Box) (m low t y r cap : ℕ
 /-- Window-free test. Kinds 0 (native) and 1 (linear) have no band part. -/
 def bandTest (m code : ℕ) : Bool :=
   if code % 4 = 2 then
-    if h : code / 4 % 64 < 51 then decide (BandPart (receiptBox code) m ⟨code / 4 % 64, h⟩ (code / 131072 % 65536))
+    if h : code / 4 % 64 < 52 then decide (BandPart (receiptBox code) m ⟨code / 4 % 64, h⟩ (code / 131072 % 65536))
     else false
   else true
 
@@ -95,7 +95,7 @@ def priceTest (W : Window) (m code : ℕ) : Bool :=
   if code % 4 = 0 then BH.check .native (degrees OZ.fallback) a m W.low W.t W.y W.r W.cap
   else if code % 4 = 1 then decide (LinearValid a W.low W.t W.y W.r W.cap)
   else if code % 4 = 2 then
-    if h : code / 4 % 64 < 51 ∧ code / 512 % 16 < 2 then
+    if h : code / 4 % 64 < 52 ∧ code / 512 % 16 < 2 then
       decide ((CN.profile ⟨code / 512 % 16, h.2⟩).L < W.low ∧
         PricePart (degrees ⟨code / 512 % 16, h.2⟩) a m W.low W.t W.y W.r W.cap ⟨code / 4 % 64, h.1⟩
           (code / 256 % 2 = 1) W.Bh W.Ch W.qd)
@@ -146,8 +146,8 @@ def WindowCount (W : Window) : Prop :=
     (P : DU.Packet (nodes : I → K) W.t W.y W.r),
     W.low ≤ wt ProximityPrize.SubmissionLower.RCN156.residualTotalWeights P.F → P.seeds.card ≤ W.cap
 
-/- Transcription of `from_sources` (B 31517): `ADD.root` → `root`, `2985 < low` → `912 < low`
-(BLH after the fallback patch), root profile `Profile S 16 52 365 7 0 1` → `… 444 …`. -/
+/- Transcription of `from_sources` (B 31517): `ADD.root` → `root`, `2985 < low` → `934 < low`
+(BLH after the fallback patch), root profile `Profile S 16 52 365 7 0 1` → `… 450 …`. -/
 section Sources
 -- the 68.19 context of `from_sources` (B 31497-31507): these opens make the 68.19 short names resolve to the
 -- port's declarations (GZ.ADG, GZ.AHY, GZ.Profile, NX.ADQ, LK.NT, LK.QC, YY.AVL, CB._Q15, CB.order,
@@ -157,18 +157,18 @@ open ProximityPrize.SubmissionLower.MovingFiberThreeSources6811 (Source Source.d
 open ProximityPrize.SubmissionLower.SecondJetCoefficients (asS)
 open ProximityPrize.SubmissionLower.SecondJetCarrierDichotomy (ratio)
 
-/-- Transcription of `from_sources` (B 31517-31552). Changes: `ADD.root` → `root` (thi 365 → 444),
-`2985 < low` → `912 < low` (patched `OZ.BLH`), root profile `Profile S 16 52 444 7 0 1`. -/
-theorem from_sources {t y r cap low : ℕ} (hLow : 1700 < low) (nodes : I ↪ K) (hI : Fintype.card I = 262144)
+/-- Transcription of `from_sources` (B 31517-31552). Changes: `ADD.root` → `root` (thi 365 → 450),
+`2985 < low` → `934 < low` (patched `OZ.BLH`), root profile `Profile S 16 52 450 7 0 1`. -/
+theorem from_sources {t y r cap low : ℕ} (hLow : 934 < low) (nodes : I ↪ K) (hI : Fintype.card I = 262144)
     (P : DU.Packet (nodes : I → K) t y r) [Fact (Irreducible P.F)]
     (hFT : low ≤ wt ProximityPrize.SubmissionLower.RCN156.residualTotalWeights P.F)
-    (S : ProximityPrize.SubmissionLower.MovingFiberThreeSources6811.Source P.F) (hS : GZ.Profile S 16 52 444 7 0 1)
-    (hcap : 6000000000000000 ≤ cap) (hid : MG t y r ≤ cap)
+    (S : ProximityPrize.SubmissionLower.MovingFiberThreeSources6811.Source P.F) (hS : GZ.Profile S 16 52 450 7 0 1)
+    (hcap : 8000000000000000 ≤ cap) (hid : MG t y r ≤ cap)
     (hcov : ∀ m, 0 < m → m ≤ 7 → PA.Covered m (OZ.Valid m low t y r cap) (root m)) :
     P.seeds.card ≤ cap := by
   classical
   have hchar : P.F.degreeOf 2 < 2130706433 := P.IZ.2.1.trans_lt (by have := P.rhigh; omega)
-  have hST : S.T = 444 := hS.2.2.1
+  have hST : S.T = 450 := hS.2.2.1
   have hs := ADG P.F S (by rw [hST]; omega) P.rdegree hchar (by rw [hS.2.2.2.2.1]; decide)
   have hpow : (Polynomial.X - Polynomial.C (ratio (carrierMap P.F) P.F)) ^ 1 ∣ QC (carrierMap P.F) S.P := by
     change (Polynomial.X - Polynomial.C (ratio (carrierMap P.F) P.F)) ^ 1 ∣ (asS S.P).map (carrierMap P.F)
@@ -195,23 +195,23 @@ theorem from_sources {t y r cap low : ℕ} (hLow : 1700 < low) (nodes : I ↪ K)
   exact OZ.BLH nodes hI P hFT hLow hcap hid J hJ horder a ha rfl hJne hJroot hvalid
 
 /-- Transcription of the window `packet_count` (B 31553-31565), generic in the window: the root source from
-`VT` at the repaired QE0 (`QE.q0 = ⟨38,444,16,7,52,0,1⟩`, kernel 36757570, P33Profiles1), the helper branch by
+`VT` at the repaired QE0 (`QE.q0 = ⟨38,450,16,7,52,0,1⟩`, kernel 8100658, P33Profiles1), the helper branch by
 `KY.helper_count` with the patched bound `< 3·10^15`. The three `VT` size arguments are discharged as in
 `GI.AGF` (B 30725-30727). -/
-theorem window_count (W : Window) (hLow : 1700 < W.low) (hcap : 6000000000000000 ≤ W.cap)
+theorem window_count (W : Window) (hLow : 934 < W.low) (hcap : 8000000000000000 ≤ W.cap)
     (hid : MG W.t W.y W.r ≤ W.cap)
     (hcov : ∀ m, 0 < m → m ≤ 7 → PA.Covered m (OZ.Valid m W.low W.t W.y W.r W.cap) (root m)) :
     WindowCount W := by
   intro K I _ _ _ nodes hI P hFT
   classical
   letI : Fact (Irreducible P.F) := ⟨P.irreducible⟩
-  rcases VT QE.q0 QE.shape_q0 36757570 (by decide) QE.dimension_q0 nodes P.u0 P.u1 hI P.F P.irreducible
-      (by change 444 < _; omega) W.r W.y W.t (by have := P.rlow; omega)
+  rcases VT QE.q0 QE.shape_q0 8100658 (by decide) QE.dimension_q0 nodes P.u0 P.u1 hI P.F P.irreducible
+      (by change 450 < _; omega) W.r W.y W.t (by have := P.rlow; omega)
       (by have := P.rlow; have := P.ylow; omega) (by have := P.rlow; have := P.ylow; have := P.yt; omega)
       ⟨P.r_weight, P.y_weight, P.total_weight⟩ with ⟨Q, hQ⟩ | ⟨S, hS⟩
   · have hsmall : (QE.q0).B ≤ 256 ∧ (QE.q0).U ≤ 512 ∧ (QE.q0).L ≤ 4096 ∧ (QE.q0).s ≤ 64 := by decide
     have hh := KY.helper_count QE.q0 nodes P hsmall.1 hsmall.2.1 hsmall.2.2.1 hsmall.2.2.2 Q hQ
-    -- hh : P.seeds.card < 3000000000000000 (patched DZN bound, MANIFEST §3.1)
+    -- hh : P.seeds.card < 4000000000000000 (patched DZN bound, MANIFEST §3.1)
     omega
   · exact from_sources hLow nodes hI P hFT S hS hcap hid hcov
 

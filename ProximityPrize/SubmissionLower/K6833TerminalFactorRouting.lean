@@ -106,7 +106,7 @@ theorem route_regular_factor [CharP K 2130706433]
     (large.one_le_s.trans (large.s_le_ys.trans large.ys_le_total))
     ⟨hlarge.s_weight, hlarge.ys_weight, hlarge.total_weight⟩
 
-def terminalScale : ℕ := 62705875769460
+def terminalScale : ℕ := 62736297596280
 
 def jetFlagCharge (cuts : TailCorrections) (f : Envelope) (cfg : Fin 3 → JetProfile) (left : FlagDegree) : ℕ :=
   ((List.finRange 3).map
@@ -140,7 +140,7 @@ theorem jetFlagCharge_mono (cuts : TailCorrections) (f : Envelope) (cfg : Fin 3 
   exact Nat.add_le_add (Nat.add_le_add (Nat.mul_le_mul_left _ hpq.2.2)
     (Nat.mul_le_mul_left _ hpq.2.1)) (Nat.mul_le_mul_left _ hpq.1)
 
-theorem rawCharge_increments (cuts : TailCorrections) (f : Envelope) (left : FlagDegree) :
+private theorem rawCharge_increments (cuts : TailCorrections) (f : Envelope) (left : FlagDegree) :
     rawChargeWithCorrections cuts f left =
       left.zOnly * rawChargeWithCorrections cuts f unitZFlag +
       left.yz * rawChargeWithCorrections cuts f unitYZFlag +

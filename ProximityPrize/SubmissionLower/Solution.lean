@@ -1,8 +1,12 @@
-import ProximityPrize.SubmissionLower.Mid6833Candidate6833
+/- KoalaBear 68.36 by Bome2017. Builds on Lucieno's interpolation and stage accounting,
+BitWonka's public packet construction, and earlier work credited in the retained modules.
+Packet6833P01 retains the 81,095-error header from an earlier replay and preserves its original
+declarations. The score-dependent modules here use 81,105 errors. -/
+import ProximityPrize.SubmissionLower.Original6836
 
 namespace ProximityPrize.Benchmark
-theorem candidate : ProtocolClaim 6835 332167720 1073741824 :=
-  ProximityPrize.SubmissionLower.Intermediate6833.candidate
+theorem candidate : ProtocolClaim 6836 332210175 1073741824 :=
+  ProximityPrize.SubmissionLower.KoalaOriginal6836.protocol
 #print axioms candidate
 end ProximityPrize.Benchmark
 

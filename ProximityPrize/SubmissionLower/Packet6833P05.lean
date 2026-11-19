@@ -1,3 +1,4 @@
+/- Apache-2.0. 68.36 retuning by Bome2017. Packet construction from BitWonka’s PR 623 and the earlier Bome2017, Lucieno and 0xAndoroid proofs. -/
 import Mathlib.Algebra.BigOperators.Field
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Algebra.BigOperators.Intervals

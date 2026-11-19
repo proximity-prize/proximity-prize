@@ -1,3 +1,4 @@
+/- Apache-2.0. 68.36 retuning by Bome2017. Packet construction from BitWonka’s PR 623 and the earlier Bome2017, Lucieno and 0xAndoroid proofs. -/
 import Mathlib.Algebra.BigOperators.Field
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Algebra.BigOperators.Intervals
@@ -239,7 +240,7 @@ theorem GHJ [Fintype I] (nodes:I ↪ K) (hI:Fintype.card I=262144)
     (h:Contains a (point J)) (hm:0<m)
     (hroot:((SecondJetCoefficients.asS J).map (carrierMap P.F)).rootMultiplicity (SecondJetCarrierDichotomy.ratio (carrierMap P.F) P.F)=m)
     (hJne:(SecondJetCoefficients.asS J).map (carrierMap P.F)≠0)
-    (hJF:a.thi<wt RCN156.residualTotalWeights P.F) (hcap:3000000000000000≤cap)
+    (hJF:a.thi<wt RCN156.residualTotalWeights P.F) (hcap:4000000000000000≤cap)
     (hgood:GoodPower i a m)
     (hchecks: ∀e,e<(powerBox (CN.profile i) a m).q→
       active (CN.profile i) a m e→
@@ -378,7 +379,7 @@ theorem BLQ (nodes:I ↪ K) (hI:Fintype.card I=262144)
     (P:Packet (nodes:I→K) t y r) [Fact (Irreducible P.F)]
     (fixedS:MovingFiberThreeSources6811.Source P.F) (fixed:Degrees) (hFixed:Fits fixedS fixed)
     (c:Choice) (a:Box) (m low cap:ℕ)
-    (hloF:low≤wt RCN156.residualTotalWeights P.F) (hlo:1700<low) (hcap:3000000000000000≤cap)
+    (hloF:low≤wt RCN156.residualTotalWeights P.F) (hlo:∀ u : Bool, c = .derivative u → 1700<low) (hcap:4000000000000000≤cap)
     (J:SecondJetSupport.Poly (K:=K)) (hJ:Irreducible J) (h:Contains a (point J))
     (hroot:((SecondJetCoefficients.asS J).map (carrierMap P.F)).rootMultiplicity (SecondJetCarrierDichotomy.ratio (carrierMap P.F) P.F)=m)
     (hJne:(SecondJetCoefficients.asS J).map (carrierMap P.F)≠0)
@@ -400,7 +401,7 @@ theorem BLQ (nodes:I ↪ K) (hI:Fintype.card I=262144)
     have hh:=of_decide_eq_true hc.2
     obtain ⟨S,hS⟩:=hsrc useOwner
     exact GBB P S _ hS (hh.2.1.1.trans_le hloF) hh.2.1.2.1 hh.2.1.2.2
-      (hlo.trans_le hloF) J hJ a m cap h hh.1 (hms.trans h.1) hsmall hsChar hroot
+      ((hlo useOwner rfl).trans_le hloF) J hJ a m cap h hh.1 (hms.trans h.1) hsmall hsChar hroot
       ⟨hh.2.2.1,hh.2.2.2.1⟩ hh.2.2.2.2
   | auxiliary useOwner i=>
     have hh:=hc.2
@@ -740,7 +741,7 @@ theorem CZX {t y r:ℕ} (nodes:I ↪ K)
     (hslope: ∀e∈J.support,e 1≤p.s)
     (hproper: ¬P.F∣SecondJetClearedHelper.helper J P.F (p.s-m) m)
     (hb:p.B≤256) (hu:p.U≤512) (hl:p.L≤4096) (hs:p.s≤64):
-    P.seeds.card<3000000000000000∨
+    P.seeds.card<4000000000000000∨
       ∃gamma∈P.seeds,SecondJetSpecialize.specialize (P.selected gamma) gamma
         ((MvPolynomial.pderiv 1)^[m] J)≠0:=by
   classical
@@ -764,14 +765,14 @@ theorem CZX {t y r:ℕ} (nodes:I ↪ K)
       wt RCN156.residualYSWeights (SecondJetClearedHelper.helper J P.F (p.s-m) m)≤p.U+p.s*(y-1)∧
       wt RCN156.residualTotalWeights (SecondJetClearedHelper.helper J P.F (p.s-m) m)≤p.L+p.s*(t-1):=by omega
   obtain ⟨hr,hy,ht⟩:=KY.ESM p P hb hu hl hs
-  have hg:=KY.gates_mono t y r _ _ _ 7200 71 14 1088 4992 464832
+  have hg:=KY.gates_mono t y r _ _ _ 9352 76 18 1344 5312 602560
     P.thigh P.yhigh P.rhigh hr hy ht KY.DZN.1
   have hc:=ER.DHG P (SecondJetClearedHelper.helper J P.F (p.s-m) m)
     _ _ _ (P.irreducible.isRelPrime_iff_not_dvd.mpr hproper) hweights' hg
     (fun gamma hgamma=>SecondJetClearedHelper.helper_vanish J P.F (p.s-m) m
       (SecondJetHelperWeights.asS_derivative_degree J p.s m hslope) (P.selected gamma) gamma
       (P.solution gamma hgamma) (hzero gamma hgamma))
-  exact hc.trans_lt ((KY.count_mono t y r _ _ _ 7200 71 14 1088 4992 464832
+  exact hc.trans_lt ((KY.count_mono t y r _ _ _ 9352 76 18 1344 5312 602560
     P.thigh P.yhigh P.rhigh hr hy ht).trans_lt KY.DZN.2)
 def maximumOwner:Parameters:=⟨65,4096,256,64,512,0,1⟩
 theorem ENC:Shape maximumOwner:=by constructor<;>decide+kernel
@@ -783,7 +784,7 @@ theorem CMA {t y r:ℕ} (nodes:I ↪ K)
     (hne:(SecondJetCoefficients.asS J).map (DC.carrierMap P.F)≠0)
     (hm:((SecondJetCoefficients.asS J).map (DC.carrierMap P.F)).rootMultiplicity
       (SecondJetCarrierDichotomy.ratio (DC.carrierMap P.F) P.F)=m):
-    P.seeds.card<3000000000000000∨
+    P.seeds.card<4000000000000000∨
       ∃gamma∈P.seeds,SecondJetSpecialize.specialize (P.selected gamma) gamma
         ((MvPolynomial.pderiv 1)^[m] J)≠0:=by
   have hS: ∀e∈J.support,e 1≤64:=fun e he=>(MvPolynomial.monomial_le_degreeOf 1 he).trans horder
@@ -913,8 +914,8 @@ theorem DYW
     (hag: ∀i∈s,f.eval (nodes i)=u0 i+u1 i*z)
     (hne:SecondJetSpecialize.specialize f z ((MvPolynomial.pderiv 1)^[m] J)≠0)
     (hdegree:(SecondJetSpecialize.specialize f z ((MvPolynomial.pderiv 1)^[m] J)).natDegree≤nu-m*131069)
-    (hnu:m*131069≤nu) (hcard:s.card=181049) (hD:D+q*nu=n*181049)
-    (hQ:weightedTotalDegree CW.codeWeights Q<D-q*m*49980):
+    (hnu:m*131069≤nu) (hcard:s.card=181039) (hD:D+q*nu=n*181039)
+    (hQ:weightedTotalDegree CW.codeWeights Q<D-q*m*49970):
     SecondJetSpecialize.specialize f z Q=0:=by
   classical
   let mu (i:I):=(NS.outer (nodes i) (u0 i) (u1 i) J).rootMultiplicity 0
@@ -925,7 +926,7 @@ theorem DYW
       (NS.outer (nodes i) (u0 i) (u1 i) J).pow_rootMultiplicity_dvd 0
   have hloss:=ASN.DIJ nodes u0 u1 J f z s
     mu m (nu-m*131069) hag (fun i _=>hmu i) hne hdegree
-  have hmass:=ALQ.DZT s mu q m n 181049 131069 49980 nu
+  have hmass:=ALQ.DZT s mu q m n 181039 131069 49970 nu
     (by decide) hcard hnu hloss
   let R:=SecondJetSpecialize.specialize f z Q
   by_contra hR
@@ -956,7 +957,7 @@ theorem DYW
         rw [TA.BLT]
         exact le_weightedTotalDegree CW.codeWeights he)
     simpa only [Function.iterate_zero,id_eq,Nat.zero_mul,Nat.sub_zero] using hh
-  change n*181049≤(∑ i∈s,ord i)+q*nu+q*m*49980 at hmass
+  change n*181039≤(∑ i∈s,ord i)+q*nu+q*m*49970 at hmass
   omega
 end
 end BSV
@@ -992,9 +993,9 @@ theorem FIN {t y r:ℕ}
     (hJne:(SecondJetCoefficients.asS J).map (carrierMap P.F)≠0)
     (hroot:((SecondJetCoefficients.asS J).map (carrierMap P.F)).rootMultiplicity (SecondJetCarrierDichotomy.ratio (carrierMap P.F) P.F)=m)
     (hnu:weightedTotalDegree CW.codeWeights J=nu)
-    (hD:D+q*nu=n*181049)
-    (hQcode:weightedTotalDegree CW.codeWeights Q<D-q*m*49980):
-    P.F∣SecondJetClearedHelper.helper Q P.F 64 0∨P.seeds.card<6000000000000000:=by
+    (hD:D+q*nu=n*181039)
+    (hQcode:weightedTotalDegree CW.codeWeights Q<D-q*m*49970):
+    P.F∣SecondJetClearedHelper.helper Q P.F 64 0∨P.seeds.card<8000000000000000:=by
   classical
   by_cases hproper:P.F∣SecondJetClearedHelper.helper Q P.F 64 0
   · exact Or.inl hproper
@@ -1007,7 +1008,7 @@ theorem FIN {t y r:ℕ}
   let nonzeroPacket:=P.restrict nonzeroSeeds hUsub
   letI:Fact (Irreducible zeroPacket.F):=⟨zeroPacket.irreducible⟩
   letI:Fact (Irreducible nonzeroPacket.F):=⟨nonzeroPacket.irreducible⟩
-  have hZsmall:zeroSeeds.card<3000000000000000:=by
+  have hZsmall:zeroSeeds.card<4000000000000000:=by
     rcases CZX nodes zeroPacket maximumOwner ENC Q 0
         (by decide) hQs.2 (fun e he=>(MvPolynomial.monomial_le_degreeOf 1 he).trans hQs.1)
         hproper (by decide) (by decide) (by decide) (by decide)
@@ -1015,7 +1016,7 @@ theorem FIN {t y r:ℕ}
     · exact hs
     · have hz:=(Finset.mem_filter.mp hg).2
       exact False.elim (hn (by simpa only [zeroPacket,Packet.restrict,Function.iterate_zero,id_eq] using hz))
-  have hUsmall:nonzeroSeeds.card<3000000000000000:=by
+  have hUsmall:nonzeroSeeds.card<4000000000000000:=by
     rcases CMA nodes nonzeroPacket J m hms hJs.1 hJs.2 hJne hroot
         with hs | ⟨g,hg,hn⟩
     · exact hs
@@ -1295,7 +1296,7 @@ theorem powSpace_le (V:Submodule K (SecondJetSupport.Poly (K:=K))) (J:SecondJetS
 @[simp] theorem GVA (V:Submodule K (SecondJetSupport.Poly (K:=K))) (J:SecondJetSupport.Poly (K:=K)):
  powSpace V J 0=V:=by ext P;simp [powSpace]
 def bandCount (p:SourceCaps) (a:OwnerBox) (m e:ℕ):ℕ:=
- BLM.count (p.C-e*(131071*a.loU-a.hiB)) (e*m*49980)
+ BLM.count (p.C-e*(131071*a.loU-a.hiB)) (e*m*49970)
    (p.T-e*a.loT) (p.B-e*a.loB) (p.S-e*a.loS) (p.U-e*a.loU)
 theorem EAJ (p:SourceCaps) (a:OwnerBox) (e:ℕ)
  (P J Q:SecondJetSupport.Poly (K:=K)) (hJ:J≠0) (hQ:Q≠0) (heq:P=J^e*Q)
@@ -1323,7 +1324,7 @@ theorem step
  (V:Submodule K (SecondJetSupport.Poly (K:=K))) [Module.Finite K V]
  (hb: ∀P∈V,Bounds p P) (J:SecondJetSupport.Poly (K:=K)) (hJ:J≠0) (ha:Covers a J)
  (hlow: ∀(P Q:SecondJetSupport.Poly (K:=K)),P∈V→P=J^e*Q→Q≠0→
-   weightedTotalDegree codeWeights Q<p.C-e*weightedTotalDegree codeWeights J-e*m*49980→J∣Q):
+   weightedTotalDegree codeWeights Q<p.C-e*weightedTotalDegree codeWeights J-e*m*49970→J∣Q):
  Module.finrank K (powSpace V J e)≤bandCount p a m e+Module.finrank K (powSpace V J (e+1)):=by
  classical
  let W:=powSpace V J e
@@ -1332,7 +1333,7 @@ theorem step
  let Q:=BKC W J e hJ hd
  have heq (v:W):v.val=J^e*Q v:=RV W J e hd v
  let D:=p.C-e*weightedTotalDegree codeWeights J
- let width:=e*m*49980
+ let width:=e*m*49970
  let idx:=BLM.Index D width (p.T-e*a.loT) (p.B-e*a.loB) (p.S-e*a.loS) (p.U-e*a.loU)
  let ex:=BLM.exponent D width (p.T-e*a.loT) (p.B-e*a.loB) (p.S-e*a.loS) (p.U-e*a.loU)
  let proj:W→ₗ[K] (idx→K):=LinearMap.pi (fun i=>(MvPolynomial.lcoeff K (ex i)).comp Q)
@@ -1379,7 +1380,7 @@ theorem telescope
  (V:Submodule K (SecondJetSupport.Poly (K:=K))) [Module.Finite K V]
  (hb: ∀P∈V,Bounds p P) (J:SecondJetSupport.Poly (K:=K)) (hJ:J≠0) (ha:Covers a J)
  (hlow: ∀e<N,∀(P Q:SecondJetSupport.Poly (K:=K)),P∈V→P=J^e*Q→Q≠0→
-   weightedTotalDegree codeWeights Q<p.C-e*weightedTotalDegree codeWeights J-e*m*49980→J∣Q):
+   weightedTotalDegree codeWeights Q<p.C-e*weightedTotalDegree codeWeights J-e*m*49970→J∣Q):
  Module.finrank K V≤(∑ e∈Finset.range N,bandCount p a m e)+Module.finrank K (powSpace V J N):=by
  induction N with
  | zero=>
@@ -1430,7 +1431,7 @@ set_option maxHeartbeats 1500000
 variable {K I:Type} [Field K] [CharP K 2130706433] [Fintype I]
 theorem GHY {t y r:ℕ}
  (nodes:I ↪ K) (P:Packet (nodes:I→K) t y r) [Fact (Irreducible P.F)]
- (p:DA.SourceCaps) (n:ℕ) (hpC:p.C=n*181049)
+ (p:DA.SourceCaps) (n:ℕ) (hpC:p.C=n*181039)
  (hpSmall:p.B≤256∧p.U≤512∧p.T≤4096∧p.S≤64)
  (hFT:p.T<wt RCN156.residualTotalWeights P.F)
  (J:SecondJetSupport.Poly (K:=K)) (hJ:Irreducible J) (a:DR.Box) (ha:Contains a (point J))
@@ -1440,7 +1441,7 @@ theorem GHY {t y r:ℕ}
  (SJ SZ:MovingFiberThreeSources6811.Source P.F) (hSJ:SJ.P=J) (hSJd:1≤SJ.d)
  (z:Degrees) (hZ:Fits SZ z) (hZFT:z.T<wt RCN156.residualTotalWeights P.F)
  (hk:z.k<2130706433) (hg:Gates t y r (z.B-2*z.n0) (z.U-z.n0) (z.T-z.n0))
- (cap:ℕ) (hcap:6000000000000000≤cap) (hlarge:cap<P.seeds.card) (T0 Bh Ch qd nh:ℕ) (hT0:T0≤wt RCN156.residualTotalWeights P.F) (hcert:FormalR.H2.Certificate r y T0 Bh Ch qd nh)
+ (cap:ℕ) (hcap:8000000000000000≤cap) (hlarge:cap<P.seeds.card) (T0 Bh Ch qd nh:ℕ) (hT0:T0≤wt RCN156.residualTotalWeights P.F) (hcert:FormalR.H2.Certificate r y T0 Bh Ch qd nh)
  (hidentity:MG t y r≤cap)
  (hgeo:flagMixed (ownerFlag a) (flag p.B p.U p.T p.S) unitZFlag<2130706433∧
    flagMixed (ownerFlag a) (flag p.B p.U p.T p.S) unitYZFlag<2130706433∧
@@ -1448,7 +1449,7 @@ theorem GHY {t y r:ℕ}
  (e:ℕ) (T Q:SecondJetSupport.Poly (K:=K))
  (heq:T=J^e*Q) (hQ:Q≠0) (hb:DA.Bounds p T)
  (hjet: ∀i,MvPolynomial.X 0^n∣SecondJetDifferentiation.substitute (K:=K) (SecondJetGlobalSupport.localize (nodes i) (P.u0 i) (P.u1 i) T))
- (hcode:weightedTotalDegree codeWeights Q<p.C-e*weightedTotalDegree codeWeights J-e*m*49980):
+ (hcode:weightedTotalDegree codeWeights Q<p.C-e*weightedTotalDegree codeWeights J-e*m*49970):
  J∣Q:=by
  classical
  by_contra hnot
@@ -1480,7 +1481,7 @@ theorem GHY {t y r:ℕ}
  have hc:=hb.1
  rw [heq,weight_mul codeWeights _ _ (pow_ne_zero _ hJ.ne_zero) hQ,weight_pow codeWeights J hJ.ne_zero] at hc
  have henu:e*weightedTotalDegree codeWeights J≤p.C:=by omega
- have hD:p.C-e*weightedTotalDegree codeWeights J+e*weightedTotalDegree codeWeights J=n*181049:=by
+ have hD:p.C-e*weightedTotalDegree codeWeights J+e*weightedTotalDegree codeWeights J=n*181039:=by
    rw [Nat.sub_add_cancel henu,hpC]
  rcases AMK.FIN nodes P J T Q hJ.ne_zero e m n
      (weightedTotalDegree codeWeights J) (p.C-e*weightedTotalDegree codeWeights J) heq hjet
@@ -1539,7 +1540,7 @@ theorem packet_count {t y r:ℕ}
  (SJ SZ:MovingFiberThreeSources6811.Source P.F) (hSJ:SJ.P=J) (hSJd:1≤SJ.d)
  (z:Degrees) (hZ:Fits SZ z) (hZFT:z.T<wt RCN156.residualTotalWeights P.F)
  (hk:z.k<2130706433) (hg:Gates t y r (z.B-2*z.n0) (z.U-z.n0) (z.T-z.n0))
- (cap:ℕ) (hcap:6000000000000000≤cap) (T0 Bh Ch qd nh:ℕ) (hT0:T0≤wt RCN156.residualTotalWeights P.F) (hcert:FormalR.H2.Certificate r y T0 Bh Ch qd nh)
+ (cap:ℕ) (hcap:8000000000000000≤cap) (T0 Bh Ch qd nh:ℕ) (hT0:T0≤wt RCN156.residualTotalWeights P.F) (hcert:FormalR.H2.Certificate r y T0 Bh Ch qd nh)
  (hidentity:MG t y r≤cap)
  (hgeo:flagMixed (ownerFlag a) (flag p.B p.U p.L p.s) unitZFlag<2130706433∧
    flagMixed (ownerFlag a) (flag p.B p.U p.L p.s) unitYZFlag<2130706433∧
@@ -1557,7 +1558,7 @@ theorem packet_count {t y r:ℕ}
  have hcover:DA.Covers (powerBox p a m) J:=by
    exact ⟨ha.2.2.1,ha.2.2.2.1,ha.1,ha.2.2.2.2.1,ha.2.2.2.2.2.2.1⟩
  have hlow: ∀e<N,∀(T Q:SecondJetSupport.Poly (K:=K)),T∈V→T=J^e*Q→Q≠0→
-   weightedTotalDegree codeWeights Q<(caps p).C-e*weightedTotalDegree codeWeights J-e*m*49980→J∣Q:=by
+   weightedTotalDegree codeWeights Q<(caps p).C-e*weightedTotalDegree codeWeights J-e*m*49970→J∣Q:=by
    intro e he T Q hT heq hQ hcode
    exact DDV.GHY nodes P (caps p) p.m rfl hpSmall hFT J hJ a ha m hms hJs
      hJne hroot SJ SZ hSJ hSJd z hZ hZFT hk hg cap hcap hlarge T0 Bh Ch qd nh hT0 hcert hidentity hgeo
@@ -1585,10 +1586,10 @@ def p:Parameters:=⟨51,400,23,11,70,0,1⟩
 theorem shape:Shape p:=by constructor<;>decide+kernel
 theorem middle_p (h:ℕ) (hh:h≤11):70≤(p.cutoff h+23-1)/131071:=by
  interval_cases h<;>decide+kernel
-theorem coefficients:SecondJetRelaxedGlobalCounts.coefficientCount p.cutoff 131071 400 23 11 70=13493372594923:=by decide+kernel
+theorem coefficients:SecondJetRelaxedGlobalCounts.coefficientCount p.cutoff 131071 400 23 11 70=13491666205303:=by decide+kernel
 theorem rank:SecondJetRelaxedCounts.rankBound 51 400 23 11 70=51397405:=by decide+kernel
-theorem dimension:Dimension p 19851258603:=by
- exact AZ p 19851258603 13493372594923 51397405 (by decide) (by decide) (by decide) (by decide) (by decide) middle_p coefficients rank (by decide)
+theorem dimension:Dimension p 18144868983:=by
+ exact AZ p 18144868983 13491666205303 51397405 (by decide) (by decide) (by decide) (by decide) (by decide) middle_p coefficients rank (by decide)
 end AUA
 end SubmissionLower
 end ProximityPrize
@@ -1603,25 +1604,25 @@ set_option maxRecDepth 100000
 def p600:Parameters:=⟨51,600,23,11,70,0,1⟩
 theorem shape600:Shape p600:=by constructor<;>decide+kernel
 theorem middle600 (h:ℕ) (hh:h≤11):70≤(p600.cutoff h+23-1)/131071:=by interval_cases h<;>decide+kernel
-theorem GIT:SecondJetRelaxedGlobalCounts.coefficientCount p600.cutoff 131071 600 23 11 70=20772161161323:=by decide+kernel
+theorem GIT:SecondJetRelaxedGlobalCounts.coefficientCount p600.cutoff 131071 600 23 11 70=20769508007703:=by decide+kernel
 theorem rank600:SecondJetRelaxedCounts.rankBound 51 600 23 11 70=78773405:=by decide+kernel
-theorem dimension600:Dimension p600 122185681003:=by
- exact AZ p600 122185681003 20772161161323 78773405 (by decide) (by decide) (by decide) (by decide) (by decide) middle600 GIT rank600 (by decide)
+theorem dimension600:Dimension p600 119532527383:=by
+ exact AZ p600 119532527383 20769508007703 78773405 (by decide) (by decide) (by decide) (by decide) (by decide) middle600 GIT rank600 (by decide)
 def p1000:Parameters:=⟨51,1000,23,11,70,0,1⟩
 theorem shape1000:Shape p1000:=by constructor<;>decide+kernel
 theorem middle1000 (h:ℕ) (hh:h≤11):70≤(p1000.cutoff h+23-1)/131071:=by interval_cases h<;>decide+kernel
-theorem GDB:SecondJetRelaxedGlobalCounts.coefficientCount p1000.cutoff 131071 1000 23 11 70=35329738294123:=by decide+kernel
+theorem GDB:SecondJetRelaxedGlobalCounts.coefficientCount p1000.cutoff 131071 1000 23 11 70=35325191612503:=by decide+kernel
 theorem rank1000:SecondJetRelaxedCounts.rankBound 51 1000 23 11 70=133525405:=by decide+kernel
-theorem GXD:Dimension p1000 326854525803:=by
- exact AZ p1000 326854525803 35329738294123 133525405 (by decide) (by decide) (by decide) (by decide) (by decide) middle1000 GDB rank1000 (by decide)
+theorem GXD:Dimension p1000 322307844183:=by
+ exact AZ p1000 322307844183 35325191612503 133525405 (by decide) (by decide) (by decide) (by decide) (by decide) middle1000 GDB rank1000 (by decide)
 def profile (i:Fin 3):Parameters:=match i.val with
  | 0=>AUA.p
  | 1=>p600
  | _=>p1000
 def kernel (i:Fin 3):ℕ:=match i.val with
- | 0=>19851258603
- | 1=>122185681003
- | _=>326854525803
+ | 0=>18144868983
+ | 1=>119532527383
+ | _=>322307844183
 theorem shape (i:Fin 3):Shape (profile i):=by fin_cases i;exact AUA.shape;exact shape600;exact shape1000
 theorem dimension (i:Fin 3):Dimension (profile i) (kernel i):=by fin_cases i;exact AUA.dimension;exact dimension600;exact GXD
 end BWK
@@ -1671,7 +1672,7 @@ variable {K I:Type} [Field K] [CharP K 2130706433] [Fintype I]
 theorem CPT {t y r low cap m:ℕ}
  (nodes:I ↪ K) (hN:Fintype.card I=262144) (P:Packet (nodes:I→K) t y r) [Fact (Irreducible P.F)]
  (SZ:MovingFiberThreeSources6811.Source P.F) (fixed:Degrees) (hFixed:Fits SZ fixed)
- (hFT:low≤wt RCN156.residualTotalWeights P.F) (hcap:6000000000000000≤cap)
+ (hFT:low≤wt RCN156.residualTotalWeights P.F) (hcap:8000000000000000≤cap)
  (J:SecondJetSupport.Poly (K:=K)) (hJ:Irreducible J)
  (a:DR.Box) (ha:Contains a (point J))
  (hroot:((SecondJetCoefficients.asS J).map (carrierMap P.F)).rootMultiplicity (SecondJetCarrierDichotomy.ratio (carrierMap P.F) P.F)=m)
@@ -1849,7 +1850,7 @@ variable {K I:Type} [Field K] [CharP K 2130706433] [Fintype I]
 theorem AGF {t y r:ℕ} (i:Fin 2) (nodes:I ↪ K) (hI:Fintype.card I=262144)
  (P:Packet (nodes:I→K) t y r)
  (hFT:(CN.profile i).L<wt RCN156.residualTotalWeights P.F):
- P.seeds.card<3000000000000000∨ ∃S:MovingFiberThreeSources6811.Source P.F,Fits S (degrees i):=by
+ P.seeds.card<4000000000000000∨ ∃S:MovingFiberThreeSources6811.Source P.F,Fits S (degrees i):=by
  let p:=CN.profile i
  rcases VT p (CN.shape i) (CN.kernel i)
    (CN.positive i) (CN.dimension i)
@@ -1954,7 +1955,7 @@ variable {K I:Type} [Field K] [CharP K 2130706433] [Fintype I]
 theorem AGF {t y r:ℕ} (i:Fin 2) (nodes:I ↪ K) (hI:Fintype.card I=262144)
  (P:Packet (nodes:I→K) t y r)
  (hFT:(CN.profile i).L<wt RCN156.residualTotalWeights P.F):
- P.seeds.card<3000000000000000∨ ∃S:MovingFiberThreeSources6811.Source P.F,Fits S (degrees i):=by
+ P.seeds.card<4000000000000000∨ ∃S:MovingFiberThreeSources6811.Source P.F,Fits S (degrees i):=by
  let p:=CN.profile i
  rcases VT p (CN.shape i) (CN.kernel i)
    (CN.positive i) (CN.dimension i)
@@ -1976,7 +1977,7 @@ namespace QE
 open FF ZGL
 set_option maxHeartbeats 10000000
 set_option maxRecDepth 100000
-theorem small (i:Fin 51):(profile i).B≤256∧(profile i).U≤512∧(profile i).L≤4096∧(profile i).s≤64:=by fin_cases i<;>decide
+theorem small (i:Fin 52):(profile i).B≤256∧(profile i).U≤512∧(profile i).L≤4096∧(profile i).s≤64:=by fin_cases i<;>decide
 end QE
 end SubmissionLower
 end ProximityPrize
@@ -2006,7 +2007,7 @@ instance (p:DA.SourceCaps) (a:DA.OwnerBox):
  Decidable (DA.Impossible p a):=by unfold DA.Impossible;infer_instance
 def pricing (fixed:Degrees) (a:DR.Box) (m:ℕ) (useOwner:Bool):=if useOwner then ownerZ a m else fixed
 def BandValid (fixed:Degrees) (a:DR.Box) (m low t y r cap:ℕ)
- (i:Fin 51) (useOwner:Bool) (N Bh Ch qd:ℕ):Prop:=
+ (i:Fin 52) (useOwner:Bool) (N Bh Ch qd:ℕ):Prop:=
  let p:=profile i
  let z:=pricing fixed a m useOwner
  0<m∧m≤a.slo∧2*a.slo≤a.bhi∧
@@ -2018,18 +2019,18 @@ def BandValid (fixed:Degrees) (a:DR.Box) (m low t y r cap:ℕ)
  flagMixed (ownerFlag a) (flag p.B p.U p.L p.s) unitYZFlag<2130706433∧
  FormalR.H2.pairCostEH z 1 (ownerFlag a) (flag p.B p.U p.L p.s) Bh Ch qd t y r+leading z t y r≤cap
 instance (fixed:Degrees) (a:DR.Box) (m low t y r cap:ℕ)
- (i:Fin 51) (useOwner:Bool) (N Bh Ch qd:ℕ):Decidable (BandValid fixed a m low t y r cap i useOwner N Bh Ch qd):=by
+ (i:Fin 52) (useOwner:Bool) (N Bh Ch qd:ℕ):Decidable (BandValid fixed a m low t y r cap i useOwner N Bh Ch qd):=by
  unfold BandValid SN.Common Gates;infer_instance
 variable {K I:Type} [Field K] [CharP K 2130706433] [Fintype I]
 theorem CPT {t y r low cap m:ℕ}
  (nodes:I ↪ K) (hN:Fintype.card I=262144) (P:Packet (nodes:I→K) t y r) [Fact (Irreducible P.F)]
  (SZ:MovingFiberThreeSources6811.Source P.F) (fixed:Degrees) (hFixed:Fits SZ fixed)
- (hFT:low≤wt RCN156.residualTotalWeights P.F) (hcap:6000000000000000≤cap)
+ (hFT:low≤wt RCN156.residualTotalWeights P.F) (hcap:8000000000000000≤cap)
  (J:SecondJetSupport.Poly (K:=K)) (hJ:Irreducible J)
  (a:DR.Box) (ha:Contains a (point J))
  (hroot:((SecondJetCoefficients.asS J).map (carrierMap P.F)).rootMultiplicity (SecondJetCarrierDichotomy.ratio (carrierMap P.F) P.F)=m)
  (hJne:(SecondJetCoefficients.asS J).map (carrierMap P.F)≠0)
- (i:Fin 51) (useOwner:Bool) (N Bh Ch qd nh:ℕ) (hcert:FormalR.H2.Certificate r y low Bh Ch qd nh) (hc:BandValid fixed a m low t y r cap i useOwner N Bh Ch qd):
+ (i:Fin 52) (useOwner:Bool) (N Bh Ch qd nh:ℕ) (hcert:FormalR.H2.Certificate r y low Bh Ch qd nh) (hc:BandValid fixed a m low t y r cap i useOwner N Bh Ch qd):
  P.seeds.card≤cap:=by
  classical
  obtain ⟨hm,hms,h2,hs,hb,hu,ht,haf,hpf,hcommon,hid,hstop,hband,hz,huy,hgeo⟩:=hc
@@ -2110,14 +2111,14 @@ def fallback:Fin 2:=⟨0,by decide⟩
 def Valid (m low t y r cap:ℕ) (a:DR.Box):Prop:=
  BH.check .native (degrees fallback) a m low t y r cap=true∨
  LinearValid a low t y r cap∨
- ∃(i:Fin 51) (useOwner:Bool) (j:Fin 2) (N Bh Ch qd nh:ℕ),
+ ∃(i:Fin 52) (useOwner:Bool) (j:Fin 2) (N Bh Ch qd nh:ℕ),
    (CN.profile j).L<low∧FormalR.H2.Certificate r y low Bh Ch qd nh∧
    BandValid (degrees j) a m low t y r cap i useOwner N Bh Ch qd
 variable {K I:Type} [Field K] [CharP K 2130706433] [Fintype I]
 theorem BLH {m low t y r cap:ℕ}
  (nodes:I ↪ K) (hI:Fintype.card I=262144) (P:Packet (nodes:I→K) t y r) [Fact (Irreducible P.F)]
- (hFT:low≤wt RCN156.residualTotalWeights P.F) (hLow:1700<low)
- (hcap:6000000000000000≤cap) (hid:MG t y r≤cap)
+ (hFT:low≤wt RCN156.residualTotalWeights P.F) (hLow:934<low)
+ (hcap:8000000000000000≤cap) (hid:MG t y r≤cap)
  (J:SecondJetSupport.Poly (K:=K)) (hJ:Irreducible J) (horder:1≤order J)
  (a:DR.Box) (ha:Contains a (point J))
  (hroot:((SecondJetCoefficients.asS J).map (carrierMap P.F)).rootMultiplicity (SecondJetCarrierDichotomy.ratio (carrierMap P.F) P.F)=m)
@@ -2126,12 +2127,12 @@ theorem BLH {m low t y r cap:ℕ}
  (hc:Valid m low t y r cap a):P.seeds.card≤cap:=by
  rcases hc with hc | hc | ⟨i,useOwner,j,N,Bh,Ch,qd,nh,hL,hcert,hc⟩
  · have hL:(CN.profile fallback).L<low:=by
-     have hh:(CN.profile fallback).L=923:=by decide+kernel
+     have hh:(CN.profile fallback).L=934:=by decide+kernel
      omega
    rcases AGF fallback nodes hI P (hL.trans_le hFT) with hs | ⟨SZ,hZ⟩
    · exact hs.le.trans (by omega)
    exact (BH.BLQ nodes hI P SZ (degrees fallback) hZ .native a m low cap
-     hFT (by omega) (by omega) J hJ ha hroot hJne hc).trans (max_le hid le_rfl)
+     hFT (by intro u h; cases h) (by omega) J hJ ha hroot hJne hc).trans (max_le hid le_rfl)
  · exact CUP P hFT hid J hJ.ne_zero horder a ha hJroot hc
  · rcases AGF j nodes hI P (hL.trans_le hFT) with hs | ⟨SZ,hZ⟩
    · exact hs.le.trans (by omega)

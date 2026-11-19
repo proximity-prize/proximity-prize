@@ -13,15 +13,15 @@ set_option Elab.async false
 
 def n : ℕ := 262144
 def w : ℕ := 131071
-def errors : ℕ := 81095
+def errors : ℕ := 81076
 def agreements : ℕ := n-errors
 def gap : ℕ := agreements-w
 def prime : ℕ := 2130706433
-def multiplicity : ℕ := 255
-def yTotalCap : ℕ := 350
-def slopeCap : ℕ := 78
+def multiplicity : ℕ := 229
+def yTotalCap : ℕ := 316
+def slopeCap : ℕ := 70
 def weightedCap : ℕ := multiplicity*agreements
-def listBudget : ℕ := 37417093163
+def listBudget : ℕ := 30294781525
 def capY : ℕ := 1+2*w*yTotalCap
 def capR : ℕ := w*(2*slopeCap-1)
 def regularListNumerator : ℕ := (n-w)*(capY*slopeCap+capR*yTotalCap)
@@ -31,36 +31,36 @@ def listNumerator : ℕ := regularListNumerator+singularListCap*gap
 theorem list_numerator_fits : listNumerator < listBudget*gap := by decide
 
 private def coefficientRow (derivative : ℕ) : ℕ :=
-  let length := 351 - derivative
-  length * (46167495 - 131070 * derivative) -
+  let length := 317 - derivative
+  length * (41464572 - 131070 * derivative) -
     131071 * (length * (length - 1) / 2)
 
-private theorem coefficientRow_eq (derivative : ℕ) (hderivative : derivative < 79) :
-    (∑ value ∈ Finset.range 351,
-      min 1 (351 - value - derivative) *
-        (46167495 - 131071 * value - 131070 * derivative)) =
+private theorem coefficientRow_eq (derivative : ℕ) (hderivative : derivative < 71) :
+    (∑ value ∈ Finset.range 317,
+      min 1 (317 - value - derivative) *
+        (41464572 - 131071 * value - 131070 * derivative)) =
       coefficientRow derivative := by
   calc
-    _ = ∑ value ∈ Finset.range (351 - derivative),
-        min 1 (351 - value - derivative) *
-          (46167495 - 131071 * value - 131070 * derivative) := by
+    _ = ∑ value ∈ Finset.range (317 - derivative),
+        min 1 (317 - value - derivative) *
+          (41464572 - 131071 * value - 131070 * derivative) := by
       symm
       apply Finset.sum_subset (Finset.range_subset_range.mpr (Nat.sub_le _ _))
       intro value _ houtside
-      have hlength : 351 - derivative ≤ value :=
+      have hlength : 317 - derivative ≤ value :=
         Nat.le_of_not_gt (fun h => houtside (Finset.mem_range.mpr h))
-      have hzero : 351 - value - derivative = 0 := by omega
+      have hzero : 317 - value - derivative = 0 := by omega
       simp [hzero]
-    _ = ∑ value ∈ Finset.range (351 - derivative),
-        ((46167495 - 131070 * derivative) - 131071 * value) := by
+    _ = ∑ value ∈ Finset.range (317 - derivative),
+        ((41464572 - 131070 * derivative) - 131071 * value) := by
       apply Finset.sum_congr rfl
       intro value hvalue
       have hvalue' := Finset.mem_range.mp hvalue
-      have hone : min 1 (351 - value - derivative) = 1 := min_eq_left (by omega)
+      have hone : min 1 (317 - value - derivative) = 1 := min_eq_left (by omega)
       rw [hone, one_mul]
       omega
-    _ = (∑ _value ∈ Finset.range (351 - derivative), (46167495 - 131070 * derivative)) -
-        (∑ value ∈ Finset.range (351 - derivative), 131071 * value) := by
+    _ = (∑ _value ∈ Finset.range (317 - derivative), (41464572 - 131070 * derivative)) -
+        (∑ value ∈ Finset.range (317 - derivative), 131071 * value) := by
       apply Finset.sum_tsub_distrib
       intro value hvalue
       have hvalue' := Finset.mem_range.mp hvalue
@@ -71,13 +71,13 @@ private theorem coefficientRow_eq (derivative : ℕ) (hderivative : derivative <
       rfl
 
 private theorem coefficientCount_exact :
-    RCN279.coefficientCount weightedCap w yTotalCap slopeCap = 512270442736 := by
-  change (∑ value ∈ Finset.range 351, ∑ derivative ∈ Finset.range 79,
-    min 1 (351 - value - derivative) *
-      (46167495 - 131071 * value - 131070 * derivative)) = _
+    RCN279.coefficientCount weightedCap w yTotalCap slopeCap = 371593325013 := by
+  change (∑ value ∈ Finset.range 317, ∑ derivative ∈ Finset.range 71,
+    min 1 (317 - value - derivative) *
+      (41464572 - 131071 * value - 131070 * derivative)) = _
   rw [Finset.sum_comm]
   calc
-    _ = ∑ derivative ∈ Finset.range 79, coefficientRow derivative := by
+    _ = ∑ derivative ∈ Finset.range 71, coefficientRow derivative := by
       apply Finset.sum_congr rfl
       intro derivative hderivative
       exact coefficientRow_eq derivative (Finset.mem_range.mp hderivative)
@@ -99,30 +99,30 @@ private theorem seedlessInputCount_eq_mul {valueCap totalCap derivativeCap : ℕ
       rfl
 
 private def localRankRow (order : ℕ) : ℕ :=
-  let tail := 255 - order
-  (order + 1) * 79 -
-    if tail ≤ order ∧ tail ≤ 350 ∧ tail ≤ 78 then
-      (order - tail + 1) * (78 - tail + 1)
+  let tail := 229 - order
+  (order + 1) * 71 -
+    if tail ≤ order ∧ tail ≤ 316 ∧ tail ≤ 70 then
+      (order - tail + 1) * (70 - tail + 1)
     else 0
 
-private theorem localRankRow_eq (order : ℕ) (horder : order < 255) :
-    RCN285.seedlessContactRankBound (min order 350) 350 78 (255 - order) =
+private theorem localRankRow_eq (order : ℕ) (horder : order < 229) :
+    RCN285.seedlessContactRankBound (min order 316) 316 70 (229 - order) =
       localRankRow order := by
-  rw [min_eq_left (by omega : order ≤ 350)]
+  rw [min_eq_left (by omega : order ≤ 316)]
   unfold RCN285.seedlessContactRankBound RCN285.seedlessKernelLowerBound localRankRow
-  rw [seedlessInputCount_eq_mul (by omega : order + 78 ≤ 350)]
-  by_cases htail : 255 - order ≤ order ∧ 255 - order ≤ 350 ∧ 255 - order ≤ 78
-  · have hbox : order - (255 - order) + (78 - (255 - order)) ≤ 350 - (255 - order) := by
+  rw [seedlessInputCount_eq_mul (by omega : order + 70 ≤ 316)]
+  by_cases htail : 229 - order ≤ order ∧ 229 - order ≤ 316 ∧ 229 - order ≤ 70
+  · have hbox : order - (229 - order) + (70 - (229 - order)) ≤ 316 - (229 - order) := by
       omega
     simp only [ite_eq_left htail, seedlessInputCount_eq_mul hbox]
   · simp only [ite_eq_right htail]
 
 private theorem localRankBound_exact :
-    RCN279.localRankBound multiplicity yTotalCap slopeCap = 1954144 := by
-  change (∑ order ∈ Finset.range 255,
-    RCN285.seedlessContactRankBound (min order 350) 350 78 (255 - order)) = _
+    RCN279.localRankBound multiplicity yTotalCap slopeCap = 1417515 := by
+  change (∑ order ∈ Finset.range 229,
+    RCN285.seedlessContactRankBound (min order 316) 316 70 (229 - order)) = _
   calc
-    _ = ∑ order ∈ Finset.range 255, localRankRow order := by
+    _ = ∑ order ∈ Finset.range 229, localRankRow order := by
       apply Finset.sum_congr rfl
       intro order horder
       exact localRankRow_eq order (Finset.mem_range.mp horder)
@@ -610,9 +610,9 @@ theorem irs_scalar_finite_list_card_le
    (received:IRSProfile.Index → IRSProfile.Field)
    (L:Finset (IRSProfile.Index → IRSProfile.Field))
    (hcode:∀ c ∈ L, c ∈ IRSProfile.baseCode)
-   (hclose:∀ c ∈ L, 181049 ≤
+   (hclose:∀ c ∈ L, 181068 ≤
      (Finset.univ.filter (fun i => c i = received i)).card) :
-   L.card ≤ 37417093163:=by
+   L.card ≤ 30294781525:=by
  classical
  let D:=↥L
  let codeword:D → IRSProfile.baseCode:=fun c => ⟨c.1, hcode c.1 c.2⟩

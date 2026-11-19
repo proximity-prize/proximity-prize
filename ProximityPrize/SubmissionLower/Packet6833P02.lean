@@ -1,3 +1,4 @@
+/- Apache-2.0. 68.36 retuning by Bome2017. Packet construction from BitWonka’s PR 623 and the earlier Bome2017, Lucieno and 0xAndoroid proofs. -/
 import Mathlib.Algebra.BigOperators.Field
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Algebra.BigOperators.Intervals
@@ -7309,7 +7310,7 @@ local instance:DecidableEq Lower80811.Counting.I:=Classical.decEq Lower80811.Cou
 local instance:CharP LocatorBatchPhase6800.K 2130706433:=by
   simpa [RCN223.prime] using RCN128.FJ
 def helperPair (L YS S leftY leftR leftZ:ℕ):DG:=
-  ⟨262144,131071,181049,leftY,leftR,leftZ,YS,S,L⟩
+  ⟨262144,131071,181039,leftY,leftR,leftZ,YS,S,L⟩
 def LX (L YS S leftY leftR leftZ:ℕ):Prop:=
   let P:=helperPair L YS S leftY leftR leftZ
   1≤P.leftR∧P.leftY<2130706433∧P.leftR<2130706433∧
@@ -7423,14 +7424,14 @@ def EA.fuel (s:EA) (p:FlagDegree):ℕ:=
   min (s.totalCap/LocatorFactorAggregate.total p)
     (min (s.middleCap/LocatorFactorAggregate.middle p) (s.slopeCap/p.all))
 def EA.band (s:EA) (p:FlagDegree):ℕ:=
-  LH 49979 (LocatorFactorAggregate.total p) (LocatorFactorAggregate.middle p) p.all
+  LH 49969 (LocatorFactorAggregate.total p) (LocatorFactorAggregate.middle p) p.all
     (s.totalCap-LocatorFactorAggregate.total p) (s.middleCap-LocatorFactorAggregate.middle p)
     (s.slopeCap-p.all) (s.fuel p)
 def contactDec (p:FlagDegree):ℕ:=131071*LocatorFactorAggregate.middle p-p.all
 def EA.contactCap (s:EA) (p:FlagDegree):ℕ:=
   (131071*(s.middleCap+1)-s.slopeCap)-contactDec p
 def EA.bandThin (s:EA) (p:FlagDegree):ℕ:=
-  HN 131071 (s.contactCap p) 49979 (contactDec p)
+  HN 131071 (s.contactCap p) 49969 (contactDec p)
     (LocatorFactorAggregate.total p) (LocatorFactorAggregate.middle p) p.all
     (s.totalCap-LocatorFactorAggregate.total p) (s.middleCap-LocatorFactorAggregate.middle p)
     (s.slopeCap-p.all) (s.fuel p)
@@ -7488,7 +7489,7 @@ structure WZ (sound:YF)
     (u0 u1:Lower80811.Counting.I→LocatorBatchPhase6800.K) where
   D:ℕ
   m:ℕ
-  weighted:D≤m*181049∧m*49979<D
+  weighted:D≤m*181039∧m*49969<D
   shape:D+sound.source.slopeCap≤
     131071*(sound.source.middleCap+1)
   slope_le_m:sound.source.slopeCap≤m
@@ -7516,7 +7517,7 @@ noncomputable section
 set_option autoImplicit false
 set_option maxRecDepth 100000
 set_option maxHeartbeats 5000000
-def gap:ℕ:=49978
+def gap:ℕ:=49968
 end
 end AJN
 end SubmissionLower
@@ -7534,7 +7535,7 @@ noncomputable section
 set_option autoImplicit false
 set_option maxRecDepth 20000
 set_option maxHeartbeats 5000000
-def errors:ℕ:=81095
+def errors:ℕ:=81105
 def agreements:ℕ:=Pilot6832ScalarArithmetic.n-errors
 def gap:ℕ:=agreements-Koala6831MovingSources.weight
 def slopeCap:ℕ:=42
@@ -8480,9 +8481,9 @@ open RCN260 GB
 set_option autoImplicit false
 set_option maxHeartbeats 1400000
 def EIX (L U S Rcap Ycap Tcap qt qy qr:ℕ):Prop:=
-  2*131073*131071*((S:ℤ)*Ycap+(U:ℤ)*Rcap)+131073*((S:ℤ)-131071*U)≤49978*(qt:ℤ)∧
-  2*131073*131071*((L:ℤ)*Rcap+(S:ℤ)*Tcap)+131073*((S:ℤ)-131071*L)+81096*49978*S≤49978*(qy:ℤ)∧
-  2*131073*131071*((L:ℤ)*Ycap+(U:ℤ)*Tcap)+131073*((L:ℤ)+U)+81096*49978*U≤49978*(qr:ℤ)
+  2*131073*131071*((S:ℤ)*Ycap+(U:ℤ)*Rcap)+131073*((S:ℤ)-131071*U)≤49968*(qt:ℤ)∧
+  2*131073*131071*((L:ℤ)*Rcap+(S:ℤ)*Tcap)+131073*((S:ℤ)-131071*L)+81106*49968*S≤49968*(qy:ℤ)∧
+  2*131073*131071*((L:ℤ)*Ycap+(U:ℤ)*Tcap)+131073*((L:ℤ)+U)+81106*49968*U≤49968*(qr:ℤ)
 instance (L U S Rcap Ycap Tcap qt qy qr:ℕ):Decidable (EIX L U S Rcap Ycap Tcap qt qy qr):=by
   unfold EIX;infer_instance
 end MZ
@@ -8551,7 +8552,7 @@ set_option autoImplicit false
 set_option maxRecDepth 100000
 set_option maxHeartbeats 3000000
 variable {K N:Type*} [Field K] [Fintype N]
-def cutoff (m k n0 h:ℕ):ℕ:=m*181049-SecondJetRelaxedDifferentiation.reserve k n0 h*49980
+def cutoff (m k n0 h:ℕ):ℕ:=m*181039-SecondJetRelaxedDifferentiation.reserve k n0 h*49970
 end
 end BB
 end MergedPart0
@@ -8577,23 +8578,23 @@ theorem ATR (P:SecondJetSupport.Poly (K:=K)) (m k n0 d:ℕ)
     (hdm:d<m) (hdn:d<n0) (hfact:(d.factorial:K) ≠ 0)
     (hP: ∀e ∈ P.support,
       e 0+131071*e 2+131070*e 3+131069*e 1+
-        SecondJetRelaxedDifferentiation.reserve k n0 (e 1)*49980<m*181049)
+        SecondJetRelaxedDifferentiation.reserve k n0 (e 1)*49970<m*181039)
     (nodes:N ↪ K) (u0 u1:N→K)
     (hcontact: ∀i,MvPolynomial.X 0^m ∣ SecondJetDifferentiation.substitute (K:=K)
       (SecondJetGlobalSupport.localize (nodes i) (u0 i) (u1 i) P))
     (f:Polynomial K) (hf:f.natDegree≤131071) (z:K) (S:Finset N)
-    (hS:181049≤S.card) (hvalues: ∀i ∈ S,f.eval (nodes i)=u0 i+u1 i*z)
+    (hS:181039≤S.card) (hvalues: ∀i ∈ S,f.eval (nodes i)=u0 i+u1 i*z)
     (hh: ∀j,d<j→SecondJetCoefficientSpecialization.coefficientSpecialize f z ((SecondJetCoefficients.asS P).coeff j)=0):
     SecondJetCoefficientSpecialization.coefficientSpecialize f z ((SecondJetCoefficients.asS P).coeff d)=0:=by
   have hweight: ∀e ∈ ((SecondJetCoefficients.asS P).coeff d).support,
-      e 0+131071*e 1+131070*e 2<(m-d)*181049:=by
+      e 0+131071*e 1+131070*e 2<(m-d)*181039:=by
     intro e he
     have hb:=hP _ (SecondJetCoefficients.coefficient_support P d e he)
     obtain ⟨h0,h1,h2,h3,h4⟩:=SecondJetCoefficients.lift_coordinates d e
     rw [h0,h1,h2,h3] at hb
     simp only [SecondJetRelaxedDifferentiation.reserve,if_pos hdn] at hb
     omega
-  have hdeg:=MovingFiberLeadingCoefficient6815.coefficient_degree ((SecondJetCoefficients.asS P).coeff d) f z 131071 ((m-d)*181049)
+  have hdeg:=MovingFiberLeadingCoefficient6815.coefficient_degree ((SecondJetCoefficients.asS P).coeff d) f z 131071 ((m-d)*181039)
     hf (by omega) hweight
   have htop:=MovingFiberLeadingCoefficient6815.specialize_top P f z d hh
   have hv:SecondJetSpecialize.specialize f z ((pderiv 1)^[d] P)=0:=by
@@ -9245,7 +9246,7 @@ open RCN095 DY
 open RCN095 renaming PolynomialInFlag → BI
 open LocatorFactorAggregate (middle total)
 def evalBand (s:EA) (p:FlagDegree):ℕ:=
-  Lower80899.ThresholdFast.evalPowerBandBudget 49979 (LocatorFactorAggregate.total p) (LocatorFactorAggregate.middle p) p.all
+  Lower80899.ThresholdFast.evalPowerBandBudget 49969 (LocatorFactorAggregate.total p) (LocatorFactorAggregate.middle p) p.all
     (s.totalCap-LocatorFactorAggregate.total p) (s.middleCap-LocatorFactorAggregate.middle p)
     (s.slopeCap-p.all) (s.fuel p)
 def ABC
@@ -9256,7 +9257,7 @@ def ABC
         ABC w (Dh-delta-dc) delta dc dT dY dS
           (T-dT) (YS-dY) (S-dS) fuel
 def evalBandThin (s:EA) (p:FlagDegree):ℕ:=
-  ABC 131071 (s.contactCap p) 49979 (contactDec p)
+  ABC 131071 (s.contactCap p) 49969 (contactDec p)
     (LocatorFactorAggregate.total p) (LocatorFactorAggregate.middle p) p.all
     (s.totalCap-LocatorFactorAggregate.total p) (s.middleCap-LocatorFactorAggregate.middle p)
     (s.slopeCap-p.all) (s.fuel p)
@@ -9295,7 +9296,7 @@ def indexedThin (w Dh delta dc dT dY dS T YS S:ℕ):ℕ→ℕ
       delta*Lower80899.ThresholdFast.evalChannelCount (T-n*dT)
         (min (YS-n*dY) (thinTop w (Dh-n*(delta+dc)) (S-n*dS))) (S-n*dS)
 def indexedBand (s:EA) (p:FlagDegree):ℕ:=
-  indexedThin 131071 (s.contactCap p) 49979 (contactDec p)
+  indexedThin 131071 (s.contactCap p) 49969 (contactDec p)
     (LocatorFactorAggregate.total p) (LocatorFactorAggregate.middle p) p.all (s.totalCap-LocatorFactorAggregate.total p)
     (s.middleCap-LocatorFactorAggregate.middle p) (s.slopeCap-p.all) (s.fuel p)
 def DVX (s:EA) (r v threshold:ℕ):Prop:=
@@ -9441,13 +9442,13 @@ open RCN095 renaming PolynomialInFlag → BI
 open LocatorFactorAggregate (middle total)
 def ofSource (s:EA) (p:FlagDegree):Input:=
   ⟨s.totalCap-LocatorFactorAggregate.total p,s.middleCap-LocatorFactorAggregate.middle p,s.slopeCap-p.all,s.contactCap p,
-    LocatorFactorAggregate.total p,LocatorFactorAggregate.middle p,p.all,49979+contactDec p,s.fuel p⟩
+    LocatorFactorAggregate.total p,LocatorFactorAggregate.middle p,p.all,49969+contactDec p,s.fuel p⟩
 def Sufficient (s:EA) (r v threshold:ℕ) (runs:List Run):Prop:=
   11192-(r+v)<threshold∨
     let p:=LocatorPhase6800Oracle.rawFlag r v threshold
     1≤p.all∧LocatorFactorAggregate.total p≤s.totalCap∧LocatorFactorAggregate.middle p≤s.middleCap∧p.all≤s.slopeCap∧
       RunsValid (ofSource s p) 0 runs∧
-      49979*runsUpper (ofSource s p) 0 runs<(s.gap:ℤ)*(72*131071^3)
+      49969*runsUpper (ofSource s p) 0 runs<(s.gap:ℤ)*(72*131071^3)
 instance (s:EA) (r v threshold:ℕ) (runs:List Run):
     Decidable (Sufficient s r v threshold runs):=by
   unfold Sufficient;infer_instance
@@ -9462,7 +9463,7 @@ set_option autoImplicit false
 set_option maxRecDepth 100000
 set_option maxHeartbeats 5000000
 def stage (y z d j:ℕ):DG:=
-  ⟨262144,131071,181049,y,d-j,z,y,d,z⟩
+  ⟨262144,131071,181039,y,d-j,z,y,d,z⟩
 end ADZ
 end MergedPart10
 end SubmissionLower
@@ -9538,14 +9539,14 @@ local instance:CharP LocatorBatchPhase6800.K 2130706433:=by
 local instance:StrongNormalizationMonoid LocatorBatchPhase6800.P4:=UniqueFactorizationMonoid.strongNormalizationMonoid
 structure Input (u0 u1:Lower80811.Counting.I→LocatorBatchPhase6800.K) (selected:LocatorBatchPhase6800.K→Polynomial LocatorBatchPhase6800.K) (Gamma:Finset LocatorBatchPhase6800.K):Prop where
   degree: ∀gamma ∈ Gamma,(selected gamma).natDegree≤131071
-  agreement: ∀gamma ∈ Gamma,181049≤((Finset.univ:Finset Lower80811.Counting.I).filter (fun i=>
+  agreement: ∀gamma ∈ Gamma,181039≤((Finset.univ:Finset Lower80811.Counting.I).filter (fun i=>
     (selected gamma).eval (IRSProfile.domain i)=u0 i+gamma*u1 i)).card
-  noPencil:BL selected Gamma 131071 81095
+  noPencil:BL selected Gamma 131071 81105
 variable {u0 u1:Lower80811.Counting.I→LocatorBatchPhase6800.K} {selected:LocatorBatchPhase6800.K→Polynomial LocatorBatchPhase6800.K} {Gamma:Finset LocatorBatchPhase6800.K}
 theorem Input.restrict (inp:Input u0 u1 selected Gamma) (Delta:Finset LocatorBatchPhase6800.K) (h:Delta ⊆ Gamma):
     Input u0 u1 selected Delta:=
   ⟨fun g hg=>inp.degree g (h hg),fun g hg=>inp.agreement g (h hg),
-    KX selected Gamma Delta 131071 81095 h inp.noPencil⟩
+    KX selected Gamma Delta 131071 81105 h inp.noPencil⟩
 end
 end Counting
 end Lower80899

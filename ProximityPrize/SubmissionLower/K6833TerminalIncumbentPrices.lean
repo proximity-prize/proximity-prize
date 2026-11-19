@@ -101,19 +101,19 @@ theorem identityCurveDegree_eq_identityRaw (f : Envelope) (left : FlagDegree)
 theorem incumbent_raw_identity_absorbed (f : Envelope) (left : FlagDegree)
     (hr : 3 ≤ f.slope) (hy : f.slope + 2 ≤ f.middle)
     (hgate : rawGatesWithCorrections TailCorrections.original f = true) :
-    131073 * 81096 *
+    131073 * 81077 *
         identityCurveDegree left (cellA f.total f.middle) (cellB f.middle f.slope)
           (cellS f.slope) RCN327.w ≤
-      49978 * MovingFiberOrdinaryHigh6815.bound left f.total f.middle f.slope := by
+      49997 * MovingFiberOrdinaryHigh6815.bound left f.total f.middle f.slope := by
   simp only [rawGatesWithCorrections, Bool.and_eq_true] at hgate
   have haxis := List.all_eq_true.mp hgate.2
   have hZ := of_decide_eq_true (haxis (0 : Fin 3) (by simp))
   have hYZ := of_decide_eq_true (haxis (1 : Fin 3) (by simp))
   have hFull := of_decide_eq_true (haxis (2 : Fin 3) (by simp))
   let price := rawChargeWithCorrections TailCorrections.original f
-  change 131073 * 81096 * (identityRaw f).zOnly ≤ 49978 * price unitZFlag at hZ
-  change 131073 * 81096 * (identityRaw f).yz ≤ 49978 * price unitYZFlag at hYZ
-  change 131073 * 81096 * (identityRaw f).all ≤ 49978 * price unitAllFlag at hFull
+  change 131073 * 81077 * (identityRaw f).zOnly ≤ 49997 * price unitZFlag at hZ
+  change 131073 * 81077 * (identityRaw f).yz ≤ 49997 * price unitYZFlag at hYZ
+  change 131073 * 81077 * (identityRaw f).all ≤ 49997 * price unitAllFlag at hFull
   have hlin : price left =
       left.zOnly * price unitZFlag + left.yz * price unitYZFlag +
         left.all * price unitAllFlag := by
@@ -121,16 +121,16 @@ theorem incumbent_raw_identity_absorbed (f : Envelope) (left : FlagDegree)
     ring
   rw [identityCurveDegree_eq_identityRaw f left hr hy,
     ← rawChargeWithCorrections_original_eq_incumbent f left hr hy]
-  change 131073 * 81096 * _ ≤ 49978 * price left
+  change 131073 * 81077 * _ ≤ 49997 * price left
   calc
-    _ = left.zOnly * (131073*81096*(identityRaw f).zOnly) +
-        left.yz * (131073*81096*(identityRaw f).yz) +
-        left.all * (131073*81096*(identityRaw f).all) := by ring
-    _ ≤ left.zOnly * (49978*price unitZFlag) + left.yz * (49978*price unitYZFlag) +
-        left.all * (49978*price unitAllFlag) :=
+    _ = left.zOnly * (131073*81077*(identityRaw f).zOnly) +
+        left.yz * (131073*81077*(identityRaw f).yz) +
+        left.all * (131073*81077*(identityRaw f).all) := by ring
+    _ ≤ left.zOnly * (49997*price unitZFlag) + left.yz * (49997*price unitYZFlag) +
+        left.all * (49997*price unitAllFlag) :=
       Nat.add_le_add (Nat.add_le_add (Nat.mul_le_mul_left _ hZ) (Nat.mul_le_mul_left _ hYZ))
         (Nat.mul_le_mul_left _ hFull)
-    _ = 49978 * price left := by rw [hlin]; ring
+    _ = 49997 * price left := by rw [hlin]; ring
 
 theorem rawGates_of_jetGates_small (cuts : TailCorrections) (f : Envelope)
     (cfg : Fin 3 → JetProfile) (hgate : jetGatesWithCorrections cuts f cfg = true) :
