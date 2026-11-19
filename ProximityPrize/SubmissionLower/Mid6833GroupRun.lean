@@ -67,7 +67,7 @@ theorem group_run [CharP K 2130706433] (menu : List Stage) (top : Stage)
     apply regularFiber_le_paid_factor H A F (Finset.mem_sdiff.mp hF).1 a pos ⟨le_rfl,le_rfl,le_rfl⟩ cap top top.numbers.slopeCap
       Γ R.selected Finset.univ x R.u₀ R.u₁ x.injective.injOn nodes (fun g mem=>R.degree g (hg mem))
       (fun g mem=>R.agreement g (hg mem))
-      (noLargeSelectedPencil_mono R.selected R.seeds Γ weight 81085 hg R.pencil) Q rel big
+      (noLargeSelectedPencil_mono R.selected R.seeds Γ weight 81095 hg R.pencil) Q rel big
     intro g mem
     exact specialization_zero_of_box_and_agreement xg uv vv s Q (R.selected g) g (supp g) box
       (fun i _=>contacts i) (R.degree g (hg mem)) (fit g mem) (fun i hi=>(Finset.mem_filter.mp hi).2)

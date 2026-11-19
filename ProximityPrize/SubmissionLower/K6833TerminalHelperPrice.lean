@@ -14,20 +14,20 @@ set_option maxHeartbeats 3000000
 set_option maxRecDepth 6000
 
 private def terminalPairCut (f : Envelope) : FlagDegree :=
-  let slopeScale := (terminalScale / 181059) * 262144 * 131071
-  let nodeScale := (terminalScale / (181059 - 131071)) * (262144 - 131071)
-  ⟨2 * slopeScale * (f.total - f.middle) + 81086 * terminalScale,
+  let slopeScale := (terminalScale / 181049) * 262144 * 131071
+  let nodeScale := (terminalScale / (181049 - 131071)) * (262144 - 131071)
+  ⟨2 * slopeScale * (f.total - f.middle) + 81096 * terminalScale,
     2 * slopeScale * (f.middle - f.slope) + nodeScale,
     2 * slopeScale * (f.slope - 1)⟩
 
 private theorem scaledPairFlag_mono_nodes (support : ResidualSupportParameters) {n m : ℕ}
     (h : n ≤ m) :
-    let a := scaledPairFlag support n 131071 181059 81085
-    let b := scaledPairFlag support m 131071 181059 81085
+    let a := scaledPairFlag support n 131071 181049 81095
+    let b := scaledPairFlag support m 131071 181049 81095
     a.zOnly ≤ b.zOnly ∧ a.yz ≤ b.yz ∧ a.all ≤ b.all := by
-  have hlen : n * 131071 * (181059 - 131071) ≤ m * 131071 * (181059 - 131071) :=
+  have hlen : n * 131071 * (181049 - 131071) ≤ m * 131071 * (181049 - 131071) :=
     Nat.mul_le_mul_right _ (Nat.mul_le_mul_right _ h)
-  have hnode : (n - 131071) * 181059 ≤ (m - 131071) * 181059 :=
+  have hnode : (n - 131071) * 181049 ≤ (m - 131071) * 181049 :=
     Nat.mul_le_mul_right _ (Nat.sub_le_sub_right h _)
   simp only [scaledPairFlag, add_zOnly, add_yz, add_all, nsmul_zOnly, nsmul_yz, nsmul_all,
     unitYZFlag, unitZFlag, mul_zero, mul_one, add_zero]
@@ -36,7 +36,7 @@ private theorem scaledPairFlag_mono_nodes (support : ResidualSupportParameters) 
 
 private theorem scaledPairFlag_full_eq (f : Envelope) (support : ResidualSupportParameters)
     (hS : support.s = f.slope) (hY : support.ys = f.middle) (hT : support.total = f.total) :
-    6930 • scaledPairFlag support 262144 131071 181059 81085 = terminalPairCut f := by
+    6930 • scaledPairFlag support 262144 131071 181049 81095 = terminalPairCut f := by
   unfold scaledPairFlag terminalPairCut
   have hlast : 2 * f.slope - 2 = 2 * (f.slope - 1) := by omega
   apply LocatorHybridCells.flag_ext <;>
@@ -47,7 +47,7 @@ private theorem scaledPairFlag_full_eq (f : Envelope) (support : ResidualSupport
 private theorem terminalPairCut_ge (f : Envelope) (support : ResidualSupportParameters)
     (hS : support.s = f.slope) (hY : support.ys = f.middle) (hT : support.total = f.total)
     {n : ℕ} (hn : n ≤ 262144) :
-    Below (6930 • scaledPairFlag support n 131071 181059 81085) (terminalPairCut f) := by
+    Below (6930 • scaledPairFlag support n 131071 181049 81095) (terminalPairCut f) := by
   rw [← scaledPairFlag_full_eq f support hS hY hT]
   obtain ⟨hz, hy, hr⟩ := scaledPairFlag_mono_nodes support hn
   unfold Below middle total
@@ -97,18 +97,18 @@ theorem terminal_pair_count_scaled_le (n count : ℕ) (f : Envelope)
     (left right : FlagDegree) (support : ResidualSupportParameters)
     (hS : support.s = f.slope) (hY : support.ys = f.middle) (hT : support.total = f.total)
     (hn : n ≤ 262144)
-    (hcount : count * (181059 * (181059 - 131071)) ≤
-      flagMixed left right (scaledPairFlag support n 131071 181059 81085)) :
+    (hcount : count * (181049 * (181049 - 131071)) ≤
+      flagMixed left right (scaledPairFlag support n 131071 181049 81095)) :
     count * terminalScale ≤ flagMixed left right
       (shortenedDirection f (pencilBudget * residualPriceScale)) := by
   rw [← terminalPairCut_eq]
   calc
-    count * terminalScale = (count * (181059 * (181059 - 131071))) * 6930 := by
+    count * terminalScale = (count * (181049 * (181049 - 131071))) * 6930 := by
       rw [Nat.mul_assoc]
       rfl
-    _ ≤ flagMixed left right (scaledPairFlag support n 131071 181059 81085) * 6930 :=
+    _ ≤ flagMixed left right (scaledPairFlag support n 131071 181049 81095) * 6930 :=
       Nat.mul_le_mul_right _ hcount
-    _ = flagMixed left right (6930 • scaledPairFlag support n 131071 181059 81085) :=
+    _ = flagMixed left right (6930 • scaledPairFlag support n 131071 181049 81095) :=
       (flagMixed_scale_last _ _ _ _).symm
     _ ≤ flagMixed left right (terminalPairCut f) :=
       mixed_mono_third left right (terminalPairCut_ge f support hS hY hT hn)
@@ -118,9 +118,9 @@ theorem helper_count_mul_le_jetFlagCharge (cuts : TailCorrections) (n count : �
     (support : ResidualSupportParameters)
     (hS : support.s = f.slope) (hY : support.ys = f.middle) (hT : support.total = f.total)
     (hn : n ≤ 262144)
-    (hcount : count * (181059 * (181059 - 131071)) ≤
+    (hcount : count * (181049 * (181049 - 131071)) ≤
       flagMixed left (helperEnvelope (cfg j) (f.paddedSupport 2)).flag
-        (scaledPairFlag support n 131071 181059 81085)) :
+        (scaledPairFlag support n 131071 181049 81095)) :
     count * terminalScale ≤ jetFlagCharge cuts f cfg left := by
   let right := (helperEnvelope (cfg j) (f.paddedSupport 2)).flag
   have hright : right = ((cfg j).helper (f.pad 2)).flag := rfl
@@ -156,8 +156,8 @@ theorem leading_counts_mul_le_jetLeadingNumerator (n : ℕ) (count : Fin 3 → �
     (support : ResidualSupportParameters)
     (hS : support.s = f.slope) (hY : support.ys = f.middle) (hT : support.total = f.total)
     (hn : n ≤ 262144)
-    (hcount : ∀ j, count j * (181059 * (181059 - 131071)) ≤
-      flagMixed left (cfg j).leading.flag (scaledPairFlag support n 131071 181059 81085)) :
+    (hcount : ∀ j, count j * (181049 * (181049 - 131071)) ≤
+      flagMixed left (cfg j).leading.flag (scaledPairFlag support n 131071 181049 81095)) :
     (∑ j : Fin 3, count j) * terminalScale ≤ jetLeadingNumerator f cfg left := by
   rw [Finset.sum_mul]
   exact Finset.sum_le_sum fun j _ =>

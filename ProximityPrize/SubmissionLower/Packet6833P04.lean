@@ -1603,11 +1603,11 @@ structure Packet (x:I→K) (t y r:ℕ) where
   injective:Set.InjOn x nodes
   nodeCount:nodes.card=262144
   degree: ∀gamma∈seeds,(selected gamma).natDegree≤w
-  agreement: ∀gamma∈seeds,181059≤
+  agreement: ∀gamma∈seeds,181049≤
     (nodes.filter (fun i=>(selected gamma).eval (x i)=u0 i+gamma*u1 i)).card
   solution: ∀gamma∈seeds,RCN319.specialization K (selected gamma) gamma F=0
   regular: ∀gamma∈seeds,RCN319.specialization K (selected gamma) gamma (MvPolynomial.pderiv (2:Fin 4) F)≠0
-  noPencil:BL selected seeds w 81085
+  noPencil:BL selected seeds w 81095
 namespace Packet
 variable {x:I→K} {t y r:ℕ} (P:Packet x t y r)
 include P in
@@ -1633,10 +1633,10 @@ def restrict (Delta:Finset K) (hsub:Delta⊆P.seeds):Packet x t y r:=
           agreement:=fun gamma hg=>P.agreement gamma (hsub hg)
           solution:=fun gamma hg=>P.solution gamma (hsub hg)
           regular:=fun gamma hg=>P.regular gamma (hsub hg)
-          noPencil:=KX P.selected P.seeds Delta w 81085 hsub P.noPencil}
+          noPencil:=KX P.selected P.seeds Delta w 81095 hsub P.noPencil}
 def stage (g:RCN222.GeometricFactor K P.F):
     FH (RCN135.polynomialEmbedding K) (KK K P.F P.selected P.seeds g) x
-      2130706433 81085 (CO K g) w (LocatorHybridCells.cellSupport t y r):=
+      2130706433 81095 (CO K g) w (LocatorHybridCells.cellSupport t y r):=
   BJP
     (AIT K (LocatorHybridCells.cellSupport t y r) P.F P.irreducible P.rdegree
       (P.IZ.2.1.trans_lt (by have:=P.rhigh;omega:r<2130706433)) P.support
@@ -1651,7 +1651,7 @@ theorem stage_flag (g:RCN222.GeometricFactor K P.F):
   simpa only [P.support_caps.1,P.support_caps.2.1,P.support_caps.2.2] using
     AER P.F P.irreducible.ne_zero P.support g
 theorem CVV (g:RCN222.GeometricFactor K P.F):
-    ∀gamma∈KK K P.F P.selected P.seeds g,181059≤((P.stage g).AJW gamma).card:=
+    ∀gamma∈KK K P.F P.selected P.seeds g,181049≤((P.stage g).AJW gamma).card:=
   fun gamma hg=>P.agreement gamma (WK K P.F P.selected P.seeds g hg)
 theorem parent_flag (L:Type) [Field L] (phi:Polynomial K→+*L):
     RCN095.PolynomialInFlag ⟨t-y,y-r,r⟩ (surfaceMap phi P.F):=
@@ -1706,9 +1706,9 @@ def factorPacket {H:MvPolynomial (Fin 4) K} (F:RCN266.RegularIndex H)
     (nodes:I ↪ K) (u0 u1:I→K) (hI:Fintype.card I=262144)
     (selected:K→Polynomial K) (Gamma:Finset K)
     (hdegree: ∀gamma∈Gamma,(selected gamma).natDegree≤131071)
-    (hagreement: ∀gamma∈Gamma,181059≤
+    (hagreement: ∀gamma∈Gamma,181049≤
       ((Finset.univ:Finset I).filter (fun i=>(selected gamma).eval (nodes i)=u0 i+gamma*u1 i)).card)
-    (hno:BL selected Gamma 131071 81085):Packet (nodes:I→K) t y r where
+    (hno:BL selected Gamma 131071 81095):Packet (nodes:I→K) t y r where
   rlow:=hrlo
   rhigh:=hrhi
   ylow:=hylo
@@ -1741,7 +1741,7 @@ def factorPacket {H:MvPolynomial (Fin 4) K} (F:RCN266.RegularIndex H)
   agreement:=fun gamma hg=>hagreement gamma (RCN140.ACS H selected Gamma F hg)
   solution:=fun _ hg=>(Finset.mem_filter.mp hg).2.1
   regular:=fun _ hg=>(Finset.mem_filter.mp hg).2.2
-  noPencil:=KX selected Gamma _ 131071 81085
+  noPencil:=KX selected Gamma _ 131071 81095
     (RCN140.ACS H selected Gamma F) hno
 end
 end CVL
@@ -1857,7 +1857,7 @@ structure Parameters where
   n0:ℕ
   deriving DecidableEq
 def Parameters.cutoff (p:Parameters) (h:ℕ):ℕ:=
-  p.m*181059-SecondJetRelaxedDifferentiation.reserve p.k p.n0 h*49990
+  p.m*181049-SecondJetRelaxedDifferentiation.reserve p.k p.n0 h*49980
 structure Shape (p:Parameters):Prop where
   slope:2*p.s≤p.B
   middle:p.B≤p.U
@@ -1917,12 +1917,12 @@ theorem AMU (p:Parameters) (hp:Shape p)
     (nodes:N ↪ K) (u0 u1:N→K) (P:SecondJetSupport.Poly (K:=K))
     (hP:Interpolant p nodes u0 u1 P) (d:ℕ) (hd:d≤p.k)
     (f:Polynomial K) (hf:f.natDegree≤131071) (z:K) (A:Finset N)
-    (hA:181059≤A.card) (hvalues: ∀i∈A,f.eval (nodes i)=u0 i+u1 i*z):
+    (hA:181049≤A.card) (hvalues: ∀i∈A,f.eval (nodes i)=u0 i+u1 i*z):
     SecondJetSpecialize.specialize f z ((pderiv 1)^[d] P)=0:=by
   have hs:=hp.contact
   have hk:=hp.retention
   have hn:=hp.degree
-  apply AQ.AMU P p.m 181059 131071 p.k p.n0 d
+  apply AQ.AMU P p.m 181049 131071 p.k p.n0 d
     (by decide) (by decide) (by omega) hd ?_ nodes u0 u1 hP.2.2 f hf z A hA hvalues
   intro e he
   have hh:=(hP.2.1 e he).2.2.2.2
@@ -1934,12 +1934,12 @@ theorem ATR (p:Parameters) (hp:Shape p)
     (hP:Interpolant p nodes u0 u1 P) (d:ℕ) (hd:d<p.n0)
     (hfact:(d.factorial:K)≠0)
     (f:Polynomial K) (hf:f.natDegree≤131071) (z:K) (A:Finset N)
-    (hA:181059≤A.card) (hvalues: ∀i∈A,f.eval (nodes i)=u0 i+u1 i*z)
+    (hA:181049≤A.card) (hvalues: ∀i∈A,f.eval (nodes i)=u0 i+u1 i*z)
     (hh: ∀j,d<j→SecondJetCoefficientSpecialization.coefficientSpecialize f z ((SecondJetCoefficients.asS P).coeff j)=0):
     SecondJetCoefficientSpecialization.coefficientSpecialize f z ((SecondJetCoefficients.asS P).coeff d)=0:=by
   have hdm:d<p.m:=lt_trans (lt_of_lt_of_le hd hp.degree) hp.contact
   have hweight: ∀e∈((SecondJetCoefficients.asS P).coeff d).support,
-      e 0+131071*e 1+131070*e 2<(p.m-d)*181059:=by
+      e 0+131071*e 1+131070*e 2<(p.m-d)*181049:=by
     intro e he
     have hb:=(hP.2.1 _ (SecondJetCoefficients.coefficient_support P d e he)).2.2.2.2
     obtain ⟨h0,h1,h2,h3,h4⟩:=SecondJetCoefficients.lift_coordinates d e
@@ -1947,7 +1947,7 @@ theorem ATR (p:Parameters) (hp:Shape p)
     simp only [Parameters.cutoff,SecondJetRelaxedDifferentiation.reserve,if_pos hd] at hb
     omega
   have hdeg:=MovingFiberLeadingCoefficient6815.coefficient_degree ((SecondJetCoefficients.asS P).coeff d)
-    f z 131071 ((p.m-d)*181059) hf (by omega) hweight
+    f z 131071 ((p.m-d)*181049) hf (by omega) hweight
   have htop:=MovingFiberLeadingCoefficient6815.specialize_top P f z d hh
   have hv:SecondJetSpecialize.specialize f z ((pderiv 1)^[d] P)=0:=by
     refine CAG.ALK _ f z nodes u0 u1 A (p.m-d) ?_ hvalues ?_
@@ -1966,7 +1966,7 @@ def ProperHelper (p:Parameters) (F Q:MvPolynomial (Fin 4) K) (r y t:ℕ)
   (wt RCN156.residualSWeights Q≤p.B+p.s*(r-1)∧wt RCN156.residualYSWeights Q≤p.U+p.s*(y-1)∧
     wt RCN156.residualTotalWeights Q≤p.L+p.s*(t-1))∧
   ∀f:Polynomial K,f.natDegree≤131071→ ∀z:K,∀A:Finset N,
-    181059≤A.card→(∀i∈A,f.eval (nodes i)=u0 i+u1 i*z)→
+    181049≤A.card→(∀i∈A,f.eval (nodes i)=u0 i+u1 i*z)→
       RCN319.specialization K f z F=0→RCN319.specialization K f z Q=0
 theorem EMH [CharP K 2130706433]
     (p:Parameters) (hp:Shape p) (nodes:N ↪ K) (u0 u1:N→K)
@@ -2748,15 +2748,15 @@ open DC CB BD
 open MovingFiberThreeSources6811 (direction weight)
 open RCN234 RCN156
 def caps (p:Parameters):DA.SourceCaps:=
-  ⟨p.m*181059,p.L,p.B,p.s,p.U⟩
+  ⟨p.m*181049,p.L,p.B,p.s,p.U⟩
 variable {K N:Type} [Field K] [Fintype N]
 theorem CTV (p:Parameters) (hp:Shape p) (P:SecondJetSupport.Poly (K:=K)) (hb:Bounds p P):
     DA.Bounds (caps p) P:=by
-  have hc:weightedTotalDegree codeWeights P≤p.m*181059-1:=by
+  have hc:weightedTotalDegree codeWeights P≤p.m*181049-1:=by
     apply Finset.sup_le
     intro e he
     have hh:=(hb e he).2.2.2.2
-    have hcut:p.cutoff (e 1)≤p.m*181059:=Nat.sub_le _ _
+    have hcut:p.cutoff (e 1)≤p.m*181049:=Nat.sub_le _ _
     simp [JW,codeWeights]
     omega
   have hm:0<p.m:=lt_of_le_of_lt (Nat.zero_le _) hp.contact
@@ -2773,7 +2773,7 @@ theorem CTV (p:Parameters) (hp:Shape p) (P:SecondJetSupport.Poly (K:=K)) (hb:Bou
     simpa [caps,JW,HA] using (hb e he).2.2.1
 def strongCount (p:Parameters) (a:DA.OwnerBox):ℕ:=
   min (DA.count (caps p) a)
-    (BZS.count (caps p) a p.k 49990)
+    (BZS.count (caps p) a p.k 49980)
 theorem BIV
     (p:Parameters) (hp:Shape p) (Kdim:ℕ) (hd:Dimension p Kdim)
     (nodes:N ↪ K) (u0 u1:N→K) (hN:Fintype.card N=262144)
@@ -2793,11 +2793,11 @@ theorem CWH
     (J:SecondJetSupport.Poly (K:=K)) (hJ:J≠0) (a:DA.OwnerBox)
     (ha:DA.Covers a J)
     (hgood:(DA.Impossible (caps p) a∧0<Kdim)∨
-      BZS.count (caps p) a p.k 49990<Kdim):
+      BZS.count (caps p) a p.k 49980<Kdim):
     ∃P,Interpolant p nodes u0 u1 P∧ ¬J^a.q∣P:=by
   obtain ⟨V,hf,hv,hb,hc⟩:=DVF p hp Kdim hd nodes u0 u1 hN
   letI:Module.Finite K V:=hf
-  obtain ⟨P,hP,hnot⟩:=BZS.ASJ (caps p) a p.k p.n0 49990 Kdim
+  obtain ⟨P,hP,hnot⟩:=BZS.ASJ (caps p) a p.k p.n0 49980 Kdim
     V hv (fun P hP=>CTV p hp P (hb P hP)) (by
       intro P hP e he
       have h:=(hb P hP e he).2.2.2.2
@@ -3020,7 +3020,7 @@ variable {K I:Type} [Field K] [CharP K 2130706433]
 local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq I:=Classical.decEq I
 variable {x:I→K} {t y r:ℕ}
-def pair (t y r b u l:ℕ):DG:=⟨262144,131071,181059,y,r,t,u,b,l⟩
+def pair (t y r b u l:ℕ):DG:=⟨262144,131071,181049,y,r,t,u,b,l⟩
 def Gates (t y r b u l:ℕ):Prop:=
   (pair t y r b u l).mixedCost.y<2130706433∧
   (pair t y r b u l).mixedCost.r<2130706433∧
@@ -3143,7 +3143,7 @@ local instance:DecidableEq K:=Classical.decEq K
 local instance:DecidableEq I:=Classical.decEq I
 variable {x:I→K} {t y r:ℕ}
 def MG (t y r:ℕ):ℕ:=
-  131073*81086*IY ⟨t-y,y-r,r⟩ (LocatorHybridCells.cellA t y) (LocatorHybridCells.cellB y r) (LocatorHybridCells.cellS r) w/49988
+  131073*81096*IY ⟨t-y,y-r,r⟩ (LocatorHybridCells.cellA t y) (LocatorHybridCells.cellB y r) (LocatorHybridCells.cellS r) w/49978
 theorem CNE (P:Packet x t y r) (hidentity:P.F∣numerator K P.F (w+1)):
     P.seeds.card≤MG t y r:=by
   have hrlo:=P.rlow
@@ -3155,7 +3155,7 @@ theorem CNE (P:Packet x t y r) (hidentity:P.F∣numerator K P.F (w+1)):
   let cost:=fun g:RCN222.GeometricFactor K P.F=>
     IY (CO K g) (LocatorHybridCells.cellA t y) (LocatorHybridCells.cellB y r) (LocatorHybridCells.cellS r) w
   have hsingle (g:RCN222.GeometricFactor K P.F):
-      (KK K P.F P.selected P.seeds g).card*49988≤131073*81086*cost g:=by
+      (KK K P.F P.selected P.seeds g).card*49978≤131073*81096*cost g:=by
     let S:=P.stage g
     have hflag:=P.stage_flag g
     have hflagChar:(CO K g).yz+(CO K g).all<2130706433∧
@@ -3166,7 +3166,7 @@ theorem CNE (P:Packet x t y r) (hidentity:P.F∣numerator K P.F (w+1)):
     have hmixed:=BoundaryTailGates.identity_gate (CO K g) t y r
       (by omega) (by omega) (by omega) (by omega) (by omega) hflag.1 hflag.2.1
     have hnodes:S.nodes.card=262144:=P.nodeCount
-    have hprovider:=BRK.AAB S 181059
+    have hprovider:=BRK.AAB S 181049
       hnodes (P.CVV g) (by decide) hTailNumerator P.D t r (by decide)
       P.Dlow P.Dchar P.box hflagChar hmixed
     have hpositive:1≤cost g:=by
@@ -3174,7 +3174,7 @@ theorem CNE (P:Packet x t y r) (hidentity:P.F∣numerator K P.F (w+1)):
       have hh:=S.y_dependent
       have hd:=RCN084.degreeOf_le_flag_total S.G (CO K g) S.flag_support 1
       omega
-    have hinc:=AQH S 181059 _ hprovider (P.CVV g)
+    have hinc:=AQH S 181049 _ hprovider (P.CVV g)
       (by decide) (by rw [hnodes];decide) hpositive
     simpa only [cost,hnodes,RCN326.w,Nat.reduceSub,Nat.reduceAdd] using hinc
   have hb:=VD P.F P.irreducible.ne_zero
@@ -3194,9 +3194,9 @@ theorem CNE (P:Packet x t y r) (hidentity:P.F∣numerator K P.F (w+1)):
     simpa only [cost,IY,Finset.sum_add_distrib] using Nat.add_le_add hz hu
   have hsum:=Finset.sum_le_sum (fun g (_:g∈Finset.univ)=>hsingle g)
   simp only [←Finset.sum_mul,←Finset.mul_sum] at hsum
-  have hfinal:=(Nat.mul_le_mul_right 49988 P.seeds_cover).trans
-    (hsum.trans (Nat.mul_le_mul_left (131073*81086) hcost))
-  exact (Nat.le_div_iff_mul_le (by decide:0<49988)).mpr hfinal
+  have hfinal:=(Nat.mul_le_mul_right 49978 P.seeds_cover).trans
+    (hsum.trans (Nat.mul_le_mul_left (131073*81096) hcost))
+  exact (Nat.le_div_iff_mul_le (by decide:0<49978)).mpr hfinal
 end
 end EF
 end MergedPart2

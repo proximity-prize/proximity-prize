@@ -10,12 +10,12 @@ namespace ProximityPrize.SubmissionLower.K6833FlowPaid
 open RCN095 RCN130 RCN275 LocatorFactorAggregate
 open Koala6831Moving Koala6831MovingLedger K6833FlowSources Koala6831MovingPairIncidence
 
-def agreementScale : ℕ := 9050777292
+def agreementScale : ℕ := 9048466922
 
-theorem agreementScale_eq : agreementScale = 181059 * (181059 - 131071) := by decide +kernel
+theorem agreementScale_eq : agreementScale = 181049 * (181049 - 131071) := by decide +kernel
 theorem agreementScale_pos : 0 < agreementScale := by decide +kernel
 
-def primaryIncoming : FlagDegree := ⟨52775, 342, 98⟩
+def primaryIncoming : FlagDegree := ⟨65424, 342, 98⟩
 
 
 def stageSupport (incoming : FlagDegree) (hpos : 0 < incoming.all) :
@@ -40,7 +40,7 @@ theorem stagePartnerFlag_cumulative (s : Stage) (gain : ℕ) :
       (Nat.le_add_right _ _))
 
 def stageScaledCut (incoming : FlagDegree) (hpos : 0 < incoming.all) : FlagDegree :=
-  scaledPairFlag (stageSupport incoming hpos) 262144 131071 181059 81085
+  scaledPairFlag (stageSupport incoming hpos) 262144 131071 181049 81095
 
 def stagePrice (incoming : FlagDegree) (hpos : 0 < incoming.all) (s : Stage) (gain : ℕ) : ℕ :=
   flagMixed incoming (stagePartnerFlag s gain) (stageScaledCut incoming hpos) / agreementScale

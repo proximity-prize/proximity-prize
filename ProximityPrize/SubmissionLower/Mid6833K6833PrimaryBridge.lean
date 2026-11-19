@@ -19,20 +19,20 @@ set_option maxRecDepth 50000
 set_option maxHeartbeats 2200000
 def RegularBudget : Prop :=
   ∀(original : Finset F) (R : Ready Dmn original) (H : P4 F), H≠0 →
-    H∈nestedCoefficientBox F Stage.primary.cutoff 131071 53215 440 98 →
+    H∈nestedCoefficientBox F Stage.primary.cutoff 131071 65864 440 98 →
     (∀i∈R.good,ContactOrderBridge.ContactAtLeast F (Dmn i) (R.u₀ i) (R.u₁ i) 319 H) →
     ∀(Γ : Finset F), Γ⊆R.seeds → ∀(A : Finset (RegularIndex H)),
     (∀f∈A,¬f.1∣R.flow.flow f.1) → (A.card : ENat)<ENat.card F →
     Below (aggregateFlag H A) K6833FlowPaid.primaryIncoming →
     Γ⊆A.biUnion (regularFiber H Γ R.selected) →
-    (A.biUnion (regularFiber H Γ R.selected)).card≤264040334683142352
+    (A.biUnion (regularFiber H Γ R.selected)).card≤262932826822788554
 
 private theorem below_trans {a b c : FlagDegree} (ab : Below a b) (bc : Below b c) : Below a c :=
   ⟨ab.1.trans bc.1,ab.2.1.trans bc.2.1,ab.2.2.trans bc.2.2⟩
 
-theorem combined_prices (δ : ℕ) (lo : 2236≤δ) :
-    K6833PrimaryReady.normalizationBudget + 10517238248308782 + (33735-δ+1)*6*(2130706433+1) +
-      264040334683142352≤274980695007758447 := by
+theorem combined_prices (δ : ℕ) (lo : 2223≤δ) :
+    K6833PrimaryReady.normalizationBudget + 11624541508801261 + (33735-δ+1)*6*(2130706433+1) +
+      262932826822788554≤274980690694301924 := by
   unfold normalizationBudget
   omega
 
@@ -46,7 +46,7 @@ private theorem factor_card_le_slope {k : Type} [Field k] (H : P4 k) (A : Finset
       rw [contactFlag_regularProduct,sumFlag_all]
 
 theorem seed_count (bounds : RegularBudget) (original : Finset F) (R : Ready Dmn original) :
-    original.card ≤ 274577991491732447 := by
+    original.card ≤ 274577820983174072 := by
   classical
   letI := Koala6831BenchmarkField.characteristic
   obtain ⟨H,hn,box,contact,Γ,sub,fee,regular⟩ :=

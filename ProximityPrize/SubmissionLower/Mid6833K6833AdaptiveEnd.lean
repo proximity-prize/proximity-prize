@@ -17,13 +17,14 @@ import ProximityPrize.SubmissionLower.Mid6833K6833End14
 import ProximityPrize.SubmissionLower.Mid6833K6833End15
 import ProximityPrize.SubmissionLower.Mid6833K6833End16
 import ProximityPrize.SubmissionLower.Mid6833K6833End17
+import ProximityPrize.SubmissionLower.Mid6833K6833End18
 namespace ProximityPrize.SubmissionLower.K6833AdaptiveCert
 open RCN095 RCN130 RCN263 RCN275 LocatorFactorAggregate
 open K6833FlowSources K6833FlowStages K6833FlowPaid Koala6831MovingPairIncidence Koala6831MovingLedger
 open Lower80899.ThresholdFast (evalPowerBandBudget evalPowerBandBudget_eq)
 set_option autoImplicit false
 set_option maxRecDepth 100000
-theorem checkedRanks (r : ℕ) (h : 1≤r) (h' : r≤17) : checkedRank r = true := by
+theorem checkedRanks (r : ℕ) (h : 1≤r) (h' : r≤18) : checkedRank r = true := by
   interval_cases r
   · exact checkedEnd1
   · exact checkedEnd2
@@ -42,8 +43,9 @@ theorem checkedRanks (r : ℕ) (h : 1≤r) (h' : r≤17) : checkedRank r = true 
   · exact checkedEnd15
   · exact checkedEnd16
   · exact checkedEnd17
+  · exact checkedEnd18
 private theorem cut_le {f : FlagDegree} (prev : Prior 5 f) {r y : ℕ}
-    (rp:0<r) (ry:r≤y) (r16:r≤17) (yup:y≤maxY r+1) (hr:r≤f.all) (hy:y≤middle f) :
+    (rp:0<r) (ry:r≤y) (r16:r≤18) (yup:y≤maxY r+1) (hr:r≤f.all) (hy:y≤middle f) :
     total f≤endCap r y := by
   have c := getCheck (checkedRanks r rp r16) ry yup
   have ⟨a,b⟩ := Bool.and_eq_true_iff.mp c
@@ -53,18 +55,18 @@ private theorem cut_le {f : FlagDegree} (prev : Prior 5 f) {r y : ℕ}
     (Bool.and_eq_true_iff.mpr ⟨decide_eq_true aa.2.2.2,b⟩)
 
 theorem inside {f : FlagDegree} (hp : 0<f.all) (prev : Prior 5 f) :
-    1≤f.all ∧ f.all≤16 ∧ f.all≤middle f ∧ middle f≤maxY f.all := by
+    1≤f.all ∧ f.all≤17 ∧ f.all≤middle f ∧ middle f≤maxY f.all := by
   have ry : f.all≤middle f := Nat.le_add_left _ _
   have yt : middle f≤total f := by unfold middle total; omega
-  have r15 : f.all≤16 := by
+  have r15 : f.all≤17 := by
     by_contra! z
-    have h := cut_le (f:=f) prev (r:=17) (y:=17) (by decide) le_rfl le_rfl (by decide) z ((show 17≤f.all from z).trans ry)
-    have e : endCap 17 17=16 := by decide +kernel
+    have h := cut_le (f:=f) prev (r:=18) (y:=18) (by decide) le_rfl le_rfl (by decide) z ((show 18≤f.all from z).trans ry)
+    have e : endCap 18 18=17 := by decide +kernel
     omega
   refine ⟨hp,r15,ry,?_⟩
   by_contra! z
   have rbound : f.all≤maxY f.all+1 := by
-    have all : ∀ r : Fin 17, r.val≤maxY r.val+1 := by decide +kernel
+    have all : ∀ r : Fin 18, r.val≤maxY r.val+1 := by decide +kernel
     exact all ⟨f.all,by omega⟩
   have h := cut_le (f:=f) prev hp rbound (by omega) le_rfl le_rfl z
   have ⟨a,_⟩ := Bool.and_eq_true_iff.mp (getCheck (r:=f.all) (y:=maxY f.all+1) (checkedRanks f.all hp (by omega)) rbound le_rfl)

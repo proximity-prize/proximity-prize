@@ -23,15 +23,15 @@ theorem separated_retained_6833
     (hfixed : ∀ i, σ (x i) = x i) (hpow : ∀ g : K, σ g = g ^ prime)
     (hcard : Fintype.card I = 262144)
     (hprim : IsPrimitiveRow q) (hf : q.first ≠ 0) (hs : q.second ≠ 0)
-    (hlong : 9584 ≤ primitiveExcess 131071 q) (hsmall : primitiveExcess 131071 q ≤ 33735)
+    (hlong : 9600 ≤ primitiveExcess 131071 q) (hsmall : primitiveExcess 131071 q ≤ 33735)
     (N : NormalForm q 131071 (primitiveExcess 131071 q))
     (hgoodSeed : ∀ g ∈ retained, primitiveSelected σ prime q selected g = 0 ∧
       Disjoint (agreementSet x received selected g) (badNodes x σ received q))
     (hdegree : ∀ g ∈ retained, (selected g).natDegree ≤ 131071)
-    (hagree : ∀ g ∈ retained, 181059 ≤ (agreementSet x received selected g).card)
+    (hagree : ∀ g ∈ retained, 181049 ≤ (agreementSet x received selected g).card)
     (hpencil : ∀ P₀ P₁ : Polynomial K, P₀.natDegree ≤ 131071 → P₁.natDegree ≤ 131071 →
-      (RCN050.pencilSeeds retained selected P₀ P₁).card ≤ 81086) :
-    retained.card ≤ 274584715711948448 := by
+      (RCN050.pencilSeeds retained selected P₀ P₁).card ≤ 81096) :
+    retained.card ≤ 274584755586524048 := by
   let bad := badNodes x σ received q
   let Good := {i : I // i ∉ bad}
   let goodX : Good ↪ K := (Function.Embedding.subtype (· ∉ bad)).trans x
@@ -45,12 +45,12 @@ theorem separated_retained_6833
         (MvPolynomial.C (received 0 i.1) + MvPolynomial.X 0 * MvPolynomial.C (received 1 i.1))
         (MvPolynomial.C (σ (received 0 i.1)) + MvPolynomial.X 1 * MvPolynomial.C (σ (received 1 i.1))) = 0 :=
     good_node_identity (x := x) (σ := σ) (received := received) (q := q) i.2
-  have hsize (g : ↥retained) : 181059 ≤ (agree g).card := by
+  have hsize (g : ↥retained) : 181049 ≤ (agree g).card := by
     have havoid := Finset.disjoint_left.mp (hgoodSeed g.1 g.2).2
     have heq : (agreementSet x received selected g.1).filter (· ∉ bad) =
         agreementSet x received selected g.1 :=
       Finset.filter_true_of_mem (fun i hi hb => havoid hi hb)
-    change 181059 ≤ ((agreementSet x received selected g.1).subtype (· ∉ bad)).card
+    change 181049 ≤ ((agreementSet x received selected g.1).subtype (· ∉ bad)).card
     rw [Finset.card_subtype, heq]
     exact hagree g.1 g.2
   have h₀ (g : ↥retained) (i : Good) (hi : i ∈ agree g) :

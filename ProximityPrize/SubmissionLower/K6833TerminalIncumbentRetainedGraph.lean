@@ -98,7 +98,7 @@ private theorem graph_mono (f : Envelope) (cfg : Fin 3 → JetProfile) {a b : Fl
     exact hsum _ _ _ fun _ => Nat.mul_le_mul_left _ (mixed_mono_first hab _ _)
   · exact hsum _ _ _ fun _ => Nat.mul_le_mul_left _ (mixed_mono_first hab _ _)
 
-private def identityWeight : ℕ := (residualPriceScale / 49988) * 131073 * 81086
+private def identityWeight : ℕ := (residualPriceScale / 49978) * 131073 * 81096
 
 def graphAxis (f : Envelope) (cfg : Fin 3 → JetProfile) (i : Fin 3) : ℕ :=
   max (jetGraphNumerator TailCorrections.original (f.pad 2) cfg (unit i))
@@ -135,12 +135,12 @@ private theorem graph_le_axis (f : Envelope) (cfg : Fin 3 → JetProfile) (left 
 
 private theorem identity_le_axis (f : Envelope) (cfg : Fin 3 → JetProfile) (left : FlagDegree)
     (hr : 3 ≤ (f.pad 2).slope) (hy : (f.pad 2).slope + 2 ≤ (f.pad 2).middle) :
-    terminalScale * 131073 * 81086 *
+    terminalScale * 131073 * 81096 *
         identityCurveDegree left (cellA (f.pad 2).total (f.pad 2).middle)
           (cellB (f.pad 2).middle (f.pad 2).slope) (cellS (f.pad 2).slope) RCN327.w ≤
-      49988 * axisPrice (graphAxis f cfg) left := by
+      49978 * axisPrice (graphAxis f cfg) left := by
   rw [identityCurveDegree_eq_identityGraph _ _ hr hy]
-  have hscale : terminalScale * 131073 * 81086 = 49988 * identityWeight := by decide +kernel
+  have hscale : terminalScale * 131073 * 81096 = 49978 * identityWeight := by decide +kernel
   rw [hscale]
   have haux (g : FlagDegree) (a b : ℕ) :
       (a * b) * (left.zOnly * g.zOnly + left.yz * g.yz + left.all * g.all) =
@@ -217,9 +217,9 @@ theorem incumbent_retained_profile_seed_card_mul_le
     (selected : K → Polynomial K) (seeds : Finset K)
     (hdegree : ∀ g ∈ seeds, (selected g).natDegree ≤ 131071)
     (hregular : ∀ g ∈ seeds, RegularSolution F (selected g) g)
-    (hagreement : ∀ g ∈ seeds, 181059 ≤
+    (hagreement : ∀ g ∈ seeds, 181049 ≤
       (Finset.univ.filter (fun i => (selected g).eval (nodes i) = u₀ i + g * u₁ i)).card)
-    (hpencil : NoLargeSelectedPencil selected seeds 131071 81085) :
+    (hpencil : NoLargeSelectedPencil selected seeds 131071 81095) :
     seeds.card * terminalScale ≤
       jetFlagCharge TailCorrections.original f (cellConfig ids) (originalCumulativeFlag F) := by
   classical
@@ -274,7 +274,7 @@ theorem incumbent_retained_profile_seed_card_mul_le
       nodes.injective.injOn (by simpa only [Finset.card_univ] using hI)
       (fun _ hg => hdegree _ (hGood hg)) (fun _ hg => hagreement _ (hGood hg))
       (fun _ hg => (hregular _ (hGood hg)).1) (fun _ hg => (hregular _ (hGood hg)).2)
-      (RCN243.noLargeSelectedPencil_mono selected seeds good 131071 81085 hGood hpencil)
+      (RCN243.noLargeSelectedPencil_mono selected seeds good 131071 81095 hGood hpencil)
       source (by decide) hsourceDiv (fun _ _ S _ => HFreeDir6813.hfree_stage_dir_of_gaps S hfreeTotal)
       SecondJetOwnShape.two_ne hfact (fun _ hg j => (Finset.mem_filter.mp hg).2 j)
       (graphAxis f cfg) (graphAxis_mono f cfg)
@@ -293,7 +293,7 @@ theorem incumbent_retained_profile_seed_card_mul_le
       selected (bad j) (fun g hg => hdegree g (hBad j hg))
       (fun g hg => hregular g (hBad j hg)) (fun g hg => (Finset.mem_filter.mp hg).2)
       (fun g hg => hagreement g (hBad j hg))
-      (RCN243.noLargeSelectedPencil_mono selected seeds (bad j) 131071 81085 (hBad j) hpencil)
+      (RCN243.noLargeSelectedPencil_mono selected seeds (bad j) 131071 81095 (hBad j) hpencil)
     exact hc
   calc
     _ ≤ (good.card + ∑ j : Fin 3, (bad j).card) * terminalScale :=
@@ -320,9 +320,9 @@ theorem individual_retained_profile_seed_card_mul_le
     (selected : K → Polynomial K) (seeds : Finset K)
     (hdegree : ∀ g ∈ seeds, (selected g).natDegree ≤ 131071)
     (hregular : ∀ g ∈ seeds, RegularSolution F (selected g) g)
-    (hagreement : ∀ g ∈ seeds, 181059 ≤
+    (hagreement : ∀ g ∈ seeds, 181049 ≤
       (Finset.univ.filter (fun i => (selected g).eval (nodes i) = u₀ i + g * u₁ i)).card)
-    (hpencil : NoLargeSelectedPencil selected seeds 131071 81085) :
+    (hpencil : NoLargeSelectedPencil selected seeds 131071 81095) :
     seeds.card * terminalScale ≤
       jetLeadingNumerator f (cellConfig ids) (originalCumulativeFlag F) +
           axisPrice (graphAxis f (cellConfig ids)) (originalCumulativeFlag F) := by
@@ -378,7 +378,7 @@ theorem individual_retained_profile_seed_card_mul_le
       nodes.injective.injOn (by simpa only [Finset.card_univ] using hI)
       (fun _ hg => hdegree _ (hGood hg)) (fun _ hg => hagreement _ (hGood hg))
       (fun _ hg => (hregular _ (hGood hg)).1) (fun _ hg => (hregular _ (hGood hg)).2)
-      (RCN243.noLargeSelectedPencil_mono selected seeds good 131071 81085 hGood hpencil)
+      (RCN243.noLargeSelectedPencil_mono selected seeds good 131071 81095 hGood hpencil)
       source (by decide) hsourceDiv (fun _ _ S _ => HFreeDir6813.hfree_stage_dir_of_gaps S hfreeTotal)
       SecondJetOwnShape.two_ne hfact (fun _ hg j => (Finset.mem_filter.mp hg).2 j)
       (graphAxis f cfg) (graphAxis_mono f cfg)
@@ -397,7 +397,7 @@ theorem individual_retained_profile_seed_card_mul_le
       selected (bad j) (fun g hg => hdegree g (hBad j hg))
       (fun g hg => hregular g (hBad j hg)) (fun g hg => (Finset.mem_filter.mp hg).2)
       (fun g hg => hagreement g (hBad j hg))
-      (RCN243.noLargeSelectedPencil_mono selected seeds (bad j) 131071 81085 (hBad j) hpencil)
+      (RCN243.noLargeSelectedPencil_mono selected seeds (bad j) 131071 81095 (hBad j) hpencil)
     exact hc
   calc
     _ ≤ (good.card + ∑ j : Fin 3, (bad j).card) * terminalScale :=

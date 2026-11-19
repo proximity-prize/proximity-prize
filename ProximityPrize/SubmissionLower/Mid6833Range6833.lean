@@ -13,15 +13,15 @@ local instance mid6833Local_Range6833_11  : DecidableEq IRSProfile.Index := Clas
 set_option maxHeartbeats 4000000
 
 /-- Only score-specific, genuinely agreeing, non-normalizable singular rows in the indicated range remain. -/
-theorem protocol_of_short (unpriced : Intermediate.OpenAt 181059 274980695007758447 2235 9584) :
-    ProtocolClaim 6834 332127561 1073741824 := by
+theorem protocol_of_short (unpriced : Intermediate.OpenAt 181049 274980690694301924 2222 9600) :
+    ProtocolClaim 6835 332167720 1073741824 := by
   apply protocol_at
   intro U S P q N hard fit pencil
-  by_cases norm : CanNormalize N 2235
+  by_cases norm : CanNormalize N 2222
   · exact semilinear_6833 U S P q N hard fit norm
-  have lo : 2235<primitiveExcess 131071 q :=
+  have lo : 2222<primitiveExcess 131071 q :=
     Nat.lt_of_not_ge (fun h => norm (Intermediate.can_of_excess N h))
-  by_cases short : primitiveExcess 131071 q<9584
+  by_cases short : primitiveExcess 131071 q<9600
   · exact unpriced U S P q N hard fit pencil lo short norm
   let hchar := Koala6831BenchmarkField.characteristic
   have h := hard.actual

@@ -27,7 +27,7 @@ theorem room_remaining_caps (roomOrder : ℕ) (remaining incoming source : FlagD
   · rw [Nat.mul_comm, total, Nat.mul_add, Nat.mul_add]
     exact hsource.2.2
 
-def weightGain : ℕ := 19166
+def weightGain : ℕ := 19198
 
 def adaptiveBand (source : SourceNumbers) (p : FlagDegree) : ℕ :=
   powerBandBudget weightGain (total p) (middle p) p.all

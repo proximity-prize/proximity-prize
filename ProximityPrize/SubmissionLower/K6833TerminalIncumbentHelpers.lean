@@ -65,15 +65,15 @@ theorem incumbent_profile_helper_count [CharP K 2130706433]
     (hg : jetGatesWithCorrections TailCorrections.original f cfg = true)
     (F Q : MvPolynomial (Fin 4) K) (hirr : Irreducible F) (hpos : 0 < F.degreeOf (2 : Fin 4))
     (hF : Below (originalCumulativeFlag F) f.flag)
-    (nodes : N ↪ K) (u₀ u₁ : N → K) (hN : Fintype.card N ≤ 262144) (hn : 181059 ≤ Fintype.card N)
+    (nodes : N ↪ K) (u₀ u₁ : N → K) (hN : Fintype.card N ≤ 262144) (hn : 181049 ≤ Fintype.card N)
     (hQ : ProperProfileHelper F Q (cfg j) (f.paddedSupport 2).s
       (f.paddedSupport 2).ys (f.paddedSupport 2).total nodes u₀ u₁)
     (selected : K → Polynomial K) (seeds : Finset K)
     (hdegree : ∀ g ∈ seeds, (selected g).natDegree ≤ 131071)
     (hregular : ∀ g ∈ seeds, RegularSolution F (selected g) g)
-    (hagreement : ∀ g ∈ seeds, 181059 ≤
+    (hagreement : ∀ g ∈ seeds, 181049 ≤
       (Finset.univ.filter (fun i => (selected g).eval (nodes i) = u₀ i + g * u₁ i)).card)
-    (hpencil : NoLargeSelectedPencil selected seeds 131071 81085) :
+    (hpencil : NoLargeSelectedPencil selected seeds 131071 81095) :
     seeds.card * terminalScale ≤ jetFlagCharge TailCorrections.original f cfg (originalCumulativeFlag F) := by
   let supp := f.endpointSupport hmin hshape
   obtain ⟨h₁, h₂, _, hpair⟩ := incumbent_jet_pair_gates f cfg j hg
@@ -90,15 +90,15 @@ theorem individual_profile_helper_count [CharP K 2130706433]
     (hg : jetGatesWithCorrections TailCorrections.original f cfg = true)
     (F Q : MvPolynomial (Fin 4) K) (hirr : Irreducible F) (hpos : 0 < F.degreeOf (2 : Fin 4))
     (hF : Below (originalCumulativeFlag F) f.flag)
-    (nodes : N ↪ K) (u₀ u₁ : N → K) (hN : Fintype.card N ≤ 262144) (hn : 181059 ≤ Fintype.card N)
+    (nodes : N ↪ K) (u₀ u₁ : N → K) (hN : Fintype.card N ≤ 262144) (hn : 181049 ≤ Fintype.card N)
     (hQ : ProperProfileHelper F Q (cfg j) (f.paddedSupport 2).s
       (f.paddedSupport 2).ys (f.paddedSupport 2).total nodes u₀ u₁)
     (selected : K → Polynomial K) (seeds : Finset K)
     (hdegree : ∀ g ∈ seeds, (selected g).natDegree ≤ 131071)
     (hregular : ∀ g ∈ seeds, RegularSolution F (selected g) g)
-    (hagreement : ∀ g ∈ seeds, 181059 ≤
+    (hagreement : ∀ g ∈ seeds, 181049 ≤
       (Finset.univ.filter (fun i => (selected g).eval (nodes i) = u₀ i + g * u₁ i)).card)
-    (hpencil : NoLargeSelectedPencil selected seeds 131071 81085) :
+    (hpencil : NoLargeSelectedPencil selected seeds 131071 81095) :
     seeds.card * terminalScale ≤ flagMixed (originalCumulativeFlag F) ((cfg j).helper (f.pad 2)).flag
       (shortenedDirection f (pencilBudget * residualPriceScale)) := by
   let supp := f.endpointSupport hmin hshape

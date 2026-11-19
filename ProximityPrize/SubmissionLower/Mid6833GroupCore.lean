@@ -29,8 +29,8 @@ theorem exhaust_group [CharP K 2130706433] (menu : List Stage)
     (card : Fintype.card I ≤ 262144)
     (h₀ : ∀i,B.d0.eval (nodes i)*u₀ i+B.c0.eval (nodes i)=B.a0.eval (nodes i)*normalized i)
     (h₁ : ∀i,B.d0.eval (nodes i)*u₁ i+B.c1.eval (nodes i)=B.a1.eval (nodes i)*normalized i)
-    (den : B.d0.natDegree+max B.a0.natDegree B.a1.natDegree≤9583)
-    (minor : (B.a1*B.c0-B.a0*B.c1).natDegree≤weight+9583)
+    (den : B.d0.natDegree+max B.a0.natDegree B.a1.natDegree≤9599)
+    (minor : (B.a1*B.c0-B.a0*B.c1).natDegree≤weight+9599)
     (H : P4 K) (A : Finset (RegularIndex H)) (field : (A.card:ENat)<ENat.card K)
     (cap : Below (aggregateFlag H A) primaryIncoming) (trans : ∀F∈A, ¬F.1∣B.flow F.1) :
     ∃U⊆A, (U=∅ ∨ ∀s∈menu, ¬adaptiveGate s.numbers (aggregateFlag H U)) ∧

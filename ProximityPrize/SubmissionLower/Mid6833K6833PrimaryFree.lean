@@ -16,21 +16,21 @@ section FixedProfile
 
 open RCN318
 
-def primary319FreeParameters : TightParameters := ⟨262144, weight, 181059, (319*181059), 53215, 1⟩
+def primary319FreeParameters : TightParameters := ⟨262144, weight, 181049, (319*181049), 65864, 1⟩
 
 set_option maxRecDepth 80000 in
 
 theorem primary319_free_count [CharP K 2130706433] {I : Type}
     (H : ExceptionPoly K) (hH : H ≠ 0)
-    (hbox : H ∈ nestedCoefficientBox K (319*181059) weight 53215 440 98)
+    (hbox : H ∈ nestedCoefficientBox K (319*181049) weight 65864 440 98)
     (seeds : Finset K) (selected : K → Polynomial K) (nodes : Finset I)
     (x u₀ u₁ : I → K) (hinj : Set.InjOn x nodes) (hnodes : nodes.card = 262144)
     (hdegree : ∀ g ∈ seeds, (selected g).natDegree ≤ weight)
     (hsol : ∀ g ∈ seeds, RCN319.specialization K (selected g) g (freeAndTailCarrier H) = 0)
-    (hagree : ∀ g ∈ seeds, 181059 ≤
+    (hagree : ∀ g ∈ seeds, 181049 ≤
       (nodes.filter fun i => (selected g).eval (x i) = u₀ i + g * u₁ i).card)
-    (hpencil : RCN238.NoLargeSelectedPencil selected seeds weight 81085) :
-    seeds.card ≤ 48288459149968 := by
+    (hpencil : RCN238.NoLargeSelectedPencil selected seeds weight 81095) :
+    seeds.card ≤ 59780054304029 := by
   let J := freeAndTailCarrier H
   let params := primary319FreeParameters
   have hweights := nested_mem_weights hbox hH
@@ -48,12 +48,12 @@ theorem primary319_free_count [CharP K 2130706433] {I : Type}
     have hr := (MvPolynomial.monomial_le_degreeOf (2 : Fin 4) hd).trans_eq hJR
     have hx := (MvPolynomial.le_weightedTotalDegree (contactWeights weight) hd).trans_lt
       ((freeAndTailCarrier_weight_le H hH (contactWeights weight)).trans_lt hweights.2.2.2)
-    have ht' : d 1 + d 2 + d 3 ≤ 53215 := by
+    have ht' : d 1 + d 2 + d 3 ≤ 65864 := by
       simpa [weight_fin4, residualTotalWeights] using ht
-    exact ⟨by change d 1 + d 3 ≤ 53215; omega,
+    exact ⟨by change d 1 + d 3 ≤ 65864; omega,
       hr.trans (by decide +kernel),
       by simpa [weight_fin4, contactWeights, Nat.mul_comm, params, primary319FreeParameters] using hx⟩
-  have herrors : params.errors = 81085 := by decide +kernel
+  have herrors : params.errors = 81095 := by decide +kernel
   have hpencil' : RCN238.NoLargeSelectedPencil selected seeds params.w params.errors := by
     rw [herrors]
     exact hpencil

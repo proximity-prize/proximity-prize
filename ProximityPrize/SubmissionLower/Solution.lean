@@ -1,7 +1,7 @@
 import ProximityPrize.SubmissionLower.Mid6833Candidate6833
 
 namespace ProximityPrize.Benchmark
-theorem candidate : ProtocolClaim 6834 332127561 1073741824 :=
+theorem candidate : ProtocolClaim 6835 332167720 1073741824 :=
   ProximityPrize.SubmissionLower.Intermediate6833.candidate
 #print axioms candidate
 end ProximityPrize.Benchmark

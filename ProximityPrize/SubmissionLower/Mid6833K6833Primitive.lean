@@ -23,21 +23,21 @@ theorem K6833_carrier_of_primitive {I Γ : Type*} [Fintype I]
     (nodes : I ↪ K) (u₀ v₀ u₁ v₁ : I → K) (node_count : Fintype.card I ≤ 262144)
     (q : SymbolicRow (SeedRing K)) (hprim : IsPrimitiveRow q)
     (hf : q.first ≠ 0) (hs : q.second ≠ 0)
-    (long : 9584 ≤ primitiveExcess 131071 q) (small : primitiveExcess 131071 q ≤ 33735)
+    (long : 9600 ≤ primitiveExcess 131071 q) (small : primitiveExcess 131071 q ≤ 33735)
     (N : NormalForm q 131071 (primitiveExcess 131071 q))
     (hgood : ∀ i, q.atNode (MvPolynomial.C (nodes i))
       (MvPolynomial.C (u₀ i) + MvPolynomial.X 0 * MvPolynomial.C (v₀ i))
       (MvPolynomial.C (u₁ i) + MvPolynomial.X 1 * MvPolynomial.C (v₁ i)) = 0)
     (σ : K →+* K) (p : ℕ) (P : K → Polynomial K) (seed : Γ → K)
     (agreement : Γ → Finset I) (hdegree : ∀ g, (P (seed g)).natDegree ≤ 131071)
-    (hsize : ∀ g, 181059 ≤ (agreement g).card)
+    (hsize : ∀ g, 181049 ≤ (agreement g).card)
     (h₀ : ∀ g i, i ∈ agreement g → (P (seed g)).eval (nodes i) = u₀ i + seed g * v₀ i)
     (h₁ : ∀ g i, i ∈ agreement g →
       ((P (seed g)).map σ).eval (nodes i) = u₁ i + (seed g) ^ p * v₁ i)
     (hzero : ∀ g, primitiveSelected σ p q P (seed g) = 0) :
     ∃ G : Carrier K, G ≠ 0 ∧
       (∀ d ∈ G.support, d 1 ≤ 22 ∧ d 1 + d 2 ≤ 198 ∧ d 3 ≤ 167 ∧
-        d 0 + 131071 * d 1 ≤ 16 * 181059 - 1 + 22 * primitiveExcess 131071 q ∧
+        d 0 + 131071 * d 1 ≤ 16 * 181049 - 1 + 22 * primitiveExcess 131071 q ∧
         d 0 + 131071 * d 1 < 2130706433) ∧
       ∀ g, Koala6831Intrinsic.graphSpecialize (P (seed g)) (seed g) ((seed g) ^ p) G = 0 := by
   let δ := primitiveExcess 131071 q

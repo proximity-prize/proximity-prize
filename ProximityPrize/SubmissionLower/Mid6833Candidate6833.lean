@@ -21,7 +21,7 @@ theorem regular : K6833PrimaryBridge.RegularBudget := by
   classical
   intro original R H nz box _ Γ hg A trans field cap _
   let old : DecidableEq F := inferInstance
-  change (@Finset.biUnion _ F old A (regularFiber H Γ R.selected)).card≤264040334683142352
+  change (@Finset.biUnion _ F old A (regularFiber H Γ R.selected)).card≤262932826822788554
   have instEq : old = Classical.decEq F := Subsingleton.elim _ _
   rw [instEq]
   letI : DecidableEq F := Classical.decEq _
@@ -30,7 +30,7 @@ theorem regular : K6833PrimaryBridge.RegularBudget := by
   let f := aggregateFlag H v.current
   have b := v.paid v.current Finset.Subset.rfl
   rw [accrued_five] at b
-  have target : finalBudget≤264040334683142352 := by decide +kernel
+  have target : finalBudget≤262932826822788554 := by decide +kernel
   rcases v.current.eq_empty_or_nonempty with empty|ne
   · have zero : (v.current.biUnion (regularFiber H Γ R.selected)).card=0 := by simp [empty]
     have feeSum : (∑ i : Fin 5, (fee i-credit (capStage i) f))≤∑ i : Fin 5, fee i := Finset.sum_le_sum (s:=Finset.univ) (fun (i : Fin 5) _ => Nat.sub_le (fee i) (credit (capStage i) f))
@@ -42,13 +42,13 @@ theorem regular : K6833PrimaryBridge.RegularBudget := by
       primary := H, primary_ne := nz, primary_box := box, seeds := Γ, u₀ := R.u₀, u₁ := R.u₁,
       selected := R.selected, nodes_card := R.nodes_card, degree := fun g h => R.degree g (hg h),
       agreement := fun g h => R.agreement g (hg h),
-      pencil := RCN243.noLargeSelectedPencil_mono R.selected R.seeds Γ 131071 81085 hg R.pencil }
+      pencil := RCN243.noLargeSelectedPencil_mono R.selected R.seeds Γ 131071 81095 hg R.pencil }
     have bound := P33.row_count info v.current row (P33.rowAt_ok entry) rs ys ts
     change (v.current.biUnion (regularFiber H Γ R.selected)).card≤row.terminalLimit at bound
     change (A.biUnion (regularFiber H Γ R.selected)).card≤(v.current.biUnion (regularFiber H Γ R.selected)).card+∑ i : Fin 5, (fee i-credit (capStage i) f) at b
     omega
 
-theorem candidate : ProtocolClaim 6834 332127561 1073741824 :=
+theorem candidate : ProtocolClaim 6835 332167720 1073741824 :=
   K6833PrimaryBridge.protocol_of_regularBudget regular
 #print axioms candidate
 end

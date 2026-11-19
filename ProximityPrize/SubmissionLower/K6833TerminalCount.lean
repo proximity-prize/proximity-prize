@@ -58,7 +58,7 @@ private theorem graph_absorbed (f : Envelope) (cfg : Fin 3 → JetProfile) (p : 
 theorem single_count {x : I ↪ K} (T : TerminalData x) (F : RegularIndex T.primary)
     (f : Envelope) (limit : ℕ) (choice : Option Profiles)
     (shape : f.slope ≤ f.middle ∧ f.middle ≤ f.total)
-    (caps : f.slope ≤ 16 ∧ f.middle ≤ 67 ∧ f.total ≤ 8870)
+    (caps : f.slope ≤ 17 ∧ f.middle ≤ 72 ∧ f.total ≤ 8870)
     (below : Below (originalCumulativeFlag F.1) f.flag) (ok : simpleMode f limit choice = true) :
     (regularFiber T.primary T.seeds T.selected F).card ≤ limit := by
   cases choice with
@@ -117,7 +117,7 @@ private theorem below_pred {p agg : FlagDegree} (f : Envelope)
 private theorem multiple_count {x : I ↪ K} (T : TerminalData x) (A : Finset (RegularIndex T.primary))
     (f : Envelope) (limit : ℕ) (choice : Option Profiles)
     (hcard : 1 < A.card) (shape : f.slope ≤ f.middle ∧ f.middle ≤ f.total)
-    (caps : f.slope ≤ 16 ∧ f.middle ≤ 67 ∧ f.total ≤ 8870)
+    (caps : f.slope ≤ 17 ∧ f.middle ≤ 72 ∧ f.total ≤ 8870)
     (overall : Below (aggregateFlag T.primary A) f.flag)
     (ok : multipleMode f (predEnvelope f) limit choice = true) :
     (A.biUnion (regularFiber T.primary T.seeds T.selected)).card ≤ limit := by
@@ -127,7 +127,7 @@ private theorem multiple_count {x : I ↪ K} (T : TerminalData x) (A : Finset (R
   have localBelow (F) (hF : F ∈ A) : Below (deg F) sm.flag := below_pred f shape
     (positive_split T A F hF hcard) overall
   have sh : sm.slope ≤ sm.middle ∧ sm.middle ≤ sm.total := by simp only [sm,predEnvelope]; omega
-  have cp : sm.slope ≤ 16 ∧ sm.middle ≤ 67 ∧ sm.total ≤ 8870 := by simp only [sm,predEnvelope]; omega
+  have cp : sm.slope ≤ 17 ∧ sm.middle ≤ 72 ∧ sm.total ≤ 8870 := by simp only [sm,predEnvelope]; omega
   have agg : originalCumulativeFlag (regularProduct T.primary A) = LocatorPhase6800Oracle.sumFlag A deg :=
     contactFlag_regularProduct T.primary A
   cases choice with
@@ -199,7 +199,7 @@ packet composition certificate (P33Composition). -/
 theorem factor_jet_charge {x : I ↪ K} (T : TerminalData x) (F : RegularIndex T.primary)
     (f : Envelope) (ids : Profiles) (hmin : 1 ≤ f.slope ∧ 2 ≤ f.middle)
     (shape : f.slope ≤ f.middle ∧ f.middle ≤ f.total)
-    (caps : f.slope ≤ 16 ∧ f.middle ≤ 67 ∧ f.total ≤ 8870)
+    (caps : f.slope ≤ 17 ∧ f.middle ≤ 72 ∧ f.total ≤ 8870)
     (below : Below (originalCumulativeFlag F.1) f.flag)
     (gate : jetGatesWithCorrections TailCorrections.original f (cellConfig ids) = true) :
     (regularFiber T.primary T.seeds T.selected F).card * terminalScale ≤

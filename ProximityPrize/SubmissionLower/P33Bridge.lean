@@ -1,6 +1,6 @@
 /- P33Bridge (Bome2017 tree): a residual factor of a `K6833Residual.TerminalData` inside a packet window has
 fiber ≤ cap. Same proof as the 68.32 version (Ready/ReachedTerminal), with the TerminalData fields:
-seeds/selected/u₀/u₁/degree/agreement (181059)/pencil (81085) and the primary cutoff 57757821. -/
+seeds/selected/u₀/u₁/degree/agreement (181059)/pencil (81085) and the primary cutoff 57754631. -/
 import ProximityPrize.SubmissionLower.P33Windows
 import ProximityPrize.SubmissionLower.K6833TerminalData
 
@@ -34,7 +34,7 @@ theorem fiber_le_window {x : I ↪ K} (T : TerminalData x)
     (ht : wt residualTotalWeights F.1 ≤ W.t) (hlow : W.low ≤ wt residualTotalWeights F.1) :
     (regularFiber T.primary T.seeds T.selected F).card ≤ W.cap := by
   have hbox := T.factor_global_box F hdata
-  let P := CVL.factorPacket F 57757821 _ _ W.t W.y W.r (by norm_num) (by norm_num) hbox hr5 hrh hy hyh hyt hth
+  let P := CVL.factorPacket F 57754631 _ _ W.t W.y W.r (by norm_num) (by norm_num) hbox hr5 hrh hy hyh hyt hth
     hr hyF ht x T.u₀ T.u₁ T.nodes_card T.selected T.seeds T.degree
     (fun γ hγ => by have h := T.agreement γ hγ; convert h)
     (fun P₀ P₁ h₀ h₁ => (T.pencil P₀ P₁ h₀ h₁).trans (by norm_num))

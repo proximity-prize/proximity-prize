@@ -65,9 +65,19 @@ def oldRowOK (x : OldCell × ℕ) : Bool :=
   capsOK x.1.envelope && simpleMode x.1.envelope x.2 x.1.sourceIds
 
 def oldSliceOK (rq : ℕ) (slice : List (List (ℕ × ℕ))) : Bool :=
-  (List.range 24).all fun j => (List.range 24).all fun k =>
+  (List.range 24).all fun j => (List.range 30).all fun k =>
     let v := (slice.getD j []).getD k (0, 0)
     v.1 = 0 || oldRowOK (⟨⟨rq, bandHi rq j, 300 * (k + 1)⟩, idsOfCode v.2⟩, v.1)
+
+/-- Remainder-support table entry check (refined certificate, `P33RCheck`): an entry
+`(code, a0, a1, a2) = supTab[s][yy][kT]` with `code ≠ 0` asserts that the support
+`(s, yy, min (300 kT) 8870)` is capped, has a valid route `idsOfCode code`, and that route's axes are `(a0, a1, a2)`. -/
+def supSliceOK (s : ℕ) (slice : List (List (ℕ × ℕ × ℕ × ℕ))) : Bool :=
+  (List.range 68).all fun yy => (List.range 31).all fun kT =>
+    let v := (slice.getD yy []).getD kT (0, 0, 0, 0)
+    v.1 = 0 || (capsOK ⟨s, yy, min (300 * kT) 8870⟩ &&
+      routeOK ⟨s, yy, min (300 * kT) 8870⟩ (idsOfCode v.1) &&
+      decide (axes ⟨s, yy, min (300 * kT) 8870⟩ (idsOfCode v.1) = (v.2.1, v.2.2.1, v.2.2.2)))
 
 end P33
 end SubmissionLower

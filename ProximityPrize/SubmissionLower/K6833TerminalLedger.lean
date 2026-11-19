@@ -8,12 +8,12 @@ namespace ProximityPrize.SubmissionLower.K6833Residual
 
 abbrev Profiles := Fin 6 × Fin 6 × Fin 6
 def jetProfile : Fin 6 → JetProfile :=
-  ![⟨120,54,25,164,1742,4,5⟩,
-    ⟨107,42,20,145,3305,4,5⟩,
-    ⟨107,44,20,146,2737,4,5⟩,
-    ⟨128,51,24,174,3232,5,6⟩,
-    ⟨128,53,24,174,2883,5,6⟩,
-    ⟨146,63,26,198,3234,6,7⟩]
+  ![⟨120,54,25,164,1774,4,5⟩,
+    ⟨107,42,20,145,3432,4,5⟩,
+    ⟨107,44,20,146,2826,4,5⟩,
+    ⟨128,51,24,174,3333,5,6⟩,
+    ⟨128,53,24,174,2965,5,6⟩,
+    ⟨146,63,26,198,3327,6,7⟩]
 def cellConfig (ids : Profiles) : Fin 3 → JetProfile :=
   ![jetProfile ids.1, jetProfile ids.2.1, jetProfile ids.2.2]
 end ProximityPrize.SubmissionLower.K6833Residual

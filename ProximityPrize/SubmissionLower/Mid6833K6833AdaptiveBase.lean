@@ -21,11 +21,11 @@ def capStage : Fin 5 → Stage
   | 3 => .src485
   | 4 => .src718
 def fee : Fin 5 → ℕ
-  | 0 => 5347880873160128
-  | 1 => 1616577662157267
-  | 2 => 736755185420453
-  | 3 => 1312829695180950
-  | 4 => 8187063037011665
+  | 0 => 6549797983858004
+  | 1 => 1964970898496834
+  | 2 => 953657939715696
+  | 3 => 1527775511358948
+  | 4 => 9367372783627535
 def sourceGroup : Stage → ℕ
   | .primary => 5
   | .first => 0
@@ -153,7 +153,7 @@ inductive Tile where
 
 def checkTile (j : Fin 5) (rl rh yl yh : ℕ) : Tile → Bool
   | .empty => decide (yh<rl)
-  | .full => decide (yh≤53215 ∧ priceAt j (min rh yh) yh 53215 ≤ fee j)
+  | .full => decide (yh≤65864 ∧ priceAt j (min rh yh) yh 65864 ≤ fee j)
   | .excluded s => decide (sourceGroup s<j.val) && gateAt s rl (max yl rl) (max yl rl)
   | .cut t s => decide (yh≤t ∧ priceAt j (min rh yh) yh t ≤ fee j) &&
       (decide (sourceGroup s<j.val) && gateAt s rl (max yl rl) (max (max yl rl) (t+1)))
@@ -169,7 +169,7 @@ private theorem upperPrice {j : Fin 5} {f : FlagDegree} {rh yh : ℕ} (hp : 0<f.
     exact price_mono hp _ (below_raw (min_le_right _ _) yt hR hy1 ht) _ _
 
 theorem cost_of_tile (j : Fin 5) (f : FlagDegree) (hp : 0<f.all)
-    (hT : total f≤53215) (prev : Prior j.val f) (tree : Tile) (rl rh yl yh : ℕ)
+    (hT : total f≤65864) (prev : Prior j.val f) (tree : Tile) (rl rh yl yh : ℕ)
     (check : checkTile j rl rh yl yh tree=true) (pos : 0<rl)
     (hr0:rl≤f.all) (hr1:f.all≤rh) (hy0:yl≤middle f) (hy1:middle f≤yh) :
     stagePrice f hp (capStage j) (capStage j).numbers.slopeCap ≤ fee j := by

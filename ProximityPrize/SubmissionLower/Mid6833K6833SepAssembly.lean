@@ -27,15 +27,15 @@ theorem count_81076_long_factors_6833
     (seeds : Finset K) (selected : K → Polynomial K) (u₀ u₁ : I → K)
     (hvan : ∀ g ∈ seeds, graphSpecialize (selected g) g (g ^ 2130706433) Q = 0)
     (hdegree : ∀ g ∈ seeds, (selected g).natDegree ≤ 131071)
-    (hagree : ∀ g ∈ seeds, 181059 ≤ ((Finset.univ : Finset I).filter
+    (hagree : ∀ g ∈ seeds, 181049 ≤ ((Finset.univ : Finset I).filter
       (fun i => (selected g).eval (x i) = u₀ i + g * u₁ i)).card)
     (hpencil : ∀ P₀ P₁ : Polynomial K, P₀.natDegree ≤ 131071 → P₁.natDegree ≤ 131071 →
-      (RCN050.pencilSeeds seeds selected P₀ P₁).card ≤ 81086) :
-    seeds.card ≤ 274584715711948448 := by
+      (RCN050.pencilSeeds seeds selected P₀ P₁).card ≤ 81096) :
+    seeds.card ≤ 274584755586524048 := by
   let nodes := (Finset.univ : Finset I)
   have hn : nodes.card = 262144 := Finset.card_univ.trans hcard
-  have hAn : 181059 ≤ nodes.card := hn.symm ▸ (by decide)
-  have haverage : nodeAverage nodes.card 131071 181059 ≤ 3 := by
+  have hAn : 181049 ≤ nodes.card := hn.symm ▸ (by decide)
+  have haverage : nodeAverage nodes.card 131071 181049 ≤ 3 := by
     rw [hn]
     norm_num [nodeAverage]
   apply long_retained_seed_budget_of_factor_counts_lp32 Q hQ
@@ -60,7 +60,7 @@ theorem count_81076_long_factors_6833
     exact hgeom.trans (by rw [longFactorCharge_eq_lp32 _ _ _ hyt]; exact Nat.le_add_left _ _)
   · exact long_proper_first_tail_factor_count_lp32 F hp hiF hy ht hz G hiG hdiv hfirst
       (G.degreeOf 0) (longMiddleDegree_lp32 G) (G.degreeOf 2) hyt hGy hGt hGz le_rfl hmid le_rfl
-      4000000 81085 (by decide) (by decide) le_rfl hcode
+      4000000 81095 (by decide) (by decide) le_rfl hcode
       x (u₀) (u₁) nodes hAn haverage seeds selected
       hdegree hagree hpencil
 

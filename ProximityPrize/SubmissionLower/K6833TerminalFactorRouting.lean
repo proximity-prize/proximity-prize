@@ -106,7 +106,7 @@ theorem route_regular_factor [CharP K 2130706433]
     (large.one_le_s.trans (large.s_le_ys.trans large.ys_le_total))
     ⟨hlarge.s_weight, hlarge.ys_weight, hlarge.total_weight⟩
 
-def terminalScale : ℕ := 62721886633560
+def terminalScale : ℕ := 62705875769460
 
 def jetFlagCharge (cuts : TailCorrections) (f : Envelope) (cfg : Fin 3 → JetProfile) (left : FlagDegree) : ℕ :=
   ((List.finRange 3).map

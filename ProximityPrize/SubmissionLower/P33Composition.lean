@@ -123,7 +123,7 @@ theorem jet_factor_card_mul_le {x : I ↪ K} (T : TerminalData x)
   simp only [routeOK, Bool.and_eq_true, decide_eq_true_eq] at hroute
   obtain ⟨⟨hjg, _⟩, hsize⟩ := hroute
   obtain ⟨hs, hm, h1, h2, h3⟩ := caps_of e hcapsE
-  exact factor_jet_charge T F e ids ⟨hsize.1, hsize.2.1⟩ ⟨hs, hm⟩ ⟨h1, h2, h3⟩ hbelow hjg
+  exact factor_jet_charge T F e ids ⟨hsize.1, hsize.2.1⟩ ⟨hs, hm⟩ ⟨by omega, by omega, h3⟩ hbelow hjg
 
 /-- **factor_charge_le** (P1 in `cumCharge` form): at a verified support `e` with route `ids`, a factor below `e`
 has `|fiber| · terminalScale ≤ cumCharge (axes e ids) κ(F)`. -/
@@ -136,7 +136,7 @@ theorem factor_charge_le {x : I ↪ K} (T : TerminalData x)
   cases ids with
   | none =>
     have hdata := residual_support_of_endpoint F.1 e ⟨hs, hm⟩ hbelow             -- K ShortCount:126
-    have hraw := incumbent_raw_fiber T F e ⟨hR17, hY71, hT⟩ hroute hdata
+    have hraw := incumbent_raw_fiber T F e ⟨by omega, by omega, hT⟩ hroute hdata
     have h := raw_eq_cum e (originalCumulativeFlag F.1)
     rw [k1, k2, k3] at h
     rw [← h]
@@ -157,7 +157,7 @@ theorem fiber_le_old {x : I ↪ K} (T : TerminalData x) (e : Envelope) (ids : Op
     (F : RegularIndex T.primary) (hb : Below (originalCumulativeFlag F.1) e.flag) :
     (regularFiber T.primary T.seeds T.selected F).card ≤ price := by
   obtain ⟨hs, hm, h1, h2, h3⟩ := caps_of e hca
-  exact single_count T F e price ids ⟨hs, hm⟩ ⟨h1, h2, h3⟩ hb hsm
+  exact single_count T F e price ids ⟨hs, hm⟩ ⟨by omega, by omega, h3⟩ hb hsm
 
 /-! ## 2. The residue as a Finset sum -/
 
@@ -235,7 +235,7 @@ theorem fiber_le_ub {x : I ↪ K} (T : TerminalData x) (A : Finset (RegularIndex
     intro v hv hv0
     have hslice := oldIndex_ok_all rq hrq1 (hr.trans hr14)
     simp only [oldSliceOK, List.all_eq_true, List.mem_range, Bool.or_eq_true, decide_eq_true_eq] at hslice
-    rcases hslice j hj k hk with h0 | hrow
+    rcases hslice j hj k (by omega) with h0 | hrow
     · have hv' : v = 0 := by rw [← hv]; simpa only [oldAt] using h0
       exact absurd hv' hv0
     · have hrow' := hrow

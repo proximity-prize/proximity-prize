@@ -1182,12 +1182,12 @@ structure Data (nodes:I ↪ K) (u0 u1:I→K) where
   selected:K→Polynomial K
   seeds:Finset K
   degree: ∀gamma ∈ seeds,(selected gamma).natDegree≤w
-  agreement: ∀gamma ∈ seeds,181059≤
+  agreement: ∀gamma ∈ seeds,181049≤
     (Finset.univ.filter (fun i=>(selected gamma).eval (nodes i)=u0 i+gamma*u1 i)).card
   solution: ∀gamma ∈ seeds,RCN319.specialization K (selected gamma) gamma F=0
   regular: ∀gamma ∈ seeds,
     RCN319.specialization K (selected gamma) gamma (pderiv (2:Fin 4) F)≠0
-  noPencil:BL selected seeds w 81085
+  noPencil:BL selected seeds w 81095
 namespace Data
 variable {nodes:I ↪ K} {u0 u1:I→K}
 def restrict (S:Data nodes u0 u1) (Delta:Finset K) (hsub:Delta ⊆ S.seeds):
@@ -1198,9 +1198,9 @@ def restrict (S:Data nodes u0 u1) (Delta:Finset K) (hsub:Delta ⊆ S.seeds):
            agreement:=fun gamma h=>S.agreement gamma (hsub h)
            solution:=fun gamma h=>S.solution gamma (hsub h)
            regular:=fun gamma h=>S.regular gamma (hsub h)
-           noPencil:=KX S.selected S.seeds Delta w 81085 hsub S.noPencil}
+           noPencil:=KX S.selected S.seeds Delta w 81095 hsub S.noPencil}
 def pair (S:Data nodes u0 u1) (R capY T:ℕ):DG:=
-  ⟨262144,131071,181059,S.y,S.r,S.t,capY,R,T⟩
+  ⟨262144,131071,181049,S.y,S.r,S.t,capY,R,T⟩
 end Data
 end
 end AAG
@@ -1256,7 +1256,7 @@ def CZ (a b c capY capR capT:ℕ):ℕ:=
   131073*((1+262142*(a+b+5))*((a+3)*capT+(a+b+c+5)*capR)+
     131071*(2*a+5)*((a+b+5)*capT+(a+b+c+5)*capY)+
     (1+262142*(a+b+c+5))*((a+b+5)*capR+(a+3)*capY))+
-    81086*49988*((a+b+5)*capR+(a+3)*capY)
+    81096*49978*((a+b+5)*capR+(a+3)*capY)
 def coeff (P:Params) (a b c:ℕ):ℕ:=CZ a b c P.U P.B P.L
 end GU
 end SubmissionLower
@@ -3543,9 +3543,9 @@ structure Rectangle where
   L1:ℕ
   U:ℕ
   deriving DecidableEq
-def tail (b:Band):ℕ:=(b.B+b.R-1)*181059+131071-1
+def tail (b:Band):ℕ:=(b.B+b.R-1)*181049+131071-1
 def cutoff (b:Band) (d:Rectangle):ℕ:=
-  d.alpha*181059-d.beta*min (d.hi-131071+1) ((b.B+b.R-1)*181059)
+  d.alpha*181049-d.beta*min (d.hi-131071+1) ((b.B+b.R-1)*181049)
 def lowerTotal (b:Band) (d:Rectangle) (T:ℕ):ℕ:=
   max (T+d.alpha+d.s) (max (cutoff b d/131071+1) (T+(cutoff b d-d.lo)/131071+1))
 def total (b:Band) (d:Rectangle) (T:ℕ):ℕ:=
@@ -3588,7 +3588,7 @@ set_option autoImplicit false
 set_option maxHeartbeats 1300000
 set_option maxRecDepth 25000
 def pair (b:Band) (d:Rectangle):DG:=
-  ⟨262144,131071,181059,b.B,b.R,b.T1,d.U,d.s,max d.L0 d.L1⟩
+  ⟨262144,131071,181049,b.B,b.R,b.T1,d.U,d.s,max d.L0 d.L1⟩
 def Valid (b:Band) (d:Rectangle):Prop:=
   Shape b d∧1≤b.R∧b.B<2130706433∧b.R<2130706433∧b.T1<2130706433∧
   cutoff b d≤131071*(d.U+1)∧
@@ -3749,7 +3749,7 @@ set_option maxHeartbeats 1100000
 set_option maxRecDepth 20000
 def hiRect (d:Rectangle):Rectangle:={d with lo:=d.hi}
 def cutAt (b:Band) (d:Rectangle) (nu:ℕ):ℕ:=
-  d.alpha*181059-d.beta*min (nu-131071+1) ((b.B+b.R-1)*181059)
+  d.alpha*181049-d.beta*min (nu-131071+1) ((b.B+b.R-1)*181049)
 def tanK (b:Band) (d:Rectangle):ℕ:=cutAt b d d.lo-cutoff b d
 def tanE (b:Band) (d:Rectangle):ℕ:=cutAt b d d.lo-d.lo
 def tanLower (b:Band) (d:Rectangle) (T:ℕ):ℕ:=

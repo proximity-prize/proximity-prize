@@ -913,8 +913,8 @@ theorem DYW
     (hag: ∀i∈s,f.eval (nodes i)=u0 i+u1 i*z)
     (hne:SecondJetSpecialize.specialize f z ((MvPolynomial.pderiv 1)^[m] J)≠0)
     (hdegree:(SecondJetSpecialize.specialize f z ((MvPolynomial.pderiv 1)^[m] J)).natDegree≤nu-m*131069)
-    (hnu:m*131069≤nu) (hcard:s.card=181059) (hD:D+q*nu=n*181059)
-    (hQ:weightedTotalDegree CW.codeWeights Q<D-q*m*49990):
+    (hnu:m*131069≤nu) (hcard:s.card=181049) (hD:D+q*nu=n*181049)
+    (hQ:weightedTotalDegree CW.codeWeights Q<D-q*m*49980):
     SecondJetSpecialize.specialize f z Q=0:=by
   classical
   let mu (i:I):=(NS.outer (nodes i) (u0 i) (u1 i) J).rootMultiplicity 0
@@ -925,7 +925,7 @@ theorem DYW
       (NS.outer (nodes i) (u0 i) (u1 i) J).pow_rootMultiplicity_dvd 0
   have hloss:=ASN.DIJ nodes u0 u1 J f z s
     mu m (nu-m*131069) hag (fun i _=>hmu i) hne hdegree
-  have hmass:=ALQ.DZT s mu q m n 181059 131069 49990 nu
+  have hmass:=ALQ.DZT s mu q m n 181049 131069 49980 nu
     (by decide) hcard hnu hloss
   let R:=SecondJetSpecialize.specialize f z Q
   by_contra hR
@@ -956,7 +956,7 @@ theorem DYW
         rw [TA.BLT]
         exact le_weightedTotalDegree CW.codeWeights he)
     simpa only [Function.iterate_zero,id_eq,Nat.zero_mul,Nat.sub_zero] using hh
-  change n*181059≤(∑ i∈s,ord i)+q*nu+q*m*49990 at hmass
+  change n*181049≤(∑ i∈s,ord i)+q*nu+q*m*49980 at hmass
   omega
 end
 end BSV
@@ -992,8 +992,8 @@ theorem FIN {t y r:ℕ}
     (hJne:(SecondJetCoefficients.asS J).map (carrierMap P.F)≠0)
     (hroot:((SecondJetCoefficients.asS J).map (carrierMap P.F)).rootMultiplicity (SecondJetCarrierDichotomy.ratio (carrierMap P.F) P.F)=m)
     (hnu:weightedTotalDegree CW.codeWeights J=nu)
-    (hD:D+q*nu=n*181059)
-    (hQcode:weightedTotalDegree CW.codeWeights Q<D-q*m*49990):
+    (hD:D+q*nu=n*181049)
+    (hQcode:weightedTotalDegree CW.codeWeights Q<D-q*m*49980):
     P.F∣SecondJetClearedHelper.helper Q P.F 64 0∨P.seeds.card<6000000000000000:=by
   classical
   by_cases hproper:P.F∣SecondJetClearedHelper.helper Q P.F 64 0
@@ -1295,7 +1295,7 @@ theorem powSpace_le (V:Submodule K (SecondJetSupport.Poly (K:=K))) (J:SecondJetS
 @[simp] theorem GVA (V:Submodule K (SecondJetSupport.Poly (K:=K))) (J:SecondJetSupport.Poly (K:=K)):
  powSpace V J 0=V:=by ext P;simp [powSpace]
 def bandCount (p:SourceCaps) (a:OwnerBox) (m e:ℕ):ℕ:=
- BLM.count (p.C-e*(131071*a.loU-a.hiB)) (e*m*49990)
+ BLM.count (p.C-e*(131071*a.loU-a.hiB)) (e*m*49980)
    (p.T-e*a.loT) (p.B-e*a.loB) (p.S-e*a.loS) (p.U-e*a.loU)
 theorem EAJ (p:SourceCaps) (a:OwnerBox) (e:ℕ)
  (P J Q:SecondJetSupport.Poly (K:=K)) (hJ:J≠0) (hQ:Q≠0) (heq:P=J^e*Q)
@@ -1323,7 +1323,7 @@ theorem step
  (V:Submodule K (SecondJetSupport.Poly (K:=K))) [Module.Finite K V]
  (hb: ∀P∈V,Bounds p P) (J:SecondJetSupport.Poly (K:=K)) (hJ:J≠0) (ha:Covers a J)
  (hlow: ∀(P Q:SecondJetSupport.Poly (K:=K)),P∈V→P=J^e*Q→Q≠0→
-   weightedTotalDegree codeWeights Q<p.C-e*weightedTotalDegree codeWeights J-e*m*49990→J∣Q):
+   weightedTotalDegree codeWeights Q<p.C-e*weightedTotalDegree codeWeights J-e*m*49980→J∣Q):
  Module.finrank K (powSpace V J e)≤bandCount p a m e+Module.finrank K (powSpace V J (e+1)):=by
  classical
  let W:=powSpace V J e
@@ -1332,7 +1332,7 @@ theorem step
  let Q:=BKC W J e hJ hd
  have heq (v:W):v.val=J^e*Q v:=RV W J e hd v
  let D:=p.C-e*weightedTotalDegree codeWeights J
- let width:=e*m*49990
+ let width:=e*m*49980
  let idx:=BLM.Index D width (p.T-e*a.loT) (p.B-e*a.loB) (p.S-e*a.loS) (p.U-e*a.loU)
  let ex:=BLM.exponent D width (p.T-e*a.loT) (p.B-e*a.loB) (p.S-e*a.loS) (p.U-e*a.loU)
  let proj:W→ₗ[K] (idx→K):=LinearMap.pi (fun i=>(MvPolynomial.lcoeff K (ex i)).comp Q)
@@ -1379,7 +1379,7 @@ theorem telescope
  (V:Submodule K (SecondJetSupport.Poly (K:=K))) [Module.Finite K V]
  (hb: ∀P∈V,Bounds p P) (J:SecondJetSupport.Poly (K:=K)) (hJ:J≠0) (ha:Covers a J)
  (hlow: ∀e<N,∀(P Q:SecondJetSupport.Poly (K:=K)),P∈V→P=J^e*Q→Q≠0→
-   weightedTotalDegree codeWeights Q<p.C-e*weightedTotalDegree codeWeights J-e*m*49990→J∣Q):
+   weightedTotalDegree codeWeights Q<p.C-e*weightedTotalDegree codeWeights J-e*m*49980→J∣Q):
  Module.finrank K V≤(∑ e∈Finset.range N,bandCount p a m e)+Module.finrank K (powSpace V J N):=by
  induction N with
  | zero=>
@@ -1430,7 +1430,7 @@ set_option maxHeartbeats 1500000
 variable {K I:Type} [Field K] [CharP K 2130706433] [Fintype I]
 theorem GHY {t y r:ℕ}
  (nodes:I ↪ K) (P:Packet (nodes:I→K) t y r) [Fact (Irreducible P.F)]
- (p:DA.SourceCaps) (n:ℕ) (hpC:p.C=n*181059)
+ (p:DA.SourceCaps) (n:ℕ) (hpC:p.C=n*181049)
  (hpSmall:p.B≤256∧p.U≤512∧p.T≤4096∧p.S≤64)
  (hFT:p.T<wt RCN156.residualTotalWeights P.F)
  (J:SecondJetSupport.Poly (K:=K)) (hJ:Irreducible J) (a:DR.Box) (ha:Contains a (point J))
@@ -1448,7 +1448,7 @@ theorem GHY {t y r:ℕ}
  (e:ℕ) (T Q:SecondJetSupport.Poly (K:=K))
  (heq:T=J^e*Q) (hQ:Q≠0) (hb:DA.Bounds p T)
  (hjet: ∀i,MvPolynomial.X 0^n∣SecondJetDifferentiation.substitute (K:=K) (SecondJetGlobalSupport.localize (nodes i) (P.u0 i) (P.u1 i) T))
- (hcode:weightedTotalDegree codeWeights Q<p.C-e*weightedTotalDegree codeWeights J-e*m*49990):
+ (hcode:weightedTotalDegree codeWeights Q<p.C-e*weightedTotalDegree codeWeights J-e*m*49980):
  J∣Q:=by
  classical
  by_contra hnot
@@ -1480,7 +1480,7 @@ theorem GHY {t y r:ℕ}
  have hc:=hb.1
  rw [heq,weight_mul codeWeights _ _ (pow_ne_zero _ hJ.ne_zero) hQ,weight_pow codeWeights J hJ.ne_zero] at hc
  have henu:e*weightedTotalDegree codeWeights J≤p.C:=by omega
- have hD:p.C-e*weightedTotalDegree codeWeights J+e*weightedTotalDegree codeWeights J=n*181059:=by
+ have hD:p.C-e*weightedTotalDegree codeWeights J+e*weightedTotalDegree codeWeights J=n*181049:=by
    rw [Nat.sub_add_cancel henu,hpC]
  rcases AMK.FIN nodes P J T Q hJ.ne_zero e m n
      (weightedTotalDegree codeWeights J) (p.C-e*weightedTotalDegree codeWeights J) heq hjet
@@ -1557,7 +1557,7 @@ theorem packet_count {t y r:ℕ}
  have hcover:DA.Covers (powerBox p a m) J:=by
    exact ⟨ha.2.2.1,ha.2.2.2.1,ha.1,ha.2.2.2.2.1,ha.2.2.2.2.2.2.1⟩
  have hlow: ∀e<N,∀(T Q:SecondJetSupport.Poly (K:=K)),T∈V→T=J^e*Q→Q≠0→
-   weightedTotalDegree codeWeights Q<(caps p).C-e*weightedTotalDegree codeWeights J-e*m*49990→J∣Q:=by
+   weightedTotalDegree codeWeights Q<(caps p).C-e*weightedTotalDegree codeWeights J-e*m*49980→J∣Q:=by
    intro e he T Q hT heq hQ hcode
    exact DDV.GHY nodes P (caps p) p.m rfl hpSmall hFT J hJ a ha m hms hJs
      hJne hroot SJ SZ hSJ hSJd z hZ hZFT hk hg cap hcap hlarge T0 Bh Ch qd nh hT0 hcert hidentity hgeo
@@ -1585,10 +1585,10 @@ def p:Parameters:=⟨51,400,23,11,70,0,1⟩
 theorem shape:Shape p:=by constructor<;>decide+kernel
 theorem middle_p (h:ℕ) (hh:h≤11):70≤(p.cutoff h+23-1)/131071:=by
  interval_cases h<;>decide+kernel
-theorem coefficients:SecondJetRelaxedGlobalCounts.coefficientCount p.cutoff 131071 400 23 11 70=13495078984543:=by decide+kernel
+theorem coefficients:SecondJetRelaxedGlobalCounts.coefficientCount p.cutoff 131071 400 23 11 70=13493372594923:=by decide+kernel
 theorem rank:SecondJetRelaxedCounts.rankBound 51 400 23 11 70=51397405:=by decide+kernel
-theorem dimension:Dimension p 21557648223:=by
- exact AZ p 21557648223 13495078984543 51397405 (by decide) (by decide) (by decide) (by decide) (by decide) middle_p coefficients rank (by decide)
+theorem dimension:Dimension p 19851258603:=by
+ exact AZ p 19851258603 13493372594923 51397405 (by decide) (by decide) (by decide) (by decide) (by decide) middle_p coefficients rank (by decide)
 end AUA
 end SubmissionLower
 end ProximityPrize
@@ -1603,25 +1603,25 @@ set_option maxRecDepth 100000
 def p600:Parameters:=⟨51,600,23,11,70,0,1⟩
 theorem shape600:Shape p600:=by constructor<;>decide+kernel
 theorem middle600 (h:ℕ) (hh:h≤11):70≤(p600.cutoff h+23-1)/131071:=by interval_cases h<;>decide+kernel
-theorem GIT:SecondJetRelaxedGlobalCounts.coefficientCount p600.cutoff 131071 600 23 11 70=20774814314943:=by decide+kernel
+theorem GIT:SecondJetRelaxedGlobalCounts.coefficientCount p600.cutoff 131071 600 23 11 70=20772161161323:=by decide+kernel
 theorem rank600:SecondJetRelaxedCounts.rankBound 51 600 23 11 70=78773405:=by decide+kernel
-theorem dimension600:Dimension p600 124838834623:=by
- exact AZ p600 124838834623 20774814314943 78773405 (by decide) (by decide) (by decide) (by decide) (by decide) middle600 GIT rank600 (by decide)
+theorem dimension600:Dimension p600 122185681003:=by
+ exact AZ p600 122185681003 20772161161323 78773405 (by decide) (by decide) (by decide) (by decide) (by decide) middle600 GIT rank600 (by decide)
 def p1000:Parameters:=⟨51,1000,23,11,70,0,1⟩
 theorem shape1000:Shape p1000:=by constructor<;>decide+kernel
 theorem middle1000 (h:ℕ) (hh:h≤11):70≤(p1000.cutoff h+23-1)/131071:=by interval_cases h<;>decide+kernel
-theorem GDB:SecondJetRelaxedGlobalCounts.coefficientCount p1000.cutoff 131071 1000 23 11 70=35334284975743:=by decide+kernel
+theorem GDB:SecondJetRelaxedGlobalCounts.coefficientCount p1000.cutoff 131071 1000 23 11 70=35329738294123:=by decide+kernel
 theorem rank1000:SecondJetRelaxedCounts.rankBound 51 1000 23 11 70=133525405:=by decide+kernel
-theorem GXD:Dimension p1000 331401207423:=by
- exact AZ p1000 331401207423 35334284975743 133525405 (by decide) (by decide) (by decide) (by decide) (by decide) middle1000 GDB rank1000 (by decide)
+theorem GXD:Dimension p1000 326854525803:=by
+ exact AZ p1000 326854525803 35329738294123 133525405 (by decide) (by decide) (by decide) (by decide) (by decide) middle1000 GDB rank1000 (by decide)
 def profile (i:Fin 3):Parameters:=match i.val with
  | 0=>AUA.p
  | 1=>p600
  | _=>p1000
 def kernel (i:Fin 3):ℕ:=match i.val with
- | 0=>21557648223
- | 1=>124838834623
- | _=>331401207423
+ | 0=>19851258603
+ | 1=>122185681003
+ | _=>326854525803
 theorem shape (i:Fin 3):Shape (profile i):=by fin_cases i;exact AUA.shape;exact shape600;exact shape1000
 theorem dimension (i:Fin 3):Dimension (profile i) (kernel i):=by fin_cases i;exact AUA.dimension;exact dimension600;exact GXD
 end BWK
@@ -1976,7 +1976,7 @@ namespace QE
 open FF ZGL
 set_option maxHeartbeats 10000000
 set_option maxRecDepth 100000
-theorem small (i:Fin 52):(profile i).B≤256∧(profile i).U≤512∧(profile i).L≤4096∧(profile i).s≤64:=by fin_cases i<;>decide
+theorem small (i:Fin 51):(profile i).B≤256∧(profile i).U≤512∧(profile i).L≤4096∧(profile i).s≤64:=by fin_cases i<;>decide
 end QE
 end SubmissionLower
 end ProximityPrize
@@ -2006,7 +2006,7 @@ instance (p:DA.SourceCaps) (a:DA.OwnerBox):
  Decidable (DA.Impossible p a):=by unfold DA.Impossible;infer_instance
 def pricing (fixed:Degrees) (a:DR.Box) (m:ℕ) (useOwner:Bool):=if useOwner then ownerZ a m else fixed
 def BandValid (fixed:Degrees) (a:DR.Box) (m low t y r cap:ℕ)
- (i:Fin 52) (useOwner:Bool) (N Bh Ch qd:ℕ):Prop:=
+ (i:Fin 51) (useOwner:Bool) (N Bh Ch qd:ℕ):Prop:=
  let p:=profile i
  let z:=pricing fixed a m useOwner
  0<m∧m≤a.slo∧2*a.slo≤a.bhi∧
@@ -2018,7 +2018,7 @@ def BandValid (fixed:Degrees) (a:DR.Box) (m low t y r cap:ℕ)
  flagMixed (ownerFlag a) (flag p.B p.U p.L p.s) unitYZFlag<2130706433∧
  FormalR.H2.pairCostEH z 1 (ownerFlag a) (flag p.B p.U p.L p.s) Bh Ch qd t y r+leading z t y r≤cap
 instance (fixed:Degrees) (a:DR.Box) (m low t y r cap:ℕ)
- (i:Fin 52) (useOwner:Bool) (N Bh Ch qd:ℕ):Decidable (BandValid fixed a m low t y r cap i useOwner N Bh Ch qd):=by
+ (i:Fin 51) (useOwner:Bool) (N Bh Ch qd:ℕ):Decidable (BandValid fixed a m low t y r cap i useOwner N Bh Ch qd):=by
  unfold BandValid SN.Common Gates;infer_instance
 variable {K I:Type} [Field K] [CharP K 2130706433] [Fintype I]
 theorem CPT {t y r low cap m:ℕ}
@@ -2029,7 +2029,7 @@ theorem CPT {t y r low cap m:ℕ}
  (a:DR.Box) (ha:Contains a (point J))
  (hroot:((SecondJetCoefficients.asS J).map (carrierMap P.F)).rootMultiplicity (SecondJetCarrierDichotomy.ratio (carrierMap P.F) P.F)=m)
  (hJne:(SecondJetCoefficients.asS J).map (carrierMap P.F)≠0)
- (i:Fin 52) (useOwner:Bool) (N Bh Ch qd nh:ℕ) (hcert:FormalR.H2.Certificate r y low Bh Ch qd nh) (hc:BandValid fixed a m low t y r cap i useOwner N Bh Ch qd):
+ (i:Fin 51) (useOwner:Bool) (N Bh Ch qd nh:ℕ) (hcert:FormalR.H2.Certificate r y low Bh Ch qd nh) (hc:BandValid fixed a m low t y r cap i useOwner N Bh Ch qd):
  P.seeds.card≤cap:=by
  classical
  obtain ⟨hm,hms,h2,hs,hb,hu,ht,haf,hpf,hcommon,hid,hstop,hband,hz,huy,hgeo⟩:=hc
@@ -2110,7 +2110,7 @@ def fallback:Fin 2:=⟨0,by decide⟩
 def Valid (m low t y r cap:ℕ) (a:DR.Box):Prop:=
  BH.check .native (degrees fallback) a m low t y r cap=true∨
  LinearValid a low t y r cap∨
- ∃(i:Fin 52) (useOwner:Bool) (j:Fin 2) (N Bh Ch qd nh:ℕ),
+ ∃(i:Fin 51) (useOwner:Bool) (j:Fin 2) (N Bh Ch qd nh:ℕ),
    (CN.profile j).L<low∧FormalR.H2.Certificate r y low Bh Ch qd nh∧
    BandValid (degrees j) a m low t y r cap i useOwner N Bh Ch qd
 variable {K I:Type} [Field K] [CharP K 2130706433] [Fintype I]
@@ -2126,7 +2126,7 @@ theorem BLH {m low t y r cap:ℕ}
  (hc:Valid m low t y r cap a):P.seeds.card≤cap:=by
  rcases hc with hc | hc | ⟨i,useOwner,j,N,Bh,Ch,qd,nh,hL,hcert,hc⟩
  · have hL:(CN.profile fallback).L<low:=by
-     have hh:(CN.profile fallback).L=912:=by decide+kernel
+     have hh:(CN.profile fallback).L=923:=by decide+kernel
      omega
    rcases AGF fallback nodes hI P (hL.trans_le hFT) with hs | ⟨SZ,hZ⟩
    · exact hs.le.trans (by omega)

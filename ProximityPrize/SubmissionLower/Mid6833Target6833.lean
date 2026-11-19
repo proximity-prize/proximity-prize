@@ -10,9 +10,9 @@ set_option maxRecDepth 20000
 set_option maxHeartbeats 5000000
 local instance mid6833Local_Target6833_10  : DecidableEq IRSProfile.Field := Classical.decEq _
 local instance mid6833Local_Target6833_11  : DecidableEq IRSProfile.Index := Classical.decEq _
-def errors : ℕ := 81085
-def mcaBudget : ℕ := 274980695007758447
-def radiusNumerator : ℕ := 332127561
+def errors : ℕ := 81095
+def mcaBudget : ℕ := 274980690694301924
+def radiusNumerator : ℕ := 332167720
 def radiusDenominator : ℕ := 1073741824
 def radius : ℝ≥0 := claimedRadius radiusNumerator radiusDenominator
 
@@ -26,63 +26,63 @@ private theorem radius_cell :
     errors, IRSProfile.Index]
 
 private theorem score_root_integer :
-    (2 : ℕ)^34 * 100000000^100 ≤ 126575660^100 := by
+    (2 : ℕ)^35 * 100000000^100 ≤ 127456063^100 := by
   decide +kernel
 
 private theorem score_radius_integer :
-    (741614263 : ℕ)^128 * (2^68 * 126575660) ≤ 100000000 * 1073741824^128 := by
+    (741574104 : ℕ)^128 * (2^68 * 127456063) ≤ 100000000 * 1073741824^128 := by
   decide +kernel
 
 private theorem two_rpow_fraction_le :
-    (2 : ℝ≥0)^((34 : ℝ) / 100) ≤ (126575660 : ℝ≥0) / 100000000 := by
-  have hroot : ((2 : ℝ≥0)^(34 : ℕ))^((100 : ℝ)⁻¹) ≤
-      (126575660 : ℝ≥0) / 100000000 := by
+    (2 : ℝ≥0)^((35 : ℝ) / 100) ≤ (127456063 : ℝ≥0) / 100000000 := by
+  have hroot : ((2 : ℝ≥0)^(35 : ℕ))^((100 : ℝ)⁻¹) ≤
+      (127456063 : ℝ≥0) / 100000000 := by
     rw [NNReal.rpow_inv_le_iff (by norm_num : (0 : ℝ) < 100)]
     rw [NNReal.rpow_ofNat, div_pow, le_div_iff₀ (by positivity)]
     exact_mod_cast score_root_integer
   calc
-    (2 : ℝ≥0)^((34 : ℝ) / 100) = ((2 : ℝ≥0)^(34 : ℕ))^((100 : ℝ)⁻¹) := by
+    (2 : ℝ≥0)^((35 : ℝ) / 100) = ((2 : ℝ≥0)^(35 : ℕ))^((100 : ℝ)⁻¹) := by
       rw [← NNReal.rpow_natCast_mul]
       norm_num [div_eq_mul_inv]
     _ ≤ _ := hroot
 
 private theorem radius_power_bound :
     (1 - radius)^IRSProfile.repetitions ≤
-      ((1 : ℝ≥0) / 2^(68 : ℕ)) * (100000000 / 126575660) := by
-  have hsub : (1 - radius : ℝ≥0) = 741614263 / 1073741824 := by
+      ((1 : ℝ≥0) / 2^(68 : ℕ)) * (100000000 / 127456063) := by
+  have hsub : (1 - radius : ℝ≥0) = 741574104 / 1073741824 := by
     have hr : radius ≤ 1 := by
       rw [← NNReal.coe_le_coe]
       norm_num [radius, claimedRadius, radiusNumerator, radiusDenominator]
     apply NNReal.coe_injective
     rw [NNReal.coe_sub hr]
     norm_num [radius, claimedRadius, radiusNumerator, radiusDenominator]
-  change (1 - radius)^128 ≤ ((1 : ℝ≥0) / 2^(68 : ℕ)) * (100000000 / 126575660)
+  change (1 - radius)^128 ≤ ((1 : ℝ≥0) / 2^(68 : ℕ)) * (100000000 / 127456063)
   rw [hsub, div_pow, div_mul_div_comm, one_mul,
     div_le_div_iff₀ (by positivity) (by positivity)]
   exact_mod_cast score_radius_integer
 
-theorem score_target_le : (1 - radius)^IRSProfile.repetitions ≤ claimedError 6834 := by
-  have hscale : (100000000 : ℝ≥0) / 126575660 ≤ (2 : ℝ≥0)^(-((34 : ℝ) / 100)) := by
+theorem score_target_le : (1 - radius)^IRSProfile.repetitions ≤ claimedError 6835 := by
+  have hscale : (100000000 : ℝ≥0) / 127456063 ≤ (2 : ℝ≥0)^(-((35 : ℝ) / 100)) := by
     calc
-      (100000000 : ℝ≥0) / 126575660 = 1 / ((126575660 : ℝ≥0) / 100000000) := by
+      (100000000 : ℝ≥0) / 127456063 = 1 / ((127456063 : ℝ≥0) / 100000000) := by
         norm_num
-      _ ≤ 1 / ((2 : ℝ≥0)^((34 : ℝ) / 100)) :=
+      _ ≤ 1 / ((2 : ℝ≥0)^((35 : ℝ) / 100)) :=
         one_div_le_one_div_of_le (by positivity) two_rpow_fraction_le
       _ = _ := by rw [one_div, NNReal.rpow_neg]
   calc
     (1 - radius)^IRSProfile.repetitions ≤
-        ((1 : ℝ≥0) / 2^(68 : ℕ)) * (100000000 / 126575660) := radius_power_bound
-    _ ≤ ((1 : ℝ≥0) / 2^(68 : ℕ)) * (2 : ℝ≥0)^(-((34 : ℝ) / 100)) :=
+        ((1 : ℝ≥0) / 2^(68 : ℕ)) * (100000000 / 127456063) := radius_power_bound
+    _ ≤ ((1 : ℝ≥0) / 2^(68 : ℕ)) * (2 : ℝ≥0)^(-((35 : ℝ) / 100)) :=
       mul_le_mul_of_nonneg_left hscale (by positivity)
-    _ = claimedError 6834 := by
+    _ = claimedError 6835 := by
       unfold claimedError
-      rw [show -((((6834 : ℕ) : ℝ) / 100)) =
-          -((68 : ℕ) : ℝ) + -((34 : ℝ) / 100) by norm_num,
+      rw [show -((((6835 : ℕ) : ℝ) / 100)) =
+          -((68 : ℕ) : ℝ) + -((35 : ℝ) / 100) by norm_num,
         NNReal.rpow_add (by norm_num : (2 : ℝ≥0) ≠ 0)]
       simp only [NNReal.rpow_neg, NNReal.rpow_natCast, one_div]
 
 private theorem lambda_le (listBudget : ℕ)
-    (hlist : IntermediateScalar.Words 181059 listBudget)
+    (hlist : IntermediateScalar.Words 181049 listBudget)
     (hprojection : 15 * (listBudget + 1).choose 2 < Fintype.card IRSProfile.Field) :
     Code.Lambda
       ((IRSProfile.code ^⋈ (Fin 2) :
@@ -137,7 +137,7 @@ private theorem mca_le (hgiven : AffineLineGivenSetsBound IRSProfile.baseCode (r
 
 private theorem reduction_of_bounds
     (hgiven : AffineLineGivenSetsBound IRSProfile.baseCode (radius : ℝ) mcaBudget)
-    (listBudget : ℕ) (hlist : IntermediateScalar.Words 181059 listBudget)
+    (listBudget : ℕ) (hlist : IntermediateScalar.Words 181049 listBudget)
     (hprojection : 15 * (listBudget + 1).choose 2 < Fintype.card IRSProfile.Field)
     (hcapacity : 2 ^ (128 : ℕ) * (mcaBudget + listBudget) ≤ Fintype.card IRSProfile.Field) :
     certifiedGammaError IRSProfile.code radius ≤ (1 : ℝ≥0) / 2 ^ (128 : ℕ) := by
@@ -169,20 +169,20 @@ private theorem reduction_of_bounds
 /-- The projected-support (joint agreement) predicate is itself sufficient at the
 new score and seed budget. This interface can use direct recovery of both words. -/
 theorem protocol_of_projected (hgiven : AffineLineGivenSetsBound IRSProfile.baseCode (radius : ℝ) mcaBudget) :
-    ProtocolClaim 6834 332127561 1073741824 where
+    ProtocolClaim 6835 332167720 1073741824 where
   admissible := radius_admissible
   reduction := by
     change certifiedGammaError IRSProfile.code radius ≤ reductionTarget
-    have proj : 15*(33103636640+1).choose 2 < Fintype.card IRSProfile.Field := by
+    have proj : 15*(37417093163+1).choose 2 < Fintype.card IRSProfile.Field := by
       rw [RCN284.field_cardinality,Nat.choose_eq_descFactorial_div_factorial]
       norm_num [Nat.descFactorial_succ,Nat.factorial_succ]
-    have capacity : 2^(128:ℕ)*(mcaBudget+33103636640) ≤ Fintype.card IRSProfile.Field := by
+    have capacity : 2^(128:ℕ)*(mcaBudget+37417093163) ≤ Fintype.card IRSProfile.Field := by
       rw [RCN284.field_cardinality]; decide +kernel
     simpa [reductionTarget,ProximityGap.prizeThreshold] using reduction_of_bounds hgiven _ IntermediateScalar.words_6833 proj capacity
   score := score_target_le
 #print axioms protocol_of_projected
 
-theorem protocol_at (rem : Intermediate.At 181059 274980695007758447) : ProtocolClaim 6834 332127561 1073741824 := by
+theorem protocol_at (rem : Intermediate.At 181049 274980690694301924) : ProtocolClaim 6835 332167720 1073741824 := by
   apply protocol_of_projected
   exact Intermediate.given_of_at (r:=radius) (by decide) (by decide) (by decide) (by norm_num [radius,claimedRadius,radiusNumerator,radiusDenominator]) rem
 #print axioms protocol_at
