@@ -16,7 +16,7 @@ theorem fee_bound (j : Fin 5) (f : FlagDegree) (hpos : 0<f.all)
     stagePrice f hpos (capStage j) (capStage j).numbers.slopeCap ≤ fee j := by
   have r : f.all≤98 := hcap.1
   have y : middle f≤440 := hcap.2.1
-  have t : total f≤45384 := hcap.2.2
+  have t : total f≤53215 := hcap.2.2
   have p : 1≤middle f := hpos.trans_le (Nat.le_add_left _ _)
   fin_cases j
   · exact cost_of_tile _ f hpos t hprior _ _ _ _ _ checkedFee0 (by decide) hpos r p y

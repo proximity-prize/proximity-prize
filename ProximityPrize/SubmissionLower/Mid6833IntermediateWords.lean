@@ -56,7 +56,7 @@ theorem of_scalar {A B : ℕ} (hA : 131072 ≤ A)
   simpa [Set.ncard_coe_finset,hc] using b
 
 
-theorem words_6833 : Words 181068 30294781525 := Intermediate6833Scalar.irs_scalar_finite_list_card_le
+theorem words_6833 : Words 181059 33103636640 := Intermediate6833Scalar.irs_scalar_finite_list_card_le
 #print axioms words_6833
 
 theorem words_6842 : Words 180980 87312511777 := Frontier6842Scalar.irs_scalar_finite_list_card_le

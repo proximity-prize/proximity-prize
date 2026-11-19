@@ -171,8 +171,8 @@ theorem exists_adaptive_exit_partners {p : ℕ} [CharP K p]
       B.a0.eval (nodes i) * normalized i)
     (h₁ : ∀ i, B.d0.eval (nodes i) * u₁ i + B.c1.eval (nodes i) =
       B.a1.eval (nodes i) * normalized i)
-    (hden : B.d0.natDegree + max B.a0.natDegree B.a1.natDegree ≤ 9568)
-    (hminor : (B.a1 * B.c0 - B.a0 * B.c1).natDegree ≤ weight + 9568)
+    (hden : B.d0.natDegree + max B.a0.natDegree B.a1.natDegree ≤ 9583)
+    (hminor : (B.a1 * B.c0 - B.a0 * B.c1).natDegree ≤ weight + 9583)
     (H : MvPolynomial (Fin 4) K) (A : Finset (RegularIndex H))
     (hA : A.Nonempty) (hfield : A.card < ENat.card K)
     (hr : 0 < (originalCumulativeFlag (regularProduct H A)).all)
@@ -191,7 +191,7 @@ theorem exists_adaptive_exit_partners {p : ℕ} [CharP K p]
     have hf : s.numbers.fuel f ≤ s.numbers.slopeCap / f.all :=
       (min_le_right _ _).trans (min_le_right _ _)
     exact hj.trans (hf.trans (Nat.div_le_self _ _))
-  have hroom : (s.cutoff - j * weightGain) + j * (2 * 9568) ≤ s.multiplicity * agreement := by
+  have hroom : (s.cutoff - j * weightGain) + j * (2 * 9583) ≤ s.multiplicity * agreement := by
     obtain ⟨d, hd⟩ := MvPolynomial.support_nonempty.mpr hv
     have hpositive := (hb hd).2.2.2
     have hle : j * weightGain ≤ s.cutoff := by omega

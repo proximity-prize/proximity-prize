@@ -17,7 +17,7 @@ noncomputable section
 
 variable {K I : Type} [Field K] [Fintype I]
 
-def normalizationBudget : ℕ := 20386599684803
+def normalizationBudget : ℕ := 20418560281313
 
 structure Ready (x : I ↪ K) (original : Finset K) where
   flow : FlowData K
@@ -31,24 +31,24 @@ structure Ready (x : I ↪ K) (original : Finset K) where
   nodes_card : Fintype.card I = 262144
   count : original.card ≤ seeds.card + normalizationBudget
   degree : ∀ g ∈ seeds, (selected g).natDegree ≤ 131071
-  agreement : ∀ g ∈ seeds, 181068 ≤
+  agreement : ∀ g ∈ seeds, 181059 ≤
     (Finset.univ.filter (fun i => (selected g).eval (x i) = u₀ i + g * u₁ i)).card
   agree_good : ∀ g ∈ seeds, ∀ i,
     (selected g).eval (x i) = u₀ i + g * u₁ i → i ∈ good
-  pencil : RCN238.NoLargeSelectedPencil selected seeds 131071 81076
+  pencil : RCN238.NoLargeSelectedPencil selected seeds 131071 81085
   scale_ne : flow.d0 ≠ 0
   affine_ne : flow.A ≠ 0
   denominator_ne : ∀ g ∈ seeds, flow.seedDenominator g ≠ 0
   normalization : ∀ g ∈ seeds,
     flow.d0 * selected g + flow.seedOffset g = flow.seedDenominator g * normalized g
-  normalized_degree : ∀ g ∈ seeds, (normalized g).natDegree ≤ 140639
-  normalized_agreement : ∀ g ∈ seeds, 181068 ≤
+  normalized_degree : ∀ g ∈ seeds, (normalized g).natDegree ≤ 140654
+  normalized_agreement : ∀ g ∈ seeds, 181059 ≤
     (Finset.univ.filter (fun i => (normalized g).eval (x i) = word i)).card
   fixedWord : ∀ i ∈ good,
     flow.d0.eval (x i) * u₀ i + flow.c0.eval (x i) = flow.a0.eval (x i) * word i ∧
     flow.d0.eval (x i) * u₁ i + flow.c1.eval (x i) = flow.a1.eval (x i) * word i
-  denominator_degree : flow.d0.natDegree + max flow.a0.natDegree flow.a1.natDegree ≤ 9568
-  minor_degree : (flow.a1 * flow.c0 - flow.a0 * flow.c1).natDegree ≤ 131071 + 9568
+  denominator_degree : flow.d0.natDegree + max flow.a0.natDegree flow.a1.natDegree ≤ 9583
+  minor_degree : (flow.a1 * flow.c0 - flow.a0 * flow.c1).natDegree ≤ 131071 + 9583
 
 private theorem specialize_affine (B : FlowData K) (g : K) :
     RCN319.specialization K 0 g B.A = B.seedDenominator g := by
@@ -73,19 +73,19 @@ private theorem ready_of_normalization
     (x : I ↪ K) (hcard : Fintype.card I = 262144) (original oriented : Finset K)
     (hcount : original.card ≤ oriented.card + (normalizationBudget - 1))
     (B : FlowData K) (hd0 : B.d0 ≠ 0) (hcop : IsCoprime B.a0 B.a1)
-    (hdenDegree : B.d0.natDegree + max B.a0.natDegree B.a1.natDegree ≤ 9568)
-    (hminorDegree : (B.a1 * B.c0 - B.a0 * B.c1).natDegree ≤ 131071 + 9568)
+    (hdenDegree : B.d0.natDegree + max B.a0.natDegree B.a1.natDegree ≤ 9583)
+    (hminorDegree : (B.a1 * B.c0 - B.a0 * B.c1).natDegree ≤ 131071 + 9583)
     (u₀ u₁ word : I → K) (good : Finset I) (selected normalized : K → Polynomial K)
     (hdegree : ∀ g ∈ oriented, (selected g).natDegree ≤ 131071)
-    (hagreement : ∀ g ∈ oriented, 181068 ≤
+    (hagreement : ∀ g ∈ oriented, 181059 ≤
       (Finset.univ.filter (fun i => (selected g).eval (x i) = u₀ i + g * u₁ i)).card)
     (hgood : ∀ g ∈ oriented, ∀ i,
       (selected g).eval (x i) = u₀ i + g * u₁ i → i ∈ good)
-    (hpencil : RCN238.NoLargeSelectedPencil selected oriented 131071 81076)
+    (hpencil : RCN238.NoLargeSelectedPencil selected oriented 131071 81085)
     (hfixed : ∀ i ∈ good,
       B.d0.eval (x i) * u₀ i + B.c0.eval (x i) = B.a0.eval (x i) * word i ∧
       B.d0.eval (x i) * u₁ i + B.c1.eval (x i) = B.a1.eval (x i) * word i)
-    (hnorm : ∀ g ∈ oriented, (normalized g).natDegree ≤ 140639 ∧
+    (hnorm : ∀ g ∈ oriented, (normalized g).natDegree ≤ 140654 ∧
       B.d0 * selected g + B.seedOffset g = B.seedDenominator g * normalized g ∧
       ∀ i ∈ good, (selected g).eval (x i) = u₀ i + g * u₁ i →
         (normalized g).eval (x i) = word i) : Nonempty (Ready x original) := by
@@ -111,7 +111,7 @@ private theorem ready_of_normalization
     degree := fun g hg => hdegree g (hsub hg)
     agreement := fun g hg => hagreement g (hsub hg)
     agree_good := fun g hg => hgood g (hsub hg)
-    pencil := RCN243.noLargeSelectedPencil_mono selected oriented seeds 131071 81076 hsub hpencil
+    pencil := RCN243.noLargeSelectedPencil_mono selected oriented seeds 131071 81085 hsub hpencil
     scale_ne := hd0
     affine_ne := affine_ne_of_coprime B hcop
     denominator_ne := fun g hg => (Finset.mem_filter.mp hg).2
@@ -152,9 +152,9 @@ theorem ready_of_retainedComparison (x : I ↪ K) (σ : K ≃+* K)
     (hfixed : ∀ i, σ (x i) = x i) (hpower : ∀ g : K, σ g = g ^ prime)
     (hcard : Fintype.card I = 262144) (u : Received K I) (Γ : Finset K) (selected : SelectionMap K)
     (q : SymbolicRow (SeedRing K)) (hret : K6969Global.RetainedComparison x σ.toRingHom u Γ selected q)
-    (enough : ∀g∈Γ,181068≤(agreementSet x u selected g).card)
-    (pencil : RCN238.NoLargeSelectedPencil selected Γ 131071 81076)
-    (delta : ℕ) (hdelta : delta ≤ 9568) (N : NormalForm q 131071 delta) :
+    (enough : ∀g∈Γ,181059≤(agreementSet x u selected g).card)
+    (pencil : RCN238.NoLargeSelectedPencil selected Γ 131071 81085)
+    (delta : ℕ) (hdelta : delta ≤ 9583) (N : NormalForm q 131071 delta) :
     Nonempty (Ready x Γ) := by
   let good : Finset I := Finset.univ \ badNodes x σ.toRingHom u q
   have hgoodCard : good.card ≤ 262144 := (Finset.card_le_univ _).trans_eq hcard
@@ -182,11 +182,11 @@ theorem ready_of_retainedComparison (x : I ↪ K) (σ : K ≃+* K)
     have hmem : i ∈ agreementSet x u selected g := Finset.mem_filter.mpr ⟨Finset.mem_univ _, hi⟩
     refine Finset.mem_sdiff.mpr ⟨Finset.mem_univ _, ?_⟩
     exact fun hb => Finset.disjoint_left.mp (hret.good g hg).2 hmem hb
-  have hpencil : RCN238.NoLargeSelectedPencil selected Γ 131071 81076 := pencil
+  have hpencil : RCN238.NoLargeSelectedPencil selected Γ 131071 81085 := pencil
   have hsmall : delta < prime := hdelta.trans_lt (by decide)
   have hfee : 2 * good.card + 2 + (prime + 1) * delta ≤ normalizationBudget - 1 := by
     calc
-      _ ≤ 2 * 262144 + 2 + (prime + 1) * 9568 :=
+      _ ≤ 2 * 262144 + 2 + (prime + 1) * 9583 :=
         Nat.add_le_add (Nat.add_le_add_right (Nat.mul_le_mul_left 2 hgoodCard) 2)
           (Nat.mul_le_mul_left (prime + 1) hdelta)
       _ ≤ _ := by decide
@@ -200,7 +200,7 @@ theorem ready_of_retainedComparison (x : I ↪ K) (σ : K ≃+* K)
       (hminor.trans (Nat.add_le_add_left hdelta _)) (u 0) (u 1) word good selected normalized
       (fun g hg => hret.selection.degree_le g (hsub hg))
       (fun g hg => enough g (hsub hg)) (fun g hg => ha g (hsub hg))
-      (RCN243.noLargeSelectedPencil_mono selected Γ seeds 131071 81076 hsub hpencil) hword
+      (RCN243.noLargeSelectedPencil_mono selected Γ seeds 131071 81085 hsub hpencil) hword
       (fun g hg => ⟨((hnorm g hg).1).trans (by omega), (hnorm g hg).2⟩)
   · obtain ⟨seeds, hsub, hcost, word, normalized, hword, hnorm⟩ :=
       normalForm_exists_retained_right_words N σ prime hpower hsmall good x (u 0) (u 1)
@@ -229,8 +229,8 @@ theorem ready_of_retainedComparison (x : I ↪ K) (σ : K ≃+* K)
       exact enough _ (hsub (hback g hg))
     · intro g hg i he
       exact ha _ (hsub (hback g hg)) i ((right_agrees_iff x σ hfixed u selected g i).mp he)
-    · exact noLargeSelectedPencil_conjugate σ selected seeds 131071 81076
-        (RCN243.noLargeSelectedPencil_mono selected Γ seeds 131071 81076 hsub hpencil)
+    · exact noLargeSelectedPencil_conjugate σ selected seeds 131071 81085
+        (RCN243.noLargeSelectedPencil_mono selected Γ seeds 131071 81085 hsub hpencil)
     · intro i hi
       simpa only [rightFlowData, Polynomial.eval_neg, sub_eq_add_neg] using hword i hi
     · intro g hg

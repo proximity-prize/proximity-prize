@@ -23,11 +23,11 @@ theorem exists_primary_and_regular_subfamily
       (nodes.filter (fun i => (selected γ).eval (x i) = u₀ i + γ * u₁ i)).card)
     (hgoodAgree : ∀ γ ∈ Γ, ∀ i ∈ nodes,
       (selected γ).eval (x i) = u₀ i + γ * u₁ i → i ∈ good)
-    (hnoPencil : NoLargeSelectedPencil selected Γ weight 81076) :
+    (hnoPencil : NoLargeSelectedPencil selected Γ weight 81085) :
     ∃ H : MvPolynomial (Fin 4) K, H ≠ 0 ∧
-      H ∈ nestedCoefficientBox K Stage.primary.cutoff weight 45384 440 98 ∧
+      H ∈ nestedCoefficientBox K Stage.primary.cutoff weight 53215 440 98 ∧
       (∀ i ∈ good, ContactOrderBridge.ContactAtLeast K (x i) (u₀ i) (u₁ i) Stage.primary.multiplicity H) ∧
-      ∃ regular : Finset K, regular ⊆ Γ ∧ Γ.card ≤ regular.card + 3934697472501126 ∧
+      ∃ regular : Finset K, regular ⊆ Γ ∧ Γ.card ≤ regular.card + 4617491994487160 ∧
         ∀ γ ∈ regular, ∃ F : RegularIndex H, specialization K (selected γ) γ F.1 = 0 ∧
           specialization K (selected γ) γ (polyH K F.1) ≠ 0 := by
   classical
@@ -39,7 +39,7 @@ theorem exists_primary_and_regular_subfamily
     exact Finset.card_le_card hgood
   obtain ⟨v, hv⟩ := Stage.primary.exists_source K xgood u₀good u₁good hcard
   let H := Stage.primary.reconstruct K xgood u₀good u₁good v
-  have hbox : H ∈ nestedCoefficientBox K Stage.primary.cutoff weight 45384 440 98 :=
+  have hbox : H ∈ nestedCoefficientBox K Stage.primary.cutoff weight 53215 440 98 :=
     Stage.primary.reconstruct_mem_box K xgood u₀good u₁good v
   have hcontact (i : Node) (hi : i ∈ good) :
       ContactOrderBridge.ContactAtLeast K (x i) (u₀ i) (u₁ i) Stage.primary.multiplicity H :=
@@ -61,7 +61,7 @@ theorem exists_primary_and_transverse_subfamily [Fintype Node]
       (nodes.filter (fun i => (selected γ).eval (x i) = u₀ i + γ * u₁ i)).card)
     (hgoodAgree : ∀ γ ∈ Γ, ∀ i ∈ nodes,
       (selected γ).eval (x i) = u₀ i + γ * u₁ i → i ∈ good)
-    (hnoPencil : NoLargeSelectedPencil selected Γ weight 81076)
+    (hnoPencil : NoLargeSelectedPencil selected Γ weight 81085)
     (hd0 : B.d0 ≠ 0) (ha : B.A ≠ 0)
     (hden : ∀ γ ∈ Γ, B.seedDenominator γ ≠ 0)
     (hnorm : ∀ γ ∈ Γ,
@@ -70,9 +70,9 @@ theorem exists_primary_and_transverse_subfamily [Fintype Node]
     (hnormAgree : ∀ γ ∈ Γ, Primary319List.agreements ≤
       (nodes.filter (fun i => (normalized γ).eval (x i) = received i)).card) :
     ∃ H : MvPolynomial (Fin 4) K, H ≠ 0 ∧
-      H ∈ nestedCoefficientBox K Stage.primary.cutoff weight 45384 440 98 ∧
+      H ∈ nestedCoefficientBox K Stage.primary.cutoff weight 53215 440 98 ∧
       (∀ i ∈ good, ContactOrderBridge.ContactAtLeast K (x i) (u₀ i) (u₁ i) Stage.primary.multiplicity H) ∧
-      ∃ retained : Finset K, retained ⊆ Γ ∧ Γ.card ≤ retained.card + 9830386100875986 ∧
+      ∃ retained : Finset K, retained ⊆ Γ ∧ Γ.card ≤ retained.card + 10517238248308782 ∧
         ∀ γ ∈ retained, ∃ F : RegularIndex H, specialization K (selected γ) γ F.1 = 0 ∧
           specialization K (selected γ) γ (polyH K F.1) ≠ 0 ∧ ¬ F.1 ∣ B.flow F.1 := by
   classical
@@ -84,9 +84,9 @@ theorem exists_primary_and_transverse_subfamily [Fintype Node]
       hnodes hd0 ha (fun γ hγ => hden γ (hsub hγ)) (fun γ hγ => hdegree γ (hsub hγ))
       (fun γ hγ => hnorm γ (hsub hγ)) (fun γ hγ => hnormDegree γ (hsub hγ))
       (fun γ hγ => hnormAgree γ (hsub hγ))
-      (RCN243.noLargeSelectedPencil_mono selected Γ regular weight 81076 hsub hnoPencil)
+      (RCN243.noLargeSelectedPencil_mono selected Γ regular weight 81085 hsub hnoPencil)
   refine ⟨H, hH, hbox, hcontact, retained, hret.trans hsub, ?_, ?_⟩
-  · change regular.card ≤ retained.card + 5895688628374860 at htangentCost
+  · change regular.card ≤ retained.card + 5899746253821622 at htangentCost
     omega
   · intro γ hγ
     obtain ⟨F, hF, hreg⟩ := hregular γ (hret hγ)

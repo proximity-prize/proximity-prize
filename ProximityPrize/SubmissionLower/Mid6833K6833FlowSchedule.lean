@@ -94,8 +94,8 @@ theorem exists_exhausted_adaptive_pass [CharP K 2130706433]
       B.a0.eval (nodes i) * normalized i)
     (h₁ : ∀ i, B.d0.eval (nodes i) * u₁ i + B.c1.eval (nodes i) =
       B.a1.eval (nodes i) * normalized i)
-    (hden : B.d0.natDegree + max B.a0.natDegree B.a1.natDegree ≤ 9568)
-    (hminor : (B.a1 * B.c0 - B.a0 * B.c1).natDegree ≤ weight + 9568)
+    (hden : B.d0.natDegree + max B.a0.natDegree B.a1.natDegree ≤ 9583)
+    (hminor : (B.a1 * B.c0 - B.a0 * B.c1).natDegree ≤ weight + 9583)
     (H : MvPolynomial (Fin 4) K) (A : Finset (RegularIndex H))
     (hfield : A.card < ENat.card K) (hcap : Below (aggregateFlag H A) ⟨s.numbers.totalCap - s.numbers.middleCap,s.numbers.middleCap - s.numbers.slopeCap,s.numbers.slopeCap⟩)
     (htrans : ∀ F ∈ A, ¬ F.1 ∣ B.flow F.1) :

@@ -1,6 +1,6 @@
 /- Apache-2.0. Prepared for the KoalaBear 68.33 intermediate construction by Bome2017, building on Lucieno and BitWonka. Original attribution is retained below. -/
 /- Apache-2.0. Adaptive interval certificates for 68.33. After Lucieno, BitWonka and Bome2017. -/
-import ProximityPrize.SubmissionLower.Mid6833K6833End9
+import ProximityPrize.SubmissionLower.Mid6833K6833Fee4
 import ProximityPrize.SubmissionLower.Mid6833K6833AdaptiveEndBase
 namespace ProximityPrize.SubmissionLower.K6833AdaptiveCert
 open RCN095 RCN130 RCN263 RCN275 LocatorFactorAggregate

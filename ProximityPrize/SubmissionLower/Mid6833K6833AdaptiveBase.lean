@@ -13,19 +13,19 @@ def menu : Fin 5 → List Stage
   | 1 => [.second]
   | 2 => [.src394]
   | 3 => [.src481, .src485]
-  | 4 => [.src607, .src608, .src609, .src610, .src611, .src612, .src613, .src614, .src615, .src616, .src617]
+  | 4 => [.src700, .src701, .src702, .src703, .src704, .src705, .src706, .src707, .src708, .src709, .src710, .src711, .src712, .src713, .src714, .src715, .src716, .src717, .src718]
 def capStage : Fin 5 → Stage
   | 0 => .first
   | 1 => .second
   | 2 => .src394
   | 3 => .src485
-  | 4 => .src617
+  | 4 => .src718
 def fee : Fin 5 → ℕ
-  | 0 => 4190263312240125
-  | 1 => 2907892551494430
-  | 2 => 728935791732041
-  | 3 => 1155592422243305
-  | 4 => 7263402153328080
+  | 0 => 5347880873160128
+  | 1 => 1616577662157267
+  | 2 => 736755185420453
+  | 3 => 1312829695180950
+  | 4 => 8187063037011665
 def sourceGroup : Stage → ℕ
   | .primary => 5
   | .first => 0
@@ -33,17 +33,25 @@ def sourceGroup : Stage → ℕ
   | .src394 => 2
   | .src481 => 3
   | .src485 => 3
-  | .src607 => 4
-  | .src608 => 4
-  | .src609 => 4
-  | .src610 => 4
-  | .src611 => 4
-  | .src612 => 4
-  | .src613 => 4
-  | .src614 => 4
-  | .src615 => 4
-  | .src616 => 4
-  | .src617 => 4
+  | .src700 => 4
+  | .src701 => 4
+  | .src702 => 4
+  | .src703 => 4
+  | .src704 => 4
+  | .src705 => 4
+  | .src706 => 4
+  | .src707 => 4
+  | .src708 => 4
+  | .src709 => 4
+  | .src710 => 4
+  | .src711 => 4
+  | .src712 => 4
+  | .src713 => 4
+  | .src714 => 4
+  | .src715 => 4
+  | .src716 => 4
+  | .src717 => 4
+  | .src718 => 4
 private theorem direction_cumulative (P : ResidualSupportParameters) :
     (reducedAgreementDirection P).all = 2 * P.s - 2 ∧
       middle (reducedAgreementDirection P) = 2 * P.ys - 2 ∧
@@ -145,7 +153,7 @@ inductive Tile where
 
 def checkTile (j : Fin 5) (rl rh yl yh : ℕ) : Tile → Bool
   | .empty => decide (yh<rl)
-  | .full => decide (yh≤45384 ∧ priceAt j (min rh yh) yh 45384 ≤ fee j)
+  | .full => decide (yh≤53215 ∧ priceAt j (min rh yh) yh 53215 ≤ fee j)
   | .excluded s => decide (sourceGroup s<j.val) && gateAt s rl (max yl rl) (max yl rl)
   | .cut t s => decide (yh≤t ∧ priceAt j (min rh yh) yh t ≤ fee j) &&
       (decide (sourceGroup s<j.val) && gateAt s rl (max yl rl) (max (max yl rl) (t+1)))
@@ -161,7 +169,7 @@ private theorem upperPrice {j : Fin 5} {f : FlagDegree} {rh yh : ℕ} (hp : 0<f.
     exact price_mono hp _ (below_raw (min_le_right _ _) yt hR hy1 ht) _ _
 
 theorem cost_of_tile (j : Fin 5) (f : FlagDegree) (hp : 0<f.all)
-    (hT : total f≤45384) (prev : Prior j.val f) (tree : Tile) (rl rh yl yh : ℕ)
+    (hT : total f≤53215) (prev : Prior j.val f) (tree : Tile) (rl rh yl yh : ℕ)
     (check : checkTile j rl rh yl yh tree=true) (pos : 0<rl)
     (hr0:rl≤f.all) (hr1:f.all≤rh) (hy0:yl≤middle f) (hy1:middle f≤yh) :
     stagePrice f hp (capStage j) (capStage j).numbers.slopeCap ≤ fee j := by

@@ -11,7 +11,7 @@ set_option maxRecDepth 100000
 open K6833Residual
 open scoped BigOperators
 
-def finalBudget : ℕ := 264350000000000000
+def finalBudget : ℕ := 264040334683142352
 def charged (r y : ℕ) : ℕ := ∑ i : Fin 5, (fee i - priceAt i r y y)
 
 def checkRow (r y : ℕ) : Bool :=
@@ -22,8 +22,8 @@ def checkRow (r y : ℕ) : Bool :=
 def linkRank (r : ℕ) : Bool :=
   (List.range (maxY r + 1 - r)).all fun k => checkRow r (k+r)
 
-theorem checkedLink (r : Fin 15) : linkRank (r.val+1)=true := by
-  have h : ∀ i : Fin 15, linkRank (i.val+1) = true := by decide +kernel
+theorem checkedLink (r : Fin 16) : linkRank (r.val+1)=true := by
+  have h : ∀ i : Fin 16, linkRank (i.val+1) = true := by decide +kernel
   exact h r
 
 

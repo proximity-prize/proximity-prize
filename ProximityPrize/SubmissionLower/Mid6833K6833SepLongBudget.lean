@@ -17,16 +17,16 @@ noncomputable section
 set_option autoImplicit false
 
 def longFactorCharge_lp32 (y t z : ℕ) : ℕ :=
-  ((46137520 + 81674) * 43777881 +
-    (43778215 + 81674) * (51642172 - 5505004) + 1067484004607) * y +
-  (5505046 * 43777881 + (43778215 + 81674) * 5505004) * t +
-  (5505046 * 51642172 + (46137520 + 81674) * 5505004) * z
+  ((46137520 + 81683) * 43777881 +
+    (43778215 + 81683) * (51642172 - 5505004) + 1067484004616) * y +
+  (5505046 * 43777881 + (43778215 + 81683) * 5505004) * t +
+  (5505046 * 51642172 + (46137520 + 81683) * 5505004) * z
 
 theorem longFactorCharge_eq_lp32 (y t z : ℕ) (hyt : y ≤ t) :
     longFactorCharge_lp32 y t z =
       5505046 * (51642172 * z + t * 43777881) +
-      (46137520 + 81674) * (5505004 * z + y * 43777881) +
-      (43778215 + 81674) * (5505004 * (t - y) + y * 51642172) + 1067484004607 * y := by
+      (46137520 + 81683) * (5505004 * z + y * 43777881) +
+      (43778215 + 81683) * (5505004 * (t - y) + y * 51642172) + 1067484004616 * y := by
   unfold longFactorCharge_lp32
   rw [show t = (t - y) + y by omega]
   rw [Nat.add_sub_cancel]
@@ -42,7 +42,7 @@ theorem sum_longFactorCharge_le_lp32 {J : Type*} (S : Finset J) (y t z : J → �
 
 theorem long_geometric_allowances_le_retained_lp32 :
     2130706433 * (2 * 22 + 2) * 365 + longFactorCharge_lp32 22 198 167
-      ≤ 274584679824830408 := by
+      ≤ 274584715711948448 := by
   decide +kernel
 
 variable {K : Type} [Field K]
@@ -167,7 +167,7 @@ theorem long_retained_seed_budget_of_factor_counts_lp32 [CharP K 2130706433]
     (hcount : ∀ F ∈ normalizedFactorSet Q, ∀ G ∈ surfaceFactors (polynomialEmbedding K) F,
       (longFactorSeeds_lp32 F G seeds selected).card ≤
         longFactorCharge_lp32 (G.degreeOf 0) (longMiddleDegree_lp32 G) (G.degreeOf 2)) :
-    seeds.card ≤ 274584679824830408 := by
+    seeds.card ≤ 274584715711948448 := by
   classical
   let φ := polynomialEmbedding K
   let S := normalizedFactorSet Q

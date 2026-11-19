@@ -54,16 +54,16 @@ theorem proper_profile_helper_card_mul_le [CharP K 2130706433]
     (hprofile₂ : profile.middleCap ≤ profile.totalCap)
     (hMixed : (helperEnvelope profile helperSupport).middle * support.s +
       support.ys * (helperEnvelope profile helperSupport).slope < 2130706433)
-    (nodes : N ↪ K) (u₀ u₁ : N → K) (hn : 181068 ≤ Fintype.card N)
+    (nodes : N ↪ K) (u₀ u₁ : N → K) (hn : 181059 ≤ Fintype.card N)
     (hQ : ProperProfileHelper F Q profile helperSupport.s helperSupport.ys helperSupport.total nodes u₀ u₁)
     (selected : K → Polynomial K) (seeds : Finset K)
     (hdegree : ∀ g ∈ seeds, (selected g).natDegree ≤ 131071)
     (hregular : ∀ g ∈ seeds, RegularSolution F (selected g) g)
-    (hagreement : ∀ g ∈ seeds, 181068 ≤
+    (hagreement : ∀ g ∈ seeds, 181059 ≤
       (Finset.univ.filter (fun i => (selected g).eval (nodes i) = u₀ i + g * u₁ i)).card)
-    (hpencil : NoLargeSelectedPencil selected seeds 131071 81076) :
-    seeds.card * (181068 * (181068 - 131071)) ≤ flagMixed (originalCumulativeFlag F)
-      (helperEnvelope profile helperSupport).flag (scaledPairFlag support (Fintype.card N) 131071 181068 81076) := by
+    (hpencil : NoLargeSelectedPencil selected seeds 131071 81085) :
+    seeds.card * (181059 * (181059 - 131071)) ≤ flagMixed (originalCumulativeFlag F)
+      (helperEnvelope profile helperSupport).flag (scaledPairFlag support (Fintype.card N) 131071 181059 81085) := by
   let right := helperEnvelope profile helperSupport
   have hright := helperEnvelope_nested profile helperSupport hprofile₁ hprofile₂
   have hrightM : right.flag.yz + right.flag.all = right.middle := Nat.sub_add_cancel hright.1
@@ -85,7 +85,7 @@ theorem proper_profile_helper_card_mul_le [CharP K 2130706433]
   rw [← Finset.card_univ (α := N)]
   exact Koala6831MovingCarrierPairs.regular_carrier_seed_card_mul_le support F Q hirr hproper
     2130706433 hpos hchar hSupport right.flag hrightFlags selected seeds Finset.univ nodes u₀ u₁
-    nodes.injective.injOn 131071 181068 81076 (by decide) (by decide) (by decide)
+    nodes.injective.injOn 131071 181059 81085 (by decide) (by decide) (by decide)
     (by simpa using hn) hTotal hpair hdegree (fun g hg => (hregular g hg).1) hQzero
     (fun g hg => (hregular g hg).2) hagreement hpencil
 
@@ -97,7 +97,7 @@ theorem profile_leading_seed_card_mul_le [CharP K 2130706433]
     (hprofile₁ : profile.secondCap ≤ profile.middleCap)
     (hprofile₂ : profile.middleCap ≤ profile.totalCap)
     (hMixed : profile.middleCap * support.s + support.ys * profile.secondCap < 2130706433)
-    (nodes : N ↪ K) (u₀ u₁ : N → K) (hn : 181068 ≤ Fintype.card N)
+    (nodes : N ↪ K) (u₀ u₁ : N → K) (hn : 181059 ≤ Fintype.card N)
     (hP : ProfileInterpolant profile nodes u₀ u₁ P)
     (hFT : profile.totalCap < wt residualTotalWeights F)
     (selected : K → Polynomial K) (seeds : Finset K)
@@ -105,12 +105,12 @@ theorem profile_leading_seed_card_mul_le [CharP K 2130706433]
     (hregular : ∀ g ∈ seeds, RegularSolution F (selected g) g)
     (hleading : ∀ g ∈ seeds, MvPolynomial.eval (selectedPoint (polynomialEmbedding K) selected g)
       (surfaceMap (polynomialEmbedding K) (SecondJetCoefficients.asS P).leadingCoeff) = 0)
-    (hagreement : ∀ g ∈ seeds, 181068 ≤
+    (hagreement : ∀ g ∈ seeds, 181059 ≤
       (Finset.univ.filter (fun i => (selected g).eval (nodes i) = u₀ i + g * u₁ i)).card)
-    (hpencil : NoLargeSelectedPencil selected seeds 131071 81076) :
-    seeds.card * (181068 * (181068 - 131071)) ≤ flagMixed (originalCumulativeFlag F)
+    (hpencil : NoLargeSelectedPencil selected seeds 131071 81085) :
+    seeds.card * (181059 * (181059 - 131071)) ≤ flagMixed (originalCumulativeFlag F)
       (Envelope.flag ⟨profile.secondCap, profile.middleCap, profile.totalCap⟩)
-      (scaledPairFlag support (Fintype.card N) 131071 181068 81076) := by
+      (scaledPairFlag support (Fintype.card N) 131071 181059 81085) := by
   let Q := (SecondJetCoefficients.asS P).leadingCoeff
   let right : Envelope := ⟨profile.secondCap, profile.middleCap, profile.totalCap⟩
   obtain ⟨hcop, hweights⟩ := profile_leading_coprime_and_weights profile P F nodes u₀ u₁ hP hirr hFT
@@ -132,7 +132,7 @@ theorem profile_leading_seed_card_mul_le [CharP K 2130706433]
   rw [← Finset.card_univ (α := N)]
   exact Koala6831MovingCarrierPairs.regular_carrier_seed_card_mul_le support F Q hirr hproper
     2130706433 hpos hchar hSupport right.flag hrightFlags selected seeds Finset.univ nodes u₀ u₁
-    nodes.injective.injOn 131071 181068 81076 (by decide) (by decide) (by decide)
+    nodes.injective.injOn 131071 181059 81085 (by decide) (by decide) (by decide)
     (by simpa using hn) hTotal hpair hdegree (fun g hg => (hregular g hg).1) hQzero
     (fun g hg => (hregular g hg).2) hagreement hpencil
 

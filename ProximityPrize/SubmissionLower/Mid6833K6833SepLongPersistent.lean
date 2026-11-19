@@ -28,7 +28,7 @@ local notation "p" => 2130706433
 
 theorem long_persistent_selected_sum_le_of_degree_lp32
     (F : Carrier K) (G : MvPolynomial (Fin 3) Ω) (bound e : ℕ)
-    (hw : w + 1 ≤ bound) (hchar : bound < p) (he : e ≤ 81076)
+    (hw : w + 1 ≤ bound) (hchar : bound < p) (he : e ≤ 81085)
     (hweight : wt ![1, w, 0, 0] F < bound)
     (hT : wt ![0, 1, 1, 0] F ≤ 198) (hZ : wt ![0, 0, 0, 1] F ≤ 167)
     (component : A → FirstTailComponent F w G)
@@ -43,18 +43,18 @@ theorem long_persistent_selected_sum_le_of_degree_lp32
       (∑ v ∈ W, RCN346.poleOrder Ω (CoordinateField Ω (component i).1) v
         (coordinate Ω (component i).1 2)) ≤ (d₁ i : ℤ))
     (x : I ↪ K) (u₀ u₁ : I → K) (nodes : Finset I)
-    (hAn : 181068 ≤ nodes.card) (haverage : nodeAverage nodes.card w 181068 ≤ 3)
+    (hAn : 181059 ≤ nodes.card) (haverage : nodeAverage nodes.card w 181059 ≤ 3)
     (seeds allSeeds : Finset K) (hsub : seeds ⊆ allSeeds)
     (selected : K → Polynomial K)
     (hdegree : ∀ g ∈ seeds, (selected g).natDegree ≤ w)
     (hgraph : ∀ g ∈ seeds, graphSpecialize (selected g) g (g ^ p) F = 0)
     (hreg : ∀ g ∈ seeds, graphSpecialize (selected g) g (g ^ p) (implicitRegularity F) ≠ 0)
-    (hagreements : ∀ g ∈ seeds, 181068 ≤
+    (hagreements : ∀ g ∈ seeds, 181059 ≤
       (nodes.filter (fun i => (selected g).eval (x i) = u₀ i + g * u₁ i)).card)
     (hpencil : ∀ P₀ P₁ : Polynomial K, P₀.natDegree ≤ w → P₁.natDegree ≤ w →
       (RCN050.pencilSeeds allSeeds selected P₀ P₁).card ≤ e + 1) :
     (∑ i, (selectedComponentPoints F w p G seeds selected (component i)).card) ≤
-      81674 * ((∑ i, d₀ i) + ∑ i, d₁ i) := by
+      81683 * ((∑ i, d₀ i) + ∑ i, d₁ i) := by
   classical
   letI : CharP Ω p := genericField_charP K p
   have hts : ∀ d ∈ F.support, d 2 ≤ 198 := by
@@ -71,7 +71,7 @@ theorem long_persistent_selected_sum_le_of_degree_lp32
     change d 0 * 0 + d 1 * 0 + d 2 * 0 + d 3 * 1 ≤ 167 at hl
     simpa only [Nat.mul_zero, Nat.mul_one, Nat.zero_add] using hl
   have hcount (i : A) : (selectedComponentPoints F w p G seeds selected (component i)).card ≤
-      81674 * (d₀ i + d₁ i) := by
+      81683 * (d₀ i + d₁ i) := by
     rw [selectedComponentPoints_card]
     let fiber := selectedOnComponent F w p G seeds selected (component i)
     have hmem (g : K) (hg : g ∈ fiber) :
@@ -82,7 +82,7 @@ theorem long_persistent_selected_sum_le_of_degree_lp32
       persistent_curve_selected_seed_bound F w bound p 198 167 (component i).1
         (base i) (d₀ i) (d₁ i) (hd₀ i) (hd₁ i) (charts i).carrier_mem
         (charts i).separant_not_mem (hpersistent i) (by omega) hw hchar hweight hts hzs
-        x u₀ u₁ nodes 181068 e (by decide) hAn haverage fiber allSeeds
+        x u₀ u₁ nodes 181059 e (by decide) hAn haverage fiber allSeeds
         (fun g hg => hsub (hmem g hg).1) selected (fun g => g ^ p)
         (fun g hg => hdegree g (hmem g hg).1)
         (fun g hg => hgraph g (hmem g hg).1)
@@ -95,7 +95,7 @@ theorem long_persistent_selected_sum_le_of_degree_lp32
     have hp := hpos i
     omega
   calc
-    _ ≤ ∑ i, 81674 * (d₀ i + d₁ i) := Finset.sum_le_sum fun i _ => hcount i
+    _ ≤ ∑ i, 81683 * (d₀ i + d₁ i) := Finset.sum_le_sum fun i _ => hcount i
     _ = _ := by simp only [← Finset.mul_sum, Finset.sum_add_distrib]
 
 theorem long_literal_pole_le_actual_degree_lp32
