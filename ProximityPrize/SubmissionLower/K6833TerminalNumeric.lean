@@ -15,7 +15,7 @@ def predEnvelope (f : Envelope) : Envelope := ⟨f.slope-1,f.middle-1,f.total-1�
 def sharpDirection (f : Envelope) := shortenedDirection f (pencilBudget*residualPriceScale)
 def upperGraphAxis (f : Envelope) (cfg : Fin 3 → JetProfile) (i : Fin 3) : ℕ :=
   max (jetGraphNumerator TailCorrections.original (f.pad 2) cfg (unit i))
-    ((residualPriceScale/49997)*131073*81077*byAxis (identityGraph (f.pad 2)) i)
+    ((residualPriceScale/49988)*131073*81086*byAxis (identityGraph (f.pad 2)) i)
 def leadCost (f : Envelope) (cfg : Fin 3 → JetProfile) (left : FlagDegree) :=
   ((List.finRange 3).map (fun j => flagMixed left (cfg j).leading.flag (sharpDirection f))).sum
 def graphCost (f : Envelope) (cfg : Fin 3 → JetProfile) (left : FlagDegree) :=
@@ -51,878 +51,856 @@ def multipleMode (overall f : Envelope) (lim : ℕ) : Option Profiles → Bool
 def validRow (row : TerminalRow) : Bool :=
   let f := row.envelope
   decide (1 ≤ f.slope ∧ f.slope ≤ f.middle ∧ f.middle ≤ f.total ∧
-      f.slope ≤ 16 ∧ f.middle ≤ 66 ∧ f.total ≤ 8870) &&
+      f.slope ≤ 16 ∧ f.middle ≤ 67 ∧ f.total ≤ 8870) &&
     simpleMode f row.terminalLimit row.single &&
     (decide (f.slope = 1) || multipleMode f (predEnvelope f) row.terminalLimit row.multiple)
-private def rows1_0 : List TerminalRow := [
-  ⟨⟨1,1,6968⟩,248103920679285493,none,none⟩,
-  ⟨⟨1,2,6945⟩,248109582208506812,none,none⟩,
-  ⟨⟨1,3,6923⟩,248115258173156121,none,none⟩,
-  ⟨⟨1,4,6900⟩,248120948573233419,none,none⟩,
-  ⟨⟨1,5,6876⟩,248126653408738709,none,none⟩,
-  ⟨⟨1,6,6853⟩,248132372679671989,none,none⟩,
-  ⟨⟨1,7,6830⟩,248138106386033259,none,none⟩,
-  ⟨⟨1,8,6806⟩,248143854527822518,none,none⟩]
-private theorem rows1_0_v : rows1_0.all validRow = true := by decide +kernel
-private def rows1_1 : List TerminalRow := [
-  ⟨⟨1,9,6782⟩,248149617105039768,none,none⟩,
-  ⟨⟨1,10,6758⟩,248155394117685008,none,none⟩,
-  ⟨⟨1,11,6734⟩,248161185565758237,none,none⟩,
-  ⟨⟨1,12,6709⟩,248166991449259458,none,none⟩,
-  ⟨⟨1,13,6685⟩,248172811768188668,none,none⟩,
-  ⟨⟨1,14,6660⟩,248178646522545867,none,none⟩,
-  ⟨⟨1,15,6635⟩,248184495712331060,none,none⟩,
-  ⟨⟨1,16,6610⟩,248190359337544240,none,none⟩]
-private theorem rows1_1_v : rows1_1.all validRow = true := by decide +kernel
-private def rows1_2 : List TerminalRow := [
-  ⟨⟨1,17,6584⟩,248196237398185410,none,none⟩,
-  ⟨⟨1,18,6559⟩,248202129894254570,none,none⟩,
-  ⟨⟨1,19,6533⟩,248208036825751722,none,none⟩,
-  ⟨⟨1,20,6507⟩,248213958192676862,none,none⟩,
-  ⟨⟨1,21,6480⟩,248219893995029992,none,none⟩,
-  ⟨⟨1,22,6454⟩,248225844232811115,none,none⟩,
-  ⟨⟨1,23,6427⟩,248231808906020225,none,none⟩,
-  ⟨⟨1,24,6400⟩,248237788014657327,none,none⟩]
-private theorem rows1_2_v : rows1_2.all validRow = true := by decide +kernel
-private def rows1_3 : List TerminalRow := [
-  ⟨⟨1,25,6372⟩,248243781558722419,none,none⟩,
-  ⟨⟨1,26,6345⟩,248249789538215499,none,none⟩,
-  ⟨⟨1,27,6317⟩,248255811953136571,none,none⟩,
-  ⟨⟨1,28,6289⟩,248261848803485633,none,none⟩,
-  ⟨⟨1,29,6260⟩,248267900089262685,none,none⟩,
-  ⟨⟨1,30,6232⟩,248273965810467726,none,none⟩,
-  ⟨⟨1,31,6202⟩,248280045967100758,none,none⟩,
-  ⟨⟨1,32,6173⟩,248286140559161781,none,none⟩]
-private theorem rows1_3_v : rows1_3.all validRow = true := by decide +kernel
-private def rows1_4 : List TerminalRow := [
-  ⟨⟨1,33,6143⟩,248292249586650794,none,none⟩,
-  ⟨⟨1,34,6113⟩,248298373049567796,none,none⟩,
-  ⟨⟨1,35,6083⟩,248304510947912789,none,none⟩,
-  ⟨⟨1,36,6052⟩,248310663281685772,none,none⟩,
-  ⟨⟨1,37,6021⟩,248316830050886743,none,none⟩,
-  ⟨⟨1,38,5989⟩,248323011255515707,none,none⟩,
-  ⟨⟨1,39,5957⟩,248329206895572659,none,none⟩,
-  ⟨⟨1,40,5924⟩,248335416971057602,none,none⟩]
-private theorem rows1_4_v : rows1_4.all validRow = true := by decide +kernel
-private def rows1_5 : List TerminalRow := [
-  ⟨⟨1,41,5892⟩,248341641481970536,none,none⟩,
-  ⟨⟨1,42,5858⟩,248347880428311459,none,none⟩,
-  ⟨⟨1,43,5824⟩,248354133810080372,none,none⟩,
-  ⟨⟨1,44,5790⟩,248360401627277276,none,none⟩,
-  ⟨⟨1,45,5755⟩,248366683879902168,none,none⟩,
-  ⟨⟨1,46,5704⟩,248372980567955053,none,none⟩,
-  ⟨⟨1,47,5652⟩,248379291691435927,none,none⟩,
-  ⟨⟨1,48,5598⟩,248385617250344790,none,none⟩]
-private theorem rows1_5_v : rows1_5.all validRow = true := by decide +kernel
-private def rows1_6 : List TerminalRow := [
-  ⟨⟨1,49,5543⟩,248391957244681645,none,none⟩,
-  ⟨⟨1,50,5486⟩,248398311674446489,none,none⟩,
-  ⟨⟨1,51,5427⟩,248404680539639322,none,none⟩,
-  ⟨⟨1,52,5366⟩,248411063840260146,none,none⟩,
-  ⟨⟨1,53,5301⟩,248417461576308961,none,none⟩,
-  ⟨⟨1,54,5174⟩,248423873747785765,none,none⟩,
-  ⟨⟨1,55,4757⟩,248430300354690560,none,none⟩,
-  ⟨⟨1,56,4322⟩,248436741397023344,none,none⟩]
-private theorem rows1_6_v : rows1_6.all validRow = true := by decide +kernel
-private def rows1_7 : List TerminalRow := [
-  ⟨⟨1,57,3869⟩,248443196874784120,none,none⟩,
-  ⟨⟨1,58,3397⟩,248449666787972884,none,none⟩,
-  ⟨⟨1,59,2907⟩,248456151136589638,none,none⟩,
-  ⟨⟨1,60,2398⟩,248462649920634384,none,none⟩,
-  ⟨⟨1,61,1871⟩,248469163140107120,none,none⟩,
-  ⟨⟨1,62,1325⟩,248475690795007845,none,none⟩,
-  ⟨⟨1,63,760⟩,248482232885336560,none,none⟩,
-  ⟨⟨1,64,177⟩,248488789411093264,none,none⟩]
-private theorem rows1_7_v : rows1_7.all validRow = true := by decide +kernel
-def rows1 : List TerminalRow := rows1_0 ++ rows1_1 ++ rows1_2 ++ rows1_3 ++ rows1_4 ++ rows1_5 ++ rows1_6 ++ rows1_7
-private theorem rows1_v : rows1.all validRow = true := by simp only [rows1,List.all_append,rows1_0_v,rows1_1_v,rows1_2_v,rows1_3_v,rows1_4_v,rows1_5_v,rows1_6_v,rows1_7_v,Bool.and_self]
-private def rows2_0 : List TerminalRow := [
-  ⟨⟨2,2,6863⟩,248115233128679128,none,none⟩,
-  ⟨⟨2,3,6840⟩,248132200196970608,none,none⟩,
-  ⟨⟨2,4,6817⟩,248149181700690077,none,none⟩,
-  ⟨⟨2,5,6794⟩,248166177639837538,none,none⟩,
-  ⟨⟨2,6,6770⟩,248183188014412986,none,none⟩,
-  ⟨⟨2,7,6746⟩,248200212824416426,none,none⟩,
-  ⟨⟨2,8,6723⟩,248217252069847854,none,none⟩,
-  ⟨⟨2,9,6699⟩,248234305750707275,none,none⟩]
-private theorem rows2_0_v : rows2_0.all validRow = true := by decide +kernel
-private def rows2_1 : List TerminalRow := [
-  ⟨⟨2,10,6675⟩,248251373866994686,none,none⟩,
-  ⟨⟨2,11,6650⟩,248268456418710084,none,none⟩,
-  ⟨⟨2,12,6626⟩,248285553405853475,none,none⟩,
-  ⟨⟨2,13,6601⟩,248302664828424856,none,none⟩,
-  ⟨⟨2,14,6576⟩,248319790686424227,none,none⟩,
-  ⟨⟨2,15,6551⟩,248336930979851587,none,none⟩,
-  ⟨⟨2,16,6526⟩,248354085708706938,none,none⟩,
-  ⟨⟨2,17,6500⟩,248371254872990277,none,none⟩]
-private theorem rows2_1_v : rows2_1.all validRow = true := by decide +kernel
-private def rows2_2 : List TerminalRow := [
-  ⟨⟨2,18,6474⟩,248388438472701608,none,none⟩,
-  ⟨⟨2,19,6448⟩,248405636507840928,none,none⟩,
-  ⟨⟨2,20,6422⟩,248422848978408241,none,none⟩,
-  ⟨⟨2,21,6396⟩,248440075884403541,none,none⟩,
-  ⟨⟨2,22,6369⟩,248457317225826833,none,none⟩,
-  ⟨⟨2,23,6342⟩,248474573002678114,none,none⟩,
-  ⟨⟨2,24,6315⟩,248491843214957385,none,none⟩,
-  ⟨⟨2,25,6287⟩,248509127862664648,none,none⟩]
-private theorem rows2_2_v : rows2_2.all validRow = true := by decide +kernel
-private def rows2_3 : List TerminalRow := [
-  ⟨⟨2,26,6259⟩,248526426945799899,none,none⟩,
-  ⟨⟨2,27,6231⟩,248543740464363140,none,none⟩,
-  ⟨⟨2,28,6203⟩,248561068418354372,none,none⟩,
-  ⟨⟨2,29,6174⟩,248578410807773594,none,none⟩,
-  ⟨⟨2,30,6145⟩,248595767632620807,none,none⟩,
-  ⟨⟨2,31,6116⟩,248613138892896008,none,none⟩,
-  ⟨⟨2,32,6086⟩,248630524588599200,none,none⟩,
-  ⟨⟨2,33,6057⟩,248647924719730382,none,none⟩]
-private theorem rows2_3_v : rows2_3.all validRow = true := by decide +kernel
-private def rows2_4 : List TerminalRow := [
-  ⟨⟨2,34,6026⟩,248665339286289555,none,none⟩,
-  ⟨⟨2,35,5996⟩,248682768288276717,none,none⟩,
-  ⟨⟨2,36,5965⟩,248700211725691872,none,none⟩,
-  ⟨⟨2,37,5933⟩,248717669598535013,none,none⟩,
-  ⟨⟨2,38,5901⟩,248735141906806144,none,none⟩,
-  ⟨⟨2,39,5869⟩,248752628650505269,none,none⟩,
-  ⟨⟨2,40,5836⟩,248770129829632382,none,none⟩,
-  ⟨⟨2,41,5803⟩,248787645444187485,none,none⟩]
-private theorem rows2_4_v : rows2_4.all validRow = true := by decide +kernel
-private def rows2_5 : List TerminalRow := [
-  ⟨⟨2,42,5769⟩,248805175494170579,none,none⟩,
-  ⟨⟨2,43,5735⟩,248822719979581661,none,none⟩,
-  ⟨⟨2,44,5690⟩,248840278900420735,none,none⟩,
-  ⟨⟨2,45,5639⟩,248857852256687799,none,none⟩,
-  ⟨⟨2,46,5588⟩,248875440048382851,none,none⟩,
-  ⟨⟨2,47,5534⟩,248893042275505896,none,none⟩,
-  ⟨⟨2,48,5480⟩,248910658938056931,none,none⟩,
-  ⟨⟨2,49,5423⟩,248928290036035954,none,none⟩]
-private theorem rows2_5_v : rows2_5.all validRow = true := by decide +kernel
-private def rows2_6 : List TerminalRow := [
-  ⟨⟨2,50,5365⟩,248945935569442968,none,none⟩,
-  ⟨⟨2,51,5305⟩,248963595538277972,none,none⟩,
-  ⟨⟨2,52,5239⟩,248981269942540967,none,none⟩,
-  ⟨⟨2,53,5122⟩,248998958782231952,none,none⟩,
-  ⟨⟨2,54,4713⟩,249016662057350925,none,none⟩,
-  ⟨⟨2,55,4285⟩,249034379767897891,none,none⟩,
-  ⟨⟨2,56,3839⟩,249052111913872845,none,none⟩,
-  ⟨⟨2,57,3375⟩,249069858495275790,none,none⟩]
-private theorem rows2_6_v : rows2_6.all validRow = true := by decide +kernel
-private def rows2_7 : List TerminalRow := [
-  ⟨⟨2,58,2892⟩,249087619512106725,none,none⟩,
-  ⟨⟨2,59,2390⟩,249105394964365650,none,none⟩,
-  ⟨⟨2,60,1870⟩,249123184852052565,none,none⟩,
-  ⟨⟨2,61,1332⟩,249140989175167470,none,none⟩,
-  ⟨⟨2,62,775⟩,249158807933710366,none,none⟩,
-  ⟨⟨2,63,200⟩,249176641127681251,none,none⟩]
-private theorem rows2_7_v : rows2_7.all validRow = true := by decide +kernel
-def rows2 : List TerminalRow := rows2_0 ++ rows2_1 ++ rows2_2 ++ rows2_3 ++ rows2_4 ++ rows2_5 ++ rows2_6 ++ rows2_7
-private theorem rows2_v : rows2.all validRow = true := by simp only [rows2,List.all_append,rows2_0_v,rows2_1_v,rows2_2_v,rows2_3_v,rows2_4_v,rows2_5_v,rows2_6_v,rows2_7_v,Bool.and_self]
-private def rows3_0 : List TerminalRow := [
-  ⟨⟨3,3,6755⟩,248137851117142925,none,none⟩,
-  ⟨⟨3,4,6731⟩,248166123724504565,none,none⟩,
-  ⟨⟨3,5,6708⟩,248194410767294194,none,none⟩,
-  ⟨⟨3,6,6684⟩,248222712245511813,none,none⟩,
-  ⟨⟨3,7,6661⟩,248251028159157424,none,none⟩,
-  ⟨⟨3,8,6637⟩,248279358508231023,none,none⟩,
-  ⟨⟨3,9,6613⟩,248307703292732612,none,none⟩,
-  ⟨⟨3,10,6588⟩,248336062512662192,none,none⟩]
-private theorem rows3_0_v : rows3_0.all validRow = true := by decide +kernel
-private def rows3_1 : List TerminalRow := [
-  ⟨⟨3,11,6564⟩,248364436168019763,none,none⟩,
-  ⟨⟨3,12,6539⟩,248392824258805324,none,none⟩,
-  ⟨⟨3,13,6515⟩,248421226785018874,none,none⟩,
-  ⟨⟨3,14,6489⟩,248449643746660414,none,none⟩,
-  ⟨⟨3,15,6464⟩,248478075143729945,none,none⟩,
-  ⟨⟨3,16,6439⟩,248506520976227465,none,none⟩,
-  ⟨⟨3,17,6413⟩,248534981244152975,none,none⟩,
-  ⟨⟨3,18,6387⟩,248563455947506477,none,none⟩]
-private theorem rows3_1_v : rows3_1.all validRow = true := by decide +kernel
-private def rows3_2 : List TerminalRow := [
-  ⟨⟨3,19,6361⟩,248591945086287967,none,none⟩,
-  ⟨⟨3,20,6335⟩,248620448660497449,none,none⟩,
-  ⟨⟨3,21,6308⟩,248648966670134919,none,none⟩,
-  ⟨⟨3,22,6281⟩,248677499115200381,none,none⟩,
-  ⟨⟨3,23,6254⟩,248706045995693832,none,none⟩,
-  ⟨⟨3,24,6227⟩,248734607311615274,none,none⟩,
-  ⟨⟨3,25,6199⟩,248763183062964706,none,none⟩,
-  ⟨⟨3,26,6171⟩,248791773249742128,none,none⟩]
-private theorem rows3_2_v : rows3_2.all validRow = true := by decide +kernel
-private def rows3_3 : List TerminalRow := [
-  ⟨⟨3,27,6143⟩,248820377871947539,none,none⟩,
-  ⟨⟨3,28,6114⟩,248848996929580941,none,none⟩,
-  ⟨⟨3,29,6085⟩,248877630422642332,none,none⟩,
-  ⟨⟨3,30,6056⟩,248906278351131714,none,none⟩,
-  ⟨⟨3,31,6027⟩,248934940715049087,none,none⟩,
-  ⟨⟨3,32,5997⟩,248963617514394450,none,none⟩,
-  ⟨⟨3,33,5967⟩,248992308749167801,none,none⟩,
-  ⟨⟨3,34,5936⟩,249021014419369144,none,none⟩]
-private theorem rows3_3_v : rows3_3.all validRow = true := by decide +kernel
-private def rows3_4 : List TerminalRow := [
-  ⟨⟨3,35,5905⟩,249049734524998477,none,none⟩,
-  ⟨⟨3,36,5874⟩,249078469066055799,none,none⟩,
-  ⟨⟨3,37,5842⟩,249107218042541113,none,none⟩,
-  ⟨⟨3,38,5810⟩,249135981454454414,none,none⟩,
-  ⟨⟨3,39,5778⟩,249164759301795708,none,none⟩,
-  ⟨⟨3,40,5745⟩,249193551584564992,none,none⟩,
-  ⟨⟨3,41,5711⟩,249222358302762264,none,none⟩,
-  ⟨⟨3,42,5667⟩,249251179456387528,none,none⟩]
-private theorem rows3_4_v : rows3_4.all validRow = true := by decide +kernel
-private def rows3_5 : List TerminalRow := [
-  ⟨⟨3,43,5619⟩,249280015045440780,none,none⟩,
-  ⟨⟨3,44,5569⟩,249308865069922025,none,none⟩,
-  ⟨⟨3,45,5517⟩,249337729529831258,none,none⟩,
-  ⟨⟨3,46,5465⟩,249366608425168482,none,none⟩,
-  ⟨⟨3,47,5411⟩,249395501755933695,none,none⟩,
-  ⟨⟨3,48,5355⟩,249424409522126900,none,none⟩,
-  ⟨⟨3,49,5298⟩,249453331723748094,none,none⟩,
-  ⟨⟨3,50,5238⟩,249482268360797277,none,none⟩]
-private theorem rows3_5_v : rows3_5.all validRow = true := by decide +kernel
-private def rows3_6 : List TerminalRow := [
-  ⟨⟨3,51,5170⟩,249511219433274452,none,none⟩,
-  ⟨⟨3,52,5035⟩,249540184941179617,none,none⟩,
-  ⟨⟨3,53,4632⟩,249569164884512772,none,none⟩,
-  ⟨⟨3,54,4212⟩,249598159263273916,none,none⟩,
-  ⟨⟨3,55,3773⟩,249627168077463050,none,none⟩,
-  ⟨⟨3,56,3315⟩,249656191327080175,none,none⟩,
-  ⟨⟨3,57,2839⟩,249685229012125288,none,none⟩,
-  ⟨⟨3,58,2345⟩,249714281132598394,none,none⟩]
-private theorem rows3_6_v : rows3_6.all validRow = true := by decide +kernel
-private def rows3_7 : List TerminalRow := [
-  ⟨⟨3,59,1832⟩,249743347688499491,none,none⟩,
-  ⟨⟨3,60,1301⟩,249772428679828574,none,none⟩,
-  ⟨⟨3,61,751⟩,249801524106585651,none,none⟩,
-  ⟨⟨3,62,183⟩,249830633968770716,none,none⟩]
-private theorem rows3_7_v : rows3_7.all validRow = true := by decide +kernel
+def rows1_0 : List TerminalRow := [
+  ⟨⟨1,1,7586⟩,246844905463626880,none,none⟩,
+  ⟨⟨1,2,7563⟩,246844914166725239,none,none⟩,
+  ⟨⟨1,3,7541⟩,246850607579210469,none,none⟩,
+  ⟨⟨1,4,7518⟩,246856315333715565,none,none⟩,
+  ⟨⟨1,5,7495⟩,246862037430240528,none,none⟩,
+  ⟨⟨1,6,7471⟩,246867773868785360,none,none⟩,
+  ⟨⟨1,7,7448⟩,246873524649350057,none,none⟩,
+  ⟨⟨1,8,7424⟩,246879289771934623,none,none⟩]
+def rows1_1 : List TerminalRow := [
+  ⟨⟨1,9,7401⟩,246885069236539055,none,none⟩,
+  ⟨⟨1,10,7377⟩,246890863043163353,none,none⟩,
+  ⟨⟨1,11,7353⟩,246896671191807519,none,none⟩,
+  ⟨⟨1,12,7328⟩,246902493682471553,none,none⟩,
+  ⟨⟨1,13,7304⟩,246908330515155451,none,none⟩,
+  ⟨⟨1,14,7279⟩,246914181689859219,none,none⟩,
+  ⟨⟨1,15,7255⟩,246920047206582853,none,none⟩,
+  ⟨⟨1,16,7230⟩,246925927065326354,none,none⟩]
+def rows1_2 : List TerminalRow := [
+  ⟨⟨1,17,7205⟩,246931821266089724,none,none⟩,
+  ⟨⟨1,18,7179⟩,246937729808872959,none,none⟩,
+  ⟨⟨1,19,7154⟩,246943652693676061,none,none⟩,
+  ⟨⟨1,20,7128⟩,246949589920499029,none,none⟩,
+  ⟨⟨1,21,7102⟩,246955541489341867,none,none⟩,
+  ⟨⟨1,22,7074⟩,246961507400204569,none,none⟩,
+  ⟨⟨1,23,7046⟩,246967487653087140,none,none⟩,
+  ⟨⟨1,24,7018⟩,246973482247989578,none,none⟩]
+def rows1_3 : List TerminalRow := [
+  ⟨⟨1,25,6989⟩,246979491184911881,none,none⟩,
+  ⟨⟨1,26,6960⟩,246985514463854054,none,none⟩,
+  ⟨⟨1,27,6930⟩,246991552084816091,none,none⟩,
+  ⟨⟨1,28,6901⟩,246997604047797997,none,none⟩,
+  ⟨⟨1,29,6871⟩,247003670352799770,none,none⟩,
+  ⟨⟨1,30,6841⟩,247009750999821409,none,none⟩,
+  ⟨⟨1,31,6810⟩,247015845988862915,none,none⟩,
+  ⟨⟨1,32,6779⟩,247021955319924290,none,none⟩]
+def rows1_4 : List TerminalRow := [
+  ⟨⟨1,33,6748⟩,247028078993005531,none,none⟩,
+  ⟨⟨1,34,6716⟩,247034217008106638,none,none⟩,
+  ⟨⟨1,35,6685⟩,247040369365227613,none,none⟩,
+  ⟨⟨1,36,6652⟩,247046536064368455,none,none⟩,
+  ⟨⟨1,37,6620⟩,247052717105529164,none,none⟩,
+  ⟨⟨1,38,6587⟩,247058912488709740,none,none⟩,
+  ⟨⟨1,39,6553⟩,247065122213910183,none,none⟩,
+  ⟨⟨1,40,6519⟩,247071346281130492,none,none⟩]
+def rows1_5 : List TerminalRow := [
+  ⟨⟨1,41,6481⟩,247077584690370669,none,none⟩,
+  ⟨⟨1,42,6442⟩,247083837441630714,none,none⟩,
+  ⟨⟨1,43,6402⟩,247090104534910624,none,none⟩,
+  ⟨⟨1,44,6362⟩,247096385970210404,none,none⟩,
+  ⟨⟨1,45,6321⟩,247102681747530048,none,none⟩,
+  ⟨⟨1,46,6279⟩,247108991866869559,none,none⟩,
+  ⟨⟨1,47,6236⟩,247115316328228939,none,none⟩,
+  ⟨⟨1,48,6193⟩,247121655131608184,none,none⟩]
+def rows1_6 : List TerminalRow := [
+  ⟨⟨1,49,6149⟩,247128008277007298,none,none⟩,
+  ⟨⟨1,50,6103⟩,247134375764426278,none,none⟩,
+  ⟨⟨1,51,6050⟩,247140757593865125,none,none⟩,
+  ⟨⟨1,52,5996⟩,247147153765323841,none,none⟩,
+  ⟨⟨1,53,5940⟩,247153564278802421,none,none⟩,
+  ⟨⟨1,54,5882⟩,247159989134300870,none,none⟩,
+  ⟨⟨1,55,5813⟩,247166428331819185,none,none⟩,
+  ⟨⟨1,56,5735⟩,247172881871357367,none,none⟩]
+def rows1_7 : List TerminalRow := [
+  ⟨⟨1,57,5439⟩,247179349752915417,none,none⟩,
+  ⟨⟨1,58,5022⟩,247185831976493333,none,none⟩,
+  ⟨⟨1,59,4587⟩,247192328542091116,none,none⟩,
+  ⟨⟨1,60,4135⟩,247198839449708768,none,none⟩,
+  ⟨⟨1,61,3665⟩,247205364699346285,none,none⟩,
+  ⟨⟨1,62,3178⟩,247211904291003669,none,none⟩,
+  ⟨⟨1,63,2673⟩,247218458224680922,none,none⟩,
+  ⟨⟨1,64,2151⟩,247225026500378041,none,none⟩]
+def rows1_8 : List TerminalRow := [
+  ⟨⟨1,65,1611⟩,247231609118095026,none,none⟩,
+  ⟨⟨1,66,1054⟩,247238206077831879,none,none⟩,
+  ⟨⟨1,67,479⟩,247244817379588599,none,none⟩]
+def rows1 : List TerminalRow := rows1_0 ++ rows1_1 ++ rows1_2 ++ rows1_3 ++ rows1_4 ++ rows1_5 ++ rows1_6 ++ rows1_7 ++ rows1_8
+def rows2_0 : List TerminalRow := [
+  ⟨⟨2,2,7481⟩,246850582697041873,none,none⟩,
+  ⟨⟨2,3,7458⟩,246867602502241242,none,none⟩,
+  ⟨⟨2,4,7435⟩,246884636649460478,none,none⟩,
+  ⟨⟨2,5,7412⟩,246901685138699582,none,none⟩,
+  ⟨⟨2,6,7389⟩,246918747969958553,none,none⟩,
+  ⟨⟨2,7,7365⟩,246935825143237391,none,none⟩,
+  ⟨⟨2,8,7341⟩,246952916658536095,none,none⟩,
+  ⟨⟨2,9,7318⟩,246970022515854668,none,none⟩]
+def rows2_1 : List TerminalRow := [
+  ⟨⟨2,10,7294⟩,246987142715193106,none,none⟩,
+  ⟨⟨2,11,7270⟩,247004277256551412,none,none⟩,
+  ⟨⟨2,12,7245⟩,247021426139929584,none,none⟩,
+  ⟨⟨2,13,7221⟩,247038589365327625,none,none⟩,
+  ⟨⟨2,14,7196⟩,247055766932745531,none,none⟩,
+  ⟨⟨2,15,7171⟩,247072958842183304,none,none⟩,
+  ⟨⟨2,16,7146⟩,247090165093640946,none,none⟩,
+  ⟨⟨2,17,7121⟩,247107385687118454,none,none⟩]
+def rows2_2 : List TerminalRow := [
+  ⟨⟨2,18,7095⟩,247124620622615829,none,none⟩,
+  ⟨⟨2,19,7068⟩,247141869900133071,none,none⟩,
+  ⟨⟨2,20,7041⟩,247159133519670182,none,none⟩,
+  ⟨⟨2,21,7013⟩,247176411481227156,none,none⟩,
+  ⟨⟨2,22,6985⟩,247193703784803999,none,none⟩,
+  ⟨⟨2,23,6956⟩,247211010430400710,none,none⟩,
+  ⟨⟨2,24,6928⟩,247228331418017287,none,none⟩,
+  ⟨⟨2,25,6899⟩,247245666747653732,none,none⟩]
+def rows2_3 : List TerminalRow := [
+  ⟨⟨2,26,6869⟩,247263016419310043,none,none⟩,
+  ⟨⟨2,27,6840⟩,247280380432986220,none,none⟩,
+  ⟨⟨2,28,6810⟩,247297758788682266,none,none⟩,
+  ⟨⟨2,29,6780⟩,247315151486398178,none,none⟩,
+  ⟨⟨2,30,6750⟩,247332558526133958,none,none⟩,
+  ⟨⟨2,31,6719⟩,247349979907889605,none,none⟩,
+  ⟨⟨2,32,6688⟩,247367415631665118,none,none⟩,
+  ⟨⟨2,33,6656⟩,247384865697460500,none,none⟩]
+def rows2_4 : List TerminalRow := [
+  ⟨⟨2,34,6625⟩,247402330105275747,none,none⟩,
+  ⟨⟨2,35,6593⟩,247419808855110862,none,none⟩,
+  ⟨⟨2,36,6560⟩,247437301946965843,none,none⟩,
+  ⟨⟨2,37,6527⟩,247454809380840690,none,none⟩,
+  ⟨⟨2,38,6494⟩,247472331156735407,none,none⟩,
+  ⟨⟨2,39,6456⟩,247489867274649989,none,none⟩,
+  ⟨⟨2,40,6418⟩,247507417734584439,none,none⟩,
+  ⟨⟨2,41,6379⟩,247524982536538756,none,none⟩]
+def rows2_5 : List TerminalRow := [
+  ⟨⟨2,42,6339⟩,247542561680512940,none,none⟩,
+  ⟨⟨2,43,6299⟩,247560155166506989,none,none⟩,
+  ⟨⟨2,44,6259⟩,247577762994520908,none,none⟩,
+  ⟨⟨2,45,6217⟩,247595385164554693,none,none⟩,
+  ⟨⟨2,46,6175⟩,247613021676608345,none,none⟩,
+  ⟨⟨2,47,6132⟩,247630672530681863,none,none⟩,
+  ⟨⟨2,48,6088⟩,247648337726775250,none,none⟩,
+  ⟨⟨2,49,6039⟩,247666017264888504,none,none⟩]
+def rows2_6 : List TerminalRow := [
+  ⟨⟨2,50,5987⟩,247683711145021623,none,none⟩,
+  ⟨⟨2,51,5933⟩,247701419367174610,none,none⟩,
+  ⟨⟨2,52,5878⟩,247719141931347464,none,none⟩,
+  ⟨⟨2,53,5819⟩,247736878837540185,none,none⟩,
+  ⟨⟨2,54,5750⟩,247754630085752773,none,none⟩,
+  ⟨⟨2,55,5673⟩,247772395675985229,none,none⟩,
+  ⟨⟨2,56,5390⟩,247790175608237550,none,none⟩,
+  ⟨⟨2,57,4980⟩,247807969882509740,none,none⟩]
+def rows2_7 : List TerminalRow := [
+  ⟨⟨2,58,4552⟩,247825778498801797,none,none⟩,
+  ⟨⟨2,59,4107⟩,247843601457113721,none,none⟩,
+  ⟨⟨2,60,3644⟩,247861438757445510,none,none⟩,
+  ⟨⟨2,61,3164⟩,247879290399797168,none,none⟩,
+  ⟨⟨2,62,2667⟩,247897156384168693,none,none⟩,
+  ⟨⟨2,63,2151⟩,247915036710560083,none,none⟩,
+  ⟨⟨2,64,1618⟩,247932931378971343,none,none⟩,
+  ⟨⟨2,65,1068⟩,247950840389402467,none,none⟩]
+def rows2_8 : List TerminalRow := [
+  ⟨⟨2,66,500⟩,247968763741853459,none,none⟩]
+def rows2 : List TerminalRow := rows2_0 ++ rows2_1 ++ rows2_2 ++ rows2_3 ++ rows2_4 ++ rows2_5 ++ rows2_6 ++ rows2_7 ++ rows2_8
+def rows3_0 : List TerminalRow := [
+  ⟨⟨3,3,7374⟩,246873271032557876,none,none⟩,
+  ⟨⟨3,4,7350⟩,246901631572491252,none,none⟩,
+  ⟨⟨3,5,7327⟩,246930006454444496,none,none⟩,
+  ⟨⟨3,6,7304⟩,246958395678417607,none,none⟩,
+  ⟨⟨3,7,7280⟩,246986799244410584,none,none⟩,
+  ⟨⟨3,8,7256⟩,247015217152423429,none,none⟩,
+  ⟨⟨3,9,7232⟩,247043649402456141,none,none⟩,
+  ⟨⟨3,10,7208⟩,247072095994508718,none,none⟩]
+def rows3_1 : List TerminalRow := [
+  ⟨⟨3,11,7184⟩,247100556928581164,none,none⟩,
+  ⟨⟨3,12,7160⟩,247129032204673478,none,none⟩,
+  ⟨⟨3,13,7135⟩,247157521822785656,none,none⟩,
+  ⟨⟨3,14,7110⟩,247186025782917703,none,none⟩,
+  ⟨⟨3,15,7085⟩,247214544085069618,none,none⟩,
+  ⟨⟨3,16,7058⟩,247243076729241398,none,none⟩,
+  ⟨⟨3,17,7031⟩,247271623715433045,none,none⟩,
+  ⟨⟨3,18,7004⟩,247300185043644560,none,none⟩]
+def rows3_2 : List TerminalRow := [
+  ⟨⟨3,19,6976⟩,247328760713875942,none,none⟩,
+  ⟨⟨3,20,6948⟩,247357350726127192,none,none⟩,
+  ⟨⟨3,21,6920⟩,247385955080398306,none,none⟩,
+  ⟨⟨3,22,6892⟩,247414573776689291,none,none⟩,
+  ⟨⟨3,23,6863⟩,247443206815000140,none,none⟩,
+  ⟨⟨3,24,6835⟩,247471854195330857,none,none⟩,
+  ⟨⟨3,25,6805⟩,247500515917681441,none,none⟩,
+  ⟨⟨3,26,6776⟩,247529191982051892,none,none⟩]
+def rows3_3 : List TerminalRow := [
+  ⟨⟨3,27,6746⟩,247557882388442210,none,none⟩,
+  ⟨⟨3,28,6716⟩,247586587136852394,none,none⟩,
+  ⟨⟨3,29,6686⟩,247615306227282448,none,none⟩,
+  ⟨⟨3,30,6655⟩,247644039659732367,none,none⟩,
+  ⟨⟨3,31,6625⟩,247672787434202153,none,none⟩,
+  ⟨⟨3,32,6593⟩,247701549550691806,none,none⟩,
+  ⟨⟨3,33,6562⟩,247730326009201326,none,none⟩,
+  ⟨⟨3,34,6530⟩,247759116809730713,none,none⟩]
+def rows3_4 : List TerminalRow := [
+  ⟨⟨3,35,6497⟩,247787921952279969,none,none⟩,
+  ⟨⟨3,36,6463⟩,247816741436849091,none,none⟩,
+  ⟨⟨3,37,6426⟩,247845575263438078,none,none⟩,
+  ⟨⟨3,38,6389⟩,247874423432046933,none,none⟩,
+  ⟨⟨3,39,6350⟩,247903285942675657,none,none⟩,
+  ⟨⟨3,40,6312⟩,247932162795324246,none,none⟩,
+  ⟨⟨3,41,6273⟩,247961053989992701,none,none⟩,
+  ⟨⟨3,42,6233⟩,247989959526681025,none,none⟩]
+def rows3_5 : List TerminalRow := [
+  ⟨⟨3,43,6192⟩,248018879405389216,none,none⟩,
+  ⟨⟨3,44,6151⟩,248047813626117274,none,none⟩,
+  ⟨⟨3,45,6109⟩,248076762188865199,none,none⟩,
+  ⟨⟨3,46,6067⟩,248105725093632990,none,none⟩,
+  ⟨⟨3,47,6021⟩,248134702340420650,none,none⟩,
+  ⟨⟨3,48,5970⟩,248163693929228176,none,none⟩,
+  ⟨⟨3,49,5918⟩,248192699860055568,none,none⟩,
+  ⟨⟨3,50,5865⟩,248221720132902828,none,none⟩]
+def rows3_6 : List TerminalRow := [
+  ⟨⟨3,51,5810⟩,248250754747769955,none,none⟩,
+  ⟨⟨3,52,5748⟩,248279803704656949,none,none⟩,
+  ⟨⟨3,53,5680⟩,248308867003563811,none,none⟩,
+  ⟨⟨3,54,5601⟩,248337944644490539,none,none⟩,
+  ⟨⟨3,55,5308⟩,248367036627437133,none,none⟩,
+  ⟨⟨3,56,4904⟩,248396142952403594,none,none⟩,
+  ⟨⟨3,57,4483⟩,248425263619389924,none,none⟩,
+  ⟨⟨3,58,4045⟩,248454398628396120,none,none⟩]
+def rows3_7 : List TerminalRow := [
+  ⟨⟨3,59,3589⟩,248483547979422183,none,none⟩,
+  ⟨⟨3,60,3115⟩,248512711672468113,none,none⟩,
+  ⟨⟨3,61,2624⟩,248541889707533911,none,none⟩,
+  ⟨⟨3,62,2116⟩,248571082084619574,none,none⟩,
+  ⟨⟨3,63,1590⟩,248600288803725107,none,none⟩,
+  ⟨⟨3,64,1046⟩,248629509864850505,none,none⟩,
+  ⟨⟨3,65,485⟩,248658745267995771,none,none⟩]
 def rows3 : List TerminalRow := rows3_0 ++ rows3_1 ++ rows3_2 ++ rows3_3 ++ rows3_4 ++ rows3_5 ++ rows3_6 ++ rows3_7
-private theorem rows3_v : rows3.all validRow = true := by simp only [rows3,List.all_append,rows3_0_v,rows3_1_v,rows3_2_v,rows3_3_v,rows3_4_v,rows3_5_v,rows3_6_v,rows3_7_v,Bool.and_self]
-private def rows4_0 : List TerminalRow := [
-  ⟨⟨4,4,6643⟩,248171774644676882,none,none⟩,
-  ⟨⟨4,5,6620⟩,248211352791108681,none,none⟩,
-  ⟨⟨4,6,6596⟩,248250945372968470,none,none⟩,
-  ⟨⟨4,7,6572⟩,248290552390256250,none,none⟩,
-  ⟨⟨4,8,6548⟩,248330173842972021,none,none⟩,
-  ⟨⟨4,9,6524⟩,248369809731115781,none,none⟩,
-  ⟨⟨4,10,6499⟩,248409460054687530,none,none⟩,
-  ⟨⟨4,11,6475⟩,248449124813687271,none,none⟩]
-private theorem rows4_0_v : rows4_0.all validRow = true := by decide +kernel
-private def rows4_1 : List TerminalRow := [
-  ⟨⟨4,12,6450⟩,248488804008115001,none,none⟩,
-  ⟨⟨4,13,6425⟩,248528497637970721,none,none⟩,
-  ⟨⟨4,14,6400⟩,248568205703254432,none,none⟩,
-  ⟨⟨4,15,6374⟩,248607928203966132,none,none⟩,
-  ⟨⟨4,16,6349⟩,248647665140105823,none,none⟩,
-  ⟨⟨4,17,6323⟩,248687416511673504,none,none⟩,
-  ⟨⟨4,18,6297⟩,248727182318669174,none,none⟩,
-  ⟨⟨4,19,6271⟩,248766962561092834,none,none⟩]
-private theorem rows4_1_v : rows4_1.all validRow = true := by decide +kernel
-private def rows4_2 : List TerminalRow := [
-  ⟨⟨4,20,6244⟩,248806757238944487,none,none⟩,
-  ⟨⟨4,21,6217⟩,248846566352224127,none,none⟩,
-  ⟨⟨4,22,6190⟩,248886389900931758,none,none⟩,
-  ⟨⟨4,23,6163⟩,248926227885067379,none,none⟩,
-  ⟨⟨4,24,6135⟩,248966080304630992,none,none⟩,
-  ⟨⟨4,25,6107⟩,249005947159622594,none,none⟩,
-  ⟨⟨4,26,6079⟩,249045828450042185,none,none⟩,
-  ⟨⟨4,27,6051⟩,249085724175889767,none,none⟩]
-private theorem rows4_2_v : rows4_2.all validRow = true := by decide +kernel
-private def rows4_3 : List TerminalRow := [
-  ⟨⟨4,28,6022⟩,249125634337165339,none,none⟩,
-  ⟨⟨4,29,5993⟩,249165558933868902,none,none⟩,
-  ⟨⟨4,30,5964⟩,249205497966000454,none,none⟩,
-  ⟨⟨4,31,5934⟩,249245451433559995,none,none⟩,
-  ⟨⟨4,32,5904⟩,249285419336547527,none,none⟩,
-  ⟨⟨4,33,5873⟩,249325401674963050,none,none⟩,
-  ⟨⟨4,34,5843⟩,249365398448806563,none,none⟩,
-  ⟨⟨4,35,5811⟩,249405409658078066,none,none⟩]
-private theorem rows4_3_v : rows4_3.all validRow = true := by decide +kernel
-private def rows4_4 : List TerminalRow := [
-  ⟨⟨4,36,5780⟩,249445435302777557,none,none⟩,
-  ⟨⟨4,37,5748⟩,249485475382905041,none,none⟩,
-  ⟨⟨4,38,5715⟩,249525529898460514,none,none⟩,
-  ⟨⟨4,39,5682⟩,249565598849443977,none,none⟩,
-  ⟨⟨4,40,5637⟩,249605682235855431,none,none⟩,
-  ⟨⟨4,41,5590⟩,249645780057694873,none,none⟩,
-  ⟨⟨4,42,5541⟩,249685892314962306,none,none⟩,
-  ⟨⟨4,43,5492⟩,249726019007657730,none,none⟩]
-private theorem rows4_4_v : rows4_4.all validRow = true := by decide +kernel
-private def rows4_5 : List TerminalRow := [
-  ⟨⟨4,44,5441⟩,249766160135781144,none,none⟩,
-  ⟨⟨4,45,5389⟩,249806315699332548,none,none⟩,
-  ⟨⟨4,46,5335⟩,249846485698311941,none,none⟩,
-  ⟨⟨4,47,5280⟩,249886670132719325,none,none⟩,
-  ⟨⟨4,48,5223⟩,249926869002554700,none,none⟩,
-  ⟨⟨4,49,5164⟩,249967082307818064,none,none⟩,
-  ⟨⟨4,50,5091⟩,250007310048509418,none,none⟩,
-  ⟨⟨4,51,4907⟩,250047552224628762,none,none⟩]
-private theorem rows4_5_v : rows4_5.all validRow = true := by decide +kernel
-private def rows4_6 : List TerminalRow := [
-  ⟨⟨4,52,4511⟩,250087808836176097,none,none⟩,
-  ⟨⟨4,53,4097⟩,250128079883151420,none,none⟩,
-  ⟨⟨4,54,3665⟩,250168365365554736,none,none⟩,
-  ⟨⟨4,55,3214⟩,250208665283386041,none,none⟩,
-  ⟨⟨4,56,2744⟩,250248979636645335,none,none⟩,
-  ⟨⟨4,57,2256⟩,250289308425332620,none,none⟩,
-  ⟨⟨4,58,1750⟩,250329651649447896,none,none⟩,
-  ⟨⟨4,59,1226⟩,250370009308991160,none,none⟩]
-private theorem rows4_6_v : rows4_6.all validRow = true := by decide +kernel
-private def rows4_7 : List TerminalRow := [
-  ⟨⟨4,60,683⟩,250410381403962414,none,none⟩,
-  ⟨⟨4,61,121⟩,250450767934361661,none,none⟩]
-private theorem rows4_7_v : rows4_7.all validRow = true := by decide +kernel
+def rows4_0 : List TerminalRow := [
+  ⟨⟨4,4,7263⟩,246907300102807887,none,none⟩,
+  ⟨⟨4,5,7240⟩,246947001377475270,none,none⟩,
+  ⟨⟨4,6,7216⟩,246986716994162520,none,none⟩,
+  ⟨⟨4,7,7192⟩,247026446952869638,none,none⟩,
+  ⟨⟨4,8,7168⟩,247066191253596621,none,none⟩,
+  ⟨⟨4,9,7144⟩,247105949896343473,none,none⟩,
+  ⟨⟨4,10,7120⟩,247145722881110190,none,none⟩,
+  ⟨⟨4,11,7096⟩,247185510207896777,none,none⟩]
+def rows4_1 : List TerminalRow := [
+  ⟨⟨4,12,7070⟩,247225311876703228,none,none⟩,
+  ⟨⟨4,13,7044⟩,247265127887529549,none,none⟩,
+  ⟨⟨4,14,7017⟩,247304958240375735,none,none⟩,
+  ⟨⟨4,15,6990⟩,247344802935241788,none,none⟩,
+  ⟨⟨4,16,6963⟩,247384661972127710,none,none⟩,
+  ⟨⟨4,17,6936⟩,247424535351033497,none,none⟩,
+  ⟨⟨4,18,6909⟩,247464423071959153,none,none⟩,
+  ⟨⟨4,19,6881⟩,247504325134904674,none,none⟩]
+def rows4_2 : List TerminalRow := [
+  ⟨⟨4,20,6853⟩,247544241539870061,none,none⟩,
+  ⟨⟨4,21,6825⟩,247584172286855318,none,none⟩,
+  ⟨⟨4,22,6796⟩,247624117375860441,none,none⟩,
+  ⟨⟨4,23,6767⟩,247664076806885430,none,none⟩,
+  ⟨⟨4,24,6738⟩,247704050579930288,none,none⟩,
+  ⟨⟨4,25,6709⟩,247744038694995011,none,none⟩,
+  ⟨⟨4,26,6679⟩,247784041152079602,none,none⟩,
+  ⟨⟨4,27,6649⟩,247824057951184061,none,none⟩]
+def rows4_3 : List TerminalRow := [
+  ⟨⟨4,28,6619⟩,247864089092308385,none,none⟩,
+  ⟨⟨4,29,6589⟩,247904134575452576,none,none⟩,
+  ⟨⟨4,30,6558⟩,247944194400616636,none,none⟩,
+  ⟨⟨4,31,6527⟩,247984268567800562,none,none⟩,
+  ⟨⟨4,32,6495⟩,248024357077004355,(some (1,1,5)),none⟩,
+  ⟨⟨4,33,6463⟩,248064459928228016,(some (1,1,5)),none⟩,
+  ⟨⟨4,34,6427⟩,248104577121471543,(some (1,1,5)),none⟩,
+  ⟨⟨4,35,6391⟩,248144708656734937,(some (1,1,5)),none⟩]
+def rows4_4 : List TerminalRow := [
+  ⟨⟨4,36,6354⟩,248184854534018197,(some (1,1,5)),none⟩,
+  ⟨⟨4,37,6317⟩,248225014753321326,(some (1,1,5)),none⟩,
+  ⟨⟨4,38,6279⟩,248265189314644321,(some (1,1,5)),none⟩,
+  ⟨⟨4,39,6241⟩,248305378217987184,(some (1,1,5)),none⟩,
+  ⟨⟨4,40,6202⟩,248345581463349912,(some (1,1,5)),none⟩,
+  ⟨⟨4,41,6162⟩,248385799050732511,(some (1,1,5)),none⟩,
+  ⟨⟨4,42,6122⟩,248426030980134973,(some (1,1,5)),none⟩,
+  ⟨⟨4,43,6081⟩,248466277251557303,(some (1,1,5)),none⟩]
+def rows4_5 : List TerminalRow := [
+  ⟨⟨4,44,6039⟩,248506537864999501,(some (1,1,5)),none⟩,
+  ⟨⟨4,45,5994⟩,248546812820461565,(some (1,1,5)),none⟩,
+  ⟨⟨4,46,5945⟩,248587102117943497,(some (1,1,5)),none⟩,
+  ⟨⟨4,47,5895⟩,248627405757445295,(some (1,1,5)),none⟩,
+  ⟨⟨4,48,5843⟩,248667723738966961,(some (1,1,5)),none⟩,
+  ⟨⟨4,49,5790⟩,248708056062508494,(some (1,1,5)),none⟩,
+  ⟨⟨4,50,5735⟩,248748402728069894,(some (1,1,5)),none⟩,
+  ⟨⟨4,51,5670⟩,248788763735651161,(some (1,1,5)),none⟩]
+def rows4_6 : List TerminalRow := [
+  ⟨⟨4,52,5602⟩,248829139085252293,(some (1,1,5)),none⟩,
+  ⟨⟨4,53,5520⟩,248869528776873295,(some (1,1,5)),none⟩,
+  ⟨⟨4,54,5188⟩,248909932810514162,(some (1,1,5)),none⟩,
+  ⟨⟨4,55,4791⟩,248950351186174898,(some (1,3,5)),none⟩,
+  ⟨⟨4,56,4376⟩,248990783903855499,(some (1,3,5)),none⟩,
+  ⟨⟨4,57,3944⟩,249031230963555968,(some (1,3,5)),none⟩,
+  ⟨⟨4,58,3494⟩,249071692365276304,(some (3,3,4)),none⟩,
+  ⟨⟨4,59,3027⟩,249112168109016507,(some (2,2,0)),none⟩]
+def rows4_7 : List TerminalRow := [
+  ⟨⟨4,60,2542⟩,249152658194776576,none,none⟩,
+  ⟨⟨4,61,2040⟩,249193162622556514,none,none⟩,
+  ⟨⟨4,62,1521⟩,249233681392356318,none,none⟩,
+  ⟨⟨4,63,984⟩,249274214504175990,none,none⟩,
+  ⟨⟨4,64,429⟩,249314761958015528,none,none⟩]
 def rows4 : List TerminalRow := rows4_0 ++ rows4_1 ++ rows4_2 ++ rows4_3 ++ rows4_4 ++ rows4_5 ++ rows4_6 ++ rows4_7
-private theorem rows4_v : rows4.all validRow = true := by simp only [rows4,List.all_append,rows4_0_v,rows4_1_v,rows4_2_v,rows4_3_v,rows4_4_v,rows4_5_v,rows4_6_v,rows4_7_v,Bool.and_self]
-private def rows5_0 : List TerminalRow := [
-  ⟨⟨5,5,6528⟩,248217003711280998,none,none⟩,
-  ⟨⟨5,6,6504⟩,248267887396782957,none,none⟩,
-  ⟨⟨5,7,6480⟩,248318785517712908,none,none⟩,
-  ⟨⟨5,8,6456⟩,248369698074070848,none,none⟩,
-  ⟨⟨5,9,6432⟩,248420625065856778,none,none⟩,
-  ⟨⟨5,10,6407⟩,248471566493070698,none,none⟩,
-  ⟨⟨5,11,6382⟩,248522522355712608,none,none⟩,
-  ⟨⟨5,12,6357⟩,248573492653782509,none,none⟩]
-private theorem rows5_0_v : rows5_0.all validRow = true := by decide +kernel
-private def rows5_1 : List TerminalRow := [
-  ⟨⟨5,13,6332⟩,248624477387280399,none,none⟩,
-  ⟨⟨5,14,6307⟩,248675476556206279,none,none⟩,
-  ⟨⟨5,15,6281⟩,248726490160560149,none,none⟩,
-  ⟨⟨5,16,6255⟩,248777518200342012,none,none⟩,
-  ⟨⟨5,17,6229⟩,248828560675551862,none,none⟩,
-  ⟨⟨5,18,6203⟩,248879617586189702,none,none⟩,
-  ⟨⟨5,19,6177⟩,248930688932255533,none,none⟩,
-  ⟨⟨5,20,6150⟩,248981774713749353,none,none⟩]
-private theorem rows5_1_v : rows5_1.all validRow = true := by decide +kernel
-private def rows5_2 : List TerminalRow := [
-  ⟨⟨5,21,6123⟩,249032874930671166,none,none⟩,
-  ⟨⟨5,22,6096⟩,249083989583020968,none,none⟩,
-  ⟨⟨5,23,6068⟩,249135118670798759,none,none⟩,
-  ⟨⟨5,24,6040⟩,249186262194004540,none,none⟩,
-  ⟨⟨5,25,6012⟩,249237420152638312,none,none⟩,
-  ⟨⟨5,26,5984⟩,249288592546700074,none,none⟩,
-  ⟨⟨5,27,5955⟩,249339779376189826,none,none⟩,
-  ⟨⟨5,28,5926⟩,249390980641107567,none,none⟩]
-private theorem rows5_2_v : rows5_2.all validRow = true := by decide +kernel
-private def rows5_3 : List TerminalRow := [
-  ⟨⟨5,29,5897⟩,249442196341453300,none,none⟩,
-  ⟨⟨5,30,5867⟩,249493426477227022,none,none⟩,
-  ⟨⟨5,31,5837⟩,249544671048428733,none,none⟩,
-  ⟨⟨5,32,5807⟩,249595930055058437,none,none⟩,
-  ⟨⟨5,33,5776⟩,249647203497116129,none,none⟩,
-  ⟨⟨5,34,5745⟩,249698491374601812,none,none⟩,
-  ⟨⟨5,35,5714⟩,249749793687515484,none,none⟩,
-  ⟨⟨5,36,5682⟩,249801110435857147,none,none⟩]
-private theorem rows5_3_v : rows5_3.all validRow = true := by decide +kernel
-private def rows5_4 : List TerminalRow := [
-  ⟨⟨5,37,5645⟩,249852441619626800,none,none⟩,
-  ⟨⟨5,38,5599⟩,249903787238824442,none,none⟩,
-  ⟨⟨5,39,5553⟩,249955147293450077,none,none⟩,
-  ⟨⟨5,40,5506⟩,250006521783503701,none,none⟩,
-  ⟨⟨5,41,5457⟩,250057910708985313,none,none⟩,
-  ⟨⟨5,42,5408⟩,250109314069894916,none,none⟩,
-  ⟨⟨5,43,5358⟩,250160731866232509,none,none⟩,
-  ⟨⟨5,44,5306⟩,250212164097998093,(some (2,2,2)),none⟩]
-private theorem rows5_4_v : rows5_4.all validRow = true := by decide +kernel
-private def rows5_5 : List TerminalRow := [
-  ⟨⟨5,45,5252⟩,250263610765191668,(some (2,2,2)),none⟩,
-  ⟨⟨5,46,5198⟩,250315071867813230,(some (2,2,2)),none⟩,
-  ⟨⟨5,47,5141⟩,250366547405862786,(some (2,2,2)),none⟩,
-  ⟨⟨5,48,5076⟩,250418037379340329,(some (2,2,2)),none⟩,
-  ⟨⟨5,49,5002⟩,250469541788245863,(some (2,2,2)),none⟩,
-  ⟨⟨5,50,4733⟩,250521060632579386,(some (2,2,2)),none⟩,
-  ⟨⟨5,51,4343⟩,250572593912340903,none,none⟩,
-  ⟨⟨5,52,3934⟩,250624141627530406,none,none⟩]
-private theorem rows5_5_v : rows5_5.all validRow = true := by decide +kernel
-private def rows5_6 : List TerminalRow := [
-  ⟨⟨5,53,3508⟩,250675703778147902,none,none⟩,
-  ⟨⟨5,54,3063⟩,250727280364193385,none,none⟩,
-  ⟨⟨5,55,2600⟩,250778871385666860,none,none⟩,
-  ⟨⟨5,56,2118⟩,250830476842568325,none,none⟩,
-  ⟨⟨5,57,1618⟩,250882096734897781,none,none⟩,
-  ⟨⟨5,58,1100⟩,250933731062655225,none,none⟩,
-  ⟨⟨5,59,564⟩,250985379825840661,none,none⟩]
-private theorem rows5_6_v : rows5_6.all validRow = true := by decide +kernel
-def rows5 : List TerminalRow := rows5_0 ++ rows5_1 ++ rows5_2 ++ rows5_3 ++ rows5_4 ++ rows5_5 ++ rows5_6
-private theorem rows5_v : rows5.all validRow = true := by simp only [rows5,List.all_append,rows5_0_v,rows5_1_v,rows5_2_v,rows5_3_v,rows5_4_v,rows5_5_v,rows5_6_v,Bool.and_self]
-private def rows6_0 : List TerminalRow := [
-  ⟨⟨6,6,6409⟩,248273538316955275,none,none⟩,
-  ⟨⟨6,7,6385⟩,248335727541527395,none,none⟩,
-  ⟨⟨6,8,6360⟩,248397931201527505,none,none⟩,
-  ⟨⟨6,9,6336⟩,248460149296955605,none,none⟩,
-  ⟨⟨6,10,6311⟩,248522381827811695,none,none⟩,
-  ⟨⟨6,11,6286⟩,248584628794095776,none,none⟩,
-  ⟨⟨6,12,6261⟩,248646890195807845,none,none⟩,
-  ⟨⟨6,13,6236⟩,248709166032947906,none,none⟩]
-private theorem rows6_0_v : rows6_0.all validRow = true := by decide +kernel
-private def rows6_1 : List TerminalRow := [
-  ⟨⟨6,14,6210⟩,248771456305515956,none,none⟩,
-  ⟨⟨6,15,6184⟩,248833761013511998,none,none⟩,
-  ⟨⟨6,16,6158⟩,248896080156936028,none,none⟩,
-  ⟨⟨6,17,6132⟩,248958413735788049,none,none⟩,
-  ⟨⟨6,18,6106⟩,249020761750068060,none,none⟩,
-  ⟨⟨6,19,6079⟩,249083124199776060,none,none⟩,
-  ⟨⟨6,20,6052⟩,249145501084912053,none,none⟩,
-  ⟨⟨6,21,6025⟩,249207892405476033,none,none⟩]
-private theorem rows6_1_v : rows6_1.all validRow = true := by decide +kernel
-private def rows6_2 : List TerminalRow := [
-  ⟨⟨6,22,5997⟩,249270298161468006,none,none⟩,
-  ⟨⟨6,23,5969⟩,249332718352887967,none,none⟩,
-  ⟨⟨6,24,5941⟩,249395152979735918,none,none⟩,
-  ⟨⟨6,25,5913⟩,249457602042011861,none,none⟩,
-  ⟨⟨6,26,5884⟩,249520065539715791,none,none⟩,
-  ⟨⟨6,27,5855⟩,249582543472847713,none,none⟩,
-  ⟨⟨6,28,5826⟩,249645035841407627,none,none⟩,
-  ⟨⟨6,29,5796⟩,249707542645395528,none,none⟩]
-private theorem rows6_2_v : rows6_2.all validRow = true := by decide +kernel
-private def rows6_3 : List TerminalRow := [
-  ⟨⟨6,30,5767⟩,249770063884811420,none,none⟩,
-  ⟨⟨6,31,5736⟩,249832599559655302,none,none⟩,
-  ⟨⟨6,32,5706⟩,249895149669927175,none,none⟩,
-  ⟨⟨6,33,5675⟩,249957714215627038,none,none⟩,
-  ⟨⟨6,34,5640⟩,250020293196754890,none,none⟩,
-  ⟨⟨6,35,5597⟩,250082886613310733,(some (2,2,2)),none⟩,
-  ⟨⟨6,36,5553⟩,250145494465294567,(some (2,2,2)),none⟩,
-  ⟨⟨6,37,5507⟩,250208116752706388,(some (2,2,2)),none⟩]
-private theorem rows6_3_v : rows6_3.all validRow = true := by decide +kernel
-private def rows6_4 : List TerminalRow := [
-  ⟨⟨6,38,5461⟩,250270753475546202,(some (2,2,2)),none⟩,
-  ⟨⟨6,39,5414⟩,250333404633814005,(some (2,2,2)),none⟩,
-  ⟨⟨6,40,5366⟩,250396070227509799,(some (2,2,2)),none⟩,
-  ⟨⟨6,41,5317⟩,250458750256633583,(some (2,2,2)),none⟩,
-  ⟨⟨6,42,5266⟩,250521444721185354,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨6,43,5214⟩,250584153621165120,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨6,44,5161⟩,250646876956572874,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨6,45,5107⟩,250709614727408617,(some (2,2,2)),(some (2,2,2))⟩]
-private theorem rows6_4_v : rows6_4.all validRow = true := by decide +kernel
-private def rows6_5 : List TerminalRow := [
-  ⟨⟨6,46,5045⟩,250772366933672350,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨6,47,4975⟩,250835133575364075,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨6,48,4869⟩,250897914652483789,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨6,49,4502⟩,250960710165031494,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨6,50,4117⟩,251023520113007187,(some (2,2,2)),none⟩,
-  ⟨⟨6,51,3714⟩,251086344496410871,none,none⟩,
-  ⟨⟨6,52,3293⟩,251149183315242546,none,none⟩,
-  ⟨⟨6,53,2854⟩,251212036569502211,none,none⟩]
-private theorem rows6_5_v : rows6_5.all validRow = true := by decide +kernel
-private def rows6_6 : List TerminalRow := [
-  ⟨⟨6,54,2396⟩,251274904259189865,none,none⟩,
-  ⟨⟨6,55,1921⟩,251337786384305511,none,none⟩,
-  ⟨⟨6,56,1428⟩,251400682944849146,none,none⟩,
-  ⟨⟨6,57,916⟩,251463593940820770,none,none⟩,
-  ⟨⟨6,58,386⟩,251526519372220386,none,none⟩]
-private theorem rows6_6_v : rows6_6.all validRow = true := by decide +kernel
-def rows6 : List TerminalRow := rows6_0 ++ rows6_1 ++ rows6_2 ++ rows6_3 ++ rows6_4 ++ rows6_5 ++ rows6_6
-private theorem rows6_v : rows6.all validRow = true := by simp only [rows6,List.all_append,rows6_0_v,rows6_1_v,rows6_2_v,rows6_3_v,rows6_4_v,rows6_5_v,rows6_6_v,Bool.and_self]
-private def rows7_0 : List TerminalRow := [
-  ⟨⟨7,7,6286⟩,248341378461699712,none,none⟩,
-  ⟨⟨7,8,6261⟩,248414873225341991,none,none⟩,
-  ⟨⟨7,9,6236⟩,248488382424412263,none,none⟩,
-  ⟨⟨7,10,6211⟩,248561906058910523,none,none⟩,
-  ⟨⟨7,11,6186⟩,248635444128836773,none,none⟩,
-  ⟨⟨7,12,6161⟩,248708996634191013,none,none⟩,
-  ⟨⟨7,13,6135⟩,248782563574973244,none,none⟩,
-  ⟨⟨7,14,6109⟩,248856144951183465,none,none⟩]
-private theorem rows7_0_v : rows7_0.all validRow = true := by decide +kernel
-private def rows7_1 : List TerminalRow := [
-  ⟨⟨7,15,6083⟩,248929740762821674,none,none⟩,
-  ⟨⟨7,16,6057⟩,249003351009887876,none,none⟩,
-  ⟨⟨7,17,6031⟩,249076975692382067,none,none⟩,
-  ⟨⟨7,18,6004⟩,249150614810304248,none,none⟩,
-  ⟨⟨7,19,5977⟩,249224268363654419,none,none⟩,
-  ⟨⟨7,20,5950⟩,249297936352432580,none,none⟩,
-  ⟨⟨7,21,5922⟩,249371618776638732,none,none⟩,
-  ⟨⟨7,22,5894⟩,249445315636272874,none,none⟩]
-private theorem rows7_1_v : rows7_1.all validRow = true := by decide +kernel
-private def rows7_2 : List TerminalRow := [
-  ⟨⟨7,23,5866⟩,249519026931335005,none,none⟩,
-  ⟨⟨7,24,5838⟩,249592752661825126,none,none⟩,
-  ⟨⟨7,25,5809⟩,249666492827743239,none,none⟩,
-  ⟨⟨7,26,5780⟩,249740247429089341,none,none⟩,
-  ⟨⟨7,27,5751⟩,249814016465863433,none,none⟩,
-  ⟨⟨7,28,5721⟩,249887799938065514,none,none⟩,
-  ⟨⟨7,29,5692⟩,249961597845695586,none,none⟩,
-  ⟨⟨7,30,5661⟩,250035410188753649,none,none⟩]
-private theorem rows7_2_v : rows7_2.all validRow = true := by decide +kernel
-private def rows7_3 : List TerminalRow := [
-  ⟨⟨7,31,5625⟩,250109236967239702,(some (2,2,2)),none⟩,
-  ⟨⟨7,32,5583⟩,250183078181153744,(some (2,2,2)),none⟩,
-  ⟨⟨7,33,5540⟩,250256933830495776,(some (2,2,2)),none⟩,
-  ⟨⟨7,34,5497⟩,250330803915265800,(some (2,2,2)),none⟩,
-  ⟨⟨7,35,5452⟩,250404688435463813,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨7,36,5407⟩,250478587391089815,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨7,37,5361⟩,250552500782143808,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨7,38,5314⟩,250626428608625791,(some (2,2,2)),(some (2,2,2))⟩]
-private theorem rows7_3_v : rows7_3.all validRow = true := by decide +kernel
-private def rows7_4 : List TerminalRow := [
-  ⟨⟨7,39,5265⟩,250700370870535764,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨7,40,5216⟩,250774327567873726,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨7,41,5166⟩,250848298700639681,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨7,42,5114⟩,250922284268833624,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨7,43,5061⟩,250996284272455558,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨7,44,4998⟩,251070298711505482,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨7,45,4931⟩,251144327585983396,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨7,46,4851⟩,251218370895889300,(some (2,2,2)),(some (2,2,2))⟩]
-private theorem rows7_4_v : rows7_4.all validRow = true := by decide +kernel
-private def rows7_5 : List TerminalRow := [
-  ⟨⟨7,47,4562⟩,251292428641223194,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨7,48,4199⟩,251366500821985079,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨7,49,3820⟩,251440587438174952,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨7,50,3422⟩,251514688489792816,(some (2,2,2)),none⟩,
-  ⟨⟨7,51,3007⟩,251588803976838671,none,none⟩,
-  ⟨⟨7,52,2573⟩,251662933899312516,none,none⟩,
-  ⟨⟨7,53,2122⟩,251737078257214350,none,none⟩,
-  ⟨⟨7,54,1653⟩,251811237050544175,none,none⟩]
-private theorem rows7_5_v : rows7_5.all validRow = true := by decide +kernel
-private def rows7_6 : List TerminalRow := [
-  ⟨⟨7,55,1166⟩,251885410279301991,none,none⟩,
-  ⟨⟨7,56,660⟩,251959597943487795,none,none⟩,
-  ⟨⟨7,57,137⟩,252033800043101591,none,none⟩]
-private theorem rows7_6_v : rows7_6.all validRow = true := by decide +kernel
+def rows5_0 : List TerminalRow := [
+  ⟨⟨5,5,7149⟩,246952669907791904,none,none⟩,
+  ⟨⟨5,6,7126⟩,247003711917193294,none,none⟩,
+  ⟨⟨5,7,7102⟩,247054768268614552,none,none⟩,
+  ⟨⟨5,8,7077⟩,247105838962055674,none,none⟩,
+  ⟨⟨5,9,7051⟩,247156923997516667,none,none⟩,
+  ⟨⟨5,10,7025⟩,247208023374997525,none,none⟩,
+  ⟨⟨5,11,6999⟩,247259137094498250,none,none⟩,
+  ⟨⟨5,12,6973⟩,247310265156018841,none,none⟩]
+def rows5_1 : List TerminalRow := [
+  ⟨⟨5,13,6946⟩,247361407559559301,none,none⟩,
+  ⟨⟨5,14,6919⟩,247412564305119628,none,none⟩,
+  ⟨⟨5,15,6892⟩,247463735392699821,none,none⟩,
+  ⟨⟨5,16,6865⟩,247514920822299881,none,none⟩,
+  ⟨⟨5,17,6838⟩,247566120593919808,none,none⟩,
+  ⟨⟨5,18,6810⟩,247617334707559603,none,none⟩,
+  ⟨⟨5,19,6782⟩,247668563163219265,none,none⟩,
+  ⟨⟨5,20,6754⟩,247719805960898794,none,none⟩]
+def rows5_2 : List TerminalRow := [
+  ⟨⟨5,21,6725⟩,247771063100598189,none,none⟩,
+  ⟨⟨5,22,6697⟩,247822334582317451,none,none⟩,
+  ⟨⟨5,23,6668⟩,247873620406056581,(some (1,1,5)),none⟩,
+  ⟨⟨5,24,6638⟩,247924920571815577,(some (1,1,5)),none⟩,
+  ⟨⟨5,25,6609⟩,247976235079594441,(some (1,1,5)),none⟩,
+  ⟨⟨5,26,6579⟩,248027563929393171,(some (1,1,5)),none⟩,
+  ⟨⟨5,27,6549⟩,248078907121211770,(some (1,1,5)),none⟩,
+  ⟨⟨5,28,6518⟩,248130264655050236,(some (1,1,5)),none⟩]
+def rows5_3 : List TerminalRow := [
+  ⟨⟨5,29,6488⟩,248181636530908565,(some (1,1,5)),none⟩,
+  ⟨⟨5,30,6457⟩,248233022748786765,(some (1,1,5)),(some (1,1,5))⟩,
+  ⟨⟨5,31,6422⟩,248284423308684831,(some (1,1,5)),(some (1,1,5))⟩,
+  ⟨⟨5,32,6387⟩,248335838210602764,(some (1,1,5)),(some (1,1,5))⟩,
+  ⟨⟨5,33,6351⟩,248387267454540564,(some (1,1,5)),(some (1,1,5))⟩,
+  ⟨⟨5,34,6315⟩,248438711040498231,(some (1,1,5)),(some (1,1,5))⟩,
+  ⟨⟨5,35,6278⟩,248490168968475765,(some (1,1,5)),(some (1,1,5))⟩,
+  ⟨⟨5,36,6241⟩,248541641238473165,(some (1,1,5)),(some (1,1,5))⟩]
+def rows5_4 : List TerminalRow := [
+  ⟨⟨5,37,6203⟩,248593127850490434,(some (1,1,5)),(some (1,1,5))⟩,
+  ⟨⟨5,38,6165⟩,248644628804527569,(some (1,1,5)),(some (1,1,5))⟩,
+  ⟨⟨5,39,6126⟩,248696144100584571,(some (1,1,5)),(some (1,1,5))⟩,
+  ⟨⟨5,40,6086⟩,248747673738661440,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨5,41,6046⟩,248799217718758177,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨5,42,6006⟩,248850776040874781,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨5,43,5960⟩,248902348705011249,(some (1,3,5)),(some (1,1,5))⟩,
+  ⟨⟨5,44,5912⟩,248953935711167588,(some (1,3,5)),(some (1,1,5))⟩]
+def rows5_5 : List TerminalRow := [
+  ⟨⟨5,45,5864⟩,249005537059343792,(some (1,3,5)),(some (1,1,5))⟩,
+  ⟨⟨5,46,5813⟩,249057152749539863,(some (1,3,5)),(some (1,1,5))⟩,
+  ⟨⟨5,47,5762⟩,249108782781755801,(some (1,3,5)),(some (1,1,5))⟩,
+  ⟨⟨5,48,5710⟩,249160427155991607,(some (1,3,5)),(some (1,1,5))⟩,
+  ⟨⟨5,49,5648⟩,249212085872247280,(some (1,3,5)),(some (2,4,4))⟩,
+  ⟨⟨5,50,5583⟩,249263758930522819,(some (1,3,5)),(some (2,4,4))⟩,
+  ⟨⟨5,51,5512⟩,249315446330818225,(some (1,3,5)),(some (2,2,2))⟩,
+  ⟨⟨5,52,5400⟩,249367148073133499,(some (1,3,5)),(some (2,2,2))⟩]
+def rows5_6 : List TerminalRow := [
+  ⟨⟨5,53,5026⟩,249418864157468638,(some (1,3,5)),(some (2,2,2))⟩,
+  ⟨⟨5,54,4634⟩,249470594583823647,(some (1,3,5)),(some (2,2,2))⟩,
+  ⟨⟨5,55,4225⟩,249522339352198521,(some (1,3,5)),(some (2,2,2))⟩,
+  ⟨⟨5,56,3798⟩,249574098462593264,(some (2,4,4)),none⟩,
+  ⟨⟨5,57,3354⟩,249625871915007871,(some (2,2,2)),none⟩,
+  ⟨⟨5,58,2893⟩,249677659709442348,(some (0,0,0)),none⟩,
+  ⟨⟨5,59,2414⟩,249729461845896690,(some (0,0,0)),none⟩,
+  ⟨⟨5,60,1918⟩,249781278324370900,(some (0,0,0)),none⟩]
+def rows5_7 : List TerminalRow := [
+  ⟨⟨5,61,1405⟩,249833109144864979,none,none⟩,
+  ⟨⟨5,62,874⟩,249884954307378921,none,none⟩,
+  ⟨⟨5,63,326⟩,249936813811912732,none,none⟩]
+def rows5 : List TerminalRow := rows5_0 ++ rows5_1 ++ rows5_2 ++ rows5_3 ++ rows5_4 ++ rows5_5 ++ rows5_6 ++ rows5_7
+def rows6_0 : List TerminalRow := [
+  ⟨⟨6,6,7028⟩,247009380447509928,none,none⟩,
+  ⟨⟨6,7,7002⟩,247071763191645324,none,none⟩,
+  ⟨⟨6,8,6976⟩,247134160277800588,none,none⟩,
+  ⟨⟨6,9,6950⟩,247196571705975720,none,none⟩,
+  ⟨⟨6,10,6924⟩,247258997476170717,none,none⟩,
+  ⟨⟨6,11,6898⟩,247321437588385584,none,none⟩,
+  ⟨⟨6,12,6871⟩,247383892042620314,none,none⟩,
+  ⟨⟨6,13,6845⟩,247446360838874913,none,none⟩]
+def rows6_1 : List TerminalRow := [
+  ⟨⟨6,14,6818⟩,247508843977149379,none,none⟩,
+  ⟨⟨6,15,6790⟩,247571341457443712,none,none⟩,
+  ⟨⟨6,16,6763⟩,247633853279757913,none,none⟩,
+  ⟨⟨6,17,6735⟩,247696379444091981,none,none⟩,
+  ⟨⟨6,18,6707⟩,247758919950445915,none,none⟩,
+  ⟨⟨6,19,6679⟩,247821474798819716,none,none⟩,
+  ⟨⟨6,20,6651⟩,247884043989213384,(some (1,3,5)),none⟩,
+  ⟨⟨6,21,6622⟩,247946627521626919,(some (1,3,5)),none⟩]
+def rows6_2 : List TerminalRow := [
+  ⟨⟨6,22,6593⟩,248009225396060322,(some (1,3,5)),none⟩,
+  ⟨⟨6,23,6564⟩,248071837612513592,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨6,24,6535⟩,248134464170986728,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨6,25,6505⟩,248197105071479731,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨6,26,6475⟩,248259760313992601,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨6,27,6444⟩,248322429898525339,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨6,28,6410⟩,248385113825077944,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨6,29,6375⟩,248447812093650416,(some (1,3,5)),(some (1,3,5))⟩]
+def rows6_3 : List TerminalRow := [
+  ⟨⟨6,30,6340⟩,248510524704242755,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨6,31,6305⟩,248573251656854960,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨6,32,6269⟩,248635992951487033,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨6,33,6233⟩,248698748588138972,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨6,34,6197⟩,248761518566810779,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨6,35,6159⟩,248824302887502454,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨6,36,6122⟩,248887101550213994,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨6,37,6084⟩,248949914554945402,(some (1,3,5)),(some (1,3,5))⟩]
+def rows6_4 : List TerminalRow := [
+  ⟨⟨6,38,6045⟩,249012741901696677,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨6,39,6005⟩,249075583590467819,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨6,40,5964⟩,249138439621258828,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨6,41,5919⟩,249201309994069703,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨6,42,5872⟩,249264194708900447,(some (1,3,5)),(some (1,1,5))⟩,
+  ⟨⟨6,43,5824⟩,249327093765751057,(some (1,3,5)),(some (3,3,5))⟩,
+  ⟨⟨6,44,5775⟩,249390007164621534,(some (1,3,5)),(some (3,3,5))⟩,
+  ⟨⟨6,45,5725⟩,249452934905511878,(some (1,3,5)),(some (3,3,5))⟩]
+def rows6_5 : List TerminalRow := [
+  ⟨⟨6,46,5674⟩,249515876988422089,(some (1,3,5)),(some (3,3,5))⟩,
+  ⟨⟨6,47,5614⟩,249578833413352168,(some (1,3,5)),(some (2,4,4))⟩,
+  ⟨⟨6,48,5551⟩,249641804180302114,(some (1,3,5)),(some (2,4,4))⟩,
+  ⟨⟨6,49,5486⟩,249704789289271925,(some (1,3,5)),(some (2,2,4))⟩,
+  ⟨⟨6,50,5407⟩,249767788740261604,(some (1,3,5)),(some (2,2,2))⟩,
+  ⟨⟨6,51,5181⟩,249830802533271151,(some (1,3,5)),(some (2,2,2))⟩,
+  ⟨⟨6,52,4812⟩,249893830668300565,(some (1,3,5)),(some (2,2,2))⟩,
+  ⟨⟨6,53,4425⟩,249956873145349845,(some (3,3,5)),(some (2,2,2))⟩]
+def rows6_6 : List TerminalRow := [
+  ⟨⟨6,54,4021⟩,250019929964418992,(some (2,4,4)),(some (2,2,2))⟩,
+  ⟨⟨6,55,3600⟩,250083001125508007,(some (2,2,2)),(some (0,0,0))⟩,
+  ⟨⟨6,56,3162⟩,250146086628616888,(some (0,0,0)),(some (0,0,0))⟩,
+  ⟨⟨6,57,2706⟩,250209186473745637,(some (0,0,0)),(some (0,0,0))⟩,
+  ⟨⟨6,58,2233⟩,250272300660894252,(some (0,0,0)),none⟩,
+  ⟨⟨6,59,1743⟩,250335429190062735,(some (0,0,0)),none⟩,
+  ⟨⟨6,60,1236⟩,250398572061251084,none,none⟩,
+  ⟨⟨6,61,711⟩,250461729274459300,none,none⟩]
+def rows6_7 : List TerminalRow := [
+  ⟨⟨6,62,169⟩,250524900829687385,none,none⟩]
+def rows6 : List TerminalRow := rows6_0 ++ rows6_1 ++ rows6_2 ++ rows6_3 ++ rows6_4 ++ rows6_5 ++ rows6_6 ++ rows6_7
+def rows7_0 : List TerminalRow := [
+  ⟨⟨7,7,6898⟩,247077431721961958,none,none⟩,
+  ⟨⟨7,8,6872⟩,247151155200831361,none,none⟩,
+  ⟨⟨7,9,6846⟩,247224893021720632,none,none⟩,
+  ⟨⟨7,10,6819⟩,247298645184629771,none,none⟩,
+  ⟨⟨7,11,6793⟩,247372411689558775,none,none⟩,
+  ⟨⟨7,12,6766⟩,247446192536507648,none,none⟩,
+  ⟨⟨7,13,6739⟩,247519987725476387,none,none⟩,
+  ⟨⟨7,14,6712⟩,247593797256464991,none,none⟩]
+def rows7_1 : List TerminalRow := [
+  ⟨⟨7,15,6684⟩,247667621129473466,none,none⟩,
+  ⟨⟨7,16,6657⟩,247741459344501806,none,none⟩,
+  ⟨⟨7,17,6629⟩,247815311901550012,none,none⟩,
+  ⟨⟨7,18,6601⟩,247889178800618086,(some (1,3,5)),none⟩,
+  ⟨⟨7,19,6572⟩,247963060041706028,(some (1,3,5)),none⟩,
+  ⟨⟨7,20,6544⟩,248036955624813836,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨7,21,6515⟩,248110865549941511,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨7,22,6485⟩,248184789817089053,(some (1,3,5)),(some (1,3,5))⟩]
+def rows7_2 : List TerminalRow := [
+  ⟨⟨7,23,6456⟩,248258728426256463,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨7,24,6423⟩,248332681377443738,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨7,25,6390⟩,248406648670650882,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨7,26,6357⟩,248480630305877892,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨7,27,6323⟩,248554626283124770,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨7,28,6288⟩,248628636602391514,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨7,29,6253⟩,248702661263678126,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨7,30,6218⟩,248776700266984604,(some (1,3,5)),(some (1,3,5))⟩]
+def rows7_3 : List TerminalRow := [
+  ⟨⟨7,31,6182⟩,248850753612310949,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨7,32,6146⟩,248924821299657162,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨7,33,6110⟩,248998903329023242,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨7,34,6073⟩,249072999700409188,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨7,35,6035⟩,249147110413815002,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨7,36,5997⟩,249221235469240683,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨7,37,5958⟩,249295374866686230,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨7,38,5913⟩,249369528606151646,(some (1,3,5)),(some (1,3,5))⟩]
+def rows7_4 : List TerminalRow := [
+  ⟨⟨7,39,5868⟩,249443696687636928,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨7,40,5822⟩,249517879111142075,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨7,41,5775⟩,249592075876667091,(some (1,3,5)),(some (1,1,5))⟩,
+  ⟨⟨7,42,5728⟩,249666286984211974,(some (1,3,5)),(some (3,3,5))⟩,
+  ⟨⟨7,43,5679⟩,249740512433776723,(some (1,3,5)),(some (3,3,5))⟩,
+  ⟨⟨7,44,5626⟩,249814752225361340,(some (1,3,5)),(some (3,3,5))⟩,
+  ⟨⟨7,45,5567⟩,249889006358965825,(some (1,3,5)),(some (4,4,4))⟩,
+  ⟨⟨7,46,5507⟩,249963274834590176,(some (1,3,5)),(some (4,4,4))⟩]
+def rows7_5 : List TerminalRow := [
+  ⟨⟨7,47,5443⟩,250037557652234395,(some (1,3,5)),(some (4,4,4))⟩,
+  ⟨⟨7,48,5368⟩,250111854811898479,(some (1,3,5)),(some (2,2,2))⟩,
+  ⟨⟨7,49,5249⟩,250186166313582430,(some (1,3,5)),(some (2,2,2))⟩,
+  ⟨⟨7,50,4900⟩,250260492157286250,(some (1,3,5)),(some (2,2,2))⟩,
+  ⟨⟨7,51,4535⟩,250334832343009936,(some (2,4,4)),(some (2,2,2))⟩,
+  ⟨⟨7,52,4153⟩,250409186870753489,(some (2,4,4)),(some (2,2,0))⟩,
+  ⟨⟨7,53,3755⟩,250483555740516910,(some (2,2,0)),(some (0,0,0))⟩,
+  ⟨⟨7,54,3339⟩,250557938952300197,(some (0,0,0)),(some (0,0,0))⟩]
+def rows7_6 : List TerminalRow := [
+  ⟨⟨7,55,2906⟩,250632336506103351,(some (0,0,0)),(some (0,0,0))⟩,
+  ⟨⟨7,56,2456⟩,250706748401926372,(some (0,0,0)),(some (0,0,0))⟩,
+  ⟨⟨7,57,1989⟩,250781174639769261,(some (0,0,0)),(some (0,0,0))⟩,
+  ⟨⟨7,58,1505⟩,250855615219632016,none,none⟩,
+  ⟨⟨7,59,1003⟩,250930070141514638,none,none⟩,
+  ⟨⟨7,60,485⟩,251004539405417128,none,none⟩]
 def rows7 : List TerminalRow := rows7_0 ++ rows7_1 ++ rows7_2 ++ rows7_3 ++ rows7_4 ++ rows7_5 ++ rows7_6
-private theorem rows7_v : rows7.all validRow = true := by simp only [rows7,List.all_append,rows7_0_v,rows7_1_v,rows7_2_v,rows7_3_v,rows7_4_v,rows7_5_v,rows7_6_v,Bool.and_self]
-private def rows8_0 : List TerminalRow := [
-  ⟨⟨8,8,6157⟩,248420524145514310,none,none⟩,
-  ⟨⟨8,9,6132⟩,248505324448226749,none,none⟩,
-  ⟨⟨8,10,6107⟩,248590139186367181,none,none⟩,
-  ⟨⟨8,11,6081⟩,248674968359935599,none,none⟩,
-  ⟨⟨8,12,6056⟩,248759811968932011,none,none⟩,
-  ⟨⟨8,13,6030⟩,248844670013356410,none,none⟩,
-  ⟨⟨8,14,6004⟩,248929542493208801,none,none⟩,
-  ⟨⟨8,15,5978⟩,249014429408489181,none,none⟩]
-private theorem rows8_0_v : rows8_0.all validRow = true := by decide +kernel
-private def rows8_1 : List TerminalRow := [
-  ⟨⟨8,16,5951⟩,249099330759197554,none,none⟩,
-  ⟨⟨8,17,5924⟩,249184246545333915,none,none⟩,
-  ⟨⟨8,18,5897⟩,249269176766898267,none,none⟩,
-  ⟨⟨8,19,5870⟩,249354121423890606,none,none⟩,
-  ⟨⟨8,20,5842⟩,249439080516310938,none,none⟩,
-  ⟨⟨8,21,5815⟩,249524054044159259,none,none⟩,
-  ⟨⟨8,22,5787⟩,249609042007435571,none,none⟩,
-  ⟨⟨8,23,5758⟩,249694044406139873,none,none⟩]
-private theorem rows8_1_v : rows8_1.all validRow = true := by decide +kernel
-private def rows8_2 : List TerminalRow := [
-  ⟨⟨8,24,5729⟩,249779061240272164,none,none⟩,
-  ⟨⟨8,25,5701⟩,249864092509832446,none,none⟩,
-  ⟨⟨8,26,5671⟩,249949138214820718,none,none⟩,
-  ⟨⟨8,27,5639⟩,250034198355236981,none,none⟩,
-  ⟨⟨8,28,5599⟩,250119272931081234,(some (2,2,2)),none⟩,
-  ⟨⟨8,29,5558⟩,250204361942353474,(some (2,2,2)),none⟩,
-  ⟨⟨8,30,5516⟩,250289465389053708,(some (2,2,2)),none⟩,
-  ⟨⟨8,31,5474⟩,250374583271181930,(some (2,2,2)),(some (2,2,2))⟩]
-private theorem rows8_2_v : rows8_2.all validRow = true := by decide +kernel
-private def rows8_3 : List TerminalRow := [
-  ⟨⟨8,32,5431⟩,250459715588738142,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨8,33,5387⟩,250544862341722345,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨8,34,5342⟩,250630023530134537,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨8,35,5297⟩,250715199153974721,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨8,36,5250⟩,250800389213242893,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨8,37,5203⟩,250885593707939056,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨8,38,5155⟩,250970812638063210,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨8,39,5105⟩,251056046003615354,(some (2,2,2)),(some (2,2,2))⟩]
-private theorem rows8_3_v : rows8_3.all validRow = true := by decide +kernel
-private def rows8_4 : List TerminalRow := [
-  ⟨⟨8,40,5055⟩,251141293804595485,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨8,41,4997⟩,251226556041003610,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨8,42,4934⟩,251311832712839723,(some (4,4,4)),(some (2,2,2))⟩,
-  ⟨⟨8,43,4869⟩,251397123820103828,(some (1,1,5)),(some (2,2,2))⟩,
-  ⟨⟨8,44,4784⟩,251482429362795921,(some (1,1,5)),(some (2,2,2))⟩,
-  ⟨⟨8,45,4502⟩,251567749340916005,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨8,46,4162⟩,251653083754464078,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨8,47,3805⟩,251738432603440143,(some (2,2,2)),(some (2,2,2))⟩]
-private theorem rows8_4_v : rows8_4.all validRow = true := by decide +kernel
-private def rows8_5 : List TerminalRow := [
-  ⟨⟨8,48,3431⟩,251823795887844198,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨8,49,3039⟩,251909173607676242,(some (2,2,2)),none⟩,
-  ⟨⟨8,50,2630⟩,251994565762936276,none,none⟩,
-  ⟨⟨8,51,2203⟩,252079972353624300,none,none⟩,
-  ⟨⟨8,52,1758⟩,252165393379740316,none,none⟩,
-  ⟨⟨8,53,1296⟩,252250828841284319,none,none⟩,
-  ⟨⟨8,54,815⟩,252336278738256316,none,none⟩,
-  ⟨⟨8,55,317⟩,252421743070656300,none,none⟩]
-private theorem rows8_5_v : rows8_5.all validRow = true := by decide +kernel
-def rows8 : List TerminalRow := rows8_0 ++ rows8_1 ++ rows8_2 ++ rows8_3 ++ rows8_4 ++ rows8_5
-private theorem rows8_v : rows8.all validRow = true := by simp only [rows8,List.all_append,rows8_0_v,rows8_1_v,rows8_2_v,rows8_3_v,rows8_4_v,rows8_5_v,Bool.and_self]
-private def rows9_0 : List TerminalRow := [
-  ⟨⟨9,9,6023⟩,248510975368399067,none,none⟩,
-  ⟨⟨9,10,5997⟩,248607081210181667,none,none⟩,
-  ⟨⟨9,11,5972⟩,248703201487392258,none,none⟩,
-  ⟨⟨9,12,5946⟩,248799336200030838,none,none⟩,
-  ⟨⟨9,13,5920⟩,248895485348097409,none,none⟩,
-  ⟨⟨9,14,5893⟩,248991648931591969,none,none⟩,
-  ⟨⟨9,15,5867⟩,249087826950514521,none,none⟩,
-  ⟨⟨9,16,5840⟩,249184019404865061,none,none⟩]
-private theorem rows9_0_v : rows9_0.all validRow = true := by decide +kernel
-private def rows9_1 : List TerminalRow := [
-  ⟨⟨9,17,5813⟩,249280226294643591,none,none⟩,
-  ⟨⟨9,18,5785⟩,249376447619850113,none,none⟩,
-  ⟨⟨9,19,5758⟩,249472683380484626,none,none⟩,
-  ⟨⟨9,20,5730⟩,249568933576547125,none,none⟩,
-  ⟨⟨9,21,5702⟩,249665198208037617,none,none⟩,
-  ⟨⟨9,22,5673⟩,249761477274956099,none,none⟩,
-  ⟨⟨9,23,5638⟩,249857770777302571,none,none⟩,
-  ⟨⟨9,24,5599⟩,249954078715077032,none,none⟩]
-private theorem rows9_1_v : rows9_1.all validRow = true := by decide +kernel
-private def rows9_2 : List TerminalRow := [
-  ⟨⟨9,25,5560⟩,250050401088279484,none,none⟩,
-  ⟨⟨9,26,5520⟩,250146737896909927,(some (2,2,2)),none⟩,
-  ⟨⟨9,27,5479⟩,250243089140968358,(some (2,2,2)),none⟩,
-  ⟨⟨9,28,5438⟩,250339454820454780,(some (2,2,2)),none⟩,
-  ⟨⟨9,29,5396⟩,250435834935369193,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨9,30,5353⟩,250532229485711595,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨9,31,5310⟩,250628638471481989,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨9,32,5266⟩,250725061892680371,(some (2,2,2)),(some (2,2,2))⟩]
-private theorem rows9_2_v : rows9_2.all validRow = true := by decide +kernel
-private def rows9_3 : List TerminalRow := [
-  ⟨⟨9,33,5221⟩,250821499749306743,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨9,34,5175⟩,250917952041361106,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨9,35,5128⟩,251014418768843458,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨9,36,5080⟩,251110899931753802,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨9,37,5032⟩,251207395530092136,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨9,38,4973⟩,251303905563858458,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨9,39,4913⟩,251400430033052773,(some (1,1,5)),(some (2,2,2))⟩,
-  ⟨⟨9,40,4851⟩,251496968937675075,(some (1,1,5)),(some (2,2,2))⟩]
-private theorem rows9_3_v : rows9_3.all validRow = true := by decide +kernel
-private def rows9_4 : List TerminalRow := [
-  ⟨⟨9,41,4771⟩,251593522277725368,(some (1,3,5)),(some (2,2,0))⟩,
-  ⟨⟨9,42,4584⟩,251690090053203652,(some (4,4,4)),(some (2,2,2))⟩,
-  ⟨⟨9,43,4284⟩,251786672264109926,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨9,44,3968⟩,251883268910444190,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨9,45,3635⟩,251979879992206444,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨9,46,3285⟩,252076505509396688,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨9,47,2919⟩,252173145462014923,(some (2,2,2)),none⟩,
-  ⟨⟨9,48,2535⟩,252269799850061147,none,none⟩]
-private theorem rows9_4_v : rows9_4.all validRow = true := by decide +kernel
-private def rows9_5 : List TerminalRow := [
-  ⟨⟨9,49,2133⟩,252366468673535362,none,none⟩,
-  ⟨⟨9,50,1715⟩,252463151932437565,none,none⟩,
-  ⟨⟨9,51,1278⟩,252559849626767760,none,none⟩,
-  ⟨⟨9,52,824⟩,252656561756525945,none,none⟩,
-  ⟨⟨9,53,352⟩,252753288321712120,none,none⟩]
-private theorem rows9_5_v : rows9_5.all validRow = true := by decide +kernel
-def rows9 : List TerminalRow := rows9_0 ++ rows9_1 ++ rows9_2 ++ rows9_3 ++ rows9_4 ++ rows9_5
-private theorem rows9_v : rows9.all validRow = true := by simp only [rows9,List.all_append,rows9_0_v,rows9_1_v,rows9_2_v,rows9_3_v,rows9_4_v,rows9_5_v,Bool.and_self]
-private def rows10_0 : List TerminalRow := [
-  ⟨⟨10,10,5882⟩,248612732130353983,none,none⟩,
-  ⟨⟨10,11,5856⟩,248720143511206745,none,none⟩,
-  ⟨⟨10,12,5830⟩,248827569327487495,none,none⟩,
-  ⟨⟨10,13,5803⟩,248935009579196236,none,none⟩,
-  ⟨⟨10,14,5777⟩,249042464266332966,none,none⟩,
-  ⟨⟨10,15,5750⟩,249149933388897687,none,none⟩,
-  ⟨⟨10,16,5722⟩,249257416946890399,none,none⟩,
-  ⟨⟨10,17,5695⟩,249364914940311100,none,none⟩]
-private theorem rows10_0_v : rows10_0.all validRow = true := by decide +kernel
-private def rows10_1 : List TerminalRow := [
-  ⟨⟨10,18,5660⟩,249472427369159791,none,none⟩,
-  ⟨⟨10,19,5623⟩,249579954233436472,none,none⟩,
-  ⟨⟨10,20,5585⟩,249687495533141144,none,none⟩,
-  ⟨⟨10,21,5547⟩,249795051268273805,none,none⟩,
-  ⟨⟨10,22,5508⟩,249902621438834457,none,none⟩,
-  ⟨⟨10,23,5469⟩,250010206044823100,none,none⟩,
-  ⟨⟨10,24,5429⟩,250117805086239731,none,none⟩,
-  ⟨⟨10,25,5389⟩,250225418563084352,(some (2,2,2)),none⟩]
-private theorem rows10_1_v : rows10_1.all validRow = true := by decide +kernel
-private def rows10_2 : List TerminalRow := [
-  ⟨⟨10,26,5347⟩,250333046475356965,(some (2,2,2)),none⟩,
-  ⟨⟨10,27,5306⟩,250440688823057567,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨10,28,5263⟩,250548345606186159,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨10,29,5220⟩,250656016824742741,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨10,30,5176⟩,250763702478727312,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨10,31,5131⟩,250871402568139875,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨10,32,5085⟩,250979117092980429,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨10,33,5038⟩,251086846053248971,(some (2,2,2)),(some (2,2,2))⟩]
-private theorem rows10_2_v : rows10_2.all validRow = true := by decide +kernel
-private def rows10_3 : List TerminalRow := [
-  ⟨⟨10,34,4982⟩,251194589448945505,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨10,35,4925⟩,251302347280070027,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨10,36,4867⟩,251410119546622541,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨10,37,4793⟩,251517906248603043,(some (4,4,4)),(some (2,2,2))⟩,
-  ⟨⟨10,38,4632⟩,251625707386011537,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨10,39,4378⟩,251733522958848021,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨10,40,4113⟩,251841352967112495,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨10,41,3835⟩,251949197410804957,(some (2,2,2)),(some (2,2,2))⟩]
-private theorem rows10_3_v : rows10_3.all validRow = true := by decide +kernel
-private def rows10_4 : List TerminalRow := [
-  ⟨⟨10,42,3545⟩,252057056289925412,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨10,43,3240⟩,252164929604473854,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨10,44,2920⟩,252272817354450290,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨10,45,2583⟩,252380719539854714,none,none⟩,
-  ⟨⟨10,46,2229⟩,252488636160687127,none,none⟩,
-  ⟨⟨10,47,1858⟩,252596567216947532,none,none⟩,
-  ⟨⟨10,48,1470⟩,252704512708635926,none,none⟩,
-  ⟨⟨10,49,1064⟩,252812472635752312,none,none⟩]
-private theorem rows10_4_v : rows10_4.all validRow = true := by decide +kernel
-private def rows10_5 : List TerminalRow := [
-  ⟨⟨10,50,640⟩,252920446998296685,none,none⟩,
-  ⟨⟨10,51,198⟩,253028435796269049,none,none⟩]
-private theorem rows10_5_v : rows10_5.all validRow = true := by decide +kernel
+def rows8_0 : List TerminalRow := [
+  ⟨⟨8,8,6763⟩,247156823731147997,none,none⟩,
+  ⟨⟨8,9,6737⟩,247241887944751407,none,none⟩,
+  ⟨⟨8,10,6710⟩,247326966500374685,none,none⟩,
+  ⟨⟨8,11,6683⟩,247412059398017828,none,none⟩,
+  ⟨⟨8,12,6656⟩,247497166637680841,none,none⟩,
+  ⟨⟨8,13,6629⟩,247582288219363719,none,none⟩,
+  ⟨⟨8,14,6601⟩,247667424143066465,none,none⟩,
+  ⟨⟨8,15,6574⟩,247752574408789077,none,none⟩]
+def rows8_1 : List TerminalRow := [
+  ⟨⟨8,16,6546⟩,247837739016531558,none,none⟩,
+  ⟨⟨8,17,6518⟩,247922917966293905,none,none⟩,
+  ⟨⟨8,18,6489⟩,248008111258076119,(some (1,3,5)),none⟩,
+  ⟨⟨8,19,6460⟩,248093318891878200,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨8,20,6428⟩,248178540867700147,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨8,21,6396⟩,248263777185541962,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨8,22,6364⟩,248349027845403644,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨8,23,6331⟩,248434292847285194,(some (1,3,5)),(some (1,3,5))⟩]
+def rows8_2 : List TerminalRow := [
+  ⟨⟨8,24,6297⟩,248519572191186610,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨8,25,6264⟩,248604865877107892,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨8,26,6230⟩,248690173905049044,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨8,27,6195⟩,248775496275010059,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨8,28,6160⟩,248860832986990944,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨8,29,6125⟩,248946184040991696,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨8,30,6089⟩,249031549437012314,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨8,31,6053⟩,249116929175052799,(some (1,3,5)),(some (1,3,5))⟩]
+def rows8_3 : List TerminalRow := [
+  ⟨⟨8,32,6016⟩,249202323255113151,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨8,33,5979⟩,249287731677193371,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨8,34,5940⟩,249373154441293458,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨8,35,5897⟩,249458591547413409,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨8,36,5853⟩,249544042995553230,(some (1,3,5)),(some (1,4,5))⟩,
+  ⟨⟨8,37,5809⟩,249629508785712919,(some (1,3,5)),(some (1,5,5))⟩,
+  ⟨⟨8,38,5763⟩,249714988917892472,(some (1,3,5)),(some (1,5,5))⟩,
+  ⟨⟨8,39,5717⟩,249800483392091894,(some (1,3,5)),(some (1,3,0))⟩]
+def rows8_4 : List TerminalRow := [
+  ⟨⟨8,40,5670⟩,249885992208311185,(some (1,3,5)),(some (3,3,0))⟩,
+  ⟨⟨8,41,5621⟩,249971515366550339,(some (1,3,5)),(some (3,3,0))⟩,
+  ⟨⟨8,42,5565⟩,250057052866809361,(some (1,3,5)),(some (4,4,0))⟩,
+  ⟨⟨8,43,5508⟩,250142604709088252,(some (1,3,5)),(some (4,4,0))⟩,
+  ⟨⟨8,44,5449⟩,250228170893387009,(some (1,3,5)),(some (4,4,0))⟩,
+  ⟨⟨8,45,5382⟩,250313751419705632,(some (1,3,5)),(some (4,4,0))⟩,
+  ⟨⟨8,46,5309⟩,250399346288044122,(some (1,3,5)),(some (2,2,0))⟩,
+  ⟨⟨8,47,5211⟩,250484955498402480,(some (1,3,5)),(some (2,2,0))⟩]
+def rows8_5 : List TerminalRow := [
+  ⟨⟨8,48,4884⟩,250570579050780705,(some (3,3,5)),(some (2,2,0))⟩,
+  ⟨⟨8,49,4540⟩,250656216945178797,(some (4,4,4)),(some (2,2,0))⟩,
+  ⟨⟨8,50,4180⟩,250741869181596755,(some (2,2,2)),(some (2,2,0))⟩,
+  ⟨⟨8,51,3803⟩,250827535760034583,(some (2,0,0)),(some (0,0,0))⟩,
+  ⟨⟨8,52,3409⟩,250913216680492275,(some (0,0,0)),(some (0,0,0))⟩,
+  ⟨⟨8,53,2999⟩,250998911942969835,(some (0,0,0)),(some (0,0,0))⟩,
+  ⟨⟨8,54,2572⟩,251084621547467262,(some (0,0,0)),(some (0,0,0))⟩,
+  ⟨⟨8,55,2128⟩,251170345493984557,(some (0,0,0)),(some (0,0,0))⟩]
+def rows8_6 : List TerminalRow := [
+  ⟨⟨8,56,1667⟩,251256083782521718,none,none⟩,
+  ⟨⟨8,57,1189⟩,251341836413078746,none,none⟩,
+  ⟨⟨8,58,694⟩,251427603385655640,none,none⟩,
+  ⟨⟨8,59,182⟩,251513384700252401,none,none⟩]
+def rows8 : List TerminalRow := rows8_0 ++ rows8_1 ++ rows8_2 ++ rows8_3 ++ rows8_4 ++ rows8_5 ++ rows8_6
+def rows9_0 : List TerminalRow := [
+  ⟨⟨9,9,6622⟩,247247556475068041,none,none⟩,
+  ⟨⟨9,10,6596⟩,247343961423405458,none,none⟩,
+  ⟨⟨9,11,6568⟩,247440380713762742,none,none⟩,
+  ⟨⟨9,12,6541⟩,247536814346139894,none,none⟩,
+  ⟨⟨9,13,6514⟩,247633262320536913,none,none⟩,
+  ⟨⟨9,14,6486⟩,247729724636953798,none,none⟩,
+  ⟨⟨9,15,6456⟩,247826201295390550,none,none⟩,
+  ⟨⟨9,16,6425⟩,247922692295847170,none,none⟩]
+def rows9_1 : List TerminalRow := [
+  ⟨⟨9,17,6393⟩,248019197638323657,(some (5,3,5)),none⟩,
+  ⟨⟨9,18,6362⟩,248115717322820011,(some (5,3,5)),none⟩,
+  ⟨⟨9,19,6330⟩,248212251349336231,(some (5,3,5)),(some (5,3,5))⟩,
+  ⟨⟨9,20,6297⟩,248308799717872319,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨9,21,6264⟩,248405362428428274,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨9,22,6231⟩,248501939481004096,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨9,23,6198⟩,248598530875599785,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨9,24,6164⟩,248695136612215340,(some (1,3,5)),(some (1,3,5))⟩]
+def rows9_2 : List TerminalRow := [
+  ⟨⟨9,25,6130⟩,248791756690850763,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨9,26,6095⟩,248888391111506054,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨9,27,6060⟩,248985039874181211,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨9,28,6025⟩,249081702978876235,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨9,29,5989⟩,249178380425591126,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨9,30,5952⟩,249275072214325883,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨9,31,5910⟩,249371778345080509,(some (1,3,5)),(some (1,4,5))⟩,
+  ⟨⟨9,32,5868⟩,249468498817855001,(some (1,3,5)),(some (1,5,5))⟩]
+def rows9_3 : List TerminalRow := [
+  ⟨⟨9,33,5826⟩,249565233632649360,(some (1,3,5)),(some (1,5,5))⟩,
+  ⟨⟨9,34,5783⟩,249661982789463587,(some (1,3,5)),(some (1,5,5))⟩,
+  ⟨⟨9,35,5739⟩,249758746288297679,(some (1,3,5)),(some (1,3,0))⟩,
+  ⟨⟨9,36,5694⟩,249855524129151639,(some (1,3,5)),(some (1,4,0))⟩,
+  ⟨⟨9,37,5649⟩,249952316312025468,(some (1,3,5)),(some (1,5,0))⟩,
+  ⟨⟨9,38,5598⟩,250049122836919162,(some (1,3,5)),(some (3,5,0))⟩,
+  ⟨⟨9,39,5545⟩,250145943703832723,(some (1,3,5)),(some (3,3,0))⟩,
+  ⟨⟨9,40,5490⟩,250242778912766150,(some (1,3,5)),(some (4,4,0))⟩]
+def rows9_4 : List TerminalRow := [
+  ⟨⟨9,41,5433⟩,250339628463719446,(some (1,3,5)),(some (4,4,0))⟩,
+  ⟨⟨9,42,5369⟩,250436492356692608,(some (1,3,5)),(some (4,4,0))⟩,
+  ⟨⟨9,43,5301⟩,250533370591685639,(some (1,3,5)),(some (4,4,0))⟩,
+  ⟨⟨9,44,5221⟩,250630263168698536,(some (1,3,5)),(some (2,0,0))⟩,
+  ⟨⟨9,45,5042⟩,250727170087731298,(some (3,3,5)),(some (2,2,0))⟩,
+  ⟨⟨9,46,4736⟩,250824091348783929,(some (4,4,4)),(some (2,2,0))⟩,
+  ⟨⟨9,47,4413⟩,250921026951856427,(some (4,4,4)),(some (2,2,0))⟩,
+  ⟨⟨9,48,4075⟩,251017976896948793,(some (2,2,0)),(some (0,0,0))⟩]
+def rows9_5 : List TerminalRow := [
+  ⟨⟨9,49,3720⟩,251114941184061023,(some (0,0,0)),(some (0,0,0))⟩,
+  ⟨⟨9,50,3349⟩,251211919813193122,(some (0,0,0)),(some (0,0,0))⟩,
+  ⟨⟨9,51,2962⟩,251308912784345088,(some (0,0,0)),(some (0,0,0))⟩,
+  ⟨⟨9,52,2558⟩,251405920097516921,(some (0,0,0)),(some (0,0,0))⟩,
+  ⟨⟨9,53,2138⟩,251502941752708620,(some (0,0,0)),(some (0,0,0))⟩,
+  ⟨⟨9,54,1701⟩,251599977749920187,none,none⟩,
+  ⟨⟨9,55,1247⟩,251697028089151621,none,none⟩,
+  ⟨⟨9,56,776⟩,251794092770402923,none,none⟩]
+def rows9_6 : List TerminalRow := [
+  ⟨⟨9,57,288⟩,251891171793674090,none,none⟩]
+def rows9 : List TerminalRow := rows9_0 ++ rows9_1 ++ rows9_2 ++ rows9_3 ++ rows9_4 ++ rows9_5 ++ rows9_6
+def rows10_0 : List TerminalRow := [
+  ⟨⟨10,10,6472⟩,247349629953722091,none,none⟩,
+  ⟨⟨10,11,6442⟩,247457375636793517,none,none⟩,
+  ⟨⟨10,12,6412⟩,247565135661884807,none,none⟩,
+  ⟨⟨10,13,6381⟩,247672910028995965,none,none⟩,
+  ⟨⟨10,14,6350⟩,247780698738126990,none,none⟩,
+  ⟨⟨10,15,6319⟩,247888501789277884,none,none⟩,
+  ⟨⟨10,16,6287⟩,247996319182448643,none,none⟩,
+  ⟨⟨10,17,6256⟩,248104150917639270,(some (5,3,5)),none⟩]
+def rows10_1 : List TerminalRow := [
+  ⟨⟨10,18,6223⟩,248211996994849763,(some (5,3,5)),(some (5,3,5))⟩,
+  ⟨⟨10,19,6191⟩,248319857414080124,(some (5,3,5)),(some (5,3,5))⟩,
+  ⟨⟨10,20,6158⟩,248427732175330351,(some (5,3,5)),(some (5,3,5))⟩,
+  ⟨⟨10,21,6125⟩,248535621278600446,(some (5,3,5)),(some (5,3,5))⟩,
+  ⟨⟨10,22,6091⟩,248643524723890408,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨10,23,6057⟩,248751442511200237,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨10,24,6023⟩,248859374640529931,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨10,25,5988⟩,248967321111879496,(some (1,3,5)),(some (1,3,5))⟩]
+def rows10_2 : List TerminalRow := [
+  ⟨⟨10,26,5949⟩,249075281925248924,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨10,27,5909⟩,249183257080638221,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨10,28,5869⟩,249291246578047385,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨10,29,5828⟩,249399250417476415,(some (1,3,5)),(some (1,5,5))⟩,
+  ⟨⟨10,30,5787⟩,249507268598925314,(some (1,3,5)),(some (1,5,5))⟩,
+  ⟨⟨10,31,5744⟩,249615301122394079,(some (1,3,5)),(some (1,5,5))⟩,
+  ⟨⟨10,32,5701⟩,249723347987882711,(some (1,3,5)),(some (1,3,0))⟩,
+  ⟨⟨10,33,5658⟩,249831409195391210,(some (1,3,5)),(some (1,4,0))⟩]
+def rows10_3 : List TerminalRow := [
+  ⟨⟨10,34,5610⟩,249939484744919577,(some (1,3,5)),(some (1,5,0))⟩,
+  ⟨⟨10,35,5558⟩,250047574636467808,(some (1,3,5)),(some (1,5,0))⟩,
+  ⟨⟨10,36,5506⟩,250155678870035908,(some (1,3,5)),(some (1,5,0))⟩,
+  ⟨⟨10,37,5453⟩,250263797445623877,(some (1,3,5)),(some (3,5,0))⟩,
+  ⟨⟨10,38,5395⟩,250371930363231710,(some (1,3,5)),(some (4,0,0))⟩,
+  ⟨⟨10,39,5331⟩,250480077622859412,(some (1,3,5)),(some (4,0,0))⟩,
+  ⟨⟨10,40,5262⟩,250588239224506980,(some (1,3,5)),(some (4,0,0))⟩,
+  ⟨⟨10,41,5179⟩,250696415168174415,(some (1,3,5)),(some (4,0,0))⟩]
+def rows10_4 : List TerminalRow := [
+  ⟨⟨10,42,4958⟩,250804605453861716,(some (3,3,3)),(some (2,0,0))⟩,
+  ⟨⟨10,43,4688⟩,250912810081568887,(some (4,4,4)),(some (2,2,0))⟩,
+  ⟨⟨10,44,4404⟩,251021029051295923,(some (2,2,4)),(some (2,2,0))⟩,
+  ⟨⟨10,45,4105⟩,251129262363042827,(some (2,2,0)),(some (0,0,0))⟩,
+  ⟨⟨10,46,3791⟩,251237510016809597,(some (0,0,0)),(some (0,0,0))⟩,
+  ⟨⟨10,47,3462⟩,251345772012596234,(some (0,0,0)),(some (0,0,0))⟩,
+  ⟨⟨10,48,3117⟩,251454048350402738,(some (0,0,0)),(some (0,0,0))⟩,
+  ⟨⟨10,49,2755⟩,251562339030229109,(some (0,0,0)),(some (0,0,0))⟩]
+def rows10_5 : List TerminalRow := [
+  ⟨⟨10,50,2377⟩,251670644052075349,(some (0,0,0)),(some (0,0,0))⟩,
+  ⟨⟨10,51,1983⟩,251778963415941455,(some (0,0,0)),(some (0,0,0))⟩,
+  ⟨⟨10,52,1572⟩,251887297121827425,none,none⟩,
+  ⟨⟨10,53,1144⟩,251995645169733265,none,none⟩,
+  ⟨⟨10,54,699⟩,252104007559658972,none,none⟩,
+  ⟨⟨10,55,238⟩,252212384291604547,none,none⟩]
 def rows10 : List TerminalRow := rows10_0 ++ rows10_1 ++ rows10_2 ++ rows10_3 ++ rows10_4 ++ rows10_5
-private theorem rows10_v : rows10.all validRow = true := by simp only [rows10,List.all_append,rows10_0_v,rows10_1_v,rows10_2_v,rows10_3_v,rows10_4_v,rows10_5_v,Bool.and_self]
-private def rows11_0 : List TerminalRow := [
-  ⟨⟨11,11,5733⟩,248725794431379061,none,none⟩,
-  ⟨⟨11,12,5701⟩,248844511351301983,none,none⟩,
-  ⟨⟨11,13,5665⟩,248963242706652893,none,none⟩,
-  ⟨⟨11,14,5629⟩,249081988497431794,none,none⟩,
-  ⟨⟨11,15,5593⟩,249200748723638684,none,none⟩,
-  ⟨⟨11,16,5556⟩,249319523385273565,none,none⟩,
-  ⟨⟨11,17,5518⟩,249438312482336436,none,none⟩,
-  ⟨⟨11,18,5480⟩,249557116014827299,none,none⟩]
-private theorem rows11_0_v : rows11_0.all validRow = true := by decide +kernel
-private def rows11_1 : List TerminalRow := [
-  ⟨⟨11,19,5442⟩,249675933982746149,none,none⟩,
-  ⟨⟨11,20,5403⟩,249794766386092992,none,none⟩,
-  ⟨⟨11,21,5364⟩,249913613224867822,none,none⟩,
-  ⟨⟨11,22,5324⟩,250032474499070646,none,none⟩,
-  ⟨⟨11,23,5283⟩,250151350208701456,none,none⟩,
-  ⟨⟨11,24,5242⟩,250270240353760258,(some (2,2,2)),none⟩,
-  ⟨⟨11,25,5200⟩,250389144934247050,(some (2,2,2)),none⟩,
-  ⟨⟨11,26,5157⟩,250508063950161832,(some (2,2,2)),(some (2,2,2))⟩]
-private theorem rows11_1_v : rows11_1.all validRow = true := by decide +kernel
-private def rows11_2 : List TerminalRow := [
-  ⟨⟨11,27,5113⟩,250626997401504605,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨11,28,5066⟩,250745945288275367,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨11,29,5014⟩,250864907610474120,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨11,30,4960⟩,250983884368100863,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨11,31,4904⟩,251102875561155595,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨11,32,4803⟩,251221881189638317,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨11,33,4587⟩,251340901253549031,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨11,34,4364⟩,251459935752887732,(some (2,2,2)),(some (2,2,2))⟩]
-private theorem rows11_2_v : rows11_2.all validRow = true := by decide +kernel
-private def rows11_3 : List TerminalRow := [
-  ⟨⟨11,35,4132⟩,251578984687654427,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨11,36,3893⟩,251698048057849109,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨11,37,3644⟩,251817125863471782,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨11,38,3387⟩,251936218104522446,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨11,39,3120⟩,252055324781001099,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨11,40,2843⟩,252174445892907743,(some (2,2,2)),none⟩,
-  ⟨⟨11,41,2555⟩,252293581440242376,none,none⟩,
-  ⟨⟨11,42,2255⟩,252412731423005000,none,none⟩]
-private theorem rows11_3_v : rows11_3.all validRow = true := by decide +kernel
-private def rows11_4 : List TerminalRow := [
-  ⟨⟨11,43,1944⟩,252531895841195614,none,none⟩,
-  ⟨⟨11,44,1620⟩,252651074694814218,none,none⟩,
-  ⟨⟨11,45,1282⟩,252770267983860812,none,none⟩,
-  ⟨⟨11,46,929⟩,252889475708335396,none,none⟩,
-  ⟨⟨11,47,561⟩,253008697868237970,none,none⟩,
-  ⟨⟨11,48,176⟩,253127934463568536,none,none⟩]
-private theorem rows11_4_v : rows11_4.all validRow = true := by decide +kernel
-def rows11 : List TerminalRow := rows11_0 ++ rows11_1 ++ rows11_2 ++ rows11_3 ++ rows11_4
-private theorem rows11_v : rows11.all validRow = true := by simp only [rows11,List.all_append,rows11_0_v,rows11_1_v,rows11_2_v,rows11_3_v,rows11_4_v,Bool.and_self]
-private def rows12_0 : List TerminalRow := [
-  ⟨⟨12,12,5509⟩,248850162271474300,none,none⟩,
-  ⟨⟨12,13,5472⟩,248980184730467381,none,none⟩,
-  ⟨⟨12,14,5435⟩,249110221624888450,none,none⟩,
-  ⟨⟨12,15,5397⟩,249240272954737512,none,none⟩,
-  ⟨⟨12,16,5359⟩,249370338720014563,none,none⟩,
-  ⟨⟨12,17,5320⟩,249500418920719604,none,none⟩,
-  ⟨⟨12,18,5280⟩,249630513556852635,none,none⟩,
-  ⟨⟨12,19,5240⟩,249760622628413658,none,none⟩]
-private theorem rows12_0_v : rows12_0.all validRow = true := by decide +kernel
-private def rows12_1 : List TerminalRow := [
-  ⟨⟨12,20,5200⟩,249890746135402668,none,none⟩,
-  ⟨⟨12,21,5158⟩,250020884077819670,none,none⟩,
-  ⟨⟨12,22,5110⟩,250151036455664662,none,none⟩,
-  ⟨⟨12,23,5060⟩,250281203268937644,none,none⟩,
-  ⟨⟨12,24,5009⟩,250411384517638616,(some (2,2,2)),none⟩,
-  ⟨⟨12,25,4863⟩,250541580201767578,(some (2,2,2)),none⟩,
-  ⟨⟨12,26,4670⟩,250671790321324531,(some (2,2,2)),none⟩,
-  ⟨⟨12,27,4473⟩,250802014876309473,(some (2,2,2)),(some (2,2,2))⟩]
-private theorem rows12_1_v : rows12_1.all validRow = true := by decide +kernel
-private def rows12_2 : List TerminalRow := [
-  ⟨⟨12,28,4270⟩,250932253866722405,(some (2,2,2)),(some (2,2,2))⟩,
-  ⟨⟨12,29,4061⟩,251062507292563328,(some (2,2,2)),none⟩,
-  ⟨⟨12,30,3847⟩,251192775153832239,(some (2,2,2)),none⟩,
-  ⟨⟨12,31,3626⟩,251323057450529144,(some (2,2,2)),none⟩,
-  ⟨⟨12,32,3399⟩,251453354182654036,(some (2,2,2)),none⟩,
-  ⟨⟨12,33,3166⟩,251583665350206918,none,none⟩,
-  ⟨⟨12,34,2925⟩,251713990953187792,none,none⟩,
-  ⟨⟨12,35,2677⟩,251844330991596655,none,none⟩]
-private theorem rows12_2_v : rows12_2.all validRow = true := by decide +kernel
-private def rows12_3 : List TerminalRow := [
-  ⟨⟨12,36,2421⟩,251974685465433507,none,none⟩,
-  ⟨⟨12,37,2157⟩,252105054374698351,none,none⟩,
-  ⟨⟨12,38,1885⟩,252235437719391184,none,none⟩,
-  ⟨⟨12,39,1605⟩,252365835499512008,none,none⟩,
-  ⟨⟨12,40,1314⟩,252496247715060822,none,none⟩,
-  ⟨⟨12,41,1015⟩,252626674366037627,none,none⟩,
-  ⟨⟨12,42,705⟩,252757115452442419,none,none⟩,
-  ⟨⟨12,43,384⟩,252887570974275204,none,none⟩]
-private theorem rows12_3_v : rows12_3.all validRow = true := by decide +kernel
-private def rows12_4 : List TerminalRow := [
-  ⟨⟨12,44,52⟩,253018040931535977,none,none⟩]
-private theorem rows12_4_v : rows12_4.all validRow = true := by decide +kernel
+def rows11_0 : List TerminalRow := [
+  ⟨⟨11,11,6299⟩,247463044167110149,none,none⟩,
+  ⟨⟨11,12,6268⟩,247582130584915581,none,none⟩,
+  ⟨⟨11,13,6237⟩,247701231344740879,none,none⟩,
+  ⟨⟨11,14,6205⟩,247820346446586044,none,none⟩,
+  ⟨⟨11,15,6173⟩,247939475890451076,none,none⟩,
+  ⟨⟨11,16,6141⟩,248058619676335976,none,none⟩,
+  ⟨⟨11,17,6109⟩,248177777804240742,none,none⟩,
+  ⟨⟨11,18,6076⟩,248296950274165375,(some (5,3,5)),(some (5,3,5))⟩]
+def rows11_1 : List TerminalRow := [
+  ⟨⟨11,19,6043⟩,248416137086109876,(some (5,3,5)),(some (5,3,5))⟩,
+  ⟨⟨11,20,6009⟩,248535338240074243,(some (5,3,5)),(some (5,3,5))⟩,
+  ⟨⟨11,21,5971⟩,248654553736058479,(some (5,3,5)),(some (5,3,5))⟩,
+  ⟨⟨11,22,5933⟩,248773783574062579,(some (5,3,5)),(some (5,3,5))⟩,
+  ⟨⟨11,23,5894⟩,248893027754086547,(some (5,3,5)),(some (5,3,5))⟩,
+  ⟨⟨11,24,5855⟩,249012286276130383,(some (5,3,5)),(some (5,3,5))⟩,
+  ⟨⟨11,25,5815⟩,249131559140194086,(some (1,3,5)),(some (1,3,5))⟩,
+  ⟨⟨11,26,5775⟩,249250846346277656,(some (1,3,5)),(some (1,3,5))⟩]
+def rows11_2 : List TerminalRow := [
+  ⟨⟨11,27,5734⟩,249370147894381091,(some (1,3,5)),(some (1,4,5))⟩,
+  ⟨⟨11,28,5692⟩,249489463784504396,(some (1,3,5)),(some (1,5,5))⟩,
+  ⟨⟨11,29,5647⟩,249608794016647567,(some (1,3,5)),(some (1,5,5))⟩,
+  ⟨⟨11,30,5598⟩,249728138590810604,(some (1,3,5)),(some (3,5,5))⟩,
+  ⟨⟨11,31,5549⟩,249847497506993509,(some (1,3,5)),(some (3,0,5))⟩,
+  ⟨⟨11,32,5499⟩,249966870765196281,(some (1,3,5)),(some (3,0,5))⟩,
+  ⟨⟨11,33,5447⟩,250086258365418919,(some (1,3,5)),(some (5,5,0))⟩,
+  ⟨⟨11,34,5387⟩,250205660307661425,(some (1,3,5)),(some (5,5,0))⟩]
+def rows11_3 : List TerminalRow := [
+  ⟨⟨11,35,5326⟩,250325076591923798,(some (1,3,5)),(some (4,0,0))⟩,
+  ⟨⟨11,36,5254⟩,250444507218206039,(some (1,3,5)),(some (4,0,0))⟩,
+  ⟨⟨11,37,5072⟩,250563952186508145,(some (1,3,5)),(some (4,0,0))⟩,
+  ⟨⟨11,38,4841⟩,250683411496830119,(some (4,4,4)),(some (2,0,0))⟩,
+  ⟨⟨11,39,4601⟩,250802885149171960,(some (4,4,4)),(some (2,2,0))⟩,
+  ⟨⟨11,40,4352⟩,250922373143533668,(some (2,2,2)),(some (2,0,0))⟩,
+  ⟨⟨11,41,4093⟩,251041875479915243,(some (2,0,2)),(some (0,0,0))⟩,
+  ⟨⟨11,42,3824⟩,251161392158316685,(some (0,0,0)),(some (0,0,0))⟩]
+def rows11_4 : List TerminalRow := [
+  ⟨⟨11,43,3544⟩,251280923178737994,(some (0,0,0)),(some (0,0,0))⟩,
+  ⟨⟨11,44,3253⟩,251400468541179170,(some (0,0,0)),(some (0,0,0))⟩,
+  ⟨⟨11,45,2949⟩,251520028245640213,(some (0,0,0)),(some (0,0,0))⟩,
+  ⟨⟨11,46,2632⟩,251639602292121124,(some (0,0,0)),(some (0,0,0))⟩,
+  ⟨⟨11,47,2302⟩,251759190680621901,(some (0,0,0)),(some (0,0,0))⟩,
+  ⟨⟨11,48,1956⟩,251878793411142545,(some (0,0,0)),(some (0,0,0))⟩,
+  ⟨⟨11,49,1595⟩,251998410483683055,none,none⟩,
+  ⟨⟨11,50,1216⟩,252118041898243436,none,none⟩]
+def rows11_5 : List TerminalRow := [
+  ⟨⟨11,51,821⟩,252237687654823681,none,none⟩,
+  ⟨⟨11,52,408⟩,252357347753423793,none,none⟩]
+def rows11 : List TerminalRow := rows11_0 ++ rows11_1 ++ rows11_2 ++ rows11_3 ++ rows11_4 ++ rows11_5
+def rows12_0 : List TerminalRow := [
+  ⟨⟨12,12,6114⟩,247587799115232215,none,none⟩,
+  ⟨⟨12,13,6082⟩,247718226267771654,none,none⟩,
+  ⟨⟨12,14,6048⟩,247848667762330958,none,none⟩,
+  ⟨⟨12,15,6012⟩,247979123598910131,none,none⟩,
+  ⟨⟨12,16,5975⟩,248109593777509169,none,none⟩,
+  ⟨⟨12,17,5938⟩,248240078298128076,none,none⟩,
+  ⟨⟨12,18,5901⟩,248370577160766848,(some (5,3,5)),(some (5,3,5))⟩,
+  ⟨⟨12,19,5863⟩,248501090365425489,(some (5,3,5)),(some (5,3,5))⟩]
+def rows12_1 : List TerminalRow := [
+  ⟨⟨12,20,5824⟩,248631617912103996,(some (5,3,5)),(some (5,3,5))⟩,
+  ⟨⟨12,21,5785⟩,248762159800802370,(some (5,3,5)),(some (5,3,5))⟩,
+  ⟨⟨12,22,5746⟩,248892716031520612,(some (5,3,5)),(some (5,3,5))⟩,
+  ⟨⟨12,23,5704⟩,249023286604258720,(some (5,3,5)),(some (5,3,5))⟩,
+  ⟨⟨12,24,5658⟩,249153871519016695,(some (5,3,5)),(some (5,3,5))⟩,
+  ⟨⟨12,25,5611⟩,249284470775794538,(some (5,3,5)),(some (5,3,5))⟩,
+  ⟨⟨12,26,5564⟩,249415084374592247,(some (5,3,5)),(some (5,3,5))⟩,
+  ⟨⟨12,27,5516⟩,249545712315409823,(some (1,3,5)),(some (5,5,5))⟩]
+def rows12_2 : List TerminalRow := [
+  ⟨⟨12,28,5460⟩,249676354598247267,(some (1,3,5)),(some (5,5,5))⟩,
+  ⟨⟨12,29,5403⟩,249807011223104578,(some (1,3,5)),(some (5,0,5))⟩,
+  ⟨⟨12,30,5298⟩,249937682189981755,(some (1,3,5)),(some (4,4,0))⟩,
+  ⟨⟨12,31,5098⟩,250068367498878798,(some (1,3,5)),(some (4,4,0))⟩,
+  ⟨⟨12,32,4892⟩,250199067149795711,(some (1,3,5)),(some (2,2,0))⟩,
+  ⟨⟨12,33,4680⟩,250329781142732489,(some (4,4,4)),(some (2,0,0))⟩,
+  ⟨⟨12,34,4462⟩,250460509477689134,(some (4,4,4)),(some (2,0,0))⟩,
+  ⟨⟨12,35,4238⟩,250591252154665648,(some (2,2,2)),(some (2,0,0))⟩]
+def rows12_3 : List TerminalRow := [
+  ⟨⟨12,36,4006⟩,250722009173662027,(some (2,2,0)),(some (0,0,0))⟩,
+  ⟨⟨12,37,3767⟩,250852780534678274,(some (0,0,0)),(some (0,0,0))⟩,
+  ⟨⟨12,38,3520⟩,250983566237714388,(some (0,0,0)),(some (0,0,0))⟩,
+  ⟨⟨12,39,3266⟩,251114366282770368,(some (0,0,0)),(some (0,0,0))⟩,
+  ⟨⟨12,40,3003⟩,251245180669846216,(some (0,0,0)),(some (0,0,0))⟩,
+  ⟨⟨12,41,2731⟩,251376009398941931,(some (0,0,0)),(some (0,0,0))⟩,
+  ⟨⟨12,42,2451⟩,251506852470057513,(some (0,0,0)),(some (0,0,0))⟩,
+  ⟨⟨12,43,2160⟩,251637709883192961,(some (0,0,0)),(some (0,0,0))⟩]
+def rows12_4 : List TerminalRow := [
+  ⟨⟨12,44,1859⟩,251768581638348278,(some (0,0,0)),(some (0,0,0))⟩,
+  ⟨⟨12,45,1547⟩,251899467735523462,none,none⟩,
+  ⟨⟨12,46,1224⟩,252030368174718511,none,none⟩,
+  ⟨⟨12,47,890⟩,252161282955933428,none,none⟩,
+  ⟨⟨12,48,542⟩,252292212079168212,none,none⟩,
+  ⟨⟨12,49,181⟩,252423155544422863,none,none⟩]
 def rows12 : List TerminalRow := rows12_0 ++ rows12_1 ++ rows12_2 ++ rows12_3 ++ rows12_4
-private theorem rows12_v : rows12.all validRow = true := by simp only [rows12,List.all_append,rows12_0_v,rows12_1_v,rows12_2_v,rows12_3_v,rows12_4_v,Bool.and_self]
-private def rows13_0 : List TerminalRow := [
-  ⟨⟨13,13,5253⟩,248985835650639697,none,none⟩,
-  ⟨⟨13,14,5208⟩,249127163648702938,none,none⟩,
-  ⟨⟨13,15,5161⟩,249268506082194169,none,none⟩,
-  ⟨⟨13,16,5011⟩,249409862951113391,none,none⟩,
-  ⟨⟨13,17,4840⟩,249551234255460603,none,none⟩,
-  ⟨⟨13,18,4664⟩,249692619995235803,none,none⟩,
-  ⟨⟨13,19,4485⟩,249834020170438995,none,none⟩,
-  ⟨⟨13,20,4301⟩,249975434781070176,none,none⟩]
-private theorem rows13_0_v : rows13_0.all validRow = true := by decide +kernel
-private def rows13_1 : List TerminalRow := [
-  ⟨⟨13,21,4114⟩,250116863827129348,none,none⟩,
-  ⟨⟨13,22,3922⟩,250258307308616510,none,none⟩,
-  ⟨⟨13,23,3726⟩,250399765225531662,none,none⟩,
-  ⟨⟨13,24,3525⟩,250541237577874804,none,none⟩,
-  ⟨⟨13,25,3319⟩,250682724365645935,none,none⟩,
-  ⟨⟨13,26,3109⟩,250824225588845059,none,none⟩,
-  ⟨⟨13,27,2893⟩,250965741247472170,none,none⟩,
-  ⟨⟨13,28,2672⟩,251107271341527274,none,none⟩]
-private theorem rows13_1_v : rows13_1.all validRow = true := by decide +kernel
-private def rows13_2 : List TerminalRow := [
-  ⟨⟨13,29,2445⟩,251248815871010364,none,none⟩,
-  ⟨⟨13,30,2213⟩,251390374835921449,none,none⟩,
-  ⟨⟨13,31,1975⟩,251531948236260521,none,none⟩,
-  ⟨⟨13,32,1730⟩,251673536072027583,none,none⟩,
-  ⟨⟨13,33,1480⟩,251815138343222638,none,none⟩,
-  ⟨⟨13,34,1222⟩,251956755049845681,none,none⟩,
-  ⟨⟨13,35,958⟩,252098386191896714,none,none⟩,
-  ⟨⟨13,36,686⟩,252240031769375737,none,none⟩]
-private theorem rows13_2_v : rows13_2.all validRow = true := by decide +kernel
-private def rows13_3 : List TerminalRow := [
-  ⟨⟨13,37,407⟩,252381691782282749,none,none⟩,
-  ⟨⟨13,38,120⟩,252523366230617752,none,none⟩]
-private theorem rows13_3_v : rows13_3.all validRow = true := by decide +kernel
+def rows13_0 : List TerminalRow := [
+  ⟨⟨13,13,5889⟩,247723894798088287,none,none⟩,
+  ⟨⟨13,14,5852⟩,247865662685361732,none,none⟩,
+  ⟨⟨13,15,5815⟩,248007444914655045,none,none⟩,
+  ⟨⟨13,16,5774⟩,248149241485968221,none,none⟩,
+  ⟨⟨13,17,5730⟩,248291052399301269,none,none⟩,
+  ⟨⟨13,18,5686⟩,248432877654654181,(some (5,3,5)),none⟩,
+  ⟨⟨13,19,5642⟩,248574717252026962,(some (5,3,5)),(some (5,3,5))⟩,
+  ⟨⟨13,20,5594⟩,248716571191419609,(some (5,3,5)),(some (5,3,5))⟩]
+def rows13_1 : List TerminalRow := [
+  ⟨⟨13,21,5541⟩,248858439472832123,(some (5,3,5)),(some (5,3,5))⟩,
+  ⟨⟨13,22,5420⟩,249000322096264502,(some (5,3,5)),(some (5,3,5))⟩,
+  ⟨⟨13,23,5241⟩,249142219061716752,(some (5,3,5)),(some (4,4,4))⟩,
+  ⟨⟨13,24,5058⟩,249284130369188867,(some (5,3,5)),(some (4,4,4))⟩,
+  ⟨⟨13,25,4871⟩,249426056018680848,(some (5,3,5)),(some (2,2,2))⟩,
+  ⟨⟨13,26,4679⟩,249567996010192699,(some (5,3,5)),(some (2,2,2))⟩,
+  ⟨⟨13,27,4482⟩,249709950343724414,(some (5,3,5)),(some (2,2,2))⟩,
+  ⟨⟨13,28,4280⟩,249851919019275998,(some (4,4,4)),(some (2,0,2))⟩]
+def rows13_2 : List TerminalRow := [
+  ⟨⟨13,29,4074⟩,249993902036847448,(some (4,4,4)),(some (2,0,2))⟩,
+  ⟨⟨13,30,3862⟩,250135899396438765,(some (2,2,2)),(some (0,0,0))⟩,
+  ⟨⟨13,31,3645⟩,250277911098049949,(some (0,2,2)),(some (0,0,0))⟩,
+  ⟨⟨13,32,3422⟩,250419937141681001,(some (0,0,0)),(some (0,0,0))⟩,
+  ⟨⟨13,33,3193⟩,250561977527331920,(some (0,0,0)),(some (0,0,0))⟩,
+  ⟨⟨13,34,2959⟩,250704032255002704,(some (0,0,0)),(some (0,0,0))⟩,
+  ⟨⟨13,35,2717⟩,250846101324693357,(some (0,0,0)),(some (0,0,0))⟩,
+  ⟨⟨13,36,2470⟩,250988184736403877,(some (0,0,0)),(some (0,0,0))⟩]
+def rows13_3 : List TerminalRow := [
+  ⟨⟨13,37,2215⟩,251130282490134263,(some (0,0,0)),(some (0,0,0))⟩,
+  ⟨⟨13,38,1954⟩,251272394585884517,(some (0,0,0)),(some (0,0,0))⟩,
+  ⟨⟨13,39,1684⟩,251414521023654638,none,none⟩,
+  ⟨⟨13,40,1408⟩,251556661803444624,none,none⟩,
+  ⟨⟨13,41,1122⟩,251698816925254480,none,none⟩,
+  ⟨⟨13,42,829⟩,251840986389084202,none,none⟩,
+  ⟨⟨13,43,527⟩,251983170194933790,none,none⟩,
+  ⟨⟨13,44,215⟩,252125368342803246,none,none⟩]
 def rows13 : List TerminalRow := rows13_0 ++ rows13_1 ++ rows13_2 ++ rows13_3
-private theorem rows13_v : rows13.all validRow = true := by simp only [rows13,List.all_append,rows13_0_v,rows13_1_v,rows13_2_v,rows13_3_v,Bool.and_self]
-private def rows14_0 : List TerminalRow := [
-  ⟨⟨14,14,3728⟩,249132814568875257,none,none⟩,
-  ⟨⟨14,15,3546⟩,249285448106008656,none,none⟩,
-  ⟨⟨14,16,3360⟩,249438096078570048,none,none⟩,
-  ⟨⟨14,17,3170⟩,249590758486559430,none,none⟩,
-  ⟨⟨14,18,2977⟩,249743435329976800,none,none⟩,
-  ⟨⟨14,19,2779⟩,249896126608822162,none,none⟩,
-  ⟨⟨14,20,2578⟩,250048832323095513,none,none⟩,
-  ⟨⟨14,21,2372⟩,250201552472796856,none,none⟩]
-private theorem rows14_0_v : rows14_0.all validRow = true := by decide +kernel
-private def rows14_1 : List TerminalRow := [
-  ⟨⟨14,22,2162⟩,250354287057926188,none,none⟩,
-  ⟨⟨14,23,1948⟩,250507036078483509,none,none⟩,
-  ⟨⟨14,24,1729⟩,250659799534468822,none,none⟩,
-  ⟨⟨14,25,1505⟩,250812577425882123,none,none⟩,
-  ⟨⟨14,26,1277⟩,250965369752723416,none,none⟩,
-  ⟨⟨14,27,1043⟩,251118176514992698,none,none⟩,
-  ⟨⟨14,28,804⟩,251270997712689971,none,none⟩,
-  ⟨⟨14,29,560⟩,251423833345815234,none,none⟩]
-private theorem rows14_1_v : rows14_1.all validRow = true := by decide +kernel
-private def rows14_2 : List TerminalRow := [
-  ⟨⟨14,30,310⟩,251576683414368487,none,none⟩,
-  ⟨⟨14,31,55⟩,251729547918349730,none,none⟩]
-private theorem rows14_2_v : rows14_2.all validRow = true := by decide +kernel
-def rows14 : List TerminalRow := rows14_0 ++ rows14_1 ++ rows14_2
-private theorem rows14_v : rows14.all validRow = true := by simp only [rows14,List.all_append,rows14_0_v,rows14_1_v,rows14_2_v,Bool.and_self]
-private def rows15_0 : List TerminalRow := [
-  ⟨⟨15,15,1637⟩,249291099026180974,none,none⟩,
-  ⟨⟨15,16,1433⟩,249455038102384535,none,none⟩,
-  ⟨⟨15,17,1226⟩,249618991614016086,none,none⟩,
-  ⟨⟨15,18,1014⟩,249782959561075628,none,none⟩,
-  ⟨⟨15,19,799⟩,249946941943563160,none,none⟩,
-  ⟨⟨15,20,580⟩,250110938761478681,none,none⟩,
-  ⟨⟨15,21,357⟩,250274950014822194,none,none⟩,
-  ⟨⟨15,22,129⟩,250438975703593695,none,none⟩]
-private theorem rows15_0_v : rows15_0.all validRow = true := by decide +kernel
-def rows15 : List TerminalRow := rows15_0
-private theorem rows15_v : rows15.all validRow = true := by simp only [rows15,List.all_append,rows15_0_v,Bool.and_self]
+def rows14_0 : List TerminalRow := [
+  ⟨⟨14,14,5303⟩,247871331215678365,none,none⟩,
+  ⟨⟨14,15,5136⟩,248024439837685816,none,none⟩,
+  ⟨⟨14,16,4966⟩,248177562801713136,none,none⟩,
+  ⟨⟨14,17,4792⟩,248330700107760322,none,none⟩,
+  ⟨⟨14,18,4615⟩,248483851755827374,(some (5,3,5)),none⟩,
+  ⟨⟨14,19,4434⟩,248637017745914294,(some (5,3,5)),none⟩,
+  ⟨⟨14,20,4250⟩,248790198078021082,(some (5,3,5)),(some (5,3,5))⟩,
+  ⟨⟨14,21,4061⟩,248943392752147735,(some (5,3,5)),(some (4,4,4))⟩]
+def rows14_1 : List TerminalRow := [
+  ⟨⟨14,22,3869⟩,249096601768294257,(some (5,3,5)),(some (2,2,2))⟩,
+  ⟨⟨14,23,3673⟩,249249825126460644,(some (4,4,4)),(some (2,2,2))⟩,
+  ⟨⟨14,24,3472⟩,249403062826646899,(some (2,2,2)),(some (2,2,2))⟩,
+  ⟨⟨14,25,3267⟩,249556314868853021,(some (0,2,2)),(some (0,0,0))⟩,
+  ⟨⟨14,26,3058⟩,249709581253079010,(some (0,0,0)),(some (0,0,0))⟩,
+  ⟨⟨14,27,2844⟩,249862861979324866,(some (0,0,0)),(some (0,0,0))⟩,
+  ⟨⟨14,28,2625⟩,250016157047590588,(some (0,0,0)),(some (0,0,0))⟩,
+  ⟨⟨14,29,2401⟩,250169466457876180,(some (0,0,0)),(some (0,0,0))⟩]
+def rows14_2 : List TerminalRow := [
+  ⟨⟨14,30,2172⟩,250322790210181635,(some (0,0,0)),(some (0,0,0))⟩,
+  ⟨⟨14,31,1938⟩,250476128304506959,(some (0,0,0)),(some (0,0,0))⟩,
+  ⟨⟨14,32,1699⟩,250629480740852150,none,none⟩,
+  ⟨⟨14,33,1454⟩,250782847519217209,none,none⟩,
+  ⟨⟨14,34,1202⟩,250936228639602136,none,none⟩,
+  ⟨⟨14,35,945⟩,251089624102006927,none,none⟩,
+  ⟨⟨14,36,682⟩,251243033906431586,none,none⟩,
+  ⟨⟨14,37,412⟩,251396458052876113,none,none⟩]
+def rows14_3 : List TerminalRow := [
+  ⟨⟨14,38,135⟩,251549896541340506,none,none⟩]
+def rows14 : List TerminalRow := rows14_0 ++ rows14_1 ++ rows14_2 ++ rows14_3
+def rows15_0 : List TerminalRow := [
+  ⟨⟨15,15,3445⟩,248030108368002450,none,none⟩,
+  ⟨⟨15,16,3258⟩,248194557724743909,none,none⟩,
+  ⟨⟨15,17,3067⟩,248359021423505234,none,none⟩,
+  ⟨⟨15,18,2873⟩,248523499464286428,none,none⟩,
+  ⟨⟨15,19,2675⟩,248687991847087487,none,none⟩,
+  ⟨⟨15,20,2473⟩,248852498571908414,none,none⟩,
+  ⟨⟨15,21,2268⟩,249017019638749208,(some (0,0,0)),none⟩,
+  ⟨⟨15,22,2059⟩,249181555047609869,(some (0,0,0)),none⟩]
+def rows15_1 : List TerminalRow := [
+  ⟨⟨15,23,1845⟩,249346104798490397,(some (0,0,0)),none⟩,
+  ⟨⟨15,24,1628⟩,249510668891390791,none,none⟩,
+  ⟨⟨15,25,1406⟩,249675247326311054,none,none⟩,
+  ⟨⟨15,26,1179⟩,249839840103251182,none,none⟩,
+  ⟨⟨15,27,948⟩,250004447222211177,none,none⟩,
+  ⟨⟨15,28,713⟩,250169068683191040,none,none⟩,
+  ⟨⟨15,29,472⟩,250333704486190771,none,none⟩,
+  ⟨⟨15,30,227⟩,250498354631210367,none,none⟩]
+def rows15 : List TerminalRow := rows15_0 ++ rows15_1
+def rows16_0 : List TerminalRow := [
+  ⟨⟨16,16,1288⟩,248200226255060545,none,none⟩,
+  ⟨⟨16,17,1081⟩,248376016346536009,none,none⟩,
+  ⟨⟨16,18,870⟩,248551820780031341,none,none⟩,
+  ⟨⟨16,19,655⟩,248727639555546541,none,none⟩,
+  ⟨⟨16,20,437⟩,248903472673081607,none,none⟩,
+  ⟨⟨16,21,215⟩,249079320132636541,none,none⟩]
+def rows16 : List TerminalRow := rows16_0
 def rowsBySlope : ℕ → List TerminalRow
   | 1 => rows1
   | 2 => rows2
@@ -939,42 +917,7 @@ def rowsBySlope : ℕ → List TerminalRow
   | 13 => rows13
   | 14 => rows14
   | 15 => rows15
+  | 16 => rows16
   | _ => []
 def rowAt (r y : ℕ) : Option TerminalRow := (rowsBySlope r)[y-r]?
-theorem all_rows_valid (r : ℕ) : (rowsBySlope r).all validRow = true := by
-  rcases r with _|r
-  · rfl
-  rcases r with _|r
-  · exact rows1_v
-  rcases r with _|r
-  · exact rows2_v
-  rcases r with _|r
-  · exact rows3_v
-  rcases r with _|r
-  · exact rows4_v
-  rcases r with _|r
-  · exact rows5_v
-  rcases r with _|r
-  · exact rows6_v
-  rcases r with _|r
-  · exact rows7_v
-  rcases r with _|r
-  · exact rows8_v
-  rcases r with _|r
-  · exact rows9_v
-  rcases r with _|r
-  · exact rows10_v
-  rcases r with _|r
-  · exact rows11_v
-  rcases r with _|r
-  · exact rows12_v
-  rcases r with _|r
-  · exact rows13_v
-  rcases r with _|r
-  · exact rows14_v
-  rcases r with _|r
-  · exact rows15_v
-  rfl
-theorem rowAt_valid {r y : ℕ} {row : TerminalRow} (h : rowAt r y = some row) :
-    validRow row = true := List.all_eq_true.mp (all_rows_valid r) _ (List.mem_of_getElem? h)
 end ProximityPrize.SubmissionLower.K6833Residual

@@ -35,13 +35,13 @@ theorem long_proper_first_tail_factor_count_lp32
     (gy gt gz : ℕ) (hyt : gy ≤ gt) (hy : gy ≤ 22) (ht : gt ≤ 198) (hz : gz ≤ 167)
     (hGy : G.degreeOf 0 ≤ gy) (hGt : ∀ d ∈ G.support, d 0 + d 1 ≤ gt)
     (hGz : G.degreeOf 2 ≤ gz)
-    (bound e : ℕ) (hw : w + 1 ≤ bound) (hchar : bound < p₀) (he : e ≤ 81076)
+    (bound e : ℕ) (hw : w + 1 ≤ bound) (hchar : bound < p₀) (he : e ≤ 81085)
     (hweight : wt ![1, w, 0, 0] F < bound)
     (x : I ↪ K) (u₀ u₁ : I → K) (nodes : Finset I)
-    (hAn : 181068 ≤ nodes.card) (haverage : nodeAverage nodes.card w 181068 ≤ 3)
+    (hAn : 181059 ≤ nodes.card) (haverage : nodeAverage nodes.card w 181059 ≤ 3)
     (allSeeds : Finset K) (selected : K → Polynomial K)
     (hdegree : ∀ g ∈ allSeeds, (selected g).natDegree ≤ w)
-    (hagreements : ∀ g ∈ allSeeds, 181068 ≤
+    (hagreements : ∀ g ∈ allSeeds, 181059 ≤
       (nodes.filter (fun i => (selected g).eval (x i) = u₀ i + g * u₁ i)).card)
     (hpencil : ∀ P₀ P₁ : Polynomial K, P₀.natDegree ≤ w → P₁.natDegree ≤ w →
       (RCN050.pencilSeeds allSeeds selected P₀ P₁).card ≤ e + 1) :
@@ -123,13 +123,13 @@ theorem long_proper_first_tail_factor_count_lp32
   change seeds.card ≤ _
   calc
     _ ≤ (∑ c : C, (points c).card) := hcover
-    _ ≤ 81674 * ((5505004 * gz + gy * 43777881) +
+    _ ≤ 81683 * ((5505004 * gz + gy * 43777881) +
         (5505004 * (gt - gy) + gy * 51642172)) + longProperCurveCost_lp32 gy gt gz := by
       rw [hsplit]
       exact Nat.add_le_add (hP.trans (Nat.mul_le_mul_left _ (Nat.add_le_add hsum₀ hsum₁))) hn
     _ ≤ longFactorCharge_lp32 gy gt gz := by
       rw [longFactorCharge_eq_lp32 gy gt gz hyt, longProperCurveCost_lp32]
-      have h : 0 ≤ 1067484004607 * gy := Nat.zero_le _
+      have h : 0 ≤ 1067484004616 * gy := Nat.zero_le _
       omega
 
 end

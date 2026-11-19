@@ -67,7 +67,7 @@ def ProperProfileHelper (F Q : MvPolynomial (Fin 4) K) (p : JetProfile)
       wt residualYSWeights Q ≤ p.middleCap+p.slopeCap*(capY-1) ∧
       wt residualTotalWeights Q ≤ p.totalCap+p.slopeCap*(capT-1)) ∧
     ∀ f : Polynomial K, f.natDegree ≤ 131071 → ∀ z : K, ∀ S : Finset N,
-      181068 ≤ S.card → (∀ i ∈ S, f.eval (nodes i) = u0 i+u1 i*z) →
+      181059 ≤ S.card → (∀ i ∈ S, f.eval (nodes i) = u0 i+u1 i*z) →
       RCN319.specialization K f z F = 0 → RCN319.specialization K f z Q = 0
 
 theorem profile_leading_coprime_and_weights [Fintype N]
@@ -131,13 +131,13 @@ theorem profile_helper_or_divisibility [CharP K 2130706433] [Fintype N]
     · intro f hf z S hSc hvalues _
       have hweight : ∀ e ∈ P.support,
           e 0+131071*e 2+131070*e 3+131069*e 1+
-            reserve p.derivativeOrder p.minimumOrder (e 1)*49999 < p.order*181068 := by
+            reserve p.derivativeOrder p.minimumOrder (e 1)*49990 < p.order*181059 := by
         intro e he
         have hcut := (hP.2.1 e he).2.2.2.2
         change e 0+131071*e 2+131070*e 3+131069*e 1 < profileCutoff p (e 1) at hcut
         dsimp [profileCutoff] at hcut
         omega
-      apply low_coefficient_vanish_of_agreement P p.order 181068 131071
+      apply low_coefficient_vanish_of_agreement P p.order 181059 131071
         p.derivativeOrder p.minimumOrder n (by decide) (by decide)
         (hdegree.trans_lt hsm) hn
         (RCN347.factorial_cast_ne_zero_below_characteristic 2130706433 n (hdegree.trans_lt hchar))

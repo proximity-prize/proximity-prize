@@ -8,47 +8,47 @@ noncomputable section
 local instance mid6833Local_IntermediateDegree6833Scalar_7  : DecidableEq KoalaBear.Ext6 := Classical.decEq _
 local instance mid6833Local_IntermediateDegree6833Scalar_8  : CharP KoalaBear.Ext6 2130706433 := charP_of_injective_algebraMap' KoalaBear.Field 2130706433
 private theorem all_intermediatedegree6833 (x : Fin 262144 ↪ KoalaBear.Ext6) (u : Fin 262144 → KoalaBear.Ext6)
-    (A s U L : ℕ) (agree : 133315≤A)
+    (A s U L : ℕ) (agree : 133307≤A)
     (source : ∃ Q : MvPolynomial (Fin 4) KoalaBear.Ext6, Q≠0 ∧ Q.degreeOf 2≤s ∧ weightedTotalDegree wt Q≤U ∧ weightedTotalDegree jetIndexWt Q≤41 ∧
-      ∀ f : Polynomial KoalaBear.Ext6, f.natDegree≤133314 → ∀ S : Finset (Fin 262144), A≤S.card →
+      ∀ f : Polynomial KoalaBear.Ext6, f.natDegree≤133306 → ∀ S : Finset (Fin 262144), A≤S.card →
         (∀ i∈S, f.eval (x i)=u i) → differentialSpecialization (rename slot Q) f=0)
     (count : ∀ (Γ : Finset (Polynomial KoalaBear.Ext6)) (Q : MvPolynomial (Fin 4) KoalaBear.Ext6),
       Q≠0 → Q.degreeOf 2≤s → weightedTotalDegree wt Q≤U → weightedTotalDegree jetIndexWt Q≤41 →
-      (∀ f∈Γ, f∈closePolynomialSet x u 133315 A) →
+      (∀ f∈Γ, f∈closePolynomialSet x u 133307 A) →
       (∀ f∈Γ, differentialSpecialization (rename slot Q) f=0) → Γ.card≤L) :
-    (closePolynomialSet x u 133315 A).ncard ≤ L := by
+    (closePolynomialSet x u 133307 A).ncard ≤ L := by
   classical
-  let S := closePolynomialSet x u 133315 A
+  let S := closePolynomialSet x u 133307 A
   have hf : S.Finite := (closePolynomialSet_finite_and_ncard_mul_choose_le x u agree).1
   change S.ncard ≤ _
   rw [Set.ncard_eq_toFinset_card _ hf]
   obtain ⟨Q,hq,ht,hu,hi,van⟩ := source
   apply count _ Q hq ht hu hi (fun f h => hf.mem_toFinset.mp h)
   intro f h
-  have mem : f∈closePolynomialSet x u 133315 A := hf.mem_toFinset.mp h
+  have mem : f∈closePolynomialSet x u 133307 A := hf.mem_toFinset.mp h
   apply van f _ (polynomialAgreementSet x u f) mem.2
   · intro i hi
     exact (mem_polynomialAgreementSet x u f i).mp hi
   · by_cases hz : f=0
     · simp [hz]
-    · have hd : f.natDegree < 133315 := (Polynomial.natDegree_lt_iff_degree_lt hz).mpr mem.1
+    · have hd : f.natDegree < 133307 := (Polynomial.natDegree_lt_iff_degree_lt hz).mpr mem.1
       omega
 
 theorem scalar_list_intermediatedegree6833
     (x : Fin 262144 ↪ KoalaBear.Ext6) (u : Fin 262144 → KoalaBear.Ext6) :
-    (closePolynomialSet x u 133315 181068).ncard ≤ 269636151982671244 := by
-  apply all_intermediatedegree6833 x u 181068 19 132 _ (by decide)
+    (closePolynomialSet x u 133307 181059).ncard ≤ 274492770385165975 := by
+  apply all_intermediatedegree6833 x u 181059 19 134 _ (by decide)
   · obtain ⟨Q,hQ,ht,hw,hi,hvan⟩ := intermediatedegree6833_index (by simp) x u
     exact ⟨Q,hQ,ht,hw,hi,fun f hf S hsize => hvan f hf S (by omega)⟩
   · intro Γ Q hQ ht hw hi hclose hvan
-    have ch : max (133315-1) ((2*19-1)*132) < ringChar KoalaBear.Ext6 := by
+    have ch : max (133307-1) ((2*19-1)*134) < ringChar KoalaBear.Ext6 := by
       rw [ringChar.eq KoalaBear.Ext6 2130706433]
       decide
-    have b := KoalaFactorResultant.capped_whole (p:=2130706433) (V:=41) (τ:=266623) (c:=10531611) (a:=5265805) (b:=34927614) (by decide) (by decide)
-      (by decide) (by decide) (by decide) ch (fun l => by have := l.isLt; change 2*(l.val-2)-1 ≤ 266623; omega)
+    have b := KoalaFactorResultant.capped_whole (p:=2130706433) (V:=41) (τ:=266607) (c:=10530979) (a:=5265489) (b:=35458732) (by decide) (by decide)
+      (by decide) (by decide) (by decide) ch (fun l => by have := l.isLt; change 2*(l.val-2)-1 ≤ 266607; omega)
       (by decide) (by decide) (by decide) (by decide) (by decide) (by decide) (by decide) (by decide) (by decide) (by decide) Q hQ ht hw hi x u Γ hclose hvan
-    have hu : (Γ.card : ℚ) < 269636151982671245 := b.trans_lt (by decide +kernel)
-    have hl : Γ.card < 269636151982671245 := by exact_mod_cast hu
+    have hu : (Γ.card : ℚ) < 274492770385165976 := b.trans_lt (by decide +kernel)
+    have hl : Γ.card < 274492770385165976 := by exact_mod_cast hu
     omega
 
 #print axioms scalar_list_intermediatedegree6833

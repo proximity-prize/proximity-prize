@@ -12,10 +12,10 @@ noncomputable section
 
 variable {K I : Type} [Field K] [CharP K Primary319List.prime] [Fintype I]
 
-def primary319_tangentSeedBudget : ℕ := 5895688628374860
+def primary319_tangentSeedBudget : ℕ := 5899746253821622
 
 theorem primary319_tangent_seed_budget_exact :
-    Primary319List.listBudget * (81076 + 1) = primary319_tangentSeedBudget := by decide +kernel
+    Primary319List.listBudget * (81085 + 1) = primary319_tangentSeedBudget := by decide +kernel
 
 theorem primary319_normalized_word_card_le_of_seed_independent_carrier
     (c : NormalizedCoeff K) (hc : c ≠ 0)
@@ -48,7 +48,7 @@ theorem FlowData.primary319_seed_card_le_of_seed_independent_carrier
       (nodes.filter (fun i => (normalized g).eval (points i) = received i)).card)
     (hvanishes : ∀ g ∈ seeds, evalNormalizedCoefficient (normalized g) c = 0)
     (hno : ∀ P₀ P₁ : Polynomial K, P₀.natDegree ≤ 131071 → P₁.natDegree ≤ 131071 →
-      (seeds.filter (fun g => selected g = P₀ + Polynomial.C g * P₁)).card ≤ 81076 + 1) :
+      (seeds.filter (fun g => selected g = P₀ + Polynomial.C g * P₁)).card ≤ 81085 + 1) :
     seeds.card ≤ primary319_tangentSeedBudget := by
   classical
   have hwords := primary319_normalized_word_card_le_of_seed_independent_carrier c hc hy hr
@@ -63,9 +63,9 @@ theorem FlowData.primary319_seed_card_le_of_seed_independent_carrier
       obtain ⟨g, hg, rfl⟩ := Finset.mem_image.mp hq
       exact hvanishes g hg)
   calc
-    seeds.card ≤ (seeds.image normalized).card * (81076 + 1) :=
-      B.normalized_seed_card_le seeds selected normalized 131071 81076 hd0 hselected hnorm hno
-    _ ≤ Primary319List.listBudget * (81076 + 1) := Nat.mul_le_mul_right _ hwords
+    seeds.card ≤ (seeds.image normalized).card * (81085 + 1) :=
+      B.normalized_seed_card_le seeds selected normalized 131071 81085 hd0 hselected hnorm hno
+    _ ≤ Primary319List.listBudget * (81085 + 1) := Nat.mul_le_mul_right _ hwords
     _ = primary319_tangentSeedBudget := primary319_tangent_seed_budget_exact
 
 private theorem primary319_degreeOf_le_normalized_weight
@@ -108,7 +108,7 @@ theorem FlowData.primary319_tangent_seed_card_le
       (nodes.filter (fun i => (normalized g).eval (points i) = received i)).card)
     (hvanishes : ∀ g ∈ seeds, ∃ F ∈ factors, RCN319.specialization K (selected g) g F = 0)
     (hno : ∀ P₀ P₁ : Polynomial K, P₀.natDegree ≤ 131071 → P₁.natDegree ≤ 131071 →
-      (seeds.filter (fun g => selected g = P₀ + Polynomial.C g * P₁)).card ≤ 81076 + 1) :
+      (seeds.filter (fun g => selected g = P₀ + Polynomial.C g * P₁)).card ≤ 81085 + 1) :
     seeds.card ≤ primary319_tangentSeedBudget := by
   classical
   have hfamily (F : ↥factors) :

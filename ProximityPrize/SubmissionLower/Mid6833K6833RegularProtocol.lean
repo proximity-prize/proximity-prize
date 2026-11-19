@@ -10,14 +10,14 @@ set_option maxRecDepth 80000
 set_option maxHeartbeats 3000000
 
 theorem protocol_of_regularBudget (bounds : RegularBudget) :
-    ProtocolClaim 6833 332091391 1073741824 := by
+    ProtocolClaim 6834 332127561 1073741824 := by
   apply Target6833.protocol_of_short
   intro U S P q N hard fit pencil lo hi _
   obtain ⟨R⟩ := K6833PrimaryReady.ready_of_retainedComparison Dmn frobenius
     Koala6831BenchmarkField.domain_fixed Koala6831BenchmarkField.frobenius_apply IRSProfile.card_index U S P q
     hard.actual fit pencil (primitiveExcess 131071 q) (by omega) N
   have price := seed_count bounds S R
-  have degree : 33735-primitiveExcess 131071 q+1≤31492 := by omega
+  have degree : 33735-primitiveExcess 131071 q+1≤31500 := by omega
   unfold prime
   omega
 #print axioms protocol_of_regularBudget

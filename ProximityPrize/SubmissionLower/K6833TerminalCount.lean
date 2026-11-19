@@ -55,10 +55,10 @@ private theorem graph_absorbed (f : Envelope) (cfg : Fin 3 → JetProfile) (p : 
   rw [jetLeadingNumerator_eq_list] at h
   exact h
 
-private theorem single_count {x : I ↪ K} (T : TerminalData x) (F : RegularIndex T.primary)
+theorem single_count {x : I ↪ K} (T : TerminalData x) (F : RegularIndex T.primary)
     (f : Envelope) (limit : ℕ) (choice : Option Profiles)
     (shape : f.slope ≤ f.middle ∧ f.middle ≤ f.total)
-    (caps : f.slope ≤ 16 ∧ f.middle ≤ 66 ∧ f.total ≤ 8870)
+    (caps : f.slope ≤ 16 ∧ f.middle ≤ 67 ∧ f.total ≤ 8870)
     (below : Below (originalCumulativeFlag F.1) f.flag) (ok : simpleMode f limit choice = true) :
     (regularFiber T.primary T.seeds T.selected F).card ≤ limit := by
   cases choice with
@@ -117,7 +117,7 @@ private theorem below_pred {p agg : FlagDegree} (f : Envelope)
 private theorem multiple_count {x : I ↪ K} (T : TerminalData x) (A : Finset (RegularIndex T.primary))
     (f : Envelope) (limit : ℕ) (choice : Option Profiles)
     (hcard : 1 < A.card) (shape : f.slope ≤ f.middle ∧ f.middle ≤ f.total)
-    (caps : f.slope ≤ 16 ∧ f.middle ≤ 66 ∧ f.total ≤ 8870)
+    (caps : f.slope ≤ 16 ∧ f.middle ≤ 67 ∧ f.total ≤ 8870)
     (overall : Below (aggregateFlag T.primary A) f.flag)
     (ok : multipleMode f (predEnvelope f) limit choice = true) :
     (A.biUnion (regularFiber T.primary T.seeds T.selected)).card ≤ limit := by
@@ -127,7 +127,7 @@ private theorem multiple_count {x : I ↪ K} (T : TerminalData x) (A : Finset (R
   have localBelow (F) (hF : F ∈ A) : Below (deg F) sm.flag := below_pred f shape
     (positive_split T A F hF hcard) overall
   have sh : sm.slope ≤ sm.middle ∧ sm.middle ≤ sm.total := by simp only [sm,predEnvelope]; omega
-  have cp : sm.slope ≤ 16 ∧ sm.middle ≤ 66 ∧ sm.total ≤ 8870 := by simp only [sm,predEnvelope]; omega
+  have cp : sm.slope ≤ 16 ∧ sm.middle ≤ 67 ∧ sm.total ≤ 8870 := by simp only [sm,predEnvelope]; omega
   have agg : originalCumulativeFlag (regularProduct T.primary A) = LocatorPhase6800Oracle.sumFlag A deg :=
     contactFlag_regularProduct T.primary A
   cases choice with
@@ -193,6 +193,21 @@ theorem terminal_count {x : I ↪ K} (T : TerminalData x) (A : Finset (RegularIn
     omega
   have mok' := mok.resolve_left (show row.envelope.slope ≠ 1 by omega)
   exact multiple_count T A row.envelope row.terminalLimit row.multiple many ⟨hy0,ht0⟩ cp below mok'
+
+/-- Per-factor jet charge at a verified support (the `hcount` step of `multiple_count`), exported for the
+packet composition certificate (P33Composition). -/
+theorem factor_jet_charge {x : I ↪ K} (T : TerminalData x) (F : RegularIndex T.primary)
+    (f : Envelope) (ids : Profiles) (hmin : 1 ≤ f.slope ∧ 2 ≤ f.middle)
+    (shape : f.slope ≤ f.middle ∧ f.middle ≤ f.total)
+    (caps : f.slope ≤ 16 ∧ f.middle ≤ 67 ∧ f.total ≤ 8870)
+    (below : Below (originalCumulativeFlag F.1) f.flag)
+    (gate : jetGatesWithCorrections TailCorrections.original f (cellConfig ids) = true) :
+    (regularFiber T.primary T.seeds T.selected F).card * terminalScale ≤
+      jetFlagCharge TailCorrections.original f (cellConfig ids) (originalCumulativeFlag F.1) := by
+  rcases individual_alternatives T F f ids hmin shape caps below gate with ⟨_,hc⟩ | ⟨j,hj⟩ | hg
+  · exact (Nat.mul_le_mul_right _ hc).trans (rawCharge_mul_le_jetFlagCharge _ _ _ _)
+  · exact hj.trans (helper_absorbed _ _ _ _)
+  · exact hg.trans (graph_absorbed _ _ _)
 
 #print axioms terminal_count
 end

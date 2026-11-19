@@ -17,7 +17,7 @@ private def FlowData.primary319TangentFactors (B : FlowData K) (H : P4 K) : Fins
 
 theorem FlowData.primary319_screen_tangent_seeds
     (B : FlowData K) (H : P4 K) (hH : H ≠ 0)
-    (hbox : H ∈ nestedCoefficientBox K (319 * 181068) weight 45384 440 98)
+    (hbox : H ∈ nestedCoefficientBox K (319 * 181059) weight 53215 440 98)
     (Γ : Finset K) (selected normalized : K → Polynomial K)
     (nodes : Finset I) (points received : I → K)
     (hinj : Set.InjOn points nodes) (hnodes : nodes.card = Primary319List.n)
@@ -29,7 +29,7 @@ theorem FlowData.primary319_screen_tangent_seeds
     (hdegree : ∀ g ∈ Γ, (normalized g).natDegree ≤ Primary319List.w)
     (hagreement : ∀ g ∈ Γ, Primary319List.agreements ≤
       (nodes.filter (fun i => (normalized g).eval (points i) = received i)).card)
-    (hno : RCN238.NoLargeSelectedPencil selected Γ weight 81076) :
+    (hno : RCN238.NoLargeSelectedPencil selected Γ weight 81085) :
     ∃ retained ⊆ Γ, Γ.card ≤ retained.card + primary319_tangentSeedBudget ∧
       ∀ g ∈ retained, ∀ F : RCN266.RegularIndex H,
         RCN319.specialization K (selected g) g F.1 = 0 → ¬F.1 ∣ B.flow F.1 := by
@@ -47,14 +47,14 @@ theorem FlowData.primary319_screen_tangent_seeds
     fun F hF => (Finset.mem_filter.mp hF).2
   have hweights := nested_mem_weights hbox hH
   have hcap : H.weightedTotalDegree ![0, 1, 1, 1] < Primary319List.prime :=
-    hweights.1.trans_lt (by decide +kernel : 45384 < Primary319List.prime)
+    hweights.1.trans_lt (by decide +kernel : 53215 < Primary319List.prime)
   have hbound : removed.card ≤ primary319_tangentSeedBudget :=
     B.primary319_tangent_seed_card_le H hH factors hproduct htangent hcap hweights.2.1 hweights.2.2.1
       removed selected normalized nodes points received hinj hnodes hd0 ha
       (fun g hg => hden g (hremoved hg)) (fun g hg => hselected g (hremoved hg))
       (fun g hg => hnorm g (hremoved hg)) (fun g hg => hdegree g (hremoved hg))
       (fun g hg => hagreement g (hremoved hg)) (fun g hg => (Finset.mem_filter.mp hg).2)
-      (RCN243.noLargeSelectedPencil_mono selected Γ removed weight 81076 hremoved hno)
+      (RCN243.noLargeSelectedPencil_mono selected Γ removed weight 81085 hremoved hno)
   have hsplit : removed.card + retained.card = Γ.card :=
     Finset.card_filter_add_card_filter_not _
   refine ⟨retained, hretained, by omega, ?_⟩

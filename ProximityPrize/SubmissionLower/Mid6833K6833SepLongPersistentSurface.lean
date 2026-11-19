@@ -31,7 +31,7 @@ theorem long_persistent_surface_selected_count_lp32
     (hfirst : G ∣ surfaceMap (polynomialEmbedding K) (tailNumerator F 131071))
     (hGy : G.degreeOf 0 ≤ 22) (hGz : G.degreeOf 2 ≤ 167)
     (x : I ↪ K) (u₀ u₁ : I → K) (nodes : Finset I)
-    (hAn : 181068 ≤ nodes.card) (haverage : nodeAverage nodes.card 131071 181068 ≤ 3)
+    (hAn : 181059 ≤ nodes.card) (haverage : nodeAverage nodes.card 131071 181059 ≤ 3)
     (seeds allSeeds : Finset K) (hsub : seeds ⊆ allSeeds)
     (selected : K → Polynomial K)
     (hdegree : ∀ g ∈ seeds, (selected g).natDegree ≤ 131071)
@@ -39,11 +39,11 @@ theorem long_persistent_surface_selected_count_lp32
     (hreg : ∀ g ∈ seeds, graphSpecialize (selected g) g (g ^ 2130706433)
       (implicitRegularity F) ≠ 0)
     (hzero : ∀ g ∈ seeds, MvPolynomial.eval (selectedGraphPoint 2130706433 selected g) G = 0)
-    (hagreements : ∀ g ∈ seeds, 181068 ≤
+    (hagreements : ∀ g ∈ seeds, 181059 ≤
       (nodes.filter (fun i => (selected g).eval (x i) = u₀ i + g * u₁ i)).card)
     (hpencil : ∀ P₀ P₁ : Polynomial K, P₀.natDegree ≤ 131071 → P₁.natDegree ≤ 131071 →
-      (RCN050.pencilSeeds allSeeds selected P₀ P₁).card ≤ 81077) :
-    seeds.card ≤ 1067484004607 * G.degreeOf 0 := by
+      (RCN050.pencilSeeds allSeeds selected P₀ P₁).card ≤ 81086) :
+    seeds.card ≤ 1067484004616 * G.degreeOf 0 := by
   classical
   let Ω := GenericField K
   let φ := polynomialEmbedding K
@@ -93,7 +93,7 @@ theorem long_persistent_surface_selected_count_lp32
   let d (c : C) := Module.finrank (RatFunc Ω) (CoordinateField Ω c.1)
   obtain ⟨fields, hsum⟩ := frobeniusSlice_projection_budget p G H hG
     (hGy.trans_lt (by decide)) (hGz.trans_lt (by decide)) hregular hGpos
-  have hcount (c : C) : (onCurve c).card ≤ 1067484004607 * d c := by
+  have hcount (c : C) : (onCurve c).card ≤ 1067484004616 * d c := by
     let base : SeparableLiteralCoordinate c.1 := ⟨1, hx c, (fields c).1, (fields c).2⟩
     letI : FiniteDimensional (RatFunc Ω) (CoordinateField Ω c.1) := (fields c).1
     have hpos : 1 ≤ d c := Module.finrank_pos
@@ -111,7 +111,7 @@ theorem long_persistent_surface_selected_count_lp32
     have hlocal := persistent_curve_selected_seed_bound F 131071 4000000 p 198 167 c.1 base
       (d c) (p * d c) (fun W => (hpoles W).1) (fun W => by exact_mod_cast (hpoles W).2)
       hFmem hS htail (by decide) (by decide) (by decide) hweight ht hz
-      x u₀ u₁ nodes 181068 81076 (by decide) hAn haverage (onCurve c) allSeeds
+      x u₀ u₁ nodes 181059 81085 (by decide) hAn haverage (onCurve c) allSeeds
       (fun g hg => hsub (hmem g hg).1) selected (fun g => g ^ p)
       (fun g hg => hdegree g (hmem g hg).1)
       (fun g hg => hgraph g (hmem g hg).1)
@@ -120,13 +120,13 @@ theorem long_persistent_surface_selected_count_lp32
         exact hreg g (hmem g hg).1)
       (fun g hg => (hmem g hg).2) (fun g hg => hagreements g (hmem g hg).1) hpencil
     refine hlocal.trans ?_
-    change 3 * ((198 + 1) * d c + 167 * (2130706433 * d c)) + (81076 + 1) ≤ 1067484004607 * d c
+    change 3 * ((198 + 1) * d c + 167 * (2130706433 * d c)) + (81085 + 1) ≤ 1067484004616 * d c
     omega
   calc
     _ ≤ ∑ c : C, (onCurve c).card := hcover
-    _ ≤ ∑ c : C, 1067484004607 * d c := Finset.sum_le_sum (fun c _ => hcount c)
-    _ = 1067484004607 * ∑ c : C, d c := (Finset.mul_sum _ _ _).symm
-    _ ≤ 1067484004607 * G.degreeOf 0 := Nat.mul_le_mul_left _ hsum
+    _ ≤ ∑ c : C, 1067484004616 * d c := Finset.sum_le_sum (fun c _ => hcount c)
+    _ = 1067484004616 * ∑ c : C, d c := (Finset.mul_sum _ _ _).symm
+    _ ≤ 1067484004616 * G.degreeOf 0 := Nat.mul_le_mul_left _ hsum
 
 end
 

@@ -63,8 +63,8 @@ theorem topColumnActive_card_le (D : ℕ → ℕ) (w L B s U m : ℕ) :
   simpa [Target] using Fintype.card_le_of_injective embedding hinj
 
 def profileCutoff (p : JetProfile) (h : ℕ) : ℕ :=
-  p.order*181068 - SecondJetRelaxedDifferentiation.reserve
-    p.derivativeOrder p.minimumOrder h * 49999
+  p.order*181059 - SecondJetRelaxedDifferentiation.reserve
+    p.derivativeOrder p.minimumOrder h * 49990
 
 abbrev ProfileIndex (j : Fin 6) :=
   let p := jetProfile j
@@ -90,10 +90,10 @@ theorem profileMiddleCap_le_cutoff (j : Fin 6) (h : ℕ) :
   have hre : SecondJetRelaxedDifferentiation.reserve p.derivativeOrder p.minimumOrder h ≤ cap := by
     unfold SecondJetRelaxedDifferentiation.reserve cap
     split <;> omega
-  have hd : p.order*181068 - cap*49999 ≤ profileCutoff p h := by
+  have hd : p.order*181059 - cap*49990 ≤ profileCutoff p h := by
     unfold profileCutoff
-    exact Nat.sub_le_sub_left (Nat.mul_le_mul_right 49999 hre) _
-  have hl : p.middleCap ≤ (p.order*181068-cap*49999+p.secondCap-1)/131071 := by
+    exact Nat.sub_le_sub_left (Nat.mul_le_mul_right 49990 hre) _
+  have hl : p.middleCap ≤ (p.order*181059-cap*49990+p.secondCap-1)/131071 := by
     fin_cases j <;> decide
   change p.middleCap ≤ (profileCutoff p h + p.secondCap - 1) / 131071
   exact hl.trans (Nat.div_le_div_right (Nat.sub_le_sub_right (Nat.add_le_add_right hd _) _))
