@@ -160,6 +160,39 @@ theorem blockSaving_eq (i : BlockIndex) (p : Powers) (hw : w3.Contains i) :
   rw [show 3 * (550 - ((p.top : ℤ) + p.cubic)) =
     1650 - (3 * (p.top : ℤ) + 3 * p.cubic) by ring, show (3 : ℤ) * 550 = 1650 by decide]
 
+/-- Window-free form of `blockSaving_eq`: only the three inequalities used by its proof.
+(Added for the 6916 w4 top-factor certificate; the proof is the official one verbatim.) -/
+theorem blockSaving_eq_of (i : BlockIndex) (p : Powers) (hs : 1650 ≤ i.1.val)
+    (hj : i.2.val ≤ 2999) (hsum : i.1.val + i.2.val < 4650) :
+    blockSaving i.1.val i.2.val p = savings i p := by
+  have hd : min (i.1.val : ℤ) 1650 = 1650 := min_eq_right (by omega)
+  have hu : min (1650 : ℤ) (2999 - offset i) = 1650 := by
+    unfold offset
+    apply min_eq_left
+    omega
+  have ho : 0 < (4650 : ℤ) - i.1.val - i.2.val := by omega
+  have hi : initialFlag i = ⟨1650, 1650 - (i.2.val : ℤ), 1650, 550,
+      4650 - (i.1.val : ℤ) - i.2.val⟩ := by
+    unfold initialFlag offset
+    rw [hd]
+    congr 1 <;> ring
+  have hz : residualFlag (initialFlag i) (fun _ => 0) = initialFlag i := by
+    cases h : initialFlag i
+    simp [residualFlag]
+  unfold savings baseline blockBound blockSaving
+  dsimp only
+  rw [hz, hi]
+  simp only [hu,
+    not_le.mpr ho, ite_false, max_self, ← max_assoc]
+  have hmin (a b : ℤ) (hb : 0 ≤ b) : min a (a - b) = a - b := min_eq_right (by omega)
+  rw [hmin _ _ (le_max_left _ _), hmin _ _ ((le_max_left _ _).trans (le_max_left _ _))]
+  rw [residualFlag_expand]
+  rw [fastOld_eq _ _ _ (4650 - (i.1.val : ℤ) - i.2.val) (by decide), fastKernel_eq,
+    fastKernel_eq]
+  rw [show 3 * (550 - ((p.top : ℤ) + p.cubic)) =
+    1650 - (3 * (p.top : ℤ) + 3 * p.cubic) by ring, show (3 : ℤ) * 550 = 1650 by decide]
+
+
 theorem blockSaving_zero (s j : ℕ) : blockSaving s j ⟨0, 0, 0⟩ = 0 := by
   simp [blockSaving]
 

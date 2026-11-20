@@ -2308,31 +2308,3 @@ def rangeSum (f : ℕ → ℕ) : ℕ → ℕ
 end K1_13_2_3_7
 end PackSource_K1_13_2_3_7Defs
 
-section PackSource_K1_14_2_2_7Defs
-set_option autoImplicit true
-namespace K1_14_2_2_7
-
-noncomputable section
-
-open K1_14 K1_14_2 K1_14_2_2
-open scoped Classical
-
-/-- The reduced arithmetic components of the affine principal cut. -/
-def cutComponents (I : Ideal Ambient) (P : Jet) : Finset (Ideal Ambient) :=
-  (I ⊔ Ideal.span {toJet P}).minimalPrimesFinset
-
-/-- A zero-dimensional seed image can be a closed point with residue field
-larger than the ground field. Both seed coordinates are algebraic here. -/
-def ConstantSeed (Q : Ideal Ambient) : Prop :=
-  ∀ i : Fin 2, IsAlgebraic FX
-    (Ideal.Quotient.mk Q (MvPolynomial.X (Fin.castLE (by decide : 2 ≤ 4) i)))
-
-def movingComponents (I : Ideal Ambient) (P : Jet) : Finset (Ideal Ambient) :=
-  (cutComponents I P).filter fun Q => ¬ ConstantSeed Q
-
-def constantComponents (I : Ideal Ambient) (P : Jet) : Finset (Ideal Ambient) :=
-  (cutComponents I P).filter ConstantSeed
-
-end
-end K1_14_2_2_7
-end PackSource_K1_14_2_2_7Defs

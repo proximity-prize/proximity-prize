@@ -11,6 +11,7 @@ import ProximityPrize.SubmissionLower.Fast017
 import ProximityPrize.SubmissionLower.Fast051
 import ProximityPrize.SubmissionLower.Fast022
 import ProximityPrize.SubmissionLower.Numeric6AuxCert
+import ProximityPrize.SubmissionLower.Numeric6KLMv2
 import ProximityPrize.SubmissionLower.Fast060
 import ProximityPrize.SubmissionLower.Fast049
 import ProximityPrize.SubmissionLower.Fast061
@@ -577,7 +578,6 @@ theorem of_children (h1 : c1) (h2 : c2) : K1_11.c1 := by
     graphV := (graph_intoFive p (planePair Q 1)).trans (graph_pair R p Q c hgraphQ 1)
     original_height := hlo
   }⟩
-
 
 end
 
@@ -3525,17 +3525,6 @@ end
 end K1_13_6_2_3_2_5
 end PackSource_K1_13_6_2_3_2_5Proof
 
-section PackSource_K1_14_2_2_7_3_3_1_2Proof
-set_option autoImplicit true
-namespace K1_14_2_2_7_3_3_1_2
-
-/-- The weighted pole degree identity for the normalized inverse chart. -/
-theorem proof : K1_14_2_2_7_3_3_1.c2 :=
-  K1_14_3R_3_1_3_2.proof
-
-end K1_14_2_2_7_3_3_1_2
-end PackSource_K1_14_2_2_7_3_3_1_2Proof
-
 section PackSource_K1_13_6_3_5_4Proof
 set_option autoImplicit true
 set_option autoImplicit false
@@ -5116,26 +5105,26 @@ set_option autoImplicit true
 namespace K1_13_2_3_6
 
 private def rows : List (List ℕ) :=
-  rowsA ++ rowsB ++ rowsC ++ rowsD ++ rowsE ++ rowsF ++ rowsG ++ rowsH ++ rowsI ++ rowsJ ++ rowsK ++ rowsL ++ rowsM
+  rowsA ++ rowsB ++ rowsC ++ rowsD ++ rowsE ++ rowsF ++ rowsG ++ rowsH ++ rowsI ++ rowsJ ++ rowsKv2 ++ rowsLv2 ++ rowsMv2
 
 private theorem rows_length : rows.length = 502 := by
   simp only [rows, List.length_append, checkA.1, checkB.1, checkC.1, checkD.1,
     checkE.1, checkF.1, checkG.1, checkH.1, checkI.1, checkJ.1,
-    checkK.1, checkL.1, checkM.1, Nat.reduceAdd]
+    checkKv2.1, checkLv2.1, checkMv2.1, Nat.reduceAdd]
 
 private theorem rows_fit : fits 3012 rows = true := by
   simp only [rows, fits_append, List.length_append, checkA.1, checkB.1, checkC.1, checkD.1,
     checkE.1, checkF.1, checkG.1, checkH.1, checkI.1, checkJ.1,
-    checkK.1, checkL.1, checkA.2.1, checkB.2.1, checkC.2.1,
+    checkKv2.1, checkLv2.1, checkA.2.1, checkB.2.1, checkC.2.1,
     checkD.2.1, checkE.2.1, checkF.2.1, checkG.2.1, checkH.2.1, checkI.2.1,
-    checkJ.2.1, checkK.2.1, checkL.2.1, checkM.2.1, Nat.reduceAdd, Bool.true_and]
+    checkJ.2.1, checkKv2.2.1, checkLv2.2.1, checkMv2.2.1, Nat.reduceAdd, Bool.true_and]
 
-private theorem rows_value : value 3012 rows = 100540921280 := by
+private theorem rows_value : value 3012 rows = 101630846804 := by
   simp only [rows, value_append, List.length_append, checkA.1, checkB.1, checkC.1, checkD.1,
     checkE.1, checkF.1, checkG.1, checkH.1, checkI.1, checkJ.1,
-    checkK.1, checkL.1, checkA.2.2, checkB.2.2, checkC.2.2,
+    checkKv2.1, checkLv2.1, checkA.2.2, checkB.2.2, checkC.2.2,
     checkD.2.2, checkE.2.2, checkF.2.2, checkG.2.2, checkH.2.2, checkI.2.2,
-    checkJ.2.2, checkK.2.2, checkL.2.2, checkM.2.2, Nat.reduceAdd]
+    checkJ.2.2, checkKv2.2.2, checkLv2.2.2, checkMv2.2.2, Nat.reduceAdd]
 
 theorem proof : K1_13_2_3.c6 := by
   have hc := value_le_savingsSum 3012 rows (by decide)

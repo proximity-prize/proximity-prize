@@ -1868,7 +1868,6 @@ private theorem lowShiftTest (k t : ℤ) (hk : k ≤ 2300) :
         unfold linearPower conicPower at *
         omega
 
-
 -- The three boundaries separate the empty, one-power, two-power and column runs.
 private def lowBegin (k : ℕ) := max ((k+2302)/2) (min ((k+2304)/2) (2*k+3))
 private def lowEnd (k : ℕ) := min 2301 (k+1151)
@@ -1975,7 +1974,6 @@ private theorem lowLength (k t : ℤ) (mode : Mode) (n w : ℕ) (hn : 0 < n) (hc
     rw [lowEndpoint k t mode n w cut 12 0 (n-1) hw₀ (by omega) (by omega)
           (by change n-1-0 ≤ 4096; omega)]
     omega
-
 
 private theorem lowAdmissible {k t : ℤ} {b : Bool} (h : chooseMode k t = .shifted b) :
     admissible b k t t := by
@@ -2132,7 +2130,6 @@ private theorem lowGood_of_nat {k : ℕ} (h : lowGoodN k) : lowGood k := by
   · have hcast : (lowNatCol k : ℤ) ≤ lowNatCost (max (2301-k) (lowEnd k)) := by exact_mod_cast hhi
     simpa only [lowNatCol_eq k hk, lowNatCost_eq] using hcast
 
-
 -- Once a parity run ends at a threshold, only subsequent modes are possible.
 private def lowStep (k : ℕ) (m : Mode) (u : ℕ) (next : ℕ → ℕ → ℤ) (t n : ℕ) : ℤ :=
   if n = 0 then 0 else
@@ -2258,7 +2255,6 @@ theorem window7 : total 1750 250 = 514817120875 :=
 
 theorem window8 : total 2000 250 = 442900355250 :=
   (lowSum_eq 2000 250).trans (by decide +kernel)
-
 
 end K1_13_4_2_2_5
 end PackSource_K1_13_4_2_2_5BudgetLow
@@ -8867,68 +8863,6 @@ def width (b : Bank) (h q k l : ℕ) : ℕ :=
 
 end K1_13_4_2_1
 end PackSource_K1_13_4_2_1Defs
-
-section PackSource_K1_14_3R_3Defs
-set_option autoImplicit true
-set_option backward.isDefEq.respectTransparency false
-set_option maxSynthPendingDepth 8
-
-namespace K1_14_3R_3
-
-noncomputable section
-
-open K1 K1_14 K1_14_3 Polynomial
-
-/-- The scheme of the proper principal cut on the parent. -/
-def cutIdeal (q : Surface) (P : Jet) : Ideal Jet :=
-  q.asIdeal ⊔ Ideal.span {P}
-
-def seedInclusion : Seeds →+* Jet :=
-  (Polynomial.C : Equation →+* Jet).comp Polynomial.C
-
-def seedIdeal (R : Ideal Jet) : Ideal Seeds :=
-  R.comap seedInclusion
-
-def IsCutCurve (R : Ideal Jet) : Prop :=
-  R.IsPrime ∧ ringKrullDim (Jet ⧸ R) = 1
-
-def HasSeedEquation (R : Ideal Jet) (f : Seeds) : Prop :=
-  f ≠ 0 ∧ seedIdeal R = Ideal.span {f}
-
-def seedPointEval (t : FX × FX) : Seeds →+* FX :=
-  MvPolynomial.eval ![t.1, t.2]
-
-def HasSeedPoint (R : Ideal Jet) (t : FX × FX) : Prop :=
-  seedIdeal R = RingHom.ker (seedPointEval t)
-
-def markPoint (z : K) : FX × FX :=
-  (seedEmbedding z, seedEmbedding z ^ p)
-
-inductive Line where
-  | seed
-  | jet
-
-/-- The individual generic line equations of the parent's mixed section.
-The offsets and slopes are independent elements of the common section field. -/
-def lineEquation : Line → SectionJet
-  | .seed =>
-    let t₀ : SectionJet := C (C (MvPolynomial.X 0))
-    let t₁ : SectionJet := C (C (MvPolynomial.X 1))
-    t₀ + sectionScalar 0 * t₁ - sectionScalar 2
-  | .jet =>
-    let y : SectionJet := C (R := Polynomial SectionSeeds) (Polynomial.X (R := SectionSeeds))
-    let v : SectionJet := Polynomial.X (R := Polynomial SectionSeeds)
-    y + sectionScalar 1 * v - sectionScalar 3
-
-abbrev LineSection (I : Ideal Jet) (l : Line) :=
-  SectionJet ⧸ (I.map sectionMap ⊔ Ideal.span {lineEquation l})
-
-def lineLength (I : Ideal Jet) (l : Line) : ℕ :=
-  Module.finrank SectionField (LineSection I l)
-
-end
-end K1_14_3R_3
-end PackSource_K1_14_3R_3Defs
 
 section PackSource_K1_13_3Defs
 set_option autoImplicit true

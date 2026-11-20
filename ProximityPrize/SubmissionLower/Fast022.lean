@@ -543,9 +543,9 @@ def c4 : Prop := ∃ p : BlockIndex → Powers, 9573892230 ≤ savingsSum w1 p
 
 def c5 : Prop := ∃ p : BlockIndex → Powers, 159735926601 ≤ savingsSum w2 p
 
-def c6 : Prop := ∃ p : BlockIndex → Powers, 100540921280 ≤ savingsSum w3 p
+def c6 : Prop := ∃ p : BlockIndex → Powers, 101630846804 ≤ savingsSum w3 p
 
-def c7 : Prop := ∃ p : BlockIndex → Powers, 174062508216 ≤ savingsSum w4 p
+def c7 : Prop := ∃ p : BlockIndex → Powers, 179331165611 ≤ savingsSum w4 p
 
 private theorem bound_le_baseline (i : BlockIndex) (p : Fin 11 → ℕ) :
     blockBound i p ≤ baseline i := by
@@ -654,12 +654,14 @@ private theorem savings_parts (p₁ p₂ p₃ p₄ : BlockIndex → Powers) :
             split <;> simp)
 
 private theorem finish_budget (a b c : ℕ) (h : a + b = c)
-    (hc : c ≤ 344569599740461) (hb : 443913248327 ≤ b) :
-    a ≤ 344125686492134 := by omega
+    (hc : c ≤ 344569599740461) (hb : 450271831246 ≤ b) :
+    a ≤ 344119327909215 := by omega
 
 set_option maxHeartbeats 200000 in
-theorem of_children (h₂ : c1) (h₃ : c2) (h₄ : c3)
-    (h₅ : c4) (h₆ : c5) (h₇ : c6) (h₈ : c7) : K1_13_2.c3 := by
+/-- The block budget with the exact w3/w4 savings; strictly below `K1_13_2.c3`. -/
+theorem of_children_strong (h₂ : c1) (h₃ : c2) (h₄ : c3)
+    (h₅ : c4) (h₆ : c5) (h₇ : c6) (h₈ : c7) :
+    ∃ power : BlockIndex → Fin 11 → ℕ, (∑ i, blockBound i (power i)) ≤ 344119327909215 := by
   unfold c1 at h₂
   unfold c2 at h₃
   unfold c3 at h₄
@@ -670,8 +672,8 @@ theorem of_children (h₂ : c1) (h₃ : c2) (h₄ : c3)
   let p := combine p₁ p₂ p₃ p₄
   refine ⟨fun i => (p i).expand, ?_⟩
   have hstatic := baseline_budget_on (Finset.univ : Finset BlockIndex) baseline_low h₂ h₃ h₄
-  have hsave : 443913248327 ≤ ∑ i : BlockIndex, savings i (p i) := calc
-    _ ≤ (9573892230 + 159735926601 + 100540921280 + 174062508216) := by decide
+  have hsave : 450271831246 ≤ ∑ i : BlockIndex, savings i (p i) := calc
+    _ ≤ (9573892230 + 159735926601 + 101630846804 + 179331165611) := by decide
     _ ≤ _ := Nat.add_le_add (Nat.add_le_add (Nat.add_le_add hp₁ hp₂) hp₃) hp₄
     _ ≤ _ := savings_parts p₁ p₂ p₃ p₄
   have hsum : (∑ i : BlockIndex, blockBound i (p i).expand) +
@@ -680,6 +682,12 @@ theorem of_children (h₂ : c1) (h₃ : c2) (h₄ : c3)
       (fun i => savings i (p i)) baseline
       (fun i _ => Nat.add_sub_of_le (bound_le_baseline i (p i).expand))
   exact finish_budget _ _ _ hsum hstatic hsave
+
+set_option maxHeartbeats 200000 in
+theorem of_children (h₂ : c1) (h₃ : c2) (h₄ : c3)
+    (h₅ : c4) (h₆ : c5) (h₇ : c6) (h₈ : c7) : K1_13_2.c3 := by
+  obtain ⟨q, hq⟩ := of_children_strong h₂ h₃ h₄ h₅ h₆ h₇ h₈
+  exact ⟨q, hq.trans (by decide)⟩
 
 end K1_13_2_3
 end PackSource_K1_13_2_3Split
