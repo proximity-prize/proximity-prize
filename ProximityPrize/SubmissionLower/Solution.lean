@@ -1,3 +1,4 @@
+import ProximityPrize.SubmissionLower.Radius81879Score
 import ProximityPrize.SubmissionLower.Fast000
 import ProximityPrize.SubmissionLower.Fast004
 import ProximityPrize.SubmissionLower.Fast001
@@ -642,6 +643,11 @@ theorem Asm.K1_14_6 : K1_14.c6 := K1_14_6.of_children Asm.K1_14_6_1 Asm.K1_14_6_
 theorem Asm.K1_14 : K1.c14 := K1_14.of_children Asm.K1_14_1 Asm.K1_14_2 Asm.K1_14_3 Asm.K1_14_4 Asm.K1_14_5 Asm.K1_14_6
 theorem Asm.K1 : FrobeniusLocator.Native.ScalarMCACap6915 := K1.of_children Asm.K1_1 Asm.K1_2 Asm.K1_3 Asm.K1_4 Asm.K1_5 Asm.K1_6 Asm.K1_7 Asm.K1_8 Asm.K1_9 Asm.K1_10 Asm.K1_11 Asm.K1_12 Asm.K1_13 Asm.K1_14
 
-theorem ProximityPrize.Benchmark.candidate :
+theorem ProximityPrize.Benchmark.integerCell81879 :
     ProximityPrize.Benchmark.ProtocolClaim 6915 81879 262144 :=
   FrobeniusLocator.Native.protocolClaim6915_of_scalarCap Asm.K1
+
+theorem ProximityPrize.Benchmark.candidate :
+    ProximityPrize.Benchmark.ProtocolClaim 6915 2880896386633559938 9223372036854762291 :=
+  ProximityPrize.SubmissionLower.Radius81879.of_reduction
+    ProximityPrize.Benchmark.integerCell81879.reduction
