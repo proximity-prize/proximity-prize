@@ -17,7 +17,7 @@ private theorem numeric_profile (b : HeightBand) (e : ℕ)
     0 < b.seedCap e ∧ singularDegree e (b.seedCap e) < p ∧
       retainedPrice (131071+b.upper) e (b.seedCap e) ≤ K21.highRetained b.upper := by
   cases b
-  · change e ≤ 8 at hcap
+  · change e ≤ 12 at hcap
     interval_cases e <;> decide
   · change e ≤ 5 at hcap
     interval_cases e <;> decide
@@ -46,7 +46,7 @@ theorem retained_count (b : HeightBand) {w : ℤ}
     (hroots : ∀ γ ∈ T, atMark f (z γ) (s γ) = 0) :
     T.card ≤ K21.highRetained w := by
   have hd0 : 0 < 131071+b.upper := by omega
-  have hd : 131071+b.upper < 180169 := by cases b <;> decide
+  have hd : 131071+b.upper < 180139 := by cases b <;> decide
   obtain ⟨hvp, hchar, hprice⟩ := numeric_profile b f.natDegree he hcap
   have h := retained_charge hword hlabel hd0 hd hvp he le_rfl hprimitive hsep hseed hchar hroots
   rw [same_tariff b hlo hhi]

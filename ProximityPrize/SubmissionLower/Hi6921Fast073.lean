@@ -35,17 +35,17 @@ export _root_.K1_14_3_6 (c1)
 
 /-- Reconstruct degree-bounded regular solutions and encode agreement by capped plane cuts. -/
 def c2 : Prop :=
-  ∀ (f : K1_13.Row 2) (d b j : ℕ), 2 ≤ d → d < 180169 → 0 < j →
+  ∀ (f : K1_13.Row 2) (d b j : ℕ), 2 ≤ d → d < 180139 → 0 < j →
     f.totalDegree ≤ b → f.degreeOf 1 ≤ j → Nonempty (AgreementChart f d b j)
 
 private theorem regular_count (hclear : c1) (hchart : c2)
-    {w T s d} (h : FixedWord w T s d) (hd₀ : 2 ≤ d) (hd : d < 180169)
+    {w T s d} (h : FixedWord w T s d) (hd₀ : 2 ≤ d) (hd : d < 180139)
     {g : JetPlane} (hg : Irreducible g) {b j : ℕ}
     (ht : total g ≤ b) (hr : g.natDegree ≤ j)
     (hreg : ∀ γ ∈ T, atScalar (s γ) g = 0 ∧ atScalar (s γ) g.derivative ≠ 0) :
-    (180169-d) * T.card ≤
-      81975 * (total g * topCap d b j + g.natDegree * (totalCap d b - topCap d b j)) +
-        (180169-d) := by
+    (180139-d) * T.card ≤
+      82005 * (total g * topCap d b j + g.natDegree * (totalCap d b - topCap d b j)) +
+        (180139-d) := by
   classical
   by_cases hempty : T = ∅
   · simp [hempty]
@@ -98,13 +98,13 @@ private theorem regular_count (hclear : c1) (hchart : c2)
 
 open private total_pos from ProximityPrize.SubmissionLower.Fast073
 
-private theorem factor_count (hc1 : c1) (hc2 : c2) {w T s d} (h : FixedWord w T s d) (hd₀ : 2 ≤ d) (hd : d < 180169)
+private theorem factor_count (hc1 : c1) (hc2 : c2) {w T s d} (h : FixedWord w T s d) (hd₀ : 2 ≤ d) (hd : d < 180139)
     {g : JetPlane} (hg : Irreducible g) {b j : ℕ} (hb : 2 ≤ b) (hbp : b < p)
     (ht : total g ≤ b) (hr : g.natDegree ≤ j)
     (hroot : ∀ γ ∈ T, atScalar (s γ) g = 0) :
-    let gap := 180169 - d
+    let gap := 180139 - d
     let mass := total g * topCap d b j + g.natDegree * (totalCap d b - topCap d b j)
-    gap * T.card ≤ 81975 * mass + gap * (total g * (b-1) + 1) := by
+    gap * T.card ≤ 82005 * mass + gap * (total g * (b-1) + 1) := by
   classical
   let good := fun γ => atScalar (s γ) g.derivative ≠ 0
   let R := T.filter good
@@ -123,14 +123,14 @@ private theorem factor_count (hc1 : c1) (hc2 : c2) {w T s d} (h : FixedWord w T 
     Finset.card_filter_add_card_filter_not (s := T) good
   dsimp only
   rw [← hpartition, Nat.mul_add]
-  refine (Nat.add_le_add hR (Nat.mul_le_mul_left (180169 - d) hE)).trans_eq ?_
+  refine (Nat.add_le_add hR (Nat.mul_le_mul_left (180139 - d) hE)).trans_eq ?_
   ring
 
 /-- The standalone fixed-equation tariff, including singular and ordinary solutions. -/
 theorem of_children (h1 : c1) (h2 : c2) : H21_3.c6 := by
   classical
   intro u del M Γ F d b j hd₀ hd _ hb hbp _ hj hD G hG hcaps T hT hroot
-  let gap := 180169 - d
+  let gap := 180139 - d
   let a := totalCap d b
   let v := topCap d b j
   have hv : v ≤ a := min_le_left _ _
@@ -155,7 +155,7 @@ theorem of_children (h1 : c1) (h2 : c2) : H21_3.c6 := by
       _ ≤ b := hB
   have hcount (g : JetPlane) (hg : g ∈ fs) :
       gap * (S g).card ≤
-        81975 * (total g * v + g.natDegree * (a-v)) + gap * (total g * (b-1) + 1) :=
+        82005 * (total g * v + g.natDegree * (a-v)) + gap * (total g * (b-1) + 1) :=
     factor_count h1 h2 (hW.mono (Finset.filter_subset _ T)) hd₀ hd (hF g hg) hb hbp
       ((Finset.single_le_sum (fun z _ => Nat.zero_le (total z)) hg).trans hB)
       ((Finset.single_le_sum (fun z _ => Nat.zero_le z.natDegree) hg).trans hJ)
@@ -165,12 +165,12 @@ theorem of_children (h1 : c1) (h2 : c2) : H21_3.c6 := by
     dsimp only [mass]
     zify [hj, hv]
     ring
-  have hcount' : gap * T.card ≤ 81975*mass + gap*(b*(b-1) + b) := by
+  have hcount' : gap * T.card ≤ 82005*mass + gap*(b*(b-1) + b) := by
     calc
       _ ≤ gap * ∑ g ∈ fs, (S g).card := Nat.mul_le_mul_left _
         ((Finset.card_le_card hcov).trans Finset.card_biUnion_le)
       _ = ∑ g ∈ fs, gap * (S g).card := Finset.mul_sum _ _ _
-      _ ≤ ∑ g ∈ fs, (81975 * (total g * v + g.natDegree * (a-v)) +
+      _ ≤ ∑ g ∈ fs, (82005 * (total g * v + g.natDegree * (a-v)) +
           gap * (total g * (b-1) + 1)) := Finset.sum_le_sum hcount
       _ ≤ _ := by
         simp only [Finset.sum_add_distrib, ← Finset.mul_sum, ← Finset.sum_mul,
@@ -183,7 +183,7 @@ theorem of_children (h1 : c1) (h2 : c2) : H21_3.c6 := by
     have hlt := Nat.mod_lt ((262144-d)*mass + (gap-1)) hgap
     dsimp only [charge]
     omega
-  have hpay := (Nat.mul_le_mul_right mass (show 81975 ≤ 262144-d by omega)).trans hceil
+  have hpay := (Nat.mul_le_mul_right mass (show 82005 ≤ 262144-d by omega)).trans hceil
   have hbound : gap * T.card ≤ gap * (charge + b*(b-1) + b) := by
     calc
       _ ≤ _ := hcount'
@@ -211,7 +211,7 @@ open private eval_at_center from ProximityPrize.SubmissionLower.Fast073
 open private specialization_flatten from ProximityPrize.SubmissionLower.Fast073
 
 private theorem agreement {f : Row 2} {S : Geom[X]} {d : ℕ}
-    (hd : d < 180169) (hD : S.natDegree ≤ d) (hS : RegularAt 1 f S) (x y : Geom) :
+    (hd : d < 180139) (hD : S.natDegree ≤ d) (hS : RegularAt 1 f S) (x y : Geom) :
     MvPolynomial.aeval (marked S)
       (taylorAgreementEquation center (chart f) (d + 1) (power d) (constants x) (constants y))
       = 0 ↔ S.eval x = y := by

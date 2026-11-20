@@ -15,7 +15,7 @@ inductive HeightBand
   deriving DecidableEq
 
 def HeightBand.lower : HeightBand → ℕ
-  | .first => 2448
+  | .first => 2472
   | .second => 3555
   | .third => 8250
   | .fourth => 24000
@@ -24,79 +24,83 @@ def HeightBand.upper : HeightBand → ℕ
   | .first => 3554
   | .second => 8249
   | .third => 23999
-  | .fourth => 32872
+  | .fourth => 32932
 
 def HeightBand.ordinateCap : HeightBand → ℕ
-  | .first => 8
+  | .first => 12
   | .second => 5
   | .third => 3
   | .fourth => 2
 
-def bridgeShape (U : ℕ) : Shape := ⟨1024, 1422, 290, U⟩
+def bridgeShape (U : ℕ) : Shape := ⟨2048, 2845, 600, U⟩
 def laterShape (U : ℕ) : Shape := ⟨358, 500, 105, U⟩
 
 def HeightBand.fullBank : HeightBand → Shape
-  | .first => bridgeShape 80000
+  | .first => bridgeShape 75000
   | _ => laterShape 66251
 
 def HeightBand.seedBank : HeightBand → Shape
-  | .first => bridgeShape 40000
+  | .first => bridgeShape 75000
   | .second => laterShape 6798
   | .third => laterShape 4860
   | .fourth => laterShape 3913
 
 /-- The tested seed ceiling for each positive actual ordinate degree. -/
 def HeightBand.seedCap : HeightBand → ℕ → ℕ
-  | .first, 1 => 242
-  | .first, 2 => 234
-  | .first, 3 => 224
-  | .first, 4 => 214
-  | .first, 5 => 202
-  | .first, 6 => 188
-  | .first, 7 => 170
-  | .first, 8 => 147
-  | .second, 1 => 121
-  | .second, 2 => 117
-  | .second, 3 => 112
-  | .second, 4 => 107
-  | .second, 5 => 101
-  | .third, 1 => 48
-  | .third, 2 => 44
-  | .third, 3 => 40
+  | .first, 1 => 234
+  | .first, 2 => 226
+  | .first, 3 => 217
+  | .first, 4 => 207
+  | .first, 5 => 196
+  | .first, 6 => 183
+  | .first, 7 => 167
+  | .first, 8 => 146
+  | .first, 9 => 121
+  | .first, 10 => 91
+  | .first, 11 => 55
+  | .first, 12 => 15
+  | .second, 1 => 132
+  | .second, 2 => 128
+  | .second, 3 => 124
+  | .second, 4 => 119
+  | .second, 5 => 113
+  | .third, 1 => 49
+  | .third, 2 => 46
+  | .third, 3 => 42
   | .fourth, 1 => 35
   | .fourth, 2 => 32
   | _, _ => 0
 
-private theorem bridgeCount (U : ℕ) : columnCount (bridgeShape U) = 371898 := by
-  change (∑ q ∈ Finset.range 1423, (min q 290 + 1)) = _
-  exact (range_sum_eq (fun q => min q 290 + 1) 1423).trans (by decide +kernel)
+private theorem bridgeCount (U : ℕ) : columnCount (bridgeShape U) = 1530146 := by
+  change (∑ q ∈ Finset.range 2846, (min q 600 + 1)) = _
+  exact (range_sum_eq (fun q => min q 600 + 1) 2846).trans (by decide +kernel)
 
-private theorem bridgeGrade (U : ℕ) : gradeMoment (bridgeShape U) = 290355338 := by
-  change (∑ q ∈ Finset.range 1423, q*(min q 290+1)) = _
-  exact (range_sum_eq (fun q => q*(min q 290+1)) 1423).trans (by decide +kernel)
+private theorem bridgeGrade (U : ℕ) : gradeMoment (bridgeShape U) = 2397109535 := by
+  change (∑ q ∈ Finset.range 2846, q*(min q 600+1)) = _
+  exact (range_sum_eq (fun q => q*(min q 600+1)) 2846).trans (by decide +kernel)
 
-private theorem bridgeIndex (U : ℕ) : indexMoment (bridgeShape U) = 51871720 := by
-  change (∑ q ∈ Finset.range 1423, (min q 290+1)*min q 290/2) = _
-  exact (range_sum_eq (fun q => (min q 290+1)*min q 290/2) 1423).trans (by decide +kernel)
+private theorem bridgeIndex (U : ℕ) : indexMoment (bridgeShape U) = 440953700 := by
+  change (∑ q ∈ Finset.range 2846, (min q 600+1)*min q 600/2) = _
+  exact (range_sum_eq (fun q => (min q 600+1)*min q 600/2) 2846).trans (by decide +kernel)
 
 private theorem bridgeNodeSum :
-    (∑ q ∈ Finset.range 1423, nodeCostAt (bridgeShape 0) q) = 117680885 :=
-  (range_sum_eq (nodeCostAt (bridgeShape 0)) 1423).trans (by decide +kernel)
+    (∑ q ∈ Finset.range 2846, nodeCostAt (bridgeShape 0) q) = 963929476 :=
+  (range_sum_eq (nodeCostAt (bridgeShape 0)) 2846).trans (by decide +kernel)
 
 private theorem bridgePoleSum :
-    (∑ q ∈ Finset.range 1423, poleCostAt (bridgeShape 0) q) = 274017686200 :=
-  (range_sum_eq (poleCostAt (bridgeShape 0)) 1423).trans (by decide +kernel)
+    (∑ q ∈ Finset.range 2846, poleCostAt (bridgeShape 0) q) = 4523988852695 :=
+  (range_sum_eq (poleCostAt (bridgeShape 0)) 2846).trans (by decide +kernel)
 
 private theorem bridgeFixed (U : ℕ) :
-    fixedDebit (bridgeShape U) = triangle U * 30849337917440 := by
+    fixedDebit (bridgeShape U) = triangle U * 252688328556544 := by
   change triangle U * 262144 *
-    (∑ q ∈ Finset.range 1423, nodeCostAt (bridgeShape 0) q) = _
+    (∑ q ∈ Finset.range 2846, nodeCostAt (bridgeShape 0) q) = _
   rw [bridgeNodeSum, Nat.mul_assoc]
 
 private theorem bridgeLinear (U : ℕ) :
-    linearDebit (bridgeShape U) = (U+1)*548035372400 := by
+    linearDebit (bridgeShape U) = (U+1)*9047977705390 := by
   change 2 * (U+1) *
-    (∑ q ∈ Finset.range 1423, poleCostAt (bridgeShape 0) q) = _
+    (∑ q ∈ Finset.range 2846, poleCostAt (bridgeShape 0) q) = _
   rw [bridgePoleSum, Nat.mul_comm 2, Nat.mul_assoc]
 
 private theorem laterCount (U : ℕ) : columnCount (laterShape U) = 47541 := by
@@ -154,7 +158,7 @@ private theorem seed_certificate (b : HeightBand) (e : ℕ)
     decide +kernel
 
 /-- Every high-overhead height belongs to a real band, including both end points. -/
-theorem exists_height_band {h : ℕ} (hlo : 2448 ≤ h) (hhi : h ≤ 32872) :
+theorem exists_height_band {h : ℕ} (hlo : 2472 ≤ h) (hhi : h ≤ 32932) :
     ∃ b : HeightBand, b.lower ≤ h ∧ h ≤ b.upper := by
   by_cases h₁ : h ≤ 3554
   · exact ⟨.first, hlo, h₁⟩

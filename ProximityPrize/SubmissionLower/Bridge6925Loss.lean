@@ -12,83 +12,60 @@ open K1_14_2_2 (Fits mass dot weight dot_mono dot_mass_sdiff mass_mono)
 open scoped BigOperators
 
 private def firstWeight (fee : Fin 3) := weight stageFiveShape fee
+private def midWeight (fee : Fin 3) := weight stageLateShape fee
 private def lastWeight (fee : Fin 3) := weight terminalFullShape fee
-private def increment (fee : Fin 3) (j : Fin 4) := lastWeight fee j - firstWeight fee j
+private def delta (a b : Fin 4 → ℕ) := fun j => b j - a j
 
-private theorem weights_increase (fee : Fin 3) (j : Fin 4) :
-    firstWeight fee j ≤ lastWeight fee j := by
-  fin_cases fee <;> fin_cases j <;> decide
-
-private theorem dot_split (fee : Fin 3) (v : Fin 4 → ℕ) :
-    dot (lastWeight fee) v = dot (firstWeight fee) v + dot (increment fee) v := by
+private theorem expand_dot (a b : Fin 4 → ℕ) (h : ∀ j, a j ≤ b j) (v : Fin 4 → ℕ) :
+    dot b v = dot a v + dot (delta a b) v := by
   unfold dot
   rw [← Finset.sum_add_distrib]
   apply Finset.sum_congr rfl
   intro j _
-  rw [← Nat.add_mul, show firstWeight fee j + increment fee j =
-    lastWeight fee j from Nat.add_sub_of_le (weights_increase fee j)]
+  rw [← Nat.add_mul, show a j + delta a b j = b j from Nat.add_sub_of_le (h j)]
 
-/-- The two first-failure inventories are disjoint, and reserve five contributes
-only the increase of the terminal weight in the telescoped price. -/
-private theorem telescope (A B U V : Finset (Ideal Ambient)) (hB : B ⊆ A)
-    (hU : U ⊆ A \ B) (hV : V ⊆ B) (fee : Fin 3) :
-    dot (firstWeight fee) (mass U) + dot (lastWeight fee) (mass V) ≤
-      dot (firstWeight fee) (mass A) + dot (increment fee) (mass B) := by
-  calc
-    _ ≤ dot (firstWeight fee) (mass (A \ B)) + dot (lastWeight fee) (mass B) :=
-      Nat.add_le_add (dot_mono _ _ _ (mass_mono hU)) (dot_mono _ _ _ (mass_mono hV))
-    _ = _ := by
-      rw [dot_split, ← Nat.add_assoc, dot_mass_sdiff hB]
+def extraFee (fee : Fin 3) : ℕ := if fee = 2 then fixedPrice 319 66 + fixedPrice 837 168 else 0
 
-private theorem dot4 (w v : Fin 4 → ℕ) :
-    dot w v = w 0*v 0 + (w 1*v 1 + (w 2*v 2 + (w 3*v 3 + 0))) := by
-  simp only [dot, Fin.sum_univ_succ, Fin.sum_univ_zero]
-  rfl
+private theorem schedule_charge (fee : Fin 3)
+    (A B D U V lastSet : Finset (Ideal Ambient)) (hBA : B ⊆ A) (hDB : D ⊆ B)
+    (hU : U ⊆ A \ B) (hV : V ⊆ B \ D) (hZ : lastSet ⊆ D)
+    (hA : Fits A initialCap) (hB : Fits B reserveFiveCap) (hD : Fits D lateCap) :
+    dot (firstWeight fee) (mass U) + (dot (midWeight fee) (mass V) + dot (lastWeight fee) (mass lastSet) + extraFee fee) ≤
+      dot (firstWeight fee) initialCap + dot (delta (firstWeight fee) (midWeight fee)) reserveFiveCap +
+      dot (delta (midWeight fee) (lastWeight fee)) lateCap + extraFee fee := by
+  let a := firstWeight fee
+  let b := midWeight fee
+  let c := lastWeight fee
+  have hab : ∀ j, a j ≤ b j := by fin_cases fee <;> intro j <;> fin_cases j <;> decide
+  have hbc : ∀ j, b j ≤ c j := by fin_cases fee <;> intro j <;> fin_cases j <;> decide
+  have hmid : dot b (mass V) + dot c (mass lastSet) ≤ dot b (mass B) + dot (delta b c) (mass D) := by
+    calc
+      _ ≤ dot b (mass (B \ D)) + dot c (mass D) :=
+        Nat.add_le_add (dot_mono _ _ _ (mass_mono hV)) (dot_mono _ _ _ (mass_mono hZ))
+      _ = _ := by rw [expand_dot b c hbc, ← Nat.add_assoc, dot_mass_sdiff hDB]
+  have hsum : dot a (mass U) + (dot b (mass V) + dot c (mass lastSet)) ≤
+      dot a (mass A) + dot (delta a b) (mass B) + dot (delta b c) (mass D) := by
+    calc
+      _ ≤ dot a (mass (A \ B)) + (dot b (mass B) + dot (delta b c) (mass D)) :=
+        Nat.add_le_add (dot_mono _ _ _ (mass_mono hU)) hmid
+      _ = _ := by rw [expand_dot a b hab (mass B), ← Nat.add_assoc, ← Nat.add_assoc, dot_mass_sdiff hBA]
+  have hcap := Nat.add_le_add (Nat.add_le_add (dot_mono a _ _ hA) (dot_mono (delta a b) _ _ hB))
+    (dot_mono (delta b c) _ _ hD)
+  dsimp only [a,b,c] at hsum hcap
+  simpa only [Nat.add_assoc] using Nat.add_le_add_right (hsum.trans hcap) (extraFee fee)
 
-private theorem seed_ledger :
-    dot (firstWeight 0) initialCap + dot (increment 0) reserveFiveCap ≤ lossSeedCap := by
-  decide +kernel
-
-private theorem ordinate_ledger :
-    dot (firstWeight 1) initialCap + dot (increment 1) reserveFiveCap ≤ lossYCap := by
-  decide +kernel
-
-private theorem constant_ledger :
-    dot (lastWeight 2) (![5908,160523,767348,initialE₀] : Fin 4 → ℕ) ≤ constantFee := by
-  decide +kernel
-
-theorem loss_bounds (A B U V : Finset (Ideal Ambient)) (hB : B ⊆ A)
-    (hU : U ⊆ A \ B) (hV : V ⊆ B) (hA : Fits A initialCap) (hBc : Fits B reserveFiveCap) :
-    dot (weight stageFiveShape 0) (mass U) + dot (weight terminalFullShape 0) (mass V) ≤ lossSeedCap ∧
-    dot (weight stageFiveShape 1) (mass U) + dot (weight terminalFullShape 1) (mass V) ≤ lossYCap ∧
-    dot (weight stageFiveShape 2) (mass U) + dot (weight terminalFullShape 2) (mass V) ≤ constantFee := by
-  have hpay (fee : Fin 3) :
-      dot (firstWeight fee) (mass U) + dot (lastWeight fee) (mass V) ≤
-        dot (firstWeight fee) initialCap + dot (increment fee) reserveFiveCap :=
-    (telescope A B U V hB hU hV fee).trans
-      (Nat.add_le_add (dot_mono _ _ _ hA) (dot_mono _ _ _ hBc))
-  refine ⟨(hpay 0).trans seed_ledger, (hpay 1).trans ordinate_ledger, ?_⟩
-  have hV' : V ⊆ B := hV
-  have hconst : mass A 3 ≤ initialE₀ := (hA 3).trans (by decide)
-  have hcoarse : ∀ j : Fin 4, mass A j ≤ (![5908,160523,767348,initialE₀] : Fin 4 → ℕ) j := by
-    intro j
-    fin_cases j
-    · exact hA 0
-    · exact hA 1
-    · exact hA 2
-    · exact hconst
-  change dot (firstWeight 2) (mass U) + dot (lastWeight 2) (mass V) ≤ constantFee
-  calc
-    _ ≤ dot (lastWeight 2) (mass (A \ B)) + dot (lastWeight 2) (mass B) := by
-      apply Nat.add_le_add _ (dot_mono _ _ _ (mass_mono hV'))
-      apply le_trans _ (dot_mono _ _ _ (mass_mono hU))
-      exact Finset.sum_le_sum (fun j _ => Nat.mul_le_mul_right _ (weights_increase 2 j))
-    _ = dot (lastWeight 2) (mass A) := dot_mass_sdiff hB _
-    _ ≤ _ := (dot_mono _ _ _ hcoarse).trans constant_ledger
+theorem loss_bounds (A B D U V lastSet : Finset (Ideal Ambient)) (hBA : B ⊆ A) (hDB : D ⊆ B)
+    (hU : U ⊆ A \ B) (hV : V ⊆ B \ D) (hZ : lastSet ⊆ D)
+    (hA : Fits A initialCap) (hB : Fits B reserveFiveCap) (hD : Fits D lateCap) :
+    dot (weight stageFiveShape 0) (mass U) + (dot (weight stageLateShape 0) (mass V) + dot (weight terminalFullShape 0) (mass lastSet) + extraFee 0) ≤ lossSeedCap ∧
+    dot (weight stageFiveShape 1) (mass U) + (dot (weight stageLateShape 1) (mass V) + dot (weight terminalFullShape 1) (mass lastSet) + extraFee 1) ≤ lossYCap ∧
+    dot (weight stageFiveShape 2) (mass U) + (dot (weight stageLateShape 2) (mass V) + dot (weight terminalFullShape 2) (mass lastSet) + extraFee 2) ≤ constantFee := by
+  have h := fun fee => schedule_charge fee A B D U V lastSet hBA hDB hU hV hZ hA hB hD
+  exact ⟨(h 0).trans (by decide +kernel), (h 1).trans (by decide +kernel), (h 2).trans (by decide +kernel)⟩
 
 theorem prefix_ledger (w : ℤ) (hw : w ≤ 3554) :
-    initialFee + fixedPrice 76 16 + fixedPrice 208 43 +
-      fixedPrice 112 24 + fixedPrice 311 64 + fixedPrice 352304 62013 +
+    initialFee + fixedPrice 76 16 + fixedPrice 222 46 +
+      fixedPrice 126 27 + fixedPrice 369 77 + fixedPrice 358008 65143 +
       constantFee + curveFee ≤ P0.highPrefix w := by
   unfold P0.highPrefix K21.highPrefix
   rw [ite_eq_left hw]
@@ -250,8 +227,8 @@ private theorem regular_count_P0_10RBridgeRoot {n U s g H w} (A : RegularChart U
     obtain ⟨hγU, hγhit⟩ := mem_filter.mp hγ
     exact mem_zeroLocus_sup_span_singleton_iff.mpr ⟨hpoints γ hγU, (hcut γ hγU).mpr hγhit⟩
   have hcount := P0_10.section_capacity hw (by decide) D hsection
-  change 45544 * U.card ≤ 81975 * D + 45544 at hcount
-  have hcountQ : (45544 : ℚ) * (U.card : ℚ) ≤ 81975 * (D : ℚ) + 45544 := by
+  change 45514 * U.card ≤ 82005 * D + 45514 at hcount
+  have hcountQ : (45514 : ℚ) * (U.card : ℚ) ≤ 82005 * (D : ℚ) + 45514 := by
     exact_mod_cast hcount
   change (U.card : ℚ) ≤ beta * (D : ℚ) + 1
   unfold beta
@@ -354,10 +331,10 @@ private theorem linear_rate (r a b c : ℕ) (hb : (b : ℚ) ≠ 0) :
   simp only [Nat.cast_add, Nat.cast_mul, Nat.cast_one, Nat.cast_ofNat]
   field_simp
 
-private theorem yRate_eq : yRate = ((331076066760 : ℕ) : ℚ) / 45544 := by
+private theorem yRate_eq : yRate = ((331197228390 : ℕ) : ℚ) / 45514 := by
   unfold yRate beta
-  have h := linear_rate 15 81975 45544 (2*endpointDegree-1) (by norm_num : (45544 : ℚ) ≠ 0)
-  have hn : (15 : ℕ) * 45544 + 81975 * ((2*endpointDegree-1)*15+1) = 331076066760 := by decide
+  have h := linear_rate 15 82005 45514 (2*endpointDegree-1) (by norm_num : (45514 : ℚ) ≠ 0)
+  have hn : (15 : ℕ) * 45514 + 82005 * ((2*endpointDegree-1)*15+1) = 331197228390 := by decide
   rw [hn] at h
   exact h
 
@@ -376,7 +353,7 @@ private theorem tariff_ledger :
     seedRate * (lossSeedCap : ℚ) + yRate * (lossYCap : ℚ) + (lossSeedCap : ℚ) ≤
       (curveFee : ℚ) := by
   rw [yRate_eq]
-  exact tariff_fraction (p+1) 331076066760 lossSeedCap lossYCap curveFee 9 45544
+  exact tariff_fraction (p+1) 331197228390 lossSeedCap lossYCap curveFee 9 45514
     (by decide) (by decide) (by decide)
 
 private theorem group_price {u del} (M : AnchorModel u del) {Γ} (F : AnchoredFamily M Γ)

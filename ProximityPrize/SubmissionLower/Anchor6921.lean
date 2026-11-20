@@ -28,7 +28,7 @@ structure Direction (u : Words) (deleted : Finset I) where
   phase : U * den.map twist = V * den
   degrees_eq : V.natDegree = U.natDegree
   primitive : IsCoprime (A 0) (A 1)
-  height : U.natDegree + amplitudeDegree (A 0) (A 1) + deleted.card ≤ 32872
+  height : U.natDegree + amplitudeDegree (A 0) (A 1) + deleted.card ≤ 32932
   out_degree : ∀ i j, (out i j).degree <
     (131072 + U.natDegree + amplitudeDegree (A 0) (A 1) : ℕ)
   nodes : ∀ x ∉ deleted, ∀ i j, (out i j).eval (node x) =
@@ -288,7 +288,7 @@ theorem Offset.fixed_numerator (O : Offset F anchor) (W : K[X]) (hW : F.den = O.
     have hP := O.numerator_degree m
     have hA := reg.degree_eq
     have hheight := F.height
-    change F.U.natDegree + F.s + deleted.card ≤ 32872 at hheight
+    change F.U.natDegree + F.s + deleted.card ≤ 32932 at hheight
     have hdeg : diff.natDegree ≤ max (l.natDegree + a.natDegree + P.natDegree)
         (r.natDegree + a.natDegree + P.natDegree) := by
       apply (natDegree_sub_le _ _).trans
@@ -411,7 +411,7 @@ theorem cross_lift {u deleted} (F : Direction u deleted) : Nonempty (CrossLift F
   let P (j : Fin 2) := F.A 0 * F.out j 1 - F.A 1 * F.out j 0
   let P' (j : Fin 2) := A' 1 * F.out 0 j - A' 0 * F.out 1 j
   have hheight := F.height
-  change F.U.natDegree + F.s + deleted.card ≤ 32872 at hheight
+  change F.U.natDegree + F.s + deleted.card ≤ 32932 at hheight
   have hroom : d + 2*F.s + deleted.card ≤ 262144 := by dsimp [d]; omega
   have hpos : 0 < d := by dsimp [d]; omega
   have ha (j : Fin 2) : (F.A j).natDegree ≤ F.s := by
@@ -498,7 +498,7 @@ theorem offset_of_anchor {u deleted} (F : Direction u deleted) (H : CrossLift F)
   let out := r 0 + C η * r 1
   let d := 131072 + F.U.natDegree + F.s
   have hheight := F.height
-  change F.U.natDegree + F.s + deleted.card ≤ 32872 at hheight
+  change F.U.natDegree + F.s + deleted.card ≤ 32932 at hheight
   have hpos : 0 < d := by dsimp [d]; omega
   have hA1 : (F.A 1).natDegree ≤ F.s := le_max_right _ _
   have ha : a.natDegree = F.s := reg.degree_eq
@@ -772,7 +772,7 @@ theorem family_of_offset {u deleted} (F : Direction u deleted) (Γ : Finset K)
     height_bound := by
       rw [hs]
       have h := F.height
-      change F.U.natDegree + F.s + deleted.card ≤ 32872 at h
+      change F.U.natDegree + F.s + deleted.card ≤ 32932 at h
       have hd := natDegree_le_of_dvd O.left F.U_ne
       omega
     first_word := by
@@ -860,7 +860,7 @@ def c2 : Prop :=
 theorem of_children (h1 : c1) (h2 : c2) : K21.c12 := by
   classical
   intro u hu T R D B sat par unit Γ bad normal
-  by_cases hsmall : Γ.card ≤ 70040582193466
+  by_cases hsmall : Γ.card ≤ 70168424579566
   · exact Or.inl hsmall
   right
   obtain ⟨γ,hγ⟩ := Finset.card_pos.mp (show 0 < Γ.card by omega)
@@ -869,9 +869,9 @@ theorem of_children (h1 : c1) (h2 : c2) : K21.c12 := by
   have hbook : book ⊆ Γ := Finset.filter_subset _ _
   have hcard := h2 F Γ
   change book.card ≤ 2130706434 * F.s + F.U.natDegree + 262144 + 1 at hcard
-  have hbudget : book.card + 1 ≤ 70040582193466 := by
+  have hbudget : book.card + 1 ≤ 70168424579566 := by
     have height := F.height
-    change F.U.natDegree + F.s + (fixedNodes R).card ≤ 32872 at height
+    change F.U.natDegree + F.s + (fixedNodes R).card ≤ 32932 at height
     omega
   let Δ := Γ \ book
   have hbig : 1 < Δ.card := by
@@ -1329,7 +1329,7 @@ theorem proof : K21_12.c1 := by
   have hheight := plane_height B P par hdeg'
   have hdvd : B.a ∣ den := hcop.dvd_of_dvd_mul_left
     (hphase ▸ dvd_mul_right B.a (den.map twist))
-  have hbudget : T.height ≤ 32872 := by
+  have hbudget : T.height ≤ 32932 := by
     have hr := hu.1
     have hd := T.degreeSum
     have hn := T.nullitySum

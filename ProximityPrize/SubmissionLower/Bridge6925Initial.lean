@@ -14,7 +14,7 @@ open K1_14_3 (Surface Parent ProjectedProduct)
 
 /-- Both full banks vanish and every common positive-ordinate factor passes
 the constant-seed chain-rule test in the outer derivative variable. -/
-def SurfacePass {w : ℤ} {rows : Banks} {i : Fin 2} (pair : BufferedPair w rows i)
+def SurfacePass {w : ℤ} {rows : Banks} {i : Fin 3} (pair : BufferedPair w rows i)
     (q : Surface) : Prop :=
   BankVanishes rows (freeShape w i) q ∧
   BankVanishes rows (movingShape w i) q ∧ K1_14_3R.compatible pair.free pair.moving q
@@ -22,7 +22,7 @@ def SurfacePass {w : ℤ} {rows : Banks} {i : Fin 2} (pair : BufferedPair w rows
 /-- The prefix pays losses on this input. Surviving labels are covered by
 the same tested parents whose reduced distinct-Y product serves the subbank. -/
 structure RetainedCover {u del} (M : AnchorModel u del) {Γ} (F : AnchoredFamily M Γ)
-    {rows : Banks} (pairs : ∀ i : Fin 2, BufferedPair M.overhead rows i) where
+    {rows : Banks} (pairs : ∀ i : Fin 3, BufferedPair M.overhead rows i) where
   kept : Finset K
   subset : kept ⊆ Γ
   paid : (Γ \ kept).card ≤ highPrefix M.overhead
@@ -38,7 +38,7 @@ structure RetainedCover {u del} (M : AnchorModel u del) {Γ} (F : AnchoredFamily
   divides : TerminalDivisibility M.overhead rows equation
 
 def PrefixCover {u del} (M : AnchorModel u del) {Γ} (F : AnchoredFamily M Γ)
-    {rows : Banks} (pairs : ∀ i : Fin 2, BufferedPair M.overhead rows i) : Prop :=
+    {rows : Banks} (pairs : ∀ i : Fin 3, BufferedPair M.overhead rows i) : Prop :=
   Γ.card ≤ highPrefix M.overhead ∨ Nonempty (RetainedCover M F pairs)
 
 end
@@ -68,14 +68,14 @@ def PairPass {w rows i} (pair : BufferedPair w rows i) (I : Ideal Ambient) : Pro
         K1_14_2.toJet (K1_14_3R.chainCutter g) ∈ I
 
 /-- Integral section lengths use the floors of the rational mass bounds. -/
-def initialCap : Fin 4 → ℕ := ![5908, 160523, 767348, 8491459]
+def initialCap : Fin 4 → ℕ := ![6312, 173392, 828372, 9420720]
 
-def reserveFiveCap : Fin 4 → ℕ := ![363, 10335, 110095, 1039380]
+def reserveFiveCap : Fin 4 → ℕ := ![358, 9306, 85921, 910022]
 
 /-- The conservative initial cap pays low-seed and constant-image exits. -/
-def initialE₀ : ℕ := 9564755
+def initialE₀ : ℕ := 10494016
 
-def initialFee : ℕ := (p+1)*767348 + initialE₀ + 5908 + (p+1)*(1297+6547)
+def initialFee : ℕ := (p+1)*828372 + initialE₀ + 6312 + (p+1)*(1360+6927)
 
 structure InitialCover {u del} {M : AnchorModel u del} {Γ} (F : AnchoredFamily M Γ)
     (P Q : Jet) (freeFixed movingFixed : ODE) where
@@ -90,15 +90,17 @@ structure InitialCover {u del} {M : AnchorModel u del} {Γ} (F : AnchoredFamily 
     K1_14_2.fixedAt movingFixed (F.scalar γ) = 0 ∨ ∃ I ∈ parents, OnParent F I γ
 
 /-- The stage caps for proper failed tests, in chronological order. -/
-def stageFiveShape : Shape := ⟨224, 311, 64, 10066⟩
-def terminalFullShape : Shape := ⟨1024, 1422, 290, 80000⟩
+def stageFiveShape : Shape := ⟨266, 369, 77, 10980⟩
+def terminalFullShape : Shape := ⟨2048, 2845, 600, 75000⟩
 
-def lossSeedCap : ℕ := 207725822
-def lossYCap : ℕ := 3117034885
-def constantFee : ℕ := 74988921610
-def curveFee : ℕ := 71836954762824499
+def stageLateShape : Shape := ⟨600,837,168,25162⟩
+def lateCap : Fin 4 → ℕ := ![169,4062,35223,281939]
+def lossSeedCap : ℕ := 230165867
+def lossYCap : ℕ := 3168268898
+def constantFee : ℕ := 157253942415
+def curveFee : ℕ := 77545580555522242
 
-def beta : ℚ := (81975 : ℚ) / 45544
+def beta : ℚ := (82005 : ℚ) / 45514
 
 def rootPrice (g H : ℕ) : ℚ :=
   let s : ℚ := 2 * (g : ℚ) - 1
@@ -149,8 +151,8 @@ open scoped BigOperators
 open private divisor_caps seedContent_cap gcd_caps multiset_prod_ne_zero
   distinct_le_degree seed_degree_mul atMark_prod_eq_zero row_at_mark from ProximityPrize.SubmissionLower.Fast051
 
-def freeZero : Shape := ⟨55, 76, 16, 1297⟩
-def movingZero : Shape := ⟨150, 208, 43, 6547⟩
+def freeZero : Shape := ⟨55, 76, 16, 1360⟩
+def movingZero : Shape := ⟨160, 222, 46, 6927⟩
 
 /-- Residual rows and their common ordinary factors, with divisibility into
 the original rows retained for both kinds of component. -/
@@ -162,8 +164,8 @@ structure Prepared (P Q : Jet) (G H : ODE) where
   gcdSeed : ℕ
   gcdY : ℕ
   seedContent_ne : seedContent ≠ 0
-  seedContent_degree : seedContent.totalDegree ≤ 1297 + 6547
-  gcdSeed_le : gcdSeed ≤ 1297
+  seedContent_degree : seedContent.totalDegree ≤ 1360 + 6927
+  gcdSeed_le : gcdSeed ≤ 1360
   gcdY_le : gcdY ≤ 76
   free_caps : RowCaps free (afterGcd freeZero gcdSeed gcdY)
   moving_caps : RowCaps moving (afterGcd movingZero gcdSeed gcdY)
@@ -205,8 +207,8 @@ theorem prepare {P Q : Jet} (hP : P ≠ 0) (hQ : Q ≠ 0)
     (right_ne_zero_of_mul hpa0) (right_ne_zero_of_mul hqb0) hpa hord
   have ha0 : a ≠ 0 := by intro hz; simp [hz] at hpa0
   have hb0 : b ≠ 0 := by intro hz; simp [hz] at hqb0
-  have hau : a.totalDegree ≤ 1297 := seedContent_cap hP hPc (Dvd.dvd.trans ⟨P', ha⟩ hAr)
-  have hbu : b.totalDegree ≤ 6547 := seedContent_cap hQ hQc (Dvd.dvd.trans ⟨Q', hb⟩ hBr)
+  have hau : a.totalDegree ≤ 1360 := seedContent_cap hP hPc (Dvd.dvd.trans ⟨P', ha⟩ hAr)
+  have hbu : b.totalDegree ≤ 6927 := seedContent_cap hQ hQc (Dvd.dvd.trans ⟨Q', hb⟩ hBr)
   have hp : P = fixedIncl A.equation * (C (C a) * (C M.prod * L)) :=
     A.factorization.trans (by rw [ha, hL])
   have hq : Q = fixedIncl B.equation * (C (C b) * (C M.prod * T)) :=
@@ -282,7 +284,7 @@ private theorem split_mul {u x b a d : ℕ} (hx : x ≤ u) (ha : a ≤ b) (hd : 
     _ = _ := by rw [← Nat.add_mul, Nat.sub_add_cancel hx]
 
 /-- Shared-gcd accounting for the four initial bridge section lengths. -/
-theorem ledger (x y : ℕ) (hx : x ≤ 1297) (hy : y ≤ 76) (k : Fin 4) :
+theorem ledger (x y : ℕ) (hx : x ≤ 1360) (hy : y ≤ 76) (k : Fin 4) :
     residualBudget (afterGcd freeZero x y) (afterGcd movingZero x y) k +
       ordinaryBudget x y k ≤ initialCap k := by
   have h := PriceReceipt6925.initial_cap k x y hx hy

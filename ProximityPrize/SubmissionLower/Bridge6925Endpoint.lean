@@ -46,10 +46,10 @@ theorem first : H21.c2 := by
       simp only [HighMassBridge6921.choose, P0_10.fullShape, P0_10.terminalShape, H21.terminalShape,
         H21.band, ite_eq_left hu]
       rfl
-    have q := HighMassBridge6921.ordinate raw hl (hu.trans (by decide : (3554 : ℤ) ≤ 32872)) f hf
+    have q := HighMassBridge6921.ordinate raw hl (hu.trans (by decide : (3554 : ℤ) ≤ 32932)) f hf
       (by rw [same]; exact hd)
     simpa only [H21.band,ite_eq_left hu] using q
-  have result := P0_10R.Bridge.cover P0_10R_1.proof P0_10R_2.proof degree
+  have result := P0_10R.Bridge.cover P0_10R_1.proof P0_10R_2.proof P0_10R_Late.proof degree
     u del M T G lo hi center rows src pairs
   have erased : Γ.card - 1 ≤ T.card := Finset.pred_card_le_card_erase
   have room : P0.highPrefix M.overhead + 1 ≤ K21.highPrefix M.overhead := by

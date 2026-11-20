@@ -17,9 +17,9 @@ open Polynomial FrobeniusLocator
 theorem proof : K21.c4 := by
   intro u Γ hprincipal hΓ
   obtain ⟨a, g, hg, hga, ha, hkernel⟩ := hprincipal
-  have hsum : a + (81975 - a) = 81975 := by omega
+  have hsum : a + (82005 - a) = 82005 := by omega
   have hcertificate : Native6921.PrincipalCert (u 0) (u 1) := by
-    refine ⟨a, 81975 - a, hsum, ⟨{
+    refine ⟨a, 82005 - a, hsum, ⟨{
       generator := g
       nonzero := hg
       degree_bound := hga
@@ -27,15 +27,15 @@ theorem proof : K21.c4 := by
     }⟩⟩
     intro f
     rw [hsum, Principal.recurrence_kernel_iff_matrix, Principal.recurrenceMatrix_parameter]
-    change (f.natDegree ≤ 81975 ∧
+    change (f.natDegree ≤ 82005 ∧
       ((K21.twoBlock u).map (algebraMap K21.K[X] K21.Frac)).mulVec
         (fun i => f.coeff i.val) = 0) ↔
-      ∃ Q : K21.Frac[X], Q.natDegree ≤ 81975 - a ∧ f = g * Q
+      ∃ Q : K21.Frac[X], Q.natDegree ≤ 82005 - a ∧ f = g * Q
     constructor
     · rintro ⟨hf, hker⟩
       exact (hkernel f hf).mp hker
     · rintro ⟨Q, hQ, rfl⟩
-      have hdegree : (g * Q).natDegree ≤ 81975 :=
+      have hdegree : (g * Q).natDegree ≤ 82005 :=
         natDegree_mul_le.trans ((Nat.add_le_add hga hQ).trans_eq hsum)
       exact ⟨hdegree, (hkernel _ hdegree).mpr ⟨Q, hQ, rfl⟩⟩
   exact (Native6921.native_generic_principal_MCA_count u hcertificate Γ hΓ).trans (by norm_num)
@@ -71,7 +71,7 @@ private theorem atSlope_constant (G : K[X]) (γ : K) :
 private theorem twoBlock_atSlope (u : Words) (γ : K) :
     ((twoBlock u).map (evalRingHom γ)) =
       Strata.conjugateHankel (Strata.twoConjugations (frobenius K p))
-        node (fun i => u 0 i + γ * u 1 i) 49097 81975 := by
+        node (fun i => u 0 i + γ * u 1 i) 49067 82005 := by
   rw [twoBlock, Strata.stacked_eq_frobeniusStacked, Strata.frobeniusStacked_eval]
   have h : (fun b : Fin 2 => iterateFrobenius K p b.val) =
       Strata.twoConjugations (frobenius K p) := by
@@ -82,7 +82,7 @@ private theorem twoBlock_atSlope (u : Words) (γ : K) :
   rw [h]
 
 private theorem rank_at_normal {u : Words} (T : TwoActive u) {γ : K} (hγ : Normal u γ) :
-    ((twoBlock u).map (evalRingHom γ)).rank = 49097 + T.height := by
+    ((twoBlock u).map (evalRingHom γ)).rank = 49067 + T.height := by
   change _ = stackRank u at hγ
   rw [hγ, actual_stackRank]
   have := T.degreeSum
@@ -93,17 +93,17 @@ private theorem rank_at_normal {u : Words} (T : TwoActive u) {γ : K} (hγ : Nor
 
 /-- The original stack has the same rank as its two evaluated error blocks. -/
 private theorem error_rank {u : Words} {γ : K} (M : BadMark u γ)
-    (E : Finset I) (hE : E.card ≤ 81975)
+    (E : Finset I) (hE : E.card ≤ 82005)
     (hEagree : ∀ i ∉ E, u 0 i + γ * u 1 i = M.decoder.eval (node i)) :
     ((twoBlock u).map (evalRingHom γ)).rank =
       (Strata.errorTwoMatrix (frobenius K p) (fun i : E => node i.val)
-        (fun i : E => u 0 i.val + γ * u 1 i.val - M.decoder.eval (node i.val)) 49097).rank := by
+        (fun i : E => u 0 i.val + γ * u 1 i.val - M.decoder.eval (node i.val)) 49067).rank := by
   have hfix : ∀ b i, Strata.twoConjugations (frobenius K p) b (node i) = node i := by
     intro b i
     fin_cases b <;> simp [Strata.twoConjugations, frobenius_def, Native.native_domain_fixed]
   have h := Strata.conjugateHankel_error_rank
     (Strata.twoConjugations (frobenius K p)) node (fun i => u 0 i + γ * u 1 i)
-    IRSProfile.domain.injective hfix M.decoder 131072 49097 81975 M.degree
+    IRSProfile.domain.injective hfix M.decoder 131072 49067 82005 M.degree
     (by rw [IRSProfile.card_index]) E (by omega) hEagree
   rw [Strata.conjugateErrors_two] at h
   rw [twoBlock_atSlope]
@@ -155,7 +155,7 @@ theorem proof : K21.c7 := by
   have hEagree (i : I) (hi : i ∉ E) : u 0 i + γ * u 1 i = M.decoder.eval (node i) := by
     by_contra h
     exact hi (Finset.mem_filter.mpr ⟨Finset.mem_univ _, Ne.symm h⟩)
-  have hEcard : E.card ≤ 81975 := by
+  have hEcard : E.card ≤ 82005 := by
     have hsub : E ⊆ Finset.univ \ M.support := by
       intro i hi
       refine Finset.mem_sdiff.mpr ⟨Finset.mem_univ _, fun hs => ?_⟩
@@ -165,7 +165,7 @@ theorem proof : K21.c7 := by
       IRSProfile.card_index] at h
     have := M.agreement
     omega
-  have hH : T.height < 49097 := by
+  have hH : T.height < 49067 := by
     have := T.degreeSum
     have := T.nullitySum
     have := hfront.1
@@ -185,15 +185,15 @@ theorem proof : K21.c7 := by
   have herror (i : E) : U.eval (x i) * e i + V.eval (x i) * frobenius K p (e i) = 0 :=
     Strata.certificate_error_identity p node (u 0) (u 1) IRSProfile.domain.injective
       Native.native_domain_fixed 131072 T.height R γ M.support hfit M.decoder M.degree M.hits i.val
-  have hrank : (Strata.errorTwoMatrix (frobenius K p) x e 49097).rank = 49097 + T.height :=
+  have hrank : (Strata.errorTwoMatrix (frobenius K p) x e 49067).rank = 49067 + T.height :=
     (error_rank M E hEcard hEagree).symm.trans (rank_at_normal T hγ)
   obtain ⟨hU, hV⟩ := Strata.saturated_coefficients_nonzero (frobenius K p) x e hx U V
-    T.height 49097 hUle hVle hpair hH he herror hrank
+    T.height 49067 hUle hVle hpair hH he herror hrank
   let G := GCDMonoid.gcd U V
   let C₀ := (Finset.univ : Finset E).filter (fun i => G.eval (x i) = 0)
   let S := C₀.image (fun i : E => i.val)
   obtain ⟨hC, hsum, _⟩ := Strata.normal_error_three_rank (frobenius K p) x e hx
-    (fun i => hfix i.val) U V T.height 49097 hUle hVle hpair hH he herror hrank
+    (fun i => hfix i.val) U V T.height 49067 hUle hVle hpair hH he herror hrank
   have hmax : max U.natDegree V.natDegree = T.height := by
     obtain ⟨hle, hred⟩ := Strata.gcd_reduction_degrees U V hU hV
     change max (U / G).natDegree (V / G).natDegree + G.natDegree = T.height at hsum
@@ -245,7 +245,7 @@ open K1_3 (deficient_hankel_count)
 theorem proof : K21.c3 := by
   intro u Γ hrank hΓ
   have h := deficient_hankel_count K21.node (u 0) (u 1) K21.node.injective
-    131072 49097 81975 (K21.firstRank u)
+    131072 49067 82005 (K21.firstRank u)
     (by rw [ProximityPrize.Benchmark.IRSProfile.card_index]) hrank rfl Γ
     (fun γ hγ => Native6921.native_IsMCA_badSlope u γ (hΓ γ hγ))
   rw [ProximityPrize.Benchmark.IRSProfile.card_index] at h
@@ -271,20 +271,20 @@ theorem proof : K21.c5 := by
   intro u Γ hu hΓ
   let φ := algebraMap K21.K[X] K21.Frac
   have hrank : ((K21.twoBlock u).map φ).rank = K21.stackRank u := rfl
-  have hconstant : (coefficientStack K21.p K21.node (u 0) (u 1) 49097 81975).rank =
+  have hconstant : (coefficientStack K21.p K21.node (u 0) (u 1) 49067 82005).rank =
       K21.stackRank u := hu.symm
   have hcount := constantRankCount φ (IsFractionRing.injective K21.K[X] K21.Frac)
     K21.p (by norm_num [Native.p]) K21.node IRSProfile.domain.injective Native.native_domain_fixed
-    (u 0) (u 1) 131072 180169 49097 81975 (by norm_num) (by norm_num)
+    (u 0) (u 1) 131072 180139 49067 82005 (by norm_num) (by norm_num)
     (by norm_num only [IRSProfile.card_index]) (K21.stackRank u) hrank hconstant
     Γ (fun γ hγ => Native6921.native_IsMCA_badSlope u γ (hΓ γ hγ))
-  have hr : K21.stackRank u ≤ 81976 := by
+  have hr : K21.stackRank u ≤ 82006 := by
     have h := Matrix.rank_le_card_width ((K21.twoBlock u).map φ)
     simpa only [hrank, Fintype.card_fin] using h
   calc
     Γ.card ≤ K21.p * K21.stackRank u := hcount
-    _ ≤ K21.p * 81976 := Nat.mul_le_mul_left K21.p hr
-    _ = 174666790551608 := by norm_num [Native.p]
+    _ ≤ K21.p * 82006 := Nat.mul_le_mul_left K21.p hr
+    _ = 174730711744598 := by norm_num [Native.p]
 
 end
 end K21_5
@@ -319,24 +319,24 @@ private theorem independent_nativeMoments (u : K21.Words)
   simpa [nativeMoments, Principal.parameterSyndromes, map_mul] using hall i j
 
 private theorem locator_matrix (u : K21.Words) :
-    Principal.recurrenceMatrix (nativeMoments u) 131072 81975 =
+    Principal.recurrenceMatrix (nativeMoments u) 131072 82005 =
       (K21.twoBlock u).map (algebraMap K21.K[X] K21.Frac) :=
   Principal.recurrenceMatrix_parameter (algebraMap K21.K[X] K21.Frac)
-    K21.p K21.node (u 0) (u 1) 131072 81975
+    K21.p K21.node (u 0) (u 1) 131072 82005
 
 private theorem locator_nullity (u : K21.Words) :
-    sliceDim (nativeMoments u) 131072 81976 = K21.nullity u := by
-  rw [sliceDim_succ (nativeMoments u) 131072 81975, locator_matrix]
+    sliceDim (nativeMoments u) 131072 82006 = K21.nullity u := by
+  rw [sliceDim_succ (nativeMoments u) 131072 82005, locator_matrix]
   rfl
 
-private theorem principal_of_one_active (u : K21.Words) (a : ℕ) (ha : a ≤ 81975)
+private theorem principal_of_one_active (u : K21.Words) (a : ℕ) (ha : a ≤ 82005)
     (hone : sliceDim (nativeMoments u) 131072 (a+1) = 1)
-    (hnull : K21.nullity u = 81976-a) : K21.HomogeneousPrincipal u := by
+    (hnull : K21.nullity u = 82006-a) : K21.HomogeneousPrincipal u := by
   have hpos : 0 < sliceDim (nativeMoments u) 131072 (a+1) := by omega
-  have hdim : sliceDim (nativeMoments u) 131072 81976 = (81975-a)+1 := by
+  have hdim : sliceDim (nativeMoments u) 131072 82006 = (82005-a)+1 := by
     rw [locator_nullity]
     omega
-  obtain ⟨g, hg, hdeg, hfac⟩ := principal_of_slice (nativeMoments u) 131072 a 81975
+  obtain ⟨g, hg, hdeg, hfac⟩ := principal_of_slice (nativeMoments u) 131072 a 82005
     ha (by decide) hpos hdim
   refine ⟨a, g, hg, hdeg, ha, fun P hP => ?_⟩
   rw [← locator_matrix]
@@ -346,12 +346,12 @@ theorem proof : K21.c1 := by
   intro u hu
   obtain ⟨a, b, c, hab, hbc, hc, hsum, hdim⟩ := level_profile
     (nativeMoments u) 131072 (independent_nativeMoments u hu.2.2.1)
-  have hloc := hdim 81976 (by decide)
+  have hloc := hdim 82006 (by decide)
   rw [locator_nullity] at hloc
   have hpos := hu.1
-  have hinactive : 81975 < c := by omega
-  have ha : a ≤ 81975 := by omega
-  have hb : b ≤ 81975 := by
+  have hinactive : 82005 < c := by omega
+  have ha : a ≤ 82005 := by omega
+  have hb : b ≤ 82005 := by
     by_contra hb
     have hsmall := hdim (a+1) (by omega)
     exact hu.2.2.2.1 (principal_of_one_active u a ha (by omega) (by omega))

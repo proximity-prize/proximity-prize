@@ -21,7 +21,7 @@ export _root_.K1_14_2_1 (RowCaps)
 
 /-- Number of cutoffs in the buffered telescope, including cutoff zero. -/
 def cutoffCount (h r : ℕ) (s : Shape) : ℕ :=
-  s.m * 180169 - 2 * h * r
+  s.m * 180139 - 2 * h * r
 
 def rawWidth (h r : ℕ) (s : Shape) (q j : ℕ) : ℕ :=
   cutoffCount h r s + j - q * (131071 - h)
@@ -91,17 +91,17 @@ export _root_.K1_14_3 (reserve)
 export _root_.K1_14_3 (fullShape)
 
 def reserveCutoff (h : ℕ) (s : Shape) (i : Fin 4) : ℕ :=
-  s.m * 180169 - 1 - 2*h*reserve i
+  s.m * 180139 - 1 - 2*h*reserve i
 
 def contactPower (h : ℕ) (s : Shape) (W : ℕ) : ℕ :=
-  1 + (s.m * 180169 - 1 - W) / (2*h)
+  1 + (s.m * 180139 - 1 - W) / (2*h)
 
 export _root_.K1_14_3 (SeedShift)
 
 export _root_.K1_14_3 (LeadingFilter)
 
 def RankFloor (h : ℕ) (rows : Banks) (s : Shape) : Prop :=
-  ∀ W < s.m*180169,
+  ∀ W < s.m*180139,
     (∀ q ≤ s.B, ∀ j ≤ min q s.J, q*(131071-h) ≤ W+1+j) →
     triangle s.U * shapeSum s (fun q j => W+1+j - q*(131071-h)) ≤
       sourceDebit h s + ∑ t ∈ Finset.range (W+1), Module.finrank FX (rows s t)
@@ -145,7 +145,7 @@ export _root_.K1_14_3 (fibrePoint)
 export _root_.K1_14_3 (OrderAt)
 
 def BankVanishes (rows : Banks) (s : Shape) (q : Surface) : Prop :=
-  ∀ P ∈ rows s (s.m*180169 - 1), P ∈ q.asIdeal
+  ∀ P ∈ rows s (s.m*180139 - 1), P ∈ q.asIdeal
 
 export _root_.K1_14_3 (ClearedSeeds)
 export _root_.K1_14_3 (ClearedEquation)
@@ -242,7 +242,7 @@ def odePrice (d b j : ℕ) : ℕ :=
   let T := 2*d - 3
   let a := 1 + T*(b-1)
   let v := min a (T*(j-1)+d)
-  let gap := 180169-d
+  let gap := 180139-d
   ((262144-d)*((b-j)*v+j*a) + (gap-1))/gap + b*(b-1)+b
 
 export _root_.K1_14_3 (ProjectedProduct)
@@ -380,8 +380,8 @@ theorem endpoint_fees (w : ℤ) (hlo : 3555 ≤ w) :
   simp only [hnot, ite_false]
   split_ifs <;> decide
 
-theorem endpoint_range (w : ℤ) (hlo : 3555 ≤ w) (hhi : w ≤ 32872) :
-    w ≤ (band w).endpoint ∧ 8249 ≤ (band w).endpoint ∧ (band w).endpoint ≤ 32872 := by
+theorem endpoint_range (w : ℤ) (hlo : 3555 ≤ w) (hhi : w ≤ 32932) :
+    w ≤ (band w).endpoint ∧ 8249 ≤ (band w).endpoint ∧ (band w).endpoint ≤ 32932 := by
   unfold band
   split_ifs <;> norm_num at * <;> omega
 

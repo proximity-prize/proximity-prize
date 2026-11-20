@@ -14,9 +14,9 @@ open scoped NNReal
 noncomputable section
 local instance : DecidableEq K := Classical.decEq K
 
-def queryRadius : ℝ≥0 := claimedRadius 335773130 1073741824
+def queryRadius : ℝ≥0 := claimedRadius 335893008 1073741824
 
-theorem query_complement : (1 - queryRadius : ℝ≥0) = 368984347 / 536870912 := by
+theorem query_complement : (1 - queryRadius : ℝ≥0) = 46115551 / 67108864 := by
   apply NNReal.coe_injective
   have hr : queryRadius ≤ 1 := by
     rw [← NNReal.coe_le_coe]
@@ -24,22 +24,22 @@ theorem query_complement : (1 - queryRadius : ℝ≥0) = 368984347 / 536870912 :
   rw [NNReal.coe_sub hr]
   norm_num [queryRadius, claimedRadius]
 
-private theorem score_power_comparison : (368984347 : ℕ) ^ 12800 ≤ 2 ^ 364275 := by
+private theorem score_power_comparison : (46115551 : ℕ) ^ 12800 ≤ 2 ^ 325872 := by
   decide +kernel
 
 theorem score_lower_integer_cross :
-    (368984347 : ℕ) ^ 12800 * 2 ^ 6925 ≤ 536870912 ^ 12800 := by
+    (46115551 : ℕ) ^ 12800 * 2 ^ 6928 ≤ 67108864 ^ 12800 := by
   calc
-    _ ≤ 2 ^ 364275 * 2 ^ 6925 := Nat.mul_le_mul_right _ score_power_comparison
-    _ = 536870912 ^ 12800 := by
-      rw [show (536870912 : ℕ) = 2 ^ 29 by norm_num, ← pow_mul, ← pow_add]
+    _ ≤ 2 ^ 325872 * 2 ^ 6928 := Nat.mul_le_mul_right _ score_power_comparison
+    _ = 67108864 ^ 12800 := by
+      rw [show (67108864 : ℕ) = 2 ^ 26 by norm_num, ← pow_mul, ← pow_add]
 
 theorem query_score_6921 :
-    (1 - queryRadius) ^ IRSProfile.repetitions ≤ claimedError 6925 := by
-  change (1 - queryRadius) ^ 128 ≤ claimedError 6925
+    (1 - queryRadius) ^ IRSProfile.repetitions ≤ claimedError 6928 := by
+  change (1 - queryRadius) ^ 128 ≤ claimedError 6928
   apply (pow_le_pow_iff_left₀ (by positivity) (by positivity) (by norm_num : (100 : ℕ) ≠ 0)).mp
   rw [← pow_mul, Sol1.C42.claimedError_pow_100, query_complement]
-  change ((368984347 : ℝ≥0) / 536870912) ^ 12800 ≤ 1 / (2 : ℝ≥0) ^ 6925
+  change ((46115551 : ℝ≥0) / 67108864) ^ 12800 ≤ 1 / (2 : ℝ≥0) ^ 6928
   rw [div_pow, div_le_div_iff₀ (by positivity) (by positivity), one_mul]
   exact_mod_cast score_lower_integer_cross
 
@@ -52,7 +52,7 @@ def radius : ℝ := List6921.Native.radius6921
 theorem queryRadius_coe : (queryRadius : ℝ) = radius := by
   norm_num [queryRadius, claimedRadius, radius, List6921.Native.radius6921]
 
-def mcaAllowance : ℕ := 242944015907142031
+def mcaAllowance : ℕ := 243570039531703383
 
 def ActualMCACap (B : ℕ) : Prop :=
   ∀ U : Fin 2 → I → Fin IRSProfile.interleaving → K,
@@ -130,7 +130,7 @@ theorem gamma_error_le_of_actualCap (B : ℕ) (hcap : ActualMCACap B)
 /-- Exact native benchmark type, with one mathematical count and the explicit integer budget. -/
 theorem protocolClaim_of_actualCap (B : ℕ) (hcap : ActualMCACap B)
     (hbudget : (B + List6921.weightedListCap) * 2 ^ 128 ≤ (2130706433 : ℕ) ^ 6) :
-    ProtocolClaim 6925 335773130 1073741824 where
+    ProtocolClaim 6928 335893008 1073741824 where
   admissible := query_admissible
   reduction := by
     change ToyProblem.certifiedGammaError IRSProfile.code queryRadius ≤ reductionTarget
@@ -157,7 +157,7 @@ def OneCountGoal : Prop := ActualMCACap mcaAllowance
 
 /-- All non-MCA mathematics and arithmetic are discharged for this exact fixed allowance. -/
 theorem protocolClaim_of_oneCountGoal (hcap : OneCountGoal) :
-    ProtocolClaim 6925 335773130 1073741824 :=
+    ProtocolClaim 6928 335893008 1073741824 :=
   protocolClaim_of_actualCap mcaAllowance hcap remaining_budget
 
 
@@ -187,7 +187,7 @@ theorem nativeCap_of_scalarCap (hscalar : ScalarMCACap) :
 
 /-- This is the entire protocol bridge needed by a future uniform scalar count. -/
 theorem protocolClaim_of_scalarCap (hscalar : ScalarMCACap) :
-    ProtocolClaim 6925 335773130 1073741824 :=
+    ProtocolClaim 6928 335893008 1073741824 :=
   protocolClaim_of_oneCountGoal (nativeCap_of_scalarCap hscalar)
 
 
@@ -195,7 +195,7 @@ theorem protocolClaim_of_scalarCap (hscalar : ScalarMCACap) :
 def ScalarBadSlopeCap : Prop :=
   ∀ (u : Fin 2 → I → K) (Γ : Finset K),
     (∀ γ ∈ Γ, FrobeniusLocator.Principal.BadSlope IRSProfile.domain
-      (u 0) (u 1) 131072 180169 γ) →
+      (u 0) (u 1) 131072 180139 γ) →
     Γ.card ≤ mcaAllowance
 
 theorem scalarMCACap_of_badSlopeCap (hcap : ScalarBadSlopeCap) : ScalarMCACap := by
@@ -206,18 +206,13 @@ theorem scalarMCACap_of_badSlopeCap (hcap : ScalarBadSlopeCap) : ScalarMCACap :=
   have hmca := hΓ γ hγ
   change IsMCA (AffineLineGenerator K) (ReedSolomon.code IRSProfile.domain 131072) γ u radius at hmca
   have : NeZero (131072 : ℕ) := ⟨by decide⟩
-  apply FrobeniusLocator.Principal.isMCA_implies_badSlope IRSProfile.domain u 131072 180169 radius
+  apply FrobeniusLocator.Principal.isMCA_implies_badSlope IRSProfile.domain u 131072 180139 radius
     ?_ γ hmca
   intro T hT
-  have hcount : (Fintype.card I : ℝ) * (1 - radius) = (368984347 : ℝ) / 2048 := by
+  have hcount : (180138 : ℝ) < (Fintype.card I : ℝ) * (1 - radius) := by
     norm_num [I, IRSProfile.Index, radius, List6921.Native.radius6921]
-  rw [hcount] at hT
-  have ht : (180168 : ℝ) < (T.card : ℝ) :=
-    (by norm_num : (180168 : ℝ) < (368984347 : ℝ) / 2048).trans_le hT
-  have hn : 180168 < T.card := by exact_mod_cast ht
-  omega
-
-theorem protocolClaim_of_badSlopeCap (hcap : ScalarBadSlopeCap) : ProtocolClaim 6925 335773130 1073741824 :=
+  exact Nat.succ_le_of_lt (by exact_mod_cast hcount.trans_le hT)
+theorem protocolClaim_of_badSlopeCap (hcap : ScalarBadSlopeCap) : ProtocolClaim 6928 335893008 1073741824 :=
   protocolClaim_of_scalarCap (scalarMCACap_of_badSlopeCap hcap)
 
 end

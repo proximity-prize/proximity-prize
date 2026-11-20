@@ -18,10 +18,10 @@ open K1_14_2_2 (RowCaps Active dual orderOn sectionDegree)
 open K1_14_2_2_3
 open private specialize_shiftedWord shift_word from ProximityPrize.SubmissionLower.Fast052
 
-theorem free_scheduled (w : ℤ) (i : Fin 2) : freeShape w i ∈ scheduled w := by
+theorem free_scheduled (w : ℤ) (i : Fin 3) : freeShape w i ∈ scheduled w := by
   fin_cases i <;> simp [scheduled]
 
-theorem moving_scheduled (w : ℤ) (i : Fin 2) : movingShape w i ∈ scheduled w := by
+theorem moving_scheduled (w : ℤ) (i : Fin 3) : movingShape w i ∈ scheduled w := by
   fin_cases i <;> simp [scheduled]
 
 theorem full_scheduled (w : ℤ) : fullShape w ∈ scheduled w := by simp [scheduled]
@@ -36,16 +36,35 @@ theorem moving_five (w : ℤ) (hw : w ≤ 3554) : movingShape w 1 = stageFiveSha
 
 theorem bridge_five_buffer (w : ℤ) (hw : w ≤ 3554) (s : Shape)
     (hs : s = freeShape w 1 ∨ s = movingShape w 1) :
-    reserveCutoff w s 1 + 2*w.toNat*5 ≤ fullCutoff s := by
+    reserveCutoff w s 1 + 2*w.toNat*6 ≤ fullCutoff s := by
   have h : w.toNat ≤ 3554 := by omega
-  have hcut : 35540 ≤ fullCutoff s := by
+  have hcut : 42648 ≤ fullCutoff s := by
     rcases hs with rfl | rfl
     · simp only [freeShape, ite_eq_left hw]
       decide
     · rw [moving_five w hw]
       decide
-  have hspend : 2*w.toNat*5 ≤ 35540 := by omega
-  change fullCutoff s - 2*w.toNat*5 + 2*w.toNat*5 ≤ fullCutoff s
+  have hspend : 2*w.toNat*6 ≤ 42648 := by omega
+  change fullCutoff s - 2*w.toNat*6 + 2*w.toNat*6 ≤ fullCutoff s
+  omega
+
+
+theorem moving_late (w : ℤ) (hw : w ≤ 3554) : movingShape w 2 = stageLateShape := by
+  rw [movingShape, ite_eq_left hw]
+  rfl
+
+theorem late_buffer (w : ℤ) (hw : w ≤ 3554) (s : Shape)
+    (hs : s = freeShape w 2 ∨ s = movingShape w 2) :
+    reserveCutoff w s 2 + 2*w.toNat*25 ≤ fullCutoff s := by
+  have h : w.toNat ≤ 3554 := by omega
+  have hcut : 177700 ≤ fullCutoff s := by
+    rcases hs with rfl | rfl
+    · simp only [freeShape, ite_eq_left hw]
+      decide
+    · rw [moving_late w hw]
+      decide
+  have hspend : 2*w.toNat*25 ≤ 177700 := by omega
+  change fullCutoff s - 2*w.toNat*25 + 2*w.toNat*25 ≤ fullCutoff s
   omega
 
 /-- Every selected row is a genuine mark equation. -/
@@ -60,7 +79,7 @@ theorem bank_zero {u del} {M : AnchorModel u del} {Γ} {F : AnchoredFamily M Γ}
 
 theorem buffered_zero {u del} {M : AnchorModel u del} {Γ} {F : AnchoredFamily M Γ}
     {rows : Banks} (src : JetSource M F rows) (hw : M.overhead ≤ 3554)
-    (i : Fin 2) (pair : BufferedPair M.overhead rows i) :
+    (i : Fin 3) (pair : BufferedPair M.overhead rows i) :
     ∀ γ ∈ Γ, jetAt pair.free (M.label γ) (F.scalar γ) = 0 ∧
       jetAt pair.moving (M.label γ) (F.scalar γ) = 0 := by
   have hf : 0 < (freeShape M.overhead i).m := by
@@ -92,7 +111,7 @@ theorem failed_pair {u del} {M : AnchorModel u del} {Γ} {F : AnchoredFamily M �
     ∃ P : Jet, RowCaps P stageFiveShape ∧ toJet P ∉ I ∧
       ∀ γ ∈ Γ, OnParent F I γ → jetAt P (M.label γ) (F.scalar γ) = 0 := by
   classical
-  have hc : freeShape M.overhead 1 = ⟨81, 112, 24, 2039⟩ := by
+  have hc : freeShape M.overhead 1 = ⟨91, 126, 27, 2072⟩ := by
     rw [freeShape, ite_eq_left hw]
     rfl
   have hm := moving_five M.overhead hw
@@ -108,6 +127,46 @@ theorem failed_pair {u del} {M : AnchorModel u del} {Γ} {F : AnchoredFamily M �
       obtain ⟨f, _, _, _, hdiv, hmem, g, a, hclear, hproper⟩ := htest
       have hcaps := src.shape _ (moving_scheduled _ _) _ _ pair.moving_mem
       have hj : 1 ≤ (movingShape M.overhead 1).J := by rw [hm]; decide
+      have hG := K1_14_3R.chainCutter_caps_of_dvd pair.moving_ne hcaps hj hdiv hclear
+      rw [hm] at hG
+      refine ⟨K1_14_3R.chainCutter g, hG, hproper, ?_⟩
+      intro γ _ hγ
+      apply K1_14_3R.chainCutter_zero hclear
+      have hz := RingHom.mem_ker.mp (hγ hmem)
+      simpa only [eval_toJet, jetAt, eval₂_C, coe_eval₂RingHom, K1_14.atMark] using hz
+    · obtain ⟨P, hcaps, hproper, hzero⟩ := failed_bank src (moving_scheduled _ _) hmovePos hQ
+      rw [hm] at hcaps
+      exact ⟨P, hcaps, hproper, fun γ hγ _ => hzero γ hγ⟩
+  · obtain ⟨P, hcaps, hproper, hzero⟩ := failed_bank src (free_scheduled _ _) hfreePos hP
+    rw [hc] at hcaps
+    refine ⟨P, ?_, hproper, fun γ hγ _ => hzero γ hγ⟩
+    intro j i h
+    obtain ⟨hb, hj, hu⟩ := hcaps j i h
+    exact ⟨hb.trans (by decide), hj.trans (by decide), hu.trans (by decide)⟩
+
+
+theorem failed_late_pair {u del} {M : AnchorModel u del} {Γ} {F : AnchoredFamily M Γ}
+    {rows : Banks} (src : JetSource M F rows) (hw : M.overhead ≤ 3554)
+    (pair : BufferedPair M.overhead rows 2) {I : Ideal Ambient} (hf : ¬ PairPass pair I) :
+    ∃ P : Jet, RowCaps P stageLateShape ∧ toJet P ∉ I ∧
+      ∀ γ ∈ Γ, OnParent F I γ → jetAt P (M.label γ) (F.scalar γ) = 0 := by
+  classical
+  have hc : freeShape M.overhead 2 = ⟨230, 319, 66, 4045⟩ := by
+    rw [freeShape, ite_eq_left hw]
+    rfl
+  have hm := moving_late M.overhead hw
+  have hfreePos : 0 < (freeShape M.overhead 2).m := by rw [hc]; decide
+  have hmovePos : 0 < (movingShape M.overhead 2).m := by rw [hm]; decide
+  by_cases hP : BankPass rows (freeShape M.overhead 2) I
+  · by_cases hQ : BankPass rows (movingShape M.overhead 2) I
+    · have htest : ¬ (∀ f : K1_14.Equation, Irreducible f → 0 < f.natDegree →
+          C f ∣ pair.free → C f ∣ pair.moving → toJet (C f) ∈ I →
+          ∀ g a, K1_14_3.IsClearing f g a → toJet (K1_14_3R.chainCutter g) ∈ I) :=
+        fun h => hf ⟨hP, hQ, h⟩
+      push Not at htest
+      obtain ⟨f, _, _, _, hdiv, hmem, g, a, hclear, hproper⟩ := htest
+      have hcaps := src.shape _ (moving_scheduled _ _) _ _ pair.moving_mem
+      have hj : 1 ≤ (movingShape M.overhead 2).J := by rw [hm]; decide
       have hG := K1_14_3R.chainCutter_caps_of_dvd pair.moving_ne hcaps hj hdiv hclear
       rw [hm] at hG
       refine ⟨K1_14_3R.chainCutter g, hG, hproper, ?_⟩
@@ -153,7 +212,7 @@ theorem buffered_order {u del} {M : AnchorModel u del} {Γ} {F : AnchoredFamily 
     {s : Shape} (hpair : s = freeShape M.overhead 1 ∨ s = movingShape M.overhead 1)
     {I : Ideal Ambient} (hactive : Active I) (hv : BankPass rows s I)
     {P : Jet} (hP : P ∈ rows s (reserveCutoff M.overhead s 1)) :
-    orderOn I P 6 := by
+    orderOn I P 7 := by
   classical
   have hs : s ∈ scheduled M.overhead := by
     rcases hpair with rfl | rfl
@@ -161,13 +220,13 @@ theorem buffered_order {u del} {M : AnchorModel u del} {Γ} {F : AnchoredFamily 
     · exact moving_scheduled _ _
   have hn := src.nested s hs s hs rfl rfl rfl le_rfl
   have hcut := bridge_five_buffer M.overhead hw s hpair
-  have ht : (5 : ℕ) < p := by decide
+  have ht : (6 : ℕ) < p := by decide
   by_cases hd : dual I
   · have hc := shifted_contact (algebraMap K1_14.Seeds K1_14_2.SeedField) hn
       (src.shift s hs) hv hcut hP
     rw [← mapGenericJets_eq] at hc
     exact clear_dual hd (K1_14_2_2_3_1.proof I hactive.prime hactive.jet_finite
-      hd hactive.jet_lt _ 5 ht hc)
+      hd hactive.jet_lt _ 6 ht hc)
   · obtain ⟨g, hg, hdeg, he⟩ := K1_14_2_2_3_2.proof I hactive hd
     let _ : I.IsPrime := hactive.prime
     let _ : (I.comap jetInclude).IsPrime := Ideal.IsPrime.comap jetInclude
@@ -176,7 +235,42 @@ theorem buffered_order {u del} {M : AnchorModel u del} {Γ} {F : AnchoredFamily 
       charP_of_injective_ringHom ((jetImageMap I).comp MvPolynomial.C).injective p
     apply clear_rank_one hactive.prime hd
     have hc := shifted_contact (jetImageMap I) hn (src.shift s hs) hv hcut hP
-    change fibreContact (I.map (imageFibreMap I)) (imageFibreMap I (toJet P)) 5 at hc
+    change fibreContact (I.map (imageFibreMap I)) (imageFibreMap I (toJet P)) 6 at hc
+    rw [he] at hc ⊢
+    exact divisor_contact hg hdeg ht hc
+
+theorem late_order {u del} {M : AnchorModel u del} {Γ} {F : AnchoredFamily M Γ}
+    {rows : Banks} (src : JetSource M F rows) (hw : M.overhead ≤ 3554)
+    {s : Shape} (hpair : s = freeShape M.overhead 2 ∨ s = movingShape M.overhead 2)
+    {I : Ideal Ambient} (hactive : Active I) (hv : BankPass rows s I)
+    {P : Jet} (hP : P ∈ rows s (reserveCutoff M.overhead s 2)) :
+    orderOn I P 26 := by
+  classical
+  have hs : s ∈ scheduled M.overhead := by
+    rcases hpair with rfl | rfl
+    · exact free_scheduled _ _
+    · exact moving_scheduled _ _
+  have hn := src.nested s hs s hs rfl rfl rfl le_rfl
+  have hcut := late_buffer M.overhead hw s hpair
+  have ht : (25 : ℕ) < p := by decide
+  suffices general : ∀ v : ℕ, v < p → reserveCutoff M.overhead s 2 + 2*M.overhead.toNat*v ≤ fullCutoff s → orderOn I P (v+1) from general 25 ht hcut
+  clear hcut ht
+  intro v ht hcut
+  by_cases hd : dual I
+  · have hc := shifted_contact (algebraMap K1_14.Seeds K1_14_2.SeedField) hn
+      (src.shift s hs) hv hcut hP
+    rw [← mapGenericJets_eq] at hc
+    exact clear_dual hd (K1_14_2_2_3_1.proof I hactive.prime hactive.jet_finite
+      hd hactive.jet_lt _ v ht hc)
+  · obtain ⟨g, hg, hdeg, he⟩ := K1_14_2_2_3_2.proof I hactive hd
+    let _ : I.IsPrime := hactive.prime
+    let _ : (I.comap jetInclude).IsPrime := Ideal.IsPrime.comap jetInclude
+    let _ : CharP K1_14.FX p := charP_of_injective_ringHom K1_14.seedEmbedding.injective p
+    let _ : CharP (JetImageField I) p :=
+      charP_of_injective_ringHom ((jetImageMap I).comp MvPolynomial.C).injective p
+    apply clear_rank_one hactive.prime hd
+    have hc := shifted_contact (jetImageMap I) hn (src.shift s hs) hv hcut hP
+    change fibreContact (I.map (imageFibreMap I)) (imageFibreMap I (toJet P)) v at hc
     rw [he] at hc ⊢
     exact divisor_contact hg hdeg ht hc
 
@@ -219,7 +313,7 @@ theorem on_surface {u del} {M : AnchorModel u del} {Γ} {F : AnchoredFamily M Γ
   rw [← eval_toJet]
   exact RingHom.mem_ker.mp (hm hP)
 
-theorem surface_pass {w : ℤ} {rows : Banks} {i : Fin 2}
+theorem surface_pass {w : ℤ} {rows : Banks} {i : Fin 3}
     {pair : P0_10.BufferedPair w rows i} {I : Ideal Ambient}
     (hI : I.IsPrime) (ht : PairPass pair I) :
     P0_10R.SurfacePass pair (surfaceOf I hI) := by
@@ -334,7 +428,7 @@ private theorem terminal_order {u del} {M : AnchorModel u del} {Γ} {F : Anchore
   intro a b hab
   change a + b < 1 + (fullCutoff s - W) / (2*h) at hab
   have hh : 0 < 2*h := by
-    change 2448 ≤ M.overhead at hlo
+    change 2472 ≤ M.overhead at hlo
     dsimp only [h]
     omega
   have hcost := (Nat.le_div_iff_mul_le hh).mp
@@ -597,8 +691,8 @@ theorem bridge_word {u del} (M : AnchorModel u del) {Γ} (F : AnchoredFamily M �
 private theorem regular_count {w T s} (h : P0_10.FixedWord w T s 134625) (f : Row 2)
     (hf : Irreducible f) (hp : 0 < f.degreeOf 1) {B J : ℕ} (hB : f.totalDegree ≤ B)
     (hJ : f.degreeOf 1 ≤ J) (hreg : ∀ γ ∈ T, RegularAt 1 f (extend (s γ))) :
-    45544 * T.card ≤ 81975 * MvPolynomial.cappedDegreeMixedVolume f.totalDegree
-      (f.degreeOf 1) (chartTotal B) (chartTop B J) + 45544 := by
+    45514 * T.card ≤ 82005 * MvPolynomial.cappedDegreeMixedVolume f.totalDegree
+      (f.degreeOf 1) (chartTotal B) (chartTop B J) + 45514 := by
   classical
   let x (γ : K) := marked (extend (s γ))
   have hx : Set.InjOn x (T : Set K) := by
@@ -680,19 +774,19 @@ theorem fixed_count {u del} (M : AnchorModel u del) {Γ} (F : AnchoredFamily M �
         (hA g hg).2.trans_le (g.degreeOf_le_totalDegree 1)
       _ ≤ B := hAb
   have hlocal (g : Row 2) (hg : g ∈ A) :
-      45544 * (reg g).card ≤ 81975 * (g.totalDegree * v + g.degreeOf 1 * (a - v)) + 45544 := by
+      45514 * (reg g).card ≤ 82005 * (g.totalDegree * v + g.degreeOf 1 * (a - v)) + 45514 := by
     have hb := (Finset.single_le_sum (fun x _ => Nat.zero_le x.totalDegree) hg).trans hAb
     have hj := (Finset.single_le_sum (fun x _ => Nat.zero_le (x.degreeOf 1)) hg).trans hAj
     exact regular_count (word.mono (Finset.filter_subset _ _)) g (hA g hg).1 (hA g hg).2
       hb hj (fun _ hγ => (Finset.mem_filter.mp hγ).2)
-  have hr : 45544 * (∑ g ∈ A, (reg g).card) ≤
-      81975 * (B*v + J*(a-v)) + 45544 * B := by
+  have hr : 45514 * (∑ g ∈ A, (reg g).card) ≤
+      82005 * (B*v + J*(a-v)) + 45514 * B := by
     rw [Finset.mul_sum]
     refine (Finset.sum_le_sum hlocal).trans ?_
     simp only [Finset.sum_add_distrib, ← Finset.mul_sum, ← Finset.sum_mul,
       Finset.sum_const, smul_eq_mul]
-    have hn' := Nat.mul_le_mul_left 45544 hn
-    rw [Nat.mul_comm 45544 A.card] at hn'
+    have hn' := Nat.mul_le_mul_left 45514 hn
+    rw [Nat.mul_comm 45514 A.card] at hn'
     exact Nat.add_le_add (Nat.mul_le_mul_left _ (Nat.add_le_add
       (Nat.mul_le_mul_right _ hAb) (Nat.mul_le_mul_right _ hAj))) hn'
   have hcost : B*v + J*(a-v) = (B-J)*v + J*a := by
@@ -705,19 +799,19 @@ theorem fixed_count {u del} (M : AnchorModel u del) {Γ} (F : AnchoredFamily M �
     calc
       _ = B * ((B - 1) + 1) := by rw [Nat.mul_add, Nat.mul_one]
       _ = _ := by rw [Nat.sub_add_cancel (by omega : 1 ≤ B)]
-  let num := 81975 * ((B-J)*v + J*a)
-  have htotal := Nat.mul_le_mul_left 45544 hs
+  let num := 82005 * ((B-J)*v + J*a)
+  have htotal := Nat.mul_le_mul_left 45514 hs
   rw [Nat.mul_add] at htotal
-  have ho := Nat.mul_le_mul_left 45544 ordinary_bound
+  have ho := Nat.mul_le_mul_left 45514 ordinary_bound
   rw [hcost] at hr
-  have hcount : 45544 * T.card ≤ num + 45544 * (B*B) := by
+  have hcount : 45514 * T.card ≤ num + 45514 * (B*B) := by
     rw [← hbox, Nat.mul_add]
     dsimp only [num]
     omega
-  have hmod := Nat.mod_add_div num 45544
-  have hlt := Nat.mod_lt num (by decide : 0 < 45544)
-  have hround : T.card ≤ num / 45544 + B*B := by omega
-  change T.card ≤ (num + 45544 - 1) / 45544 + B^2
+  have hmod := Nat.mod_add_div num 45514
+  have hlt := Nat.mod_lt num (by decide : 0 < 45514)
+  have hround : T.card ≤ num / 45514 + B*B := by omega
+  change T.card ≤ (num + 45514 - 1) / 45514 + B^2
   rw [pow_two]
   exact hround.trans (Nat.add_le_add_right (Nat.div_le_div_right (by omega)) _)
 
@@ -741,8 +835,8 @@ open scoped BigOperators Classical
 /-- Project the rank-one survivors using the linear section lengths. -/
 theorem rank_equation (S : Finset (Ideal Ambient))
     (hS : ∀ I ∈ S, Active I ∧ ¬ K1_14_2_2.dual I)
-    (hord : mass S 1 ≤ 62013) (hmix : mass S 2 ≤ 352304) :
-    ∃ G : ODE, ODECaps G 352304 62013 ∧ ∀ I ∈ S, fixedOn G I := by
+    (hord : mass S 1 ≤ 65143) (hmix : mass S 2 ≤ 358008) :
+    ∃ G : ODE, ODECaps G 358008 65143 ∧ ∀ I ∈ S, fixedOn G I := by
   have hchoose (I : Ideal Ambient) :
       ∃ G : ODE, I ∈ S → ODECaps G (sectionDegree I 2) (sectionDegree I 1) ∧ fixedOn G I := by
     by_cases hI : I ∈ S

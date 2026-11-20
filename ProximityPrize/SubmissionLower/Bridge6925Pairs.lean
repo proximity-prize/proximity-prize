@@ -200,36 +200,51 @@ set_option maxRecDepth 8000
 -- The four columns are width intercept, width slope, node count and pole count.
 -- Each check sums at most 32 grades, after the inner sums have been proved symbolically.
 
-private theorem bridgeFree0 : Certificate ⟨55,76,16,1297⟩ 0 0 2448 3554 := by
-  apply certificate_of_stats (a := 10386013218) (b := 98124) (c := 20196) (d := 2490602)
+private theorem bridgeFree0 : Certificate ⟨55,76,16,1360⟩ 0 0 2472 3554 := by
+  apply certificate_of_stats (a := 10382142318) (b := 98124) (c := 20196) (d := 2490602)
   · rw [← evaluate_eq]
-    change evaluate (rowStats ⟨55,76,16,1297⟩ 0 0) 77 = _
+    change evaluate (rowStats ⟨55,76,16,1360⟩ 0 0) 77 = _
     decide +kernel
   · decide +kernel
 
-private theorem bridgeMoving0 : Certificate ⟨150,208,43,6547⟩ 0 1 2448 3554 := by
-  apply certificate_of_stats (a := 198682009680) (b := 1205160) (c := 383834) (d := 130467370)
+private theorem bridgeMoving0 : Certificate ⟨160,222,46,6927⟩ 0 1 2472 3554 := by
+  apply certificate_of_stats (a := 241135516112) (b := 1464144) (c := 465911) (d := 169342880)
   · rw [← evaluate_eq]
-    change evaluate (rowStats ⟨150,208,43,6547⟩ 0 1) 209 = _
+    change evaluate (rowStats ⟨160,222,46,6927⟩ 0 1) 223 = _
     decide +kernel
   · decide +kernel
 
-private theorem bridgeFree5 : Certificate ⟨81,112,24,2039⟩ 5 0 2448 3554 := by
-  apply certificate_of_stats (a := 32830249650) (b := 261300) (c := 63625) (d := 11635000)
+private theorem bridgeFree5 : Certificate ⟨91,126,27,2072⟩ 6 0 2472 3554 := by
+  apply certificate_of_stats (a := 46323388412) (b := 365232) (c := 89740) (d := 18524478)
   · rw [← evaluate_eq]
-    change evaluate (rowStats ⟨81,112,24,2039⟩ 5 0) 113 = _
+    change evaluate (rowStats ⟨91,126,27,2072⟩ 6 0) 127 = _
     decide +kernel
   · decide +kernel
 
-private theorem bridgeMoving5 : Certificate ⟨224,311,64,10066⟩ 5 1 2448 3554 := by
-  apply certificate_of_stats (a := 653802157320) (b := 3617640) (c := 1261520) (d := 642698420)
+private theorem bridgeMoving5 : Certificate ⟨266,369,77,10980⟩ 6 1 2472 3554 := by
+  apply certificate_of_stats (a := 1102103376998) (b := 6052800) (c := 2126215) (d := 1286500592)
   · rw [← evaluate_eq]
-    change evaluate (rowStats ⟨224,311,64,10066⟩ 5 1) 312 = _
+    change evaluate (rowStats ⟨266,369,77,10980⟩ 6 1) 370 = _
     decide +kernel
   · decide +kernel
+
+private theorem lateFree : Certificate ⟨230,319,66,4045⟩ 25 0 2472 3554 := by
+  apply certificate_of_stats (a := 709508079208) (b := 4820650) (c := 1369346) (d := 714691010)
+  · rw [← evaluate_eq]
+    change evaluate (rowStats ⟨230,319,66,4045⟩ 25 0) 320 = _
+    decide +kernel
+  · decide +kernel
+
+private theorem lateMoving : Certificate ⟨600,837,168,25162⟩ 25 1 2472 3554 := by
+  apply certificate_of_stats (a := 12215603797982) (b := 63008270) (c := 23547784) (d := 32496696843)
+  · rw [← evaluate_eq]
+    change evaluate (rowStats ⟨600,837,168,25162⟩ 25 1) 838 = _
+    decide +kernel
+  · decide +kernel
+
 
 end
-theorem stage_tests {w : ℤ} (hlo : 2448 ≤ w) (hhi : w ≤ 3554) (i : Fin 2) :
+theorem stage_tests {w : ℤ} (hlo : 2472 ≤ w) (hhi : w ≤ 3554) (i : Fin 3) :
     let h := w.toNat
     let r := reserve i
     let s := freeShape w i
@@ -242,7 +257,7 @@ theorem stage_tests {w : ℤ} (hlo : 2448 ≤ w) (hhi : w ≤ 3554) (i : Fin 2) 
   dsimp only
   have hh : w.toNat ≤ 131071 := by omega
   have hb : w ≤ 3554 := hhi
-  have hl : 2448 ≤ w.toNat := by omega
+  have hl : 2472 ≤ w.toNat := by omega
   have hu : w.toNat ≤ 3554 := by omega
   simp only [freeShape, movingShape, ite_eq_left hb]
   fin_cases i <;> simp only [reserve, Matrix.cons_val_zero', Matrix.cons_val_succ']
@@ -250,6 +265,8 @@ theorem stage_tests {w : ℤ} (hlo : 2448 ≤ w) (hhi : w ≤ 3554) (i : Fin 2) 
         by simpa only [one_mul] using test hl hu hh bridgeMoving0, by decide⟩
   · exact ⟨by simpa only [zero_mul, add_zero] using test hl hu hh bridgeFree5,
         by simpa only [one_mul] using test hl hu hh bridgeMoving5, by decide⟩
+  · exact ⟨by simpa only [zero_mul, add_zero] using test hl hu hh lateFree,
+        by simpa only [one_mul] using test hl hu hh lateMoving, by decide⟩
 end P0_10_2
 end PackSource_P0_10_2Certs
 section PackSource_P0_10_2Proof
@@ -355,10 +372,10 @@ private theorem avoids_one {u del} {M : AnchorModel u del} {Γ} {F : AnchoredFam
 theorem proof : P0_10.c2 := by
   classical
   intro u del M Γ F hlo hhi rows src
-  have hlo' : 2448 ≤ M.overhead := hlo
+  have hlo' : 2472 ≤ M.overhead := hlo
   have hhi' : M.overhead ≤ 3554 := hhi
   have hh : 0 < M.overhead.toNat := by omega
-  have hpairs (i : Fin 2) : Nonempty (BufferedPair M.overhead rows i) := by
+  have hpairs (i : Fin 3) : Nonempty (BufferedPair M.overhead rows i) := by
     let s := freeShape M.overhead i
     let s' := movingShape M.overhead i
     let r := reserve i

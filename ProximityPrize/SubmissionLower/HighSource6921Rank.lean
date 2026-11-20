@@ -160,7 +160,7 @@ private theorem ambient_degree {h s W P} (hp : P ∈ ambient h s W) {j i : ℕ}
     exact hne (hp j i _ e nh)
   exact hel.2.2.2
 
-theorem forward_bounded {h} (hpos : 0 < h) (hh : h ≤ 32872) {D : PoleData h} (Crt : CRTLift D)
+theorem forward_bounded {h} (hpos : 0 < h) (hh : h ≤ 32932) {D : PoleData h} (Crt : CRTLift D)
     {s W P} (hp : P ∈ ambient h s W) :
     Bounded (131071-h) (131071-h-1) (W+(s.B+s.J)*(2*h)) (forward Crt P) := by
   let u := 131071-h
@@ -411,7 +411,7 @@ private def rawPosition {h} {D : PoleData h} (Crt : CRTLift D) (j i : ℕ) : Jet
   map_add' P Q := by simp
   map_smul' b P := by simp [Polynomial.coeff_smul]
 
-private theorem rawPosition_zero {h} (hpos : 0 < h) (hh : h ≤ 32872) {D : PoleData h} (Crt : CRTLift D)
+private theorem rawPosition_zero {h} (hpos : 0 < h) (hh : h ≤ 32932) {D : PoleData h} (Crt : CRTLift D)
     (word : I → L) {s W P} (hP : P ∈ evaluated Crt word s W) (j i : ℕ)
     (hw : W < (131071-h)*i+(131071-h-1)*j) : rawPosition Crt j i P = 0 := by
   have hsub : evaluated Crt word s W ≤ LinearMap.ker (rawPosition Crt j i) := by
@@ -805,7 +805,7 @@ private theorem generic_centre {h : ℕ} {D : PoleData h} {Crt : CRTLift D}
       rw [eq_neg_of_add_eq_zero_left he, mul_neg, ← mul_assoc, inv_mul_cancel₀ hd, one_mul]
       ring
 
-theorem proof (h : ℕ) (hlo : 2448 ≤ h) (hhi : h ≤ 32872)
+theorem proof (h : ℕ) (hlo : 2472 ≤ h) (hhi : h ≤ 32932)
     (D : PoleData h) (Crt : CRTLift D) : Nonempty (RegularDeformation D Crt) := by
   have hh : 0 < h := by omega
   have hp : h < K1.p := by change h < 2130706433; omega
@@ -1073,7 +1073,7 @@ private theorem leading_forward {h} {D : PoleData h} (Crt : CRTLift D) (P : Sour
   simp [H, pow_add, mul_assoc]
 
 /-- The signed cutoff immediately before zero has no nonzero complete row. -/
-theorem zero_of_strict_cutoff {h} (hhi : h ≤ 32872) {D : PoleData h}
+theorem zero_of_strict_cutoff {h} (hhi : h ≤ 32932) {D : PoleData h}
     (Crt : CRTLift D) (s : Shape) (P : Source) (hp : P ∈ poleSpace Crt s)
     (hs : ∀ j i a e, coeffAt P j i a e ≠ 0 →
       a+(i+j)*(131071+h) < (s.B+s.J)*(2*h)+j) : P = 0 := by
@@ -1351,7 +1351,7 @@ private theorem ker_step_le {h} {D : PoleData h} (Crt : CRTLift D) (word : I →
   apply Subtype.ext
   exact congrArg (fun x : complete Crt word s W => (x : Source)) he
 
-private theorem ker_zero {h} (hhi : h ≤ 32872) {D : PoleData h} (Crt : CRTLift D)
+private theorem ker_zero {h} (hhi : h ≤ 32932) {D : PoleData h} (Crt : CRTLift D)
     (word : I → L) (s : Shape) : (boundaryMap Crt word s 0).ker = ⊥ := by
   apply bot_unique
   intro P hP

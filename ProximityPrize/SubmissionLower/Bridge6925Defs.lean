@@ -1,17 +1,9 @@
+import ProximityPrize.SubmissionLower.Low27Common
 import ProximityPrize.SubmissionLower.Fast075
 import ProximityPrize.SubmissionLower.Hi6921Fast023
 import ProximityPrize.SubmissionLower.HighPrice6921Core
 import ProximityPrize.SubmissionLower.Bridge6925Price
 set_option Elab.async false
-namespace P0
-export K21 (AnchorModel AnchoredFamily K I p node twist)
-abbrev k : ℕ := 131072
-abbrev t : ℕ := 81975
-abbrev heightCap : ℕ := 32872
-abbrev agreement : ℕ := 180169
-abbrev lowCutoff : ℤ := 2447
-def highPrefix (w : ℤ) : ℕ := K21.highPrefix w - 1
-end P0
 section PackSource_P0_10Defs
 set_option autoImplicit true
 namespace P0_10
@@ -27,26 +19,26 @@ open scoped BigOperators
 
 abbrev band := H21.band
 abbrev terminalShape := H21.terminalShape
-def freeShape (w : ℤ) (i : Fin 2) : Shape :=
-  if w ≤ 3554 then ![⟨55, 76, 16, 1297⟩, ⟨81, 112, 24, 2039⟩] i
-  else ![⟨34, 47, 10, 515⟩, ⟨64, 80, 16, 940⟩] i
+def freeShape (w : ℤ) (i : Fin 3) : Shape :=
+  if w ≤ 3554 then ![⟨55, 76, 16, 1360⟩, ⟨91, 126, 27, 2072⟩, ⟨230,319,66,4045⟩] i
+  else ![⟨34, 47, 10, 515⟩, ⟨77, 80, 16, 940⟩, ⟨230,319,66,4045⟩] i
 
-def movingShape (w : ℤ) (i : Fin 2) : Shape :=
-  if w ≤ 3554 then ![⟨150, 208, 43, 6547⟩, ⟨224, 311, 64, 10066⟩] i
-  else ![⟨67, 93, 18, 1857⟩, ⟨124, 172, 35, 3138⟩] i
+def movingShape (w : ℤ) (i : Fin 3) : Shape :=
+  if w ≤ 3554 then ![⟨160, 222, 46, 6927⟩, ⟨266, 369, 77, 10980⟩, ⟨600,837,168,25162⟩] i
+  else ![⟨67, 93, 18, 1857⟩, ⟨124, 172, 35, 3138⟩, ⟨600,837,168,25162⟩] i
 
-def reserve (i : Fin 2) : ℕ := ![0, 5] i
+def reserve (i : Fin 3) : ℕ := ![0, 6, 25] i
 
 def fullShape (w : ℤ) : Shape :=
-  { terminalShape w with U := if w ≤ 3554 then 80000 else 59515 }
+  { terminalShape w with U := if w ≤ 3554 then 75000 else 59515 }
 
 def scheduled (w : ℤ) : List Shape :=
   [freeShape w 0, movingShape w 0, freeShape w 1, movingShape w 1,
-    fullShape w, terminalShape w]
+    freeShape w 2, movingShape w 2, fullShape w, terminalShape w]
 
 def fullCutoff (s : Shape) : ℕ := s.m * agreement - 1
 
-def reserveCutoff (w : ℤ) (s : Shape) (i : Fin 2) : ℕ :=
+def reserveCutoff (w : ℤ) (s : Shape) (i : Fin 3) : ℕ :=
   fullCutoff s - 2 * w.toNat * reserve i
 
 /-- Evaluated true-row spaces over the generic abscissa. The seed shifts
@@ -69,7 +61,7 @@ structure JetSource {u del} (M : AnchorModel u del) {Γ} (F : AnchoredFamily M �
       sourceDebit M.overhead.toNat s + ∑ t ∈ Finset.range (W + 1), Module.finrank FX (rows s t)
 
 /-- Both rows are selected at the stage's buffered cutoff. -/
-structure BufferedPair (w : ℤ) (rows : Banks) (i : Fin 2) where
+structure BufferedPair (w : ℤ) (rows : Banks) (i : Fin 3) where
   free : Jet
   moving : Jet
   free_ne : free ≠ 0
@@ -84,7 +76,7 @@ def BankVanishes (rows : Banks) (s : Shape) (q : Surface) : Prop :=
 /-- Retention uses every row of both full spaces and the ordinary
 compatibility test. At level five, each full cutoff exceeds its buffered
 cutoff by ten times the overhead. -/
-def PairPass {w : ℤ} {rows : Banks} {i : Fin 2} (pair : BufferedPair w rows i)
+def PairPass {w : ℤ} {rows : Banks} {i : Fin 3} (pair : BufferedPair w rows i)
     (q : Surface) : Prop :=
   BankVanishes rows (freeShape w i) q ∧
   BankVanishes rows (movingShape w i) q ∧ Compatible pair.free pair.moving q
@@ -104,6 +96,6 @@ end PackSource_P0_10Defs
 namespace P0_10
 def c2 : Prop :=
   ∀ u del (M : K21.AnchorModel u del) Γ (F : K21.AnchoredFamily M Γ),
-    (2448 : ℤ) ≤ M.overhead → M.overhead ≤ 3554 → ∀ rows, JetSource M F rows →
-    Nonempty (∀ i : Fin 2, BufferedPair M.overhead rows i)
+    (2472 : ℤ) ≤ M.overhead → M.overhead ≤ 3554 → ∀ rows, JetSource M F rows →
+    Nonempty (∀ i : Fin 3, BufferedPair M.overhead rows i)
 end P0_10

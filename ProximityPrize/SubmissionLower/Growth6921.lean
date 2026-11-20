@@ -376,14 +376,14 @@ private theorem certificate_shifts_annihilate_generic {F E ι : Type} [Field F] 
 
 /-- Each prescribed shift satisfies every complementary moment equation. -/
 theorem certificate_shifts_annihilate {u : Words} {T : TwoActive u} (R : Relation T)
-    (s : ℕ) (hL : T.height + s = 49097) :
-    (shifts (fun b => Principal.assemble (fun j => R.coefficients (b, j))) 49097 s).transpose *
+    (s : ℕ) (hL : T.height + s = 49067) :
+    (shifts (fun b => Principal.assemble (fun j => R.coefficients (b, j))) 49067 s).transpose *
       twoBlock u = 0 := by
-  have hsize : 131072 + (49096 + 1) + 81975 ≤ Fintype.card I := by
+  have hsize : 131072 + (49066 + 1) + 82005 ≤ Fintype.card I := by
     rw [IRSProfile.card_index]
   exact certificate_shifts_annihilate_generic p node (u 0) (u 1) IRSProfile.domain.injective
     Native.native_domain_fixed (algebraMap K[X] Frac) (IsFractionRing.injective K[X] Frac)
-    131072 T.height 49096 81975 s hL hsize R _ (fun _ => rfl)
+    131072 T.height 49066 82005 s hL hsize R _ (fun _ => rfl)
 
 end K21_6
 end Port_K1_6Aux1
@@ -538,18 +538,18 @@ private theorem k16Aux2_count_bound {c n n' H b : ℕ}
 
 /-- Cover the marked slopes by one nonzero seed polynomial per nonfixed node. -/
 theorem normal_growth_count {u : Words} {T : TwoActive u} (R : Relation T)
-    (hHeight : ∀ i, (R.coefficients i).natDegree ≤ 6447537366)
+    (hHeight : ∀ i, (R.coefficients i).natDegree ≤ 6479539670)
     (hMoving : MovingGCD R) (hSat : NormalSaturation R) (Γ : Finset K)
     (hBad : BadFamily u Γ) (hNormal : ∀ γ ∈ Γ, Normal u γ) :
-    Γ.card ≤ 1690183235272704 := by
+    Γ.card ≤ 1698572447252480 := by
   classical
   let U (i : I) := (leftU R).eval (C (node i))
   let V (i : I) := (leftV R).eval (C (node i))
-  have hU (i) : (U i).natDegree ≤ 6447537366 := by
+  have hU (i) : (U i).natDegree ≤ 6479539670 := by
     dsimp only [U, leftU]
     rw [Strata.assemble_nodePolynomial]
     exact Principal.nodePolynomial_natDegree_le _ (fun j => hHeight (0, j)) _
-  have hV (i) : (V i).natDegree ≤ 6447537366 := by
+  have hV (i) : (V i).natDegree ≤ 6479539670 := by
     dsimp only [V, leftV]
     rw [Strata.assemble_nodePolynomial]
     exact Principal.nodePolynomial_natDegree_le _ (fun j => hHeight (1, j)) _
@@ -562,8 +562,8 @@ theorem normal_growth_count {u : Words} {T : TwoActive u} (R : Relation T)
       simpa only [fixedNodes, Finset.mem_filter, Finset.mem_univ, true_and] using hi
     exact ⟨i, hNZ, hu, hv⟩
   exact k16Aux2_count_bound (c := Γ.card) (n := Fintype.card I) (n' := 262144)
-    (H := 6447537366) (b := 1690183235272704) IRSProfile.card_index
-    (common_node_count U V 6447537366 Γ hU hV hNew) rfl
+    (H := 6479539670) (b := 1698572447252480) IRSProfile.card_index
+    (common_node_count U V 6479539670 Γ hU hV hNew) rfl
 
 end K21_6
 end Port_K1_6Aux2
@@ -604,15 +604,15 @@ def c2 : Prop :=
 theorem of_children (h1 : c1) (h2 : c2) : K21.c6 := by
   intro u front T R moving saturated Γ bad normal
   let P (b : Fin 2) : Bivar := Principal.assemble (fun j => R.coefficients (b, j))
-  let s := 49097 - T.height
-  have hsDef : s = 49097 - T.height := rfl
+  let s := 49067 - T.height
+  have hsDef : s = 49067 - T.height := rfl
   have hP : ∀ b, (P b).natDegree ≤ T.height := R.x_degree
-  have hBalance : 49097 + T.height + nullity u = 81976 ∧ T.height ≤ 32872 ∧ T.height < 49097 :=
+  have hBalance : 49067 + T.height + nullity u = 82006 ∧ T.height ≤ 32932 ∧ T.height < 49067 :=
     Native6921Balance (nullity u) T.a T.b T.c
       T.top T.degreeSum T.nullitySum (by have := front.1; omega)
-  have hSum : T.height + s = 49097 := by omega
-  have hs : 16225 ≤ s := by omega
-  have hRank : GenericLayer.genericRank (twoBlock u) + s = 2 * 49097 := by
+  have hSum : T.height + s = 49067 := by omega
+  have hs : 16135 ≤ s := by omega
+  have hRank : GenericLayer.genericRank (twoBlock u) + s = 2 * 49067 := by
     change stackRank u + s = _
     rw [K21.actual_stackRank u]
     omega
@@ -624,14 +624,14 @@ theorem of_children (h1 : c1) (h2 : c2) : K21.c6 := by
     exact R.primitive
   have hKernel := certificate_shifts_annihilate R s hSum
   obtain ⟨hMinors, H, hH, rows, hRows⟩ :=
-    h1 K T.height 49097 s P hSum (by omega) hP hPrim
-  have hBound := h2 K 49097 81976 s p (twoBlock u) (shifts P 49097 s)
+    h1 K T.height 49067 s P hSum (by omega) hP hPrim
+  have hBound := h2 K 49067 82006 s p (twoBlock u) (shifts P 49067 s)
     (by norm_num [Native.p]) hRank hKernel
-    (stacked_entry_natDegree p node (u 0) (u 1) 49097 81975) hMinors rows
+    (stacked_entry_natDegree p node (u 0) (u 1) 49067 82005) hMinors rows
   rw [hRows] at hBound
-  have hProduct : 16225 * H ≤ s * H := Nat.mul_le_mul_right H hs
-  have hCeiling : 49097 * (p + 1) = 104611293790098 := by norm_num [Native.p]
-  have hCap : H ≤ 6447537366 := by omega
+  have hProduct : 16135 * H ≤ s * H := Nat.mul_le_mul_right H hs
+  have hCeiling : 49067 * (p + 1) = 104547372597078 := by norm_num [Native.p]
+  have hCap : H ≤ 6479539670 := by omega
   apply normal_growth_count R _ moving saturated Γ bad normal
   intro i
   rw [← hCoordinates]

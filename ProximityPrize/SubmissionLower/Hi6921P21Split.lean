@@ -32,7 +32,7 @@ private theorem source_floor {u del} {M : AnchorModel u del} {Γ}
       ∑ W ∈ range (cutoffCount M.overhead.toNat r s), Module.finrank FX (rows s W) := by
   let N := cutoffCount M.overhead.toNat r s
   have hN : 0 < N := lt_of_le_of_lt (Nat.zero_le _) hw
-  have hNt : N ≤ s.m * 180169 := Nat.sub_le _ _
+  have hNt : N ≤ s.m * 180139 := Nat.sub_le _ _
   have hc : N - 1 + 1 = N := by omega
   have h := src.floor_bound s hs (N - 1) (by omega) (by
     intro q hq j _
