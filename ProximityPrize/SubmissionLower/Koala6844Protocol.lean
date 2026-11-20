@@ -16,7 +16,7 @@ local instance : DecidableEq IRSProfile.Field := Classical.decEq _
 local instance : DecidableEq IRSProfile.Index := Classical.decEq _
 
 def errors : ℕ := 81183
-def mcaBudget : ℕ := 274764664204693010
+def mcaBudget : ℕ := 271137186418029849
 def listBudget : ℕ := 122234137536
 def radiusNumerator : ℕ := 332529663
 def radiusDenominator : ℕ := 1073741824
@@ -88,31 +88,33 @@ theorem score_target_le : (1 - radius)^IRSProfile.repetitions ≤ claimedError 6
         NNReal.rpow_add (by norm_num : (2 : ℝ≥0) ≠ 0)]
       simp only [NNReal.rpow_neg, NNReal.rpow_natCast, one_div]
 
-def ScalarListBound : Prop :=
+def ScalarListBoundAt (B : ℕ) : Prop :=
   ∀ (received : IRSProfile.Index → IRSProfile.Field)
     (words : Finset (IRSProfile.Index → IRSProfile.Field)),
     (∀ word ∈ words, word ∈ IRSProfile.baseCode) →
     (∀ word ∈ words, Fintype.card IRSProfile.Index - errors ≤
       (Finset.univ.filter (fun i => word i = received i)).card) →
-    words.card ≤ listBudget
+    words.card ≤ B
 
-private theorem lambda_le
-    (hlist : ScalarListBound)
-    (hprojection : 15 * (listBudget + 1).choose 2 < Fintype.card IRSProfile.Field) :
+abbrev ScalarListBound := ScalarListBoundAt listBudget
+
+private theorem lambda_le {B : ℕ}
+    (hlist : ScalarListBoundAt B)
+    (hprojection : 15 * (B + 1).choose 2 < Fintype.card IRSProfile.Field) :
     Code.Lambda
       ((IRSProfile.code ^⋈ (Fin 2) :
         ModuleCode IRSProfile.Index IRSProfile.Field
           (Fin 2 → Fin IRSProfile.interleaving → IRSProfile.Field)) :
         Set (IRSProfile.Index → Fin 2 → Fin IRSProfile.interleaving → IRSProfile.Field))
-      (radius : ℝ) ≤ (listBudget : ℕ∞) := by
+      (radius : ℝ) ≤ (B : ℕ∞) := by
   rw [RCN018.irs_squared_carrier_eq]
   apply RCN280.squared_eight_lambda_le_of_interleaved_list
-    IRSProfile.baseCode errors listBudget ?_ (radius : ℝ) radius_cell
+    IRSProfile.baseCode errors B ?_ (radius : ℝ) radius_cell
   intro received words hrows hclose
   classical
   by_contra hnot
   obtain ⟨subset, hsubset, hsubsetCard⟩ :=
-    Finset.exists_subset_card_eq (show listBudget + 1 ≤ words.card by omega)
+    Finset.exists_subset_card_eq (show B + 1 ≤ words.card by omega)
   obtain ⟨t, ht⟩ := RCN019.exists_separating_moment_parameter subset
     (show 15 * subset.card.choose 2 < Fintype.card IRSProfile.Field by
       rw [hsubsetCard]
@@ -175,14 +177,16 @@ private theorem mca_le (halign : AffineLineAlignmentBound IRSProfile.baseCode er
       rw [ENNReal.ofReal_div_of_pos (by positivity), ENNReal.ofReal_natCast,
         ENNReal.ofReal_natCast]
 
-private theorem reduction_of_bounds
+/-- The exact numerator obtained by combining the chosen alignment and scalar list bounds. -/
+theorem extractor_error_le {B : ℕ}
     (halign : AffineLineAlignmentBound IRSProfile.baseCode errors mcaBudget)
-    (hlist : ScalarListBound)
-    (hprojection : 15 * (listBudget + 1).choose 2 < Fintype.card IRSProfile.Field)
-    (hcapacity : 2 ^ (128 : ℕ) * (mcaBudget + listBudget) ≤ Fintype.card IRSProfile.Field) :
-    certifiedGammaError IRSProfile.code radius ≤ (1 : ℝ≥0) / 2 ^ (128 : ℕ) := by
+    (hlist : ScalarListBoundAt B)
+    (hprojection : 15 * (B + 1).choose 2 < Fintype.card IRSProfile.Field) :
+    certifiedGammaError IRSProfile.code radius ≤
+      ((mcaBudget + B : ℕ) : ℝ≥0) / (Fintype.card IRSProfile.Field : ℝ≥0) := by
   rw [← ENNReal.coe_le_coe, coe_certifiedGammaError]
   push_cast
+  rw [← Nat.cast_add]
   have hLambdaNat := ENat.toNat_le_of_le_natCast (lambda_le hlist hprojection)
   have hList :
       ((Code.Lambda
@@ -191,22 +195,39 @@ private theorem reduction_of_bounds
             (Fin 2 → Fin IRSProfile.interleaving → IRSProfile.Field)) :
           Set (IRSProfile.Index → Fin 2 → Fin IRSProfile.interleaving → IRSProfile.Field))
         (radius : ℝ)).toNat : ENNReal) / (Fintype.card IRSProfile.Field : ENNReal) ≤
-      (listBudget : ENNReal) / (Fintype.card IRSProfile.Field : ENNReal) :=
+      (B : ENNReal) / (Fintype.card IRSProfile.Field : ENNReal) :=
     ENNReal.div_le_div_right (by exact_mod_cast hLambdaNat) _
   calc
     _ ≤ (mcaBudget : ENNReal) / (Fintype.card IRSProfile.Field : ENNReal) +
-        (listBudget : ENNReal) / (Fintype.card IRSProfile.Field : ENNReal) :=
+        (B : ENNReal) / (Fintype.card IRSProfile.Field : ENNReal) :=
       add_le_add (mca_le halign) hList
-    _ = ((mcaBudget + listBudget : ℕ) : ENNReal) / (Fintype.card IRSProfile.Field : ENNReal) := by
+    _ = ((mcaBudget + B : ℕ) : ENNReal) / (Fintype.card IRSProfile.Field : ENNReal) := by
       rw [← ENNReal.add_div, Nat.cast_add]
-    _ ≤ (1 : ENNReal) / 2 ^ (128 : ℕ) := by
-      apply RCN284.nat_div_le_inv_pow
-      · unfold mcaBudget
-        omega
-      · simpa only [Nat.mul_comm] using hcapacity
+private theorem reduction_of_bounds
+    (halign : AffineLineAlignmentBound IRSProfile.baseCode errors mcaBudget)
+    (hlist : ScalarListBound)
+    (hprojection : 15 * (listBudget + 1).choose 2 < Fintype.card IRSProfile.Field)
+    (hcapacity : 2 ^ (128 : ℕ) * (mcaBudget + listBudget) ≤ Fintype.card IRSProfile.Field) :
+    certifiedGammaError IRSProfile.code radius ≤ (1 : ℝ≥0) / 2 ^ (128 : ℕ) := by
+  apply (extractor_error_le halign hlist hprojection).trans
+  rw [← ENNReal.coe_le_coe]
+  push_cast
+  rw [← Nat.cast_add]
+  apply RCN284.nat_div_le_inv_pow
+  · unfold mcaBudget
+    omega
+  · simpa only [Nat.mul_comm] using hcapacity
 
 abbrev ScalarSeedBound : Prop :=
   RCN050.SelectedNoLargePencilBound IRSProfile.domain 131071 errors mcaBudget
+
+theorem extractor_error_le_of_selected {B : ℕ} (hseed : ScalarSeedBound)
+    (hlist : ScalarListBoundAt B)
+    (hprojection : 15 * (B + 1).choose 2 < Fintype.card IRSProfile.Field) :
+    certifiedGammaError IRSProfile.code radius ≤
+      ((mcaBudget + B : ℕ) : ℝ≥0) / (Fintype.card IRSProfile.Field : ℝ≥0) :=
+  extractor_error_le (RCN050.alignmentBound_of_selected_count IRSProfile.domain 131071
+    errors mcaBudget hseed) hlist hprojection
 
 private theorem protocolClaim_of_bounds
     (hseed : ScalarSeedBound)

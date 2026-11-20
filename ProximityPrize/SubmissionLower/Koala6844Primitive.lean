@@ -1715,7 +1715,7 @@ abbrev badNodes (received : ReceivedWords) (q : SymbolicRow (SeedRing IRSProfile
 
 def commonDiscardBudget : ℕ := 336726191297190
 
-def retainedSeedBudget : ℕ := 274427938013395820
+def retainedSeedBudget : ℕ := 270800460226732659
 
 structure RetainedComparison (received : ReceivedWords) (retained : Finset IRSProfile.Field)
     (selected : IRSProfile.Field → Polynomial IRSProfile.Field)

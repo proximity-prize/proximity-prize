@@ -22,9 +22,8 @@ theorem benchmark_large_support : Koala6844VirtualDispatch.LargeSupportBound := 
   have hcap (f : BenchmarkVirtualCarrier) (hf : f ∈ U) (i : Fin 4) :
       f.degreeOf i ≤ (∏ g ∈ U, g).degreeOf i :=
     RCN137.coordinate_degree_le_of_dvd i f _ (Finset.dvd_prod_of_mem (fun g => g) hf) hprod
-  apply (virtual_budget_of_factor_counts benchmarkVirtualSeed (benchmarkSurfaceValue D)
-    D.seeds U room adaptiveDone excluded hcover hroom hadaptive hexcluded hnz hcaps ?_).trans
-    virtual_budget_le_retained_budget
+  apply virtual_budget_of_factor_counts benchmarkVirtualSeed (benchmarkSurfaceValue D)
+    D.seeds U room adaptiveDone excluded hcover hroom hadaptive hexcluded hnz hcaps ?_
   intro f hf
   rcases hcaps with he | hc
   · simp [he] at hf

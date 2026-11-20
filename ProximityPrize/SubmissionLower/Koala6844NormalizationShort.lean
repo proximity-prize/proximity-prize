@@ -61,7 +61,7 @@ theorem prepare_retained_short
     (N : NormalForm q 131071 (primitiveExcess 131071 q)) :
     retained.card ≤ 10^16 ∨
     ∃ data : CenteredVirtualData x (goodNodes received q) frobenius 131071 180961 81183
-        (primitiveExcess 131071 q), retained.card ≤ data.seeds.card + 10^15 := by
+        (primitiveExcess 131071 q), retained.card ≤ data.seeds.card + 20878792628510 := by
   classical
   let δ := primitiveExcess 131071 q
   let nodes := goodNodes received q

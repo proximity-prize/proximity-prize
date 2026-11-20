@@ -48,7 +48,7 @@ private theorem pay_short_phases (n initial a b c d e room₁ room₂ adaptive�
     (h₀ : initial ≤ shortSymbolicBudget) (h₁ : room₁ ≤ 1911243880121235)
     (h₂ : room₂ ≤ 524153816993650) (h₃ : adaptive₁ ≤ 524260340103650)
     (h₄ : adaptive₂ ≤ 7000000000000000) (h₅ : e ≤ terminalBudget) :
-    n ≤ 273427938013395819 := by
+    n ≤ 270779581434104148 := by
   unfold shortSymbolicBudget at h₀
   unfold terminalBudget at h₅
   omega
@@ -77,7 +77,7 @@ theorem short_centered_support_bound
     (hTerm : ∀ e ∈ table, terminalMetadata e = true)
     (hRaw : ∀ e ∈ table, intrinsicRawMetadata e = true)
     (margins : ∀ j : Fin contactProfiles.size, sourceMargin contactProfiles[j]) :
-    data.seeds.card ≤ 273427938013395819 := by
+    data.seeds.card ≤ 270779581434104148 := by
   have hsize : domain.card ≤ nodes := (Finset.card_le_univ domain).trans hSize
   have hgap : 0 < firstJetGap primaryShape 0 := by rw [primary_firstJetGap_eq]; decide
   obtain ⟨H,hH,hbox,_,_,hzero⟩ := exists_checked_primary data hsize hpole hLead hgap

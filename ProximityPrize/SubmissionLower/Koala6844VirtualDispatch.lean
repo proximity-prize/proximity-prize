@@ -20,7 +20,7 @@ set_option maxRecDepth 20000
 abbrev VirtualFamily (nodes : Finset IRSProfile.Index) (excess : ℕ) :=
   CenteredVirtualData IRSProfile.domain nodes Koala6844BenchmarkField.frobenius 131071 180961 81183 excess
 
-def activeBudget : ℕ := 273427938013395819
+def activeBudget : ℕ := 270779581434104148
 
 def LargeSupportBound : Prop :=
   ∀ (nodes : Finset IRSProfile.Index) (excess : ℕ), excess ≤ 9799 →
