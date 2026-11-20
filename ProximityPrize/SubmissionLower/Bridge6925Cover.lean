@@ -47,7 +47,7 @@ def c2 : Prop :=
     (∀ I ∈ S, Active I ∧ Bridge.PairPass pair I ∧
       ¬ fixedOn A.equation I ∧ ¬ fixedOn B.equation I ∧
       orderOn I pair.free 7 ∧ orderOn I pair.moving 7) →
-    mass S 1 ≤ 65143 ∧ mass S 2 ≤ 358008 ∧ Fits (S.filter dual) reserveFiveCap
+    mass S 1 ≤ 63777 ∧ mass S 2 ≤ 350344 ∧ Fits (S.filter dual) reserveFiveCap
 
 def lateMass : Prop :=
   ∀ (w : ℤ), lowCutoff + 1 ≤ w → w ≤ 3554 →
@@ -180,7 +180,7 @@ theorem cover (h1 : c1) (h2 : c2) (nextMass : lateMass) (h3 : c3) :
       exact failed_terminal src hhi (fun h => hnot (Finset.mem_filter.mpr ⟨hb, h⟩)))
   let fixed₄ := Γ.filter fun γ => fixedAt Af.equation (F.scalar γ) = 0
   let fixed₅ := Γ.filter fun γ => fixedAt Bf.equation (F.scalar γ) = 0
-  have fshape : freeShape M.overhead 2 = ⟨230,319,66,4045⟩ := by rw [freeShape,ite_eq_left hhi]; rfl
+  have fshape : freeShape M.overhead 2 = ⟨230,319,66,3650⟩ := by rw [freeShape,ite_eq_left hhi]; rfl
   have mshape := moving_late M.overhead hhi
   have paid₄ : fixed₄.card ≤ fixedPrice 319 66 :=
     fixed_group_count hhi (by simpa only [fshape] using Af.equation_caps) (by decide) (by decide) (by decide)
@@ -234,13 +234,13 @@ theorem cover (h1 : c1) (h2 : c2) (nextMass : lateMass) (h3 : c3) :
   let fixed₂ := Γ.filter fun γ => fixedAt A₅.equation (F.scalar γ) = 0
   let fixed₃ := Γ.filter fun γ => fixedAt B₅.equation (F.scalar γ) = 0
   let rank := Γ.filter fun γ => fixedAt G (F.scalar γ) = 0
-  have shape₀ : freeShape M.overhead 0 = ⟨55,76,16,1360⟩ := by
+  have shape₀ : freeShape M.overhead 0 = ⟨55,76,16,1299⟩ := by
     rw [freeShape, ite_eq_left hhi]
     rfl
-  have shape₁ : movingShape M.overhead 0 = ⟨160,222,46,6927⟩ := by
+  have shape₁ : movingShape M.overhead 0 = ⟨160,222,46,7106⟩ := by
     rw [movingShape, ite_eq_left hhi]
     rfl
-  have shape₂ : freeShape M.overhead 1 = ⟨91,126,27,2072⟩ := by
+  have shape₂ : freeShape M.overhead 1 = ⟨91,126,27,1931⟩ := by
     rw [freeShape, ite_eq_left hhi]
     rfl
   have shape₃ := moving_five M.overhead hhi
@@ -256,7 +256,7 @@ theorem cover (h1 : c1) (h2 : c2) (nextMass : lateMass) (h3 : c3) :
   have fixed₃_paid : fixed₃.card ≤ fixedPrice 369 77 :=
     fixed_group_count hhi (by simpa only [shape₃, stageFiveShape] using B₅.equation_caps)
       (by decide) (by decide) (by decide)
-  have rank_paid : rank.card ≤ fixedPrice 358008 65143 :=
+  have rank_paid : rank.card ≤ fixedPrice 350344 63777 :=
     fixed_group_count hhi hG (by decide) (by decide) (by decide)
   let keep := Γ.filter fun γ => ∃ I ∈ C, OnParent F I γ
   let paid := initial.direct ∪ fixed₀ ∪ fixed₁ ∪ fixed₂ ∪ fixed₃ ∪ rank ∪
@@ -267,7 +267,7 @@ theorem cover (h1 : c1) (h2 : c2) (nextMass : lateMass) (h3 : c3) :
       (Finset.card_union_le _ _).trans hconst'
     calc
       _ ≤ initialFee + fixedPrice 76 16 + fixedPrice 222 46 + fixedPrice 126 27 +
-          fixedPrice 369 77 + fixedPrice 358008 65143 + constantFee + curveFee := by
+          fixedPrice 369 77 + fixedPrice 350344 63777 + constantFee + curveFee := by
         exact card_union_bound
           (card_union_bound
             (card_union_bound
@@ -540,7 +540,7 @@ theorem proof : P0_10R.c1 := by
     simpa only [seedImage, dite_eq_left hi] using Classical.choose_spec (seed_exists I hi)
   let imageCover := joinCovers noSeeds seedImage
   let seedExits := Γ.filter (fun γ => imageCover.Covers (M.label γ))
-  have hseedExits : seedExits.card ≤ (p+1)*828372 + initialE₀ := by
+  have hseedExits : seedExits.card ≤ (p+1)*828434 + initialE₀ := by
     apply cover_count M _ _ _ _ _ (by decide) _ (fun γ hγ => (Finset.mem_filter.mp hγ).2)
     · calc
         _ ≤ ∑ I ∈ noSeeds, (seedImage I).curve.totalDegree := joinCovers_degree _ _
@@ -573,8 +573,8 @@ theorem proof : P0_10R.c1 := by
       _ ≤ _ := hfit 0
   let contentCover : SeedCover := ⟨prep.seedContent, prep.seedContent_ne, ∅⟩
   let contentExits := Γ.filter (fun γ => graphEval (M.label γ) prep.seedContent = 0)
-  have hcontentExits : contentExits.card ≤ (p+1)*(1360+6927) := by
-    have h := cover_count M contentExits contentCover (1360+6927) 0 prep.seedContent_degree
+  have hcontentExits : contentExits.card ≤ (p+1)*(1299+7106) := by
+    have h := cover_count M contentExits contentCover (1299+7106) 0 prep.seedContent_degree
       (by decide) (by simp [contentCover]) (fun γ hγ => Or.inl (Finset.mem_filter.mp hγ).2)
     simpa only [Nat.add_zero] using h
   let direct := (contentExits ∪ seedExits) ∪ yExits
@@ -585,7 +585,7 @@ theorem proof : P0_10R.c1 := by
       direct.card ≤ (contentExits ∪ seedExits).card + yExits.card := Finset.card_union_le _ _
       _ ≤ contentExits.card + seedExits.card + yExits.card :=
         Nat.add_le_add_right (Finset.card_union_le _ _) _
-      _ ≤ (p+1)*(1360+6927) + ((p+1)*828372 + initialE₀) + 6312 :=
+      _ ≤ (p+1)*(1299+7106) + ((p+1)*828434 + initialE₀) + 6312 :=
         Nat.add_le_add (Nat.add_le_add hcontentExits hseedExits) hyExits
       _ = initialFee := by unfold initialFee; ac_rfl
   · intro γ hγ
@@ -704,8 +704,8 @@ open private numerator numerator_bound seedNumerator ordinateNumerator mixedNume
   jetsNumerator ordinate_endpoints mixed_seed_endpoints mixed_ordinate_endpoints
   jets_endpoints from ProximityPrize.SubmissionLower.Fast032
 
-def bridgeFree : Shape := ⟨91, 126, 27, 2072⟩
-def bridgeMoving : Shape := ⟨266, 369, 77, 10980⟩
+def bridgeFree : Shape := ⟨91, 126, 27, 1931⟩
+def bridgeMoving : Shape := ⟨266, 369, 77, 11028⟩
 
 end
 end P0_10R_2
@@ -813,16 +813,16 @@ theorem proof : P0_10R.c2 := by
   obtain ⟨G⟩ := sharedGcd A B pair.free_ne pair.moving_ne hP hQ pair.no_moving
   let x := seedDegree G.ordinary
   let z := G.ordinary.natDegree
-  have hx : x ≤ 2072 := G.seed_le
+  have hx : x ≤ 1931 := G.seed_le
   have hz : z ≤ 126 := G.ordinate_le
   have hlocal (I) (hI : I ∈ S) :
       Active I ∧ K1_14_2_2R.chainCompatible pair.free pair.moving I ∧
       ¬ fixedOn A.equation I ∧ ¬ fixedOn B.equation I ∧
       orderOn I pair.free 7 ∧ orderOn I pair.moving 7 :=
     ⟨(hpass I hI).1, (hpass I hI).2.1.2.2, (hpass I hI).2.2⟩
-  refine ⟨paired_stage G S false 1 1 65143 (by decide) (by decide) (by simp) hlocal
+  refine ⟨paired_stage G S false 1 1 63777 (by decide) (by decide) (by simp) hlocal
     (PriceReceipt6925.linear_ordinate x z hx hz),
-    paired_stage G S false 2 2 358008 (by decide) (by decide) (by simp) hlocal
+    paired_stage G S false 2 2 350344 (by decide) (by decide) (by simp) hlocal
     (PriceReceipt6925.linear_mixed x z hx hz), ?_⟩
   intro k
   let T := S.filter dual
@@ -830,9 +830,9 @@ theorem proof : P0_10R.c2 := by
   have hT (I) (hI : I ∈ T) := hlocal I (Finset.mem_filter.mp hI).1
   fin_cases k
   · exact paired_stage G T true 0 1 358 (by decide) (by decide) hdual hT (PriceReceipt6925.reserve_square 0 x z hx hz)
-  · exact paired_stage G T true 1 1 9306 (by decide) (by decide) hdual hT (PriceReceipt6925.reserve_square 1 x z hx hz)
-  · exact paired_stage G T true 2 3 85921 (by decide) (by decide) hdual hT (PriceReceipt6925.reserve_square 2 x z hx hz)
-  · exact paired_stage G T true 3 3 910022 (by decide) (by decide) hdual hT (PriceReceipt6925.reserve_square 3 x z hx hz)
+  · exact paired_stage G T true 1 1 9111 (by decide) (by decide) hdual hT (PriceReceipt6925.reserve_square 1 x z hx hz)
+  · exact paired_stage G T true 2 3 84082 (by decide) (by decide) hdual hT (PriceReceipt6925.reserve_square 2 x z hx hz)
+  · exact paired_stage G T true 3 3 851802 (by decide) (by decide) hdual hT (PriceReceipt6925.reserve_square 3 x z hx hz)
 
 end
 end P0_10R_2
@@ -925,8 +925,8 @@ open private numerator numerator_bound seedNumerator ordinateNumerator mixedNume
   jetsNumerator ordinate_endpoints mixed_seed_endpoints mixed_ordinate_endpoints
   jets_endpoints from ProximityPrize.SubmissionLower.Fast032
 
-def bridgeFree : Shape := ⟨230, 319, 66, 4045⟩
-def bridgeMoving : Shape := ⟨600, 837, 168, 25162⟩
+def bridgeFree : Shape := ⟨230, 319, 66, 3650⟩
+def bridgeMoving : Shape := ⟨600, 837, 168, 25167⟩
 
 end
 end P0_10R_Late
@@ -1034,7 +1034,7 @@ theorem proof : P0_10R.lateMass := by
   obtain ⟨G⟩ := sharedGcd A B pair.free_ne pair.moving_ne hP hQ pair.no_moving
   let x := seedDegree G.ordinary
   let z := G.ordinary.natDegree
-  have hx : x ≤ 4045 := G.seed_le
+  have hx : x ≤ 3650 := G.seed_le
   have hz : z ≤ 319 := G.ordinate_le
   have hlocal (I) (hI : I ∈ S) :
       Active I ∧ K1_14_2_2R.chainCompatible pair.free pair.moving I ∧
@@ -1047,9 +1047,9 @@ theorem proof : P0_10R.lateMass := by
   have hT (I) (hI : I ∈ T) := hlocal I (Finset.mem_filter.mp hI).1
   fin_cases k
   · exact paired_stage G T true 0 3 169 (by decide) (by decide) hdual hT (LateReceipt6928.reserve_square 0 x z hx hz)
-  · exact paired_stage G T true 1 3 4062 (by decide) (by decide) hdual hT (LateReceipt6928.reserve_square 1 x z hx hz)
-  · exact paired_stage G T true 2 9 35223 (by decide) (by decide) hdual hT (LateReceipt6928.reserve_square 2 x z hx hz)
-  · exact paired_stage G T true 3 8 281939 (by decide) (by decide) hdual hT (LateReceipt6928.reserve_square 3 x z hx hz)
+  · exact paired_stage G T true 1 3 3948 (by decide) (by decide) hdual hT (LateReceipt6928.reserve_square 1 x z hx hz)
+  · exact paired_stage G T true 2 9 34207 (by decide) (by decide) hdual hT (LateReceipt6928.reserve_square 2 x z hx hz)
+  · exact paired_stage G T true 3 8 254458 (by decide) (by decide) hdual hT (LateReceipt6928.reserve_square 3 x z hx hz)
 
 end
 end P0_10R_Late

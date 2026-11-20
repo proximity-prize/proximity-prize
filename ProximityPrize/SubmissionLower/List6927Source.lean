@@ -17,7 +17,7 @@ abbrev Jet := (s : Fin 68) × (e2 : Fin (min s.val 9 + 1)) ×
 def e1 (j : Jet) : ℕ := j.2.2.val
 def e2 (j : Jet) : ℕ := j.2.1.val
 def e0 (j : Jet) : ℕ := j.1.val - e2 j - e1 j
-def width (j : Jet) : ℕ := 49 * 180139 - 131072 * j.1.val + e1 j + 2 * e2 j
+def width (j : Jet) : ℕ := 49 * 180120 - 131072 * j.1.val + e1 j + 2 * e2 j
 abbrev SourceIndex := (j : Jet) × Fin (width j)
 
 def columns (i : SourceIndex) : SourceColumn 2 where
@@ -36,13 +36,13 @@ theorem jet_order (j : Jet) : e1 j + 2 * e2 j ≤ 20 := by
   simp only [e1, e2]
   omega
 
-theorem width_lower (j : Jet) : 44987 ≤ width j := by
+theorem width_lower (j : Jet) : 44056 ≤ width j := by
   have hs := j.1.isLt
   unfold width
   omega
 
 theorem source_weight_lt (i : SourceIndex) :
-    i.2.val + 131072 * e0 i.1 + 131071 * e1 i.1 + 131070 * e2 i.1 < 49 * 180139 := by
+    i.2.val + 131072 * e0 i.1 + 131071 * e1 i.1 + 131070 * e2 i.1 < 49 * 180120 := by
   have hs := i.1.1.isLt
   have ht := jet_total i.1
   have hx := i.2.isLt
@@ -82,7 +82,7 @@ theorem columns_total_le (i : SourceIndex) : totalJetDegree (columns i).exponent
   omega
 
 theorem columns_weight_lt (i : SourceIndex) :
-    Finsupp.weight (differentialWeight 131072) (columns i).exponent < 49 * 180139 := by
+    Finsupp.weight (differentialWeight 131072) (columns i).exponent < 49 * 180120 := by
   simpa [SourceColumn.weight_exponent, columns, differentialWeight, Fin.sum_univ_two,
     Nat.add_assoc, Nat.mul_comm] using
     source_weight_lt i
@@ -90,11 +90,11 @@ theorem columns_weight_lt (i : SourceIndex) :
 def sourceTotal : ℕ := ∑ j : Jet, width j
 
 theorem jet_count : Fintype.card Jet = 6960 := by decide +kernel
-theorem source_total : sourceTotal = 26471237490 := by decide +kernel
+theorem source_total : sourceTotal = 26464757730 := by decide +kernel
 
 /-- Cardinality is a sum over7194 jet triples, never an enumeration of the
-26471237490-dimensional full source index. -/
-theorem source_card : Fintype.card SourceIndex = 26471237490 := by
+26464757730-dimensional full source index. -/
+theorem source_card : Fintype.card SourceIndex = 26464757730 := by
   rw [Fintype.card_sigma]
   simp only [Fintype.card_fin]
   exact source_total
@@ -107,7 +107,7 @@ theorem jet_top (j : Jet) : e2 j ≤ 9 := by
 
 def Eligible (x a b c : ℕ) : Prop :=
   a + b + c ≤ 67 ∧ b + 2 * c ≤ 20 ∧ c ≤ 9 ∧
-    x + 131072 * a + 131071 * b + 131070 * c < 49 * 180139
+    x + 131072 * a + 131071 * b + 131070 * c < 49 * 180120
 
 theorem columns_eligible (i : SourceIndex) :
     Eligible (columns i).x (columns i).y₀ ((columns i).higher 0) ((columns i).higher 1) := by
@@ -152,7 +152,7 @@ def sourceSpan (F : Type*) [Field F] : Submodule F (DifferentialPolynomial F 2) 
   Submodule.span F (Set.range fun i : SourceIndex ↦ (columns i).polynomial)
 
 def sourceBand (F : Type*) [Field F] : Submodule F (DifferentialPolynomial F 2) :=
-  restrictWeightAtMost (R := F) (differentialWeight 131072) 8826810 ⊓
+  restrictWeightAtMost (R := F) (differentialWeight 131072) 8825879 ⊓
     (restrictWeightAtMost (R := F) jetDegreeWeight 67 ⊓
       (restrictWeightAtMost (R := F) sourceOrderWeight 20 ⊓
         restrictWeightAtMost (R := F) sourceTopWeight 9))

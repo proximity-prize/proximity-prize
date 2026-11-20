@@ -10,13 +10,13 @@ set_option Elab.async false
 set_option maxRecDepth 12000
 set_option maxHeartbeats 1200000
 
-def freeZero : Shape := ⟨55,76,16,1360⟩
-def movingZero : Shape := ⟨160,222,46,6927⟩
-def freeFive : Shape := ⟨91,126,27,2072⟩
-def movingFive : Shape := ⟨266,369,77,10980⟩
+def freeZero : Shape := ⟨55,76,16,1299⟩
+def movingZero : Shape := ⟨160,222,46,7106⟩
+def freeFive : Shape := ⟨91,126,27,1931⟩
+def movingFive : Shape := ⟨266,369,77,11028⟩
 def full : Shape := ⟨2048,2845,600,75000⟩
-def initial : Fin 4 → ℕ := ![6312,173392,828372,9420720]
-def dual : Fin 4 → ℕ := ![358,9306,85921,910022]
+def initial : Fin 4 → ℕ := ![6312,173450,828434,9230694]
+def dual : Fin 4 → ℕ := ![358,9111,84082,851802]
 def threshold : Fin 4 → ℕ := ![1,1,3,3]
 
 private instance (s t : Shape) (d r M : ℕ) (k : Fin 4) :
@@ -51,13 +51,13 @@ theorem reserve_square (k : Fin 4) (x z : ℕ) (hx : x ≤ freeFive.U) (hz : z �
 
 theorem linear_ordinate (x z : ℕ) (hx : x ≤ freeFive.U) (hz : z ≤ freeFive.B) :
     7*highCap x z 1 + highScale 1 1 * pairCap (residualShape freeFive x z) (residualShape movingFive x z) 1
-      < highScale 1 1*7*(65143+1) := by
+      < highScale 1 1*7*(63777+1) := by
   apply bound (by decide) (by decide) hx hz
   decide +kernel
 
 theorem linear_mixed (x z : ℕ) (hx : x ≤ freeFive.U) (hz : z ≤ freeFive.B) :
     6*highCap x z 2 + highScale 2 2 * pairCap (residualShape freeFive x z) (residualShape movingFive x z) 2
-      < highScale 2 2*6*(358008+1) := by
+      < highScale 2 2*6*(350344+1) := by
   apply bound (by decide) (by decide) hx hz
   decide +kernel
 
@@ -70,13 +70,13 @@ set_option Elab.async false
 set_option maxRecDepth 12000
 set_option maxHeartbeats 1200000
 
-def freeZero : Shape := ⟨55,76,16,1360⟩
-def movingZero : Shape := ⟨160,222,46,6927⟩
-def freeFive : Shape := ⟨230,319,66,4045⟩
-def movingFive : Shape := ⟨600,837,168,25162⟩
+def freeZero : Shape := ⟨55,76,16,1299⟩
+def movingZero : Shape := ⟨160,222,46,7106⟩
+def freeFive : Shape := ⟨230,319,66,3650⟩
+def movingFive : Shape := ⟨600,837,168,25167⟩
 def full : Shape := ⟨2048,2845,600,75000⟩
-def initial : Fin 4 → ℕ := ![6312,173392,828372,9420720]
-def dual : Fin 4 → ℕ := ![169,4062,35223,281939]
+def initial : Fin 4 → ℕ := ![6312,173450,828434,9230694]
+def dual : Fin 4 → ℕ := ![169,3948,34207,254458]
 def threshold : Fin 4 → ℕ := ![3,3,9,8]
 
 private instance (s t : Shape) (d r M : ℕ) (k : Fin 4) :
