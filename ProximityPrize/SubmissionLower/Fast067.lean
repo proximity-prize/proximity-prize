@@ -5786,14 +5786,14 @@ open K1
 
 /-- The branch with two active generators in the low-nullity prefix. -/
 def MiddleGuard (u : Words) : Prop :=
-  7 ≤ nullity u ∧ nullity u ≤ 16 ∧ firstRank u = 49174 ∧
+  7 ≤ nullity u ∧ nullity u ≤ 16 ∧ firstRank u = 49164 ∧
     ¬ TypeAtMostOne u ∧ ¬ HomogeneousPrincipal u ∧ ¬ ConstantKernel u
 
 def JointOn (u : Words) (S : Finset I) : Prop :=
   ExtendsOn node (u 0) 131072 S ∧ ExtendsOn node (u 1) 131072 S
 
 def BadOn (D : Finset I) (v w : I → K) (γ : K) : Prop :=
-  ∃ S : Finset I, S ⊆ D ∧ 180246 ≤ S.card ∧
+  ∃ S : Finset I, S ⊆ D ∧ 180236 ≤ S.card ∧
     ExtendsOn node (fun i => v i + γ * w i) 131072 S ∧
     ¬ (ExtendsOn node v 131072 S ∧ ExtendsOn node w 131072 S)
 
@@ -5808,20 +5808,20 @@ def padding (r : ℕ) : ℕ :=
 def cutoff (r : ℕ) : ℕ := if r = 16 then 3 else 64
 def fixedLimit (r : ℕ) : ℕ := if r = 16 then 14427 else 14678
 
-def reducedHeight (r g : ℕ) : ℕ := 32725 - r - g
-def childRows (r : ℕ) : ℕ := 49174 - padding r
+def reducedHeight (r g : ℕ) : ℕ := 32745 - r - g
+def childRows (r : ℕ) : ℕ := 49164 - padding r
 def childErrors (r g : ℕ) : ℕ := childRows r + reducedHeight r g
 def deletionSize (r : ℕ) : ℕ := r - 1 + 2 * padding r
 
-def rankReserve (r : ℕ) : ℕ := 49174 + 2130706433 * (32725 - r)
+def rankReserve (r : ℕ) : ℕ := 49164 + 2130706433 * (32745 - r)
 
 def extraReserve (r g : ℕ) : ℕ :=
   let H := reducedHeight r g
-  2 * H * ((2130706433 * 49174 + H) / (49174 - H)) +
-    (49174 / (49174 - H)) * (2130706433 + 1)
+  2 * H * ((2130706433 * 49164 + H) / (49164 - H)) +
+    (49164 / (49164 - H)) * (2130706433 + 1)
 
 def incidenceDenominator (r g : ℕ) : ℕ :=
-  (81898 - g).choose (r - 1 + padding r) * (180246 - 1).choose (padding r)
+  (81908 - g).choose (r - 1 + padding r) * (180236 - 1).choose (padding r)
 
 def incidenceRatio (r g : ℕ) : ℚ :=
   ((262144 - g).choose (deletionSize r) : ℚ) / incidenceDenominator r g
@@ -5867,8 +5867,8 @@ structure PaddedFamily (u : Words) (D : Finset I) (Γ : Finset K) (r g : ℕ) wh
   degree : ∀ γ ∈ Γ, (decoder γ).degree < 131072
   witness : ∀ γ ∈ Γ,
     slack γ ≤ r - 1 ∧
-    (goodSet u D γ (decoder γ)).card = 180246 + slack γ ∧
-    (errorSet u D γ (decoder γ)).card = 81898 - g - slack γ ∧
+    (goodSet u D γ (decoder γ)).card = 180236 + slack γ ∧
+    (errorSet u D γ (decoder γ)).card = 81908 - g - slack γ ∧
     ¬ JointOn u (goodSet u D γ (decoder γ))
 
 /-- A single deletion union, with the error and agreement parts determined
@@ -5953,15 +5953,15 @@ The same witness support supplies the agreement lower bound and the
 contradiction to joint extension. -/
 private theorem shortened_from_weighted (N cap m B H : ℕ)
     (hB : B ≤ 2 * 131071 + 1)
-    (hcert : ∀ n ≤ N, IsJohnsonWeightedCertificate n 131071 180246 m B
-      (johnsonWeightedHeight n 131071 180246 m B))
-    (hheight : ∀ n ≤ N, johnsonWeightedHeight n 131071 180246 m B ≤ H)
-    (hprice : ⌊johnsonWeightedRefinedExceptionCount N 131071 180246 B H⌋ ≤ (cap : ℤ)) :
+    (hcert : ∀ n ≤ N, IsJohnsonWeightedCertificate n 131071 180236 m B
+      (johnsonWeightedHeight n 131071 180236 m B))
+    (hheight : ∀ n ≤ N, johnsonWeightedHeight n 131071 180236 m B ≤ H)
+    (hprice : ⌊johnsonWeightedRefinedExceptionCount N 131071 180236 B H⌋ ≤ (cap : ℤ)) :
     ShortenedCap N cap := by
   classical
   letI : DecidableEq K := Classical.decEq K
   intro D hD u v Γ hΓ
-  by_cases hA : 180246 ≤ D.card
+  by_cases hA : 180236 ≤ D.card
   swap
   · have hzero : Γ = ∅ := by
       apply eq_empty_iff_forall_notMem.mpr
@@ -5993,7 +5993,7 @@ private theorem shortened_from_weighted (N cap m B H : ℕ)
       intro j hj
       obtain ⟨i, _, rfl⟩ := mem_map.mp hj
       exact hhits i
-    have hA' : 180246 ≤ hits.card := hAS.trans (by simpa using card_le_card hinj)
+    have hA' : 180236 ≤ hits.card := hAS.trans (by simpa using card_le_card hinj)
     obtain ⟨pair, h0, h1, _, hsets⟩ := hexact γ hnormal P hP (by simpa only [hits] using hA')
     change hits = ReedSolomon.commonPolynomialAgreementSet x u' v' pair.1 pair.2 at hsets
     have hboth (i : S) : pair.1.eval (node i.val) = u i.val ∧
@@ -6004,10 +6004,10 @@ private theorem shortened_from_weighted (N cap m B H : ℕ)
         x, Function.Embedding.coeFn_mk, u', v', hf] using hi
     exact hnonjoint ⟨⟨pair.1, h0, fun i hi => (hboth ⟨i, hi⟩).1⟩,
       ⟨pair.2, h1, fun i hi => (hboth ⟨i, hi⟩).2⟩⟩
-  have hmono : johnsonWeightedRefinedExceptionCount D.card 131071 180246 B
-      (johnsonWeightedHeight D.card 131071 180246 m B) ≤
-      johnsonWeightedRefinedExceptionCount N 131071 180246 B H := by
-    let h := johnsonWeightedHeight D.card 131071 180246 m B
+  have hmono : johnsonWeightedRefinedExceptionCount D.card 131071 180236 B
+      (johnsonWeightedHeight D.card 131071 180236 m B) ≤
+      johnsonWeightedRefinedExceptionCount N 131071 180236 B H := by
+    let h := johnsonWeightedHeight D.card 131071 180236 m B
     have hh : h ≤ H := hheight D.card hD
     have hN : D.card - 131071 ≤ N - 131071 := Nat.sub_le_sub_right hD _
     have hN' : D.card - 131071 - 1 ≤ N - 131071 - 1 := Nat.sub_le_sub_right hN _
@@ -6027,24 +6027,24 @@ private theorem shortened_from_weighted (N cap m B H : ℕ)
         · exact div_nonneg (Nat.cast_nonneg _) (Nat.cast_nonneg _)
     · exact_mod_cast Nat.mul_le_mul_right B hN'
   have hΓq : (Γ.card : ℚ) ≤
-      johnsonWeightedRefinedExceptionCount N 131071 180246 B H :=
+      johnsonWeightedRefinedExceptionCount N 131071 180236 B H :=
     (show (Γ.card : ℚ) ≤ exceptions.card by exact_mod_cast card_le_card hsub).trans
       (hcard.trans hmono)
   have hΓz := (Int.le_floor.mpr (by exact_mod_cast hΓq)).trans hprice
   exact_mod_cast hΓz
 
 private theorem small_moments :
-    johnsonWeightedN 131071 180246 384 527 = 18309590904 ∧
-    johnsonWeightedW 131071 180246 384 527 = 3216801073112 ∧
+    johnsonWeightedN 131071 180236 384 527 = 18307563384 ∧
+    johnsonWeightedW 131071 180236 384 527 = 3216266821592 ∧
     johnsonWeightedR 384 527 = 73920 ∧ johnsonWeightedT 384 527 = 9437120 := by decide +kernel
 
 private theorem large_moments :
-    johnsonWeightedN 131071 180246 473 650 = 27770542233 ∧
-    johnsonWeightedW 131071 180246 473 650 = 6011953204075 ∧
-    johnsonWeightedR 473 650 = 112101 ∧ johnsonWeightedT 473 650 = 17637224 := by decide +kernel
+    johnsonWeightedN 131071 180236 796 1094 = 78590360805 ∧
+    johnsonWeightedW 131071 180236 796 1094 = 28648326043595 ∧
+    johnsonWeightedR 796 1094 = 317206 ∧ johnsonWeightedT 796 1094 = 84059590 := by decide +kernel
 
-theorem shortened_small : ShortenedCap 247446 42657721657869 := by
-  apply shortened_from_weighted 247446 42657721657869 384 527 47959 (by decide)
+theorem shortened_small : ShortenedCap 247436 42657721657869 := by
+  apply shortened_from_weighted 247436 42657721657869 384 527 51548 (by decide)
   · intro n hn
     refine ⟨by decide, by decide, by decide, ?_, rfl⟩
     rw [small_moments.1, small_moments.2.2.1]
@@ -6052,18 +6052,18 @@ theorem shortened_small : ShortenedCap 247446 42657721657869 := by
   · intro n hn
     unfold johnsonWeightedHeight johnsonWeightedHeightInt johnsonWeightedMoment johnsonWeightedSlope
     rw [small_moments.1, small_moments.2.1, small_moments.2.2.1, small_moments.2.2.2]
-    change (max (527 : ℤ) ((3216801073112 - (n : ℤ) * 9437120) /
-      (18309590904 - (n : ℤ) * 73920))).toNat ≤ 47959
-    have hn' : (n : ℤ) ≤ 247446 := by exact_mod_cast hn
-    have hden : 0 < (18309590904 - (n : ℤ) * 73920) := by omega
-    have hquot : (3216801073112 - (n : ℤ) * 9437120) /
-        (18309590904 - (n : ℤ) * 73920) < 47960 :=
+    change (max (527 : ℤ) ((3216266821592 - (n : ℤ) * 9437120) /
+      (18307563384 - (n : ℤ) * 73920))).toNat ≤ 51548
+    have hn' : (n : ℤ) ≤ 247436 := by exact_mod_cast hn
+    have hden : 0 < (18307563384 - (n : ℤ) * 73920) := by omega
+    have hquot : (3216266821592 - (n : ℤ) * 9437120) /
+        (18307563384 - (n : ℤ) * 73920) < 51549 :=
       (Int.ediv_lt_iff_lt_mul hden).mpr (by omega)
     omega
   · norm_num [johnsonWeightedRefinedExceptionCount]
 
-theorem shortened_large : ShortenedCap 247716 997091057559175 := by
-  apply shortened_from_weighted 247716 997091057559175 473 650 1234435 (by decide)
+theorem shortened_large : ShortenedCap 247716 796742540426218 := by
+  apply shortened_from_weighted 247716 796742540426218 796 1094 585765 (by decide)
   · intro n hn
     refine ⟨by decide, by decide, by decide, ?_, rfl⟩
     rw [large_moments.1, large_moments.2.2.1]
@@ -6071,12 +6071,12 @@ theorem shortened_large : ShortenedCap 247716 997091057559175 := by
   · intro n hn
     unfold johnsonWeightedHeight johnsonWeightedHeightInt johnsonWeightedMoment johnsonWeightedSlope
     rw [large_moments.1, large_moments.2.1, large_moments.2.2.1, large_moments.2.2.2]
-    change (max (650 : ℤ) ((6011953204075 - (n : ℤ) * 17637224) /
-      (27770542233 - (n : ℤ) * 112101))).toNat ≤ 1234435
+    change (max (1094 : ℤ) ((28648326043595 - (n : ℤ) * 84059590) /
+      (78590360805 - (n : ℤ) * 317206))).toNat ≤ 585765
     have hn' : (n : ℤ) ≤ 247716 := by exact_mod_cast hn
-    have hden : 0 < (27770542233 - (n : ℤ) * 112101) := by omega
-    have hquot : (6011953204075 - (n : ℤ) * 17637224) /
-        (27770542233 - (n : ℤ) * 112101) < 1234436 :=
+    have hden : 0 < (78590360805 - (n : ℤ) * 317206) := by omega
+    have hquot : (28648326043595 - (n : ℤ) * 84059590) /
+        (78590360805 - (n : ℤ) * 317206) < 585766 :=
       (Int.ediv_lt_iff_lt_mul hden).mpr (by omega)
     omega
   · norm_num [johnsonWeightedRefinedExceptionCount]
@@ -6702,10 +6702,10 @@ open K1 Polynomial Matrix FrobeniusLocator
 /-- The two syndrome streams on the complement of the fixed node roots.
 The number of rows stays fixed because all the deleted nodes are errors. -/
 def shortenedStack {u : Words} {T : TwoActive u} (R : Relation T) :
-    Matrix (Fin 2 × Fin 49174) (Fin (81898 - (fixedNodes R).card + 1)) K[X] :=
+    Matrix (Fin 2 × Fin 49164) (Fin (81908 - (fixedNodes R).card + 1)) K[X] :=
   let D := Finset.univ \ fixedNodes R
   stacked p (fun i : D => node i.val) (fun i => u 0 i.val) (fun i => u 1 i.val)
-    49174 (81898 - (fixedNodes R).card)
+    49164 (81908 - (fixedNodes R).card)
 
 /-- Coefficient polynomials in the seed, with the outer variable
 reserved for the evaluation coordinate. -/
@@ -7301,7 +7301,7 @@ def c2 : Prop :=
   ∀ f g : GeoJets, f ≠ 0 → g ≠ 0 → IsRelPrime f g →
     ∀ (C : TaylorChart) (d : ℕ), SliceBound f g C d →
       ∀ (Γ : Finset K) (s : K → K[X]), Set.InjOn s (Γ : Set K) →
-        (∀ γ ∈ Γ, (s γ).natDegree ≤ 133646 ∧
+        (∀ γ ∈ Γ, (s γ).natDegree ≤ 133658 ∧
           evalGeneric (extend (s γ)) f = 0 ∧ evalGeneric (extend (s γ)) g = 0 ∧
           C.Recovers (extend (s γ))) →
         ∃ B : Pieces Γ, Γ ⊆ B.union ∧ B.surfaces s ∧

@@ -17,12 +17,12 @@ open scoped BigOperators
 open ReedSolomon.HiddenDerivative PolynomialDifferential
 
 abbrev Jet := (s : Fin 65) × (e2 : Fin (min s.val 10 + 1)) ×
-  Fin (min (s.val - e2.val) (21 - 2 * e2.val) + 1)
+  Fin (min (s.val - e2.val) (21 - s.val / 62 - 2 * e2.val) + 1)
 
 def e1 (j : Jet) : ℕ := j.2.2.val
 def e2 (j : Jet) : ℕ := j.2.1.val
 def e0 (j : Jet) : ℕ := j.1.val - e2 j - e1 j
-def width (j : Jet) : ℕ := 48 * 180246 - 131072 * j.1.val + e1 j + 2 * e2 j
+def width (j : Jet) : ℕ := 48 * 180236 - 131072 * j.1.val + e1 j + 2 * e2 j
 abbrev SourceIndex := (j : Jet) × Fin (width j)
 
 def columns (i : SourceIndex) : SourceColumn 2 where
@@ -36,18 +36,22 @@ theorem jet_total (j : Jet) : e0 j + e1 j + e2 j = j.1.val := by
   simp only [e0, e1, e2]
   omega
 
-theorem jet_order (j : Jet) : e1 j + 2 * e2 j ≤ 21 := by
+theorem jet_order (j : Jet) : e1 j + 2 * e2 j ≤ 21 - j.1.val / 62 := by
   have h1 := j.2.2.isLt
   simp only [e1, e2]
   omega
 
-theorem width_lower (j : Jet) : 263200 ≤ width j := by
-  have hs := j.1.isLt
+theorem width_lower (j : Jet) : 262720 ≤ width j := by
+  have hs : j.1.val ≤ 64 := Nat.le_of_lt_succ j.1.isLt
+  have hmul : 131072 * j.1.val ≤ 131072 * 64 := Nat.mul_le_mul_left 131072 hs
+  have hbase : 48 * 180236 - 131072 * 64 ≤ 48 * 180236 - 131072 * j.1.val :=
+    Nat.sub_le_sub_left hmul (48 * 180236)
+  have hnum : 48 * 180236 - 131072 * 64 = 262720 := by decide
   unfold width
-  omega
+  exact ((hnum ▸ hbase).trans (Nat.le_add_right _ (e1 j))).trans (Nat.le_add_right _ (2 * e2 j))
 
 theorem source_weight_lt (i : SourceIndex) :
-    i.2.val + 131072 * e0 i.1 + 131071 * e1 i.1 + 131070 * e2 i.1 < 48 * 180246 := by
+    i.2.val + 131072 * e0 i.1 + 131071 * e1 i.1 + 131070 * e2 i.1 < 48 * 180236 := by
   have hs := i.1.1.isLt
   have ht := jet_total i.1
   have hx := i.2.isLt
@@ -87,19 +91,19 @@ theorem columns_total_le (i : SourceIndex) : totalJetDegree (columns i).exponent
   omega
 
 theorem columns_weight_lt (i : SourceIndex) :
-    Finsupp.weight (differentialWeight 131072) (columns i).exponent < 48 * 180246 := by
+    Finsupp.weight (differentialWeight 131072) (columns i).exponent < 48 * 180236 := by
   simpa [SourceColumn.weight_exponent, columns, differentialWeight, Fin.sum_univ_two,
     Nat.add_assoc, Nat.mul_comm] using
     source_weight_lt i
 
 def sourceTotal : ℕ := ∑ j : Jet, width j
 
-theorem jet_count : Fintype.card Jet = 7194 := by decide +kernel
-theorem source_total : sourceTotal = 27306583216 := by decide +kernel
+theorem jet_count : Fintype.card Jet = 7161 := by decide +kernel
+theorem source_total : sourceTotal = 27290134267 := by decide +kernel
 
-/-- Cardinality is a sum over7194 jet triples, never an enumeration of the
-27306583216-dimensional full source index. -/
-theorem source_card : Fintype.card SourceIndex = 27306583216 := by
+/-- Cardinality is a sum over7161 jet triples, never an enumeration of the
+27290134267-dimensional full source index. -/
+theorem source_card : Fintype.card SourceIndex = 27290134267 := by
   rw [Fintype.card_sigma]
   simp only [Fintype.card_fin]
   exact source_total
@@ -969,18 +973,14 @@ theorem nonzero_blocks : nonzeroBlocks = 4364 := by
   change (∑ s : Fin 65, pack2NonzeroBlocksRow s) = 4364
   simp_rw [pack2NonzeroBlocksRows]
   decide +kernel
-theorem local_columns_per_jet : localColumns = Fintype.card Jet * 48 := by
-  rw [local_columns, jet_count]
+theorem local_columns_per_jet : localColumns = 345312 := by
+  rw [local_columns]
 
 theorem global_rank_allowance : (262144 : ℕ) * blockUpper = 27294433280 := by
   rw [block_upper]
 
-theorem source_surplus : sourceTotal - 262144 * blockUpper = 12149936 := by
-  rw [source_total, block_upper]
-
-theorem strict_source_surplus : 262144 * blockUpper < Fintype.card SourceIndex := by
-  rw [block_upper, source_card]
-  norm_num
+-- source_surplus / strict_source_surplus (blockUpper = 104120) do not hold at A = 180236; the list
+-- interpolation uses Sol1.C52.strict_source_surplusT (exact-fibre bound 104088, Fast010).
 
 
 end Sol1.C42
@@ -1230,8 +1230,8 @@ namespace Sol1.C42
 open ReedSolomon.HiddenDerivative
 
 def Eligible (x a b c : ℕ) : Prop :=
-  a + b + c ≤ 64 ∧ b + 2 * c ≤ 21 ∧
-    x + 131072 * a + 131071 * b + 131070 * c < 48 * 180246
+  a + b + c ≤ 64 ∧ b + 2 * c ≤ 21 - (a + b + c) / 62 ∧
+    x + 131072 * a + 131071 * b + 131070 * c < 48 * 180236
 
 theorem columns_eligible (i : SourceIndex) :
     Eligible (columns i).x (columns i).y₀ ((columns i).higher 0) ((columns i).higher 1) := by
@@ -1249,7 +1249,7 @@ theorem index_of_eligible (x a b c : ℕ) (h : Eligible x a b c) :
   obtain ⟨htotal, horder, hweight⟩ := h
   let s : Fin 65 := ⟨a + b + c, by omega⟩
   let f2 : Fin (min s.val 10 + 1) := ⟨c, by dsimp [s]; omega⟩
-  let f1 : Fin (min (s.val - f2.val) (21 - 2 * f2.val) + 1) :=
+  let f1 : Fin (min (s.val - f2.val) (21 - s.val / 62 - 2 * f2.val) + 1) :=
     ⟨b, by dsimp [s, f2]; omega⟩
   let j : Jet := ⟨s, f2, f1⟩
   have h0 : e0 j = a := by dsimp [e0, e1, e2, j, s, f1, f2]; omega

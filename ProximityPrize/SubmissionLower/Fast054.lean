@@ -49,15 +49,15 @@ def c2 : Prop :=
 theorem of_children (h1 : c1) (h2 : c2) : K1.c6 := by
   intro u front T R moving saturated Γ bad normal
   let P (b : Fin 2) : Bivar := Principal.assemble (fun j => R.coefficients (b, j))
-  let s := 49174 - T.height
-  have hsDef : s = 49174 - T.height := rfl
+  let s := 49164 - T.height
+  have hsDef : s = 49164 - T.height := rfl
   have hP : ∀ b, (P b).natDegree ≤ T.height := R.x_degree
-  have hBalance : 49174 + T.height + nullity u = 81899 ∧ T.height ≤ 32718 ∧ T.height < 49174 :=
+  have hBalance : 49164 + T.height + nullity u = 81909 ∧ T.height ≤ 32738 ∧ T.height < 49164 :=
     Strata.native_minimal_relation_degree (nullity u) T.a T.b T.c
       T.top T.degreeSum T.nullitySum (by have := front.1; omega)
-  have hSum : T.height + s = 49174 := by omega
-  have hs : 16456 ≤ s := by omega
-  have hRank : GenericLayer.genericRank (twoBlock u) + s = 2 * 49174 := by
+  have hSum : T.height + s = 49164 := by omega
+  have hs : 16426 ≤ s := by omega
+  have hRank : GenericLayer.genericRank (twoBlock u) + s = 2 * 49164 := by
     change stackRank u + s = _
     rw [K1.actual_stackRank u]
     omega
@@ -69,14 +69,14 @@ theorem of_children (h1 : c1) (h2 : c2) : K1.c6 := by
     exact R.primitive
   have hKernel := certificate_shifts_annihilate R s hSum
   obtain ⟨hMinors, H, hH, rows, hRows⟩ :=
-    h1 K T.height 49174 s P hSum (by omega) hP hPrim
-  have hBound := h2 K 49174 81899 s p (twoBlock u) (shifts P 49174 s)
+    h1 K T.height 49164 s P hSum (by omega) hP hPrim
+  have hBound := h2 K 49164 81909 s p (twoBlock u) (shifts P 49164 s)
     (by norm_num [Native.p]) hRank hKernel
-    (stacked_entry_natDegree p node (u 0) (u 1) 49174 81898) hMinors rows
+    (stacked_entry_natDegree p node (u 0) (u 1) 49164 81908) hMinors rows
   rw [hRows] at hBound
-  have hProduct : 16456 * H ≤ s * H := Nat.mul_le_mul_right H hs
-  have hCeiling : 49174 * (p + 1) = 104775358185516 := by norm_num [Native.p]
-  have hCap : H ≤ 6367000374 := by omega
+  have hProduct : 16426 * H ≤ s * H := Nat.mul_le_mul_right H hs
+  have hCeiling : 49164 * (p + 1) = 104754051121176 := by norm_num [Native.p]
+  have hCap : H ≤ 6377331736 := by omega
   apply normal_growth_count R _ moving saturated Γ bad normal
   intro i
   rw [← hCoordinates]
@@ -2999,7 +2999,7 @@ def Chart4 {f Q l} (b : Branch f Q l) : Prop :=
   Box4 (chart (taylorLength + 1) p) b.member ∧
     Box4 (chart (taylorLength + 2) p) b.next ∧
     ∀ x a : K, ∃ D, Box4 (chart (taylorLength + 2) p) D ∧
-      ∀ S : K[X], S.natDegree ≤ 133646 → b.Contains (actualPoint (extend S)) →
+      ∀ S : K[X], S.natDegree ≤ 133658 → b.Contains (actualPoint (extend S)) →
         (MvPolynomial.eval (actualPoint (extend S)) D = 0 ↔ S.eval x = a)
 
 def Chart5 {f Q l} (b : Branch f Q l) : Prop :=
@@ -3011,7 +3011,7 @@ def Chart5 {f Q l} (b : Branch f Q l) : Prop :=
       Box5 (liftedChart (taylorLength + 2) p) (taylorLength + 2) H ∧
       Associated (b.onGraph H) (b.localMap b.next) ∧
       ∀ x a : K, ∃ D, Box5 (liftedChart (taylorLength + 2) p) (taylorLength + 2) D ∧
-        ∀ S : K[X], S.natDegree ≤ 133646 → ∀ h : b.Contains (actualPoint (extend S)),
+        ∀ S : K[X], S.natDegree ≤ 133658 → ∀ h : b.Contains (actualPoint (extend S)),
           (b.liftedEval (actualPoint (extend S)) h D = 0 ↔ S.eval x = a)
 
 end
@@ -3075,7 +3075,7 @@ theorem next_proper (b : Branch f Q l) (h : b.Simple) : b.next ∉ b.curve :=
   b.terminal.resolve_left (fun hne => hne h)
 
 theorem next_actual (b : Branch f Q l) {S : Geom[X]} (h : b.Contains (actualPoint S))
-    (hd : S.natDegree ≤ 133646) : MvPolynomial.eval (actualPoint S) b.next = 0 := by
+    (hd : S.natDegree ≤ 133658) : MvPolynomial.eval (actualPoint S) b.next = 0 := by
   have hs : b.surface ≤ b.curve := le_trans le_sup_left b.divisor.le
   have hg : toGeneric b.g ∈ b.surface := b.chart.2.1 b.r le_rfl
   have hzero : MvPolynomial.eval (actualPoint S) (toGeneric b.g) = 0 := h.1 (hs hg)
@@ -5088,7 +5088,7 @@ private def valuePolynomial (g : Row 4) (k : ℕ) (x a : K) : GeoJets5 :=
 
 private theorem value_section (h2 : c2) (b : Branch f Q l) (k : ℕ)
     (hk : taylorLength ≤ k + 5) (x a : K) :
-    ∀ S : K[X], S.natDegree ≤ 133646 → ∀ h : b.Contains (actualPoint (extend S)),
+    ∀ S : K[X], S.natDegree ≤ 133658 → ∀ h : b.Contains (actualPoint (extend S)),
       b.liftedEval (actualPoint (extend S)) h (valuePolynomial b.g k x a) = 0 ↔ S.eval x = a := by
   intro S hS h
   let p := actualPoint (extend S)

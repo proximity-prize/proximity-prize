@@ -744,15 +744,15 @@ set_option autoImplicit true
 namespace K1_2.Pruning
 
 def coreK : ℕ := 42657721657869
-def productionC : ℚ := 247447 / 67201
-def degreeBudget (r : ℕ) : ℕ := 49174 + 2130706433 * (32725 - r)
-def nullitySixCap : ℕ := 173765030958608237
+def productionC : ℚ := 247437 / 67201
+def degreeBudget (r : ℕ) : ℕ := 49164 + 2130706433 * (32745 - r)
+def nullitySixCap : ℕ := 173829092174484954
 
 theorem productionC_eq :
-    (1 + (262144 - 81898 : ℕ) / ((67200 : ℚ) + 1)) = productionC := by
+    (1 + (262144 - 81908 : ℕ) / ((67200 : ℚ) + 1)) = productionC := by
   norm_num [productionC]
 
-theorem degreeBudget_six : degreeBudget 6 = 69714583830501 := by decide
+theorem degreeBudget_six : degreeBudget 6 = 69757197959151 := by decide
 
 /-- A finite exact-rational certificate. The right endpoint is strict so
 natural cardinalities may be rounded down without a floor API. -/
@@ -774,16 +774,16 @@ theorem production_six_floor :
   norm_num [bound, degreeBudget, coreK, productionC, nullitySixCap]
 
 theorem production_budget_margin :
-    nullitySixCap + 31935746555673236 = 205700777514281473 ∧
-    274980728111395087 - (nullitySixCap + 31935746555673236) = 69279950597113614 ∧
-    nullitySixCap ≤ 243044981555721851 := by decide
+    nullitySixCap + 29984033161052090 = 203813125335537044 ∧
+    274980728111395087 - (nullitySixCap + 29984033161052090) = 71167602775858043 ∧
+    nullitySixCap ≤ 244996694950342997 := by decide
 
 /-- An instantiated pruning system on the production-size domain has the
 advertised count. Its rank/specialization/core premises remain explicit. -/
 theorem production_pruning_count {State Slope Node : Type*}
     [DecidableEq Slope] [DecidableEq Node]
     (r : ℕ) (hr : r ≤ 6)
-    (P : PruningSystem State Slope Node 81898 67200 (degreeBudget r) coreK)
+    (P : PruningSystem State Slope Node 81908 67200 (degreeBudget r) coreK)
     (hn : P.domain.card = 262144) (q : State) (hq : P.nullity q = r) :
     (P.slopes q).card ≤ nullitySixCap := by
   apply production_count_le r _ hr

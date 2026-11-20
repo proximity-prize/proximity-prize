@@ -22,7 +22,7 @@ open scoped BigOperators Classical
 /-- Choose a nonzero cheap row and a layered row avoiding its moving
 positive-V factors at the reserved, rather than the full, cutoff. -/
 def c1 : Prop :=
-  ∀ (h : ℕ) (rows : Banks) (i : Fin 4), 3555 ≤ h → h ≤ 32718 →
+  ∀ (h : ℕ) (rows : Banks) (i : Fin 4), 3555 ≤ h → h ≤ 32738 →
     (∀ s ∈ [cheapShape i, layeredShape i],
       (∀ W, ∀ P ∈ rows s W, RowCaps P s) ∧
       LeadingFilter h rows s ∧ SeedShift h rows s ∧ RankFloor h rows s) →
@@ -42,8 +42,8 @@ def c2 : Prop :=
 in both jet variables in each geometric generic-seed fibre. -/
 def c3 : Prop :=
   ∀ (h : ℕ) (rows : Banks) (s : Shape) (q : Surface),
-    0 < h → s.m*180246 < p → Parent q → SeedShift h rows s → BankVanishes rows s q →
-    ∀ W < s.m*180246, ∀ P ∈ rows s W, OrderAt q P (contactPower h s W)
+    0 < h → s.m*180236 < p → Parent q → SeedShift h rows s → BankVanishes rows s q →
+    ∀ W < s.m*180236, ∀ P ∈ rows s W, OrderAt q P (contactPower h s W)
 
 /-- The shared ordinary gcd and the residual local intersection lengths
 bound the aggregate masses of a set of parents that pass a paired test. -/
@@ -58,7 +58,7 @@ def c4 : Prop :=
 and constant seed images have the respective local degree budgets. -/
 def c5 : Prop :=
   ∀ u del (M : AnchorModel u del) Γ (F : AnchoredFamily M Γ),
-    3555 ≤ M.overhead → M.overhead ≤ 32718 →
+    3555 ≤ M.overhead → M.overhead ≤ 32738 →
     ∀ (rows : Banks), JetSource M F rows →
     ∀ (pairs : ∀ i : Fin 4, BufferedPair M.overhead.toNat rows i)
       (i : Fin 5) (q : Surface), Parent q → ¬ PassStage rows pairs i q →
@@ -70,7 +70,7 @@ def c5 : Prop :=
 ordinary factors and the singular V-separant class. -/
 def c6 : Prop :=
   ∀ u del (M : AnchorModel u del) Γ (F : AnchoredFamily M Γ) (d b j : ℕ),
-    2 ≤ d → d < 180246 → 180246^2 ≤ 262144*d → 2 ≤ b → b < p → 1 ≤ j → j ≤ b →
+    2 ≤ d → d < 180236 → 180236^2 ≤ 262144*d → 2 ≤ b → b < p → 1 ≤ j → j ≤ b →
     (∀ γ ∈ Γ, (F.scalar γ).natDegree ≤ d) →
     ∀ G : JetPlane, G ≠ 0 → JetCaps G b j →
     ∀ T ⊆ Γ, (∀ γ ∈ T, fixedAt G (F.scalar γ) = 0) → T.card ≤ odePrice d b j
@@ -84,10 +84,10 @@ def c7 : Prop :=
 /-- At the terminal full-bank rank floor, the leading-position restriction
 that five distinct Y values would force is impossible. -/
 def c8 : Prop :=
-  ∀ (h : ℕ) (rows : Banks), 3555 ≤ h → h ≤ 32718 →
+  ∀ (h : ℕ) (rows : Banks), 3555 ≤ h → h ≤ 32738 →
     (∀ W, ∀ P ∈ rows fullShape W, RowCaps P fullShape) →
     LeadingFilter h rows fullShape → RankFloor h rows fullShape →
-    ∃ W < fullShape.m*180246, ∃ P ∈ rows fullShape W, P ≠ 0 ∧
+    ∃ W < fullShape.m*180236, ∃ P ∈ rows fullShape W, P ≠ 0 ∧
       P.leadingCoeff.natDegree < 5 * (contactPower h fullShape W - P.natDegree)
 
 
@@ -110,16 +110,16 @@ private theorem source_data {u del} {M : AnchorModel u del} {Γ}
     RankFloor M.overhead.toNat rows s :=
   ⟨h.shape s hs, h.leading s hs, h.shift s hs, h.floor_bound s hs⟩
 
-private theorem buffered_power (h : ℕ) (hl : 3555 ≤ h) (hu : h ≤ 32718)
+private theorem buffered_power (h : ℕ) (hl : 3555 ≤ h) (hu : h ≤ 32738)
     (i : Fin 4) (s : Shape) (hs : s ∈ [cheapShape i, layeredShape i]) :
-    reserveCutoff h s i < s.m*180246 ∧ contactPower h s (reserveCutoff h s i) = reserve i+1 := by
+    reserveCutoff h s i < s.m*180236 ∧ contactPower h s (reserveCutoff h s i) = reserve i+1 := by
   simp at hs
-  have hfit : 2*h*reserve i ≤ s.m*180246-1 := by
+  have hfit : 2*h*reserve i ≤ s.m*180236-1 := by
     rcases hs with rfl | rfl <;> fin_cases i <;>
       norm_num [cheapShape, layeredShape, reserve] <;> omega
   have hpos : 0 < s.m := by
     rcases hs with rfl | rfl <;> fin_cases i <;> decide
-  have hdiff : s.m*180246-1 - reserveCutoff h s i = 2*h*reserve i := by
+  have hdiff : s.m*180236-1 - reserveCutoff h s i = 2*h*reserve i := by
     unfold reserveCutoff
     omega
   constructor
@@ -130,7 +130,7 @@ private theorem buffered_power (h : ℕ) (hl : 3555 ≤ h) (hu : h ≤ 32718)
 
 private theorem paired_mass_of_test (contact : c3) (massBound : c4) {u del}
     {M : AnchorModel u del} {Γ} {F : AnchoredFamily M Γ} {rows : Banks}
-    (hJ : JetSource M F rows) (hl : 3555 ≤ M.overhead) (hu : M.overhead ≤ 32718)
+    (hJ : JetSource M F rows) (hl : 3555 ≤ M.overhead) (hu : M.overhead ≤ 32738)
     (pairs : ∀ i : Fin 4, BufferedPair M.overhead.toNat rows i)
     (i : Fin 4) (S : Finset Surface) (hS : ∀ q ∈ S, Parent q)
     (hpass : ∀ q ∈ S, PassStage rows pairs i.castSucc q) :
@@ -143,7 +143,7 @@ private theorem paired_mass_of_test (contact : c3) (massBound : c4) {u del}
   have hcontact (s : Shape) (hs : s ∈ [cheapShape i, layeredShape i])
       (hv : BankVanishes rows s q) (P : Jet)
       (hP : P ∈ rows s (reserveCutoff M.overhead.toNat s i)) : OrderAt q P (reserve i+1) := by
-    have hp : s.m*180246 < p := by
+    have hp : s.m*180236 < p := by
       simp at hs
       rcases hs with rfl | rfl <;> fin_cases i <;> decide
     have hw := buffered_power M.overhead.toNat (by omega) (by omega) i s hs
@@ -172,7 +172,7 @@ private theorem terminal_power {w : ℤ} (hm : (band w).multiplicity = fullShape
 
 private theorem paid_complement (ode : c6) {u del}
     {M : AnchorModel u del} {Γ} {F : AnchoredFamily M Γ}
-    (hl : 3555 ≤ M.overhead) (hu : M.overhead ≤ 32718)
+    (hl : 3555 ≤ M.overhead) (hu : M.overhead ≤ 32738)
     (initial : InitialCover M F) (lost : SeedCover)
     (hd : lost.curve.totalDegree ≤ 54375137) (he : lost.points.card ≤ 26769366519)
     (kept : Finset K)
@@ -253,7 +253,7 @@ private theorem paid_complement (ode : c6) {u del}
 private theorem split_terminal_divisibility {w : ℤ} {rows : Banks} {f : Equation}
     (hm : (band w).multiplicity = fullShape.m)
     (hsub : ∀ W, rows (terminalShape w) W ≤ rows fullShape W)
-    (hfull : ∀ W < fullShape.m * 180246, ∀ P ∈ rows fullShape W, P ≠ 0 →
+    (hfull : ∀ W < fullShape.m * 180236, ∀ P ∈ rows fullShape W, P ≠ 0 →
       f ^ (contactPower w.toNat fullShape W - P.natDegree) ∣ P.leadingCoeff) :
     TerminalDivisibility w rows f := by
   intro W hW P hP hn
@@ -268,7 +268,7 @@ theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) (h4 : c4) (h5 : c5)
   let w := M.overhead
   let h := w.toNat
   have hln : 3555 ≤ h := by dsimp [h, w]; omega
-  have hun : h ≤ 32718 := by dsimp [h, w]; omega
+  have hun : h ≤ 32738 := by dsimp [h, w]; omega
   let pairs (i : Fin 4) : BufferedPair h rows i :=
     Classical.choice (h1 h rows i hln hun (fun s hs => source_data hJ (pair_membership hl i hs)))
   obtain ⟨initial⟩ := h2 u del M Γ F (pairs 0).cheap (pairs 0).layered
@@ -358,7 +358,7 @@ theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) (h4 : c4) (h5 : c5)
       exact ⟨q, hq⟩
     obtain ⟨f, hf⟩ := h7 S₄ hne hg₄
     have hs := full_membership hl
-    have hcontacts (W : ℕ) (hw : W < fullShape.m*180246) (P : Jet)
+    have hcontacts (W : ℕ) (hw : W < fullShape.m*180236) (P : Jet)
         (hP : P ∈ rows fullShape W) :
         ∀ q ∈ S₄, OrderAt q P (contactPower h fullShape W) := by
       intro q hq

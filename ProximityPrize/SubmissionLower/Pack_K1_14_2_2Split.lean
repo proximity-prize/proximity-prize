@@ -90,7 +90,7 @@ private theorem selectPair {u del} {M : AnchorModel u del} {Γ} {F : AnchoredFam
 
 private theorem passing_mass (h3 : c3) (h4 : c4)
     {u del} {M : AnchorModel u del} {Γ} {F : AnchoredFamily M Γ} {rows : Banks}
-    (hsrc : JetSource M F rows) (hlo : 2576 ≤ M.overhead) (hhi : M.overhead ≤ 3554)
+    (hsrc : JetSource M F rows) (hlo : 2588 ≤ M.overhead) (hhi : M.overhead ≤ 3554)
     (i : Fin 10) (hi : 0 < i.val) (B : RowPair M.overhead rows i) (A : FixedPair B)
     (S : Finset (Ideal Ambient)) (hgeom : ∀ I ∈ S, Active I)
     (hcap : Fits S (budget (i.val-1))) :

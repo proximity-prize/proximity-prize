@@ -373,56 +373,56 @@ open scoped BigOperators
 
 /-- Generic CRT lift with denominators regular at every permitted specialization. -/
 def c1 : Prop :=
-  ∀ h, 2576 ≤ h → h ≤ 32718 → ∀ D : PoleData h, Nonempty (CRTLift D)
+  ∀ h, 2588 ≤ h → h ≤ 32738 → ∀ D : PoleData h, Nonempty (CRTLift D)
 
 /-- Contact and the unpunctured agreement force each evaluated row to be an identity. -/
 def c2 : Prop :=
-  ∀ h, 2576 ≤ h → h ≤ 32718 → ∀ (D : PoleData h) (Crt : CRTLift D) (word : I → L),
+  ∀ h, 2588 ≤ h → h ≤ 32738 → ∀ (D : PoleData h) (Crt : CRTLift D) (word : I → L),
     (∀ i k, (D.block i).eval (nodeL k) ≠ 0) →
     ∀ z S, MarkResidues D z S → (liftPoly S).natDegree ≤ 131071+h →
-    ∀ hits : Finset I, 180246 ≤ hits.card → (∀ k ∈ hits, (liftPoly S).eval (nodeL k) = word k) →
-    ∀ s W, W < s.m*180246 → ∀ P ∈ evaluated Crt word s W, jetAt P z S = 0
+    ∀ hits : Finset I, 180236 ≤ hits.card → (∀ k ∈ hits, (liftPoly S).eval (nodeL k) = word k) →
+    ∀ s W, W < s.m*180236 → ∀ P ∈ evaluated Crt word s W, jetAt P z S = 0
 
 /-- Fixed-true-jet seed derivatives consume at most 2h of cutoff per order. -/
 def c3 : Prop :=
-  ∀ h, 2576 ≤ h → h ≤ 32718 → ∀ (D : PoleData h) (Crt : CRTLift D) (word : I → L),
+  ∀ h, 2588 ≤ h → h ≤ 32738 → ∀ (D : PoleData h) (Crt : CRTLift D) (word : I → L),
     ∀ s W, ∀ P ∈ evaluated Crt word s W, ∀ i r,
       seedHasse i r P ∈ evaluated Crt word s (W+2*h*r)
 
 /-- The leading V,Y position of an evaluated row satisfies the raw cutoff. -/
 def c4 : Prop :=
-  ∀ h, 2576 ≤ h → h ≤ 32718 → ∀ (D : PoleData h) (Crt : CRTLift D) (word : I → L),
+  ∀ h, 2588 ≤ h → h ≤ 32738 → ∀ (D : PoleData h) (Crt : CRTLift D) (word : I → L),
     ∀ s W, ∀ P ∈ evaluated Crt word s W, P ≠ 0 →
       (P.leadingCoeff.natDegree + P.natDegree)*(131071-h) ≤ W+P.natDegree
 
 /-- Count the true ambient monomials before the two sets of constraints. -/
 def c5 : Prop :=
-  ∀ h, 2576 ≤ h → h ≤ 32718 → ∀ s W, rawWidthCond h s W →
+  ∀ h, 2588 ≤ h → h ≤ 32738 → ∀ s W, rawWidthCond h s W →
     rawVolumeAt h s W + poleCredit h s ≤ Module.finrank L (ambient h s W)
 
 /-- Restricting to the physical contacts costs at most the sum of the node debits. -/
 def c6 : Prop :=
-  ∀ h, 2576 ≤ h → h ≤ 32718 → ∀ (word : I → L) s W,
+  ∀ h, 2588 ≤ h → h ≤ 32738 → ∀ (word : I → L) s W,
     Module.finrank L (ambient h s W) ≤
       physicalDebit s + Module.finrank L (contacted h word s W)
 
 /-- Full primary divisibility costs at most the main pole credit and seed debit. -/
 def c7 : Prop :=
-  ∀ h, 2576 ≤ h → h ≤ 32718 → ∀ (D : PoleData h) (Crt : CRTLift D) (word : I → L) s W,
+  ∀ h, 2588 ≤ h → h ≤ 32738 → ∀ (D : PoleData h) (Crt : CRTLift D) (word : I → L) s W,
     Module.finrank L (contacted h word s W) ≤
       poleCredit h s + poleSeedDebit h s + Module.finrank L (complete Crt word s W)
 
 /-- Whole-cutoff sum of evaluated dimensions dominates the symbolic dimension. -/
 def c8 : Prop :=
-  ∀ h, 2576 ≤ h → h ≤ 32718 → ∀ (D : PoleData h) (Crt : CRTLift D) (word : I → L) s W,
+  ∀ h, 2588 ≤ h → h ≤ 32738 → ∀ (D : PoleData h) (Crt : CRTLift D) (word : I → L) s W,
     Module.finrank L (complete Crt word s W) ≤
       ∑ t ∈ Finset.range (W+1), Module.finrank FX (evaluated Crt word s t)
 
 theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) (h4 : c4)
     (h5 : c5) (h6 : c6) (h7 : c7) (h8 : c8) : K1_14.c1 := by
   intro u del M Γ F hlo hhi H hH
-  have lo : 2576 ≤ M.overhead.toNat := by omega
-  have hi : M.overhead.toNat ≤ 32718 := by omega
+  have lo : 2588 ≤ M.overhead.toNat := by omega
+  have hi : M.overhead.toNat ≤ 32738 := by omega
   obtain ⟨D, hnode, hres⟩ := chart_poles M F H hH
   obtain ⟨Crt⟩ := h1 _ lo hi D
   let word := chartWord M
@@ -588,9 +588,9 @@ theorem zero_of_poles_and_hits {h : ℕ} {D : PoleData h}
     {s : Shape} {W : ℕ} {Q : L[X]}
     (hdeg : Q.natDegree ≤ W+(s.B+s.J)*(2*h))
     (hpole : poleProduct D ^ (s.B+s.J) ∣ Q)
-    (hits : Finset I) (hcard : 180246 ≤ hits.card)
+    (hits : Finset I) (hcard : 180236 ≤ hits.card)
     (hcontact : ∀ k ∈ hits, (Polynomial.X-C (nodeL k)) ^ s.m ∣ Q)
-    (hW : W < s.m*180246) : Q = 0 := by
+    (hW : W < s.m*180236) : Q = 0 := by
   by_contra hne
   obtain ⟨T, hT⟩ := hpole
   have hTne : T ≠ 0 := by intro he; simp [hT, he] at hne
@@ -1619,7 +1619,7 @@ def c2 : Prop :=
 
 /-- Deform the two primary blocks with a regular cleared CRT lift. -/
 def c3 : Prop :=
-  ∀ h, 2576 ≤ h → h ≤ 32718 → ∀ (D : PoleData h) (Crt : CRTLift D),
+  ∀ h, 2588 ≤ h → h ≤ 32738 → ∀ (D : PoleData h) (Crt : CRTLift D),
     Nonempty (RegularDeformation D Crt)
 
 /-- The cleared coefficient equations form one polynomial matrix on a fixed
@@ -3337,7 +3337,7 @@ private theorem leading_forward {h} {D : PoleData h} (Crt : CRTLift D) (P : Sour
   simp [H, pow_add, mul_assoc]
 
 /-- The signed cutoff immediately before zero has no nonzero complete row. -/
-theorem zero_of_strict_cutoff {h} (hhi : h ≤ 32718) {D : PoleData h}
+theorem zero_of_strict_cutoff {h} (hhi : h ≤ 32738) {D : PoleData h}
     (Crt : CRTLift D) (s : Shape) (P : Source) (hp : P ∈ poleSpace Crt s)
     (hs : ∀ j i a e, coeffAt P j i a e ≠ 0 →
       a+(i+j)*(131071+h) < (s.B+s.J)*(2*h)+j) : P = 0 := by
@@ -3660,7 +3660,7 @@ private theorem ambient_degree {h s W P} (hp : P ∈ ambient h s W) {j i : ℕ}
     exact hne (hp j i _ e nh)
   exact hel.2.2.2
 
-theorem forward_bounded {h} (hpos : 0 < h) (hh : h ≤ 32718) {D : PoleData h} (Crt : CRTLift D)
+theorem forward_bounded {h} (hpos : 0 < h) (hh : h ≤ 32738) {D : PoleData h} (Crt : CRTLift D)
     {s W P} (hp : P ∈ ambient h s W) :
     Bounded (131071-h) (131071-h-1) (W+(s.B+s.J)*(2*h)) (forward Crt P) := by
   let u := 131071-h
@@ -4626,7 +4626,7 @@ private theorem ker_step_le {h} {D : PoleData h} (Crt : CRTLift D) (word : I →
   apply Subtype.ext
   exact congrArg (fun x : complete Crt word s W => (x : Source)) he
 
-private theorem ker_zero {h} (hhi : h ≤ 32718) {D : PoleData h} (Crt : CRTLift D)
+private theorem ker_zero {h} (hhi : h ≤ 32738) {D : PoleData h} (Crt : CRTLift D)
     (word : I → L) (s : Shape) : (boundaryMap Crt word s 0).ker = ⊥ := by
   apply bot_unique
   intro P hP
@@ -5643,7 +5643,7 @@ private def rawPosition {h} {D : PoleData h} (Crt : CRTLift D) (j i : ℕ) : Jet
   map_add' P Q := by simp
   map_smul' b P := by simp [Polynomial.coeff_smul]
 
-private theorem rawPosition_zero {h} (hpos : 0 < h) (hh : h ≤ 32718) {D : PoleData h} (Crt : CRTLift D)
+private theorem rawPosition_zero {h} (hpos : 0 < h) (hh : h ≤ 32738) {D : PoleData h} (Crt : CRTLift D)
     (word : I → L) {s W P} (hP : P ∈ evaluated Crt word s W) (j i : ℕ)
     (hw : W < (131071-h)*i+(131071-h-1)*j) : rawPosition Crt j i P = 0 := by
   have hsub : evaluated Crt word s W ≤ LinearMap.ker (rawPosition Crt j i) := by
@@ -7121,7 +7121,7 @@ structure IndependentLift {u : Words} {T : TwoActive u} (R : Relation T) where
     Polynomial.C content * leftU R
   graphV : aeval ![Polynomial.X, 0, 0, seed, seed ^ p] V =
     Polynomial.C content * leftV R
-  original_height : 24587 ≤ T.height
+  original_height : 24582 ≤ T.height
 
 structure Puncture (deleted : Finset I) where
   N : ℕ
@@ -7166,7 +7166,7 @@ def Bank.b (b : Bank) : ℕ := b.t + 5 * (b.dT - 1)
 def Bank.E (b : Bank) : ℕ := b.a + b.b
 def Bank.M (b : Bank) : ℕ := (2 * 131071 - 1) * (b.E - 1) + 1
 def Bank.zeroFee (b : Bank) : ℕ := b.a + p * b.b
-def Bank.chartFee (b : Bank) : ℚ := b.E * ((131073 / 49175 : ℚ) * b.M) ^ 2
+def Bank.chartFee (b : Bank) : ℚ := b.E * ((131073 / 49165 : ℚ) * b.M) ^ 2
 
 def Bank.relationBounds (b : Bank) (H : ℕ) : Fin 4 → ℕ := ![131071 + H, 1, b.dS, b.dT]
 
@@ -7253,11 +7253,11 @@ open K1
 
 /-- Lower the X-height by e and remove those same e nodes. The finite
 monomial sums are affine on this native interval, including the shortest block. -/
-theorem bank_surplus (b : Bank) (h H e N : ℕ) (hh : 24587 ≤ h) (hmax : h ≤ 32718)
+theorem bank_surplus (b : Bank) (h H e N : ℕ) (hh : 24582 ≤ h) (hmax : h ≤ 32738)
     (hH : H + e = h) (hN : N + e = 262144) :
     N * (J 4 b.s b.t - J 3 (b.s - b.dS) (b.t - b.dT)) +
-      V (720983 - 131071 - H) 131071 4 (b.s - b.dS) (b.t - b.dT) <
-      V 720983 131071 5 b.s b.t := by
+      V (720943 - 131071 - H) 131071 4 (b.s - b.dS) (b.t - b.dT) <
+      V 720943 131071 5 b.s b.t := by
   cases b <;> norm_num [Bank.s, Bank.t, Bank.dS, Bank.dT, V, J, Finset.sum_range_succ,
     Nat.sub_sub] <;> omega
 
@@ -7266,7 +7266,7 @@ theorem chartFee_nonneg (b : Bank) : 0 ≤ b.chartFee := by
   positivity
 
 theorem final_fee (b : Bank) :
-    (b.zeroFee : ℚ) + 5 * b.chartFee ≤ 98765158849964375 := by
+    (b.zeroFee : ℚ) + 5 * b.chartFee ≤ 98805339942668965 := by
   cases b <;> norm_num [Bank.zeroFee, Bank.chartFee, Bank.M, Bank.E, Bank.a, Bank.b,
     Bank.s, Bank.t, Bank.dS, Bank.dT, FrobeniusLocator.Native.p]
 
@@ -7302,7 +7302,7 @@ private theorem exists_kernel_outside {F E G : Type*} [Field F]
   omega
 
 abbrev Source (F : Type*) [Field F] (b : Bank) :=
-  filtered (F := F) (sourceWeights 131071) (sourceBounds 720983 5 b.s b.t)
+  filtered (F := F) (sourceWeights 131071) (sourceBounds 720943 5 b.s b.t)
 
 abbrev Multipliers (F : Type*) [Field F] (b : Bank) := JetSpace F 2 (b.s - b.dS) (b.t - b.dT)
 
@@ -7378,12 +7378,12 @@ private theorem local_finrank (i : Fin N) :
 
 private def nodeMap (i : Fin N) : Source F b →ₗ[F] LocalSpace D i :=
   (LinearMap.range (localMultiply D i)).mkQ.comp
-    (sourceToJet 720983 131071 5 b.s b.t 3 (D.x i) (D.first i) (D.firstSlope i) (D.second i) (D.secondSlope i))
+    (sourceToJet 720943 131071 5 b.s b.t 3 (D.x i) (D.first i) (D.firstSlope i) (D.second i) (D.secondSlope i))
 
 private theorem localContact (Q : Source F b) (i : Fin N) (hi : nodeMap D i Q = 0) :
     ∃ R : Multipliers F b, D.shifted i Q.val - D.shifted i L * R.val ∈
       restrictWeightedOrder contactWeight 4 := by
-  have hmem : sourceToJet 720983 131071 5 b.s b.t 3 (D.x i)
+  have hmem : sourceToJet 720943 131071 5 b.s b.t 3 (D.x i)
       (D.first i) (D.firstSlope i) (D.second i) (D.secondSlope i) Q ∈
       LinearMap.range (localMultiply D i) :=
     (Submodule.Quotient.mk_eq_zero _).mp hi
@@ -7392,23 +7392,23 @@ private theorem localContact (Q : Source F b) (i : Fin N) (hi : nodeMap D i Q = 
   rw [map_sub]
   exact sub_eq_zero.mpr (congrArg Subtype.val hR).symm
 
-theorem exists_quotient_source (h e : ℕ) (hmin : 24587 ≤ h) (hmax : h ≤ 32718)
+theorem exists_quotient_source (h e : ℕ) (hmin : 24582 ≤ h) (hmax : h ≤ 32738)
     (hH : H + e = h) (hN : N + e = 262144)
     (hdeg : ∀ j, L.weightedTotalDegree (sourceWeights 131071 j) = b.relationBounds H j) :
     ∃ Q : Source F b, ¬ L ∣ Q.val ∧ ∀ i, ∃ R : Multipliers F b,
       D.shifted i Q.val - D.shifted i L * R.val ∈ restrictWeightedOrder contactWeight 4 := by
-  have hfit : ∀ i, b.relationBounds H i ≤ sourceBounds 720983 5 b.s b.t i := by
+  have hfit : ∀ i, b.relationBounds H i ≤ sourceBounds 720943 5 b.s b.t i := by
     intro i
     cases b <;> fin_cases i <;>
       simp [Bank.relationBounds, Bank.s, Bank.t, Bank.dS, Bank.dT, sourceBounds] <;> omega
-  have hshift : (fun i => sourceBounds 720983 5 b.s b.t i - b.relationBounds H i) =
-      sourceBounds (720983 - 131071 - H) 4 (b.s-b.dS) (b.t-b.dT) := by
+  have hshift : (fun i => sourceBounds 720943 5 b.s b.t i - b.relationBounds H i) =
+      sourceBounds (720943 - 131071 - H) 4 (b.s-b.dS) (b.t-b.dT) := by
     funext i
     fin_cases i <;> simp [sourceBounds, Bank.relationBounds] <;> omega
-  let mult := filteredMul (sourceWeights 131071) (sourceBounds 720983 5 b.s b.t)
+  let mult := filteredMul (sourceWeights 131071) (sourceBounds 720943 5 b.s b.t)
     (b.relationBounds H) L D.nonzero hdeg hfit
   have hdimMult : Module.finrank F (LinearMap.range mult) =
-      V (720983 - 131071 - H) 131071 4 (b.s-b.dS) (b.t-b.dT) := by
+      V (720943 - 131071 - H) 131071 4 (b.s-b.dS) (b.t-b.dT) := by
     rw [LinearMap.finrank_range_of_inj
       (filteredMul_injective _ _ _ L D.nonzero hdeg hfit), hshift, source_filtered_finrank]
   have hdimLocal : Module.finrank F (∀ i : Fin N, LocalSpace D i) =
@@ -7704,9 +7704,9 @@ def correctOn (u : Words) {deleted : Finset I} (P : Puncture deleted)
 theorem nodes_injective : Function.Injective P.nodes :=
   ProximityPrize.Benchmark.IRSProfile.domain.injective.comp P.index.injective
 
-theorem relation_annihilates (hH : H ≤ 32718) (Q Q' : Polynomial K)
+theorem relation_annihilates (hH : H ≤ 32738) (Q Q' : Polynomial K)
     (hQ : Q.natDegree ≤ 131071) (hQ' : Q'.natDegree ≤ 131071)
-    (s t : K) (S : Finset (Fin P.N)) (hS : 180246 ≤ S.card) (hc : correctOn u P Q Q' s t S) :
+    (s t : K) (S : Finset (Fin P.N)) (hS : 180236 ≤ S.card) (hc : correctOn u P Q Q' s t S) :
     aeval (decoderImages Q Q' s t) D.L = 0 := by
   apply eq_zero_of_many_contacts S P.nodes nodes_injective 1
   · intro i hi
@@ -7722,11 +7722,11 @@ theorem relation_annihilates (hH : H ≤ 32718) (Q Q' : Polynomial K)
     have hd := decoder_eval_degree 131071 (131071+H) D.L hdeg Q Q' hQ hQ' s t
     omega
 
-theorem exists_two_decoder_source (h : ℕ) (hmin : 24587 ≤ h) (hmax : h ≤ 32718)
+theorem exists_two_decoder_source (h : ℕ) (hmin : 24582 ≤ h) (hmax : h ≤ 32738)
     (hH : H + deleted.card = h) :
     ∃ G : Source K b, ¬ D.L ∣ G.val ∧
       ∀ (Q Q' : Polynomial K), Q.natDegree ≤ 131071 → Q'.natDegree ≤ 131071 →
-        ∀ (s t : K) (S : Finset (Fin P.N)), 180246 ≤ S.card → correctOn u P Q Q' s t S →
+        ∀ (s t : K) (S : Finset (Fin P.N)), 180236 ≤ S.card → correctOn u P Q Q' s t S →
           aeval (decoderImages Q Q' s t) G.val = 0 := by
   obtain ⟨G, hnot, hnode⟩ := exists_quotient_source (asContactData D) h deleted.card hmin hmax hH P.size D.degrees
   refine ⟨G, hnot, ?_⟩
@@ -7737,7 +7737,7 @@ theorem exists_two_decoder_source (h : ℕ) (hmin : 24587 ≤ h) (hmax : h ≤ 3
     obtain ⟨R, hR⟩ := hnode i
     exact decoder_contact_multiplicity 4 _ _ _ _ _ s t Q Q' G.val D.L R.val
       (hc i hi).1 (hc i hi).2 hrel hR
-  · have hd := decoder_eval_degree 131071 720983 G.val
+  · have hd := decoder_eval_degree 131071 720943 G.val
       ((mem_filtered _ _ _).mp G.property 0) Q Q' hQ hQ' s t
     omega
 
@@ -7974,7 +7974,7 @@ theorem first_slice_nullity (u : Words) (T : TwoActive u) :
     T.top (by exact T.degreeSum) T.ab (T.active.trans_lt T.inactive)
     (by have := T.inactive; omega) T.level
 
-theorem plane_first_slice_nullity (u : Words) (T : TwoActive u) (hh : T.height ≤ 32718) :
+theorem plane_first_slice_nullity (u : Words) (T : TwoActive u) (hh : T.height ≤ 32738) :
     Module.finrank (PlaneField K) (LinearMap.ker
       ((planeSlice p node (u 0) (u 1) 131072 T.height).map
         (algebraMap (Seeds K) (PlaneField K))).mulVecLin) = 1 := by
@@ -7995,23 +7995,23 @@ theorem plane_first_slice_nullity (u : Words) (T : TwoActive u) (hh : T.height �
   exact hn
 
 theorem plane_stack_rank (u : Words) :
-    ((planeStack p node (u 0) (u 1) 49174 81898).map
+    ((planeStack p node (u 0) (u 1) 49164 81908).map
       (algebraMap (Seeds K) (PlaneField K))).rank = stackRank u := by
-  let A := planeStack p node (u 0) (u 1) 49174 81898
-  have hdeg (j : Fin 81899) (b : Fin 2 × Fin 49174) :
+  let A := planeStack p node (u 0) (u 1) 49164 81908
+  have hdeg (j : Fin 81909) (b : Fin 2 × Fin 49164) :
       (A.transpose j b).degreeOf 0 ≤ if b.1 = 0 then 1 else 0 :=
     syndrome_degree p node (u 0) (u 1) b.1 0 _
   have he := rank_graph p (by decide) (by decide) A.transpose hdeg
   rw [Matrix.transpose_map, Matrix.transpose_map, Matrix.rank_transpose, Matrix.rank_transpose] at he
-  change ((planeStack p node (u 0) (u 1) 49174 81898).map _).rank =
-    ((planeStack p node (u 0) (u 1) 49174 81898).map _).rank at he
+  change ((planeStack p node (u 0) (u 1) 49164 81908).map _).rank =
+    ((planeStack p node (u 0) (u 1) 49164 81908).map _).rank at he
   rw [graph_stack_map] at he
   exact he
 
 
-theorem plane_stack_degree (u : Words) (b : Fin 2 × Fin 49174) (j : Fin 81899)
+theorem plane_stack_degree (u : Words) (b : Fin 2 × Fin 49164) (j : Fin 81909)
     (i : Fin 2) :
-    (planeStack p node (u 0) (u 1) 49174 81898 b j).degreeOf i ≤
+    (planeStack p node (u 0) (u 1) 49164 81908 b j).degreeOf i ≤
       if b.1 = i then 1 else 0 :=
   syndrome_degree p node (u 0) (u 1) b.1 i _
 
@@ -8593,7 +8593,7 @@ theorem chart_cut_iff (γ : K) (hγ : γ ∈ Λ) (i : Fin P.N) :
     rw [h]
 
 theorem chart_agreements (γ : K) (hγ : γ ∈ Λ) :
-    180246 ≤ {i | MvPolynomial.eval (chart.point γ) (nodeCut u P chart.numerator chart.denominator i) = 0}.ncard := by
+    180236 ≤ {i | MvPolynomial.eval (chart.point γ) (nodeCut u P chart.numerator chart.denominator i) = 0}.ncard := by
   let M := F.mark γ (chart.subset hγ)
   have hsub : (indexedSupport P M.support : Set (Fin P.N)) ⊆
       {i | MvPolynomial.eval (chart.point γ) (nodeCut u P chart.numerator chart.denominator i) = 0} := by

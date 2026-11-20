@@ -925,13 +925,18 @@ def sourceOrderWeight : JetVariable 2 → ℕ
   | none => 0
   | some j => j.val
 
+def sourceTopWeight : JetVariable 2 → ℕ
+  | none => 0
+  | some j => 1 + 4 * j.val
+
 def sourceSpan (F : Type*) [Field F] : Submodule F (DifferentialPolynomial F 2) :=
   Submodule.span F (Set.range fun i : SourceIndex ↦ (columns i).polynomial)
 
 def sourceBand (F : Type*) [Field F] : Submodule F (DifferentialPolynomial F 2) :=
-  restrictWeightAtMost (R := F) (differentialWeight 131072) 8651807 ⊓
+  restrictWeightAtMost (R := F) (differentialWeight 131072) 8651327 ⊓
     (restrictWeightAtMost (R := F) jetDegreeWeight 64 ⊓
-      restrictWeightAtMost (R := F) sourceOrderWeight 21)
+      (restrictWeightAtMost (R := F) sourceOrderWeight 21 ⊓
+        restrictWeightAtMost (R := F) sourceTopWeight 145))
 
 theorem column_mem_band (i : SourceIndex) : (columns i).polynomial ∈ sourceBand F := by
   classical
@@ -939,7 +944,7 @@ theorem column_mem_band (i : SourceIndex) : (columns i).polynomial ∈ sourceBan
       u = (columns i).exponent := by
     intro u hu
     exact Finset.mem_singleton.mp (support_monomial_subset hu)
-  refine ⟨?_,?_,?_⟩
+  refine ⟨?_,?_,?_,?_⟩
   · apply mem_restrictWeightAtMost.mpr
     intro u hu
     rw [hs u hu]
@@ -952,8 +957,18 @@ theorem column_mem_band (i : SourceIndex) : (columns i).polynomial ∈ sourceBan
   · apply mem_restrictWeightAtMost.mpr
     intro u hu
     rw [hs u hu]
+    have ho : e1 i.1 + 2 * e2 i.1 ≤ 21 := (jet_order i.1).trans (Nat.sub_le _ _)
     simpa [SourceColumn.weight_exponent, columns, sourceOrderWeight, Fin.sum_univ_two,
-      Nat.mul_comm] using jet_order i.1
+      Nat.mul_comm] using ho
+  · apply mem_restrictWeightAtMost.mpr
+    intro u hu
+    rw [hs u hu]
+    have ht := jet_total i.1
+    have ho := jet_order i.1
+    have hs64 := i.1.1.isLt
+    simp [SourceColumn.weight_exponent, columns, sourceTopWeight, Fin.sum_univ_succ,
+      Nat.mul_comm]
+    omega
 
 theorem sourceSpan_le_band : sourceSpan F ≤ sourceBand F := by
   apply Submodule.span_le.mpr
@@ -970,11 +985,12 @@ theorem mem_sourceSpan_of_band (Q : DifferentialPolynomial F 2) (hQ : Q ∈ sour
   have he : c.exponent = u := SourceColumn.exponent_ofExponent u
   have hr := mem_restrictWeightAtMost.mp hQ.1 u hu
   have ht := mem_restrictWeightAtMost.mp hQ.2.1 u hu
-  have ho := mem_restrictWeightAtMost.mp hQ.2.2 u hu
-  rw [← he] at hr ht ho
+  have ho := mem_restrictWeightAtMost.mp hQ.2.2.1 u hu
+  have hw := mem_restrictWeightAtMost.mp hQ.2.2.2 u hu
+  rw [← he] at hr ht ho hw
   have heligible : Eligible c.x c.y₀ (c.higher 0) (c.higher 1) := by
     simp [SourceColumn.weight_exponent, differentialWeight, jetDegreeWeight,
-      sourceOrderWeight, Fin.sum_univ_succ, Nat.mul_comm] at hr ht ho
+      sourceOrderWeight, sourceTopWeight, Fin.sum_univ_succ, Nat.mul_comm] at hr ht ho hw
     unfold Eligible
     omega
   obtain ⟨i,hi⟩ := index_of_eligible c.x c.y₀ (c.higher 0) (c.higher 1) heligible
@@ -997,13 +1013,15 @@ theorem sourceSpan_translation (center received : F) (Q : DifferentialPolynomial
     (hQ : Q ∈ sourceSpan F) : globalPointTranslation center received Q ∈ sourceSpan F := by
   apply mem_sourceSpan_of_band
   have hb := sourceSpan_le_band hQ
-  refine ⟨?_,?_,?_⟩
+  refine ⟨?_,?_,?_,?_⟩
   · exact globalPointTranslation_mem_restrictWeightAtMost (by exact Nat.zero_le _)
       (by exact Nat.zero_le _) center received hb.1
   · exact globalPointTranslation_mem_restrictWeightAtMost (by exact Nat.zero_le _)
       (by exact Nat.zero_le _) center received hb.2.1
   · exact globalPointTranslation_mem_restrictWeightAtMost (by exact Nat.zero_le _)
-      (by exact Nat.zero_le _) center received hb.2.2
+      (by exact Nat.zero_le _) center received hb.2.2.1
+  · exact globalPointTranslation_mem_restrictWeightAtMost (by exact Nat.zero_le _)
+      (by exact Nat.zero_le _) center received hb.2.2.2
 
 def pointMatrix (m : ℕ) (center received : F) : Matrix (LowContactIndex 2 m) SourceIndex F :=
   fun row i ↦ localConstraintCoordinatesAt m center received (columns i).polynomial row
@@ -1061,9 +1079,13 @@ set_option maxHeartbeats 0
 
 abbrev Block := Fin 65 × Fin 69
 def balance (q : Block) : ℤ := (q.2.val : ℤ) - 21
-abbrev ColFiber (q : Block) :=
+abbrev ColFiberOld (q : Block) :=
   (e : Fin (min q.1.val 10 + 1)) ×
     {a : Fin (min (q.1.val - e.val) (21 - 2 * e.val) + 1) //
+      0 ≤ balance q + a.val + 2 * e.val ∧ balance q + a.val + 2 * e.val < 48}
+abbrev ColFiber (q : Block) :=
+  (e : Fin (min q.1.val 10 + 1)) ×
+    {a : Fin (min (q.1.val - e.val) (21 - q.1.val / 62 - 2 * e.val) + 1) //
       0 ≤ balance q + a.val + 2 * e.val ∧ balance q + a.val + 2 * e.val < 48}
 abbrev Col := (q : Block) × ColFiber q
 
@@ -1073,7 +1095,7 @@ abbrev RowFiber (q : Block) :=
       balance q + q.1.val + f.val + 2 * b.val < 48}
 abbrev Row := (q : Block) × RowFiber q
 
-theorem colFiber_card (q : Block) : Fintype.card (ColFiber q) = columnCount q.1.val (balance q) := by
+theorem colFiberOld_card (q : Block) : Fintype.card (ColFiberOld q) = columnCount q.1.val (balance q) := by
   classical
   rw [Fintype.card_sigma]
   simp only [Fintype.card_subtype]
@@ -1085,6 +1107,16 @@ theorem colFiber_card (q : Block) : Fintype.card (ColFiber q) = columnCount q.1.
   change (∑ e : Fin (min q.1.val 10 + 1), f e.val) =
     ∑ e ∈ Finset.range (min q.1.val 10 + 1), f e
   exact Fin.sum_univ_eq_sum_range f _
+
+theorem colFiber_card_le (q : Block) :
+    Fintype.card (ColFiber q) ≤ columnCount q.1.val (balance q) := by
+  rw [← colFiberOld_card q]
+  refine Fintype.card_le_of_injective
+    (Sigma.map id fun e =>
+      Subtype.map (Fin.castLE (Nat.add_le_add_right
+        (min_le_min_left _ (Nat.sub_le_sub_right (Nat.sub_le _ _) _)) 1)) (fun _ ha => ha)) ?_
+  exact Function.Injective.sigma_map Function.injective_id
+    (fun _ => Subtype.map_injective _ (Fin.castLE_injective _))
 
 theorem rowFiber_card (q : Block) : Fintype.card (RowFiber q) =
     rowCountEnvelope q.1.val (balance q) := by
@@ -1305,7 +1337,8 @@ theorem finiteMatrix_offblock (i : Row) (j : Col) (hne : i.1 ≠ j.1) :
 theorem finiteMatrix_rank : (finiteMatrix (F := F)).rank ≤ blockUpper := by
   classical
   apply (rank_le_sum_min_dependent (finiteMatrix (F := F)) finiteMatrix_offblock).trans
-  simp_rw [rowFiber_card, colFiber_card]
+  refine (Finset.sum_le_sum fun q _ => min_le_min_left _ (colFiber_card_le q)).trans ?_
+  simp_rw [rowFiber_card]
   rw [Fintype.sum_prod_type]
   change (∑ s : Fin 65, ∑ gi : Fin 69,
     min (rowCountEnvelope s.val ((gi.val : ℤ) - 21))
@@ -1341,9 +1374,255 @@ theorem low_columns_rank_le_finite :
     exact congrArg (fun r : LowContactIndex 2 48 ↦
       ((pointMatrix (F := F) 48 0 0).submatrix id colOriginal) r) hi.symm
 
+/-- Exact column-fibre count: `ColFiber` already uses the actual jet cap `21 - s/62`. -/
+def fiberCountT (s : ℕ) (g : ℤ) : ℕ :=
+  ∑ e ∈ Finset.range (min s 10 + 1),
+    (Finset.univ.filter fun a : Fin (min (s - e) (21 - s / 62 - 2 * e) + 1) ↦
+      0 ≤ g + a.val + 2 * e ∧ g + a.val + 2 * e < 48).card
+
+theorem colFiber_card_eq (q : Block) :
+    Fintype.card (ColFiber q) = fiberCountT q.1.val (balance q) := by
+  classical
+  rw [Fintype.card_sigma]
+  simp only [Fintype.card_subtype]
+  unfold fiberCountT
+  let f : ℕ → ℕ := fun e ↦ (Finset.univ.filter fun a :
+    Fin (min (q.1.val - e) (21 - q.1.val / 62 - 2 * e) + 1) ↦
+      0 ≤ balance q + a.val + 2 * e ∧ balance q + a.val + 2 * e < 48).card
+  change (∑ e : Fin (min q.1.val 10 + 1), f e.val) =
+    ∑ e ∈ Finset.range (min q.1.val 10 + 1), f e
+  exact Fin.sum_univ_eq_sum_range f _
+
+/-- Row `s` of the exact-fibre block allowance. -/
+def gradeUpperT (s : ℕ) : ℕ := ∑ gi : Fin 69,
+  min (rowCountEnvelope s ((gi.val : ℤ) - 21)) (fiberCountT s ((gi.val : ℤ) - 21))
+
+/-- Exact-fibre static origin allowance (rows 62..64 lose the columns excluded by `21 - s/62`). -/
+def blockUpperT : ℕ := ∑ s : Fin 65, gradeUpperT s.val
+
+theorem gradeT_0 : gradeUpperT 0 = 48 := by decide +kernel
+
+theorem gradeT_1 : gradeUpperT 1 = 141 := by decide +kernel
+
+theorem gradeT_2 : gradeUpperT 2 = 276 := by decide +kernel
+
+theorem gradeT_3 : gradeUpperT 3 = 450 := by decide +kernel
+
+theorem gradeT_4 : gradeUpperT 4 = 660 := by decide +kernel
+
+theorem gradeT_5 : gradeUpperT 5 = 903 := by decide +kernel
+
+theorem gradeT_6 : gradeUpperT 6 = 1176 := by decide +kernel
+
+theorem gradeT_7 : gradeUpperT 7 = 1476 := by decide +kernel
+
+theorem gradeT_8 : gradeUpperT 8 = 1800 := by decide +kernel
+
+theorem gradeT_9 : gradeUpperT 9 = 2145 := by decide +kernel
+
+theorem gradeT_10 : gradeUpperT 10 = 2508 := by decide +kernel
+
+theorem gradeT_11 : gradeUpperT 11 = 2849 := by decide +kernel
+
+theorem gradeT_12 : gradeUpperT 12 = 3132 := by decide +kernel
+
+theorem gradeT_13 : gradeUpperT 13 = 3360 := by decide +kernel
+
+theorem gradeT_14 : gradeUpperT 14 = 3536 := by decide +kernel
+
+theorem gradeT_15 : gradeUpperT 15 = 3663 := by decide +kernel
+
+theorem gradeT_16 : gradeUpperT 16 = 3744 := by decide +kernel
+
+theorem gradeT_17 : gradeUpperT 17 = 3782 := by decide +kernel
+
+theorem gradeT_18 : gradeUpperT 18 = 3780 := by decide +kernel
+
+theorem gradeT_19 : gradeUpperT 19 = 3741 := by decide +kernel
+
+theorem gradeT_20 : gradeUpperT 20 = 3668 := by decide +kernel
+
+theorem gradeT_21 : gradeUpperT 21 = 3564 := by decide +kernel
+
+theorem gradeT_22 : gradeUpperT 22 = 3432 := by decide +kernel
+
+theorem gradeT_23 : gradeUpperT 23 = 3300 := by decide +kernel
+
+theorem gradeT_24 : gradeUpperT 24 = 3168 := by decide +kernel
+
+theorem gradeT_25 : gradeUpperT 25 = 3036 := by decide +kernel
+
+theorem gradeT_26 : gradeUpperT 26 = 2904 := by decide +kernel
+
+theorem gradeT_27 : gradeUpperT 27 = 2772 := by decide +kernel
+
+theorem gradeT_28 : gradeUpperT 28 = 2641 := by decide +kernel
+
+theorem gradeT_29 : gradeUpperT 29 = 2511 := by decide +kernel
+
+theorem gradeT_30 : gradeUpperT 30 = 2383 := by decide +kernel
+
+theorem gradeT_31 : gradeUpperT 31 = 2257 := by decide +kernel
+
+theorem gradeT_32 : gradeUpperT 32 = 2134 := by decide +kernel
+
+theorem gradeT_33 : gradeUpperT 33 = 2013 := by decide +kernel
+
+theorem gradeT_34 : gradeUpperT 34 = 1893 := by decide +kernel
+
+theorem gradeT_35 : gradeUpperT 35 = 1777 := by decide +kernel
+
+theorem gradeT_36 : gradeUpperT 36 = 1665 := by decide +kernel
+
+theorem gradeT_37 : gradeUpperT 37 = 1555 := by decide +kernel
+
+theorem gradeT_38 : gradeUpperT 38 = 1448 := by decide +kernel
+
+theorem gradeT_39 : gradeUpperT 39 = 1346 := by decide +kernel
+
+theorem gradeT_40 : gradeUpperT 40 = 1246 := by decide +kernel
+
+theorem gradeT_41 : gradeUpperT 41 = 1150 := by decide +kernel
+
+theorem gradeT_42 : gradeUpperT 42 = 1060 := by decide +kernel
+
+theorem gradeT_43 : gradeUpperT 43 = 970 := by decide +kernel
+
+theorem gradeT_44 : gradeUpperT 44 = 887 := by decide +kernel
+
+theorem gradeT_45 : gradeUpperT 45 = 806 := by decide +kernel
+
+theorem gradeT_46 : gradeUpperT 46 = 730 := by decide +kernel
+
+theorem gradeT_47 : gradeUpperT 47 = 658 := by decide +kernel
+
+theorem gradeT_48 : gradeUpperT 48 = 590 := by decide +kernel
+
+theorem gradeT_49 : gradeUpperT 49 = 526 := by decide +kernel
+
+theorem gradeT_50 : gradeUpperT 50 = 466 := by decide +kernel
+
+theorem gradeT_51 : gradeUpperT 51 = 410 := by decide +kernel
+
+theorem gradeT_52 : gradeUpperT 52 = 359 := by decide +kernel
+
+theorem gradeT_53 : gradeUpperT 53 = 310 := by decide +kernel
+
+theorem gradeT_54 : gradeUpperT 54 = 268 := by decide +kernel
+
+theorem gradeT_55 : gradeUpperT 55 = 226 := by decide +kernel
+
+theorem gradeT_56 : gradeUpperT 56 = 190 := by decide +kernel
+
+theorem gradeT_57 : gradeUpperT 57 = 158 := by decide +kernel
+
+theorem gradeT_58 : gradeUpperT 58 = 128 := by decide +kernel
+
+theorem gradeT_59 : gradeUpperT 59 = 103 := by decide +kernel
+
+theorem gradeT_60 : gradeUpperT 60 = 81 := by decide +kernel
+
+theorem gradeT_61 : gradeUpperT 61 = 61 := by decide +kernel
+
+theorem gradeT_62 : gradeUpperT 62 = 33 := by decide +kernel
+
+theorem gradeT_63 : gradeUpperT 63 = 22 := by decide +kernel
+
+theorem gradeT_64 : gradeUpperT 64 = 13 := by decide +kernel
+
+theorem gradeT_table (s : Fin 65) : gradeUpperT s.val = ([48, 141, 276, 450, 660, 903, 1176, 1476, 1800, 2145, 2508, 2849, 3132, 3360, 3536, 3663, 3744, 3782, 3780, 3741, 3668, 3564, 3432, 3300, 3168, 3036, 2904, 2772, 2641, 2511, 2383, 2257, 2134, 2013, 1893, 1777, 1665, 1555, 1448, 1346, 1246, 1150, 1060, 970, 887, 806, 730, 658, 590, 526, 466, 410, 359, 310, 268, 226, 190, 158, 128, 103, 81, 61, 33, 22, 13] : List ℕ).getD s.val 0 := by
+  fin_cases s
+  · exact gradeT_0
+  · exact gradeT_1
+  · exact gradeT_2
+  · exact gradeT_3
+  · exact gradeT_4
+  · exact gradeT_5
+  · exact gradeT_6
+  · exact gradeT_7
+  · exact gradeT_8
+  · exact gradeT_9
+  · exact gradeT_10
+  · exact gradeT_11
+  · exact gradeT_12
+  · exact gradeT_13
+  · exact gradeT_14
+  · exact gradeT_15
+  · exact gradeT_16
+  · exact gradeT_17
+  · exact gradeT_18
+  · exact gradeT_19
+  · exact gradeT_20
+  · exact gradeT_21
+  · exact gradeT_22
+  · exact gradeT_23
+  · exact gradeT_24
+  · exact gradeT_25
+  · exact gradeT_26
+  · exact gradeT_27
+  · exact gradeT_28
+  · exact gradeT_29
+  · exact gradeT_30
+  · exact gradeT_31
+  · exact gradeT_32
+  · exact gradeT_33
+  · exact gradeT_34
+  · exact gradeT_35
+  · exact gradeT_36
+  · exact gradeT_37
+  · exact gradeT_38
+  · exact gradeT_39
+  · exact gradeT_40
+  · exact gradeT_41
+  · exact gradeT_42
+  · exact gradeT_43
+  · exact gradeT_44
+  · exact gradeT_45
+  · exact gradeT_46
+  · exact gradeT_47
+  · exact gradeT_48
+  · exact gradeT_49
+  · exact gradeT_50
+  · exact gradeT_51
+  · exact gradeT_52
+  · exact gradeT_53
+  · exact gradeT_54
+  · exact gradeT_55
+  · exact gradeT_56
+  · exact gradeT_57
+  · exact gradeT_58
+  · exact gradeT_59
+  · exact gradeT_60
+  · exact gradeT_61
+  · exact gradeT_62
+  · exact gradeT_63
+  · exact gradeT_64
+
+theorem blockUpperT_eq : blockUpperT = 104088 := by
+  change (∑ s : Fin 65, gradeUpperT s.val) = 104088
+  simp_rw [gradeT_table]
+  decide +kernel
+
+/-- The finite semantic block matrix has the exact-fibre rank allowance. -/
+theorem finiteMatrix_rankT : (finiteMatrix (F := F)).rank ≤ blockUpperT := by
+  classical
+  apply (rank_le_sum_min_dependent (finiteMatrix (F := F)) finiteMatrix_offblock).trans
+  refine (Finset.sum_le_sum fun q _ => min_le_min_left _ (colFiber_card_eq q).le).trans ?_
+  simp_rw [rowFiber_card]
+  rw [Fintype.sum_prod_type]
+  change (∑ s : Fin 65, ∑ gi : Fin 69,
+    min (rowCountEnvelope s.val ((gi.val : ℤ) - 21))
+      (fiberCountT s.val ((gi.val : ℤ) - 21))) ≤ blockUpperT
+  exact le_rfl
+
+/-- The source strictly exceeds the exact-fibre rank allowance at A = 180246. -/
+theorem strict_source_surplusT : 262144 * blockUpperT < Fintype.card SourceIndex := by
+  rw [blockUpperT_eq, source_card]
+  norm_num
+
 /-- Kernel-checked static origin rank, valid over every coefficient field. -/
-theorem origin_rank : (pointMatrix (F := F) 48 0 0).rank ≤ blockUpper :=
-  origin_rank_le_low_columns.trans (low_columns_rank_le_finite.trans finiteMatrix_rank)
+theorem origin_rank : (pointMatrix (F := F) 48 0 0).rank ≤ blockUpperT :=
+  origin_rank_le_low_columns.trans (low_columns_rank_le_finite.trans finiteMatrix_rankT)
 
 end
 end Sol1.C52

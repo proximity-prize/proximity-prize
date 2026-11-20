@@ -1134,15 +1134,15 @@ open Polynomial FrobeniusLocator K1 K1_6
 theorem proof : K1_2.c1 := by
   intro u guard T R
   let P (b : Fin 2) : Bivar := Principal.assemble (fun j => R.coefficients (b, j))
-  let s := 49174 - T.height
+  let s := 49164 - T.height
   have hP : ∀ b, (P b).natDegree ≤ T.height := R.x_degree
-  have hBalance : 49174 + T.height + nullity u = 81899 ∧
-      T.height ≤ 32718 ∧ T.height < 49174 :=
+  have hBalance : 49164 + T.height + nullity u = 81909 ∧
+      T.height ≤ 32738 ∧ T.height < 49164 :=
     Strata.native_minimal_relation_degree (nullity u) T.a T.b T.c
       T.top T.degreeSum T.nullitySum (by have := guard.1; omega)
-  have hSum : T.height + s = 49174 := by omega
-  have hs : 16456 ≤ s := by omega
-  have hRank : GenericLayer.genericRank (twoBlock u) + s = 2 * 49174 := by
+  have hSum : T.height + s = 49164 := by omega
+  have hs : 16426 ≤ s := by omega
+  have hRank : GenericLayer.genericRank (twoBlock u) + s = 2 * 49164 := by
     change stackRank u + s = _
     rw [K1.actual_stackRank u]
     omega
@@ -1155,19 +1155,19 @@ theorem proof : K1_2.c1 := by
   have hMinors := shift_minors_primitive P T.height s hP hPrim
   obtain ⟨H, hH, rows, hRows⟩ := shift_minors_height P T.height s hP hPrim
   rw [hSum] at hMinors
-  have hBound := complementary_minor_bound 49174 81899 s p (twoBlock u) (shifts P 49174 s)
+  have hBound := complementary_minor_bound 49164 81909 s p (twoBlock u) (shifts P 49164 s)
     (by norm_num [Native.p]) hRank (certificate_shifts_annihilate R s hSum)
-    (stacked_entry_natDegree p node (u 0) (u 1) 49174 81898) hMinors
-  have hRows' : ∃ rows : Fin s → Fin 2 × Fin 49174,
-      (maximalMinors (shifts P 49174 s) rows).natDegree = s * H := by
+    (stacked_entry_natDegree p node (u 0) (u 1) 49164 81908) hMinors
+  have hRows' : ∃ rows : Fin s → Fin 2 × Fin 49164,
+      (maximalMinors (shifts P 49164 s) rows).natDegree = s * H := by
     rw [← hSum]
     exact ⟨rows, hRows⟩
   obtain ⟨rows', hdeg⟩ := hRows'
   have hDegree := hBound rows'
   rw [hdeg] at hDegree
   have hProduct := Nat.mul_le_mul_right H hs
-  have hCeiling : 49174 * (p + 1) = 104775358185516 := by norm_num [Native.p]
-  have hCap : H ≤ 6367000374 := by omega
+  have hCeiling : 49164 * (p + 1) = 104754051121176 := by norm_num [Native.p]
+  have hCap : H ≤ 6377331736 := by omega
   intro i
   rw [← hCoordinates]
   exact (hH i.1 i.2.val).trans hCap

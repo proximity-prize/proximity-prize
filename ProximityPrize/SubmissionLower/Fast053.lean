@@ -2377,8 +2377,8 @@ theorem CutInput.markPoint_inj {Γ : Finset K} {s : K → K[X]} {f Q : Row 4} {l
     exact embed.injective (by simpa only [markPoint, coeffPoint, Polynomial.coeff_map] using hcoeff)
   · have hαdeg := h.degree α hα
     have hβdeg := h.degree β hβ
-    have hlt : 133646 < n := by
-      change ¬ n < 133647 at hn
+    have hlt : 133658 < n := by
+      change ¬ n < 133659 at hn
       omega
     rw [Polynomial.coeff_eq_zero_of_natDegree_lt (hαdeg.trans_lt hlt),
       Polynomial.coeff_eq_zero_of_natDegree_lt (hβdeg.trans_lt hlt)]
@@ -2735,7 +2735,7 @@ def c1 : Prop :=
 The true weights pay for the identities in the independent argument. -/
 def c2 : Prop :=
   ∀ (f Q : Row 4) (r : ℕ) (P : JetIdeal) (hp : P.IsPrime),
-    TrueWeightLE f (90 * 180246 - 1) → TrueWeightLE Q (3000 * 180246 - 1) →
+    TrueWeightLE f (90 * 180236 - 1) → TrueWeightLE Q (3000 * 180236 - 1) →
     intersectionIdeal f Q ≤ P →
     let g := (separant^[r]) f
     toGeneric g ∈ P → toGeneric (separant g) ∉ P →
@@ -2770,7 +2770,7 @@ of its birational fresh jet image, using the second-jet height bound. -/
 def c5 : Prop :=
   ∀ A : CoeffIdeal, A.IsPrime → (extendIdeal A).IsPrime → dimension A = 2 →
     FreshBirational A →
-    2 * affineDegree A ≤ 133646 * affineDegree (freshImage A)
+    2 * affineDegree A ≤ 133658 * affineDegree (freshImage A)
 
 /-- The geometric complete intersection retains the local lengths in its
 ordinary degree bound. -/
@@ -3043,19 +3043,19 @@ theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) (h4 : c4) (h5 : c5)
       intro P hp
       obtain ⟨A, hA, rfl⟩ := Finset.mem_image.mp hp
       exact hD A hA)
-    have hbound : (2 : ℚ) * (D.total : ℚ) ≤ 133646 * (((shape f).b * cutterBox.b : ℕ) : ℚ) := by
+    have hbound : (2 : ℚ) * (D.total : ℚ) ≤ 133658 * (((shape f).b * cutterBox.b : ℕ) : ℚ) := by
       calc
         _ ≤ 2 * (∑ P ∈ Td, affineDegree P) :=
           mul_le_mul_of_nonneg_left (piecesOf_le_degree (T := Td) (part := marksOn Γ s))
             (by positivity)
-        _ ≤ ∑ P ∈ Td, 133646 * affineDegree (freshImage P) := by
+        _ ≤ ∑ P ∈ Td, 133658 * affineDegree (freshImage P) := by
           rw [Finset.mul_sum]
           apply Finset.sum_le_sum
           intro P hP
           obtain ⟨ht, he⟩ := Finset.mem_filter.mp hP
           have hf := (hT P ht).1
           exact h5 P hf.prime hf.extended_prime he hf.birational
-        _ = 133646 * (∑ P ∈ Td.image freshImage, affineDegree P) := by
+        _ = 133658 * (∑ P ∈ Td.image freshImage, affineDegree P) := by
           rw [Finset.mul_sum, Finset.sum_image (fun P hP R hR h =>
             hinj (Finset.mem_filter.mp hP).1 (Finset.mem_filter.mp hR).1 h)]
         _ ≤ _ := mul_le_mul_of_nonneg_left hsum (by positivity)
@@ -3320,7 +3320,7 @@ def c3 : Prop :=
     dimension R = 2 →
     dimension (freshImage R) = 2 ∧
     2 * affineDegree (extendIdeal R) ≤
-      133646 * (residueDegree freshJetMap (extendIdeal R) : ℚ) *
+      133658 * (residueDegree freshJetMap (extendIdeal R) : ℚ) *
         affineDegree (freshImage R)
 
 /-- Birational projection preserves surface dimension. A full-dimensional
@@ -3371,7 +3371,7 @@ theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) (h4 : c4) (h5 : c5) :
   have hdimC' : dimension C = 2 := hdimC
   have hheight (P : Ideal FreshCoeffRing) (hP : P ∈ S) :
       dimension (image P) = 2 ∧
-      2 * affineDegree P ≤ 133646 * (rank P : ℚ) * affineDegree (image P) := by
+      2 * affineDegree P ≤ 133658 * (rank P : ℚ) * affineDegree (image P) := by
     have hp := Ideal.mem_minimalPrimesFinset.mp hP
     obtain ⟨R, hR, rfl⟩ := hdescend P hp
     obtain ⟨hd, hhom⟩ := (h1 _ _ A hA hdim).1 R hR
@@ -3387,7 +3387,7 @@ theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) (h4 : c4) (h5 : c5) :
   calc
     2 * affineDegree A = 2 * ∑ P ∈ S, (weight P : ℚ) * affineDegree P := by
       rw [hdegree, (h1 _ _ B hAe hdimB).2]
-    _ ≤ ∑ P ∈ S, 133646 * ((weight P * rank P : ℕ) : ℚ) * affineDegree (image P) := by
+    _ ≤ ∑ P ∈ S, 133658 * ((weight P * rank P : ℕ) : ℚ) * affineDegree (image P) := by
       rw [Finset.mul_sum]
       apply Finset.sum_le_sum
       intro P hP
@@ -3395,28 +3395,28 @@ theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) (h4 : c4) (h5 : c5) :
       calc
         2 * ((weight P : ℚ) * affineDegree P) =
             (weight P : ℚ) * (2 * affineDegree P) := by ring
-        _ ≤ (weight P : ℚ) * (133646 * (rank P : ℚ) * affineDegree (image P)) :=
+        _ ≤ (weight P : ℚ) * (133658 * (rank P : ℚ) * affineDegree (image P)) :=
           mul_le_mul_of_nonneg_left (hheight P hP).2 (by positivity)
         _ = _ := by ring
     _ = ∑ Q ∈ T, ∑ P ∈ S.filter (fun P => image P = Q),
-        133646 * ((weight P * rank P : ℕ) : ℚ) * affineDegree (image P) :=
+        133658 * ((weight P * rank P : ℕ) : ℚ) * affineDegree (image P) :=
       (Finset.sum_fiberwise_of_maps_to hmaps _).symm
-    _ ≤ ∑ Q ∈ T, 133646 * (boundaryWeight (boundaryIdeal C) Q : ℚ) * affineDegree Q := by
+    _ ≤ ∑ Q ∈ T, 133658 * (boundaryWeight (boundaryIdeal C) Q : ℚ) * affineDegree Q := by
       apply Finset.sum_le_sum
       intro Q hQ
       calc
         _ = ∑ P ∈ S.filter (fun P => image P = Q),
-            133646 * ((weight P * rank P : ℕ) : ℚ) * affineDegree Q := by
+            133658 * ((weight P * rank P : ℕ) : ℚ) * affineDegree Q := by
           apply Finset.sum_congr rfl
           intro P hP
           rw [(Finset.mem_filter.mp hP).2]
-        _ = 133646 * ((∑ P ∈ S.filter (fun P => image P = Q), weight P * rank P : ℕ) : ℚ) *
+        _ = 133658 * ((∑ P ∈ S.filter (fun P => image P = Q), weight P * rank P : ℕ) : ℚ) *
             affineDegree Q := by
           rw [Nat.cast_sum, Finset.mul_sum, Finset.sum_mul]
         _ ≤ _ := mul_le_mul_of_nonneg_right
           (mul_le_mul_of_nonneg_left (by exact_mod_cast hfibre Q hQ) (by positivity))
           (affineDegree_nonneg Q)
-    _ = 133646 * affineDegree C := by
+    _ = 133658 * affineDegree C := by
       rw [(h1 _ _ C hC hdimC').2, Finset.mul_sum]
       exact Finset.sum_congr rfl (fun _ _ => mul_assoc ..)
 
@@ -3810,7 +3810,7 @@ structure FreshCurve (R : CoeffIdeal) where
     (Polynomial.eval₂RingHom includeOld (algebraMap GeoField Fresh genericArgument))
   polynomial : Old[X]
   monic : polynomial.Monic
-  degree_le : polynomial.natDegree ≤ 133646
+  degree_le : polynomial.natDegree ≤ 133658
   equation : extendIdeal R =
     coneIdeal GeoField (coefficientTuple (N := taylorLength) includeOld polynomial)
   generates : IntermediateField.adjoin GeoField
@@ -4126,7 +4126,7 @@ private theorem jet_zero_nonzero {R : CoeffIdeal} (D : FreshCurve R) {n : ℕ} (
 private theorem height_comparison (h5 : c5) (h6 : c6) {R : CoeffIdeal} (D : FreshCurve R)
     (hdiv : PrincipalDivisors GeoField D.Fresh) :
     2 * tupleHeight GeoField D.Fresh D.coefficients ≤
-      133646 * tupleHeight GeoField D.Fresh (ratios (D.jets (n := 4)) 0) := by
+      133658 * tupleHeight GeoField D.Fresh (ratios (D.jets (n := 4)) 0) := by
   let : CharP D.Old K1.p := charP_of_injective_ringHom
     ((algebraMap Geom D.Old).comp K1_13.embed).injective K1.p
   have hdeg : D.polynomial.natDegree < taylorLength := Nat.lt_succ_iff.mpr D.degree_le
@@ -4166,7 +4166,7 @@ private theorem height_comparison (h5 : c5) (h6 : c6) {R : CoeffIdeal} (D : Fres
     intro i
     rfl
   suffices hh : 2 * tupleHeight GeoField D.Fresh D.coefficients ≤
-      133646 * tupleHeight GeoField D.Fresh r₃ from
+      133658 * tupleHeight GeoField D.Fresh r₃ from
     hh.trans (Nat.mul_le_mul_left _ hmore)
   rw [hcoeff, hjet, Finset.mul_sum, Finset.mul_sum]
   apply Finset.sum_le_sum
@@ -4207,7 +4207,7 @@ theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) (h4 : c4) (h5 : c5) (h6 : c6) 
     rwa [hu, hgen, IntermediateField.finrank_top, Nat.cast_one, one_mul, ← hcone] at h
   have hcmp := height_comparison h5 h6 D hdiv
   have hjpos : 0 < tupleHeight GeoField D.Fresh (ratios v 0) := by
-    change 2 * tupleHeight GeoField D.Fresh u ≤ 133646 * tupleHeight GeoField D.Fresh
+    change 2 * tupleHeight GeoField D.Fresh u ≤ 133658 * tupleHeight GeoField D.Fresh
       (ratios v 0) at hcmp
     omega
   have himage : coneIdeal GeoField v = freshImage R := by
@@ -4222,7 +4222,7 @@ theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) (h4 : c4) (h5 : c5) (h6 : c6) 
   rw [himage, ← hrank] at ht
   refine ⟨himage ▸ hdim', ?_⟩
   have hcmp' : 2 * (tupleHeight GeoField D.Fresh u : ℚ) ≤
-      133646 * (tupleHeight GeoField D.Fresh (ratios v 0) : ℚ) := by exact_mod_cast hcmp
+      133658 * (tupleHeight GeoField D.Fresh (ratios v 0) : ℚ) := by exact_mod_cast hcmp
   rw [hs, ht] at hcmp'
   simpa only [mul_assoc] using hcmp'
 
