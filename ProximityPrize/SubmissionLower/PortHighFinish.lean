@@ -69,14 +69,14 @@ def PairPass {w rows i} (pair : BufferedPair w rows i) (I : Ideal Ambient) : Pro
         K1_14_2.toJet (K1_14_3R.chainCutter g) ∈ I
 
 /-- Integral section lengths use the floors of the rational mass bounds. -/
-def initialCap : Fin 4 → ℕ := ![5548, 125234, 577116, 5169640]
+def initialCap : Fin 4 → ℕ := ![5548, 130413, 600702, 5559570]
 
-def reserveFiveCap : Fin 4 → ℕ := ![337, 7944, 82782, 640800]
+def reserveFiveCap : Fin 4 → ℕ := ![337, 8288, 86333, 674862]
 
 /-- The conservative initial cap pays low-seed and constant-image exits. -/
-def initialE₀ : ℕ := 6242936
+def initialE₀ : ℕ := 6687414
 
-def initialFee : ℕ := (p+1)*577116 + initialE₀ + 5548 + (p+1)*(1036+4990)
+def initialFee : ℕ := (p+1)*600702 + initialE₀ + 5548 + (p+1)*(1062+5235)
 
 structure InitialCover {u del} {M : AnchorModel u del} {Γ} (F : AnchoredFamily M Γ)
     (P Q : Jet) (freeFixed movingFixed : ODE) where
@@ -91,15 +91,15 @@ structure InitialCover {u del} {M : AnchorModel u del} {Γ} (F : AnchoredFamily 
     K1_14_2.fixedAt movingFixed (F.scalar γ) = 0 ∨ ∃ I ∈ parents, OnParent F I γ
 
 /-- The stage caps for proper failed tests, in chronological order. -/
-def stageFiveShape : Shape := ⟨203, 282, 58, 7726⟩
-def terminalFullShape : Shape := ⟨1024, 1422, 290, 141471⟩
+def stageFiveShape : Shape := ⟨203, 282, 58, 8124⟩
+def terminalFullShape : Shape := ⟨1024, 1422, 290, 172135⟩
 
-def lossSeedCap : ℕ := 175962087
-def lossYCap : ℕ := 2478622105
-def constantFee : ℕ := 90522632628
-def curveFee : ℕ := 59646678368515881
+def lossSeedCap : ℕ := 191951647
+def lossYCap : ℕ := 2897821424
+def constantFee : ℕ := 112911341478
+def curveFee : ℕ := 66480915484694807
 
-def beta : ℚ := (81927 : ℚ) / 45592
+def beta : ℚ := (81936 : ℚ) / 45583
 
 def rootPrice (g H : ℕ) : ℚ :=
   let s : ℚ := 2 * (g : ℚ) - 1
@@ -141,11 +141,11 @@ open K1_14 (Jet Shape atX jetAt)
 open K1_14_3 (Surface Parent MassCap mass JetPlane JetCaps SeedCover fixedAt)
 open K1_14_3_2 (AtSurface)
 
-def freeZero : Shape := ⟨34, 47, 10, 515⟩
-def movingZero : Shape := ⟨67, 93, 18, 1857⟩
-def freeFive : Shape := ⟨58, 80, 17, 940⟩
-def movingFive : Shape := ⟨124, 172, 35, 3138⟩
-def laterTerminal : Shape := ⟨582, 809, 165, 59515⟩
+def freeZero : Shape := ⟨34, 47, 10, 522⟩
+def movingZero : Shape := ⟨67, 93, 18, 1904⟩
+def freeFive : Shape := ⟨58, 80, 17, 954⟩
+def movingFive : Shape := ⟨124, 172, 35, 3211⟩
+def laterTerminal : Shape := ⟨582, 809, 165, 65532⟩
 
 def contactPower (h : ℕ) (s : Shape) (W : ℕ) : ℕ :=
   1 + (s.m * agreement - 1 - W) / (2 * h)
@@ -156,11 +156,11 @@ structure InitialCover (P Q : Jet) where
   parents : Finset Surface
   geometric : ∀ q ∈ parents, Parent q
   initial : ∀ q ∈ parents, P ∈ q.asIdeal ∧ Q ∈ q.asIdeal
-  masses : MassCap parents 1643 28355 183584
-  jetMass : mass parents .jets ≤ 1221580
+  masses : MassCap parents 1643 28958 187102
+  jetMass : mass parents .jets ≤ 1266372
   seeds : SeedCover
-  seedDegree : seeds.curve.totalDegree ≤ 183584 + 515 + 1857
-  seedPoints : seeds.points.card ≤ 1221580
+  seedDegree : seeds.curve.totalDegree ≤ 187102 + 522 + 1904
+  seedPoints : seeds.points.card ≤ 1266372
   ordinates : Finset K1_14.FX
   ordinateCount : ordinates.card ≤ 1643
   lowJet : JetPlane
@@ -169,7 +169,7 @@ structure InitialCover (P Q : Jet) where
   lowJet_ne : lowJet ≠ 0
   fixedFree_ne : fixedFree ≠ 0
   fixedMoving_ne : fixedMoving ≠ 0
-  lowJet_caps : JetCaps lowJet 183584 28355
+  lowJet_caps : JetCaps lowJet 187102 28958
   fixedFree_caps : JetCaps fixedFree 47 10
   fixedMoving_caps : JetCaps fixedMoving 93 18
   cover : ∀ z S, jetAt P z S = 0 → jetAt Q z S = 0 →
@@ -206,8 +206,8 @@ open scoped BigOperators
 open private divisor_caps seedContent_cap gcd_caps multiset_prod_ne_zero
   distinct_le_degree seed_degree_mul atMark_prod_eq_zero row_at_mark from ProximityPrize.SubmissionLower.Fast051
 
-def freeZero : Shape := ⟨55, 76, 17, 1036⟩
-def movingZero : Shape := ⟨138, 191, 39, 4990⟩
+def freeZero : Shape := ⟨55, 76, 17, 1062⟩
+def movingZero : Shape := ⟨138, 191, 39, 5235⟩
 
 /-- Residual rows and their common ordinary factors, with divisibility into
 the original rows retained for both kinds of component. -/
@@ -219,8 +219,8 @@ structure Prepared (P Q : Jet) (G H : ODE) where
   gcdSeed : ℕ
   gcdY : ℕ
   seedContent_ne : seedContent ≠ 0
-  seedContent_degree : seedContent.totalDegree ≤ 1036 + 4990
-  gcdSeed_le : gcdSeed ≤ 1036
+  seedContent_degree : seedContent.totalDegree ≤ 1062 + 5235
+  gcdSeed_le : gcdSeed ≤ 1062
   gcdY_le : gcdY ≤ 76
   free_caps : RowCaps free (afterGcd freeZero gcdSeed gcdY)
   moving_caps : RowCaps moving (afterGcd movingZero gcdSeed gcdY)
@@ -262,8 +262,8 @@ theorem prepare {P Q : Jet} (hP : P ≠ 0) (hQ : Q ≠ 0)
     (right_ne_zero_of_mul hpa0) (right_ne_zero_of_mul hqb0) hpa hord
   have ha0 : a ≠ 0 := by intro hz; simp [hz] at hpa0
   have hb0 : b ≠ 0 := by intro hz; simp [hz] at hqb0
-  have hau : a.totalDegree ≤ 1036 := seedContent_cap hP hPc (Dvd.dvd.trans ⟨P', ha⟩ hAr)
-  have hbu : b.totalDegree ≤ 4990 := seedContent_cap hQ hQc (Dvd.dvd.trans ⟨Q', hb⟩ hBr)
+  have hau : a.totalDegree ≤ 1062 := seedContent_cap hP hPc (Dvd.dvd.trans ⟨P', ha⟩ hAr)
+  have hbu : b.totalDegree ≤ 5235 := seedContent_cap hQ hQc (Dvd.dvd.trans ⟨Q', hb⟩ hBr)
   have hp : P = fixedIncl A.equation * (C (C a) * (C M.prod * L)) :=
     A.factorization.trans (by rw [ha, hL])
   have hq : Q = fixedIncl B.equation * (C (C b) * (C M.prod * T)) :=
@@ -340,7 +340,7 @@ private theorem split_mul {u x b a d : ℕ} (hx : x ≤ u) (ha : a ≤ b) (hd : 
     _ = _ := by rw [← Nat.add_mul, Nat.sub_add_cancel hx]
 
 /-- Shared-gcd accounting for the four initial bridge section lengths. -/
-theorem ledger (x y : ℕ) (hx : x ≤ 1036) (hy : y ≤ 76) (k : Fin 4) :
+theorem ledger (x y : ℕ) (hx : x ≤ 1062) (hy : y ≤ 76) (k : Fin 4) :
     residualBudget (afterGcd freeZero x y) (afterGcd movingZero x y) k +
       ordinaryBudget x y k ≤ initialCap k := by
   have hj : min 39 (191-y) = 39 := min_eq_left (by omega)
@@ -355,21 +355,21 @@ theorem ledger (x y : ℕ) (hx : x ≤ 1036) (hy : y ≤ 76) (k : Fin 4) :
       rw [min_eq_right hs]
       have hm : (191-y)*(76-y) ≤ 191*17 := Nat.mul_le_mul (Nat.sub_le _ _) hs
       omega
-  · change (1036-x)*min 39 (191-y) + (4990-x)*min 17 (76-y) + x ≤ 125234
+  · change (1062-x)*min 39 (191-y) + (5235-x)*min 17 (76-y) + x ≤ 130413
     rw [hj]
-    have hm := Nat.mul_le_mul_left (4990-x) (min_le_left 17 (76-y))
+    have hm := Nat.mul_le_mul_left (5235-x) (min_le_left 17 (76-y))
     omega
-  · change (1036-x)*(191-y) + (4990-x)*(76-y) + 2*x*y ≤ 577116
-    have h₁ : (1036-x)*(191-y) + x*y ≤ 1036*191 :=
+  · change (1062-x)*(191-y) + (5235-x)*(76-y) + 2*x*y ≤ 600702
+    have h₁ : (1062-x)*(191-y) + x*y ≤ 1062*191 :=
       split_mul hx (Nat.sub_le _ _) (by omega)
-    have h₂ : (4990-x)*(76-y) + x*y ≤ 4990*76 :=
+    have h₂ : (5235-x)*(76-y) + x*y ≤ 5235*76 :=
       split_mul (by omega) (Nat.sub_le _ _) hy
     calc
-      _ = ((1036-x)*(191-y) + x*y) + ((4990-x)*(76-y) + x*y) := by ring
-      _ ≤ 1036*191 + 4990*76 := Nat.add_le_add h₁ h₂
+      _ = ((1062-x)*(191-y) + x*y) + ((5235-x)*(76-y) + x*y) := by ring
+      _ ≤ 1062*191 + 5235*76 := Nat.add_le_add h₁ h₂
       _ = _ := by decide
-  · change (1036-x)*(4990-x) + x*x ≤ 5169640
-    exact (split_mul hx (Nat.sub_le _ _) (by omega : x ≤ 4990)).trans (by decide)
+  · change (1062-x)*(5235-x) + x*x ≤ 5559570
+    exact (split_mul hx (Nat.sub_le _ _) (by omega : x ≤ 5235)).trans (by decide)
 
 end P0_10R_1
 end PackSource_P0_10R_1Budget
@@ -463,7 +463,7 @@ theorem failed_pair {u del} {M : AnchorModel u del} {Γ} {F : AnchoredFamily M �
     ∃ P : Jet, RowCaps P stageFiveShape ∧ toJet P ∉ I ∧
       ∀ γ ∈ Γ, OnParent F I γ → jetAt P (M.label γ) (F.scalar γ) = 0 := by
   classical
-  have hc : freeShape M.overhead 1 = ⟨82, 113, 25, 1601⟩ := by
+  have hc : freeShape M.overhead 1 = ⟨82, 113, 25, 1643⟩ := by
     rw [freeShape, ite_eq_left hw]
     rfl
   have hm := moving_five M.overhead hw
@@ -972,8 +972,8 @@ theorem bridge_word {u del} (M : AnchorModel u del) {Γ} (F : AnchoredFamily M �
 private theorem regular_count {w T s} (h : P0_10.FixedWord w T s 134625) (f : Row 2)
     (hf : Irreducible f) (hp : 0 < f.degreeOf 1) {B J : ℕ} (hB : f.totalDegree ≤ B)
     (hJ : f.degreeOf 1 ≤ J) (hreg : ∀ γ ∈ T, RegularAt 1 f (extend (s γ))) :
-    45592 * T.card ≤ 81927 * MvPolynomial.cappedDegreeMixedVolume f.totalDegree
-      (f.degreeOf 1) (chartTotal B) (chartTop B J) + 45592 := by
+    45583 * T.card ≤ 81936 * MvPolynomial.cappedDegreeMixedVolume f.totalDegree
+      (f.degreeOf 1) (chartTotal B) (chartTop B J) + 45583 := by
   classical
   let x (γ : K) := marked (extend (s γ))
   have hx : Set.InjOn x (T : Set K) := by
@@ -1011,7 +1011,7 @@ private theorem regular_count {w T s} (h : P0_10.FixedWord w T s 134625) (f : Ro
   exact hcap
 
 
-/-- Fixed first-order tariff at the bridge endpoint for agreement 180217. -/
+/-- Fixed first-order tariff at the bridge endpoint for agreement 180208. -/
 theorem fixed_count {u del} (M : AnchorModel u del) {Γ} (F : AnchoredFamily M Γ)
     (hw : M.overhead ≤ 3554) (T : Finset K) (hT : T ⊆ Γ)
     (B J : ℕ) (hB : 2 ≤ B) (hchar : B < p) (hJB : J ≤ B)
@@ -1055,19 +1055,19 @@ theorem fixed_count {u del} (M : AnchorModel u del) {Γ} (F : AnchoredFamily M �
         (hA g hg).2.trans_le (g.degreeOf_le_totalDegree 1)
       _ ≤ B := hAb
   have hlocal (g : Row 2) (hg : g ∈ A) :
-      45592 * (reg g).card ≤ 81927 * (g.totalDegree * v + g.degreeOf 1 * (a - v)) + 45592 := by
+      45583 * (reg g).card ≤ 81936 * (g.totalDegree * v + g.degreeOf 1 * (a - v)) + 45583 := by
     have hb := (Finset.single_le_sum (fun x _ => Nat.zero_le x.totalDegree) hg).trans hAb
     have hj := (Finset.single_le_sum (fun x _ => Nat.zero_le (x.degreeOf 1)) hg).trans hAj
     exact regular_count (word.mono (Finset.filter_subset _ _)) g (hA g hg).1 (hA g hg).2
       hb hj (fun _ hγ => (Finset.mem_filter.mp hγ).2)
-  have hr : 45592 * (∑ g ∈ A, (reg g).card) ≤
-      81927 * (B*v + J*(a-v)) + 45592 * B := by
+  have hr : 45583 * (∑ g ∈ A, (reg g).card) ≤
+      81936 * (B*v + J*(a-v)) + 45583 * B := by
     rw [Finset.mul_sum]
     refine (Finset.sum_le_sum hlocal).trans ?_
     simp only [Finset.sum_add_distrib, ← Finset.mul_sum, ← Finset.sum_mul,
       Finset.sum_const, smul_eq_mul]
-    have hn' := Nat.mul_le_mul_left 45592 hn
-    rw [Nat.mul_comm 45592 A.card] at hn'
+    have hn' := Nat.mul_le_mul_left 45583 hn
+    rw [Nat.mul_comm 45583 A.card] at hn'
     exact Nat.add_le_add (Nat.mul_le_mul_left _ (Nat.add_le_add
       (Nat.mul_le_mul_right _ hAb) (Nat.mul_le_mul_right _ hAj))) hn'
   have hcost : B*v + J*(a-v) = (B-J)*v + J*a := by
@@ -1080,19 +1080,19 @@ theorem fixed_count {u del} (M : AnchorModel u del) {Γ} (F : AnchoredFamily M �
     calc
       _ = B * ((B - 1) + 1) := by rw [Nat.mul_add, Nat.mul_one]
       _ = _ := by rw [Nat.sub_add_cancel (by omega : 1 ≤ B)]
-  let num := 81927 * ((B-J)*v + J*a)
-  have htotal := Nat.mul_le_mul_left 45592 hs
+  let num := 81936 * ((B-J)*v + J*a)
+  have htotal := Nat.mul_le_mul_left 45583 hs
   rw [Nat.mul_add] at htotal
-  have ho := Nat.mul_le_mul_left 45592 ordinary_bound
+  have ho := Nat.mul_le_mul_left 45583 ordinary_bound
   rw [hcost] at hr
-  have hcount : 45592 * T.card ≤ num + 45592 * (B*B) := by
+  have hcount : 45583 * T.card ≤ num + 45583 * (B*B) := by
     rw [← hbox, Nat.mul_add]
     dsimp only [num]
     omega
-  have hmod := Nat.mod_add_div num 45592
-  have hlt := Nat.mod_lt num (by decide : 0 < 45592)
-  have hround : T.card ≤ num / 45592 + B*B := by omega
-  change T.card ≤ (num + 45592 - 1) / 45592 + B^2
+  have hmod := Nat.mod_add_div num 45583
+  have hlt := Nat.mod_lt num (by decide : 0 < 45583)
+  have hround : T.card ≤ num / 45583 + B*B := by omega
+  change T.card ≤ (num + 45583 - 1) / 45583 + B^2
   rw [pow_two]
   exact hround.trans (Nat.add_le_add_right (Nat.div_le_div_right (by omega)) _)
 
@@ -1117,8 +1117,8 @@ open scoped BigOperators Classical
 /-- Project the rank-one survivors using the linear section lengths. -/
 theorem rank_equation (S : Finset (Ideal Ambient))
     (hS : ∀ I ∈ S, Active I ∧ ¬ K1_14_2_2.dual I)
-    (hord : mass S 1 ≤ 47668) (hmix : mass S 2 ≤ 264904) :
-    ∃ G : ODE, ODECaps G 264904 47668 ∧ ∀ I ∈ S, fixedOn G I := by
+    (hord : mass S 1 ≤ 49732) (hmix : mass S 2 ≤ 276267) :
+    ∃ G : ODE, ODECaps G 276267 49732 ∧ ∀ I ∈ S, fixedOn G I := by
   have hchoose (I : Ideal Ambient) :
       ∃ G : ODE, I ∈ S → ODECaps G (sectionDegree I 2) (sectionDegree I 1) ∧ fixedOn G I := by
     by_cases hI : I ∈ S
@@ -1186,19 +1186,19 @@ private theorem dot4 (w v : Fin 4 → ℕ) :
   simp only [dot, Fin.sum_univ_succ, Fin.sum_univ_zero]
   rfl
 
-private theorem first_seed_weights : firstWeight 0 = ![7726,224,58,0] := by
+private theorem first_seed_weights : firstWeight 0 = ![8124,224,58,0] := by
   funext i
   fin_cases i <;> rfl
 
-private theorem seed_increments : increment 0 = ![133745,908,232,0] := by
+private theorem seed_increments : increment 0 = ![164011,908,232,0] := by
   funext i
   fin_cases i <;> rfl
 
-private theorem first_ordinate_weights : firstWeight 1 = ![0,7726,0,58] := by
+private theorem first_ordinate_weights : firstWeight 1 = ![0,8124,0,58] := by
   funext i
   fin_cases i <;> rfl
 
-private theorem ordinate_increments : increment 1 = ![0,133745,0,232] := by
+private theorem ordinate_increments : increment 1 = ![0,164011,0,232] := by
   funext i
   fin_cases i <;> rfl
 
@@ -1213,9 +1213,9 @@ private theorem ordinate_ledger :
   decide
 
 private theorem constant_ledger :
-    dot (lastWeight 2) (![5548,125234,577116,initialE₀] : Fin 4 → ℕ) ≤ constantFee := by
+    dot (lastWeight 2) (![5548,130413,600702,initialE₀] : Fin 4 → ℕ) ≤ constantFee := by
   rw [dot4]
-  change 0*5548 + (0*125234 + (141471*577116 + (1422*6242936 + 0))) ≤ 90522632628
+  change 0*5548 + (0*130413 + (172135*600702 + (1422*6687414 + 0))) ≤ 112911341478
   decide
 
 theorem loss_bounds (A B U V : Finset (Ideal Ambient)) (hB : B ⊆ A)
@@ -1231,7 +1231,7 @@ theorem loss_bounds (A B U V : Finset (Ideal Ambient)) (hB : B ⊆ A)
   refine ⟨(hpay 0).trans seed_ledger, (hpay 1).trans ordinate_ledger, ?_⟩
   have hV' : V ⊆ B := hV
   have hconst : mass A 3 ≤ initialE₀ := (hA 3).trans (by decide)
-  have hcoarse : ∀ j : Fin 4, mass A j ≤ (![5548,125234,577116,initialE₀] : Fin 4 → ℕ) j := by
+  have hcoarse : ∀ j : Fin 4, mass A j ≤ (![5548,130413,600702,initialE₀] : Fin 4 → ℕ) j := by
     intro j
     fin_cases j
     · exact hA 0
@@ -1249,60 +1249,60 @@ theorem loss_bounds (A B U V : Finset (Ideal Ambient)) (hB : B ⊆ A)
 
 private theorem fixed_price_row (B J a v mixed num quotient price : ℕ)
     (ha : 1 + 269247 * (B - 1) = a) (hv : min a (269247 * (J - 1) + 134625) = v)
-    (hm : (B - J) * v + J * a = mixed) (hn : 81927 * mixed + 45591 = num)
-    (hq : num / 45592 = quotient) (hprice : quotient + B ^ 2 = price) :
+    (hm : (B - J) * v + J * a = mixed) (hn : 81936 * mixed + 45582 = num)
+    (hq : num / 45583 = quotient) (hprice : quotient + B ^ 2 = price) :
     fixedPrice B J = price := by
-  change (81927 * ((B - J) * min (1 + 269247 * (B - 1)) (269247 * (J - 1) + 134625) +
-    J * (1 + 269247 * (B - 1))) + 45591) / 45592 + B ^ 2 = price
+  change (81936 * ((B - J) * min (1 + 269247 * (B - 1)) (269247 * (J - 1) + 134625) +
+    J * (1 + 269247 * (B - 1))) + 45582) / 45583 + B ^ 2 = price
   rw [ha, hv, hm, hn, hq, hprice]
 
-private theorem rank_price : fixedPrice 264904 47668 = 11119599951001550 := by
-  apply fixed_price_row 264904 47668 71324338042 12834331374
-    6187967356148320 506961601587163458231 11119529776872334 <;> decide
+private theorem rank_price : fixedPrice 276267 49732 = 12101955636267973 := by
+  apply fixed_price_row 276267 49732 74383791703 13390057182
+    6732571332697966 551639964715940587758 12101879312812684 <;> decide
 
-private theorem free_zero_price : fixedPrice 76 17 = 1087888923 := by
+private theorem free_zero_price : fixedPrice 76 17 = 1088223249 := by
   apply fixed_price_row 76 17 20193526 4442577
-    605401985 49598768470686 1087883147 <;> decide
+    605401985 49604217088542 1088217473 <;> decide
 
-private theorem moving_zero_price : fixedPrice 191 39 = 6416538530 := by
+private theorem moving_zero_price : fixedPrice 191 39 = 6418510434 := by
   apply fixed_price_row 191 39 51156931 10366011
-    3570753981 292541161446978 6416502049 <;> decide
+    3570753981 292573298232798 6418473953 <;> decide
 
-private theorem free_five_price : fixedPrice 113 25 = 2397855140 := by
+private theorem free_five_price : fixedPrice 113 25 = 2398592039 := by
   apply fixed_price_row 113 25 30155665 6596553
-    1334388289 109322429398494 2397842371 <;> decide
+    1334388289 109334438893086 2398579270 <;> decide
 
-private theorem moving_five_price : fixedPrice 282 58 = 14117157806 := by
+private theorem moving_five_price : fixedPrice 282 58 = 14121496233 := by
   apply fixed_price_row 282 58 75658408 15481704
-    7856089360 643625833042311 14117078282 <;> decide
+    7856089360 643696537846542 14121416709 <;> decide
 
-private theorem terminal_price : fixedPrice 1422 290 = 357938500294 := by
+private theorem terminal_price : fixedPrice 1422 290 = 358048500478 := by
   apply fixed_price_row 1422 290 382599988 77947008
-    199190009576 16319039914578543 357936478210 <;> decide
+    199190009576 16320832624664718 358046478394 <;> decide
 
-private theorem initial_price : initialFee = 1242504417584112 := by decide
+private theorem initial_price : initialFee = 1293336681424528 := by decide
 
 theorem prefix_ledger (w : ℤ) (hw : w ≤ 3554) :
     initialFee + fixedPrice 76 17 + fixedPrice 191 39 +
-      fixedPrice 113 25 + fixedPrice 282 58 + fixedPrice 264904 47668 +
+      fixedPrice 113 25 + fixedPrice 282 58 + fixedPrice 276267 49732 +
       constantFee + curveFee ≤ P0.highPrefix w := by
   let spent := initialFee + fixedPrice 76 17 + fixedPrice 191 39 +
-    fixedPrice 113 25 + fixedPrice 282 58 + fixedPrice 264904 47668 +
+    fixedPrice 113 25 + fixedPrice 282 58 + fixedPrice 276267 49732 +
     constantFee + curveFee
   change spent ≤ P0.highPrefix w
   calc
-    _ ≤ spent + fixedPrice 1422 290 + (P0.p+1)*(1601+7726+141471) :=
+    _ ≤ spent + fixedPrice 1422 290 + (P0.p+1)*(1643+8124+172135) :=
       (Nat.le_add_right _ _).trans (Nat.le_add_right _ _)
     _ = _ := by
       unfold spent
       rw [initial_price, free_zero_price, moving_zero_price, free_five_price, moving_five_price,
         rank_price, terminal_price, P0.highPrefix, ite_eq_left hw]
-      have hcontents : (P0.p+1)*(1601+7726+141471) = 321306268834332 := by decide
+      have hcontents : (P0.p+1)*(1643+8124+172135) = 387579761757468 := by decide
       rw [hcontents]
       exact (show
-        1242504417584112 + 1087888923 + 6416538530 + 2397855140 + 14117157806 +
-          11119599951001550 + 90522632628 + 59646678368515881 + 357938500294 +
-          321306268834332 = 72330561486509196 by decide)
+        1293336681424528 + 1088223249 + 6418510434 + 2398592039 + 14121496233 +
+          12101955636267973 + 112911341478 + 66480915484694807 + 358048500478 +
+          387579761757468 = 80264282550808687 by decide)
 
 end
 end P0_10R.Bridge
@@ -1463,8 +1463,8 @@ private theorem regular_count_P0_10RBridgeRoot {n U s g H w} (A : RegularChart U
     obtain ⟨hγU, hγhit⟩ := mem_filter.mp hγ
     exact mem_zeroLocus_sup_span_singleton_iff.mpr ⟨hpoints γ hγU, (hcut γ hγU).mpr hγhit⟩
   have hcount := P0_10.section_capacity hw (by decide) D hsection
-  change 45592 * U.card ≤ 81927 * D + 45592 at hcount
-  have hcountQ : (45592 : ℚ) * (U.card : ℚ) ≤ 81927 * (D : ℚ) + 45592 := by
+  change 45583 * U.card ≤ 81936 * D + 45583 at hcount
+  have hcountQ : (45583 : ℚ) * (U.card : ℚ) ≤ 81936 * (D : ℚ) + 45583 := by
     exact_mod_cast hcount
   change (U.card : ℚ) ≤ beta * (D : ℚ) + 1
   unfold beta
@@ -1568,10 +1568,10 @@ private theorem linear_rate (r a b c : ℕ) (hb : (b : ℚ) ≠ 0) :
   simp only [Nat.cast_add, Nat.cast_mul, Nat.cast_one, Nat.cast_ofNat]
   field_simp
 
-private theorem yRate_eq : yRate = ((330882208152 : ℕ) : ℚ) / 45592 := by
+private theorem yRate_eq : yRate = ((330918556641 : ℕ) : ℚ) / 45583 := by
   unfold yRate beta
-  have h := linear_rate 15 81927 45592 (2*endpointDegree-1) (by norm_num : (45592 : ℚ) ≠ 0)
-  have hn : (15 : ℕ) * 45592 + 81927 * ((2*endpointDegree-1)*15+1) = 330882208152 := by decide
+  have h := linear_rate 15 81936 45583 (2*endpointDegree-1) (by norm_num : (45583 : ℚ) ≠ 0)
+  have hn : (15 : ℕ) * 45583 + 81936 * ((2*endpointDegree-1)*15+1) = 330918556641 := by decide
   rw [hn] at h
   exact h
 
@@ -1590,7 +1590,7 @@ private theorem tariff_ledger :
     seedRate * (lossSeedCap : ℚ) + yRate * (lossYCap : ℚ) + (lossSeedCap : ℚ) ≤
       (curveFee : ℚ) := by
   rw [yRate_eq]
-  exact tariff_fraction (p+1) 330882208152 lossSeedCap lossYCap curveFee 9 45592
+  exact tariff_fraction (p+1) 330918556641 lossSeedCap lossYCap curveFee 9 45583
     (by decide) (by decide) (by decide)
 
 private theorem group_price {u del} (M : AnchorModel u del) {Γ} (F : AnchoredFamily M Γ)
@@ -1978,7 +1978,7 @@ private theorem residual_mass (h1 : K1_14_3R_2.c1) (h2 : K1_14_3R_2.c2) (h3 : K1
 
 private def threshold (k : Fin 3) : ℕ := ![1, 1, 3] k
 
-private def stageCap (k : Fin 3) : ℚ := ![8009 / 36, 60043 / 18, 382555 / 9] k
+private def stageCap (k : Fin 3) : ℚ := ![8009 / 36, 122321 / 36, 86541 / 2] k
 
 private theorem add_fraction_row (a m b n c d : ℕ) (hm : 0 < m) (hn : 0 < n) (hd : 0 < d)
     (h : (a * n + b * m) * d = c * (m * n)) :
@@ -2004,12 +2004,12 @@ private theorem stage_arithmetic (k : Fin 3) :
       (pairCap freeFive movingFive k : ℚ) / (n ^ 2 : ℕ) = stageCap k := by
   fin_cases k
   · exact add_fraction_row 80 1 5129 36 8009 36 (by decide) (by decide) (by decide) (by decide)
-  · exact add_fraction_row 940 1 86246 36 60043 18 (by decide) (by decide) (by decide) (by decide)
-  · change 2 * ((940 : ℚ) / 3) * (80 / 3) + 412720 / 16 = 382555 / 9
-    have hg : 2 * ((940 : ℚ) / 3) * (80 / 3) = 150400 / 9 :=
-      mixed_graph_fraction 940 80 3 (by decide)
+  · exact add_fraction_row 954 1 87977 36 122321 36 (by decide) (by decide) (by decide) (by decide)
+  · change 2 * ((954 : ℚ) / 3) * (80 / 3) + 420968 / 16 = 86541 / 2
+    have hg : 2 * ((954 : ℚ) / 3) * (80 / 3) = 152640 / 9 :=
+      mixed_graph_fraction 954 80 3 (by decide)
     rw [hg]
-    exact add_fraction_row 150400 9 412720 16 382555 9 (by decide) (by decide) (by decide) (by decide)
+    exact add_fraction_row 152640 9 420968 16 86541 2 (by decide) (by decide) (by decide) (by decide)
 
 /-- The coordinatewise thresholds 1, 1 and 3 certify the conservative
 reserve-five section bounds. -/
@@ -2017,7 +2017,7 @@ theorem reserveFive_mass (P Q : Jet) (hP : P ≠ 0) (hQ : Q ≠ 0)
     (hPs : RowCaps P freeFive) (hQs : RowCaps Q movingFive) (hno : NoMovingCommon P Q)
     (qs : Finset Surface) (hgraphs : OrdinaryGraphs P Q qs)
     (hpass : ∀ q ∈ qs, Parent q ∧ OrderAt q P 6 ∧ OrderAt q Q 6) :
-    MassCap qs (8009 / 36) (60043 / 18) (382555 / 9) := by
+    MassCap qs (8009 / 36) (122321 / 36) (86541 / 2) := by
   obtain ⟨D⟩ := fullGcd P Q freeFive movingFive hP hQ hPs hQs hno
   have hstage (k : Fin 3) : mass qs (countedSlice k) ≤ stageCap k := by
     let r := threshold k
@@ -2395,8 +2395,8 @@ theorem fixed_count {u del} (M : P0.AnchorModel u del) {Γ}
     dsimp only [charge]
     omega
   have herrors : P0.t ≤ 262144 - d := by
-    change 81927 ≤ 262144 - d
-    change d < 180217 at hd
+    change 81936 ≤ 262144 - d
+    change d < 180208 at hd
     omega
   have hpay := (Nat.mul_le_mul_right mass herrors).trans hceil
   have hbound : gap * T.card ≤ gap * (charge + b*(b-1) + b) := by
@@ -2430,9 +2430,9 @@ open scoped Classical BigOperators
 at the terminal bank, using the price increment on the survivors. -/
 theorem moving_loss_bound {S₀ S₁ S₂ : Finset Surface}
     (h₁ : S₁ ⊆ S₀) (h₂ : S₂ ⊆ S₁)
-    (m₀ : MassCap S₀ 1643 28355 183584)
-    (m₁ : MassCap S₁ (8009 / 36) (60043 / 18) (382555 / 9)) :
-    cutDegree movingFive (S₀ \ S₁) + cutDegree laterTerminal (S₁ \ S₂) ≤ 422701573 / 12 := by
+    (m₀ : MassCap S₀ 1643 28958 187102)
+    (m₁ : MassCap S₁ (8009 / 36) (122321 / 36) (86541 / 2)) :
+    cutDegree movingFive (S₀ \ S₁) + cutDegree laterTerminal (S₁ \ S₂) ≤ 333036295 / 9 := by
   rcases m₀ with ⟨a₀, c₀, z₀⟩
   rcases m₁ with ⟨a₁, c₁, z₁⟩
   have a₂ := mass_nonneg S₂ .seed
@@ -2445,9 +2445,9 @@ theorem moving_loss_bound {S₀ S₁ S₂ : Finset Surface}
 initial fourth mass uses the conservative separate ordinary-factor cap. -/
 theorem constant_loss_bound {S₀ S₁ S₂ : Finset Surface}
     (h₁ : S₁ ⊆ S₀) (h₂ : S₂ ⊆ S₁)
-    (z₀ : mass S₀ .mixed ≤ 183584) (e₀ : mass S₀ .jets ≤ 1221580) :
+    (z₀ : mass S₀ .mixed ≤ 187102) (e₀ : mass S₀ .jets ≤ 1266372) :
     constantDegree movingFive (S₀ \ S₁) + constantDegree laterTerminal (S₁ \ S₂) ≤
-      11914259980 := by
+      13285663212 := by
   have z₁ := mass_nonneg (S₀ \ S₁) .mixed
   have z₂ := mass_nonneg S₂ .mixed
   have e₁ := mass_nonneg (S₀ \ S₁) .jets
@@ -2457,15 +2457,15 @@ theorem constant_loss_bound {S₀ S₁ S₂ : Finset Surface}
   linarith only [z₀, z₁, z₂, e₀, e₁, e₂]
 
 theorem endpoint_range (w : ℤ) (hlo : 3555 ≤ w) (hhi : w ≤ (heightCap : ℤ)) :
-    w ≤ (band w).endpoint ∧ 8249 ≤ (band w).endpoint ∧ (band w).endpoint ≤ 32766 := by
+    w ≤ (band w).endpoint ∧ 8249 ≤ (band w).endpoint ∧ (band w).endpoint ≤ 32784 := by
   unfold band
   split_ifs <;> norm_num at * <;> omega
 
 private theorem initial_seed_fee :
-    (p + 1) * (183584 + 515 + 1857) + 1221580 = 396217646862484 := rfl
+    (p + 1) * (187102 + 522 + 1904) + 1266372 = 403828530289524 := rfl
 
 private theorem first_loss_fee :
-    (p + 1) * 35225131 + 11914259980 = 75054425174452834 := rfl
+    (p + 1) * 37004032 + 13285663212 = 78844742352005100 := rfl
 
 private theorem ode_price_row (d b j gap t a v mixed num quotient price : ℕ)
     (hg : agreement - d = gap) (ht : 2 * d - 3 = t) (ha : 1 + t * (b - 1) = a)
@@ -2478,61 +2478,61 @@ private theorem ode_price_row (d b j gap t a v mixed num quotient price : ℕ)
   rw [hg, ht, ha, hv, hm, hn, hq, hp]
 
 private theorem endpoint_8249_fees :
-    odePrice 139320 183584 28355 = 8039283025342136 ∧
-    odePrice 139320 47 10 = 679079522 ∧ odePrice 139320 93 18 = 2484100744 := by
+    odePrice 139320 187102 28958 = 8367977387629866 ∧
+    odePrice 139320 47 10 = 679228996 ∧ odePrice 139320 93 18 = 2484647526 := by
   refine ⟨?_, ?_, ?_⟩
-  · apply ode_price_row 139320 183584 28355 40897 278637 51153016372 7900612818
-      2676848006353382 328781179532347831664 8039249322257080 <;> decide
-  · apply ode_price_row 139320 47 10 40897 278637 12817303 2647053
-      226113991 27772224871480 679077313 <;> decide
-  · apply ode_price_row 139320 93 18 40897 278637 25634605 4876149
-      827134065 101591914440456 2484092095 <;> decide
+  · apply ode_price_row 139320 187102 28958 40888 278637 52133261338 8068630929
+      2785680551461580 342148428052717142807 8367942380471462 <;> decide
+  · apply ode_price_row 139320 47 10 40888 278637 12817303 2647053
+      226113991 27772224871471 679226787 <;> decide
+  · apply ode_price_row 139320 93 18 40888 278637 25634605 4876149
+      827134065 101591914440447 2484638877 <;> decide
 
 private theorem endpoint_23999_fees :
-    odePrice 155070 183584 28355 = 12686373909283030 ∧
-    odePrice 155070 47 10 = 1071620368 ∧ odePrice 155070 93 18 = 3920030986 := by
+    odePrice 155070 187102 28958 = 13206890117443168 ∧
+    odePrice 155070 47 10 = 1072004033 ∧ odePrice 155070 93 18 = 3921434447 := by
   refine ⟨?_, ?_, ?_⟩
-  · apply ode_price_row 155070 183584 28355 25147 310137 56935880872 8793779568
-      2979466510686632 319023397165260459914 12686340206197974 <;> decide
-  · apply ode_price_row 155070 47 10 25147 310137 14266303 2946303
-      251676241 26947981853980 1071618159 <;> decide
-  · apply ode_price_row 155070 93 18 25147 310137 28532605 5427399
-      920641815 98576801724456 3920022337 <;> decide
+  · apply ode_price_row 155070 187102 28958 25138 310137 58026942838 8980792179
+      3100602609058580 331993923762338420057 13206855110284764 <;> decide
+  · apply ode_price_row 155070 47 10 25138 310137 14266303 2946303
+      251676241 26947981853971 1072001824 <;> decide
+  · apply ode_price_row 155070 93 18 25138 310137 28532605 5427399
+      920641815 98576801724447 3921425798 <;> decide
 
 private theorem endpoint_32766_fees :
-    odePrice 163837 183584 28355 = 18892709800175331 ∧
-    odePrice 163837 47 10 = 1595871007 ∧ odePrice 163837 93 18 = 5837760951 := by
+    odePrice 163855 187102 28958 = 19691848990688233 ∧
+    odePrice 163855 47 10 = 1598388806 ∧ odePrice 163855 93 18 = 5846971164 := by
   refine ⟨?_, ?_, ?_⟩
-  · apply ode_price_row 163837 183584 28355 16380 327671 60154825194 9290947371
-      3147914537828829 309462034470338708882 18892676097090275 <;> decide
-  · apply ode_price_row 163837 47 10 16380 327671 15072867 3112876
-      265905082 26140330912553 1595868798 <;> decide
-  · apply ode_price_row 163837 93 18 16380 327671 30145733 5734244
-      972691494 95622382717037 5837752302 <;> decide
+  · apply ode_price_row 163855 187102 28958 16353 327707 61314307408 9489575454
+      3276259134518240 322020234072663307712 19691813983529829 <;> decide
+  · apply ode_price_row 163855 47 10 16353 327707 15074523 3113218
+      265934296 26138416035896 1598386597 <;> decide
+  · apply ode_price_row 163855 93 18 16353 327707 30149045 5734874
+      972798360 95615378022392 5846962515 <;> decide
 
 private theorem endpoint_fees (w : ℤ) (hlo : 3555 ≤ w) :
-    (p+1)*(183584+515+1857) + 1221580 + 1643 +
-      odePrice (131071 + (band w).endpoint) 183584 28355 +
+    (p+1)*(187102+522+1904) + 1266372 + 1643 +
+      odePrice (131071 + (band w).endpoint) 187102 28958 +
       odePrice (131071 + (band w).endpoint) 47 10 +
       odePrice (131071 + (band w).endpoint) 93 18 +
-      ((p+1)*35225131 + 11914259980) ≤ highPrefix w := by
+      ((p+1)*37004032 + 13285663212) ≤ highPrefix w := by
   have hnot : ¬ w ≤ 3554 := by omega
   rw [initial_seed_fee, first_loss_fee]
   unfold band highPrefix
   simp only [hnot, ite_false]
   split_ifs
-  · change 396217646862484 + 1643 + odePrice 139320 183584 28355 +
-       odePrice 139320 47 10 + odePrice 139320 93 18 + 75054425174452834 ≤ 83625638374831363
+  · change 403828530289524 + 1643 + odePrice 139320 187102 28958 +
+       odePrice 139320 47 10 + odePrice 139320 93 18 + 78844742352005100 ≤ 87616551433802655
     rw [endpoint_8249_fees.1, endpoint_8249_fees.2.1, endpoint_8249_fees.2.2]
-    decide
-  · change 396217646862484 + 1643 + odePrice 155070 183584 28355 +
-       odePrice 155070 47 10 + odePrice 155070 93 18 + 75054425174452834 ≤ 88272853155571659
+    all_goals decide
+  · change 403828530289524 + 1643 + odePrice 155070 187102 28958 +
+       odePrice 155070 47 10 + odePrice 155070 93 18 + 78844742352005100 ≤ 92455465993177915
     rw [endpoint_23999_fees.1, endpoint_23999_fees.2.1, endpoint_23999_fees.2.2]
-    decide
-  · change 396217646862484 + 1643 + odePrice 163837 183584 28355 +
-       odePrice 163837 47 10 + odePrice 163837 93 18 + 75054425174452834 ≤ 94479354514532614
+    all_goals decide
+  · change 403828530289524 + 1643 + odePrice 163855 187102 28958 +
+       odePrice 163855 47 10 + odePrice 163855 93 18 + 78844742352005100 ≤ 98940427318344470
     rw [endpoint_32766_fees.1, endpoint_32766_fees.2.1, endpoint_32766_fees.2.2]
-    decide
+    all_goals decide
 
 /-- Count the initial exceptional projections and the first-loss cover on
 the original marked input. -/
@@ -2541,7 +2541,7 @@ theorem paid_complement {u del} {M : AnchorModel u del} {Γ} {F : AnchoredFamily
     (initial : InitialCover P Q) (lost : SeedCover)
     (hrows : ∀ γ ∈ Γ, jetAt P (M.label γ) (F.scalar γ) = 0 ∧
       jetAt Q (M.label γ) (F.scalar γ) = 0)
-    (hd : lost.curve.totalDegree ≤ 35225131) (he : lost.points.card ≤ 11914259980)
+    (hd : lost.curve.totalDegree ≤ 37004032) (he : lost.points.card ≤ 13285663212)
     (kept : Finset K)
     (hcover : ∀ γ ∈ Γ, (∃ q ∈ initial.parents, MarkOn M F q γ) →
       γ ∈ kept ∨ lost.Covers (M.label γ)) :
@@ -2568,7 +2568,7 @@ theorem paid_complement {u del} {M : AnchorModel u del} {Γ} {F : AnchoredFamily
     · exact Finset.mem_biUnion.mpr ⟨4, Finset.mem_univ _, Finset.mem_filter.mpr ⟨hγ, h⟩⟩
     · have hh := (hcover γ hΓ h).resolve_left (Finset.mem_sdiff.mp hγ).2
       exact Finset.mem_biUnion.mpr ⟨5, Finset.mem_univ _, Finset.mem_filter.mpr ⟨hγ, hh⟩⟩
-  have hzero : (book 0).card ≤ (p+1)*(183584+515+1857) + 1221580 := by
+  have hzero : (book 0).card ≤ (p+1)*(187102+522+1904) + 1266372 := by
     apply (seed_count hlabel.injOn initial.seeds _
       (fun _ hγ => (Finset.mem_filter.mp hγ).2)).trans
     · exact Nat.add_le_add (Nat.mul_le_mul_left _ initial.seedDegree) initial.seedPoints
@@ -2595,17 +2595,17 @@ theorem paid_complement {u del} {M : AnchorModel u del} {Γ} {F : AnchoredFamily
   have hode (G : JetPlane) (b j : ℕ) (hb : 2 ≤ b) (hbp : b < p) (hjb : j ≤ b)
       (hn : G ≠ 0) (hcap : JetCaps G b j) :
       (T.filter (fun γ => fixedAt G (F.scalar γ) = 0)).card ≤ odePrice d b j :=
-    fixed_count M F d b j (by dsimp [d]; omega) (by change d < 180217; dsimp [d]; omega)
+    fixed_count M F d b j (by dsimp [d]; omega) (by change d < 180208; dsimp [d]; omega)
       hb hbp hjb hdeg G hn hcap _
       (fun _ hγ => (Finset.mem_sdiff.mp (Finset.mem_filter.mp hγ).1).1)
       (fun _ hγ => (Finset.mem_filter.mp hγ).2)
-  have hlow : (book 2).card ≤ odePrice d 183584 28355 :=
+  have hlow : (book 2).card ≤ odePrice d 187102 28958 :=
     hode _ _ _ (by decide) (by decide) (by decide) initial.lowJet_ne initial.lowJet_caps
   have hfree : (book 3).card ≤ odePrice d 47 10 :=
     hode _ _ _ (by decide) (by decide) (by decide) initial.fixedFree_ne initial.fixedFree_caps
   have hmoving : (book 4).card ≤ odePrice d 93 18 :=
     hode _ _ _ (by decide) (by decide) (by decide) initial.fixedMoving_ne initial.fixedMoving_caps
-  have hloss : (book 5).card ≤ (p+1)*35225131 + 11914259980 :=
+  have hloss : (book 5).card ≤ (p+1)*37004032 + 13285663212 :=
     (seed_count hlabel.injOn lost (hd.trans_lt (by decide))
       (fun _ hγ => (Finset.mem_filter.mp hγ).2)).trans
       (Nat.add_le_add (Nat.mul_le_mul_left _ hd) he)
@@ -2668,7 +2668,7 @@ def c2 : Prop :=
     (∀ I ∈ S, Active I ∧ Bridge.PairPass pair I ∧
       ¬ fixedOn A.equation I ∧ ¬ fixedOn B.equation I ∧
       orderOn I pair.free 6 ∧ orderOn I pair.moving 6) →
-    mass S 1 ≤ 47668 ∧ mass S 2 ≤ 264904 ∧ Fits (S.filter dual) reserveFiveCap
+    mass S 1 ≤ 49732 ∧ mass S 2 ≤ 276267 ∧ Fits (S.filter dual) reserveFiveCap
 
 /-- The full terminal rank floor precludes divisibility at seven distinct ordinates. -/
 def c3 : Prop :=
@@ -2702,7 +2702,7 @@ def c4 : Prop :=
 /-- The telescoped full-bank rank floor rules out the restriction on all
 leading positions that five distinct projected ordinates would force. -/
 def c5 : Prop :=
-  ∀ (h : ℕ) (rows : Banks), 3555 ≤ h → h ≤ 32766 →
+  ∀ (h : ℕ) (rows : Banks), 3555 ≤ h → h ≤ 32784 →
     (∀ W, ∀ P ∈ rows laterTerminal W, RowCaps P laterTerminal) →
     K1_14_3.LeadingFilter h rows laterTerminal →
     (∀ W < laterTerminal.m * agreement,
@@ -2812,13 +2812,13 @@ theorem cover (h1 : c1) (h2 : c2) (h3 : c3) :
   let fixed₂ := Γ.filter fun γ => fixedAt A₅.equation (F.scalar γ) = 0
   let fixed₃ := Γ.filter fun γ => fixedAt B₅.equation (F.scalar γ) = 0
   let rank := Γ.filter fun γ => fixedAt G (F.scalar γ) = 0
-  have shape₀ : freeShape M.overhead 0 = ⟨55,76,17,1036⟩ := by
+  have shape₀ : freeShape M.overhead 0 = ⟨55,76,17,1062⟩ := by
     rw [freeShape, ite_eq_left hhi]
     rfl
-  have shape₁ : movingShape M.overhead 0 = ⟨138,191,39,4990⟩ := by
+  have shape₁ : movingShape M.overhead 0 = ⟨138,191,39,5235⟩ := by
     rw [movingShape, ite_eq_left hhi]
     rfl
-  have shape₂ : freeShape M.overhead 1 = ⟨82,113,25,1601⟩ := by
+  have shape₂ : freeShape M.overhead 1 = ⟨82,113,25,1643⟩ := by
     rw [freeShape, ite_eq_left hhi]
     rfl
   have shape₃ := moving_five M.overhead hhi
@@ -2834,7 +2834,7 @@ theorem cover (h1 : c1) (h2 : c2) (h3 : c3) :
   have fixed₃_paid : fixed₃.card ≤ fixedPrice 282 58 :=
     fixed_group_count hhi (by simpa only [shape₃, stageFiveShape] using B₅.equation_caps)
       (by decide) (by decide) (by decide)
-  have rank_paid : rank.card ≤ fixedPrice 264904 47668 :=
+  have rank_paid : rank.card ≤ fixedPrice 276267 49732 :=
     fixed_group_count hhi hG (by decide) (by decide) (by decide)
   let keep := Γ.filter fun γ => ∃ I ∈ C, OnParent F I γ
   let paid := initial.direct ∪ fixed₀ ∪ fixed₁ ∪ fixed₂ ∪ fixed₃ ∪ rank ∪
@@ -2845,7 +2845,7 @@ theorem cover (h1 : c1) (h2 : c2) (h3 : c3) :
       (Finset.card_union_le _ _).trans hconst'
     calc
       _ ≤ initialFee + fixedPrice 76 17 + fixedPrice 191 39 + fixedPrice 113 25 +
-          fixedPrice 282 58 + fixedPrice 264904 47668 + constantFee + curveFee := by
+          fixedPrice 282 58 + fixedPrice 276267 49732 + constantFee + curveFee := by
         exact card_union_bound
           (card_union_bound
             (card_union_bound
@@ -2971,15 +2971,15 @@ private theorem paired_mass_of_test {u del} {M : AnchorModel u del} {Γ} {F : An
     {rows : Banks} (src : JetSource M F rows) (hl : 3555 ≤ M.overhead)
     (hu : M.overhead ≤ (heightCap : ℤ)) (pair : BufferedPair M.overhead rows 1)
     (S : Finset Surface) (hS : ∀ q ∈ S, Parent q) (hpass : ∀ q ∈ S, SurfacePass pair q) :
-    MassCap S (8009 / 36) (60043 / 18) (382555 / 9) := by
+    MassCap S (8009 / 36) (122321 / 36) (86541 / 2) := by
   let w := M.overhead
   have hf : freeShape w 1 = freeFive := later_free_five hl
   have hg : movingShape w 1 = movingFive := later_moving_five hl
   have hs : freeShape w 1 ∈ scheduled w := by simp [scheduled]
   have ht : movingShape w 1 ∈ scheduled w := by simp [scheduled]
   have hh : 0 < w.toNat := by dsimp [w]; omega
-  have hw : w.toNat ≤ 32766 := by
-    change M.overhead ≤ 32766 at hu
+  have hw : w.toNat ≤ 32784 := by
+    change M.overhead ≤ 32784 at hu
     dsimp [w]
     omega
   have hPf : RowCaps pair.free freeFive := by
@@ -3001,11 +3001,11 @@ private theorem paired_mass_of_test {u del} {M : AnchorModel u del} {Γ} {F : An
     exact order_of_source src hs hh hp (hS q hq) hv _ (buffered_lt 1 hm) _ hP
   have hfree : 2 * w.toNat * 5 ≤ fullCutoff (freeShape w 1) := by
     rw [hf]
-    change 2 * w.toNat * 5 ≤ 10452585
+    change 2 * w.toNat * 5 ≤ 10452063
     omega
   have hmoving : 2 * w.toNat * 5 ≤ fullCutoff (movingShape w 1) := by
     rw [hg]
-    change 2 * w.toNat * 5 ≤ 22346907
+    change 2 * w.toNat * 5 ≤ 22345791
     omega
   exact ⟨hS q hq, ord _ (by rw [hf]; decide) hs (by rw [hf]; decide) hfree
     (hpass q hq).1 _ pair.free_mem,
@@ -3022,8 +3022,8 @@ theorem cover (initialCover : c4) (terminalRank : c5) :
   let w := M.overhead
   let h := w.toNat
   have hwlo : 3555 ≤ h := by dsimp [h, w]; omega
-  have hwhi : h ≤ 32766 := by
-    change M.overhead ≤ 32766 at hu
+  have hwhi : h ≤ 32784 := by
+    change M.overhead ≤ 32784 at hu
     dsimp [h, w]
     omega
   have hf : freeShape w 0 = freeZero := later_free_zero hl
@@ -3073,12 +3073,12 @@ theorem cover (initialCover : c4) (terminalRank : c5) :
     exact ⟨C, hd, he, fun γ hγ hm => hcov _ _ hm (hv γ hγ)⟩)
   let C : Fin 2 → SeedCover := ![C₁,C₂]
   let lost := joinCovers Finset.univ C
-  have hd : (lost.curve.totalDegree : ℚ) ≤ 422701573 / 12 := by
+  have hd : (lost.curve.totalDegree : ℚ) ≤ 333036295 / 9 := by
     have hd' : (lost.curve.totalDegree : ℚ) ≤ ∑ i : Fin 2, ((C i).curve.totalDegree : ℚ) := by
       exact_mod_cast joinCovers_degree .univ C
     rw [Fin.sum_univ_two] at hd'
     exact (hd'.trans (add_le_add d₁ d₂)).trans (moving_loss_bound s₁ s₂ initial.masses m₁)
-  have he : (lost.points.card : ℚ) ≤ 11914259980 := by
+  have he : (lost.points.card : ℚ) ≤ 13285663212 := by
     have he' : (lost.points.card : ℚ) ≤ ∑ i : Fin 2, ((C i).points.card : ℚ) := by
       exact_mod_cast joinCovers_points .univ C
     rw [Fin.sum_univ_two] at he'
@@ -3095,11 +3095,11 @@ theorem cover (initialCover : c4) (terminalRank : c5) :
           ⟨q, Finset.mem_sdiff.mpr ⟨hq₁, hq₂⟩, hm⟩))
     · exact Or.inr (joinCovers_covers (i := (0 : Fin 2)) (Finset.mem_univ _) (cov₁ γ hγ
         ⟨q, Finset.mem_sdiff.mpr ⟨hq₀, hq₁⟩, hm⟩))
-  have hdNat : lost.curve.totalDegree ≤ 35225131 := by
-    have ht : (lost.curve.totalDegree : ℚ) < (35225132 : ℕ) := hd.trans_lt (by norm_num)
-    have hn : lost.curve.totalDegree < 35225132 := by exact_mod_cast ht
+  have hdNat : lost.curve.totalDegree ≤ 37004032 := by
+    have ht : (lost.curve.totalDegree : ℚ) < (37004033 : ℕ) := hd.trans_lt (by norm_num)
+    have hn : lost.curve.totalDegree < 37004033 := by exact_mod_cast ht
     omega
-  have heNat : lost.points.card ≤ 11914259980 := by exact_mod_cast he
+  have heNat : lost.points.card ≤ 13285663212 := by exact_mod_cast he
   have hprefix := paid_complement hl hu initial lost hmarks hdNat heNat kept hcover
   by_cases hkept : kept.Nonempty
   · have hne : S₂.Nonempty := by
@@ -3401,7 +3401,7 @@ theorem proof : P0_10R.c1 := by
     simpa only [seedImage, dite_eq_left hi] using Classical.choose_spec (seed_exists I hi)
   let imageCover := joinCovers noSeeds seedImage
   let seedExits := Γ.filter (fun γ => imageCover.Covers (M.label γ))
-  have hseedExits : seedExits.card ≤ (p+1)*577116 + initialE₀ := by
+  have hseedExits : seedExits.card ≤ (p+1)*600702 + initialE₀ := by
     apply cover_count M _ _ _ _ _ (by decide) _ (fun γ hγ => (Finset.mem_filter.mp hγ).2)
     · calc
         _ ≤ ∑ I ∈ noSeeds, (seedImage I).curve.totalDegree := joinCovers_degree _ _
@@ -3434,8 +3434,8 @@ theorem proof : P0_10R.c1 := by
       _ ≤ _ := hfit 0
   let contentCover : SeedCover := ⟨prep.seedContent, prep.seedContent_ne, ∅⟩
   let contentExits := Γ.filter (fun γ => graphEval (M.label γ) prep.seedContent = 0)
-  have hcontentExits : contentExits.card ≤ (p+1)*(1036+4990) := by
-    have h := cover_count M contentExits contentCover (1036+4990) 0 prep.seedContent_degree
+  have hcontentExits : contentExits.card ≤ (p+1)*(1062+5235) := by
+    have h := cover_count M contentExits contentCover (1062+5235) 0 prep.seedContent_degree
       (by decide) (by simp [contentCover]) (fun γ hγ => Or.inl (Finset.mem_filter.mp hγ).2)
     simpa only [Nat.add_zero] using h
   let direct := (contentExits ∪ seedExits) ∪ yExits
@@ -3446,7 +3446,7 @@ theorem proof : P0_10R.c1 := by
       direct.card ≤ (contentExits ∪ seedExits).card + yExits.card := Finset.card_union_le _ _
       _ ≤ contentExits.card + seedExits.card + yExits.card :=
         Nat.add_le_add_right (Finset.card_union_le _ _) _
-      _ ≤ (p+1)*(1036+4990) + ((p+1)*577116 + initialE₀) + 5548 :=
+      _ ≤ (p+1)*(1062+5235) + ((p+1)*600702 + initialE₀) + 5548 :=
         Nat.add_le_add (Nat.add_le_add hcontentExits hseedExits) hyExits
       _ = initialFee := by unfold initialFee; ac_rfl
   · intro γ hγ
@@ -3567,8 +3567,8 @@ open private numerator numerator_bound seedNumerator ordinateNumerator mixedNume
   jetsNumerator ordinate_endpoints mixed_seed_endpoints mixed_ordinate_endpoints
   jets_endpoints from ProximityPrize.SubmissionLower.Fast032
 
-def bridgeFree : Shape := ⟨82, 113, 25, 1601⟩
-def bridgeMoving : Shape := ⟨203, 282, 58, 7726⟩
+def bridgeFree : Shape := ⟨82, 113, 25, 1643⟩
+def bridgeMoving : Shape := ⟨203, 282, 58, 8124⟩
 
 /-- The derivative cap on the moving residual is still 58. After removing
 the common term in the jet-plane formula, the other cap is at most 25. -/
@@ -3588,34 +3588,34 @@ private theorem seed_endpoint {z : ℕ} (hz : z ≤ 113) :
 
 /-- Six separate checks of the shared-degree numerator. The residual scales
 are supplied by the linear or squared local length at the given threshold. -/
-theorem ordinate_linear (x z : ℕ) (hx : x ≤ 1601) :
+theorem ordinate_linear (x z : ℕ) (hx : x ≤ 1643) :
     6 * highCap x z 1 + highScale 1 1 *
       pairCap (residualShape bridgeFree x z) (residualShape bridgeMoving x z) 1 <
-        highScale 1 1 * 6 * (47668 + 1) := by
+        highScale 1 1 * 6 * (49732 + 1) := by
   refine (numerator_bound bridgeFree bridgeMoving 6 1 x z 1).trans_lt ?_
-  change ordinateNumerator bridgeFree bridgeMoving 6 1 x < 286014
+  change ordinateNumerator bridgeFree bridgeMoving 6 1 x < 298398
   apply ordinate_endpoints bridgeFree bridgeMoving hx (by decide)
-  · change 286008 < 286014
+  · change 298394 < 298398
     decide
-  · change 162731 < 286014
+  · change 171883 < 298398
     decide
 
-theorem mixed_linear (x z : ℕ) (hx : x ≤ 1601) (hz : z ≤ 113) :
+theorem mixed_linear (x z : ℕ) (hx : x ≤ 1643) (hz : z ≤ 113) :
     5 * highCap x z 2 + highScale 2 2 *
       pairCap (residualShape bridgeFree x z) (residualShape bridgeMoving x z) 2 <
-        highScale 2 2 * 5 * (264904 + 1) := by
+        highScale 2 2 * 5 * (276267 + 1) := by
   refine (numerator_bound bridgeFree bridgeMoving 5 2 x z 2).trans_lt ?_
-  change mixedNumerator bridgeFree bridgeMoving 5 2 x z < 5298100
+  change mixedNumerator bridgeFree bridgeMoving 5 2 x z < 5525360
   apply mixed_seed_endpoints bridgeFree bridgeMoving hx (by decide)
   · apply mixed_ordinate_endpoints bridgeFree bridgeMoving hz (by decide)
-    · change 5298080 < 5298100
+    · change 5525352 < 5525360
       decide
-    · change 1082276 < 5298100
+    · change 1110668 < 5525360
       decide
   · apply mixed_ordinate_endpoints bridgeFree bridgeMoving hz (by decide)
-    · change 2768500 < 5298100
+    · change 2929412 < 5525360
       decide
-    · change 1809130 < 5298100
+    · change 1856590 < 5525360
       decide
 
 theorem seed_square (x z : ℕ) (hz : z ≤ 113) :
@@ -3626,46 +3626,46 @@ theorem seed_square (x z : ℕ) (hz : z ≤ 113) :
   change seedNumerator bridgeFree bridgeMoving 36 1 z < 12168
   exact (seed_endpoint hz).trans_lt (by decide)
 
-theorem ordinate_square (x z : ℕ) (hx : x ≤ 1601) :
+theorem ordinate_square (x z : ℕ) (hx : x ≤ 1643) :
     36 * highCap x z 1 + highScale 1 1 *
       pairCap (residualShape bridgeFree x z) (residualShape bridgeMoving x z) 1 <
-        highScale 1 1 * 36 * (7944 + 1) := by
+        highScale 1 1 * 36 * (8288 + 1) := by
   refine (numerator_bound bridgeFree bridgeMoving 36 1 x z 1).trans_lt ?_
-  change ordinateNumerator bridgeFree bridgeMoving 36 1 x < 286020
+  change ordinateNumerator bridgeFree bridgeMoving 36 1 x < 298404
   apply ordinate_endpoints bridgeFree bridgeMoving hx (by decide)
-  · change 286008 < 286020
+  · change 298394 < 298404
     decide
-  · change 210761 < 286020
+  · change 221173 < 298404
     decide
 
-theorem mixed_square (x z : ℕ) (hx : x ≤ 1601) (hz : z ≤ 113) :
+theorem mixed_square (x z : ℕ) (hx : x ≤ 1643) (hz : z ≤ 113) :
     16 * highCap x z 2 + highScale 3 2 *
       pairCap (residualShape bridgeFree x z) (residualShape bridgeMoving x z) 2 <
-        highScale 3 2 * 16 * (82782 + 1) := by
+        highScale 3 2 * 16 * (86333 + 1) := by
   refine (numerator_bound bridgeFree bridgeMoving 16 3 x z 2).trans_lt ?_
-  change mixedNumerator bridgeFree bridgeMoving 16 3 x z < 11920752
+  change mixedNumerator bridgeFree bridgeMoving 16 3 x z < 12432096
   apply mixed_seed_endpoints bridgeFree bridgeMoving hx (by decide)
   · apply mixed_ordinate_endpoints bridgeFree bridgeMoving hz (by decide)
-    · change 11920680 < 11920752
+    · change 12432042 < 12432096
       decide
-    · change 2435121 < 11920752
+    · change 2499003 < 12432096
       decide
   · apply mixed_ordinate_endpoints bridgeFree bridgeMoving hz (by decide)
-    · change 6229125 < 11920752
+    · change 6591177 < 12432096
       decide
-    · change 5789216 < 11920752
+    · change 5941088 < 12432096
       decide
 
-theorem jets_square (x z : ℕ) (hx : x ≤ 1601) :
+theorem jets_square (x z : ℕ) (hx : x ≤ 1643) :
     25 * highCap x z 3 + highScale 2 3 *
       pairCap (residualShape bridgeFree x z) (residualShape bridgeMoving x z) 3 <
-        highScale 2 3 * 25 * (640800 + 1) := by
+        highScale 2 3 * 25 * (674862 + 1) := by
   refine (numerator_bound bridgeFree bridgeMoving 25 2 x z 3).trans_lt ?_
-  change jetsNumerator bridgeFree bridgeMoving 25 2 x < 64080100
+  change jetsNumerator bridgeFree bridgeMoving 25 2 x < 67486300
   apply jets_endpoints bridgeFree bridgeMoving hx
-  · change 49477304 < 64080100
+  · change 53390928 < 67486300
     decide
-  · change 64080025 < 64080100
+  · change 67486225 < 67486300
     decide
 
 end
@@ -3775,16 +3775,16 @@ theorem proof : P0_10R.c2 := by
   obtain ⟨G⟩ := sharedGcd A B pair.free_ne pair.moving_ne hP hQ pair.no_moving
   let x := seedDegree G.ordinary
   let z := G.ordinary.natDegree
-  have hx : x ≤ 1601 := G.seed_le
+  have hx : x ≤ 1643 := G.seed_le
   have hz : z ≤ 113 := G.ordinate_le
   have hlocal (I) (hI : I ∈ S) :
       Active I ∧ K1_14_2_2R.chainCompatible pair.free pair.moving I ∧
       ¬ fixedOn A.equation I ∧ ¬ fixedOn B.equation I ∧
       orderOn I pair.free 6 ∧ orderOn I pair.moving 6 :=
     ⟨(hpass I hI).1, (hpass I hI).2.1.2.2, (hpass I hI).2.2⟩
-  refine ⟨paired_stage G S false 1 1 47668 (by decide) (by decide) (by simp) hlocal
+  refine ⟨paired_stage G S false 1 1 49732 (by decide) (by decide) (by simp) hlocal
     (ordinate_linear x z hx),
-    paired_stage G S false 2 2 264904 (by decide) (by decide) (by simp) hlocal
+    paired_stage G S false 2 2 276267 (by decide) (by decide) (by simp) hlocal
     (mixed_linear x z hx hz), ?_⟩
   intro k
   let T := S.filter dual
@@ -3792,9 +3792,9 @@ theorem proof : P0_10R.c2 := by
   have hT (I) (hI : I ∈ T) := hlocal I (Finset.mem_filter.mp hI).1
   fin_cases k
   · exact paired_stage G T true 0 1 337 (by decide) (by decide) hdual hT (seed_square x z hz)
-  · exact paired_stage G T true 1 1 7944 (by decide) (by decide) hdual hT (ordinate_square x z hx)
-  · exact paired_stage G T true 2 3 82782 (by decide) (by decide) hdual hT (mixed_square x z hx hz)
-  · exact paired_stage G T true 3 2 640800 (by decide) (by decide) hdual hT (jets_square x z hx)
+  · exact paired_stage G T true 1 1 8288 (by decide) (by decide) hdual hT (ordinate_square x z hx)
+  · exact paired_stage G T true 2 3 86333 (by decide) (by decide) hdual hT (mixed_square x z hx hz)
+  · exact paired_stage G T true 3 2 674862 (by decide) (by decide) hdual hT (jets_square x z hx)
 
 end
 end P0_10R_2
@@ -3812,7 +3812,7 @@ open P0_10 (JetSource fullShape)
 open P0_10R.Bridge (FullDivisibility)
 open scoped BigOperators
 
-def full : Shape := ⟨1024, 1422, 290, 141471⟩
+def full : Shape := ⟨1024, 1422, 290, 172135⟩
 
 theorem fullShape_eq (w : ℤ) (hw : w ≤ 3554) : fullShape w = full := by
   simp [fullShape, P0_10.terminalShape, P0_10.band, hw, full]
@@ -4122,55 +4122,55 @@ private theorem support_le_loss (h : ℕ) (hh : h ≤ 131071) :
 private def supportRow (i : ℕ) : Row := ⟨true, block 2481 i, blockSlope i⟩
 
 -- The kernel evaluates only short batches of closed-form diagonal rows.
-private theorem supportRows : scan supportRow 0 1423 = ⟨true, 61737119413018, 237166694⟩ := by
-  refine joinRows 0 1408 15 ⟨true, 61736815857050, 236925446⟩ ⟨true, 303555968, 241248⟩
+private theorem supportRows : scan supportRow 0 1423 = ⟨true, 61730271088880, 237154036⟩ := by
+  refine joinRows 0 1408 15 ⟨true, 61729969744752, 236912788⟩ ⟨true, 301344128, 241248⟩
     ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 1344 64 ⟨true, 61712265991530, 231141206⟩ ⟨true, 24549865520, 5784240⟩
+  refine joinRows 0 1344 64 ⟨true, 61705475912512, 231128548⟩ ⟨true, 24493832240, 5784240⟩
     ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 1280 64 ⟨true, 61601207518990, 218600634⟩ ⟨true, 111058472540, 12540572⟩
+  refine joinRows 0 1280 64 ⟨true, 61594548970724, 218587976⟩ ⟨true, 110926941788, 12540572⟩
     ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 1216 64 ⟨true, 61338070342540, 200662052⟩ ⟨true, 263137176450, 17938582⟩
+  refine joinRows 0 1216 64 ⟨true, 61331617655082, 200655130⟩ ⟨true, 262931315642, 17932846⟩
     ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 1152 64 ⟨true, 60857235557552, 178660232⟩ ⟨true, 480834784988, 22001820⟩
+  refine joinRows 0 1152 64 ⟨true, 60851061826578, 178658100⟩ ⟨true, 480555828504, 21997030⟩
     ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 1088 64 ⟨true, 60095685397128, 154548936⟩ ⟨true, 761550160424, 24111296⟩
+  refine joinRows 0 1088 64 ⟨true, 60089849678472, 154548936⟩ ⟨true, 761212148106, 24109164⟩
     ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 1024 64 ⟨true, 59026500747996, 131835804⟩ ⟨true, 1069184649132, 22713132⟩
+  refine joinRows 0 1024 64 ⟨true, 59021008306908, 131835804⟩ ⟨true, 1068841371564, 22713132⟩
     ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 960 64 ⟨true, 57649084586244, 110825604⟩ ⟨true, 1377416161752, 21010200⟩
+  refine joinRows 0 960 64 ⟨true, 57643935422724, 110825604⟩ ⟨true, 1377072884184, 21010200⟩
     ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 896 64 ⟨true, 55963436911872, 91518336⟩ ⟨true, 1685647674372, 19307268⟩
+  refine joinRows 0 896 64 ⟨true, 55958631025920, 91518336⟩ ⟨true, 1685304396804, 19307268⟩
     ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 832 64 ⟨true, 53969554836996, 73912836⟩ ⟨true, 1993882074876, 17605500⟩
+  refine joinRows 0 832 64 ⟨true, 53965092228612, 73912836⟩ ⟨true, 1993538797308, 17605500⟩
     ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 768 64 ⟨true, 51667441249500, 58010268⟩ ⟨true, 2302113587496, 15902568⟩
+  refine joinRows 0 768 64 ⟨true, 51663321918684, 58010268⟩ ⟨true, 2301770309928, 15902568⟩
     ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 704 64 ⟨true, 49057096149384, 43810632⟩ ⟨true, 2610345100116, 14199636⟩
+  refine joinRows 0 704 64 ⟨true, 49053320096136, 43810632⟩ ⟨true, 2610001822548, 14199636⟩
     ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 640 64 ⟨true, 46138519536648, 31313928⟩ ⟨true, 2918576612736, 12496704⟩
+  refine joinRows 0 640 64 ⟨true, 46135086760968, 31313928⟩ ⟨true, 2918233335168, 12496704⟩
     ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 576 64 ⟨true, 42911711411292, 20520156⟩ ⟨true, 3226808125356, 10793772⟩
+  refine joinRows 0 576 64 ⟨true, 42908621913180, 20520156⟩ ⟨true, 3226464847788, 10793772⟩
     ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 512 64 ⟨true, 39376671773316, 11429316⟩ ⟨true, 3535039637976, 9090840⟩
+  refine joinRows 0 512 64 ⟨true, 39373925552772, 11429316⟩ ⟨true, 3534696360408, 9090840⟩
     ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 448 64 ⟨true, 35533400622720, 4041408⟩ ⟨true, 3843271150596, 7387908⟩
+  refine joinRows 0 448 64 ⟨true, 35530997679744, 4041408⟩ ⟨true, 3842927873028, 7387908⟩
     ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 384 64 ⟨true, 31381895071620, -1644732⟩ ⟨true, 4151505551100, 5686140⟩
+  refine joinRows 0 384 64 ⟨true, 31379835406212, -1644732⟩ ⟨true, 4151162273532, 5686140⟩
     ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 320 64 ⟨true, 26922158007900, -5627940⟩ ⟨true, 4459737063720, 3983208⟩
+  refine joinRows 0 320 64 ⟨true, 26920441620060, -5627940⟩ ⟨true, 4459393786152, 3983208⟩
     ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 256 64 ⟨true, 22154189431560, -7908216⟩ ⟨true, 4767968576340, 2280276⟩
+  refine joinRows 0 256 64 ⟨true, 22152816321288, -7908216⟩ ⟨true, 4767625298772, 2280276⟩
     ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 192 64 ⟨true, 17077989342600, -8485560⟩ ⟨true, 5076200088960, 577344⟩
+  refine joinRows 0 192 64 ⟨true, 17076959509896, -8485560⟩ ⟨true, 5075856811392, 577344⟩
     ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 128 64 ⟨true, 11693557741020, -7359972⟩ ⟨true, 5384431601580, -1125588⟩
+  refine joinRows 0 128 64 ⟨true, 11692871185884, -7359972⟩ ⟨true, 5384088324012, -1125588⟩
     ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 64 64 ⟨true, 6000894626820, -4531452⟩ ⟨true, 5692663114200, -2828520⟩
+  refine joinRows 0 64 64 ⟨true, 6000551349252, -4531452⟩ ⟨true, 5692319836632, -2828520⟩
     ?_ (Row.eq_of_check rfl) rfl
   exact Row.eq_of_check rfl
 
 private theorem support_values :
-    supportBase = 61737119413018 ∧ supportSlope = 237166694 := by
+    supportBase = 61730271088880 ∧ supportSlope = 237154036 := by
   have hb := (scan_sum supportRow 0 1423 false).symm
   have hs := (scan_sum supportRow 0 1423 true).symm
   rw [supportRows] at hb hs
@@ -4222,13 +4222,13 @@ theorem debit_lt_loss (h : ℕ) (hlo : 2481 ≤ h) (hhi : h ≤ 3554) :
   have hbound := support_le_loss h (by omega)
   rw [support_values.1, support_values.2] at hbound
   apply compare_affine hlo hbound
-  · have hn : 2*(nodeDebit+2481*poleDebit) < triangle full.U * 61737119413018 := by
-      change 2*(10007234128*30849337917440+2481*(2*141472*274017686200)) <
-        10007234128*61737119413018
+  · have hn : 2*(nodeDebit+2481*poleDebit) < triangle full.U * 61730271088880 := by
+      change 2*(14815487316*30849337917440+2481*(2*172136*274017686200)) <
+        14815487316*61730271088880
       decide
     exact_mod_cast hn
-  · have hn : 2*poleDebit ≤ triangle full.U * 237166694 := by
-      change 2*(2*141472*274017686200) ≤ 10007234128*237166694
+  · have hn : 2*poleDebit ≤ triangle full.U * 237154036 := by
+      change 2*(2*172136*274017686200) ≤ 14815487316*237154036
       decide
     exact_mod_cast hn
 
@@ -4296,7 +4296,7 @@ structure PreparedPair (P Q : Jet) where
   moving : Jet
   ordinary : Finset Equation
   seeds_ne : seeds ≠ 0
-  seeds_degree : seeds.totalDegree ≤ 515 + 1857
+  seeds_degree : seeds.totalDegree ≤ 522 + 1904
   fixedFree_ne : fixedFree ≠ 0
   fixedMoving_ne : fixedMoving ≠ 0
   fixedFree_caps : JetCaps fixedFree 47 10
@@ -4307,7 +4307,7 @@ structure PreparedPair (P Q : Jet) where
   moving_dvd : moving ∣ Q
   proper : ProperPair free moving
   ordinary_factors : ∀ f ∈ ordinary, Irreducible f ∧ 0 < f.natDegree
-  ordinary_seed : ∑ f ∈ ordinary, ordinarySeedDegree f ≤ 515
+  ordinary_seed : ∑ f ∈ ordinary, ordinarySeedDegree f ≤ 522
   ordinary_y : ∑ f ∈ ordinary, f.natDegree ≤ 47
   ordinary_dvd : ∀ f ∈ ordinary, C f ∣ P ∧ C f ∣ Q
   cover : ∀ z S, jetAt P z S = 0 → jetAt Q z S = 0 →
@@ -4421,37 +4421,37 @@ private theorem slice_cap {P Q : Jet} {qs : Finset Surface}
 theorem residual_sections {P Q : Jet} (hp : ProperPair P Q)
     (hc : RowCaps P freeZero) (hl : RowCaps Q movingZero)
     (qs : Finset Surface) (hq : ComponentsOn P Q qs) :
-    FourMassCap qs 1596 27840 135174 956355 := by
+    FourMassCap qs 1596 28436 138034 993888 := by
   have proper (s : Slice) := K1_14_3_2R.proper_transport s (K1_14_3_2R.prime_transport s) P Q hp
-  refine ⟨slice_cap hq .seed 1596 ?_, slice_cap hq .ordinate 27840 ?_,
-    slice_cap hq .mixed 135174 ?_, slice_cap hq .jets 956355 ?_⟩
+  refine ⟨slice_cap hq .seed 1596 ?_, slice_cap hq .ordinate 28436 ?_,
+    slice_cap hq .mixed 138034 ?_, slice_cap hq .jets 993888 ?_⟩
   · exact capped_bound _ _ 47 10 93 18 (by decide) (by decide)
       (proper .seed) (planeMap_caps .seed P _ hc) (planeMap_caps .seed Q _ hl)
-  · exact box_bound _ _ 515 10 1857 18 (by decide) (by decide)
+  · exact box_bound _ _ 522 10 1904 18 (by decide) (by decide)
       (proper .ordinate) (planeMap_caps .ordinate P _ hc) (planeMap_caps .ordinate Q _ hl)
-  · exact box_bound _ _ 515 47 1857 93 (by decide) (by decide)
+  · exact box_bound _ _ 522 47 1904 93 (by decide) (by decide)
       (proper .mixed) (planeMap_caps .mixed P _ hc) (planeMap_caps .mixed Q _ hl)
-  · exact total_bound _ _ 515 1857 (by decide)
+  · exact total_bound _ _ 522 1904 (by decide)
       (proper .jets) (planeMap_caps .jets P _ hc) (planeMap_caps .jets Q _ hl)
 
 /-- The first ordinary row has V-degree zero. Pad the second by the free row caps. -/
 private theorem graph_sections {P Q : Jet} {b u : ℕ} (hp : ProperPair P Q)
-    (hc : RowCaps P ⟨0,b,0,u⟩) (hd : RowCaps Q ⟨0,47,1,515⟩)
+    (hc : RowCaps P ⟨0,b,0,u⟩) (hd : RowCaps Q ⟨0,47,1,522⟩)
     (qs : Finset Surface) (hq : ComponentsOn P Q qs) :
-    FourMassCap qs b u (47 * (u : ℚ) + 515 * (b : ℚ)) (515 * (u : ℚ)) := by
+    FourMassCap qs b u (47 * (u : ℚ) + 522 * (b : ℚ)) (522 * (u : ℚ)) := by
   have proper (s : Slice) := K1_14_3_2R.proper_transport s (K1_14_3_2R.prime_transport s) P Q hp
   constructor
   · simpa only [mul_one, zero_mul, add_zero] using slice_cap hq .seed _
       (capped_bound _ _ b 0 47 1 (by decide) (by decide)
         (proper .seed) (planeMap_caps .seed P _ hc) (planeMap_caps .seed Q _ hd))
   · simpa only [mul_one, mul_zero, add_zero] using slice_cap hq .ordinate _
-      (box_bound _ _ u 0 515 1 (by decide) (by decide)
+      (box_bound _ _ u 0 522 1 (by decide) (by decide)
         (proper .ordinate) (planeMap_caps .ordinate P _ hc) (planeMap_caps .ordinate Q _ hd))
   · simpa only [Nat.cast_add, Nat.cast_mul, Nat.cast_ofNat, mul_comm] using slice_cap hq .mixed _
-      (box_bound _ _ u b 515 47 (by decide) (by decide)
+      (box_bound _ _ u b 522 47 (by decide) (by decide)
         (proper .mixed) (planeMap_caps .mixed P _ hc) (planeMap_caps .mixed Q _ hd))
   · simpa only [Nat.cast_mul, Nat.cast_ofNat, mul_comm] using slice_cap hq .jets _
-      (total_bound _ _ u 515 (by decide)
+      (total_bound _ _ u 522 (by decide)
         (proper .jets) (planeMap_caps .jets P _ hc) (planeMap_caps .jets Q _ hd))
 
 private theorem union_cap {A B : Finset Surface} {s : Slice} {x y z : ℕ}
@@ -4464,20 +4464,20 @@ private theorem union_cap {A B : Finset Surface} {s : Slice} {x y z : ℕ}
     _ ≤ (z : ℚ) := Nat.cast_le.mpr hz
 
 theorem initial_sections {A B : Finset Surface}
-    (hA : FourMassCap A 1596 27840 135174 956355)
-    (hB : FourMassCap B 47 515 48410 265225) :
-    FourMassCap (A ∪ B) 1643 28355 183584 1221580 :=
+    (hA : FourMassCap A 1596 28436 138034 993888)
+    (hB : FourMassCap B 47 522 49068 272484) :
+    FourMassCap (A ∪ B) 1643 28958 187102 1266372 :=
   ⟨union_cap (x := 1596) (y := 47) hA.seed hB.seed (by decide),
-    union_cap (x := 27840) (y := 515) hA.ordinate hB.ordinate (by decide),
-    union_cap (x := 135174) (y := 48410) hA.mixed hB.mixed (by decide),
-    union_cap (x := 956355) (y := 265225) hA.jets hB.jets (by decide)⟩
+    union_cap (x := 28436) (y := 522) hA.ordinate hB.ordinate (by decide),
+    union_cap (x := 138034) (y := 49068) hA.mixed hB.mixed (by decide),
+    union_cap (x := 993888) (y := 272484) hA.jets hB.jets (by decide)⟩
 
 private theorem sum_branches {F : Finset Equation} {T : Equation → Finset Surface}
     (hc : ∀ f ∈ F, FourMassCap (T f) f.natDegree (ordinarySeedDegree f)
-      (47 * ordinarySeedDegree f + 515 * (f.natDegree : ℚ)) (515 * (ordinarySeedDegree f : ℚ)))
-    (hu : ∑ f ∈ F, ordinarySeedDegree f ≤ 515) (hb : ∑ f ∈ F, f.natDegree ≤ 47) :
-    FourMassCap (F.biUnion T) 47 515 48410 265225 := by
-  have hu' : ∑ f ∈ F, (ordinarySeedDegree f : ℚ) ≤ 515 := by exact_mod_cast hu
+      (47 * ordinarySeedDegree f + 522 * (f.natDegree : ℚ)) (522 * (ordinarySeedDegree f : ℚ)))
+    (hu : ∑ f ∈ F, ordinarySeedDegree f ≤ 522) (hb : ∑ f ∈ F, f.natDegree ≤ 47) :
+    FourMassCap (F.biUnion T) 47 522 49068 272484 := by
+  have hu' : ∑ f ∈ F, (ordinarySeedDegree f : ℚ) ≤ 522 := by exact_mod_cast hu
   have hb' : ∑ f ∈ F, (f.natDegree : ℚ) ≤ 47 := by exact_mod_cast hb
   refine ⟨(mass_biUnion F T .seed).trans
       ((Finset.sum_le_sum fun f hf => (hc f hf).seed).trans hb'),
@@ -4486,26 +4486,26 @@ private theorem sum_branches {F : Finset Equation} {T : Equation → Finset Surf
   · refine (mass_biUnion F T .mixed).trans ((Finset.sum_le_sum fun f hf => (hc f hf).mixed).trans ?_)
     rw [Finset.sum_add_distrib, ← Finset.mul_sum, ← Finset.mul_sum]
     calc
-      _ ≤ (47 : ℚ) * 515 + 515 * 47 :=
+      _ ≤ (47 : ℚ) * 522 + 522 * 47 :=
         add_le_add (mul_le_mul_of_nonneg_left hu' (by positivity))
           (mul_le_mul_of_nonneg_left hb' (by positivity))
-      _ ≤ 48410 := by exact_mod_cast (show 47 * 515 + 515 * 47 ≤ (48410 : ℕ) by decide)
+      _ ≤ 49068 := by exact_mod_cast (show 47 * 522 + 522 * 47 ≤ (49068 : ℕ) by decide)
   · refine (mass_biUnion F T .jets).trans ((Finset.sum_le_sum fun f hf => (hc f hf).jets).trans ?_)
     rw [← Finset.mul_sum]
     calc
-      _ ≤ (515 : ℚ) * 515 := mul_le_mul_of_nonneg_left hu' (by positivity)
-      _ ≤ 265225 := by exact_mod_cast (show 515 * 515 ≤ (265225 : ℕ) by decide)
+      _ ≤ (522 : ℚ) * 522 := mul_le_mul_of_nonneg_left hu' (by positivity)
+      _ ≤ 272484 := by exact_mod_cast (show 522 * 522 ≤ (272484 : ℕ) by decide)
 
 private theorem ord_cover (f : Equation) (hi : Irreducible f) (hd : 0 < f.natDegree)
-    (hb : f.natDegree ≤ 47) (hu : ordinarySeedDegree f ≤ 515) :
+    (hb : f.natDegree ≤ 47) (hu : ordinarySeedDegree f ≤ 522) :
     ∃ qs : Finset Surface, (∀ q ∈ qs, q.asIdeal.height = 2 ∧ C f ∈ q.asIdeal) ∧
       FourMassCap qs f.natDegree (ordinarySeedDegree f)
-        (47 * ordinarySeedDegree f + 515 * (f.natDegree : ℚ)) (515 * (ordinarySeedDegree f : ℚ)) ∧
+        (47 * ordinarySeedDegree f + 522 * (f.natDegree : ℚ)) (522 * (ordinarySeedDegree f : ℚ)) ∧
       ∀ z S, atMark f z S = 0 → ∃ q ∈ qs, AtSurface q z S := by
   obtain ⟨g, a, ha, hproper, hleft, hright⟩ :=
     K1_14_3_4_2.proof f hi hd (hb.trans_lt (by decide : 47 < p))
   obtain ⟨qs, hqs, hcover⟩ := properPairCover hproper
-  have caps : RowCaps (K1_14_3R.chainCutter g) ⟨0,47,1,515⟩ := by
+  have caps : RowCaps (K1_14_3R.chainCutter g) ⟨0,47,1,522⟩ := by
     intro v y hy
     obtain ⟨hby, hv, hc⟩ := hright v y hy
     exact ⟨hby.trans hb, hv, hc.trans hu⟩
@@ -4516,7 +4516,7 @@ private theorem ord_cover (f : Equation) (hi : Irreducible f) (hd : 0 < f.natDeg
   simpa only [jetAt, eval₂_C, coe_eval₂RingHom, atMark] using hz
 
 theorem all_ordinary {P Q : Jet} (B : PreparedPair P Q) :
-    ∃ qs : Finset Surface, ComponentsOn P Q qs ∧ FourMassCap qs 47 515 48410 265225 ∧
+    ∃ qs : Finset Surface, ComponentsOn P Q qs ∧ FourMassCap qs 47 522 49068 272484 ∧
       ∀ f ∈ B.ordinary, ∀ z S, atMark f z S = 0 → ∃ q ∈ qs, AtSurface q z S := by
   have branch (f : Equation) (hf : f ∈ B.ordinary) :=
     ord_cover f (B.ordinary_factors f hf).1 (B.ordinary_factors f hf).2
@@ -4527,7 +4527,7 @@ theorem all_ordinary {P Q : Jet} (B : PreparedPair P Q) :
   have data (f : Equation) (hf : f ∈ B.ordinary) :
       (∀ q ∈ T f, q.asIdeal.height = 2 ∧ C f ∈ q.asIdeal) ∧
       FourMassCap (T f) f.natDegree (ordinarySeedDegree f)
-        (47 * ordinarySeedDegree f + 515 * (f.natDegree : ℚ)) (515 * (ordinarySeedDegree f : ℚ)) ∧
+        (47 * ordinarySeedDegree f + 522 * (f.natDegree : ℚ)) (522 * (ordinarySeedDegree f : ℚ)) ∧
       ∀ z S, atMark f z S = 0 → ∃ q ∈ T f, AtSurface q z S := by
     simpa only [T, dite_eq_left hf] using Classical.choose_spec (branch f hf)
   refine ⟨B.ordinary.biUnion T, ?_,
@@ -4569,7 +4569,7 @@ private theorem jet_images : K1_14_3_2.c6 :=
       K1_14_3_2_6_2_3.proof K1_14_3_2_6_2_4.proof)
 
 private theorem all_surfaces {P Q : Jet} (B : PreparedPair P Q) :
-    ∃ qs : Finset Surface, ComponentsOn P Q qs ∧ FourMassCap qs 1643 28355 183584 1221580 ∧
+    ∃ qs : Finset Surface, ComponentsOn P Q qs ∧ FourMassCap qs 1643 28958 187102 1266372 ∧
       ∀ z S, jetAt P z S = 0 → jetAt Q z S = 0 →
         graphEval z B.seeds = 0 ∨ fixedAt B.fixedFree S = 0 ∨
           fixedAt B.fixedMoving S = 0 ∨ ∃ q ∈ qs, AtSurface q z S := by
@@ -4603,16 +4603,16 @@ theorem proof : P0_10R.c4 := by
   obtain ⟨C, hCdeg, hCpoints, hCcover⟩ := seed_images qs hdim
   obtain ⟨O, G, hG, hO, hGcaps, hGcover⟩ := jet_images qs hdim
   have ha : totalSectionDegree qs .seed ≤ 1643 := total_le (by exact hm.seed)
-  have hc : totalSectionDegree qs .ordinate ≤ 28355 := total_le (by exact hm.ordinate)
-  have hz : totalSectionDegree qs .mixed ≤ 183584 := total_le (by exact hm.mixed)
-  have he : totalSectionDegree qs .jets ≤ 1221580 := total_le (by exact hm.jets)
+  have hc : totalSectionDegree qs .ordinate ≤ 28958 := total_le (by exact hm.ordinate)
+  have hz : totalSectionDegree qs .mixed ≤ 187102 := total_le (by exact hm.mixed)
+  have he : totalSectionDegree qs .jets ≤ 1266372 := total_le (by exact hm.jets)
   let qs' := qs.filter (fun q => SeedDominant q ∧ JetDominant q)
   have hsub : qs' ⊆ qs := Finset.filter_subset _ _
   let seeds : SeedCover := ⟨B.seeds * C.curve, mul_ne_zero B.seeds_ne C.curve_ne, C.points⟩
-  have hsdeg : C.curve.totalDegree ≤ 183584 := by
+  have hsdeg : C.curve.totalDegree ≤ 187102 := by
     have h := hCdeg.trans hm.mixed
     exact_mod_cast h
-  have hspoints : C.points.card ≤ 1221580 := by
+  have hspoints : C.points.card ≤ 1266372 := by
     have h := hCpoints.trans hm.jets
     exact_mod_cast h
   refine ⟨{
@@ -4819,7 +4819,7 @@ private theorem signedWidth_le (h q j : ℕ) (hh : h ≤ 131071) :
 the last three grades. These fixed prefixes give a lower bound at any height. -/
 def supportLength (q : ℕ) : ℕ :=
   min (min q laterTerminal.J + 1)
-    (if q = 807 then 147 else if q = 808 then 125 else if q = 809 then 102
+    (if q = 807 then 146 else if q = 808 then 123 else if q = 809 then 102
       else laterTerminal.J + 1)
 
 def twiceSupport (f : ℕ → ℕ → ℤ) : ℤ :=
@@ -4930,32 +4930,32 @@ def supportRow (q : ℕ) : Row :=
 
 -- Each receipt evaluates at most 32 closed row formulas, with no inner finite sums.
 theorem support_totals :
-    scan supportRow 0 810 = ⟨true, 11392347982736, 33834626⟩ := by
-  refine joinRows 0 800 10 ⟨true, 11390024657630, 32732280⟩ ⟨true, 2323325106, 1102346⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 768 32 ⟨true, 11353934522698, 29131804⟩ ⟨true, 36090134932, 3600476⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 736 32 ⟨true, 11274009605158, 25735312⟩ ⟨true, 79924917540, 3396492⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 704 32 ⟨true, 11150249890790, 22542800⟩ ⟨true, 123759714368, 3192512⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 672 32 ⟨true, 10982655379594, 19554268⟩ ⟨true, 167594511196, 2988532⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 640 32 ⟨true, 10771226085790, 16769720⟩ ⟨true, 211429293804, 2784548⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 608 32 ⟨true, 10515961980938, 14189148⟩ ⟨true, 255264104852, 2580572⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 576 32 ⟨true, 10216863093478, 11812560⟩ ⟨true, 299098887460, 2376588⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 544 32 ⟨true, 9873929409190, 9639952⟩ ⟨true, 342933684288, 2172608⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 512 32 ⟨true, 9487160928074, 7671324⟩ ⟨true, 386768481116, 1968628⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 480 32 ⟨true, 9056557664350, 5906680⟩ ⟨true, 430603263724, 1764644⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 448 32 ⟨true, 8582119589578, 4346012⟩ ⟨true, 474438074772, 1560668⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 416 32 ⟨true, 8063846732198, 2989328⟩ ⟨true, 518272857380, 1356684⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 384 32 ⟨true, 7501739077990, 1836624⟩ ⟨true, 562107654208, 1152704⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 352 32 ⟨true, 6895796626954, 887900⟩ ⟨true, 605942451036, 948724⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 320 32 ⟨true, 6246019393310, 143160⟩ ⟨true, 649777233644, 744740⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 288 32 ⟨true, 5552407348618, -397604⟩ ⟨true, 693612044692, 540764⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 256 32 ⟨true, 4814960521318, -734384⟩ ⟨true, 737446827300, 336780⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 224 32 ⟨true, 4033678897190, -867184⟩ ⟨true, 781281624128, 132800⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 192 32 ⟨true, 3208562476234, -796004⟩ ⟨true, 825116420956, -71180⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 160 32 ⟨true, 2342105992160, -525760⟩ ⟨true, 866456484074, -270244⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 128 32 ⟨true, 1547696067400, -266600⟩ ⟨true, 794409924760, -259160⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 96 32 ⟨true, 899007649568, -110656⟩ ⟨true, 648688417832, -155944⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 64 32 ⟨true, 413313580680, -31720⟩ ⟨true, 485694068888, -78936⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 32 32 ⟨true, 107886745412, -3572⟩ ⟨true, 305426835268, -28148⟩ ?_ (Row.eq_of_check rfl) rfl
+    scan supportRow 0 810 = ⟨true, 11391084150594, 33832972⟩ := by
+  refine joinRows 0 800 10 ⟨true, 11388776913650, 32732280⟩ ⟨true, 2307236944, 1100692⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 768 32 ⟨true, 11352742427230, 29131804⟩ ⟨true, 36034486420, 3600476⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 736 32 ⟨true, 11272873158202, 25735312⟩ ⟨true, 79869269028, 3396492⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 704 32 ⟨true, 11149169092346, 22542800⟩ ⟨true, 123704065856, 3192512⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 672 32 ⟨true, 10981630229662, 19554268⟩ ⟨true, 167538862684, 2988532⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 640 32 ⟨true, 10770256584370, 16769720⟩ ⟨true, 211373645292, 2784548⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 608 32 ⟨true, 10515048128030, 14189148⟩ ⟨true, 255208456340, 2580572⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 576 32 ⟨true, 10216004889082, 11812560⟩ ⟨true, 299043238948, 2376588⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 544 32 ⟨true, 9873126853306, 9639952⟩ ⟨true, 342878035776, 2172608⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 512 32 ⟨true, 9486414020702, 7671324⟩ ⟨true, 386712832604, 1968628⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 480 32 ⟨true, 9055866405490, 5906680⟩ ⟨true, 430547615212, 1764644⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 448 32 ⟨true, 8581483979230, 4346012⟩ ⟨true, 474382426260, 1560668⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 416 32 ⟨true, 8063266770362, 2989328⟩ ⟨true, 518217208868, 1356684⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 384 32 ⟨true, 7501214764666, 1836624⟩ ⟨true, 562052005696, 1152704⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 352 32 ⟨true, 6895327962142, 887900⟩ ⟨true, 605886802524, 948724⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 320 32 ⟨true, 6245606377010, 143160⟩ ⟨true, 649721585132, 744740⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 288 32 ⟨true, 5552049980830, -397604⟩ ⟨true, 693556396180, 540764⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 256 32 ⟨true, 4814658802042, -734384⟩ ⟨true, 737391178788, 336780⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 224 32 ⟨true, 4033432826426, -867184⟩ ⟨true, 781225975616, 132800⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 192 32 ⟨true, 3208372053982, -796004⟩ ⟨true, 825060772444, -71180⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 160 32 ⟨true, 2341971061280, -525760⟩ ⟨true, 866400992702, -270244⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 128 32 ⟨true, 1547609577544, -266600⟩ ⟨true, 794361483736, -259160⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 96 32 ⟨true, 898958873312, -110656⟩ ⟨true, 648650704232, -155944⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 64 32 ⟨true, 413291790600, -31720⟩ ⟨true, 485667082712, -78936⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 32 32 ⟨true, 107881214084, -3572⟩ ⟨true, 305410576516, -28148⟩ ?_ (Row.eq_of_check rfl) rfl
   exact Row.eq_of_check rfl
 
 end P0_10R_5
@@ -4987,14 +4987,14 @@ private theorem debit_of_stats (s : Shape) (h nodes poles : ℕ)
   rw [debit_eq, nodeCost, poleSlope, hnode, hpole]
 
 theorem debit_value (h : ℕ) :
-    sourceDebit h laterTerminal = 10076342549643992236032 + h * 3429081785911840 := by
+    sourceDebit h laterTerminal = 12216727375579067973632 + h * 3775758059616920 := by
   have hs : scan (debitRow laterTerminal.m laterTerminal.B laterTerminal.J)
       0 (laterTerminal.B+1) = ⟨true, 21702923, 28808066620⟩ :=
     (congrArg₂ (fun f b => scan f 0 b)
       (show debitRow laterTerminal.m laterTerminal.B laterTerminal.J = debitRow 582 809 165 from rfl)
       (show laterTerminal.B+1 = 810 from rfl)).trans laterDebit
-  have hnode : triangle laterTerminal.U * 262144 * 21702923 = 10076342549643992236032 := rfl
-  have hpole : 2 * (laterTerminal.U+1) * 28808066620 = 3429081785911840 := rfl
+  have hnode : triangle laterTerminal.U * 262144 * 21702923 = 12216727375579067973632 := rfl
+  have hpole : 2 * (laterTerminal.U+1) * 28808066620 = 3775758059616920 := rfl
   exact (debit_of_stats laterTerminal h 21702923 28808066620 hs).trans
     (congrArg₂ (fun n p => n + h * p) hnode hpole)
 
@@ -5030,24 +5030,24 @@ private theorem support_of_stats (n : ℕ) (base slope : ℤ)
   · exact cert_slope_row q _ hq
 
 private theorem support_coeffs :
-    twiceSupport (signedWidth 3555) = 11392347982736 ∧ twiceSupport widthSlope = 33834626 := by
-  have hs : scan supportRow 0 (laterTerminal.B+1) = ⟨true, 11392347982736, 33834626⟩ :=
+    twiceSupport (signedWidth 3555) = 11391084150594 ∧ twiceSupport widthSlope = 33832972 := by
+  have hs : scan supportRow 0 (laterTerminal.B+1) = ⟨true, 11391084150594, 33832972⟩ :=
     (congrArg (scan supportRow 0) (show laterTerminal.B+1 = 810 from rfl)).trans support_totals
-  exact support_of_stats (laterTerminal.B+1) 11392347982736 33834626 hs
+  exact support_of_stats (laterTerminal.B+1) 11391084150594 33832972 hs
 
 private theorem support_surplus (h : ℕ) (hl : 3555 ≤ h) :
     2 * (sourceDebit h laterTerminal : ℤ) <
       (triangle laterTerminal.U : ℤ) *
         (twiceSupport (signedWidth 3555) + ((h : ℤ)-3555) * twiceSupport widthSlope) := by
   rw [debit_value, support_coeffs.1, support_coeffs.2]
-  have htriangle : triangle laterTerminal.U = 1771106886 := rfl
+  have htriangle : triangle laterTerminal.U = 2147319811 := rfl
   rw [htriangle]
   push_cast
   omega
 
 /-- The support taken at the first later height has positive surplus
 and greater slope than the source debit throughout all three later bands. -/
-theorem debit_lt_loss (h : ℕ) (hl : 3555 ≤ h) (hu : h ≤ 32766) :
+theorem debit_lt_loss (h : ℕ) (hl : 3555 ≤ h) (hu : h ≤ 32784) :
     sourceDebit h laterTerminal < triangle laterTerminal.U * shapeSum laterTerminal (lostWidth h) := by
   have hs := support_surplus h hl
   have hw := mul_le_mul_of_nonneg_left (support_le h (by omega))
@@ -5143,7 +5143,7 @@ theorem proof : P0_10R.c5 := by
   intro h rows hl hu hcaps hlead hfloor
   by_contra hbad
   let top := laterTerminal.m*agreement
-  have htop : top = 104886294 := rfl
+  have htop : top = 104881056 := rfl
   have htopSub : top-1+1 = top := by omega
   have hwidth : ∀ q ≤ laterTerminal.B, ∀ j ≤ min q laterTerminal.J,
       q*(131071-h) ≤ top-1+1+j := by

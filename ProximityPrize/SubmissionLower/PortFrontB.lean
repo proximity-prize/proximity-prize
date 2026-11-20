@@ -123,7 +123,7 @@ private theorem contraction_degree {U V P Q : K[X]} {s t : ℕ}
 theorem adjugate_of_plane {u : Words} {T : TwoActive u} {R : Relation T} {D : Reduction u T R}
     (B : RankThree u T R D) (hnp : Nonparallel B)
     (W : Plane u (fixedNodes R) D.height (leftCoeff B) (rightCoeff B))
-    (hroom : D.height + (fixedNodes R).card ≤ 32766) :
+    (hroom : D.height + (fixedNodes R).card ≤ 32784) :
     Nonempty (Adjugate u (fixedNodes R) D.height) := by
   let A := B.α
   let V := fun j => (B.β j).map twist
@@ -229,25 +229,25 @@ private theorem sum_rows {n : ℕ} (f : ℕ → ℕ) (rows : Fin n → ℕ)
   rw [← Fin.sum_univ_eq_sum_range f n]
   exact Finset.sum_congr rfl (fun i _ => h i)
 
-private theorem source_count : K1_10.sourceDim sourceCutoff 5 16 16 = 1494492048 := by
-  let rows : Fin 6 → ℕ := ![620522372, 414157360, 253601460, 135774436, 57071768, 13364652]
+private theorem source_count : K1_10.sourceDim sourceCutoff 5 16 16 = 1494315144 := by
+  let rows : Fin 6 → ℕ := ![620469128, 414114160, 253567980, 135750244, 57056324, 13357308]
   unfold K1_10.sourceDim
   calc
     _ = ∑ i : Fin 6, rows i := by
       refine sum_rows _ rows ?_
       intro i
       fin_cases i <;> decide
-    _ = 1494492048 := by decide
+    _ = 1494315144 := by decide
 
-private theorem multiple_count : K1_10.sourceDim 565223 4 15 15 = 740577966 := by
-  let rows : Fin 5 → ℕ := ![360423200, 216495780, 112036918, 43761588, 7860480]
+private theorem multiple_count : K1_10.sourceDim 565192 4 15 15 = 740478301 := by
+  let rows : Fin 5 → ℕ := ![360388480, 216468810, 112017388, 43749095, 7854528]
   unfold K1_10.sourceDim
   calc
     _ = ∑ i : Fin 5, rows i := by
       refine sum_rows _ rows ?_
       intro i
       fin_cases i <;> decide
-    _ = 740577966 := by decide
+    _ = 740478301 := by decide
 
 private theorem jet_count : K1_10.jetDim 4 16 16 = 5276 := by
   let rows : Fin 4 → ℕ := ![2720, 1568, 750, 238]
@@ -271,16 +271,16 @@ private theorem local_multiple_count : K1_10.jetDim 3 15 15 = 2401 := by
 
 theorem minimum_surplus :
     K1_10.sourceDim sourceCutoff 5 16 16 -
-      K1_10.sourceDim (sourceCutoff - (k - 1) - 24573) 4 15 15 =
-      blockLength * (K1_10.jetDim 4 16 16 - K1_10.jetDim 3 15 15) + 250082 := by
-  have h : sourceCutoff - (k - 1) - 24573 = 565223 := by decide
+      K1_10.sourceDim (sourceCutoff - (k - 1) - 24568) 4 15 15 =
+      blockLength * (K1_10.jetDim 4 16 16 - K1_10.jetDim 3 15 15) + 172843 := by
+  have h : sourceCutoff - (k - 1) - 24568 = 565192 := by decide
   rw [h, source_count, multiple_count, jet_count, local_multiple_count]
   decide
 
-theorem bank_surplus (n h : ℕ) (hn : n ≤ blockLength) (hh : 24573 ≤ h) :
+theorem bank_surplus (n h : ℕ) (hn : n ≤ blockLength) (hh : 24568 ≤ h) :
     quotientSurplus n h := by
   have hm : K1_10.sourceDim (sourceCutoff - (k - 1) - h) 4 15 15 ≤
-      K1_10.sourceDim (sourceCutoff - (k - 1) - 24573) 4 15 15 := by
+      K1_10.sourceDim (sourceCutoff - (k - 1) - 24568) 4 15 15 := by
     unfold K1_10.sourceDim
     apply Finset.sum_le_sum
     intro i _
@@ -307,9 +307,9 @@ private theorem ceil_sq_div_eq (a b c v : ℕ) (hb : 0 < b) (hv : v ≠ 0)
   · apply (div_le_iff₀ hpos).mpr
     exact_mod_cast hu
 
-theorem regularPrice_exact : regularPrice = 117191699485828189 := by
+theorem regularPrice_exact : regularPrice = 117234633400712490 := by
   unfold regularPrice incidenceRatio
-  exact ceil_sq_div_eq 1236945993621 49146 185 117191699485828189
+  exact ceil_sq_div_eq 1236945993621 49137 185 117234633400712490
     (by decide) (by decide) (by decide) (by decide)
 
 end
@@ -658,7 +658,7 @@ open P0 Polynomial
 
 /-- The (1,1) filtered quotient supplies an eliminant for every marked decoder on the puncture. -/
 def c1 : Prop :=
-  ∀ u deleted h U V, Plane u deleted h U V → 24573 ≤ h → h + deleted.card ≤ 32766 →
+  ∀ u deleted h U V, Plane u deleted h U V → 24568 ≤ h → h + deleted.card ≤ 32784 →
     quotientSurplus (blockLength - deleted.card) h →
     ∃ A : ScalarSource, ∀ γ (M : BadMark u γ), Disjoint M.support deleted →
       A.atDecoder γ M.decoder = 0
@@ -683,7 +683,7 @@ theorem of_children (h1 : c1) (h2 : c2) : P0.c6 := by
   classical
   intro u hu T R D B _hsat hnp Γ hΓ hn
   obtain ⟨W⟩ := plane_of_rankThree B
-  have hh : D.height + (fixedNodes R).card ≤ 32766 :=
+  have hh : D.height + (fixedNodes R).card ≤ 32784 :=
     D.height_eq ▸ relation_height_le hu T
   by_cases hsmall : 2 * D.height < L
   · obtain ⟨J⟩ := adjugate_of_plane B hnp W hh
@@ -692,8 +692,8 @@ theorem of_children (h1 : c1) (h2 : c2) : P0.c6 := by
       obtain ⟨M⟩ := bad_mark u Γ hΓ γ hγ
       exact no_small_normal T D J hsmall (hn γ hγ) M)
     simp [hempty]
-  have hmin : 24573 ≤ D.height := by
-    change ¬ 2 * D.height < 49145 at hsmall
+  have hmin : 24568 ≤ D.height := by
+    change ¬ 2 * D.height < 49136 at hsmall
     omega
   obtain ⟨A, hA⟩ := h1 u _ D.height _ _ W hmin hh
     (bank_surplus _ _ (Nat.sub_le _ _) hmin)
@@ -794,11 +794,11 @@ private def nodeMap (i : Fin N) : Source F →ₗ[F] LocalSpace C hdeg i :=
 
 include hdeg in
 /-- Produce a source outside the plane relation with order-four contacts modulo it. -/
-theorem quotientSource (hL : L ≠ 0) (hh : h ≤ 32766) (hs : P0_6.quotientSurplus N h) :
+theorem quotientSource (hL : L ≠ 0) (hh : h ≤ 32784) (hs : P0_6.quotientSurplus N h) :
     ∃ G : Source F, ¬ L ∣ G.val ∧ ∀ i, ∃ R : Multipliers F,
       C.shifted i G.val - C.shifted i L * R.val ∈ restrictWeightedOrder contactWeight 4 := by
   have hfit : ∀ j, relationBounds h j ≤ sourceBounds sourceCutoff 5 16 16 j := by
-    have hcapacity : 131071 + 32766 ≤ sourceCutoff := by decide
+    have hcapacity : 131071 + 32784 ≤ sourceCutoff := by decide
     intro j
     fin_cases j <;> simp [relationBounds, sourceBounds] <;> omega
   have hshift : (fun j => sourceBounds sourceCutoff 5 16 16 j - relationBounds h j) =
@@ -893,7 +893,7 @@ private theorem relation_eval (U V : Fin 2 → Polynomial K) (O : Fin 2 → Fin 
 private theorem relation_at_decoder {u : Words} {deleted : Finset I} {h : ℕ}
     {U V : Fin 2 → Polynomial K} (W : Plane u deleted h U V) (P : Puncture deleted)
     (hdeg : (planeRelation U V W.output).weightedTotalDegree (sourceWeights 131071 0) ≤ 131071 + h)
-    (hh : h ≤ 32766) (Q Q' : Polynomial K) (hq : Q.natDegree ≤ 131071)
+    (hh : h ≤ 32784) (Q Q' : Polynomial K) (hq : Q.natDegree ≤ 131071)
     (hq' : Q'.natDegree ≤ 131071) (s t : K) (S : Finset (Fin P.N)) (hS : P0.agreement ≤ S.card)
     (hc : correctOn u P Q Q' s t S) :
     aeval (decoderImages Q Q' s t) (planeRelation U V W.output) = 0 := by
@@ -909,7 +909,7 @@ private theorem relation_at_decoder {u : Words} {deleted : Finset I} {h : ℕ}
     linear_combination W.nodes _ hi 0 0 + s * W.nodes _ hi 1 0 +
       t * W.nodes _ hi 0 1 + (s*t) * W.nodes _ hi 1 1
   · have hd := decoder_eval_degree 131071 (131071+h) _ hdeg Q Q' hq hq' s t
-    have hcapacity : 131071 + 32766 < P0.agreement := by decide
+    have hcapacity : 131071 + 32784 < P0.agreement := by decide
     omega
 
 private theorem coeff_bounds (L : MvPolynomial (Fin 5) K) (a b : MvPolynomial (Fin 4) K)
@@ -1067,7 +1067,7 @@ structure TaylorCuts {u : Words} {Γ : Finset K} (F : Marks u Γ) where
 private theorem pencil_count {u : Words} (Γ : Finset K) (F : Marks u Γ)
     (P Q : K[X]) (hP : P.degree < 131072) (hQ : Q.degree < 131072)
     (hpencil : ∀ γ (hγ : γ ∈ Γ), (F γ hγ).decoder = P + Polynomial.C γ * Q) :
-    Γ.card ≤ 81928 := by
+    Γ.card ≤ 81937 := by
   classical
   rcases Γ.eq_empty_or_nonempty with rfl | ⟨r, hr⟩
   · simp
@@ -1114,7 +1114,7 @@ private theorem pencil_count {u : Words} (Γ : Finset K) (F : Marks u Γ)
       (Finset.mem_erase.mp δ.property).2 (hindex γ) hδ (hmismatch γ))
   have hcard := Finset.card_le_card_of_injective hf
   have he := Finset.card_erase_add_one hr
-  have hS : 180217 ≤ S.card := (F r hr).agreement
+  have hS : 180208 ≤ S.card := (F r hr).agreement
   rw [Finset.card_sdiff_of_subset (Finset.subset_univ _), Finset.card_univ,
     IRSProfile.card_index] at hcard
   omega
@@ -1123,7 +1123,7 @@ private theorem persistent_count {u : Words} {Γ : Finset K} {F : Marks u Γ}
     (C : TaylorCuts F) (J : Ideal GenericRow) (W : Finset K) (hW : W ⊆ Γ)
     (hzero : ∀ γ (hγ : γ ∈ W), point γ (F γ (hW hγ)).decoder ∈ zeroLocus Frac J)
     (hpersistent : 131072 ≤ {i | C.equation i ∈ J}.ncard) :
-    W.card ≤ 81928 := by
+    W.card ≤ 81937 := by
   classical
   let keep := Finset.univ.filter fun i => C.equation i ∈ J
   have hk : 131072 ≤ keep.card := by
@@ -1154,26 +1154,26 @@ private theorem persistent_count {u : Words} {Γ : Finset K} {F : Marks u Γ}
     exact (C.agrees γ (hW hγ) i).mp hz |>.trans (by
       rw [Lagrange.eval_interpolate_at_node _ hinj hi, Lagrange.eval_interpolate_at_node _ hinj hi])
 
-private theorem terminal_price_le : (81928 : ℚ) ≤ incidenceRatio := by
-  change ((81928 : ℕ) : ℚ) ≤ ((1236945993621 : ℕ) : ℚ) / ((49146 : ℕ) : ℚ)
+private theorem terminal_price_le : (81937 : ℚ) ≤ incidenceRatio := by
+  change ((81937 : ℕ) : ℚ) ≤ ((1236945993621 : ℕ) : ℚ) / ((49137 : ℕ) : ℚ)
   apply (le_div_iff₀ (by positivity)).mpr
-  exact_mod_cast (show (81928 : ℕ) * 49146 ≤ 1236945993621 by decide)
+  exact_mod_cast (show (81937 : ℕ) * 49137 ≤ 1236945993621 by decide)
 
 /-- Every proper cut is charged against the agreement left after its persistent nodes. -/
 private theorem node_incidence (m : ℕ) (hm : m < 131072) :
     (((Fintype.card I - m) * cutDegree : ℕ) : ℚ) ≤
-      incidenceRatio * ((180217 - m : ℕ) : ℚ) := by
+      incidenceRatio * ((180208 - m : ℕ) : ℚ) := by
   rw [IRSProfile.card_index, Nat.cast_mul]
-  have hn : (262144 - m) * 49146 ≤ 131073 * (180217 - m) := by omega
-  have hq : ((262144 - m : ℕ) : ℚ) * 49146 ≤ 131073 * ((180217 - m : ℕ) : ℚ) := by
+  have hn : (262144 - m) * 49137 ≤ 131073 * (180208 - m) := by omega
+  have hq : ((262144 - m : ℕ) : ℚ) * 49137 ≤ 131073 * ((180208 - m : ℕ) : ℚ) := by
     exact_mod_cast hn
   change ((262144 - m : ℕ) : ℚ) * (cutDegree : ℚ) ≤
-    (((131073 : ℕ) * cutDegree : ℕ) : ℚ) / 49146 * ((180217 - m : ℕ) : ℚ)
+    (((131073 : ℕ) * cutDegree : ℕ) : ℚ) / 49137 * ((180208 - m : ℕ) : ℚ)
   rw [Nat.cast_mul, div_mul_eq_mul_div]
   apply (le_div_iff₀ (by positivity)).mpr
   calc
-    _ = (((262144 - m : ℕ) : ℚ) * 49146) * (cutDegree : ℚ) := by ring
-    _ ≤ (131073 * ((180217 - m : ℕ) : ℚ)) * (cutDegree : ℚ) :=
+    _ = (((262144 - m : ℕ) : ℚ) * 49137) * (cutDegree : ℚ) := by ring
+    _ ≤ (131073 * ((180208 - m : ℕ) : ℚ)) * (cutDegree : ℚ) :=
       mul_le_mul_of_nonneg_right hq (Nat.cast_nonneg _)
     _ = _ := by push_cast; ring
 
@@ -1194,8 +1194,8 @@ theorem count_chart {u : Words} {Γ : Finset K} (F : Marks u Γ) (C : TaylorCuts
   have hcard : S.card = Γ.card := by
     simp only [S, Finset.card_image_of_injective _ hinj, Finset.card_attach]
   rw [← hcard]
-  refine surface_count_with_terminal g s hg C.equation (L := 131072) (A := 180217)
-    (by decide) hdeg C.degree ((by norm_num : (1 : ℚ) ≤ 81928).trans terminal_price_le)
+  refine surface_count_with_terminal g s hg C.equation (L := 131072) (A := 180208)
+    (by decide) hdeg C.degree ((by norm_num : (1 : ℚ) ≤ 81937).trans terminal_price_le)
     node_incidence S
     (fun y hy => ?_) (fun y hy => ?_) (fun J hJ => ?_)
   · obtain ⟨γ, -, rfl⟩ := Finset.mem_image.mp hy
@@ -1225,7 +1225,7 @@ theorem count_chart {u : Words} {Γ : Finset K} (F : Marks u Γ) (C : TaylorCuts
       · rintro ⟨γ, ⟨hγ, h⟩, rfl⟩
         exact ⟨⟨γ, hγ, rfl⟩, h⟩
     rw [he, Set.ncard_coe_finset, Finset.card_image_of_injective _ hinj, hW]
-    exact (by exact_mod_cast hcount : (V.card : ℚ) ≤ 81928).trans terminal_price_le
+    exact (by exact_mod_cast hcount : (V.card : ℚ) ≤ 81937).trans terminal_price_le
 
 end
 end P0_6_2

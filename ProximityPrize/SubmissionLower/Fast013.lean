@@ -38,13 +38,13 @@ def GlobalBlockRankGate (domain : Fin 262144 ↪ E) (received : Fin 262144 → E
 
 open Classical in
 def UniformAnnihilator (domain : Fin 262144 ↪ E) (received : Fin 262144 → E) : Prop :=
-  ∃ Q : DifferentialPolynomial E 2, Q ≠ 0 ∧ jetTotalDegree Q ≤ 64 ∧
+  ∃ Q : DifferentialPolynomial E 2, Q ≠ 0 ∧ jetTotalDegree Q ≤ 65 ∧
     ∀ P ∈ ReedSolomon.closePolynomialSet domain received 131073 180265,
       differentialSpecialization Q P = 0
 
 open Classical in
 def C40ConsumerGate (domain : Fin 262144 ↪ E) (received : Fin 262144 → E) : Prop :=
-  ∀ Q : DifferentialPolynomial E 2, Q ≠ 0 → jetTotalDegree Q ≤ 64 →
+  ∀ Q : DifferentialPolynomial E 2, Q ≠ 0 → jetTotalDegree Q ≤ 65 →
     ∀ S : Finset E[X],
       (∀ P ∈ S, P ∈ ReedSolomon.closePolynomialSet domain received 131073 180265 ∧
         differentialSpecialization Q P = 0) →
@@ -61,21 +61,21 @@ conditions are proved. Only the actual block-to-matrix rank bound is a premise. 
 theorem certificate_of_block_rank
     (domain : Fin 262144 ↪ E) (received : Fin 262144 → E)
     (hrank : GlobalBlockRankGate domain received) :
-    Nonempty (SymbolicReceivedCurve.Certificate 180265 131073 0 64 2 0 domain
+    Nonempty (SymbolicReceivedCurve.Certificate 180265 131073 0 65 2 0 domain
       (fun i ↦ Polynomial.C (received i))) := by
   classical
   have h := SymbolicReceivedCurve.exists_certificate_of_monomial_rank_bound
     (F := E) (K := FractionRing (Polynomial E))
     (d := 2) (D := 131072) (m := 48) (A := 180265) (k := 131073)
-    (ℓ := 0) (ν := 64) (r := 262144 * blockUpper)
+    (ℓ := 0) (ν := 65) (r := 262144 * blockUpper)
     (by norm_num) (by norm_num) domain (fun i ↦ Polynomial.C (received i))
     (by intro i; simp) columns columns_injective columns_y0_le columns_total_le columns_weight_lt
     (algebraMap (Polynomial E) (FractionRing (Polynomial E)))
     (IsFractionRing.injective (Polynomial E) (FractionRing (Polynomial E))) hrank strict_source_surplus
   exact certificate_at_zero_degree
-    (P := fun b ↦ Nonempty (SymbolicReceivedCurve.Certificate 180265 131073 0 64 2 b
+    (P := fun b ↦ Nonempty (SymbolicReceivedCurve.Certificate 180265 131073 0 65 2 b
       domain (fun i ↦ Polynomial.C (received i))))
-    (262144 * blockUpper) (Fintype.card SourceIndex) 64 h
+    (262144 * blockUpper) (Fintype.card SourceIndex) 65 h
 
 open Classical in
 /-- The pinned certificate/contact/multiplicity machinery supplies a GLOBAL
@@ -353,7 +353,7 @@ theorem columns_weight148 (i : SourceIndex) :
 information as weighted degree 148 for jet weights (1,5,9). -/
 theorem weighted_uniform_annihilator {F : Type u} [Field F]
     (domain : Fin 262144 ↪ F) (received : Fin 262144 → F) :
-    ∃ Q : DifferentialPolynomial F 2, Q ≠ 0 ∧ jetTotalDegree Q ≤ 64 ∧
+    ∃ Q : DifferentialPolynomial F 2, Q ≠ 0 ∧ jetTotalDegree Q ≤ 65 ∧
       Q.weightedTotalDegree (jetWeight 1 4 3) ≤ 148 ∧
       ∀ P ∈ ReedSolomon.closePolynomialSet domain received 131073 180265,
         differentialSpecialization Q P=0 := by
@@ -368,7 +368,7 @@ theorem weighted_uniform_annihilator {F : Type u} [Field F]
       (fun i => Polynomial.C (domain i)) (fun i => Polynomial.C (received i)) columns]
     exact hglobal
   obtain ⟨v,_,hvdegree,hspan,_,hconstraints⟩ :=
-    exists_primitive_interpolant_of_rank_le.{u,0,0,u,u} 48 0 64 (fun i => domain i)
+    exists_primitive_interpolant_of_rank_le.{u,0,0,u,u} 48 0 65 (fun i => domain i)
       (fun i => Polynomial.C (received i)) (by intro i; simp) columns
       columns_injective columns_y0_le phi hphi hrank strict_source_surplus
   let Qs : DifferentialPolynomial (Polynomial F) 2 := SourceColumn.interpolant columns v
@@ -377,7 +377,7 @@ theorem weighted_uniform_annihilator {F : Type u} [Field F]
   have hQ0 : Q ≠ 0 := by
     exact SourceColumn.map_interpolant_ne_zero columns_injective psi
       (Ideal.comp_ne_zero_of_span_range_eq_top hspan psi)
-  have hjet : jetTotalDegree Q ≤ 64 :=
+  have hjet : jetTotalDegree Q ≤ 65 :=
     SourceColumn.map_interpolant_jetTotalDegree_le psi columns columns_total_le v
   have hwt : Q.weightedTotalDegree (jetWeight 1 4 3) ≤ 148 :=
     generic_source_weight_le psi columns v (jetWeight 1 4 3) 148 columns_weight148
@@ -424,23 +424,23 @@ theorem regularPart_dvd (d : ℕ) (Q : DifferentialPolynomial F (d+1)) : regular
   have hh := congrArg (topReindex d).symm hR
   simpa [regularPart] using hh
 
-def weightedFullCharge : ℚ := weightedRegularCap+firstOrderCharge 4032
-def weightedListCap : ℕ := 31911086374011223
-def weightedMCAAllowance : ℕ := 243069641737383864
+def weightedFullCharge : ℚ := weightedRegularCap+firstOrderCharge 4160
+def weightedListCap : ℕ := 31911818688068302
+def weightedMCAAllowance : ℕ := 243068909423326785
 
 theorem weighted_budget_exact :
-    weightedFullCharge=(386116366638676700141991232 : ℚ)/12099756245 ∧
+    weightedFullCharge=(386125227460262142519790272 : ℚ)/12099756245 ∧
     weightedFullCharge ≤ weightedListCap ∧
     (weightedListCap : ℚ)-1 < weightedFullCharge ∧
     weightedListCap+weightedMCAAllowance=274980728111395087 ∧
-    123935685281173519-weightedListCap=92024598907162296 := by
+    123935685281173519-weightedListCap=92023866593105217 := by
   norm_num [weightedFullCharge,weightedRegularCap,firstOrderCharge,I1,b,
     weightedListCap,weightedMCAAllowance]
 
 /-- All regular, singular, and lower-order branches are included. -/
 theorem weighted_second_order_card [CharP F 2130706433]
     (domain : Fin 262144 ↪ F) (received : Fin 262144 → F)
-    (Q : DifferentialPolynomial F 2) (hQ : Q ≠ 0) (hjet : jetTotalDegree Q ≤ 64)
+    (Q : DifferentialPolynomial F 2) (hQ : Q ≠ 0) (hjet : jetTotalDegree Q ≤ 65)
     (hwt : Q.weightedTotalDegree (jetWeight 1 4 3) ≤ 148)
     (S : Finset F[X])
     (hS : ∀ P ∈ S, P ∈ directJetAgreementSolutions Q domain received 131073 180265) :
@@ -448,7 +448,7 @@ theorem weighted_second_order_card [CharP F 2130706433]
   classical
   let G := regularPart 1 Q
   have hsplit := split_weight 1 Q
-  have hGjet : jetTotalDegree G ≤ 64 := by dsimp [G]; omega
+  have hGjet : jetTotalDegree G ≤ 65 := by dsimp [G]; omega
   have hGwt : G.weightedTotalDegree (jetWeight 1 4 3) ≤ 148 :=
     (weightedTotalDegree_le_of_dvd (jetWeight 1 4 3) (regularPart_dvd 1 Q) hQ).trans hwt
   have hchar : ringChar F=0 ∨ jetDegree Q (Fin.last 2) < ringChar F := by
@@ -470,9 +470,9 @@ theorem weighted_second_order_card [CharP F 2130706433]
         have hz : (1 : F[X])=0 := by
           simpa only [differentialSpecialization,map_one] using hr
         exact (one_ne_zero hz).elim
-    have hlowjet : jetTotalDegree (lowerPart 1 Q) ≤ 4032 := by omega
+    have hlowjet : jetTotalDegree (lowerPart 1 Q) ≤ 4160 := by omega
     have hc := first_order_card_le domain received (lowerPart 1 Q) (lower_ne_zero 1 Q)
-      4032 (by decide) hlowjet S hlow
+      4160 (by decide) hlowjet S hlow
     exact hc.trans (le_add_of_nonneg_left hcost)
   · have hbpos : 0 < jetDegree G (Fin.last 2) := by omega
     let good : F[X] → Prop := fun P => differentialSpecialization G P=0 ∧
@@ -488,12 +488,12 @@ theorem weighted_second_order_card [CharP F 2130706433]
         exact ⟨hp.2.1,(hS P hp.1).2⟩
     let R := exceptionalEquation 1 Q
     have hR : R ≠ 0 := exceptional_ne_zero 1 Q hchar
-    have hRjet : jetTotalDegree R ≤ 4032 := by
-      have hh := exceptional_weight_sharp 1 Q 64 hjet
+    have hRjet : jetTotalDegree R ≤ 4160 := by
+      have hh := exceptional_weight_sharp 1 Q 65 hjet
         (hbpos.trans_le (jetDegree_le_total G (Fin.last 2)))
       exact hh
-    have he : (exceptional.card : ℚ) ≤ firstOrderCharge 4032 := by
-      apply first_order_card_le domain received R hR 4032 (by decide) hRjet exceptional
+    have he : (exceptional.card : ℚ) ≤ firstOrderCharge 4160 := by
+      apply first_order_card_le domain received R hR 4160 (by decide) hRjet exceptional
       intro P hP
       have hp := Finset.mem_filter.mp hP
       refine ⟨?_,(hS P hp.1).2⟩
@@ -504,7 +504,7 @@ theorem weighted_second_order_card [CharP F 2130706433]
       Finset.card_filter_add_card_filter_not (s := S) (p := good)
     calc
       (S.card : ℚ)=(regular.card : ℚ)+exceptional.card := by exact_mod_cast hc.symm
-      _ ≤ weightedRegularCap+firstOrderCharge 4032 := add_le_add hr he
+      _ ≤ weightedRegularCap+firstOrderCharge 4160 := add_le_add hr he
       _ = weightedFullCharge := rfl
 
 theorem weighted_complete_list [CharP F 2130706433]

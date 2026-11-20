@@ -16,8 +16,8 @@ set_option maxHeartbeats 0
 open scoped BigOperators
 open ReedSolomon.HiddenDerivative PolynomialDifferential
 
-abbrev Jet := (s : Fin 65) × (e2 : Fin (min s.val 10 + 1)) ×
-  Fin (min (s.val - e2.val) (21 - 2 * e2.val) + 1)
+abbrev Jet := (s : Fin 66) × (e2 : Fin (min s.val 10 + 1)) ×
+  Fin (min (s.val - e2.val) (21 - s.val / 65 - 2 * e2.val) + 1)
 
 def e1 (j : Jet) : ℕ := j.2.2.val
 def e2 (j : Jet) : ℕ := j.2.1.val
@@ -36,15 +36,19 @@ theorem jet_total (j : Jet) : e0 j + e1 j + e2 j = j.1.val := by
   simp only [e0, e1, e2]
   omega
 
-theorem jet_order (j : Jet) : e1 j + 2 * e2 j ≤ 21 := by
+theorem jet_order (j : Jet) : e1 j + 2 * e2 j ≤ 21 - j.1.val / 65 := by
   have h1 := j.2.2.isLt
   simp only [e1, e2]
   omega
 
-theorem width_lower (j : Jet) : 264112 ≤ width j := by
-  have hs := j.1.isLt
+theorem width_lower (j : Jet) : 133040 ≤ width j := by
+  have hs : j.1.val ≤ 65 := Nat.le_of_lt_succ j.1.isLt
+  have hmul : 131072 * j.1.val ≤ 131072 * 65 := Nat.mul_le_mul_left 131072 hs
+  have hbase : 48 * 180265 - 131072 * 65 ≤ 48 * 180265 - 131072 * j.1.val :=
+    Nat.sub_le_sub_left hmul (48 * 180265)
+  have hnum : 48 * 180265 - 131072 * 65 = 133040 := by decide
   unfold width
-  omega
+  exact ((hnum ▸ hbase).trans (Nat.le_add_right _ (e1 j))).trans (Nat.le_add_right _ (2 * e2 j))
 
 theorem source_weight_lt (i : SourceIndex) :
     i.2.val + 131072 * e0 i.1 + 131071 * e1 i.1 + 131070 * e2 i.1 < 48 * 180265 := by
@@ -73,13 +77,13 @@ theorem columns_injective : Function.Injective columns := by
   subst xb
   rfl
 
-theorem columns_y0_le (i : SourceIndex) : (columns i).y₀ ≤ 64 := by
+theorem columns_y0_le (i : SourceIndex) : (columns i).y₀ ≤ 65 := by
   have ht := jet_total i.1
   have hs := i.1.1.isLt
-  change e0 i.1 ≤ 64
+  change e0 i.1 ≤ 65
   omega
 
-theorem columns_total_le (i : SourceIndex) : totalJetDegree (columns i).exponent ≤ 64 := by
+theorem columns_total_le (i : SourceIndex) : totalJetDegree (columns i).exponent ≤ 65 := by
   rw [SourceColumn.totalJetDegree_exponent]
   have ht := jet_total i.1
   have hs := i.1.1.isLt
@@ -94,12 +98,12 @@ theorem columns_weight_lt (i : SourceIndex) :
 
 def sourceTotal : ℕ := ∑ j : Jet, width j
 
-theorem jet_count : Fintype.card Jet = 7194 := by decide +kernel
-theorem source_total : sourceTotal = 27313144144 := by decide +kernel
+theorem jet_count : Fintype.card Jet = 7315 := by decide +kernel
+theorem source_total : sourceTotal = 27329243579 := by decide +kernel
 
-/-- Cardinality is a sum over7194 jet triples, never an enumeration of the
-27313144144-dimensional full source index. -/
-theorem source_card : Fintype.card SourceIndex = 27313144144 := by
+/-- Cardinality is a sum over7315 jet triples, never an enumeration of the
+27329243579-dimensional full source index. -/
+theorem source_card : Fintype.card SourceIndex = 27329243579 := by
   rw [Fintype.card_sigma]
   simp only [Fintype.card_fin]
   exact source_total
@@ -133,19 +137,19 @@ def rowCount (s : ℕ) (g : ℤ) : ℕ :=
           2 * ((lo + 1) / 2) ≤ min hi (2 * ((s : ℤ) - b)) then 1 else 0)
   else 0
 
-def blockUpper : ℕ := ∑ s : Fin 65, ∑ gi : Fin 69,
+def blockUpper : ℕ := ∑ s : Fin 66, ∑ gi : Fin 69,
   min (columnCount s.val ((gi.val : ℤ) - 21)) (rowCount s.val ((gi.val : ℤ) - 21))
 
-def localColumns : ℕ := ∑ s : Fin 65, ∑ gi : Fin 69, columnCount s.val ((gi.val : ℤ) - 21)
-def reachableRows : ℕ := ∑ s : Fin 65, ∑ gi : Fin 69,
+def localColumns : ℕ := ∑ s : Fin 66, ∑ gi : Fin 69, columnCount s.val ((gi.val : ℤ) - 21)
+def reachableRows : ℕ := ∑ s : Fin 66, ∑ gi : Fin 69,
   if 0 < columnCount s.val ((gi.val : ℤ) - 21) then rowCount s.val ((gi.val : ℤ) - 21) else 0
-def nonzeroBlocks : ℕ := ∑ s : Fin 65, ∑ gi : Fin 69,
+def nonzeroBlocks : ℕ := ∑ s : Fin 66, ∑ gi : Fin 69,
   if 0 < columnCount s.val ((gi.val : ℤ) - 21) then 1 else 0
 
-private def pack2BlockUpperRow (s : Fin 65) : ℕ := ∑ gi : Fin 69,
+private def pack2BlockUpperRow (s : Fin 66) : ℕ := ∑ gi : Fin 69,
   min (columnCount s.val ((gi.val : ℤ) - 21)) (rowCount s.val ((gi.val : ℤ) - 21))
 
-private def pack2BlockUpperTable : Fin 65 → ℕ := ![48, 141, 276, 450, 660, 903, 1176, 1476, 1800, 2145, 2508, 2849, 3132, 3360, 3536, 3663, 3744, 3782, 3780, 3741, 3668, 3564, 3432, 3300, 3168, 3036, 2904, 2772, 2641, 2511, 2383, 2257, 2134, 2013, 1893, 1777, 1665, 1555, 1448, 1346, 1246, 1150, 1060, 970, 887, 806, 730, 658, 590, 526, 466, 410, 359, 310, 268, 226, 190, 158, 128, 103, 81, 61, 45, 33, 22]
+private def pack2BlockUpperTable : Fin 66 → ℕ := ![48, 141, 276, 450, 660, 903, 1176, 1476, 1800, 2145, 2508, 2849, 3132, 3360, 3536, 3663, 3744, 3782, 3780, 3741, 3668, 3564, 3432, 3300, 3168, 3036, 2904, 2772, 2641, 2511, 2383, 2257, 2134, 2013, 1893, 1777, 1665, 1555, 1448, 1346, 1246, 1150, 1060, 970, 887, 806, 730, 658, 590, 526, 466, 410, 359, 310, 268, 226, 190, 158, 128, 103, 81, 61, 45, 33, 22, 13]
 
 private theorem pack2BlockUpperCheck0 : pack2BlockUpperRow 0 = 48 := by decide +kernel
 
@@ -277,7 +281,9 @@ private theorem pack2BlockUpperCheck63 : pack2BlockUpperRow 63 = 33 := by decide
 
 private theorem pack2BlockUpperCheck64 : pack2BlockUpperRow 64 = 22 := by decide +kernel
 
-private theorem pack2BlockUpperRows (s : Fin 65) : pack2BlockUpperRow s = pack2BlockUpperTable s := by
+private theorem pack2BlockUpperCheck65 : pack2BlockUpperRow 65 = 13 := by decide +kernel
+
+private theorem pack2BlockUpperRows (s : Fin 66) : pack2BlockUpperRow s = pack2BlockUpperTable s := by
   fin_cases s
   · exact pack2BlockUpperCheck0
   · exact pack2BlockUpperCheck1
@@ -344,14 +350,15 @@ private theorem pack2BlockUpperRows (s : Fin 65) : pack2BlockUpperRow s = pack2B
   · exact pack2BlockUpperCheck62
   · exact pack2BlockUpperCheck63
   · exact pack2BlockUpperCheck64
+  · exact pack2BlockUpperCheck65
 
-theorem block_upper : blockUpper = 104120 := by
-  change (∑ s : Fin 65, pack2BlockUpperRow s) = 104120
+theorem block_upper : blockUpper = 104133 := by
+  change (∑ s : Fin 66, pack2BlockUpperRow s) = 104133
   simp_rw [pack2BlockUpperRows]
   decide +kernel
-private def pack2LocalColumnsRow (s : Fin 65) : ℕ := ∑ gi : Fin 69, columnCount s.val ((gi.val : ℤ) - 21)
+private def pack2LocalColumnsRow (s : Fin 66) : ℕ := ∑ gi : Fin 69, columnCount s.val ((gi.val : ℤ) - 21)
 
-private def pack2LocalColumnsTable : Fin 65 → ℕ := ![48, 144, 288, 480, 720, 1008, 1344, 1728, 2160, 2640, 3168, 3696, 4176, 4608, 4992, 5328, 5616, 5856, 6048, 6192, 6288, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336]
+private def pack2LocalColumnsTable : Fin 66 → ℕ := ![48, 144, 288, 480, 720, 1008, 1344, 1728, 2160, 2640, 3168, 3696, 4176, 4608, 4992, 5328, 5616, 5856, 6048, 6192, 6288, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336]
 
 private theorem pack2LocalColumnsCheck0 : pack2LocalColumnsRow 0 = 48 := by decide +kernel
 
@@ -483,7 +490,9 @@ private theorem pack2LocalColumnsCheck63 : pack2LocalColumnsRow 63 = 6336 := by 
 
 private theorem pack2LocalColumnsCheck64 : pack2LocalColumnsRow 64 = 6336 := by decide +kernel
 
-private theorem pack2LocalColumnsRows (s : Fin 65) : pack2LocalColumnsRow s = pack2LocalColumnsTable s := by
+private theorem pack2LocalColumnsCheck65 : pack2LocalColumnsRow 65 = 6336 := by decide +kernel
+
+private theorem pack2LocalColumnsRows (s : Fin 66) : pack2LocalColumnsRow s = pack2LocalColumnsTable s := by
   fin_cases s
   · exact pack2LocalColumnsCheck0
   · exact pack2LocalColumnsCheck1
@@ -550,15 +559,16 @@ private theorem pack2LocalColumnsRows (s : Fin 65) : pack2LocalColumnsRow s = pa
   · exact pack2LocalColumnsCheck62
   · exact pack2LocalColumnsCheck63
   · exact pack2LocalColumnsCheck64
+  · exact pack2LocalColumnsCheck65
 
-theorem local_columns : localColumns = 345312 := by
-  change (∑ s : Fin 65, pack2LocalColumnsRow s) = 345312
+theorem local_columns : localColumns = 351648 := by
+  change (∑ s : Fin 66, pack2LocalColumnsRow s) = 351648
   simp_rw [pack2LocalColumnsRows]
   decide +kernel
-private def pack2ReachableRowsRow (s : Fin 65) : ℕ := ∑ gi : Fin 69,
+private def pack2ReachableRowsRow (s : Fin 66) : ℕ := ∑ gi : Fin 69,
   if 0 < columnCount s.val ((gi.val : ℤ) - 21) then rowCount s.val ((gi.val : ℤ) - 21) else 0
 
-private def pack2ReachableRowsTable : Fin 65 → ℕ := ![48, 141, 276, 450, 660, 903, 1176, 1476, 1800, 2145, 2508, 2884, 3267, 3650, 4026, 4388, 4729, 5045, 5332, 5586, 5803, 5979, 6110, 6193, 6225, 6203, 6124, 5988, 5799, 5565, 5295, 4998, 4683, 4359, 4035, 3719, 3416, 3128, 2856, 2600, 2360, 2135, 1925, 1729, 1547, 1378, 1222, 1078, 946, 825, 715, 615, 525, 444, 372, 308, 252, 203, 161, 125, 95, 70, 50, 34, 22]
+private def pack2ReachableRowsTable : Fin 66 → ℕ := ![48, 141, 276, 450, 660, 903, 1176, 1476, 1800, 2145, 2508, 2884, 3267, 3650, 4026, 4388, 4729, 5045, 5332, 5586, 5803, 5979, 6110, 6193, 6225, 6203, 6124, 5988, 5799, 5565, 5295, 4998, 4683, 4359, 4035, 3719, 3416, 3128, 2856, 2600, 2360, 2135, 1925, 1729, 1547, 1378, 1222, 1078, 946, 825, 715, 615, 525, 444, 372, 308, 252, 203, 161, 125, 95, 70, 50, 34, 22, 13]
 
 private theorem pack2ReachableRowsCheck0 : pack2ReachableRowsRow 0 = 48 := by decide +kernel
 
@@ -690,7 +700,9 @@ private theorem pack2ReachableRowsCheck63 : pack2ReachableRowsRow 63 = 34 := by 
 
 private theorem pack2ReachableRowsCheck64 : pack2ReachableRowsRow 64 = 22 := by decide +kernel
 
-private theorem pack2ReachableRowsRows (s : Fin 65) : pack2ReachableRowsRow s = pack2ReachableRowsTable s := by
+private theorem pack2ReachableRowsCheck65 : pack2ReachableRowsRow 65 = 13 := by decide +kernel
+
+private theorem pack2ReachableRowsRows (s : Fin 66) : pack2ReachableRowsRow s = pack2ReachableRowsTable s := by
   fin_cases s
   · exact pack2ReachableRowsCheck0
   · exact pack2ReachableRowsCheck1
@@ -757,15 +769,16 @@ private theorem pack2ReachableRowsRows (s : Fin 65) : pack2ReachableRowsRow s = 
   · exact pack2ReachableRowsCheck62
   · exact pack2ReachableRowsCheck63
   · exact pack2ReachableRowsCheck64
+  · exact pack2ReachableRowsCheck65
 
-theorem reachable_rows : reachableRows = 168704 := by
-  change (∑ s : Fin 65, pack2ReachableRowsRow s) = 168704
+theorem reachable_rows : reachableRows = 168717 := by
+  change (∑ s : Fin 66, pack2ReachableRowsRow s) = 168717
   simp_rw [pack2ReachableRowsRows]
   decide +kernel
-private def pack2NonzeroBlocksRow (s : Fin 65) : ℕ := ∑ gi : Fin 69,
+private def pack2NonzeroBlocksRow (s : Fin 66) : ℕ := ∑ gi : Fin 69,
   if 0 < columnCount s.val ((gi.val : ℤ) - 21) then 1 else 0
 
-private def pack2NonzeroBlocksTable : Fin 65 → ℕ := ![48, 50, 52, 54, 56, 58, 60, 62, 64, 66, 68, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69]
+private def pack2NonzeroBlocksTable : Fin 66 → ℕ := ![48, 50, 52, 54, 56, 58, 60, 62, 64, 66, 68, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69]
 
 private theorem pack2NonzeroBlocksCheck0 : pack2NonzeroBlocksRow 0 = 48 := by decide +kernel
 
@@ -897,7 +910,9 @@ private theorem pack2NonzeroBlocksCheck63 : pack2NonzeroBlocksRow 63 = 69 := by 
 
 private theorem pack2NonzeroBlocksCheck64 : pack2NonzeroBlocksRow 64 = 69 := by decide +kernel
 
-private theorem pack2NonzeroBlocksRows (s : Fin 65) : pack2NonzeroBlocksRow s = pack2NonzeroBlocksTable s := by
+private theorem pack2NonzeroBlocksCheck65 : pack2NonzeroBlocksRow 65 = 69 := by decide +kernel
+
+private theorem pack2NonzeroBlocksRows (s : Fin 66) : pack2NonzeroBlocksRow s = pack2NonzeroBlocksTable s := by
   fin_cases s
   · exact pack2NonzeroBlocksCheck0
   · exact pack2NonzeroBlocksCheck1
@@ -964,18 +979,19 @@ private theorem pack2NonzeroBlocksRows (s : Fin 65) : pack2NonzeroBlocksRow s = 
   · exact pack2NonzeroBlocksCheck62
   · exact pack2NonzeroBlocksCheck63
   · exact pack2NonzeroBlocksCheck64
+  · exact pack2NonzeroBlocksCheck65
 
-theorem nonzero_blocks : nonzeroBlocks = 4364 := by
-  change (∑ s : Fin 65, pack2NonzeroBlocksRow s) = 4364
+theorem nonzero_blocks : nonzeroBlocks = 4433 := by
+  change (∑ s : Fin 66, pack2NonzeroBlocksRow s) = 4433
   simp_rw [pack2NonzeroBlocksRows]
   decide +kernel
-theorem local_columns_per_jet : localColumns = Fintype.card Jet * 48 := by
-  rw [local_columns, jet_count]
+theorem local_columns_per_jet : localColumns = 351648 := by
+  rw [local_columns]
 
-theorem global_rank_allowance : (262144 : ℕ) * blockUpper = 27294433280 := by
+theorem global_rank_allowance : (262144 : ℕ) * blockUpper = 27297841152 := by
   rw [block_upper]
 
-theorem source_surplus : sourceTotal - 262144 * blockUpper = 18710864 := by
+theorem source_surplus : sourceTotal - 262144 * blockUpper = 31402427 := by
   rw [source_total, block_upper]
 
 theorem strict_source_surplus : 262144 * blockUpper < Fintype.card SourceIndex := by
@@ -1005,13 +1021,13 @@ def rowCountCoarse (s : ℕ) (g : ℤ) : ℕ :=
         if 2 * (b : ℤ) + ((s : ℤ) - b) < L ∧ lo ≤ 2 * ((s : ℤ) - b) then 1 else 0)
   else 0
 
-def coarseUpper : ℕ := ∑ s : Fin 65, ∑ gi : Fin 69,
+def coarseUpper : ℕ := ∑ s : Fin 66, ∑ gi : Fin 69,
   min (columnCount s.val ((gi.val : ℤ) - 21)) (rowCountCoarse s.val ((gi.val : ℤ) - 21))
 
-private def pack2CoarseUpperRow (s : Fin 65) : ℕ := ∑ gi : Fin 69,
+private def pack2CoarseUpperRow (s : Fin 66) : ℕ := ∑ gi : Fin 69,
   min (columnCount s.val ((gi.val : ℤ) - 21)) (rowCountCoarse s.val ((gi.val : ℤ) - 21))
 
-private def pack2CoarseUpperTable : Fin 65 → ℕ := ![48, 141, 276, 450, 660, 903, 1176, 1476, 1800, 2145, 2508, 2849, 3132, 3360, 3536, 3663, 3744, 3782, 3780, 3741, 3668, 3564, 3432, 3300, 3168, 3036, 2904, 2772, 2641, 2511, 2383, 2257, 2134, 2013, 1893, 1777, 1665, 1555, 1448, 1346, 1246, 1150, 1060, 970, 887, 806, 730, 658, 590, 526, 466, 410, 359, 310, 268, 226, 190, 158, 128, 103, 81, 61, 45, 33, 22]
+private def pack2CoarseUpperTable : Fin 66 → ℕ := ![48, 141, 276, 450, 660, 903, 1176, 1476, 1800, 2145, 2508, 2849, 3132, 3360, 3536, 3663, 3744, 3782, 3780, 3741, 3668, 3564, 3432, 3300, 3168, 3036, 2904, 2772, 2641, 2511, 2383, 2257, 2134, 2013, 1893, 1777, 1665, 1555, 1448, 1346, 1246, 1150, 1060, 970, 887, 806, 730, 658, 590, 526, 466, 410, 359, 310, 268, 226, 190, 158, 128, 103, 81, 61, 45, 33, 22, 13]
 
 private theorem pack2CoarseUpperCheck0 : pack2CoarseUpperRow 0 = 48 := by decide +kernel
 
@@ -1143,7 +1159,9 @@ private theorem pack2CoarseUpperCheck63 : pack2CoarseUpperRow 63 = 33 := by deci
 
 private theorem pack2CoarseUpperCheck64 : pack2CoarseUpperRow 64 = 22 := by decide +kernel
 
-private theorem pack2CoarseUpperRows (s : Fin 65) : pack2CoarseUpperRow s = pack2CoarseUpperTable s := by
+private theorem pack2CoarseUpperCheck65 : pack2CoarseUpperRow 65 = 13 := by decide +kernel
+
+private theorem pack2CoarseUpperRows (s : Fin 66) : pack2CoarseUpperRow s = pack2CoarseUpperTable s := by
   fin_cases s
   · exact pack2CoarseUpperCheck0
   · exact pack2CoarseUpperCheck1
@@ -1210,9 +1228,10 @@ private theorem pack2CoarseUpperRows (s : Fin 65) : pack2CoarseUpperRow s = pack
   · exact pack2CoarseUpperCheck62
   · exact pack2CoarseUpperCheck63
   · exact pack2CoarseUpperCheck64
+  · exact pack2CoarseUpperCheck65
 
-theorem coarse_upper : coarseUpper = 104120 := by
-  change (∑ s : Fin 65, pack2CoarseUpperRow s) = 104120
+theorem coarse_upper : coarseUpper = 104133 := by
+  change (∑ s : Fin 66, pack2CoarseUpperRow s) = 104133
   simp_rw [pack2CoarseUpperRows]
   decide +kernel
 theorem coarse_upper_eq_exact : coarseUpper = blockUpper := by rw [coarse_upper, block_upper]
@@ -1230,7 +1249,7 @@ namespace Sol1.C42
 open ReedSolomon.HiddenDerivative
 
 def Eligible (x a b c : ℕ) : Prop :=
-  a + b + c ≤ 64 ∧ b + 2 * c ≤ 21 ∧
+  a + b + c ≤ 65 ∧ b + 2 * c ≤ 21 - (a + b + c) / 65 ∧
     x + 131072 * a + 131071 * b + 131070 * c < 48 * 180265
 
 theorem columns_eligible (i : SourceIndex) :
@@ -1247,9 +1266,9 @@ actual Sigma-Fin source family; no monomials are lost by the indexing scheme. -/
 theorem index_of_eligible (x a b c : ℕ) (h : Eligible x a b c) :
     ∃ i : SourceIndex, columns i = { x := x, y₀ := a, higher := ![b,c] } := by
   obtain ⟨htotal, horder, hweight⟩ := h
-  let s : Fin 65 := ⟨a + b + c, by omega⟩
+  let s : Fin 66 := ⟨a + b + c, by omega⟩
   let f2 : Fin (min s.val 10 + 1) := ⟨c, by dsimp [s]; omega⟩
-  let f1 : Fin (min (s.val - f2.val) (21 - 2 * f2.val) + 1) :=
+  let f1 : Fin (min (s.val - f2.val) (21 - s.val / 65 - 2 * f2.val) + 1) :=
     ⟨b, by dsimp [s, f2]; omega⟩
   let j : Jet := ⟨s, f2, f1⟩
   have h0 : e0 j = a := by dsimp [e0, e1, e2, j, s, f1, f2]; omega
@@ -1471,7 +1490,7 @@ def rowCountEnvelope (s : ℕ) (g : ℤ) : ℕ :=
     (min ((s : ℤ) - b.val) (48 - g - s - 1 - 2 * b.val) -
       max 0 (max 0 (-g) - s + b.val) + 1).toNat
 
-def envelopeUpper : ℕ := ∑ s : Fin 65, ∑ gi : Fin 69,
+def envelopeUpper : ℕ := ∑ s : Fin 66, ∑ gi : Fin 69,
   min (columnCount s.val ((gi.val : ℤ) - 21))
     (rowCountEnvelope s.val ((gi.val : ℤ) - 21))
 
@@ -1609,7 +1628,9 @@ theorem grade_63 : gradeUpper 63 = 33 := by decide +kernel
 
 theorem grade_64 : gradeUpper 64 = 22 := by decide +kernel
 
-theorem grade_table (s : Fin 65) : gradeUpper s.val = ([48, 141, 276, 450, 660, 903, 1176, 1476, 1800, 2145, 2508, 2849, 3132, 3360, 3536, 3663, 3744, 3782, 3780, 3741, 3668, 3564, 3432, 3300, 3168, 3036, 2904, 2772, 2641, 2511, 2383, 2257, 2134, 2013, 1893, 1777, 1665, 1555, 1448, 1346, 1246, 1150, 1060, 970, 887, 806, 730, 658, 590, 526, 466, 410, 359, 310, 268, 226, 190, 158, 128, 103, 81, 61, 45, 33, 22] : List ℕ).getD s.val 0 := by
+theorem grade_65 : gradeUpper 65 = 13 := by decide +kernel
+
+theorem grade_table (s : Fin 66) : gradeUpper s.val = ([48, 141, 276, 450, 660, 903, 1176, 1476, 1800, 2145, 2508, 2849, 3132, 3360, 3536, 3663, 3744, 3782, 3780, 3741, 3668, 3564, 3432, 3300, 3168, 3036, 2904, 2772, 2641, 2511, 2383, 2257, 2134, 2013, 1893, 1777, 1665, 1555, 1448, 1346, 1246, 1150, 1060, 970, 887, 806, 730, 658, 590, 526, 466, 410, 359, 310, 268, 226, 190, 158, 128, 103, 81, 61, 45, 33, 22, 13] : List ℕ).getD s.val 0 := by
   fin_cases s
   · exact grade_0
   · exact grade_1
@@ -1676,9 +1697,10 @@ theorem grade_table (s : Fin 65) : gradeUpper s.val = ([48, 141, 276, 450, 660, 
   · exact grade_62
   · exact grade_63
   · exact grade_64
+  · exact grade_65
 
-theorem envelope_upper : envelopeUpper = 104120 := by
-  change (∑ s : Fin 65, gradeUpper s.val) = 104120
+theorem envelope_upper : envelopeUpper = 104133 := by
+  change (∑ s : Fin 66, gradeUpper s.val) = 104133
   simp_rw [grade_table]
   decide +kernel
 

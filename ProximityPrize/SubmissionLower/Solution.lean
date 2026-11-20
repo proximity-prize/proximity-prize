@@ -90,8 +90,8 @@ theorem Asm.P0_10R_5 : P0_10R.c5 := P0_10R_5.proof
 theorem Asm.P0_10R : P0.c10 := P0_10R.of_children Asm.P0_10_1 Asm.P0_10_2 Asm.P0_10_5 Asm.P0_10R_1 Asm.P0_10R_2 Asm.P0_10R_3 Asm.P0_10R_4 Asm.P0_10R_5
 theorem Asm.P0_10 : P0.c10 := Asm.P0_10R
 theorem Asm.P0_11 : P0.c11 := P0_11.proof
-theorem Asm.P0 : ProximityPrize.Benchmark.ProtocolClaim 6920 335573291 1073741824 := P0.of_children Asm.P0_1 Asm.P0_2 Asm.P0_3 Asm.P0_4 Asm.P0_5 Asm.P0_6 Asm.P0_7 Asm.P0_8 Asm.P0_9 Asm.P0_10 Asm.P0_11
+theorem Asm.P0 : ProximityPrize.Benchmark.ProtocolClaim 6921 335613951 1073741824 := P0.of_children Asm.P0_1 Asm.P0_2 Asm.P0_3 Asm.P0_4 Asm.P0_5 Asm.P0_6 Asm.P0_7 Asm.P0_8 Asm.P0_9 Asm.P0_10 Asm.P0_11
 end PackSource_Asm_P0
 
-theorem ProximityPrize.Benchmark.candidate : ProximityPrize.Benchmark.ProtocolClaim 6920 335573291 1073741824 :=
+theorem ProximityPrize.Benchmark.candidate : ProximityPrize.Benchmark.ProtocolClaim 6921 335613951 1073741824 :=
   Asm.P0

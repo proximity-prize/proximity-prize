@@ -440,7 +440,7 @@ theorem add_rank_exceptions (u : Words) (hu : FrontRemainder u) (Γ : Finset K)
 
 theorem anchored_list_count {u deleted} (M : AnchorModel u deleted) (Γ : Finset K)
     (F : AnchoredFamily M Γ) (hw : M.overhead ≤ 0) :
-    Γ.card ≤ 31911086374011223 := by
+    Γ.card ≤ 31911818688068302 := by
   classical
   obtain ⟨hfinite, hprice⟩ := Astra7.native_weighted_complete_list M.word
   have hsub : Γ.image F.scalar ⊆ hfinite.toFinset := by
@@ -463,7 +463,7 @@ theorem anchored_list_count {u deleted} (M : AnchorModel u deleted) (Γ : Finset
     Γ.card = (Γ.image F.scalar).card := (Finset.card_image_of_injOn F.distinct).symm
     _ ≤ hfinite.toFinset.card := Finset.card_le_card hsub
     _ = _ := (Set.ncard_eq_toFinset_card _ hfinite).symm
-    _ ≤ 31911086374011223 := hprice
+    _ ≤ 31911818688068302 := hprice
 
 theorem high_with_reserve (w : ℤ) :
     highPrefix w + highRetained w + (69631486279633 + 69631486557946) + 1 ≤

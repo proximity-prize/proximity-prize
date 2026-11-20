@@ -701,7 +701,7 @@ theorem firstOrderCharge_ge (h : ℕ) : (h : ℚ) ≤ firstOrderCharge h := by
 /-- Sharp whole first-order fixed-word consumer, including every singular/lower-order root. -/
 theorem first_order_card_le
     (domain : Fin 262144 ↪ E) (received : Fin 262144 → E)
-    (Q : DifferentialPolynomial E 1) (hQ : Q ≠ 0) (h : ℕ) (hbound : h ≤ 4096)
+    (Q : DifferentialPolynomial E 1) (hQ : Q ≠ 0) (h : ℕ) (hbound : h ≤ 4160)
     (hweight : jetTotalDegree Q ≤ h) (S : Finset E[X])
     (hS : ∀ P ∈ S, P ∈ directJetAgreementSolutions Q domain received 131073 180265) :
     (S.card : ℚ) ≤ firstOrderCharge h := by

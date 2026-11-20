@@ -19,9 +19,9 @@ abbrev incidenceGap : ℕ := agreement - physicalDegree
 abbrev anchorCutoff : ℕ := 90 * agreement - 1
 abbrev primaryCutoff : ℕ := 3000 * agreement - 1
 abbrev primaryBox : Shape := ⟨4012, 1650, 550⟩
-abbrev sourceRank : ℕ := 1274885048030345631
+abbrev sourceRank : ℕ := 1263843147908069631
 abbrev layerWidth : ℕ := incidenceGap + 3
-abbrev layerNeed : ℕ := 27317599434965
+abbrev layerNeed : ℕ := 27086222629835
 
 /-- Physical weight uses the full Taylor space through the new low endpoint. -/
 def TrueWeightLE {n : ℕ} (P : Row n) (D : ℕ) : Prop :=
@@ -164,7 +164,7 @@ def c4 : Prop :=
 /-- Aggregate order-at-most-two count before the single seed book. -/
 def c5 : Prop :=
   ∀ w Γ s, Messages w Γ s → ∀ g, LowerRow g →
-    (∀ γ ∈ Γ, atJet g (extend (s γ)) = 0) → Γ.card ≤ 18479565405033887
+    (∀ γ ∈ Γ, atJet g (extend (s γ)) = 0) → Γ.card ≤ 18479566821066575
 
 /-- Proper physical cut on a single leading-unit factor at its actual order. -/
 def c6 : Prop :=
@@ -183,7 +183,7 @@ def c8 : Prop :=
   ∀ n (a : Fin n → Shape) (l cost : Fin n → ℕ), Fits a → LayerBudget a l →
     (∀ i, 0 < l i → cost i ≤ physicalPrice (a i) (l i)) →
     (∀ i, FatEligible (a i) → cost i ≤ fatPrice (a i)) →
-    (∑ i, cost i) ≤ 211033041011743389
+    (∑ i, cost i) ≤ 214480139679075858
 
 theorem degree_at_height {u D Γ} (M : AnchorModel u D) (F : AnchoredFamily M Γ)
     (γ : K) (hγ : γ ∈ Γ) : (F.scalar γ).natDegree ≤ k - 1 + M.overhead.toNat := by
@@ -262,7 +262,7 @@ theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) (h4 : c4)
   obtain ⟨l, layers, cut⟩ := h3 _ _ _ hmsg (h2 _) _ _ _ cover
   obtain ⟨book, E, booked, hE⟩ := h4 _ _ _ hmsg pole
   let low := Γ.filter (fun γ => atJet g (extend (s γ)) = 0)
-  have low_bound : low.card ≤ 18479565405033887 :=
+  have low_bound : low.card ≤ 18479566821066575 :=
     h5 _ _ _ (hmsg.mono (Finset.filter_subset _ _)) _ cover.lower
       (fun _ h => (Finset.mem_filter.mp h).2)
   let pieces (i : Fin n) := Γ.filter (fun γ => γ ∉ book ∧ OnFactor (f i) (extend (s γ)))
@@ -473,7 +473,7 @@ private def gradeSlots (a b c : ℕ) : ℕ :=
   gradeCeiling a b c + 1 - (a + b + c)
 
 private def firstWidth (a b c : ℕ) : ℕ :=
-  90 * 180217 - 133551 * gradeCeiling a b c + indexWeight a b c
+  90 * 180208 - 133551 * gradeCeiling a b c + indexWeight a b c
 
 /-- The grade falls by j from its ceiling, so each step adds 133551 abscissa slots. -/
 private def abscissaWidth (a b c j : ℕ) : ℕ := firstWidth a b c + 133551 * j
@@ -512,19 +512,19 @@ private theorem true_weight (x v a b c : ℕ) :
 private theorem eligible_exponent (x v a b c : ℕ) :
     AnchorEligible (exponent x v a b c) ↔
       c ≤ 10 ∧ indexWeight a b c ≤ 48 ∧ v + (a + b + c) ≤ gradeCeiling a b c ∧
-        x + 133551 * (v + (a + b + c)) < 90 * 180217 + indexWeight a b c := by
+        x + 133551 * (v + (a + b + c)) < 90 * 180208 + indexWeight a b c := by
   unfold AnchorEligible gradeCeiling indexWeight
   rw [show P0_9.physicalDegree = 133551 from rfl,
     Finsupp.degree_eq_weight_one, jet_weight, jet_weight, true_weight]
   simp only [mul_one, Finsupp.some_apply, exponent_some, Matrix.cons_val_zero, le_min_iff]
   change (v + a + b + c ≤ 120 ∧ v * 0 + a * 1 + b * 2 + c * 3 ≤ 48 ∧
     c ≤ 10 ∧ a + b + c ≤ 48 - (v + a + b + c - 113 + 1) / 2 ∧
-    x + (v * 133551 + a * 133550 + b * 133549 + c * 133548) ≤ 90 * 180217 - 1) ↔ _
+    x + (v * 133551 + a * 133550 + b * 133549 + c * 133548) ≤ 90 * 180208 - 1) ↔ _
   by_cases h : a + b + c = 0 <;> omega
 
 private theorem width_iff (a b c j x : ℕ) (hj : j ≤ gradeCeiling a b c) :
     x < abscissaWidth a b c j ↔
-      x + 133551 * (gradeCeiling a b c - j) < 90 * 180217 + indexWeight a b c := by
+      x + 133551 * (gradeCeiling a b c - j) < 90 * 180208 + indexWeight a b c := by
   have hgrade : gradeCeiling a b c ≤ 120 := min_le_left _ _
   unfold abscissaWidth firstWidth
   omega
@@ -640,35 +640,33 @@ private theorem slot_card : Fintype.card Slot = sumRange sliceCount 11 := by
 
 /-- The entries are abscissa-column counts at fixed second and third jet exponents. -/
 private def rowTable : ℕ → List ℕ
-  | 0 => [32035005198, 30681091193, 29331597631, 27986791616, 26646940252, 25312370551, 23983008873, 22658588120,
-      21338841194, 20023500997, 18712300431, 17404972398, 16101249800, 14800865539, 13503552517, 12209043636,
-      10917071798, 9627369905, 8339670859, 7053707562, 5769212916, 4485919823, 3203561185, 1921869904,
-      640578882]
-  | 1 => [30308361331, 28947469572, 27591666011, 26241277660, 24896230879, 23556258570, 22221093635, 20890468976,
-      19564117495, 18241772094, 16923165675, 15608031140, 14296101391, 12987109330, 11680787859, 10376869880,
-      9075088295, 7775176006, 6476865915, 5179890924, 3883983935, 2588877850, 1294305571]
-  | 2 => [28552344086, 27186003537, 25825138105, 24469480692, 23118764200, 21772721531, 20431085587, 19093589270,
-      17759965482, 16429947125, 15103267101, 13779658312, 12458853660, 11140586047, 9824588375, 8510593546,
-      7198334462, 5887544025, 4577955137, 3269300700, 1961313616, 653726787]
-  | 3 => [26769864100, 25398388035, 24031986438, 22670392211, 21313338256, 19960557475, 18611782770, 17266747043,
-      15925183196, 14586824131, 13251402750, 11918651955, 10588304648, 9260093731, 7933752106, 6609012675,
-      5285608340, 3963272003, 2641736566, 1320734931]
-  | 4 => [24960893898, 23583614565, 22211009051, 20842810258, 19478751088, 18118564443, 16761983225, 15408740336,
-      14058568678, 12711201153, 11366370663, 10023810110, 8683252396, 7344430423, 6007077093, 4670925308,
-      3335707970, 2001157981, 667008243]
-  | 5 => [23124231521, 21740481168, 20361003985, 18985532874, 17613800737, 16245540476, 14880484993, 13518367190,
-      12158919969, 10801876232, 9446968881, 8093930818, 6742494945, 5392394164, 4043361377, 2695129486,
-      1347431393]
-  | 6 => [21258675010, 19867785885, 18480769281, 17097358100, 15717285244, 14340283615, 12966086115, 11594425646,
-      10225035110, 8857647409, 7491995445, 6127812120, 4764830336, 3402782995, 2041402999, 680423250]
-  | 7 => [19363022406, 17964326757, 16569102980, 15177083977, 13788002650, 12401591901, 11017584632, 9635713745,
-      8255712142, 6877312725, 5500248396, 4124252057, 2749056610, 1374394957]
-  | 8 => [17436071750, 16028901825, 14624803123, 13223508546, 11824750996, 10428263375, 9033778585, 7641029528,
-      6249749106, 4859670221, 3470525775, 2082048670, 693971808]
-  | 9 => [15476621083, 14060309130, 12646667751, 11235429848, 9826328323, 8419096078, 7013466015, 5609171036,
-      4205944043, 2803517938, 1401625623]
-  | 10 => [13483468446, 12057346713, 10633494905, 9211645924, 7791532672, 6372888051, 4955444963, 3538936310,
-      2123094994, 707653917]
+  | 0 => [32031168228, 30677405693, 29328065221, 27983413916, 26643718882, 25309306321, 23980101783, 22655838170,
+      21336248384, 20021065327, 18710021901, 17402851008, 16099285550, 14799058429, 13501902547, 12207550806,
+      10915736108, 9626191355, 8338649449, 7052843292, 5768505786, 4485369833, 3203168335, 1921634194, 640500312]
+  | 1 => [30304731721, 28943995482, 27588349061, 26238118660, 24893229829, 23553415470, 22218408485, 20887941776,
+      19561748245, 18239560794, 16921112325, 15606135740, 14294363941, 12985529830, 11679366309, 10375606280,
+      9073982645, 7774228306, 6476076165, 5179259124, 3883510085, 2588561950, 1294147621]
+  | 2 => [28548930746, 27182748957, 25822042285, 24466543632, 23115985900, 21770101991, 20428624807, 19091287250,
+      17757822222, 16427962625, 15101441361, 13777991332, 12457345440, 11139236587, 9823397675, 8509561606,
+      7197461282, 5886829605, 4577399477, 3268903800, 1961075476, 653647407]
+  | 3 => [26766672700, 25395356205, 24029114178, 22667679521, 21310785136, 19958163925, 18609548790, 17264672633,
+      15923268356, 14585068861, 13249807050, 11917215825, 10587028088, 9258976741, 7932794686, 6608214825,
+      5284970060, 3962793293, 2641417426, 1320575361]
+  | 4 => [24957926868, 23580807915, 22208362781, 20840324368, 19476425578, 18116399313, 16759978475, 15406895966,
+      14056884688, 12709677543, 11365007433, 10022607260, 8682209926, 7343548333, 6006355383, 4670363978, 3335307020,
+      2000917411, 666928053]
+  | 5 => [23121491291, 21737902128, 20358586135, 18983276214, 17611705267, 16243606196, 14878711903, 13516755290,
+      12157469259, 10800586712, 9445840551, 8092963678, 6741688995, 5391749404, 4042877807, 2694807106, 1347270203]
+  | 6 => [21256164010, 19865436885, 18478582281, 17095333100, 15715422244, 14338582615, 12964547115, 11593048646,
+      10223820110, 8856594409, 7491104445, 6127083120, 4764263336, 3402377995, 2041159999, 680342250]
+  | 7 => [19360743066, 17962210227, 16567149260, 15175293067, 13786374550, 12400126611, 11016282152, 9634574075,
+      8254735282, 6876498675, 5499597156, 4123763627, 2748730990, 1374232147]
+  | 8 => [17434026500, 16027020195, 14623085113, 13221954156, 11823360226, 10427036225, 9032715055, 7640129618,
+      6249012816, 4859097551, 3470116725, 2081803240, 693889998]
+  | 9 => [15474812353, 14058664830, 12645187881, 11234114408, 9825177313, 8418109498, 7012643865, 5608513316,
+      4205450753, 2803189078, 1401461193]
+  | 10 => [13481898666, 12055942173, 10632255605, 9210571864, 7790623852, 6372144471, 4954866623, 3538523210,
+      2122847134, 707571297]
   | _ => []
 
 private theorem row0 (b : Fin 25) : rowCount b 0 = (rowTable 0)[b.val]! := by
@@ -720,9 +718,9 @@ private theorem rowTable_correct (c : Fin 11) :
   · exact row10
 
 private def sliceTotals : List ℕ :=
-  [404688682780, 360604969994, 319004761383, 279307633360, 242235876882,
-    207191950209, 174914598560, 144797405935, 117597073308, 92698176868,
-    70875506895]
+  [404639600830, 360561379844, 318966341463, 279274123660, 242206928292,
+    207167288139, 174893862560, 144780310885, 117583247418, 92687324488,
+    70867244895]
 
 private theorem sliceCount_eq (c : Fin 11) : sliceCount c = sliceTotals[c.val]! := by
   unfold sliceCount
@@ -734,7 +732,7 @@ private theorem sliceCount_eq (c : Fin 11) : sliceCount c = sliceTotals[c.val]! 
       rw [← sumRange_eq_fin]
       fin_cases c <;> decide
 
-private theorem totalCount : sumRange sliceCount 11 = 2413916636174 := by
+private theorem totalCount : sumRange sliceCount 11 = 2413627652474 := by
   rw [sumRange_eq_fin]
   calc
     _ = ∑ c : Fin 11, sliceTotals[c.val]! :=
@@ -742,7 +740,7 @@ private theorem totalCount : sumRange sliceCount 11 = 2413916636174 := by
     _ = _ := by rw [← sumRange_eq_fin]; decide
 
 /-- Exact dimension of the order-90 anchor bank. -/
-theorem anchor_finrank : Module.finrank Geom anchorSpace = 2413916636174 := by
+theorem anchor_finrank : Module.finrank Geom anchorSpace = 2413627652474 := by
   let e : Slot ≃ Eligible :=
     Equiv.ofBijective slotExponent ⟨slotExponent_injective, slotExponent_surjective⟩
   let b := MvPolynomial.basisRestrictSupport Geom {u : Exponent | AnchorEligible u}
@@ -1002,13 +1000,13 @@ def SourceEligible (e : SourceExponent) : Prop :=
   e.weight jetDegreeWeight ≤ 4012 ∧
   e.weight jetDerivativeWeight ≤ 1650 ∧
   e.weight topWeight ≤ 550 ∧
-  e.weight (differentialWeight 133551) ≤ 3000 * 180217 - 1
+  e.weight (differentialWeight 133551) ≤ 3000 * 180208 - 1
 
 def sourceExponents : Set SourceExponent := { e | SourceEligible e }
 
 theorem sourceExponents_finite : sourceExponents.Finite := by
   refine (Finsupp.finite_of_nat_weight_le (differentialWeight (d := 3) 133551)
-    ?_ (3000 * 180217 - 1)).subset (fun e he => he.2.2.2)
+    ?_ (3000 * 180208 - 1)).subset (fun e he => he.2.2.2)
   intro v
   cases v with
   | none => decide
@@ -1030,13 +1028,13 @@ private theorem weight_eq_sum (m : Fin 4 →₀ ℕ) (weight : Fin 4 → ℕ) :
 /-- Extract the support test at the largest X exponent in a nonzero coefficient. -/
 theorem row_bounds (Q : SourceSpace) :
     InBox (shape (toRow Q.1)) ⟨4012, 1650, 550⟩ ∧
-    P0_9.TrueWeightLE (toRow Q.1) (3000 * 180217 - 1) := by
+    P0_9.TrueWeightLE (toRow Q.1) (3000 * 180208 - 1) := by
   classical
   have h (m : Fin 4 →₀ ℕ) (hm : m ∈ (toRow Q.1).support) :
       m.sum (fun _ a => a) ≤ 4012 ∧
       m.sum (fun i a => i.val * a) ≤ 1650 ∧ m 3 ≤ 550 ∧
       ((toRow Q.1).coeff m).natDegree + m.sum (fun i a => (133551 - i.val) * a) ≤
-        3000 * 180217 - 1 := by
+        3000 * 180208 - 1 := by
     let n := ((toRow Q.1).coeff m).natDegree
     have hc : (Q.1).coeff (m.optionElim n) ≠ 0 := by
       rw [← MvPolynomial.optionEquivRight_coeff_coeff]
@@ -1083,7 +1081,7 @@ theorem translate_mem_source (x y : Geom) (Q : SourceSpace) :
     ⟨preserve jetDegreeWeight 4012 (fun t ht => (h t ht).1) e he,
       preserve jetDerivativeWeight 1650 (fun t ht => (h t ht).2.1) e he,
       preserve topWeight 550 (fun t ht => (h t ht).2.2.1) e he,
-      preserve (differentialWeight 133551) (3000 * 180217 - 1)
+      preserve (differentialWeight 133551) (3000 * 180208 - 1)
         (fun t ht => (h t ht).2.2.2) e he⟩
 
 def nodeMap (x y : Geom) : SourceSpace →ₗ[Geom] Local :=
@@ -1131,7 +1129,7 @@ open scoped BigOperators
 private abbrev Column := Σ _ : ℕ, Σ _ : ℕ, Σ _ : ℕ, Σ _ : ℕ, ℕ
 
 private def width (a b c f : ℕ) : ℕ :=
-  540651000 + b + 2 * c + 3 * f - 133551 * (a + b + c + f)
+  540624000 + b + 2 * c + 3 * f - 133551 * (a + b + c + f)
 
 private def tuples : Finset Column :=
   (range 551).sigma fun f =>
@@ -1174,11 +1172,11 @@ private theorem card_columns : sourceColumns.card = tuples.card := by
   exact (Finset.card_equiv e (fun t => (mem_columns t).symm)).symm
 
 private def widthInt (a b c f : ℤ) : ℤ :=
-  540651000 + b + 2 * c + 3 * f - 133551 * (a + b + c + f)
+  540624000 + b + 2 * c + 3 * f - 133551 * (a + b + c + f)
 
 private theorem cast_width (a b c f : ℕ) (h : a + b + c + f ≤ 4012) :
     (width a b c f : ℤ) = widthInt a b c f := by
-  have hpos : 133551 * (a + b + c + f) ≤ 540651000 + b + 2 * c + 3 * f := by omega
+  have hpos : 133551 * (a + b + c + f) ≤ 540624000 + b + 2 * c + 3 * f := by omega
   simp [width, widthInt, Nat.cast_sub hpos]
 
 /-- Verify a polynomial prefix by its initial value and forward difference. -/
@@ -1283,8 +1281,8 @@ private theorem countC_closed (f : ℕ) (hf : f < 551) :
 
 /-- A prefix for 120 times the paired even and odd summands. -/
 private def pairPrefix (q : ℤ) : ℤ :=
-  q * (33025892962946239768320 + (q - 1) * (-111062335503339043200 +
-    (q - 2) * (105441619037425920 + (q - 3) * (44265756160800 +
+  q * (33021840760400253208320 + (q - 1) * (-111048262347062563200 +
+    (q - 2) * (105426832351345920 + (q - 3) * (44261557120800 +
       (q - 4) * 20769913728))))
 
 private theorem pair_step (q : ℕ) (hq : q < 275) :
@@ -1305,12 +1303,12 @@ private theorem pairs_sum (n : ℕ) (hn : n ≤ 275) :
     rw [hindex, sum_range_succ, sum_range_succ, add_assoc,
       mul_add, ih (by omega), hcast, pair_step n (by omega)]
 
-theorem sourceColumns_card : sourceColumns.card = 91485369007824320927 := by
+theorem sourceColumns_card : sourceColumns.card = 91474327107702044927 := by
   have h : 288 * (tuples.card : ℤ) = ∑ f ∈ range 551, closedC f := by
     rw [card_tuples_int, mul_sum]
     exact sum_congr rfl fun f hf => countC_closed f (mem_range.mp hf)
-  have hprefix : pairPrefix 275 = 3161734324662895444108800 := by rfl
-  have hlast : closedC 550 = 235395942392736 := by rfl
+  have hprefix : pairPrefix 275 = 3161352716597900980108800 := by rfl
+  have hlast : closedC 550 = 235369014104736 := by rfl
   have hsum : 120 * (∑ f ∈ range 550, closedC f) = pairPrefix 275 :=
     pairs_sum 275 (by decide)
   rw [show 551 = 2 * 275 + 1 by decide, sum_range_succ,
@@ -1410,9 +1408,9 @@ private theorem origin_rank :
   exact (K1_13_2.origin_rank_le power hBlock).trans hp
 
 private theorem surplus {r k n : ℕ}
-    (hr : r ≤ 262144 * 344125686492134) (hn : n = 91485369007824320927)
+    (hr : r ≤ 262144 * 344125686492134) (hn : n = 91474327107702044927)
     (he : r + k = n) : P0_9.sourceRank ≤ k := by
-  change 1274885048030345631 ≤ k
+  change 1263843147908069631 ≤ k
   omega
 
 private theorem map_independent_family {V W : Type*} [AddCommGroup V] [Module Geom V]
@@ -1450,7 +1448,7 @@ private theorem family_of_kernel (w : I → K) {n : ℕ}
 
 theorem proof : P0_9.c2 := by
   intro w
-  have hSource : Module.finrank Geom SourceSpace = 91485369007824320927 := by
+  have hSource : Module.finrank Geom SourceSpace = 91474327107702044927 := by
     rw [finrank_source, sourceColumns_card]
   exact family_of_kernel w
     (surplus (word_rank_le w origin_rank) hSource (wordMap w).finrank_range_add_finrank_ker)

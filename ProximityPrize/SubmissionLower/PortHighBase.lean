@@ -35,18 +35,18 @@ def AdjacentChart {u del} (M : AnchorModel u del) {Γ} (F : AnchoredFamily M Γ)
     H' ∣ D.map σ * S + C (z ^ p) * (liftPoly M.Q).map σ
 
 def band (w : ℤ) : Band :=
-  if w ≤ 3554 then ⟨3554, 6, 188, 1024, 1422, 290, 28962⟩
-  else if w ≤ 8249 then ⟨8249, 4, 96, 582, 809, 165, 11805⟩
-  else if w ≤ 23999 then ⟨23999, 4, 46, 582, 809, 165, 8216⟩
+  if w ≤ 3554 then ⟨3554, 6, 195, 1024, 1422, 290, 28962⟩
+  else if w ≤ 8249 then ⟨8249, 4, 98, 582, 809, 165, 11805⟩
+  else if w ≤ 23999 then ⟨23999, 4, 47, 582, 809, 165, 8216⟩
   else ⟨heightCap, 4, 35, 582, 809, 165, 7295⟩
 
 def freeShape (w : ℤ) (i : Fin 2) : Shape :=
-  if w ≤ 3554 then ![⟨55, 76, 17, 1036⟩, ⟨82, 113, 25, 1601⟩] i
-  else ![⟨34, 47, 10, 515⟩, ⟨58, 80, 17, 940⟩] i
+  if w ≤ 3554 then ![⟨55, 76, 17, 1062⟩, ⟨82, 113, 25, 1643⟩] i
+  else ![⟨34, 47, 10, 522⟩, ⟨58, 80, 17, 954⟩] i
 
 def movingShape (w : ℤ) (i : Fin 2) : Shape :=
-  if w ≤ 3554 then ![⟨138, 191, 39, 4990⟩, ⟨203, 282, 58, 7726⟩] i
-  else ![⟨67, 93, 18, 1857⟩, ⟨124, 172, 35, 3138⟩] i
+  if w ≤ 3554 then ![⟨138, 191, 39, 5235⟩, ⟨203, 282, 58, 8124⟩] i
+  else ![⟨67, 93, 18, 1904⟩, ⟨124, 172, 35, 3211⟩] i
 
 def reserve (i : Fin 2) : ℕ := ![0, 5] i
 
@@ -55,7 +55,7 @@ def terminalShape (w : ℤ) : Shape :=
   ⟨b.multiplicity, b.jetBound, b.vBound, b.subbankSeeds⟩
 
 def fullShape (w : ℤ) : Shape :=
-  { terminalShape w with U := if w ≤ 3554 then 141471 else 59515 }
+  { terminalShape w with U := if w ≤ 3554 then 172135 else 65532 }
 
 def scheduled (w : ℤ) : List Shape :=
   [freeShape w 0, movingShape w 0, freeShape w 1, movingShape w 1,
@@ -412,7 +412,7 @@ private theorem cutoffCapacity_eq (w : ℤ) (W : ℕ) (hk : 0 < 131071 - w.toNat
   split_ifs <;> simp
 
 /-- The exact summation-by-parts identity for the smaller terminal bank. -/
-theorem sum_cutoffCapacity_add_seedGain (w : ℤ) (hlo : 2481 ≤ w) (hhi : w ≤ 32766) :
+theorem sum_cutoffCapacity_add_seedGain (w : ℤ) (hlo : 2481 ≤ w) (hhi : w ≤ 32784) :
     (∑ W ∈ range ((band w).multiplicity * agreement), cutoffCapacity w W) + seedGain w =
       rawVolume w := by
   let b := band w
@@ -515,7 +515,7 @@ theorem cutoff_finrank_le (w : ℤ) (W : ℕ) (V : Submodule FX Jet)
 
 /-- The oversized seed degree loses at least the sum of the graded
 seed slots specified by the subbank test. -/
-theorem oversized_seed_loss (w : ℤ) (hlo : 2481 ≤ w) (hhi : w ≤ 32766)
+theorem oversized_seed_loss (w : ℤ) (hlo : 2481 ≤ w) (hhi : w ≤ 32784)
     (f : Equation) (hf : ReducedEquation w f) (hm : TerminalMass w f)
     (hbad : ¬ SeedBound f (band w).seedBound) : seedGain w ≤ subbankDebit w := by
   obtain ⟨V, hfloor, hrows⟩ := hm
@@ -635,8 +635,8 @@ theorem section_capacity {w T s d} (h : FixedWord w T s d) (hd : d < agreement) 
   have hx : agreement - d ≤ x := by dsimp [x]; omega
   have hnodes : nodes.card = x + P0.t := by
     rw [card_sdiff_of_subset (subset_univ common), card_univ, IRSProfile.card_index]
-    change 262144 - common.card = (180217 - common.card) + 81927
-    have hbound : common.card ≤ 180217 := hcommon.trans hd.le
+    change 262144 - common.card = (180208 - common.card) + 81936
+    have hbound : common.card ≤ 180208 := hcommon.trans hd.le
     omega
   have exists_trim (γ : K) : ∃ B : Finset I, γ ∈ T → B ⊆ hits γ \ common ∧ B.card = x := by
     by_cases hγ : γ ∈ T
@@ -1350,8 +1350,8 @@ theorem of_children (h₁ : c1) (h₂ : c2) : P0_10.c1 := by
     change 2481 ≤ M.overhead at hlo
     omega
   have hi : M.overhead.toNat ≤ heightCap := by
-    change M.overhead ≤ 32766 at hhi
-    change M.overhead.toNat ≤ 32766
+    change M.overhead ≤ 32784 at hhi
+    change M.overhead.toNat ≤ 32784
     omega
   obtain ⟨D, hnode, hres⟩ := P0_10_1.chart_poles M F H hH
   obtain ⟨Crt⟩ := crt_lift D
@@ -1433,7 +1433,7 @@ theorem proof : P0_10_1.c1 := by
   intro h hlo hhi D Crt word s W
   have hpos : 0 < h := by omega
   have hcap : P0.heightCap < K1.p := by
-    change 32766 < 2130706433
+    change 32784 < 2130706433
     decide
   obtain ⟨E⟩ := regular_deformation hpos (hhi.trans_lt hcap) D Crt
   let A := contacted h word s W
@@ -1771,122 +1771,122 @@ set_option maxRecDepth 8000
 -- The four columns are width intercept, width slope, node count and pole count.
 -- Each check sums at most 32 grades, after the inner sums have been proved symbolically.
 
-private theorem bridgeFree0 : Certificate ⟨55, 76, 17, 1036⟩ 0 0 2481 3554 := by
-  apply certificate_of_stats (a := 10850264718) (b := 103704) (c := 21090) (d := 2630988)
+private theorem bridgeFree0 : Certificate ⟨55, 76, 17, 1062⟩ 0 0 2481 3554 := by
+  apply certificate_of_stats (a := 10849044048) (b := 103704) (c := 21090) (d := 2630988)
   · rw [← evaluate_eq]
-    change evaluate (rowStats ⟨55, 76, 17, 1036⟩ 0 0) 77 = (10850264718, 103704, 21090, 2630988)
-    refine checked_append (a := 64) (b := 13) (x := (10505361120, 70944, 21020, 2595420))
-      (y := (344903598, 32760, 70, 35568)) ?_ (by decide +kernel) (by decide) (by decide)
-    refine checked_append (a := 32) (b := 32) (x := (6259007328, 16224, 15153, 1799388))
-      (y := (4246353792, 54720, 5867, 796032)) ?_ (by decide +kernel) (by decide) (by decide)
+    change evaluate (rowStats ⟨55, 76, 17, 1062⟩ 0 0) 77 = (10849044048, 103704, 21090, 2630988)
+    refine checked_append (a := 64) (b := 13) (x := (10504372110, 70944, 21020, 2595420))
+      (y := (344671938, 32760, 70, 35568)) ?_ (by decide +kernel) (by decide) (by decide)
+    refine checked_append (a := 32) (b := 32) (x := (6258588558, 16224, 15153, 1799388))
+      (y := (4245783552, 54720, 5867, 796032)) ?_ (by decide +kernel) (by decide) (by decide)
     decide +kernel
   · decide
 
-private theorem bridgeMoving0 : Certificate ⟨138, 191, 39, 4990⟩ 0 1 2481 3554 := by
-  apply certificate_of_stats (a := 153530047720) (b := 930240) (c := 296540) (d := 91941420)
+private theorem bridgeMoving0 : Certificate ⟨138, 191, 39, 5235⟩ 0 1 2481 3554 := by
+  apply certificate_of_stats (a := 153512908120) (b := 930240) (c := 296540) (d := 91941420)
   · rw [← evaluate_eq]
-    change evaluate (rowStats ⟨138, 191, 39, 4990⟩ 0 1) 192 = (153530047720, 930240, 296540, 91941420)
-    refine checked_append (a := 160) (b := 32) (x := (148750514920, 580800, 296015, 90751020))
-      (y := (4779532800, 349440, 525, 1190400)) ?_ (by decide +kernel) (by decide) (by decide)
-    refine checked_append (a := 128) (b := 32) (x := (133233645800, 313280, 285815, 85382700))
-      (y := (15516869120, 267520, 10200, 5368320)) ?_ (by decide +kernel) (by decide) (by decide)
-    refine checked_append (a := 96) (b := 32) (x := (106979440360, 127680, 249760, 73215020))
-      (y := (26254205440, 185600, 36055, 12167680)) ?_ (by decide +kernel) (by decide) (by decide)
-    refine checked_append (a := 64) (b := 32) (x := (69987898600, 24000, 174880, 51626540))
-      (y := (36991541760, 103680, 74880, 21588480)) ?_ (by decide +kernel) (by decide) (by decide)
-    refine checked_append (a := 32) (b := 32) (x := (23402180384, 0, 61952, 18857520))
-      (y := (46585718216, 24000, 112928, 32769020)) ?_ (by decide +kernel) (by decide) (by decide)
+    change evaluate (rowStats ⟨138, 191, 39, 5235⟩ 0 1) 192 = (153512908120, 930240, 296540, 91941420)
+    refine checked_append (a := 160) (b := 32) (x := (148736554840, 580800, 296015, 90751020))
+      (y := (4776353280, 349440, 525, 1190400)) ?_ (by decide +kernel) (by decide) (by decide)
+    refine checked_append (a := 128) (b := 32) (x := (133222865240, 313280, 285815, 85382700))
+      (y := (15513689600, 267520, 10200, 5368320)) ?_ (by decide +kernel) (by decide) (by decide)
+    refine checked_append (a := 96) (b := 32) (x := (106971839320, 127680, 249760, 73215020))
+      (y := (26251025920, 185600, 36055, 12167680)) ?_ (by decide +kernel) (by decide) (by decide)
+    refine checked_append (a := 64) (b := 32) (x := (69983477080, 24000, 174880, 51626540))
+      (y := (36988362240, 103680, 74880, 21588480)) ?_ (by decide +kernel) (by decide) (by decide)
+    refine checked_append (a := 32) (b := 32) (x := (23400868832, 0, 61952, 18857520))
+      (y := (46582608248, 24000, 112928, 32769020)) ?_ (by decide +kernel) (by decide) (by decide)
     decide +kernel
   · decide
 
-private theorem bridgeFree5 : Certificate ⟨82, 113, 25, 1601⟩ 5 0 2481 3554 := by
-  apply certificate_of_stats (a := 34778956810) (b := 276952) (c := 67353) (d := 12410294)
+private theorem bridgeFree5 : Certificate ⟨82, 113, 25, 1643⟩ 5 0 2481 3554 := by
+  apply certificate_of_stats (a := 34775061646) (b := 276952) (c := 67353) (d := 12410294)
   · rw [← evaluate_eq]
-    change evaluate (rowStats ⟨82, 113, 25, 1601⟩ 5 0) 114 = (34778956810, 276952, 67353, 12410294)
-    refine checked_append (a := 96) (b := 18) (x := (33767246578, 188500, 67192, 12264434))
-      (y := (1011710232, 88452, 161, 145860)) ?_ (by decide +kernel) (by decide) (by decide)
-    refine checked_append (a := 64) (b := 32) (x := (26516097010, 72852, 60016, 10562994))
-      (y := (7251149568, 115648, 7176, 1701440)) ?_ (by decide +kernel) (by decide) (by decide)
-    refine checked_append (a := 32) (b := 32) (x := (12285678834, 10452, 31278, 5560178))
-      (y := (14230418176, 62400, 28738, 5002816)) ?_ (by decide +kernel) (by decide) (by decide)
+    change evaluate (rowStats ⟨82, 113, 25, 1643⟩ 5 0) 114 = (34775061646, 276952, 67353, 12410294)
+    refine checked_append (a := 96) (b := 18) (x := (33764042182, 188500, 67192, 12264434))
+      (y := (1011019464, 88452, 161, 145860)) ?_ (by decide +kernel) (by decide) (by decide)
+    refine checked_append (a := 64) (b := 32) (x := (26514120646, 72852, 60016, 10562994))
+      (y := (7249921536, 115648, 7176, 1701440)) ?_ (by decide +kernel) (by decide) (by decide)
+    refine checked_append (a := 32) (b := 32) (x := (12284930502, 10452, 31278, 5560178))
+      (y := (14229190144, 62400, 28738, 5002816)) ?_ (by decide +kernel) (by decide) (by decide)
     decide +kernel
   · decide
 
-private theorem bridgeMoving5 : Certificate ⟨203, 282, 58, 7726⟩ 5 1 2481 3554 := by
-  apply certificate_of_stats (a := 487865104484) (b := 2673880) (c := 941050) (d := 435164058)
+private theorem bridgeMoving5 : Certificate ⟨203, 282, 58, 8124⟩ 5 1 2481 3554 := by
+  apply certificate_of_stats (a := 487810345640) (b := 2673880) (c := 941050) (d := 435164058)
   · rw [← evaluate_eq]
-    change evaluate (rowStats ⟨203, 282, 58, 7726⟩ 5 1) 283 = (487865104484, 2673880, 941050, 435164058)
-    refine checked_append (a := 256) (b := 27) (x := (483640529018, 2033494, 941028, 433597077))
-      (y := (4224575466, 640386, 22, 1566981)) ?_ (by decide +kernel) (by decide) (by decide)
-    refine checked_append (a := 224) (b := 32) (x := (464033363930, 1385910, 936300, 425372005))
-      (y := (19607165088, 647584, 4728, 8225072)) ?_ (by decide +kernel) (by decide) (by decide)
-    refine checked_append (a := 192) (b := 32) (x := (428588627770, 859158, 911860, 406574133))
-      (y := (35444736160, 526752, 24440, 18797872)) ?_ (by decide +kernel) (by decide) (by decide)
-    refine checked_append (a := 160) (b := 32) (x := (377306320538, 453238, 851324, 373336837))
-      (y := (51282307232, 405920, 60536, 33237296)) ?_ (by decide +kernel) (by decide) (by decide)
-    refine checked_append (a := 128) (b := 32) (x := (310186442234, 168150, 738680, 321793493))
-      (y := (67119878304, 285088, 112644, 51543344)) ?_ (by decide +kernel) (by decide) (by decide)
-    refine checked_append (a := 96) (b := 32) (x := (227228992858, 3894, 565928, 248077477))
-      (y := (82957449376, 164256, 172752, 73716016)) ?_ (by decide +kernel) (by decide) (by decide)
-    refine checked_append (a := 64) (b := 32) (x := (128433972410, -39530, 332760, 148322165))
-      (y := (98795020448, 43424, 233168, 99755312)) ?_ (by decide +kernel) (by decide) (by decide)
-    refine checked_append (a := 32) (b := 32) (x := (35772275264, -10560, 96272, 44093808))
-      (y := (92661697146, -28970, 236488, 104228357)) ?_ (by decide +kernel) (by decide) (by decide)
+    change evaluate (rowStats ⟨203, 282, 58, 8124⟩ 5 1) 283 = (487810345640, 2673880, 941050, 435164058)
+    refine checked_append (a := 256) (b := 27) (x := (483591590996, 2033494, 941028, 433597077))
+      (y := (4218754644, 640386, 22, 1566981)) ?_ (by decide +kernel) (by decide) (by decide)
+    refine checked_append (a := 224) (b := 32) (x := (463991324660, 1385910, 936300, 425372005))
+      (y := (19600266336, 647584, 4728, 8225072)) ?_ (by decide +kernel) (by decide) (by decide)
+    refine checked_append (a := 192) (b := 32) (x := (428553487252, 859158, 911860, 406574133))
+      (y := (35437837408, 526752, 24440, 18797872)) ?_ (by decide +kernel) (by decide) (by decide)
+    refine checked_append (a := 160) (b := 32) (x := (377278078772, 453238, 851324, 373336837))
+      (y := (51275408480, 405920, 60536, 33237296)) ?_ (by decide +kernel) (by decide) (by decide)
+    refine checked_append (a := 128) (b := 32) (x := (310165099220, 168150, 738680, 321793493))
+      (y := (67112979552, 285088, 112644, 51543344)) ?_ (by decide +kernel) (by decide) (by decide)
+    refine checked_append (a := 96) (b := 32) (x := (227214548596, 3894, 565928, 248077477))
+      (y := (82950550624, 164256, 172752, 73716016)) ?_ (by decide +kernel) (by decide) (by decide)
+    refine checked_append (a := 64) (b := 32) (x := (128426426900, -39530, 332760, 148322165))
+      (y := (98788121696, 43424, 233168, 99755312)) ?_ (by decide +kernel) (by decide) (by decide)
+    refine checked_append (a := 32) (b := 32) (x := (35770345952, -10560, 96272, 44093808))
+      (y := (92656080948, -28970, 236488, 104228357)) ?_ (by decide +kernel) (by decide) (by decide)
     decide +kernel
   · decide
 
-private theorem laterFree0 : Certificate ⟨34, 47, 10, 515⟩ 0 0 3555 32766 := by
-  apply certificate_of_stats (a := 2587099592) (b := 24486) (c := 5060) (d := 385990)
+private theorem laterFree0 : Certificate ⟨34, 47, 10, 522⟩ 0 0 3555 32784 := by
+  apply certificate_of_stats (a := 2586810116) (b := 24486) (c := 5060) (d := 385990)
   · rw [← evaluate_eq]
-    change evaluate (rowStats ⟨34, 47, 10, 515⟩ 0 0) 48 = (2587099592, 24486, 5060, 385990)
-    refine checked_append (a := 32) (b := 16) (x := (2252671960, 10582, 4857, 359150))
-      (y := (334427632, 13904, 203, 26840)) ?_ (by decide +kernel) (by decide) (by decide)
+    change evaluate (rowStats ⟨34, 47, 10, 522⟩ 0 0) 48 = (2586810116, 24486, 5060, 385990)
+    refine checked_append (a := 32) (b := 16) (x := (2252490196, 10582, 4857, 359150))
+      (y := (334319920, 13904, 203, 26840)) ?_ (by decide +kernel) (by decide) (by decide)
     decide +kernel
   · decide
 
-private theorem laterMoving0 : Certificate ⟨67, 93, 18, 1857⟩ 0 1 3555 32766 := by
-  apply certificate_of_stats (a := 17484173540) (b := 108300) (c := 33934) (d := 5095325)
+private theorem laterMoving0 : Certificate ⟨67, 93, 18, 1904⟩ 0 1 3555 32784 := by
+  apply certificate_of_stats (a := 17482225850) (b := 108300) (c := 33934) (d := 5095325)
   · rw [← evaluate_eq]
-    change evaluate (rowStats ⟨67, 93, 18, 1857⟩ 0 1) 94 = (17484173540, 108300, 33934, 5095325)
-    refine checked_append (a := 64) (b := 30) (x := (15448732610, 39330, 32988, 4784010))
-      (y := (2035440930, 68970, 946, 311315)) ?_ (by decide +kernel) (by decide) (by decide)
-    refine checked_append (a := 32) (b := 32) (x := (8336743202, 3458, 20824, 2975514))
-      (y := (7111989408, 35872, 12164, 1808496)) ?_ (by decide +kernel) (by decide) (by decide)
+    change evaluate (rowStats ⟨67, 93, 18, 1904⟩ 0 1) 94 = (17482225850, 108300, 33934, 5095325)
+    refine checked_append (a := 64) (b := 30) (x := (15447472340, 39330, 32988, 4784010))
+      (y := (2034753510, 68970, 946, 311315)) ?_ (by decide +kernel) (by decide) (by decide)
+    refine checked_append (a := 32) (b := 32) (x := (8336216180, 3458, 20824, 2975514))
+      (y := (7111256160, 35872, 12164, 1808496)) ?_ (by decide +kernel) (by decide) (by decide)
     decide +kernel
   · decide
 
-private theorem laterFree5 : Certificate ⟨58, 80, 17, 940⟩ 5 0 3555 32766 := by
-  apply certificate_of_stats (a := 12207057108) (b := 88908) (c := 23709) (d := 3071496)
+private theorem laterFree5 : Certificate ⟨58, 80, 17, 954⟩ 5 0 3555 32784 := by
+  apply certificate_of_stats (a := 12205694688) (b := 88908) (c := 23709) (d := 3071496)
   · rw [← evaluate_eq]
-    change evaluate (rowStats ⟨58, 80, 17, 940⟩ 5 0) 81 = (12207057108, 88908, 23709, 3071496)
-    refine checked_append (a := 64) (b := 17) (x := (11585581818, 50964, 23548, 3002952))
-      (y := (621475290, 37944, 161, 68544)) ?_ (by decide +kernel) (by decide) (by decide)
-    refine checked_append (a := 32) (b := 32) (x := (6716398074, 7764, 16422, 2027208))
-      (y := (4869183744, 43200, 7126, 975744)) ?_ (by decide +kernel) (by decide) (by decide)
+    change evaluate (rowStats ⟨58, 80, 17, 954⟩ 5 0) 81 = (12205694688, 88908, 23709, 3071496)
+    refine checked_append (a := 64) (b := 17) (x := (11584538862, 50964, 23548, 3002952))
+      (y := (621155826, 37944, 161, 68544)) ?_ (by decide +kernel) (by decide) (by decide)
+    refine checked_append (a := 32) (b := 32) (x := (6715956462, 7764, 16422, 2027208))
+      (y := (4868582400, 43200, 7126, 975744)) ?_ (by decide +kernel) (by decide) (by decide)
     decide +kernel
   · decide
 
-private theorem laterMoving5 : Certificate ⟨124, 172, 35, 3138⟩ 5 1 3555 32766 := by
-  apply certificate_of_stats (a := 111662511672) (b := 568656) (c := 215790) (d := 60491790)
+private theorem laterMoving5 : Certificate ⟨124, 172, 35, 3211⟩ 5 1 3555 32784 := by
+  apply certificate_of_stats (a := 111650016936) (b := 568656) (c := 215790) (d := 60491790)
   · rw [← evaluate_eq]
-    change evaluate (rowStats ⟨124, 172, 35, 3138⟩ 5 1) 173 = (111662511672, 568656, 215790, 60491790)
-    refine checked_append (a := 160) (b := 13) (x := (111111077100, 455400, 215790, 60370110))
-      (y := (551434572, 113256, 0, 121680)) ?_ (by decide +kernel) (by decide) (by decide)
-    refine checked_append (a := 128) (b := 32) (x := (102958979052, 228456, 212934, 58187070))
-      (y := (8152098048, 226944, 2856, 2183040)) ?_ (by decide +kernel) (by decide) (by decide)
-    refine checked_append (a := 96) (b := 32) (x := (85143278316, 75240, 193438, 51432894))
-      (y := (17815700736, 153216, 19496, 6754176)) ?_ (by decide +kernel) (by decide) (by decide)
-    refine checked_append (a := 64) (b := 32) (x := (57663974892, -4248, 142140, 37748286))
-      (y := (27479303424, 79488, 51298, 13684608)) ?_ (by decide +kernel) (by decide) (by decide)
-    refine checked_append (a := 32) (b := 32) (x := (20737852256, -10560, 54560, 14919696))
-      (y := (36926122636, 6312, 87580, 22828590)) ?_ (by decide +kernel) (by decide) (by decide)
+    change evaluate (rowStats ⟨124, 172, 35, 3211⟩ 5 1) 173 = (111650016936, 568656, 215790, 60491790)
+    refine checked_append (a := 160) (b := 13) (x := (111099626940, 455400, 215790, 60370110))
+      (y := (550389996, 113256, 0, 121680)) ?_ (by decide +kernel) (by decide) (by decide)
+    refine checked_append (a := 128) (b := 32) (x := (102950100156, 228456, 212934, 58187070))
+      (y := (8149526784, 226944, 2856, 2183040)) ?_ (by decide +kernel) (by decide) (by decide)
+    refine checked_append (a := 96) (b := 32) (x := (85136970684, 75240, 193438, 51432894))
+      (y := (17813129472, 153216, 19496, 6754176)) ?_ (by decide +kernel) (by decide) (by decide)
+    refine checked_append (a := 64) (b := 32) (x := (57660238524, -4248, 142140, 37748286))
+      (y := (27476732160, 79488, 51298, 13684608)) ?_ (by decide +kernel) (by decide) (by decide)
+    refine checked_append (a := 32) (b := 32) (x := (20736673760, -10560, 54560, 14919696))
+      (y := (36923564764, 6312, 87580, 22828590)) ?_ (by decide +kernel) (by decide) (by decide)
     decide +kernel
   · decide
 
 end
 
 /-- The reserves zero and five have sufficient source rank in both schedules. -/
-theorem stage_tests {w : ℤ} (hlo : 2481 ≤ w) (hhi : w ≤ 32766) (i : Fin 2) :
+theorem stage_tests {w : ℤ} (hlo : 2481 ≤ w) (hhi : w ≤ 32784) (i : Fin 2) :
     let h := w.toNat
     let r := reserve i
     let s := freeShape w i
@@ -1908,7 +1908,7 @@ theorem stage_tests {w : ℤ} (hlo : 2481 ≤ w) (hhi : w ≤ 32766) (i : Fin 2)
     · exact ⟨by simpa only [zero_mul, add_zero] using test hl hu hh bridgeFree5,
         by simpa only [one_mul] using test hl hu hh bridgeMoving5, by decide⟩
   · have hl : 3555 ≤ w.toNat := by omega
-    have hu : w.toNat ≤ 32766 := by omega
+    have hu : w.toNat ≤ 32784 := by omega
     simp only [freeShape, movingShape, ite_eq_right hb]
     fin_cases i <;> simp only [reserve, Matrix.cons_val_zero', Matrix.cons_val_succ']
     · exact ⟨by simpa only [zero_mul, add_zero] using test hl hu hh laterFree0,
@@ -2023,7 +2023,7 @@ theorem proof : P0_10.c2 := by
   classical
   intro u del M Γ F hlo hhi rows src
   have hlo' : 2481 ≤ M.overhead := hlo
-  have hhi' : M.overhead ≤ 32766 := hhi
+  have hhi' : M.overhead ≤ 32784 := hhi
   have hh : 0 < M.overhead.toNat := by omega
   have hpairs (i : Fin 2) : Nonempty (BufferedPair M.overhead rows i) := by
     let s := freeShape M.overhead i
@@ -2507,29 +2507,29 @@ private theorem bridgeDebit :
   exact Row.eq_of_check rfl
 
 private theorem bridgeSupport :
-    scan (diagonalRow bridgeShape 189 2481) 0 444 = ⟨true, 25957940475139738031870, 124970354399992208⟩ := by
-  refine joinRows 0 432 12 ⟨true, 25956355514725079243482, 124970705913706916⟩ ⟨true, 1584960414658788388, -351513714708⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 408 24 ⟨true, 25912663744849463659290, 124959697655251226⟩ ⟨true, 43691769875615584192, 11008258455690⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 384 24 ⟨true, 25743998542573052284802, 124823375994111674⟩ ⟨true, 168665202276411374488, 136321661139552⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 360 24 ⟨true, 25361751804915124304988, 124294585171633412⟩ ⟨true, 382246737657927979814, 528790822478262⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 336 24 ⟨true, 24673267481072748791212, 122946963924408108⟩ ⟨true, 688484323842375513776, 1347621247225304⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 312 24 ⟨true, 23581756488973371365732, 120192548111634900⟩ ⟨true, 1091510992099377425480, 2754415812773208⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 288 24 ⟨true, 21988947300258625296984, 115296777387593208⟩ ⟨true, 1592809188714746068748, 4895770724041692⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 264 24 ⟨true, 20122933575027534581704, 108736418477811696⟩ ⟨true, 1866013725231090715280, 6560358909781512⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 240 24 ⟨true, 18178678855715165353016, 101158647342005352⟩ ⟨true, 1944254719312369228688, 7577771135806344⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 216 24 ⟨true, 16154576855085402376104, 92528673769157472⟩ ⟨true, 2024102000629762976912, 8629973572847880⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 192 24 ⟨true, 14049021285902130416152, 82811707548251352⟩ ⟨true, 2105555569183271959952, 9716966220906120⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 168 24 ⟨true, 11860405860929234238344, 71972958468270288⟩ ⟨true, 2188615424972896177808, 10838749079981064⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 144 24 ⟨true, 9588172059555374264112, 59982370338903264⟩ ⟨true, 2272233801373859974232, 11990588129367024⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 120 24 ⟨true, 7283250953427744702792, 47061014852651184⟩ ⟨true, 2304921106127629561320, 12921355486252080⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 96 24 ⟨true, 5072651634738317364000, 33892876812271680⟩ ⟨true, 2210599318689427338792, 13168138040379504⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 72 24 ⟨true, 3093879272931619349688, 21385672118890128⟩ ⟨true, 1978772361806698014312, 12507204693381552⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 48 24 ⟨true, 1489500219837372147216, 10651736040638112⟩ ⟨true, 1604379053094247202472, 10733936078252016⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 24 24 ⟨true, 407226449831976953640, 3012005273140080⟩ ⟨true, 1082273770005395193576, 7639730767498032⟩ ?_ (Row.eq_of_check rfl) rfl
+    scan (diagonalRow bridgeShape 196 2481) 0 438 = ⟨true, 25957889195403846712776, 126109399527048236⟩ := by
+  refine joinRows 0 432 6 ⟨true, 25957631318705967050760, 126109444782646712⟩ ⟨true, 257876697879662016, -45255598476⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 408 24 ⟨true, 25928387355147118019608, 126101073301381344⟩ ⟨true, 29243963558849031152, 8371481265368⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 384 24 ⟨true, 25785844725168263054612, 125983065216083464⟩ ⟨true, 142542629978854964996, 118008085297880⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 360 24 ⟨true, 25435667762250677545612, 125492624275383204⟩ ⟨true, 350176962917585509000, 490440940700260⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 336 24 ⟨true, 24779187810025710746384, 124196800371850220⟩ ⟨true, 656479952224966799228, 1295823903532984⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 312 24 ⟨true, 23713311709027019624416, 121488144003564516⟩ ⟨true, 1065876100998691121968, 2708656368285704⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 288 24 ⟨true, 22133267318168527948840, 116602603525559024⟩ ⟨true, 1580044390858491675576, 4885540478005492⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 264 24 ⟨true, 20273257669075812178280, 110029361559685280⟩ ⟨true, 1860009649092715770560, 6573241965873744⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 240 24 ⟨true, 18335129203991499987624, 102439588872411728⟩ ⟨true, 1938128465084312190656, 7589772687273552⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 216 24 ⟨true, 16317275635679476142056, 93798495252721664⟩ ⟨true, 2017853568312023845568, 8641093619690064⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 192 24 ⟨true, 14218090676903625406760, 84071290489598384⟩ ⟨true, 2099184958775850735296, 9727204763123280⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 168 24 ⟨true, 12035968040427832546920, 73223184372025184⟩ ⟨true, 2182122636475792859840, 10848106117573200⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 144 24 ⟨true, 9769359278801074680672, 61219650346061424⟩ ⟨true, 2266608761626757866248, 12003534025963760⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 120 24 ⟨true, 7451009386527803934992, 48193993042178984⟩ ⟨true, 2318349892273270745680, 13025657303882440⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 96 24 ⟨true, 5207516554163381996608, 34814553075528352⟩ ⟨true, 2243492832364421938384, 13379439966650632⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 72 24 ⟨true, 3185680665392362890480, 22027577766469464⟩ ⟨true, 2021835888771019106128, 12786975309058888⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 48 24 ⟨true, 1537724379739594783520, 10998673906683344⟩ ⟨true, 1647956285652768106960, 11028903859786120⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 24 24 ⟨true, 421383943388607493840, 3117090249462280⟩ ⟨true, 1116340436350987289680, 7881583657221064⟩ ?_ (Row.eq_of_check rfl) rfl
   exact Row.eq_of_check rfl
 
-theorem bridge_test : PositiveSupport bridgeShape 189 2481 :=
-  certify bridgeShape 189 2481 bridgeSupport bridgeDebit (by decide) (by decide)
+theorem bridge_test : PositiveSupport bridgeShape 196 2481 :=
+  certify bridgeShape 196 2481 bridgeSupport bridgeDebit (by decide) (by decide)
 
 private theorem laterDebit :
     scan (debitRow 582 809 165) 0 810 = ⟨true, 21702923, 28808066620⟩ := by
@@ -2548,61 +2548,61 @@ private theorem laterDebit :
   exact Row.eq_of_check rfl
 
 private theorem laterLowSupport :
-    scan (diagonalRow laterLowShape 97 3555) 0 287 = ⟨true, 797895904171546067410, 3456522162798708⟩ := by
-  refine joinRows 0 264 23 ⟨true, 796844516469855656410, 3457928407960260⟩ ⟨true, 1051387701690411000, -1406245161552⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 240 24 ⟨true, 788855263311295716442, 3461223564720876⟩ ⟨true, 7989253158559939968, -3295156760616⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 216 24 ⟨true, 766198299127162293382, 3447781384438296⟩ ⟨true, 22656964184133423060, 13442180282580⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 192 24 ⟨true, 720501174055806240082, 3375525861066276⟩ ⟨true, 45697125071356053300, 72255523372020⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 168 24 ⟨true, 642725529929073111742, 3177599358539280⟩ ⟨true, 77775644126733128340, 197926502526996⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 144 24 ⟨true, 538525416562899005634, 2828046007154004⟩ ⟨true, 104200113366174106108, 349553351385276⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 120 24 ⟨true, 426454164372606804412, 2379132284513556⟩ ⟨true, 112071252190292201222, 448913722640448⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 96 24 ⟨true, 308597386006073125232, 1833861808748496⟩ ⟨true, 117856778366533679180, 545270475765060⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 72 24 ⟨true, 194619537290229938052, 1233034849495980⟩ ⟨true, 113977848715843187180, 600826959252516⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 48 24 ⟨true, 96519258808915027960, 651325610649000⟩ ⟨true, 98100278481314910092, 581709238846980⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 24 24 ⟨true, 27101322518912923340, 194407097230020⟩ ⟨true, 69417936290002104620, 456918513418980⟩ ?_ (Row.eq_of_check rfl) rfl
+    scan (diagonalRow laterLowShape 99 3555) 0 285 = ⟨true, 797905824024860200860, 3484128350592800⟩ := by
+  refine joinRows 0 264 21 ⟨true, 797124665781600819068, 3485145104929734⟩ ⟨true, 781158243259381792, -1016754336934⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 240 24 ⟨true, 789900001580763114118, 3488000481296034⟩ ⟨true, 7224664200837704950, -2855376366300⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 216 24 ⟨true, 768247725866143641554, 3474859013252634⟩ ⟨true, 21652275714619472564, 13141468043400⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 192 24 ⟨true, 723513942681958988286, 3403522809489618⟩ ⟨true, 44733783184184653268, 71336203763016⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 168 24 ⟨true, 646353517850653476106, 3206069189670858⟩ ⟨true, 77160424831305512180, 197453619818760⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 144 24 ⟨true, 542420528223427045988, 2855938149788034⟩ ⟨true, 103932989627226430118, 350131039882824⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 120 24 ⟨true, 430621763733470971548, 2406498023648394⟩ ⟨true, 111798764489956074440, 449440126139640⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 96 24 ⟨true, 312534384705164091888, 1858911223460544⟩ ⟨true, 118087379028306879660, 547586800187850⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 72 24 ⟨true, 197579515440895351236, 1252348075992816⟩ ⟨true, 114954869264268740652, 606563147467728⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 48 24 ⟨true, 98184982174181994168, 662713814990304⟩ ⟨true, 99394533266713357068, 589634261002512⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 24 24 ⟨true, 27616142964719226060, 198124725736080⟩ ⟨true, 70568839209462768108, 464589089254224⟩ ?_ (Row.eq_of_check rfl) rfl
   exact Row.eq_of_check rfl
 
-theorem laterLow_test : PositiveSupport laterLowShape 97 3555 :=
-  certify laterLowShape 97 3555 laterLowSupport laterDebit (by decide) (by decide)
+theorem laterLow_test : PositiveSupport laterLowShape 99 3555 :=
+  certify laterLowShape 99 3555 laterLowSupport laterDebit (by decide) (by decide)
 
 private theorem laterMidSupport :
-    scan (diagonalRow laterMidShape 47 8250) 0 340 = ⟨true, 392009263055330854820, 1385705687986440⟩ := by
-  refine joinRows 0 336 4 ⟨true, 392007744901402193642, 1385712856610990⟩ ⟨true, 1518153928661178, -7168624550⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 312 24 ⟨true, 391570108698228860862, 1387381275584430⟩ ⟨true, 437636203173332780, -1668418973440⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 288 24 ⟨true, 389170125749732484270, 1394067365784490⟩ ⟨true, 2399982948496376592, -6686090200060⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 264 24 ⟨true, 382972069993288276830, 1404707705047430⟩ ⟨true, 6198055756444207440, -10640339262940⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 240 24 ⟨true, 370963150425597067470, 1412788041130050⟩ ⟨true, 12008919567691209360, -8080336082620⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 216 24 ⟨true, 350946868662928804350, 1406097046793950⟩ ⟨true, 20016281762668263120, 6690994336100⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 192 24 ⟨true, 320536376501533289454, 1366480067695706⟩ ⟨true, 30410492161395514896, 39616979098244⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 168 24 ⟨true, 277155794027773367784, 1269602749801232⟩ ⟨true, 43380582473759921670, 96877317894474⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 144 24 ⟨true, 224092678934450292912, 1108400313484536⟩ ⟨true, 53063115093323074872, 161202436316696⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 120 24 ⟨true, 170385640655322933192, 907961575248596⟩ ⟨true, 53707038279127359720, 200438738235940⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 96 24 ⟨true, 118923203419642186272, 680603018854096⟩ ⟨true, 51462437235680746920, 227358556394500⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 72 24 ⟨true, 72754747906795202232, 445586608260588⟩ ⟨true, 46168455512846984040, 235016410593508⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 48 24 ⟨true, 35159859253724869776, 229595147191592⟩ ⟨true, 37594888653070332456, 215991461068996⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 24 24 ⟨true, 9654969494519081640, 66978531244420⟩ ⟨true, 25504889759205788136, 162616615947172⟩ ?_ (Row.eq_of_check rfl) rfl
+    scan (diagonalRow laterMidShape 48 8250) 0 337 = ⟨true, 392129919242588635908, 1405508337842676⟩ := by
+  refine joinRows 0 336 1 ⟨true, 392129916948253367088, 1405508348594256⟩ ⟨true, 2294335268820, -10751580⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 312 24 ⟨true, 391827570673276761630, 1406646177691110⟩ ⟨true, 302346274976605458, -1137829096854⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 288 24 ⟨true, 389751000881278764846, 1412390396585838⟩ ⟨true, 2076569791997996784, -5744218894728⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 264 24 ⟨true, 384010577334982589886, 1422156131015670⟩ ⟨true, 5740423546296174960, -9765734429832⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 240 24 ⟨true, 372532957631958513102, 1429701109682046⟩ ⟨true, 11477619703024076784, -7544978666376⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 216 24 ⟨true, 353054159101013412702, 1422868822310406⟩ ⟨true, 19478798530945100400, 6832287371640⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 192 24 ⟨true, 323112630698608302702, 1383331677250446⟩ ⟨true, 29941528402405110000, 39537145059960⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 168 24 ⟨true, 280042943570992321104, 1286334953323392⟩ ⟨true, 43069687127615981598, 96996723927054⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 144 24 ⟨true, 226918894987317448512, 1124217664785216⟩ ⟨true, 53124048583674872592, 162117288538176⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 120 24 ⟨true, 172858167640809833952, 922021903409376⟩ ⟨true, 54060727346507614560, 202195761375840⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 96 24 ⟨true, 120846571657683338112, 691990075003776⟩ ⟨true, 52011595983126495840, 230031828405600⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 72 24 ⟨true, 74038100793533298720, 453585920463648⟩ ⟨true, 46808470864150039392, 238404154540128⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 48 24 ⟨true, 35825885797795713984, 233985316458432⟩ ⟨true, 38212214995737584736, 219600604005216⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 24 24 ⟨true, 9849122517329708640, 68333117831520⟩ ⟨true, 25976763280466005344, 165652198626912⟩ ?_ (Row.eq_of_check rfl) rfl
   exact Row.eq_of_check rfl
 
-theorem laterMid_test : PositiveSupport laterMidShape 47 8250 :=
-  certify laterMidShape 47 8250 laterMidSupport laterDebit (by decide) (by decide)
+theorem laterMid_test : PositiveSupport laterMidShape 48 8250 :=
+  certify laterMidShape 48 8250 laterMidSupport laterDebit (by decide) (by decide)
 
 private theorem laterHighSupport :
-    scan (diagonalRow laterHighShape 36 24000) 0 368 = ⟨true, 323405295875036584320, 973169774482680⟩ := by
-  refine joinRows 0 360 8 ⟨true, 323399891663148871752, 973205869898256⟩ ⟨true, 5404211887712568, -36095415576⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 336 24 ⟨true, 323060964821074888992, 975084570528216⟩ ⟨true, 338926842073982760, -1878700629960⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 312 24 ⟨true, 321495833736810165432, 981787410777696⟩ ⟨true, 1565131084264723560, -6702840249480⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 288 24 ⟨true, 317626378349963722512, 993562509743016⟩ ⟨true, 3869455386846442920, -11775098965320⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 264 24 ⟨true, 310220390105100465192, 1007484805211568⟩ ⟨true, 7405988244863257320, -13922295468552⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 240 24 ⟨true, 297885399430340812800, 1017311579811960⟩ ⟨true, 12334990674759652392, -9826774600392⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 216 24 ⟨true, 279062503215960329880, 1013337987164160⟩ ⟨true, 18822896214380482920, 3973592647800⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 192 24 ⟨true, 252039575659629739356, 982258065260928⟩ ⟨true, 27022927556330590524, 31079921903232⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 168 24 ⟨true, 215605563295778841276, 907669241928288⟩ ⟨true, 36434012363850898080, 74588823332640⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 144 24 ⟨true, 173053469916418600368, 787221194129424⟩ ⟨true, 42552093379360240908, 120448047798864⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 120 24 ⟨true, 130842967928187540168, 640119748385304⟩ ⟨true, 42210501988231060200, 147101445744120⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 96 24 ⟨true, 90937978918279960608, 476186587235424⟩ ⟨true, 39904989009907579560, 163933161149880⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 72 24 ⟨true, 55460762606445949368, 309416444627688⟩ ⟨true, 35477216311834011240, 166770142607736⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 48 24 ⟨true, 26743219900083032976, 158277500467632⟩ ⟨true, 28717542706362916392, 151138944160056⟩ ?_ (Row.eq_of_check rfl) rfl
-  refine joinRows 0 24 24 ⟨true, 7333065415636545960, 45855854468280⟩ ⟨true, 19410154484446487016, 112421645999352⟩ ?_ (Row.eq_of_check rfl) rfl
+    scan (diagonalRow laterHighShape 36 24000) 0 368 = ⟨true, 323371618692462756480, 973169774482680⟩ := by
+  refine joinRows 0 360 8 ⟨true, 323366215278596077032, 973205869898256⟩ ⟨true, 5403413866679448, -36095415576⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 336 24 ⟨true, 323027336835625751712, 975084570528216⟩ ⟨true, 338878442970325320, -1878700629960⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 312 24 ⟨true, 321462420771201105432, 981787410777696⟩ ⟨true, 1564916064424646280, -6702840249480⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 288 24 ⟨true, 317593476281325686352, 993562509743016⟩ ⟨true, 3868944489875419080, -11775098965320⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 264 24 ⟨true, 310188428571447173448, 1007484805211568⟩ ⟨true, 7405047709878512904, -13922295468552⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 240 24 ⟨true, 297854946335057007360, 1017311579811960⟩ ⟨true, 12333482236390166088, -9826774600392⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 216 24 ⟨true, 279034269232290021240, 1013337987164160⟩ ⟨true, 18820677102766986120, 3973592647800⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 192 24 ⟨true, 252014416798504780836, 982258065260928⟩ ⟨true, 27019852433785240404, 31079921903232⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 168 24 ⟨true, 215584419161563120836, 907669241928288⟩ ⟨true, 36429997636941660000, 74588823332640⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 144 24 ⟨true, 173036856081420219888, 787221194129424⟩ ⟨true, 42547563080142900948, 120448047798864⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 120 24 ⟨true, 130830667930721752488, 640119748385304⟩ ⟨true, 42206188150698467400, 147101445744120⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 96 24 ⟨true, 90929605712540204448, 476186587235424⟩ ⟨true, 39901062218181548040, 163933161149880⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 72 24 ⟨true, 55455759349836911064, 309416444627688⟩ ⟨true, 35473846362703293384, 166770142607736⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 48 24 ⟨true, 26740855448732399184, 158277500467632⟩ ⟨true, 28714903901104511880, 151138944160056⟩ ?_ (Row.eq_of_check rfl) rfl
+  refine joinRows 0 24 24 ⟨true, 7332429819906756360, 45855854468280⟩ ⟨true, 19408425628825642824, 112421645999352⟩ ?_ (Row.eq_of_check rfl) rfl
   exact Row.eq_of_check rfl
 
 theorem laterHigh_test : PositiveSupport laterHighShape 36 24000 :=
@@ -2619,7 +2619,7 @@ namespace P0_10_5
 theorem proof : P0_10.c5 := by
   intro w hlo hhi
   change 2481 ≤ w at hlo
-  change w ≤ 32766 at hhi
+  change w ≤ 32784 at hhi
   have hw : w ≤ 131071 := by omega
   by_cases hb : w ≤ 3554
   · exact test_of_support w
