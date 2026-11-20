@@ -1684,8 +1684,8 @@ private theorem physical_widen {x x' : Shape} (hx : Widen x x') (vx : Admissible
     omega
   have surface := ceil_mono (surface_widen hp vp) 32
   have component := ceil_mono (Nat.mul_le_mul
-    (Nat.mul_le_mul_right bank.b (Nat.mul_le_mul_left (81889 + 2 * 46584) hx.1))
-    (chart_widen hp (taylorLength + 1)).1) 46584
+    (Nat.mul_le_mul_right bank.b (Nat.mul_le_mul_left (81898 + 2 * 46600) hx.1))
+    (chart_widen hp (taylorLength + 1)).1) 46600
   have curves := Nat.add_le_add
     (mixed_widen hp (Widen.refl bank) hextra hh vp bank_admissible vextra vh)
     (Nat.mul_le_mul (le_of_eq (congrArg (fun t => 2 * t) hx.2.2))
@@ -1695,12 +1695,12 @@ private theorem physical_widen {x x' : Shape} (hx : Widen x x') (vx : Admissible
     (Nat.mul_le_mul (le_of_eq (congrArg (fun t => 2 * t) hx.2.2))
       (mixed_widen hp hp hp hp vp vp vp vp))
   exact Nat.add_le_add (Nat.add_le_add (ceil_mono (Nat.add_le_add surface component) l)
-    (Nat.mul_le_mul_right bank.b (Nat.mul_le_mul_left (2 * 133671) hx.1)))
-    (ceil_mono (Nat.add_le_add (Nat.mul_le_mul_left 81889 curves)
-      (Nat.mul_le_mul_left (2 * 46584) points)) (32 * 46584))
+    (Nat.mul_le_mul_right bank.b (Nat.mul_le_mul_left (2 * 133646) hx.1)))
+    (ceil_mono (Nat.add_le_add (Nat.mul_le_mul_left 81898 curves)
+      (Nat.mul_le_mul_left (2 * 46600) points)) (32 * 46600))
 
 /-- Uniform cost per unit of the derivative-index budget. -/
-def rate : ℕ := 4114266963186215
+def rate : ℕ := 4112448315350269
 
 section
 set_option maxRecDepth 32768
@@ -1848,7 +1848,7 @@ open K1_13 K1_13_8
 private def potential (y : Shape) : ℕ := rate * (45 - y.j)
 
 theorem proof : K1_13_8.c3 := by
-  change Bellman start 185142013343379695
+  change Bellman start 185060174190762111
   refine ⟨potential, fun x => indexOrder x.j, by decide, ?_, ?_⟩
   · intro x _ _
     exact checked_order x
@@ -5632,8 +5632,8 @@ def hypersurfacePrice (x : Shape) : ℕ :=
   let big : Shape := ⟨35007, 12106, 0⟩
   let cut : Shape :=
     ⟨max (max h.b big.b) (max h.j (big.j + 1)), max h.j (big.j + 1), max 1 h.t⟩
-  ceilDiv (81889 * mixed32 p big cut h) (32 * 46584) +
-    ceilDiv (mixed32 p big cut p) 32 + 20 * p.b * h.b ^ 2 + 5 * 133671 * p.b * h.b + 1
+  ceilDiv (81898 * mixed32 p big cut h) (32 * 46600) +
+    ceilDiv (mixed32 p big cut p) 32 + 20 * p.b * h.b ^ 2 + 5 * 133646 * p.b * h.b + 1
 
 def singularPrice (x : Shape) : ℕ :=
   let p := x.chamber
@@ -5644,7 +5644,7 @@ def highCurvePrice (x : Shape) : ℕ :=
   let p := x.chamber
   let h := fatChart x
   let q : Shape := ⟨952630000, 322000000, 0⟩
-  ceilDiv (81889 * mixed32 p q q h + 46584 * mixed32 p q q p) (32 * 46584 * 293711590)
+  ceilDiv (81898 * mixed32 p q q h + 46600 * mixed32 p q q p) (32 * 46600 * 293711590)
 
 def isolatedPrice : ℕ :=
   let q : Shape := ⟨952630000, 322000000, 0⟩
@@ -5852,7 +5852,7 @@ structure FatTaylor (f : Row 4) where
     toGeneric (separant f) ∉ surface →
     (toGeneric test ∈ surface ↔ toGeneric (membershipTest f) ∈ surface)
   recovers : ∀ (L : Type) [Field L] [Algebra Geom L] (S : L[X]),
-    S.natDegree ≤ 133671 → evalTrajectory f S = 0 →
+    S.natDegree ≤ 133646 → evalTrajectory f S = 0 →
     evalTrajectory (separant f) S ≠ 0 →
     evalTrajectory denom S ≠ 0 ∧ evalTrajectory test S = 0 ∧
       ∀ i, evalTrajectory (numer i) S = evalTrajectory denom S * C (S.coeff i.val)

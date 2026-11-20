@@ -27,16 +27,16 @@ open scoped BigOperators
 
 def zeroShape : Shape := ⟨0, 0, 0⟩
 def fullCap : Shape := ⟨120, 48, 10⟩
-def need : ℕ := 25866424310967
-def layerCount : ℕ := 1 + (3000 * 180255 - 1) / 46587
+def need : ℕ := 26141261914202
+def layerCount : ℕ := 1 + (3000 * 180246 - 1) / 46603
 
 /-- The additive inequalities on a nonempty product. -/
 def Valid (a : Shape) : Prop := 1 ≤ a.t ∧ 3 * a.t ≤ a.j ∧ a.j ≤ 3 * a.b
 
 /-- The finite region for a nonempty retained product. -/
 def RetainedBox (a : Shape) : Prop :=
-  a.b ≤ 20 ∧ a.j ≤ 6 ∧
-  (4 ≤ a.j → a.b ≤ 17) ∧ (5 ≤ a.j → a.b ≤ 13) ∧ (6 ≤ a.j → a.b ≤ 7)
+  a.b ≤ 19 ∧ a.j ≤ 6 ∧
+  (4 ≤ a.j → a.b ≤ 17) ∧ (5 ≤ a.j → a.b ≤ 13) ∧ (6 ≤ a.j → a.b ≤ 6)
 
 instance (a : Shape) : Decidable (Valid a) := by unfold Valid; infer_instance
 instance (a : Shape) : Decidable (RetainedBox a) := by unfold RetainedBox; infer_instance
@@ -196,27 +196,27 @@ section
 set_option maxRecDepth 8192
 set_option maxHeartbeats 0
 
-private theorem aux8_exclude_21_3 : zeroMass 21 3 < need := by decide
+private theorem aux8_exclude_20_3 : zeroMass 20 3 < need := by decide
 
 private theorem aux8_exclude_18_4 : zeroMass 18 4 < need := by decide
 
 private theorem aux8_exclude_14_5 : zeroMass 14 5 < need := by decide
 
-private theorem aux8_exclude_8_6 : zeroMass 8 6 < need := by decide
+private theorem aux8_exclude_7_6 : zeroMass 7 6 < need := by decide
 
 private theorem aux8_exclude_3_7 : zeroMass 3 7 < need := by decide
 
 end
 
 theorem retained_exclusions :
-    zeroMass 21 3 < need ∧ zeroMass 18 4 < need ∧ zeroMass 14 5 < need ∧
-    zeroMass 8 6 < need ∧ zeroMass 3 7 < need :=
-  ⟨aux8_exclude_21_3, aux8_exclude_18_4, aux8_exclude_14_5,
-    aux8_exclude_8_6, aux8_exclude_3_7⟩
+    zeroMass 20 3 < need ∧ zeroMass 18 4 < need ∧ zeroMass 14 5 < need ∧
+    zeroMass 7 6 < need ∧ zeroMass 3 7 < need :=
+  ⟨aux8_exclude_20_3, aux8_exclude_18_4, aux8_exclude_14_5,
+    aux8_exclude_7_6, aux8_exclude_3_7⟩
 
 theorem corner_order_test :
-    availableMass zeroShape fullCap 56 < need ∧
-      need ≤ availableMass zeroShape fullCap 57 := by decide
+    availableMass zeroShape fullCap 57 < need ∧
+      need ≤ availableMass zeroShape fullCap 58 := by decide
 
 theorem retained_bound (hcount : ∀ b j, remaining b j = fastRemaining b j)
     {r : Shape} (hr : Valid r)
@@ -247,16 +247,16 @@ theorem retainedBox_down {a r : Shape} (h : InBox a r) (hr : RetainedBox r) : Re
 set_option maxRecDepth 8192 in
 set_option maxHeartbeats 0 in
 private theorem retained_prices_finite :
-    ∀ (b : Fin 21) (j : Fin 7) (t : Fin 3),
+    ∀ (b : Fin 20) (j : Fin 7) (t : Fin 3),
       let a : Shape := ⟨b.val, j.val, t.val⟩
       Valid a → RetainedBox a →
-      fatPrice a ≤ (if a.t = 1 then 37000000000000000 else 55200000000000000) * a.t :=
+      fatPrice a ≤ (if a.t = 1 then 37000000000000000 else 48500000000000000) * a.t :=
   by decide
 
 theorem retained_price {a : Shape} (ha : Valid a) (hb : RetainedBox a) :
-    fatPrice a ≤ (if a.t = 1 then 37000000000000000 else 55200000000000000) * a.t := by
+    fatPrice a ≤ (if a.t = 1 then 37000000000000000 else 48500000000000000) * a.t := by
   obtain ⟨b, j, t⟩ := a
-  have hb' : b ≤ 20 := hb.1
+  have hb' : b ≤ 19 := hb.1
   have hj' : j ≤ 6 := hb.2.1
   have ht : 3 * t ≤ j := ha.2.1
   exact retained_prices_finite ⟨b, by omega⟩ ⟨j, by omega⟩ ⟨t, by omega⟩ ha hb
@@ -350,13 +350,13 @@ open scoped BigOperators
 def c1 : Prop := ∀ b j, remaining b j = fastRemaining b j
 
 /-- The positive phase with an empty retained product. -/
-def c2 : Prop := Bellman zeroShape 225965362921901696
+def c2 : Prop := Bellman zeroShape 222060174190762111
 
 /-- The positive phase when the retained product has top degree one. -/
-def c3 : Prop := Bellman ⟨1, 3, 1⟩ 185142013343379695
+def c3 : Prop := Bellman ⟨1, 3, 1⟩ 185060174190762111
 
 /-- The positive phase when the retained product has top degree two. -/
-def c4 : Prop := Bellman ⟨2, 6, 2⟩ 115565362921901696
+def c4 : Prop := Bellman ⟨2, 6, 2⟩ 125060174190762111
 
 private def shapeSum {ι : Type*} (a : ι → Shape) (s : Finset ι) : Shape :=
   ⟨∑ i ∈ s, (a i).b, ∑ i ∈ s, (a i).j, ∑ i ∈ s, (a i).t⟩
@@ -433,10 +433,10 @@ private theorem retained_cost {ι : Type*} {a : ι → Shape} {cost : ι → ℕ
     {z : Finset ι} (ha : ∀ i, Valid (a i)) (hbox : RetainedBox (shapeSum a z))
     (hfat : ∀ i, FatEligible (a i) → cost i ≤ fatPrice (a i)) :
     (∑ i ∈ z, cost i) ≤
-      (if (shapeSum a z).t = 1 then 37000000000000000 else 55200000000000000) *
+      (if (shapeSum a z).t = 1 then 37000000000000000 else 48500000000000000) *
         (shapeSum a z).t := by
   let r := shapeSum a z
-  let rate : ℕ := if r.t = 1 then 37000000000000000 else 55200000000000000
+  let rate : ℕ := if r.t = 1 then 37000000000000000 else 48500000000000000
   change (∑ i ∈ z, cost i) ≤ rate * ∑ i ∈ z, (a i).t
   rw [Finset.mul_sum]
   apply Finset.sum_le_sum
@@ -466,10 +466,10 @@ theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) (h4 : c4) : K1_13.c8 := by
   have hdisj {s : Finset (Fin n)} (hs : s ⊆ pos) : Disjoint z s :=
     Finset.disjoint_left.mpr fun i hi his => (Nat.ne_of_gt (hpos i (hs his))) (hz i hi)
   have account : ∃ (q : Shape) (cap : ℕ), InBox q r ∧ (q = zeroShape ∨ 0 < q.j) ∧
-      Bellman q cap ∧ (∑ i ∈ z, cost i) + cap ≤ 225965362921901696 := by
+      Bellman q cap ∧ (∑ i ∈ z, cost i) + cap ≤ 222060174190762111 := by
     rcases shapeSum_valid_or_empty ha z with hempty | hr
     · have hr0 : r = zeroShape := by simp [r, hempty, shapeSum_empty]
-      refine ⟨zeroShape, 225965362921901696, ?_, Or.inl rfl, h2, ?_⟩
+      refine ⟨zeroShape, 222060174190762111, ?_, Or.inl rfl, h2, ?_⟩
       · rw [hr0]
         exact ⟨le_rfl, le_rfl, le_rfl⟩
       · simp [hempty]
@@ -484,13 +484,13 @@ theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) (h4 : c4) : K1_13.c8 := by
       have hrj : r.j ≤ 6 := hret.2.1
       have ht : r.t = 1 ∨ r.t = 2 := by omega
       rcases ht with ht | ht
-      · refine ⟨⟨1, 3, 1⟩, 185142013343379695, ?_, Or.inr (by decide), h3, ?_⟩
+      · refine ⟨⟨1, 3, 1⟩, 185060174190762111, ?_, Or.inr (by decide), h3, ?_⟩
         · change 1 ≤ r.b ∧ 3 ≤ r.j ∧ 1 ≤ r.t
           omega
         · change (∑ i ∈ z, cost i) ≤ (if r.t = 1 then _ else _) * r.t at hcost
           rw [ite_eq_left ht, ht, Nat.mul_one] at hcost
           omega
-      · refine ⟨⟨2, 6, 2⟩, 115565362921901696, ?_, Or.inr (by decide), h4, ?_⟩
+      · refine ⟨⟨2, 6, 2⟩, 125060174190762111, ?_, Or.inr (by decide), h4, ?_⟩
         · change 2 ≤ r.b ∧ 6 ≤ r.j ∧ 2 ≤ r.t
           omega
         · change (∑ i ∈ z, cost i) ≤ (if r.t = 1 then _ else _) * r.t at hcost
@@ -567,7 +567,7 @@ namespace K1_13_8_2
 
 open K1_13 K1_13_8
 
-def limit : ℕ := 225965362921901696
+def limit : ℕ := 222060174190762111
 
 /-- Lower degree and index thresholds for certifying a positive order. -/
 structure Threshold where
@@ -576,13 +576,9 @@ structure Threshold where
   l : ℕ
 
 def thresholds : List Threshold :=
-  [⟨112, 48, 57⟩, ⟨114, 47, 57⟩, ⟨117, 46, 57⟩, ⟨120, 45, 57⟩,
-   ⟨13, 39, 53⟩, ⟨40, 38, 53⟩, ⟨41, 37, 53⟩, ⟨43, 36, 52⟩,
-   ⟨44, 35, 52⟩, ⟨46, 34, 52⟩, ⟨48, 33, 51⟩, ⟨50, 32, 51⟩,
-   ⟨52, 31, 51⟩, ⟨54, 30, 50⟩, ⟨56, 29, 50⟩, ⟨59, 28, 50⟩,
-   ⟨61, 27, 49⟩, ⟨64, 26, 49⟩, ⟨67, 25, 48⟩, ⟨68, 4, 27⟩,
-   ⟨4, 11, 16⟩, ⟨11, 10, 14⟩, ⟨13, 9, 10⟩, ⟨39, 5, 10⟩,
-   ⟨16, 8, 6⟩, ⟨27, 6, 3⟩, ⟨20, 7, 2⟩]
+  [⟨118, 48, 58⟩, ⟨103, 43, 57⟩, ⟨67, 30, 52⟩, ⟨11, 16, 34⟩,
+   ⟨4, 11, 17⟩, ⟨48, 4, 15⟩, ⟨5, 9, 7⟩, ⟨27, 6, 3⟩,
+   ⟨19, 7, 2⟩, ⟨36, 4, 2⟩, ⟨9, 8, 2⟩, ⟨26, 6, 2⟩]
 
 def orderFor (b j : ℕ) : List Threshold → ℕ
   | [] => 1
@@ -788,8 +784,8 @@ theorem physical_mono {x y : Shape} (h : InBox x y) (hx : 3 * x.t ≤ x.j)
   have ha'c : Chamber A' := plus_chamber hqc (scale_chamber hp'c 4)
   have hs := surface_mono hp hp'c hqc
   have hb := (chart_mono (L+1) hp).1
-  have hmain : (81889 + 2*46584) * x.b * q.b * (chart (L+1) p).b ≤
-      (81889 + 2*46584) * y.b * q.b * (chart (L+1) p').b := by
+  have hmain : (81898 + 2*46600) * x.b * q.b * (chart (L+1) p).b ≤
+      (81898 + 2*46600) * y.b * q.b * (chart (L+1) p').b := by
     have := h.1
     gcongr
   have hcurve := mixed_mono hp (box_refl q) ha (chart_mono L hp) hp'c hqc ha'c hqc hac (chart_chamber L p)
@@ -799,8 +795,8 @@ theorem physical_mono {x y : Shape} (h : InBox x y) (hx : 3 * x.t ≤ x.j)
   have htc := Nat.mul_le_mul_left 2 h.2.2
   have hc := Nat.add_le_add hcurve (Nat.mul_le_mul htc hcurve')
   have hn := Nat.add_le_add hpoint (Nat.mul_le_mul htc hpoint')
-  have hgeom := Nat.add_le_add (Nat.mul_le_mul_left 81889 hc) (Nat.mul_le_mul_left (2*46584) hn)
-  have hraw := Nat.mul_le_mul_right q.b (Nat.mul_le_mul_left (2*133671) h.1)
+  have hgeom := Nat.add_le_add (Nat.mul_le_mul_left 81898 hc) (Nat.mul_le_mul_left (2*46600) hn)
+  have hraw := Nat.mul_le_mul_right q.b (Nat.mul_le_mul_left (2*133646) h.1)
   exact Nat.add_le_add
     (Nat.add_le_add (ceil_mono (Nat.add_le_add (ceil_mono hs _) (ceil_mono hmain _)) l) hraw)
     (ceil_mono hgeom _)
@@ -1319,19 +1315,7 @@ namespace K1_13_8_4
 
 open K1_13 K1_13_8
 
-def indexRate : ℕ := 2750000000000000
-
-/-- Index-dependent orders for the top-degree-two retained phase. -/
-def lowerOrder (j : ℕ) : ℕ := if j < 35 then 67 else 112
-
-theorem lowerOrder_pos (j : ℕ) : 0 < lowerOrder j := by
-  unfold lowerOrder
-  split_ifs <;> omega
-
-theorem lowerOrder_mono : Monotone lowerOrder := by
-  intro j k hjk
-  unfold lowerOrder
-  split_ifs <;> omega
+def indexRate : ℕ := 2960000000000000
 
 private theorem chamber_mono {a A : Shape} (h : TotalLE a A) :
     TotalLE a.chamber A.chamber :=
@@ -1432,7 +1416,7 @@ set_option maxHeartbeats 0
 private def tariffBoundaryRow (j : ℕ) : Prop :=
   ∀ t : Fin 9,
     let a : Shape := ⟨118, j, t.val⟩
-    Valid a → physicalPrice a (lowerOrder j) ≤ indexRate * a.j
+    Valid a → physicalPrice a 78 ≤ indexRate * a.j
 
 private theorem tariffBoundaryRow0 : tariffBoundaryRow 0 := by
   unfold tariffBoundaryRow
@@ -1609,7 +1593,7 @@ private theorem tariffBoundaryRow42 : tariffBoundaryRow 42 := by
 private theorem tariff_boundary :
     ∀ (j : Fin 43) (t : Fin 9),
       let a : Shape := ⟨118, j.val, t.val⟩
-      Valid a → physicalPrice a (lowerOrder j.val) ≤ indexRate * a.j := by
+      Valid a → physicalPrice a 78 ≤ indexRate * a.j := by
   change ∀ j : Fin 43, tariffBoundaryRow j.val
   intro j
   fin_cases j
@@ -1662,20 +1646,20 @@ end
 set_option maxHeartbeats 1000000 in
 theorem tariff_le (a : Shape) (ha : Valid a)
     (hb : a.b ≤ 118) (hj : a.j ≤ 42) (ht : a.t ≤ 8) :
-    edgePrice a (lowerOrder a.j) ≤ indexRate * a.j := by
+    edgePrice a 78 ≤ indexRate * a.j := by
   let A : Shape := ⟨118, a.j, a.t⟩
   have hA : Valid A :=
     ⟨ha.1, ha.2.1, ha.2.2.trans (Nat.mul_le_mul_left 3 hb)⟩
   have htotal : TotalLE a A := ⟨hb, rfl, rfl⟩
-  have hboundary : physicalPrice A (lowerOrder a.j) ≤ indexRate * a.j :=
+  have hboundary : physicalPrice A 78 ≤ indexRate * a.j :=
     tariff_boundary ⟨a.j, Nat.lt_succ_of_le hj⟩ ⟨a.t, Nat.lt_succ_of_le ht⟩ hA
   calc
-    edgePrice a (lowerOrder a.j) ≤ physicalPrice a (lowerOrder a.j) := by
+    edgePrice a 78 ≤ physicalPrice a 78 := by
       unfold edgePrice
       split
       · exact min_le_left _ _
       · exact le_rfl
-    _ ≤ physicalPrice A (lowerOrder a.j) := physical_mono htotal ha.2.1 (lowerOrder a.j)
+    _ ≤ physicalPrice A 78 := physical_mono htotal ha.2.1 78
     _ ≤ indexRate * a.j := hboundary
 
 end K1_13_8_4
@@ -1689,7 +1673,7 @@ open K1_13 K1_13_8
 open scoped BigOperators
 
 def start : Shape := ⟨2, 6, 2⟩
-
+def lowerOrder : ℕ := 78
 
 private def coarseCount (b j : ℕ) : ℕ :=
   (b + 1) * coefficient 0 j + shifted 2 j 3 + shifted 2 j 4 + shifted 2 j 5
@@ -2049,43 +2033,25 @@ private theorem remaining_le_tail (b j k : ℕ) (h : 462 + (k + 1) * 9 ≤ j) :
       (envelope_mono (by omega) (Nat.sub_le _ _))
   · simp [fastRemaining, hbox]
 
-/-- The c3-style index bound for the start ⟨2,6,2⟩: drop the total degree. -/
-private def mass4 (j L : ℕ) : ℕ :=
-  (∑ k ∈ Finset.range (min L 275), K1_13_8_3.indexBudget ((k + 1) * 6)) +
-    ∑ k ∈ Finset.range (1650 / (6 + j)), K1_13_8_3.indexBudget (L * 6 + (k + 1) * (6 + j))
-
-private theorem available_le_mass4 (x : Shape) (L : ℕ) :
-    availableMass start x L ≤ mass4 x.j L := by
-  simp only [availableMass, start, mass4, show ¬ 6 = 0 by decide,
-    ite_false, show 1650 / 6 = 275 by decide]
-  exact Nat.add_le_add (Finset.sum_le_sum fun _ _ => K1_13_8_3.remaining_le_index _ _)
-    (Finset.sum_le_sum fun _ _ => K1_13_8_3.remaining_le_index _ _)
-
-private theorem mass4_anti {i j : ℕ} (hij : i ≤ j) (L : ℕ) :
-    mass4 j L ≤ mass4 i L := by
-  unfold mass4
-  apply Nat.add_le_add_left
-  apply sum_range_mono (Nat.div_le_div_left (by omega) (by omega))
-  intro k _
-  apply K1_13_8_3.indexBudget_anti
-  exact Nat.add_le_add_left (Nat.mul_le_mul_left _ (by omega)) _
-
-set_option maxRecDepth 32768 in
+set_option maxRecDepth 8192 in
 set_option maxHeartbeats 0 in
-private theorem mass4_tests : mass4 3 66 < need ∧ mass4 35 111 < need := by
-  refine ⟨?_, ?_⟩
-  all_goals as_aux_lemma => decide +kernel
+private theorem mass_envelope_test :
+    (∑ k ∈ Finset.range 77, fastRemaining ((k + 1) * 2) ((k + 1) * 6)) +
+      (∑ k ∈ Finset.range (1650 / 9), tailUpper k) < need := by
+  decide +kernel
 
 theorem mass_lt_need (x : Shape) (hx : Valid x) :
-    availableMass start x (lowerOrder x.j - 1) < need := by
-  have hj : 3 ≤ x.j := by
+    availableMass start x (lowerOrder - 1) < need := by
+  have hj : 9 ≤ 6 + x.j := by
     rcases hx with ⟨ht, hj, _⟩
     omega
-  obtain ⟨h₃, h₃₅⟩ := mass4_tests
-  unfold lowerOrder
-  split_ifs with h
-  · exact (available_le_mass4 _ _).trans_lt ((mass4_anti hj _).trans_lt h₃)
-  · exact (available_le_mass4 _ _).trans_lt ((mass4_anti (by omega) _).trans_lt h₃₅)
+  change (∑ k ∈ Finset.range 77, fastRemaining ((k + 1) * 2) ((k + 1) * 6)) +
+    (∑ k ∈ Finset.range (1650 / (6 + x.j)),
+      fastRemaining (154 + (k + 1) * (2 + x.b)) (462 + (k + 1) * (6 + x.j))) < need
+  refine lt_of_le_of_lt (Nat.add_le_add_left ?_ _) mass_envelope_test
+  apply sum_range_mono (Nat.div_le_div_left hj (by decide))
+  intro k _
+  exact remaining_le_tail _ _ _ (Nat.add_le_add_left (Nat.mul_le_mul_left (k + 1) hj) _)
 
 end K1_13_8_4
 end PackSource_K1_13_8_4Mass
@@ -2273,98 +2239,49 @@ section
 set_option maxRecDepth 32768
 set_option maxHeartbeats 0
 
-private theorem orderThreshold112_48 : thresholdCheck ⟨112, 48, 57⟩ = true := by
+private theorem orderThreshold118_48 : thresholdCheck ⟨118, 48, 58⟩ = true := by
   decide +kernel
 
-private theorem orderThreshold114_47 : thresholdCheck ⟨114, 47, 57⟩ = true := by
+private theorem orderThreshold103_43 : thresholdCheck ⟨103, 43, 57⟩ = true := by
   decide +kernel
 
-private theorem orderThreshold117_46 : thresholdCheck ⟨117, 46, 57⟩ = true := by
+private theorem orderThreshold67_30 : thresholdCheck ⟨67, 30, 52⟩ = true := by
   decide +kernel
 
-private theorem orderThreshold120_45 : thresholdCheck ⟨120, 45, 57⟩ = true := by
+private theorem orderThreshold11_16 : thresholdCheck ⟨11, 16, 34⟩ = true := by
   decide +kernel
 
-private theorem orderThreshold13_39 : thresholdCheck ⟨13, 39, 53⟩ = true := by
+private theorem orderThreshold4_11 : thresholdCheck ⟨4, 11, 17⟩ = true := by
   decide +kernel
 
-private theorem orderThreshold40_38 : thresholdCheck ⟨40, 38, 53⟩ = true := by
+private theorem orderThreshold48_4 : thresholdCheck ⟨48, 4, 15⟩ = true := by
   decide +kernel
 
-private theorem orderThreshold41_37 : thresholdCheck ⟨41, 37, 53⟩ = true := by
-  decide +kernel
-
-private theorem orderThreshold43_36 : thresholdCheck ⟨43, 36, 52⟩ = true := by
-  decide +kernel
-
-private theorem orderThreshold44_35 : thresholdCheck ⟨44, 35, 52⟩ = true := by
-  decide +kernel
-
-private theorem orderThreshold46_34 : thresholdCheck ⟨46, 34, 52⟩ = true := by
-  decide +kernel
-
-private theorem orderThreshold48_33 : thresholdCheck ⟨48, 33, 51⟩ = true := by
-  decide +kernel
-
-private theorem orderThreshold50_32 : thresholdCheck ⟨50, 32, 51⟩ = true := by
-  decide +kernel
-
-private theorem orderThreshold52_31 : thresholdCheck ⟨52, 31, 51⟩ = true := by
-  decide +kernel
-
-private theorem orderThreshold54_30 : thresholdCheck ⟨54, 30, 50⟩ = true := by
-  decide +kernel
-
-private theorem orderThreshold56_29 : thresholdCheck ⟨56, 29, 50⟩ = true := by
-  decide +kernel
-
-private theorem orderThreshold59_28 : thresholdCheck ⟨59, 28, 50⟩ = true := by
-  decide +kernel
-
-private theorem orderThreshold61_27 : thresholdCheck ⟨61, 27, 49⟩ = true := by
-  decide +kernel
-
-private theorem orderThreshold64_26 : thresholdCheck ⟨64, 26, 49⟩ = true := by
-  decide +kernel
-
-private theorem orderThreshold67_25 : thresholdCheck ⟨67, 25, 48⟩ = true := by
-  decide +kernel
-
-private theorem orderThreshold68_4 : thresholdCheck ⟨68, 4, 27⟩ = true := by
-  decide +kernel
-
-private theorem orderThreshold4_11 : thresholdCheck ⟨4, 11, 16⟩ = true := by
-  decide +kernel
-
-private theorem orderThreshold11_10 : thresholdCheck ⟨11, 10, 14⟩ = true := by
-  decide +kernel
-
-private theorem orderThreshold13_9 : thresholdCheck ⟨13, 9, 10⟩ = true := by
-  decide +kernel
-
-private theorem orderThreshold39_5 : thresholdCheck ⟨39, 5, 10⟩ = true := by
-  decide +kernel
-
-private theorem orderThreshold16_8 : thresholdCheck ⟨16, 8, 6⟩ = true := by
+private theorem orderThreshold5_9 : thresholdCheck ⟨5, 9, 7⟩ = true := by
   decide +kernel
 
 private theorem orderThreshold27_6 : thresholdCheck ⟨27, 6, 3⟩ = true := by
   decide +kernel
 
-private theorem orderThreshold20_7 : thresholdCheck ⟨20, 7, 2⟩ = true := by
+private theorem orderThreshold19_7 : thresholdCheck ⟨19, 7, 2⟩ = true := by
+  decide +kernel
+
+private theorem orderThreshold36_4 : thresholdCheck ⟨36, 4, 2⟩ = true := by
+  decide +kernel
+
+private theorem orderThreshold9_8 : thresholdCheck ⟨9, 8, 2⟩ = true := by
+  decide +kernel
+
+private theorem orderThreshold26_6 : thresholdCheck ⟨26, 6, 2⟩ = true := by
   decide +kernel
 
 end
 
 private theorem thresholdChecks : thresholds.all thresholdCheck = true := by
   simp only [thresholds, List.all_cons, List.all_nil, Bool.true_and,
-    orderThreshold112_48, orderThreshold114_47, orderThreshold117_46, orderThreshold120_45,
-    orderThreshold13_39, orderThreshold40_38, orderThreshold41_37, orderThreshold43_36,
-    orderThreshold44_35, orderThreshold46_34, orderThreshold48_33, orderThreshold50_32,
-    orderThreshold52_31, orderThreshold54_30, orderThreshold56_29, orderThreshold59_28,
-    orderThreshold61_27, orderThreshold64_26, orderThreshold67_25, orderThreshold68_4,
-    orderThreshold4_11, orderThreshold11_10, orderThreshold13_9, orderThreshold39_5,
-    orderThreshold16_8, orderThreshold27_6, orderThreshold20_7]
+    orderThreshold118_48, orderThreshold103_43, orderThreshold67_30, orderThreshold11_16,
+    orderThreshold4_11, orderThreshold48_4, orderThreshold5_9, orderThreshold27_6,
+    orderThreshold19_7, orderThreshold36_4, orderThreshold9_8, orderThreshold26_6]
 
 private theorem orderFor_select (b j : ℕ) (ss : List Threshold) :
     1 ≤ orderFor b j ss ∧
@@ -2775,22 +2692,20 @@ open K1_13 K1_13_8
 private def potential (x : Shape) : ℕ := indexRate * (42 - x.j)
 
 theorem proof : K1_13_8.c4 := by
-  change Bellman start 115565362921901696
-  refine ⟨potential, fun x => lowerOrder x.j, by decide, ?_, ?_⟩
+  change Bellman start 125060174190762111
+  refine ⟨potential, fun _ => lowerOrder, by decide, ?_, ?_⟩
   · intro x hx _
-    exact ⟨lowerOrder_pos _, Or.inr (mass_lt_need x hx)⟩
+    exact ⟨by change 0 < lowerOrder; decide, Or.inr (mass_lt_need x hx)⟩
   · intro y a _ ha hbox
     change 2 + (y.b + a.b) ≤ 120 ∧ 6 + (y.j + a.j) ≤ 48 ∧
       2 + (y.t + a.t) ≤ 10 at hbox
     rcases hbox with ⟨hb, hj, ht⟩
     have hprice := tariff_le a ha (by omega) (by omega) (by omega)
-    have hmono : edgePrice a (lowerOrder (y.j + a.j)) ≤ edgePrice a (lowerOrder a.j) :=
-      edgePrice_anti a (lowerOrder_pos a.j) (lowerOrder_mono (Nat.le_add_left _ _))
     have hunspent : a.j + (42 - (y.j + a.j)) = 42 - y.j := by omega
     calc
-      edgePrice a (lowerOrder (y.plus a).j) + potential (y.plus a) ≤
+      edgePrice a lowerOrder + potential (y.plus a) ≤
           indexRate * a.j + indexRate * (42 - (y.j + a.j)) :=
-        Nat.add_le_add_right (hmono.trans hprice) _
+        Nat.add_le_add_right hprice _
       _ = potential y := by rw [← Nat.mul_add, hunspent, potential]
 
 end K1_13_8_4
@@ -5389,7 +5304,7 @@ open scoped BigOperators
 /-- Number of cutoffs counted by the raw width but excluded by the
 five-ordinate restriction at the position (q,j). -/
 def lostWidth (h q j : ℕ) : ℕ :=
-  fullShape.m*180255 + j - q*(131071-h) - 2*h*(j+(q-j)/5)
+  fullShape.m*180246 + j - q*(131071-h) - 2*h*(j+(q-j)/5)
 
 private def intShapeSum (f : ℕ → ℕ → ℤ) : ℤ :=
   ∑ q ∈ range (fullShape.B+1), ∑ j ∈ range (min q fullShape.J+1), f q j
@@ -5398,7 +5313,7 @@ private def widthSlope (q j : ℕ) : ℤ :=
   (q : ℤ) - 2 * (j + ((q-j)/5 : ℕ))
 
 private def signedWidth (h : ℤ) (q j : ℕ) : ℤ :=
-  (fullShape.m : ℤ)*180255 + j - q*131071 + h * widthSlope q j
+  (fullShape.m : ℤ)*180246 + j - q*131071 + h * widthSlope q j
 
 private def supportSum (f : ℕ → ℕ → ℤ) : ℤ :=
   intShapeSum (fun q j => if 0 < signedWidth 3555 q j then f q j else 0)
@@ -5433,7 +5348,7 @@ private theorem signedWidth_le (h q j : ℕ) (hh : h ≤ 131071) :
   have hcast : (↑(131071-h : ℕ) : ℤ) = 131071 - h := Nat.cast_sub hh
   calc
     signedWidth h q j =
-        (↑(fullShape.m*180255 + j : ℕ) : ℤ) -
+        (↑(fullShape.m*180246 + j : ℕ) : ℤ) -
         (↑(q*(131071-h) : ℕ) : ℤ) - (↑(2*h*(j+(q-j)/5) : ℕ) : ℤ) := by
       simp only [signedWidth, widthSlope, Nat.cast_add, Nat.cast_mul, Nat.cast_ofNat, hcast]
       ring
@@ -5521,13 +5436,13 @@ private theorem cert_slope_row (q n : ℕ) (hn : n ≤ q+1) :
     _ = _ := by rw [cert_twice_index, cert_twice_desc_div q n hn]; unfold certSlopeRow; ring
 
 private def certBaseRow (q n : ℕ) : ℤ :=
-  2 * (n : ℤ) * ((fullShape.m : ℤ)*180255 - q*131071) +
+  2 * (n : ℤ) * ((fullShape.m : ℤ)*180246 - q*131071) +
     (n : ℤ)*((n : ℤ)-1) + 3555 * certSlopeRow q n
 
 private theorem cert_base_row (q n : ℕ) (hn : n ≤ q+1) :
     2 * (∑ j ∈ range n, signedWidth 3555 q j) = certBaseRow q n := by
   calc
-    _ = 2 * (n : ℤ) * ((fullShape.m : ℤ)*180255 - q*131071) +
+    _ = 2 * (n : ℤ) * ((fullShape.m : ℤ)*180246 - q*131071) +
           2 * (∑ j ∈ range n, (j : ℤ)) +
           3555 * (2 * (∑ j ∈ range n, widthSlope q j)) := by
       simp only [signedWidth, sum_sub_distrib, ← mul_sum, sum_add_distrib,
@@ -5543,7 +5458,7 @@ private theorem cert_full_support (q j : ℕ) (hq : q < 496)
   have hjmax : j ≤ 105 := (Nat.le_of_lt_succ hj).trans (min_le_right _ _)
   have hd : 5 * ((q-j)/5) ≤ q-j := Nat.mul_div_le _ _
   unfold signedWidth widthSlope
-  change 0 < (358 : ℤ)*180255 + j - q*131071 +
+  change 0 < (358 : ℤ)*180246 + j - q*131071 +
     3555 * ((q : ℤ) - 2 * (j + (((q-j)/5 : ℕ) : ℤ)))
   omega
 
@@ -5701,19 +5616,19 @@ private theorem cert_pole_500 :
   decide +kernel
 
 private theorem cert_base_000 :
-    (∑ q ∈ range 124, certFullBaseRow q) = 816104724338 := by
+    (∑ q ∈ range 124, certFullBaseRow q) = 816055885262 := by
   decide +kernel
 
 private theorem cert_base_124 :
-    (∑ q ∈ range 124, certFullBaseRow (124+q)) = 1059868211596 := by
+    (∑ q ∈ range 124, certFullBaseRow (124+q)) = 1059783511660 := by
   decide +kernel
 
 private theorem cert_base_248 :
-    (∑ q ∈ range 124, certFullBaseRow (248+q)) = 639567468584 := by
+    (∑ q ∈ range 124, certFullBaseRow (248+q)) = 639482768648 := by
   decide +kernel
 
 private theorem cert_base_372 :
-    (∑ q ∈ range 124, certFullBaseRow (372+q)) = 219266725572 := by
+    (∑ q ∈ range 124, certFullBaseRow (372+q)) = 219182025636 := by
   decide +kernel
 
 private theorem cert_slope_000 :
@@ -5735,7 +5650,7 @@ private theorem cert_slope_372 :
 -- The last five support rows still use the original finite sums.
 
 private theorem cert_base_tail :
-    (∑ q ∈ range 5, certKeptRow (signedWidth 3555) (496+q)) = 61294636 := by
+    (∑ q ∈ range 5, certKeptRow (signedWidth 3555) (496+q)) = 60373144 := by
   decide +kernel
 
 private theorem cert_slope_tail :
@@ -5759,7 +5674,7 @@ private theorem cert_pole_total :
   exact cert_sum_append (certPoleRow fullShape) 500 1 501 (by rfl) h500 cert_pole_500
 
 private theorem cert_base_total :
-    (∑ q ∈ range 496, certFullBaseRow q) = 2734807130090 := by
+    (∑ q ∈ range 496, certFullBaseRow q) = 2734504191206 := by
   have h248 := cert_sum_append certFullBaseRow 124 124 248 (by rfl) cert_base_000 cert_base_124
   have h372 := cert_sum_append certFullBaseRow 248 124 372 (by rfl) h248 cert_base_248
   exact cert_sum_append certFullBaseRow 372 124 496 (by rfl) h372 cert_base_372
@@ -5770,11 +5685,11 @@ private theorem cert_slope_total :
   have h372 := cert_sum_append certFullSlopeRow 248 124 372 (by rfl) h248 cert_slope_248
   exact cert_sum_append certFullSlopeRow 372 124 496 (by rfl) h372 cert_slope_372
 
-private theorem cert_base_value : supportBase = 3001170858316598775918 := by
+private theorem cert_base_value : supportBase = 3000836406409513471866 := by
   have h := cert_twice_support (signedWidth 3555) certFullBaseRow
     (fun q => cert_base_row q _ (Nat.succ_le_succ (min_le_left _ _)))
   rw [cert_base_total, cert_base_tail] at h
-  have hsum : supportSum (signedWidth 3555) = 1367464859681 := by omega
+  have hsum : supportSum (signedWidth 3555) = 1367312468747 := by omega
   rw [supportBase, hsum]
   rfl
 
@@ -5797,7 +5712,7 @@ private theorem support_rises : (poleSlope : ℤ) ≤ supportSlope := by
 
 /-- A single affine support at height 3555 certifies the strict surplus
 throughout the scheduled interval. -/
-theorem debit_lt_loss (h : ℕ) (hl : 3555 ≤ h) (hu : h ≤ 32700) :
+theorem debit_lt_loss (h : ℕ) (hl : 3555 ≤ h) (hu : h ≤ 32718) :
     sourceDebit h fullShape < triangle fullShape.U * shapeSum fullShape (lostWidth h) := by
   have hstep : (0 : ℤ) ≤ (h : ℤ)-3555 := by omega
   have hslope := mul_le_mul_of_nonneg_left support_rises hstep
@@ -5972,18 +5887,18 @@ private theorem cutoff_interval_card (top j t d : ℕ) (hj : j ≤ t) :
   omega
 
 private theorem contact_le_iff (h W n : ℕ) (hh : 0 < 2*h)
-    (hW : W < fullShape.m*180255) :
-    contactPower h fullShape W ≤ n ↔ fullShape.m*180255 ≤ W + 2*h*n := by
+    (hW : W < fullShape.m*180246) :
+    contactPower h fullShape W ≤ n ↔ fullShape.m*180246 ≤ W + 2*h*n := by
   unfold contactPower
-  rw [show (1 + (fullShape.m*180255-1-W)/(2*h) ≤ n) ↔
-      (fullShape.m*180255-1-W)/(2*h) < n by omega,
+  rw [show (1 + (fullShape.m*180246-1-W)/(2*h) ≤ n) ↔
+      (fullShape.m*180246-1-W)/(2*h) < n by omega,
     Nat.div_lt_iff_lt_mul hh, Nat.mul_comm n (2*h)]
   omega
 
 private theorem position_sum (h q j : ℕ) (hh : 0 < 2*h) (hj : j ≤ q*(131071-h)) :
-    (∑ W ∈ range (fullShape.m*180255), if Allowed h W q j then 1 else 0) +
-      lostWidth h q j = fullShape.m*180255+j-q*(131071-h) := by
-  let top := fullShape.m*180255
+    (∑ W ∈ range (fullShape.m*180246), if Allowed h W q j then 1 else 0) +
+      lostWidth h q j = fullShape.m*180246+j-q*(131071-h) := by
+  let top := fullShape.m*180246
   let t := q*(131071-h)
   let d := 2*h*(j+(q-j)/5)
   change (∑ W ∈ range top, if Allowed h W q j then 1 else 0) +
@@ -6007,14 +5922,14 @@ private theorem position_sum (h q j : ℕ) (hh : 0 < 2*h) (hj : j ≤ q*(131071-
     simp [ha, ht]
 
 private theorem cutoff_total (h : ℕ) (hh : 0 < 2*h) (hk : 1 ≤ 131071-h) :
-    (∑ W ∈ range (fullShape.m*180255),
+    (∑ W ∈ range (fullShape.m*180246),
       shapeSum fullShape (fun q j => if Allowed h W q j then 1 else 0)) +
       shapeSum fullShape (lostWidth h) =
-      shapeSum fullShape (fun q j => fullShape.m*180255+j-q*(131071-h)) := by
+      shapeSum fullShape (fun q j => fullShape.m*180246+j-q*(131071-h)) := by
   have hswap :
-      (∑ W ∈ range (fullShape.m*180255),
+      (∑ W ∈ range (fullShape.m*180246),
         shapeSum fullShape (fun q j => if Allowed h W q j then 1 else 0)) =
-      shapeSum fullShape (fun q j => ∑ W ∈ range (fullShape.m*180255),
+      shapeSum fullShape (fun q j => ∑ W ∈ range (fullShape.m*180246),
         if Allowed h W q j then 1 else 0) := by
     unfold shapeSum
     rw [sum_comm]
@@ -6036,8 +5951,8 @@ five distinct generic ordinates. -/
 theorem proof : K1_14_3.c8 := by
   intro h rows hl hu hcaps hlead hfloor
   by_contra hbad
-  let top := fullShape.m*180255
-  have htop : top = 64531290 := rfl
+  let top := fullShape.m*180246
+  have htop : top = 64528068 := rfl
   have htopSub : top-1+1 = top := by omega
   have hwidth : ∀ q ≤ fullShape.B, ∀ j ≤ min q fullShape.J,
       q*(131071-h) ≤ top-1+1+j := by
@@ -6225,18 +6140,18 @@ private theorem k16Aux2_count_bound {c n n' H b : ℕ}
 
 /-- Cover the marked slopes by one nonzero seed polynomial per nonfixed node. -/
 theorem normal_growth_count {u : Words} {T : TwoActive u} (R : Relation T)
-    (hHeight : ∀ i, (R.coefficients i).natDegree ≤ 6357734303)
+    (hHeight : ∀ i, (R.coefficients i).natDegree ≤ 6367000374)
     (hMoving : MovingGCD R) (hSat : NormalSaturation R) (Γ : Finset K)
     (hBad : BadFamily u Γ) (hNormal : ∀ γ ∈ Γ, Normal u γ) :
-    Γ.card ≤ 1666641901125632 := by
+    Γ.card ≤ 1669070946041856 := by
   classical
   let U (i : I) := (leftU R).eval (C (node i))
   let V (i : I) := (leftV R).eval (C (node i))
-  have hU (i) : (U i).natDegree ≤ 6357734303 := by
+  have hU (i) : (U i).natDegree ≤ 6367000374 := by
     dsimp only [U, leftU]
     rw [Strata.assemble_nodePolynomial]
     exact Principal.nodePolynomial_natDegree_le _ (fun j => hHeight (0, j)) _
-  have hV (i) : (V i).natDegree ≤ 6357734303 := by
+  have hV (i) : (V i).natDegree ≤ 6367000374 := by
     dsimp only [V, leftV]
     rw [Strata.assemble_nodePolynomial]
     exact Principal.nodePolynomial_natDegree_le _ (fun j => hHeight (1, j)) _
@@ -6249,8 +6164,8 @@ theorem normal_growth_count {u : Words} {T : TwoActive u} (R : Relation T)
       simpa only [fixedNodes, Finset.mem_filter, Finset.mem_univ, true_and] using hi
     exact ⟨i, hNZ, hu, hv⟩
   exact k16Aux2_count_bound (c := Γ.card) (n := Fintype.card I) (n' := 262144)
-    (H := 6357734303) (b := 1666641901125632) IRSProfile.card_index
-    (common_node_count U V 6357734303 Γ hU hV hNew) rfl
+    (H := 6367000374) (b := 1669070946041856) IRSProfile.card_index
+    (common_node_count U V 6367000374 Γ hU hV hNew) rfl
 
 end K1_6
 end PackSource_K1_6Aux2
@@ -6501,9 +6416,9 @@ open private pair_membership from ProximityPrize.SubmissionLower.Pack_K1_14_3Spl
 
 private def Certificate (s : Shape) (r mode : ℕ) : Prop :=
   0 < worstBase s + 3555 * worstSlope s r ∧
-  0 < worstBase s + 32700 * worstSlope s r ∧
+  0 < worstBase s + 32718 * worstSlope s r ∧
   0 < surplusBase s + 3555 * surplusSlope s r mode ∧
-  0 < surplusBase s + 32700 * surplusSlope s r mode
+  0 < surplusBase s + 32718 * surplusSlope s r mode
 
 private def stageCheck (i : Fin 4) : Prop :=
   Certificate (cheapShape i) (reserve i) 0 ∧
@@ -6517,33 +6432,33 @@ set_option maxHeartbeats 0 in
 set_option maxRecDepth 16000 in
 private theorem certificates : ∀ i : Fin 4, stageCheck i := by decide +kernel
 
-private theorem affine_positive {a b h : ℤ} (hlo : 3555 ≤ h) (hhi : h ≤ 32700)
-    (ha : 0 < a + 3555 * b) (hb : 0 < a + 32700 * b) : 0 < a + h * b := by
+private theorem affine_positive {a b h : ℤ} (hlo : 3555 ≤ h) (hhi : h ≤ 32718)
+    (ha : 0 < a + 3555 * b) (hb : 0 < a + 32718 * b) : 0 < a + h * b := by
   by_cases hb0 : 0 ≤ b
   · nlinarith only [ha, mul_nonneg (sub_nonneg.mpr hlo) hb0]
   · nlinarith only [hb, mul_nonneg (sub_nonneg.mpr hhi) (neg_nonneg.mpr (le_of_not_ge hb0))]
 
-private theorem test (h r mode : ℕ) (s : Shape) (hlo : 3555 ≤ h) (hhi : h ≤ 32700)
+private theorem test (h r mode : ℕ) (s : Shape) (hlo : 3555 ≤ h) (hhi : h ≤ 32718)
     (hc : Certificate s r mode) :
     s.B * (131071 - h) < cutoffCount h r s ∧
       sourceDebit h s + mode * movingCeiling h s < rawVolume h r s := by
   have hh : h ≤ 131071 := by omega
   have hloI : (3555 : ℤ) ≤ (h : ℤ) := by exact_mod_cast hlo
-  have hhiI : (h : ℤ) ≤ 32700 := by exact_mod_cast hhi
+  have hhiI : (h : ℤ) ≤ 32718 := by exact_mod_cast hhi
   obtain ⟨ha, hb, hc, hd⟩ := hc
   have hw := affine_positive hloI hhiI ha hb
   unfold worstBase worstSlope at hw
   have hpos : (s.B : ℤ) * (131071 - (h : ℤ)) <
-      (s.m : ℤ) * 180255 - 2 * (h : ℤ) * r := by nlinarith only [hw]
-  have hbuf : 2 * h * r ≤ s.m * 180255 := by
+      (s.m : ℤ) * 180246 - 2 * (h : ℤ) * r := by nlinarith only [hw]
+  have hbuf : 2 * h * r ≤ s.m * 180246 := by
     have hn : 0 ≤ (s.B : ℤ) * (131071 - (h : ℤ)) := by
       exact mul_nonneg (Int.natCast_nonneg _) (by omega)
-    have ht : 2 * (h : ℤ) * r ≤ (s.m : ℤ) * 180255 := by linarith only [hpos, hn]
+    have ht : 2 * (h : ℤ) * r ≤ (s.m : ℤ) * 180246 := by linarith only [hpos, hn]
     exact_mod_cast ht
   have hwidth : s.B * (131071 - h) < cutoffCount h r s := by
     unfold cutoffCount
     have ht : ((s.B * (131071 - h) : ℕ) : ℤ) <
-        ((s.m * 180255 - 2 * h * r : ℕ) : ℤ) := by
+        ((s.m * 180246 - 2 * h * r : ℕ) : ℤ) := by
       push_cast [Nat.cast_sub hh, Nat.cast_sub hbuf]
       exact hpos
     exact_mod_cast ht
@@ -6577,11 +6492,11 @@ private theorem fixed_of_no_seed (G : Jet) (hn : ¬ K1_14_2.UsesSeed G) :
 theorem bufferedPairs (power : K1_14_2_1.c1) (rankBound : K1_14_2_1.c2)
     {u del} {M : AnchorModel u del} {Γ} {F : AnchoredFamily M Γ}
     {rows : Banks} (src : JetSource M F rows) (hl : 3555 ≤ M.overhead)
-    (hu : M.overhead ≤ 32700) (i : Fin 4) :
+    (hu : M.overhead ≤ 32718) (i : Fin 4) :
     Nonempty (BufferedPair M.overhead.toNat rows i) := by
   let h := M.overhead.toNat
   have hlo : 3555 ≤ h := by dsimp [h]; omega
-  have hhi : h ≤ 32700 := by dsimp [h]; omega
+  have hhi : h ≤ 32718 := by dsimp [h]; omega
   obtain ⟨hc, hd⟩ := certificates i
   obtain ⟨cw, cv⟩ := test h (reserve i) 0 _ hlo hhi hc
   obtain ⟨lw, lv⟩ := test h (reserve i) 1 _ hlo hhi hd
@@ -7189,7 +7104,7 @@ finite set of marks where its chart fails. -/
 def c5 : Prop :=
   ∀ (Γ : Finset K) s f C r, SmallFactor f → CurveOnFactor f C → CanonicalChart f C r →
     InBox (shape (separant ((separant^[r]) f))) (anchorBox f) →
-    Set.InjOn s (Γ : Set K) → (∀ γ ∈ Γ, (s γ).natDegree ≤ 133671) →
+    Set.InjOn s (Γ : Set K) → (∀ γ ∈ Γ, (s γ).natDegree ≤ 133646) →
     ∃ (A B : Finset K) (d : ℕ),
       A ⊆ Γ ∧ CurveSections A s d ∧
       (∀ γ ∈ Γ, C ≤ markIdeal (extend (s γ)) → γ ∈ A ∪ B) ∧

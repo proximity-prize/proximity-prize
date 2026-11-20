@@ -2498,7 +2498,7 @@ def c2 : Prop :=
 trajectory to a genuinely independent polynomial argument. -/
 def c3 : Prop :=
   ∀ (f : Row 3) (F : Type) [Field F] (k : Geom →+* F) (x : F) (y : Fin 3 → F),
-    TrueWeightLE f (90 * 180255 - 1) → rowAt k x y f = 0 → Tangent k x y →
+    TrueWeightLE f (90 * 180246 - 1) → rowAt k x y f = 0 → Tangent k x y →
       ∃ U : F[X], U.natDegree < taylorLength ∧ trajectory k U f = 0 ∧ jetAt x U = y
 
 theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) : K1_13_5_5.c1 := by
@@ -3290,12 +3290,12 @@ private theorem degree_trajectory (k : Geom →+* F) {U : F[X]}
   apply natDegree_sum_le_of_forall_le
   intro m hm
   have hprod : (∏ i ∈ m.support, hasseDeriv i.val U ^ m i).natDegree ≤
-      m.sum (fun i e => (133671 - i.val) * e) := by
+      m.sum (fun i e => (133646 - i.val) * e) := by
     unfold Finsupp.sum
     apply (natDegree_prod_le _ _).trans
     apply Finset.sum_le_sum
     intro i _
-    change ((hasseDeriv i.val U) ^ m i).natDegree ≤ (133671 - i.val) * m i
+    change ((hasseDeriv i.val U) ^ m i).natDegree ≤ (133646 - i.val) * m i
     rw [Nat.mul_comm]
     exact natDegree_pow_le_of_le _ ((natDegree_hasseDeriv_le U i.val).trans
       (Nat.sub_le_sub_right (Nat.le_of_lt_succ hU) _))
@@ -3384,7 +3384,7 @@ theorem proof : K1_13_5_5_1.c3 := by
     (eval_trajectory k U x f).trans ((congrArg (fun z => rowAt k x z f) hjet).trans hzero)
   refine ⟨U, hU, ?_, hjet⟩
   apply eq_zero_of_constant_coeffs x hx _ ((degree_trajectory k hU f hweight).trans_lt
-    (by decide : 90 * 180255 - 1 < K1.p)) (mapCoeffs_trajectory k h.constants hc f) hroot
+    (by decide : 90 * 180246 - 1 < K1.p)) (mapCoeffs_trajectory k h.constants hc f) hroot
 
 end
 
@@ -7153,13 +7153,13 @@ private theorem bank_cancel (b : Bank) : 1 + (b.dT - 1) = b.dT := by cases b <;>
 
 theorem exists_annihilator {u : Words} {deleted : Finset I} {P : Puncture deleted}
     {b : Bank} {H : ℕ} (C : ContactInput u P b H) (h : ℕ)
-    (hmin : 24592 ≤ h) (hmax : h ≤ 32700) (hH : H + deleted.card = h)
+    (hmin : 24587 ≤ h) (hmax : h ≤ 32718) (hH : H + deleted.card = h)
     {Γ : Finset K} (F : Marks u deleted Γ) : Nonempty (Annihilator F b) := by
   obtain ⟨G, hG, hgAnn⟩ := exists_two_decoder_source C h hmin hmax hH
   let Q := scalarEliminant 5 G.val C.numerator C.denominator
-  have hne : Q ≠ 0 := scalarEliminant_ne_zero 721019 131071 5 b.s b.t
+  have hne : Q ≠ 0 := scalarEliminant_ne_zero 720983 131071 5 b.s b.t
     G.val C.L G.property hG C.numerator C.denominator C.denominator_ne C.linear C.primitive
-  obtain ⟨hY, hS, hT⟩ := polynomialView_source_coefficients 721019 131071 5 b.s b.t G.val G.property
+  obtain ⟨hY, hS, hT⟩ := polynomialView_source_coefficients 720983 131071 5 b.s b.t G.val G.property
   have hy : Q.weightedTotalDegree scalarWeightY ≤ 5 := by
     simpa [Q, scalarEliminant] using
       clearedEval_weight_bound scalarWeightY 5 5 1 1 0 (polynomialView G.val)
@@ -7176,7 +7176,7 @@ theorem exists_annihilator {u : Words} {deleted : Finset I} {P : Puncture delete
   intro γ hγ
   let M := F.mark γ hγ
   let S := indexedSupport P M.support
-  have hS : 180255 ≤ S.card := by
+  have hS : 180246 ≤ S.card := by
     rw [indexedSupport_card P M.support (F.survives γ hγ)]
     exact M.agreement
   have hd := mark_degree M
@@ -7184,7 +7184,7 @@ theorem exists_annihilator {u : Words} {deleted : Finset I} {P : Puncture delete
     Polynomial.natDegree_map_le.trans hd
   have hcorrect := correctOn_mark P M
   have hrel := relation_annihilates C (by omega) _ _ hd hd' γ (γ ^ p) S hS hcorrect
-  exact scalarEliminant_annihilates 721019 131071 5 b.s b.t G.val C.L G.property
+  exact scalarEliminant_annihilates 720983 131071 5 b.s b.t G.val C.L G.property
     C.numerator C.denominator C.linear _ _ γ (γ^p) hrel
     (hgAnn _ _ hd hd' γ (γ^p) S hS hcorrect)
 

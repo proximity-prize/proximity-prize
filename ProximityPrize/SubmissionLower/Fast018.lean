@@ -17,13 +17,13 @@ open scoped BigOperators
 /-- All the data of the physical cut, before using the common received word. -/
 structure CutInput (Γ : Finset K) (s : K → K[X]) (f Q : Row 4) (l : ℕ) : Prop where
   distinct : Set.InjOn s (Γ : Set K)
-  degree : ∀ γ ∈ Γ, (s γ).natDegree ≤ 133671
+  degree : ∀ γ ∈ Γ, (s γ).natDegree ≤ 133646
   small : SmallFactor f
   onFactor : ∀ γ ∈ Γ, OnFactor f (extend (s γ))
   positive : 0 < l
   proper : ¬ f ∣ Q
   box : InBox (shape Q) ⟨4012, 1650, 550⟩
-  weight : TrueWeightLE Q (3000 * 180255 - 1)
+  weight : TrueWeightLE Q (3000 * 180246 - 1)
   order : ∀ γ ∈ Γ, OrderAt Q (extend (s γ)) l
 
 abbrev GenericField := FractionRing Geom[X]
@@ -240,14 +240,14 @@ private theorem occupancy {α ι : Type*} [DecidableEq α] [DecidableEq ι]
   exact sum_le_sum hocc
 
 /-- The final step of the incidence inequality, with the benchmark's
-two deficiencies 81889 and 46584. -/
+two deficiencies 81898 and 46600. -/
 private theorem incidence_arithmetic (m x : ℕ) (d : ℕ)
-    (hm : 0 < m) (hx : 46584 ≤ x)
-    (hsec : (m*x)^2 ≤ (x+81889) * (m * (x + (m-1)*(x-46584))))
-    (hfirst : m*x ≤ (x+81889)*d) :
-    46584*m ≤ 81889*d + 46584 := by
+    (hm : 0 < m) (hx : 46600 ≤ x)
+    (hsec : (m*x)^2 ≤ (x+81898) * (m * (x + (m-1)*(x-46600))))
+    (hfirst : m*x ≤ (x+81898)*d) :
+    46600*m ≤ 81898*d + 46600 := by
   have hcancel :
-      m*x^2 ≤ (x+81889) * (x + (m-1)*(x-46584)) := by
+      m*x^2 ≤ (x+81898) * (x + (m-1)*(x-46600)) := by
     apply Nat.le_of_mul_le_mul_left _ hm
     calc
       _ = (m*x)^2 := by ring
@@ -255,35 +255,35 @@ private theorem incidence_arithmetic (m x : ℕ) (d : ℕ)
       _ = _ := by ring
   have hM : ((m - 1 : ℕ) : ℤ) = (m : ℤ)-1 := by
     exact Int.ofNat_sub (by omega)
-  have hX : ((x - 46584 : ℕ) : ℤ) = (x : ℤ)-46584 := Int.ofNat_sub hx
+  have hX : ((x - 46600 : ℕ) : ℤ) = (x : ℤ)-46600 := Int.ofNat_sub hx
   have hcancelZ := (Int.ofNat_le.mpr hcancel)
   push_cast [hM, hX] at hcancelZ
   have hfirstZ := (Int.ofNat_le.mpr hfirst)
   push_cast at hfirstZ
-  have secondZ : ((m : ℤ)*81889 - ((m : ℤ)-1)*46584)*x ≥
-      ((m : ℤ)-1)*81889*46584 := by
+  have secondZ : ((m : ℤ)*81898 - ((m : ℤ)-1)*46600)*x ≥
+      ((m : ℤ)-1)*81898*46600 := by
     nlinarith only [hcancelZ]
-  have firstZ : ((m : ℤ)-(d : ℤ))*x ≤ (d : ℤ)*81889 := by
+  have firstZ : ((m : ℤ)-(d : ℤ))*x ≤ (d : ℤ)*81898 := by
     nlinarith only [hfirstZ]
   by_contra! h
-  have hbad : (d : ℤ)*81889 < ((m : ℤ)-1)*46584 := by omega
+  have hbad : (d : ℤ)*81898 < ((m : ℤ)-1)*46600 := by omega
   have hxpos : 0 < (x : ℤ) := by omega
-  have cmp : (m : ℤ)*81889 - ((m : ℤ)-1)*46584 < ((m : ℤ)-(d : ℤ))*81889 := by
+  have cmp : (m : ℤ)*81898 - ((m : ℤ)-1)*46600 < ((m : ℤ)-(d : ℤ))*81898 := by
     linarith only [hbad]
   have left := mul_lt_mul_of_pos_right cmp hxpos
-  have right := mul_le_mul_of_nonneg_right firstZ (by norm_num : (0 : ℤ) ≤ 81889)
+  have right := mul_le_mul_of_nonneg_right firstZ (by norm_num : (0 : ℤ) ≤ 81898)
   have impossible := secondZ.trans_lt (left.trans_le (show
-      ((m : ℤ)-(d : ℤ))*81889*x ≤ (d : ℤ)*81889*81889 from by
+      ((m : ℤ)-(d : ℤ))*81898*x ≤ (d : ℤ)*81898*81898 from by
         convert right using 1; ring))
-  have bigger := mul_lt_mul_of_pos_right hbad (by norm_num : (0 : ℤ) < 81889)
+  have bigger := mul_lt_mul_of_pos_right hbad (by norm_num : (0 : ℤ) < 81898)
   nlinarith only [impossible, bigger]
 
 /-- A proper section occupancy bound d implies fixed-word capacity
-(81889/46584)d + 1. Common agreement nodes are removed before counting. -/
+(81898/46600)d + 1. Common agreement nodes are removed before counting. -/
 theorem section_capacity {w Γ s} (h : Messages w Γ s) (d : ℕ)
     (hsection : ∀ i : I, (∃ γ ∈ Γ, (s γ).eval (node i) ≠ w i) →
       (Γ.filter fun γ => (s γ).eval (node i) = w i).card ≤ d) :
-    46584 * Γ.card ≤ 81889*d + 46584 := by
+    46600 * Γ.card ≤ 81898*d + 46600 := by
   classical
   by_cases hm : Γ.card ≤ 1
   · omega
@@ -293,11 +293,11 @@ theorem section_capacity {w Γ s} (h : Messages w Γ s) (d : ℕ)
   have common_le (γ : K) (hγ : γ ∈ Γ) : common ⊆ hits γ := by
     intro i hi
     exact mem_filter.mpr ⟨mem_univ _, (mem_filter.mp hi).2 γ hγ⟩
-  have hit_count (γ : K) (hγ : γ ∈ Γ) : 180255 ≤ (hits γ).card := by
+  have hit_count (γ : K) (hγ : γ ∈ Γ) : 180246 ≤ (hits γ).card := by
     obtain ⟨T, hT, ht⟩ := h.hits γ hγ
     exact hT.trans (card_le_card fun i hi => mem_filter.mpr ⟨mem_univ _, ht i hi⟩)
   have pair_count (a : K) (ha : a ∈ Γ) (b : K) (hb : b ∈ Γ) (hab : a ≠ b) :
-      (hits a ∩ hits b).card ≤ 133671 := by
+      (hits a ∩ hits b).card ≤ 133646 := by
     let P := s a - s b
     have hp : P ≠ 0 := sub_ne_zero.mpr fun eq => hab (h.distinct ha hb eq)
     refine (FrobeniusLocator.Strata.root_nodes_card_le node IRSProfile.domain.injective
@@ -306,14 +306,14 @@ theorem section_capacity {w Γ s} (h : Messages w Γ s) (d : ℕ)
     rw [eval_sub, (mem_filter.mp (mem_inter.mp hi).1).2, (mem_filter.mp (mem_inter.mp hi).2).2,
       sub_self]
   obtain ⟨a, ha, b, hb, hab⟩ := one_lt_card.mp (by omega : 1 < Γ.card)
-  have hcommon : common.card ≤ 133671 :=
+  have hcommon : common.card ≤ 133646 :=
     (card_le_card (subset_inter (common_le a ha) (common_le b hb))).trans
       (pair_count a ha b hb hab)
-  let x := 180255 - common.card
-  let t := 133671 - common.card
-  have ht : t = x - 46584 := by dsimp [t, x]; omega
-  have hx : 46584 ≤ x := by dsimp [x]; omega
-  have hnodes : nodes.card = x + 81889 := by
+  let x := 180246 - common.card
+  let t := 133646 - common.card
+  have ht : t = x - 46600 := by dsimp [t, x]; omega
+  have hx : 46600 ≤ x := by dsimp [x]; omega
+  have hnodes : nodes.card = x + 81898 := by
     rw [card_sdiff_of_subset (subset_univ common), card_univ, IRSProfile.card_index]
     dsimp [x]
     omega
@@ -362,7 +362,7 @@ theorem section_capacity {w Γ s} (h : Messages w Γ s) (d : ℕ)
   exact incidence_arithmetic _ _ _ (by omega) hx sec first
 
 theorem curve_capacity {w Γ s d} (h : Messages w Γ s) (hc : CurveSections Γ s d) :
-    46584 * Γ.card ≤ 81889*d + 46584 :=
+    46600 * Γ.card ≤ 81898*d + 46600 :=
   section_capacity h d (fun i => hc (node i) (w i))
 
 theorem curve_capacity_integral {w Γ s d} (h : Messages w Γ s)
@@ -371,14 +371,14 @@ theorem curve_capacity_integral {w Γ s d} (h : Messages w Γ s)
   omega
 
 theorem Pieces.curve_capacity {w Γ s} (C : Pieces Γ) (h : Messages w Γ s)
-    (hc : C.curves s) : 46584 * C.union.card ≤ 81889 * C.total + 46584 * C.n := by
+    (hc : C.curves s) : 46600 * C.union.card ≤ 81898 * C.total + 46600 * C.n := by
   classical
   have hc' (i : Fin C.n) := K1_13_6.curve_capacity (h.mono (C.subset i)) (hc i)
   calc
-    _ ≤ 46584 * ∑ i, (C.piece i).card :=
+    _ ≤ 46600 * ∑ i, (C.piece i).card :=
       Nat.mul_le_mul_left _ (by exact card_biUnion_le)
-    _ = ∑ i, 46584 * (C.piece i).card := by rw [mul_sum]
-    _ ≤ ∑ i : Fin C.n, (81889 * C.degree i + 46584) := sum_le_sum fun i _ => hc' i
+    _ = ∑ i, 46600 * (C.piece i).card := by rw [mul_sum]
+    _ ≤ ∑ i : Fin C.n, (81898 * C.degree i + 46600) := sum_le_sum fun i _ => hc' i
     _ = _ := by simp [Pieces.total, sum_add_distrib, mul_sum, Nat.mul_comm]
 
 theorem Pieces.curve_capacity_integral {w Γ s} (C : Pieces Γ) (h : Messages w Γ s)
@@ -545,7 +545,7 @@ private theorem eval_jetNumerator_zero (g : Row 4) (S : Geom[X])
   rw [eval_jetNumerator _ _ hg, iterate_derivative_eq_zero hS, mul_zero]
 
 theorem eval_membership_tests (g : Row 4) (S : Geom[X])
-    (hg : atJet g S = 0) (hS : S.natDegree ≤ 133671) :
+    (hg : atJet g S = 0) (hS : S.natDegree ≤ 133646) :
     atJet (membershipTest g) S = 0 ∧ atJet (nextTest g) S = 0 :=
   ⟨eval_jetNumerator_zero g S hg taylorLength (Nat.lt_succ_of_le hS),
     eval_jetNumerator_zero g S hg (taylorLength+1)
@@ -588,7 +588,7 @@ def c3 : Prop :=
       C.curves s ∧ D.surfaces s ∧ (∀ i, 0 < C.degree i) ∧ (∀ i, 0 < D.degree i) ∧
       (∀ γ ∈ Γ, ContinuedMark f Q l (extend (s γ)) → γ ∈ C.union ∪ D.union) ∧
       l * C.total ≤ membershipDegree (shape f) ∧
-      2 * D.total ≤ 133671 * (shape f).b * cutterBox.b
+      2 * D.total ≤ 133646 * (shape f).b * cutterBox.b
 
 private theorem genericCoeffs_injective : Function.Injective genericCoeffs :=
   (algebraMap GenericField GeoField).injective.comp (IsFractionRing.injective Geom[X] GenericField)
@@ -604,7 +604,7 @@ private theorem mem_markIdeal {P : Row 4} {S : Geom[X]} :
   exact map_eq_zero_iff _ genericCoeffs_injective
 
 /-- A high regular actual point is on a terminal mixed branch or a continued branch. -/
-theorem highMark_cases {f Q l S} (hS : S.natDegree ≤ 133671)
+theorem highMark_cases {f Q l S} (hS : S.natDegree ≤ 133646)
     (hh : HighMark f Q l S) : MixedMark f Q l S ∨ ContinuedMark f Q l S := by
   obtain ⟨surface, r, hc⟩ := hh
   let g := (separant^[r]) f
@@ -631,9 +631,9 @@ private theorem le_ceil {n d count : ℕ} (hd : 0 < d) (h : count*d ≤ n) :
 private theorem price_formula (x : Shape) (l : ℕ) :
     physicalPrice x l =
       ceilDiv (ceilDiv (surfaceNumerator32 x.chamber cutterBox) 32 +
-        ceilDiv ((81889 + 2*46584) * membershipDegree x) 46584) l +
-      2 * (133671 * x.b * cutterBox.b) +
-      ceilDiv (81889 * auxCurves32 x + 2*46584 * auxPoints32 x) (32*46584) := by
+        ceilDiv ((81898 + 2*46600) * membershipDegree x) 46600) l +
+      2 * (133646 * x.b * cutterBox.b) +
+      ceilDiv (81898 * auxCurves32 x + 2*46600 * auxPoints32 x) (32*46600) := by
   simp only [physicalPrice, auxCurves32, auxPoints32, membershipDegree, Nat.mul_assoc]
 
 theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) : K1_13.c6 := by
@@ -650,7 +650,7 @@ theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) : K1_13.c6 := by
   have cover : Γ ⊆ (A.union ∪ AB) ∪ (C.union ∪ CB) ∪ D.union ∪ F.union := by
     intro γ hγ
     by_cases hh : HighMark f Q l (extend (s γ))
-    · have hdeg : (extend (s γ)).natDegree ≤ 133671 := by
+    · have hdeg : (extend (s γ)).natDegree ≤ 133646 := by
         simpa only [Polynomial.natDegree_map] using hm.degree γ hγ
       rcases highMark_cases hdeg hh with h | h
       · exact Finset.mem_union_left _ (Finset.mem_union_left _
@@ -674,7 +674,7 @@ theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) : K1_13.c6 := by
           (Nat.add_le_add (Finset.card_union_le _ _) (Finset.card_union_le _ _)) _) _
   let x := shape f
   have aux_bound : aux ≤
-      ceilDiv (81889 * auxCurves32 x + 2*46584 * auxPoints32 x) (32*46584) := by
+      ceilDiv (81898 * auxCurves32 x + 2*46600 * auxPoints32 x) (32*46600) := by
     apply le_ceil (by decide)
     have hA' := A.curve_capacity hm hA
     change 32 * A.total ≤ auxCurves32 x at haCurves
@@ -687,7 +687,7 @@ theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) : K1_13.c6 := by
     have h := (Nat.mul_le_mul_left (32*l) hC').trans hcBudget
     simpa only [mixed, x, Nat.mul_assoc, Nat.mul_left_comm, Nat.mul_comm] using h
   have curve_bound : l * D.union.card ≤
-      ceilDiv ((81889 + 2*46584) * membershipDegree x) 46584 := by
+      ceilDiv ((81898 + 2*46600) * membershipDegree x) 46600 := by
     apply le_ceil (by decide)
     have hD' := Nat.mul_le_mul_left l (D.curve_capacity_integral hm hD hdPos)
     change l * D.total ≤ membershipDegree x at hdBudget
@@ -697,20 +697,20 @@ theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) : K1_13.c6 := by
     omega
   have main_bound : mixed + D.union.card ≤
       ceilDiv (ceilDiv (surfaceNumerator32 x.chamber cutterBox) 32 +
-        ceilDiv ((81889 + 2*46584) * membershipDegree x) 46584) l := by
+        ceilDiv ((81898 + 2*46600) * membershipDegree x) 46600) l := by
     apply le_ceil hl
     rw [Nat.add_mul, Nat.mul_comm mixed l, Nat.mul_comm D.union.card l]
     exact Nat.add_le_add mixed_bound curve_bound
-  have surface_bound : F.union.card ≤ 2*(133671*x.b*cutterBox.b) := by
+  have surface_bound : F.union.card ≤ 2*(133646*x.b*cutterBox.b) := by
     have hF' := F.surface_capacity hm hF hfPos
-    change 2 * F.total ≤ 133671*x.b*cutterBox.b at hfBudget
+    change 2 * F.total ≤ 133646*x.b*cutterBox.b at hfBudget
     omega
   rw [price_formula]
   change Γ.card ≤
     ceilDiv (ceilDiv (surfaceNumerator32 x.chamber cutterBox) 32 +
-      ceilDiv ((81889 + 2*46584) * membershipDegree x) 46584) l +
-    2*(133671*x.b*cutterBox.b) +
-    ceilDiv (81889 * auxCurves32 x + 2*46584 * auxPoints32 x) (32*46584)
+      ceilDiv ((81898 + 2*46600) * membershipDegree x) 46600) l +
+    2*(133646*x.b*cutterBox.b) +
+    ceilDiv (81898 * auxCurves32 x + 2*46600 * auxPoints32 x) (32*46600)
   omega
 
 end

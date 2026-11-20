@@ -2013,7 +2013,7 @@ distinct selected polynomials against the same word. -/
 structure FixedWord (w : I → K) (T : Finset K) (s : K → K[X]) (d : ℕ) : Prop where
   distinct : Set.InjOn s (T : Set K)
   degree : ∀ γ ∈ T, (s γ).natDegree ≤ d
-  hits : ∀ γ ∈ T, ∃ B : Finset I, 180255 ≤ B.card ∧ ∀ i ∈ B, (s γ).eval (node i) = w i
+  hits : ∀ γ ∈ T, ∃ B : Finset I, 180246 ≤ B.card ∧ ∀ i ∈ B, (s γ).eval (node i) = w i
 
 theorem FixedWord.mono {w T s d} (h : FixedWord w T s d) {U : Finset K} (hU : U ⊆ T) :
     FixedWord w U s d :=
@@ -2087,10 +2087,10 @@ private theorem occupancy {α ι : Type*} [DecidableEq α] [DecidableEq ι]
 
 private theorem incidence_arithmetic (m x gap cap : ℕ)
     (hm : 0 < m) (hg : 0 < gap) (hx : gap ≤ x)
-    (hsecond : (m*x)^2 ≤ (x+81889) * (m * (x + (m-1)*(x-gap))))
-    (hfirst : m*x ≤ (x+81889)*cap) :
-    gap*m ≤ 81889*cap + gap := by
-  have hcancel : m*x^2 ≤ (x+81889) * (x + (m-1)*(x-gap)) := by
+    (hsecond : (m*x)^2 ≤ (x+81898) * (m * (x + (m-1)*(x-gap))))
+    (hfirst : m*x ≤ (x+81898)*cap) :
+    gap*m ≤ 81898*cap + gap := by
+  have hcancel : m*x^2 ≤ (x+81898) * (x + (m-1)*(x-gap)) := by
     apply Nat.le_of_mul_le_mul_left _ hm
     calc
       _ = (m*x)^2 := by ring
@@ -2102,35 +2102,35 @@ private theorem incidence_arithmetic (m x gap cap : ℕ)
   push_cast [hM, hX] at hcancelZ
   have hfirstZ := Int.ofNat_le.mpr hfirst
   push_cast at hfirstZ
-  have secondZ : ((m : ℤ)*81889 - ((m : ℤ)-1)*gap)*x ≥
-      ((m : ℤ)-1)*81889*gap := by
+  have secondZ : ((m : ℤ)*81898 - ((m : ℤ)-1)*gap)*x ≥
+      ((m : ℤ)-1)*81898*gap := by
     nlinarith only [hcancelZ]
-  have firstZ : ((m : ℤ)-(cap : ℤ))*x ≤ (cap : ℤ)*81889 := by
+  have firstZ : ((m : ℤ)-(cap : ℤ))*x ≤ (cap : ℤ)*81898 := by
     nlinarith only [hfirstZ]
   by_contra! h
-  have hbadZ : (81889 : ℤ)*cap + gap < (gap : ℤ)*m := by exact_mod_cast h
-  have hbad : (cap : ℤ)*81889 < ((m : ℤ)-1)*gap := by nlinarith only [hbadZ]
+  have hbadZ : (81898 : ℤ)*cap + gap < (gap : ℤ)*m := by exact_mod_cast h
+  have hbad : (cap : ℤ)*81898 < ((m : ℤ)-1)*gap := by nlinarith only [hbadZ]
   have hxpos : 0 < (x : ℤ) := by omega
-  have cmp : (m : ℤ)*81889 - ((m : ℤ)-1)*gap < ((m : ℤ)-(cap : ℤ))*81889 := by
+  have cmp : (m : ℤ)*81898 - ((m : ℤ)-1)*gap < ((m : ℤ)-(cap : ℤ))*81898 := by
     linarith only [hbad]
   have left := mul_lt_mul_of_pos_right cmp hxpos
-  have right := mul_le_mul_of_nonneg_right firstZ (by norm_num : (0 : ℤ) ≤ 81889)
+  have right := mul_le_mul_of_nonneg_right firstZ (by norm_num : (0 : ℤ) ≤ 81898)
   have impossible := secondZ.trans_lt (left.trans_le (show
-      ((m : ℤ)-(cap : ℤ))*81889*x ≤ (cap : ℤ)*81889*81889 from by
+      ((m : ℤ)-(cap : ℤ))*81898*x ≤ (cap : ℤ)*81898*81898 from by
         convert right using 1
         ring))
-  have bigger := mul_lt_mul_of_pos_right hbad (by norm_num : (0 : ℤ) < 81889)
+  have bigger := mul_lt_mul_of_pos_right hbad (by norm_num : (0 : ℤ) < 81898)
   nlinarith only [impossible, bigger]
 
 /-- A uniform occupancy cap on the nonpersistent nodes gives the fixed-word
 bound with the actual degree parameter in the agreement gap. -/
-theorem section_capacity {w T s d} (h : FixedWord w T s d) (hd : d < 180255) (cap : ℕ)
+theorem section_capacity {w T s d} (h : FixedWord w T s d) (hd : d < 180246) (cap : ℕ)
     (hsection : ∀ i : I, (∃ γ ∈ T, (s γ).eval (node i) ≠ w i) →
       (T.filter fun γ => (s γ).eval (node i) = w i).card ≤ cap) :
-    (180255 - d) * T.card ≤ 81889 * cap + (180255 - d) := by
+    (180246 - d) * T.card ≤ 81898 * cap + (180246 - d) := by
   classical
   by_cases hm : T.card ≤ 1
-  · have hb := Nat.mul_le_mul_left (180255 - d) hm
+  · have hb := Nat.mul_le_mul_left (180246 - d) hm
     simp only [Nat.mul_one] at hb
     omega
   let hits (γ : K) : Finset I := univ.filter fun i => (s γ).eval (node i) = w i
@@ -2139,7 +2139,7 @@ theorem section_capacity {w T s d} (h : FixedWord w T s d) (hd : d < 180255) (ca
   have common_le (γ : K) (hγ : γ ∈ T) : common ⊆ hits γ := by
     intro i hi
     exact mem_filter.mpr ⟨mem_univ _, (mem_filter.mp hi).2 γ hγ⟩
-  have hit_count (γ : K) (hγ : γ ∈ T) : 180255 ≤ (hits γ).card := by
+  have hit_count (γ : K) (hγ : γ ∈ T) : 180246 ≤ (hits γ).card := by
     obtain ⟨B, hB, hval⟩ := h.hits γ hγ
     exact hB.trans (card_le_card fun i hi => mem_filter.mpr ⟨mem_univ _, hval i hi⟩)
   have pair_count (a : K) (ha : a ∈ T) (b : K) (hb : b ∈ T) (hab : a ≠ b) :
@@ -2156,11 +2156,11 @@ theorem section_capacity {w T s d} (h : FixedWord w T s d) (hd : d < 180255) (ca
   have hcommon : common.card ≤ d :=
     (card_le_card (subset_inter (common_le a ha) (common_le b hb))).trans
       (pair_count a ha b hb hab)
-  let x := 180255 - common.card
+  let x := 180246 - common.card
   let t := d - common.card
-  have ht : t = x - (180255 - d) := by dsimp [t, x]; omega
-  have hx : 180255 - d ≤ x := by dsimp [x]; omega
-  have hnodes : nodes.card = x + 81889 := by
+  have ht : t = x - (180246 - d) := by dsimp [t, x]; omega
+  have hx : 180246 - d ≤ x := by dsimp [x]; omega
+  have hnodes : nodes.card = x + 81898 := by
     rw [card_sdiff_of_subset (subset_univ common), card_univ, IRSProfile.card_index]
     dsimp [x]
     omega
@@ -2298,7 +2298,7 @@ private theorem regular_count {n U s g H w} (A : RegularChart U s g H n)
     (C : TaylorForms n (ordinateBound endpointDegree g) (taylorPower endpointDegree))
     (hrec : ∀ γ ∈ U, C.Recovers (A.parameter γ) (s γ)) (hdegree : c3) :
     (U.card : ℚ) ≤
-      (81889 / 45630 : ℚ) * ((taylorPower endpointDegree * (g * H) +
+      (81898 / 45621 : ℚ) * ((taylorPower endpointDegree * (g * H) +
         ordinateBound endpointDegree g * H : ℕ) : ℚ) + 1 := by
   classical
   let a := ordinateBound endpointDegree g
@@ -2363,10 +2363,10 @@ private theorem regular_count {n U s g H w} (A : RegularChart U s g H n)
     obtain ⟨hγU, hγhit⟩ := mem_filter.mp hγ
     exact mem_zeroLocus_sup_span_singleton_iff.mpr ⟨hpoints γ hγU, (hcut γ hγU).mpr hγhit⟩
   have hcount := K1_14_6.section_capacity hw (by decide) D hsection
-  change 45630 * U.card ≤ 81889 * D + 45630 at hcount
-  have hcountQ : (45630 : ℚ) * (U.card : ℚ) ≤ 81889 * (D : ℚ) + 45630 := by
+  change 45621 * U.card ≤ 81898 * D + 45621 at hcount
+  have hcountQ : (45621 : ℚ) * (U.card : ℚ) ≤ 81898 * (D : ℚ) + 45621 := by
     exact_mod_cast hcount
-  change (U.card : ℚ) ≤ (81889 / 45630 : ℚ) * (D : ℚ) + 1
+  change (U.card : ℚ) ≤ (81898 / 45621 : ℚ) * (D : ℚ) + 1
   linarith only [hcountQ]
 
 set_option maxHeartbeats 800000 in
@@ -2411,10 +2411,10 @@ theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) : K1_14_2.c4 := by
     (T.card : ℚ) = ((T \ U).card : ℚ) + (U.card : ℚ) := by
       exact_mod_cast (card_sdiff_add_card_eq_card hU).symm
     _ ≤ ((taylorPower g * H : ℕ) : ℚ) +
-        ((81889 / 45630 : ℚ) * (((b * taylorPower g + 1) * H : ℕ) : ℚ) + 1) :=
+        ((81898 / 45621 : ℚ) * (((b * taylorPower g + 1) * H : ℕ) : ℚ) + 1) :=
       add_le_add (Nat.cast_le.mpr hexc) hregular
     _ ≤ ((taylorPower g * H : ℕ) : ℚ) +
-        ((81889 / 45630 : ℚ) * (((b * taylorPower g + 1) * H : ℕ) : ℚ) + g) :=
+        ((81898 / 45621 : ℚ) * (((b * taylorPower g + 1) * H : ℕ) : ℚ) + g) :=
       add_le_add le_rfl (add_le_add le_rfl hgQ)
     _ = rootPrice g H := by
       unfold rootPrice
@@ -7020,7 +7020,7 @@ private theorem card_le_sum_cover {α β : Type*} (U : Finset α) (Ps : Finset �
   classical
   exact (card_le_card fun γ hγ => mem_biUnion.mpr (h γ hγ)).trans card_biUnion_le
 
-def curveFactor (d : ℕ) : ℕ := 81889 / (180255 - d) + 1
+def curveFactor (d : ℕ) : ℕ := 81898 / (180246 - d) + 1
 
 private def LinearCover.slice {T s d e b} (C : LinearCover T s d e b)
     (U : Finset K) (P : Ideal (LinearRing d e b)) : Finset K := by
@@ -7111,7 +7111,7 @@ private theorem curve_degree_nat {k σ : Type*} [Field k] [Finite σ]
   exact ⟨m-n, Nat.sub_pos_of_lt hmn, hdiff.trans (Nat.cast_sub hmn.le).symm⟩
 
 private theorem LinearCover.curve_count {T s d e b w} (C : LinearCover T s d e b)
-    {U : Finset K} (hU : U ⊆ T) (hword : FixedWord w U s d) (hd : d < 180255)
+    {U : Finset K} (hU : U ⊆ T) (hword : FixedWord w U s d) (hd : d < 180246)
     (P : Ideal (LinearRing d e b)) (hP : P.IsPrime)
     (hdim : (affineHilbertPolynomial P).natDegree = 1)
     (hpoints : ∀ γ ∈ U, C.point γ ∈ zeroLocus ClosedField P) :
@@ -7134,13 +7134,13 @@ private theorem LinearCover.curve_count {T s d e b w} (C : LinearCover T s d e b
     have hbound := hsumQ.trans ((sum_le_sum hone).trans (degree.trans_eq hδdeg))
     exact_mod_cast hbound
   have hcount := section_capacity hword hd δ hsection
-  let gap := 180255 - d
+  let gap := 180246 - d
   have hgap : 0 < gap := Nat.sub_pos_of_lt hd
-  have hfactor : 81889 < gap * curveFactor d := by
-    change 81889 < gap * (81889 / gap + 1)
+  have hfactor : 81898 < gap * curveFactor d := by
+    change 81898 < gap * (81898 / gap + 1)
     rw [Nat.mul_add, Nat.mul_one]
-    have heq := Nat.mod_add_div 81889 gap
-    have hr := Nat.mod_lt 81889 hgap
+    have heq := Nat.mod_add_div 81898 gap
+    have hr := Nat.mod_lt 81898 hgap
     omega
   suffices hcard : U.card ≤ curveFactor d * δ by
     rw [hδdeg, ← Nat.cast_mul]
@@ -7149,16 +7149,16 @@ private theorem LinearCover.curve_count {T s d e b w} (C : LinearCover T s d e b
   have hstep := Nat.mul_le_mul_left gap (show curveFactor d * δ + 1 ≤ U.card by omega)
   rw [Nat.mul_add, Nat.mul_one, ← Nat.mul_assoc] at hstep
   have hstrict := Nat.mul_lt_mul_of_pos_right hfactor hδ
-  change gap * U.card ≤ 81889 * δ + gap at hcount
+  change gap * U.card ≤ 81898 * δ + gap at hcount
   omega
 
 private theorem LinearCover.surface_count {T s d e b w} (C : LinearCover T s d e b)
-    {U : Finset K} (hU : U ⊆ T) (hword : FixedWord w U s d) (hd : d < 180255)
+    {U : Finset K} (hU : U ⊆ T) (hword : FixedWord w U s d) (hd : d < 180246)
     (P : Ideal (LinearRing d e b)) (hP : P.IsPrime)
     (hdim : (affineHilbertPolynomial P).natDegree = 2)
     (hpoints : ∀ γ ∈ U, C.point γ ∈ zeroLocus ClosedField P) :
-    ((180255 - d : ℕ) : ℚ) * U.card ≤
-      81889 * (curveFactor d : ℚ) * affineDegree P + ((180255 - d : ℕ) : ℚ) := by
+    ((180246 - d : ℕ) : ℚ) * U.card ≤
+      81898 * (curveFactor d : ℚ) * affineDegree P + ((180246 - d : ℕ) : ℚ) := by
   classical
   let r := (curveFactor d : ℚ) * affineDegree P
   have hr : 0 ≤ r := mul_nonneg (Nat.cast_nonneg _) (affineDegree_nonneg P)
@@ -7181,8 +7181,8 @@ private theorem LinearCover.surface_count {T s d e b w} (C : LinearCover T s d e
     rw [← mul_sum]
     exact mul_le_mul_of_nonneg_left degree (Nat.cast_nonneg _)
   have hcount := section_capacity hword hd ⌊r⌋₊ hsection
-  have hcountQ : ((180255 - d : ℕ) : ℚ) * U.card ≤
-      81889 * (⌊r⌋₊ : ℚ) + ((180255 - d : ℕ) : ℚ) := by exact_mod_cast hcount
+  have hcountQ : ((180246 - d : ℕ) : ℚ) * U.card ≤
+      81898 * (⌊r⌋₊ : ℚ) + ((180246 - d : ℕ) : ℚ) := by exact_mod_cast hcount
   have hfloor := Nat.floor_le hr
   dsimp only [r] at hfloor
   linarith only [hcountQ, hfloor]
@@ -7190,10 +7190,10 @@ private theorem LinearCover.surface_count {T s d e b w} (C : LinearCover T s d e
 /-- Sum the fixed-word bound over the regular source components, with one
 additive allowance for each component and one shared mixed degree budget. -/
 theorem LinearCover.count {T s d e b w} (C : LinearCover T s d e b)
-    (hword : FixedWord w T s d) (hd : d < 180255) :
-    (180255 - d) * T.card ≤ 81889 * curveFactor d * mixedDegree d e b + (180255 - d) * e := by
+    (hword : FixedWord w T s d) (hd : d < 180246) :
+    (180246 - d) * T.card ≤ 81898 * curveFactor d * mixedDegree d e b + (180246 - d) * e := by
   classical
-  let gap : ℕ := 180255 - d
+  let gap : ℕ := 180246 - d
   have hcover : T.card ≤ ∑ P ∈ C.components, (C.slice T P).card := by
     apply card_le_sum_cover
     intro γ hγ
@@ -7203,18 +7203,18 @@ theorem LinearCover.count {T s d e b w} (C : LinearCover T s d e b)
     exact_mod_cast hcover
   have hone (P : Ideal (LinearRing d e b)) (hP : P ∈ C.components) :
       (gap : ℚ) * ((C.slice T P).card : ℚ) ≤
-        81889 * (curveFactor d : ℚ) * affineDegree P + (gap : ℚ) :=
+        81898 * (curveFactor d : ℚ) * affineDegree P + (gap : ℚ) :=
     C.surface_count (filter_subset _ _) (hword.mono (filter_subset _ _)) hd
       P (C.is_prime P hP) (C.dimension P hP) (fun _ hγ => (mem_filter.mp hγ).2)
   have hcount : (gap : ℚ) * T.card ≤
-      81889 * (curveFactor d : ℚ) * (mixedDegree d e b : ℚ) + (gap : ℚ) * e := by
+      81898 * (curveFactor d : ℚ) * (mixedDegree d e b : ℚ) + (gap : ℚ) * e := by
     calc
       _ ≤ (gap : ℚ) * ∑ P ∈ C.components, ((C.slice T P).card : ℚ) :=
         mul_le_mul_of_nonneg_left hcoverQ (Nat.cast_nonneg _)
       _ = ∑ P ∈ C.components, (gap : ℚ) * ((C.slice T P).card : ℚ) := mul_sum ..
-      _ ≤ ∑ P ∈ C.components, (81889 * (curveFactor d : ℚ) * affineDegree P + (gap : ℚ)) :=
+      _ ≤ ∑ P ∈ C.components, (81898 * (curveFactor d : ℚ) * affineDegree P + (gap : ℚ)) :=
         sum_le_sum hone
-      _ = 81889 * (curveFactor d : ℚ) * (∑ P ∈ C.components, affineDegree P) +
+      _ = 81898 * (curveFactor d : ℚ) * (∑ P ∈ C.components, affineDegree P) +
           (gap : ℚ) * (C.components.card : ℚ) := by
         rw [sum_add_distrib, ← mul_sum, sum_const, nsmul_eq_mul, mul_comm (C.components.card : ℚ)]
       _ ≤ _ := add_le_add (mul_le_mul_of_nonneg_left C.degree_sum (by positivity))
@@ -7953,7 +7953,7 @@ theorem of_children (h1 : c1) (h2 : c2) : K1_14.c6 := by
     · exact hthird
     · exact hhi
   have hd0 : 0 < d := by dsimp only [d]; omega
-  have hd : d < 180255 := by
+  have hd : d < 180246 := by
     dsimp only [d, band]
     split_ifs <;> decide
   have hdp : d < p := hd.trans (by decide)
@@ -7981,8 +7981,8 @@ theorem of_children (h1 : c1) (h2 : c2) : K1_14.c6 := by
   obtain ⟨cover⟩ := h2 d e b hd0 hb0 f hf0 hfe hprimitive hsep hseed T M.label F.scalar
     hlabel hroots C (fun γ hγ => hC _ _ (hword.degree γ hγ) (hroots γ hγ).1 (hroots γ hγ).2)
   have hcount := cover.count hword hd
-  let gap := 180255 - d
-  let total := 81889 * curveFactor d * mixedDegree d e b
+  let gap := 180246 - d
+  let total := 81898 * curveFactor d * mixedDegree d e b
   have hgap : 0 < gap := Nat.sub_pos_of_lt hd
   change gap * T.card ≤ total + gap * e at hcount
   change T.card ≤ (total + (gap - 1)) / gap + e
@@ -8571,7 +8571,7 @@ abbrev FreshField := FractionRing Geom[X]
 abbrev FreshCoeffRing := MvPolynomial CoeffIndex FreshField
 abbrev FreshJetRing := MvPolynomial (Fin 3) FreshField
 
-/-- The coefficient coordinates of an actual polynomial of degree at most 133671. -/
+/-- The coefficient coordinates of an actual polynomial of degree at most 133646. -/
 def coeffPoint (P : Geom[X]) : CoeffIndex → Geom := fun a => P.coeff a.val
 
 /-- The j-th Hasse jet at x as a linear form on the coefficient space. -/

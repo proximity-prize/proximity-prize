@@ -2342,7 +2342,7 @@ def c2 : Prop :=
 def c3 : Prop :=
   ∀ (Γ : Finset K) (s : K → K[X]) (f : Row 4) (D q : Row 3),
     SmallFactor f → FatEligible (shape f) → ReducedCut f D q → ∀ T : FatTaylor f,
-    Set.InjOn s (Γ : Set K) → (∀ γ ∈ Γ, (s γ).natDegree ≤ 133671) →
+    Set.InjOn s (Γ : Set K) → (∀ γ ∈ Γ, (s γ).natDegree ≤ 133646) →
     (∀ γ ∈ Γ, OnFactor f (extend (s γ)) ∧ RegularAt f (extend (s γ))) →
     ∃ C : Pieces Γ, C.curves s ∧
       (∀ γ ∈ Γ, ProperMark f q T.test (extend (s γ)) → γ ∈ C.union) ∧
@@ -2355,7 +2355,7 @@ def c4 : Prop :=
   ∀ f : Row 4, SmallFactor f → ∀ surface : Ideal GeoJets, surface.IsPrime → surface.height = 2 →
     toGeneric f ∈ surface → toGeneric (separant f) ∉ surface →
     Invariant f surface → toGeneric (membershipTest f) ∈ surface →
-    ∀ S : Geom[X], surface ≤ markIdeal S → RegularAt f S → S.natDegree ≤ 133671 →
+    ∀ S : Geom[X], surface ≤ markIdeal S → RegularAt f S → S.natDegree ≤ 133646 →
       IntegratedMark f S
 
 /-- Bound and deduplicate the fresh coefficient families, either by the
@@ -2363,12 +2363,12 @@ proper membership section or by slicing the integrable threefold. -/
 def c5 : Prop :=
   ∀ (Γ : Finset K) (s : K → K[X]) (f : Row 4),
     SmallFactor f → FatEligible (shape f) → FatTaylor f →
-    Set.InjOn s (Γ : Set K) → (∀ γ ∈ Γ, (s γ).natDegree ≤ 133671) →
+    Set.InjOn s (Γ : Set K) → (∀ γ ∈ Γ, (s γ).natDegree ≤ 133646) →
     (∀ γ ∈ Γ, OnFactor f (extend (s γ)) ∧ RegularAt f (extend (s γ))) →
     ∃ C F : Pieces Γ, C.surfaces s ∧ ThreefoldPieces F s ∧
       (∀ i, 0 < C.degree i) ∧ (∀ i, 0 < F.degree i) ∧
       (∀ γ ∈ Γ, IntegratedMark f (extend (s γ)) → γ ∈ C.union ∪ F.union) ∧
-      2 * C.total ≤ 133671 * (shape f).chamber.b * (fatChart (shape f)).b ∧
+      2 * C.total ≤ 133646 * (shape f).chamber.b * (fatChart (shape f)).b ∧
       F.total ≤ (shape f).chamber.b * (fatChart (shape f)).b ^ 2
 
 private theorem genericCoeffs_injective : Function.Injective genericCoeffs :=
@@ -2458,7 +2458,7 @@ theorem threefold_pieces_capacity {w Γ s} (C : Pieces Γ) (h : Messages w Γ s)
 private theorem proper_capacity {w Γ s} {x : Shape} (C : Pieces Γ) (h : Messages w Γ s)
     (hc : C.curves s) (hb : 32 * C.total ≤ curveMass32 x)
     (hn : 32 * C.n ≤ componentMass32 x) :
-    C.union.card ≤ ceilDiv (81889 * curveMass32 x) (32 * 46584) +
+    C.union.card ≤ ceilDiv (81898 * curveMass32 x) (32 * 46600) +
       ceilDiv (componentMass32 x) 32 := by
   have hcap := C.curve_capacity h hc
   unfold ceilDiv
@@ -2478,7 +2478,7 @@ theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) (h4 : c4) (h5 : c5) : K1_13_7.
     let S := extend (s γ)
     have hfS := (hon γ hγ).1
     have hrS := (hon γ hγ).2
-    have hdS : S.natDegree ≤ 133671 := Polynomial.natDegree_map_le.trans (hm.degree γ hγ)
+    have hdS : S.natDegree ≤ 133646 := Polynomial.natDegree_map_le.trans (hm.degree γ hγ)
     obtain ⟨surface, hZ, hle⟩ := lifted_at_mark hfS hrS (hq.roots S (hDmark γ hγ))
     by_cases hE : toGeneric T.test ∈ surface
     · by_cases hflow : toGeneric (lowerFlow q) ∈ surface
@@ -2497,13 +2497,13 @@ theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) (h4 : c4) (h5 : c5) : K1_13_7.
   have hsumI := Finset.card_union_le C.union F.union
   let p := (shape f).chamber
   let h := fatChart (shape f)
-  change Γ.card ≤ ceilDiv (81889 * curveMass32 (shape f)) (32 * 46584) +
+  change Γ.card ≤ ceilDiv (81898 * curveMass32 (shape f)) (32 * 46600) +
     ceilDiv (componentMass32 (shape f)) 32 + 20 * p.b * h.b ^ 2 +
-    5 * 133671 * p.b * h.b + 1
-  have hreserveC : C.union.card ≤ 5 * 133671 * p.b * h.b := by
+    5 * 133646 * p.b * h.b + 1
+  have hreserveC : C.union.card ≤ 5 * 133646 * p.b * h.b := by
     have ht := Nat.mul_le_mul_left 2 hdegC
     simp only [← Nat.mul_assoc] at ht
-    change 4 * C.total ≤ 2 * 133671 * p.b * h.b at ht
+    change 4 * C.total ≤ 2 * 133646 * p.b * h.b at ht
     refine hCcard.trans (ht.trans ?_)
     gcongr
     decide
@@ -2619,7 +2619,7 @@ private theorem genericCoeffs_injective : Function.Injective genericCoeffs :=
   (algebraMap GenericField GeoField).injective.comp (IsFractionRing.injective Geom[X] GenericField)
 
 theorem chart_on_mark {S : Geom[X]} {f : Row 4} (T : FatTaylor f)
-    (hd : S.natDegree ≤ 133671) (hf : atJet f S = 0) (hr : RegularAt f S) :
+    (hd : S.natDegree ≤ 133646) (hf : atJet f S = 0) (hr : RegularAt f S) :
     atJet T.denom S ≠ 0 ∧ atJet T.test S = 0 ∧
       ∀ i, atJet (T.numer i) S = atJet T.denom S * Polynomial.C (S.coeff i.val) := by
   have h := T.recovers Geom S hd ((evalTrajectory_geom _ _).trans hf)
@@ -2627,7 +2627,7 @@ theorem chart_on_mark {S : Geom[X]} {f : Row 4} (T : FatTaylor f)
   simpa only [evalTrajectory_geom] using h
 
 theorem value_at_mark {f : Row 4} (T : FatTaylor f) {S : K[X]}
-    (hd : S.natDegree ≤ 133671) (hf : atJet f (extend S) = 0)
+    (hd : S.natDegree ≤ 133646) (hf : atJet f (extend S) = 0)
     (hr : RegularAt f (extend S)) (x a : K) :
     evalGeneric (extend S) (valueSection T x a) = 0 ↔ S.eval x = a := by
   have h := chart_on_mark T (Polynomial.natDegree_map_le.trans hd) hf hr
@@ -2710,7 +2710,7 @@ private theorem cutter_fits {f : Row 4} {D q : Row 3} (hq : ReducedCut f D q)
   · simpa [cutter, h] using test_fits_cut T
 
 private theorem exists_marked_curve {f : Row 4} {D q : Row 3} {S : Geom[X]}
-    (hq : ReducedCut f D q) (T : FatTaylor f) (hd : S.natDegree ≤ 133671)
+    (hq : ReducedCut f D q) (T : FatTaylor f) (hd : S.natDegree ≤ 133646)
     (hf : OnFactor f S) (hr : RegularAt f S) (hm : ProperMark f q T.test S) :
     ∃ C surface : Ideal GeoJets, LiftedSurface f q surface ∧
       ProperComponent surface (toGeneric (cutter q T surface)) C ∧ C ≤ markIdeal S := by
@@ -2734,7 +2734,7 @@ private theorem curveSections_of_component (h2 : c2)
     {Γ : Finset K} {s : K → K[X]} {f : Row 4} (T : FatTaylor f)
     (hh : Chamber (fatChart (shape f))) (ht : 0 < (fatChart (shape f)).t)
     {surface C : Ideal GeoJets} {P : GeoJets} (hC : ProperComponent surface P C)
-    (huniq : Set.InjOn s (Γ : Set K)) (hd : ∀ γ ∈ Γ, (s γ).natDegree ≤ 133671)
+    (huniq : Set.InjOn s (Γ : Set K)) (hd : ∀ γ ∈ Γ, (s γ).natDegree ≤ 133646)
     (hreg : ∀ γ ∈ Γ, OnFactor f (extend (s γ)) ∧ RegularAt f (extend (s γ)))
     (hle : ∀ γ ∈ Γ, C ≤ markIdeal (extend (s γ))) :
     CurveSections Γ s (sectionDegree C ((fatChart (shape f)).scale 6) / 6) := by
@@ -3240,8 +3240,8 @@ theorem mapped_chartPolynomial_degree {R : Type} [CommRing R] {f : Row 4} {P : I
     (φ : ChartRing f P →+* R) : ((chartPolynomial f P).map φ).natDegree < taylorLength := by
   rw [chartPolynomial, Polynomial.map_taylor, natDegree_taylor, Polynomial.map_sum]
   simp only [map_monomial]
-  apply Nat.lt_of_le_of_lt (natDegree_sum_le_of_forall_le _ _ (n := 133671) ?_)
-    (by decide : 133671 < taylorLength)
+  apply Nat.lt_of_le_of_lt (natDegree_sum_le_of_forall_le _ _ (n := 133646) ?_)
+    (by decide : 133646 < taylorLength)
   intro i _
   exact (natDegree_monomial_le _).trans (Nat.le_of_lt_succ i.isLt)
 
@@ -3326,13 +3326,13 @@ private theorem markLift_center {f : Row 4} {P : Ideal GeoJets} {S : Geom[X]}
 
 private theorem markLift_polynomial {f : Row 4} {P : Ideal GeoJets} {S : Geom[X]}
     (hP : P ≤ markIdeal S) (hr : RegularAt f S) (hf : atJet f S = 0)
-    (hd : S.natDegree ≤ 133671) :
+    (hd : S.natDegree ≤ 133646) :
     (chartPolynomial f P).map (markLift hP hr) = S.map geomConstants := by
   apply taylor_injective genericArgument
   rw [← markLift_center hP hr, taylor_mapped_chartPolynomial, markLift_center hP hr]
   apply sum_monomial_eq_of_coeffs
   · rw [natDegree_taylor]
-    exact natDegree_map_le.trans_lt (hd.trans_lt (by decide : 133671 < taylorLength))
+    exact natDegree_map_le.trans_lt (hd.trans_lt (by decide : 133646 < taylorLength))
   · intro i
     rw [markLift_jet hP hr hf, taylor_coeff, hasseDeriv_map]
     change genericCoeffs (hasseDeriv i.val S) = (evalRingHom genericArgument)
@@ -3350,7 +3350,7 @@ private theorem comp_eval_coeffs {R : Type} [CommRing R] {T : Type} [CommRing T]
 
 theorem specializes {f : Row 4} {P : Ideal GeoJets} [P.IsPrime]
     (hs : toGeneric (separant f) ∉ P) {S : Geom[X]} (hP : P ≤ markIdeal S)
-    (hr : RegularAt f S) (hf : atJet f S = 0) (hd : S.natDegree ≤ 133671) :
+    (hr : RegularAt f S) (hf : atJet f S = 0) (hd : S.natDegree ≤ 133646) :
     coefficientKernel (componentConstants P) ((chartPolynomial f P).map (genericLift f P hs)) ≤
       coefficientPointIdeal S := by
   let e := MvPolynomial.eval₂Hom (chartConstants f P)
@@ -3565,7 +3565,7 @@ as a polynomial identity in the fresh argument. -/
 def c2 : Prop :=
   ∀ (f : Row 4) (P : Ideal GeoJets) (hp : P.IsPrime)
     (hs : toGeneric (separant f) ∉ P),
-    TrueWeightLE f (90 * 180255 - 1) → toGeneric f ∈ P →
+    TrueWeightLE f (90 * 180246 - 1) → toGeneric f ∈ P →
     toGeneric (membershipTest f) ∈ P →
     ∀ δ : Derivation Geom (ChartRing f P) (ChartRing f P),
       FollowsFlow f P δ →
@@ -4253,7 +4253,7 @@ open Polynomial K1 K1_13 K1_13_6 K1_13_6_3 K1_13_7_2 MvPolynomial
 open scoped BigOperators
 
 theorem markPoint_inj {Γ : Finset K} {s : K → K[X]}
-    (hs : Set.InjOn s (Γ : Set K)) (hd : ∀ γ ∈ Γ, (s γ).natDegree ≤ 133671) :
+    (hs : Set.InjOn s (Γ : Set K)) (hd : ∀ γ ∈ Γ, (s γ).natDegree ≤ 133646) :
     Set.InjOn (markPoint s) (Γ : Set K) := by
   intro α hα β hβ he
   apply hs hα hβ
@@ -4262,8 +4262,8 @@ theorem markPoint_inj {Γ : Finset K} {s : K → K[X]}
   by_cases hn : n < taylorLength
   · have hc := congrFun he ⟨n, hn⟩
     exact embed.injective (by simpa only [markPoint, coeffPoint, Polynomial.coeff_map] using hc)
-  · have hlt : 133671 < n := by
-      change ¬ n < 133672 at hn
+  · have hlt : 133646 < n := by
+      change ¬ n < 133647 at hn
       omega
     rw [Polynomial.coeff_eq_zero_of_natDegree_lt ((hd α hα).trans_lt hlt),
       Polynomial.coeff_eq_zero_of_natDegree_lt ((hd β hβ).trans_lt hlt)]
@@ -4667,17 +4667,17 @@ theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) (h4 : c4) : K1_13_7_2.c5 := by
   · have hsum := sum_fresh_le U₂ (properComponents f T.test)
       (hinj.mono (Finset.filter_subset _ _)) hV₂
     have hb : 2 * (C.total : ℚ) ≤
-        (133671 : ℚ) * (shape f).chamber.b * (fatChart (shape f)).b := calc
+        (133646 : ℚ) * (shape f).chamber.b * (fatChart (shape f)).b := calc
       _ ≤ 2 * ∑ B ∈ U₂, affineDegree B :=
         mul_le_mul_of_nonneg_left (piecesOf_le_degree (T := U₂) (part := marksOn Γ s)) (by positivity)
-      _ ≤ ∑ B ∈ U₂, 133671 * affineDegree (freshImage B) := by
+      _ ≤ ∑ B ∈ U₂, 133646 * affineDegree (freshImage B) := by
         rw [Finset.mul_sum]
         refine Finset.sum_le_sum fun B hB => ?_
         obtain ⟨hBU, hdim⟩ := Finset.mem_filter.mp hB
         have h := (hU B hBU).1
         have hb := h1 f T B h
         exact h3 B h.prime hb.extended_prime hdim (fresh_birational hb)
-      _ = 133671 * ∑ B ∈ U₂, affineDegree (freshImage B) := (Finset.mul_sum ..).symm
+      _ = 133646 * ∑ B ∈ U₂, affineDegree (freshImage B) := (Finset.mul_sum ..).symm
       _ ≤ _ := by
         rw [mul_assoc]
         exact mul_le_mul_of_nonneg_left (hsum.trans (proper_sum hf T)) (by positivity)
@@ -5013,7 +5013,7 @@ private def rowTrajectory {R : Type*} [CommRing R]
 
 private theorem rowTrajectory_degree {R : Type*} [CommRing R]
     (k : Geom →+* R) (Q : Row 4) (U : R[X]) {B : ℕ}
-    (hQ : TrueWeightLE Q B) (hU : U.natDegree ≤ 133671) :
+    (hQ : TrueWeightLE Q B) (hU : U.natDegree ≤ 133646) :
     (rowTrajectory k Q U).natDegree ≤ B := by
   classical
   unfold rowTrajectory
@@ -5022,7 +5022,7 @@ private theorem rowTrajectory_degree {R : Type*} [CommRing R]
   intro m hm
   refine (natDegree_mul_le_of_le (Polynomial.natDegree_map_le) ?_).trans (hQ m hm)
   refine (natDegree_prod_le _ _).trans (Finset.sum_le_sum fun i _ => ?_)
-  change _ ≤ (133671 - i.val) * m i
+  change _ ≤ (133646 - i.val) * m i
   rw [Nat.mul_comm]
   exact natDegree_pow_le_of_le _ ((natDegree_hasseDeriv_le _ _).trans (Nat.sub_le_sub_right hU _))
 
@@ -5082,11 +5082,11 @@ theorem proof : K1_13_7_2_4.c2 := by
   have hU : coeffDeriv d U = 0 :=
     coeffDeriv_zero_of_shift d x hx U (chartTaylor_shift hδ hmem)
   have he : V.eval x = 0 := (eval_chartTrajectory f P f).trans (onChart_zero hf)
-  have hd : V.natDegree ≤ 90 * 180255 - 1 :=
+  have hd : V.natDegree ≤ 90 * 180246 - 1 :=
     rowTrajectory_degree k f U hw (Nat.le_of_lt_succ (chartPolynomial_degree f P))
   have hz : V = 0 := zero_of_stationary_eval d x hx V
     (rowTrajectory_stationary d k hc f U hU) he (fun n hn => chart_factorial_unit f P
-      (hn.trans_lt (hd.trans_lt (by decide : 90 * 180255 - 1 < K1.p))))
+      (hn.trans_lt (hd.trans_lt (by decide : 90 * 180246 - 1 < K1.p))))
   let φ := @genericLift f P hp hs
   have hk : φ.comp (chartConstants f P) = componentConstants P := by
     apply RingHom.ext
@@ -6066,7 +6066,7 @@ private theorem universal_coeff (i : Fin taylorLength) :
   exact coeff_sum_at (m := taylorLength) MvPolynomial.X i
 
 private theorem universal_degree :
-    universalPolynomial.natDegree ≤ 133671 := by
+    universalPolynomial.natDegree ≤ 133646 := by
   apply natDegree_le_iff_coeff_eq_zero.mpr
   intro n hn
   rw [universal_eq]
@@ -6120,7 +6120,7 @@ theorem fresh_identities {f : Row 4} (T : FatTaylor f) {A : CoeffIdeal}
     rw [← evaluateFresh_row, evaluateFresh_mem h.prime]
     obtain ⟨n, hn⟩ := h.regular
     exact fun hall => hn (hall n)
-  have hd : U.natDegree ≤ 133671 := natDegree_map_le.trans universal_degree
+  have hd : U.natDegree ≤ 133646 := natDegree_map_le.trans universal_degree
   obtain ⟨hden, ht, hr⟩ := T.recovers (CoeffField A) U hd ((hfresh f).mpr hf)
     (fun hz => hs ((hfresh (separant f)).mp hz))
   refine ⟨hf, hs, (hfresh T.test).mp ht, fun hm => hden ((hfresh T.denom).mpr hm), ?_⟩
@@ -6552,7 +6552,7 @@ def c1 : Prop :=
 /-- Inverse Taylor evaluation on the regular chart with the common support caps. -/
 def c2 : Prop :=
   ∀ f : Row 4, SmallFactor f → ∃ C : ValueChart (fatChart (shape f)),
-    ∀ S : K[X], S.natDegree ≤ 133671 → OnFactor f (extend S) → RegularAt f (extend S) →
+    ∀ S : K[X], S.natDegree ≤ 133646 → OnFactor f (extend S) → RegularAt f (extend S) →
       C.recovers S
 
 /-- Sparse intersection with one proper supported section chosen independently on each curve. -/
@@ -6668,7 +6668,7 @@ private theorem choose_section {w Γ s} (hm : Messages w Γ s) {H : Shape} (C : 
     (hr : ∀ γ ∈ Γ, r.asIdeal ≤ jetPointIdeal (jetPoint (extend (s γ)))) :
     ∃ (F : Jets) (selected : Finset JetPoint), Supported H F ∧ F ∉ r.asIdeal ∧
       (∀ y ∈ selected, r.asIdeal ≤ jetPointIdeal y ∧ MvPolynomial.eval y F = 0) ∧
-      46584 * Γ.card ≤ 81889 * selected.card + 46584 := by
+      46600 * Γ.card ≤ 81898 * selected.card + 46600 := by
   classical
   let proper := (univ : Finset I).filter (fun i => ∃ γ ∈ Γ, (s γ).eval (node i) ≠ w i)
   let hits (i : I) := Γ.filter (fun γ => (s γ).eval (node i) = w i)
@@ -6742,7 +6742,7 @@ theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) : K1_13_7.c5 := by
   have hsections (r : PrimeSpectrum Jets) :
       ∃ (F : Jets) (selected : Finset JetPoint), Supported (fatChart (shape f)) F ∧ F ∉ r.asIdeal ∧
         (∀ y ∈ selected, r.asIdeal ≤ jetPointIdeal y ∧ MvPolynomial.eval y F = 0) ∧
-        46584 * (piece r).card ≤ 81889 * selected.card + 46584 :=
+        46600 * (piece r).card ≤ 81898 * selected.card + 46600 :=
     choose_section (hm.mono (filter_subset _ _)) C
       (fun γ hγ => hC (s γ) (hm.degree γ (mem_filter.mp hγ).1)
         (hOn γ (mem_filter.mp hγ).1).1 (hOn γ (mem_filter.mp hγ).1).2)
@@ -6763,17 +6763,17 @@ theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) : K1_13_7.c5 := by
   have hCount := h3 f P Q hf hpq hbP hbQ R (fun r hr => (hR r hr).1)
     (shape f).chamber (Or.inr rfl) linear singlePoint hLinear
   rw [sum_congr rfl hOne, sum_const, smul_eq_mul, Nat.mul_one] at hCount
-  have hsum : 46584 * Γ.card ≤ 81889 * (∑ r ∈ R, (selected r).card) + 46584 * R.card := calc
-    _ ≤ 46584 * (∑ r ∈ R, (piece r).card) := Nat.mul_le_mul_left _ hcover
-    _ = ∑ r ∈ R, 46584 * (piece r).card := mul_sum ..
-    _ ≤ ∑ r ∈ R, (81889 * (selected r).card + 46584) := sum_le_sum fun r _ => hFee r
+  have hsum : 46600 * Γ.card ≤ 81898 * (∑ r ∈ R, (selected r).card) + 46600 * R.card := calc
+    _ ≤ 46600 * (∑ r ∈ R, (piece r).card) := Nat.mul_le_mul_left _ hcover
+    _ = ∑ r ∈ R, 46600 * (piece r).card := mul_sum ..
+    _ ≤ ∑ r ∈ R, (81898 * (selected r).card + 46600) := sum_le_sum fun r _ => hFee r
     _ = _ := by rw [sum_add_distrib, ← mul_sum, sum_const, smul_eq_mul, Nat.mul_comm R.card]
   change Γ.card ≤ ceilDiv
-    (81889 * mixed32 (shape f).chamber lowerBox lowerBox (fatChart (shape f)) +
-      46584 * mixed32 (shape f).chamber lowerBox lowerBox (shape f).chamber)
-    (32 * 46584 * threshold)
-  rw [Nat.mul_right_comm 32 46584 threshold]
-  exact weighted_ceil (32 * threshold) 81889 46584 (by decide) hsum hDegree hCount
+    (81898 * mixed32 (shape f).chamber lowerBox lowerBox (fatChart (shape f)) +
+      46600 * mixed32 (shape f).chamber lowerBox lowerBox (shape f).chamber)
+    (32 * 46600 * threshold)
+  rw [Nat.mul_right_comm 32 46600 threshold]
+  exact weighted_ceil (32 * threshold) 81898 46600 (by decide) hsum hDegree hCount
 
 end
 end K1_13_7_5

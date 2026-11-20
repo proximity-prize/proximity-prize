@@ -640,8 +640,8 @@ theorem Asm.K1_14_6_1 : K1_14_6.c1 := K1_14_6_1.proof
 theorem Asm.K1_14_6_2 : K1_14_6.c2 := K1_14_6_2.proof
 theorem Asm.K1_14_6 : K1_14.c6 := K1_14_6.of_children Asm.K1_14_6_1 Asm.K1_14_6_2
 theorem Asm.K1_14 : K1.c14 := K1_14.of_children Asm.K1_14_1 Asm.K1_14_2 Asm.K1_14_3 Asm.K1_14_4 Asm.K1_14_5 Asm.K1_14_6
-theorem Asm.K1 : FrobeniusLocator.Native.ScalarMCACap6915 := K1.of_children Asm.K1_1 Asm.K1_2 Asm.K1_3 Asm.K1_4 Asm.K1_5 Asm.K1_6 Asm.K1_7 Asm.K1_8 Asm.K1_9 Asm.K1_10 Asm.K1_11 Asm.K1_12 Asm.K1_13 Asm.K1_14
+theorem Asm.K1 : FrobeniusLocator.Native.ScalarMCACap6917 := K1.of_children Asm.K1_1 Asm.K1_2 Asm.K1_3 Asm.K1_4 Asm.K1_5 Asm.K1_6 Asm.K1_7 Asm.K1_8 Asm.K1_9 Asm.K1_10 Asm.K1_11 Asm.K1_12 Asm.K1_13 Asm.K1_14
 
 theorem ProximityPrize.Benchmark.candidate :
-    ProximityPrize.Benchmark.ProtocolClaim 6916 81889 262144 :=
-  FrobeniusLocator.Native.protocolClaim6915_of_scalarCap Asm.K1
+    ProximityPrize.Benchmark.ProtocolClaim 6917 81898 262144 :=
+  FrobeniusLocator.Native.protocolClaim6917_of_scalarCap Asm.K1

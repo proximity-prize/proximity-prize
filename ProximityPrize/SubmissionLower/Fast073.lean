@@ -1012,7 +1012,7 @@ def line (Q : Row 3) (T U : Geom[X]) : Polynomial Geom[X] :=
     (fun i => Polynomial.C (jet T i) + Polynomial.C (jet U i) * Polynomial.X) Q
 
 private def Bounded (F : Polynomial Geom[X]) (b : ℕ) : Prop :=
-  ∀ j, (F.coeff j).natDegree ≤ b + 49186 * j
+  ∀ j, (F.coeff j).natDegree ≤ b + 49177 * j
 
 private theorem bounded_mul {F G : Polynomial Geom[X]} {a b : ℕ}
     (hF : Bounded F a) (hG : Bounded G b) : Bounded (F * G) (a + b) := by
@@ -1052,8 +1052,8 @@ private theorem bounded_pow {f : Polynomial Geom[X]} {b : ℕ} (hf : Bounded f b
     exact bounded_mul ih hf
 
 private theorem line_degree (Q : Row 3) (T U : Geom[X]) (t : ℕ)
-    (hQ : RawCut t Q) (hT : T.natDegree ≤ 131071) (hU : U.natDegree ≤ 180257)
-    (j : ℕ) : ((line Q T U).coeff j).natDegree ≤ t + 49186 * j := by
+    (hQ : RawCut t Q) (hT : T.natDegree ≤ 131071) (hU : U.natDegree ≤ 180248)
+    (j : ℕ) : ((line Q T U).coeff j).natDegree ≤ t + 49177 * j := by
   let b (i : Fin 3) : ℕ := 131071 - i.val
   let F (i : Fin 3) : Polynomial Geom[X] :=
     Polynomial.C (jet T i) + Polynomial.C (jet U i) * Polynomial.X
@@ -1061,12 +1061,12 @@ private theorem line_degree (Q : Row 3) (T U : Geom[X]) (t : ℕ)
     intro k
     have ht : (jet T i).natDegree ≤ b i :=
       (natDegree_hasseDeriv_le T i.val).trans (Nat.sub_le_sub_right hT _)
-    have hu : (jet U i).natDegree ≤ b i + 49186 := by
+    have hu : (jet U i).natDegree ≤ b i + 49177 := by
       refine (natDegree_hasseDeriv_le U i.val).trans ((Nat.sub_le_sub_right hU _).trans ?_)
       have hi := i.isLt
-      change 180257 - i.val ≤ (131071 - i.val) + 49186
+      change 180248 - i.val ≤ (131071 - i.val) + 49177
       omega
-    change ((F i).coeff k).natDegree ≤ b i + 49186 * k
+    change ((F i).coeff k).natDegree ≤ b i + 49177 * k
     rw [show F i = _ from rfl, Polynomial.coeff_add, Polynomial.coeff_C,
       Polynomial.coeff_C_mul_X]
     by_cases h0 : k = 0
@@ -1140,15 +1140,15 @@ private theorem coeff_contact (F : Polynomial Geom[X]) (x : Geom) (r : ℕ)
 /-- Each surviving parameter coefficient must vanish by contact at the selected hits. -/
 theorem line_coeff_zero (w : I → K) (H res T : Geom[X]) (t r : ℕ) (Q : Row 3)
     (hT : T.natDegree ≤ 131071) (hQ : RawCut t Q) (hcontact : RawContact r w H res Q)
-    (A : Finset I) (hA : A.card = 180255)
+    (A : Finset I) (hA : A.card = 180246)
     (hhit : ∀ i ∈ A, (H * T + res).eval (embed (node i)) = embed (w i))
-    (V : Geom[X]) (hV : V.natDegree ≤ 2) (j : ℕ) (hj : t + 49186 * j < r * 180255) :
+    (V : Geom[X]) (hV : V.natDegree ≤ 2) (j : ℕ) (hj : t + 49177 * j < r * 180246) :
     (line Q T (locator (fun i => embed (node i)) A * V)).coeff j = 0 := by
   classical
   let x (i : I) : Geom := embed (node i)
   let L := locator x A
   let U := L * V
-  have hU : U.natDegree ≤ 180257 :=
+  have hU : U.natDegree ≤ 180248 :=
     natDegree_mul_le.trans (by rw [locator_natDegree, hA]; omega)
   have hc (i : I) (hi : i ∈ A) (c : Geom) :
       (Polynomial.X - C (x i)) ^ r ∣ (line Q T U).eval (C c) := by
@@ -2328,10 +2328,10 @@ private def gradeSlots (a b c : ℕ) : ℕ :=
   gradeCeiling a b c + 1 - (a + b + c)
 
 private def firstWidth (a b c : ℕ) : ℕ :=
-  90 * 180255 - 133671 * gradeCeiling a b c + indexWeight a b c
+  90 * 180246 - 133646 * gradeCeiling a b c + indexWeight a b c
 
-/-- The grade falls by j from its ceiling, so each step adds 133671 abscissa slots. -/
-private def abscissaWidth (a b c j : ℕ) : ℕ := firstWidth a b c + 133671 * j
+/-- The grade falls by j from its ceiling, so each step adds 133646 abscissa slots. -/
+private def abscissaWidth (a b c j : ℕ) : ℕ := firstWidth a b c + 133646 * j
 
 private noncomputable def exponent (x v a b c : ℕ) : Exponent :=
   (Finsupp.equivFunOnFinite.symm ![v, a, b, c]).optionElim x
@@ -2355,10 +2355,10 @@ private theorem jet_weight (m : Fin 4 →₀ ℕ) (w : Fin 4 → ℕ) :
   simp [Finsupp.weight_apply, Finsupp.sum_fintype, Fin.sum_univ_succ, smul_eq_mul, add_assoc]
 
 private theorem true_weight (x v a b c : ℕ) :
-    (exponent x v a b c).weight (differentialWeight 133671) =
-      x + (v * 133671 + a * 133670 + b * 133669 + c * 133668) := by
-  have hw : differentialWeight (d := 3) 133671 = fun i =>
-      i.elim 1 (fun k => 133671 - k.val) := by
+    (exponent x v a b c).weight (differentialWeight 133646) =
+      x + (v * 133646 + a * 133645 + b * 133644 + c * 133643) := by
+  have hw : differentialWeight (d := 3) 133646 = fun i =>
+      i.elim 1 (fun k => 133646 - k.val) := by
     funext i
     cases i <;> rfl
   rw [hw, exponent, Finsupp.weight_optionElim, jet_weight]
@@ -2367,18 +2367,18 @@ private theorem true_weight (x v a b c : ℕ) :
 private theorem eligible_exponent (x v a b c : ℕ) :
     AnchorEligible (exponent x v a b c) ↔
       c ≤ 10 ∧ indexWeight a b c ≤ 48 ∧ v + (a + b + c) ≤ gradeCeiling a b c ∧
-        x + 133671 * (v + (a + b + c)) < 90 * 180255 + indexWeight a b c := by
+        x + 133646 * (v + (a + b + c)) < 90 * 180246 + indexWeight a b c := by
   unfold AnchorEligible gradeCeiling indexWeight
   rw [Finsupp.degree_eq_weight_one, jet_weight, jet_weight, true_weight]
   simp only [mul_one, Finsupp.some_apply, exponent_some, Matrix.cons_val_zero, le_min_iff]
   change (v + a + b + c ≤ 120 ∧ v * 0 + a * 1 + b * 2 + c * 3 ≤ 48 ∧
     c ≤ 10 ∧ a + b + c ≤ 48 - (v + a + b + c - 113 + 1) / 2 ∧
-    x + (v * 133671 + a * 133670 + b * 133669 + c * 133668) ≤ 90 * 180255 - 1) ↔ _
+    x + (v * 133646 + a * 133645 + b * 133644 + c * 133643) ≤ 90 * 180246 - 1) ↔ _
   by_cases h : a + b + c = 0 <;> omega
 
 private theorem width_iff (a b c j x : ℕ) (hj : j ≤ gradeCeiling a b c) :
     x < abscissaWidth a b c j ↔
-      x + 133671 * (gradeCeiling a b c - j) < 90 * 180255 + indexWeight a b c := by
+      x + 133646 * (gradeCeiling a b c - j) < 90 * 180246 + indexWeight a b c := by
   have hgrade : gradeCeiling a b c ≤ 120 := min_le_left _ _
   unfold abscissaWidth firstWidth
   omega
@@ -2474,7 +2474,7 @@ private theorem sumRange_eq_fin (f : ℕ → ℕ) (n : ℕ) :
 
 private def tripleCount (a b c : ℕ) : ℕ :=
   let n := gradeSlots a b c
-  n * firstWidth a b c + 133671 * (n * (n - 1) / 2)
+  n * firstWidth a b c + 133646 * (n * (n - 1) / 2)
 
 private theorem sum_abscissaWidth (a b c : ℕ) :
     (∑ j : Fin (gradeSlots a b c), abscissaWidth a b c j) = tripleCount a b c := by
@@ -2492,11 +2492,11 @@ private theorem slot_card : Fintype.card Slot = sumRange sliceCount 11 := by
 
 set_option maxRecDepth 10000 in
 set_option maxHeartbeats 2000000 in
-private theorem totalCount : sumRange sliceCount 11 = 2412106273214 := by
+private theorem totalCount : sumRange sliceCount 11 = 2412448647089 := by
   decide +kernel
 
 /-- Exact dimension of the order-90 anchor bank. -/
-theorem anchor_finrank : Module.finrank Geom anchorSpace = 2412106273214 := by
+theorem anchor_finrank : Module.finrank Geom anchorSpace = 2412448647089 := by
   let e : Slot ≃ Eligible :=
     Equiv.ofBijective slotExponent ⟨slotExponent_injective, slotExponent_surjective⟩
   let b := MvPolynomial.basisRestrictSupport Geom {u : Exponent | AnchorEligible u}
@@ -2804,7 +2804,7 @@ theorem jet_step (n : ℕ) (hn : n < taylorLength) :
     norm_num [Nat.factorial]
     linear_combination -(e (lowerTangent f) * r) * hc
   · have hn' : k + 3 + 1 < K1.p := by
-      change k + 3 < 133672 at hn
+      change k + 3 < 133647 at hn
       change k + 3 + 1 < 2130706433
       omega
     have hc := congrArg (constants e) (inverse_factorial_step hn')
@@ -2887,7 +2887,7 @@ private theorem hasse_comm {A : Type*} [CommRing A] (i j : ℕ) (U : A[X]) :
   rw [hi, hj, Nat.add_comm j i, Nat.choose_symm_add (a := i) (b := j)]
 
 private theorem trajectory_degree {A : Type*} [CommRing A] (k : Geom →+* A) (f : Row 3)
-    (U : A[X]) (hU : U.natDegree ≤ 133671) {D : ℕ} (hf : TrueWeightLE f D) :
+    (U : A[X]) (hU : U.natDegree ≤ 133646) {D : ℕ} (hf : TrueWeightLE f D) :
     (trajectory k f U).natDegree ≤ D := by
   classical
   rw [trajectory, MvPolynomial.eval₂_eq]
@@ -3036,11 +3036,11 @@ private theorem initial_residual (hc : oldCutIdeal f ≤ P) :
   rw [he]
   exact chart_zero f P (hc (Ideal.subset_span (by simp)))
 
-theorem continuation (h : TangentStable f P) (hf : TrueWeightLE f (90 * 180255 - 1))
+theorem continuation (h : TangentStable f P) (hf : TrueWeightLE f (90 * 180246 - 1))
     (hc : oldCutIdeal f ≤ P) : trajectory k f (localTaylor f P) = 0 := by
   have hOne : delta h (1 : A) = 0 := by
     simpa only [map_one] using delta_constants h (1 : Geom)
-  have hU : (localTaylor f P).natDegree ≤ 133671 := by
+  have hU : (localTaylor f P).natDegree ≤ 133646 := by
     rw [localTaylor, natDegree_taylor, centred]
     exact degree_jetPolynomial _ (by decide)
   have hShift : taylor x₀ (localTaylor f P) = centred f P := by
@@ -3152,17 +3152,17 @@ def c1 : Prop :=
 
 /-- Reconstruct degree-bounded regular solutions and encode agreement by capped plane cuts. -/
 def c2 : Prop :=
-  ∀ (f : K1_13.Row 2) (d b j : ℕ), 2 ≤ d → d < 180255 → 0 < j →
+  ∀ (f : K1_13.Row 2) (d b j : ℕ), 2 ≤ d → d < 180246 → 0 < j →
     f.totalDegree ≤ b → f.degreeOf 1 ≤ j → Nonempty (AgreementChart f d b j)
 
 private theorem regular_count (hclear : c1) (hchart : c2)
-    {w T s d} (h : FixedWord w T s d) (hd₀ : 2 ≤ d) (hd : d < 180255)
+    {w T s d} (h : FixedWord w T s d) (hd₀ : 2 ≤ d) (hd : d < 180246)
     {g : JetPlane} (hg : Irreducible g) {b j : ℕ}
     (ht : total g ≤ b) (hr : g.natDegree ≤ j)
     (hreg : ∀ γ ∈ T, atScalar (s γ) g = 0 ∧ atScalar (s γ) g.derivative ≠ 0) :
-    (180255-d) * T.card ≤
-      81889 * (total g * topCap d b j + g.natDegree * (totalCap d b - topCap d b j)) +
-        (180255-d) := by
+    (180246-d) * T.card ≤
+      81898 * (total g * topCap d b j + g.natDegree * (totalCap d b - topCap d b j)) +
+        (180246-d) := by
   classical
   by_cases hempty : T = ∅
   · simp [hempty]
@@ -3229,13 +3229,13 @@ private theorem total_pos {g : JetPlane} (hg : Irreducible g) : 0 < total g := b
   rw [hform]
   exact (isUnit_iff_ne_zero.mpr h1).map ((C : FX[X] →+* JetPlane).comp C)
 
-private theorem factor_count (hc1 : c1) (hc2 : c2) {w T s d} (h : FixedWord w T s d) (hd₀ : 2 ≤ d) (hd : d < 180255)
+private theorem factor_count (hc1 : c1) (hc2 : c2) {w T s d} (h : FixedWord w T s d) (hd₀ : 2 ≤ d) (hd : d < 180246)
     {g : JetPlane} (hg : Irreducible g) {b j : ℕ} (hb : 2 ≤ b) (hbp : b < p)
     (ht : total g ≤ b) (hr : g.natDegree ≤ j)
     (hroot : ∀ γ ∈ T, atScalar (s γ) g = 0) :
-    let gap := 180255 - d
+    let gap := 180246 - d
     let mass := total g * topCap d b j + g.natDegree * (totalCap d b - topCap d b j)
-    gap * T.card ≤ 81889 * mass + gap * (total g * (b-1) + 1) := by
+    gap * T.card ≤ 81898 * mass + gap * (total g * (b-1) + 1) := by
   classical
   let good := fun γ => atScalar (s γ) g.derivative ≠ 0
   let R := T.filter good
@@ -3254,14 +3254,14 @@ private theorem factor_count (hc1 : c1) (hc2 : c2) {w T s d} (h : FixedWord w T 
     Finset.card_filter_add_card_filter_not (s := T) good
   dsimp only
   rw [← hpartition, Nat.mul_add]
-  refine (Nat.add_le_add hR (Nat.mul_le_mul_left (180255 - d) hE)).trans_eq ?_
+  refine (Nat.add_le_add hR (Nat.mul_le_mul_left (180246 - d) hE)).trans_eq ?_
   ring
 
 /-- The standalone fixed-equation tariff, including singular and ordinary solutions. -/
 theorem of_children (h1 : c1) (h2 : c2) : K1_14_3.c6 := by
   classical
   intro u del M Γ F d b j hd₀ hd _ hb hbp _ hj hD G hG hcaps T hT hroot
-  let gap := 180255 - d
+  let gap := 180246 - d
   let a := totalCap d b
   let v := topCap d b j
   have hv : v ≤ a := min_le_left _ _
@@ -3286,7 +3286,7 @@ theorem of_children (h1 : c1) (h2 : c2) : K1_14_3.c6 := by
       _ ≤ b := hB
   have hcount (g : JetPlane) (hg : g ∈ fs) :
       gap * (S g).card ≤
-        81889 * (total g * v + g.natDegree * (a-v)) + gap * (total g * (b-1) + 1) :=
+        81898 * (total g * v + g.natDegree * (a-v)) + gap * (total g * (b-1) + 1) :=
     factor_count h1 h2 (hW.mono (Finset.filter_subset _ T)) hd₀ hd (hF g hg) hb hbp
       ((Finset.single_le_sum (fun z _ => Nat.zero_le (total z)) hg).trans hB)
       ((Finset.single_le_sum (fun z _ => Nat.zero_le z.natDegree) hg).trans hJ)
@@ -3296,12 +3296,12 @@ theorem of_children (h1 : c1) (h2 : c2) : K1_14_3.c6 := by
     dsimp only [mass]
     zify [hj, hv]
     ring
-  have hcount' : gap * T.card ≤ 81889*mass + gap*(b*(b-1) + b) := by
+  have hcount' : gap * T.card ≤ 81898*mass + gap*(b*(b-1) + b) := by
     calc
       _ ≤ gap * ∑ g ∈ fs, (S g).card := Nat.mul_le_mul_left _
         ((Finset.card_le_card hcov).trans Finset.card_biUnion_le)
       _ = ∑ g ∈ fs, gap * (S g).card := Finset.mul_sum _ _ _
-      _ ≤ ∑ g ∈ fs, (81889 * (total g * v + g.natDegree * (a-v)) +
+      _ ≤ ∑ g ∈ fs, (81898 * (total g * v + g.natDegree * (a-v)) +
           gap * (total g * (b-1) + 1)) := Finset.sum_le_sum hcount
       _ ≤ _ := by
         simp only [Finset.sum_add_distrib, ← Finset.mul_sum, ← Finset.sum_mul,
@@ -3314,7 +3314,7 @@ theorem of_children (h1 : c1) (h2 : c2) : K1_14_3.c6 := by
     have hlt := Nat.mod_lt ((262144-d)*mass + (gap-1)) hgap
     dsimp only [charge]
     omega
-  have hpay := (Nat.mul_le_mul_right mass (show 81889 ≤ 262144-d by omega)).trans hceil
+  have hpay := (Nat.mul_le_mul_right mass (show 81898 ≤ 262144-d by omega)).trans hceil
   have hbound : gap * T.card ≤ gap * (charge + b*(b-1) + b) := by
     calc
       _ ≤ _ := hcount'
@@ -3517,7 +3517,7 @@ private theorem specialization_flatten (f : Row 2) (S : Geom[X]) :
   cases v <;> rfl
 
 private theorem agreement {f : Row 2} {S : Geom[X]} {d : ℕ}
-    (hd : d < 180255) (hD : S.natDegree ≤ d) (hS : RegularAt 1 f S) (x y : Geom) :
+    (hd : d < 180246) (hD : S.natDegree ≤ d) (hS : RegularAt 1 f S) (x y : Geom) :
     MvPolynomial.aeval (marked S)
       (taylorAgreementEquation center (chart f) (d + 1) (power d) (constants x) (constants y))
       = 0 ↔ S.eval x = y := by
@@ -7630,11 +7630,11 @@ private theorem seed_weight (P : GenericRow) :
   rw [seedDegree, degreeOf_eq_sup, weightedTotalDegree]
   simp only [Finsupp.weight_single_one_apply]
 
-private theorem small_cast_ne_zero (n : ℕ) (hpos : 0 < n) (hsmall : n ≤ 11) :
+private theorem small_cast_ne_zero (n : ℕ) (hpos : 0 < n) (hsmall : n ≤ 10) :
     (n : GenericX) ≠ 0 := by
   let : CharP GenericX K1.p := charP_of_injective_ringHom (inclConst.comp embed).injective K1.p
   intro hz
-  have hlarge : 11 < K1.p := by decide
+  have hlarge : 10 < K1.p := by decide
   exact (not_le_of_gt (hsmall.trans_lt hlarge))
     (Nat.le_of_dvd hpos ((CharP.cast_eq_zero_iff GenericX K1.p n).mp hz))
 
@@ -7646,7 +7646,7 @@ private theorem pderiv_moved {P : GenericRow} {i j k : SeedVar} (h : P.degreeOf 
 
 /-- If k is absent from f, divisibility by f survives the k partial. -/
 private theorem partial_not_dvd {f g : GenericRow} (i k : SeedVar) (a : GenericX)
-    (hi : 0 < f.degreeOf i) (hsmall : f.degreeOf i ≤ 11) (hk : f.degreeOf k = 0)
+    (hi : 0 < f.degreeOf i) (hsmall : f.degreeOf i ≤ 10) (hk : f.degreeOf k = 0)
     (ha : a ≠ 0) (hg : pderiv k g = C a * pderiv i f) : ¬ f ∣ g := by
   have hpartial : pderiv i f ≠ 0 :=
     pderiv_ne_zero_of_natCast_ne_zero i f (small_cast_ne_zero _ hi hsmall)
@@ -7662,12 +7662,12 @@ private theorem partial_not_dvd {f g : GenericRow} (i k : SeedVar) (a : GenericX
   omega
 
 private theorem dotted_relPrime {f r : GenericRow} (hf : Irreducible f)
-    (hb : 0 < jetTotal f) (ht : jetTotal f ≤ 11) (htop : f.degreeOf (some 2) = 0)
+    (hb : 0 < jetTotal f) (ht : jetTotal f ≤ 10) (htop : f.degreeOf (some 2) = 0)
     (hr : r.support ⊆ f.support) (a : GenericX) (ha : a ≠ 0) :
     IsRelPrime f (dotted r (C a * f)) := by
   have hd (i : SeedVar) : (C a * f).degreeOf i = f.degreeOf i := by
     rw [degreeOf_mul_eq (C_ne_zero.mpr ha) hf.ne_zero, degreeOf_C, zero_add]
-  have hsmall (i : Fin 3) : f.degreeOf (some i) ≤ 11 :=
+  have hsmall (i : Fin 3) : f.degreeOf (some i) ≤ 10 :=
     (degreeOf_le_weightedTotalDegree (fun j : SeedVar => j.elim 0 (fun _ => 1))
       (some i) (show 0 < (1 : ℕ) by decide) f).trans ht
   have hzero (i : SeedVar) (hi : f.degreeOf i = 0) : pderiv i r = 0 :=
