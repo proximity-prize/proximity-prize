@@ -1,5 +1,4 @@
-import ProximityPrize.SubmissionLower.LowerPolynomialFoundation
-
+import ProximityPrize.SubmissionLower.LowerFoundation
 
 namespace ProximityPrize.SubmissionLower.Koala6831Intrinsic
 

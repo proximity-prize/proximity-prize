@@ -1,6 +1,5 @@
 import ProximityPrize.SubmissionLower.Koala6831IntrinsicChart
 
-
 namespace ProximityPrize.SubmissionLower.Koala6831Intrinsic
 
 open RCN002 RCN135 RCN136
@@ -38,7 +37,6 @@ theorem polynomialGraphSurfacePoint_tail_zero (φ : Polynomial K →+* L)
       (surfaceMap φ (tailNumerator F j)) = 0 := by
   rw [eval_polynomialGraphSurfacePoint,
     graphSpecialize_tailNumerator_eq_zero F P z₀ z₁ hF j hP, map_zero]
-
 
 end
 

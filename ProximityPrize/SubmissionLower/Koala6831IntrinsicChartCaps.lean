@@ -1,6 +1,5 @@
 import ProximityPrize.SubmissionLower.Koala6831IntrinsicChartCuts
 
-
 namespace ProximityPrize.SubmissionLower.Koala6831Intrinsic
 
 open RCN081 RCN136 RCN234

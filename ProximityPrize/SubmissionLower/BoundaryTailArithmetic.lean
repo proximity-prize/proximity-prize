@@ -1,3 +1,4 @@
+import ProximityPrize.SubmissionLower.MergedInfra6815_1
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.Ring
 namespace ProximityPrize.SubmissionLower.BoundaryTail

@@ -1,7 +1,5 @@
 import ProximityPrize.SubmissionLower.Koala6831OrdinaryTestAdapter
 
-
-
 namespace ProximityPrize.SubmissionLower.Koala6831Intrinsic
 
 open Koala6831Ordinary (ordinarySurface ordinarySurface_injective
@@ -55,7 +53,6 @@ private theorem native_weights_of_degree_caps (F : Carrier K) (y t : ℕ)
     intro d hd
     rw [RCN081.weight_fin4]
     simpa [totalSurfaceWeights, Nat.add_assoc] using (hcap d hd).2
-
 
 private theorem rational_ordinarySurface_irreducible (F : Carrier K) (hirr : Irreducible F)
     (hpos : 0 < (ordinarySurface (algebraMap (Polynomial K) (RCN132.RationalCoefficients K)) F).degreeOf 1) :
@@ -158,4 +155,3 @@ theorem native_regular_cover_after_singular_discard
 end
 
 end ProximityPrize.SubmissionLower.Koala6831Intrinsic
-

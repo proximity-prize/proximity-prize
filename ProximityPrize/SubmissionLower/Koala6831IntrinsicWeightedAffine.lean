@@ -2,7 +2,6 @@ import ProximityPrize.SubmissionLower.Koala6831IntrinsicAffineFamily
 import ProximityPrize.SubmissionLower.Koala6831IntrinsicChartProjection
 import ProximityPrize.SubmissionLower.Koala6831IntrinsicLongLiteral
 
-
 namespace ProximityPrize.SubmissionLower.Koala6831Intrinsic
 
 open scoped BigOperators

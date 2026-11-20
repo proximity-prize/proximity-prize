@@ -1,6 +1,4 @@
-import Mathlib.RingTheory.MvPolynomial.Localization
 import ProximityPrize.SubmissionLower.Koala6831MovingTransverseSpecialize
-
 
 namespace ProximityPrize.SubmissionLower.Koala6831Moving
 

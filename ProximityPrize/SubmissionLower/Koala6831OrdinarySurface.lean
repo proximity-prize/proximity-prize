@@ -1,15 +1,4 @@
-import ProximityPrize.SubmissionLower.Koala6831OrdinaryCarrier
-import Mathlib.Algebra.MvPolynomial.PDeriv
-import Mathlib.RingTheory.Polynomial.UniqueFactorization
-import Mathlib.Tactic.Ring
-import Mathlib.Algebra.MvPolynomial.Degrees
-import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
-import Mathlib.LinearAlgebra.Dimension.Finrank
-import Mathlib.Algebra.Polynomial.Roots
-import Mathlib.Algebra.MvPolynomial.NoZeroDivisors
-import Mathlib.Tactic.LinearCombination
-import ProximityPrize.SubmissionLower.Koala6831BivariateSeeds
-import ProximityPrize.SubmissionLower.Koala6831CarrierPrime
+import ProximityPrize.SubmissionLower.Koala6831OrdinaryPrimitiveCarrier
 import ProximityPrize.SubmissionLower.Koala6831OrdinaryIncidence
 
 namespace ProximityPrize.SubmissionLower.Koala6831Ordinary

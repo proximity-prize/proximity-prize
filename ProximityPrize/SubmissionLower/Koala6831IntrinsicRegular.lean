@@ -1,6 +1,5 @@
 import ProximityPrize.SubmissionLower.Koala6831IntrinsicTail
 
-
 namespace ProximityPrize.SubmissionLower.Koala6831Intrinsic
 
 open MvPolynomial RCN077 RCN347
@@ -170,7 +169,6 @@ theorem regularImage_tailNumerator (F : Carrier K) (j : ℕ) :
         (((D : RegularCarrier F → RegularCarrier F)^[j + 1]) Q) (2 * j)
       rw [pow_two, mul_assoc] at hstep
       exact hstep
-
 
 end
 

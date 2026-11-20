@@ -1,6 +1,4 @@
-import ProximityPrize.SubmissionLower.LowerFoundation
 import ProximityPrize.SubmissionLower.Koala6831MovingDerivation
-
 
 namespace ProximityPrize.SubmissionLower.Koala6831Moving
 

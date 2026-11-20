@@ -1,7 +1,6 @@
 import ProximityPrize.SubmissionLower.Koala6831IntrinsicGauss
 import Mathlib.Algebra.Polynomial.Eval.Degree
 
-
 namespace ProximityPrize.SubmissionLower.Koala6831Intrinsic
 
 open scoped Polynomial BigOperators

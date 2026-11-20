@@ -1,7 +1,5 @@
-import ProximityPrize.SubmissionLower.LowerFoundation
 import ProximityPrize.SubmissionLower.Koala6831IntrinsicRegular
 import ProximityPrize.SubmissionLower.Koala6831IntrinsicReconstruction
-
 
 namespace ProximityPrize.SubmissionLower.Koala6831Intrinsic
 
@@ -86,10 +84,6 @@ theorem pointTaylorPolynomial_coeff_succ (F : Carrier K) (coeff : K →+* L) (v 
   congr 1
   exact (eq_div_iff (pow_ne_zero _ hS)).mpr (by simpa only [mul_comm] using hclear.symm)
 
-
-
-
-
 private theorem coord_eval_eq_image (F : Carrier K) :
     (MvPolynomial.eval₂Hom (algebraMap K (RegularCarrier F))
       (fun i : Fin 4 => regularImage F (MvPolynomial.X i))) = regularImage F := by
@@ -163,8 +157,6 @@ theorem pointTaylorPolynomial_relation_of_persistent
       coord (centeredGraph v P) hv F hrel hdeg
     rwa [hcoeff] at hz
   exact rel
-
-
 
 end
 

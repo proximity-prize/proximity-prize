@@ -4,8 +4,6 @@ import Mathlib.RingTheory.MvPolynomial.WeightedHomogeneous
 import Mathlib.RingTheory.MvPolynomial.Basic
 import Mathlib.Algebra.MvPolynomial.NoZeroDivisors
 
-
-
 namespace ProximityPrize.SubmissionLower.Koala6831Ordinary
 
 open MvPolynomial

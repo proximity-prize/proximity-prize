@@ -1,7 +1,5 @@
 import ProximityPrize.SubmissionLower.Koala6831OrdinaryCurveBudget
 
-
-
 namespace ProximityPrize.SubmissionLower.Koala6831OrdinaryIncidence
 
 open RCN095 RCN237 RCN264
@@ -315,4 +313,3 @@ theorem regular_surface_seed_count
 end
 
 end ProximityPrize.SubmissionLower.Koala6831OrdinaryIncidence
-

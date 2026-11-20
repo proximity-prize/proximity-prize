@@ -15,7 +15,7 @@ set_option autoImplicit false
 set_option maxHeartbeats 1000000
 set_option maxRecDepth 100000
 variable {K I : Type} [Field K]
-local instance : DecidableEq K := Classical.decEq K
+
 local instance : DecidableEq I := Classical.decEq I
 variable {Gamma : Finset K} {x : I → K} {p : ℕ} {flag : FlagDegree}
 variable [CharP (GenericField K) p]
@@ -201,8 +201,7 @@ set_option maxHeartbeats 5000000
 set_option maxRecDepth 100000
 
 variable {K I : Type} [Field K]
-local instance : DecidableEq K := Classical.decEq K
-local instance : DecidableEq I := Classical.decEq I
+
 variable {Gamma : Finset K} {x : I → K} {p : ℕ} {flag : FlagDegree}
 variable [CharP (GenericField K) p] [CharP K p]
 variable {stageErrorCap : ℕ}
@@ -500,9 +499,7 @@ set_option synthInstance.maxHeartbeats 300000
 variable {K Omega Iota:Type} [Field K] [Field Omega] [IsAlgClosed Omega]
  {phi:Polynomial K →+* Omega} {Gamma:Finset K} {x:Iota → K}
  {pchar e w a b s:ℕ} [CharP Omega pchar] {flag:FlagDegree}
-local instance:DecidableEq K:=Classical.decEq K
-local instance:DecidableEq Omega:=Classical.decEq Omega
-local instance:DecidableEq Iota:=Classical.decEq Iota
+
 theorem exists_reduced_firstTail_activeNestedData_of_caps
    (S:ResidualStage phi Gamma x pchar e flag w (support a b s))
    (hproper:¬ S.G ∣ globalTailCut phi S.F (w + 1))
@@ -685,8 +682,7 @@ set_option autoImplicit false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 100000
 variable {K I:Type} [Field K]
-local instance:DecidableEq K:=Classical.decEq K
-local instance:DecidableEq I:=Classical.decEq I
+
 variable {Gamma:Finset K} {x:I → K} {p:ℕ} {flag:FlagDegree}
  [CharP (GenericField K) p]
  {stageErrorCap:ℕ}
@@ -884,8 +880,7 @@ set_option maxHeartbeats 8000000
 set_option maxRecDepth 800000
 
 variable {K I : Type} [Field K]
-local instance : DecidableEq K := Classical.decEq K
-local instance : DecidableEq I := Classical.decEq I
+
 variable {Gamma : Finset K} {x : I → K} {p : ℕ} {flag : FlagDegree}
 variable [CharP (GenericField K) p] [CharP K p]
 variable {stageErrorCap : ℕ}
@@ -980,35 +975,6 @@ open RCN095 RCN198 RCN263 RCN287 RCN327 LocatorHybridCells
 set_option maxHeartbeats 1000000
 set_option maxRecDepth 10000
 
-def Safe (r y : ℕ) : Prop :=
-  r * (cellFirstTail y y r).yz + y * (cellFirstTail y y r).all < 2130706433 ∧
-  r * (sharpResidualAgreementFlag (cellSupport y y r) w).yz +
-    y * (sharpResidualAgreementFlag (cellSupport y y r) w).all < 2130706433
-instance (r y : ℕ) : Decidable (Safe r y) := by unfold Safe; infer_instance
-
-theorem z_mixed_bound (f q : FlagDegree) (r y : ℕ)
-    (hr : f.all ≤ r) (hy : f.yz + f.all ≤ y) :
-    flagMixed f q unitZFlag ≤ r * q.yz + y * q.all := by
-  have h1 := Nat.mul_le_mul_right q.yz hr
-  have h2 := Nat.mul_le_mul_right q.all hy
-  simp only [flagMixed, unitZFlag]
-  nlinarith
-
-theorem reduced_gate (f : FlagDegree) (t y r : ℕ)
-    (hsafe : Safe r y) (hfa : f.all ≤ r) (hfy : f.yz + f.all ≤ y) :
-    flagMixed f (cellFirstTail t y r) unitZFlag < 2130706433 := by
-  have hy : (cellFirstTail t y r).yz = (cellFirstTail y y r).yz := rfl
-  have hr : (cellFirstTail t y r).all = (cellFirstTail y y r).all := rfl
-  exact (z_mixed_bound f _ r y hfa hfy).trans_lt (by rw [hy,hr]; exact hsafe.1)
-
-theorem identity_gate (f : FlagDegree) (t y r : ℕ)
-    (hsafe : Safe r y) (hfa : f.all ≤ r) (hfy : f.yz + f.all ≤ y) :
-    flagMixed f (sharpResidualAgreementFlag (cellSupport t y r) w) unitZFlag < 2130706433 := by
-  have hy : (sharpResidualAgreementFlag (cellSupport t y r) w).yz =
-      (sharpResidualAgreementFlag (cellSupport y y r) w).yz := rfl
-  have hr : (sharpResidualAgreementFlag (cellSupport t y r) w).all =
-      (sharpResidualAgreementFlag (cellSupport y y r) w).all := rfl
-  exact (z_mixed_bound f _ r y hfa hfy).trans_lt (by rw [hy,hr]; exact hsafe.2)
 end ProximityPrize.SubmissionLower.BoundaryTailGates6808
 end MergedPart7
 section MergedPart8
@@ -1021,8 +987,7 @@ set_option maxHeartbeats 4000000
 set_option maxRecDepth 45000
 set_option synthInstance.maxHeartbeats 300000
 variable {K I:Type} [Field K]
-local instance:DecidableEq K:=Classical.decEq K
-local instance:DecidableEq I:=Classical.decEq I
+
 variable {Γ:Finset K} {x:I → K} {p e a b s:ℕ} [CharP (GenericField K) p]
  {flag:FlagDegree} {w:ℕ}
 theorem actual_identityCurveCountProvider
@@ -1155,7 +1120,6 @@ set_option autoImplicit false
 set_option maxHeartbeats 2000000
 set_option maxRecDepth 100000
 
-
 end ProximityPrize.SubmissionLower.MovingFiberIdentityArithmetic6815
 end MergedPart10
 section MergedPart11
@@ -1178,36 +1142,9 @@ def bound (flag : FlagDegree) (t y r : ℕ) : ℕ :=
   flagMixed flag (cellFirstTail t y r) (BoundaryTailProvider.cellNormal t y r) +
     65539 * flagMixed flag (cellMovingFiber t y r) (cellMovingCut t y r)
 
-theorem bound_eq_abs (flag : FlagDegree) (t y r : ℕ)
-    (hr3 : 3 ≤ r) (hb : r+2 ≤ y) :
-    bound flag t y r = BoundaryTailIdentityArithmetic.newCost flag
-      (cellA t y) (cellB y r) (cellS r) := by
-  have hfirst := SecondJetIdentity.cell_first_eq t y r
-  have hnormal : BoundaryTailProvider.cellNormal t y r =
-      Lower80788.HybridIdentityC2.rationalABS (cellA t y) (cellB y r) (cellS r) +
-        131071 • unitAllFlag := by
-    unfold BoundaryTailProvider.cellNormal
-    rw [BoundaryTailAlgebra.normalFlag_eq_cell t y r hr3 hb,
-      SecondJetIdentity.cell_normal_eq]
-    rfl
-  have hfiber : cellMovingFiber t y r =
-      Lower80788.HybridIdentityC2.mfibABS (cellA t y) (cellB y r) (cellS r) := rfl
-  have hrat : cellRational t y r =
-      Lower80788.HybridIdentityC2.rationalABS (cellA t y) (cellB y r) (cellS r) :=
-    SecondJetIdentity.cell_normal_eq t y r
-  have hcut : cellMovingCut t y r =
-      Lower80788.HybridIdentityC2.mcutABS (cellA t y) (cellB y r) (cellS r) := by
-    simp only [cellMovingCut, Lower80788.HybridIdentityC2.mcutABS, hrat,
-      RCN327.w, Nat.reduceAdd, Nat.reduceMul]
-  unfold bound BoundaryTailIdentityArithmetic.newCost BoundaryTailIdentityArithmetic.newNormal
-  rw [hfirst, hnormal, hfiber, hcut]
-
 variable {K I : Type} [Field K] [CharP K 2130706433]
-local instance : DecidableEq K := Classical.decEq K
-local instance : DecidableEq I := Classical.decEq I
-local instance : CharP (GenericField K) 2130706433 := genericField_charP K 2130706433
-variable {Gamma : Finset K} {x : I → K} {flag : FlagDegree}
 
+variable {Gamma : Finset K} {x : I → K} {flag : FlagDegree}
 
 end
 end ProximityPrize.SubmissionLower.MovingFiberOrdinaryHigh6815

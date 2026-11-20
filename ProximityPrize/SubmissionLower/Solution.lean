@@ -1,9 +1,23 @@
-import ProximityPrize.SubmissionLower.Koala6844Submission
-namespace ProximityPrize.Benchmark
-theorem candidate : ProtocolClaim 6844 332529663 1073741824 :=
-  ProximityPrize.SubmissionLower.Koala6844Submission.claim
-end ProximityPrize.Benchmark
+/- KoalaBear 68.36 by Bome2017. Builds on Lucieno's interpolation and stage accounting,
+BitWonka's public packet construction, and earlier work credited in the retained modules.
+Packet6833P01 retains the 81,095-error header from an earlier replay and preserves its original
+declarations. The score-dependent modules here use 81,105 errors. -/
+import ProximityPrize.SubmissionLower.Radius81105Extractor
+import ProximityPrize.SubmissionLower.Radius81105Score
 
+namespace ProximityPrize.Benchmark
+open scoped NNReal
+
+/-- Extend Bome2017's 81,105-error proof to the largest representable radius in
+the same Hamming cell, tighten its extractor bound, and certify its fractional-bit score. -/
+theorem candidate : ProtocolClaim 6836 2853663682636784260 9223372036854698457 := by
+  have base := SubmissionLower.Radius81105.improve SubmissionLower.KoalaOriginal6836.protocol
+  refine ⟨base.admissible, SubmissionLower.Radius81105.extractor_error_lt_target.le,
+    SubmissionLower.Radius81105.fine_score.trans ?_⟩
+  apply NNReal.rpow_le_rpow_of_exponent_le (by norm_num : (1 : ℝ≥0) ≤ 2)
+  norm_num
+#print axioms candidate
+end ProximityPrize.Benchmark
 
 /-
                                  Apache License

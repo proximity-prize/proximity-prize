@@ -1,7 +1,0 @@
-import ProximityPrize.SubmissionLower.Koala6831OrdinaryWeights
-
-namespace ProximityPrize.SubmissionLower.Koala6844HighOrdinary
-
-export Koala6831Ordinary (Poly weightDegree weightLift weight_five weightLift_coeff weightLift_natDegree weightLift_ne_zero weight_mul_eq weight_mul_le weight_add_le weight_C weight_X weight_eval_le)
-
-end ProximityPrize.SubmissionLower.Koala6844HighOrdinary

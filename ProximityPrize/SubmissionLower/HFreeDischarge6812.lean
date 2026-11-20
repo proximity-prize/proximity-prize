@@ -51,12 +51,6 @@ variable {K I : Type} [Field K] [CharP K 2130706433]
   {Gamma : Finset K} {x : I → K} {flag : FlagDegree} {errorCap : ℕ}
   [CharP (GenericField K) 2130706433]
 
-omit [CharP (GenericField K) 2130706433] in
-private theorem natCast_ne_zero_K {n : ℕ} (h0 : 0 < n) (hn : n < 2130706433) : (n : K) ≠ 0 := by
-  intro h
-  exact absurd (Nat.le_of_dvd h0 ((CharP.cast_eq_zero_iff K 2130706433 n).1 h)) (by omega)
-
-
 end Stage
 
 end

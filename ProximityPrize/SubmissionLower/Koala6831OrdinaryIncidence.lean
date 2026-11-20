@@ -1,7 +1,5 @@
 import ProximityPrize.SubmissionLower.LowerFoundation
 
-
-
 namespace ProximityPrize.SubmissionLower.Koala6831OrdinaryIncidence
 
 open scoped Classical BigOperators
@@ -92,12 +90,7 @@ theorem incidence_le_shortened_scaled {Seed Node : Type*}
   · positivity
   · positivity
 
-
-
 def ordinaryFlag (y t : ℕ) : FlagDegree := ⟨0, t - y, y⟩
-
-
-
 
 theorem ordinary_mixed_sum_le {Component : Type*} [Fintype Component]
     (y t : Component → ℕ) (valueCap totalCap : ℕ) (q r : FlagDegree)
@@ -114,7 +107,6 @@ def averageDenominator (w A : ℕ) : ℕ := A * (A - w)
 
 def averagedCutNumerator (n w A degree : ℕ) : ℕ :=
   2 * n * w * (degree - 1) * (A - w) + (n - w) * A
-
 
 def cutFlag (center length y t : ℕ) : FlagDegree :=
   ordinaryFlag (center + length * (2 * (y - 1))) (center + length * (2 * (t - 1)))
@@ -187,8 +179,16 @@ def ordinaryPrice (p n w A e y t : ℕ) : ℕ :=
       (ordinaryFlag cutY (cutT + (e + 1) * denominator)) / denominator ^ 2 +
     p * (2 * y + 2) * t + (e + 1) * (y + t)
 
+def koalaCarrierShape (caseIndex : Fin 9) : ℕ × ℕ :=
+  ![(19, 185), (15, 95), (8, 54), (6, 43), (5, 38), (4, 39),
+    (4, 41), (4, 44), (2, 31)] caseIndex
 
-
+theorem koala_ordinary_price_le (caseIndex : Fin 9) :
+    ordinaryPrice 2130706433 262144 131071 181078 81066
+      (koalaCarrierShape caseIndex).1 (koalaCarrierShape caseIndex).2 +
+      10 * 2130706433 * (262144 + 1) ≤ 250000000000000000 := by
+  fin_cases caseIndex <;> decide +kernel
 
 end ProximityPrize.SubmissionLower.Koala6831OrdinaryIncidence
 
+/- Modified for the 68.32 KoalaBear soundness construction, November 2026. -/

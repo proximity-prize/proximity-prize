@@ -1,8 +1,6 @@
 import ProximityPrize.SubmissionLower.Koala6831OrdinarySurface
 import Mathlib.RingTheory.Localization.Integer
 
-
-
 namespace ProximityPrize.SubmissionLower.Koala6831Ordinary
 
 open RCN136 MvPolynomial
@@ -134,4 +132,3 @@ theorem exists_integral_carrier_lift (H : MvPolynomial (Fin 3) (RatFunc K)) :
 end
 
 end ProximityPrize.SubmissionLower.Koala6831Ordinary
-

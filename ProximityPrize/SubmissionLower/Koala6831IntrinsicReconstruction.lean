@@ -1,10 +1,9 @@
-import ProximityPrize.SubmissionLower.LowerPolynomialFoundation
-
+import ProximityPrize.SubmissionLower.LowerFoundation
 
 namespace ProximityPrize.SubmissionLower.Koala6831Intrinsic
 
 open scoped BigOperators
-open RCN234 RCN347
+open RCN234 RCN347 RCN348 RCN233
 
 noncomputable section
 
@@ -45,9 +44,7 @@ theorem natDegree_eval₂Hom_le_wt
 def centeredGraph (v : Fin 4 → L) (P : Polynomial L) : Fin 4 → Polynomial L :=
   ![Polynomial.C (v 0) + Polynomial.X, P, Polynomial.C (v 2), Polynomial.C (v 3)]
 
-
 variable {A : Type*} [CommRing A] [Algebra K A]
-
 
 end
 

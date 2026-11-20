@@ -298,8 +298,7 @@ set_option maxHeartbeats 12000000
 set_option synthInstance.maxHeartbeats 500000
 variable {K I E T : Type} [Field K] [Field E] [IsAlgClosed E]
   [Algebra (GenericField K) E] [Fintype T] [Nonempty T]
-local instance : DecidableEq K := Classical.decEq K
-local instance : DecidableEq I := Classical.decEq I
+
 variable {Gamma : Finset K} {x : I → K} {p : ℕ} {flag : FlagDegree}
   [CharP (GenericField K) p] {errorCap : ℕ}
   {stageSupport : RCN275.ResidualSupportParameters}
@@ -422,7 +421,7 @@ open scoped Classical BigOperators
 open RCN002 RCN007 RCN072 RCN084 RCN095 RCN134 RCN264
 noncomputable section
 set_option autoImplicit false
-local instance {A : Type*} : DecidableEq A := Classical.decEq A
+
 set_option maxRecDepth 30000
 set_option maxHeartbeats 3000000
 variable {E I : Type} [Field E] [IsAlgClosed E] [Fintype I]
@@ -543,7 +542,7 @@ set_option maxRecDepth 100000
 set_option synthInstance.maxHeartbeats 500000
 variable {K I E T : Type} [Field K] [Field E] [IsAlgClosed E]
   [Algebra (GenericField K) E] [Fintype T]
-local instance : DecidableEq K := Classical.decEq K
+
 local instance : DecidableEq I := Classical.decEq I
 variable {Gamma : Finset K} {x : I → K} {p : ℕ} {flag : FlagDegree}
   [CharP (GenericField K) p] [CharP E p] {errorCap : ℕ}
@@ -718,8 +717,7 @@ variable {K I E A : Type} [Field K] [Field E] [IsAlgClosed E]
   [Algebra (GenericField K) E] [Algebra (RatFunc (GenericField K)) E]
   [IsScalarTower (GenericField K) (RatFunc (GenericField K)) E]
   [Fintype A]
-local instance : DecidableEq K := Classical.decEq K
-local instance : DecidableEq I := Classical.decEq I
+
 variable {Gamma : Finset K} {x : I → K} {p : ℕ} {flag : FlagDegree}
   [CharP (GenericField K) p] [CharP E p] {errorCap : ℕ}
   {stageSupport : RCN275.ResidualSupportParameters}
@@ -988,8 +986,7 @@ set_option synthInstance.maxHeartbeats 500000
 variable {K I E : Type} [Field K] [Field E] [IsAlgClosed E]
   [Algebra (GenericField K) E] [Algebra (RatFunc (GenericField K)) E]
   [IsScalarTower (GenericField K) (RatFunc (GenericField K)) E]
-local instance : DecidableEq K := Classical.decEq K
-local instance : DecidableEq I := Classical.decEq I
+
 variable {Gamma : Finset K} {x : I → K} {p : ℕ} {flag : FlagDegree}
   [CharP (GenericField K) p] [CharP E p] {errorCap : ℕ}
   {stageSupport : RCN275.ResidualSupportParameters}
@@ -1011,8 +1008,7 @@ set_option autoImplicit false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 100000
 variable {K I : Type} [Field K]
-local instance : DecidableEq K := Classical.decEq K
-local instance : DecidableEq I := Classical.decEq I
+
 variable {Gamma : Finset K} {x : I → K} {p : ℕ} {flag : FlagDegree}
   [CharP (GenericField K) p] {stageErrorCap a b s : ℕ}
 
@@ -1115,8 +1111,7 @@ set_option maxHeartbeats 5000000
 set_option maxRecDepth 100000
 
 variable {K I : Type} [Field K]
-local instance : DecidableEq K := Classical.decEq K
-local instance : DecidableEq I := Classical.decEq I
+
 variable {Gamma : Finset K} {x : I → K} {p : ℕ} {flag : FlagDegree}
 variable [CharP (GenericField K) p] [CharP K p]
 variable {stageErrorCap : ℕ}
@@ -1307,8 +1302,7 @@ set_option maxHeartbeats 5000000
 set_option maxRecDepth 100000
 
 variable {K I : Type} [Field K]
-local instance : DecidableEq K := Classical.decEq K
-local instance : DecidableEq I := Classical.decEq I
+
 variable {Gamma : Finset K} {x : I → K} {p : ℕ} {flag : FlagDegree}
 variable [CharP (GenericField K) p] [CharP K p]
 variable {stageErrorCap : ℕ}

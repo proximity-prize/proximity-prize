@@ -1,7 +1,6 @@
 import ProximityPrize.SubmissionLower.Koala6831IntrinsicChartAgreement
 import ProximityPrize.SubmissionLower.Koala6831IntrinsicChartCoefficients
 
-
 namespace ProximityPrize.SubmissionLower.Koala6831Intrinsic
 
 open scoped BigOperators WithZero

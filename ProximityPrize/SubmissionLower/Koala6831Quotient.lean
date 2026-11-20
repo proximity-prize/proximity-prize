@@ -9,8 +9,6 @@ import Mathlib.RingTheory.Coprime.Lemmas
 import Mathlib.Tactic.FinCases
 import Mathlib.Tactic.Ring
 
-
-
 namespace ProximityPrize.SubmissionLower.Koala6831Quotient
 
 open scoped BigOperators

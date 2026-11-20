@@ -1,7 +1,6 @@
-import Mathlib.FieldTheory.RatFunc.AsPolynomial
+import ProximityPrize.SubmissionLower.LowerFoundation
 import Mathlib.FieldTheory.KummerPolynomial
 import Mathlib.FieldTheory.PurelyInseparable.PerfectClosure
-
 
 namespace ProximityPrize.SubmissionLower.Koala6831Intrinsic
 

@@ -1,7 +1,5 @@
 import ProximityPrize.SubmissionLower.Koala6831CarrierExceptions
 
-
-
 namespace ProximityPrize.SubmissionLower.Koala6831OrdinaryFactorExceptions
 
 open Koala6831BivariateSeeds
@@ -174,4 +172,3 @@ theorem singular_embedded_seed_card_le {p : ℕ} [CharP E p] (φ : K →+* E)
 end
 
 end ProximityPrize.SubmissionLower.Koala6831OrdinaryFactorExceptions
-

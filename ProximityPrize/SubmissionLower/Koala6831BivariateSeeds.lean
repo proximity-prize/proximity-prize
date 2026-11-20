@@ -3,7 +3,6 @@ import Mathlib.Algebra.MvPolynomial.Degrees
 import Mathlib.Algebra.MvPolynomial.Eval
 import ProximityPrize.SubmissionLower.Koala6831SeedEncoding
 
-
 namespace ProximityPrize.SubmissionLower.Koala6831BivariateSeeds
 
 open Polynomial Koala6831SeedEncoding
@@ -116,13 +115,27 @@ theorem frobeniusHom_eq_encode (p : ℕ) (P : SeedPolynomial K)
         ← Polynomial.C_mul_X_pow_eq_monomial]
       simp [coordinates, exponent, pow_add, pow_mul]
 
-
 theorem frobeniusHom_nonzero {p : ℕ} (hp : 0 < p) (hb : b ≤ p)
     {P : SeedPolynomial K} (hP : P ≠ 0) (h₀ : P.degreeOf 0 < b) (h₁ : P.degreeOf 1 < c) :
     frobeniusHom p P ≠ 0 := by
   rw [frobeniusHom_eq_encode p P h₀ h₁]
   exact encode_nonzero hp hb (coefficients_nonzero hP h₀ h₁)
 
+theorem natDegree_frobeniusHom_le (p : ℕ) (P : SeedPolynomial K)
+    (h₀ : P.degreeOf 0 < b) (h₁ : P.degreeOf 1 < c) :
+    (frobeniusHom p P).natDegree ≤ (b - 1) + p * (c - 1) := by
+  rw [frobeniusHom_eq_encode p P h₀ h₁]
+  exact natDegree_encode_le p _
 
+theorem card_le_of_vanishing {p : ℕ} (hp : 0 < p) (hb : b ≤ p)
+    {P : SeedPolynomial K} (hP : P ≠ 0) (h₀ : P.degreeOf 0 < b) (h₁ : P.degreeOf 1 < c)
+    (seeds : Finset K) (hzero : ∀ g ∈ seeds, MvPolynomial.eval (coordinates g (g ^ p)) P = 0) :
+    seeds.card ≤ (b - 1) + p * (c - 1) := by
+  have hcard : seeds.card ≤ (frobeniusHom p P).natDegree := by
+    apply Polynomial.card_le_degree_of_subset_roots
+    intro g hg
+    exact (Polynomial.mem_roots (frobeniusHom_nonzero hp hb hP h₀ h₁)).mpr
+      ((eval_frobeniusHom p P g).trans (hzero g hg))
+  exact hcard.trans (natDegree_frobeniusHom_le p P h₀ h₁)
 
 end ProximityPrize.SubmissionLower.Koala6831BivariateSeeds

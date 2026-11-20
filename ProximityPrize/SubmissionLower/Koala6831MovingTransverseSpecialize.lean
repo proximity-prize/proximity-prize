@@ -1,6 +1,5 @@
 import ProximityPrize.SubmissionLower.Koala6831MovingTransverseClassify
 
-
 namespace ProximityPrize.SubmissionLower.Koala6831Moving
 
 noncomputable section

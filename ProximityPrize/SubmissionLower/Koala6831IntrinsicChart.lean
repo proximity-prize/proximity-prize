@@ -1,6 +1,4 @@
-import ProximityPrize.SubmissionLower.LowerFoundation
 import ProximityPrize.SubmissionLower.Koala6831IntrinsicRegular
-
 
 namespace ProximityPrize.SubmissionLower.Koala6831Intrinsic
 

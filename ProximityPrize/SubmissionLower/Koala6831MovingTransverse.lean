@@ -1,7 +1,4 @@
-import Mathlib.Algebra.Polynomial.RingDivision
-import Mathlib.RingTheory.Coprime.Lemmas
 import ProximityPrize.SubmissionLower.Koala6831MovingDerivation
-
 
 namespace ProximityPrize.SubmissionLower.Koala6831Moving
 

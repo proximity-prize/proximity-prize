@@ -2,8 +2,6 @@ import ProximityPrize.SubmissionLower.Koala6831OrdinaryWeights
 import ProximityPrize.SubmissionLower.Koala6831Quotient
 import ProximityPrize.SubmissionLower.Koala6831QuotientBoxes
 
-
-
 namespace ProximityPrize.SubmissionLower.Koala6831Ordinary
 
 open MvPolynomial Koala6831Quotient

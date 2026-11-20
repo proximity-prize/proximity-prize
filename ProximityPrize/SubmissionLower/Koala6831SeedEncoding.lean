@@ -1,6 +1,5 @@
 import Mathlib.Algebra.Polynomial.Roots
 
-
 namespace ProximityPrize.SubmissionLower.Koala6831SeedEncoding
 
 open Polynomial
@@ -28,7 +27,6 @@ theorem exponent_injective {p : ℕ} (hp : 0 < p) (hb : b ≤ p) :
 
 noncomputable def encode (p : ℕ) (a : SeedIndex b c → K) : K[X] :=
   ∑ index, monomial (exponent p index) (a index)
-
 
 theorem coeff_encode {p : ℕ} (hp : 0 < p) (hb : b ≤ p)
     (a : SeedIndex b c → K) (index : SeedIndex b c) :
@@ -63,7 +61,14 @@ theorem encode_nonzero {p : ℕ} (hp : 0 < p) (hb : b ≤ p)
     simpa only [encode_zero] using hz
   exact ha (encode_injective hp hb heq)
 
-
-
+theorem natDegree_encode_le (p : ℕ) (a : SeedIndex b c → K) :
+    (encode p a).natDegree ≤ (b - 1) + p * (c - 1) := by
+  unfold encode
+  apply Polynomial.natDegree_sum_le_of_forall_le
+  intro index _
+  apply (Polynomial.natDegree_monomial_le (a index) (m := exponent p index)).trans
+  have hfirst : index.1.val ≤ b - 1 := Nat.le_sub_one_of_lt index.1.isLt
+  have hsecond : index.2.val ≤ c - 1 := Nat.le_sub_one_of_lt index.2.isLt
+  exact Nat.add_le_add hfirst (Nat.mul_le_mul_left p hsecond)
 
 end ProximityPrize.SubmissionLower.Koala6831SeedEncoding

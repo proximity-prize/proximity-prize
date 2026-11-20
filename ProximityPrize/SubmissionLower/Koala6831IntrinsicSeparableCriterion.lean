@@ -1,7 +1,6 @@
 import ProximityPrize.SubmissionLower.Koala6831IntrinsicPowers
 import Mathlib.FieldTheory.PurelyInseparable.Exponent
 
-
 namespace ProximityPrize.SubmissionLower.Koala6831Intrinsic
 
 noncomputable section

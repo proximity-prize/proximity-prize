@@ -1,8 +1,6 @@
 import ProximityPrize.SubmissionLower.Koala6831OrdinaryIncidence
 import ProximityPrize.SubmissionLower.MergedInfra6815_6
 
-
-
 namespace ProximityPrize.SubmissionLower.Koala6831OrdinaryIncidence
 
 open MvPolynomial KaehlerDifferential
@@ -110,6 +108,7 @@ theorem exists_regular_curve_budgets (p : ℕ) [CharP Ω p]
   exact D.uTranscendental C
 
 omit [IsAlgClosed Ω] in
+
 theorem curve_cut_seed_bound {Seed : Type*} {G T H : MvPolynomial (Fin 3) Ω}
     {left first : FlagDegree}
     (B : PrimeFlagBudgetFamily (G := G) (T := T) (H := H) left first)

@@ -3,8 +3,6 @@ import Mathlib.LinearAlgebra.Dimension.RankNullity
 import Mathlib.RingTheory.MvPolynomial.Basic
 import Mathlib.Tactic.FinCases
 
-
-
 namespace ProximityPrize.SubmissionLower.Koala6831Quotient
 
 open scoped BigOperators
@@ -99,6 +97,19 @@ theorem separatedColumns_mono_cutoff (w y s L₀ L₁ : ℕ) :
   intro i _
   exact Nat.mul_le_mul_right _ (Nat.mul_le_mul_right _ (Nat.sub_le_sub_right cut_le _))
 
+theorem longSeparatedDimensionGate (excess : ℕ) (long : 9554 ≤ excess) :
+    separatedColumns (16 * 181078 - 131071 - excess) 131071 21 21 177 164 +
+      262144 * (separatedColumns 16 1 15 22 178 165 -
+        separatedColumns 15 1 14 21 177 164) <
+      separatedColumns (16 * 181078) 131071 22 22 178 165 := by
+  have threshold :
+      separatedColumns (16 * 181078 - 131071 - 9554) 131071 21 21 177 164 +
+        262144 * (separatedColumns 16 1 15 22 178 165 -
+          separatedColumns 15 1 14 21 177 164) <
+        separatedColumns (16 * 181078) 131071 22 22 178 165 := by
+    decide +kernel
+  apply lt_of_le_of_lt _ threshold
+  exact Nat.add_le_add_right (separatedColumns_mono_cutoff _ _ _ _ _ (Nat.sub_le_sub_left long _)) _
 
 def ordinaryExponents (D w y L : ℕ) : Set (Fin 5 →₀ ℕ) :=
   {d | d 0 + w * (d 1 + d 2) < D ∧ d 1 + d 2 ≤ y ∧
@@ -196,18 +207,19 @@ def ordinaryProfiles : Fin 9 → ℕ × ℕ × ℕ :=
     (3, 4, 15), (3, 4, 13), (3, 4, 12), (2, 2, 13)]
 
 set_option maxRecDepth 30000 in
+
 theorem ordinaryDimensionGate (c : Fin 9) (excess : ℕ) (large : 11000 ≤ excess) :
     let (m, y, L) := ordinaryProfiles c
-    ordinaryColumns (m * 181084 - 131071 - excess) 131071 (y - 1) (L - (c.val + 2)) +
+    ordinaryColumns (m * 181078 - 131071 - excess) 131071 (y - 1) (L - (c.val + 2)) +
       262144 * (ordinaryColumns m 1 (m - 1) L -
         ordinaryColumns (m - 1) 1 (m - 2) (L - (c.val + 2))) <
-      ordinaryColumns (m * 181084) 131071 y L := by
+      ordinaryColumns (m * 181078) 131071 y L := by
   have threshold :
       let (m, y, L) := ordinaryProfiles c
-      ordinaryColumns (m * 181084 - 131071 - 11000) 131071 (y - 1) (L - (c.val + 2)) +
+      ordinaryColumns (m * 181078 - 131071 - 11000) 131071 (y - 1) (L - (c.val + 2)) +
         262144 * (ordinaryColumns m 1 (m - 1) L -
           ordinaryColumns (m - 1) 1 (m - 2) (L - (c.val + 2))) <
-        ordinaryColumns (m * 181084) 131071 y L := by
+        ordinaryColumns (m * 181078) 131071 y L := by
     fin_cases c <;> decide +kernel
   cases profile : ordinaryProfiles c with
   | mk m caps =>
@@ -217,3 +229,5 @@ theorem ordinaryDimensionGate (c : Fin 9) (excess : ℕ) (large : 11000 ≤ exce
       exact Nat.add_le_add_right (ordinaryColumns_mono_cutoff _ _ _ (Nat.sub_le_sub_left large _)) _
 
 end ProximityPrize.SubmissionLower.Koala6831Quotient
+
+/- Modified for the 68.32 KoalaBear soundness construction, November 2026. -/

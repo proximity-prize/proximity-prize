@@ -1,6 +1,5 @@
 import ProximityPrize.SubmissionLower.Koala6831IntrinsicSeedProjections
 
-
 namespace ProximityPrize.SubmissionLower.Koala6831Intrinsic
 
 open scoped BigOperators

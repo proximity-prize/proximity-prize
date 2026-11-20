@@ -1,7 +1,6 @@
 import ProximityPrize.SubmissionLower.Koala6831IntrinsicSeedProjections
 import ProximityPrize.SubmissionLower.Koala6831IntrinsicTail
 
-
 namespace ProximityPrize.SubmissionLower.Koala6831Intrinsic
 
 open scoped Classical
