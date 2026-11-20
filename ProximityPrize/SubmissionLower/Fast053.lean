@@ -2735,7 +2735,7 @@ def c1 : Prop :=
 The true weights pay for the identities in the independent argument. -/
 def c2 : Prop :=
   ∀ (f Q : Row 4) (r : ℕ) (P : JetIdeal) (hp : P.IsPrime),
-    TrueWeightLE f (90 * 180265 - 1) → TrueWeightLE Q (3000 * 180265 - 1) →
+    TrueWeightLE f (90 * 180255 - 1) → TrueWeightLE Q (3000 * 180255 - 1) →
     intersectionIdeal f Q ≤ P →
     let g := (separant^[r]) f
     toGeneric g ∈ P → toGeneric (separant g) ∉ P →

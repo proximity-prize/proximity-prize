@@ -41,7 +41,7 @@ noncomputable section
 open K1_14 K1_14_2 Polynomial Finset
 open scoped BigOperators
 
-def top : ℕ := full.m * 180265
+def top : ℕ := full.m * 180255
 
 def width (h q j : ℕ) : ℕ := top + j - q * (131071 - h)
 
@@ -674,7 +674,7 @@ theorem deficient_hankel_count (x u v : ι → F) (hx : Function.Injective x)
 theorem proof : K1.c3 := by
   intro u Γ hrank hΓ
   have h := deficient_hankel_count K1.node (u 0) (u 1) K1.node.injective
-    131072 49193 81879 (K1.firstRank u)
+    131072 49183 81889 (K1.firstRank u)
     (by rw [ProximityPrize.Benchmark.IRSProfile.card_index]) hrank rfl Γ
     (fun γ hγ => Strata.native_IsMCA_badSlope u γ (hΓ γ hγ))
   rw [ProximityPrize.Benchmark.IRSProfile.card_index] at h
@@ -772,20 +772,20 @@ theorem proof : K1.c5 := by
   intro u Γ hu hΓ
   let φ := algebraMap K1.K[X] K1.Frac
   have hrank : ((K1.twoBlock u).map φ).rank = K1.stackRank u := rfl
-  have hconstant : (coefficientStack K1.p K1.node (u 0) (u 1) 49193 81879).rank =
+  have hconstant : (coefficientStack K1.p K1.node (u 0) (u 1) 49183 81889).rank =
       K1.stackRank u := hu.symm
   have hcount := constantRankCount φ (IsFractionRing.injective K1.K[X] K1.Frac)
     K1.p (by norm_num [Native.p]) K1.node IRSProfile.domain.injective Native.native_domain_fixed
-    (u 0) (u 1) 131072 180265 49193 81879 (by norm_num) (by norm_num)
+    (u 0) (u 1) 131072 180255 49183 81889 (by norm_num) (by norm_num)
     (by norm_num only [IRSProfile.card_index]) (K1.stackRank u) hrank hconstant
     Γ (fun γ hγ => Native.native_IsMCA_badSlope u γ (hΓ γ hγ))
-  have hr : K1.stackRank u ≤ 81880 := by
+  have hr : K1.stackRank u ≤ 81890 := by
     have h := Matrix.rank_le_card_width ((K1.twoBlock u).map φ)
     simpa only [hrank, Fintype.card_fin] using h
   calc
     Γ.card ≤ K1.p * K1.stackRank u := hcount
-    _ ≤ K1.p * 81880 := Nat.mul_le_mul_left K1.p hr
-    _ = 174462242734040 := by norm_num [Native.p]
+    _ ≤ K1.p * 81890 := Nat.mul_le_mul_left K1.p hr
+    _ = 174483549798370 := by norm_num [Native.p]
 
 end
 end K1_5
@@ -1180,7 +1180,7 @@ structure Direction (u : Words) (deleted : Finset I) where
   phase : U * den.map twist = V * den
   degrees_eq : V.natDegree = U.natDegree
   primitive : IsCoprime (A 0) (A 1)
-  height : U.natDegree + amplitudeDegree (A 0) (A 1) + deleted.card ≤ 32680
+  height : U.natDegree + amplitudeDegree (A 0) (A 1) + deleted.card ≤ 32700
   out_degree : ∀ i j, (out i j).degree <
     (131072 + U.natDegree + amplitudeDegree (A 0) (A 1) : ℕ)
   nodes : ∀ x ∉ deleted, ∀ i j, (out i j).eval (node x) =
@@ -1440,7 +1440,7 @@ theorem Offset.fixed_numerator (O : Offset F anchor) (W : K[X]) (hW : F.den = O.
     have hP := O.numerator_degree m
     have hA := reg.degree_eq
     have hheight := F.height
-    change F.U.natDegree + F.s + deleted.card ≤ 32680 at hheight
+    change F.U.natDegree + F.s + deleted.card ≤ 32700 at hheight
     have hdeg : diff.natDegree ≤ max (l.natDegree + a.natDegree + P.natDegree)
         (r.natDegree + a.natDegree + P.natDegree) := by
       apply (natDegree_sub_le _ _).trans
@@ -1563,7 +1563,7 @@ theorem cross_lift {u deleted} (F : Direction u deleted) : Nonempty (CrossLift F
   let P (j : Fin 2) := F.A 0 * F.out j 1 - F.A 1 * F.out j 0
   let P' (j : Fin 2) := A' 1 * F.out 0 j - A' 0 * F.out 1 j
   have hheight := F.height
-  change F.U.natDegree + F.s + deleted.card ≤ 32680 at hheight
+  change F.U.natDegree + F.s + deleted.card ≤ 32700 at hheight
   have hroom : d + 2*F.s + deleted.card ≤ 262144 := by dsimp [d]; omega
   have hpos : 0 < d := by dsimp [d]; omega
   have ha (j : Fin 2) : (F.A j).natDegree ≤ F.s := by
@@ -1650,7 +1650,7 @@ theorem offset_of_anchor {u deleted} (F : Direction u deleted) (H : CrossLift F)
   let out := r 0 + C η * r 1
   let d := 131072 + F.U.natDegree + F.s
   have hheight := F.height
-  change F.U.natDegree + F.s + deleted.card ≤ 32680 at hheight
+  change F.U.natDegree + F.s + deleted.card ≤ 32700 at hheight
   have hpos : 0 < d := by dsimp [d]; omega
   have hA1 : (F.A 1).natDegree ≤ F.s := le_max_right _ _
   have ha : a.natDegree = F.s := reg.degree_eq
@@ -1924,7 +1924,7 @@ theorem family_of_offset {u deleted} (F : Direction u deleted) (Γ : Finset K)
     height_bound := by
       rw [hs]
       have h := F.height
-      change F.U.natDegree + F.s + deleted.card ≤ 32680 at h
+      change F.U.natDegree + F.s + deleted.card ≤ 32700 at h
       have hd := natDegree_le_of_dvd O.left F.U_ne
       omega
     first_word := by
@@ -2012,7 +2012,7 @@ def c2 : Prop :=
 theorem of_children (h1 : c1) (h2 : c2) : K1.c12 := by
   classical
   intro u hu T R D B sat par unit Γ bad normal
-  by_cases hsmall : Γ.card ≤ 69631486557946
+  by_cases hsmall : Γ.card ≤ 69674100686646
   · exact Or.inl hsmall
   right
   obtain ⟨γ,hγ⟩ := Finset.card_pos.mp (show 0 < Γ.card by omega)
@@ -2021,9 +2021,9 @@ theorem of_children (h1 : c1) (h2 : c2) : K1.c12 := by
   have hbook : book ⊆ Γ := Finset.filter_subset _ _
   have hcard := h2 F Γ
   change book.card ≤ 2130706434 * F.s + F.U.natDegree + 262144 + 1 at hcard
-  have hbudget : book.card + 1 ≤ 69631486557946 := by
+  have hbudget : book.card + 1 ≤ 69674100686646 := by
     have height := F.height
-    change F.U.natDegree + F.s + (fixedNodes R).card ≤ 32680 at height
+    change F.U.natDegree + F.s + (fixedNodes R).card ≤ 32700 at height
     omega
   let Δ := Γ \ book
   have hbig : 1 < Δ.card := by
@@ -3203,24 +3203,24 @@ private theorem independent_nativeMoments (u : K1.Words)
   simpa [nativeMoments, Principal.parameterSyndromes, map_mul] using hall i j
 
 private theorem locator_matrix (u : K1.Words) :
-    Principal.recurrenceMatrix (nativeMoments u) 131072 81879 =
+    Principal.recurrenceMatrix (nativeMoments u) 131072 81889 =
       (K1.twoBlock u).map (algebraMap K1.K[X] K1.Frac) :=
   Principal.recurrenceMatrix_parameter (algebraMap K1.K[X] K1.Frac)
-    K1.p K1.node (u 0) (u 1) 131072 81879
+    K1.p K1.node (u 0) (u 1) 131072 81889
 
 private theorem locator_nullity (u : K1.Words) :
-    sliceDim (nativeMoments u) 131072 81880 = K1.nullity u := by
-  rw [sliceDim_succ (nativeMoments u) 131072 81879, locator_matrix]
+    sliceDim (nativeMoments u) 131072 81890 = K1.nullity u := by
+  rw [sliceDim_succ (nativeMoments u) 131072 81889, locator_matrix]
   rfl
 
-private theorem principal_of_one_active (u : K1.Words) (a : ℕ) (ha : a ≤ 81879)
+private theorem principal_of_one_active (u : K1.Words) (a : ℕ) (ha : a ≤ 81889)
     (hone : sliceDim (nativeMoments u) 131072 (a+1) = 1)
-    (hnull : K1.nullity u = 81880-a) : K1.HomogeneousPrincipal u := by
+    (hnull : K1.nullity u = 81890-a) : K1.HomogeneousPrincipal u := by
   have hpos : 0 < sliceDim (nativeMoments u) 131072 (a+1) := by omega
-  have hdim : sliceDim (nativeMoments u) 131072 81880 = (81879-a)+1 := by
+  have hdim : sliceDim (nativeMoments u) 131072 81890 = (81889-a)+1 := by
     rw [locator_nullity]
     omega
-  obtain ⟨g, hg, hdeg, hfac⟩ := principal_of_slice (nativeMoments u) 131072 a 81879
+  obtain ⟨g, hg, hdeg, hfac⟩ := principal_of_slice (nativeMoments u) 131072 a 81889
     ha (by decide) hpos hdim
   refine ⟨a, g, hg, hdeg, ha, fun P hP => ?_⟩
   rw [← locator_matrix]
@@ -3233,11 +3233,11 @@ theorem two_active_of_positive (u : K1.Words) (hpos : 0 < K1.nullity u)
     Nonempty (K1.TwoActive u) := by
   obtain ⟨a, b, c, hab, hbc, hc, hsum, hdim⟩ := level_profile
     (nativeMoments u) 131072 (independent_nativeMoments u htype)
-  have hloc := hdim 81880 (by decide)
+  have hloc := hdim 81890 (by decide)
   rw [locator_nullity] at hloc
-  have hinactive : 81879 < c := by omega
-  have ha : a ≤ 81879 := by omega
-  have hb : b ≤ 81879 := by
+  have hinactive : 81889 < c := by omega
+  have ha : a ≤ 81889 := by omega
+  have hb : b ≤ 81889 := by
     by_contra hb
     have hsmall := hdim (a+1) (by omega)
     exact hprincipal (principal_of_one_active u a ha (by omega) (by omega))
@@ -3276,24 +3276,24 @@ private theorem independent_nativeMoments (u : K1.Words)
   simpa [nativeMoments, Principal.parameterSyndromes, map_mul] using hall i j
 
 private theorem locator_matrix (u : K1.Words) :
-    Principal.recurrenceMatrix (nativeMoments u) 131072 81879 =
+    Principal.recurrenceMatrix (nativeMoments u) 131072 81889 =
       (K1.twoBlock u).map (algebraMap K1.K[X] K1.Frac) :=
   Principal.recurrenceMatrix_parameter (algebraMap K1.K[X] K1.Frac)
-    K1.p K1.node (u 0) (u 1) 131072 81879
+    K1.p K1.node (u 0) (u 1) 131072 81889
 
 private theorem locator_nullity (u : K1.Words) :
-    sliceDim (nativeMoments u) 131072 81880 = K1.nullity u := by
-  rw [sliceDim_succ (nativeMoments u) 131072 81879, locator_matrix]
+    sliceDim (nativeMoments u) 131072 81890 = K1.nullity u := by
+  rw [sliceDim_succ (nativeMoments u) 131072 81889, locator_matrix]
   rfl
 
-private theorem principal_of_one_active (u : K1.Words) (a : ℕ) (ha : a ≤ 81879)
+private theorem principal_of_one_active (u : K1.Words) (a : ℕ) (ha : a ≤ 81889)
     (hone : sliceDim (nativeMoments u) 131072 (a+1) = 1)
-    (hnull : K1.nullity u = 81880-a) : K1.HomogeneousPrincipal u := by
+    (hnull : K1.nullity u = 81890-a) : K1.HomogeneousPrincipal u := by
   have hpos : 0 < sliceDim (nativeMoments u) 131072 (a+1) := by omega
-  have hdim : sliceDim (nativeMoments u) 131072 81880 = (81879-a)+1 := by
+  have hdim : sliceDim (nativeMoments u) 131072 81890 = (81889-a)+1 := by
     rw [locator_nullity]
     omega
-  obtain ⟨g, hg, hdeg, hfac⟩ := principal_of_slice (nativeMoments u) 131072 a 81879
+  obtain ⟨g, hg, hdeg, hfac⟩ := principal_of_slice (nativeMoments u) 131072 a 81889
     ha (by decide) hpos hdim
   refine ⟨a, g, hg, hdeg, ha, fun P hP => ?_⟩
   rw [← locator_matrix]
@@ -3303,12 +3303,12 @@ theorem proof : K1.c1 := by
   intro u hu
   obtain ⟨a, b, c, hab, hbc, hc, hsum, hdim⟩ := level_profile
     (nativeMoments u) 131072 (independent_nativeMoments u hu.2.2.1)
-  have hloc := hdim 81880 (by decide)
+  have hloc := hdim 81890 (by decide)
   rw [locator_nullity] at hloc
   have hpos := hu.1
-  have hinactive : 81879 < c := by omega
-  have ha : a ≤ 81879 := by omega
-  have hb : b ≤ 81879 := by
+  have hinactive : 81889 < c := by omega
+  have ha : a ≤ 81889 := by omega
+  have hb : b ≤ 81889 := by
     by_contra hb
     have hsmall := hdim (a+1) (by omega)
     exact hu.2.2.2.1 (principal_of_one_active u a ha (by omega) (by omega))
@@ -4404,7 +4404,7 @@ private theorem atSlope_constant (G : K[X]) (γ : K) :
 private theorem twoBlock_atSlope (u : Words) (γ : K) :
     ((twoBlock u).map (evalRingHom γ)) =
       Strata.conjugateHankel (Strata.twoConjugations (frobenius K p))
-        node (fun i => u 0 i + γ * u 1 i) 49193 81879 := by
+        node (fun i => u 0 i + γ * u 1 i) 49183 81889 := by
   rw [twoBlock, Strata.stacked_eq_frobeniusStacked, Strata.frobeniusStacked_eval]
   have h : (fun b : Fin 2 => iterateFrobenius K p b.val) =
       Strata.twoConjugations (frobenius K p) := by
@@ -4415,7 +4415,7 @@ private theorem twoBlock_atSlope (u : Words) (γ : K) :
   rw [h]
 
 private theorem rank_at_normal {u : Words} (T : TwoActive u) {γ : K} (hγ : Normal u γ) :
-    ((twoBlock u).map (evalRingHom γ)).rank = 49193 + T.height := by
+    ((twoBlock u).map (evalRingHom γ)).rank = 49183 + T.height := by
   change _ = stackRank u at hγ
   rw [hγ, actual_stackRank]
   have := T.degreeSum
@@ -4426,17 +4426,17 @@ private theorem rank_at_normal {u : Words} (T : TwoActive u) {γ : K} (hγ : Nor
 
 /-- The original stack has the same rank as its two evaluated error blocks. -/
 private theorem error_rank {u : Words} {γ : K} (M : BadMark u γ)
-    (E : Finset I) (hE : E.card ≤ 81879)
+    (E : Finset I) (hE : E.card ≤ 81889)
     (hEagree : ∀ i ∉ E, u 0 i + γ * u 1 i = M.decoder.eval (node i)) :
     ((twoBlock u).map (evalRingHom γ)).rank =
       (Strata.errorTwoMatrix (frobenius K p) (fun i : E => node i.val)
-        (fun i : E => u 0 i.val + γ * u 1 i.val - M.decoder.eval (node i.val)) 49193).rank := by
+        (fun i : E => u 0 i.val + γ * u 1 i.val - M.decoder.eval (node i.val)) 49183).rank := by
   have hfix : ∀ b i, Strata.twoConjugations (frobenius K p) b (node i) = node i := by
     intro b i
     fin_cases b <;> simp [Strata.twoConjugations, frobenius_def, Native.native_domain_fixed]
   have h := Strata.conjugateHankel_error_rank
     (Strata.twoConjugations (frobenius K p)) node (fun i => u 0 i + γ * u 1 i)
-    IRSProfile.domain.injective hfix M.decoder 131072 49193 81879 M.degree
+    IRSProfile.domain.injective hfix M.decoder 131072 49183 81889 M.degree
     (by rw [IRSProfile.card_index]) E (by omega) hEagree
   rw [Strata.conjugateErrors_two] at h
   rw [twoBlock_atSlope]
@@ -4480,7 +4480,7 @@ private theorem valid_of_saturation {u : Words} {T : TwoActive u} (R : Relation 
 /-- Normal saturation depends on the height being strictly below the
 ordinary row count. The same argument covers the middle prefix. -/
 theorem saturation_of_height (u : Words) (T : TwoActive u) (R : Relation T)
-    (hH : T.height < 49193) : NormalSaturation R := by
+    (hH : T.height < 49183) : NormalSaturation R := by
   classical
   intro γ hγ M
   let U := atSlope (leftU R) γ
@@ -4491,7 +4491,7 @@ theorem saturation_of_height (u : Words) (T : TwoActive u) (R : Relation T)
   have hEagree (i : I) (hi : i ∉ E) : u 0 i + γ * u 1 i = M.decoder.eval (node i) := by
     by_contra h
     exact hi (Finset.mem_filter.mpr ⟨Finset.mem_univ _, Ne.symm h⟩)
-  have hEcard : E.card ≤ 81879 := by
+  have hEcard : E.card ≤ 81889 := by
     have hsub : E ⊆ Finset.univ \ M.support := by
       intro i hi
       refine Finset.mem_sdiff.mpr ⟨Finset.mem_univ _, fun hs => ?_⟩
@@ -4515,15 +4515,15 @@ theorem saturation_of_height (u : Words) (T : TwoActive u) (R : Relation T)
   have herror (i : E) : U.eval (x i) * e i + V.eval (x i) * frobenius K p (e i) = 0 :=
     Strata.certificate_error_identity p node (u 0) (u 1) IRSProfile.domain.injective
       Native.native_domain_fixed 131072 T.height R γ M.support hfit M.decoder M.degree M.hits i.val
-  have hrank : (Strata.errorTwoMatrix (frobenius K p) x e 49193).rank = 49193 + T.height :=
+  have hrank : (Strata.errorTwoMatrix (frobenius K p) x e 49183).rank = 49183 + T.height :=
     (error_rank M E hEcard hEagree).symm.trans (rank_at_normal T hγ)
   obtain ⟨hU, hV⟩ := Strata.saturated_coefficients_nonzero (frobenius K p) x e hx U V
-    T.height 49193 hUle hVle hpair hH he herror hrank
+    T.height 49183 hUle hVle hpair hH he herror hrank
   let G := GCDMonoid.gcd U V
   let C₀ := (Finset.univ : Finset E).filter (fun i => G.eval (x i) = 0)
   let S := C₀.image (fun i : E => i.val)
   obtain ⟨hC, hsum, _⟩ := Strata.normal_error_three_rank (frobenius K p) x e hx
-    (fun i => hfix i.val) U V T.height 49193 hUle hVle hpair hH he herror hrank
+    (fun i => hfix i.val) U V T.height 49183 hUle hVle hpair hH he herror hrank
   have hmax : max U.natDegree V.natDegree = T.height := by
     obtain ⟨hle, hred⟩ := Strata.gcd_reduction_degrees U V hU hV
     change max (U / G).natDegree (V / G).natDegree + G.natDegree = T.height at hsum
@@ -4573,7 +4573,7 @@ open scoped BigOperators
 private abbrev Column := Σ _ : ℕ, Σ _ : ℕ, Σ _ : ℕ, Σ _ : ℕ, ℕ
 
 private def width (a b c f : ℕ) : ℕ :=
-  540795000 + b + 2 * c + 3 * f - 133671 * (a + b + c + f)
+  540765000 + b + 2 * c + 3 * f - 133671 * (a + b + c + f)
 
 private def tuples : Finset Column :=
   (range 551).sigma fun f =>
@@ -4616,11 +4616,11 @@ private theorem card_columns : sourceColumns.card = tuples.card := by
   exact (Finset.card_equiv e (fun t => (mem_columns t).symm)).symm
 
 private def widthInt (a b c f : ℤ) : ℤ :=
-  540795000 + b + 2 * c + 3 * f - 133671 * (a + b + c + f)
+  540765000 + b + 2 * c + 3 * f - 133671 * (a + b + c + f)
 
 private theorem cast_width (a b c f : ℕ) (h : a + b + c + f ≤ 4012) :
     (width a b c f : ℤ) = widthInt a b c f := by
-  have hpos : 133671 * (a + b + c + f) ≤ 540795000 + b + 2 * c + 3 * f := by omega
+  have hpos : 133671 * (a + b + c + f) ≤ 540765000 + b + 2 * c + 3 * f := by omega
   simp [width, widthInt, Nat.cast_sub hpos]
 
 /-- Verify a polynomial prefix by its initial value and forward difference. -/
@@ -4736,11 +4736,11 @@ private theorem sum_eq_evaluate (g : ℕ → ℤ) (n : ℕ) :
 
 set_option maxRecDepth 10000 in
 set_option maxHeartbeats 3000000 in
-private theorem evaluate_closedC : evaluate closedC 551 = 26331204051959789539296 := by
+private theorem evaluate_closedC : evaluate closedC 551 = 26327670643920661219296 := by
   rfl
 
 theorem proof : K1_13_2.c1 := by
-  have h : 288 * (tuples.card : ℤ) = 26331204051959789539296 := by
+  have h : 288 * (tuples.card : ℤ) = 26327670643920661219296 := by
     rw [card_tuples_int, mul_sum]
     calc
       _ = ∑ f ∈ range 551, closedC f :=
@@ -8230,9 +8230,9 @@ structure PolarData (u : K1.Words) where
   a_ne : a ≠ 0
   norms_ne : K1.sixNorm a ≠ K1.sixNorm b
   primitive : IsCoprime (A 0) (A 1)
-  a_bound : a.natDegree + K1.amplitudeDegree (A 0) (A 1) ≤ 32685
-  b_bound : b.natDegree + K1.amplitudeDegree (A 0) (A 1) ≤ 32685
-  Q_degree : ∀ r s, (Q r s).degree < 163757
+  a_bound : a.natDegree + K1.amplitudeDegree (A 0) (A 1) ≤ 32705
+  b_bound : b.natDegree + K1.amplitudeDegree (A 0) (A 1) ≤ 32705
+  Q_degree : ∀ r s, (Q r s).degree < 163777
   nodes : ∀ r s i,
     (Q r s).eval (node i) =
       a.eval (node i) * twist ((pencil (A 0) (A 1) r).eval (node i)) * fold u s i -
@@ -8241,12 +8241,12 @@ structure PolarData (u : K1.Words) where
 abbrev PolarData.amp {u : K1.Words} (D : PolarData u) := pencil (D.A 0) (D.A 1)
 
 theorem PolarData.left_bound {u : K1.Words} (D : PolarData u) (z : K) :
-    (D.a * (D.amp z).map twist).natDegree ≤ 32685 :=
+    (D.a * (D.amp z).map twist).natDegree ≤ 32705 :=
   natDegree_mul_le.trans <|
     (Nat.add_le_add_left (natDegree_map_le.trans (pencil_natDegree ..)) _).trans D.a_bound
 
 theorem PolarData.right_bound {u : K1.Words} (D : PolarData u) (z : K) :
-    (D.b * D.amp z).natDegree ≤ 32685 :=
+    (D.b * D.amp z).natDegree ≤ 32705 :=
   natDegree_mul_le.trans <|
     (Nat.add_le_add_left (pencil_natDegree ..) _).trans D.b_bound
 
@@ -8309,7 +8309,7 @@ private theorem affine_zero (f χ : K → K) (h : Function.Injective χ)
   exact hz.trans (hrr.symm.trans hr)
 
 private theorem PolarData.amp_bound {u} (D : PolarData u) (z : K) :
-    (D.amp z).natDegree ≤ 32685 :=
+    (D.amp z).natDegree ≤ 32705 :=
   (pencil_natDegree ..).trans (Nat.le_trans (Nat.le_add_left _ _) D.a_bound)
 
 private theorem PolarData.amp_nonzero_at {u} (D : PolarData u) {r s : K}
@@ -8329,16 +8329,16 @@ private def PolarData.cross {u} (D : PolarData u) (r s : K) (P Q : K[X]) : K[X] 
 
 private theorem PolarData.cross_degree {u} (D : PolarData u) (r s : K)
     {P Q : K[X]} (hP : P.degree < 131072) (hQ : Q.degree < 131072) :
-    (D.cross r s P Q).degree < 163757 :=
+    (D.cross r s P Q).degree < 163777 :=
   degree_sub_lt
-    (Strata.degree_mul_lt_add _ _ 32685 131072 (D.left_bound r) hQ)
-    (Strata.degree_mul_lt_add _ _ 32685 131072 (D.right_bound s) (degree_map_le.trans_lt hP))
+    (Strata.degree_mul_lt_add _ _ 32705 131072 (D.left_bound r) hQ)
+    (Strata.degree_mul_lt_add _ _ 32705 131072 (D.right_bound s) (degree_map_le.trans_lt hP))
 
 private theorem PolarData.decoder_identity {u} (D : PolarData u) (z : K)
-    (S : Finset I) (P : K[X]) (hS : 180265 ≤ S.card) (hP : P.degree < 131072)
+    (S : Finset I) (P : K[X]) (hS : 180255 ≤ S.card) (hP : P.degree < 131072)
     (hits : ∀ i ∈ S, P.eval (node i) = fold u z i) : D.cross z z P P = D.Q z z := by
-  have hcard : 163757 ≤ S.card := by omega
-  have hb : (163757 : WithBot ℕ) ≤ S.card := by exact_mod_cast hcard
+  have hcard : 163777 ≤ S.card := by omega
+  have hb : (163777 : WithBot ℕ) ≤ S.card := by exact_mod_cast hcard
   apply eq_on_nodes S _ _ ((D.cross_degree z z hP hP).trans_le hb) ((D.Q_degree z z).trans_le hb)
   intro i hi
   simp only [PolarData.cross, eval_sub, eval_mul, map_eval_node, hits i hi, D.nodes]
@@ -8373,15 +8373,15 @@ private theorem PolarData.offdiag_zero {u} (D : PolarData u) {r s : K}
     (hr : D.amp r ≠ 0) (hs : D.amp s ≠ 0) (hrr : D.Q r r = 0) (hss : D.Q s s = 0) :
     D.Q r s = 0 := by
   let E := D.amp s * (D.amp r).map twist
-  have ha : D.a.natDegree ≤ 32685 := (Nat.le_add_right _ _).trans D.a_bound
-  have hb : D.b.natDegree ≤ 32685 := (Nat.le_add_right _ _).trans D.b_bound
-  have hE : E.natDegree ≤ 65370 := natDegree_mul_le.trans
+  have ha : D.a.natDegree ≤ 32705 := (Nat.le_add_right _ _).trans D.a_bound
+  have hb : D.b.natDegree ≤ 32705 := (Nat.le_add_right _ _).trans D.b_bound
+  have hE : E.natDegree ≤ 65410 := natDegree_mul_le.trans
     (Nat.add_le_add (D.amp_bound s) (natDegree_map_le.trans (D.amp_bound r)))
-  have hl : (D.b * E * (D.Q r s).map twist).degree < 261812 :=
-    Strata.degree_mul_lt_add _ _ 98055 163757
+  have hl : (D.b * E * (D.Q r s).map twist).degree < 261892 :=
+    Strata.degree_mul_lt_add _ _ 98115 163777
       (natDegree_mul_le.trans (Nat.add_le_add hb hE)) (degree_map_le.trans_lt (D.Q_degree r s))
-  have ht : (D.a.map twist * E.map twist * D.Q r s).degree < 261812 :=
-    Strata.degree_mul_lt_add _ _ 98055 163757
+  have ht : (D.a.map twist * E.map twist * D.Q r s).degree < 261892 :=
+    Strata.degree_mul_lt_add _ _ 98115 163777
       (natDegree_mul_le.trans (Nat.add_le_add (natDegree_map_le.trans ha) (natDegree_map_le.trans hE)))
       (D.Q_degree r s)
   have heq : D.b * E * (D.Q r s).map twist = D.a.map twist * E.map twist * D.Q r s := by
@@ -8431,7 +8431,7 @@ private theorem PolarData.zero_of_diagonal_zeros {u} (D : PolarData u) {r s : K}
 /-- A vanishing polarized relation forces every close decoder to be zero, including
 the zero-amplitude case, where enough agreeing nodes survive the zeros of the left scalar. -/
 private theorem PolarData.decoder_zero {u} (D : PolarData u) (hQ : ∀ r s, D.Q r s = 0) (z : K)
-    (S : Finset I) (P : K[X]) (hS : 180265 ≤ S.card) (hP : P.degree < 131072)
+    (S : Finset I) (P : K[X]) (hS : 180255 ≤ S.card) (hP : P.degree < 131072)
     (hits : ∀ i ∈ S, P.eval (node i) = fold u z i) : P = 0 := by
   classical
   by_cases hz : D.amp z = 0
@@ -8444,7 +8444,7 @@ private theorem PolarData.decoder_zero {u} (D : PolarData u) (hQ : ∀ r s, D.Q 
       obtain ⟨i, hi, rfl⟩ := Finset.mem_image.mp hx
       exact (Polynomial.mem_roots D.a_ne).mpr (Finset.mem_filter.mp hi).2
     have hsum : roots.card + S'.card = S.card := Finset.card_filter_add_card_filter_not ..
-    have ha : D.a.natDegree ≤ 32685 := (Nat.le_add_right _ _).trans D.a_bound
+    have ha : D.a.natDegree ≤ 32705 := (Nat.le_add_right _ _).trans D.a_bound
     have hcard : 131072 ≤ S'.card := by omega
     apply eq_on_nodes S' _ _ (hP.trans_le (by exact_mod_cast hcard))
       (by rw [degree_zero]; exact WithBot.bot_lt_coe _)
@@ -8621,7 +8621,7 @@ theorem coefficients_at_node
 -- The node set stays abstract while checking the locator and degree calculations.
 private theorem polarData_of_set {u : K1.Words} (S : Finset I) (height : ℕ)
     (a b : K[X]) (A : Fin 2 → K[X]) (output : K1.Bivar)
-    (hh : height + S.card ≤ 32685)
+    (hh : height + S.card ≤ 32705)
     (hout : output.degree < (131072 + height : ℕ))
     (hfirst : a.natDegree + K1.amplitudeDegree (A 0) (A 1) ≤ height)
     (hsecond : b.natDegree + K1.amplitudeDegree (A 0) (A 1) ≤ height)
@@ -8631,14 +8631,14 @@ private theorem polarData_of_set {u : K1.Words} (S : Finset I) (height : ℕ)
   let g := locator node S
   let t (j : ℕ) := g * seedCoeff output j
   have hg : g.natDegree = S.card := locator_natDegree _ _
-  have hd (j : ℕ) : (t j).degree < 163757 := by
+  have hd (j : ℕ) : (t j).degree < 163777 := by
     have h := Strata.degree_mul_lt_add g (seedCoeff output j) g.natDegree
       (131072 + height) le_rfl (seedCoeff_degree _ _ _ hout)
-    exact h.trans_le (by exact_mod_cast (show 131072 + height + g.natDegree ≤ 163757 by omega))
-  have ha : (g * a).natDegree + K1.amplitudeDegree (A 0) (A 1) ≤ 32685 := by
+    exact h.trans_le (by exact_mod_cast (show 131072 + height + g.natDegree ≤ 163777 by omega))
+  have ha : (g * a).natDegree + K1.amplitudeDegree (A 0) (A 1) ≤ 32705 := by
     have h := natDegree_mul_le (p := g) (q := a)
     omega
-  have hb : (g * b).natDegree + K1.amplitudeDegree (A 0) (A 1) ≤ 32685 := by
+  have hb : (g * b).natDegree + K1.amplitudeDegree (A 0) (A 1) ≤ 32705 := by
     have h := natDegree_mul_le (p := g) (q := b)
     omega
   have hgn : g ≠ 0 := (locator_monic node S).ne_zero
@@ -8666,7 +8666,7 @@ theorem polarData_of_coefficients {u : K1.Words} {T : K1.TwoActive u} {R : K1.Re
     (hp : K1.Parallel B) (hn : ¬ K1.UnitNorm B)
     (hc : ∀ i ∉ K1.fixedNodes R, CoefficientIdentities u B.a B.b B.α B.output i) :
     Nonempty (PolarData u) := by
-  have hh : D.height + (K1.fixedNodes R).card ≤ 32685 := by
+  have hh : D.height + (K1.fixedNodes R).card ≤ 32705 := by
     rw [D.height_eq, K1.TwoActive.height]
     have h₁ := T.ab
     have h₂ := T.active
@@ -8704,7 +8704,7 @@ def c2 : Prop :=
 private theorem pencil_count {u : K1.Words} (Γ : Finset K)
     (M : ∀ z ∈ Γ, K1.BadMark u z) {P Q : K[X]} (hP : P.degree < 131072)
     (hQ : Q.degree < 131072) (h : ∀ z (hz : z ∈ Γ), (M z hz).decoder = pencil P Q z) :
-    Γ.card ≤ 81880 := by
+    Γ.card ≤ 81890 := by
   classical
   by_cases hΓ : Γ.Nonempty
   swap
@@ -8749,7 +8749,7 @@ private theorem pencil_count {u : K1.Words} (Γ : Finset K)
     exact unique (Finset.mem_erase.mp z.property).2 (Finset.mem_erase.mp t.property).2 (hf z) ht (hn z)
   have hcard := Finset.card_le_card_of_injective hg
   have he := Finset.card_erase_add_one hr
-  have hS : 180265 ≤ S.card := (M r hr).agreement
+  have hS : 180255 ≤ S.card := (M r hr).agreement
   rw [Finset.card_sdiff_of_subset (Finset.subset_univ _), Finset.card_univ, IRSProfile.card_index] at hcard
   omega
 

@@ -35,7 +35,7 @@ def full : Shape := ⟨836,1164,247,273617⟩
 def shapes : List Shape := full :: stages.flatMap (fun s => [s.cheap, s.layered])
 
 def bufferedAt (w : ℤ) (r : ℕ) (s : Shape) : ℕ :=
-  s.m * 180265 - 1 - 2 * w.toNat * r
+  s.m * 180255 - 1 - 2 * w.toNat * r
 
 def UsesSeed (G : Jet) : Prop :=
   ∃ j i, 0 < ((G.coeff j).coeff i).totalDegree
@@ -71,8 +71,8 @@ def fixedPrice (B J : ℕ) : ℕ :=
   let t := 2*d-3
   let a := 1+t*(B-1)
   let v := min a (t*(J-1)+d)
-  let gap := 180265-d
-  (81879*((B-J)*v+J*a)+gap-1)/gap+B^2
+  let gap := 180255-d
+  (81889*((B-J)*v+J*a)+gap-1)/gap+B^2
 
 def fixedTotal : ℕ := (fixedKeys.map fun k => fixedPrice k.1 k.2).sum
 
@@ -83,7 +83,7 @@ def directPrice : ℕ :=
 
 def lossSeedCap : ℕ := 220891211
 def lossYCap : ℕ := 4783514411
-def movingPrice : ℕ := 86954269798767161
+def movingPrice : ℕ := 86966099356717748
 
 abbrev Ambient := MvPolynomial (Fin 4) FX
 abbrev RootAmbient := MvPolynomial (Fin 3) FX
@@ -207,7 +207,7 @@ def SmallRootCurve (I : Ideal RootAmbient) (g H : ℕ) : Prop :=
 
 def rootPrice (g H : ℕ) : ℚ :=
   let t : ℚ := 2 * (g : ℚ) - 1
-  (t + (11697/6520 : ℚ) * (((2 * endpointDegree - 1 : ℕ) : ℚ)*t+1)) * H + g
+  (t + (81889/45630 : ℚ) * (((2 * endpointDegree - 1 : ℕ) : ℚ)*t+1)) * H + g
 
 /-- The unrounded price is summed before the final bridge ceiling. -/
 def RootTariff : Prop :=
@@ -245,10 +245,10 @@ structure RetainedParents (rows : Banks) where
   jet_finite : ∀ I ∈ ideals, Module.Finite SeedField (OverJets I)
   jet_size : ∀ I ∈ ideals, 0 < Module.finrank SeedField (OverJets I) ∧
     Module.finrank SeedField (OverJets I) < p
-  terminal : ∀ I ∈ ideals, ∀ P ∈ rows full (full.m * 180265 - 1), toJet P ∈ I
+  terminal : ∀ I ∈ ideals, ∀ P ∈ rows full (full.m * 180255 - 1), toJet P ∈ I
 
 def FullDivisibility (w : ℤ) (rows : Banks) (f : Equation) : Prop :=
-  ∀ W < full.m * 180265, ∀ P ∈ rows full W, P ≠ 0 →
+  ∀ W < full.m * 180255, ∀ P ∈ rows full W, P ≠ 0 →
     f ^ forcedPower w W P.natDegree ∣ P.leadingCoeff
 
 def ProjectedProduct (w : ℤ) (rows : Banks) (parents : RetainedParents rows)
@@ -365,7 +365,7 @@ private theorem card_unionOf_le (groups : (ℕ × ℕ) → Finset K)
 set_option maxRecDepth 12000 in
 private theorem ledger (w : ℤ) (hw : w ≤ 3554) :
     directPrice + fixedTotal + movingPrice ≤ highPrefix w := by
-  have he : highPrefix w = 132117856182247703 := by simp [highPrefix, hw]
+  have he : highPrefix w = 132143966177788304 := by simp [highPrefix, hw]
   rw [he]
   decide +kernel
 
@@ -432,7 +432,7 @@ def RowCaps (s : Shape) (P : Jet) : Prop :=
 
 /-- Number of cutoffs in the buffered telescope, including cutoff zero. -/
 def cutoffCount (h r : ℕ) (s : Shape) : ℕ :=
-  s.m * 180265 - 2 * h * r
+  s.m * 180255 - 2 * h * r
 
 def rawWidth (h r : ℕ) (s : Shape) (q j : ℕ) : ℕ :=
   cutoffCount h r s + j - q * (131071 - h)
@@ -564,10 +564,10 @@ def reserve (i : Fin 4) : ℕ := ![0,2,5,12] i
 def fullShape : Shape := ⟨358,500,105,66251⟩
 
 def reserveCutoff (h : ℕ) (s : Shape) (i : Fin 4) : ℕ :=
-  s.m * 180265 - 1 - 2*h*reserve i
+  s.m * 180255 - 1 - 2*h*reserve i
 
 def contactPower (h : ℕ) (s : Shape) (W : ℕ) : ℕ :=
-  1 + (s.m * 180265 - 1 - W) / (2*h)
+  1 + (s.m * 180255 - 1 - W) / (2*h)
 
 def SeedShift (h : ℕ) (rows : Banks) (s : Shape) : Prop :=
   ∀ W, ∀ P ∈ rows s W, ∀ i r, seedHasse i r P ∈ rows s (W + 2*h*r)
@@ -577,7 +577,7 @@ def LeadingFilter (h : ℕ) (rows : Banks) (s : Shape) : Prop :=
     (P.leadingCoeff.natDegree + P.natDegree) * (131071-h) ≤ W + P.natDegree
 
 def RankFloor (h : ℕ) (rows : Banks) (s : Shape) : Prop :=
-  ∀ W < s.m*180265,
+  ∀ W < s.m*180255,
     (∀ q ≤ s.B, ∀ j ≤ min q s.J, q*(131071-h) ≤ W+1+j) →
     triangle s.U * shapeSum s (fun q j => W+1+j - q*(131071-h)) ≤
       sourceDebit h s + ∑ t ∈ Finset.range (W+1), Module.finrank FX (rows s t)
@@ -636,7 +636,7 @@ def OrderAt (q : Surface) (P : Jet) (m : ℕ) : Prop :=
   ∀ y v, OnSeedFibre q y v → fibreRow P ∈ fibrePoint y v ^ m
 
 def BankVanishes (rows : Banks) (s : Shape) (q : Surface) : Prop :=
-  ∀ P ∈ rows s (s.m*180265 - 1), P ∈ q.asIdeal
+  ∀ P ∈ rows s (s.m*180255 - 1), P ∈ q.asIdeal
 
 abbrev ClearedSeeds := MvPolynomial (Fin 2) L[X]
 abbrev ClearedEquation := Polynomial ClearedSeeds
@@ -770,7 +770,7 @@ def odePrice (d b j : ℕ) : ℕ :=
   let T := 2*d - 3
   let a := 1 + T*(b-1)
   let v := min a (T*(j-1)+d)
-  let gap := 180265-d
+  let gap := 180255-d
   ((262144-d)*((b-j)*v+j*a) + (gap-1))/gap + b*(b-1)+b
 
 /-- This is the primitive union of the retained Y projections. The order
@@ -807,7 +807,7 @@ def stagePair (i : Fin 10) : List Shape :=
 
 def key (s : Shape) : ℕ × ℕ := (s.B, s.J)
 
-def fullCutoff (s : Shape) : ℕ := s.m * 180265 - 1
+def fullCutoff (s : Shape) : ℕ := s.m * 180255 - 1
 
 def RowCaps (P : Jet) (s : Shape) : Prop :=
   ∀ j i, (P.coeff j).coeff i ≠ 0 →
@@ -1036,7 +1036,7 @@ theorem positive_m (i : Fin 10) :
   fin_cases i <;> decide
 
 theorem buffer_lt (i : Fin 10) {s : Shape} (hs : s ∈ stagePair i) (w : ℤ) :
-    bufferedAt w (stageAt i).reserve s < s.m * 180265 := by
+    bufferedAt w (stageAt i).reserve s < s.m * 180255 := by
   have hm : 0 < s.m := by
     simp [stagePair] at hs
     rcases hs with rfl | rfl
@@ -1512,8 +1512,8 @@ theorem endpoint_fees (w : ℤ) (hlo : 3555 ≤ w) :
   simp only [hnot, ite_false]
   split_ifs <;> decide
 
-theorem endpoint_range (w : ℤ) (hlo : 3555 ≤ w) (hhi : w ≤ 32680) :
-    w ≤ (band w).endpoint ∧ 8249 ≤ (band w).endpoint ∧ (band w).endpoint ≤ 32680 := by
+theorem endpoint_range (w : ℤ) (hlo : 3555 ≤ w) (hhi : w ≤ 32700) :
+    w ≤ (band w).endpoint ∧ 8249 ≤ (band w).endpoint ∧ (band w).endpoint ≤ 32700 := by
   unfold band
   split_ifs <;> norm_num at * <;> omega
 

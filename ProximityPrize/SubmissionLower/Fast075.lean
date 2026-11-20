@@ -77,19 +77,19 @@ theorem proof : K1_14_2.c5 := by
         (hA g hg).2.trans_le (g.degreeOf_le_totalDegree 1)
       _ ≤ B := hAb
   have hlocal (g : Row 2) (hg : g ∈ A) :
-      45640 * (reg g).card ≤ 81879 * (g.totalDegree * v + g.degreeOf 1 * (a - v)) + 45640 := by
+      45630 * (reg g).card ≤ 81889 * (g.totalDegree * v + g.degreeOf 1 * (a - v)) + 45630 := by
     have hb := (Finset.single_le_sum (fun x _ => Nat.zero_le x.totalDegree) hg).trans hAb
     have hj := (Finset.single_le_sum (fun x _ => Nat.zero_le (x.degreeOf 1)) hg).trans hAj
     exact regular_count (word.mono (Finset.filter_subset _ _)) g (hA g hg).1 (hA g hg).2
       hb hj (fun _ hγ => (Finset.mem_filter.mp hγ).2)
-  have hr : 45640 * (∑ g ∈ A, (reg g).card) ≤
-      81879 * (B*v + J*(a-v)) + 45640 * B := by
+  have hr : 45630 * (∑ g ∈ A, (reg g).card) ≤
+      81889 * (B*v + J*(a-v)) + 45630 * B := by
     rw [Finset.mul_sum]
     refine (Finset.sum_le_sum hlocal).trans ?_
     simp only [Finset.sum_add_distrib, ← Finset.mul_sum, ← Finset.sum_mul,
       Finset.sum_const, smul_eq_mul]
-    have hn' := Nat.mul_le_mul_left 45640 hn
-    rw [Nat.mul_comm 45640 A.card] at hn'
+    have hn' := Nat.mul_le_mul_left 45630 hn
+    rw [Nat.mul_comm 45630 A.card] at hn'
     exact Nat.add_le_add (Nat.mul_le_mul_left _ (Nat.add_le_add
       (Nat.mul_le_mul_right _ hAb) (Nat.mul_le_mul_right _ hAj))) hn'
   have hcost : B*v + J*(a-v) = (B-J)*v + J*a := by
@@ -102,19 +102,19 @@ theorem proof : K1_14_2.c5 := by
     calc
       _ = B * ((B - 1) + 1) := by rw [Nat.mul_add, Nat.mul_one]
       _ = _ := by rw [Nat.sub_add_cancel (by omega : 1 ≤ B)]
-  let num := 81879 * ((B-J)*v + J*a)
-  have htotal := Nat.mul_le_mul_left 45640 hs
+  let num := 81889 * ((B-J)*v + J*a)
+  have htotal := Nat.mul_le_mul_left 45630 hs
   rw [Nat.mul_add] at htotal
-  have ho := Nat.mul_le_mul_left 45640 ordinary_bound
+  have ho := Nat.mul_le_mul_left 45630 ordinary_bound
   rw [hcost] at hr
-  have hcount : 45640 * T.card ≤ num + 45640 * (B*B) := by
+  have hcount : 45630 * T.card ≤ num + 45630 * (B*B) := by
     rw [← hbox, Nat.mul_add]
     dsimp only [num]
     omega
-  have hmod := Nat.mod_add_div num 45640
-  have hlt := Nat.mod_lt num (by decide : 0 < 45640)
-  have hround : T.card ≤ num / 45640 + B*B := by omega
-  change T.card ≤ (num + 45640 - 1) / 45640 + B^2
+  have hmod := Nat.mod_add_div num 45630
+  have hlt := Nat.mod_lt num (by decide : 0 < 45630)
+  have hround : T.card ≤ num / 45630 + B*B := by omega
+  change T.card ≤ (num + 45630 - 1) / 45630 + B^2
   rw [pow_two]
   exact hround.trans (Nat.add_le_add_right (Nat.div_le_div_right (by omega)) _)
 

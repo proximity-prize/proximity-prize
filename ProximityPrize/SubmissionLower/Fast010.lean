@@ -925,13 +925,18 @@ def sourceOrderWeight : JetVariable 2 → ℕ
   | none => 0
   | some j => j.val
 
+def sourceTopWeight : JetVariable 2 → ℕ
+  | none => 0
+  | some j => 1 + 4 * j.val
+
 def sourceSpan (F : Type*) [Field F] : Submodule F (DifferentialPolynomial F 2) :=
   Submodule.span F (Set.range fun i : SourceIndex ↦ (columns i).polynomial)
 
 def sourceBand (F : Type*) [Field F] : Submodule F (DifferentialPolynomial F 2) :=
-  restrictWeightAtMost (R := F) (differentialWeight 131072) 8652719 ⊓
+  restrictWeightAtMost (R := F) (differentialWeight 131072) 8652239 ⊓
     (restrictWeightAtMost (R := F) jetDegreeWeight 64 ⊓
-      restrictWeightAtMost (R := F) sourceOrderWeight 21)
+      (restrictWeightAtMost (R := F) sourceOrderWeight 21 ⊓
+        restrictWeightAtMost (R := F) sourceTopWeight 145))
 
 theorem column_mem_band (i : SourceIndex) : (columns i).polynomial ∈ sourceBand F := by
   classical
@@ -939,7 +944,7 @@ theorem column_mem_band (i : SourceIndex) : (columns i).polynomial ∈ sourceBan
       u = (columns i).exponent := by
     intro u hu
     exact Finset.mem_singleton.mp (support_monomial_subset hu)
-  refine ⟨?_,?_,?_⟩
+  refine ⟨?_,?_,?_,?_⟩
   · apply mem_restrictWeightAtMost.mpr
     intro u hu
     rw [hs u hu]
@@ -952,8 +957,18 @@ theorem column_mem_band (i : SourceIndex) : (columns i).polynomial ∈ sourceBan
   · apply mem_restrictWeightAtMost.mpr
     intro u hu
     rw [hs u hu]
+    have ho : e1 i.1 + 2 * e2 i.1 ≤ 21 := (jet_order i.1).trans (Nat.sub_le _ _)
     simpa [SourceColumn.weight_exponent, columns, sourceOrderWeight, Fin.sum_univ_two,
-      Nat.mul_comm] using jet_order i.1
+      Nat.mul_comm] using ho
+  · apply mem_restrictWeightAtMost.mpr
+    intro u hu
+    rw [hs u hu]
+    have ht := jet_total i.1
+    have ho := jet_order i.1
+    have hs64 := i.1.1.isLt
+    simp [SourceColumn.weight_exponent, columns, sourceTopWeight, Fin.sum_univ_succ,
+      Nat.mul_comm]
+    omega
 
 theorem sourceSpan_le_band : sourceSpan F ≤ sourceBand F := by
   apply Submodule.span_le.mpr
@@ -970,11 +985,12 @@ theorem mem_sourceSpan_of_band (Q : DifferentialPolynomial F 2) (hQ : Q ∈ sour
   have he : c.exponent = u := SourceColumn.exponent_ofExponent u
   have hr := mem_restrictWeightAtMost.mp hQ.1 u hu
   have ht := mem_restrictWeightAtMost.mp hQ.2.1 u hu
-  have ho := mem_restrictWeightAtMost.mp hQ.2.2 u hu
-  rw [← he] at hr ht ho
+  have ho := mem_restrictWeightAtMost.mp hQ.2.2.1 u hu
+  have hw := mem_restrictWeightAtMost.mp hQ.2.2.2 u hu
+  rw [← he] at hr ht ho hw
   have heligible : Eligible c.x c.y₀ (c.higher 0) (c.higher 1) := by
     simp [SourceColumn.weight_exponent, differentialWeight, jetDegreeWeight,
-      sourceOrderWeight, Fin.sum_univ_succ, Nat.mul_comm] at hr ht ho
+      sourceOrderWeight, sourceTopWeight, Fin.sum_univ_succ, Nat.mul_comm] at hr ht ho hw
     unfold Eligible
     omega
   obtain ⟨i,hi⟩ := index_of_eligible c.x c.y₀ (c.higher 0) (c.higher 1) heligible
@@ -997,13 +1013,15 @@ theorem sourceSpan_translation (center received : F) (Q : DifferentialPolynomial
     (hQ : Q ∈ sourceSpan F) : globalPointTranslation center received Q ∈ sourceSpan F := by
   apply mem_sourceSpan_of_band
   have hb := sourceSpan_le_band hQ
-  refine ⟨?_,?_,?_⟩
+  refine ⟨?_,?_,?_,?_⟩
   · exact globalPointTranslation_mem_restrictWeightAtMost (by exact Nat.zero_le _)
       (by exact Nat.zero_le _) center received hb.1
   · exact globalPointTranslation_mem_restrictWeightAtMost (by exact Nat.zero_le _)
       (by exact Nat.zero_le _) center received hb.2.1
   · exact globalPointTranslation_mem_restrictWeightAtMost (by exact Nat.zero_le _)
-      (by exact Nat.zero_le _) center received hb.2.2
+      (by exact Nat.zero_le _) center received hb.2.2.1
+  · exact globalPointTranslation_mem_restrictWeightAtMost (by exact Nat.zero_le _)
+      (by exact Nat.zero_le _) center received hb.2.2.2
 
 def pointMatrix (m : ℕ) (center received : F) : Matrix (LowContactIndex 2 m) SourceIndex F :=
   fun row i ↦ localConstraintCoordinatesAt m center received (columns i).polynomial row
@@ -1061,9 +1079,13 @@ set_option maxHeartbeats 0
 
 abbrev Block := Fin 65 × Fin 69
 def balance (q : Block) : ℤ := (q.2.val : ℤ) - 21
-abbrev ColFiber (q : Block) :=
+abbrev ColFiberOld (q : Block) :=
   (e : Fin (min q.1.val 10 + 1)) ×
     {a : Fin (min (q.1.val - e.val) (21 - 2 * e.val) + 1) //
+      0 ≤ balance q + a.val + 2 * e.val ∧ balance q + a.val + 2 * e.val < 48}
+abbrev ColFiber (q : Block) :=
+  (e : Fin (min q.1.val 10 + 1)) ×
+    {a : Fin (min (q.1.val - e.val) (21 - q.1.val / 62 - 2 * e.val) + 1) //
       0 ≤ balance q + a.val + 2 * e.val ∧ balance q + a.val + 2 * e.val < 48}
 abbrev Col := (q : Block) × ColFiber q
 
@@ -1073,7 +1095,7 @@ abbrev RowFiber (q : Block) :=
       balance q + q.1.val + f.val + 2 * b.val < 48}
 abbrev Row := (q : Block) × RowFiber q
 
-theorem colFiber_card (q : Block) : Fintype.card (ColFiber q) = columnCount q.1.val (balance q) := by
+theorem colFiberOld_card (q : Block) : Fintype.card (ColFiberOld q) = columnCount q.1.val (balance q) := by
   classical
   rw [Fintype.card_sigma]
   simp only [Fintype.card_subtype]
@@ -1085,6 +1107,16 @@ theorem colFiber_card (q : Block) : Fintype.card (ColFiber q) = columnCount q.1.
   change (∑ e : Fin (min q.1.val 10 + 1), f e.val) =
     ∑ e ∈ Finset.range (min q.1.val 10 + 1), f e
   exact Fin.sum_univ_eq_sum_range f _
+
+theorem colFiber_card_le (q : Block) :
+    Fintype.card (ColFiber q) ≤ columnCount q.1.val (balance q) := by
+  rw [← colFiberOld_card q]
+  refine Fintype.card_le_of_injective
+    (Sigma.map id fun e =>
+      Subtype.map (Fin.castLE (Nat.add_le_add_right
+        (min_le_min_left _ (Nat.sub_le_sub_right (Nat.sub_le _ _) _)) 1)) (fun _ ha => ha)) ?_
+  exact Function.Injective.sigma_map Function.injective_id
+    (fun _ => Subtype.map_injective _ (Fin.castLE_injective _))
 
 theorem rowFiber_card (q : Block) : Fintype.card (RowFiber q) =
     rowCountEnvelope q.1.val (balance q) := by
@@ -1305,7 +1337,8 @@ theorem finiteMatrix_offblock (i : Row) (j : Col) (hne : i.1 ≠ j.1) :
 theorem finiteMatrix_rank : (finiteMatrix (F := F)).rank ≤ blockUpper := by
   classical
   apply (rank_le_sum_min_dependent (finiteMatrix (F := F)) finiteMatrix_offblock).trans
-  simp_rw [rowFiber_card, colFiber_card]
+  refine (Finset.sum_le_sum fun q _ => min_le_min_left _ (colFiber_card_le q)).trans ?_
+  simp_rw [rowFiber_card]
   rw [Fintype.sum_prod_type]
   change (∑ s : Fin 65, ∑ gi : Fin 69,
     min (rowCountEnvelope s.val ((gi.val : ℤ) - 21))
