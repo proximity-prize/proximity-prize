@@ -1,3 +1,4 @@
+import ProximityPrize.SubmissionLower.AnchorRank
 import ProximityPrize.SubmissionLower.Low27Definitions
 import ProximityPrize.SubmissionLower.LowPrimary6921Source
 set_option Elab.async false
@@ -128,11 +129,8 @@ private theorem centered_in_old_space (x y : Geom) (Q : anchorSpace) :
       (Q.property hu) (by assumption)
   · exact (hn rfl).elim
 
-private theorem old_rank : K1_13_1.c1 :=
-  K1_13_1_1.of_children K1_13_1_1_1.proof K1_13_1_1_2.proof K1_13_1_1_3.proof
-
 theorem rank_local (x y : Geom) :
-    Module.finrank Geom (LinearMap.range (anchorLocal x y)) ≤ 9199626 := by
+    Module.finrank Geom (LinearMap.range (anchorLocal x y)) ≤ 9198569 := by
   have hpositive (j : JetVariable 3) : differentialWeight 133671 j ≠ 0 := by
     cases j with
     | none => decide
@@ -154,7 +152,7 @@ theorem rank_local (x y : Geom) :
       localConstraintAt 90 0 0 (truncateX (globalPointTranslation x y Q))
     rw [origin_truncateX, localConstraintAt_eq_zero_globalPointTranslation]
   rw [h]
-  exact (LinearMap.finrank_range_comp_le_left (K1_13_1.anchorLocal 0 0) tr).trans (old_rank 0 0)
+  exact (LinearMap.finrank_range_comp_le_left (K1_13_1.anchorLocal 0 0) tr).trans (SoundnessAnchor.rank_local 0 0)
 
 end
 end P0_9_1
@@ -447,11 +445,11 @@ private theorem exists_anchor (w : I → K) :
       ∀ Γ s, Messages w Γ s → ∀ γ ∈ Γ, atJet Q (extend (s γ)) = 0 := by
   let localRows (i : I) := anchorLocal (embed (node i)) (embed (w i))
   have hr : (∑ i, Module.finrank Geom (LinearMap.range (localRows i))) ≤
-      2411626758144 := by
+      2411349671936 := by
     calc
-      _ ≤ ∑ _ : I, (9199626 : ℕ) := Finset.sum_le_sum fun i _ => rank_local _ _
+      _ ≤ ∑ _ : I, (9198569 : ℕ) := Finset.sum_le_sum fun i _ => rank_local _ _
       _ = _ := by simp
-  have hDim : 2411626758144 < Module.finrank Geom anchorSpace := by
+  have hDim : 2411349671936 < Module.finrank Geom anchorSpace := by
     rw [anchor_finrank]
     decide
   obtain ⟨Q, hQ, hlocal⟩ :=
