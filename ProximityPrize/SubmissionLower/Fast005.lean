@@ -4,6 +4,7 @@ import ArkLib.ToMathlib.RingTheory.MvPolynomial.AffineHilbertBidegree
 import ArkLib.ToMathlib.RingTheory.MvPolynomial.AffineHilbertCappedDegree
 import ArkLib.ToMathlib.RingTheory.Nullstellensatz.AgreementIncidence
 import Mathlib.LinearAlgebra.Lagrange
+import Mathlib.Tactic
 import ProximityPrize.SubmissionLower.Fast001
 set_option Elab.async false
 

@@ -11,6 +11,7 @@ import Mathlib.RingTheory.MvPolynomial.Ideal
 import Mathlib.RingTheory.Polynomial.Radical
 import Mathlib.RingTheory.RegularLocalRing.Polynomial
 import Mathlib.RingTheory.Smooth.Field
+import Mathlib.Tactic
 set_option Elab.async false
 
 section PackSource_C42ConsumerArithmetic

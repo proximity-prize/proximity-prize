@@ -685,6 +685,497 @@ theorem mixed_mono {p q r s p' q' r' s' : Shape}
 end K1_13_8_2
 end PackSource_K1_13_8_2Mixed
 
+section PackSource_K1_13_8_2Tariff
+set_option autoImplicit true
+namespace K1_13_8_2
+
+open K1_13
+
+private theorem box_refl (x : Shape) : InBox x x := ⟨le_rfl, le_rfl, le_rfl⟩
+
+private theorem normalize_mono {x y : Shape} (h : InBox x y) :
+    InBox x.chamber y.chamber := ⟨max_le_max h.1 h.2.1, h.2.1, h.2.2⟩
+
+private theorem normalize_chamber (x : Shape) (h : 3 * x.t ≤ x.j) :
+    Chamber x.chamber := ⟨le_max_right _ _, h⟩
+
+private theorem plus_mono {x y u v : Shape} (h : InBox x y) (h' : InBox u v) :
+    InBox (x.plus u) (y.plus v) :=
+  ⟨Nat.add_le_add h.1 h'.1, Nat.add_le_add h.2.1 h'.2.1, Nat.add_le_add h.2.2 h'.2.2⟩
+
+private theorem plus_chamber {x y : Shape} (hx : Chamber x) (hy : Chamber y) :
+    Chamber (x.plus y) := by
+  exact ⟨Nat.add_le_add hx.1 hy.1, by simp only [Shape.plus, Nat.mul_add]; exact Nat.add_le_add hx.2 hy.2⟩
+
+private theorem scale_mono {x y : Shape} (h : InBox x y) (k : ℕ) :
+    InBox (x.scale k) (y.scale k) :=
+  ⟨Nat.mul_le_mul_left k h.1, Nat.mul_le_mul_left k h.2.1, Nat.mul_le_mul_left k h.2.2⟩
+
+private theorem scale_chamber {x : Shape} (hx : Chamber x) (k : ℕ) :
+    Chamber (x.scale k) :=
+  ⟨Nat.mul_le_mul_left k hx.1, by simpa [Shape.scale, Nat.mul_left_comm 3 k] using Nat.mul_le_mul_left k hx.2⟩
+
+private theorem min_fits_index (a i : ℕ) : 3 * min a (i / 3) ≤ i := by
+  have h := min_le_right a (i / 3)
+  omega
+
+private theorem chart_chamber (L : ℕ) (x : Shape) : Chamber (chart L x) :=
+  ⟨le_max_right _ _, min_fits_index _ _⟩
+
+private theorem lifted_chamber (L : ℕ) (x : Shape) : Chamber (liftedChart L x) :=
+  ⟨le_max_right _ _, min_fits_index _ _⟩
+
+private theorem chart_mono (L : ℕ) {x y : Shape} (h : InBox x y) :
+    InBox (chart L x) (chart L y) := by
+  obtain ⟨hb, hj, ht⟩ := h
+  refine ⟨?_, ?_, ?_⟩ <;> dsimp [chart] <;> gcongr
+
+private theorem lifted_mono (L : ℕ) {x y : Shape} (h : InBox x y) :
+    InBox (liftedChart L x) (liftedChart L y) := by
+  obtain ⟨hb, hj, ht⟩ := h
+  refine ⟨?_, ?_, ?_⟩ <;> dsimp [liftedChart] <;> gcongr
+
+private def graphShape (p : Shape) : Shape :=
+  ⟨max p.b (p.j + 1), p.j + 1, min (p.t + 1) ((p.j + 1) / 3)⟩
+
+private theorem graph_chamber (x : Shape) : Chamber (graphShape x) :=
+  ⟨le_max_right _ _, min_fits_index _ _⟩
+
+private theorem graph_mono {x y : Shape} (h : InBox x y) :
+    InBox (graphShape x) (graphShape y) := by
+  obtain ⟨hb, hj, ht⟩ := h
+  refine ⟨?_, ?_, ?_⟩ <;> dsimp [graphShape] <;> gcongr
+
+private theorem surface_mono {p p' q : Shape} (hp : InBox p p') (hp' : Chamber p') (hq : Chamber q) :
+    surfaceNumerator32 p q ≤ surfaceNumerator32 p' q := by
+  let L := taylorLength
+  have hchart : mixed32 p q (chart (L+1) p) (chart (L+2) p) ≤
+      mixed32 p' q (chart (L+1) p') (chart (L+2) p') :=
+    mixed_mono hp (box_refl q) (chart_mono _ hp) (chart_mono _ hp) hp' hq
+      (chart_chamber _ _) hq (chart_chamber _ _) (chart_chamber _ _)
+  have hlift : mixed32 p q (liftedChart (L+1) p) (liftedChart (L+2) p) ≤
+      mixed32 p' q (liftedChart (L+1) p') (liftedChart (L+2) p') :=
+    mixed_mono hp (box_refl q) (lifted_mono _ hp) (lifted_mono _ hp) hp' hq
+      (lifted_chamber _ _) hq (lifted_chamber _ _) (lifted_chamber _ _)
+  have hgraph (M : ℕ) :
+      mixed32 p q (graphShape p) (liftedChart M p) ≤ mixed32 p' q (graphShape p') (liftedChart M p') :=
+    mixed_mono hp (box_refl q) (graph_mono hp) (lifted_mono _ hp) hp' hq
+      (graph_chamber _) hq (graph_chamber _) (lifted_chamber _ _)
+  exact min_le_min hchart (Nat.add_le_add (Nat.add_le_add hlift (Nat.mul_le_mul_left _ (hgraph _)))
+    (Nat.mul_le_mul_left _ (hgraph _)))
+
+private theorem ceil_mono {a b : ℕ} (h : a ≤ b) (l : ℕ) : ceilDiv a l ≤ ceilDiv b l :=
+  Nat.div_le_div_right (Nat.sub_le_sub_right (Nat.add_le_add_right h l) 1)
+
+theorem physical_mono {x y : Shape} (h : InBox x y) (hx : 3 * x.t ≤ x.j)
+    (hy : 3 * y.t ≤ y.j) (l : ℕ) : physicalPrice x l ≤ physicalPrice y l := by
+  let p := x.chamber
+  let p' := y.chamber
+  let q : Shape := ⟨4013, 1650, 550⟩
+  let L := taylorLength
+  let A := q.plus (p.scale 4)
+  let A' := q.plus (p'.scale 4)
+  have hp := normalize_mono h
+  have hpc : Chamber p := normalize_chamber x hx
+  have hp'c : Chamber p' := normalize_chamber y hy
+  have hqc : Chamber q := by dsimp [Chamber, q]; omega
+  have ha : InBox A A' := plus_mono (box_refl q) (scale_mono hp 4)
+  have hac : Chamber A := plus_chamber hqc (scale_chamber hpc 4)
+  have ha'c : Chamber A' := plus_chamber hqc (scale_chamber hp'c 4)
+  have hs := surface_mono hp hp'c hqc
+  have hb := (chart_mono (L+1) hp).1
+  have hmain : (81879 + 2*46594) * x.b * q.b * (chart (L+1) p).b ≤
+      (81879 + 2*46594) * y.b * q.b * (chart (L+1) p').b := by
+    have := h.1
+    gcongr
+  have hcurve := mixed_mono hp (box_refl q) ha (chart_mono L hp) hp'c hqc ha'c hqc hac (chart_chamber L p)
+  have hpoint := mixed_mono hp (box_refl q) ha hp hp'c hqc ha'c hqc hac hpc
+  have hcurve' := mixed_mono hp hp hp (chart_mono L hp) hp'c hp'c hp'c hpc hpc (chart_chamber L p)
+  have hpoint' := mixed_mono hp hp hp hp hp'c hp'c hp'c hpc hpc hpc
+  have htc := Nat.mul_le_mul_left 2 h.2.2
+  have hc := Nat.add_le_add hcurve (Nat.mul_le_mul htc hcurve')
+  have hn := Nat.add_le_add hpoint (Nat.mul_le_mul htc hpoint')
+  have hgeom := Nat.add_le_add (Nat.mul_le_mul_left 81879 hc) (Nat.mul_le_mul_left (2*46594) hn)
+  have hraw := Nat.mul_le_mul_right q.b (Nat.mul_le_mul_left (2*133671) h.1)
+  exact Nat.add_le_add
+    (Nat.add_le_add (ceil_mono (Nat.add_le_add (ceil_mono hs _) (ceil_mono hmain _)) l) hraw)
+    (ceil_mono hgeom _)
+
+end K1_13_8_2
+end PackSource_K1_13_8_2Tariff
+
+section PackSource_K1_13_8_3Mass
+set_option autoImplicit true
+namespace K1_13_8_3
+
+open K1_13 K1_13_8
+open scoped BigOperators
+
+def start : Shape := ⟨1, 3, 1⟩
+
+def indexOrder (j : ℕ) : ℕ :=
+  if j < 4 then 1 else if j < 5 then 4 else if j < 14 then 17 else
+    if j < 40 then 54 else 68
+
+theorem indexOrder_pos (j : ℕ) : 0 < indexOrder j := by
+  unfold indexOrder
+  split_ifs <;> omega
+
+theorem indexOrder_mono : Monotone indexOrder := by
+  intro j k hjk
+  unfold indexOrder
+  split_ifs <;> omega
+
+private def positive (j : ℕ) : ℕ := shifted 2 j 3 + shifted 2 j 4 + shifted 2 j 5
+private def negative (j : ℕ) : ℕ :=
+  shifted 1 j 1 + shifted 1 j 2 + shifted 1 j 3 + shifted 3 j 6
+
+private theorem across_unshifted {b r j v : ℕ} (h : j < v + r * (b + 1)) :
+    across b r j v = shifted r j v := by
+  simp [across, shifted, show ¬ v + r * (b + 1) ≤ j by omega]
+
+private theorem symbols_unshifted {b j : ℕ} (h : j ≤ b) :
+    fastSymbols b j = (b + 1) * coefficient 0 j + positive j - negative j := by
+  simp only [fastSymbols, positive, negative]
+  rw [across_unshifted (by omega), across_unshifted (by omega),
+    across_unshifted (by omega), across_unshifted (by omega),
+    across_unshifted (by omega), across_unshifted (by omega),
+    across_unshifted (by omega)]
+  omega
+
+private theorem symbols_upper (b j : ℕ) :
+    fastSymbols b j ≤ (b + 1) * coefficient 0 j + positive j := by
+  unfold fastSymbols positive across
+  have h₁ := Nat.sub_le (shifted 2 j 3) (shifted 2 j (3 + 2 * (b + 1)))
+  have h₂ := Nat.sub_le (shifted 2 j 4) (shifted 2 j (4 + 2 * (b + 1)))
+  have h₃ := Nat.sub_le (shifted 2 j 5) (shifted 2 j (5 + 2 * (b + 1)))
+  omega
+
+private abbrev massIndexWindow (a n : ℕ) : Prop :=
+  ∀ i : Fin n,
+    negative (a + i.val) ≤ 2363 * coefficient 0 (a + i.val) ∧
+      fastSymbols 4012 (a + i.val) ≤ fastSymbols 4012 (a + i.val + 1)
+
+private theorem massIndexBisect {a n : ℕ}
+    (lo : massIndexWindow a (n / 2))
+    (hi : massIndexWindow (a + n / 2) (n - n / 2)) : massIndexWindow a n := by
+  intro i
+  by_cases h : i.val < n / 2
+  · exact lo ⟨i.val, h⟩
+  · rw [show a + i.val = a + n / 2 + (i.val - n / 2) by omega]
+    exact hi ⟨i.val - n / 2, by have := i.isLt; omega⟩
+
+set_option maxRecDepth 32768 in
+set_option maxHeartbeats 0 in
+private theorem index_checks : ∀ j : Fin 1651,
+    negative j.val ≤ 2363 * coefficient 0 j.val ∧
+      fastSymbols 4012 j.val ≤ fastSymbols 4012 (j.val + 1) := by
+  have allChecks : massIndexWindow 0 1651 := by
+    -- Each leaf covers 25 or 26 consecutive indices.
+    iterate 6 (all_goals apply massIndexBisect)
+    all_goals as_aux_lemma => decide +kernel
+  intro j
+  simpa only [Nat.zero_add] using allChecks j
+
+/-- Relax the spent total-degree budget to zero while retaining the spent index. -/
+private def indexBudget (j : ℕ) : ℕ :=
+  if j ≤ 1650 then fastSymbols 4012 (1650 - j) else 0
+
+private theorem remaining_le_index (b j : ℕ) : fastRemaining b j ≤ indexBudget j := by
+  unfold fastRemaining indexBudget
+  split
+  next h =>
+    obtain ⟨hb, hj⟩ := h
+    rw [ite_eq_left hj, symbols_unshifted (by omega : 1650 - j ≤ 4012)]
+    by_cases hlarge : 1650 - j ≤ 4012 - b
+    · rw [symbols_unshifted hlarge]
+      exact Nat.sub_le_sub_right
+        (Nat.add_le_add_right (Nat.mul_le_mul_right _ (by omega)) _) _
+    · apply (symbols_upper _ _).trans
+      have hneg : negative (1650 - j) ≤ 2363 * coefficient 0 (1650 - j) :=
+        (index_checks ⟨1650 - j, by omega⟩).1
+      have hmul := Nat.mul_le_mul_right (coefficient 0 (1650 - j))
+        (show (4012 - b) + 1 ≤ 1650 by omega)
+      rw [show 4012 + 1 = 1650 + 2363 by decide, Nat.add_mul]
+      simp only [Nat.add_mul, Nat.one_mul] at hmul ⊢
+      omega
+  next => exact Nat.zero_le _
+
+private theorem symbols_mono_index {i j : ℕ} (hij : i ≤ j) (hj : j ≤ 1650) :
+    fastSymbols 4012 i ≤ fastSymbols 4012 j := by
+  induction j with
+  | zero => rw [show i = 0 by omega]
+  | succ j ih =>
+    rcases Nat.eq_or_lt_of_le hij with he | hl
+    · rw [he]
+    · exact (ih (by omega) (by omega)).trans (index_checks ⟨j, by omega⟩).2
+
+private theorem indexBudget_anti : Antitone indexBudget := by
+  intro i j hij
+  unfold indexBudget
+  by_cases hj : j ≤ 1650
+  · rw [ite_eq_left (hij.trans hj), ite_eq_left hj]
+    exact symbols_mono_index (by omega) (by omega)
+  · rw [ite_eq_right hj]
+    exact Nat.zero_le _
+
+private def indexMass (j L : ℕ) : ℕ :=
+  (∑ k ∈ Finset.range (min L 550), indexBudget ((k + 1) * 3)) +
+    ∑ k ∈ Finset.range (1650 / (3 + j)), indexBudget (L * 3 + (k + 1) * (3 + j))
+
+private theorem available_le_index (x : Shape) (L : ℕ) :
+    availableMass start x L ≤ indexMass x.j L := by
+  simp only [availableMass, start, indexMass, show ¬ 3 = 0 by decide,
+    ite_false, show 1650 / 3 = 550 by decide]
+  exact Nat.add_le_add (Finset.sum_le_sum fun _ _ => remaining_le_index _ _)
+    (Finset.sum_le_sum fun _ _ => remaining_le_index _ _)
+
+private theorem indexMass_anti {i j : ℕ} (hij : i ≤ j) (L : ℕ) :
+    indexMass j L ≤ indexMass i L := by
+  unfold indexMass
+  apply Nat.add_le_add_left
+  apply sum_range_mono (Nat.div_le_div_left (by omega) (by omega))
+  intro k _
+  apply indexBudget_anti
+  exact Nat.add_le_add_left (Nat.mul_le_mul_left _ (by omega)) _
+
+set_option maxRecDepth 32768 in
+set_option maxHeartbeats 0 in
+private theorem order_tests :
+    indexMass 4 3 < need ∧ indexMass 5 16 < need ∧
+    indexMass 14 53 < need ∧ indexMass 40 67 < need := by
+  refine ⟨?_, ?_, ?_, ?_⟩
+  all_goals as_aux_lemma => decide +kernel
+
+theorem checked_order (x : Shape) :
+    0 < indexOrder x.j ∧
+      (indexOrder x.j = 1 ∨ availableMass start x (indexOrder x.j - 1) < need) := by
+  refine ⟨indexOrder_pos _, ?_⟩
+  obtain ⟨h₄, h₅, h₁₄, h₄₀⟩ := order_tests
+  unfold indexOrder
+  split_ifs with ha hb hc hd
+  · exact Or.inl rfl
+  · exact Or.inr ((available_le_index _ _).trans_lt ((indexMass_anti (by omega) _).trans_lt h₄))
+  · exact Or.inr ((available_le_index _ _).trans_lt ((indexMass_anti (by omega) _).trans_lt h₅))
+  · exact Or.inr ((available_le_index _ _).trans_lt ((indexMass_anti (by omega) _).trans_lt h₁₄))
+  · exact Or.inr ((available_le_index _ _).trans_lt ((indexMass_anti (by omega) _).trans_lt h₄₀))
+
+end K1_13_8_3
+end PackSource_K1_13_8_3Mass
+
+section PackSource_K1_13_8_2Prices
+set_option autoImplicit true
+namespace K1_13_8_2
+
+open K1_13 K1_13_8
+
+private def peak (b j : ℕ) : Shape := ⟨b, j, min 10 (j / 3)⟩
+
+/-- For each index, check the right end of each constant-order degree interval. -/
+private def endpoint (b j : ℕ) : Prop :=
+  b = 120 ∨ orderAt (peak b j) ≠ orderAt (peak (b + 1) j)
+
+private instance (b j : ℕ) : Decidable (endpoint b j) := by unfold endpoint; infer_instance
+
+private def peakCheck (b j : ℕ) : Bool :=
+  if j ≤ 3 * b ∧ endpoint b j then
+    decide (physicalPrice (peak b j) (orderAt (peak b j)) ≤ indexBudget j)
+  else true
+
+private def priceBand (start count : ℕ) : Bool :=
+  allBelow (fun i => allBelow (fun b => peakCheck b (start + i)) 121) count
+
+set_option maxRecDepth 32768
+set_option maxHeartbeats 0
+
+/-- Extend a checked band by a single index, keeping the previous rows opaque. -/
+private theorem priceBand_succ (start count : ℕ)
+    (prev : priceBand start count = true)
+    (row : allBelow (fun b => peakCheck b (start + count)) 121 = true) :
+    priceBand start (count + 1) = true :=
+  Bool.and_eq_true_iff.mpr ⟨row, prev⟩
+
+private theorem pricesThrough3 : priceBand 3 1 = true :=
+  priceBand_succ 3 0 rfl (by decide +kernel)
+
+private theorem pricesThrough4 : priceBand 3 2 = true :=
+  priceBand_succ 3 1 pricesThrough3 (by decide +kernel)
+
+private theorem pricesThrough5 : priceBand 3 3 = true :=
+  priceBand_succ 3 2 pricesThrough4 (by decide +kernel)
+
+private theorem pricesThrough6 : priceBand 3 4 = true :=
+  priceBand_succ 3 3 pricesThrough5 (by decide +kernel)
+
+private theorem pricesThrough7 : priceBand 3 5 = true :=
+  priceBand_succ 3 4 pricesThrough6 (by decide +kernel)
+
+private theorem pricesThrough8 : priceBand 3 6 = true :=
+  priceBand_succ 3 5 pricesThrough7 (by decide +kernel)
+
+private theorem pricesThrough9 : priceBand 3 7 = true :=
+  priceBand_succ 3 6 pricesThrough8 (by decide +kernel)
+
+private theorem pricesThrough10 : priceBand 3 8 = true :=
+  priceBand_succ 3 7 pricesThrough9 (by decide +kernel)
+
+private theorem pricesThrough11 : priceBand 3 9 = true :=
+  priceBand_succ 3 8 pricesThrough10 (by decide +kernel)
+
+private theorem pricesThrough12 : priceBand 3 10 = true :=
+  priceBand_succ 3 9 pricesThrough11 (by decide +kernel)
+
+private theorem pricesThrough13 : priceBand 3 11 = true :=
+  priceBand_succ 3 10 pricesThrough12 (by decide +kernel)
+
+private theorem pricesThrough14 : priceBand 3 12 = true :=
+  priceBand_succ 3 11 pricesThrough13 (by decide +kernel)
+
+private theorem pricesThrough15 : priceBand 3 13 = true :=
+  priceBand_succ 3 12 pricesThrough14 (by decide +kernel)
+
+private theorem pricesThrough16 : priceBand 3 14 = true :=
+  priceBand_succ 3 13 pricesThrough15 (by decide +kernel)
+
+private theorem pricesThrough17 : priceBand 3 15 = true :=
+  priceBand_succ 3 14 pricesThrough16 (by decide +kernel)
+
+private theorem pricesThrough18 : priceBand 3 16 = true :=
+  priceBand_succ 3 15 pricesThrough17 (by decide +kernel)
+
+private theorem pricesThrough19 : priceBand 3 17 = true :=
+  priceBand_succ 3 16 pricesThrough18 (by decide +kernel)
+
+private theorem pricesThrough20 : priceBand 3 18 = true :=
+  priceBand_succ 3 17 pricesThrough19 (by decide +kernel)
+
+private theorem pricesThrough21 : priceBand 3 19 = true :=
+  priceBand_succ 3 18 pricesThrough20 (by decide +kernel)
+
+private theorem pricesThrough22 : priceBand 3 20 = true :=
+  priceBand_succ 3 19 pricesThrough21 (by decide +kernel)
+
+private theorem pricesThrough23 : priceBand 3 21 = true :=
+  priceBand_succ 3 20 pricesThrough22 (by decide +kernel)
+
+private theorem pricesThrough24 : priceBand 3 22 = true :=
+  priceBand_succ 3 21 pricesThrough23 (by decide +kernel)
+
+private theorem pricesThrough25 : priceBand 3 23 = true :=
+  priceBand_succ 3 22 pricesThrough24 (by decide +kernel)
+
+private theorem pricesThrough26 : priceBand 3 24 = true :=
+  priceBand_succ 3 23 pricesThrough25 (by decide +kernel)
+
+private theorem pricesThrough27 : priceBand 3 25 = true :=
+  priceBand_succ 3 24 pricesThrough26 (by decide +kernel)
+
+private theorem pricesThrough28 : priceBand 3 26 = true :=
+  priceBand_succ 3 25 pricesThrough27 (by decide +kernel)
+
+private theorem pricesThrough29 : priceBand 3 27 = true :=
+  priceBand_succ 3 26 pricesThrough28 (by decide +kernel)
+
+private theorem pricesThrough30 : priceBand 3 28 = true :=
+  priceBand_succ 3 27 pricesThrough29 (by decide +kernel)
+
+private theorem pricesThrough31 : priceBand 3 29 = true :=
+  priceBand_succ 3 28 pricesThrough30 (by decide +kernel)
+
+private theorem pricesThrough32 : priceBand 3 30 = true :=
+  priceBand_succ 3 29 pricesThrough31 (by decide +kernel)
+
+private theorem pricesThrough33 : priceBand 3 31 = true :=
+  priceBand_succ 3 30 pricesThrough32 (by decide +kernel)
+
+private theorem pricesThrough34 : priceBand 3 32 = true :=
+  priceBand_succ 3 31 pricesThrough33 (by decide +kernel)
+
+private theorem pricesThrough35 : priceBand 3 33 = true :=
+  priceBand_succ 3 32 pricesThrough34 (by decide +kernel)
+
+private theorem pricesThrough36 : priceBand 3 34 = true :=
+  priceBand_succ 3 33 pricesThrough35 (by decide +kernel)
+
+private theorem pricesThrough37 : priceBand 3 35 = true :=
+  priceBand_succ 3 34 pricesThrough36 (by decide +kernel)
+
+private theorem pricesThrough38 : priceBand 3 36 = true :=
+  priceBand_succ 3 35 pricesThrough37 (by decide +kernel)
+
+private theorem pricesThrough39 : priceBand 3 37 = true :=
+  priceBand_succ 3 36 pricesThrough38 (by decide +kernel)
+
+private theorem pricesThrough40 : priceBand 3 38 = true :=
+  priceBand_succ 3 37 pricesThrough39 (by decide +kernel)
+
+private theorem pricesThrough41 : priceBand 3 39 = true :=
+  priceBand_succ 3 38 pricesThrough40 (by decide +kernel)
+
+private theorem pricesThrough42 : priceBand 3 40 = true :=
+  priceBand_succ 3 39 pricesThrough41 (by decide +kernel)
+
+private theorem pricesThrough43 : priceBand 3 41 = true :=
+  priceBand_succ 3 40 pricesThrough42 (by decide +kernel)
+
+private theorem pricesThrough44 : priceBand 3 42 = true :=
+  priceBand_succ 3 41 pricesThrough43 (by decide +kernel)
+
+private theorem pricesThrough45 : priceBand 3 43 = true :=
+  priceBand_succ 3 42 pricesThrough44 (by decide +kernel)
+
+private theorem pricesThrough46 : priceBand 3 44 = true :=
+  priceBand_succ 3 43 pricesThrough45 (by decide +kernel)
+
+private theorem pricesThrough47 : priceBand 3 45 = true :=
+  priceBand_succ 3 44 pricesThrough46 (by decide +kernel)
+
+private theorem allPrices : priceBand 3 46 = true :=
+  priceBand_succ 3 45 pricesThrough47 (by decide +kernel)
+
+private theorem priceBand_spec {start count b j : ℕ}
+    (h : priceBand start count = true) (hlo : start ≤ j) (hhi : j < start + count)
+    (hb : b ≤ 120) (hshape : j ≤ 3 * b) (he : endpoint b j) :
+    physicalPrice (peak b j) (orderAt (peak b j)) ≤ indexBudget j := by
+  have hc := allBelow_spec (allBelow_spec h (k := j - start) (by omega)) (k := b) (by omega)
+  rwa [Nat.add_sub_of_le hlo, peakCheck, ite_eq_left ⟨hshape, he⟩, decide_eq_true_eq] at hc
+
+private theorem peak_bound (b j : ℕ) (hb : b ≤ 120) (hshape : j ≤ 3 * b)
+    (hend : ∀ k ≤ 120, j ≤ 3 * k → endpoint k j →
+      physicalPrice (peak k j) (orderAt (peak k j)) ≤ indexBudget j) :
+    physicalPrice (peak b j) (orderAt (peak b j)) ≤ indexBudget j := by
+  induction hb using Nat.decreasingInduction with
+  | self => exact hend _ le_rfl hshape (Or.inl rfl)
+  | of_succ b hb ih =>
+    by_cases he : endpoint b j
+    · exact hend b (by omega) hshape he
+    · have horder : orderAt (peak b j) = orderAt (peak (b + 1) j) := by
+        by_contra h
+        exact he (Or.inr h)
+      have ht : 3 * (peak b j).t ≤ j := by dsimp [peak]; omega
+      have hmono : InBox (peak b j) (peak (b + 1) j) := ⟨by dsimp [peak]; omega, le_rfl, le_rfl⟩
+      rw [horder]
+      exact (physical_mono hmono ht ht _).trans (ih (by omega))
+
+
+theorem price_upper {a : Shape} (ha : Valid a) (hbox : InBox a fullCap) :
+    physicalPrice a (orderAt a) ≤ indexBudget a.j := by
+  have hj : 3 ≤ a.j := (Nat.mul_le_mul_left 3 ha.1).trans ha.2.1
+  have hmax : a.j ≤ 48 := hbox.2.1
+  have ht : a.t ≤ (peak a.b a.j).t :=
+    le_min hbox.2.2 ((Nat.le_div_iff_mul_le (by decide : 0 < 3)).mpr
+      (by simpa [Nat.mul_comm] using ha.2.1))
+  have htop : 3 * (peak a.b a.j).t ≤ a.j := by dsimp [peak]; omega
+  have hmono : InBox a (peak a.b a.j) := ⟨le_rfl, le_rfl, ht⟩
+  have horder : orderAt a = orderAt (peak a.b a.j) := rfl
+  rw [horder]
+  exact (physical_mono hmono ha.2.1 htop _).trans <|
+    peak_bound _ _ hbox.1 ha.2.2 fun b hb hvalid he =>
+      priceBand_spec allPrices hj (by omega) hb hvalid he
+
+end K1_13_8_2
+end PackSource_K1_13_8_2Prices
+
 section PackSource_K1_13_8_4Mixed
 set_option autoImplicit true
 namespace K1_13_8_4
@@ -817,6 +1308,1036 @@ theorem mixed_mono_total {p P q Q r R s S : Shape}
 
 end K1_13_8_4
 end PackSource_K1_13_8_4Mixed
+
+section PackSource_K1_13_8_4Tariff
+set_option autoImplicit true
+namespace K1_13_8_4
+
+open K1_13 K1_13_8
+
+def indexRate : ℕ := 2960000000000000
+
+private theorem chamber_mono {a A : Shape} (h : TotalLE a A) :
+    TotalLE a.chamber A.chamber :=
+  ⟨max_le_max h.1 (le_of_eq h.2.1), h.2⟩
+
+private theorem chart_mono (L : ℕ) {a A : Shape} (h : TotalLE a A) :
+    TotalLE (chart L a) (chart L A) := by
+  rcases h with ⟨hb, hj, ht⟩
+  refine ⟨?_, by simp [chart, hj], by simp [chart, hj, ht]⟩
+  dsimp only [chart]
+  rw [hj]
+  gcongr
+
+private theorem lifted_mono (L : ℕ) {a A : Shape} (h : TotalLE a A) :
+    TotalLE (liftedChart L a) (liftedChart L A) := by
+  rcases h with ⟨hb, hj, ht⟩
+  refine ⟨?_, by simp [liftedChart, hj], by simp [liftedChart, hj, ht]⟩
+  dsimp only [liftedChart]
+  rw [hj]
+  gcongr
+
+private def liftedInput (a : Shape) : Shape :=
+  ⟨max a.b (a.j + 1), a.j + 1, min (a.t + 1) ((a.j + 1) / 3)⟩
+
+private theorem liftedInput_mono {a A : Shape} (h : TotalLE a A) :
+    TotalLE (liftedInput a) (liftedInput A) := by
+  rcases h with ⟨hb, hj, ht⟩
+  refine ⟨?_, by simp [liftedInput, hj], by simp [liftedInput, hj, ht]⟩
+  dsimp only [liftedInput]
+  rw [hj]
+  exact max_le_max hb le_rfl
+
+private theorem capped_fits (b j t : ℕ) : IndexFits ⟨b, j, min t (j / 3)⟩ := by
+  change 3 * min t (j / 3) ≤ j
+  exact (Nat.mul_le_mul_left 3 (min_le_right _ _)).trans (by omega)
+
+private theorem surface_mono {p P q : Shape} (hp : TotalLE p P)
+    (hp' : IndexFits p) (hq : IndexFits q) :
+    surfaceNumerator32 p q ≤ surfaceNumerator32 P q := by
+  let L := taylorLength
+  have hqle := TotalLE.refl q
+  have hold := mixed_mono_total hp hqle (chart_mono (L+1) hp) (chart_mono (L+2) hp)
+    hp' hq (capped_fits _ _ _) (capped_fits _ _ _)
+  have hnew := mixed_mono_total hp hqle (lifted_mono (L+1) hp) (lifted_mono (L+2) hp)
+    hp' hq (capped_fits _ _ _) (capped_fits _ _ _)
+  have hg₁ := mixed_mono_total hp hqle (liftedInput_mono hp) (lifted_mono (L+2) hp)
+    hp' hq (capped_fits _ _ _) (capped_fits _ _ _)
+  have hg₂ := mixed_mono_total hp hqle (liftedInput_mono hp) (lifted_mono (L+1) hp)
+    hp' hq (capped_fits _ _ _) (capped_fits _ _ _)
+  exact min_le_min hold (Nat.add_le_add
+    (Nat.add_le_add hnew (Nat.mul_le_mul_left (L+1) hg₁)) (Nat.mul_le_mul_left (L+2) hg₂))
+
+private theorem ceilDiv_mono {a b l : ℕ} (h : a ≤ b) : ceilDiv a l ≤ ceilDiv b l :=
+  Nat.div_le_div_right (Nat.sub_le_sub_right (Nat.add_le_add_right h _) _)
+
+private theorem physical_mono {x y : Shape} (hx : TotalLE x y) (hv : IndexFits x) (l : ℕ) :
+    physicalPrice x l ≤ physicalPrice y l := by
+  let p := x.chamber
+  let P := y.chamber
+  let q : Shape := ⟨4013, 1650, 550⟩
+  have hp : TotalLE p P := chamber_mono hx
+  have hp' : IndexFits p := hv
+  have hq := TotalLE.refl q
+  have hq' : IndexFits q := le_rfl
+  have hH := chart_mono taylorLength hp
+  have hH' : IndexFits (chart taylorLength p) := capped_fits _ _ _
+  have haux : TotalLE (q.plus (p.scale 4)) (q.plus (P.scale 4)) := by
+    rcases hp with ⟨hb, hj, ht⟩
+    exact ⟨Nat.add_le_add_left (Nat.mul_le_mul_left 4 hb) _, by simp [Shape.plus, Shape.scale, hj],
+      by simp [Shape.plus, Shape.scale, ht]⟩
+  have haux' : IndexFits (q.plus (p.scale 4)) := by
+    change 3 * (q.t + 4 * p.t) ≤ q.j + 4 * p.j
+    have h₁ : 3 * p.t ≤ p.j := hp'
+    have h₂ : 3 * q.t ≤ q.j := hq'
+    omega
+  have hcurves₁ := mixed_mono_total hp hq haux hH hp' hq' haux' hH'
+  have hcurves₂ := mixed_mono_total hp hp hp hH hp' hp' hp' hH'
+  have hpoints₁ := mixed_mono_total hp hq haux hp hp' hq' haux' hp'
+  have hpoints₂ := mixed_mono_total hp hp hp hp hp' hp' hp' hp'
+  have hchart := (chart_mono (taylorLength+1) hp).1
+  dsimp only [physicalPrice]
+  rw [hx.2.2]
+  refine Nat.add_le_add (Nat.add_le_add (ceilDiv_mono ?_) ?_) (ceilDiv_mono ?_)
+  · exact Nat.add_le_add (ceilDiv_mono (surface_mono hp hp' hq'))
+      (ceilDiv_mono (Nat.mul_le_mul
+        (Nat.mul_le_mul_right q.b (Nat.mul_le_mul_left _ hx.1)) hchart))
+  · exact Nat.mul_le_mul_right q.b (Nat.mul_le_mul_left _ hx.1)
+  · exact Nat.add_le_add
+      (Nat.mul_le_mul_left _ (Nat.add_le_add hcurves₁ (Nat.mul_le_mul_left _ hcurves₂)))
+      (Nat.mul_le_mul_left _ (Nat.add_le_add hpoints₁ (Nat.mul_le_mul_left _ hpoints₂)))
+
+section
+
+set_option maxRecDepth 8192
+set_option maxHeartbeats 0
+
+-- Each closed decision checks the nine t values for a single derivative index.
+private def tariffBoundaryRow (j : ℕ) : Prop :=
+  ∀ t : Fin 9,
+    let a : Shape := ⟨118, j, t.val⟩
+    Valid a → physicalPrice a 78 ≤ indexRate * a.j
+
+private theorem tariffBoundaryRow0 : tariffBoundaryRow 0 := by
+  unfold tariffBoundaryRow
+  decide +kernel
+
+private theorem tariffBoundaryRow1 : tariffBoundaryRow 1 := by
+  unfold tariffBoundaryRow
+  decide +kernel
+
+private theorem tariffBoundaryRow2 : tariffBoundaryRow 2 := by
+  unfold tariffBoundaryRow
+  decide +kernel
+
+private theorem tariffBoundaryRow3 : tariffBoundaryRow 3 := by
+  unfold tariffBoundaryRow
+  decide +kernel
+
+private theorem tariffBoundaryRow4 : tariffBoundaryRow 4 := by
+  unfold tariffBoundaryRow
+  decide +kernel
+
+private theorem tariffBoundaryRow5 : tariffBoundaryRow 5 := by
+  unfold tariffBoundaryRow
+  decide +kernel
+
+private theorem tariffBoundaryRow6 : tariffBoundaryRow 6 := by
+  unfold tariffBoundaryRow
+  decide +kernel
+
+private theorem tariffBoundaryRow7 : tariffBoundaryRow 7 := by
+  unfold tariffBoundaryRow
+  decide +kernel
+
+private theorem tariffBoundaryRow8 : tariffBoundaryRow 8 := by
+  unfold tariffBoundaryRow
+  decide +kernel
+
+private theorem tariffBoundaryRow9 : tariffBoundaryRow 9 := by
+  unfold tariffBoundaryRow
+  decide +kernel
+
+private theorem tariffBoundaryRow10 : tariffBoundaryRow 10 := by
+  unfold tariffBoundaryRow
+  decide +kernel
+
+private theorem tariffBoundaryRow11 : tariffBoundaryRow 11 := by
+  unfold tariffBoundaryRow
+  decide +kernel
+
+private theorem tariffBoundaryRow12 : tariffBoundaryRow 12 := by
+  unfold tariffBoundaryRow
+  decide +kernel
+
+private theorem tariffBoundaryRow13 : tariffBoundaryRow 13 := by
+  unfold tariffBoundaryRow
+  decide +kernel
+
+private theorem tariffBoundaryRow14 : tariffBoundaryRow 14 := by
+  unfold tariffBoundaryRow
+  decide +kernel
+
+private theorem tariffBoundaryRow15 : tariffBoundaryRow 15 := by
+  unfold tariffBoundaryRow
+  decide +kernel
+
+private theorem tariffBoundaryRow16 : tariffBoundaryRow 16 := by
+  unfold tariffBoundaryRow
+  decide +kernel
+
+private theorem tariffBoundaryRow17 : tariffBoundaryRow 17 := by
+  unfold tariffBoundaryRow
+  decide +kernel
+
+private theorem tariffBoundaryRow18 : tariffBoundaryRow 18 := by
+  unfold tariffBoundaryRow
+  decide +kernel
+
+private theorem tariffBoundaryRow19 : tariffBoundaryRow 19 := by
+  unfold tariffBoundaryRow
+  decide +kernel
+
+private theorem tariffBoundaryRow20 : tariffBoundaryRow 20 := by
+  unfold tariffBoundaryRow
+  decide +kernel
+
+private theorem tariffBoundaryRow21 : tariffBoundaryRow 21 := by
+  unfold tariffBoundaryRow
+  decide +kernel
+
+private theorem tariffBoundaryRow22 : tariffBoundaryRow 22 := by
+  unfold tariffBoundaryRow
+  decide +kernel
+
+private theorem tariffBoundaryRow23 : tariffBoundaryRow 23 := by
+  unfold tariffBoundaryRow
+  decide +kernel
+
+private theorem tariffBoundaryRow24 : tariffBoundaryRow 24 := by
+  unfold tariffBoundaryRow
+  decide +kernel
+
+private theorem tariffBoundaryRow25 : tariffBoundaryRow 25 := by
+  unfold tariffBoundaryRow
+  decide +kernel
+
+private theorem tariffBoundaryRow26 : tariffBoundaryRow 26 := by
+  unfold tariffBoundaryRow
+  decide +kernel
+
+private theorem tariffBoundaryRow27 : tariffBoundaryRow 27 := by
+  unfold tariffBoundaryRow
+  decide +kernel
+
+private theorem tariffBoundaryRow28 : tariffBoundaryRow 28 := by
+  unfold tariffBoundaryRow
+  decide +kernel
+
+private theorem tariffBoundaryRow29 : tariffBoundaryRow 29 := by
+  unfold tariffBoundaryRow
+  decide +kernel
+
+private theorem tariffBoundaryRow30 : tariffBoundaryRow 30 := by
+  unfold tariffBoundaryRow
+  decide +kernel
+
+private theorem tariffBoundaryRow31 : tariffBoundaryRow 31 := by
+  unfold tariffBoundaryRow
+  decide +kernel
+
+private theorem tariffBoundaryRow32 : tariffBoundaryRow 32 := by
+  unfold tariffBoundaryRow
+  decide +kernel
+
+private theorem tariffBoundaryRow33 : tariffBoundaryRow 33 := by
+  unfold tariffBoundaryRow
+  decide +kernel
+
+private theorem tariffBoundaryRow34 : tariffBoundaryRow 34 := by
+  unfold tariffBoundaryRow
+  decide +kernel
+
+private theorem tariffBoundaryRow35 : tariffBoundaryRow 35 := by
+  unfold tariffBoundaryRow
+  decide +kernel
+
+private theorem tariffBoundaryRow36 : tariffBoundaryRow 36 := by
+  unfold tariffBoundaryRow
+  decide +kernel
+
+private theorem tariffBoundaryRow37 : tariffBoundaryRow 37 := by
+  unfold tariffBoundaryRow
+  decide +kernel
+
+private theorem tariffBoundaryRow38 : tariffBoundaryRow 38 := by
+  unfold tariffBoundaryRow
+  decide +kernel
+
+private theorem tariffBoundaryRow39 : tariffBoundaryRow 39 := by
+  unfold tariffBoundaryRow
+  decide +kernel
+
+private theorem tariffBoundaryRow40 : tariffBoundaryRow 40 := by
+  unfold tariffBoundaryRow
+  decide +kernel
+
+private theorem tariffBoundaryRow41 : tariffBoundaryRow 41 := by
+  unfold tariffBoundaryRow
+  decide +kernel
+
+private theorem tariffBoundaryRow42 : tariffBoundaryRow 42 := by
+  unfold tariffBoundaryRow
+  decide +kernel
+
+private theorem tariff_boundary :
+    ∀ (j : Fin 43) (t : Fin 9),
+      let a : Shape := ⟨118, j.val, t.val⟩
+      Valid a → physicalPrice a 78 ≤ indexRate * a.j := by
+  change ∀ j : Fin 43, tariffBoundaryRow j.val
+  intro j
+  fin_cases j
+  · exact tariffBoundaryRow0
+  · exact tariffBoundaryRow1
+  · exact tariffBoundaryRow2
+  · exact tariffBoundaryRow3
+  · exact tariffBoundaryRow4
+  · exact tariffBoundaryRow5
+  · exact tariffBoundaryRow6
+  · exact tariffBoundaryRow7
+  · exact tariffBoundaryRow8
+  · exact tariffBoundaryRow9
+  · exact tariffBoundaryRow10
+  · exact tariffBoundaryRow11
+  · exact tariffBoundaryRow12
+  · exact tariffBoundaryRow13
+  · exact tariffBoundaryRow14
+  · exact tariffBoundaryRow15
+  · exact tariffBoundaryRow16
+  · exact tariffBoundaryRow17
+  · exact tariffBoundaryRow18
+  · exact tariffBoundaryRow19
+  · exact tariffBoundaryRow20
+  · exact tariffBoundaryRow21
+  · exact tariffBoundaryRow22
+  · exact tariffBoundaryRow23
+  · exact tariffBoundaryRow24
+  · exact tariffBoundaryRow25
+  · exact tariffBoundaryRow26
+  · exact tariffBoundaryRow27
+  · exact tariffBoundaryRow28
+  · exact tariffBoundaryRow29
+  · exact tariffBoundaryRow30
+  · exact tariffBoundaryRow31
+  · exact tariffBoundaryRow32
+  · exact tariffBoundaryRow33
+  · exact tariffBoundaryRow34
+  · exact tariffBoundaryRow35
+  · exact tariffBoundaryRow36
+  · exact tariffBoundaryRow37
+  · exact tariffBoundaryRow38
+  · exact tariffBoundaryRow39
+  · exact tariffBoundaryRow40
+  · exact tariffBoundaryRow41
+  · exact tariffBoundaryRow42
+
+end
+
+set_option maxHeartbeats 1000000 in
+theorem tariff_le (a : Shape) (ha : Valid a)
+    (hb : a.b ≤ 118) (hj : a.j ≤ 42) (ht : a.t ≤ 8) :
+    edgePrice a 78 ≤ indexRate * a.j := by
+  let A : Shape := ⟨118, a.j, a.t⟩
+  have hA : Valid A :=
+    ⟨ha.1, ha.2.1, ha.2.2.trans (Nat.mul_le_mul_left 3 hb)⟩
+  have htotal : TotalLE a A := ⟨hb, rfl, rfl⟩
+  have hboundary : physicalPrice A 78 ≤ indexRate * a.j :=
+    tariff_boundary ⟨a.j, Nat.lt_succ_of_le hj⟩ ⟨a.t, Nat.lt_succ_of_le ht⟩ hA
+  calc
+    edgePrice a 78 ≤ physicalPrice a 78 := by
+      unfold edgePrice
+      split
+      · exact min_le_left _ _
+      · exact le_rfl
+    _ ≤ physicalPrice A 78 := physical_mono htotal ha.2.1 78
+    _ ≤ indexRate * a.j := hboundary
+
+end K1_13_8_4
+end PackSource_K1_13_8_4Tariff
+
+section PackSource_K1_13_8_4Mass
+set_option autoImplicit true
+namespace K1_13_8_4
+
+open K1_13 K1_13_8
+open scoped BigOperators
+
+def start : Shape := ⟨2, 6, 2⟩
+def lowerOrder : ℕ := 78
+
+private def coarseCount (b j : ℕ) : ℕ :=
+  (b + 1) * coefficient 0 j + shifted 2 j 3 + shifted 2 j 4 + shifted 2 j 5
+
+/-- When the total-degree budget dominates the index budget, every upper
+shift in the Gaussian-binomial formula vanishes. -/
+private def saturatedCount (b j : ℕ) : ℕ :=
+  coarseCount b j - (shifted 1 j 1 + shifted 1 j 2 + shifted 1 j 3 + shifted 3 j 6)
+
+private theorem count_of_index_le {b j : ℕ} (h : j ≤ b) :
+    fastSymbols b j = saturatedCount b j := by
+  have erase (r v : ℕ) (hr : 0 < r) : shifted r j (v + r * (b + 1)) = 0 := by
+    have hmul : b + 1 ≤ r * (b + 1) := by
+      simpa using Nat.mul_le_mul_right (b + 1) hr
+    simp [shifted, show ¬ v + r * (b + 1) ≤ j by omega]
+  have eraseOne (v : ℕ) : shifted 1 j (v + (b + 1)) = 0 := by
+    simpa using erase 1 v (by decide)
+  simp [fastSymbols, saturatedCount, coarseCount, across, erase, eraseOne]
+
+private theorem count_le_coarse (b j : ℕ) : fastSymbols b j ≤ coarseCount b j := by
+  have hacross (v : ℕ) : across b 2 j v ≤ shifted 2 j v := Nat.sub_le _ _
+  unfold fastSymbols coarseCount
+  exact (Nat.sub_le _ _).trans
+    (Nat.add_le_add (Nat.add_le_add (Nat.add_le_add_left (hacross 3) _) (hacross 4)) (hacross 5))
+
+section
+
+set_option maxRecDepth 8192
+set_option maxHeartbeats 0
+
+-- Check the two inequalities over short intervals, then join the intervals
+-- using only their endpoints. The last coarse bound is checked separately.
+private abbrev envelopeAt (j : ℕ) : Prop :=
+  coarseCount j j ≤ saturatedCount 4012 j ∧
+    saturatedCount 4012 j ≤ saturatedCount 4012 (j + 1)
+
+private theorem joinEnvelopeBlocks {s a b : ℕ}
+    (left : ∀ i : Fin a, envelopeAt (i.val + s))
+    (right : ∀ i : Fin b, envelopeAt (i.val + (s + a)))
+    (i : Fin (a + b)) : envelopeAt (i.val + s) := by
+  by_cases h : i.val < a
+  · exact left ⟨i.val, h⟩
+  · have hi := i.isLt
+    have hr := right ⟨i.val - a, by omega⟩
+    change envelopeAt (i.val - a + (s + a)) at hr
+    rwa [show i.val - a + (s + a) = i.val + s by omega] at hr
+
+private theorem envelopeBlock0 : ∀ i : Fin 32, envelopeAt (i.val + 0) := by
+  decide +kernel
+
+private theorem envelopeBlock32 : ∀ i : Fin 32, envelopeAt (i.val + 32) := by
+  decide +kernel
+
+private theorem envelopeBlock64 : ∀ i : Fin 32, envelopeAt (i.val + 64) := by
+  decide +kernel
+
+private theorem envelopeBlock96 : ∀ i : Fin 32, envelopeAt (i.val + 96) := by
+  decide +kernel
+
+private theorem envelopeBlock128 : ∀ i : Fin 32, envelopeAt (i.val + 128) := by
+  decide +kernel
+
+private theorem envelopeBlock160 : ∀ i : Fin 32, envelopeAt (i.val + 160) := by
+  decide +kernel
+
+private theorem envelopeBlock192 : ∀ i : Fin 32, envelopeAt (i.val + 192) := by
+  decide +kernel
+
+private theorem envelopeBlock224 : ∀ i : Fin 32, envelopeAt (i.val + 224) := by
+  decide +kernel
+
+private theorem envelopeBlock256 : ∀ i : Fin 32, envelopeAt (i.val + 256) := by
+  decide +kernel
+
+private theorem envelopeBlock288 : ∀ i : Fin 32, envelopeAt (i.val + 288) := by
+  decide +kernel
+
+private theorem envelopeBlock320 : ∀ i : Fin 32, envelopeAt (i.val + 320) := by
+  decide +kernel
+
+private theorem envelopeBlock352 : ∀ i : Fin 32, envelopeAt (i.val + 352) := by
+  decide +kernel
+
+private theorem envelopeBlock384 : ∀ i : Fin 32, envelopeAt (i.val + 384) := by
+  decide +kernel
+
+private theorem envelopeBlock416 : ∀ i : Fin 32, envelopeAt (i.val + 416) := by
+  decide +kernel
+
+private theorem envelopeBlock448 : ∀ i : Fin 32, envelopeAt (i.val + 448) := by
+  decide +kernel
+
+private theorem envelopeBlock480 : ∀ i : Fin 32, envelopeAt (i.val + 480) := by
+  decide +kernel
+
+private theorem envelopeBlock512 : ∀ i : Fin 32, envelopeAt (i.val + 512) := by
+  decide +kernel
+
+private theorem envelopeBlock544 : ∀ i : Fin 32, envelopeAt (i.val + 544) := by
+  decide +kernel
+
+private theorem envelopeBlock576 : ∀ i : Fin 32, envelopeAt (i.val + 576) := by
+  decide +kernel
+
+private theorem envelopeBlock608 : ∀ i : Fin 32, envelopeAt (i.val + 608) := by
+  decide +kernel
+
+private theorem envelopeBlock640 : ∀ i : Fin 32, envelopeAt (i.val + 640) := by
+  decide +kernel
+
+private theorem envelopeBlock672 : ∀ i : Fin 32, envelopeAt (i.val + 672) := by
+  decide +kernel
+
+private theorem envelopeBlock704 : ∀ i : Fin 32, envelopeAt (i.val + 704) := by
+  decide +kernel
+
+private theorem envelopeBlock736 : ∀ i : Fin 32, envelopeAt (i.val + 736) := by
+  decide +kernel
+
+private theorem envelopeBlock768 : ∀ i : Fin 32, envelopeAt (i.val + 768) := by
+  decide +kernel
+
+private theorem envelopeBlock800 : ∀ i : Fin 32, envelopeAt (i.val + 800) := by
+  decide +kernel
+
+private theorem envelopeBlock832 : ∀ i : Fin 32, envelopeAt (i.val + 832) := by
+  decide +kernel
+
+private theorem envelopeBlock864 : ∀ i : Fin 32, envelopeAt (i.val + 864) := by
+  decide +kernel
+
+private theorem envelopeBlock896 : ∀ i : Fin 32, envelopeAt (i.val + 896) := by
+  decide +kernel
+
+private theorem envelopeBlock928 : ∀ i : Fin 32, envelopeAt (i.val + 928) := by
+  decide +kernel
+
+private theorem envelopeBlock960 : ∀ i : Fin 32, envelopeAt (i.val + 960) := by
+  decide +kernel
+
+private theorem envelopeBlock992 : ∀ i : Fin 32, envelopeAt (i.val + 992) := by
+  decide +kernel
+
+private theorem envelopeBlock1024 : ∀ i : Fin 32, envelopeAt (i.val + 1024) := by
+  decide +kernel
+
+private theorem envelopeBlock1056 : ∀ i : Fin 32, envelopeAt (i.val + 1056) := by
+  decide +kernel
+
+private theorem envelopeBlock1088 : ∀ i : Fin 32, envelopeAt (i.val + 1088) := by
+  decide +kernel
+
+private theorem envelopeBlock1120 : ∀ i : Fin 32, envelopeAt (i.val + 1120) := by
+  decide +kernel
+
+private theorem envelopeBlock1152 : ∀ i : Fin 32, envelopeAt (i.val + 1152) := by
+  decide +kernel
+
+private theorem envelopeBlock1184 : ∀ i : Fin 32, envelopeAt (i.val + 1184) := by
+  decide +kernel
+
+private theorem envelopeBlock1216 : ∀ i : Fin 32, envelopeAt (i.val + 1216) := by
+  decide +kernel
+
+private theorem envelopeBlock1248 : ∀ i : Fin 32, envelopeAt (i.val + 1248) := by
+  decide +kernel
+
+private theorem envelopeBlock1280 : ∀ i : Fin 32, envelopeAt (i.val + 1280) := by
+  decide +kernel
+
+private theorem envelopeBlock1312 : ∀ i : Fin 32, envelopeAt (i.val + 1312) := by
+  decide +kernel
+
+private theorem envelopeBlock1344 : ∀ i : Fin 32, envelopeAt (i.val + 1344) := by
+  decide +kernel
+
+private theorem envelopeBlock1376 : ∀ i : Fin 32, envelopeAt (i.val + 1376) := by
+  decide +kernel
+
+private theorem envelopeBlock1408 : ∀ i : Fin 32, envelopeAt (i.val + 1408) := by
+  decide +kernel
+
+private theorem envelopeBlock1440 : ∀ i : Fin 32, envelopeAt (i.val + 1440) := by
+  decide +kernel
+
+private theorem envelopeBlock1472 : ∀ i : Fin 32, envelopeAt (i.val + 1472) := by
+  decide +kernel
+
+private theorem envelopeBlock1504 : ∀ i : Fin 32, envelopeAt (i.val + 1504) := by
+  decide +kernel
+
+private theorem envelopeBlock1536 : ∀ i : Fin 32, envelopeAt (i.val + 1536) := by
+  decide +kernel
+
+private theorem envelopeBlock1568 : ∀ i : Fin 32, envelopeAt (i.val + 1568) := by
+  decide +kernel
+
+private theorem envelopeBlock1600 : ∀ i : Fin 32, envelopeAt (i.val + 1600) := by
+  decide +kernel
+
+private theorem envelopeBlock1632 : ∀ i : Fin 18, envelopeAt (i.val + 1632) := by
+  decide +kernel
+
+private theorem envelopeBlocks (i : Fin 1650) : envelopeAt i.val :=
+  (joinEnvelopeBlocks (s := 0) (a := 832) (b := 818)
+    (joinEnvelopeBlocks (s := 0) (a := 416) (b := 416)
+      (joinEnvelopeBlocks (s := 0) (a := 192) (b := 224)
+        (joinEnvelopeBlocks (s := 0) (a := 96) (b := 96)
+          (joinEnvelopeBlocks (s := 0) (a := 32) (b := 64)
+            envelopeBlock0
+            (joinEnvelopeBlocks (s := 32) (a := 32) (b := 32)
+              envelopeBlock32
+              envelopeBlock64))
+          (joinEnvelopeBlocks (s := 96) (a := 32) (b := 64)
+            envelopeBlock96
+            (joinEnvelopeBlocks (s := 128) (a := 32) (b := 32)
+              envelopeBlock128
+              envelopeBlock160)))
+        (joinEnvelopeBlocks (s := 192) (a := 96) (b := 128)
+          (joinEnvelopeBlocks (s := 192) (a := 32) (b := 64)
+            envelopeBlock192
+            (joinEnvelopeBlocks (s := 224) (a := 32) (b := 32)
+              envelopeBlock224
+              envelopeBlock256))
+          (joinEnvelopeBlocks (s := 288) (a := 64) (b := 64)
+            (joinEnvelopeBlocks (s := 288) (a := 32) (b := 32)
+              envelopeBlock288
+              envelopeBlock320)
+            (joinEnvelopeBlocks (s := 352) (a := 32) (b := 32)
+              envelopeBlock352
+              envelopeBlock384))))
+      (joinEnvelopeBlocks (s := 416) (a := 192) (b := 224)
+        (joinEnvelopeBlocks (s := 416) (a := 96) (b := 96)
+          (joinEnvelopeBlocks (s := 416) (a := 32) (b := 64)
+            envelopeBlock416
+            (joinEnvelopeBlocks (s := 448) (a := 32) (b := 32)
+              envelopeBlock448
+              envelopeBlock480))
+          (joinEnvelopeBlocks (s := 512) (a := 32) (b := 64)
+            envelopeBlock512
+            (joinEnvelopeBlocks (s := 544) (a := 32) (b := 32)
+              envelopeBlock544
+              envelopeBlock576)))
+        (joinEnvelopeBlocks (s := 608) (a := 96) (b := 128)
+          (joinEnvelopeBlocks (s := 608) (a := 32) (b := 64)
+            envelopeBlock608
+            (joinEnvelopeBlocks (s := 640) (a := 32) (b := 32)
+              envelopeBlock640
+              envelopeBlock672))
+          (joinEnvelopeBlocks (s := 704) (a := 64) (b := 64)
+            (joinEnvelopeBlocks (s := 704) (a := 32) (b := 32)
+              envelopeBlock704
+              envelopeBlock736)
+            (joinEnvelopeBlocks (s := 768) (a := 32) (b := 32)
+              envelopeBlock768
+              envelopeBlock800)))))
+    (joinEnvelopeBlocks (s := 832) (a := 416) (b := 402)
+      (joinEnvelopeBlocks (s := 832) (a := 192) (b := 224)
+        (joinEnvelopeBlocks (s := 832) (a := 96) (b := 96)
+          (joinEnvelopeBlocks (s := 832) (a := 32) (b := 64)
+            envelopeBlock832
+            (joinEnvelopeBlocks (s := 864) (a := 32) (b := 32)
+              envelopeBlock864
+              envelopeBlock896))
+          (joinEnvelopeBlocks (s := 928) (a := 32) (b := 64)
+            envelopeBlock928
+            (joinEnvelopeBlocks (s := 960) (a := 32) (b := 32)
+              envelopeBlock960
+              envelopeBlock992)))
+        (joinEnvelopeBlocks (s := 1024) (a := 96) (b := 128)
+          (joinEnvelopeBlocks (s := 1024) (a := 32) (b := 64)
+            envelopeBlock1024
+            (joinEnvelopeBlocks (s := 1056) (a := 32) (b := 32)
+              envelopeBlock1056
+              envelopeBlock1088))
+          (joinEnvelopeBlocks (s := 1120) (a := 64) (b := 64)
+            (joinEnvelopeBlocks (s := 1120) (a := 32) (b := 32)
+              envelopeBlock1120
+              envelopeBlock1152)
+            (joinEnvelopeBlocks (s := 1184) (a := 32) (b := 32)
+              envelopeBlock1184
+              envelopeBlock1216))))
+      (joinEnvelopeBlocks (s := 1248) (a := 192) (b := 210)
+        (joinEnvelopeBlocks (s := 1248) (a := 96) (b := 96)
+          (joinEnvelopeBlocks (s := 1248) (a := 32) (b := 64)
+            envelopeBlock1248
+            (joinEnvelopeBlocks (s := 1280) (a := 32) (b := 32)
+              envelopeBlock1280
+              envelopeBlock1312))
+          (joinEnvelopeBlocks (s := 1344) (a := 32) (b := 64)
+            envelopeBlock1344
+            (joinEnvelopeBlocks (s := 1376) (a := 32) (b := 32)
+              envelopeBlock1376
+              envelopeBlock1408)))
+        (joinEnvelopeBlocks (s := 1440) (a := 96) (b := 114)
+          (joinEnvelopeBlocks (s := 1440) (a := 32) (b := 64)
+            envelopeBlock1440
+            (joinEnvelopeBlocks (s := 1472) (a := 32) (b := 32)
+              envelopeBlock1472
+              envelopeBlock1504))
+          (joinEnvelopeBlocks (s := 1536) (a := 64) (b := 50)
+            (joinEnvelopeBlocks (s := 1536) (a := 32) (b := 32)
+              envelopeBlock1536
+              envelopeBlock1568)
+            (joinEnvelopeBlocks (s := 1600) (a := 32) (b := 18)
+              envelopeBlock1600
+              envelopeBlock1632)))))) i
+
+private theorem coarse_le_envelope (j : Fin 1651) :
+    coarseCount j.val j.val ≤ saturatedCount 4012 j.val := by
+  by_cases h : j.val < 1650
+  · exact (envelopeBlocks ⟨j.val, h⟩).1
+  · have hj := j.isLt
+    rw [show j.val = 1650 by omega]
+    decide +kernel
+
+private theorem envelope_step (j : Fin 1650) :
+    saturatedCount 4012 j.val ≤ saturatedCount 4012 (j.val + 1) :=
+  (envelopeBlocks j).2
+
+end
+
+private theorem envelope_mono {j J : ℕ} (h : j ≤ J) (hJ : J ≤ 1650) :
+    saturatedCount 4012 j ≤ saturatedCount 4012 J := by
+  induction J with
+  | zero =>
+    have : j = 0 := by omega
+    subst j
+    exact le_rfl
+  | succ n ih =>
+    by_cases hj : j = n + 1
+    · subst j
+      exact le_rfl
+    · exact (ih (by omega) (by omega)).trans (envelope_step ⟨n, by omega⟩)
+
+private theorem count_le_envelope {b j : ℕ} (hb : b ≤ 4012) (hj : j ≤ 1650) :
+    fastSymbols b j ≤ saturatedCount 4012 j := by
+  have hmono {a b : ℕ} (h : a ≤ b) : coarseCount a j ≤ coarseCount b j := by
+    unfold coarseCount
+    gcongr
+  by_cases h : j ≤ b
+  · rw [count_of_index_le h]
+    exact Nat.sub_le_sub_right (hmono hb) _
+  · exact (count_le_coarse _ _).trans ((hmono (by omega : b ≤ j)).trans
+      (coarse_le_envelope ⟨j, by omega⟩))
+
+private def tailUpper (k : ℕ) : ℕ :=
+  if 462 + (k + 1) * 9 ≤ 1650
+  then saturatedCount 4012 (1650 - (462 + (k + 1) * 9)) else 0
+
+private theorem remaining_le_tail (b j k : ℕ) (h : 462 + (k + 1) * 9 ≤ j) :
+    fastRemaining b j ≤ tailUpper k := by
+  by_cases hbox : b ≤ 4012 ∧ j ≤ 1650
+  · have hk : 462 + (k + 1) * 9 ≤ 1650 := h.trans hbox.2
+    simp only [fastRemaining, hbox, tailUpper, ite_eq_left, hk]
+    exact (count_le_envelope (Nat.sub_le _ _) (Nat.sub_le _ _)).trans
+      (envelope_mono (by omega) (Nat.sub_le _ _))
+  · simp [fastRemaining, hbox]
+
+set_option maxRecDepth 8192 in
+set_option maxHeartbeats 0 in
+private theorem mass_envelope_test :
+    (∑ k ∈ Finset.range 77, fastRemaining ((k + 1) * 2) ((k + 1) * 6)) +
+      (∑ k ∈ Finset.range (1650 / 9), tailUpper k) < need := by
+  decide +kernel
+
+theorem mass_lt_need (x : Shape) (hx : Valid x) :
+    availableMass start x (lowerOrder - 1) < need := by
+  have hj : 9 ≤ 6 + x.j := by
+    rcases hx with ⟨ht, hj, _⟩
+    omega
+  change (∑ k ∈ Finset.range 77, fastRemaining ((k + 1) * 2) ((k + 1) * 6)) +
+    (∑ k ∈ Finset.range (1650 / (6 + x.j)),
+      fastRemaining (154 + (k + 1) * (2 + x.b)) (462 + (k + 1) * (6 + x.j))) < need
+  refine lt_of_le_of_lt (Nat.add_le_add_left ?_ _) mass_envelope_test
+  apply sum_range_mono (Nat.div_le_div_left hj (by decide))
+  intro k _
+  exact remaining_le_tail _ _ _ (Nat.add_le_add_left (Nat.mul_le_mul_left (k + 1) hj) _)
+
+end K1_13_8_4
+end PackSource_K1_13_8_4Mass
+
+section PackSource_K1_13_8_2Order
+set_option autoImplicit true
+namespace K1_13_8_2
+
+open K1_13 K1_13_8
+open scoped BigOperators
+
+private def sumBelow (f : ℕ → ℕ) : ℕ → ℕ
+  | 0 => 0
+  | n + 1 => sumBelow f n + f n
+
+private theorem sumBelow_eq (f : ℕ → ℕ) (n : ℕ) :
+    sumBelow f n = ∑ k ∈ Finset.range n, f k := by
+  induction n with
+  | zero => simp [sumBelow]
+  | succ n ih => rw [sumBelow, Finset.sum_range_succ, ih]
+
+private def positiveTerms (b j : ℕ) : ℕ :=
+  (b + 1) * coefficient 0 j + shifted 2 j 3 + shifted 2 j 4 + shifted 2 j 5
+
+private def negativeTerms (j : ℕ) : ℕ :=
+  shifted 1 j 1 + shifted 1 j 2 + shifted 1 j 3 + shifted 3 j 6
+
+private def upperRemaining (b j : ℕ) : ℕ :=
+  if b ≤ 4012 ∧ j ≤ 1650 then positiveTerms (4012 - b) (1650 - j) else 0
+
+private def upperMass (b j : ℕ) : ℕ :=
+  sumBelow (fun k => upperRemaining ((k + 1) * b) ((k + 1) * j)) (1650 / j)
+
+private def correction (k : ℕ) : ℕ := negativeTerms (1650 - (k + 1) * 48)
+
+private def correctionTotal : ℕ := sumBelow correction 12
+
+private def coefficientCheck (r : ℕ) : Bool :=
+  allBelow (fun j => decide (coefficient r j ≤ coefficient r (j + 1))) 1650
+
+-- Check the four monotonicity rows separately so the kernel can release each reduction.
+section
+set_option maxRecDepth 32768
+set_option maxHeartbeats 0
+
+private theorem orderCoefficientRow0 : coefficientCheck 0 = true := by decide +kernel
+
+private theorem orderCoefficientRow1 : coefficientCheck 1 = true := by decide +kernel
+
+private theorem orderCoefficientRow2 : coefficientCheck 2 = true := by decide +kernel
+
+private theorem orderCoefficientRow3 : coefficientCheck 3 = true := by decide +kernel
+
+end
+
+private theorem coefficientChecks :
+    coefficientCheck 0 = true ∧ coefficientCheck 1 = true ∧
+    coefficientCheck 2 = true ∧ coefficientCheck 3 = true :=
+  ⟨orderCoefficientRow0, orderCoefficientRow1, orderCoefficientRow2, orderCoefficientRow3⟩
+
+private theorem coefficient_mono {r j k : ℕ} (hr : r ≤ 3) (hjk : j ≤ k) (hk : k ≤ 1650) :
+    coefficient r j ≤ coefficient r k := by
+  have hcheck : coefficientCheck r = true := by
+    rcases (show r = 0 ∨ r = 1 ∨ r = 2 ∨ r = 3 by omega) with rfl | rfl | rfl | rfl
+    · exact coefficientChecks.1
+    · exact coefficientChecks.2.1
+    · exact coefficientChecks.2.2.1
+    · exact coefficientChecks.2.2.2
+  induction k with
+  | zero => simp [Nat.eq_zero_of_le_zero hjk]
+  | succ k ih =>
+    rcases Nat.lt_or_eq_of_le hjk with hlt | rfl
+    · have hs : coefficient r k ≤ coefficient r (k + 1) :=
+        of_decide_eq_true (allBelow_spec hcheck (by omega))
+      exact (ih (by omega) (by omega)).trans hs
+    · exact le_rfl
+
+private theorem shifted_mono {r j k : ℕ} (hr : r ≤ 3) (hjk : j ≤ k) (hk : k ≤ 1650)
+    (v : ℕ) : shifted r j v ≤ shifted r k v := by
+  by_cases hv : v ≤ j
+  · simpa [shifted, hv, hv.trans hjk] using
+      (coefficient_mono hr (show j - v ≤ k - v by omega) (show k - v ≤ 1650 by omega))
+  · simp [shifted, hv]
+
+private theorem upperRemaining_anti {b c j k : ℕ} (hb : b ≤ c) (hj : j ≤ k) :
+    upperRemaining c k ≤ upperRemaining b j := by
+  by_cases h : c ≤ 4012 ∧ k ≤ 1650
+  · have h' : b ≤ 4012 ∧ j ≤ 1650 := ⟨hb.trans h.1, hj.trans h.2⟩
+    simp only [upperRemaining, h, h', positiveTerms]
+    have hidx : 1650 - k ≤ 1650 - j := by omega
+    have hcap : 1650 - j ≤ 1650 := Nat.sub_le _ _
+    exact Nat.add_le_add (Nat.add_le_add (Nat.add_le_add
+      (Nat.mul_le_mul (by omega) (coefficient_mono (by decide : 0 ≤ 3) hidx hcap))
+      (shifted_mono (by decide : 2 ≤ 3) hidx hcap 3))
+      (shifted_mono (by decide : 2 ≤ 3) hidx hcap 4))
+      (shifted_mono (by decide : 2 ≤ 3) hidx hcap 5)
+  · simp [upperRemaining, h]
+
+private theorem positive_part_le (b j : ℕ) :
+    (b + 1) * coefficient 0 j + across b 2 j 3 + across b 2 j 4 + across b 2 j 5
+      ≤ positiveTerms b j := by
+  exact Nat.add_le_add (Nat.add_le_add (Nat.add_le_add le_rfl (Nat.sub_le _ _))
+    (Nat.sub_le _ _)) (Nat.sub_le _ _)
+
+private theorem remaining_le_upper (b j : ℕ) :
+    fastRemaining b j ≤ upperRemaining b j := by
+  by_cases h : b ≤ 4012 ∧ j ≤ 1650
+  · simp only [fastRemaining, upperRemaining, h, fastSymbols]
+    exact (Nat.sub_le _ _).trans (positive_part_le _ _)
+  · simp [fastRemaining, upperRemaining, h]
+
+private def correctionCheck : Bool :=
+  allBelow (fun k => decide (correction k ≤ upperRemaining ((k + 1) * 120) ((k + 1) * 48))) 12
+
+private theorem corrections_fit : correctionCheck = true := by decide +kernel
+
+/-- On the first twelve layers all the delayed negative shifts vanish.
+Charge the negative contribution of the full-box endpoint as a common deduction. -/
+private theorem layer_add_correction {b j k : ℕ} (hb : b ≤ 120) (hj : j ≤ 48) (hk : k < 12) :
+    fastRemaining ((k + 1) * b) ((k + 1) * j) + correction k ≤
+      upperRemaining ((k + 1) * b) ((k + 1) * j) := by
+  let d := k + 1
+  let B := 4012 - d * b
+  let J := 1650 - d * j
+  have hdb := Nat.mul_le_mul_left d hb
+  have hdj := Nat.mul_le_mul_left d hj
+  have hB : d * b ≤ 4012 := by omega
+  have hJ : d * j ≤ 1650 := by omega
+  have hlarge : J < B := by dsimp [B, J]; omega
+  have hz (r v : ℕ) (h : J < v + r * (B + 1)) :
+      shifted r J (v + r * (B + 1)) = 0 := by
+    simp [shifted, Nat.not_le.mpr h]
+  have hneg (r v : ℕ) (h : J < v + r * (B + 1)) :
+      across B r J v = shifted r J v := by simp [across, hz r v h]
+  have h1 := hneg 1 1 (by omega)
+  have h2 := hneg 1 2 (by omega)
+  have h3 := hneg 1 3 (by omega)
+  have h6 := hneg 3 6 (by omega)
+  have hidx : 1650 - d * 48 ≤ J := by dsimp [J]; omega
+  have hJcap : J ≤ 1650 := Nat.sub_le _ _
+  have hc : correction k ≤ negativeTerms J :=
+    Nat.add_le_add (Nat.add_le_add (Nat.add_le_add
+      (shifted_mono (by decide : 1 ≤ 3) hidx hJcap 1)
+      (shifted_mono (by decide : 1 ≤ 3) hidx hJcap 2))
+      (shifted_mono (by decide : 1 ≤ 3) hidx hJcap 3))
+      (shifted_mono (by decide : 3 ≤ 3) hidx hJcap 6)
+  have hc' : correction k ≤ upperRemaining (d * b) (d * j) :=
+    (of_decide_eq_true (allBelow_spec corrections_fit hk)).trans (upperRemaining_anti hdb hdj)
+  change fastRemaining (d * b) (d * j) + correction k ≤ upperRemaining (d * b) (d * j)
+  rw [fastRemaining, ite_eq_left ⟨hB, hJ⟩]
+  rw [upperRemaining, ite_eq_left ⟨hB, hJ⟩] at hc' ⊢
+  change fastSymbols B J + correction k ≤ positiveTerms B J
+  have hp := positive_part_le B J
+  unfold fastSymbols
+  rw [h1, h2, h3, h6]
+  change _ - negativeTerms J + correction k ≤ positiveTerms B J
+  change correction k ≤ positiveTerms B J at hc'
+  omega
+
+private theorem mass_le_upper {b j b₀ j₀ : ℕ} (hb : b ≤ 120) (hj : j ≤ 48)
+    (hj₀ : 0 < j₀) (hb₀ : b₀ ≤ b) (hjj : j₀ ≤ j) :
+    zeroMass b j + correctionTotal ≤ upperMass b₀ j₀ := by
+  have hpos : 0 < j := hj₀.trans_le hjj
+  have hn : 12 ≤ 1650 / j := (Nat.le_div_iff_mul_le hpos).mpr (by omega)
+  let extra := fun k => if k < 12 then correction k else 0
+  have hsum : correctionTotal = ∑ k ∈ Finset.range (1650 / j), extra k := by
+    unfold correctionTotal
+    rw [sumBelow_eq, sum_range_truncate (m := 12)
+      (fun k hk => ite_eq_right (Nat.not_lt.mpr hk)) hn]
+    exact Finset.sum_congr rfl fun k hk => (ite_eq_left (Finset.mem_range.mp hk)).symm
+  rw [zeroMass, hsum, ← Finset.sum_add_distrib, upperMass, sumBelow_eq]
+  have hlen : 1650 / j ≤ 1650 / j₀ := Nat.div_le_div_left hjj hj₀
+  apply sum_range_mono hlen
+  intro k _
+  refine le_trans ?_ (upperRemaining_anti (Nat.mul_le_mul_left _ hb₀) (Nat.mul_le_mul_left _ hjj))
+  by_cases hk : k < 12
+  · simpa [extra, hk] using layer_add_correction hb hj hk
+  · simpa [extra, hk] using remaining_le_upper ((k + 1) * b) ((k + 1) * j)
+
+private def thresholdCheck (s : Threshold) : Bool :=
+  decide (0 < s.j ∧ (s.l - 1) * fastRemaining 0 0 + upperMass s.b s.j < need + correctionTotal)
+
+-- Each endpoint has its own mass sum. Replay those sums independently.
+section
+set_option maxRecDepth 32768
+set_option maxHeartbeats 0
+
+private theorem orderThreshold118_48 : thresholdCheck ⟨118, 48, 58⟩ = true := by
+  decide +kernel
+
+private theorem orderThreshold103_43 : thresholdCheck ⟨103, 43, 57⟩ = true := by
+  decide +kernel
+
+private theorem orderThreshold67_30 : thresholdCheck ⟨67, 30, 52⟩ = true := by
+  decide +kernel
+
+private theorem orderThreshold11_16 : thresholdCheck ⟨11, 16, 34⟩ = true := by
+  decide +kernel
+
+private theorem orderThreshold4_11 : thresholdCheck ⟨4, 11, 17⟩ = true := by
+  decide +kernel
+
+private theorem orderThreshold48_4 : thresholdCheck ⟨48, 4, 15⟩ = true := by
+  decide +kernel
+
+private theorem orderThreshold5_9 : thresholdCheck ⟨5, 9, 7⟩ = true := by
+  decide +kernel
+
+private theorem orderThreshold27_6 : thresholdCheck ⟨27, 6, 3⟩ = true := by
+  decide +kernel
+
+private theorem orderThreshold19_7 : thresholdCheck ⟨19, 7, 2⟩ = true := by
+  decide +kernel
+
+private theorem orderThreshold36_4 : thresholdCheck ⟨36, 4, 2⟩ = true := by
+  decide +kernel
+
+private theorem orderThreshold9_8 : thresholdCheck ⟨9, 8, 2⟩ = true := by
+  decide +kernel
+
+private theorem orderThreshold26_6 : thresholdCheck ⟨26, 6, 2⟩ = true := by
+  decide +kernel
+
+end
+
+private theorem thresholdChecks : thresholds.all thresholdCheck = true := by
+  simp only [thresholds, List.all_cons, List.all_nil, Bool.true_and,
+    orderThreshold118_48, orderThreshold103_43, orderThreshold67_30, orderThreshold11_16,
+    orderThreshold4_11, orderThreshold48_4, orderThreshold5_9, orderThreshold27_6,
+    orderThreshold19_7, orderThreshold36_4, orderThreshold9_8, orderThreshold26_6]
+
+private theorem orderFor_select (b j : ℕ) (ss : List Threshold) :
+    1 ≤ orderFor b j ss ∧
+    (orderFor b j ss = 1 ∨ ∃ s ∈ ss, s.b ≤ b ∧ s.j ≤ j ∧ orderFor b j ss = s.l) := by
+  induction ss with
+  | nil => simp [orderFor]
+  | cons s ss ih =>
+    unfold orderFor
+    let p := if s.b ≤ b ∧ s.j ≤ j then s.l else 1
+    change 1 ≤ max p (orderFor b j ss) ∧
+      (max p (orderFor b j ss) = 1 ∨ ∃ q ∈ s :: ss,
+        q.b ≤ b ∧ q.j ≤ j ∧ max p (orderFor b j ss) = q.l)
+    refine ⟨ih.1.trans (le_max_right _ _), ?_⟩
+    rcases le_total p (orderFor b j ss) with h | h
+    · rw [max_eq_right h]
+      rcases ih.2 with h1 | ⟨q, hq, hb, hj, hl⟩
+      · exact Or.inl h1
+      · exact Or.inr ⟨q, List.mem_cons_of_mem _ hq, hb, hj, hl⟩
+    · rw [max_eq_left h]
+      by_cases hbox : s.b ≤ b ∧ s.j ≤ j
+      · exact Or.inr ⟨s, List.mem_cons_self, hbox.1, hbox.2, ite_eq_left hbox⟩
+      · exact Or.inl (ite_eq_right hbox)
+
+private theorem orderFor_mono {b b' j j' : ℕ} (hb : b ≤ b') (hj : j ≤ j') (ss : List Threshold) :
+    orderFor b j ss ≤ orderFor b' j' ss := by
+  induction ss with
+  | nil => exact le_rfl
+  | cons s ss ih =>
+    unfold orderFor
+    by_cases h : s.b ≤ b ∧ s.j ≤ j
+    · rw [ite_eq_left h, ite_eq_left ⟨h.1.trans hb, h.2.trans hj⟩]
+      exact max_le_max le_rfl ih
+    · rw [ite_eq_right h, max_eq_right (orderFor_select b j ss).1]
+      exact ih.trans (le_max_right _ _)
+
+theorem orderAt_pos (x : Shape) : 0 < orderAt x := (orderFor_select x.b x.j thresholds).1
+
+theorem orderAt_mono {x y : Shape} (hb : x.b ≤ y.b) (hj : x.j ≤ y.j) :
+    orderAt x ≤ orderAt y := orderFor_mono hb hj thresholds
+
+theorem orderAt_certified (x : Shape) (hb : x.b ≤ 120) (hj : x.j ≤ 48) :
+    orderAt x = 1 ∨ availableMass zeroShape x (orderAt x - 1) < need := by
+  rcases (orderFor_select x.b x.j thresholds).2 with he | ⟨s, hs, hsb, hsj, he⟩
+  · exact Or.inl he
+  · have hcheck := of_decide_eq_true (List.all_eq_true.mp thresholdChecks s hs)
+    have hm := mass_le_upper hb hj hcheck.1 hsb hsj
+    have hlt := hcheck.2
+    change orderAt x = s.l at he
+    right
+    rw [he]
+    simp only [availableMass, zeroShape, Nat.zero_add, Nat.mul_zero, ite_true]
+    change (s.l - 1) * fastRemaining 0 0 + zeroMass x.b x.j < need
+    omega
+
+end K1_13_8_2
+end PackSource_K1_13_8_2Order
 
 section PackSource_K1_13_8_1Coefficients
 set_option autoImplicit true
@@ -1160,6 +2681,83 @@ theorem gaussian_expand (d : ℕ) (j : ℤ) :
 
 end K1_13_8_1
 end PackSource_K1_13_8_1Counting
+
+section PackSource_K1_13_8_4Proof
+set_option autoImplicit true
+namespace K1_13_8_4
+
+open K1_13 K1_13_8
+
+/-- Each factor pays from the unspent derivative-index budget. -/
+private def potential (x : Shape) : ℕ := indexRate * (42 - x.j)
+
+theorem proof : K1_13_8.c4 := by
+  change Bellman start 125142013343379695
+  refine ⟨potential, fun _ => lowerOrder, by decide, ?_, ?_⟩
+  · intro x hx _
+    exact ⟨by change 0 < lowerOrder; decide, Or.inr (mass_lt_need x hx)⟩
+  · intro y a _ ha hbox
+    change 2 + (y.b + a.b) ≤ 120 ∧ 6 + (y.j + a.j) ≤ 48 ∧
+      2 + (y.t + a.t) ≤ 10 at hbox
+    rcases hbox with ⟨hb, hj, ht⟩
+    have hprice := tariff_le a ha (by omega) (by omega) (by omega)
+    have hunspent : a.j + (42 - (y.j + a.j)) = 42 - y.j := by omega
+    calc
+      edgePrice a lowerOrder + potential (y.plus a) ≤
+          indexRate * a.j + indexRate * (42 - (y.j + a.j)) :=
+        Nat.add_le_add_right hprice _
+      _ = potential y := by rw [← Nat.mul_add, hunspent, potential]
+
+end K1_13_8_4
+end PackSource_K1_13_8_4Proof
+
+section PackSource_K1_13_8_2Proof
+set_option autoImplicit true
+namespace K1_13_8_2
+
+open K1_13 K1_13_8
+
+private theorem edge_le_physical (a : Shape) (l : ℕ) : edgePrice a l ≤ physicalPrice a l := by
+  unfold edgePrice
+  split
+  · exact min_le_left _ _
+  · exact le_rfl
+
+private theorem zero_plus (x : Shape) : zeroShape.plus x = x := by
+  cases x
+  simp [zeroShape, Shape.plus]
+
+theorem proof : K1_13_8.c2 := by
+  refine ⟨potential, orderAt, by decide, ?_, ?_⟩
+  · intro x _ hx
+    rw [zero_plus] at hx
+    exact ⟨orderAt_pos x, orderAt_certified x hx.1 hx.2.1⟩
+  · intro y a _ ha hbox
+    let x := y.plus a
+    have hcap : InBox x fullCap := by simpa only [zero_plus] using hbox
+    have haBox : InBox a x := ⟨Nat.le_add_left _ _, Nat.le_add_left _ _, Nat.le_add_left _ _⟩
+    have hb : InBox a fullCap :=
+      ⟨haBox.1.trans hcap.1, haBox.2.1.trans hcap.2.1, haBox.2.2.trans hcap.2.2⟩
+    have hl := orderAt_mono haBox.1 haBox.2.1
+    have hprice : edgePrice a (orderAt x) ≤ indexBudget a.j :=
+      (edgePrice_anti a (orderAt_pos a) hl).trans
+        ((edge_le_physical a _).trans (price_upper ha hb))
+    have hidx : a.j + (48 - x.j) = 48 - y.j := by
+      have h := hcap.2.1
+      change _ + _ ≤ 48 at h
+      dsimp [x, Shape.plus]
+      omega
+    calc
+      edgePrice a (orderAt x) + potential x ≤ indexBudget a.j + potential x :=
+        Nat.add_le_add_right hprice _
+      _ ≤ potential y := by
+        have hdiv : limit * a.j / 48 + limit * (48 - x.j) / 48 ≤
+            (limit * a.j + limit * (48 - x.j)) / 48 := Nat.div_add_div_le_add_div
+        rw [← Nat.mul_add, hidx] at hdiv
+        exact hdiv
+
+end K1_13_8_2
+end PackSource_K1_13_8_2Proof
 
 section PackSource_K1_13_8_1Proof
 set_option autoImplicit true
@@ -5262,6 +6860,104 @@ def stagePass {w rows} (pairs : ∀ i : Fin 10, RowPair w rows i)
 end
 end K1_14_2_2R
 end PackSource_K1_14_2_2RDefs
+
+section PackSource_K1_14_2_2RCutter
+set_option autoImplicit true
+set_option backward.isDefEq.respectTransparency false
+set_option maxSynthPendingDepth 8
+
+namespace K1_14_2_2R
+
+noncomputable section
+
+open K1 K1_14 K1_14_2 K1_14_2_2 Polynomial
+
+/-- In particular the compatibility test always passes on a mark's
+evaluation kernel, for every common factor and every clearing. -/
+theorem compatible_at_mark (P Q : Jet) (z : K) (S : K[X]) :
+    chainCompatible P Q (RingHom.ker (jetMarkHom z S)) := by
+  intro f _ _ _ _ hon g a hclear
+  apply RingHom.mem_ker.mpr
+  rw [eval_toJet]
+  apply K1_14_3R.chainCutter_zero hclear
+  have h := RingHom.mem_ker.mp hon
+  simpa only [eval_toJet, jetAt, eval₂_C, coe_eval₂RingHom, atMark] using h
+
+/-- Both reported affine witnesses are instances, with c equal to the
+first seed or to one. The cutter is precisely the outer jet variable. -/
+theorem affine_chainCutter (c : MvPolynomial (Fin 2) L) :
+    let g : K1_14_3.ClearedEquation := Polynomial.X - C (MvPolynomial.map C c)
+    K1_14_3R.chainCutter g = Polynomial.X (R := Equation) := by
+  intro g
+  have hc (j : ℕ) (e : Fin 2 →₀ ℕ) : ((g.coeff j).coeff e).derivative = 0 := by
+    by_cases h0 : j = 0 <;> by_cases h1 : j = 1 <;> by_cases he : e = 0 <;>
+      simp_all [g, coeff_X, coeff_C, MvPolynomial.coeff_one, MvPolynomial.coeff_map, eq_comm]
+  have dx : K1_14_3.clearedDx g = 0 := by
+    simp [K1_14_3.clearedDx, Polynomial.sum, hc]
+  simp [K1_14_3R.chainCutter, dx, g, K1_14_3.liftEquation]
+
+private theorem stage_shapes (i : Fin 10) :
+    (stageAt i).cheap.B ≤ (stageAt i).layered.B ∧
+    (stageAt i).cheap.J ≤ (stageAt i).layered.J ∧
+    (stageAt i).cheap.U ≤ (stageAt i).layered.U ∧ 1 ≤ (stageAt i).layered.J := by
+  fin_cases i <;> decide
+
+/-- A failed full bank or ordinary graph yields a padded proper cut at
+every marked zero, even at a singular specialization of the ordinary factor. -/
+theorem failed_stage {u del} {M : AnchorModel u del} {Γ} {F : AnchoredFamily M Γ}
+    {rows : Banks} (hw : M.overhead ≤ 3554) (src : JetSource M F rows)
+    (pairs : ∀ i : Fin 10, RowPair M.overhead rows i) (n : ℕ) (I : Ideal Ambient)
+    (hf : ¬ stagePass pairs n I) :
+    ∃ P : Jet, RowCaps P (cutShape n) ∧ toJet P ∉ I ∧
+      ∀ γ ∈ Γ, OnParent M F I γ → jetAt P (M.label γ) (F.scalar γ) = 0 := by
+  classical
+  have bank (s : Shape) (hs : s ∈ scheduled M.overhead) (hm : 0 < s.m)
+      (hn : ¬ bankVanishes rows s I) :
+      ∃ P : Jet, RowCaps P s ∧ toJet P ∉ I ∧
+        ∀ γ ∈ Γ, jetAt P (M.label γ) (F.scalar γ) = 0 := by
+    unfold bankVanishes at hn
+    push Not at hn
+    obtain ⟨P, hP, hprop⟩ := hn
+    exact ⟨P, src.shape _ hs _ _ hP, hprop,
+      src.necessary _ hs _ (by unfold fullCutoff; omega) _ hP⟩
+  by_cases hi : n < 10
+  · let i : Fin 10 := ⟨n, hi⟩
+    change ¬ (if hn : n < 10 then pairPass (pairs ⟨n, hn⟩) I else _) at hf
+    rw [dite_eq_left hi] at hf
+    rw [cutShape, dite_eq_left hi]
+    change ¬ pairPass (pairs i) I at hf
+    have caps := stage_shapes i
+    by_cases hp : bankVanishes rows (stageAt i).cheap I
+    · by_cases hq : bankVanishes rows (stageAt i).layered I
+      · have hc : ¬ chainCompatible (pairs i).cheap (pairs i).layered I :=
+          fun hc => hf ⟨hp, hq, hc⟩
+        unfold chainCompatible at hc
+        push Not at hc
+        obtain ⟨f, _, _, _, hd, hon, g, a, ha, hprop⟩ := hc
+        refine ⟨K1_14_3R.chainCutter g,
+          K1_14_3R.chainCutter_caps_of_dvd (pairs i).layered_ne
+            (pairs i).layered_caps caps.2.2.2 hd ha, hprop, ?_⟩
+        intro γ _ hmark
+        apply K1_14_3R.chainCutter_zero ha
+        have hz := RingHom.mem_ker.mp (hmark hon)
+        simpa only [eval_toJet, jetAt, eval₂_C, coe_eval₂RingHom, atMark] using hz
+      · obtain ⟨P, hc, hn, hz⟩ := bank _ (pair_scheduled hw i (by simp [stagePair]))
+          (positive_m i).2 hq
+        exact ⟨P, hc, hn, fun γ hγ _ => hz γ hγ⟩
+    · obtain ⟨P, hc, hn, hz⟩ := bank _ (pair_scheduled hw i (by simp [stagePair]))
+          (positive_m i).1 hp
+      refine ⟨P, ?_, hn, fun γ hγ _ => hz γ hγ⟩
+      intro j y h
+      exact ⟨(hc j y h).1.trans caps.1, (hc j y h).2.1.trans caps.2.1,
+        (hc j y h).2.2.trans caps.2.2.1⟩
+  · rw [stagePass, dite_eq_right hi] at hf
+    rw [cutShape, dite_eq_right hi]
+    obtain ⟨P, hc, hn, hz⟩ := bank full (full_scheduled hw) (by decide) hf
+    exact ⟨P, hc, hn, fun γ hγ _ => hz γ hγ⟩
+
+end
+end K1_14_2_2R
+end PackSource_K1_14_2_2RCutter
 
 section PackSource_K1_13_6_1Cuts
 set_option autoImplicit true

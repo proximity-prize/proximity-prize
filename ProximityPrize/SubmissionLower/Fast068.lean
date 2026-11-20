@@ -32,6 +32,420 @@ import ProximityPrize.SubmissionLower.Fast056
 import ProximityPrize.SubmissionLower.Fast064
 set_option Elab.async false
 
+section PackSource_K1_14_2_7Cutoffs
+set_option autoImplicit true
+namespace K1_14_2_7
+
+noncomputable section
+
+open K1_14 K1_14_2 Polynomial Finset
+open scoped BigOperators
+
+def top : ℕ := full.m * 180265
+
+def width (h q j : ℕ) : ℕ := top + j - q * (131071 - h)
+
+def contactBudget (q j : ℕ) : ℕ := j + (q - j) / 6
+
+def loss (h q j : ℕ) : ℕ := width h q j - 2*h*contactBudget q j
+
+private def eligible (h W q j : ℕ) : Prop :=
+  q * (131071-h) ≤ W+j ∧ top ≤ W+2*h*contactBudget q j
+
+private instance (h W q j : ℕ) : Decidable (eligible h W q j) := by
+  unfold eligible
+  infer_instance
+
+private def positions (h W : ℕ) : Finset (Σ _ : ℕ, ℕ) :=
+  ((range (full.B+1)).sigma (fun q => range (min q full.J+1))).filter
+    (fun a => eligible h W a.1 a.2)
+
+private theorem mem_positions (h W q j : ℕ) :
+    (⟨q,j⟩ : Σ _ : ℕ, ℕ) ∈ positions h W ↔
+      q ≤ full.B ∧ j ≤ min q full.J ∧ eligible h W q j := by
+  simp [positions, and_assoc]
+
+private theorem seed_finrank (U : ℕ) :
+    Module.finrank FX (MvPolynomial.restrictTotalDegree (Fin 2) FX U) = triangle U := by
+  rw [MvPolynomial.restrictTotalDegree,
+    Module.finrank_eq_nat_card_basis (MvPolynomial.basisRestrictSupport FX _),
+    Nat.card_coe_set_eq]
+  change {e : Fin 2 →₀ ℕ | e.degree ≤ U}.ncard = triangle U
+  rw [Finsupp.ncard_setOf_degree_le]
+  simp [triangle, Nat.choose_two_right, Nat.mul_comm (U+2)]
+
+private theorem forced_at_full (w : ℤ) (hw : w ≤ 3554) (W j : ℕ) :
+    forcedPower w W j = 1 + (top-1-W)/(2*w.toNat)-j := by
+  have hm : (band w).multiplicity = full.m := by
+    rw [band, ite_eq_left hw]
+    rfl
+  unfold forcedPower top
+  rw [hm]
+
+set_option maxRecDepth 12000 in
+/-- Projection to eligible coefficient positions is injective because every
+nonzero row has its leading position in the projection. -/
+private theorem cutoff_rank_le (w : ℤ) (hlo : 2601 ≤ w) (hhi : w ≤ 3554)
+    (W : ℕ) (hW : W < top) (V : Submodule FX Jet)
+    {f : Equation} (hf : 6 ≤ f.natDegree)
+    (hshape : ∀ P ∈ V, ∀ j i, (P.coeff j).coeff i ≠ 0 →
+      i+j ≤ full.B ∧ j ≤ full.J ∧ ((P.coeff j).coeff i).totalDegree ≤ full.U)
+    (hwidth : ∀ P ∈ V, P ≠ 0 →
+      (P.leadingCoeff.natDegree + P.natDegree) * (131071-w.toNat) ≤ W+P.natDegree)
+    (hdiv : ∀ P ∈ V, P ≠ 0 → f ^ forcedPower w W P.natDegree ∣ P.leadingCoeff) :
+    Module.finrank FX V ≤ (positions w.toNat W).card * triangle full.U := by
+  classical
+  let S := positions w.toNat W
+  let T := MvPolynomial.restrictTotalDegree (Fin 2) FX full.U
+  let coord (a : S) : V →ₗ[FX] Seeds :=
+    (((lcoeff Seeds (a.1.1-a.1.2)).restrictScalars FX).comp
+      ((lcoeff Equation a.1.2).restrictScalars FX)).comp V.subtype
+  let proj : V →ₗ[FX] S → T := LinearMap.pi fun a => (coord a).codRestrict T (by
+    intro P
+    change (P.1.coeff a.1.2).coeff (a.1.1-a.1.2) ∈ T
+    apply (MvPolynomial.mem_restrictTotalDegree _ _ _).2
+    by_cases hz : (P.1.coeff a.1.2).coeff (a.1.1-a.1.2) = 0
+    · simp [hz]
+    · exact (hshape P.1 P.2 _ _ hz).2.2)
+  have hzero : ∀ P : V, proj P = 0 → P = 0 := by
+    intro P hP
+    apply Subtype.ext
+    by_contra hne
+    let j := P.1.natDegree
+    let i := P.1.leadingCoeff.natDegree
+    have hcoef : (P.1.coeff j).coeff i ≠ 0 :=
+      leadingCoeff_ne_zero.mpr (leadingCoeff_ne_zero.mpr hne)
+    obtain ⟨hB, hJ, _⟩ := hshape P.1 P.2 j i hcoef
+    have hdvd := hdiv P.1 P.2 hne
+    -- Specialize the exponent before taking degrees to keep kernel replay small.
+    rw [forced_at_full w hhi W] at hdvd
+    have hd := natDegree_le_of_dvd hdvd (leadingCoeff_ne_zero.mpr hne)
+    rw [natDegree_pow] at hd
+    have hpower : 1 + (top-1-W)/(2*w.toNat)-j ≤ i/6 := by
+      apply (Nat.le_div_iff_mul_le (by decide : 0 < 6)).2
+      exact (Nat.mul_le_mul_left _ hf).trans hd
+    have hstep : 0 < 2*w.toNat := by omega
+    have hcontact : top ≤ W+2*w.toNat*(j+i/6) := by
+      by_contra! hc
+      have hh := (Nat.le_div_iff_mul_le hstep).2
+        (show (j+i/6)*(2*w.toNat) ≤ top-1-W by
+          rw [mul_comm]
+          omega)
+      omega
+    have hb : eligible w.toNat W (i+j) j := by
+      refine ⟨hwidth P.1 P.2 hne, ?_⟩
+      unfold contactBudget
+      rw [Nat.add_sub_cancel]
+      exact hcontact
+    have hjq : j ≤ i+j := Nat.le_add_left j i
+    have ha : (⟨i+j,j⟩ : Σ _ : ℕ, ℕ) ∈ S := by
+      change (⟨i+j,j⟩ : Σ _ : ℕ, ℕ) ∈ positions w.toNat W
+      rw [mem_positions]
+      exact ⟨hB, le_min hjq hJ, hb⟩
+    let a : S := ⟨⟨i+j,j⟩, ha⟩
+    have hz := congrArg (fun v : S → T => (v a : Seeds)) hP
+    change (P.1.coeff j).coeff (i+j-j) = 0 at hz
+    exact hcoef (by simpa using hz)
+  have hinj : Function.Injective proj := by
+    intro P Q heq
+    let D : V := P + (-1 : FX) • Q
+    have hD : proj D = 0 := calc
+      _ = proj P + (-1 : FX) • proj Q := by
+        change proj (P + (-1 : FX) • Q) = _
+        rw [map_add, map_smul]
+      _ = ((1 : FX) + -1) • proj Q := by rw [add_smul, one_smul, heq]
+      _ = 0 := by rw [add_neg_cancel, zero_smul]
+    have h := congrArg Subtype.val (hzero D hD)
+    change P.1 + (-1 : FX) • Q.1 = (0 : Jet) at h
+    have hneg : Q.1 + (-1 : FX) • Q.1 = 0 := calc
+      _ = ((1 : FX) + -1) • Q.1 := by rw [add_smul, one_smul]
+      _ = 0 := by rw [add_neg_cancel, zero_smul]
+    have he := congrArg (fun r : Jet => r + Q.1) h
+    rw [add_assoc, add_comm ((-1 : FX) • Q.1), hneg, add_zero, zero_add] at he
+    exact Subtype.ext he
+  calc
+    _ ≤ Module.finrank FX (S → T) := LinearMap.finrank_le_finrank_of_injective hinj
+    _ = _ := by
+      let : Module.Free FX T := Module.Free.of_basis (MvPolynomial.basisRestrictSupport FX _)
+      rw [Module.finrank_pi_fintype FX (M := fun _ : S => T)]
+      simp [T, S, seed_finrank]
+
+private theorem positions_card (h W : ℕ) :
+    (positions h W).card = shapeSum full (fun q j => if eligible h W q j then 1 else 0) := by
+  unfold positions shapeSum
+  rw [card_filter, sum_sigma]
+
+private theorem position_count (h q j : ℕ) (hj : j ≤ q * (131071-h)) :
+    (∑ W ∈ range top, if eligible h W q j then 1 else 0) + loss h q j = width h q j := by
+  let t := q * (131071-h)
+  let d := 2*h*contactBudget q j
+  have hI : (range top).filter (fun W => eligible h W q j) =
+      Ico (max (t-j) (top-d)) top := by
+    apply Finset.ext
+    intro W
+    rw [Finset.mem_filter, mem_range, mem_Ico, max_le_iff]
+    change (W < top ∧ t ≤ W+j ∧ top ≤ W+d) ↔
+      ((t-j ≤ W ∧ top-d ≤ W) ∧ W < top)
+    have ht : j ≤ t := hj
+    omega
+  rw [← card_filter, hI, Nat.card_Ico]
+  change top - max (t-j) (top-d) + (top+j-t-d) = top+j-t
+  omega
+
+/-- The telescope loses the early cutoff interval at each eligible jet position. -/
+theorem rank_add_loss_le (w : ℤ) (hlo : 2601 ≤ w) (hhi : w ≤ 3554)
+    {u del} {M : K1.AnchorModel u del} {Γ} {F : K1.AnchoredFamily M Γ}
+    (hw : M.overhead = w) {rows : Banks} (hr : JetSource M F rows)
+    (hs : full ∈ scheduled w) {f : Equation} (hf : 6 ≤ f.natDegree)
+    (hd : FullDivisibility w rows f) :
+    (∑ W ∈ range top, Module.finrank FX (rows full W)) +
+        triangle full.U * shapeSum full (loss w.toNat) ≤
+      triangle full.U * shapeSum full (width w.toNat) := by
+  have hceil :
+      (∑ W ∈ range top, Module.finrank FX (rows full W)) ≤
+        ∑ W ∈ range top, (positions w.toNat W).card * triangle full.U := by
+    apply sum_le_sum
+    intro W hW
+    have hscheduled : full ∈ scheduled M.overhead := by simpa only [hw] using hs
+    exact cutoff_rank_le w hlo hhi W (mem_range.mp hW) _ hf
+      (hr.shape full hscheduled W) (by simpa only [hw] using hr.leading full hscheduled W)
+      (hd W (mem_range.mp hW))
+  apply (Nat.add_le_add_right hceil _).trans
+  simp_rw [positions_card]
+  rw [← sum_mul, mul_comm _ (triangle full.U), ← mul_add]
+  apply Nat.mul_le_mul_left
+  have hswap (g : ℕ → ℕ → ℕ → ℕ) :
+      (∑ W ∈ range top, shapeSum full (g W)) =
+        shapeSum full (fun q j => ∑ W ∈ range top, g W q j) := by
+    unfold shapeSum
+    rw [sum_comm]
+    apply sum_congr rfl
+    intro q _
+    rw [sum_comm]
+  rw [hswap]
+  unfold shapeSum
+  simp only [← sum_add_distrib]
+  apply sum_le_sum
+  intro q _
+  apply sum_le_sum
+  intro j hj
+  have hjq : j ≤ q := (Nat.le_of_lt_succ (mem_range.mp hj)).trans (min_le_left _ _)
+  have hk : 1 ≤ 131071-w.toNat := by omega
+  have hjk : j ≤ q*(131071-w.toNat) := hjq.trans (by
+    simpa using Nat.mul_le_mul_left q hk)
+  exact (position_count w.toNat q j hjk).le
+
+end
+end K1_14_2_7
+end PackSource_K1_14_2_7Cutoffs
+
+section PackSource_K1_14_2_7Arithmetic
+set_option autoImplicit true
+namespace K1_14_2_7
+
+open K1_14 K1_14_2 Finset
+open scoped BigOperators
+
+private theorem sum_progression (n : ℕ) (a d : ℤ) :
+    (∑ j ∈ range n, (a-2*d*(j : ℤ))) = (n : ℤ)*(a-d*((n : ℤ)-1)) := by
+  induction n with
+  | zero => simp
+  | succ n ih => rw [sum_range_succ, ih, Nat.cast_succ]; ring
+
+/-- Three times the lost width, with the floor in the contact budget
+replaced by its rational upper bound. -/
+private def signedWidth (h : ℤ) (q j : ℕ) : ℤ :=
+  3*((top : ℤ)+j-131071*(q : ℤ)) + h*(2*(q : ℤ)-5*(j : ℤ))
+
+private theorem signed_le_loss (h q j : ℕ) (hh : h ≤ 131071) (hj : j ≤ q) :
+    signedWidth h q j ≤ 3*(loss h q j : ℤ) := by
+  have cast_sub_le (a b : ℕ) : (a : ℤ) - b ≤ ((a-b : ℕ) : ℤ) := by omega
+  have hraw := cast_sub_le (top+j) (q*(131071-h))
+  have hloss := cast_sub_le (width h q j) (2*h*contactBudget q j)
+  have hdiv : 6*((q-j)/6) ≤ q-j := Nat.mul_div_le _ _
+  have hbudget : 6*(contactBudget q j : ℤ) ≤ 5*(j : ℤ)+(q : ℤ) := by
+    have h := Int.ofNat_le.mpr hdiv
+    push_cast [Nat.cast_sub hj] at h
+    unfold contactBudget
+    push_cast
+    omega
+  have hcut := mul_le_mul_of_nonneg_left hbudget (show 0 ≤ (h : ℤ) by positivity)
+  push_cast [Nat.cast_sub hh] at hraw hloss
+  change _ ≤ (width h q j : ℤ) at hraw
+  change _ ≤ (loss h q j : ℤ) at hloss
+  unfold signedWidth
+  nlinarith only [hraw, hloss, hcut]
+
+/-- Keep the initial grade interval selected at height 2601 fixed throughout
+the proof, so its signed contribution is affine in height. -/
+private def supportCount (q : ℕ) : ℕ :=
+  min (min q full.J+1)
+    ((3*top + (5*2601-3) - 1 - (3*131071-2*2601)*q)/(5*2601-3))
+
+private def block (h : ℤ) (q : ℕ) : ℤ :=
+  let n : ℤ := supportCount q
+  n*(2*signedWidth h q 0 - (5*h-3)*(n-1))
+
+private def blockSlope (q : ℕ) : ℤ :=
+  let n : ℤ := supportCount q
+  n*(4*(q : ℤ)-5*(n-1))
+
+private def supportBase : ℤ := ∑ q ∈ range (full.B+1), block 2601 q
+
+private def supportSlope : ℤ := ∑ q ∈ range (full.B+1), blockSlope q
+
+private theorem block_eq_sum (h : ℤ) (q : ℕ) :
+    block h q = ∑ j ∈ range (supportCount q), 2*signedWidth h q j := by
+  calc
+    _ = ∑ j ∈ range (supportCount q),
+      (2*signedWidth h q 0 - 2*(5*h-3)*(j : ℤ)) := by
+      rw [sum_progression]
+      rfl
+    _ = _ := by
+      apply sum_congr rfl
+      intro j _
+      unfold signedWidth
+      ring
+
+private theorem support_le_loss (h : ℕ) (hh : h ≤ 131071) :
+    supportBase + ((h : ℤ)-2601)*supportSlope ≤ 6*(shapeSum full (loss h) : ℤ) := by
+  have haffine (q : ℕ) : block 2601 q + ((h : ℤ)-2601)*blockSlope q = block h q := by
+    unfold block blockSlope signedWidth
+    ring
+  unfold supportBase supportSlope shapeSum
+  push_cast
+  simp only [mul_sum, ← sum_add_distrib, haffine]
+  apply sum_le_sum
+  intro q _
+  rw [block_eq_sum]
+  have hsub : range (supportCount q) ⊆ range (min q full.J+1) :=
+    range_mono (min_le_left _ _)
+  calc
+    _ ≤ ∑ j ∈ range (supportCount q), 6*(loss h q j : ℤ) := by
+      apply sum_le_sum
+      intro j hj
+      have hjq : j ≤ q := by
+        have hj' := mem_range.mp (hsub hj)
+        omega
+      have hs := signed_le_loss h q j hh hjq
+      linarith only [hs]
+    _ ≤ _ := sum_le_sum_of_subset_of_nonneg hsub (by intros; positivity)
+
+private def nodeRow (k d : ℕ) : ℕ :=
+  let n := min k ((d+1)/2)
+  n*(d+1-n)
+
+private theorem node_row (k d : ℕ) : (∑ i ∈ range k, (d-2*i)) = nodeRow k d := by
+  unfold nodeRow
+  let n := min k ((d+1)/2)
+  have hnk : n ≤ k := min_le_left _ _
+  have hnd : n ≤ (d+1)/2 := min_le_right _ _
+  have hreduce : (∑ i ∈ range k, (d-2*i)) = ∑ i ∈ range n, (d-2*i) := by
+    symm
+    apply sum_subset (range_mono hnk)
+    intro i hi hni
+    simp only [mem_range, not_lt] at hi hni
+    have hi' : (d+1)/2 ≤ i := by unfold n at hni; omega
+    omega
+  have hcast : ((∑ i ∈ range n, (d-2*i) : ℕ) : ℤ) =
+      ∑ i ∈ range n, ((d : ℤ)-2*(i : ℤ)) := by
+    rw [Nat.cast_sum]
+    apply sum_congr rfl
+    intro i hi
+    have hit := mem_range.mp hi
+    rw [Nat.cast_sub (by omega : 2*i ≤ d)]
+    push_cast
+    rfl
+  have hc := sum_progression n (d : ℤ) 1
+  simp only [mul_one, one_mul] at hc
+  have hn : n ≤ d+1 := by omega
+  apply Int.ofNat_inj.mp
+  rw [hreduce, hcast, hc]
+  change _ = (↑(n*(d+1-n)) : ℤ)
+  push_cast [Nat.cast_sub hn]
+  ring
+
+private def physicalDebit : ℕ :=
+  triangle full.U * 262144 * ∑ q ∈ range (full.B+1),
+    nodeRow (min q full.J+1) (full.m+min q full.J-q)
+
+private def poleDebitSlope : ℕ :=
+  2*(full.U+1) * ∑ q ∈ range (full.B+1), (min q full.J+1)*((full.B+full.J-q)*(full.B-q))
+
+private theorem debit_eq (h : ℕ) :
+    sourceDebit h full = physicalDebit + h*poleDebitSlope := by
+  have hnode : shapeSum full (fun q i => full.m+min q full.J-(q+2*i)) =
+      ∑ q ∈ range (full.B+1),
+        nodeRow (min q full.J+1) (full.m+min q full.J-q) := by
+    unfold shapeSum
+    apply sum_congr rfl
+    intro q _
+    simpa only [Nat.sub_sub] using node_row (min q full.J+1) (full.m+min q full.J-q)
+  have hpole : shapeSum full (fun q _ => (full.B+full.J-q)*(full.B-q)) =
+      ∑ q ∈ range (full.B+1), (min q full.J+1)*((full.B+full.J-q)*(full.B-q)) := by
+    unfold shapeSum
+    simp only [sum_const, card_range, Nat.nsmul_eq_mul]
+  unfold sourceDebit physicalDebit poleDebitSlope
+  rw [hnode, hpole, ← Nat.mul_assoc h (2*(full.U+1)), ← Nat.mul_assoc h 2, Nat.mul_comm h 2]
+
+set_option maxRecDepth 10000 in
+set_option maxHeartbeats 0 in
+private theorem support_check :
+    6*((physicalDebit : ℤ)+2601*(poleDebitSlope : ℤ)) <
+      (triangle full.U : ℤ)*supportBase ∧
+    6*(poleDebitSlope : ℤ) ≤ (triangle full.U : ℤ)*supportSlope := by
+  constructor <;> decide +kernel
+
+/-- The six-ordinate loss exceeds the actual source debits throughout the bridge band. -/
+theorem debit_lt_loss (h : ℕ) (hlo : 2601 ≤ h) (hhi : h ≤ 3554) :
+    sourceDebit h full < triangle full.U * shapeSum full (loss h) := by
+  rw [debit_eq]
+  have hs := mul_le_mul_of_nonneg_left (support_le_loss h (by omega))
+    (show 0 ≤ (triangle full.U : ℤ) by positivity)
+  have hi := mul_le_mul_of_nonneg_left support_check.2
+    (show 0 ≤ (h : ℤ)-2601 by omega)
+  have hz : ((physicalDebit + h*poleDebitSlope : ℕ) : ℤ) <
+      (↑(triangle full.U * shapeSum full (loss h)) : ℤ) := by
+    push_cast
+    nlinarith only [hs, hi, support_check.1]
+  exact_mod_cast hz
+
+end K1_14_2_7
+end PackSource_K1_14_2_7Arithmetic
+
+section PackSource_K1_14_2_7Proof
+set_option autoImplicit true
+namespace K1_14_2_7
+
+open K1_14 K1_14_2 Finset
+open scoped BigOperators
+
+/-- A full terminal bank with the source floor cannot support a projected equation
+of Y-degree at least six with all the forced leading-coefficient divisibilities. -/
+theorem proof : K1_14_2.c7 := by
+  intro u del M Γ F hlo hhi rows hr f _ hd
+  by_contra! hlarge
+  have hs : full ∈ scheduled M.overhead := by simp [scheduled, full, hhi]
+  have htop : 0 < top := by decide
+  have hcut : top-1+1 = top := by omega
+  have hfloor := hr.floor_bound full hs (top-1) (by
+    change top-1 < top
+    omega) (by
+      intro q hq j _
+      rw [hcut]
+      have hw : 131071-M.overhead.toNat ≤ 128470 := by omega
+      have hfull : full.B*128470 ≤ top := by decide
+      exact ((Nat.mul_le_mul hq hw).trans hfull).trans (Nat.le_add_right _ _))
+  rw [hcut] at hfloor
+  have hrank := rank_add_loss_le M.overhead hlo hhi rfl hr hs hlarge hd
+  have hloss := debit_lt_loss M.overhead.toNat (by omega) (by omega)
+  change triangle full.U * shapeSum full (width M.overhead.toNat) ≤
+      sourceDebit M.overhead.toNat full + ∑ W ∈ range top, Module.finrank FX (rows full W) at hfloor
+  omega
+
+end K1_14_2_7
+end PackSource_K1_14_2_7Proof
+
 section PackSource_K1_3Proof
 set_option autoImplicit true
 set_option backward.isDefEq.respectTransparency false
@@ -1216,6 +1630,186 @@ end
 end K1_12
 end PackSource_K1_12Lift
 
+section PackSource_K1_12Offset
+set_option autoImplicit true
+set_option maxRecDepth 8000
+set_option maxHeartbeats 1200000
+set_option backward.isDefEq.respectTransparency false
+
+namespace K1_12
+noncomputable section
+open Polynomial K1 FrobeniusLocator ProximityPrize.Benchmark
+
+theorem offset_of_anchor {u deleted} (F : Direction u deleted) (H : CrossLift F)
+    {η : K} (m : BadMark u η) (avoid : Disjoint m.support deleted) (reg : Regular F η) :
+    Nonempty (Offset F m) := by
+  classical
+  let a := F.amp η
+  let w (i : I) := u 0 i + η * u 1 i
+  let r (j : Fin 2) := F.out 0 j + C (twist η) * F.out 1 j
+  let out := r 0 + C η * r 1
+  let d := 131072 + F.U.natDegree + F.s
+  have hheight := F.height
+  change F.U.natDegree + F.s + deleted.card ≤ 32680 at hheight
+  have hpos : 0 < d := by dsimp [d]; omega
+  have hA1 : (F.A 1).natDegree ≤ F.s := le_max_right _ _
+  have ha : a.natDegree = F.s := reg.degree_eq
+  have ha' : (a.map twist).natDegree ≤ F.s := natDegree_map_le.trans ha.le
+  have hr (j : Fin 2) : (r j).natDegree < d := by
+    apply (natDegree_add_le _ _).trans_lt
+    exact max_lt (natDegree_lt_of_degree_lt_pos hpos (F.out_degree 0 j))
+      ((natDegree_C_mul_le _ _).trans_lt (natDegree_lt_of_degree_lt_pos hpos (F.out_degree 1 j)))
+  have hout : out.natDegree < d := (natDegree_add_le _ _).trans_lt
+    (max_lt (hr 0) ((natDegree_C_mul_le _ _).trans_lt (hr 1)))
+  have hrn (j : Fin 2) (i : I) (hi : i ∉ deleted) : (r j).eval (node i) =
+      F.U.eval (node i) * (a.map twist).eval (node i) * u j i -
+      F.V.eval (node i) * (F.A j).eval (node i) * twist (w i) := by
+    simp only [r, w, a, Direction.amp, eval_twist, eval_add, eval_mul, eval_C,
+      F.nodes i hi, eval_twist, map_add, map_mul]
+    ring
+  have hspec (i : I) (hi : i ∉ deleted) : out.eval (node i) =
+      F.U.eval (node i) * (a.map twist).eval (node i) * w i -
+      F.V.eval (node i) * a.eval (node i) * twist (w i) := by
+    simp only [out, eval_add, eval_mul, eval_C, hrn _ i hi, a, Direction.amp, w, eval_add,
+      eval_mul, eval_C]
+    ring
+  have hp := natDegree_lt_of_degree_lt_pos (by decide : 0 < 131072) m.degree
+  have ident : F.U * a.map twist * m.decoder - F.V * a * m.decoder.map twist = out := by
+    let left := F.U * a.map twist * m.decoder - F.V * a * m.decoder.map twist
+    have hdeg : left.natDegree < d := by
+      apply (natDegree_sub_le _ _).trans_lt (max_lt ?_ ?_)
+      · apply natDegree_mul_le.trans_lt
+        have h : (F.U * a.map twist).natDegree ≤ F.U.natDegree + (a.map twist).natDegree :=
+          natDegree_mul_le
+        dsimp [d]; omega
+      · apply natDegree_mul_le.trans_lt
+        have h : (F.V*a).natDegree ≤ F.V.natDegree+a.natDegree := natDegree_mul_le
+        have h' : (m.decoder.map twist).natDegree ≤ m.decoder.natDegree := natDegree_map_le
+        have := F.degrees_eq
+        dsimp [d]; omega
+    apply sub_eq_zero.mp
+    by_contra hne
+    have hc := Strata.root_nodes_card_le node IRSProfile.domain.injective (left-out) hne m.support
+      (by intro i hi
+          rw [eval_sub, hspec i (Finset.disjoint_left.mp avoid hi)]
+          simp only [left, eval_sub, eval_mul, eval_twist, m.hits i hi, w, sub_self])
+    have hd := natDegree_sub_le left out
+    have hag := m.agreement
+    dsimp [d] at hdeg hout
+    omega
+  have hG := natDegree_le_of_dvd H.left F.U_ne
+  have hLd := natDegree_lt_of_degree_lt_pos (by omega : 0 < 131072+F.s+H.G.natDegree) H.degree_lt
+  have determinant : H.G * (a * r 1 - F.A 1 * out) = F.U * a.map twist * H.L := by
+    apply eq_on_puncture (deleted := deleted) (d := d+F.s+H.G.natDegree) (by dsimp [d]; omega)
+    · apply natDegree_mul_le.trans_lt
+      have h1 := @natDegree_mul_le _ _ a (r 1)
+      have h2 := @natDegree_mul_le _ _ (F.A 1) out
+      have h3 := natDegree_sub_le (a*r 1) (F.A 1*out)
+      have := hr 1
+      omega
+    · apply natDegree_mul_le.trans_lt
+      have h := @natDegree_mul_le _ _ F.U (a.map twist)
+      dsimp [d]; omega
+    · intro i hi
+      simp only [eval_mul, eval_sub, hrn 1 i hi, hspec i hi, H.nodes i hi, a, Direction.amp,
+        eval_add, eval_mul, eval_C, w]
+      ring
+  have div : a ∣ H.L + H.G * F.A 1 * m.decoder := by
+    have cop : IsCoprime a (F.U * a.map twist) :=
+      reg.content_unit.mul_right reg.adjacent
+    apply cop.dvd_of_dvd_mul_left
+    refine ⟨H.G * (r 1 + F.A 1 * F.V * m.decoder.map twist), ?_⟩
+    linear_combination H.G * F.A 1 * ident - determinant
+  obtain ⟨J,hJ⟩ := div
+  have hjd : J.natDegree < 131072 + H.G.natDegree := by
+    by_cases hj : J = 0
+    · simp [hj]
+    have h := natDegree_add_le H.L (H.G * F.A 1 * m.decoder)
+    rw [hJ, natDegree_mul reg.amp_ne hj, ha] at h
+    have h1 := @natDegree_mul_le _ _ H.G (F.A 1)
+    have h2 := @natDegree_mul_le _ _ (H.G * F.A 1) m.decoder
+    omega
+  let f : RatFunc K := algebraMap K[X] (RatFunc K) J / algebraMap K[X] (RatFunc K) H.G
+  have hfrac : f.num * H.G = J * f.denom := (RatFunc.num_mul_eq_mul_denom_iff H.monic.ne_zero).mpr rfl
+  have hE : f.denom ∣ H.G := RatFunc.denom_div_dvd _ _
+  let Q := f.num %ₘ f.denom
+  let pencil := f.num /ₘ f.denom
+  have division : Q + f.denom * pencil = f.num := modByMonic_add_div _ _
+  have hn : f.num.natDegree < 131072 + f.denom.natDegree := by
+    by_cases hn : f.num = 0
+    · simp [hn]
+    have hj : J ≠ 0 := by
+      intro hz
+      rw [hz, zero_mul] at hfrac
+      exact mul_ne_zero hn H.monic.ne_zero hfrac
+    have h := congrArg natDegree hfrac
+    rw [natDegree_mul hn H.monic.ne_zero, natDegree_mul hj f.denom_ne_zero] at h
+    omega
+  have hpencil : pencil.degree < 131072 := by
+    have hd : pencil.natDegree < 131072 := by
+      rw [show pencil.natDegree = f.num.natDegree - f.denom.natDegree from
+        natDegree_divByMonic _ f.monic_denom]
+      omega
+    exact degree_le_natDegree.trans_lt (by exact_mod_cast hd)
+  let raw (i : I) := F.den.eval (node i) * (w i - m.decoder.eval (node i)) / a.eval (node i)
+  have hUn (i : I) := eval_unit_of_dvd F.U_dvd (F.den_nodes i)
+  have hfixed (i : I) (hi : i ∉ deleted) : twist (raw i) = raw i := by
+    have h1 := congrArg (eval (node i)) ident
+    simp only [eval_sub, eval_mul, eval_twist, hspec i hi, eval_twist] at h1
+    have h2 := congrArg (eval (node i)) F.phase
+    simp only [eval_mul, eval_twist] at h2
+    have ha0 : a.eval (node i) ≠ 0 := reg.node_unit i hi
+    have haσ : twist (a.eval (node i)) ≠ 0 := (map_ne_zero twist).mpr ha0
+    simp only [raw, map_div₀, map_mul, map_sub]
+    apply (div_eq_div_iff haσ ha0).mpr
+    apply mul_left_cancel₀ (hUn i)
+    linear_combination F.den.eval (node i) * h1 +
+      a.eval (node i) * (twist (w i) - twist (m.decoder.eval (node i))) * h2
+  refine ⟨{
+    pencil := pencil
+    pencil_degree := hpencil
+    E := f.denom
+    Q := Q
+    E_monic := f.monic_denom
+    left := hE.trans H.left
+    right := (map_dvd (Polynomial.mapRingHom twist) hE).trans H.right
+    proper := degree_modByMonic_lt _ f.monic_denom
+    reduced := ?_
+    raw := raw
+    raw_fixed := hfixed
+    first := ?_
+    second := ?_ }⟩
+  · obtain ⟨x,y,h⟩ := f.isCoprime_num_denom
+    rw [← division] at h
+    exact ⟨x,x*pencil+y,by linear_combination h⟩
+  · intro i hi
+    change w i - m.decoder.eval (node i) = a.eval (node i) * raw i / F.den.eval (node i)
+    have ha0 : a.eval (node i) ≠ 0 := reg.node_unit i hi
+    simp only [raw]
+    field_simp [ha0, F.den_nodes i]
+  · intro i hi
+    have h1 := congrArg (eval (node i)) hJ
+    simp only [eval_add, eval_mul, H.nodes i hi] at h1
+    have h2 := congrArg (eval (node i)) hfrac
+    simp only [eval_mul, ← division, eval_add, eval_mul] at h2
+    have hEn := eval_unit_of_dvd ((hE.trans H.left).trans F.U_dvd) (F.den_nodes i)
+    have hGn := eval_unit_of_dvd (H.left.trans F.U_dvd) (F.den_nodes i)
+    have ha0 : a.eval (node i) ≠ 0 := reg.node_unit i hi
+    change u 1 i - pencil.eval (node i) = Q.eval (node i) / f.denom.eval (node i) +
+      (F.A 1).eval (node i) * raw i / F.den.eval (node i)
+    simp only [raw]
+    field_simp [F.den_nodes i, hEn, ha0]
+    apply mul_left_cancel₀ hGn
+    have h3 : a.eval (node i) = (F.A 0).eval (node i) + η * (F.A 1).eval (node i) := by
+      simp only [a,Direction.amp,eval_add,eval_mul,eval_C]
+    dsimp [w]
+    linear_combination f.denom.eval (node i) * h1 - a.eval (node i) * h2 +
+      f.denom.eval (node i) * H.G.eval (node i) * u 1 i * h3
+
+end
+end K1_12
+end PackSource_K1_12Offset
+
 section PackSource_K1_12Family
 set_option autoImplicit true
 set_option maxRecDepth 8000
@@ -1392,6 +1986,69 @@ end
 end K1_12
 end PackSource_K1_12Family
 
+section PackSource_K1_12Split
+set_option autoImplicit true
+set_option maxRecDepth 8000
+set_option backward.isDefEq.respectTransparency false
+
+namespace K1_12
+noncomputable section
+
+open Polynomial K1
+
+/-- Extract the normalized homogeneous rational direction on the actual puncture. -/
+def c1 : Prop :=
+  ∀ u, FrontRemainder u → ∀ (T : TwoActive u) (R : Relation T)
+    (D : Reduction u T R) (B : RankThree u T R D),
+    NormalSaturation R → Parallel B → UnitNorm B →
+    (∃ γ, Normal u γ ∧ Nonempty (BadMark u γ)) →
+    Nonempty (Direction u (fixedNodes R))
+
+/-- The resultant, reduced left content, domain-node, and leading-coefficient exclusions. -/
+def c2 : Prop :=
+  ∀ {u deleted} (F : Direction u deleted) (Γ : Finset K),
+    (excluded F Γ).card ≤ (p+1) * F.s + F.U.natDegree + 262144 + 1
+
+theorem of_children (h1 : c1) (h2 : c2) : K1.c12 := by
+  classical
+  intro u hu T R D B sat par unit Γ bad normal
+  by_cases hsmall : Γ.card ≤ 69631486557946
+  · exact Or.inl hsmall
+  right
+  obtain ⟨γ,hγ⟩ := Finset.card_pos.mp (show 0 < Γ.card by omega)
+  obtain ⟨F⟩ := h1 u hu T R D B sat par unit ⟨γ, normal γ hγ, bad_mark u Γ bad γ hγ⟩
+  let book := excluded F Γ
+  have hbook : book ⊆ Γ := Finset.filter_subset _ _
+  have hcard := h2 F Γ
+  change book.card ≤ 2130706434 * F.s + F.U.natDegree + 262144 + 1 at hcard
+  have hbudget : book.card + 1 ≤ 69631486557946 := by
+    have height := F.height
+    change F.U.natDegree + F.s + (fixedNodes R).card ≤ 32680 at height
+    omega
+  let Δ := Γ \ book
+  have hbig : 1 < Δ.card := by
+    have hpart := Finset.card_sdiff_add_card_eq_card hbook
+    change Δ.card + book.card = Γ.card at hpart
+    omega
+  have regular (δ : K) (hd : δ ∈ Δ) : Regular F δ := by
+    obtain ⟨hin, hout⟩ := Finset.mem_sdiff.mp hd
+    by_contra h
+    exact hout (Finset.mem_filter.mpr ⟨hin,h⟩)
+  let m (g : Δ) := Classical.choice (bad_mark u Γ bad g.val (Finset.mem_sdiff.mp g.property).1)
+  have avoid (g : Δ) : Disjoint (m g).support (fixedNodes R) := by
+    apply Finset.disjoint_left.mpr
+    intro i hi hid
+    exact (D.deleted_error g.val (normal g.val (Finset.mem_sdiff.mp g.property).1) (m g) i hid)
+      ((m g).hits i hi)
+  obtain ⟨η,hη,ζ,hζ,hne⟩ := Finset.one_lt_card.mp hbig
+  obtain ⟨lift⟩ := cross_lift F
+  obtain ⟨O⟩ := offset_of_anchor F lift (m ⟨η,hη⟩) (avoid ⟨η,hη⟩) (regular η hη)
+  exact ⟨book, hbook, by omega, family_of_offset F Δ regular m avoid ⟨η,hη⟩ ⟨ζ,hζ⟩ hne.symm O⟩
+
+end
+end K1_12
+end PackSource_K1_12Split
+
 section PackSource_K1_12_1Descent
 set_option autoImplicit true
 set_option backward.isDefEq.respectTransparency false
@@ -1539,6 +2196,220 @@ theorem denominator {a b : K[X]} (hb : b ≠ 0) (h : sixNorm a = sixNorm b) :
 end
 end K1_12_1
 end PackSource_K1_12_1Descent
+
+section PackSource_K1_12_2Proof
+set_option autoImplicit true
+set_option maxRecDepth 8000
+set_option backward.isDefEq.respectTransparency false
+
+namespace K1_12_2
+noncomputable section
+
+open Polynomial K1 K1_12
+open ProximityPrize.Benchmark
+open scoped BigOperators
+
+variable {u : Words} {deleted : Finset I}
+
+private theorem coprime_amplitudes (F : Direction u deleted) {γ δ : K} (hne : γ ≠ δ) :
+    IsCoprime (F.amp γ) (F.amp δ) := by
+  have hd : F.amp δ - F.amp γ * 1 = C (δ - γ) * F.A 1 := by
+    simp only [Direction.amp, mul_one, map_sub]
+    ring
+  have hunit : IsUnit (C (δ - γ)) :=
+    isUnit_C.mpr (sub_ne_zero.mpr hne.symm).isUnit
+  apply (IsCoprime.sub_mul_left_right_iff (x := F.amp γ) (y := F.amp δ) (z := 1)).mp
+  rw [hd, isCoprime_mul_unit_left_right hunit]
+  exact F.primitive.add_mul_right_left _
+
+/-- Each failed coprimality test contributes a positive-degree factor of the
+same nonzero polynomial. The factors are coprime across distinct labels. -/
+private theorem card_of_failed_coprime (F : Direction u deleted) (S : Finset K)
+    (Q : K → K[X]) {P : K[X]} (hP : P ≠ 0)
+    (hbad : ∀ γ ∈ S, ¬ IsCoprime (F.amp γ) (Q γ))
+    (hdiv : ∀ γ ∈ S, GCDMonoid.gcd (F.amp γ) (Q γ) ∣ P) :
+    S.card ≤ P.natDegree := by
+  classical
+  let g (γ : K) := GCDMonoid.gcd (F.amp γ) (Q γ)
+  have hne (γ : K) (hγ : γ ∈ S) : g γ ≠ 0 := by
+    intro hz
+    obtain ⟨H, hH⟩ := hdiv γ hγ
+    change P = g γ * H at hH
+    exact hP (by simpa only [hz, zero_mul] using hH)
+  have hpos (γ : K) (hγ : γ ∈ S) : 1 ≤ (g γ).natDegree := by
+    by_contra! h
+    have hd : (g γ).natDegree = 0 := by omega
+    have hu : IsUnit (g γ) := isUnit_iff_degree_eq_zero.mpr (by
+      rw [degree_eq_natDegree (hne γ hγ), hd]
+      rfl)
+    exact hbad γ hγ ((gcd_isUnit_iff _ _).mp hu)
+  have hpairs : (S : Set K).Pairwise (fun γ δ => IsCoprime (g γ) (g δ)) := by
+    intro γ _ δ _ hne
+    exact (coprime_amplitudes F hne).mono (gcd_dvd_left _ _) (gcd_dvd_left _ _)
+  have hprod : (∏ γ ∈ S, g γ) ∣ P := Finset.prod_dvd_of_coprime hpairs hdiv
+  calc
+    S.card = ∑ γ ∈ S, (1 : ℕ) := by simp
+    _ ≤ ∑ γ ∈ S, (g γ).natDegree := Finset.sum_le_sum hpos
+    _ = (∏ γ ∈ S, g γ).natDegree := (natDegree_prod S g hne).symm
+    _ ≤ P.natDegree := natDegree_le_of_dvd hprod hP
+
+/-- Eliminate the label from an amplitude and its coefficient Frobenius
+conjugate by taking the p-th power of the first amplitude. -/
+private def eliminant (F : Direction u deleted) (q : ℕ) (σ : K →+* K) : K[X] :=
+  ((F.A 0).map σ) * F.A 1 ^ q - (F.A 0 ^ q) * ((F.A 1).map σ)
+
+private theorem gcd_dvd_eliminant (F : Direction u deleted) (q : ℕ) [ExpChar K q]
+    (σ : K →+* K) (hσ : ∀ γ, σ γ = γ ^ q) (hq : q ≠ 0) (γ : K) :
+    GCDMonoid.gcd (F.amp γ) ((F.amp γ).map σ) ∣ eliminant F q σ := by
+  have hpow : (F.amp γ)^q = F.A 0 ^ q + C (σ γ) * F.A 1 ^ q := by
+    rw [Direction.amp, add_pow_expChar _ _ q, mul_pow, ← C_pow, ← hσ γ]
+  have heq : eliminant F q σ =
+      ((F.amp γ).map σ) * F.A 1 ^ q - (F.amp γ)^q * ((F.A 1).map σ) := by
+    rw [hpow]
+    simp only [eliminant, Direction.amp, Polynomial.map_add, Polynomial.map_mul, map_C]
+    ring
+  have hd : GCDMonoid.gcd (F.amp γ) ((F.amp γ).map σ) ∣ F.amp γ :=
+    gcd_dvd_left _ _
+  rw [heq]
+  exact dvd_sub ((gcd_dvd_right _ _).mul_right _)
+    ((hd.trans (dvd_pow_self _ hq)).mul_right _)
+
+private theorem degree_zero_of_power_dvd_map {q : ℕ} (hq : 2 ≤ q) {σ : K →+* K}
+    {P : K[X]} (hdiv : P ^ q ∣ P.map σ) : P.natDegree = 0 := by
+  by_cases hP : P = 0
+  · simp [hP]
+  have h := natDegree_le_of_dvd hdiv (Polynomial.map_ne_zero hP)
+  rw [natDegree_pow, natDegree_map_eq_of_injective σ.injective] at h
+  have htwo := (Nat.mul_le_mul_right P.natDegree hq).trans h
+  omega
+
+private theorem eliminant_ne (F : Direction u deleted) {q : ℕ} (hq : 2 ≤ q)
+    (σ : K →+* K) (hs : F.s ≠ 0) : eliminant F q σ ≠ 0 := by
+  intro hz
+  have hcross : ((F.A 0).map σ) * F.A 1 ^ q = F.A 0 ^ q * ((F.A 1).map σ) :=
+    sub_eq_zero.mp hz
+  have hp : IsCoprime (F.A 0 ^ q) (F.A 1 ^ q) := F.primitive.pow
+  have h0 : F.A 0 ^ q ∣ (F.A 0).map σ := hp.dvd_of_dvd_mul_right
+    (by rw [hcross]; exact dvd_mul_right _ _)
+  have h1 : F.A 1 ^ q ∣ (F.A 1).map σ := hp.symm.dvd_of_dvd_mul_left
+    (by rw [← hcross]; exact dvd_mul_left _ _)
+  exact hs (by simp [Direction.s, amplitudeDegree, degree_zero_of_power_dvd_map hq h0,
+    degree_zero_of_power_dvd_map hq h1])
+
+private theorem eliminant_degree (F : Direction u deleted) (q : ℕ) (σ : K →+* K) :
+    (eliminant F q σ).natDegree ≤ (q + 1) * F.s := by
+  have h0 : (F.A 0).natDegree ≤ F.s := le_max_left _ _
+  have h1 : (F.A 1).natDegree ≤ F.s := le_max_right _ _
+  rw [eliminant, Nat.add_mul, one_mul]
+  refine (natDegree_sub_le _ _).trans (max_le ?_ ?_)
+  · rw [add_comm]
+    exact natDegree_mul_le_of_le (natDegree_map_le.trans h0) (natDegree_pow_le_of_le q h1)
+  · exact natDegree_mul_le_of_le (natDegree_pow_le_of_le q h0) (natDegree_map_le.trans h1)
+
+private theorem same_label {a b γ δ : K} (hpair : a ≠ 0 ∨ b ≠ 0)
+    (hγ : a + γ * b = 0) (hδ : a + δ * b = 0) : γ = δ := by
+  have hb : b ≠ 0 := by
+    intro hz
+    exact hpair.elim (fun ha => ha (by simpa [hz] using hγ)) (fun hb => hb hz)
+  apply sub_eq_zero.mp
+  refine (mul_eq_zero.mp (show (γ - δ) * b = 0 from ?_)).resolve_right hb
+  linear_combination hγ - hδ
+
+private theorem top_pair (F : Direction u deleted) :
+    (F.A 0).coeff F.s ≠ 0 ∨ (F.A 1).coeff F.s ≠ 0 := by
+  have at_top (P : K[X]) (hp : P ≠ 0) (hd : P.natDegree = F.s) :
+      P.coeff F.s ≠ 0 := by
+    rw [← hd, coeff_natDegree]
+    exact leadingCoeff_ne_zero.mpr hp
+  by_cases h0 : F.A 0 = 0
+  · exact Or.inr (at_top _ (F.primitive.ne_zero_or_ne_zero.resolve_left (by simp [h0]))
+      (by simp [Direction.s, amplitudeDegree, h0]))
+  by_cases h1 : F.A 1 = 0
+  · exact Or.inl (at_top _ h0 (by simp [Direction.s, amplitudeDegree, h1]))
+  rcases le_total (F.A 0).natDegree (F.A 1).natDegree with h | h
+  · exact Or.inr (at_top _ h1 (max_eq_right h).symm)
+  · exact Or.inl (at_top _ h0 (max_eq_left h).symm)
+
+private theorem amp_degree_le (F : Direction u deleted) (γ : K) :
+    (F.amp γ).natDegree ≤ F.s :=
+  natDegree_add_le_of_degree_le (le_max_left _ _)
+    ((natDegree_C_mul_le _ _).trans (le_max_right _ _))
+
+private theorem card_node_failures (F : Direction u deleted) (S : Finset K)
+    (hS : ∀ γ ∈ S, ∃ i : I, (F.amp γ).eval (node i) = 0) : S.card ≤ 262144 := by
+  classical
+  choose f hf using fun γ : S => hS γ γ.property
+  rw [← IRSProfile.card_index, ← Fintype.card_coe]
+  apply Fintype.card_le_of_injective f
+  intro γ δ he
+  apply Subtype.ext
+  have hγ := hf γ
+  have hδ := hf δ
+  rw [← he] at hδ
+  exact same_label
+    ((F.primitive.map (evalRingHom (node (f γ)))).ne_zero_or_ne_zero)
+    (by simpa [Direction.amp] using hγ)
+    (by simpa [Direction.amp] using hδ)
+
+theorem proof : K1_12.c2 := by
+  classical
+  intro u deleted F Γ
+  let A := Γ.filter (fun γ => F.amp γ ≠ 0 ∧ ¬ IsCoprime (F.amp γ) ((F.amp γ).map twist))
+  let U := Γ.filter (fun γ => ¬ IsCoprime (F.amp γ) F.U)
+  let N := Γ.filter (fun γ => ∃ i : I, (F.amp γ).eval (node i) = 0)
+  let L := Γ.filter (fun γ => (F.amp γ).coeff F.s = 0)
+  have ha : A.card ≤ (p + 1) * F.s := by
+    by_cases hs : F.s = 0
+    · have hempty : A = ∅ := by
+        apply Finset.eq_empty_iff_forall_notMem.mpr
+        intro γ hγ
+        obtain ⟨hamp, hbad⟩ := (Finset.mem_filter.mp hγ).2
+        have hd := amp_degree_le F γ
+        rw [hs, Nat.le_zero] at hd
+        have hunit : IsUnit (F.amp γ) := isUnit_iff_degree_eq_zero.mpr (by
+          rw [degree_eq_natDegree hamp, hd]
+          rfl)
+        exact hbad (by simpa only [mul_one] using
+          (isCoprime_mul_unit_left_left hunit 1 _).mpr isCoprime_one_left)
+      simp [hempty]
+    · exact (card_of_failed_coprime F A (fun γ => (F.amp γ).map twist)
+        (eliminant_ne F (by decide : 2 ≤ p) twist hs)
+        (fun _ hγ => (Finset.mem_filter.mp hγ).2.2)
+        (fun γ _ => gcd_dvd_eliminant F p twist (fun _ => rfl) (by decide) γ)).trans
+          (eliminant_degree F p twist)
+  have hu : U.card ≤ F.U.natDegree :=
+    card_of_failed_coprime F U (fun _ => F.U) F.U_ne
+      (fun _ hγ => (Finset.mem_filter.mp hγ).2) (fun _ _ => gcd_dvd_right _ _)
+  have hn : N.card ≤ 262144 :=
+    card_node_failures F N (fun _ hγ => (Finset.mem_filter.mp hγ).2)
+  have hl : L.card ≤ 1 := by
+    apply Finset.card_le_one.mpr
+    intro γ hγ δ hδ
+    exact same_label (top_pair F)
+      (by simpa only [Direction.amp, coeff_add, coeff_C_mul] using (Finset.mem_filter.mp hγ).2)
+      (by simpa only [Direction.amp, coeff_add, coeff_C_mul] using (Finset.mem_filter.mp hδ).2)
+  have hsub : excluded F Γ ⊆ ((A ∪ U) ∪ N) ∪ L := by
+    intro γ hγ
+    obtain ⟨hΓ, hbad⟩ := Finset.mem_filter.mp hγ
+    by_contra h
+    simp only [Finset.mem_union, A, U, N, L, Finset.mem_filter, hΓ, true_and,
+      not_or] at h
+    obtain ⟨⟨⟨hA, hU⟩, hN⟩, hL⟩ := h
+    have hne : F.amp γ ≠ 0 := by
+      intro hz
+      exact hL (by simp [hz])
+    exact hbad ⟨hne, natDegree_eq_of_le_of_coeff_ne_zero (amp_degree_le F γ) hL,
+      not_not.mp (fun hbadA => hA ⟨hne, hbadA⟩), not_not.mp hU,
+      fun i _ hi => hN ⟨i, hi⟩⟩
+  have hcount := Finset.card_le_card hsub
+  have hAU := Finset.card_union_le A U
+  have hAUN := Finset.card_union_le (A ∪ U) N
+  have hAUNL := Finset.card_union_le ((A ∪ U) ∪ N) L
+  omega
+
+end
+end K1_12_2
+end PackSource_K1_12_2Proof
 
 section PackSource_K1_13_3Filtration
 set_option autoImplicit true
@@ -2376,6 +3247,77 @@ theorem two_active_of_positive (u : K1.Words) (hpos : 0 < K1.nullity u)
 end
 end K1_2
 end PackSource_K1_2Apolar
+
+section PackSource_K1_1Proof
+set_option autoImplicit true
+set_option backward.isDefEq.respectTransparency false
+set_option maxRecDepth 12000
+
+namespace K1_1
+noncomputable section
+
+open Polynomial Matrix FrobeniusLocator
+open ProximityPrize.Benchmark
+
+private def nativeMoments (u : K1.Words) : Fin 2 → ℕ → K1.Frac :=
+  fun b j => algebraMap K1.K[X] K1.Frac
+    (Principal.parameterSyndromes K1.p K1.node (u 0) (u 1) b j)
+
+private theorem independent_nativeMoments (u : K1.Words)
+    (h : ¬ K1.TypeAtMostOne u) : IndependentMoments (nativeMoments u) 131072 := by
+  classical
+  unfold IndependentMoments
+  by_contra! hall
+  apply h
+  unfold K1.TypeAtMostOne Principal.TypeOneSyndromes
+  rw [IRSProfile.card_index]
+  intro i j
+  apply IsFractionRing.injective K1.K[X] K1.Frac
+  simpa [nativeMoments, Principal.parameterSyndromes, map_mul] using hall i j
+
+private theorem locator_matrix (u : K1.Words) :
+    Principal.recurrenceMatrix (nativeMoments u) 131072 81879 =
+      (K1.twoBlock u).map (algebraMap K1.K[X] K1.Frac) :=
+  Principal.recurrenceMatrix_parameter (algebraMap K1.K[X] K1.Frac)
+    K1.p K1.node (u 0) (u 1) 131072 81879
+
+private theorem locator_nullity (u : K1.Words) :
+    sliceDim (nativeMoments u) 131072 81880 = K1.nullity u := by
+  rw [sliceDim_succ (nativeMoments u) 131072 81879, locator_matrix]
+  rfl
+
+private theorem principal_of_one_active (u : K1.Words) (a : ℕ) (ha : a ≤ 81879)
+    (hone : sliceDim (nativeMoments u) 131072 (a+1) = 1)
+    (hnull : K1.nullity u = 81880-a) : K1.HomogeneousPrincipal u := by
+  have hpos : 0 < sliceDim (nativeMoments u) 131072 (a+1) := by omega
+  have hdim : sliceDim (nativeMoments u) 131072 81880 = (81879-a)+1 := by
+    rw [locator_nullity]
+    omega
+  obtain ⟨g, hg, hdeg, hfac⟩ := principal_of_slice (nativeMoments u) 131072 a 81879
+    ha (by decide) hpos hdim
+  refine ⟨a, g, hg, hdeg, ha, fun P hP => ?_⟩
+  rw [← locator_matrix]
+  exact hfac P hP
+
+theorem proof : K1.c1 := by
+  intro u hu
+  obtain ⟨a, b, c, hab, hbc, hc, hsum, hdim⟩ := level_profile
+    (nativeMoments u) 131072 (independent_nativeMoments u hu.2.2.1)
+  have hloc := hdim 81880 (by decide)
+  rw [locator_nullity] at hloc
+  have hpos := hu.1
+  have hinactive : 81879 < c := by omega
+  have ha : a ≤ 81879 := by omega
+  have hb : b ≤ 81879 := by
+    by_contra hb
+    have hsmall := hdim (a+1) (by omega)
+    exact hu.2.2.2.1 (principal_of_one_active u a ha (by omega) (by omega))
+  refine ⟨⟨a, b, c, hab, hb, hinactive, hc, hsum, by omega, ?_⟩⟩
+  exact level_of_profile _ _ _ _ _ hdim
+
+end
+end K1_1
+end PackSource_K1_1Proof
 
 section PackSource_K1_14_2_2_4_5AuxDegree
 set_option autoImplicit true
@@ -3617,6 +4559,201 @@ theorem saturation_of_height (u : Words) (T : TwoActive u) (R : Relation T)
 end
 end K1_2
 end PackSource_K1_2Saturation
+
+section PackSource_K1_13_2_1Proof
+set_option autoImplicit true
+namespace K1_13_2_1
+
+noncomputable section
+
+open K1_13_2 PolynomialDifferential ReedSolomon.HiddenDerivative Finset
+open scoped BigOperators
+
+/-- The exponent tuple in the order (Y₃,Y₂,Y₁,Y₀,X). -/
+private abbrev Column := Σ _ : ℕ, Σ _ : ℕ, Σ _ : ℕ, Σ _ : ℕ, ℕ
+
+private def width (a b c f : ℕ) : ℕ :=
+  540795000 + b + 2 * c + 3 * f - 133671 * (a + b + c + f)
+
+private def tuples : Finset Column :=
+  (range 551).sigma fun f =>
+    (range ((1650 - 3 * f) / 2 + 1)).sigma fun c =>
+      (range (1651 - 2 * c - 3 * f)).sigma fun b =>
+        (range (4013 - b - c - f)).sigma fun a => range (width a b c f)
+
+private def exponent : Column → SourceExponent
+  | ⟨f, c, b, a, x⟩ => Finsupp.equivFunOnFinite.symm (fun v => v.elim x ![a, b, c, f])
+
+private def coordinates (e : SourceExponent) : Column :=
+  ⟨e (some 3), e (some 2), e (some 1), e (some 0), e none⟩
+
+private theorem coordinates_exponent (t : Column) : coordinates (exponent t) = t := by
+  rcases t with ⟨f, c, b, a, x⟩
+  simp [coordinates, exponent]
+
+private theorem exponent_coordinates (e : SourceExponent) : exponent (coordinates e) = e := by
+  ext v
+  cases v with
+  | none => simp [coordinates, exponent]
+  | some j => fin_cases j <;> simp [coordinates, exponent]
+
+private theorem mem_columns (t : Column) :
+    exponent t ∈ sourceColumns ↔ t ∈ tuples := by
+  rcases t with ⟨f, c, b, a, x⟩
+  change exponent ⟨f, c, b, a, x⟩ ∈ sourceExponents_finite.toFinset ↔ _
+  rw [Set.Finite.mem_toFinset]
+  change SourceEligible (exponent ⟨f, c, b, a, x⟩) ↔ _
+  simp only [tuples, mem_sigma, mem_range, SourceEligible, Finsupp.weight_eq_sum,
+    Fintype.sum_option, Fin.sum_univ_succ, Fin.sum_univ_zero, smul_eq_mul,
+    jetDegreeWeight_none, jetDegreeWeight_some, jetDerivativeWeight, differentialWeight,
+    topWeight, Option.elim_none, Option.elim_some, exponent, Finsupp.coe_equivFunOnFinite_symm]
+  simp [width]
+  omega
+
+private theorem card_columns : sourceColumns.card = tuples.card := by
+  let e : Column ≃ SourceExponent :=
+    ⟨exponent, coordinates, coordinates_exponent, exponent_coordinates⟩
+  exact (Finset.card_equiv e (fun t => (mem_columns t).symm)).symm
+
+private def widthInt (a b c f : ℤ) : ℤ :=
+  540795000 + b + 2 * c + 3 * f - 133671 * (a + b + c + f)
+
+private theorem cast_width (a b c f : ℕ) (h : a + b + c + f ≤ 4012) :
+    (width a b c f : ℤ) = widthInt a b c f := by
+  have hpos : 133671 * (a + b + c + f) ≤ 540795000 + b + 2 * c + 3 * f := by omega
+  simp [width, widthInt, Nat.cast_sub hpos]
+
+/-- Verify a polynomial prefix by its initial value and forward difference. -/
+private theorem scaled_sum (k : ℤ) (g p : ℤ → ℤ)
+    (base : p 0 = 0) (step : ∀ t, p (t + 1) = p t + k * g t) (n : ℕ) :
+    k * (∑ i ∈ range n, g i) = p n := by
+  induction n with
+  | zero => simpa using base.symm
+  | succ n ih => rw [sum_range_succ, Nat.cast_succ, mul_add, ih, step]
+
+private def prefixA (b c f n : ℤ) : ℤ :=
+  n * (2 * widthInt 0 b c f - 133671 * (n - 1))
+
+private def doubleA (b c f : ℤ) : ℤ :=
+  prefixA b c f (4013 - b - c - f)
+
+/-- The doubled sum over the (Y₀)-exponent is quadratic in the (Y₁)-exponent. -/
+private def prefixB (c f n : ℤ) : ℤ :=
+  let p := 4013 - c - f
+  let q := 2 * widthInt 0 0 c f - 133671 * (p - 1)
+  let r := 2 - 133671
+  6 * n * p * q + 3 * n * (n - 1) * (p * r - q) - n * (n - 1) * (2 * n - 1) * r
+
+private def twelveB (c f : ℤ) : ℤ :=
+  prefixB c f (1651 - 2 * c - 3 * f)
+
+/-- Sum the cubic in the (Y₂)-exponent using its first four values.
+The factor 24 clears the denominators in its Newton prefix polynomial. -/
+private def prefixC (f n : ℤ) : ℤ :=
+  let v₀ := twelveB 0 f
+  let v₁ := twelveB 1 f
+  let v₂ := twelveB 2 f
+  let v₃ := twelveB 3 f
+  24 * n * v₀ + 12 * n * (n - 1) * (v₁ - v₀) +
+    4 * n * (n - 1) * (n - 2) * (v₂ - 2 * v₁ + v₀) +
+    n * (n - 1) * (n - 2) * (n - 3) * (v₃ - 3 * v₂ + 3 * v₁ - v₀)
+
+private def countA (b c f : ℕ) : ℤ :=
+  ∑ a ∈ range (4013 - b - c - f), (width a b c f : ℤ)
+
+private def countB (c f : ℕ) : ℤ :=
+  ∑ b ∈ range (1651 - 2 * c - 3 * f), countA b c f
+
+private def countC (f : ℕ) : ℤ :=
+  ∑ c ∈ range ((1650 - 3 * f) / 2 + 1), countB c f
+
+private theorem card_tuples_int : (tuples.card : ℤ) = ∑ f ∈ range 551, countC f := by
+  simp only [tuples, card_sigma, card_range, Nat.cast_sum, countC, countB, countA]
+
+private theorem countA_closed (b c f : ℕ) (h : b + 2 * c + 3 * f ≤ 1650) :
+    2 * countA b c f = doubleA b c f := by
+  have hsum : countA b c f =
+      ∑ a ∈ range (4013 - b - c - f), widthInt a b c f := by
+    apply sum_congr rfl
+    intro a ha
+    rw [mem_range] at ha
+    exact cast_width a b c f (by omega)
+  rw [hsum, scaled_sum 2 (fun a => widthInt a b c f) (prefixA b c f)
+    (by simp [prefixA]) (by intro t; unfold prefixA widthInt; ring)]
+  have hn : ((4013 - b - c - f : ℕ) : ℤ) = 4013 - b - c - f := by omega
+  rw [hn, doubleA]
+
+private theorem countB_closed (c f : ℕ) (h : 2 * c + 3 * f ≤ 1650) :
+    12 * countB c f = twelveB c f := by
+  calc
+    12 * countB c f =
+        ∑ b ∈ range (1651 - 2 * c - 3 * f), 6 * (2 * countA b c f) := by
+      simp only [countB, ← mul_assoc, ← mul_sum, show (6 : ℤ) * 2 = 12 by decide]
+    _ = 6 * ∑ b ∈ range (1651 - 2 * c - 3 * f), doubleA b c f := by
+      rw [mul_sum]
+      apply sum_congr rfl
+      intro b hb
+      rw [mem_range] at hb
+      rw [countA_closed b c f (by omega)]
+    _ = twelveB c f := by
+      rw [scaled_sum 6 (fun b => doubleA b c f) (prefixB c f)
+        (by simp [prefixB])
+        (by intro t; unfold prefixB doubleA prefixA widthInt; ring)]
+      have hn : ((1651 - 2 * c - 3 * f : ℕ) : ℤ) = 1651 - 2 * c - 3 * f := by omega
+      rw [hn, twelveB]
+
+private def closedC (f : ℕ) : ℤ :=
+  prefixC f ((1650 - 3 * f) / 2 + 1 : ℕ)
+
+private theorem countC_closed (f : ℕ) (hf : f < 551) :
+    288 * countC f = closedC f := by
+  calc
+    288 * countC f =
+        ∑ c ∈ range ((1650 - 3 * f) / 2 + 1), 24 * (12 * countB c f) := by
+      simp only [countC, ← mul_assoc, ← mul_sum, show (24 : ℤ) * 12 = 288 by decide]
+    _ = 24 * ∑ c ∈ range ((1650 - 3 * f) / 2 + 1), twelveB c f := by
+      rw [mul_sum]
+      apply sum_congr rfl
+      intro c hc
+      rw [mem_range] at hc
+      rw [countB_closed c f (by omega)]
+    _ = closedC f := by
+      rw [scaled_sum 24 (fun c => twelveB c f) (prefixC f)
+        (by simp [prefixC])
+        (by intro t; unfold prefixC twelveB prefixB widthInt; ring)]
+      rfl
+
+/-- Evaluate the remaining one-dimensional sum of closed formulas. -/
+private def evaluate (g : ℕ → ℤ) : ℕ → ℤ
+  | 0 => 0
+  | n + 1 => evaluate g n + g n
+
+private theorem sum_eq_evaluate (g : ℕ → ℤ) (n : ℕ) :
+    (∑ i ∈ range n, g i) = evaluate g n := by
+  induction n with
+  | zero => simp [evaluate]
+  | succ n ih => rw [sum_range_succ, ih, evaluate]
+
+set_option maxRecDepth 10000 in
+set_option maxHeartbeats 3000000 in
+private theorem evaluate_closedC : evaluate closedC 551 = 26331204051959789539296 := by
+  rfl
+
+theorem proof : K1_13_2.c1 := by
+  have h : 288 * (tuples.card : ℤ) = 26331204051959789539296 := by
+    rw [card_tuples_int, mul_sum]
+    calc
+      _ = ∑ f ∈ range 551, closedC f :=
+        sum_congr rfl fun f hf => countC_closed f (mem_range.mp hf)
+      _ = _ := by rw [sum_eq_evaluate, evaluate_closedC]
+  unfold K1_13_2.c1
+  rw [card_columns]
+  omega
+
+end
+
+end K1_13_2_1
+end PackSource_K1_13_2_1Proof
 
 section PackSource_K1_13_2_2Defs
 set_option autoImplicit true
@@ -7543,6 +8680,150 @@ theorem polarData_of_coefficients {u : K1.Words} {T : K1.TwoActive u} {R : K1.Re
 end
 end K1_9
 end PackSource_K1_9Polar
+
+section PackSource_K1_9Split
+set_option autoImplicit true
+set_option backward.isDefEq.respectTransparency false
+set_option maxRecDepth 10000
+
+namespace K1_9
+noncomputable section
+
+open Polynomial FrobeniusLocator ProximityPrize.Benchmark
+
+def c1 : Prop :=
+  ∀ (a : K[X]) (A : Fin 2 → K[X]) (i : I), FirstEvaluation a A i
+
+def c2 : Prop :=
+  ∀ u (T : K1.TwoActive u) (R : K1.Relation T) (D : K1.Reduction u T R)
+    (B : K1.RankThree u T R D), K1.Parallel B →
+    ∀ i ∉ K1.fixedNodes R, FirstEvaluation B.a B.α i →
+      CoefficientIdentities u B.a B.b B.α B.output i
+
+/-- Fixing one support leaves at most one other label per node outside that support. -/
+private theorem pencil_count {u : K1.Words} (Γ : Finset K)
+    (M : ∀ z ∈ Γ, K1.BadMark u z) {P Q : K[X]} (hP : P.degree < 131072)
+    (hQ : Q.degree < 131072) (h : ∀ z (hz : z ∈ Γ), (M z hz).decoder = pencil P Q z) :
+    Γ.card ≤ 81880 := by
+  classical
+  by_cases hΓ : Γ.Nonempty
+  swap
+  · simp [Finset.not_nonempty_iff_eq_empty.mp hΓ]
+  obtain ⟨r, hr⟩ := hΓ
+  let S := (M r hr).support
+  let nonjoint (i : I) := P.eval (node i) ≠ u 0 i ∨ Q.eval (node i) ≠ u 1 i
+  have hits {z : K} (hz : z ∈ Γ) {i : I} (hi : i ∈ (M z hz).support) :
+      P.eval (node i) + z * Q.eval (node i) = u 0 i + z * u 1 i := by
+    simpa only [h z hz, pencil, eval_add, eval_mul, eval_C] using (M z hz).hits i hi
+  have unique {z t : K} (hz : z ∈ Γ) (ht : t ∈ Γ) {i : I}
+      (hi : i ∈ (M z hz).support) (hj : i ∈ (M t ht).support) (hn : nonjoint i) : z = t := by
+    by_contra hne
+    have h₁ := hits hz hi
+    have h₂ := hits ht hj
+    have hw : (z-t) * (Q.eval (node i) - u 1 i) = 0 := by linear_combination h₁ - h₂
+    have he := sub_eq_zero.mp ((mul_eq_zero.mp hw).resolve_left (sub_ne_zero.mpr hne))
+    rw [he, add_right_cancel_iff] at h₁
+    exact hn.elim (fun hbad => hbad h₁) (fun hbad => hbad he)
+  have witness (z : ↥(Γ.erase r)) :
+      ∃ i ∈ (M z.val (Finset.mem_erase.mp z.property).2).support, nonjoint i := by
+    let W := M z.val (Finset.mem_erase.mp z.property).2
+    by_contra hw
+    apply W.nonjoint
+    refine ⟨⟨P, hP, ?_⟩, ⟨Q, hQ, ?_⟩⟩
+    · intro i hi
+      by_contra hn
+      exact hw ⟨i, hi, Or.inl hn⟩
+    · intro i hi
+      by_contra hn
+      exact hw ⟨i, hi, Or.inr hn⟩
+  choose f hf hn using witness
+  let g : ↥(Γ.erase r) → ↥((Finset.univ : Finset I) \ S) := fun z =>
+    ⟨f z, Finset.mem_sdiff.mpr ⟨Finset.mem_univ _, fun hi =>
+      (Finset.mem_erase.mp z.property).1 (unique (Finset.mem_erase.mp z.property).2 hr (hf z) hi (hn z))⟩⟩
+  have hg : Function.Injective g := by
+    intro z t hzt
+    have he : f z = f t := congrArg Subtype.val hzt
+    apply Subtype.ext
+    have ht := hf t
+    rw [← he] at ht
+    exact unique (Finset.mem_erase.mp z.property).2 (Finset.mem_erase.mp t.property).2 (hf z) ht (hn z)
+  have hcard := Finset.card_le_card_of_injective hg
+  have he := Finset.card_erase_add_one hr
+  have hS : 180265 ≤ S.card := (M r hr).agreement
+  rw [Finset.card_sdiff_of_subset (Finset.subset_univ _), Finset.card_univ, IRSProfile.card_index] at hcard
+  omega
+
+theorem of_children (h1 : c1) (h2 : c2) : K1.c9 := by
+  intro u T R D B hp hn Γ hΓ
+  classical
+  obtain ⟨data⟩ := polarData_of_coefficients B hp hn
+    (fun i hi => h2 u T R D B hp i hi (h1 B.a B.α i))
+  let M (z : K) (hz : z ∈ Γ) := Classical.choice (K1.bad_mark u Γ hΓ z hz)
+  rcases pencil_of_marks data Γ M with hsmall | ⟨P, Q, hP, hQ, h⟩
+  · omega
+  · exact pencil_count Γ M hP hQ h
+
+end
+end K1_9
+end PackSource_K1_9Split
+
+section PackSource_K1_9_1Proof
+set_option autoImplicit true
+set_option backward.isDefEq.respectTransparency false
+set_option maxRecDepth 10000
+set_option maxHeartbeats 1000000
+
+namespace K1_9_1
+
+private theorem firstEvaluationAt_ok (n : ℕ) (a : Polynomial K1.K)
+    (A : Fin 2 → Polynomial K1.K) (i : K1.I) : firstEvaluationAt n a A i := by
+  unfold firstEvaluationAt K1_8.threeUAt
+  exact K1_9.eval_first a A i n
+
+private theorem threeUAt_native : K1_8.threeUAt K1.p = K1.threeU := by
+  unfold K1_8.threeUAt K1.threeU
+  rfl
+
+/-- Evaluating the outer coordinate at a native node leaves the seed variable intact. -/
+theorem proof : K1_9.c1 := by
+  intro a A i
+  unfold K1_9.FirstEvaluation
+  rw [← threeUAt_native]
+  exact firstEvaluationAt_ok K1.p a A i
+
+end K1_9_1
+end PackSource_K1_9_1Proof
+
+section PackSource_K1_9_2Proof
+set_option autoImplicit true
+namespace K1_9_2
+
+noncomputable section
+
+open Polynomial
+
+private theorem pow_eq_twist (z : K1.K) : z ^ K1.p = K1.twist z :=
+  (frobenius_def K1.p z).symm
+
+theorem proof : K1_9.c2 := by
+  intro u T R D B hparallel i hi hfirst
+  change B.α = B.β at hparallel
+  have hnodes := (B.nodes i hi).symm
+  rw [← hparallel] at hnodes
+  have hp : 1 < K1.p := by norm_num [K1.p, FrobeniusLocator.Native.p]
+  have hσ := pow_eq_twist
+  unfold K1_9.FirstEvaluation at hfirst
+  unfold K1_9.CoefficientIdentities
+  -- Check the instance conversions at a variable exponent before specializing to p.
+  generalize K1.p = n at hp hσ hfirst hnodes ⊢
+  as_aux_lemma =>
+    exact K1_9.coefficients_at_node u B.a B.b B.α i n hp hσ
+      B.output (K1.threeU B.a B.α) hfirst hnodes
+
+end
+
+end K1_9_2
+end PackSource_K1_9_2Proof
 
 section PackSource_K1_14_2_2_1Proof
 set_option autoImplicit true

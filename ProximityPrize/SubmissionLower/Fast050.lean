@@ -8656,6 +8656,176 @@ end
 end K1_13_4_5
 end PackSource_K1_13_4_5Split
 
+section PackSource_K1_13_4_7Proof
+set_option autoImplicit true
+namespace K1_13_4_7
+
+open K1_13_4 Polynomial
+open scoped Polynomial BigOperators
+
+private theorem resultant_taylor_formal {R : Type*} [CommRing R]
+    (F G : R[X]) (z : R) {m n : ℕ} (hF : F.natDegree ≤ m) (hG : G.natDegree ≤ n) :
+    resultant (F.taylor z) (G.taylor z) m n = resultant F G m n := by
+  obtain ⟨a, rfl⟩ := Nat.exists_eq_add_of_le hF
+  obtain ⟨b, rfl⟩ := Nat.exists_eq_add_of_le hG
+  have expand (P Q : R[X]) :
+      resultant P Q (P.natDegree + a) (Q.natDegree + b) =
+        (-1) ^ ((Q.natDegree + b) * a) * Q.coeff (Q.natDegree + b) ^ a *
+          (P.leadingCoeff ^ b * resultant P Q) := by
+    rw [resultant_add_left_deg _ _ _ _ _ le_rfl,
+      resultant_add_right_deg _ _ _ _ _ le_rfl, coeff_natDegree]
+  have coeff_preserved :
+      (G.taylor z).coeff (G.natDegree + b) = G.coeff (G.natDegree + b) := by
+    by_cases hb : b = 0
+    · simp [hb]
+    · have hlt : G.natDegree < G.natDegree + b := by omega
+      rw [coeff_eq_zero_of_natDegree_lt hlt,
+        coeff_eq_zero_of_natDegree_lt (by simpa only [natDegree_taylor] using hlt)]
+  have h := expand (F.taylor z) (G.taylor z)
+  rw [resultant_taylor] at h
+  simp only [natDegree_taylor, leadingCoeff_taylor, coeff_preserved] at h
+  exact h.trans (expand F G).symm
+
+/-- The part of a mixed order still required after accounting for a seed exponent. -/
+private def weight (d i : ℕ) : ℕ := d - 7800 * i
+
+-- Put the variable in the recursive argument of Nat.add.
+private def power (w : ℕ) : ℕ := (49195 + w) / 49196
+
+private theorem coefficient_bound {k : Type*} [CommRing k]
+    (P : k[X][X]) (d e i j : ℕ) (hij : j ≤ i)
+    (hP : ∀ i l : ℕ, 7800 * i + 49196 * l < d → (P.coeff i).coeff l = 0) :
+    (Polynomial.X : k[X]) ^ power (weight (d + e) i - weight e j) ∣ P.coeff (i - j) := by
+  have hweight : weight (d + e) i ≤ weight e j + weight d (i - j) := by
+    unfold weight
+    omega
+  apply X_pow_dvd_iff.mpr
+  intro l hl
+  apply hP
+  unfold power at hl
+  have hsmall : 49196 * l < weight (d + e) i - weight e j := by omega
+  unfold weight at hweight hsmall
+  omega
+
+/-- The two sets of columns shift the coefficients of G and F, respectively.
+Each column uses the weight for the opposite polynomial at its shift. -/
+private def columnWeight {m n : ℕ} (j : Fin (m + n)) : ℕ :=
+  j.addCases (fun j : Fin m => weight firstOrder j) (fun j : Fin n => weight secondOrder j)
+
+private theorem sylvester_entry {k : Type*} [CommRing k]
+    (F G : k[X][X]) (m n : ℕ)
+    (hF : ∀ i l : ℕ, 7800 * i + 49196 * l < firstOrder → (F.coeff i).coeff l = 0)
+    (hG : ∀ i l : ℕ, 7800 * i + 49196 * l < secondOrder → (G.coeff i).coeff l = 0)
+    (i j : Fin (m + n)) :
+    (Polynomial.X : k[X]) ^ power (weight (firstOrder + secondOrder) i - columnWeight j) ∣
+      sylvester F G m n i j := by
+  induction j using Fin.addCases with
+  | left j =>
+    simp only [sylvester, Matrix.of_apply, Fin.addCases_left, columnWeight, Set.mem_Icc]
+    split_ifs with h
+    · simpa only [add_comm secondOrder firstOrder] using
+        coefficient_bound G secondOrder firstOrder i j h.1 hG
+    · exact dvd_zero _
+  | right j =>
+    simp only [sylvester, Matrix.of_apply, Fin.addCases_right, columnWeight, Set.mem_Icc]
+    split_ifs with h
+    · exact coefficient_bound F firstOrder secondOrder i j h.1 hF
+    · exact dvd_zero _
+
+/-- Every Leibniz term uses every row and every column once. Summing the
+entry powers therefore bounds the divisibility of each whole term. -/
+private theorem det_bound {k : Type*} [CommRing k] {N D : ℕ}
+    (M : Matrix (Fin N) (Fin N) k[X]) (row col : Fin N → ℕ)
+    (hM : ∀ i j, (Polynomial.X : k[X]) ^ power (row i - col j) ∣ M i j)
+    (hbudget : (∑ j, col j) + 49196 * D ≤ (∑ i, row i) + 49195) :
+    (Polynomial.X : k[X]) ^ D ∣ M.det := by
+  classical
+  rw [Matrix.det_apply']
+  apply Finset.dvd_sum
+  intro σ _
+  let a : Fin N → ℕ := fun j => power (row (σ j) - col j)
+  have hprod : (Polynomial.X : k[X]) ^ (∑ j, a j) ∣ ∏ j, M (σ j) j := by
+    rw [← Finset.prod_pow_eq_pow_sum]
+    exact Finset.prod_dvd_prod_of_dvd _ _ (fun j _ => hM (σ j) j)
+  have hsum : (∑ i, row i) ≤ (∑ j, col j) + 49196 * (∑ j, a j) := by
+    rw [← Equiv.sum_comp σ row, Finset.mul_sum, ← Finset.sum_add_distrib]
+    apply Finset.sum_le_sum
+    intro j _
+    dsimp only [a, power]
+    omega
+  have hD : D ≤ ∑ j, a j := by omega
+  exact dvd_mul_of_dvd_right ((pow_dvd_pow _ hD).trans hprod) _
+
+private theorem sum_weight {d t N : ℕ} (ht : t ≤ N) (hend : d ≤ 7800 * t)
+    (hbefore : ∀ i < t, 7800 * i ≤ d) :
+    (∑ i : Fin N, weight d i) = t * d - 7800 * (t * (t - 1) / 2) := by
+  rw [Fin.sum_univ_eq_sum_range]
+  have htrim : (∑ i ∈ Finset.range t, weight d i) = ∑ i ∈ Finset.range N, weight d i := by
+    apply Finset.sum_subset (Finset.range_mono ht)
+    intro i _ hi
+    simp only [Finset.mem_range, not_lt] at hi
+    unfold weight
+    omega
+  rw [← htrim]
+  have hsum : (∑ i ∈ Finset.range t, weight d i) + 7800 * (∑ i ∈ Finset.range t, i) =
+      t * d := by
+    rw [Finset.mul_sum, ← Finset.sum_add_distrib]
+    calc
+      _ = ∑ _i ∈ Finset.range t, d := by
+        apply Finset.sum_congr rfl
+        intro i hi
+        have h := hbefore i (Finset.mem_range.mp hi)
+        unfold weight
+        omega
+      _ = _ := by simp [Nat.mul_comm]
+  rw [Finset.sum_range_id] at hsum
+  omega
+
+private theorem benchmark_budget :
+    (∑ j : Fin (70000 + 70000), columnWeight (m := 70000) (n := 70000) j) + 49196 * 41481 ≤
+      (∑ i : Fin (70000 + 70000), weight (firstOrder + secondOrder) i) + 49195 := by
+  have hF : (∑ i : Fin 70000, weight firstOrder i) = 2119578835 := by
+    rw [sum_weight (t := 737) (by decide) (by decide)
+      (by intro i hi; simp only [firstOrder]; omega)]
+    decide
+  have hG : (∑ i : Fin 70000, weight secondOrder i) = 493235864 := by
+    rw [sum_weight (t := 356) (by decide) (by decide)
+      (by intro i hi; simp only [secondOrder]; omega)]
+    decide
+  have hFG : (∑ i : Fin (70000 + 70000), weight (firstOrder + secondOrder) i) =
+      4653502308 := by
+    rw [sum_weight (t := 1092) (by decide) (by decide)
+      (by intro i hi; simp only [firstOrder, secondOrder]; omega)]
+    decide
+  rw [Fin.sum_univ_add, hFG]
+  simp only [columnWeight, Fin.addCases_left, Fin.addCases_right, hF, hG]
+  decide
+
+private theorem resultant_bound
+    (F G : GenericX[X][X]) (z : GenericX) {m n D : ℕ} (hF : F.natDegree ≤ m) (hG : G.natDegree ≤ n)
+    (hFO : ∀ i l : ℕ, 7800 * i + 49196 * l < firstOrder →
+      ((F.taylor (C z)).coeff i).coeff l = 0)
+    (hGO : ∀ i l : ℕ, 7800 * i + 49196 * l < secondOrder →
+      ((G.taylor (C z)).coeff i).coeff l = 0)
+    (hbudget : (∑ j : Fin (m + n), columnWeight (m := m) (n := n) j) + 49196 * D ≤
+      (∑ i : Fin (m + n), weight (firstOrder + secondOrder) i) + 49195) :
+    (Polynomial.X : GenericX[X]) ^ D ∣ resultant F G m n := by
+  rw [← resultant_taylor_formal F G (C z) hF hG]
+  unfold resultant
+  exact det_bound
+    (sylvester (F.taylor (C z)) (G.taylor (C z)) m n)
+    (fun i => weight (firstOrder + secondOrder) i)
+    (columnWeight (m := m) (n := n))
+    (sylvester_entry _ _ m n hFO hGO) hbudget
+
+/-- R8's local bound, obtained by counting the powers in the fixed-size determinant. -/
+theorem proof : K1_13_4.c7 := by
+  intro F G z hF hG _ hFO hGO
+  exact resultant_bound F G z hF hG hFO hGO benchmark_budget
+
+end K1_13_4_7
+end PackSource_K1_13_4_7Proof
+
 section PackSource_K1_13_7_3Defs
 set_option autoImplicit true
 namespace K1_13_7_3

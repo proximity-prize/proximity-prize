@@ -6966,6 +6966,193 @@ theorem proof : K1_13_7_5_3_1.c2 :=
 end K1_13_7_5_3_1_2
 end PackSource_K1_13_7_5_3_1_2Proof
 
+section PackSource_K1_7Proof
+set_option autoImplicit true
+set_option backward.isDefEq.respectTransparency false
+set_option maxRecDepth 12000
+set_option maxHeartbeats 2000000
+
+namespace K1_7
+noncomputable section
+
+open Polynomial Matrix FrobeniusLocator K1
+open ProximityPrize.Benchmark
+
+private theorem eval_atSlope (P : Bivar) (a γ : K) :
+    (atSlope P γ).eval a = (P.eval (C a)).eval γ := by
+  simpa only [atSlope, Polynomial.coe_evalRingHom, Polynomial.eval_C] using
+    (Polynomial.eval_map_apply (Polynomial.evalRingHom γ) (C a) (p := P))
+
+private theorem atSlope_constant (G : K[X]) (γ : K) :
+    atSlope (G.map C) γ = G := by
+  rw [atSlope, Polynomial.map_map]
+  have h : (Polynomial.evalRingHom γ).comp C = RingHom.id K := by
+    ext a
+    simp
+  rw [h, Polynomial.map_id]
+
+private theorem twoBlock_atSlope (u : Words) (γ : K) :
+    ((twoBlock u).map (evalRingHom γ)) =
+      Strata.conjugateHankel (Strata.twoConjugations (frobenius K p))
+        node (fun i => u 0 i + γ * u 1 i) 49193 81879 := by
+  rw [twoBlock, Strata.stacked_eq_frobeniusStacked, Strata.frobeniusStacked_eval]
+  have h : (fun b : Fin 2 => iterateFrobenius K p b.val) =
+      Strata.twoConjugations (frobenius K p) := by
+    funext b
+    fin_cases b
+    · exact iterateFrobenius_zero K p
+    · exact iterateFrobenius_one K p
+  rw [h]
+
+private theorem rank_at_normal {u : Words} (T : TwoActive u) {γ : K} (hγ : Normal u γ) :
+    ((twoBlock u).map (evalRingHom γ)).rank = 49193 + T.height := by
+  change _ = stackRank u at hγ
+  rw [hγ, actual_stackRank]
+  have := T.degreeSum
+  have := T.nullitySum
+  have := T.top
+  unfold TwoActive.height
+  omega
+
+/-- The original stack has the same rank as its two evaluated error blocks. -/
+private theorem error_rank {u : Words} {γ : K} (M : BadMark u γ)
+    (E : Finset I) (hE : E.card ≤ 81879)
+    (hEagree : ∀ i ∉ E, u 0 i + γ * u 1 i = M.decoder.eval (node i)) :
+    ((twoBlock u).map (evalRingHom γ)).rank =
+      (Strata.errorTwoMatrix (frobenius K p) (fun i : E => node i.val)
+        (fun i : E => u 0 i.val + γ * u 1 i.val - M.decoder.eval (node i.val)) 49193).rank := by
+  have hfix : ∀ b i, Strata.twoConjugations (frobenius K p) b (node i) = node i := by
+    intro b i
+    fin_cases b <;> simp [Strata.twoConjugations, frobenius_def, Native.native_domain_fixed]
+  have h := Strata.conjugateHankel_error_rank
+    (Strata.twoConjugations (frobenius K p)) node (fun i => u 0 i + γ * u 1 i)
+    IRSProfile.domain.injective hfix M.decoder 131072 49193 81879 M.degree
+    (by rw [IRSProfile.card_index]) E (by omega) hEagree
+  rw [Strata.conjugateErrors_two] at h
+  rw [twoBlock_atSlope]
+  exact h
+
+/-- When the distinct common error roots exhaust the gcd degree, their
+monic locator has the same divisors as the gcd. -/
+private theorem commonGCD_of_roots (U V : K[X]) (hV : V ≠ 0) (S : Finset I)
+    (hroots : ∀ i ∈ S, (GCDMonoid.gcd U V).eval (node i) = 0)
+    (hcard : S.card = (GCDMonoid.gcd U V).natDegree) :
+    IsCommonGCD (locator node S) U V := by
+  have hG : GCDMonoid.gcd U V ≠ 0 := gcd_ne_zero_of_right hV
+  have hdiv := Strata.locator_dvd_of_eval_zero node IRSProfile.domain.injective S _ hroots
+  have hassoc := Polynomial.associated_of_dvd_of_natDegree_le hdiv hG
+    (by rw [locator_natDegree, hcard])
+  exact ⟨(locator_monic node S).ne_zero, hdiv.trans (gcd_dvd_left U V),
+    hdiv.trans (gcd_dvd_right U V), fun H hHU hHV => (dvd_gcd hHU hHV).trans hassoc.dvd'⟩
+
+private theorem lift_dvd_atSlope {P : Bivar} {G : K[X]} (γ : K) (h : G.map C ∣ P) :
+    G ∣ atSlope P γ := by
+  have h' := map_dvd (Polynomial.mapRingHom (Polynomial.evalRingHom γ)) h
+  change atSlope (G.map C) γ ∣ atSlope P γ at h'
+  rwa [atSlope_constant] at h'
+
+private theorem valid_of_saturation {u : Words} {T : TwoActive u} (R : Relation T)
+    (γ : K) (S : Finset I)
+    (hdegree : max (atSlope (leftU R) γ).natDegree (atSlope (leftV R) γ).natDegree = T.height)
+    (hG : IsCommonGCD (locator node S) (atSlope (leftU R) γ) (atSlope (leftV R) γ)) :
+    ¬ InvalidLeft R := by
+  intro hinvalid
+  rcases hinvalid with hlow | ⟨G, _, hGU, hGV, hbad⟩
+  · have hle : max (atSlope (leftU R) γ).natDegree (atSlope (leftV R) γ).natDegree ≤
+        max (leftU R).natDegree (leftV R).natDegree :=
+      max_le_max Polynomial.natDegree_map_le Polynomial.natDegree_map_le
+    omega
+  · have hS : locator node S ∣ locator node Finset.univ :=
+      ⟨locator node (Finset.univ \ S),
+        (Principal.locator_mul_sdiff node S Finset.univ (Finset.subset_univ S)).symm⟩
+    exact hbad ((hG.2.2.2 G (lift_dvd_atSlope γ hGU) (lift_dvd_atSlope γ hGV)).trans hS)
+
+theorem proof : K1.c7 := by
+  classical
+  intro u hfront T R γ hγ M
+  let U := atSlope (leftU R) γ
+  let V := atSlope (leftV R) γ
+  let E : Finset I := Finset.univ.filter (fun i => M.decoder.eval (node i) ≠ u 0 i + γ * u 1 i)
+  let e : E → K := fun i => u 0 i.val + γ * u 1 i.val - M.decoder.eval (node i.val)
+  let x : E → K := fun i => node i.val
+  have hEagree (i : I) (hi : i ∉ E) : u 0 i + γ * u 1 i = M.decoder.eval (node i) := by
+    by_contra h
+    exact hi (Finset.mem_filter.mpr ⟨Finset.mem_univ _, Ne.symm h⟩)
+  have hEcard : E.card ≤ 81879 := by
+    have hsub : E ⊆ Finset.univ \ M.support := by
+      intro i hi
+      refine Finset.mem_sdiff.mpr ⟨Finset.mem_univ _, fun hs => ?_⟩
+      exact (Finset.mem_filter.mp hi).2 (M.hits i hs)
+    have h := Finset.card_le_card hsub
+    rw [Finset.card_sdiff_of_subset (Finset.subset_univ _), Finset.card_univ,
+      IRSProfile.card_index] at h
+    have := M.agreement
+    omega
+  have hH : T.height < 49193 := by
+    have := T.degreeSum
+    have := T.nullitySum
+    have := hfront.1
+    unfold TwoActive.height
+    omega
+  have hfit : 131072 + T.height ≤ M.support.card := by
+    have := M.agreement
+    omega
+  have hfix (i : I) : frobenius K p (node i) = node i := Native.native_domain_fixed i
+  obtain ⟨hpair, hrel⟩ :=
+    Strata.certificate_specializes p node (u 0) (u 1) 131072 T.height R γ
+  have hUle : U.natDegree ≤ T.height := hrel.degree_U
+  have hVle : V.natDegree ≤ T.height := hrel.degree_V
+  have hx : Function.Injective x := IRSProfile.domain.injective.comp Subtype.val_injective
+  have he (i : E) : e i ≠ 0 :=
+    sub_ne_zero.mpr (Ne.symm (Finset.mem_filter.mp i.property).2)
+  have herror (i : E) : U.eval (x i) * e i + V.eval (x i) * frobenius K p (e i) = 0 :=
+    Strata.certificate_error_identity p node (u 0) (u 1) IRSProfile.domain.injective
+      Native.native_domain_fixed 131072 T.height R γ M.support hfit M.decoder M.degree M.hits i.val
+  have hrank : (Strata.errorTwoMatrix (frobenius K p) x e 49193).rank = 49193 + T.height :=
+    (error_rank M E hEcard hEagree).symm.trans (rank_at_normal T hγ)
+  obtain ⟨hU, hV⟩ := Strata.saturated_coefficients_nonzero (frobenius K p) x e hx U V
+    T.height 49193 hUle hVle hpair hH he herror hrank
+  let G := GCDMonoid.gcd U V
+  let C₀ := (Finset.univ : Finset E).filter (fun i => G.eval (x i) = 0)
+  let S := C₀.image (fun i : E => i.val)
+  obtain ⟨hC, hsum, _⟩ := Strata.normal_error_three_rank (frobenius K p) x e hx
+    (fun i => hfix i.val) U V T.height 49193 hUle hVle hpair hH he herror hrank
+  have hmax : max U.natDegree V.natDegree = T.height := by
+    obtain ⟨hle, hred⟩ := Strata.gcd_reduction_degrees U V hU hV
+    change max (U / G).natDegree (V / G).natDegree + G.natDegree = T.height at hsum
+    change G.natDegree ≤ max U.natDegree V.natDegree at hle
+    change max (U / G).natDegree (V / G).natDegree =
+      max U.natDegree V.natDegree - G.natDegree at hred
+    omega
+  have hS_card : S.card = G.natDegree :=
+    (Finset.card_image_of_injective C₀ Subtype.val_injective).trans hC
+  have hS_error (i : I) (hi : i ∈ S) : M.decoder.eval (node i) ≠ u 0 i + γ * u 1 i := by
+    obtain ⟨j, _, rfl⟩ := Finset.mem_image.mp hi
+    exact (Finset.mem_filter.mp j.property).2
+  have hG : IsCommonGCD (locator node S) U V := by
+    apply commonGCD_of_roots U V hV S _ hS_card
+    intro i hi
+    obtain ⟨j, hj, rfl⟩ := Finset.mem_image.mp hi
+    exact (Finset.mem_filter.mp hj).2
+  refine ⟨hU, hV, hmax, ⟨S, hS_error, hG⟩, ?_, valid_of_saturation R γ S hmax hG⟩
+  intro i hi
+  have hzero := (Finset.mem_filter.mp hi).2
+  have hu0 : U.eval (node i) = 0 := by
+    change (atSlope (leftU R) γ).eval (node i) = 0
+    rw [eval_atSlope, hzero.1, eval_zero]
+  have hv0 : V.eval (node i) = 0 := by
+    change (atSlope (leftV R) γ).eval (node i) = 0
+    rw [eval_atSlope, hzero.2, eval_zero]
+  have hdiv : (Polynomial.X : K[X]) - C (node i) ∣ locator node S :=
+    hG.2.2.2 _ (dvd_iff_isRoot.mpr hu0) (dvd_iff_isRoot.mpr hv0)
+  have hroot : (locator node S).eval (node i) = 0 :=
+    eval_eq_zero_of_dvd_of_eval_eq_zero hdiv (by rw [eval_sub, eval_X, eval_C, sub_self])
+  exact hS_error i ((Principal.locator_eval_zero_iff node IRSProfile.domain.injective S i).mp hroot)
+
+end
+end K1_7
+end PackSource_K1_7Proof
+
 section PackSource_K1_13_7_2_1Algebra
 set_option autoImplicit true
 namespace K1_13_7_2_1
@@ -7118,6 +7305,144 @@ end
 end K1_13_7_2_1
 end PackSource_K1_13_7_2_1Algebra
 
+section PackSource_K1_13_7_2_5_2Split
+set_option autoImplicit true
+namespace K1_13_7_2_5_2
+
+noncomputable section
+
+open Polynomial K1_13 K1_13_6 K1_13_6_3 K1_13_7_2 K1_13_7_2_4
+
+/-- Descend the ordinary tangent derivation to an invariant regular chart. -/
+def c1 : Prop := K1_13_7_2_4.c1
+
+/-- Continue the bounded physical equation along the finite Taylor polynomial. -/
+def c2 : Prop := K1_13_7_2_4.c2
+
+/-- A geometric component of the physical factor contracts to its principal
+prime. Computation of the tangent flow therefore takes place on physical rows. -/
+private theorem whole_contraction {f : Row 4} (hf : SmallFactor f) {P : JetIdeal}
+    (hP : (Ideal.span {toGeneric f}).IsMinimalPrime P) :
+    contraction P = Ideal.span {f} := by
+  let : P.IsPrime := hP.isPrime
+  have hmem : toGeneric f ∈ P := hP.le (Ideal.subset_span (Set.mem_singleton _))
+  have hfn := K1_13_7_2_5.generic_ne_zero hf
+  have hne : P ≠ ⊥ := fun h => hfn (Ideal.mem_bot.mp (h ▸ hmem))
+  have hheight : P.height = 1 := by
+    apply le_antisymm (Ideal.height_le_one_of_isPrincipal_of_mem_minimalPrimes _ P hP)
+    exact Order.one_le_iff_ne_zero.mpr (fun h => hne (Ideal.height_eq_zero_iff_eq_bot.mp h))
+  obtain ⟨r, hrP, hr⟩ := hP.isPrime.exists_mem_prime_of_ne_bot hne
+  have he := P.eq_span_singleton_of_height_eq_one hheight hrP hr
+  have hrf : r ∣ toGeneric f := Ideal.mem_span_singleton.mp (he ▸ hmem)
+  obtain ⟨a, ha, haeq⟩ := K1_13_7_2_1.comap_span_prime hr hf.1.ne_zero hrf
+  have hc : contraction P = Ideal.span {a} := by
+    rw [contraction, he, haeq]
+  have had : a ∣ f := Ideal.mem_span_singleton.mp (hc ▸ (show f ∈ contraction P from hmem))
+  have hassoc := ha.irreducible.associated_of_dvd hf.1 had
+  exact hc.trans (le_antisymm
+    (Ideal.span_singleton_le_span_singleton.mpr hassoc.dvd')
+    (Ideal.span_singleton_le_span_singleton.mpr hassoc.dvd))
+
+private theorem whole_invariant {f : Row 4} (hf : SmallFactor f) {P : JetIdeal}
+    (hP : (Ideal.span {toGeneric f}).IsMinimalPrime P) : Invariant f P := by
+  intro Q hQ
+  have hmem : Q ∈ contraction P := hQ
+  rw [whole_contraction hf hP, Ideal.mem_span_singleton] at hmem
+  obtain ⟨R, rfl⟩ := hmem
+  change flowNumerator f (f * R) ∈ contraction P
+  rw [whole_contraction hf hP, K1_13_7_2_1.flow_mul, K1_13_7_2_1.flow_self, mul_zero, add_zero,
+    Ideal.mem_span_singleton]
+  exact dvd_mul_right _ _
+
+private theorem eval_trajectory_at_component (P : JetIdeal) [P.IsPrime]
+    (U : (JetField P)[X]) (Q : Row 4)
+    (hU : ∀ i : Fin 4, (hasseDeriv i.val U).eval (onComponent P (MvPolynomial.C genericArgument)) =
+      onComponent P (MvPolynomial.X i)) :
+    (trajectory (componentConstants P) Q U).eval (onComponent P (MvPolynomial.C genericArgument)) =
+      onComponent P (toGeneric Q) := by
+  let x := onComponent P (MvPolynomial.C genericArgument)
+  let e := (evalRingHom x).comp (mapRingHom (componentConstants P))
+  have he : e = (onComponent P).comp (MvPolynomial.C.comp genericCoeffs) := by
+    apply Polynomial.ringHom_ext
+    · intro a
+      simp [e, componentConstants, geomConstants]
+    · simp [e, x, genericArgument]
+  change (evalRingHom x) (MvPolynomial.eval₂ (mapRingHom (componentConstants P))
+    (fun i : Fin 4 => hasseDeriv i.val U) Q) = _
+  rw [MvPolynomial.hom_eval₂]
+  have h : MvPolynomial.eval₂Hom e (fun i => (evalRingHom x) (hasseDeriv i.val U)) =
+      (onComponent P).comp (MvPolynomial.map genericCoeffs) := by
+    apply MvPolynomial.ringHom_ext
+    · intro a
+      simpa only [RingHom.comp_apply, MvPolynomial.eval₂Hom_C, MvPolynomial.map_C] using
+        RingHom.congr_fun he a
+    · intro i
+      simpa only [RingHom.comp_apply, MvPolynomial.eval₂Hom_X', MvPolynomial.map_X,
+        coe_evalRingHom, x] using hU i
+  exact RingHom.congr_fun h Q
+
+/-- The fresh jet image is an affine projection after scalar extension,
+so its dimension is bounded by that of the original coefficient family. -/
+private theorem fresh_dimension_le (A : CoeffIdeal) : dimension (freshImage A) ≤ dimension A := by
+  let φ : GeoJets →ₐ[GeoField] FreshCoeffRing :=
+    MvPolynomial.aeval (fun i : Fin 4 => jetLinear genericArgument i.val)
+  let ψ := Ideal.quotientMapₐ (extendIdeal A) φ le_rfl
+  have hinj : Function.Injective ψ := Ideal.quotientMap_injective
+  let : Algebra Geom GeoField := geomConstants.toAlgebra
+  have hbase : MvPolynomial.affineHilbertPolynomial (extendIdeal A) =
+      MvPolynomial.affineHilbertPolynomial A :=
+    K1_13_5_5_2.hilbertPolynomial_map (E := GeoField) A
+  exact (MvPolynomial.natDegree_affineHilbertPolynomial_le_of_injective ψ hinj).trans_eq
+    (congrArg Polynomial.natDegree hbase)
+
+theorem of_children (h1 : c1) (h2 : c2) : K1_13_7_2_5.c2 := by
+  intro f hf P hP hs htest
+  let : P.IsPrime := hP.isPrime
+  have hfP : toGeneric f ∈ P := hP.le (Ideal.subset_span (Set.mem_singleton _))
+  obtain ⟨δ, hδ⟩ := h1 f P hP.isPrime hs (whole_invariant hf hP)
+  let U := (chartPolynomial f P).map (genericLift f P hs)
+  have hd : U.natDegree < taylorLength := mapped_chartPolynomial_degree _
+  have hj (i : Fin 4) : (hasseDeriv i.val U).eval (onComponent P (MvPolynomial.C genericArgument)) =
+      onComponent P (MvPolynomial.X i) := by
+    simpa only [U, chartCenter, genericLift_onChart, genericArgument,
+      toGeneric, MvPolynomial.map_C, MvPolynomial.map_X] using
+      eval_hasse_chartPolynomial (genericLift f P hs) i
+  have hsolve : trajectory (componentConstants P) f U = 0 :=
+    h2 f P hP.isPrime hs hf.2.2.2 hfP htest δ hδ
+  have hregular : trajectory (componentConstants P) (separant f) U ≠ 0 := by
+    intro hzero
+    apply hs
+    apply Ideal.Quotient.eq_zero_iff_mem.mp
+    apply IsFractionRing.injective (GeoJets ⧸ P) (JetField P)
+    rw [map_zero]
+    change onComponent P (toGeneric (separant f)) = 0
+    rw [← eval_trajectory_at_component P U (separant f) hj, hzero, eval_zero]
+  let A := coefficientKernel (componentConstants P) U
+  have hint : Integrated f f f P U := by
+    refine ⟨hd, hj, hsolve, hsolve, hsolve, ?_⟩
+    intro S hS hle hreg
+    exact specializes hs hle hreg (mem_markIdeal.mp (hle hfP)) (Nat.le_of_lt_succ hS)
+  obtain ⟨_, hAP, _, _⟩ := K1_13_6_3_3.trajectory_to_fresh hint hs
+  have hdim : dimension P ≤ dimension A :=
+    (MvPolynomial.natDegree_affineHilbertPolynomial_le_of_le hAP).trans (fresh_dimension_le A)
+  rw [K1_13_7_2_5.whole_dimension hf hP] at hdim
+  refine ⟨A, ⟨RingHom.ker_isPrime _, (by decide : 2 ≤ 3).trans hdim, ?_, ?_⟩, hAP⟩
+  · intro j
+    change MvPolynomial.eval₂Hom (componentConstants P)
+      (fun i : Fin taylorLength => U.coeff i.val) ((universalEval f).coeff j) = 0
+    rw [← Polynomial.coeff_map, map_universalEval _ _ hd, hsolve, coeff_zero]
+  · obtain ⟨j, hj⟩ := not_forall.mp (mt Polynomial.ext_iff.mpr hregular)
+    refine ⟨j, ?_⟩
+    change MvPolynomial.eval₂Hom (componentConstants P)
+      (fun i : Fin taylorLength => U.coeff i.val) ((universalEval (separant f)).coeff j) ≠ 0
+    rw [← Polynomial.coeff_map, map_universalEval _ _ hd]
+    simpa only [coeff_zero] using hj
+
+end
+
+end K1_13_7_2_5_2
+end PackSource_K1_13_7_2_5_2Split
+
 section PackSource_K1_13_7_2_1Split
 set_option autoImplicit true
 namespace K1_13_7_2_1
@@ -7204,6 +7529,17 @@ end
 
 end K1_13_7_2_1
 end PackSource_K1_13_7_2_1Split
+
+section PackSource_K1_13_7_2_5_2_1Proof
+set_option autoImplicit true
+namespace K1_13_7_2_5_2_1
+
+/-- The whole-component contract uses the same regular chart descent. -/
+theorem proof : K1_13_7_2_5_2.c1 :=
+  K1_13_7_2_4_1.proof
+
+end K1_13_7_2_5_2_1
+end PackSource_K1_13_7_2_5_2_1Proof
 
 section PackSource_K1_13_7_2_1_2Proof
 set_option autoImplicit true
@@ -7339,6 +7675,16 @@ end
 
 end K1_13_7_2_1_2
 end PackSource_K1_13_7_2_1_2Proof
+
+section PackSource_K1_13_7_2_5_2_2Proof
+set_option autoImplicit true
+namespace K1_13_7_2_5_2_2
+
+/-- The whole-factor continuation contract is the shared regular-chart continuation. -/
+theorem proof : K1_13_7_2_5_2.c2 := K1_13_7_2_4_2.proof
+
+end K1_13_7_2_5_2_2
+end PackSource_K1_13_7_2_5_2_2Proof
 
 section PackSource_K1_13_7_2_1_1Proof
 set_option autoImplicit true

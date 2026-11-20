@@ -2464,6 +2464,119 @@ end
 end K1_13_6_1_5_2_2
 end PackSource_K1_13_6_1_5_2_2Proof
 
+section PackSource_K1_13_6_1_5_1Proof
+set_option autoImplicit true
+namespace K1_13_6_1_5_1
+
+noncomputable section
+
+open Polynomial MvPolynomial K1_13 K1_13_6 K1_13_6_2_1 K1_13_7_1
+
+local notation "W" => MvPolynomial.weightedTotalDegree
+
+-- Keep the clearing length symbolic while proving the support and evaluation identities.
+private def denominator (L : ℕ) (g : Row 4) : Row 4 :=
+  separant g ^ (2 * L)
+
+private def numerator (L : ℕ) (g : Row 4) (i : TaylorIndex) : Row 4 :=
+  if hi : i.val < 4 then MvPolynomial.X ⟨i.val, hi⟩ * denominator L g
+  else
+    MvPolynomial.C (Polynomial.C (↑i.val.factorial : Geom)⁻¹) *
+      (separant g ^ (2 * (L - i.val)) * jetNumerator g i.val)
+
+private def recoveryChart (L : ℕ) (g : Row 4) : TaylorChart where
+  denom := toGeneric (denominator L g)
+  numerator i := toGeneric (numerator L g i)
+  initial i := by
+    unfold numerator toGeneric
+    have hi : (i.castLE (by decide : 4 ≤ taylorLength)).val < 4 := i.isLt
+    rw [dite_eq_left hi, map_mul, MvPolynomial.map_X]
+    rfl
+
+private theorem numerator_bound {L : ℕ} (hL : taylorLength ≤ L) (w : Fin 4 → ℕ)
+    (Δ d₀ : ℕ) (hshift : ∀ i : Fin 3, w i.succ ≤ w i.castSucc + Δ) (hw : ∀ i, w i ≤ d₀)
+    {g : Row 4} {B : ℕ} (hB : w 3 ≤ B) (hg : W w g ≤ B) (i : TaylorIndex) :
+    W w (numerator L g i) ≤ d₀ + 2 * L * (B - w 3) + L * Δ := by
+  have hi : i.val ≤ L := i.isLt.le.trans hL
+  unfold numerator
+  split_ifs
+  · exact (weightedTotalDegree_mul_le _ _ _).trans
+      ((Nat.add_le_add ((weight_X_le w _).trans (hw _)) (separant_pow_bound w hg _)).trans
+        (Nat.le_add_right _ _))
+  · apply (weight_const_mul_le _ _ _).trans
+    apply (weightedTotalDegree_mul_le _ _ _).trans
+    calc
+      _ ≤ 2 * (L - i.val) * (B - w 3) + (w 0 + i.val * (2 * (B - w 3) + Δ)) :=
+        Nat.add_le_add (separant_pow_bound w hg _) (jet_bound w Δ hshift hB hg i.val)
+      _ = w 0 + 2 * (i.val + (L - i.val)) * (B - w 3) + i.val * Δ := by ring
+      _ ≤ _ := by
+        rw [Nat.add_sub_of_le hi]
+        exact Nat.add_le_add (Nat.add_le_add_right (hw 0) _) (Nat.mul_le_mul_right Δ hi)
+
+private theorem chart_fits {L : ℕ} (hL : taylorLength ≤ L) {g : Row 4} {p : Shape}
+    (hg : InBox (shape g) p) (hp : Chamber p) (ht : 0 < p.t) :
+    (recoveryChart L g).Fits (chart L p) := by
+  constructor
+  · apply three_weights hg hp ht
+    intro w Δ d₀ B _ _ _ hB
+    exact (separant_pow_bound w hB (2 * L)).trans (by omega)
+  · intro i
+    exact three_weights hg hp ht (fun w Δ d₀ _ hs hw hwB hB =>
+      numerator_bound hL w Δ d₀ hs hw hwB hB i)
+
+private theorem ordinary_eq_hasse (S : Geom[X]) (n : ℕ) :
+    derivative^[n] S = Polynomial.C (n.factorial : Geom) * hasseDeriv n S := by
+  ext m
+  rw [coeff_iterate_derivative, Polynomial.coeff_C_mul, hasseDeriv_coeff,
+    Nat.descFactorial_eq_factorial_mul_choose]
+  simp only [nsmul_eq_mul, Nat.cast_mul, mul_assoc]
+
+private theorem chart_recovers {L : ℕ} (hL : taylorLength ≤ L) {g : Row 4} {S : Geom[X]}
+    (hg : atJet g S = 0) (hr : K1_13_7.RegularAt g S) : (recoveryChart L g).Recovers S := by
+  have hden : atJet (denominator L g) S = atJet (separant g) S ^ (2 * L) :=
+    map_pow (MvPolynomial.eval (jet S : Fin 4 → Geom[X])) _ _
+  constructor
+  · change evalGeneric S (toGeneric (denominator L g)) ≠ 0
+    rw [evalGeneric_toGeneric, map_ne_zero_iff _ genericCoeffs_injective, hden]
+    exact pow_ne_zero _ hr
+  · intro i
+    change evalGeneric S (toGeneric (numerator L g i)) =
+      evalGeneric S (toGeneric (denominator L g)) * genericCoeffs (hasseDeriv i.val S)
+    rw [evalGeneric_toGeneric, evalGeneric_toGeneric, ← map_mul]
+    apply congrArg genericCoeffs
+    unfold numerator
+    split_ifs with hinit
+    · unfold atJet
+      rw [map_mul, MvPolynomial.eval_X, mul_comm]
+      rfl
+    · let E := MvPolynomial.eval (jet S : Fin 4 → Geom[X])
+      change E (_ * (_ ^ _ * _)) = _
+      rw [map_mul, map_mul, map_pow, MvPolynomial.eval_C]
+      change _ * (atJet (separant g) S ^ (2 * (L - i.val)) *
+        atJet (jetNumerator g i.val) S) = _
+      rw [eval_jetNumerator _ _ hg, ordinary_eq_hasse]
+      have hinv : Polynomial.C (↑i.val.factorial : Geom)⁻¹ *
+          Polynomial.C (↑i.val.factorial : Geom) = 1 := by
+        rw [← map_mul, inv_mul_cancel₀ (factorial_cast_ne_zero
+          (i.isLt.trans (by decide : taylorLength < K1.p))), map_one]
+      have hpow : 2 * (L - i.val) + 2 * i.val = 2 * L := by
+        rw [← Nat.mul_add, Nat.sub_add_cancel (i.isLt.le.trans hL)]
+      calc
+        _ = (Polynomial.C (↑i.val.factorial : Geom)⁻¹ * Polynomial.C (↑i.val.factorial : Geom)) *
+            ((atJet (separant g) S ^ (2 * (L - i.val)) * atJet (separant g) S ^ (2 * i.val)) *
+              hasseDeriv i.val S) := by ring
+        _ = _ := by rw [hinv, one_mul, ← pow_add, hpow, hden]
+
+/-- Taylor recovery on the regular four-jet chart at the original length. -/
+theorem proof : K1_13_6_1_5.c1 := by
+  intro g p hbox hp ht
+  exact ⟨recoveryChart taylorLength g, chart_fits le_rfl hbox hp ht,
+    fun _ hg hr => chart_recovers le_rfl hg hr⟩
+
+end
+end K1_13_6_1_5_1
+end PackSource_K1_13_6_1_5_1Proof
+
 section PackSource_K1_13_6_1_4_2_2Defs
 set_option autoImplicit true
 namespace K1_13_6_1_4_2_2
@@ -5723,6 +5836,424 @@ theorem test_of_support (w : ℤ) {s : Shape} {v lo : ℕ}
 
 end K1_14_5
 end PackSource_K1_14_5Aux
+
+section PackSource_K1_14_5Proof
+set_option autoImplicit true
+namespace K1_14_5
+
+open K1_14
+
+private def bridgeShape : Shape := ⟨836, 1164, 247, 19371⟩
+private def pairedLowShape : Shape := ⟨358, 500, 105, 6798⟩
+private def pairedMidShape : Shape := ⟨358, 500, 105, 4860⟩
+private def pairedHighShape : Shape := ⟨358, 500, 105, 3913⟩
+
+private def PositiveSupport (s : Shape) (v lo : ℕ) : Prop :=
+  2 * ((nodeCost s : ℤ) + lo * (poleSlope s : ℤ)) < supportBase s v lo ∧
+  2 * (poleSlope s : ℤ) ≤ supportSlope s v lo
+
+open Finset
+open scoped BigOperators
+
+-- A recursive range sum for small closed checks, connected to the original Finset sums.
+private def k145Sum {α : Type} [AddMonoid α] (f : ℕ → α) : ℕ → α
+  | 0 => 0
+  | n + 1 => k145Sum f n + f n
+
+private theorem k145Sum_eq {α : Type} [AddCommMonoid α] (f : ℕ → α) (n : ℕ) :
+    k145Sum f n = ∑ i ∈ range n, f i := by
+  induction n with
+  | zero => simp [k145Sum]
+  | succ n ih => rw [k145Sum, Finset.sum_range_succ, ih]
+
+private def k145SupportCount (s : Shape) (lo j r : ℕ) : ℕ :=
+  let offset := j * (131071 - lo) + 2 * lo * (j + r)
+  let top := s.m * 180265 + j
+  min (s.B + 1 - j) (if offset < top then (top - offset - 1) / (131071 - lo) + 1 else 0)
+
+private def k145NodeTerm (s : Shape) (q : ℕ) : ℕ :=
+  let k := min q s.J + 1
+  let d := s.m + min q s.J - q
+  let n := min k ((d + 1) / 2)
+  n * (d + 1 - n)
+
+private def k145PoleTerm (s : Shape) (q : ℕ) : ℕ :=
+  (min q s.J + 1) * ((s.B + s.J - q) * (s.B - q))
+
+private theorem k145Node_eq (s : Shape) :
+    nodeCost s = triangle s.U * 262144 * k145Sum (k145NodeTerm s) (s.B + 1) := by
+  simp only [k145Sum_eq]
+  rfl
+
+private theorem k145Pole_eq (s : Shape) :
+    poleSlope s = 2 * (s.U + 1) * k145Sum (k145PoleTerm s) (s.B + 1) := by
+  simp only [k145Sum_eq]
+  rfl
+
+section
+
+set_option maxRecDepth 10000
+set_option maxHeartbeats 0
+
+-- On a diagonal t = j + r, j ranges backwards as r increases. Reindex
+-- the rectangle so its two finite bounds can certify a single cutoff.
+private theorem k145Diagonal (J R : ℕ) (f : ℕ → ℕ → ℤ) :
+    (∑ j ∈ range (J+1), ∑ r ∈ range (R+1), f j r) =
+      ∑ t ∈ range (J+R+1), ∑ r ∈ Ico (t-J) (min t R+1), f (t-r) r := by
+  calc
+    _ = ∑ r ∈ range (R+1), ∑ j ∈ range (J+1), f j r := sum_comm
+    _ = ∑ r ∈ range (R+1), ∑ t ∈ Ico r (r+(J+1)), f (t-r) r := by
+      apply sum_congr rfl
+      intro r _
+      rw [sum_Ico_eq_sum_range]
+      simp
+    _ = ∑ r ∈ range (R+1), ∑ t ∈ range (J+R+1),
+        if r ≤ t ∧ t-r ≤ J then f (t-r) r else 0 := by
+      apply sum_congr rfl
+      intro r hr
+      have hr' := mem_range.mp hr
+      rw [← sum_filter]
+      congr 1
+      ext t
+      simp only [mem_Ico, mem_filter, mem_range]
+      omega
+    _ = ∑ t ∈ range (J+R+1), ∑ r ∈ range (R+1),
+        if r ≤ t ∧ t-r ≤ J then f (t-r) r else 0 := sum_comm
+    _ = _ := by
+      apply sum_congr rfl
+      intro t _
+      rw [← sum_filter]
+      congr 1
+      ext r
+      simp only [mem_Ico, mem_filter, mem_range, Nat.lt_succ_iff, le_min_iff]
+      omega
+
+-- These two inequalities bracket the quotient in the original support
+-- count. At the physical cap B only the lower inequality is necessary.
+private theorem k145Quotient {B j D z T k : ℕ} (hd : 0 < D) (hj : j < k)
+    (hb : k ≤ B) (hl : (k-1)*D+z < T) (hh : k=B ∨ T ≤ k*D+z) :
+    min (B-j) (if j*D+z < T then (T-(j*D+z)-1)/D+1 else 0) = k-j := by
+  have hjD : j*D ≤ (k-1)*D := Nat.mul_le_mul_right D (by omega)
+  rw [ite_eq_left (by omega)]
+  have hlow : k-1-j ≤ (T-(j*D+z)-1)/D := (Nat.le_div_iff_mul_le hd).2 (by
+    rw [Nat.sub_mul]
+    omega)
+  rcases hh with rfl | hh
+  · omega
+  · have hupp : (T-(j*D+z)-1)/D < k-j := (Nat.div_lt_iff_lt_mul hd).2 (by
+      rw [Nat.sub_mul]
+      omega)
+    omega
+
+private def k145W (s : Shape) (v r : ℕ) : ℕ :=
+  slots s.U (r*v) - slots s.U ((r+1)*v)
+
+private def k145A (s : Shape) (lo t : ℕ) (slope : Bool) : ℤ :=
+  if slope then -4*(t : ℤ) else 2*((s.m : ℤ)*180265) - 4*(t : ℤ)*lo
+private def k145B (slope : Bool) : ℤ := if slope then 0 else 2
+private def k145C (lo : ℕ) (slope : Bool) : ℤ := if slope then 1 else -(131071-(lo : ℤ))
+
+private def k145Cell (s : Shape) (v lo : ℕ) (slope : Bool) (j r : ℕ) : ℤ :=
+  let n : ℤ := k145SupportCount s lo j r
+  (k145W s v r : ℤ) * (n * (k145A s lo (j+r) slope + k145B slope*j +
+    k145C lo slope*(2*(j : ℤ)+n-1)))
+
+private theorem k145Cells (s : Shape) (v lo : ℕ) (slope : Bool) :
+    (if slope then supportSlope s v lo else supportBase s v lo) =
+      ∑ j ∈ range (s.J+1), ∑ r ∈ range (s.U/v+1), k145Cell s v lo slope j r := by
+  cases slope
+  · change (∑ j ∈ range (s.J+1), ∑ r ∈ range (s.U/v+1), (k145W s v r : ℤ) * ((k145SupportCount s lo j r : ℤ) *
+      (2*((s.m : ℤ)*180265+j) - (2*(j : ℤ)+k145SupportCount s lo j r-1)*(131071-lo) -
+        4*((j : ℤ)+r)*lo))) = _
+    apply sum_congr rfl
+    intro j _
+    apply sum_congr rfl
+    intro r _
+    simp only [k145Cell, k145A, k145B, k145C, Bool.false_eq_true, ite_false, Nat.cast_add]
+    ring
+  · change (∑ j ∈ range (s.J+1), ∑ r ∈ range (s.U/v+1), (k145W s v r : ℤ) * ((k145SupportCount s lo j r : ℤ) *
+      ((2*(j : ℤ)+k145SupportCount s lo j r-1)-4*((j : ℤ)+r)))) = _
+    apply sum_congr rfl
+    intro j _
+    apply sum_congr rfl
+    intro r _
+    simp only [k145Cell, k145A, k145B, k145C, ite_true, Nat.cast_add]
+    ring
+
+private def k145Cut (s : Shape) (lo t : ℕ) : ℕ :=
+  min (s.B+1) ((s.m*180265+(t-(t-s.J))-2*lo*t-1)/(131071-lo)+1)
+
+private def k145GoodCut (s : Shape) (v lo t : ℕ) : Prop :=
+  let k := k145Cut s lo t
+  let D := 131071-lo
+  let jmax := t-(t-s.J)
+  let jmin := t-min t (s.U/v)
+  jmax < k ∧ k ≤ s.B+1 ∧ (k-1)*D + 2*lo*t < s.m*180265+jmin ∧
+    (k=s.B+1 ∨ s.m*180265+jmax ≤ k*D+2*lo*t)
+
+private instance (s : Shape) (v lo t : ℕ) : Decidable (k145GoodCut s v lo t) := by
+  unfold k145GoodCut
+  infer_instance
+
+private theorem k145AtCut (s : Shape) (v lo t r : ℕ) (hd : lo < 131071)
+    (h : k145GoodCut s v lo t) (hr : r ∈ Ico (t-s.J) (min t (s.U/v)+1)) :
+    t-r ≤ k145Cut s lo t ∧ k145SupportCount s lo (t-r) r = k145Cut s lo t - (t-r) := by
+  obtain ⟨hk, hb, hl, hh⟩ := h
+  obtain ⟨ha, he⟩ := mem_Ico.mp hr
+  have hrle : r ≤ t := by omega
+  have hj : t-r < k145Cut s lo t := by omega
+  refine ⟨by omega, ?_⟩
+  unfold k145SupportCount
+  rw [Nat.sub_add_cancel hrle]
+  apply k145Quotient (by omega) hj hb (by omega)
+  rcases hh with hcap | htop
+  · exact Or.inl hcap
+  · exact Or.inr (by omega)
+
+-- Packed base-2^48 digits store the three weighted prefix moments at each
+-- index. Their successive differences are verified against the slot counts.
+private def k145Digit (data i r : ℕ) : ℕ :=
+  (data >>> (48*(3*r+i))) % 281474976710656
+
+private def k145MomStep (s : Shape) (v data r : ℕ) : Prop :=
+  let w := k145W s v r
+  k145Digit data 0 (r+1) = k145Digit data 0 r + w ∧
+  k145Digit data 1 (r+1) = k145Digit data 1 r + w*r ∧
+  k145Digit data 2 (r+1) = k145Digit data 2 r + w*r*r
+
+private instance (s : Shape) (v data r : ℕ) : Decidable (k145MomStep s v data r) := by
+  unfold k145MomStep
+  infer_instance
+
+private def k145All (p : ℕ → Bool) : ℕ → Bool
+  | 0 => true
+  | n+1 => k145All p n && p n
+
+private theorem k145All_sound (p : ℕ → Prop) [DecidablePred p] (n : ℕ)
+    (h : k145All (fun i => decide (p i)) n = true) : ∀ i < n, p i := by
+  induction n with
+  | zero => intro i hi; omega
+  | succ n ih =>
+    obtain ⟨h0,h1⟩ := Bool.and_eq_true_iff.mp h
+    intro i hi
+    rcases Nat.lt_or_eq_of_le (Nat.le_of_lt_succ hi) with hlt | rfl
+    · exact ih h0 i hlt
+    · exact of_decide_eq_true h1
+
+private def k145Primitive (data i : ℕ) (x y z : ℤ) : ℤ :=
+  x*k145Digit data 0 i + y*k145Digit data 1 i + z*k145Digit data 2 i
+
+private theorem k145PrimStep (s : Shape) (v data r : ℕ) (x y z : ℤ)
+    (h : k145MomStep s v data r) :
+    k145Primitive data (r+1) x y z = k145Primitive data r x y z +
+      (k145W s v r : ℤ)*(x+y*r+z*r*r) := by
+  obtain ⟨h0,h1,h2⟩ := h
+  simp only [k145Primitive, h0,h1,h2,Nat.cast_add,Nat.cast_mul]
+  ring
+
+private theorem k145Tel (f p : ℕ → ℤ) (a n : ℕ)
+    (h : ∀ i < n, p (a+i+1) = p (a+i)+f (a+i)) :
+    (∑ i ∈ range n, f (a+i)) = p (a+n)-p a := by
+  induction n with
+  | zero => simp
+  | succ n ih =>
+    rw [sum_range_succ, ih (fun i hi => h i (by omega))]
+    rw [← Nat.add_assoc, h n (by omega)]
+    ring
+
+-- If n=k-j and j=t-r, each weighted cell is w(r) times a quadratic in r.
+private def k145PrimitiveAt (s : Shape) (lo data t : ℕ) (slope : Bool) (r : ℕ) : ℤ :=
+  let k : ℤ := k145Cut s lo t
+  let u := k-(t : ℤ)
+  let a := k145A s lo t slope
+  let b := k145B slope
+  let c := k145C lo slope
+  let e := a + b*t + c*((t : ℤ)+k-1)
+  k145Primitive data r (u*e) (e-u*(b+c)) (-(b+c))
+
+private def k145DiagValue (s : Shape) (v lo data t : ℕ) (slope : Bool) : ℤ :=
+  k145PrimitiveAt s lo data t slope (min t (s.U/v)+1) -
+    k145PrimitiveAt s lo data t slope (t-s.J)
+
+private theorem k145OneDiag (s : Shape) (v lo data t : ℕ) (slope : Bool)
+    (hd : lo < 131071) (ht : t < s.J+s.U/v+1) (hc : k145GoodCut s v lo t)
+    (hm : ∀ r < s.U/v+1, k145MomStep s v data r) :
+    (∑ r ∈ Ico (t-s.J) (min t (s.U/v)+1), k145Cell s v lo slope (t-r) r) =
+      k145DiagValue s v lo data t slope := by
+  let a := t-s.J
+  let b := min t (s.U/v)+1
+  have hab : a ≤ b := by
+    change t-s.J ≤ min t (s.U/v)+1
+    exact Nat.le.step (le_min (Nat.sub_le ..) (Nat.sub_le_iff_le_add'.2 (Nat.le_of_lt_succ ht)))
+  change (∑ r ∈ Ico a b, _) = k145PrimitiveAt s lo data t slope b -
+    k145PrimitiveAt s lo data t slope a
+  rw [sum_Ico_eq_sum_range]
+  conv_rhs => rw [← Nat.add_sub_of_le hab]
+  apply k145Tel (fun r => k145Cell s v lo slope (t-r) r) (k145PrimitiveAt s lo data t slope) a (b-a)
+  intro i hi
+  let r := a+i
+  have hmem : r ∈ Ico (t-s.J) (min t (s.U/v)+1) := by
+    change r ∈ Ico a b
+    exact mem_Ico.mpr ⟨by dsimp [r]; omega, by dsimp [r]; omega⟩
+  obtain ⟨_, he⟩ := mem_Ico.mp hmem
+  have hr : r ≤ t := by omega
+  obtain ⟨hjk, hn⟩ := k145AtCut s v lo t r hd hc hmem
+  change k145PrimitiveAt s lo data t slope (r+1) =
+    k145PrimitiveAt s lo data t slope r + k145Cell s v lo slope (t-r) r
+  simp only [k145PrimitiveAt, k145PrimStep _ _ _ r _ _ _ (hm r (by omega))]
+  congr 1
+  simp only [k145Cell, hn, Nat.cast_sub hjk, Nat.sub_add_cancel hr, Nat.cast_sub hr]
+  ring
+
+private theorem k145Eval (s : Shape) (v lo data : ℕ) (slope : Bool)
+    (hd : lo < 131071)
+    (hc : k145All (fun t => decide (k145GoodCut s v lo t)) (s.J+s.U/v+1) = true)
+    (hm : k145All (fun r => decide (k145MomStep s v data r)) (s.U/v+1) = true) :
+    (if slope then supportSlope s v lo else supportBase s v lo) =
+      k145Sum (fun t => k145DiagValue s v lo data t slope) (s.J+s.U/v+1) := by
+  rw [k145Cells, k145Diagonal, k145Sum_eq]
+  apply sum_congr rfl
+  intro t ht
+  have hlt := mem_range.mp ht
+  exact k145OneDiag s v lo data t slope hd hlt (k145All_sound _ _ hc t hlt)
+    (k145All_sound _ _ hm)
+
+private theorem k145BridgeNodeTotal :
+    k145Sum (k145NodeTerm bridgeShape) 1165 = 66215380 := by decide +kernel
+
+private theorem k145BridgePoleTotal :
+    k145Sum (k145PoleTerm bridgeShape) 1165 = 127928356332 := by decide +kernel
+
+private def k145BridgeData : ℕ :=
+  0x800ba760280001ec85ed8e00000b2f439e0080079e26540001ec7e28ca00000b2f34aa007fef85fc540001ec4f6e4a00000b2eda0a007fc249668b0001ebf7078700000b2e2d49007f808f27030001eb7598c300000b2d2e67007f2afc13000001eacbc64000000b2bdd64007ec23313000001e9fa344000000b2a3a40007e46d522bb0001e901870500000b2844fb007db98151230001e7e262d100000b25fd95007d1ad4c0640001e69d6be600000b23640e007c6b6aa5e40001e533468600000b207866007babdc4a430001e3a496f300000b1d3a9d007adcc1095b0001e1f2016f00000b19aab30079feae52400001e01c2a3c00000b15c8a800791237a7400001de23b59c00000b11947c007817ee9de30001dc0947d100000b0d0e2f00771062deeb0001d9cd851d00000b0835c10075fc2226540001d77111c200000b030b320074dbb843540001d4f4920200000afd8e820073afaf185b0001d258aa1f00000af7bfb10072788e9b130001cf9dfe5b00000af19ebf007136dcd4600001ccc532f800000aeb2bac006feb1de0600001c9ceec3800000ae46678006e95d3ee6b0001c6bbce5d00000add4f23006d377f41130001c38c7da900000ad5e5ad006bd09e2e240001c0419e5e00000ace2a16006a61ad1ea40001bcdbd4be00000ac61c5e0068eb268ed30001b95bc50b00000abdbc8500676d830e2b0001b5c2138700000ab50a8b0065e9393f600001b20f647400000aac067000645ebdd8600001ae445c1400000aa2b0340062ce83a2530001aa619ea900000a9907d7006138fb799b0001a667d07500000a8f0d59005f9e944dd40001a25795ba00000a84c0ba005dffbb21d400019e3192ba00000a7a21fa005c5cdb0bab000199f66bb700000a6f3119005ab65d34a3000195a6c4f300000a63ee1700590ca8d9400001914342b000000a5858f400576023494000018ccc893000000a4c71b00055b12fe79b000188433cb500000a40384b005400302a83000183a8018100000a33acc500524d839b6400017efb7bd600000a26cf1e00509987d6e400017a3e4ff600000a199f56004ee4988ce300017571222300000a0c1d6d004d2f0f807b00017094969f000009fe4963004b7944880000016ba951ac000009f023380049c38d8d00000166aff78c000009e1aaec00480e3e8c43000161a92c81000009d2e07f004659a995cb00015c9594cd000009c3c3f10044a61eccd400015775d4b2000009b455420042f3ec67d40001524a9072000009a494720041435eb07b00014d146c4f000009948181003f94c003b3000147d40c8b000009841c6f003de858d1a00001428a156800000973653c003c3e6f9da000013d372b28000009625be8003a9748fe4b000137dbf20d0000095100730038f3279d73000132790e590000093f52dd0037524c382400012d0f244e0000092d53260035b4f59ea40001279ed82e0000091b014e00341b60b47300012228ce3b000009085d55003285c8704b00011cadaab7000008f5673b0030f465dc200001172e11e4000008e21f00002f67701520000111aaa804000008ce84a4002ddf1c4bb300010c241159000008ba9827002c5b9dc37b0001069af225000008a65989002add25d3540001010feeaa00000891c8ca002963e3e5540000fb83ab2a0000087ce5ea0027f00576cb0000f5f6cbe700000867b0e9002681b618430000f069f5230000085229c70025191f6d800000eaddcb200000083c50840023b6692d800000e552f220000008262520002259b9227b0000dfca0e650000080fa79b0021033329e30000da43c431000007f8d7f5001fb2f934640000d4c0b7c6000007e1b62e001e692b45e40000cf418d66000007ca4246001d25e775830000c9c6e953000007b27c3d001be949ed9b0000c4516fcf0000079a6413001ab36cebc00000bee1c51c00000781f9c800198468c0c00000b9788d7c000007693d5c00185c53d0a30000b4166d31000007502ecf00173b4292ab0000aebc087d00000736ce210016214791540000a96a03a20000071d1b5200150e736a540000a42102e2000007031662001402d4ce9b00009ee1aa7f000006e8bf510012fe788253000099ac9ebb000006ce161f001201695ce00000948283d8000006b31acc00110bb048e000008f63fe1800000697cd5800101d54442b00008a51b1bd0000067c2dc3000f365a5fd30000854c4309000006603c0d000e56c5c02400008054563e00000643f836000d7e979ca400007b6a8f9e00000627623e000cadcf40130000768f936b0000060a7a25000be46a086b000071c405e7000005ed3feb000b226366e000006d088b54000005cfb390000a67b4dfe00000685dc7f4000005b1d5140009b4560b13000063c4600900000593a4770009083c935b00005f3cf7d50000057521b90008635c36d400005ac8339a000005564cda0007c5a6c6d400005666b79a0000053725da00072f0c27eb00005219281700000517acb900069f7a51e300004de02953000004f7e177000616dd4fc0000049bc5f90000004d7c4140005951f3fc0000045ae6f10000004b7549000051a28535b000041b6fc150000049692eb0004a5decf4300003dd6aae1000004757f25000438270b6400003a0e1fb600000454193e0003d0e372e40000365dfed600000432613600036ff48423000032c6ec8300000410570d00031538d0bb00002f498cff000003edfac30002c08cfd8000002be6848c000003cb4c58000271cbc2800000289e776c000003a84bcc000228cdeb030000257209e100000384f91f0001e56a558b00002261e02d0000036154510001a775f3d400001f6e9e920000033d5d6200016ec3cad400001c98e95200000319145200013b24f2bb000019e164af000002f4792100010c6896f300001748b4eb000002cf8bcf0000e25bf620000014cf7e48000002aa4c5c0000bcca622000001276650800000284bac800009b7d400b0000103e0d6d0000025ed71300007e3c083300000e271bb900000238a13d000064cc462400000c32342e00000212194600004ef198a400000a5ffb0e000001eb3f2e00003c6db1b3000008b1149b000001c412f500002d00568b0000072625170000019c949b000020675fa0000005bfd0c400000174c4200000165eb8a00000047ebbe40000014ca18400000ea06073000003638ab9000001242cc7000008e4693b0000026ee185000000fb65e9000004e0f854000001a1648a000000d24cea0000024a4654000000fbb80a000000a8e1ca000000d29f0b0000007e80470000007f24890000002a61830000002a61830000005515270000000000000000000000000000002ab3a4000000000000000000000000000000000000
+
+private theorem k145BridgeCuts :
+    k145All (fun t => decide (k145GoodCut bridgeShape 145 2601 t)) 381 = true := by decide +kernel
+
+private theorem k145BridgeMoments :
+    k145All (fun r => decide (k145MomStep bridgeShape 145 k145BridgeData r)) 134 = true := by decide +kernel
+
+private theorem k145BridgeBaseTotal : supportBase bridgeShape 145 2601 = 6540169677973944857928 := by
+  have h := k145Eval bridgeShape 145 2601 k145BridgeData false (by decide) k145BridgeCuts k145BridgeMoments
+  exact h.trans (by decide +kernel)
+
+private theorem k145BridgeSlopeTotal : supportSlope bridgeShape 145 2601 = 30603622655108330 := by
+  have h := k145Eval bridgeShape 145 2601 k145BridgeData true (by decide) k145BridgeCuts k145BridgeMoments
+  exact h.trans (by decide +kernel)
+
+private theorem bridge_test : PositiveSupport bridgeShape 145 2601 := by
+  have hB : bridgeShape.B + 1 = 1165 := rfl
+  rw [PositiveSupport, k145BridgeBaseTotal, k145BridgeSlopeTotal, k145Node_eq, k145Pole_eq, hB]
+  have hn : k145Sum (k145NodeTerm bridgeShape) 1165 = 66215380 := k145BridgeNodeTotal
+  have hp : k145Sum (k145PoleTerm bridgeShape) 1165 = 127928356332 := k145BridgePoleTotal
+  rw [hn, hp]
+  decide +kernel
+
+private theorem k145LowNodeTotal :
+    k145Sum (k145NodeTerm pairedLowShape) 501 = 5210801 := by decide +kernel
+
+private theorem k145LowPoleTotal :
+    k145Sum (k145PoleTerm pairedLowShape) 501 = 4343593800 := by decide +kernel
+
+private def k145LowData : ℕ :=
+  0x41c2e584800001edbe69600000160bb3800041b8d9de800001ed9897e00000160b25200041874383100001ecdb201000001608513000412e6e21100001eb828f100000160318b00040b0c6fc000001e993ae00000015fb7ba0004010acfc000001e7134600000015f17a00003f5070add00001e4062030000015e513d0003e725442d00001e07105b0000015d64910003d788b91000001dc58bfa0000015c519c0003c653c13000001d7c21720000015b185e0003b3a7ce8100001d2b1d5500000159b8d700039fa56d4100001cd2cc3500000158330700038a6c43f800001c737aa40000015686ee0003741b137800001c0d753400000154b48c00035ccfb6dd00001ba1087700000152bbe1000344a7238d00001b2e80ff000001509ced00032bbd693800001ab62b5e0000014e57b00003122db1d800001a3854260000014bec2a0002f81241b1000019b547e9000001495a5b0002dd8477510000192d533900000146a2430002c29ccb90000018a0c2a800000143c3e20002a772d1900000180fe2c800000140bf3800028c1d36bd0000177b002b0000013d9445000270b1c2cd000016e267630000013a43090002554557c000001646650200000136cb84000239ebf1e0000015a7459a000001332db600021eb8a7c10000150555bd0000012f699f000203bdaa4100001460e1fd0000012b7f3f0001e90c4488000013ba36ec000001276e960001ceb4dc0800001311a11c0000012337a40001b4c6f07d000012676d1f0000011eda6900019b511bed000011bbe7870000011a56e50001826112a80000110f5ce600000115ad1800016a03a3480000106219ce00000110dd0200015244b6b100000fb46ad10000010be6a300013b2f501100000f069c8100000106c9fb000124cd8ce000000e58fb7000000101870a00010f28a4e000000dabd430000000fc1dd00000fa48ea1d00000cff7353000000f68e4d0000e635c8ed00000c54256b000000f0d8810000d2f5c7f000000baa370a000000eafc6c0000c08e881000000b01f4c2000000e4fa0e0000af04c48100000a5bab25000000ded16700009e5c52c1000009b7a6c5000000d8827700008e982298000009163434000000d20d3e00007fba3e1800000877a004000000cb71bc000071c3c99d000007dc36c7000000c4aff1000064b503cd00000744450f000000bdc7dd0000588d4598000006b0176e000000b6b98000004d4b02380000061ffa76000000af84da000042ebc731000005943ab9000000a829eb0000396c3c510000050d24c9000000a0a8b3000030c823b00000048b0538000000990132000028fa59b00000040e2898000000913368000021fcd4fd00000396db7b000000893f5500001bc8a68d000003256a730000008124f900001655f9a0000002ba221200000078e4540000119c13c0000002554eea000000707d6600000d9154c1000001f73d8d00000067f02f00000a2b36c1000001a03a8d0000005f3caf0000075e4e2800000150927c0000005662e60000051e49a80000010891ec0000004d62d40000035df23d000000c8856f000000443c790000020f2b2d00000090b9970000003aefd500000122f208000000617af6000000317ce8000000895ea80000003b161e00000027e3b200000031a3310000001dd7a10000001e24330000000a0c110000000a0c11000000143e6b0000000000000000000000000000000a325a000000000000000000000000000000000000
+
+private theorem k145LowCuts :
+    k145All (fun t => decide (k145GoodCut pairedLowShape 99 3555 t)) 174 = true := by decide +kernel
+
+private theorem k145LowMoments :
+    k145All (fun r => decide (k145MomStep pairedLowShape 99 k145LowData r)) 69 = true := by decide +kernel
+
+private theorem k145LowBaseTotal : supportBase pairedLowShape 99 3555 = 63574399551366535744 := by
+  have h := k145Eval pairedLowShape 99 3555 k145LowData false (by decide) k145LowCuts k145LowMoments
+  exact h.trans (by decide +kernel)
+
+private theorem k145LowSlopeTotal : supportSlope pairedLowShape 99 3555 = 284531323985980 := by
+  have h := k145Eval pairedLowShape 99 3555 k145LowData true (by decide) k145LowCuts k145LowMoments
+  exact h.trans (by decide +kernel)
+
+private theorem paired_low_test : PositiveSupport pairedLowShape 99 3555 := by
+  have hB : pairedLowShape.B + 1 = 501 := rfl
+  rw [PositiveSupport, k145LowBaseTotal, k145LowSlopeTotal, k145Node_eq, k145Pole_eq, hB]
+  have hn : k145Sum (k145NodeTerm pairedLowShape) 501 = 5210801 := k145LowNodeTotal
+  have hp : k145Sum (k145PoleTerm pairedLowShape) 501 = 4343593800 := k145LowPoleTotal
+  rw [hn, hp]
+  decide +kernel
+
+private def k145MidData : ℕ :=
+  0x49ca6ad930000176da1b7000000b4508300049c9883700000176d7dd0000000b4502800049b85daf00000176abeb0000000b449200004992018a8000017648b98000000b439180004957508880000175af688000000b420100004909240800000174e1180000000b3fe0800048a8520800000173dee80000000b3d3000004835ad2780000172a9f88000000b39ef800047b204a58000017143698000000b361f0000471e24610000016fac5b0000000b31be8000467ad4d90000016de5ed0000000b2cce000045c8db2c8000016bf13f8000000b274d80004508f91a80000169cf728000000b213d0000443bed020000016781a60000000b1a9c8000436271e20000016508fa0000000b136c0000427d3f5980000162668e8000000b0bab8000418d09a78000015f9b838000000b035b0000409281ab0000015ca8f90000000afa7a80003f8e54e300000159900f0000000af10a00003e812d6e8000015651e58000000ae70980003d6bb20c80000152ef9c8000000adc7900003c4e861c0000014f6a540000000ad15880003b2a499c0000014bc32c0000000ac5a8000039ff992b80000147fb448000000ab967800038cf0e098000014413bd8000000aac97000037993e15000001400db70000000a9f368000365ebbcd0000013bea510000000a914600003520165080000137aaab8000000a82c5800033ddd95e800001334fe68000000a73b5000032988d560000012edb220000000a641480003150b7360000012a4d7e0000000a53e400003006d89d80000125a81a8000000a432380002ebb6fcb80000120ec178000000a31d300002d6ef79f0000011c1a950000000a1ff280002c21e7970000011734b30000000a0d8200002ad4b3d2800001123b9180000009fa8180002987cd108000010d305080000009e6f10000283ba0b000000108141000000009d2d0800026f098b000000102e7f000000009be20000025a71baf800000fdad1080000009a8df8000245f8ced800000f8649180000009930f0000231a4c49000000f30f93000000097cae800021d7b641000000edaf350000000965be0000209823f4800000e84497800000094e3d80001f5beb22800000e2d0da80000009362d00001e235e2a000000dd551e000000091d8c80001ceecc0a000000d7d28200000009045c00001bbe8061800000d24a2680000008ea9b80001a92c36f800000ccbd2b80000008d04b0000196bda13000000c72cb100000008b56a8000184a05cb000000c199d70000000899fa0000172d84b6800000bc05bd800000087df9800016169194800000b671848000000861690000150563c4000000b0de4c000000084448800013fa2f44000000ab4d34000000082698000012f524b3800000a5bf5c800000080857800011f67151800000a035e580000007e987000010fe3efd0000009ab1ef00000007ca268000100cb43500000095349900000007aa3600000f21f4188000008fbf038000000789b580000e3e1e668000008a524e8000000768a500000d614f7e00000084ef9a00000007470480000c8ba05e0000007f98060000000724d400000bbd26a58000007a4cb280000007021380000af5f493800000750ebf80000006dec300000a3619070000006fdf4d00000006bae28000097d9f7f0000006abf7b000000069672000008cc901a80000065b06980000006717180000822ef9880000060b338800000064be100000780bf580000005bc9080000000625c0800006e5fd5800000056f2f800000005ff1000000652a43780000052322880000005d7cf800005c6ab358000004d87b980000005afff00000542063100000048f4cb00000005879e800004c4a5a9000000447a7d000000055eae0000044e76bc8000004019ef80000005352d800003df632a8000003bd442800000050b1d00000377515200000037aa9600000004e07c800003162432000000339e0a00000004b54c000002bbbb698000002fafbe80000004898b80000267f3378000002be0d3800000045d3b0000021aa47b00000028326900000004305a800001d3a4b300000024a59f0000000402ea00000192c5fe800000213b9580000003d4e980000157d71c8000001df56c80000003a65900000122a36c0000001ad444000000037738800000f2f2ec00000017d93c000000034788000000c88a3b800000150574800000031747800000a32a99800000125a0d80000002e6770000008291e50000000fd82700000002b516800000667a9d0000000d80e10000000283260000004e9be08000000b555b8000000250a58000003aa96e8000000956b6800000021d950000002a53a600000007861200000001e9f48000001d478600000005e48e00000001b5c4000000132ead80000004734a8000000181038000000baf5b800000033367800000014bb3000000066c6f0000000226050000000115d2800000030567000000014c4300000000df6200000001166280000000a74180000000a8618000000038208000000038208000000070d10000000000000000000000000000000038b08000000000000000000000000000000000000
+
+private theorem k145MidCuts :
+    k145All (fun t => decide (k145GoodCut pairedMidShape 48 8250 t)) 207 = true := by decide +kernel
+
+private theorem k145MidMoments :
+    k145All (fun r => decide (k145MomStep pairedMidShape 48 k145MidData r)) 102 = true := by decide +kernel
+
+private theorem k145MidBaseTotal : supportBase pairedMidShape 48 8250 = 32981022456096911826 := by
+  have h := k145Eval pairedMidShape 48 8250 k145MidData false (by decide) k145MidCuts k145MidMoments
+  exact h.trans (by decide +kernel)
+
+private theorem k145MidSlopeTotal : supportSlope pairedMidShape 48 8250 = 121187020356472 := by
+  have h := k145Eval pairedMidShape 48 8250 k145MidData true (by decide) k145MidCuts k145MidMoments
+  exact h.trans (by decide +kernel)
+
+private theorem paired_mid_test : PositiveSupport pairedMidShape 48 8250 := by
+  have hB : pairedMidShape.B + 1 = 501 := rfl
+  rw [PositiveSupport, k145MidBaseTotal, k145MidSlopeTotal, k145Node_eq, k145Pole_eq, hB]
+  have hn : k145Sum (k145NodeTerm pairedMidShape) 501 = 5210801 := k145LowNodeTotal
+  have hp : k145Sum (k145PoleTerm pairedMidShape) 501 = 4343593800 := k145LowPoleTotal
+  rw [hn, hp]
+  decide +kernel
+
+private def k145HighData : ℕ :=
+  0x343f8617300000fe090cf00000074e857000343af339000000fdfde6400000074e6a40003428a179000000fdd0ce400000074dfb40003408cfa5700000fd81b8500000074d36b00033dc05e8f00000fd114f900000074c1c900033a2ca6cc00000fc803f200000074aace000335da158c00000fbcf322000000748e7a000330d0cd3700000fafed3b000000746ccd00032b18d01f00000fa0fcef0000007445c7000324ba008000000f902cf000000074196800031dbc208000000f7d87f000000073e7b000031626d22f00000f6918a100000073b09f00030e01978700000f52e9b500000073743500030553d26c00000f3b05de0000007332720002fc24c4ac00000f2177ce00000072eb560002f27b8fff00000f064a37000000729ee10002e85f360700000ee987cb000000724d130002ddd6985000000ecb3b3c00000071f5ec0002d2e8785000000eab6f3c00000071996c0002c79b776700000e8a2e7d0000007137930002bbf616df00000e6783b100000070d0610002affeb7ec00000e43798a0000007063d60002a3bb9bac00000e1e1aba0000006ff1f200029732e32700000df771f30000006f7ab500028a6a8f4f00000dcf89e70000006efe1f00027d68810000000da66d480000006e7c3000027032790000000d7c26c80000006df4e8000262ce17ff00000d50c1190000006d684700025540de9700000d2446ed0000006cd64d000247902d4c00000cf6c2f60000006c3efa000239c1448c00000cc83fe60000006ba24e00022bd944af00000c98c86f0000006b004900021ddd2df700000c6867430000006a58eb00020fd1e09000000c37271400000069ac34000201bc1c9000000c05129400000068fa240001f3a081f700000bd234750000006842bb0001e58390af00000b9e97690000006785f90001d769a88c00000b6a462200000066c3de0001c957094c00000b354b5200000065fc6a0001bb4fd29700000affb1ab000000652f9d0001ad5803ff00000ac983df000000645d7700019f737d0000000a92cca00000006385f8000191a5fd0000000a5b96a000000062a920000183f3234f00000a23ec9100000061c6ef0001765e6f27000009ebd92500000060df65000168eb3fac000009b3670e0000005ff28200015b9cd3ec0000097aa0fe0000005f004600014e764adf0000094191a70000005e08b10001417aa3670000090843bb0000005d0bc3000134acbc50000008cec1ec0000005c097c0001280f54500000089516ec0000005b01dc00011ba50a070000085b4d6d00000059f4e300010f705bff00000821702100000058e29100010373a8ac000007e789ba00000057cae60000f7b12e6c000007ada4ea00000056ade20000ec2b0b8700000773cc63000000558b850000e0e33e2f0000073a0ad70000005463cf0000d5dba480000007006af80000005336c00000cb15fc80000006c6f7780000005204580000c093e41f0000068dbb0900000050cc970000b656d93700000654c05d0000004f8f7d0000ac60398c0000061c12260000004e4d0a0000a2b142cc000005e3bb160000004d053e0000994b128f000005abc5df0000004bb8190000902ea657000005743d330000004a659b0000875cdb900000053d2bc4000000490dc400007ed66f90000005069c4400000047b0940000769bff97000004d09965000000464e0b00006eae08cf0000049b2dd900000044e6290000670ce84c0000046664520000004378ee00005fb8db0c00000432478200000042065a000058b1fdf7000003fee21b000000408e6d000051f84ddf000003cc3ecf0000003f112700004b8ba7800000039a68500000003d8e880000456bc7800000036969500000003c069000003f984a6f000003394c810000003a793f00003a10acc70000030a1c9500000038e695000034d44aec000002dbe43e000000374e9200002fe2612c000002aeae2e00000035b13600002b3a0bbf000002828517000000340e81000026da46c70000025773ab000000326673000022c1ee500000022d849c00000030b90c00001eefbe5000000204c29c0000002f064c00001b6252a7000001dd385d0000002d4e3300001818271f000001b6f0910000002b90c10000150f976c00000191f5ea00000029cdf600001246df2c0000016e531a0000002805d200000fbc19e70000014c12d300000026385500000d6d430f0000012b3fc700000024657f00000b5836000000010be4a8000000228d500000097aae00000000ee0c2800000020afc8000007d2463f000000d1c0f90000001ecce70000065c79d7000000b70dcd0000001ce4ad00000516a3cc0000009dfd560000001af71a000003fdff0c000000869a4600000019042e0000030fa66f00000070ef4f000000170be90000024894b70000005d0723000000150e4b000001a5a4900000004aec74000000130b540000012390900000003aa9f4000000110304000000bef3370000002c4a550000000ef55b0000007446ef0000001fd8490000000ce2590000003fe60c000000155e820000000ac9fe0000001e0acc0000000ce7b200000008ac4a0000000acf57000000067e8b00000006893d000000022dbf000000022dbf0000000460d7000000000000000000000000000000023318000000000000000000000000000000000000
+
+private theorem k145HighCuts :
+    k145All (fun t => decide (k145GoodCut pairedHighShape 37 24000 t)) 211 = true := by decide +kernel
+
+private theorem k145HighMoments :
+    k145All (fun r => decide (k145MomStep pairedHighShape 37 k145HighData r)) 106 = true := by decide +kernel
+
+private theorem k145HighBaseTotal : supportBase pairedHighShape 37 24000 = 22568247839716366500 := by
+  have h := k145Eval pairedHighShape 37 24000 k145HighData false (by decide) k145HighCuts k145HighMoments
+  exact h.trans (by decide +kernel)
+
+private theorem k145HighSlopeTotal : supportSlope pairedHighShape 37 24000 = 76379217149100 := by
+  have h := k145Eval pairedHighShape 37 24000 k145HighData true (by decide) k145HighCuts k145HighMoments
+  exact h.trans (by decide +kernel)
+
+private theorem paired_high_test : PositiveSupport pairedHighShape 37 24000 := by
+  have hB : pairedHighShape.B + 1 = 501 := rfl
+  rw [PositiveSupport, k145HighBaseTotal, k145HighSlopeTotal, k145Node_eq, k145Pole_eq, hB]
+  have hn : k145Sum (k145NodeTerm pairedHighShape) 501 = 5210801 := k145LowNodeTotal
+  have hp : k145Sum (k145PoleTerm pairedHighShape) 501 = 4343593800 := k145LowPoleTotal
+  rw [hn, hp]
+  decide +kernel
+
+end
+
+/-- The strict inequality (T) for all four native terminal subbanks. -/
+theorem proof : K1_14.c5 := by
+  intro w hlo hhi
+  have hw : w ≤ 131071 := by omega
+  by_cases hb : w ≤ 3554
+  · exact test_of_support w
+      (by simp [terminalShape, band, hb, bridgeShape])
+      (by simp [band, hb]) hlo hw bridge_test.1 bridge_test.2
+  by_cases hl : w ≤ 8249
+  · exact test_of_support w
+      (by simp [terminalShape, band, hb, hl, pairedLowShape])
+      (by simp [band, hb, hl]) (by omega) hw paired_low_test.1 paired_low_test.2
+  by_cases hm : w ≤ 23999
+  · exact test_of_support w
+      (by simp [terminalShape, band, hb, hl, hm, pairedMidShape])
+      (by simp [band, hb, hl, hm]) (by omega) hw paired_mid_test.1 paired_mid_test.2
+  · exact test_of_support w
+      (by simp [terminalShape, band, hb, hl, hm, pairedHighShape])
+      (by simp [band, hb, hl, hm]) (by omega) hw paired_high_test.1 paired_high_test.2
+
+end K1_14_5
+end PackSource_K1_14_5Proof
 
 section PackSource_K1_13_7_4_2Aux1
 set_option autoImplicit true

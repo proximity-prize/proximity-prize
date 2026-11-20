@@ -1476,6 +1476,392 @@ theorem budgetE : sumRange 13 (fun i => fastGrade (i + 62)) = 1091325 :=
 end K1_13_1_1
 end PackSource_K1_13_1_1BudgetE
 
+section PackSource_K1_13_8_3Mixed
+set_option autoImplicit true
+namespace K1_13_8_3
+
+open K1_13
+
+/-- Increase the total-degree coordinate while fixing the index and top degree. -/
+private def bump (p : Shape) (d : ℕ) : Shape := ⟨p.b + d, p.j, p.t⟩
+
+def Widen (p q : Shape) : Prop := p.b ≤ q.b ∧ p.j = q.j ∧ p.t = q.t
+
+theorem Widen.refl (p : Shape) : Widen p p := ⟨le_rfl, rfl, rfl⟩
+
+def Admissible (p : Shape) : Prop := 3 * p.t ≤ p.j
+
+private def mixedInt (p q r s : Shape) : ℤ :=
+  difference (difference (difference (difference volume32 p) q) r) s ⟨0, 0, 0⟩
+
+private def slack (p : Shape) : ℤ := (p.j : ℤ) - 3 * (p.t : ℤ)
+
+private def weight (q r s : Shape) : ℤ :=
+  16 * (slack q * slack r * s.t + slack q * slack s * r.t + slack r * slack s * q.t) +
+  48 * (slack q * r.t * s.t + slack r * q.t * s.t + slack s * q.t * r.t) +
+  144 * q.t * r.t * s.t
+
+private theorem weight_nonneg {q r s : Shape}
+    (hq : Admissible q) (hr : Admissible r) (hs : Admissible s) :
+    0 ≤ weight q r s := by
+  have hslack {p : Shape} (hp : Admissible p) : 0 ≤ slack p := by
+    unfold slack
+    have : 3 * p.t ≤ p.j := hp
+    omega
+  have := hslack hq
+  have := hslack hr
+  have := hslack hs
+  unfold weight
+  positivity
+
+set_option maxHeartbeats 0 in
+private theorem mixed_bump (p q r s : Shape) (d : ℕ) :
+    mixedInt (bump p d) q r s = mixedInt p q r s + (d : ℤ) * weight q r s := by
+  simp only [mixedInt, difference, volume32, Shape.plus, bump, weight, slack,
+    Nat.cast_add, Nat.cast_zero]
+  ring
+
+private theorem mixed_first {p p' q r s : Shape} (hp : Widen p p')
+    (hq : Admissible q) (hr : Admissible r) (hs : Admissible s) :
+    mixedInt p q r s ≤ mixedInt p' q r s := by
+  have h : p' = bump p (p'.b - p.b) := by
+    obtain ⟨b, j, t⟩ := p
+    obtain ⟨b', j', t'⟩ := p'
+    obtain ⟨hb, rfl, rfl⟩ := hp
+    simp [bump, Nat.add_sub_of_le hb]
+  rw [h, mixed_bump]
+  exact le_add_of_nonneg_right (mul_nonneg (by positivity) (weight_nonneg hq hr hs))
+
+private theorem commute (h : Shape → ℤ) (p q : Shape) :
+    difference (difference h p) q = difference (difference h q) p := by
+  funext x
+  have hsum : (x.plus q).plus p = (x.plus p).plus q := by
+    cases x
+    cases p
+    cases q
+    simp [Shape.plus, Nat.add_right_comm]
+  unfold difference
+  rw [hsum]
+  ring
+
+private theorem mixed_swap12 (p q r s : Shape) : mixedInt p q r s = mixedInt q p r s := by
+  unfold mixedInt
+  rw [commute volume32 p q]
+
+private theorem mixed_swap23 (p q r s : Shape) : mixedInt p q r s = mixedInt p r q s := by
+  unfold mixedInt
+  rw [commute (difference volume32 p) q r]
+
+private theorem mixed_swap34 (p q r s : Shape) : mixedInt p q r s = mixedInt p q s r := by
+  unfold mixedInt
+  rw [commute (difference (difference volume32 p) q) r s]
+
+theorem Widen.admissible {p q : Shape} (h : Widen p q) (hp : Admissible p) : Admissible q := by
+  unfold Admissible at *
+  simpa only [← h.2.1, ← h.2.2] using hp
+
+theorem mixed_widen {p p' q q' r r' s s' : Shape}
+    (hp : Widen p p') (hq : Widen q q') (hr : Widen r r') (hs : Widen s s')
+    (vp : Admissible p) (vq : Admissible q) (vr : Admissible r) (vs : Admissible s) :
+    mixed32 p q r s ≤ mixed32 p' q' r' s' := by
+  change (mixedInt p q r s).toNat ≤ (mixedInt p' q' r' s').toNat
+  apply Int.toNat_le_toNat
+  have vp' := hp.admissible vp
+  have vq' := hq.admissible vq
+  have vr' := hr.admissible vr
+  calc
+    mixedInt p q r s ≤ mixedInt p' q r s := mixed_first hp vq vr vs
+    _ ≤ mixedInt p' q' r s := by
+      rw [mixed_swap12 p', mixed_swap12 p']
+      exact mixed_first hq vp' vr vs
+    _ ≤ mixedInt p' q' r' s := by
+      rw [mixed_swap23 p' q' r, mixed_swap23 p' q' r', mixed_swap12 p' r,
+        mixed_swap12 p' r']
+      exact mixed_first hr vp' vq' vs
+    _ ≤ mixedInt p' q' r' s' := by
+      rw [mixed_swap34 p' q' r' s, mixed_swap34 p' q' r' s',
+        mixed_swap23 p' q' s, mixed_swap23 p' q' s', mixed_swap12 p' s,
+        mixed_swap12 p' s']
+      exact mixed_first hs vp' vq' vr'
+
+end K1_13_8_3
+end PackSource_K1_13_8_3Mixed
+
+section PackSource_K1_13_8_3Prices
+set_option autoImplicit true
+namespace K1_13_8_3
+
+open K1_13 K1_13_8
+
+private theorem Widen.plus {p p' q q' : Shape} (hp : Widen p p') (hq : Widen q q') :
+    Widen (p.plus q) (p'.plus q') :=
+  ⟨Nat.add_le_add hp.1 hq.1, congrArg₂ Nat.add hp.2.1 hq.2.1, congrArg₂ Nat.add hp.2.2 hq.2.2⟩
+
+private theorem Widen.scale {p p' : Shape} (hp : Widen p p') (d : ℕ) :
+    Widen (p.scale d) (p'.scale d) :=
+  ⟨Nat.mul_le_mul_left _ hp.1, congrArg (fun n => d * n) hp.2.1,
+    congrArg (fun n => d * n) hp.2.2⟩
+
+private theorem chamber_widen {p p' : Shape} (hp : Widen p p') :
+    Widen p.chamber p'.chamber :=
+  ⟨max_le_max hp.1 (le_of_eq hp.2.1), hp.2⟩
+
+private theorem chart_widen {p p' : Shape} (hp : Widen p p') (L : ℕ) :
+    Widen (chart L p) (chart L p') := by
+  have hb := Nat.mul_le_mul_left (2 * L) (Nat.sub_le_sub_right hp.1 1)
+  simp only [Widen, chart, hp.2.1, hp.2.2]
+  exact ⟨max_le_max (Nat.add_le_add_left hb _) le_rfl, trivial, trivial⟩
+
+private theorem lifted_widen {p p' : Shape} (hp : Widen p p') (L : ℕ) :
+    Widen (liftedChart L p) (liftedChart L p') := by
+  have hb := Nat.mul_le_mul_left (L - 5) (Nat.sub_le_sub_right hp.1 1)
+  simp only [Widen, liftedChart, hp.2.1, hp.2.2]
+  exact ⟨max_le_max (Nat.add_le_add_left hb _) le_rfl, trivial, trivial⟩
+
+private theorem admissible_min (i t : ℕ) : 3 * min t (i / 3) ≤ i := by
+  have := min_le_right t (i / 3)
+  omega
+
+private theorem chart_admissible (L : ℕ) (p : Shape) : Admissible (chart L p) :=
+  admissible_min _ _
+
+private theorem lifted_admissible (L : ℕ) (p : Shape) : Admissible (liftedChart L p) :=
+  admissible_min _ _
+
+private def graph (p : Shape) : Shape :=
+  ⟨max p.b (p.j + 1), p.j + 1, min (p.t + 1) ((p.j + 1) / 3)⟩
+
+private theorem graph_widen {p p' : Shape} (hp : Widen p p') : Widen (graph p) (graph p') := by
+  simp only [Widen, graph, hp.2.1, hp.2.2]
+  exact ⟨max_le_max hp.1 le_rfl, trivial, trivial⟩
+
+private theorem graph_admissible (p : Shape) : Admissible (graph p) :=
+  admissible_min _ _
+
+private abbrev bank : Shape := ⟨4013, 1650, 550⟩
+
+private theorem bank_admissible : Admissible bank := by
+  change 3 * 550 ≤ 1650
+  decide
+
+private theorem surface_widen {p p' : Shape} (hp : Widen p p') (vp : Admissible p) :
+    surfaceNumerator32 p bank ≤ surfaceNumerator32 p' bank := by
+  let L := taylorLength
+  have mix {r r' s s' : Shape} (hr : Widen r r') (hs : Widen s s')
+      (vr : Admissible r) (vs : Admissible s) :
+      mixed32 p bank r s ≤ mixed32 p' bank r' s' :=
+    mixed_widen hp (Widen.refl _) hr hs vp bank_admissible vr vs
+  have direct := mix (chart_widen hp (L + 1)) (chart_widen hp (L + 2))
+    (chart_admissible _ _) (chart_admissible _ _)
+  have lift := mix (lifted_widen hp (L + 1)) (lifted_widen hp (L + 2))
+    (lifted_admissible _ _) (lifted_admissible _ _)
+  have graph₁ := mix (graph_widen hp) (lifted_widen hp (L + 2))
+    (graph_admissible _) (lifted_admissible _ _)
+  have graph₂ := mix (graph_widen hp) (lifted_widen hp (L + 1))
+    (graph_admissible _) (lifted_admissible _ _)
+  exact min_le_min direct <| Nat.add_le_add
+    (Nat.add_le_add lift (Nat.mul_le_mul_left _ graph₁)) (Nat.mul_le_mul_left _ graph₂)
+
+private theorem ceil_mono {a b : ℕ} (h : a ≤ b) (d : ℕ) : ceilDiv a d ≤ ceilDiv b d :=
+  Nat.div_le_div_right (Nat.sub_le_sub_right (Nat.add_le_add_right h d) 1)
+
+private theorem physical_widen {x x' : Shape} (hx : Widen x x') (vx : Admissible x)
+    (l : ℕ) : physicalPrice x l ≤ physicalPrice x' l := by
+  let p := x.chamber
+  let p' := x'.chamber
+  let h := chart taylorLength p
+  let h' := chart taylorLength p'
+  let extra := bank.plus (p.scale 4)
+  let extra' := bank.plus (p'.scale 4)
+  have hp : Widen p p' := chamber_widen hx
+  have vp : Admissible p := vx
+  have hh : Widen h h' := chart_widen hp _
+  have vh : Admissible h := chart_admissible _ _
+  have hextra : Widen extra extra' := (Widen.refl bank).plus (hp.scale 4)
+  have vextra : Admissible extra := by
+    have hpj : 3 * p.t ≤ p.j := vp
+    change 3 * (550 + 4 * p.t) ≤ 1650 + 4 * p.j
+    omega
+  have surface := ceil_mono (surface_widen hp vp) 32
+  have component := ceil_mono (Nat.mul_le_mul
+    (Nat.mul_le_mul_right bank.b (Nat.mul_le_mul_left (81879 + 2 * 46594) hx.1))
+    (chart_widen hp (taylorLength + 1)).1) 46594
+  have curves := Nat.add_le_add
+    (mixed_widen hp (Widen.refl bank) hextra hh vp bank_admissible vextra vh)
+    (Nat.mul_le_mul (le_of_eq (congrArg (fun t => 2 * t) hx.2.2))
+      (mixed_widen hp hp hp hh vp vp vp vh))
+  have points := Nat.add_le_add
+    (mixed_widen hp (Widen.refl bank) hextra hp vp bank_admissible vextra vp)
+    (Nat.mul_le_mul (le_of_eq (congrArg (fun t => 2 * t) hx.2.2))
+      (mixed_widen hp hp hp hp vp vp vp vp))
+  exact Nat.add_le_add (Nat.add_le_add (ceil_mono (Nat.add_le_add surface component) l)
+    (Nat.mul_le_mul_right bank.b (Nat.mul_le_mul_left (2 * 133671) hx.1)))
+    (ceil_mono (Nat.add_le_add (Nat.mul_le_mul_left 81879 curves)
+      (Nat.mul_le_mul_left (2 * 46594) points)) (32 * 46594))
+
+/-- Uniform cost per unit of the derivative-index budget. -/
+def rate : ℕ := 4114266963186215
+
+section
+set_option maxRecDepth 32768
+set_option maxHeartbeats 0
+
+-- Each index has its own kernel check over the ten possible top degrees.
+private abbrev capPriceRow (j : ℕ) : Prop :=
+  ∀ t : Fin 10, 0 < t.val → 3 * t.val ≤ j →
+    physicalPrice ⟨119, j, t.val⟩ (indexOrder j) ≤ rate * j
+
+private theorem capPriceRow0 : capPriceRow 0 := by decide +kernel
+private theorem capPriceRow1 : capPriceRow 1 := by decide +kernel
+private theorem capPriceRow2 : capPriceRow 2 := by decide +kernel
+private theorem capPriceRow3 : capPriceRow 3 := by decide +kernel
+private theorem capPriceRow4 : capPriceRow 4 := by decide +kernel
+private theorem capPriceRow5 : capPriceRow 5 := by decide +kernel
+private theorem capPriceRow6 : capPriceRow 6 := by decide +kernel
+private theorem capPriceRow7 : capPriceRow 7 := by decide +kernel
+private theorem capPriceRow8 : capPriceRow 8 := by decide +kernel
+private theorem capPriceRow9 : capPriceRow 9 := by decide +kernel
+private theorem capPriceRow10 : capPriceRow 10 := by decide +kernel
+private theorem capPriceRow11 : capPriceRow 11 := by decide +kernel
+private theorem capPriceRow12 : capPriceRow 12 := by decide +kernel
+private theorem capPriceRow13 : capPriceRow 13 := by decide +kernel
+private theorem capPriceRow14 : capPriceRow 14 := by decide +kernel
+private theorem capPriceRow15 : capPriceRow 15 := by decide +kernel
+private theorem capPriceRow16 : capPriceRow 16 := by decide +kernel
+private theorem capPriceRow17 : capPriceRow 17 := by decide +kernel
+private theorem capPriceRow18 : capPriceRow 18 := by decide +kernel
+private theorem capPriceRow19 : capPriceRow 19 := by decide +kernel
+private theorem capPriceRow20 : capPriceRow 20 := by decide +kernel
+private theorem capPriceRow21 : capPriceRow 21 := by decide +kernel
+private theorem capPriceRow22 : capPriceRow 22 := by decide +kernel
+private theorem capPriceRow23 : capPriceRow 23 := by decide +kernel
+private theorem capPriceRow24 : capPriceRow 24 := by decide +kernel
+private theorem capPriceRow25 : capPriceRow 25 := by decide +kernel
+private theorem capPriceRow26 : capPriceRow 26 := by decide +kernel
+private theorem capPriceRow27 : capPriceRow 27 := by decide +kernel
+private theorem capPriceRow28 : capPriceRow 28 := by decide +kernel
+private theorem capPriceRow29 : capPriceRow 29 := by decide +kernel
+private theorem capPriceRow30 : capPriceRow 30 := by decide +kernel
+private theorem capPriceRow31 : capPriceRow 31 := by decide +kernel
+private theorem capPriceRow32 : capPriceRow 32 := by decide +kernel
+private theorem capPriceRow33 : capPriceRow 33 := by decide +kernel
+private theorem capPriceRow34 : capPriceRow 34 := by decide +kernel
+private theorem capPriceRow35 : capPriceRow 35 := by decide +kernel
+private theorem capPriceRow36 : capPriceRow 36 := by decide +kernel
+private theorem capPriceRow37 : capPriceRow 37 := by decide +kernel
+private theorem capPriceRow38 : capPriceRow 38 := by decide +kernel
+private theorem capPriceRow39 : capPriceRow 39 := by decide +kernel
+private theorem capPriceRow40 : capPriceRow 40 := by decide +kernel
+private theorem capPriceRow41 : capPriceRow 41 := by decide +kernel
+private theorem capPriceRow42 : capPriceRow 42 := by decide +kernel
+private theorem capPriceRow43 : capPriceRow 43 := by decide +kernel
+private theorem capPriceRow44 : capPriceRow 44 := by decide +kernel
+private theorem capPriceRow45 : capPriceRow 45 := by decide +kernel
+
+private theorem prices_at_cap : ∀ (j : Fin 46) (t : Fin 10),
+    0 < t.val → 3 * t.val ≤ j.val →
+      physicalPrice ⟨119, j.val, t.val⟩ (indexOrder j.val) ≤ rate * j.val := by
+  intro j
+  fin_cases j
+  · exact capPriceRow0
+  · exact capPriceRow1
+  · exact capPriceRow2
+  · exact capPriceRow3
+  · exact capPriceRow4
+  · exact capPriceRow5
+  · exact capPriceRow6
+  · exact capPriceRow7
+  · exact capPriceRow8
+  · exact capPriceRow9
+  · exact capPriceRow10
+  · exact capPriceRow11
+  · exact capPriceRow12
+  · exact capPriceRow13
+  · exact capPriceRow14
+  · exact capPriceRow15
+  · exact capPriceRow16
+  · exact capPriceRow17
+  · exact capPriceRow18
+  · exact capPriceRow19
+  · exact capPriceRow20
+  · exact capPriceRow21
+  · exact capPriceRow22
+  · exact capPriceRow23
+  · exact capPriceRow24
+  · exact capPriceRow25
+  · exact capPriceRow26
+  · exact capPriceRow27
+  · exact capPriceRow28
+  · exact capPriceRow29
+  · exact capPriceRow30
+  · exact capPriceRow31
+  · exact capPriceRow32
+  · exact capPriceRow33
+  · exact capPriceRow34
+  · exact capPriceRow35
+  · exact capPriceRow36
+  · exact capPriceRow37
+  · exact capPriceRow38
+  · exact capPriceRow39
+  · exact capPriceRow40
+  · exact capPriceRow41
+  · exact capPriceRow42
+  · exact capPriceRow43
+  · exact capPriceRow44
+  · exact capPriceRow45
+
+end
+
+private theorem edge_le_physical (a : Shape) (l : ℕ) : edgePrice a l ≤ physicalPrice a l := by
+  unfold edgePrice
+  split
+  · exact min_le_left _ _
+  · exact le_rfl
+
+theorem charged_price {y a : Shape} (ha : Valid a)
+    (hb : InBox (start.plus (y.plus a)) fullCap) :
+    edgePrice a (indexOrder (y.plus a).j) ≤ rate * a.j := by
+  have hb' : 1 + (y.b + a.b) ≤ 120 := hb.1
+  have hj' : 3 + (y.j + a.j) ≤ 48 := hb.2.1
+  have ht' : 1 + (y.t + a.t) ≤ 10 := hb.2.2
+  have hab : a.b ≤ 119 := by omega
+  have hwiden : Widen a ⟨119, a.j, a.t⟩ := ⟨hab, rfl, rfl⟩
+  have hjle : a.j ≤ (y.plus a).j := Nat.le_add_left _ _
+  have hle := edgePrice_anti a (l := indexOrder a.j) (u := indexOrder (y.plus a).j)
+    (indexOrder_pos a.j) (indexOrder_mono hjle)
+  have hprice := physical_widen hwiden ha.2.1 (indexOrder a.j)
+  let j : Fin 46 := ⟨a.j, by omega⟩
+  let t : Fin 10 := ⟨a.t, by omega⟩
+  have hcap := prices_at_cap j t ha.1 ha.2.1
+  exact hle.trans ((edge_le_physical a (indexOrder a.j)).trans (hprice.trans hcap))
+
+end K1_13_8_3
+end PackSource_K1_13_8_3Prices
+
+section PackSource_K1_13_8_3Proof
+set_option autoImplicit true
+namespace K1_13_8_3
+
+open K1_13 K1_13_8
+
+/-- Unspent index is enough to pay for every later factor. -/
+private def potential (y : Shape) : ℕ := rate * (45 - y.j)
+
+theorem proof : K1_13_8.c3 := by
+  change Bellman start 185142013343379695
+  refine ⟨potential, fun x => indexOrder x.j, by decide, ?_, ?_⟩
+  · intro x _ _
+    exact checked_order x
+  · intro y a _ ha hb
+    have hbox : 3 + (y.j + a.j) ≤ 48 := hb.2.1
+    have hbalance : a.j + (45 - (y.j + a.j)) = 45 - y.j := by omega
+    apply (Nat.add_le_add_right (charged_price ha hb) _).trans
+    change rate * a.j + rate * (45 - (y.j + a.j)) ≤ rate * (45 - y.j)
+    rw [← Nat.mul_add, hbalance]
+
+end K1_13_8_3
+end PackSource_K1_13_8_3Proof
+
 section PackSource_K1_13_2_3_3Proof
 set_option autoImplicit true
 set_option Elab.async false
@@ -5130,6 +5516,49 @@ theorem derivative_in_box (f : Row 4) (j : ℕ) :
 end
 end K1_13_7_1
 end PackSource_K1_13_7_1Derivatives
+
+section PackSource_K1_13_6_1_1Proof
+set_option autoImplicit true
+namespace K1_13_6_1_1
+noncomputable section
+open Polynomial K1_13 K1_13_6 K1_13_6_1
+
+private theorem exists_nonzero_at_mark {f : Row 4} {S : Geom[X]}
+    (hf : SmallFactor f) (hon : OnFactor f S) :
+    ∃ k ≤ (shape f).t, atJet ((separant^[k]) f) S ≠ 0 := by
+  by_cases hz : atJet (separant f) S = 0
+  · obtain ⟨j, _, hj, _, hr⟩ := K1_13_7_1.regular_derivative f S hf hon hz
+    exact ⟨j + 1, Nat.succ_le_of_lt hj, by simpa only [Function.iterate_succ_apply'] using hr⟩
+  · exact ⟨1, hf.2.1, by simpa only [Function.iterate_one] using hz⟩
+
+theorem proof : K1_13_6_1.c1 := by
+  classical
+  intro f surface S hf hon hfmem hmark
+  obtain ⟨k, hkt, hk⟩ := exists_nonzero_at_mark hf hon
+  have hkSurface : toGeneric ((separant^[k]) f) ∉ surface :=
+    fun h => hk (mem_markIdeal.mp (hmark h))
+  have hex : ∃ i, toGeneric ((separant^[i]) f) ∉ surface := ⟨k, hkSurface⟩
+  let n := Nat.find hex
+  have hn : toGeneric ((separant^[n]) f) ∉ surface := Nat.find_spec hex
+  have hnt : n ≤ (shape f).t := (Nat.find_min' hex hkSurface).trans hkt
+  have hn0 : n ≠ 0 := by
+    intro h
+    exact hn (by simpa only [h, Function.iterate_zero_apply] using hfmem)
+  have hstep : (n - 1).succ = n := by omega
+  have hsep : separant ((separant^[n - 1]) f) = (separant^[n]) f := by
+    rw [← Function.iterate_succ_apply' separant (n - 1) f, hstep]
+  refine ⟨n - 1, ⟨by omega, ?_, ?_⟩, ?_⟩
+  · intro i hi
+    by_contra h
+    exact Nat.find_min hex (show i < n by omega) h
+  · rwa [hsep]
+  · rw [hsep]
+    obtain ⟨hb, hj, ht⟩ := K1_13_7_1.derivative_in_box f n
+    exact ⟨hb.trans (le_max_left _ _), hj, ht⟩
+
+end
+end K1_13_6_1_1
+end PackSource_K1_13_6_1_1Proof
 
 section PackSource_K1_13_7Defs
 set_option autoImplicit true

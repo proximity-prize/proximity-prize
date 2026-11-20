@@ -3216,6 +3216,139 @@ theorem proof : K1_13_4_3.c1 := by
 end K1_13_4_3_1
 end PackSource_K1_13_4_3_1Proof
 
+section PackSource_K1_2_1Shifts
+set_option autoImplicit true
+set_option backward.isDefEq.respectTransparency false
+set_option maxHeartbeats 1000000
+
+namespace K1_2_1
+
+open Polynomial Matrix FrobeniusLocator K1_6
+
+/-- After a coefficient projection, a nonzero block gives a triangular shift minor.
+The same construction works in a residue field and at the leading seed coefficient. -/
+private theorem exists_projected_shift_minor {A E : Type} [CommRing A] [Field E]
+    (P : Fin 2 → A[X]) (h s : ℕ) (f : A → E) (hf : f 0 = 0)
+    (hP : ∀ b, (P b).natDegree ≤ h)
+    (hnonzero : ∃ i : Fin 2 × Fin (h + 1), f ((P i.1).coeff i.2.val) ≠ 0) :
+    ∃ rows : Fin s → Fin 2 × Fin (h + s),
+      (((shifts P (h + s) s).submatrix rows id).map f).det ≠ 0 := by
+  obtain ⟨⟨b, i⟩, hi⟩ := hnonzero
+  let Q : E[X] := Principal.assemble (fun j : Fin (h + 1) => f ((P b).coeff j.val))
+  have hQcoeff (j : ℕ) : Q.coeff j = f ((P b).coeff j) := by
+    by_cases hj : j < h + 1
+    · exact Principal.assemble_coeff _ ⟨j, hj⟩
+    · rw [coeff_eq_zero_of_natDegree_lt (p := Q)
+        (Principal.assemble_natDegree_le _ |>.trans_lt (by omega)),
+        coeff_eq_zero_of_natDegree_lt (p := P b) ((hP b).trans_lt (by omega)), hf]
+  have hQ : Q ≠ 0 := by
+    intro hz
+    exact hi ((hQcoeff i.val).symm.trans (by rw [hz, coeff_zero]))
+  let d := Q.natDegree
+  have hd : d ≤ h := Principal.assemble_natDegree_le _
+  let rows (j : Fin s) : Fin 2 × Fin (h + s) := (b, ⟨d + j.val, by have := j.isLt; omega⟩)
+  let B := ((shifts P (h + s) s).submatrix rows id).map f
+  have htri : B.IsUpperTriangular := by
+    intro j k hjk
+    change k.val < j.val at hjk
+    change f (((P b) * (Polynomial.X : A[X]) ^ k.val).coeff (d + j.val)) = 0
+    rw [coeff_mul_X_pow', ite_eq_left (by omega), ← hQcoeff]
+    exact coeff_eq_zero_of_natDegree_lt (p := Q) (show d < d + j.val - k.val by omega)
+  refine ⟨rows, ?_⟩
+  change B.det ≠ 0
+  rw [Matrix.det_of_isUpperTriangular htri]
+  apply Finset.prod_ne_zero_iff.mpr
+  intro j _
+  change f (((P b) * (Polynomial.X : A[X]) ^ j.val).coeff (d + j.val)) ≠ 0
+  rw [coeff_mul_X_pow, ← hQcoeff, coeff_natDegree]
+  exact leadingCoeff_ne_zero.mpr hQ
+
+theorem shift_minors_primitive {F : Type} [Field F] (P : Fin 2 → F[X][X])
+    (h s : ℕ) (hP : ∀ b, (P b).natDegree ≤ h)
+    (hprim : PrimitiveVector.IsPrimitive (pairCoordinates P h)) :
+    PrimitiveVector.IsPrimitive (maximalMinors (shifts P (h + s) s)) := by
+  classical
+  by_contra hn
+  obtain ⟨J, hJ, hIJ⟩ := Ideal.exists_le_maximal
+    (Ideal.span (Set.range (maximalMinors (shifts P (h + s) s)))) hn
+  let : J.IsMaximal := hJ
+  let : Field (F[X] ⧸ J) := Ideal.Quotient.field J
+  let φ := Ideal.Quotient.mk J
+  have hnz : ∃ i, φ (pairCoordinates P h i) ≠ 0 := by
+    by_contra hnz
+    push Not at hnz
+    obtain ⟨a, ha⟩ := (PrimitiveVector.primitive_iff_bezout _).mp hprim
+    have hh := congrArg φ ha
+    simp only [map_sum, map_mul, hnz, mul_zero, Finset.sum_const_zero, map_one] at hh
+    exact zero_ne_one hh
+  obtain ⟨rows, hrows⟩ := exists_projected_shift_minor P h s φ (map_zero φ) hP hnz
+  apply hrows
+  rw [← RingHom.mapMatrix_apply, ← φ.map_det]
+  exact Ideal.Quotient.eq_zero_iff_mem.mpr (hIJ (Ideal.subset_span (Set.mem_range_self rows)))
+
+/-- The coefficient of degree sH is the determinant of the matrix of H-th coefficients. -/
+private theorem coeff_det_uniform {F : Type} [Field F] {s : ℕ}
+    (M : Matrix (Fin s) (Fin s) F[X]) (H : ℕ)
+    (hM : ∀ i j, (M i j).natDegree ≤ H) :
+    M.det.coeff (s * H) = (M.map (fun Q => Q.coeff H)).det := by
+  classical
+  rw [Matrix.det_apply, Matrix.det_apply, Polynomial.finsetSum_coeff]
+  apply Finset.sum_congr rfl
+  intro σ _
+  rw [Polynomial.coeff_smul]
+  congr 1
+  simpa only [Finset.card_univ, Fintype.card_fin, Matrix.map_apply] using
+    Polynomial.coeff_prod_of_natDegree_le (Finset.univ : Finset (Fin s))
+      (fun i => M (σ i) i) H (fun i _ => hM (σ i) i)
+
+theorem shift_minors_height {F : Type} [Field F] (P : Fin 2 → F[X][X])
+    (h s : ℕ) (hP : ∀ b, (P b).natDegree ≤ h)
+    (hprim : PrimitiveVector.IsPrimitive (pairCoordinates P h)) :
+    ∃ H : ℕ, (∀ b j, ((P b).coeff j).natDegree ≤ H) ∧
+      ∃ rows : Fin s → Fin 2 × Fin (h + s),
+        (maximalMinors (shifts P (h + s) s) rows).natDegree = s * H := by
+  classical
+  let Q := pairCoordinates P h
+  let S := Finset.univ.filter fun i => Q i ≠ 0
+  have hS : S.Nonempty := by
+    obtain ⟨i, hi⟩ := PrimitiveVector.exists_eval_ne_zero Q hprim 0
+    exact ⟨i, Finset.mem_filter.mpr ⟨Finset.mem_univ _, fun hz => hi (by simp [hz])⟩⟩
+  let H := S.sup fun i => (Q i).natDegree
+  have hH (b : Fin 2) (j : ℕ) : ((P b).coeff j).natDegree ≤ H := by
+    by_cases hn : (P b).coeff j = 0
+    · simp [hn]
+    have hj : j < h + 1 := by
+      have := le_natDegree_of_ne_zero hn
+      have := hP b
+      omega
+    exact Finset.le_sup (s := S) (f := fun i => (Q i).natDegree)
+      (Finset.mem_filter.mpr ⟨Finset.mem_univ _, show Q (b, ⟨j, hj⟩) ≠ 0 from hn⟩)
+  obtain ⟨i, hi, hmax⟩ := Finset.exists_mem_eq_sup S hS (fun i => (Q i).natDegree)
+  have htop : (Q i).coeff H ≠ 0 := by
+    change H = (Q i).natDegree at hmax
+    rw [hmax, coeff_natDegree]
+    exact leadingCoeff_ne_zero.mpr (Finset.mem_filter.mp hi).2
+  obtain ⟨rows, hrows⟩ :=
+    exists_projected_shift_minor P h s (fun Q => Q.coeff H) (coeff_zero _) hP ⟨i, htop⟩
+  let M := (shifts P (h + s) s).submatrix rows id
+  have hM (i j) : (M i j).natDegree ≤ H := by
+    change (((P (rows i).1) * (Polynomial.X : F[X][X]) ^ j.val).coeff (rows i).2.val).natDegree ≤ H
+    rw [coeff_mul_X_pow']
+    split_ifs
+    · exact hH _ _
+    · simp
+  have hcoeff : M.det.coeff (s * H) ≠ 0 := by
+    rw [coeff_det_uniform M H hM]
+    exact hrows
+  have hdeg := natDegree_det_le_row_sum M (fun _ => H) hM
+  refine ⟨H, hH, rows, ?_⟩
+  change M.det.natDegree = s * H
+  apply natDegree_eq_of_le_of_coeff_ne_zero _ hcoeff
+  simpa only [Finset.sum_const, Finset.card_univ, Fintype.card_fin, smul_eq_mul] using hdeg
+
+end K1_2_1
+end PackSource_K1_2_1Shifts
+
 section PackSource_K1_13_6_2_3_2_5Differences
 set_option autoImplicit true
 set_option autoImplicit false
@@ -4322,6 +4455,107 @@ theorem proof : K1_13_6_1_4_2_1_1.c1 := by
 end K1_13_6_1_4_2_1_1_1
 end PackSource_K1_13_6_1_4_2_1_1_1Proof
 
+section PackSource_K1_12_1Proof
+set_option autoImplicit true
+set_option maxRecDepth 8000
+set_option maxHeartbeats 800000
+set_option backward.isDefEq.respectTransparency false
+
+namespace K1_12_1
+noncomputable section
+
+open Polynomial K1
+
+/-- The two pencils in the shared plane are jointly primitive, so the
+constant contents in the parallel presentation are coprime. -/
+private theorem coprime_contents {u T R D} (B : RankThree u T R D)
+    (P : K1_10.Plane u (fixedNodes R) D.height (K1_10.leftCoeff B) (K1_10.rightCoeff B)) :
+    IsCoprime B.a B.b := by
+  apply (gcd_isUnit_iff _ _).mp
+  apply P.primitive
+  · intro i
+    exact (gcd_dvd_left B.a B.b).trans (dvd_mul_right _ _)
+  · intro j
+    rw [K1_10.rightCoeff, dvd_neg]
+    exact (gcd_dvd_right B.a B.b).trans (dvd_mul_right _ _)
+
+private theorem plane_height {u T R D} (B : RankThree u T R D)
+    (P : K1_10.Plane u (fixedNodes R) D.height (K1_10.leftCoeff B) (K1_10.rightCoeff B))
+    (par : Parallel B) (hdeg : B.b.natDegree = B.a.natDegree) :
+    D.height = B.a.natDegree + amplitudeDegree (B.α 0) (B.α 1) := by
+  let s := amplitudeDegree (B.α 0) (B.α 1)
+  have hA (i : Fin 2) : (B.α i).natDegree ≤ s := by
+    fin_cases i
+    · exact le_max_left _ _
+    · exact le_max_right _ _
+  have hL (i : Fin 2) : (K1_10.leftCoeff B i).natDegree ≤ B.a.natDegree + s := by
+    change B.α = B.β at par
+    unfold K1_10.leftCoeff
+    rw [← par]
+    exact natDegree_mul_le_of_le le_rfl (natDegree_map_le.trans (hA i))
+  have hR (j : Fin 2) : (K1_10.rightCoeff B j).natDegree ≤ B.a.natDegree + s := by
+    rw [K1_10.rightCoeff, natDegree_neg, ← hdeg]
+    exact natDegree_mul_le_of_le le_rfl (hA j)
+  have hmax := max_le (max_le (hL 0) (hL 1)) (max_le (hR 0) (hR 1))
+  exact le_antisymm (P.height_eq ▸ hmax) (hdeg ▸ B.second_degree)
+
+private theorem plane_nodes {u T R D} (B : RankThree u T R D)
+    (P : K1_10.Plane u (fixedNodes R) D.height (K1_10.leftCoeff B) (K1_10.rightCoeff B))
+    (par : Parallel B) (x : I) (hx : x ∉ fixedNodes R) (i j : Fin 2) :
+    (P.output j i).eval (node x) =
+      B.a.eval (node x) * ((B.α i).map twist).eval (node x) * u j x -
+      B.b.eval (node x) * (B.α j).eval (node x) * twist (u i x) := by
+  change B.α = B.β at par
+  simpa only [K1_10.leftCoeff, K1_10.rightCoeff, eval_mul, eval_neg, neg_mul,
+    ← sub_eq_add_neg, ← par, twist, frobenius_def] using (P.nodes x hx j i).symm
+
+/-- Construct the homogeneous direction with the four output lifts on the
+actual puncture. -/
+theorem proof : K1_12.c1 := by
+  intro u hu T R D B _ par hnorm _
+  obtain ⟨P⟩ := K1_10.plane_of_rankThree B
+  obtain ⟨den, hden, hphase, hnodes⟩ := denominator B.b_ne hnorm
+  have hden' : den.map twist ≠ 0 := (Polynomial.map_ne_zero_iff twist.injective).mpr hden
+  have hdeg := congrArg (fun Q : K[X] => Q.natDegree) hphase
+  change (B.a * den.map twist).natDegree = (B.b * den).natDegree at hdeg
+  rw [natDegree_mul B.a_ne hden', natDegree_mul B.b_ne hden,
+    natDegree_map_eq_of_injective twist.injective] at hdeg
+  have hdeg' : B.b.natDegree = B.a.natDegree := by omega
+  have hcop := coprime_contents B P
+  have hheight := plane_height B P par hdeg'
+  have hdvd : B.a ∣ den := hcop.dvd_of_dvd_mul_left
+    (hphase ▸ dvd_mul_right B.a (den.map twist))
+  have hbudget : T.height ≤ 32680 := by
+    have hr := hu.1
+    have hd := T.degreeSum
+    have hn := T.nullitySum
+    unfold TwoActive.height
+    omega
+  exact ⟨{
+    den := den
+    U := B.a
+    V := B.b
+    A := B.α
+    out := fun i j => P.output j i
+    den_nodes := hnodes
+    U_ne := B.a_ne
+    V_ne := B.b_ne
+    U_dvd := hdvd
+    coprime := hcop
+    phase := hphase
+    degrees_eq := hdeg'
+    primitive := B.α_primitive
+    height := by rwa [← hheight, D.height_eq]
+    out_degree := by
+      intro i j
+      simpa only [hheight, ← Nat.add_assoc] using P.output_degree j i
+    nodes := plane_nodes B P par
+  }⟩
+
+end
+end K1_12_1
+end PackSource_K1_12_1Proof
+
 section PackSource_K1_13_6_1_5_2_1Proof
 set_option autoImplicit true
 set_option autoImplicit false
@@ -4417,6 +4651,123 @@ theorem proof : K1_13_2_3.c4 := by
 
 end K1_13_2_3_4
 end PackSource_K1_13_2_3_4Proof
+
+section PackSource_K1_13_5_3Proof
+set_option autoImplicit true
+namespace K1_13_5_3
+noncomputable section
+
+open K1 K1_13 K1_13_5 Polynomial PolynomialDifferential
+open scoped BigOperators
+
+private theorem plane_capped (f : Row 2) :
+    plane f ∈ MvPolynomial.restrictCappedDegree (Fin 2) CenterField 1
+      f.totalDegree (indexDegree f) := by
+  intro m hm
+  have hf := MvPolynomial.support_map_subset toCenter f hm
+  exact ⟨MvPolynomial.le_totalDegree hf,
+    (MvPolynomial.monomial_le_degreeOf 1 hf).trans (degreeOf_le_index f)⟩
+
+private def nodeCut (w : I → K) (f : Row 2) (i : I) : MvPolynomial (Fin 2) CenterField :=
+  taylorAgreementEquation center (chart f) taylorLength exponent
+    (constants (embed (node i))) (constants (embed (w i)))
+
+private theorem nodeCut_capped (w : I → K) (f : Row 2)
+    (hB : f.totalDegree ≤ 5064) (hJ : indexDegree f ≤ 1104) (i : I) :
+    nodeCut w f i ∈ MvPolynomial.restrictCappedDegree (Fin 2) CenterField 1
+      chartTotal chartTop := by
+  have ht : (nodeCut w f i).totalDegree ≤ chartTotal := by
+    refine (totalDegree_taylorAgreementEquation_le center (chart f)
+      exponent_sufficient _ _).trans ?_
+    exact Nat.add_le_add_left (Nat.mul_le_mul_left exponent
+      (Nat.sub_le_sub_right ((chart_degree f).trans hB) 1)) 1
+  refine mem_capped _ ht (le_min ((MvPolynomial.degreeOf_le_totalDegree _ _).trans ht) ?_)
+  exact degreeOf_taylorAgreementEquation_firstOrder_le center (chart f) 1104
+    taylorLength exponent exponent_sufficient (by decide)
+    ((chart_top f).trans ((degreeOf_le_index f).trans hJ)) _ _
+
+private theorem nodeCut_vanishes {w : I → K} {f : Row 2} {S : K[X]}
+    (hreg : RegularAt 1 f (extend S)) (hD : S.natDegree ≤ 133671) (i : I) :
+    MvPolynomial.aeval (marked (extend S)) (nodeCut w f i) = 0 ↔
+      S.eval (node i) = w i := by
+  rw [nodeCut, chart_cut_agreement hreg (Polynomial.natDegree_map_le.trans hD),
+    Polynomial.eval_map_apply, embed.injective.eq_iff]
+
+/-- The generic first-order curve of a single factor supplies a node capacity. -/
+private theorem factor_capacity {w Γ s} (h : Messages w Γ s) (f : Row 2)
+    (hf : Irreducible f) (hp : 0 < f.degreeOf 1)
+    (hB : f.totalDegree ≤ 5064) (hJ : indexDegree f ≤ 1104)
+    (hreg : ∀ γ ∈ Γ, RegularAt 1 f (extend (s γ))) :
+    NodeCapacity w Γ s
+      (MvPolynomial.cappedDegreeMixedVolume f.totalDegree (indexDegree f) chartTotal chartTop) := by
+  classical
+  let P := Ideal.span {plane f}
+  let x (γ : K) := marked (extend (s γ))
+  have hx : Set.InjOn x (Γ : Set K) := by
+    intro γ hγ η hη heq
+    exact h.distinct hγ hη (Polynomial.map_injective embed embed.injective (marked_injective heq))
+  have hxg : ∀ γ ∈ Γ, MvPolynomial.aeval (x γ) (plane f) = 0 := by
+    intro γ hγ
+    change MvPolynomial.aeval (marked (extend (s γ))) (plane f) = 0
+    rw [aeval_plane, (hreg γ hγ).1, map_zero]
+  have hxe (γ : K) (hγ : γ ∈ Γ) (i : I) :
+      MvPolynomial.aeval (x γ) (nodeCut w f i) = 0 ↔ (s γ).eval (node i) = w i :=
+    nodeCut_vanishes (hreg γ hγ) (h.degree γ hγ) i
+  refine ⟨Finset.univ.filter (fun i => nodeCut w f i ∈ P), ?_, ?_⟩
+  · intro i hi γ hγ
+    apply (hxe γ hγ i).mp
+    obtain ⟨q, hq⟩ := Ideal.mem_span_singleton.mp (Finset.mem_filter.mp hi).2
+    rw [hq, map_mul, hxg γ hγ, zero_mul]
+  · intro i hi
+    have hi' : nodeCut w f i ∉ P := by
+      intro hh
+      exact hi (Finset.mem_filter.mpr ⟨Finset.mem_univ _, hh⟩)
+    let hits := Γ.filter fun γ => (s γ).eval (node i) = w i
+    have hh : (hits.image x).card ≤ _ := capped_cut_card (by decide : 0 < chartTotal)
+      (by decide : 0 < chartTop) (plane_ne_zero hf.ne_zero) (plane_prime hf hp)
+      (plane_capped f) (nodeCut_capped w f hB hJ i) hi' (hits.image x) (by
+        intro z hz
+        obtain ⟨γ, hγ, rfl⟩ := Finset.mem_image.mp hz
+        obtain ⟨hm, hh⟩ := Finset.mem_filter.mp hγ
+        exact ⟨hxg γ hm, (hxe γ hm i).mpr hh⟩)
+    rwa [Finset.card_image_of_injOn (hx.mono (Finset.filter_subset _ _))] at hh
+
+/-- The first-order regular factors give a cover with the mixed-area capacity budget. -/
+theorem proof : K1_13_5.c3 := by
+  classical
+  intro w Γ s h n f hf hregular
+  let part (i : Fin n) := Γ.filter fun γ => RegularAt 1 (f i) (extend (s γ))
+  let cap (i : Fin n) :=
+    MvPolynomial.cappedDegreeMixedVolume (f i).totalDegree (indexDegree (f i)) chartTotal chartTop
+  have hsub : ∀ i, part i ⊆ Γ := fun _ => Finset.filter_subset _ _
+  have hlocal : ∀ i, NodeCapacity w (part i) s (cap i) := by
+    intro i
+    apply factor_capacity (h.mono (hsub i)) (f i) (hf.irreducible i) (hf.positive i)
+    · exact (Finset.single_le_sum (fun j _ => Nat.zero_le (f j).totalDegree)
+        (Finset.mem_univ i)).trans hf.total
+    · exact (Finset.single_le_sum (fun j _ => Nat.zero_le (indexDegree (f j)))
+        (Finset.mem_univ i)).trans hf.index
+    · exact fun γ hγ => (Finset.mem_filter.mp hγ).2
+  let C : NodeFamily w Γ s := ⟨n, part, cap, hsub, hlocal⟩
+  refine ⟨C, ?_, ?_, ?_⟩
+  · intro γ hγ
+    obtain ⟨i, hi⟩ := hregular γ hγ
+    exact Finset.mem_biUnion.mpr ⟨i, Finset.mem_univ _, Finset.mem_filter.mpr ⟨hγ, hi⟩⟩
+  · change n ≤ 5064
+    calc
+      n = ∑ _ : Fin n, 1 := by simp
+      _ ≤ ∑ i, (f i).totalDegree := Finset.sum_le_sum fun i _ =>
+        (Nat.succ_le_of_lt (hf.positive i)).trans (MvPolynomial.degreeOf_le_totalDegree _ _)
+      _ ≤ 5064 := hf.total
+  · change (∑ i, cap i) ≤ firstMixedBudget
+    simp only [cap, MvPolynomial.cappedDegreeMixedVolume, Finset.sum_add_distrib,
+      ← Finset.sum_mul]
+    exact (Nat.add_le_add (Nat.mul_le_mul_right chartTop hf.total)
+      (Nat.mul_le_mul_right (chartTotal - chartTop) hf.index)).trans (by decide)
+
+end
+end K1_13_5_3
+end PackSource_K1_13_5_3Proof
 
 section PackSource_K1_14_4Cutoffs
 set_option autoImplicit true
@@ -4589,6 +4940,34 @@ end
 end K1_14_4
 end PackSource_K1_14_4Cutoffs
 
+section PackSource_K1_14_4Proof
+set_option autoImplicit true
+namespace K1_14_4
+
+open K1_14 Finset
+
+/-- The oversized seed degree loses at least the sum of the graded
+seed slots specified by the subbank test. -/
+theorem proof : K1_14.c4 := by
+  intro w hlo hhi f hf hm hbad
+  obtain ⟨V, hfloor, hrows⟩ := hm
+  have hne : f ≠ 0 := by
+    intro h
+    have hd := hf.1
+    simp [h] at hd
+  have hv : (band w).seedBound + 1 ≤ seedDegree f :=
+    Nat.succ_le_of_lt (Nat.lt_of_not_ge (fun h => hbad ((seedDegree_le_iff _ _).mp h)))
+  have hk : 0 < 131071 - w.toNat := by omega
+  have hceil :
+      (∑ W ∈ range ((band w).multiplicity * 180265), Module.finrank FX (V W)) ≤
+        ∑ W ∈ range ((band w).multiplicity * 180265), cutoffCapacity w W :=
+    sum_le_sum fun W hW => cutoff_finrank_le w W (V W) hne hv hk (hrows W (mem_range.mp hW))
+  have h := sum_cutoffCapacity_add_seedGain w hlo hhi
+  omega
+
+end K1_14_4
+end PackSource_K1_14_4Proof
+
 section PackSource_K1_13_7_5_2Aux1
 set_option autoImplicit true
 namespace K1_13_7_5_2
@@ -4671,6 +5050,28 @@ theorem nonlinear_coefficients (f : Row 4) (hf : SmallFactor f) (ht : (shape f).
 end
 end K1_13_7_5_2
 end PackSource_K1_13_7_5_2Aux1
+
+section PackSource_K1_13_7_5_2Proof
+set_option autoImplicit true
+namespace K1_13_7_5_2
+noncomputable section
+
+open Polynomial K1_13 K1_13_7 K1_13_7_1
+
+theorem proof : K1_13_7_5.c2 := by
+  intro f hf
+  have hTaylor : ∃ T : TaylorChart, T.Fits (fatChart (shape f)) ∧
+      ∀ S : Geom[X], atJet f S = 0 → RegularAt f S → T.Recovers S := by
+    by_cases ht : (shape f).t = 1
+    · exact linear_coefficients f ht
+    · exact nonlinear_coefficients f hf ht
+  obtain ⟨T, hBox, hTaylor⟩ := hTaylor
+  obtain ⟨C, hC⟩ := values_of_coefficients T hBox
+  exact ⟨C, fun S hd hOn hReg => hC S hd (hTaylor (extend S) hOn.1 hReg)⟩
+
+end
+end K1_13_7_5_2
+end PackSource_K1_13_7_5_2Proof
 
 section PackSource_K1_13_7_2_3_2Split
 set_option autoImplicit true

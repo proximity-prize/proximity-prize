@@ -3371,6 +3371,39 @@ end
 end K1_2_4_2
 end PackSource_K1_2_4_2Proof
 
+section PackSource_K1_2_3Proof
+set_option autoImplicit true
+set_option autoImplicit false
+set_option backward.isDefEq.respectTransparency false
+set_option maxRecDepth 12000
+
+namespace K1_2_3
+
+open Finset Matrix FrobeniusLocator K1 K1_2
+
+theorem proof : K1_2.c3 := by
+  intro u D Γ r g hr hr16 hg F Q hreg J hJ hnon
+  obtain ⟨hH, hR, hRp, hsize⟩ := child_parameters r g hr hr16 hg
+  obtain ⟨hsub, hJc⟩ := Finset.mem_powersetCard.mp hJ
+  have hD : (D \ J).card = 131072 + childRows r + childErrors r g := by
+    rw [Finset.card_sdiff_of_subset hsub, F.domain_card, hJc, hsize]
+  have hmark := fun γ hγ => child_mark F hr hr16 hg (γ := γ) (J := J) hγ
+  have hrank (γ : K) (hγ : γ ∈ childSlopes F J) :=
+    evaluated_rank Q (Finset.sdiff_subset : D \ J ⊆ D) hH hR hD γ
+      (hreg γ (hmark γ hγ).1) (F.decoder γ) (hmark γ hγ).2.1 (hmark γ hγ).2.2.1
+  refine ⟨hD, le_antisymm ?_ ?_, ?_⟩
+  · exact plane_rank_le u (D \ J) (childRows r) (childErrors r g) hRp
+      (formal_graph_rank_le Q Finset.sdiff_subset hH hD)
+  · obtain ⟨γ, hγ⟩ := hnon
+    exact (hrank γ hγ).ge.trans
+      (rank_ge_specialization _ (onGraph γ) _ (IsFractionRing.injective Bivar (FractionRing Bivar)))
+  · intro γ hγ
+    obtain ⟨_, hdegree, hE, hbad⟩ := hmark γ hγ
+    exact ⟨hdegree, hE, hbad, hrank γ hγ⟩
+
+end K1_2_3
+end PackSource_K1_2_3Proof
+
 section PackSource_K1_14_3_2RSplit
 set_option autoImplicit true
 set_option backward.isDefEq.respectTransparency false
@@ -5631,6 +5664,248 @@ theorem proof : K1_14_3R_2.c4 :=
 end K1_14_3R_2_4
 end PackSource_K1_14_3R_2_4Proof
 
+section PackSource_K1_14_2_2RSplit
+set_option autoImplicit true
+set_option backward.isDefEq.respectTransparency false
+set_option maxSynthPendingDepth 8
+set_option maxHeartbeats 1500000
+
+namespace K1_14_2_2R
+
+noncomputable section
+
+open K1 K1_14 K1_14_2 K1_14_2_2 Polynomial
+open scoped Classical
+open private selectPair cut_shape_valid equationFor equation_caps from ProximityPrize.SubmissionLower.Pack_K1_14_2_2Split
+
+private theorem passing_mass (h3 : K1_14_2_2.c3)
+    (gcds : K1_14_2_2_4.c1) (cancel : K1_14_2_2_4.c3)
+    (lengths : K1_14_2_2_4.c4) (sections : K1_14_2_2_4.c5)
+    {u del} {M : AnchorModel u del} {Γ} {F : AnchoredFamily M Γ} {rows : Banks}
+    (hsrc : JetSource M F rows) (hlo : 2601 ≤ M.overhead) (hhi : M.overhead ≤ 3554)
+    (i : Fin 10) (hi : 0 < i.val) (B : RowPair M.overhead rows i) (A : FixedPair B)
+    (S : Finset (Ideal Ambient)) (hgeom : ∀ I ∈ S, Active I)
+    (hcap : Fits S (budget (i.val-1))) :
+    let R := S.filter (retainPair A)
+    (i.val ≤ 4 → Fits R (exitBudget i)) ∧ Fits (R.filter dual) (budget i.val) := by
+  apply retained_mass gcds cancel lengths sections _ _ i B A _ hi (fits_mono (Finset.filter_subset _ _) hcap)
+  intro I hI
+  obtain ⟨hm, hg⟩ := Finset.mem_filter.mp hI
+  have hI' := hgeom I hm
+  have hcontact (s : Shape) (hs : s ∈ stagePair i) (hv : bankVanishes rows s I)
+      (P : Jet) (hp : P ∈ rows s (bufferedAt M.overhead (stageAt i).reserve s)) :
+      orderOn I P ((stageAt i).reserve+1) := by
+    have hs' := pair_scheduled hhi i hs
+    have hres : (stageAt i).reserve < p := by fin_cases i <;> decide
+    have hfit := buffered_fits hhi i hs
+    have hsum : bufferedAt M.overhead (stageAt i).reserve s +
+        2 * M.overhead.toNat * (stageAt i).reserve ≤ fullCutoff s := by
+      change fullCutoff s - 2*M.overhead.toNat*(stageAt i).reserve + _ ≤ fullCutoff s
+      omega
+    exact h3 _ rows s I (by omega) hI'
+      (hsrc.nested s hs' s hs' rfl rfl rfl le_rfl)
+      (hsrc.shift s hs') hv _ _ P hres hsum hp
+  exact ⟨hI', hg, hcontact _ (by simp [stagePair]) hg.1.1 _ B.cheap_mem,
+    hcontact _ (by simp [stagePair]) hg.1.2.1 _ B.layered_mem⟩
+
+private def stay {w rows} {pairs : ∀ i : Fin 10, RowPair w rows i}
+    (parts : ∀ i : Fin 10, FixedPair (pairs i)) (n : ℕ) (I : Ideal Ambient) : Prop :=
+  if hn : n < 10 then retainPair (parts ⟨n, hn⟩) I ∧ (n = 4 → dual I)
+  else bankVanishes rows full I
+
+private theorem after_four {w rows} {pairs : ∀ i : Fin 10, RowPair w rows i}
+    (parts : ∀ i : Fin 10, FixedPair (pairs i)) (start : Finset (Ideal Ambient)) :
+    ∀ n, 4 ≤ n → ∀ I ∈ timeline start (stay parts) n, dual I := by
+  intro n hn I hI
+  have h4 := timeline_antitone start (stay parts) hn hI
+  change I ∈ (timeline start (stay parts) 3).filter (stay parts 4) at h4
+  have hp := (Finset.mem_filter.mp h4).2
+  simp only [stay, dite_eq_left (by decide : (4 : ℕ) < 10)] at hp
+  exact hp.2 trivial
+
+theorem of_children (h2 : K1_14_2_2.c2) (h3 : K1_14_2_2.c3)
+    (gcds : K1_14_2_2_4.c1) (cancel : K1_14_2_2_4.c3)
+    (lengths : K1_14_2_2_4.c4) (sections : K1_14_2_2_4.c5)
+    (h5 : K1_14_2_2.c5) (h7 : K1_14_2_2.c7) : K1_14_2.c2 := by
+  classical
+  intro u del M Γ F hlo hhi rows hsrc hbuf
+  let pairs (i : Fin 10) : RowPair M.overhead rows i :=
+    Classical.choice (selectPair hhi hsrc hbuf i)
+  let parts (i : Fin 10) : FixedPair (pairs i) :=
+    ⟨Classical.choice (K1_14_2_2_1.proof _ _ (pairs i).cheap_ne (pairs i).cheap_caps),
+     Classical.choice (K1_14_2_2_1.proof _ _ (pairs i).layered_ne (pairs i).layered_caps)⟩
+  obtain ⟨initial⟩ := h2 u del M Γ F rows (pairs 0) (parts 0) (by
+    intro γ hγ
+    exact ⟨hsrc.necessary _ (pair_scheduled hhi 0 (by simp [stagePair]))
+        _ (buffer_lt 0 (by simp [stagePair]) _) _ (pairs 0).cheap_mem γ hγ,
+      hsrc.necessary _ (pair_scheduled hhi 0 (by simp [stagePair]))
+        _ (buffer_lt 0 (by simp [stagePair]) _) _ (pairs 0).layered_mem γ hγ⟩)
+  let S := timeline initial.parents (stay parts)
+  have hsub (n : ℕ) : S (n+1) ⊆ S n := timeline_succ _ _ _
+  have hactive (n : ℕ) : ∀ I ∈ S n, Active I :=
+    fun I hI => initial.geometric I (timeline_antitone _ _ (Nat.zero_le n) hI)
+  have hdual (n : ℕ) (hn : 4 ≤ n) : ∀ I ∈ S n, dual I :=
+    after_four parts initial.parents n hn
+  have hcap (n : ℕ) (hn : n < 10) : Fits (S n) (budget n) := by
+    induction n with
+    | zero => exact initial.initial_mass
+    | succ n ih =>
+      let i : Fin 10 := ⟨n+1, hn⟩
+      let R := (S n).filter (retainPair (parts i))
+      have hb := passing_mass h3 gcds cancel lengths sections hsrc hlo hhi i (by simp [i]) (pairs i) (parts i)
+        (S n) (hactive n) (ih (by omega))
+      have hs (I) (hI : I ∈ S (n+1)) : I ∈ R := by
+        change I ∈ (S n).filter (stay parts (n+1)) at hI
+        obtain ⟨hm, hp⟩ := Finset.mem_filter.mp hI
+        have hp' : retainPair (parts i) I ∧ (n+1 = 4 → dual I) := by
+          simpa only [stay, dite_eq_left hn, i] using hp
+        exact Finset.mem_filter.mpr ⟨hm, hp'.1⟩
+      by_cases hfour : 4 ≤ n+1
+      · apply fits_mono (T := R.filter dual) _ hb.2
+        exact fun I hI => Finset.mem_filter.mpr ⟨hs I hI, hdual _ hfour I hI⟩
+      · have hh := hb.1 (by dsimp [i]; omega)
+        have he : exitBudget i = budget (n+1) := by
+          simp [exitBudget, i, show n+1 ≠ 4 by omega]
+        rw [he] at hh
+        exact fits_mono hs hh
+  let exitPool := (S 3).filter (retainPair (parts 4))
+  let rankOne := exitPool.filter (fun I => ¬ dual I)
+  have hexit : Fits exitPool (exitBudget 4) :=
+    (passing_mass h3 gcds cancel lengths sections hsrc hlo hhi 4 (by decide) (pairs 4) (parts 4)
+      (S 3) (hactive 3) (hcap 3 (by decide))).1 (by decide)
+  have hrank := fits_mono (Finset.filter_subset (fun I => ¬ dual I) exitPool) hexit
+  obtain ⟨rank, hrankCaps, hrankOn⟩ := h5 rankOne
+    (fun I hI => ⟨hactive 3 I ((Finset.mem_filter.mp ((Finset.mem_filter.mp hI).1)).1),
+      (Finset.mem_filter.mp hI).2⟩) (hrank 1) (hrank 2)
+  let equation := equationFor parts rank
+  let removed (n : ℕ) :=
+    (S n \ S (n+1)).filter (fun I => ¬ stagePass pairs (n+1) I)
+  have hstep (n : ℕ) (hn : n < 10) : ∃ C : CutCover,
+      (∀ fee, C.cost fee ≤ dot (weight (cutShape (n+1)) fee) (mass (removed n))) ∧
+      ∀ γ ∈ Γ, (∃ I ∈ removed n, OnParent M F I γ) → C.covers M F γ := by
+    apply combineCuts (removed n) (cutShape (n+1))
+    intro I hI
+    obtain ⟨hsd, hf⟩ := Finset.mem_filter.mp hI
+    obtain ⟨P, hP, hproper, hzero⟩ :=
+      failed_stage hhi hsrc pairs (n+1) I hf
+    obtain ⟨C, hcost, hcover⟩ :=
+      h7 u del M Γ F (cutShape (n+1)) I P (cut_shape_valid _)
+        (hactive n I (Finset.mem_sdiff.mp hsd).1) hP hproper
+    exact ⟨C, hcost, fun γ hγ hmark => hcover γ hγ hmark (hzero γ hγ hmark)⟩
+  let stepCuts (n : ℕ) : CutCover := if hn : n < 10 then Classical.choose (hstep n hn) else emptyCut
+  have hstepCuts (n : ℕ) (hn : n < 10) :
+      (∀ fee, (stepCuts n).cost fee ≤ dot (price fee (n+1)) (mass (removed n))) ∧
+      ∀ γ ∈ Γ, (∃ I ∈ removed n, OnParent M F I γ) → (stepCuts n).covers M F γ := by
+    simpa only [stepCuts, dite_eq_left hn, price, Nat.succ_ne_zero, ite_false] using
+      Classical.choose_spec (hstep n hn)
+  let cuts := joinCuts (Finset.range 10) stepCuts
+  have hcutCap (fee : Fin 3) : cuts.cost fee ≤ feeCap fee := by
+    calc
+      _ ≤ ∑ n ∈ Finset.range 10, (stepCuts n).cost fee := joinCuts_cost _ _ _
+      _ ≤ ∑ n ∈ Finset.range 10, dot (price fee (n+1)) (mass (S n \ S (n+1))) := by
+        apply Finset.sum_le_sum
+        intro n hn
+        exact ((hstepCuts n (Finset.mem_range.mp hn)).1 fee).trans
+          (dot_mono _ _ _ (mass_mono (Finset.filter_subset _ _)))
+      _ ≤ ledger fee 10 :=
+        (Nat.le_add_right _ _).trans (loss_ledger S fee le_rfl (fun i _ => hsub i) hcap)
+      _ ≤ _ := ledger_cap fee
+  have hfollow (γ : K) (hγ : γ ∈ Γ) (I : Ideal Ambient)
+      (hI : I ∈ initial.parents) (hmark : OnParent M F I γ) (n : ℕ) (hn : n ≤ 10) :
+      I ∈ S n ∨ (∃ t, fixedAt (equation t) (F.scalar γ) = 0) ∨ cuts.covers M F γ := by
+    induction n with
+    | zero => exact Or.inl hI
+    | succ n ih =>
+      rcases ih (by omega) with hm | hp
+      · by_cases hout : I ∈ S (n+1)
+        · exact Or.inl hout
+        right
+        have hfail : ¬ stay parts (n+1) I :=
+          fun h => hout (Finset.mem_filter.mpr ⟨hm, h⟩)
+        by_cases ht : stagePass pairs (n+1) I
+        · by_cases hi : n+1 < 10
+          · let i : Fin 10 := ⟨n+1, hi⟩
+            have htest : pairPass (pairs i) I := by
+              simpa only [stagePass, dite_eq_left hi, i] using ht
+            by_cases hcheap : fixedOn (parts i).cheap.equation I
+            · exact Or.inl ⟨cheapTag i, fixed_on_mark hmark hcheap⟩
+            by_cases hlayer : fixedOn (parts i).layered.equation I
+            · exact Or.inl ⟨layeredTag i, fixed_on_mark hmark hlayer⟩
+            have hgood : retainPair (parts i) I := ⟨htest, hcheap, hlayer⟩
+            have hbad : ¬ (n+1 = 4 → dual I) := by
+              intro h
+              exact hfail (by simpa only [stay, dite_eq_left hi, i] using And.intro hgood h)
+            have he : n+1 = 4 := by
+              by_contra hne
+              exact hbad (fun h => (hne h).elim)
+            have hd : ¬ dual I := fun hd => hbad (fun _ => hd)
+            have hnj : n = 3 := by omega
+            subst n
+            have hp : I ∈ rankOne :=
+              Finset.mem_filter.mpr ⟨Finset.mem_filter.mpr ⟨hm, hgood⟩, hd⟩
+            exact Or.inl ⟨rankTag, fixed_on_mark hmark (hrankOn I hp)⟩
+          · exact (hfail (by simpa only [stagePass, stay, dite_eq_right hi] using ht)).elim
+        · have hrem : I ∈ removed n :=
+            Finset.mem_filter.mpr ⟨Finset.mem_sdiff.mpr ⟨hm, hout⟩, ht⟩
+          exact Or.inr (joinCuts_covers (Finset.mem_range.mpr (by omega))
+            ((hstepCuts n (by omega)).2 γ hγ ⟨I, hrem, hmark⟩))
+      · exact Or.inr hp
+  have hterminal (I : Ideal Ambient) (hI : I ∈ S 10) : bankVanishes rows full I := by
+    change I ∈ (S 9).filter (stay parts 10) at hI
+    simpa only [stay, dite_eq_right (by decide : ¬ (10 : ℕ) < 10)] using (Finset.mem_filter.mp hI).2
+  let parents : RetainedParents rows :=
+    ⟨S 10, fun I hI => (hactive 10 I hI).prime,
+      fun I hI => (hactive 10 I hI).seed_finite, fun I hI => (hactive 10 I hI).seed_size,
+      fun I hI => (hactive 10 I hI).jet_finite,
+      fun I hI => ⟨hdual 10 (by decide) I hI, (hactive 10 I hI).jet_lt⟩, hterminal⟩
+  let kept := Γ.filter (fun γ => ∃ I ∈ parents.ideals, OnParent M F I γ)
+  let lost := Γ.filter (fun γ => ∃ I ∈ cuts.curves, OnParent M F I γ)
+  let fixedGroups (k : ℕ × ℕ) :=
+    Γ.filter (fun γ => ∃ t, tagKey t = k ∧ fixedAt (equation t) (F.scalar γ) = 0)
+  have hfixed (t : FixedTag) (γ : K) (hγ : γ ∈ Γ)
+      (hzero : fixedAt (equation t) (F.scalar γ) = 0) :
+      ∃ k ∈ fixedKeys, γ ∈ fixedGroups k :=
+    ⟨tagKey t, tagKey_mem t, Finset.mem_filter.mpr ⟨hγ, t, rfl, hzero⟩⟩
+  refine ⟨{
+    direct := initial.direct ∪ cuts.direct
+    lost := lost
+    kept := kept
+    fixedGroups := fixedGroups
+    parents := parents
+    direct_card := ?_
+    fixed_eq := ?_
+    lost_subset := Finset.filter_subset _ _
+    loss_cover := ?_
+    kept_subset := Finset.filter_subset _ _
+    kept_cover := fun γ hγ => (Finset.mem_filter.mp hγ).2
+    cover := ?_
+  }⟩
+  · exact (Finset.card_union_le _ _).trans
+      ((Nat.add_le_add initial.direct_card (hcutCap 2)).trans direct_cap)
+  · intro k hk
+    obtain ⟨t, rfl⟩ := tagKey_exists hk
+    obtain ⟨hne, hj, hb⟩ := equation_caps parts hrankCaps t
+    refine ⟨Finset.filter_subset _ _, equation t, hne, hj, hb, ?_⟩
+    intro γ hγ
+    obtain ⟨t', he, hz⟩ := (Finset.mem_filter.mp hγ).2
+    simpa only [tagKey_injective he] using hz
+  · exact ⟨cuts.curves, cuts.geometric, hcutCap 0, hcutCap 1,
+      fun γ hγ => (Finset.mem_filter.mp hγ).2⟩
+  · intro γ hγ
+    rcases initial.cover γ hγ with hd | hc | hl | ⟨I, hI, hm⟩
+    · exact Or.inl (Finset.mem_union_left _ hd)
+    · exact Or.inr (Or.inl (hfixed (cheapTag 0) γ hγ hc))
+    · exact Or.inr (Or.inl (hfixed (layeredTag 0) γ hγ hl))
+    · rcases hfollow γ hγ I hI hm 10 le_rfl with hk | ⟨t, hf⟩ | hd | ⟨J, hJ, hJm⟩
+      · exact Or.inr (Or.inr (Or.inr (Finset.mem_filter.mpr ⟨hγ, I, hk, hm⟩)))
+      · exact Or.inr (Or.inl (hfixed t γ hγ hf))
+      · exact Or.inl (Finset.mem_union_right _ hd)
+      · exact Or.inr (Or.inr (Or.inl (Finset.mem_filter.mpr ⟨hγ, J, hJ, hJm⟩)))
+
+end
+end K1_14_2_2R
+end PackSource_K1_14_2_2RSplit
+
 section PackSource_K1_13_4_2_3_1Proof
 set_option autoImplicit true
 namespace K1_13_4_2_3_1
@@ -7479,6 +7754,113 @@ end
 
 end K1_13_5_1
 end PackSource_K1_13_5_1Budget
+
+section PackSource_K1_13_5_1Proof
+set_option autoImplicit true
+namespace K1_13_5_1
+
+noncomputable section
+
+open K1_13 K1_13_5 MvPolynomial UniqueFactorizationMonoid
+open scoped Polynomial BigOperators
+
+theorem proof : K1_13_5.c1 := by
+  classical
+  intro g hg
+  obtain ⟨hg₀, hgt, hgi, hgw⟩ := hg
+  let _ : StrongNormalizationMonoid (Row 3) := UniqueFactorizationMonoid.strongNormalizationMonoid
+  let A := normalizedFactors g
+  let T := A.toFinset
+  let c (f : Row 3) := (view f).natDegree
+  let P := T.filter fun f => 0 < c f
+  let n := Fintype.card ↥P
+  let e : Fin n ≃ ↥P := (Fintype.equivFin ↥P).symm
+  let f : Fin n → Row 3 := fun i => (e i).val
+  let q : Row 2 := ∏ a ∈ T, elimination a
+  have hmem (a : Row 3) (ha : a ∈ T) : a ∈ A := Multiset.mem_toFinset.mp ha
+  have hirr (a : Row 3) (ha : a ∈ T) : Irreducible a :=
+    irreducible_of_normalized_factor a (hmem a ha)
+  have hf (i : Fin n) : f i ∈ T ∧ 0 < c (f i) := Finset.mem_filter.mp (e i).property
+  have hdvd : (∏ a ∈ T, a) ∣ g :=
+    (Multiset.toFinset_prod_dvd_prod A).trans (prod_normalizedFactors hg₀).dvd
+  have hsum (w : Fin 3 → ℕ) :
+      (∑ a ∈ T, a.weightedTotalDegree w) ≤ g.weightedTotalDegree w :=
+    sum_weightedTotalDegree_le_of_prod_dvd w T id hg₀ hdvd
+  have htop (a : Row 3) : c a = a.degreeOf 2 := view_degree a
+  have hc : ∑ a ∈ T, c a ≤ 24 := by
+    have hbound : g.weightedTotalDegree (fun i => i.val) ≤ 48 :=
+      (K1_13_1.indexDegree_eq g) ▸ hgi
+    have h : 2 * (∑ a ∈ T, c a) ≤ 48 := calc
+      _ = ∑ a ∈ T, (2 * c a) := Finset.mul_sum T c 2
+      _ ≤ ∑ a ∈ T, a.weightedTotalDegree (fun i => i.val) := by
+        apply Finset.sum_le_sum
+        intro a _
+        exact (Nat.le_add_left _ _).trans (view_coeff_weight (fun i => i.val) a (c a) le_rfl)
+      _ ≤ _ := (hsum _).trans hbound
+    omega
+  have he₀ (a : Row 3) (ha : a ∈ T) : elimination a ≠ 0 := by
+    have hca : c a ≤ 24 := (Finset.single_le_sum (fun i _ => Nat.zero_le (c i)) ha).trans hc
+    exact elimination_ne_zero (hirr a ha) (hca.trans_lt (by decide))
+  have hq (w : Fin 3 → ℕ) (B : ℕ) (hb : g.weightedTotalDegree w ≤ B)
+      (hB : w 2 * 24 ≤ B) :
+      q.weightedTotalDegree (fun i => w i.castSucc) ≤ 47 * B - w 2 * 24 ^ 2 := by
+    let v : Fin 2 → ℕ := fun i => w i.castSucc
+    rw [show q = ∏ a ∈ T, elimination a from rfl, weightedTotalDegree_prod v T _ he₀]
+    apply aggregate T (fun a => a.weightedTotalDegree w) c
+      (fun a => (elimination a).weightedTotalDegree v) B (w 2) ((hsum w).trans hb) hc hB
+    · intro a _
+      exact (Nat.le_add_left _ _).trans (view_coeff_weight w a (c a) le_rfl)
+    · intro a _ ha
+      exact elimination_weight_zero w a ha
+    · intro a _ ha
+      exact elimination_weight_positive w a ha
+  have hqtotal : q.totalDegree ≤ 5064 := by
+    have h := hq (1 : Fin 3 → ℕ) 120 (by simpa only [weightedTotalDegree_one] using hgt) (by decide)
+    change q.weightedTotalDegree (1 : Fin 2 → ℕ) ≤ 5064 at h
+    simpa only [weightedTotalDegree_one] using h
+  have hqindex : indexDegree q ≤ 1104 := by
+    rw [K1_13_1.indexDegree_eq] at hgi ⊢
+    exact hq (fun i => i.val) 48 hgi (by decide)
+  have hsub (d : Row 3 → ℕ) : (∑ i, d (f i)) ≤ ∑ a ∈ T, d a := by
+    calc
+      _ = ∑ a : ↥P, d a.val := e.sum_comp _
+      _ = ∑ a ∈ P, d a := Finset.sum_coe_sort P d
+      _ ≤ _ := Finset.sum_le_sum_of_subset (Finset.filter_subset _ _)
+  refine ⟨n, f, q, ⟨fun i => hirr _ (hf i).1, fun i => htop _ ▸ (hf i).2, ?_, ?_, ?_, ?_⟩,
+    ⟨Finset.prod_ne_zero_iff.mpr he₀, hqtotal, hqindex⟩, ?_⟩
+  · intro i
+    let E := MvPolynomial.optionEquivRight Geom (Fin 3)
+    have hdi := map_dvd E.symm (dvd_of_mem_normalizedFactors (hmem _ (hf i).1))
+    have hgn : E.symm g ≠ 0 := fun hz => hg₀ (E.symm.injective (hz.trans (map_zero _).symm))
+    exact (K1_13_1.trueWeight_iff _).mpr
+      ((weightedTotalDegree_le_of_dvd _ hdi hgn).trans ((K1_13_1.trueWeight_iff _).mp hgw))
+  · exact (hsub _).trans ((by simpa only [weightedTotalDegree_one] using hsum (1 : Fin 3 → ℕ) :
+      (∑ a ∈ T, a.totalDegree) ≤ g.totalDegree).trans hgt)
+  · exact (hsub _).trans ((by simpa only [← K1_13_1.indexDegree_eq] using hsum (fun i => i.val) :
+      (∑ a ∈ T, indexDegree a) ≤ indexDegree g).trans hgi)
+  · simpa only [htop] using (hsub c).trans hc
+  · intro S hS
+    have hz := map_dvd (eval (jet S)) (prod_normalizedFactors hg₀).symm.dvd
+    change atJet g S ∣ eval (jet S) A.prod at hz
+    rw [hS, zero_dvd_iff, map_multiset_prod, Multiset.prod_eq_zero_iff, Multiset.mem_map] at hz
+    obtain ⟨a, ha, hzero⟩ := hz
+    have haT : a ∈ T := Multiset.mem_toFinset.mpr ha
+    rcases elimination_eval a S hzero with h | ⟨hp, hr⟩
+    · left
+      change eval (jet S) (∏ a ∈ T, elimination a) = 0
+      rw [map_prod]
+      exact Finset.prod_eq_zero haT h
+    · right
+      let j : ↥P := ⟨a, Finset.mem_filter.mpr ⟨haT, hp⟩⟩
+      refine ⟨e.symm j, ?_⟩
+      change RegularAt 2 ((e (e.symm j)).val) S
+      rw [Equiv.apply_symm_apply]
+      exact hr
+
+end
+
+end K1_13_5_1
+end PackSource_K1_13_5_1Proof
 
 section PackSource_K1_13_5_4_1_2Proof
 set_option autoImplicit true
