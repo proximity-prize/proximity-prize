@@ -1,0 +1,33 @@
+import ProximityPrize.SubmissionLower.Koala6844VirtualHighClosure
+import ProximityPrize.SubmissionLower.Koala6844VirtualShortCheckedFees
+import ProximityPrize.SubmissionLower.Koala6844ReceiptsEndpointFlags
+import ProximityPrize.SubmissionLower.Koala6844ReceiptsTerminalTapes
+import ProximityPrize.SubmissionLower.Koala6844ReceiptsMargins
+import ProximityPrize.SubmissionLower.Koala6844TerminalEndpointTable
+import ProximityPrize.SubmissionLower.Koala6844TerminalIntrinsicTable
+
+
+namespace ProximityPrize.SubmissionLower.Koala6844Submission
+
+open ProximityPrize.Benchmark
+open Koala6844Receipts Koala6844Terminal Koala6844VirtualDispatch
+
+set_option autoImplicit false
+set_option maxHeartbeats 2000000
+
+theorem verified_endpoint_cover : AdaptiveEndpointCover terminalEndpoints := by
+  intro f hr hord hfit _ hsecond
+  apply terminalCoverage_of_tapes checkedTerminalTapes checkedTerminalTapes_slopes terminalEndpoints
+    _ f hr hord hfit hsecond
+  exact terminalEndpoints_flags.trans coveredTerminalFlags_eq_reference.symm
+
+theorem checked_short_support : ShortSupportBound :=
+  Koala6844VirtualShort.short_support_of_verified_endpoints terminalEndpoints
+    verified_endpoint_cover terminal_endpoints_metadata terminal_endpoints_intrinsic_raw
+    terminal_profile_margin
+
+theorem claim : ProtocolClaim 6844 332546047 1073741824 :=
+  protocolClaim_of_active_counts Koala6844VirtualHigh.benchmark_large_support checked_short_support
+
+end ProximityPrize.SubmissionLower.Koala6844Submission
+

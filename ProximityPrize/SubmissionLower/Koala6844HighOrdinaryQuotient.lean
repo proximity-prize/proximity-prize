@@ -1,0 +1,7 @@
+import ProximityPrize.SubmissionLower.Koala6831Quotient
+
+namespace ProximityPrize.SubmissionLower.Koala6844HighOrdinaryQuotient
+
+export Koala6831Quotient (exists_relative_interpolant local_multiplier_injective contact_specializes centerAtNode specialize shifted_power_dvd_specialization specialization_degree_lt specialization_zero_of_relative_contacts)
+
+end ProximityPrize.SubmissionLower.Koala6844HighOrdinaryQuotient

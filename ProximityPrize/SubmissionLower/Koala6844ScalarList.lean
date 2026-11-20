@@ -1,0 +1,5 @@
+import ProximityPrize.SubmissionLower.ScalarCappedProfile
+namespace ProximityPrize.SubmissionLower.Koala6844ScalarList
+theorem irs_scalar_finite_list_card_le : IntermediateScalar.Words 180957 115275407416 :=
+  ScalarCappedProfile.words_81187
+end ProximityPrize.SubmissionLower.Koala6844ScalarList
