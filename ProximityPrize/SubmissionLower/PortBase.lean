@@ -21,22 +21,22 @@ abbrev node := IRSProfile.domain
 abbrev p := Native.p
 abbrev blockLength : ℕ := 262144
 abbrev k : ℕ := 131072
-abbrev agreement : ℕ := 180217
+abbrev agreement : ℕ := 180208
 abbrev t : ℕ := blockLength - agreement
 abbrev L : ℕ := agreement - k
 abbrev frontLimit : ℕ := 16
 abbrev heightCap : ℕ := t + 1 - L - (frontLimit + 1)
 abbrev lowCutoff : ℤ := 2480
 
-abbrev radiusNumerator : ℕ := 335573291
+abbrev radiusNumerator : ℕ := 335613263
 abbrev radiusDenominator : ℕ := 1073741824
 def queryRadius : ℝ≥0 := claimedRadius radiusNumerator radiusDenominator
 def radius : ℝ := queryRadius
 
-abbrev scalarCap : ℕ := 229652235871261455
-abbrev listCap : ℕ := 31973440934878498
-abbrev rankFee : ℕ := 69814727032823
-abbrev anchorFee : ℕ := 69814727311356
+abbrev scalarCap : ℕ := 238970682432062142
+abbrev listCap : ℕ := 31985152762362180
+abbrev rankFee : ℕ := 69853079748608
+abbrev anchorFee : ℕ := 69853080027186
 
 /-- The augmented weighted list serves both the scalar endpoint and the squared code. -/
 def WeightedList : Prop :=
@@ -339,16 +339,16 @@ structure AnchoredFamily {u deleted} (M : AnchorModel u deleted) (Γ : Finset K)
 
 /-- Initial cover and first proper losses in the four O8 intervals. -/
 def highPrefix (w : ℤ) : ℕ :=
-  if w ≤ 3554 then 72330561486509196
-  else if w ≤ 8249 then 83625638374831363
-  else if w ≤ 23999 then 88272853155571659
-  else 94479354514532614
+  if w ≤ 3554 then 80264281918316493
+  else if w ≤ 8249 then 87616551433802655
+  else if w ≤ 23999 then 92455465993177915
+  else 98940427318344470
 
 def highRetained (w : ℤ) : ℕ :=
-  if w ≤ 3554 then 147341630862505162
-  else if w ≤ 8249 then 43002915371002194
-  else if w ≤ 23999 then 26524108968507199
-  else 39471880490774732
+  if w ≤ 3554 then 158566694353969854
+  else if w ≤ 8249 then 44828125060523543
+  else if w ≤ 23999 then 27702807103641210
+  else 39550082674513474
 
 end
 end P0
@@ -369,15 +369,15 @@ open scoped NNReal
 
 /-- The same integer threshold governs both the scalar MCA and squared-code list. -/
 theorem support_threshold :
-    (Fintype.card I : ℝ) * (1 - radius) = (738168533 : ℝ) / 4096 := by
+    (Fintype.card I : ℝ) * (1 - radius) = (738128561 : ℝ) / 4096 := by
   rw [IRSProfile.card_index]
   norm_num [radius, queryRadius, claimedRadius]
 
 theorem agreement_of_threshold {s : ℕ}
     (hs : (Fintype.card I : ℝ) * (1 - radius) ≤ s) : agreement ≤ s := by
   rw [support_threshold] at hs
-  have hlt : (180216 : ℝ) < (738168533 : ℝ) / 4096 := by norm_num
-  have hn : 180216 < s := by exact_mod_cast hlt.trans_le hs
+  have hlt : (180207 : ℝ) < (738128561 : ℝ) / 4096 := by norm_num
+  have hn : 180207 < s := by exact_mod_cast hlt.trans_le hs
   exact hn
 
 theorem bad_slope (u : Words) (γ : K)
@@ -408,74 +408,81 @@ private theorem dyadic_mul {a i j x y u v z w e s : ℕ}
 
 /-- Upper bounds rounded in 60-bit significands. The kernel checks each
 multiplication of two significands, and combines the powers symbolically. -/
-private theorem complement_pow_1600 : (738168533 : ℕ) ^ 1600 ≤ 2 ^ 47135 := by
-  have h1 : (738168533 : ℕ) ^ 1 ≤ 738168533 * 2 ^ 0 := by decide
-  have h2 : (738168533 : ℕ) ^ 2 ≤ 544892783111372089 * 2 ^ 0 :=
-    dyadic_mul h1 h1 (z := 544892783111372089) (w := 0) (e := 2)
+private theorem complement_pow_12800 : (738128561 : ℕ) ^ 12800 ≤ 2 ^ 377079 := by
+  have h1 : (738128561 : ℕ) ^ 1 ≤ 738128561 * 2 ^ 0 := by decide
+  have h2 : (738128561 : ℕ) ^ 2 ≤ 544833772563930721 * 2 ^ 0 :=
+    dyadic_mul h1 h1 (z := 544833772563930721) (w := 0) (e := 2)
       (s := 0) (by decide) (by decide) (by decide)
-  have h4 : (738168533 : ℕ) ^ 4 ≤ 1030107058981796720 * 2 ^ 58 :=
-    dyadic_mul h2 h2 (z := 1030107058981796720) (w := 58) (e := 4)
+  have h4 : (738128561 : ℕ) ^ 4 ≤ 1029883954944427846 * 2 ^ 58 :=
+    dyadic_mul h2 h2 (z := 1029883954944427846) (w := 58) (e := 4)
       (s := 58) (by decide) (by decide) (by decide)
-  have h8 : (738168533 : ℕ) ^ 8 ≤ 920375367034180862 * 2 ^ 176 :=
-    dyadic_mul h4 h4 (z := 920375367034180862) (w := 60) (e := 8)
+  have h8 : (738128561 : ℕ) ^ 8 ≤ 919976734247547860 * 2 ^ 176 :=
+    dyadic_mul h4 h4 (z := 919976734247547860) (w := 60) (e := 8)
       (s := 176) (by decide) (by decide) (by decide)
-  have h16 : (738168533 : ℕ) ^ 16 ≤ 734734162610806791 * 2 ^ 412 :=
-    dyadic_mul h8 h8 (z := 734734162610806791) (w := 60) (e := 16)
+  have h16 : (738128561 : ℕ) ^ 16 ≤ 734097844627675748 * 2 ^ 412 :=
+    dyadic_mul h8 h8 (z := 734097844627675748) (w := 60) (e := 16)
       (s := 412) (by decide) (by decide) (by decide)
-  have h24 : (738168533 : ℕ) ^ 24 ≤ 586537090238482156 * 2 ^ 648 :=
-    dyadic_mul h16 h8 (z := 586537090238482156) (w := 60) (e := 24)
-      (s := 648) (by decide) (by decide) (by decide)
-  have h25 : (738168533 : ℕ) ^ 25 ≤ 806456847957203153 * 2 ^ 677 :=
-    dyadic_mul h24 h1 (z := 806456847957203153) (w := 29) (e := 25)
-      (s := 677) (by decide) (by decide) (by decide)
-  have h50 : (738168533 : ℕ) ^ 50 ≤ 1128216699954518391 * 2 ^ 1413 :=
-    dyadic_mul h25 h25 (z := 1128216699954518391) (w := 59) (e := 50)
-      (s := 1413) (by decide) (by decide) (by decide)
-  have h100 : (738168533 : ℕ) ^ 100 ≤ 1104041269913098674 * 2 ^ 2886 :=
-    dyadic_mul h50 h50 (z := 1104041269913098674) (w := 60) (e := 100)
-      (s := 2886) (by decide) (by decide) (by decide)
-  have h200 : (738168533 : ℕ) ^ 200 ≤ 1057233402968732125 * 2 ^ 5832 :=
-    dyadic_mul h100 h100 (z := 1057233402968732125) (w := 60) (e := 200)
-      (s := 5832) (by decide) (by decide) (by decide)
-  have h400 : (738168533 : ℕ) ^ 400 ≤ 969487049973972245 * 2 ^ 11724 :=
-    dyadic_mul h200 h200 (z := 969487049973972245) (w := 60) (e := 400)
-      (s := 11724) (by decide) (by decide) (by decide)
-  have h800 : (738168533 : ℕ) ^ 800 ≤ 815237755832951131 * 2 ^ 23508 :=
-    dyadic_mul h400 h400 (z := 815237755832951131) (w := 60) (e := 800)
-      (s := 23508) (by decide) (by decide) (by decide)
-  have h1600 : (738168533 : ℕ) ^ 1600 ≤ 1152919077109561343 * 2 ^ 47075 :=
-    dyadic_mul h800 h800 (z := 1152919077109561343) (w := 59) (e := 1600)
-      (s := 47075) (by decide) (by decide) (by decide)
-  refine h1600.trans ?_
+  have h32 : (738128561 : ℕ) ^ 32 ≤ 934841866221876253 * 2 ^ 883 :=
+    dyadic_mul h16 h16 (z := 934841866221876253) (w := 59) (e := 32)
+      (s := 883) (by decide) (by decide) (by decide)
+  have h64 : (738128561 : ℕ) ^ 64 ≤ 758012849399678273 * 2 ^ 1826 :=
+    dyadic_mul h32 h32 (z := 758012849399678273) (w := 60) (e := 64)
+      (s := 1826) (by decide) (by decide) (by decide)
+  have h128 : (738128561 : ℕ) ^ 128 ≤ 996743451412948855 * 2 ^ 3711 :=
+    dyadic_mul h64 h64 (z := 996743451412948855) (w := 59) (e := 128)
+      (s := 3711) (by decide) (by decide) (by decide)
+  have h256 : (738128561 : ℕ) ^ 256 ≤ 861721725169300262 * 2 ^ 7482 :=
+    dyadic_mul h128 h128 (z := 861721725169300262) (w := 60) (e := 256)
+      (s := 7482) (by decide) (by decide) (by decide)
+  have h512 : (738128561 : ℕ) ^ 512 ≤ 644071889249714242 * 2 ^ 15024 :=
+    dyadic_mul h256 h256 (z := 644071889249714242) (w := 60) (e := 512)
+      (s := 15024) (by decide) (by decide) (by decide)
+  have h1024 : (738128561 : ℕ) ^ 1024 ≤ 719612908362144158 * 2 ^ 30107 :=
+    dyadic_mul h512 h512 (z := 719612908362144158) (w := 59) (e := 1024)
+      (s := 30107) (by decide) (by decide) (by decide)
+  have h2048 : (738128561 : ℕ) ^ 2048 ≤ 898313954267009894 * 2 ^ 60273 :=
+    dyadic_mul h1024 h1024 (z := 898313954267009894) (w := 59) (e := 2048)
+      (s := 60273) (by decide) (by decide) (by decide)
+  have h4096 : (738128561 : ℕ) ^ 4096 ≤ 699933132660243311 * 2 ^ 120606 :=
+    dyadic_mul h2048 h2048 (z := 699933132660243311) (w := 60) (e := 4096)
+      (s := 120606) (by decide) (by decide) (by decide)
+  have h8192 : (738128561 : ℕ) ^ 8192 ≤ 849852116103329561 * 2 ^ 241271 :=
+    dyadic_mul h4096 h4096 (z := 849852116103329561) (w := 59) (e := 8192)
+      (s := 241271) (by decide) (by decide) (by decide)
+  have h12288 : (738128561 : ℕ) ^ 12288 ≤ 1031882312100656144 * 2 ^ 361936 :=
+    dyadic_mul h8192 h4096 (z := 1031882312100656144) (w := 59) (e := 12288)
+      (s := 361936) (by decide) (by decide) (by decide)
+  have h12800 : (738128561 : ℕ) ^ 12800 ≤ 1152908307430118695 * 2 ^ 377019 :=
+    dyadic_mul h12288 h512 (z := 1152908307430118695) (w := 59) (e := 12800)
+      (s := 377019) (by decide) (by decide) (by decide)
+  refine h12800.trans ?_
   calc
-    1152919077109561343 * 2 ^ 47075 ≤ 2 ^ 60 * 2 ^ 47075 :=
+    1152908307430118695 * 2 ^ 377019 ≤ 2 ^ 60 * 2 ^ 377019 :=
       Nat.mul_le_mul_right _ (by decide)
-    _ = 2 ^ (60 + 47075) := (pow_add (2 : ℕ) 60 47075).symm
-    _ = 2 ^ 47135 := congrArg (fun e : ℕ => (2 : ℕ) ^ e) (by decide)
+    _ = 2 ^ (60 + 377019) := (pow_add (2 : ℕ) 60 377019).symm
+    _ = 2 ^ 377079 := congrArg (fun e : ℕ => (2 : ℕ) ^ e) (by decide)
 
 theorem score_integer_cross :
-    (738168533 : ℕ) ^ 12800 * 2 ^ 6920 ≤ 1073741824 ^ 12800 := by
+    (738128561 : ℕ) ^ 12800 * 2 ^ 6921 ≤ 1073741824 ^ 12800 := by
   calc
-    (738168533 : ℕ) ^ 12800 * 2 ^ 6920 = (738168533 ^ 1600) ^ 8 * 2 ^ 6920 := by
-      rw [← pow_mul]
-    _ ≤ ((2 : ℕ) ^ 47135) ^ 8 * 2 ^ 6920 :=
-      Nat.mul_le_mul_right _ (Nat.pow_le_pow_left complement_pow_1600 8)
+    (738128561 : ℕ) ^ 12800 * 2 ^ 6921 ≤ (2 : ℕ) ^ 377079 * 2 ^ 6921 :=
+      Nat.mul_le_mul_right _ complement_pow_12800
     _ = (2 ^ 30) ^ 12800 := by
       simp only [← pow_mul, ← pow_add]
     _ = 1073741824 ^ 12800 := congrArg (fun b : ℕ => b ^ 12800) (by decide)
 
-theorem query_score : (1 - queryRadius) ^ IRSProfile.repetitions ≤ claimedError 6920 := by
-  have hcomplement : (1 - queryRadius : ℝ≥0) = 738168533 / 1073741824 := by
+theorem query_score : (1 - queryRadius) ^ IRSProfile.repetitions ≤ claimedError 6921 := by
+  have hcomplement : (1 - queryRadius : ℝ≥0) = 738128561 / 1073741824 := by
     apply NNReal.coe_injective
     have hr : queryRadius ≤ 1 := by
       rw [← NNReal.coe_le_coe]
       norm_num [queryRadius, claimedRadius]
     rw [NNReal.coe_sub hr]
     norm_num [queryRadius, claimedRadius]
-  change (1 - queryRadius) ^ 128 ≤ claimedError 6920
+  change (1 - queryRadius) ^ 128 ≤ claimedError 6921
   apply (pow_le_pow_iff_left₀ (by positivity) (by positivity) (by decide : (100 : ℕ) ≠ 0)).mp
   rw [← pow_mul, Sol1.C42.claimedError_pow_100, hcomplement]
-  change ((738168533 : ℝ≥0) / 1073741824) ^ 12800 ≤ 1 / (2 : ℝ≥0) ^ 6920
+  change ((738128561 : ℝ≥0) / 1073741824) ^ 12800 ≤ 1 / (2 : ℝ≥0) ^ 6921
   rw [div_pow, div_le_div_iff₀ (by positivity) (by positivity), one_mul]
   exact_mod_cast score_integer_cross
 
@@ -648,7 +655,7 @@ theorem gamma_error_le_of_scalar_cap (hlist : WeightedList)
 /-- Scalar counting and the augmented weighted list suffice at the submitted radius. -/
 theorem protocol_claim_of_scalar_cap (hlist : WeightedList)
     (hscalar : ∀ u Γ, BadFamily u Γ → Γ.card ≤ scalarCap) :
-    ProtocolClaim 6920 radiusNumerator radiusDenominator where
+    ProtocolClaim 6921 radiusNumerator radiusDenominator where
   admissible := query_admissible
   reduction := gamma_error_le_of_scalar_cap hlist hscalar
   score := query_score
@@ -934,7 +941,7 @@ def c1 : Prop :=
 def c2 : Prop :=
   ∀ u, FrontRemainder u → ∀ (T : TwoActive u) (R : Relation T),
     MovingGCD R → NormalSaturation R → ∀ Γ, BadFamily u Γ → (∀ γ ∈ Γ, Normal u γ) →
-    Γ.card ≤ 1675928535564288
+    Γ.card ≤ 1678388363264000
 
 /-- Normal specialization of the actual relation (old K1.c7). -/
 def c3 : Prop :=
@@ -958,13 +965,13 @@ def c6 : Prop :=
   ∀ u, FrontRemainder u → ∀ (T : TwoActive u) (R : Relation T)
     (D : Reduction u T R) (B : RankThree u T R D),
     NormalSaturation R → Nonparallel B →
-    ∀ Γ, BadFamily u Γ → (∀ γ ∈ Γ, Normal u γ) → Γ.card ≤ 117191744230663308
+    ∀ Γ, BadFamily u Γ → (∀ γ ∈ Γ, Normal u γ) → Γ.card ≤ 117234678145547609
 
 /-- Rank four, on normal labels using the eight exact weight banks (old K1.c11). -/
 def c7 : Prop :=
   ∀ u, FrontRemainder u → ∀ (T : TwoActive u) (R : Relation T) (D : Reduction u T R),
     NormalSaturation R → columnRank D.U D.V = 4 →
-    ∀ Γ, BadFamily u Γ → (∀ γ ∈ Γ, Normal u γ) → Γ.card ≤ 160322346563912056
+    ∀ Γ, BadFamily u Γ → (∀ γ ∈ Γ, Normal u γ) → Γ.card ≤ 160381081648094588
 
 /-- One anchor model on the normal part, after its exceptional book (old K1.c12). -/
 def c8 : Prop :=
@@ -980,7 +987,7 @@ def c8 : Prop :=
 def c9 : Prop :=
   ∀ u deleted (M : AnchorModel u deleted) Γ, AnchoredFamily M Γ →
     1 ≤ M.overhead → M.overhead ≤ lowCutoff →
-    Γ.card ≤ 211033041011743389 + 18479565405173887
+    Γ.card ≤ 214480139679075858 + 18479565405173887
 
 /-- O8 prefix and retained fees, including one optional chart label (old K1.c14). -/
 def c10 : Prop :=
@@ -1118,7 +1125,7 @@ private theorem scalar_count (h1 : c1) (h2 : c2) (h3 : c3) (h4 : c4) (h5 : c5)
 
 theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) (h4 : c4) (h5 : c5)
     (h6 : c6) (h7 : c7) (h8 : c8) (h9 : c9) (h10 : c10) (h11 : c11) :
-    ProtocolClaim 6920 335573291 1073741824 :=
+    ProtocolClaim 6921 335613263 1073741824 :=
   protocol_claim_of_scalar_cap h11 (scalar_count h1 h2 h3 h4 h5 h6 h7 h8 h9 h10 h11)
 
 end

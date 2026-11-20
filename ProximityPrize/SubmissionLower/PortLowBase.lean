@@ -183,7 +183,7 @@ def c8 : Prop :=
   ∀ n (a : Fin n → Shape) (l cost : Fin n → ℕ), Fits a → LayerBudget a l →
     (∀ i, 0 < l i → cost i ≤ physicalPrice (a i) (l i)) →
     (∀ i, FatEligible (a i) → cost i ≤ fatPrice (a i)) →
-    (∑ i, cost i) ≤ 211033041011743389
+    (∑ i, cost i) ≤ 214480139679075858
 
 theorem degree_at_height {u D Γ} (M : AnchorModel u D) (F : AnchoredFamily M Γ)
     (γ : K) (hγ : γ ∈ Γ) : (F.scalar γ).natDegree ≤ k - 1 + M.overhead.toNat := by
@@ -473,7 +473,7 @@ private def gradeSlots (a b c : ℕ) : ℕ :=
   gradeCeiling a b c + 1 - (a + b + c)
 
 private def firstWidth (a b c : ℕ) : ℕ :=
-  90 * 180217 - 133551 * gradeCeiling a b c + indexWeight a b c
+  90 * 180208 - 133551 * gradeCeiling a b c + indexWeight a b c
 
 /-- The grade falls by j from its ceiling, so each step adds 133551 abscissa slots. -/
 private def abscissaWidth (a b c j : ℕ) : ℕ := firstWidth a b c + 133551 * j
@@ -512,19 +512,19 @@ private theorem true_weight (x v a b c : ℕ) :
 private theorem eligible_exponent (x v a b c : ℕ) :
     AnchorEligible (exponent x v a b c) ↔
       c ≤ 10 ∧ indexWeight a b c ≤ 48 ∧ v + (a + b + c) ≤ gradeCeiling a b c ∧
-        x + 133551 * (v + (a + b + c)) < 90 * 180217 + indexWeight a b c := by
+        x + 133551 * (v + (a + b + c)) < 90 * 180208 + indexWeight a b c := by
   unfold AnchorEligible gradeCeiling indexWeight
   rw [show P0_9.physicalDegree = 133551 from rfl,
     Finsupp.degree_eq_weight_one, jet_weight, jet_weight, true_weight]
   simp only [mul_one, Finsupp.some_apply, exponent_some, Matrix.cons_val_zero, le_min_iff]
   change (v + a + b + c ≤ 120 ∧ v * 0 + a * 1 + b * 2 + c * 3 ≤ 48 ∧
     c ≤ 10 ∧ a + b + c ≤ 48 - (v + a + b + c - 113 + 1) / 2 ∧
-    x + (v * 133551 + a * 133550 + b * 133549 + c * 133548) ≤ 90 * 180217 - 1) ↔ _
+    x + (v * 133551 + a * 133550 + b * 133549 + c * 133548) ≤ 90 * 180208 - 1) ↔ _
   by_cases h : a + b + c = 0 <;> omega
 
 private theorem width_iff (a b c j x : ℕ) (hj : j ≤ gradeCeiling a b c) :
     x < abscissaWidth a b c j ↔
-      x + 133551 * (gradeCeiling a b c - j) < 90 * 180217 + indexWeight a b c := by
+      x + 133551 * (gradeCeiling a b c - j) < 90 * 180208 + indexWeight a b c := by
   have hgrade : gradeCeiling a b c ≤ 120 := min_le_left _ _
   unfold abscissaWidth firstWidth
   omega
@@ -1002,13 +1002,13 @@ def SourceEligible (e : SourceExponent) : Prop :=
   e.weight jetDegreeWeight ≤ 4012 ∧
   e.weight jetDerivativeWeight ≤ 1650 ∧
   e.weight topWeight ≤ 550 ∧
-  e.weight (differentialWeight 133551) ≤ 3000 * 180217 - 1
+  e.weight (differentialWeight 133551) ≤ 3000 * 180208 - 1
 
 def sourceExponents : Set SourceExponent := { e | SourceEligible e }
 
 theorem sourceExponents_finite : sourceExponents.Finite := by
   refine (Finsupp.finite_of_nat_weight_le (differentialWeight (d := 3) 133551)
-    ?_ (3000 * 180217 - 1)).subset (fun e he => he.2.2.2)
+    ?_ (3000 * 180208 - 1)).subset (fun e he => he.2.2.2)
   intro v
   cases v with
   | none => decide
@@ -1030,13 +1030,13 @@ private theorem weight_eq_sum (m : Fin 4 →₀ ℕ) (weight : Fin 4 → ℕ) :
 /-- Extract the support test at the largest X exponent in a nonzero coefficient. -/
 theorem row_bounds (Q : SourceSpace) :
     InBox (shape (toRow Q.1)) ⟨4012, 1650, 550⟩ ∧
-    P0_9.TrueWeightLE (toRow Q.1) (3000 * 180217 - 1) := by
+    P0_9.TrueWeightLE (toRow Q.1) (3000 * 180208 - 1) := by
   classical
   have h (m : Fin 4 →₀ ℕ) (hm : m ∈ (toRow Q.1).support) :
       m.sum (fun _ a => a) ≤ 4012 ∧
       m.sum (fun i a => i.val * a) ≤ 1650 ∧ m 3 ≤ 550 ∧
       ((toRow Q.1).coeff m).natDegree + m.sum (fun i a => (133551 - i.val) * a) ≤
-        3000 * 180217 - 1 := by
+        3000 * 180208 - 1 := by
     let n := ((toRow Q.1).coeff m).natDegree
     have hc : (Q.1).coeff (m.optionElim n) ≠ 0 := by
       rw [← MvPolynomial.optionEquivRight_coeff_coeff]
@@ -1083,7 +1083,7 @@ theorem translate_mem_source (x y : Geom) (Q : SourceSpace) :
     ⟨preserve jetDegreeWeight 4012 (fun t ht => (h t ht).1) e he,
       preserve jetDerivativeWeight 1650 (fun t ht => (h t ht).2.1) e he,
       preserve topWeight 550 (fun t ht => (h t ht).2.2.1) e he,
-      preserve (differentialWeight 133551) (3000 * 180217 - 1)
+      preserve (differentialWeight 133551) (3000 * 180208 - 1)
         (fun t ht => (h t ht).2.2.2) e he⟩
 
 def nodeMap (x y : Geom) : SourceSpace →ₗ[Geom] Local :=
@@ -1131,7 +1131,7 @@ open scoped BigOperators
 private abbrev Column := Σ _ : ℕ, Σ _ : ℕ, Σ _ : ℕ, Σ _ : ℕ, ℕ
 
 private def width (a b c f : ℕ) : ℕ :=
-  540651000 + b + 2 * c + 3 * f - 133551 * (a + b + c + f)
+  540624000 + b + 2 * c + 3 * f - 133551 * (a + b + c + f)
 
 private def tuples : Finset Column :=
   (range 551).sigma fun f =>
@@ -1174,11 +1174,11 @@ private theorem card_columns : sourceColumns.card = tuples.card := by
   exact (Finset.card_equiv e (fun t => (mem_columns t).symm)).symm
 
 private def widthInt (a b c f : ℤ) : ℤ :=
-  540651000 + b + 2 * c + 3 * f - 133551 * (a + b + c + f)
+  540624000 + b + 2 * c + 3 * f - 133551 * (a + b + c + f)
 
 private theorem cast_width (a b c f : ℕ) (h : a + b + c + f ≤ 4012) :
     (width a b c f : ℤ) = widthInt a b c f := by
-  have hpos : 133551 * (a + b + c + f) ≤ 540651000 + b + 2 * c + 3 * f := by omega
+  have hpos : 133551 * (a + b + c + f) ≤ 540624000 + b + 2 * c + 3 * f := by omega
   simp [width, widthInt, Nat.cast_sub hpos]
 
 /-- Verify a polynomial prefix by its initial value and forward difference. -/

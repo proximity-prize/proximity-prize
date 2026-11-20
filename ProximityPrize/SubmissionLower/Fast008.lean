@@ -17,7 +17,7 @@ open scoped BigOperators
 open ReedSolomon.HiddenDerivative PolynomialDifferential
 
 abbrev Jet := (s : Fin 65) × (e2 : Fin (min s.val 10 + 1)) ×
-  Fin (min (s.val - e2.val) (21 - 2 * e2.val) + 1)
+  Fin (min (s.val - e2.val) (20 - 2 * e2.val) + 1)
 
 def e1 (j : Jet) : ℕ := j.2.2.val
 def e2 (j : Jet) : ℕ := j.2.1.val
@@ -36,7 +36,7 @@ theorem jet_total (j : Jet) : e0 j + e1 j + e2 j = j.1.val := by
   simp only [e0, e1, e2]
   omega
 
-theorem jet_order (j : Jet) : e1 j + 2 * e2 j ≤ 21 := by
+theorem jet_order (j : Jet) : e1 j + 2 * e2 j ≤ 20 := by
   have h1 := j.2.2.isLt
   simp only [e1, e2]
   omega
@@ -94,12 +94,12 @@ theorem columns_weight_lt (i : SourceIndex) :
 
 def sourceTotal : ℕ := ∑ j : Jet, width j
 
-theorem jet_count : Fintype.card Jet = 7194 := by decide +kernel
-theorem source_total : sourceTotal = 27313144144 := by decide +kernel
+theorem jet_count : Fintype.card Jet = 6655 := by decide +kernel
+theorem source_total : sourceTotal = 25468020105 := by decide +kernel
 
-/-- Cardinality is a sum over7194 jet triples, never an enumeration of the
-27313144144-dimensional full source index. -/
-theorem source_card : Fintype.card SourceIndex = 27313144144 := by
+/-- Cardinality is a sum over 6655 jet triples, never an enumeration of the
+25468020105-dimensional full source index. -/
+theorem source_card : Fintype.card SourceIndex = 25468020105 := by
   rw [Fintype.card_sigma]
   simp only [Fintype.card_fin]
   exact source_total
@@ -119,7 +119,7 @@ open scoped BigOperators
 
 def columnCount (s : ℕ) (g : ℤ) : ℕ :=
   ∑ e ∈ Finset.range (min s 10 + 1),
-    ((min (min ((s : ℤ) - e) (21 - 2 * (e : ℤ))) (47 - g - 2 * e)) -
+    ((min (min ((s : ℤ) - e) (20 - 2 * (e : ℤ))) (47 - g - 2 * e)) -
       max 0 (-g - 2 * e) + 1).toNat
 
 def rowCount (s : ℕ) (g : ℤ) : ℕ :=
@@ -145,7 +145,7 @@ def nonzeroBlocks : ℕ := ∑ s : Fin 65, ∑ gi : Fin 69,
 private def pack2BlockUpperRow (s : Fin 65) : ℕ := ∑ gi : Fin 69,
   min (columnCount s.val ((gi.val : ℤ) - 21)) (rowCount s.val ((gi.val : ℤ) - 21))
 
-private def pack2BlockUpperTable : Fin 65 → ℕ := ![48, 141, 276, 450, 660, 903, 1176, 1476, 1800, 2145, 2508, 2849, 3132, 3360, 3536, 3663, 3744, 3782, 3780, 3741, 3668, 3564, 3432, 3300, 3168, 3036, 2904, 2772, 2641, 2511, 2383, 2257, 2134, 2013, 1893, 1777, 1665, 1555, 1448, 1346, 1246, 1150, 1060, 970, 887, 806, 730, 658, 590, 526, 466, 410, 359, 310, 268, 226, 190, 158, 128, 103, 81, 61, 45, 33, 22]
+private def pack2BlockUpperTable : Fin 65 → ℕ := ![48, 141, 276, 450, 660, 903, 1176, 1476, 1800, 2145, 2508, 2812, 3060, 3255, 3400, 3498, 3552, 3565, 3540, 3480, 3388, 3267, 3146, 3025, 2904, 2783, 2662, 2541, 2420, 2300, 2181, 2064, 1949, 1837, 1727, 1618, 1513, 1412, 1312, 1216, 1125, 1035, 950, 869, 790, 718, 646, 581, 517, 460, 404, 355, 306, 264, 224, 188, 157, 127, 102, 81, 61, 45, 33, 22, 13]
 
 private theorem pack2BlockUpperCheck0 : pack2BlockUpperRow 0 = 48 := by decide +kernel
 
@@ -169,113 +169,113 @@ private theorem pack2BlockUpperCheck9 : pack2BlockUpperRow 9 = 2145 := by decide
 
 private theorem pack2BlockUpperCheck10 : pack2BlockUpperRow 10 = 2508 := by decide +kernel
 
-private theorem pack2BlockUpperCheck11 : pack2BlockUpperRow 11 = 2849 := by decide +kernel
+private theorem pack2BlockUpperCheck11 : pack2BlockUpperRow 11 = 2812 := by decide +kernel
 
-private theorem pack2BlockUpperCheck12 : pack2BlockUpperRow 12 = 3132 := by decide +kernel
+private theorem pack2BlockUpperCheck12 : pack2BlockUpperRow 12 = 3060 := by decide +kernel
 
-private theorem pack2BlockUpperCheck13 : pack2BlockUpperRow 13 = 3360 := by decide +kernel
+private theorem pack2BlockUpperCheck13 : pack2BlockUpperRow 13 = 3255 := by decide +kernel
 
-private theorem pack2BlockUpperCheck14 : pack2BlockUpperRow 14 = 3536 := by decide +kernel
+private theorem pack2BlockUpperCheck14 : pack2BlockUpperRow 14 = 3400 := by decide +kernel
 
-private theorem pack2BlockUpperCheck15 : pack2BlockUpperRow 15 = 3663 := by decide +kernel
+private theorem pack2BlockUpperCheck15 : pack2BlockUpperRow 15 = 3498 := by decide +kernel
 
-private theorem pack2BlockUpperCheck16 : pack2BlockUpperRow 16 = 3744 := by decide +kernel
+private theorem pack2BlockUpperCheck16 : pack2BlockUpperRow 16 = 3552 := by decide +kernel
 
-private theorem pack2BlockUpperCheck17 : pack2BlockUpperRow 17 = 3782 := by decide +kernel
+private theorem pack2BlockUpperCheck17 : pack2BlockUpperRow 17 = 3565 := by decide +kernel
 
-private theorem pack2BlockUpperCheck18 : pack2BlockUpperRow 18 = 3780 := by decide +kernel
+private theorem pack2BlockUpperCheck18 : pack2BlockUpperRow 18 = 3540 := by decide +kernel
 
-private theorem pack2BlockUpperCheck19 : pack2BlockUpperRow 19 = 3741 := by decide +kernel
+private theorem pack2BlockUpperCheck19 : pack2BlockUpperRow 19 = 3480 := by decide +kernel
 
-private theorem pack2BlockUpperCheck20 : pack2BlockUpperRow 20 = 3668 := by decide +kernel
+private theorem pack2BlockUpperCheck20 : pack2BlockUpperRow 20 = 3388 := by decide +kernel
 
-private theorem pack2BlockUpperCheck21 : pack2BlockUpperRow 21 = 3564 := by decide +kernel
+private theorem pack2BlockUpperCheck21 : pack2BlockUpperRow 21 = 3267 := by decide +kernel
 
-private theorem pack2BlockUpperCheck22 : pack2BlockUpperRow 22 = 3432 := by decide +kernel
+private theorem pack2BlockUpperCheck22 : pack2BlockUpperRow 22 = 3146 := by decide +kernel
 
-private theorem pack2BlockUpperCheck23 : pack2BlockUpperRow 23 = 3300 := by decide +kernel
+private theorem pack2BlockUpperCheck23 : pack2BlockUpperRow 23 = 3025 := by decide +kernel
 
-private theorem pack2BlockUpperCheck24 : pack2BlockUpperRow 24 = 3168 := by decide +kernel
+private theorem pack2BlockUpperCheck24 : pack2BlockUpperRow 24 = 2904 := by decide +kernel
 
-private theorem pack2BlockUpperCheck25 : pack2BlockUpperRow 25 = 3036 := by decide +kernel
+private theorem pack2BlockUpperCheck25 : pack2BlockUpperRow 25 = 2783 := by decide +kernel
 
-private theorem pack2BlockUpperCheck26 : pack2BlockUpperRow 26 = 2904 := by decide +kernel
+private theorem pack2BlockUpperCheck26 : pack2BlockUpperRow 26 = 2662 := by decide +kernel
 
-private theorem pack2BlockUpperCheck27 : pack2BlockUpperRow 27 = 2772 := by decide +kernel
+private theorem pack2BlockUpperCheck27 : pack2BlockUpperRow 27 = 2541 := by decide +kernel
 
-private theorem pack2BlockUpperCheck28 : pack2BlockUpperRow 28 = 2641 := by decide +kernel
+private theorem pack2BlockUpperCheck28 : pack2BlockUpperRow 28 = 2420 := by decide +kernel
 
-private theorem pack2BlockUpperCheck29 : pack2BlockUpperRow 29 = 2511 := by decide +kernel
+private theorem pack2BlockUpperCheck29 : pack2BlockUpperRow 29 = 2300 := by decide +kernel
 
-private theorem pack2BlockUpperCheck30 : pack2BlockUpperRow 30 = 2383 := by decide +kernel
+private theorem pack2BlockUpperCheck30 : pack2BlockUpperRow 30 = 2181 := by decide +kernel
 
-private theorem pack2BlockUpperCheck31 : pack2BlockUpperRow 31 = 2257 := by decide +kernel
+private theorem pack2BlockUpperCheck31 : pack2BlockUpperRow 31 = 2064 := by decide +kernel
 
-private theorem pack2BlockUpperCheck32 : pack2BlockUpperRow 32 = 2134 := by decide +kernel
+private theorem pack2BlockUpperCheck32 : pack2BlockUpperRow 32 = 1949 := by decide +kernel
 
-private theorem pack2BlockUpperCheck33 : pack2BlockUpperRow 33 = 2013 := by decide +kernel
+private theorem pack2BlockUpperCheck33 : pack2BlockUpperRow 33 = 1837 := by decide +kernel
 
-private theorem pack2BlockUpperCheck34 : pack2BlockUpperRow 34 = 1893 := by decide +kernel
+private theorem pack2BlockUpperCheck34 : pack2BlockUpperRow 34 = 1727 := by decide +kernel
 
-private theorem pack2BlockUpperCheck35 : pack2BlockUpperRow 35 = 1777 := by decide +kernel
+private theorem pack2BlockUpperCheck35 : pack2BlockUpperRow 35 = 1618 := by decide +kernel
 
-private theorem pack2BlockUpperCheck36 : pack2BlockUpperRow 36 = 1665 := by decide +kernel
+private theorem pack2BlockUpperCheck36 : pack2BlockUpperRow 36 = 1513 := by decide +kernel
 
-private theorem pack2BlockUpperCheck37 : pack2BlockUpperRow 37 = 1555 := by decide +kernel
+private theorem pack2BlockUpperCheck37 : pack2BlockUpperRow 37 = 1412 := by decide +kernel
 
-private theorem pack2BlockUpperCheck38 : pack2BlockUpperRow 38 = 1448 := by decide +kernel
+private theorem pack2BlockUpperCheck38 : pack2BlockUpperRow 38 = 1312 := by decide +kernel
 
-private theorem pack2BlockUpperCheck39 : pack2BlockUpperRow 39 = 1346 := by decide +kernel
+private theorem pack2BlockUpperCheck39 : pack2BlockUpperRow 39 = 1216 := by decide +kernel
 
-private theorem pack2BlockUpperCheck40 : pack2BlockUpperRow 40 = 1246 := by decide +kernel
+private theorem pack2BlockUpperCheck40 : pack2BlockUpperRow 40 = 1125 := by decide +kernel
 
-private theorem pack2BlockUpperCheck41 : pack2BlockUpperRow 41 = 1150 := by decide +kernel
+private theorem pack2BlockUpperCheck41 : pack2BlockUpperRow 41 = 1035 := by decide +kernel
 
-private theorem pack2BlockUpperCheck42 : pack2BlockUpperRow 42 = 1060 := by decide +kernel
+private theorem pack2BlockUpperCheck42 : pack2BlockUpperRow 42 = 950 := by decide +kernel
 
-private theorem pack2BlockUpperCheck43 : pack2BlockUpperRow 43 = 970 := by decide +kernel
+private theorem pack2BlockUpperCheck43 : pack2BlockUpperRow 43 = 869 := by decide +kernel
 
-private theorem pack2BlockUpperCheck44 : pack2BlockUpperRow 44 = 887 := by decide +kernel
+private theorem pack2BlockUpperCheck44 : pack2BlockUpperRow 44 = 790 := by decide +kernel
 
-private theorem pack2BlockUpperCheck45 : pack2BlockUpperRow 45 = 806 := by decide +kernel
+private theorem pack2BlockUpperCheck45 : pack2BlockUpperRow 45 = 718 := by decide +kernel
 
-private theorem pack2BlockUpperCheck46 : pack2BlockUpperRow 46 = 730 := by decide +kernel
+private theorem pack2BlockUpperCheck46 : pack2BlockUpperRow 46 = 646 := by decide +kernel
 
-private theorem pack2BlockUpperCheck47 : pack2BlockUpperRow 47 = 658 := by decide +kernel
+private theorem pack2BlockUpperCheck47 : pack2BlockUpperRow 47 = 581 := by decide +kernel
 
-private theorem pack2BlockUpperCheck48 : pack2BlockUpperRow 48 = 590 := by decide +kernel
+private theorem pack2BlockUpperCheck48 : pack2BlockUpperRow 48 = 517 := by decide +kernel
 
-private theorem pack2BlockUpperCheck49 : pack2BlockUpperRow 49 = 526 := by decide +kernel
+private theorem pack2BlockUpperCheck49 : pack2BlockUpperRow 49 = 460 := by decide +kernel
 
-private theorem pack2BlockUpperCheck50 : pack2BlockUpperRow 50 = 466 := by decide +kernel
+private theorem pack2BlockUpperCheck50 : pack2BlockUpperRow 50 = 404 := by decide +kernel
 
-private theorem pack2BlockUpperCheck51 : pack2BlockUpperRow 51 = 410 := by decide +kernel
+private theorem pack2BlockUpperCheck51 : pack2BlockUpperRow 51 = 355 := by decide +kernel
 
-private theorem pack2BlockUpperCheck52 : pack2BlockUpperRow 52 = 359 := by decide +kernel
+private theorem pack2BlockUpperCheck52 : pack2BlockUpperRow 52 = 306 := by decide +kernel
 
-private theorem pack2BlockUpperCheck53 : pack2BlockUpperRow 53 = 310 := by decide +kernel
+private theorem pack2BlockUpperCheck53 : pack2BlockUpperRow 53 = 264 := by decide +kernel
 
-private theorem pack2BlockUpperCheck54 : pack2BlockUpperRow 54 = 268 := by decide +kernel
+private theorem pack2BlockUpperCheck54 : pack2BlockUpperRow 54 = 224 := by decide +kernel
 
-private theorem pack2BlockUpperCheck55 : pack2BlockUpperRow 55 = 226 := by decide +kernel
+private theorem pack2BlockUpperCheck55 : pack2BlockUpperRow 55 = 188 := by decide +kernel
 
-private theorem pack2BlockUpperCheck56 : pack2BlockUpperRow 56 = 190 := by decide +kernel
+private theorem pack2BlockUpperCheck56 : pack2BlockUpperRow 56 = 157 := by decide +kernel
 
-private theorem pack2BlockUpperCheck57 : pack2BlockUpperRow 57 = 158 := by decide +kernel
+private theorem pack2BlockUpperCheck57 : pack2BlockUpperRow 57 = 127 := by decide +kernel
 
-private theorem pack2BlockUpperCheck58 : pack2BlockUpperRow 58 = 128 := by decide +kernel
+private theorem pack2BlockUpperCheck58 : pack2BlockUpperRow 58 = 102 := by decide +kernel
 
-private theorem pack2BlockUpperCheck59 : pack2BlockUpperRow 59 = 103 := by decide +kernel
+private theorem pack2BlockUpperCheck59 : pack2BlockUpperRow 59 = 81 := by decide +kernel
 
-private theorem pack2BlockUpperCheck60 : pack2BlockUpperRow 60 = 81 := by decide +kernel
+private theorem pack2BlockUpperCheck60 : pack2BlockUpperRow 60 = 61 := by decide +kernel
 
-private theorem pack2BlockUpperCheck61 : pack2BlockUpperRow 61 = 61 := by decide +kernel
+private theorem pack2BlockUpperCheck61 : pack2BlockUpperRow 61 = 45 := by decide +kernel
 
-private theorem pack2BlockUpperCheck62 : pack2BlockUpperRow 62 = 45 := by decide +kernel
+private theorem pack2BlockUpperCheck62 : pack2BlockUpperRow 62 = 33 := by decide +kernel
 
-private theorem pack2BlockUpperCheck63 : pack2BlockUpperRow 63 = 33 := by decide +kernel
+private theorem pack2BlockUpperCheck63 : pack2BlockUpperRow 63 = 22 := by decide +kernel
 
-private theorem pack2BlockUpperCheck64 : pack2BlockUpperRow 64 = 22 := by decide +kernel
+private theorem pack2BlockUpperCheck64 : pack2BlockUpperRow 64 = 13 := by decide +kernel
 
 private theorem pack2BlockUpperRows (s : Fin 65) : pack2BlockUpperRow s = pack2BlockUpperTable s := by
   fin_cases s
@@ -345,13 +345,13 @@ private theorem pack2BlockUpperRows (s : Fin 65) : pack2BlockUpperRow s = pack2B
   · exact pack2BlockUpperCheck63
   · exact pack2BlockUpperCheck64
 
-theorem block_upper : blockUpper = 104120 := by
-  change (∑ s : Fin 65, pack2BlockUpperRow s) = 104120
+theorem block_upper : blockUpper = 97083 := by
+  change (∑ s : Fin 65, pack2BlockUpperRow s) = 97083
   simp_rw [pack2BlockUpperRows]
   decide +kernel
 private def pack2LocalColumnsRow (s : Fin 65) : ℕ := ∑ gi : Fin 69, columnCount s.val ((gi.val : ℤ) - 21)
 
-private def pack2LocalColumnsTable : Fin 65 → ℕ := ![48, 144, 288, 480, 720, 1008, 1344, 1728, 2160, 2640, 3168, 3696, 4176, 4608, 4992, 5328, 5616, 5856, 6048, 6192, 6288, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336, 6336]
+private def pack2LocalColumnsTable : Fin 65 → ℕ := ![48, 144, 288, 480, 720, 1008, 1344, 1728, 2160, 2640, 3168, 3648, 4080, 4464, 4800, 5088, 5328, 5520, 5664, 5760, 5808, 5808, 5808, 5808, 5808, 5808, 5808, 5808, 5808, 5808, 5808, 5808, 5808, 5808, 5808, 5808, 5808, 5808, 5808, 5808, 5808, 5808, 5808, 5808, 5808, 5808, 5808, 5808, 5808, 5808, 5808, 5808, 5808, 5808, 5808, 5808, 5808, 5808, 5808, 5808, 5808, 5808, 5808, 5808, 5808]
 
 private theorem pack2LocalColumnsCheck0 : pack2LocalColumnsRow 0 = 48 := by decide +kernel
 
@@ -375,113 +375,113 @@ private theorem pack2LocalColumnsCheck9 : pack2LocalColumnsRow 9 = 2640 := by de
 
 private theorem pack2LocalColumnsCheck10 : pack2LocalColumnsRow 10 = 3168 := by decide +kernel
 
-private theorem pack2LocalColumnsCheck11 : pack2LocalColumnsRow 11 = 3696 := by decide +kernel
+private theorem pack2LocalColumnsCheck11 : pack2LocalColumnsRow 11 = 3648 := by decide +kernel
 
-private theorem pack2LocalColumnsCheck12 : pack2LocalColumnsRow 12 = 4176 := by decide +kernel
+private theorem pack2LocalColumnsCheck12 : pack2LocalColumnsRow 12 = 4080 := by decide +kernel
 
-private theorem pack2LocalColumnsCheck13 : pack2LocalColumnsRow 13 = 4608 := by decide +kernel
+private theorem pack2LocalColumnsCheck13 : pack2LocalColumnsRow 13 = 4464 := by decide +kernel
 
-private theorem pack2LocalColumnsCheck14 : pack2LocalColumnsRow 14 = 4992 := by decide +kernel
+private theorem pack2LocalColumnsCheck14 : pack2LocalColumnsRow 14 = 4800 := by decide +kernel
 
-private theorem pack2LocalColumnsCheck15 : pack2LocalColumnsRow 15 = 5328 := by decide +kernel
+private theorem pack2LocalColumnsCheck15 : pack2LocalColumnsRow 15 = 5088 := by decide +kernel
 
-private theorem pack2LocalColumnsCheck16 : pack2LocalColumnsRow 16 = 5616 := by decide +kernel
+private theorem pack2LocalColumnsCheck16 : pack2LocalColumnsRow 16 = 5328 := by decide +kernel
 
-private theorem pack2LocalColumnsCheck17 : pack2LocalColumnsRow 17 = 5856 := by decide +kernel
+private theorem pack2LocalColumnsCheck17 : pack2LocalColumnsRow 17 = 5520 := by decide +kernel
 
-private theorem pack2LocalColumnsCheck18 : pack2LocalColumnsRow 18 = 6048 := by decide +kernel
+private theorem pack2LocalColumnsCheck18 : pack2LocalColumnsRow 18 = 5664 := by decide +kernel
 
-private theorem pack2LocalColumnsCheck19 : pack2LocalColumnsRow 19 = 6192 := by decide +kernel
+private theorem pack2LocalColumnsCheck19 : pack2LocalColumnsRow 19 = 5760 := by decide +kernel
 
-private theorem pack2LocalColumnsCheck20 : pack2LocalColumnsRow 20 = 6288 := by decide +kernel
+private theorem pack2LocalColumnsCheck20 : pack2LocalColumnsRow 20 = 5808 := by decide +kernel
 
-private theorem pack2LocalColumnsCheck21 : pack2LocalColumnsRow 21 = 6336 := by decide +kernel
+private theorem pack2LocalColumnsCheck21 : pack2LocalColumnsRow 21 = 5808 := by decide +kernel
 
-private theorem pack2LocalColumnsCheck22 : pack2LocalColumnsRow 22 = 6336 := by decide +kernel
+private theorem pack2LocalColumnsCheck22 : pack2LocalColumnsRow 22 = 5808 := by decide +kernel
 
-private theorem pack2LocalColumnsCheck23 : pack2LocalColumnsRow 23 = 6336 := by decide +kernel
+private theorem pack2LocalColumnsCheck23 : pack2LocalColumnsRow 23 = 5808 := by decide +kernel
 
-private theorem pack2LocalColumnsCheck24 : pack2LocalColumnsRow 24 = 6336 := by decide +kernel
+private theorem pack2LocalColumnsCheck24 : pack2LocalColumnsRow 24 = 5808 := by decide +kernel
 
-private theorem pack2LocalColumnsCheck25 : pack2LocalColumnsRow 25 = 6336 := by decide +kernel
+private theorem pack2LocalColumnsCheck25 : pack2LocalColumnsRow 25 = 5808 := by decide +kernel
 
-private theorem pack2LocalColumnsCheck26 : pack2LocalColumnsRow 26 = 6336 := by decide +kernel
+private theorem pack2LocalColumnsCheck26 : pack2LocalColumnsRow 26 = 5808 := by decide +kernel
 
-private theorem pack2LocalColumnsCheck27 : pack2LocalColumnsRow 27 = 6336 := by decide +kernel
+private theorem pack2LocalColumnsCheck27 : pack2LocalColumnsRow 27 = 5808 := by decide +kernel
 
-private theorem pack2LocalColumnsCheck28 : pack2LocalColumnsRow 28 = 6336 := by decide +kernel
+private theorem pack2LocalColumnsCheck28 : pack2LocalColumnsRow 28 = 5808 := by decide +kernel
 
-private theorem pack2LocalColumnsCheck29 : pack2LocalColumnsRow 29 = 6336 := by decide +kernel
+private theorem pack2LocalColumnsCheck29 : pack2LocalColumnsRow 29 = 5808 := by decide +kernel
 
-private theorem pack2LocalColumnsCheck30 : pack2LocalColumnsRow 30 = 6336 := by decide +kernel
+private theorem pack2LocalColumnsCheck30 : pack2LocalColumnsRow 30 = 5808 := by decide +kernel
 
-private theorem pack2LocalColumnsCheck31 : pack2LocalColumnsRow 31 = 6336 := by decide +kernel
+private theorem pack2LocalColumnsCheck31 : pack2LocalColumnsRow 31 = 5808 := by decide +kernel
 
-private theorem pack2LocalColumnsCheck32 : pack2LocalColumnsRow 32 = 6336 := by decide +kernel
+private theorem pack2LocalColumnsCheck32 : pack2LocalColumnsRow 32 = 5808 := by decide +kernel
 
-private theorem pack2LocalColumnsCheck33 : pack2LocalColumnsRow 33 = 6336 := by decide +kernel
+private theorem pack2LocalColumnsCheck33 : pack2LocalColumnsRow 33 = 5808 := by decide +kernel
 
-private theorem pack2LocalColumnsCheck34 : pack2LocalColumnsRow 34 = 6336 := by decide +kernel
+private theorem pack2LocalColumnsCheck34 : pack2LocalColumnsRow 34 = 5808 := by decide +kernel
 
-private theorem pack2LocalColumnsCheck35 : pack2LocalColumnsRow 35 = 6336 := by decide +kernel
+private theorem pack2LocalColumnsCheck35 : pack2LocalColumnsRow 35 = 5808 := by decide +kernel
 
-private theorem pack2LocalColumnsCheck36 : pack2LocalColumnsRow 36 = 6336 := by decide +kernel
+private theorem pack2LocalColumnsCheck36 : pack2LocalColumnsRow 36 = 5808 := by decide +kernel
 
-private theorem pack2LocalColumnsCheck37 : pack2LocalColumnsRow 37 = 6336 := by decide +kernel
+private theorem pack2LocalColumnsCheck37 : pack2LocalColumnsRow 37 = 5808 := by decide +kernel
 
-private theorem pack2LocalColumnsCheck38 : pack2LocalColumnsRow 38 = 6336 := by decide +kernel
+private theorem pack2LocalColumnsCheck38 : pack2LocalColumnsRow 38 = 5808 := by decide +kernel
 
-private theorem pack2LocalColumnsCheck39 : pack2LocalColumnsRow 39 = 6336 := by decide +kernel
+private theorem pack2LocalColumnsCheck39 : pack2LocalColumnsRow 39 = 5808 := by decide +kernel
 
-private theorem pack2LocalColumnsCheck40 : pack2LocalColumnsRow 40 = 6336 := by decide +kernel
+private theorem pack2LocalColumnsCheck40 : pack2LocalColumnsRow 40 = 5808 := by decide +kernel
 
-private theorem pack2LocalColumnsCheck41 : pack2LocalColumnsRow 41 = 6336 := by decide +kernel
+private theorem pack2LocalColumnsCheck41 : pack2LocalColumnsRow 41 = 5808 := by decide +kernel
 
-private theorem pack2LocalColumnsCheck42 : pack2LocalColumnsRow 42 = 6336 := by decide +kernel
+private theorem pack2LocalColumnsCheck42 : pack2LocalColumnsRow 42 = 5808 := by decide +kernel
 
-private theorem pack2LocalColumnsCheck43 : pack2LocalColumnsRow 43 = 6336 := by decide +kernel
+private theorem pack2LocalColumnsCheck43 : pack2LocalColumnsRow 43 = 5808 := by decide +kernel
 
-private theorem pack2LocalColumnsCheck44 : pack2LocalColumnsRow 44 = 6336 := by decide +kernel
+private theorem pack2LocalColumnsCheck44 : pack2LocalColumnsRow 44 = 5808 := by decide +kernel
 
-private theorem pack2LocalColumnsCheck45 : pack2LocalColumnsRow 45 = 6336 := by decide +kernel
+private theorem pack2LocalColumnsCheck45 : pack2LocalColumnsRow 45 = 5808 := by decide +kernel
 
-private theorem pack2LocalColumnsCheck46 : pack2LocalColumnsRow 46 = 6336 := by decide +kernel
+private theorem pack2LocalColumnsCheck46 : pack2LocalColumnsRow 46 = 5808 := by decide +kernel
 
-private theorem pack2LocalColumnsCheck47 : pack2LocalColumnsRow 47 = 6336 := by decide +kernel
+private theorem pack2LocalColumnsCheck47 : pack2LocalColumnsRow 47 = 5808 := by decide +kernel
 
-private theorem pack2LocalColumnsCheck48 : pack2LocalColumnsRow 48 = 6336 := by decide +kernel
+private theorem pack2LocalColumnsCheck48 : pack2LocalColumnsRow 48 = 5808 := by decide +kernel
 
-private theorem pack2LocalColumnsCheck49 : pack2LocalColumnsRow 49 = 6336 := by decide +kernel
+private theorem pack2LocalColumnsCheck49 : pack2LocalColumnsRow 49 = 5808 := by decide +kernel
 
-private theorem pack2LocalColumnsCheck50 : pack2LocalColumnsRow 50 = 6336 := by decide +kernel
+private theorem pack2LocalColumnsCheck50 : pack2LocalColumnsRow 50 = 5808 := by decide +kernel
 
-private theorem pack2LocalColumnsCheck51 : pack2LocalColumnsRow 51 = 6336 := by decide +kernel
+private theorem pack2LocalColumnsCheck51 : pack2LocalColumnsRow 51 = 5808 := by decide +kernel
 
-private theorem pack2LocalColumnsCheck52 : pack2LocalColumnsRow 52 = 6336 := by decide +kernel
+private theorem pack2LocalColumnsCheck52 : pack2LocalColumnsRow 52 = 5808 := by decide +kernel
 
-private theorem pack2LocalColumnsCheck53 : pack2LocalColumnsRow 53 = 6336 := by decide +kernel
+private theorem pack2LocalColumnsCheck53 : pack2LocalColumnsRow 53 = 5808 := by decide +kernel
 
-private theorem pack2LocalColumnsCheck54 : pack2LocalColumnsRow 54 = 6336 := by decide +kernel
+private theorem pack2LocalColumnsCheck54 : pack2LocalColumnsRow 54 = 5808 := by decide +kernel
 
-private theorem pack2LocalColumnsCheck55 : pack2LocalColumnsRow 55 = 6336 := by decide +kernel
+private theorem pack2LocalColumnsCheck55 : pack2LocalColumnsRow 55 = 5808 := by decide +kernel
 
-private theorem pack2LocalColumnsCheck56 : pack2LocalColumnsRow 56 = 6336 := by decide +kernel
+private theorem pack2LocalColumnsCheck56 : pack2LocalColumnsRow 56 = 5808 := by decide +kernel
 
-private theorem pack2LocalColumnsCheck57 : pack2LocalColumnsRow 57 = 6336 := by decide +kernel
+private theorem pack2LocalColumnsCheck57 : pack2LocalColumnsRow 57 = 5808 := by decide +kernel
 
-private theorem pack2LocalColumnsCheck58 : pack2LocalColumnsRow 58 = 6336 := by decide +kernel
+private theorem pack2LocalColumnsCheck58 : pack2LocalColumnsRow 58 = 5808 := by decide +kernel
 
-private theorem pack2LocalColumnsCheck59 : pack2LocalColumnsRow 59 = 6336 := by decide +kernel
+private theorem pack2LocalColumnsCheck59 : pack2LocalColumnsRow 59 = 5808 := by decide +kernel
 
-private theorem pack2LocalColumnsCheck60 : pack2LocalColumnsRow 60 = 6336 := by decide +kernel
+private theorem pack2LocalColumnsCheck60 : pack2LocalColumnsRow 60 = 5808 := by decide +kernel
 
-private theorem pack2LocalColumnsCheck61 : pack2LocalColumnsRow 61 = 6336 := by decide +kernel
+private theorem pack2LocalColumnsCheck61 : pack2LocalColumnsRow 61 = 5808 := by decide +kernel
 
-private theorem pack2LocalColumnsCheck62 : pack2LocalColumnsRow 62 = 6336 := by decide +kernel
+private theorem pack2LocalColumnsCheck62 : pack2LocalColumnsRow 62 = 5808 := by decide +kernel
 
-private theorem pack2LocalColumnsCheck63 : pack2LocalColumnsRow 63 = 6336 := by decide +kernel
+private theorem pack2LocalColumnsCheck63 : pack2LocalColumnsRow 63 = 5808 := by decide +kernel
 
-private theorem pack2LocalColumnsCheck64 : pack2LocalColumnsRow 64 = 6336 := by decide +kernel
+private theorem pack2LocalColumnsCheck64 : pack2LocalColumnsRow 64 = 5808 := by decide +kernel
 
 private theorem pack2LocalColumnsRows (s : Fin 65) : pack2LocalColumnsRow s = pack2LocalColumnsTable s := by
   fin_cases s
@@ -551,14 +551,14 @@ private theorem pack2LocalColumnsRows (s : Fin 65) : pack2LocalColumnsRow s = pa
   · exact pack2LocalColumnsCheck63
   · exact pack2LocalColumnsCheck64
 
-theorem local_columns : localColumns = 345312 := by
-  change (∑ s : Fin 65, pack2LocalColumnsRow s) = 345312
+theorem local_columns : localColumns = 319440 := by
+  change (∑ s : Fin 65, pack2LocalColumnsRow s) = 319440
   simp_rw [pack2LocalColumnsRows]
   decide +kernel
 private def pack2ReachableRowsRow (s : Fin 65) : ℕ := ∑ gi : Fin 69,
   if 0 < columnCount s.val ((gi.val : ℤ) - 21) then rowCount s.val ((gi.val : ℤ) - 21) else 0
 
-private def pack2ReachableRowsTable : Fin 65 → ℕ := ![48, 141, 276, 450, 660, 903, 1176, 1476, 1800, 2145, 2508, 2884, 3267, 3650, 4026, 4388, 4729, 5045, 5332, 5586, 5803, 5979, 6110, 6193, 6225, 6203, 6124, 5988, 5799, 5565, 5295, 4998, 4683, 4359, 4035, 3719, 3416, 3128, 2856, 2600, 2360, 2135, 1925, 1729, 1547, 1378, 1222, 1078, 946, 825, 715, 615, 525, 444, 372, 308, 252, 203, 161, 125, 95, 70, 50, 34, 22]
+private def pack2ReachableRowsTable : Fin 65 → ℕ := ![48, 141, 276, 450, 660, 903, 1176, 1476, 1800, 2145, 2508, 2883, 3263, 3641, 4010, 4363, 4693, 4996, 5268, 5505, 5703, 5858, 5967, 6027, 6035, 5988, 5883, 5721, 5510, 5259, 4977, 4673, 4356, 4035, 3719, 3416, 3128, 2856, 2600, 2360, 2135, 1925, 1729, 1547, 1378, 1222, 1078, 946, 825, 715, 615, 525, 444, 372, 308, 252, 203, 161, 125, 95, 70, 50, 34, 22, 13]
 
 private theorem pack2ReachableRowsCheck0 : pack2ReachableRowsRow 0 = 48 := by decide +kernel
 
@@ -582,113 +582,113 @@ private theorem pack2ReachableRowsCheck9 : pack2ReachableRowsRow 9 = 2145 := by 
 
 private theorem pack2ReachableRowsCheck10 : pack2ReachableRowsRow 10 = 2508 := by decide +kernel
 
-private theorem pack2ReachableRowsCheck11 : pack2ReachableRowsRow 11 = 2884 := by decide +kernel
+private theorem pack2ReachableRowsCheck11 : pack2ReachableRowsRow 11 = 2883 := by decide +kernel
 
-private theorem pack2ReachableRowsCheck12 : pack2ReachableRowsRow 12 = 3267 := by decide +kernel
+private theorem pack2ReachableRowsCheck12 : pack2ReachableRowsRow 12 = 3263 := by decide +kernel
 
-private theorem pack2ReachableRowsCheck13 : pack2ReachableRowsRow 13 = 3650 := by decide +kernel
+private theorem pack2ReachableRowsCheck13 : pack2ReachableRowsRow 13 = 3641 := by decide +kernel
 
-private theorem pack2ReachableRowsCheck14 : pack2ReachableRowsRow 14 = 4026 := by decide +kernel
+private theorem pack2ReachableRowsCheck14 : pack2ReachableRowsRow 14 = 4010 := by decide +kernel
 
-private theorem pack2ReachableRowsCheck15 : pack2ReachableRowsRow 15 = 4388 := by decide +kernel
+private theorem pack2ReachableRowsCheck15 : pack2ReachableRowsRow 15 = 4363 := by decide +kernel
 
-private theorem pack2ReachableRowsCheck16 : pack2ReachableRowsRow 16 = 4729 := by decide +kernel
+private theorem pack2ReachableRowsCheck16 : pack2ReachableRowsRow 16 = 4693 := by decide +kernel
 
-private theorem pack2ReachableRowsCheck17 : pack2ReachableRowsRow 17 = 5045 := by decide +kernel
+private theorem pack2ReachableRowsCheck17 : pack2ReachableRowsRow 17 = 4996 := by decide +kernel
 
-private theorem pack2ReachableRowsCheck18 : pack2ReachableRowsRow 18 = 5332 := by decide +kernel
+private theorem pack2ReachableRowsCheck18 : pack2ReachableRowsRow 18 = 5268 := by decide +kernel
 
-private theorem pack2ReachableRowsCheck19 : pack2ReachableRowsRow 19 = 5586 := by decide +kernel
+private theorem pack2ReachableRowsCheck19 : pack2ReachableRowsRow 19 = 5505 := by decide +kernel
 
-private theorem pack2ReachableRowsCheck20 : pack2ReachableRowsRow 20 = 5803 := by decide +kernel
+private theorem pack2ReachableRowsCheck20 : pack2ReachableRowsRow 20 = 5703 := by decide +kernel
 
-private theorem pack2ReachableRowsCheck21 : pack2ReachableRowsRow 21 = 5979 := by decide +kernel
+private theorem pack2ReachableRowsCheck21 : pack2ReachableRowsRow 21 = 5858 := by decide +kernel
 
-private theorem pack2ReachableRowsCheck22 : pack2ReachableRowsRow 22 = 6110 := by decide +kernel
+private theorem pack2ReachableRowsCheck22 : pack2ReachableRowsRow 22 = 5967 := by decide +kernel
 
-private theorem pack2ReachableRowsCheck23 : pack2ReachableRowsRow 23 = 6193 := by decide +kernel
+private theorem pack2ReachableRowsCheck23 : pack2ReachableRowsRow 23 = 6027 := by decide +kernel
 
-private theorem pack2ReachableRowsCheck24 : pack2ReachableRowsRow 24 = 6225 := by decide +kernel
+private theorem pack2ReachableRowsCheck24 : pack2ReachableRowsRow 24 = 6035 := by decide +kernel
 
-private theorem pack2ReachableRowsCheck25 : pack2ReachableRowsRow 25 = 6203 := by decide +kernel
+private theorem pack2ReachableRowsCheck25 : pack2ReachableRowsRow 25 = 5988 := by decide +kernel
 
-private theorem pack2ReachableRowsCheck26 : pack2ReachableRowsRow 26 = 6124 := by decide +kernel
+private theorem pack2ReachableRowsCheck26 : pack2ReachableRowsRow 26 = 5883 := by decide +kernel
 
-private theorem pack2ReachableRowsCheck27 : pack2ReachableRowsRow 27 = 5988 := by decide +kernel
+private theorem pack2ReachableRowsCheck27 : pack2ReachableRowsRow 27 = 5721 := by decide +kernel
 
-private theorem pack2ReachableRowsCheck28 : pack2ReachableRowsRow 28 = 5799 := by decide +kernel
+private theorem pack2ReachableRowsCheck28 : pack2ReachableRowsRow 28 = 5510 := by decide +kernel
 
-private theorem pack2ReachableRowsCheck29 : pack2ReachableRowsRow 29 = 5565 := by decide +kernel
+private theorem pack2ReachableRowsCheck29 : pack2ReachableRowsRow 29 = 5259 := by decide +kernel
 
-private theorem pack2ReachableRowsCheck30 : pack2ReachableRowsRow 30 = 5295 := by decide +kernel
+private theorem pack2ReachableRowsCheck30 : pack2ReachableRowsRow 30 = 4977 := by decide +kernel
 
-private theorem pack2ReachableRowsCheck31 : pack2ReachableRowsRow 31 = 4998 := by decide +kernel
+private theorem pack2ReachableRowsCheck31 : pack2ReachableRowsRow 31 = 4673 := by decide +kernel
 
-private theorem pack2ReachableRowsCheck32 : pack2ReachableRowsRow 32 = 4683 := by decide +kernel
+private theorem pack2ReachableRowsCheck32 : pack2ReachableRowsRow 32 = 4356 := by decide +kernel
 
-private theorem pack2ReachableRowsCheck33 : pack2ReachableRowsRow 33 = 4359 := by decide +kernel
+private theorem pack2ReachableRowsCheck33 : pack2ReachableRowsRow 33 = 4035 := by decide +kernel
 
-private theorem pack2ReachableRowsCheck34 : pack2ReachableRowsRow 34 = 4035 := by decide +kernel
+private theorem pack2ReachableRowsCheck34 : pack2ReachableRowsRow 34 = 3719 := by decide +kernel
 
-private theorem pack2ReachableRowsCheck35 : pack2ReachableRowsRow 35 = 3719 := by decide +kernel
+private theorem pack2ReachableRowsCheck35 : pack2ReachableRowsRow 35 = 3416 := by decide +kernel
 
-private theorem pack2ReachableRowsCheck36 : pack2ReachableRowsRow 36 = 3416 := by decide +kernel
+private theorem pack2ReachableRowsCheck36 : pack2ReachableRowsRow 36 = 3128 := by decide +kernel
 
-private theorem pack2ReachableRowsCheck37 : pack2ReachableRowsRow 37 = 3128 := by decide +kernel
+private theorem pack2ReachableRowsCheck37 : pack2ReachableRowsRow 37 = 2856 := by decide +kernel
 
-private theorem pack2ReachableRowsCheck38 : pack2ReachableRowsRow 38 = 2856 := by decide +kernel
+private theorem pack2ReachableRowsCheck38 : pack2ReachableRowsRow 38 = 2600 := by decide +kernel
 
-private theorem pack2ReachableRowsCheck39 : pack2ReachableRowsRow 39 = 2600 := by decide +kernel
+private theorem pack2ReachableRowsCheck39 : pack2ReachableRowsRow 39 = 2360 := by decide +kernel
 
-private theorem pack2ReachableRowsCheck40 : pack2ReachableRowsRow 40 = 2360 := by decide +kernel
+private theorem pack2ReachableRowsCheck40 : pack2ReachableRowsRow 40 = 2135 := by decide +kernel
 
-private theorem pack2ReachableRowsCheck41 : pack2ReachableRowsRow 41 = 2135 := by decide +kernel
+private theorem pack2ReachableRowsCheck41 : pack2ReachableRowsRow 41 = 1925 := by decide +kernel
 
-private theorem pack2ReachableRowsCheck42 : pack2ReachableRowsRow 42 = 1925 := by decide +kernel
+private theorem pack2ReachableRowsCheck42 : pack2ReachableRowsRow 42 = 1729 := by decide +kernel
 
-private theorem pack2ReachableRowsCheck43 : pack2ReachableRowsRow 43 = 1729 := by decide +kernel
+private theorem pack2ReachableRowsCheck43 : pack2ReachableRowsRow 43 = 1547 := by decide +kernel
 
-private theorem pack2ReachableRowsCheck44 : pack2ReachableRowsRow 44 = 1547 := by decide +kernel
+private theorem pack2ReachableRowsCheck44 : pack2ReachableRowsRow 44 = 1378 := by decide +kernel
 
-private theorem pack2ReachableRowsCheck45 : pack2ReachableRowsRow 45 = 1378 := by decide +kernel
+private theorem pack2ReachableRowsCheck45 : pack2ReachableRowsRow 45 = 1222 := by decide +kernel
 
-private theorem pack2ReachableRowsCheck46 : pack2ReachableRowsRow 46 = 1222 := by decide +kernel
+private theorem pack2ReachableRowsCheck46 : pack2ReachableRowsRow 46 = 1078 := by decide +kernel
 
-private theorem pack2ReachableRowsCheck47 : pack2ReachableRowsRow 47 = 1078 := by decide +kernel
+private theorem pack2ReachableRowsCheck47 : pack2ReachableRowsRow 47 = 946 := by decide +kernel
 
-private theorem pack2ReachableRowsCheck48 : pack2ReachableRowsRow 48 = 946 := by decide +kernel
+private theorem pack2ReachableRowsCheck48 : pack2ReachableRowsRow 48 = 825 := by decide +kernel
 
-private theorem pack2ReachableRowsCheck49 : pack2ReachableRowsRow 49 = 825 := by decide +kernel
+private theorem pack2ReachableRowsCheck49 : pack2ReachableRowsRow 49 = 715 := by decide +kernel
 
-private theorem pack2ReachableRowsCheck50 : pack2ReachableRowsRow 50 = 715 := by decide +kernel
+private theorem pack2ReachableRowsCheck50 : pack2ReachableRowsRow 50 = 615 := by decide +kernel
 
-private theorem pack2ReachableRowsCheck51 : pack2ReachableRowsRow 51 = 615 := by decide +kernel
+private theorem pack2ReachableRowsCheck51 : pack2ReachableRowsRow 51 = 525 := by decide +kernel
 
-private theorem pack2ReachableRowsCheck52 : pack2ReachableRowsRow 52 = 525 := by decide +kernel
+private theorem pack2ReachableRowsCheck52 : pack2ReachableRowsRow 52 = 444 := by decide +kernel
 
-private theorem pack2ReachableRowsCheck53 : pack2ReachableRowsRow 53 = 444 := by decide +kernel
+private theorem pack2ReachableRowsCheck53 : pack2ReachableRowsRow 53 = 372 := by decide +kernel
 
-private theorem pack2ReachableRowsCheck54 : pack2ReachableRowsRow 54 = 372 := by decide +kernel
+private theorem pack2ReachableRowsCheck54 : pack2ReachableRowsRow 54 = 308 := by decide +kernel
 
-private theorem pack2ReachableRowsCheck55 : pack2ReachableRowsRow 55 = 308 := by decide +kernel
+private theorem pack2ReachableRowsCheck55 : pack2ReachableRowsRow 55 = 252 := by decide +kernel
 
-private theorem pack2ReachableRowsCheck56 : pack2ReachableRowsRow 56 = 252 := by decide +kernel
+private theorem pack2ReachableRowsCheck56 : pack2ReachableRowsRow 56 = 203 := by decide +kernel
 
-private theorem pack2ReachableRowsCheck57 : pack2ReachableRowsRow 57 = 203 := by decide +kernel
+private theorem pack2ReachableRowsCheck57 : pack2ReachableRowsRow 57 = 161 := by decide +kernel
 
-private theorem pack2ReachableRowsCheck58 : pack2ReachableRowsRow 58 = 161 := by decide +kernel
+private theorem pack2ReachableRowsCheck58 : pack2ReachableRowsRow 58 = 125 := by decide +kernel
 
-private theorem pack2ReachableRowsCheck59 : pack2ReachableRowsRow 59 = 125 := by decide +kernel
+private theorem pack2ReachableRowsCheck59 : pack2ReachableRowsRow 59 = 95 := by decide +kernel
 
-private theorem pack2ReachableRowsCheck60 : pack2ReachableRowsRow 60 = 95 := by decide +kernel
+private theorem pack2ReachableRowsCheck60 : pack2ReachableRowsRow 60 = 70 := by decide +kernel
 
-private theorem pack2ReachableRowsCheck61 : pack2ReachableRowsRow 61 = 70 := by decide +kernel
+private theorem pack2ReachableRowsCheck61 : pack2ReachableRowsRow 61 = 50 := by decide +kernel
 
-private theorem pack2ReachableRowsCheck62 : pack2ReachableRowsRow 62 = 50 := by decide +kernel
+private theorem pack2ReachableRowsCheck62 : pack2ReachableRowsRow 62 = 34 := by decide +kernel
 
-private theorem pack2ReachableRowsCheck63 : pack2ReachableRowsRow 63 = 34 := by decide +kernel
+private theorem pack2ReachableRowsCheck63 : pack2ReachableRowsRow 63 = 22 := by decide +kernel
 
-private theorem pack2ReachableRowsCheck64 : pack2ReachableRowsRow 64 = 22 := by decide +kernel
+private theorem pack2ReachableRowsCheck64 : pack2ReachableRowsRow 64 = 13 := by decide +kernel
 
 private theorem pack2ReachableRowsRows (s : Fin 65) : pack2ReachableRowsRow s = pack2ReachableRowsTable s := by
   fin_cases s
@@ -758,14 +758,14 @@ private theorem pack2ReachableRowsRows (s : Fin 65) : pack2ReachableRowsRow s = 
   · exact pack2ReachableRowsCheck63
   · exact pack2ReachableRowsCheck64
 
-theorem reachable_rows : reachableRows = 168704 := by
-  change (∑ s : Fin 65, pack2ReachableRowsRow s) = 168704
+theorem reachable_rows : reachableRows = 161065 := by
+  change (∑ s : Fin 65, pack2ReachableRowsRow s) = 161065
   simp_rw [pack2ReachableRowsRows]
   decide +kernel
 private def pack2NonzeroBlocksRow (s : Fin 65) : ℕ := ∑ gi : Fin 69,
   if 0 < columnCount s.val ((gi.val : ℤ) - 21) then 1 else 0
 
-private def pack2NonzeroBlocksTable : Fin 65 → ℕ := ![48, 50, 52, 54, 56, 58, 60, 62, 64, 66, 68, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69]
+private def pack2NonzeroBlocksTable : Fin 65 → ℕ := ![48, 50, 52, 54, 56, 58, 60, 62, 64, 66, 68, 68, 68, 68, 68, 68, 68, 68, 68, 68, 68, 68, 68, 68, 68, 68, 68, 68, 68, 68, 68, 68, 68, 68, 68, 68, 68, 68, 68, 68, 68, 68, 68, 68, 68, 68, 68, 68, 68, 68, 68, 68, 68, 68, 68, 68, 68, 68, 68, 68, 68, 68, 68, 68, 68]
 
 private theorem pack2NonzeroBlocksCheck0 : pack2NonzeroBlocksRow 0 = 48 := by decide +kernel
 
@@ -789,113 +789,113 @@ private theorem pack2NonzeroBlocksCheck9 : pack2NonzeroBlocksRow 9 = 66 := by de
 
 private theorem pack2NonzeroBlocksCheck10 : pack2NonzeroBlocksRow 10 = 68 := by decide +kernel
 
-private theorem pack2NonzeroBlocksCheck11 : pack2NonzeroBlocksRow 11 = 69 := by decide +kernel
+private theorem pack2NonzeroBlocksCheck11 : pack2NonzeroBlocksRow 11 = 68 := by decide +kernel
 
-private theorem pack2NonzeroBlocksCheck12 : pack2NonzeroBlocksRow 12 = 69 := by decide +kernel
+private theorem pack2NonzeroBlocksCheck12 : pack2NonzeroBlocksRow 12 = 68 := by decide +kernel
 
-private theorem pack2NonzeroBlocksCheck13 : pack2NonzeroBlocksRow 13 = 69 := by decide +kernel
+private theorem pack2NonzeroBlocksCheck13 : pack2NonzeroBlocksRow 13 = 68 := by decide +kernel
 
-private theorem pack2NonzeroBlocksCheck14 : pack2NonzeroBlocksRow 14 = 69 := by decide +kernel
+private theorem pack2NonzeroBlocksCheck14 : pack2NonzeroBlocksRow 14 = 68 := by decide +kernel
 
-private theorem pack2NonzeroBlocksCheck15 : pack2NonzeroBlocksRow 15 = 69 := by decide +kernel
+private theorem pack2NonzeroBlocksCheck15 : pack2NonzeroBlocksRow 15 = 68 := by decide +kernel
 
-private theorem pack2NonzeroBlocksCheck16 : pack2NonzeroBlocksRow 16 = 69 := by decide +kernel
+private theorem pack2NonzeroBlocksCheck16 : pack2NonzeroBlocksRow 16 = 68 := by decide +kernel
 
-private theorem pack2NonzeroBlocksCheck17 : pack2NonzeroBlocksRow 17 = 69 := by decide +kernel
+private theorem pack2NonzeroBlocksCheck17 : pack2NonzeroBlocksRow 17 = 68 := by decide +kernel
 
-private theorem pack2NonzeroBlocksCheck18 : pack2NonzeroBlocksRow 18 = 69 := by decide +kernel
+private theorem pack2NonzeroBlocksCheck18 : pack2NonzeroBlocksRow 18 = 68 := by decide +kernel
 
-private theorem pack2NonzeroBlocksCheck19 : pack2NonzeroBlocksRow 19 = 69 := by decide +kernel
+private theorem pack2NonzeroBlocksCheck19 : pack2NonzeroBlocksRow 19 = 68 := by decide +kernel
 
-private theorem pack2NonzeroBlocksCheck20 : pack2NonzeroBlocksRow 20 = 69 := by decide +kernel
+private theorem pack2NonzeroBlocksCheck20 : pack2NonzeroBlocksRow 20 = 68 := by decide +kernel
 
-private theorem pack2NonzeroBlocksCheck21 : pack2NonzeroBlocksRow 21 = 69 := by decide +kernel
+private theorem pack2NonzeroBlocksCheck21 : pack2NonzeroBlocksRow 21 = 68 := by decide +kernel
 
-private theorem pack2NonzeroBlocksCheck22 : pack2NonzeroBlocksRow 22 = 69 := by decide +kernel
+private theorem pack2NonzeroBlocksCheck22 : pack2NonzeroBlocksRow 22 = 68 := by decide +kernel
 
-private theorem pack2NonzeroBlocksCheck23 : pack2NonzeroBlocksRow 23 = 69 := by decide +kernel
+private theorem pack2NonzeroBlocksCheck23 : pack2NonzeroBlocksRow 23 = 68 := by decide +kernel
 
-private theorem pack2NonzeroBlocksCheck24 : pack2NonzeroBlocksRow 24 = 69 := by decide +kernel
+private theorem pack2NonzeroBlocksCheck24 : pack2NonzeroBlocksRow 24 = 68 := by decide +kernel
 
-private theorem pack2NonzeroBlocksCheck25 : pack2NonzeroBlocksRow 25 = 69 := by decide +kernel
+private theorem pack2NonzeroBlocksCheck25 : pack2NonzeroBlocksRow 25 = 68 := by decide +kernel
 
-private theorem pack2NonzeroBlocksCheck26 : pack2NonzeroBlocksRow 26 = 69 := by decide +kernel
+private theorem pack2NonzeroBlocksCheck26 : pack2NonzeroBlocksRow 26 = 68 := by decide +kernel
 
-private theorem pack2NonzeroBlocksCheck27 : pack2NonzeroBlocksRow 27 = 69 := by decide +kernel
+private theorem pack2NonzeroBlocksCheck27 : pack2NonzeroBlocksRow 27 = 68 := by decide +kernel
 
-private theorem pack2NonzeroBlocksCheck28 : pack2NonzeroBlocksRow 28 = 69 := by decide +kernel
+private theorem pack2NonzeroBlocksCheck28 : pack2NonzeroBlocksRow 28 = 68 := by decide +kernel
 
-private theorem pack2NonzeroBlocksCheck29 : pack2NonzeroBlocksRow 29 = 69 := by decide +kernel
+private theorem pack2NonzeroBlocksCheck29 : pack2NonzeroBlocksRow 29 = 68 := by decide +kernel
 
-private theorem pack2NonzeroBlocksCheck30 : pack2NonzeroBlocksRow 30 = 69 := by decide +kernel
+private theorem pack2NonzeroBlocksCheck30 : pack2NonzeroBlocksRow 30 = 68 := by decide +kernel
 
-private theorem pack2NonzeroBlocksCheck31 : pack2NonzeroBlocksRow 31 = 69 := by decide +kernel
+private theorem pack2NonzeroBlocksCheck31 : pack2NonzeroBlocksRow 31 = 68 := by decide +kernel
 
-private theorem pack2NonzeroBlocksCheck32 : pack2NonzeroBlocksRow 32 = 69 := by decide +kernel
+private theorem pack2NonzeroBlocksCheck32 : pack2NonzeroBlocksRow 32 = 68 := by decide +kernel
 
-private theorem pack2NonzeroBlocksCheck33 : pack2NonzeroBlocksRow 33 = 69 := by decide +kernel
+private theorem pack2NonzeroBlocksCheck33 : pack2NonzeroBlocksRow 33 = 68 := by decide +kernel
 
-private theorem pack2NonzeroBlocksCheck34 : pack2NonzeroBlocksRow 34 = 69 := by decide +kernel
+private theorem pack2NonzeroBlocksCheck34 : pack2NonzeroBlocksRow 34 = 68 := by decide +kernel
 
-private theorem pack2NonzeroBlocksCheck35 : pack2NonzeroBlocksRow 35 = 69 := by decide +kernel
+private theorem pack2NonzeroBlocksCheck35 : pack2NonzeroBlocksRow 35 = 68 := by decide +kernel
 
-private theorem pack2NonzeroBlocksCheck36 : pack2NonzeroBlocksRow 36 = 69 := by decide +kernel
+private theorem pack2NonzeroBlocksCheck36 : pack2NonzeroBlocksRow 36 = 68 := by decide +kernel
 
-private theorem pack2NonzeroBlocksCheck37 : pack2NonzeroBlocksRow 37 = 69 := by decide +kernel
+private theorem pack2NonzeroBlocksCheck37 : pack2NonzeroBlocksRow 37 = 68 := by decide +kernel
 
-private theorem pack2NonzeroBlocksCheck38 : pack2NonzeroBlocksRow 38 = 69 := by decide +kernel
+private theorem pack2NonzeroBlocksCheck38 : pack2NonzeroBlocksRow 38 = 68 := by decide +kernel
 
-private theorem pack2NonzeroBlocksCheck39 : pack2NonzeroBlocksRow 39 = 69 := by decide +kernel
+private theorem pack2NonzeroBlocksCheck39 : pack2NonzeroBlocksRow 39 = 68 := by decide +kernel
 
-private theorem pack2NonzeroBlocksCheck40 : pack2NonzeroBlocksRow 40 = 69 := by decide +kernel
+private theorem pack2NonzeroBlocksCheck40 : pack2NonzeroBlocksRow 40 = 68 := by decide +kernel
 
-private theorem pack2NonzeroBlocksCheck41 : pack2NonzeroBlocksRow 41 = 69 := by decide +kernel
+private theorem pack2NonzeroBlocksCheck41 : pack2NonzeroBlocksRow 41 = 68 := by decide +kernel
 
-private theorem pack2NonzeroBlocksCheck42 : pack2NonzeroBlocksRow 42 = 69 := by decide +kernel
+private theorem pack2NonzeroBlocksCheck42 : pack2NonzeroBlocksRow 42 = 68 := by decide +kernel
 
-private theorem pack2NonzeroBlocksCheck43 : pack2NonzeroBlocksRow 43 = 69 := by decide +kernel
+private theorem pack2NonzeroBlocksCheck43 : pack2NonzeroBlocksRow 43 = 68 := by decide +kernel
 
-private theorem pack2NonzeroBlocksCheck44 : pack2NonzeroBlocksRow 44 = 69 := by decide +kernel
+private theorem pack2NonzeroBlocksCheck44 : pack2NonzeroBlocksRow 44 = 68 := by decide +kernel
 
-private theorem pack2NonzeroBlocksCheck45 : pack2NonzeroBlocksRow 45 = 69 := by decide +kernel
+private theorem pack2NonzeroBlocksCheck45 : pack2NonzeroBlocksRow 45 = 68 := by decide +kernel
 
-private theorem pack2NonzeroBlocksCheck46 : pack2NonzeroBlocksRow 46 = 69 := by decide +kernel
+private theorem pack2NonzeroBlocksCheck46 : pack2NonzeroBlocksRow 46 = 68 := by decide +kernel
 
-private theorem pack2NonzeroBlocksCheck47 : pack2NonzeroBlocksRow 47 = 69 := by decide +kernel
+private theorem pack2NonzeroBlocksCheck47 : pack2NonzeroBlocksRow 47 = 68 := by decide +kernel
 
-private theorem pack2NonzeroBlocksCheck48 : pack2NonzeroBlocksRow 48 = 69 := by decide +kernel
+private theorem pack2NonzeroBlocksCheck48 : pack2NonzeroBlocksRow 48 = 68 := by decide +kernel
 
-private theorem pack2NonzeroBlocksCheck49 : pack2NonzeroBlocksRow 49 = 69 := by decide +kernel
+private theorem pack2NonzeroBlocksCheck49 : pack2NonzeroBlocksRow 49 = 68 := by decide +kernel
 
-private theorem pack2NonzeroBlocksCheck50 : pack2NonzeroBlocksRow 50 = 69 := by decide +kernel
+private theorem pack2NonzeroBlocksCheck50 : pack2NonzeroBlocksRow 50 = 68 := by decide +kernel
 
-private theorem pack2NonzeroBlocksCheck51 : pack2NonzeroBlocksRow 51 = 69 := by decide +kernel
+private theorem pack2NonzeroBlocksCheck51 : pack2NonzeroBlocksRow 51 = 68 := by decide +kernel
 
-private theorem pack2NonzeroBlocksCheck52 : pack2NonzeroBlocksRow 52 = 69 := by decide +kernel
+private theorem pack2NonzeroBlocksCheck52 : pack2NonzeroBlocksRow 52 = 68 := by decide +kernel
 
-private theorem pack2NonzeroBlocksCheck53 : pack2NonzeroBlocksRow 53 = 69 := by decide +kernel
+private theorem pack2NonzeroBlocksCheck53 : pack2NonzeroBlocksRow 53 = 68 := by decide +kernel
 
-private theorem pack2NonzeroBlocksCheck54 : pack2NonzeroBlocksRow 54 = 69 := by decide +kernel
+private theorem pack2NonzeroBlocksCheck54 : pack2NonzeroBlocksRow 54 = 68 := by decide +kernel
 
-private theorem pack2NonzeroBlocksCheck55 : pack2NonzeroBlocksRow 55 = 69 := by decide +kernel
+private theorem pack2NonzeroBlocksCheck55 : pack2NonzeroBlocksRow 55 = 68 := by decide +kernel
 
-private theorem pack2NonzeroBlocksCheck56 : pack2NonzeroBlocksRow 56 = 69 := by decide +kernel
+private theorem pack2NonzeroBlocksCheck56 : pack2NonzeroBlocksRow 56 = 68 := by decide +kernel
 
-private theorem pack2NonzeroBlocksCheck57 : pack2NonzeroBlocksRow 57 = 69 := by decide +kernel
+private theorem pack2NonzeroBlocksCheck57 : pack2NonzeroBlocksRow 57 = 68 := by decide +kernel
 
-private theorem pack2NonzeroBlocksCheck58 : pack2NonzeroBlocksRow 58 = 69 := by decide +kernel
+private theorem pack2NonzeroBlocksCheck58 : pack2NonzeroBlocksRow 58 = 68 := by decide +kernel
 
-private theorem pack2NonzeroBlocksCheck59 : pack2NonzeroBlocksRow 59 = 69 := by decide +kernel
+private theorem pack2NonzeroBlocksCheck59 : pack2NonzeroBlocksRow 59 = 68 := by decide +kernel
 
-private theorem pack2NonzeroBlocksCheck60 : pack2NonzeroBlocksRow 60 = 69 := by decide +kernel
+private theorem pack2NonzeroBlocksCheck60 : pack2NonzeroBlocksRow 60 = 68 := by decide +kernel
 
-private theorem pack2NonzeroBlocksCheck61 : pack2NonzeroBlocksRow 61 = 69 := by decide +kernel
+private theorem pack2NonzeroBlocksCheck61 : pack2NonzeroBlocksRow 61 = 68 := by decide +kernel
 
-private theorem pack2NonzeroBlocksCheck62 : pack2NonzeroBlocksRow 62 = 69 := by decide +kernel
+private theorem pack2NonzeroBlocksCheck62 : pack2NonzeroBlocksRow 62 = 68 := by decide +kernel
 
-private theorem pack2NonzeroBlocksCheck63 : pack2NonzeroBlocksRow 63 = 69 := by decide +kernel
+private theorem pack2NonzeroBlocksCheck63 : pack2NonzeroBlocksRow 63 = 68 := by decide +kernel
 
-private theorem pack2NonzeroBlocksCheck64 : pack2NonzeroBlocksRow 64 = 69 := by decide +kernel
+private theorem pack2NonzeroBlocksCheck64 : pack2NonzeroBlocksRow 64 = 68 := by decide +kernel
 
 private theorem pack2NonzeroBlocksRows (s : Fin 65) : pack2NonzeroBlocksRow s = pack2NonzeroBlocksTable s := by
   fin_cases s
@@ -965,17 +965,17 @@ private theorem pack2NonzeroBlocksRows (s : Fin 65) : pack2NonzeroBlocksRow s = 
   · exact pack2NonzeroBlocksCheck63
   · exact pack2NonzeroBlocksCheck64
 
-theorem nonzero_blocks : nonzeroBlocks = 4364 := by
-  change (∑ s : Fin 65, pack2NonzeroBlocksRow s) = 4364
+theorem nonzero_blocks : nonzeroBlocks = 4310 := by
+  change (∑ s : Fin 65, pack2NonzeroBlocksRow s) = 4310
   simp_rw [pack2NonzeroBlocksRows]
   decide +kernel
 theorem local_columns_per_jet : localColumns = Fintype.card Jet * 48 := by
   rw [local_columns, jet_count]
 
-theorem global_rank_allowance : (262144 : ℕ) * blockUpper = 27294433280 := by
+theorem global_rank_allowance : (262144 : ℕ) * blockUpper = 25449725952 := by
   rw [block_upper]
 
-theorem source_surplus : sourceTotal - 262144 * blockUpper = 18710864 := by
+theorem source_surplus : sourceTotal - 262144 * blockUpper = 18294153 := by
   rw [source_total, block_upper]
 
 theorem strict_source_surplus : 262144 * blockUpper < Fintype.card SourceIndex := by
@@ -1011,7 +1011,7 @@ def coarseUpper : ℕ := ∑ s : Fin 65, ∑ gi : Fin 69,
 private def pack2CoarseUpperRow (s : Fin 65) : ℕ := ∑ gi : Fin 69,
   min (columnCount s.val ((gi.val : ℤ) - 21)) (rowCountCoarse s.val ((gi.val : ℤ) - 21))
 
-private def pack2CoarseUpperTable : Fin 65 → ℕ := ![48, 141, 276, 450, 660, 903, 1176, 1476, 1800, 2145, 2508, 2849, 3132, 3360, 3536, 3663, 3744, 3782, 3780, 3741, 3668, 3564, 3432, 3300, 3168, 3036, 2904, 2772, 2641, 2511, 2383, 2257, 2134, 2013, 1893, 1777, 1665, 1555, 1448, 1346, 1246, 1150, 1060, 970, 887, 806, 730, 658, 590, 526, 466, 410, 359, 310, 268, 226, 190, 158, 128, 103, 81, 61, 45, 33, 22]
+private def pack2CoarseUpperTable : Fin 65 → ℕ := ![48, 141, 276, 450, 660, 903, 1176, 1476, 1800, 2145, 2508, 2812, 3060, 3255, 3400, 3498, 3552, 3565, 3540, 3480, 3388, 3267, 3146, 3025, 2904, 2783, 2662, 2541, 2420, 2300, 2181, 2064, 1949, 1837, 1727, 1618, 1513, 1412, 1312, 1216, 1125, 1035, 950, 869, 790, 718, 646, 581, 517, 460, 404, 355, 306, 264, 224, 188, 157, 127, 102, 81, 61, 45, 33, 22, 13]
 
 private theorem pack2CoarseUpperCheck0 : pack2CoarseUpperRow 0 = 48 := by decide +kernel
 
@@ -1035,113 +1035,113 @@ private theorem pack2CoarseUpperCheck9 : pack2CoarseUpperRow 9 = 2145 := by deci
 
 private theorem pack2CoarseUpperCheck10 : pack2CoarseUpperRow 10 = 2508 := by decide +kernel
 
-private theorem pack2CoarseUpperCheck11 : pack2CoarseUpperRow 11 = 2849 := by decide +kernel
+private theorem pack2CoarseUpperCheck11 : pack2CoarseUpperRow 11 = 2812 := by decide +kernel
 
-private theorem pack2CoarseUpperCheck12 : pack2CoarseUpperRow 12 = 3132 := by decide +kernel
+private theorem pack2CoarseUpperCheck12 : pack2CoarseUpperRow 12 = 3060 := by decide +kernel
 
-private theorem pack2CoarseUpperCheck13 : pack2CoarseUpperRow 13 = 3360 := by decide +kernel
+private theorem pack2CoarseUpperCheck13 : pack2CoarseUpperRow 13 = 3255 := by decide +kernel
 
-private theorem pack2CoarseUpperCheck14 : pack2CoarseUpperRow 14 = 3536 := by decide +kernel
+private theorem pack2CoarseUpperCheck14 : pack2CoarseUpperRow 14 = 3400 := by decide +kernel
 
-private theorem pack2CoarseUpperCheck15 : pack2CoarseUpperRow 15 = 3663 := by decide +kernel
+private theorem pack2CoarseUpperCheck15 : pack2CoarseUpperRow 15 = 3498 := by decide +kernel
 
-private theorem pack2CoarseUpperCheck16 : pack2CoarseUpperRow 16 = 3744 := by decide +kernel
+private theorem pack2CoarseUpperCheck16 : pack2CoarseUpperRow 16 = 3552 := by decide +kernel
 
-private theorem pack2CoarseUpperCheck17 : pack2CoarseUpperRow 17 = 3782 := by decide +kernel
+private theorem pack2CoarseUpperCheck17 : pack2CoarseUpperRow 17 = 3565 := by decide +kernel
 
-private theorem pack2CoarseUpperCheck18 : pack2CoarseUpperRow 18 = 3780 := by decide +kernel
+private theorem pack2CoarseUpperCheck18 : pack2CoarseUpperRow 18 = 3540 := by decide +kernel
 
-private theorem pack2CoarseUpperCheck19 : pack2CoarseUpperRow 19 = 3741 := by decide +kernel
+private theorem pack2CoarseUpperCheck19 : pack2CoarseUpperRow 19 = 3480 := by decide +kernel
 
-private theorem pack2CoarseUpperCheck20 : pack2CoarseUpperRow 20 = 3668 := by decide +kernel
+private theorem pack2CoarseUpperCheck20 : pack2CoarseUpperRow 20 = 3388 := by decide +kernel
 
-private theorem pack2CoarseUpperCheck21 : pack2CoarseUpperRow 21 = 3564 := by decide +kernel
+private theorem pack2CoarseUpperCheck21 : pack2CoarseUpperRow 21 = 3267 := by decide +kernel
 
-private theorem pack2CoarseUpperCheck22 : pack2CoarseUpperRow 22 = 3432 := by decide +kernel
+private theorem pack2CoarseUpperCheck22 : pack2CoarseUpperRow 22 = 3146 := by decide +kernel
 
-private theorem pack2CoarseUpperCheck23 : pack2CoarseUpperRow 23 = 3300 := by decide +kernel
+private theorem pack2CoarseUpperCheck23 : pack2CoarseUpperRow 23 = 3025 := by decide +kernel
 
-private theorem pack2CoarseUpperCheck24 : pack2CoarseUpperRow 24 = 3168 := by decide +kernel
+private theorem pack2CoarseUpperCheck24 : pack2CoarseUpperRow 24 = 2904 := by decide +kernel
 
-private theorem pack2CoarseUpperCheck25 : pack2CoarseUpperRow 25 = 3036 := by decide +kernel
+private theorem pack2CoarseUpperCheck25 : pack2CoarseUpperRow 25 = 2783 := by decide +kernel
 
-private theorem pack2CoarseUpperCheck26 : pack2CoarseUpperRow 26 = 2904 := by decide +kernel
+private theorem pack2CoarseUpperCheck26 : pack2CoarseUpperRow 26 = 2662 := by decide +kernel
 
-private theorem pack2CoarseUpperCheck27 : pack2CoarseUpperRow 27 = 2772 := by decide +kernel
+private theorem pack2CoarseUpperCheck27 : pack2CoarseUpperRow 27 = 2541 := by decide +kernel
 
-private theorem pack2CoarseUpperCheck28 : pack2CoarseUpperRow 28 = 2641 := by decide +kernel
+private theorem pack2CoarseUpperCheck28 : pack2CoarseUpperRow 28 = 2420 := by decide +kernel
 
-private theorem pack2CoarseUpperCheck29 : pack2CoarseUpperRow 29 = 2511 := by decide +kernel
+private theorem pack2CoarseUpperCheck29 : pack2CoarseUpperRow 29 = 2300 := by decide +kernel
 
-private theorem pack2CoarseUpperCheck30 : pack2CoarseUpperRow 30 = 2383 := by decide +kernel
+private theorem pack2CoarseUpperCheck30 : pack2CoarseUpperRow 30 = 2181 := by decide +kernel
 
-private theorem pack2CoarseUpperCheck31 : pack2CoarseUpperRow 31 = 2257 := by decide +kernel
+private theorem pack2CoarseUpperCheck31 : pack2CoarseUpperRow 31 = 2064 := by decide +kernel
 
-private theorem pack2CoarseUpperCheck32 : pack2CoarseUpperRow 32 = 2134 := by decide +kernel
+private theorem pack2CoarseUpperCheck32 : pack2CoarseUpperRow 32 = 1949 := by decide +kernel
 
-private theorem pack2CoarseUpperCheck33 : pack2CoarseUpperRow 33 = 2013 := by decide +kernel
+private theorem pack2CoarseUpperCheck33 : pack2CoarseUpperRow 33 = 1837 := by decide +kernel
 
-private theorem pack2CoarseUpperCheck34 : pack2CoarseUpperRow 34 = 1893 := by decide +kernel
+private theorem pack2CoarseUpperCheck34 : pack2CoarseUpperRow 34 = 1727 := by decide +kernel
 
-private theorem pack2CoarseUpperCheck35 : pack2CoarseUpperRow 35 = 1777 := by decide +kernel
+private theorem pack2CoarseUpperCheck35 : pack2CoarseUpperRow 35 = 1618 := by decide +kernel
 
-private theorem pack2CoarseUpperCheck36 : pack2CoarseUpperRow 36 = 1665 := by decide +kernel
+private theorem pack2CoarseUpperCheck36 : pack2CoarseUpperRow 36 = 1513 := by decide +kernel
 
-private theorem pack2CoarseUpperCheck37 : pack2CoarseUpperRow 37 = 1555 := by decide +kernel
+private theorem pack2CoarseUpperCheck37 : pack2CoarseUpperRow 37 = 1412 := by decide +kernel
 
-private theorem pack2CoarseUpperCheck38 : pack2CoarseUpperRow 38 = 1448 := by decide +kernel
+private theorem pack2CoarseUpperCheck38 : pack2CoarseUpperRow 38 = 1312 := by decide +kernel
 
-private theorem pack2CoarseUpperCheck39 : pack2CoarseUpperRow 39 = 1346 := by decide +kernel
+private theorem pack2CoarseUpperCheck39 : pack2CoarseUpperRow 39 = 1216 := by decide +kernel
 
-private theorem pack2CoarseUpperCheck40 : pack2CoarseUpperRow 40 = 1246 := by decide +kernel
+private theorem pack2CoarseUpperCheck40 : pack2CoarseUpperRow 40 = 1125 := by decide +kernel
 
-private theorem pack2CoarseUpperCheck41 : pack2CoarseUpperRow 41 = 1150 := by decide +kernel
+private theorem pack2CoarseUpperCheck41 : pack2CoarseUpperRow 41 = 1035 := by decide +kernel
 
-private theorem pack2CoarseUpperCheck42 : pack2CoarseUpperRow 42 = 1060 := by decide +kernel
+private theorem pack2CoarseUpperCheck42 : pack2CoarseUpperRow 42 = 950 := by decide +kernel
 
-private theorem pack2CoarseUpperCheck43 : pack2CoarseUpperRow 43 = 970 := by decide +kernel
+private theorem pack2CoarseUpperCheck43 : pack2CoarseUpperRow 43 = 869 := by decide +kernel
 
-private theorem pack2CoarseUpperCheck44 : pack2CoarseUpperRow 44 = 887 := by decide +kernel
+private theorem pack2CoarseUpperCheck44 : pack2CoarseUpperRow 44 = 790 := by decide +kernel
 
-private theorem pack2CoarseUpperCheck45 : pack2CoarseUpperRow 45 = 806 := by decide +kernel
+private theorem pack2CoarseUpperCheck45 : pack2CoarseUpperRow 45 = 718 := by decide +kernel
 
-private theorem pack2CoarseUpperCheck46 : pack2CoarseUpperRow 46 = 730 := by decide +kernel
+private theorem pack2CoarseUpperCheck46 : pack2CoarseUpperRow 46 = 646 := by decide +kernel
 
-private theorem pack2CoarseUpperCheck47 : pack2CoarseUpperRow 47 = 658 := by decide +kernel
+private theorem pack2CoarseUpperCheck47 : pack2CoarseUpperRow 47 = 581 := by decide +kernel
 
-private theorem pack2CoarseUpperCheck48 : pack2CoarseUpperRow 48 = 590 := by decide +kernel
+private theorem pack2CoarseUpperCheck48 : pack2CoarseUpperRow 48 = 517 := by decide +kernel
 
-private theorem pack2CoarseUpperCheck49 : pack2CoarseUpperRow 49 = 526 := by decide +kernel
+private theorem pack2CoarseUpperCheck49 : pack2CoarseUpperRow 49 = 460 := by decide +kernel
 
-private theorem pack2CoarseUpperCheck50 : pack2CoarseUpperRow 50 = 466 := by decide +kernel
+private theorem pack2CoarseUpperCheck50 : pack2CoarseUpperRow 50 = 404 := by decide +kernel
 
-private theorem pack2CoarseUpperCheck51 : pack2CoarseUpperRow 51 = 410 := by decide +kernel
+private theorem pack2CoarseUpperCheck51 : pack2CoarseUpperRow 51 = 355 := by decide +kernel
 
-private theorem pack2CoarseUpperCheck52 : pack2CoarseUpperRow 52 = 359 := by decide +kernel
+private theorem pack2CoarseUpperCheck52 : pack2CoarseUpperRow 52 = 306 := by decide +kernel
 
-private theorem pack2CoarseUpperCheck53 : pack2CoarseUpperRow 53 = 310 := by decide +kernel
+private theorem pack2CoarseUpperCheck53 : pack2CoarseUpperRow 53 = 264 := by decide +kernel
 
-private theorem pack2CoarseUpperCheck54 : pack2CoarseUpperRow 54 = 268 := by decide +kernel
+private theorem pack2CoarseUpperCheck54 : pack2CoarseUpperRow 54 = 224 := by decide +kernel
 
-private theorem pack2CoarseUpperCheck55 : pack2CoarseUpperRow 55 = 226 := by decide +kernel
+private theorem pack2CoarseUpperCheck55 : pack2CoarseUpperRow 55 = 188 := by decide +kernel
 
-private theorem pack2CoarseUpperCheck56 : pack2CoarseUpperRow 56 = 190 := by decide +kernel
+private theorem pack2CoarseUpperCheck56 : pack2CoarseUpperRow 56 = 157 := by decide +kernel
 
-private theorem pack2CoarseUpperCheck57 : pack2CoarseUpperRow 57 = 158 := by decide +kernel
+private theorem pack2CoarseUpperCheck57 : pack2CoarseUpperRow 57 = 127 := by decide +kernel
 
-private theorem pack2CoarseUpperCheck58 : pack2CoarseUpperRow 58 = 128 := by decide +kernel
+private theorem pack2CoarseUpperCheck58 : pack2CoarseUpperRow 58 = 102 := by decide +kernel
 
-private theorem pack2CoarseUpperCheck59 : pack2CoarseUpperRow 59 = 103 := by decide +kernel
+private theorem pack2CoarseUpperCheck59 : pack2CoarseUpperRow 59 = 81 := by decide +kernel
 
-private theorem pack2CoarseUpperCheck60 : pack2CoarseUpperRow 60 = 81 := by decide +kernel
+private theorem pack2CoarseUpperCheck60 : pack2CoarseUpperRow 60 = 61 := by decide +kernel
 
-private theorem pack2CoarseUpperCheck61 : pack2CoarseUpperRow 61 = 61 := by decide +kernel
+private theorem pack2CoarseUpperCheck61 : pack2CoarseUpperRow 61 = 45 := by decide +kernel
 
-private theorem pack2CoarseUpperCheck62 : pack2CoarseUpperRow 62 = 45 := by decide +kernel
+private theorem pack2CoarseUpperCheck62 : pack2CoarseUpperRow 62 = 33 := by decide +kernel
 
-private theorem pack2CoarseUpperCheck63 : pack2CoarseUpperRow 63 = 33 := by decide +kernel
+private theorem pack2CoarseUpperCheck63 : pack2CoarseUpperRow 63 = 22 := by decide +kernel
 
-private theorem pack2CoarseUpperCheck64 : pack2CoarseUpperRow 64 = 22 := by decide +kernel
+private theorem pack2CoarseUpperCheck64 : pack2CoarseUpperRow 64 = 13 := by decide +kernel
 
 private theorem pack2CoarseUpperRows (s : Fin 65) : pack2CoarseUpperRow s = pack2CoarseUpperTable s := by
   fin_cases s
@@ -1211,8 +1211,8 @@ private theorem pack2CoarseUpperRows (s : Fin 65) : pack2CoarseUpperRow s = pack
   · exact pack2CoarseUpperCheck63
   · exact pack2CoarseUpperCheck64
 
-theorem coarse_upper : coarseUpper = 104120 := by
-  change (∑ s : Fin 65, pack2CoarseUpperRow s) = 104120
+theorem coarse_upper : coarseUpper = 97083 := by
+  change (∑ s : Fin 65, pack2CoarseUpperRow s) = 97083
   simp_rw [pack2CoarseUpperRows]
   decide +kernel
 theorem coarse_upper_eq_exact : coarseUpper = blockUpper := by rw [coarse_upper, block_upper]
@@ -1230,7 +1230,7 @@ namespace Sol1.C42
 open ReedSolomon.HiddenDerivative
 
 def Eligible (x a b c : ℕ) : Prop :=
-  a + b + c ≤ 64 ∧ b + 2 * c ≤ 21 ∧
+  a + b + c ≤ 64 ∧ b + 2 * c ≤ 20 ∧
     x + 131072 * a + 131071 * b + 131070 * c < 48 * 180265
 
 theorem columns_eligible (i : SourceIndex) :
@@ -1249,7 +1249,7 @@ theorem index_of_eligible (x a b c : ℕ) (h : Eligible x a b c) :
   obtain ⟨htotal, horder, hweight⟩ := h
   let s : Fin 65 := ⟨a + b + c, by omega⟩
   let f2 : Fin (min s.val 10 + 1) := ⟨c, by dsimp [s]; omega⟩
-  let f1 : Fin (min (s.val - f2.val) (21 - 2 * f2.val) + 1) :=
+  let f1 : Fin (min (s.val - f2.val) (20 - 2 * f2.val) + 1) :=
     ⟨b, by dsimp [s, f2]; omega⟩
   let j : Jet := ⟨s, f2, f1⟩
   have h0 : e0 j = a := by dsimp [e0, e1, e2, j, s, f1, f2]; omega
@@ -1393,7 +1393,7 @@ theorem fin_interval_card (N : ℕ) (lo hi : ℤ) :
 
 def sourceBlockFiberCount (s : ℕ) (g : ℤ) : ℕ :=
   ∑ e ∈ Finset.range (min s 10 + 1),
-    (Finset.univ.filter fun a : Fin (min (s - e) (21 - 2 * e) + 1) ↦
+    (Finset.univ.filter fun a : Fin (min (s - e) (20 - 2 * e) + 1) ↦
       0 ≤ g + a.val + 2 * e ∧ g + a.val + 2 * e < 48).card
 
 /-- c(s,g) counts the exact legal e1/e2 choices with x=g+e1+2e2 in[0,47]. -/
@@ -1404,18 +1404,18 @@ theorem sourceBlockFiberCount_eq (s : ℕ) (g : ℤ) :
   apply Finset.sum_congr rfl
   intro e he
   have heS : e ≤ s := by have := Finset.mem_range.mp he; omega
-  have heJ : 2 * e ≤ 21 := by have := Finset.mem_range.mp he; omega
+  have heJ : 2 * e ≤ 20 := by have := Finset.mem_range.mp he; omega
   have hfilter :
-      (Finset.univ.filter fun a : Fin (min (s - e) (21 - 2 * e) + 1) ↦
+      (Finset.univ.filter fun a : Fin (min (s - e) (20 - 2 * e) + 1) ↦
         0 ≤ g + a.val + 2 * e ∧ g + a.val + 2 * e < 48) =
-      (Finset.univ.filter fun a : Fin (min (s - e) (21 - 2 * e) + 1) ↦
+      (Finset.univ.filter fun a : Fin (min (s - e) (20 - 2 * e) + 1) ↦
         -g - 2 * e ≤ (a.val : ℤ) ∧ (a.val : ℤ) ≤ 47 - g - 2 * e) := by
     ext a
     simp only [Finset.mem_filter, Finset.mem_univ, true_and]
     omega
   rw [hfilter, fin_interval_card]
-  have hupper : ((min (s - e) (21 - 2 * e) + 1 : ℕ) : ℤ) - 1 =
-      min ((s : ℤ) - e) (21 - 2 * e) := by omega
+  have hupper : ((min (s - e) (20 - 2 * e) + 1 : ℕ) : ℤ) - 1 =
+      min ((s : ℤ) - e) (20 - 2 * e) := by omega
   rw [hupper]
 
 def rowBlockFiberCount (s : ℕ) (g : ℤ) : ℕ :=
@@ -1501,115 +1501,115 @@ theorem grade_9 : gradeUpper 9 = 2145 := by decide +kernel
 
 theorem grade_10 : gradeUpper 10 = 2508 := by decide +kernel
 
-theorem grade_11 : gradeUpper 11 = 2849 := by decide +kernel
+theorem grade_11 : gradeUpper 11 = 2812 := by decide +kernel
 
-theorem grade_12 : gradeUpper 12 = 3132 := by decide +kernel
+theorem grade_12 : gradeUpper 12 = 3060 := by decide +kernel
 
-theorem grade_13 : gradeUpper 13 = 3360 := by decide +kernel
+theorem grade_13 : gradeUpper 13 = 3255 := by decide +kernel
 
-theorem grade_14 : gradeUpper 14 = 3536 := by decide +kernel
+theorem grade_14 : gradeUpper 14 = 3400 := by decide +kernel
 
-theorem grade_15 : gradeUpper 15 = 3663 := by decide +kernel
+theorem grade_15 : gradeUpper 15 = 3498 := by decide +kernel
 
-theorem grade_16 : gradeUpper 16 = 3744 := by decide +kernel
+theorem grade_16 : gradeUpper 16 = 3552 := by decide +kernel
 
-theorem grade_17 : gradeUpper 17 = 3782 := by decide +kernel
+theorem grade_17 : gradeUpper 17 = 3565 := by decide +kernel
 
-theorem grade_18 : gradeUpper 18 = 3780 := by decide +kernel
+theorem grade_18 : gradeUpper 18 = 3540 := by decide +kernel
 
-theorem grade_19 : gradeUpper 19 = 3741 := by decide +kernel
+theorem grade_19 : gradeUpper 19 = 3480 := by decide +kernel
 
-theorem grade_20 : gradeUpper 20 = 3668 := by decide +kernel
+theorem grade_20 : gradeUpper 20 = 3388 := by decide +kernel
 
-theorem grade_21 : gradeUpper 21 = 3564 := by decide +kernel
+theorem grade_21 : gradeUpper 21 = 3267 := by decide +kernel
 
-theorem grade_22 : gradeUpper 22 = 3432 := by decide +kernel
+theorem grade_22 : gradeUpper 22 = 3146 := by decide +kernel
 
-theorem grade_23 : gradeUpper 23 = 3300 := by decide +kernel
+theorem grade_23 : gradeUpper 23 = 3025 := by decide +kernel
 
-theorem grade_24 : gradeUpper 24 = 3168 := by decide +kernel
+theorem grade_24 : gradeUpper 24 = 2904 := by decide +kernel
 
-theorem grade_25 : gradeUpper 25 = 3036 := by decide +kernel
+theorem grade_25 : gradeUpper 25 = 2783 := by decide +kernel
 
-theorem grade_26 : gradeUpper 26 = 2904 := by decide +kernel
+theorem grade_26 : gradeUpper 26 = 2662 := by decide +kernel
 
-theorem grade_27 : gradeUpper 27 = 2772 := by decide +kernel
+theorem grade_27 : gradeUpper 27 = 2541 := by decide +kernel
 
-theorem grade_28 : gradeUpper 28 = 2641 := by decide +kernel
+theorem grade_28 : gradeUpper 28 = 2420 := by decide +kernel
 
-theorem grade_29 : gradeUpper 29 = 2511 := by decide +kernel
+theorem grade_29 : gradeUpper 29 = 2300 := by decide +kernel
 
-theorem grade_30 : gradeUpper 30 = 2383 := by decide +kernel
+theorem grade_30 : gradeUpper 30 = 2181 := by decide +kernel
 
-theorem grade_31 : gradeUpper 31 = 2257 := by decide +kernel
+theorem grade_31 : gradeUpper 31 = 2064 := by decide +kernel
 
-theorem grade_32 : gradeUpper 32 = 2134 := by decide +kernel
+theorem grade_32 : gradeUpper 32 = 1949 := by decide +kernel
 
-theorem grade_33 : gradeUpper 33 = 2013 := by decide +kernel
+theorem grade_33 : gradeUpper 33 = 1837 := by decide +kernel
 
-theorem grade_34 : gradeUpper 34 = 1893 := by decide +kernel
+theorem grade_34 : gradeUpper 34 = 1727 := by decide +kernel
 
-theorem grade_35 : gradeUpper 35 = 1777 := by decide +kernel
+theorem grade_35 : gradeUpper 35 = 1618 := by decide +kernel
 
-theorem grade_36 : gradeUpper 36 = 1665 := by decide +kernel
+theorem grade_36 : gradeUpper 36 = 1513 := by decide +kernel
 
-theorem grade_37 : gradeUpper 37 = 1555 := by decide +kernel
+theorem grade_37 : gradeUpper 37 = 1412 := by decide +kernel
 
-theorem grade_38 : gradeUpper 38 = 1448 := by decide +kernel
+theorem grade_38 : gradeUpper 38 = 1312 := by decide +kernel
 
-theorem grade_39 : gradeUpper 39 = 1346 := by decide +kernel
+theorem grade_39 : gradeUpper 39 = 1216 := by decide +kernel
 
-theorem grade_40 : gradeUpper 40 = 1246 := by decide +kernel
+theorem grade_40 : gradeUpper 40 = 1125 := by decide +kernel
 
-theorem grade_41 : gradeUpper 41 = 1150 := by decide +kernel
+theorem grade_41 : gradeUpper 41 = 1035 := by decide +kernel
 
-theorem grade_42 : gradeUpper 42 = 1060 := by decide +kernel
+theorem grade_42 : gradeUpper 42 = 950 := by decide +kernel
 
-theorem grade_43 : gradeUpper 43 = 970 := by decide +kernel
+theorem grade_43 : gradeUpper 43 = 869 := by decide +kernel
 
-theorem grade_44 : gradeUpper 44 = 887 := by decide +kernel
+theorem grade_44 : gradeUpper 44 = 790 := by decide +kernel
 
-theorem grade_45 : gradeUpper 45 = 806 := by decide +kernel
+theorem grade_45 : gradeUpper 45 = 718 := by decide +kernel
 
-theorem grade_46 : gradeUpper 46 = 730 := by decide +kernel
+theorem grade_46 : gradeUpper 46 = 646 := by decide +kernel
 
-theorem grade_47 : gradeUpper 47 = 658 := by decide +kernel
+theorem grade_47 : gradeUpper 47 = 581 := by decide +kernel
 
-theorem grade_48 : gradeUpper 48 = 590 := by decide +kernel
+theorem grade_48 : gradeUpper 48 = 517 := by decide +kernel
 
-theorem grade_49 : gradeUpper 49 = 526 := by decide +kernel
+theorem grade_49 : gradeUpper 49 = 460 := by decide +kernel
 
-theorem grade_50 : gradeUpper 50 = 466 := by decide +kernel
+theorem grade_50 : gradeUpper 50 = 404 := by decide +kernel
 
-theorem grade_51 : gradeUpper 51 = 410 := by decide +kernel
+theorem grade_51 : gradeUpper 51 = 355 := by decide +kernel
 
-theorem grade_52 : gradeUpper 52 = 359 := by decide +kernel
+theorem grade_52 : gradeUpper 52 = 306 := by decide +kernel
 
-theorem grade_53 : gradeUpper 53 = 310 := by decide +kernel
+theorem grade_53 : gradeUpper 53 = 264 := by decide +kernel
 
-theorem grade_54 : gradeUpper 54 = 268 := by decide +kernel
+theorem grade_54 : gradeUpper 54 = 224 := by decide +kernel
 
-theorem grade_55 : gradeUpper 55 = 226 := by decide +kernel
+theorem grade_55 : gradeUpper 55 = 188 := by decide +kernel
 
-theorem grade_56 : gradeUpper 56 = 190 := by decide +kernel
+theorem grade_56 : gradeUpper 56 = 157 := by decide +kernel
 
-theorem grade_57 : gradeUpper 57 = 158 := by decide +kernel
+theorem grade_57 : gradeUpper 57 = 127 := by decide +kernel
 
-theorem grade_58 : gradeUpper 58 = 128 := by decide +kernel
+theorem grade_58 : gradeUpper 58 = 102 := by decide +kernel
 
-theorem grade_59 : gradeUpper 59 = 103 := by decide +kernel
+theorem grade_59 : gradeUpper 59 = 81 := by decide +kernel
 
-theorem grade_60 : gradeUpper 60 = 81 := by decide +kernel
+theorem grade_60 : gradeUpper 60 = 61 := by decide +kernel
 
-theorem grade_61 : gradeUpper 61 = 61 := by decide +kernel
+theorem grade_61 : gradeUpper 61 = 45 := by decide +kernel
 
-theorem grade_62 : gradeUpper 62 = 45 := by decide +kernel
+theorem grade_62 : gradeUpper 62 = 33 := by decide +kernel
 
-theorem grade_63 : gradeUpper 63 = 33 := by decide +kernel
+theorem grade_63 : gradeUpper 63 = 22 := by decide +kernel
 
-theorem grade_64 : gradeUpper 64 = 22 := by decide +kernel
+theorem grade_64 : gradeUpper 64 = 13 := by decide +kernel
 
-theorem grade_table (s : Fin 65) : gradeUpper s.val = ([48, 141, 276, 450, 660, 903, 1176, 1476, 1800, 2145, 2508, 2849, 3132, 3360, 3536, 3663, 3744, 3782, 3780, 3741, 3668, 3564, 3432, 3300, 3168, 3036, 2904, 2772, 2641, 2511, 2383, 2257, 2134, 2013, 1893, 1777, 1665, 1555, 1448, 1346, 1246, 1150, 1060, 970, 887, 806, 730, 658, 590, 526, 466, 410, 359, 310, 268, 226, 190, 158, 128, 103, 81, 61, 45, 33, 22] : List ℕ).getD s.val 0 := by
+theorem grade_table (s : Fin 65) : gradeUpper s.val = ([48, 141, 276, 450, 660, 903, 1176, 1476, 1800, 2145, 2508, 2812, 3060, 3255, 3400, 3498, 3552, 3565, 3540, 3480, 3388, 3267, 3146, 3025, 2904, 2783, 2662, 2541, 2420, 2300, 2181, 2064, 1949, 1837, 1727, 1618, 1513, 1412, 1312, 1216, 1125, 1035, 950, 869, 790, 718, 646, 581, 517, 460, 404, 355, 306, 264, 224, 188, 157, 127, 102, 81, 61, 45, 33, 22, 13] : List ℕ).getD s.val 0 := by
   fin_cases s
   · exact grade_0
   · exact grade_1
@@ -1677,8 +1677,8 @@ theorem grade_table (s : Fin 65) : gradeUpper s.val = ([48, 141, 276, 450, 660, 
   · exact grade_63
   · exact grade_64
 
-theorem envelope_upper : envelopeUpper = 104120 := by
-  change (∑ s : Fin 65, gradeUpper s.val) = 104120
+theorem envelope_upper : envelopeUpper = 97083 := by
+  change (∑ s : Fin 65, gradeUpper s.val) = 97083
   simp_rw [grade_table]
   decide +kernel
 

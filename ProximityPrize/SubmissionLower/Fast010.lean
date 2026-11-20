@@ -931,7 +931,7 @@ def sourceSpan (F : Type*) [Field F] : Submodule F (DifferentialPolynomial F 2) 
 def sourceBand (F : Type*) [Field F] : Submodule F (DifferentialPolynomial F 2) :=
   restrictWeightAtMost (R := F) (differentialWeight 131072) 8652719 ⊓
     (restrictWeightAtMost (R := F) jetDegreeWeight 64 ⊓
-      restrictWeightAtMost (R := F) sourceOrderWeight 21)
+      restrictWeightAtMost (R := F) sourceOrderWeight 20)
 
 theorem column_mem_band (i : SourceIndex) : (columns i).polynomial ∈ sourceBand F := by
   classical
@@ -1063,7 +1063,7 @@ abbrev Block := Fin 65 × Fin 69
 def balance (q : Block) : ℤ := (q.2.val : ℤ) - 21
 abbrev ColFiber (q : Block) :=
   (e : Fin (min q.1.val 10 + 1)) ×
-    {a : Fin (min (q.1.val - e.val) (21 - 2 * e.val) + 1) //
+    {a : Fin (min (q.1.val - e.val) (20 - 2 * e.val) + 1) //
       0 ≤ balance q + a.val + 2 * e.val ∧ balance q + a.val + 2 * e.val < 48}
 abbrev Col := (q : Block) × ColFiber q
 
@@ -1080,7 +1080,7 @@ theorem colFiber_card (q : Block) : Fintype.card (ColFiber q) = columnCount q.1.
   rw [← sourceBlockFiberCount_eq]
   unfold sourceBlockFiberCount
   let f : ℕ → ℕ := fun e ↦ (Finset.univ.filter fun a :
-    Fin (min (q.1.val - e) (21 - 2 * e) + 1) ↦
+    Fin (min (q.1.val - e) (20 - 2 * e) + 1) ↦
       0 ≤ balance q + a.val + 2 * e ∧ balance q + a.val + 2 * e < 48).card
   change (∑ e : Fin (min q.1.val 10 + 1), f e.val) =
     ∑ e ∈ Finset.range (min q.1.val 10 + 1), f e
