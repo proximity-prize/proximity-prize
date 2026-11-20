@@ -63,11 +63,11 @@ theorem fixed_room_fee_callbacks
     (∀ (H : MvPolynomial (Fin 4) K) (A R : Finset (RegularIndex H)), H ≠ 0 → R ⊆ A →
       Below (aggregateFlag H A) primaryFlag.toFlagDegree →
       RoomPartners D firstRoomShape firstRoomCut H A R →
-      (phaseSeeds H D.selected D.seeds (A \ R)).card ≤ 1911243880121235) ∧
+      (phaseSeeds H D.selected D.seeds (A \ R)).card ≤ 1911243880979235) ∧
     (∀ (H : MvPolynomial (Fin 4) K) (A R : Finset (RegularIndex H)), H ≠ 0 → R ⊆ A →
       Below (aggregateFlag H A) firstResidualFlag.toFlagDegree →
       RoomPartners D secondRoomShape secondRoomCut H A R →
-      (phaseSeeds H D.selected D.seeds (A \ R)).card ≤ 524153816993650) := by
+      (phaseSeeds H D.selected D.seeds (A \ R)).card ≤ 524153817851650) := by
   constructor
   · intro H A R _ _ hfit hpartners
     exact (card_fixed_room_paid_family D embed germ σpow firstRoomShape firstRoomCut H A R

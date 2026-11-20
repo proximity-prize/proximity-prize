@@ -62,7 +62,7 @@ theorem normal_form_of_retained_singular
       (Koala6844RankFour.matrix q keys (primitiveExcess 131071 q)).det = 0) :
     Nonempty (NormalForm q 131071 (primitiveExcess 131071 q)) := by
   let δ := primitiveExcess 131071 q
-  have hδz : δ + (badNodes received q).card ≤ 31606 := h.excess_bad
+  have hδz : δ + (badNodes received q).card ≤ 31608 := h.excess_bad
   have hnodes := goodNodes_card (received := received) (q := q)
   have hnodesLarge : 131071 + 4 * δ < (goodNodes received q).card := by omega
   have hbetaExcess : q.beta.natDegree - 131071 ≤ δ := le_max_left _ _

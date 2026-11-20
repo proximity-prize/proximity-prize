@@ -19,13 +19,13 @@ set_option maxRecDepth 50000
 set_option maxHeartbeats 5000000
 
 abbrev n : ℕ := 262144
-abbrev w : ℕ := 137745
-abbrev agreements : ℕ := 180961
+abbrev w : ℕ := 137747
+abbrev agreements : ℕ := 180960
 abbrev gap : ℕ := agreements - w
 abbrev prime : ℕ := 2130706433
 abbrev yTotalCap : ℕ := 829
 abbrev slopeCap : ℕ := 185
-abbrev listBudget : ℕ := 242911280048
+abbrev listBudget : ℕ := 242927765322
 
 private abbrev capY : ℕ := 1 + 2 * w * yTotalCap
 private abbrev capR : ℕ := w * (2 * slopeCap - 1)

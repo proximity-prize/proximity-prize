@@ -1,7 +1,7 @@
-import ProximityPrize.SubmissionLower.Koala6844Submission
+import ProximityPrize.SubmissionLower.Frontier81184
 namespace ProximityPrize.Benchmark
-theorem candidate : ProtocolClaim 6844 332529663 1073741824 :=
-  ProximityPrize.SubmissionLower.Koala6844Submission.claim
+theorem candidate : ProtocolClaim 6844 2856443248031796021 9223372036854679265 :=
+  ProximityPrize.SubmissionLower.Radius81184.claim
 end ProximityPrize.Benchmark
 
 

@@ -81,7 +81,7 @@ theorem virtual_total_budget :
 
 
 theorem virtual_budget_le_retained_budget :
-    (270779581434104148 : ℕ) ≤ 273427938013395819 := by decide +kernel
+    (270779581434104148 : ℕ) ≤ 270779581434104148 := by decide +kernel
 
 
 end ProximityPrize.SubmissionLower.Koala6844VirtualHigh

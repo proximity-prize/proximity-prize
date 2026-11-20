@@ -81,9 +81,9 @@ theorem short_regular_card_le_slope (H : MvPolynomial (Fin 4) K) (A : Finset (Re
     _ = _ := hh.symm
 
 theorem short_primary_box_caps (H : MvPolynomial (Fin 4) K) (D : Nat)
-    (hbox : H ∈ nestedCoefficientBox K D 131071 40642 829 185) :
+    (hbox : H ∈ nestedCoefficientBox K D 131071 42072 829 185) :
     wt residualSWeights H ≤ 185 ∧ wt residualYSWeights H ≤ 829 ∧
-      wt residualTotalWeights H ≤ 40642 ∧
+      wt residualTotalWeights H ≤ 42072 ∧
       MvPolynomial.weightedTotalDegree (contactWeights 131071) H ≤ D-1 := by
   refine ⟨?_,?_,?_,?_⟩
   · apply (weightedTotalDegree_le_iff _ _ _).mpr
@@ -109,14 +109,14 @@ theorem short_primary_box_caps (H : MvPolynomial (Fin 4) K) (D : Nat)
 
 theorem short_primary_fit (H : MvPolynomial (Fin 4) K) (hH : H ≠ 0)
     (A : Finset (RegularIndex H)) (D : Nat)
-    (hbox : H ∈ nestedCoefficientBox K D 131071 40642 829 185) :
+    (hbox : H ∈ nestedCoefficientBox K D 131071 42072 829 185) :
     Below (aggregateFlag H A) primaryFlag.toFlagDegree := by
   obtain ⟨hr,hy,ht,_⟩ := short_primary_box_caps H D hbox
   have hs : Below (originalCumulativeFlag H) primaryFlag.toFlagDegree := by
     obtain ⟨hr',hy',ht'⟩ := originalCumulativeFlag_cumulative H
     change (originalCumulativeFlag H).all ≤ 185 ∧
       (originalCumulativeFlag H).yz+(originalCumulativeFlag H).all ≤ 829 ∧
-      (originalCumulativeFlag H).zOnly+(originalCumulativeFlag H).yz+(originalCumulativeFlag H).all ≤ 40642
+      (originalCumulativeFlag H).zOnly+(originalCumulativeFlag H).yz+(originalCumulativeFlag H).all ≤ 42072
     rw [ht',hy',hr']
     exact ⟨hr,hy,ht⟩
   have h := contactFlag_below_of_dvd hH (short_regular_product_dvd H hH A)

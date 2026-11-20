@@ -30,17 +30,17 @@ theorem regular_terminal_pair_bound
     (selected : K → Polynomial K) (Gamma : Finset K)
     (nodes : Finset I) (x u0 u1 : I → K) (hinj : Set.InjOn x nodes) (hnodes : nodes.card = 262144)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ w)
-    (hagreement : ∀ gamma ∈ Gamma, 180961 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 180960 ≤
       (nodes.filter (fun i => (selected gamma).eval (x i) = u0 i+gamma*u1 i)).card)
     (hsolution : ∀ gamma ∈ Gamma, specialization K (selected gamma) gamma F = 0)
     (hregular : ∀ gamma ∈ Gamma, specialization K (selected gamma) gamma (MvPolynomial.pderiv (2 : Fin 4) F) ≠ 0)
     (hQ : ∀ gamma ∈ Gamma, specialization K (selected gamma) gamma Q = 0)
-    (hno : NoLargeSelectedPencil selected Gamma w 81183) :
-    Gamma.card * (180961 * 49890) ≤ flagMixed (originalCumulativeFlag F) right
-      (scaledPairFlag (cellSupport t y r) 262144 w 180961 81183) := by
+    (hno : NoLargeSelectedPencil selected Gamma w 81184) :
+    Gamma.card * (180960 * 49889) ≤ flagMixed (originalCumulativeFlag F) right
+      (scaledPairFlag (cellSupport t y r) 262144 w 180960 81184) := by
   classical
   let phi := polynomialEmbedding K
-  let direction := scaledPairFlag (cellSupport t y r) 262144 w 180961 81183
+  let direction := scaledPairFlag (cellSupport t y r) 262144 w 180960 81184
   have hs : cellS r+2 = r := by dsimp [cellS]; omega
   have hys : cellB y r+cellS r+3 = y := by dsimp [cellB,cellS]; omega
   have hts : cellA t y+cellB y r+cellS r+3 = t := by dsimp [cellA,cellB,cellS]; omega
@@ -57,7 +57,7 @@ theorem regular_terminal_pair_bound
     exact (geometric_factor_dvd_iff K (GenericField K) F Q hF hpos g.1 hg.1 hgeo).mp
       (by simpa only [canonical_geometricSurfaceMap] using hdvd)
   have hcount (g : GeometricFactor K F) :
-      (geometricSeeds K F selected Gamma g).card * (180961 * 49890) ≤
+      (geometricSeeds K F selected Gamma g).card * (180960 * 49889) ≤
         flagMixed (geometricCumulativeFlag K g) right direction := by
     let Delta := geometricSeeds K F selected Gamma g
     let S := geometricResidualStageOfSupport K (cellSupport t y r) F hF hFR hFRsmall hsupport
@@ -88,20 +88,20 @@ theorem regular_terminal_pair_bound
     have hp := regular_pair_seed_card_le phi (polynomialEmbedding_injective K)
       (cellSupport t y r) hsupport g.1 (surfaceMap phi Q) S.G_dvd_surface
       (geometricCumulativeFlag K g) right budget hseed selected Delta nodes x u0 u1 hinj
-      2130706433 w 180961 81183 (by norm_num [w]) (by norm_num [w]) (by norm_num [w])
+      2130706433 w 180960 81184 (by norm_num [w]) (by norm_num [w]) (by norm_num [w])
       (by rw [hnodes]; decide)
       (fun gamma hg => hdegree gamma (hsub hg)) (fun gamma hg => hsolution gamma (hsub hg))
       hDeltaRegular hGzero hQzero (fun gamma hg => hagreement gamma (hsub hg))
-      (noLargeSelectedPencil_mono selected Gamma Delta w 81183 hsub hno)
+      (noLargeSelectedPencil_mono selected Gamma Delta w 81184 hsub hno)
     rw [hnodes] at hp
-    exact mul_scale_le_of_pair_bound (cellSupport t y r) 262144 w 180961 81183 _
+    exact mul_scale_le_of_pair_bound (cellSupport t y r) 262144 w 180960 81184 _
       (geometricCumulativeFlag K g) right (by norm_num [w]) (by decide) hp
   have cover := card_le_sum_geometricSeeds K F hF.ne_zero selected Gamma hsolution
   have budget := geometricCumulativeFlag_budgets F hF.ne_zero
   calc
-    _ ≤ (∑ g : GeometricFactor K F, (geometricSeeds K F selected Gamma g).card) * (180961 * 49890) :=
+    _ ≤ (∑ g : GeometricFactor K F, (geometricSeeds K F selected Gamma g).card) * (180960 * 49889) :=
       Nat.mul_le_mul_right _ cover
-    _ = ∑ g : GeometricFactor K F, (geometricSeeds K F selected Gamma g).card * (180961 * 49890) :=
+    _ = ∑ g : GeometricFactor K F, (geometricSeeds K F selected Gamma g).card * (180960 * 49889) :=
       Finset.sum_mul _ _ _
     _ ≤ ∑ g : GeometricFactor K F, flagMixed (geometricCumulativeFlag K g) right direction :=
       Finset.sum_le_sum (fun g _ => hcount g)

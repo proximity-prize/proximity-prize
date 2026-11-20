@@ -19,7 +19,7 @@ def charge (cost : Fin 3 → ℕ) (f : FlagDegree) : ℕ :=
 
 
 def identityCharge (scale t y r : ℕ) (f : FlagDegree) : ℕ :=
-  (scale / 49890) * (131073 * 81184 *
+  (scale / 49889) * (131073 * 81185 *
     identityCurveDegree f (cellA t y) (cellB y r) (cellS r) w)
 
 private theorem sum_charge_le {J : Type} [Fintype J] (cost : Fin 3 → ℕ)
@@ -58,13 +58,13 @@ variable {Gamma : Finset K} {x : I → K} {flag : FlagDegree}
 theorem stage_graph_bound
     (D t y r scale : ℕ) (hDlow : 131072 ≤ D) (hDchar : D < 2130706433)
     (gates : GraphGates t y r) (hr3 : 3 ≤ r) (hry : r+2 ≤ y) (hyt : y+2 ≤ t)
-    (S : ResidualStage (polynomialEmbedding K) Gamma x 2130706433 81183 flag w (cellSupport t y r))
+    (S : ResidualStage (polynomialEmbedding K) Gamma x 2130706433 81184 flag w (cellSupport t y r))
     (hnodes : S.nodes.card = 262144)
-    (hagreement : ∀ gamma ∈ Gamma, 180961 ≤ (S.agreementFiber gamma).card)
+    (hagreement : ∀ gamma ∈ Gamma, 180960 ≤ (S.agreementFiber gamma).card)
     (hbox : S.F ∈ globalCoefficientBox K D w t r)
     (hflag : flag.all ≤ r ∧ flag.yz+flag.all ≤ y ∧ flag.zOnly+flag.yz+flag.all ≤ t)
     (source : Fin 3 → Source S.F) (hscale : 0 < scale)
-    (hscaleDiv : ∀ j, 3*(source j).d ∣ scale) (hgap : 49890 ∣ scale)
+    (hscaleDiv : ∀ j, 3*(source j).d ∣ scale) (hgap : 49889 ∣ scale)
     (h2 : (2 : GenericField K) ≠ 0) (hfact : ∀ j, ((source j).k.factorial : GenericField K) ≠ 0)
     (hgood : ∀ gamma ∈ Gamma, ∀ j,
       MvPolynomial.eval (selectedPoint (polynomialEmbedding K) S.selected gamma)
@@ -79,7 +79,7 @@ theorem stage_graph_bound
   · have hTailNumerator := (globalTailCut_dvd_iff (polynomialEmbedding K)
       (polynomialEmbedding_injective K) S.F (w+1) S.G).mp hTail
     have hmixed := BoundaryTailGates6808.identity_gate flag t y r gates.projection hflag.1 hflag.2.1
-    have hprovider := BoundaryTailIdentity.actual_identityCurveCountProvider S 180961
+    have hprovider := BoundaryTailIdentity.actual_identityCurveCountProvider S 180960
       (by simpa using hnodes) hagreement (by norm_num [w]) hTailNumerator D t r
       (by norm_num [w]) hDlow hDchar hbox hflagChar hmixed
     have hpositive : 1 ≤ identityCurveDegree flag (cellA t y) (cellB y r) (cellS r) w := by
@@ -87,14 +87,14 @@ theorem stage_graph_bound
       have hp := S.y_dependent
       have hd := degreeOf_le_flag_total S.G flag S.flag_support 1
       omega
-    have hinc := identity_surface_seed_bound S 180961 _ hprovider hagreement
+    have hinc := identity_surface_seed_bound S 180960 _ hprovider hagreement
       (by norm_num [w]) (by rw [hnodes]; norm_num) hpositive
-    have hinc' : Gamma.card*49890 ≤ 131073*81184*identityCurveDegree flag (cellA t y) (cellB y r) (cellS r) w := by
+    have hinc' : Gamma.card*49889 ≤ 131073*81185*identityCurveDegree flag (cellA t y) (cellB y r) (cellS r) w := by
       simpa only [hnodes,w] using hinc
     calc
-      _ = (scale / 49890) * (Gamma.card * 49890) := by
+      _ = (scale / 49889) * (Gamma.card * 49889) := by
         calc
-          _ = ((scale / 49890) * 49890) * Gamma.card := by rw [Nat.div_mul_cancel hgap]
+          _ = ((scale / 49889) * 49889) * Gamma.card := by rw [Nat.div_mul_cancel hgap]
           _ = _ := by ac_rfl
       _ ≤ identityCharge scale t y r flag := Nat.mul_le_mul_left _ hinc'
       _ ≤ _ := hidentity
@@ -104,10 +104,10 @@ theorem stage_graph_bound
         (componentSeeds (GenericField K) S.G (globalTailCut (polynomialEmbedding K) S.F (w+1))
           (regularitySurface (polynomialEmbedding K) S.F) Gamma
           (selectedPoint (polynomialEmbedding K) S.selected) C).card ≤
-          (81183+1)*(BoundaryTailReduced.reducedBudgetFamily S hTail hflagChar hmixed).yzCost C := by
+          (81184+1)*(BoundaryTailReduced.reducedBudgetFamily S hTail hflagChar hmixed).yzCost C := by
       intro C hall
       exact tangent_component_card_le S C hTail (BoundaryTailReduced.reducedBaseOrd S hTail hflagChar hmixed C)
-        180961 D t r (by simpa using hnodes) hagreement (by norm_num [w]) (by norm_num [w])
+        180960 D t r (by simpa using hnodes) hagreement (by norm_num [w]) (by norm_num [w])
         hDlow hDchar hbox (BoundaryTailReduced.reducedBudgetFamily S hTail hflagChar hmixed)
         (BoundaryTailReduced.reducedBudgetFamily_yzPositive S hTail hflagChar hmixed C) hall
         (BoundaryTailReduced.reducedBudgetFamily_yzPole S hTail hflagChar hmixed C)
@@ -122,7 +122,7 @@ theorem stage_graph_bound
         unfold cellNormal
         rw [BoundaryTailAlgebra.normalFlag_eq_cell t y r hr3 hry]
         simpa only [add_yz,nsmul_yz,unitAllFlag,mul_zero,add_zero] using
-          hybridC1Gate_of_le t y r 81183 hry (by norm_num)) htangent h2 hfact hgood
+          hybridC1Gate_of_le t y r 81184 hry (by norm_num)) htangent h2 hfact hgood
     exact ((by simpa only [Nat.mul_comm] using (Nat.le_div_iff_mul_le hscale).mp bound) :
       scale * Gamma.card ≤ HFreeDir6813.numeratorDir source scale t y r flag).trans hgraph
 
@@ -154,17 +154,17 @@ theorem regular_graph_bound
     (selected : K → Polynomial K) (Gamma : Finset K)
     (nodes : Finset I) (x u0 u1 : I → K) (hinj : Set.InjOn x nodes) (hnodes : nodes.card = 262144)
     (hdegree : ∀ gamma ∈ Gamma, (selected gamma).natDegree ≤ w)
-    (hagreement : ∀ gamma ∈ Gamma, 180961 ≤
+    (hagreement : ∀ gamma ∈ Gamma, 180960 ≤
       (nodes.filter (fun i => (selected gamma).eval (x i) = u0 i+gamma*u1 i)).card)
     (hsolution : ∀ gamma ∈ Gamma, specialization K (selected gamma) gamma F = 0)
     (hregular : ∀ gamma ∈ Gamma, specialization K (selected gamma) gamma (MvPolynomial.pderiv (2 : Fin 4) F) ≠ 0)
-    (hno : NoLargeSelectedPencil selected Gamma w 81183)
+    (hno : NoLargeSelectedPencil selected Gamma w 81184)
     (source : Fin 3 → Source F) (hscale : 0 < scale) (hscaleDiv : ∀ j, 3*(source j).d ∣ scale)
     (h2 : (2 : GenericField K) ≠ 0) (hfact : ∀ j, ((source j).k.factorial : GenericField K) ≠ 0)
     (hgood : ∀ gamma ∈ Gamma, ∀ j,
       MvPolynomial.eval (selectedPoint (polynomialEmbedding K) selected gamma)
         ((source j).leading (polynomialEmbedding K)) ≠ 0)
-    (hgap : 49890 ∣ scale) (cost : Fin 3 → ℕ)
+    (hgap : 49889 ∣ scale) (cost : Fin 3 → ℕ)
     (hmono : cost 0 ≤ cost 1 ∧ cost 1 ≤ cost 2)
     (hidentity : ∀ f, identityCharge scale t y r f ≤ charge cost f)
     (hgraph : ∀ f, HFreeDir6813.numeratorDir source scale t y r f ≤ charge cost f) :
@@ -182,7 +182,7 @@ theorem regular_graph_bound
       selected Gamma nodes x u0 u1 hinj hdegree hsolution hregular hno (by norm_num [w]) g
     let S := reflagResidualStage S0 (polynomialIn_surfaceCumulativeFlag g.1)
     have hsub := geometricSeeds_subset K F selected Gamma g
-    have hag : ∀ gamma ∈ geometricSeeds K F selected Gamma g, 180961 ≤ (S.agreementFiber gamma).card :=
+    have hag : ∀ gamma ∈ geometricSeeds K F selected Gamma g, 180960 ≤ (S.agreementFiber gamma).card :=
       fun gamma hgamma => hagreement gamma (hsub hgamma)
     have hf := geometricCumulativeFlag_le_support F hF.ne_zero hsupport g
     have hf' : (geometricCumulativeFlag K g).all ≤ r ∧

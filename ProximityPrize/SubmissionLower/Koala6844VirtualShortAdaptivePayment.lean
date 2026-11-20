@@ -16,7 +16,7 @@ set_option maxRecDepth 4000
 
 variable {K E I : Type} [Field K] [Field E] [CharP K prime] [DecidableEq K] [DecidableEq I]
 variable {x : I ↪ K} {domain : Finset I} {σ : K ≃+* K} {excess : ℕ}
-variable {data : CenteredVirtualData x domain σ degree agreements 81183 excess}
+variable {data : CenteredVirtualData x domain σ degree agreements 81184 excess}
 
 private theorem below_trans {f g h : FlagDegree} (hfg : Below f g) (hgh : Below g h) : Below f h :=
   ⟨hfg.1.trans hgh.1,hfg.2.1.trans hgh.2.1,hfg.2.2.trans hgh.2.2⟩
@@ -39,7 +39,7 @@ private theorem physical_fit_of_below (P : MvPolynomial (Fin 4) K) {f : Flag} (h
 
 omit [CharP K prime] in
 private theorem adaptive_family_paid
-    (data : CenteredVirtualData x domain σ degree agreements 81183 excess)
+    (data : CenteredVirtualData x domain σ degree agreements 81184 excess)
     (embed : K →+* E) (germ : ActiveResultantGerm data embed)
     (σpow : ∀ g ∈ data.seeds, embed (σ g) = (embed g)^prime)
     (s : CenteredAdaptiveSource data prime)
@@ -62,7 +62,7 @@ private theorem adaptive_family_paid
 
 omit [CharP K prime] in
 theorem adaptive_fee_first
-    (data : CenteredVirtualData x domain σ degree agreements 81183 excess)
+    (data : CenteredVirtualData x domain σ degree agreements 81184 excess)
     (hsize : domain.card ≤ nodes) (hpole : data.d0.natDegree + affineDegree data.A0 ≤ poleWidth)
     (embed : K →+* E) (germ : ActiveResultantGerm data embed)
     (σpow : ∀ g ∈ data.seeds, embed (σ g) = (embed g)^prime)
@@ -79,7 +79,7 @@ theorem adaptive_fee_first
 
 omit [CharP K prime] in
 theorem adaptive_fee_second
-    (data : CenteredVirtualData x domain σ degree agreements 81183 excess)
+    (data : CenteredVirtualData x domain σ degree agreements 81184 excess)
     (hsize : domain.card ≤ nodes) (hpole : data.d0.natDegree + affineDegree data.A0 ≤ poleWidth)
     (embed : K →+* E) (germ : ActiveResultantGerm data embed)
     (σpow : ∀ g ∈ data.seeds, embed (σ g) = (embed g)^prime)
@@ -87,7 +87,7 @@ theorem adaptive_fee_second
     (hfit : Below (aggregateFlag H A) afterRooms.toFlagDegree)
     (first : CenteredAdaptivePass (firstCenteredAdaptiveSource data hsize hpole) poleWidth H A)
     (second : CenteredAdaptivePass (secondCenteredAdaptiveSource data hsize hpole) poleWidth H first.residue) :
-    (phaseSeeds H data.selected data.seeds (first.residue \ second.residue)).card ≤ 7000000000000000 := by
+    (phaseSeeds H data.selected data.seeds (first.residue \ second.residue)).card ≤ 6659687472027177 := by
   rcases first.stopped with empty | hfail
   · simp [phaseSeeds,empty]
   let P := regularProduct H first.residue

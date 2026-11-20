@@ -43,7 +43,7 @@ private theorem flag_fit_of_below {f g : Flag} (hf : f.ordered) (hg : g.ordered)
   exact ⟨hr,hy,ht⟩
 
 private theorem seeds_at_endpoint_le
-    (data : CenteredVirtualData x domain σ 131071 180961 81183 excess)
+    (data : CenteredVirtualData x domain σ 131071 180960 81184 excess)
     (full : Finset I) (hfull : domain ⊆ full) (hcount : full.card = 262144)
     (hSize : Fintype.card I ≤ 262144)
     (hPole : data.d0.natDegree + affineDegree data.A0 ≤ poleWidth)
@@ -72,7 +72,7 @@ private theorem seeds_at_endpoint_le
       H hH remaining D hD hDchar hcontact f src price hprice hfit hmeta margins seeds hsub hcover).trans hfits
 
 theorem adaptive_residue_card_le_terminal
-    (data : CenteredVirtualData x domain σ 131071 180961 81183 excess)
+    (data : CenteredVirtualData x domain σ 131071 180960 81184 excess)
     (full : Finset I) (hfull : domain ⊆ full) (hcount : full.card = 262144)
     (hSize : Fintype.card I ≤ 262144)
     (hPole : data.d0.natDegree + affineDegree data.A0 ≤ poleWidth)

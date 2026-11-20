@@ -24,7 +24,7 @@ local notation "p" => 2130706433
 
 theorem long_persistent_selected_sum_le_of_degree
     (F : Carrier K) (G : MvPolynomial (Fin 3) Ω) (bound e : ℕ)
-    (hw : w + 1 ≤ bound) (hchar : bound < p) (he : e ≤ 81183)
+    (hw : w + 1 ≤ bound) (hchar : bound < p) (he : e ≤ 81184)
     (hweight : wt ![1, w, 0, 0] F < bound)
     (hT : wt ![0, 1, 1, 0] F ≤ 200) (hZ : wt ![0, 0, 0, 1] F ≤ 162)
     (component : A → FirstTailComponent F w G)
@@ -39,13 +39,13 @@ theorem long_persistent_selected_sum_le_of_degree
       (∑ v ∈ W, RCN346.poleOrder Ω (CoordinateField Ω (component i).1) v
         (coordinate Ω (component i).1 2)) ≤ (d₁ i : ℤ))
     (x : I ↪ K) (u₀ u₁ : I → K) (nodes : Finset I)
-    (hAn : 180961 ≤ nodes.card) (haverage : nodeAverage nodes.card w 180961 ≤ 3)
+    (hAn : 180960 ≤ nodes.card) (haverage : nodeAverage nodes.card w 180960 ≤ 3)
     (seeds allSeeds : Finset K) (hsub : seeds ⊆ allSeeds)
     (selected : K → Polynomial K)
     (hdegree : ∀ g ∈ seeds, (selected g).natDegree ≤ w)
     (hgraph : ∀ g ∈ seeds, graphSpecialize (selected g) g (g ^ p) F = 0)
     (hreg : ∀ g ∈ seeds, graphSpecialize (selected g) g (g ^ p) (implicitRegularity F) ≠ 0)
-    (hagreements : ∀ g ∈ seeds, 180961 ≤
+    (hagreements : ∀ g ∈ seeds, 180960 ≤
       (nodes.filter (fun i => (selected g).eval (x i) = u₀ i + g * u₁ i)).card)
     (hpencil : ∀ P₀ P₁ : Polynomial K, P₀.natDegree ≤ w → P₁.natDegree ≤ w →
       (RCN050.pencilSeeds allSeeds selected P₀ P₁).card ≤ e + 1) :
@@ -78,7 +78,7 @@ theorem long_persistent_selected_sum_le_of_degree
       persistent_curve_selected_seed_bound F w bound p 200 162 (component i).1
         (base i) (d₀ i) (d₁ i) (hd₀ i) (hd₁ i) (charts i).carrier_mem
         (charts i).separant_not_mem (hpersistent i) (by omega) hw hchar hweight hts hzs
-        x u₀ u₁ nodes 180961 e (by decide) hAn haverage fiber allSeeds
+        x u₀ u₁ nodes 180960 e (by decide) hAn haverage fiber allSeeds
         (fun g hg => hsub (hmem g hg).1) selected (fun g => g ^ p)
         (fun g hg => hdegree g (hmem g hg).1)
         (fun g hg => hgraph g (hmem g hg).1)

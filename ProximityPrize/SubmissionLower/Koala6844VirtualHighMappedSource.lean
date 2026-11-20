@@ -20,7 +20,7 @@ variable {excess : ℕ}
 def mappedSourceDegree (d a : ℕ) : ℕ := 131071 + d - a
 
 def mappedSourceCutoff (shape : SourceShape) (d : ℕ) : ℕ :=
-  shape.ordinaryOrder * 180961 + (2 * shape.virtualOrder - shape.room) * d
+  shape.ordinaryOrder * 180960 + (2 * shape.virtualOrder - shape.room) * d
 
 private theorem sourceShape_room_le_order (shape : SourceShape)
     (hshape : shape = primary ∨ shape = roomSource ∨ shape = adaptive) :
@@ -38,9 +38,9 @@ private theorem cast_mappedSourceCutoff (shape : SourceShape)
 
 private theorem centered_shape_passes (shape : SourceShape)
     (hshape : shape = primary ∨ shape = roomSource ∨ shape = adaptive) (d a : ℕ)
-    (hstart : 6675 ≤ d+a) (hend : d+a ≤ 10000) :
+    (hstart : 6677 ≤ d+a) (hend : d+a ≤ 10000) :
     ∃ perContent, Passes shape d a perContent := by
-  have hstart' : (6675 : ℤ) ≤ (d : ℤ)+a := by exact_mod_cast hstart
+  have hstart' : (6677 : ℤ) ≤ (d : ℤ)+a := by exact_mod_cast hstart
   have hend' : (d : ℤ)+a ≤ (10000 : ℤ) := by exact_mod_cast hend
   rcases hshape with rfl | rfl | rfl
   · exact ⟨377230, primary_passes (by positivity) (by positivity) hstart' hend'⟩
@@ -48,11 +48,11 @@ private theorem centered_shape_passes (shape : SourceShape)
   · exact ⟨adaptiveGap, adaptive_passes (by positivity) (by positivity) hstart' hend'⟩
 
 theorem exists_mapped_source_and_seed_vanishing
-    (D : CenteredVirtualData x nodes σ 131071 180961 81183 excess)
+    (D : CenteredVirtualData x nodes σ 131071 180960 81184 excess)
     (embed : K →+* E) (shape : SourceShape)
     (hshape : shape = primary ∨ shape = roomSource ∨ shape = adaptive)
     (hcard : nodes.card ≤ 262144)
-    (hstart : 6675 ≤ D.d0.natDegree + affineDegree D.A0)
+    (hstart : 6677 ≤ D.d0.natDegree + affineDegree D.A0)
     (hend : D.d0.natDegree + affineDegree D.A0 ≤ 10000) :
     let cut := mappedSourceCutoff shape D.d0.natDegree
     let w' := mappedSourceDegree D.d0.natDegree (affineDegree D.A0)
@@ -104,7 +104,7 @@ theorem exists_mapped_source_and_seed_vanishing
   have hrM := hr.trans (sourceShape_room_le_order shape hshape)
   have hs : 2 * shape.virtualOrder - shape.room ≤
       shape.virtualOrder + shape.virtualOrder - r := by omega
-  have room : cut ≤ 180961 * shape.ordinaryOrder +
+  have room : cut ≤ 180960 * shape.ordinaryOrder +
       (shape.virtualOrder + shape.virtualOrder - r) * d := by
     unfold cut mappedSourceCutoff
     rw [Nat.mul_comm shape.ordinaryOrder]
@@ -113,7 +113,7 @@ theorem exists_mapped_source_and_seed_vanishing
     le_rfl (by cases second <;> exact hrM) room F ho hv0 hv1
 
 theorem exists_mapped_sourceSpace_and_seed_vanishing
-    (D : CenteredVirtualData x nodes σ 131071 180961 81183 excess)
+    (D : CenteredVirtualData x nodes σ 131071 180960 81184 excess)
     (embed : K →+* E) (shape : SourceShape)
     (hshape : shape = primary ∨ shape = roomSource ∨ shape = adaptive)
     (hcard : nodes.card ≤ 262144)
@@ -174,7 +174,7 @@ theorem exists_mapped_sourceSpace_and_seed_vanishing
   have hrM := hr.trans (sourceShape_room_le_order shape hshape)
   have hs : 2 * shape.virtualOrder - shape.room ≤
       shape.virtualOrder + shape.virtualOrder - r := by omega
-  have room : cut ≤ 180961 * shape.ordinaryOrder +
+  have room : cut ≤ 180960 * shape.ordinaryOrder +
       (shape.virtualOrder + shape.virtualOrder - r) * d := by
     unfold cut mappedSourceCutoff
     rw [Nat.mul_comm shape.ordinaryOrder]

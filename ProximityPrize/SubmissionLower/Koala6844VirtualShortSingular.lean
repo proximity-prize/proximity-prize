@@ -21,7 +21,7 @@ theorem slope_degree_le_weight (F : MvPolynomial (Fin 4) K) (w : Fin 4 → ℕ) 
   exact (show d 2 ≤ d 0*w 0+d 1*w 1+d 2+d 3*w 3 by omega).trans h
 
 def singularMiddle (r y : ℕ) : ℕ := 184*y + (828-184)*r
-def singularTotal (r t : ℕ) : ℕ := 184*t + (40641-184)*r
+def singularTotal (r t : ℕ) : ℕ := 184*t + (42071-184)*r
 def singularPrice (r y t : ℕ) : ℕ := singularTotal r t + 2130706433 * singularMiddle r y
 
 private theorem pad_cut (r s y u : ℕ) (hs : s ≤ 184) (hy : r ≤ y) (hu : 184 ≤ u) :
@@ -40,7 +40,7 @@ private theorem pad_cut (r s y u : ℕ) (hs : s ≤ 184) (hy : r ≤ y) (hu : 18
 
 theorem singular_germ_cut [CharP K 2130706433] (F : MvPolynomial (Fin 4) K)
     (hF : Irreducible F) (hr : 0 < F.degreeOf 2) (hrCap : F.degreeOf 2 ≤ 185)
-    (hy : wt residualYSWeights F ≤ 829) (ht : wt residualTotalWeights F ≤ 40642) :
+    (hy : wt residualYSWeights F ≤ 829) (ht : wt residualTotalWeights F ≤ 42072) :
     ∃ J : MvPolynomial (Fin 3) K, J ≠ 0 ∧
       J.degreeOf 1 ≤ singularMiddle (F.degreeOf 2) (wt residualYSWeights F) ∧
       J.weightedTotalDegree ![0,1,1] ≤ singularTotal (F.degreeOf 2) (wt residualTotalWeights F) ∧
@@ -57,9 +57,9 @@ theorem singular_germ_cut [CharP K 2130706433] (F : MvPolynomial (Fin 4) K)
     have h := coordinate_degree_le_of_dvd 2 F G hd hGne
     omega
   have hGy : wt residualYSWeights G ≤ 828 := wt_pderiv_le residualYSWeights F 2 829 hy
-  have hGt : wt residualTotalWeights G ≤ 40641 := wt_pderiv_le residualTotalWeights F 2 40642 ht
+  have hGt : wt residualTotalWeights G ≤ 42071 := wt_pderiv_le residualTotalWeights F 2 42072 ht
   obtain ⟨J, hJ, hJy, hJt, hvanish⟩ :=
-    exists_weighted_R_resultant F G hF hr hproper _ 828 _ 40641 le_rfl hGy le_rfl hGt
+    exists_weighted_R_resultant F G hF hr hproper _ 828 _ 42071 le_rfl hGy le_rfl hGt
   have hsy : F.degreeOf 2 ≤ wt residualYSWeights F := slope_degree_le_weight F _ rfl
   have hst : F.degreeOf 2 ≤ wt residualTotalWeights F := slope_degree_le_weight F _ rfl
   exact ⟨J,hJ,hJy.trans (pad_cut _ _ _ _ (by omega) hsy (by decide)),
@@ -76,10 +76,10 @@ theorem card_biUnion_le_short_singular (H : MvPolynomial (Fin 4) K) (hH : H ≠ 
     (points : MvPolynomial (Fin 4) K → Finset Seed)
     (hproduct : (∏ F ∈ factors, F) ∣ H)
     (hr : wt residualSWeights H ≤ 185) (hy : wt residualYSWeights H ≤ 829)
-    (ht : wt residualTotalWeights H ≤ 40642)
+    (ht : wt residualTotalWeights H ≤ 42072)
     (hcount : ∀ F ∈ factors, (points F).card ≤
       singularPrice (F.degreeOf 2) (wt residualYSWeights F) (wt residualTotalWeights F)) :
-    (factors.biUnion points).card ≤ singularPrice 185 829 40642 := by
+    (factors.biUnion points).card ≤ singularPrice 185 829 42072 := by
   have sy := (RCN293.sum_weighted_degrees_le_of_prod_dvd
     residualYSWeights factors id H hH hproduct).trans hy
   have st := (RCN293.sum_weighted_degrees_le_of_prod_dvd

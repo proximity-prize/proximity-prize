@@ -29,7 +29,7 @@ theorem benchmarkVirtualCharacteristic : CharP BenchmarkVirtualField 2130706433 
 
 
 abbrev BenchmarkVirtualFamily (nodes : Finset IRSProfile.Index) (excess : ℕ) :=
-  CenteredVirtualData IRSProfile.domain nodes Koala6844BenchmarkField.frobenius 131071 180961 81183 excess
+  CenteredVirtualData IRSProfile.domain nodes Koala6844BenchmarkField.frobenius 131071 180960 81184 excess
 
 variable {nodes : Finset IRSProfile.Index} {excess : ℕ}
 
@@ -90,8 +90,8 @@ private theorem benchmarkContent_pos (D : BenchmarkVirtualFamily nodes excess) :
   exact D.active ((Polynomial.isUnit_iff_degree_eq_zero.mpr hdeg).dvd)
 
 private theorem adaptive_cutoff_sub (d j : ℕ) (hj : j ≤ 6975) :
-    mappedSourceCutoff adaptive d - j*d = 180961*4800+(6912+6912-j)*d := by
-  change 4800*180961+ (2*6912-0)*d - j*d = _
+    mappedSourceCutoff adaptive d - j*d = 180960*4800+(6912+6912-j)*d := by
+  change 4800*180960+ (2*6912-0)*d - j*d = _
   have h : j*d ≤ (2*6912-0)*d := Nat.mul_le_mul_right d (by omega)
   rw [Nat.add_sub_assoc h, ← Nat.sub_mul]
 
@@ -128,7 +128,7 @@ theorem BenchmarkVirtualSources.adaptiveMap_mem {D : BenchmarkVirtualFamily node
 
 theorem exists_benchmark_virtual_sources
     (D : BenchmarkVirtualFamily nodes excess) (hexcess : excess ≤ 9799)
-    (hstart : 6675 ≤ D.d0.natDegree + affineDegree D.A0) :
+    (hstart : 6677 ≤ D.d0.natDegree + affineDegree D.A0) :
     Nonempty (BenchmarkVirtualSources D) := by
   have hend : D.d0.natDegree + affineDegree D.A0 ≤ 10000 :=
     D.support_le.trans (hexcess.trans (by decide))
@@ -142,7 +142,7 @@ theorem exists_benchmark_virtual_sources
     exists_mapped_source_and_seed_vanishing D benchmarkVirtualEmbedding Koala6844VirtualHigh.roomSource
       (Or.inr (Or.inl rfl)) hcard hstart hend
   let d := D.d0.natDegree
-  have hstart' : (6675 : ℤ) ≤ (d : ℤ) + affineDegree D.A0 := by exact_mod_cast hstart
+  have hstart' : (6677 : ℤ) ≤ (d : ℤ) + affineDegree D.A0 := by exact_mod_cast hstart
   have hend' : (d : ℤ) + affineDegree D.A0 ≤ 10000 := by exact_mod_cast hend
   have hpasses := adaptive_passes (d := (d : ℤ)) (a := (affineDegree D.A0 : ℤ))
     (by positivity) (by positivity) hstart' hend'
@@ -174,7 +174,7 @@ theorem exists_benchmark_virtual_sources
     change 0 < mappedSourceCutoff adaptive d - j*d
     rw [he]
     positivity
-  have hroom : cut ≤ 180961*4800+(6912+6912-k)*d := by
+  have hroom : cut ≤ 180960*4800+(6912+6912-k)*d := by
     change mappedSourceCutoff adaptive d - j*d ≤ _
     rw [he]
     exact Nat.add_le_add_left (Nat.mul_le_mul_right _ (Nat.sub_le_sub_left hk _)) _

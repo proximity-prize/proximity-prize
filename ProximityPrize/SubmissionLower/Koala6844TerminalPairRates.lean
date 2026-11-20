@@ -19,15 +19,15 @@ private theorem support_shape (g : Flag) (hr : 3 ≤ g.r) (hy : g.r+2 ≤ g.y) (
 
 theorem graphDirection_eq_scaled (g : Flag) (hr : 3 ≤ g.r) (hy : g.r+2 ≤ g.y) (ht : g.y ≤ g.t) :
     geometryFlag (graphDirection g) = (graphScale / geometryScale) •
-      scaledPairFlag (cellSupport g.t g.y g.r) 262144 w 180961 81183 := by
+      scaledPairFlag (cellSupport g.t g.y g.r) 262144 w 180960 81184 := by
   obtain ⟨hs,hys,htot⟩ := support_shape g hr hy ht
   have hs' : 2*g.r - 2 = 2*(g.r-1) := by omega
-  have ha : graphScale / agreements = graphScale / geometryScale * 49890 := by decide
-  have hg : graphScale / agreementGap = graphScale / geometryScale * 180961 := by decide
-  have hscale : graphScale = graphScale / geometryScale * (180961 * 49890) := by decide
+  have ha : graphScale / agreements = graphScale / geometryScale * 49889 := by decide
+  have hg : graphScale / agreementGap = graphScale / geometryScale * 180960 := by decide
+  have hscale : graphScale = graphScale / geometryScale * (180960 * 49889) := by decide
   have hnodes : nodes=262144 := by decide
   have hdegree : Koala6844Receipts.degree=131071 := by decide
-  have hpenc : pencilLimit=81184 := by decide
+  have hpenc : pencilLimit=81185 := by decide
   apply flag_ext <;>
     simp only [graphDirection,geometryFlag,scaledPairFlag,reducedAgreementDirection,hs,hys,htot,hs',
       unitYZFlag,unitZFlag,add_zOnly,add_yz,add_all,nsmul_zOnly,nsmul_yz,nsmul_all,
@@ -40,19 +40,19 @@ theorem graphDirection_eq_scaled (g : Flag) (hr : 3 ≤ g.r) (hy : g.r+2 ≤ g.y
 
 theorem scaled_pair_to_receipt (g : Flag) (hr : 3 ≤ g.r) (hy : g.r+2 ≤ g.y) (ht : g.y ≤ g.t)
     (left : FlagDegree) (right : FlagIncrements) (count : ℕ)
-    (hcount : count * (180961 * 49890) ≤ flagMixed left (geometryFlag right)
-      (scaledPairFlag (cellSupport g.t g.y g.r) 262144 w 180961 81183)) :
+    (hcount : count * (180960 * 49889) ≤ flagMixed left (geometryFlag right)
+      (scaledPairFlag (cellSupport g.t g.y g.r) 262144 w 180960 81184)) :
     graphScale * count ≤ dot (increments left)
       (FlagIncrements.map (fun j => mixedRate j right (graphDirection g))) := by
   rw [dot_mixed_eq,geometryFlag_increments,graphDirection_eq_scaled g hr hy ht]
-  let d := scaledPairFlag (cellSupport g.t g.y g.r) 262144 w 180961 81183
+  let d := scaledPairFlag (cellSupport g.t g.y g.r) 262144 w 180960 81184
   have he : flagMixed left (geometryFlag right) ((graphScale/geometryScale) • d) =
       (graphScale/geometryScale) * flagMixed left (geometryFlag right) d := by
     simp only [flagMixed,nsmul_zOnly,nsmul_yz,nsmul_all]
     ring
-  have hscale : graphScale = (graphScale / geometryScale) * (180961 * 49890) := by decide
+  have hscale : graphScale = (graphScale / geometryScale) * (180960 * 49889) := by decide
   calc
-    _ = (graphScale / geometryScale) * (count * (180961 * 49890)) := by rw [hscale]; ac_rfl
+    _ = (graphScale / geometryScale) * (count * (180960 * 49889)) := by rw [hscale]; ac_rfl
     _ ≤ (graphScale / geometryScale) * flagMixed left (geometryFlag right) d := Nat.mul_le_mul_left _ hcount
     _ = _ := he.symm
 

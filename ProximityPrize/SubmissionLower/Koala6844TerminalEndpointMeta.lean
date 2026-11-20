@@ -16,12 +16,12 @@ theorem contactProfile_of_check (s : SourceShape) (h : hasContactProfile s = tru
 def terminalMetadata (e : CertifiedEndpoint) : Bool :=
   match e.receipt with
   | .intrinsic _ _ => true
-  | .terminal src _ _ => decide (e.flag.r ≤ 19 ∧ e.flag.y ≤ 82) &&
+  | .terminal src _ _ => decide (e.flag.r ≤ 20 ∧ e.flag.y ≤ 84) &&
       hasContactProfile src.z && hasContactProfile src.yz && hasContactProfile src.all
 
 structure TerminalMetadata (f : Flag) (src : Sources) : Prop where
-  slope : f.r ≤ 19
-  middle : f.y ≤ 82
+  slope : f.r ≤ 20
+  middle : f.y ≤ 84
   z : ∃ i : Fin contactProfiles.size, contactProfiles[i] = src.z
   yz : ∃ i : Fin contactProfiles.size, contactProfiles[i] = src.yz
   all : ∃ i : Fin contactProfiles.size, contactProfiles[i] = src.all

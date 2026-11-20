@@ -88,7 +88,7 @@ private theorem card_graph_cover {F : MvPolynomial (Fin 4) K} (S : Fin 3 → Sou
       (Nat.add_le_add_right (Finset.card_union_le _ _) _)) _)
 
 private theorem graphScale_pos : 0 < graphScale := by decide
-private theorem graphScale_gap : 49890 ∣ graphScale := by decide
+private theorem graphScale_gap : 49889 ∣ graphScale := by decide
 
 attribute [local irreducible] graphScale
 

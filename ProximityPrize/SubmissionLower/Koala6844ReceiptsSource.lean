@@ -6,8 +6,8 @@ set_option autoImplicit false
 def nodes : Nat := 262144
 def degree : Nat := 131071
 def prime : Nat := 2130706433
-def agreements : Nat := 180961
-def poleWidth : Nat := 6674
+def agreements : Nat := 180960
+def poleWidth : Nat := 6676
 
 structure Flag where
   r : Nat

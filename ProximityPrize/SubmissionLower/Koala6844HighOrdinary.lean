@@ -128,7 +128,7 @@ theorem ordinary_retained_le_seed_budget [Fintype I] [CharP K 2130706433]
     (hpow : ∀ g : K, σ g = g ^ 2130706433) (hcard : Fintype.card I = 262144)
     (U : Received K I) (seeds : Finset K) (P : K → Polynomial K) (q : SymbolicRow (SeedRing K))
     (selection : Selection x U seeds P) (hf : q.first ≠ 0) (hs : q.second ≠ 0)
-    (hprim : IsPrimitiveRow q) (hδ' : primitiveExcess 131071 q ≤ 31606)
+    (hprim : IsPrimitiveRow q) (hδ' : primitiveExcess 131071 q ≤ 31608)
     (hkeep : ∀ g ∈ seeds, primitiveSelected σ 2130706433 q P g = 0 ∧
       Disjoint (agreementSet x U P g)
         (primitiveBadNodes x (conjugateWord σ (U 0)) (conjugateWord σ (U 1)) q))
@@ -166,7 +166,7 @@ theorem benchmark_ordinary_retained_le_seed_budget
   letI := Koala6844BenchmarkField.characteristic
   have sel : Selection IRSProfile.domain U seeds P :=
     ⟨data.selection.degree_le, data.selection.agreement, data.selection.pencil⟩
-  have hδ' : primitiveExcess 131071 q ≤ 31606 :=
+  have hδ' : primitiveExcess 131071 q ≤ 31608 :=
     (Nat.le_add_right _ _).trans data.excess_bad
   exact ordinary_retained_le_seed_budget IRSProfile.domain Koala6844BenchmarkField.frobenius.toRingHom
     Koala6844BenchmarkField.domain_fixed Koala6844BenchmarkField.frobenius_apply IRSProfile.card_index

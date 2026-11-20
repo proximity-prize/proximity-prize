@@ -150,9 +150,9 @@ theorem graph_identity_eq (g : Flag) (hr : 3 ≤ g.r) (hy : g.r+2 ≤ g.y) (ht :
   have hc : a+3+(b+2)+c-(a+3+(b+2))=c := by omega
   have hB : a+3+(b+2)-(a+3)-1=b+1 := by omega
   have hS : a+3-2=a+1 := by omega
-  have hg : agreementGap = 49890 := by decide
+  have hg : agreementGap = 49889 := by decide
   have hn : nodes-degree = 131073 := by decide
-  have hp : pencilLimit = 81184 := by decide
+  have hp : pencilLimit = 81185 := by decide
   unfold identityCharge
   rw [show RCN327.w = Lower80788.HybridIdentityC2.w from rfl,
     Lower80788.HybridIdentityC2.identityDegree_linear]

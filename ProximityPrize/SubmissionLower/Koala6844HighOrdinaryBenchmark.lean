@@ -31,17 +31,17 @@ theorem eval_eq_of_mem_agreementSet
 structure Selection (x : I ↪ K) (received : Received K I) (seeds : Finset K)
     (selected : K → Polynomial K) : Prop where
   degree_le : ∀ g ∈ seeds, (selected g).natDegree ≤ 131071
-  agreement : ∀ g ∈ seeds, 180961 ≤ (agreementSet x received selected g).card
+  agreement : ∀ g ∈ seeds, 180960 ≤ (agreementSet x received selected g).card
   pencil : ∀ p₀ p₁ : Polynomial K, p₀.natDegree ≤ 131071 → p₁.natDegree ≤ 131071 →
-    (RCN050.pencilSeeds seeds selected p₀ p₁).card ≤ 81184
+    (RCN050.pencilSeeds seeds selected p₀ p₁).card ≤ 81185
 
 def profileShape (idx : Fin 9) : ℕ × ℕ :=
   ![(19, 185), (15, 95), (8, 54), (6, 43), (5, 38), (4, 39),
     (4, 41), (4, 44), (2, 32)] idx
 
 theorem profile_price (idx : Fin 9) :
-    ordinaryPrice 2130706433 262144 131071 180961 81183
-      (profileShape idx).1 (profileShape idx).2 ≤ 243788757625463486 := by
+    ordinaryPrice 2130706433 262144 131071 180960 81184
+      (profileShape idx).1 (profileShape idx).2 ≤ 250000000000000000 := by
   fin_cases idx <;> decide +kernel
 
 private theorem ordinary_profiles_match (i : Fin 9) :
@@ -61,7 +61,7 @@ theorem ordinary_retained_price [IsAlgClosed Ω] [CharP E 2130706433] [CharP Ω 
     (U : Received K I) (retained : Finset K) (P : K → Polynomial K)
     (selection : Selection x U retained P) (q : SymbolicRow (SeedRing K))
     (hf : q.first ≠ 0) (hs : q.second ≠ 0) (hprim : IsPrimitiveRow q)
-    (hδ : 11500 ≤ primitiveExcess 131071 q) (hδ' : primitiveExcess 131071 q ≤ 31606)
+    (hδ : 11500 ≤ primitiveExcess 131071 q) (hδ' : primitiveExcess 131071 q ≤ 31608)
     (hc₂ : 2 ≤ weightDegree totalWeights (primitiveRowLift q))
     (hc₁₀ : weightDegree totalWeights (primitiveRowLift q) ≤ 10)
     (hkeep : ∀ g ∈ retained, primitiveSelected σ 2130706433 q P g = 0 ∧
@@ -71,7 +71,7 @@ theorem ordinary_retained_price [IsAlgClosed Ω] [CharP E 2130706433] [CharP Ω 
       (∀ d ∈ F.support, d 1 ≤ (profileShape idx).1 ∧ d 1 + d 2 + d 3 ≤ (profileShape idx).2) →
       HasOrdinaryAgreementTests φ ψ F x (U 0) (U 1) P retained Finset.univ 131071
         (profileShape idx).1 (profileShape idx).2) :
-    ∃ idx : Fin 9, retained.card ≤ ordinaryPrice 2130706433 262144 131071 180961 81183
+    ∃ idx : Fin 9, retained.card ≤ ordinaryPrice 2130706433 262144 131071 180960 81184
       (profileShape idx).1 (profileShape idx).2 := by
   classical
   let agree := agreementSet x U P
@@ -99,11 +99,11 @@ theorem ordinary_retained_price [IsAlgClosed Ω] [CharP E 2130706433] [CharP Ω 
         (MvPolynomial.C (σ (U 0 i.1)) + MvPolynomial.X 1 * MvPolynomial.C (σ (U 1 i.1))) ≠ 0 := hn
     simpa only [affineSeedWord, u, v, conjugateWord, zero_ne_one, one_ne_zero,
       ite_true, ite_false] using heq
-  have agreeing_count (g : ↥retained) : 180961 ≤ (agreement g).card := by
+  have agreeing_count (g : ↥retained) : 180960 ≤ (agreement g).card := by
     have havoid := Finset.disjoint_left.mp (hkeep g.1 g.2).2
     have eq : (agree g.1).filter (· ∉ bad) = agree g.1 :=
       Finset.filter_true_of_mem (fun i hi hb => havoid hi hb)
-    change 180961 ≤ ((agree g.1).subtype (· ∉ bad)).card
+    change 180960 ≤ ((agree g.1).subtype (· ∉ bad)).card
     rw [Finset.card_subtype, eq]
     exact selection.agreement g.1 g.2
   have natDegree (g : ↥retained) : (P g.1).natDegree ≤ 131071 := selection.degree_le g.1 g.2
@@ -133,7 +133,7 @@ theorem ordinary_retained_price [IsAlgClosed Ω] [CharP E 2130706433] [CharP Ω 
     simpa only [← hy', ← ht'] using support
   obtain ⟨hy, ht, hyt⟩ := ordinary_profile_caps idx
   have price := ordinary_carrier_seed_count φ hφ ψ F hF (profileShape idx).1 (profileShape idx).2
-    hy ht hyt support' x (U 0) (U 1) P retained Finset.univ 131071 180961 81183 (by decide) (by decide)
+    hy ht hyt support' x (U 0) (U 1) P retained Finset.univ 131071 180960 81184 (by decide) (by decide)
     (by rw [Finset.card_univ, hcard]; decide)
     selection.degree_le (fun g hg => zero ⟨g, hg⟩) selection.agreement
     selection.pencil (tests F hF idx support')

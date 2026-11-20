@@ -26,7 +26,7 @@ theorem checked_short_support : ShortSupportBound :=
     verified_endpoint_cover terminal_endpoints_metadata terminal_endpoints_intrinsic_raw
     terminal_profile_margin
 
-theorem claim : ProtocolClaim 6844 332529663 1073741824 :=
+theorem claim : ProtocolClaim 6844 332533759 1073741824 :=
   protocolClaim_of_active_counts Koala6844VirtualHigh.benchmark_large_support checked_short_support
 
 end ProximityPrize.SubmissionLower.Koala6844Submission

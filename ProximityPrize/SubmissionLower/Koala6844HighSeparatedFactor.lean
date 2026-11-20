@@ -41,7 +41,7 @@ theorem long_factor_seed_count_of_persistent_allowance
     (hZ : wt ![0, 0, 0, 1] F ≤ 162)
     (G : MvPolynomial (Fin 3) Ω) (hG : Irreducible G) (hdiv : G ∣ surfaceMap φ F)
     (x : I ↪ K) (u₀ u₁ : I → K) (nodes : Finset I)
-    (hAn : 180961 ≤ nodes.card) (haverage : nodeAverage nodes.card 131071 180961 ≤ 3)
+    (hAn : 180960 ≤ nodes.card) (haverage : nodeAverage nodes.card 131071 180960 ≤ 3)
     (seeds allSeeds : Finset K) (hsub : seeds ⊆ allSeeds)
     (selected : K → Polynomial K)
     (hdegree : ∀ g ∈ seeds, (selected g).natDegree ≤ 131071)
@@ -49,10 +49,10 @@ theorem long_factor_seed_count_of_persistent_allowance
     (hreg : ∀ g ∈ seeds,
       graphSpecialize (selected g) g (g ^ 2130706433) (implicitRegularity F) ≠ 0)
     (hzero : ∀ g ∈ seeds, MvPolynomial.eval (selectedGraphPoint 2130706433 selected g) G = 0)
-    (hagreements : ∀ g ∈ seeds, 180961 ≤
+    (hagreements : ∀ g ∈ seeds, 180960 ≤
       (nodes.filter (fun i => (selected g).eval (x i) = u₀ i + g * u₁ i)).card)
     (hpencil : ∀ P₀ P₁ : Polynomial K, P₀.natDegree ≤ 131071 → P₁.natDegree ≤ 131071 →
-      (RCN050.pencilSeeds allSeeds selected P₀ P₁).card ≤ 81184)
+      (RCN050.pencilSeeds allSeeds selected P₀ P₁).card ≤ 81185)
     (curveAllowance : ¬ G ∣ surfaceMap φ (tailNumerator F 131071) →
       (∑ C : {C : FirstTailComponent F 131071 G // Persistent F 131071 C.1},
         (selectedComponentPoints F 131071 2130706433 G seeds selected C.1).card) ≤

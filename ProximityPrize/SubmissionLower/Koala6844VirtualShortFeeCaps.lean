@@ -11,8 +11,7 @@ set_option maxHeartbeats 0
 set_option maxRecDepth 15000
 
 private def secondFeeStop (r : ℕ) : ℕ :=
-  ([127,126,125,124,123,122,121,120,118,117,116,114,113,111,109,107,105,103,101,98,
-    94,90,85,79,73,65,57,48,38,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50]
+  ([129,128,127,126,125,124,123,122,120,119,118,116,115,113,112,110,108,106,103,100,97,93,88,83,77,69,62,53,44,33,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50]
       : List ℕ).getD (r-1) 0
 
 private theorem checkedSecondFeeStop (r : ℕ) (hr₀ : 1 ≤ r) (hr₁ : r ≤ 50) :
@@ -20,7 +19,7 @@ private theorem checkedSecondFeeStop (r : ℕ) (hr₀ : 1 ≤ r) (hr₁ : r ≤ 
     bandCovers firstAdaptiveFlag ⟨r,secondFeeStop r,secondFeeStop r⟩ firstAdaptiveGap = true ∧
     (r < secondFeeStop r →
       germPrice ⟨r,secondFeeStop r - 1,afterRooms.t⟩ (adaptivePartnerFlag secondAdaptiveFlag) ≤
-        7000000000000000) := by
+        6659687472027177) := by
   refine ⟨?_,?_,?_⟩
   · interval_cases r <;> decide +kernel
   · rw [bandCovers, decide_eq_true_eq]
@@ -53,7 +52,7 @@ theorem second_adaptive_germ_fee (f : Flag) (hr : 1 ≤ f.r) (hf : f.ordered)
       f.toFlagDegree) :
     (adaptivePartnerFlag secondAdaptiveFlag).ordered ∧
     germDegreeT f (adaptivePartnerFlag secondAdaptiveFlag) < prime ∧
-    germPrice f (adaptivePartnerFlag secondAdaptiveFlag) ≤ 7000000000000000 := by
+    germPrice f (adaptivePartnerFlag secondAdaptiveFlag) ≤ 6659687472027177 := by
   let g := adaptivePartnerFlag secondAdaptiveFlag
   have hg : g.ordered := ⟨by decide +kernel,by decide +kernel⟩
   have hd := (germDegreeT_mono_left f afterRooms g (hg.1.trans hg.2) hfit.1 hfit.2.2).trans_lt
