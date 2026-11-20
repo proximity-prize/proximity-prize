@@ -13,19 +13,19 @@ noncomputable section
 open Polynomial
 open P0 (AnchorModel AnchoredFamily K k p node twist agreement t heightCap highPrefix)
 open K1_14 (L FX Seeds Equation Jet Shape Band Banks liftPoly graphEval atX
-  triangle slots shapeSum sourceDebit seedHasse SeedBound)
+  triangle slots shapeSum seedHasse SeedBound)
 open K1_14_3 (Surface Parent NoMovingCommon Compatible RowCaps ProjectedProduct)
 open scoped BigOperators
 
 abbrev band := H21.band
 abbrev terminalShape := H21.terminalShape
 def freeShape (w : ℤ) (i : Fin 3) : Shape :=
-  if w ≤ 3554 then ![⟨55, 76, 16, 1360⟩, ⟨91, 126, 27, 2072⟩, ⟨230,319,66,4045⟩] i
-  else ![⟨34, 47, 10, 515⟩, ⟨77, 80, 16, 940⟩, ⟨230,319,66,4045⟩] i
+  if w ≤ 3554 then ![⟨55, 76, 16, 1299⟩, ⟨91, 126, 27, 1931⟩, ⟨230,319,66,3650⟩] i
+  else ![⟨34, 47, 10, 515⟩, ⟨77, 80, 16, 940⟩, ⟨230,319,66,3650⟩] i
 
 def movingShape (w : ℤ) (i : Fin 3) : Shape :=
-  if w ≤ 3554 then ![⟨160, 222, 46, 6927⟩, ⟨266, 369, 77, 10980⟩, ⟨600,837,168,25162⟩] i
-  else ![⟨67, 93, 18, 1857⟩, ⟨124, 172, 35, 3138⟩, ⟨600,837,168,25162⟩] i
+  if w ≤ 3554 then ![⟨160, 222, 46, 7106⟩, ⟨266, 369, 77, 11028⟩, ⟨600,837,168,25167⟩] i
+  else ![⟨67, 93, 18, 1857⟩, ⟨124, 172, 35, 3138⟩, ⟨600,837,168,25167⟩] i
 
 def reserve (i : Fin 3) : ℕ := ![0, 6, 25] i
 
@@ -58,7 +58,7 @@ structure JetSource {u del} (M : AnchorModel u del) {Γ} (F : AnchoredFamily M �
   floor_bound : ∀ s ∈ scheduled M.overhead, ∀ W, W < s.m * agreement →
     (∀ q ≤ s.B, ∀ j ≤ min q s.J, q * (131071 - M.overhead.toNat) ≤ W + 1 + j) →
     triangle s.U * shapeSum s (fun q j => W + 1 + j - q * (131071 - M.overhead.toNat)) ≤
-      sourceDebit M.overhead.toNat s + ∑ t ∈ Finset.range (W + 1), Module.finrank FX (rows s t)
+      BankDebit.debit M.overhead.toNat s + ∑ t ∈ Finset.range (W + 1), Module.finrank FX (rows s t)
 
 /-- Both rows are selected at the stage's buffered cutoff. -/
 structure BufferedPair (w : ℤ) (rows : Banks) (i : Fin 3) where
@@ -96,6 +96,6 @@ end PackSource_P0_10Defs
 namespace P0_10
 def c2 : Prop :=
   ∀ u del (M : K21.AnchorModel u del) Γ (F : K21.AnchoredFamily M Γ),
-    (2472 : ℤ) ≤ M.overhead → M.overhead ≤ 3554 → ∀ rows, JetSource M F rows →
+    (2442 : ℤ) ≤ M.overhead → M.overhead ≤ 3554 → ∀ rows, JetSource M F rows →
     Nonempty (∀ i : Fin 3, BufferedPair M.overhead rows i)
 end P0_10

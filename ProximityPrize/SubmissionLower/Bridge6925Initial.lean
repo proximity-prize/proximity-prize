@@ -68,14 +68,14 @@ def PairPass {w rows i} (pair : BufferedPair w rows i) (I : Ideal Ambient) : Pro
         K1_14_2.toJet (K1_14_3R.chainCutter g) ∈ I
 
 /-- Integral section lengths use the floors of the rational mass bounds. -/
-def initialCap : Fin 4 → ℕ := ![6312, 173392, 828372, 9420720]
+def initialCap : Fin 4 → ℕ := ![6312, 173450, 828434, 9230694]
 
-def reserveFiveCap : Fin 4 → ℕ := ![358, 9306, 85921, 910022]
+def reserveFiveCap : Fin 4 → ℕ := ![358, 9111, 84082, 851802]
 
 /-- The conservative initial cap pays low-seed and constant-image exits. -/
-def initialE₀ : ℕ := 10494016
+def initialE₀ : ℕ := 10303990
 
-def initialFee : ℕ := (p+1)*828372 + initialE₀ + 6312 + (p+1)*(1360+6927)
+def initialFee : ℕ := (p+1)*828434 + initialE₀ + 6312 + (p+1)*(1299+7106)
 
 structure InitialCover {u del} {M : AnchorModel u del} {Γ} (F : AnchoredFamily M Γ)
     (P Q : Jet) (freeFixed movingFixed : ODE) where
@@ -90,17 +90,17 @@ structure InitialCover {u del} {M : AnchorModel u del} {Γ} (F : AnchoredFamily 
     K1_14_2.fixedAt movingFixed (F.scalar γ) = 0 ∨ ∃ I ∈ parents, OnParent F I γ
 
 /-- The stage caps for proper failed tests, in chronological order. -/
-def stageFiveShape : Shape := ⟨266, 369, 77, 10980⟩
+def stageFiveShape : Shape := ⟨266, 369, 77, 11028⟩
 def terminalFullShape : Shape := ⟨2048, 2845, 600, 75000⟩
 
-def stageLateShape : Shape := ⟨600,837,168,25162⟩
-def lateCap : Fin 4 → ℕ := ![169,4062,35223,281939]
-def lossSeedCap : ℕ := 230165867
-def lossYCap : ℕ := 3168268898
-def constantFee : ℕ := 157253942415
-def curveFee : ℕ := 77545580555522242
+def stageLateShape : Shape := ⟨600,837,168,25167⟩
+def lateCap : Fin 4 → ℕ := ![169,3948,34207,254458]
+def lossSeedCap : ℕ := 229614874
+def lossYCap : ℕ := 3136570989
+def constantFee : ℕ := 157152720070
+def curveFee : ℕ := 77199298085591273
 
-def beta : ℚ := (82005 : ℚ) / 45514
+def beta : ℚ := (82024 : ℚ) / 45495
 
 def rootPrice (g H : ℕ) : ℚ :=
   let s : ℚ := 2 * (g : ℚ) - 1
@@ -151,8 +151,8 @@ open scoped BigOperators
 open private divisor_caps seedContent_cap gcd_caps multiset_prod_ne_zero
   distinct_le_degree seed_degree_mul atMark_prod_eq_zero row_at_mark from ProximityPrize.SubmissionLower.Fast051
 
-def freeZero : Shape := ⟨55, 76, 16, 1360⟩
-def movingZero : Shape := ⟨160, 222, 46, 6927⟩
+def freeZero : Shape := ⟨55, 76, 16, 1299⟩
+def movingZero : Shape := ⟨160, 222, 46, 7106⟩
 
 /-- Residual rows and their common ordinary factors, with divisibility into
 the original rows retained for both kinds of component. -/
@@ -164,8 +164,8 @@ structure Prepared (P Q : Jet) (G H : ODE) where
   gcdSeed : ℕ
   gcdY : ℕ
   seedContent_ne : seedContent ≠ 0
-  seedContent_degree : seedContent.totalDegree ≤ 1360 + 6927
-  gcdSeed_le : gcdSeed ≤ 1360
+  seedContent_degree : seedContent.totalDegree ≤ 1299 + 7106
+  gcdSeed_le : gcdSeed ≤ 1299
   gcdY_le : gcdY ≤ 76
   free_caps : RowCaps free (afterGcd freeZero gcdSeed gcdY)
   moving_caps : RowCaps moving (afterGcd movingZero gcdSeed gcdY)
@@ -207,8 +207,8 @@ theorem prepare {P Q : Jet} (hP : P ≠ 0) (hQ : Q ≠ 0)
     (right_ne_zero_of_mul hpa0) (right_ne_zero_of_mul hqb0) hpa hord
   have ha0 : a ≠ 0 := by intro hz; simp [hz] at hpa0
   have hb0 : b ≠ 0 := by intro hz; simp [hz] at hqb0
-  have hau : a.totalDegree ≤ 1360 := seedContent_cap hP hPc (Dvd.dvd.trans ⟨P', ha⟩ hAr)
-  have hbu : b.totalDegree ≤ 6927 := seedContent_cap hQ hQc (Dvd.dvd.trans ⟨Q', hb⟩ hBr)
+  have hau : a.totalDegree ≤ 1299 := seedContent_cap hP hPc (Dvd.dvd.trans ⟨P', ha⟩ hAr)
+  have hbu : b.totalDegree ≤ 7106 := seedContent_cap hQ hQc (Dvd.dvd.trans ⟨Q', hb⟩ hBr)
   have hp : P = fixedIncl A.equation * (C (C a) * (C M.prod * L)) :=
     A.factorization.trans (by rw [ha, hL])
   have hq : Q = fixedIncl B.equation * (C (C b) * (C M.prod * T)) :=
@@ -284,7 +284,7 @@ private theorem split_mul {u x b a d : ℕ} (hx : x ≤ u) (ha : a ≤ b) (hd : 
     _ = _ := by rw [← Nat.add_mul, Nat.sub_add_cancel hx]
 
 /-- Shared-gcd accounting for the four initial bridge section lengths. -/
-theorem ledger (x y : ℕ) (hx : x ≤ 1360) (hy : y ≤ 76) (k : Fin 4) :
+theorem ledger (x y : ℕ) (hx : x ≤ 1299) (hy : y ≤ 76) (k : Fin 4) :
     residualBudget (afterGcd freeZero x y) (afterGcd movingZero x y) k +
       ordinaryBudget x y k ≤ initialCap k := by
   have h := PriceReceipt6925.initial_cap k x y hx hy

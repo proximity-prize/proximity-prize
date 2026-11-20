@@ -6,10 +6,9 @@ import ProximityPrize.SubmissionLower.Bridge6925Endpoint
 
 set_option Elab.async false
 
-/- Dadon's PR 627 supplies the Frobenius rank classification. The first
-interval extends the PR 631 cover to reserves 0, 6 and 25. The physical
-count shares the anchor degree between its leading coefficient and factors. -/
+/- The two-pole source uses joint projective grades and certified
+four-by-four savings. The anchored cover tests reserves 0, 6 and 25. -/
 theorem ProximityPrize.Benchmark.candidate :
-    ProximityPrize.Benchmark.ProtocolClaim 6928 335893008 1073741824 :=
+    ProximityPrize.Benchmark.ProtocolClaim 6930 335972916 1073741824 :=
   Assembly6921.protocol_of_high (CompleteHigh6921.of_producers
     HighSource6921.proof Bridge6925.first HighProducer6921.P.K1_14_3R)

@@ -1,3 +1,4 @@
+import ProximityPrize.SubmissionLower.PoleDebitDefs
 import ProximityPrize.SubmissionLower.JointTerminal6921
 
 set_option Elab.async false
@@ -10,7 +11,7 @@ namespace HighJoint6921
 open K1_14 K1_14_4 Polynomial
 open scoped BigOperators
 
-def top (s : Shape) : ℕ := s.m * 180139
+def top (s : Shape) : ℕ := s.m * 180120
 
 def base (h : ℕ) : ℕ := 131071 - h
 
@@ -29,7 +30,7 @@ def width (s : Shape) (h W j : ℕ) : ℕ :=
 of each leading derivative coefficient in the same terminal bank. -/
 def TerminalMass (s : Shape) (h : ℕ) (f : Equation) : Prop :=
   ∃ V : ℕ → Submodule FX Jet,
-    rawVolume s h ≤ sourceDebit h s +
+    rawVolume s h ≤ BankDebit.debit h s +
       ∑ W ∈ Finset.range (top s), Module.finrank FX (V W) ∧
     ∀ W < top s, ∀ P ∈ V W, P ≠ 0 →
       let j := P.natDegree
@@ -58,17 +59,17 @@ private theorem row_cutoff {s : Shape} {h W : ℕ} {P : Jet} {f : Equation}
 /-- A joint degree exclusion from a numerical quotient-volume inequality. -/
 theorem seed_of_strict {s : Shape} {h e v : ℕ} {f : Equation}
     (hf : f ≠ 0) (hk : 0 < base h) (he : e ≤ f.natDegree) (hm : TerminalMass s h f)
-    (hstrict : sourceDebit h s + quotientVolume s h e (v+1) < rawVolume s h) :
+    (hstrict : BankDebit.debit h s + quotientVolume s h e (v+1) < rawVolume s h) :
     SeedBound f v := by
   obtain ⟨V, hmass, hrows⟩ := hm
   exact JointTerminal.seed_bound_of_bank V hf (top s) (s.J + 1) s.U e v
-    (sourceDebit h s) (rawVolume s h) (width s h) (forcedPower s h) he hmass
+    (BankDebit.debit h s) (rawVolume s h) (width s h) (forcedPower s h) he hmass
     (fun W hW P hP hn => row_cutoff hk (hrows W hW P hP hn)) hstrict
 
 /-- A zero seed charge tests ordinate degree alone in the full bank. -/
 theorem ordinate_of_strict {s : Shape} {h e : ℕ} {f : Equation}
     (hf : f ≠ 0) (hk : 0 < base h) (hm : TerminalMass s h f)
-    (hstrict : sourceDebit h s + quotientVolume s h e 0 < rawVolume s h) :
+    (hstrict : BankDebit.debit h s + quotientVolume s h e 0 < rawVolume s h) :
     f.natDegree < e := by
   by_contra! he
   obtain ⟨V, hmass, hrows⟩ := hm

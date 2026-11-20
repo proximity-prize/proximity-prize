@@ -15,14 +15,11 @@ def nodeCostAt (s : Shape) (q : ℕ) : ℕ :=
   let n := min (min q s.J + 1) ((d+1)/2)
   n*d - 2*(n*(n-1)/2)
 
-def poleCostAt (s : Shape) (q : ℕ) : ℕ :=
-  (min q s.J + 1) * ((s.B+s.J-q)*(s.B-q))
-
 def fixedDebit (s : Shape) : ℕ :=
   triangle s.U * 262144 * ∑ q ∈ range (s.B+1), nodeCostAt s q
 
 def linearDebit (s : Shape) : ℕ :=
-  2*(s.U+1)*(∑ q ∈ range (s.B+1), poleCostAt s q)
+  2 * BankDebit.extra s
 
 private theorem sum_debit_at (p q u : ℕ) :
     (∑ i ∈ range u, (p - (q + 2*i))) =
@@ -58,18 +55,15 @@ private theorem sum_debit_at (p q u : ℕ) :
   omega
 
 theorem debit_affine (s : Shape) (h : ℕ) :
-    sourceDebit h s = fixedDebit s + h * linearDebit s := by
-  unfold sourceDebit fixedDebit linearDebit
+    BankDebit.debit h s = fixedDebit s + h * linearDebit s := by
+  unfold BankDebit.debit K1_14_1.physicalDebit fixedDebit linearDebit
   have hnode : shapeSum s (fun q i => s.m + min q s.J - (q+2*i)) =
       ∑ q ∈ range (s.B+1), nodeCostAt s q := by
     unfold shapeSum
     apply sum_congr rfl
     intro q _
     exact sum_debit_at (s.m+min q s.J) q (min q s.J+1)
-  have hpole : shapeSum s (fun q _ => (s.B+s.J-q)*(s.B-q)) =
-      ∑ q ∈ range (s.B+1), poleCostAt s q := by
-    simp [shapeSum, poleCostAt]
-  rw [hnode, hpole]
+  rw [hnode]
   ring
 
 def affineCost (s : Shape) (e step : ℕ) : ℕ :=
@@ -90,7 +84,7 @@ theorem strict_of_affine (s : Shape) (h lo e step : ℕ)
     (hh : 0 < h) (hle : lo ≤ h) (hhi : h ≤ 131071) (he : 0 < e)
     (hwidth : s.B * base lo ≤ top s)
     (hc : AffineCertificate s lo e step) :
-    sourceDebit h s + quotientVolume s h e step < rawVolume s h := by
+    BankDebit.debit h s + quotientVolume s h e step < rawVolume s h := by
   have hbase : base lo = base h + (h-lo) := by unfold base; omega
   have hwidth' : s.B * base h ≤ top s :=
     (Nat.mul_le_mul_left _ (by omega : base h ≤ base lo)).trans hwidth
@@ -111,7 +105,7 @@ theorem strict_of_affine (s : Shape) (h lo e step : ℕ)
         rw [hbase]
         ring
       _ < _ := hc.1
-  have hd : sourceDebit h s + quotientVolume s h e step ≤ fixedDebit s + h * affineCost s e step := by
+  have hd : BankDebit.debit h s + quotientVolume s h e step ≤ fixedDebit s + h * affineCost s e step := by
     rw [debit_affine]
     unfold affineCost
     rw [Nat.mul_add, ← Nat.mul_assoc, Nat.mul_comm h 2, ← Nat.add_assoc]

@@ -183,10 +183,10 @@ private def gradeSlots (a b c : ℕ) : ℕ :=
   gradeCeiling a b c + 1 - (a + b + c)
 
 private def firstWidth (a b c : ℕ) : ℕ :=
-  90 * 180139 - 133542 * gradeCeiling a b c + indexWeight a b c
+  90 * 180120 - 133512 * gradeCeiling a b c + indexWeight a b c
 
-/-- The grade falls by j from its ceiling, so each step adds 133542 abscissa slots. -/
-private def abscissaWidth (a b c j : ℕ) : ℕ := firstWidth a b c + 133542 * j
+/-- The grade falls by j from its ceiling, so each step adds 133512 abscissa slots. -/
+private def abscissaWidth (a b c j : ℕ) : ℕ := firstWidth a b c + 133512 * j
 
 private noncomputable def exponent (x v a b c : ℕ) : Exponent :=
   (Finsupp.equivFunOnFinite.symm ![v, a, b, c]).optionElim x
@@ -210,10 +210,10 @@ private theorem jet_weight (m : Fin 4 →₀ ℕ) (w : Fin 4 → ℕ) :
   simp [Finsupp.weight_apply, Finsupp.sum_fintype, Fin.sum_univ_succ, smul_eq_mul, add_assoc]
 
 private theorem true_weight (x v a b c : ℕ) :
-    (exponent x v a b c).weight (differentialWeight 133542) =
-      x + (v * 133542 + a * 133541 + b * 133540 + c * 133539) := by
-  have hw : differentialWeight (d := 3) 133542 = fun i =>
-      i.elim 1 (fun k => 133542 - k.val) := by
+    (exponent x v a b c).weight (differentialWeight 133512) =
+      x + (v * 133512 + a * 133511 + b * 133510 + c * 133509) := by
+  have hw : differentialWeight (d := 3) 133512 = fun i =>
+      i.elim 1 (fun k => 133512 - k.val) := by
     funext i
     cases i <;> rfl
   rw [hw, exponent, Finsupp.weight_optionElim, jet_weight]
@@ -222,19 +222,19 @@ private theorem true_weight (x v a b c : ℕ) :
 private theorem eligible_exponent (x v a b c : ℕ) :
     AnchorEligible (exponent x v a b c) ↔
       c ≤ 10 ∧ indexWeight a b c ≤ 48 ∧ v + (a + b + c) ≤ gradeCeiling a b c ∧
-        x + 133542 * (v + (a + b + c)) < 90 * 180139 + indexWeight a b c := by
+        x + 133512 * (v + (a + b + c)) < 90 * 180120 + indexWeight a b c := by
   unfold AnchorEligible gradeCeiling indexWeight
-  rw [show P0_9.physicalDegree = 133542 from rfl,
+  rw [show P0_9.physicalDegree = 133512 from rfl,
     Finsupp.degree_eq_weight_one, jet_weight, jet_weight, true_weight]
   simp only [mul_one, Finsupp.some_apply, exponent_some, Matrix.cons_val_zero, le_min_iff]
   change (v + a + b + c ≤ 120 ∧ v * 0 + a * 1 + b * 2 + c * 3 ≤ 48 ∧
     c ≤ 10 ∧ a + b + c ≤ 48 - (v + a + b + c - 113 + 1) / 2 ∧
-    x + (v * 133542 + a * 133541 + b * 133540 + c * 133539) ≤ 90 * 180139 - 1) ↔ _
+    x + (v * 133512 + a * 133511 + b * 133510 + c * 133509) ≤ 90 * 180120 - 1) ↔ _
   by_cases h : a + b + c = 0 <;> omega
 
 private theorem width_iff (a b c j x : ℕ) (hj : j ≤ gradeCeiling a b c) :
     x < abscissaWidth a b c j ↔
-      x + 133542 * (gradeCeiling a b c - j) < 90 * 180139 + indexWeight a b c := by
+      x + 133512 * (gradeCeiling a b c - j) < 90 * 180120 + indexWeight a b c := by
   have hgrade : gradeCeiling a b c ≤ 120 := min_le_left _ _
   unfold abscissaWidth firstWidth
   omega
@@ -330,7 +330,7 @@ private theorem sumRange_eq_fin (f : ℕ → ℕ) (n : ℕ) :
 
 private def tripleCount (a b c : ℕ) : ℕ :=
   let n := gradeSlots a b c
-  n * firstWidth a b c + 133542 * (n * (n - 1) / 2)
+  n * firstWidth a b c + 133512 * (n * (n - 1) / 2)
 
 private theorem sum_abscissaWidth (a b c : ℕ) :
     (∑ j : Fin (gradeSlots a b c), abscissaWidth a b c j) = tripleCount a b c := by
@@ -350,11 +350,11 @@ private theorem slot_card : Fintype.card Slot = sumRange sliceCount 11 := by
 
 set_option maxRecDepth 10000 in
 set_option maxHeartbeats 2000000 in
-private theorem totalCount : sumRange sliceCount 11 = 2411639399501 := by
+private theorem totalCount : sumRange sliceCount 11 = 2411786951891 := by
   decide +kernel
 
 /-- Exact dimension of the order-90 anchor bank. -/
-theorem anchor_finrank : Module.finrank Geom anchorSpace = 2411639399501 := by
+theorem anchor_finrank : Module.finrank Geom anchorSpace = 2411786951891 := by
   let e : Slot ≃ Eligible :=
     Equiv.ofBijective slotExponent ⟨slotExponent_injective, slotExponent_surjective⟩
   let b := MvPolynomial.basisRestrictSupport Geom {u : Exponent | AnchorEligible u}

@@ -273,11 +273,11 @@ private theorem chart_le (p : Shape) (hp : Chamber p) (ht : 1 < p.t) (hb : p.b �
     InBox (chart (K1_13.taylorLength + 4) (derivativeBox p))
       (chart (P0_9.taylorLength + 4) p) := by
   obtain ⟨hjb, htj⟩ := hp
-  have hB : 1 + 267352 * (p.b - 1 - 1) ≤ 1 + 267094 * (p.b - 1) := by omega
+  have hB : 1 + 267352 * (p.b - 1 - 1) ≤ 1 + 267034 * (p.b - 1) := by omega
   have hJ : 267352 * (p.j - 3 - 3) + 133676 + 3 ≤
-      267094 * (p.j - 3) + 133547 + 3 := by omega
+      267034 * (p.j - 3) + 133517 + 3 := by omega
   have hT : 267352 * (p.t - 1 - 1) + 133676 + 1 ≤
-      267094 * (p.t - 1) + 133547 + 1 := by omega
+      267034 * (p.t - 1) + 133517 + 1 := by omega
   exact ⟨max_le_max hB hJ, hJ, min_le_min hT (Nat.div_le_div_right hJ)⟩
 
 /-- Recover in the larger ambient Taylor space, with all pullbacks still
@@ -998,7 +998,7 @@ theorem threefold_pieces_capacity {w Γ s} (C : Pieces Γ) (h : Messages w Γ s)
 private theorem proper_capacity {w Γ s} {x : Shape} (C : Pieces Γ) (h : Messages w Γ s)
     (hc : C.curves s) (hb : 32 * C.total ≤ curveMass32 x)
     (hn : 32 * C.n ≤ componentMass32 x) :
-    C.union.card ≤ ceilDiv (82005 * curveMass32 x) (32 * 46597) +
+    C.union.card ≤ ceilDiv (82024 * curveMass32 x) (32 * 46608) +
       ceilDiv (componentMass32 x) 32 := by
   have hcap := P0_9_6.pieces_curve_capacity C h hc
   unfold ceilDiv
@@ -1039,7 +1039,7 @@ theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) : P0_9_7.c2 := by
   have hsumI := Finset.card_union_le C.union F.union
   let p := (shape f).chamber
   let h := fatChart (shape f)
-  change Γ.card ≤ ceilDiv (82005 * curveMass32 (shape f)) (32 * 46597) +
+  change Γ.card ≤ ceilDiv (82024 * curveMass32 (shape f)) (32 * 46608) +
     ceilDiv (componentMass32 (shape f)) 32 + 20 * p.b * h.b ^ 2 +
     5 * physicalDegree * p.b * h.b + 1
   have hreserveC : C.union.card ≤ 5 * physicalDegree * p.b * h.b := by
@@ -3210,7 +3210,7 @@ private theorem height_comparison {R : CoeffIdeal} (D : FreshCurve R)
     ((algebraMap Geom D.Old).comp K1_13.embed).injective K1.p
   have hdeg : D.polynomial.natDegree < taylorLength := Nat.lt_succ_iff.mpr D.degree_le
   have hchar : D.polynomial.natDegree < K1.p := by
-    exact D.degree_le.trans_lt (by decide : 133542 < 2130706433)
+    exact D.degree_le.trans_lt (by decide : 133512 < 2130706433)
   let B := factorsOfMonic D.monic hchar (by decide : 2 < K1.p)
   let z := fun i => (B.factor i).eval₂ D.includeOld D.center
   let r₃ := ratios (D.jets (n := 3)) 0
@@ -3252,7 +3252,7 @@ private theorem height_comparison {R : CoeffIdeal} (D : FreshCurve R)
   intro i _
   rw [(hdiv (z i)).2.2.1, ← mul_assoc, ← mul_assoc]
   apply Nat.mul_le_mul_right
-  exact multiplicity_bound ((B.le_degree i).trans D.degree_le) (by decide : 2 ≤ 133542)
+  exact multiplicity_bound ((B.le_degree i).trans D.degree_le) (by decide : 2 ≤ 133512)
 
 /-- The full residue degree converts the image curve's degree to the
 height of the jet ratios on the original curve. -/
@@ -3935,7 +3935,7 @@ private theorem choose_section {w Γ s} (hm : P0_9.Messages w Γ s) {H : Shape} 
     (hr : ∀ γ ∈ Γ, r.asIdeal ≤ jetPointIdeal (jetPoint (extend (s γ)))) :
     ∃ (F : Jets) (selected : Finset JetPoint), Supported H F ∧ F ∉ r.asIdeal ∧
       (∀ y ∈ selected, r.asIdeal ≤ jetPointIdeal y ∧ MvPolynomial.eval y F = 0) ∧
-      46597 * Γ.card ≤ 82005 * selected.card + 46597 := by
+      46608 * Γ.card ≤ 82024 * selected.card + 46608 := by
   classical
   let proper := (univ : Finset I).filter (fun i => ∃ γ ∈ Γ, (s γ).eval (node i) ≠ w i)
   let hits (i : I) := Γ.filter (fun γ => (s γ).eval (node i) = w i)
@@ -4004,7 +4004,7 @@ theorem of_children (h1 : c1) (h2 : c2) : P0_9_7.c3 := by
   have hsections (r : PrimeSpectrum Jets) :
       ∃ (F : Jets) (selected : Finset JetPoint), Supported (P0_9_7.fatChart (shape f)) F ∧ F ∉ r.asIdeal ∧
         (∀ y ∈ selected, r.asIdeal ≤ jetPointIdeal y ∧ MvPolynomial.eval y F = 0) ∧
-        46597 * (piece r).card ≤ 82005 * selected.card + 46597 :=
+        46608 * (piece r).card ≤ 82024 * selected.card + 46608 :=
     choose_section (hm.mono (filter_subset _ _)) C
       (fun γ hγ => hC (s γ) (hm.degree γ (mem_filter.mp hγ).1)
         (hOn γ (mem_filter.mp hγ).1).1 (hOn γ (mem_filter.mp hγ).1).2)
@@ -4026,17 +4026,17 @@ theorem of_children (h1 : c1) (h2 : c2) : P0_9_7.c3 := by
   have hCount := sparse_sections f P Q hbP hbQ R (fun r hr => (hR r hr).1)
     (shape f).chamber ⟨shape_chamber f, hf.2.1⟩ linear singlePoint hLinear
   rw [sum_congr rfl hOne, sum_const, smul_eq_mul, Nat.mul_one] at hCount
-  have hsum : 46597 * Γ.card ≤ 82005 * (∑ r ∈ R, (selected r).card) + 46597 * R.card := calc
-    _ ≤ 46597 * (∑ r ∈ R, (piece r).card) := Nat.mul_le_mul_left _ hcover
-    _ = ∑ r ∈ R, 46597 * (piece r).card := mul_sum ..
-    _ ≤ ∑ r ∈ R, (82005 * (selected r).card + 46597) := sum_le_sum fun r _ => hFee r
+  have hsum : 46608 * Γ.card ≤ 82024 * (∑ r ∈ R, (selected r).card) + 46608 * R.card := calc
+    _ ≤ 46608 * (∑ r ∈ R, (piece r).card) := Nat.mul_le_mul_left _ hcover
+    _ = ∑ r ∈ R, 46608 * (piece r).card := mul_sum ..
+    _ ≤ ∑ r ∈ R, (82024 * (selected r).card + 46608) := sum_le_sum fun r _ => hFee r
     _ = _ := by rw [sum_add_distrib, ← mul_sum, sum_const, smul_eq_mul, Nat.mul_comm R.card]
   change Γ.card ≤ ceilDiv
-    (82005 * mixed32 (shape f).chamber lowerBox lowerBox (P0_9_7.fatChart (shape f)) +
-      46597 * mixed32 (shape f).chamber lowerBox lowerBox (shape f).chamber)
-    (32 * 46597 * threshold)
-  rw [Nat.mul_right_comm 32 46597 threshold]
-  exact weighted_ceil (32 * threshold) 82005 46597 (Nat.mul_pos (Nat.mul_pos (by decide) (by decide)) (by decide))
+    (82024 * mixed32 (shape f).chamber lowerBox lowerBox (P0_9_7.fatChart (shape f)) +
+      46608 * mixed32 (shape f).chamber lowerBox lowerBox (shape f).chamber)
+    (32 * 46608 * threshold)
+  rw [Nat.mul_right_comm 32 46608 threshold]
+  exact weighted_ceil (32 * threshold) 82024 46608 (Nat.mul_pos (Nat.mul_pos (by decide) (by decide)) (by decide))
     hsum hDegree hCount
 
 end
@@ -4257,7 +4257,7 @@ theorem proof : P0_9_7_3.c1 := by
   obtain ⟨hD, hN⟩ := coefficient_fits f ht
   obtain ⟨C, hC⟩ := values_of_coefficients _ _ hD hN
   have hlength : P0_9.taylorLength < K1.p := by
-    change 133543 < 2130706433
+    change 133513 < 2130706433
     decide
   exact ⟨C, fun S hS hon hr =>
     hC S (Nat.lt_succ_of_le hS) (coefficients_recover hlength ht (extend S) hon.1 hr)⟩

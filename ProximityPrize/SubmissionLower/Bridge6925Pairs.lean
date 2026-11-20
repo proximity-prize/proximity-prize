@@ -1,3 +1,4 @@
+import ProximityPrize.SubmissionLower.PoleReceipts
 import ProximityPrize.SubmissionLower.Bridge6925Defs
 import ProximityPrize.SubmissionLower.Fast076
 import ProximityPrize.SubmissionLower.Pack_K1_14_2_1Split
@@ -7,10 +8,10 @@ set_option autoImplicit true
 namespace P0_10_2
 
 open P0 (agreement)
-open K1_14 (Shape triangle shapeSum sourceDebit)
+open K1_14 (Shape triangle shapeSum)
 open K1_14_2_1 (movingCeiling)
 open Finset
-open private twice_sum_linear nodeRow nodeCost poleSlope debit_eq from ProximityPrize.SubmissionLower.Pack_K1_14_2_1Arithmetic
+open private twice_sum_linear nodeRow nodeCost debit_eq from ProximityPrize.SubmissionLower.Pack_K1_14_2_1Arithmetic
 
 def cutoffCount (h r : ℕ) (s : Shape) : ℕ :=
   s.m * agreement - 2 * h * r
@@ -86,7 +87,7 @@ private def worstSlope (s : Shape) (r : ℕ) : ℤ := (s.B : ℤ) - 2 * r
 
 private def surplusBase (s : Shape) : ℤ := (triangle s.U : ℤ) * widthBase s - 2 * nodeCost s
 private def surplusSlope (s : Shape) (r mode : ℕ) : ℤ :=
-  (triangle s.U : ℤ) * widthSlope s r mode - 2 * poleSlope s
+  (triangle s.U : ℤ) * widthSlope s r mode - 2 * (2 * BankDebit.extra s : ℕ)
 
 /-- The width guard and twice the source-rank surplus at both endpoints. -/
 def Certificate (s : Shape) (r mode lo hi : ℕ) : Prop :=
@@ -100,14 +101,15 @@ def rowStats (s : Shape) (r mode q : ℕ) : ℤ × ℤ × ℕ × ℕ :=
   (baseRow s q, slopeRow s r mode q, nodeRow (min q s.J + 1) (s.m + min q s.J - q),
     (min q s.J + 1) * ((s.B + s.J - q) * (s.B - q)))
 
-theorem certificate_of_stats {s : Shape} {r mode lo hi : ℕ} {a b : ℤ} {c d : ℕ}
+theorem certificate_of_stats {s : Shape} {r mode lo hi : ℕ} {a b : ℤ} {c d pole : ℕ}
     (hs : (∑ q ∈ range (s.B + 1), rowStats s r mode q) = (a, b, c, d))
+    (hp : BankDebit.extra s = pole)
     (hc : 0 < worstBase s + lo * worstSlope s r ∧
       0 < worstBase s + hi * worstSlope s r ∧
       0 < (triangle s.U : ℤ) * (a + lo * b)
-        - 2 * ((triangle s.U * 262144 * c : ℕ) : ℤ) - 2 * lo * ((2 * (s.U + 1) * d : ℕ) : ℤ) ∧
+        - 2 * ((triangle s.U * 262144 * c : ℕ) : ℤ) - 2 * lo * ((2 * pole : ℕ) : ℤ) ∧
       0 < (triangle s.U : ℤ) * (a + hi * b)
-        - 2 * ((triangle s.U * 262144 * c : ℕ) : ℤ) - 2 * hi * ((2 * (s.U + 1) * d : ℕ) : ℤ)) :
+        - 2 * ((triangle s.U * 262144 * c : ℕ) : ℤ) - 2 * hi * ((2 * pole : ℕ) : ℤ)) :
     Certificate s r mode lo hi := by
   have ha : widthBase s = a := by
     simpa only [Prod.fst_sum, widthBase, rowStats] using congrArg Prod.fst hs
@@ -118,10 +120,6 @@ theorem certificate_of_stats {s : Shape} {r mode lo hi : ℕ} {a b : ℤ} {c d :
     unfold nodeCost
     congr 1
     simpa only [Prod.fst_sum, Prod.snd_sum, rowStats] using congrArg (fun t => t.2.2.1) hs
-  have hp : poleSlope s = 2 * (s.U + 1) * d := by
-    unfold poleSlope
-    congr 1
-    simpa only [Prod.snd_sum, rowStats] using congrArg (fun t => t.2.2.2) hs
   unfold Certificate surplusBase surplusSlope
   rw [ha, hb, hn, hp]
   exact ⟨hc.1, hc.2.1, by linarith only [hc.2.2.1], by linarith only [hc.2.2.2]⟩
@@ -135,7 +133,7 @@ private theorem affine_positive {a b h lo hi : ℤ} (hlo : lo ≤ h) (hhi : h �
 theorem test {h r mode lo hi : ℕ} {s : Shape} (hlo : lo ≤ h) (hhi : h ≤ hi)
     (hh : h ≤ 131071) (hc : Certificate s r mode lo hi) :
     s.B * (131071 - h) < cutoffCount h r s ∧
-      sourceDebit h s + mode * movingCeiling h s < rawVolume h r s := by
+      BankDebit.debit h s + mode * movingCeiling h s < rawVolume h r s := by
   have hloI : (lo : ℤ) ≤ (h : ℤ) := by exact_mod_cast hlo
   have hhiI : (h : ℤ) ≤ (hi : ℤ) := by exact_mod_cast hhi
   obtain ⟨ha, hb, hc, hd⟩ := hc
@@ -158,10 +156,14 @@ theorem test {h r mode lo hi : ℕ} {s : Shape} (hlo : lo ≤ h) (hhi : h ≤ hi
   have hs := affine_positive hloI hhiI hc hd
   have heq := volume_eq h r mode s hh hwidth
   unfold surplusBase surplusSlope at hs
+  push_cast at hs
   refine ⟨hwidth, ?_⟩
-  have ht : ((sourceDebit h s + mode * movingCeiling h s : ℕ) : ℤ) <
+  have ht : ((BankDebit.debit h s + mode * movingCeiling h s : ℕ) : ℤ) <
       (rawVolume h r s : ℤ) := by
-    rw [debit_eq]
+    unfold BankDebit.debit
+    change ((K1_14_1.physicalDebit s + 2*h*BankDebit.extra s + _ : ℕ) : ℤ) < _
+    rw [show K1_14_1.physicalDebit s = nodeCost s from by
+      simpa [K1_14.sourceDebit, K1_14_1.physicalDebit] using debit_eq s 0]
     push_cast
     nlinarith only [hs, heq]
   exact_mod_cast ht
@@ -200,64 +202,70 @@ set_option maxRecDepth 8000
 -- The four columns are width intercept, width slope, node count and pole count.
 -- Each check sums at most 32 grades, after the inner sums have been proved symbolically.
 
-private theorem bridgeFree0 : Certificate ⟨55,76,16,1360⟩ 0 0 2472 3554 := by
-  apply certificate_of_stats (a := 10382142318) (b := 98124) (c := 20196) (d := 2490602)
+private theorem bridgeFree0 : Certificate ⟨55,76,16,1299⟩ 0 0 2442 3554 := by
+  apply certificate_of_stats (a := 10379690748) (b := 98124) (c := 20196) (d := 2490602)
   · rw [← evaluate_eq]
-    change evaluate (rowStats ⟨55,76,16,1360⟩ 0 0) 77 = _
+    change evaluate (rowStats ⟨55,76,16,1299⟩ 0 0) 77 = _
     decide +kernel
+  · exact PoleReceipts.debit_76_16_1299
   · decide +kernel
 
-private theorem bridgeMoving0 : Certificate ⟨160,222,46,6927⟩ 0 1 2472 3554 := by
-  apply certificate_of_stats (a := 241135516112) (b := 1464144) (c := 465911) (d := 169342880)
+private theorem bridgeMoving0 : Certificate ⟨160,222,46,7106⟩ 0 1 2442 3554 := by
+  apply certificate_of_stats (a := 241078364112) (b := 1464144) (c := 465911) (d := 169342880)
   · rw [← evaluate_eq]
-    change evaluate (rowStats ⟨160,222,46,6927⟩ 0 1) 223 = _
+    change evaluate (rowStats ⟨160,222,46,7106⟩ 0 1) 223 = _
     decide +kernel
+  · exact PoleReceipts.debit_222_46_7106
   · decide +kernel
 
-private theorem bridgeFree5 : Certificate ⟨91,126,27,2072⟩ 6 0 2472 3554 := by
-  apply certificate_of_stats (a := 46323388412) (b := 365232) (c := 89740) (d := 18524478)
+private theorem bridgeFree5 : Certificate ⟨91,126,27,1931⟩ 6 0 2442 3554 := by
+  apply certificate_of_stats (a := 46312398888) (b := 365232) (c := 89740) (d := 18524478)
   · rw [← evaluate_eq]
-    change evaluate (rowStats ⟨91,126,27,2072⟩ 6 0) 127 = _
+    change evaluate (rowStats ⟨91,126,27,1931⟩ 6 0) 127 = _
     decide +kernel
+  · exact PoleReceipts.debit_126_27_1931
   · decide +kernel
 
-private theorem bridgeMoving5 : Certificate ⟨266,369,77,10980⟩ 6 1 2472 3554 := by
-  apply certificate_of_stats (a := 1102103376998) (b := 6052800) (c := 2126215) (d := 1286500592)
+private theorem bridgeMoving5 : Certificate ⟨266,369,77,11028⟩ 6 1 2442 3554 := by
+  apply certificate_of_stats (a := 1101842014442) (b := 6052800) (c := 2126215) (d := 1286500592)
   · rw [← evaluate_eq]
-    change evaluate (rowStats ⟨266,369,77,10980⟩ 6 1) 370 = _
+    change evaluate (rowStats ⟨266,369,77,11028⟩ 6 1) 370 = _
     decide +kernel
+  · exact PoleReceipts.debit_369_77_11028
   · decide +kernel
 
-private theorem lateFree : Certificate ⟨230,319,66,4045⟩ 25 0 2472 3554 := by
-  apply certificate_of_stats (a := 709508079208) (b := 4820650) (c := 1369346) (d := 714691010)
+private theorem lateFree : Certificate ⟨230,319,66,3650⟩ 25 0 2442 3554 := by
+  apply certificate_of_stats (a := 709340017748) (b := 4820650) (c := 1369346) (d := 714691010)
   · rw [← evaluate_eq]
-    change evaluate (rowStats ⟨230,319,66,4045⟩ 25 0) 320 = _
+    change evaluate (rowStats ⟨230,319,66,3650⟩ 25 0) 320 = _
     decide +kernel
+  · exact PoleReceipts.debit_319_66_3650
   · decide +kernel
 
-private theorem lateMoving : Certificate ⟨600,837,168,25162⟩ 25 1 2472 3554 := by
-  apply certificate_of_stats (a := 12215603797982) (b := 63008270) (c := 23547784) (d := 32496696843)
+private theorem lateMoving : Certificate ⟨600,837,168,25167⟩ 25 1 2442 3554 := by
+  apply certificate_of_stats (a := 12212698485182) (b := 63008270) (c := 23547784) (d := 32496696843)
   · rw [← evaluate_eq]
-    change evaluate (rowStats ⟨600,837,168,25162⟩ 25 1) 838 = _
+    change evaluate (rowStats ⟨600,837,168,25167⟩ 25 1) 838 = _
     decide +kernel
+  · exact PoleReceipts.debit_837_168_25167
   · decide +kernel
 
 
 end
-theorem stage_tests {w : ℤ} (hlo : 2472 ≤ w) (hhi : w ≤ 3554) (i : Fin 3) :
+theorem stage_tests {w : ℤ} (hlo : 2442 ≤ w) (hhi : w ≤ 3554) (i : Fin 3) :
     let h := w.toNat
     let r := reserve i
     let s := freeShape w i
     let s' := movingShape w i
     (s.B * (131071 - h) < cutoffCount h r s ∧
-      K1_14.sourceDebit h s < rawVolume h r s) ∧
+      BankDebit.debit h s < rawVolume h r s) ∧
     (s'.B * (131071 - h) < cutoffCount h r s' ∧
-      K1_14.sourceDebit h s' + K1_14_2_1.movingCeiling h s' < rawVolume h r s') ∧
+      BankDebit.debit h s' + K1_14_2_1.movingCeiling h s' < rawVolume h r s') ∧
     s.U < P0.p := by
   dsimp only
   have hh : w.toNat ≤ 131071 := by omega
   have hb : w ≤ 3554 := hhi
-  have hl : 2472 ≤ w.toNat := by omega
+  have hl : 2442 ≤ w.toNat := by omega
   have hu : w.toNat ≤ 3554 := by omega
   simp only [freeShape, movingShape, ite_eq_left hb]
   fin_cases i <;> simp only [reserve, Matrix.cons_val_zero', Matrix.cons_val_succ']
@@ -279,7 +287,7 @@ noncomputable section
 
 open P0 (AnchorModel AnchoredFamily agreement)
 open P0_10
-open K1_14 (Shape Banks Jet FX triangle shapeSum sourceDebit seedHasse)
+open K1_14 (Shape Banks Jet FX triangle shapeSum seedHasse)
 open K1_14_2 (UsesSeed)
 open K1_14_2_1 (exists_layered movingCeiling)
 open Polynomial Finset
@@ -290,7 +298,7 @@ private theorem source_floor {u del} {M : AnchorModel u del} {Γ}
     {F : AnchoredFamily M Γ} {rows : Banks} (src : JetSource M F rows)
     {s : Shape} (hs : s ∈ scheduled M.overhead) (r : ℕ)
     (hw : s.B * (131071 - M.overhead.toNat) < cutoffCount M.overhead.toNat r s) :
-    rawVolume M.overhead.toNat r s ≤ sourceDebit M.overhead.toNat s +
+    rawVolume M.overhead.toNat r s ≤ BankDebit.debit M.overhead.toNat s +
       ∑ W ∈ range (cutoffCount M.overhead.toNat r s), Module.finrank FX (rows s W) := by
   let N := cutoffCount M.overhead.toNat r s
   have hN : 0 < N := lt_of_le_of_lt (Nat.zero_le _) hw
@@ -301,14 +309,14 @@ private theorem source_floor {u del} {M : AnchorModel u del} {Γ}
     rw [hc]
     exact ((Nat.mul_le_mul_right _ hq).trans hw.le).trans (Nat.le_add_right N j))
   change triangle s.U * shapeSum s (fun q j => N + j - q * (131071 - M.overhead.toNat)) ≤
-    sourceDebit M.overhead.toNat s + ∑ W ∈ range N, Module.finrank FX (rows s W)
+    BankDebit.debit M.overhead.toNat s + ∑ W ∈ range N, Module.finrank FX (rows s W)
   simpa only [hc] using h
 
 private theorem bank_nonzero {u del} {M : AnchorModel u del} {Γ}
     {F : AnchoredFamily M Γ} {rows : Banks} (src : JetSource M F rows)
     {s : Shape} (hs : s ∈ scheduled M.overhead) (r : ℕ)
     (hw : s.B * (131071 - M.overhead.toNat) < cutoffCount M.overhead.toNat r s)
-    (hd : sourceDebit M.overhead.toNat s < rawVolume M.overhead.toNat r s) :
+    (hd : BankDebit.debit M.overhead.toNat s < rawVolume M.overhead.toNat r s) :
     ∃ P ∈ rows s (cutoffCount M.overhead.toNat r s - 1), P ≠ 0 := by
   by_contra! hz
   have hf := source_floor src hs r hw
@@ -349,7 +357,7 @@ private theorem avoids_one {u del} {M : AnchorModel u del} {Γ} {F : AnchoredFam
     {rows : Banks} (src : JetSource M F rows) (power : K1_14_2_1.c1) (rankBound : K1_14_2_1.c2)
     (hh : 0 < M.overhead.toNat) {s : Shape} (hs : s ∈ scheduled M.overhead) (r : ℕ)
     (hw : s.B * (131071 - M.overhead.toNat) < cutoffCount M.overhead.toNat r s)
-    (hd : sourceDebit M.overhead.toNat s + movingCeiling M.overhead.toNat s <
+    (hd : BankDebit.debit M.overhead.toNat s + movingCeiling M.overhead.toNat s <
       rawVolume M.overhead.toNat r s)
     {G P : Jet} (hi : Irreducible G) (hv : 0 < G.natDegree) (hm : UsesSeed G)
     (hP : P ≠ 0) (hdiv : G ∣ P) {U : ℕ} (hp : U < P0.p)
@@ -372,7 +380,7 @@ private theorem avoids_one {u del} {M : AnchorModel u del} {Γ} {F : AnchoredFam
 theorem proof : P0_10.c2 := by
   classical
   intro u del M Γ F hlo hhi rows src
-  have hlo' : 2472 ≤ M.overhead := hlo
+  have hlo' : 2442 ≤ M.overhead := hlo
   have hhi' : M.overhead ≤ 3554 := hhi
   have hh : 0 < M.overhead.toNat := by omega
   have hpairs (i : Fin 3) : Nonempty (BufferedPair M.overhead rows i) := by

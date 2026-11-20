@@ -14,11 +14,11 @@ open K1_13_2 (SourcePolynomial SourceExponent Local topWeight toRow atJet_toRow)
 open scoped BigOperators Polynomial
 open MvPolynomial (mem_support_iff)
 
-abbrev degreeBound : ℕ := 133542
-abbrev agreement : ℕ := 180139
+abbrev degreeBound : ℕ := 133512
+abbrev agreement : ℕ := 180120
 abbrev terminal : ℕ := 3000 * agreement - 1
-abbrev layerWidth : ℕ := 46600
-abbrev sourceRank : ℕ := 1187923627408492908
+abbrev layerWidth : ℕ := 46611
+abbrev sourceRank : ℕ := 1193729773054374498
 
 def WeightLE {n : ℕ} (P : Row n) (T : ℕ) : Prop :=
   ∀ m ∈ P.support, (P.coeff m).natDegree +
@@ -57,7 +57,7 @@ instance : Module.Finite Geom SourceSpace :=
 private abbrev Column := Σ _ : ℕ, Σ _ : ℕ, Σ _ : ℕ, Σ _ : ℕ, ℕ
 
 private def width (a b c f : ℕ) : ℕ :=
-  540417000 + b + 2 * c + 3 * f - 133542 * (a + b + c + f)
+  540360000 + b + 2 * c + 3 * f - 133512 * (a + b + c + f)
 
 private def tuples : Finset Column :=
   (range 551).sigma fun f =>
@@ -100,11 +100,11 @@ private theorem card_columns : sourceColumns.card = tuples.card := by
   exact (Finset.card_equiv e (fun t => (mem_columns t).symm)).symm
 
 private def widthInt (a b c f : ℤ) : ℤ :=
-  540417000 + b + 2 * c + 3 * f - 133542 * (a + b + c + f)
+  540360000 + b + 2 * c + 3 * f - 133512 * (a + b + c + f)
 
 private theorem cast_width (a b c f : ℕ) (h : a + b + c + f ≤ 4012) :
     (width a b c f : ℤ) = widthInt a b c f := by
-  have hpos : 133542 * (a + b + c + f) ≤ 540417000 + b + 2 * c + 3 * f := by omega
+  have hpos : 133512 * (a + b + c + f) ≤ 540360000 + b + 2 * c + 3 * f := by omega
   simp [width, widthInt, Nat.cast_sub hpos]
 
 /-- Verify a polynomial prefix by its initial value and forward difference. -/
@@ -116,7 +116,7 @@ private theorem scaled_sum (k : ℤ) (g p : ℤ → ℤ)
   | succ n ih => rw [sum_range_succ, Nat.cast_succ, mul_add, ih, step]
 
 private def prefixA (b c f n : ℤ) : ℤ :=
-  n * (2 * widthInt 0 b c f - 133542 * (n - 1))
+  n * (2 * widthInt 0 b c f - 133512 * (n - 1))
 
 private def doubleA (b c f : ℤ) : ℤ :=
   prefixA b c f (4013 - b - c - f)
@@ -124,8 +124,8 @@ private def doubleA (b c f : ℤ) : ℤ :=
 /-- The doubled sum over the (Y₀)-exponent is quadratic in the (Y₁)-exponent. -/
 private def prefixB (c f n : ℤ) : ℤ :=
   let p := 4013 - c - f
-  let q := 2 * widthInt 0 0 c f - 133542 * (p - 1)
-  let r := 2 - 133542
+  let q := 2 * widthInt 0 0 c f - 133512 * (p - 1)
+  let r := 2 - 133512
   6 * n * p * q + 3 * n * (n - 1) * (p * r - q) - n * (n - 1) * (2 * n - 1) * r
 
 private def twelveB (c f : ℤ) : ℤ :=
@@ -220,11 +220,11 @@ private theorem sum_eq_evaluate (g : ℕ → ℤ) (n : ℕ) :
 
 set_option maxRecDepth 10000 in
 set_option maxHeartbeats 3000000 in
-private theorem evaluate_closedC : evaluate closedC 551 = 26322741385114310842752 := by
+private theorem evaluate_closedC : evaluate closedC 551 = 26324413555060324740672 := by
   rfl
 
-theorem exact_source_columns : sourceColumns.card = 91398407587202468204 := by
-  have h : 288 * (tuples.card : ℤ) = 26322741385114310842752 := by
+theorem exact_source_columns : sourceColumns.card = 91404213732848349794 := by
+  have h : 288 * (tuples.card : ℤ) = 26324413555060324740672 := by
     rw [card_tuples_int, mul_sum]
     calc
       _ = ∑ f ∈ range 551, closedC f :=
@@ -245,7 +245,7 @@ theorem row_bounds (Q : SourceSpace) :
   have h (m : Fin 4 →₀ ℕ) (hm : m ∈ (toRow Q.1).support) :
       m.sum (fun _ a => a) ≤ 4012 ∧
       m.sum (fun i a => i.val * a) ≤ 1650 ∧ m 3 ≤ 550 ∧
-      ((toRow Q.1).coeff m).natDegree + m.sum (fun i a => (133542 - i.val) * a) ≤
+      ((toRow Q.1).coeff m).natDegree + m.sum (fun i a => (133512 - i.val) * a) ≤
         terminal := by
     let n := ((toRow Q.1).coeff m).natDegree
     have hc : (Q.1).coeff (m.optionElim n) ≠ 0 := by
@@ -259,8 +259,8 @@ theorem row_bounds (Q : SourceSpace) :
       funext v; cases v <;> rfl
     have ji : jetDerivativeWeight (d := 3) = (fun v => v.elim 0 (fun i => i.val)) := by
       funext v; cases v <;> rfl
-    have jw : differentialWeight (d := 3) 133542 =
-        (fun v => v.elim 1 (fun i => 133542 - i.val)) := by
+    have jw : differentialWeight (d := 3) 133512 =
+        (fun v => v.elim 1 (fun i => 133512 - i.val)) := by
       funext v; cases v <;> rfl
     rw [jb] at hb
     rw [ji] at hj
@@ -270,7 +270,7 @@ theorem row_bounds (Q : SourceSpace) :
     rw [Finsupp.weight_single_one_apply] at ht
     rw [weight_eq_sum m (fun _ => 1)] at hb
     rw [weight_eq_sum m (fun i => i.val)] at hj
-    rw [weight_eq_sum m (fun i => 133542 - i.val)] at hw
+    rw [weight_eq_sum m (fun i => 133512 - i.val)] at hw
     exact ⟨by simpa only [one_mul] using hb, hj, ht, hw⟩
   refine ⟨⟨?_, ?_, ?_⟩, ?_⟩
   · exact Finset.sup_le fun m hm => (h m hm).1
@@ -467,7 +467,7 @@ theorem primary_rank (w : I → K) : PrimaryRank w := by
   obtain ⟨power, hpower⟩ := OldGeometry.K1_13_2_3
   have hlocal := (K1_13_2.origin_rank_le power OldGeometry.K1_13_2_2).trans hpower
   have hglobal := word_rank_le w hlocal
-  have hsize : Module.finrank Geom SourceSpace = 91398407587202468204 :=
+  have hsize : Module.finrank Geom SourceSpace = 91404213732848349794 :=
     finrank_source.trans exact_source_columns
   have hdim := (wordMap w).finrank_range_add_finrank_ker
   have hker : sourceRank ≤ Module.finrank Geom (LinearMap.ker (wordMap w)) := by

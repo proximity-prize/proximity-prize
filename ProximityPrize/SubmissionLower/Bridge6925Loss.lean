@@ -65,7 +65,7 @@ theorem loss_bounds (A B D U V lastSet : Finset (Ideal Ambient)) (hBA : B ⊆ A)
 
 theorem prefix_ledger (w : ℤ) (hw : w ≤ 3554) :
     initialFee + fixedPrice 76 16 + fixedPrice 222 46 +
-      fixedPrice 126 27 + fixedPrice 369 77 + fixedPrice 358008 65143 +
+      fixedPrice 126 27 + fixedPrice 369 77 + fixedPrice 350344 63777 +
       constantFee + curveFee ≤ P0.highPrefix w := by
   unfold P0.highPrefix K21.highPrefix
   rw [ite_eq_left hw]
@@ -227,8 +227,8 @@ private theorem regular_count_P0_10RBridgeRoot {n U s g H w} (A : RegularChart U
     obtain ⟨hγU, hγhit⟩ := mem_filter.mp hγ
     exact mem_zeroLocus_sup_span_singleton_iff.mpr ⟨hpoints γ hγU, (hcut γ hγU).mpr hγhit⟩
   have hcount := P0_10.section_capacity hw (by decide) D hsection
-  change 45514 * U.card ≤ 82005 * D + 45514 at hcount
-  have hcountQ : (45514 : ℚ) * (U.card : ℚ) ≤ 82005 * (D : ℚ) + 45514 := by
+  change 45495 * U.card ≤ 82024 * D + 45495 at hcount
+  have hcountQ : (45495 : ℚ) * (U.card : ℚ) ≤ 82024 * (D : ℚ) + 45495 := by
     exact_mod_cast hcount
   change (U.card : ℚ) ≤ beta * (D : ℚ) + 1
   unfold beta
@@ -331,10 +331,10 @@ private theorem linear_rate (r a b c : ℕ) (hb : (b : ℚ) ≠ 0) :
   simp only [Nat.cast_add, Nat.cast_mul, Nat.cast_one, Nat.cast_ofNat]
   field_simp
 
-private theorem yRate_eq : yRate = ((331197228390 : ℕ) : ℚ) / 45514 := by
+private theorem yRate_eq : yRate = ((331273964089 : ℕ) : ℚ) / 45495 := by
   unfold yRate beta
-  have h := linear_rate 15 82005 45514 (2*endpointDegree-1) (by norm_num : (45514 : ℚ) ≠ 0)
-  have hn : (15 : ℕ) * 45514 + 82005 * ((2*endpointDegree-1)*15+1) = 331197228390 := by decide
+  have h := linear_rate 15 82024 45495 (2*endpointDegree-1) (by norm_num : (45495 : ℚ) ≠ 0)
+  have hn : (15 : ℕ) * 45495 + 82024 * ((2*endpointDegree-1)*15+1) = 331273964089 := by decide
   rw [hn] at h
   exact h
 
@@ -353,7 +353,7 @@ private theorem tariff_ledger :
     seedRate * (lossSeedCap : ℚ) + yRate * (lossYCap : ℚ) + (lossSeedCap : ℚ) ≤
       (curveFee : ℚ) := by
   rw [yRate_eq]
-  exact tariff_fraction (p+1) 331197228390 lossSeedCap lossYCap curveFee 9 45514
+  exact tariff_fraction (p+1) 331273964089 lossSeedCap lossYCap curveFee 9 45495
     (by decide) (by decide) (by decide)
 
 private theorem group_price {u del} (M : AnchorModel u del) {Γ} (F : AnchoredFamily M Γ)

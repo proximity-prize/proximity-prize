@@ -83,9 +83,9 @@ structure PolarData (u : K21.Words) where
   a_ne : a ≠ 0
   norms_ne : K21.sixNorm a ≠ K21.sixNorm b
   primitive : IsCoprime (A 0) (A 1)
-  a_bound : a.natDegree + K21.amplitudeDegree (A 0) (A 1) ≤ 32937
-  b_bound : b.natDegree + K21.amplitudeDegree (A 0) (A 1) ≤ 32937
-  Q_degree : ∀ r s, (Q r s).degree < 164009
+  a_bound : a.natDegree + K21.amplitudeDegree (A 0) (A 1) ≤ 32975
+  b_bound : b.natDegree + K21.amplitudeDegree (A 0) (A 1) ≤ 32975
+  Q_degree : ∀ r s, (Q r s).degree < 164047
   nodes : ∀ r s i,
     (Q r s).eval (node i) =
       a.eval (node i) * twist ((pencil (A 0) (A 1) r).eval (node i)) * fold u s i -
@@ -94,12 +94,12 @@ structure PolarData (u : K21.Words) where
 abbrev PolarData.amp {u : K21.Words} (D : PolarData u) := pencil (D.A 0) (D.A 1)
 
 theorem PolarData.left_bound {u : K21.Words} (D : PolarData u) (z : K) :
-    (D.a * (D.amp z).map twist).natDegree ≤ 32937 :=
+    (D.a * (D.amp z).map twist).natDegree ≤ 32975 :=
   natDegree_mul_le.trans <|
     (Nat.add_le_add_left (natDegree_map_le.trans (pencil_natDegree ..)) _).trans D.a_bound
 
 theorem PolarData.right_bound {u : K21.Words} (D : PolarData u) (z : K) :
-    (D.b * D.amp z).natDegree ≤ 32937 :=
+    (D.b * D.amp z).natDegree ≤ 32975 :=
   natDegree_mul_le.trans <|
     (Nat.add_le_add_left (pencil_natDegree ..) _).trans D.b_bound
 
@@ -162,7 +162,7 @@ private theorem affine_zero (f χ : K → K) (h : Function.Injective χ)
   exact hz.trans (hrr.symm.trans hr)
 
 private theorem PolarData.amp_bound {u} (D : PolarData u) (z : K) :
-    (D.amp z).natDegree ≤ 32937 :=
+    (D.amp z).natDegree ≤ 32975 :=
   (pencil_natDegree ..).trans (Nat.le_trans (Nat.le_add_left _ _) D.a_bound)
 
 private theorem PolarData.amp_nonzero_at {u} (D : PolarData u) {r s : K}
@@ -182,16 +182,16 @@ private def PolarData.cross {u} (D : PolarData u) (r s : K) (P Q : K[X]) : K[X] 
 
 private theorem PolarData.cross_degree {u} (D : PolarData u) (r s : K)
     {P Q : K[X]} (hP : P.degree < 131072) (hQ : Q.degree < 131072) :
-    (D.cross r s P Q).degree < 164009 :=
+    (D.cross r s P Q).degree < 164047 :=
   degree_sub_lt
-    (Strata.degree_mul_lt_add _ _ 32937 131072 (D.left_bound r) hQ)
-    (Strata.degree_mul_lt_add _ _ 32937 131072 (D.right_bound s) (degree_map_le.trans_lt hP))
+    (Strata.degree_mul_lt_add _ _ 32975 131072 (D.left_bound r) hQ)
+    (Strata.degree_mul_lt_add _ _ 32975 131072 (D.right_bound s) (degree_map_le.trans_lt hP))
 
 private theorem PolarData.decoder_identity {u} (D : PolarData u) (z : K)
-    (S : Finset I) (P : K[X]) (hS : 180139 ≤ S.card) (hP : P.degree < 131072)
+    (S : Finset I) (P : K[X]) (hS : 180120 ≤ S.card) (hP : P.degree < 131072)
     (hits : ∀ i ∈ S, P.eval (node i) = fold u z i) : D.cross z z P P = D.Q z z := by
-  have hcard : 164009 ≤ S.card := by omega
-  have hb : (164009 : WithBot ℕ) ≤ S.card := by exact_mod_cast hcard
+  have hcard : 164047 ≤ S.card := by omega
+  have hb : (164047 : WithBot ℕ) ≤ S.card := by exact_mod_cast hcard
   apply eq_on_nodes S _ _ ((D.cross_degree z z hP hP).trans_le hb) ((D.Q_degree z z).trans_le hb)
   intro i hi
   simp only [PolarData.cross, eval_sub, eval_mul, map_eval_node, hits i hi, D.nodes]
@@ -226,24 +226,24 @@ private theorem PolarData.offdiag_zero {u} (D : PolarData u) {r s : K}
     (hr : D.amp r ≠ 0) (hs : D.amp s ≠ 0) (hrr : D.Q r r = 0) (hss : D.Q s s = 0) :
     D.Q r s = 0 := by
   let E := D.amp s * (D.amp r).map twist
-  have ha : D.a.natDegree ≤ 32937 := (Nat.le_add_right _ _).trans D.a_bound
-  have hb : D.b.natDegree ≤ 32937 := (Nat.le_add_right _ _).trans D.b_bound
+  have ha : D.a.natDegree ≤ 32975 := (Nat.le_add_right _ _).trans D.a_bound
+  have hb : D.b.natDegree ≤ 32975 := (Nat.le_add_right _ _).trans D.b_bound
   let d := K21.amplitudeDegree (D.A 0) (D.A 1)
   have hE : E.natDegree ≤ d+d := natDegree_mul_le.trans
     (Nat.add_le_add (pencil_natDegree ..) (natDegree_map_le.trans (pencil_natDegree ..)))
-  have hbE : D.b.natDegree + E.natDegree ≤ 65874 := by
+  have hbE : D.b.natDegree + E.natDegree ≤ 65950 := by
     have := D.b_bound
     dsimp [d] at hE
     omega
-  have haE : D.a.natDegree + E.natDegree ≤ 65874 := by
+  have haE : D.a.natDegree + E.natDegree ≤ 65950 := by
     have := D.a_bound
     dsimp [d] at hE
     omega
-  have hl : (D.b * E * (D.Q r s).map twist).degree < 229883 :=
-    Strata.degree_mul_lt_add _ _ 65874 164009 (natDegree_mul_le.trans hbE)
+  have hl : (D.b * E * (D.Q r s).map twist).degree < 229997 :=
+    Strata.degree_mul_lt_add _ _ 65950 164047 (natDegree_mul_le.trans hbE)
       (degree_map_le.trans_lt (D.Q_degree r s))
-  have ht : (D.a.map twist * E.map twist * D.Q r s).degree < 229883 :=
-    Strata.degree_mul_lt_add _ _ 65874 164009
+  have ht : (D.a.map twist * E.map twist * D.Q r s).degree < 229997 :=
+    Strata.degree_mul_lt_add _ _ 65950 164047
       (natDegree_mul_le.trans ((Nat.add_le_add natDegree_map_le natDegree_map_le).trans haE))
       (D.Q_degree r s)
   have heq : D.b * E * (D.Q r s).map twist = D.a.map twist * E.map twist * D.Q r s := by
@@ -293,7 +293,7 @@ private theorem PolarData.zero_of_diagonal_zeros {u} (D : PolarData u) {r s : K}
 /-- A vanishing polarized relation forces every close decoder to be zero, including
 the zero-amplitude case, where enough agreeing nodes survive the zeros of the left scalar. -/
 private theorem PolarData.decoder_zero {u} (D : PolarData u) (hQ : ∀ r s, D.Q r s = 0) (z : K)
-    (S : Finset I) (P : K[X]) (hS : 180139 ≤ S.card) (hP : P.degree < 131072)
+    (S : Finset I) (P : K[X]) (hS : 180120 ≤ S.card) (hP : P.degree < 131072)
     (hits : ∀ i ∈ S, P.eval (node i) = fold u z i) : P = 0 := by
   classical
   by_cases hz : D.amp z = 0
@@ -306,7 +306,7 @@ private theorem PolarData.decoder_zero {u} (D : PolarData u) (hQ : ∀ r s, D.Q 
       obtain ⟨i, hi, rfl⟩ := Finset.mem_image.mp hx
       exact (Polynomial.mem_roots D.a_ne).mpr (Finset.mem_filter.mp hi).2
     have hsum : roots.card + S'.card = S.card := Finset.card_filter_add_card_filter_not ..
-    have ha : D.a.natDegree ≤ 32937 := (Nat.le_add_right _ _).trans D.a_bound
+    have ha : D.a.natDegree ≤ 32975 := (Nat.le_add_right _ _).trans D.a_bound
     have hcard : 131072 ≤ S'.card := by omega
     apply eq_on_nodes S' _ _ (hP.trans_le (by exact_mod_cast hcard))
       (by rw [degree_zero]; exact WithBot.bot_lt_coe _)
@@ -483,7 +483,7 @@ theorem coefficients_at_node
 -- The node set stays abstract while checking the locator and degree calculations.
 private theorem polarData_of_set {u : K21.Words} (S : Finset I) (height : ℕ)
     (a b : K[X]) (A : Fin 2 → K[X]) (output : K21.Bivar)
-    (hh : height + S.card ≤ 32937)
+    (hh : height + S.card ≤ 32975)
     (hout : output.degree < (131072 + height : ℕ))
     (hfirst : a.natDegree + K21.amplitudeDegree (A 0) (A 1) ≤ height)
     (hsecond : b.natDegree + K21.amplitudeDegree (A 0) (A 1) ≤ height)
@@ -493,14 +493,14 @@ private theorem polarData_of_set {u : K21.Words} (S : Finset I) (height : ℕ)
   let g := locator node S
   let t (j : ℕ) := g * seedCoeff output j
   have hg : g.natDegree = S.card := locator_natDegree _ _
-  have hd (j : ℕ) : (t j).degree < 164009 := by
+  have hd (j : ℕ) : (t j).degree < 164047 := by
     have h := Strata.degree_mul_lt_add g (seedCoeff output j) g.natDegree
       (131072 + height) le_rfl (seedCoeff_degree _ _ _ hout)
-    exact h.trans_le (by exact_mod_cast (show 131072 + height + g.natDegree ≤ 164009 by omega))
-  have ha : (g * a).natDegree + K21.amplitudeDegree (A 0) (A 1) ≤ 32937 := by
+    exact h.trans_le (by exact_mod_cast (show 131072 + height + g.natDegree ≤ 164047 by omega))
+  have ha : (g * a).natDegree + K21.amplitudeDegree (A 0) (A 1) ≤ 32975 := by
     have h := natDegree_mul_le (p := g) (q := a)
     omega
-  have hb : (g * b).natDegree + K21.amplitudeDegree (A 0) (A 1) ≤ 32937 := by
+  have hb : (g * b).natDegree + K21.amplitudeDegree (A 0) (A 1) ≤ 32975 := by
     have h := natDegree_mul_le (p := g) (q := b)
     omega
   have hgn : g ≠ 0 := (locator_monic node S).ne_zero
@@ -528,7 +528,7 @@ theorem polarData_of_coefficients {u : K21.Words} {T : K21.TwoActive u} {R : K21
     (hp : K21.Parallel B) (hn : ¬ K21.UnitNorm B)
     (hc : ∀ i ∉ K21.fixedNodes R, CoefficientIdentities u B.a B.b B.α B.output i) :
     Nonempty (PolarData u) := by
-  have hh : D.height + (K21.fixedNodes R).card ≤ 32937 := by
+  have hh : D.height + (K21.fixedNodes R).card ≤ 32975 := by
     rw [D.height_eq, K21.TwoActive.height]
     have h₁ := T.ab
     have h₂ := T.active
@@ -566,7 +566,7 @@ def c2 : Prop :=
 private theorem pencil_count {u : K21.Words} (Γ : Finset K)
     (M : ∀ z ∈ Γ, K21.BadMark u z) {P Q : K[X]} (hP : P.degree < 131072)
     (hQ : Q.degree < 131072) (h : ∀ z (hz : z ∈ Γ), (M z hz).decoder = pencil P Q z) :
-    Γ.card ≤ 82006 := by
+    Γ.card ≤ 82025 := by
   classical
   by_cases hΓ : Γ.Nonempty
   swap
@@ -611,7 +611,7 @@ private theorem pencil_count {u : K21.Words} (Γ : Finset K)
     exact unique (Finset.mem_erase.mp z.property).2 (Finset.mem_erase.mp t.property).2 (hf z) ht (hn z)
   have hcard := Finset.card_le_card_of_injective hg
   have he := Finset.card_erase_add_one hr
-  have hS : 180139 ≤ S.card := (M r hr).agreement
+  have hS : 180120 ≤ S.card := (M r hr).agreement
   rw [Finset.card_sdiff_of_subset (Finset.subset_univ _), Finset.card_univ, IRSProfile.card_index] at hcard
   omega
 

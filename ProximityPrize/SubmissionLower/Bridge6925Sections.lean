@@ -111,7 +111,7 @@ theorem failed_pair {u del} {M : AnchorModel u del} {Γ} {F : AnchoredFamily M �
     ∃ P : Jet, RowCaps P stageFiveShape ∧ toJet P ∉ I ∧
       ∀ γ ∈ Γ, OnParent F I γ → jetAt P (M.label γ) (F.scalar γ) = 0 := by
   classical
-  have hc : freeShape M.overhead 1 = ⟨91, 126, 27, 2072⟩ := by
+  have hc : freeShape M.overhead 1 = ⟨91, 126, 27, 1931⟩ := by
     rw [freeShape, ite_eq_left hw]
     rfl
   have hm := moving_five M.overhead hw
@@ -151,7 +151,7 @@ theorem failed_late_pair {u del} {M : AnchorModel u del} {Γ} {F : AnchoredFamil
     ∃ P : Jet, RowCaps P stageLateShape ∧ toJet P ∉ I ∧
       ∀ γ ∈ Γ, OnParent F I γ → jetAt P (M.label γ) (F.scalar γ) = 0 := by
   classical
-  have hc : freeShape M.overhead 2 = ⟨230, 319, 66, 4045⟩ := by
+  have hc : freeShape M.overhead 2 = ⟨230, 319, 66, 3650⟩ := by
     rw [freeShape, ite_eq_left hw]
     rfl
   have hm := moving_late M.overhead hw
@@ -428,7 +428,7 @@ private theorem terminal_order {u del} {M : AnchorModel u del} {Γ} {F : Anchore
   intro a b hab
   change a + b < 1 + (fullCutoff s - W) / (2*h) at hab
   have hh : 0 < 2*h := by
-    change 2472 ≤ M.overhead at hlo
+    change 2442 ≤ M.overhead at hlo
     dsimp only [h]
     omega
   have hcost := (Nat.le_div_iff_mul_le hh).mp
@@ -691,8 +691,8 @@ theorem bridge_word {u del} (M : AnchorModel u del) {Γ} (F : AnchoredFamily M �
 private theorem regular_count {w T s} (h : P0_10.FixedWord w T s 134625) (f : Row 2)
     (hf : Irreducible f) (hp : 0 < f.degreeOf 1) {B J : ℕ} (hB : f.totalDegree ≤ B)
     (hJ : f.degreeOf 1 ≤ J) (hreg : ∀ γ ∈ T, RegularAt 1 f (extend (s γ))) :
-    45514 * T.card ≤ 82005 * MvPolynomial.cappedDegreeMixedVolume f.totalDegree
-      (f.degreeOf 1) (chartTotal B) (chartTop B J) + 45514 := by
+    45495 * T.card ≤ 82024 * MvPolynomial.cappedDegreeMixedVolume f.totalDegree
+      (f.degreeOf 1) (chartTotal B) (chartTop B J) + 45495 := by
   classical
   let x (γ : K) := marked (extend (s γ))
   have hx : Set.InjOn x (T : Set K) := by
@@ -774,19 +774,19 @@ theorem fixed_count {u del} (M : AnchorModel u del) {Γ} (F : AnchoredFamily M �
         (hA g hg).2.trans_le (g.degreeOf_le_totalDegree 1)
       _ ≤ B := hAb
   have hlocal (g : Row 2) (hg : g ∈ A) :
-      45514 * (reg g).card ≤ 82005 * (g.totalDegree * v + g.degreeOf 1 * (a - v)) + 45514 := by
+      45495 * (reg g).card ≤ 82024 * (g.totalDegree * v + g.degreeOf 1 * (a - v)) + 45495 := by
     have hb := (Finset.single_le_sum (fun x _ => Nat.zero_le x.totalDegree) hg).trans hAb
     have hj := (Finset.single_le_sum (fun x _ => Nat.zero_le (x.degreeOf 1)) hg).trans hAj
     exact regular_count (word.mono (Finset.filter_subset _ _)) g (hA g hg).1 (hA g hg).2
       hb hj (fun _ hγ => (Finset.mem_filter.mp hγ).2)
-  have hr : 45514 * (∑ g ∈ A, (reg g).card) ≤
-      82005 * (B*v + J*(a-v)) + 45514 * B := by
+  have hr : 45495 * (∑ g ∈ A, (reg g).card) ≤
+      82024 * (B*v + J*(a-v)) + 45495 * B := by
     rw [Finset.mul_sum]
     refine (Finset.sum_le_sum hlocal).trans ?_
     simp only [Finset.sum_add_distrib, ← Finset.mul_sum, ← Finset.sum_mul,
       Finset.sum_const, smul_eq_mul]
-    have hn' := Nat.mul_le_mul_left 45514 hn
-    rw [Nat.mul_comm 45514 A.card] at hn'
+    have hn' := Nat.mul_le_mul_left 45495 hn
+    rw [Nat.mul_comm 45495 A.card] at hn'
     exact Nat.add_le_add (Nat.mul_le_mul_left _ (Nat.add_le_add
       (Nat.mul_le_mul_right _ hAb) (Nat.mul_le_mul_right _ hAj))) hn'
   have hcost : B*v + J*(a-v) = (B-J)*v + J*a := by
@@ -799,19 +799,19 @@ theorem fixed_count {u del} (M : AnchorModel u del) {Γ} (F : AnchoredFamily M �
     calc
       _ = B * ((B - 1) + 1) := by rw [Nat.mul_add, Nat.mul_one]
       _ = _ := by rw [Nat.sub_add_cancel (by omega : 1 ≤ B)]
-  let num := 82005 * ((B-J)*v + J*a)
-  have htotal := Nat.mul_le_mul_left 45514 hs
+  let num := 82024 * ((B-J)*v + J*a)
+  have htotal := Nat.mul_le_mul_left 45495 hs
   rw [Nat.mul_add] at htotal
-  have ho := Nat.mul_le_mul_left 45514 ordinary_bound
+  have ho := Nat.mul_le_mul_left 45495 ordinary_bound
   rw [hcost] at hr
-  have hcount : 45514 * T.card ≤ num + 45514 * (B*B) := by
+  have hcount : 45495 * T.card ≤ num + 45495 * (B*B) := by
     rw [← hbox, Nat.mul_add]
     dsimp only [num]
     omega
-  have hmod := Nat.mod_add_div num 45514
-  have hlt := Nat.mod_lt num (by decide : 0 < 45514)
-  have hround : T.card ≤ num / 45514 + B*B := by omega
-  change T.card ≤ (num + 45514 - 1) / 45514 + B^2
+  have hmod := Nat.mod_add_div num 45495
+  have hlt := Nat.mod_lt num (by decide : 0 < 45495)
+  have hround : T.card ≤ num / 45495 + B*B := by omega
+  change T.card ≤ (num + 45495 - 1) / 45495 + B^2
   rw [pow_two]
   exact hround.trans (Nat.add_le_add_right (Nat.div_le_div_right (by omega)) _)
 
@@ -835,8 +835,8 @@ open scoped BigOperators Classical
 /-- Project the rank-one survivors using the linear section lengths. -/
 theorem rank_equation (S : Finset (Ideal Ambient))
     (hS : ∀ I ∈ S, Active I ∧ ¬ K1_14_2_2.dual I)
-    (hord : mass S 1 ≤ 65143) (hmix : mass S 2 ≤ 358008) :
-    ∃ G : ODE, ODECaps G 358008 65143 ∧ ∀ I ∈ S, fixedOn G I := by
+    (hord : mass S 1 ≤ 63777) (hmix : mass S 2 ≤ 350344) :
+    ∃ G : ODE, ODECaps G 350344 63777 ∧ ∀ I ∈ S, fixedOn G I := by
   have hchoose (I : Ideal Ambient) :
       ∃ G : ODE, I ∈ S → ODECaps G (sectionDegree I 2) (sectionDegree I 1) ∧ fixedOn G I := by
     by_cases hI : I ∈ S
