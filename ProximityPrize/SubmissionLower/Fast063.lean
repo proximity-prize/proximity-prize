@@ -1,35 +1,14 @@
-import ProximityPrize.SubmissionLower.Fast004
-import ProximityPrize.SubmissionLower.Fast014
-import ProximityPrize.SubmissionLower.Pack_K1Defs
-import ProximityPrize.SubmissionLower.Fast054
-import ProximityPrize.SubmissionLower.Fast017
-import ProximityPrize.SubmissionLower.Fast051
-import ProximityPrize.SubmissionLower.Fast060
-import ProximityPrize.SubmissionLower.Fast049
-import ProximityPrize.SubmissionLower.Fast048
-import ProximityPrize.SubmissionLower.Fast018
-import ProximityPrize.SubmissionLower.Fast019
-import ProximityPrize.SubmissionLower.Fast020
-import ProximityPrize.SubmissionLower.Fast023
-import ProximityPrize.SubmissionLower.Fast053
-import ProximityPrize.SubmissionLower.Fast040
-import ProximityPrize.SubmissionLower.Fast058
 import ProximityPrize.SubmissionLower.Fast059
-import ProximityPrize.SubmissionLower.Fast056
+import ProximityPrize.SubmissionLower.Fast060
 set_option Elab.async false
-
-section PackSource_K1_13_6_1_4_3_3Packing
 set_option autoImplicit true
+section
 set_option autoImplicit false
-
 namespace K1_13_6_1_4_3_3
-
 open K1_13 K1_13_7_1 K1_13_7_1_1
 open scoped Pointwise
-
 theorem zero_mem_lattice (p : Shape) : 0 ∈ lattice p := by
   simp [lattice]
-
 theorem mem_lattice_iff {p : Shape} {e : Exponent} :
     e ∈ lattice p ↔ (fun i => (e i : ℝ)) ∈ cap p := by
   change (_ ∧ _ ∧ _) ↔
@@ -37,7 +16,6 @@ theorem mem_lattice_iff {p : Shape} {e : Exponent} :
       ((e 1 : ℝ) + 2 * e 2 + 3 * e 3 ≤ p.j) ∧ (e 3 : ℝ) ≤ p.t
   simp only [Nat.cast_nonneg, implies_true, true_and]
   exact_mod_cast Iff.rfl
-
 theorem lattice_zero : lattice ⟨0, 0, 0⟩ = 0 := by
   ext e
   rw [mem_lattice_iff, cap_zero, Set.mem_zero, Set.mem_zero]
@@ -50,9 +28,6 @@ theorem lattice_zero : lattice ⟨0, 0, 0⟩ = 0 := by
   · rintro rfl
     funext i
     simp
-
-/-- When at least one index budget is even, allocate weight two first,
-then use the remaining slots for the weight-one coordinate. -/
 private theorem split_weighted {x y A B : ℕ} (h : x + 2 * y ≤ A + B)
     (he : Even A ∨ Even B) :
     ∃ u ≤ x, ∃ v ≤ y, u + 2 * v ≤ A ∧ (x - u) + 2 * (y - v) ≤ B := by
@@ -70,9 +45,6 @@ private theorem split_weighted {x y A B : ℕ} (h : x + 2 * y ≤ A + B)
   refine ⟨u, hux, v, hvy, by omega, ?_⟩
   dsimp [u]
   omega
-
-/-- An integral exponent in the sum cap can be allocated between the two
-summands when both index and top budgets are even. -/
 theorem lattice_add {p q : Shape} (hp : Chamber p) (hq : Chamber q)
     (hpj : Even p.j) (hpt : Even p.t) (hqj : Even q.j) :
     lattice (p.plus q) = lattice p + lattice q := by
@@ -135,12 +107,10 @@ theorem lattice_add {p q : Shape} (hp : Chamber p) (hq : Chamber q)
     rw [mem_lattice_iff] at ha hb ⊢
     rw [cap_add hp hq]
     exact Set.mem_add.mpr ⟨_, ha, _, hb, by ext i; simp [Finsupp.add_apply]⟩
-
 theorem chamber_scale {p : Shape} (hp : Chamber p) (n : ℕ) : Chamber (p.scale n) := by
   refine ⟨Nat.mul_le_mul_left n hp.1, ?_⟩
   change 3 * (n * p.t) ≤ n * p.j
   simpa only [Nat.mul_left_comm] using Nat.mul_le_mul_left n hp.2
-
 theorem lattice_scale {p : Shape} (hp : Chamber p) (hj : Even p.j) (ht : Even p.t)
     (n : ℕ) : lattice (p.scale n) = n • lattice p := by
   induction n with
@@ -154,24 +124,16 @@ theorem lattice_scale {p : Shape} (hp : Chamber p) (hj : Even p.j) (ht : Even p.
       cases p
       simp [Shape.scale, Shape.plus, Nat.add_mul, Nat.add_comm]
     rw [hs, lattice_add hp (chamber_scale hp n) hj ht he, ih, succ_nsmul']
-
 end K1_13_6_1_4_3_3
-end PackSource_K1_13_6_1_4_3_3Packing
-
-section PackSource_K1_13_6_1_4_3_3Volume
-set_option autoImplicit true
+end
+section
 set_option autoImplicit false
-
 namespace K1_13_6_1_4_3_3
-
 noncomputable section
-
 open K1_13 K1_13_7_1 K1_13_7_1_1 MeasureTheory Filter Set
 open scoped ENNReal Topology
-
 private def unitCell (e : Exponent) : Set RealPoint :=
   univ.pi fun i => Ico (e i : ℝ) ((e i : ℝ) + 1)
-
 private theorem unitCell_disjoint {e f : Exponent} (h : e ≠ f) :
     Disjoint (unitCell e) (unitCell f) := by
   apply Set.disjoint_left.mpr
@@ -186,10 +148,8 @@ private theorem unitCell_disjoint {e f : Exponent} (h : e ≠ f) :
   have hfe : (f i : ℝ) < (e i : ℝ) + 1 := hxf.1.trans_lt hxe.2
   exact le_antisymm (Nat.lt_succ_iff.mp (by exact_mod_cast hef))
     (Nat.lt_succ_iff.mp (by exact_mod_cast hfe))
-
 private def cells (p : Shape) : Set RealPoint :=
   ⋃ e ∈ (lattice_finite p).toFinset, unitCell e
-
 private theorem volume_cells (p : Shape) : volume (cells p) = ((lattice p).ncard : ℝ≥0∞) := by
   rw [cells, measure_biUnion_finset
     (fun _ _ _ _ h => unitCell_disjoint h)
@@ -199,7 +159,6 @@ private theorem volume_cells (p : Shape) : volume (cells p) = ((lattice p).ncard
     rw [Real.volume_pi_Ico]
     simp
   simp only [hvol, Finset.sum_const, nsmul_one, Set.ncard_eq_toFinset_card _ (lattice_finite p)]
-
 private theorem cap_subset_cells (p : Shape) : cap p ⊆ cells p := by
   intro x hx
   obtain ⟨hx, hb, hj, ht⟩ := hx
@@ -212,9 +171,7 @@ private theorem cap_subset_cells (p : Shape) : cap p ⊆ cells p := by
     exact ⟨fun _ => Nat.cast_nonneg _, by linarith [hlo 0, hlo 1, hlo 2, hlo 3],
       by linarith [hlo 1, hlo 2, hlo 3], (hlo 3).trans ht⟩
   exact mem_iUnion₂.mpr ⟨e, (lattice_finite p).mem_toFinset.mpr hm, fun i _ => ⟨hlo i, hhi i⟩⟩
-
 private def padding : Shape := ⟨6, 6, 1⟩
-
 private theorem cells_subset_cap (p : Shape) : cells p ⊆ cap (p.plus padding) := by
   intro x hx
   obtain ⟨e, he, hxe⟩ := mem_iUnion₂.mp hx
@@ -225,7 +182,6 @@ private theorem cells_subset_cap (p : Shape) : cells p ⊆ cap (p.plus padding) 
   refine ⟨fun i => (hn i).trans (hlo i), ?_, ?_, ?_⟩ <;>
     simp only [Shape.plus, padding, Nat.cast_add, Nat.cast_ofNat, Nat.cast_one] <;>
     linarith [hhi 0, hhi 1, hhi 2, hhi 3]
-
 private theorem volume_cap_ne_top (p : Shape) : volume (cap p) ≠ ∞ := by
   let box : Set RealPoint := Icc 0 fun _ => (p.b : ℝ)
   have hs : cap p ⊆ box := by
@@ -252,7 +208,6 @@ private theorem volume_cap_ne_top (p : Shape) : volume (cap p) ≠ ∞ := by
     rw [Real.volume_Icc_pi]
     exact ENNReal.prod_ne_top fun i _ => ENNReal.ofReal_ne_top
   exact (measure_lt_top_of_subset hs hfin).ne
-
 private theorem lattice_volume_bounds (p : Shape) :
     (volume (cap p)).toReal ≤ ((lattice p).ncard : ℝ) ∧
       ((lattice p).ncard : ℝ) ≤ (volume (cap (p.plus padding))).toReal := by
@@ -261,10 +216,8 @@ private theorem lattice_volume_bounds (p : Shape) :
   rw [volume_cells] at hlo hhi
   exact ⟨by simpa using ENNReal.toReal_mono (ENNReal.natCast_ne_top _) hlo,
     by simpa using ENNReal.toReal_mono (volume_cap_ne_top _) hhi⟩
-
 private def volumeFormula (b j t : ℝ) : ℝ :=
   (8*b*j^2*t - 24*b*j*t^2 + 24*b*t^3 - 4*j^3*t + 14*j^2*t^2 - 20*j*t^3 + 9*t^4) / 32
-
 private theorem volume_eq_formula (p : Shape) (hp : Chamber p) :
     (volume (cap p)).toReal = volumeFormula p.b p.j p.t := by
   have h := K1_13_6_1_4_3.cap_volume32 p hp
@@ -272,7 +225,6 @@ private theorem volume_eq_formula (p : Shape) (hp : Chamber p) :
   push_cast at h
   unfold volumeFormula
   linarith
-
 private theorem ratio_volume (R p : Shape) (hR : Chamber R) (hp : Chamber p) :
     Tendsto (fun n : ℕ => (volume (cap (R.plus (p.scale n)))).toReal / (n : ℝ)^4)
       atTop (𝓝 (volume (cap p)).toReal) := by
@@ -292,9 +244,6 @@ private theorem ratio_volume (R p : Shape) (hR : Chamber R) (hp : Chamber p) :
   unfold volumeFormula
   field_simp
   ring
-
-/-- The normalized count has the cap's volume as its limit, even along a
-lower-dimensional direction and with a fixed baseline. -/
 theorem lattice_ratio (R p : Shape) (hR : Chamber R) (hp : Chamber p) :
     Tendsto (fun n : ℕ => ((lattice (R.plus (p.scale n))).ncard : ℝ) / (n : ℝ)^4)
       atTop (𝓝 (volume (cap p)).toReal) := by
@@ -311,82 +260,52 @@ theorem lattice_ratio (R p : Shape) (hR : Chamber R) (hp : Chamber p) :
     have hb := div_le_div_of_nonneg_right (lattice_volume_bounds (R.plus (p.scale n))).2
       (by positivity : 0 ≤ (n : ℝ)^4)
     simpa only [hassoc] using hb
-
 end
-
 end K1_13_6_1_4_3_3
-end PackSource_K1_13_6_1_4_3_3Volume
-
-section PackSource_K1_13_6_1_4_3_3_3Defs
-set_option autoImplicit true
+end
+section
 set_option autoImplicit false
-
 namespace K1_13_6_1_4_3_3_3
-
 noncomputable section
-
 open K1_13 K1_13_6_1_4_3_3 MvPolynomial
-
 abbrev Degree := Fin 4 → ℕ
 abbrev GenericJets (k : Type) [Field k] (P : Fin 4 → Shape) :=
   Jets (CoefficientField k P)
-
-/-- The fifth factor supplies the four coordinate monomials on the affine chart. -/
 def auxiliary : Shape := ⟨6, 6, 2⟩
-
-/-- The cap for a graded piece, with the auxiliary degree kept separate. -/
 def shapeAt (P : Fin 4 → Shape) (b : ℕ) (d : Degree) : Shape :=
   (((((auxiliary.scale b).plus ((P 0).scale (d 0))).plus
     ((P 1).scale (d 1))).plus ((P 2).scale (d 2))).plus ((P 3).scale (d 3)))
-
 def shift (d : Degree) (i : Fin 4) (n : ℕ) : Degree := d + Pi.single i n
-
-/-- The polynomials in one dehomogenized multidegree. -/
 def piece (k : Type) [Field k] (P : Fin 4 → Shape) (b : ℕ) (d : Degree) :
     Submodule (CoefficientField k P) (GenericJets k P) :=
   restrictSupport (CoefficientField k P) (lattice (shapeAt P b d))
-
-/-- The first `r` affine cuts, with the full independent coefficient field. -/
 def prefixIdeal (k : Type) [Field k] (P : Fin 4 → Shape) (r : ℕ) :
     Ideal (GenericJets k P) :=
   Ideal.span (genericEquation k P '' {i : Fin 4 | i.val < r})
-
 end
-
 end K1_13_6_1_4_3_3_3
-end PackSource_K1_13_6_1_4_3_3_3Defs
-
-section PackSource_K1_13_6_1_4_3_3_3Pieces
-set_option autoImplicit true
+end
+section
 set_option autoImplicit false
-
 namespace K1_13_6_1_4_3_3_3
-
 noncomputable section
-
 open K1_13 K1_13_7_1 K1_13_7_1_1 K1_13_6_1_4_3_3 MvPolynomial
 open scoped Pointwise
-
 private theorem auxiliary_admissible : Chamber auxiliary ∧ Even auxiliary.j ∧ Even auxiliary.t :=
   ⟨⟨by decide, by decide⟩, ⟨3, rfl⟩, ⟨1, rfl⟩⟩
-
 theorem auxiliary_contains_coordinate (i : Fin 4) : Finsupp.single i 1 ∈ lattice auxiliary := by
   fin_cases i <;> norm_num [lattice, auxiliary, Finsupp.single_apply]
-
 private theorem scale_admissible {p : Shape} (hp : Chamber p ∧ Even p.j ∧ Even p.t)
     (n : ℕ) : Chamber (p.scale n) ∧ Even (p.scale n).j ∧ Even (p.scale n).t :=
   ⟨chamber_scale hp.1 n, hp.2.1.mul_left n, hp.2.2.mul_left n⟩
-
 private theorem plus_admissible {p q : Shape} (hp : Chamber p ∧ Even p.j ∧ Even p.t)
     (hq : Chamber q ∧ Even q.j ∧ Even q.t) :
     Chamber (p.plus q) ∧ Even (p.plus q).j ∧ Even (p.plus q).t :=
   ⟨chamber_plus hp.1 hq.1, hp.2.1.add hq.2.1, hp.2.2.add hq.2.2⟩
-
 private theorem shapePlus_comm (p q : Shape) : p.plus q = q.plus p := by
   cases p
   cases q
   simp [Shape.plus, Nat.add_comm]
-
 theorem shapeAt_admissible {P : Fin 4 → Shape}
     (hP : ∀ i, Chamber (P i) ∧ Even (P i).j ∧ Even (P i).t) (b : ℕ) (d : Degree) :
     Chamber (shapeAt P b d) ∧ Even (shapeAt P b d).j ∧ Even (shapeAt P b d).t :=
@@ -394,9 +313,6 @@ theorem shapeAt_admissible {P : Fin 4 → Shape}
     (scale_admissible auxiliary_admissible b) (scale_admissible (hP 0) (d 0)))
     (scale_admissible (hP 1) (d 1))) (scale_admissible (hP 2) (d 2)))
     (scale_admissible (hP 3) (d 3))
-
-/-- Every lattice exponent of the cap is a sum of the prescribed numbers of
-monomials from the five factors. -/
 theorem lattice_shapeAt {P : Fin 4 → Shape}
     (hP : ∀ i, Chamber (P i) ∧ Even (P i).j ∧ Even (P i).t) (b : ℕ) (d : Degree) :
     lattice (shapeAt P b d) = ((((b • lattice auxiliary + d 0 • lattice (P 0)) +
@@ -414,18 +330,14 @@ theorem lattice_shapeAt {P : Fin 4 → Shape}
   rw [hadd h2 (hS 3), hadd h1 (hS 2), hadd h0 (hS 1), hadd hA (hS 0),
     lattice_scale auxiliary_admissible.1 auxiliary_admissible.2.1 auxiliary_admissible.2.2 b,
     hscale 0, hscale 1, hscale 2, hscale 3]
-
 theorem shapeAt_shift (P : Fin 4 → Shape) (b : ℕ) (d : Degree) (i : Fin 4) (n : ℕ) :
     shapeAt P b (shift d i n) = (shapeAt P b d).plus ((P i).scale n) := by
   fin_cases i <;>
     simp [shapeAt, shift, Shape.plus, Shape.scale, Pi.single_eq_of_ne, Nat.add_mul] <;>
     omega
-
 variable {k : Type} [Field k] {P : Fin 4 → Shape}
-
 instance piece_finite (b : ℕ) (d : Degree) : Module.Finite (CoefficientField k P) (piece k P b d) :=
   FiniteDimensional.of_finite_basis (basisRestrictSupport _ _) (lattice_finite _)
-
 private theorem generic_supported (i : Fin 4) :
     genericEquation k P i ∈ restrictSupport (CoefficientField k P) (lattice (P i)) := by
   classical
@@ -433,7 +345,6 @@ private theorem generic_supported (i : Fin 4) :
   apply Submodule.sum_mem
   intro e _
   exact (monomial_mem_restrictSupport _).mpr (Or.inl e.property)
-
 theorem equation_mul_mem_piece (hP : ∀ i, Chamber (P i) ∧ Even (P i).j ∧ Even (P i).t)
     (b : ℕ) (d : Degree) (i : Fin 4) {p : GenericJets k P} (hp : p ∈ piece k P b d) :
     genericEquation k P i * p ∈ piece k P b (shift d i 1) := by
@@ -444,10 +355,8 @@ theorem equation_mul_mem_piece (hP : ∀ i, Chamber (P i) ∧ Even (P i).j ∧ E
   unfold piece
   rw [shapeAt_shift, show (P i).scale 1 = P i from by cases P i; simp [Shape.scale]]
   rwa [shapePlus_comm] at h
-
 private theorem lattice_mono {p q : Shape} (hb : p.b ≤ q.b) (hj : p.j ≤ q.j) (ht : p.t ≤ q.t) :
     lattice p ⊆ lattice q := fun _ h => ⟨h.1.trans hb, h.2.1.trans hj, h.2.2.trans ht⟩
-
 theorem piece_mono {b c : ℕ} {d e : Degree} (hbc : b ≤ c) (hde : d ≤ e) :
     piece k P b d ≤ piece k P c e := by
   unfold piece
@@ -457,8 +366,6 @@ theorem piece_mono {b c : ℕ} {d e : Degree} (hbc : b ≤ c) (hde : d ≤ e) :
   have h2 := hde 2
   have h3 := hde 3
   apply lattice_mono <;> simp only [shapeAt, Shape.plus, Shape.scale] <;> gcongr
-
-/-- The auxiliary cap alone contains any fixed affine polynomial for sufficiently large degree. -/
 theorem piece_exhaustive (p : GenericJets k P) : ∃ b : ℕ, p ∈ piece k P b (fun _ => 0) := by
   refine ⟨p.totalDegree, ?_⟩
   apply (mem_restrictSupport_iff _).mpr
@@ -468,28 +375,18 @@ theorem piece_exhaustive (p : GenericJets k P) : ∃ b : ℕ, p ∈ piece k P b 
   simp only [lattice, Set.mem_ofPred_eq, shapeAt, Shape.plus, Shape.scale, auxiliary,
     Nat.zero_mul, Nat.add_zero]
   omega
-
 theorem finrank_piece (b : ℕ) (d : Degree) :
     Module.finrank (CoefficientField k P) (piece k P b d) = (lattice (shapeAt P b d)).ncard := by
   rw [piece, Module.finrank_eq_nat_card_basis (basisRestrictSupport _ _), Nat.card_coe_set_eq]
-
 end
 end K1_13_6_1_4_3_3_3
-end PackSource_K1_13_6_1_4_3_3_3Pieces
-
-section PackSource_K1_13_6_1_4_3_3_3Finite
-set_option autoImplicit true
+end
+section
 set_option autoImplicit false
 set_option maxHeartbeats 800000
-
 namespace K1_13_6_1_4_3_3_3
-
 noncomputable section
-
 open K1_13 K1_13_6_1_4_3_3 MvPolynomial
-
-/-- If a polynomial parametrization with as many variables as the coefficient
-field captures all its coefficient variables, its image is algebraic over that field. -/
 private theorem image_algebraic {k σ D : Type} [Field k] [Fintype σ]
     [CommRing D] [Algebra k D] [Algebra (FractionRing (MvPolynomial σ k)) D]
     [IsScalarTower k (FractionRing (MvPolynomial σ k)) D]
@@ -518,9 +415,6 @@ private theorem image_algebraic {k σ D : Type} [Field k] [Fintype σ]
     Cardinal.mk_fintype σ, Fintype.card_sum, Fintype.card_unit] at hle
   have : 1 + Fintype.card σ ≤ Fintype.card σ := by exact_mod_cast hle
   omega
-
-/-- Eliminate the four constant coefficients using the affine equations.
-The four spatial coordinates replace them in the polynomial parametrization. -/
 theorem generic_finite (k : Type) [Field k] (P : Fin 4 → Shape) :
     Module.Finite (CoefficientField k P) (GenericAlgebra k P) := by
   classical
@@ -587,40 +481,28 @@ theorem generic_finite (k : Type) [Field k] (P : Fin 4 → Shape) :
   let : Algebra.IsIntegral F D :=
     Algebra.isAlgebraic_iff_isIntegral.mp (Algebra.isAlgebraic_iff.mpr h)
   exact Algebra.IsIntegral.finite
-
 end
 end K1_13_6_1_4_3_3_3
-end PackSource_K1_13_6_1_4_3_3_3Finite
-
-section PackSource_K1_13_6_1_4_3_3_3Box
-set_option autoImplicit true
+end
+section
 set_option autoImplicit false
-
 namespace K1_13_6_1_4_3_3_3
-
 noncomputable section
-
 open K1_13 K1_13_6_1_4_3_3
-
 def degreeDifference (F : Degree → ℝ) (i : Fin 4) (n : ℕ) (d : Degree) : ℝ :=
   F (shift d i n) - F d
-
 def degreeDifferences (n : ℕ) (F : Degree → ℝ) (is : List (Fin 4)) : Degree → ℝ :=
   is.foldl (fun H i => degreeDifference H i n) F
-
 private theorem le_shift (d : Degree) (i : Fin 4) (n : ℕ) : d ≤ shift d i n :=
   fun _ => Nat.le_add_right _ _
-
 private theorem shift_succ (d : Degree) (i : Fin 4) (n : ℕ) :
     shift d i (n + 1) = shift (shift d i n) i 1 := by
   funext j
   by_cases h : j = i <;> simp [shift, h, Pi.single_eq_of_ne, add_assoc]
-
 private theorem shift_comm (d : Degree) (i j : Fin 4) (t n : ℕ) :
     shift (shift d j n) i t = shift (shift d i t) j n := by
   unfold shift
   ac_rfl
-
 private theorem line_sum {F G : Degree → ℝ} {q : ℕ} {i : Fin 4}
     (h : ∀ d : Degree, (∀ j, q ≤ d j) → F (shift d i 1) - F d = G (shift d i 1))
     (n : ℕ) (d : Degree) (hd : ∀ j, q ≤ d j) :
@@ -631,7 +513,6 @@ private theorem line_sum {F G : Degree → ℝ} {q : ℕ} {i : Fin 4}
     rw [Finset.sum_range_succ, ← ih, degreeDifference, degreeDifference, shift_succ d i n,
       ← h (shift d i n) (fun j => (hd j).trans (le_shift d i n j))]
     ring
-
 private theorem differences_sum {q : ℕ} {i : Fin 4} {U G : Degree → ℝ}
     (n : ℕ) (is : List (Fin 4))
     (h : ∀ d : Degree, (∀ j, q ≤ d j) → U d = ∑ t ∈ Finset.range n, G (shift d i (t + 1)))
@@ -645,15 +526,12 @@ private theorem differences_sum {q : ℕ} {i : Fin 4} {U G : Degree → ℝ}
     intro e he
     simp only [degreeDifference, h (shift e j n) (fun l => (he l).trans (le_shift e j n l)),
       h e he, ← Finset.sum_sub_distrib, shift_comm e i j]
-
 private theorem box_step {F G : Degree → ℝ} {q : ℕ} {i : Fin 4}
     (h : ∀ d : Degree, (∀ j, q ≤ d j) → F (shift d i 1) - F d = G (shift d i 1))
     (n : ℕ) (is : List (Fin 4)) (d : Degree) (hd : ∀ j, q ≤ d j) :
     degreeDifferences n F (i :: is) d =
       ∑ t ∈ Finset.range n, degreeDifferences n G is (shift d i (t + 1)) :=
   differences_sum n is (line_sum h n) d hd
-
-/-- Each point of the four-dimensional box contributes its terminal rank. -/
 theorem fourfold_telescoping (H : ℕ → Degree → ℝ) (C : ℝ) (q : ℕ)
     (hstep : ∀ (i : Fin 4) (d : Degree), (∀ j, q ≤ d j) →
       H i.val (shift d i 1) - H i.val d = H (i.val + 1) (shift d i 1))
@@ -683,8 +561,6 @@ theorem fourfold_telescoping (H : ℕ → Degree → ℝ) (C : ℝ) (q : ℕ)
     · intro e he
       simpa [degreeDifferences, tail, show (List.finRange 4).drop 4 = [] by decide] using htop e he
   exact hbox 0 (by decide) d hd
-
-/-- A shift in a single multidegree is the matching shift of the cap. -/
 theorem shape_differences (P : Fin 4 → Shape) (b n : ℕ) (F : Shape → ℝ)
     (d : Degree) (is : List (Fin 4)) :
     degreeDifferences n (fun e => F (shapeAt P b e)) is d =
@@ -699,56 +575,37 @@ theorem shape_differences (P : Fin 4 → Shape) (b n : ℕ) (F : Shape → ℝ)
     change degreeDifferences n (degreeDifference (fun e => F (shapeAt P b e)) i n) is d = _
     rw [he]
     exact ih _
-
 end
-
 end K1_13_6_1_4_3_3_3
-end PackSource_K1_13_6_1_4_3_3_3Box
-
-section PackSource_K1_13_6_1_3Defs
-set_option autoImplicit true
+end
+section
 namespace K1_13_6_1_3
 noncomputable section
 open Polynomial K1_13 K1_13_6
-
 abbrev RationalJets := MvPolynomial (Fin 4) GenericField
-
 def toRational : Row 4 →+* RationalJets :=
   MvPolynomial.map (algebraMap Geom[X] GenericField)
-
-/-- The contraction before geometric scalar extension. -/
 abbrev contractedPrime (surface : Ideal GeoJets) : Ideal RationalJets :=
   surface.comap (MvPolynomial.map (algebraMap GenericField GeoField))
-
-/-- Length on the rational chart, before geometric scalar extension,
-expressed as the coheight of the localized intersection ideal. -/
 def contractedLength (g P : Row 4) (surface : Ideal GeoJets) (hp : surface.IsPrime) : ℕ∞ := by
   letI := hp
   let L := Localization.AtPrime (contractedPrime surface)
   let J : Ideal L := (Ideal.span {toRational g, toRational P}).map (algebraMap RationalJets L)
   exact Order.coheight J
-
-/-- A uniformizer on the rational chart, and a cutter of exact order v,
-expressed in the source polynomial ring by clearing denominators. -/
 def NormalForm (g P : Row 4) (surface : Ideal GeoJets) (v : ℕ) : Prop :=
   ∃ t d u B : Row 4,
     toGeneric t ∈ surface ∧ toGeneric d ∉ surface ∧ toGeneric u ∉ surface ∧
     d * P = B * g + u * t ^ v ∧
     ∀ a : Row 4, toGeneric a ∈ surface →
       ∃ e C W : Row 4, toGeneric e ∉ surface ∧ e * a = C * g + W * t
-
 end
 end K1_13_6_1_3
-end PackSource_K1_13_6_1_3Defs
-
-section PackSource_K1_13_6_1_3Boxes
-set_option autoImplicit true
+end
+section
 namespace K1_13_6_1_3
 noncomputable section
 open Polynomial MvPolynomial K1_13 K1_13_1 K1_13_6 K1_13_6_1 K1_13_7_1
-
 local notation "W" => MvPolynomial.weightedTotalDegree
-
 private theorem pderiv_zero_of_weight_lt (w : Fin 4 → ℕ) (i : Fin 4) (P : Row 4)
     (h : W w P < w i) : pderiv i P = 0 := by
   apply MvPolynomial.ext
@@ -760,7 +617,6 @@ private theorem pderiv_zero_of_weight_lt (w : Fin 4 → ℕ) (i : Fin 4) (P : Ro
     rw [map_add, Finsupp.weight_single, one_smul] at hm
     omega
   simp [hz]
-
 private theorem weight_coeff_deriv (w : Fin 4 → ℕ) (P : Row 4) :
     W w (coefficientDerivative P) ≤ W w P := by
   classical
@@ -771,7 +627,6 @@ private theorem weight_coeff_deriv (w : Fin 4 → ℕ) (P : Row 4) :
     by_contra hne
     exact (MvPolynomial.mem_support_iff.mp hmj) (by rw [MvPolynomial.coeff_monomial, ite_eq_right hne])
   exact h ▸ hj
-
 private theorem partialFlow_bound (w : Fin 4 → ℕ) (Δ : ℕ)
     (hshift : ∀ i : Fin 3, w i.succ ≤ w i.castSucc + Δ)
     (P : Row 4) {d : ℕ} (hP : W w P ≤ d) : W w (partialFlow P) ≤ d + Δ := by
@@ -794,7 +649,6 @@ private theorem partialFlow_bound (w : Fin 4 → ℕ) (Δ : ℕ)
     · rw [pderiv_zero_of_weight_lt w _ P (hP.trans_lt (Nat.lt_of_not_ge h)), mul_zero,
         weightedTotalDegree_zero]
       exact Nat.zero_le _
-
 private theorem flow_bound (w : Fin 4 → ℕ) (Δ : ℕ)
     (hshift : ∀ i : Fin 3, w i.succ ≤ w i.castSucc + Δ)
     {g P : Row 4} {B d : ℕ} (hΔ : Δ ≤ B)
@@ -810,7 +664,6 @@ private theorem flow_bound (w : Fin 4 → ℕ) (Δ : ℕ)
   · apply mem_restrictWeightedDegree_iff_weightedTotalDegree_le.mpr
     have h := Nat.add_le_add (partialFlow_bound w Δ hshift g hg) ((hsep P).trans hP)
     exact (weightedTotalDegree_mul_le _ _ _).trans (h.trans (by omega))
-
 private theorem tangent_weight (w : Fin 4 → ℕ) (Δ : ℕ)
     (hshift : ∀ i : Fin 3, w i.succ ≤ w i.castSucc + Δ)
     {g P : Row 4} {B d : ℕ} (hΔ : Δ ≤ B)
@@ -823,7 +676,6 @@ private theorem tangent_weight (w : Fin 4 → ℕ) (Δ : ℕ)
     change W w (flowNumerator g (tangentCut g P n)) ≤ _
     simpa only [Nat.mul_add, Nat.mul_one, Nat.add_mul, Nat.add_assoc] using
       flow_bound w Δ hshift hΔ hg ih
-
 theorem tangent_box {g P : Row 4} {a b : Shape} (hb : 0 < b.t) (hj : 0 < b.j)
     (hg : InBox (shape g) b) (hP : InBox (shape P) a) (n : ℕ) :
     InBox (shape (tangentCut g P n)) (a.plus (b.scale (2 * n))) := by
@@ -849,16 +701,13 @@ theorem tangent_box {g P : Row 4} {a b : Shape} (hb : 0 < b.t) (hj : 0 < b.j)
       tangent_weight Fin.val 1 hs₂ hj h₂ hp₂ n
   · simpa only [w, shape, Shape.plus, Shape.scale, weightedTotalDegree_piSingle, Nat.mul_comm] using
       tangent_weight w 1 hs₃ hb h₃ hp₃ n
-
 theorem anchor_fits (f : Row 4) : InBox (shape f) (anchorBox f) :=
   ⟨le_max_left _ _, le_rfl, le_rfl⟩
-
 theorem derivative_fits (f : Row 4) (r : ℕ) :
     InBox (shape ((separant^[r]) f)) (anchorBox f) := by
   have d := derivative_in_box f r
   have a := anchor_fits f
   exact ⟨d.1.trans a.1, d.2.1.trans a.2.1, d.2.2.trans a.2.2⟩
-
 theorem derivative_proper {f : Row 4} (hf : SmallFactor f) (j : ℕ)
     (hj : 0 < j) (hg : (separant^[j]) f ≠ 0) : ¬ f ∣ (separant^[j]) f := by
   rintro ⟨q, hq⟩
@@ -871,18 +720,14 @@ theorem derivative_proper {f : Row 4} (hf : SmallFactor f) (j : ℕ)
   change ((separant^[j]) f).degreeOf 3 ≤ f.degreeOf 3 - j at h
   rw [hq, hd] at h
   omega
-
 end
 end K1_13_6_1_3
-end PackSource_K1_13_6_1_3Boxes
-
-section PackSource_K1_13_6_1_3Leibniz
-set_option autoImplicit true
+end
+section
 namespace K1_13_6_1_3
 noncomputable section
 open Polynomial K1 K1_13 K1_13_6 K1_13_6_1
 open scoped BigOperators
-
 @[simp] private theorem coeff_coefficientDerivative (P : Row 4) (m : Fin 4 →₀ ℕ) :
     (coefficientDerivative P).coeff m = derivative (P.coeff m) := by
   classical
@@ -891,12 +736,10 @@ open scoped BigOperators
   split_ifs with hm
   · rfl
   · rw [MvPolynomial.notMem_support_iff.mp hm, map_zero]
-
 private theorem coefficientDerivative_add (P Q : Row 4) :
     coefficientDerivative (P + Q) = coefficientDerivative P + coefficientDerivative Q := by
   ext m
   simp
-
 private theorem coefficientDerivative_mul (P Q : Row 4) :
     coefficientDerivative (P * Q) = coefficientDerivative P * Q + P * coefficientDerivative Q := by
   classical
@@ -907,12 +750,10 @@ private theorem coefficientDerivative_mul (P Q : Row 4) :
     (coefficientDerivative P * Q).coeff m + (P * coefficientDerivative Q).coeff m
   simp only [coeff_coefficientDerivative, MvPolynomial.coeff_mul, map_sum, derivative_mul,
     Finset.sum_add_distrib]
-
 private theorem partialFlow_add (P Q : Row 4) :
     partialFlow (P + Q) = partialFlow P + partialFlow Q := by
   simp only [partialFlow, coefficientDerivative_add, map_add, mul_add, Finset.sum_add_distrib]
   abel
-
 private theorem partialFlow_mul (P Q : Row 4) :
     partialFlow (P * Q) = partialFlow P * Q + P * partialFlow Q := by
   let a : Fin 3 → Row 4 := fun i =>
@@ -932,7 +773,6 @@ private theorem partialFlow_mul (P Q : Row 4) :
   change _ = (coefficientDerivative P + (∑ i : Fin 3, a i * MvPolynomial.pderiv i.castSucc P)) * Q +
     P * (coefficientDerivative Q + (∑ i : Fin 3, a i * MvPolynomial.pderiv i.castSucc Q))
   ring
-
 private def delta (g : Row 4) : Row 4 →+ Row 4 where
   toFun := flowNumerator g
   map_add' P Q := by
@@ -940,28 +780,21 @@ private def delta (g : Row 4) : Row 4 →+ Row 4 where
     ring
   map_zero' := by
     simp [flowNumerator, separant, partialFlow, coefficientDerivative]
-
 private theorem delta_mul (g x y : Row 4) :
     delta g (x * y) = delta g x * y + x * delta g y := by
   change flowNumerator g (x * y) = flowNumerator g x * y + x * flowNumerator g y
   simp only [flowNumerator, partialFlow_mul, separant, MvPolynomial.pderiv_mul]
   ring
-
 section Iterates
 variable {R S : Type*} [CommRing R] [CommRing S]
 variable (D : R →+ R) (ρ : R →+* S)
 variable (hD : ∀ x y, D (x * y) = D x * y + x * D y)
-
 private theorem iterate_map_add (n : ℕ) (x y : R) :
     (D^[n]) (x + y) = (D^[n]) x + (D^[n]) y := by
   induction n with
   | zero => rfl
   | succ n ih => simp only [Function.iterate_succ_apply', ih, map_add]
-
 include hD
-
-/-- Through order n, only the undifferentiated left factor contributes if
-all lower derivatives of the right factor vanish in the residue ring. -/
 private theorem iterate_mul_residue (n : ℕ) (x y : R)
     (hy : ∀ k < n, ρ ((D^[k]) y) = 0) :
     ρ ((D^[n]) (x * y)) = ρ x * ρ ((D^[n]) y) := by
@@ -974,7 +807,6 @@ private theorem iterate_mul_residue (n : ℕ) (x y : R)
       intro k hk
       exact hy (k + 1) (Nat.succ_lt_succ hk)
     simpa only [Function.iterate_succ_apply] using ih x (D y) hy'
-
 private theorem derivative_pow_succ (t : R) (n : ℕ) :
     D (t ^ (n + 1)) = ((n + 1 : ℕ) : R) * D t * t ^ n := by
   induction n with
@@ -983,7 +815,6 @@ private theorem derivative_pow_succ (t : R) (n : ℕ) :
     rw [pow_succ t (n + 1), hD, ih, pow_succ t n]
     push_cast
     ring
-
 private theorem iterate_power_order (t : R) (ht : ρ t = 0) (n : ℕ) :
     (∀ k < n, ∀ a : R, ρ ((D^[k]) (a * t ^ n)) = 0) ∧
     ∀ a : R, ρ ((D^[n]) (a * t ^ n)) = ρ a * (n.factorial : S) * (ρ (D t)) ^ n := by
@@ -1007,11 +838,7 @@ private theorem iterate_power_order (t : R) (ht : ρ t = 0) (n : ℕ) :
       simp only [map_add, map_mul, ht, mul_zero, zero_add, map_natCast, Nat.factorial_succ,
         Nat.cast_mul, pow_succ]
       ring
-
 end Iterates
-
-/-- The polynomial normal form suffices for the DVR tangent test. No
-derivation of the algebraic closure of the abscissa field is required. -/
 theorem tangent_proper {g P : Row 4} {surface : Ideal GeoJets} (hp : surface.IsPrime) {v : ℕ}
     (hg : toGeneric g ∈ surface) (hi : ¬ Invariant g surface) (hv : v < K1.p)
     (hn : NormalForm g P surface v) :
@@ -1071,45 +898,31 @@ theorem tangent_proper {g P : Row 4} {surface : Ideal GeoJets} (hp : surface.IsP
   have hzero : ρ ((D^[v]) P) = 0 := (hρ _).mpr hz
   rw [hzero, mul_zero] at htop
   exact (mul_ne_zero (mul_ne_zero hu0 hfact) (pow_ne_zero _ hDt)) htop
-
 end
 end K1_13_6_1_3
-end PackSource_K1_13_6_1_3Leibniz
-
-section PackSource_K1_13_6_1_3Split
-set_option autoImplicit true
+end
+section
 namespace K1_13_6_1_3
 noncomputable section
 open K1_13 K1_13_6 K1_13_6_1
-
-/-- A proper auxiliary pair vanishing on an original surface component
-has that same component, with its ordinary Bézout local-length bound. -/
 def c1 : Prop :=
   ∀ f P Q surface, IsRelPrime (toGeneric f) (toGeneric P) →
     (intersectionIdeal f Q).IsMinimalPrime surface → toGeneric P ∈ surface →
     ∃ (hZ : (intersectionIdeal f P).IsMinimalPrime surface) (w : ℕ),
       0 < w ∧ w ≤ (shape f).b * (shape P).b ∧
         cycleLength (intersectionIdeal f P) surface hZ.isPrime = (w : ℕ∞)
-
-/-- The contracted smooth hypersurface chart is a DVR at the surface
-prime. Its local quotient length determines the exact order. -/
 def c2 : Prop :=
   ∀ g P surface (hZ : (intersectionIdeal g P).IsMinimalPrime surface) (v : ℕ),
     IsRelPrime (toGeneric g) (toGeneric P) → toGeneric (separant g) ∉ surface →
     0 < v → contractedLength g P surface hZ.isPrime = (v : ℕ∞) →
     NormalForm g P surface v
-
-/-- Below the characteristic the geometric local length agrees with
-the contracted local length over the rational abscissa field. -/
 def c3 : Prop :=
   ∀ g P surface (hZ : (intersectionIdeal g P).IsMinimalPrime surface) (v : ℕ),
     cycleLength (intersectionIdeal g P) surface hZ.isPrime = (v : ℕ∞) →
     v < K1.p → contractedLength g P surface hZ.isPrime = (v : ℕ∞)
-
 private theorem intersection_comm (g P : Row 4) : intersectionIdeal g P = intersectionIdeal P g := by
   unfold intersectionIdeal
   rw [Set.pair_comm]
-
 private theorem chart_cut (h2 : c2) (h3 : c3)
     {g P : Row 4} {surface : Ideal GeoJets} (hZ : (intersectionIdeal g P).IsMinimalPrime surface)
     (hrel : IsRelPrime (toGeneric g) (toGeneric P)) (hsep : toGeneric (separant g) ∉ surface)
@@ -1120,7 +933,6 @@ private theorem chart_cut (h2 : c2) (h3 : c3)
   have hlen' := h3 g P surface hZ v hlen hchar
   have hn := h2 g P surface hZ v hrel hsep hv hlen'
   exact tangent_proper hZ.isPrime hg hi hchar hn
-
 theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) : K1_13_6_1.c3 := by
   intro f Q surface hZ v r hf hproper hQbox hv hvmax hlen hr hi
   let g := (separant^[r]) f
@@ -1156,49 +968,34 @@ theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) : K1_13_6_1.c3 := by
     exact Or.inr ⟨hrPos, w, ⟨hgProper, hGbox, hw, hfg, hwlen⟩,
       chart_cut h2 h3 hgf hgRel.symm hsep hi hw hwChar hwlen',
       tangent_box ht hj hGbox hAnchor w⟩
-
 end
 end K1_13_6_1_3
-end PackSource_K1_13_6_1_3Split
-
-section PackSource_K1_13_6_1_3_3Aux1
-set_option autoImplicit true
+end
+section
 set_option autoImplicit false
-
 namespace K1_13_6_1_3_3
-
 noncomputable section
-
 open IsLocalRing
-
-/-- Colength at a prime of an ambient ring. -/
 abbrev localLength {R : Type*} [CommRing R] (q : Ideal R) [q.IsPrime] (J : Ideal R) : ℕ∞ :=
   Module.length (Localization.AtPrime q)
     (Localization.AtPrime q ⧸ J.map (algebraMap R (Localization.AtPrime q)))
-
 section Length
-
 variable {R S : Type*} [CommRing R] [CommRing S] [Algebra R S]
     (Q : Ideal S) [Q.IsPrime]
-
 theorem localLength_pos {J : Ideal S} (hJ : J ≤ Q) : 0 < localLength Q J := by
   apply Module.length_pos_iff.mpr
   apply Ideal.Quotient.nontrivial_iff.mpr
   exact ne_top_of_le_ne_top (maximalIdeal.isMaximal _).ne_top
     ((Ideal.map_mono hJ).trans_eq Localization.AtPrime.map_eq_maximalIdeal)
-
 theorem localLength_eq_one_iff {J : Ideal S} :
     localLength Q J = 1 ↔
       J.map (algebraMap S (Localization.AtPrime Q)) = maximalIdeal (Localization.AtPrime Q) := by
   rw [localLength, Module.length_eq_one_iff, isSimpleModule_iff_isCoatom, ← Ideal.isMaximal_def,
     IsLocalRing.isMaximal_iff]
-
 theorem localLength_mono {I J : Ideal S} (h : I ≤ J) :
     localLength Q J ≤ localLength Q I := by
   simp only [localLength, Module.length_quotient]
   exact Order.coheight_anti (Ideal.map_mono h)
-
-/-- Flat base change multiplies the local colength by the colength of the local residue fibre. -/
 theorem localLength_map [Module.Flat R S] (J : Ideal R) :
     localLength Q (J.map (algebraMap R S)) =
       localLength (Q.comap (algebraMap R S)) J *
@@ -1224,47 +1021,30 @@ theorem localLength_map [Module.Flat R S] (J : Ideal R) :
   rw [← hmap, ← hmap, Localization.AtPrime.map_eq_maximalIdeal]
   exact ((Algebra.TensorProduct.quotIdealMapEquivTensorQuot B I).toLinearEquiv.length_eq).trans
     (IsLocalRing.length_baseChange A B (A ⧸ I))
-
 end Length
-
 attribute [local instance] MvPolynomial.algebraMvPolynomial
-
 theorem polynomial_flat {k l σ : Type*} [Field k] [Field l] [Algebra k l] :
     Module.Flat (MvPolynomial σ k) (MvPolynomial σ l) := by
   have h : Algebra.IsPushout k (MvPolynomial σ k) l (MvPolynomial σ l) := inferInstance
   exact Module.Flat.isBaseChange k (MvPolynomial σ k) l (MvPolynomial σ l) h.out
-
-/-- A flat local base change cannot decrease the colength. -/
 theorem localLength_le_map {R S : Type*} [CommRing R] [CommRing S] [Algebra R S]
     [Module.Flat R S] (Q : Ideal S) [Q.IsPrime] (J : Ideal R) :
     localLength (Q.comap (algebraMap R S)) J ≤ localLength Q (J.map (algebraMap R S)) := by
   rw [localLength_map]
   exact ENat.self_le_mul_right _ (localLength_pos Q (Ideal.map_le_iff_le_comap.mpr le_rfl)).ne'
-
 end
-
 end K1_13_6_1_3_3
-end PackSource_K1_13_6_1_3_3Aux1
-
-section PackSource_K1_13_6_1_3_3Aux2
-set_option autoImplicit true
+end
+section
 set_option autoImplicit false
-
 namespace K1_13_6_1_3_3
-
 noncomputable section
-
 open IsLocalRing Algebra
 open scoped TensorProduct
-
 attribute [local instance] MvPolynomial.algebraMvPolynomial
-
 section FiniteScalarExtension
-
 variable {k l σ : Type*} [Field k] [Field l] [Algebra k l] [FiniteDimensional k l]
 variable (Q : Ideal (MvPolynomial σ l)) [Q.IsPrime]
-
-/-- The local fibre of a finite separable change of coefficients has length one. -/
 theorem separable_fibre [Algebra.IsSeparable k l] :
     localLength Q ((Q.comap (algebraMap (MvPolynomial σ k) _)).map
       (algebraMap (MvPolynomial σ k) _)) = 1 := by
@@ -1297,20 +1077,15 @@ theorem separable_fibre [Algebra.IsSeparable k l] :
     IsScalarTower.algebraMap_eq R A B, ← Ideal.map_map,
     Localization.AtPrime.map_eq_maximalIdeal]
   exact FormallyUnramified.map_maximalIdeal
-
 end FiniteScalarExtension
-
 private theorem selfLength_congr {R S : Type*} [CommRing R] [CommRing S] (e : R ≃+* S) :
     Module.length R R = Module.length S S := by
   rw [Module.length_eq_coheight, Module.length_eq_coheight]
   change Order.coheight (⊥ : Ideal R) = Order.coheight (⊥ : Ideal S)
   simpa using Order.coheight_orderIso e.idealComapOrderIso (⊥ : Ideal S)
-
 section PurelyInseparable
-
 variable {k l F : Type*} [Field k] [Field l] [Field F] [Algebra k l] [Algebra k F]
 variable [IsPurelyInseparable k l]
-
 private theorem tensor_selfLength_eq_one [FiniteDimensional k l]
     (p : ℕ) [ExpChar k p] (hp : p.Prime)
     (h : Module.length (F ⊗[k] l) (F ⊗[k] l) < (p : ℕ∞)) :
@@ -1336,20 +1111,15 @@ private theorem tensor_selfLength_eq_one [FiniteDimensional k l]
     have hlt : (Module.length T T).toNat < p := by
       exact ENat.natCast_lt_natCast.mp ((ENat.natCast_toNat_le_self _).trans_lt h)
     omega
-
 end PurelyInseparable
-
 section PolynomialFibre
-
 variable {k l σ : Type*} [Field k] [Field l] [Algebra k l]
 variable [IsPurelyInseparable k l]
 variable (q : Ideal (MvPolynomial σ k)) [q.IsPrime]
 variable (Q : Ideal (MvPolynomial σ l)) [Q.IsPrime] [Q.LiesOver q]
-
 private abbrev fibreInclusion {R S : Type*} [CommRing R] [CommRing S] [Algebra R S]
     (q : Ideal R) [q.IsPrime] : S →+* q.Fiber S :=
   (Algebra.TensorProduct.includeRight (R := R) (A := q.ResidueField) (B := S)).toRingHom
-
 set_option backward.isDefEq.respectTransparency false in
 private theorem fibre_at_length {R S : Type*} [CommRing R] [CommRing S] [Algebra R S]
     (q : Ideal R) [q.IsPrime] (r : Ideal (q.Fiber S)) [r.IsPrime] :
@@ -1367,9 +1137,7 @@ private theorem fibre_at_length {R S : Type*} [CommRing R] [CommRing S] [Algebra
     (Ideal.Fiber.algEquivAux₂ (S := S) q r).toRingEquiv
   have he := selfLength_congr (R := B ⧸ I) (S := Localization.AtPrime r) e.symm
   exact hquot.trans he
-
 set_option backward.isDefEq.respectTransparency false in
-/-- A purely inseparable residue fibre is already local. -/
 private theorem purely_inseparable_fibre_length :
     localLength Q (q.map (algebraMap (MvPolynomial σ k) (MvPolynomial σ l))) =
       Module.length (q.ResidueField ⊗[k] l) (q.ResidueField ⊗[k] l) := by
@@ -1406,34 +1174,22 @@ private theorem purely_inseparable_fibre_length :
   let e : Localization.AtPrime r ≃+* T := e₂.symm.toRingEquiv.trans e₁.toRingEquiv
   have h₂ := selfLength_congr (R := Localization.AtPrime r) (S := T) e
   exact h₁.trans h₂
-
-/-- A finite purely inseparable fibre of length less than the characteristic has length one. -/
 theorem purely_inseparable_fibre [FiniteDimensional k l] (p : ℕ) [ExpChar k p] (hp : p.Prime)
     (h : localLength Q (q.map (algebraMap (MvPolynomial σ k) _)) < (p : ℕ∞)) :
     localLength Q (q.map (algebraMap (MvPolynomial σ k) _)) = 1 := by
   rw [purely_inseparable_fibre_length q Q] at h ⊢
   exact tensor_selfLength_eq_one p hp h
-
 end PolynomialFibre
-
 end
-
 end K1_13_6_1_3_3
-end PackSource_K1_13_6_1_3_3Aux2
-
-section PackSource_K1_13_6_1_3_3Proof
-set_option autoImplicit true
+end
+section
 set_option autoImplicit false
-
 namespace K1_13_6_1_3_3
-
 noncomputable section
-
 open IsLocalRing
 open K1_13 K1_13_6 K1_13_6_1_3
-
 attribute [local instance] MvPolynomial.algebraMvPolynomial
-
 private theorem polynomial_tower {k E l σ : Type*} [Field k] [Field E] [Field l]
     [Algebra k E] [Algebra k l] [Algebra E l] [IsScalarTower k E l] :
     IsScalarTower (MvPolynomial σ k) (MvPolynomial σ E) (MvPolynomial σ l) := by
@@ -1444,7 +1200,6 @@ private theorem polynomial_tower {k E l σ : Type*} [Field k] [Field E] [Field l
   change MvPolynomial.map (algebraMap k l) x =
     MvPolynomial.map (algebraMap E l) (MvPolynomial.map (algebraMap k E) x)
   rw [MvPolynomial.map_map, IsScalarTower.algebraMap_eq k E l]
-
 private theorem finite_fibre {k l σ : Type*} [Field k] [Field l] [Algebra k l]
     [FiniteDimensional k l] (Q : Ideal (MvPolynomial σ l)) [Q.IsPrime]
     (p : ℕ) [ExpChar k p] (hp : p.Prime)
@@ -1466,7 +1221,6 @@ private theorem finite_fibre {k l σ : Type*} [Field k] [Field l] [Algebra k l]
     simp only [q, Ideal.map_map, Ideal.comap_comap, ← IsScalarTower.algebraMap_eq R T S]
   rw [← hmap, localLength_map, separable_fibre (k := k) q, one_mul] at h ⊢
   exact purely_inseparable_fibre q Q p hp h
-
 private theorem lift_polynomial {k l σ : Type*} [Field k] [Field l] [Algebra k l]
     [Algebra.IsAlgebraic k l] (x : MvPolynomial σ l) :
     ∃ (E : IntermediateField k l), FiniteDimensional k E ∧
@@ -1485,10 +1239,6 @@ private theorem lift_polynomial {k l σ : Type*} [Field k] [Field l] [Algebra k 
     IntermediateField.algebraMap_apply]
   rw [Finset.sum_attach x.support (fun m ↦ MvPolynomial.monomial m (x.coeff m))]
   exact (MvPolynomial.as_sum x).symm
-
-/-- A local residue fibre of algebraic scalar extension has length one when
-its length is below the positive characteristic. Each element of the geometric
-prime is represented over a finite coefficient extension. -/
 theorem algebraic_fibre {k l σ : Type*} [Field k] [Field l] [Algebra k l]
     [Algebra.IsAlgebraic k l] (Q : Ideal (MvPolynomial σ l)) [Q.IsPrime]
     (p : ℕ) [ExpChar k p] (hp : p.Prime)
@@ -1534,8 +1284,6 @@ theorem algebraic_fibre {k l σ : Type*} [Field k] [Field l] [Algebra k l]
   change (algebraMap S B) ((algebraMap T S) y) ∈ J.map (algebraMap S B)
   rw [← IsScalarTower.algebraMap_apply T S B]
   rwa [← IsScalarTower.algebraMap_apply T A B] at hmem
-
-/-- Below the characteristic, the rational and geometric local lengths coincide. -/
 theorem proof : K1_13_6_1_3.c3 := by
   intro g P surface hZ v hlen hv
   have : surface.IsPrime := hZ.isPrime
@@ -1572,66 +1320,45 @@ theorem proof : K1_13_6_1_3.c3 := by
   rw [hJ, hfib, mul_one] at hbase
   change Order.coheight (J.map (algebraMap RationalJets (Localization.AtPrime q))) = _
   simpa only [localLength, Module.length_quotient] using hbase.symm.trans hlen
-
 end
-
 end K1_13_6_1_3_3
-end PackSource_K1_13_6_1_3_3Proof
-
-section PackSource_K1_13_6_1_3_2Proof
-set_option autoImplicit true
+end
+section
 namespace K1_13_6_1_3_2
-
 noncomputable section
-
 open K1_13 K1_13_6 K1_13_6_1_3 IsLocalRing
-
 attribute [local instance] MvPolynomial.algebraMvPolynomial
-
 private theorem toGeneric_eq (a : Row 4) :
     MvPolynomial.map (algebraMap GenericField GeoField) (toRational a) = toGeneric a := by
   rw [toRational, toGeneric, genericCoeffs, MvPolynomial.map_map]
-
 section Chart
-
 variable (surface : Ideal GeoJets) [surface.IsPrime]
-
 private abbrev A := Localization.AtPrime (contractedPrime surface)
 private abbrev sourcePrime := (contractedPrime surface).comap (algebraMap (Row 4) RationalJets)
-
-/-- The chart is also the localization of the source rows at the contracted prime. -/
 local instance : IsLocalization.AtPrime (A surface) (sourcePrime surface) :=
   IsLocalization.isLocalization_isLocalization_atPrime_isLocalization
     ((nonZeroDivisors (Polynomial Geom)).map (MvPolynomial.C (σ := Fin 4))) (A surface)
     (contractedPrime surface)
-
 private abbrev loc := algebraMap (Row 4) (A surface)
-
 private theorem loc_eq_rational (a : Row 4) :
     loc surface a = algebraMap RationalJets (A surface) (toRational a) := rfl
-
 omit [surface.IsPrime] in
 private theorem source_mem (a : Row 4) : a ∈ sourcePrime surface ↔ toGeneric a ∈ surface := by
   change (MvPolynomial.map (algebraMap GenericField GeoField) (toRational a) ∈ surface) ↔ _
   rw [toGeneric_eq]
-
 private theorem loc_mem (a : Row 4) : loc surface a ∈ maximalIdeal (A surface) ↔ toGeneric a ∈ surface :=
   (IsLocalization.AtPrime.to_map_mem_maximal_iff (A surface) (sourcePrime surface) a).trans (source_mem surface a)
-
 private theorem loc_unit (a : Row 4) : IsUnit (loc surface a) ↔ toGeneric a ∉ surface :=
   (IsLocalization.AtPrime.isUnit_to_map_iff (A surface) (sourcePrime surface) a).trans (not_congr (source_mem surface a))
-
 private theorem loc_numerator (x : A surface) :
     ∃ a d : Row 4, toGeneric d ∉ surface ∧ x * loc surface d = loc surface a := by
   obtain ⟨⟨a, d⟩, h⟩ := IsLocalization.surj (sourcePrime surface).primeCompl x
   exact ⟨a, d, (not_congr (source_mem surface d)).mp d.2, h⟩
-
 private theorem clear_mem {J : Ideal (Row 4)} {a : Row 4} (ha : loc surface a ∈ J.map (loc surface)) :
     ∃ d : Row 4, toGeneric d ∉ surface ∧ d * a ∈ J := by
   obtain ⟨d, hd, hda⟩ := (IsLocalization.algebraMap_mem_map_algebraMap_iff
     (sourcePrime surface).primeCompl (A surface) J a).mp ha
   exact ⟨d, (not_congr (source_mem surface d)).mp hd, hda⟩
-
 omit [surface.IsPrime] in
 private theorem separant_mem_of_sq {a : Row 4} (ha : a ∈ sourcePrime surface ^ 2) :
     separant a ∈ sourcePrime surface := by
@@ -1641,7 +1368,6 @@ private theorem separant_mem_of_sq {a : Row 4} (ha : a ∈ sourcePrime surface ^
     exact (sourcePrime surface).add_mem ((sourcePrime surface).mul_mem_left _ hy)
       ((sourcePrime surface).mul_mem_right _ hx)
   · simpa only [separant, map_add] using (sourcePrime surface).add_mem hx hy
-
 private theorem loc_not_sq {g : Row 4} (hg : toGeneric g ∈ surface)
     (hs : toGeneric (separant g) ∉ surface) :
     loc surface g ∉ maximalIdeal (A surface) ^ 2 := by
@@ -1660,7 +1386,6 @@ private theorem loc_not_sq {g : Row 4} (hg : toGeneric g ∈ surface)
   exact (hp.mem_or_mem hmul).elim
     (fun h => hd ((source_mem surface d).mp h))
     (fun h => hs ((source_mem surface (separant g)).mp h))
-
 private theorem loc_proper {g P : Row 4} (hg : toGeneric g ∈ surface)
     (hrel : IsRelPrime (toGeneric g) (toGeneric P)) :
     loc surface P ∉ Ideal.span {loc surface g} := by
@@ -1671,7 +1396,6 @@ private theorem loc_proper {g P : Row 4} (hg : toGeneric g ∈ surface)
   have hdvd := map_dvd (MvPolynomial.map genericCoeffs) (Ideal.mem_span_singleton.mp hdp)
   rw [map_mul] at hdvd
   exact hd (surface.mem_of_dvd (hrel.dvd_of_dvd_mul_right hdvd) hg)
-
 private theorem clear_order {g P : Row 4} {v : ℕ} {t' u' : A surface}
     (ht' : maximalIdeal (A surface) = Ideal.span {loc surface g, t'})
     (hu' : IsUnit u') (hP : loc surface P - u' * t' ^ v ∈ Ideal.span {loc surface g}) :
@@ -1709,9 +1433,7 @@ private theorem clear_order {g P : Row 4} {v : ℕ} {t' u' : A surface}
     obtain ⟨e, he, hea⟩ := clear_mem surface (htm ▸ (loc_mem surface a).mpr ha)
     obtain ⟨C, W, heq⟩ := Ideal.mem_span_pair.mp hea
     exact ⟨e, C, W, he, heq.symm⟩
-
 end Chart
-
 theorem proof : K1_13_6_1_3.c2 := by
   intro g P surface hZ v hrel hsep _ hlen
   have := hZ.isPrime
@@ -1732,23 +1454,15 @@ theorem proof : K1_13_6_1_3.c2 := by
   obtain ⟨t, u, ht, hu, hP⟩ := @local_order (A surface) inferInstance hdom hreg hufd
     (loc surface g) (loc surface P) v hg' hq' hgsq hqf hlen'
   exact clear_order surface (g := g) (P := P) (v := v) (t' := t) (u' := u) ht hu hP
-
 end
 end K1_13_6_1_3_2
-end PackSource_K1_13_6_1_3_2Proof
-
-section PackSource_K1_13_6_3_1_1Proof
-set_option autoImplicit true
+end
+section
 set_option autoImplicit false
-
 namespace K1_13_6_3_1_1
-
 noncomputable section
-
 open K1_13 K1_13_6 K1_13_6_3 K1_13_6_3_1 K1_13_6_1_3_3
-
 attribute [local instance] MvPolynomial.algebraMvPolynomial
-
 theorem proof : K1_13_6_3_1.c1 := by
   intro f Q P hz hlen
   have : P.IsPrime := hz.isPrime
@@ -1772,25 +1486,18 @@ theorem proof : K1_13_6_3_1.c1 := by
     algebraic_fibre (k := SepField) P K1.p hp hsmall
   exact descent_of_local_equality (k := SepField) (E := GeoField) (R := SepJets) P
     ((localLength_eq_one_iff P).mp hone)
-
 end
 end K1_13_6_3_1_1
-end PackSource_K1_13_6_3_1_1Proof
-
-section PackSource_K1_13_6_1_5Aux1
-set_option autoImplicit true
+end
+section
 namespace K1_13_6_1_5
 noncomputable section
-
 open Polynomial K1 K1_13 K1_13_6 K1_13_6_1 K1_13_7_1
 open scoped BigOperators
-
 private abbrev constants : Geom →+* GeoField := genericCoeffs.comp Polynomial.C
 private abbrev center : GeoField := genericCoeffs Polynomial.X
-
 def valueForm (x a : K) : AffineForm :=
   (-constants (embed a), fun i => (constants (embed x) - center) ^ i.val)
-
 private theorem eval_at_center (S : Geom[X]) : (S.map constants).eval center = genericCoeffs S := by
   rw [Polynomial.eval_map]
   change Polynomial.eval₂RingHom constants center S = genericCoeffs S
@@ -1799,7 +1506,6 @@ private theorem eval_at_center (S : Geom[X]) : (S.map constants).eval center = g
   · intro a
     simp [constants]
   · simp [center]
-
 private theorem taylor_value (S : Geom[X]) (hS : S.natDegree < taylorLength) (x : Geom) :
     (∑ i : TaylorIndex, genericCoeffs (hasseDeriv i.val S) * (constants x - center) ^ i.val) =
       constants (S.eval x) := by
@@ -1818,7 +1524,6 @@ private theorem taylor_value (S : Geom[X]) (hS : S.natDegree < taylorLength) (x 
   rw [taylor_eval_sub, show P.eval (constants x) = constants (S.eval x) from
     Polynomial.eval_map_apply constants x] at heval
   exact heval.symm
-
 theorem value_cut_eval (T : TaylorChart) {S : K[X]}
     (hS : S.natDegree ≤ 133671) (hT : T.Recovers (extend S)) (x a : K) :
     evalGeneric (extend S) (T.pullback (valueForm x a)) = 0 ↔ S.eval x = a := by
@@ -1843,15 +1548,12 @@ theorem value_cut_eval (T : TaylorChart) {S : K[X]}
       evalGeneric (extend S) T.denom * (constants (embed (S.eval x)) - constants (embed a)) by ring,
     mul_eq_zero, or_iff_right hT.1, sub_eq_zero]
   exact (genericCoeffs_injective.comp Polynomial.C_injective).eq_iff.trans embed.injective.eq_iff
-
 def markPoint (S : Geom[X]) : GeoPoint := fun i => genericCoeffs (jet S i)
-
 theorem markPoint_injective : Function.Injective markPoint := by
   intro S T h
   have hzero := congrFun h (0 : Fin 4)
   simpa only [markPoint, jet, Fin.val_zero, hasseDeriv_zero', genericCoeffs_injective.eq_iff]
     using hzero
-
 theorem coordinate_cut {C : Ideal GeoJets} (hp : C.IsPrime)
     (hdim : ringKrullDim (GeoJets ⧸ C) = 1) :
     ∃ (x : GeoPoint) (D : GeoJets), C ≤ RingHom.ker (MvPolynomial.eval x) ∧
@@ -1894,26 +1596,17 @@ theorem coordinate_cut {C : Ideal GeoJets} (hp : C.IsPrime)
   · apply (MvPolynomial.degreeOf_sub_le _ _ _).trans
     simp only [MvPolynomial.degreeOf_X, MvPolynomial.degreeOf_C, max_zero]
     split <;> decide
-
 end
 end K1_13_6_1_5
-end PackSource_K1_13_6_1_5Aux1
-
-section PackSource_K1_13_6_1_5Split
-set_option autoImplicit true
+end
+section
 namespace K1_13_6_1_5
 noncomputable section
-
 open Polynomial K1 K1_13 K1_13_6 K1_13_6_1 K1_13_7 K1_13_7_1
-
-/-- The common Taylor denominator and numerators at the original recovery length. -/
 def c1 : Prop :=
   ∀ (g : Row 4) (p : Shape), InBox (shape g) p → Chamber p → 0 < p.t →
     ∃ T : TaylorChart, T.Fits (chart taylorLength p) ∧
       ∀ S : Geom[X], atJet g S = 0 → RegularAt g S → T.Recovers S
-
-/-- A proper supported cut on an integral curve pays six units per distinct
-point in the generic section of the sixfold box. -/
 def c2 : Prop :=
   ∀ (C : Ideal GeoJets) (p : Shape), C.IsPrime → ringKrullDim (GeoJets ⧸ C) = 1 →
     InBox ⟨1, 3, 1⟩ p →
@@ -1921,7 +1614,6 @@ def c2 : Prop :=
       ∀ points : Finset GeoPoint,
         (∀ x ∈ points, C ≤ RingHom.ker (MvPolynomial.eval x) ∧ MvPolynomial.eval x D = 0) →
         6 * points.card ≤ sectionDegree C (p.scale 6)
-
 private theorem count_marks (h2 : c2) {f C s p D} {Γ : Finset K}
     (hc : CurveOnFactor f C) (hp : InBox ⟨1, 3, 1⟩ p)
     (hD : GeoFits D p) (hproper : D ∉ C) (hinj : Set.InjOn s (Γ : Set K))
@@ -1939,7 +1631,6 @@ private theorem count_marks (h2 : c2) {f C s p D} {Γ : Finset K}
     obtain ⟨γ, hγ, rfl⟩ := Finset.mem_image.mp hx
     exact hmarks γ hγ)
   rwa [Finset.card_image_of_injOn hinjL] at hcount
-
 private theorem chart_has_simplex (p : Shape) (hp : InBox ⟨1, 3, 1⟩ p) :
     InBox ⟨1, 3, 1⟩ (chart taylorLength p) := by
   obtain ⟨hb, hj, ht⟩ := hp
@@ -1950,7 +1641,6 @@ private theorem chart_has_simplex (p : Shape) (hp : InBox ⟨1, 3, 1⟩ p) :
   simp only [InBox]
   exact ⟨(Nat.le_add_right _ _).trans (le_max_left _ _),
     Nat.le_add_left _ _, le_min (by omega) (by omega)⟩
-
 theorem of_children (h1 : c1) (h2 : c2) : K1_13_6_1.c5 := by
   classical
   intro Γ s f C r hf hc hr hsep hinj hdeg
@@ -2010,50 +1700,32 @@ theorem of_children (h1 : c1) (h2 : c2) : K1_13_6_1.c5 := by
       intro y hy
       rw [Finset.mem_singleton.mp hy]
       exact ⟨hx, hvan⟩)
-
 end
 end K1_13_6_1_5
-end PackSource_K1_13_6_1_5Split
-
-section PackSource_K1_13_6_1_5_2Defs
-set_option autoImplicit true
+end
+section
 set_option autoImplicit false
-
 namespace K1_13_6_1_5_2
-
 open K1_13 K1_13_6 K1_13_6_1
-
-/-- The scheme-theoretic affine fibre of a prescribed section. -/
 abbrev CutQuotient (C : Ideal GeoJets) (E : GeoJets) :=
   GeoJets ⧸ (C ⊔ Ideal.span {E})
-
-/-- The affine section quotient used in the definition of sectionDegree. -/
 abbrev GenericQuotient (C : Ideal GeoJets) (a : Shape) :=
   SectionJets a ⧸
     (C.map (MvPolynomial.map (algebraMap GeoField (SectionField a))) ⊔
       Ideal.span {genericSection a})
-
-/-- A specialization of the coefficients of the full box section. -/
 noncomputable def boxSection (a : Shape) (c : SectionIndex a → GeoField) : GeoJets :=
   ∑ m ∈ boxMonomials a, MvPolynomial.C (c m) * ∏ i : Fin 4, MvPolynomial.X i ^ (m i).val
-
 end K1_13_6_1_5_2
-end PackSource_K1_13_6_1_5_2Defs
-
-section PackSource_K1_13_6_1_5_2Aux
-set_option autoImplicit true
+end
+section
 set_option autoImplicit false
-
 namespace K1_13_6_1_5_2
-
 open K1_13 K1_13_6 K1_13_6_1 K1_13_7_1 MvPolynomial
-
 theorem fits_pow {D : GeoJets} {p : Shape} (hD : GeoFits D p) (n : ℕ) :
     GeoFits (D ^ n) (p.scale n) :=
   ⟨(totalDegree_pow D n).trans (Nat.mul_le_mul_left n hD.1),
     (weightedTotalDegree_pow_le _ D n).trans (Nat.mul_le_mul_left n hD.2.1),
     (degreeOf_pow_le _ D n).trans (Nat.mul_le_mul_left n hD.2.2)⟩
-
 private noncomputable def exponent (a : Shape) : SectionIndex a ↪ (Fin 4 →₀ ℕ) where
   toFun m := Finsupp.equivFunOnFinite.symm fun i => (m i).val
   inj' := by
@@ -2061,7 +1733,6 @@ private noncomputable def exponent (a : Shape) : SectionIndex a ↪ (Fin 4 →�
     funext i
     apply Fin.ext
     exact DFunLike.congr_fun h i
-
 theorem exists_boxSection {E : GeoJets} {a : Shape} (hE : GeoFits E a) :
     ∃ c : SectionIndex a → GeoField, boxSection a c = E := by
   classical
@@ -2093,7 +1764,6 @@ theorem exists_boxSection {E : GeoJets} {a : Shape} (hE : GeoFits E a) :
       rw [monomial_eq, Finsupp.prod_fintype _ _ (fun _ => pow_zero _)]
       simp only [hexp]
     _ = E := hsum.symm.trans E.as_sum.symm
-
 theorem cut_finite {C : Ideal GeoJets} [C.IsPrime]
     (hdim : ringKrullDim (GeoJets ⧸ C) = 1) {E : GeoJets} (hE : E ∉ C) :
     Module.Finite GeoField (CutQuotient C E) := by
@@ -2107,12 +1777,10 @@ theorem cut_finite {C : Ideal GeoJets} [C.IsPrime]
   apply (Module.finite_iff_krullDimLE_zero GeoField _).mpr
   apply Ring.krullDimLE_iff.mpr
   exact ENat.WithBot.add_le_add_one_right_iff.mp (by simpa using hd)
-
 theorem pow_not_mem {C : Ideal GeoJets} [C.IsPrime] {D : GeoJets} (hD : D ∉ C) (n : ℕ) :
     D ^ n ∉ C := by
   rw [← Ideal.Quotient.eq_zero_iff_mem, map_pow]
   exact pow_ne_zero n (mt Ideal.Quotient.eq_zero_iff_mem.mp hD)
-
 private theorem power_colon {C : Ideal GeoJets} [C.IsPrime] {D : GeoJets} (hD : D ∉ C)
     (n : ℕ) : (C ⊔ Ideal.span {D ^ (n + 1)}).colon {D} = C ⊔ Ideal.span {D ^ n} := by
   ext x
@@ -2141,14 +1809,12 @@ private theorem power_colon {C : Ideal GeoJets} [C.IsPrime] {D : GeoJets} (hD : 
     apply Ideal.add_mem _ (Ideal.mem_sup_left (Ideal.mul_mem_right D C hc))
     apply Ideal.mem_sup_right
     exact Ideal.mem_span_singleton.mpr ⟨r, by rw [pow_succ]; ac_rfl⟩
-
 private theorem sup_pow_succ {C : Ideal GeoJets} (D : GeoJets) (n : ℕ) :
     (C ⊔ Ideal.span {D ^ (n + 1)}) ⊔ Ideal.span {D} = C ⊔ Ideal.span {D} := by
   have hpow : (Ideal.span {D ^ (n + 1)} : Ideal GeoJets) ≤ Ideal.span {D} :=
     (Ideal.span_singleton_le_iff_mem _).mpr
       (Ideal.mem_span_singleton.mpr ⟨D ^ n, by rw [pow_succ, mul_comm]⟩)
   rw [sup_assoc, sup_eq_right.mpr hpow]
-
 set_option maxHeartbeats 800000 in
 theorem finrank_power {C : Ideal GeoJets} [C.IsPrime] {D : GeoJets}
     (hdim : ringKrullDim (GeoJets ⧸ C) = 1) (hD : D ∉ C) (n : ℕ) :
@@ -2181,7 +1847,6 @@ theorem finrank_power {C : Ideal GeoJets} [C.IsPrime] {D : GeoJets}
       Module.finrank GeoField (CutQuotient C (D ^ n)) = _ at hr
     rw [ih, add_comm, ← Nat.succ_mul] at hr
     exact hr.symm
-
 theorem card_le_finrank {C : Ideal GeoJets} {D : GeoJets}
     [Module.Finite GeoField (CutQuotient C D)] (points : Finset GeoPoint)
     (hp : ∀ x ∈ points, C ≤ RingHom.ker (MvPolynomial.eval x) ∧ MvPolynomial.eval x D = 0) :
@@ -2199,31 +1864,21 @@ theorem card_le_finrank {C : Ideal GeoJets} {D : GeoJets}
   have hcard := Set.ncard_le_ncard hz hf
   rw [Set.ncard_coe_finset] at hcard
   exact hcard.trans (ncard_zeroLocus_le_finrank_quotient I)
-
 end K1_13_6_1_5_2
-end PackSource_K1_13_6_1_5_2Aux
-
-section PackSource_K1_13_6_1_5_2Split
-set_option autoImplicit true
+end
+section
 set_option autoImplicit false
-
 namespace K1_13_6_1_5_2
-
 open K1_13 K1_13_6 K1_13_6_1 K1_13_7_1
-
-/-- Generic sections of integral affine curves have finite coordinate algebra. -/
 def c1 : Prop :=
   ∀ (C : Ideal GeoJets) (a : Shape), C.IsPrime → ringKrullDim (GeoJets ⧸ C) = 1 →
     Module.Finite (SectionField a) (GenericQuotient C a)
-
-/-- A proper coefficient specialization cannot increase the affine section length. -/
 def c2 : Prop :=
   ∀ (C : Ideal GeoJets) (a : Shape), C.IsPrime → ringKrullDim (GeoJets ⧸ C) = 1 →
     Module.Finite (SectionField a) (GenericQuotient C a) →
     ∀ c : SectionIndex a → GeoField, boxSection a c ∉ C →
       Module.Finite GeoField (CutQuotient C (boxSection a c)) →
       Module.finrank GeoField (CutQuotient C (boxSection a c)) ≤ sectionDegree C a
-
 theorem of_children (h₁ : c1) (h₂ : c2) : K1_13_6_1_5.c2 := by
   intro C p hC hdim _ D hD hproper points hpoints
   let : C.IsPrime := hC
@@ -2234,20 +1889,12 @@ theorem of_children (h₁ : c1) (h₂ : c2) : K1_13_6_1_5.c2 := by
     (cut_finite hdim hne)
   rw [hc, finrank_power hdim hproper] at hlength
   exact (Nat.mul_le_mul_left 6 (card_le_finrank points hpoints)).trans hlength
-
 end K1_13_6_1_5_2
-end PackSource_K1_13_6_1_5_2Split
-
-section PackSource_K1_13_6_1_5_2_2Aux
-set_option autoImplicit true
+end
+section
 set_option autoImplicit false
-
 namespace K1_13_6_1_5_2_2
-
 open MvPolynomial
-
-/-- Independent residues force all scalar coefficients of a polynomial relation to vanish
-when its right-hand side is a multiple of a section with regular constant term. -/
 theorem coefficients_eq_zero
     {k A D σ ι : Type*} [Field k] [CommRing A] [IsDomain A] [CommRing D]
     [Algebra k A] [Algebra k D] [Fintype ι]
@@ -2287,27 +1934,18 @@ theorem coefficients_eq_zero
   intro i
   ext m
   exact (h m.degree m rfl).2 i
-
 end K1_13_6_1_5_2_2
-end PackSource_K1_13_6_1_5_2_2Aux
-
-section PackSource_K1_13_6_1_5_2_2Proof
-set_option autoImplicit true
+end
+section
 set_option autoImplicit false
-
 namespace K1_13_6_1_5_2_2
-
 noncomputable section
-
 open K1_13 K1_13_6 K1_13_6_1 K1_13_6_1_5_2 MvPolynomial
 open scoped nonZeroDivisors
-
 attribute [local instance] MvPolynomial.algebraMvPolynomial
-
 private def translate {σ k : Type*} [CommRing k] (c : σ → k) :
     MvPolynomial σ k →ₐ[k] MvPolynomial σ k :=
   aeval (fun i => MvPolynomial.X i + C (c i))
-
 private theorem translate_injective {σ k : Type*} [CommRing k] (c : σ → k) :
     Function.Injective (translate c) := by
   have h : (translate (fun i => -c i)).comp (translate c) = AlgHom.id k _ := by
@@ -2316,7 +1954,6 @@ private theorem translate_injective {σ k : Type*} [CommRing k] (c : σ → k) :
   have hinv : Function.LeftInverse (translate (fun i => -c i)) (translate c) :=
     fun p => AlgHom.congr_fun h p
   exact hinv.injective
-
 private theorem lift_independence
     (C₀ : Ideal GeoJets) [C₀.IsPrime] (a : Shape) (c : SectionIndex a → GeoField)
     (hproper : boxSection a c ∉ C₀)
@@ -2358,7 +1995,6 @@ private theorem lift_independence
   rw [Fintype.linearIndependent_iff]
   intro g hg
   change ∑ i, g i • Ideal.Quotient.mk J (MvPolynomial.map (algebraMap k F) (v i)) = 0 at hg
-  -- Clear the scalar denominators, then clear the denominator in the localized ideal.
   obtain ⟨d, hd⟩ := IsLocalization.exist_integer_multiples_of_finite (nonZeroDivisors R) g
   choose r hr using hd
   have hr' (i : ι) : algebraMap R F (r i) = algebraMap R F (d : R) * g i := by
@@ -2442,8 +2078,6 @@ private theorem lift_independence
   have hdi : d' * r i = 0 := translate_injective c ((hz i).trans (map_zero t).symm)
   have hri := (mul_eq_zero.mp hdi).resolve_left hd'₀
   exact (mul_eq_zero.mp ((hr' i).symm.trans (by rw [hri, map_zero]))).resolve_left hd₀
-
-/-- Every proper box specialization has length at most the generic affine section. -/
 theorem proof : K1_13_6_1_5_2.c2 := by
   classical
   intro C₀ a hprime _ hgeneric c hproper hfinite
@@ -2458,180 +2092,38 @@ theorem proof : K1_13_6_1_5_2.c2 := by
       simpa only [hv] using b.linearIndependent)
   change _ ≤ Module.finrank (SectionField a) (GenericQuotient C₀ a)
   simpa only [Fintype.card_fin] using hli.fintype_card_le_finrank
-
 end
-
 end K1_13_6_1_5_2_2
-end PackSource_K1_13_6_1_5_2_2Proof
-
-section PackSource_K1_13_6_1_5_1Proof
-set_option autoImplicit true
-namespace K1_13_6_1_5_1
-
-noncomputable section
-
-open Polynomial MvPolynomial K1_13 K1_13_6 K1_13_6_2_1 K1_13_7_1
-
-local notation "W" => MvPolynomial.weightedTotalDegree
-
--- Keep the clearing length symbolic while proving the support and evaluation identities.
-private def denominator (L : ℕ) (g : Row 4) : Row 4 :=
-  separant g ^ (2 * L)
-
-private def numerator (L : ℕ) (g : Row 4) (i : TaylorIndex) : Row 4 :=
-  if hi : i.val < 4 then MvPolynomial.X ⟨i.val, hi⟩ * denominator L g
-  else
-    MvPolynomial.C (Polynomial.C (↑i.val.factorial : Geom)⁻¹) *
-      (separant g ^ (2 * (L - i.val)) * jetNumerator g i.val)
-
-private def recoveryChart (L : ℕ) (g : Row 4) : TaylorChart where
-  denom := toGeneric (denominator L g)
-  numerator i := toGeneric (numerator L g i)
-  initial i := by
-    unfold numerator toGeneric
-    have hi : (i.castLE (by decide : 4 ≤ taylorLength)).val < 4 := i.isLt
-    rw [dite_eq_left hi, map_mul, MvPolynomial.map_X]
-    rfl
-
-private theorem numerator_bound {L : ℕ} (hL : taylorLength ≤ L) (w : Fin 4 → ℕ)
-    (Δ d₀ : ℕ) (hshift : ∀ i : Fin 3, w i.succ ≤ w i.castSucc + Δ) (hw : ∀ i, w i ≤ d₀)
-    {g : Row 4} {B : ℕ} (hB : w 3 ≤ B) (hg : W w g ≤ B) (i : TaylorIndex) :
-    W w (numerator L g i) ≤ d₀ + 2 * L * (B - w 3) + L * Δ := by
-  have hi : i.val ≤ L := i.isLt.le.trans hL
-  unfold numerator
-  split_ifs
-  · exact (weightedTotalDegree_mul_le _ _ _).trans
-      ((Nat.add_le_add ((weight_X_le w _).trans (hw _)) (separant_pow_bound w hg _)).trans
-        (Nat.le_add_right _ _))
-  · apply (weight_const_mul_le _ _ _).trans
-    apply (weightedTotalDegree_mul_le _ _ _).trans
-    calc
-      _ ≤ 2 * (L - i.val) * (B - w 3) + (w 0 + i.val * (2 * (B - w 3) + Δ)) :=
-        Nat.add_le_add (separant_pow_bound w hg _) (jet_bound w Δ hshift hB hg i.val)
-      _ = w 0 + 2 * (i.val + (L - i.val)) * (B - w 3) + i.val * Δ := by ring
-      _ ≤ _ := by
-        rw [Nat.add_sub_of_le hi]
-        exact Nat.add_le_add (Nat.add_le_add_right (hw 0) _) (Nat.mul_le_mul_right Δ hi)
-
-private theorem chart_fits {L : ℕ} (hL : taylorLength ≤ L) {g : Row 4} {p : Shape}
-    (hg : InBox (shape g) p) (hp : Chamber p) (ht : 0 < p.t) :
-    (recoveryChart L g).Fits (chart L p) := by
-  constructor
-  · apply three_weights hg hp ht
-    intro w Δ d₀ B _ _ _ hB
-    exact (separant_pow_bound w hB (2 * L)).trans (by omega)
-  · intro i
-    exact three_weights hg hp ht (fun w Δ d₀ _ hs hw hwB hB =>
-      numerator_bound hL w Δ d₀ hs hw hwB hB i)
-
-private theorem ordinary_eq_hasse (S : Geom[X]) (n : ℕ) :
-    derivative^[n] S = Polynomial.C (n.factorial : Geom) * hasseDeriv n S := by
-  ext m
-  rw [coeff_iterate_derivative, Polynomial.coeff_C_mul, hasseDeriv_coeff,
-    Nat.descFactorial_eq_factorial_mul_choose]
-  simp only [nsmul_eq_mul, Nat.cast_mul, mul_assoc]
-
-private theorem chart_recovers {L : ℕ} (hL : taylorLength ≤ L) {g : Row 4} {S : Geom[X]}
-    (hg : atJet g S = 0) (hr : K1_13_7.RegularAt g S) : (recoveryChart L g).Recovers S := by
-  have hden : atJet (denominator L g) S = atJet (separant g) S ^ (2 * L) :=
-    map_pow (MvPolynomial.eval (jet S : Fin 4 → Geom[X])) _ _
-  constructor
-  · change evalGeneric S (toGeneric (denominator L g)) ≠ 0
-    rw [evalGeneric_toGeneric, map_ne_zero_iff _ genericCoeffs_injective, hden]
-    exact pow_ne_zero _ hr
-  · intro i
-    change evalGeneric S (toGeneric (numerator L g i)) =
-      evalGeneric S (toGeneric (denominator L g)) * genericCoeffs (hasseDeriv i.val S)
-    rw [evalGeneric_toGeneric, evalGeneric_toGeneric, ← map_mul]
-    apply congrArg genericCoeffs
-    unfold numerator
-    split_ifs with hinit
-    · unfold atJet
-      rw [map_mul, MvPolynomial.eval_X, mul_comm]
-      rfl
-    · let E := MvPolynomial.eval (jet S : Fin 4 → Geom[X])
-      change E (_ * (_ ^ _ * _)) = _
-      rw [map_mul, map_mul, map_pow, MvPolynomial.eval_C]
-      change _ * (atJet (separant g) S ^ (2 * (L - i.val)) *
-        atJet (jetNumerator g i.val) S) = _
-      rw [eval_jetNumerator _ _ hg, ordinary_eq_hasse]
-      have hinv : Polynomial.C (↑i.val.factorial : Geom)⁻¹ *
-          Polynomial.C (↑i.val.factorial : Geom) = 1 := by
-        rw [← map_mul, inv_mul_cancel₀ (factorial_cast_ne_zero
-          (i.isLt.trans (by decide : taylorLength < K1.p))), map_one]
-      have hpow : 2 * (L - i.val) + 2 * i.val = 2 * L := by
-        rw [← Nat.mul_add, Nat.sub_add_cancel (i.isLt.le.trans hL)]
-      calc
-        _ = (Polynomial.C (↑i.val.factorial : Geom)⁻¹ * Polynomial.C (↑i.val.factorial : Geom)) *
-            ((atJet (separant g) S ^ (2 * (L - i.val)) * atJet (separant g) S ^ (2 * i.val)) *
-              hasseDeriv i.val S) := by ring
-        _ = _ := by rw [hinv, one_mul, ← pow_add, hpow, hden]
-
-/-- Taylor recovery on the regular four-jet chart at the original length. -/
-theorem proof : K1_13_6_1_5.c1 := by
-  intro g p hbox hp ht
-  exact ⟨recoveryChart taylorLength g, chart_fits le_rfl hbox hp ht,
-    fun _ hg hr => chart_recovers le_rfl hg hr⟩
-
 end
-end K1_13_6_1_5_1
-end PackSource_K1_13_6_1_5_1Proof
-
-section PackSource_K1_13_6_1_4_2_2Defs
-set_option autoImplicit true
+section
 namespace K1_13_6_1_4_2_2
-
 noncomputable section
-
 open K1_13 K1_13_6 K1_13_6_1_4_2 MvPolynomial
-
-/-- The sixfold lattice system is applied to the combination of the three
-shapes with the indicated multidegree. -/
 def combinedShape (a b h : Shape) (t : Fin 3 → ℕ) : Shape :=
   ((a.scale (t 0)).plus (b.scale (t 1))).plus (h.scale (t 2))
-
-/-- The dimension of the monomial span after restriction to the surface. -/
 def boxHilbert (surface : Ideal GeoJets) (p : Shape) : ℕ :=
   Module.finrank GeoField
     ((restrictSupport GeoField (latticeIndices p)).map
       (Ideal.Quotient.mkₐ GeoField surface).toLinearMap)
-
-/-- The common three-graded Hilbert function. -/
 def multiHilbert (surface : Ideal GeoJets) (a b h : Shape) (t : Fin 3 → ℕ) : ℕ :=
   boxHilbert surface (combinedShape a b h t)
-
-/-- Variables of the common monomial presentation, retaining their blocks. -/
 abbrev SectionVariable (a b h : Shape) :=
   Σ l : Fin 3, latticeIndices (![a, b, h] l)
-
-/-- The multidegree of a monomial in variables with unit-vector degrees. -/
 def blockDegree {σ : Type} (block : σ → Fin 3) (e : σ →₀ ℕ) : Fin 3 → ℕ :=
   fun l => e.sum fun v n => if block v = l then n else 0
-
-/-- Count the monomials of an exact multidegree outside the upward cones
-generated by the forbidden exponents. -/
 def standardCount {σ : Type} (block : σ → Fin 3) (forbidden : Finset (σ →₀ ℕ))
     (t : Fin 3 → ℕ) : ℕ :=
   ({e | blockDegree block e = t ∧ ∀ f ∈ forbidden, ¬ f ≤ e} : Set (σ →₀ ℕ)).ncard
-
 end
-
 end K1_13_6_1_4_2_2
-end PackSource_K1_13_6_1_4_2_2Defs
-
-section PackSource_K1_13_6_1_4_2_2Aux2
-set_option autoImplicit true
+end
+section
 namespace K1_13_6_1_4_2_2
-
 noncomputable section
-
 open MvPolynomial
 open scoped BigOperators
-
-/-- Restrict a multivariate polynomial to a ray with common offset `pad`. -/
 def rayPolynomial (P : MvPolynomial (Fin 3) ℚ) (t : Fin 3 → ℕ) (pad : ℕ) : Polynomial ℚ :=
   P.eval₂ Polynomial.C fun l => Polynomial.C (pad : ℚ) + Polynomial.C (t l : ℚ) * Polynomial.X
-
 theorem eval_rayPolynomial (P : MvPolynomial (Fin 3) ℚ) (t : Fin 3 → ℕ) (pad n : ℕ) :
     (rayPolynomial P t pad).eval (n : ℚ) =
       MvPolynomial.eval (fun l => ((n * t l + pad : ℕ) : ℚ)) P := by
@@ -2642,7 +2134,6 @@ theorem eval_rayPolynomial (P : MvPolynomial (Fin 3) ℚ) (t : Fin 3 → ℕ) (p
   apply congrArg (fun x => MvPolynomial.eval x P)
   funext l
   simp [f, Function.comp_apply, Nat.cast_add, Nat.cast_mul, add_comm, mul_comm]
-
 private theorem product_degree_and_coeff {α : Type} (s : Finset α)
     (q : α → Polynomial ℚ) (d : α → ℕ) (hq : ∀ i ∈ s, (q i).natDegree ≤ d i) :
     (∏ i ∈ s, q i).natDegree ≤ ∑ i ∈ s, d i ∧
@@ -2656,7 +2147,6 @@ private theorem product_degree_and_coeff {α : Type} (s : Finset α)
     rw [Finset.prod_insert hi, Finset.sum_insert hi, Finset.prod_insert hi,
       Polynomial.coeff_mul_add_eq_of_natDegree_le hi' hd, hc]
     exact ⟨Polynomial.natDegree_mul_le.trans (Nat.add_le_add hi' hd), rfl⟩
-
 private theorem monomial_ray (e : Fin 3 →₀ ℕ) (r : ℚ) (t : Fin 3 → ℕ) (pad : ℕ) :
     (rayPolynomial (monomial e r) t pad).natDegree ≤ e.degree ∧
       (rayPolynomial (monomial e r) t pad).coeff e.degree =
@@ -2682,20 +2172,17 @@ private theorem monomial_ray (e : Fin 3 →₀ ℕ) (r : ℚ) (t : Fin 3 → ℕ
   exact ⟨(Polynomial.natDegree_C_mul_le _ _).trans hd, by
     rw [Polynomial.coeff_C_mul, hcoeff]
     simp only [hpc]⟩
-
 private theorem ray_as_sum (P : MvPolynomial (Fin 3) ℚ) (t : Fin 3 → ℕ) (pad : ℕ) :
     rayPolynomial P t pad = ∑ e ∈ P.support, rayPolynomial (monomial e (P.coeff e)) t pad := by
   unfold rayPolynomial
   simp only [← MvPolynomial.coe_eval₂Hom]
   conv_lhs => rw [P.as_sum]
   rw [map_sum]
-
 theorem degree_ray_le (P : MvPolynomial (Fin 3) ℚ) (t : Fin 3 → ℕ) (pad : ℕ) :
     (rayPolynomial P t pad).natDegree ≤ P.totalDegree := by
   rw [ray_as_sum]
   exact Polynomial.natDegree_sum_le_of_forall_le _ _ fun e he =>
     (monomial_ray e (P.coeff e) t pad).1.trans (le_totalDegree he)
-
 theorem coeff_ray (P : MvPolynomial (Fin 3) ℚ) (t : Fin 3 → ℕ) (pad : ℕ) {d : ℕ}
     (hd : P.totalDegree ≤ d) :
     (rayPolynomial P t pad).coeff d =
@@ -2710,7 +2197,6 @@ theorem coeff_ray (P : MvPolynomial (Fin 3) ℚ) (t : Fin 3 → ℕ) (pad : ℕ)
   · simp only [hed, ↓reduceIte]
     exact Polynomial.coeff_eq_zero_of_natDegree_lt
       (hdeg.trans_lt (lt_of_le_of_ne ((le_totalDegree he).trans hd) hed))
-
 private theorem eq_zero_of_eval_pos_nat (P : MvPolynomial (Fin 3) ℚ)
     (hp : ∀ t : Fin 3 → ℕ, (∀ i, 0 < t i) →
       MvPolynomial.eval (fun i => (t i : ℚ)) P = 0) : P = 0 := by
@@ -2728,7 +2214,6 @@ private theorem eq_zero_of_eval_pos_nat (P : MvPolynomial (Fin 3) ℚ)
     have hcast : (fun i => (((t i + 1 : ℕ) : ℚ))) = x := funext ht
     rw [← hcast]
     exact hp (fun i => t i + 1) (fun _ => Nat.succ_pos _)
-
 theorem degree_le_of_positive_rays (P : MvPolynomial (Fin 3) ℚ) (d : ℕ)
     (h : ∀ t : Fin 3 → ℕ, (∀ i, 0 < t i) → (rayPolynomial P t 0).natDegree ≤ d) :
     P.totalDegree ≤ d := by
@@ -2748,14 +2233,10 @@ theorem degree_le_of_positive_rays (P : MvPolynomial (Fin 3) ℚ) (d : ℕ)
     have hz := congrArg (fun Q : MvPolynomial (Fin 3) ℚ => Q.coeff e) hzero
     exact (mem_support_iff.mp he) (by simpa [coeff_homogeneousComponent, heq] using hz)
   omega
-
-/-- The exponent with the listed coordinates, in order. -/
 def exponent (i j k : ℕ) : Fin 3 →₀ ℕ :=
   Finsupp.equivFunOnFinite.symm ![i, j, k]
-
 private theorem exponent_degree (i j k : ℕ) : (exponent i j k).degree = i + j + k := by
   simp [exponent, Finsupp.degree_eq_sum, Fin.sum_univ_three]
-
 private theorem exponent_eq_iff {i j k u v w : ℕ} :
     exponent i j k = exponent u v w ↔ i = u ∧ j = v ∧ k = w := by
   constructor
@@ -2764,7 +2245,6 @@ private theorem exponent_eq_iff {i j k u v w : ℕ} :
       congrArg (fun e : Fin 3 →₀ ℕ => e 1) h, congrArg (fun e : Fin 3 →₀ ℕ => e 2) h⟩
   · rintro ⟨rfl, rfl, rfl⟩
     rfl
-
 private theorem exponent_cases {e : Fin 3 →₀ ℕ} (he : e.degree = 2) :
     e = exponent 2 0 0 ∨ e = exponent 0 2 0 ∨ e = exponent 0 0 2 ∨
       e = exponent 1 1 0 ∨ e = exponent 1 0 1 ∨ e = exponent 0 1 1 := by
@@ -2787,7 +2267,6 @@ private theorem exponent_cases {e : Fin 3 →₀ ℕ} (he : e.degree = 2) :
   · exact Or.inr (Or.inr (Or.inr (Or.inl (heq hc))))
   · exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inl (heq hc)))))
   · exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (heq hc)))))
-
 theorem eval_homogeneous_two (P : MvPolynomial (Fin 3) ℚ) (x : Fin 3 → ℚ) :
     MvPolynomial.eval x (homogeneousComponent 2 P) =
       P.coeff (exponent 2 0 0) * (x 0)^2 + P.coeff (exponent 0 2 0) * (x 1)^2 +
@@ -2816,40 +2295,28 @@ theorem eval_homogeneous_two (P : MvPolynomial (Fin 3) ℚ) (x : Fin 3 → ℚ) 
     rw [MvPolynomial.eval_monomial, Finsupp.prod_fintype _ _ (fun _ => pow_zero _)]
     simp [Fin.prod_univ_three, exponent, mul_assoc]
   simp [hform, heval, mul_assoc]
-
 end
-
 end K1_13_6_1_4_2_2
-end PackSource_K1_13_6_1_4_2_2Aux2
-
-section PackSource_K1_13_6_1_4_2_2Aux1
-set_option autoImplicit true
+end
+section
 namespace K1_13_6_1_4_2_2
-
 noncomputable section
-
 open K1_13 K1_13_6 K1_13_6_1_4 K1_13_6_1_4_2 K1_13_7_1 MvPolynomial
-
-/-- Componentwise cap comparison. -/
 def CapsLE (p q : Shape) : Prop :=
   p.b ≤ q.b ∧ p.j ≤ q.j ∧ p.t ≤ q.t
-
 private theorem lattice_mono {p q : Shape} (hpq : CapsLE p q) :
     latticeIndices p ⊆ latticeIndices q := by
   intro e he
   obtain ⟨hb, hj, ht⟩ := hpq
   exact ⟨he.1.trans (Nat.mul_le_mul_left 6 hb),
     he.2.1.trans (Nat.mul_le_mul_left 6 hj), he.2.2.trans (Nat.mul_le_mul_left 6 ht)⟩
-
 theorem boxHilbert_mono (surface : Ideal GeoJets) {p q : Shape} (hpq : CapsLE p q) :
     boxHilbert surface p ≤ boxHilbert surface q := by
   let := restrictSupport_finite (R := GeoField) (Set.toFinite (latticeIndices q))
   exact Submodule.finrank_mono (Submodule.map_mono (restrictSupport_mono GeoField (lattice_mono hpq)))
-
 theorem combined_chamber {a b h : Shape} (ha : Chamber a) (hb : Chamber b) (hh : Chamber h)
     (t : Fin 3 → ℕ) : Chamber (combinedShape a b h t) :=
   chamber_plus (chamber_plus (chamber_scale ha _) (chamber_scale hb _)) (chamber_scale hh _)
-
 theorem combined_full {a b h : Shape} (ha : FullChamber a) (hb : FullChamber b) (hh : FullChamber h)
     {t : Fin 3 → ℕ} (ht : 0 < t 0 + t 1 + t 2) : FullChamber (combinedShape a b h t) := by
   refine ⟨combined_chamber ha.1 hb.1 hh.1 t, ?_⟩
@@ -2862,7 +2329,6 @@ theorem combined_full {a b h : Shape} (ha : FullChamber a) (hb : FullChamber b) 
     omega
   have := Nat.mul_pos (show 0 < t 2 by omega) hh.2
   omega
-
 theorem combined_pad (a b h : Shape) (t : Fin 3 → ℕ) (n pad : ℕ) :
     combinedShape a b h (fun l => n * t l + pad) =
       ((combinedShape a b h t).scale n).plus ((combinedShape a b h (fun _ => 1)).scale pad) := by
@@ -2871,7 +2337,6 @@ theorem combined_pad (a b h : Shape) (t : Fin 3 → ℕ) (n pad : ℕ) :
   cases h
   simp only [combinedShape, Shape.scale, Shape.plus, Nat.one_mul]
   congr 1 <;> ring
-
 theorem boxHilbert_pad (surface : Ideal GeoJets) {p q : Shape}
     (hp : FullChamber p) (hq : Chamber q) (n pad : ℕ) :
     boxHilbert surface (p.scale n) ≤ boxHilbert surface ((p.scale n).plus (q.scale pad)) ∧
@@ -2890,10 +2355,8 @@ theorem boxHilbert_pad (surface : Ideal GeoJets) {p q : Shape}
     exact ⟨Nat.add_le_add_left (Nat.le_mul_of_pos_right _ hb) _,
       Nat.add_le_add_left ((Nat.mul_le_mul_left _ hq.1).trans (Nat.le_mul_of_pos_right _ hj)) _,
       Nat.add_le_add_left ((Nat.mul_le_mul_left _ hqt).trans (Nat.le_mul_of_pos_right _ ht)) _⟩
-
 def boxIdeal (surface : Ideal GeoJets) (p : Shape) : Ideal (MvPolynomial (latticeIndices p) GeoField) :=
   surface.comap (monomialMap GeoField (latticeIndices p)).toRingHom
-
 theorem boxHilbert_scale (surface : Ideal GeoJets) {p : Shape} (hp : Chamber p) (n : ℕ) :
     boxHilbert surface (p.scale n) = affineHilbertFunction (boxIdeal surface p) n := by
   let φ := monomialMap GeoField (latticeIndices p)
@@ -2908,7 +2371,6 @@ theorem boxHilbert_scale (surface : Ideal GeoJets) {p : Shape} (hp : Chamber p) 
   unfold boxHilbert
   rw [← monomialMap_filtration hp, ← Submodule.map_comp, ← hcomp, Submodule.map_comp]
   exact (Submodule.equivMapOfInjective _ hg (quotientDegreeLE I n)).finrank_eq.symm
-
 theorem boxHilbert_degree (surface : Ideal GeoJets) {p : Shape}
     (hdim : ringKrullDim (GeoJets ⧸ surface) = 2) (hp : FullChamber p) :
     (affineHilbertPolynomial (boxIdeal surface p)).natDegree ≤ 2 := by
@@ -2916,42 +2378,28 @@ theorem boxHilbert_degree (surface : Ideal GeoJets) {p : Shape}
   have hφ : Function.Surjective φ := monomialMap_surjective (latticeIndices_single hp)
   exact (natDegree_affineHilbertPolynomial_comap_of_surjective φ hφ surface).trans_le
     (K1_13_6_2_4_2.hilbert_degree_le (d := 2) hdim.le)
-
 end
-
 end K1_13_6_1_4_2_2
-end PackSource_K1_13_6_1_4_2_2Aux1
-
-section PackSource_K1_13_6_1_4_2_2Split
-set_option autoImplicit true
+end
+section
 namespace K1_13_6_1_4_2_2
-
 noncomputable section
-
 open Filter K1_13 K1_13_6 K1_13_6_1_4 K1_13_6_1_4_2 K1_13_7_1 MvPolynomial
-
-/-- The exact multigraded dimensions count standard monomials of the common
-monomial presentation, with one finite collection of forbidden exponents. -/
 def c1 : Prop :=
   ∀ (surface : Ideal GeoJets) (a b h : Shape),
     Chamber a → Chamber b → Chamber h →
     ∃ forbidden : Finset (SectionVariable a b h →₀ ℕ),
       ∀ t : Fin 3 → ℕ,
         multiHilbert surface a b h t = standardCount (fun v => v.1) forbidden t
-
-/-- An exact-degree count outside finitely many monomial cones is eventually
-a polynomial on a coordinatewise tail of the multidegrees. -/
 def c2 : Prop :=
   ∀ {σ : Type} [Finite σ] (block : σ → Fin 3), Function.Surjective block →
     ∀ forbidden : Finset (σ →₀ ℕ),
       ∃ (P : MvPolynomial (Fin 3) ℚ) (N : ℕ),
         ∀ t : Fin 3 → ℕ, (∀ l, N ≤ t l) →
           MvPolynomial.eval (fun l => (t l : ℚ)) P = (standardCount block forbidden t : ℚ)
-
 private theorem combined_scale (a b h : Shape) (t : Fin 3 → ℕ) (n : ℕ) :
     combinedShape a b h (fun l => n * t l) = (combinedShape a b h t).scale n := by
   simpa [Shape.scale, Shape.plus] using combined_pad a b h t n 0
-
 private theorem polynomial_degree (surface : Ideal GeoJets) {a b h : Shape}
     (hdim : ringKrullDim (GeoJets ⧸ surface) = 2)
     (ha : FullChamber a) (hb : FullChamber b) (hh : FullChamber h)
@@ -2974,7 +2422,6 @@ private theorem polynomial_degree (surface : Ideal GeoJets) {a b h : Shape}
     rw [boxHilbert_scale surface hp.1]
   rw [hpol]
   exact boxHilbert_degree surface hdim hp
-
 private theorem diagonal_coeff (surface : Ideal GeoJets) {a b h : Shape}
     (hdim : ringKrullDim (GeoJets ⧸ surface) = 2)
     (ha : FullChamber a) (hb : FullChamber b) (hh : FullChamber h)
@@ -3019,7 +2466,6 @@ private theorem diagonal_coeff (surface : Ideal GeoJets) {a b h : Shape}
     (hbounds.mono fun _ hn => hn.2)
   rw [Polynomial.coeff_taylor_of_natDegree_le _ hSdeg] at hhi
   exact le_antisymm hlo hhi
-
 theorem of_children (h1 : c1) (h2 : c2) : K1_13_6_1_4_2.c2 := by
   intro surface a b h _ hdim ha hb hh
   obtain ⟨forbidden, hcount⟩ := h1 surface a b h ha.1 hb.1 hh.1
@@ -3041,26 +2487,17 @@ theorem of_children (h1 : c1) (h2 : c2) : K1_13_6_1_4_2.c2 := by
   rw [diagonal_coeff surface hdim ha hb hh P N hdeg hval t hijk, coeff_ray P t N hdeg,
     eval_homogeneous_two]
   rfl
-
 end
-
 end K1_13_6_1_4_2_2
-end PackSource_K1_13_6_1_4_2_2Split
-
-section PackSource_K1_13_6_1_4_2_2_1Proof
-set_option autoImplicit true
+end
+section
 set_option autoImplicit false
-
 namespace K1_13_6_1_4_2_2_1
-
 noncomputable section
-
 open K1_13 K1_13_6 K1_13_6_1_4_2 K1_13_6_1_4_2_2 K1_13_6_2_3_2 MvPolynomial
 open K1_13_7_1 (Chamber)
 open scoped Pointwise
-
 attribute [local instance] MvPolynomial.weightedGradedAlgebra
-
 private theorem weight_eq_blockDegree {σ : Type} (block : σ → Fin 3) (e : σ →₀ ℕ) :
     Finsupp.weight (step ∘ block) e = blockDegree block e := by
   funext i
@@ -3069,19 +2506,15 @@ private theorem weight_eq_blockDegree {σ : Type} (block : σ → Fin 3) (e : σ
   apply Finset.sum_congr rfl
   intro v _
   split <;> simp_all [eq_comm]
-
 private theorem combined_add (a b h : Shape) (s t : Fin 3 → ℕ) :
     combinedShape a b h (s + t) = (combinedShape a b h s).plus (combinedShape a b h t) := by
   simp only [combinedShape, Shape.scale, Shape.plus, Pi.add_apply]
   congr 1 <;> ring
-
 private theorem combined_slot (a b h : Shape) (i : Fin 3) (n : ℕ) :
     combinedShape a b h (n • step i) = (![a, b, h] i).scale n := by
   fin_cases i <;> simp [combinedShape, Shape.scale, Shape.plus, step, Pi.smul_apply]
-
 private def exponentsMap (a b h : Shape) : (SectionVariable a b h →₀ ℕ) →+ (Fin 4 →₀ ℕ) :=
   Finsupp.weight fun v => v.2.val
-
 private theorem exponent_mem {a b h : Shape} (ha : Chamber a) (hb : Chamber b)
     (hh : Chamber h) (e : SectionVariable a b h →₀ ℕ) :
     exponentsMap a b h e ∈
@@ -3103,7 +2536,6 @@ private theorem exponent_mem {a b h : Shape} (ha : Chamber a) (hb : Chamber b)
       | succ n ih =>
           rw [succ_nsmul, succ_nsmul]
           exact Set.add_mem_add ih v.2.property
-
 private theorem exponent_lift_slot {a b h : Shape} (i : Fin 3) (n : ℕ)
     {m : Fin 4 →₀ ℕ} (hm : m ∈ n • latticeIndices (![a, b, h] i)) :
     ∃ e : SectionVariable a b h →₀ ℕ,
@@ -3122,7 +2554,6 @@ private theorem exponent_lift_slot {a b h : Shape} (i : Fin 3) (n : ℕ)
       · rw [map_add, Finsupp.weight_single, one_smul, he, succ_nsmul]
         rfl
       · rw [map_add, hexp, exponentsMap, Finsupp.weight_single, one_smul]
-
 private theorem exponent_lift {a b h : Shape} (ha : Chamber a) (hb : Chamber b)
     (hh : Chamber h) (t : Fin 3 → ℕ) {m : Fin 4 →₀ ℕ}
     (hm : m ∈ latticeIndices (combinedShape a b h t)) :
@@ -3139,16 +2570,13 @@ private theorem exponent_lift {a b h : Shape} (ha : Chamber a) (hb : Chamber b)
   rw [map_add, map_add, h₀, h₁, h₂]
   funext i
   fin_cases i <;> simp [step]
-
 private def sectionMap (a b h : Shape) :
     MvPolynomial (SectionVariable a b h) GeoField →ₐ[GeoField] GeoJets :=
   aeval fun v => monomial v.2.val 1
-
 private theorem sectionMap_monomial (a b h : Shape) (e : SectionVariable a b h →₀ ℕ) :
     sectionMap a b h (monomial e 1) = monomial (exponentsMap a b h e) 1 := by
   rw [sectionMap, aeval_monomial, Finsupp.prod, exponentsMap, Finsupp.weight_apply, Finsupp.sum]
   simp only [monomial_pow, one_pow, ← monomial_sum_one, algebraMap_eq, C_mul_monomial, mul_one]
-
 private theorem section_image {a b h : Shape} (ha : Chamber a) (hb : Chamber b)
     (hh : Chamber h) (t : Fin 3 → ℕ) :
     (weightedHomogeneousSubmodule GeoField (step ∘ fun v : SectionVariable a b h => v.1) t).map
@@ -3169,15 +2597,11 @@ private theorem section_image {a b h : Shape} (ha : Chamber a) (hb : Chamber b)
     rintro _ ⟨m, hm, rfl⟩
     obtain ⟨e, he, rfl⟩ := exponent_lift ha hb hh t hm
     exact ⟨monomial e 1, isWeightedHomogeneous_monomial _ _ _ he, sectionMap_monomial a b h e⟩
-
 private def degreeLexOrder (σ : Type) [Finite σ] : MonomialOrder σ := by
   let _ := Fintype.ofFinite σ
   let _ : LinearOrder σ := LinearOrder.lift' (Fintype.equivFin σ) (Fintype.equivFin σ).injective
   have : WellFoundedGT σ := Finite.to_wellFoundedGT
   exact MonomialOrder.degLex
-
-/-- The homogeneous core imposes exactly the surface relations in each
-degree. This keeps different degrees separate even if their affine images coincide. -/
 theorem proof : K1_13_6_1_4_2_2.c1 := by
   classical
   intro surface a b h ha hb hh
@@ -3226,48 +2650,33 @@ theorem proof : K1_13_6_1_4_2_2.c1 := by
   change (Module.finrank GeoField W : ℚ) = _ at hcount
   rw [hrank] at hcount
   exact_mod_cast hcount
-
 end
-
 end K1_13_6_1_4_2_2_1
-end PackSource_K1_13_6_1_4_2_2_1Proof
-
-section PackSource_K1_13_6_1_4_2_2_2Proof
-set_option autoImplicit true
+end
+section
 namespace K1_13_6_1_4_2_2_2
-
 noncomputable section
-
 open Finset K1_13_6_1_4_2_2
 open scoped BigOperators
-
 private abbrev Block {σ : Type} (block : σ → Fin 3) (l : Fin 3) :=
   {v : σ // block v = l}
-
 private abbrev Exact {σ : Type} (block : σ → Fin 3) (t : Fin 3 → ℕ) :=
   {e : σ →₀ ℕ // blockDegree block e = t}
-
 section Count
-
 variable {σ : Type} [Fintype σ] (block : σ → Fin 3)
   [∀ l, Fintype (Block block l)]
-
 private theorem degree_eq_sum (e : σ →₀ ℕ) (l : Fin 3) :
     blockDegree block e l = ∑ v : Block block l, e v := by
   change e.sum (fun v n => if block v = l then n else 0) = _
   rw [Finsupp.sum_fintype _ _ (fun v => by simp), ← sum_filter]
   exact sum_subtype _ (by simp) _
-
 private theorem degree_add (e f : σ →₀ ℕ) (l : Fin 3) :
     blockDegree block (e + f) l = blockDegree block e l + blockDegree block f l := by
   simp only [degree_eq_sum, Finsupp.add_apply, sum_add_distrib]
-
 private theorem degree_mono {e f : σ →₀ ℕ} (hef : e ≤ f) (l : Fin 3) :
     blockDegree block e l ≤ blockDegree block f l := by
   simp only [degree_eq_sum]
   exact sum_le_sum fun v _ => Finsupp.le_def.mp hef v
-
-/-- An exact multidegree specifies an independent antidiagonal in each block. -/
 private def exactEquiv [DecidableEq σ] (t : Fin 3 → ℕ) :
     Exact block t ≃ ∀ l : Fin 3, (univ : Finset (Block block l)).finsuppAntidiag (t l) where
   toFun e l := ⟨Finsupp.equivFunOnFinite.symm (fun v => e.1 (v : σ)), by
@@ -3294,7 +2703,6 @@ private def exactEquiv [DecidableEq σ] (t : Fin 3 → ℕ) :
     obtain ⟨v, hv⟩ := v
     subst l
     rfl
-
 private theorem exact_card [DecidableEq σ] (hblock : Function.Surjective block) (t : Fin 3 → ℕ) :
     Nat.card (Exact block t) =
       ∏ l : Fin 3, (t l + (Fintype.card (Block block l) - 1)).choose
@@ -3308,8 +2716,6 @@ private theorem exact_card [DecidableEq σ] (hblock : Function.Surjective block)
   have hadd : Fintype.card (Block block l) + t l - 1 =
       t l + (Fintype.card (Block block l) - 1) := by omega
   exact (Nat.choose_symm_of_eq_add hadd).trans (by rw [hadd])
-
-/-- Removing the cone vertex subtracts its degree in each block. -/
 private def coneEquiv (s : σ →₀ ℕ) (t : Fin 3 → ℕ)
     (hs : ∀ l, blockDegree block s l ≤ t l) :
     {e : σ →₀ ℕ // blockDegree block e = t ∧ s ≤ e} ≃
@@ -3326,10 +2732,7 @@ private def coneEquiv (s : σ →₀ ℕ) (t : Fin 3 → ℕ)
     exact Nat.sub_add_cancel (hs l), le_add_self⟩⟩
   left_inv e := Subtype.ext (tsub_add_cancel_of_le e.2.2)
   right_inv u := Subtype.ext (add_tsub_cancel_right u.1 s)
-
 end Count
-
-/-- A filter on the finite exact-degree type computes the corresponding set cardinality. -/
 private theorem exact_filter_card {σ : Type} (block : σ → Fin 3) (t : Fin 3 → ℕ)
     [Fintype (Exact block t)] (p : (σ →₀ ℕ) → Prop) [DecidablePred p] :
     #(univ.filter fun e : Exact block t => p e.1) =
@@ -3343,7 +2746,6 @@ private theorem exact_filter_card {σ : Type} (block : σ → Fin 3) (t : Fin 3 
         invFun := fun e => ⟨⟨e.1, e.2.1⟩, mem_filter.mpr ⟨mem_univ _, e.2.2⟩⟩
         left_inv := fun e => Subtype.ext rfl
         right_inv := fun e => Subtype.ext rfl }
-
 private theorem eval_blockPoly (t : Fin 3 → ℕ) (l : Fin 3) (d k : ℕ)
     (hk : k ≤ t l) :
     MvPolynomial.eval (fun l => (t l : ℚ))
@@ -3355,8 +2757,6 @@ private theorem eval_blockPoly (t : Fin 3 → ℕ) (l : Fin 3) (d k : ℕ)
   change (Polynomial.preHilbertPoly ℚ d k).eval (t l : ℚ) = _
   rw [Polynomial.preHilbertPoly_eq_choose_add_sub ℚ d (hk.trans (Nat.le_add_right _ _)),
     Nat.sub_add_comm hk]
-
-/-- The signed sum over forbidden subsets gives a counting polynomial on the common tail. -/
 theorem proof : K1_13_6_1_4_2_2.c2 := by
   classical
   intro σ hσ block hblock forbidden
@@ -3401,21 +2801,13 @@ theorem proof : K1_13_6_1_4_2_2.c2 := by
     Nat.card_congr (coneEquiv block (U.sup id) t hshift), exact_card block hblock _]
   push_cast
   exact prod_congr rfl fun l _ => eval_blockPoly t l _ _ (hshift l)
-
 end
-
 end K1_13_6_1_4_2_2_2
-end PackSource_K1_13_6_1_4_2_2_2Proof
-
-section PackSource_K1_13_6_1_2Local
-set_option autoImplicit true
+end
+section
 namespace K1_13_6_1_2
-
 noncomputable section
-
 open K1_13 K1_13_6
-
-/-- A geometric minimal prime of a proper two-equation intersection has height two. -/
 theorem pair_height {f Q : GeoJets} {p : Ideal GeoJets}
     (hf : f ≠ 0) (hrel : IsRelPrime f Q) (hp : (Ideal.span {f, Q}).IsMinimalPrime p) :
     p.height = 2 := by
@@ -3439,9 +2831,6 @@ theorem pair_height {f Q : GeoJets} {p : Ideal GeoJets}
     exact hp.isPrime.ne_top (hz.trans (Ideal.span_singleton_eq_top.mpr (hrel hzf hzQ)))
   exact le_antisymm hupper ((ENat.add_one_le_iff (by simp : (1 : ℕ∞) ≠ ⊤)).mpr
     (lt_of_le_of_ne hone (Ne.symm hnot)))
-
-/-- In a local ring of dimension at least two, the quotient by an anchor
-and a cutter has length at least the maximal-ideal order of the cutter. -/
 private theorem length_ge_order {R : Type*} [CommRing R] [IsLocalRing R] [IsNoetherianRing R]
     {x y : R} {n : ℕ} (hx : x ∈ IsLocalRing.maximalIdeal R)
     (hh : 1 < (IsLocalRing.maximalIdeal R).height)
@@ -3483,8 +2872,6 @@ private theorem length_ge_order {R : Type*} [CommRing R] [IsLocalRing R] [IsNoet
   apply Ideal.span_le.mpr
   simp only [Set.insert_subset_iff, Set.singleton_subset_iff]
   exact ⟨Ideal.mem_sup_left (Ideal.mem_span_singleton_self x), Ideal.mem_sup_right hy⟩
-
-/-- The local colength is positive because the localized intersection lies in the maximal ideal. -/
 theorem cycleLength_pos {J p : Ideal GeoJets} (hp : p.IsPrime) (hle : J ≤ p) :
     0 < cycleLength J p hp := by
   let _ : p.IsPrime := hp
@@ -3497,8 +2884,6 @@ theorem cycleLength_pos {J p : Ideal GeoJets} (hp : p.IsPrime) (hle : J ≤ p) :
     exact Ideal.map_mono hle
   change 0 < Module.length L (L ⧸ A)
   exact Module.length_pos_iff.mpr (Ideal.Quotient.nontrivial_iff.mpr hA)
-
-/-- Compare ambient order of the cutter and local cycle length on a height-two prime. -/
 theorem cycleLength_ge_order {f Q : Row 4} {p : Ideal GeoJets} [p.IsPrime] {n : ℕ}
     (hheight : p.height = 2)
     (hfp : toGeneric f ∈ p) (hQ : VanishesTo p (toGeneric Q) n) :
@@ -3517,26 +2902,18 @@ theorem cycleLength_ge_order {f Q : Row 4} {p : Ideal GeoJets} [p.IsPrime] {n : 
   change (n : ℕ∞) ≤ Module.length L (L ⧸ (intersectionIdeal f Q).map φ)
   rw [hmap]
   exact length_ge_order hf (hheight' ▸ (by decide : (1 : ℕ∞) < 2)) hQ
-
 end
 end K1_13_6_1_2
-end PackSource_K1_13_6_1_2Local
-
-section PackSource_K1_13_6_1_4_3_2Aux2
-set_option autoImplicit true
+end
+section
 set_option maxHeartbeats 800000
 set_option synthInstance.maxHeartbeats 160000
-
 namespace K1_13_6_1_4_3_2
-
 noncomputable section
-
 open K1_13 K1_13_6 K1_13_6_1 K1_13_6_1_4 K1_13_6_1_4_3
 open MvPolynomial
 open scoped BigOperators nonZeroDivisors
-
 attribute [local instance] MvPolynomial.algebraMvPolynomial
-
 private theorem quotient_isLocalization {A B : Type*} [CommRing A] [CommRing B]
     [Algebra A B] (M : Submonoid A) [IsLocalization M B] (I : Ideal A)
     (J' : Ideal B) (hJ : I.map (algebraMap A B) = J') :
@@ -3575,7 +2952,6 @@ private theorem quotient_isLocalization {A B : Type*} [CommRing A] [CommRing B]
     refine ⟨⟨Ideal.Quotient.mk I m, hm ⟨m, hmM⟩⟩, ?_⟩
     rw [← map_mul, ← map_mul, Ideal.Quotient.mk_eq_mk_iff_sub_mem, ← mul_sub]
     exact hmem
-
 private def eliminate {R σ : Type*} [CommRing R] [DecidableEq σ]
     (p q : σ) (hpq : p ≠ q) (u v : MvPolynomial {i // i ≠ p ∧ i ≠ q} R) :
     let ι := rename (R := R) (Subtype.val : {i // i ≠ p ∧ i ≠ q} → σ)
@@ -3625,22 +3001,15 @@ private def eliminate {R σ : Type*} [CommRing R] [DecidableEq σ]
         have hz : j (MvPolynomial.X q + ι v) = 0 :=
           Ideal.Quotient.eq_zero_iff_mem.mpr (Ideal.subset_span (by simp))
         exact (eq_neg_of_add_eq_zero_left (by simpa only [map_add] using hz)).symm
-
 abbrev sectionIdeal (a h : Shape) : Ideal (SliceJets a h) :=
   Ideal.span {firstSection a h, secondSection a h}
-
 def UniversalSlice (a h : Shape) : Type := SliceJets a h ⧸ sectionIdeal a h
-
 instance (a h : Shape) : CommRing (UniversalSlice a h) :=
   inferInstanceAs (CommRing (SliceJets a h ⧸ sectionIdeal a h))
-
 instance (a h : Shape) : Algebra (PairSectionField a h) (UniversalSlice a h) :=
   inferInstanceAs (Algebra (PairSectionField a h) (SliceJets a h ⧸ sectionIdeal a h))
-
 instance (a h : Shape) : Algebra GeoJets (UniversalSlice a h) :=
   inferInstanceAs (Algebra GeoJets (SliceJets a h ⧸ sectionIdeal a h))
-
-/-- Quotienting the universal slice by an extended ideal gives the given section algebra. -/
 def sliceEquiv (J : Ideal GeoJets) (a h : Shape) :
     (UniversalSlice a h ⧸ J.map (algebraMap GeoJets (UniversalSlice a h))) ≃ₐ[PairSectionField a h]
       SliceAlgebra J a h := by
@@ -3654,19 +3023,14 @@ def sliceEquiv (J : Ideal GeoJets) (a h : Shape) :
     DoubleQuot.quotQuotEquivQuotSupₐ F (sectionIdeal a h) L
   exact (Ideal.quotientEquivAlgOfEq F hmap).trans
     (e.trans (Ideal.quotientEquivAlgOfEq F (sup_comm _ _)))
-
 private def zeroIndex (b : Shape) : SectionIndex b := fun _ => 0
-
 private abbrev CoeffRing (a h : Shape) := MvPolynomial (PairSectionIndex a h) GeoField
 private abbrev IncidenceJets (a h : Shape) := MvPolynomial (Fin 4) (CoeffRing a h)
-
 private def integralSection {σ : Type*} (p : Shape) (ι : SectionIndex p → σ) :
     MvPolynomial (Fin 4) (MvPolynomial σ GeoField) :=
   ∑ m ∈ boxMonomials p, C (MvPolynomial.X (ι m)) * ∏ i : Fin 4, MvPolynomial.X i ^ (m i).val
-
 private abbrev incidenceIdeal (a h : Shape) : Ideal (IncidenceJets a h) :=
   Ideal.span {integralSection a Sum.inl, integralSection h Sum.inr}
-
 private theorem coeffElimination (a h : Shape) :
     Module.Flat GeoJets (IncidenceJets a h ⧸ incidenceIdeal a h) := by
   classical
@@ -3719,10 +3083,6 @@ private theorem coeffElimination (a h : Shape) :
     simp [incidenceIdeal, Ideal.map_span, Set.image_insert_eq, Set.image_singleton, hu, hv, p, q]
   exact Module.Flat.of_linearEquiv
     (((Ideal.quotientEquivAlg _ _ e hI).trans (eliminate p q hpq u v)).toLinearEquiv)
-
-/-- The generic equations make a flat extension of the original four-jet ring.
-The incidence ring is polynomial after elimination, and the field of
-section coefficients is obtained by inverting the nonzero coefficients. -/
 theorem universalSlice_flat (a h : Shape) : Module.Flat GeoJets (UniversalSlice a h) := by
   let A := IncidenceJets a h
   let B := SliceJets a h
@@ -3762,34 +3122,23 @@ theorem universalSlice_flat (a h : Shape) : Module.Flat GeoJets (UniversalSlice 
         MvPolynomial.map_map, MvPolynomial.algebraMap_eq]
     exact congrArg (Ideal.Quotient.mk (sectionIdeal a h)) he
   exact Module.Flat.trans GeoJets (A ⧸ I) (UniversalSlice a h)
-
 end
-
 end K1_13_6_1_4_3_2
-end PackSource_K1_13_6_1_4_3_2Aux2
-
-section PackSource_K1_13_6_1_4_2_1_2_1Proof
-set_option autoImplicit true
+end
+section
 set_option autoImplicit false
-
 namespace K1_13_6_1_4_2_1_2_1
-
 noncomputable section
-
 open K1_13 K1_13_7_1 K1_13_6_1_4_2 K1_13_6_1_4_2_1_2 MvPolynomial
 open scoped Pointwise
-
 variable {k : Type*} [Field k]
-
 private abbrev degreeShape (a h : Shape) (d : ℕ × ℕ) : Shape :=
   (a.scale d.1).plus (h.scale d.2)
-
 private theorem degreeShape_add (a h : Shape) (d e : ℕ × ℕ) :
     degreeShape a h (d + e) = (degreeShape a h d).plus (degreeShape a h e) := by
   cases a
   cases h
   simp [degreeShape, Shape.scale, Shape.plus, Nat.add_mul, add_assoc, add_left_comm]
-
 private theorem splitExponent {a h : Shape} (ha : Chamber a) (hh : Chamber h)
     (d e : ℕ × ℕ) {m : Fin 4 →₀ ℕ}
     (hm : m ∈ latticeIndices (degreeShape a h (d + e))) :
@@ -3799,7 +3148,6 @@ private theorem splitExponent {a h : Shape} (ha : Chamber a) (hh : Chamber h)
     (chamber_plus (chamber_scale ha d.1) (chamber_scale hh d.2))
     (chamber_plus (chamber_scale ha e.1) (chamber_scale hh e.2))] at hm
   exact hm
-
 private theorem exponent_eq_zero {a h : Shape} {m : Fin 4 →₀ ℕ}
     (hm : m ∈ latticeIndices (degreeShape a h 0)) : m = 0 := by
   have hzero : degreeShape a h 0 = ⟨0, 0, 0⟩ := by
@@ -3809,19 +3157,16 @@ private theorem exponent_eq_zero {a h : Shape} {m : Fin 4 →₀ ℕ}
   rw [exponents_zero, Set.mem_singleton_iff] at he
   ext i
   exact congrFun he i
-
 private abbrev liftedMonomial (I : Ideal (MvPolynomial (Fin 4) k)) (a h : Shape)
     (d : ℕ × ℕ) (m : Fin 4 →₀ ℕ) (hm : m ∈ latticeIndices (degreeShape a h d)) :
     rees I a h :=
   homogeneous d (Ideal.Quotient.mk I (monomial m 1)) (monomial_mem_box hm 1)
-
 private theorem liftedMonomial_zero (I : Ideal (MvPolynomial (Fin 4) k)) (a h : Shape)
     (hm : (0 : Fin 4 →₀ ℕ) ∈ latticeIndices (degreeShape a h 0)) :
     liftedMonomial I a h 0 0 hm = 1 := by
   apply (show Function.Injective (rees I a h).val from Subtype.val_injective)
   rw [show (rees I a h).val 1 = AddMonoidAlgebra.single 0 1 from rfl]
   simp only [liftedMonomial, val_homogeneous, monomial_zero', map_one]
-
 private theorem liftedMonomial_add (I : Ideal (MvPolynomial (Fin 4) k)) (a h : Shape)
     (d e : ℕ × ℕ) {u v : Fin 4 →₀ ℕ}
     (hu : u ∈ latticeIndices (degreeShape a h d))
@@ -3832,8 +3177,6 @@ private theorem liftedMonomial_add (I : Ideal (MvPolynomial (Fin 4) k)) (a h : S
   apply (show Function.Injective (rees I a h).val from Subtype.val_injective)
   simp only [map_mul, liftedMonomial, val_homogeneous, AddMonoidAlgebra.single_mul_single]
   rw [← map_mul, monomial_mul_monomial, mul_one]
-
-/-- To prove submodule membership for a homogeneous piece, it suffices to check its monomials. -/
 private theorem homogeneous_mem (I : Ideal (MvPolynomial (Fin 4) k)) (a h : Shape)
     (d : ℕ × ℕ) (S : Submodule k (rees I a h))
     (hmon : ∀ m hm, liftedMonomial I a h d m hm ∈ S)
@@ -3852,19 +3195,15 @@ private theorem homogeneous_mem (I : Ideal (MvPolynomial (Fin 4) k)) (a h : Shap
   have heq' : r = homogeneous d (Ideal.Quotient.mk I p) ⟨p, hp, rfl⟩ :=
     Subtype.val_injective heq
   exact heq' ▸ hr
-
 private def coordinateEval (I : Ideal (MvPolynomial (Fin 4) k)) (a h : Shape) :
     MvPolynomial (latticeIndices a ⊕ latticeIndices h) k →ₐ[k] rees I a h :=
   aeval (Sum.elim (leftGen I a h) (rightGen I a h))
-
 private theorem leftGen_mem_range (I : Ideal (MvPolynomial (Fin 4) k)) (a h : Shape)
     (m : latticeIndices a) : leftGen I a h m ∈ (coordinateEval I a h).range :=
   ⟨MvPolynomial.X (.inl m), by simp [coordinateEval]⟩
-
 private theorem rightGen_mem_range (I : Ideal (MvPolynomial (Fin 4) k)) (a h : Shape)
     (m : latticeIndices h) : rightGen I a h m ∈ (coordinateEval I a h).range :=
   ⟨MvPolynomial.X (.inr m), by simp [coordinateEval]⟩
-
 private theorem liftedMonomial_mem_range (I : Ideal (MvPolynomial (Fin 4) k))
     (a h : Shape) (ha : Chamber a) (hh : Chamber h) (i j : ℕ) (m : Fin 4 →₀ ℕ)
     (hm : m ∈ latticeIndices (degreeShape a h (i, j))) :
@@ -3885,7 +3224,6 @@ private theorem liftedMonomial_mem_range (I : Ideal (MvPolynomial (Fin 4) k))
     have hv' : v ∈ latticeIndices a := by simpa only [degreeShape, left_axis] using hv
     exact (liftedMonomial_add I a h (i, j) (1, 0) hu hv hm).symm ▸
       (coordinateEval I a h).range.mul_mem (ih u hu) (leftGen_mem_range I a h ⟨v, hv'⟩)
-
 private theorem rees_noetherian (I : Ideal (MvPolynomial (Fin 4) k))
     (a h : Shape) (ha : Chamber a) (hh : Chamber h) : IsNoetherianRing (rees I a h) := by
   classical
@@ -3901,7 +3239,6 @@ private theorem rees_noetherian (I : Ideal (MvPolynomial (Fin 4) k))
   intro d _
   exact homogeneous_mem I a h d (coordinateEval I a h).range.toSubmodule
     (liftedMonomial_mem_range I a h ha hh d.1 d.2) _ _
-
 private theorem liftedMonomial_mem_irrelevant (I : Ideal (MvPolynomial (Fin 4) k))
     (a h : Shape) (ha : Chamber a) (hh : Chamber h) (m : Fin 4 →₀ ℕ)
     (hm : m ∈ latticeIndices (degreeShape a h (1, 1))) :
@@ -3911,7 +3248,6 @@ private theorem liftedMonomial_mem_irrelevant (I : Ideal (MvPolynomial (Fin 4) k
   have hv' : v ∈ latticeIndices h := by simpa only [degreeShape, right_axis] using hv
   exact (liftedMonomial_add I a h (1, 0) (0, 1) hu hv hm).symm ▸
     Ideal.subset_span (s := Set.range (pairGen I a h)) ⟨(⟨u, hu'⟩, ⟨v, hv'⟩), rfl⟩
-
 private theorem liftedMonomial_mem_pow (I : Ideal (MvPolynomial (Fin 4) k))
     (a h : Shape) (ha : Chamber a) (hh : Chamber h) (i j : ℕ) (m : Fin 4 →₀ ℕ)
     (hm : m ∈ latticeIndices (degreeShape a h (i, j))) (n : ℕ) (hi : n ≤ i) (hj : n ≤ j) :
@@ -3930,53 +3266,36 @@ private theorem liftedMonomial_mem_pow (I : Ideal (MvPolynomial (Fin 4) k))
         exact (liftedMonomial_add I a h (i, j) (1, 1) hu hv hm).symm ▸
           Ideal.mul_mem_mul (ih i j u hu (by omega) (by omega))
             (liftedMonomial_mem_irrelevant I a h ha hh v hv)
-
-/-- The Rees algebra is Noetherian, and each bidegree lies in the indicated chart ideal powers. -/
 theorem proof : K1_13_6_1_4_2_1_2.c1 := by
   intro k _ I a h ha hh
   refine ⟨rees_noetherian I a h ha hh, ?_⟩
   intro i j x hx n hi hj
   exact homogeneous_mem I a h (i, j) ((irrelevant I a h ^ n).restrictScalars k)
     (fun m hm => liftedMonomial_mem_pow I a h ha hh i j m hm n hi hj) x hx
-
 end
 end K1_13_6_1_4_2_1_2_1
-end PackSource_K1_13_6_1_4_2_1_2_1Proof
-
-section PackSource_K1_13_6_1_4_3_3_2Aux1
-set_option autoImplicit true
+end
+section
 set_option autoImplicit false
-
 namespace K1_13_6_1_4_3_3_2
-
 noncomputable section
-
 open K1_13 K1_13_6_1_4_3_3 MvPolynomial
 open scoped TensorProduct
-
 section Coefficients
-
 variable {k : Type} [Field k] (P : Fin 4 → Shape) (f : Fin 4 → Jets k)
-
 private abbrev CoeffIndex := Σ i : Fin 4, lattice (P i)
-
 private def center (a : CoeffIndex P) : k :=
   (f a.1).coeff a.2.1
-
 private def coeffLine (a : CoeffIndex P) : Polynomial (CoefficientField k P) :=
   Polynomial.C (algebraMap k (CoefficientField k P) (center P f a)) +
     Polynomial.X * Polynomial.C
       (algebraMap (CoefficientRing k P) (CoefficientField k P) (MvPolynomial.X a))
-
-/-- Follow the line from the actual coefficients in independent coefficient directions. -/
 def deformation (i : Fin 4) : K1_13_5_4_2_4_1.Total (CoefficientField k P) := by
   classical
   letI := (lattice_finite (P i)).fintype
   exact ∑ e : lattice (P i), monomial e.val (coeffLine P f ⟨i, e⟩)
-
 private def coeffLineHom : CoefficientRing k P →+* Polynomial (CoefficientField k P) :=
   eval₂Hom (Polynomial.C.comp (algebraMap k (CoefficientField k P))) (coeffLine P f)
-
 private theorem coeffLineHom_injective : Function.Injective (coeffLineHom P f) := by
   let shift : CoefficientRing k P →ₐ[k] CoefficientRing k P :=
     aeval fun a => C (center P f a) + MvPolynomial.X a
@@ -4009,14 +3328,12 @@ private theorem coeffLineHom_injective : Function.Injective (coeffLineHom P f) :
   apply IsFractionRing.injective (CoefficientRing k P) (CoefficientField k P)
   exact (RingHom.congr_fun heval p).symm.trans
     ((congrArg (Polynomial.evalRingHom 1) hpq).trans (RingHom.congr_fun heval q))
-
 open K1_13_5_4_2_4_1 in
 private def genericCoeffMap : CoefficientField k P →+* ParameterField (CoefficientField k P) :=
   IsFractionRing.lift (g := (algebraMap (Polynomial (CoefficientField k P))
       (ParameterField (CoefficientField k P))).comp (coeffLineHom P f))
     ((IsFractionRing.injective (Polynomial (CoefficientField k P)) (ParameterField (CoefficientField k P))).comp
       (coeffLineHom_injective P f))
-
 open K1_13_5_4_2_4_1 in
 private theorem genericCoeffMap_coeff (a : CoeffIndex P) :
     genericCoeffMap P f (algebraMap (CoefficientRing k P) (CoefficientField k P) (MvPolynomial.X a)) =
@@ -4024,7 +3341,6 @@ private theorem genericCoeffMap_coeff (a : CoeffIndex P) :
         (coeffLine P f a) := by
   rw [genericCoeffMap, IsFractionRing.lift_algebraMap]
   simp [coeffLineHom]
-
 open K1_13_5_4_2_4_1 in
 theorem deformation_reduce
     (hs : ∀ i, (↑(f i).support : Set Exponent) ⊆ lattice (P i)) (i : Fin 4) :
@@ -4050,7 +3366,6 @@ theorem deformation_reduce
     intro a _
     have hne : a.val ≠ e := fun h => he (h ▸ a.prop)
     simp [hne]
-
 open K1_13_5_4_2_4_1 in
 theorem finite_rank_map_ideal {L : Type} [Field L] [Algebra k L]
     (I : Ideal (Jets k)) [Module.Finite k (Jets k ⧸ I)] :
@@ -4059,7 +3374,6 @@ theorem finite_rank_map_ideal {L : Type} [Field L] [Algebra k L]
       Module.finrank k (Jets k ⧸ I) := by
   let e := (baseQuotient (L := L) I).toLinearEquiv
   exact ⟨Module.Finite.equiv e, e.finrank_eq.symm.trans Module.finrank_baseChange⟩
-
 open K1_13_5_4_2_4_1 in
 theorem deformation_generic (hf : Module.Finite (CoefficientField k P) (GenericAlgebra k P)) :
     Module.Finite (ParameterField (CoefficientField k P)) (GenericFiber (deformation P f)) ∧
@@ -4082,30 +3396,19 @@ theorem deformation_generic (hf : Module.Finite (CoefficientField k P) (GenericA
     (CutIdeal (genericEquation k P))
   rw [hid] at hbase
   exact hbase
-
 end Coefficients
-
 end
-
 end K1_13_6_1_4_3_3_2
-end PackSource_K1_13_6_1_4_3_3_2Aux1
-
-section PackSource_K1_13_6_1_2Hasse
-set_option autoImplicit true
+end
+section
 namespace K1_13_6_1_2
-
 noncomputable section
-
 open Polynomial K1_13 K1_13_6
 open scoped BigOperators
-
-/-- Expand a polynomial at the original variables with new indeterminates
-for their increments. -/
 def taylorHom {n : ℕ} {A : Type*} [CommSemiring A] :
     MvPolynomial (Fin n) A →+* MvPolynomial (Fin n) (MvPolynomial (Fin n) A) :=
   MvPolynomial.eval₂Hom (MvPolynomial.C.comp MvPolynomial.C)
     (fun i => MvPolynomial.C (MvPolynomial.X i) + MvPolynomial.X i)
-
 private theorem pow_taylor {n : ℕ} {A : Type*} [CommSemiring A] (i : Fin n) (k : ℕ)
     (f : A) :
     (MvPolynomial.C f + MvPolynomial.X i) ^ k =
@@ -4116,7 +3419,6 @@ private theorem pow_taylor {n : ℕ} {A : Type*} [CommSemiring A] (i : Fin n) (k
   intro j _
   rw [MvPolynomial.X_pow_eq_monomial, ← map_pow, ← MvPolynomial.C_eq_coe_nat,
     mul_assoc, ← map_mul, mul_comm, MvPolynomial.C_mul_monomial, mul_one]
-
 private theorem taylor_monomial_coeff {n : ℕ} {A : Type*} [CommSemiring A]
     (m a : Fin n →₀ ℕ) (c : A) :
     (taylorHom (MvPolynomial.monomial m c)).coeff a =
@@ -4170,14 +3472,11 @@ private theorem taylor_monomial_coeff {n : ℕ} {A : Type*} [CommSemiring A]
         simpa using congrArg (fun x : Fin n →₀ ℕ => x i) h
       exact (not_lt_of_ge (Finset.mem_range_succ_iff.mp (he ▸ hbi))) hi
     simp [hn]
-
 theorem taylor_coeff {n : ℕ} {A : Type*} [CommSemiring A] (F : MvPolynomial (Fin n) A)
     (a : Fin n →₀ ℕ) : (taylorHom F).coeff a = hassePartial a F := by
   unfold hassePartial
   conv_lhs => rw [MvPolynomial.as_sum F, map_sum, MvPolynomial.coeff_sum]
   exact Finset.sum_congr rfl fun m _ => taylor_monomial_coeff m a (F.coeff m)
-
-/-- Coefficient maps commute with the jet Hasse partials. -/
 theorem map_hassePartial {n : ℕ} {A B : Type*} [CommSemiring A] [CommSemiring B]
     (φ : A →+* B) (a : Fin n →₀ ℕ) (P : MvPolynomial (Fin n) A) :
     MvPolynomial.map φ (hassePartial a P) = hassePartial a (MvPolynomial.map φ P) := by
@@ -4187,9 +3486,6 @@ theorem map_hassePartial {n : ℕ} {A B : Type*} [CommSemiring A] [CommSemiring 
   have hc := congrArg (fun F : MvPolynomial (Fin n) (MvPolynomial (Fin n) B) => F.coeff a)
     (RingHom.congr_fun h P)
   simpa only [RingHom.comp_apply, MvPolynomial.coeff_map, taylor_coeff] using hc
-
-/-- Evaluating a Hasse partial at the original jet gives the corresponding
-coefficient of the expansion around that jet. -/
 theorem atJet_hassePartial {n : ℕ} (a : Fin n →₀ ℕ) (P : Row n) (S : Geom[X]) :
     atJet (hassePartial a P) S = (shiftJet P S).coeff a := by
   let e : Row n →+* Geom[X] := MvPolynomial.eval (jet S)
@@ -4204,7 +3500,6 @@ theorem atJet_hassePartial {n : ℕ} (a : Fin n →₀ ℕ) (P : Row n) (S : Geo
   change e (hassePartial a P) = (shift P).coeff a
   have hc := congrArg (fun F : Row n => F.coeff a) (RingHom.congr_fun h P)
   simpa only [RingHom.comp_apply, MvPolynomial.coeff_map, taylor_coeff] using hc
-
 private theorem source_support {a : Fin 4 →₀ ℕ} {P : Row 4} {m : Fin 4 →₀ ℕ}
     (hm : m ∈ (hassePartial a P).support) : ∃ v ∈ P.support, m = v - a := by
   classical
@@ -4215,13 +3510,10 @@ private theorem source_support {a : Fin 4 →₀ ℕ} {P : Row 4} {m : Fin 4 →
   apply Finset.sum_eq_zero
   intro v hv
   simp [MvPolynomial.coeff_monomial, Ne.symm (h v hv)]
-
 private theorem weight_le (w : Fin 4 → ℕ) (v a : Fin 4 →₀ ℕ) :
     (v - a).sum (fun i k => w i * k) ≤ v.sum (fun i k => w i * k) := by
   simp only [Finsupp.sum_fintype _ _ (fun _ => Nat.mul_zero _)]
   exact Finset.sum_le_sum fun i _ => Nat.mul_le_mul_left _ (Nat.sub_le _ _)
-
-/-- Hasse partials keep all three box bounds, since each exponent can only decrease. -/
 theorem hasse_inBox (a : Fin 4 →₀ ℕ) {P : Row 4} {B : Shape}
     (hP : InBox (shape P) B) : InBox (shape (hassePartial a P)) B := by
   refine ⟨?_, ?_, ?_⟩
@@ -4243,38 +3535,27 @@ theorem hasse_inBox (a : Fin 4 →₀ ℕ) {P : Row 4} {B : Shape}
     intro m hm
     obtain ⟨v, hv, rfl⟩ := source_support hm
     exact (Nat.sub_le _ _).trans ((MvPolynomial.le_degreeOf_of_mem_support 3 hv).trans hP.2.2)
-
 theorem hasse_atJet_eq_zero {n : ℕ} {a : Fin n →₀ ℕ} {P : Row n} {S : Geom[X]} {l : ℕ}
     (ha : multiOrder a < l) (h : OrderAt P S l) : atJet (hassePartial a P) S = 0 := by
   rw [atJet_hassePartial]
   by_contra hn
   exact (not_le_of_gt ha) (h a (MvPolynomial.mem_support_iff.mpr hn))
-
 end
 end K1_13_6_1_2
-end PackSource_K1_13_6_1_2Hasse
-
-section PackSource_K1_13_6_1_2Split
-set_option autoImplicit true
+end
+section
 namespace K1_13_6_1_2
-
 noncomputable section
-
 open K1_13 K1_13_6
-
-/-- The ordinary affine Bézout bound for a local weight of a proper geometric pair. -/
 def c1 : Prop :=
   ∀ (F G : GeoJets) (p : Ideal GeoJets) (hp : (Ideal.span {F, G}).IsMinimalPrime p),
     F ≠ 0 → IsRelPrime F G →
     cycleLength (Ideal.span {F, G}) p hp.isPrime ≤ (↑(F.totalDegree * G.totalDegree) : ℕ∞)
-
-/-- The generic Hasse criterion for powers of the local maximal ideal at a geometric prime. -/
 def c2 : Prop :=
   ∀ (F : GeoJets) (p : Ideal GeoJets) [p.IsPrime] (d : ℕ),
     p.height = 2 →
     (∀ a : Fin 4 →₀ ℕ, multiOrder a < d → hassePartial a F ∈ p) →
     VanishesTo p F d
-
 theorem of_children (h1 : c1) (h2 : c2) : K1_13_6_1.c2 := by
   intro f Q l surface hZ hf hproper hbox
   let _ : surface.IsPrime := hZ.isPrime
@@ -4313,23 +3594,15 @@ theorem of_children (h1 : c1) (h2 : c2) : K1_13_6_1.c2 := by
   obtain ⟨a, ha, hproper'⟩ := hcut
   exact ⟨hassePartial a Q, hproper', hasse_inBox a hbox,
     fun S hS => hasse_atJet_eq_zero (by omega) hS⟩
-
 end
 end K1_13_6_1_2
-end PackSource_K1_13_6_1_2Split
-
-section PackSource_K1_13_6_1_2_2Proof
-set_option autoImplicit true
+end
+section
 namespace K1_13_6_1_2_2
-
 noncomputable section
-
 open K1_13_6 K1_13_6_1_2
 open MvPolynomial
 open scoped BigOperators
-
-/-- A product of increments of total order at least `d` vanishes in a ring
-where the `d`-th power of their common ideal is zero. -/
 private theorem increment_prod_eq_zero {n : ℕ} {B : Type*} [CommRing B]
     {J : Ideal B} {d : ℕ} (hJ : J ^ d = ⊥) {t : Fin n → B} (ht : ∀ i, t i ∈ J)
     (a : Fin n →₀ ℕ) (ha : d ≤ multiOrder a) : (a.prod fun i k => t i ^ k) = 0 := by
@@ -4342,10 +3615,6 @@ private theorem increment_prod_eq_zero {n : ℕ} {B : Type*} [CommRing B]
     (fun i _ => Ideal.pow_mem_pow (ht i) (a i))
   rw [Finset.prod_pow_eq_pow_sum] at hp
   exact hp
-
-/-- Evaluate the Taylor expansion at a lift of the coordinate residues.
-Coefficients of low order vanish at the residue and terms of high order
-vanish in the nilpotent kernel. -/
 private theorem eval_eq_zero_of_hasse {K B C : Type*} [CommRing K] [CommRing B] [CommRing C]
     [Algebra K B] [Algebra K C] [Algebra.FormallySmooth K C] {n : ℕ}
     (φ : MvPolynomial (Fin n) K →ₐ[K] B) (ρ : B →ₐ[K] C) (hρ : Function.Surjective ρ)
@@ -4387,9 +3656,6 @@ private theorem eval_eq_zero_of_hasse {K B C : Type*} [CommRing K] [CommRing B] 
       rw [taylor_coeff, hr, map_zero, zero_mul]
     · rw [increment_prod_eq_zero hJ ht a (le_of_not_gt ha), mul_zero]
   exact (RingHom.congr_fun heval F).symm.trans hzero
-
-/-- The quotient by the chosen maximal-ideal power admits the lifted residue
-coordinates used in the Taylor calculation. -/
 private theorem local_mem_pow_of_hasse {K A : Type*} [CommRing K] [CommRing A]
     [Algebra K A] [IsLocalRing A] [Algebra.FormallySmooth K (IsLocalRing.ResidueField A)]
     {n : ℕ} (loc : MvPolynomial (Fin n) K →ₐ[K] A) (F : MvPolynomial (Fin n) K) (d : ℕ)
@@ -4408,9 +3674,6 @@ private theorem local_mem_pow_of_hasse {K A : Type*} [CommRing K] [CommRing A]
   apply Ideal.Quotient.eq_zero_iff_mem.mp
   refine eval_eq_zero_of_hasse φ ρ hρ F d hJ fun a ha => ?_
   exact Ideal.Quotient.eq_zero_iff_mem.mpr (h a ha)
-
-/-- At every prime of a polynomial ring over a perfect field, the low Hasse
-partials detect membership in the corresponding localized ideal power. -/
 theorem vanishesTo_of_hasse {K : Type*} [Field K] [PerfectField K] {n : ℕ}
     (F : MvPolynomial (Fin n) K) (p : Ideal (MvPolynomial (Fin n) K)) [p.IsPrime]
     (d : ℕ) (h : ∀ a : Fin n →₀ ℕ, multiOrder a < d → hassePartial a F ∈ p) :
@@ -4427,39 +3690,28 @@ theorem vanishesTo_of_hasse {K : Type*} [Field K] [PerfectField K] {n : ℕ}
   change algebraMap (MvPolynomial (Fin n) K) L (hassePartial a F) ∈ IsLocalRing.maximalIdeal L
   rw [← Localization.AtPrime.map_eq_maximalIdeal (I := p)]
   exact Ideal.mem_map_of_mem _ (h a ha)
-
 theorem proof : K1_13_6_1_2.c2 := by
   intro F p hp d _ h
   exact vanishesTo_of_hasse F p d h
-
 end
 end K1_13_6_1_2_2
-end PackSource_K1_13_6_1_2_2Proof
-
-section PackSource_K1_13_2_3_4DataC
-set_option autoImplicit true
+end
+section
 namespace K1_13_2_3_4
-
--- Keep the kernel reductions sequential to bound peak memory.
 set_option Elab.async false
 set_option maxRecDepth 50000
 set_option maxHeartbeats 0
-
 open K1_13_2
-
-/-- The count at index `n - 1`, with index `-1` represented by zero. -/
 private def c4cDen (n : ℕ) : ℕ :=
   if n == 0 then 0 else
     let u := n - 1
     u * (u * (2 * u + 21) + 66) / 72 + 1
-
 private theorem c4cTwiceHalf (n : ℤ) : 2 * (n * (n - 1) / 2) = n * (n - 1) := by
   have h : (2 : ℤ) ∣ n * (n - 1) := by
     rcases Int.emod_two_eq_zero_or_one n with hn | hn
     · exact dvd_mul_of_dvd_left (by omega : (2 : ℤ) ∣ n) _
     · exact dvd_mul_of_dvd_right (by omega : (2 : ℤ) ∣ n - 1) _
   rw [mul_comm, Int.ediv_mul_cancel h]
-
 private theorem c4cDenPoly (u : ℤ) (hu : 0 ≤ u) :
     u * (u * (2 * u + 21) + 66) / 72 + 1 = denominator u := by
   rw [denominator, ite_eq_right (by omega)]
@@ -4479,7 +3731,6 @@ private theorem c4cDenPoly (u : ℤ) (hu : 0 ≤ u) :
   rw [he]
   rcases hr with h | h | h | h | h | h <;> rw [h] <;> norm_num <;>
     constructor <;> nlinarith only [hq]
-
 private theorem c4cDenEq (n : ℕ) :
     (c4cDen n : ℤ) = denominator ((n : ℤ) - 1) := by
   cases n with
@@ -4489,7 +3740,6 @@ private theorem c4cDenEq (n : ℕ) :
     push_cast
     rw [show (n : ℤ) + 1 - 1 = n by omega]
     exact c4cDenPoly n (by omega)
-
 private theorem c4cDenSub (n k : ℕ) :
     (c4cDen (n - k) : ℤ) = denominator ((n : ℤ) - 1 - k) := by
   rw [c4cDenEq]
@@ -4499,32 +3749,22 @@ private theorem c4cDenSub (n k : ℕ) :
     omega
   · have hz : n - k = 0 := by omega
     simp [hz, denominator, show (n : ℤ) - 1 - k < 0 by omega]
-
-
 private theorem c4cDenNeg (u : ℤ) (h : u < 0) : denominator u = 0 := by
   simp [denominator, h]
-
 private theorem c4cCumNeg (d u : ℤ) (h : u < 0) : cumulative d u = 0 := by
   simp [cumulative, h]
-
 private theorem c4cCumSmall (d u : ℤ) (h : u < d + 1) :
     cumulative d u = denominator u := by
   by_cases hu : u < 0
   · rw [c4cCumNeg _ _ hu, c4cDenNeg _ hu]
   have hd : ¬ d < 0 := by omega
   simp (disch := omega) [cumulative, hu, hd, c4cDenNeg]
-
-
-/- In these grades the cap is inactive. The cumulative counts at the lower
-   bound cancel in the target, and the shifted order falls below zero. -/
 private def c4cChart (s q k : ℤ) : Flag :=
   ⟨1650 - 3*k, s - 1350 - q - 2*k, 1650 - 3*k, 550 - k, 1650 - q - 3*k⟩
-
 private theorem c4cCap (d u c : ℤ) (hc : 0 ≤ c) (hu : u ≤ d) (hd : d ≤ 3*c) :
     cappedCount d u c = denominator u := by
   rw [cappedCount, ite_eq_right (by omega), c4cCumNeg (d - c - 1) (u - 3*(c + 1)) (by omega),
     sub_zero, c4cCumSmall d u (by omega)]
-
 private theorem c4cCounts (s q k : ℤ) (hs₀ : 1866 ≤ s) (hs₁ : s ≤ 1942)
     (hq₀ : 0 ≤ q) (hq₁ : q ≤ 70) (hk₀ : 0 ≤ k) (hk₁ : k ≤ 300) :
     oldCount (c4cChart s q k) =
@@ -4559,14 +3799,10 @@ private theorem c4cCounts (s q k : ℤ) (hs₀ : 1866 ≤ s) (hs₁ : s ≤ 1942
   simp only [not_lt.mpr hd, not_lt.mpr hc, decide_false, Bool.false_or,
     Bool.false_eq_true, ite_false, hold, ht]
   rfl
-
-
 private def c4cOld (s q k : ℕ) : ℕ :=
   c4cDen (1651 - 3*k) - c4cDen (s - (1350 + q + 2*k))
-
 private def c4cPositive (s q k : ℕ) : ℕ :=
   c4cOld s q k - c4cDen (1650 - (q + 3*k))
-
 private theorem c4cNatCounts (s q k : ℕ) (hs₀ : 1866 ≤ s) (hs₁ : s ≤ 1942)
     (hq : q ≤ 70) (hk : k ≤ 300) :
     (oldCount (c4cChart s q k)).toNat = c4cOld s q k ∧
@@ -4592,17 +3828,14 @@ private theorem c4cNatCounts (s q k : ℕ) (hs₀ : 1866 ≤ s) (hs₁ : s ≤ 1
   rw [ho, hp, ← hu, ← hl, ← ht]
   unfold c4cPositive c4cOld
   omega
-
 private theorem c4cSaving (a b c : ℤ) :
     (a - max 0 b).toNat - (a - max (max 0 b) c).toNat =
       min a.toNat c.toNat - b.toNat := by
   omega
-
 private def c4cEntry (s q k : ℕ) : ℕ :=
   if k = 0 then 0 else if k ≤ 300 then
     min (c4cOld s q 0) (c4cPositive s q k) - c4cPositive s q 0
   else entry s q k
-
 private theorem c4cEntryEq (s q k : ℕ) (hs₀ : 1866 ≤ s) (hs₁ : s ≤ 1942)
     (hq : q ≤ 70) : entry s q k = c4cEntry s q k := by
   let j := 3000 + q - s
@@ -4625,11 +3858,9 @@ private theorem c4cEntryEq (s q k : ℕ) (hs₀ : 1866 ≤ s) (hs₁ : s ≤ 194
     try dsimp only
     rw [hw, hr, c4cSaving, h₀.1, h₀.2, h₁.2]
   · simp only [c4cEntry, ite_eq_right hz, ite_eq_right hk]
-
 private def c4cRow (s q code : ℕ) : ℕ → ℕ
   | 0 => 0
   | n + 1 => c4cEntry s q (code % 512) + c4cRow s (q + 1) (code / 512) n
-
 private theorem c4cRowEq (s q code n : ℕ) (hs₀ : 1866 ≤ s) (hs₁ : s ≤ 1942)
     (hq : q + n ≤ 71) : rowSum s q code n = c4cRow s q code n := by
   induction n generalizing q code with
@@ -4637,82 +3868,56 @@ private theorem c4cRowEq (s q code n : ℕ) (hs₀ : 1866 ≤ s) (hs₁ : s ≤ 
   | succ n ih =>
     rw [rowSum, c4cRow, c4cEntryEq _ _ _ hs₀ hs₁ (by omega),
       ih (q + 1) (code / 512) (by omega)]
-
 private theorem c4cCheck {s code v : ℕ} (hs₀ : 1866 ≤ s) (hs₁ : s ≤ 1942)
     (hv : c4cRow s 0 code 71 = v) :
     [code].length = 1 ∧ rowsSum s [code] = v := by
   refine ⟨rfl, ?_⟩
   change rowSum s 0 code 71 + 0 = v
   rw [Nat.add_zero, c4cRowEq s 0 code 71 hs₀ hs₁ (by decide), hv]
-
-/- The certificate encodes a row per grade. The base-512 digit of index
-`q` is the cubic exponent on the diagonal `s + j = 3000 + q`. Each row is checked separately,
-then the original block equalities follow from `rowsSum_append`. -/
-private def rowsC1_row000 : List ℕ := [486700987698019908738002333011314256167925776103521575471461463512992763269698674608787884952500587372795800271133475072]
-
+private def rowsC1_row000 : List ℕ := [0x30403020130c06c4023140c0603420100804424130c06030180c86836201008040a1918904c26180c06030180c2643420100]
 private theorem rowsC1_row000_checked :
     rowsC1_row000.length = 1 ∧ rowsSum 1866 rowsC1_row000 = 28404388 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
-private def rowsC1_row001 : List ℕ := [648091605080800247133284792989942535928933486380203272005056907293069326017587720285046525223738631842424260239403647232]
-
+private def rowsC1_row001 : List ℕ := [0x40403020140c0704024180c0603420100824624140c06030180c86836201008040a1918904c28180c06030180c2663420100]
 private theorem rowsC1_row001_checked :
     rowsC1_row001.length = 1 ∧ rowsSum 1867 rowsC1_row001 = 28636056 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
-private def rowsC1_row002 : List ℕ := [83441793537301272264976902685413991826338845460250135311755590776354155097794370026413849169328174622044296583811713597696]
-
+private def rowsC1_row002 : List ℕ := [0x2050483020180c0804024180c0623420100844626140c06030184cc683820100804122118904c28180c06030180c3663420100]
 private theorem rowsC1_row002_checked :
     rowsC1_row002.length = 1 ∧ rowsSum 1868 rowsC1_row002 = 28875231 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
-private def rowsC1_row003 : List ℕ := [83603184771540509259889136275730033479590438416947941647856138218834081763567804739294290677220621830544762788960798900480]
-
+private def rowsC1_row003 : List ℕ := [0x2060483422180c8804226180c0623620100844626140c06030184cc6c38201008041a2118904c28180c06030180c4663420100]
 private theorem rowsC1_row003_checked :
     rowsC1_row003.length = 1 ∧ rowsSum 1869 rowsC1_row003 = 29121059 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
-private def rowsC1_row004 : List ℕ := [166235496703229960492770918302628172183885386840357447928387073019290629844570528286803350979548363830681117138479776661760]
-
+private def rowsC1_row004 : List ℕ := [0x4060503824180d0804426180c0643620100864826180c06030188cc6c40201008041a2118904c28180c06030180c4663620100]
 private theorem rowsC1_row004_checked :
     rowsC1_row004.length = 1 ∧ rowsSum 1870 rowsC1_row004 = 29305336 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
-private def rowsC1_row005 : List ℕ := [249029515082803303097608698603336600461387433318275390013423035356723912473261856689862106451522480835066633511792478912768]
-
+private def rowsC1_row005 : List ℕ := [0x6070604024180d0804426180c0663620100864826180c06030188cc6c4020100804222120904c30180c06030180c4663620100]
 private theorem rowsC1_row005_checked :
     rowsC1_row005.length = 1 ∧ rowsSum 1871 rowsC1_row005 = 29479343 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
-private def rowsC1_row006 : List ℕ := [249190905701386193273857194501792640549895064275949125842619232570080931492139715505198035543668909748162893681686021800192]
-
+private def rowsC1_row006 : List ℕ := [0x6080604026180d8804628180c0663820100884826180c0603018cd06c4020100804222120904c30180c06030180c6663620100]
 private theorem rowsC1_row006_checked :
     rowsC1_row006.length = 1 ∧ rowsSum 1872 rowsC1_row006 = 29714183 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
-private def rowsC1_row007 : List ℕ := [331822901801369726532241540604509980519121493915545371081063232193764544850718193199546275262277948193074074922167268671744]
-
+private def rowsC1_row007 : List ℕ := [0x8080604028180e0804828180c0684020100884826180c06030190d06c4020100804223120984c30180c06030180c6663620100]
 private theorem rowsC1_row007_checked :
     rowsC1_row007.length = 1 ∧ rowsSum 1873 rowsC1_row007 = 29944623 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
-private def rowsC1_row008 : List ℕ := [42722036900480870967881320679983583256540855964759901647021304377648233714239854869612513187671618318256375314456803165733120]
-
+private def rowsC1_row008 : List ℕ := [0x40a08060403018100804830180c06840201048c4826180c06030190d06c4020100814323120984c30180c06030180c6683620100]
 private theorem rowsC1_row008_checked :
     rowsC1_row008.length = 1 ∧ rowsSum 1874 rowsC1_row008 = 30174338 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
-private def rowsC1_row009 : List ℕ := [42804830603028740741063202777162180613359514509441712241760496910837472203417625958420891390551787196557303255423104277676288]
-
+private def rowsC1_row009 : List ℕ := [0x40c09068443019100844830180c46c40201088c4c28180c06030190d06c4020100814323120984c30180c06030180c6683620100]
 private theorem rowsC1_row009_checked :
     rowsC1_row009.length = 1 ∧ rowsSum 1875 rowsC1_row009 = 30418119 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
 private def rowsC1 : List ℕ :=
   rowsC1_row000 ++ rowsC1_row001 ++ rowsC1_row002 ++ rowsC1_row003
     ++ rowsC1_row004 ++ rowsC1_row005 ++ rowsC1_row006 ++ rowsC1_row007
     ++ rowsC1_row008 ++ rowsC1_row009
-
 private theorem rowsC1_checked :
     rowsC1.length = 10 ∧ rowsSum 1866 rowsC1 = 294072676 := by
   constructor <;> simp only [rowsC1, rowsSum_append, List.length_append, Nat.reduceAdd,
@@ -4721,72 +3926,50 @@ private theorem rowsC1_checked :
     rowsC1_row004_checked.1, rowsC1_row004_checked.2, rowsC1_row005_checked.1, rowsC1_row005_checked.2,
     rowsC1_row006_checked.1, rowsC1_row006_checked.2, rowsC1_row007_checked.1, rowsC1_row007_checked.2,
     rowsC1_row008_checked.1, rowsC1_row008_checked.2, rowsC1_row009_checked.1, rowsC1_row009_checked.2]
-
-private def rowsC2_row000 : List ℕ := [85112574312053737423747168418143685051826489599255202254738071729787012354063633043713044788640495422023001380767370112532736]
-
+private def rowsC2_row000 : List ℕ := [0x80c0a070483019100844c30180c86c40201088c4c28180c06030998d0704020100824323120984c30180c06030180c8683620100]
 private theorem rowsC2_row000_checked :
     rowsC2_row000.length = 1 ∧ rowsSum 1876 rowsC2_row000 = 30664326 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
-private def rowsC2_row001 : List ℕ := [127420479726296510111106664271404112685949329866476943353937954597342940983348927918866496906216089937617509908528056580047104]
-
+private def rowsC2_row001 : List ℕ := [0xc0c0c08048301a100884c30180c86c402010c904c30180c06030998d8704020100824423120985030180c06030182c8683620100]
 private theorem rowsC2_row001_checked :
     rowsC2_row001.length = 1 ∧ rowsSum 1877 rowsC2_row001 = 30888547 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
-private def rowsC2_row002 : List ℕ := [127585743719109730956214848588906235433355482949250318549479201218679003945296301096888477292353273687338711969867593108553984]
-
+private def rowsC2_row002 : List ℕ := [0xc100c0804c301b1008c4c30180cc704020110904c30180c06031198d8804020100834423120985030180c06030182c8683620100]
 private theorem rowsC2_row002_checked :
     rowsC2_row002.length = 1 ∧ rowsSum 1878 rowsC2_row002 = 31120790 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
-private def rowsC2_row003 : List ℕ := [169893325721685641289137463299015308880866658026109471646162628173645714857076655069092458898571192212105590670353179854635264]
-
+private def rowsC2_row003 : List ℕ := [0x10100c0804c301b1008c5030180d0704020110904c30180c060319a0d8804020100834423120985030180c06030184c8683620100]
 private theorem rowsC2_row003_checked :
     rowsC2_row003.length = 1 ∧ rowsSum 1879 rowsC2_row003 = 31376287 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
-private def rowsC2_row004 : List ℕ := [21873682893046205935555236188151594627348918250162794463146530749510633555260969561973527488798637669942304100511753130637132032]
-
+private def rowsC2_row004 : List ℕ := [0x814100c080603020100906030180d0804020910904c30180c060319a0d8804020100844424120985030180c06030184c8683620100]
 private theorem rowsC2_row004_checked :
     rowsC2_row004.length = 1 ∧ rowsSum 1880 rowsC2_row004 = 31616683 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
-private def rowsC2_row005 : List ℕ := [21916073268750715259424359821907036213299465486670641177111105040154354762975052544623297650987576688004699279624197768457879808]
-
+private def rowsC2_row005 : List ℕ := [0x818120d088603220108906030188d0804020918904c30180c060321a0d8804020100844424120986030180c06030186cc683620100]
 private theorem rowsC2_row005_checked :
     rowsC2_row005.length = 1 ∧ rowsSum 1881 rowsC2_row005 = 31804404 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
-private def rowsC2_row006 : List ℕ := [43577638047456297511387394396391267676139141235937950795833851248080111697091934774176925421342535435763703807481960608389267712]
-
+private def rowsC2_row006 : List ℕ := [0x1018140e088603220108986030188d8804021118985030180c060321a0d8804020100864624130986030180c06030188cc683620100]
 private theorem rowsC2_row006_checked :
     rowsC2_row006.length = 1 ∧ rowsSum 1882 rowsC2_row006 = 32048882 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
-private def rowsC2_row007 : List ℕ := [65239285619863813176886612106958905695206055916507357912134082886272027825921244719074297768264824173363825824391455754174988544]
-
+private def rowsC2_row007 : List ℕ := [0x18181810090603420110986030190d8804021118985030180c061331a0e0804020102864624130986030180c06030188cc683620100]
 private theorem rowsC2_row007_checked :
     rowsC2_row007.length = 1 ∧ rowsSum 1883 rowsC2_row007 = 32294911 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
-private def rowsC2_row008 : List ℕ := [65323900784184182249582002477519992281137401327867497942107767342519987770883640968421502378892522807243855078179288020932493568]
-
+private def rowsC2_row008 : List ℕ := [0x18201810098603620118986030198d8804021920986030180c061331b0e0804020104864624130986030180c06030188cc684020100]
 private theorem rowsC2_row008_checked :
     rowsC2_row008.length = 1 ∧ rowsSum 1884 rowsC2_row008 = 32492899 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
-private def rowsC2_row009 : List ℕ := [86985382769503048340038381209095771397408856380927974638406947720679344310215964756739998918479314410862465037088918939923251456]
-
+private def rowsC2_row009 : List ℕ := [0x20201810098603620118a06030198e0804022120986030180c062331b0e0804020104884624130986030180c0603018ccc6c4020100]
 private theorem rowsC2_row009_checked :
     rowsC2_row009.length = 1 ∧ rowsSum 1885 rowsC2_row009 = 32746505 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
 private def rowsC2 : List ℕ :=
   rowsC2_row000 ++ rowsC2_row001 ++ rowsC2_row002 ++ rowsC2_row003
     ++ rowsC2_row004 ++ rowsC2_row005 ++ rowsC2_row006 ++ rowsC2_row007
     ++ rowsC2_row008 ++ rowsC2_row009
-
 private theorem rowsC2_checked :
     rowsC2.length = 10 ∧ rowsSum 1876 rowsC2 = 317054234 := by
   constructor <;> simp only [rowsC2, rowsSum_append, List.length_append, Nat.reduceAdd,
@@ -4795,66 +3978,46 @@ private theorem rowsC2_checked :
     rowsC2_row004_checked.1, rowsC2_row004_checked.2, rowsC2_row005_checked.1, rowsC2_row005_checked.2,
     rowsC2_row006_checked.1, rowsC2_row006_checked.2, rowsC2_row007_checked.1, rowsC2_row007_checked.2,
     rowsC2_row008_checked.1, rowsC2_row008_checked.2, rowsC2_row009_checked.1, rowsC2_row009_checked.2]
-
-private def rowsC3_row000 : List ℕ := [11199325641239657434194465647140974248795254646697399145088766828204577558947571800556805036895597764053576645052045930034830115072]
-
+private def rowsC3_row000 : List ℕ := [0x10282018100c0603820120a060301a100804022120986030180c062331b100804020106884624130a06030180c0603018ccc6c4020100]
 private theorem rowsC3_row000_checked :
     rowsC3_row000.length = 1 ∧ rowsSum 1886 rowsC3_row000 = 32973215 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
-private def rowsC3_row001 : List ℕ := [11221029513600366212822923686233594532188862112074591733080482314151513477008085812079534013112759619565945686122244443168808501504]
-
+private def rowsC3_row001 : List ℕ := [0x1030241a110c0644020120c060301a100804122120986030180c063341b100804020106884624130a06030180c0603018ccc6c4020100]
 private theorem rowsC3_row001_checked :
     rowsC3_row001.length = 1 ∧ rowsSum 1887 rowsC3_row001 = 33225916 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
-private def rowsC3_row002 : List ℕ := [22311750680297624325830345930952329050183239815469391025932610552978475676930620021118232557137339618104366505260811145967315321088]
-
+private def rowsC3_row002 : List ℕ := [0x2030281c110c0644021130c060311b100804123120986030180c064341b100804020108884624130a06030180c0603018cd06c4020100]
 private theorem rowsC3_row002_checked :
     rowsC3_row002.length = 1 ∧ rowsSum 1888 rowsC3_row002 = 33489779 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
-private def rowsC3_row003 : List ℕ := [33402514237370272346565945398762959715945500629251767251012650383640758722295239068576966969914619151847765218171713324587826675968]
-
+private def rowsC3_row003 : List ℕ := [0x30303020120c0684022130c060321b100804223130a06030180c064341b100804020108884824130a06030180c06030590d06c4020100]
 private theorem rowsC3_row003_checked :
     rowsC3_row003.length = 1 ∧ rowsSum 1889 rowsC3_row003 = 33755809 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
-private def rowsC3_row004 : List ℕ := [33445837201502300696127289907243690347061883698023357406838157752022026536834332545792005905105372350490172108633675199354109034752]
-
+private def rowsC3_row004 : List ℕ := [0x30403020130c0684022130c060321b100804323130a06030180c064341b10080402010c884824130c06030180c06030590d06c4020100]
 private theorem rowsC3_row004_checked :
     rowsC3_row004.length = 1 ∧ rowsSum 1890 rowsC3_row004 = 33963460 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
-private def rowsC3_row005 : List ℕ := [44536515977985560750099642005062570861688097781371425247041095201827896217636266059124622808494639641631187945075424715938052833536]
-
+private def rowsC3_row005 : List ℕ := [0x40403020130c06c4023130c060331b100804324130c06030180c266341c10080402050c8c4826130c06030180c06030990d06c4020100]
 private theorem rowsC3_row005_checked :
     rowsC3_row005.length = 1 ∧ rowsSum 1891 rowsC3_row005 = 34212972 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
-private def rowsC3_row006 : List ℕ := [5734054728314059043838044684188764835056172867160258415238485883620148010263593292342740824875548024605183670121701995662551453663488]
-
+private def rowsC3_row006 : List ℕ := [0x2050403020140c0704024140c060341c100804424130c06030180c466361c10080402050c8c4826130c06030180c06030990d06c4020100]
 private theorem rowsC3_row006_checked :
     rowsC3_row006.length = 1 ∧ rowsSum 1892 rowsC3_row006 = 34469951 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
-private def rowsC3_row007 : List ℕ := [5745167110963387500965336927351600400480697146752693925526446161235733324710479233346612395562038387864738076049983184177100220399872]
-
+private def rowsC3_row007 : List ℕ := [0x2060483422180c8804024180c0603420100804424130c06030180c466361c10080402090c8c4826130c06030180c06030d90d06c4020100]
 private theorem rowsC3_row007_checked :
     rowsC3_row007.length = 1 ∧ rowsSum 1893 rowsC3_row007 = 34710054 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
-private def rowsC3_row008 : List ℕ := [11423616348312383654825132419562426857675777857090011989962747254280294169327890041222523329807572002693432685223221719445091735699712]
-
+private def rowsC3_row008 : List ℕ := [0x4060503822180c8804224180c0623420100824624130c06030180c6683620100804020d108c4826130c06030180c06031198d06c4020100]
 private theorem rowsC3_row008_checked :
     rowsC3_row008.length = 1 ∧ rowsSum 1894 rowsC3_row008 = 34951171 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
 private def rowsC3 : List ℕ :=
   rowsC3_row000 ++ rowsC3_row001 ++ rowsC3_row002 ++ rowsC3_row003
     ++ rowsC3_row004 ++ rowsC3_row005 ++ rowsC3_row006 ++ rowsC3_row007
     ++ rowsC3_row008
-
 private theorem rowsC3_checked :
     rowsC3.length = 9 ∧ rowsSum 1886 rowsC3 = 305752327 := by
   constructor <;> simp only [rowsC3, rowsSum_append, List.length_append, Nat.reduceAdd,
@@ -4863,66 +4026,46 @@ private theorem rowsC3_checked :
     rowsC3_row004_checked.1, rowsC3_row004_checked.2, rowsC3_row005_checked.1, rowsC3_row005_checked.2,
     rowsC3_row006_checked.1, rowsC3_row006_checked.2, rowsC3_row007_checked.1, rowsC3_row007_checked.2,
     rowsC3_row008_checked.1, rowsC3_row008_checked.2]
-
-private def rowsC4_row000 : List ℕ := [17113177968310062700880077700903190211372043806379127781016890515579845308542989442495610640451402338249366542402070576595256073126144]
-
+private def rowsC4_row000 : List ℕ := [0x6070604024180d0804426180c0623620100844624140c06030180c6683620100804020d108c4826140c06030180c06031198d06c4020100]
 private theorem rowsC4_row000_checked :
     rowsC4_row000.length = 1 ∧ rowsSum 1895 rowsC4_row000 = 35215060 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
-private def rowsC4_row001 : List ℕ := [17124268647169177956417172432508769457695684198758461950490375985479566535686908132000265712870285979553306765854674966102357441642752]
-
+private def rowsC4_row001 : List ℕ := [0x6080604026180d0804426180c0643620100844626140c06030180c86836201008040211108c4826140c06030180c06031198d06c4020100]
 private theorem rowsC4_row001_checked :
     rowsC4_row001.length = 1 ∧ rowsSum 1896 rowsC4_row001 = 35482889 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
-private def rowsC4_row002 : List ℕ := [22802696180728607104051016706592036281184306064062139372283599688604323750254337732263284964774666244478917703104367988406887041335552]
-
+private def rowsC4_row002 : List ℕ := [0x8080604026180d8804626180c0663620100864826140c06030180c8683620100804021110904826140c06030180c06031998d06c4020100]
 private theorem rowsC4_row002_checked :
     rowsC4_row002.length = 1 ∧ rowsSum 1897 rowsC4_row002 = 35752024 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
-private def rowsC4_row003 : List ℕ := [2935836020896798230445078878304647578050754709721956913622086955444937451793275389152304794783368590598859969509436911869773564744958208]
-
+private def rowsC4_row003 : List ℕ := [0x40a080604028180e0804828180c0663820100884826180c06030184cc683820100804021910904826140c06030180c06031998d06c4020100]
 private theorem rowsC4_row003_checked :
     rowsC4_row003.length = 1 ∧ rowsSum 1898 rowsC4_row003 = 35999170 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
-private def rowsC4_row004 : List ℕ := [5848880457995681801300930357924250688965734131698409385388889179448783062789147276984760217976989563300480254816638661958324470774104320]
-
+private def rowsC4_row004 : List ℕ := [0x80c09068443018100804830180c0684020100884826180c06030188cc6c38201008040a1918904c26180c06030180c06031998d86c4020100]
 private theorem rowsC4_row004_checked :
     rowsC4_row004.length = 1 ∧ rowsSum 1899 rowsC4_row004 = 36195310 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
-private def rowsC4_row005 : List ℕ := [5848891570335940431270467798815962551129998262320827144777305072596684364128695188488730223259245920872975652047786049970562713386090752]
-
+private def rowsC4_row005 : List ℕ := [0x80c0a070443019100844830180c4684020104884826180c06030188cc6c3820100804121918904c26180c06030180c060b1998d8704020100]
 private theorem rowsC4_row005_checked :
     rowsC4_row005.length = 1 ∧ rowsSum 1900 rowsC4_row005 = 36479131 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
-private def rowsC4_row006 : List ℕ := [8761947119774752102850599782862433388222486298495807053135753971338214900849994640222957321111166835227083789511645840174850337839120640]
-
+private def rowsC4_row006 : List ℕ := [0xc0e0c08048301a100884c30180c46c40201048c4826180c0603018cd06c4020100804121918904c26180c06030180c060b21a0d8804020100]
 private theorem rowsC4_row006_checked :
     rowsC4_row006.length = 1 ∧ rowsSum 1901 rowsC4_row006 = 36712301 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
-private def rowsC4_row007 : List ℕ := [11674980444533046675882887516996508099754755752513604759777033301260488233338126401736168069042278212223323726239646855265623438608433408]
-
+private def rowsC4_row007 : List ℕ := [0x10100c0804c301a100884c30180c86c40201088c4c28180c0603018cd06c40201008041a2118904c26180c06030180c061321a0d8804020100]
 private theorem rowsC4_row007_checked :
     rowsC4_row007.length = 1 ∧ rowsSum 1902 rowsC4_row007 = 36993294 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
-private def rowsC4_row008 : List ℕ := [11674980444533046837274120553775122575966364704290556364525581518998302338027876378652941602522964518182239569371360151400631669528592640]
-
+private def rowsC4_row008 : List ℕ := [0x10100c0804c301b1008c4c30180cc6c402010c8c4c28180c06030190d06c40201008041a2118904c26180c06030180c061321a0d8804020100]
 private theorem rowsC4_row008_checked :
     rowsC4_row008.length = 1 ∧ rowsSum 1903 rowsC4_row008 = 37262321 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
 private def rowsC4 : List ℕ :=
   rowsC4_row000 ++ rowsC4_row001 ++ rowsC4_row002 ++ rowsC4_row003
     ++ rowsC4_row004 ++ rowsC4_row005 ++ rowsC4_row006 ++ rowsC4_row007
     ++ rowsC4_row008
-
 private theorem rowsC4_checked :
     rowsC4.length = 9 ∧ rowsSum 1895 rowsC4 = 326091500 := by
   constructor <;> simp only [rowsC4, rowsSum_append, List.length_append, Nat.reduceAdd,
@@ -4931,66 +4074,46 @@ private theorem rowsC4_checked :
     rowsC4_row004_checked.1, rowsC4_row004_checked.2, rowsC4_row005_checked.1, rowsC4_row005_checked.2,
     rowsC4_row006_checked.1, rowsC4_row006_checked.2, rowsC4_row007_checked.1, rowsC4_row007_checked.2,
     rowsC4_row008_checked.1, rowsC4_row008_checked.2]
-
-private def rowsC5_row000 : List ℕ := [1503153721126863483744722490269213556652529746596596498274969374609996760807435423641082273627030247390734965028560164204237734837330510080]
-
+private def rowsC5_row000 : List ℕ := [0x814120c08060301c1008c5030180cc70402010c904c28180c06030190d06c4020100804222118904c28180c06030180c061b21a0d8804020100]
 private theorem rowsC5_row000_checked :
     rowsC5_row000.length = 1 ∧ rowsSum 1904 rowsC5_row000 = 37531039 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
-private def rowsC5_row001 : List ℕ := [2994626794493789082266076343257216352610471829043472842159271117328114168146390983721479646257784254199666011843930639201908232043578392832]
-
+private def rowsC5_row001 : List ℕ := [0x1018120d088603020100906030180d0704020110904c30180c06030998d06c4020100804222118904c28180c06030180c061b21a0d8804020100]
 private theorem rowsC5_row001_checked :
     rowsC5_row001.length = 1 ∧ rowsSum 1905 rowsC5_row001 = 37771999 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
-private def rowsC5_row002 : List ℕ := [2994632484012001500810479512993768239181327063415645403955749518151192483505410018607933556560585581959508893795736256064666091853355024640]
-
+private def rowsC5_row002 : List ℕ := [0x1018140e088603220108906030180d0804020110904c30180c06031198d8704020100814322120904c28180c06030180c062331a0d8804020100]
 private theorem rowsC5_row002_checked :
     rowsC5_row002.length = 1 ∧ rowsSum 1906 rowsC5_row002 = 38045448 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
-private def rowsC5_row003 : List ℕ := [4486116925324673076659191872775994738936214752509052062295065395396812313487855603601506841874349543101791906556161728028249078665413001472]
-
+private def rowsC5_row003 : List ℕ := [0x181c1810090603420108986030188d8804020918904c30180c06031198d8704020100814323120984c28180c06030180c062331a0d8804020100]
 private theorem rowsC5_row003_checked :
     rowsC5_row003.length = 1 ∧ rowsSum 1907 rowsC5_row003 = 38327971 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
-private def rowsC5_row004 : List ℕ := [5977589987600919898052038408702212147074434945285945129724728168055667131095923441323493433476637890905442606433889302066010180628250755328]
-
+private def rowsC5_row004 : List ℕ := [0x20201810098603420110986030190d8804021118904c30180c060319a0d8804020100824323120984c30180c06030180c063331a0d8804020100]
 private theorem rowsC5_row004_checked :
     rowsC5_row004.length = 1 ∧ rowsSum 1908 rowsC5_row004 = 38527726 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
-private def rowsC5_row005 : List ℕ := [768123232154591210845332110903505100786301390105769369142190734154732708282417904563019444633046508775697294913421087543461886292592928358656]
-
+private def rowsC5_row005 : List ℕ := [0x1020201810098603620118986030190d8804021118985030180c060319a0d8804020100824323120984c30180c06030180c063331a0d8804020100]
 private theorem rowsC5_row005_checked :
     rowsC5_row005.length = 1 ∧ rowsSum 1909 rowsC5_row005 = 38819639 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
-private def rowsC5_row006 : List ℕ := [769614705216954103677297915017837340988177272319774232827353967336728426260317372521740807367909467778957039073596018793288157908395618337024]
-
+private def rowsC5_row006 : List ℕ := [0x10282418100c0603820118a06030198d8804021918985030180c060321a0d8804020100834423120984c30180c06030180c063331a0d8804020100]
 private theorem rowsC5_row006_checked :
     rowsC5_row006.length = 1 ∧ rowsSum 1910 rowsC5_row006 = 39111484 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
-private def rowsC5_row007 : List ℕ := [1533248918780820052427813085398354330909831389032724631685494796143759804369925531370585023154141568239655382268093903904845234545501875077376]
-
+private def rowsC5_row007 : List ℕ := [0x2030241a110c0644020120a060301a0e0804022120986030180c060321a0d8804020100844423120984c30180c06030180c163331a0d8804020100]
 private theorem rowsC5_row007_checked :
     rowsC5_row007.length = 1 ∧ rowsSum 1911 rowsC5_row007 = 39380995 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
-private def rowsC5_row008 : List ℕ := [2295403288702020102911220925861558341848090463837506916049053138604486820943374278590568593564958765429318280453093093667696315350134793830656]
-
+private def rowsC5_row008 : List ℕ := [0x3030301c120c0644021120c060301a100804022120986030180c061331a0d8804020100844423120984c30180c06030180c164331b0d8804020100]
 private theorem rowsC5_row008_checked :
     rowsC5_row008.length = 1 ∧ rowsSum 1912 rowsC5_row008 = 39661353 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
 private def rowsC5 : List ℕ :=
   rowsC5_row000 ++ rowsC5_row001 ++ rowsC5_row002 ++ rowsC5_row003
     ++ rowsC5_row004 ++ rowsC5_row005 ++ rowsC5_row006 ++ rowsC5_row007
     ++ rowsC5_row008
-
 private theorem rowsC5_checked :
     rowsC5.length = 9 ∧ rowsSum 1904 rowsC5 = 347177654 := by
   constructor <;> simp only [rowsC5, rowsSum_append, List.length_append, Nat.reduceAdd,
@@ -4999,59 +4122,41 @@ private theorem rowsC5_checked :
     rowsC5_row004_checked.1, rowsC5_row004_checked.2, rowsC5_row005_checked.1, rowsC5_row005_checked.2,
     rowsC5_row006_checked.1, rowsC5_row006_checked.2, rowsC5_row007_checked.1, rowsC5_row007_checked.2,
     rowsC5_row008_checked.1, rowsC5_row008_checked.2]
-
-private def rowsC6_row000 : List ℕ := [2296891865766232615249506238861309297161347489190849419706733021085131284683925105207390260761302986658449773584997700765402358384187832140033]
-
+private def rowsC6_row000 : List ℕ := [0x30383020120c0684021130c060311a100804122120986030180c062331b0e0804020100844424120985030180c06030180c264341b0d8804020101]
 private theorem rowsC6_row000_checked :
     rowsC6_row000.length = 1 ∧ rowsSum 1913 rowsC6_row000 = 39942270 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
-private def rowsC6_row001 : List ℕ := [3060526073651670987802643665255532619302110657810611331684499503716888996415191958601504637791558823912844158055255758909697237416206705754370]
-
+private def rowsC6_row001 : List ℕ := [0x40403020130c0684022130c060321b100804123120986030180c062331b0e0804020102864424120985030180c06030180c264341b0e0804020102]
 private theorem rowsC6_row001_checked :
     rowsC6_row001.length = 1 ∧ rowsSum 1914 rowsC6_row001 = 40226680 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
-private def rowsC6_row002 : List ℕ := [393279094863161790631586524042032925259322884068967662749103159153523828558920425621496393516894957710439822323965533752132087448998329767297282]
-
+private def rowsC6_row002 : List ℕ := [0x2040403020140c06c4023130c060321b100804223130a06030180c063341b100804020102864624120985030180c06030180c364341b100804020102]
 private theorem rowsC6_row002_checked :
     rowsC6_row002.length = 1 ∧ rowsSum 1915 rowsC6_row002 = 40455650 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
-private def rowsC6_row003 : List ℕ := [394804877620602388556068742447607922380579304685713915179255196269454551984435109263357909895056037639893886231265338470492772412270583098769667]
-
+private def rowsC6_row003 : List ℕ := [0x2060483420180c0704023140c060331b100804323130a06030180c063341b100804020104864624130985030180c06030180c464341b100804020103]
 private theorem rowsC6_row003_checked :
     rowsC6_row003.length = 1 ∧ rowsSum 1916 rowsC6_row003 = 40745788 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
-private def rowsC6_row004 : List ℕ := [785024934981487224245952144739115972059120027408085902401554278130240421951059717648286124795832189740365177691794013150431010472494734040498435]
-
+private def rowsC6_row004 : List ℕ := [0x4060503422180c8804024140c060341c100804324130a06030180c064341b100804020106884624130986030180c06030180c466341b100804020103]
 private theorem rowsC6_row004_checked :
     rowsC6_row004.length = 1 ∧ rowsSum 1917 rowsC6_row004 = 40973542 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
-private def rowsC6_row005 : List ℕ := [1175246483815434292690545114041117871026222317484803541017115206965482778311852966113942388894415878576233821370222557926616827217561542289654020]
-
+private def rowsC6_row005 : List ℕ := [0x6060603824180c8804224180c0603420100804424130c06030180c264341b100804020106884624130986030180c06030180c466341b100804020104]
 private theorem rowsC6_row005_checked :
     rowsC6_row005.length = 1 ∧ rowsSum 1918 rowsC6_row005 = 41234803 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
-private def rowsC6_row006 : List ℕ := [1176770780914478089298611842058170332389224318309138968112225030658977852275214315496531658820253612301097454675202122045140632281653564280013060]
-
+private def rowsC6_row006 : List ℕ := [0x6080604024180d0804226180c0623420100824424130c06030180c266341b100804020108884624130986030180c06030180c666341b100804020104]
 private theorem rowsC6_row006_checked :
     rowsC6_row006.length = 1 ∧ rowsSum 1919 rowsC6_row006 = 41539927 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
-private def rowsC6_row007 : List ℕ := [1566989349709655567416435541929698791539041470416874434919628397276614159683950006355296037982257082012679088848270738593656523128239066141819140]
-
+private def rowsC6_row007 : List ℕ := [0x8080604026180d8804426180c0643620100824624130c06030180c466361c100804020108884624130986030180c06030180c666341b100804020104]
 private theorem rowsC6_row007_checked :
     rowsC6_row007.length = 1 ∧ rowsSum 1920 rowsC6_row007 = 41847978 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
 private def rowsC6 : List ℕ :=
   rowsC6_row000 ++ rowsC6_row001 ++ rowsC6_row002 ++ rowsC6_row003
     ++ rowsC6_row004 ++ rowsC6_row005 ++ rowsC6_row006 ++ rowsC6_row007
-
 private theorem rowsC6_checked :
     rowsC6.length = 8 ∧ rowsSum 1913 rowsC6 = 326966638 := by
   constructor <;> simp only [rowsC6, rowsSum_append, List.length_append, Nat.reduceAdd,
@@ -5059,59 +4164,41 @@ private theorem rowsC6_checked :
     rowsC6_row002_checked.1, rowsC6_row002_checked.2, rowsC6_row003_checked.1, rowsC6_row003_checked.2,
     rowsC6_row004_checked.1, rowsC6_row004_checked.2, rowsC6_row005_checked.1, rowsC6_row005_checked.2,
     rowsC6_row006_checked.1, rowsC6_row006_checked.2, rowsC6_row007_checked.1, rowsC6_row007_checked.2]
-
-private def rowsC7_row000 : List ℕ := [201749115138728335832294999963245003520991891411144297201537512051164914405775900644933478869872740846375172492559953510821470217422059008593887494]
-
+private def rowsC7_row000 : List ℕ := [0x40a080604028180d8804626180c0643620100844624130c06030180c466361c10080402050c884824130a06030180c06030182c666341b100804020106]
 private theorem rowsC7_row000_checked :
     rowsC7_row000.length = 1 ∧ rowsSum 1921 rowsC7_row000 = 42158211 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
-private def rowsC7_row001 : List ℕ := [401932004564879280646311846402135195058318903267058243669513978147110482697218332782992030421125830113088367525004459440053494121796388299919720710]
-
+private def rowsC7_row001 : List ℕ := [0x80c090684430180e0804628180c0663620100864626140c06030180c668362010080402050c8c4824130a06030180c06030182c666341b100804020106]
 private theorem rowsC7_row001_checked :
     rowsC7_row001.length = 1 ∧ rowsSum 1922 rowsC7_row001 = 42435804 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
-private def rowsC7_row002 : List ℕ := [401932766710521458813927498106427376491815651652737369350181724846542538022593110394862318789546605127623249823695590646505557998070272788317470982]
-
+private def rowsC7_row002 : List ℕ := [0x80c0a068443019100804828180c0663820100864826140c06030180c868362010080402090c8c4826130a06030180c06030184c866341b100804020106]
 private theorem rowsC7_row002_checked :
     rowsC7_row002.length = 1 ∧ rowsSum 1923 rowsC7_row002 = 42727099 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
-private def rowsC7_row003 : List ℕ := [602116421259423271601287621732806812862910974032567547769875155497367072216855524919511244998733568773781583720242137951232306137915648490179002630]
-
+private def rowsC7_row003 : List ℕ := [0xc0e0c080483019100844830180c0684020100884826180c06030180c868362010080402090c8c4826130a06030180c06030184c868361b100804020106]
 private theorem rowsC7_row003_checked :
     rowsC7_row003.length = 1 ∧ rowsSum 1924 rowsC7_row003 = 42983291 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
-private def rowsC7_row004 : List ℕ := [802298547048436284529353793422548429661526045725572433963777436783353632679920646021731862666522699204895733870232481123250710205230724812453839112]
-
+private def rowsC7_row004 : List ℕ := [0x10100c08048301a100884c30180c4684020100884826180c06030184c8683620100804020d108c4826130c06030180c06030186c868361b100804020108]
 private theorem rowsC7_row004_checked :
     rowsC7_row004.length = 1 ∧ rowsSum 1925 rowsC7_row004 = 43217928 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
-private def rowsC7_row005 : List ℕ := [103095755043805777088429393023330479288038053171699214382031704992407910420809636639408325015173626422077682241223829331086600844875519140491924996360]
-
+private def rowsC7_row005 : List ℕ := [0x810100c0804c301b100884c30180c86c40201048c4826180c06030184cc6836201008040211108c4826130c06030180c06030186c868361c100804020108]
 private theorem rowsC7_row005_checked :
     rowsC7_row005.length = 1 ∧ rowsSum 1926 rowsC7_row005 = 43524631 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
-private def rowsC7_row006 : List ℕ := [103295937169597697445163962680835165948536066977273713288581063564816389347224613600908249728092908987335268744661605713476456245821079493169081614600]
-
+private def rowsC7_row006 : List ℕ := [0x814120c08050301b1008c4c30180c86c40201088c4826180c06030188cc6c38201008040211108c4826130c06030180c06030188c868361c100804020108]
 private theorem rowsC7_row006_checked :
     rowsC7_row006.length = 1 ∧ rowsSum 1927 rowsC7_row006 = 43833918 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
-private def rowsC7_row007 : List ℕ := [205789186337218191690911707665475222445769611386354555887426488986990500321780175877399888351235395235907669469938271979072966077091183042641466097928]
-
+private def rowsC7_row007 : List ℕ := [0x1018120d08860301c100905030180cc6c40201088c4c28180c0603018ccc6c38201008040211108c4826130c06030180c06030188cc683620100804020108]
 private theorem rowsC7_row007_checked :
     rowsC7_row007.length = 1 ∧ rowsSum 1928 rowsC7_row007 = 44105101 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
 private def rowsC7 : List ℕ :=
   rowsC7_row000 ++ rowsC7_row001 ++ rowsC7_row002 ++ rowsC7_row003
     ++ rowsC7_row004 ++ rowsC7_row005 ++ rowsC7_row006 ++ rowsC7_row007
-
 private theorem rowsC7_checked :
     rowsC7.length = 8 ∧ rowsSum 1921 rowsC7 = 344985983 := by
   constructor <;> simp only [rowsC7, rowsSum_append, List.length_append, Nat.reduceAdd,
@@ -5119,59 +4206,41 @@ private theorem rowsC7_checked :
     rowsC7_row002_checked.1, rowsC7_row002_checked.2, rowsC7_row003_checked.1, rowsC7_row003_checked.2,
     rowsC7_row004_checked.1, rowsC7_row004_checked.2, rowsC7_row005_checked.1, rowsC7_row005_checked.2,
     rowsC7_row006_checked.1, rowsC7_row006_checked.2, rowsC7_row007_checked.1, rowsC7_row007_checked.2]
-
-private def rowsC8_row000 : List ℕ := [308083033814687062517633348582057020240800519151331463223885632389770653492309047689323157540401351460498487047639279592996185125270901621756054864136]
-
+private def rowsC8_row000 : List ℕ := [0x1818140e088603220100906030180cc70402010c8c4c28180c0603018cd06c40201008040a1910904826140c06030180c0603018ccc683620100804020108]
 private theorem rowsC8_row000_checked :
     rowsC8_row000.length = 1 ∧ rowsSum 1929 rowsC8_row000 = 44390104 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
-private def rowsC8_row001 : List ℕ := [308283607684824720738286795886625920602402667829710008028005692023869245726661356772758138523920578074474543563007614814203497942920955951590980845832]
-
+private def rowsC8_row001 : List ℕ := [0x181c1810090603420108906030180d0804020110904c28180c06030190d06c4020100804121918904826140c06030180c0603018ccc683620100804020108]
 private theorem rowsC8_row001_checked :
     rowsC8_row001.length = 1 ∧ rowsSum 1930 rowsC8_row001 = 44705169 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
-private def rowsC8_row002 : List ℕ := [410776856090287943386386545144189811145255968697849343696141675019562217413928455489723015187281214530831417552839810649780264506607683854875928690956]
-
+private def rowsC8_row002 : List ℕ := [0x20201810098603420110986030188d0804020110904c30180c06030190d06c4020100804121918904c26140c06030180c0603058ccc68362010080402010c]
 private theorem rowsC8_row002_checked :
     rowsC8_row002.length = 1 ∧ rowsSum 1931 rowsC8_row002 = 45006648 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
-private def rowsC8_row003 : List ℕ := [52887320038925312302713761405971067868982253287830925580334163377681394778347632484992191228488134371584417958797395989367569859495370177324184363991308]
-
+private def rowsC8_row003 : List ℕ := [0x1028201810098603620110986030190d8804020910904c30180c06030998d06c40201008041a2118904c26140c06030180c0603058ccc68362010080402010c]
 private theorem rowsC8_row003_checked :
     rowsC8_row003.length = 1 ∧ rowsSum 1932 rowsC8_row003 = 45312877 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
-private def rowsC8_row004 : List ℕ := [105364063403893568497901354754202087659403515844712216473305663656921582175453208848779901779304215714601945823704423813548478340530650458262445213483276]
-
+private def rowsC8_row004 : List ℕ := [0x2030241a100c0603620118986030190d8804021118904c30180c06031198d07040201008041a2118904c26180c06030180c06030990cc68362010080402010c]
 private theorem rowsC8_row004_checked :
     rowsC8_row004.length = 1 ∧ rowsSum 1933 rowsC8_row004 = 45547060 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
-private def rowsC8_row005 : List ℕ := [105364263196562934391963312881183735984543977936594804871067309868862270237893190374087948558013391768761030128917572377322425586501667984782021846237452]
-
+private def rowsC8_row005 : List ℕ := [0x2030281a110c0604020120a06030198d8804021118985030180c06031198d8704020100804222118904c26180c06030180c06030d90cc68362010080402010c]
 private theorem rowsC8_row005_checked :
     rowsC8_row005.length = 1 ∧ rowsSum 1934 rowsC8_row005 = 45856919 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
-private def rowsC8_row006 : List ℕ := [157841206354193116531649884466125601382702057589333792239845917581585634155788195149653673517664221001247171983912726017809303548271892409700592298099468]
-
+private def rowsC8_row006 : List ℕ := [0x3038301c120c0644021120c06030198e0804021918985030180c06031998d8704020100804222118904c26180c06030180c06030d90d06c362010080402030c]
 private theorem rowsC8_row006_checked :
     rowsC8_row006.length = 1 ∧ rowsSum 1935 rowsC8_row006 = 46164340 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
-private def rowsC8_row007 : List ℕ := [210317750317465281371651786821219920257403208729439406516742929061011227401216940761089025546994968632510341009796085447322077286755874754681591983899404]
-
+private def rowsC8_row007 : List ℕ := [0x40403020120c0684021120c060301a100804022120985030180c060319a0d8804020100814322120904c26180c06030180c06031190d06c362010080402030c]
 private theorem rowsC8_row007_checked :
     rowsC8_row007.length = 1 ∧ rowsSum 1936 rowsC8_row007 = 46453223 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
 private def rowsC8 : List ℕ :=
   rowsC8_row000 ++ rowsC8_row001 ++ rowsC8_row002 ++ rowsC8_row003
     ++ rowsC8_row004 ++ rowsC8_row005 ++ rowsC8_row006 ++ rowsC8_row007
-
 private theorem rowsC8_checked :
     rowsC8.length = 8 ∧ rowsSum 1929 rowsC8 = 363436340 := by
   constructor <;> simp only [rowsC8, rowsSum_append, List.length_append, Nat.reduceAdd,
@@ -5179,62 +4248,45 @@ private theorem rowsC8_checked :
     rowsC8_row002_checked.1, rowsC8_row002_checked.2, rowsC8_row003_checked.1, rowsC8_row003_checked.2,
     rowsC8_row004_checked.1, rowsC8_row004_checked.2, rowsC8_row005_checked.1, rowsC8_row005_checked.2,
     rowsC8_row006_checked.1, rowsC8_row006_checked.2, rowsC8_row007_checked.1, rowsC8_row007_checked.2]
-
-private def rowsC9_row000 : List ℕ := [27025933610203421626161879907525517438265102697158085619419547425053543915463025322814486780109694824959885075232915217893418407537951205113696524106335500]
-
+private def rowsC9_row000 : List ℕ := [0x2040403020130c0684022130c060311a100804022120986030180c060321a0d8804020100824323120904c28180c06030180c06031190d06c362010080402050c]
 private theorem rowsC9_row000_checked :
     rowsC9_row000.length = 1 ∧ rowsSum 1937 rowsC9_row000 = 46752489 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
-private def rowsC9_row001 : List ℕ := [27078410153387018799065050742326077259153600425675987146749187067450502911893329290688943780331585023196967017666947276614202567807846655613326183842841872]
-
+private def rowsC9_row001 : List ℕ := [0x2050483020140c06c4022130c060321b100804122120986030180c061321a0d8804020100824323120904c28180c06030180c06031198d06c3820100804020510]
 private theorem rowsC9_row001_checked :
     rowsC9_row001.length = 1 ∧ rowsSum 1938 rowsC9_row001 = 47081445 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
-private def rowsC9_row002 : List ℕ := [53946400463183725642622347560256596097536041132263247739580186628950019611659944020585805710710024495142497380421103359841873026679677021471257219341354768]
-
+private def rowsC9_row002 : List ℕ := [0x4060483422180c0704023130c060321b100804223120986030180c061331a0d8804020100834423120984c28180c06030180c06031998d06c3820100804020710]
 private theorem rowsC9_row002_checked :
     rowsC9_row002.length = 1 ∧ rowsSum 1939 rowsC9_row002 = 47411477 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
-private def rowsC9_row003 : List ℕ := [80762118816317325316622476357402899630823050467264894266257222689858061714544055363787156205361487551948297422643209574745798145794357064726365953375471888]
-
+private def rowsC9_row003 : List ℕ := [0x6060503822180c8804024140c060331b100804223130986030180c062331b0e0804020100834423120984c28180c06030180c060b1998d06c4020100804020910]
 private theorem rowsC9_row003_checked :
     rowsC9_row003.length = 1 ∧ rowsSum 1940 rowsC9_row003 = 47702936 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
-private def rowsC9_row004 : List ℕ := [80814698052930690104651746463500753482859358001991250741412365361932177665417750537379149768359472128556000740273737569011244457204974773170609987067709712]
-
+private def rowsC9_row004 : List ℕ := [0x6070604024180c8804224180c060341c100804323130a06030180c063331b0e0804020100844423120984c30180c06030180c060b1998d06c4020100804020910]
 private theorem rowsC9_row004_checked :
     rowsC9_row004.length = 1 ∧ rowsSum 1941 rowsC9_row004 = 47947008 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
-private def rowsC9_row005 : List ℕ := [107682688162932442631075236062744851792033465285005024049075128564591746055849560951177136676970531726970545484243177347692341866680556780618260244896811280]
-
+private def rowsC9_row005 : List ℕ := [0x8080604026180d0804226180c0603420100804424130a06030180c063341b0e0804020100844423120984c30180c06030180c06132198d06c4020100804020910]
 private theorem rowsC9_row005_checked :
     rowsC9_row005.length = 1 ∧ rowsSum 1942 rowsC9_row005 = 48258651 := by
   exact c4cCheck (by decide) (by decide) (by decide +kernel)
-
 private def rowsC9 : List ℕ :=
   rowsC9_row000 ++ rowsC9_row001 ++ rowsC9_row002 ++ rowsC9_row003
     ++ rowsC9_row004 ++ rowsC9_row005
-
 private theorem rowsC9_checked :
     rowsC9.length = 6 ∧ rowsSum 1937 rowsC9 = 285154006 := by
   constructor <;> simp only [rowsC9, rowsSum_append, List.length_append, Nat.reduceAdd,
     rowsC9_row000_checked.1, rowsC9_row000_checked.2, rowsC9_row001_checked.1, rowsC9_row001_checked.2,
     rowsC9_row002_checked.1, rowsC9_row002_checked.2, rowsC9_row003_checked.1, rowsC9_row003_checked.2,
     rowsC9_row004_checked.1, rowsC9_row004_checked.2, rowsC9_row005_checked.1, rowsC9_row005_checked.2]
-
 def rowsC : List ℕ := rowsC1 ++ rowsC2 ++ rowsC3 ++ rowsC4 ++ rowsC5 ++ rowsC6 ++ rowsC7 ++ rowsC8 ++ rowsC9
-
 theorem rowsC_length : rowsC.length = 77 := by
   simp only [rowsC, List.length_append, Nat.reduceAdd,
     rowsC1_checked.1, rowsC2_checked.1, rowsC3_checked.1, rowsC4_checked.1,
     rowsC5_checked.1, rowsC6_checked.1, rowsC7_checked.1, rowsC8_checked.1,
     rowsC9_checked.1]
-
 theorem rowsC_sum : rowsSum 1866 rowsC = 2910691358 := by
   simp only [rowsC, rowsSum_append, List.length_append, Nat.reduceAdd,
     rowsC1_checked.1, rowsC2_checked.1, rowsC3_checked.1, rowsC4_checked.1,
@@ -5242,42 +4294,29 @@ theorem rowsC_sum : rowsSum 1866 rowsC = 2910691358 := by
     rowsC1_checked.2, rowsC2_checked.2, rowsC3_checked.2, rowsC4_checked.2,
     rowsC5_checked.2, rowsC6_checked.2, rowsC7_checked.2, rowsC8_checked.2,
     rowsC9_checked.2]
-
 end K1_13_2_3_4
-end PackSource_K1_13_2_3_4DataC
-
-section PackSource_K1_13_1_1Blocks
-set_option autoImplicit true
+end
+section
 namespace K1_13_1_1
-
 open K1_13 K1_13_1 MvPolynomial PolynomialDifferential ReedSolomon.HiddenDerivative
 open scoped BigOperators
 noncomputable section
-
 set_option maxHeartbeats 1000000
 set_option maxRecDepth 12000
 set_option backward.isDefEq.respectTransparency false
-
 private abbrev Local := LocalPolynomial Geom 3
 private abbrev T : Local := MvPolynomial.X (localT 3)
-
 private def liftVar (j : Fin 4) : LocalVariable 3 := ![localE 3, localY 0, localY 1, localY 2] j
-
 private def liftPower (j : Fin 4) : ℕ := if j = 0 then 1 else j.val
-
 private def liftImage (j : Fin 4) : Local := T ^ liftPower j * MvPolynomial.X (liftVar j)
-
 private def liftJets : Form →ₐ[Geom] Local := bind₁ liftImage
-
 private theorem liftJets_X (j : Fin 4) : liftJets (MvPolynomial.X j) = liftImage j := bind₁_X_right _ _
-
 private theorem lift_value :
     liftJets valueForm = unscaledLocalSubstitution 3 0 0 (MvPolynomial.X (some 0)) := by
   rw [unscaledLocalSubstitution_Y_zero]
   simp only [valueForm, map_add, map_sub, liftJets_X, localCorrection, Fin.sum_univ_three]
   simp [liftImage, liftPower, liftVar]
   ring
-
 private theorem lift_order (j : Fin 4) :
     liftImage j ∈ restrictWeightedOrder (localContactWeight 3) (1 + targetOrder j) := by
   have h : liftPower j * 1 + localContactWeight 3 (liftVar j) = 1 + targetOrder j := by
@@ -5287,12 +4326,10 @@ private theorem lift_order (j : Fin 4) :
     (pow_mem_restrictWeightedOrder (X_mem_restrictWeightedOrder _ _ (localContactWeight_T 3).ge)
       (liftPower j))
     (X_mem_restrictWeightedOrder _ _ le_rfl)
-
 private theorem value_hom :
     valueForm.IsWeightedHomogeneous (fun _ => (1 : ℕ)) 1 := by
   let h := isWeightedHomogeneous_X Geom (fun _ : Fin 4 => (1 : ℕ))
   exact (((h 0).add (h 1)).sub (h 2)).add (h 3)
-
 private theorem lift_value_order :
     liftJets valueForm ∈ restrictWeightedOrder (localContactWeight 3) 1 := by
   have h (j : Fin 4) :
@@ -5300,12 +4337,10 @@ private theorem lift_value_order :
     restrictWeightedOrder_anti _ (Nat.le_add_right 1 (targetOrder j)) (lift_order j)
   simpa only [valueForm, map_add, map_sub, liftJets_X] using
     (add_mem (sub_mem (add_mem (h 0) (h 1)) (h 2)) (h 3))
-
 private def postprocess (s : ℕ) (g : ℤ) : Form →ₗ[Geom] Local :=
   (projectLowContact 138).comp
     ((LinearMap.mulLeft Geom (T ^ (g + 48).toNat *
       (liftJets valueForm) ^ (s - residualDegree s))).comp liftJets.toLinearMap)
-
 private theorem postprocess_truncate (s : ℕ) (g : ℤ) (hg : -48 ≤ g) {P : Form}
     (hP : P.IsWeightedHomogeneous (fun _ => (1 : ℕ)) (residualDegree s)) :
     postprocess s g (weightedTruncation targetOrder (orderCutoff s g).toNat P) =
@@ -5346,7 +4381,6 @@ private theorem postprocess_truncate (s : ℕ) (g : ℤ) (hg : -48 ≤ g) {P : F
     postprocess s g (weightedTruncation targetOrder cutoff P) =
         postprocess s g (weightedTruncation targetOrder cutoff P + H) := by rw [map_add, hz, add_zero]
     _ = postprocess s g P := by rw [hsplit]
-
 private theorem project_monomial (cut : ℕ) (e : LocalVariable 3 →₀ ℕ) (a : Geom) :
     projectLowContact cut (monomial e a) =
       if localContactOrder 3 e < cut then monomial e a else 0 := by
@@ -5364,7 +4398,6 @@ private theorem project_monomial (cut : ℕ) (e : LocalVariable 3 →₀ ℕ) (a
     · subst v
       simp [coeff_projectLowContact, hc]
     · simp [coeff_projectLowContact, coeff_monomial, h]
-
 private theorem shift_projection (P : Local) :
     T ^ 48 * projectLowContact 90 P = projectLowContact 138 (T ^ 48 * P) := by
   induction P using MvPolynomial.induction_on' with
@@ -5383,24 +4416,19 @@ private theorem shift_projection (P : Local) :
           fun h => he (hlt.mp h)
         simp [he, hnot]
   | add P Q hP hQ => simp only [map_add, mul_add, hP, hQ]
-
 private theorem jet_index_formula (m : Fin 4 →₀ ℕ) :
     m.weight jetIndex = m 1 + 2 * m 2 + 3 * m 3 := by
   simp [Finsupp.weight_eq_sum, Fin.sum_univ_four, jetIndex, Nat.mul_comm]
-
 private def trimmed (u : JetVariable 3 →₀ ℕ) : Fin 4 →₀ ℕ :=
   u.some - Finsupp.single 0 (u.some.degree - residualDegree u.some.degree)
-
 private theorem trimmed_other (u : JetVariable 3 →₀ ℕ) (j : Fin 4) (h : j ≠ 0) :
     trimmed u j = u (some j) := by
   simp [trimmed, Ne.symm h]
-
 private theorem trimmed_id (u : JetVariable 3 →₀ ℕ) :
     (trimmed u).weight jetIndex = u.some.weight jetIndex := by
   rw [jet_index_formula, jet_index_formula]
   rw [trimmed_other u 1 (by decide), trimmed_other u 2 (by decide), trimmed_other u 3 (by decide)]
   simp
-
 private theorem trimmed_value_and_degree (u : JetVariable 3 →₀ ℕ) (hu : AnchorEligible u) :
     trimmed u 0 + (u.some.degree - residualDegree u.some.degree) = u (some 0) ∧
       (trimmed u).degree = residualDegree u.some.degree := by
@@ -5416,7 +4444,6 @@ private theorem trimmed_value_and_degree (u : JetVariable 3 →₀ ℕ) (hu : An
       trimmed_other u 2 (by decide), trimmed_other u 3 (by decide)]
   simp only [residualDegree] at *
   omega
-
 private theorem trimmed_mem_band (u : JetVariable 3 →₀ ℕ) (hu : AnchorEligible u) :
     BandExponent (residualDegree u.some.degree) (-((u none : ℤ) - u.some.weight jetIndex))
       48 10 (trimmed u) := by
@@ -5427,7 +4454,6 @@ private theorem trimmed_mem_band (u : JetVariable 3 →₀ ℕ) (hu : AnchorElig
     exact_mod_cast hu.2.1
   · rw [trimmed_other u 3 (by decide)]
     exact hu.2.2.1
-
 private theorem backShift_hom (u : JetVariable 3 →₀ ℕ) (hu : AnchorEligible u) (a : Geom) :
     (backShift (monomial (trimmed u) a)).IsWeightedHomogeneous
       (fun _ => (1 : ℕ)) (residualDegree u.some.degree) := by
@@ -5439,7 +4465,6 @@ private theorem backShift_hom (u : JetVariable 3 →₀ ℕ) (hu : AnchorEligibl
   split_ifs
   · exact value_hom
   · exact isWeightedHomogeneous_X _ _ _
-
 private theorem source_monomial_expr (u : JetVariable 3 →₀ ℕ) (a : Geom) :
     monomial u a = MvPolynomial.C a * MvPolynomial.X none ^ u none *
       MvPolynomial.X (some 0) ^ u (some 0) * MvPolynomial.X (some 1) ^ u (some 1) *
@@ -5448,13 +4473,11 @@ private theorem source_monomial_expr (u : JetVariable 3 →₀ ℕ) (a : Geom) :
   change _ * (_ * ∏ i : Fin 4, MvPolynomial.X (some i) ^ u (some i)) = _
   rw [Fin.prod_univ_four]
   ring
-
 private theorem form_monomial_expr (m : Fin 4 →₀ ℕ) (a : Geom) :
     monomial m a = MvPolynomial.C a * MvPolynomial.X 0 ^ m 0 * MvPolynomial.X 1 ^ m 1 *
       MvPolynomial.X 2 ^ m 2 * MvPolynomial.X 3 ^ m 3 := by
   rw [monomial_eq, Finsupp.prod_fintype _ _ (fun _ => pow_zero _), Fin.prod_univ_four]
   ring
-
 private theorem shifted_substitution (u : JetVariable 3 →₀ ℕ) (hu : AnchorEligible u) (a : Geom) :
     T ^ 48 * unscaledLocalSubstitution 3 0 0 (monomial u a) =
       T ^ (((u none : ℤ) - u.some.weight jetIndex) + 48).toNat *
@@ -5495,7 +4518,6 @@ private theorem shifted_substitution (u : JetVariable 3 →₀ ℕ) (hu : Anchor
       rw [← hpow, ← hv, pow_add]
       simp [liftImage, liftPower, liftVar, mul_pow]
       ring
-
 private theorem shifted_constraint_monomial (u : JetVariable 3 →₀ ℕ) (hu : AnchorEligible u)
     (a : Geom) :
     let s := u.some.degree
@@ -5513,7 +4535,6 @@ private theorem shifted_constraint_monomial (u : JetVariable 3 →₀ ℕ) (hu :
   change postprocess s g P = postprocess s g
     (weightedTruncation targetOrder (orderCutoff s g).toNat P)
   exact (postprocess_truncate s g (by dsimp [g]; omega) (backShift_hom u hu a)).symm
-
 theorem blockMap_eq_zero (s : ℕ) (g : ℤ) (h : 90 - (s : ℤ) ≤ g) :
     blockMap s g = 0 := by
   apply LinearMap.ext
@@ -5522,15 +4543,11 @@ theorem blockMap_eq_zero (s : ℕ) (g : ℤ) (h : 90 - (s : ℤ) ≤ g) :
   have hcut : (orderCutoff s g).toNat = 0 := by unfold orderCutoff; omega
   rw [hcut, weightedTruncation_eq_zero_iff, restrictWeightedOrder_zero]
   trivial
-
 private abbrev Block := Fin 121 × Fin 138
-
 private abbrev Image (b : Block) := LinearMap.range (blockMap b.1 (offset b.2))
-
 private def merge {ι : Type} [Fintype ι] {V : ι → Submodule Geom Form}
     (post : ι → Form →ₗ[Geom] Local) : (∀ i, V i) →ₗ[Geom] Local :=
   ∑ i, (post i).comp ((V i).subtype.comp (LinearMap.proj i))
-
 private theorem merge_single {ι : Type} [Fintype ι] [DecidableEq ι]
     {V : ι → Submodule Geom Form} (post : ι → Form →ₗ[Geom] Local) (i : ι) (v : V i) :
     merge post (Pi.single i v) = post i v := by
@@ -5541,10 +4558,8 @@ private theorem merge_single {ι : Type} [Fintype ι] [DecidableEq ι]
       Pi.single_eq_of_ne (M := fun k => ↥(V k)) hj v
     simp [hj']
   · simp
-
 private def assemble : (∀ b : Block, Image b) →ₗ[Geom] Local :=
   merge (fun b => postprocess b.1 (offset b.2))
-
 private theorem postprocess_mem_assemble (b : Block) (s : ℕ) (g : ℤ)
     (hs : (b.1 : ℕ) = s) (hg : offset b.2 = g)
     (q : bandSpace (residualDegree s) (-g) 48 10) :
@@ -5553,7 +4568,6 @@ private theorem postprocess_mem_assemble (b : Block) (s : ℕ) (g : ℤ)
   subst g
   let v : Image b := ⟨blockMap b.1 (offset b.2) q, LinearMap.mem_range_self _ q⟩
   exact ⟨Pi.single b v, merge_single (fun j : Block => postprocess j.1 (offset j.2)) b v⟩
-
 private theorem shifted_monomial_mem_assemble (u : JetVariable 3 →₀ ℕ)
     (hu : AnchorEligible u) (a : Geom) :
     T ^ 48 * localConstraintAt 90 0 0 (monomial u a) ∈ LinearMap.range assemble := by
@@ -5575,8 +4589,6 @@ private theorem shifted_monomial_mem_assemble (u : JetVariable 3 →₀ ℕ)
     exact postprocess_mem_assemble b s g rfl ho q
   · rw [blockMap_eq_zero s g (by omega), LinearMap.zero_apply, map_zero]
     exact Submodule.zero_mem _
-
-/-- Translating to the origin leaves a contact image bounded by the sum of residual block ranks. -/
 theorem rank_origin_le_blocks :
     Module.finrank Geom (LinearMap.range (anchorLocal 0 0)) ≤
       ∑ s : Fin 121, ∑ r : Fin 138,
@@ -5605,49 +4617,33 @@ theorem rank_origin_le_blocks :
     _ ≤ Module.finrank Geom (LinearMap.range assemble) := Submodule.finrank_mono hsub
     _ ≤ Module.finrank Geom (∀ b : Block, Image b) := LinearMap.finrank_range_le assemble
     _ = _ := by rw [Module.finrank_pi_fintype, Fintype.sum_prod_type]
-
 end
-
 end K1_13_1_1
-end PackSource_K1_13_1_1Blocks
-
-section PackSource_K1_14_5Aux
-set_option autoImplicit true
+end
+section
 namespace K1_14_5
-
 open K1_14 Finset
 open scoped BigOperators
-
 private theorem sum_arithmetic (n : ℕ) (a d : ℤ) :
     (∑ t ∈ range n, (a - 2*d*(t : ℤ))) = (n : ℤ)*(a - d*((n : ℤ)-1)) := by
   induction n with
   | zero => simp
   | succ n ih => rw [sum_range_succ, ih, Nat.cast_succ]; ring
-
-/-- For fixed derivative grade j and layer r, the positions used by the
-left-endpoint support form the consecutive block j, ..., j+n-1. -/
 private def supportCount (s : Shape) (lo j r : ℕ) : ℕ :=
   let offset := j*(131071-lo) + 2*lo*(j+r)
   let top := s.m*180265 + j
   min (s.B+1-j) (if offset < top then (top-offset-1)/(131071-lo)+1 else 0)
-
-/-- Twice the sum of the signed widths in that block. -/
 private def blockValue (s : Shape) (j r n : ℕ) (h : ℤ) : ℤ :=
   (n : ℤ) * (2*((s.m : ℤ)*180265+j) - (2*(j : ℤ)+n-1)*(131071-h) -
     4*((j : ℤ)+r)*h)
-
 private def blockSlope (j r n : ℕ) : ℤ :=
   (n : ℤ) * ((2*(j : ℤ)+n-1) - 4*((j : ℤ)+r))
-
 private def signedWidth (s : Shape) (h : ℤ) (q j r : ℕ) : ℤ :=
   (s.m : ℤ)*180265 + j - q*(131071-h) - 2*h*((j : ℤ)+r)
-
 private def width (s : Shape) (h q j r : ℕ) : ℕ :=
   s.m*180265 + j - q*(131071-h) - 2*h*(j+r)
-
 private def weight (s : Shape) (v r : ℕ) : ℕ :=
   slots s.U (r*v) - slots s.U ((r+1)*v)
-
 private theorem width_ge_signed (s : Shape) {h : ℕ} (hh : h ≤ 131071) (q j r : ℕ) :
     signedWidth s h q j r ≤ (width s h q j r : ℤ) := by
   have cast_sub_le (a b : ℕ) : (a : ℤ) - b ≤ ((a-b : ℕ) : ℤ) := by omega
@@ -5656,7 +4652,6 @@ private theorem width_ge_signed (s : Shape) {h : ℕ} (hh : h ≤ 131071) (q j r
   unfold signedWidth width
   push_cast [Nat.cast_sub hh] at h₁ h₂
   linarith only [h₁, h₂]
-
 private theorem blockValue_eq_sum (s : Shape) (h : ℤ) (j r n : ℕ) :
     blockValue s j r n h = ∑ t ∈ range n, 2 * signedWidth s h (j+t) j r := by
   calc
@@ -5671,8 +4666,6 @@ private theorem blockValue_eq_sum (s : Shape) (h : ℤ) (j r n : ℕ) :
       unfold signedWidth
       push_cast
       ring
-
-/-- Reorder the triangular (total grade, derivative grade) indexing. -/
 private theorem shape_sum_flip {M : Type} [AddCommMonoid M]
     (s : Shape) (f : ℕ → ℕ → M) :
     (∑ q ∈ range (s.B+1), ∑ j ∈ range (min q s.J+1), f q j) =
@@ -5697,7 +4690,6 @@ private theorem shape_sum_flip {M : Type} [AddCommMonoid M]
       ext q
       simp only [mem_filter, mem_range, mem_Ico]
       tauto
-
 private theorem block_le (s : Shape) (v lo j r : ℕ) {h : ℕ} (hh : h ≤ 131071) :
     (weight s v r : ℤ) * blockValue s j r (supportCount s lo j r) h ≤
       ∑ q ∈ Ico j (s.B+1), 2 * (weight s v r : ℤ) * (width s h q j r : ℤ) := by
@@ -5716,21 +4708,14 @@ private theorem block_le (s : Shape) (v lo j r : ℕ) {h : ℕ} (hh : h ≤ 1310
     _ ≤ ∑ t ∈ range (s.B+1-j), term (j+t) :=
       sum_le_sum_of_subset_of_nonneg (range_mono hn) (by intros; positivity)
     _ = _ := (sum_Ico_eq_sum_range term j (s.B+1)).symm
-
 private def weightedSum (s : Shape) (v : ℕ) (f : ℕ → ℕ → ℤ) : ℤ :=
   ∑ j ∈ range (s.J+1), ∑ r ∈ range (s.U/v+1), (weight s v r : ℤ) * f j r
-
-/-- Value of the doubled supporting line at the left endpoint. -/
 def supportBase (s : Shape) (v lo : ℕ) : ℤ :=
   weightedSum s v fun j r => blockValue s j r (supportCount s lo j r) lo
-
-/-- Slope of the doubled supporting line. -/
 def supportSlope (s : Shape) (v lo : ℕ) : ℤ :=
   weightedSum s v fun j r => blockSlope j r (supportCount s lo j r)
-
 private def gain (s : Shape) (v h : ℕ) : ℕ :=
   shapeSum s fun q j => ∑ r ∈ range (s.U/v+1), weight s v r * width s h q j r
-
 private theorem support_le_gain (s : Shape) (v lo : ℕ) {h : ℕ} (hh : h ≤ 131071) :
     supportBase s v lo + ((h : ℤ)-lo) * supportSlope s v lo ≤ 2 * (gain s v h : ℤ) := by
   have hline : supportBase s v lo + ((h : ℤ)-lo) * supportSlope s v lo =
@@ -5752,11 +4737,9 @@ private theorem support_le_gain (s : Shape) (v lo : ℕ) {h : ℕ} (hh : h ≤ 1
   intro j _
   rw [sum_comm]
   exact sum_le_sum fun r _ => block_le s v lo j r hh
-
 private def nodeRow (k d : ℕ) : ℕ :=
   let n := min k ((d+1)/2)
   n*(d+1-n)
-
 private theorem nodeRow_eq_sum (k d : ℕ) :
     (∑ i ∈ range k, (d-2*i)) = nodeRow k d := by
   let n := min k ((d+1)/2)
@@ -5786,16 +4769,11 @@ private theorem nodeRow_eq_sum (k d : ℕ) :
   change _ = (↑(n*(d+1-n)) : ℤ)
   push_cast [Nat.cast_sub hn]
   ring
-
-/-- Constant node debit, with an arithmetic progression summed at each q. -/
 def nodeCost (s : Shape) : ℕ :=
   triangle s.U * 262144 *
     ∑ q ∈ range (s.B+1), nodeRow (min q s.J+1) (s.m+min q s.J-q)
-
-/-- Coefficient of height in the two primary pole debits. -/
 def poleSlope (s : Shape) : ℕ :=
   2*(s.U+1) * ∑ q ∈ range (s.B+1), (min q s.J+1)*((s.B+s.J-q)*(s.B-q))
-
 private theorem debit_eq (s : Shape) (h : ℕ) :
     sourceDebit h s = nodeCost s + h * poleSlope s := by
   have hnode : shapeSum s (fun q i => s.m+min q s.J-(q+2*i)) =
@@ -5811,9 +4789,6 @@ private theorem debit_eq (s : Shape) (h : ℕ) :
   unfold sourceDebit nodeCost poleSlope
   rw [hnode, hpole]
   ring
-
-/-- Checking the starting slack and the slope suffices throughout a band
-with this fixed terminal shape and tested seed degree. -/
 theorem test_of_support (w : ℤ) {s : Shape} {v lo : ℕ}
     (hshape : terminalShape w = s) (hv : (band w).seedBound+1 = v)
     (hlo : (lo : ℤ) ≤ w) (hhi : w ≤ 131071)
@@ -5833,443 +4808,15 @@ theorem test_of_support (w : ℤ) {s : Shape} {v lo : ℕ}
     push_cast
     nlinarith only [hplane, hinc, hbase]
   exact_mod_cast hcast
-
 end K1_14_5
-end PackSource_K1_14_5Aux
-
-section PackSource_K1_14_5Proof
-set_option autoImplicit true
-namespace K1_14_5
-
-open K1_14
-
-private def bridgeShape : Shape := ⟨836, 1164, 247, 19371⟩
-private def pairedLowShape : Shape := ⟨358, 500, 105, 6798⟩
-private def pairedMidShape : Shape := ⟨358, 500, 105, 4860⟩
-private def pairedHighShape : Shape := ⟨358, 500, 105, 3913⟩
-
-private def PositiveSupport (s : Shape) (v lo : ℕ) : Prop :=
-  2 * ((nodeCost s : ℤ) + lo * (poleSlope s : ℤ)) < supportBase s v lo ∧
-  2 * (poleSlope s : ℤ) ≤ supportSlope s v lo
-
-open Finset
-open scoped BigOperators
-
--- A recursive range sum for small closed checks, connected to the original Finset sums.
-private def k145Sum {α : Type} [AddMonoid α] (f : ℕ → α) : ℕ → α
-  | 0 => 0
-  | n + 1 => k145Sum f n + f n
-
-private theorem k145Sum_eq {α : Type} [AddCommMonoid α] (f : ℕ → α) (n : ℕ) :
-    k145Sum f n = ∑ i ∈ range n, f i := by
-  induction n with
-  | zero => simp [k145Sum]
-  | succ n ih => rw [k145Sum, Finset.sum_range_succ, ih]
-
-private def k145SupportCount (s : Shape) (lo j r : ℕ) : ℕ :=
-  let offset := j * (131071 - lo) + 2 * lo * (j + r)
-  let top := s.m * 180265 + j
-  min (s.B + 1 - j) (if offset < top then (top - offset - 1) / (131071 - lo) + 1 else 0)
-
-private def k145NodeTerm (s : Shape) (q : ℕ) : ℕ :=
-  let k := min q s.J + 1
-  let d := s.m + min q s.J - q
-  let n := min k ((d + 1) / 2)
-  n * (d + 1 - n)
-
-private def k145PoleTerm (s : Shape) (q : ℕ) : ℕ :=
-  (min q s.J + 1) * ((s.B + s.J - q) * (s.B - q))
-
-private theorem k145Node_eq (s : Shape) :
-    nodeCost s = triangle s.U * 262144 * k145Sum (k145NodeTerm s) (s.B + 1) := by
-  simp only [k145Sum_eq]
-  rfl
-
-private theorem k145Pole_eq (s : Shape) :
-    poleSlope s = 2 * (s.U + 1) * k145Sum (k145PoleTerm s) (s.B + 1) := by
-  simp only [k145Sum_eq]
-  rfl
-
-section
-
-set_option maxRecDepth 10000
-set_option maxHeartbeats 0
-
--- On a diagonal t = j + r, j ranges backwards as r increases. Reindex
--- the rectangle so its two finite bounds can certify a single cutoff.
-private theorem k145Diagonal (J R : ℕ) (f : ℕ → ℕ → ℤ) :
-    (∑ j ∈ range (J+1), ∑ r ∈ range (R+1), f j r) =
-      ∑ t ∈ range (J+R+1), ∑ r ∈ Ico (t-J) (min t R+1), f (t-r) r := by
-  calc
-    _ = ∑ r ∈ range (R+1), ∑ j ∈ range (J+1), f j r := sum_comm
-    _ = ∑ r ∈ range (R+1), ∑ t ∈ Ico r (r+(J+1)), f (t-r) r := by
-      apply sum_congr rfl
-      intro r _
-      rw [sum_Ico_eq_sum_range]
-      simp
-    _ = ∑ r ∈ range (R+1), ∑ t ∈ range (J+R+1),
-        if r ≤ t ∧ t-r ≤ J then f (t-r) r else 0 := by
-      apply sum_congr rfl
-      intro r hr
-      have hr' := mem_range.mp hr
-      rw [← sum_filter]
-      congr 1
-      ext t
-      simp only [mem_Ico, mem_filter, mem_range]
-      omega
-    _ = ∑ t ∈ range (J+R+1), ∑ r ∈ range (R+1),
-        if r ≤ t ∧ t-r ≤ J then f (t-r) r else 0 := sum_comm
-    _ = _ := by
-      apply sum_congr rfl
-      intro t _
-      rw [← sum_filter]
-      congr 1
-      ext r
-      simp only [mem_Ico, mem_filter, mem_range, Nat.lt_succ_iff, le_min_iff]
-      omega
-
--- These two inequalities bracket the quotient in the original support
--- count. At the physical cap B only the lower inequality is necessary.
-private theorem k145Quotient {B j D z T k : ℕ} (hd : 0 < D) (hj : j < k)
-    (hb : k ≤ B) (hl : (k-1)*D+z < T) (hh : k=B ∨ T ≤ k*D+z) :
-    min (B-j) (if j*D+z < T then (T-(j*D+z)-1)/D+1 else 0) = k-j := by
-  have hjD : j*D ≤ (k-1)*D := Nat.mul_le_mul_right D (by omega)
-  rw [ite_eq_left (by omega)]
-  have hlow : k-1-j ≤ (T-(j*D+z)-1)/D := (Nat.le_div_iff_mul_le hd).2 (by
-    rw [Nat.sub_mul]
-    omega)
-  rcases hh with rfl | hh
-  · omega
-  · have hupp : (T-(j*D+z)-1)/D < k-j := (Nat.div_lt_iff_lt_mul hd).2 (by
-      rw [Nat.sub_mul]
-      omega)
-    omega
-
-private def k145W (s : Shape) (v r : ℕ) : ℕ :=
-  slots s.U (r*v) - slots s.U ((r+1)*v)
-
-private def k145A (s : Shape) (lo t : ℕ) (slope : Bool) : ℤ :=
-  if slope then -4*(t : ℤ) else 2*((s.m : ℤ)*180265) - 4*(t : ℤ)*lo
-private def k145B (slope : Bool) : ℤ := if slope then 0 else 2
-private def k145C (lo : ℕ) (slope : Bool) : ℤ := if slope then 1 else -(131071-(lo : ℤ))
-
-private def k145Cell (s : Shape) (v lo : ℕ) (slope : Bool) (j r : ℕ) : ℤ :=
-  let n : ℤ := k145SupportCount s lo j r
-  (k145W s v r : ℤ) * (n * (k145A s lo (j+r) slope + k145B slope*j +
-    k145C lo slope*(2*(j : ℤ)+n-1)))
-
-private theorem k145Cells (s : Shape) (v lo : ℕ) (slope : Bool) :
-    (if slope then supportSlope s v lo else supportBase s v lo) =
-      ∑ j ∈ range (s.J+1), ∑ r ∈ range (s.U/v+1), k145Cell s v lo slope j r := by
-  cases slope
-  · change (∑ j ∈ range (s.J+1), ∑ r ∈ range (s.U/v+1), (k145W s v r : ℤ) * ((k145SupportCount s lo j r : ℤ) *
-      (2*((s.m : ℤ)*180265+j) - (2*(j : ℤ)+k145SupportCount s lo j r-1)*(131071-lo) -
-        4*((j : ℤ)+r)*lo))) = _
-    apply sum_congr rfl
-    intro j _
-    apply sum_congr rfl
-    intro r _
-    simp only [k145Cell, k145A, k145B, k145C, Bool.false_eq_true, ite_false, Nat.cast_add]
-    ring
-  · change (∑ j ∈ range (s.J+1), ∑ r ∈ range (s.U/v+1), (k145W s v r : ℤ) * ((k145SupportCount s lo j r : ℤ) *
-      ((2*(j : ℤ)+k145SupportCount s lo j r-1)-4*((j : ℤ)+r)))) = _
-    apply sum_congr rfl
-    intro j _
-    apply sum_congr rfl
-    intro r _
-    simp only [k145Cell, k145A, k145B, k145C, ite_true, Nat.cast_add]
-    ring
-
-private def k145Cut (s : Shape) (lo t : ℕ) : ℕ :=
-  min (s.B+1) ((s.m*180265+(t-(t-s.J))-2*lo*t-1)/(131071-lo)+1)
-
-private def k145GoodCut (s : Shape) (v lo t : ℕ) : Prop :=
-  let k := k145Cut s lo t
-  let D := 131071-lo
-  let jmax := t-(t-s.J)
-  let jmin := t-min t (s.U/v)
-  jmax < k ∧ k ≤ s.B+1 ∧ (k-1)*D + 2*lo*t < s.m*180265+jmin ∧
-    (k=s.B+1 ∨ s.m*180265+jmax ≤ k*D+2*lo*t)
-
-private instance (s : Shape) (v lo t : ℕ) : Decidable (k145GoodCut s v lo t) := by
-  unfold k145GoodCut
-  infer_instance
-
-private theorem k145AtCut (s : Shape) (v lo t r : ℕ) (hd : lo < 131071)
-    (h : k145GoodCut s v lo t) (hr : r ∈ Ico (t-s.J) (min t (s.U/v)+1)) :
-    t-r ≤ k145Cut s lo t ∧ k145SupportCount s lo (t-r) r = k145Cut s lo t - (t-r) := by
-  obtain ⟨hk, hb, hl, hh⟩ := h
-  obtain ⟨ha, he⟩ := mem_Ico.mp hr
-  have hrle : r ≤ t := by omega
-  have hj : t-r < k145Cut s lo t := by omega
-  refine ⟨by omega, ?_⟩
-  unfold k145SupportCount
-  rw [Nat.sub_add_cancel hrle]
-  apply k145Quotient (by omega) hj hb (by omega)
-  rcases hh with hcap | htop
-  · exact Or.inl hcap
-  · exact Or.inr (by omega)
-
--- Packed base-2^48 digits store the three weighted prefix moments at each
--- index. Their successive differences are verified against the slot counts.
-private def k145Digit (data i r : ℕ) : ℕ :=
-  (data >>> (48*(3*r+i))) % 281474976710656
-
-private def k145MomStep (s : Shape) (v data r : ℕ) : Prop :=
-  let w := k145W s v r
-  k145Digit data 0 (r+1) = k145Digit data 0 r + w ∧
-  k145Digit data 1 (r+1) = k145Digit data 1 r + w*r ∧
-  k145Digit data 2 (r+1) = k145Digit data 2 r + w*r*r
-
-private instance (s : Shape) (v data r : ℕ) : Decidable (k145MomStep s v data r) := by
-  unfold k145MomStep
-  infer_instance
-
-private def k145All (p : ℕ → Bool) : ℕ → Bool
-  | 0 => true
-  | n+1 => k145All p n && p n
-
-private theorem k145All_sound (p : ℕ → Prop) [DecidablePred p] (n : ℕ)
-    (h : k145All (fun i => decide (p i)) n = true) : ∀ i < n, p i := by
-  induction n with
-  | zero => intro i hi; omega
-  | succ n ih =>
-    obtain ⟨h0,h1⟩ := Bool.and_eq_true_iff.mp h
-    intro i hi
-    rcases Nat.lt_or_eq_of_le (Nat.le_of_lt_succ hi) with hlt | rfl
-    · exact ih h0 i hlt
-    · exact of_decide_eq_true h1
-
-private def k145Primitive (data i : ℕ) (x y z : ℤ) : ℤ :=
-  x*k145Digit data 0 i + y*k145Digit data 1 i + z*k145Digit data 2 i
-
-private theorem k145PrimStep (s : Shape) (v data r : ℕ) (x y z : ℤ)
-    (h : k145MomStep s v data r) :
-    k145Primitive data (r+1) x y z = k145Primitive data r x y z +
-      (k145W s v r : ℤ)*(x+y*r+z*r*r) := by
-  obtain ⟨h0,h1,h2⟩ := h
-  simp only [k145Primitive, h0,h1,h2,Nat.cast_add,Nat.cast_mul]
-  ring
-
-private theorem k145Tel (f p : ℕ → ℤ) (a n : ℕ)
-    (h : ∀ i < n, p (a+i+1) = p (a+i)+f (a+i)) :
-    (∑ i ∈ range n, f (a+i)) = p (a+n)-p a := by
-  induction n with
-  | zero => simp
-  | succ n ih =>
-    rw [sum_range_succ, ih (fun i hi => h i (by omega))]
-    rw [← Nat.add_assoc, h n (by omega)]
-    ring
-
--- If n=k-j and j=t-r, each weighted cell is w(r) times a quadratic in r.
-private def k145PrimitiveAt (s : Shape) (lo data t : ℕ) (slope : Bool) (r : ℕ) : ℤ :=
-  let k : ℤ := k145Cut s lo t
-  let u := k-(t : ℤ)
-  let a := k145A s lo t slope
-  let b := k145B slope
-  let c := k145C lo slope
-  let e := a + b*t + c*((t : ℤ)+k-1)
-  k145Primitive data r (u*e) (e-u*(b+c)) (-(b+c))
-
-private def k145DiagValue (s : Shape) (v lo data t : ℕ) (slope : Bool) : ℤ :=
-  k145PrimitiveAt s lo data t slope (min t (s.U/v)+1) -
-    k145PrimitiveAt s lo data t slope (t-s.J)
-
-private theorem k145OneDiag (s : Shape) (v lo data t : ℕ) (slope : Bool)
-    (hd : lo < 131071) (ht : t < s.J+s.U/v+1) (hc : k145GoodCut s v lo t)
-    (hm : ∀ r < s.U/v+1, k145MomStep s v data r) :
-    (∑ r ∈ Ico (t-s.J) (min t (s.U/v)+1), k145Cell s v lo slope (t-r) r) =
-      k145DiagValue s v lo data t slope := by
-  let a := t-s.J
-  let b := min t (s.U/v)+1
-  have hab : a ≤ b := by
-    change t-s.J ≤ min t (s.U/v)+1
-    exact Nat.le.step (le_min (Nat.sub_le ..) (Nat.sub_le_iff_le_add'.2 (Nat.le_of_lt_succ ht)))
-  change (∑ r ∈ Ico a b, _) = k145PrimitiveAt s lo data t slope b -
-    k145PrimitiveAt s lo data t slope a
-  rw [sum_Ico_eq_sum_range]
-  conv_rhs => rw [← Nat.add_sub_of_le hab]
-  apply k145Tel (fun r => k145Cell s v lo slope (t-r) r) (k145PrimitiveAt s lo data t slope) a (b-a)
-  intro i hi
-  let r := a+i
-  have hmem : r ∈ Ico (t-s.J) (min t (s.U/v)+1) := by
-    change r ∈ Ico a b
-    exact mem_Ico.mpr ⟨by dsimp [r]; omega, by dsimp [r]; omega⟩
-  obtain ⟨_, he⟩ := mem_Ico.mp hmem
-  have hr : r ≤ t := by omega
-  obtain ⟨hjk, hn⟩ := k145AtCut s v lo t r hd hc hmem
-  change k145PrimitiveAt s lo data t slope (r+1) =
-    k145PrimitiveAt s lo data t slope r + k145Cell s v lo slope (t-r) r
-  simp only [k145PrimitiveAt, k145PrimStep _ _ _ r _ _ _ (hm r (by omega))]
-  congr 1
-  simp only [k145Cell, hn, Nat.cast_sub hjk, Nat.sub_add_cancel hr, Nat.cast_sub hr]
-  ring
-
-private theorem k145Eval (s : Shape) (v lo data : ℕ) (slope : Bool)
-    (hd : lo < 131071)
-    (hc : k145All (fun t => decide (k145GoodCut s v lo t)) (s.J+s.U/v+1) = true)
-    (hm : k145All (fun r => decide (k145MomStep s v data r)) (s.U/v+1) = true) :
-    (if slope then supportSlope s v lo else supportBase s v lo) =
-      k145Sum (fun t => k145DiagValue s v lo data t slope) (s.J+s.U/v+1) := by
-  rw [k145Cells, k145Diagonal, k145Sum_eq]
-  apply sum_congr rfl
-  intro t ht
-  have hlt := mem_range.mp ht
-  exact k145OneDiag s v lo data t slope hd hlt (k145All_sound _ _ hc t hlt)
-    (k145All_sound _ _ hm)
-
-private theorem k145BridgeNodeTotal :
-    k145Sum (k145NodeTerm bridgeShape) 1165 = 66215380 := by decide +kernel
-
-private theorem k145BridgePoleTotal :
-    k145Sum (k145PoleTerm bridgeShape) 1165 = 127928356332 := by decide +kernel
-
-private def k145BridgeData : ℕ :=
-  0x800ba760280001ec85ed8e00000b2f439e0080079e26540001ec7e28ca00000b2f34aa007fef85fc540001ec4f6e4a00000b2eda0a007fc249668b0001ebf7078700000b2e2d49007f808f27030001eb7598c300000b2d2e67007f2afc13000001eacbc64000000b2bdd64007ec23313000001e9fa344000000b2a3a40007e46d522bb0001e901870500000b2844fb007db98151230001e7e262d100000b25fd95007d1ad4c0640001e69d6be600000b23640e007c6b6aa5e40001e533468600000b207866007babdc4a430001e3a496f300000b1d3a9d007adcc1095b0001e1f2016f00000b19aab30079feae52400001e01c2a3c00000b15c8a800791237a7400001de23b59c00000b11947c007817ee9de30001dc0947d100000b0d0e2f00771062deeb0001d9cd851d00000b0835c10075fc2226540001d77111c200000b030b320074dbb843540001d4f4920200000afd8e820073afaf185b0001d258aa1f00000af7bfb10072788e9b130001cf9dfe5b00000af19ebf007136dcd4600001ccc532f800000aeb2bac006feb1de0600001c9ceec3800000ae46678006e95d3ee6b0001c6bbce5d00000add4f23006d377f41130001c38c7da900000ad5e5ad006bd09e2e240001c0419e5e00000ace2a16006a61ad1ea40001bcdbd4be00000ac61c5e0068eb268ed30001b95bc50b00000abdbc8500676d830e2b0001b5c2138700000ab50a8b0065e9393f600001b20f647400000aac067000645ebdd8600001ae445c1400000aa2b0340062ce83a2530001aa619ea900000a9907d7006138fb799b0001a667d07500000a8f0d59005f9e944dd40001a25795ba00000a84c0ba005dffbb21d400019e3192ba00000a7a21fa005c5cdb0bab000199f66bb700000a6f3119005ab65d34a3000195a6c4f300000a63ee1700590ca8d9400001914342b000000a5858f400576023494000018ccc893000000a4c71b00055b12fe79b000188433cb500000a40384b005400302a83000183a8018100000a33acc500524d839b6400017efb7bd600000a26cf1e00509987d6e400017a3e4ff600000a199f56004ee4988ce300017571222300000a0c1d6d004d2f0f807b00017094969f000009fe4963004b7944880000016ba951ac000009f023380049c38d8d00000166aff78c000009e1aaec00480e3e8c43000161a92c81000009d2e07f004659a995cb00015c9594cd000009c3c3f10044a61eccd400015775d4b2000009b455420042f3ec67d40001524a9072000009a494720041435eb07b00014d146c4f000009948181003f94c003b3000147d40c8b000009841c6f003de858d1a00001428a156800000973653c003c3e6f9da000013d372b28000009625be8003a9748fe4b000137dbf20d0000095100730038f3279d73000132790e590000093f52dd0037524c382400012d0f244e0000092d53260035b4f59ea40001279ed82e0000091b014e00341b60b47300012228ce3b000009085d55003285c8704b00011cadaab7000008f5673b0030f465dc200001172e11e4000008e21f00002f67701520000111aaa804000008ce84a4002ddf1c4bb300010c241159000008ba9827002c5b9dc37b0001069af225000008a65989002add25d3540001010feeaa00000891c8ca002963e3e5540000fb83ab2a0000087ce5ea0027f00576cb0000f5f6cbe700000867b0e9002681b618430000f069f5230000085229c70025191f6d800000eaddcb200000083c50840023b6692d800000e552f220000008262520002259b9227b0000dfca0e650000080fa79b0021033329e30000da43c431000007f8d7f5001fb2f934640000d4c0b7c6000007e1b62e001e692b45e40000cf418d66000007ca4246001d25e775830000c9c6e953000007b27c3d001be949ed9b0000c4516fcf0000079a6413001ab36cebc00000bee1c51c00000781f9c800198468c0c00000b9788d7c000007693d5c00185c53d0a30000b4166d31000007502ecf00173b4292ab0000aebc087d00000736ce210016214791540000a96a03a20000071d1b5200150e736a540000a42102e2000007031662001402d4ce9b00009ee1aa7f000006e8bf510012fe788253000099ac9ebb000006ce161f001201695ce00000948283d8000006b31acc00110bb048e000008f63fe1800000697cd5800101d54442b00008a51b1bd0000067c2dc3000f365a5fd30000854c4309000006603c0d000e56c5c02400008054563e00000643f836000d7e979ca400007b6a8f9e00000627623e000cadcf40130000768f936b0000060a7a25000be46a086b000071c405e7000005ed3feb000b226366e000006d088b54000005cfb390000a67b4dfe00000685dc7f4000005b1d5140009b4560b13000063c4600900000593a4770009083c935b00005f3cf7d50000057521b90008635c36d400005ac8339a000005564cda0007c5a6c6d400005666b79a0000053725da00072f0c27eb00005219281700000517acb900069f7a51e300004de02953000004f7e177000616dd4fc0000049bc5f90000004d7c4140005951f3fc0000045ae6f10000004b7549000051a28535b000041b6fc150000049692eb0004a5decf4300003dd6aae1000004757f25000438270b6400003a0e1fb600000454193e0003d0e372e40000365dfed600000432613600036ff48423000032c6ec8300000410570d00031538d0bb00002f498cff000003edfac30002c08cfd8000002be6848c000003cb4c58000271cbc2800000289e776c000003a84bcc000228cdeb030000257209e100000384f91f0001e56a558b00002261e02d0000036154510001a775f3d400001f6e9e920000033d5d6200016ec3cad400001c98e95200000319145200013b24f2bb000019e164af000002f4792100010c6896f300001748b4eb000002cf8bcf0000e25bf620000014cf7e48000002aa4c5c0000bcca622000001276650800000284bac800009b7d400b0000103e0d6d0000025ed71300007e3c083300000e271bb900000238a13d000064cc462400000c32342e00000212194600004ef198a400000a5ffb0e000001eb3f2e00003c6db1b3000008b1149b000001c412f500002d00568b0000072625170000019c949b000020675fa0000005bfd0c400000174c4200000165eb8a00000047ebbe40000014ca18400000ea06073000003638ab9000001242cc7000008e4693b0000026ee185000000fb65e9000004e0f854000001a1648a000000d24cea0000024a4654000000fbb80a000000a8e1ca000000d29f0b0000007e80470000007f24890000002a61830000002a61830000005515270000000000000000000000000000002ab3a4000000000000000000000000000000000000
-
-private theorem k145BridgeCuts :
-    k145All (fun t => decide (k145GoodCut bridgeShape 145 2601 t)) 381 = true := by decide +kernel
-
-private theorem k145BridgeMoments :
-    k145All (fun r => decide (k145MomStep bridgeShape 145 k145BridgeData r)) 134 = true := by decide +kernel
-
-private theorem k145BridgeBaseTotal : supportBase bridgeShape 145 2601 = 6540169677973944857928 := by
-  have h := k145Eval bridgeShape 145 2601 k145BridgeData false (by decide) k145BridgeCuts k145BridgeMoments
-  exact h.trans (by decide +kernel)
-
-private theorem k145BridgeSlopeTotal : supportSlope bridgeShape 145 2601 = 30603622655108330 := by
-  have h := k145Eval bridgeShape 145 2601 k145BridgeData true (by decide) k145BridgeCuts k145BridgeMoments
-  exact h.trans (by decide +kernel)
-
-private theorem bridge_test : PositiveSupport bridgeShape 145 2601 := by
-  have hB : bridgeShape.B + 1 = 1165 := rfl
-  rw [PositiveSupport, k145BridgeBaseTotal, k145BridgeSlopeTotal, k145Node_eq, k145Pole_eq, hB]
-  have hn : k145Sum (k145NodeTerm bridgeShape) 1165 = 66215380 := k145BridgeNodeTotal
-  have hp : k145Sum (k145PoleTerm bridgeShape) 1165 = 127928356332 := k145BridgePoleTotal
-  rw [hn, hp]
-  decide +kernel
-
-private theorem k145LowNodeTotal :
-    k145Sum (k145NodeTerm pairedLowShape) 501 = 5210801 := by decide +kernel
-
-private theorem k145LowPoleTotal :
-    k145Sum (k145PoleTerm pairedLowShape) 501 = 4343593800 := by decide +kernel
-
-private def k145LowData : ℕ :=
-  0x41c2e584800001edbe69600000160bb3800041b8d9de800001ed9897e00000160b25200041874383100001ecdb201000001608513000412e6e21100001eb828f100000160318b00040b0c6fc000001e993ae00000015fb7ba0004010acfc000001e7134600000015f17a00003f5070add00001e4062030000015e513d0003e725442d00001e07105b0000015d64910003d788b91000001dc58bfa0000015c519c0003c653c13000001d7c21720000015b185e0003b3a7ce8100001d2b1d5500000159b8d700039fa56d4100001cd2cc3500000158330700038a6c43f800001c737aa40000015686ee0003741b137800001c0d753400000154b48c00035ccfb6dd00001ba1087700000152bbe1000344a7238d00001b2e80ff000001509ced00032bbd693800001ab62b5e0000014e57b00003122db1d800001a3854260000014bec2a0002f81241b1000019b547e9000001495a5b0002dd8477510000192d533900000146a2430002c29ccb90000018a0c2a800000143c3e20002a772d1900000180fe2c800000140bf3800028c1d36bd0000177b002b0000013d9445000270b1c2cd000016e267630000013a43090002554557c000001646650200000136cb84000239ebf1e0000015a7459a000001332db600021eb8a7c10000150555bd0000012f699f000203bdaa4100001460e1fd0000012b7f3f0001e90c4488000013ba36ec000001276e960001ceb4dc0800001311a11c0000012337a40001b4c6f07d000012676d1f0000011eda6900019b511bed000011bbe7870000011a56e50001826112a80000110f5ce600000115ad1800016a03a3480000106219ce00000110dd0200015244b6b100000fb46ad10000010be6a300013b2f501100000f069c8100000106c9fb000124cd8ce000000e58fb7000000101870a00010f28a4e000000dabd430000000fc1dd00000fa48ea1d00000cff7353000000f68e4d0000e635c8ed00000c54256b000000f0d8810000d2f5c7f000000baa370a000000eafc6c0000c08e881000000b01f4c2000000e4fa0e0000af04c48100000a5bab25000000ded16700009e5c52c1000009b7a6c5000000d8827700008e982298000009163434000000d20d3e00007fba3e1800000877a004000000cb71bc000071c3c99d000007dc36c7000000c4aff1000064b503cd00000744450f000000bdc7dd0000588d4598000006b0176e000000b6b98000004d4b02380000061ffa76000000af84da000042ebc731000005943ab9000000a829eb0000396c3c510000050d24c9000000a0a8b3000030c823b00000048b0538000000990132000028fa59b00000040e2898000000913368000021fcd4fd00000396db7b000000893f5500001bc8a68d000003256a730000008124f900001655f9a0000002ba221200000078e4540000119c13c0000002554eea000000707d6600000d9154c1000001f73d8d00000067f02f00000a2b36c1000001a03a8d0000005f3caf0000075e4e2800000150927c0000005662e60000051e49a80000010891ec0000004d62d40000035df23d000000c8856f000000443c790000020f2b2d00000090b9970000003aefd500000122f208000000617af6000000317ce8000000895ea80000003b161e00000027e3b200000031a3310000001dd7a10000001e24330000000a0c110000000a0c11000000143e6b0000000000000000000000000000000a325a000000000000000000000000000000000000
-
-private theorem k145LowCuts :
-    k145All (fun t => decide (k145GoodCut pairedLowShape 99 3555 t)) 174 = true := by decide +kernel
-
-private theorem k145LowMoments :
-    k145All (fun r => decide (k145MomStep pairedLowShape 99 k145LowData r)) 69 = true := by decide +kernel
-
-private theorem k145LowBaseTotal : supportBase pairedLowShape 99 3555 = 63574399551366535744 := by
-  have h := k145Eval pairedLowShape 99 3555 k145LowData false (by decide) k145LowCuts k145LowMoments
-  exact h.trans (by decide +kernel)
-
-private theorem k145LowSlopeTotal : supportSlope pairedLowShape 99 3555 = 284531323985980 := by
-  have h := k145Eval pairedLowShape 99 3555 k145LowData true (by decide) k145LowCuts k145LowMoments
-  exact h.trans (by decide +kernel)
-
-private theorem paired_low_test : PositiveSupport pairedLowShape 99 3555 := by
-  have hB : pairedLowShape.B + 1 = 501 := rfl
-  rw [PositiveSupport, k145LowBaseTotal, k145LowSlopeTotal, k145Node_eq, k145Pole_eq, hB]
-  have hn : k145Sum (k145NodeTerm pairedLowShape) 501 = 5210801 := k145LowNodeTotal
-  have hp : k145Sum (k145PoleTerm pairedLowShape) 501 = 4343593800 := k145LowPoleTotal
-  rw [hn, hp]
-  decide +kernel
-
-private def k145MidData : ℕ :=
-  0x49ca6ad930000176da1b7000000b4508300049c9883700000176d7dd0000000b4502800049b85daf00000176abeb0000000b449200004992018a8000017648b98000000b439180004957508880000175af688000000b420100004909240800000174e1180000000b3fe0800048a8520800000173dee80000000b3d3000004835ad2780000172a9f88000000b39ef800047b204a58000017143698000000b361f0000471e24610000016fac5b0000000b31be8000467ad4d90000016de5ed0000000b2cce000045c8db2c8000016bf13f8000000b274d80004508f91a80000169cf728000000b213d0000443bed020000016781a60000000b1a9c8000436271e20000016508fa0000000b136c0000427d3f5980000162668e8000000b0bab8000418d09a78000015f9b838000000b035b0000409281ab0000015ca8f90000000afa7a80003f8e54e300000159900f0000000af10a00003e812d6e8000015651e58000000ae70980003d6bb20c80000152ef9c8000000adc7900003c4e861c0000014f6a540000000ad15880003b2a499c0000014bc32c0000000ac5a8000039ff992b80000147fb448000000ab967800038cf0e098000014413bd8000000aac97000037993e15000001400db70000000a9f368000365ebbcd0000013bea510000000a914600003520165080000137aaab8000000a82c5800033ddd95e800001334fe68000000a73b5000032988d560000012edb220000000a641480003150b7360000012a4d7e0000000a53e400003006d89d80000125a81a8000000a432380002ebb6fcb80000120ec178000000a31d300002d6ef79f0000011c1a950000000a1ff280002c21e7970000011734b30000000a0d8200002ad4b3d2800001123b9180000009fa8180002987cd108000010d305080000009e6f10000283ba0b000000108141000000009d2d0800026f098b000000102e7f000000009be20000025a71baf800000fdad1080000009a8df8000245f8ced800000f8649180000009930f0000231a4c49000000f30f93000000097cae800021d7b641000000edaf350000000965be0000209823f4800000e84497800000094e3d80001f5beb22800000e2d0da80000009362d00001e235e2a000000dd551e000000091d8c80001ceecc0a000000d7d28200000009045c00001bbe8061800000d24a2680000008ea9b80001a92c36f800000ccbd2b80000008d04b0000196bda13000000c72cb100000008b56a8000184a05cb000000c199d70000000899fa0000172d84b6800000bc05bd800000087df9800016169194800000b671848000000861690000150563c4000000b0de4c000000084448800013fa2f44000000ab4d34000000082698000012f524b3800000a5bf5c800000080857800011f67151800000a035e580000007e987000010fe3efd0000009ab1ef00000007ca268000100cb43500000095349900000007aa3600000f21f4188000008fbf038000000789b580000e3e1e668000008a524e8000000768a500000d614f7e00000084ef9a00000007470480000c8ba05e0000007f98060000000724d400000bbd26a58000007a4cb280000007021380000af5f493800000750ebf80000006dec300000a3619070000006fdf4d00000006bae28000097d9f7f0000006abf7b000000069672000008cc901a80000065b06980000006717180000822ef9880000060b338800000064be100000780bf580000005bc9080000000625c0800006e5fd5800000056f2f800000005ff1000000652a43780000052322880000005d7cf800005c6ab358000004d87b980000005afff00000542063100000048f4cb00000005879e800004c4a5a9000000447a7d000000055eae0000044e76bc8000004019ef80000005352d800003df632a8000003bd442800000050b1d00000377515200000037aa9600000004e07c800003162432000000339e0a00000004b54c000002bbbb698000002fafbe80000004898b80000267f3378000002be0d3800000045d3b0000021aa47b00000028326900000004305a800001d3a4b300000024a59f0000000402ea00000192c5fe800000213b9580000003d4e980000157d71c8000001df56c80000003a65900000122a36c0000001ad444000000037738800000f2f2ec00000017d93c000000034788000000c88a3b800000150574800000031747800000a32a99800000125a0d80000002e6770000008291e50000000fd82700000002b516800000667a9d0000000d80e10000000283260000004e9be08000000b555b8000000250a58000003aa96e8000000956b6800000021d950000002a53a600000007861200000001e9f48000001d478600000005e48e00000001b5c4000000132ead80000004734a8000000181038000000baf5b800000033367800000014bb3000000066c6f0000000226050000000115d2800000030567000000014c4300000000df6200000001166280000000a74180000000a8618000000038208000000038208000000070d10000000000000000000000000000000038b08000000000000000000000000000000000000
-
-private theorem k145MidCuts :
-    k145All (fun t => decide (k145GoodCut pairedMidShape 48 8250 t)) 207 = true := by decide +kernel
-
-private theorem k145MidMoments :
-    k145All (fun r => decide (k145MomStep pairedMidShape 48 k145MidData r)) 102 = true := by decide +kernel
-
-private theorem k145MidBaseTotal : supportBase pairedMidShape 48 8250 = 32981022456096911826 := by
-  have h := k145Eval pairedMidShape 48 8250 k145MidData false (by decide) k145MidCuts k145MidMoments
-  exact h.trans (by decide +kernel)
-
-private theorem k145MidSlopeTotal : supportSlope pairedMidShape 48 8250 = 121187020356472 := by
-  have h := k145Eval pairedMidShape 48 8250 k145MidData true (by decide) k145MidCuts k145MidMoments
-  exact h.trans (by decide +kernel)
-
-private theorem paired_mid_test : PositiveSupport pairedMidShape 48 8250 := by
-  have hB : pairedMidShape.B + 1 = 501 := rfl
-  rw [PositiveSupport, k145MidBaseTotal, k145MidSlopeTotal, k145Node_eq, k145Pole_eq, hB]
-  have hn : k145Sum (k145NodeTerm pairedMidShape) 501 = 5210801 := k145LowNodeTotal
-  have hp : k145Sum (k145PoleTerm pairedMidShape) 501 = 4343593800 := k145LowPoleTotal
-  rw [hn, hp]
-  decide +kernel
-
-private def k145HighData : ℕ :=
-  0x343f8617300000fe090cf00000074e857000343af339000000fdfde6400000074e6a40003428a179000000fdd0ce400000074dfb40003408cfa5700000fd81b8500000074d36b00033dc05e8f00000fd114f900000074c1c900033a2ca6cc00000fc803f200000074aace000335da158c00000fbcf322000000748e7a000330d0cd3700000fafed3b000000746ccd00032b18d01f00000fa0fcef0000007445c7000324ba008000000f902cf000000074196800031dbc208000000f7d87f000000073e7b000031626d22f00000f6918a100000073b09f00030e01978700000f52e9b500000073743500030553d26c00000f3b05de0000007332720002fc24c4ac00000f2177ce00000072eb560002f27b8fff00000f064a37000000729ee10002e85f360700000ee987cb000000724d130002ddd6985000000ecb3b3c00000071f5ec0002d2e8785000000eab6f3c00000071996c0002c79b776700000e8a2e7d0000007137930002bbf616df00000e6783b100000070d0610002affeb7ec00000e43798a0000007063d60002a3bb9bac00000e1e1aba0000006ff1f200029732e32700000df771f30000006f7ab500028a6a8f4f00000dcf89e70000006efe1f00027d68810000000da66d480000006e7c3000027032790000000d7c26c80000006df4e8000262ce17ff00000d50c1190000006d684700025540de9700000d2446ed0000006cd64d000247902d4c00000cf6c2f60000006c3efa000239c1448c00000cc83fe60000006ba24e00022bd944af00000c98c86f0000006b004900021ddd2df700000c6867430000006a58eb00020fd1e09000000c37271400000069ac34000201bc1c9000000c05129400000068fa240001f3a081f700000bd234750000006842bb0001e58390af00000b9e97690000006785f90001d769a88c00000b6a462200000066c3de0001c957094c00000b354b5200000065fc6a0001bb4fd29700000affb1ab000000652f9d0001ad5803ff00000ac983df000000645d7700019f737d0000000a92cca00000006385f8000191a5fd0000000a5b96a000000062a920000183f3234f00000a23ec9100000061c6ef0001765e6f27000009ebd92500000060df65000168eb3fac000009b3670e0000005ff28200015b9cd3ec0000097aa0fe0000005f004600014e764adf0000094191a70000005e08b10001417aa3670000090843bb0000005d0bc3000134acbc50000008cec1ec0000005c097c0001280f54500000089516ec0000005b01dc00011ba50a070000085b4d6d00000059f4e300010f705bff00000821702100000058e29100010373a8ac000007e789ba00000057cae60000f7b12e6c000007ada4ea00000056ade20000ec2b0b8700000773cc63000000558b850000e0e33e2f0000073a0ad70000005463cf0000d5dba480000007006af80000005336c00000cb15fc80000006c6f7780000005204580000c093e41f0000068dbb0900000050cc970000b656d93700000654c05d0000004f8f7d0000ac60398c0000061c12260000004e4d0a0000a2b142cc000005e3bb160000004d053e0000994b128f000005abc5df0000004bb8190000902ea657000005743d330000004a659b0000875cdb900000053d2bc4000000490dc400007ed66f90000005069c4400000047b0940000769bff97000004d09965000000464e0b00006eae08cf0000049b2dd900000044e6290000670ce84c0000046664520000004378ee00005fb8db0c00000432478200000042065a000058b1fdf7000003fee21b000000408e6d000051f84ddf000003cc3ecf0000003f112700004b8ba7800000039a68500000003d8e880000456bc7800000036969500000003c069000003f984a6f000003394c810000003a793f00003a10acc70000030a1c9500000038e695000034d44aec000002dbe43e000000374e9200002fe2612c000002aeae2e00000035b13600002b3a0bbf000002828517000000340e81000026da46c70000025773ab000000326673000022c1ee500000022d849c00000030b90c00001eefbe5000000204c29c0000002f064c00001b6252a7000001dd385d0000002d4e3300001818271f000001b6f0910000002b90c10000150f976c00000191f5ea00000029cdf600001246df2c0000016e531a0000002805d200000fbc19e70000014c12d300000026385500000d6d430f0000012b3fc700000024657f00000b5836000000010be4a8000000228d500000097aae00000000ee0c2800000020afc8000007d2463f000000d1c0f90000001ecce70000065c79d7000000b70dcd0000001ce4ad00000516a3cc0000009dfd560000001af71a000003fdff0c000000869a4600000019042e0000030fa66f00000070ef4f000000170be90000024894b70000005d0723000000150e4b000001a5a4900000004aec74000000130b540000012390900000003aa9f4000000110304000000bef3370000002c4a550000000ef55b0000007446ef0000001fd8490000000ce2590000003fe60c000000155e820000000ac9fe0000001e0acc0000000ce7b200000008ac4a0000000acf57000000067e8b00000006893d000000022dbf000000022dbf0000000460d7000000000000000000000000000000023318000000000000000000000000000000000000
-
-private theorem k145HighCuts :
-    k145All (fun t => decide (k145GoodCut pairedHighShape 37 24000 t)) 211 = true := by decide +kernel
-
-private theorem k145HighMoments :
-    k145All (fun r => decide (k145MomStep pairedHighShape 37 k145HighData r)) 106 = true := by decide +kernel
-
-private theorem k145HighBaseTotal : supportBase pairedHighShape 37 24000 = 22568247839716366500 := by
-  have h := k145Eval pairedHighShape 37 24000 k145HighData false (by decide) k145HighCuts k145HighMoments
-  exact h.trans (by decide +kernel)
-
-private theorem k145HighSlopeTotal : supportSlope pairedHighShape 37 24000 = 76379217149100 := by
-  have h := k145Eval pairedHighShape 37 24000 k145HighData true (by decide) k145HighCuts k145HighMoments
-  exact h.trans (by decide +kernel)
-
-private theorem paired_high_test : PositiveSupport pairedHighShape 37 24000 := by
-  have hB : pairedHighShape.B + 1 = 501 := rfl
-  rw [PositiveSupport, k145HighBaseTotal, k145HighSlopeTotal, k145Node_eq, k145Pole_eq, hB]
-  have hn : k145Sum (k145NodeTerm pairedHighShape) 501 = 5210801 := k145LowNodeTotal
-  have hp : k145Sum (k145PoleTerm pairedHighShape) 501 = 4343593800 := k145LowPoleTotal
-  rw [hn, hp]
-  decide +kernel
-
 end
-
-/-- The strict inequality (T) for all four native terminal subbanks. -/
-theorem proof : K1_14.c5 := by
-  intro w hlo hhi
-  have hw : w ≤ 131071 := by omega
-  by_cases hb : w ≤ 3554
-  · exact test_of_support w
-      (by simp [terminalShape, band, hb, bridgeShape])
-      (by simp [band, hb]) hlo hw bridge_test.1 bridge_test.2
-  by_cases hl : w ≤ 8249
-  · exact test_of_support w
-      (by simp [terminalShape, band, hb, hl, pairedLowShape])
-      (by simp [band, hb, hl]) (by omega) hw paired_low_test.1 paired_low_test.2
-  by_cases hm : w ≤ 23999
-  · exact test_of_support w
-      (by simp [terminalShape, band, hb, hl, hm, pairedMidShape])
-      (by simp [band, hb, hl, hm]) (by omega) hw paired_mid_test.1 paired_mid_test.2
-  · exact test_of_support w
-      (by simp [terminalShape, band, hb, hl, hm, pairedHighShape])
-      (by simp [band, hb, hl, hm]) (by omega) hw paired_high_test.1 paired_high_test.2
-
-end K1_14_5
-end PackSource_K1_14_5Proof
-
-section PackSource_K1_13_7_4_2Aux1
-set_option autoImplicit true
+section
 namespace K1_13_7_4_2
-
 noncomputable section
-
 open scoped BigOperators Pointwise
-
 section PowerScaling
-
 variable {R ι : Type*} [CommRing R]
-
-/-- Colength of an ideal in its ambient ring. -/
 abbrev colength (I : Ideal R) : ℕ∞ := Module.length R (R ⧸ I)
-
 private theorem mem_sup_span_singleton {I : Ideal R} {x y : R} :
     y ∈ I ⊔ Ideal.span {x} ↔ ∃ z, y - x * z ∈ I := by
   rw [Submodule.mem_sup]
@@ -6280,8 +4827,6 @@ private theorem mem_sup_span_singleton {I : Ideal R} {x y : R} :
   · rintro ⟨z, hz⟩
     exact ⟨y - x * z, hz, x * z, Ideal.mem_span_singleton.mpr ⟨z, rfl⟩,
       sub_add_cancel _ _⟩
-
-/-- Filter by consecutive powers of a nonzerodivisor modulo the other cuts. -/
 private theorem span_power_colength (I : Ideal R) (x : R)
     (hreg : ∀ y, x * y ∈ I → y ∈ I) (k : ℕ) :
     colength (I ⊔ Ideal.span {x ^ k}) = (k : ℕ∞) * colength (I ⊔ Ideal.span {x}) := by
@@ -6347,7 +4892,6 @@ private theorem span_power_colength (I : Ideal R) (x : R)
       colength (P (k + 1)) = colength (P k) + colength (P 1) :=
         Module.length_eq_add_of_exact f g hf (Submodule.factor_surjective hle) hex
       _ = _ := by rw [ih, Nat.cast_succ, add_mul, one_mul]
-
 private theorem span_range_eq_remaining_sup (f : ι → R) (i : ι) :
     Ideal.span (Set.range f) = remainingIdeal f i ⊔ Ideal.span {f i} := by
   classical
@@ -6362,9 +4906,6 @@ private theorem span_range_eq_remaining_sup (f : ι → R) (i : ι) :
   · rintro (⟨j, _, rfl⟩ | h)
     · exact ⟨j, rfl⟩
     · exact ⟨i, h.symm⟩
-
-/-- Replacing the entries of the tuple by positive powers multiplies its
-colength by the product of the exponents. -/
 theorem power_colength {n : ℕ} (f : Fin n → R) (b : Fin n → ℕ) (hb : ∀ i, 0 < b i)
     (hreg : ∀ (e : Fin n → ℕ), (∀ j, 0 < e j) → ∀ i y,
       f i * y ∈ remainingIdeal (fun j => f j ^ e j) i →
@@ -6395,8 +4936,6 @@ theorem power_colength {n : ℕ} (f : Fin n → R) (b : Fin n → ℕ) (hb : ∀
         span_power_colength _ _ (hreg (e s) (he s) i) (b i),
         ← hold, ← span_range_eq_remaining_sup, ih, Finset.prod_insert hi, Nat.cast_mul, mul_assoc]
   simpa [F, e] using hs Finset.univ
-
-/-- Positive powers preserve the radical of a tuple ideal. -/
 theorem radical_span_powers (f : ι → R) (e : ι → ℕ) (he : ∀ i, 0 < e i) :
     (Ideal.span (Set.range fun i => f i ^ e i)).radical =
       (Ideal.span (Set.range f)).radical := by
@@ -6410,19 +4949,13 @@ theorem radical_span_powers (f : ι → R) (e : ι → ℕ) (he : ∀ i, 0 < e i
     apply Ideal.span_le.mpr
     rintro _ ⟨i, rfl⟩
     exact ⟨e i, Ideal.subset_span ⟨i, rfl⟩⟩
-
 end PowerScaling
-
 section PowerLayers
-
 variable {R : Type*} [CommRing R]
-
 theorem colength_le_of_le {I J : Ideal R} (h : I ≤ J) : colength J ≤ colength I :=
   Module.length_le_of_surjective (Submodule.factor h) (Submodule.factor_surjective h)
-
 private def monomial {ι : Type*} (f : ι → R) {k : ℕ} (m : Sym ι k) : R :=
   (m.val.map f).prod
-
 private theorem span_monomial {ι : Type*} (f : ι → R) (k : ℕ) :
     Ideal.span (Set.range (monomial f (k := k))) = Ideal.span (Set.range f) ^ k := by
   induction k with
@@ -6440,7 +4973,6 @@ private theorem span_monomial {ι : Type*} (f : ι → R) (k : ℕ) :
       exact ⟨f i, ⟨i, rfl⟩, monomial f m, ⟨m, rfl⟩, by simp [monomial, Sym.coe_cons]⟩
     · rintro ⟨_, ⟨i, rfl⟩, _, ⟨m, rfl⟩, rfl⟩
       exact ⟨Sym.cons i m, by simp [monomial, Sym.coe_cons]⟩
-
 private theorem colength_pow_succ {n : ℕ} (f : Fin n → R) (k : ℕ) :
     colength (Ideal.span (Set.range f) ^ (k + 1)) ≤
       colength (Ideal.span (Set.range f) ^ k) +
@@ -6496,9 +5028,6 @@ private theorem colength_pow_succ {n : ℕ} (f : Fin n → R) (k : ℕ) :
   rw [Module.length_eq_add_of_exact N.subtype g N.subtype_injective
     (Submodule.factor_surjective hAB) (LinearMap.exact_subtype_ker_map g), add_comm]
   exact add_le_add_right hlen _
-
-/-- A power of an ideal generated by `n` elements has at most one copy of
-the original quotient per monomial of degree below that power. -/
 theorem colength_pow_le {n : ℕ} (f : Fin n → R) {t : ℕ} (ht : 0 < t) :
     colength (Ideal.span (Set.range f) ^ t) ≤
       ((t + n - 1).choose n : ℕ∞) * colength (Ideal.span (Set.range f)) := by
@@ -6513,11 +5042,8 @@ theorem colength_pow_le {n : ℕ} (f : Fin n → R) {t : ℕ} (ht : 0 < t) :
   obtain ⟨k, rfl⟩ := Nat.exists_eq_succ_of_ne_zero (Nat.ne_of_gt ht)
   simpa only [← Nat.cast_sum, Nat.sum_range_multichoose,
     show k + 1 + n - 1 = k + n by omega] using h (k + 1)
-
 end PowerLayers
-
 section GrowthComparison
-
 private theorem ascFactorial_le {n : ℕ} (hn : n = 2 ∨ n = 3) {t : ℕ} (ht : 0 < t) :
     t.ascFactorial n ≤ t ^ n + 5 * t ^ (n - 1) := by
   rcases hn with rfl | rfl
@@ -6535,8 +5061,6 @@ private theorem ascFactorial_le {n : ℕ} (hn : n = 2 ∨ n = 3) {t : ℕ} (ht :
         ring
       _ ≤ t ^ 3 + (3 * t ^ 2 + 2 * t ^ 2) := Nat.add_le_add_left (Nat.add_le_add_left h _) _
       _ = t ^ 3 + 5 * t ^ (3 - 1) := by ring
-
-/-- Recover the leading-term comparison using one sufficiently large integer. -/
 private theorem power_le_of_growth {n : ℕ} (hn : n = 2 ∨ n = 3) (M C : ℕ)
     (h : ∀ t : ℕ, 0 < t →
       (M * t + n - 1).choose n ≤ (t + n - 1).choose n * C) :
@@ -6563,9 +5087,6 @@ private theorem power_le_of_growth {n : ℕ} (hn : n = 2 ∨ n = 3) (M C : ℕ)
     _ = (M * t) ^ n := (mul_pow _ _ _).symm
     _ ≤ (M * t).ascFactorial n := Nat.pow_succ_le_ascFactorial _ _
   exact (not_lt_of_ge (hlarge.trans hnat)) hsmall
-
-/-- A containment in a maximal-ideal power and the corresponding Hilbert
-function bound force a lower bound for the colength of the contained ideal. -/
 theorem colength_ge_of_growth {R : Type*} [CommRing R] {n M : ℕ}
     (hn : n = 2 ∨ n = 3) (m : Ideal R) (f : Fin n → R)
     (hcontain : Ideal.span (Set.range f) ≤ m ^ M)
@@ -6592,59 +5113,42 @@ theorem colength_ge_of_growth {R : Type*} [CommRing R] {n M : ℕ}
     ↑((t + n - 1).choose n) * colength I at h
   rw [← hC, ← ENat.natCast_mul] at h
   exact ENat.natCast_le_natCast.mp h
-
 end GrowthComparison
-
 end
 end K1_13_7_4_2
-end PackSource_K1_13_7_4_2Aux1
-
-section PackSource_K1_13_2_3_4DataB
-set_option autoImplicit true
+end
+section
 namespace K1_13_2_3_4
-
--- Keep the kernel reductions sequential to bound peak memory.
 set_option Elab.async false
 set_option maxRecDepth 50000
 set_option maxHeartbeats 0
-
 open K1_13_2
-
 private theorem bDenNeg {u : ℤ} (hu : u < 0) : denominator u = 0 := by
   simp [denominator, hu]
-
 private theorem bCumNeg {d u : ℤ} (hu : u < 0) : cumulative d u = 0 := by
   simp [cumulative, hu]
-
 private theorem bCumLow {d u : ℤ} (hd : 0 ≤ d) (hu : u ≤ d) :
     cumulative d u = denominator u := by
   by_cases hn : u < 0
   · rw [bCumNeg hn, bDenNeg hn]
   simp (disch := omega) [cumulative, hn, bDenNeg]
   omega
-
 private theorem bCapLow {d u c : ℤ} (hd : 0 ≤ d) (hc : 0 ≤ c)
     (hu : u ≤ d) (ht : u < 3 * (c + 1)) :
     cappedCount d u c = denominator u := by
   simp (disch := omega) [cappedCount, bCumLow, bCumNeg]
   omega
-
--- At these grades the degree and upper bound coincide and equal three times the cap.
 private def bFlag (s q k : ℤ) : Flag :=
   ⟨1650 - 3 * k, s - 1350 - q - 2 * k, 1650 - 3 * k, 550 - k, 1650 - q - 3 * k⟩
-
 private theorem bOld (s q k : ℤ) (hs : 1758 ≤ s) (hs' : s ≤ 1865)
     (hq : 0 ≤ q) (hq' : q ≤ 70) (hk : 0 ≤ k) (hk' : k ≤ 256) :
     oldCount (bFlag s q k) = denominator (1650 - 3 * k) - denominator (s - 1350 - q - 2 * k - 1) := by
   simp (disch := omega) [oldCount, bFlag, bCapLow]
-
--- The two lower-cutoff terms in targetCount cancel and the shifted upper term vanishes.
 private theorem bTarget (s q k : ℤ) (hs : 1758 ≤ s) (hs' : s ≤ 1865)
     (hq : 0 ≤ q) (hq' : q ≤ 70) (hk : 0 ≤ k) (hk' : k ≤ 256) :
     targetCount (bFlag s q k) = denominator (1650 - q - 3 * k - 1) := by
   simp (disch := omega) [targetCount, bFlag, bCumNeg, bCumLow]
   omega
-
 private theorem bKernel (s q k : ℤ) (hs : 1758 ≤ s) (hs' : s ≤ 1865)
     (hq : 0 ≤ q) (hq' : q ≤ 70) (hk : 0 ≤ k) (hk' : k ≤ 256) :
     kernelLower (bFlag s q k) =
@@ -6655,18 +5159,13 @@ private theorem bKernel (s q k : ℤ) (hs : 1758 ≤ s) (hs' : s ≤ 1865)
   rw [ite_eq_right, h, t]
   simp [bFlag]
   omega
-
--- A single rounded cubic gives D(index - 1) for positive indices.
--- At index zero it also gives the zero required for every negative argument.
 private def bDen (i : ℕ) : ℕ := (((2 * i + 15) * i + 30) * i + 25) / 72
-
 private theorem bTwiceHalf (x : ℤ) : 2 * (x * (x - 1) / 2) = x * (x - 1) := by
   have h : (2 : ℤ) ∣ x * (x - 1) := by
     rcases Int.emod_two_eq_zero_or_one x with hx | hx
     · exact dvd_mul_of_dvd_left (by omega : (2 : ℤ) ∣ x) _
     · exact dvd_mul_of_dvd_right (by omega : (2 : ℤ) ∣ x - 1) _
   rw [mul_comm, Int.ediv_mul_cancel h]
-
 private theorem bTwiceDen (u : ℤ) (hu : 0 ≤ u) :
     let a := u / 6
     let b := u % 6
@@ -6680,8 +5179,6 @@ private theorem bTwiceDen (u : ℤ) (hu : 0 ≤ u) :
   have h := bTwiceHalf (b + 1)
   rw [show (b + 1) * (b + 1 - 1) = b * (b + 1) by ring] at h
   linear_combination h + a * bTwiceHalf b + (57 + 6 * b) * bTwiceHalf a
-
--- In each of the six residue classes the extra numerator lies in [0, 72).
 private theorem bRound (a b v : ℤ) (hb : 0 ≤ b) (hb' : b ≤ 5)
     (hv : 2 * v = ((12 * a + 21 + 6 * b) * a + 11 + (7 + b) * b) * a + b * (b + 1) + 2) :
     v = (((2 * (6 * a + b + 1) + 15) * (6 * a + b + 1) + 30) * (6 * a + b + 1) + 25) / 72 := by
@@ -6694,26 +5191,22 @@ private theorem bRound (a b v : ℤ) (hb : 0 ≤ b) (hb' : b ≤ 5)
     dsimp only [r]
     interval_cases b <;> decide
   omega
-
 private theorem bDenNat (u : ℕ) : denominator u = (bDen (u + 1) : ℤ) := by
   simp only [bDen, Int.natCast_ediv, Nat.cast_mul, Nat.cast_ofNat, Nat.cast_add, Nat.cast_one]
   have h := bRound ((u : ℤ) / 6) ((u : ℤ) % 6) (denominator u)
     (by omega) (by omega) (bTwiceDen (u : ℤ) (by omega))
   rwa [show 6 * ((u : ℤ) / 6) + (u : ℤ) % 6 = u by omega] at h
-
 private theorem bDenInt (u : ℤ) : denominator u = (bDen (u + 1).toNat : ℤ) := by
   by_cases h : u < 0
   · rw [bDenNeg h, show (u + 1).toNat = 0 by omega]
     rfl
   have hh := bDenNat u.toNat
   rwa [show (u.toNat : ℤ) = u by omega, show u.toNat + 1 = (u + 1).toNat by omega] at hh
-
 private def bSavings (s q k : ℕ) : ℕ :=
   let old := bDen 1651 - bDen (s - (1350 + q))
   let lower := old - bDen (1650 - q)
   let after := bDen (1651 - 3 * k) - bDen (s - (1350 + q + 2 * k)) - bDen (1650 - q - 3 * k)
   (old - lower) - (old - max lower after)
-
 private theorem bClip (a b t c d v : ℕ) :
     let old := (a : ℤ) - b
     let lower := max 0 (old - t)
@@ -6725,7 +5218,6 @@ private theorem bClip (a b t c d v : ℕ) :
   have subNat (x y : ℤ) (hy : 0 ≤ y) : (x - y).toNat = x.toNat - y.toNat := by omega
   have maxNat (x y : ℤ) : (max x y).toNat = max x.toNat y.toNat := by omega
   simp (disch := omega) only [subNat, maxNat, Int.toNat_natCast, Int.toNat_zero, Nat.zero_max]
-
 private theorem bSavings_eq {s q k : ℕ} (hs : 1758 ≤ s) (hs' : s ≤ 1865)
     (hq : q ≤ 70) (hk : k ≤ 256) (hk0 : k ≠ 0) : entry s q k = bSavings s q k := by
   have hj : 993 ≤ 3000 + q - s ∧ 3000 + q - s ≤ 1581 := by omega
@@ -6748,16 +5240,12 @@ private theorem bSavings_eq {s q k : ℕ} (hs : 1758 ≤ s) (hs' : s ≤ 1865)
   have h6 : ((1650 : ℤ) - q - 3 * k - 1 + 1).toNat = 1650 - q - 3 * k := by omega
   simp only [h1, h2, h3, h4, h5, h6]
   apply bClip
-
 private theorem bZeroRow (s q n : ℕ) : rowSum s q 0 n = 0 := by
   induction n generalizing q with
   | zero => rfl
   | succ n ih =>
     have hz : entry s q 0 = 0 := by simp [entry, cubicSavings]
     simp [rowSum, hz, ih]
-
--- A zero suffix contributes nothing. The original entry covers digits outside
--- the range in which bSavings_eq specializes the flag arithmetic.
 private def bRow (s q code : ℕ) : ℕ → ℕ
   | 0 => 0
   | n + 1 =>
@@ -6765,7 +5253,6 @@ private def bRow (s q code : ℕ) : ℕ → ℕ
       let k := code % 512
       (if k = 0 then 0 else if k ≤ 256 then bSavings s q k else entry s q k) +
         bRow s (q + 1) (code / 512) n
-
 private theorem bRow_eq (s q code n : ℕ) (hs : 1758 ≤ s) (hs' : s ≤ 1865)
     (hq : q + n ≤ 71) : rowSum s q code n = bRow s q code n := by
   induction n generalizing q code with
@@ -6781,11 +5268,9 @@ private theorem bRow_eq (s q code n : ℕ) (hs : 1758 ≤ s) (hs' : s ≤ 1865)
     by_cases hk : code % 512 ≤ 256
     · simp only [ite_eq_right hk0, ite_eq_left hk, bSavings_eq (q := q) hs hs' (by omega) hk hk0]
     · simp only [ite_eq_right hk0, ite_eq_right hk]
-
 private def bRows (s : ℕ) : List ℕ → ℕ
   | [] => 0
   | c :: cs => bRow s 0 c 71 + bRows (s + 1) cs
-
 private theorem bRows_eq (s : ℕ) (cs : List ℕ) (lo : 1758 ≤ s)
     (hi : s + cs.length ≤ 1866) : rowsSum s cs = bRows s cs := by
   induction cs generalizing s with
@@ -6793,64 +5278,50 @@ private theorem bRows_eq (s : ℕ) (cs : List ℕ) (lo : 1758 ≤ s)
   | cons c cs ih =>
     simp only [List.length_cons] at hi
     rw [rowsSum, bRows, bRow_eq _ _ _ _ lo (by omega) (by decide), ih _ (by omega) (by omega)]
-
-
-
-/-- The certificate encodes a row per grade. The base-512 digit of index
-`q` is the cubic exponent on the diagonal `s + j = 3000 + q`. -/
 private def rowsB1_chunk000 : List ℕ := [
-  21824427147138291642878122648045419253929843162672815214528917204165034344640,
-  29061460331456146707176124106804482419221782748606954946746290570995414696128,
-  29075595161894267116114070081990462490711275639870992910060818919953405149376,
-  36312628346212122583715858033406414330796557175693122701881081764822850306240]
-
+  0x30403022180d0804830180c8704021120986030180c86c4020100864826180c0,
+  0x40403422180d8804830180cc804021920986030180c86c4020100884826180c0,
+  0x40483424180d8804830180d0804021920986030180cc6c4020100884826180c0,
+  0x50483824180e0844c30180d0804022120a06030180cc6c4020102884826180c0]
 private theorem rowsB1_chunk000_checked :
     rowsB1_chunk000.length = 4 ∧ rowsSum 1758 rowsB1_chunk000 = 43976193 := by
   constructor
   · rfl
   · rw [bRows_eq 1758 rowsB1_chunk000 (by decide) (by decide)]
     decide +kernel
-
 private def rowsB1_chunk004 : List ℕ := [
-  3748910679562072355837687470924870409099226220020367269744761244920480595542208,
-  7454285804763146957277268114628668959258638917664323498119047782533602614542528,
-  7461522810556264105121684255162748015755069417296050784500836123113453774799040,
-  11174106671727714621291663473068551652486774022254066399141142682808166062850240]
-
+  0x206050402618100844c30180d0804022120a06030180cc6c4020102884826180c0,
+  0x406060402818100884c30180d8804022130c06030184d06c4020104884826180c0,
+  0x407060403019100885030188d8804023130c06030184d06c40201048c4826180c0,
+  0x6080604030191008c5030188d8804123130c06030188d07040201068c4828180c0]
 private theorem rowsB1_chunk004_checked :
     rowsB1_chunk004.length = 4 ∧ rowsSum 1762 rowsB1_chunk004 = 45785842 := by
   constructor
   · rfl
   · rw [bRows_eq 1762 rowsB1_chunk004 (by decide) (by decide)]
     decide +kernel
-
 private def rowsB1_chunk008 : List ℕ := [
-  11174106699334805320751864284734507066738731691740806103338908981842037891498176,
-  14879467689705547114074175542637126923946218675373618628940015600633980314026176,
-  18592065713260501244079312065643980414342504881773849259675295923396667009761472,
-  1919442267935780624939729310884786857764392004487801219973056894966739662469693632]
-
+  0x60806044301a1008c6030190e0804123130c0603018cd07040201088c4830180c0,
+  0x80806844301b100906030198e0804224130c0603018cd08040201088c4c30180c0,
+  0xa0907048301b10090603019900804224130c06030190d08040201088c4c30180c0,
+  0x40c0a0804c301c1089860301a100804324130c06030190d880402010c8c4c30180c0]
 private theorem rowsB1_chunk008_checked :
     rowsB1_chunk008.length = 4 ∧ rowsSum 1766 rowsB1_chunk008 = 47566533 := by
   constructor
   · rfl
   · rw [bRows_eq 1766 rowsB1_chunk008 (by decide) (by decide)]
     decide +kernel
-
 private def rowsB1_chunk012 : List ℕ := [
-  1919456741946935710713323931486659735447285483398511244703942611008441462129000640,
-  3816594332038731242125961274689878507140247540142801790488625170638209007457763520,
-  5717437269068995767642089357025669666289968118890903436548795668654309397231665344]
-
+  0x40c0c0804c30201089860301a100804424140c06030190d880402010c8c4c30180c0,
+  0x80c0c0805030201109860301b100804424140c06030198d880402010c8c4c30180c0,
+  0xc0e0c080603220110a060311b100804426140c06030198d880402010c904c30180c0]
 private theorem rowsB1_chunk012_checked :
     rowsB1_chunk012.length = 3 ∧ rowsSum 1770 rowsB1_chunk012 = 37033122 := by
   constructor
   · rfl
   · rw [bRows_eq 1770 rowsB1_chunk012 (by decide) (by decide)]
     decide +kernel
-
 private def rowsB1 : List ℕ := rowsB1_chunk000 ++ rowsB1_chunk004 ++ rowsB1_chunk008 ++ rowsB1_chunk012
-
 private theorem rowsB1_checked :
     rowsB1.length = 15 ∧ rowsSum 1758 rowsB1 = 174361690 := by
   constructor
@@ -6860,59 +5331,49 @@ private theorem rowsB1_checked :
       rowsB1_chunk000_checked.1, rowsB1_chunk004_checked.1, rowsB1_chunk008_checked.1,
       rowsB1_chunk000_checked.2, rowsB1_chunk004_checked.2, rowsB1_chunk008_checked.2,
       rowsB1_chunk012_checked.2]
-
 private def rowsB2_chunk000 : List ℕ := [
-  5721142630059420324221740636157067774628768923627620760876922444823069485040763072,
-  7618287457129186202512643575012137787995310653773894581055011374302956925774561472,
-  7621992818119610758886606784484371451726644837517376455298176772472233411532128448,
-  980853583758053912096699561189369171293346782025537970179170670527737996391676477632]
-
+  0xc100c088603420118a060311b100804626180c06030998d8804020110904c30180c0,
+  0x10100d088603420120c060321b100824626180c060309a0d8804020510904c30180c0,
+  0x10120d090603620120c060321c100824626180c060311a0d8804020510904c30180c0,
+  0x814120e090603620120c0603320100844826180c060311a0e0804020910904c30180c0]
 private theorem rowsB2_chunk000_checked :
     rowsB2_chunk000.length = 4 ∧ rowsSum 1773 rowsB2_chunk000 = 51174475 := by
   constructor
   · rfl
   · rw [bRows_eq 1773 rowsB2_chunk000 (by decide) (by decide)]
     decide +kernel
-
 private def rowsB2_chunk004 : List ℕ := [
-  982761851876831083885221852921169784537592011733818214080643289935370973585472585920,
-  1954096298003830395863179880969595617864738779386507846515379746583928821682767233216,
-  1955993435650461297572607420458350406303565438873448965545355830033757799979440767168,
-  2929225019353390021578569537815525211822642449320110290753989112306035895066274398400]
-
+  0x8181810098604021130c0603420100864826180c060319a0e0804020910904c30180c0,
+  0x101818100a0604021130c0603420100864826180c060321a0e0804020d18904c30180c0,
+  0x101c18100c0644022130c0603420100884828180c060321b100804021118904c30180c0,
+  0x182018100c0644022140c0623620100884828180c060321b100804021118904c30180c0]
 private theorem rowsB2_chunk004_checked :
     rowsB2_chunk004.length = 4 ∧ rowsSum 1777 rowsB2_chunk004 = 53211888 := by
   constructor
   · rfl
   · rw [bRows_eq 1777 rowsB2_chunk004 (by decide) (by decide)]
     decide +kernel
-
 private def rowsB2_chunk008 : List ℕ := [
-  3900559472703287741461262159124178153908296448441828453497431089689676794457382551744,
-  3902460315640207524232293297424596884289860480837383881900444707170151789860485169344,
-  502197034884123602993510175328160118015074447678322192920914394609513205188832197181632,
-  503170273885757276090069882554146274391939806676290312334291743379614665646368614351040]
-
+  0x202018110c0684023140c0623620100884c28180c060331b100804021118904c30180c0,
+  0x20241a110c0684024180c06436201008c4c30180c060331b100804021918985030180c0,
+  0x1028241c120c06c4024180c06438201048c4c30180c061331b100804021918985030180c0,
+  0x10302820130c0704024180c06638201088c4c30180c061331b100804021918986030180c0]
 private theorem rowsB2_chunk008_checked :
     rowsB2_chunk008.length = 4 ∧ rowsSum 1781 rowsB2_chunk008 = 55266253 := by
   constructor
   · rfl
   · rw [bRows_eq 1781 rowsB2_chunk008 (by decide) (by decide)]
     decide +kernel
-
 private def rowsB2_chunk012 : List ℕ := [
-  1000497304570724157104615836842459769777857254255739031052415096590601952332545263763648,
-  1001468639024074027217407830009844715800067458465418086527458277378811894955100042526912]
-
+  0x20303020130c0804226180c0684020108904c30180c062341b100804021920986030180c0,
+  0x20383020140c0804226180c068402010c904c30180c062341b1008040a2120986030180c0]
 private theorem rowsB2_chunk012_checked :
     rowsB2_chunk012.length = 2 ∧ rowsSum 1785 rowsB2_chunk012 = 28420456 := by
   constructor
   · rfl
   · rw [bRows_eq 1785 rowsB2_chunk012 (by decide) (by decide)]
     decide +kernel
-
 private def rowsB2 : List ℕ := rowsB2_chunk000 ++ rowsB2_chunk004 ++ rowsB2_chunk008 ++ rowsB2_chunk012
-
 private theorem rowsB2_checked :
     rowsB2.length = 14 ∧ rowsSum 1773 rowsB2 = 188073072 := by
   constructor
@@ -6922,59 +5383,49 @@ private theorem rowsB2_checked :
       rowsB2_chunk000_checked.1, rowsB2_chunk004_checked.1, rowsB2_chunk008_checked.1,
       rowsB2_chunk000_checked.2, rowsB2_chunk004_checked.2, rowsB2_chunk008_checked.2,
       rowsB2_chunk012_checked.2]
-
 private def rowsB3_chunk000 : List ℕ := [
-  1499763209908935691048016978374908007575356763167775251437931100702035226228287483248832,
-  1997086450024083323628166225471579214801002109676049576822898637212135137662444037570752,
-  1998059681607786252352171776212009356597005581071004408438545572930689541538161048518848,
-  257124881860671284732677209768016411145291114831044391308378714741060930172193911093690561]
-
+  0x30403020180c8804426180c068402010c904c30180c063341c1008040a2120986030180c0,
+  0x40403022180d0804628180c46c4020110905030180c064341c100804122120986030180c0,
+  0x40483422180d0804628180c46c4020110905030180c0643420100804122120986030180c0,
+  0x2050483824180d8804830180c86c4020118985030180c06436201008041a2120986030180c1]
 private theorem rowsB3_chunk000_checked :
     rowsB3_chunk000.length = 4 ∧ rowsSum 1787 rowsB3_chunk000 = 58605477 := by
   constructor
   · rfl
   · rw [bRows_eq 1787 rowsB3_chunk000 (by decide) (by decide)]
     decide +kernel
-
 private def rowsB3_chunk004 : List ℕ := [
-  257623180229507711223339261640246521308235272152773333429566260944263033682013855294783681,
-  512254619940210768437563308462931390510457932562936720853545219067731028403356446880792770,
-  512751943180325901935312808965040494486629691367941723735429325421450915429743595031199938,
-  767878763473375073816584692927952899878582662741900928570064688785122354371535554333475011]
-
+  0x2060504026180d8804830180c8704020918986030180c06636201008041a3120986030180c1,
+  0x406060402618100844c30180cc704020918986030180c0663620100804223120986030180c2,
+  0x407060402818100844c30180d0804021118986030180c2663620100804223120986030180c2,
+  0x608060403019100884c30180d0804021920986030180c4683620100804323120986030180c3]
 private theorem rowsB3_chunk004_checked :
     rowsB3_chunk004.length = 4 ∧ rowsSum 1791 rowsB3_chunk004 = 60830669 := by
   constructor
   · rfl
   · rw [bRows_eq 1791 rowsB3_chunk004 (by decide) (by decide)]
     decide +kernel
-
 private def rowsB3_chunk008 : List ℕ := [
-  1022508262412323424664328949798912188392358894218118388661437246176893073227601358627111107,
-  1023006556983186561204311949420548790577666811836428090363652963496235793224933087209685188,
-  131647938541329251670266195941287761024958437022289233003033357241469455837256544243880657092,
-  131903068275610810556285513413985628420873481746527902108275419451930222475782859576188174534]
-
+  0x808060443019100884c30180d0804021920986030180c4683620100804323120986030180c3,
+  0x80906844301a1008c5030188d8804022120986030180c6683620100804323130986030180c4,
+  0x40a0906848301b100906030188d8804022120a06030180c6683820100804323130a06030180c4,
+  0x40c0a08048301b100906030190d8804022120a06030180c8683820100814424130a06030180c6]
 private theorem rowsB3_chunk008_checked :
     rowsB3_chunk008.length = 4 ∧ rowsSum 1795 rowsB3_chunk008 = 63192444 := by
   constructor
   · rfl
   · rw [bRows_eq 1795 rowsB3_chunk008 (by decide) (by decide)]
     decide +kernel
-
 private def rowsB3_chunk012 : List ℕ := [
-  262274365409387884477820114114764928831977200309447997614763356902805841865374023831154426054,
-  262528994908326861790880158189891831229868237703699818536774217721123818811522160955479916742]
-
+  0x80c0c0804c301c100906030190e0804123130a06030180c8683820100824424130c06030180c6,
+  0x80e0c080503020108986030198e0804123130c06030180c86c4020100824424130c06030180c6]
 private theorem rowsB3_chunk012_checked :
     rowsB3_chunk012.length = 2 ∧ rowsSum 1799 rowsB3_chunk012 = 32409390 := by
   constructor
   · rfl
   · rw [bRows_eq 1799 rowsB3_chunk012 (by decide) (by decide)]
     decide +kernel
-
 private def rowsB3 : List ℕ := rowsB3_chunk000 ++ rowsB3_chunk004 ++ rowsB3_chunk008 ++ rowsB3_chunk012
-
 private theorem rowsB3_checked :
     rowsB3.length = 14 ∧ rowsSum 1787 rowsB3 = 215037980 := by
   constructor
@@ -6984,58 +5435,48 @@ private theorem rowsB3_checked :
       rowsB3_chunk000_checked.1, rowsB3_chunk004_checked.1, rowsB3_chunk008_checked.1,
       rowsB3_chunk000_checked.2, rowsB3_chunk004_checked.2, rowsB3_chunk008_checked.2,
       rowsB3_chunk012_checked.2]
-
 private def rowsB4_chunk000 : List ℕ := [
-  393153926898368037779956586260884810099629461466337530894068449703337103790479912149209678022,
-  523524230355109593428136422297043040455355258298810726050894624286238085270850616115530399944,
-  523779357175391519336607717997597312966345423910928523258048709878366167435799158900706607304,
-  67403744533160573149815081095419755717829335161821473582592952719408791139519767887881957376200]
-
+  0xc100c0806032201089860301a100804223130c06030180cc6c4020100834424130c06030180c6,
+  0x10100c0886032201109860301a100804224130c06030184cc6c4020100834424130c06030180c8,
+  0x10120d088603420118a060301a100804324130c06030184cc6c4020100844624130c06030180c8,
+  0x814120d090603420118a060311b100804424130c06030188d06c4020100844624130c06030180c8]
 private theorem rowsB4_chunk000_checked :
     rowsB4_chunk000.length = 4 ∧ rowsSum 1801 rowsB4_chunk000 = 66698494 := by
   constructor
   · rfl
   · rw [bRows_eq 1801 rowsB4_chunk000 (by decide) (by decide)]
     decide +kernel
-
 private def rowsB4_chunk004 : List ℕ := [
-  67534370957112735004818182867855329459818665467524367851583201845534692509983537509866666033352,
-  134284475089606596852643898426759232185045281576300356148425231210264482724176761656935073284296,
-  201164440265591793311775069311023121171027053934403601362494993146329176530353119470450762678472,
-  201294810571964435343337772165466064973999768161101407725246533797628533519914280496752620568780]
-
+  0x8181410090603620120c060311b100804424140c06030188d06c4020100844624130c06030180c8,
+  0x10181810098603820120c060321b100804424140c0603018cd06c4020100864624130c06030180c8,
+  0x181c18100a0604021130c060331c100824626140c06030190d0704020100864624130c06030180c8,
+  0x182018100c0644021130c060331c100824626180c06030190d0704020100864624130c06030180cc]
 private theorem rowsB4_chunk004_checked :
     rowsB4_chunk004.length = 4 ∧ rowsSum 1805 rowsB4_chunk004 = 69282112 := by
   constructor
   · rfl
   · rw [bRows_eq 1805 rowsB4_chunk004 (by decide) (by decide)]
     decide +kernel
-
 private def rowsB4_chunk008 : List ℕ := [
-  268044405941816111835205848216086036713138827257909359916615046791159001649524467563885980909772,
-  268175030873800457893077876484401107874737700002417187832002709029989846091415634678252031803596,
-  34577467050480238934590926732728424482281439612892865746451262414272060043450779469199432608743628,
-  68753390504776281640787256927054762517070429065106299246104782079995351432998244765056107955716300]
-
+  0x202018110c0644022130c0603420100844626180c06030190d8804020102884626130c06030180cc,
+  0x20241a110c0684022130c0603420100844826180c06030198d8804020104884826130c06030180cc,
+  0x1030241c120c0684023140c0623620100864826180c06030998d8804020104884826140c06030180cc,
+  0x20302820120c06c4024180c0623620100884826180c06030998d8804020106884826140c06030180cc]
 private theorem rowsB4_chunk008_checked :
     rowsB4_chunk008.length = 4 ∧ rowsSum 1809 rowsB4_chunk008 = 71729271 := by
   constructor
   · rfl
   · rw [bRows_eq 1809 rowsB4_chunk008 (by decide) (by decide)]
     decide +kernel
-
 private def rowsB4_chunk012 : List ℕ := [
-  68753651245878577588553675994500726878743184155093160934935405530764948874570955137958838169338060]
-
+  0x20303020130c0704024180c0643620100884826180c060311a0d8804020106884826180c06030180cc]
 private theorem rowsB4_chunk012_checked :
     rowsB4_chunk012.length = 1 ∧ rowsSum 1813 rowsB4_chunk012 = 18309315 := by
   constructor
   · rfl
   · rw [bRows_eq 1813 rowsB4_chunk012 (by decide) (by decide)]
     decide +kernel
-
 private def rowsB4 : List ℕ := rowsB4_chunk000 ++ rowsB4_chunk004 ++ rowsB4_chunk008 ++ rowsB4_chunk012
-
 private theorem rowsB4_checked :
     rowsB4.length = 13 ∧ rowsSum 1801 rowsB4 = 226019192 := by
   constructor
@@ -7045,48 +5486,40 @@ private theorem rowsB4_checked :
       rowsB4_chunk000_checked.1, rowsB4_chunk004_checked.1, rowsB4_chunk008_checked.1,
       rowsB4_chunk000_checked.2, rowsB4_chunk004_checked.2, rowsB4_chunk008_checked.2,
       rowsB4_chunk012_checked.2]
-
 private def rowsB5_chunk000 : List ℕ := [
-  102996193415982998175614361476035042996816956930845070340167375286250461921569518819625724473869004,
-  103062943012845790895788939348718625266687881250593435103223641673107586543131997946138430992909004,
-  137238735842209849259625394286636050796725344997094359056362043669466859839572085844683170984854736,
-  17669487206646215790739594036999697123890862852629209689225024489854023833254021835771025808943056080]
-
+  0x30383020140c0804224180c0643620100884828180c060311a0d8804020108884826180c06030182cc,
+  0x30403020180c8804226180c06638201048c4c28180c060319a0d88040201088c4826180c06030182cc,
+  0x40403022180c8804426180c06840201048c4c28180c060321a0e08040201088c4826180c06030184d0,
+  0x2050483422180d0804426180c06840201088c4c30180c060321a0e080402010c8c4826180c06030184d0]
 private theorem rowsB5_chunk000_checked :
     rowsB5_chunk000.length = 4 ∧ rowsSum 1814 rowsB5_chunk000 = 74964634 := by
   constructor
   · rfl
   · rw [bRows_eq 1814 rowsB5_chunk000 (by decide) (by decide)]
     decide +kernel
-
 private def rowsB5_chunk004 : List ℕ := [
-  17703663129845882334510554487129238509754266224092229570651202315631877380341678546493527941619746512,
-  35201869437635201256963225235508674005746820615856007757212583879336492906155061595475767620750378704,
-  35236045230464566286657802456455478010362991304615665819534584338182542517640056348498247281432168656,
-  52768226821558029625335735832964466302384138196438057612730930092605686523768292782658714256330033360]
-
+  0x2060483824180d0804628180c068402010c904c30180c060321b0e080402010c8c4826180c06030186d0,
+  0x4060604024180d8804830180c46c402010c904c30180c060331b10080402050c8c4826180c06030186d0,
+  0x4070604026180e0804830180c46c4020110904c30180c061331b1008040205108c4826180c06030188d0,
+  0x608060402818100804830180c86c4020110904c30180c061331b1008040209108c4c26180c06030188d0]
 private theorem rowsB5_chunk004_checked :
     rowsB5_chunk004.length = 4 ∧ rowsSum 1818 rowsB5_chunk004 = 77713468 := by
   constructor
   · rfl
   · rw [bRows_eq 1818 rowsB5_chunk004 (by decide) (by decide)]
     decide +kernel
-
 private def rowsB5_chunk008 : List ℕ := [
-  70266232620841140333623954763484907059163055970211390320486844595951626679794191994211269088118933712,
-  70266299500806315349368276719157937461893121307642181786543625702435796506700285774048610153276738768,
-  9046777449802862484858672146943844927431916092451970281474066644838226083831965840326309796612214459600,
-  9064309698273666489830722217757468829827811458468891966367327421915808671333158629641839358255938243792]
-
+  0x808060403019100844c30180cc704020110905030180c062341b100804020910904c26180c06030188d0,
+  0x808068443019100884c30180cc704020918985030180c063341b100804020d10904c28180c0603018cd0,
+  0x40a0906844301a100884c30180d0804020918985030180c063341b100804021110904c28180c0603018cd0,
+  0x40c0a07048301a1008c5030180d0804021118986030180c064341c100804021118904c28180c0603018cd0]
 private theorem rowsB5_chunk008_checked :
     rowsB5_chunk008.length = 4 ∧ rowsSum 1822 rowsB5_chunk008 = 80477410 := by
   constructor
   · rfl
   · rw [bRows_eq 1822 rowsB5_chunk008 (by decide) (by decide)]
     decide +kernel
-
 private def rowsB5 : List ℕ := rowsB5_chunk000 ++ rowsB5_chunk004 ++ rowsB5_chunk008
-
 private theorem rowsB5_checked :
     rowsB5.length = 12 ∧ rowsSum 1814 rowsB5 = 233155512 := by
   constructor
@@ -7095,48 +5528,40 @@ private theorem rowsB5_checked :
   · simp only [rowsB5, rowsSum_append, List.length_append, Nat.reduceAdd,
       rowsB5_chunk000_checked.1, rowsB5_chunk004_checked.1, rowsB5_chunk000_checked.2,
       rowsB5_chunk004_checked.2, rowsB5_chunk008_checked.2]
-
 private def rowsB6_chunk000 : List ℕ := [
-  18023357152199593346050548787326776862054543923453407724783007652068824559638846440196412352445183790288,
-  26999834126709074780998563979978981853792227848832153888434931629463635376324425396733083234857482555608,
-  27017332132637711168171896746477806746820678756576285497706818225872463819850773098879933713146250891480,
-  35976311101870663850815464838890082423802483254462715118331619903847053927472950529657262401977961255128]
-
+  0x80c0c0804c301b100905030188d8804021920986030180c064341c100804021118904c30180c0603018cd0,
+  0xc0e0c0804c301c100906030188d8804021920986030180c064361c100804021918904c30180c06030190d8,
+  0xc100c080503020100906030190d8804022120986030180c0663620100804021918904c30180c06030190d8,
+  0x10100c080603220108986030190d8804022120986030180c26636201008040a1918904c30180c06030190d8]
 private theorem rowsB6_chunk000_checked :
     rowsB6_chunk000.length = 4 ∧ rowsSum 1826 rowsB6_chunk000 = 83124628 := by
   constructor
   · rfl
   · rw [bRows_eq 1826 rowsB6_chunk000 (by decide) (by decide)]
     decide +kernel
-
 private def rowsB6_chunk004 : List ℕ := [
-  44952822318922314396501306820299582063898683846960496654799960803359437837417297034260975518041493311704,
-  4640909033334526403962398348432366808275426124905681898577956059640330324970815393861996041907884632674520,
-  9227923865847845415484094202736692519890637112346625446197353177416633443820321164723489194628102941153496,
-  9227958861926191793177880979111281483818784310991063534840668156237239405479586490056222635177014743898328]
-
+  0x14120d088603220110986030198e0804123120a06030180c46636201008040a1918904c30180c06030190d8,
+  0x818120d0906034201109860301a100804123130a06030180c4683620100804122118904c30180c06030190d8,
+  0x10181410090603420118a060301a100804223130a06030180c6683620100804122120984c30180c06030198d8,
+  0x10181810098603620120a060311a100804223130c06030180c66836201008041a2120984c30180c06030598d8]
 private theorem rowsB6_chunk004_checked :
     rowsB6_chunk004.length = 4 ∧ rowsSum 1830 rowsB6_chunk004 = 86155640 := by
   constructor
   · rfl
   · rw [bRows_eq 1830 rowsB6_chunk004 (by decide) (by decide)]
     decide +kernel
-
 private def rowsB6_chunk008 : List ℕ := [
-  13832874051843757504713494526871512486254107240591001389018284861486255686039061278405234729822600980437208,
-  18419871284157649521313089921509975291391893764175779327696083431598312769422862811130246735752870366910680,
-  18419871284157779891617517997511722200986871426284910140579943383523469711413467754421711917623999057205504,
-  2371558427801121452860489265881330413392344544518439068556320985315208364980815691570692945606271479824881920]
-
+  0x18201810098603820120c060311b100804324130c06030180c8683820100804222120984c30180c06030598d8,
+  0x202018100c0604021120c060321b100804424130c06030180c8683820100804222120985030180c06030998d8,
+  0x202018100c0644021130c060321b100804424130c06030180cc6c3820100804223120985030180c0603099900,
+  0x1028241a110c0644022130c060331c100804424130c06030184cc6c4020100804323120985030180c06030d9900]
 private theorem rowsB6_chunk008_checked :
     rowsB6_chunk008.length = 4 ∧ rowsSum 1834 rowsB6_chunk008 = 89076513 := by
   constructor
   · rfl
   · rw [bRows_eq 1834 rowsB6_chunk008 (by decide) (by decide)]
     decide +kernel
-
 private def rowsB6 : List ℕ := rowsB6_chunk000 ++ rowsB6_chunk004 ++ rowsB6_chunk008
-
 private theorem rowsB6_checked :
     rowsB6.length = 12 ∧ rowsSum 1826 rowsB6 = 258356781 := by
   constructor
@@ -7145,47 +5570,39 @@ private theorem rowsB6_checked :
   · simp only [rowsB6, rowsSum_append, List.length_append, Nat.reduceAdd,
       rowsB6_chunk000_checked.1, rowsB6_chunk004_checked.1, rowsB6_chunk000_checked.2,
       rowsB6_chunk004_checked.2, rowsB6_chunk008_checked.2]
-
 private def rowsB7_chunk000 : List ℕ := [
-  2376154401544252028309685579146511896555101584536301239155143703978420834645809726974939491931156888268151040,
-  4724714937272034405531843176746540638918701312992318111663706018497357628115258659170279616842581242272651520,
-  7077844517312023569019777299881211974116899127860526691272910232153144806962384155860942558304445804563243264,
-  7082431514578179634988043759076534740260815741016235983535062447304363272570710540772076868537945547051475200]
-
+  0x1030281c120c0684022130c0603420100824624140c06030184cc6c4020100804323120986030180c06030d9900,
+  0x20303020120c06c4023140c0603420100824626140c06030188cc6c4020100814323120986030180c0603119900,
+  0x30383020130c06c4024140c0603420100844626180c0603018cd06c4020100814423120986030180c060311a100,
+  0x30403020140c0704024180c0623620100864826180c0603018cd06c4020100824423120986030180c060311a100]
 private theorem rowsB7_chunk000_checked :
     rowsB7_chunk000.length = 4 ∧ rowsSum 1838 rowsB7_chunk000 = 91876466 := by
   constructor
   · rfl
   · rw [bRows_eq 1838 rowsB7_chunk000 (by decide) (by decide)]
     decide +kernel
-
 private def rowsB7_chunk004 : List ℕ := [
-  9430974097488716554912302039813107349192595687364664714500805382858959117888711468918899198555912694769754368,
-  1214237915034174183864315874634195641075230102299611648612808501939743564114422723793797722204848680208090898688,
-  1216586457616948083842054857256470583528684407140852704306056965896935960961398148088949237242598248829731578112,
-  2419044855970859651174227711576196401917300413376599468734205483066339991670494146457796907278498258001596621056]
-
+  0x40403020180c0804224180c0643620100864826180c06030190d06c4020100834423120986030180c060319a100,
+  0x2050483422180c8804226180c0643620100884826180c06030190d0704020100834424130986030180c060319a100,
+  0x2060483422180d0804426180c0663820100884826180c06030198d0704020100844424130986030180c060319a100,
+  0x4060503824180d0804626180c06838201048c4828180c06030998d8704020100844424130986030180c060321a100]
 private theorem rowsB7_chunk004_checked :
     rowsB7_chunk004.length = 4 ∧ rowsSum 1842 rowsB7_chunk004 = 95136682 := by
   constructor
   · rfl
   · rw [bRows_eq 1842 rowsB7_chunk004 (by decide) (by decide)]
     decide +kernel
-
 private def rowsB7_chunk008 : List ℕ := [
-  3623856392863756067337871348042138719987041190764860322291800456202723246640742905302537734200725933784393949440,
-  3626204935446529900566019436721861146068365279068192151254512716551472438269913489633519315263787554558649147648,
-  4828658737844230852791671960317086644407572680810213091852441327334411803614584996185136012282693880377868656896]
-
+  0x6070604026180d8804628180c06840201048c4c28180c06030998d8804020100844624130986030180c060321a100,
+  0x6080604026180d8804830180c06840201088c4c28180c06031198d8804020100864624130a06030180c060321a100,
+  0x808060402818100804830180c46c40201088c4c30180c060319a0d8804020102864624130a06030180c060321a100]
 private theorem rowsB7_chunk008_checked :
     rowsB7_chunk008.length = 3 ∧ rowsSum 1846 rowsB7_chunk008 = 73419578 := by
   constructor
   · rfl
   · rw [bRows_eq 1846 rowsB7_chunk008 (by decide) (by decide)]
     decide +kernel
-
 private def rowsB7 : List ℕ := rowsB7_chunk000 ++ rowsB7_chunk004 ++ rowsB7_chunk008
-
 private theorem rowsB7_checked :
     rowsB7.length = 11 ∧ rowsSum 1838 rowsB7 = 260432726 := by
   constructor
@@ -7194,47 +5611,39 @@ private theorem rowsB7_checked :
   · simp only [rowsB7, rowsSum_append, List.length_append, Nat.reduceAdd,
       rowsB7_chunk000_checked.1, rowsB7_chunk004_checked.1, rowsB7_chunk000_checked.2,
       rowsB7_chunk004_checked.2, rowsB7_chunk008_checked.2]
-
 private def rowsB8_chunk000 : List ℕ := [
-  4828658737914257051908182637939712904655474816186644321637029936411169451397895025531836375349337276035637551360,
-  622892266299877384751209141878264308788534161842442223863560085970527523921276357233239304669778287177054835286272,
-  1238550966257080141401074218024525253534532376945304657436764797900009075571227116623186417565711894942809060389120,
-  1238555672516240153027946413731489717664046136209266450738956383752184385432438491191271953234508229094512163664128]
-
+  0x808060403019100844c30180c86c402010c904c30180c060319a0d8804020102864624130a06030180c060321a100,
+  0x40c09068443019100844c30180c86c4020110904c30180c060321a0d8804020104884624130c06030180c060b21a100,
+  0x80c0a07048301a100884c30180cc704020110904c30180c060321a0e0804020104884624130c06030180c061331b100,
+  0x80c0c08048301a1008c4c30180d0704020110904c30180c060321a0e0804020106884624130c06030180c061331b100]
 private theorem rowsB8_chunk000_checked :
     rowsB8_chunk000.length = 4 ∧ rowsSum 1849 rowsB8_chunk000 = 100580370 := by
   constructor
   · rfl
   · rw [bRows_eq 1849 rowsB8_chunk000 (by decide) (by decide)]
     decide +kernel
-
 private def rowsB8_chunk004 : List ℕ := [
-  1855414473146243106476990130197575024633365089455928911676196715218275493879236957962952489292650655738699074089216,
-  2472273273776246059926165744744099294380107889344717132214623778119517904161027892944471631609605931647135546192128,
-  2472273273812082112504180911051267438425772321023090434317505898684600408226827346860520466585698470178233265533184,
-  318305183998718557254927220640106582134025105802452877786881433733593206035776695535906514413258292153749855391559936]
-
+  0xc0e0c0804c301b1008c5030180d0804020918905030180c061331b0e0804020108884826130c06030180c061b31b100,
+  0x10100c08050301c100906030188d0804021118985030180c061331b100804020108884826130c06030180c061b31b100,
+  0x10100c080603020100906030188d8804021118985030180c062331b1008040201088c4826130c06030180c062331b100,
+  0x814120d088603220108986030190d8804021920986030180c063341b10080402010c8c4826130c06030180c062331b100]
 private theorem rowsB8_chunk004_checked :
     rowsB8_chunk004.length = 4 ∧ rowsSum 1853 rowsB8_chunk004 = 103896094 := by
   constructor
   · rfl
   · rw [bRows_eq 1853 rowsB8_chunk004 (by decide) (by decide)]
     decide +kernel
-
 private def rowsB8_chunk008 : List ℕ := [
-  634136889916693072188923949301788159960460066396342713290665891380403462359007932363355335582918568822719651704320256,
-  634140504328314958350241814235649235669470664446291164543810922205318054712730671449744451333277285930153026324115712,
-  949972210250876470516218946661158397435174940012581187930215331780631193214647235237544209308023329003852156022927616]
-
+  0x1018120d088603420110986030190d8804022120986030180c063341b10080402050c8c4826140c06030180c062331b100,
+  0x10181810090603420110986030198e0804022120986030180c064341b10080402050c8c4826140c06030180c063341b100,
+  0x181c1810098603620118a060301a0e0804022120986030180c064341b1008040209108c4826140c06030180c063341b100]
 private theorem rowsB8_chunk008_checked :
     rowsB8_chunk008.length = 3 ∧ rowsSum 1857 rowsB8_chunk008 = 80211996 := by
   constructor
   · rfl
   · rw [bRows_eq 1857 rowsB8_chunk008 (by decide) (by decide)]
     decide +kernel
-
 private def rowsB8 : List ℕ := rowsB8_chunk000 ++ rowsB8_chunk004 ++ rowsB8_chunk008
-
 private theorem rowsB8_checked :
     rowsB8.length = 11 ∧ rowsSum 1849 rowsB8 = 284688460 := by
   constructor
@@ -7243,33 +5652,27 @@ private theorem rowsB8_checked :
   · simp only [rowsB8, rowsSum_append, List.length_append, Nat.reduceAdd,
       rowsB8_chunk000_checked.1, rowsB8_chunk004_checked.1, rowsB8_chunk000_checked.2,
       rowsB8_chunk004_checked.2, rowsB8_chunk008_checked.2]
-
 private def rowsB9_chunk000 : List ℕ := [
-  950587866597695134253977556257595685018062141155854423885979957077841411188021688404296320022330583065980744371384576,
-  1265803916173438052674220054365360418642686507108378862995309162979897596450316423447405538883203452374106409170743552,
-  162972254207343901314522603468544327672504287430081089360618270942393796415603058519301013300530501064941289092562399488,
-  163287470256915057148220969288535718963061492085019597000226879631130979259422772432279280096006714859675262660588450048]
-
+  0x18201810098603620120a060301a100804123120a06030180c064341c1008040209108c4826140c06030180c063341b100,
+  0x202018100a0604020120c060311a100804223130a06030180c266361c100804020d108c4826180c06030180c064341b100,
+  0x1028241a110c0644021120c060311b100804223130a06030180c2663620100804021110904826180c06030180c064341b100,
+  0x1030241a110c0644021130c060321b100804324130c06030180c4663620100804021110904c26180c06030180c064341b100]
 private theorem rowsB9_chunk000_checked :
     rowsB9_chunk000.length = 4 ∧ rowsSum 1860 rowsB9_chunk000 = 109742129 := by
   constructor
   · rfl
   · rw [bRows_eq 1860 rowsB9_chunk000 (by decide) (by decide)]
     decide +kernel
-
 private def rowsB9_chunk004 : List ℕ := [
-  324678704498496016587443199809821146119887555959215295867379149599344819876394483689142502176295233384451705052116156672,
-  486385771648448752904303967191322857106693009810942777241014939597172706255615282641903912681420489317776635564816204032]
-
+  0x2030281c120c0684022130c060331b100804324130c06030180c6683620100804021110904c26180c06030180c1643420100,
+  0x30383020130c06c4023130c060331c100804424130c06030180c6683620100804021918904c26180c06030180c1643420100]
 private theorem rowsB9_chunk004_checked :
     rowsB9_chunk004.length = 2 ∧ rowsSum 1864 rowsB9_chunk004 = 56116171 := by
   constructor
   · rfl
   · rw [bRows_eq 1864 rowsB9_chunk004 (by decide) (by decide)]
     decide +kernel
-
 private def rowsB9 : List ℕ := rowsB9_chunk000 ++ rowsB9_chunk004
-
 private theorem rowsB9_checked :
     rowsB9.length = 6 ∧ rowsSum 1860 rowsB9 = 165858300 := by
   constructor
@@ -7277,15 +5680,12 @@ private theorem rowsB9_checked :
       rowsB9_chunk004_checked.1]
   · simp only [rowsB9, rowsSum_append, Nat.reduceAdd, rowsB9_chunk000_checked.1,
       rowsB9_chunk000_checked.2, rowsB9_chunk004_checked.2]
-
 def rowsB : List ℕ := rowsB1 ++ rowsB2 ++ rowsB3 ++ rowsB4 ++ rowsB5 ++ rowsB6 ++ rowsB7 ++ rowsB8 ++ rowsB9
-
 theorem rowsB_length : rowsB.length = 108 := by
   simp only [rowsB, List.length_append, Nat.reduceAdd,
     rowsB1_checked.1, rowsB2_checked.1, rowsB3_checked.1, rowsB4_checked.1,
     rowsB5_checked.1, rowsB6_checked.1, rowsB7_checked.1, rowsB8_checked.1,
     rowsB9_checked.1]
-
 theorem rowsB_sum : rowsSum 1758 rowsB = 2005983713 := by
   simp only [rowsB, rowsSum_append, List.length_append, Nat.reduceAdd,
     rowsB1_checked.1, rowsB2_checked.1, rowsB3_checked.1, rowsB4_checked.1,
@@ -7293,30 +5693,18 @@ theorem rowsB_sum : rowsSum 1758 rowsB = 2005983713 := by
     rowsB1_checked.2, rowsB2_checked.2, rowsB3_checked.2, rowsB4_checked.2,
     rowsB5_checked.2, rowsB6_checked.2, rowsB7_checked.2, rowsB8_checked.2,
     rowsB9_checked.2]
-
 end K1_13_2_3_4
-end PackSource_K1_13_2_3_4DataB
-
-section PackSource_K1_13_2_3_4DataD
-set_option autoImplicit true
+end
+section
 namespace K1_13_2_3_4
-
--- Keep the kernel reductions sequential to bound peak memory.
 set_option Elab.async false
 set_option maxRecDepth 50000
 set_option maxHeartbeats 0
-
 open K1_13_2
-
--- Each row has grade 1943–2007 and 71 base-512 digits. In this range the
--- original counting formula reduces to three denominator evaluations per flag.
 private theorem ddDenNeg {v : ℤ} (hv : v < 0) : denominator v = 0 := by
   simp [denominator, hv]
-
 private theorem ddCumNeg {d v : ℤ} (hv : v < 0) : cumulative d v = 0 := by
   simp [cumulative, hv]
-
--- Below the degree, the shifted terms in inclusion-exclusion all vanish.
 private theorem ddCum {d v : ℤ} (hd : 0 ≤ d) (hv : v ≤ d) :
     cumulative d v = denominator v := by
   by_cases h : v < 0
@@ -7329,33 +5717,24 @@ private theorem ddCum {d v : ℤ} (hd : 0 ≤ d) (hv : v ≤ d) :
     ddDenNeg (show v - 2 * d - 4 < 0 by omega),
     ddDenNeg (show v - 2 * d - 5 < 0 by omega),
     ddDenNeg (show v - 3 * d - 6 < 0 by omega), sub_zero, add_zero]
-
 private theorem ddCumBelow {d v : ℤ} (hv : v ≤ d) : cumulative d v = denominator v := by
   by_cases hd : 0 ≤ d
   · exact ddCum hd hv
   · rw [ddCumNeg (by omega), ddDenNeg (by omega)]
-
 private theorem ddCap {d v c : ℤ} (hd : 0 ≤ d) (hc : 0 ≤ c) (hv : v ≤ d)
     (hcap : v < 3 * (c + 1)) : cappedCount d v c = denominator v := by
   simp [cappedCount, show ¬ c < 0 by omega, ddCum hd hv,
     ddCumNeg (show v - 3 * (c + 1) < 0 by omega)]
-
--- In this block the window and its cubic residual have the same explicit flag shape.
 private def ddFlag (s q k : ℤ) : Flag :=
   ⟨1650 - 3 * k, s - 1350 - q - 2 * k, 1650 - 3 * k, 550 - k, 1650 - q - 3 * k⟩
-
 private def ddOld (s q k : ℤ) : ℤ :=
   denominator (1650 - 3 * k) - denominator (s - 1350 - q - 2 * k - 1)
-
 private def ddTarget (q k : ℤ) : ℤ := denominator (1650 - q - 3 * k - 1)
-
 private theorem ddOldEq {s q k : ℤ} (hs : s ≤ 2007) (hq : 0 ≤ q)
     (hk : 0 ≤ k) (hk' : k < 512) : oldCount (ddFlag s q k) = ddOld s q k := by
   dsimp only [oldCount, ddFlag, ddOld]
   rw [min_eq_right (by omega), ddCap (by omega) (by omega) (by omega) (by omega),
     ddCap (by omega) (by omega) (by omega) (by omega)]
-
--- Of the four cumulative counts in the target, one vanishes and two cancel.
 private theorem ddTargetEq {s q k : ℤ} (hs : 1943 ≤ s) (hs' : s ≤ 2007)
     (hq : 0 ≤ q) (hq' : q ≤ 70) (hk : 0 ≤ k) (hk' : k < 512) :
     targetCount (ddFlag s q k) = ddTarget q k := by
@@ -7368,7 +5747,6 @@ private theorem ddTargetEq {s q k : ℤ} (hs : 1943 ≤ s) (hs' : s ≤ 2007)
     omega
   rw [ddCumNeg hv, ddCumBelow (by omega), ddCumBelow (by omega), ddCumBelow (by omega)]
   omega
-
 private theorem ddKernelEq {s q k : ℤ} (hs : 1943 ≤ s) (hs' : s ≤ 2007)
     (hq : 0 ≤ q) (hq' : q ≤ 70) (hk : 0 ≤ k) (hk' : k < 512) :
     kernelLower (ddFlag s q k) = ddOld s q k - ddTarget q k := by
@@ -7377,21 +5755,17 @@ private theorem ddKernelEq {s q k : ℤ} (hs : 1943 ≤ s) (hs' : s ≤ 2007)
     Bool.false_eq_true, ↓reduceIte]
   rw [← ddOldEq hs' hq hk hk', ← ddTargetEq hs hs' hq hq' hk hk']
   rfl
-
 private theorem ddWindow {s q : ℕ} (hs : 1943 ≤ s) (hs' : s ≤ 2007) :
     windowFlag s (3000 + q - s) = ddFlag s q 0 := by
   simp only [windowFlag, ddFlag, mul_zero, sub_zero]
   congr 1 <;> omega
-
 private theorem ddCubic (s q : ℤ) (k : ℕ) : cubicFlag (ddFlag s q 0) k = ddFlag s q k := by
   simp [ddFlag, cubicFlag]
-
 private def ddSaving (s q k : ℕ) : ℕ :=
   let old := ddOld s q 0
   let lower := max 0 (old - ddTarget q 0)
   (old - lower).toNat -
     (old - max lower (ddOld s q k - ddTarget q k)).toNat
-
 private theorem ddSavingEq {s q k : ℕ} (hs : 1943 ≤ s) (hs' : s ≤ 2007)
     (hq' : q ≤ 70) (hk' : k < 512) :
     entry s q k = ddSaving s q k := by
@@ -7403,17 +5777,12 @@ private theorem ddSavingEq {s q k : ℕ} (hs : 1943 ≤ s) (hs' : s ≤ 2007)
   rw [ddKernelEq (by omega) (by omega) (by omega) (by omega) (by omega) (by omega),
     ddKernelEq (by omega) (by omega) (by omega) (by omega) (by omega) (by omega),
     ddOldEq (by omega) (by omega) (by omega) (by omega)]
-
--- On nonnegative inputs the six residues share one rounded cubic.
 private def ddDenNat (u : ℕ) : ℕ := (((2 * u + 21) * u + 66) * u + 72) / 72
-
--- The product of consecutive integers is even.
 private theorem ddEvenPair (x : ℤ) : 2 * (x * (x - 1) / 2) = x * (x - 1) := by
   have hm : x * (x - 1) % 2 = 0 := by
     rw [Int.mul_emod, Int.sub_emod]
     rcases (show x % 2 = 0 ∨ x % 2 = 1 by omega) with h | h <;> norm_num [h]
   omega
-
 private theorem ddDenPoly (x r : ℤ) :
     1 + r * (r + 1) / 2 + x * (22 + 7 * r + r * (r - 1) / 2) + (57 + 6 * r) * (x * (x - 1) / 2) +
       6 * x * (x - 1) * (x - 2) =
@@ -7424,7 +5793,6 @@ private theorem ddDenPoly (x r : ℤ) :
       6 * x * (x - 1) * (x - 2)) = (((12 * x + 21 + 6 * r) * x + 11 + 7 * r + r * r) * x + 2 + r + r * r) := by
     linear_combination hp + x * ddEvenPair r + (57 + 6 * r) * ddEvenPair x
   omega
-
 private theorem ddRoundCubic (x r : ℤ) (hr : 0 ≤ r) (hr' : r < 6) :
     (((12 * x + 21 + 6 * r) * x + 11 + 7 * r + r * r) * x + 2 + r + r * r) / 2 =
       (((2 * (6 * x + r) + 21) * (6 * x + r) + 66) * (6 * x + r) + 72) / 72 := by
@@ -7434,21 +5802,16 @@ private theorem ddRoundCubic (x r : ℤ) (hr : 0 ≤ r) (hr' : r < 6) :
       36 * (((12 * x + 21 + 6 * r) * x + 11 + 7 * r + r * r) * x + 2 + r + r * r) + (2 * r ^ 3 - 15 * r ^ 2 + 30 * r) := by ring
   rw [he]
   omega
-
 private theorem ddDenCorrect (i : ℕ) : denominator (i : ℤ) = ddDenNat i := by
   simp only [denominator, ddDenNat, show ¬ (i : ℤ) < 0 by omega, ↓reduceIte,
     Int.natCast_ediv, Nat.cast_ofNat, Nat.cast_mul, Nat.cast_add]
   rw [ddDenPoly, ddRoundCubic _ _ (by omega) (by omega),
     show 6 * ((i : ℤ) / 6) + (i : ℤ) % 6 = i by omega]
-
--- Shifting the cubic's argument by one lets index zero represent every negative input.
 private def ddBefore (u : ℕ) : ℕ := (((2 * u + 15) * u + 30) * u + 25) / 72
-
 private theorem ddBeforeSucc (u : ℕ) : ddBefore (u + 1) = ddDenNat u := by
   unfold ddBefore ddDenNat
   congr 1
   ring
-
 private theorem ddBeforeEq (a b : ℕ) :
     denominator ((a : ℤ) - b - 1) = (ddBefore (a - b) : ℤ) := by
   by_cases h : a ≤ b
@@ -7456,13 +5819,11 @@ private theorem ddBeforeEq (a b : ℕ) :
       show ddBefore 0 = 0 from rfl, Nat.cast_zero]
   · have he : (a : ℤ) - b - 1 = ((a - b - 1 : ℕ) : ℤ) := by omega
     rw [he, ddDenCorrect, ← ddBeforeSucc, show a - b - 1 + 1 = a - b by omega]
-
 private def ddNatSaving (s q k : ℕ) : ℕ :=
   let old := ddDenNat 1650 - ddBefore (s - (1350 + q))
   let lower := old - ddDenNat (1649 - q)
   let other := ddDenNat (1650 - 3 * k) - ddBefore (s - (1350 + q + 2 * k)) - ddDenNat (1649 - q - 3 * k)
   (old - lower) - (old - max lower other)
-
 private theorem ddNatSavingEq {s q k : ℕ} (hq : q ≤ 70) (hk : k < 512) :
     ddSaving s q k = ddNatSaving s q k := by
   have h₁ : ∀ c : ℕ, c < 512 → ddOld s q c =
@@ -7481,12 +5842,9 @@ private theorem ddNatSavingEq {s q k : ℕ} (hq : q ≤ 70) (hk : k < 512) :
   simp only [Nat.cast_zero, Nat.mul_zero, Nat.add_zero, Nat.sub_zero] at hb ht
   simp only [ddSaving, ddNatSaving, hb, ht, h₁ k hk, h₂ k hk]
   omega
-
--- The loop index is also the digit position, so every digit is read from the original code.
 private def ddPrefix (s code : ℕ) : ℕ → ℕ
   | 0 => 0
   | q + 1 => ddNatSaving s q ((code >>> (9 * q)) % 512) + ddPrefix s code q
-
 private theorem ddPrefixEq {s : ℕ} (hs : 1943 ≤ s) (hs' : s ≤ 2007)
     (code q n : ℕ) (hq : q + n ≤ 71) :
     rowSum s q (code / 512 ^ q) n + ddPrefix s code q = ddPrefix s code (q + n) := by
@@ -7502,7 +5860,6 @@ private theorem ddPrefixEq {s : ℕ} (hs : 1943 ≤ s) (hs' : s ≤ 2007)
     rw [ddPrefix, hd] at hi
     rw [show q + (n + 1) = q + 1 + n by omega]
     omega
-
 private theorem ddSingle {s code total : ℕ}
     (h : 1943 ≤ s ∧ s ≤ 2007 ∧ ddPrefix s code 71 = total) :
     [code].length = 1 ∧ rowsSum s [code] = total := by
@@ -7510,62 +5867,42 @@ private theorem ddSingle {s code total : ℕ}
   simp only [pow_zero, Nat.div_one, Nat.zero_add, show ddPrefix s code 0 = 0 from rfl,
     Nat.add_zero] at he
   exact ⟨rfl, (Nat.add_zero _).trans (he.trans h.2.2)⟩
-
-/-- The certificate encodes a row per grade. The base-512 digit of index
-`q` is the cubic exponent on the diagonal `s + j = 3000 + q`. -/
 private def rowsD1_row1943 : List ℕ := [
-  13864093624284037068282596270006879532491706471140757910254512911202485400233707987156570188148018810688872097509204115825535162545345774354316592558081445136]
-
+  0x40a080604026180d8804426180c0623420100804424130c06030180c064341b100804020102864423120984c30180c06030180c06132198d06c4020100804020d10]
 private theorem rowsD1_row1943_checked :
     rowsD1_row1943.length = 1 ∧ rowsSum 1943 rowsD1_row1943 = 48532032 := ddSingle (by decide +kernel)
-
 private def rowsD1_row1944 : List ℕ := [
-  27620556934655258249284261306657683242909305166466150149715382457616063125920147933412859734562508328036660817286330949496276427298330581538437635519228808464]
-
+  0x80c090604028180d8804626180c0643620100824424130c06030180c064341b100804020102864624120984c30180c06030180c061b2198d06c4020100804020d10]
 private theorem rowsD1_row1944_checked :
     rowsD1_row1944.length = 1 ∧ rowsSum 1944 rowsD1_row1944 = 48859683 := ddSingle (by decide +kernel)
-
 private def rowsD1_row1945 : List ℕ := [
-  27620609411399793867292562184067883996491407402618833004846356914175796182317166414696647246991462294508982359165799216790900125522881244407044596119992667408]
-
+  0x80c0a0684430180e0804628180c0643620100844624130c06030180c266341b100804020104864624120985030180c06030180c062321a0d86c4020100804020d10]
 private theorem rowsD1_row1945_checked :
     rowsD1_row1945.length = 1 ∧ rowsSum 1945 rowsD1_row1945 = 49189053 := ddSingle (by decide +kernel)
-
 private def rowsD1_row1946 : List ℕ := [
-  41377125198313808432849696367056994786409231503426265681163480684846457311728099638291142721842253554416380087758987681091492957186408887579561308432631991568]
-
+  0xc0e0c070443019100804828180c0663620100844624130c06030180c466341b100804020106884624130985030180c06030180c062321a0d86c4020100804020d10]
 private theorem rowsD1_row1946_checked :
     rowsD1_row1946.length = 1 ∧ rowsSum 1946 rowsD1_row1946 = 49521319 := ddSingle (by decide +kernel)
-
 private def rowsD1_row1947 : List ℕ := [
-  55133536339221617957744643837471583910017820628947315985147505106567550230052305662576064101688348140059138261664945789385470058548144968536910620641363890448]
-
+  0x10100c080483019100844830180c0683820100864626140c06030180c466361c100804020106884624130985030180c06030180c062331a0d86c4020100804021110]
 private theorem rowsD1_row1947_checked :
     rowsD1_row1947.length = 1 ∧ rowsSum 1947 rowsD1_row1947 = 49852962 := ddSingle (by decide +kernel)
-
 private def rowsD1_row1948 : List ℕ := [
-  7084686340313165758768579846478369201028985078867898863551194462596509942057389425721727204262326333839011870935128154773544554869614804802370500308350676373776]
-
+  0x810100c0804c301a100884c30180c0684020100884826140c06030180c666361c100804020108884624130985030180c06030180c063331a0d86c4020100804021110]
 private theorem rowsD1_row1948_checked :
     rowsD1_row1948.length = 1 ∧ rowsSum 1948 rowsD1_row1948 = 50188791 := ddSingle (by decide +kernel)
-
 private def rowsD1_row1949 : List ℕ := [
-  7098442751249286864154888438293518732328008671955709234837066057658559968447718636518117512365556791048700185070737370818595377906211989731891373592692297699600]
-
+  0x814120c0804c301b100884c30180c4684020100884826180c06030180c8683620100804020108884624130986030180c06030180c163331a0d8704020100804021110]
 private theorem rowsD1_row1949_checked :
     rowsD1_row1949.length = 1 ∧ rowsSum 1949 rowsD1_row1949 = 50412605 := ddSingle (by decide +kernel)
-
 private def rowsD1_row1950 : List ℕ := [
-  14141725202918541117600692603231002658501977731271213254467834682646706154190920579547314922226654467612668217459592558282095785964849767496708411932202984673560]
-
+  0x1018120d08060301b1008c4c30180c86c4020104884826180c06030180c868362010080402050c884624130986030180c06030180c163331a0d8704020100804021118]
 private theorem rowsD1_row1950_checked :
     rowsD1_row1950.length = 1 ∧ rowsSum 1950 rowsD1_row1950 = 50748619 := ddSingle (by decide +kernel)
-
 private def rowsD1 : List ℕ :=
     rowsD1_row1943 ++ rowsD1_row1944 ++ rowsD1_row1945 ++
     rowsD1_row1946 ++ rowsD1_row1947 ++ rowsD1_row1948 ++
     rowsD1_row1949 ++ rowsD1_row1950
-
 private theorem rowsD1_checked :
     rowsD1.length = 8 ∧ rowsSum 1943 rowsD1 = 397305064 := by
   constructor <;> simp only [rowsD1, rowsSum_append, List.length_append, Nat.reduceAdd,
@@ -7577,54 +5914,38 @@ private theorem rowsD1_checked :
     rowsD1_row1948_checked.1, rowsD1_row1948_checked.2,
     rowsD1_row1949_checked.1, rowsD1_row1949_checked.2,
     rowsD1_row1950_checked.1, rowsD1_row1950_checked.2]
-
 private def rowsD2_row1951 : List ℕ := [
-  21171304822610438811243843732524961606573655579502707760177018110525706994669731512421611706633865873731227601463484487172054983992388501147617538497437742797080]
-
+  0x1818140d088603020100905030180c86c40201088c4826180c06030184c868362010080402090c8c4824130986030180c06030180c264331a0d8704020100804021118]
 private theorem rowsD2_row1951_checked :
     rowsD2_row1951.length = 1 ∧ rowsSum 1951 rowsD2_row1951 = 51076092 := ddSingle (by decide +kernel)
-
 private def rowsD2_row1952 : List ℕ := [
-  21185088206387462826792338813793163807150561874193563566072621148777932407631587273782775701449095587428263047259074113219607687774321168937003825546165800538392]
-
+  0x181c1810090603220100905030180cc6c40201088c4826180c06030184cc68362010080402090c8c4824130a06030180c06030180c264331a0d8804020100804061118]
 private theorem rowsD2_row1952_checked :
     rowsD2_row1952.length = 1 ∧ rowsSum 1952 rowsD2_row1952 = 51364774 := ddSingle (by decide +kernel)
-
 private def rowsD2_row1953 : List ℕ := [
-  28228370605681468784583826434284479884628777886166814002970290447683979575181400452410412172535136762748541672908948639143727059825419259860041756738098154576152]
-
+  0x20201810090603420108906030180d070402010c8c4c28180c06030188cc6c3820100804020d108c4826130a06030180c06030180c364331a0d8804020100804061918]
 private theorem rowsD2_row1953_checked :
     rowsD2_row1953.length = 1 ∧ rowsSum 1953 rowsD2_row1953 = 51696017 := ddSingle (by decide +kernel)
-
 private def rowsD2_row1954 : List ℕ := [
-  3634388959044314612837654347815184399242806247446577053333792309049460519650347237140464823146113150554437541423361648193376770887088935471404938351957583896123672]
-
+  0x1028201810098603420110986030188d0804020110904c28180c0603018ccc6c3820100804020d108c4826130a06030180c06030180c464341a0d88040201008040a1918]
 private theorem rowsD2_row1954_checked :
     rowsD2_row1954.length = 1 ∧ rowsSum 1954 rowsD2_row1954 = 52031837 := ddSingle (by decide +kernel)
-
 private def rowsD2_row1955 : List ℕ := [
-  7240563303893883878385566106554814333376515317867593411297581015131165279257174006289627702919757342971642015404431175760335308646197820731366006635508979320101144]
-
+  0x2030241a100a0603620110986030188d8804020110904c28180c0603018cd06c38201008040211108c4826130a06030180c06030180c464341b0d88040201008040a1918]
 private theorem rowsD2_row1955_checked :
     rowsD2_row1955.length = 1 ∧ rowsSum 1955 rowsD2_row1955 = 52377791 := ddSingle (by decide +kernel)
-
 private def rowsD2_row1956 : List ℕ := [
-  7240577033541987563547541415365581588011388377441073533853613950906885977779050892735975731339940945317649664363426803301604113778017265694283164934750853210708248]
-
+  0x2030281a110c0603820118986030190d8804020910904c30180c06030190d06c40201008040211108c4826130c06030180c06030180c464341b0d88040201008040e1918]
 private theorem rowsD2_row1956_checked :
     rowsD2_row1956.length = 1 ∧ rowsSum 1956 rowsD2_row1956 = 52601764 := ddSingle (by decide +kernel)
-
 private def rowsD2_row1957 : List ℕ := [
-  10846765107986774997820950804445788841288461583234174990722919480648322695190173452325899402560266691168453095218930416619695035693943122321554732454529862378330392]
-
+  0x3038301c110c0644020120a06030198d8804021118904c30180c06030990d06c40201008040a19108c4826130c06030180c06030180c666341b0d88040201008040e1918]
 private theorem rowsD2_row1957_checked :
     rowsD2_row1957.length = 1 ∧ rowsSum 1957 rowsD2_row1957 = 52957221 := ddSingle (by decide +kernel)
-
 private def rowsD2 : List ℕ :=
     rowsD2_row1951 ++ rowsD2_row1952 ++ rowsD2_row1953 ++
     rowsD2_row1954 ++ rowsD2_row1955 ++ rowsD2_row1956 ++
     rowsD2_row1957
-
 private theorem rowsD2_checked :
     rowsD2.length = 7 ∧ rowsSum 1951 rowsD2 = 364105496 := by
   constructor <;> simp only [rowsD2, rowsSum_append, List.length_append, Nat.reduceAdd,
@@ -7635,54 +5956,38 @@ private theorem rowsD2_checked :
     rowsD2_row1955_checked.1, rowsD2_row1955_checked.2,
     rowsD2_row1956_checked.1, rowsD2_row1956_checked.2,
     rowsD2_row1957_checked.1, rowsD2_row1957_checked.2]
-
 private def rowsD3_row1958 : List ℕ := [
-  14452925750108911817915011914130150870846229585320678242373611079434119753778953632523597616968152015712205054848146862235451684946873903867982715038745246443903256]
-
+  0x40403020120c0644021120c06030198e0804021118904c30180c06030998d06c4020100804121918904826130c06030180c06030182c666341b0d8804020100804121918]
 private theorem rowsD3_row1958_checked :
     rowsD3_row1958.length = 1 ∧ rowsSum 1958 rowsD3_row1958 = 53310127 := ddSingle (by decide +kernel)
-
 private def rowsD3_row1959 : List ℕ := [
-  1857208015995054524666629833129583448843912939210648245069593533000169616621658114486926644493375506681245786674439298139796608499662897120633717331254440837485041944]
-
+  0x2040403020130c0684021130c060301a0e0804021918985030180c06031198d06c4020100804121918904826140c06030180c06030182c666341b0e0804020100804121918]
 private theorem rowsD3_row1959_checked :
     rowsD3_row1959.length = 1 ∧ rowsSum 1959 rowsD3_row1959 = 53653364 := ddSingle (by decide +kernel)
-
 private def rowsD3_row1960 : List ℕ := [
-  1864413307619127612823267505574164960054489262995798974926031767752553615776720820327994386785230082785110340727433125579580057728830005937032153361580608996578566424]
-
+  0x2060483020130c06c4022130c060311a100804022120985030180c06031998d87040201008041a2118904826140c06030180c06030184c866341b0e08040201008041a2118]
 private theorem rowsD3_row1960_checked :
     rowsD3_row1960.length = 1 ∧ rowsSum 1960 rowsD3_row1960 = 53987134 := ddSingle (by decide +kernel)
-
 private def rowsD3_row1961 : List ℕ := [
-  3707168411593878042732315961781387949819663673741710871647550850297526977692453621507126379104450461681730419437233611972420363313353573886364138525932174859847737624]
-
+  0x4060483420180c06c4023130c060311b100804022120985030180c060319a0d8704020100804222118904c26140c06030180c06030186c866341b0e08040201008041a2118]
 private theorem rowsD3_row1961_checked :
     rowsD3_row1961.length = 1 ∧ rowsSum 1961 rowsD3_row1961 = 54330098 := ddSingle (by decide +kernel)
-
 private def rowsD3_row1962 : List ℕ := [
-  5549930545147986191995924839237182966566139937962246193918638341429808840032200812135889764701081263277429574324082851509617331665558816272681602815201794918715105560]
-
+  0x6060503822180c0804023140c060321b100804122120986030180c060321a0d8804020100804222118904c26140c06030180c06030186c866341b1008040201008041a2118]
 private theorem rowsD3_row1962_checked :
     rowsD3_row1962.length = 1 ∧ rowsSum 1962 rowsD3_row1962 = 54579573 := ddSingle (by decide +kernel)
-
 private def rowsD3_row1963 : List ℕ := [
-  5557142893810869612372899296809143918548772649643239060771021802883331649631522259537887029075312416769665773863424797749069077541607691033836547033810555472285671704]
-
+  0x6080604024180c8804024140c060331b100804223120986030180c061321a0d8804020100814222118904c26140c06030180c06030188c866341b1008040201008041a2118]
 private theorem rowsD3_row1963_checked :
     rowsD3_row1963.length = 1 ∧ rowsSum 1963 rowsD3_row1963 = 54934116 := ddSingle (by decide +kernel)
-
 private def rowsD3_row1964 : List ℕ := [
-  950890504189441101013454587843856293413015752677656770323542315147577035350764898793363807222195053740650965677527151218257105648256850184093901552493336432264534434072]
-
+  0x408080604024180d0804224180c060331c100804223130986030180c061331a0d8804020100814322118904c26180c06030180c06030188c868341b100804020100804222118]
 private theorem rowsD3_row1964_checked :
     rowsD3_row1964.length = 1 ∧ rowsSum 1964 rowsD3_row1964 = 55210710 := ddSingle (by decide +kernel)
-
 private def rowsD3 : List ℕ :=
     rowsD3_row1958 ++ rowsD3_row1959 ++ rowsD3_row1960 ++
     rowsD3_row1961 ++ rowsD3_row1962 ++ rowsD3_row1963 ++
     rowsD3_row1964
-
 private theorem rowsD3_checked :
     rowsD3.length = 7 ∧ rowsSum 1958 rowsD3 = 380005122 := by
   constructor <;> simp only [rowsD3, rowsSum_append, List.length_append, Nat.reduceAdd,
@@ -7693,54 +5998,38 @@ private theorem rowsD3_checked :
     rowsD3_row1962_checked.1, rowsD3_row1962_checked.2,
     rowsD3_row1963_checked.1, rowsD3_row1963_checked.2,
     rowsD3_row1964_checked.1, rowsD3_row1964_checked.2]
-
 private def rowsD4_row1965 : List ℕ := [
-  952733259279712809867714061353663693476505375515162090674338176953396485504725853443609074217103765586588962206695205224734173551960536385690537860364144987667051979040]
-
+  0x40a080604026180d0804426180c060341c100804323130a06030180c062331a0d8804020100824323120904c26180c06030180c06030188cc68361b100804020100804222120]
 private theorem rowsD4_row1965_checked :
     rowsD4_row1965.length = 1 ∧ rowsSum 1965 rowsD4_row1965 = 55576301 := ddSingle (by decide +kernel)
-
 private def rowsD4_row1966 : List ℕ := [
-  1898070226735958295415505841436705248586471873934115888334565764157399487028809361622163433475531601791399095307321745465843650383828231938456260615571226584670047183136]
-
+  0x80c090684028180d8804426180c0623420100804424130a06030180c062331b0e0804020100834323120904c26180c06030180c0603058ccc68361b100804020100804222120]
 private theorem rowsD4_row1966_checked :
     rowsD4_row1966.length = 1 ∧ rowsSum 1966 rowsD4_row1966 = 55938580 := ddSingle (by decide +kernel)
-
 private def rowsD4_row1967 : List ℕ := [
-  2841564432086216125918995342036662242536887699920022887552573350607940724047652891695340435961346473236734614407487625730567363014597636716210390418829547288376216002848]
-
+  0xc0c0a0684430180e0804626180c0643620100824424130c06030180c063331b0e0804020100834423120904c28180c06030180c0603058ccc68361b10080402010080c222120]
 private theorem rowsD4_row1967_checked :
     rowsD4_row1967.length = 1 ∧ rowsSum 1967 rowsD4_row1967 = 56277297 := ddSingle (by decide +kernel)
-
 private def rowsD4_row1968 : List ℕ := [
-  2843414392481814740349036547110600665930457726067817610852982291159820495378582067337745301059515992650577904558312391754429813063911933976480531803044410023760265093408]
-
+  0xc0e0c070483019100804828180c0643620100824624130c06030180c064341b0e0804020100844423120984c28180c06030180c0603098ccc68361b10080402010080c222120]
 private theorem rowsD4_row1968_checked :
     rowsD4_row1968.length = 1 ∧ rowsSum 1968 rowsD4_row1968 = 56624711 := ddSingle (by decide +kernel)
-
 private def rowsD4_row1969 : List ℕ := [
-  3788747767836550579595512883217734269864932650861337358292160589334015652749755110876741817017399495088437317454114712726998541484252150729875098784271861362972210372896]
-
+  0x10100c080483019100844830180c0663620100844624130c06030180c064341b100804020100844423120984c28180c06030180c06030990cc68361c100804020100814222120]
 private theorem rowsD4_row1969_checked :
     rowsD4_row1969.length = 1 ∧ rowsSum 1969 rowsD4_row1969 = 56945987 := ddSingle (by decide +kernel)
-
 private def rowsD4_row1970 : List ℕ := [
-  487799428751212958652269399621168590836467943841540283660154953302583197503141158557258936492184444767405047317491245673873952149026108763060158149465022154699995054481696]
-
+  0x814100c0804c301a100844c30180c0683820100864626130c06030180c264341b100804020102864423120984c28180c06030180c06030d90cc68361c100804020100814322120]
 private theorem rowsD4_row1970_checked :
     rowsD4_row1970.length = 1 ∧ rowsSum 1970 rowsD4_row1970 = 57303937 := ddSingle (by decide +kernel)
-
 private def rowsD4_row1971 : List ℕ := [
-  971811952489679611618181884567162281127488112358426685408430822829541382865612211996194484493202126488238406619946730840880451177479141320117804065581118163024215152931104]
-
+  0x1018120c08050301b100884c30180c4684020100864626140c06030180c466341b100804020104864423120984c30180c06030180c06031190cc68361c10080402010081c323120]
 private theorem rowsD4_row1971_checked :
     rowsD4_row1971.length = 1 ∧ rowsSum 1971 rowsD4_row1971 = 57581502 := ddSingle (by decide +kernel)
-
 private def rowsD4 : List ℕ :=
     rowsD4_row1965 ++ rowsD4_row1966 ++ rowsD4_row1967 ++
     rowsD4_row1968 ++ rowsD4_row1969 ++ rowsD4_row1970 ++
     rowsD4_row1971
-
 private theorem rowsD4_checked :
     rowsD4.length = 7 ∧ rowsSum 1965 rowsD4 = 396248315 := by
   constructor <;> simp only [rowsD4, rowsSum_append, List.length_append, Nat.reduceAdd,
@@ -7751,54 +6040,38 @@ private theorem rowsD4_checked :
     rowsD4_row1969_checked.1, rowsD4_row1969_checked.2,
     rowsD4_row1970_checked.1, rowsD4_row1970_checked.2,
     rowsD4_row1971_checked.1, rowsD4_row1971_checked.2]
-
 private def rowsD5_row1972 : List ℕ := [
-  971811956095895118437993979833361629135785260743830956484522314839614825056059174962598819697246883637962016220893470567047833586992145667947185583678861218391512795197728]
-
+  0x1018120d08860301b1008c4c30180c46c4020100884826140c06030180c466361c100804020104864624120984c30180c06030180c06031190d0683620100804020100824323120]
 private theorem rowsD5_row1972_checked :
     rowsD5_row1972.length = 1 ∧ rowsSum 1972 rowsD5_row1972 = 57898819 := ddSingle (by decide +kernel)
-
 private def rowsD5_row1973 : List ℕ := [
-  1455828168943659594254732767200141716735634142824451436806247481837439500433866003382770119623845065284719568678270292565797769554051014700079156142161148905228799015268640]
-
+  0x181c180e0886032201008c4c30180c86c4020104884826180c06030180c666361c100804020106864624120984c30180c06030180c06031190d0683620100804020100824323120]
 private theorem rowsD5_row1973_checked :
     rowsD5_row1973.length = 1 ∧ rowsSum 1973 rowsD5_row1973 = 58241930 := ddSingle (by decide +kernel)
-
 private def rowsD5_row1974 : List ℕ := [
-  1939838857132313896752800299629234641421415373639074053176337235593556446054132680580624180279227472807477611871462286484783263768350057130658623980797362585281403624239392]
-
+  0x20201810090603220100905030180cc6c40201048c4826180c06030180c868361c100804020106884624130985030180c06030180c060b1998d06c3620100804020100824323120]
 private theorem rowsD5_row1974_checked :
     rowsD5_row1974.length = 1 ∧ rowsSum 1974 rowsD5_row1974 = 58621160 := ddSingle (by decide +kernel)
-
 private def rowsD5_row1975 : List ℕ := [
-  249270240330243877536875013220088005646868503961519020798214720700560247806769070670748620131500420985758737258350749679070516880318246699480312330650522218712188624573706528]
-
+  0x1020201810098603420108906030180cc6c40201088c4826180c06030180c8683620100804020108884624130985030180c06030180c060b1998d06c3620100804020100834323120]
 private theorem rowsD5_row1975_checked :
     rowsD5_row1975.length = 1 ∧ rowsSum 1975 rowsD5_row1975 = 58973106 := ddSingle (by decide +kernel)
-
 private def rowsD5_row1976 : List ℕ := [
-  497567719674708931595705151154038944982244519403188591751694743251359672462981656965416399003828888010073543727060781473263505864254015573531706108795607610411210825262051616]
-
+  0x2030241810098603620110986030180d070402010c8c4c28180c06030184c8683620100804020508884624130985030180c06030180c06131998d06c3620100804020100834323120]
 private theorem rowsD5_row1976_checked :
     rowsD5_row1976.length = 1 ∧ rowsSum 1976 rowsD5_row1976 = 59337501 := ddSingle (by decide +kernel)
-
 private def rowsD5_row1977 : List ℕ := [
-  497567721517499169604618258274976226551125120307160503456563218747901288270157957762732161641661651274660541205674531545493051377878463209919048811086105061471142828241465728]
-
+  0x2030241a100c0603620110986030188d080402010c904c28180c06030188cc68362010080402050c884624130985030180c06030180c06132198d06c3620100804020100834423180]
 private theorem rowsD5_row1977_checked :
     rowsD5_row1977.length = 1 ∧ rowsSum 1977 rowsD5_row1977 = 59662769 := ddSingle (by decide +kernel)
-
 private def rowsD5_row1978 : List ℕ := [
-  744899068327564130357802353342055359655768058579200937500684518456242632594788065406492365477232830730632814839387712783550574994119703862826700554645563515944308715995410816]
-
+  0x3030281c110c0603820118986030190d8804020110904c28180c06030188cc6c382010080402090c8c4824130986030180c06030180c061b2198d06c3620100804020100834423180]
 private theorem rowsD5_row1978_checked :
     rowsD5_row1978.length = 1 ∧ rowsSum 1978 rowsD5_row1978 = 59950487 := ddSingle (by decide +kernel)
-
 private def rowsD5 : List ℕ :=
     rowsD5_row1972 ++ rowsD5_row1973 ++ rowsD5_row1974 ++
     rowsD5_row1975 ++ rowsD5_row1976 ++ rowsD5_row1977 ++
     rowsD5_row1978
-
 private theorem rowsD5_checked :
     rowsD5.length = 7 ∧ rowsSum 1972 rowsD5 = 412685772 := by
   constructor <;> simp only [rowsD5, rowsSum_append, List.length_append, Nat.reduceAdd,
@@ -7809,54 +6082,38 @@ private theorem rowsD5_checked :
     rowsD5_row1976_checked.1, rowsD5_row1976_checked.2,
     rowsD5_row1977_checked.1, rowsD5_row1977_checked.2,
     rowsD5_row1978_checked.1, rowsD5_row1978_checked.2]
-
 private def rowsD6_row1979 : List ℕ := [
-  993197494851744715137433753410168134919198963945718388217264354248601759870055250768809124027316541557819740881819180001306010955511005444498020439609635993080134185171169664]
-
+  0x40403020120c0644020120a06030190d8804020910904c30180c0603018ccc6c3820100804020d0c8c4824130986030180c06030180c06232198d06c3820100804020100844423180]
 private theorem rowsD6_row1979_checked :
     rowsD6_row1979.length = 1 ∧ rowsSum 1979 rowsD6_row1979 = 60292859 := ddSingle (by decide +kernel)
-
 private def rowsD6_row1980 : List ℕ := [
-  127626363049081266167844372211578810460390525242810642890991295465380366272607673645365238356575021977058452233542391179195298899227231320089233818213698137804732036398790619520]
-
+  0x2040403020120c0684021120c06030198d8804021118904c30180c06030190d06c3820100804020d108c4824130986030180c06030180c06232198d06c3820100804020101844423180]
 private theorem rowsD6_row1980_checked :
     rowsD6_row1980.length = 1 ∧ rowsSum 1980 rowsD6_row1980 = 60662595 := ddSingle (by decide +kernel)
-
 private def rowsD6_row1981 : List ℕ := [
-  127873693450557969832940509494291619076235052670375074307294356817337609302494932030872446346336564714505625204267126875751114629955142321911550216454361070621248196620341883264]
-
+  0x2050403020130c0684021130c060301a0e0804021118904c30180c06030190d06c40201008040211108c4826130a06030180c06030180c062321a0d06c3820100804020101844423180]
 private theorem rowsD6_row1981_checked :
     rowsD6_row1981.length = 1 ∧ rowsSum 1981 rowsD6_row1981 = 61019904 := ddSingle (by decide +kernel)
-
 private def rowsD6_row1982 : List ℕ := [
-  254754673416945178313422010008362834270928207616140250703320218352026450581314581858460168878540859838046387023642543705002730784070919498913127049698147651033298026416153178496]
-
+  0x4060483420140c06c4022130c060311a0e0804021918985030180c06030990d06c40201008040211108c4826130a06030180c06030180c163331a0d06c4020100804020102844423180]
 private theorem rowsD6_row1982_checked :
     rowsD6_row1982.length = 1 ∧ rowsSum 1982 rowsD6_row1982 = 61356710 := ddSingle (by decide +kernel)
-
 private def rowsD6_row1983 : List ℕ := [
-  381388322040222228537809466850743698131563249681615478207902574858463143639938961726283045629378134438682120655834173089196317019466013688357308307250492872934604477710892937600]
-
+  0x6060503422180c0704023130c060311a100804022120985030180c06031198d06c40201008040a19108c4826130a06030180c06030180c163331a0d86c4020100804020102844423180]
 private theorem rowsD6_row1983_checked :
     rowsD6_row1983.length = 1 ∧ rowsSum 1983 rowsD6_row1983 = 61740488 := ddSingle (by decide +kernel)
-
 private def rowsD6_row1984 : List ℕ := [
-  381636621408390668177328236088677350252337567240250991647156316255268174708127520947279734184239525748306614575695903839138170217584721620888461026414534329585774590455175065984]
-
+  0x6070604024180c8804023140c060321b100804122120985030180c06031198d86c40201008041219108c4826130a06030180c06030180c263331a0d86c4020100804020103864423180]
 private theorem rowsD6_row1984_checked :
     rowsD6_row1984.length = 1 ∧ rowsSum 1984 rowsD6_row1984 = 62116571 := ddSingle (by decide +kernel)
-
 private def rowsD6_row1985 : List ℕ := [
-  65344697881129608270906765767536258955604447038545271079756287845703347706781317366436005577205295534774574447018997194838720640966161093445842768284745812247542950639992632914304]
-
+  0x408080604024180c8804224140c060331b100804122120986030180c06031998d8704020100804121918904826130c06030180c06030180c264331a0d86c4020100804020104864423180]
 private theorem rowsD6_row1985_checked :
     rowsD6_row1985.length = 1 ∧ rowsSum 1985 rowsD6_row1985 = 62380616 := ddSingle (by decide +kernel)
-
 private def rowsD6 : List ℕ :=
     rowsD6_row1979 ++ rowsD6_row1980 ++ rowsD6_row1981 ++
     rowsD6_row1982 ++ rowsD6_row1983 ++ rowsD6_row1984 ++
     rowsD6_row1985
-
 private theorem rowsD6_checked :
     rowsD6.length = 7 ∧ rowsSum 1979 rowsD6 = 429569743 := by
   constructor <;> simp only [rowsD6, rowsSum_append, List.length_append, Nat.reduceAdd,
@@ -7867,54 +6124,38 @@ private theorem rowsD6_checked :
     rowsD6_row1983_checked.1, rowsD6_row1983_checked.2,
     rowsD6_row1984_checked.1, rowsD6_row1984_checked.2,
     rowsD6_row1985_checked.1, rowsD6_row1985_checked.2]
-
 private def rowsD7_row1986 : List ℕ := [
-  65471331046685680554465540756328809513590684353228262650163200028047228980312215031091247077341446576078449576661821515120699660775185400359364706776282044863070226087395845095808]
-
+  0x40a080604026180d0804224180c060331b100804223120986030180c060321a0d87040201008041a1918904826130c06030180c06030180c364331a0d86c4020100804020104864424180]
 private theorem rowsD7_row1986_checked :
     rowsD7_row1986.length = 1 ∧ rowsSum 1986 rowsD7_row1986 = 62750730 := ddSingle (by decide +kernel)
-
 private def rowsD7_row1987 : List ℕ := [
-  130434392789475931296472069124281770756496673509964779267839442077392986499349438794171213002951902314233009603227169149121085788062923642552487208913791077959032592265055020663168]
-
+  0x80c090684028180d8804426180c060341c100804323120986030180c060321a0d8804020100804222118904826140c06030180c06030180c464331a0d8704020100804020104864424180]
 private theorem rowsD7_row1987_checked :
     rowsD7_row1987.length = 1 ∧ rowsSum 1987 rowsD7_row1987 = 63106578 := ddSingle (by decide +kernel)
-
 private def rowsD7_row1988 : List ℕ := [
-  195270820884593781004328894223607029095218917418716644186221762683015887877254041013360797263388452745949688236588750993635966364460765802433702297964132310179525913720979860898176]
-
+  0xc0c0a0684430180d8804626180c0623420100804323130a06030180c061321a0d8804020100804222118904c26140c06030180c06030180c464331a0d8704020100804020106864624180]
 private theorem rowsD7_row1988_checked :
     rowsD7_row1988.length = 1 ∧ rowsSum 1988 rowsD7_row1988 = 63484853 := ddSingle (by decide +kernel)
-
 private def rowsD7_row1989 : List ℕ := [
-  195397949194018147147141049626198836249845585134661460063830877806411996809476696418571024240756228788435543180102710513244526332640686320136230840364784621205476439872480779321728]
-
+  0xc0e0c070443018100804626180c0643620100804424130a06030180c062331a0d8804020100814222118904c26140c06030180c06030180c464341a0d8704020100804020106864624180]
 private theorem rowsD7_row1989_checked :
     rowsD7_row1989.length = 1 ∧ rowsSum 1989 rowsD7_row1989 = 63874545 := ddSingle (by decide +kernel)
-
 private def rowsD7_row1990 : List ℕ := [
-  260360764090415766604987433853955115560258493204586401159504434942564960192929280275616735982503227318604919610421211945615449825817500319893338861578659414852921084215238427033984]
-
+  0x10100c080483019100804828180c0643620100824424130a06030180c062331b0d8804020100814322118904c26140c06030180c06030182c666341a0d8704020100804020106864624180]
 private theorem rowsD7_row1990_checked :
     rowsD7_row1990.length = 1 ∧ rowsSum 1990 rowsD7_row1990 = 64269789 := ddSingle (by decide +kernel)
-
 private def rowsD7_row1991 : List ℕ := [
-  33521321495903068443886356867240350470958430388852870476883558414360181235562137518680924989662399443345211021468102988041960769327694430097306835477521439838330179286374247536148864]
-
+  0x814100c0804c301a100844830180c0663620100844624130c06030180c063331b0e0804020100824323120904c26140c06030180c06030182c666341b0d8804020100804020106884624180]
 private theorem rowsD7_row1991_checked :
     rowsD7_row1991.length = 1 ∧ rowsSum 1991 rowsD7_row1991 = 64582414 := ddSingle (by decide +kernel)
-
 private def rowsD7_row1992 : List ℕ := [
-  66782408860880331860082959945791685219033859734742210226083290890622642350945500834650465254625556134031425286734038116788674132011529888920560073437816687190731904306209593013453184]
-
+  0x1018120c0804c301b100884c30180c0683820100844624130c06030180c064341b0e0804020100834323120904c26180c06030180c06030184c666341b0d8804020100804020308884624180]
 private theorem rowsD7_row1992_checked :
     rowsD7_row1992.length = 1 ∧ rowsSum 1992 rowsD7_row1992 = 64894000 := ddSingle (by decide +kernel)
-
 private def rowsD7 : List ℕ :=
     rowsD7_row1986 ++ rowsD7_row1987 ++ rowsD7_row1988 ++
     rowsD7_row1989 ++ rowsD7_row1990 ++ rowsD7_row1991 ++
     rowsD7_row1992
-
 private theorem rowsD7_checked :
     rowsD7.length = 7 ∧ rowsSum 1986 rowsD7 = 446962909 := by
   constructor <;> simp only [rowsD7, rowsSum_append, List.length_append, Nat.reduceAdd,
@@ -7925,54 +6166,38 @@ private theorem rowsD7_checked :
     rowsD7_row1990_checked.1, rowsD7_row1990_checked.2,
     rowsD7_row1991_checked.1, rowsD7_row1991_checked.2,
     rowsD7_row1992_checked.1, rowsD7_row1992_checked.2]
-
 private def rowsD8_row1993 : List ℕ := [
-  99978660292912015874216380112891478635526558589443987738062960444733790887270644660310027919792930297602044152792276816072302821066730721481349188627762164883383193106560714748871040]
-
+  0x1818140d08860301b100884c30180c4683820100864626130c06030180c264341b100804020100834423120904c26180c06030180c06030186c866341b0d8804020100804020308884624180]
 private theorem rowsD8_row1993_checked :
     rowsD8_row1993.length = 1 ∧ rowsSum 1993 rowsD8_row1993 = 65248059 := ddSingle (by decide +kernel)
-
 private def rowsD8_row1994 : List ℕ := [
-  100043749987337291324939693266075575534354872006549024738030756644105872793728417687523475030748898245545564916377175195060837374190994399379184758107633119047810998560303845130518912]
-
+  0x181c180e08860301c1008c4c30180c4684020100884826140c06030180c266341b100804020100844423120984c28180c06030180c06030186c866341b0d8804020100804020508884624180]
 private theorem rowsD8_row1994_checked :
     rowsD8_row1994.length = 1 ∧ rowsSum 1994 rowsD8_row1994 = 65628090 := ddSingle (by decide +kernel)
-
 private def rowsD8_row1995 : List ℕ := [
-  133304711214292872501753566133225019166852348520748237393666270690593259618761443512187848250947771173490482571724977231745470420148452671836809806409071740825739216671290423588831616]
-
+  0x20201810090603220100905030180c86c4020104884826140c06030180c466341b100804020102844423120984c28180c06030180c06030188c866341b0d8804020100804020508884624180]
 private theorem rowsD8_row1995_checked :
     rowsD8_row1995.length = 1 ∧ rowsSum 1995 rowsD8_row1995 = 66018413 := ddSingle (by decide +kernel)
-
 private def rowsD8_row1996 : List ℕ := [
-  17162916605902371043269814715812534514251634805496566572440838823692880811062285811476876895673468276616708797614147084785901005771791120708963538568701923763824269515634870483914211712]
-
+  0x1028201810098603420108905030180cc6c4020104884826180c06030180c666361b100804020102864423120984c28180c06030180c06030188c866341b0e0804020100804020708884624180]
 private theorem rowsD8_row1996_checked :
     rowsD8_row1996.length = 1 ∧ rowsSum 1996 rowsD8_row1996 = 66385371 := ddSingle (by decide +kernel)
-
 private def rowsD8_row1997 : List ℕ := [
-  34192593336770729910519713372447645619801219125615612706148694890426369547669789406656672655750875014945995796414949136880479847022123083065484156076999184850126569962273095109488820608]
-
+  0x2030241810098603420108986030180cc6c40201088c4826180c06030180c666361c100804020104864423120984c28180c06030180c06030188c868341b0e080402010080402090c884624180]
 private theorem rowsD8_row1997_checked :
     rowsD8_row1997.length = 1 ∧ rowsSum 1997 rowsD8_row1997 = 66779004 := ddSingle (by decide +kernel)
-
 private def rowsD8_row1998 : List ℕ := [
-  34192593463404378533782374088515720513191063980593299741491320276373909757653907121778140396623349108201351521804080593868068435109949365481209457472815951867074892916019056193747173760]
-
+  0x2030241a100a0603620110986030180d07040201088c4826180c06030180c868361c100804020106864624120984c30180c06030180c0603058ccc68341b0e080402010080402090c884624180]
 private theorem rowsD8_row1998_checked :
     rowsD8_row1998.length = 1 ∧ rowsSum 1998 rowsD8_row1998 = 67102115 := ddSingle (by decide +kernel)
-
 private def rowsD8_row1999 : List ℕ := [
-  51222399993516693158369122952230694673589694467350181954119497855362344739567991983043350149295343129524158808422623494344802620910041738125130121048524251992551375795988656568955715968]
-
+  0x3038301c110c0603820118986030188d080402010c8c4c28180c06030184c8683620100804020106884624120984c30180c06030180c0603098ccc68361b10080402010080402090c884624180]
 private theorem rowsD8_row1999_checked :
     rowsD8_row1999.length = 1 ∧ rowsSum 1999 rowsD8_row1999 = 67423880 := ddSingle (by decide +kernel)
-
 private def rowsD8 : List ℕ :=
     rowsD8_row1993 ++ rowsD8_row1994 ++ rowsD8_row1995 ++
     rowsD8_row1996 ++ rowsD8_row1997 ++ rowsD8_row1998 ++
     rowsD8_row1999
-
 private theorem rowsD8_checked :
     rowsD8.length = 7 ∧ rowsSum 1993 rowsD8 = 464584932 := by
   constructor <;> simp only [rowsD8, rowsSum_append, List.length_append, Nat.reduceAdd,
@@ -7983,47 +6208,33 @@ private theorem rowsD8_checked :
     rowsD8_row1997_checked.1, rowsD8_row1997_checked.2,
     rowsD8_row1998_checked.1, rowsD8_row1998_checked.2,
     rowsD8_row1999_checked.1, rowsD8_row1999_checked.2]
-
 private def rowsD9_row2000 : List ℕ := [
-  68252012141717950720897818830658405839684054299668113578853073197836985803850139753289600899811039786941435318520137453095328191127673936841431325055906506125866494987575424325743952256]
-
+  0x40403020120c0644020118a06030190d8804020110904c28180c06030184cc683620100804020108884624120984c30180c06030180c0603098ccc68361b100804020100804020d0c884624180]
 private theorem rowsD9_row2000_checked :
     rowsD9_row2000.length = 1 ∧ rowsSum 2000 rowsD9_row2000 = 67821210 := ddSingle (by decide +kernel)
-
 private def rowsD9_row2001 : List ℕ := [
-  8787413302221766643752672029961957168673523916727452520302349504153213336227914331550195945558590962593142296449909324008635940956442317845939864767084173581578083059774666305480316567936]
-
+  0x2050403020120c0684021120a06030190d8804020910904c28180c06030188cc683620100804020508884624130985030180c06030180c06030d90cc68361b100804020100804020d0c884624180]
 private theorem rowsD9_row2001_checked :
     rowsD9_row2001.length = 1 ∧ rowsSum 2001 rowsD9_row2001 = 68213984 := ddSingle (by decide +kernel)
-
 private def rowsD9_row2002 : List ℕ := [
-  17506607788426613714186093232634088949390735496032260869029438474930497713713442697768355235332325197751464845907930633484088552879516878816734374979051303207783346499736162458553716720000]
-
+  0x4060483020130c0684021120c06030198d8804021118904c30180c0603018ccc6c382010080402050c884624130985030180c06030180c06030d90cc68361b100804020100804020d0c8c4624180]
 private theorem rowsD9_row2002_checked :
     rowsD9_row2002.length = 1 ∧ rowsSum 2002 rowsD9_row2002 = 68573887 := ddSingle (by decide +kernel)
-
 private def rowsD9_row2003 : List ℕ := [
-  17506607853263041809296575533320048902753824758063769467643555981503441795303144099531744145379164369538684322925746817823419051597990971327652488137365039988417831417398847614279923941760]
-
+  0x4060483420140c06c4022130c060301a0e0804021118904c30180c0603018cd06c382010080402090c884624130985030180c06030180c06031190cc68361b100804020100804060d0c8c4824180]
 private theorem rowsD9_row2003_checked :
     rowsD9_row2003.length = 1 ∧ rowsSum 2003 rowsD9_row2003 = 68976045 := ddSingle (by decide +kernel)
-
 private def rowsD9_row2004 : List ℕ := [
-  26225868796680546897084990951542115672877923567283293160464820186839587153689507623824116527269623007156183070782985406641046635276794573357472914412218011698642754736259678680165896044928]
-
+  0x6070603822180c0704023130c060311a100804021918984c30180c06030190d06c3820100804020d0c8c4824130985030180c06030180c06031190cc68361b1008040201008040611108c4824180]
 private theorem rowsD9_row2004_checked :
     rowsD9_row2004.length = 1 ∧ rowsSum 2004 rowsD9_row2004 = 69370983 := ddSingle (by decide +kernel)
-
 private def rowsD9_row2005 : List ℕ := [
-  34945030216559590769099683227237998181970747105147141315854080168324733235646469381607087020907409557883641949817045199184045696688174744079985590360959527281204929233191246453757012230528]
-
+  0x8080604024180c8804023130c060321b100804022120985030180c06030990d06c4020100804020d108c4824130986030180c06030180c060b1990d068361c1008040201008040a11108c4824180]
 private theorem rowsD9_row2005_checked :
     rowsD9_row2005.length = 1 ∧ rowsSum 2005 rowsD9_row2005 = 69671945 := ddSingle (by decide +kernel)
-
 private def rowsD9 : List ℕ :=
     rowsD9_row2000 ++ rowsD9_row2001 ++ rowsD9_row2002 ++
     rowsD9_row2003 ++ rowsD9_row2004 ++ rowsD9_row2005
-
 private theorem rowsD9_checked :
     rowsD9.length = 6 ∧ rowsSum 2000 rowsD9 = 412628054 := by
   constructor <;> simp only [rowsD9, rowsSum_append, List.length_append, Nat.reduceAdd,
@@ -8033,36 +6244,27 @@ private theorem rowsD9_checked :
     rowsD9_row2003_checked.1, rowsD9_row2003_checked.2,
     rowsD9_row2004_checked.1, rowsD9_row2004_checked.2,
     rowsD9_row2005_checked.1, rowsD9_row2005_checked.2]
-
 private def rowsD10_row2006 : List ℕ := [
-  4490453445863234608973368833032118886390518806160544833149567944124925784926724610107739451093950210527961325889012099834338299642698330070813997669933445144796493485039621197460515835756928]
-
+  0x408080604024180c8804024140c060321b100804122120985030180c06031198d06c40201008040211108c4824130986030180c06030180c060b1998d068361c1008040201008040a11108c4824180]
 private theorem rowsD10_row2006_checked :
     rowsD10_row2006.length = 1 ∧ rowsSum 2006 rowsD10_row2006 = 70092207 := ddSingle (by decide +kernel)
-
 private def rowsD10_row2007 : List ℕ := [
-  8963383187674426221663279735108653542088056573967752442169490794067726491314564710967675078527696850015658871279471470997794382639203360582432446198098645026684367911848715505858547783188864]
-
+  0x80c090604026180d0804224180c060331b100804122120986030180c06031198d06c40201008040a11108c4826130a06030180c06030180c06131998d06c361c1008040201008040e11108c4824180]
 private theorem rowsD10_row2007_checked :
     rowsD10_row2007.length = 1 ∧ rowsSum 2007 rowsD10_row2007 = 70478169 := ddSingle (by decide +kernel)
-
 private def rowsD10 : List ℕ :=
     rowsD10_row2006 ++ rowsD10_row2007
-
 private theorem rowsD10_checked :
     rowsD10.length = 2 ∧ rowsSum 2006 rowsD10 = 140570376 := by
   constructor <;> simp only [rowsD10, rowsSum_append, List.length_append, Nat.reduceAdd,
     rowsD10_row2006_checked.1, rowsD10_row2006_checked.2,
     rowsD10_row2007_checked.1, rowsD10_row2007_checked.2]
-
 def rowsD : List ℕ := rowsD1 ++ rowsD2 ++ rowsD3 ++ rowsD4 ++ rowsD5 ++ rowsD6 ++ rowsD7 ++ rowsD8 ++ rowsD9 ++ rowsD10
-
 theorem rowsD_length : rowsD.length = 65 := by
   simp only [rowsD, List.length_append, Nat.reduceAdd,
     rowsD1_checked.1, rowsD2_checked.1, rowsD3_checked.1, rowsD4_checked.1,
     rowsD5_checked.1, rowsD6_checked.1, rowsD7_checked.1, rowsD8_checked.1,
     rowsD9_checked.1, rowsD10_checked.1]
-
 theorem rowsD_sum : rowsSum 1943 rowsD = 3844665783 := by
   simp only [rowsD, rowsSum_append, List.length_append, Nat.reduceAdd,
     rowsD1_checked.1, rowsD2_checked.1, rowsD3_checked.1, rowsD4_checked.1,
@@ -8070,28 +6272,18 @@ theorem rowsD_sum : rowsSum 1943 rowsD = 3844665783 := by
     rowsD9_checked.1, rowsD1_checked.2, rowsD2_checked.2, rowsD3_checked.2,
     rowsD4_checked.2, rowsD5_checked.2, rowsD6_checked.2, rowsD7_checked.2,
     rowsD8_checked.2, rowsD9_checked.2, rowsD10_checked.2]
-
 end K1_13_2_3_4
-end PackSource_K1_13_2_3_4DataD
-
-section PackSource_K1_14_4Defs
-set_option autoImplicit true
+end
+section
 namespace K1_14_4
-
 open K1_14 Finset
-
-/-- At grade j, eligible Y indices are the total indices from j up to the
-smaller of the bank's total cap and the bound from its cutoff. -/
 def gradeWidth (k B W j : ℕ) : ℕ :=
   min (B + 1) ((W + j) / k + 1) - j
-
 def gradeCapacity (w : ℤ) (W j : ℕ) : ℕ :=
   let b := band w
   gradeWidth (131071 - w.toNat) b.jetBound W j *
     slots b.subbankSeeds (forcedPower w W j * (b.seedBound + 1))
-
 def cutoffCapacity (w : ℤ) (W : ℕ) : ℕ :=
   ∑ j ∈ range ((band w).vBound + 1), gradeCapacity w W j
-
 end K1_14_4
-end PackSource_K1_14_4Defs
+end

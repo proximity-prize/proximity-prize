@@ -1,20 +1,12 @@
-import ProximityPrize.SubmissionLower.Pack_K1Defs
-import ProximityPrize.SubmissionLower.Fast023
-import ProximityPrize.SubmissionLower.Fast029
 import ProximityPrize.SubmissionLower.Pack_K1_14_3Split
 set_option Elab.async false
-
-section PackSource_K1_14_3_2Support
 set_option autoImplicit true
+section
 set_option backward.isDefEq.respectTransparency false
 set_option maxSynthPendingDepth 8
-
 namespace K1_14_3_2
-
 noncomputable section
-
 open K1_14 K1_14_3
-
 private theorem minimalPairHeight {P Q : Jet} (h : ProperPair P Q)
     {q : Ideal Jet} (hq : q ∈ (Ideal.span {P, Q}).minimalPrimes) : q.height = 2 := by
   classical
@@ -45,8 +37,6 @@ private theorem minimalPairHeight {P Q : Jet} (h : ProperPair P Q)
       2 = 1 + 1 := by decide
       _ ≤ J.height + 1 := add_le_add_left hJ₁ 1
       _ ≤ q.height := Ideal.height_add_one_le_of_lt_of_isPrime hJq
-
-/-- Every actual point of a proper pair belongs to a height-two minimal prime. -/
 theorem properPairCover {P Q : Jet} (h : ProperPair P Q) :
     ∃ qs : Finset Surface, ComponentsOn P Q qs ∧
       ∀ z S, jetAt P z S = 0 → jetAt Q z S = 0 → ∃ q ∈ qs, AtSurface q z S := by
@@ -74,31 +64,20 @@ theorem properPairCover {P Q : Jet} (h : ProperPair P Q) :
     obtain ⟨I, hI, hIe⟩ := Ideal.exists_minimalPrimes_le hJ
     let i : {I // I ∈ s} := ⟨I, (hs I).mpr hI⟩
     exact ⟨mk i, Finset.mem_image.mpr ⟨i, Finset.mem_attach _ _, rfl⟩, hIe⟩
-
 end
 end K1_14_3_2
-end PackSource_K1_14_3_2Support
-
-section PackSource_K1_14_3_4Defs
-set_option autoImplicit true
+end
+section
 set_option backward.isDefEq.respectTransparency false
 set_option maxSynthPendingDepth 8
 set_option maxHeartbeats 800000
-
 namespace K1_14_3_4
-
 noncomputable section
-
 open K1 K1_14 K1_14_3 K1_14_3_2 Polynomial
 open scoped BigOperators
-
-/-- The written ordinary compatibility equation, in the original four coordinates. -/
 def graphCutter (g : ClearedEquation) : Jet :=
   C (liftEquation (clearedDx g)) +
     (Polynomial.X (R := Equation)) * C (liftEquation g.derivative)
-
-/-- At threshold r, keep one copy of each heavy ordinary irreducible.
-The second alternative measures the order after dividing out the full gcd. -/
 structure ThresholdPair (i : Fin 4) (P Q : Jet) (r : ℕ) where
   left : Jet
   right : Jet
@@ -114,16 +93,12 @@ structure ThresholdPair (i : Fin 4) (P Q : Jet) (r : ℕ) where
     OrderAt q P (reserve i + 1) → OrderAt q Q (reserve i + 1) →
     (∀ f ∈ heavy, C f ∉ q.asIdeal) →
     OrderAt q left (reserve i + 2 - r) ∧ OrderAt q right (reserve i + 2 - r)
-
 private def localLength {R : Type*} [CommRing R] (q : Ideal R) [q.IsPrime]
     (J : Ideal R) : ℕ∞ :=
   let A := Localization.AtPrime q
   Module.length A (A ⧸ J.map (algebraMap R A))
-
-/-- Intersection multiplicity in the two-dimensional ambient local ring. -/
 def intersectionLength (q : Surface) (P Q : Jet) : ℕ∞ :=
   localLength q.asIdeal (Ideal.span {P, Q})
-
 private theorem localLength_pos {R : Type*} [CommRing R] (q J : Ideal R) [q.IsPrime]
     (hJ : J ≤ q) : 0 < localLength q J := by
   let A := Localization.AtPrime q
@@ -133,7 +108,6 @@ private theorem localLength_pos {R : Type*} [CommRing R] (q J : Ideal R) [q.IsPr
     exact Ideal.map_mono hJ
   change 0 < Module.length A (A ⧸ J.map (algebraMap R A))
   exact Module.length_pos_iff.mpr (Ideal.Quotient.nontrivial_iff.mpr hn)
-
 theorem intersectionLength_one {q : Surface} {P Q : Jet}
     (hP : P ∈ q.asIdeal) (hQ : Q ∈ q.asIdeal) : 1 ≤ intersectionLength q P Q := by
   apply Order.one_le_iff_pos.mpr
@@ -145,23 +119,16 @@ theorem intersectionLength_one {q : Surface} {P Q : Jet}
   · exact hP
   · rw [Set.mem_singleton_iff.mp ht]
     exact hQ
-
-/-- The affine scheme cut by the residual equations and the two section equations. -/
 def pairSectionDegree (P Q : Jet) (s : Slice) : ℕ :=
   let J := Ideal.span ({sectionMap P, sectionMap Q} : Set SectionJet) ⊔
     Ideal.span (sectionEquations s)
   Module.finrank SectionField (SectionJet ⧸ J)
-
-/-- Raw proper-pair budgets for the three slices in the contract. -/
 def residualSeed (f g : Shape) : ℚ :=
   (f.B : ℚ) * g.J + (g.B : ℚ) * f.J - (f.J : ℚ) * g.J
-
 def residualOrdinate (f g : Shape) : ℚ :=
   (f.U : ℚ) * g.J + (g.U : ℚ) * f.J
-
 def residualMixed (f g : Shape) : ℚ :=
   (f.U : ℚ) * g.B + (g.U : ℚ) * f.B
-
 end
 end K1_14_3_4
-end PackSource_K1_14_3_4Defs
+end

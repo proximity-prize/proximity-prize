@@ -1,47 +1,26 @@
-import ProximityPrize.SubmissionLower.Fast007
-import ProximityPrize.SubmissionLower.Pack_K1Defs
-import ProximityPrize.SubmissionLower.Fast017
-import ProximityPrize.SubmissionLower.Fast051
-import ProximityPrize.SubmissionLower.Numeric6Defs
-import ProximityPrize.SubmissionLower.Numeric6AuxCert
-import ProximityPrize.SubmissionLower.Fast049
-import ProximityPrize.SubmissionLower.Fast023
-import ProximityPrize.SubmissionLower.Fast029
-import ProximityPrize.SubmissionLower.Fast052
-import ProximityPrize.SubmissionLower.Fast042
-import ProximityPrize.SubmissionLower.Fast040
 import ProximityPrize.SubmissionLower.Fast055
 import ProximityPrize.SubmissionLower.Fast056
-import ProximityPrize.SubmissionLower.SoloK1_13_1_1ArithmeticLogic
 set_option Elab.async false
-
-section PackSource_K1_14_2_3Moving
 set_option autoImplicit true
+section
 set_option autoImplicit false
 set_option backward.isDefEq.respectTransparency false
 set_option maxHeartbeats 1500000
 set_option maxRecDepth 4096
-
 namespace K1_14_2_3
-
 noncomputable section
-
 open K1 K1_14 K1_14_2 MvPolynomial
 open scoped Polynomial
 open scoped BigOperators
-
 private theorem constantCoefficients_apply (a : L) :
     constantCoefficients a = algebraMap L FX a := by
   rw [IsScalarTower.algebraMap_apply L L[X] FX]
   rfl
-
 theorem constant_map_degree (Q : MvPolynomial (Fin 2) L) :
     (MvPolynomial.map constantCoefficients Q).totalDegree = Q.totalDegree := by
   unfold totalDegree
   rw [support_map_of_injective Q (fun a b hab => (algebraMap L FX).injective
     (by simpa only [constantCoefficients_apply] using hab))]
-
-/-- A coefficient functional over the constants retains every constant zero. -/
 private theorem constant_equation (C : Seeds) (hC : C ≠ 0) :
     ∃ Q : MvPolynomial (Fin 2) L, Q ≠ 0 ∧ Q.totalDegree ≤ C.totalDegree ∧
       ∀ x : Fin 2 → L, MvPolynomial.eval (constantCoefficients ∘ x) C = 0 →
@@ -88,7 +67,6 @@ private theorem constant_equation (C : Seeds) (hC : C ≠ 0) :
       rw [eval_monomial, constantCoefficients_apply, mul_comm (C.coeff m), ← Algebra.smul_def,
         map_smul, smul_eq_mul, mul_comm]
     rw [heval, hx, map_zero]
-
 private theorem plane_intersection {k : Type} [Field k]
     (A B : MvPolynomial (Fin 2) k) (hA : Irreducible A)
     (hB : B ∉ Ideal.span {A}) (S : Finset (Fin 2 → k))
@@ -127,8 +105,6 @@ private theorem plane_intersection {k : Type} [Field k]
   have hout := hs'.trans (hf.2.trans ((affineDegree_of_natDegree_eq_zero hjdim).le.trans hcoeff))
   rw [mul_comm] at hout
   exact_mod_cast hout
-
-/-- Intersect the moving equation with a constant-coefficient equation extracted from it. -/
 theorem moving_count (C : Seeds) (hC : Irreducible C)
     (hmoving : ¬ DefinedOverConstants (Ideal.span {C})) (marks : Finset (Fin 2 → L))
     (hmarks : ∀ x ∈ marks, MvPolynomial.eval (constantCoefficients ∘ x) C = 0) :
@@ -192,44 +168,31 @@ theorem moving_count (C : Seeds) (hC : Irreducible C)
     rw [eval_map, ← eval₂_comp, hzQ, map_zero])
   rw [Finset.card_image_of_injective _ hinj] at hcount
   exact hcount.trans (by rw [pow_two]; exact Nat.mul_le_mul_left _ hBdeg)
-
 end
 end K1_14_2_3
-end PackSource_K1_14_2_3Moving
-
-section PackSource_K1_14_2_3Split
-set_option autoImplicit true
+end
+section
 set_option autoImplicit false
 set_option backward.isDefEq.respectTransparency false
 set_option maxHeartbeats 1500000
 set_option maxRecDepth 4096
-
 namespace K1_14_2_3
-
 noncomputable section
-
 open K1 K1_14 K1_14_2
 open scoped BigOperators Classical
-
-/-- The seed projection is a plane curve and its degree is paid by the generic line. -/
 def c1 : Prop :=
   ∀ I : Ideal Ambient, SeedSlice I →
     ∃ C : Seeds, Irreducible C ∧ seedImage I = Ideal.span {C} ∧
       0 < C.totalDegree ∧ C.totalDegree ≤ seedLength I
-
-/-- The contracted Y-image has its own generic covering degree over the constant base. -/
 def c2 : Prop :=
   ∀ (I : Ideal Ambient) (C : MvPolynomial (Fin 2) L), SeedSlice I →
     Module.Finite SeedField (JetYSection I) → Irreducible C →
     seedImage I = Ideal.span {MvPolynomial.map constantCoefficients C} →
     ∃ g : ℕ, 0 < g ∧ SmallRootCurve (rootImage I) g (yLength I) ∧
       C.totalDegree * g ≤ seedLength I
-
 private def seedRate : ℚ := ((p + 1 : ℕ) : ℚ) / 9
-
 private def yRate : ℚ :=
   15 + (11697 / 6520 : ℚ) * (((2 * endpointDegree - 1 : ℕ) : ℚ) * 15 + 1)
-
 private theorem root_price_bound (g H : ℕ) (hg : g ≤ 8) :
     rootPrice g H ≤ yRate * (H : ℚ) + (g : ℚ) := by
   have hgq : (g : ℚ) ≤ 8 := by exact_mod_cast hg
@@ -240,16 +203,13 @@ private theorem root_price_bound (g H : ℕ) (hg : g ≤ 8) :
     (add_le_add ht (mul_le_mul_of_nonneg_left
       (add_le_add (mul_le_mul_of_nonneg_left ht hd) (le_refl (1 : ℚ))) hb))
     (Nat.cast_nonneg H)) (le_refl (g : ℚ))
-
 private theorem seedRate_nonneg : 0 ≤ seedRate := by unfold seedRate; positivity
 private theorem yRate_nonneg : 0 ≤ yRate := by unfold yRate; positivity
 private theorem seedCap_lt_p : lossSeedCap < p := by decide +kernel
 private theorem seedCap_le_rate : (lossSeedCap : ℚ) ≤ seedRate := by decide +kernel
-
 private theorem ledger :
     seedRate * (lossSeedCap : ℚ) + yRate * (lossYCap : ℚ) + (lossSeedCap : ℚ) ≤
       (movingPrice : ℚ) := by decide +kernel
-
 private theorem eval_root_image (a b y v : FX) (q : RootAmbient) :
     MvPolynomial.eval ![a,b,y,v] (rootIncl q) = MvPolynomial.eval ![a,b,y] q := by
   change MvPolynomial.eval ![a,b,y,v] (MvPolynomial.rename (Fin.castLE (by decide : 3 ≤ 4)) q) = _
@@ -258,7 +218,6 @@ private theorem eval_root_image (a b y v : FX) (q : RootAmbient) :
     funext i
     fin_cases i <;> rfl
   rw [hv]
-
 private theorem eval_seed_image (a b y : FX) (C : Seeds) :
     MvPolynomial.eval ![a,b,y] (rootSeeds C) = MvPolynomial.eval ![a,b] C := by
   change MvPolynomial.eval ![a,b,y] (MvPolynomial.rename (Fin.castLE (by decide : 2 ≤ 3)) C) = _
@@ -267,20 +226,17 @@ private theorem eval_seed_image (a b y : FX) (C : Seeds) :
     funext i
     fin_cases i <;> rfl
   rw [hv]
-
 private theorem on_root {I : Ideal Ambient} {z : K} {S : Polynomial K}
     (h : OnJet I z S) : OnRoot (rootImage I) z S := by
   intro q hq
   have heval : jetMarkHom z S (rootIncl q) = rootMarkHom z S q :=
     eval_root_image (seedEmbedding z) (seedEmbedding z ^ p) (atX S) (atX S.derivative) q
   exact RingHom.mem_ker.mpr (heval.symm.trans (RingHom.mem_ker.mp (h hq)))
-
 private theorem on_seed {I : Ideal Ambient} {z : K} {S : Polynomial K}
     (h : OnJet I z S) {C : Seeds} (hC : C ∈ seedImage I) : graphEval z C = 0 := by
   have heval : rootMarkHom z S (rootSeeds C) = graphEval z C :=
     eval_seed_image (seedEmbedding z) (seedEmbedding z ^ p) (atX S) C
   exact heval.symm.trans (RingHom.mem_ker.mp (on_root h hC))
-
 private theorem moving_graph_count (n : ℕ) (C : Seeds) (hC : Irreducible C)
     (hmoving : ¬ DefinedOverConstants (Ideal.span {C})) (labels : Finset K)
     (hlabels : ∀ z ∈ labels, MvPolynomial.eval ![seedEmbedding z, (seedEmbedding z)^n] C = 0) :
@@ -302,7 +258,6 @@ private theorem moving_graph_count (n : ℕ) (C : Seeds) (hC : Irreducible C)
     rw [hgraph]
     exact hlabels z hz)
   simpa only [Finset.card_image_of_injective _ hinj] using hc
-
 private theorem seed_graph_count (C : Seeds) (hC : C ≠ 0) (hdeg : C.totalDegree < p)
     (labels : Finset K) (hlabels : ∀ z ∈ labels, graphEval z C = 0) :
     labels.card ≤ (p+1) * C.totalDegree := by
@@ -315,7 +270,6 @@ private theorem seed_graph_count (C : Seeds) (hC : C ≠ 0) (hdeg : C.totalDegre
       exact hlabels z hz)
   simpa only [Finset.card_image_of_injective _ seedEmbedding.injective, Nat.add_mul, Nat.one_mul,
     Nat.add_comm C.totalDegree] using hc
-
 private theorem equal_image_degree (C : Seeds) (hC : C ≠ 0) (Q : MvPolynomial (Fin 2) L)
     (h : Ideal.span {C} = Ideal.span {MvPolynomial.map constantCoefficients Q}) :
     C.totalDegree = Q.totalDegree := by
@@ -326,11 +280,9 @@ private theorem equal_image_degree (C : Seeds) (hC : C ≠ 0) (Q : MvPolynomial 
   rw [← constant_map_degree Q]
   exact (MvPolynomial.totalDegree_le_of_dvd_of_isDomain ha.dvd_dvd.1 hQ).antisymm
     (MvPolynomial.totalDegree_le_of_dvd_of_isDomain ha.dvd_dvd.2 hC)
-
 private theorem union_card_le {ι : Type*} (s : Finset ι) (W : ι → Finset K) :
     ((s.biUnion W).card : ℚ) ≤ ∑ i ∈ s, ((W i).card : ℚ) := by
   exact_mod_cast (Finset.card_biUnion_le (s := s) (t := W))
-
 private theorem group_price {u del} (M : AnchorModel u del) {Γ} (F : AnchoredFamily M Γ)
     (hhi : M.overhead ≤ 3554) (T : Finset K) (hT : T ⊆ Γ)
     (h1 : c1) (h2 : c2) (tariff : RootTariff)
@@ -418,7 +370,6 @@ private theorem group_price {u del} (M : AnchorModel u del) {Γ} (F : AnchoredFa
     exact extend_seed (hq.trans (by
       rw [pow_two]
       exact mul_le_mul hCr hCq (Nat.cast_nonneg C.totalDegree) seedRate_nonneg))
-
 theorem of_children (h1 : c1) (h2 : c2) : K1_14_2.c3 := by
   classical
   intro tariff u del M Γ F hhi T hT hcover
@@ -466,40 +417,28 @@ theorem of_children (h1 : c1) (h2 : c2) : K1_14_2.c3 := by
         (mul_le_mul_of_nonneg_left hHq yRate_nonneg)) hDq
     _ ≤ _ := ledger
   exact_mod_cast hbound
-
 end
 end K1_14_2_3
-end PackSource_K1_14_2_3Split
-
-section PackSource_K1_14_2_3_1Degree
-set_option autoImplicit true
+end
+section
 set_option autoImplicit false
 set_option backward.isDefEq.respectTransparency false
 set_option maxHeartbeats 1000000
-
 namespace K1_14_2_3_1
-
 noncomputable section
-
 open K1 K1_14 K1_14_2 K1_14_2_3 Polynomial
 open scoped Polynomial BigOperators
-
 def lineValues {R : Type} [CommRing R] (s t : R) : Fin 2 → R[X] :=
   ![Polynomial.C t - Polynomial.C s * (Polynomial.X : R[X]), Polynomial.X]
-
 def eliminate : MvPolynomial (Fin 2) SeedField →ₐ[SeedField] SeedField[X] :=
   MvPolynomial.aeval (lineValues (generic 0) (generic 1))
-
 def lineRestriction : Seeds →+* SeedField[X] :=
   eliminate.toRingHom.comp (MvPolynomial.map (algebraMap FX SeedField))
-
 private theorem fin_two_sum (e : Fin 2 →₀ ℕ) : e.sum (fun _ m => m) = e 0 + e 1 := by
   simp [Finsupp.sum_of_support_subset e (Finset.subset_univ e.support)]
-
 private def integralRestriction : Seeds →+* Seeds[X] :=
   MvPolynomial.eval₂Hom (Polynomial.C.comp (MvPolynomial.C : FX →+* Seeds))
     (lineValues (MvPolynomial.X 0) (MvPolynomial.X 1))
-
 private theorem restriction_map :
     (mapRingHom (algebraMap Seeds SeedField)).comp integralRestriction = lineRestriction := by
   apply MvPolynomial.ringHom_ext
@@ -509,14 +448,12 @@ private theorem restriction_map :
   · intro k
     fin_cases k <;>
       simp [integralRestriction, lineRestriction, eliminate, lineValues, RingHom.comp_apply, generic]
-
 private theorem lineValue_natDegree {R : Type} [CommRing R] (s t : R) :
     (lineValues s t 0).natDegree ≤ 1 := by
   change (Polynomial.C t - Polynomial.C s * (Polynomial.X : R[X])).natDegree ≤ 1
   have hs : (Polynomial.C s * (Polynomial.X : R[X])).natDegree ≤ 1 := by
     simpa only [pow_one] using natDegree_C_mul_X_pow_le s 1
   exact (natDegree_sub_le _ _).trans (max_le (by simp) hs)
-
 private theorem coeff_integralRestriction_monomial (e : Fin 2 →₀ ℕ) (a : FX) (d : ℕ)
     (he : e 0 + e 1 ≤ d) :
     (integralRestriction (MvPolynomial.monomial e a)).coeff d =
@@ -538,9 +475,6 @@ private theorem coeff_integralRestriction_monomial (e : Fin 2 →₀ ℕ) (a : F
     simp
   · rw [coeff_eq_zero_of_natDegree_lt, mul_zero]
     exact (natDegree_mul_le_of_le hpow hXpow).trans_lt (lt_of_le_of_ne he heq)
-
-/-- At top degree the distinct plane monomials give distinct powers of the
-slope. This preserves the total degree in every characteristic. -/
 theorem totalDegree_lineRestriction (F : Seeds) : (lineRestriction F).natDegree = F.totalDegree := by
   classical
   have hu : (lineRestriction F).natDegree ≤ F.totalDegree := by
@@ -613,22 +547,14 @@ theorem totalDegree_lineRestriction (F : Seeds) : (lineRestriction F).natDegree 
     (RingHom.congr_fun restriction_map F).symm
   rw [hr, coeff_map]
   exact fun h => htop (IsFractionRing.injective Seeds SeedField (h.trans (map_zero _).symm))
-
 end
 end K1_14_2_3_1
-end PackSource_K1_14_2_3_1Degree
-
-section PackSource_K1_14_2_2_2_6Defs
-set_option autoImplicit true
+end
+section
 set_option autoImplicit false
-
 namespace K1_14_2_2_2_6
-
 noncomputable section
-
 open K1_14 K1_14_2 K1_14_2_2
-
-/-- Embed the generic seed-line parameters into the independent mixed-section field. -/
 def seedParameters : SeedField →+* SectionField :=
   let indices : Fin 2 → Fin 4 := ![0, 2]
   let rename : Seeds →+* MvPolynomial (Fin 4) FX :=
@@ -641,50 +567,32 @@ def seedParameters : SeedField →+* SectionField :=
   IsFractionRing.lift (K := SeedField) (g := g)
     ((IsFractionRing.injective (MvPolynomial (Fin 4) FX) SectionField).comp
       (MvPolynomial.rename_injective indices hi))
-
-/-- Substitute the same generic seed line used in `OverMixed`, leaving its second
-seed coordinate free. The independent jet-line parameters extend the coefficients. -/
 def mixedSeedRestriction (f : Seeds) : Polynomial SectionField :=
   (K1_14_2_3_1.lineRestriction f).map seedParameters
-
 end
 end K1_14_2_2_2_6
-end PackSource_K1_14_2_2_2_6Defs
-
-section PackSource_K1_14_2_2_2_6Split
-set_option autoImplicit true
+end
+section
 set_option autoImplicit false
 set_option backward.isDefEq.respectTransparency false
 set_option maxRecDepth 10000
 set_option maxSynthPendingDepth 8
-
 namespace K1_14_2_2_2_6
-
 noncomputable section
-
 open K1 K1_14 K1_14_2 K1_14_2_2 K1_14_2_3
-
-/-- The generic mixed section dominates the zero-dimensional seed-line
-section of a curve image, including its residue degrees and multiplicities. -/
 def c1 : Prop :=
   ∀ I : Ideal Ambient, I.IsPrime → ringKrullDim (CoordinateRing I) = 2 →
     Module.Finite SectionField (OverMixed I) →
     ∀ f : Seeds, f ≠ 0 → seedImage I = Ideal.span {f} →
       ∃ e : (Polynomial SectionField ⧸ Ideal.span {mixedSeedRestriction f}) →ₐ[SectionField]
           OverMixed I, Function.Injective e
-
-/-- A point seed image that supports an actual mark meets the full generic
-jet-plane section. -/
 def c2 : Prop :=
   ∀ I : Ideal Ambient, I.IsPrime → ringKrullDim (CoordinateRing I) = 2 →
     (seedImage I).IsMaximal → Module.Finite SeedField (OverJets I) →
     (∃ (z : K) (R : Polynomial K), OnJet I z R) → 0 < sectionDegree I 3
-
 private abbrev seedIncl : Seeds →+* Ambient := rootIncl.comp rootSeeds
-
 private theorem seedImage_prime (I : Ideal Ambient) [I.IsPrime] : (seedImage I).IsPrime :=
   (inferInstance : I.IsPrime).comap seedIncl
-
 private theorem eval_seed_rename {k : Type} [CommRing k] (a b y v : k)
     (f : MvPolynomial (Fin 2) k) :
     MvPolynomial.eval ![a, b, y, v]
@@ -698,7 +606,6 @@ private theorem eval_seed_rename {k : Type} [CommRing k] (a b y v : k)
     funext i
     fin_cases i <;> rfl
   rw [he]
-
 private theorem seed_image_eval {I : Ideal Ambient} {z : K} {R : Polynomial K}
     (h : OnJet I z R) : seedImage I ≤ RingHom.ker (graphEval z) := by
   intro f hf
@@ -706,16 +613,11 @@ private theorem seed_image_eval {I : Ideal Ambient} {z : K} {R : Polynomial K}
   have he : jetMarkHom z R (seedIncl f) = graphEval z f :=
     eval_seed_rename (seedEmbedding z) (seedEmbedding z ^ p) (atX R) (atX R.derivative) f
   exact RingHom.mem_ker.mpr (he.symm.trans (RingHom.mem_ker.mp (h hmem)))
-
 private abbrev SurfaceField (I : Ideal Ambient) := FractionRing (Ambient ⧸ I)
-
 private def surfaceFractionMap (I : Ideal Ambient) : Ambient →+* SurfaceField I := by
   let q : Ambient →+* (Ambient ⧸ I) := Ideal.Quotient.mk I
   let ι : (Ambient ⧸ I) →+* SurfaceField I := algebraMap _ _
   exact ι.comp q
-
-/-- A dominant seed projection gives a nonzero generic fibre by evaluation
-in the fraction field of the surface. -/
 private theorem seedImage_ne_bot (I : Ideal Ambient) [I.IsPrime]
     [Module.Finite SeedField (OverSeeds I)] (hz : sectionDegree I 0 = 0) :
     seedImage I ≠ ⊥ := by
@@ -758,7 +660,6 @@ private theorem seedImage_ne_bot (I : Ideal Ambient) [I.IsPrime]
     Ideal.Quotient.subsingleton_iff.mp
       ((Module.finrank_eq_zero_iff_of_free SeedField (OverSeeds I)).mp hz)
   exact RingHom.ker_ne_top e (top_unique (htop ▸ hmap))
-
 private theorem seedImage_principal (I : Ideal Ambient) [I.IsPrime]
     (hn : seedImage I ≠ ⊥) (hm : ¬ (seedImage I).IsMaximal) :
     ∃ f : Seeds, f ≠ 0 ∧ seedImage I = Ideal.span {f} := by
@@ -785,7 +686,6 @@ private theorem seedImage_principal (I : Ideal Ambient) [I.IsPrime]
   have : UniqueFactorizationMonoid Seeds := MvPolynomial.uniqueFactorizationMonoid (Fin 2)
   obtain ⟨f, hmem, hf⟩ := Ideal.IsPrime.exists_mem_prime_of_ne_bot (seedImage_prime I) hn
   exact ⟨f, hf.ne_zero, Ideal.eq_span_singleton_of_height_eq_one (hle.antisymm hlo) hmem hf⟩
-
 private theorem same_seed {I : Ideal Ambient} (hI : (seedImage I).IsMaximal)
     {z w : K} {R S : Polynomial K} (hz : OnJet I z R) (hw : OnJet I w S) :
     (seedEmbedding z, seedEmbedding z ^ p) = (seedEmbedding w, seedEmbedding w ^ p) := by
@@ -798,7 +698,6 @@ private theorem same_seed {I : Ideal Ambient} (hI : (seedImage I).IsMaximal)
   have he' : seedEmbedding w = seedEmbedding z := by
     simpa [graphEval, sub_eq_zero] using he
   rw [he']
-
 theorem of_children (h1 : c1) (h2 : c2) : K1_14_2_2_2.c6 := by
   classical
   intro I hI hdim hfinite hz
@@ -828,53 +727,36 @@ theorem of_children (h1 : c1) (h2 : c2) : K1_14_2_2_2.c6 := by
       rw [hgen]
       exact Ideal.subset_span (Set.mem_singleton f)
     exact Or.inl (RingHom.mem_ker.mp (seed_image_eval hon hmem))
-
 end
 end K1_14_2_2_2_6
-end PackSource_K1_14_2_2_2_6Split
-
-section PackSource_K1_14_2_3_1Fiber
-set_option autoImplicit true
+end
+section
 set_option autoImplicit false
 set_option backward.isDefEq.respectTransparency false
 set_option maxHeartbeats 1000000
-
 namespace K1_14_2_3_1
-
 noncomputable section
-
 open K1 K1_14 K1_14_2 K1_14_2_3
 open scoped Polynomial
-
 abbrev Raw (n : ℕ) := MvPolynomial (Fin n) FX
 abbrev Over (n : ℕ) := MvPolynomial (Fin n) SeedField
-
 local instance (n : ℕ) (I : Ideal (Raw n)) : CommRing (CoordinateRing I)[X] :=
   @Polynomial.commRing (CoordinateRing I) (Ideal.Quotient.commRing I)
-
 abbrev sectionIdeal {n : ℕ} (I : Ideal (Raw n)) (i j : Fin n) : Ideal (Over n) :=
   I.map (MvPolynomial.map (algebraMap FX SeedField)) ⊔ Ideal.span {seedLine i j}
-
 abbrev Slice {n : ℕ} (I : Ideal (Raw n)) (i j : Fin n) := Over n ⧸ sectionIdeal I i j
-
 abbrev coord {n : ℕ} (I : Ideal (Raw n)) (k : Fin n) : CoordinateRing I :=
   Ideal.Quotient.mk I (MvPolynomial.X k)
-
-/-- The two coefficient parameters are the free slope and the intercept of the
-line through the indicated coordinates. -/
 def parameterMap {n : ℕ} (I : Ideal (Raw n)) (i j : Fin n) :
     Seeds →+* (CoordinateRing I)[X] :=
   MvPolynomial.eval₂Hom (Polynomial.C.comp (algebraMap FX (CoordinateRing I)))
     ![Polynomial.X, Polynomial.C (coord I i) + Polynomial.X * Polynomial.C (coord I j)]
-
 def toSlice {n : ℕ} (I : Ideal (Raw n)) (i j : Fin n) : CoordinateRing I →+* Slice I i j :=
   Ideal.quotientMap (sectionIdeal I i j) (MvPolynomial.map (algebraMap FX SeedField))
     (Ideal.map_le_iff_le_comap.mp le_sup_left)
-
 def slopeToSlice {n : ℕ} (I : Ideal (Raw n)) (i j : Fin n) :
     (CoordinateRing I)[X] →+* Slice I i j :=
   Polynomial.eval₂RingHom (toSlice I i j) (algebraMap SeedField (Slice I i j) (generic 0))
-
 theorem sliceLine {n : ℕ} (I : Ideal (Raw n)) (i j : Fin n) :
     toSlice I i j (coord I i) +
       algebraMap SeedField (Slice I i j) (generic 0) * toSlice I i j (coord I j) =
@@ -886,7 +768,6 @@ theorem sliceLine {n : ℕ} (I : Ideal (Raw n)) (i j : Fin n) :
   apply sub_eq_zero.mp
   simpa only [seedLine, map_sub, map_add, map_mul, ← MvPolynomial.algebraMap_eq,
     Ideal.Quotient.mk_algebraMap, toSlice, coord, Ideal.quotientMap_mk, MvPolynomial.map_X] using h
-
 theorem parameter_commutes {n : ℕ} (I : Ideal (Raw n)) (i j : Fin n) :
     (slopeToSlice I i j).comp (parameterMap I i j) =
       (algebraMap SeedField (Slice I i j)).comp (algebraMap Seeds SeedField) := by
@@ -900,7 +781,6 @@ theorem parameter_commutes {n : ℕ} (I : Ideal (Raw n)) (i j : Fin n) :
     · have h := sliceLine I i j
       rw [mul_comm (algebraMap SeedField (Slice I i j) (generic 0)) (toSlice I i j (coord I j))] at h
       simpa [parameterMap, slopeToSlice, RingHom.comp_apply, generic] using h
-
 theorem parameter_injective {n : ℕ} (I : Ideal (Raw n)) (i j : Fin n)
     [Nontrivial (Slice I i j)] : Function.Injective (parameterMap I i j) := by
   have h := (RingHom.injective (algebraMap SeedField (Slice I i j))).comp
@@ -909,34 +789,28 @@ theorem parameter_injective {n : ℕ} (I : Ideal (Raw n)) (i j : Fin n)
     rw [parameter_commutes]
     exact h
   exact Function.Injective.of_comp hf
-
 private abbrev FunctionField {n : ℕ} (I : Ideal (Raw n)) :=
   FractionRing ((CoordinateRing I)[X])
-
 private def coefficientToFrac {n : ℕ} (I : Ideal (Raw n)) (i j : Fin n) [I.IsPrime]
     [Nontrivial (Slice I i j)] : SeedField →+* FunctionField I :=
   IsFractionRing.lift (K := SeedField)
     (g := (algebraMap (CoordinateRing I)[X] (FunctionField I)).comp (parameterMap I i j))
     ((IsFractionRing.injective (CoordinateRing I)[X] (FunctionField I)).comp
       (parameter_injective I i j))
-
 private theorem coefficientToFrac_base {n : ℕ} (I : Ideal (Raw n)) (i j : Fin n)
     [I.IsPrime] [Nontrivial (Slice I i j)] (d : Seeds) :
     coefficientToFrac I i j (algebraMap Seeds SeedField d) =
       algebraMap (CoordinateRing I)[X] (FunctionField I) (parameterMap I i j d) :=
   IsFractionRing.lift_algebraMap _ d
-
 private theorem coefficientToFrac_generic {n : ℕ} (I : Ideal (Raw n)) (i j : Fin n)
     [I.IsPrime] [Nontrivial (Slice I i j)] (k : Fin 2) :
     coefficientToFrac I i j (generic k) =
       algebraMap (CoordinateRing I)[X] (FunctionField I) (parameterMap I i j (MvPolynomial.X k)) :=
   coefficientToFrac_base I i j _
-
 private def polynomialToFrac {n : ℕ} (I : Ideal (Raw n)) (i j : Fin n)
     [I.IsPrime] [Nontrivial (Slice I i j)] : Over n →+* FunctionField I :=
   MvPolynomial.eval₂Hom (coefficientToFrac I i j)
     (fun k => algebraMap (CoordinateRing I)[X] (FunctionField I) (Polynomial.C (coord I k)))
-
 private theorem originalToFrac {n : ℕ} (I : Ideal (Raw n)) (i j : Fin n)
     [I.IsPrime] [Nontrivial (Slice I i j)] :
     (polynomialToFrac I i j).comp (MvPolynomial.map (algebraMap FX SeedField)) =
@@ -951,20 +825,15 @@ private theorem originalToFrac {n : ℕ} (I : Ideal (Raw n)) (i j : Fin n)
     rfl
   · intro k
     simp [polynomialToFrac, RingHom.comp_apply]
-
 private theorem map_seedLine {n : ℕ} {B : Type} [CommRing B] (f : Over n →+* B)
     (i j : Fin n) : f (seedLine i j) =
       f (MvPolynomial.X i) + f (MvPolynomial.C (generic 0)) * f (MvPolynomial.X j) -
         f (MvPolynomial.C (generic 1)) := by
   simp only [seedLine, map_sub, map_add, map_mul]
-
 private theorem map_affine_relation {A B : Type} [CommRing A] [CommRing B] (f : A →+* B)
     (a b s : A) : f a + f s * f b - f (a + s * b) = 0 := by
   rw [f.map_add, f.map_mul, sub_self]
-
 set_option maxHeartbeats 1500000 in
-/-- The slice maps to the function field of the curve with a free slope. This
-certifies that adjoining the coefficient fractions preserves the original coordinates. -/
 private def sliceToFrac {n : ℕ} (I : Ideal (Raw n)) (i j : Fin n)
     [I.IsPrime] [Nontrivial (Slice I i j)] : Slice I i j →+* FunctionField I :=
   Ideal.Quotient.lift (sectionIdeal I i j) (polynomialToFrac I i j) <| by
@@ -996,7 +865,6 @@ private def sliceToFrac {n : ℕ} (I : Ideal (Raw n)) (i j : Fin n)
       have h := map_seedLine f i j
       rw [hX i, hX j, hC 0, hC 1, hs, ht] at h
       exact h.trans (map_affine_relation m _ _ _)
-
 private theorem sliceToFrac_slope {n : ℕ} (I : Ideal (Raw n)) (i j : Fin n)
     [I.IsPrime] [Nontrivial (Slice I i j)] :
     (sliceToFrac I i j).comp (slopeToSlice I i j) =
@@ -1010,14 +878,12 @@ private theorem sliceToFrac_slope {n : ℕ} (I : Ideal (Raw n)) (i j : Fin n)
     change sliceToFrac I i j (Ideal.Quotient.mk (sectionIdeal I i j) (MvPolynomial.C (generic 0))) = _
     simp only [sliceToFrac, Ideal.Quotient.lift_mk, polynomialToFrac, MvPolynomial.eval₂Hom_C,
       coefficientToFrac_generic, parameterMap, MvPolynomial.eval₂Hom_X', Matrix.cons_val_zero]
-
 theorem slope_injective {n : ℕ} (I : Ideal (Raw n)) (i j : Fin n)
     [I.IsPrime] [Nontrivial (Slice I i j)] : Function.Injective (slopeToSlice I i j) := by
   have hf : Function.Injective ((sliceToFrac I i j).comp (slopeToSlice I i j)) := by
     rw [sliceToFrac_slope]
     exact IsFractionRing.injective (CoordinateRing I)[X] (FunctionField I)
   exact Function.Injective.of_comp hf
-
 private theorem clear_denominator {n : ℕ} (I : Ideal (Raw n)) (i j : Fin n)
     (x : Slice I i j) :
     ∃ (q : (CoordinateRing I)[X]) (d : Seeds), d ≠ 0 ∧
@@ -1049,23 +915,16 @@ private theorem clear_denominator {n : ℕ} (I : Ideal (Raw n)) (i j : Fin n)
       (map_mul _ _ _).symm
     _ = _ := (congrArg (Ideal.Quotient.mk (sectionIdeal I i j)) hgm').trans
       (RingHom.congr_fun hcomp g).symm
-
 abbrev PlaneSlice (P : Ideal Seeds) := Slice P 0 1
-
 private abbrev seedIncl := rootIncl.comp rootSeeds
-
 private abbrev seedInclOver : Over 2 →ₐ[SeedField] Over 4 :=
   MvPolynomial.rename (Fin.castLE (by decide : 2 ≤ 4))
-
 theorem seedImage_prime (I : Ideal Ambient) [I.IsPrime] : (seedImage I).IsPrime :=
   (inferInstance : I.IsPrime).comap seedIncl
-
 private def seedToJet (I : Ideal Ambient) : CoordinateRing (seedImage I) →+* CoordinateRing I :=
   Ideal.quotientMap I seedIncl le_rfl
-
 private theorem seedToJet_injective (I : Ideal Ambient) : Function.Injective (seedToJet I) :=
   Ideal.quotientMap_injective
-
 theorem plane_parameter_injective (I : Ideal Ambient) [Nontrivial (JetSeedSection I)] :
     Function.Injective (parameterMap (seedImage I) 0 1) := by
   have h : (Polynomial.mapRingHom (seedToJet I)).comp (parameterMap (seedImage I) 0 1) =
@@ -1087,7 +946,6 @@ theorem plane_parameter_injective (I : Ideal Ambient) [Nontrivial (JetSeedSectio
     rw [h]
     exact parameter_injective I 0 1
   exact Function.Injective.of_comp hinj
-
 private theorem seedIncl_square :
     (seedInclOver.toRingHom).comp (MvPolynomial.map (algebraMap FX SeedField)) =
       (MvPolynomial.map (algebraMap FX SeedField)).comp seedIncl := by
@@ -1096,10 +954,8 @@ private theorem seedIncl_square :
     simp [rootIncl, rootSeeds, RingHom.comp_apply]
   · intro k
     simp [rootIncl, rootSeeds, RingHom.comp_apply]
-
 private theorem seedLine_map : seedInclOver (seedLine 0 1) = seedLine 0 1 := by
   simp [seedLine]
-
 private theorem plane_le (I : Ideal Ambient) :
     sectionIdeal (seedImage I) 0 1 ≤ (sectionIdeal I 0 1).comap seedInclOver := by
   refine sup_le (Ideal.map_le_iff_le_comap.mpr ?_) (Ideal.span_le.mpr ?_)
@@ -1115,10 +971,8 @@ private theorem plane_le (I : Ideal Ambient) :
     rw [seedLine_map]
     exact (show Ideal.span {seedLine 0 1} ≤ sectionIdeal I 0 1 from le_sup_right)
       (Ideal.mem_span_singleton_self _)
-
 def planeToJet (I : Ideal Ambient) : PlaneSlice (seedImage I) →ₐ[SeedField] JetSeedSection I :=
   Ideal.quotientMapₐ (sectionIdeal I 0 1) seedInclOver (plane_le I)
-
 private theorem plane_slope_commutes (I : Ideal Ambient) :
     (planeToJet I).toRingHom.comp (slopeToSlice (seedImage I) 0 1) =
       (slopeToSlice I 0 1).comp (Polynomial.mapRingHom (seedToJet I)) := by
@@ -1137,9 +991,6 @@ private theorem plane_slope_commutes (I : Ideal Ambient) :
       MvPolynomial.map (algebraMap FX SeedField) (seedIncl a) at h
     exact congrArg (Ideal.Quotient.mk (sectionIdeal I 0 1)) h
   · simp [slopeToSlice, RingHom.comp_apply]
-
-/-- A generic affine section preserves the inclusion of the plane image in the
-original prime curve. -/
 theorem planeToJet_injective (I : Ideal Ambient) [I.IsPrime] [Nontrivial (JetSeedSection I)] :
     Function.Injective (planeToJet I) := by
   apply (injective_iff_map_eq_zero (planeToJet I)).mpr
@@ -1156,39 +1007,28 @@ theorem planeToJet_injective (I : Ideal Ambient) [I.IsPrime] [Nontrivial (JetSee
     fun h => hd (IsFractionRing.injective Seeds SeedField (h.trans (map_zero _).symm))
   exact ((isUnit_iff_ne_zero.mpr hd').map (algebraMap SeedField (PlaneSlice (seedImage I)))).mul_right_cancel
     (hq.trans (zero_mul _).symm)
-
 end
 end K1_14_2_3_1
-end PackSource_K1_14_2_3_1Fiber
-
-section PackSource_K1_14_2_2_2_6_1Relative
-set_option autoImplicit true
+end
+section
 set_option autoImplicit false
 set_option backward.isDefEq.respectTransparency false
 set_option maxHeartbeats 1000000
 set_option linter.style.haveILetI false
-
 namespace K1_14_2_2_2_6_1
-
 noncomputable section
-
 open K1_14 K1_14_2 K1_14_2_3 Polynomial Algebra AlgebraicIndependent
 open scoped Polynomial
-
 abbrev Surface (I : Ideal Ambient) := CoordinateRing I
 abbrev Image (I : Ideal Ambient) := CoordinateRing (seedImage I)
 abbrev coord (I : Ideal Ambient) (i : Fin 4) : Surface I :=
   Ideal.Quotient.mk I (MvPolynomial.X i)
-
 abbrev seedIncl : Seeds →+* Ambient := rootIncl.comp rootSeeds
-
 def imageToSurface (I : Ideal Ambient) : Image I →+* Surface I :=
   Ideal.quotientMap I seedIncl le_rfl
-
 theorem imageToSurface_injective (I : Ideal Ambient) :
     Function.Injective (imageToSurface I) :=
   Ideal.quotientMap_injective
-
 private theorem finiteType_dimension (k R : Type) [Field k] [CommRing R] [IsDomain R]
     [Algebra k R] [Algebra.FiniteType k R] :
     ∃ n : ℕ, ringKrullDim R = n ∧ trdeg k R = n := by
@@ -1227,7 +1067,6 @@ private theorem finiteType_dimension (k R : Type) [Field k] [CommRing R] [IsDoma
     calc
       trdeg k R = trdeg k N + trdeg N R := (trdeg_add_eq k N (A := R)).symm
       _ = n := by rw [hN, hzero, add_zero]
-
 private theorem algebraic_polynomial_eval {k B A : Type} [CommRing k] [CommRing B]
     [IsDomain B] [CommRing A] [Algebra B A] {n : ℕ} (q : MvPolynomial (Fin n) k →+* A)
     (hC : ∀ a, IsAlgebraic B (q (MvPolynomial.C a)))
@@ -1241,7 +1080,6 @@ private theorem algebraic_polynomial_eval {k B A : Type} [CommRing k] [CommRing 
   | mul_X p i hp =>
     rw [map_mul]
     exact hp.mul (hX i)
-
 private theorem relative_not_algebraic (I : Ideal Ambient) [I.IsPrime]
     (hdim : ringKrullDim (Surface I) = 2) (f : Seeds) (hf : f ≠ 0)
     (hgen : seedImage I = Ideal.span {f}) :
@@ -1289,13 +1127,9 @@ private theorem relative_not_algebraic (I : Ideal Ambient) [I.IsPrime]
   rw [← hgen, hBA, hdim, MvPolynomial.ringKrullDim_of_isNoetherianRing_of_finite,
     ringKrullDim_eq_zero_of_field] at hle
   norm_num [Nat.card_eq_fintype_card] at hle
-
-/-- Adjoin an independent slope and evaluate the jet intercept at the affine
-linear combination of the two jet coordinates. -/
 def lineEval {B A : Type} [CommRing B] [CommRing A] (i : B →+* A) (y v : A) :
     B[X][X] →+* A[X] :=
   Polynomial.eval₂RingHom (Polynomial.mapRingHom i) (Polynomial.C y + Polynomial.X * Polynomial.C v)
-
 private theorem lineEval_injective {B A : Type} [CommRing B] [IsDomain B] [Infinite B]
     [CommRing A] [Algebra B A] (y v : A)
     (h : ¬ (IsAlgebraic B y ∧ IsAlgebraic B v)) :
@@ -1349,8 +1183,6 @@ private theorem lineEval_injective {B A : Type} [CommRing B] [IsDomain B] [Infin
   have hy := (alg c hc).sub (hv.smul c)
   rw [add_sub_cancel_right] at hy
   exact h ⟨hy, hv⟩
-
-/-- The generic jet intercept is independent of its slope over the seed image. -/
 theorem jetEval_injective (I : Ideal Ambient) [I.IsPrime]
     (hdim : ringKrullDim (Surface I) = 2) (f : Seeds) (hf : f ≠ 0)
     (hgen : seedImage I = Ideal.span {f}) :
@@ -1362,30 +1194,21 @@ theorem jetEval_injective (I : Ideal Ambient) [I.IsPrime]
   letI : Infinite FX := Infinite.of_injective _ (IsFractionRing.injective L[X] FX)
   letI : Infinite (Image I) := Infinite.of_injective _ (algebraMap FX (Image I)).injective
   exact lineEval_injective _ _ (relative_not_algebraic I hdim f hf hgen)
-
 end
 end K1_14_2_2_2_6_1
-end PackSource_K1_14_2_2_2_6_1Relative
-
-section PackSource_K1_14_2_3_1Quotient
-set_option autoImplicit true
+end
+section
 set_option autoImplicit false
 set_option backward.isDefEq.respectTransparency false
 set_option maxHeartbeats 1000000
-
 namespace K1_14_2_3_1
-
 noncomputable section
-
 open K1 K1_14 K1_14_2 K1_14_2_3 Polynomial
 open scoped Polynomial BigOperators
-
 private theorem elimination_line : eliminate (seedLine 0 1) = 0 := by
   simp [eliminate, lineValues, seedLine, Polynomial.algebraMap_eq]
-
 private def reconstruct (P : Ideal Seeds) : SeedField[X] →ₐ[SeedField] PlaneSlice P :=
   aeval (Ideal.Quotient.mk (sectionIdeal P 0 1) (MvPolynomial.X 1))
-
 private theorem elimination_reconstruct (P : Ideal Seeds) :
     (reconstruct P).comp eliminate = Ideal.Quotient.mkₐ SeedField (sectionIdeal P 0 1) := by
   apply MvPolynomial.algHom_ext
@@ -1395,9 +1218,6 @@ private theorem elimination_reconstruct (P : Ideal Seeds) :
     simp only [toSlice, coord, Ideal.quotientMap_mk, MvPolynomial.map_X] at h
     simpa [eliminate, lineValues, reconstruct, sub_eq_iff_eq_add] using h.symm
   · simp [eliminate, lineValues, reconstruct]
-
-/-- Eliminate the first coordinate using the generic line and retain the second
-coordinate as the univariate variable. -/
 def lineQuotientEquiv (P : Ideal Seeds) :
     PlaneSlice P ≃ₐ[SeedField] (SeedField[X] ⧸ P.map lineRestriction) := by
   let A := Ideal.Quotient.mkₐ SeedField (sectionIdeal P 0 1)
@@ -1437,70 +1257,48 @@ def lineQuotientEquiv (P : Ideal Seeds) :
     rw [show f' (Ideal.Quotient.mk (sectionIdeal P 0 1) p) = B (eliminate p) by rfl]
     change (reconstruct P) (eliminate p) = Ideal.Quotient.mk (sectionIdeal P 0 1) p
     exact DFunLike.congr_fun (elimination_reconstruct P) p
-
 end
 end K1_14_2_3_1
-end PackSource_K1_14_2_3_1Quotient
-
-section PackSource_K1_14_2_4_1_1Defs
-set_option autoImplicit true
+end
+section
 namespace K1_14_2_4_1_1
-
 noncomputable section
-
 open K1 K1_14 K1_14_2 K1_14_2_4_1
 open scoped Polynomial
-
-/-- Generic evaluation of the two constant seed coordinates over the independent X. -/
 def genericSeedMap (C₀ : ConstantSeeds) [Fact (Irreducible C₀)] :
     Seeds →+* ConstantSeedX C₀ :=
   MvPolynomial.eval₂Hom (extendX C₀) (insertConstant C₀ ∘ seedCoordinate C₀)
-
-/-- The generic evaluation on the coordinate ring of the seed curve. -/
 def seedCurveMap (C₀ : ConstantSeeds) [Fact (Irreducible C₀)]
     (h : RingHom.ker (genericSeedMap C₀) = seedEquation C₀) :
     (Seeds ⧸ seedEquation C₀) →+* ConstantSeedX C₀ :=
   Ideal.Quotient.lift (seedEquation C₀) (genericSeedMap C₀) fun _ hf =>
     RingHom.mem_ker.mp (h.symm ▸ hf)
-
-/-- The generic seed evaluation presents the fraction field of the seed curve. -/
 structure SeedLocalization (C₀ : ConstantSeeds) [Fact (Irreducible C₀)] : Prop where
   kernel : RingHom.ker (genericSeedMap C₀) = seedEquation C₀
   localized : letI : Algebra (Seeds ⧸ seedEquation C₀) (ConstantSeedX C₀) :=
     (seedCurveMap C₀ kernel).toAlgebra
     IsFractionRing (Seeds ⧸ seedEquation C₀) (ConstantSeedX C₀)
-
-/-- Write the root ambient ring as the polynomial ring in its last coordinate Y. -/
 def rootView : RootAmbient ≃ₐ[FX] Seeds[X] :=
   (MvPolynomial.renameEquiv FX finSuccEquivLast).trans (MvPolynomial.optionEquivLeft FX (Fin 2))
-
 end
 end K1_14_2_4_1_1
-end PackSource_K1_14_2_4_1_1Defs
-
-section PackSource_K1_14_2_4_1_1Aux1
-set_option autoImplicit true
+end
+section
 set_option autoImplicit false
 set_option backward.isDefEq.respectTransparency false
-
 namespace K1_14_2_4_1_1
-
 noncomputable section
-
 open K1 K1_14 K1_14_2 K1_14_2_4_1 K1_14_2_3_1
 open scoped Polynomial
-
 private theorem root_index_zero : finSuccEquivLast (0 : Fin 3) = some 0 := rfl
 private theorem root_index_one : finSuccEquivLast (1 : Fin 3) = some 1 := rfl
 private theorem root_index_two : finSuccEquivLast (2 : Fin 3) = none := finSuccEquivLast_last
-
 theorem rootView_seed : (rootView.toRingEquiv.toRingHom).comp rootSeeds = Polynomial.C := by
   apply MvPolynomial.ringHom_ext
   · intro a
     simp [rootView, rootSeeds]
   · intro i
     fin_cases i <;> simp [rootView, rootSeeds, root_index_zero, root_index_one]
-
 theorem genericRootMap_eq (C₀ : ConstantSeeds) [Fact (Irreducible C₀)] :
     genericRootMap C₀ =
       (Polynomial.mapRingHom (genericSeedMap C₀)).comp rootView.toRingEquiv.toRingHom := by
@@ -1510,9 +1308,6 @@ theorem genericRootMap_eq (C₀ : ConstantSeeds) [Fact (Irreducible C₀)] :
   · intro i
     fin_cases i <;> simp [genericRootMap, genericSeedMap, rootView, root_index_zero,
       root_index_one, root_index_two]
-
-/-- Once the base is localized, prime extension and contraction are the ordinary
-localization correspondence for a polynomial ring. -/
 theorem exists_generic_prime (C₀ : ConstantSeeds) [Fact (Irreducible C₀)]
     (hC : SeedLocalization C₀) (J : Ideal RootAmbient) (hJ : J.IsPrime)
     (hseed : J.comap rootSeeds = seedEquation C₀) :
@@ -1570,8 +1365,6 @@ theorem exists_generic_prime (C₀ : ConstantSeeds) [Fact (Irreducible C₀)]
   ext f
   change f ∈ J ↔ e.symm (e f) ∈ J
   rw [e.symm_apply_apply]
-
-/-- Restricting to the independent generic line retains the entire seed curve degree. -/
 theorem seed_section_rank (C₀ : ConstantSeeds) :
     Module.finrank SeedField (PlaneSlice (seedEquation C₀)) = C₀.totalDegree := by
   rw [(lineQuotientEquiv (seedEquation C₀)).toLinearEquiv.finrank_eq,
@@ -1579,7 +1372,6 @@ theorem seed_section_rank (C₀ : ConstantSeeds) :
     totalDegree_lineRestriction]
   unfold MvPolynomial.totalDegree
   rw [MvPolynomial.support_map_of_injective _ (RingHom.injective _)]
-
 theorem seed_degree_pos (C₀ : ConstantSeeds) (hC : Irreducible C₀) : 0 < C₀.totalDegree := by
   by_contra! hn
   have h := MvPolynomial.totalDegree_eq_zero_iff_eq_C.mp (Nat.eq_zero_of_le_zero hn)
@@ -1587,28 +1379,18 @@ theorem seed_degree_pos (C₀ : ConstantSeeds) (hC : Irreducible C₀) : 0 < C�
     intro hz
     exact hC.ne_zero (by simpa [hz] using h)
   exact hC.not_isUnit (h ▸ hc.isUnit.map MvPolynomial.C)
-
 end
 end K1_14_2_4_1_1
-end PackSource_K1_14_2_4_1_1Aux1
-
-section PackSource_K1_14_2_4_1_1Split
-set_option autoImplicit true
+end
+section
 set_option autoImplicit false
 set_option backward.isDefEq.respectTransparency false
-
 namespace K1_14_2_4_1_1
-
 noncomputable section
-
 open K1 K1_14 K1_14_2 K1_14_2_4_1 K1_14_2_3_1
 open scoped Polynomial
-
-/-- Identify the function field of the constant seed curve with independent X. -/
 def c1 : Prop :=
   ∀ (C₀ : ConstantSeeds) [Fact (Irreducible C₀)], SeedLocalization C₀
-
-/-- The ratio of the two generic line lengths is the relative degree in Y. -/
 def c2 : Prop :=
   ∀ (C₀ : ConstantSeeds) [Fact (Irreducible C₀)] (J : Ideal RootAmbient)
     (P : Ideal (ConstantSeedX C₀)[X]), SeedLocalization C₀ →
@@ -1618,9 +1400,6 @@ def c2 : Prop :=
     Module.finrank SeedField (RootSeedSection J) =
       Module.finrank SeedField (PlaneSlice (seedEquation C₀)) *
         Module.finrank (ConstantSeedX C₀) ((ConstantSeedX C₀)[X] ⧸ P)
-
-/-- Clearing X-denominators and dividing by the resulting X-content changes the
-generic Y-polynomial by a unit. -/
 theorem primitive_equation (C₀ : ConstantSeeds) [Fact (Irreducible C₀)]
     (f : (ConstantSeedX C₀)[X]) (hf : f ≠ 0) :
     ∃ q : ((ConstantSeedField C₀)[X])[X],
@@ -1659,7 +1438,6 @@ theorem primitive_equation (C₀ : ConstantSeeds) [Fact (Irreducible C₀)]
   · apply hq.symm.trans
     rw [he]
     exact associated_unit_mul_left _ _ ((isUnit_iff_ne_zero.mpr hbn).map Polynomial.C)
-
 theorem of_children (h1 : c1) (h2 : c2) : K1_14_2_4_1.c1 := by
   intro C₀ hC J g hJ hseed hfinite hrank hg
   have hCdeg := seed_degree_pos C₀ hC.out
@@ -1695,37 +1473,25 @@ theorem of_children (h1 : c1) (h2 : c2) : K1_14_2_4_1.c1 := by
     irreducible := hassoc.symm.irreducible hfi
     contraction := hcontract.trans (congrArg (fun I => I.comap (genericRootMap C₀))
       (hfspan.symm.trans (Ideal.span_singleton_eq_span_singleton.mpr hassoc).symm)) }⟩
-
 end
 end K1_14_2_4_1_1
-end PackSource_K1_14_2_4_1_1Split
-
-section PackSource_K1_14_2_2_2_6_1Incidence
-set_option autoImplicit true
+end
+section
 set_option autoImplicit false
 set_option backward.isDefEq.respectTransparency false
 set_option maxHeartbeats 1200000
-
 namespace K1_14_2_2_2_6_1
-
 noncomputable section
-
 open K1 K1_14 K1_14_2 K1_14_2_2 K1_14_2_3 K1_14_2_2_2_6 Polynomial
 open scoped Polynomial
-
 abbrev Params := MvPolynomial (Fin 4) FX
 abbrev Double (R : Type) [CommRing R] := R[X][X]
 private abbrev Triple (R : Type) [CommRing R] := R[X][X][X]
-
 private def constants {R : Type} [CommRing R] : R →+* Triple R :=
   Polynomial.C.comp (Polynomial.C.comp Polynomial.C)
-
 def integralRestriction : Seeds →+* Params[X] :=
   MvPolynomial.eval₂Hom (Polynomial.C.comp MvPolynomial.C)
     (K1_14_2_3_1.lineValues (MvPolynomial.X 0) (MvPolynomial.X 2))
-
-/-- The variables of the iterated ring, from outermost to innermost, are
-the seed slope, the jet intercept, and the jet slope. -/
 private def parameterToTriple : Params →+* Triple Seeds :=
   let x : Fin 4 → Triple Seeds :=
     ![Polynomial.X, Polynomial.C (Polynomial.C Polynomial.X),
@@ -1733,21 +1499,17 @@ private def parameterToTriple : Params →+* Triple Seeds :=
         Polynomial.X * constants (MvPolynomial.X (1 : Fin 2) : Seeds),
       Polynomial.C Polynomial.X]
   MvPolynomial.eval₂Hom ((constants (R := Seeds)).comp (MvPolynomial.C : FX →+* Seeds)) x
-
 private def toTriple : Params[X] →+* Triple Seeds :=
   Polynomial.eval₂RingHom parameterToTriple (constants (MvPolynomial.X 1))
-
 private def fromTriple : Triple Seeds →+* Params[X] :=
   Polynomial.eval₂RingHom
     (Polynomial.eval₂RingHom
       (Polynomial.eval₂RingHom integralRestriction (Polynomial.C (MvPolynomial.X 1)))
       (Polynomial.C (MvPolynomial.X 3)))
     (Polynomial.C (MvPolynomial.X 0))
-
 private theorem fromTriple_constants (f : Seeds) :
     fromTriple (constants f) = integralRestriction f := by
   simp [fromTriple, constants, RingHom.comp_apply]
-
 private theorem fromTriple_left : fromTriple.comp toTriple = RingHom.id _ := by
   have h : fromTriple.comp parameterToTriple = Polynomial.C := by
     apply MvPolynomial.ringHom_ext
@@ -1763,7 +1525,6 @@ private theorem fromTriple_left : fromTriple.comp toTriple = RingHom.id _ := by
     simpa [RingHom.comp_apply, toTriple] using RingHom.congr_fun h a
   · simp [RingHom.comp_apply, toTriple, fromTriple_constants, integralRestriction,
       K1_14_2_3_1.lineValues]
-
 private theorem toTriple_restriction (f : Seeds) :
     toTriple (integralRestriction f) = constants f := by
   suffices toTriple.comp integralRestriction = constants by
@@ -1781,28 +1542,21 @@ private theorem toTriple_restriction (f : Seeds) :
       simp [toTriple, parameterToTriple]
       exact add_sub_cancel_right (constants (MvPolynomial.X (0 : Fin 2) : Seeds)) _
     · simp [toTriple, integralRestriction, K1_14_2_3_1.lineValues]
-
 abbrev coords (I : Ideal Ambient) (i : Fin 4) : Double (Surface I) :=
   Polynomial.C (Polynomial.C (coord I i))
-
-/-- Substitute the two free slopes and their corresponding intercepts. -/
 def rawParameters (I : Ideal Ambient) : Params →+* Double (Surface I) :=
   MvPolynomial.eval₂Hom
     (Polynomial.C.comp (Polynomial.C.comp (algebraMap FX (Surface I))))
     ![Polynomial.X, Polynomial.C Polynomial.X,
       coords I 0 + Polynomial.X * coords I 1,
       coords I 2 + Polynomial.C Polynomial.X * coords I 3]
-
 def rawEval (I : Ideal Ambient) : Params[X] →+* Double (Surface I) :=
   Polynomial.eval₂RingHom (rawParameters I) (coords I 1)
-
 private def tripleQuotient (I : Ideal Ambient) : Triple Seeds →+* Triple (Image I) :=
   Polynomial.mapRingHom (Polynomial.mapRingHom (Polynomial.mapRingHom (Ideal.Quotient.mk (seedImage I))))
-
 private def tripleJet (I : Ideal Ambient) : Triple (Image I) →+* Double (Surface I) :=
   Polynomial.mapRingHom
     (lineEval (B := Image I) (A := Surface I) (imageToSurface I) (coord I 2) (coord I 3))
-
 private theorem rawEval_factor (I : Ideal Ambient) :
     rawEval I = (tripleJet I).comp ((tripleQuotient I).comp toTriple) := by
   have h : rawParameters I = (tripleJet I).comp ((tripleQuotient I).comp parameterToTriple) := by
@@ -1821,7 +1575,6 @@ private theorem rawEval_factor (I : Ideal Ambient) :
     simpa [rawEval, RingHom.comp_apply, toTriple] using RingHom.congr_fun h a
   · simp [rawEval, RingHom.comp_apply, toTriple, constants, tripleQuotient,
       tripleJet, lineEval, coords, coord, imageToSurface, rootIncl, rootSeeds]
-
 theorem rawEval_eq_zero_iff (I : Ideal Ambient) [I.IsPrime]
     (hdim : ringKrullDim (Surface I) = 2) (f : Seeds) (hf : f ≠ 0)
     (hgen : seedImage I = Ideal.span {f}) (q : Params[X]) :
@@ -1848,13 +1601,11 @@ theorem rawEval_eq_zero_iff (I : Ideal Ambient) [I.IsPrime]
     refine ⟨toTriple a, ?_⟩
     rw [ha, map_mul, toTriple_restriction]
     exact mul_comm (toTriple a) (constants f)
-
 theorem seedParameters_generic (i : Fin 2) :
     seedParameters (generic i) = sliceParameter (![0, 2] i) := by
   unfold generic seedParameters
   rw [IsFractionRing.lift_algebraMap]
   simp [sliceParameter]
-
 theorem seedParameters_base (a : FX) :
     seedParameters (algebraMap FX SeedField a) = algebraMap FX SectionField a := by
   change seedParameters (algebraMap Seeds SeedField (MvPolynomial.C a)) =
@@ -1862,7 +1613,6 @@ theorem seedParameters_base (a : FX) :
   unfold seedParameters
   rw [IsFractionRing.lift_algebraMap]
   simp
-
 theorem restriction_eval (f : Seeds) :
     mixedSeedRestriction f =
       MvPolynomial.eval₂Hom (Polynomial.C.comp (algebraMap FX SectionField))
@@ -1879,7 +1629,6 @@ theorem restriction_eval (f : Seeds) :
     fin_cases i <;>
       simp [RingHom.comp_apply, K1_14_2_3_1.lineRestriction, K1_14_2_3_1.eliminate,
         K1_14_2_3_1.lineValues, seedParameters_generic]
-
 theorem restriction_map (f : Seeds) :
     (integralRestriction f).map (algebraMap Params SectionField) = mixedSeedRestriction f := by
   rw [restriction_eval]
@@ -1894,10 +1643,6 @@ theorem restriction_map (f : Seeds) :
   · intro i
     fin_cases i <;> simp [integralRestriction, K1_14_2_3_1.lineValues,
       sliceParameter]
-
-/-- There is no relation over the ground field among the four incidence
-parameters. The only relation after adjoining the free seed coordinate has
-positive degree in that coordinate. -/
 theorem rawParameters_injective (I : Ideal Ambient) [I.IsPrime]
     (hdim : ringKrullDim (Surface I) = 2) (f : Seeds) (hf : f ≠ 0)
     (hgen : seedImage I = Ideal.span {f}) :
@@ -1921,30 +1666,20 @@ theorem rawParameters_injective (I : Ideal Ambient) [I.IsPrime]
   have := Polynomial.natDegree_le_of_dvd hdiv (Polynomial.C_ne_zero.mpr hn)
   simp at this
   omega
-
 end
 end K1_14_2_2_2_6_1
-end PackSource_K1_14_2_2_2_6_1Incidence
-
-section PackSource_K1_14_2_4_1_1_1Proof
-set_option autoImplicit true
+end
+section
 set_option autoImplicit false
 set_option backward.isDefEq.respectTransparency false
-
 namespace K1_14_2_4_1_1_1
-
 noncomputable section
-
 open K1_14 K1_14_2_4_1 K1_14_2_4_1_1
 open scoped Polynomial
-
 private abbrev PolynomialSeeds := MvPolynomial (Fin 2) L[X]
-
-/-- Move the independent univariate indeterminate into the coefficient ring. -/
 private def exchangeX : ConstantSeeds[X] ≃+* PolynomialSeeds :=
   ((MvPolynomial.optionEquivLeft L (Fin 2)).symm.trans
     (MvPolynomial.optionEquivRight L (Fin 2))).toRingEquiv
-
 private theorem exchange_constant (a : ConstantSeeds) :
     exchangeX (Polynomial.C a) = MvPolynomial.map Polynomial.C a := by
   have h : exchangeX.toRingHom.comp Polynomial.C = MvPolynomial.map Polynomial.C := by
@@ -1958,39 +1693,30 @@ private theorem exchange_constant (a : ConstantSeeds) :
         ((MvPolynomial.optionEquivLeft L (Fin 2)).symm (Polynomial.C (MvPolynomial.X i))) = _
       simp
   exact DFunLike.congr_fun h a
-
 private theorem exchange_indeterminate :
     exchangeX Polynomial.X = MvPolynomial.C Polynomial.X := by
   change MvPolynomial.optionEquivRight L (Fin 2)
     ((MvPolynomial.optionEquivLeft L (Fin 2)).symm Polynomial.X) = _
   simp
-
 private def baseChange : PolynomialSeeds →+* Seeds :=
   MvPolynomial.map (algebraMap L[X] FX)
-
 private def quotientPolynomial (C₀ : ConstantSeeds) :
     ConstantSeeds[X] →+* (ConstantSeedRing C₀)[X] :=
   Polynomial.mapRingHom (Ideal.Quotient.mk (constantIdeal C₀))
-
 private def intoFunctionField (C₀ : ConstantSeeds) :
     (ConstantSeedRing C₀)[X] →+* ConstantSeedX C₀ :=
   (insertX C₀).comp (Polynomial.mapRingHom
     (algebraMap (ConstantSeedRing C₀) (ConstantSeedField C₀)))
-
 private theorem intoFunctionField_injective (C₀ : ConstantSeeds) [Fact (Irreducible C₀)] :
     Function.Injective (intoFunctionField C₀) :=
   (IsFractionRing.injective (ConstantSeedField C₀)[X] (ConstantSeedX C₀)).comp
     (Polynomial.map_injective _ (IsFractionRing.injective
       (ConstantSeedRing C₀) (ConstantSeedField C₀)))
-
 private theorem extend_on_polynomial (C₀ : ConstantSeeds) [Fact (Irreducible C₀)] (p : L[X]) :
     extendX C₀ (algebraMap L[X] FX p) = insertX C₀ (p.map (constToSeed C₀)) := by
   unfold extendX IsFractionRing.map
   rw [IsLocalization.map_eq]
   rfl
-
-/-- The prescribed generic evaluation agrees with quotienting coefficients before
-inverting denominators. -/
 private theorem generic_comp (C₀ : ConstantSeeds) [Fact (Irreducible C₀)] :
     (genericSeedMap C₀).comp (baseChange.comp exchangeX.toRingHom) =
       (intoFunctionField C₀).comp (quotientPolynomial C₀) := by
@@ -2010,7 +1736,6 @@ private theorem generic_comp (C₀ : ConstantSeeds) [Fact (Irreducible C₀)] :
       intoFunctionField C₀ (quotientPolynomial C₀ Polynomial.X)
     simp [exchange_indeterminate, baseChange, genericSeedMap, intoFunctionField,
       quotientPolynomial, extend_on_polynomial]
-
 private theorem generic_kernel (C₀ : ConstantSeeds) [Fact (Irreducible C₀)] :
     RingHom.ker (genericSeedMap C₀) = seedEquation C₀ := by
   let : Algebra PolynomialSeeds Seeds := MvPolynomial.algebraMvPolynomial
@@ -2032,9 +1757,7 @@ private theorem generic_kernel (C₀ : ConstantSeeds) [Fact (Irreducible C₀)] 
   change Ideal.span {baseChange (exchangeX (Polynomial.C C₀))} = seedEquation C₀
   rw [exchange_constant]
   simp only [baseChange, seedEquation, MvPolynomial.map_map]
-
 attribute [local instance] Polynomial.algebra in
-/-- A common coefficient denominator gives a fraction over the polynomial ring of the base. -/
 private theorem polynomial_fractions (R F E : Type*) [CommRing R] [Field F] [Field E]
     [Algebra R F] [IsFractionRing R F] [Algebra F[X] E] [IsFractionRing F[X] E]
     (z : E) :
@@ -2057,8 +1780,6 @@ private theorem polynomial_fractions (R F E : Type*) [CommRing R] [Field F] [Fie
   refine ⟨a, b, ?_⟩
   rw [← ha', ← hb', mul_div_mul_right _ _ ht]
   exact hz.symm
-
-/-- A field generated by fractions of the image is a fraction field of the kernel quotient. -/
 private theorem quotient_isFractionRing {R F : Type*} [CommRing R] [Field F]
     (f : R →+* F) (I : Ideal R) (h : RingHom.ker f = I)
     (hfractions : ∀ z : F, ∃ a b : R, z = f a / f b) :
@@ -2075,8 +1796,6 @@ private theorem quotient_isFractionRing {R F : Type*} [CommRing R] [Field F]
   intro z
   obtain ⟨a, b, hz⟩ := hfractions z
   exact ⟨Ideal.Quotient.mk I a, Ideal.Quotient.mk I b, hz⟩
-
-/-- The constant seed curve over the independent abscissa has function field L(C₀)(X). -/
 theorem proof : K1_14_2_4_1_1.c1 := by
   intro C₀ hC
   let k := generic_kernel C₀
@@ -2093,47 +1812,34 @@ theorem proof : K1_14_2_4_1_1.c1 := by
     ((genericSeedMap C₀).comp (baseChange.comp exchangeX.toRingHom)) b'
   rw [generic_comp]
   exact hz
-
 end
 end K1_14_2_4_1_1_1
-end PackSource_K1_14_2_4_1_1_1Proof
-
-section PackSource_K1_14_2_2_2_6_1Proof
-set_option autoImplicit true
+end
+section
 set_option autoImplicit false
 set_option backward.isDefEq.respectTransparency false
 set_option maxHeartbeats 1200000
-
 namespace K1_14_2_2_2_6_1
-
 noncomputable section
-
 open K1 K1_14 K1_14_2 K1_14_2_2 K1_14_2_3 K1_14_2_2_2_6 Polynomial
 open scoped Polynomial
-
 private abbrev mixedIdeal (I : Ideal Ambient) :=
   I.map sectionBase ⊔ Ideal.span {sectionSeedLine, sectionJetLine}
-
 private abbrev FieldOf (I : Ideal Ambient) [I.IsPrime] :=
   FractionRing (Double (Surface I))
-
 private abbrev embed (I : Ideal Ambient) [I.IsPrime] :
     Double (Surface I) →+* FieldOf I := algebraMap _ _
-
 private def coefficients (I : Ideal Ambient) [I.IsPrime]
     (h : Function.Injective (rawParameters I)) : SectionField →+* FieldOf I :=
   IsFractionRing.lift (g := (embed I).comp (rawParameters I))
     ((IsFractionRing.injective (Double (Surface I)) (FieldOf I)).comp h)
-
 private theorem coefficients_apply (I : Ideal Ambient) [I.IsPrime]
     (h : Function.Injective (rawParameters I)) (d : Params) :
     coefficients I h (algebraMap Params SectionField d) = embed I (rawParameters I d) :=
   IsFractionRing.lift_algebraMap _ d
-
 private def evalInField (I : Ideal Ambient) [I.IsPrime]
     (h : Function.Injective (rawParameters I)) : SectionAmbient →+* FieldOf I :=
   MvPolynomial.eval₂Hom (coefficients I h) (fun i => embed I (coords I i))
-
 private theorem evalInField_base (I : Ideal Ambient) [I.IsPrime]
     (h : Function.Injective (rawParameters I)) :
     (evalInField I h).comp sectionBase =
@@ -2146,7 +1852,6 @@ private theorem evalInField_base (I : Ideal Ambient) [I.IsPrime]
     rfl
   · intro i
     simp [evalInField, sectionBase, RingHom.comp_apply]
-
 private def mixedToField (I : Ideal Ambient) [I.IsPrime]
     (h : Function.Injective (rawParameters I)) : OverMixed I →+* FieldOf I :=
   Ideal.Quotient.lift (mixedIdeal I) (evalInField I h) <| by
@@ -2161,15 +1866,12 @@ private def mixedToField (I : Ideal Ambient) [I.IsPrime]
         simp [RingHom.mem_ker, sectionSeedLine, sectionJetLine, evalInField,
           sliceParameter, coefficients_apply, rawParameters, coords]
       all_goals ring
-
 private theorem mixed_scalar (I : Ideal Ambient) (a : SectionField) :
     Ideal.Quotient.mk (mixedIdeal I) (MvPolynomial.C a) = algebraMap SectionField (OverMixed I) a := by
   simpa only [MvPolynomial.algebraMap_eq] using
     (Ideal.Quotient.mk_algebraMap (R₁ := SectionField) (mixedIdeal I) a)
-
 private def seedEval (I : Ideal Ambient) : SectionField[X] →ₐ[SectionField] OverMixed I :=
   Polynomial.aeval (Ideal.Quotient.mk (mixedIdeal I) (MvPolynomial.X 1))
-
 private theorem seedEval_restriction (I : Ideal Ambient) (f : Seeds)
     (hf : f ∈ seedImage I) : seedEval I (mixedSeedRestriction f) = 0 := by
   let π := Ideal.Quotient.mk (mixedIdeal I)
@@ -2200,7 +1902,6 @@ private theorem seedEval_restriction (I : Ideal Ambient) (f : Seeds)
   exact (RingHom.congr_fun he f).trans (Ideal.Quotient.eq_zero_iff_mem.mpr
     ((show I.map sectionBase ≤ mixedIdeal I from le_sup_left)
       (Ideal.mem_map_of_mem sectionBase (show K1_14_2_2_2_6_1.seedIncl f ∈ I from hf))))
-
 private theorem seedEval_toField (I : Ideal Ambient) [I.IsPrime]
     (h : Function.Injective (rawParameters I)) :
     (mixedToField I h).comp (seedEval I).toRingHom =
@@ -2213,8 +1914,6 @@ private theorem seedEval_toField (I : Ideal Ambient) [I.IsPrime]
     rw [ha, ← mixed_scalar I a]
     simp [mixedToField, evalInField]
   · simp [mixedToField, evalInField, seedEval, RingHom.comp_apply]
-
-/-- The mixed section contains the scheme-theoretic generic seed-line section. -/
 theorem proof : K1_14_2_2_2_6.c1 := by
   intro I hI hdim _ f hf hgen
   let : I.IsPrime := hI
@@ -2261,39 +1960,29 @@ theorem proof : K1_14_2_2_2_6.c1 := by
       (mem_nonZeroDivisors_iff_ne_zero.mp hd))
   exact Ideal.Quotient.eq_zero_iff_mem.mpr
     (Ideal.mem_span_singleton.mpr ((hdunit.map Polynomial.C).dvd_mul_left.mp hdiv))
-
 end
 end K1_14_2_2_2_6_1
-end PackSource_K1_14_2_2_2_6_1Proof
-
-section PackSource_K1_14_2_2_3_2Aux2
-set_option autoImplicit true
+end
+section
 set_option autoImplicit false
 set_option backward.isDefEq.respectTransparency false
 set_option maxHeartbeats 1000000
-
 namespace K1_14_2_2_3_2
-
 noncomputable section
-
 open Polynomial
 open scoped BigOperators Polynomial
-
 private theorem fin_two_sum (e : Fin 2 →₀ ℕ) : e.sum (fun _ m => m) = e 0 + e 1 := by
   simp [Finsupp.sum_of_support_subset e (Finset.subset_univ e.support)]
-
 def integralRestriction {F : Type} [Field F] :
     MvPolynomial (Fin 2) F →+* (MvPolynomial (Fin 2) F)[X] :=
   MvPolynomial.eval₂Hom (Polynomial.C.comp (MvPolynomial.C : F →+* MvPolynomial (Fin 2) F))
     (K1_14_2_3_1.lineValues (R := MvPolynomial (Fin 2) F) (MvPolynomial.X 0) (MvPolynomial.X 1))
-
 private theorem lineValue_natDegree {R : Type} [CommRing R] (s t : R) :
     (K1_14_2_3_1.lineValues s t 0).natDegree ≤ 1 := by
   change (Polynomial.C t - Polynomial.C s * (Polynomial.X : R[X])).natDegree ≤ 1
   have hs : (Polynomial.C s * (Polynomial.X : R[X])).natDegree ≤ 1 := by
     simpa only [pow_one] using natDegree_C_mul_X_pow_le s 1
   exact (natDegree_sub_le _ _).trans (max_le (by simp) hs)
-
 private theorem coeff_integralRestriction_monomial {F : Type} [Field F]
     (e : Fin 2 →₀ ℕ) (a : F) (d : ℕ)
     (he : e 0 + e 1 ≤ d) :
@@ -2317,9 +2006,6 @@ private theorem coeff_integralRestriction_monomial {F : Type} [Field F]
     simp
   · rw [coeff_eq_zero_of_natDegree_lt, mul_zero]
     exact (natDegree_mul_le_of_le hpow hXpow).trans_lt (lt_of_le_of_ne he heq)
-
-/-- At the total degree the monomials of a plane equation give distinct
-powers of the independent slope. -/
 theorem coeff_line_totalDegree_ne_zero {F : Type} [Field F]
     {g : MvPolynomial (Fin 2) F} (hg : g ≠ 0) :
     (integralRestriction g).coeff g.totalDegree ≠ 0 := by
@@ -2374,27 +2060,19 @@ theorem coeff_line_totalDegree_ne_zero {F : Type} [Field F]
       exact hne (Finsupp.ext (by intro i; fin_cases i <;> assumption))
     simp [hdiff]
   · exact fun h => False.elim (h (Finset.mem_filter.mpr ⟨he, hde.symm⟩))
-
 end
 end K1_14_2_2_3_2
-end PackSource_K1_14_2_2_3_2Aux2
-
-section PackSource_K1_14_2_4_1_1_2Plane
-set_option autoImplicit true
+end
+section
 set_option autoImplicit false
 set_option backward.isDefEq.respectTransparency false
 set_option maxHeartbeats 1000000
-
 namespace K1_14_2_4_1_1_2
-
 noncomputable section
-
 open K1 K1_14 K1_14_2 K1_14_2_3_1 K1_14_2_4_1 K1_14_2_4_1_1
 open scoped Polynomial
-
 local instance (I : Ideal Seeds) : CommRing (CoordinateRing I)[X] :=
   @Polynomial.commRing (CoordinateRing I) (Ideal.Quotient.commRing I)
-
 private theorem plane_denominator (I : Ideal Seeds) (x : PlaneSlice I) :
     ∃ (q : (CoordinateRing I)[X]) (d : Seeds), d ∈ nonZeroDivisors Seeds ∧
       x * algebraMap SeedField (PlaneSlice I) (algebraMap Seeds SeedField d) =
@@ -2425,9 +2103,6 @@ private theorem plane_denominator (I : Ideal Seeds) (x : PlaneSlice I) :
       (map_mul _ _ _).symm
     _ = _ := (congrArg (Ideal.Quotient.mk (sectionIdeal I 0 1)) hgm').trans
       (RingHom.congr_fun hcomp g).symm
-
-/-- Clearing the parameter denominators reduces the domain assertion to the
-coordinate ring of the seed curve with an independent slope. -/
 private theorem plane_domain (I : Ideal Seeds) [I.IsPrime] [Nontrivial (PlaneSlice I)] :
     IsDomain (PlaneSlice I) := by
   let : IsDomain (CoordinateRing I) := Ideal.Quotient.isDomain I
@@ -2459,7 +2134,6 @@ private theorem plane_domain (I : Ideal Seeds) [I.IsPrime] [Nontrivial (PlaneSli
     exact (mul_ne_zero (numerator_ne x hne.1 q d hd hq) (numerator_ne y hne.2 r e he hr))
       ((injective_iff_map_eq_zero _).mp (slope_injective I 0 1) _ hprod)⟩
   exact NoZeroDivisors.to_isDomain _
-
 theorem plane_field (C₀ : ConstantSeeds) [h : Fact (Irreducible C₀)] (hC : SeedLocalization C₀) :
     IsField (PlaneSlice (seedEquation C₀)) := by
   have hpos : 0 < Module.finrank SeedField (PlaneSlice (seedEquation C₀)) := by
@@ -2471,45 +2145,33 @@ theorem plane_field (C₀ : ConstantSeeds) [h : Fact (Irreducible C₀)] (hC : S
   let : Module.Finite SeedField (PlaneSlice (seedEquation C₀)) := Module.finite_of_finrank_pos hpos
   exact isField_of_isIntegral_of_isField' (S := PlaneSlice (seedEquation C₀))
     (Field.toIsField SeedField)
-
 theorem toPlane_injective (I : Ideal Seeds) [I.IsPrime] [Nontrivial (PlaneSlice I)] :
     Function.Injective (toSlice I 0 1) := by
   intro a b hab
   apply Polynomial.C_injective
   apply slope_injective I 0 1
   simpa [slopeToSlice] using hab
-
 end
 end K1_14_2_4_1_1_2
-end PackSource_K1_14_2_4_1_1_2Plane
-
-section PackSource_K1_14_2_2_3_2Aux3
-set_option autoImplicit true
+end
+section
 set_option autoImplicit false
 set_option backward.isDefEq.respectTransparency false
 set_option maxHeartbeats 1000000
-
 namespace K1_14_2_2_3_2
-
 noncomputable section
-
 open K1_14 K1_14_2 K1_14_2_2 K1_14_2_2_3 Polynomial
 open scoped Polynomial
-
 private abbrev JetParams (I : Ideal Ambient) :=
   Polynomial (MvPolynomial (Fin 2) (JetImageField I))
-
 private abbrev MixedField (I : Ideal Ambient) := FractionRing (JetParams I)
-
 private def jetVal (I : Ideal Ambient) (i : Fin 2) : JetImageField I :=
   jetImageMap I (MvPolynomial.X i)
-
 private def paramOrder : Fin 4 ≃ Fin 4 where
   toFun := ![2, 0, 3, 1]
   invFun := ![1, 3, 0, 2]
   left_inv := by intro i; fin_cases i <;> rfl
   right_inv := by intro i; fin_cases i <;> rfl
-
 private def coefficientParams (I : Ideal Ambient) :
     MvPolynomial (Fin 3) FX →+* JetParams I :=
   MvPolynomial.eval₂Hom
@@ -2517,7 +2179,6 @@ private def coefficientParams (I : Ideal Ambient) :
     ![Polynomial.C (MvPolynomial.C (jetVal I 0)) +
         Polynomial.X * Polynomial.C (MvPolynomial.C (jetVal I 1)),
       Polynomial.C (MvPolynomial.X 0), Polynomial.C (MvPolynomial.X 1)]
-
 private theorem coefficientParams_injective_at_zero {I : Ideal Ambient} (hI : Active I)
     [(I.comap jetInclude).IsPrime] :
     Function.Injective (constantCoeff.comp (coefficientParams I)) := by
@@ -2561,7 +2222,6 @@ private theorem coefficientParams_injective_at_zero {I : Ideal Ambient} (hI : Ac
         fin_cases j <;> simp
   rw [he]
   exact (MvPolynomial.map_injective _ ha).comp b.injective
-
 private theorem eval_X_injective_of_constantCoeff {A B : Type*} [CommRing A] [CommRing B]
     [IsDomain B] (f : A →+* B[X]) (hf : Function.Injective (constantCoeff.comp f)) :
     Function.Injective (eval₂RingHom f Polynomial.X) := by
@@ -2587,34 +2247,28 @@ private theorem eval_X_injective_of_constantCoeff {A B : Type*} [CommRing A] [Co
     have hX : e Polynomial.X = Polynomial.X := by simp [e]
     rw [map_mul, hX] at hz
     rw [ih ((mul_eq_zero.mp hz).resolve_right X_ne_zero), zero_mul]
-
 private def sectionParams (I : Ideal Ambient) :
     MvPolynomial (Fin 4) FX →+* JetParams I :=
   (eval₂RingHom (coefficientParams I) Polynomial.X).comp
     ((MvPolynomial.finSuccEquiv FX 3).toRingHom.comp (MvPolynomial.renameEquiv FX paramOrder).toRingHom)
-
 private theorem sectionParams_injective {I : Ideal Ambient} (hI : Active I)
     [(I.comap jetInclude).IsPrime] : Function.Injective (sectionParams I) :=
   (eval_X_injective_of_constantCoeff _ (coefficientParams_injective_at_zero hI)).comp
     ((MvPolynomial.finSuccEquiv FX 3).injective.comp (MvPolynomial.renameEquiv FX paramOrder).injective)
-
 private def sectionCoeff {I : Ideal Ambient} (hI : Active I)
     [(I.comap jetInclude).IsPrime] : SectionField →+* MixedField I :=
   IsFractionRing.lift (K := SectionField)
     (g := (algebraMap (JetParams I) (MixedField I)).comp (sectionParams I))
     ((IsFractionRing.injective (JetParams I) (MixedField I)).comp (sectionParams_injective hI))
-
 private def seedCoeff (I : Ideal Ambient) :
     MvPolynomial (Fin 2) (JetImageField I) →+* MixedField I :=
   (algebraMap (JetParams I) (MixedField I)).comp Polynomial.C
-
 private theorem sectionCoeff_C {I : Ideal Ambient} (hI : Active I)
     [(I.comap jetInclude).IsPrime] (c : FX) :
     sectionCoeff hI (algebraMap FX SectionField c) =
       seedCoeff I (MvPolynomial.C (jetImageMap I (MvPolynomial.C c))) := by
   rw [IsScalarTower.algebraMap_apply FX (MvPolynomial (Fin 4) FX) SectionField]
   simp [sectionCoeff, sectionParams, coefficientParams, seedCoeff, MvPolynomial.finSuccEquiv_apply]
-
 private theorem sectionParams_X (I : Ideal Ambient) (i : Fin 4) :
     sectionParams I (MvPolynomial.X i) =
       ![Polynomial.C (MvPolynomial.X 0), Polynomial.X, Polynomial.C (MvPolynomial.X 1),
@@ -2640,7 +2294,6 @@ private theorem sectionParams_X (I : Ideal Ambient) (i : Fin 4) :
       (MvPolynomial.finSuccEquiv FX 3 (MvPolynomial.X (0 : Fin 3).succ)) = _
     rw [MvPolynomial.finSuccEquiv_X_succ]
     simp [coefficientParams]
-
 private theorem sectionCoeff_params {I : Ideal Ambient} (hI : Active I)
     [(I.comap jetInclude).IsPrime] (i : Fin 4) :
     sectionCoeff hI (sliceParameter i) =
@@ -2652,7 +2305,6 @@ private theorem sectionCoeff_params {I : Ideal Ambient} (hI : Active I)
   rw [IsFractionRing.lift_algebraMap, RingHom.comp_apply, sectionParams_X]
   fin_cases i <;> simp [seedCoeff, RingHom.comp_apply]
   exact mul_comm _ _
-
 set_option maxHeartbeats 2000000 in
 theorem degree_le_mixed {I : Ideal Ambient} (hI : Active I)
     (g : MvPolynomial (Fin 2) (JetImageField I)) (hg : g ≠ 0)
@@ -2780,27 +2432,19 @@ theorem degree_le_mixed {I : Ideal Ambient} (hI : Active I)
       (by simpa only [Algebra.smul_def] using hh) i
     exact s.injective (hz.trans (map_zero s).symm)
   exact (le_natDegree_of_ne_zero hcoeff).trans (by simpa using hlin.fintype_card_le_finrank)
-
 end
 end K1_14_2_2_3_2
-end PackSource_K1_14_2_2_3_2Aux3
-
-section PackSource_K1_14_2_2_2_6_2Proof
-set_option autoImplicit true
+end
+section
 set_option autoImplicit false
 set_option backward.isDefEq.respectTransparency false
 set_option maxRecDepth 10000
 set_option maxHeartbeats 800000
-
 namespace K1_14_2_2_2_6_2
-
 noncomputable section
-
 open K1 K1_14 K1_14_2 K1_14_2_2 K1_14_2_3
 open scoped nonZeroDivisors
-
 private abbrev JetPlane (k : Type) [CommRing k] := MvPolynomial (Fin 2) k
-
 private theorem eval_seed_inclusion {k : Type} [CommRing k] (a b y v : k)
     (f : MvPolynomial (Fin 2) k) :
     MvPolynomial.eval ![a, b, y, v]
@@ -2814,9 +2458,6 @@ private theorem eval_seed_inclusion {k : Type} [CommRing k] (a b y v : k)
     funext i
     fin_cases i <;> rfl
   rw [hvec]
-
-/-- At an actual mark the maximal seed contraction is the ideal of its
-rational seed point. -/
 private theorem seedImage_eq_ker {I : Ideal Ambient} {z : K} {R : Polynomial K}
     (hm : (seedImage I).IsMaximal) (hmark : OnJet I z R) :
     seedImage I = RingHom.ker (graphEval z) := by
@@ -2826,7 +2467,6 @@ private theorem seedImage_eq_ker {I : Ideal Ambient} {z : K} {R : Polynomial K}
   have he : jetMarkHom z R ((rootIncl.comp rootSeeds) f) = graphEval z f :=
     eval_seed_inclusion (seedEmbedding z) (seedEmbedding z ^ p) (atX R) (atX R.derivative) f
   exact RingHom.mem_ker.mpr (he.symm.trans (RingHom.mem_ker.mp (hmark hmem)))
-
 private theorem seedRelations {I : Ideal Ambient} {z : K} {R : Polynomial K}
     (hm : (seedImage I).IsMaximal) (hmark : OnJet I z R) :
     (MvPolynomial.X 0 - MvPolynomial.C (seedEmbedding z) : Ambient) ∈ I ∧
@@ -2840,16 +2480,11 @@ private theorem seedRelations {I : Ideal Ambient} {z : K} {R : Polynomial K}
   have lift_mem (f : Seeds) (hf : f ∈ seedImage I) : rootIncl (rootSeeds f) ∈ I := hf
   exact ⟨by simpa [rootIncl, rootSeeds] using lift_mem _ h₀,
     by simpa [rootIncl, rootSeeds] using lift_mem _ h₁⟩
-
 private def jetIncl {k : Type} [CommRing k] : JetPlane k →+* MvPolynomial (Fin 4) k :=
   MvPolynomial.eval₂Hom MvPolynomial.C ![MvPolynomial.X 2, MvPolynomial.X 3]
-
 private def fixSeed {k : Type} [CommRing k] (a b : k) : MvPolynomial (Fin 4) k →+* JetPlane k :=
   MvPolynomial.eval₂Hom MvPolynomial.C
     ![MvPolynomial.C a, MvPolynomial.C b, MvPolynomial.X 0, MvPolynomial.X 1]
-
-/-- A two-dimensional surface over a rational seed point fills the jet
-plane. In particular the substitution fixing the seed annihilates its ideal. -/
 private theorem fixSeed_kills {k : Type} [Field k] {I : Ideal (MvPolynomial (Fin 4) k)}
     (hdim : ringKrullDim (CoordinateRing I) = 2) {a b : k}
     (h₀ : MvPolynomial.X 0 - MvPolynomial.C a ∈ I)
@@ -2897,9 +2532,6 @@ private theorem fixSeed_kills {k : Type} [Field k] {I : Ideal (MvPolynomial (Fin
   change (j.comp (fixSeed a b)) f = 0
   rw [hcomp]
   exact Ideal.Quotient.eq_zero_iff_mem.mpr hf
-
-/-- Specializing the free seeds in the generic jet slice gives a point over
-the field of generic jet parameters. -/
 private theorem jetSection_pos (I : Ideal Ambient) [Module.Finite SeedField (OverJets I)]
     (a b : FX) (hI : I ≤ RingHom.ker (fixSeed a b)) : 0 < sectionDegree I 3 := by
   let e : FibreRing →+* SeedField :=
@@ -2937,43 +2569,30 @@ private theorem jetSection_pos (I : Ideal Ambient) [Module.Finite SeedField (Ove
   let : Nontrivial (OverJets I) := Ideal.Quotient.nontrivial_iff.mpr hn
   change 0 < Module.finrank SeedField (OverJets I)
   exact (Module.finrank_pos_iff_of_free SeedField (OverJets I)).mpr inferInstance
-
 theorem proof : K1_14_2_2_2_6.c2 := by
   intro I _ hdim hm hfinite hmark
   let : Module.Finite SeedField (OverJets I) := hfinite
   obtain ⟨z, R, hon⟩ := hmark
   obtain ⟨h₀, h₁⟩ := seedRelations hm hon
   exact jetSection_pos I _ _ (fixSeed_kills hdim h₀ h₁)
-
 end
-
 end K1_14_2_2_2_6_2
-end PackSource_K1_14_2_2_2_6_2Proof
-
-section PackSource_K1_14_3_2_5_1Proof
-set_option autoImplicit true
+end
+section
 set_option autoImplicit false
 set_option backward.isDefEq.respectTransparency false
 set_option maxHeartbeats 1000000
-
 namespace K1_14_3_2_5_1
-
 noncomputable section
-
 open K1_14 K1_14_3 K1_14_3_2_5 Polynomial
 open scoped Polynomial
-
 private def substitute : SectionSeeds →ₐ[SectionField] SectionField[X] :=
   MvPolynomial.aeval (K1_14_2_3_1.lineValues (sectionParameter 0) (sectionParameter 2))
-
 private def restriction (f : Seeds) : SectionField[X] := substitute (seedBase f)
-
 private theorem substitute_line : substitute seedLine = 0 := by
   simp [substitute, K1_14_2_3_1.lineValues, seedLine, Polynomial.algebraMap_eq]
-
 private def restore (f : Seeds) : SectionField[X] →ₐ[SectionField] CurveSection f :=
   Polynomial.aeval (Ideal.Quotient.mk (curveSectionIdeal f) (MvPolynomial.X 1))
-
 private theorem restore_substitute (f : Seeds) :
     (restore f).comp substitute = Ideal.Quotient.mkₐ SectionField (curveSectionIdeal f) := by
   apply MvPolynomial.algHom_ext
@@ -2991,8 +2610,6 @@ private theorem restore_substitute (f : Seeds) :
     simpa [substitute, K1_14_2_3_1.lineValues, restore, Ideal.Quotient.mkₐ_eq_mk, J] using
       (eq_sub_iff_add_eq.mpr h).symm
   · simp [substitute, K1_14_2_3_1.lineValues, restore, Ideal.Quotient.mkₐ_eq_mk]
-
-/-- Eliminate the first seed coordinate and use the second as the polynomial variable. -/
 private def sectionEquiv (f : Seeds) :
     CurveSection f ≃ₐ[SectionField] (SectionField[X] ⧸ Ideal.span {restriction f}) := by
   let I : Ideal SectionField[X] := Ideal.span {restriction f}
@@ -3032,28 +2649,20 @@ private def sectionEquiv (f : Seeds) :
     rw [AlgHom.comp_assoc, hfrom, AlgHom.id_comp]
     change toSection.comp (B.comp substitute) = A
     rw [← AlgHom.comp_assoc, hto, restore_substitute]
-
 private def parameterIndices : Fin 2 → Fin 4 := ![0, 2]
-
 private theorem parameterIndices_injective : Function.Injective parameterIndices := by
   intro i j hij
   fin_cases i <;> fin_cases j <;> simp_all [parameterIndices]
-
 private def parameterMap : Seeds →+* SectionField :=
   (algebraMap (MvPolynomial (Fin 4) FX) SectionField).comp
     (MvPolynomial.rename parameterIndices).toRingHom
-
 private def extendParameters : K1_14_2.SeedField →+* SectionField :=
   IsFractionRing.lift (g := parameterMap)
     ((IsFractionRing.injective (MvPolynomial (Fin 4) FX) SectionField).comp
       (MvPolynomial.rename_injective parameterIndices parameterIndices_injective))
-
 private theorem extendParameters_apply (r : Seeds) :
     extendParameters (algebraMap Seeds K1_14_2.SeedField r) = parameterMap r :=
   IsFractionRing.lift_algebraMap _ r
-
-/-- The previously proved two-parameter restriction embeds coefficientwise
-into the full section field, so it keeps its univariate degree. -/
 private theorem restriction_map :
     (Polynomial.mapRingHom extendParameters).comp K1_14_2_3_1.lineRestriction =
       substitute.toRingHom.comp seedBase := by
@@ -3072,7 +2681,6 @@ private theorem restriction_map :
       simp [K1_14_2_3_1.lineRestriction, K1_14_2_3_1.eliminate, K1_14_2_3_1.lineValues,
         substitute, seedBase, K1_14_2.generic, extendParameters_apply, parameterMap,
         parameterIndices, sectionParameter]
-
 theorem proof : K1_14_3_2_5.c1 := by
   intro f _
   have hmap : restriction f = (K1_14_2_3_1.lineRestriction f).map extendParameters :=
@@ -3080,39 +2688,28 @@ theorem proof : K1_14_3_2_5.c1 := by
   rw [(sectionEquiv f).toLinearEquiv.finrank_eq, finrank_quotient_span_eq_natDegree, hmap,
     Polynomial.natDegree_map_eq_of_injective extendParameters.injective,
     K1_14_2_3_1.totalDegree_lineRestriction]
-
 end
 end K1_14_3_2_5_1
-end PackSource_K1_14_3_2_5_1Proof
-
-section PackSource_K1_14_2_4_1_1_2Proof
-set_option autoImplicit true
+end
+section
 set_option autoImplicit false
 set_option backward.isDefEq.respectTransparency false
 set_option maxHeartbeats 1000000
-
 namespace K1_14_2_4_1_1_2
-
 noncomputable section
-
 open K1 K1_14 K1_14_2 K1_14_2_3_1 K1_14_2_4_1 K1_14_2_4_1_1
 open scoped Polynomial
-
 local instance (I : Ideal Seeds) : CommRing (PlaneSlice I)[X] :=
   @Polynomial.commRing (PlaneSlice I) (Ideal.Quotient.commRing (sectionIdeal I 0 1))
-
 private def rootPolynomial (R : Type) [CommRing R] :
     MvPolynomial (Fin 3) R ≃ₐ[R] (MvPolynomial (Fin 2) R)[X] :=
   (MvPolynomial.renameEquiv R finSuccEquivLast).trans (MvPolynomial.optionEquivLeft R (Fin 2))
-
 private theorem root_index_zero : finSuccEquivLast (0 : Fin 3) = some 0 := rfl
 private theorem root_index_one : finSuccEquivLast (1 : Fin 3) = some 1 := rfl
 private theorem root_index_two : finSuccEquivLast (2 : Fin 3) = none := finSuccEquivLast_last
-
 private abbrev incl (R : Type) [CommRing R] :
     MvPolynomial (Fin 2) R →+* MvPolynomial (Fin 3) R :=
   (MvPolynomial.rename (Fin.castLE (by decide : 2 ≤ 3))).toRingHom
-
 private theorem rootPolynomial_incl (R : Type) [CommRing R] :
     (rootPolynomial R).toRingEquiv.toRingHom.comp (incl R) = Polynomial.C := by
   apply MvPolynomial.ringHom_ext
@@ -3120,10 +2717,8 @@ private theorem rootPolynomial_incl (R : Type) [CommRing R] :
     simp [rootPolynomial]
   · intro i
     fin_cases i <;> simp [rootPolynomial, root_index_zero, root_index_one]
-
 private abbrev toOver (n : ℕ) : Raw n →+* Over n :=
   MvPolynomial.map (algebraMap FX SeedField)
-
 private theorem incl_coeff :
     (incl SeedField).comp (toOver 2) = (toOver 3).comp rootSeeds := by
   apply MvPolynomial.ringHom_ext
@@ -3131,10 +2726,8 @@ private theorem incl_coeff :
     simp [rootSeeds]
   · intro i
     simp [rootSeeds]
-
 private theorem incl_line : incl SeedField (seedLine 0 1) = seedLine 0 1 := by
   simp [seedLine]
-
 private theorem root_coeff :
     (rootPolynomial SeedField).toRingEquiv.toRingHom.comp (toOver 3) =
       (Polynomial.mapRingHom (toOver 2)).comp rootView.toRingEquiv.toRingHom := by
@@ -3143,9 +2736,6 @@ private theorem root_coeff :
     simp [rootPolynomial, rootView]
   · intro i
     fin_cases i <;> simp [rootPolynomial, rootView, root_index_zero, root_index_one, root_index_two]
-
-/-- The seed quotient followed by coefficient localization recovers every
-ideal of the generic polynomial ring from its contraction. -/
 private theorem generic_ideal (C₀ : ConstantSeeds) [Fact (Irreducible C₀)]
     (hC : SeedLocalization C₀) (P : Ideal (ConstantSeedX C₀)[X]) :
     (P.comap (genericRootMap C₀)).map (genericRootMap C₀) = P := by
@@ -3170,7 +2760,6 @@ private theorem generic_ideal (C₀ : ConstantSeeds) [Fact (Irreducible C₀)]
     rfl
   rw [h, ← Ideal.comap_comap, ← Ideal.map_map, Ideal.map_comap_of_surjective _ hu]
   exact IsLocalization.map_under M T[X] P
-
 private theorem seed_le (C₀ : ConstantSeeds) [Fact (Irreducible C₀)]
     (hC : SeedLocalization C₀) (J : Ideal RootAmbient) (P : Ideal (ConstantSeedX C₀)[X])
     (hJ : J = P.comap (genericRootMap C₀)) :
@@ -3187,16 +2776,13 @@ private theorem seed_le (C₀ : ConstantSeeds) [Fact (Irreducible C₀)]
   change genericRootMap C₀ (rootSeeds s) ∈ P
   rw [h]
   exact P.zero_mem
-
 private def planePolynomial (I : Ideal Seeds) : Over 3 →ₐ[SeedField] (PlaneSlice I)[X] :=
   (Polynomial.mapAlgHom (Ideal.Quotient.mkₐ SeedField (sectionIdeal I 0 1))).comp
     (rootPolynomial SeedField).toAlgHom
-
 private theorem planePolynomial_surjective (I : Ideal Seeds) :
     Function.Surjective (planePolynomial I) :=
   (Polynomial.map_surjective _ Ideal.Quotient.mk_surjective).comp
     (rootPolynomial SeedField).surjective
-
 private theorem planePolynomial_ker (I : Ideal Seeds) :
     RingHom.ker (planePolynomial I).toRingHom =
       (sectionIdeal I 0 1).map (incl SeedField) := by
@@ -3206,9 +2792,6 @@ private theorem planePolynomial_ker (I : Ideal Seeds) :
   rw [← RingHom.comap_ker, Polynomial.ker_mapRingHom, Ideal.mk_ker,
     ← rootPolynomial_incl SeedField, ← Ideal.map_map]
   exact Ideal.comap_map_of_bijective e.toRingHom e.bijective
-
-/-- Impose the seed-plane relations first and then the extended root ideal.
-The free polynomial variable on the plane slice remains the original Y. -/
 private def rootSliceEquiv (I : Ideal Seeds) (J : Ideal RootAmbient)
     (hseed : I.map rootSeeds ≤ J) :
     RootSeedSection J ≃ₐ[SeedField]
@@ -3236,7 +2819,6 @@ private def rootSliceEquiv (I : Ideal Seeds) (J : Ideal RootAmbient)
       ← RingHom.ker_eq_comap_bot, hW]
   exact (Ideal.quotientEquivAlgOfEq SeedField hgker.symm).trans
     (Ideal.quotientKerAlgEquivOfSurjective hg)
-
 private theorem quotient_rank {T B : Type} [Field T] [Field B]
     (η : T →+* B) (P : Ideal T[X]) :
     Module.finrank B (B[X] ⧸ P.map (Polynomial.mapRingHom η)) =
@@ -3249,7 +2831,6 @@ private theorem quotient_rank {T B : Type} [Field T] [Field B]
   rw [← hp, Ideal.map_span, Set.image_singleton, finrank_quotient_span_eq_natDegree,
     finrank_quotient_span_eq_natDegree]
   exact Polynomial.natDegree_map_eq_of_injective η.injective p
-
 private theorem section_rank {F T B R : Type} [Field F] [Field T] [Field B]
     [CommRing R] [Algebra F R] [Algebra F B] (η : T →+* B) (P : Ideal T[X])
     (e : R ≃ₐ[F] (B[X] ⧸ P.map (Polynomial.mapRingHom η))) :
@@ -3260,7 +2841,6 @@ private theorem section_rank {F T B R : Type} [Field F] [Field T] [Field B]
     _ = Module.finrank F B * Module.finrank B (B[X] ⧸ P.map (Polynomial.mapRingHom η)) :=
       (Module.finrank_mul_finrank F B _).symm
     _ = _ := congrArg (Module.finrank F B * ·) (quotient_rank η P)
-
 theorem proof : K1_14_2_4_1_1.c2 := by
   intro C₀ hC₀ J P hC _ hJ _ _
   let I := seedEquation C₀
@@ -3299,30 +2879,21 @@ theorem proof : K1_14_2_4_1_1.c2 := by
   let e := (rootSliceEquiv I J (seed_le C₀ hC J P hJ)).trans
     (Ideal.quotientEquivAlgOfEq SeedField hmap)
   exact section_rank η P e
-
 end
 end K1_14_2_4_1_1_2
-end PackSource_K1_14_2_4_1_1_2Proof
-
-section PackSource_K1_14_2_2_7_2_1Proof
-set_option autoImplicit true
+end
+section
 set_option autoImplicit false
 set_option backward.isDefEq.respectTransparency false
 set_option maxSynthPendingDepth 8
 set_option maxHeartbeats 1000000
-
 namespace K1_14_2_2_7_2_1
-
 noncomputable section
-
 open K1_14 K1_14_2 K1_14_2_2 K1_14_2_2_7_2
 open K1_14_2_3_1 (coord parameterMap slopeToSlice toSlice parameter_commutes)
 open scoped Polynomial nonZeroDivisors
-
 attribute [local instance] MvPolynomial.algebraMvPolynomial
-
 private abbrev seedIncl : Seeds →+* Ambient := rootIncl.comp rootSeeds
-
 private theorem seed_dominant {I : Ideal Ambient} (hI : Active I) :
     Function.Injective ((Ideal.Quotient.mk I).comp seedIncl) := by
   let q := (Ideal.Quotient.mk (I.map mapGenericSeed)).comp mapGenericSeed
@@ -3348,10 +2919,6 @@ private theorem seed_dominant {I : Ideal Ambient} (hI : Active I) :
   have hinj : Function.Injective (e.comp (algebraMap Seeds SeedField)) :=
     e.injective.comp (IsFractionRing.injective Seeds SeedField)
   exact hinj (hzero.trans (map_zero (e.comp (algebraMap Seeds SeedField))).symm)
-
-/-- With independent seed coordinates, the slope and intercept are independent.
-Specializing the second seed coordinate to zero identifies the two parameters
-with the two indeterminates of an iterated polynomial ring. -/
 theorem parameter_injective_of_active {I : Ideal Ambient} (hI : Active I) :
     Function.Injective (parameterMap I 0 1) := by
   let u : Seeds →+* Seeds[X] :=
@@ -3391,21 +2958,15 @@ theorem parameter_injective_of_active {I : Ideal Ambient} (hI : Active I) :
         simp [g, u, parameterMap, seedIncl, rootIncl, rootSeeds, coord, RingHom.comp_apply]
   rw [← hg]
   exact (Polynomial.map_injective g (seed_dominant hI)).comp hu
-
 private abbrev BeforeLocalization := MvPolynomial (Fin 4) Seeds
-
 private abbrev denominators : Submonoid BeforeLocalization :=
   Seeds⁰.map (MvPolynomial.C (σ := Fin 4))
-
 private def beforeBase : Ambient →+* BeforeLocalization := MvPolynomial.map MvPolynomial.C
-
 private def beforeLine : BeforeLocalization :=
   MvPolynomial.X 0 + MvPolynomial.C (MvPolynomial.X 0) * MvPolynomial.X 1 -
     MvPolynomial.C (MvPolynomial.X 1)
-
 private def beforeEval (I : Ideal Ambient) : BeforeLocalization →+* (CoordinateRing I)[X] :=
   MvPolynomial.eval₂Hom (parameterMap I 0 1) (fun i => Polynomial.C (coord I i))
-
 private theorem beforeEval_comp (I : Ideal Ambient) :
     (beforeEval I).comp beforeBase = Polynomial.C.comp (Ideal.Quotient.mk I) := by
   apply MvPolynomial.ringHom_ext
@@ -3414,7 +2975,6 @@ private theorem beforeEval_comp (I : Ideal Ambient) :
     rfl
   · intro i
     simp [beforeEval, beforeBase, coord]
-
 private theorem beforeEval_surjective (I : Ideal Ambient) : Function.Surjective (beforeEval I) := by
   let u := Polynomial.eval₂RingHom beforeBase
     (MvPolynomial.C (MvPolynomial.X 0) : BeforeLocalization)
@@ -3429,7 +2989,6 @@ private theorem beforeEval_surjective (I : Ideal Ambient) : Function.Surjective 
     rw [he]
     exact Polynomial.map_surjective _ Ideal.Quotient.mk_surjective
   exact Function.Surjective.of_comp (f := beforeEval I) (g := u) hs
-
 private theorem localized_beforeBase :
     (algebraMap BeforeLocalization SeedAmbient).comp beforeBase = seedBase := by
   change (MvPolynomial.map (algebraMap Seeds SeedField)).comp beforeBase = seedBase
@@ -3439,13 +2998,11 @@ private theorem localized_beforeBase :
     rfl
   · intro i
     simp only [RingHom.comp_apply, beforeBase, seedBase, MvPolynomial.map_X]
-
 private theorem localized_beforeLine :
     algebraMap BeforeLocalization SeedAmbient beforeLine = seedLine 0 1 := by
   change MvPolynomial.map (algebraMap Seeds SeedField) beforeLine = seedLine 0 1
   simp only [beforeLine, map_add, map_mul, map_sub, MvPolynomial.map_X, MvPolynomial.map_C,
     seedLine, generic]
-
 private theorem evaluation_square (I : Ideal Ambient) :
     (Ideal.Quotient.mk (seedIdeal I)).comp (algebraMap BeforeLocalization SeedAmbient) =
       (slopeToSlice I 0 1).comp (beforeEval I) := by
@@ -3472,15 +3029,11 @@ private theorem evaluation_square (I : Ideal Ambient) :
       Polynomial.coe_eval₂RingHom, Polynomial.eval₂_C, toSlice, coord, Ideal.quotientMap_mk,
       MvPolynomial.map_X]
     rfl
-
 abbrev sectionAlgebra (I : Ideal Ambient) :
     Algebra ((CoordinateRing I)[X]) (JetSeedSection I) :=
   (slopeToSlice I 0 1).toAlgebra
-
 abbrev seedDenominators (I : Ideal Ambient) : Submonoid ((CoordinateRing I)[X]) :=
   Seeds⁰.map (parameterMap I 0 1)
-
-/-- Eliminate the intercept before inverting the nonzero parameter polynomials. -/
 theorem localization_of_seed_section (I : Ideal Ambient) :
     letI : Algebra ((CoordinateRing I)[X]) (JetSeedSection I) := sectionAlgebra I
     IsLocalization (seedDenominators I) (JetSeedSection I) := by
@@ -3511,8 +3064,6 @@ theorem localization_of_seed_section (I : Ideal Ambient) :
     apply Ideal.mem_map_of_mem
     change beforeEval I beforeLine = 0
     simp [beforeEval, beforeLine, parameterMap]
-
-/-- Noether normalization computes the two dimensions from the same polynomial ring. -/
 private theorem affine_dimension (k A : Type) [Field k] [CommRing A] [IsDomain A]
     [Algebra k A] [Algebra.FiniteType k A] :
     ∃ d : ℕ, ringKrullDim A = (d : WithBot ℕ∞) ∧ Algebra.trdeg k A = (d : Cardinal) := by
@@ -3548,22 +3099,18 @@ private theorem affine_dimension (k A : Type) [Field k] [CommRing A] [IsDomain A
   · let : Algebra.IsAlgebraic R A := Algebra.IsAlgebraic.of_finite R A
     simpa [R, trdeg_eq_zero (R := R) (A := A), Cardinal.mk_fin] using
       (trdeg_add_eq (A := A) k R).symm
-
 private theorem trdeg_seedField : Algebra.trdeg FX SeedField = 2 := by
   let : Algebra.IsAlgebraic Seeds SeedField := IsLocalization.isAlgebraic SeedField Seeds⁰
   simpa [Seeds, trdeg_eq_zero (R := Seeds) (A := SeedField), Cardinal.mk_fin] using
     (trdeg_add_eq (A := SeedField) FX Seeds).symm
-
 private theorem regular_denominators {I : Ideal Ambient} [I.IsPrime] (hI : Active I) :
     seedDenominators I ≤ (CoordinateRing I)[X]⁰ :=
   map_le_nonZeroDivisors_of_injective (parameterMap I 0 1) (parameter_injective_of_active hI) le_rfl
-
 private theorem seed_section_domain {I : Ideal Ambient} [I.IsPrime] (hI : Active I) :
     IsDomain (JetSeedSection I) := by
   let : Algebra ((CoordinateRing I)[X]) (JetSeedSection I) := sectionAlgebra I
   let : IsLocalization (seedDenominators I) (JetSeedSection I) := localization_of_seed_section I
   exact IsLocalization.isDomain_of_le_nonZeroDivisors (JetSeedSection I) (regular_denominators hI)
-
 private theorem section_constants (I : Ideal Ambient) (a : FX) :
     algebraMap FX (JetSeedSection I) a =
       slopeToSlice I 0 1 (algebraMap FX (CoordinateRing I)[X] a) := by
@@ -3572,7 +3119,6 @@ private theorem section_constants (I : Ideal Ambient) (a : FX) :
   rw [slopeToSlice, Polynomial.coe_eval₂RingHom, Polynomial.eval₂_C, toSlice,
     Ideal.quotientMap_mk, MvPolynomial.map_C]
   rfl
-
 private theorem trdeg_of_localization (k R S : Type) [Field k] [CommRing R] [CommRing S]
     [IsDomain R] [IsDomain S] [Algebra k R] [Algebra k S] [hAlg : Algebra R S]
     [FaithfulSMul k R] (M : Submonoid R) [hLoc : IsLocalization M S]
@@ -3585,14 +3131,12 @@ private theorem trdeg_of_localization (k R S : Type) [Field k] [CommRing R] [Com
   let : Algebra.IsAlgebraic R S := IsLocalization.isAlgebraic S M
   simpa only [trdeg_eq_zero (R := R) (A := S), add_zero] using
     (trdeg_add_eq (A := S) k R).symm
-
 private theorem trdeg_polynomial (k R : Type) [Field k] [CommRing R] [IsDomain R]
     [Algebra k R] [FaithfulSMul k R] :
     Algebra.trdeg k R[X] = Algebra.trdeg k R + 1 := by
   let : FaithfulSMul R R[X] := (faithfulSMul_iff_algebraMap_injective R R[X]).mpr
     Polynomial.C_injective
   simpa only [Polynomial.trdeg_of_isDomain] using (trdeg_add_eq (A := R[X]) k R).symm
-
 private theorem trdeg_section_over_constants {I : Ideal Ambient} [I.IsPrime]
     [IsDomain (JetSeedSection I)] (hI : Active I) :
     Algebra.trdeg FX (JetSeedSection I) = Algebra.trdeg FX (CoordinateRing I) + 1 := by
@@ -3606,7 +3150,6 @@ private theorem trdeg_section_over_constants {I : Ideal Ambient} [I.IsPrime]
     (seedDenominators I) (hLoc := localization_of_seed_section I)
     (regular_denominators hI) (section_constants I)
   exact hloc.trans (trdeg_polynomial FX R)
-
 theorem proof : K1_14_2_2_7_2.c1 := by
   intro I hI
   let S := JetSeedSection I
@@ -3636,24 +3179,17 @@ theorem proof : K1_14_2_2_7_2.c1 := by
     rw [hrel] at hte
     exact_mod_cast hte.symm
   simpa [he'] using he
-
 end
 end K1_14_2_2_7_2_1
-end PackSource_K1_14_2_2_7_2_1Proof
-
-section PackSource_K1_14_2_3_1Proof
-set_option autoImplicit true
+end
+section
 set_option autoImplicit false
 set_option backward.isDefEq.respectTransparency false
 set_option maxHeartbeats 1000000
-
 namespace K1_14_2_3_1
-
 noncomputable section
-
 open K1 K1_14 K1_14_2 K1_14_2_3
 open scoped Polynomial
-
 private theorem seedImage_ne_bot (I : Ideal Ambient) [I.IsPrime] [Nontrivial (JetSeedSection I)]
     [Module.Finite SeedField (JetSeedSection I)] : seedImage I ≠ ⊥ := by
   have hf := Module.Finite.of_injective (planeToJet I).toLinearMap (planeToJet_injective I)
@@ -3665,7 +3201,6 @@ private theorem seedImage_ne_bot (I : Ideal Ambient) [I.IsPrime] [Nontrivial (Je
       (SeedField[X] ⧸ (⊥ : Ideal SeedField[X])) := he ▸ e
   exact Polynomial.not_finite
     (Module.Finite.equiv (e'.trans (AlgEquiv.quotientBot SeedField SeedField[X])).toLinearEquiv)
-
 private theorem seedImage_not_maximal (I : Ideal Ambient) [Nontrivial (JetSeedSection I)] :
     ¬ (seedImage I).IsMaximal := by
   intro hM
@@ -3687,7 +3222,6 @@ private theorem seedImage_not_maximal (I : Ideal Ambient) [Nontrivial (JetSeedSe
     simpa only [Cardinal.lift_id, Cardinal.mk_fin, Nat.cast_ofNat] using hdim
   have hn : (2 : ℕ) ≤ 1 := by exact_mod_cast hbad
   omega
-
 private theorem seedImage_height (I : Ideal Ambient) [I.IsPrime] [Nontrivial (JetSeedSection I)]
     [Module.Finite SeedField (JetSeedSection I)] : (seedImage I).height = 1 := by
   let P := seedImage I
@@ -3712,7 +3246,6 @@ private theorem seedImage_height (I : Ideal Ambient) [I.IsPrime] [Nontrivial (Je
   have hle : P.height ≤ 1 :=
     (ENat.add_le_add_iff_right (by simp : (1 : ℕ∞) ≠ ⊤)).mp hP
   exact hle.antisymm hlo
-
 theorem proof : K1_14_2_3.c1 := by
   intro I h
   let : I.IsPrime := h.1
@@ -3739,54 +3272,36 @@ theorem proof : K1_14_2_3.c1 := by
       rw [(lineQuotientEquiv P).toLinearEquiv.finrank_eq, hspan, Ideal.map_span, Set.image_singleton,
         finrank_quotient_span_eq_natDegree, totalDegree_lineRestriction]
     exact hd ▸ hbound
-
 end
 end K1_14_2_3_1
-end PackSource_K1_14_2_3_1Proof
-
-section PackSource_K1_14_2_2_3_2Proof
-set_option autoImplicit true
+end
+section
 namespace K1_14_2_2_3_2
-
 open K1_14_2_2
-
 theorem proof : K1_14_2_2_3.c2 := by
   intro I hI hd
   obtain ⟨g, hg, hIg⟩ := primeGenerator hI hd
   exact ⟨g, hg, (degree_le_mixed hI g hg.ne_zero hIg).trans_lt hI.mixed_lt, hIg⟩
-
 end K1_14_2_2_3_2
-end PackSource_K1_14_2_2_3_2Proof
-
-section PackSource_K1_13_1_1BudgetD
-set_option autoImplicit true
+end
+section
 namespace K1_13_1_1
-
 set_option maxRecDepth 30000
 set_option Elab.async false
 set_option maxHeartbeats 4000000
-
 open private sumToCap_eq innerSlice_eq sumRange_suffix sumRange_congr sumRange_zero natLine_zero
   activeNatCount_eq sumRange_prefix sumRange_succ_left
   from ProximityPrize.SubmissionLower.SoloK1_13_1_1ArithmeticLogic
-
--- With residual degree 48 the two arguments of the Pascal minimum have
--- different monotonicity.  The active count only depends on the lower index.
 private def dActive (lo : ℕ) : ℕ := activeNatCount 48 lo 48
-
 private def dTarget (lo o : ℕ) : ℕ :=
   sumRange 49 fun b =>
     min (natPairs 48 lo b) (sumRange (48 - b + 1) (natLine 48 lo o b))
-
--- The original evaluator skips the zero prefix of each slice.  Use it for
--- the few endpoint checks and the full target sum for the monotonicity proof.
 private def dCapped (lo o cap : ℕ) : ℕ :=
   let startB := 49 - o
   sumToCap (fun b =>
     let startC := 2 * (48 - b) + 1 - o
     sumToCap (natLine 48 lo o b) (48 - b + 1 - startC) startC (natPairs 48 lo b))
     (49 - startB) startB cap
-
 private theorem dCapped_eq (lo o cap : ℕ) :
     dCapped lo o cap = min cap (dTarget lo o) := by
   unfold dCapped dTarget
@@ -3803,13 +3318,11 @@ private theorem dCapped_eq (lo o cap : ℕ) :
       intro c hc
       exact natLine_zero 48 lo o b c (by omega) (by omega)
     simp [hz]
-
 private theorem dSumMono (n : ℕ) (f g : ℕ → ℕ) (h : ∀ i, f i ≤ g i) :
     sumRange n f ≤ sumRange n g := by
   induction n with
   | zero => exact le_rfl
   | succ n ih => exact Nat.add_le_add ih (h n)
-
 private theorem dActive_antitone {u v : ℕ} (h : u ≤ v) : dActive v ≤ dActive u := by
   unfold dActive activeNatCount
   apply dSumMono
@@ -3817,7 +3330,6 @@ private theorem dActive_antitone {u v : ℕ} (h : u ≤ v) : dActive v ≤ dActi
   apply dSumMono
   intro c
   exact Nat.sub_le_sub_left (Nat.sub_le_sub_right h _) _
-
 private theorem dTarget_mono {l₁ l₂ o₁ o₂ : ℕ} (hl : l₂ ≤ l₁) (ho : o₁ ≤ o₂) :
     dTarget l₁ o₁ ≤ dTarget l₂ o₂ := by
   unfold dTarget
@@ -3838,23 +3350,12 @@ private theorem dTarget_mono {l₁ l₂ o₁ o₂ : ℕ} (hl : l₂ ≤ l₁) (h
     apply min_le_min (Nat.sub_le_sub_left hf _)
     apply Nat.sub_le_sub_left
     exact max_le_max hf (by omega)
-
--- Entries occupy disjoint twelve-bit fields.  All endpoint values are
--- compared to the extracted numerals by kernel reduction below.
 private def dField (data i : ℕ) : ℕ := (data >>> (12 * i)) % 4096
-
 private def dActiveVal := dField 0xbe1762292d637e4204bd5545e66726f977a7f686c8dd9489aea0ea69abeb0eb59b9fbe0c1dc55c89cb9ce5d0dd32d53d71d8cda4db9dccddcdeadf6e00e08e0fe14e18e1be1de1ee1f
-
 private def dTargetVal := dField 0xd61ca9bf6b49aa19ff9628cb8397ad7266a56295b35424d74714113b63613112c628023f2021ca19616613a1120ed0cc0ae09307b06605304303502901f01701000b007004002001000
-
-
 private theorem dActiveTable : ∀ i : Fin 49, dActive i = dActiveVal i := by decide +kernel
-
--- When the order is below 49 the degree and order bounds alone determine
--- each target line. An active line already satisfies the lower-index cutoff.
 private def dLine (o b c : ℕ) : ℕ :=
   min 11 (min (49 - b - c) (2 * b + c + o - 96))
-
 private theorem dLine_eq (lo o b c : ℕ) (hl : lo ≤ 19) (ho : o ≤ 48) (hbc : b + c ≤ 48) :
     natLine 48 lo o b c = dLine o b c := by
   have hrow : 49 - b - c - (145 - (3 * b + 2 * c + o)) =
@@ -3871,13 +3372,8 @@ private theorem dLine_eq (lo o b c : ℕ) (hl : lo ≤ 19) (ho : o ≤ 48) (hbc 
     have hempty : 49 - b - c ≤ max ((lo - (b + 2 * min c 24) + 2) / 3)
         (145 - (3 * b + 2 * c + o)) := hle.trans (le_max_right _ _)
     simp only [hx, Nat.sub_eq_zero_of_le hz, Nat.sub_eq_zero_of_le hempty, Nat.min_zero]
-
-
 private def dLines (o b : ℕ) := sumRange (49 - b) (dLine o b)
-
--- Check the most restrictive pair cap at the largest order in this range.
 private theorem dPairCover : ∀ b : Fin 49, dLines 48 b ≤ natPairs 48 19 b := by decide +kernel
-
 private theorem dSlice_eq (lo o b : ℕ) (hl : lo ≤ 19) (ho : o ≤ 48) (hb : b < 49) :
     min (natPairs 48 lo b) (sumRange (48 - b + 1) (natLine 48 lo o b)) = dLines o b := by
   have hn : 48 - b + 1 = 49 - b := by omega
@@ -3897,15 +3393,12 @@ private theorem dSlice_eq (lo o b : ℕ) (hl : lo ≤ 19) (ho : o ≤ 48) (hb : 
       intro f
       apply Nat.sub_le_sub_left
       omega
-
--- The first possible nonzero slice and line follow from the order bound.
 private def dShortTarget (o : ℕ) : ℕ :=
   let start := 49 - o
   sumRange o fun i =>
     let b := i + start
     let first := 97 - (2 * b + o)
     sumRange (49 - b - first) fun j => dLine o b (j + first)
-
 private theorem dTarget_short (lo o : ℕ) (hl : lo ≤ 19) (ho : o ≤ 48) :
     dTarget lo o = dShortTarget o := by
   have h : dTarget lo o = sumRange 49 (dLines o) :=
@@ -3926,26 +3419,17 @@ private theorem dTarget_short (lo o : ℕ) (hl : lo ≤ 19) (ho : o ≤ 48) :
     intro c hc
     unfold dLine
     omega
-
--- A row has rising heights t+j, falling heights n-j and height cap 11.
--- The uncapped area is a triangle minus the terms (n-t), (n-t-2), ...
--- The portion above height 11 is another uncapped triangle.
 private def dUncappedArea (n t : ℕ) : ℕ :=
   let d := n - t
   n * (n + 1) / 2 - ((d + 1) / 2) * ((d + 2) / 2)
-
 private def dRowArea (n t : ℕ) : ℕ :=
   dUncappedArea n t - dUncappedArea (n + t - 22) 0
-
 private def dRowSum (n t : ℕ) : ℕ :=
   sumRange n fun j => min 11 (min (n - j) (t + j))
-
--- The kernel checks the first-column recurrence over the entire domain.
 private theorem dAreaStep : ∀ (n : Fin 49) (t : Fin 12),
     dRowArea (n.val + 1) t.val =
       min 11 (min (n.val + 1) t.val) + dRowArea n.val (min 11 (t.val + 1)) := by
   decide +kernel
-
 private theorem dRow_sum_step (n t : ℕ) :
     dRowSum (n + 1) t = min 11 (min (n + 1) t) + dRowSum n (t + 1) := by
   unfold dRowSum
@@ -3954,7 +3438,6 @@ private theorem dRow_sum_step (n t : ℕ) :
   apply sumRange_congr
   intro i hi
   rw [show n + 1 - (i + 1) = n - i by omega, show t + (i + 1) = t + 1 + i by omega]
-
 private theorem dRowArea_eq (n t : ℕ) (hn : n ≤ 49) :
     dRowSum n t = dRowArea n (min 11 t) := by
   induction n generalizing t with
@@ -3967,13 +3450,11 @@ private theorem dRowArea_eq (n t : ℕ) (hn : n ≤ 49) :
     rw [show min 11 (min (n + 1) (min 11 t)) = min 11 (min (n + 1) t) by omega,
       show min 11 (min 11 t + 1) = min 11 (t + 1) by omega] at h
     exact h.symm
-
 private def dAreaTarget (o : ℕ) : ℕ :=
   sumRange o fun i =>
     let b := i + (49 - o)
     let first := 97 - (2 * b + o)
     dRowArea (49 - b - first) (min 11 (2 * b + o + first - 96))
-
 private theorem dAreaTarget_eq (o : ℕ) : dShortTarget o = dAreaTarget o := by
   unfold dShortTarget dAreaTarget
   apply sumRange_congr
@@ -3989,17 +3470,13 @@ private theorem dAreaTarget_eq (o : ℕ) : dShortTarget o = dAreaTarget o := by
   unfold dLine
   rw [show 49 - b - (j + first) = 49 - b - first - j by omega,
     show 2 * b + (j + first) + o - 96 = 2 * b + o + first - 96 + j by dsimp [first]; omega]
-
 private theorem dShortTable : ∀ i : Fin 49, dAreaTarget i = dTargetVal i := by decide +kernel
-
 private theorem dTarget_small (lo o : ℕ) (ho : o < 49) (hl : lo ≤ o - 29) :
     dTarget lo o = dTargetVal o := by
   rw [dTarget_short _ _ (by omega) (by omega), dAreaTarget_eq]
   exact dShortTable ⟨o, ho⟩
-
 private theorem dFullLow : dCapped 24 49 3615 = 3615 := by decide +kernel
 private theorem dFullHigh : dCapped 48 49 3040 = 3040 := by decide +kernel
-
 private theorem dTarget_large (lo o : ℕ) (hl : lo ≤ 48) (ho : 49 ≤ o) :
     dActive lo ≤ dTarget lo o := by
   by_cases h : lo ≤ 24
@@ -4015,12 +3492,10 @@ private theorem dTarget_large (lo o : ℕ) (hl : lo ≤ 48) (ho : 49 ≤ o) :
     have h₃ : dActive 25 = 3040 := dActiveTable 25
     have h₄ : dTarget 48 49 ≤ dTarget lo o := dTarget_mono hl ho
     omega
-
 private def dPascal (s r : ℕ) : ℕ :=
   let lo := 48 - r
   let o := 138 - (s + r)
   if o < 49 then min (dActiveVal lo) (dTargetVal o) else dActiveVal lo
-
 private theorem dPascal_eq (s r : ℕ) (hs : 49 ≤ s) (hs' : s ≤ 61) (hr : s + r < 138) :
     fastPascal s r = dPascal s r := by
   have hd : residualDegree s = 48 := by unfold residualDegree; omega
@@ -4038,19 +3513,14 @@ private theorem dPascal_eq (s r : ℕ) (hs : 49 ≤ s) (hs' : s ≤ 61) (hr : s 
     rw [ha, dTarget_small _ _ h (by omega)]
   · rename_i h
     rw [min_eq_left (dTarget_large _ _ (Nat.sub_le _ _) (by omega)), ha]
-
--- Both integer counts use the size of an interval. Its upper endpoint plus
--- one and its lower endpoint can be clipped to naturals before subtraction.
 private theorem dIntervalNat (l a b : ℤ) :
     intervalSize (max 0 l) (min a b) = min (a + 1).toNat (b + 1).toNat - l.toNat := by
   unfold intervalSize
   omega
-
 private def dBand (d lo upper top : ℕ) : ℕ :=
   sumRange (min d top + 1) fun f =>
     sumRange (min (d - f) ((upper - 1 - 3 * f) / 2) + 1) fun c =>
       min (d - f - c + 1) (upper - (2 * c + 3 * f)) - (lo - (2 * c + 3 * f))
-
 private theorem dBand_eq (d : ℕ) (lo hi : ℤ) (top : ℕ) :
     bandCount d lo hi top = dBand d lo.toNat (hi + 1).toNat top := by
   unfold bandCount dBand
@@ -4065,14 +3535,12 @@ private theorem dBand_eq (d : ℕ) (lo hi : ℤ) (top : ℕ) :
   have h₂ : (hi - 2 * c - 3 * f + 1).toNat = (hi + 1).toNat - (2 * c + 3 * f : ℕ) := by omega
   have h₃ : (lo - 2 * c - 3 * f).toNat = lo.toNat - (2 * c + 3 * f : ℕ) := by omega
   rw [h₁, h₂, h₃]
-
 private def dCount (d lo upper : ℕ) : ℕ :=
   sumRange (d + 1) fun a =>
     let x := d - a
     let u := upper - 3 * a
     sumRange (min (x + 1) ((u + 1) / 2)) fun f =>
       min (x + 1 - f) (u - 2 * f) - (lo - (x + 2 * f))
-
 private theorem dCount_eq (d : ℕ) (lo o : ℤ) :
     targetCount d lo o = dCount d lo.toNat o.toNat := by
   unfold targetCount dCount
@@ -4092,7 +3560,6 @@ private theorem dCount_eq (d : ℕ) (lo o : ℤ) :
     rw [dIntervalNat]
     have h₂ : (o - 1 - 3 * a - 2 * f + 1).toNat = 0 := by omega
     simp only [h₂, Nat.min_zero, Nat.zero_sub]
-
 private def dFlag (s r : ℕ) (v : FactorPowers) : ℕ :=
   let g := offset r
   let count := dActiveVal (48 - r)
@@ -4103,7 +3570,6 @@ private def dFlag (s r : ℕ) (v : FactorPowers) : ℕ :=
     let order := (orderCutoff s g - (v.minOrder : ℤ)).toNat
     count - (dBand d' lo' upper (10 - v.maxTop) - dCount d' lo' order)
   else count
-
 private theorem dFlag_eq (s r : ℕ) (v : FactorPowers) (hs : 49 ≤ s) (hs' : s ≤ 61) :
     flagBound s (offset r) v = dFlag s r v := by
   have hd : residualDegree s = 48 := by unfold residualDegree; omega
@@ -4113,26 +3579,21 @@ private theorem dFlag_eq (s r : ℕ) (v : FactorPowers) (hs : 49 ≤ s) (hs' : s
     rw [hl]
     exact dActiveTable ⟨48 - r, by omega⟩
   simp only [flagBound, dFlag, hd, ha, dBand_eq, dCount_eq]
-
 private def dBlock (s r : ℕ) : ℕ :=
   if s + r < 138 then
     match selectedFactors s (offset r) with
     | none => dPascal s r
     | some v => min (dPascal s r) (dFlag s r v)
   else 0
-
 private theorem dBlock_eq (s r : ℕ) (hs : 49 ≤ s) (hs' : s ≤ 61) :
     fastBlock s r = dBlock s r := by
   unfold fastBlock dBlock
   by_cases hr : s + r < 138
   · cases h : selectedFactors s (offset r) <;> simp [hr, dPascal_eq s r hs hs' hr, dFlag_eq s r _ hs hs']
   · simp only [ite_eq_right hr]
-
 private theorem dBlockSum_eq (s k n : ℕ) (hs : 49 ≤ s) (hs' : s ≤ 61) :
     sumRange n (fun i => fastBlock s (i + k)) = sumRange n (fun i => dBlock s (i + k)) :=
   sumRange_congr _ fun i _ => dBlock_eq s (i + k) hs hs'
-
--- Assemble independently checked runs of consecutive blocks.
 private theorem budgetDAddRanges (a b : ℕ) (f : ℕ → ℕ) :
     sumRange (a + b) f = sumRange a f + sumRange b (fun i => f (i + a)) := by
   induction b with
@@ -4141,13 +3602,11 @@ private theorem budgetDAddRanges (a b : ℕ) (f : ℕ → ℕ) :
     change sumRange (a + b) f + f (a + b) =
       sumRange a f + (sumRange b (fun i => f (i + a)) + f (b + a))
     rw [ih, Nat.add_comm b a, Nat.add_assoc]
-
 private theorem budgetDAppend (f : ℕ → ℕ) (start len lhs rhs : ℕ)
     (hp : sumRange start f = lhs)
     (hc : sumRange len (fun i => f (i + start)) = rhs) :
     sumRange (start + len) f = lhs + rhs :=
   (budgetDAddRanges start len f).trans (congrArg₂ Nat.add hp hc)
-
 private theorem budgetDGrade49At0 :
     sumRange 4 (fun i => fastBlock 49 (i + 0)) = 1843 :=
   (dBlockSum_eq 49 0 4 (by decide) (by decide)).trans (by decide +kernel)
@@ -4220,7 +3679,6 @@ private theorem budgetDGrade49At88 :
 private theorem budgetDGrade49At92 :
     sumRange 46 (fun i => fastBlock 49 (i + 92)) = 0 :=
   (dBlockSum_eq 49 92 46 (by decide) (by decide)).trans (by decide +kernel)
-
 private theorem grade49 : fastGrade 49 = 148279 := by
   have prefix4 : sumRange 4 (fastBlock 49) = 1843 :=
     budgetDAppend (fastBlock 49) 0 4 0 1843 rfl budgetDGrade49At0
@@ -4271,7 +3729,6 @@ private theorem grade49 : fastGrade 49 = 148279 := by
   have prefix138 : sumRange 138 (fastBlock 49) = 148279 :=
     budgetDAppend (fastBlock 49) 92 46 148279 0 prefix92 budgetDGrade49At92
   exact prefix138
-
 private theorem budgetDGrade50At0 :
     sumRange 4 (fun i => fastBlock 50 (i + 0)) = 1843 :=
   (dBlockSum_eq 50 0 4 (by decide) (by decide)).trans (by decide +kernel)
@@ -4341,7 +3798,6 @@ private theorem budgetDGrade50At84 :
 private theorem budgetDGrade50At88 :
     sumRange 50 (fun i => fastBlock 50 (i + 88)) = 0 :=
   (dBlockSum_eq 50 88 50 (by decide) (by decide)).trans (by decide +kernel)
-
 private theorem grade50 : fastGrade 50 = 144695 := by
   have prefix4 : sumRange 4 (fastBlock 50) = 1843 :=
     budgetDAppend (fastBlock 50) 0 4 0 1843 rfl budgetDGrade50At0
@@ -4390,7 +3846,6 @@ private theorem grade50 : fastGrade 50 = 144695 := by
   have prefix138 : sumRange 138 (fastBlock 50) = 144695 :=
     budgetDAppend (fastBlock 50) 88 50 144695 0 prefix88 budgetDGrade50At88
   exact prefix138
-
 private theorem budgetDGrade51At0 :
     sumRange 4 (fun i => fastBlock 51 (i + 0)) = 1843 :=
   (dBlockSum_eq 51 0 4 (by decide) (by decide)).trans (by decide +kernel)
@@ -4460,7 +3915,6 @@ private theorem budgetDGrade51At84 :
 private theorem budgetDGrade51At88 :
     sumRange 50 (fun i => fastBlock 51 (i + 88)) = 0 :=
   (dBlockSum_eq 51 88 50 (by decide) (by decide)).trans (by decide +kernel)
-
 private theorem grade51 : fastGrade 51 = 141121 := by
   have prefix4 : sumRange 4 (fastBlock 51) = 1843 :=
     budgetDAppend (fastBlock 51) 0 4 0 1843 rfl budgetDGrade51At0
@@ -4509,7 +3963,6 @@ private theorem grade51 : fastGrade 51 = 141121 := by
   have prefix138 : sumRange 138 (fastBlock 51) = 141121 :=
     budgetDAppend (fastBlock 51) 88 50 141121 0 prefix88 budgetDGrade51At88
   exact prefix138
-
 private theorem budgetDGrade52At0 :
     sumRange 4 (fun i => fastBlock 52 (i + 0)) = 1843 :=
   (dBlockSum_eq 52 0 4 (by decide) (by decide)).trans (by decide +kernel)
@@ -4579,7 +4032,6 @@ private theorem budgetDGrade52At84 :
 private theorem budgetDGrade52At88 :
     sumRange 50 (fun i => fastBlock 52 (i + 88)) = 0 :=
   (dBlockSum_eq 52 88 50 (by decide) (by decide)).trans (by decide +kernel)
-
 private theorem grade52 : fastGrade 52 = 137559 := by
   have prefix4 : sumRange 4 (fastBlock 52) = 1843 :=
     budgetDAppend (fastBlock 52) 0 4 0 1843 rfl budgetDGrade52At0
@@ -4628,7 +4080,6 @@ private theorem grade52 : fastGrade 52 = 137559 := by
   have prefix138 : sumRange 138 (fastBlock 52) = 137559 :=
     budgetDAppend (fastBlock 52) 88 50 137559 0 prefix88 budgetDGrade52At88
   exact prefix138
-
 private theorem budgetDGrade53At0 :
     sumRange 4 (fun i => fastBlock 53 (i + 0)) = 1843 :=
   (dBlockSum_eq 53 0 4 (by decide) (by decide)).trans (by decide +kernel)
@@ -4698,7 +4149,6 @@ private theorem budgetDGrade53At84 :
 private theorem budgetDGrade53At88 :
     sumRange 50 (fun i => fastBlock 53 (i + 88)) = 0 :=
   (dBlockSum_eq 53 88 50 (by decide) (by decide)).trans (by decide +kernel)
-
 private theorem grade53 : fastGrade 53 = 134011 := by
   have prefix4 : sumRange 4 (fastBlock 53) = 1843 :=
     budgetDAppend (fastBlock 53) 0 4 0 1843 rfl budgetDGrade53At0
@@ -4747,7 +4197,6 @@ private theorem grade53 : fastGrade 53 = 134011 := by
   have prefix138 : sumRange 138 (fastBlock 53) = 134011 :=
     budgetDAppend (fastBlock 53) 88 50 134011 0 prefix88 budgetDGrade53At88
   exact prefix138
-
 private theorem budgetDGrade54At0 :
     sumRange 4 (fun i => fastBlock 54 (i + 0)) = 1843 :=
   (dBlockSum_eq 54 0 4 (by decide) (by decide)).trans (by decide +kernel)
@@ -4814,7 +4263,6 @@ private theorem budgetDGrade54At80 :
 private theorem budgetDGrade54At84 :
     sumRange 54 (fun i => fastBlock 54 (i + 84)) = 0 :=
   (dBlockSum_eq 54 84 54 (by decide) (by decide)).trans (by decide +kernel)
-
 private theorem grade54 : fastGrade 54 = 130479 := by
   have prefix4 : sumRange 4 (fastBlock 54) = 1843 :=
     budgetDAppend (fastBlock 54) 0 4 0 1843 rfl budgetDGrade54At0
@@ -4861,7 +4309,6 @@ private theorem grade54 : fastGrade 54 = 130479 := by
   have prefix138 : sumRange 138 (fastBlock 54) = 130479 :=
     budgetDAppend (fastBlock 54) 84 54 130479 0 prefix84 budgetDGrade54At84
   exact prefix138
-
 private theorem budgetDGrade55At0 :
     sumRange 4 (fun i => fastBlock 55 (i + 0)) = 1843 :=
   (dBlockSum_eq 55 0 4 (by decide) (by decide)).trans (by decide +kernel)
@@ -4928,7 +4375,6 @@ private theorem budgetDGrade55At80 :
 private theorem budgetDGrade55At84 :
     sumRange 54 (fun i => fastBlock 55 (i + 84)) = 0 :=
   (dBlockSum_eq 55 84 54 (by decide) (by decide)).trans (by decide +kernel)
-
 private theorem grade55 : fastGrade 55 = 126957 := by
   have prefix4 : sumRange 4 (fastBlock 55) = 1843 :=
     budgetDAppend (fastBlock 55) 0 4 0 1843 rfl budgetDGrade55At0
@@ -4975,7 +4421,6 @@ private theorem grade55 : fastGrade 55 = 126957 := by
   have prefix138 : sumRange 138 (fastBlock 55) = 126957 :=
     budgetDAppend (fastBlock 55) 84 54 126957 0 prefix84 budgetDGrade55At84
   exact prefix138
-
 private theorem budgetDGrade56At0 :
     sumRange 4 (fun i => fastBlock 56 (i + 0)) = 1843 :=
   (dBlockSum_eq 56 0 4 (by decide) (by decide)).trans (by decide +kernel)
@@ -5042,7 +4487,6 @@ private theorem budgetDGrade56At80 :
 private theorem budgetDGrade56At84 :
     sumRange 54 (fun i => fastBlock 56 (i + 84)) = 0 :=
   (dBlockSum_eq 56 84 54 (by decide) (by decide)).trans (by decide +kernel)
-
 private theorem grade56 : fastGrade 56 = 123452 := by
   have prefix4 : sumRange 4 (fastBlock 56) = 1843 :=
     budgetDAppend (fastBlock 56) 0 4 0 1843 rfl budgetDGrade56At0
@@ -5089,7 +4533,6 @@ private theorem grade56 : fastGrade 56 = 123452 := by
   have prefix138 : sumRange 138 (fastBlock 56) = 123452 :=
     budgetDAppend (fastBlock 56) 84 54 123452 0 prefix84 budgetDGrade56At84
   exact prefix138
-
 private theorem budgetDGrade57At0 :
     sumRange 4 (fun i => fastBlock 57 (i + 0)) = 1843 :=
   (dBlockSum_eq 57 0 4 (by decide) (by decide)).trans (by decide +kernel)
@@ -5156,7 +4599,6 @@ private theorem budgetDGrade57At80 :
 private theorem budgetDGrade57At84 :
     sumRange 54 (fun i => fastBlock 57 (i + 84)) = 0 :=
   (dBlockSum_eq 57 84 54 (by decide) (by decide)).trans (by decide +kernel)
-
 private theorem grade57 : fastGrade 57 = 119968 := by
   have prefix4 : sumRange 4 (fastBlock 57) = 1843 :=
     budgetDAppend (fastBlock 57) 0 4 0 1843 rfl budgetDGrade57At0
@@ -5203,7 +4645,6 @@ private theorem grade57 : fastGrade 57 = 119968 := by
   have prefix138 : sumRange 138 (fastBlock 57) = 119968 :=
     budgetDAppend (fastBlock 57) 84 54 119968 0 prefix84 budgetDGrade57At84
   exact prefix138
-
 private theorem budgetDGrade58At0 :
     sumRange 4 (fun i => fastBlock 58 (i + 0)) = 1843 :=
   (dBlockSum_eq 58 0 4 (by decide) (by decide)).trans (by decide +kernel)
@@ -5267,7 +4708,6 @@ private theorem budgetDGrade58At76 :
 private theorem budgetDGrade58At80 :
     sumRange 58 (fun i => fastBlock 58 (i + 80)) = 0 :=
   (dBlockSum_eq 58 80 58 (by decide) (by decide)).trans (by decide +kernel)
-
 private theorem grade58 : fastGrade 58 = 116510 := by
   have prefix4 : sumRange 4 (fastBlock 58) = 1843 :=
     budgetDAppend (fastBlock 58) 0 4 0 1843 rfl budgetDGrade58At0
@@ -5312,7 +4752,6 @@ private theorem grade58 : fastGrade 58 = 116510 := by
   have prefix138 : sumRange 138 (fastBlock 58) = 116510 :=
     budgetDAppend (fastBlock 58) 80 58 116510 0 prefix80 budgetDGrade58At80
   exact prefix138
-
 private theorem budgetDGrade59At0 :
     sumRange 4 (fun i => fastBlock 59 (i + 0)) = 1843 :=
   (dBlockSum_eq 59 0 4 (by decide) (by decide)).trans (by decide +kernel)
@@ -5376,7 +4815,6 @@ private theorem budgetDGrade59At76 :
 private theorem budgetDGrade59At80 :
     sumRange 58 (fun i => fastBlock 59 (i + 80)) = 0 :=
   (dBlockSum_eq 59 80 58 (by decide) (by decide)).trans (by decide +kernel)
-
 private theorem grade59 : fastGrade 59 = 113078 := by
   have prefix4 : sumRange 4 (fastBlock 59) = 1843 :=
     budgetDAppend (fastBlock 59) 0 4 0 1843 rfl budgetDGrade59At0
@@ -5421,7 +4859,6 @@ private theorem grade59 : fastGrade 59 = 113078 := by
   have prefix138 : sumRange 138 (fastBlock 59) = 113078 :=
     budgetDAppend (fastBlock 59) 80 58 113078 0 prefix80 budgetDGrade59At80
   exact prefix138
-
 private theorem budgetDGrade60At0 :
     sumRange 4 (fun i => fastBlock 60 (i + 0)) = 1843 :=
   (dBlockSum_eq 60 0 4 (by decide) (by decide)).trans (by decide +kernel)
@@ -5485,7 +4922,6 @@ private theorem budgetDGrade60At76 :
 private theorem budgetDGrade60At80 :
     sumRange 58 (fun i => fastBlock 60 (i + 80)) = 0 :=
   (dBlockSum_eq 60 80 58 (by decide) (by decide)).trans (by decide +kernel)
-
 private theorem grade60 : fastGrade 60 = 109672 := by
   have prefix4 : sumRange 4 (fastBlock 60) = 1843 :=
     budgetDAppend (fastBlock 60) 0 4 0 1843 rfl budgetDGrade60At0
@@ -5530,7 +4966,6 @@ private theorem grade60 : fastGrade 60 = 109672 := by
   have prefix138 : sumRange 138 (fastBlock 60) = 109672 :=
     budgetDAppend (fastBlock 60) 80 58 109672 0 prefix80 budgetDGrade60At80
   exact prefix138
-
 private theorem budgetDGrade61At0 :
     sumRange 4 (fun i => fastBlock 61 (i + 0)) = 1843 :=
   (dBlockSum_eq 61 0 4 (by decide) (by decide)).trans (by decide +kernel)
@@ -5594,7 +5029,6 @@ private theorem budgetDGrade61At76 :
 private theorem budgetDGrade61At80 :
     sumRange 58 (fun i => fastBlock 61 (i + 80)) = 0 :=
   (dBlockSum_eq 61 80 58 (by decide) (by decide)).trans (by decide +kernel)
-
 private theorem grade61 : fastGrade 61 = 106293 := by
   have prefix4 : sumRange 4 (fastBlock 61) = 1843 :=
     budgetDAppend (fastBlock 61) 0 4 0 1843 rfl budgetDGrade61At0
@@ -5639,14 +5073,11 @@ private theorem grade61 : fastGrade 61 = 106293 := by
   have prefix138 : sumRange 138 (fastBlock 61) = 106293 :=
     budgetDAppend (fastBlock 61) 80 58 106293 0 prefix80 budgetDGrade61At80
   exact prefix138
-
 private theorem sumStep (f : ℕ → ℕ) (n a b : ℕ)
     (ha : sumRange n f = a) (hb : f n = b) :
     sumRange (n + 1) f = a + b :=
   (show sumRange (n + 1) f = sumRange n f + f n from rfl).trans (congrArg₂ Nat.add ha hb)
-
 private def gradeFrom (i : ℕ) : ℕ := fastGrade (i + 49)
-
 private theorem prefix49 : sumRange 1 gradeFrom = 148279 :=
   sumStep gradeFrom 0 0 148279 rfl grade49
 private theorem prefix50 : sumRange 2 gradeFrom = 292974 :=
@@ -5673,29 +5104,19 @@ private theorem prefix60 : sumRange 12 gradeFrom = 1545781 :=
   sumStep gradeFrom 11 1436109 109672 prefix59 grade60
 theorem budgetD : sumRange 13 (fun i => fastGrade (i + 49)) = 1652074 :=
   sumStep gradeFrom 12 1545781 106293 prefix60 grade61
-
 end K1_13_1_1
-end PackSource_K1_13_1_1BudgetD
-
-section PackSource_K1_13_2_3_4DataA
-set_option autoImplicit true
+end
+section
 namespace K1_13_2_3_4
-
 open K1_13_2
-
 set_option Elab.async false
 set_option maxRecDepth 50000
 set_option maxHeartbeats 0
-
 private def daTriple (x : ℤ) : ℤ :=
   denominator (x - 1) + denominator (x - 2) + denominator (x - 3)
-
 private theorem daDenNeg (x : ℤ) (h : x < 0) : denominator x = 0 := ite_eq_left h
-
 private theorem daCumNeg (d u : ℤ) (h : u < 0) : cumulative d u = 0 := by
   simp [cumulative, h]
-
--- In this range the last four inclusion-exclusion terms have negative indices.
 private theorem daCum (d u : ℤ) (hd : 0 ≤ d) (hu : u ≤ 2 * d) :
     cumulative d u = denominator u - daTriple (u - d) := by
   by_cases h : u < 0
@@ -5707,28 +5128,20 @@ private theorem daCum (d u : ℤ) (hd : 0 ≤ d) (hu : u ≤ 2 * d) :
       daDenNeg (u - 2 * d - 3) (by omega), daDenNeg (u - 2 * d - 4) (by omega),
       daDenNeg (u - 2 * d - 5) (by omega), daDenNeg (u - 3 * d - 6) (by omega), daTriple]
     omega
-
 private theorem daCumLow (d u : ℤ) (hd : 0 ≤ d) (hu : u ≤ d) :
     cumulative d u = denominator u := by
   rw [daCum d u hd (by omega), daTriple, daDenNeg (u - d - 1) (by omega), daDenNeg (u - d - 2) (by omega),
     daDenNeg (u - d - 3) (by omega)]
   omega
-
 private theorem daCap (d u c : ℤ) (hc : 0 ≤ c) (hu : u ≤ 3 * c) :
     cappedCount d u c = cumulative d u := by
   simp [cappedCount, show ¬ c < 0 by omega, daCumNeg (d - c - 1) (u - 3 * (c + 1)) (by omega)]
-
 private def daOld (d s q k : ℤ) : ℤ :=
   denominator (1650 - 3 * k) - daTriple (1650 - d) - denominator (s - 1351 - q - 2 * k)
-
 private def daTarget (d q k : ℤ) : ℤ :=
   denominator (1649 - q - 3 * k) - daTriple (1649 - q - d)
-
 private def daFlag (d s q k : ℤ) : Flag :=
   ⟨d - 3 * k, s - 1350 - q - 2 * k, 1650 - 3 * k, 550 - k, 1650 - q - 3 * k⟩
-
--- On this window the cap subtraction vanishes. In the target count the
--- two lower-bound terms cancel, and the removed upper term is zero.
 private theorem daCounts (d s q k : ℤ)
     (hd : 1419 ≤ d) (hD : d ≤ 1650) (hs : 1419 ≤ s) (hS : s ≤ 1757)
     (hq : 0 ≤ q) (hQ : q ≤ 70) (hk : 0 ≤ k) (hK : k ≤ 256) :
@@ -5776,23 +5189,19 @@ private theorem daCounts (d s q k : ℤ)
   simp only [show ¬ D < 0 by omega, show ¬ U < 0 by omega, show ¬ C < 0 by omega,
     decide_false, Bool.false_or, Bool.false_eq_true, ite_false]
   rw [ho, ht]
-
 private def daSavings (s q k : ℕ) : ℕ :=
   let d := min (s : ℤ) 1650
   let old := daOld d s q 0
   let low := max 0 (old - daTarget d q 0)
   let res := daOld d s q k - daTarget d q k
   (old - low).toNat - (old - max low res).toNat
-
 private theorem daWindow (s q : ℕ) (hs : s ≤ 1757) :
     windowFlag s (3000 + q - s) = daFlag (min (s : ℤ) 1650) s q 0 := by
   simp [windowFlag, daFlag, Nat.cast_sub (show s ≤ 3000 + q by omega)]
   omega
-
 private theorem daCubic (d s q : ℤ) (k : ℕ) :
     cubicFlag (daFlag d s q 0) k = daFlag d s q k := by
   simp [cubicFlag, daFlag]
-
 private theorem daSavings_eq (s q k : ℕ) (hs : 1419 ≤ s) (hS : s ≤ 1757)
     (hq : q ≤ 70) (hk : k ≤ 256) (hk' : k ≠ 0) :
     cubicSavings s (3000 + q - s) k = daSavings s q k := by
@@ -5809,16 +5218,10 @@ private theorem daSavings_eq (s q k : ℕ) (hs : 1419 ≤ s) (hS : s ≤ 1757)
       (kernelLower (daFlag d s q k))).toNat = _
   rw [hb.1, hb.2, hr.2]
   rfl
-
--- These rounded cubics give D(n - 1) and D(n - 1) + D(n - 2) + D(n - 3).
--- The shifted index reserves zero for negative denominator arguments.
 private def daDenValue (n : ℕ) : ℕ :=
   (n * (n * (2 * n + 15) + 30) + 25) / 72
-
 private def daTripleValue (n : ℕ) : ℕ :=
   (n * (n * (2 * n + 9) + 10) + 3) / 24
-
--- Splitting the integer argument modulo 12 resolves both divisions in the original formula.
 private theorem daDenResidue (a r : ℤ) (hr : 0 ≤ r) (hR : r ≤ 11) :
     let q := 2 * a + r / 6
     let m := r % 6
@@ -5828,7 +5231,6 @@ private theorem daDenResidue (a r : ℤ) (hr : 0 ≤ r) (hR : r ≤ 11) :
       ((z + 1) * ((z + 1) * (2 * (z + 1) + 15) + 30) + 25) / 72 := by
   dsimp only
   interval_cases r <;> norm_num <;> ring_nf <;> omega
-
 private theorem daDenValue_eq (x : ℤ) :
     denominator x = (daDenValue (x + 1).toNat : ℤ) := by
   by_cases hx : x < 0
@@ -5845,14 +5247,12 @@ private theorem daDenValue_eq (x : ℤ) :
     push_cast
     rw [show ((x + 1).toNat : ℤ) = x + 1 by omega]
     exact hv
-
 private theorem daTriResidue (a r : ℤ) (hr : 0 ≤ r) (hR : r ≤ 11) :
     let f := fun t : ℤ => (t * (t * (2 * t + 15) + 30) + 25) / 72
     let z := 12 * a + r
     f z + f (z - 1) + f (z - 2) = (z * (z * (2 * z + 9) + 10) + 3) / 24 := by
   dsimp only
   interval_cases r <;> ring_nf <;> omega
-
 private theorem daTripleValue_eq (x : ℤ) :
     daTriple x = (daTripleValue x.toNat : ℤ) := by
   by_cases hn : x < 0
@@ -5872,7 +5272,6 @@ private theorem daTripleValue_eq (x : ℤ) :
   have hv := daTriResidue (x / 12) (x % 12) (by omega) (by omega)
   dsimp only at hv
   rwa [show 12 * (x / 12) + x % 12 = x by omega] at hv
-
 private def daNatSavings (s q k : ℕ) : ℕ :=
   let d := min s 1650
   let upperCorr := daTripleValue (1650 - d)
@@ -5883,8 +5282,6 @@ private def daNatSavings (s q k : ℕ) : ℕ :=
   let gain := daDenValue (1651 - 3 * k) + targetCorr -
     (upperCorr + daDenValue (s - 1350 - q - 2 * k) + daDenValue (1650 - q - 3 * k) + low)
   min rank gain
-
--- Express the signed, clipped rank difference using truncated Nat subtraction.
 private theorem daNatClip (p t b a v pk bk ak : ℕ) :
     let old : ℤ := (p : ℤ) - t - b
     let low := max 0 (old - ((a : ℤ) - v))
@@ -5894,7 +5291,6 @@ private theorem daNatClip (p t b a v pk bk ak : ℕ) :
       min (p - (t + b + natLow)) (pk + v - (t + bk + ak + natLow)) := by
   dsimp only
   omega
-
 private theorem daNatSavings_eq (s q k : ℕ) : daSavings s q k = daNatSavings s q k := by
   let d := min s 1650
   have hd' : min (s : ℤ) 1650 = (d : ℤ) := by dsimp [d]; omega
@@ -5914,13 +5310,11 @@ private theorem daNatSavings_eq (s q k : ℕ) : daSavings s q k = daNatSavings s
       hv (1649 - (q : ℤ) - 3 * (k : ℤ)) (1650 - q - 3 * k) (by omega)]
   rw [show daDenValue 1651 = 125576826 by decide +kernel]
   exact daNatClip _ _ _ _ _ _ _ _
-
 private def daEntry (s q k : ℕ) : ℕ :=
   let j := 3000 + q - s
   if 993 ≤ j ∧ j ≤ 1581 then
     if k = 0 then 0 else if k ≤ 256 then daNatSavings s q k else cubicSavings s j k
   else 0
-
 private theorem daEntry_eq (s q k : ℕ) (hs : 1419 ≤ s) (hS : s ≤ 1757) (hq : q ≤ 70) :
     entry s q k = daEntry s q k := by
   by_cases hz : k = 0
@@ -5929,18 +5323,14 @@ private theorem daEntry_eq (s q k : ℕ) (hs : 1419 ≤ s) (hS : s ≤ 1757) (hq
     · simp only [entry, daEntry, ite_eq_right hz, ite_eq_left hK,
         daSavings_eq s q k hs hS hq hK hz, daNatSavings_eq s q k]
     · simp only [entry, daEntry, ite_eq_right hz, ite_eq_right hK]
-
--- Once all base-512 digits are consumed, the remaining terms vanish.
 private theorem daRowZero (s q n : ℕ) : rowSum s q 0 n = 0 := by
   induction n generalizing q with
   | zero => rfl
   | succ n ih => simp [rowSum, entry, cubicSavings, ih]
-
 private def daRow (s q code : ℕ) : ℕ → ℕ
   | 0 => 0
   | n + 1 => if code = 0 then 0 else
       daEntry s q (code % 512) + daRow s (q + 1) (code / 512) n
-
 private theorem daRow_eq (s q code n : ℕ) (hs : 1419 ≤ s) (hS : s ≤ 1757)
     (hn : q + n ≤ 71) : rowSum s q code n = daRow s q code n := by
   induction n generalizing code q with
@@ -5951,11 +5341,9 @@ private theorem daRow_eq (s q code n : ℕ) (hs : 1419 ≤ s) (hS : s ≤ 1757)
       simp [daRowZero, daRow]
     · rw [rowSum, daRow, ite_eq_right hz, daEntry_eq s q _ hs hS (by omega),
         ih (q + 1) (code / 512) (by omega)]
-
 private def daRows (s : ℕ) : List ℕ → ℕ
   | [] => 0
   | code :: more => daRow s 0 code 71 + daRows (s + 1) more
-
 private theorem daRows_eq (s : ℕ) (xs : List ℕ) (hs : 1419 ≤ s) (he : s + xs.length ≤ 1758) :
     rowsSum s xs = daRows s xs := by
   induction xs generalizing s with
@@ -5964,160 +5352,108 @@ private theorem daRows_eq (s : ℕ) (xs : List ℕ) (hs : 1419 ≤ s) (he : s + 
     simp only [List.length_cons] at he
     rw [rowsSum, daRows, daRow_eq s 0 c 71 hs (by omega) (by decide),
       ih (s + 1) (by omega) (by omega)]
-
 private theorem daChecked (s : ℕ) (xs : List ℕ) (n total : ℕ)
     (h : xs.length = n ∧ 1419 ≤ s ∧ s + n ≤ 1758 ∧ daRows s xs = total) :
     xs.length = n ∧ rowsSum s xs = total :=
   ⟨h.1, (daRows_eq s xs h.2.1 (h.1.symm ▸ h.2.2.1)).trans h.2.2.2⟩
-
 private theorem daAppend {s n m a b : ℕ} {xs ys : List ℕ}
     (hx : xs.length = n ∧ rowsSum s xs = a)
     (hy : ys.length = m ∧ rowsSum (s + n) ys = b) :
     (xs ++ ys).length = n + m ∧ rowsSum s (xs ++ ys) = a + b := by
   simp only [List.length_append, rowsSum_append, hx.1, hx.2, hy.1, hy.2, and_self]
-
-/-- The certificate encodes a row per grade. The base-512 digit of index
-`q` is the cubic exponent on the diagonal `s + j = 3000 + q`. -/
-private def rowsA1_chunk000 : List ℕ := [1, 1, 2, 2]
-
+private def rowsA1_chunk000 : List ℕ := [1,1,2,2]
 private theorem rowsA1_chunk000_checked : rowsA1_chunk000.length = 4 ∧ rowsSum 1419 rowsA1_chunk000 = 184 := by
   apply daChecked
   decide +kernel
-
-private def rowsA1_chunk004 : List ℕ := [3, 3, 4, 4]
-
+private def rowsA1_chunk004 : List ℕ := [3,3,4,4]
 private theorem rowsA1_chunk004_checked : rowsA1_chunk004.length = 4 ∧ rowsSum 1423 rowsA1_chunk004 = 1104 := by
   apply daChecked
   decide +kernel
-
-private def rowsA1_chunk008 : List ℕ := [5, 6, 6, 6]
-
+private def rowsA1_chunk008 : List ℕ := [5,6,6,6]
 private theorem rowsA1_chunk008_checked : rowsA1_chunk008.length = 4 ∧ rowsSum 1427 rowsA1_chunk008 = 2856 := by
   apply daChecked
   decide +kernel
-
-private def rowsA1_chunk012 : List ℕ := [7, 8, 8, 8]
-
+private def rowsA1_chunk012 : List ℕ := [7,8,8,8]
 private theorem rowsA1_chunk012_checked : rowsA1_chunk012.length = 4 ∧ rowsSum 1431 rowsA1_chunk012 = 5512 := by
   apply daChecked
   decide +kernel
-
-private def rowsA1_chunk016 : List ℕ := [9, 9, 10, 12]
-
+private def rowsA1_chunk016 : List ℕ := [9,9,10,12]
 private theorem rowsA1_chunk016_checked : rowsA1_chunk016.length = 4 ∧ rowsSum 1435 rowsA1_chunk016 = 9050 := by
   apply daChecked
   decide +kernel
-
-private def rowsA1_chunk020 : List ℕ := [12, 12, 12, 12]
-
+private def rowsA1_chunk020 : List ℕ := [12,12,12,12]
 private theorem rowsA1_chunk020_checked : rowsA1_chunk020.length = 4 ∧ rowsSum 1439 rowsA1_chunk020 = 13632 := by
   apply daChecked
   decide +kernel
-
-private def rowsA1_chunk024 : List ℕ := [13, 13, 16, 16]
-
+private def rowsA1_chunk024 : List ℕ := [13,13,16,16]
 private theorem rowsA1_chunk024_checked : rowsA1_chunk024.length = 4 ∧ rowsSum 1443 rowsA1_chunk024 = 19103 := by
   apply daChecked
   decide +kernel
-
-private def rowsA1_chunk028 : List ℕ := [16, 16, 16, 529]
-
+private def rowsA1_chunk028 : List ℕ := [16,16,16,529]
 private theorem rowsA1_chunk028_checked : rowsA1_chunk028.length = 4 ∧ rowsSum 1447 rowsA1_chunk028 = 25884 := by
   apply daChecked
   decide +kernel
-
-private def rowsA1_chunk032 : List ℕ := [1041, 1042, 1554, 1555]
-
+private def rowsA1_chunk032 : List ℕ := [1041,1042,1554,1555]
 private theorem rowsA1_chunk032_checked : rowsA1_chunk032.length = 4 ∧ rowsSum 1451 rowsA1_chunk032 = 34333 := by
   apply daChecked
   decide +kernel
-
-private def rowsA1_chunk036 : List ℕ := [2067, 2068, 2584, 3096]
-
+private def rowsA1_chunk036 : List ℕ := [2067,2068,2584,3096]
 private theorem rowsA1_chunk036_checked : rowsA1_chunk036.length = 4 ∧ rowsSum 1455 rowsA1_chunk036 = 44501 := by
   apply daChecked
   decide +kernel
-
-private def rowsA1_chunk040 : List ℕ := [3096, 3096, 3608, 4120]
-
+private def rowsA1_chunk040 : List ℕ := [3096,3096,3608,4120]
 private theorem rowsA1_chunk040_checked : rowsA1_chunk040.length = 4 ∧ rowsSum 1459 rowsA1_chunk040 = 57794 := by
   apply daChecked
   decide +kernel
-
-private def rowsA1_chunk044 : List ℕ := [4120, 4120, 4632, 4633]
-
+private def rowsA1_chunk044 : List ℕ := [4120,4120,4632,4633]
 private theorem rowsA1_chunk044_checked : rowsA1_chunk044.length = 4 ∧ rowsSum 1463 rowsA1_chunk044 = 73760 := by
   apply daChecked
   decide +kernel
-
-private def rowsA1_chunk048 : List ℕ := [5145, 6170, 6170, 6171]
-
+private def rowsA1_chunk048 : List ℕ := [5145,6170,6170,6171]
 private theorem rowsA1_chunk048_checked : rowsA1_chunk048.length = 4 ∧ rowsSum 1467 rowsA1_chunk048 = 91810 := by
   apply daChecked
   decide +kernel
-
-private def rowsA1_chunk052 : List ℕ := [6171, 6688, 268832, 269344]
-
+private def rowsA1_chunk052 : List ℕ := [6171,6688,268832,269344]
 private theorem rowsA1_chunk052_checked : rowsA1_chunk052.length = 4 ∧ rowsSum 1471 rowsA1_chunk052 = 111993 := by
   apply daChecked
   decide +kernel
-
-private def rowsA1_chunk056 : List ℕ := [532512, 532512, 794656, 794656]
-
+private def rowsA1_chunk056 : List ℕ := [532512,532512,794656,794656]
 private theorem rowsA1_chunk056_checked : rowsA1_chunk056.length = 4 ∧ rowsSum 1475 rowsA1_chunk056 = 136932 := by
   apply daChecked
   decide +kernel
-
-private def rowsA1_chunk060 : List ℕ := [1056800, 1319456, 1581601, 1582113]
-
+private def rowsA1_chunk060 : List ℕ := [1056800,1319456,1581601,1582113]
 private theorem rowsA1_chunk060_checked : rowsA1_chunk060.length = 4 ∧ rowsSum 1479 rowsA1_chunk060 = 166213 := by
   apply daChecked
   decide +kernel
-
-private def rowsA1_chunk064 : List ℕ := [1582114, 1844770, 2106915, 2107427]
-
+private def rowsA1_chunk064 : List ℕ := [1582114,1844770,2106915,2107427]
 private theorem rowsA1_chunk064_checked : rowsA1_chunk064.length = 4 ∧ rowsSum 1483 rowsA1_chunk064 = 199448 := by
   apply daChecked
   decide +kernel
-
-private def rowsA1_chunk068 : List ℕ := [2109476, 2371620, 2371620, 2633766]
-
+private def rowsA1_chunk068 : List ℕ := [2109476,2371620,2371620,2633766]
 private theorem rowsA1_chunk068_checked : rowsA1_chunk068.length = 4 ∧ rowsSum 1487 rowsA1_chunk068 = 236173 := by
   apply daChecked
   decide +kernel
-
-private def rowsA1_chunk072 : List ℕ := [3158054, 3158054, 137375782, 137375784]
-
+private def rowsA1_chunk072 : List ℕ := [3158054,3158054,137375782,137375784]
 private theorem rowsA1_chunk072_checked : rowsA1_chunk072.length = 4 ∧ rowsSum 1491 rowsA1_chunk072 = 279400 := by
   apply daChecked
   decide +kernel
-
-private def rowsA1_chunk076 : List ℕ := [271594032, 406073904, 406336560, 541078576]
-
+private def rowsA1_chunk076 : List ℕ := [271594032,406073904,406336560,541078576]
 private theorem rowsA1_chunk076_checked : rowsA1_chunk076.length = 4 ∧ rowsSum 1495 rowsA1_chunk076 = 323511 := by
   apply daChecked
   decide +kernel
-
-private def rowsA1_chunk080 : List ℕ := [541079088, 675296816, 809515056, 809517104]
-
+private def rowsA1_chunk080 : List ℕ := [541079088,675296816,809515056,809517104]
 private theorem rowsA1_chunk080_checked : rowsA1_chunk080.length = 4 ∧ rowsSum 1499 rowsA1_chunk080 = 380169 := by
   apply daChecked
   decide +kernel
-
-private def rowsA1_chunk084 : List ℕ := [809779248, 943996976, 1078476848, 1078476848]
-
+private def rowsA1_chunk084 : List ℕ := [809779248,943996976,1078476848,1078476848]
 private theorem rowsA1_chunk084_checked : rowsA1_chunk084.length = 4 ∧ rowsSum 1503 rowsA1_chunk084 = 443081 := by
   apply daChecked
   decide +kernel
-
-private def rowsA1_chunk088 : List ℕ := [1078738992, 1212956720]
-
+private def rowsA1_chunk088 : List ℕ := [1078738992,1212956720]
 private theorem rowsA1_chunk088_checked : rowsA1_chunk088.length = 2 ∧ rowsSum 1507 rowsA1_chunk088 = 247486 := by
   apply daChecked
   decide +kernel
-
 private def rowsA1 : List ℕ := rowsA1_chunk000 ++ rowsA1_chunk004 ++ rowsA1_chunk008 ++ rowsA1_chunk012 ++ rowsA1_chunk016 ++ rowsA1_chunk020 ++ rowsA1_chunk024 ++ rowsA1_chunk028 ++ rowsA1_chunk032 ++ rowsA1_chunk036 ++ rowsA1_chunk040 ++ rowsA1_chunk044 ++ rowsA1_chunk048 ++ rowsA1_chunk052 ++ rowsA1_chunk056 ++ rowsA1_chunk060 ++ rowsA1_chunk064 ++ rowsA1_chunk068 ++ rowsA1_chunk072 ++ rowsA1_chunk076 ++ rowsA1_chunk080 ++ rowsA1_chunk084 ++ rowsA1_chunk088
-
 private theorem rowsA1_checked :
     rowsA1.length = 90 ∧ rowsSum 1419 rowsA1 = 2903929 :=
   daAppend rowsA1_chunk000_checked <|
@@ -6143,117 +5479,79 @@ private theorem rowsA1_checked :
   daAppend rowsA1_chunk080_checked <|
   daAppend rowsA1_chunk084_checked <|
   rowsA1_chunk088_checked
-
-private def rowsA2_chunk000 : List ℕ := [1213218864, 70336397360, 70336397872, 139055874609]
-
+private def rowsA2_chunk000 : List ℕ := [1213218864,70336397360,70336397872,139055874609]
 private theorem rowsA2_chunk000_checked : rowsA2_chunk000.length = 4 ∧ rowsSum 1509 rowsA2_chunk000 = 549100 := by
   apply daChecked
   decide +kernel
-
-private def rowsA2_chunk004 : List ℕ := [139055875121, 207775352370, 207909570098, 276629047347]
-
+private def rowsA2_chunk004 : List ℕ := [139055875121,207775352370,207909570098,276629047347]
 private theorem rowsA2_chunk004_checked : rowsA2_chunk004.length = 4 ∧ rowsSum 1513 rowsA2_chunk004 = 631098 := by
   apply daChecked
   decide +kernel
-
-private def rowsA2_chunk008 : List ℕ := [276763265075, 345751439412, 414470917172, 414471179316]
-
+private def rowsA2_chunk008 : List ℕ := [276763265075,345751439412,414470917172,414471179316]
 private theorem rowsA2_chunk008_checked : rowsA2_chunk008.length = 4 ∧ rowsSum 1517 rowsA2_chunk008 = 721185 := by
   apply daChecked
   decide +kernel
-
-private def rowsA2_chunk012 : List ℕ := [483190656054, 551910394934, 552044613686, 552044879926]
-
+private def rowsA2_chunk012 : List ℕ := [483190656054,551910394934,552044613686,552044879926]
 private theorem rowsA2_chunk012_checked : rowsA2_chunk012.length = 4 ∧ rowsSum 1521 rowsA2_chunk012 = 818867 := by
   apply daChecked
   decide +kernel
-
-private def rowsA2_chunk016 : List ℕ := [620899622968, 35805405929536, 35874125406272, 71196070666304]
-
+private def rowsA2_chunk016 : List ℕ := [620899622968,35805405929536,35874125406272,71196070666304]
 private theorem rowsA2_chunk016_checked : rowsA2_chunk016.length = 4 ∧ rowsSum 1525 rowsA2_chunk016 = 919874 := by
   apply daChecked
   decide +kernel
-
-private def rowsA2_chunk020 : List ℕ := [71196607537216, 106380979626048, 106380979626048, 141565351714880]
-
+private def rowsA2_chunk020 : List ℕ := [71196607537216,0x60c0c0806040,0x60c0c0806040,0x80c0c0806040]
 private theorem rowsA2_chunk020_checked : rowsA2_chunk020.length = 4 ∧ rowsSum 1529 rowsA2_chunk020 = 1043682 := by
   apply daChecked
   decide +kernel
-
-private def rowsA2_chunk024 : List ℕ := [141634071453760, 176887163019328, 212208974323776, 212208974323776]
-
+private def rowsA2_chunk024 : List ℕ := [0x80d0c0846040,0xa0e0c0846040,0xc100c0886040,0xc100c0886040]
 private theorem rowsA2_chunk024_checked : rowsA2_chunk024.length = 4 ∧ rowsSum 1533 rowsA2_chunk024 = 1181252 := by
   apply daChecked
   decide +kernel
-
-private def rowsA2_chunk028 : List ℕ := [247393346674752, 282577852981312, 282577987461184, 282646706937920]
-
+private def rowsA2_chunk028 : List ℕ := [0xe100c08c6040,282577852981312,282577987461184,282646706937920]
 private theorem rowsA2_chunk028_checked : rowsA2_chunk028.length = 4 ∧ rowsSum 1537 rowsA2_chunk028 = 1328543 := by
   apply daChecked
   decide +kernel
-
-private def rowsA2_chunk032 : List ℕ := [18332229722726976, 18332298442728000, 36381881458517057, 36452319459042369]
-
+private def rowsA2_chunk032 : List ℕ := [0x412110d8906240,0x412120d8986240,0x814120e0986441,0x81813100986441]
 private theorem rowsA2_chunk032_checked : rowsA2_chunk032.length = 4 ∧ rowsSum 1541 rowsA2_chunk032 = 1486575 := by
   apply daChecked
   decide +kernel
-
-private def rowsA2_chunk036 : List ℕ := [54466717968524866, 54467061566432834, 72481460078012483, 90531042959583299]
-
+private def rowsA2_chunk036 : List ℕ := [0xc1813100986642,0xc1818100a06642,72481460078012483,90531042959583299]
 private theorem rowsA2_chunk036_checked : rowsA2_chunk036.length = 4 ∧ rowsSum 1545 rowsA2_chunk036 = 1653595 := by
   apply daChecked
   decide +kernel
-
-private def rowsA2_chunk040 : List ℕ := [108545441469065284, 108580625841155140, 108650994585332804, 126665393094814790]
-
+private def rowsA2_chunk040 : List ℕ := [0x181a18100c06844,0x181c18100c06c44,0x182018100c06c44,0x1c2018100c06c46]
 private theorem rowsA2_chunk040_checked : rowsA2_chunk040.length = 4 ∧ rowsSum 1549 rowsA2_chunk040 = 1814289 := by
   apply daChecked
   decide +kernel
-
-private def rowsA2_chunk044 : List ℕ := [144679791738515526, 144679791872733254, 9368051897446989894, 9386101480462778440]
-
+private def rowsA2_chunk044 : List ℕ := [0x202018108c07046,0x202018110c07046,0x8202019110c08046,0x8242219118c08048]
 private theorem rowsA2_chunk044_checked : rowsA2_chunk044.length = 4 ∧ rowsSum 1553 rowsA2_chunk044 = 1964020 := by
   apply daChecked
   decide +kernel
-
-private def rowsA2_chunk048 : List ℕ := [18609473586037030984, 18663551966071783496, 27886959256018124872, 37110331361592377416]
-
+private def rowsA2_chunk048 : List ℕ := [0x1024221a118c08048,0x1030241a120c08048,0x1830261b120c08048,0x2030261c120c08048]
 private theorem rowsA2_chunk048_checked : rowsA2_chunk048.length = 4 ∧ rowsSum 1557 rowsA2_chunk048 = 2129047 := by
   apply daChecked
   decide +kernel
-
-private def rowsA2_chunk052 : List ℕ := [37110366821110808652, 46333879595453939788, 55575266030818459724, 55575266030818459724]
-
+private def rowsA2_chunk052 : List ℕ := [0x20302820130c0804c,0x28303020130c0804c,0x30343020130c4804c,0x30343020130c4804c]
 private theorem rowsA2_chunk052_checked : rowsA2_chunk052.length = 4 ∧ rowsSum 1561 rowsA2_chunk052 = 2309631 := by
   apply daChecked
   decide +kernel
-
-private def rowsA2_chunk056 : List ℕ := [55593280429596639308, 64852681264544120908, 74076053301399158860, 4796442536171044372556]
-
+private def rowsA2_chunk056 : List ℕ := [0x30383020140c8804c,0x38403020180c8804c,0x40403020180cc804c,0x1040403020180cc804c]
 private theorem rowsA2_chunk056_checked : rowsA2_chunk056.length = 4 ∧ rowsSum 1565 rowsA2_chunk056 = 2504617 := by
   apply daChecked
   decide +kernel
-
-private def rowsA2_chunk060 : List ℕ := [4805665908207899410512, 9528050440729145671776, 9537273812766000447584, 14278105089360956785248]
-
+private def rowsA2_chunk060 : List ℕ := [0x1048403020180d08050,0x2048443221180d08060,0x2050443221180d08060,0x3060483422180d88260]
 private theorem rowsA2_chunk060_checked : rowsA2_chunk060.length = 4 ∧ rowsSum 1569 rowsA2_chunk060 = 2708537 := by
   apply daChecked
   decide +kernel
-
-private def rowsA2_chunk064 : List ℕ := [19000471572299321476192, 19000489621882203047008, 23722856104820567737952, 28445240637273095046752]
-
+private def rowsA2_chunk064 : List ℕ := [0x4060483423180d88460,0x40604c3623180d88460,0x50604c3624180d88660,0x6060503824180e08660]
 private theorem rowsA2_chunk064_checked : rowsA2_chunk064.length = 4 ∧ rowsSum 1573 rowsA2_chunk064 = 2946193 := by
   apply daChecked
   decide +kernel
-
-private def rowsA2_chunk068 : List ℕ := [28454536207641478203488, 28454536207778917156960]
-
+private def rowsA2_chunk068 : List ℕ := [0x6068604024181008860,0x6068604026181008860]
 private theorem rowsA2_chunk068_checked : rowsA2_chunk068.length = 2 ∧ rowsSum 1577 rowsA2_chunk068 = 1563390 := by
   apply daChecked
   decide +kernel
-
 private def rowsA2 : List ℕ := rowsA2_chunk000 ++ rowsA2_chunk004 ++ rowsA2_chunk008 ++ rowsA2_chunk012 ++ rowsA2_chunk016 ++ rowsA2_chunk020 ++ rowsA2_chunk024 ++ rowsA2_chunk028 ++ rowsA2_chunk032 ++ rowsA2_chunk036 ++ rowsA2_chunk040 ++ rowsA2_chunk044 ++ rowsA2_chunk048 ++ rowsA2_chunk052 ++ rowsA2_chunk056 ++ rowsA2_chunk060 ++ rowsA2_chunk064 ++ rowsA2_chunk068
-
 private theorem rowsA2_checked :
     rowsA2.length = 70 ∧ rowsSum 1509 rowsA2 = 28273495 :=
   daAppend rowsA2_chunk000_checked <|
@@ -6274,75 +5572,51 @@ private theorem rowsA2_checked :
   daAppend rowsA2_chunk060_checked <|
   daAppend rowsA2_chunk064_checked <|
   rowsA2_chunk068_checked
-
-private def rowsA3_chunk000 : List ℕ := [33204572806759126698080, 2455778578518887121325152, 2455778578518887121325152, 4878352584231152689122400]
-
+private def rowsA3_chunk000 : List ℕ := [0x7080604026181008860,0x208080604026181008c60,0x208080604026181008c60,0x409080604028189008c60]
 private theorem rowsA3_chunk000_checked : rowsA3_chunk000.length = 4 ∧ rowsSum 1579 rowsA3_chunk000 = 3338238 := by
   apply daChecked
   decide +kernel
-
-private def rowsA3_chunk004 : List ℕ := [4878352584231702444936288, 7300935813315867428556896, 7310380564331189600555104, 9728241426932484938960992]
-
+private def rowsA3_chunk004 : List ℕ := [0x409080604030189008c60,0x60a088604030191009060,0x60c088644230191009060,0x80c090644230199009060]
 private theorem rowsA3_chunk004_checked : rowsA3_chunk004.length = 4 ∧ rowsSum 1583 rowsA3_chunk004 = 3625471 := by
   apply daChecked
   decide +kernel
-
-private def rowsA3_chunk008 : List ℕ := [12146093084211326169944160, 14563953946812621508350048, 14563963188234241244696672, 14568722466219656818497632]
-
+private def rowsA3_chunk008 : List ℕ := [0xa0c090684430199009060,0xc0c0986844301a1009060,0xc0c0a06c46301a1009060,0xc0d0c07046301a1009860]
 private theorem rowsA3_chunk008_checked : rowsA3_chunk008.length = 4 ∧ rowsSum 1587 rowsA3_chunk008 = 3946296 := by
   apply daChecked
   decide +kernel
-
-private def rowsA3_chunk012 : List ℕ := [16991296544024563491575904, 1257358632201599836030539872, 1257358632201670204774717536, 2495298671487050479674103904]
-
+private def rowsA3_chunk012 : List ℕ := [0xe0e0c08048301b1009860,0x410100c08048301b1009860,0x410100c0804c301b1009860,0x810100c0804c301b1049860]
 private theorem rowsA3_chunk012_checked : rowsA3_chunk012.length = 4 ∧ rowsSum 1591 rowsA3_chunk012 = 4286127 := by
   apply daChecked
   decide +kernel
-
-private def rowsA3_chunk016 : List ℕ := [2497716523126279738292213856, 3738074414050889272614492256, 4980854878981281302602096736, 4980854888204653339456872544]
-
+private def rowsA3_chunk016 : List ℕ := [0x812100c0804c301c1089860,0xc14100c0804c30201089860,0x1018110c08050302010ca060,0x1018110c88050302010ca060]
 private theorem rowsA3_chunk016_checked : rowsA3_chunk016.length = 4 ∧ rowsSum 1595 rowsA3_chunk016 = 4649499 := by
   apply daChecked
   decide +kernel
-
-private def rowsA3_chunk020 : List ℕ := [6218799649856798027697668192, 7456744420750047607606263904, 7456744420768062074835222624, 7459167003997146239685148768]
-
+private def rowsA3_chunk020 : List ℕ := [0x1418120c880603120110c060,0x1818130d084603120110c060,0x1818130d088603220110c060,0x181a140d888603220118c060]
 private theorem rowsA3_chunk020_checked : rowsA3_chunk020.length = 4 ∧ rowsSum 1599 rowsA3_chunk020 = 5008695 := by
   apply daChecked
   decide +kernel
-
-private def rowsA3_chunk024 : List ℕ := [642522426046881173208745689184, 643762783947029154778849001568, 1277592919801333816658547490913, 1278830859840619196933447139425]
-
+private def rowsA3_chunk024 : List ℕ := [0x81c1a180d88c603320118c060,0x8201c180e08c603320118c060,0x1020201810090603420118c061,0x1024201810090603420120c061]
 private theorem rowsA3_chunk024_checked : rowsA3_chunk024.length = 4 ∧ rowsSum 1603 rowsA3_chunk024 = 5391796 := by
   apply daChecked
   decide +kernel
-
-private def rowsA3_chunk028 : List ℕ := [1912656159954733897681798742114, 1913894099994055306891155783778, 2550197698038379997447655047267, 2550197698038379997447655047267]
-
+private def rowsA3_chunk028 : List ℕ := [0x1824201810090603420120c062,0x1828201810098603620120c062,0x2030221810098603620120c063,0x2030221810098603620120c063]
 private theorem rowsA3_chunk028_checked : rowsA3_chunk028.length = 4 ∧ rowsSum 1607 rowsA3_chunk028 = 5767634 := by
   apply daChecked
   decide +kernel
-
-private def rowsA3_chunk032 : List ℕ := [3817850720840651140006811844708, 3817850720840651140006946062436, 3817853143424024339909627134052, 328971472459855790433347382067302]
-
+private def rowsA3_chunk032 : List ℕ := [0x30302419100a0603820130c064,0x30302419100a0603820930c064,0x3030261a108c0604020930c064,0x103834281a108c0604021130c066]
 private theorem rowsA3_chunk032_checked : rowsA3_chunk032.length = 4 ∧ rowsSum 1611 rowsA3_chunk032 = 6156288 := by
   apply daChecked
   decide +kernel
-
-private def rowsA3_chunk036 : List ℕ := [329606545376147337321494902521958, 654127574914652634900385227653222, 654127574919384224755291727642726, 979279953896823755577896041758824]
-
+private def rowsA3_chunk036 : List ℕ := [0x104038301b110c0624021130c066,0x204040301b110c0644021930c066,0x204040301c118c0644021930c066,0x3048403020120c0664022130c068]
 private theorem rowsA3_chunk036_checked : rowsA3_chunk036.length = 4 ∧ rowsSum 1615 rowsA3_chunk036 = 6577418 := by
   apply daChecked
   decide +kernel
-
-private def rowsA3_chunk040 : List ℕ := [979913779196937870278644394410088, 1305699983455592826498481490280552]
-
+private def rowsA3_chunk040 : List ℕ := [0x3050403020120c0664022140c068,0x4060403020120c0684022140c068]
 private theorem rowsA3_chunk040_checked : rowsA3_chunk040.length = 2 ∧ rowsSum 1619 rowsA3_chunk040 = 3462537 := by
   apply daChecked
   decide +kernel
-
 private def rowsA3 : List ℕ := rowsA3_chunk000 ++ rowsA3_chunk004 ++ rowsA3_chunk008 ++ rowsA3_chunk012 ++ rowsA3_chunk016 ++ rowsA3_chunk020 ++ rowsA3_chunk024 ++ rowsA3_chunk028 ++ rowsA3_chunk032 ++ rowsA3_chunk036 ++ rowsA3_chunk040
-
 private theorem rowsA3_checked :
     rowsA3.length = 42 ∧ rowsSum 1579 rowsA3 = 52209999 :=
   daAppend rowsA3_chunk000_checked <|
@@ -6356,57 +5630,39 @@ private theorem rowsA3_checked :
   daAppend rowsA3_chunk032_checked <|
   daAppend rowsA3_chunk036_checked <|
   rowsA3_chunk040_checked
-
-private def rowsA4_chunk000 : List ℕ := [1630219775054077285405986392162408, 1954739566652543297569417311862888, 1954739569070394936869044405452908, 1954740807010434222249319573012588]
-
+private def rowsA4_chunk000 : List ℕ := [0x5060443020130c0684023180c068,0x6060483020130c0684023180c068,0x6060483220130c06c4023180c06c,0x60604c3220130c06c4024180c06c]
 private theorem rowsA4_chunk000_checked : rowsA4_chunk000.length = 4 ∧ rowsSum 1621 rowsA4_chunk000 = 7260342 := by
   apply daChecked
   decide +kernel
-
-private def rowsA4_chunk004 : List ℕ := [168433392661501329262682438539198572, 168757912453104591428305033942319212, 334913318356302149032686757867470956, 501391336383075059872727271399800940]
-
+private def rowsA4_chunk004 : List ℕ := [0x2070684c3420140c06c4024180c06c,0x208068503421180c06c4024180c06c,0x408080603622180c0704024180c06c,0x609080603622180c0804024180c06c]
 private theorem rowsA4_chunk004_checked : rowsA4_chunk004.length = 4 ∧ rowsSum 1625 rowsA4_chunk004 = 7766341 := by
   apply daChecked
   decide +kernel
-
-private def rowsA4_chunk008 : List ℕ := [501391336385497633896453866623385708, 667869354421941951293129939113525356, 668518391529263527131193588028850288, 834672524827678125376884617424978560]
-
+private def rowsA4_chunk008 : List ℕ := [0x609080603823180c4804124180c06c,0x80a080604023180c4804126180c06c,0x80c080604024180c8804226180c070,0xa0c088604024180cc804226180c280]
 private theorem rowsA4_chunk008_checked : rowsA4_chunk008.length = 4 ∧ rowsSum 1629 rowsA4_chunk008 = 8309886 := by
   apply daChecked
   decide +kernel
-
-private def rowsA4_chunk012 : List ℕ := [1000826024300792609489860568679498368, 1000826658126102168355541523550487680, 86237572522897072671712250287278310528, 86404050540923845582552009325833930368]
-
+private def rowsA4_chunk012 : List ℕ := [0xc0c088604024180cc804326180c280,0xc0c090604026180d0804426180c480,0x40e0c098644026180d0804426180c480,0x4100d098644026180d0804426180c680]
 private theorem rowsA4_chunk012_checked : rowsA4_chunk012.length = 4 ∧ rowsSum 1633 rowsA4_chunk012 = 8898525 := by
   apply daChecked
   decide +kernel
-
-private def rowsA4_chunk016 : List ℕ := [171474967424775369473291520037332502144, 171475618997186304634843118601129478272, 256712364228132012803016989573667408000, 341782955959606986559785250967005481088]
-
+private def rowsA4_chunk016 : List ℕ := [0x8100e0a0684028180d8804628180c680,0x810100c0684228180d8804628180c880,0xc12100c06c4230180d8804628180c880,0x1012100c0704430180d8804630180c880]
 private theorem rowsA4_chunk016_checked : rowsA4_chunk016.length = 4 ∧ rowsSum 1637 rowsA4_chunk016 = 9516978 := by
   apply daChecked
   decide +kernel
-
-private def rowsA4_chunk020 : List ℕ := [341949109464034279052715006141944351872, 427352008193215123896152096989887122560, 512422924442005816040361761262199164032, 512423248960559474476311951639446604928]
-
+private def rowsA4_chunk020 : List ℕ := [0x1014100c0804630180e0804830180cc80,0x1418100c080463018900804830180cc80,0x1818110c080483018900804830180cc80,0x1818120c080483019100824830180cc80]
 private theorem rowsA4_chunk020_checked : rowsA4_chunk020.length = 4 ∧ rowsSum 1641 rowsA4_chunk020 = 10091626 := by
   apply daChecked
   decide +kernel
-
-private def rowsA4_chunk024 : List ℕ := [44068566214840682797788261702905777672320, 44238873876953008938257405332421372596352, 87795016842833132261578578455724558438528, 131351326287365107657915482701962168815744]
-
+private def rowsA4_chunk024 : List ℕ := [0x81818120c080483019100824830180d080,0x8201a130c8804c3019900844c30180d080,0x10201a130c8804c301a100844c30180d080,0x18201c140d0804c301a100864c30180d080]
 private theorem rowsA4_chunk024_checked : rowsA4_chunk024.length = 4 ∧ rowsSum 1645 rowsA4_chunk024 = 10709640 := by
   apply daChecked
   decide +kernel
-
-private def rowsA4_chunk028 : List ℕ := [131436730484169745912199023312185233297536, 174992873450683694535643534508273625520256, 175077944043049011734475892075221613598848, 218804228194924905489975988003565979359360]
-
+private def rowsA4_chunk028 : List ℕ := [0x182420180d08450301a100884c30180d080,0x202420180d88450301b100884c30180d880,0x202820180e08860301b100884c30180d880,0x283020181008860301b1008c4c30180d880]
 private theorem rowsA4_chunk028_checked : rowsA4_chunk028.length = 4 ∧ rowsSum 1649 rowsA4_chunk028 = 11354713 := by
   apply daChecked
   decide +kernel
-
 private def rowsA4 : List ℕ := rowsA4_chunk000 ++ rowsA4_chunk004 ++ rowsA4_chunk008 ++ rowsA4_chunk012 ++ rowsA4_chunk016 ++ rowsA4_chunk020 ++ rowsA4_chunk024 ++ rowsA4_chunk028
-
 private theorem rowsA4_checked :
     rowsA4.length = 32 ∧ rowsSum 1621 rowsA4 = 73908051 :=
   daAppend rowsA4_chunk000_checked <|
@@ -6417,51 +5673,35 @@ private theorem rowsA4_checked :
   daAppend rowsA4_chunk020_checked <|
   daAppend rowsA4_chunk024_checked <|
   rowsA4_chunk028_checked
-
-private def rowsA5_chunk000 : List ℕ := [262360537314305739867811336110989744593024, 262360537314305739872552149338207977527424, 22606662044964309715786179557070288086947968, 44951048457052543215265797989676111767328896]
-
+private def rowsA5_chunk000 : List ℕ := [0x303022181008c60301b1008c4c30180d880,0x303022181008c60311c1008c5030184d880,0x1038302418100906031201008c5030184d880,0x204034241810090603220100906030188d880]
 private theorem rowsA5_chunk000_checked : rowsA5_chunk000.length = 4 ∧ rowsSum 1653 rowsA5_chunk000 = 12030169 := by
   apply daChecked
   decide +kernel
-
-private def rowsA5_chunk004 : List ℕ := [44951048623530563717918787400195700121196672, 67251879059130935120848004740752226279809152, 67295606007894273605860984829710738635415680, 89596351206750049126359966328340272668278912]
-
+private def rowsA5_chunk004 : List ℕ := [0x204034261910098603220100906030188d880,0x304038281a1009860332010490603018ce080,0x304840301a10098603320104906030190e080,0x404840301b108986034201089060301910080]
 private theorem rowsA5_chunk004_checked : rowsA5_chunk004.length = 4 ∧ rowsSum 1657 rowsA5_chunk004 = 12736568 := by
   apply daChecked
   decide +kernel
-
-private def rowsA5_chunk008 : List ℕ := [112027764834178315113745699021143720454062208, 134328510033034100537760272436332584035221632, 134328595104923904987019289938097203859488896, 11552310136752603587278607159648759043273064576]
-
+private def rowsA5_chunk008 : List ℕ := [0x506040301b108a06034201089860301910080,0x606040301c110c060342010c9860301990080,0x6060443020110c06036201109860301990080,0x206060443020118c06036201109860301990080]
 private theorem rowsA5_chunk008_checked : rowsA5_chunk008.length = 4 ∧ rowsSum 1661 rowsA5_chunk008 = 13509033 := by
   apply daChecked
   decide +kernel
-
-private def rowsA5_chunk012 : List ℕ := [11574610967021725940654758743765059262721097856, 23014936810010902126213632940106344524631048320, 34432918436895326404387651045658933356170117249, 34455349935593347665786828424424981086825676929]
-
+private def rowsA5_chunk012 : List ℕ := [0x207060483020118c06036201109860301990080,0x408068483020120c06238201189860301a10080,0x6080684c3220120c06238201189860301a10081,0x609080503220130c06440201189860301a10081]
 private theorem rowsA5_chunk012_checked : rowsA5_chunk012.length = 4 ∧ rowsSum 1665 rowsA5_chunk012 = 14361060 := by
   apply daChecked
   decide +kernel
-
-private def rowsA5_chunk016 : List ℕ := [45873331817689547134664694127508666229679259778, 45895632562888077757808647697456572646553616514, 57358215595099296070584779809661524485991366787, 68776197136913129886177200129239092214776266884]
-
+private def rowsA5_chunk016 : List ℕ := [0x809080603420130c0644020118a060301a10082,0x80a080603420130c0664020120a060301a10082,0xa0c080603621130c0664020920c060301a10083,0xc0c080603821140c0684020920c060309b10084]
 private theorem rowsA5_chunk016_checked : rowsA5_chunk016.length = 4 ∧ rowsSum 1669 rowsA5_chunk016 = 15213582 := by
   apply daChecked
   decide +kernel
-
-private def rowsA5_chunk020 : List ℕ := [5914782790017332712168088371591640586814665851012, 5926200771558980715735113153477241789578581442692, 11783647646725581564101583631137487658552103338118, 17629654239605336527314999943750519643635174146182]
-
+private def rowsA5_chunk020 : List ℕ := [0x40c0c088604022180c0684021120c060309b10084,0x40e0c088604023180c06c4021120c060311b10084,0x8100d090604023180c06c4021930c060311b10086,0xc100d098604024180c06c4022130c060319b10086]
 private theorem rowsA5_chunk020_checked : rowsA5_chunk020.length = 4 ∧ rowsSum 1673 rowsA5_chunk020 = 16020251 := by
   apply daChecked
   decide +kernel
-
-private def rowsA5_chunk024 : List ℕ := [17629676540435605649668376095334635943854756397190, 23487145716347405028659230884446422870350489518214, 23498563872198695811996770338226847179025468686472]
-
+private def rowsA5_chunk024 : List ℕ := [0xc100e098644024180c06c4022130c060321b10086,0x1012100a0644024180c4704022130c060321b10086,0x1014100c0684026180c8704023130c060321c10088]
 private theorem rowsA5_chunk024_checked : rowsA5_chunk024.length = 3 ∧ rowsSum 1677 rowsA5_chunk024 = 12595054 := by
   apply daChecked
   decide +kernel
-
 private def rowsA5 : List ℕ := rowsA5_chunk000 ++ rowsA5_chunk004 ++ rowsA5_chunk008 ++ rowsA5_chunk012 ++ rowsA5_chunk016 ++ rowsA5_chunk020 ++ rowsA5_chunk024
-
 private theorem rowsA5_checked :
     rowsA5.length = 27 ∧ rowsSum 1653 rowsA5 = 96465717 :=
   daAppend rowsA5_chunk000_checked <|
@@ -6471,45 +5711,31 @@ private theorem rowsA5_checked :
   daAppend rowsA5_chunk016_checked <|
   daAppend rowsA5_chunk020_checked <|
   rowsA5_chunk024_checked
-
-private def rowsA6_chunk000 : List ℕ := [29367406384605602842908461587416285013898386538632, 35213412934014451260954146588670659100537497125000, 3028368788488533897513491167460055925280012872253576, 3034214795038197957706727556313648643549169159569544]
-
+private def rowsA6_chunk000 : List ℕ := [0x1418100c0684026180c8804023130c060331c10088,0x1818100c06c4226180cc804023130c060332010088,0x81818110c0704228180cc804023140c060332010088,0x81c18110c0804428180d0804124140c060332010088]
 private theorem rowsA6_chunk000_checked : rowsA6_chunk000.length = 4 ∧ rowsSum 1680 rowsA6_chunk000 = 17567317 := by
   apply daChecked
   decide +kernel
-
-private def rowsA6_chunk004 : List ℕ := [6033216177141955946987460403850593486796752676782216, 9026382948377186937301154880660503474702321918738572, 9026394388659473949664328437478540027048206819983500, 12025418606769871374672889911651616564186860004376716]
-
+private def rowsA6_chunk004 : List ℕ := [0x102018120c0804430180d0804124140c060342010088,0x18201a120c0804630180d0804224180c06034201008c,0x18201c130c0804830180d8804224180c06034201008c,0x202420140c8804830180d8804324180c06034201008c]
 private theorem rowsA6_chunk004_checked : rowsA6_chunk004.length = 4 ∧ rowsSum 1684 rowsA6_chunk004 = 18497024 := by
   apply daChecked
   decide +kernel
-
-private def rowsA6_chunk008 : List ℕ := [12031264702565731923434077340448703630098412228116620, 15036112068918068655568488603927264796406942938497164, 18029267422215313975016149089953638485114376188657804, 1550524819706085799051633964844696202559474385859707020]
-
+private def rowsA6_chunk008 : List ℕ := [0x202820180d0804830180d8804326180c06134201008c,0x283020180d0804c30188e0804426180c06136201008c,0x303020180d8804c30190e0804426180c06236201008c,0x10303022180d8844c3019100804626180c06236201008c]
 private theorem rowsA6_chunk008_checked : rowsA6_chunk008.length = 4 ∧ rowsSum 1688 rowsA6_chunk008 = 19536570 := by
   apply daChecked
   decide +kernel
-
-private def rowsA6_chunk012 : List ℕ := [3086013515925271903061735651427260728092872706363555980, 3089006682696681443528351097158860544955746139259339408, 4621508069569119711898191298893332446568723551747113616, 4621513926993650577157543162101378400562446411598202000]
-
+private def rowsA6_chunk012 : List ℕ := [0x20383022180e084503019900804626180c06336201008c,0x204030241810088503019900804626180c064362010290,0x30403424181008c60301a100804626180c064362010290,0x30403826181008c60301a100824828180c064362010490]
 private theorem rowsA6_chunk012_checked : rowsA6_chunk012.length = 4 ∧ rowsSum 1692 rowsA6_chunk012 = 20635869 := by
   apply daChecked
   decide +kernel
-
-private def rowsA6_chunk016 : List ℕ := [6157014315248192602184840586294504074415299984680354960, 7692503068557242857958064002316072835277329170908120720, 9230984920151939839867903945682723779991179943970145936, 793868701843487035489483089825666333802838926634376038544]
-
+private def rowsA6_chunk016 : List ℕ := [0x40484026191009060301b100824828180c066362010490,0x50504030191009060301b100844828180c066382010690,0x606040301a1009060301b100844830180c066382010690,0x20606040301a1009860311b100864830180c066402010890]
 private theorem rowsA6_chunk016_checked : rowsA6_chunk016.length = 4 ∧ rowsSum 1696 rowsA6_chunk016 = 21713176 := by
   apply daChecked
   decide +kernel
-
-private def rowsA6_chunk020 : List ℕ := [793868707689515885558293294531200237355578215990684616848, 1580038920153739214197467140481127366008940568454730156176, 1581574414696054152775691918373315507834960895965543861392]
-
+private def rowsA6_chunk020 : List ℕ := [0x20606044301b1009860311c100884c30180c068402010890,0x40706044301c1089860321c100884c30180c068402010890,0x408068483020110a0603220100884c30180c068402010c90]
 private theorem rowsA6_chunk020_checked : rowsA6_chunk020.length = 3 ∧ rowsSum 1700 rowsA6_chunk020 = 16957259 := by
   apply daChecked
   decide +kernel
-
 private def rowsA6 : List ℕ := rowsA6_chunk000 ++ rowsA6_chunk004 ++ rowsA6_chunk008 ++ rowsA6_chunk012 ++ rowsA6_chunk016 ++ rowsA6_chunk020
-
 private theorem rowsA6_checked :
     rowsA6.length = 23 ∧ rowsSum 1680 rowsA6 = 114907215 :=
   daAppend rowsA6_chunk000_checked <|
@@ -6518,39 +5744,27 @@ private theorem rowsA6_checked :
   daAppend rowsA6_chunk012_checked <|
   daAppend rowsA6_chunk016_checked <|
   rowsA6_chunk020_checked
-
-private def rowsA7_chunk000 : List ℕ := [2366212131619389248255165920792832303977760603380639665296, 3152385343084950079842494123922771557652355891504665922712, 3152391329407074568762494765264312651303200363570301832344, 3938561571101308343274528120147479180176509093094742888600]
-
+private def rowsA7_chunk000 : List ℕ := [0x608068483020110a06033201008c4c30180c268402010c90,0x8090704c3020118c06034201008c4c30180c468402010c98,0x8090804c3220118c06034201008c4c30180c46c402010c98,0xa0a080603220120c06034201048c4c30180c66c402011098]
 private theorem rowsA7_chunk000_checked : rowsA7_chunk000.length = 4 ∧ rowsSum 1703 rowsA7_chunk000 = 23599906 := by
   apply daChecked
   decide +kernel
-
-private def rowsA7_chunk004 : List ℕ := [406460775343865362083502889905478967190309083364993706037400, 406460775343865362170615175837240451776972268282985639383192, 808979927118703037386816162914126537514723144351565297553560, 809764564835637812764582483450737448972660410064077133516952]
-
+private def rowsA7_chunk004 : List ℕ := [0x40c0c080603420120c0603620104905030180c66c402011098,0x40c0c080603420130c0603620108905030180c86c402011098,0x80e0c088603620130c0623620108905030180c86c402011098,0x8100c088603821130c062382010c906030180c86c402011098]
 private theorem rowsA7_chunk004_checked : rowsA7_chunk004.length = 4 ∧ rowsSum 1707 rowsA7_chunk004 = 24803520 := by
   apply daChecked
   decide +kernel
-
-private def rowsA7_chunk008 : List ℕ := [1211500611389127272718787298233896363520888183775137800198296, 1211500611389127295106644785292428190642050727108313530570904, 1614021295659494440879356825294957088523443496613691342788760, 2016543512431248436441056493059666223802749717108966579050648]
-
+private def rowsA7_chunk008 : List ℕ := [0xc100d090604021130c0643820110906030180cc6c402011898,0xc100d090604022140c0644020110986030180cc6c402011898,0x10120e098604023180c0664020110986030180cc70402011898,0x1414100a0644023180c0684020118986030180d070402051898]
 private theorem rowsA7_chunk008_checked : rowsA7_chunk008.length = 4 ∧ rowsSum 1711 rowsA7_chunk008 = 26030978 := by
   apply daChecked
   decide +kernel
-
-private def rowsA7_chunk012 : List ℕ := [2419847310902464110833007867955968082184834824086641206171840, 208107916976059065386753479299297595944357683178377146364664000, 413795986641209820656124627451274041838728748723227142704928960, 414599457195840702710935280864525713788581414105007956356307136]
-
+private def rowsA7_chunk012 : List ℕ := [0x1818100c0644024180c0684020118986030180d0804020518c0,0x81818100c0684024180c0684020118986030184d0804020918c0,0x101818100c0684024180c06c4020918986030184d0804020918c0,0x102018110c06c4026180c06c4020920986030188d0804020d18c0]
 private theorem rowsA7_chunk012_checked : rowsA7_chunk012.length = 4 ∧ rowsSum 1715 rowsA7_chunk012 = 27292478 := by
   apply daChecked
   decide +kernel
-
-private def rowsA7_chunk016 : List ℕ := [620288311498714238739932858487816655144931417346945351762911424, 620288313031233163632019011625162574024093143852806618286727360, 826378903377661142133843104915273630890151932221543550127513792, 1032068542318245755491386839729797654279403175700391040281813184]
-
+private def rowsA7_chunk016 : List ℕ := [0x18201a110c0704226180c46c4021120a06030188d0804021120c0,0x18201a120c0804226180c4704021920a0603018cd8804021120c0,0x20241c130c0804428180c8704021920a06030190d8804021120c0,0x282420130c0804628180cc804022120c06030190d8804021920c0]
 private theorem rowsA7_chunk016_checked : rowsA7_chunk016.length = 4 ∧ rowsSum 1719 rowsA7_chunk016 = 28642995 := by
   apply daChecked
   decide +kernel
-
 private def rowsA7 : List ℕ := rowsA7_chunk000 ++ rowsA7_chunk004 ++ rowsA7_chunk008 ++ rowsA7_chunk012 ++ rowsA7_chunk016
-
 private theorem rowsA7_checked :
     rowsA7.length = 20 ∧ rowsSum 1703 rowsA7 = 130369877 :=
   daAppend rowsA7_chunk000_checked <|
@@ -6558,39 +5772,27 @@ private theorem rowsA7_checked :
   daAppend rowsA7_chunk008_checked <|
   daAppend rowsA7_chunk012_checked <|
   rowsA7_chunk016_checked
-
-private def rowsA8_chunk000 : List ℕ := [1238158348029949954727191987195624921824633744218736685085171904, 106551253491739248322664527712063886709323130602215337570571198656, 211863545160299428175935809084910801442406229178618105671433396416, 212069234014605289009893529401380629303024776122240989062204825792]
-
+private def rowsA8_chunk000 : List ℕ := [0x302820140c8804630180cc804022130c06030190d8804021920c0,0x10303020180c8804830180d0804022130c06030198d8804021920c0,0x20303020180d0804830180d0804023130c06030198d8804021920c0,0x20383022180d8804830180d0804023130c06030198d8804022120c0]
 private theorem rowsA8_chunk000_checked : rowsA8_chunk000.length = 4 ∧ rowsSum 1723 rowsA8_chunk000 = 29931024 := by
   apply daChecked
   decide +kernel
-
-private def rowsA8_chunk004 : List ℕ := [317587213752827626485916891486307596510998179175600447590951362752, 317587616271979407158180719025235480811657769092114839380795924672, 423105997744724781980350018103954916339029607253063770408501715136, 528419093666941820965583468381336377397400487354230715491708645568]
-
+private def rowsA8_chunk004 : List ℕ := [0x30403022180d8804c30180d8804123130c06030198e0804022120c0,0x30403424180e0844c30188d8804124130c060301a0e0804022120c0,0x4048382418100844c30188d8804224130c060309a0e0804022120c0,0x5048402618100885030190e0804224140c060311a100804022130c0]
 private theorem rowsA8_chunk004_checked : rowsA8_chunk004.length = 4 ∧ rowsSum 1727 rowsA8_chunk004 = 31362247 := by
   apply daChecked
   decide +kernel
-
-private def rowsA8_chunk008 : List ℕ := [633937074191334376728978400874270500790820025226256055689011081408, 54554241787770495135358231595696955353923471973044403945145325662400, 108474135122073307226079134207918186721059457498802937867091018068160, 108579447815476375477524621164648523207084427748531867350340130123968]
-
+private def rowsA8_chunk008 : List ℕ := [0x60504028191008c5030190e0804324140c060311a1008040a2130c0,0x2060604030191008c603019900804424140c060319a1008040a3130c0,0x40606040301a10090603019900804424180c060319b100804123130c0,0x40706044301a1009060301a100804426180c060321b100804123130c0]
 private theorem rowsA8_chunk008_checked : rowsA8_chunk008.length = 4 ∧ rowsSum 1731 rowsA8_chunk008 = 32793617 := by
   apply daChecked
   decide +kernel
-
-private def rowsA8_chunk012 : List ℕ := [162604653441447744749097435255229813982741869315050633729236020572352, 162604859531251920976292286697627666014235368095938750032197270450368, 216630065157229423223183917597331732163610314099788721776575946764480, 270550575957474212322686700324739351263421408356889578246953526964416]
-
+private def rowsA8_chunk012 : List ℕ := [0x60806044301b1009060301a100804626180c060321b1008041a3130c0,0x60806848301b1009860301b100804626180c060321b1008041a3130c0,0x8090684830201089860301b100824626180c060331b100804223130c0,0xa090804c30201109860311b100824826180c060331b100804223130c0]
 private theorem rowsA8_chunk012_checked : rowsA8_chunk012.length = 4 ∧ rowsSum 1735 rowsA8_chunk012 = 34383972 := by
   apply daChecked
   decide +kernel
-
-private def rowsA8_chunk016 : List ℕ := [27931561168745699198849434133033956680877202574290850142752003456053440, 27931771795338493509256646501953057573259101359986007820193111652511936]
-
+private def rowsA8_chunk016 : List ℕ := [0x40c0a0804c3020110a060321b100844826180c060331b100804224130c0,0x40c0c080603220118a060321c100844826180c060341c100804324130c0]
 private theorem rowsA8_chunk016_checked : rowsA8_chunk016.length = 2 ∧ rowsSum 1739 rowsA8_chunk016 = 17805320 := by
   apply daChecked
   decide +kernel
-
 private def rowsA8 : List ℕ := rowsA8_chunk000 ++ rowsA8_chunk004 ++ rowsA8_chunk008 ++ rowsA8_chunk012 ++ rowsA8_chunk016
-
 private theorem rowsA8_checked :
     rowsA8.length = 18 ∧ rowsSum 1723 rowsA8 = 146276180 :=
   daAppend rowsA8_chunk000_checked <|
@@ -6598,39 +5800,27 @@ private theorem rowsA8_checked :
   daAppend rowsA8_chunk008_checked <|
   daAppend rowsA8_chunk012_checked <|
   rowsA8_chunk016_checked
-
-private def rowsA9_chunk000 : List ℕ := [55538757182501533296759361361200422258537655024058364700822994134577344, 55646596969170135858931184774802190123866849612270681094461510603845824, 83253582562021245311537886850677664425558763928433767709830359973703872, 110860673467163238689600674193691976079724699124497022205915387522023616]
-
+private def rowsA9_chunk000 : List ℕ := [0x80c0c080603420118c0603320100864828180c061341c100804324130c0,0x8100c080603420120c0603320100884828180c062341c100804324130c0,0xc100c088603620120c0603420100884830180c0623420100804424130c0,0x10100d090603620130c0603420100884c30180c0633420100804424180c0]
 private theorem rowsA9_chunk000_checked : rowsA9_chunk000.length = 4 ∧ rowsSum 1741 rowsA9_chunk000 = 36670908 := by
   apply daChecked
   decide +kernel
-
-private def rowsA9_chunk004 : List ℕ := [110914698672789994696589170387479527572897465646349105084407017323462848, 138521894890226795176720038282396062437946956281276246045170354840764608, 14301067158184466592364102622049244893728282195892657505731908823645520064, 14301067159213308676739403008955363987111598650029745641034156472400969920]
-
+private def rowsA9_chunk004 : List ℕ := [0x10120e090603821130c06036201008c4c30180c0633420100804424180c0,0x141210098604021130c06036201008c4c30180c0643620100804424180c0,0x8181810098604022130c06236201048c4c30180c0643620100814424180c0,0x81818100c0644023140c0643620108904c30180c0643620100814424180c0]
 private theorem rowsA9_chunk004_checked : rowsA9_chunk004.length = 4 ∧ rowsSum 1745 rowsA9_chunk004 = 38204146 := by
   apply daChecked
   decide +kernel
-
-private def rowsA9_chunk008 : List ℕ := [28463450662827545568579467281218451219350184679505683314499961509979979968, 42625834271754475864996333308560097068638240690928541028230557201692983488, 42625834271754877599507398056128982559162624055793805285886135523984113856, 56760664815187578206010554105438514035432545602686028350364866611219890368]
-
+private def rowsA9_chunk008 : List ℕ := [0x101c18100c0644023180c0643820108904c30180c0663620100824624180c0,0x182018110c0684024180c066402010c904c30180c0663620100834626180c0,0x182018110c06c4024180c066402010c905030180c0663620100834626180c0,0x20201a120c06c4024180c0684020110905030180c2683620100844626180c0]
 private theorem rowsA9_chunk008_checked : rowsA9_chunk008.length = 4 ∧ rowsSum 1749 rowsA9_chunk008 = 39928229 := by
   apply daChecked
   decide +kernel
-
-private def rowsA9_chunk012 : List ℕ := [56788325720468477284653655215553554863217154558773105945404321563335033024, 7322091171019672569995483341672973481026032558829437468912101379019896881344, 7322146384990446895290420542489213342032737518416914882734108417791210127552, 14559151962849476255679123180858798913701143050361472396012918354141165748416]
-
+private def rowsA9_chunk012 : List ℕ := [0x20241c120c0704226180c0684020110905030180c2683820100844626180c0,0x10302820130c0804226180c06c4020118986030180c4683820100844626180c0,0x10303020130c0804426180c46c4020118986030180c6683820100864626180c0,0x20303020180c8804428180c46c4020918986030180c6684020100864826180c0]
 private theorem rowsA9_chunk012_checked : rowsA9_chunk012.length = 4 ∧ rowsSum 1753 rowsA9_chunk012 = 41715946 := by
   apply daChecked
   decide +kernel
-
-private def rowsA9_chunk016 : List ℕ := [14573286739367703331100427283634083906630848272252177398407456942191590604992]
-
+private def rowsA9_chunk016 : List ℕ := [0x20383020180c8804628180c86c4020918986030180c8684020100864826180c0]
 private theorem rowsA9_chunk016_checked : rowsA9_chunk016.length = 1 ∧ rowsSum 1757 rowsA9_chunk016 = 10717684 := by
   apply daChecked
   decide +kernel
-
 private def rowsA9 : List ℕ := rowsA9_chunk000 ++ rowsA9_chunk004 ++ rowsA9_chunk008 ++ rowsA9_chunk012 ++ rowsA9_chunk016
-
 private theorem rowsA9_checked :
     rowsA9.length = 17 ∧ rowsSum 1741 rowsA9 = 167236913 :=
   daAppend rowsA9_chunk000_checked <|
@@ -6638,15 +5828,12 @@ private theorem rowsA9_checked :
   daAppend rowsA9_chunk008_checked <|
   daAppend rowsA9_chunk012_checked <|
   rowsA9_chunk016_checked
-
 def rowsA : List ℕ := rowsA1 ++ rowsA2 ++ rowsA3 ++ rowsA4 ++ rowsA5 ++ rowsA6 ++ rowsA7 ++ rowsA8 ++ rowsA9
-
 theorem rowsA_length : rowsA.length = 339 := by
   simp only [rowsA, List.length_append, Nat.reduceAdd,
     rowsA1_checked.1, rowsA2_checked.1, rowsA3_checked.1, rowsA4_checked.1,
     rowsA5_checked.1, rowsA6_checked.1, rowsA7_checked.1, rowsA8_checked.1,
     rowsA9_checked.1]
-
 theorem rowsA_sum : rowsSum 1419 rowsA = 812551376 := by
   simp only [rowsA, rowsSum_append, List.length_append, Nat.reduceAdd,
     rowsA1_checked.1, rowsA2_checked.1, rowsA3_checked.1, rowsA4_checked.1,
@@ -6654,53 +5841,39 @@ theorem rowsA_sum : rowsSum 1419 rowsA = 812551376 := by
     rowsA1_checked.2, rowsA2_checked.2, rowsA3_checked.2, rowsA4_checked.2,
     rowsA5_checked.2, rowsA6_checked.2, rowsA7_checked.2, rowsA8_checked.2,
     rowsA9_checked.2]
-
 end K1_13_2_3_4
-end PackSource_K1_13_2_3_4DataA
-
-section PackSource_K1_13_2_3_6AuxC
-set_option autoImplicit true
+end
+section
 namespace K1_13_2_3_6
 open K1_13_2_3
 open private fastDen fastC fastOld fastKernel from ProximityPrize.SubmissionLower.Numeric6Defs
 open private decode runLength rowLength rowValue rowStart runValue sumFrom from ProximityPrize.SubmissionLower.Numeric6AuxCert
-
 set_option maxRecDepth 50000
 set_option maxHeartbeats 0
-
--- Shift the cubic by one to handle negative inputs at zero.
 private def auxCDen (k : ℕ) : ℕ :=
   let lin := Nat.add (Nat.mul 2 k) 15
   let quad := Nat.add (Nat.mul k lin) 30
   Nat.div (Nat.add (Nat.mul k quad) 25) 72
-
--- The sum of three consecutive denominators is itself a rounded cubic.
 private def auxCExc (k : ℕ) : ℕ :=
   let lin := Nat.add (Nat.mul 2 k) 9
   let quad := Nat.add (Nat.mul k lin) 10
   Nat.div (Nat.add (Nat.mul k quad) 3) 24
-
 private theorem auxCDen_formula (k : ℕ) :
     auxCDen k = (k * (k * (2*k+15)+30)+25) / 72 := rfl
-
 private theorem auxCExc_formula (k : ℕ) :
     auxCExc k = (k * (k * (2*k+9)+10)+3) / 24 := rfl
-
 private theorem auxCDen_step (k : ℕ) :
     auxCDen (k+12) = auxCDen k + (k*(k+17)+83) := by
   simp only [auxCDen_formula]
   rw [show (k+12)*((k+12)*(2*(k+12)+15)+30)+25 =
       (k*(k*(2*k+15)+30)+25) + 72*(k*(k+17)+83) by ring, Nat.add_mul_div_left _ _ (by decide)]
-
 private theorem auxCExc_step (k : ℕ) :
     auxCExc (k+12) = auxCExc k + (k*(3*k+45)+203) := by
   simp only [auxCExc_formula]
   rw [show (k+12)*((k+12)*(2*(k+12)+9)+10)+3 =
       (k*(k*(2*k+9)+10)+3) + 24*(k*(3*k+45)+203) by ring, Nat.add_mul_div_left _ _ (by decide)]
-
 private theorem auxCExc_small : ∀ i : Fin 14, auxCExc i.val =
     auxCDen i.val + auxCDen (i.val-1) + auxCDen (i.val-2) := by decide +kernel
-
 private theorem auxCExc_correct (k : ℕ) :
     auxCExc k = auxCDen k + auxCDen (k-1) + auxCDen (k-2) := by
   induction k using Nat.strong_induction_on with
@@ -6714,7 +5887,6 @@ private theorem auxCExc_correct (k : ℕ) :
         show n+14 = (n+2)+12 by omega, auxCExc_step, auxCDen_step (n+2),
         auxCDen_step (n+1), auxCDen_step n, hi]
       ring
-
 private theorem auxCDen_eq (u : ℤ) : fastDen u = (auxCDen (u+1).toNat : ℤ) := by
   by_cases hu : u < 0
   · rw [fastDen, ite_eq_left hu, show (u+1).toNat = 0 by omega]
@@ -6725,14 +5897,11 @@ private theorem auxCDen_eq (u : ℤ) : fastDen u = (auxCDen (u+1).toNat : ℤ) :
       Nat.cast_add, Nat.cast_one, Nat.cast_mul, Nat.cast_ofNat]
     congr 1
     ring
-
 private theorem auxCExc_eq (x : ℤ) :
     (auxCExc x.toNat : ℤ) = fastDen (x-1) + fastDen (x-2) + fastDen (x-3) := by
   simp only [auxCExc_correct, Nat.cast_add, auxCDen_eq]
   rw [show (x-1+1).toNat = x.toNat by omega,
     show (x-2+1).toNat = x.toNat-1 by omega, show (x-3+1).toNat = x.toNat-2 by omega]
-
--- On this interval the second inclusion-exclusion correction is zero.
 private theorem auxCCum (d u : ℤ) (hd : 0 ≤ d) (h₁ : u ≤ 3*d) (h₂ : u ≤ 2*d+2) :
     fastC d u = (auxCDen (u+1).toNat : ℤ) - auxCExc (u-d).toNat := by
   rw [← auxCDen_eq, auxCExc_eq]
@@ -6748,20 +5917,15 @@ private theorem auxCCum (d u : ℤ) (hd : 0 ≤ d) (h₁ : u ≤ 3*d) (h₂ : u 
         hz _ (show u-d-3 < 0 by omega)]
     · rw [ite_eq_left (show u-d ≤ d+2 by omega)]
       omega
-
 private def auxCRem (d l o : ℕ) := (o + d - (1+l)) / 4 + 1
-
--- The nonnegative part of the signed kernel on the checked range.
 private def auxCK (d l cap o : ℕ) :=
   let m := auxCRem d l o
   auxCDen (3*cap+1) + auxCDen (o - 3*m) + auxCExc (l - (1+(d-m))) -
     (auxCExc (3*cap-d) + auxCDen o + auxCDen l)
-
 private def auxCGood (d l cap o : ℕ) : Bool :=
   let m := auxCRem d l o
   1+l ≤ o+d && m ≤ d && l ≤ 3*cap+1 && 3*cap ≤ 2*d+2 && cap ≤ d &&
     o ≤ d+1 && l ≤ 3*(d-m)+1 && l ≤ 2*(d-m)+3
-
 private theorem auxCK_eq (d l cap o : ℕ) (hg : auxCGood d l cap o = true) :
     (fastKernel d l cap o).toNat = auxCK d l cap o := by
   let m := auxCRem d l o
@@ -6794,7 +5958,6 @@ private theorem auxCK_eq (d l cap o : ℕ) (hg : auxCGood d l cap o = true) :
   change _ = auxCDen (3*cap+1) + auxCDen (o-3*m) + auxCExc (l-(1+(d-m))) -
     (auxCExc (3*cap-d) + auxCDen o + auxCDen l)
   omega
-
 private theorem auxCOld (j : ℕ) :
     (fastOld 1650 (1650-j) 550).toNat = auxCDen 1651 - auxCDen (1650-j) := by
   unfold fastOld
@@ -6805,24 +5968,19 @@ private theorem auxCOld (j : ℕ) :
     show ((1650 : ℤ)-j-1-1650).toNat = 0 by omega]
   change ((auxCDen 1651 : ℤ) - 0 - (auxCDen (1650-j) - 0)).toNat = _
   omega
-
 private theorem auxCClip (old initial residual : ℤ) :
     min old.toNat residual.toNat - initial.toNat =
       (old - max 0 initial).toNat - (old - max (max 0 initial) residual).toNat := by
   omega
-
--- The bounds apply to all offsets of a nonzero run.
 private def auxCBox (s j n a b c : ℕ) : Bool :=
   3100 ≤ s && s ≤ 3200 && 200 ≤ j && j+n ≤ 410 && 3360 ≤ s+j &&
     a+4*c ≤ 384 && b ≤ 256 && a ≤ b+360
-
 private def auxCQuick (s j a b c : ℕ) : ℕ :=
   let l := 1650-j
   let o := 4650-(s+j)
   Nat.min (auxCDen 1651 - auxCDen l)
     (auxCK (1650-(a+b+3*c)) (l-(3*b+2*c)) (550-(b+c)) (o-(2*b+3*c))) -
     auxCK 1650 l 550 o
-
 private theorem auxCQuick_eq (s j a b c : ℕ)
     (hs : 3100 ≤ s) (hs' : s ≤ 3200) (hj : 200 ≤ j) (hj' : j ≤ 409)
     (hsj : 3360 ≤ s+j) (ha : a+4*c ≤ 384) (hb : b ≤ 256) (hab : a ≤ b+360) :
@@ -6855,22 +6013,16 @@ private theorem auxCQuick_eq (s j a b c : ℕ)
     show (o' : ℤ) = 4650-s-j-(2*b+3*c) by omega, show (l : ℤ) = 1650-j by omega,
     show (o : ℤ) = 4650-s-j by omega]
   exact auxCClip _ _ _
-
--- Force a natural argument to a literal before reusing it at every offset of a run.
 private def auxCForce {α : Type} (x : ℕ) (f : ℕ → α) : α :=
   match x with
   | 0 => f 0
   | n+1 => f n.succ
-
 private theorem auxCForce_eq {α : Type} (x : ℕ) (f : ℕ → α) :
     auxCForce x f = f x := by cases x <;> rfl
-
 private def auxCAt (h e x y o l i : ℕ) :=
   let positive := Nat.add (Nat.add h (auxCDen (Nat.sub x i))) (auxCExc (Nat.sub y i))
   let negative := Nat.add (Nat.add e (auxCDen (Nat.sub o i))) (auxCDen (Nat.sub l i))
   Nat.sub positive negative
-
--- Advancing the offset decreases l and o together, so the cut m stays fixed.
 private def auxCWithK {α : Type} (d l cap o : ℕ) (f : (ℕ → ℕ) → α) : α :=
   let m := auxCRem d l o
   auxCForce (auxCDen (3*cap+1)) fun h =>
@@ -6880,7 +6032,6 @@ private def auxCWithK {α : Type} (d l cap o : ℕ) (f : (ℕ → ℕ) → α) :
   auxCForce o fun o' =>
   auxCForce l fun l' =>
   f (auxCAt h e x y o' l')
-
 private theorem auxCAt_eq (d l cap o i : ℕ) (hl : i ≤ l) (ho : i ≤ o) :
     auxCAt (auxCDen (3*cap+1)) (auxCExc (3*cap-d)) (o-3*auxCRem d l o)
       (l-(1+(d-auxCRem d l o))) o l i = auxCK d (l-i) cap (o-i) := by
@@ -6891,7 +6042,6 @@ private theorem auxCAt_eq (d l cap o i : ℕ) (hl : i ≤ l) (ho : i ≤ o) :
   rw [hm, show o-i-3*auxCRem d l o = o-3*auxCRem d l o-i by omega,
     show l-i-(1+(d-auxCRem d l o)) = l-(1+(d-auxCRem d l o))-i by omega]
   rfl
-
 private def auxCOffsetSum (s j a b c n : ℕ) :=
   let l := 1650-j
   let o := 4650-(s+j)
@@ -6901,7 +6051,6 @@ private def auxCOffsetSum (s j a b c n : ℕ) :=
   auxCWithK d (l-(3*b+2*c)) cap (o-(2*b+3*c)) fun res =>
   sumFrom (fun i => auxCForce (res i) fun residual =>
     Nat.sub (Nat.min (Nat.sub 125576826 (auxCDen (Nat.sub l i))) residual) (init i)) 0 n
-
 private theorem auxCOffsetSum_eq (s j a b c n : ℕ)
     (hbox : auxCBox s j n a b c = true) : auxCOffsetSum s j a b c n =
     sumFrom (fun u => blockSaving s u ⟨a,b,c⟩) j n := by
@@ -6930,7 +6079,6 @@ private theorem auxCOffsetSum_eq (s j a b c n : ℕ)
   | zero => rfl
   | succ k ih =>
     rw [sumFrom, sumFrom, ih (fun i hi => h i (by omega)), Nat.zero_add, h k (by omega)]
-
 private def auxCRun (s j code : ℕ) : ℕ :=
   let n := runLength code
   let a := code % 2048
@@ -6939,7 +6087,6 @@ private def auxCRun (s j code : ℕ) : ℕ :=
   if code % 2147483648 = 0 then 0 else
     if auxCBox s j n a b c then auxCOffsetSum s j a b c n
     else runValue s j code
-
 private theorem auxCRun_eq (s j code : ℕ) : auxCRun s j code = runValue s j code := by
   unfold auxCRun
   dsimp only
@@ -6949,24 +6096,19 @@ private theorem auxCRun_eq (s j code : ℕ) : auxCRun s j code = runValue s j co
     · rw [runValue, ite_eq_right hz]
       exact auxCOffsetSum_eq _ _ _ _ _ _ h
     · rfl
-
 private def auxCRow (s j : ℕ) : List ℕ → ℕ
   | [] => 0
   | code :: tail => auxCRun s j code + auxCForce (j + runLength code) (fun j' => auxCRow s j' tail)
-
 private theorem auxCRow_eq (s j : ℕ) (row : List ℕ) :
     auxCRow s j row = rowValue s j row := by
   induction row generalizing j with
   | nil => rfl
   | cons code tail ih => rw [auxCRow, auxCForce_eq, auxCRun_eq, ih, rowValue]
-
--- Check each row against its own literal total.
 private def auxCChecks (s : ℕ) : List (List ℕ) → List ℕ → Bool
   | [], [] => true
   | row :: rest, v :: vs =>
       (auxCRow s (rowStart s) row == v) && auxCChecks (s+1) rest vs
   | _, _ => false
-
 private theorem auxCChecks_sound (s : ℕ) (rows : List (List ℕ)) (vs : List ℕ)
     (h : auxCChecks s rows vs = true) :
     rows.length = vs.length ∧ value s rows = vs.sum := by
@@ -6980,15 +6122,12 @@ private theorem auxCChecks_sound (s : ℕ) (rows : List (List ℕ)) (vs : List �
       obtain ⟨hn, hv⟩ := ih (s+1) vs p.2
       refine ⟨congrArg Nat.succ hn, ?_⟩
       exact congrArg₂ Nat.add ((auxCRow_eq s (rowStart s) row).symm.trans (eq_of_beq p.1)) hv
-
 private def auxCBatch (s : ℕ) (rows : List (List ℕ)) (n w : ℕ) : Prop :=
   rows.length = n ∧ fits s rows = true ∧ value s rows = w
-
 private theorem auxCChecked (s : ℕ) (rows : List (List ℕ)) (vs : List ℕ)
     (h : fits s rows = true ∧ auxCChecks s rows vs = true) : auxCBatch s rows vs.length vs.sum := by
   have p := auxCChecks_sound s rows vs h.2
   exact ⟨p.1, h.1, p.2⟩
-
 private theorem auxCMerge (s : ℕ) (a b : List (List ℕ)) (n m x y : ℕ)
     (ha : auxCBatch s a n x) (hb : auxCBatch (s+n) b m y) :
     auxCBatch s (a++b) (n+m) (x+y) := by
@@ -6996,504 +6135,451 @@ private theorem auxCMerge (s : ℕ) (a b : List (List ℕ)) (n m x y : ℕ)
   obtain ⟨hm, hg, hw⟩ := hb
   exact ⟨by rw [List.length_append, hn, hm], by rw [fits_append, hn, hf, hg]; rfl,
     by rw [value_append, hn, hv, hw]⟩
-
 private def auxCData3103 : List (List ℕ) := [
-    [77309411328, 4496818176, 2282225664, 2349203456, 13019512832, 6543507456, 4362469376,
-    2248409088, 4362338304, 2198077440, 33816576, 6442713472, 6442647936, 8590131456, 4295098624,
-    98560, 2147549440, 2147533056, 33024, 24832, 16640, 264, 259, 15032385792, 2147483872,
-    2147483864, 208, 204, 200, 195, 15032385728, 2147483808, 2147483800, 144, 140, 136, 131,
-    8589934720, 108, 104, 99, 8589934688, 76, 72, 67, 4294967360, 51, 4294967344, 35, 2147483680,
-    2147483672, 16, 12, 8, 3],
-    [77309411328, 6644301824, 134742016, 2349203456, 13019512832, 8690991104, 2214985728,
-    2248409088, 4362338304, 4345561088, 8590197120, 6442647936, 8590131456, 2147614976, 98560,
-    4295033088, 49408, 2147516672, 24832, 12544, 262, 258, 15032385792, 224, 2147483864,
-    2147483856, 204, 198, 194, 15032385728, 160, 2147483800, 2147483792, 140, 134, 130, 6442451072,
-    112, 108, 102, 98, 6442451040, 80, 76, 70, 66, 2147483712, 54, 50, 2147483696, 38, 34, 32, 26,
-    24, 18, 16, 12, 6, 2],
-    [79456894976, 4496818176, 2282225664, 2349203456, 10872029184, 8690991104, 4362469376,
-    100925440, 6509821952, 2198077440, 8590197120, 8590131584, 6442647808, 4295098624, 98560,
-    2147549440, 2147533056, 33024, 24832, 16640, 268, 262, 257, 15032385792, 224, 2147483864,
-    2147483856, 204, 198, 193, 15032385728, 160, 2147483800, 2147483792, 140, 134, 129, 6442451072,
-    112, 108, 102, 97, 6442451040, 80, 76, 70, 65, 2147483712, 54, 49, 2147483696, 38, 33, 32, 25,
-    24, 17, 16, 12, 6, 1],
-    [79456894976, 4496818176, 2282225664, 2349203456, 13019512832, 6543507456, 4362469376,
-    2248409088, 4362338304, 2198077440, 10737680768, 8590131584, 6442647808, 2147614976, 98560,
-    4295033088, 2147533056, 33024, 24832, 268, 264, 260, 17179869440, 224, 2147483864, 208, 204,
-    200, 196, 17179869376, 160, 2147483800, 144, 140, 136, 132, 8589934720, 108, 104, 100,
-    8589934688, 76, 72, 68, 4294967360, 52, 4294967344, 36, 2147483680, 2147483672, 16, 12, 8, 4],
-    [81604378624, 4496818176, 2282225664, 201719808, 13019512832, 8690991104, 4362469376,
-    100925440, 6509821952, 2198077440, 10737680768, 6442647936, 6442647808, 4295098624, 98560,
-    2147549440, 2147533056, 33024, 24832, 16640, 268, 264, 259, 15032385792, 2147483872,
-    2147483864, 208, 204, 200, 195, 15032385728, 2147483808, 2147483800, 144, 140, 136, 131,
-    8589934720, 108, 104, 99, 8589934688, 76, 72, 67, 4294967360, 51, 4294967344, 35, 2147483680,
-    2147483672, 16, 12, 8, 3],
-    [81604378624, 4496818176, 4429709312, 201719808, 10872029184, 8690991104, 4362469376,
-    2248409088, 4362338304, 2198077440, 10737680768, 8590131584, 6442647808, 2147614976, 98560,
-    4295033088, 2147533056, 33024, 24832, 272, 268, 262, 258, 15032385792, 224, 2147483864,
-    2147483856, 204, 198, 194, 15032385728, 160, 2147483800, 2147483792, 140, 134, 130, 6442451072,
-    112, 108, 102, 98, 6442451040, 80, 76, 70, 66, 2147483712, 54, 50, 2147483696, 38, 34, 32, 26,
-    24, 18, 16, 12, 6, 2]
+    [77309411328,4496818176,2282225664,2349203456,13019512832,6543507456,4362469376,
+    2248409088,4362338304,2198077440,33816576,6442713472,6442647936,8590131456,4295098624,
+    98560,2147549440,2147533056,33024,24832,16640,264,259,15032385792,2147483872,
+    2147483864,208,204,200,195,15032385728,2147483808,2147483800,144,140,136,131,
+    8589934720,108,104,99,8589934688,76,72,67,4294967360,51,4294967344,35,2147483680,
+    2147483672,16,12,8,3],
+    [77309411328,6644301824,134742016,2349203456,13019512832,8690991104,2214985728,
+    2248409088,4362338304,4345561088,8590197120,6442647936,8590131456,2147614976,98560,
+    4295033088,49408,2147516672,24832,12544,262,258,15032385792,224,2147483864,
+    2147483856,204,198,194,15032385728,160,2147483800,2147483792,140,134,130,6442451072,
+    112,108,102,98,6442451040,80,76,70,66,2147483712,54,50,2147483696,38,34,32,26,
+    24,18,16,12,6,2],
+    [79456894976,4496818176,2282225664,2349203456,10872029184,8690991104,4362469376,
+    100925440,6509821952,2198077440,8590197120,8590131584,6442647808,4295098624,98560,
+    2147549440,2147533056,33024,24832,16640,268,262,257,15032385792,224,2147483864,
+    2147483856,204,198,193,15032385728,160,2147483800,2147483792,140,134,129,6442451072,
+    112,108,102,97,6442451040,80,76,70,65,2147483712,54,49,2147483696,38,33,32,25,
+    24,17,16,12,6,1],
+    [79456894976,4496818176,2282225664,2349203456,13019512832,6543507456,4362469376,
+    2248409088,4362338304,2198077440,10737680768,8590131584,6442647808,2147614976,98560,
+    4295033088,2147533056,33024,24832,268,264,260,17179869440,224,2147483864,208,204,
+    200,196,17179869376,160,2147483800,144,140,136,132,8589934720,108,104,100,
+    8589934688,76,72,68,4294967360,52,4294967344,36,2147483680,2147483672,16,12,8,4],
+    [81604378624,4496818176,2282225664,201719808,13019512832,8690991104,4362469376,
+    100925440,6509821952,2198077440,10737680768,6442647936,6442647808,4295098624,98560,
+    2147549440,2147533056,33024,24832,16640,268,264,259,15032385792,2147483872,
+    2147483864,208,204,200,195,15032385728,2147483808,2147483800,144,140,136,131,
+    8589934720,108,104,99,8589934688,76,72,67,4294967360,51,4294967344,35,2147483680,
+    2147483672,16,12,8,3],
+    [81604378624,4496818176,4429709312,201719808,10872029184,8690991104,4362469376,
+    2248409088,4362338304,2198077440,10737680768,8590131584,6442647808,2147614976,98560,
+    4295033088,2147533056,33024,24832,272,268,262,258,15032385792,224,2147483864,
+    2147483856,204,198,194,15032385728,160,2147483800,2147483792,140,134,130,6442451072,
+    112,108,102,98,6442451040,80,76,70,66,2147483712,54,50,2147483696,38,34,32,26,
+    24,18,16,12,6,2]
   ]
-
 private theorem auxCValues3103 : auxCBatch 3103 auxCData3103 6 533140834 :=
   auxCChecked 3103 auxCData3103
-    [87538471, 88431136, 88445518, 89347227, 89301948, 90076534] (by decide +kernel)
-
+    [87538471,88431136,88445518,89347227,89301948,90076534] (by decide +kernel)
 private def auxCData3109 : List (List ℕ) := [
-    [81604378624, 4496818176, 4429709312, 201719808, 13019512832, 6543507456, 6509953024,
-    100925440, 4362338304, 2198077440, 12885164416, 8590131584, 6442647808, 2147614976, 98560,
-    2147549440, 2147533056, 33024, 24832, 16640, 272, 268, 262, 257, 15032385792, 224, 2147483864,
-    2147483856, 204, 198, 193, 15032385728, 160, 2147483800, 2147483792, 140, 134, 129, 6442451072,
-    112, 108, 102, 97, 6442451040, 80, 76, 70, 65, 2147483712, 54, 49, 2147483696, 38, 33, 32, 25,
-    24, 17, 16, 12, 6, 1],
-    [83751862272, 4496818176, 4429709312, 201719808, 10872029184, 8690991104, 4362469376, 50724864,
-    6509821952, 50593792, 12885164416, 10737615232, 4295164160, 2147614976, 2147582208, 2147549440,
-    2147533056, 33024, 24832, 272, 268, 264, 260, 17179869440, 224, 2147483864, 208, 204, 200, 196,
-    17179869376, 160, 2147483800, 144, 140, 136, 132, 8589934720, 108, 104, 100, 8589934688, 76,
-    72, 68, 4294967360, 52, 4294967344, 36, 2147483680, 2147483672, 16, 12, 8, 4],
-    [83751862272, 4496818176, 4429709312, 201719808, 13019512832, 6543507456, 6509953024,
-    100925440, 4362338304, 2198077440, 12885164416, 8590131584, 6442647808, 2147614976, 98560,
-    4295033088, 49408, 2147516672, 16640, 272, 268, 264, 259, 15032385792, 2147483872, 2147483864,
-    208, 204, 200, 195, 15032385728, 2147483808, 2147483800, 144, 140, 136, 131, 8589934720, 108,
-    104, 99, 8589934688, 76, 72, 67, 4294967360, 51, 4294967344, 35, 2147483680, 2147483672, 16,
-    12, 8, 3],
-    [85899345920, 4496818176, 4429709312, 13019512832, 8690991104, 4362469376, 50724864,
-    6509821952, 50593792, 15032648064, 8590131584, 4295164160, 2147614976, 2147582208, 2147549440,
-    2147533056, 33024, 24832, 2147483920, 268, 262, 258, 15032385792, 224, 2147483864, 2147483856,
-    204, 198, 194, 15032385728, 160, 2147483800, 2147483792, 140, 134, 130, 6442451072, 112, 108,
-    102, 98, 6442451040, 80, 76, 70, 66, 2147483712, 54, 50, 2147483696, 38, 34, 32, 26, 24, 18,
-    16, 12, 6, 2],
-    [85899345920, 4496818176, 4429709312, 201719808, 10872029184, 8690991104, 4362469376, 50724864,
-    100925440, 4362338304, 50593792, 15032648064, 10737615232, 4295164160, 2147614976, 98560,
-    4295033088, 49408, 2147516672, 280, 2147483920, 268, 262, 257, 15032385792, 224, 2147483864,
-    2147483856, 204, 198, 193, 15032385728, 160, 2147483800, 2147483792, 140, 134, 129, 6442451072,
-    112, 108, 102, 97, 6442451040, 80, 76, 70, 65, 2147483712, 54, 49, 2147483696, 38, 33, 32, 25,
-    24, 17, 16, 12, 6, 1],
-    [85899345920, 4496818176, 6577192960, 13019512832, 6543507456, 6509953024, 50724864,
-    4362338304, 50593792, 17180131712, 10737615232, 4295164160, 131328, 2147582208, 2147549440,
-    2147533056, 33024, 24832, 280, 272, 268, 264, 260, 17179869440, 224, 2147483864, 208, 204, 200,
-    196, 17179869376, 160, 2147483800, 144, 140, 136, 132, 8589934720, 108, 104, 100, 8589934688,
-    76, 72, 68, 4294967360, 52, 4294967344, 36, 2147483680, 2147483672, 16, 12, 8, 4]
+    [81604378624,4496818176,4429709312,201719808,13019512832,6543507456,6509953024,
+    100925440,4362338304,2198077440,12885164416,8590131584,6442647808,2147614976,98560,
+    2147549440,2147533056,33024,24832,16640,272,268,262,257,15032385792,224,2147483864,
+    2147483856,204,198,193,15032385728,160,2147483800,2147483792,140,134,129,6442451072,
+    112,108,102,97,6442451040,80,76,70,65,2147483712,54,49,2147483696,38,33,32,25,
+    24,17,16,12,6,1],
+    [83751862272,4496818176,4429709312,201719808,10872029184,8690991104,4362469376,50724864,
+    6509821952,50593792,12885164416,10737615232,4295164160,2147614976,2147582208,2147549440,
+    2147533056,33024,24832,272,268,264,260,17179869440,224,2147483864,208,204,200,196,
+    17179869376,160,2147483800,144,140,136,132,8589934720,108,104,100,8589934688,76,
+    72,68,4294967360,52,4294967344,36,2147483680,2147483672,16,12,8,4],
+    [83751862272,4496818176,4429709312,201719808,13019512832,6543507456,6509953024,
+    100925440,4362338304,2198077440,12885164416,8590131584,6442647808,2147614976,98560,
+    4295033088,49408,2147516672,16640,272,268,264,259,15032385792,2147483872,2147483864,
+    208,204,200,195,15032385728,2147483808,2147483800,144,140,136,131,8589934720,108,
+    104,99,8589934688,76,72,67,4294967360,51,4294967344,35,2147483680,2147483672,16,
+    12,8,3],
+    [85899345920,4496818176,4429709312,13019512832,8690991104,4362469376,50724864,
+    6509821952,50593792,15032648064,8590131584,4295164160,2147614976,2147582208,2147549440,
+    2147533056,33024,24832,2147483920,268,262,258,15032385792,224,2147483864,2147483856,
+    204,198,194,15032385728,160,2147483800,2147483792,140,134,130,6442451072,112,108,
+    102,98,6442451040,80,76,70,66,2147483712,54,50,2147483696,38,34,32,26,24,18,
+    16,12,6,2],
+    [85899345920,4496818176,4429709312,201719808,10872029184,8690991104,4362469376,50724864,
+    100925440,4362338304,50593792,15032648064,10737615232,4295164160,2147614976,98560,
+    4295033088,49408,2147516672,280,2147483920,268,262,257,15032385792,224,2147483864,
+    2147483856,204,198,193,15032385728,160,2147483800,2147483792,140,134,129,6442451072,
+    112,108,102,97,6442451040,80,76,70,65,2147483712,54,49,2147483696,38,33,32,25,
+    24,17,16,12,6,1],
+    [85899345920,4496818176,6577192960,13019512832,6543507456,6509953024,50724864,
+    4362338304,50593792,17180131712,10737615232,4295164160,131328,2147582208,2147549440,
+    2147533056,33024,24832,280,272,268,264,260,17179869440,224,2147483864,208,204,200,
+    196,17179869376,160,2147483800,144,140,136,132,8589934720,108,104,100,8589934688,
+    76,72,68,4294967360,52,4294967344,36,2147483680,2147483672,16,12,8,4]
   ]
-
 private theorem auxCValues3109 : auxCBatch 3109 auxCData3109 6 551130453 :=
   auxCChecked 3109 auxCData3109
-    [90766116, 90885142, 91739364, 91775485, 92704907, 93259439] (by decide +kernel)
-
+    [90766116,90885142,91739364,91775485,92704907,93259439] (by decide +kernel)
 private def auxCData3115 : List (List ℕ) := [
-    [88046829568, 4496818176, 6577192960, 10872029184, 8690991104, 4362469376, 2198208512,
-    4362338304, 50593792, 15032648064, 10737615232, 4295164160, 2147614976, 98560, 4295033088,
-    2147533056, 33024, 2147483928, 272, 268, 264, 259, 15032385792, 2147483872, 2147483864, 208,
-    204, 200, 195, 15032385728, 2147483808, 2147483800, 144, 140, 136, 131, 8589934720, 108, 104,
-    99, 8589934688, 76, 72, 67, 4294967360, 51, 4294967344, 35, 2147483680, 2147483672, 16, 12, 8,
+    [88046829568,4496818176,6577192960,10872029184,8690991104,4362469376,2198208512,
+    4362338304,50593792,15032648064,10737615232,4295164160,2147614976,98560,4295033088,
+    2147533056,33024,2147483928,272,268,264,259,15032385792,2147483872,2147483864,208,
+    204,200,195,15032385728,2147483808,2147483800,144,140,136,131,8589934720,108,104,
+    99,8589934688,76,72,67,4294967360,51,4294967344,35,2147483680,2147483672,16,12,8,
     3],
-    [88046829568, 4496818176, 6577192960, 13019512832, 6543507456, 6509953024, 50724864,
-    4362338304, 50593792, 17180131712, 10737615232, 4295164160, 2147614976, 98560, 2147549440,
-    2147533056, 33024, 24832, 280, 2147483920, 268, 262, 258, 15032385792, 224, 2147483864,
-    2147483856, 204, 198, 194, 15032385728, 160, 2147483800, 2147483792, 140, 134, 130, 6442451072,
-    112, 108, 102, 98, 6442451040, 80, 76, 70, 66, 2147483712, 54, 50, 2147483696, 38, 34, 32, 26,
-    24, 18, 16, 12, 6, 2],
-    [90194313216, 2349334528, 8724676608, 10872029184, 8690991104, 4362469376, 2198208512,
-    4362338304, 19327615360, 10737615232, 4295164160, 131328, 2147582208, 2147549440, 2147533056,
-    33024, 2147483928, 2147483920, 268, 262, 257, 15032385792, 224, 2147483864, 2147483856, 204,
-    198, 193, 15032385728, 160, 2147483800, 2147483792, 140, 134, 129, 6442451072, 112, 108, 102,
-    97, 6442451040, 80, 76, 70, 65, 2147483712, 54, 49, 2147483696, 38, 33, 32, 25, 24, 17, 16, 12,
-    6, 1],
-    [90194313216, 4496818176, 6577192960, 10872029184, 8690991104, 4362469376, 2198208512,
-    4362338304, 19327615360, 12885098880, 2147680512, 2147614976, 98560, 4295033088, 49408,
-    2147516672, 2147483928, 272, 268, 264, 260, 17179869440, 224, 2147483864, 208, 204, 200, 196,
-    17179869376, 160, 2147483800, 144, 140, 136, 132, 8589934720, 108, 104, 100, 8589934688, 76,
-    72, 68, 4294967360, 52, 4294967344, 36, 2147483680, 2147483672, 16, 12, 8, 4],
-    [90194313216, 4496818176, 8724676608, 10872029184, 6543507456, 6509953024, 2198208512,
-    2214854656, 50593792, 19327615360, 10737615232, 4295164160, 131328, 2147582208, 2147549440,
-    2147533056, 33024, 288, 2147483928, 272, 268, 264, 259, 15032385792, 2147483872, 2147483864,
-    208, 204, 200, 195, 15032385728, 2147483808, 2147483800, 144, 140, 136, 131, 8589934720, 108,
-    104, 99, 8589934688, 76, 72, 67, 4294967360, 51, 4294967344, 35, 2147483680, 2147483672, 16,
-    12, 8, 3],
-    [92341796864, 2349334528, 8724676608, 10872029184, 8690991104, 4362469376, 2198208512,
-    33947648, 2214854656, 19327615360, 12885098880, 2147680512, 2147614976, 98560, 4295033088,
-    49408, 33024, 288, 2147483928, 2147483920, 268, 262, 258, 15032385792, 224, 2147483864,
-    2147483856, 204, 198, 194, 15032385728, 160, 2147483800, 2147483792, 140, 134, 130, 6442451072,
-    112, 108, 102, 98, 6442451040, 80, 76, 70, 66, 2147483712, 54, 50, 2147483696, 38, 34, 32, 26,
-    24, 18, 16, 12, 6, 2]
+    [88046829568,4496818176,6577192960,13019512832,6543507456,6509953024,50724864,
+    4362338304,50593792,17180131712,10737615232,4295164160,2147614976,98560,2147549440,
+    2147533056,33024,24832,280,2147483920,268,262,258,15032385792,224,2147483864,
+    2147483856,204,198,194,15032385728,160,2147483800,2147483792,140,134,130,6442451072,
+    112,108,102,98,6442451040,80,76,70,66,2147483712,54,50,2147483696,38,34,32,26,
+    24,18,16,12,6,2],
+    [90194313216,2349334528,8724676608,10872029184,8690991104,4362469376,2198208512,
+    4362338304,19327615360,10737615232,4295164160,131328,2147582208,2147549440,2147533056,
+    33024,2147483928,2147483920,268,262,257,15032385792,224,2147483864,2147483856,204,
+    198,193,15032385728,160,2147483800,2147483792,140,134,129,6442451072,112,108,102,
+    97,6442451040,80,76,70,65,2147483712,54,49,2147483696,38,33,32,25,24,17,16,12,
+    6,1],
+    [90194313216,4496818176,6577192960,10872029184,8690991104,4362469376,2198208512,
+    4362338304,19327615360,12885098880,2147680512,2147614976,98560,4295033088,49408,
+    2147516672,2147483928,272,268,264,260,17179869440,224,2147483864,208,204,200,196,
+    17179869376,160,2147483800,144,140,136,132,8589934720,108,104,100,8589934688,76,
+    72,68,4294967360,52,4294967344,36,2147483680,2147483672,16,12,8,4],
+    [90194313216,4496818176,8724676608,10872029184,6543507456,6509953024,2198208512,
+    2214854656,50593792,19327615360,10737615232,4295164160,131328,2147582208,2147549440,
+    2147533056,33024,288,2147483928,272,268,264,259,15032385792,2147483872,2147483864,
+    208,204,200,195,15032385728,2147483808,2147483800,144,140,136,131,8589934720,108,
+    104,99,8589934688,76,72,67,4294967360,51,4294967344,35,2147483680,2147483672,16,
+    12,8,3],
+    [92341796864,2349334528,8724676608,10872029184,8690991104,4362469376,2198208512,
+    33947648,2214854656,19327615360,12885098880,2147680512,2147614976,98560,4295033088,
+    49408,33024,288,2147483928,2147483920,268,262,258,15032385792,224,2147483864,
+    2147483856,204,198,194,15032385728,160,2147483800,2147483792,140,134,130,6442451072,
+    112,108,102,98,6442451040,80,76,70,66,2147483712,54,50,2147483696,38,34,32,26,
+    24,18,16,12,6,2]
   ]
-
 private theorem auxCValues3115 : auxCBatch 3115 auxCData3115 6 569091567 :=
   auxCChecked 3115 auxCData3115
-    [93388796, 94248210, 94182920, 95243120, 95854815, 96173706] (by decide +kernel)
-
+    [93388796,94248210,94182920,95243120,95854815,96173706] (by decide +kernel)
 private def auxCData3121 : List (List ℕ) := [
-    [92341796864, 4496818176, 8724676608, 10872029184, 6543507456, 6509953024, 2198208512,
-    2214854656, 21475099008, 12885098880, 2147680512, 131328, 2147582208, 2147549440, 2147533056,
-    33024, 288, 2147483928, 2147483920, 268, 262, 257, 15032385792, 224, 2147483864, 2147483856,
-    204, 198, 193, 15032385728, 160, 2147483800, 2147483792, 140, 134, 129, 6442451072, 112, 108,
-    102, 97, 6442451040, 80, 76, 70, 65, 2147483712, 54, 49, 2147483696, 38, 33, 32, 25, 24, 17,
-    16, 12, 6, 1],
-    [94489280512, 2349334528, 10872160256, 8724545536, 6543507456, 6509953024, 2198208512,
-    33947648, 67371008, 23622582656, 12885098880, 2147680512, 131328, 98560, 4295033088,
-    2147533056, 2147483936, 2147483928, 272, 268, 264, 260, 17179869440, 224, 2147483864, 208, 204,
-    200, 196, 17179869376, 160, 2147483800, 144, 140, 136, 132, 8589934720, 108, 104, 100,
-    8589934688, 76, 72, 68, 4294967360, 52, 4294967344, 36, 2147483680, 2147483672, 16, 12, 8, 4],
-    [94489280512, 4496818176, 8724676608, 8724545536, 8690991104, 4362469376, 4345692160,
-    2214854656, 21475099008, 12885098880, 2147680512, 131328, 2147582208, 2147549440, 2147533056,
-    33024, 2147483936, 2147483928, 272, 268, 264, 259, 15032385792, 2147483872, 2147483864, 208,
-    204, 200, 195, 15032385728, 2147483808, 2147483800, 144, 140, 136, 131, 8589934720, 108, 104,
-    99, 8589934688, 76, 72, 67, 4294967360, 51, 4294967344, 35, 2147483680, 2147483672, 16, 12, 8,
+    [92341796864,4496818176,8724676608,10872029184,6543507456,6509953024,2198208512,
+    2214854656,21475099008,12885098880,2147680512,131328,2147582208,2147549440,2147533056,
+    33024,288,2147483928,2147483920,268,262,257,15032385792,224,2147483864,2147483856,
+    204,198,193,15032385728,160,2147483800,2147483792,140,134,129,6442451072,112,108,
+    102,97,6442451040,80,76,70,65,2147483712,54,49,2147483696,38,33,32,25,24,17,
+    16,12,6,1],
+    [94489280512,2349334528,10872160256,8724545536,6543507456,6509953024,2198208512,
+    33947648,67371008,23622582656,12885098880,2147680512,131328,98560,4295033088,
+    2147533056,2147483936,2147483928,272,268,264,260,17179869440,224,2147483864,208,204,
+    200,196,17179869376,160,2147483800,144,140,136,132,8589934720,108,104,100,
+    8589934688,76,72,68,4294967360,52,4294967344,36,2147483680,2147483672,16,12,8,4],
+    [94489280512,4496818176,8724676608,8724545536,8690991104,4362469376,4345692160,
+    2214854656,21475099008,12885098880,2147680512,131328,2147582208,2147549440,2147533056,
+    33024,2147483936,2147483928,272,268,264,259,15032385792,2147483872,2147483864,208,
+    204,200,195,15032385728,2147483808,2147483800,144,140,136,131,8589934720,108,104,
+    99,8589934688,76,72,67,4294967360,51,4294967344,35,2147483680,2147483672,16,12,8,
     3],
-    [94489280512, 4496818176, 10872160256, 8724545536, 6543507456, 6509953024, 2198208512,
-    33947648, 67371008, 23622582656, 12885098880, 2147680512, 131328, 2147582208, 2147549440,
-    2147533056, 2147483936, 2147483928, 2147483920, 268, 262, 258, 15032385792, 224, 2147483864,
-    2147483856, 204, 198, 194, 15032385728, 160, 2147483800, 2147483792, 140, 134, 130, 6442451072,
-    112, 108, 102, 98, 6442451040, 80, 76, 70, 66, 2147483712, 54, 50, 2147483696, 38, 34, 32, 26,
-    24, 18, 16, 12, 6, 2],
-    [96636764160, 2349334528, 10872160256, 8724545536, 8690991104, 4362469376, 2198208512,
-    33947648, 67371008, 23622582656, 15032582528, 196864, 131328, 2147582208, 4295033088, 49408,
-    33024, 2147483936, 2147483928, 2147483920, 268, 262, 257, 15032385792, 224, 2147483864,
-    2147483856, 204, 198, 193, 15032385728, 160, 2147483800, 2147483792, 140, 134, 129, 6442451072,
-    112, 108, 102, 97, 6442451040, 80, 76, 70, 65, 2147483712, 54, 49, 2147483696, 38, 33, 32, 25,
-    24, 17, 16, 12, 6, 1],
-    [96636764160, 4496818176, 10872160256, 8724545536, 6543507456, 4362469376, 4345692160,
-    33947648, 67371008, 23622582656, 15032582528, 196864, 131328, 2147582208, 2147549440,
-    2147533056, 4294967584, 2147483928, 272, 268, 264, 260, 17179869440, 224, 2147483864, 208, 204,
-    200, 196, 17179869376, 160, 2147483800, 144, 140, 136, 132, 8589934720, 108, 104, 100,
-    8589934688, 76, 72, 68, 4294967360, 52, 4294967344, 36, 2147483680, 2147483672, 16, 12, 8, 4]
+    [94489280512,4496818176,10872160256,8724545536,6543507456,6509953024,2198208512,
+    33947648,67371008,23622582656,12885098880,2147680512,131328,2147582208,2147549440,
+    2147533056,2147483936,2147483928,2147483920,268,262,258,15032385792,224,2147483864,
+    2147483856,204,198,194,15032385728,160,2147483800,2147483792,140,134,130,6442451072,
+    112,108,102,98,6442451040,80,76,70,66,2147483712,54,50,2147483696,38,34,32,26,
+    24,18,16,12,6,2],
+    [96636764160,2349334528,10872160256,8724545536,8690991104,4362469376,2198208512,
+    33947648,67371008,23622582656,15032582528,196864,131328,2147582208,4295033088,49408,
+    33024,2147483936,2147483928,2147483920,268,262,257,15032385792,224,2147483864,
+    2147483856,204,198,193,15032385728,160,2147483800,2147483792,140,134,129,6442451072,
+    112,108,102,97,6442451040,80,76,70,65,2147483712,54,49,2147483696,38,33,32,25,
+    24,17,16,12,6,1],
+    [96636764160,4496818176,10872160256,8724545536,6543507456,4362469376,4345692160,
+    33947648,67371008,23622582656,15032582528,196864,131328,2147582208,2147549440,
+    2147533056,4294967584,2147483928,272,268,264,260,17179869440,224,2147483864,208,204,
+    200,196,17179869376,160,2147483800,144,140,136,132,8589934720,108,104,100,
+    8589934688,76,72,68,4294967360,52,4294967344,36,2147483680,2147483672,16,12,8,4]
   ]
-
 private theorem auxCValues3121 : auxCBatch 3121 auxCData3121 6 588624088 :=
   auxCChecked 3121 auxCData3121
-    [96895255, 96783674, 97940204, 98480426, 98977850, 99546679] (by decide +kernel)
-
+    [96895255,96783674,97940204,98480426,98977850,99546679] (by decide +kernel)
 private def auxCData3127 : List (List ℕ) := [
-    [98784247808, 2349334528, 10872160256, 8724545536, 6543507456, 6509953024, 2198208512,
-    2181431296, 25770066304, 12885098880, 2147680512, 2147582208, 4295033088, 49408, 304,
-    4294967584, 2147483928, 272, 268, 264, 259, 15032385792, 2147483872, 2147483864, 208, 204, 200,
-    195, 15032385728, 2147483808, 2147483800, 144, 140, 136, 131, 8589934720, 108, 104, 99,
-    8589934688, 76, 72, 67, 4294967360, 51, 4294967344, 35, 2147483680, 2147483672, 16, 12, 8, 3],
-    [98784247808, 2349334528, 13019643904, 6577061888, 8690991104, 4362469376, 4345692160,
-    33947648, 25770066304, 15032582528, 196864, 131328, 2147582208, 2147549440, 2147533056,
-    4294967584, 2147483928, 2147483920, 268, 262, 258, 15032385792, 224, 2147483864, 2147483856,
-    204, 198, 194, 15032385728, 160, 2147483800, 2147483792, 140, 134, 130, 6442451072, 112, 108,
-    102, 98, 6442451040, 80, 76, 70, 66, 2147483712, 54, 50, 2147483696, 38, 34, 32, 26, 24, 18,
-    16, 12, 6, 2],
-    [98784247808, 4496818176, 13019643904, 6577061888, 6543507456, 6509953024, 2198208512,
-    2181431296, 25770066304, 15032582528, 196864, 2147582208, 4295033088, 49408, 304, 4294967584,
-    2147483928, 2147483920, 268, 262, 257, 15032385792, 224, 2147483864, 2147483856, 204, 198, 193,
-    15032385728, 160, 2147483800, 2147483792, 140, 134, 129, 6442451072, 112, 108, 102, 97,
-    6442451040, 80, 76, 70, 65, 2147483712, 54, 49, 2147483696, 38, 33, 32, 25, 24, 17, 16, 12, 6,
+    [98784247808,2349334528,10872160256,8724545536,6543507456,6509953024,2198208512,
+    2181431296,25770066304,12885098880,2147680512,2147582208,4295033088,49408,304,
+    4294967584,2147483928,272,268,264,259,15032385792,2147483872,2147483864,208,204,200,
+    195,15032385728,2147483808,2147483800,144,140,136,131,8589934720,108,104,99,
+    8589934688,76,72,67,4294967360,51,4294967344,35,2147483680,2147483672,16,12,8,3],
+    [98784247808,2349334528,13019643904,6577061888,8690991104,4362469376,4345692160,
+    33947648,25770066304,15032582528,196864,131328,2147582208,2147549440,2147533056,
+    4294967584,2147483928,2147483920,268,262,258,15032385792,224,2147483864,2147483856,
+    204,198,194,15032385728,160,2147483800,2147483792,140,134,130,6442451072,112,108,
+    102,98,6442451040,80,76,70,66,2147483712,54,50,2147483696,38,34,32,26,24,18,
+    16,12,6,2],
+    [98784247808,4496818176,13019643904,6577061888,6543507456,6509953024,2198208512,
+    2181431296,25770066304,15032582528,196864,2147582208,4295033088,49408,304,4294967584,
+    2147483928,2147483920,268,262,257,15032385792,224,2147483864,2147483856,204,198,193,
+    15032385728,160,2147483800,2147483792,140,134,129,6442451072,112,108,102,97,
+    6442451040,80,76,70,65,2147483712,54,49,2147483696,38,33,32,25,24,17,16,12,6,
     1],
-    [100931731456, 2349334528, 13019643904, 6577061888, 8690991104, 4362469376, 2198208512,
-    2181431296, 25770066304, 17180066176, 131328, 2147582208, 2147549440, 2147533056, 304,
-    4294967584, 2147483928, 272, 268, 264, 260, 17179869440, 224, 2147483864, 208, 204, 200, 196,
-    17179869376, 160, 2147483800, 144, 140, 136, 132, 8589934720, 108, 104, 100, 8589934688, 76,
-    72, 68, 4294967360, 52, 4294967344, 36, 2147483680, 2147483672, 16, 12, 8, 4],
-    [100931731456, 4496818176, 13019643904, 6577061888, 6543507456, 4362469376, 4345692160,
-    33947648, 25559040, 25770066304, 15032582528, 196864, 98688, 2147582208, 2147549440, 49408,
-    2147483952, 4294967584, 2147483928, 272, 268, 264, 259, 15032385792, 2147483872, 2147483864,
-    208, 204, 200, 195, 15032385728, 2147483808, 2147483800, 144, 140, 136, 131, 8589934720, 108,
-    104, 99, 8589934688, 76, 72, 67, 4294967360, 51, 4294967344, 35, 2147483680, 2147483672, 16,
-    12, 8, 3],
-    [103079215104, 2349334528, 13019643904, 6577061888, 6543507456, 6509953024, 2198208512,
-    2181431296, 25559040, 25770066304, 15032582528, 196864, 98688, 98560, 4295033088, 49408, 304,
-    4294967584, 2147483928, 2147483920, 268, 262, 258, 15032385792, 224, 2147483864, 2147483856,
-    204, 198, 194, 15032385728, 160, 2147483800, 2147483792, 140, 134, 130, 6442451072, 112, 108,
-    102, 98, 6442451040, 80, 76, 70, 66, 2147483712, 54, 50, 2147483696, 38, 34, 32, 26, 24, 18,
-    16, 12, 6, 2]
+    [100931731456,2349334528,13019643904,6577061888,8690991104,4362469376,2198208512,
+    2181431296,25770066304,17180066176,131328,2147582208,2147549440,2147533056,304,
+    4294967584,2147483928,272,268,264,260,17179869440,224,2147483864,208,204,200,196,
+    17179869376,160,2147483800,144,140,136,132,8589934720,108,104,100,8589934688,76,
+    72,68,4294967360,52,4294967344,36,2147483680,2147483672,16,12,8,4],
+    [100931731456,4496818176,13019643904,6577061888,6543507456,4362469376,4345692160,
+    33947648,25559040,25770066304,15032582528,196864,98688,2147582208,2147549440,49408,
+    2147483952,4294967584,2147483928,272,268,264,259,15032385792,2147483872,2147483864,
+    208,204,200,195,15032385728,2147483808,2147483800,144,140,136,131,8589934720,108,
+    104,99,8589934688,76,72,67,4294967360,51,4294967344,35,2147483680,2147483672,16,
+    12,8,3],
+    [103079215104,2349334528,13019643904,6577061888,6543507456,6509953024,2198208512,
+    2181431296,25559040,25770066304,15032582528,196864,98688,98560,4295033088,49408,304,
+    4294967584,2147483928,2147483920,268,262,258,15032385792,224,2147483864,2147483856,
+    204,198,194,15032385728,160,2147483800,2147483792,140,134,130,6442451072,112,108,
+    102,98,6442451040,80,76,70,66,2147483712,54,50,2147483696,38,34,32,26,24,18,
+    16,12,6,2]
   ]
-
 private theorem auxCValues3127 : auxCBatch 3127 auxCData3127 6 608227577 :=
   auxCChecked 3127 auxCData3127
-    [99738493, 100649740, 101225458, 101742608, 102334122, 102537156] (by decide +kernel)
-
+    [99738493,100649740,101225458,101742608,102334122,102537156] (by decide +kernel)
 private def auxCData3133 : List (List ℕ) := [
-    [103079215104, 2349334528, 13019643904, 101187584, 4429578240, 8690991104, 4362469376,
-    2198208512, 2181431296, 25559040, 25770066304, 17180066176, 98688, 2147582208, 2147549440,
-    49408, 2147483952, 4294967584, 2147483928, 2147483920, 268, 262, 257, 15032385792, 224,
-    2147483864, 2147483856, 204, 198, 193, 15032385728, 160, 2147483800, 2147483792, 140, 134, 129,
-    6442451072, 112, 108, 102, 97, 6442451040, 80, 76, 70, 65, 2147483712, 54, 49, 2147483696, 38,
-    33, 32, 25, 24, 17, 16, 12, 6, 1],
-    [103079215104, 4496818176, 13019643904, 6577061888, 6543507456, 6509953024, 2198208512,
-    2181431296, 25559040, 25770066304, 17180066176, 98688, 98560, 4295033088, 49408, 2147483952,
-    4294967584, 2147483928, 272, 268, 264, 260, 17179869440, 224, 2147483864, 208, 204, 200, 196,
-    17179869376, 160, 2147483800, 144, 140, 136, 132, 8589934720, 108, 104, 100, 8589934688, 76,
-    72, 68, 4294967360, 52, 4294967344, 36, 2147483680, 2147483672, 16, 12, 8, 4],
-    [105226698752, 2349334528, 13019643904, 101187584, 4429578240, 8690991104, 4362469376,
-    2198208512, 2181431296, 25559040, 25770066304, 17180066176, 2147582336, 98560, 2147549440,
-    49408, 4294967600, 4294967584, 2147483928, 272, 268, 264, 259, 15032385792, 2147483872,
-    2147483864, 208, 204, 200, 195, 15032385728, 2147483808, 2147483800, 144, 140, 136, 131,
-    8589934720, 108, 104, 99, 8589934688, 76, 72, 67, 4294967360, 51, 4294967344, 35, 2147483680,
-    2147483672, 16, 12, 8, 3],
-    [105226698752, 4496818176, 13019643904, 101187584, 4429578240, 6543507456, 4362469376,
-    4345692160, 33947648, 2173042688, 25770066304, 17180066176, 2147582336, 4295033088, 4294967600,
-    4294967584, 2147483928, 2147483920, 268, 262, 258, 15032385792, 224, 2147483864, 2147483856,
-    204, 198, 194, 15032385728, 160, 2147483800, 2147483792, 140, 134, 130, 6442451072, 112, 108,
-    102, 98, 6442451040, 80, 76, 70, 66, 2147483712, 54, 50, 2147483696, 38, 34, 32, 26, 24, 18,
-    16, 12, 6, 2],
-    [107374182400, 2349334528, 13019643904, 101187584, 4429578240, 6543507456, 6509953024,
-    2198208512, 2181431296, 25559040, 17170432, 25770066304, 15032582528, 2147582336, 98560,
-    2147549440, 49408, 4294967600, 4294967584, 2147483928, 2147483920, 268, 262, 257, 15032385792,
-    224, 2147483864, 2147483856, 204, 198, 193, 15032385728, 160, 2147483800, 2147483792, 140, 134,
-    129, 6442451072, 112, 108, 102, 97, 6442451040, 80, 76, 70, 65, 2147483712, 54, 49, 2147483696,
-    38, 33, 32, 25, 24, 17, 16, 12, 6, 1],
-    [107374182400, 2349334528, 13019643904, 2248671232, 2282094592, 8690991104, 4362469376,
-    2198208512, 2181431296, 25559040, 17170432, 25770066304, 17180066176, 2147582336, 98560,
-    2147549440, 6442451248, 4294967584, 2147483928, 272, 268, 264, 260, 17179869440, 224,
-    2147483864, 208, 204, 200, 196, 17179869376, 160, 2147483800, 144, 140, 136, 132, 8589934720,
-    108, 104, 100, 8589934688, 76, 72, 68, 4294967360, 52, 4294967344, 36, 2147483680, 2147483672,
-    16, 12, 8, 4]
+    [103079215104,2349334528,13019643904,101187584,4429578240,8690991104,4362469376,
+    2198208512,2181431296,25559040,25770066304,17180066176,98688,2147582208,2147549440,
+    49408,2147483952,4294967584,2147483928,2147483920,268,262,257,15032385792,224,
+    2147483864,2147483856,204,198,193,15032385728,160,2147483800,2147483792,140,134,129,
+    6442451072,112,108,102,97,6442451040,80,76,70,65,2147483712,54,49,2147483696,38,
+    33,32,25,24,17,16,12,6,1],
+    [103079215104,4496818176,13019643904,6577061888,6543507456,6509953024,2198208512,
+    2181431296,25559040,25770066304,17180066176,98688,98560,4295033088,49408,2147483952,
+    4294967584,2147483928,272,268,264,260,17179869440,224,2147483864,208,204,200,196,
+    17179869376,160,2147483800,144,140,136,132,8589934720,108,104,100,8589934688,76,
+    72,68,4294967360,52,4294967344,36,2147483680,2147483672,16,12,8,4],
+    [105226698752,2349334528,13019643904,101187584,4429578240,8690991104,4362469376,
+    2198208512,2181431296,25559040,25770066304,17180066176,2147582336,98560,2147549440,
+    49408,4294967600,4294967584,2147483928,272,268,264,259,15032385792,2147483872,
+    2147483864,208,204,200,195,15032385728,2147483808,2147483800,144,140,136,131,
+    8589934720,108,104,99,8589934688,76,72,67,4294967360,51,4294967344,35,2147483680,
+    2147483672,16,12,8,3],
+    [105226698752,4496818176,13019643904,101187584,4429578240,6543507456,4362469376,
+    4345692160,33947648,2173042688,25770066304,17180066176,2147582336,4295033088,4294967600,
+    4294967584,2147483928,2147483920,268,262,258,15032385792,224,2147483864,2147483856,
+    204,198,194,15032385728,160,2147483800,2147483792,140,134,130,6442451072,112,108,
+    102,98,6442451040,80,76,70,66,2147483712,54,50,2147483696,38,34,32,26,24,18,
+    16,12,6,2],
+    [107374182400,2349334528,13019643904,101187584,4429578240,6543507456,6509953024,
+    2198208512,2181431296,25559040,17170432,25770066304,15032582528,2147582336,98560,
+    2147549440,49408,4294967600,4294967584,2147483928,2147483920,268,262,257,15032385792,
+    224,2147483864,2147483856,204,198,193,15032385728,160,2147483800,2147483792,140,134,
+    129,6442451072,112,108,102,97,6442451040,80,76,70,65,2147483712,54,49,2147483696,
+    38,33,32,25,24,17,16,12,6,1],
+    [107374182400,2349334528,13019643904,2248671232,2282094592,8690991104,4362469376,
+    2198208512,2181431296,25559040,17170432,25770066304,17180066176,2147582336,98560,
+    2147549440,6442451248,4294967584,2147483928,272,268,264,260,17179869440,224,
+    2147483864,208,204,200,196,17179869376,160,2147483800,144,140,136,132,8589934720,
+    108,104,100,8589934688,76,72,68,4294967360,52,4294967344,36,2147483680,2147483672,
+    16,12,8,4]
   ]
-
 private theorem auxCValues3133 : auxCBatch 3133 auxCData3133 6 629231195 :=
   auxCChecked 3133 auxCData3133
-    [103444958, 104227698, 104582763, 105169767, 105502099, 106303910] (by decide +kernel)
-
+    [103444958,104227698,104582763,105169767,105502099,106303910] (by decide +kernel)
 private def auxCData3139 : List (List ℕ) := [
-    [109521666048, 2349334528, 13019643904, 101187584, 4429578240, 6543507456, 6509953024,
-    2198208512, 2181431296, 25559040, 17170432, 25770066304, 15032582528, 4295065984, 4295033088,
-    6442451248, 4294967584, 2147483928, 272, 268, 264, 259, 15032385792, 2147483872, 2147483864,
-    208, 204, 200, 195, 15032385728, 2147483808, 2147483800, 144, 140, 136, 131, 8589934720, 108,
-    104, 99, 8589934688, 76, 72, 67, 4294967360, 51, 4294967344, 35, 2147483680, 2147483672, 16,
-    12, 8, 3],
-    [109521666048, 2349334528, 13019643904, 2248671232, 2282094592, 8690991104, 4362469376,
-    2198208512, 2181431296, 25559040, 17170432, 25770066304, 17180066176, 4295065984, 2147549440,
-    6442451248, 4294967584, 2147483928, 2147483920, 268, 262, 258, 15032385792, 224, 2147483864,
-    2147483856, 204, 198, 194, 15032385728, 160, 2147483800, 2147483792, 140, 134, 130, 6442451072,
-    112, 108, 102, 98, 6442451040, 80, 76, 70, 66, 2147483712, 54, 50, 2147483696, 38, 34, 32, 26,
-    24, 18, 16, 12, 6, 2],
-    [109521666048, 2349334528, 13019643904, 2248671232, 4429578240, 6543507456, 4362469376,
-    4345692160, 33947648, 25559040, 17170432, 12976128, 25770066304, 15032582528, 4295065984,
-    4295033088, 6442451248, 4294967584, 2147483928, 2147483920, 268, 262, 257, 15032385792, 224,
-    2147483864, 2147483856, 204, 198, 193, 15032385728, 160, 2147483800, 2147483792, 140, 134, 129,
-    6442451072, 112, 108, 102, 97, 6442451040, 80, 76, 70, 65, 2147483712, 54, 49, 2147483696, 38,
-    33, 32, 25, 24, 17, 16, 12, 6, 1],
-    [111669149696, 2349334528, 13019643904, 2248671232, 2282094592, 6543507456, 6509953024,
-    2198208512, 2181431296, 25559040, 17170432, 8781824, 25770066304, 15032582528, 4295065984,
-    2147549440, 320, 6442451248, 4294967584, 2147483928, 272, 268, 264, 260, 17179869440, 224,
-    2147483864, 208, 204, 200, 196, 17179869376, 160, 2147483800, 144, 140, 136, 132, 8589934720,
-    108, 104, 100, 8589934688, 76, 72, 68, 4294967360, 52, 4294967344, 36, 2147483680, 2147483672,
-    16, 12, 8, 4],
-    [111669149696, 2349334528, 13019643904, 4396154880, 134610944, 8690991104, 4362469376,
-    2198208512, 2181431296, 25559040, 17170432, 12976128, 25770066304, 15032582528, 4295065984,
-    65920, 65792, 2147483968, 6442451248, 4294967584, 2147483928, 272, 268, 264, 259, 15032385792,
-    2147483872, 2147483864, 208, 204, 200, 195, 15032385728, 2147483808, 2147483800, 144, 140, 136,
-    131, 8589934720, 108, 104, 99, 8589934688, 76, 72, 67, 4294967360, 51, 4294967344, 35,
-    2147483680, 2147483672, 16, 12, 8, 3],
-    [113816633344, 2349334528, 13019643904, 2248671232, 2282094592, 6543507456, 6509953024,
-    2198208512, 33947648, 2173042688, 12976128, 6684672, 25770066304, 15032582528, 4295065984,
-    65920, 65792, 320, 6442451248, 4294967584, 2147483928, 2147483920, 268, 262, 258, 15032385792,
-    224, 2147483864, 2147483856, 204, 198, 194, 15032385728, 160, 2147483800, 2147483792, 140, 134,
-    130, 6442451072, 112, 108, 102, 98, 6442451040, 80, 76, 70, 66, 2147483712, 54, 50, 2147483696,
-    38, 34, 32, 26, 24, 18, 16, 12, 6, 2]
+    [109521666048,2349334528,13019643904,101187584,4429578240,6543507456,6509953024,
+    2198208512,2181431296,25559040,17170432,25770066304,15032582528,4295065984,4295033088,
+    6442451248,4294967584,2147483928,272,268,264,259,15032385792,2147483872,2147483864,
+    208,204,200,195,15032385728,2147483808,2147483800,144,140,136,131,8589934720,108,
+    104,99,8589934688,76,72,67,4294967360,51,4294967344,35,2147483680,2147483672,16,
+    12,8,3],
+    [109521666048,2349334528,13019643904,2248671232,2282094592,8690991104,4362469376,
+    2198208512,2181431296,25559040,17170432,25770066304,17180066176,4295065984,2147549440,
+    6442451248,4294967584,2147483928,2147483920,268,262,258,15032385792,224,2147483864,
+    2147483856,204,198,194,15032385728,160,2147483800,2147483792,140,134,130,6442451072,
+    112,108,102,98,6442451040,80,76,70,66,2147483712,54,50,2147483696,38,34,32,26,
+    24,18,16,12,6,2],
+    [109521666048,2349334528,13019643904,2248671232,4429578240,6543507456,4362469376,
+    4345692160,33947648,25559040,17170432,12976128,25770066304,15032582528,4295065984,
+    4295033088,6442451248,4294967584,2147483928,2147483920,268,262,257,15032385792,224,
+    2147483864,2147483856,204,198,193,15032385728,160,2147483800,2147483792,140,134,129,
+    6442451072,112,108,102,97,6442451040,80,76,70,65,2147483712,54,49,2147483696,38,
+    33,32,25,24,17,16,12,6,1],
+    [111669149696,2349334528,13019643904,2248671232,2282094592,6543507456,6509953024,
+    2198208512,2181431296,25559040,17170432,8781824,25770066304,15032582528,4295065984,
+    2147549440,320,6442451248,4294967584,2147483928,272,268,264,260,17179869440,224,
+    2147483864,208,204,200,196,17179869376,160,2147483800,144,140,136,132,8589934720,
+    108,104,100,8589934688,76,72,68,4294967360,52,4294967344,36,2147483680,2147483672,
+    16,12,8,4],
+    [111669149696,2349334528,13019643904,4396154880,134610944,8690991104,4362469376,
+    2198208512,2181431296,25559040,17170432,12976128,25770066304,15032582528,4295065984,
+    65920,65792,2147483968,6442451248,4294967584,2147483928,272,268,264,259,15032385792,
+    2147483872,2147483864,208,204,200,195,15032385728,2147483808,2147483800,144,140,136,
+    131,8589934720,108,104,99,8589934688,76,72,67,4294967360,51,4294967344,35,
+    2147483680,2147483672,16,12,8,3],
+    [113816633344,2349334528,13019643904,2248671232,2282094592,6543507456,6509953024,
+    2198208512,33947648,2173042688,12976128,6684672,25770066304,15032582528,4295065984,
+    65920,65792,320,6442451248,4294967584,2147483928,2147483920,268,262,258,15032385792,
+    224,2147483864,2147483856,204,198,194,15032385728,160,2147483800,2147483792,140,134,
+    130,6442451072,112,108,102,98,6442451040,80,76,70,66,2147483712,54,50,2147483696,
+    38,34,32,26,24,18,16,12,6,2]
   ]
-
 private theorem auxCValues3139 : auxCBatch 3139 auxCData3139 6 649902183 :=
   auxCChecked 3139 auxCData3139
-    [106663438, 107462595, 108401759, 108389864, 109408998, 109575529] (by decide +kernel)
-
+    [106663438,107462595,108401759,108389864,109408998,109575529] (by decide +kernel)
 private def auxCData3145 : List (List ℕ) := [
-    [113816633344, 2349334528, 13019643904, 4396154880, 134610944, 8690991104, 4362469376,
-    2198208512, 2181431296, 25559040, 17170432, 8781824, 25770066304, 15032582528, 4295065984,
-    65920, 65792, 2147483968, 6442451248, 4294967584, 2147483928, 2147483920, 268, 262, 257,
-    15032385792, 224, 2147483864, 2147483856, 204, 198, 193, 15032385728, 160, 2147483800,
-    2147483792, 140, 134, 129, 6442451072, 112, 108, 102, 97, 6442451040, 80, 76, 70, 65,
-    2147483712, 54, 49, 2147483696, 38, 33, 32, 25, 24, 17, 16, 12, 6, 1],
-    [113816633344, 2349334528, 13019643904, 4396154880, 2282094592, 6543507456, 4362469376,
-    4345692160, 33947648, 25559040, 17170432, 12976128, 6684672, 25770066304, 12885098880,
-    6442549632, 65920, 65792, 2147483968, 6442451248, 4294967584, 2147483928, 272, 268, 264, 260,
-    17179869440, 224, 2147483864, 208, 204, 200, 196, 17179869376, 160, 2147483800, 144, 140, 136,
-    132, 8589934720, 108, 104, 100, 8589934688, 76, 72, 68, 4294967360, 52, 4294967344, 36,
-    2147483680, 2147483672, 16, 12, 8, 4],
-    [115964116992, 2349334528, 13019643904, 4396154880, 134610944, 6543507456, 6509953024,
-    2198208512, 2181431296, 25559040, 17170432, 8781824, 393600, 25770066304, 12885098880,
-    4295065984, 2147549568, 4294967616, 6442451248, 4294967584, 2147483928, 272, 268, 264, 259,
-    15032385792, 2147483872, 2147483864, 208, 204, 200, 195, 15032385728, 2147483808, 2147483800,
-    144, 140, 136, 131, 8589934720, 108, 104, 99, 8589934688, 76, 72, 67, 4294967360, 51,
-    4294967344, 35, 2147483680, 2147483672, 16, 12, 8, 3],
-    [115964116992, 2349334528, 13019643904, 4396154880, 134610944, 8690991104, 4362469376,
-    2198208512, 2181431296, 25559040, 17170432, 12976128, 4587520, 25770066304, 12885098880,
-    6442549632, 2147549568, 2147483968, 6442451248, 4294967584, 2147483928, 2147483920, 268, 262,
-    258, 15032385792, 224, 2147483864, 2147483856, 204, 198, 194, 15032385728, 160, 2147483800,
-    2147483792, 140, 134, 130, 6442451072, 112, 108, 102, 98, 6442451040, 80, 76, 70, 66,
-    2147483712, 54, 50, 2147483696, 38, 34, 32, 26, 24, 18, 16, 12, 6, 2],
-    [118111600640, 2349334528, 10872160256, 6543638528, 134610944, 6543507456, 4362469376,
-    4345692160, 33947648, 2173042688, 12976128, 6684672, 393600, 25770066304, 12885098880,
-    4295065984, 2147549568, 4294967616, 6442451248, 4294967584, 2147483928, 2147483920, 268, 262,
-    257, 15032385792, 224, 2147483864, 2147483856, 204, 198, 193, 15032385728, 160, 2147483800,
-    2147483792, 140, 134, 129, 6442451072, 112, 108, 102, 97, 6442451040, 80, 76, 70, 65,
-    2147483712, 54, 49, 2147483696, 38, 33, 32, 25, 24, 17, 16, 12, 6, 1],
-    [118111600640, 2349334528, 13019643904, 6543638528, 8690991104, 4362469376, 2198208512,
-    2181431296, 25559040, 17170432, 8781824, 393600, 27917549952, 10737615232, 6442549632,
-    2147549568, 4294967616, 6442451248, 4294967584, 2147483928, 272, 268, 264, 260, 17179869440,
-    224, 2147483864, 208, 204, 200, 196, 17179869376, 160, 2147483800, 144, 140, 136, 132,
-    8589934720, 108, 104, 100, 8589934688, 76, 72, 68, 4294967360, 52, 4294967344, 36, 2147483680,
-    2147483672, 16, 12, 8, 4]
+    [113816633344,2349334528,13019643904,4396154880,134610944,8690991104,4362469376,
+    2198208512,2181431296,25559040,17170432,8781824,25770066304,15032582528,4295065984,
+    65920,65792,2147483968,6442451248,4294967584,2147483928,2147483920,268,262,257,
+    15032385792,224,2147483864,2147483856,204,198,193,15032385728,160,2147483800,
+    2147483792,140,134,129,6442451072,112,108,102,97,6442451040,80,76,70,65,
+    2147483712,54,49,2147483696,38,33,32,25,24,17,16,12,6,1],
+    [113816633344,2349334528,13019643904,4396154880,2282094592,6543507456,4362469376,
+    4345692160,33947648,25559040,17170432,12976128,6684672,25770066304,12885098880,
+    6442549632,65920,65792,2147483968,6442451248,4294967584,2147483928,272,268,264,260,
+    17179869440,224,2147483864,208,204,200,196,17179869376,160,2147483800,144,140,136,
+    132,8589934720,108,104,100,8589934688,76,72,68,4294967360,52,4294967344,36,
+    2147483680,2147483672,16,12,8,4],
+    [115964116992,2349334528,13019643904,4396154880,134610944,6543507456,6509953024,
+    2198208512,2181431296,25559040,17170432,8781824,393600,25770066304,12885098880,
+    4295065984,2147549568,4294967616,6442451248,4294967584,2147483928,272,268,264,259,
+    15032385792,2147483872,2147483864,208,204,200,195,15032385728,2147483808,2147483800,
+    144,140,136,131,8589934720,108,104,99,8589934688,76,72,67,4294967360,51,
+    4294967344,35,2147483680,2147483672,16,12,8,3],
+    [115964116992,2349334528,13019643904,4396154880,134610944,8690991104,4362469376,
+    2198208512,2181431296,25559040,17170432,12976128,4587520,25770066304,12885098880,
+    6442549632,2147549568,2147483968,6442451248,4294967584,2147483928,2147483920,268,262,
+    258,15032385792,224,2147483864,2147483856,204,198,194,15032385728,160,2147483800,
+    2147483792,140,134,130,6442451072,112,108,102,98,6442451040,80,76,70,66,
+    2147483712,54,50,2147483696,38,34,32,26,24,18,16,12,6,2],
+    [118111600640,2349334528,10872160256,6543638528,134610944,6543507456,4362469376,
+    4345692160,33947648,2173042688,12976128,6684672,393600,25770066304,12885098880,
+    4295065984,2147549568,4294967616,6442451248,4294967584,2147483928,2147483920,268,262,
+    257,15032385792,224,2147483864,2147483856,204,198,193,15032385728,160,2147483800,
+    2147483792,140,134,129,6442451072,112,108,102,97,6442451040,80,76,70,65,
+    2147483712,54,49,2147483696,38,33,32,25,24,17,16,12,6,1],
+    [118111600640,2349334528,13019643904,6543638528,8690991104,4362469376,2198208512,
+    2181431296,25559040,17170432,8781824,393600,27917549952,10737615232,6442549632,
+    2147549568,4294967616,6442451248,4294967584,2147483928,272,268,264,260,17179869440,
+    224,2147483864,208,204,200,196,17179869376,160,2147483800,144,140,136,132,
+    8589934720,108,104,100,8589934688,76,72,68,4294967360,52,4294967344,36,2147483680,
+    2147483672,16,12,8,4]
   ]
-
 private theorem auxCValues3145 : auxCBatch 3145 auxCData3145 6 672517077 :=
   auxCChecked 3145 auxCData3145
-    [110571115, 111455567, 111522245, 112665163, 112711833, 113591154] (by decide +kernel)
-
+    [110571115,111455567,111522245,112665163,112711833,113591154] (by decide +kernel)
 private def auxCData3151 : List (List ℕ) := [
-    [120259084288, 201850880, 13019643904, 6543638528, 134610944, 6543507456, 4362469376,
-    4345692160, 33947648, 25559040, 17170432, 12976128, 4587520, 393600, 25770066304, 12885098880,
-    4295065984, 4295033216, 4294967616, 6442451248, 4294967584, 2147483928, 272, 268, 264, 259,
-    15032385792, 2147483872, 2147483864, 208, 204, 200, 195, 15032385728, 2147483808, 2147483800,
-    144, 140, 136, 131, 8589934720, 108, 104, 99, 8589934688, 76, 72, 67, 4294967360, 51,
-    4294967344, 35, 2147483680, 2147483672, 16, 12, 8, 3],
-    [120259084288, 2349334528, 13019643904, 6543638528, 6543507456, 6509953024, 2198208512,
-    2181431296, 25559040, 17170432, 8781824, 2147877248, 25770066304, 10737615232, 6442549632,
-    4295033216, 2147483968, 6442451248, 4294967584, 2147483928, 2147483920, 268, 262, 258,
-    15032385792, 224, 2147483864, 2147483856, 204, 198, 194, 15032385728, 160, 2147483800,
-    2147483792, 140, 134, 130, 6442451072, 112, 108, 102, 98, 6442451040, 80, 76, 70, 66,
-    2147483712, 54, 50, 2147483696, 38, 34, 32, 26, 24, 18, 16, 12, 6, 2],
-    [120259084288, 2349334528, 13019643904, 6543638528, 8690991104, 4362469376, 2198208512,
-    2181431296, 25559040, 17170432, 12976128, 2147877248, 25770066304, 12885098880, 6442549632,
-    2147549568, 4294967616, 6442451248, 4294967584, 2147483928, 2147483920, 268, 262, 257,
-    15032385792, 224, 2147483864, 2147483856, 204, 198, 193, 15032385728, 160, 2147483800,
-    2147483792, 140, 134, 129, 6442451072, 112, 108, 102, 97, 6442451040, 80, 76, 70, 65,
-    2147483712, 54, 49, 2147483696, 38, 33, 32, 25, 24, 17, 16, 12, 6, 1],
-    [122406567936, 201850880, 13019643904, 8691122176, 6543507456, 4362469376, 4345692160,
-    33947648, 2173042688, 12976128, 6684672, 2147877248, 25770066304, 10737615232, 6442549632,
-    4295033216, 4294967616, 6442451248, 4294967584, 2147483928, 272, 268, 264, 260, 17179869440,
-    224, 2147483864, 208, 204, 200, 196, 17179869376, 160, 2147483800, 144, 140, 136, 132,
-    8589934720, 108, 104, 100, 8589934688, 76, 72, 68, 4294967360, 52, 4294967344, 36, 2147483680,
-    2147483672, 16, 12, 8, 4],
-    [122406567936, 2349334528, 13019643904, 6543638528, 8690991104, 4362469376, 2198208512,
-    2181431296, 25559040, 17170432, 8781824, 2147877248, 27917549952, 10737615232, 6442549632,
-    2147549568, 49536, 4294967616, 6442451248, 4294967584, 2147483928, 272, 268, 264, 259,
-    15032385792, 2147483872, 2147483864, 208, 204, 200, 195, 15032385728, 2147483808, 2147483800,
-    144, 140, 136, 131, 8589934720, 108, 104, 99, 8589934688, 76, 72, 67, 4294967360, 51,
-    4294967344, 35, 2147483680, 2147483672, 16, 12, 8, 3],
-    [124554051584, 201850880, 13019643904, 8691122176, 6543507456, 4362469376, 2198208512,
-    2181431296, 25559040, 17170432, 12976128, 4587520, 2147877248, 25770066304, 10737615232,
-    6442549632, 4295033216, 49536, 2147483968, 6442451248, 4294967584, 2147483928, 2147483920, 268,
-    262, 258, 15032385792, 224, 2147483864, 2147483856, 204, 198, 194, 15032385728, 160,
-    2147483800, 2147483792, 140, 134, 130, 6442451072, 112, 108, 102, 98, 6442451040, 80, 76, 70,
-    66, 2147483712, 54, 50, 2147483696, 38, 34, 32, 26, 24, 18, 16, 12, 6, 2]
+    [120259084288,201850880,13019643904,6543638528,134610944,6543507456,4362469376,
+    4345692160,33947648,25559040,17170432,12976128,4587520,393600,25770066304,12885098880,
+    4295065984,4295033216,4294967616,6442451248,4294967584,2147483928,272,268,264,259,
+    15032385792,2147483872,2147483864,208,204,200,195,15032385728,2147483808,2147483800,
+    144,140,136,131,8589934720,108,104,99,8589934688,76,72,67,4294967360,51,
+    4294967344,35,2147483680,2147483672,16,12,8,3],
+    [120259084288,2349334528,13019643904,6543638528,6543507456,6509953024,2198208512,
+    2181431296,25559040,17170432,8781824,2147877248,25770066304,10737615232,6442549632,
+    4295033216,2147483968,6442451248,4294967584,2147483928,2147483920,268,262,258,
+    15032385792,224,2147483864,2147483856,204,198,194,15032385728,160,2147483800,
+    2147483792,140,134,130,6442451072,112,108,102,98,6442451040,80,76,70,66,
+    2147483712,54,50,2147483696,38,34,32,26,24,18,16,12,6,2],
+    [120259084288,2349334528,13019643904,6543638528,8690991104,4362469376,2198208512,
+    2181431296,25559040,17170432,12976128,2147877248,25770066304,12885098880,6442549632,
+    2147549568,4294967616,6442451248,4294967584,2147483928,2147483920,268,262,257,
+    15032385792,224,2147483864,2147483856,204,198,193,15032385728,160,2147483800,
+    2147483792,140,134,129,6442451072,112,108,102,97,6442451040,80,76,70,65,
+    2147483712,54,49,2147483696,38,33,32,25,24,17,16,12,6,1],
+    [122406567936,201850880,13019643904,8691122176,6543507456,4362469376,4345692160,
+    33947648,2173042688,12976128,6684672,2147877248,25770066304,10737615232,6442549632,
+    4295033216,4294967616,6442451248,4294967584,2147483928,272,268,264,260,17179869440,
+    224,2147483864,208,204,200,196,17179869376,160,2147483800,144,140,136,132,
+    8589934720,108,104,100,8589934688,76,72,68,4294967360,52,4294967344,36,2147483680,
+    2147483672,16,12,8,4],
+    [122406567936,2349334528,13019643904,6543638528,8690991104,4362469376,2198208512,
+    2181431296,25559040,17170432,8781824,2147877248,27917549952,10737615232,6442549632,
+    2147549568,49536,4294967616,6442451248,4294967584,2147483928,272,268,264,259,
+    15032385792,2147483872,2147483864,208,204,200,195,15032385728,2147483808,2147483800,
+    144,140,136,131,8589934720,108,104,99,8589934688,76,72,67,4294967360,51,
+    4294967344,35,2147483680,2147483672,16,12,8,3],
+    [124554051584,201850880,13019643904,8691122176,6543507456,4362469376,2198208512,
+    2181431296,25559040,17170432,12976128,4587520,2147877248,25770066304,10737615232,
+    6442549632,4295033216,49536,2147483968,6442451248,4294967584,2147483928,2147483920,268,
+    262,258,15032385792,224,2147483864,2147483856,204,198,194,15032385728,160,
+    2147483800,2147483792,140,134,130,6442451072,112,108,102,98,6442451040,80,76,70,
+    66,2147483712,54,50,2147483696,38,34,32,26,24,18,16,12,6,2]
   ]
-
 private theorem auxCValues3151 : auxCBatch 3151 auxCData3151 6 694058266 :=
   auxCChecked 3151 auxCData3151
-    [113925853, 114679591, 115690581, 115887800, 116779841, 117094600] (by decide +kernel)
-
+    [113925853,114679591,115690581,115887800,116779841,117094600] (by decide +kernel)
 private def auxCData3157 : List (List ℕ) := [
-    [124554051584, 2349334528, 10872160256, 8691122176, 67633152, 4396023808, 6509953024,
-    2198208512, 2181431296, 25559040, 17170432, 8781824, 4295360896, 25770066304, 10737615232,
-    6442549632, 4295033216, 4294967616, 6442451248, 4294967584, 2147483928, 2147483920, 268, 262,
-    257, 15032385792, 224, 2147483864, 2147483856, 204, 198, 193, 15032385728, 160, 2147483800,
-    2147483792, 140, 134, 129, 6442451072, 112, 108, 102, 97, 6442451040, 80, 76, 70, 65,
-    2147483712, 54, 49, 2147483696, 38, 33, 32, 25, 24, 17, 16, 12, 6, 1],
-    [126701535232, 201850880, 13019643904, 8691122176, 6543507456, 4362469376, 2198208512,
-    2181431296, 25559040, 17170432, 12976128, 4295360896, 25770066304, 10737615232, 6442549632,
-    4295033216, 49536, 4294967616, 6442451248, 4294967584, 2147483928, 272, 268, 264, 260,
-    17179869440, 224, 2147483864, 208, 204, 200, 196, 17179869376, 160, 2147483800, 144, 140, 136,
-    132, 8589934720, 108, 104, 100, 8589934688, 76, 72, 68, 4294967360, 52, 4294967344, 36,
-    2147483680, 2147483672, 16, 12, 8, 4],
-    [126701535232, 201850880, 13019643904, 8691122176, 67633152, 4396023808, 4362469376,
-    4345692160, 33947648, 25559040, 17170432, 12976128, 6684672, 4295360896, 25770066304,
-    10737615232, 6442549632, 4295033216, 49536, 4294967616, 6442451248, 4294967584, 2147483928,
-    272, 268, 264, 259, 15032385792, 2147483872, 2147483864, 208, 204, 200, 195, 15032385728,
-    2147483808, 2147483800, 144, 140, 136, 131, 8589934720, 108, 104, 99, 8589934688, 76, 72, 67,
-    4294967360, 51, 4294967344, 35, 2147483680, 2147483672, 16, 12, 8, 3],
-    [126701535232, 2349334528, 13019643904, 6543638528, 67633152, 6543507456, 4362469376,
-    2198208512, 2181431296, 25559040, 17170432, 8781824, 4295360896, 27917549952, 8590131584,
-    131456, 4295065984, 4295033216, 2147533184, 2147483968, 6442451248, 4294967584, 2147483928,
-    2147483920, 268, 262, 258, 15032385792, 224, 2147483864, 2147483856, 204, 198, 194,
-    15032385728, 160, 2147483800, 2147483792, 140, 134, 130, 6442451072, 112, 108, 102, 98,
-    6442451040, 80, 76, 70, 66, 2147483712, 54, 50, 2147483696, 38, 34, 32, 26, 24, 18, 16, 12, 6,
+    [124554051584,2349334528,10872160256,8691122176,67633152,4396023808,6509953024,
+    2198208512,2181431296,25559040,17170432,8781824,4295360896,25770066304,10737615232,
+    6442549632,4295033216,4294967616,6442451248,4294967584,2147483928,2147483920,268,262,
+    257,15032385792,224,2147483864,2147483856,204,198,193,15032385728,160,2147483800,
+    2147483792,140,134,129,6442451072,112,108,102,97,6442451040,80,76,70,65,
+    2147483712,54,49,2147483696,38,33,32,25,24,17,16,12,6,1],
+    [126701535232,201850880,13019643904,8691122176,6543507456,4362469376,2198208512,
+    2181431296,25559040,17170432,12976128,4295360896,25770066304,10737615232,6442549632,
+    4295033216,49536,4294967616,6442451248,4294967584,2147483928,272,268,264,260,
+    17179869440,224,2147483864,208,204,200,196,17179869376,160,2147483800,144,140,136,
+    132,8589934720,108,104,100,8589934688,76,72,68,4294967360,52,4294967344,36,
+    2147483680,2147483672,16,12,8,4],
+    [126701535232,201850880,13019643904,8691122176,67633152,4396023808,4362469376,
+    4345692160,33947648,25559040,17170432,12976128,6684672,4295360896,25770066304,
+    10737615232,6442549632,4295033216,49536,4294967616,6442451248,4294967584,2147483928,
+    272,268,264,259,15032385792,2147483872,2147483864,208,204,200,195,15032385728,
+    2147483808,2147483800,144,140,136,131,8589934720,108,104,99,8589934688,76,72,67,
+    4294967360,51,4294967344,35,2147483680,2147483672,16,12,8,3],
+    [126701535232,2349334528,13019643904,6543638528,67633152,6543507456,4362469376,
+    2198208512,2181431296,25559040,17170432,8781824,4295360896,27917549952,8590131584,
+    131456,4295065984,4295033216,2147533184,2147483968,6442451248,4294967584,2147483928,
+    2147483920,268,262,258,15032385792,224,2147483864,2147483856,204,198,194,
+    15032385728,160,2147483800,2147483792,140,134,130,6442451072,112,108,102,98,
+    6442451040,80,76,70,66,2147483712,54,50,2147483696,38,34,32,26,24,18,16,12,6,
     2],
-    [128849018880, 201850880, 13019643904, 8691122176, 67633152, 4396023808, 4362469376,
-    2198208512, 2181431296, 25559040, 17170432, 12976128, 6442844544, 25770066304, 10737615232,
-    6442549632, 4295033216, 49536, 4294967616, 6442451248, 4294967584, 2147483928, 2147483920, 268,
-    262, 257, 15032385792, 224, 2147483864, 2147483856, 204, 198, 193, 15032385728, 160,
-    2147483800, 2147483792, 140, 134, 129, 6442451072, 112, 108, 102, 97, 6442451040, 80, 76, 70,
-    65, 2147483712, 54, 49, 2147483696, 38, 33, 32, 25, 24, 17, 16, 12, 6, 1]
+    [128849018880,201850880,13019643904,8691122176,67633152,4396023808,4362469376,
+    2198208512,2181431296,25559040,17170432,12976128,6442844544,25770066304,10737615232,
+    6442549632,4295033216,49536,4294967616,6442451248,4294967584,2147483928,2147483920,268,
+    262,257,15032385792,224,2147483864,2147483856,204,198,193,15032385728,160,
+    2147483800,2147483792,140,134,129,6442451072,112,108,102,97,6442451040,80,76,70,
+    65,2147483712,54,49,2147483696,38,33,32,25,24,17,16,12,6,1]
   ]
-
 private theorem auxCValues3157 : auxCBatch 3157 auxCData3157 5 595226413 :=
   auxCChecked 3157 auxCData3157
-    [117742062, 118322356, 118983761, 119938168, 120240066] (by decide +kernel)
-
+    [117742062,118322356,118983761,119938168,120240066] (by decide +kernel)
 private def auxCRows3157 := auxCData3157
-
 private theorem auxCBatch3157 : auxCBatch 3157 auxCRows3157 5 595226413 :=
   auxCValues3157
-
 private def auxCRows3151 := auxCData3151 ++ auxCRows3157
-
 private theorem auxCBatch3151 : auxCBatch 3151 auxCRows3151 11 1289284679 :=
   auxCMerge 3151 auxCData3151 auxCRows3157 6 5 694058266 595226413 auxCValues3151 auxCBatch3157
-
 private def auxCRows3145 := auxCData3145 ++ auxCRows3151
-
 private theorem auxCBatch3145 : auxCBatch 3145 auxCRows3145 17 1961801756 :=
   auxCMerge 3145 auxCData3145 auxCRows3151 6 11 672517077 1289284679 auxCValues3145 auxCBatch3151
-
 private def auxCRows3139 := auxCData3139 ++ auxCRows3145
-
 private theorem auxCBatch3139 : auxCBatch 3139 auxCRows3139 23 2611703939 :=
   auxCMerge 3139 auxCData3139 auxCRows3145 6 17 649902183 1961801756 auxCValues3139 auxCBatch3145
-
 private def auxCRows3133 := auxCData3133 ++ auxCRows3139
-
 private theorem auxCBatch3133 : auxCBatch 3133 auxCRows3133 29 3240935134 :=
   auxCMerge 3133 auxCData3133 auxCRows3139 6 23 629231195 2611703939 auxCValues3133 auxCBatch3139
-
 private def auxCRows3127 := auxCData3127 ++ auxCRows3133
-
 private theorem auxCBatch3127 : auxCBatch 3127 auxCRows3127 35 3849162711 :=
   auxCMerge 3127 auxCData3127 auxCRows3133 6 29 608227577 3240935134 auxCValues3127 auxCBatch3133
-
 private def auxCRows3121 := auxCData3121 ++ auxCRows3127
-
 private theorem auxCBatch3121 : auxCBatch 3121 auxCRows3121 41 4437786799 :=
   auxCMerge 3121 auxCData3121 auxCRows3127 6 35 588624088 3849162711 auxCValues3121 auxCBatch3127
-
 private def auxCRows3115 := auxCData3115 ++ auxCRows3121
-
 private theorem auxCBatch3115 : auxCBatch 3115 auxCRows3115 47 5006878366 :=
   auxCMerge 3115 auxCData3115 auxCRows3121 6 41 569091567 4437786799 auxCValues3115 auxCBatch3121
-
 private def auxCRows3109 := auxCData3109 ++ auxCRows3115
-
 private theorem auxCBatch3109 : auxCBatch 3109 auxCRows3109 53 5558008819 :=
   auxCMerge 3109 auxCData3109 auxCRows3115 6 47 551130453 5006878366 auxCValues3109 auxCBatch3115
-
 private def auxCRows3103 := auxCData3103 ++ auxCRows3109
-
 private theorem auxCBatch3103 : auxCBatch 3103 auxCRows3103 59 6091149653 :=
   auxCMerge 3103 auxCData3103 auxCRows3109 6 53 533140834 5558008819 auxCValues3103 auxCBatch3109
-
-/-- Certified factor products for grades 3103 through 3161. -/
 def rowsC : List (List ℕ) := auxCRows3103
-
 theorem checkC :
     rowsC.length = 59 ∧ fits 3103 rowsC = true ∧
       value 3103 rowsC = 6091149653 := auxCBatch3103
-
 end K1_13_2_3_6
-end PackSource_K1_13_2_3_6AuxC
-
-section PackSource_K1_13_7Split
-set_option autoImplicit true
+end
+section
 namespace K1_13_7
 noncomputable section
 open Polynomial K1 K1_13
-
-/-- Singular solutions on the leading-unit open. -/
 def c1 : Prop :=
   ∀ w Γ s, Messages w Γ s → ∀ f, SmallFactor f → FatEligible (shape f) →
     (∀ γ ∈ Γ, OnFactor f (extend (s γ)) ∧ ¬ RegularAt f (extend (s γ))) →
     Γ.card ≤ singularPrice (shape f)
-
-/-- Regular solutions over a fixed lower-jet hypersurface. -/
 def c2 : Prop :=
   ∀ w Γ s, Messages w Γ s → ∀ f, SmallFactor f → FatEligible (shape f) →
     (∀ γ ∈ Γ, OnFactor f (extend (s γ)) ∧ RegularAt f (extend (s γ))) →
     ∀ D : Row 3, D ≠ 0 → LowerCaps D 35007 12106 →
       (∀ γ ∈ Γ, atJet D (extend (s γ)) = 0) → Γ.card ≤ hypersurfacePrice (shape f)
-
-/-- Buy the common and high-power factors and produce a geometrically proper
-residual pair with the two pointwise orders. -/
 def c3 : Prop :=
   ∀ E : FatEquations, ∃ D P Q : Row 3,
     D ≠ 0 ∧ LowerCaps D 35007 12106 ∧
@@ -7501,16 +6587,12 @@ def c3 : Prop :=
     ProperLowerPair P Q ∧
     ∀ S : Geom[X], E.holds S →
       atJet D S = 0 ∨ (OrderAt P S 41481 ∧ OrderAt Q S 8298)
-
-/-- A third cut isolates the residual marks away from the purchased curves. -/
 def c4 : Prop :=
   ∀ P Q : Row 3, ProperLowerPair P Q →
     LowerCaps P 952630000 322000000 → LowerCaps Q 952630000 322000000 →
     ∃ R : Row 3, LowerCaps R 952630000 322000000 ∧
       ∀ S : Geom[X], OrderAt P S 41481 → OrderAt Q S 8298 →
         HighCurve P Q (lowerPoint S) ∨ IsolatedFat P Q R (lowerPoint S)
-
-/-- The regular lifts of the high curves, weighted by their local lengths. -/
 def c5 : Prop :=
   ∀ w Γ s, Messages w Γ s → ∀ f, SmallFactor f → FatEligible (shape f) →
     (∀ γ ∈ Γ, OnFactor f (extend (s γ)) ∧ RegularAt f (extend (s γ))) →
@@ -7518,14 +6600,11 @@ def c5 : Prop :=
       LowerCaps P 952630000 322000000 → LowerCaps Q 952630000 322000000 →
       (∀ γ ∈ Γ, HighCurve P Q (lowerPoint (extend (s γ)))) →
       Γ.card ≤ highCurvePrice (shape f)
-
-/-- The sparse isolated-intersection bound in three lower coordinates. -/
 def c6 : Prop :=
   ∀ P Q R : Row 3, LowerCaps P 952630000 322000000 →
     LowerCaps Q 952630000 322000000 → LowerCaps R 952630000 322000000 →
     ∀ points : Finset LowerPoint,
       (∀ y ∈ points, IsolatedFat P Q R y) → points.card ≤ isolatedPrice
-
 theorem lowerPoint_injective : Function.Injective lowerPoint := by
   intro S T h
   have h₀ := congrFun h (0 : Fin 3)
@@ -7533,11 +6612,9 @@ theorem lowerPoint_injective : Function.Injective lowerPoint := by
     (algebraMap GenericX GeometricX).injective.comp
       (IsFractionRing.injective Geom[X] GenericX)
   exact hcoeff (by simpa [lowerPoint, jet, Polynomial.hasseDeriv_zero'] using h₀)
-
 theorem fat_price_sum (x : Shape) :
     fatPrice x = hypersurfacePrice x + singularPrice x + highCurvePrice x + isolatedPrice :=
   rfl
-
 theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) (h4 : c4) (h5 : c5) (h6 : c6) :
     K1_13.c7 := by
   classical
@@ -7590,90 +6667,61 @@ theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) (h4 : c4) (h5 : c5) (h6 : c6) 
   have hunion₃ := Finset.card_union_le (singular ∪ divisors ∪ curves) isolated
   rw [fat_price_sum]
   omega
-
 end
 end K1_13_7
-end PackSource_K1_13_7Split
-
-section PackSource_K1_13_7_5Defs
-set_option autoImplicit true
+end
+section
 namespace K1_13_7_5
-
 noncomputable section
-
 open Polynomial K1 K1_13 K1_13_7
-
 abbrev Jets := MvPolynomial (Fin 4) GeometricX
 abbrev JetPoint := Fin 4 → GeometricX
-
 def jetPoint (S : Geom[X]) : JetPoint := fun i => genericCoeff (jet S i)
-
 def jetPointIdeal (y : JetPoint) : Ideal Jets := RingHom.ker (MvPolynomial.eval y)
-
 def geometricFactor (f : Row 4) : Jets := MvPolynomial.map genericCoeff f
-
 def liftRow (P : Row 3) : Jets := MvPolynomial.rename Fin.castSucc (genericRow P)
-
 def liftIdeal (f : Row 4) (P Q : Row 3) : Ideal Jets :=
   Ideal.span {geometricFactor f, liftRow P, liftRow Q}
-
 def liftLength (r : PrimeSpectrum Jets) (J : Ideal Jets) : ℕ∞ :=
   let A := Localization.AtPrime r.asIdeal
   Module.length A (A ⧸ J.map (algebraMap Jets A))
-
 abbrev threshold : ℕ := 293711590
 abbrev lowerBox : Shape := ⟨952630000, 322000000, 0⟩
-
-/-- The weight is the generic complete-intersection length in the ambient four jets. -/
 structure LiftedCurve (f : Row 4) (P Q : Row 3) (r : PrimeSpectrum Jets) : Prop where
   component : r.asIdeal ∈ (liftIdeal f P Q).minimalPrimes
   height : r.asIdeal.height = 3
   heavy : (↑threshold : ℕ∞) ≤ liftLength r (liftIdeal f P Q)
   finite : liftLength r (liftIdeal f P Q) < ⊤
-
-/-- The downward-closed support envelope, including the cap on the highest jet. -/
 def Supported (H : Shape) (F : Jets) : Prop :=
   ∀ m ∈ F.support, m.sum (fun _ a => a) ≤ H.b ∧
     m.sum (fun i a => i.val * a) ≤ H.j ∧ m 3 ≤ H.t
-
 abbrev constantCoeff : K →+* GeometricX := genericCoeff.comp (Polynomial.C.comp embed)
-
-/-- A common clearing denominator for the inverse Taylor evaluation functions. -/
 structure ValueChart (H : Shape) where
   denominator : Jets
   numerator : I → Jets
   denominator_supported : Supported H denominator
   numerator_supported : ∀ i, Supported H (numerator i)
-
 def ValueChart.recovers {H : Shape} (C : ValueChart H) (S : K[X]) : Prop :=
   let ev := MvPolynomial.eval (jetPoint (extend S))
   ev C.denominator ≠ 0 ∧
     ∀ i, ev (C.numerator i) = constantCoeff (S.eval (node i)) * ev C.denominator
-
 end
 end K1_13_7_5
-end PackSource_K1_13_7_5Defs
-
-section PackSource_K1_13_7_6Chart
-set_option autoImplicit true
+end
+section
 set_option autoImplicit false
-
 namespace K1_13_7_6
 noncomputable section
-
 open K1_13 K1_13_7 MvPolynomial
 open scoped Pointwise
-
 private theorem zero_mem_cap (b j : ℕ) : 0 ∈ cap b j := by
   simp [cap]
-
 theorem chartMap_surjective : Function.Surjective chartMap := by
   apply monomialMap_surjective
   intro i
   change (Finsupp.single i 1).degree ≤ totalCap ∧
     Finsupp.single i 1 1 + 2 * Finsupp.single i 1 2 ≤ 2 * halfIndexCap
   fin_cases i <;> norm_num [Finsupp.degree_single, Finsupp.single_apply, totalCap, halfIndexCap]
-
 private theorem cap_add_subset (b j b' j' : ℕ) :
     cap b j + cap b' j' ⊆ cap (b + b') (j + j') := by
   rintro _ ⟨e, he, e', he', rfl⟩
@@ -7683,7 +6731,6 @@ private theorem cap_add_subset (b j b' j' : ℕ) :
     (e + e') 1 + 2 * (e + e') 2 ≤ j + j'
   simp only [map_add, Finsupp.add_apply]
   omega
-
 private theorem nsmul_cap_subset (b j n : ℕ) : n • cap b j ⊆ cap (b * n) (j * n) := by
   induction n with
   | zero =>
@@ -7692,12 +6739,10 @@ private theorem nsmul_cap_subset (b j n : ℕ) : n • cap b j ⊆ cap (b * n) (
   | succ n ih =>
       rw [succ_nsmul, Nat.mul_succ, Nat.mul_succ]
       exact (Set.add_subset_add ih subset_rfl).trans (cap_add_subset _ _ _ _)
-
 private theorem indexWeight_eq (e : Fin 3 →₀ ℕ) :
     (e.sum fun i a => i.val * a) = e 1 + 2 * e 2 := by
   rw [Finsupp.sum_fintype _ _ (fun _ => by simp), Fin.sum_univ_three]
   simp
-
 private theorem genericRow_mem_chart (P : Row 3) (hP : LowerCaps P totalCap (2 * halfIndexCap)) :
     genericRow P ∈ restrictSupport GeometricX chartExponents := by
   intro e he
@@ -7705,14 +6750,12 @@ private theorem genericRow_mem_chart (P : Row 3) (hP : LowerCaps P totalCap (2 *
   refine ⟨(le_totalDegree he').trans hP.1, ?_⟩
   rw [← indexWeight_eq]
   exact (Finset.le_sup (f := fun m : Fin 3 →₀ ℕ => m.sum fun i a => i.val * a) he').trans hP.2
-
 theorem chart_lift (P : Row 3) (hP : LowerCaps P totalCap (2 * halfIndexCap)) :
     ∃ L : MvPolynomial chartExponents GeometricX,
       chartMap L = genericRow P ∧ L.totalDegree ≤ 1 := by
   let h := genericRow_mem_chart P hP
   exact ⟨monomialLift (genericRow P) h, monomialMap_monomialLift (genericRow P) h,
     totalDegree_monomialLift_le_one (genericRow P) h⟩
-
 theorem chartDegree_eq_one {σ : Type} [Finite σ]
     (φ : MvPolynomial σ GeometricX →ₐ[GeometricX] Lower) (hφ : Function.Surjective φ)
     (y : LowerPoint) (q : PrimeSpectrum Lower) (hq : q.asIdeal = pointIdeal y) :
@@ -7729,7 +6772,6 @@ theorem chartDegree_eq_one {σ : Type} [Finite σ]
   let e := Ideal.quotientKerAlgEquivOfSurjective hψ
   let := Module.Finite.of_surjective e.symm.toLinearMap e.symm.surjective
   rw [affineDegree_eq_finrank, e.toLinearEquiv.finrank_eq, Module.finrank_self, Nat.cast_one]
-
 private theorem chartHilbert_le (n : ℕ) :
     affineHilbertFunction (RingHom.ker chartMap) n ≤
       (cap (totalCap * n) ((2 * halfIndexCap) * n)).ncard := by
@@ -7748,8 +6790,6 @@ private theorem chartHilbert_le (n : ℕ) :
     _ ≤ Module.finrank GeometricX M := Submodule.finrank_map_le _ _
     _ = S.ncard := by
       rw [Module.finrank_eq_nat_card_basis (basisRestrictSupport GeometricX S), Nat.card_coe_set_eq]
-
-/-- The leading term of the cap's lattice polynomial gives its normalized volume. -/
 theorem chartDegree_bound :
     chartDegree chartMap zeroPrime ≤ 6 * (halfIndexCap : ℚ) ^ 2 * (totalCap - halfIndexCap : ℚ) := by
   let a : ℚ := halfIndexCap
@@ -7786,7 +6826,6 @@ theorem chartDegree_bound :
     (Filter.Eventually.of_forall hfit)).trans_eq ?_
   norm_num [H, a, b, Polynomial.coeff_add, Polynomial.coeff_C_mul_X_pow,
     Polynomial.coeff_one]
-
 end
 end K1_13_7_6
-end PackSource_K1_13_7_6Chart
+end

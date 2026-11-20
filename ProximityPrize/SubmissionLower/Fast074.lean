@@ -1,51 +1,19 @@
-import ProximityPrize.SubmissionLower.Fast005
-import ProximityPrize.SubmissionLower.Fast009
-import ProximityPrize.SubmissionLower.Fast014
-import ProximityPrize.SubmissionLower.Pack_K1Defs
-import ProximityPrize.SubmissionLower.Fast050
-import ProximityPrize.SubmissionLower.Fast054
-import ProximityPrize.SubmissionLower.Fast017
-import ProximityPrize.SubmissionLower.Fast051
-import ProximityPrize.SubmissionLower.Fast048
-import ProximityPrize.SubmissionLower.Fast018
-import ProximityPrize.SubmissionLower.Fast066
-import ProximityPrize.SubmissionLower.Fast023
-import ProximityPrize.SubmissionLower.Fast029
-import ProximityPrize.SubmissionLower.Fast032
-import ProximityPrize.SubmissionLower.Pack_K1_14_2_2_4Split
-import ProximityPrize.SubmissionLower.Fast052
-import ProximityPrize.SubmissionLower.Fast053
-import ProximityPrize.SubmissionLower.Fast057
 import ProximityPrize.SubmissionLower.Fast068
-import ProximityPrize.SubmissionLower.Fast042
-import ProximityPrize.SubmissionLower.Fast040
-import ProximityPrize.SubmissionLower.Fast059
-import ProximityPrize.SubmissionLower.Fast055
-import ProximityPrize.SubmissionLower.Fast056
-import ProximityPrize.SubmissionLower.Fast064
-import ProximityPrize.SubmissionLower.Fast070
-import ProximityPrize.SubmissionLower.Fast067
 import ProximityPrize.SubmissionLower.Fast069
+import ProximityPrize.SubmissionLower.Fast070
 set_option Elab.async false
-
-section PackSource_K1_13_3Split
 set_option autoImplicit true
+section
 namespace K1_13_3
-
 noncomputable section
-
 open Polynomial K1 K1_13
 open scoped BigOperators
-
-/-- Contact and the reserve force ordinary multiplicity along one message. -/
 def c1 : Prop :=
   ∀ (w : I → K) (T : ℕ) (P : Row 4), T ≤ terminal → BankRow w T P →
     ∀ S : Geom[X], S.natDegree ≤ 133671 →
       (∃ H : Finset I, 180265 ≤ H.card ∧
         ∀ i ∈ H, S.eval (embed (node i)) = embed (w i)) →
       OrderAt P S (requiredOrder T)
-
-/-- A top Hasse partial at the exact factor exponent gives the proper cutter. -/
 def c2 : Prop :=
   ∀ (f P : Row 4) (Γ : Finset K) (s : K → K[X]) (d a : ℕ),
     SmallFactor f →
@@ -53,7 +21,6 @@ def c2 : Prop :=
     (∀ γ ∈ Γ, OrderAt P (extend (s γ)) d) →
     a < d → f ^ a ∣ P → (¬ f ^ (a + 1) ∣ P) →
     ProperCut f Γ s (d - a)
-
 private theorem exists_fresh {n : ℕ} (f : Fin n → Row 4) :
     ∃ x : Geom, (∀ i : I, x ≠ embed (node i)) ∧
       ∀ i, (symbolAt x (f i)).support = (f i).support := by
@@ -75,14 +42,11 @@ private theorem exists_fresh {n : ℕ} (f : Fin n → Row 4) :
       (Polynomial.mem_roots (MvPolynomial.mem_support_iff.mp hm)).mpr heval
     exact hx.2 (Finset.mem_biUnion.mpr
       ⟨i, Finset.mem_univ _, Finset.mem_biUnion.mpr ⟨m, hm, Multiset.mem_toFinset.mpr hroot⟩⟩)
-
 private theorem specialization_bounds (x : Geom) (P : Row 4)
     (hP : InBox (shape P) ⟨4012, 1650, 550⟩) :
     (symbolAt x P).totalDegree ≤ 4012 ∧ symbolIndex (symbolAt x P) ≤ 1650 := by
   have h : (symbolAt x P).support ⊆ P.support := MvPolynomial.support_map_subset _ _
   exact ⟨(Finset.sup_mono h).trans hP.1, (Finset.sup_mono h).trans hP.2.1⟩
-
-/-- Choose the least availability that forces the required powers at all cutoffs. -/
 private theorem exists_availability (hc : c1) (hd : c2)
     {w : I → K} {Γ : Finset K} {s : K → K[X]} (hm : Messages w Γ s)
     {f : Row 4} (hf : SmallFactor f) :
@@ -122,7 +86,6 @@ private theorem exists_availability (hc : c1) (hd : c2)
     hweight horder (by omega) (hl T hT P hP) (by rwa [hstep] at hnext)
   have heq : requiredOrder T - (requiredOrder T - l) = l := by omega
   rwa [heq] at hcut
-
 private theorem sum_by_layer (W E : ℕ) (hE : 0 < E) (cost : ℕ → ℕ) :
     (∑ T ∈ Finset.range (W + 1), cost ((W - T) / E)) ≤
       E * ∑ k ∈ Finset.range (1 + W / E), cost k := by
@@ -159,7 +122,6 @@ private theorem sum_by_layer (W E : ℕ) (hE : 0 < E) (cost : ℕ → ℕ) :
       obtain ⟨T, hT, rfl⟩ := Finset.mem_image.mp hp
       exact hmem T hT
     _ = _ := by rw [Finset.sum_product, Finset.mul_sum]; simp [U, R]
-
 theorem of_children (h1 : c1) (h2 : c2) : K1_13.c3 := by
   classical
   intro w Γ s hm hr n g f hf
@@ -210,31 +172,20 @@ theorem of_children (h1 : c1) (h2 : c2) : K1_13.c3 := by
   have hpred : (∑ k ∈ Finset.range (1 + terminal / layerWidth), cost k) ≤
       26124168665121 - 1 := by omega
   exact (not_le_of_gt hceil) (hsum.trans (Nat.mul_le_mul_left layerWidth hpred))
-
 end
-
 end K1_13_3
-end PackSource_K1_13_3Split
-
-section PackSource_K1_13_3_1Coefficients
-set_option autoImplicit true
+end
+section
 set_option maxRecDepth 12000
-
 namespace K1_13_3_1
-
 noncomputable section
-
 open Polynomial K1 K1_13 K1_13_3 FrobeniusLocator ProximityPrize.Benchmark
 open scoped BigOperators
-
-/-- Substitute the jets of a line of polynomial paths, with a formal parameter. -/
 def line (P : Row 4) (S U : Geom[X]) : Polynomial Geom[X] :=
   MvPolynomial.eval₂ Polynomial.C
     (fun i => Polynomial.C (jet S i) + Polynomial.C (jet U i) * Polynomial.X) P
-
 private def Bounded (Q : Polynomial Geom[X]) (b : ℕ) : Prop :=
   ∀ j, (Q.coeff j).natDegree ≤ b + layerWidth * j
-
 private theorem bounded_mul {F G : Polynomial Geom[X]} {a b : ℕ}
     (hF : Bounded F a) (hG : Bounded G b) : Bounded (F * G) (a + b) := by
   intro j
@@ -245,14 +196,12 @@ private theorem bounded_mul {F G : Polynomial Geom[X]} {a b : ℕ}
   refine natDegree_mul_le.trans ((Nat.add_le_add (hF ij.1) (hG ij.2)).trans ?_)
   rw [← hsum, Nat.mul_add]
   omega
-
 private theorem bounded_C (f : Geom[X]) {a : ℕ} (hf : f.natDegree ≤ a) :
     Bounded (Polynomial.C f) a := by
   intro j
   by_cases h : j = 0
   · simpa [h] using hf
   · simp [Polynomial.coeff_C, h]
-
 private theorem bounded_prod {ι : Type*} (A : Finset ι)
     (f : ι → Polynomial Geom[X]) (b : ι → ℕ) (hf : ∀ i ∈ A, Bounded (f i) (b i)) :
     Bounded (∏ i ∈ A, f i) (∑ i ∈ A, b i) := by
@@ -263,7 +212,6 @@ private theorem bounded_prod {ι : Type*} (A : Finset ι)
     rw [Finset.prod_insert hi, Finset.sum_insert hi]
     exact bounded_mul (hf i (Finset.mem_insert_self _ _))
       (ih fun k hk => hf k (Finset.mem_insert_of_mem hk))
-
 private theorem bounded_pow {f : Polynomial Geom[X]} {b : ℕ} (hf : Bounded f b) (n : ℕ) :
     Bounded (f ^ n) (b * n) := by
   induction n with
@@ -271,7 +219,6 @@ private theorem bounded_pow {f : Polynomial Geom[X]} {b : ℕ} (hf : Bounded f b
   | succ n ih =>
     rw [pow_succ, Nat.mul_succ]
     exact bounded_mul ih hf
-
 private theorem line_degree (P : Row 4) (S U : Geom[X]) (T : ℕ)
     (hP : TrueWeightLE P T) (hS : S.natDegree ≤ 133671) (hU : U.natDegree ≤ 180268)
     (j : ℕ) : ((line P S U).coeff j).natDegree ≤ T + layerWidth * j := by
@@ -303,7 +250,6 @@ private theorem line_degree (P : Row 4) (S U : Geom[X]) (T : ℕ)
     (bounded_prod m.support (fun i => F i ^ m i) (fun i => b i * m i)
       (fun i _ => bounded_pow (hF i) (m i))) j
   exact hterm.trans (Nat.add_le_add_right (hP m hm) _)
-
 private theorem eval_line (P : Row 4) (S U : Geom[X]) (c : Geom) :
     (line P S U).eval (Polynomial.C c) = atJet P (S + c • U) := by
   change (evalRingHom (Polynomial.C c))
@@ -320,7 +266,6 @@ private theorem eval_line (P : Row 4) (S U : Geom[X]) (c : Geom) :
     simp only [coe_evalRingHom, eval_mul, eval_C, eval_X, jet, map_add]
     rw [(hasseDeriv i.val).map_smul, Algebra.smul_def, algebraMap_eq, mul_comm]
   rw [heq]
-
 private theorem swapped_coeff (Q : Polynomial Geom[X]) (i j : ℕ) :
     ((Bivariate.swap Q).coeff i).coeff j = (Q.coeff j).coeff i := by
   induction Q using Polynomial.induction_on' with
@@ -331,13 +276,10 @@ private theorem swapped_coeff (Q : Polynomial Geom[X]) (i j : ℕ) :
     | monomial m c =>
       rw [Bivariate.swap_monomial_monomial]
       by_cases hi : m = i <;> by_cases hj : n = j <;> simp [Polynomial.coeff_monomial, hi, hj]
-
 private theorem eval_swap (Q : Polynomial Geom[X]) (c : Geom) :
     (Bivariate.swap Q).map (evalRingHom c) = Q.eval (Polynomial.C c) := by
   simpa [Polynomial.aeval_def]
     using (Bivariate.aveal_eq_map_swap c Q).symm
-
-/-- Contact at all constant values of the line parameter holds coefficientwise. -/
 private theorem coeff_contact (Q : Polynomial Geom[X]) (x : Geom) (r : ℕ)
     (h : ∀ c : Geom, (Polynomial.X - C x) ^ r ∣ Q.eval (C c)) (j : ℕ) :
     (Polynomial.X - C x) ^ r ∣ Q.coeff j := by
@@ -360,15 +302,12 @@ private theorem coeff_contact (Q : Polynomial Geom[X]) (x : Geom) (r : ℕ)
   intro i hi
   change (f (Q.coeff j)).coeff i = 0
   rw [← Polynomial.coeff_map, ← swapped_coeff, hzero i hi, Polynomial.coeff_zero]
-
 private theorem line_contacts_zero (Q : Polynomial Geom[X]) (A : Finset I)
     (x : I → Geom) (hx : Function.Injective x) (r : ℕ)
     (h : ∀ i ∈ A, ∀ c : Geom, (Polynomial.X - C (x i)) ^ r ∣ Q.eval (C c))
     (j : ℕ) (hdeg : (Q.coeff j).natDegree < r * A.card) : Q.coeff j = 0 := by
   exact K1_11.eq_zero_of_many_contacts A x hx r (Q.coeff j)
     (fun i hi => coeff_contact Q (x i) r (h i hi) j) hdeg
-
-/-- The reserve makes every low coefficient of every locator line vanish. -/
 theorem line_coeff_zero (w : I → K) (T : ℕ) (P : Row 4) (S : Geom[X])
     (hP : BankRow w T P) (hS : S.natDegree ≤ 133671)
     (A : Finset I) (hA : A.card = 180265)
@@ -396,317 +335,15 @@ theorem line_coeff_zero (w : I → K) (T : ℕ) (P : Row 4) (S : Geom[X])
     rw [hA]
     exact hb.trans_lt (by decide)
   exact line_contacts_zero Q A x hx 3000 hcontact j hdegree
-
 end
-
 end K1_13_3_1
-end PackSource_K1_13_3_1Coefficients
-
-section PackSource_K1_13_3_2Proof
-set_option autoImplicit true
-namespace K1_13_3_2
-
-noncomputable section
-
-open K1 K1_13 K1_13_3 Polynomial
-
-private abbrev Exponent := Fin 4 →₀ ℕ
-
-/-- Translate the top jet by a formal parameter, holding all coefficients
-and the other jets fixed. -/
-private def translateTop : Row 4 →+* Polynomial (Row 4) :=
-  MvPolynomial.eval₂Hom (Polynomial.C.comp MvPolynomial.C) fun i =>
-    Polynomial.C (MvPolynomial.X i) + if i = 3 then Polynomial.X else 0
-
-private def topHasse (a : ℕ) (P : Row 4) : Row 4 :=
-  (translateTop P).coeff a
-
-private theorem translate_independent (m : Exponent) (c : Geom[X]) (hm : m 3 = 0) :
-    translateTop (MvPolynomial.monomial m c) = Polynomial.C (MvPolynomial.monomial m c) := by
-  rw [translateTop, MvPolynomial.eval₂Hom_monomial, MvPolynomial.monomial_eq, map_mul]
-  simp only [RingHom.comp_apply]
-  congr 1
-  unfold Finsupp.prod
-  rw [map_prod]
-  refine Finset.prod_congr rfl fun i hi => ?_
-  have hne : i ≠ 3 := by
-    intro he
-    subst i
-    exact (Finsupp.mem_support_iff.mp hi) hm
-  simp [hne]
-
-private theorem translate_top_pow_coeff (n a : ℕ) :
-    ((Polynomial.C (MvPolynomial.X (3 : Fin 4) : Row 4) + Polynomial.X) ^ n).coeff a =
-      MvPolynomial.C (↑(n.choose a) : Geom[X]) * MvPolynomial.X 3 ^ (n - a) := by
-  rw [add_comm, ← Polynomial.taylor_X_pow, Polynomial.taylor_coeff,
-    Polynomial.X_pow_eq_monomial, Polynomial.hasseDeriv_monomial]
-  simp [Polynomial.eval_monomial]
-
-private theorem erase_top_add (u : Exponent) :
-    u.erase 3 + Finsupp.single 3 (u 3) = u := by
-  ext i
-  by_cases hi : i = 3
-  · subst i
-    simp
-  · simp [Finsupp.erase_ne hi, Finsupp.single_eq_of_ne hi]
-
-private theorem topHasse_monomial (a : ℕ) (u : Exponent) (c : Geom[X]) :
-    topHasse a (MvPolynomial.monomial u c) =
-      MvPolynomial.monomial (u.erase 3 + Finsupp.single 3 (u 3 - a)) (↑((u 3).choose a) * c) := by
-  have hu : MvPolynomial.monomial u c =
-      MvPolynomial.monomial (u.erase 3) c * MvPolynomial.X 3 ^ (u 3) := by
-    rw [← MvPolynomial.monomial_add_single, erase_top_add]
-  have hx : translateTop (MvPolynomial.X 3) =
-      Polynomial.C (MvPolynomial.X 3) + Polynomial.X := by simp [translateTop]
-  unfold topHasse
-  rw [hu, map_mul, map_pow, translate_independent _ _ Finsupp.erase_same, hx,
-    Polynomial.coeff_C_mul, translate_top_pow_coeff, ← mul_assoc]
-  rw [mul_comm (MvPolynomial.monomial (u.erase 3) c), MvPolynomial.C_mul_monomial,
-    ← MvPolynomial.monomial_add_single]
-
-private theorem apply_add_top (m : Exponent) (a : ℕ) :
-    (m + Finsupp.single 3 a : Exponent) 3 = m 3 + a := by simp
-
-private theorem topHasse_coeff (a : ℕ) (P : Row 4) (m : Exponent) :
-    (topHasse a P).coeff m =
-      ↑((m 3 + a).choose a) * P.coeff (m + Finsupp.single 3 a) := by
-  classical
-  induction P using MvPolynomial.induction_on' with
-  | monomial u c =>
-    rw [topHasse_monomial, MvPolynomial.coeff_monomial, MvPolynomial.coeff_monomial]
-    by_cases ha : a ≤ u 3
-    · have hcancel : (u.erase 3 + Finsupp.single 3 (u 3 - a)) + Finsupp.single 3 a = u := by
-        rw [add_assoc, ← Finsupp.single_add, Nat.sub_add_cancel ha, erase_top_add]
-      have heq : u.erase 3 + Finsupp.single 3 (u 3 - a) = m ↔
-          u = m + Finsupp.single 3 a := by
-        constructor
-        · intro h
-          rw [← h, hcancel]
-        · intro h
-          exact add_right_cancel (hcancel.trans h)
-      simp only [heq]
-      by_cases h : u = m + Finsupp.single 3 a
-      · have h3 : u 3 = m 3 + a := by rw [h, apply_add_top]
-        simp only [h3, ite_eq_left h]
-      · simp [h]
-    · have hne : u ≠ m + Finsupp.single 3 a := by
-        intro h
-        have h3 : u 3 = m 3 + a := by rw [h, apply_add_top]
-        omega
-      rw [Nat.choose_eq_zero_of_lt (Nat.lt_of_not_ge ha)]
-      simp [hne]
-  | add P Q hP hQ =>
-    simp only [topHasse, map_add, Polynomial.coeff_add, AddMonoidAlgebra.coeff_add,
-      Finsupp.add_apply] at hP hQ ⊢
-    rw [hP, hQ, mul_add]
-
-private theorem source_support {a : ℕ} {P : Row 4} {m : Exponent}
-    (hm : m ∈ (topHasse a P).support) : m + Finsupp.single 3 a ∈ P.support := by
-  rw [MvPolynomial.mem_support_iff, topHasse_coeff] at hm
-  exact MvPolynomial.mem_support_iff.mpr (right_ne_zero_of_mul hm)
-
-private theorem sum_add_top (w : Fin 4 → ℕ) (m : Exponent) (a : ℕ) :
-    (m + Finsupp.single 3 a).sum (fun i k => w i * k) =
-      m.sum (fun i k => w i * k) + w 3 * a := by
-  rw [Finsupp.sum_add_index' (fun i => Nat.mul_zero (w i)) (fun i b c => Nat.mul_add (w i) b c),
-    Finsupp.sum_single_index (h := fun i k => w i * k) (Nat.mul_zero _)]
-
-private theorem total_add_top (m : Exponent) (a : ℕ) :
-    (m + Finsupp.single 3 a).sum (fun _ k => k) = m.sum (fun _ k => k) + a := by
-  simpa only [one_mul] using sum_add_top (fun _ => 1) m a
-
-private theorem topHasse_bounds (a : ℕ) (P : Row 4)
-    (hb : InBox (shape P) ⟨4012, 1650, 550⟩) (hw : TrueWeightLE P terminal) :
-    InBox (shape (topHasse a P)) ⟨4012, 1650, 550⟩ ∧ TrueWeightLE (topHasse a P) terminal := by
-  refine ⟨⟨?_, ?_, ?_⟩, ?_⟩
-  · change (topHasse a P).totalDegree ≤ 4012
-    apply Finset.sup_le
-    intro m hm
-    have hp := (MvPolynomial.le_totalDegree (source_support hm)).trans hb.1
-    rw [total_add_top] at hp
-    change _ ≤ 4012 at hp
-    omega
-  · change indexDegree (topHasse a P) ≤ 1650
-    apply Finset.sup_le
-    intro m hm
-    have hp := (Finset.le_sup (f := fun u : Exponent => u.sum (fun i k => i.val * k))
-      (source_support hm)).trans hb.2.1
-    rw [sum_add_top Fin.val] at hp
-    change _ ≤ 1650 at hp
-    omega
-  · change (topHasse a P).degreeOf 3 ≤ 550
-    apply MvPolynomial.degreeOf_le_iff.mpr
-    intro m hm
-    have hp := (MvPolynomial.le_degreeOf_of_mem_support 3 (source_support hm)).trans hb.2.2
-    rw [apply_add_top] at hp
-    change _ ≤ 550 at hp
-    omega
-  · intro m hm
-    have hp := hw _ (source_support hm)
-    rw [sum_add_top (fun i => 133671 - i.val)] at hp
-    rw [topHasse_coeff]
-    have hcoeff := Polynomial.natDegree_mul_le
-      (p := (↑((m 3 + a).choose a) : Geom[X])) (q := P.coeff (m + Finsupp.single 3 a))
-    rw [Polynomial.natDegree_natCast, zero_add] at hcoeff
-    omega
-
-private def shiftHom (S : Geom[X]) : Row 4 →+* Row 4 :=
-  MvPolynomial.eval₂Hom MvPolynomial.C (fun i => MvPolynomial.X i + MvPolynomial.C (jet S i))
-
-private theorem translate_shift (S : Geom[X]) :
-    translateTop.comp (shiftHom S) = (Polynomial.mapRingHom (shiftHom S)).comp translateTop := by
-  apply MvPolynomial.ringHom_ext
-  · intro c
-    simp [translateTop, shiftHom]
-  · intro i
-    simp only [RingHom.comp_apply, shiftHom, translateTop, MvPolynomial.eval₂Hom_X',
-      MvPolynomial.eval₂Hom_C, map_add, Polynomial.coe_mapRingHom, Polynomial.map_C]
-    by_cases hi : i = 3
-    · simp only [hi, ite_true, Polynomial.map_X]
-      exact add_right_comm _ _ _
-    · simp only [hi, ite_false, Polynomial.map_zero, add_zero]
-
-private theorem topHasse_order (a d : ℕ) (P : Row 4) (S : Geom[X])
-    (h : OrderAt P S d) : OrderAt (topHasse a P) S (d - a) := by
-  have he := RingHom.congr_fun (translate_shift S) P
-  change translateTop (shiftJet P S) = (translateTop P).map (shiftHom S) at he
-  have hs : topHasse a (shiftJet P S) = shiftJet (topHasse a P) S := by
-    change (translateTop (shiftJet P S)).coeff a =
-      shiftHom S ((translateTop P).coeff a)
-    rw [he, Polynomial.coeff_map]
-  intro m hm
-  rw [← hs] at hm
-  have hd := h _ (source_support hm)
-  rw [total_add_top] at hd
-  omega
-
-private theorem topHasse_one_not_dvd (f : Row 4) (hf : SmallFactor f) :
-    ¬ f ∣ topHasse 1 f := by
-  classical
-  have hpos : 0 < f.degreeOf 3 := hf.2.1
-  have hsmall : f.degreeOf 3 < K1.p :=
-    (show f.degreeOf 3 ≤ 10 from hf.2.2.1.2.2).trans_lt (by decide)
-  have hdeg : (topHasse 1 f).degreeOf 3 ≤ f.degreeOf 3 - 1 := by
-    apply MvPolynomial.degreeOf_le_iff.mpr
-    intro m hm
-    have h := MvPolynomial.le_degreeOf_of_mem_support 3 (source_support hm)
-    rw [apply_add_top] at h
-    omega
-  have hnz : topHasse 1 f ≠ 0 := by
-    have hsup : 0 < f.support.sup (fun m => m (3 : Fin 4)) := by
-      rwa [← MvPolynomial.degreeOf_eq_sup]
-    obtain ⟨u, hu, htop⟩ := (Finset.le_sup_iff hsup).mp (le_refl _)
-    rw [← MvPolynomial.degreeOf_eq_sup] at htop
-    have hupos : 0 < u 3 := hpos.trans_le htop
-    have hult : u 3 < K1.p := (MvPolynomial.le_degreeOf_of_mem_support 3 hu).trans_lt hsmall
-    let m := u.erase 3 + Finsupp.single 3 (u 3 - 1)
-    have hsum : m + Finsupp.single 3 1 = u := by
-      dsimp [m]
-      rw [add_assoc, ← Finsupp.single_add, Nat.sub_add_cancel hupos, erase_top_add]
-    have hm : m 3 + 1 = u 3 := by
-      rw [← apply_add_top, hsum]
-    have hc : (↑(u 3) : Geom[X]) ≠ 0 := by
-      have : CharP Geom K1.p :=
-        charP_of_injective_ringHom (RingHom.injective embed) K1.p
-      intro hz
-      have hz' : (↑(u 3) : Geom) = 0 := by
-        simpa only [map_natCast, map_zero] using congrArg (Polynomial.evalRingHom (0 : Geom)) hz
-      exact (not_le_of_gt hult)
-        (Nat.le_of_dvd hupos ((CharP.cast_eq_zero_iff Geom K1.p _).mp hz'))
-    have hcoeff : (topHasse 1 f).coeff m ≠ 0 := by
-      rw [topHasse_coeff, hm, hsum, Nat.choose_one_right]
-      exact mul_ne_zero hc (MvPolynomial.mem_support_iff.mp hu)
-    intro hz
-    exact hcoeff (by rw [hz]; rfl)
-  rintro ⟨g, hg⟩
-  have hg0 : g ≠ 0 := by
-    intro h
-    exact hnz (by rw [hg, h, mul_zero])
-  have h := MvPolynomial.degreeOf_mul_eq (n := (3 : Fin 4)) hf.1.ne_zero hg0
-  rw [hg, h] at hdeg
-  omega
-
-private theorem topHasse_zero (P : Row 4) : topHasse 0 P = P := by
-  ext m
-  simp [topHasse_coeff]
-
-/-- The first possible coefficient after extracting one parameter from
-each of the a factors. -/
-private theorem coeff_X_mul_pow {R : Type*} [CommSemiring R]
-    (V W : Polynomial R) (a : ℕ) :
-    ((Polynomial.X * V) ^ a * W).coeff a = (V.coeff 0) ^ a * W.coeff 0 := by
-  rw [mul_pow, mul_assoc]
-  calc
-    _ = (V ^ a * W).coeff 0 := by
-      simpa only [zero_add] using Polynomial.coeff_X_pow_mul (V ^ a * W) a 0
-    _ = _ := by
-      change Polynomial.constantCoeff (V ^ a * W) =
-        Polynomial.constantCoeff V ^ a * Polynomial.constantCoeff W
-      rw [map_mul, map_pow]
-
-/-- In the quotient by the prime factor, the constant term of its translate
-vanishes and the first coefficient survives. -/
-private theorem exact_hasse_not_dvd {R : Type*} [CommRing R]
-    (T : R →+* Polynomial R) (T0 : ∀ G, (T G).coeff 0 = G)
-    (f P : R) (a : ℕ) (hf : Prime f) (hsep : ¬ f ∣ (T f).coeff 1)
-    (hdiv : f ^ a ∣ P) (hexact : ¬ f ^ (a + 1) ∣ P) : ¬ f ∣ (T P).coeff a := by
-  obtain ⟨U, rfl⟩ := hdiv
-  have hu : ¬ f ∣ U := by
-    rintro ⟨V, rfl⟩
-    exact hexact ⟨V, by rw [pow_succ, mul_assoc]⟩
-  let J := Ideal.span ({f} : Set R)
-  have : J.IsPrime := Ideal.isPrime_span_singleton_of_prime hf
-  let reduce := Ideal.Quotient.mk J
-  let tr := (Polynomial.mapRingHom reduce).comp T
-  have hzero (G : R) : reduce G = 0 ↔ f ∣ G :=
-    Ideal.Quotient.eq_zero_iff_mem.trans Ideal.mem_span_singleton
-  have hcoeff (G : R) (n : ℕ) : (tr G).coeff n = reduce ((T G).coeff n) :=
-    Polynomial.coeff_map _ _
-  have hconstant (G : R) : (tr G).coeff 0 = reduce G := by rw [hcoeff, T0]
-  obtain ⟨V, hV⟩ := Polynomial.X_dvd_iff.mpr
-    (show (tr f).coeff 0 = 0 by rw [hconstant]; exact (hzero _).mpr dvd_rfl)
-  have hfirst : V.coeff 0 = reduce ((T f).coeff 1) := by
-    rw [← hcoeff, hV]
-    exact (Polynomial.coeff_X_mul V 0).symm
-  have hr : reduce ((T (f ^ a * U)).coeff a) = reduce ((T f).coeff 1) ^ a * reduce U := by
-    calc
-      _ = (tr (f ^ a * U)).coeff a := (hcoeff _ _).symm
-      _ = (V.coeff 0) ^ a * (tr U).coeff 0 := by
-        rw [map_mul, map_pow, hV]
-        exact coeff_X_mul_pow V (tr U) a
-      _ = _ := by rw [hfirst, hconstant]
-  intro h
-  exact (mul_ne_zero (pow_ne_zero _ ((hzero _).not.mpr hsep))
-    ((hzero _).not.mpr hu)) (hr.symm.trans ((hzero _).mpr h))
-
-/-- The Hasse partial at the exact exponent is a proper cutter of the factor. -/
-theorem proof : K1_13_3.c2 := by
-  intro f P Γ s d a hf hb hw hord _ hdiv hexact
-  obtain ⟨hbox, hweight⟩ := topHasse_bounds a P hb hw
-  have hp : Prime f := UniqueFactorizationMonoid.irreducible_iff_prime.mp hf.1
-  have hproper : ¬ f ∣ topHasse a P :=
-    exact_hasse_not_dvd translateTop topHasse_zero f P a hp (topHasse_one_not_dvd f hf) hdiv hexact
-  exact ⟨topHasse a P, hproper, hbox, hweight, fun γ hγ =>
-    topHasse_order a d P (extend (s γ)) (hord γ hγ)⟩
-
 end
-
-end K1_13_3_2
-end PackSource_K1_13_3_2Proof
-
-section PackSource_K1_13_3_1Proof
-set_option autoImplicit true
+section
 set_option maxRecDepth 12000
-
 namespace K1_13_3_1
-
 noncomputable section
-
 open Polynomial K1 K1_13 K1_13_3 FrobeniusLocator
 open scoped BigOperators
-
-/-- Multiplication by the locator is invertible in the local four-jet ring
-away from its roots. Reduce the inverse times the target to degree at most three. -/
 private theorem exists_direction (L : Geom[X]) (x : Geom) (hx : L.eval x ≠ 0)
     (v : Fin 4 → Geom) :
     ∃ V : Geom[X], V.natDegree ≤ 3 ∧ ∀ i : Fin 4, (jet (L * V) i).eval x = v i := by
@@ -739,9 +376,6 @@ private theorem exists_direction (L : Geom[X]) (x : Geom) (hx : L.eval x ≠ 0)
     change (hasseDeriv i.val (L * V)).eval x = v i
     rw [h, ← taylor_coeff, show F = taylor (-x) (ofFn 4 v) from rfl, taylor_taylor,
       add_neg_cancel, taylor_zero, ofFn_coeff_eq_val_of_lt v i.isLt]
-
-/-- Along a scalar line through the origin, the coefficient at degree j
-is the degree-j homogeneous component evaluated at the direction. -/
 private theorem coeff_line_through_zero (P : Symbol) (v : Fin 4 → Geom) (j : ℕ) :
     (MvPolynomial.eval₂ Polynomial.C (fun i => Polynomial.C (v i) * Polynomial.X) P).coeff j =
       MvPolynomial.eval v (MvPolynomial.homogeneousComponent j P) := by
@@ -756,7 +390,6 @@ private theorem coeff_line_through_zero (P : Symbol) (v : Fin 4 → Geom) (j : �
     ← map_prod Polynomial.C, ← map_mul Polynomial.C, ← mul_assoc, Finset.prod_pow_eq_pow_sum,
     Polynomial.coeff_C_mul_X_pow, RingHom.id_apply, Finsupp.degree_apply]
   split_ifs <;> simp_all
-
 private theorem line_at_abscissa (P : Row 4) (S U : Geom[X]) (x : Geom) :
     (line P S U).map (evalRingHom x) =
       MvPolynomial.eval₂ Polynomial.C (fun i : Fin 4 => Polynomial.C ((jet U i).eval x) *
@@ -780,7 +413,6 @@ private theorem line_at_abscissa (P : Row 4) (S U : Geom[X]) (x : Geom) :
   congr 1
   funext i
   simp [g, add_comm]
-
 private theorem order_of_locator_lines (P : Row 4) (S L : Geom[X]) (hL : L ≠ 0) (d : ℕ)
     (h : ∀ (V : Geom[X]), V.natDegree ≤ 3 → ∀ j < d, (line P S (L * V)).coeff j = 0) :
     OrderAt P S d := by
@@ -811,7 +443,6 @@ private theorem order_of_locator_lines (P : Row 4) (S L : Geom[X]) (hL : L ≠ 0
     intro x hx
     exact hz x hx
   exact MvPolynomial.mem_support_iff.mp hm hzero
-
 theorem proof : K1_13_3.c1 := by
   intro w T P hT hP S hS hits
   obtain ⟨H, hH, hhits⟩ := hits
@@ -825,28 +456,18 @@ theorem proof : K1_13_3.c1 := by
   have hq := Nat.div_mul_le_self (terminal - T) layerWidth
   rw [Nat.mul_comm _ layerWidth] at hq
   omega
-
 end
-
 end K1_13_3_1
-end PackSource_K1_13_3_1Proof
-
-section PackSource_K1_14_2_2_4_3Split
-set_option autoImplicit true
+end
+section
 set_option autoImplicit false
 set_option backward.isDefEq.respectTransparency false
 set_option backward.isDefEq.respectTransparency.types false
 set_option maxHeartbeats 1000000
 set_option maxSynthPendingDepth 8
-
 namespace K1_14_2_2_4_3
-
 noncomputable section
-
 open K1 K1_14 K1_14_2 K1_14_2_2 K1_14_2_2_4 Polynomial
-
-/-- At a rank-two parent the ordinary factor is a prime parameter of the
-ambient local surface. -/
 def c1 : Prop :=
   ∀ (I : Ideal Ambient) (hI : Active I) (f : Equation),
     dual I → Irreducible f → 0 < f.natDegree → f.natDegree < p →
@@ -854,9 +475,6 @@ def c1 : Prop :=
     letI : I.IsPrime := hI.prime
     let a := parentLocalMap I
     Prime (a (ordinaryIncl f)) ∧ ∃ t, I.map a = Ideal.span {a (ordinaryIncl f), t}
-
-/-- On the generic seed fibre over the rank-one jet image, the ordinary
-factor is a nonzero generator of the local maximal ideal. -/
 def c2 : Prop :=
   ∀ (I : Ideal Ambient) (hI : Active I) (f : Equation),
     ¬ dual I → Irreducible f → 0 < f.natDegree → seedDegree f < p →
@@ -867,7 +485,6 @@ def c2 : Prop :=
     let f' := q (a (ordinaryIncl f))
     Function.Injective (fun x : JetQuotient I => f' * x) ∧
       (I.map a).map q = Ideal.span {f'}
-
 theorem of_children (h1 : c1) (h2 : c2) : K1_14_2_2_4.c3 := by
   intro H P I m r hH hs hy hI hr hrm hhigh ho
   by_cases hmem : ordinaryIncl H ∈ I
@@ -893,36 +510,25 @@ theorem of_children (h1 : c1) (h2 : c2) : K1_14_2_2_4.c3 := by
       simpa only [map_mul, ordinaryIncl_apply] using
         (order_rankOne_iff I hd (C f * Q) (n + 1)).mp hQ
   · exact lower_order (by omega) (cancel_unit hI.prime hmem ho)
-
 end
 end K1_14_2_2_4_3
-end PackSource_K1_14_2_2_4_3Split
-
-section PackSource_K1_14_2_2_4_3_2Fibre
-set_option autoImplicit true
+end
+section
 set_option autoImplicit false
 set_option backward.isDefEq.respectTransparency false
 set_option backward.isDefEq.respectTransparency.types false
 set_option maxHeartbeats 1000000
-
 namespace K1_14_2_2_4_3_2
-
 noncomputable section
-
 open K1_14 K1_14_2 K1_14_2_2 K1_14_2_2_3 K1_14_2_2_4_3
 open scoped nonZeroDivisors
-
 attribute [local instance] MvPolynomial.algebraMvPolynomial
-
 abbrev Reduction (I : Ideal Ambient) := MvPolynomial (Fin 2) (JetImageRing I)
 abbrev GenericFibre (I : Ideal Ambient) := MvPolynomial (Fin 2) (JetImageField I)
-
 def reduceJets (I : Ideal Ambient) : Ambient →+* Reduction I :=
   specializeJets (Ideal.Quotient.mk (I.comap jetInclude))
-
 abbrev fibreDenominators (I : Ideal Ambient) : Submonoid (Reduction I) :=
   (JetImageRing I)⁰.map (MvPolynomial.C (σ := Fin 2))
-
 private theorem presentation_jetInclude : seedPresentation.toRingHom.comp jetInclude = MvPolynomial.C := by
   apply MvPolynomial.ringHom_ext
   · simp [jetInclude]
@@ -930,23 +536,19 @@ private theorem presentation_jetInclude : seedPresentation.toRingHom.comp jetInc
     change seedPresentation (MvPolynomial.rename (Fin.natAdd 2) (MvPolynomial.X i)) = _
     rw [MvPolynomial.rename_X]
     exact seedPresentation_jet i
-
 theorem specialize_jetInclude {A : Type*} [CommRing A] (q : Seeds →+* A) (s : Seeds) :
     specializeJets q (jetInclude s) = MvPolynomial.C (q s) := by
   change MvPolynomial.map q (seedPresentation (jetInclude s)) = _
   rw [show seedPresentation (jetInclude s) = MvPolynomial.C s from
       RingHom.congr_fun presentation_jetInclude s,
     MvPolynomial.map_C]
-
 theorem reduce_surjective (I : Ideal Ambient) : Function.Surjective (reduceJets I) :=
   (MvPolynomial.map_surjective _ Ideal.Quotient.mk_surjective).comp seedPresentation.surjective
-
 theorem reduce_kernel (I : Ideal Ambient) : RingHom.ker (reduceJets I) = jetImageIdeal I := by
   rw [reduceJets, specializeJets, ← RingHom.comap_ker, MvPolynomial.ker_map,
     ← presentation_jetInclude, ← Ideal.map_map,
     Ideal.comap_map_of_bijective seedPresentation.toRingHom seedPresentation.bijective, Ideal.mk_ker]
   exact (imageIdeal_eq I).symm
-
 theorem fibre_comp (I : Ideal Ambient) :
     imageFibreMap I = (algebraMap (Reduction I) (GenericFibre I)).comp (reduceJets I) := by
   apply RingHom.ext
@@ -955,10 +557,8 @@ theorem fibre_comp (I : Ideal Ambient) :
     (Ideal.Quotient.mk (I.comap jetInclude))) (seedPresentation z) = _
   rw [← MvPolynomial.map_map]
   rfl
-
 theorem image_le (I : Ideal Ambient) : jetImageIdeal I ≤ I :=
   Ideal.map_le_iff_le_comap.mpr le_rfl
-
 private theorem disjoint_denominators (I : Ideal Ambient) [I.IsPrime] :
     Disjoint (fibreDenominators I : Set (Reduction I)) (I.map (reduceJets I) : Set (Reduction I)) := by
   have : (I.comap jetInclude).IsPrime := Ideal.IsPrime.comap jetInclude
@@ -972,7 +572,6 @@ private theorem disjoint_denominators (I : Ideal Ambient) [I.IsPrime] :
   rw [Ideal.comap_map_of_surjective _ (reduce_surjective I), ← RingHom.ker_eq_comap_bot, reduce_kernel,
     sup_eq_left.mpr (image_le I)] at hm
   exact (nonZeroDivisors.ne_zero hd) (Ideal.Quotient.eq_zero_iff_mem.mpr hm)
-
 theorem fibre_prime (I : Ideal Ambient) [I.IsPrime] : (I.map (imageFibreMap I)).IsPrime := by
   have : (I.comap jetInclude).IsPrime := Ideal.IsPrime.comap jetInclude
   have hp : (I.map (reduceJets I)).IsPrime :=
@@ -980,7 +579,6 @@ theorem fibre_prime (I : Ideal Ambient) [I.IsPrime] : (I.map (imageFibreMap I)).
   rw [fibre_comp, ← Ideal.map_map]
   exact IsLocalization.isPrime_of_isPrime_disjoint (fibreDenominators I) (GenericFibre I)
     _ hp (disjoint_denominators I)
-
 theorem fibre_comap (I : Ideal Ambient) [I.IsPrime] :
     (I.map (imageFibreMap I)).comap (imageFibreMap I) = I := by
   have : (I.comap jetInclude).IsPrime := Ideal.IsPrime.comap jetInclude
@@ -992,7 +590,6 @@ theorem fibre_comap (I : Ideal Ambient) [I.IsPrime] :
   rw [fibre_comp, ← Ideal.map_map, ← Ideal.comap_comap, hu,
     Ideal.comap_map_of_surjective _ (reduce_surjective I), ← RingHom.ker_eq_comap_bot, reduce_kernel,
     sup_eq_left.mpr (image_le I)]
-
 private theorem image_ne_bot (I : Ideal Ambient) (hI : Active I) (hd : ¬ dual I) :
     jetImageIdeal I ≠ ⊥ := by
   have : I.IsPrime := hI.prime
@@ -1024,9 +621,6 @@ private theorem image_ne_bot (I : Ideal Ambient) (hI : Active I) (hd : ¬ dual I
   have : Nontrivial (OverJets I) := Ideal.Quotient.nontrivial_iff.mpr hprime.ne_top
   have := hI.jet_finite
   exact hd Module.finrank_pos
-
-/-- The generic seed-plane prime has height at most one. Any longer chain
-would lift above the nonzero jet-image ideal in the four-coordinate ring. -/
 private theorem fibre_height_le_one (I : Ideal Ambient) (hI : Active I) (hd : ¬ dual I) :
     (I.map (imageFibreMap I)).height ≤ 1 := by
   have : I.IsPrime := hI.prime
@@ -1067,7 +661,6 @@ private theorem fibre_height_le_one (I : Ideal Ambient) (hI : Active I) (hd : ¬
       Ideal.ringKrullDim_quotient_succ_le_of_lt hQ
     _ = 4 := (RingEquiv.quotientBot Ambient).ringKrullDim.trans hdim
   exact (by decide : ¬ (5 : WithBot ℕ∞) ≤ 4) hbad
-
 theorem fibre_principal (I : Ideal Ambient) (hI : Active I) (hd : ¬ dual I)
     (hne : I.map (imageFibreMap I) ≠ ⊥) :
     ∃ g : GenericFibre I, I.map (imageFibreMap I) = Ideal.span {g} := by
@@ -1081,35 +674,26 @@ theorem fibre_principal (I : Ideal Ambient) (hI : Active I) (hd : ¬ dual I)
     simpa only [Ideal.height_bot, zero_add] using Ideal.height_add_one_le_of_lt_of_isPrime hlt
   exact (UniqueFactorizationMonoid.isPrincipal_of_height_eq_one
     (le_antisymm (fibre_height_le_one I hI hd) hlo)).principal
-
 end
 end K1_14_2_2_4_3_2
-end PackSource_K1_14_2_2_4_3_2Fibre
-
-section PackSource_K1_14_2_2_4_3_1Proof
-set_option autoImplicit true
+end
+section
 set_option autoImplicit false
 set_option backward.isDefEq.respectTransparency false
 set_option backward.isDefEq.respectTransparency.types false
 set_option maxHeartbeats 1000000
 set_option maxSynthPendingDepth 8
-
 namespace K1_14_2_2_4_3_1
-
 noncomputable section
-
 open K1_14 K1_14_2 K1_14_2_2_4_3 Polynomial
-
 private def lastEquiv (n : ℕ) :
     Polynomial (MvPolynomial (Fin n) FX) ≃+* MvPolynomial (Fin (n + 1)) FX :=
   (MvPolynomial.optionEquivLeft FX (Fin n)).symm.toRingEquiv.trans
     (MvPolynomial.renameEquiv FX (finSuccEquivLast (n := n)).symm).toRingEquiv
-
 private theorem lastEquiv_X (n : ℕ) :
     lastEquiv n Polynomial.X = MvPolynomial.X (Fin.last n) := by
   change MvPolynomial.rename _ ((MvPolynomial.optionEquivLeft FX (Fin n)).symm Polynomial.X) = _
   simp
-
 private theorem lastEquiv_C (n : ℕ) (x : MvPolynomial (Fin n) FX) :
     lastEquiv n (C x) = MvPolynomial.rename Fin.castSucc x := by
   have h : (MvPolynomial.optionEquivLeft FX (Fin n)).symm (C x) =
@@ -1121,16 +705,13 @@ private theorem lastEquiv_C (n : ℕ) (x : MvPolynomial (Fin n) FX) :
     funext i
     simp
   rw [h, MvPolynomial.rename_rename, he]
-
 private theorem castLE_succ (n : ℕ) :
     (Fin.castLE (Nat.le_succ n) : Fin n → Fin (n + 1)) = Fin.castSucc := by
   funext i
   apply Fin.ext
   rfl
-
 private def jetEquiv : Jet ≃+* Ambient :=
   (Polynomial.mapEquiv (lastEquiv 2)).trans (lastEquiv 3)
-
 private theorem jetEquiv_toRingHom : jetEquiv.toRingHom = toJet := by
   have hroot : (lastEquiv 2).toRingHom = toRoot := by
     apply Polynomial.ringHom_ext
@@ -1145,10 +726,7 @@ private theorem jetEquiv_toRingHom : jetEquiv.toRingHom = toJet := by
   · change lastEquiv 3 (Polynomial.X.map (lastEquiv 2).toRingHom) = toJet Polynomial.X
     rw [Polynomial.map_X, lastEquiv_X]
     simp [toJet]
-
 attribute [local instance] Polynomial.algebra in
-/-- After inverting the complement of the coefficient prime, the residue
-polynomial ring is univariate over a field. Lift its principal ideal generator. -/
 private theorem generators_of_contraction {R T : Type*} [CommRing R] [CommRing T]
     (P : Ideal R[X]) [P.IsPrime] (f : R) (hf : P.comap C = Ideal.span {f})
     (b : R[X] →+* T) (hb : ∀ x ∉ P, IsUnit (b x)) :
@@ -1203,7 +781,6 @@ private theorem generators_of_contraction {R T : Type*} [CommRing R] [CommRing T
       rw [Ideal.map_map, hcomp]
     _ = Ideal.span {b (C f), l v} := by
       rw [hv, Ideal.map_span, Set.image_insert_eq, Set.image_singleton, hl]
-
 theorem proof : K1_14_2_2_4_3.c1 := by
   intro I hI f _ hirr _ _ hcon
   let : I.IsPrime := hI.prime
@@ -1252,29 +829,21 @@ theorem proof : K1_14_2_2_4_3.c1 := by
   rw [← hmap, ht]
   change Ideal.span {a (jetEquiv (C f)), t} = _
   rw [heval]
-
 end
 end K1_14_2_2_4_3_1
-end PackSource_K1_14_2_2_4_3_1Proof
-
-section PackSource_K1_14_2_2_4_3_2Separant
-set_option autoImplicit true
+end
+section
 set_option autoImplicit false
 set_option backward.isDefEq.respectTransparency false
 set_option backward.isDefEq.respectTransparency.types false
 set_option maxHeartbeats 1000000
-
 namespace K1_14_2_2_4_3_2
-
 noncomputable section
-
 open K1 K1_14 K1_14_2 K1_14_2_2 K1_14_2_2_3 K1_14_2_2_4_3
 open MvPolynomial
 open scoped Polynomial
-
 private def seedView : Equation ≃ₐ[FX] MvPolynomial (Fin 2) FX[X] :=
   (optionEquivLeft FX (Fin 2)).symm.trans (optionEquivRight FX (Fin 2))
-
 private theorem seedView_C (a : Seeds) : seedView (Polynomial.C a) = map Polynomial.C a := by
   have h : seedView.toRingHom.comp (Polynomial.C : Seeds →+* Equation) =
       map (Polynomial.C : FX →+* FX[X]) := by
@@ -1284,16 +853,13 @@ private theorem seedView_C (a : Seeds) : seedView (Polynomial.C a) = map Polynom
     · intro i
       simp [seedView, optionEquivLeft_symm_C_X]
   exact RingHom.congr_fun h a
-
 private theorem seedView_X : seedView Polynomial.X = C (Polynomial.X : FX[X]) := by
   simp [seedView, optionEquivLeft_symm_X]
-
 private theorem seedView_coeff (f : Equation) (j : ℕ) (d : Fin 2 →₀ ℕ) :
     ((seedView f).coeff d).coeff j = (f.coeff j).coeff d := by
   change ((optionEquivRight FX (Fin 2) ((optionEquivLeft FX (Fin 2)).symm f)).coeff d).coeff j = _
   rw [optionEquivRight_coeff_coeff, ← optionEquivLeft_coeff_coeff]
   simp
-
 private theorem seedView_degree_le (f : Equation) :
     (seedView f).totalDegree ≤ K1_14_2_2_4.seedDegree f := by
   rw [totalDegree, Finset.sup_le_iff]
@@ -1303,16 +869,13 @@ private theorem seedView_degree_le (f : Equation) :
   have hle := le_totalDegree hj
   exact hle.trans (Finset.le_sup (f := fun j => (f.coeff j).totalDegree)
     (Polynomial.mem_support_iff.mpr (fun hz => MvPolynomial.mem_support_iff.mp hj (by simp [hz]))))
-
 private def ordinateSeed : FX[X] →+* Seeds :=
   Polynomial.eval₂RingHom C (MvPolynomial.X 0)
-
 private theorem ordinateSeed_include : jetInclude.comp ordinateSeed = ordinateIncl := by
   apply Polynomial.ringHom_ext
   · intro a
     simp [ordinateSeed, ordinateIncl, jetInclude]
   · simp [ordinateSeed, ordinateIncl, jetInclude]
-
 private theorem specialize_ordinary {A : Type*} [CommRing A] (q : Seeds →+* A) (f : Equation) :
     specializeJets q (ordinaryIncl f) = map (q.comp ordinateSeed) (seedView f) := by
   have hs : (specializeJets q).comp (rootIncl.comp rootSeeds) =
@@ -1350,7 +913,6 @@ private theorem specialize_ordinary {A : Type*} [CommRing A] (q : Seeds →+* A)
       rw [show Fin.castLE (by decide : 3 ≤ 4) (2 : Fin 3) = Fin.natAdd 2 (0 : Fin 2) from rfl]
       exact specialize_jet_var q 0
   exact RingHom.congr_fun ho f
-
 private theorem ordinate_injective (I : Ideal Ambient) (hI : Active I) :
     Function.Injective ((jetImageMap I).comp ordinateSeed) := by
   have : I.IsPrime := hI.prime
@@ -1364,7 +926,6 @@ private theorem ordinate_injective (I : Ideal Ambient) (hI : Active I) :
   rw [← RingHom.comp_apply, ordinateSeed_include] at hm
   exact (injective_iff_map_eq_zero _).mp hI.ordinate_dominant f
     (Ideal.Quotient.eq_zero_iff_mem.mpr hm)
-
 theorem separant (I : Ideal Ambient) (hI : Active I) (f : Equation) (hf : f ≠ 0)
     (hdeg : K1_14_2_2_4.seedDegree f < p) (hcontract : I.comap ordinaryIncl = Ideal.span {f}) :
     ∃ i : Fin 2, pderiv i (imageFibreMap I (ordinaryIncl f)) ∉ I.map (imageFibreMap I) := by
@@ -1417,29 +978,19 @@ theorem separant (I : Ideal Ambient) (hI : Active I) (f : Equation) (hf : f ≠ 
   have hkn : seedView k ≠ 0 := fun hz => hn (by rw [heq, hz, mul_zero])
   rw [heq, degreeOf_mul_eq hv hkn] at hb
   omega
-
 end
 end K1_14_2_2_4_3_2
-end PackSource_K1_14_2_2_4_3_2Separant
-
-section PackSource_K1_14_2_2_4_3_2Proof
-set_option autoImplicit true
+end
+section
 set_option autoImplicit false
 set_option backward.isDefEq.respectTransparency false
 set_option backward.isDefEq.respectTransparency.types false
 set_option maxHeartbeats 1000000
-
 namespace K1_14_2_2_4_3_2
-
 noncomputable section
-
 open K1_14 K1_14_2 K1_14_2_2 K1_14_2_2_3 K1_14_2_2_4_3
 open scoped nonZeroDivisors
-
 attribute [local instance] MvPolynomial.algebraMvPolynomial
-
-/-- In the local rank-one seed fibre, a factor with a nonvanishing
-seed partial generates the maximal ideal and acts injectively. -/
 theorem proof : K1_14_2_2_4_3.c2 := by
   intro I hI f hd hf _ hdeg hcontract
   let : I.IsPrime := hI.prime
@@ -1529,50 +1080,34 @@ theorem proof : K1_14_2_2_4_3.c2 := by
   change P.map l = _
   rw [hg, Ideal.map_span, Set.image_singleton, ← hl, hb, map_mul,
     Ideal.span_singleton_mul_right_unit hbunit]
-
 end
 end K1_14_2_2_4_3_2
-end PackSource_K1_14_2_2_4_3_2Proof
-
-section PackSource_K1_13_7_1_1_1_2Defs
-set_option autoImplicit true
+end
+section
 namespace K1_13_7_1_1_1_2
-
 noncomputable section
-
 open K1_13_6 K1_13_7_1_1_1 K1_13_6_2_4_1 MvPolynomial
-
 attribute [local instance] MvPolynomial.weightedGradedAlgebra
-
 abbrev Grid := ℕ × Grades
-
-/-- The fifth slot is the auxiliary grade. -/
 def multigrade (a : Grid) : Grade :=
   Finsupp.equivFunOnFinite.symm (Fin.snoc a.2 a.1)
-
 def gridOf (t : Grade) : Grid :=
   (t (Fin.last 4), fun i => t i.castSucc)
-
 @[simp] theorem multigrade_castSucc (a : Grid) (i : Fin 4) :
     multigrade a i.castSucc = a.2 i := by simp [multigrade]
-
 @[simp] theorem multigrade_last (a : Grid) : multigrade a (Fin.last 4) = a.1 := by
   simp only [multigrade, Finsupp.coe_equivFunOnFinite_symm, Fin.snoc_last]
-
 theorem multigrade_add (a v : Grid) : multigrade (a + v) = multigrade a + multigrade v := by
   ext j
   refine Fin.lastCases ?_ (fun i => ?_) j
   · simp only [multigrade_last, Finsupp.add_apply, Prod.fst_add]
   · simp
-
 @[simp] theorem multigrade_gridOf (t : Grade) : multigrade (gridOf t) = t := by
   ext j
   refine Fin.lastCases ?_ (fun i => ?_) j
   · exact multigrade_last _
   · exact multigrade_castSucc _ _
-
 def advance (i : Fin 4) : Grid := (0, Pi.single i 1)
-
 @[simp] theorem multigrade_advance (i : Fin 4) :
     multigrade (advance i) = unitGrade i.castSucc := by
   ext j
@@ -1580,25 +1115,18 @@ def advance (i : Fin 4) : Grid := (0, Pi.single i 1)
   · rw [multigrade_last, unitGrade, Finsupp.single_apply, ite_eq_right (Fin.castSucc_ne_last i)]
     rfl
   · by_cases he : i = k <;> simp [advance, unitGrade, he, eq_comm]
-
 def supportIn (A : Fin 4 → Set Exponent) (B : Set Exponent) : Fin 5 → Set Exponent :=
   Fin.snoc A B
-
 @[simp] theorem supportIn_last (A : Fin 4 → Set Exponent) (B : Set Exponent) :
     supportIn A B (Fin.last 4) = B := by simp only [supportIn, Fin.snoc_last]
-
 @[simp] theorem supportIn_castSucc (A : Fin 4 → Set Exponent) (B : Set Exponent) (i : Fin 4) :
     supportIn A B i.castSucc = A i := Fin.snoc_castSucc _ _ _
-
 abbrev Generator (A : Fin 4 → Set Exponent) (B : Set Exponent) :=
   (j : Fin 5) × supportIn A B j
-
 abbrev SectionRing (A : Fin 4 → Set Exponent) (B : Set Exponent) :=
   MvPolynomial (Generator A B) GeoField
-
 abbrev slot (A : Fin 4 → Set Exponent) (B : Set Exponent) : Generator A B → Fin 5 :=
   Sigma.fst
-
 theorem finite_generator {A : Fin 4 → Set Exponent} {B : Set Exponent}
     (hAB : admissible A B) : Finite (Generator A B) := by
   have (j : Fin 5) : Finite (supportIn A B j) := by
@@ -1607,38 +1135,24 @@ theorem finite_generator {A : Fin 4 → Set Exponent} {B : Set Exponent}
     · simpa only [supportIn_last] using hAB.2.1
     · simpa only [supportIn_castSucc] using (hAB.1 i).1
   infer_instance
-
-/-- Evaluate a variable as its affine monomial, dropping the slot tag. -/
 def dehom (A : Fin 4 → Set Exponent) (B : Set Exponent) : SectionRing A B →ₐ[GeoField] GeoJets :=
   aeval fun v => monomial v.2.val 1
-
-/-- The ideal of homogeneous relations of the monomial image of an affine scheme. -/
 def liftIdeal (A : Fin 4 → Set Exponent) (B : Set Exponent)
     (J : Ideal GeoJets) : Ideal (SectionRing A B) :=
   ((J.comap (dehom A B)).homogeneousCore (piece (slot A B))).toIdeal
-
 def rankAt {σ : Type} (s : σ → Fin 5) (J : Ideal (MvPolynomial σ GeoField))
     (a : Grid) : ℝ :=
   gradedHilbert s J (multigrade a)
-
 def difference (dirs : List (Fin 4)) (H : Grid → ℝ) (a : Grid) : ℝ :=
   gradeDifferences dirs 1 (fun w => H (a.1, w)) a.2
-
 end
 end K1_13_7_1_1_1_2
-end PackSource_K1_13_7_1_1_1_2Defs
-
-section PackSource_K1_13_7_1_1_1_2Exact
-set_option autoImplicit true
+end
+section
 namespace K1_13_7_1_1_1_2
-
 noncomputable section
-
 open K1_13_6 K1_13_6_3_6 K1_13_6_2_4_1 MvPolynomial
-
 attribute [local instance] MvPolynomial.weightedGradedAlgebra
-
-/-- Multiplication by a homogeneous form in any multidegree, including an auxiliary shift. -/
 theorem homogeneous_cut_exact {σ : Type} [Finite σ] (s : σ → Fin 5)
     (J : Ideal (MvPolynomial σ GeoField)) (hJ : J.IsHomogeneous (piece s))
     (e : Grade) (g : MvPolynomial σ GeoField) (hg : g ∈ piece s e) :
@@ -1714,32 +1228,21 @@ theorem homogeneous_cut_exact {σ : Type} [Finite σ] (s : σ → Fin 5)
   have hrank := cut.finrank_range_add_finrank_ker
   rw [LinearMap.range_eq_top.mpr hsurj, finrank_top, hker, LinearMap.finrank_range_of_inj hInj] at hrank
   exact hrank
-
-
 end
 end K1_13_7_1_1_1_2
-end PackSource_K1_13_7_1_1_1_2Exact
-
-section PackSource_K1_13_7_1_1_1_2Algebra
-set_option autoImplicit true
+end
+section
 namespace K1_13_7_1_1_1_2
-
 noncomputable section
-
 open K1_13_6 K1_13_7_1_1_1 K1_13_6_2_4_1 MvPolynomial
-
 attribute [local instance] MvPolynomial.weightedGradedAlgebra
-
 variable {A : Fin 4 → Set Exponent} {B : Set Exponent}
-
 theorem liftIdeal_homogeneous (J : Ideal GeoJets) :
     (liftIdeal A B J).IsHomogeneous (piece (slot A B)) :=
   ((J.comap (dehom A B)).homogeneousCore (piece (slot A B))).isHomogeneous
-
 theorem liftIdeal_mono {J K : Ideal GeoJets} (h : J ≤ K) :
     liftIdeal A B J ≤ liftIdeal A B K :=
   Ideal.homogeneousCore_mono _ (Ideal.comap_mono h)
-
 theorem mem_liftIdeal_of_piece {J : Ideal GeoJets} {g : SectionRing A B} {t : Grade}
     (hg : g ∈ piece (slot A B) t) : g ∈ liftIdeal A B J ↔ dehom A B g ∈ J := by
   constructor
@@ -1747,13 +1250,11 @@ theorem mem_liftIdeal_of_piece {J : Ideal GeoJets} {g : SectionRing A B} {t : Gr
     exact Ideal.toIdeal_homogeneousCore_le (piece (slot A B)) (J.comap (dehom A B)) h
   · intro h
     exact Ideal.mem_homogeneousCore_of_homogeneous_of_mem ⟨t, hg⟩ h
-
 theorem cut_le_lift {J K : Ideal GeoJets} (hJK : J ≤ K) {g : SectionRing A B} {t : Grade}
     (hg : g ∈ piece (slot A B) t) (h : dehom A B g ∈ K) :
     liftIdeal A B J ⊔ Ideal.span {g} ≤ liftIdeal A B K :=
   sup_le (liftIdeal_mono hJK) ((Ideal.span_singleton_le_iff_mem _).mpr
     ((mem_liftIdeal_of_piece hg).mpr h))
-
 theorem liftIdeal_colon {J K : Ideal GeoJets} {g : SectionRing A B} {t : Grade}
     (hg : g ∈ piece (slot A B) t)
     (h : ∀ x : GeoJets, x * dehom A B g ∈ J ↔ x ∈ K) :
@@ -1777,7 +1278,6 @@ theorem liftIdeal_colon {J K : Ideal GeoJets} {g : SectionRing A B} {t : Grade}
   change z ∈ (liftIdeal A B J).colon {g} ↔ z ∈ liftIdeal A B K
   rw [Submodule.mem_colon_singleton, smul_eq_mul, mem_liftIdeal_of_piece hzg,
     mem_liftIdeal_of_piece hz, map_mul, h]
-
 theorem exists_slot_lift (j : Fin 5) (f : GeoJets)
     (hf : (f.support : Set Exponent) ⊆ supportIn A B j) :
     ∃ g : SectionRing A B, g ∈ piece (slot A B) (unitGrade j) ∧ dehom A B g = f := by
@@ -1791,8 +1291,6 @@ theorem exists_slot_lift (j : Fin 5) (f : GeoJets)
       C_mul_monomial, mul_one, gen]
     rw [Finset.sum_coe_sort f.support (fun m => monomial m (f.coeff m))]
     exact f.support_sum_monomial_coeff
-
-/-- The auxiliary coordinate and constant monomials lift every affine polynomial. -/
 theorem exists_affine_lift (hAB : admissible A B) (f : GeoJets) :
     ∃ t : Grade, ∃ g : SectionRing A B, g ∈ piece (slot A B) t ∧ dehom A B g = f := by
   let j := Fin.last 4
@@ -1828,16 +1326,12 @@ theorem exists_affine_lift (hAB : admissible A B) (f : GeoJets) :
         simpa only [mem_weightedHomogeneousSubmodule, add_nsmul, one_nsmul] using IsWeightedHomogeneous.mul hg hx
   obtain ⟨n, g, hg, hm⟩ := hex
   exact ⟨_, g, hg, hm⟩
-
 abbrev cut (P : Ideal GeoJets) (f : GeoJets) : Ideal GeoJets := P ⊔ Ideal.span {f}
-
 theorem cut_self_mem (P : Ideal GeoJets) (f : GeoJets) : f ∈ cut P f :=
   (le_sup_right : Ideal.span {f} ≤ cut P f) (Ideal.mem_span_singleton_self _)
-
 theorem cut_sq_le (P : Ideal GeoJets) (f : GeoJets) : cut P (f ^ 2) ≤ cut P f := by
   refine sup_le le_sup_left ((Ideal.span_singleton_le_iff_mem _).mpr ?_)
   exact (pow_two f).symm ▸ (cut P f).mul_mem_right f (cut_self_mem P f)
-
 theorem square_colon {P : Ideal GeoJets} {f : GeoJets} (hp : P.IsPrime) (hf : f ∉ P)
     (a : GeoJets) : a * f ∈ cut P (f ^ 2) ↔ a ∈ cut P f := by
   constructor
@@ -1855,9 +1349,7 @@ theorem square_colon {P : Ideal GeoJets} {f : GeoJets} (hp : P.IsPrime) (hf : f 
     obtain ⟨c, rfl⟩ := Ideal.mem_span_singleton'.mp hy
     exact Submodule.mem_sup.mpr ⟨x * f, P.mul_mem_right f hx, c * f * f,
       Ideal.mem_span_singleton'.mpr ⟨c, by ring⟩, by rw [← add_mul, hxy]⟩
-
 def intersection (Q : Finset (Ideal GeoJets)) : Ideal GeoJets := Q.inf id
-
 theorem separating_element {I q : Ideal GeoJets} {Q : Finset (Ideal GeoJets)}
     (hq : I.IsMinimalPrime q) (hQ : ∀ r ∈ Q, I.IsMinimalPrime r) (hn : q ∉ Q) :
     ∃ f ∈ intersection Q, f ∉ q := by
@@ -1866,11 +1358,9 @@ theorem separating_element {I q : Ideal GeoJets} {Q : Finset (Ideal GeoJets)}
   obtain ⟨r, hr, hrq⟩ := hq.isPrime.inf_le'.mp hle
   have he : r = q := le_antisymm hrq (hq.2 (hQ r hr).1 hrq)
   exact hn (he ▸ hr)
-
 theorem intersection_insert (q : Ideal GeoJets) (Q : Finset (Ideal GeoJets))
     [DecidableEq (Ideal GeoJets)] : intersection (insert q Q) = q ⊓ intersection Q := by
   simp [intersection]
-
 theorem separator_colon {q J : Ideal GeoJets} {f : GeoJets}
     (hq : q.IsPrime) (hf : f ∉ q) (hJ : f ∈ J) (a : GeoJets) :
     a * f ∈ q ⊓ J ↔ a ∈ q := by
@@ -1879,39 +1369,26 @@ theorem separator_colon {q J : Ideal GeoJets} {f : GeoJets}
     exact (hq.mem_or_mem ((Ideal.mem_inf.mp h).1)).resolve_right hf
   · intro h
     exact Ideal.mem_inf.mpr ⟨q.mul_mem_right f h, J.mul_mem_left a hJ⟩
-
 end
 end K1_13_7_1_1_1_2
-end PackSource_K1_13_7_1_1_1_2Algebra
-
-section PackSource_K1_13_7_1_1_1_2Split
-set_option autoImplicit true
+end
+section
 namespace K1_13_7_1_1_1_2
-
 noncomputable section
-
 open K1_13_6 K1_13_7_1_1_1 K1_13_6_2_4_1 MvPolynomial Filter
 open scoped BigOperators
-
 attribute [local instance] MvPolynomial.weightedGradedAlgebra
-
-/-- A homogeneous subquotient of a standard multigraded polynomial ring has nonnegative
-eventual differences along distinct slots. -/
 def c1 : Prop :=
   ∀ {σ : Type} [Finite σ] (s : σ → Fin 5) (I J : Ideal (MvPolynomial σ GeoField)),
     I.IsHomogeneous (piece s) → J.IsHomogeneous (piece s) → I ≤ J →
       ∀ k : ℕ, ∀ᶠ a in (atTop : Filter Grid),
         0 ≤ difference (remainingDirections k) (fun x => rankAt s I x - rankAt s J x) a
-
-/-- The tagged monomial presentation computes the affine support rank in each grade. -/
 def c2 : Prop :=
   ∀ (A : Fin 4 → Set Exponent) (B : Set Exponent), admissible A B →
     ∀ (P : Ideal GeoJets) (a : Grid),
       rankAt (slot A B) (liftIdeal A B P) a = hilbert A B P a.1 a.2
-
 private theorem difference_cons (i : Fin 4) (dirs : List (Fin 4)) (H : Grid → ℝ) (a : Grid) :
     difference (i :: dirs) H a = difference dirs (fun x => H (x + advance i) - H x) a := rfl
-
 private theorem difference_sub (dirs : List (Fin 4)) (H K : Grid → ℝ) (a : Grid) :
     difference dirs (fun x => H x - K x) a = difference dirs H a - difference dirs K a := by
   induction dirs generalizing H K with
@@ -1922,7 +1399,6 @@ private theorem difference_sub (dirs : List (Fin 4)) (H K : Grid → ℝ) (a : G
         (fun x => (H (x + advance i) - H x) - (K (x + advance i) - K x)) by
           funext x; ring]
       exact ih _ _
-
 private theorem difference_shift (dirs : List (Fin 4)) (H : Grid → ℝ) (a v : Grid) :
     difference dirs (fun x => H (x + v)) a = difference dirs H (a + v) := by
   induction dirs generalizing H with
@@ -1930,19 +1406,16 @@ private theorem difference_shift (dirs : List (Fin 4)) (H : Grid → ℝ) (a v :
   | cons i dirs ih =>
       simp only [difference_cons, add_right_comm _ (advance i) v]
       exact ih (fun x => H (x + advance i) - H x)
-
 private theorem difference_zero (dirs : List (Fin 4)) (a : Grid) :
     difference dirs (fun _ => 0) a = 0 := by
   induction dirs with
   | nil => rfl
   | cons i dirs ih => simpa only [difference_cons, sub_self] using ih
-
 private theorem eventually_shift {F : Grid → Prop} (v : Grid)
     (h : ∀ᶠ a in atTop, F a) : ∀ᶠ a in atTop, F (a + v) := by
   obtain ⟨u, hu⟩ := eventually_atTop.mp h
   exact eventually_atTop.mpr ⟨u, fun a ha => hu (a + v)
     (ha.trans (le_add_of_nonneg_right zero_le))⟩
-
 private theorem eventually_unshift {F : Grid → Prop} (v : Grid)
     (h : ∀ᶠ a in atTop, F (a + v)) : ∀ᶠ a in atTop, F a := by
   obtain ⟨u, hu⟩ := eventually_atTop.mp h
@@ -1950,7 +1423,6 @@ private theorem eventually_unshift {F : Grid → Prop} (v : Grid)
   obtain ⟨b, rfl⟩ := exists_add_of_le ha
   have hb := hu (u + b) (le_add_of_nonneg_right zero_le)
   rwa [add_right_comm] at hb
-
 private theorem mixed_stable (hr : c2) {A : Fin 4 → Set Exponent} {B : Set Exponent}
     (hAB : admissible A B) {P : Ideal GeoJets} {k : ℕ} {d : ℝ}
     (hd : IsMixedDegree A B P k d) :
@@ -1962,20 +1434,17 @@ private theorem mixed_stable (hr : c2) {A : Fin 4 → Set Exponent} {B : Set Exp
     funext (hr A B hAB P)
   rw [he, difference]
   simpa only [Nat.cast_one, one_pow, one_mul] using hN a.1 a.2 1 ha.1 ha.2
-
 private theorem rankAt_top {σ : Type} (s : σ → Fin 5) :
     rankAt s (⊤ : Ideal (MvPolynomial σ GeoField)) = fun _ => 0 := by
   funext a
   have : Subsingleton (MvPolynomial σ GeoField ⧸ (⊤ : Ideal (MvPolynomial σ GeoField))) :=
     (Ideal.Quotient.subsingleton_iff).mpr rfl
   simp [rankAt, gradedHilbert, Module.finrank_eq_zero_of_subsingleton]
-
 private theorem liftIdeal_top (A : Fin 4 → Set Exponent) (B : Set Exponent) :
     liftIdeal A B (⊤ : Ideal GeoJets) = ⊤ := by
   rw [liftIdeal, show (⊤ : Ideal GeoJets).comap (dehom A B) = ⊤ from Ideal.comap_top]
   exact (show (⊤ : Ideal (SectionRing A B)).IsHomogeneous (piece (slot A B)) from
     fun _ _ _ => Submodule.mem_top).toIdeal_homogeneousCore_eq_self
-
 private theorem difference_mono (hpos : c1) {σ : Type} [Finite σ]
     (s : σ → Fin 5) {I J : Ideal (MvPolynomial σ GeoField)}
     (hI : I.IsHomogeneous (piece s)) (hJ : J.IsHomogeneous (piece s)) (hIJ : I ≤ J) (k : ℕ) :
@@ -1985,8 +1454,6 @@ private theorem difference_mono (hpos : c1) {σ : Type} [Finite σ]
   filter_upwards [hpos s I J hI hJ hIJ k] with a ha
   rw [difference_sub] at ha
   exact sub_nonneg.mp ha
-
-/-- The exact graded sequence accounts for the colon quotient and any larger target ideal. -/
 private theorem spend (hpos : c1) {σ : Type} [Finite σ] (s : σ → Fin 5)
     {I J L : Ideal (MvPolynomial σ GeoField)}
     (hI : I.IsHomogeneous (piece s)) (hJ : J.IsHomogeneous (piece s))
@@ -2014,7 +1481,6 @@ private theorem spend (hpos : c1) {σ : Type} [Finite σ] (s : σ → Fin 5)
   change difference D (rankAt s J) (a + v) ≤ _ at ha
   rw [hd] at ha
   exact le_sub_iff_add_le.mp ha
-
 private theorem selected_components (hpos : c1) (hr : c2)
     {A : Fin 4 → Set Exponent} {B : Set Exponent} (hAB : admissible A B)
     (I : Ideal GeoJets) (k : ℕ) (e : Ideal GeoJets → ℝ)
@@ -2059,11 +1525,9 @@ private theorem selected_components (hpos : c1) (hr : c2)
   have hm := difference_mono hpos (slot A B) (liftIdeal_homogeneous I)
     (liftIdeal_homogeneous (intersection Q)) (liftIdeal_mono hle) k
   filter_upwards [hcomp Q hQ he, hm] with a ha hb using ha.trans hb
-
 private theorem remaining_succ (i : Fin 4) :
     remainingDirections i.val = i :: remainingDirections (i.val + 1) := by
   fin_cases i <;> rfl
-
 theorem of_children (hpos : c1) (hr : c2) : K1_13_7_1_1_1.c2 := by
   classical
   intro A B hAB i P hp _ f hf hs Q hQ d e hd he
@@ -2114,43 +1578,31 @@ theorem of_children (hpos : c1) (hr : c2) : K1_13_7_1_1_1.c2 := by
     linarith only [h₁, h₂, hb, hc, h₀]
   obtain ⟨_, hb⟩ := hbudget.exists
   exact hb
-
 end
 end K1_13_7_1_1_1_2
-end PackSource_K1_13_7_1_1_1_2Split
-
-section PackSource_K1_13_7_1_1_1_2_2Proof
-set_option autoImplicit true
+end
+section
 set_option autoImplicit false
-
 namespace K1_13_7_1_1_1_2_2
-
 noncomputable section
-
 open K1_13_6 K1_13_6_2_4_1 K1_13_7_1_1_1 K1_13_7_1_1_1_2 MvPolynomial
 open scoped BigOperators Pointwise
-
 variable {A : Fin 4 → Set Exponent} {B : Set Exponent}
-
 private abbrev affineWeight (A : Fin 4 → Set Exponent) (B : Set Exponent) :
     (Generator A B →₀ ℕ) →+ Exponent :=
   Finsupp.weight fun v : Generator A B => v.2.val
-
 private abbrev supportWeight (A : Fin 4 → Set Exponent) (B : Set Exponent) :
     Grade →+ Set Exponent :=
   Finsupp.weight (supportIn A B)
-
 private theorem supportWeight_unit (j : Fin 5) :
     supportWeight A B (unitGrade j) = supportIn A B j := by
   rw [unitGrade, Finsupp.weight_single, one_nsmul]
-
 private theorem supportWeight_multigrade (a : Grid) :
     supportWeight A B (multigrade a) = gradedExponents A B a.1 a.2 := by
   rw [Finsupp.weight_eq_sum, Fin.sum_univ_castSucc]
   simp only [multigrade_castSucc, supportIn_castSucc, multigrade_last, supportIn_last,
     Fin.sum_univ_four, gradedExponents]
   ac_rfl
-
 private theorem affineWeight_mem (e : Generator A B →₀ ℕ) :
     affineWeight A B e ∈ supportWeight A B (Finsupp.weight (slotWeight (slot A B)) e) := by
   induction e using Finsupp.induction_linear with
@@ -2163,8 +1615,6 @@ private theorem affineWeight_mem (e : Generator A B →₀ ℕ) :
       change n • v.2.val ∈ n • supportWeight A B (unitGrade v.1)
       rw [supportWeight_unit]
       exact Set.nsmul_mem_nsmul v.2.property
-
-/-- Realize a sum of exponents from one slot by a presentation monomial. -/
 private theorem realize_slot (j : Fin 5) (n : ℕ) {m : Exponent}
     (hm : m ∈ n • supportIn A B j) :
     ∃ e : Generator A B →₀ ℕ,
@@ -2182,7 +1632,6 @@ private theorem realize_slot (j : Fin 5) (n : ℕ) {m : Exponent}
       · rw [map_add, he, Finsupp.weight_single, one_nsmul]
         rfl
       · rw [map_add, hxe, Finsupp.weight_single, one_nsmul]
-
 private theorem realize_grade (t : Grade) {m : Exponent} (hm : m ∈ supportWeight A B t) :
     ∃ e : Generator A B →₀ ℕ,
       Finsupp.weight (slotWeight (slot A B)) e = t ∧ affineWeight A B e = m := by
@@ -2199,7 +1648,6 @@ private theorem realize_grade (t : Grade) {m : Exponent} (hm : m ∈ supportWeig
   | single j n =>
       rw [Finsupp.weight_single] at hm
       simpa only [unitGrade, Finsupp.smul_single_one] using realize_slot j n hm
-
 private theorem mem_gradedExponents (a : Grid) (m : Exponent) :
     m ∈ gradedExponents A B a.1 a.2 ↔
       ∃ e : Generator A B →₀ ℕ,
@@ -2209,7 +1657,6 @@ private theorem mem_gradedExponents (a : Grid) (m : Exponent) :
   rintro ⟨e, he, rfl⟩
   rw [← he]
   exact affineWeight_mem e
-
 private theorem dehom_monomial_one (e : Generator A B →₀ ℕ) :
     dehom A B (monomial e 1) = monomial (affineWeight A B e) 1 := by
   induction e using Finsupp.induction_linear with
@@ -2220,8 +1667,6 @@ private theorem dehom_monomial_one (e : Generator A B →₀ ℕ) :
   | single v n =>
       rw [← X_pow_eq_monomial, map_pow, dehom, aeval_X, monomial_pow, one_pow,
         Finsupp.weight_single]
-
-/-- The dehomogenized grade is exactly the span of the monomials in the prescribed set sum. -/
 private theorem dehom_map_piece (a : Grid) :
     (piece (slot A B) (multigrade a)).map (dehom A B).toLinearMap =
       restrictSupport GeoField (gradedExponents A B a.1 a.2) := by
@@ -2238,8 +1683,6 @@ private theorem dehom_map_piece (a : Grid) :
   · rintro ⟨m, hm, rfl⟩
     obtain ⟨e, he, rfl⟩ := (mem_gradedExponents a m).1 hm
     exact ⟨monomial e 1, ⟨e, he, rfl⟩, dehom_monomial_one e⟩
-
-/-- The homogeneous presentation and the affine support have equal rank in each grade. -/
 theorem proof : K1_13_7_1_1_1_2.c2 := by
   intro A B _ P a
   let S := piece (slot A B) (multigrade a)
@@ -2259,20 +1702,14 @@ theorem proof : K1_13_7_1_1_1_2.c2 := by
   rw [LinearMap.range_domRestrict, LinearMap.range_domRestrict, Submodule.map_comp,
     show S.map (dehom A B).toLinearMap = _ from dehom_map_piece a] at hr
   exact congrArg (fun n : ℕ => (n : ℝ)) hr
-
 end
 end K1_13_7_1_1_1_2_2
-end PackSource_K1_13_7_1_1_1_2_2Proof
-
-section PackSource_K1_13_6_2_4_3_1Proof
-set_option autoImplicit true
+end
+section
 set_option autoImplicit false
-
 namespace K1_13_6_2_4_3_1
-
 open K1_13 K1_13_6_2_4 K1_13_6_2_4_3
 open scoped BigOperators Pointwise
-
 private theorem latticePoints_coords (a : Shape × ℕ) (e : Exponent) :
     e ∈ latticePoints a ↔
       e 0 + e 1 + e 2 + e 3 ≤ 2 * a.1.b ∧
@@ -2282,8 +1719,6 @@ private theorem latticePoints_coords (a : Shape × ℕ) (e : Exponent) :
   simp only [Allowed, Fin.sum_univ_four, Shape.scale]
   change (_ ∧ (0 * e 0 + 1 * e 1 + 2 * e 2 + 3 * e 3 ≤ _) ∧ _ ∧ _) ↔ _
   simp
-
-/-- The doubled top bounds allow packing with at most one odd residual weight. -/
 private theorem latticePoints_add (p q : Shape) (r s : ℕ) (hp : Chamber p) (hq : Chamber q) :
     latticePoints (p, r) + latticePoints (q, s) = latticePoints (p.plus q, r + s) := by
   ext e
@@ -2342,7 +1777,6 @@ private theorem latticePoints_add (p q : Shape) (r s : ℕ) (hp : Chamber p) (hq
       · exact hy.1
       · exact hz.1
       · exact hv.1
-
 private theorem latticePoints_zero : latticePoints (⟨0, 0, 0⟩, 0) = 0 := by
   ext e
   rw [latticePoints_coords, Set.mem_zero]
@@ -2364,7 +1798,6 @@ private theorem latticePoints_zero : latticePoints (⟨0, 0, 0⟩, 0) = 0 := by
     · exact h4
   · rintro rfl
     simp
-
 private theorem sum_latticePoints {ι : Type*} (I : Finset ι) (A : ι → Shape × ℕ)
     (hA : ∀ i, Chamber (A i).1) :
     (∑ i ∈ I, latticePoints (A i)) = latticePoints
@@ -2382,20 +1815,17 @@ private theorem sum_latticePoints {ι : Type*} (I : Finset ι) (A : ι → Shape
     simp only [Finset.sum_insert hi]
     rw [ih, latticePoints_add _ _ _ _ (hA i) hI]
     rfl
-
 private theorem nsmul_latticePoints (a : Shape × ℕ) (ha : Chamber a.1) (n : ℕ) :
     n • latticePoints a = latticePoints (scaleCap a n) := by
   simpa only [Finset.sum_const, Finset.card_univ, Fintype.card_fin, Nat.nsmul_eq_mul,
     scaleCap, Shape.scale] using
     sum_latticePoints (Finset.univ : Finset (Fin n)) (fun _ => a) (fun _ => ha)
-
 private theorem chamber_scale (a : Shape × ℕ) (ha : Chamber a.1) (n : ℕ) :
     Chamber (scaleCap a n).1 := by
   refine ⟨Nat.mul_le_mul_left n ha.1, ?_⟩
   change 3 * (n * a.1.t) ≤ n * a.1.j
   rw [Nat.mul_left_comm 3 n]
   exact Nat.mul_le_mul_left n ha.2
-
 private theorem diagonal_eq_sum (B : Boxes) (t : Fin 5 → ℕ) :
     diagonalExponents B t = ∑ i, ∑ _j : Fin (t i), latticePoints (B i) := by
   classical
@@ -2411,7 +1841,6 @@ private theorem diagonal_eq_sum (B : Boxes) (t : Fin 5 → ℕ) :
       exact ⟨u, hu, hs⟩
     choose u hu hs using h
     exact ⟨u, hu, by simp only [hs]⟩
-
 theorem proof : K1_13_6_2_4_3.c1 := by
   intro B hB t n
   have hdiag : diagonalExponents B t = latticePoints (sumCap B t) := calc
@@ -2426,26 +1855,17 @@ theorem proof : K1_13_6_2_4_3.c1 := by
         (fun i => chamber_scale (B i) (hB i) (t i))
   rw [hdiag]
   exact nsmul_latticePoints (sumCap B t) (sumCap_chamber B hB t) n
-
 end K1_13_6_2_4_3_1
-end PackSource_K1_13_6_2_4_3_1Proof
-
-section PackSource_K1_13_6_2_4_3_2Proof
-set_option autoImplicit true
+end
+section
 set_option autoImplicit false
-
 namespace K1_13_6_2_4_3_2
-
 open K1_13 K1_13_6_2_3 K1_13_6_2_3_1 K1_13_6_2_4 Finset
 open scoped BigOperators
-
 noncomputable section
-
-/-- With top exponent zero, enumerate the other exponents in descending weight. -/
 private def flatSlices (b j : ℕ) :=
   Σ y : Fin (j + 1), Σ x : Fin (2 * j - 2 * y.val + 1),
     Fin (2 * b - (y.val + x.val) + 1)
-
 private def flatCapEquiv (p : Shape) (hb : p.j ≤ p.b) (ht : p.t = 0) :
     capExponents p ≃ flatSlices p.b p.j where
   toFun e := by
@@ -2479,7 +1899,6 @@ private def flatCapEquiv (p : Shape) (hb : p.j ≤ p.b) (ht : p.t = 0) :
   right_inv a := by
     rcases a with ⟨⟨y, hy⟩, ⟨x, hx⟩, ⟨u, hu⟩⟩
     rfl
-
 private theorem sum_affine (a d : ℚ) (n : ℕ) :
     (∑ x ∈ range n, (a + d * (x : ℚ))) = n * a + d * n * ((n : ℚ) - 1) / 2 := by
   induction n with
@@ -2488,8 +1907,6 @@ private theorem sum_affine (a d : ℚ) (n : ℕ) :
     rw [sum_range_succ, ih]
     push_cast
     ring
-
-/-- The sole slice at top exponent zero has even residual index `2 * j`. -/
 private theorem zero_top_count (p : Shape) (hb : p.j ≤ p.b) (ht : p.t = 0) :
     ((capExponents p).ncard : ℚ) =
       ((p.j : ℚ) + 1) ^ 2 * (2 * (p.b : ℚ) + 1 - (p.j : ℚ)) := by
@@ -2526,7 +1943,6 @@ private theorem zero_top_count (p : Shape) (hb : p.j ≤ p.b) (ht : p.t = 0) :
       rw [← mul_sum, sum_affine]
       push_cast
       ring
-
 private theorem lattice_degree (p : Shape) : (latticePolynomial p).natDegree ≤ 4 := by
   rw [Polynomial.natDegree_le_iff_coeff_eq_zero]
   intro k hk
@@ -2535,7 +1951,6 @@ private theorem lattice_degree (p : Shape) : (latticePolynomial p).natDegree ≤
     Polynomial.coeff_C, ite_eq_right (hne 4 (by decide)), ite_eq_right (hne 3 (by decide)),
     ite_eq_right (hne 2 (by decide)), ite_eq_right (hne 1 (by decide)),
     ite_eq_right (hne 0 (by decide)), add_zero]
-
 theorem proof : K1_13_6_2_4_3.c2 := by
   intro p hp
   refine ⟨latticePolynomial p, lattice_degree p, ?_, ?_⟩
@@ -2555,25 +1970,15 @@ theorem proof : K1_13_6_2_4_3.c2 := by
         push_cast
         ring
       · exact latticePolynomial_eval p ⟨hp.1, hp.2, Nat.pos_of_ne_zero ht⟩ _ (Nat.succ_pos _)
-
 end
-
 end K1_13_6_2_4_3_2
-end PackSource_K1_13_6_2_4_3_2Proof
-
-section PackSource_K1_13_7_2_4_3Proof
-set_option autoImplicit true
+end
+section
 set_option autoImplicit false
-
 namespace K1_13_7_2_4_3
-
 noncomputable section
-
 open K1_13 K1_13_6 K1_13_6_3 MvPolynomial
 open scoped Polynomial
-
-/-- A height-two prime in four affine coordinates can be reached by two
-proper principal cuts. -/
 private theorem jet_dimension (P : JetIdeal) [P.IsPrime] (hP : P.height = 2) :
     (affineHilbertPolynomial P).natDegree = 2 := by
   have hPne : P ≠ ⊥ := by
@@ -2613,16 +2018,11 @@ private theorem jet_dimension (P : JetIdeal) [P.IsPrime] (hP : P.height = 2) :
   have hPdeg := principalCut_natDegree_affineHilbertPolynomial_add_one hgD hcut
   rw [Nat.card_fin] at hDdeg
   omega
-
 private def componentScalars (P : JetIdeal) : GeoField →+* JetField P :=
   (onComponent P).comp MvPolynomial.C
-
 private def coefficientEval (P : JetIdeal) (U : (JetField P)[X]) :
     FreshCoeffRing →+* JetField P :=
   MvPolynomial.eval₂Hom (componentScalars P) (fun j => U.coeff j.val)
-
-/-- Evaluating the linear jet form on a retained coefficient vector computes
-the corresponding Hasse jet of the original polynomial. -/
 private theorem coefficientEval_jetLinear (P : JetIdeal) [P.IsPrime] {U : (JetField P)[X]}
     (hd : U.natDegree < taylorLength) (i : ℕ) :
     coefficientEval P U (jetLinear genericArgument i) =
@@ -2636,9 +2036,6 @@ private theorem coefficientEval_jetLinear (P : JetIdeal) [P.IsPrime] {U : (JetFi
   simp only [Polynomial.hasseDeriv_monomial, Polynomial.eval_monomial, map_mul, coefficientEval,
     MvPolynomial.eval₂Hom_C, MvPolynomial.eval₂Hom_X', map_natCast, map_pow]
   ring
-
-/-- Recovery at the original argument puts the source component inside the
-generic jet image of the extended coefficient ideal. -/
 private theorem freshImage_le_source (P : JetIdeal) [P.IsPrime] (U : (JetField P)[X])
     (hd : U.natDegree < taylorLength)
     (hjet : ∀ i : Fin 4, (Polynomial.hasseDeriv i.val U).eval
@@ -2664,7 +2061,6 @@ private theorem freshImage_le_source (P : JetIdeal) [P.IsPrime] (U : (JetField P
   apply Ideal.Quotient.eq_zero_iff_mem.mp
   apply IsFractionRing.injective (GeoJets ⧸ P) (JetField P)
   exact hz.trans (map_zero _).symm
-
 private theorem image_dimension_le (A : CoeffIdeal) :
     (affineHilbertPolynomial (freshImage A)).natDegree ≤ (affineHilbertPolynomial A).natDegree := by
   let f : (GeoJets ⧸ freshImage A) →ₐ[GeoField] (FreshCoeffRing ⧸ extendIdeal A) :=
@@ -2681,7 +2077,6 @@ private theorem image_dimension_le (A : CoeffIdeal) :
   have hbase : affineHilbertPolynomial (extendIdeal A) = affineHilbertPolynomial A :=
     K1_13_5_5_2.hilbertPolynomial_map (E := GeoField) A
   exact hbase ▸ h
-
 theorem proof : K1_13_7_2_4.c3 := by
   intro P hp U hheight hdegree hjet
   let := hp
@@ -2691,33 +2086,22 @@ theorem proof : K1_13_7_2_4.c3 := by
     _ ≤ (affineHilbertPolynomial (freshImage A)).natDegree :=
       natDegree_affineHilbertPolynomial_le_of_le (freshImage_le_source P U hdegree hjet)
     _ ≤ (affineHilbertPolynomial A).natDegree := image_dimension_le A
-
 end
-
 end K1_13_7_2_4_3
-end PackSource_K1_13_7_2_4_3Proof
-
-section PackSource_K1_13_4_2_4_1Proof
-set_option autoImplicit true
+end
+section
 namespace K1_13_4_2_4_1
-
 noncomputable section
-
 open K1_13 K1_13_4 K1_13_4_2_4 Polynomial
 open scoped Polynomial
-
 private def constCoeff : Geom →+* ShiftSeed := (C : Geom[X] →+* ShiftSeed).comp C
-
 private def constant (p : Geom[X]) : ShiftSeed[X] := p.map constCoeff
-
 @[simp] private theorem specialize_C (ε : Geom) (u : Geom[X]) :
     specializeShift ε (C u) = C (u.eval ε) := by
   simp [specializeShift]
-
 @[simp] private theorem specialize_X (ε : Geom) :
     specializeShift ε (Polynomial.X : ShiftSeed) = Polynomial.X := by
   simp [specializeShift]
-
 @[simp] private theorem specialize_constant (p : Geom[X]) (ε : Geom) :
     (constant p).map (specializeShift ε) = p.map C := by
   rw [constant, Polynomial.map_map]
@@ -2725,7 +2109,6 @@ private def constant (p : Geom[X]) : ShiftSeed[X] := p.map constCoeff
     ext x
     simp [constCoeff]
   rw [h]
-
 @[simp] private theorem map_seed_eval (p : Geom[X]) (z : Geom) :
     (p.map C).map (evalRingHom z) = p := by
   rw [Polynomial.map_map]
@@ -2733,13 +2116,10 @@ private def constant (p : Geom[X]) : ShiftSeed[X] := p.map constCoeff
     ext x
     simp
   rw [h, Polynomial.map_id]
-
 @[simp] private theorem map_seed_generic (p : Geom[X]) :
     (p.map C).map (algebraMap Geom[X] GenericSeed) = liftX p := by
   rw [liftX, Polynomial.map_map,
     ← Polynomial.algebraMap_eq, ← IsScalarTower.algebraMap_eq Geom Geom[X] GenericSeed]
-
-/-- Monicity lets the fixed right size survive a loss of multiplier degree. -/
 private theorem regular_resultant {F : Type*} [Field F] {H A : F[X]}
     (hH : H.Monic) {n : ℕ} (hA : A.natDegree ≤ n) (hc : IsCoprime A H) :
     H.resultant A H.natDegree n ≠ 0 := by
@@ -2748,14 +2128,12 @@ private theorem regular_resultant {F : Type*} [Field F] {H A : F[X]}
   rw [Nat.add_sub_of_le hA, coeff_natDegree, hH.leadingCoeff, one_pow, one_mul] at e
   rw [e]
   exact ((isUnit_resultant_iff_isCoprime hH).mpr hc.symm).ne_zero
-
 private theorem scaled_inverse {F : Type*} [Field F] {H A U V : F[X]} {d : F}
     (hd : d ≠ 0) (h : H * U + A * V = C d) : IsCoprime A H := by
   refine ⟨C d⁻¹ * V, C d⁻¹ * U, ?_⟩
   calc
     _ = C d⁻¹ * (H * U + A * V) := by ring
     _ = 1 := by rw [h, ← C_mul, inv_mul_cancel₀ hd, C_1]
-
 private theorem unscale {F : Type*} [Field F] {H A B N : F[X]} {d : F}
     (hd : d ≠ 0) (h : H ∣ A * N + C d * B) :
     H ∣ A * (C d⁻¹ * N) + B := by
@@ -2767,7 +2145,6 @@ private theorem unscale {F : Type*} [Field F] {H A B N : F[X]} {d : F}
       calc
         _ = A * (C d⁻¹ * N) + (C d⁻¹ * C d) * B := by ring
         _ = _ := by rw [hunit, one_mul]
-
 theorem proof : K1_13_4_2_4.c1 := by
   intro H c q a₀ a₁ hH hpos
   let block : ShiftSeed[X] := constant H + C (C (Polynomial.X : Geom[X]))
@@ -2789,7 +2166,6 @@ theorem proof : K1_13_4_2_4.c1 := by
   obtain ⟨U, V, _, _, hbezout⟩ := exists_mul_add_mul_eq_C_resultant block A le_rfl le_rfl
     (Or.inl (Nat.ne_of_gt hblock_pos))
   change block * U + A * V = C den at hbezout
-  -- The remainder and the divisible expression both use the whole block.
   let num := (-B * V) %ₘ block
   have hcleared : block ∣ A * num + C den * B := by
     obtain ⟨W, hW⟩ := dvd_modByMonic_sub (-B * V) block
@@ -2854,51 +2230,37 @@ theorem proof : K1_13_4_2_4.c1 := by
       RingHom.comp_apply] at hm
     have h := unscale hf hm
     simpa only [residueAtShift, genericResidue, Polynomial.map_map, f, s] using h
-
 end
 end K1_13_4_2_4_1
-end PackSource_K1_13_4_2_4_1Proof
-
-section PackSource_K1_13_5_4_3_4Proof
-set_option autoImplicit true
+end
+section
 set_option autoImplicit false
 set_option maxHeartbeats 1000000
-
 namespace K1_13_5_4_3_4
-
 noncomputable section
-
 open K1_13 K1_13_5 K1_13_5_4 K1_13_5_4_3 MvPolynomial
 open scoped BigOperators Polynomial
-
 private abbrev Coord (P : Ideal (GeoRow 3)) := GeoRow 3 ⧸ P
 private abbrev sep (f : Row 3) := genericRow (separant f)
 private abbrev Chart (f : Row 3) (P : Ideal (GeoRow 3)) :=
   Localization.Away (Ideal.Quotient.mk P (sep f))
-
 private def intoChart (f : Row 3) (P : Ideal (GeoRow 3)) :
     GeoRow 3 →ₐ[GeometricX] Chart f P :=
   (IsScalarTower.toAlgHom GeometricX (Coord P) (Chart f P)).comp
     (Ideal.Quotient.mkₐ GeometricX P)
-
 private def pointQuotientEval {f : Row 3} {P : Ideal (GeoRow 3)} {y : Fin 3 → GeometricX}
     (hy : y ∈ regularLocus f P) : Coord P →ₐ[GeometricX] GeometricX :=
   Ideal.Quotient.liftₐ P (aeval y) (fun p hp => hy.1 p hp)
-
 private def pointChartEval {f : Row 3} {P : Ideal (GeoRow 3)} {y : Fin 3 → GeometricX}
     (hy : y ∈ regularLocus f P) : Chart f P →ₐ[GeometricX] GeometricX :=
   IsLocalization.Away.liftAlgHom (f := pointQuotientEval hy) (Ideal.Quotient.mk P (sep f))
     (isUnit_iff_ne_zero.mpr hy.2)
-
 private theorem pointChartEval_coord {f : Row 3} {P : Ideal (GeoRow 3)}
     {y : Fin 3 → GeometricX} (hy : y ∈ regularLocus f P) (p : GeoRow 3) :
     pointChartEval hy (intoChart f P p) = eval y p := by
   change pointChartEval hy
     (algebraMap (Coord P) (Chart f P) (Ideal.Quotient.mk P p)) = _
   rw [pointChartEval, IsLocalization.Away.liftAlgHom_apply, IsLocalization.Away.lift_eq] <;> rfl
-
-/-- Evaluation at the geometric points of the separant open detects zero
-in the localized coordinate ring. -/
 private theorem chart_eq_zero {f : Row 3} {P : Ideal (GeoRow 3)} (hp : P.IsPrime)
     (hsep : sep f ∉ P) {z : Chart f P}
     (hz : ∀ y (hy : y ∈ regularLocus f P), pointChartEval hy z = 0) : z = 0 := by
@@ -2925,10 +2287,8 @@ private theorem chart_eq_zero {f : Row 3} {P : Ideal (GeoRow 3)} (hp : P.IsPrime
   have hu : IsUnit (intoChart f P (sep f) ^ n) :=
     IsLocalization.Away.algebraMap_pow_isUnit (S := Chart f P) s n
   exact hu.mul_right_cancel (by rw [h, hzero, zero_mul])
-
 private def invSep (f : Row 3) (P : Ideal (GeoRow 3)) : Chart f P :=
   IsLocalization.Away.invSelf (Ideal.Quotient.mk P (sep f))
-
 private theorem pointChartEval_invSep {f : Row 3} {P : Ideal (GeoRow 3)}
     {y : Fin 3 → GeometricX} (hy : y ∈ regularLocus f P) :
     pointChartEval hy (invSep f P) = (eval y (sep f))⁻¹ := by
@@ -2937,7 +2297,6 @@ private theorem pointChartEval_invSep {f : Row 3} {P : Ideal (GeoRow 3)}
   have he := congrArg (pointChartEval hy) h
   rw [map_mul, pointChartEval_coord, map_one] at he
   exact (inv_eq_of_mul_eq_one_right he).symm
-
 private def chartJet (f : Row 3) (P : Ideal (GeoRow 3)) : ℕ → Chart f P
   | 0 => intoChart f P (MvPolynomial.X 0)
   | 1 => intoChart f P (MvPolynomial.X 1)
@@ -2945,10 +2304,8 @@ private def chartJet (f : Row 3) (P : Ideal (GeoRow 3)) : ℕ → Chart f P
   | k + 3 => 2 * intoChart f P (genericRow (compatibilityNumerator f k)) *
       algebraMap GeometricX (Chart f P) (((k + 3).factorial : GeometricX)⁻¹) *
       invSep f P ^ (2 * k + 1)
-
 private theorem pointEval_apply {y : Fin 3 → GeometricX} (p : Row 3) :
     pointEval y p = eval y (genericRow p) := rfl
-
 private theorem pointChartEval_chartJet {f : Row 3} {P : Ideal (GeoRow 3)}
     {y : Fin 3 → GeometricX} (hy : y ∈ regularLocus f P) (j : ℕ) :
     pointChartEval hy (chartJet f P j) = centredJet f (pointEval y) j := by
@@ -2960,11 +2317,9 @@ private theorem pointChartEval_chartJet {f : Row 3} {P : Ideal (GeoRow 3)}
     simp only [chartJet, centredJet, map_mul, map_ofNat, map_pow, AlgHom.commutes,
       Algebra.algebraMap_self_apply, pointChartEval_coord, pointChartEval_invSep, pointEval_apply]
     rw [div_eq_mul_inv, mul_inv, ← inv_pow, mul_assoc (2 * _)]
-
 private def chartTaylor (f : Row 3) (P : Ideal (GeoRow 3)) : (Chart f P)[X] :=
   Polynomial.taylor (-(algebraMap GeometricX (Chart f P) (genericCoeff Polynomial.X)))
     (∑ j : Fin taylorLength, Polynomial.monomial j.val (chartJet f P j.val))
-
 private theorem pointChartEval_chartTaylor {f : Row 3} {P : Ideal (GeoRow 3)}
     {y : Fin 3 → GeometricX} (hy : y ∈ regularLocus f P) :
     (chartTaylor f P).map (pointChartEval hy).toRingHom = taylorAt f (pointEval y) := by
@@ -2973,11 +2328,9 @@ private theorem pointChartEval_chartTaylor {f : Row 3} {P : Ideal (GeoRow 3)}
   simp only [chartTaylor, taylorAt, hc, Polynomial.map_taylor, map_neg, hmap,
     AlgHom.commutes, Algebra.algebraMap_self_apply, Polynomial.map_sum, Polynomial.map_monomial,
     pointChartEval_chartJet]
-
 private def chartCoefficientMap (f : Row 3) (P : Ideal (GeoRow 3)) :
     GeoRow taylorLength →ₐ[GeometricX] Chart f P :=
   aeval (fun j : Fin taylorLength => (chartTaylor f P).coeff j.val)
-
 private theorem pointChartEval_coefficientMap {f : Row 3} {P : Ideal (GeoRow 3)}
     {y : Fin 3 → GeometricX} (hy : y ∈ regularLocus f P) (p : GeoRow taylorLength) :
     pointChartEval hy (chartCoefficientMap f P p) = eval (reconstructAt f y) p := by
@@ -2988,7 +2341,6 @@ private theorem pointChartEval_coefficientMap {f : Row 3} {P : Ideal (GeoRow 3)}
     rw [← Polynomial.coeff_map (f := (pointChartEval hy).toRingHom),
       pointChartEval_chartTaylor hy]
   exact congrArg (fun a : Coefficients => eval a p) (funext hj)
-
 private theorem curveIdeal_eq_ker {f : Row 3} {P : Ideal (GeoRow 3)}
     (hp : P.IsPrime) (hsep : sep f ∉ P) :
     curveIdeal f P = RingHom.ker (chartCoefficientMap f P).toRingHom := by
@@ -3003,20 +2355,16 @@ private theorem curveIdeal_eq_ker {f : Row 3} {P : Ideal (GeoRow 3)}
     exact h _ ⟨y, hy, rfl⟩
   · rintro h _ ⟨y, hy, rfl⟩
     rw [← pointChartEval_coefficientMap hy, h, map_zero]
-
-/-- The three initial jets are linear forms in the reconstructed coefficients. -/
 private def initialJetForm (i : Fin 3) : GeoRow taylorLength :=
   (Polynomial.hasseDeriv i.val (∑ j : Fin taylorLength,
     Polynomial.monomial j.val (MvPolynomial.X j))).eval
       (MvPolynomial.C (genericCoeff Polynomial.X))
-
 private theorem eval_initialJetForm (a : Coefficients) (i : Fin 3) :
     eval a (initialJetForm i) =
       (Polynomial.hasseDeriv i.val (coefficientPolynomial a)).eval
         (genericCoeff Polynomial.X) := by
   rw [initialJetForm, ← Polynomial.eval_map_apply, ← Polynomial.hasseDeriv_map]
   simp only [Polynomial.map_sum, Polynomial.map_monomial, eval_X, eval_C, coefficientPolynomial]
-
 private theorem coord_in_range {f : Row 3} {P : Ideal (GeoRow 3)}
     (hp : P.IsPrime) (hsep : sep f ∉ P) (p : GeoRow 3) :
     intoChart f P p ∈ Set.range (chartCoefficientMap f P) := by
@@ -3030,7 +2378,6 @@ private theorem coord_in_range {f : Row 3} {P : Ideal (GeoRow 3)}
     rw [map_sub, pointChartEval_coefficientMap hy, eval_initialJetForm,
       coefficientPolynomial_reconstructAt, recover_initial, pointChartEval_coord, eval_X, sub_self]
   exact ⟨aeval initialJetForm p, DFunLike.congr_fun he p⟩
-
 theorem proof : K1_13_5_4_3.c4 := by
   intro f P hp hsep hdim
   let := hp
@@ -3052,91 +2399,67 @@ theorem proof : K1_13_5_4_3.c4 := by
       IsLeftCancelMulZero.mul_left_cancel_of_ne_zero hs
     exact natDegree_affineHilbertPolynomial_le_of_away_range P (sep f) hregular Φ
       (coord_in_range hp hsep) le_rfl
-
 end
 end K1_13_5_4_3_4
-end PackSource_K1_13_5_4_3_4Proof
-
-section PackSource_K1_13_5_4_2_4_2_2Proof
-set_option autoImplicit true
+end
+section
 set_option autoImplicit false
-
 namespace K1_13_5_4_2_4_2_2
-
 noncomputable section
-
 open K1_13_5_4 K1_13_5_4_2_4 K1_13_5_4_2_4_2 MvPolynomial
 open scoped nonZeroDivisors
-
 attribute [local instance] MvPolynomial.algebraMvPolynomial
-
 private abbrev Index (A : Fin 4 → Finset Exponent) := Σ i : Fin 4, ↥(A i)
 private abbrev IntegralRow (A : Fin 4 → Finset Exponent) :=
   MvPolynomial (Fin 4) (CoefficientRing A)
 private abbrev Spatial := MvPolynomial (Fin 4) GeometricX
 private abbrev Rest {A : Fin 4 → Finset Exponent} (v : Index A) :=
   MvPolynomial {w : Index A // w ≠ v} Spatial
-
 variable {A : Fin 4 → Finset Exponent}
-
-/-- Before localization, separate the one coefficient indexed by `v` as a
-univariate indeterminate. -/
 private def pivotEquiv (v : Index A) : IntegralRow A ≃+* Polynomial (Rest v) := by
   classical
   exact (commAlgEquiv GeometricX (Fin 4) (Index A)).toRingEquiv.trans
     ((renameEquiv Spatial (Equiv.optionSubtypeNe v).symm).toRingEquiv.trans
       (optionEquivLeft Spatial {w : Index A // w ≠ v}).toRingEquiv)
-
 private theorem pivotEquiv_pivot (v : Index A) :
     pivotEquiv v (C (MvPolynomial.X v)) = Polynomial.X := by
   classical
   simp [pivotEquiv, renameEquiv_apply]
-
 private theorem pivotEquiv_other (v w : Index A) (h : w ≠ v) :
     pivotEquiv v (C (MvPolynomial.X w)) = Polynomial.C (MvPolynomial.X ⟨w, h⟩) := by
   classical
   simp [pivotEquiv, renameEquiv_apply, Equiv.optionSubtypeNe_symm_of_ne h]
-
 private theorem pivotEquiv_X (v : Index A) (j : Fin 4) :
     pivotEquiv v (MvPolynomial.X j) = Polynomial.C (C (MvPolynomial.X j)) := by
   classical
   simp [pivotEquiv, renameEquiv_apply]
-
 private theorem pivotEquiv_monomial (v : Index A) (a : Exponent) :
     pivotEquiv v (monomial a 1) = Polynomial.C (C (monomial a 1)) := by
   simp only [monic_monomial_eq, Finsupp.prod, map_prod, map_pow, pivotEquiv_X]
-
 private def integralTerm (A : Fin 4 → Finset Exponent) (j : Fin 4) (a : ↥(A j)) :
     IntegralRow A :=
   C (MvPolynomial.X (⟨j, a⟩ : Index A)) * monomial a.1 1
-
 private def integralEquation (A : Fin 4 → Finset Exponent) (j : Fin 4) : IntegralRow A :=
   ∑ a : ↥(A j), integralTerm A j a
-
 private def integralPrefix (A : Fin 4 → Finset Exponent) (i : Fin 4) :
     Ideal (IntegralRow A) :=
   Ideal.span (integralEquation A '' {j : Fin 4 | (j : ℕ) < i.val})
-
 private def restTerm (v : Index A) (j : Fin 4) (a : ↥(A j)) : Rest v := by
   classical
   exact if h : (⟨j, a⟩ : Index A) = v then 0
     else MvPolynomial.X ⟨⟨j, a⟩, h⟩ * C (monomial a.1 1)
-
 private def restEquation (v : Index A) (j : Fin 4) : Rest v :=
   ∑ a : ↥(A j), restTerm v j a
-
 private theorem pivotEquiv_integralTerm (v : Index A) (j : Fin 4) (a : ↥(A j))
     (h : (⟨j, a⟩ : Index A) ≠ v) :
     pivotEquiv v (integralTerm A j a) = Polynomial.C (restTerm v j a) := by
   simp [integralTerm, restTerm, h, pivotEquiv_other v _ h, pivotEquiv_monomial]
-
 private theorem pivotEquiv_previous (i j : Fin 4) (hi : 0 ∈ A i) (hji : j.val < i.val) :
     pivotEquiv (⟨i, ⟨0, hi⟩⟩ : Index A) (integralEquation A j) =
       Polynomial.C (restEquation ⟨i, ⟨0, hi⟩⟩ j) := by
   rw [integralEquation, restEquation, map_sum, map_sum]
   refine Finset.sum_congr rfl fun a _ => pivotEquiv_integralTerm _ _ _ ?_
   exact fun h => (ne_of_lt hji) (congrArg (fun w : Index A => w.1.val) h)
-
 private theorem pivotEquiv_current (i : Fin 4) (hi : 0 ∈ A i) :
     pivotEquiv (⟨i, ⟨0, hi⟩⟩ : Index A) (integralEquation A i) =
       Polynomial.X + Polynomial.C (restEquation ⟨i, ⟨0, hi⟩⟩ i) := by
@@ -3155,7 +2478,6 @@ private theorem pivotEquiv_current (i : Fin 4) (hi : 0 ∈ A i) :
   intro h
   apply (Finset.mem_erase.mp ha).1
   exact Subtype.ext (congrArg (fun w : Index A => (w.2 : Exponent)) h)
-
 private theorem cancel_monic_linear {B : Type*} [CommRing B] (J : Ideal B) (b : B)
     (q : Polynomial B) (h : (Polynomial.X + Polynomial.C b) * q ∈ J.map Polynomial.C) :
     q ∈ J.map Polynomial.C := by
@@ -3167,7 +2489,6 @@ private theorem cancel_monic_linear {B : Type*} [CommRing B] (J : Ideal B) (b : 
   rw [← hf, RingHom.mem_ker]
   apply (Polynomial.monic_X_add_C (Ideal.Quotient.mk J b)).mul_right_eq_zero_iff.mp
   simpa [f] using h
-
 private theorem integral_cancel (i : Fin 4) (hi : 0 ∈ A i) (q : IntegralRow A)
     (h : integralEquation A i * q ∈ integralPrefix A i) :
     q ∈ integralPrefix A i := by
@@ -3186,14 +2507,10 @@ private theorem integral_cancel (i : Fin 4) (hi : 0 ∈ A i) (q : IntegralRow A)
   rw [← hJ] at hq'
   obtain ⟨r, hr, he⟩ := (Ideal.mem_map_iff_of_surjective e.toRingHom e.surjective).mp hq'
   exact (e.injective he) ▸ hr
-
 private theorem map_integralEquation (A : Fin 4 → Finset Exponent) (j : Fin 4) :
     algebraMap (IntegralRow A) (Row A) (integralEquation A j) = genericEquation A j := by
   simp only [integralEquation, integralTerm, genericEquation, MvPolynomial.algebraMap_def,
     map_sum, MvPolynomial.map_monomial, C_mul_monomial, mul_one]
-
-/-- The next generic equation is regular modulo the preceding equations.
-Clear denominators to apply univariate monic cancellation before localization. -/
 theorem proof : K1_13_5_4_2_4_2.c2 := by
   intro A hA i p hp
   let M : Submonoid (IntegralRow A) := (CoefficientRing A)⁰.map (C (σ := Fin 4))
@@ -3219,38 +2536,24 @@ theorem proof : K1_13_5_4_2_4_2.c2 := by
     (IsLocalization.algebraMap_mem_map_algebraMap_iff M (Row A) J q).mpr ⟨t, ht, hq⟩
   rw [hJ, ← hs] at hfp
   exact (Ideal.mul_unit_mem_iff_mem _ (IsLocalization.map_units (Row A) s)).mp hfp
-
 end
-
 end K1_13_5_4_2_4_2_2
-end PackSource_K1_13_5_4_2_4_2_2Proof
-
-section PackSource_K1_13_6_2_3_2_1Cells
-set_option autoImplicit true
+end
+section
 set_option autoImplicit false
-
 namespace K1_13_6_2_3_2_1
-
 noncomputable section
-
 open K1_13_6_2_3_2
 open scoped BigOperators Function
-
 variable {ι σ : Type} [DecidableEq ι]
-
-/-- A coordinate at the threshold stands for all exponents at least that large. -/
 abbrev Cell (T : σ → ℕ) := ∀ x, Fin (T x + 1)
-
 def cellOf (T : σ → ℕ) (e : σ →₀ ℕ) : Cell T :=
   fun x => ⟨min (T x) (e x), Nat.lt_succ_of_le (min_le_left _ _)⟩
-
 def base [Finite σ] {T : σ → ℕ} (p : Cell T) : σ →₀ ℕ :=
   Finsupp.equivFunOnFinite.symm (fun x => (p x : ℕ))
-
 @[simp] theorem base_apply [Finite σ] {T : σ → ℕ} (p : Cell T) (x : σ) :
     base p x = (p x : ℕ) :=
   rfl
-
 theorem cellOf_eq_iff [Finite σ] {T : σ → ℕ} (p : Cell T) (e : σ →₀ ℕ) :
     cellOf T e = p ↔ base p ≤ e ∧ ∀ x, (p x : ℕ) < T x → e x = base p x := by
   constructor
@@ -3274,15 +2577,12 @@ theorem cellOf_eq_iff [Finite σ] {T : σ → ℕ} (p : Cell T) (e : σ →₀ �
     · have hfix : e x = (p x : ℕ) := by simpa using hf x hlt
       omega
     · omega
-
 theorem le_base_cellOf [Finite σ] {T : σ → ℕ} {b e : σ →₀ ℕ} (hb : ∀ x, b x ≤ T x) :
     b ≤ base (cellOf T e) ↔ b ≤ e := by
   simp only [Finsupp.le_def, base_apply, cellOf, le_min_iff]
   exact ⟨fun h x => (h x).2, fun h x => ⟨hb x, h x⟩⟩
-
 abbrev grade (slot : σ → ι) : (σ →₀ ℕ) →+ (ι → ℕ) :=
   Finsupp.weight (step ∘ slot)
-
 theorem grade_apply [Fintype σ] (slot : σ → ι) (e : σ →₀ ℕ) (i : ι) :
     grade slot e i = ∑ x ∈ Finset.univ.filter (fun x => slot x = i), e x := by
   rw [Finsupp.weight_eq_sum, Finset.sum_apply, Finset.sum_filter]
@@ -3290,7 +2590,6 @@ theorem grade_apply [Fintype σ] (slot : σ → ι) (e : σ →₀ ℕ) (i : ι)
   by_cases h : slot x = i
   · simp [h, step]
   · simp [h, Ne.symm h, step]
-
 theorem finite_grade [Fintype σ] (slot : σ → ι) (a : ι → ℕ) :
     {e : σ →₀ ℕ | grade slot e = a}.Finite := by
   classical
@@ -3304,11 +2603,8 @@ theorem finite_grade [Fintype σ] (slot : σ → ι) (a : ι → ℕ) :
     intro e g h
     exact Subtype.ext (Finsupp.ext fun x => congrArg (fun z => (z x : ℕ)) h))
   exact Set.toFinite _
-
 def cellSlice {T : σ → ℕ} (slot : σ → ι) (p : Cell T) (a : ι → ℕ) : Set (σ →₀ ℕ) :=
   {e | cellOf T e = p ∧ grade slot e = a}
-
-/-- Count the difference by summing over exactly the cells in the larger complement only. -/
 theorem sliceCount_sub [Fintype σ] (slot : σ → ι) (A B : Finset (σ →₀ ℕ))
     (hn : outside B ⊆ outside A) (T : σ → ℕ)
     (hT : ∀ b, b ∈ A ∨ b ∈ B → ∀ x, b x ≤ T x) (a : ι → ℕ) :
@@ -3349,50 +2645,34 @@ theorem sliceCount_sub [Fintype σ] (slot : σ → ι) (A B : Finset (σ →₀ 
   · intro p q hpq
     refine Set.disjoint_left.mpr fun e hp hq => hpq (Subtype.ext ?_)
     exact hp.1.symm.trans hq.1
-
 end
-
 end K1_13_6_2_3_2_1
-end PackSource_K1_13_6_2_3_2_1Cells
-
-section PackSource_K1_13_6_2_3_2_1Count
-set_option autoImplicit true
+end
+section
 set_option autoImplicit false
-
 namespace K1_13_6_2_3_2_1
-
 noncomputable section
-
 open scoped BigOperators
-
 variable {ι σ : Type} [DecidableEq ι] [Fintype σ] {T : σ → ℕ}
-
-/-- The variables whose values can grow in a given cell and grading slot. -/
 def free (slot : σ → ι) (p : Cell T) (i : ι) : Finset σ :=
   Finset.univ.filter (fun x => (p x : ℕ) = T x ∧ slot x = i)
-
 private theorem mem_free {slot : σ → ι} {p : Cell T} {i : ι} {x : σ} :
     x ∈ free slot p i ↔ (p x : ℕ) = T x ∧ slot x = i := by
   simp [free]
-
 private def extras (slot : σ → ι) (p : Cell T) (e : σ →₀ ℕ)
     (i : ι) (x : free slot p i) : ℕ := e x - p x
-
 private def extend (slot : σ → ι) (p : Cell T)
     (d : ∀ i, free slot p i → ℕ) (x : σ) : ℕ :=
   if h : (p x : ℕ) = T x then d (slot x) ⟨x, mem_free.mpr ⟨h, rfl⟩⟩ else 0
-
 private def restore (slot : σ → ι) (p : Cell T)
     (d : ∀ i, free slot p i → ℕ) : σ →₀ ℕ :=
   base p + Finsupp.equivFunOnFinite.symm (extend slot p d)
-
 private theorem restore_cell (slot : σ → ι) (p : Cell T) (d : ∀ i, free slot p i → ℕ) :
     cellOf T (restore slot p d) = p := by
   apply (cellOf_eq_iff _ _).mpr
   refine ⟨le_add_right (le_refl _), ?_⟩
   intro x hx
   simp [restore, extend, ne_of_lt hx]
-
 private theorem restore_extras (slot : σ → ι) (p : Cell T) (e : σ →₀ ℕ)
     (h : cellOf T e = p) :
     restore slot p (extras slot p e) = e := by
@@ -3405,7 +2685,6 @@ private theorem restore_extras (slot : σ → ι) (p : Cell T) (e : σ →₀ �
   · have hlt : (p x : ℕ) < T x :=
       lt_of_le_of_ne (Nat.le_of_lt_succ (p x).isLt) hx
     simpa [restore, extend, hx] using (hfix x hlt).symm
-
 private theorem extend_free (slot : σ → ι) (p : Cell T) (d : ∀ i, free slot p i → ℕ)
     (i : ι) (x : free slot p i) : extend slot p d x = d i x := by
   obtain ⟨hT, hi⟩ := mem_free.mp x.2
@@ -3415,7 +2694,6 @@ private theorem extend_free (slot : σ → ι) (p : Cell T) (d : ∀ i, free slo
     exact congrArg (d i) (Subtype.ext hz)
   rw [extend, dite_eq_left hT]
   exact hh _ y hi rfl
-
 private theorem restore_grade (slot : σ → ι) (p : Cell T)
     (d : ∀ i, free slot p i → ℕ) (i : ι) :
     grade slot (restore slot p d) i = grade slot (base p) i + ∑ x : free slot p i, d i x := by
@@ -3431,8 +2709,6 @@ private theorem restore_grade (slot : σ → ι) (p : Cell T)
   change (∑ x ∈ Finset.univ.filter (fun x => slot x = i), extend slot p d x) = _
   rw [← Finset.sum_subset hsub hz, ← Finset.sum_attach (free slot p i) (extend slot p d)]
   exact Finset.sum_congr rfl fun x _ => extend_free slot p d i x
-
-/-- After translation by the base monomial, the free exponents have a specified sum in each slot. -/
 private def cellEquiv (slot : σ → ι) (p : Cell T) (a : ι → ℕ)
     (ha : grade slot (base p) ≤ a) :
     cellSlice slot p a ≃
@@ -3454,7 +2730,6 @@ private def cellEquiv (slot : σ → ι) (p : Cell T) (a : ι → ℕ)
     rw [restore, Finsupp.add_apply, base_apply]
     change (p x : ℕ) + extend slot p (fun j => (d j).1) x - (p x : ℕ) = (d i).1 x
     rw [extend_free, Nat.add_sub_cancel_left]
-
 theorem cellSlice_ncard [Fintype ι] (slot : σ → ι) (p : Cell T) (a : ι → ℕ)
     (ha : grade slot (base p) ≤ a) :
     (cellSlice slot p a).ncard =
@@ -3465,32 +2740,20 @@ theorem cellSlice_ncard [Fintype ι] (slot : σ → ι) (p : Cell T) (a : ι →
   rw [← Nat.card_congr (Sym.equivNatSumOfFintype (free slot p i)
     (a i - grade slot (base p) i)), Sym.natCard_sym_eq_multichoose, Nat.card_eq_fintype_card]
   exact congrArg (fun n => n.multichoose (a i - grade slot (base p) i)) (Fintype.card_coe _)
-
 end
-
 end K1_13_6_2_3_2_1
-end PackSource_K1_13_6_2_3_2_1Count
-
-section PackSource_K1_13_6_2_3_2_1Proof
-set_option autoImplicit true
+end
+section
 set_option autoImplicit false
-
 namespace K1_13_6_2_3_2_1
-
 noncomputable section
-
 open K1_13_6_2_3_2 Filter
 open scoped BigOperators
-
 variable {ι : Type} [Fintype ι] [DecidableEq ι]
-
-/-- Index zero denotes an identically zero factor. Positive indices encode degrees one lower. -/
 private def binom (n d : ℕ) : ℚ :=
   if d = 0 then 0 else (n.choose (d - 1) : ℚ)
-
 private def model (w c d a : ι → ℕ) : ℚ :=
   ∏ i, binom (a i + c i - w i) (d i)
-
 private theorem binom_step (n d : ℕ) :
     binom (n + 1) d - binom n d = binom n (d - 1) := by
   cases d with
@@ -3502,7 +2765,6 @@ private theorem binom_step (n d : ℕ) :
       simp only [binom, Nat.succ_ne_zero, ite_false, Nat.succ_sub_one, Nat.choose_succ_succ']
       push_cast
       ring
-
 private theorem model_step (w c d : ι → ℕ) (i : ι) :
     (fun a => model w c d (a + step i) - model w c d a) =ᶠ[atTop]
       model w c (Function.update d i (d i - 1)) := by
@@ -3525,14 +2787,12 @@ private theorem model_step (w c d : ι → ℕ) (i : ι) :
     omega
   simp only [hfactor, hshift, hupdate, htop, Function.update_self]
   rw [← sub_mul, binom_step]
-
 omit [Fintype ι] in
 private theorem eventual_shift {p : (ι → ℕ) → Prop} (h : ∀ᶠ a in atTop, p a) (i : ι) :
     ∀ᶠ a in atTop, p (a + step i) := by
   obtain ⟨a, h⟩ := eventually_atTop.mp h
   refine eventually_atTop.mpr ⟨a, fun b hb => h _ (hb.trans ?_)⟩
   exact fun j => Nat.le_add_right _ _
-
 omit [Fintype ι] in
 private theorem deltas_congr (used : List ι) {H G : (ι → ℕ) → ℚ} (h : H =ᶠ[atTop] G) :
     deltas used H =ᶠ[atTop] deltas used G := by
@@ -3541,7 +2801,6 @@ private theorem deltas_congr (used : List ι) {H G : (ι → ℕ) → ℚ} (h : 
   | cons i used ih =>
     filter_upwards [eventual_shift ih i, ih] with a h₁ h₂
     exact congrArg₂ (· - ·) h₁ h₂
-
 omit [Fintype ι] in
 private theorem deltas_comm (used : List ι) (H : (ι → ℕ) → ℚ) (i : ι) (a : ι → ℕ) :
     deltas used (fun b => H (b + step i) - H b) a =
@@ -3552,7 +2811,6 @@ private theorem deltas_comm (used : List ι) (H : (ι → ℕ) → ℚ) (i : ι)
     simp only [deltas, ih]
     rw [add_right_comm a (step j) (step i)]
     ring
-
 private theorem model_deltas_nonneg (used : List ι) (w c d : ι → ℕ) :
     ∀ᶠ a in atTop, 0 ≤ deltas used (model w c d) a := by
   induction used generalizing d with
@@ -3565,11 +2823,9 @@ private theorem model_deltas_nonneg (used : List ι) (w c d : ι → ℕ) :
     rw [deltas_comm] at he
     change 0 ≤ deltas used (model w c d) (a + step i) - deltas used (model w c d) a
     rwa [he]
-
 private def cellPoly (w d : ι → ℕ) : MvPolynomial ι ℚ :=
   ∏ i, if d i = 0 then 0 else
     (Polynomial.preHilbertPoly ℚ (d i - 1) (w i)).eval₂ MvPolynomial.C (MvPolynomial.X i)
-
 omit [DecidableEq ι] in
 private theorem eval_cellPoly (w d : ι → ℕ) {a : ι → ℕ} (ha : w ≤ a) :
     MvPolynomial.eval (fun i => (a i : ℚ)) (cellPoly w d) =
@@ -3588,7 +2844,6 @@ private theorem eval_cellPoly (w d : ι → ℕ) {a : ι → ℕ} (ha : w ≤ a)
     rw [Polynomial.hom_eval₂, hC, MvPolynomial.eval_X]
     exact Polynomial.preHilbertPoly_eq_choose_add_sub ℚ _
       ((ha i).trans (Nat.le_add_right _ _))
-
 private theorem binom_multichoose (d a w : ℕ) (h : w < a) :
     (d.multichoose (a - w) : ℚ) = binom (a + (d - 1) - w) d := by
   cases d with
@@ -3599,7 +2854,6 @@ private theorem binom_multichoose (d a w : ℕ) (h : w < a) :
     simp only [Nat.multichoose_eq, binom, Nat.succ_ne_zero, ite_false, Nat.succ_sub_one]
     rw [show d + 1 + (a - w) - 1 = (a - w) + d by omega, Nat.choose_symm_add,
       show (a - w) + d = a + d - w by omega]
-
 omit [Fintype ι] in
 private theorem deltas_sum {β : Type} (s : Finset β) (H : β → (ι → ℕ) → ℚ)
     (used : List ι) (a : ι → ℕ) :
@@ -3607,8 +2861,6 @@ private theorem deltas_sum {β : Type} (s : Finset β) (H : β → (ι → ℕ) 
   induction used generalizing a with
   | nil => rfl
   | cons i used ih => simp only [deltas, ih, Finset.sum_sub_distrib]
-
-/-- Nested standard-exponent slices admit an eventual polynomial with nonnegative differences. -/
 theorem proof : K1_13_6_2_3_2.c1 := by
   intro ι σ _ _ _ slot A B hn
   classical
@@ -3643,24 +2895,15 @@ theorem proof : K1_13_6_2_3_2.c1 := by
       eventually_all.mpr fun p : P => model_deltas_nonneg used (w p) _ (d p)] with a h ha
     rw [h, deltas_sum]
     exact Finset.sum_nonneg fun p _ => ha p
-
 end
-
 end K1_13_6_2_3_2_1
-end PackSource_K1_13_6_2_3_2_1Proof
-
-section PackSource_K1_13_6_2_4_1Standard
-set_option autoImplicit true
+end
+section
 set_option autoImplicit false
-
 namespace K1_13_6_2_4_1
-
 noncomputable section
-
 open K1_13_6 MvPolynomial
-
 attribute [local instance] MvPolynomial.weightedGradedAlgebra
-
 theorem standard_piece_rank {σ : Type} (s : σ → Fin 5) (m : MonomialOrder σ)
     (J : Ideal (MvPolynomial σ GeoField)) (hJ : J.IsHomogeneous (piece s)) (t : Grade) :
     gradedHilbert s J t =
@@ -3700,8 +2943,6 @@ theorem standard_piece_rank {σ : Type} (s : σ → Fin 5) (m : MonomialOrder σ
   change Module.finrank GeoField T = A.ncard
   rw [← e.finrank_eq, Module.finrank_eq_nat_card_basis (basisRestrictSupport GeoField A),
     Nat.card_coe_set_eq]
-
-/-- The nested-ideal form reduces to counting exponents outside finitely many cones. -/
 theorem forms_of_counts
     (hc : ∀ (σ : Type) [Finite σ] (s : σ → Fin 5) (A C : Finset (σ →₀ ℕ)),
       outside C ⊆ outside A → ∃ p q : Form,
@@ -3730,35 +2971,24 @@ theorem forms_of_counts
     rw [standard_piece_rank s m K hK t, hKC]
     rfl
   exact ⟨p, q, by simpa only [hilbertJ] using hp, by simpa only [hilbertK] using hq, hpq⟩
-
 end
-
 end K1_13_6_2_4_1
-end PackSource_K1_13_6_2_4_1Standard
-
-section PackSource_K1_13_7_1_1_1_2_1Proof
-set_option autoImplicit true
+end
+section
 set_option autoImplicit false
-
 namespace K1_13_7_1_1_1_2_1
-
 noncomputable section
-
 open K1_13_6 K1_13_6_2_4_1 K1_13_7_1_1_1 K1_13_7_1_1_1_2
 open K1_13_6_2_3_2 (step deltas)
 open MvPolynomial Filter
-
 attribute [local instance] MvPolynomial.weightedGradedAlgebra
-
 private abbrev coords (a : Grid) : Fin 5 → ℕ := multigrade a
-
 private theorem coords_advance (a : Grid) (i : Fin 4) :
     coords (a + advance i) = coords a + step i.castSucc := by
   funext j
   change multigrade (a + advance i) j = multigrade a j + step i.castSucc j
   rw [multigrade_add, multigrade_advance, Finsupp.add_apply]
   simp [unitGrade, step, Finsupp.single_apply, Pi.single_apply, eq_comm]
-
 private theorem eventually_coords {p : (Fin 5 → ℕ) → Prop}
     (h : ∀ᶠ t in atTop, p t) : ∀ᶠ a in atTop, p (coords a) := by
   obtain ⟨t, ht⟩ := eventually_atTop.mp h
@@ -3767,7 +2997,6 @@ private theorem eventually_coords {p : (Fin 5 → ℕ) → Prop}
   refine Fin.lastCases ?_ (fun i => ?_) j
   · simpa only [coords, multigrade_last] using ha.1
   · simpa only [coords, multigrade_castSucc] using ha.2 i
-
 private theorem deltas_comm (dirs : List (Fin 5)) (H : (Fin 5 → ℕ) → ℚ)
     (i : Fin 5) (t : Fin 5 → ℕ) :
     deltas dirs (fun u => H (u + step i) - H u) t =
@@ -3778,7 +3007,6 @@ private theorem deltas_comm (dirs : List (Fin 5)) (H : (Fin 5 → ℕ) → ℚ)
     simp only [deltas, ih]
     rw [add_right_comm t (step j) (step i)]
     ring
-
 private theorem difference_cast (dirs : List (Fin 4)) (H : (Fin 5 → ℕ) → ℚ)
     (a : Grid) :
     difference dirs (fun b => (H (coords b) : ℝ)) a =
@@ -3789,14 +3017,12 @@ private theorem difference_cast (dirs : List (Fin 4)) (H : (Fin 5 → ℕ) → �
     change difference dirs (fun b => (H (coords (b + advance i)) : ℝ) - (H (coords b) : ℝ)) a = _
     simp only [coords_advance, ← Rat.cast_sub]
     rw [ih (fun t => H (t + step i.castSucc) - H t), deltas_comm, List.map_cons, deltas]
-
 private theorem weight_coe {σ : Type} [Fintype σ] (s : σ → Fin 5) (e : σ →₀ ℕ) :
     (⇑(Finsupp.weight (slotWeight s) e) : Fin 5 → ℕ) = Finsupp.weight (step ∘ s) e := by
   funext j
   rw [Finsupp.weight_eq_sum, Finsupp.weight_eq_sum, Finsupp.finsetSum_apply, Finset.sum_apply]
   refine Finset.sum_congr rfl fun v _ => ?_
   simp [slotWeight, unitGrade, step, Pi.smul_apply, Finsupp.single_apply, Pi.single_apply, eq_comm]
-
 private theorem rankAt_eq_slice {σ : Type} [Fintype σ] (s : σ → Fin 5) (m : MonomialOrder σ)
     (I : Ideal (MvPolynomial σ GeoField)) (hI : I.IsHomogeneous (piece s))
     (A : Finset (σ →₀ ℕ)) (hA : m.standardExponents I = K1_13_6_2_3_2.outside A)
@@ -3811,9 +3037,6 @@ private theorem rankAt_eq_slice {σ : Type} [Fintype σ] (s : σ → Fin 5) (m :
   rw [← weight_coe s e]
   exact ⟨fun h => congrArg (fun t : Grade => (⇑t : Fin 5 → ℕ)) h,
     fun h => DFunLike.coe_injective h⟩
-
-/-- The standard-exponent count for the nested homogeneous ideals has nonnegative
-mixed differences on the eventual grid. -/
 theorem proof : K1_13_7_1_1_1_2.c1 := by
   classical
   intro σ _ s I J hI hJ hIJ k
@@ -3840,23 +3063,16 @@ theorem proof : K1_13_7_1_1_1_2.c1 := by
   filter_upwards [eventually_coords hp] with a ha
   rw [difference_cast]
   exact_mod_cast ha
-
 end
-
 end K1_13_7_1_1_1_2_1
-end PackSource_K1_13_7_1_1_1_2_1Proof
-
-section PackSource_K1_13_7_4_2_1Aux1
-set_option autoImplicit true
+end
+section
 namespace K1_13_7_4_2_1
-
 open K1_13_7 K1_13_7_4_2
 open Ideal IsLocalRing MvPolynomial RingTheory.Sequence
 open CategoryTheory Abelian
 open scoped Pointwise
-
 private noncomputable abbrev coord : Fin 3 → Lower := MvPolynomial.X
-
 private theorem variable_cancel {s : Set (Fin 3)} {i : Fin 3} (hi : i ∉ s)
     (p : Lower) (hp : coord i * p ∈ span (coord '' s)) : p ∈ span (coord '' s) := by
   rw [mem_ideal_span_X_image] at hp ⊢
@@ -3867,7 +3083,6 @@ private theorem variable_cancel {s : Set (Fin 3)} {i : Fin 3} (hi : i ∉ s)
   obtain ⟨j, hj, hne⟩ := hp _ hmem
   have hji : i ≠ j := fun e => hi (e.symm ▸ hj)
   exact ⟨j, hj, by simpa [Finsupp.add_apply, Finsupp.single_apply, hji] using hne⟩
-
 private theorem variables_weaklyRegular :
     IsWeaklyRegular Lower ([coord 0, coord 1, coord 2] : List Lower) := by
   classical
@@ -3899,15 +3114,11 @@ private theorem variables_weaklyRegular :
       (coord 2)
     exact ((Submodule.quotEquivOfEq _ _ h₂).isSMulRegular_congr (coord 2)).mpr
       (step {0, 1} 2 (by simp))
-
 private noncomputable def translation (y : LowerPoint) : Lower ≃ₐ[GeometricX] Lower :=
   AlgEquiv.ofAlgHom (aeval (fun i => coord i - C (y i))) (aeval (fun i => coord i + C (y i)))
     (MvPolynomial.algHom_ext (fun i => by simp))
     (MvPolynomial.algHom_ext (fun i => by simp))
-
 set_option maxHeartbeats 1000000 in
-/-- A height-three prime is a geometric point. Its translated coordinates give
-a regular sequence in the maximal ideal of the localization. -/
 theorem exists_regular_three (q : PrimeSpectrum Lower) (hh : q.asIdeal.height = 3) :
     ∃ rs : List (Local q), rs.length = 3 ∧
       (∀ x ∈ rs, x ∈ maximalIdeal (Local q)) ∧ IsRegular (Local q) rs := by
@@ -3950,9 +3161,7 @@ theorem exists_regular_three (q : PrimeSpectrum Lower) (hh : q.asIdeal.height = 
   intro x hx
   obtain ⟨w, hw, rfl⟩ := List.mem_map.mp hx
   exact (IsLocalization.AtPrime.to_map_mem_maximal_iff (Local q) q.asIdeal w).mpr (hm w hw)
-
 universe u
-
 private theorem ext_after_regular {R : Type u} [CommRing R] (N M : ModuleCat.{u} R)
     {a : R} (ha : IsSMulRegular M a) {n : ℕ}
     (h : ∀ i < n + 1, Subsingleton (Ext N M i)) :
@@ -3963,9 +3172,6 @@ private theorem ext_after_regular {R : Type u} [CommRing R] (N M : ModuleCat.{u}
   exact AddCommGrpCat.subsingleton_of_isZero <| ShortComplex.Exact.isZero_of_both_zeros
     (Ext.covariant_sequence_exact₃' N ha.smulShortComplex_shortExact i (i + 1) rfl)
     (h₀.eq_zero_of_src _) (h₁.eq_zero_of_tgt _)
-
-/-- Two regular cuts in a local ring of depth at least three leave a regular
-element of its maximal ideal on their quotient. -/
 theorem regular_on_pair_quotient {R : Type u} [CommRing R] [IsNoetherianRing R] [IsLocalRing R]
     {a b : R} (ha : IsSMulRegular R a) (hb : IsSMulRegular (QuotSMulTop a R) b)
     (rs : List R) (hlen : rs.length = 3) (hmem : ∀ x ∈ rs, x ∈ maximalIdeal R)
@@ -3999,22 +3205,15 @@ theorem regular_on_pair_quotient {R : Type u} [CommRing R] [IsNoetherianRing R] 
     have e' := Submodule.quotOfListConsSMulTopEquivQuotSMulTopInner R a [b]
     rwa [hfirst, hsecond] at e'
   exact ⟨r, hAnn ▸ hr, (e.isSMulRegular_congr r).mpr hreg₂⟩
-
 end K1_13_7_4_2_1
-end PackSource_K1_13_7_4_2_1Aux1
-
-section PackSource_K1_13_7_4_2_1Proof
-set_option autoImplicit true
+end
+section
 namespace K1_13_7_4_2_1
-
 open K1_13_7 K1_13_7_4_2
 open Ideal IsLocalRing
 open scoped Pointwise
-
 section LocalRing
-
 variable {R : Type*} [CommRing R] [IsNoetherianRing R] [IsLocalRing R]
-
 private theorem height_bound {I : Ideal R} (hI : I.radical = maximalIdeal R)
     (s : Finset R) (hs : (↑s : Set R) ⊆ maximalIdeal R) (hle : I ≤ span (↑s : Set R)) :
     (maximalIdeal R).height ≤ s.card := by
@@ -4022,14 +3221,10 @@ private theorem height_bound {I : Ideal R} (hI : I.radical = maximalIdeal R)
   refine ⟨⟨inferInstance, span_le.mpr hs⟩, ?_⟩
   intro p hp _
   exact hI ▸ hp.1.radical_le_iff.mpr (hle.trans hp.2)
-
 omit [IsNoetherianRing R] [IsLocalRing R] in
 private theorem principal_smul_top (a : R) :
     a • (⊤ : Submodule R R) = (span {a} : Ideal R) := by
   rw [← Submodule.ideal_span_singleton_smul, Ideal.smul_eq_mul, Ideal.mul_top]
-
-/-- Removing a zero parameter or replacing two parameters by a common prime
-factor would give an ideal of maximal radical with too few generators. -/
 private theorem parameter_pair [IsDomain R] [UniqueFactorizationMonoid R] {a b : R}
     (s : Finset R) (hrad : (span (insert a (insert b (↑s : Set R)))).radical = maximalIdeal R)
     (hheight : (↑(s.card + 1) : ℕ∞) < (maximalIdeal R).height) :
@@ -4069,7 +3264,6 @@ private theorem parameter_pair [IsDomain R] [UniqueFactorizationMonoid R] {a b :
   rw [isSMulRegular_quotient_iff_mem_of_smul_mem]
   intro x hx
   exact mem_span_singleton.mpr (hab.dvd_of_dvd_mul_left (mem_span_singleton.mp hx))
-
 private theorem cancel_pair [IsDomain R] [UniqueFactorizationMonoid R] {a b x : R}
     (hh : (maximalIdeal R).height = 2) (hrad : (span ({a, b} : Set R)).radical = maximalIdeal R)
     (hx : b * x ∈ span ({a} : Set R)) : x ∈ span ({a} : Set R) := by
@@ -4077,7 +3271,6 @@ private theorem cancel_pair [IsDomain R] [UniqueFactorizationMonoid R] {a b x : 
     (by rw [hh]; norm_num)).2
   have hq := ((Submodule.quotEquivOfEq _ _ (principal_smul_top a)).isSMulRegular_congr b).mp hp
   exact mem_of_isSMulRegular_quotient_of_smul_mem hq hx
-
 private theorem cancel_triple [IsDomain R] [UniqueFactorizationMonoid R] {a b c x : R}
     (hh : (maximalIdeal R).height = 3) (hrad : (span ({a, b, c} : Set R)).radical = maximalIdeal R)
     (href : ∃ rs : List R, rs.length = 3 ∧
@@ -4100,16 +3293,13 @@ private theorem cancel_triple [IsDomain R] [UniqueFactorizationMonoid R] {a b c 
   change r ^ k * x ∈ span ({a, b} : Set R)
   rw [← hsum, add_mul, mul_comm c t, mul_assoc]
   exact Ideal.add_mem _ (Ideal.mul_mem_left _ _ hx) (Ideal.mul_mem_right _ _ hw)
-
 end LocalRing
-
 private theorem remaining_zero {R : Type*} [CommRing R] {n : ℕ}
     (g : Fin (n + 1) → R) : remainingIdeal g 0 = span (Set.range (Fin.tail g)) := by
   unfold remainingIdeal
   congr 1
   ext z
   simp [Set.mem_image, Set.mem_range, Fin.exists_fin_succ, Fin.tail]
-
 private theorem reindex_remaining {R ι : Type*} [CommRing R] (f : ι → R)
     (e : ι ≃ ι) (j : ι) : remainingIdeal (f ∘ e) j = remainingIdeal f (e j) := by
   unfold remainingIdeal
@@ -4121,7 +3311,6 @@ private theorem reindex_remaining {R ι : Type*} [CommRing R] (f : ι → R)
   · rintro ⟨k, hk, rfl⟩
     obtain ⟨l, rfl⟩ := e.surjective k
     exact ⟨l, fun he => hk (congrArg e he), rfl⟩
-
 private theorem indexed_cancel {R : Type*} [CommRing R] [IsLocalRing R] {n : ℕ}
     (h : ∀ (g : Fin (n + 1) → R), (span (Set.range g)).radical = maximalIdeal R →
       ∀ x, g 0 * x ∈ remainingIdeal g 0 → x ∈ remainingIdeal g 0)
@@ -4135,7 +3324,6 @@ private theorem indexed_cancel {R : Type*} [CommRing R] [IsLocalRing R] {n : ℕ
     rw [reindex_remaining, he]
   rw [← hrem] at hx ⊢
   exact h (f ∘ e) (by rw [EquivLike.range_comp]; exact hf) x (by simpa only [Function.comp_apply, he] using hx)
-
 theorem proof : K1_13_7_4_2.c1 := by
   classical
   intro n hn q hh f hf i x hx
@@ -4163,40 +3351,28 @@ theorem proof : K1_13_7_4_2.c1 := by
     change (span ({g 1, g 2, g 0} : Set (Local q))).radical = _
     rw [Set.pair_comm (g 2) (g 0), Set.insert_comm (g 1) (g 0)]
     exact hg
-
 end K1_13_7_4_2_1
-end PackSource_K1_13_7_4_2_1Proof
-
-section PackSource_K1_13_6_3_5_3_2_2Proof
-set_option autoImplicit true
+end
+section
 set_option autoImplicit false
-
 namespace K1_13_6_3_5_3_2_2
-
 open K1_13_6_3_5_3 K1_13_6_3_5_3_2 IsDedekindDomain WithZero
 open scoped WithZero
-
 noncomputable section
-
 variable {k L : Type} [Field k] [Field L] [Algebra k L] {x : L}
-
 local notation "A" => ParameterRing k L x
 local notation "B" => Normalization k L x
 local notation "p" => origin k L x
-
 private abbrev parameter : A := ⟨x, Algebra.self_mem_adjoin_singleton k x⟩
-
 private theorem zeroOrder_ne_zero_iff (v : Valuation L ℤᵐ⁰) (hx : x ≠ 0) :
     zeroOrder v x ≠ 0 ↔ v x < 1 := by
   have h := log_lt_iff_lt_exp (a := (0 : ℤ)) (v.ne_zero_iff.mpr hx)
   rw [exp_zero] at h
   unfold zeroOrder
   exact (show (-log (v x)).toNat ≠ 0 ↔ log (v x) < 0 by omega).trans h
-
 private theorem valuation_eq_of_equiv {v w : Valuation L ℤᵐ⁰}
     (hv : Function.Surjective v) (hw : Function.Surjective w) (h : v.IsEquiv w) :
     v = w := by
-  -- Equivalence preserves the largest value below one, which generates all nonzero values.
   have hsmall {z : ℤᵐ⁰} (hz : z < 1) : z ≤ exp (-1 : ℤ) := by
     apply (lt_mul_exp_iff_le (y := exp (-1 : ℤ)) exp_ne_zero).mp
     simpa only [← exp_add, neg_add_cancel, exp_zero] using hz
@@ -4220,14 +3396,12 @@ private theorem valuation_eq_of_equiv {v w : Valuation L ℤᵐ⁰}
       have hs : (-log (v a)) • (-1 : ℤ) = log (v a) := by simp
       rw [hs, exp_log (v.ne_zero_iff.mpr ha)]
     exact (hpow w hπw).symm.trans (h.eq_iff.mp (hpow v hπ))
-
 private theorem curvePlace_value_injective :
     Function.Injective (CurvePlace.value (k := k) (L := L)) := by
   rintro ⟨v, hv, hc⟩ ⟨w, hw, hd⟩ h
   change v = w at h
   subst w
   rfl
-
 private theorem chart_le_one (v : ZeroPlaces k L x) (hx : x ≠ 0) (a : A) :
     v.val.value (algebraMap A L a) ≤ 1 := by
   let w := v.val.value
@@ -4247,7 +3421,6 @@ private theorem chart_le_one (v : ZeroPlaces k L x) (hx : x ≠ 0) (a : A) :
   | mul a b ha hb hwa hwb =>
     rw [map_mul]
     exact mul_le_one' hwa hwb
-
 private theorem normalization_le_one (v : ZeroPlaces k L x) (hx : x ≠ 0) (b : B) :
     v.val.value (algebraMap B L b) ≤ 1 := by
   let w := v.val.value
@@ -4259,19 +3432,15 @@ private theorem normalization_le_one (v : ZeroPlaces k L x) (hx : x ≠ 0) (b : 
   have hvalInt : w.Integers w.valuationSubring := Valuation.integer.integers w
   have hb : IsIntegral w.valuationSubring (b.val : L) := IsIntegral.tower_top b.property
   exact hvalInt.isIntegral_iff_v_le_one.mp hb
-
 private def centerMap (v : ZeroPlaces k L x) (hx : x ≠ 0) :
     B →+* v.val.value.valuationSubring :=
   (algebraMap B L).codRestrict v.val.value.valuationSubring.toSubring
     (normalization_le_one v hx)
-
 private def centerIdeal (v : ZeroPlaces k L x) (hx : x ≠ 0) : Ideal B :=
   (IsLocalRing.maximalIdeal v.val.value.valuationSubring).comap (centerMap v hx)
-
 private theorem mem_centerIdeal (v : ZeroPlaces k L x) (hx : x ≠ 0) (b : B) :
     b ∈ centerIdeal v hx ↔ v.val.value (algebraMap B L b) < 1 :=
   v.val.value.mem_maximalIdeal_iff (a := centerMap v hx b)
-
 private def center (v : ZeroPlaces k L x) (hx : Transcendental k x) :
     Ideal.primesOver p B := by
   let P := centerIdeal v hx.ne_zero
@@ -4283,9 +3452,7 @@ private def center (v : ZeroPlaces k L x) (hx : Transcendental k x) :
   change algebraMap A B (parameter (x := x) (k := k)) ∈ P
   apply (mem_centerIdeal v hx.ne_zero _).mpr
   exact (zeroOrder_ne_zero_iff v.val.value hx.ne_zero).mp v.property
-
 variable [IsDedekindDomain (Normalization k L x)] [IsFractionRing (Normalization k L x) L]
-
 private def heightOne (hx : Transcendental k x) (P : Ideal.primesOver p B) :
     HeightOneSpectrum B := by
   refine ⟨P.val, P.property.1, ?_⟩
@@ -4294,7 +3461,6 @@ private def heightOne (hx : Transcendental k x) (P : Ideal.primesOver p B) :
     (P.val.mem_of_liesOver p _).mp (Ideal.mem_span_singleton_self _)
   rw [h, Ideal.mem_bot] at hmem
   exact hx.ne_zero (congrArg Subtype.val hmem)
-
 private def placeOfPrime (hx : Transcendental k x) (P : Ideal.primesOver p B) :
     ZeroPlaces k L x := by
   let w := heightOne hx P
@@ -4308,7 +3474,6 @@ private def placeOfPrime (hx : Transcendental k x) (P : Ideal.primesOver p B) :
   change w.valuation L (algebraMap B L (algebraMap A B (parameter (x := x) (k := k)))) < 1
   exact (w.valuation_lt_one_iff_mem _).mpr
     ((P.val.mem_of_liesOver p _).mp (Ideal.mem_span_singleton_self _))
-
 private theorem placeOfPrime_injective (hx : Transcendental k x) :
     Function.Injective (placeOfPrime hx) := by
   intro P Q h
@@ -4316,7 +3481,6 @@ private theorem placeOfPrime_injective (hx : Transcendental k x) :
     congrArg (fun v : ZeroPlaces k L x => v.val.value) h
   exact Subtype.ext (congrArg HeightOneSpectrum.asIdeal
     (HeightOneSpectrum.valuation_injective L hval))
-
 private theorem placeOfPrime_surjective (hx : Transcendental k x) :
     Function.Surjective (placeOfPrime hx) := by
   intro z
@@ -4342,7 +3506,6 @@ private theorem placeOfPrime_surjective (hx : Transcendental k x) :
   have heq := (Valuation.isEquiv_iff_valuationSubring (w.valuation L) v).mpr hring
   refine ⟨center z hx, Subtype.ext (curvePlace_value_injective ?_)⟩
   exact valuation_eq_of_equiv (w.valuation_surjective L) z.val.normalized heq
-
 private theorem placeOfPrime_order (hx : Transcendental k x) (P : Ideal.primesOver p B) :
     zeroOrder (placeOfPrime hx P).val.value x = P.val.ramificationIdx A := by
   let w := heightOne hx P
@@ -4360,7 +3523,6 @@ private theorem placeOfPrime_order (hx : Transcendental k x) (P : Ideal.primesOv
     multiplicity w.asIdeal (Ideal.span {b})
   simp only [w.valuation_of_algebraMap, w.intValuation_eq_exp_neg_multiplicity hb,
     log_exp, neg_neg, Int.toNat_natCast]
-
 theorem proof : K1_13_6_3_5_3_2.c2 := by
   intro k L _ _ _ x hx _ _
   let e := Equiv.ofBijective (placeOfPrime hx)
@@ -4369,34 +3531,24 @@ theorem proof : K1_13_6_3_5_3_2.c2 := by
   have h := placeOfPrime_order hx (e.symm v)
   change zeroOrder (e (e.symm v)).val.value x = _ at h
   simpa only [Equiv.apply_symm_apply] using h
-
 end
-
 end K1_13_6_3_5_3_2_2
-end PackSource_K1_13_6_3_5_3_2_2Proof
-
-section PackSource_K1_13_4_2_1Arithmetic
-set_option autoImplicit true
+end
+section
 namespace K1_13_4_2_1
-
 open K1_13_4 K1_13_4_2 Finset
 open scoped BigOperators
-
 set_option maxHeartbeats 1500000
-
 private def moment (B c a d e : ℕ) : ℕ :=
   jetSum B fun q k l => c + a * (l + 2 * k) + d * (B - q) + e * (B - q) ^ 2
-
 private def raw (b : Bank) : ℕ := moment b.box.b (rawBase b) 1 131071 0
 private def extra (B : ℕ) : ℕ := moment B 0 0 2300 1
 private def credit (B : ℕ) : ℕ := jetSum B fun q _ _ => 2300 + (B - q)
-
 private theorem grade_sum (B : ℕ) (f : ℕ → ℕ) :
     jetSum B (fun q _ _ => f q) =
       ∑ q ∈ range (B + 1), gradeCount ⟨B, 2300, 1150⟩ q * f q := by
   simp only [jetSum, gradeCount, Nat.reduceDiv, min_self, sum_mul, sum_const,
     card_range, Nat.nsmul_eq_mul]
-
 private theorem pole_eq (b : Bank) : poleDebit b.box = 70001 * credit b.box.b + extra b.box.b := by
   have hb : b.box = ⟨b.box.b, 2300, 1150⟩ := by cases b <;> rfl
   have hgrade (q : ℕ) : gradeCount b.box q = gradeCount ⟨b.box.b, 2300, 1150⟩ q :=
@@ -4416,25 +3568,19 @@ private theorem pole_eq (b : Bank) : poleDebit b.box = 70001 * credit b.box.b + 
       simp only [credit, extra, moment, jetSum, mul_sum, ← sum_add_distrib]
       refine sum_congr rfl fun q _ => sum_congr rfl fun k _ => sum_congr rfl fun l _ => ?_
       ring
-
 private theorem volume_eq (b : Bank) (h : ℕ) :
     jetSum b.box.b (width b h) = raw b + credit b.box.b * h := by
   simp only [width, raw, moment, credit, jetSum, sum_mul, ← sum_add_distrib]
   refine sum_congr rfl fun q _ => sum_congr rfl fun k _ => sum_congr rfl fun l _ => ?_
   ring
-
 private abbrev Triple := Σ _ : ℕ, Σ _ : ℕ, ℕ
-
 private def byGrade (B : ℕ) : Finset Triple :=
   (range (B + 1)).sigma fun q => (range (min q 1150 + 1)).sigma fun k =>
     range (min (q - k) (2300 - 2 * k) + 1)
-
 private def byDeficit (B : ℕ) : Finset Triple :=
   (range 1151).sigma fun k => (range (2300 - 2 * k + 1)).sigma fun l =>
     range (B - (k + l) + 1)
-
 set_option linter.constructorNameAsVariable false in
-/-- Fix the middle and top exponents first, then sum the deficit from the total cap. -/
 private theorem jetSum_deficit {M : Type*} [AddCommMonoid M] {B : ℕ} (hB : 2300 ≤ B)
     (f : ℕ → ℕ → ℕ → M) :
     jetSum B (fun q k l => f k l (B - q)) =
@@ -4459,12 +3605,9 @@ private theorem jetSum_deficit {M : Type*} [AddCommMonoid M] {B : ℕ} (hB : 230
         simp only [byDeficit, mem_sigma, mem_range] at h
         rw [show B - (B - r) = r by omega]
     _ = _ := by simp only [byDeficit, sum_sigma]
-
-/-- Twelve times the sum of a cubic over the initial interval of length n. -/
 private def cubicSum (c d e f n : ℤ) : ℤ :=
   12 * c * n + 6 * d * n * (n - 1) + 2 * e * n * (n - 1) * (2 * n - 1) +
     3 * f * n ^ 2 * (n - 1) ^ 2
-
 private theorem sum_cubic (c d e f : ℤ) (n : ℕ) :
     12 * (∑ i ∈ range n, (c + d * (i : ℤ) + e * i ^ 2 + f * i ^ 3)) =
       cubicSum c d e f n := by
@@ -4475,9 +3618,6 @@ private theorem sum_cubic (c d e f : ℤ) (n : ℕ) :
     push_cast
     unfold cubicSum
     ring
-
-/-- After summing over the deficit, the summand is a cubic in the middle exponent.
-The two scaled summations give a factor of 144. -/
 private def slice (B c a d e k : ℤ) : ℤ :=
   let N := B - k + 1
   let C := c + 2 * a * k
@@ -4487,7 +3627,6 @@ private def slice (B c a d e k : ℤ) : ℤ :=
     (-12 * a + 6 * d + 2 * e * (6 * N - 3))
     (-4 * e)
     (2301 - 2 * k)
-
 private theorem sum_slice {B k : ℕ} (hB : 2300 ≤ B) (hk : k < 1151) (c a d e : ℤ) :
     144 * (∑ l ∈ range (2300 - 2 * k + 1), ∑ r ∈ range (B - (k + l) + 1),
       (c + a * ((l : ℤ) + 2 * k) + d * (r : ℤ) + e * (r : ℤ) ^ 2)) =
@@ -4508,15 +3647,11 @@ private theorem sum_slice {B k : ℕ} (hB : 2300 ≤ B) (hk : k < 1151) (c a d e
   rw [hi, hlen]
   dsimp [N, C, cubicSum]
   ring
-
-/-- The successive terms are the forward differences of f at zero,
-multiplied by 120 times the corresponding binomial polynomials. -/
 private def antidifference (f : ℤ → ℤ) (n : ℤ) : ℤ :=
   n * (120 * f 0 + (n - 1) * (60 * (f 1 - f 0) +
     (n - 2) * (20 * (f 2 - 2 * f 1 + f 0) +
       (n - 3) * (5 * (f 3 - 3 * f 2 + 3 * f 1 - f 0) +
         (n - 4) * (f 4 - 4 * f 3 + 6 * f 2 - 4 * f 1 + f 0)))))
-
 private theorem sum_slices (B c a d e : ℤ) (n : ℕ) :
     120 * (∑ k ∈ range n, slice B c a d e k) =
       antidifference (slice B c a d e) n := by
@@ -4528,7 +3663,6 @@ private theorem sum_slices (B c a d e : ℤ) (n : ℕ) :
   induction n with
   | zero => simp [antidifference]
   | succ n ih => rw [Nat.cast_succ, hstep, sum_range_succ, mul_add, ih]
-
 private theorem evaluate (B c a d e : ℕ) (hB : 2300 ≤ B) :
     17280 * (moment B c a d e : ℤ) =
       antidifference (slice B c a d e) 1151 := by
@@ -4541,13 +3675,11 @@ private theorem evaluate (B c a d e : ℕ) (hB : 2300 ≤ B) :
   rw [show (17280 : ℤ) = 120 * 144 by decide, mul_assoc, hs, sum_slices]
   exact congrArg (antidifference (slice B c a d e))
     (show ((1151 : ℕ) : ℤ) = 1151 from by decide)
-
 private theorem moment_eq (B c a d e value : ℕ) (hB : 2300 ≤ B)
     (cert : antidifference (slice B c a d e) 1151 = 17280 * (value : ℤ)) :
     moment B c a d e = value := by
   have h := (evaluate B c a d e hB).trans cert
   omega
-
 set_option maxHeartbeats 300000 in
 private theorem bank_moments :
     raw .first = 2823319580182079460 ∧ raw .second = 2845830394728456187 ∧
@@ -4563,7 +3695,6 @@ private theorem bank_moments :
   have e₂ : raw .second = moment 6820 4650787 1 131071 0 :=
     congrArg (fun base => moment 6820 base 1 131071 0) r₂
   exact ⟨e₁.trans h₁, e₂.trans h₂, h₃, h₄⟩
-
 set_option maxHeartbeats 300000 in
 private theorem endpoint (b : Bank) :
     b.targetRank + 262144 * (70001 * b.nodeRank) + 2600 * extra b.box.b ≤ 70001 * raw b := by
@@ -4583,8 +3714,6 @@ private theorem endpoint (b : Bank) :
     exact (congrArg₂ (fun x y : ℕ =>
       Bank.second.targetRank + 262144 * (70001 * Bank.second.nodeRank) + 2600 * x ≤ 70001 * y)
       he h₂).mpr ha
-
-/-- The height-dependent credit cancels before bounding the remaining debit. -/
 theorem budget (b : Bank) (h : ℕ) (hh : h ≤ 2600) :
     b.targetRank + 262144 * (70001 * b.nodeRank) + h * poleDebit b.box ≤
       70001 * jetSum b.box.b (width b h) := by
@@ -4593,56 +3722,37 @@ theorem budget (b : Bank) (h : ℕ) (hh : h ≤ 2600) :
   rw [pole_eq, volume_eq, Nat.mul_add, Nat.mul_add]
   have hc : h * (70001 * credit b.box.b) = 70001 * (credit b.box.b * h) := by ring
   omega
-
 end K1_13_4_2_1
-end PackSource_K1_13_4_2_1Arithmetic
-
-section PackSource_K1_13_6_3_5_5_4Charts
-set_option autoImplicit true
+end
+section
 set_option autoImplicit false
-
 namespace K1_13_6_3_5_5_4
-
 noncomputable section
-
 open K1_13_6_3_5_5
-
 variable {S ι : Type} [CommRing S] (P : ι → Ideal S) [∀ i, (P i).IsPrime]
-
-/-- Elements that are invertible in every selected chart. -/
 def denominators : Submonoid S := ⨅ i, (P i).primeCompl
-
 theorem mem_denominators {s : S} :
     s ∈ denominators P ↔ ∀ i, s ∉ P i :=
   Submonoid.mem_iInf
-
 abbrev Semilocal := Localization (denominators P)
-
-/-- The canonical map from the simultaneous localization to a selected chart. -/
 def toChart (i : ι) : Semilocal P →+* Localization.AtPrime (P i) :=
   IsLocalization.lift (M := denominators P)
     (g := algebraMap S (Localization.AtPrime (P i)))
     (fun s => IsLocalization.map_units _ (⟨s, (mem_denominators P).mp s.2 i⟩ : (P i).primeCompl))
-
 @[simp]
 theorem toChart_algebraMap (i : ι) (s : S) :
     toChart P i (algebraMap S (Semilocal P) s) =
       algebraMap S (Localization.AtPrime (P i)) s :=
   IsLocalization.lift_eq _ s
-
-/-- The map to a localized quotient by the same section ideal. -/
 def toSection (J : Ideal S) (i : ι) : Semilocal P →+* LocalSection J (P i) :=
   (Ideal.Quotient.mk _).comp (toChart P i)
-
 private theorem disjoint_selected (i : ι) :
     Disjoint (denominators P : Set S) (P i : Set S) :=
   Set.disjoint_left.mpr fun _ hs hp => (mem_denominators P).mp hs i hp
-
 private theorem under_selected (i : ι) :
     ((P i).map (algebraMap S (Semilocal P))).under S = P i :=
   IsLocalization.under_map_of_isPrime_disjoint (denominators P) _
     (inferInstance : (P i).IsPrime) (disjoint_selected P i)
-
 private theorem selected_maximal [Fintype ι] {J : Ideal S}
     (hP : ∀ i, J.IsMinimalPrime (P i)) (i : ι) :
     ((P i).map (algebraMap S (Semilocal P))).IsMaximal := by
@@ -4672,7 +3782,6 @@ private theorem selected_maximal [Fintype ι] {J : Ideal S}
   have hji : P j ≤ P i := (hP j).2 (hP i).1 (hiN.trans hNj)
   exact hEN.not_ge ((IsLocalization.under_le_under_iff M A).mp
     ((hNj.trans hji).trans_eq (under_selected P i).symm))
-
 private theorem radical_ker_toSection {J : Ideal S} (i : ι) (h : J.IsMinimalPrime (P i)) :
     (RingHom.ker (toSection P J i)).radical = (P i).map (algebraMap S (Semilocal P)) := by
   let T := Localization.AtPrime (P i)
@@ -4692,7 +3801,6 @@ private theorem radical_ker_toSection {J : Ideal S} (i : ι) (h : J.IsMinimalPri
   change toChart P i (algebraMap S (Semilocal P) s) ∈ IsLocalRing.maximalIdeal T ↔ s ∈ P i
   rw [toChart_algebraMap]
   exact IsLocalization.AtPrime.to_map_mem_maximal_iff T (P i) s
-
 private theorem toSection_surjective [Fintype ι] {J : Ideal S}
     (hP : ∀ i, J.IsMinimalPrime (P i)) (i : ι) :
     Function.Surjective (toSection P J i) := by
@@ -4729,8 +3837,6 @@ private theorem toSection_surjective [Fintype ι] {J : Ideal S}
       using congrArg (Ideal.Quotient.mk (J.map (algebraMap S T))) (IsLocalization.mk'_spec T a s)
   refine ⟨algebraMap S A a * v, ?_⟩
   rw [map_mul, ← hfrac, mul_assoc, mul_comm (g d) (g v), hv, mul_one]
-
-/-- The simultaneous localization supplies all the localized sections at once. -/
 theorem sections_surjective [Fintype ι] {J : Ideal S} (hP : ∀ i, J.IsMinimalPrime (P i))
     (hinj : Function.Injective P) :
     Function.Surjective (fun a : Semilocal P => fun i => toSection P J i a) := by
@@ -4755,23 +3861,14 @@ theorem sections_surjective [Fintype ι] {J : Ideal S} (hP : ∀ i, J.IsMinimalP
   refine ⟨r, funext fun i => ?_⟩
   let lift := Ideal.Quotient.lift (K i) (toSection P J i) (fun _ h => RingHom.mem_ker.mp h)
   exact (congrArg lift (hr i)).trans (ha i)
-
 end
-
 end K1_13_6_3_5_5_4
-end PackSource_K1_13_6_3_5_5_4Charts
-
-section PackSource_K1_13_6_3_5_5_4Proof
-set_option autoImplicit true
+end
+section
 set_option autoImplicit false
-
 namespace K1_13_6_3_5_5_4
-
 noncomputable section
-
 open K1_13_6_3_5_5
-
-/-- The semilocal principal section bounds all the selected branch lengths together. -/
 theorem proof : K1_13_6_3_5_5.c4 := by
   classical
   intro R S F _ _ _ _ _ _ _ f e he hcomp w q _
@@ -4832,7 +3929,6 @@ theorem proof : K1_13_6_3_5_5.c4 := by
         rw [hg, hk, lF.commutes]
         exact RingHom.congr_fun hcomp r
       exact RingHom.congr_fun hc }
-  -- Use the canonical L-algebra of the total fraction ring of L.
   let _ : Algebra L (FractionRing L) := OreLocalization.instAlgebra
   let equiv := (FractionRing.algEquiv L F).symm
   let j := equiv.toAlgHom.comp aF
@@ -4878,25 +3974,17 @@ theorem proof : K1_13_6_3_5_5.c4 := by
     Module.length L (SectionQuotient x B)
   rw [← Module.length_pi_of_fintype L]
   exact Module.length_le_of_surjective ψ.toLinearMap hψ
-
 end
-
 end K1_13_6_3_5_5_4
-end PackSource_K1_13_6_3_5_5_4Proof
-
-section PackSource_K1_13_4_4_1Proof
-set_option autoImplicit true
+end
+section
 namespace K1_13_4_4_1
-
 noncomputable section
 open Polynomial K1 K1_13 K1_13_4
 open scoped BigOperators
-
 set_option maxHeartbeats 1000000
 set_option backward.isDefEq.respectTransparency false
-
 private def Bound (d : ℕ) (F : RawRow) : Prop := ∀ m, (F.coeff m).natDegree ≤ d
-
 private theorem bound_C {p : GenericSeed[X]} {d : ℕ} (hp : p.natDegree ≤ d) :
     Bound d (MvPolynomial.C p) := by
   classical
@@ -4905,7 +3993,6 @@ private theorem bound_C {p : GenericSeed[X]} {d : ℕ} (hp : p.natDegree ≤ d) 
   split
   · exact hp
   · simp
-
 private theorem bound_mul {d e : ℕ} {F G : RawRow} (hF : Bound d F) (hG : Bound e G) :
     Bound (d + e) (F * G) := by
   classical
@@ -4914,21 +4001,18 @@ private theorem bound_mul {d e : ℕ} {F G : RawRow} (hF : Bound d F) (hG : Boun
   apply natDegree_sum_le_of_forall_le
   intro p _
   exact natDegree_mul_le.trans (Nat.add_le_add (hF p.1) (hG p.2))
-
 private theorem bound_sum {ι : Type*} (S : Finset ι) (F : ι → RawRow) {d : ℕ}
     (hF : ∀ i ∈ S, Bound d (F i)) : Bound d (∑ i ∈ S, F i) := by
   intro m
   rw [MvPolynomial.coeff_sum]
   apply natDegree_sum_le_of_forall_le
   exact fun i hi => hF i hi m
-
 private theorem bound_pow {d : ℕ} {F : RawRow} (hF : Bound d F) (n : ℕ) :
     Bound (n * d) (F ^ n) := by
   induction n with
   | zero => simpa only [pow_zero, Nat.zero_mul, ← MvPolynomial.C_1] using
       (bound_C (p := (1 : GenericSeed[X])) (by simp) : Bound 0 _)
   | succ n ih => simpa only [pow_succ, Nat.succ_mul] using bound_mul ih hF
-
 private theorem bound_prod {ι : Type*} (S : Finset ι) (d : ι → ℕ) (F : ι → RawRow)
     (hF : ∀ i ∈ S, Bound (d i) (F i)) : Bound (∑ i ∈ S, d i) (∏ i ∈ S, F i) := by
   classical
@@ -4940,16 +4024,13 @@ private theorem bound_prod {ι : Type*} (S : Finset ι) (d : ι → ℕ) (F : ι
     rw [Finset.sum_insert hi, Finset.prod_insert hi]
     exact bound_mul (hF i (Finset.mem_insert_self ..))
       (ih fun j hj => hF j (Finset.mem_insert_of_mem hj))
-
 private theorem bound_X (j : Fin 3) : Bound 0 (MvPolynomial.X j) := by
   classical
   intro m
   rw [MvPolynomial.coeff_X]
   split <;> simp
-
 private theorem lift_degree (p : Geom[X]) : (K1_13_4.liftX p).natDegree = p.natDegree :=
   natDegree_map_eq_of_injective (FaithfulSMul.algebraMap_injective Geom GenericSeed) p
-
 private theorem restore_degree {Γ s} (P : PoleData Γ s) (L : ResidueChart P)
     {T : ℕ} {F : PhysicalRow} (hF : TrueCut P.H.natDegree T F) :
     Bound T (restore P L F) := by
@@ -5003,18 +4084,14 @@ private theorem restore_degree {Γ s} (P : PoleData Γ s) (L : ResidueChart P)
     change a (some i) * h ≤ (131071 + h - i.val) * a (some i)
     rw [Nat.mul_comm (a (some i))]
     exact Nat.mul_le_mul_right _ (by omega)
-
 private abbrev RestoredField := FractionRing (GenericSeed[X])
 private abbrev A := MvPolynomial (Fin 3) RestoredField
 private abbrev intoField : GenericSeed[X] →+* RestoredField := algebraMap _ _
-
-/-- The seed is adjoined independently of the abscissa, then made rational. -/
 private def beforeJets : PhysicalRow →+* A :=
   (MvPolynomial.map intoField).comp
     ((MvPolynomial.map ((Polynomial.mapRingHom (algebraMap Geom[X] GenericSeed)).comp
       (Bivariate.swap (R := Geom)).toRingHom)).comp
       (MvPolynomial.optionEquivRight Geom[X] (Fin 3)).toRingHom)
-
 private theorem beforeJets_injective : Function.Injective beforeJets := by
   have hcoeff : Function.Injective ((Polynomial.mapRingHom (algebraMap Geom[X] GenericSeed)).comp
       (Bivariate.swap (R := Geom)).toRingHom) :=
@@ -5023,8 +4100,6 @@ private theorem beforeJets_injective : Function.Injective beforeJets := by
   exact (MvPolynomial.map_injective _ (IsFractionRing.injective GenericSeed[X] RestoredField)).comp
     ((MvPolynomial.map_injective _ hcoeff).comp
       (MvPolynomial.optionEquivRight Geom[X] (Fin 3)).injective)
-
-/-- Invert the three triangular affine substitutions over the fraction field. -/
 private theorem restored_injective {Γ s} (P : PoleData Γ s) (L : ResidueChart P) :
     Function.Injective (restored P L) := by
   let c (p : GenericSeed[X]) : A := MvPolynomial.C (intoField p)
@@ -5076,7 +4151,6 @@ private theorem restored_injective {Γ s} (P : PoleData Γ s) (L : ResidueChart 
   apply beforeJets_injective
   rw [← hcomp]
   exact congrArg back h
-
 set_option maxRecDepth 4096 in
 private theorem endpoint (Γ : Finset K) (s : K → K[X]) (P : PoleData Γ s) (L : ResidueChart P)
     (F : PhysicalRow) (hcut : ∀ m ∈ F.support, (F.coeff m).natDegree + weight P.H.natDegree m <
@@ -5101,329 +4175,24 @@ private theorem endpoint (Γ : Finset K) (s : K → K[X]) (P : PoleData Γ s) (L
   have hpos : 0 < polePower * P.H.natDegree :=
     Nat.mul_pos (by decide) P.small.1
   exact (Nat.not_le_of_lt (Nat.sub_lt hpos Nat.zero_lt_one)) (hle.trans (hd m))
-
 theorem proof : K1_13_4_4.c1 := telescope endpoint
-
 end
-
 end K1_13_4_4_1
-end PackSource_K1_13_4_4_1Proof
-
-section PackSource_K1_2_1Complement
-set_option autoImplicit true
-set_option backward.isDefEq.respectTransparency false
-set_option maxHeartbeats 1000000
-
-namespace K1_2_1
-noncomputable section
-
-open Polynomial Matrix Finset FrobeniusLocator K1_6
-
-variable {E : Type*} [Field E]
-
-private def unitColumns {R row col : Type*} [Zero R] [One R] [DecidableEq row]
-    (I : col → row) : Matrix row col R :=
-  fun i j => (Pi.single (I j) 1 : row → R) i
-
-private theorem transpose_mul_unitColumns {row col pick : Type*} [Fintype row] [DecidableEq row]
-    (B : Matrix row col E) (I : pick → row) :
-    B.transpose*unitColumns I=(B.submatrix I id).transpose := by
-  ext i j
-  change B.transpose.mulVec (Pi.single (I j) 1) i= _
-  rw [Matrix.mulVec_single_one]
-  rfl
-
-private theorem augmentation_det_ne_zero {r s : ℕ}
-    (C : Matrix (Fin r ⊕ Fin s) (Fin r) E) (B : Matrix (Fin r ⊕ Fin s) (Fin s) E)
-    (hBC : B.transpose*C=0)
-    (hC : ∀ a, C.mulVec a=0 → a=0)
-    (I : Fin s → (Fin r ⊕ Fin s)) (hI : (B.submatrix I id).det ≠ 0) :
-    (Matrix.fromCols C (unitColumns I)).det ≠ 0 := by
-  classical
-  let A := Matrix.fromCols C (unitColumns I)
-  have hker : ∀ w, A.mulVec w=0 → w=0 := by
-    intro w hw
-    have hh := congrArg B.transpose.mulVec hw
-    rw [Matrix.mulVec_zero] at hh
-    change B.transpose.mulVec ((Matrix.fromCols C (unitColumns I)).mulVec w)=0 at hh
-    rw [Matrix.fromCols_mulVec,Matrix.mulVec_add,Matrix.mulVec_mulVec,Matrix.mulVec_mulVec,
-      hBC,Matrix.zero_mulVec,zero_add,transpose_mul_unitColumns] at hh
-    have hb : w ∘ Sum.inr=0 := Matrix.eq_zero_of_mulVec_eq_zero
-      (by simpa only [Matrix.det_transpose] using hI) hh
-    change (Matrix.fromCols C (unitColumns I)).mulVec w=0 at hw
-    rw [Matrix.fromCols_mulVec,hb,Matrix.mulVec_zero,add_zero] at hw
-    have ha := hC (w ∘ Sum.inl) hw
-    funext i
-    cases i with
-    | inl i => exact congrFun ha i
-    | inr i => exact congrFun hb i
-  have hinj : Function.Injective A.mulVec := by
-    intro u v huv
-    have hh := hker (u-v) (by rw [Matrix.mulVec_sub,huv,sub_self])
-    exact sub_eq_zero.mp hh
-  have hu : IsUnit A := Matrix.mulVec_injective_iff_isUnit.mp hinj
-  exact ((Matrix.isUnit_iff_isUnit_det A).mp hu).ne_zero
-
-/-- Rectangular kernel minors and unit-column augmented determinants are
-proportional, with no complementary-index signs. -/
-private theorem augmented_minor_cross {r s : ℕ}
-    (C : Matrix (Fin r ⊕ Fin s) (Fin r) E) (B : Matrix (Fin r ⊕ Fin s) (Fin s) E)
-    (hBC : B.transpose*C=0) (hC : ∀ a, C.mulVec a=0 → a=0)
-    (I0 I : Fin s → (Fin r ⊕ Fin s)) (hI0 : (B.submatrix I0 id).det ≠ 0) :
-    (Matrix.fromCols C (unitColumns I)).det*(B.submatrix I0 id).det=
-      (Matrix.fromCols C (unitColumns I0)).det*(B.submatrix I id).det := by
-  classical
-  let A0 := Matrix.fromCols C (unitColumns I0)
-  let AI := Matrix.fromCols C (unitColumns I)
-  have hA0 : IsUnit A0.det := isUnit_iff_ne_zero.mpr (augmentation_det_ne_zero C B hBC hC I0 hI0)
-  let T := A0⁻¹*AI
-  let J : Matrix (Fin r ⊕ Fin s) (Fin r) E := Matrix.fromRows 1 0
-  have hA0J : A0*J=C := by
-    simp only [A0,J,Matrix.fromCols_mul_fromRows,Matrix.mul_one,Matrix.mul_zero,add_zero]
-  have hfirst : T.submatrix id Sum.inl=J := by
-    have heq : T.submatrix id Sum.inl=A0⁻¹*C := by
-      ext i j
-      rfl
-    rw [heq,← hA0J,Matrix.nonsing_inv_mul_cancel_left A0 J hA0]
-  let D := T.submatrix Sum.inr Sum.inr
-  let U := T.submatrix Sum.inl Sum.inr
-  have hT : T=Matrix.fromBlocks 1 U 0 D := by
-    ext i j
-    cases i with
-    | inl i =>
-      cases j with
-      | inl j => exact congrFun (congrFun hfirst (Sum.inl i)) j
-      | inr j => rfl
-    | inr i =>
-      cases j with
-      | inl j => exact congrFun (congrFun hfirst (Sum.inr i)) j
-      | inr j => rfl
-  have hAT : A0*T=AI := Matrix.mul_nonsing_inv_cancel_left A0 AI hA0
-  have hB0 : B.transpose*A0=Matrix.fromCols 0 (B.submatrix I0 id).transpose := by
-    dsimp only [A0]
-    rw [Matrix.mul_fromCols,hBC,transpose_mul_unitColumns]
-  have hBI : B.transpose*AI=Matrix.fromCols 0 (B.submatrix I id).transpose := by
-    dsimp only [AI]
-    rw [Matrix.mul_fromCols,hBC,transpose_mul_unitColumns]
-  have hbottom : (B.submatrix I0 id).transpose*D=(B.submatrix I id).transpose := by
-    have hh : (B.transpose*A0)*T=B.transpose*AI := by rw [Matrix.mul_assoc,hAT]
-    rw [hB0,hBI,hT,Matrix.fromCols_mul_fromBlocks,Matrix.zero_mul,Matrix.mul_zero,
-      zero_add,Matrix.zero_mul,zero_add] at hh
-    have hz := congrArg (fun M : Matrix (Fin s) (Fin r ⊕ Fin s) E => M.submatrix id Sum.inr) hh
-    exact hz
-  have hdetD : (B.submatrix I0 id).det*D.det=(B.submatrix I id).det := by
-    have hh := congrArg Matrix.det hbottom
-    simpa only [Matrix.det_mul,Matrix.det_transpose] using hh
-  have hdetT : T.det=D.det := by
-    rw [hT,Matrix.det_fromBlocks_zero₂₁,Matrix.det_one,one_mul]
-  have hdetAI : AI.det=A0.det*D.det := by
-    have hh := congrArg Matrix.det hAT
-    rw [Matrix.det_mul,hdetT] at hh
-    exact hh.symm
-  change AI.det*(B.submatrix I0 id).det=A0.det*(B.submatrix I id).det
-  rw [hdetAI,← hdetD]
-  ring
-
-variable {F : Type} [Field F]
-
-private theorem unitColumns_map {row col : Type*} [DecidableEq row]
-    (φ : F[X] →+* E) (I : col → row) :
-    (unitColumns I : Matrix row col F[X]).map φ=unitColumns I := by
-  ext i j
-  by_cases h : I j=i <;> simp [unitColumns, h]
-
-private theorem augmented_map_det {r s : ℕ} (φ : F[X] →+* E)
-    (C : Matrix (Fin r ⊕ Fin s) (Fin r) F[X]) (I : Fin s → (Fin r ⊕ Fin s)) :
-    φ (Matrix.fromCols C (unitColumns I)).det=
-      (Matrix.fromCols (C.map φ) (unitColumns I)).det := by
-  have hh := φ.map_det (Matrix.fromCols C (unitColumns I))
-  rw [RingHom.mapMatrix_apply] at hh
-  rw [hh]
-  congr 1
-  ext i j
-  cases j with
-  | inl j => rfl
-  | inr j => exact congrFun (congrFun (unitColumns_map φ I) i) j
-
-variable {ι : Type*} [Fintype ι] [DecidableEq ι]
-
-/-- Each constant column saves one from a positive row budget. This
-gives the exact pL+H complementary-minor budget after augmentation. -/
-private theorem det_degree_sub_constant_columns (M : Matrix ι ι F[X]) (d : ι → ℕ)
-    (S : Finset ι) (hpositive : ∀ i, 1 ≤ d i)
-    (hdegree : ∀ i j, (M i j).natDegree ≤ d i)
-    (hconstant : ∀ j ∈ S, ∀ i, (M i j).natDegree=0) :
-    M.det.natDegree ≤ (∑ i, d i)-S.card := by
-  classical
-  rw [Matrix.det_apply]
-  apply Polynomial.natDegree_sum_le_of_forall_le
-  intro sigma hsigma
-  have hsign : (Equiv.Perm.sign sigma • ∏ i, M (sigma i) i).natDegree=
-      (∏ i, M (sigma i) i).natDegree := by
-    rcases Int.units_eq_one_or (Equiv.Perm.sign sigma) with h | h
-    · rw [h,one_smul]
-    · rw [h,Units.neg_smul,one_smul,Polynomial.natDegree_neg]
-  rw [hsign]
-  have hpoint : ∀ j, (M (sigma j) j).natDegree+(if j ∈ S then 1 else 0) ≤ d (sigma j) := by
-    intro j
-    by_cases hj : j ∈ S
-    · rw [ite_eq_left hj,hconstant j hj (sigma j),Nat.zero_add]
-      exact hpositive _
-    · simpa only [ite_eq_right hj,Nat.add_zero] using hdegree (sigma j) j
-  have hsum := Finset.sum_le_sum (fun j (_ : j ∈ (Finset.univ : Finset ι)) => hpoint j)
-  have hbool : (∑ j : ι, if j ∈ S then 1 else 0)=S.card := by simp
-  rw [Finset.sum_add_distrib,hbool,Equiv.sum_comp sigma d] at hsum
-  have hprod := Polynomial.natDegree_prod_le (Finset.univ : Finset ι) (fun i => M (sigma i) i)
-  omega
-
-private theorem augmented_det_row_budget {r s : ℕ}
-    (C : Matrix (Fin r ⊕ Fin s) (Fin r) F[X])
-    (d : (Fin r ⊕ Fin s) → ℕ) (hpositive : ∀ i, 1 ≤ d i)
-    (hdegree : ∀ i j, (C i j).natDegree ≤ d i) (I : Fin s → (Fin r ⊕ Fin s)) :
-    (Matrix.fromCols C (unitColumns I)).det.natDegree ≤ (∑ i, d i)-s := by
-  classical
-  let S : Finset (Fin r ⊕ Fin s) := Finset.univ.image Sum.inr
-  have hS : S.card=s := by rw [Finset.card_image_of_injective _ Sum.inr_injective]; simp
-  have hbound : (Matrix.fromCols C (unitColumns I)).det.natDegree ≤ (∑ i, d i)-S.card := by
-    apply det_degree_sub_constant_columns _ d S hpositive
-    · intro i j
-      cases j with
-      | inl j => exact hdegree i j
-      | inr j =>
-        simp only [Matrix.fromCols_apply_inr,unitColumns,Pi.single_apply]
-        split_ifs <;> simp
-    · intro j hj i
-      obtain ⟨k,hk,rfl⟩ := Finset.mem_image.mp hj
-      simp only [Matrix.fromCols_apply_inr,unitColumns,Pi.single_apply]
-      split_ifs <;> simp
-  simpa only [hS] using hbound
-
-/-- Bézout for the kernel minors clears the common scalar from the complementary tuple. -/
-private theorem primitive_minor_le_augmented {r s : ℕ}
-    (φ : F[X] →+* E) (hφ : Function.Injective φ)
-    (C : Matrix (Fin r ⊕ Fin s) (Fin r) F[X]) (B : Matrix (Fin r ⊕ Fin s) (Fin s) F[X])
-    (hBC : (B.map φ).transpose * C.map φ = 0)
-    (hC : ∀ v, (C.map φ).mulVec v = 0 → v = 0)
-    (hprim : PrimitiveVector.IsPrimitive (maximalMinors B))
-    (I₀ : Fin s → (Fin r ⊕ Fin s)) (hI₀ : maximalMinors B I₀ ≠ 0) :
-    (maximalMinors B I₀).natDegree ≤ (Matrix.fromCols C (unitColumns I₀)).det.natDegree := by
-  classical
-  let P := maximalMinors B
-  let A := fun I : Fin s → (Fin r ⊕ Fin s) => (Matrix.fromCols C (unitColumns I)).det
-  have hPmap (I : Fin s → (Fin r ⊕ Fin s)) :
-      φ (P I) = ((B.map φ).submatrix I id).det := φ.map_det (B.submatrix I id)
-  have hI₀map : ((B.map φ).submatrix I₀ id).det ≠ 0 := by
-    rw [← hPmap]
-    exact fun hz => hI₀ (hφ (hz.trans (map_zero φ).symm))
-  have hcross (I) : A I * P I₀ = A I₀ * P I := by
-    apply hφ
-    simp only [map_mul, A, augmented_map_det, hPmap]
-    exact augmented_minor_cross (C.map φ) (B.map φ) hBC hC I₀ I hI₀map
-  have hA₀ : A I₀ ≠ 0 := by
-    intro hz
-    apply augmentation_det_ne_zero (C.map φ) (B.map φ) hBC hC I₀ hI₀map
-    rw [← augmented_map_det φ C I₀]
-    exact (congrArg φ hz).trans (map_zero φ)
-  obtain ⟨a, ha⟩ := (PrimitiveVector.primitive_iff_bezout P).mp hprim
-  have hfactor : A I₀ = P I₀ * ∑ I, a I * A I := by
-    rw [Finset.mul_sum, ← mul_one (A I₀), ← ha, Finset.mul_sum]
-    apply Finset.sum_congr rfl
-    intro I _
-    calc
-      A I₀ * (a I * P I) = a I * (A I₀ * P I) := by ring
-      _ = a I * (A I * P I₀) := by rw [hcross]
-      _ = P I₀ * (a I * A I) := by ring
-  exact Polynomial.natDegree_le_of_dvd ⟨_, hfactor⟩ hA₀
-
-/-- A selected column basis of the stacked matrix gives complementary minors
-for the primitive left kernel. The unit columns each save one row degree. -/
-theorem complementary_minor_bound {F : Type} [Field F] (L w s p : ℕ)
-    (M : Matrix (Fin 2 × Fin L) (Fin w) F[X])
-    (W : Matrix (Fin 2 × Fin L) (Fin s) F[X])
-    (hp : 1 ≤ p) (hrank : GenericLayer.genericRank M + s = 2 * L)
-    (hWM : W.transpose * M = 0)
-    (hM : ∀ i j, (M i j).natDegree ≤ if i.1 = 0 then 1 else p)
-    (hprim : PrimitiveVector.IsPrimitive (maximalMinors W))
-    (I : Fin s → Fin 2 × Fin L) :
-    (maximalMinors W I).natDegree ≤ L * (p + 1) - s := by
-  classical
-  by_cases hI : maximalMinors W I = 0
-  · simp [hI]
-  let φ := algebraMap F[X] (GenericLayer.GenericField F)
-  have hφ := IsFractionRing.injective F[X] (GenericLayer.GenericField F)
-  let r := GenericLayer.genericRank M
-  obtain ⟨D⟩ := NormalFiber.exists_rowBasis φ M r rfl
-  let e : (Fin r ⊕ Fin s) ≃ Fin 2 × Fin L :=
-    Fintype.equivOfCardEq (by simpa only [Fintype.card_sum, Fintype.card_prod, Fintype.card_fin]
-      using hrank)
-  let C := M.submatrix e D.cols
-  let B := W.submatrix e id
-  have hC (v) (hv : (C.map φ).mulVec v = 0) : v = 0 := by
-    have hdet : ((M.map φ).submatrix D.rows D.cols).det ≠ 0 := by
-      rw [← show φ (M.submatrix D.rows D.cols).det =
-        ((M.map φ).submatrix D.rows D.cols).det from φ.map_det _]
-      exact fun hz => D.minor_ne (hφ (hz.trans (map_zero φ).symm))
-    apply Matrix.eq_zero_of_mulVec_eq_zero hdet
-    funext i
-    have hv' := congrFun hv (e.symm (D.rows i))
-    simpa only [C, Matrix.mulVec, dotProduct, Matrix.map_apply, Matrix.submatrix_apply,
-      Equiv.apply_symm_apply, Pi.zero_apply] using hv'
-  have hBC : (B.map φ).transpose * C.map φ = 0 := by
-    ext i j
-    have hh := congrArg φ (congrFun (congrFun hWM i) (D.cols j))
-    change (∑ k : Fin r ⊕ Fin s, φ (W (e k) i) * φ (M (e k) (D.cols j))) = 0
-    rw [Equiv.sum_comp e (fun k => φ (W k i) * φ (M k (D.cols j)))]
-    simpa only [Matrix.mul_apply, Matrix.transpose_apply, Matrix.zero_apply, map_sum, map_mul,
-      map_zero] using hh
-  have hB : PrimitiveVector.IsPrimitive (maximalMinors B) := by
-    have hs : Function.Surjective
-        (fun J : Fin s → (Fin r ⊕ Fin s) => e ∘ J) := by
-      intro J
-      exact ⟨e.symm ∘ J, funext (fun j => e.apply_symm_apply (J j))⟩
-    change Ideal.span (Set.range (maximalMinors W ∘ (fun J : Fin s → (Fin r ⊕ Fin s) => e ∘ J))) = ⊤
-    rwa [hs.range_comp]
-  let J := e.symm ∘ I
-  have hBI : maximalMinors B J = maximalMinors W I := by
-    unfold maximalMinors
-    apply congrArg Matrix.det
-    ext i j
-    simp only [B, J, Matrix.submatrix_apply, Function.comp_apply, Equiv.apply_symm_apply, id_eq]
-  let d : (Fin r ⊕ Fin s) → ℕ := fun i => if (e i).1 = 0 then 1 else p
-  have hd (i) : 1 ≤ d i := by dsimp [d]; split_ifs <;> omega
-  have htotal : ∑ i, d i = L * (p + 1) := by
-    dsimp only [d]
-    rw [Equiv.sum_comp e (fun i : Fin 2 × Fin L => if i.1 = 0 then 1 else p)]
-    simp [Fintype.sum_prod_type, Fin.sum_univ_two, Nat.mul_add, Nat.add_comm]
-  have hbound := (primitive_minor_le_augmented φ hφ C B hBC hC hB J (by rwa [hBI])).trans
-    (augmented_det_row_budget C d hd (fun i j => hM (e i) (D.cols j)) J)
-  simpa only [hBI, htotal] using hbound
-
 end
-end K1_2_1
-end PackSource_K1_2_1Complement
-
-section PackSource_K1_14_6_1Proof
-set_option autoImplicit true
+section
 set_option autoImplicit false
-
 namespace K1_14_6_1
-
 noncomputable section
-
 open K1 K1_14 K1_14_6 MvPolynomial
 open scoped Polynomial BigOperators
-
 local notation "Y" => MvPolynomial.X (R := FX) (none : Option (Fin 2))
-
 private abbrev incl := algebraMap L[X] FX
 private abbrev center : FX := incl Polynomial.X
-
 private theorem eval_center (S : K[X]) : (S.map seedEmbedding).eval center = atX S := by
   rw [Polynomial.eval_map]
   change S.eval₂ (incl.comp (Polynomial.C.comp (algebraMap K L))) (incl Polynomial.X) =
     incl (S.map (algebraMap K L))
   rw [← Polynomial.hom_eval₂, ← Polynomial.eval₂_map, Polynomial.eval₂_C_X]
-
 private theorem factorial_ne_zero {n : ℕ} (hn : n < p) : (n.factorial : FX) ≠ 0 := by
   let : CharP FX p := charP_of_injective_ringHom seedEmbedding.injective p
   induction n with
@@ -5433,10 +4202,8 @@ private theorem factorial_ne_zero {n : ℕ} (hn : n < p) : (n.factorial : FX) �
       intro h
       exact (not_le_of_gt hn) (Nat.le_of_dvd (Nat.succ_pos n) ((CharP.cast_eq_zero_iff FX p _).mp h))
     simpa only [Nat.factorial_succ, Nat.cast_mul] using mul_ne_zero hc (ih (Nat.lt_of_succ_lt hn))
-
 private def weight (x : K) (n : ℕ) : FX :=
   (n.factorial : FX)⁻¹ * (seedEmbedding x - center)^n
-
 private theorem taylor_term (S : K[X]) (x : K) (n : ℕ) (hn : n < p) :
     (Polynomial.taylor center (S.map seedEmbedding)).coeff n * (seedEmbedding x - center)^n =
       derivativeAt S n * weight x n := by
@@ -5453,7 +4220,6 @@ private theorem taylor_term (S : K[X]) (x : K) (n : ℕ) (hn : n < p) :
     _ = (atX (Polynomial.hasseDeriv n S) * (seedEmbedding x - center)^n) *
         ((n.factorial : FX) * (n.factorial : FX)⁻¹) := by ring
     _ = _ := by rw [mul_inv_cancel₀ (factorial_ne_zero hn), mul_one]
-
 private theorem eval_taylor {d : ℕ} (hdp : d < p) (S : K[X]) (hS : S.natDegree ≤ d) (x : K) :
     seedEmbedding (S.eval x) = atX S +
       ∑ n ∈ Finset.range d, derivativeAt S (n+1) * weight x (n+1) := by
@@ -5470,18 +4236,15 @@ private theorem eval_taylor {d : ℕ} (hdp : d < p) (S : K[X]) (hS : S.natDegree
       refine congrArg (fun v : FX => atX S + v) (Finset.sum_congr rfl ?_)
       intro n hn
       exact taylor_term S x _ ((Nat.succ_le_of_lt (Finset.mem_range.mp hn)).trans_lt hdp)
-
 private theorem padding {d n : ℕ} (hn : n ∈ Finset.range d) :
     taylorPower d - (2*n+1) + (2*n+1) = taylorPower d := by
   have hnd := Finset.mem_range.mp hn
   unfold taylorPower
   omega
-
 private def valueNumerator (d : ℕ) (f : Biform) (x : K) : Biform :=
   separant f ^ taylorPower d * Y +
     ∑ n ∈ Finset.range d, weight x (n+1) •
       (separant f ^ (taylorPower d - (2*n+1)) * cleared f n)
-
 private theorem valueNumerator_bound {d e b : ℕ} {f : Equation}
     (he : 0 < e) (hfe : f.natDegree ≤ e) (hb : SeedBound f b) (x : K) :
     valueNumerator d (flatten f) x ∈ box (ordinateBound d e) (parameterBound d b) := by
@@ -5501,7 +4264,6 @@ private theorem valueNumerator_bound {d e b : ℕ} {f : Equation}
         _ = 1+(taylorPower d - (2*n+1)+(2*n+1))*(e-1) := by ring
         _ = _ := by rw [hpad, ordinateBound]
     rwa [hy, ← Nat.add_mul, hpad, ← parameterBound] at h
-
 private theorem eval_valueNumerator {d : ℕ} (hdp : d < p) (f : Biform)
     (z : K) (S : K[X]) (hS : S.natDegree ≤ d) (hf : markEval z S f = 0) (x : K) :
     markEval z S (valueNumerator d f x) =
@@ -5523,7 +4285,6 @@ private theorem eval_valueNumerator {d : ℕ} (hdp : d < p) (f : Biform)
     _ = (a ^ (taylorPower d - (2*n+1)) * a ^ (2*n+1)) *
         (derivativeAt S (n+1) * weight x (n+1)) := by ring
     _ = _ := by rw [hp]
-
 theorem proof : K1_14_6.c1 := by
   intro d e b _hd hdp f hf hfe hb
   have he := hf.trans_le hfe
@@ -5537,30 +4298,21 @@ theorem proof : K1_14_6.c1 := by
       rw [map_pow, eval_separant]
       exact pow_ne_zero _ hsep
     · exact eval_valueNumerator hdp (flatten f) z S hS ((eval_flatten z S f).trans hz)
-
 end
 end K1_14_6_1
-end PackSource_K1_14_6_1Proof
-
-section PackSource_K1_13_5_4_3_3Proof
-set_option autoImplicit true
+end
+section
 set_option autoImplicit false
-
 namespace K1_13_5_4_3_3
-
 noncomputable section
-
 open K1_13 K1_13_5 K1_13_5_4 Polynomial
 open RingTheory.Sequence
 open scoped Pointwise
-
 private theorem mem_smul_top_iff_dvd {R : Type*} [CommRing R] (f x : R) :
     x ∈ f • (⊤ : Submodule R R) ↔ f ∣ x := by
   simp only [Submodule.mem_smul_pointwise_iff_exists, Submodule.mem_top, true_and, smul_eq_mul]
   exact exists_congr fun _ => eq_comm
-
 attribute [local instance] MvPolynomial.algebraMvPolynomial in
-/-- Multiplication by the cut remains injective modulo the row after base change. -/
 private theorem generic_cut_regular {f g : Row 3} (hf : Irreducible f) (hg : ¬ f ∣ g) :
     ∀ x : GeoRow 3, genericRow f ∣ genericRow g * x → genericRow f ∣ x := by
   have hfPrime : Prime f := UniqueFactorizationMonoid.irreducible_iff_prime.mp hf
@@ -5583,8 +4335,6 @@ private theorem generic_cut_regular {f g : Row 3} (hf : Irreducible f) (hg : ¬ 
   intro x hx
   exact (mem_smul_top_iff_dvd _ _).mp
     (mem_of_isSMulRegular_quotient_of_smul_mem hgeo.2 ((mem_smul_top_iff_dvd _ _).mpr hx))
-
-/-- Every retained component of the proper compatibility cut is a curve. -/
 theorem proof : K1_13_5_4_3.c3 := by
   intro f P hf _ hwhole hP
   let F := genericRow f
@@ -5631,26 +4381,17 @@ theorem proof : K1_13_5_4_3.c3 := by
   rw [Nat.card_fin] at hsurface
   have hcurve := MvPolynomial.principalCut_natDegree_affineHilbertPolynomial_add_one hGD hcut
   omega
-
 end
-
 end K1_13_5_4_3_3
-end PackSource_K1_13_5_4_3_3Proof
-
-section PackSource_K1_14_3R_2_1Proof
-set_option autoImplicit true
+end
+section
 set_option backward.isDefEq.respectTransparency false
 set_option maxSynthPendingDepth 8
 set_option maxHeartbeats 800000
-
 namespace K1_14_3R_2_1
-
 noncomputable section
-
 open K1_14 K1_14_3 K1_14_3R_2 K1_14_3_4_1 Polynomial
-
 private abbrev toSeed : Seeds →+* SeedField := algebraMap _ _
-
 private theorem primitive_model (g : SeedField[X]) (hg : g ≠ 0) :
     ∃ f : Equation, f.IsPrimitive ∧ Associated (f.map toSeed) g := by
   classical
@@ -5675,14 +4416,11 @@ private theorem primitive_model (g : SeedField[X]) (hg : g ≠ 0) :
   have hunit : Associated (C (toSeed a) * g) g := associated_unit_mul_left _ _ ha'
   rw [← hscale] at hunit
   exact (associated_unit_mul_right _ _ hcontent).trans hunit
-
 private theorem at_fibre (f : Equation) (y v : SeedClosure) :
     seedFibreEval y v (C f) = aeval y (f.map toSeed) := by
   change (eval₂RingHom (eval₂RingHom seedGeneric y) v) (C f) = _
   rw [coe_eval₂RingHom, eval₂_C, coe_eval₂RingHom, aeval_def, eval₂_map]
   rfl
-
-/-- The primitive minimal polynomial generates the ordinary equations of the parent. -/
 private theorem ordinary_generator {q : Surface} (hq : Parent q) :
     ∃ f : Equation, Irreducible f ∧ 0 < f.natDegree ∧ (f.map seedGeneric).Separable ∧
       ∀ A : Equation, f ∣ A ↔ C A ∈ q.asIdeal := by
@@ -5708,7 +4446,6 @@ private theorem ordinary_generator {q : Surface} (hq : Parent q) :
     · intro h
       exact hprim.dvd_of_fraction_map_dvd_fraction_map (K := SeedField)
         (ha.dvd.trans (minpoly.dvd_iff.mpr h))
-
 private theorem fixed_order_zero {q : Surface} (hq : Parent q) {y v : SeedClosure}
     (hp : OnSeedFibre q y v) {G : JetPlane} (hG : G ≠ 0) :
     (rowSeries y v (fixedEmbedding G)).order = 0 := by
@@ -5720,13 +4457,10 @@ private theorem fixed_order_zero {q : Surface} (hq : Parent q) {y v : SeedClosur
   have hgen : jetGeneric G = 0 := (DFunLike.congr_fun hev G).symm.trans hm
   exact hG (((algebraMap JetField JetClosure).injective.comp
     (IsFractionRing.injective JetPlane JetField)) (hgen.trans (map_zero jetGeneric).symm))
-
 private theorem order_pow (S : Series) (n : ℕ) : (S ^ n).order = n • S.order := by
   induction n with
   | zero => simp [MvPowerSeries.order, pow_zero]
   | succ n ih => rw [pow_succ, MvPowerSeries.order_mul, ih, succ_nsmul]
-
-/-- Only the parent’s primitive ordinate factor can contribute to the ordinary order. -/
 private theorem ordinary_order_le {q : Surface} (hq : Parent q) {y v : SeedClosure}
     (hp : OnSeedFibre q y v) {H : Equation} {r : ℕ} (hr : 0 < r)
     (havoid : ¬ HighOn H r q) : (rowSeries y v (C H)).order ≤ ((r - 1 : ℕ) : ℕ∞) := by
@@ -5750,8 +4484,6 @@ private theorem ordinary_order_le {q : Surface} (hq : Parent q) {y v : SeedClosu
   rw [hB, C_mul, C_pow, map_mul, map_pow, MvPowerSeries.order_mul, hBzero, add_zero,
     order_pow, ordinary_order_one y v f hsep hroot, nsmul_one]
   exact_mod_cast (show k ≤ r - 1 by omega)
-
-/-- Away from the high ordinary factors, division loses at most `r - 1` orders. -/
 theorem proof : K1_14_3R_2.c1 := by
   intro G H P q m r hG _hH _hdeg hq hr hrm havoid horder y v hp
   have h := (mem_fibre_pow_iff _ y v m).mp (horder y v hp)
@@ -5763,23 +4495,16 @@ theorem proof : K1_14_3R_2.c1 := by
     _ = (m : ℕ∞) := by exact_mod_cast (show (r - 1) + (m + 1 - r) = m by omega)
     _ ≤ (rowSeries y v (C H)).order + (rowSeries y v P).order := h
     _ ≤ _ := add_le_add_left (ordinary_order_le hq hp hr havoid) _
-
 end
 end K1_14_3R_2_1
-end PackSource_K1_14_3R_2_1Proof
-
-section PackSource_K1_14_3R_3_4Parameters
-set_option autoImplicit true
+end
+section
 set_option backward.isDefEq.respectTransparency false
 set_option maxSynthPendingDepth 8
 set_option maxHeartbeats 1000000
-
 namespace K1_14_3R_3_4
-
 noncomputable section
-
 open Polynomial
-
 private theorem injective_of_specialization {A B : Type*} [CommRing A] [Nontrivial A] [CommRing B] [IsDomain B]
     (f : Polynomial A →+* Polynomial B) (g : A →+* B) (hg : Function.Injective g)
     (a : A) (hlinear : f (Polynomial.X - C a) ≠ 0)
@@ -5806,24 +4531,18 @@ private theorem injective_of_specialization {A B : Type*} [CommRing A] [Nontrivi
       rw [hq, map_mul] at hz
       exact (mul_eq_zero.mp hz).resolve_left hlinear
     exact hq0 (ih q hdeg hqz)
-
-/-- First substitute the offset by the generic linear form, then substitute
-the outer (slope) variable by the indeterminate. -/
 private def lineSubstitution {k D : Type*} [Field k] [CommRing D] [Algebra k D]
     (y v : D) : Polynomial (Polynomial k) →+* Polynomial D :=
   eval₂RingHom
     (eval₂RingHom (C.comp (algebraMap k D)) (C y + Polynomial.X * C v)) Polynomial.X
-
 @[simp] private theorem lineSubstitution_C {k D : Type*} [Field k] [CommRing D] [Algebra k D]
     (y v : D) (p : Polynomial k) :
     lineSubstitution (k := k) y v (C p) =
       p.eval₂ (C.comp (algebraMap k D)) (C y + Polynomial.X * C v) := by
   simp [lineSubstitution]
-
 @[simp] private theorem lineSubstitution_X {k D : Type*} [Field k] [CommRing D] [Algebra k D]
     (y v : D) : lineSubstitution (k := k) y v Polynomial.X = Polynomial.X := by
   simp [lineSubstitution]
-
 private theorem lineSubstitution_injective {k D : Type*} [Field k] [CommRing D]
     [IsDomain D] [Algebra k D] (y v : D) (a : k)
     (ha : Transcendental k (y + algebraMap k D a * v)) :
@@ -5845,68 +4564,50 @@ private theorem lineSubstitution_injective {k D : Type*} [Field k] [CommRing D]
         · simp [RingHom.comp_apply, g, mul_comm v (algebraMap k D a)]
       simpa [RingHom.comp_apply] using DFunLike.congr_fun hcomp p
     · simp [RingHom.comp_apply, hga]
-
 private def parameterIndex : Fin 4 ≃ Fin 2 ⊕ Fin 2 :=
   Equiv.ofBijective ![.inl 0, .inr 1, .inl 1, .inr 0] (by constructor <;> decide)
-
-/-- Keep parameters 0 and 2 independent, and present 3 and 1 as the
-inner and outer variables of a bivariate polynomial. -/
 private def parameterEquiv :
     MvPolynomial (Fin 4) K1_14.FX ≃ₐ[K1_14.FX]
       MvPolynomial (Fin 2) (Polynomial (Polynomial K1_14.FX)) :=
   ((MvPolynomial.renameEquiv _ parameterIndex).trans
     (MvPolynomial.sumAlgEquiv _ _ _)).trans
     (MvPolynomial.mapAlgEquiv _ (Bivariate.equivMvPolynomial _).symm)
-
 def parameterMap {D : Type*} [CommRing D] [Algebra K1_14.FX D] (y v : D) :
     MvPolynomial (Fin 4) K1_14.FX →+* MvPolynomial (Fin 2) (Polynomial D) :=
   (MvPolynomial.map (lineSubstitution y v)).comp parameterEquiv.toRingHom
-
 theorem parameterMap_injective {D : Type*} [CommRing D] [IsDomain D] [Algebra K1_14.FX D]
     (y v : D) (a : K1_14.FX) (ha : Transcendental K1_14.FX
       (y + algebraMap K1_14.FX D a * v)) :
     Function.Injective (parameterMap y v) :=
   (MvPolynomial.map_injective _ (lineSubstitution_injective y v a ha)).comp
     parameterEquiv.injective
-
 @[simp] theorem parameterMap_C {D : Type*} [CommRing D] [Algebra K1_14.FX D]
     (y v : D) (x : K1_14.FX) :
     parameterMap y v (MvPolynomial.C x) = MvPolynomial.C (C (algebraMap K1_14.FX D x)) := by
   simp [parameterMap, parameterEquiv, lineSubstitution]
-
 @[simp] theorem parameterMap_slope {D : Type*} [CommRing D] [Algebra K1_14.FX D] (y v : D) :
     parameterMap y v (MvPolynomial.X 1) = MvPolynomial.C Polynomial.X := by
   have h : parameterIndex 1 = .inr 1 := rfl
   simp [parameterMap, parameterEquiv, h]
-
 @[simp] theorem parameterMap_offset {D : Type*} [CommRing D] [Algebra K1_14.FX D] (y v : D) :
     parameterMap y v (MvPolynomial.X 3) = MvPolynomial.C (C y + Polynomial.X * C v) := by
   have h : parameterIndex 3 = .inr 0 := rfl
   simp [parameterMap, parameterEquiv, h]
-
 end
 end K1_14_3R_3_4
-end PackSource_K1_14_3R_3_4Parameters
-
-section PackSource_K1_14_3R_3_4Point
-set_option autoImplicit true
+end
+section
 set_option backward.isDefEq.respectTransparency false
 set_option maxSynthPendingDepth 8
 set_option maxHeartbeats 1000000
-
 namespace K1_14_3R_3_4
-
 noncomputable section
-
 open K1_14 K1_14_3 K1_14_3R_3 Polynomial
-
 private abbrev JetRing (k : Type*) [CommRing k] :=
   Polynomial (Polynomial (MvPolynomial (Fin 2) k))
-
 private def jetEval {k A : Type*} [CommRing k] [CommRing A]
     (f : k →+* A) (s : Fin 2 → A) (y v : A) : JetRing k →+* A :=
   eval₂RingHom (eval₂RingHom (MvPolynomial.eval₂Hom f s) y) v
-
 private theorem jetHom_ext {k A : Type*} [CommRing k] [CommRing A]
     {f g : JetRing k →+* A}
     (hk : ∀ a, f (C (C (MvPolynomial.C a))) = g (C (C (MvPolynomial.C a))))
@@ -5916,7 +4617,6 @@ private theorem jetHom_ext {k A : Type*} [CommRing k] [CommRing A]
   refine Polynomial.ringHom_ext' ?_ hv
   refine Polynomial.ringHom_ext' ?_ hy
   exact MvPolynomial.ringHom_ext hk hs
-
 private theorem seed_coordinate {R : Ideal Jet} {t : FX × FX}
     (h : HasSeedPoint R t) (i : Fin 2) :
     Ideal.Quotient.mk R (C (C (MvPolynomial.X i))) =
@@ -5930,9 +4630,6 @@ private theorem seed_coordinate {R : Ideal Jet} {t : FX × FX}
     Ideal.Quotient.mk R (seedInclusion (MvPolynomial.C (![t.1, t.2] i))) = 0
   rw [← map_sub, ← map_sub]
   exact Ideal.Quotient.eq_zero_iff_mem.mpr hm
-
-/-- At slope zero or one the line form is transcendental on a curve
-whose seed coordinates are fixed in the base field. -/
 private theorem transcendental_section {R : Ideal Jet} {t : FX × FX}
     (hR : IsCutCurve R) (ht : HasSeedPoint R t) :
     let y := Ideal.Quotient.mk R (C Polynomial.X)
@@ -5977,14 +4674,11 @@ private theorem transcendental_section {R : Ideal Jet} {t : FX × FX}
     (isField_of_isIntegral_of_isField' (R := FX) (Field.toIsField FX)).toField
   have hzero : ringKrullDim D = 0 := ringKrullDim_eq_zero_of_field D
   exact zero_ne_one (hzero.symm.trans hR.2)
-
 private theorem eval_line_eq_zero {A B F : Type*} [CommRing A] [CommRing B] [CommRing F]
     (e : A →+* F) (j : B →+* F) (y₀ v₀ a b : A) (y v u : B)
     (hY : e y₀ = j y) (hV : e v₀ = j v) (ha : e a = j u) (hb : e b = j (y + u * v)) :
     e (y₀ + a * v₀ - b) = 0 := by
   rw [map_sub e, map_add e, map_mul e, hY, hV, ha, hb, map_add j, map_mul j, sub_self]
-
-/-- The generic section contains a prime lying over the given curve prime. -/
 theorem exists_sectionPrime {R : Ideal Jet} {t : FX × FX}
     (hR : IsCutCurve R) (ht : HasSeedPoint R t) :
     ∃ J : Ideal SectionJet, J.IsPrime ∧
@@ -6054,26 +4748,17 @@ theorem exists_sectionPrime {R : Ideal Jet} {t : FX × FX}
     exact eval_line_eq_zero (A := SectionJet) (B := Polynomial D) (F := F)
       e intoPoly Y₀ V₀ (sectionScalar 1) (sectionScalar 3) (C y) (C v) Polynomial.X
       eY eV eslope eoffset
-
 end
 end K1_14_3R_3_4
-end PackSource_K1_14_3R_3_4Point
-
-section PackSource_K1_14_3R_3_4Proof
-set_option autoImplicit true
+end
+section
 set_option backward.isDefEq.respectTransparency false
 set_option maxSynthPendingDepth 8
 set_option maxHeartbeats 1000000
-
 namespace K1_14_3R_3_4
-
 noncomputable section
-
 open K1_14 K1_14_3 K1_14_3R_3
 open scoped BigOperators
-
-/-- Each constant-seed curve contributes a distinct prime to the finite
-generic jet section. The residue fields contribute at least one dimension each. -/
 theorem proof : K1_14_3R_3.c4 := by
   classical
   intro I T t hfin hT
@@ -6122,33 +4807,23 @@ theorem proof : K1_14_3R_3.c4 := by
     _ = Module.finrank SectionField (∀ i : ↥T, SectionJet ⧸ J i) :=
       (Module.finrank_pi_fintype (R := SectionField)).symm
     _ ≤ lineLength I .jet := LinearMap.finrank_le_finrank_of_surjective (f := l) hl
-
 end
 end K1_14_3R_3_4
-end PackSource_K1_14_3R_3_4Proof
-
-section PackSource_K1_13_6_3_3_2Proof
-set_option autoImplicit true
+end
+section
 set_option autoImplicit false
 set_option maxRecDepth 1500
-
 namespace K1_13_6_3_3_2
-
 noncomputable section
-
 open Polynomial K1_13 K1_13_6 K1_13_6_3
 open scoped BigOperators
-
 private def universalPolynomial : CoeffRing[X] :=
   ∑ j : Fin taylorLength, monomial j.val (MvPolynomial.X j)
-
 private def universalJets : Row 4 →+* CoeffRing[X] :=
   MvPolynomial.eval₂Hom (Polynomial.mapRingHom MvPolynomial.C)
     (fun i : Fin 4 => hasseDeriv i.val universalPolynomial)
-
 private def evaluateFresh : CoeffRing[X] →+* FreshCoeffRing :=
   Polynomial.eval₂RingHom (MvPolynomial.map geomConstants) (MvPolynomial.C genericArgument)
-
 private theorem evaluateFresh_hasse (i : ℕ) :
     evaluateFresh (hasseDeriv i universalPolynomial) = jetLinear genericArgument i := by
   classical
@@ -6158,7 +4833,6 @@ private theorem evaluateFresh_hasse (i : ℕ) :
   simp only [evaluateFresh, Polynomial.coe_eval₂RingHom, Polynomial.eval₂_monomial,
     map_mul, map_natCast, MvPolynomial.map_X, map_pow]
   ac_rfl
-
 private theorem evaluateFresh_row (R : Row 4) :
     evaluateFresh (universalJets R) = freshJetMap (toGeneric R) := by
   change (evaluateFresh.comp universalJets) R =
@@ -6185,10 +4859,8 @@ private theorem evaluateFresh_row (R : Row 4) :
   · intro i
     simpa only [RingHom.comp_apply, universalJets, MvPolynomial.eval₂Hom_X', MvPolynomial.map_X,
       freshJetMap] using evaluateFresh_hasse i.val
-
 private def pointPolynomial {n : ℕ} (a : Fin n → Geom) : Geom[X] :=
   ∑ j : Fin n, monomial j.val (a j)
-
 private theorem pointPolynomial_coeff {n : ℕ} (a : Fin n → Geom) (i : Fin n) :
     (pointPolynomial a).coeff i.val = a i := by
   classical
@@ -6197,14 +4869,12 @@ private theorem pointPolynomial_coeff {n : ℕ} (a : Fin n → Geom) (i : Fin n)
   · intro j _ hj
     exact coeff_monomial_of_ne _ (fun he => hj (Fin.ext he.symm))
   · simp
-
 private theorem pointPolynomial_degree (a : Fin taylorLength → Geom) :
     (pointPolynomial a).natDegree < taylorLength := by
   apply (natDegree_sum_le_of_forall_le _ _ (n := taylorLength - 1) ?_).trans_lt
     (by decide : taylorLength - 1 < taylorLength)
   intro j _
   exact (natDegree_monomial_le _).trans (by have := j.isLt; omega)
-
 private theorem map_universal_row (a : Fin taylorLength → Geom) (R : Row 4) :
     (universalJets R).map (MvPolynomial.eval a) = atJet R (pointPolynomial a) := by
   have hU : universalPolynomial.map (MvPolynomial.eval a) = pointPolynomial a := by
@@ -6222,15 +4892,12 @@ private theorem map_universal_row (a : Fin taylorLength → Geom) (R : Row 4) :
   · intro i
     simp only [RingHom.comp_apply, universalJets, MvPolynomial.eval₂Hom_X', MvPolynomial.eval_X,
       Polynomial.coe_mapRingHom, ← hasseDeriv_map, hU, jet]
-
 private def freshPoint (a : Fin taylorLength → Geom) : FreshCoeffRing →+* GeoField :=
   MvPolynomial.eval (geomConstants ∘ a)
-
 private theorem freshPoint_comp (a : Fin taylorLength → Geom) :
     (freshPoint a).comp (MvPolynomial.map geomConstants) =
       geomConstants.comp (MvPolynomial.eval a) := by
   apply MvPolynomial.ringHom_ext <;> intro b <;> simp [freshPoint]
-
 private theorem freshPoint_evaluateFresh (a : Fin taylorLength → Geom) :
     (freshPoint a).comp evaluateFresh =
       genericCoeffs.comp (Polynomial.mapRingHom (MvPolynomial.eval a)) := by
@@ -6240,7 +4907,6 @@ private theorem freshPoint_evaluateFresh (a : Fin taylorLength → Geom) :
       Polynomial.eval₂_C, Polynomial.coe_mapRingHom, Polynomial.map_C]
     exact RingHom.congr_fun (freshPoint_comp a) b
   · simp [evaluateFresh, freshPoint, genericArgument]
-
 private theorem extend_le_point_ker {A : CoeffIdeal} {a : Fin taylorLength → Geom}
     (ha : a ∈ MvPolynomial.zeroLocus Geom A) : extendIdeal A ≤ RingHom.ker (freshPoint a) := by
   apply Ideal.map_le_iff_le_comap.mpr
@@ -6249,7 +4915,6 @@ private theorem extend_le_point_ker {A : CoeffIdeal} {a : Fin taylorLength → G
   rw [freshPoint_comp, RingHom.comp_apply]
   have h : MvPolynomial.eval a b = 0 := ha b hb
   rw [h, map_zero]
-
 private theorem point_chart {A : CoeffIdeal} {g : Row 4}
     (hg : toGeneric g ∈ freshImage A) {a : Fin taylorLength → Geom}
     (ha : a ∈ MvPolynomial.zeroLocus Geom A) : atJet g (pointPolynomial a) = 0 := by
@@ -6262,7 +4927,6 @@ private theorem point_chart {A : CoeffIdeal} {g : Row 4}
   have hinj : Function.Injective genericCoeffs :=
     (algebraMap GenericField GeoField).injective.comp (IsFractionRing.injective Geom[X] GenericField)
   exact hinj (hz.trans (map_zero _).symm)
-
 private theorem fresh_mem_of_points {A : CoeffIdeal} (hA : A.IsPrime) (T : CoeffRing[X])
     (hT : ∀ a ∈ MvPolynomial.zeroLocus Geom A, T.map (MvPolynomial.eval a) = 0) :
     evaluateFresh T ∈ extendIdeal A := by
@@ -6276,13 +4940,10 @@ private theorem fresh_mem_of_points {A : CoeffIdeal} (hA : A.IsPrime) (T : Coeff
   intro n _
   rw [evaluateFresh, Polynomial.coe_eval₂RingHom, Polynomial.eval₂_monomial]
   exact Ideal.mul_mem_right _ _ (Ideal.mem_map_of_mem _ (hc n))
-
 private def exponent : ℕ := 2 * taylorLength
-
 private def clearedJet (g : Row 4) (j : Fin taylorLength) : Row 4 :=
   MvPolynomial.C (Polynomial.C (↑j.val.factorial : Geom)⁻¹) *
     (separant g ^ (2 * (taylorLength - j.val)) * jetNumerator g j.val)
-
 private theorem atJet_clearedJet (g : Row 4) (S : Geom[X]) (hg : atJet g S = 0)
     (j : Fin taylorLength) :
     atJet (clearedJet g j) S = atJet (separant g) S ^ exponent * hasseDeriv j.val S := by
@@ -6307,13 +4968,9 @@ private theorem atJet_clearedJet (g : Row 4) (S : Geom[X]) (hg : atJet g S = 0)
           atJet (separant g) S ^ (2 * j.val)) * hasseDeriv j.val S) := by ac_rfl
     _ = _ := by
       rw [hinv, one_mul, ← pow_add, ← Nat.mul_add, Nat.sub_add_cancel j.isLt.le, exponent]
-
-/-- Translate the full, common-denominator Taylor polynomial back to the
-original variable before taking the coefficient. -/
 private def translatedCoefficient {L : ℕ} (b : Fin L → Row 4) (i : Fin L) : Row 4 :=
   (taylor (-MvPolynomial.C (Polynomial.X : Geom[X]))
     (∑ j : Fin L, monomial j.val (b j))).coeff i.val
-
 private theorem atJet_translatedCoefficient {L : ℕ} (b : Fin L → Row 4) {S : Geom[X]}
     (hd : S.natDegree < L) (d : Geom[X])
     (hb : ∀ j, atJet (b j) S = d * hasseDeriv j.val S) (i : Fin L) :
@@ -6345,14 +5002,12 @@ private theorem atJet_translatedCoefficient {L : ℕ} (b : Fin L → Row 4) {S :
   dsimp only [T]
   rw [taylor_taylor, neg_add_cancel,
     taylor_zero, Polynomial.coeff_C_mul, Polynomial.coeff_map, mul_comm]
-
 private theorem evaluateFresh_relation (i : Fin taylorLength) (D U : Row 4) (n : ℕ) :
     evaluateFresh (Polynomial.C (MvPolynomial.X i) * universalJets D ^ n - universalJets U) =
       MvPolynomial.X i * freshJetMap (toGeneric D) ^ n - freshJetMap (toGeneric U) := by
   have hx : evaluateFresh (Polynomial.C (MvPolynomial.X i)) = MvPolynomial.X i := by
     rw [evaluateFresh, Polynomial.coe_eval₂RingHom, Polynomial.eval₂_C, MvPolynomial.map_X]
   simp only [map_sub, map_mul, map_pow, evaluateFresh_row, hx]
-
 private theorem recovery_of_trajectory (g D U : Row 4) (i : Fin taylorLength) (n : ℕ)
     (hU : ∀ S : Geom[X], S.natDegree < taylorLength → atJet g S = 0 →
       atJet U S = Polynomial.C (S.coeff i.val) * atJet D S ^ n)
@@ -6371,7 +5026,6 @@ private theorem recovery_of_trajectory (g D U : Row 4) (i : Fin taylorLength) (n
   simp only [T, map_sub, map_mul, map_pow, Polynomial.coe_mapRingHom, Polynomial.map_C,
     MvPolynomial.eval_X, map_universal_row]
   rw [hU _ (pointPolynomial_degree a) (point_chart hg ha), pointPolynomial_coeff, sub_self]
-
 theorem proof : K1_13_6_3_3.c2 := by
   intro g i
   let u := translatedCoefficient (clearedJet g) i
@@ -6380,251 +5034,15 @@ theorem proof : K1_13_6_3_3.c2 := by
   intro S hd hS
   exact atJet_translatedCoefficient (clearedJet g) hd _
     (atJet_clearedJet g S hS) i
-
 end
 end K1_13_6_3_3_2
-end PackSource_K1_13_6_3_3_2Proof
-
-section PackSource_K1_13_4_2_1Columns
-set_option autoImplicit true
-namespace K1_13_4_2_1
-
-open K1 K1_13 K1_13_4 K1_13_4_2
-open scoped BigOperators Polynomial
-noncomputable section
-
-set_option backward.isDefEq.respectTransparency false
-
-private abbrev Column (b : Bank) (h : ℕ) :=
-  Σ q : Fin (b.box.b + 1), Σ k : Fin (min q.val 1150 + 1),
-    Σ l : Fin (min (q.val - k.val) (2300 - 2 * k.val) + 1),
-      Fin (width b h q.val k.val l.val) × Fin 70001
-
-private def exponent (u i l k : ℕ) : SeedVar →₀ ℕ :=
-  Finsupp.equivFunOnFinite.symm (fun j => j.elim u (![i, l, k] ·))
-
-@[simp] private theorem exponent_none (u i l k : ℕ) : exponent u i l k none = u := by
-  simp [exponent]
-
-@[simp] private theorem exponent_zero (u i l k : ℕ) : exponent u i l k (some 0) = i := by
-  simp [exponent]
-
-@[simp] private theorem exponent_one (u i l k : ℕ) : exponent u i l k (some 1) = l := by
-  simp [exponent]
-
-@[simp] private theorem exponent_two (u i l k : ℕ) : exponent u i l k (some 2) = k := by
-  simp [exponent]
-
-private def colExp {b : Bank} {h : ℕ} (c : Column b h) : SeedVar →₀ ℕ :=
-  exponent c.2.2.2.2.val (c.1.val - c.2.1.val - c.2.2.1.val) c.2.2.1.val c.2.1.val
-
-private def colX {b : Bank} {h : ℕ} (c : Column b h) : ℕ := c.2.2.2.1.val
-
-private theorem column_injective (b : Bank) (h : ℕ) :
-    Function.Injective (fun c : Column b h => (colExp c, colX c)) := by
-  rintro ⟨q,k,l,x,u⟩ ⟨q',k',l',x',u'⟩ he
-  have he₀ := congrArg (fun p : (SeedVar →₀ ℕ) × ℕ => p.1 (some 0)) he
-  have he₁ := congrArg (fun p : (SeedVar →₀ ℕ) × ℕ => p.1 (some 1)) he
-  have he₂ := congrArg (fun p : (SeedVar →₀ ℕ) × ℕ => p.1 (some 2)) he
-  have heu := congrArg (fun p : (SeedVar →₀ ℕ) × ℕ => p.1 none) he
-  have hex := congrArg Prod.snd he
-  simp only [colExp, colX, exponent_zero, exponent_one, exponent_two, exponent_none] at *
-  have hk := k.isLt
-  have hl := l.isLt
-  have hk' := k'.isLt
-  have hl' := l'.isLt
-  simp only [Nat.lt_succ_iff, le_min_iff] at hk hl hk' hl'
-  have hq : q = q' := Fin.ext (by omega)
-  subst q'
-  have hkk : k = k' := Fin.ext he₂
-  subst k'
-  have hll : l = l' := Fin.ext he₁
-  subst l'
-  have hxx : x = x' := Fin.ext hex
-  have huu : u = u' := Fin.ext heu
-  subst x'
-  subst u'
-  rfl
-
-private def coordinate (e : SeedVar →₀ ℕ) (x : ℕ) : PhysicalRow →ₗ[Geom] Geom :=
-  (Polynomial.lcoeff Geom x).comp ((MvPolynomial.lcoeff Geom[X] e).restrictScalars Geom)
-
-private def column {b : Bank} {h : ℕ} (c : Column b h) : PhysicalRow :=
-  MvPolynomial.monomial (colExp c) (Polynomial.monomial (colX c) 1)
-
-private theorem coordinate_column {b : Bank} {h : ℕ} (c : Column b h)
-    (e : SeedVar →₀ ℕ) (x : ℕ) :
-    coordinate e x (column c) = if colExp c = e ∧ colX c = x then 1 else 0 := by
-  classical
-  change ((column c).coeff e).coeff x = _
-  by_cases he : colExp c = e <;> simp [column, he, Polynomial.coeff_monomial]
-
-private theorem column_li (b : Bank) (h : ℕ) :
-    LinearIndependent Geom (column (b := b) (h := h)) := by
-  classical
-  let L : PhysicalRow →ₗ[Geom] (Column b h → Geom) :=
-    LinearMap.pi (fun c : Column b h => coordinate (colExp c) (colX c))
-  apply LinearIndependent.of_comp L
-  have he : L ∘ column = (Pi.basisFun Geom (Column b h) : Column b h → Column b h → Geom) := by
-    funext c d
-    rw [Function.comp_apply, Pi.basisFun_apply, Pi.single_apply]
-    change coordinate (colExp d) (colX d) (column c) = _
-    simp only [coordinate_column, ← Prod.mk.injEq, (column_injective b h).eq_iff, eq_comm]
-  rw [he]
-  exact (Pi.basisFun Geom (Column b h)).linearIndependent
-
-private def space (b : Bank) (h : ℕ) : Submodule Geom PhysicalRow :=
-  Submodule.span Geom (Set.range (column (b := b) (h := h)))
-
-private theorem occurs_in_column {b : Bank} {h : ℕ} {F : PhysicalRow}
-    (hF : F ∈ space b h) {e : SeedVar →₀ ℕ} {x : ℕ} (hne : (F.coeff e).coeff x ≠ 0) :
-    ∃ c : Column b h, colExp c = e ∧ colX c = x := by
-  classical
-  by_contra! hn
-  have hle : space b h ≤ LinearMap.ker (coordinate e x) := by
-    apply Submodule.span_le.mpr
-    rintro _ ⟨c, rfl⟩
-    change coordinate e x (column c) = 0
-    rw [coordinate_column, ite_eq_right]
-    exact fun hc => (hn c hc.1 hc.2).elim
-  exact hne (LinearMap.mem_ker.mp (hle hF))
-
-private theorem column_bounds {b : Bank} {h : ℕ} (c : Column b h) :
-    let e := colExp c
-    Finsupp.weight (fun i : SeedVar => i.elim 0 (fun _ => 1)) e ≤ b.box.b ∧
-    Finsupp.weight (fun i : SeedVar => i.elim 0 Fin.val) e ≤ b.box.j ∧
-    e (some 2) ≤ b.box.t ∧ e none ≤ 70000 ∧
-    colX c + e.sum (fun i n => i.elim 0 (fun j => (131071 + h - j.val) * n)) ≤
-      b.cut + (b.box.b + b.box.j) * h := by
-  rcases c with ⟨q,k,l,x,u⟩
-  have hq := q.isLt
-  have hk := k.isLt
-  have hl := l.isLt
-  have hx := x.isLt
-  have hu := u.isLt
-  simp only [Nat.lt_succ_iff, le_min_iff] at hq hk hl
-  have hs : q.val - k.val - l.val + l.val + k.val = q.val := by omega
-  have hi : l.val + 2 * k.val ≤ 2300 := by omega
-  have hraw : rawBase b + 131071 * b.box.b = b.cut + 1 := by
-    unfold rawBase
-    have := cut_large b
-    omega
-  have hcredit : (2300 + (b.box.b - q.val)) * h + h * q.val = (b.box.b + 2300) * h := by
-    rw [mul_comm h q.val, ← Nat.add_mul]
-    congr 1
-    omega
-  have hweight :
-      (131071 + h - 0) * (q.val - k.val - l.val) +
-        (131071 + h - 1) * l.val + (131071 + h - 2) * k.val + (l.val + 2 * k.val) =
-      131071 * q.val + h * q.val := by
-    have h₁ : 131071 + h - 1 + 1 = 131071 + h := by omega
-    have h₂ : 131071 + h - 2 + 2 = 131071 + h := by omega
-    calc
-      _ = (131071 + h) * (q.val - k.val - l.val) +
-          (131071 + h - 1 + 1) * l.val + (131071 + h - 2 + 2) * k.val := by
-        simp only [Nat.sub_zero]
-        ring
-      _ = _ := by rw [h₁, h₂, ← Nat.mul_add, ← Nat.mul_add, hs, Nat.add_mul]
-  have hsum :
-      (exponent u.val (q.val - k.val - l.val) l.val k.val).sum
-        (fun i n => i.elim 0 (fun j => (131071 + h - j.val) * n)) =
-      (131071 + h - 0) * (q.val - k.val - l.val) +
-        (131071 + h - 1) * l.val + (131071 + h - 2) * k.val := by
-    rw [Finsupp.sum_fintype _ _ (fun i => by cases i <;> simp),
-      Fintype.sum_option, Fin.sum_univ_three]
-    simp
-  refine ⟨?_, ?_, ?_, ?_, ?_⟩
-  · simpa [Finsupp.weight_apply, Finsupp.sum_fintype, Fintype.sum_option, Fin.sum_univ_succ,
-      colExp, smul_eq_mul, ← Nat.add_assoc, hs] using hq
-  · simpa [Finsupp.weight_apply, Finsupp.sum_fintype, Fintype.sum_option, Fin.sum_univ_succ,
-      colExp, smul_eq_mul, Nat.mul_comm] using hi
-  · simpa [colExp] using hk.2
-  · simpa [colExp] using Nat.le_of_lt_succ hu
-  · change x.val + (exponent u.val (q.val - k.val - l.val) l.val k.val).sum
-      (fun i n => i.elim 0 (fun j => (131071 + h - j.val) * n)) ≤
-        b.cut + (b.box.b + b.box.j) * h
-    rw [hsum, box_index]
-    change x.val < width b h q.val k.val l.val at hx
-    unfold width at hx
-    omega
-
-private theorem space_bounds (b : Bank) (h : ℕ) (F : PhysicalRow) (hF : F ∈ space b h) :
-    Caps b.box F ∧ TrueCut h (b.cut + (b.box.b + b.box.j) * h) F := by
-  have he (e : SeedVar →₀ ℕ) (hm : e ∈ F.support) :
-      ∃ c : Column b h, colExp c = e ∧ colX c = (F.coeff e).natDegree := by
-    exact occurs_in_column hF (by
-      rw [Polynomial.coeff_natDegree, Polynomial.leadingCoeff_ne_zero]
-      exact MvPolynomial.mem_support_iff.mp hm)
-  refine ⟨⟨?_, ?_, ?_, ?_⟩, ?_⟩
-  · apply Finset.sup_le
-    intro e hm
-    obtain ⟨c, rfl, _⟩ := he e hm
-    exact (column_bounds c).1
-  · apply Finset.sup_le
-    intro e hm
-    obtain ⟨c, rfl, _⟩ := he e hm
-    exact (column_bounds c).2.1
-  · apply MvPolynomial.degreeOf_le_iff.mpr
-    intro e hm
-    obtain ⟨c, rfl, _⟩ := he e hm
-    exact (column_bounds c).2.2.1
-  · apply MvPolynomial.degreeOf_le_iff.mpr
-    intro e hm
-    obtain ⟨c, rfl, _⟩ := he e hm
-    exact (column_bounds c).2.2.2.1
-  · intro e hm
-    obtain ⟨c, rfl, hx⟩ := he e hm
-    rw [← hx]
-    exact (column_bounds c).2.2.2.2
-
-/-- The true ambient space, with the full independent seed cap. -/
-theorem ambient (b : Bank) (h : ℕ) :
-    ∃ V : Submodule Geom PhysicalRow, Module.Finite Geom V ∧
-      (∀ F ∈ V, Caps b.box F ∧ TrueCut h (b.cut + (b.box.b + b.box.j) * h) F) ∧
-      Module.finrank Geom V = 70001 * jetSum b.box.b (width b h) := by
-  refine ⟨space b h, Module.Finite.span_of_finite _ (Set.finite_range _), space_bounds b h, ?_⟩
-  rw [space, finrank_span_eq_card (column_li b h)]
-  simp only [Column, Fintype.card_sigma, Fintype.card_prod, Fintype.card_fin,
-    Nat.mul_comm _ 70001]
-  unfold jetSum
-  simp only [Finset.mul_sum]
-  rw [← Fin.sum_univ_eq_sum_range]
-  apply Finset.sum_congr rfl
-  intro q _
-  rw [← Fin.sum_univ_eq_sum_range]
-  apply Finset.sum_congr rfl
-  intro k _
-  rw [← Fin.sum_univ_eq_sum_range]
-
 end
-end K1_13_4_2_1
-end PackSource_K1_13_4_2_1Columns
-
-section PackSource_K1_13_4_2_1Proof
-set_option autoImplicit true
-namespace K1_13_4_2_1
-
-theorem proof : K1_13_4_2.c1 := by
-  intro b h hh
-  obtain ⟨V, hV, hadm, hdim⟩ := ambient b h
-  refine ⟨V, hV, hadm, ?_⟩
-  rw [hdim]
-  exact budget b h hh
-
-end K1_13_4_2_1
-end PackSource_K1_13_4_2_1Proof
-
-section PackSource_K1_13_7_2_3_1_2_2Packing
-set_option autoImplicit true
+section
 set_option autoImplicit false
-
 namespace K1_13_7_2_3_1_2_2
-
 open K1_13 K1_13_6_2_3 K1_13_6_2_3_1 K1_13_6_2_3_2 K1_13_7_1
 open K1_13_6_2_3_2_5 (shapeSum_add shapeSum_step)
 open scoped BigOperators Pointwise
-
-/-- Fill the highest exponent first, leaving at most one odd weighted capacity. -/
 private theorem cap_add_weak {p q : Shape} (hp : Chamber p) (hq : Chamber q) :
     capExponents p + capExponents q = capExponents (p.plus q) := by
   ext e
@@ -6678,7 +5096,6 @@ private theorem cap_add_weak {p q : Shape} (hp : Chamber p) (hq : Chamber q) :
       · exact hx.1
       · exact hy.1
       · exact hz.1
-
 private theorem slot_degree_ne_zero {ι : Type} [DecidableEq ι] (shapes : ι → Shape)
     (e : CapVar shapes →₀ ℕ) (i : ι) :
     Finsupp.weight (step ∘ capSlot shapes) e i ≠ 0 ↔
@@ -6695,7 +5112,6 @@ private theorem slot_degree_ne_zero {ι : Type} [DecidableEq ι] (shapes : ι �
       simp at hv
   · rintro ⟨v, hvi, hv⟩
     exact ⟨v, Finsupp.mem_support_iff.mpr hv, by simpa [hvi] using Nat.pos_of_ne_zero hv⟩
-
 private theorem productExponents_zero {ι : Type} [DecidableEq ι] (shapes : ι → Shape) :
     productExponents shapes 0 = 0 := by
   ext m
@@ -6711,8 +5127,6 @@ private theorem productExponents_zero {ι : Type} [DecidableEq ι] (shapes : ι 
     simpa [he] using hexp.symm
   · rintro rfl
     exact ⟨0, map_zero _, map_zero _⟩
-
-/-- Removing one variable in slot i removes one copy of its cap from the product. -/
 private theorem productExponents_add_step {ι : Type} [DecidableEq ι] (shapes : ι → Shape)
     (a : ι → ℕ) (i : ι) :
     productExponents shapes (a + step i) =
@@ -6740,7 +5154,6 @@ private theorem productExponents_add_step {ι : Type} [DecidableEq ι] (shapes :
     · rw [map_add, Finsupp.weight_single, one_smul, hdeg]
       rfl
     · simp only [map_add, Finsupp.weight_single, one_smul, hexp, v]
-
 private theorem capExponents_zero : capExponents ⟨0, 0, 0⟩ = 0 := by
   ext m
   simp only [cap_coords, Set.mem_zero, Nat.mul_zero]
@@ -6755,7 +5168,6 @@ private theorem capExponents_zero : capExponents ⟨0, 0, 0⟩ = 0 := by
     · change m 3 = 0; omega
   · rintro rfl
     simp
-
 theorem shapeSum_chamber {ι : Type} [Fintype ι] (s : ι → Shape)
     (hs : ∀ i, Chamber (s i)) (a : ι → ℕ) : Chamber (shapeSum s a) := by
   refine ⟨Finset.sum_le_sum (fun i _ => Nat.mul_le_mul_left (a i) (hs i).1), ?_⟩
@@ -6764,8 +5176,6 @@ theorem shapeSum_chamber {ι : Type} [Fintype ι] (s : ι → Shape)
   refine Finset.sum_le_sum fun i _ => ?_
   rw [Nat.mul_left_comm 3]
   exact Nat.mul_le_mul_left (a i) (hs i).2
-
-/-- Exact packing allows an individual cap to have zero top width. -/
 theorem weak_packing {ι : Type} [Fintype ι] [DecidableEq ι]
     (s : ι → Shape) (hs : ∀ i, Chamber (s i)) (a : ι → ℕ) :
     productExponents s a = capExponents (shapeSum s a) := by
@@ -6797,34 +5207,24 @@ theorem weak_packing {ι : Type} [Fintype ι] [DecidableEq ι]
       have hlt : (∑ k, b k) < ∑ k, a k := by omega
       rw [← hab, productExponents_add_step, shapeSum_add, shapeSum_step, ih b hlt,
         cap_add_weak (shapeSum_chamber s hs b) (hs i)]
-
 end K1_13_7_2_3_1_2_2
-end PackSource_K1_13_7_2_3_1_2_2Packing
-
-section PackSource_K1_13_7_2_3_1_2_2Rays
-set_option autoImplicit true
+end
+section
 set_option autoImplicit false
-
 namespace K1_13_7_2_3_1_2_2
-
 noncomputable section
-
 open K1_13 K1_13_6 K1_13_6_2_3 K1_13_6_2_3_2 K1_13_7_1 MvPolynomial Filter
 open K1_13_6_2_3_2_5 (ray ray_eval shapeSum_add)
 open scoped BigOperators
-
 variable {ι : Type} [Fintype ι]
-
 private theorem affine_eq_rank (J : Ideal GeoJets) (q : Shape) (hq : ChamberBox q) (n : ℕ) :
     affineHilbertFunction (J.comap (monomialMap GeoField (capExponents q)).toRingHom) n =
       supportRank J (capExponents (q.scale n)) := by
   rw [K1_13_6_2_3_2_4.proof, K1_13_6_2_3_2_2.proof (fun _ : Unit => q) (fun _ => hq)]
   simp [shapeSum, Shape.scale]
-
 private theorem shapeSum_scale (shapes : ι → Shape) (n : ℕ) (v : ι → ℕ) :
     shapeSum shapes (fun i => n * v i) = (shapeSum shapes v).scale n := by
   simp [shapeSum, Shape.scale, mul_assoc, Finset.mul_sum]
-
 private theorem cap_surjective (p : Shape) (hp : ChamberBox p) :
     Function.Surjective (monomialMap GeoField (capExponents p)) := by
   apply monomialMap_surjective
@@ -6832,7 +5232,6 @@ private theorem cap_surjective (p : Shape) (hp : ChamberBox p) :
   have ⟨hb, hj, ht⟩ := hp
   fin_cases i <;>
     norm_num [K1_13_6_2_3_1.cap_coords, Finsupp.single_apply] <;> omega
-
 private theorem supportRank_le (J : Ideal GeoJets) {p q : Shape} (h : InBox p q) :
     supportRank J (capExponents p) ≤ supportRank J (capExponents q) := by
   have hsub : capExponents p ⊆ capExponents q := fun _ he =>
@@ -6841,7 +5240,6 @@ private theorem supportRank_le (J : Ideal GeoJets) {p q : Shape} (h : InBox p q)
   have : Module.Finite GeoField (restrictSupport GeoField (capExponents q)) :=
     Module.Finite.of_basis (basisRestrictSupport GeoField _)
   exact Submodule.finrank_mono (Submodule.map_mono (restrictSupport_mono GeoField hsub))
-
 private theorem shape_bounds (p q : Shape) (hq : ChamberBox q) :
     ∃ C : ℕ, ∀ n, InBox (q.scale n) (p.plus (q.scale n)) ∧
       InBox (p.plus (q.scale n)) (q.scale (n + C)) := by
@@ -6855,9 +5253,6 @@ private theorem shape_bounds (p q : Shape) (hq : ChamberBox q) :
     ⟨bound p.b q.b (by dsimp [C]; omega) (by omega) n,
      bound p.j q.j (by dsimp [C]; omega) (by omega) n,
      bound p.t q.t (by dsimp [C]; omega) ht n⟩⟩⟩
-
-/-- An offset chosen in the eventual region admits even rays with zero coordinates.
-Their ranks are bounded by those of two diagonals separated by a fixed shift. -/
 theorem weak_ray_compare (shapes : ι → Shape) (J : Ideal GeoJets) (base : ι)
     (hs : ∀ i, Chamber (shapes i)) (hbase : 0 < (shapes base).t)
     (P : MvPolynomial ι ℚ) (u : ι → ℕ)
@@ -6908,27 +5303,18 @@ theorem weak_ray_compare (shapes : ι → Shape) (J : Ideal GeoJets) (base : ι)
     (hdeg.trans hd) (hT.trans_le hd) hhi
   rw [Polynomial.coeff_taylor_of_natDegree_le _ (hQ.trans_le hd)] at hh
   exact ⟨hdeg, le_antisymm hh hl⟩
-
-
 end
-
 end K1_13_7_2_3_1_2_2
-end PackSource_K1_13_7_2_3_1_2_2Rays
-
-section PackSource_K1_14_3R_2_3Proof
-set_option autoImplicit true
+end
+section
 set_option autoImplicit false
 set_option backward.isDefEq.respectTransparency false
 set_option maxSynthPendingDepth 10
 set_option maxHeartbeats 1500000
-
 namespace K1_14_3R_2_3
-
 noncomputable section
-
 open K1_14_3 K1_14_3_2_3 K1_14_3R_2 K1_14
 open scoped BigOperators
-
 private theorem pair_le {P Q : Jet} {I : Ideal Jet} (hP : P ∈ I) (hQ : Q ∈ I) :
     pairIdeal P Q ≤ I := by
   unfold pairIdeal
@@ -6938,8 +5324,6 @@ private theorem pair_le {P Q : Jet} {I : Ideal Jet} (hP : P ∈ I) (hQ : Q ∈ I
   rcases hx with rfl | rfl
   · exact hP
   · exact hQ
-
-/-- A height-two prime containing the pair has no smaller prime containing it. -/
 private theorem pair_minimal {P Q : Jet} {q : Surface} (hpair : K1_14_3_2.ProperPair P Q)
     (hh : q.asIdeal.height = 2) (hP : P ∈ q.asIdeal) (hQ : Q ∈ q.asIdeal) :
     q.asIdeal ∈ (pairIdeal P Q).minimalPrimes := by
@@ -6968,11 +5352,8 @@ private theorem pair_minimal {P Q : Jet} {q : Surface} (hpair : K1_14_3_2.Proper
   have h := (add_le_add_left hAh 1).trans (Ideal.height_add_one_le_of_lt_of_isPrime hAq')
   rw [hh] at h
   exact (by decide : ¬ (2 : ℕ∞) + 1 ≤ 2) h
-
 private def planeLength (s : Slice) (J : Ideal Jet) : ℕ∞ :=
   Module.length SectionField (Plane ⧸ J.map (planeMap s))
-
-/-- Eliminating the two slice equations identifies the quotients of any ideal. -/
 private def sectionEquiv (s : Slice) (J : Ideal Jet) :
     (SectionJet ⧸ slicedIdeal J s) ≃ₐ[SectionField] (Plane ⧸ J.map (planeMap s)) := by
   have hsurj := sliceMap_surjective s
@@ -6984,13 +5365,11 @@ private def sectionEquiv (s : Slice) (J : Ideal Jet) :
   exact AlgEquiv.ofBijective f
     ⟨Ideal.quotientMap_injective' (H := hmap.le) hmap.ge,
       Ideal.quotientMap_surjective (H := hmap.le) hsurj⟩
-
 private theorem planeLength_eq (s : Slice) (J : Ideal Jet)
     [Module.Finite SectionField (SectionJet ⧸ slicedIdeal J s)] :
     planeLength s J =
       (Module.finrank SectionField (SectionJet ⧸ slicedIdeal J s) : ℕ∞) :=
   (sectionEquiv s J).toLinearEquiv.length_eq.symm.trans (Module.length_eq_finrank _ _)
-
 theorem proof : K1_14_3R_2.c3 := by
   intro P Q qs k d hpair _ hqs hlen hfin
   let s := countedSlice k
@@ -7021,21 +5400,14 @@ theorem proof : K1_14_3R_2.c3 := by
   change (d : ℚ) * mass qs s ≤ (Module.finrank SectionField (SectionJet ⧸ slicedIdeal J s) : ℚ)
   rw [mass, Finset.mul_sum]
   exact_mod_cast hnat
-
 end
 end K1_14_3R_2_3
-end PackSource_K1_14_3R_2_3Proof
-
-section PackSource_K1_13_4_1Proof
-set_option autoImplicit true
+end
+section
 namespace K1_13_4_1
 noncomputable section
-
 open Polynomial K1_13 K1_13_4
-
-/-- View an abscissa polynomial as constant in the seed. -/
 private def overSeed (p : Geom[X]) : Geom[X][X] := p.map C
-
 @[simp] private theorem overSeed_eval (p : Geom[X]) (z : Geom) :
     (overSeed p).map (evalRingHom z) = p := by
   rw [overSeed, Polynomial.map_map]
@@ -7043,14 +5415,10 @@ private def overSeed (p : Geom[X]) : Geom[X][X] := p.map C
     ext x
     simp
   rw [h, Polynomial.map_id]
-
 @[simp] private theorem overSeed_generic (p : Geom[X]) :
     (overSeed p).map (algebraMap Geom[X] GenericSeed) = liftX p := by
   rw [overSeed, liftX, Polynomial.map_map,
     ← Polynomial.algebraMap_eq, ← IsScalarTower.algebraMap_eq Geom Geom[X] GenericSeed]
-
-/-- A monic left input makes the fixed right size harmless when the right
-polynomial loses degree at a seed. -/
 private theorem regular_resultant {F : Type*} [Field F] {H A : F[X]}
     (hH : H.Monic) {n : ℕ} (hA : A.natDegree ≤ n) (hc : IsCoprime A H) :
     H.resultant A H.natDegree n ≠ 0 := by
@@ -7059,14 +5427,12 @@ private theorem regular_resultant {F : Type*} [Field F] {H A : F[X]}
   rw [Nat.add_sub_of_le hA, coeff_natDegree, hH.leadingCoeff, one_pow, one_mul] at e
   rw [e]
   exact ((isUnit_resultant_iff_isCoprime hH).mpr hc.symm).ne_zero
-
 private theorem scaled_inverse {F : Type*} [Field F] {H A U V : F[X]} {d : F}
     (hd : d ≠ 0) (h : H * U + A * V = C d) : IsCoprime A H := by
   refine ⟨C d⁻¹ * V, C d⁻¹ * U, ?_⟩
   calc
     _ = C d⁻¹ * (H * U + A * V) := by ring
     _ = 1 := by rw [h, ← C_mul, inv_mul_cancel₀ hd, C_1]
-
 private theorem unscale {F : Type*} [Field F] {H A B N : F[X]} {d : F}
     (hd : d ≠ 0) (h : H ∣ A * N + C d * B) :
     H ∣ A * (C d⁻¹ * N) + B := by
@@ -7078,7 +5444,6 @@ private theorem unscale {F : Type*} [Field F] {H A B N : F[X]} {d : F}
       calc
         _ = A * (C d⁻¹ * N) + (C d⁻¹ * C d) * B := by ring
         _ = _ := by rw [hunit, one_mul]
-
 theorem proof : K1_13_4.c1 := by
   intro Γ s P
   let H := overSeed P.H
@@ -7109,7 +5474,6 @@ theorem proof : K1_13_4.c1 := by
   obtain ⟨U, V, _, _, hbezout⟩ := exists_mul_add_mul_eq_C_resultant H A le_rfl le_rfl
     (Or.inl (Nat.ne_of_gt hpos))
   change H * U + A * V = C den at hbezout
-  -- The monic remainder retains the entire ideal (H), including its multiplicities.
   let num := (-B * V) %ₘ H
   have hsmall : num.natDegree < P.H.natDegree := by
     rw [← hdeg]
@@ -7162,20 +5526,14 @@ theorem proof : K1_13_4.c1 := by
       (max_le hS (by omega))
     rw [hT, P.monic.natDegree_mul' hTzero] at hb
     omega
-
 end
 end K1_13_4_1
-end PackSource_K1_13_4_1Proof
-
-section PackSource_K1_13_6_2_4_1_1Polynomial
-set_option autoImplicit true
+end
+section
 set_option autoImplicit false
-
 namespace K1_13_6_2_4_1_1
-
 open K1_13_6_2_4_1 MvPolynomial
 open scoped BigOperators
-
 private theorem degree_add_eq_max {p q : Form} (hp : TopNonnegative p)
     (hq : TopNonnegative q) : (p + q).totalDegree = max p.totalDegree q.totalDegree := by
   classical
@@ -7196,14 +5554,12 @@ private theorem degree_add_eq_max {p q : Form} (hp : TopNonnegative p)
       exact (add_pos_of_pos_of_nonneg hpa hqa).ne')
     exact hd.le.trans (le_totalDegree hsum)
   · rw [totalDegree_add_eq_left_of_totalDegree_lt h, max_eq_left h.le]
-
 private theorem top_add {p q : Form} (hp : TopNonnegative p) (hq : TopNonnegative q) :
     TopNonnegative (p + q) := by
   intro a ha
   rw [degree_add_eq_max hp hq] at ha
   change 0 ≤ p.coeff a + q.coeff a
   exact add_nonneg (hp a ((le_max_left _ _).trans ha)) (hq a ((le_max_right _ _).trans ha))
-
 theorem top_sum {ι : Type} (S : Finset ι) (f : ι → Form)
     (h : ∀ i ∈ S, TopNonnegative (f i)) : TopNonnegative (∑ i ∈ S, f i) := by
   classical
@@ -7213,7 +5569,6 @@ theorem top_sum {ι : Type} (S : Finset ι) (f : ι → Form)
     rw [Finset.sum_insert ha]
     exact top_add (h _ (Finset.mem_insert_self _ _))
       (ih fun i hi => h i (Finset.mem_insert_of_mem hi))
-
 private theorem top_mul {p q : Form} (hp : TopNonnegative p) (hq : TopNonnegative q) :
     TopNonnegative (p * q) := by
   classical
@@ -7233,12 +5588,10 @@ private theorem top_mul {p q : Form} (hp : TopNonnegative p) (hq : TopNonnegativ
   by_cases hc : q.totalDegree < bc.2.degree
   · rw [coeff_eq_zero_of_totalDegree_lt hc, mul_zero]
   exact mul_nonneg (hp _ (by omega)) (hq _ (by omega))
-
 private theorem top_C {r : ℚ} (hr : 0 ≤ r) : TopNonnegative (C r : Form) := by
   intro a _
   rw [coeff_C]
   split <;> simp_all
-
 private theorem top_prod {ι : Type} (S : Finset ι) (f : ι → Form)
     (h : ∀ i ∈ S, TopNonnegative (f i)) : TopNonnegative (∏ i ∈ S, f i) := by
   classical
@@ -7248,7 +5601,6 @@ private theorem top_prod {ι : Type} (S : Finset ι) (f : ι → Form)
     rw [Finset.prod_insert ha]
     exact top_mul (h _ (Finset.mem_insert_self _ _))
       (ih fun i hi => h i (Finset.mem_insert_of_mem hi))
-
 private theorem top_linear (j : Fin 5) (r : ℚ) : TopNonnegative (MvPolynomial.X j + C r : Form) := by
   classical
   intro a ha
@@ -7258,23 +5610,18 @@ private theorem top_linear (j : Fin 5) (r : ℚ) : TopNonnegative (MvPolynomial.
   change 0 ≤ (MvPolynomial.X j : Form).coeff a + (C r : Form).coeff a
   rw [coeff_eq_zero_of_totalDegree_lt hr, add_zero, coeff_X]
   split <;> simp
-
-/-- The counting polynomial for a slot with d+1 free variables and offset k. -/
 noncomputable def slotForm (j : Fin 5) (d k : ℕ) : Form :=
   C ((d.factorial : ℚ)⁻¹) *
     ∏ r ∈ Finset.range d, (MvPolynomial.X j + C ((r : ℚ) + 1 - (k : ℚ)))
-
 theorem slotForm_top (j : Fin 5) (d k : ℕ) : TopNonnegative (slotForm j d k) := by
   exact top_mul (top_C (by positivity))
     (top_prod _ _ fun r _ => top_linear j _)
-
 private theorem asc_eval (d : ℕ) (z : ℚ) :
     (ascPochhammer ℚ d).eval z = ∏ r ∈ Finset.range d, (z + (r : ℚ)) := by
   induction d with
   | zero => simp [ascPochhammer_zero]
   | succ d ih =>
     rw [ascPochhammer_succ_eval, Finset.prod_range_succ, ih]
-
 theorem slotForm_eval (j : Fin 5) (d k : ℕ) (t : Grade) (h : k ≤ t j + d) :
     eval (fun i => (t i : ℚ)) (slotForm j d k) = ((t j + d - k).choose d : ℚ) := by
   rw [← Polynomial.preHilbertPoly_eq_choose_add_sub ℚ d h]
@@ -7283,229 +5630,22 @@ theorem slotForm_eval (j : Fin 5) (d k : ℕ) (t : Grade) (h : k ≤ t j + d) :
     Polynomial.eval_sub, Polynomial.eval_X, Polynomial.eval_C, Polynomial.eval_one, asc_eval]
   congr 1
   exact Finset.prod_congr rfl fun _ _ => by ring
-
 theorem top_product (f : Fin 5 → Form) (h : ∀ i, TopNonnegative (f i)) :
     TopNonnegative (∏ i, f i) :=
   top_prod _ _ fun i _ => h i
-
 end K1_13_6_2_4_1_1
-end PackSource_K1_13_6_2_4_1_1Polynomial
-
-section PackSource_K1_13_6_2_1Proof
-set_option autoImplicit true
-namespace K1_13_6_2_1
-
-noncomputable section
-
-open Polynomial MvPolynomial K1 K1_13 K1_13_6 K1_13_6_2 K1_13_7_1
-open scoped BigOperators
-
-local notation "W" => MvPolynomial.weightedTotalDegree
-
-private def denominator (L : ℕ) (g : Row 4) : Row 4 :=
-  separant g ^ (2 * L)
-
-private def numerator (L : ℕ) (g : Row 4) (i : TaylorIndex) : Row 4 :=
-  if hi : i.val < 4 then MvPolynomial.X ⟨i.val, hi⟩ * denominator L g
-  else
-    MvPolynomial.C (Polynomial.C (↑i.val.factorial : Geom)⁻¹) *
-      (separant g ^ (2 * (L - i.val)) * jetNumerator g i.val)
-
-private def taylorChart (L : ℕ) (g : Row 4) : TaylorChart where
-  denom := toGeneric (denominator L g)
-  numerator i := toGeneric (numerator L g i)
-  initial i := by
-    unfold numerator toGeneric
-    have hi : (i.castLE (by decide : 4 ≤ taylorLength)).val < 4 := i.isLt
-    rw [dite_eq_left hi, map_mul, MvPolynomial.map_X]
-    rfl
-
-private theorem numerator_bound {L : ℕ} (hL : taylorLength ≤ L) (w : Fin 4 → ℕ) (Δ d₀ : ℕ)
-    (hshift : ∀ i : Fin 3, w i.succ ≤ w i.castSucc + Δ) (hw : ∀ i, w i ≤ d₀)
-    {g : Row 4} {B : ℕ} (hB : w 3 ≤ B) (hg : W w g ≤ B) (i : TaylorIndex) :
-    W w (numerator L g i) ≤ d₀ + 2 * L * (B - w 3) + L * Δ := by
-  have hi : i.val ≤ L := i.isLt.le.trans hL
-  unfold numerator
-  split_ifs
-  · exact (weightedTotalDegree_mul_le _ _ _).trans
-      ((Nat.add_le_add ((weight_X_le w _).trans (hw _)) (separant_pow_bound w hg _)).trans
-        (Nat.le_add_right _ _))
-  · apply (weight_const_mul_le _ _ _).trans
-    apply (weightedTotalDegree_mul_le _ _ _).trans
-    calc
-      _ ≤ 2 * (L - i.val) * (B - w 3) + (w 0 + i.val * (2 * (B - w 3) + Δ)) :=
-        Nat.add_le_add (separant_pow_bound w hg _) (jet_bound w Δ hshift hB hg i.val)
-      _ = w 0 + 2 * (i.val + (L - i.val)) * (B - w 3) + i.val * Δ := by ring
-      _ ≤ _ := by
-        rw [Nat.add_sub_of_le hi]
-        exact Nat.add_le_add (Nat.add_le_add_right (hw 0) _) (Nat.mul_le_mul_right Δ hi)
-
-private theorem chart_fits {L : ℕ} (hL : taylorLength ≤ L) {g : Row 4} {p : Shape}
-    (hg : InBox (shape g) p) (hp : Chamber p) (ht : 0 < p.t) :
-    (taylorChart L g).Fits (chart L p) := by
-  constructor
-  · apply three_weights hg hp ht
-    intro w Δ d₀ B _ _ _ hB
-    exact (separant_pow_bound w hB (2 * L)).trans (by omega)
-  · intro i
-    exact three_weights hg hp ht (fun w Δ d₀ _ hs hw hwB hB =>
-      numerator_bound hL w Δ d₀ hs hw hwB hB i)
-
-private theorem ordinary_eq_hasse (S : Geom[X]) (n : ℕ) :
-    derivative^[n] S = Polynomial.C (n.factorial : Geom) * hasseDeriv n S := by
-  ext m
-  rw [coeff_iterate_derivative, Polynomial.coeff_C_mul, hasseDeriv_coeff,
-    Nat.descFactorial_eq_factorial_mul_choose]
-  simp only [nsmul_eq_mul, Nat.cast_mul, mul_assoc]
-
-private theorem eval_generic (S : Geom[X]) (P : Row 4) :
-    evalGeneric S (toGeneric P) = genericCoeffs (atJet P S) :=
-  (MvPolynomial.map_eval genericCoeffs (jet S) P).symm
-
-private theorem generic_injective : Function.Injective genericCoeffs :=
-  (algebraMap GenericField GeoField).injective.comp (IsFractionRing.injective Geom[X] GenericField)
-
-private theorem chart_recovers {L : ℕ} (hL : taylorLength ≤ L) {g : Row 4} {S : Geom[X]}
-    (hg : atJet g S = 0) (hr : atJet (separant g) S ≠ 0) : (taylorChart L g).Recovers S := by
-  have hden : atJet (denominator L g) S = atJet (separant g) S ^ (2 * L) :=
-    map_pow (MvPolynomial.eval (jet S : Fin 4 → Geom[X])) _ _
-  constructor
-  · change evalGeneric S (toGeneric (denominator L g)) ≠ 0
-    rw [eval_generic]
-    apply (map_ne_zero_iff _ generic_injective).mpr
-    rw [hden]
-    exact pow_ne_zero _ hr
-  · intro i
-    change evalGeneric S (toGeneric (numerator L g i)) =
-      evalGeneric S (toGeneric (denominator L g)) * genericCoeffs (hasseDeriv i.val S)
-    rw [eval_generic, eval_generic, ← map_mul]
-    apply congrArg genericCoeffs
-    unfold numerator
-    split_ifs with hinit
-    · unfold atJet
-      rw [map_mul, MvPolynomial.eval_X, mul_comm]
-      rfl
-    · let E := MvPolynomial.eval (jet S : Fin 4 → Geom[X])
-      change E (_ * (_ ^ _ * _)) = _
-      rw [map_mul, map_mul, map_pow, MvPolynomial.eval_C]
-      change _ * (atJet (separant g) S ^ (2 * (L - i.val)) *
-        atJet (jetNumerator g i.val) S) = _
-      rw [eval_jetNumerator _ _ hg, ordinary_eq_hasse]
-      have hinv : Polynomial.C (↑i.val.factorial : Geom)⁻¹ * Polynomial.C (↑i.val.factorial : Geom) = 1 := by
-        rw [← map_mul, inv_mul_cancel₀ (factorial_cast_ne_zero
-          (i.isLt.trans (by decide : taylorLength < K1.p))), map_one]
-      have hpow : 2 * (L - i.val) + 2 * i.val = 2 * L := by
-        have hi : i.val ≤ L := i.isLt.le.trans hL
-        rw [← Nat.mul_add, Nat.sub_add_cancel hi]
-      calc
-        _ = (Polynomial.C (↑i.val.factorial : Geom)⁻¹ * Polynomial.C (↑i.val.factorial : Geom)) *
-            ((atJet (separant g) S ^ (2 * (L - i.val)) * atJet (separant g) S ^ (2 * i.val)) *
-              hasseDeriv i.val S) := by ring
-        _ = _ := by rw [hinv, one_mul, ← pow_add, hpow, hden]
-
-private def constants : Geom →+* GeoField :=
-  genericCoeffs.comp Polynomial.C
-
-private def center : GeoField :=
-  genericCoeffs Polynomial.X
-
-private theorem eval_center (S : Geom[X]) : (S.map constants).eval center = genericCoeffs S := by
-  rw [Polynomial.eval_map]
-  change eval₂RingHom constants center S = genericCoeffs S
-  congr 1
-  apply Polynomial.ringHom_ext
-  · intro a
-    simp [constants]
-  · simp [center]
-
-private theorem taylor_sum {S : Geom[X]} (hS : S.natDegree < taylorLength) (x : Geom) :
-    (∑ i : TaylorIndex, (constants x - center) ^ i.val * genericCoeffs (hasseDeriv i.val S)) =
-      constants (S.eval x) := by
-  let T := (S.map constants).taylor center
-  have hT : T.natDegree < taylorLength := by
-    change ((S.map constants).taylor center).natDegree < taylorLength
-    rw [natDegree_taylor]
-    exact Polynomial.natDegree_map_le.trans_lt hS
-  have hev : T.eval (constants x - center) = constants (S.eval x) := by
-    simp [T, taylor_eval]
-  rw [← hev, Polynomial.eval_eq_sum_range' hT, ← Fin.sum_univ_eq_sum_range]
-  apply Finset.sum_congr rfl
-  intro i _
-  change _ = ((S.map constants).taylor center).coeff i.val * _
-  rw [taylor_coeff, hasseDeriv_map, eval_center, mul_comm]
-
-private def valueForm (x a : Geom) : AffineForm :=
-  (-(constants a), fun i => (constants x - center) ^ i.val)
-
-private theorem eval_value {C : TaylorChart} {S : Geom[X]}
-    (h : C.Recovers S) (hd : S.natDegree < taylorLength) (x a : Geom) :
-    evalGeneric S (C.pullback (valueForm x a)) = 0 ↔ S.eval x = a := by
-  have evC (c : GeoField) : evalGeneric S (MvPolynomial.C c) = c := MvPolynomial.eval_C _
-  have hsum :
-      (∑ i : TaylorIndex, (constants x - center) ^ i.val *
-        (evalGeneric S C.denom * genericCoeffs (hasseDeriv i.val S))) =
-      evalGeneric S C.denom * constants (S.eval x) := by
-    rw [← taylor_sum hd x, Finset.mul_sum]
-    exact Finset.sum_congr rfl fun i _ => mul_left_comm _ _ _
-  have heval : evalGeneric S (C.pullback (valueForm x a)) =
-      evalGeneric S C.denom * (constants (S.eval x) - constants a) := by
-    simp only [TaylorChart.pullback, valueForm, map_add, map_sum, map_mul, evC, h.2, hsum]
-    ring
-  have hconst : Function.Injective constants := generic_injective.comp Polynomial.C_injective
-  rw [heval, mul_eq_zero, or_iff_right h.1, sub_eq_zero, hconst.eq_iff]
-
-theorem proof : K1_13_6_2.c1 := by
-  intro f Q l hf b
-  have hg := branch_box b
-  have hp := shape_chamber f
-  have ht : 0 < (shape f).chamber.t := hf.2.1
-  refine ⟨oldBox_of_fits (jet_fits hg hp ht (Nat.le_succ _)),
-    oldBox_of_fits (jet_fits hg hp ht (Nat.le_succ _)), ?_⟩
-  intro x a
-  let L := taylorLength + 2
-  let C := taylorChart L b.g
-  have hL : taylorLength ≤ L := Nat.le_add_right _ _
-  have hfit : C.Fits (chart L (shape f).chamber) := chart_fits hL hg hp ht
-  refine ⟨C.pullback (valueForm (embed x) (embed a)),
-    oldBox_of_fits (C.pullback_fits hfit _), ?_⟩
-  intro S hd hpoint
-  have hs : b.surface ≤ b.curve := le_trans le_sup_left b.divisor.le
-  have hgmem : toGeneric b.g ∈ b.surface := b.chart.2.1 b.r le_rfl
-  have hz : evalGeneric (extend S) (toGeneric b.g) = 0 := hpoint.1 (hs hgmem)
-  have hgzero : atJet b.g (extend S) = 0 := by
-    rw [eval_generic] at hz
-    exact generic_injective (hz.trans (map_zero _).symm)
-  have hregular : atJet (separant b.g) (extend S) ≠ 0 := by
-    have hn : evalGeneric (extend S) (toGeneric (separant b.g)) ≠ 0 := hpoint.2
-    rwa [eval_generic, map_ne_zero_iff _ generic_injective] at hn
-  have hdegree : (extend S).natDegree < taylorLength :=
-    (Polynomial.natDegree_map_le.trans hd).trans_lt (by decide)
-  change evalGeneric (extend S) (C.pullback (valueForm (embed x) (embed a))) = 0 ↔ _
-  rw [eval_value (chart_recovers hL hgzero hregular) hdegree, Polynomial.eval_map_apply,
-    embed.injective.eq_iff]
-
 end
-end K1_13_6_2_1
-end PackSource_K1_13_6_2_1Proof
-
-section PackSource_K1_13_4_6Aux1
-set_option autoImplicit true
+section
 namespace K1_13_4_6
-
 noncomputable section
-
 open K1_13 K1_13_4 Polynomial
 open scoped Polynomial
-
 set_option maxRecDepth 4000
-
 private abbrev Fiber := FractionRing Lower
 private abbrev toFiber : Lower →+* Fiber := algebraMap _ _
 private abbrev embedConstant : Geom →+* Lower := MvPolynomial.C.comp inclConst
-
 private theorem toFiber_injective : Function.Injective toFiber :=
   IsFractionRing.injective Lower Fiber
-
 theorem asSeedPoly_pad (F : GenericRow) (a : Geom[X]) :
     asSeedPoly (pad F a) = asSeedPoly F * a.map embedConstant := by
   let e := (MvPolynomial.optionEquivLeft GenericX (Fin 3)).toRingHom
@@ -7521,8 +5661,6 @@ theorem asSeedPoly_pad (F : GenericRow) (a : Geom[X]) :
   congr 1
   change l (a.map inclConst) = _
   rw [h, coe_mapRingHom, map_map]
-
-/-- A common divisor over the generic fibre descends after making it primitive. -/
 private theorem coprime_in_fiber {f g : Lower[X]} (hf : f ≠ 0)
     (hfg : IsRelPrime f g) : IsCoprime (f.map toFiber) (g.map toFiber) := by
   classical
@@ -7555,7 +5693,6 @@ private theorem coprime_in_fiber {f g : Lower[X]} (hf : f ≠ 0)
     rw [hdeg, ← D.natDegree_primPart, natDegree_eq_zero_of_isUnit hu])
   have hc : d.coeff 0 ≠ 0 := fun hz => hd (he.trans (by simp [hz]))
   exact he.symm ▸ isUnit_C.mpr hc.isUnit
-
 private theorem exists_constant_nonroot (f : Fiber[X]) (hf : f ≠ 0) (avoid : Finset Fiber) :
     ∃ a : Geom, let x := toFiber (embedConstant a); f.eval x ≠ 0 ∧ x ∉ avoid := by
   classical
@@ -7569,16 +5706,13 @@ private theorem exists_constant_nonroot (f : Fiber[X]) (hf : f ≠ 0) (avoid : F
   change f.eval (emb a) ≠ 0 ∧ emb a ∉ avoid
   simp only [Finset.mem_union, Multiset.mem_toFinset, mem_roots hf, not_or] at ha
   exact ⟨ha.1, ha.2⟩
-
 private theorem coprime_linear (f : Fiber[X]) {a : Fiber} (h : f.eval a ≠ 0) :
     IsCoprime ((Polynomial.X : Fiber[X]) - C a) f :=
   ((monic_X_sub_C a).irreducible_of_degree_eq_one (degree_X_sub_C a)).coprime_iff_not_dvd.mpr
     (fun hd => h (dvd_iff_isRoot.mp hd))
-
 private theorem asSeedPoly_ne_zero {F : GenericRow} (hF : F ≠ 0) : asSeedPoly F ≠ 0 :=
   (map_ne_zero_iff (MvPolynomial.optionEquivLeft GenericX (Fin 3))
     (MvPolynomial.optionEquivLeft GenericX (Fin 3)).injective).mpr hF
-
 private theorem pad_degree (F : GenericRow) (hF : F ≠ 0)
     (hcap : seedDegree F ≤ 70000) (a : Geom) :
     (asSeedPoly (pad F (((Polynomial.X : Geom[X]) - C a) ^
@@ -7588,8 +5722,6 @@ private theorem pad_degree (F : GenericRow) (hF : F ≠ 0)
   rw [asSeedPoly_pad, Polynomial.map_pow, Polynomial.map_sub, Polynomial.map_X, Polynomial.map_C,
     natDegree_mul (asSeedPoly_ne_zero hF) (pow_ne_zero _ (X_sub_C_ne_zero _)),
     natDegree_pow, natDegree_X_sub_C, mul_one, Nat.add_sub_of_le hcap']
-
-/-- A power of a different seed-linear factor on each side attains both degrees. -/
 theorem padding_exists {F G : GenericRow} (hF : F ≠ 0) (hG : G ≠ 0)
     (hfg : IsRelPrime F G) (hf : seedDegree F ≤ 70000) (hg : seedDegree G ≤ 70000) :
     ∃ a b : Geom[X], (asSeedPoly (pad F a)).natDegree = 70000 ∧
@@ -7630,52 +5762,39 @@ theorem padding_exists {F G : GenericRow} (hF : F ≠ 0) (hG : G ≠ 0)
     natDegree_map_eq_of_injective toFiber_injective, hp, hq, resultant_map_map] at hn
   intro hz
   exact hn ((congrArg toFiber hz).trans (map_zero _))
-
 end
 end K1_13_4_6
-end PackSource_K1_13_4_6Aux1
-
-section PackSource_K1_13_4_6Proof
-set_option autoImplicit true
+end
+section
 namespace K1_13_4_6
-
 noncomputable section
-
 open K1_13 K1_13_4 Polynomial
 open scoped Polynomial BigOperators Pointwise
-
 set_option maxRecDepth 4000
-
 private abbrev deg {σ : Type*} (w : σ → ℕ) (P : MvPolynomial σ GenericX) : ℕ :=
   P.weightedTotalDegree w
-
 private theorem deg_sum_le {σ ι : Type*} (w : σ → ℕ) {s : Finset ι}
     {p : ι → MvPolynomial σ GenericX} {B : ℕ} (h : ∀ i ∈ s, deg w (p i) ≤ B) :
     deg w (∑ i ∈ s, p i) ≤ B := by
   classical
   apply (AddMonoidAlgebra.supDegree_sum_le (D := Finsupp.weight w)).trans
   exact Finset.sup_le h
-
 private theorem deg_prod_le {σ ι : Type*} (w : σ → ℕ) (s : Finset ι)
     (p : ι → MvPolynomial σ GenericX) :
     deg w (∏ i ∈ s, p i) ≤ ∑ i ∈ s, deg w (p i) :=
   AddMonoidAlgebra.supDegree_prod_le (D := Finsupp.weight w) (map_zero _) (map_add _)
-
 private theorem deg_mul_le {σ : Type*} (w : σ → ℕ) (p q : MvPolynomial σ GenericX) :
     deg w (p * q) ≤ deg w p + deg w q :=
   AddMonoidAlgebra.supDegree_mul_le (D := Finsupp.weight w) (map_add _)
-
 private theorem deg_neg {σ : Type*} (w : σ → ℕ) (p : MvPolynomial σ GenericX) :
     deg w (-p) = deg w p :=
   AddMonoidAlgebra.supDegree_neg (D := Finsupp.weight w)
-
 private theorem deg_C {σ : Type*} (w : σ → ℕ) (a : GenericX) :
     deg w (MvPolynomial.C a) = 0 := by
   classical
   change (MvPolynomial.C a : MvPolynomial σ GenericX).support.sup (Finsupp.weight w) = 0
   rw [MvPolynomial.support_C]
   split <;> simp
-
 private theorem deg_coeff (w : Fin 3 → ℕ) (F : GenericRow) (i : ℕ) :
     deg w ((asSeedPoly F).coeff i) ≤ deg (fun o => o.elim 0 w) F := by
   apply Finset.sup_le
@@ -7687,7 +5806,6 @@ private theorem deg_coeff (w : Fin 3 → ℕ) (F : GenericRow) (i : ℕ) :
   rw [Finsupp.weight_apply, Finsupp.sum_option_index_smul] at h
   simpa only [Option.elim_none, Option.elim_some, smul_zero, zero_add, Finsupp.some_optionElim,
     Finsupp.weight_apply] using h
-
 private theorem deg_pad_coeff (w : Fin 3 → ℕ) (F : GenericRow) (a : Geom[X]) (i : ℕ) :
     deg w ((asSeedPoly (pad F a)).coeff i) ≤ deg (fun o => o.elim 0 w) F := by
   rw [asSeedPoly_pad, Polynomial.coeff_mul]
@@ -7699,8 +5817,6 @@ private theorem deg_pad_coeff (w : Fin 3 → ℕ) (F : GenericRow) (a : Geom[X])
     deg w (MvPolynomial.C (inclConst (a.coeff j.2))) ≤ _
   rw [deg_C, add_zero]
   exact deg_coeff w F j.1
-
-/-- The two blocks of columns have separate coefficient bounds. -/
 private theorem deg_resultant (w : Fin 3 → ℕ) (f g : Lower[X]) (m n B D : ℕ)
     (hf : ∀ i, deg w (f.coeff i) ≤ B) (hg : ∀ i, deg w (g.coeff i) ≤ D) :
     deg w (f.resultant g m n) ≤ m * D + n * B := by
@@ -7731,7 +5847,6 @@ private theorem deg_resultant (w : Fin 3 → ℕ) (f g : Lower[X]) (m n B D : �
       using Nat.add_le_add h₁ h₂
   rcases Int.units_eq_one_or (Equiv.Perm.sign π) with hh | hh <;>
     simpa [hh, deg_neg] using hp
-
 private theorem mixedWeight_add (a b : SeedVar →₀ ℕ) :
     mixedWeight (a + b) = mixedWeight a + mixedWeight b := by
   have hsum (m : Fin 3 →₀ ℕ) :
@@ -7739,7 +5854,6 @@ private theorem mixedWeight_add (a b : SeedVar →₀ ℕ) :
     simp [Finsupp.weight_apply]
   simp only [mixedWeight, hsum, Finsupp.add_apply, Finsupp.some_add, map_add, Nat.mul_add]
   ac_rfl
-
 private theorem mixedOrder_pad {F : GenericRow} {z : GenericX} {y : Fin 3 → GenericX}
     {d : ℕ} (a : Geom[X]) (h : MixedOrder F z y d) :
     MixedOrder (pad F a) z y d := by
@@ -7748,7 +5862,6 @@ private theorem mixedOrder_pad {F : GenericRow} {z : GenericX} {y : Fin 3 → Ge
   rw [pad, map_mul] at hm
   obtain ⟨u, hu, v, _, rfl⟩ := Finset.mem_add.mp (MvPolynomial.support_mul _ _ hm)
   exact (h u hu).trans (by rw [mixedWeight_add]; exact Nat.le_add_right _ _)
-
 theorem proof : K1_13_4.c6 := by
   intro F G hF hG hp hf hg
   obtain ⟨a, b, ha, hb, hn⟩ := padding_exists hF hG hp hf.2.2.2 hg.2.2.2
@@ -7766,32 +5879,21 @@ theorem proof : K1_13_4.c6 := by
       using h
   · intro z y h
     exact ⟨mixedOrder_pad a h.1, mixedOrder_pad b h.2⟩
-
 end
 end K1_13_4_6
-end PackSource_K1_13_4_6Proof
-
-section PackSource_K1_13_6_2_4_1_1Cells
-set_option autoImplicit true
+end
+section
 set_option autoImplicit false
-
 namespace K1_13_6_2_4_1_1
-
 open K1_13_6_2_4_1
 open scoped BigOperators
-
-/-- A coordinate at its cap denotes the whole tail beginning there. -/
 abbrev Cell {σ : Type} (b : σ →₀ ℕ) := (x : σ) → Fin (b x + 1)
-
 def clip {σ : Type} (b a : σ →₀ ℕ) : Cell b :=
   fun x => ⟨min (a x) (b x), Nat.lt_succ_of_le (min_le_right _ _)⟩
-
 noncomputable def base {σ : Type} [Finite σ] {b : σ →₀ ℕ} (u : Cell b) : σ →₀ ℕ :=
   Finsupp.equivFunOnFinite.symm fun x => (u x).val
-
 @[simp] theorem base_apply {σ : Type} [Finite σ] {b : σ →₀ ℕ} (u : Cell b) (x : σ) :
     base u x = (u x).val := rfl
-
 private theorem outside_clip {σ : Type} [Finite σ] {b : σ →₀ ℕ}
     {A : Finset (σ →₀ ℕ)} (hA : ∀ d ∈ A, d ≤ b) (a : σ →₀ ℕ) :
     base (clip b a) ∈ outside A ↔ a ∈ outside A := by
@@ -7804,7 +5906,6 @@ private theorem outside_clip {σ : Type} [Finite σ] {b : σ →₀ ℕ}
       exact le_min (h x) (hA d hm x)
   exact ⟨fun h d hm hle => h d hm ((hd d hm).mpr hle),
     fun h d hm hle => h d hm ((hd d hm).mp hle)⟩
-
 theorem weight_apply_slot {σ : Type} [Fintype σ] (s : σ → Fin 5) (a : σ →₀ ℕ)
     (j : Fin 5) : Finsupp.weight (slotWeight s) a j =
       ∑ x ∈ Finset.univ.filter (fun x => s x = j), a x := by
@@ -7814,7 +5915,6 @@ theorem weight_apply_slot {σ : Type} [Fintype σ] (s : σ → Fin 5) (a : σ �
   by_cases h : s x = j
   · simp [slotWeight, unitGrade, h]
   · simp [slotWeight, unitGrade, h, Ne.symm h]
-
 private theorem finite_weight_fiber {σ : Type} [Fintype σ] (s : σ → Fin 5) (t : Grade) :
     {a : σ →₀ ℕ | Finsupp.weight (slotWeight s) a = t}.Finite := by
   classical
@@ -7826,23 +5926,19 @@ private theorem finite_weight_fiber {σ : Type} [Fintype σ] (s : σ → Fin 5) 
   rw [← ha, weight_apply_slot]
   exact Finset.single_le_sum (f := fun v => a v) (fun _ _ => Nat.zero_le _)
     (by simp)
-
 def cellSlice {σ : Type} (s : σ → Fin 5) {b : σ →₀ ℕ} (u : Cell b)
     (t : Grade) : Set (σ →₀ ℕ) :=
   {a | clip b a = u ∧ Finsupp.weight (slotWeight s) a = t}
-
 noncomputable def cells {σ : Type} [Fintype σ] {b : σ →₀ ℕ}
     (A : Finset (σ →₀ ℕ)) : Finset (Cell b) := by
   classical
   exact Finset.univ.filter fun u => base u ∈ outside A
-
 theorem cells_mono {σ : Type} [Fintype σ] {b : σ →₀ ℕ} {A C : Finset (σ →₀ ℕ)}
     (h : outside C ⊆ outside A) : cells (b := b) C ⊆ cells A := by
   classical
   intro u hu
   simp only [cells, Finset.mem_filter, Finset.mem_univ, true_and] at hu ⊢
   exact h hu
-
 theorem sliceCount_eq_sum {σ : Type} [Fintype σ] (s : σ → Fin 5)
     (b : σ →₀ ℕ) (A : Finset (σ →₀ ℕ)) (hA : ∀ d ∈ A, d ≤ b) (t : Grade) :
     sliceCount s A t = ∑ u ∈ cells (b := b) A, (cellSlice s u t).ncard := by
@@ -7869,23 +5965,15 @@ theorem sliceCount_eq_sum {σ : Type} [Fintype σ] (s : σ → Fin 5)
     ext u
     rw [Set.Finite.mem_toFinset, Finset.mem_coe]
   rw [hS]
-
 end K1_13_6_2_4_1_1
-end PackSource_K1_13_6_2_4_1_1Cells
-
-section PackSource_K1_13_6_2_4_1_1Count
-set_option autoImplicit true
+end
+section
 set_option autoImplicit false
-
 namespace K1_13_6_2_4_1_1
-
 open K1_13_6_2_4_1 MvPolynomial
 open scoped BigOperators
-
 section
-
 variable {σ : Type} [Fintype σ] {b : σ →₀ ℕ}
-
 private theorem clip_eq_iff (u : Cell b) (a : σ →₀ ℕ) :
     clip b a = u ↔ base u ≤ a ∧ ∀ x, (u x).val < b x → a x = base u x := by
   constructor
@@ -7908,25 +5996,19 @@ private theorem clip_eq_iff (u : Cell b) (a : σ →₀ ℕ) :
     · have he : (u x).val = b x := by omega
       have hlex : (u x).val ≤ a x := hle x
       rw [he, min_eq_right (he ▸ hlex)]
-
 private def free (s : σ → Fin 5) (u : Cell b) (j : Fin 5) : Finset σ :=
   Finset.univ.filter fun x => s x = j ∧ (u x).val = b x
-
 private theorem mem_free {s : σ → Fin 5} {u : Cell b} {j : Fin 5} {x : σ} :
     x ∈ free s u j ↔ s x = j ∧ (u x).val = b x := by
   simp [free]
-
 private noncomputable def offset (s : σ → Fin 5) (u : Cell b) : Grade :=
   Finsupp.weight (slotWeight s) (base u)
-
 omit [Fintype σ] in
 private theorem zero_off {S : Finset σ} {r : σ →₀ ℕ} (hs : r.support ⊆ S)
     {x : σ} (hx : x ∉ S) : r x = 0 :=
   Finsupp.notMem_support_iff.mp (fun hm => hx (hs hm))
-
 private abbrev Choices [DecidableEq σ] (s : σ → Fin 5) (u : Cell b) (t : Grade) :=
   ∀ j : Fin 5, (free s u j).finsuppAntidiag (t j - offset s u j)
-
 private noncomputable def toChoices [DecidableEq σ] (s : σ → Fin 5) (u : Cell b)
     (t : Grade) (a : cellSlice s u t) : Choices s u t := by
   let r := a.val - base u
@@ -7961,7 +6043,6 @@ private noncomputable def toChoices [DecidableEq σ] (s : σ → Fin 5) (u : Cel
     exact (Finsupp.mem_support_iff.mp hx.1) (by
       change (a.val - base u) x = 0
       rw [Finsupp.tsub_apply, hc.2 x hlt, tsub_self])
-
 private noncomputable def fromChoices [DecidableEq σ] (s : σ → Fin 5) (u : Cell b)
     (t : Grade) (ht : ∀ j, offset s u j ≤ t j) (v : Choices s u t) : cellSlice s u t := by
   let r : σ →₀ ℕ := Finsupp.equivFunOnFinite.symm (fun x => (v (s x)).val x)
@@ -7985,10 +6066,8 @@ private noncomputable def fromChoices [DecidableEq σ] (s : σ → Fin 5) (u : C
         _ = _ := (Finset.sum_subset
           (fun x hx => Finset.mem_filter.mpr ⟨Finset.mem_univ _, (mem_free.mp hx).1⟩)
           (fun _ _ h => zero_off (hv j).2 h)).symm
-    -- Restore the slot sum before using the subtraction identity.
     rw [hs, (hv j).1]
     exact Nat.add_sub_of_le (ht j)
-
 private noncomputable def cellEquiv [DecidableEq σ] (s : σ → Fin 5) (u : Cell b)
     (t : Grade) (ht : ∀ j, offset s u j ≤ t j) : cellSlice s u t ≃ Choices s u t where
   toFun := toChoices s u t
@@ -8014,7 +6093,6 @@ private noncomputable def cellEquiv [DecidableEq σ] (s : σ → Fin 5) (u : Cel
     · rename_i hx
       exact (zero_off (Finset.mem_finsuppAntidiag.mp (v j).prop).2
         (fun h => hx (mem_free.mp h).1)).symm
-
 private theorem cellSlice_ncard (s : σ → Fin 5) (u : Cell b) (t : Grade)
     (ht : ∀ j, offset s u j ≤ t j) :
     (cellSlice s u t).ncard = ∏ j, (free s u j).card.multichoose (t j - offset s u j) := by
@@ -8022,25 +6100,21 @@ private theorem cellSlice_ncard (s : σ → Fin 5) (u : Cell b) (t : Grade)
   rw [← Nat.card_coe_set_eq, Nat.card_congr (cellEquiv s u t ht),
     Nat.card_eq_fintype_card, Fintype.card_pi]
   simp only [Fintype.card_coe, Finset.card_finsuppAntidiag_nat_eq_multichoose]
-
 noncomputable def cellForm (s : σ → Fin 5) (u : Cell b) : Form :=
   ∏ j : Fin 5, if (free s u j).card = 0 then 0
     else slotForm j ((free s u j).card - 1) (offset s u j)
-
 theorem cellForm_top (s : σ → Fin 5) (u : Cell b) : TopNonnegative (cellForm s u) := by
   apply top_product
   intro j
   split
   · simp [TopNonnegative]
   · exact slotForm_top _ _ _
-
 private theorem offset_le (s : σ → Fin 5) (u : Cell b) (j : Fin 5) :
     offset s u j ≤ b.degree := by
   rw [offset, weight_apply_slot, Finsupp.degree_eq_sum]
   refine Finset.sum_le_sum_of_subset_of_nonneg (Finset.filter_subset _ _) ?_ |>.trans ?_
   · exact fun _ _ _ => Nat.zero_le _
   · exact Finset.sum_le_sum fun x _ => Nat.le_of_lt_succ (u x).isLt
-
 theorem cellForm_eval (s : σ → Fin 5) (u : Cell b) (t : Grade)
     (ht : ∀ j, b.degree < t j) :
     eval (fun j => (t j : ℚ)) (cellForm s u) = ((cellSlice s u t).ncard : ℚ) := by
@@ -8061,25 +6135,15 @@ theorem cellForm_eval (s : σ → Fin 5) (u : Cell b) (t : Grade)
     rw [show d.succ + (t j - offset s u j) - 1 = t j + d - offset s u j by omega]
     exact Nat.choose_symm_of_eq_add (by omega : t j + d - offset s u j =
       d + (t j - offset s u j))
-
 end
-
 end K1_13_6_2_4_1_1
-end PackSource_K1_13_6_2_4_1_1Count
-
-section PackSource_K1_13_6_3_5_5_3Proof
-set_option autoImplicit true
+end
+section
 set_option autoImplicit false
-
 namespace K1_13_6_3_5_5_3
-
 noncomputable section
-
 open K1_13_6_3_5_5
 open scoped Pointwise
-
-/-- A map out of a nonzero ideal that kills its multiples by `x` has
-image length at most the principal colength of `x`. -/
 private theorem length_range_le_ord {L M : Type} [CommRing L] [IsDomain L]
     [IsNoetherianRing L] [Ring.KrullDimLE 1 L] [AddCommGroup M] [Module L M]
     {x d : L} (hx : x ≠ 0) (hd : d ≠ 0) (I : Ideal L) (hdI : d ∈ I)
@@ -8129,7 +6193,6 @@ private theorem length_range_le_ord {L M : Type} [CommRing L] [IsDomain L]
     _ ≤ Module.length L (LinearMap.ker g) :=
       Module.length_le_of_injective (Submodule.inclusion hp) (Submodule.inclusion_injective hp)
     _ = Ring.ord L x := hkernel
-
 theorem proof : K1_13_6_3_5_5.c3 := by
   classical
   intro L _ _ _ _ _ x hx B s
@@ -8145,7 +6208,6 @@ theorem proof : K1_13_6_3_5_5.c3 := by
   let t : L →ₗ[L] FractionRing L :=
     (LinearMap.mul L (FractionRing L) a⁻¹).comp (Algebra.ofId L (FractionRing L)).toLinearMap
   have ht (r : L) : t r = a⁻¹ * algebraMap L (FractionRing L) r := rfl
-  -- This ideal consists of the numerators whose fractions with denominator d lie in B.
   let I : Ideal L := B.toSubmodule.comap t
   have hdI : (d : L) ∈ I := by
     change t (d : L) ∈ B
@@ -8178,26 +6240,16 @@ theorem proof : K1_13_6_3_5_5.c3 := by
     exact hlift i
   exact (Module.length_le_of_injective (Submodule.inclusion hspan)
     (Submodule.inclusion_injective hspan)).trans (length_range_le_ord hx hd0 I hdI f hzero)
-
 end
-
 end K1_13_6_3_5_5_3
-end PackSource_K1_13_6_3_5_5_3Proof
-
-section PackSource_K1_14_2_2_4_5_1Proof
-set_option autoImplicit true
+end
+section
 set_option autoImplicit false
 set_option backward.isDefEq.respectTransparency false
-
 namespace K1_14_2_2_4_5_1
-
 noncomputable section
-
 open K1_14 K1_14_2 K1_14_2_2 K1_14_2_2_4 K1_14_2_2_4_5
 open scoped BigOperators
-
-/-- Every surviving prime over the rows extends to a maximal ideal.
-Contraction then makes it minimal among the original primes over the rows. -/
 private theorem minimal_of_section {F : Type} [Field F] {φ : Ambient →+* Plane F}
     {k : Fin 4} (chart : SectionChart F φ k) {J I : Ideal Ambient}
     [Module.Finite F (PlaneSection φ J)] (hI : I.IsPrime) (hIJ : J ≤ I)
@@ -8218,7 +6270,6 @@ private theorem minimal_of_section {F : Type} [Field F] {φ : Ambient →+* Plan
     Ideal.Quotient.maximal_of_isField _ (IsArtinianRing.isField_of_isDomain _)
   have heq : H.map φ = I.map φ := hmax.eq_of_le hsurv hmap
   exact ((hIcomap.symm.trans (congrArg (Ideal.comap φ) heq.symm)).trans hHcomap).le
-
 theorem proof : K1_14_2_2_4_5.c1 := by
   classical
   intro F _ φ k chart P Q S d hfin hd hlocal
@@ -8271,62 +6322,45 @@ theorem proof : K1_14_2_2_4_5.c1 := by
   have hmass : (∑ I ∈ T, sectionDegree I k) = mass S k := Finset.sum_filter_ne_zero _
   rw [← Nat.cast_sum, hmass, ← Nat.cast_mul] at hsum
   exact ENat.natCast_le_natCast.mp hsum
-
 end
 end K1_14_2_2_4_5_1
-end PackSource_K1_14_2_2_4_5_1Proof
-
-section PackSource_K1_13_6_2_3_3_2_1Proof
-set_option autoImplicit true
+end
+section
 set_option autoImplicit false
-
 namespace K1_13_6_2_3_3_2_1
-
 noncomputable section
-
 open K1_13 K1_13_6 K1_13_6_2_3 K1_13_6_2_3_1 K1_13_6_2_3_3_2 MvPolynomial
 open scoped Pointwise
-
 attribute [local instance] MvPolynomial.weightedGradedAlgebra
-
 private abbrev Generator {k : ℕ} (boxes : Fin k → Shape) :=
   (i : Fin k) × capExponents (boxes i)
-
 private abbrev slotWeight {k m : ℕ} {boxes : Fin k → Shape}
     (u : Fin m ≃ Generator boxes) (j : Fin m) : Fin k →₀ ℕ :=
   Finsupp.single (u j).1 1
-
 private abbrev slotDegree {k m : ℕ} {boxes : Fin k → Shape}
     (u : Fin m ≃ Generator boxes) : (Fin m →₀ ℕ) →+ (Fin k →₀ ℕ) :=
   Finsupp.weight (slotWeight u)
-
 private abbrev exponentMap {k m : ℕ} {boxes : Fin k → Shape}
     (u : Fin m ≃ Generator boxes) : (Fin m →₀ ℕ) →+ (Fin 4 →₀ ℕ) :=
   Finsupp.weight (fun j => (u j).2.val)
-
 private def taggedMap {k m : ℕ} {boxes : Fin k → Shape}
     (u : Fin m ≃ Generator boxes) : MvPolynomial (Fin m) GeoField →ₐ[GeoField] GeoJets :=
   aeval (fun j => monomial (u j).2.val 1)
-
 private abbrev piece {k m : ℕ} {boxes : Fin k → Shape}
     (u : Fin m ≃ Generator boxes) :=
   weightedHomogeneousSubmodule GeoField (slotWeight u)
-
 private theorem slotDegree_apply {k m : ℕ} {boxes : Fin k → Shape}
     (u : Fin m ≃ Generator boxes) (a : Fin m →₀ ℕ) (i : Fin k) :
     slotDegree u a i = ∑ j ∈ Finset.univ.filter (fun j => (u j).1 = i), a j := by
   rw [Finsupp.weight_eq_sum, Finset.sum_filter]
   simp [Finsupp.finsetSum_apply, Finsupp.single_apply, smul_eq_mul]
-
 private theorem cap_sum_zero {k : ℕ} (boxes : Fin k → Shape) :
     capExponents (sumShape boxes (0 : Fin k → ℕ)) = 0 := by
   simpa [sumShape, Shape.scale] using
     (nsmul_cap ⟨3, 3, 1⟩ ⟨by decide, by decide, by decide⟩ 0).symm
-
 private theorem sumShape_single {k : ℕ} (boxes : Fin k → Shape) (i : Fin k) (n : ℕ) :
     sumShape boxes (Finsupp.single i n) = (boxes i).scale n := by
   simp [sumShape, Finsupp.single_apply, Shape.scale, ite_mul]
-
 private theorem sumShape_chamber {k : ℕ} (boxes : Fin k → Shape)
     (hb : ∀ i, ChamberBox (boxes i)) (a : Fin k →₀ ℕ) (ha : a ≠ 0) :
     ChamberBox (sumShape boxes a) := by
@@ -8344,7 +6378,6 @@ private theorem sumShape_chamber {k : ℕ} (boxes : Fin k → Shape)
   · exact (Nat.mul_pos (Nat.pos_of_ne_zero hi) (hb i).2.2).trans_le
       (Finset.single_le_sum (fun j _ => Nat.zero_le (a j * (boxes j).t))
         (Finset.mem_univ i))
-
 private theorem cap_sum_add {k : ℕ} (boxes : Fin k → Shape)
     (hb : ∀ i, ChamberBox (boxes i)) (a b : Fin k →₀ ℕ) :
     capExponents (sumShape boxes (⇑(a + b : Fin k →₀ ℕ))) =
@@ -8355,7 +6388,6 @@ private theorem cap_sum_add {k : ℕ} (boxes : Fin k → Shape)
   · simp [hb', cap_sum_zero]
   rw [cap_add (sumShape_chamber boxes hb a ha) (sumShape_chamber boxes hb b hb')]
   simp [sumShape, Shape.plus, Nat.add_mul, Finset.sum_add_distrib]
-
 private theorem exponentMap_mem_cap {k m : ℕ} {boxes : Fin k → Shape}
     (u : Fin m ≃ Generator boxes) (hb : ∀ i, ChamberBox (boxes i))
     (a : Fin m →₀ ℕ) : exponentMap u a ∈ capExponents (sumShape boxes (slotDegree u a)) := by
@@ -8368,7 +6400,6 @@ private theorem exponentMap_mem_cap {k m : ℕ} {boxes : Fin k → Shape}
     rw [Finsupp.weight_single, Finsupp.weight_single, Finsupp.smul_single_one,
       sumShape_single, ← nsmul_cap _ (hb (u j).1)]
     exact Set.nsmul_mem_nsmul (u j).2.property
-
 private theorem exists_exponent_lift {k m : ℕ} {boxes : Fin k → Shape}
     (u : Fin m ≃ Generator boxes) (hb : ∀ i, ChamberBox (boxes i)) (w : Fin k →₀ ℕ) :
     ∀ x ∈ capExponents (sumShape boxes w),
@@ -8404,7 +6435,6 @@ private theorem exists_exponent_lift {k m : ℕ} {boxes : Fin k → Shape}
       · rw [map_add, ha, Finsupp.weight_single, one_smul]
         simp only [slotWeight, hj, ← Finsupp.single_add]
       · rw [map_add, hay, Finsupp.weight_single, one_smul, hj]
-
 private theorem taggedMap_monomial {k m : ℕ} {boxes : Fin k → Shape}
     (u : Fin m ≃ Generator boxes) (a : Fin m →₀ ℕ) :
     taggedMap u (monomial a 1) = monomial (exponentMap u a) 1 := by
@@ -8416,7 +6446,6 @@ private theorem taggedMap_monomial {k m : ℕ} {boxes : Fin k → Shape}
   | single j n =>
     rw [← X_pow_eq_monomial, map_pow, taggedMap, aeval_X, monomial_pow, one_pow,
       Finsupp.weight_single]
-
 private theorem piece_map {k m : ℕ} {boxes : Fin k → Shape}
     (u : Fin m ≃ Generator boxes) (hb : ∀ i, ChamberBox (boxes i)) (w : Fin k →₀ ℕ) :
     (piece u w).map (taggedMap u).toLinearMap =
@@ -8438,8 +6467,6 @@ private theorem piece_map {k m : ℕ} {boxes : Fin k → Shape}
     exact ⟨monomial a 1, (monomial_mem_restrictSupport _).mpr (Or.inl ha), by
       change taggedMap u (monomial a 1) = _
       rw [taggedMap_monomial, hax]⟩
-
-/-- On each piece the homogeneous core has exactly the affine relations for that degree. -/
 private theorem standard_rank {k m : ℕ} {boxes : Fin k → Shape}
     (u : Fin m ≃ Generator boxes) (hb : ∀ i, ChamberBox (boxes i)) (P : Ideal GeoJets)
     (o : MonomialOrder (Fin m)) :
@@ -8505,7 +6532,6 @@ private theorem standard_rank {k m : ℕ} {boxes : Fin k → Shape}
   change Module.finrank GeoField T = A.ncard
   rw [← (LinearEquiv.ofBijective L ⟨hinj, hsurj⟩).finrank_eq,
     Module.finrank_eq_nat_card_basis (basisRestrictSupport GeoField A), Nat.card_coe_set_eq]
-
 theorem proof : K1_13_6_2_3_3_2.c1 := by
   classical
   intro P k boxes _ hb
@@ -8532,33 +6558,23 @@ theorem proof : K1_13_6_2_3_3_2.c1 := by
     ext i
     rw [slotDegree_apply]
     exact ha i
-
 end
-
 end K1_13_6_2_3_3_2_1
-end PackSource_K1_13_6_2_3_3_2_1Proof
-
-section PackSource_K1_13_6_2_2_1Proof
-set_option autoImplicit true
+end
+section
 namespace K1_13_6_2_2_1
-
 noncomputable section
-
 open Polynomial MvPolynomial K1_13 K1_13_1 K1_13_6 K1_13_6_2 K1_13_6_2_2
 open scoped BigOperators
-
 local notation "W" => MvPolynomial.weightedTotalDegree
-
 private theorem const_mul_bound {n : ℕ} (w : Fin n → ℕ) (a : Geom[X]) (P : Row n) :
     W w (MvPolynomial.C a * P) ≤ W w P := by
   simpa only [weightedTotalDegree_C, zero_add] using
     weightedTotalDegree_mul_le w (MvPolynomial.C a) P
-
 private theorem var_bound {n : ℕ} (w : Fin n → ℕ) (i : Fin n) :
     W w (MvPolynomial.X i : Row n) ≤ w i :=
   mem_restrictWeightedDegree_iff_weightedTotalDegree_le.mp
     (X_mem_restrictWeightedDegree _ _ _ le_rfl)
-
 private theorem coefficient_bound {n : ℕ} (w : Fin n → ℕ) (P : Row n) :
     W w (∑ m ∈ P.support, MvPolynomial.monomial m (derivative (P.coeff m))) ≤ W w P := by
   classical
@@ -8570,9 +6586,6 @@ private theorem coefficient_bound {n : ℕ} (w : Fin n → ℕ) (P : Row n) :
     exact (MvPolynomial.mem_support_iff.mp hmj)
       (by rw [MvPolynomial.coeff_monomial, ite_eq_right hne])
   exact h ▸ hj
-
-/-- Each monomial in a shift has moved one power from the differentiated
-variable to the multiplied variable. -/
 private theorem shift_bound {n : ℕ} (w : Fin n → ℕ) (i j : Fin n) (P : Row n)
     (δ : ℕ) (h : w j ≤ w i + δ) :
     W w (MvPolynomial.X j * pderiv i P) ≤ W w P + δ := by
@@ -8588,7 +6601,6 @@ private theorem shift_bound {n : ℕ} (w : Fin n → ℕ) (i j : Fin n) (P : Row
     rw [map_add, Finsupp.weight_single, one_smul] at hw
     omega
   · exact (hm rfl).elim
-
 private theorem flow_bound {n : ℕ} (w : Fin (n + 1) → ℕ) (δ : ℕ)
     (hshift : ∀ i : Fin n, w i.succ ≤ w i.castSucc + δ) (P : Row (n + 1))
     {d : ℕ} (hP : W w P ≤ d) :
@@ -8606,17 +6618,14 @@ private theorem flow_bound {n : ℕ} (w : Fin (n + 1) → ℕ) (δ : ℕ)
     rw [mul_assoc]
     exact (const_mul_bound w _ _).trans
       ((shift_bound w _ _ P δ (hshift i)).trans (Nat.add_le_add_right hP δ))
-
 private theorem lift_weight (w : Fin 5 → ℕ) (P : Row 4) :
     W w (lift4 P) = W (w ∘ Fin.castSucc) P :=
   weightedTotalDegree_rename_of_injective (Fin.castSucc_injective 4)
-
 private theorem separant_bound (w : Fin 5 → ℕ) {g : Row 4} {B : ℕ}
     (hg : W (w ∘ Fin.castSucc) g ≤ B) :
     W w (lift4 (separant g)) ≤ B - w ((3 : Fin 4).castSucc) := by
   rw [lift_weight, separant]
   exact (weightedTotalDegree_pderiv_le_sub _ _ _).trans (Nat.sub_le_sub_right hg _)
-
 private theorem graph_bound (w : Fin 5 → ℕ) (δ : ℕ)
     (hshift : ∀ i : Fin 4, w i.succ ≤ w i.castSucc + δ)
     {g : Row 4} {B : ℕ} (hg : W (w ∘ Fin.castSucc) g ≤ B)
@@ -8636,7 +6645,6 @@ private theorem graph_bound (w : Fin 5 → ℕ) (δ : ℕ)
     rw [mul_assoc]
     exact (const_mul_bound w _ _).trans ((weightedTotalDegree_mul_le _ _ _).trans
       ((Nat.add_le_add (separant_bound w hg) (var_bound w _)).trans (by omega)))
-
 private theorem numerator_bound (w : Fin 5 → ℕ) (δ : ℕ)
     (hshift : ∀ i : Fin 4, w i.succ ≤ w i.castSucc + δ)
     (hlast : w (Fin.last 4) = w ((3 : Fin 4).castSucc) + δ)
@@ -8679,12 +6687,10 @@ private theorem numerator_bound (w : Fin 5 → ℕ) (δ : ℕ)
       apply (weightedTotalDegree_mul_le _ _ _).trans
       rw [← map_natCast (MvPolynomial.C : Geom[X] →+* Row 5)]
       exact (Nat.add_le_add ((const_mul_bound w _ _).trans hDS) ih).trans (by omega)
-
 private theorem denominator_bound (w : Fin 5 → ℕ) {g : Row 4} {B : ℕ}
     (hg : W (w ∘ Fin.castSucc) g ≤ B) (k : ℕ) :
     W w (denominator g k) ≤ k * (B - w ((3 : Fin 4).castSucc)) :=
   (weightedTotalDegree_pow_le _ _ _).trans (Nat.mul_le_mul_left _ (separant_bound w hg))
-
 private theorem padded_bound (w : Fin 5 → ℕ) (δ : ℕ)
     (hshift : ∀ i : Fin 4, w i.succ ≤ w i.castSucc + δ)
     (hlast : w (Fin.last 4) = w ((3 : Fin 4).castSucc) + δ)
@@ -8712,7 +6718,6 @@ private theorem padded_bound (w : Fin 5 → ℕ) (δ : ℕ)
       _ ≤ (w (Fin.last 4) + a * (s + δ)) + (k - a) * (s + δ) :=
         Nat.add_le_add_left (Nat.mul_le_mul_left _ (Nat.le_add_right _ _)) _
       _ = _ := by rw [Nat.add_assoc, ← Nat.add_mul, Nat.add_sub_of_le ha]
-
 private theorem support_bounds (w : Fin 5 → ℕ) (δ : ℕ)
     (hshift : ∀ i : Fin 4, w i.succ ≤ w i.castSucc + δ)
     (hlast : w (Fin.last 4) = w ((3 : Fin 4).castSucc) + δ)
@@ -8725,11 +6730,8 @@ private theorem support_bounds (w : Fin 5 → ℕ) (δ : ℕ)
   refine ⟨graph_bound w δ hshift hg hB, fun k => ⟨?_, padded_bound w δ hshift hlast hw hg hB k⟩⟩
   exact (denominator_bound w hg k).trans
     ((Nat.mul_le_mul_left _ (Nat.le_add_right _ _)).trans (Nat.le_add_left _ _))
-
 private def topWeight : Fin 5 → ℕ := Fin.lastCases 2 (Pi.single (3 : Fin 4) 1)
 private def fifthWeight : Fin 5 → ℕ := Pi.single (Fin.last 4) 1
-
-/-- Drop the fifth contribution from the full weights to recover the old box. -/
 private theorem box_of_weights (P : Row 5) {b j t d : ℕ}
     (hb : W 1 P ≤ b) (hj : W Fin.val P ≤ j) (ht : W topWeight P ≤ t)
     (hd : W fifthWeight P ≤ d) :
@@ -8757,7 +6759,6 @@ private theorem box_of_weights (P : Row 5) {b j t d : ℕ}
   · intro m hm
     simpa only [fifthWeight, Finsupp.weight_single_one_apply] using
       (le_weightedTotalDegree fifthWeight (source m hm)).trans hd
-
 theorem proof : K1_13_6_2_2.c1 := by
   intro f Q l hf branch
   let p := (shape f).chamber
@@ -8833,7 +6834,6 @@ theorem proof : K1_13_6_2_2.c1 := by
           (h4.trans (by omega : 1 + k ≤ k + 5))
     exact ⟨box _ wTotal.1 wIndex.1 wTop.1 wFifth.1,
       fun i hi => box _ (wTotal.2 i hi) (wIndex.2 i hi) (wTop.2 i hi) (wFifth.2 i hi)⟩
-
 end
 end K1_13_6_2_2_1
-end PackSource_K1_13_6_2_2_1Proof
+end

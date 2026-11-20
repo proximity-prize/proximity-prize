@@ -1,318 +1,336 @@
-import ProximityPrize.SubmissionLower.PortLow8Price
+import ProximityPrize.SubmissionLower.PortLowBase
+import ProximityPrize.SubmissionLower.RungFront
 set_option Elab.async false
-set_option maxRecDepth 12000
-set_option maxHeartbeats 2400000
+set_option autoImplicit true
+section
 namespace P0_9_8
-open K1_13
+open K1_13 (Shape InBox FatEligible)
 open K1_13_8 (Valid zeroShape fullCap availableMass)
-private theorem fat : c1 := by
-  intro ⟨b,j,t⟩ h hb
-  obtain ⟨h1,h2,h3⟩ := h
-  obtain ⟨b20,j6,b17,b14,b7⟩ := hb
-  change b ≤ 20 at b20
-  change 1 ≤ t at h1
-  change 3*t ≤ j at h2
-  change j ≤ 6 at j6
-  have tmax : t ≤ 2 := by omega
-  have jmin : 3 ≤ j := by omega
-  interval_cases t <;> interval_cases j <;> first | omega | skip
-  all_goals dsimp at b17 b14 b7
-  all_goals interval_cases b <;> first | omega | decide +kernel
-
-private theorem empty_admissible : c2 := by
-  intro s hs
-  simp only [emptyThresholds,List.mem_cons,List.not_mem_nil,or_false] at hs
-  rcases hs with rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl
-  all_goals unfold availableMass; simp only [sum_eq]; decide +kernel
-
-private theorem oneMass4 : availableMass oneStart ⟨0,4,0⟩ (oneOrder ⟨0,4,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem oneMass5 : availableMass oneStart ⟨0,5,0⟩ (oneOrder ⟨0,5,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem oneMass6 : availableMass oneStart ⟨0,6,0⟩ (oneOrder ⟨0,6,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem oneMass7 : availableMass oneStart ⟨0,7,0⟩ (oneOrder ⟨0,7,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem oneMass8 : availableMass oneStart ⟨0,8,0⟩ (oneOrder ⟨0,8,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem oneMass9 : availableMass oneStart ⟨0,9,0⟩ (oneOrder ⟨0,9,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem oneMass10 : availableMass oneStart ⟨0,10,0⟩ (oneOrder ⟨0,10,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem oneMass11 : availableMass oneStart ⟨0,11,0⟩ (oneOrder ⟨0,11,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem oneMass12 : availableMass oneStart ⟨0,12,0⟩ (oneOrder ⟨0,12,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem oneMass13 : availableMass oneStart ⟨0,13,0⟩ (oneOrder ⟨0,13,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem oneMass14 : availableMass oneStart ⟨0,14,0⟩ (oneOrder ⟨0,14,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem oneMass15 : availableMass oneStart ⟨0,15,0⟩ (oneOrder ⟨0,15,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem oneMass16 : availableMass oneStart ⟨0,16,0⟩ (oneOrder ⟨0,16,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem oneMass17 : availableMass oneStart ⟨0,17,0⟩ (oneOrder ⟨0,17,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem oneMass18 : availableMass oneStart ⟨0,18,0⟩ (oneOrder ⟨0,18,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem oneMass19 : availableMass oneStart ⟨0,19,0⟩ (oneOrder ⟨0,19,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem oneMass20 : availableMass oneStart ⟨0,20,0⟩ (oneOrder ⟨0,20,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem oneMass21 : availableMass oneStart ⟨0,21,0⟩ (oneOrder ⟨0,21,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem oneMass22 : availableMass oneStart ⟨0,22,0⟩ (oneOrder ⟨0,22,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem oneMass23 : availableMass oneStart ⟨0,23,0⟩ (oneOrder ⟨0,23,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem oneMass24 : availableMass oneStart ⟨0,24,0⟩ (oneOrder ⟨0,24,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem oneMass25 : availableMass oneStart ⟨0,25,0⟩ (oneOrder ⟨0,25,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem oneMass26 : availableMass oneStart ⟨0,26,0⟩ (oneOrder ⟨0,26,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem oneMass27 : availableMass oneStart ⟨0,27,0⟩ (oneOrder ⟨0,27,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem oneMass28 : availableMass oneStart ⟨0,28,0⟩ (oneOrder ⟨0,28,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem oneMass29 : availableMass oneStart ⟨0,29,0⟩ (oneOrder ⟨0,29,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem oneMass30 : availableMass oneStart ⟨0,30,0⟩ (oneOrder ⟨0,30,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem oneMass31 : availableMass oneStart ⟨0,31,0⟩ (oneOrder ⟨0,31,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem oneMass32 : availableMass oneStart ⟨0,32,0⟩ (oneOrder ⟨0,32,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem oneMass33 : availableMass oneStart ⟨0,33,0⟩ (oneOrder ⟨0,33,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem oneMass34 : availableMass oneStart ⟨0,34,0⟩ (oneOrder ⟨0,34,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem oneMass35 : availableMass oneStart ⟨0,35,0⟩ (oneOrder ⟨0,35,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem oneMass36 : availableMass oneStart ⟨0,36,0⟩ (oneOrder ⟨0,36,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem oneMass37 : availableMass oneStart ⟨0,37,0⟩ (oneOrder ⟨0,37,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem oneMass38 : availableMass oneStart ⟨0,38,0⟩ (oneOrder ⟨0,38,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem oneMass39 : availableMass oneStart ⟨0,39,0⟩ (oneOrder ⟨0,39,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem oneMass40 : availableMass oneStart ⟨0,40,0⟩ (oneOrder ⟨0,40,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem oneMass41 : availableMass oneStart ⟨0,41,0⟩ (oneOrder ⟨0,41,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem oneMass42 : availableMass oneStart ⟨0,42,0⟩ (oneOrder ⟨0,42,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem oneMass43 : availableMass oneStart ⟨0,43,0⟩ (oneOrder ⟨0,43,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem oneMass44 : availableMass oneStart ⟨0,44,0⟩ (oneOrder ⟨0,44,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem oneMass45 : availableMass oneStart ⟨0,45,0⟩ (oneOrder ⟨0,45,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem one_admissible : c4 := by
-  intro j hl hu
-  interval_cases j
-  · exact oneMass4
-  · exact oneMass5
-  · exact oneMass6
-  · exact oneMass7
-  · exact oneMass8
-  · exact oneMass9
-  · exact oneMass10
-  · exact oneMass11
-  · exact oneMass12
-  · exact oneMass13
-  · exact oneMass14
-  · exact oneMass15
-  · exact oneMass16
-  · exact oneMass17
-  · exact oneMass18
-  · exact oneMass19
-  · exact oneMass20
-  · exact oneMass21
-  · exact oneMass22
-  · exact oneMass23
-  · exact oneMass24
-  · exact oneMass25
-  · exact oneMass26
-  · exact oneMass27
-  · exact oneMass28
-  · exact oneMass29
-  · exact oneMass30
-  · exact oneMass31
-  · exact oneMass32
-  · exact oneMass33
-  · exact oneMass34
-  · exact oneMass35
-  · exact oneMass36
-  · exact oneMass37
-  · exact oneMass38
-  · exact oneMass39
-  · exact oneMass40
-  · exact oneMass41
-  · exact oneMass42
-  · exact oneMass43
-  · exact oneMass44
-  · exact oneMass45
-private def onePeak (j : ℕ) : Shape := ⟨119,j,min 9 (j/3)⟩
-private theorem one_row (j : ℕ) (hl : 3 ≤ j) (hu : j ≤ 45) :
-    P0_9.physicalPrice (onePeak j) (oneOrder (onePeak j)) ≤ indexBudget oneStart (factorCap - oneReserve) j := by
-  interval_cases j <;> decide +kernel
-
-private theorem one_paid : c5 := by
-  intro a ha hb
-  have hb0 : 1 + a.b ≤ 120 := hb.1
-  have hb1 : 3 + a.j ≤ 48 := hb.2.1
-  have hb2 : 1 + a.t ≤ 10 := hb.2.2
-  have ht := ha.2.1
-  have hp := ha.1
-  have hm : InBox a (onePeak a.j) := ⟨by change a.b ≤ 119; omega, le_rfl, by change a.t ≤ min 9 (a.j/3); omega⟩
-  have hfit : 3 * (onePeak a.j).t ≤ (onePeak a.j).j := by
-    change 3 * min 9 (a.j/3) ≤ a.j
-    have := min_le_right 9 (a.j/3)
-    omega
-  exact (P0_9_8_3.physical_mono hm ht hfit _).trans (one_row _ (by omega) (by omega))
-private theorem twoMass3 : availableMass twoStart ⟨0,3,0⟩ (twoOrder ⟨0,3,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem twoMass4 : availableMass twoStart ⟨0,4,0⟩ (twoOrder ⟨0,4,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem twoMass5 : availableMass twoStart ⟨0,5,0⟩ (twoOrder ⟨0,5,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem twoMass6 : availableMass twoStart ⟨0,6,0⟩ (twoOrder ⟨0,6,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem twoMass7 : availableMass twoStart ⟨0,7,0⟩ (twoOrder ⟨0,7,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem twoMass8 : availableMass twoStart ⟨0,8,0⟩ (twoOrder ⟨0,8,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem twoMass9 : availableMass twoStart ⟨0,9,0⟩ (twoOrder ⟨0,9,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem twoMass10 : availableMass twoStart ⟨0,10,0⟩ (twoOrder ⟨0,10,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem twoMass11 : availableMass twoStart ⟨0,11,0⟩ (twoOrder ⟨0,11,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem twoMass12 : availableMass twoStart ⟨0,12,0⟩ (twoOrder ⟨0,12,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem twoMass13 : availableMass twoStart ⟨0,13,0⟩ (twoOrder ⟨0,13,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem twoMass14 : availableMass twoStart ⟨0,14,0⟩ (twoOrder ⟨0,14,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem twoMass15 : availableMass twoStart ⟨0,15,0⟩ (twoOrder ⟨0,15,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem twoMass16 : availableMass twoStart ⟨0,16,0⟩ (twoOrder ⟨0,16,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem twoMass17 : availableMass twoStart ⟨0,17,0⟩ (twoOrder ⟨0,17,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem twoMass18 : availableMass twoStart ⟨0,18,0⟩ (twoOrder ⟨0,18,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem twoMass19 : availableMass twoStart ⟨0,19,0⟩ (twoOrder ⟨0,19,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem twoMass20 : availableMass twoStart ⟨0,20,0⟩ (twoOrder ⟨0,20,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem twoMass21 : availableMass twoStart ⟨0,21,0⟩ (twoOrder ⟨0,21,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem twoMass22 : availableMass twoStart ⟨0,22,0⟩ (twoOrder ⟨0,22,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem twoMass23 : availableMass twoStart ⟨0,23,0⟩ (twoOrder ⟨0,23,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem twoMass24 : availableMass twoStart ⟨0,24,0⟩ (twoOrder ⟨0,24,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem twoMass25 : availableMass twoStart ⟨0,25,0⟩ (twoOrder ⟨0,25,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem twoMass26 : availableMass twoStart ⟨0,26,0⟩ (twoOrder ⟨0,26,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem twoMass27 : availableMass twoStart ⟨0,27,0⟩ (twoOrder ⟨0,27,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem twoMass28 : availableMass twoStart ⟨0,28,0⟩ (twoOrder ⟨0,28,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem twoMass29 : availableMass twoStart ⟨0,29,0⟩ (twoOrder ⟨0,29,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem twoMass30 : availableMass twoStart ⟨0,30,0⟩ (twoOrder ⟨0,30,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem twoMass31 : availableMass twoStart ⟨0,31,0⟩ (twoOrder ⟨0,31,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem twoMass32 : availableMass twoStart ⟨0,32,0⟩ (twoOrder ⟨0,32,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem twoMass33 : availableMass twoStart ⟨0,33,0⟩ (twoOrder ⟨0,33,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem twoMass34 : availableMass twoStart ⟨0,34,0⟩ (twoOrder ⟨0,34,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem twoMass35 : availableMass twoStart ⟨0,35,0⟩ (twoOrder ⟨0,35,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem twoMass36 : availableMass twoStart ⟨0,36,0⟩ (twoOrder ⟨0,36,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem twoMass37 : availableMass twoStart ⟨0,37,0⟩ (twoOrder ⟨0,37,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem twoMass38 : availableMass twoStart ⟨0,38,0⟩ (twoOrder ⟨0,38,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem twoMass39 : availableMass twoStart ⟨0,39,0⟩ (twoOrder ⟨0,39,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem twoMass40 : availableMass twoStart ⟨0,40,0⟩ (twoOrder ⟨0,40,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem twoMass41 : availableMass twoStart ⟨0,41,0⟩ (twoOrder ⟨0,41,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem twoMass42 : availableMass twoStart ⟨0,42,0⟩ (twoOrder ⟨0,42,0⟩ - 1) < P0_9.layerNeed := by
-  unfold availableMass; simp only [sum_eq]; decide +kernel
-private theorem two_admissible : c6 := by
-  intro j hl hu
-  interval_cases j
-  · exact twoMass3
-  · exact twoMass4
-  · exact twoMass5
-  · exact twoMass6
-  · exact twoMass7
-  · exact twoMass8
-  · exact twoMass9
-  · exact twoMass10
-  · exact twoMass11
-  · exact twoMass12
-  · exact twoMass13
-  · exact twoMass14
-  · exact twoMass15
-  · exact twoMass16
-  · exact twoMass17
-  · exact twoMass18
-  · exact twoMass19
-  · exact twoMass20
-  · exact twoMass21
-  · exact twoMass22
-  · exact twoMass23
-  · exact twoMass24
-  · exact twoMass25
-  · exact twoMass26
-  · exact twoMass27
-  · exact twoMass28
-  · exact twoMass29
-  · exact twoMass30
-  · exact twoMass31
-  · exact twoMass32
-  · exact twoMass33
-  · exact twoMass34
-  · exact twoMass35
-  · exact twoMass36
-  · exact twoMass37
-  · exact twoMass38
-  · exact twoMass39
-  · exact twoMass40
-  · exact twoMass41
-  · exact twoMass42
-private def twoPeak (j : ℕ) : Shape := ⟨118,j,min 8 (j/3)⟩
-private theorem two_row (j : ℕ) (hl : 3 ≤ j) (hu : j ≤ 42) :
-    P0_9.physicalPrice (twoPeak j) (twoOrder (twoPeak j)) ≤ indexBudget twoStart (factorCap - twoReserve) j := by
-  interval_cases j <;> decide +kernel
-
-private theorem two_paid : c7 := by
-  intro a ha hb
-  have hb0 : 2 + a.b ≤ 120 := hb.1
-  have hb1 : 6 + a.j ≤ 48 := hb.2.1
-  have hb2 : 2 + a.t ≤ 10 := hb.2.2
-  have ht := ha.2.1
-  have hp := ha.1
-  have hm : InBox a (twoPeak a.j) := ⟨by change a.b ≤ 118; omega, le_rfl, by change a.t ≤ min 8 (a.j/3); omega⟩
-  have hfit : 3 * (twoPeak a.j).t ≤ (twoPeak a.j).j := by
-    change 3 * min 8 (a.j/3) ≤ a.j
-    have := min_le_right 8 (a.j/3)
-    omega
-  exact (P0_9_8_3.physical_mono hm ht hfit _).trans (two_row _ (by omega) (by omega))
-theorem complete : P0_9.c8 :=
-  of_children fat empty_admissible P0_9_8_3.proof one_admissible one_paid two_admissible two_paid
+open K1_13_8_2 (Threshold orderFor)
+abbrev factorCap : ℕ := 211033041011743389
+abbrev oneReserve : ℕ := 37000000000000000
+abbrev twoReserve : ℕ := 97000000000000000
+abbrev oneStart : Shape := ⟨1, 3, 1⟩
+abbrev twoStart : Shape := ⟨2, 6, 2⟩
+def emptyThresholds : List Threshold :=
+  [⟨107, 46, 61⟩, ⟨14, 41, 58⟩, ⟨61, 31, 57⟩, ⟨8, 13, 37⟩,
+    ⟨9, 7, 14⟩, ⟨22, 4, 13⟩, ⟨3, 7, 9⟩]
+def emptyOrder (x : Shape) : ℕ := orderFor x.b x.j emptyThresholds
+def oneOrder (x : Shape) : ℕ := if x.j ≤ 3 then 1 else (3 * x.j - 4) / 2
+abbrev twoOrder : ℕ := 85
+def indexBudget (r : Shape) (cap j : ℕ) : ℕ := cap * j / (48 - r.j)
+def edgePrice (a : Shape) (L : ℕ) : ℕ :=
+  if FatEligible a then min (P0_9.physicalPrice a L) (P0_9.fatPrice a)
+  else P0_9.physicalPrice a L
+def Bellman (r : Shape) (cap : ℕ) : Prop :=
+  ∃ (B order : Shape → ℕ), B zeroShape ≤ cap ∧
+    (∀ x, Valid x → InBox (r.plus x) fullCap →
+      0 < order x ∧
+        (order x = 1 ∨ availableMass r x (order x - 1) < P0_9.layerNeed)) ∧
+    (∀ (y a : Shape), (y = zeroShape ∨ Valid y) → Valid a →
+      InBox (r.plus (y.plus a)) fullCap →
+      edgePrice a (order (y.plus a)) + B (y.plus a) ≤ B y)
 end P0_9_8
+end
+section
+namespace P0_9_8
+open K1_13 (Shape InBox FatEligible remaining)
+open K1_13_8 (Valid zeroShape fullCap availableMass layerTerm)
+open K1_13_8_2 (Threshold orderFor)
+open scoped BigOperators
+theorem symbol_count : ∀ b j, remaining b j = K1_13_8.fastRemaining b j :=
+  K1_13_8_1.proof
+theorem edgePrice_anti (a : Shape) {l u : ℕ} (hl : 0 < l) (h : l ≤ u) :
+    edgePrice a u ≤ edgePrice a l := by
+  have hp : P0_9.physicalPrice a u ≤ P0_9.physicalPrice a l := by
+    unfold P0_9.physicalPrice
+    exact Nat.add_le_add_right
+      (Nat.add_le_add_right (K1_13_8.ceilDiv_anti _ hl h) _) _
+  unfold edgePrice
+  split <;> first | exact min_le_min hp le_rfl | exact hp
+theorem edgePrice_le_physical (a : Shape) (l : ℕ) :
+    edgePrice a l ≤ P0_9.physicalPrice a l := by
+  unfold edgePrice
+  split
+  · exact min_le_left _ _
+  · exact le_rfl
+theorem availableMass_anti_prefix {r y x : Shape} {L : ℕ}
+    (hr : r = zeroShape ∨ 0 < r.j) (hj : 0 < r.j + y.j)
+    (hb : y.b ≤ x.b) (hidx : y.j ≤ x.j) :
+    availableMass r x L ≤ availableMass r y L := by
+  let N := max (L + 1650 / (r.j + x.j)) (L + 1650 / (r.j + y.j))
+  have hjx : 0 < r.j + x.j := by omega
+  rw [← K1_13_8.availableMass_eq_sum symbol_count hr hjx (N := N) (le_max_left _ _),
+    ← K1_13_8.availableMass_eq_sum symbol_count hr hj (N := N) (le_max_right _ _)]
+  exact Finset.sum_le_sum fun k _ => K1_13_8.remaining_anti
+    (Nat.add_le_add_left (Nat.mul_le_mul_left (k + 1 - L) hb) _)
+    (Nat.add_le_add_left (Nat.mul_le_mul_left (k + 1 - L) hidx) _)
+theorem orderFor_select (b j : ℕ) (ss : List Threshold) :
+    1 ≤ orderFor b j ss ∧
+    (orderFor b j ss = 1 ∨ ∃ s ∈ ss, s.b ≤ b ∧ s.j ≤ j ∧ orderFor b j ss = s.l) := by
+  induction ss with
+  | nil => simp [orderFor]
+  | cons s ss ih =>
+    unfold orderFor
+    let p := if s.b ≤ b ∧ s.j ≤ j then s.l else 1
+    change 1 ≤ max p (orderFor b j ss) ∧
+      (max p (orderFor b j ss) = 1 ∨ ∃ q ∈ s :: ss,
+        q.b ≤ b ∧ q.j ≤ j ∧ max p (orderFor b j ss) = q.l)
+    refine ⟨ih.1.trans (le_max_right _ _), ?_⟩
+    rcases le_total p (orderFor b j ss) with h | h
+    · rw [max_eq_right h]
+      rcases ih.2 with h1 | ⟨q, hq, hb, hj, hl⟩
+      · exact Or.inl h1
+      · exact Or.inr ⟨q, List.mem_cons_of_mem _ hq, hb, hj, hl⟩
+    · rw [max_eq_left h]
+      by_cases hbox : s.b ≤ b ∧ s.j ≤ j
+      · exact Or.inr ⟨s, List.mem_cons_self, hbox.1, hbox.2, ite_eq_left hbox⟩
+      · exact Or.inl (ite_eq_right hbox)
+theorem orderFor_mono {b b' j j' : ℕ} (hb : b ≤ b') (hj : j ≤ j') (ss : List Threshold) :
+    orderFor b j ss ≤ orderFor b' j' ss := by
+  induction ss with
+  | nil => exact le_rfl
+  | cons s ss ih =>
+    unfold orderFor
+    by_cases h : s.b ≤ b ∧ s.j ≤ j
+    · rw [ite_eq_left h, ite_eq_left ⟨h.1.trans hb, h.2.trans hj⟩]
+      exact max_le_max le_rfl ih
+    · rw [ite_eq_right h, max_eq_right (orderFor_select b j ss).1]
+      exact ih.trans (le_max_right _ _)
+theorem oneOrder_pos (x : Shape) : 0 < oneOrder x := by
+  unfold oneOrder
+  split <;> omega
+theorem oneOrder_mono {x y : Shape} (h : x.j ≤ y.j) : oneOrder x ≤ oneOrder y := by
+  unfold oneOrder
+  split <;> split <;> omega
+theorem bellman_of_budget (r : Shape) (cap : ℕ) (order : Shape → ℕ)
+    (hpos : ∀ x, 0 < order x)
+    (hmono : ∀ {a x}, a.b ≤ x.b → a.j ≤ x.j → order a ≤ order x)
+    (horders : ∀ x, Valid x → InBox (r.plus x) fullCap →
+      order x = 1 ∨ availableMass r x (order x - 1) < P0_9.layerNeed)
+    (hprice : ∀ a, Valid a → InBox (r.plus a) fullCap →
+      P0_9.physicalPrice a (order a) ≤ indexBudget r cap a.j) :
+    Bellman r cap := by
+  let B := fun y : Shape => indexBudget r cap (48 - r.j - y.j)
+  refine ⟨B, order, ?_, fun x hx hb => ⟨hpos x, horders x hx hb⟩, ?_⟩
+  · change cap * (48 - r.j - 0) / (48 - r.j) ≤ cap
+    rw [Nat.sub_zero]
+    exact Nat.div_le_of_le_mul (by rw [Nat.mul_comm])
+  · intro y a _ ha hbox
+    let x := y.plus a
+    have hb : InBox (r.plus a) fullCap :=
+      ⟨(Nat.add_le_add_left (Nat.le_add_left a.b y.b) _).trans hbox.1,
+        (Nat.add_le_add_left (Nat.le_add_left a.j y.j) _).trans hbox.2.1,
+        (Nat.add_le_add_left (Nat.le_add_left a.t y.t) _).trans hbox.2.2⟩
+    have hl := hmono (a := a) (x := x) (Nat.le_add_left _ _) (Nat.le_add_left _ _)
+    have hfee := (edgePrice_anti a (hpos a) hl).trans
+      ((edgePrice_le_physical a _).trans (hprice a ha hb))
+    have hidx : r.j + (y.j + a.j) ≤ 48 := hbox.2.1
+    have hbalance : a.j + (48 - r.j - x.j) = 48 - r.j - y.j := by
+      change a.j + (48 - r.j - (y.j + a.j)) = 48 - r.j - y.j
+      omega
+    apply (Nat.add_le_add_right hfee (B x)).trans
+    have hdiv : cap * a.j / (48 - r.j) + cap * (48 - r.j - x.j) / (48 - r.j) ≤
+        (cap * a.j + cap * (48 - r.j - x.j)) / (48 - r.j) :=
+      Nat.div_add_div_le_add_div
+    rw [← Nat.mul_add, hbalance] at hdiv
+    exact hdiv
+end P0_9_8
+end
+section
+namespace P0_9_8_3
+open K1_13
+open K1_13_8_2 (Chamber mixed_mono)
+private theorem box_refl (x : Shape) : InBox x x := ⟨le_rfl, le_rfl, le_rfl⟩
+private theorem normalize_mono {x y : Shape} (h : InBox x y) :
+    InBox x.chamber y.chamber := ⟨max_le_max h.1 h.2.1, h.2.1, h.2.2⟩
+private theorem normalize_chamber (x : Shape) (h : 3 * x.t ≤ x.j) :
+    Chamber x.chamber := ⟨le_max_right _ _, h⟩
+private theorem plus_mono {x y u v : Shape} (h : InBox x y) (h' : InBox u v) :
+    InBox (x.plus u) (y.plus v) :=
+  ⟨Nat.add_le_add h.1 h'.1, Nat.add_le_add h.2.1 h'.2.1, Nat.add_le_add h.2.2 h'.2.2⟩
+private theorem plus_chamber {x y : Shape} (hx : Chamber x) (hy : Chamber y) :
+    Chamber (x.plus y) := by
+  exact ⟨Nat.add_le_add hx.1 hy.1, by simp only [Shape.plus, Nat.mul_add]; exact Nat.add_le_add hx.2 hy.2⟩
+private theorem scale_mono {x y : Shape} (h : InBox x y) (k : ℕ) :
+    InBox (x.scale k) (y.scale k) :=
+  ⟨Nat.mul_le_mul_left k h.1, Nat.mul_le_mul_left k h.2.1, Nat.mul_le_mul_left k h.2.2⟩
+private theorem scale_chamber {x : Shape} (hx : Chamber x) (k : ℕ) :
+    Chamber (x.scale k) :=
+  ⟨Nat.mul_le_mul_left k hx.1, by simpa [Shape.scale, Nat.mul_left_comm 3 k] using Nat.mul_le_mul_left k hx.2⟩
+private theorem min_fits_index (a i : ℕ) : 3 * min a (i / 3) ≤ i := by
+  have h := min_le_right a (i / 3)
+  omega
+private theorem chart_chamber (L : ℕ) (x : Shape) : Chamber (chart L x) :=
+  ⟨le_max_right _ _, min_fits_index _ _⟩
+private theorem lifted_chamber (L : ℕ) (x : Shape) : Chamber (liftedChart L x) :=
+  ⟨le_max_right _ _, min_fits_index _ _⟩
+private theorem chart_mono (L : ℕ) {x y : Shape} (h : InBox x y) :
+    InBox (chart L x) (chart L y) := by
+  obtain ⟨hb, hj, ht⟩ := h
+  refine ⟨?_, ?_, ?_⟩ <;> dsimp [chart] <;> gcongr
+private theorem lifted_mono (L : ℕ) {x y : Shape} (h : InBox x y) :
+    InBox (liftedChart L x) (liftedChart L y) := by
+  obtain ⟨hb, hj, ht⟩ := h
+  refine ⟨?_, ?_, ?_⟩ <;> dsimp [liftedChart] <;> gcongr
+private def graphShape (p : Shape) : Shape :=
+  ⟨max p.b (p.j + 1), p.j + 1, min (p.t + 1) ((p.j + 1) / 3)⟩
+private theorem graph_chamber (x : Shape) : Chamber (graphShape x) :=
+  ⟨le_max_right _ _, min_fits_index _ _⟩
+private theorem graph_mono {x y : Shape} (h : InBox x y) :
+    InBox (graphShape x) (graphShape y) := by
+  obtain ⟨hb, hj, ht⟩ := h
+  refine ⟨?_, ?_, ?_⟩ <;> dsimp [graphShape] <;> gcongr
+private theorem surface_mono {p p' q : Shape} (hp : InBox p p') (hp' : Chamber p') (hq : Chamber q) :
+    P0_9.surfaceNumerator32 p q ≤ P0_9.surfaceNumerator32 p' q := by
+  let L := P0_9.taylorLength
+  have hchart : mixed32 p q (chart (L+1) p) (chart (L+2) p) ≤
+      mixed32 p' q (chart (L+1) p') (chart (L+2) p') :=
+    mixed_mono hp (box_refl q) (chart_mono _ hp) (chart_mono _ hp) hp' hq
+      (chart_chamber _ _) hq (chart_chamber _ _) (chart_chamber _ _)
+  have hlift : mixed32 p q (liftedChart (L+1) p) (liftedChart (L+2) p) ≤
+      mixed32 p' q (liftedChart (L+1) p') (liftedChart (L+2) p') :=
+    mixed_mono hp (box_refl q) (lifted_mono _ hp) (lifted_mono _ hp) hp' hq
+      (lifted_chamber _ _) hq (lifted_chamber _ _) (lifted_chamber _ _)
+  have hgraph (M : ℕ) :
+      mixed32 p q (graphShape p) (liftedChart M p) ≤ mixed32 p' q (graphShape p') (liftedChart M p') :=
+    mixed_mono hp (box_refl q) (graph_mono hp) (lifted_mono _ hp) hp' hq
+      (graph_chamber _) hq (graph_chamber _) (lifted_chamber _ _)
+  exact min_le_min hchart (Nat.add_le_add (Nat.add_le_add hlift (Nat.mul_le_mul_left _ (hgraph _)))
+    (Nat.mul_le_mul_left _ (hgraph _)))
+private theorem ceil_mono {a b : ℕ} (h : a ≤ b) (l : ℕ) : ceilDiv a l ≤ ceilDiv b l :=
+  Nat.div_le_div_right (Nat.sub_le_sub_right (Nat.add_le_add_right h l) 1)
+theorem physical_mono {x y : Shape} (h : InBox x y) (hx : 3 * x.t ≤ x.j)
+    (hy : 3 * y.t ≤ y.j) (l : ℕ) : P0_9.physicalPrice x l ≤ P0_9.physicalPrice y l := by
+  let p := x.chamber
+  let p' := y.chamber
+  let q : Shape := P0_9.primaryBox
+  let L := P0_9.taylorLength
+  let A := q.plus (p.scale 4)
+  let A' := q.plus (p'.scale 4)
+  have hp := normalize_mono h
+  have hpc : Chamber p := normalize_chamber x hx
+  have hp'c : Chamber p' := normalize_chamber y hy
+  have hqc : Chamber q := ⟨by decide, by decide⟩
+  have ha : InBox A A' := plus_mono (box_refl q) (scale_mono hp 4)
+  have hac : Chamber A := plus_chamber hqc (scale_chamber hpc 4)
+  have ha'c : Chamber A' := plus_chamber hqc (scale_chamber hp'c 4)
+  have hs := surface_mono hp hp'c hqc
+  have hb := (chart_mono (L+1) hp).1
+  have hmain : (P0.t + 2*P0_9.incidenceGap) * x.b * q.b * (chart (L+1) p).b ≤
+      (P0.t + 2*P0_9.incidenceGap) * y.b * q.b * (chart (L+1) p').b := by
+    have := h.1
+    gcongr
+  have hcurve := mixed_mono hp (box_refl q) ha (chart_mono L hp) hp'c hqc ha'c hqc hac (chart_chamber L p)
+  have hpoint := mixed_mono hp (box_refl q) ha hp hp'c hqc ha'c hqc hac hpc
+  have hcurve' := mixed_mono hp hp hp (chart_mono L hp) hp'c hp'c hp'c hpc hpc (chart_chamber L p)
+  have hpoint' := mixed_mono hp hp hp hp hp'c hp'c hp'c hpc hpc hpc
+  have htc := Nat.mul_le_mul_left 2 h.2.2
+  have hc := Nat.add_le_add hcurve (Nat.mul_le_mul htc hcurve')
+  have hn := Nat.add_le_add hpoint (Nat.mul_le_mul htc hpoint')
+  have hgeom := Nat.add_le_add (Nat.mul_le_mul_left P0.t hc) (Nat.mul_le_mul_left (2*P0_9.incidenceGap) hn)
+  have hraw := Nat.mul_le_mul_right q.b (Nat.mul_le_mul_left (2*P0_9.physicalDegree) h.1)
+  exact Nat.add_le_add
+    (Nat.add_le_add (ceil_mono (Nat.add_le_add (ceil_mono hs _) (ceil_mono hmain _)) l) hraw)
+    (ceil_mono hgeom _)
+end P0_9_8_3
+end
+section
+namespace P0_9_8_5
+open K1_13 (Shape InBox chart liftedChart mixed32 ceilDiv)
+open K1_13_8_2 (Chamber mixed_mono)
+open P0_9 (physicalPrice physicalDegree incidenceGap primaryBox taylorLength surfaceNumerator32)
+private theorem box_refl (x : Shape) : InBox x x := ⟨le_rfl, le_rfl, le_rfl⟩
+private theorem normalize_mono {x y : Shape} (h : InBox x y) :
+    InBox x.chamber y.chamber := ⟨max_le_max h.1 h.2.1, h.2.1, h.2.2⟩
+private theorem normalize_chamber (x : Shape) (h : 3 * x.t ≤ x.j) :
+    Chamber x.chamber := ⟨le_max_right _ _, h⟩
+private theorem plus_mono {x y u v : Shape} (h : InBox x y) (h' : InBox u v) :
+    InBox (x.plus u) (y.plus v) :=
+  ⟨Nat.add_le_add h.1 h'.1, Nat.add_le_add h.2.1 h'.2.1, Nat.add_le_add h.2.2 h'.2.2⟩
+private theorem plus_chamber {x y : Shape} (hx : Chamber x) (hy : Chamber y) :
+    Chamber (x.plus y) := by
+  exact ⟨Nat.add_le_add hx.1 hy.1, by simp only [Shape.plus, Nat.mul_add]; exact Nat.add_le_add hx.2 hy.2⟩
+private theorem scale_mono {x y : Shape} (h : InBox x y) (k : ℕ) :
+    InBox (x.scale k) (y.scale k) :=
+  ⟨Nat.mul_le_mul_left k h.1, Nat.mul_le_mul_left k h.2.1, Nat.mul_le_mul_left k h.2.2⟩
+private theorem scale_chamber {x : Shape} (hx : Chamber x) (k : ℕ) :
+    Chamber (x.scale k) :=
+  ⟨Nat.mul_le_mul_left k hx.1, by simpa [Shape.scale, Nat.mul_left_comm 3 k] using Nat.mul_le_mul_left k hx.2⟩
+private theorem min_fits_index (a i : ℕ) : 3 * min a (i / 3) ≤ i := by
+  have h := min_le_right a (i / 3)
+  omega
+private theorem chart_chamber (L : ℕ) (x : Shape) : Chamber (chart L x) :=
+  ⟨le_max_right _ _, min_fits_index _ _⟩
+private theorem lifted_chamber (L : ℕ) (x : Shape) : Chamber (liftedChart L x) :=
+  ⟨le_max_right _ _, min_fits_index _ _⟩
+private theorem chart_mono (L : ℕ) {x y : Shape} (h : InBox x y) :
+    InBox (chart L x) (chart L y) := by
+  obtain ⟨hb, hj, ht⟩ := h
+  refine ⟨?_, ?_, ?_⟩ <;> dsimp [chart] <;> gcongr
+private theorem lifted_mono (L : ℕ) {x y : Shape} (h : InBox x y) :
+    InBox (liftedChart L x) (liftedChart L y) := by
+  obtain ⟨hb, hj, ht⟩ := h
+  refine ⟨?_, ?_, ?_⟩ <;> dsimp [liftedChart] <;> gcongr
+private def graphShape (p : Shape) : Shape :=
+  ⟨max p.b (p.j + 1), p.j + 1, min (p.t + 1) ((p.j + 1) / 3)⟩
+private theorem graph_chamber (x : Shape) : Chamber (graphShape x) :=
+  ⟨le_max_right _ _, min_fits_index _ _⟩
+private theorem graph_mono {x y : Shape} (h : InBox x y) :
+    InBox (graphShape x) (graphShape y) := by
+  obtain ⟨hb, hj, ht⟩ := h
+  refine ⟨?_, ?_, ?_⟩ <;> dsimp [graphShape] <;> gcongr
+private theorem surface_mono {p p' q : Shape} (hp : InBox p p') (hp' : Chamber p') (hq : Chamber q) :
+    surfaceNumerator32 p q ≤ surfaceNumerator32 p' q := by
+  let L := taylorLength
+  have hchart : mixed32 p q (chart (L+1) p) (chart (L+2) p) ≤
+      mixed32 p' q (chart (L+1) p') (chart (L+2) p') :=
+    mixed_mono hp (box_refl q) (chart_mono _ hp) (chart_mono _ hp) hp' hq
+      (chart_chamber _ _) hq (chart_chamber _ _) (chart_chamber _ _)
+  have hlift : mixed32 p q (liftedChart (L+1) p) (liftedChart (L+2) p) ≤
+      mixed32 p' q (liftedChart (L+1) p') (liftedChart (L+2) p') :=
+    mixed_mono hp (box_refl q) (lifted_mono _ hp) (lifted_mono _ hp) hp' hq
+      (lifted_chamber _ _) hq (lifted_chamber _ _) (lifted_chamber _ _)
+  have hgraph (M : ℕ) :
+      mixed32 p q (graphShape p) (liftedChart M p) ≤ mixed32 p' q (graphShape p') (liftedChart M p') :=
+    mixed_mono hp (box_refl q) (graph_mono hp) (lifted_mono _ hp) hp' hq
+      (graph_chamber _) hq (graph_chamber _) (lifted_chamber _ _)
+  exact min_le_min hchart (Nat.add_le_add (Nat.add_le_add hlift (Nat.mul_le_mul_left _ (hgraph _)))
+    (Nat.mul_le_mul_left _ (hgraph _)))
+theorem ceil_mono {a b : ℕ} (h : a ≤ b) (l : ℕ) : ceilDiv a l ≤ ceilDiv b l :=
+  Nat.div_le_div_right (Nat.sub_le_sub_right (Nat.add_le_add_right h l) 1)
+theorem physical_mono {x y : Shape} (h : InBox x y) (hx : 3 * x.t ≤ x.j)
+    (hy : 3 * y.t ≤ y.j) (l : ℕ) : physicalPrice x l ≤ physicalPrice y l := by
+  let p := x.chamber
+  let p' := y.chamber
+  let q := primaryBox
+  let L := taylorLength
+  let A := q.plus (p.scale 4)
+  let A' := q.plus (p'.scale 4)
+  have hp := normalize_mono h
+  have hpc : Chamber p := normalize_chamber x hx
+  have hp'c : Chamber p' := normalize_chamber y hy
+  have hqc : Chamber q := by dsimp [Chamber, q]; omega
+  have ha : InBox A A' := plus_mono (box_refl q) (scale_mono hp 4)
+  have hac : Chamber A := plus_chamber hqc (scale_chamber hpc 4)
+  have ha'c : Chamber A' := plus_chamber hqc (scale_chamber hp'c 4)
+  have hs := surface_mono hp hp'c hqc
+  have hb := (chart_mono (L+1) hp).1
+  have hmain : (P0.t + 2*incidenceGap) * x.b * q.b * (chart (L+1) p).b ≤
+      (P0.t + 2*incidenceGap) * y.b * q.b * (chart (L+1) p').b := by
+    have := h.1
+    gcongr
+  have hcurve := mixed_mono hp (box_refl q) ha (chart_mono L hp) hp'c hqc ha'c hqc hac (chart_chamber L p)
+  have hpoint := mixed_mono hp (box_refl q) ha hp hp'c hqc ha'c hqc hac hpc
+  have hcurve' := mixed_mono hp hp hp (chart_mono L hp) hp'c hp'c hp'c hpc hpc (chart_chamber L p)
+  have hpoint' := mixed_mono hp hp hp hp hp'c hp'c hp'c hpc hpc hpc
+  have htc := Nat.mul_le_mul_left 2 h.2.2
+  have hc := Nat.add_le_add hcurve (Nat.mul_le_mul htc hcurve')
+  have hn := Nat.add_le_add hpoint (Nat.mul_le_mul htc hpoint')
+  have hgeom := Nat.add_le_add (Nat.mul_le_mul_left P0.t hc) (Nat.mul_le_mul_left (2*incidenceGap) hn)
+  have hraw := Nat.mul_le_mul_right q.b (Nat.mul_le_mul_left (2*physicalDegree) h.1)
+  exact Nat.add_le_add
+    (Nat.add_le_add (ceil_mono (Nat.add_le_add (ceil_mono hs _) (ceil_mono hmain _)) l) hraw)
+    (ceil_mono hgeom _)
+end P0_9_8_5
+end

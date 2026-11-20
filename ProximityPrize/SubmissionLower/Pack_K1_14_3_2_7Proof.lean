@@ -1,35 +1,22 @@
-import ProximityPrize.SubmissionLower.Fast014
-import ProximityPrize.SubmissionLower.Pack_K1Defs
-import ProximityPrize.SubmissionLower.Fast023
-import ProximityPrize.SubmissionLower.Fast029
-import ProximityPrize.SubmissionLower.Pack_K1_14_2_1Split
-import ProximityPrize.SubmissionLower.Pack_K1_14_3_2Split
 import ProximityPrize.SubmissionLower.Fast042
+import ProximityPrize.SubmissionLower.Pack_K1_14_2_1Split
 set_option Elab.async false
-
-section PackSource_K1_14_3_2_7Proof
 set_option autoImplicit true
+section
 set_option backward.isDefEq.respectTransparency false
 set_option maxRecDepth 4000
 set_option maxSynthPendingDepth 8
 set_option maxHeartbeats 300000
-
 namespace K1_14_3_2_7
-
 noncomputable section
-
 open K1 K1_14 K1_14_3 K1_14_3_2 Polynomial
-
 private abbrev Parameters := MvPolynomial (Fin 4) FX
-
 private def seedNodes : Seeds →+* Parameters :=
   (MvPolynomial.rename (R := FX) (Fin.natAdd 2 : Fin 2 → Fin 4)).toRingHom
 private def jetNodes : JetPlane →+* Parameters :=
   eval₂RingHom (eval₂RingHom MvPolynomial.C (MvPolynomial.X 2)) (MvPolynomial.X 3)
-
 private theorem seedNodes_injective : Function.Injective seedNodes := by
   exact MvPolynomial.rename_injective (R := FX) (Fin.natAdd 2) (Fin.natAdd_injective 2 2)
-
 private theorem jetNodes_injective : Function.Injective jetNodes := by
   let r : Parameters →+* JetPlane :=
     MvPolynomial.eval₂Hom (C.comp C) ![0, 0, C Polynomial.X, Polynomial.X]
@@ -39,7 +26,6 @@ private theorem jetNodes_injective : Function.Injective jetNodes := by
     · simp [r, jetNodes]
   have hi : Function.LeftInverse r jetNodes := fun a => RingHom.congr_fun hr a
   exact hi.injective
-
 private theorem pair_range {T : Type} (f : Fin 2 → T) : Set.range f = {f 0, f 1} := by
   ext a
   constructor
@@ -49,9 +35,7 @@ private theorem pair_range {T : Type} (f : Fin 2 → T) : Set.range f = {f 0, f 
     rintro (rfl | rfl)
     · exact ⟨0, rfl⟩
     · exact ⟨1, rfl⟩
-
 private abbrev Chart (B : Type) [CommRing B] := Projection FX SectionField B
-
 private def seedProjection : Chart Seeds where
   intoJet := C.comp C
   intoSection := (algebraMap Parameters SectionField).comp seedNodes
@@ -71,7 +55,6 @@ private def seedProjection : Chart Seeds where
   cuts := by
     rw [pair_range]
     simp [seedNodes, sectionEquations, sectionScalar, extendScalars, scalar, Fin.natAdd]
-
 private def jetProjection : Chart JetPlane where
   intoJet := fixedEmbedding
   intoSection := (algebraMap Parameters SectionField).comp jetNodes
@@ -93,7 +76,6 @@ private def jetProjection : Chart JetPlane where
   cuts := by
     rw [pair_range]
     simp [fixedEmbedding, jetNodes, sectionEquations, sectionScalar, extendScalars, scalar]
-
 private theorem seed_generates :
     Function.Surjective (MvPolynomial.eval₂Hom seedProjection.intoJet ![yVar, vVar]) := by
   let r : Jet →+* MvPolynomial (Fin 2) Seeds :=
@@ -113,7 +95,6 @@ private theorem seed_generates :
     · simp [r]
     · simp [r]
   exact fun a => ⟨r a, RingHom.congr_fun h a⟩
-
 private theorem jet_generates :
     Function.Surjective (MvPolynomial.eval₂Hom jetProjection.intoJet seedVar) := by
   let r : Jet →+* MvPolynomial (Fin 2) JetPlane :=
@@ -132,7 +113,6 @@ private theorem jet_generates :
     · simp only [RingHom.comp_apply, r, evaluate_v, MvPolynomial.eval₂Hom_C, RingHom.id_apply]
       simp [jetProjection, fixedEmbedding, vVar]
   exact fun a => ⟨r a, RingHom.congr_fun h a⟩
-
 private theorem separable_of_small {F E : Type} [Field F] [CharP F p] [Field E] [Algebra F E]
     [FiniteDimensional F E] (h : Module.finrank F E < p) : Algebra.IsSeparable F E := by
   let : Fact (Nat.Prime p) := ⟨(CharP.char_is_prime_or_zero F p).resolve_right (by decide)⟩
@@ -148,7 +128,6 @@ private theorem separable_of_small {F E : Type} [Field F] [CharP F p] [Field E] 
       rw [← hn, ← Field.finSepDegree_mul_finInsepDegree F E]
       exact dvd_mul_left _ _
     exact (not_lt_of_ge (hle.trans (Nat.le_of_dvd Module.finrank_pos hdvd)) h).elim
-
 private theorem generic_point {R G B : Type} [CommRing R] [Field G] [CommRing B] [IsDomain B]
     [CharP (FractionRing B) p] (P : Projection R G B) (x : Fin 2 → Four R)
     (hgen : Function.Surjective (MvPolynomial.eval₂Hom P.intoJet x))
@@ -177,7 +156,6 @@ private theorem generic_point {R G B : Type} [CommRing R] [Field G] [CommRing B]
   · change RingHom.ker (e.toRingHom.comp j) = _
     rw [RingHom.ker_comp_of_injective _ e.injective]
     exact ker_toFibre P.intoJet I hd
-
 private theorem section_model {B : Type} [CommRing B]
     (P : Chart B) (q : Surface) (s : Slice) (hcoeff : P.coeffMap = algebraMap FX SectionField)
     (hcuts : sectionEquations s = P.cutSet) :
@@ -187,7 +165,6 @@ private theorem section_model {B : Type} [CommRing B]
     rfl
   unfold sectionDegree
   rw [hcuts, hmap]
-
 theorem proof : K1_14_3_2.c7 := by
   intro q hh hs hj hds hdj
   let : CharP L p := charP_of_injective_algebraMap (algebraMap K L).injective p
@@ -208,8 +185,6 @@ theorem proof : K1_14_3_2.c7 := by
       · simp [seedFibreEval, yVar]
     · simp [seedFibreEval, vVar]
   rwa [OnSeedFibre, hsEval]
-
 end
-
 end K1_14_3_2_7
-end PackSource_K1_14_3_2_7Proof
+end

@@ -1,15 +1,10 @@
-import ProximityPrize.SubmissionLower.Pack_K1Defs
-import ProximityPrize.SubmissionLower.Numeric6AuxCert
-import ProximityPrize.SubmissionLower.Fast023
 import ProximityPrize.SubmissionLower.Fast029
+import ProximityPrize.SubmissionLower.Numeric6AuxCert
 set_option Elab.async false
-
-section PackSource_K1_14_2_1Arithmetic
 set_option autoImplicit true
+section
 namespace K1_14_2_1
-
 open K1 K1_14 K1_14_2 Finset
-
 private theorem twice_sum_linear (a b : ℤ) (n : ℕ) :
     2 * (∑ j ∈ range n, (a + b * (j : ℤ))) =
       n * (2 * a + b * ((n : ℤ) - 1)) := by
@@ -19,11 +14,9 @@ private theorem twice_sum_linear (a b : ℤ) (n : ℕ) :
     rw [sum_range_succ, mul_add, ih]
     push_cast
     ring
-
 private def nodeRow (k d : ℕ) : ℕ :=
   let n := min k ((d + 1) / 2)
   n * (d + 1 - n)
-
 private theorem nodeRow_eq (k d : ℕ) :
     (∑ i ∈ range k, (d - 2 * i)) = nodeRow k d := by
   let n := min k ((d + 1) / 2)
@@ -53,28 +46,21 @@ private theorem nodeRow_eq (k d : ℕ) :
   change _ = (↑(n * (d + 1 - n)) : ℤ)
   push_cast [Nat.cast_sub (show n ≤ d + 1 by omega)]
   nlinarith only [hlin]
-
 private def nodeCost (s : Shape) : ℕ :=
   triangle s.U * 262144 *
     ∑ q ∈ range (s.B + 1), nodeRow (min q s.J + 1) (s.m + min q s.J - q)
-
 private def poleSlope (s : Shape) : ℕ :=
   2 * (s.U + 1) * ∑ q ∈ range (s.B + 1), (min q s.J + 1) * ((s.B + s.J - q) * (s.B - q))
-
 private theorem debit_eq (s : Shape) (h : ℕ) : sourceDebit h s = nodeCost s + h * poleSlope s := by
   unfold sourceDebit nodeCost poleSlope shapeSum
   simp_rw [← Nat.sub_sub, nodeRow_eq, sum_const, card_range, Nat.nsmul_eq_mul]
   ring
-
-/-- Twice the signed volume minus the whole last-cutoff allowance is affine in height. -/
 private def widthBase (s : Shape) : ℤ :=
   ∑ q ∈ range (s.B + 1), (((min q s.J : ℕ) : ℤ) + 1) *
     (2 * ((s.m : ℤ) * 180265 - (q : ℤ) * 131071) + min q s.J)
-
 private def widthSlope (s : Shape) (r mode : ℕ) : ℤ :=
   ∑ q ∈ range (s.B + 1), (((min q s.J : ℕ) : ℤ) + 1) *
     (2 * ((q : ℤ) - 2 * r) - 2 * mode * min q s.J)
-
 private theorem width_cast (h r : ℕ) (s : Shape) (q j : ℕ)
     (hh : h ≤ 131071) (hq : q ≤ s.B)
     (hw : s.B * (131071 - h) < cutoffCount h r s) :
@@ -86,13 +72,12 @@ private theorem width_cast (h r : ℕ) (s : Shape) (q j : ℕ)
   rw [Nat.cast_sub (by omega : q * (131071 - h) ≤ s.m * 180265 - 2 * h * r + j)]
   push_cast [Nat.cast_sub hh, Nat.cast_sub hbuf]
   rfl
-
 private theorem volume_eq (h r mode : ℕ) (s : Shape) (hh : h ≤ 131071)
     (hw : s.B * (131071 - h) < cutoffCount h r s) :
     2 * ((rawVolume h r s : ℤ) - mode * (movingCeiling h s : ℤ)) =
       (triangle s.U : ℤ) * (widthBase s + h * widthSlope s r mode) := by
   calc
-    _ = (triangle s.U : ℤ) * ∑ q ∈ range (s.B + 1), 2 *
+    _ = (triangle s.U : ℤ) * ∑ q ∈ range (s.B + 1),2 *
           ∑ j ∈ range (min q s.J + 1), ((rawWidth h r s q j : ℤ) - mode * (2 * h * j)) := by
       unfold rawVolume movingCeiling shapeSum
       push_cast [Nat.cast_sum]
@@ -119,120 +104,89 @@ private theorem volume_eq (h r mode : ℕ) (s : Shape) (hh : h ≤ 131071)
       push_cast
       dsimp [a, b]
       ring
-
 private def worstBase (s : Shape) : ℤ := (s.m : ℤ) * 180265 - (s.B : ℤ) * 131071
 private def worstSlope (s : Shape) (r : ℕ) : ℤ := (s.B : ℤ) - 2 * r
-
 private def surplusBase (s : Shape) : ℤ := (triangle s.U : ℤ) * widthBase s - 2 * nodeCost s
 private def surplusSlope (s : Shape) (r mode : ℕ) : ℤ :=
   (triangle s.U : ℤ) * widthSlope s r mode - 2 * poleSlope s
-
 private def Certificate (s : Shape) (r mode : ℕ) : Prop :=
   0 < worstBase s + 2601 * worstSlope s r ∧
   0 < worstBase s + 3554 * worstSlope s r ∧
   0 < surplusBase s + 2601 * surplusSlope s r mode ∧
   0 < surplusBase s + 3554 * surplusSlope s r mode
-
 private def GoodStage (s : Stage) : Prop :=
   Certificate s.cheap s.reserve 0 ∧ Certificate s.layered s.reserve 1 ∧ s.cheap.U < p
-
 private instance (s : Stage) : Decidable (GoodStage s) := by
   unfold GoodStage Certificate
   infer_instance
-
 section
-
 set_option maxHeartbeats 0
 set_option maxRecDepth 16000
-
-/-- Check each stage shape independently, keeping its finite sums local to one proof. -/
-private theorem cheapCert_0 : Certificate ⟨59, 82, 18, 1899⟩ 0 0 := by
+private theorem cheapCert_0 : Certificate ⟨59,82,18,1899⟩ 0 0 := by
   unfold Certificate
   decide +kernel
-
-private theorem layeredCert_0 : Certificate ⟨136, 190, 40, 8441⟩ 0 1 := by
+private theorem layeredCert_0 : Certificate ⟨136,190,40,8441⟩ 0 1 := by
   unfold Certificate
   decide +kernel
-
-private theorem cheapCert_1 : Certificate ⟨66, 92, 21, 2076⟩ 1 0 := by
+private theorem cheapCert_1 : Certificate ⟨66,92,21,2076⟩ 1 0 := by
   unfold Certificate
   decide +kernel
-
-private theorem layeredCert_1 : Certificate ⟨150, 210, 44, 9356⟩ 1 1 := by
+private theorem layeredCert_1 : Certificate ⟨150,210,44,9356⟩ 1 1 := by
   unfold Certificate
   decide +kernel
-
-private theorem cheapCert_2 : Certificate ⟨73, 102, 23, 2261⟩ 2 0 := by
+private theorem cheapCert_2 : Certificate ⟨73,102,23,2261⟩ 2 0 := by
   unfold Certificate
   decide +kernel
-
-private theorem layeredCert_2 : Certificate ⟨164, 229, 48, 10272⟩ 2 1 := by
+private theorem layeredCert_2 : Certificate ⟨164,229,48,10272⟩ 2 1 := by
   unfold Certificate
   decide +kernel
-
-private theorem cheapCert_3 : Certificate ⟨80, 112, 25, 2455⟩ 3 0 := by
+private theorem cheapCert_3 : Certificate ⟨80,112,25,2455⟩ 3 0 := by
   unfold Certificate
   decide +kernel
-
-private theorem layeredCert_3 : Certificate ⟨178, 249, 52, 11191⟩ 3 1 := by
+private theorem layeredCert_3 : Certificate ⟨178,249,52,11191⟩ 3 1 := by
   unfold Certificate
   decide +kernel
-
-private theorem cheapCert_5 : Certificate ⟨94, 131, 30, 2824⟩ 5 0 := by
+private theorem cheapCert_5 : Certificate ⟨94,131,30,2824⟩ 5 0 := by
   unfold Certificate
   decide +kernel
-
-private theorem layeredCert_5 : Certificate ⟨213, 298, 62, 12959⟩ 5 1 := by
+private theorem layeredCert_5 : Certificate ⟨213,298,62,12959⟩ 5 1 := by
   unfold Certificate
   decide +kernel
-
-private theorem cheapCert_8 : Certificate ⟨115, 160, 36, 3401⟩ 8 0 := by
+private theorem cheapCert_8 : Certificate ⟨115,160,36,3401⟩ 8 0 := by
   unfold Certificate
   decide +kernel
-
-private theorem layeredCert_8 : Certificate ⟨262, 366, 77, 15611⟩ 8 1 := by
+private theorem layeredCert_8 : Certificate ⟨262,366,77,15611⟩ 8 1 := by
   unfold Certificate
   decide +kernel
-
-private theorem cheapCert_12 : Certificate ⟨136, 190, 43, 4204⟩ 12 0 := by
+private theorem cheapCert_12 : Certificate ⟨136,190,43,4204⟩ 12 0 := by
   unfold Certificate
   decide +kernel
-
-private theorem layeredCert_12 : Certificate ⟨325, 454, 96, 19187⟩ 12 1 := by
+private theorem layeredCert_12 : Certificate ⟨325,454,96,19187⟩ 12 1 := by
   unfold Certificate
   decide +kernel
-
-private theorem cheapCert_18 : Certificate ⟨178, 248, 56, 5332⟩ 18 0 := by
+private theorem cheapCert_18 : Certificate ⟨178,248,56,5332⟩ 18 0 := by
   unfold Certificate
   decide +kernel
-
-private theorem layeredCert_18 : Certificate ⟨409, 572, 121, 24615⟩ 18 1 := by
+private theorem layeredCert_18 : Certificate ⟨409,572,121,24615⟩ 18 1 := by
   unfold Certificate
   decide +kernel
-
-private theorem cheapCert_28 : Certificate ⟨241, 336, 78, 7235⟩ 28 0 := by
+private theorem cheapCert_28 : Certificate ⟨241,336,78,7235⟩ 28 0 := by
   unfold Certificate
   decide +kernel
-
-private theorem layeredCert_28 : Certificate ⟨570, 797, 169, 33523⟩ 28 1 := by
+private theorem layeredCert_28 : Certificate ⟨570,797,169,33523⟩ 28 1 := by
   unfold Certificate
   decide +kernel
-
-private theorem cheapCert_42 : Certificate ⟨325, 453, 104, 9976⟩ 42 0 := by
+private theorem cheapCert_42 : Certificate ⟨325,453,104,9976⟩ 42 0 := by
   unfold Certificate
   decide +kernel
-
-private theorem layeredCert_42 : Certificate ⟨759, 1061, 224, 46271⟩ 42 1 := by
+private theorem layeredCert_42 : Certificate ⟨759,1061,224,46271⟩ 42 1 := by
   unfold Certificate
   decide +kernel
-
 end
-
 private theorem stageConsChecked {s : Stage} {tail : List Stage}
     (hs : GoodStage s) (ht : tail.all (fun t => decide (GoodStage t)) = true) :
     (s :: tail).all (fun t => decide (GoodStage t)) = true := by
   simpa only [List.all_cons, decide_eq_true hs, Bool.true_and] using ht
-
 private theorem check_stages : stages.all (fun s => decide (GoodStage s)) = true := by
   refine stageConsChecked ?_ ?_
   · exact ⟨cheapCert_0, layeredCert_0, by decide⟩
@@ -255,13 +209,11 @@ private theorem check_stages : stages.all (fun s => decide (GoodStage s)) = true
   refine stageConsChecked ?_ ?_
   · exact ⟨cheapCert_42, layeredCert_42, by decide⟩
   rfl
-
 private theorem affine_positive {a b h : ℤ} (hlo : 2601 ≤ h) (hhi : h ≤ 3554)
     (ha : 0 < a + 2601 * b) (hb : 0 < a + 3554 * b) : 0 < a + h * b := by
   by_cases hb0 : 0 ≤ b
   · nlinarith only [ha, mul_nonneg (sub_nonneg.mpr hlo) hb0]
   · nlinarith only [hb, mul_nonneg (sub_nonneg.mpr hhi) (neg_nonneg.mpr (le_of_not_ge hb0))]
-
 private theorem test (h r mode : ℕ) (s : Shape) (hlo : 2601 ≤ h) (hhi : h ≤ 3554)
     (hc : Certificate s r mode) :
     s.B * (131071 - h) < cutoffCount h r s ∧
@@ -296,8 +248,6 @@ private theorem test (h r mode : ℕ) (s : Shape) (hlo : 2601 ≤ h) (hhi : h �
     push_cast
     nlinarith only [hs, heq]
   exact_mod_cast ht
-
-/-- The raw-width guard, strict source signs and cheap seed cap for each stage. -/
 theorem native_tests {h : ℕ} (hlo : 2601 ≤ h) (hhi : h ≤ 3554) {s : Stage}
     (hs : s ∈ stages) :
     (s.cheap.B * (131071 - h) < cutoffCount h s.reserve s.cheap ∧
@@ -309,6 +259,5 @@ theorem native_tests {h : ℕ} (hlo : 2601 ≤ h) (hhi : h ≤ 3554) {s : Stage}
   obtain ⟨hcheap, hlayered, hseed⟩ := hc
   exact ⟨by simpa using test h s.reserve 0 s.cheap hlo hhi hcheap,
     by simpa using test h s.reserve 1 s.layered hlo hhi hlayered, hseed⟩
-
 end K1_14_2_1
-end PackSource_K1_14_2_1Arithmetic
+end

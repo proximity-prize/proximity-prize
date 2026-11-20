@@ -1,44 +1,31 @@
-import ProximityPrize.SubmissionLower.Fast017
-import ProximityPrize.SubmissionLower.Fast022
 import ProximityPrize.SubmissionLower.Numeric5Defs
 set_option Elab.async false
-
-section PackSource_K1_13_2_3_5Certificate
 set_option autoImplicit true
+section
 namespace K1_13_2_3_5
-
 open K1_13_2 K1_13_2_3
 open scoped BigOperators
-
-/-- A grade's consecutive offsets and their products in increasing offset order.
-Each product occupies 28 bits, with 9, 9 and 10 bits for the three exponents. -/
 structure Row where
   first : ℕ
   count : ℕ
   packed : ℕ
   deriving Inhabited
-
 private def unpack (packed : ℕ) : Powers :=
   ⟨packed % 512, packed / 512 % 512, packed / 262144 % 1024⟩
-
 private def powersAt : ℕ → ℕ → Powers
   | 0, packed => unpack packed
   | k + 1, packed => powersAt k (packed / 268435456)
-
 private def rowLoop (s : ℕ) : ℕ → ℕ → ℕ → ℕ
   | 0, _, _ => 0
   | n + 1, j, packed =>
       certifiedSaving s j (unpack packed) + rowLoop s n (j + 1) (packed / 268435456)
-
 private def rowScore (s : ℕ) (r : Row) : ℕ :=
   if 2008 ≤ s ∧ s < 3012 ∧ 322 ≤ r.first ∧ r.first + r.count ≤ 1063 ∧
     3000 ≤ s + r.first ∧ s + r.first + r.count ≤ 3420
   then rowLoop s r.count r.first r.packed else 0
-
 def batchScore : ℕ → List Row → ℕ
   | _, [] => 0
   | s, r :: rs => rowScore s r + batchScore (s + 1) rs
-
 theorem batchScore_append (s : ℕ) (xs ys : List Row) :
     batchScore s (xs ++ ys) = batchScore s xs + batchScore (s + xs.length) ys := by
   induction xs generalizing s with
@@ -46,13 +33,10 @@ theorem batchScore_append (s : ℕ) (xs ys : List Row) :
   | cons x xs ih =>
     simp only [List.cons_append, batchScore, List.length_cons, ih]
     rw [show s + 1 + xs.length = s + (xs.length + 1) by omega, Nat.add_assoc]
-
 private def rowPowers (r : Row) (j : ℕ) : Powers :=
   powersAt (j - r.first) r.packed
-
 private def assignment (start : ℕ) (rows : List Row) (i : BlockIndex) : Powers :=
   rowPowers (rows[i.1.val - start]?.getD default) i.2.val
-
 private theorem rowLoop_eq (s n j packed : ℕ) :
     rowLoop s n j packed =
       ∑ k : Fin n, certifiedSaving s (j + k.val) (powersAt k.val packed) := by
@@ -65,7 +49,6 @@ private theorem rowLoop_eq (s n j packed : ℕ) :
     apply Finset.sum_congr rfl
     intro k _
     rw [show j + 1 + k.val = j + (k.val + 1) by omega]
-
 private theorem rowScore_le (s : Fin 4013) (r : Row) :
     rowScore s.val r ≤ ∑ j : Fin 4650,
       if w2.Contains (s,j) then savings (s,j) (rowPowers r j.val) else 0 := by
@@ -92,7 +75,6 @@ private theorem rowScore_le (s : Fin 4013) (r : Row) :
       rw [he]
       exact certifiedSaving_le _ _ hw
   · exact Nat.zero_le _
-
 private theorem batchScore_eq (start : ℕ) (rows : List Row) :
     batchScore start rows = ∑ k : Fin rows.length, rowScore (start+k.val) (rows.get k) := by
   induction rows generalizing start with
@@ -105,7 +87,6 @@ private theorem batchScore_eq (start : ℕ) (rows : List Row) :
     apply Finset.sum_congr rfl
     intro k _
     rw [show start + 1 + k.val = start + (k.val + 1) by omega]
-
 theorem certificate (start : ℕ) (rows : List Row) (h : start + rows.length ≤ 4013) :
     ∃ p : BlockIndex → Powers, batchScore start rows ≤ savingsSum w2 p := by
   refine ⟨assignment start rows, ?_⟩
@@ -123,6 +104,5 @@ theorem certificate (start : ℕ) (rows : List Row) (h : start + rows.length ≤
       simp [assignment, f, k.isLt]
     simp_rw [hp]
     exact rowScore_le (f k) (rows.get k)
-
 end K1_13_2_3_5
-end PackSource_K1_13_2_3_5Certificate
+end

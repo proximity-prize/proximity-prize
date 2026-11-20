@@ -1,24 +1,15 @@
 import ProximityPrize.Benchmark.TargetLower
-import ProximityPrize.SubmissionLower.Fast002
-import ProximityPrize.SubmissionLower.Fast005
-import ProximityPrize.SubmissionLower.Fast006
-import ProximityPrize.SubmissionLower.Fast007
-import ProximityPrize.SubmissionLower.Fast010
 import ProximityPrize.SubmissionLower.Fast012
 set_option Elab.async false
-
-section PackSource_MCABridge
 set_option autoImplicit true
+section
 set_option backward.isDefEq.respectTransparency false
 namespace FrobeniusLocator
 noncomputable section
 open Polynomial Finset CoreDefinitions Code LinearCode
 open scoped BigOperators
 local instance decidableMCABridge (P : Prop) : Decidable P := Classical.propDecidable P
-
 variable {F ι : Type} [Field F] [Fintype F] [Fintype ι] [DecidableEq ι]
-
-/-- No non-jointness information is needed for the full-rank stratum. -/
 theorem isMCA_implies_decodable (x : ι ↪ F) (u : Fin 2 → ι → F)
     (k t : ℕ) [NeZero k] (δ : ℝ)
     (hthreshold : ∀ T : Finset ι,
@@ -45,13 +36,10 @@ theorem isMCA_implies_decodable (x : ι ↪ F) (u : Fin 2 → ι → F)
   rw [Finset.card_sdiff_of_subset (Finset.subset_univ T), Finset.card_univ] at hcard
   have := hthreshold T hT
   omega
-
 end
 end FrobeniusLocator
-end PackSource_MCABridge
-
-section PackSource_BadSlope
-set_option autoImplicit true
+end
+section
 set_option backward.isDefEq.respectTransparency false
 namespace FrobeniusLocator.Principal
 noncomputable section
@@ -59,22 +47,15 @@ open Polynomial Finset CoreDefinitions Code LinearCode
 open scoped BigOperators
 local instance decidableBadSlope (P : Prop) : Decidable P := Classical.propDecidable P
 variable {F ι : Type} [Field F] [Fintype ι] [DecidableEq ι]
-
-/-- Same-support MCA badness in polynomial form. -/
 def BadSlope (x : ι → F) (u v : ι → F) (k A : ℕ) (γ : F) : Prop :=
   ∃ S : Finset ι, A ≤ S.card ∧
     ExtendsOn x (fun i => u i + γ * v i) k S ∧
     ¬ (ExtendsOn x u k S ∧ ExtendsOn x v k S)
-
 theorem degree_smul_lt (a : F) {P : F[X]} {k : ℕ} (hP : P.degree < k) :
     (a • P).degree < k := (Polynomial.degree_smul_le a P).trans_lt hP
-
 theorem degree_sub_lt {P Q : F[X]} {k : ℕ}
     (hP : P.degree < k) (hQ : Q.degree < k) : (P-Q).degree < k :=
   (Polynomial.degree_sub_le P Q).trans_lt (max_lt hP hQ)
-
-/-- A nonzero constant linear relation modulo the code leaves at most
-one possible bad slope. This uses the original same witness set. -/
 theorem bad_slope_relation (x : ι → F) (u v : ι → F) (k A : ℕ)
     (a b γ : F)
     (hrel : ExtendsOn x (fun i => a * u i + b * v i) k Finset.univ)
@@ -102,7 +83,6 @@ theorem bad_slope_relation (x : ι → F) (u v : ι → F) (k A : ℕ)
     rw [hQv i hi, hVv i hi]
     ring
   exact hnonjoint ⟨⟨U,hU,hUv⟩, ⟨V,hV,hVv⟩⟩
-
 theorem bad_slope_card_le_one_of_relation (x : ι → F) (u v : ι → F) (k A : ℕ)
     (a b : F) (hab : a ≠ 0 ∨ b ≠ 0)
     (hrel : ExtendsOn x (fun i => a*u i+b*v i) k Finset.univ)
@@ -116,8 +96,6 @@ theorem bad_slope_card_le_one_of_relation (x : ι → F) (u v : ι → F) (k A :
   · exact mul_left_cancel₀ ha (hg.trans hg'.symm)
   · have ha : a ≠ 0 := by intro hz; simp [hz] at hg; exact hb hg.symm
     exact mul_left_cancel₀ ha (hg.trans hg'.symm)
-
-/-- Exact-A witness extraction, preserving the nonjoint condition. -/
 theorem bad_slope_exact (x : ι → F) (hx : Function.Injective x)
     (u v : ι → F) (k A : ℕ) (hkA : k < A) (γ : F)
     (hbad : BadSlope x u v k A γ) :
@@ -128,13 +106,10 @@ theorem bad_slope_exact (x : ι → F) (hx : Function.Injective x)
   obtain ⟨T,_,hT,hP',hPv',hbad'⟩ :=
     exact_A_bad_witness x hx u v γ k A hkA S hS P hP hPv hbad
   exact ⟨T,hT,⟨P,hP',hPv'⟩,hbad'⟩
-
 end
 end FrobeniusLocator.Principal
-end PackSource_BadSlope
-
-section PackSource_TwistedRelation
-set_option autoImplicit true
+end
+section
 set_option backward.isDefEq.respectTransparency false
 set_option maxHeartbeats 2000000
 set_option maxRecDepth 4096
@@ -143,14 +118,9 @@ noncomputable section
 open Polynomial Finset
 open scoped BigOperators
 variable {F ι : Type} [Field F] [Fintype ι] [DecidableEq ι]
-
-/-- Coefficient conjugation preserves evaluation at fixed nodes. -/
 theorem eval_coefficient_map (σ : F →+* F) (P : F[X]) (a : F)
     (ha : σ a = a) : (P.map σ).eval a = σ (P.eval a) := by
   simpa only [ha] using (Polynomial.eval_map_apply σ a (p := P))
-
-/-- Multiplication by a degree-at-most-h coefficient preserves the strict
-RS degree convention. This includes zero polynomials and k=0. -/
 theorem degree_mul_lt_add (U P : F[X]) (h k : ℕ)
     (hU : U.natDegree ≤ h) (hP : P.degree < k) :
     (U*P).degree < k+h := by
@@ -160,18 +130,12 @@ theorem degree_mul_lt_add (U P : F[X]) (h k : ℕ)
   have hb : (U*P).natDegree < k+h :=
     natDegree_mul_le.trans_lt (by omega)
   exact degree_le_natDegree.trans_lt (by exact_mod_cast hb)
-
-/-- One specialized twisted relation. Its existence is a separate theorem;
-this structure itself is not an axiom or a claim about arbitrary pairs. -/
 structure TwistedRelation (σ : F →+* F) (x w : ι → F)
     (k h : ℕ) (U V R : F[X]) : Prop where
   degree_U : U.natDegree ≤ h
   degree_V : V.natDegree ≤ h
   degree_R : R.degree < k+h
   nodes : ∀ i, U.eval (x i)*w i + V.eval (x i)*σ (w i) = R.eval (x i)
-
-/-- Root counting turns the node relation into a polynomial identity for
-EVERY close decoder. No affine-closure claim about close decoders is used. -/
 theorem decoder_polynomial_identity (σ : F →+* F)
     (x w : ι → F) (hx : Function.Injective x) (hfixed : ∀ i, σ (x i)=x i)
     (k h : ℕ) (U V R : F[X]) (rel : TwistedRelation σ x w k h U V R)
@@ -204,9 +168,6 @@ theorem decoder_polynomial_identity (σ : F →+* F)
     have hdeg : Q.natDegree < k+h := (natDegree_lt_iff_degree_lt hne).mpr hQ
     omega
   exact sub_eq_zero.mp hzero
-
-/-- At all nodes, including actual errors and common coefficient zeros,
-the error satisfies U e + V sigma(e)=0. -/
 theorem decoder_error_identity (σ : F →+* F)
     (x w : ι → F) (hx : Function.Injective x) (hfixed : ∀ i, σ (x i)=x i)
     (k h : ℕ) (U V R : F[X]) (rel : TwistedRelation σ x w k h U V R)
@@ -220,8 +181,6 @@ theorem decoder_error_identity (σ : F →+* F)
   have hr := rel.nodes i
   rw [map_sub]
   linear_combination hr - he
-
-/-- The Frobenius specialization requested by the residual ledger. -/
 theorem frobenius_error_identity (p : ℕ) [ExpChar F p]
     (x w : ι → F) (hx : Function.Injective x) (hfixed : ∀ i, x i^p=x i)
     (k h : ℕ) (U V R : F[X])
@@ -231,13 +190,10 @@ theorem frobenius_error_identity (p : ℕ) [ExpChar F p]
     U.eval (x i)*(w i-P.eval (x i)) +
       V.eval (x i)*(w i-P.eval (x i))^p=0 :=
   decoder_error_identity (frobenius F p) x w hx hfixed k h U V R rel S hS P hP hagree i
-
 end
 end FrobeniusLocator.Strata
-end PackSource_TwistedRelation
-
-section PackSource_CoprimeSpan
-set_option autoImplicit true
+end
+section
 set_option backward.isDefEq.respectTransparency false
 set_option maxHeartbeats 1000000
 namespace FrobeniusLocator.Strata
@@ -245,9 +201,6 @@ noncomputable section
 open Polynomial Finset
 open scoped BigOperators
 variable {F : Type} [Field F]
-
-/-- Elementary bounded Bezout decomposition when v attains the maximum
-degree. Reduction of a Bezout coefficient modulo v gives the bound. -/
 theorem coprime_bounded_decomposition_right (u v P : F[X]) (d L : ℕ)
     (hu : u.natDegree≤d) (hv : v≠0) (hvd : v.natDegree=d)
     (hcop : IsCoprime u v) (hdL : d≤L) (hP : P.degree < (L+d : ℕ)) :
@@ -275,9 +228,6 @@ theorem coprime_bounded_decomposition_right (u v P : F[X]) (d L : ℕ)
     rw [natDegree_mul hv hb,hvd] at hbn
     exact degree_le_natDegree.trans_lt (by exact_mod_cast (show B.natDegree<L by omega))
   exact ⟨A,B,hA,hB,heq⟩
-
-/-- The two coprime degree-d numerator blocks with L≥d span the ENTIRE
-polynomial space of degree <L+d, even with unequal affine degrees. -/
 theorem coprime_bounded_decomposition (u v P : F[X]) (d L : ℕ)
     (hu : u≠0) (hv : v≠0) (hd : max u.natDegree v.natDegree=d)
     (hcop : IsCoprime u v) (hdL : d≤L) (hP : P.degree<(L+d : ℕ)) :
@@ -289,9 +239,6 @@ theorem coprime_bounded_decomposition (u v P : F[X]) (d L : ℕ)
     obtain ⟨B,A,hB,hA,heq⟩ := coprime_bounded_decomposition_right v u P d L
       (by omega) hu hud hcop.symm hdL hP
     exact ⟨A,B,hA,hB,by rw [heq,add_comm]⟩
-
-/-- In particular, no homogeneous Hilbert--Burch theorem is needed for
-the two-generator span step. -/
 theorem coprime_span_iff (u v P : F[X]) (d L : ℕ)
     (hu : u≠0) (hv : v≠0) (hd : max u.natDegree v.natDegree=d)
     (hcop : IsCoprime u v) (hdL : d≤L) :
@@ -303,13 +250,10 @@ theorem coprime_span_iff (u v P : F[X]) (d L : ℕ)
     exact (degree_add_le _ _).trans_lt
       (max_lt (degree_mul_lt_add u A d L (by omega) hA)
         (degree_mul_lt_add v B d L (by omega) hB))
-
 end
 end FrobeniusLocator.Strata
-end PackSource_CoprimeSpan
-
-section PackSource_GcdSpan
-set_option autoImplicit true
+end
+section
 set_option backward.isDefEq.respectTransparency false
 set_option maxHeartbeats 1000000
 namespace FrobeniusLocator.Strata
@@ -317,9 +261,6 @@ noncomputable section
 open Polynomial Finset
 open scoped BigOperators
 variable {F : Type} [Field F] [DecidableEq F]
-
-/-- Removing a polynomial gcd preserves the maximum degree with the
-expected subtraction. Both original polynomials may have unequal degrees. -/
 theorem gcd_reduction_degrees (u v : F[X]) (hu : u≠0) (hv : v≠0) :
     (GCDMonoid.gcd u v).natDegree≤max u.natDegree v.natDegree ∧
     max (u / GCDMonoid.gcd u v).natDegree (v / GCDMonoid.gcd u v).natDegree =
@@ -340,9 +281,6 @@ theorem gcd_reduction_degrees (u v : F[X]) (hu : u≠0) (hv : v≠0) :
   have hvD : v.natDegree=J.natDegree+(v/J).natDegree := hdb
   rw [huD,hvD,Nat.add_max_add_left]
   constructor <;> omega
-
-/-- The complete two-generator bounded span, including a nontrivial gcd.
-Only Euclidean division and bounded Bezout decomposition are used. -/
 theorem gcd_span_iff (u v P : F[X]) (L : ℕ) (hu : u≠0) (hv : v≠0)
     (hL : max u.natDegree v.natDegree-(GCDMonoid.gcd u v).natDegree≤L) :
     (∃ A B : F[X], A.degree<L ∧ B.degree<L ∧ P=u*A+v*B) ↔
@@ -384,13 +322,10 @@ theorem gcd_span_iff (u v P : F[X]) (L : ℕ) (hu : u≠0) (hv : v≠0)
     calc
       J*W = J*((u/J)*A+(v/J)*B) := by rw [heq]
       _ = u*A+v*B := by rw [mul_add,← mul_assoc,← mul_assoc,hua,hvb]
-
 end
 end FrobeniusLocator.Strata
-end PackSource_GcdSpan
-
-section PackSource_EvaluationRank
-set_option autoImplicit true
+end
+section
 set_option backward.isDefEq.respectTransparency false
 set_option maxHeartbeats 1000000
 namespace FrobeniusLocator.Strata
@@ -398,13 +333,10 @@ noncomputable section
 open Polynomial Finset Matrix
 open scoped BigOperators
 variable {F ι : Type} [Field F] [Fintype ι]
-
-/-- Evaluation of the full bounded polynomial space. -/
 def boundedEvaluation (x : ι → F) (N : ℕ) : Polynomial.degreeLT F N →ₗ[F] (ι → F) where
   toFun P i := (P : F[X]).eval (x i)
   map_add' P Q := by ext i; exact eval_add
   map_smul' c P := by ext i; simp
-
 theorem boundedEvaluation_injective (x : ι → F) (hx : Function.Injective x) (N : ℕ)
     (hN : N≤Fintype.card ι) : Function.Injective (boundedEvaluation x N) := by
   classical
@@ -422,7 +354,6 @@ theorem boundedEvaluation_injective (x : ι → F) (hx : Function.Injective x) (
     rw [eval_sub,sub_eq_zero]
     exact congrFun hPQ i
   exact hne (Polynomial.eq_zero_of_natDegree_lt_card_of_eval_eq_zero _ hx hz (by omega))
-
 theorem boundedEvaluation_surjective (x : ι → F) (hx : Function.Injective x) (N : ℕ)
     (hN : Fintype.card ι≤N) : Function.Surjective (boundedEvaluation x N) := by
   classical
@@ -434,8 +365,6 @@ theorem boundedEvaluation_surjective (x : ι → F) (hx : Function.Injective x) 
   refine ⟨⟨P,Polynomial.mem_degreeLT.mpr hP⟩,?_⟩
   funext i
   exact Lagrange.eval_interpolate_at_node w hx.injOn (Finset.mem_univ i)
-
-/-- The Vandermonde rank formula, including zero nodes/zero bound. -/
 theorem boundedEvaluation_rank (x : ι → F) (hx : Function.Injective x) (N : ℕ) :
     Module.finrank F (LinearMap.range (boundedEvaluation x N))=min (Fintype.card ι) N := by
   by_cases hN : N≤Fintype.card ι
@@ -445,13 +374,10 @@ theorem boundedEvaluation_rank (x : ι → F) (hx : Function.Injective x) (N : �
   · have hc : Fintype.card ι≤N := by omega
     rw [LinearMap.range_eq_top.mpr (boundedEvaluation_surjective x hx N hc),finrank_top,
       Module.finrank_fintype_fun_eq_card,min_eq_left hc]
-
 end
 end FrobeniusLocator.Strata
-end PackSource_EvaluationRank
-
-section PackSource_TripleSpan
-set_option autoImplicit true
+end
+section
 set_option backward.isDefEq.respectTransparency false
 set_option maxHeartbeats 1000000
 namespace FrobeniusLocator.Strata
@@ -459,10 +385,6 @@ noncomputable section
 open Polynomial Finset
 open scoped BigOperators
 variable {F : Type} [Field F] [DecidableEq F]
-
-/-- The exact three-numerator polynomial-span theorem, proved by TWO
-ordinary bounded Bezout decompositions. This replaces the written
-Hilbert--Burch/syzygy argument for this particular span. -/
 theorem triple_span_iff (σ : F →+* F) (u v P : F[X]) (d L : ℕ)
     (hu : u≠0) (hv : v≠0) (hd : max u.natDegree v.natDegree=d)
     (hcop : IsCoprime u v) (hdL : d≤L) :
@@ -502,13 +424,10 @@ theorem triple_span_iff (σ : F →+* F) (u v P : F[X]) (d L : ℕ)
     refine ⟨A,B1+B2,C,hA,(degree_add_le _ _).trans_lt (max_lt hB1 hB2),hC,?_⟩
     rw [hP,hQeq,hReq]
     ring
-
 end
 end FrobeniusLocator.Strata
-end PackSource_TripleSpan
-
-section PackSource_SpanMatrices
-set_option autoImplicit true
+end
+section
 set_option backward.isDefEq.respectTransparency false
 set_option maxHeartbeats 1000000
 namespace FrobeniusLocator.Strata
@@ -516,11 +435,8 @@ noncomputable section
 open Polynomial Finset Matrix
 open scoped BigOperators
 variable {F ι β : Type} [Field F] [Fintype ι] [Fintype β]
-
-/-- Coefficients indexed by Fin L, including L=0. -/
 def coefficientPolynomial {L : ℕ} (a : Fin L → F) : F[X] :=
   ∑ j, Polynomial.monomial j.val (a j)
-
 theorem coefficientPolynomial_degree {L : ℕ} (a : Fin L → F) :
     (coefficientPolynomial a).degree<L := by
   apply Polynomial.mem_degreeLT.mp
@@ -528,11 +444,9 @@ theorem coefficientPolynomial_degree {L : ℕ} (a : Fin L → F) :
   intro j _
   exact Polynomial.mem_degreeLT.mpr
     ((Polynomial.degree_monomial_le _ _).trans_lt (by exact_mod_cast j.isLt))
-
 theorem coefficientPolynomial_eval {L : ℕ} (a : Fin L → F) (x : F) :
     (coefficientPolynomial a).eval x=∑ j, a j*x^j.val := by
   simp only [coefficientPolynomial,eval_finsetSum,eval_monomial]
-
 theorem eval_degreeLT_sum (L : ℕ) (P : Polynomial.degreeLT F L) (x : F) :
     (P : F[X]).eval x=∑ j : Fin L, (P : F[X]).coeff j.val*x^j.val := by
   by_cases hp : (P : F[X])=0
@@ -540,25 +454,17 @@ theorem eval_degreeLT_sum (L : ℕ) (P : Polynomial.degreeLT F L) (x : F) :
   rw [Fin.sum_univ_eq_sum_range (fun j => (P : F[X]).coeff j*x^j) L]
   exact Polynomial.eval_eq_sum_range'
     ((natDegree_lt_iff_degree_lt hp).mpr (Polynomial.mem_degreeLT.mp P.property)) x
-
-/-- Bounded polynomial combinations of a finite numerator family. -/
 def polynomialCombination (g : β → F[X]) (L : ℕ) :
     (β → Polynomial.degreeLT F L) →ₗ[F] F[X] where
   toFun Q := ∑ b, g b*(Q b : F[X])
   map_add' Q R := by simp only [Pi.add_apply,Submodule.coe_add,mul_add,Finset.sum_add_distrib]
   map_smul' c Q := by simp only [Pi.smul_apply,Submodule.coe_smul,mul_smul_comm,Finset.smul_sum,RingHom.id_apply]
-
 def allEvaluation (x : ι → F) : F[X] →ₗ[F] (ι → F) where
   toFun P i := P.eval (x i)
   map_add' P Q := by ext i; exact eval_add
   map_smul' c P := by ext i; simp
-
-/-- Polynomial numerator blocks evaluated at the nodes. -/
 def numeratorMatrix (x : ι → F) (g : β → F[X]) (L : ℕ) :
     Matrix (β × Fin L) ι F := fun b i => (g b.1).eval (x i)*x i^b.2.val
-
-/-- Matrix row combinations and bounded polynomial combinations have
-exactly the same evaluated image. -/
 theorem numerator_range (x : ι → F) (g : β → F[X]) (L : ℕ) :
     LinearMap.range (numeratorMatrix x g L).transpose.mulVecLin =
       (LinearMap.range (polynomialCombination g L)).map (allEvaluation x) := by
@@ -591,20 +497,15 @@ theorem numerator_range (x : ι → F) (g : β → F[X]) (L : ℕ) :
     apply Finset.sum_congr rfl
     intro j _
     ring
-
-/-- Rank is now the dimension of an evaluated POLYNOMIAL subspace. -/
 theorem numerator_rank (x : ι → F) (g : β → F[X]) (L : ℕ) :
     (numeratorMatrix x g L).rank = Module.finrank F
       ((LinearMap.range (polynomialCombination g L)).map (allEvaluation x)) := by
   rw [← numerator_range]
   exact (Matrix.rank_transpose _).symm
-
 end
 end FrobeniusLocator.Strata
-end PackSource_SpanMatrices
-
-section PackSource_PolynomialRank
-set_option autoImplicit true
+end
+section
 set_option backward.isDefEq.respectTransparency false
 set_option maxHeartbeats 1000000
 namespace FrobeniusLocator.Strata
@@ -612,13 +513,10 @@ noncomputable section
 open Polynomial Finset Matrix
 open scoped BigOperators
 variable {F ι : Type} [Field F] [DecidableEq F] [Fintype ι]
-
 def polynomialMul (J : F[X]) : F[X] →ₗ[F] F[X] where
   toFun P := J*P
   map_add' P Q := mul_add _ _ _
   map_smul' c P := mul_smul_comm _ _ _
-
-/-- Invertible coordinate scaling at a finite collection of nodes. -/
 def coordinateScale (c : ι → F) (hc : ∀ i, c i≠0) : (ι → F) ≃ₗ[F] (ι → F) where
   toFun v i := c i*v i
   invFun v i := (c i)⁻¹*v i
@@ -626,9 +524,6 @@ def coordinateScale (c : ι → F) (hc : ∀ i, c i≠0) : (ι → F) ≃ₗ[F] 
   right_inv v := by funext i; simp only [← mul_assoc,mul_inv_cancel₀ (hc i),one_mul]
   map_add' v w := by funext i; exact mul_add _ _ _
   map_smul' a v := by funext i; simp only [Pi.smul_apply,smul_eq_mul,RingHom.id_apply]; ring
-
-/-- Evaluating a polynomial multiple by a unit at every node preserves
-Vandermonde rank exactly. -/
 theorem multiple_evaluation_rank (x : ι → F) (hx : Function.Injective x)
     (J : F[X]) (hJ : ∀ i, J.eval (x i)≠0) (N : ℕ) :
     Module.finrank F (((Polynomial.degreeLT F N).map (polynomialMul J)).map (allEvaluation x)) =
@@ -649,11 +544,8 @@ theorem multiple_evaluation_rank (x : ι → F) (hx : Function.Injective x)
     ext P i
     exact eval_mul
   rw [heq,LinearEquiv.finrank_map_eq,boundedEvaluation_rank x hx N]
-
-/-- The three numerator blocks as a literal Fin3 family. -/
 def tripleNumerators (σ : F →+* F) (u v : F[X]) : Fin 3 → F[X] :=
   ![v*v.map σ,u*v.map σ,u*u.map σ]
-
 theorem triple_polynomial_range (σ : F →+* F) (u v : F[X]) (d L : ℕ)
     (hu : u≠0) (hv : v≠0) (hd : max u.natDegree v.natDegree=d)
     (hcop : IsCoprime u v) (hdL : d≤L) :
@@ -681,9 +573,6 @@ theorem triple_polynomial_range (σ : F →+* F) (u v : F[X]) (d L : ℕ)
     change (∑ b : Fin 3, tripleNumerators σ u v b*(Q b : F[X]))=_
     simp only [Fin.sum_univ_three,tripleNumerators,Q,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.head_cons,Matrix.tail_cons]
     exact hP.symm
-
-/-- Exact evaluated three-block numerator rank. This is a matrix theorem,
-not only an equality of formal polynomial spans. -/
 theorem triple_numerator_rank (σ : F →+* F) (x : ι → F) (hx : Function.Injective x)
     (u v : F[X]) (d L : ℕ) (hu : u≠0) (hv : v≠0)
     (hd : max u.natDegree v.natDegree=d) (hcop : IsCoprime u v) (hdL : d≤L)
@@ -692,22 +581,17 @@ theorem triple_numerator_rank (σ : F →+* F) (x : ι → F) (hx : Function.Inj
       min (Fintype.card ι) (L+2*d-(GCDMonoid.gcd u (v.map σ)).natDegree) := by
   rw [numerator_rank,triple_polynomial_range σ u v d L hu hv hd hcop hdL]
   exact multiple_evaluation_rank x hx _ hJ _
-
 end
 end FrobeniusLocator.Strata
-end PackSource_PolynomialRank
-
-section PackSource_PairRank
-set_option autoImplicit true
+end
+section
 set_option backward.isDefEq.respectTransparency false
 namespace FrobeniusLocator.Strata
 noncomputable section
 open Polynomial Finset Matrix
 open scoped BigOperators
 variable {F ι : Type} [Field F] [Fintype ι]
-
 def pairNumerators (u v : F[X]) : Fin 2 → F[X] := ![v,u]
-
 theorem pair_polynomial_range (u v : F[X]) (d L : ℕ)
     (hu : u≠0) (hv : v≠0) (hd : max u.natDegree v.natDegree=d)
     (hcop : IsCoprime u v) (hdL : d≤L) :
@@ -728,7 +612,6 @@ theorem pair_polynomial_range (u v : F[X]) (d L : ℕ)
     refine ⟨Q,?_⟩
     change (∑ b : Fin 2, pairNumerators u v b*(Q b : F[X]))=P
     simpa [Fin.sum_univ_two,pairNumerators,Q,add_comm] using hP.symm
-
 theorem degreeLT_evaluation_range (x : ι → F) (N : ℕ) :
     (Polynomial.degreeLT F N).map (allEvaluation x)=LinearMap.range (boundedEvaluation x N) := by
   ext v
@@ -737,28 +620,22 @@ theorem degreeLT_evaluation_range (x : ι → F) (N : ℕ) :
     exact ⟨⟨P,hP⟩,rfl⟩
   · rintro ⟨P,rfl⟩
     exact ⟨P,P.property,rfl⟩
-
 theorem pair_numerator_rank (x : ι → F) (hx : Function.Injective x)
     (u v : F[X]) (d L : ℕ) (hu : u≠0) (hv : v≠0)
     (hd : max u.natDegree v.natDegree=d) (hcop : IsCoprime u v) (hdL : d≤L) :
     (numeratorMatrix x (pairNumerators u v) L).rank=min (Fintype.card ι) (L+d) := by
   rw [numerator_rank,pair_polynomial_range u v d L hu hv hd hcop hdL,degreeLT_evaluation_range]
   exact boundedEvaluation_rank x hx (L+d)
-
 end
 end FrobeniusLocator.Strata
-end PackSource_PairRank
-
-section PackSource_MatrixScaling
-set_option autoImplicit true
+end
+section
 set_option backward.isDefEq.respectTransparency false
 namespace FrobeniusLocator.Strata
 noncomputable section
 open Matrix Polynomial Finset
 open scoped BigOperators
 variable {F row col : Type} [Field F] [Fintype row] [Fintype col]
-
-/-- Nonzero independent row and column scalings preserve rank. -/
 theorem rank_scale (M : Matrix row col F) (a : row → F) (b : col → F)
     (ha : ∀ i, a i≠0) (hb : ∀ j, b j≠0) :
     (Matrix.of (fun i j => a i*M i j*b j)).rank=M.rank := by
@@ -771,13 +648,10 @@ theorem rank_scale (M : Matrix row col F) (a : row → F) (b : col → F)
     (by rw [Matrix.det_diagonal]; exact Finset.prod_ne_zero_iff.mpr (fun j _ => hb j)),
     Matrix.rank_mul_eq_right_of_det_ne_zero _ _
     (by rw [Matrix.det_diagonal]; exact Finset.prod_ne_zero_iff.mpr (fun i _ => ha i))]
-
 end
 end FrobeniusLocator.Strata
-end PackSource_MatrixScaling
-
-section PackSource_ErrorRank
-set_option autoImplicit true
+end
+section
 set_option backward.isDefEq.respectTransparency false
 set_option maxHeartbeats 1000000
 namespace FrobeniusLocator.Strata
@@ -785,15 +659,10 @@ noncomputable section
 open Polynomial Finset Matrix
 open scoped BigOperators
 variable {F ι : Type} [Field F] [DecidableEq F] [Fintype ι]
-
-/-- Error blocks with the dual nonzero column weights removed. -/
 def errorTwoMatrix (σ : F →+* F) (x e : ι → F) (L : ℕ) :
     Matrix (Fin 2 × Fin L) ι F := fun b i => ![e i,σ (e i)] b.1*x i^b.2.val
-
 def errorThreeMatrix (σ : F →+* F) (x e : ι → F) (L : ℕ) :
     Matrix (Fin 3 × Fin L) ι F := fun b i => ![e i,σ (e i),σ (σ (e i))] b.1*x i^b.2.val
-
-/-- First and second Frobenius ratios on nodes with nonzero denominator. -/
 theorem error_ratios (σ : F →+* F) (u v e : F) (hv : v≠0)
     (hrel : u*e+v*σ e=0) :
     σ e=-(u/v)*e ∧ σ (σ e)=(u*σ u/(v*σ v))*e := by
@@ -805,15 +674,11 @@ theorem error_ratios (σ : F →+* F) (u v e : F) (hv : v≠0)
   calc
     σ (σ e)=σ (-(u/v)*e) := congrArg σ hs
     _ = _ := by rw [map_mul,map_neg,map_div₀,hs]; field_simp
-
 theorem eval_ne_zero_of_dvd {A B : F[X]} (hAB : A∣B) (x : F) (hB : B.eval x≠0) :
     A.eval x≠0 := by
   obtain ⟨Q,hQ⟩ := hAB
   rw [hQ,eval_mul] at hB
   exact (mul_ne_zero_iff.mp hB).1
-
-/-- With no common coefficient zeros, the two-block rank is exactly the
-ordinary Vandermonde rank L+d. -/
 theorem error_two_rank_no_common (σ : F →+* F) (x e : ι → F)
     (hx : Function.Injective x) (u v : F[X]) (d L : ℕ)
     (hu : u≠0) (hv : v≠0) (hd : max u.natDegree v.natDegree=d)
@@ -837,9 +702,6 @@ theorem error_two_rank_no_common (σ : F →+* F) (x e : ι → F)
       field_simp [hvx i]
   rw [heq,rank_scale N a b ha hb]
   exact pair_numerator_rank x hx u v d L hu hv hd hcop hdL
-
-/-- The full three-block error-rank theorem off common coefficient roots.
-The sign in the middle block is explicitly absorbed by invertible scaling. -/
 theorem error_three_rank_no_common (σ : F →+* F) (x e : ι → F)
     (hx : Function.Injective x) (hfixed : ∀ i, σ (x i)=x i)
     (u v : F[X]) (d L : ℕ)
@@ -875,13 +737,10 @@ theorem error_three_rank_no_common (σ : F →+* F) (x e : ι → F)
   apply triple_numerator_rank σ x hx u v d L hu hv hd hcop hdL
   intro i
   exact eval_ne_zero_of_dvd (gcd_dvd_left u (v.map σ)) (x i) (hux i)
-
 end
 end FrobeniusLocator.Strata
-end PackSource_ErrorRank
-
-section PackSource_RankSaturation
-set_option autoImplicit true
+end
+section
 set_option backward.isDefEq.respectTransparency false
 namespace FrobeniusLocator.Strata
 noncomputable section
@@ -889,8 +748,6 @@ open Polynomial Finset Matrix
 open scoped BigOperators
 variable {F V W : Type} [Field F] [AddCommGroup V] [Module F V]
   [AddCommGroup W] [Module F W] [FiniteDimensional F V]
-
-/-- Rank-nullity for a subspace and an ambient projection. -/
 theorem subspace_map_add_inf (f : V →ₗ[F] W) (S : Submodule F V) :
     Module.finrank F (S.map f)+Module.finrank F (S ⊓ LinearMap.ker f : Submodule F V)=Module.finrank F S := by
   have h := LinearMap.finrank_range_add_finrank_ker (f.domRestrict S)
@@ -899,15 +756,11 @@ theorem subspace_map_add_inf (f : V →ₗ[F] W) (S : Submodule F V) :
   rw [Submodule.map_comap_subtype] at hk
   rw [← hk] at h
   exact h
-
 theorem subspace_projection_bound (f : V →ₗ[F] W) (S : Submodule F V) :
     Module.finrank F S≤Module.finrank F (S.map f)+Module.finrank F (LinearMap.ker f) := by
   have h := subspace_map_add_inf f S
   have hi := Submodule.finrank_mono (show S ⊓ LinearMap.ker f≤LinearMap.ker f from inf_le_right)
   omega
-
-/-- Saturating the maximum projection loss forces the entire missing
-coordinate space into the original row span. -/
 theorem projection_kernel_le_of_saturation (f : V →ₗ[F] W) (S : Submodule F V)
     (hsat : Module.finrank F S=Module.finrank F (S.map f)+Module.finrank F (LinearMap.ker f)) :
     LinearMap.ker f≤S := by
@@ -916,9 +769,6 @@ theorem projection_kernel_le_of_saturation (f : V →ₗ[F] W) (S : Submodule F 
     Submodule.eq_of_le_of_finrank_eq inf_le_right (by omega)
   rw [← heq]
   exact inf_le_left
-
-/-- Once a smaller row space saturates, the same missing coordinates
-contribute their full dimension to every larger row space. -/
 theorem saturation_lifts (f : V →ₗ[F] W) (S T : Submodule F V) (hST : S≤T)
     (hsat : Module.finrank F S=Module.finrank F (S.map f)+Module.finrank F (LinearMap.ker f)) :
     Module.finrank F T=Module.finrank F (T.map f)+Module.finrank F (LinearMap.ker f) := by
@@ -926,21 +776,17 @@ theorem saturation_lifts (f : V →ₗ[F] W) (S T : Submodule F V) (hST : S≤T)
   have h := subspace_map_add_inf f T
   rw [inf_eq_right.mpr hker] at h
   exact h.symm
-
 section Coordinates
 variable {ι : Type} [Fintype ι] [DecidableEq ι]
-
 def forgetCoordinates (C : Finset ι) : (ι → F) →ₗ[F] ({i // i∉C} → F) where
   toFun v i := v i.val
   map_add' v w := rfl
   map_smul' c v := rfl
-
 theorem forgetCoordinates_surjective (C : Finset ι) : Function.Surjective (forgetCoordinates (F := F) C) := by
   intro w
   refine ⟨fun i => if h : i∉C then w ⟨i,h⟩ else 0,?_⟩
   funext i
   simp [forgetCoordinates,i.property]
-
 theorem forgetCoordinates_nullity (C : Finset ι) :
     Module.finrank F (LinearMap.ker (forgetCoordinates (F := F) C))=C.card := by
   have h := LinearMap.finrank_range_add_finrank_ker (forgetCoordinates (F := F) C)
@@ -949,22 +795,16 @@ theorem forgetCoordinates_nullity (C : Finset ι) :
     Fintype.card_subtype_compl, Fintype.card_coe] at h
   have hc := Finset.card_le_univ C
   omega
-
-/-- Restriction to the complement is exactly the map of row spaces. -/
 theorem rowspace_forget {row : Type} (M : Matrix row ι F) (C : Finset ι) :
     (Submodule.span F (Set.range M.row)).map (forgetCoordinates C)=
       Submodule.span F (Set.range (M.submatrix id Subtype.val).row) := by
   rw [Submodule.map_span,← Set.range_comp]
   rfl
-
 end Coordinates
-
 end
 end FrobeniusLocator.Strata
-end PackSource_RankSaturation
-
-section PackSource_RootSaturation
-set_option autoImplicit true
+end
+section
 set_option backward.isDefEq.respectTransparency false
 set_option maxHeartbeats 1000000
 namespace FrobeniusLocator.Strata
@@ -972,7 +812,6 @@ noncomputable section
 open Polynomial Finset Matrix
 open scoped BigOperators
 variable {F ι : Type} [Field F] [DecidableEq F] [Fintype ι] [DecidableEq ι]
-
 theorem root_nodes_card_le (x : ι → F) (hx : Function.Injective x) (P : F[X]) (hP : P≠0)
     (S : Finset ι) (hS : ∀ i∈S, P.eval (x i)=0) : S.card≤P.natDegree := by
   have h : (S.image x).card≤P.natDegree := Polynomial.card_le_degree_of_subset_roots
@@ -980,9 +819,6 @@ theorem root_nodes_card_le (x : ι → F) (hx : Function.Injective x) (P : F[X])
       obtain ⟨i,hi,rfl⟩ := Finset.mem_image.mp ha
       exact hS i hi))
   simpa only [Finset.card_image_of_injective S hx] using h
-
-/-- A saturated normal error matrix forces BOTH relation coefficients
-nonzero, not merely a jointly nonzero pair. -/
 theorem saturated_coefficients_nonzero (σ : F →+* F) (x e : ι → F)
     (hx : Function.Injective x) (U V : F[X]) (h L : ℕ)
     (hU : U.natDegree≤h) (hV : V.natDegree≤h) (hpair : U≠0 ∨ V≠0)
@@ -1012,9 +848,6 @@ theorem saturated_coefficients_nonzero (σ : F →+* F) (x e : ι → F)
     have hc := root_nodes_card_le x hx U hu Finset.univ hz
     rw [Finset.card_univ] at hc
     omega
-
-/-- Coprimality and a nonzero error force both reduced coefficients to
-be units at that node. -/
 theorem coprime_relation_units (σ : F →+* F) (u v : F[X]) (a e : F)
     (hcop : IsCoprime u v) (he : e≠0)
     (hrel : u.eval a*e+v.eval a*σ e=0) : u.eval a≠0 ∧ v.eval a≠0 := by
@@ -1028,8 +861,6 @@ theorem coprime_relation_units (σ : F →+* F) (u v : F[X]) (a e : F)
     have hu := hne.resolve_right (by simpa using hv)
     rw [hv,zero_mul,add_zero] at hrel
     exact (mul_ne_zero hu he) hrel
-
-/-- The two error blocks occur among the three error blocks. -/
 theorem error_rowspace_le (σ : F →+* F) (x e : ι → F) (L : ℕ) :
     Submodule.span F (Set.range (errorTwoMatrix σ x e L).row)≤
       Submodule.span F (Set.range (errorThreeMatrix σ x e L).row) := by
@@ -1039,9 +870,6 @@ theorem error_rowspace_le (σ : F →+* F) (x e : ι → F) (L : ℕ) :
   refine ⟨(Fin.castLE (by decide : 2≤3) b,j),?_⟩
   funext i
   fin_cases b <;> simp [errorTwoMatrix,errorThreeMatrix,Matrix.row]
-
-/-- Common-root saturation and the exact third Frobenius rank. This is
-R3 for ACTUAL error columns, with all common-zero contributions proved. -/
 theorem normal_error_three_rank (σ : F →+* F) (x e : ι → F)
     (hx : Function.Injective x) (hfixed : ∀ i, σ (x i)=x i)
     (U V : F[X]) (h L : ℕ) (hU : U.natDegree≤h) (hV : V.natDegree≤h)
@@ -1140,13 +968,10 @@ theorem normal_error_three_rank (σ : F →+* F) (x e : ι → F)
     (errorThreeMatrix σ x e L).rank=min (Fintype.card ι) (L+h+(d-j))
   refine ⟨hcg,hsum,?_⟩
   omega
-
 end
 end FrobeniusLocator.Strata
-end PackSource_RootSaturation
-
-section PackSource_RelationExtraction
-set_option autoImplicit true
+end
+section
 set_option backward.isDefEq.respectTransparency false
 set_option maxHeartbeats 1000000
 namespace FrobeniusLocator.Strata
@@ -1154,9 +979,6 @@ noncomputable section
 open Polynomial Finset Matrix
 open scoped BigOperators
 variable {F ι : Type} [Field F] [Fintype ι] [DecidableEq ι]
-
-/-- Multiplication of a word by a bounded polynomial is contraction of
-its syndrome sequence. All coefficients and indices are literal. -/
 theorem syndrome_polynomial_multiple (x w : ι → F) (U : F[X]) (H j : ℕ)
     (hU : U.natDegree≤H) :
     syndrome x (fun i => U.eval (x i)*w i) j =
@@ -1170,9 +992,6 @@ theorem syndrome_polynomial_multiple (x w : ι → F) (U : F[X]) (H j : ℕ)
   apply Finset.sum_congr rfl
   intro l _
   ring
-
-/-- Every vector in the ACTUAL complementary Hankel kernel supplies the
-polynomial twisted relation, via completeness of the RS dual checks. -/
 theorem relation_of_kernel (σ : F →+* F) (x w : ι → F)
     (hx : Function.Injective x) (k m H : ℕ) (hkm : k+m=Fintype.card ι)
     (hH : H≤m) (a : Fin 2 × Fin (H+1) → F)
@@ -1207,9 +1026,6 @@ theorem relation_of_kernel (σ : F →+* F) (x w : ι → F)
   refine ⟨R,hU,hV,hR,?_⟩
   intro i
   exact (hRv i (Finset.mem_univ i)).symm
-
-/-- A nonzero relation coefficient vector gives a nonzero polynomial
-pair. This is the finite-specialization nonvanishing condition. -/
 theorem assembled_pair_ne_zero (H : ℕ) (a : Fin 2 × Fin (H+1) → F) (ha : a≠0) :
     Principal.assemble (fun i => a (0,i))≠0 ∨
       Principal.assemble (fun i => a (1,i))≠0 := by
@@ -1226,13 +1042,10 @@ theorem assembled_pair_ne_zero (H : ℕ) (a : Fin 2 × Fin (H+1) → F) (ha : a�
   rcases hb with rfl | rfl
   · exact hcoeff 0 h.1 i
   · exact hcoeff 1 h.2 i
-
 end
 end FrobeniusLocator.Strata
-end PackSource_RelationExtraction
-
-section PackSource_TwistedSection
-set_option autoImplicit true
+end
+section
 set_option backward.isDefEq.respectTransparency false
 set_option maxHeartbeats 1000000
 namespace FrobeniusLocator.Strata
@@ -1240,17 +1053,13 @@ noncomputable section
 open Polynomial Finset Matrix
 open scoped BigOperators
 variable {F ι : Type} [Field F] [Fintype ι] [DecidableEq ι]
-
-/-- The actual polynomial-in-slope relation matrix. -/
 def parameterRelation (p : ℕ) (x u v : ι → F) (m H : ℕ) :
     Matrix (Fin (m-H)) (Fin 2 × Fin (H+1)) F[X] :=
   fun j b => Principal.parameterSyndromes p x u v b.1 (b.2.val+j.val)
-
 theorem parameterRelation_map (φ : F[X] →+* GenericLayer.GenericField F)
     (p : ℕ) (x u v : ι → F) (m H : ℕ) :
     (parameterRelation p x u v m H).map φ =
       relationMatrix (fun b j => φ (Principal.parameterSyndromes p x u v b j)) m H := rfl
-
 theorem parameterSyndromes_eval (p : ℕ) [ExpChar F p]
     (x u v : ι → F) (hfixed : ∀ i, x i^p=x i) (γ : F) (b : Fin 2) (j : ℕ) :
     (Principal.parameterSyndromes p x u v b j).eval γ =
@@ -1263,9 +1072,6 @@ theorem parameterSyndromes_eval (p : ℕ) [ExpChar F p]
       eval_add,eval_mul,eval_C,eval_pow,eval_X]
     rw [syndrome_frobenius p x hfixed,hs]
     exact (map_add (frobenius F p) _ _).trans (by rw [map_mul]; rfl) |>.symm
-
-/-- A primitive polynomial section of a one-dimensional generic relation
-kernel. No finite slope makes all relation coefficients vanish. -/
 theorem primitive_relation_section (p : ℕ) [ExpChar F p] (hp : 1≤p)
     (x u v : ι → F) (m H : ℕ)
     (hnull : GenericLayer.genericNullity (parameterRelation p x u v m H)=1) :
@@ -1294,10 +1100,6 @@ theorem primitive_relation_section (p : ℕ) [ExpChar F p] (hp : 1≤p)
     simpa using hdegQ b
   · intro γ
     exact PrimitiveVector.eval_ne_zero Q hprim γ
-
-/-- Literal Lemma-T specialization from a generic relation line: a
-nonzero specialized coefficient pair and an RS[k+H] output at EVERY
-finite slope. The generic nullity-one premise is explicit. -/
 theorem twisted_relation_at_every_slope (p : ℕ) [ExpChar F p] (hp : 1≤p)
     (x u v : ι → F) (hx : Function.Injective x) (hfixed : ∀ i, x i^p=x i)
     (k m H : ℕ) (hkm : k+m=Fintype.card ι) (hH : H≤m)
@@ -1325,13 +1127,10 @@ theorem twisted_relation_at_every_slope (p : ℕ) [ExpChar F p] (hp : 1≤p)
   obtain ⟨R,hR⟩ := relation_of_kernel (frobenius F p) x (fun i => u i+γ*v i)
     hx k m H hkm hH a hk
   exact ⟨R,assembled_pair_ne_zero H a (hne γ),hR⟩
-
 end
 end FrobeniusLocator.Strata
-end PackSource_TwistedSection
-
-section PackSource_LocatorFactorization
-set_option autoImplicit true
+end
+section
 set_option backward.isDefEq.respectTransparency false
 set_option maxHeartbeats 1000000
 namespace FrobeniusLocator.Strata
@@ -1339,7 +1138,6 @@ noncomputable section
 open Polynomial Finset Matrix
 open scoped BigOperators
 variable {F ι β : Type} [Field F] [DecidableEq F] [Fintype ι] [DecidableEq ι] [Fintype β]
-
 theorem weight_ne_zero (x : ι → F) (hx : Function.Injective x) (i : ι) : weight x i≠0 := by
   apply inv_ne_zero
   apply Finset.prod_ne_zero_iff.mpr
@@ -1347,12 +1145,9 @@ theorem weight_ne_zero (x : ι → F) (hx : Function.Injective x) (i : ι) : wei
   apply sub_ne_zero.mpr
   intro hij
   exact (Finset.mem_erase.mp hj).1 (hx hij).symm
-
 theorem weight_map (σ : F →+* F) (x : ι → F) (hfixed : ∀ i, σ (x i)=x i) (i : ι) :
     σ (weight x i)=weight x i := by
   simp only [weight,map_inv₀,map_prod,map_sub,hfixed]
-
-/-- Codewords have zero syndrome throughout the exact dual range. -/
 theorem syndrome_eval_zero (x : ι → F) (hx : Function.Injective x) (P : F[X])
     (k j : ℕ) (hP : P.degree<k) (hj : k+j<Fintype.card ι) :
     syndrome x (fun i => P.eval (x i)) j=0 := by
@@ -1365,24 +1160,18 @@ theorem syndrome_eval_zero (x : ι → F) (hx : Function.Injective x) (P : F[X])
     simp only [natDegree_X_pow] at hd
     exact_mod_cast (show (P*(Polynomial.X : F[X])^j).natDegree<Fintype.card ι-1 by omega)
   simpa only [syndrome,eval_mul,eval_pow,eval_X,mul_assoc] using weighted_eval_sum_zero x hx (P*(Polynomial.X : F[X])^j) hdeg
-
 theorem syndrome_sub_decoder (x w : ι → F) (hx : Function.Injective x) (P : F[X])
     (k j : ℕ) (hP : P.degree<k) (hj : k+j<Fintype.card ι) :
     syndrome x w j=syndrome x (fun i => w i-P.eval (x i)) j := by
   have hz := syndrome_eval_zero x hx P k j hP hj
   have hl := Principal.syndrome_linear x w (fun i => P.eval (x i)) 1 (-1) j
   simpa only [one_mul,neg_one_mul,sub_eq_add_neg,hz,neg_zero,add_zero] using hl.symm
-
-/-- Arbitrarily many coefficient-conjugate Hankel blocks. -/
 def conjugateHankel (σ : β → F →+* F) (x w : ι → F) (L t : ℕ) :
     Matrix (β × Fin L) (Fin (t+1)) F :=
   fun b j => σ b.1 (syndrome x w (b.2.val+j.val))
-
 def conjugateErrors (σ : β → F →+* F) (x e : ι → F) (L : ℕ) : Matrix (β × Fin L) ι F :=
   fun b i => σ b.1 (e i)*x i^b.2.val
-
 def nodeVandermonde (x : ι → F) (t : ℕ) : Matrix ι (Fin (t+1)) F := fun i j => x i^j.val
-
 theorem nodeVandermonde_surjective (x : ι → F) (hx : Function.Injective x)
     (t : ℕ) (hcard : Fintype.card ι≤t+1) : Function.Surjective (nodeVandermonde x t).mulVecLin := by
   intro w
@@ -1394,15 +1183,11 @@ theorem nodeVandermonde_surjective (x : ι → F) (hx : Function.Injective x)
       ∑ j : Fin (t+1), (P : F[X]).coeff j.val*x i^j.val by apply Finset.sum_congr rfl; intro j _; ring]
   rw [sum_coeff_eval _ t (Principal.degreeLT_natDegree_le P)]
   exact congrFun hPw i
-
 theorem rank_mul_of_surjective {row mid col : Type} [Fintype row] [Fintype mid] [Fintype col]
     (A : Matrix row mid F) (B : Matrix mid col F) (hB : Function.Surjective B.mulVecLin) :
     (A*B).rank=A.rank := by
   rw [Matrix.rank,Matrix.rank,Matrix.mulVecLin_mul,
     LinearMap.range_comp_of_range_eq_top _ (LinearMap.range_eq_top.mpr hB)]
-
-/-- Literal factorization through the ACTUAL error set; a padded witness
-set is never identified with it. The error values may be zero inside S. -/
 theorem conjugateHankel_factorization (σ : β → F →+* F)
     (x w : ι → F) (hx : Function.Injective x) (hfixed : ∀ b i, σ b (x i)=x i)
     (P : F[X]) (k L t : ℕ) (hP : P.degree<k) (hsize : k+L+t≤Fintype.card ι)
@@ -1428,8 +1213,6 @@ theorem conjugateHankel_factorization (σ : β → F →+* F)
   intro i _
   rw [pow_add]
   ring
-
-/-- Exact rank equality after stripping the Vandermonde and dual weights. -/
 theorem conjugateHankel_error_rank (σ : β → F →+* F)
     (x w : ι → F) (hx : Function.Injective x) (hfixed : ∀ b i, σ b (x i)=x i)
     (P : F[X]) (k L t : ℕ) (hP : P.degree<k) (hsize : k+L+t≤Fintype.card ι)
@@ -1449,13 +1232,10 @@ theorem conjugateHankel_error_rank (σ : β → F →+* F)
     ring
   rw [heq,rank_scale N (fun _ => 1) (fun i => weight x i.val) (by simp)
     (fun i => weight_ne_zero x hx i.val)]
-
 end
 end FrobeniusLocator.Strata
-end PackSource_LocatorFactorization
-
-section PackSource_KernelTwoGcd
-set_option autoImplicit true
+end
+section
 set_option backward.isDefEq.respectTransparency false
 set_option maxHeartbeats 1000000
 namespace FrobeniusLocator.Strata
@@ -1463,19 +1243,14 @@ noncomputable section
 open Polynomial Finset Matrix
 open scoped BigOperators
 variable {F β : Type} [Field F] [DecidableEq F]
-
-/-- Common truncated apolar kernel for ANY family of syndrome functionals. -/
 def recurrenceSpace (s : β → ℕ → F) (m t : ℕ) : Submodule F F[X] :=
   Polynomial.degreeLT F (t+1) ⊓ ⨅ b, ⨅ j : Fin (m-t),
     LinearMap.ker (Principal.recurrenceEval (s b) j.val)
-
 theorem mem_recurrenceSpace (s : β → ℕ → F) (m t : ℕ) (P : F[X]) :
     P∈recurrenceSpace s m t ↔ P.degree<(t+1 : ℕ) ∧
       ∀ b j, j<m-t → Principal.recurrenceEval (s b) j P=0 := by
   simp only [recurrenceSpace,Submodule.mem_inf,Polynomial.mem_degreeLT,Submodule.mem_iInf,
     LinearMap.mem_ker,Fin.forall_iff]
-
-/-- A bounded multiplier uses only the listed shifted recurrence checks. -/
 theorem recurrence_product_zero (s : ℕ → F) (f Q : F[X]) (j N : ℕ)
     (hQ : Q.degree<N) (hrec : ∀ l<N, Principal.recurrenceEval s (j+l) f=0) :
     Principal.recurrenceEval s j (f*Q)=0 := by
@@ -1489,16 +1264,9 @@ theorem recurrence_product_zero (s : ℕ → F) (f Q : F[X]) (j N : ℕ)
     rw [← Polynomial.C_mul_X_pow_eq_monomial,Polynomial.smul_eq_C_mul]
     ring
   rw [hpoly,map_smul,Principal.recurrenceEval_shift,hrec l (Finset.mem_range.mp hl),smul_zero]
-
-/-- Ordinary polynomial multiple spaces. A top-degree split locator in
-our applications removes the possible common root at infinity. -/
 def NonprincipalSpace (K : Submodule F F[X]) (t : ℕ) : Prop :=
   ¬ ∃ G : F[X], G≠0 ∧ G.natDegree≤t ∧
     K=(Polynomial.degreeLT F (t-G.natDegree+1)).map (polynomialMul G)
-
-/-- Elementary dimension-two gcd bound. No level resolution is used:
-if the gcd were larger, bounded Bezout would put it in the smaller apolar
-kernel and force the whole two-generator space to be principal. -/
 theorem nonprincipal_two_generator_gcd_bound (s : β → ℕ → F) (m t : ℕ)
     (htm : t≤m) (f g : F[X]) (hf : f≠0) (hg : g≠0)
     (hfd : f.natDegree=t) (hgd : g.natDegree≤t)
@@ -1565,13 +1333,10 @@ theorem nonprincipal_two_generator_gcd_bound (s : β → ℕ → F) (m t : ℕ)
       apply recurrence_product_zero (s b) G Q j (t-d+1) (Polynomial.mem_degreeLT.mp hQ)
       intro l hl
       exact hGsmall b (j+l) (by omega)
-
 end
 end FrobeniusLocator.Strata
-end PackSource_KernelTwoGcd
-
-section PackSource_KernelTwoSpace
-set_option autoImplicit true
+end
+section
 set_option backward.isDefEq.respectTransparency false
 set_option maxHeartbeats 1000000
 namespace FrobeniusLocator.Strata
@@ -1579,10 +1344,8 @@ noncomputable section
 open Polynomial Finset Matrix
 open scoped BigOperators
 variable {F β : Type} [Field F] [DecidableEq F] [Fintype β]
-
 def recurrenceMatrixAll (s : β → ℕ → F) (m t : ℕ) :
     Matrix (β × Fin (m-t)) (Fin (t+1)) F := fun b j => s b.1 (j.val+b.2.val)
-
 theorem recurrenceSpace_matrix (s : β → ℕ → F) (m t : ℕ) (P : F[X]) :
     P∈recurrenceSpace s m t ↔ P.natDegree≤t ∧
       (recurrenceMatrixAll s m t).mulVec (fun j => P.coeff j.val)=0 := by
@@ -1601,9 +1364,6 @@ theorem recurrenceSpace_matrix (s : β → ℕ → F) (m t : ℕ) (P : F[X]) :
     rw [Principal.recurrenceEval_eq_sum _ _ t P hn]
     have hh := congrFun hker (b,⟨j,hj⟩)
     simpa only [recurrenceMatrixAll,Matrix.mulVec,dotProduct,Pi.zero_apply,mul_comm] using hh
-
-/-- Exact polynomial/coefficient equivalence, with no kernel dimension
-or principality hypothesis. -/
 def kernelPolynomialEquiv (s : β → ℕ → F) (m t : ℕ) :
     (LinearMap.ker (recurrenceMatrixAll s m t).mulVecLin) ≃ₗ[F] recurrenceSpace s m t where
   toFun a := ⟨Principal.assemble a.val,(recurrenceSpace_matrix s m t _).mpr
@@ -1623,13 +1383,10 @@ def kernelPolynomialEquiv (s : β → ℕ → F) (m t : ℕ) :
     apply Subtype.ext
     simp only [Principal.assemble,Submodule.coe_smul,Pi.smul_apply,← Polynomial.smul_monomial,
       Finset.smul_sum,RingHom.id_apply]
-
 theorem recurrenceSpace_finrank (s : β → ℕ → F) (m t : ℕ) :
     Module.finrank F (recurrenceSpace s m t)=
       Module.finrank F (LinearMap.ker (recurrenceMatrixAll s m t).mulVecLin) :=
   (kernelPolynomialEquiv s m t).finrank_eq.symm
-
-/-- In a two-dimensional space, every nonzero member extends to a basis. -/
 theorem dimension_two_basis (K : Submodule F F[X])
     (hK : Module.finrank F K=2) (f : F[X]) (hfK : f∈K) (hf : f≠0) :
     ∃ g : F[X], g∈K ∧ g≠0 ∧ K=Submodule.span F ({f,g} : Set F[X]) := by
@@ -1660,9 +1417,6 @@ theorem dimension_two_basis (K : Submodule F F[X])
     have hsetg : K.subtype '' ({gK} : Set K)=({gK.val} : Set F[X]) := by ext P; simp
     rw [hsetf,hsetg,← Submodule.span_union] at hm
     simpa only [Set.singleton_union] using hm.symm
-
-/-- Actual evaluated nullity two plus nonprincipality supplies the sharp
-gcd bound for any full-degree witness locator. -/
 theorem dimension_two_gcd_bound (s : β → ℕ → F) (m t : ℕ) (htm : t≤m)
     (hnull : Module.finrank F (LinearMap.ker (recurrenceMatrixAll s m t).mulVecLin)=2)
     (hnon : NonprincipalSpace (recurrenceSpace s m t) t)
@@ -1674,13 +1428,10 @@ theorem dimension_two_gcd_bound (s : β → ℕ → F) (m t : ℕ) (htm : t≤m)
     ((recurrenceSpace_finrank s m t).trans hnull) f hf hf0
   have hgd := ((recurrenceSpace_matrix s m t g).mp hg).1
   exact ⟨g,hg,hg0,hspan,nonprincipal_two_generator_gcd_bound s m t htm f g hf0 hg0 hfd hgd hspan hnon⟩
-
 end
 end FrobeniusLocator.Strata
-end PackSource_KernelTwoSpace
-
-section PackSource_PunctureWeights
-set_option autoImplicit true
+end
+section
 set_option backward.isDefEq.respectTransparency false
 set_option maxHeartbeats 1000000
 namespace FrobeniusLocator.Strata
@@ -1688,9 +1439,6 @@ noncomputable section
 open Polynomial Finset Matrix
 open scoped BigOperators
 variable {F ι : Type} [Field F] [DecidableEq F] [Fintype ι] [DecidableEq ι]
-
-/-- Removing one node changes the dual weight by exactly its locator
-factor. This is the puncturing identity used by the K2 count. -/
 theorem punctured_weight (x : ι → F) (hx : Function.Injective x) (a : ι)
     (i : {i // i≠a}) :
     weight x i.val*(x i.val-x a)=weight (fun j : {j // j≠a} => x j.val) i := by
@@ -1720,9 +1468,6 @@ theorem punctured_weight (x : ι → F) (hx : Function.Injective x) (a : ι)
   dsimp [weight]
   rw [horig,hprod]
   rw [_root_.mul_inv_rev,mul_assoc,inv_mul_cancel₀ hxa,mul_one]
-
-/-- The punctured syndrome is the original syndrome contracted against
-X-a. The node at a vanishes automatically. -/
 theorem punctured_syndrome (x w : ι → F) (hx : Function.Injective x) (a : ι) (j : ℕ) :
     syndrome (fun i : {i // i≠a} => x i.val) (fun i => w i.val) j =
       syndrome x w (j+1)-x a*syndrome x w j := by
@@ -1743,13 +1488,10 @@ theorem punctured_syndrome (x w : ι → F) (hx : Function.Injective x) (a : ι)
   intro i _
   rw [pow_succ]
   ring
-
 end
 end FrobeniusLocator.Strata
-end PackSource_PunctureWeights
-
-section PackSource_SlopeRank
-set_option autoImplicit true
+end
+section
 set_option backward.isDefEq.respectTransparency false
 set_option maxHeartbeats 1000000
 namespace FrobeniusLocator.Strata
@@ -1757,22 +1499,16 @@ noncomputable section
 open Polynomial Finset Matrix
 open scoped BigOperators
 variable {F ι : Type} [Field F] [DecidableEq F] [Fintype ι] [DecidableEq ι]
-
 def twoConjugations (σ : F →+* F) : Fin 2 → F →+* F := ![RingHom.id F,σ]
 def threeConjugations (σ : F →+* F) : Fin 3 → F →+* F := ![RingHom.id F,σ,σ.comp σ]
-
 theorem conjugateErrors_two (σ : F →+* F) (x e : ι → F) (L : ℕ) :
     conjugateErrors (twoConjugations σ) x e L=errorTwoMatrix σ x e L := by
   ext ⟨b,j⟩ i
   fin_cases b <;> simp [conjugateErrors,twoConjugations,errorTwoMatrix]
-
 theorem conjugateErrors_three (σ : F →+* F) (x e : ι → F) (L : ℕ) :
     conjugateErrors (threeConjugations σ) x e L=errorThreeMatrix σ x e L := by
   ext ⟨b,j⟩ i
   fin_cases b <;> simp [conjugateErrors,threeConjugations,errorThreeMatrix,RingHom.comp_apply]
-
-/-- R3 stated on evaluated syndrome matrices, for ANY decoder and its
-EXACT support. All bridges to the error-column theorem are proved. -/
 theorem normal_slope_three_rank (σ : F →+* F) (x w : ι → F)
     (hx : Function.Injective x) (hfixed : ∀ i, σ (x i)=x i)
     (k L t H : ℕ) (hsize : k+L+t≤Fintype.card ι) (hH : H<L)
@@ -1816,18 +1552,14 @@ theorem normal_slope_three_rank (σ : F →+* F) (x w : ι → F)
     (fun i => hfixed i.val) U V H L rel.degree_U rel.degree_V hpair hH he hr hn).2.2
   rw [h3]
   simpa only [Fintype.card_coe] using hR3
-
-/-- Literal m-block polynomial matrix used for Frobenius slope evaluation. -/
 def frobeniusStacked (p blocks : ℕ) (x u v : ι → F) (L t : ℕ) :
     Matrix (Fin blocks × Fin L) (Fin (t+1)) F[X] := fun b j =>
   C (syndrome x u (b.2.val+j.val)^(p^b.1.val))+
     (Polynomial.X : F[X])^(p^b.1.val)*C (syndrome x v (b.2.val+j.val)^(p^b.1.val))
-
 theorem stacked_eq_frobeniusStacked (p : ℕ) [ExpChar F p] (x u v : ι → F) (L t : ℕ) :
     stacked p x u v L t=frobeniusStacked p 2 x u v L t := by
   ext ⟨b,i⟩ j
   fin_cases b <;> simp [stacked,hankel,frobeniusStacked]
-
 theorem frobeniusStacked_eval (p : ℕ) [ExpChar F p] (blocks : ℕ)
     (x u v : ι → F) (L t : ℕ) (γ : F) :
     (frobeniusStacked p blocks x u v L t).map (Polynomial.evalRingHom γ)=
@@ -1842,13 +1574,10 @@ theorem frobeniusStacked_eval (p : ℕ) [ExpChar F p] (blocks : ℕ)
     γ^(p^b.1.val)*(syndrome x v (b.2.val+j.val))^(p^b.1.val)=_
   rw [conjugateHankel,hs,map_add,map_mul]
   rfl
-
 end
 end FrobeniusLocator.Strata
-end PackSource_SlopeRank
-
-section PackSource_PunctureKernel
-set_option autoImplicit true
+end
+section
 set_option backward.isDefEq.respectTransparency false
 set_option maxHeartbeats 1000000
 namespace FrobeniusLocator.Strata
@@ -1856,22 +1585,18 @@ noncomputable section
 open Polynomial Finset Matrix
 open scoped BigOperators
 variable {F β : Type} [Field F] [DecidableEq F] [Fintype β]
-
 def contractSequence (s : β → ℕ → F) (a : F) : β → ℕ → F :=
   fun b j => s b (j+1)-a*s b j
-
 def evalFunctional (a : F) : F[X] →ₗ[F] F where
   toFun P := P.eval a
   map_add' P Q := eval_add
   map_smul' c P := by simp
-
 theorem recurrenceEval_contract (s : ℕ → F) (a : F) (j : ℕ) (Q : F[X]) :
     Principal.recurrenceEval (fun i => s (i+1)-a*s i) j Q=
       Principal.recurrenceEval s (j+1) Q-a*Principal.recurrenceEval s j Q := by
   induction Q using Polynomial.induction_on' with
   | add Q R hQ hR => simp only [map_add,hQ,hR]; ring
   | monomial i c => simp only [Principal.recurrenceEval_monomial]; ring
-
 theorem recurrenceEval_X_sub_C (s : ℕ → F) (a : F) (j : ℕ) (Q : F[X]) :
     Principal.recurrenceEval s j (((Polynomial.X : F[X])-C a)*Q)=
       Principal.recurrenceEval (fun i => s (i+1)-a*s i) j Q := by
@@ -1881,9 +1606,6 @@ theorem recurrenceEval_X_sub_C (s : ℕ → F) (a : F) (j : ℕ) (Q : F[X]) :
     ring
   rw [heq,map_sub,map_smul,Principal.recurrenceEval_shift]
   simp only [smul_eq_mul,RingHom.id_apply]
-
-/-- Multiplication by X-a identifies the punctured recurrence kernel
-with the old kernel restricted by evaluation at a. -/
 theorem contracted_recurrence_membership (s : β → ℕ → F) (a : F) (m t : ℕ)
     (ht : 1≤t) (htm : t≤m) (Q : F[X]) :
     Q∈recurrenceSpace (contractSequence s a) (m-1) (t-1) ↔
@@ -1912,8 +1634,6 @@ theorem contracted_recurrence_membership (s : β → ℕ → F) (a : F) (m t : �
     change Principal.recurrenceEval (fun i => s b (i+1)-a*s b i) j Q=0
     rw [← recurrenceEval_X_sub_C]
     exact hrec b j hj
-
-/-- The actual polynomial linear equivalence at one puncture. -/
 def puncturedKernelEquiv (s : β → ℕ → F) (a : F) (m t : ℕ) (ht : 1≤t) (htm : t≤m) :
     recurrenceSpace (contractSequence s a) (m-1) (t-1) ≃ₗ[F]
       (recurrenceSpace s m t ⊓ LinearMap.ker (evalFunctional a) : Submodule F F[X]) := by
@@ -1936,13 +1656,10 @@ def puncturedKernelEquiv (s : β → ℕ → F) (a : F) (m t : ℕ) (ht : 1≤t)
       exact P.property.1
     · apply Subtype.ext
       exact hQ.symm
-
 end
 end FrobeniusLocator.Strata
-end PackSource_PunctureKernel
-
-section PackSource_KernelTwoRoots
-set_option autoImplicit true
+end
+section
 set_option backward.isDefEq.respectTransparency false
 set_option maxHeartbeats 1000000
 namespace FrobeniusLocator.Strata
@@ -1951,14 +1668,10 @@ open Polynomial Finset Matrix
 open scoped BigOperators
 local instance strataDecidable (P : Prop) : Decidable P := Classical.propDecidable P
 variable {F ι β : Type} [Field F] [DecidableEq F] [Fintype ι] [DecidableEq ι] [Fintype β]
-
 theorem gcd_eval_zero_iff (f g : F[X]) (a : F) :
     (GCDMonoid.gcd f g).eval a=0 ↔ f.eval a=0 ∧ g.eval a=0 := by
   change (GCDMonoid.gcd f g).IsRoot a ↔ f.IsRoot a ∧ g.IsRoot a
   simp only [← Polynomial.dvd_iff_isRoot,_root_.dvd_gcd_iff]
-
-/-- Common witness zeros are at most the gcd degree. This is all the
-incidence argument needs, and follows directly from univariate root counting. -/
 theorem locator_common_roots_card_le (x : ι → F) (hx : Function.Injective x)
     (S : Finset ι) (g : F[X]) :
     (S.filter (fun i => g.eval (x i)=0)).card≤(GCDMonoid.gcd (locator x S) g).natDegree := by
@@ -1969,9 +1682,6 @@ theorem locator_common_roots_card_le (x : ι → F) (hx : Function.Injective x)
   intro i hi
   exact (gcd_eval_zero_iff _ _ _).mpr
     ⟨locator_eval_zero x S i (Finset.mem_filter.mp hi).1,(Finset.mem_filter.mp hi).2⟩
-
-/-- Each usable witness root is an active evaluation functional and hence
-reduces actual evaluated nullity two to one. -/
 theorem active_root_nullity_one (s : β → ℕ → F) (m t : ℕ)
     (hnull : Module.finrank F (LinearMap.ker (recurrenceMatrixAll s m t).mulVecLin)=2)
     (g : F[X]) (hg : g∈recurrenceSpace s m t) (a : F) (hga : g.eval a≠0) :
@@ -1991,9 +1701,6 @@ theorem active_root_nullity_one (s : β → ℕ → F) (m t : ℕ)
   have hh := AppendConstants.nullity_drop_one (recurrenceMatrixAll s m t) (fun j => a^j.val) hactive
   rw [hnull] at hh
   omega
-
-/-- The complete elementary K2 root supply: at least L+1 distinct domain
-roots kill one kernel dimension. No generic-rank or gcd premise. -/
 theorem nonprincipal_two_kernel_usable_roots (s : β → ℕ → F) (m t L : ℕ)
     (hm : m=L+t) (x : ι → F) (hx : Function.Injective x)
     (hnull : Module.finrank F (LinearMap.ker (recurrenceMatrixAll s m t).mulVecLin)=2)
@@ -2020,13 +1727,10 @@ theorem nonprincipal_two_kernel_usable_roots (s : β → ℕ → F) (m t L : ℕ
   refine ⟨T,Finset.filter_subset _ _,by omega,?_⟩
   intro i hi
   exact active_root_nullity_one s m t hnull g hg (x i) (Finset.mem_filter.mp hi).2
-
 end
 end FrobeniusLocator.Strata
-end PackSource_KernelTwoRoots
-
-section PackSource_FullErrorPrincipal
-set_option autoImplicit true
+end
+section
 set_option backward.isDefEq.respectTransparency false
 set_option maxHeartbeats 1000000
 namespace FrobeniusLocator.Strata
@@ -2034,7 +1738,6 @@ noncomputable section
 open Polynomial Finset Matrix
 open scoped BigOperators
 variable {F ι β : Type} [Field F] [DecidableEq F] [Fintype ι] [DecidableEq ι] [Fintype β]
-
 theorem matrix_injective_of_full_column_rank {row col : Type} [Fintype row] [Fintype col]
     (M : Matrix row col F) (hr : M.rank=Fintype.card col) : Function.Injective M.mulVecLin := by
   have hn := LinearMap.finrank_range_add_finrank_ker M.mulVecLin
@@ -2042,7 +1745,6 @@ theorem matrix_injective_of_full_column_rank {row col : Type} [Fintype row] [Fin
   rw [Module.finrank_fintype_fun_eq_card,hr] at hn
   have hk : Module.finrank F (LinearMap.ker M.mulVecLin)=0 := by omega
   exact LinearMap.ker_eq_bot.mp (Submodule.finrank_eq_zero.mp hk)
-
 theorem locator_dvd_of_eval_zero (x : ι → F) (hx : Function.Injective x)
     (S : Finset ι) (P : F[X]) (hz : ∀ i∈S, P.eval (x i)=0) : locator x S∣P := by
   classical
@@ -2055,7 +1757,6 @@ theorem locator_dvd_of_eval_zero (x : ι → F) (hx : Function.Injective x)
     obtain ⟨i,hi,rfl⟩ := Multiset.mem_map.mp ha
     exact (Polynomial.mem_roots hP).mpr (hz i hi)
   exact (Principal.locator_splits x S).dvd_of_roots_le_roots (locator_monic x S).ne_zero hroots
-
 theorem bounded_locator_quotient (x : ι → F) (S : Finset ι) (P : F[X]) (t : ℕ)
     (hS : S.card≤t) (hP : P.natDegree≤t) (hdiv : locator x S∣P) :
     ∃ Q : F[X], Q.degree<(t-S.card+1 : ℕ) ∧ P=locator x S*Q := by
@@ -2066,16 +1767,11 @@ theorem bounded_locator_quotient (x : ι → F) (S : Finset ι) (P : F[X]) (t : 
   have hd := natDegree_mul (locator_monic x S).ne_zero hq
   rw [← hQ,locator_natDegree] at hd
   exact degree_le_natDegree.trans_lt (by exact_mod_cast (show Q.natDegree<t-S.card+1 by omega))
-
 theorem recurrenceMatrixAll_conjugate (σ : β → F →+* F) (x w : ι → F) (m t : ℕ) :
     recurrenceMatrixAll (fun b j => σ b (syndrome x w j)) m t=
       conjugateHankel σ x w (m-t) t := by
   ext b j
   simp only [recurrenceMatrixAll,conjugateHankel,Nat.add_comm]
-
-/-- Full third-error rank forces an evaluated principal locator kernel
-at the TARGET padded degree t, even when actual error weight is smaller.
-This is the bridge needed to interpret the residual q cut correctly. -/
 theorem full_error_rank_principal (σ : β → F →+* F) (x w : ι → F)
     (hx : Function.Injective x) (hfixed : ∀ b i, σ b (x i)=x i)
     (k m t : ℕ) (hkm : k+m=Fintype.card ι) (htm : t≤m)
@@ -2132,13 +1828,10 @@ theorem full_error_rank_principal (σ : β → F →+* F) (x w : ι → F)
     apply (hker_iff _ hdeg).mpr
     intro i hi
     simp only [eval_mul,locator_eval_zero x E i hi,zero_mul]
-
 end
 end FrobeniusLocator.Strata
-end PackSource_FullErrorPrincipal
-
-section PackSource_PunctureNullity
-set_option autoImplicit true
+end
+section
 set_option backward.isDefEq.respectTransparency false
 set_option maxHeartbeats 1000000
 namespace FrobeniusLocator.Strata
@@ -2146,7 +1839,6 @@ noncomputable section
 open Polynomial Finset Matrix
 open scoped BigOperators
 variable {F β : Type} [Field F] [DecidableEq F] [Fintype β]
-
 theorem functional_coefficients_eval (t : ℕ) (P : F[X]) (hP : P.natDegree≤t) (a : F) :
     AppendConstants.functional (fun j : Fin (t+1) => a^j.val) (fun j => P.coeff j.val)=P.eval a := by
   change (∑ j : Fin (t+1), a^j.val*P.coeff j.val)=P.eval a
@@ -2154,8 +1846,6 @@ theorem functional_coefficients_eval (t : ℕ) (P : F[X]) (hP : P.natDegree≤t)
   apply Finset.sum_congr rfl
   intro j _
   ring
-
-/-- Coefficient encoding of the old polynomial kernel restricted at a. -/
 def appendedPolynomialEquiv (s : β → ℕ → F) (m t : ℕ) (a : F) :
     (recurrenceSpace s m t ⊓ LinearMap.ker (evalFunctional a) : Submodule F F[X]) ≃ₗ[F]
       LinearMap.ker (AppendConstants.appendOne (recurrenceMatrixAll s m t)
@@ -2198,9 +1888,6 @@ def appendedPolynomialEquiv (s : β → ℕ → F) (m t : ℕ) (a : F) :
     apply Subtype.ext
     funext j
     exact Principal.assemble_coeff c.val j
-
-/-- Appending one evaluation and puncturing one node have identical
-kernel dimensions. This is a theorem, not an incidence premise. -/
 theorem punctured_nullity_eq_appended (s : β → ℕ → F) (m t : ℕ) (a : F)
     (ht : 1≤t) (htm : t≤m) :
     Module.finrank F (LinearMap.ker
@@ -2209,10 +1896,8 @@ theorem punctured_nullity_eq_appended (s : β → ℕ → F) (m t : ℕ) (a : F)
       (fun j => a^j.val)).mulVecLin) := by
   rw [← recurrenceSpace_finrank]
   exact (puncturedKernelEquiv s a m t ht htm).finrank_eq.trans (appendedPolynomialEquiv s m t a).finrank_eq
-
 section Domain
 variable {ι : Type} [Fintype ι] [DecidableEq ι]
-
 theorem punctured_conjugate_sequence (σ : β → F →+* F) (x w : ι → F)
     (hx : Function.Injective x) (hfixed : ∀ b i, σ b (x i)=x i) (a : ι) :
     (fun b j => σ b (syndrome (fun i : {i // i≠a} => x i.val) (fun i => w i.val) j))=
@@ -2220,7 +1905,6 @@ theorem punctured_conjugate_sequence (σ : β → F →+* F) (x w : ι → F)
   funext b j
   rw [punctured_syndrome x w hx a j,map_sub,map_mul,hfixed]
   rfl
-
 theorem actual_punctured_nullity_eq_appended (σ : β → F →+* F) (x w : ι → F)
     (hx : Function.Injective x) (hfixed : ∀ b i, σ b (x i)=x i) (m t : ℕ) (a : ι)
     (ht : 1≤t) (htm : t≤m) :
@@ -2233,23 +1917,16 @@ theorem actual_punctured_nullity_eq_appended (σ : β → F →+* F) (x w : ι �
   rw [punctured_conjugate_sequence σ x w hx hfixed a]
   exact punctured_nullity_eq_appended _ m t (x a) ht htm
 end Domain
-
 end
 end FrobeniusLocator.Strata
-end PackSource_PunctureNullity
-
-section PackSource_StrataCounting
-set_option autoImplicit true
+end
+section
 set_option backward.isDefEq.respectTransparency false
 namespace FrobeniusLocator.Strata
 noncomputable section
 open Finset
 open scoped BigOperators
 variable {F ι : Type} [DecidableEq F] [Fintype ι] [DecidableEq ι]
-
-/-- Finite incidence arithmetic underlying the one-root K2 charge.
-The per-node regular bound is a named input; no geometry is encoded as
-an axiom or silently inferred from this double count. -/
 theorem one_root_incidence_count (Γ : Finset F) (usable : F → Finset ι)
     (L M : ℕ) (hroots : ∀ γ∈Γ, L+1≤(usable γ).card)
     (hnode : ∀ i, (Γ.filter (fun γ => i∈usable γ)).card≤M) :
@@ -2269,33 +1946,22 @@ theorem one_root_incidence_count (Γ : Finset F) (usable : F → Finset ι)
   have hhigh : (∑ i : ι, (Γ.filter (fun γ => i∈usable γ)).card)≤Fintype.card ι*M :=
     (Finset.sum_le_sum (fun i _ => hnode i)).trans_eq (by simp)
   exact (Nat.le_div_iff_mul_le (by omega)).mpr (hlow.trans (hswap.trans_le hhigh))
-
 def principalThreePrice (n t : ℕ) : ℕ := n^3+(t+1)*n^2+(t+1)^2*n+(t+1)^3
-
 def kernelTwoPrice (n L : ℕ) : ℕ := n*(n-1)^3/(L+1)
-
 theorem native_principal_three_price : principalThreePrice 262144 81879=25947601202251264 := by
   norm_num [principalThreePrice]
-
 theorem native_kernel_two_price : kernelTwoPrice 262144 49193=95993666704888298 := by
   norm_num [kernelTwoPrice]
-
 theorem native_booked_total : 69631486279633+principalThreePrice 262144 81879+
     kernelTwoPrice 262144 49193=122010899393419195 := by
   norm_num [principalThreePrice,kernelTwoPrice]
-
 theorem native_residual_ledger : 69631486279633+principalThreePrice 262144 81879+
     kernelTwoPrice 262144 49193+121058742343964669=243069641737383864 := by
   norm_num [principalThreePrice,kernelTwoPrice]
-
 theorem native_joint_ledger : 31911086374011223+69631486279633+
     principalThreePrice 262144 81879+kernelTwoPrice 262144 49193+
     121058742343964669=274980728111395087 := by
   norm_num [principalThreePrice,kernelTwoPrice]
-
-/-- Exact one-root count at the first benchmark cell, conditional ONLY
-on the two finite incidence inputs. The regular (n-1)^3 node bound remains
-visible in the theorem signature. -/
 theorem native_kernel_two_incidence_count (Γ : Finset F) (usable : F → Finset ι)
     (hn : Fintype.card ι=262144)
     (hroots : ∀ γ∈Γ, 49194≤(usable γ).card)
@@ -2304,9 +1970,6 @@ theorem native_kernel_two_incidence_count (Γ : Finset F) (usable : F → Finset
   have h := one_root_incidence_count Γ usable 49193 (262143^3) hroots hnode
   rw [hn] at h
   exact h.trans_eq (by norm_num)
-
-/-- Four DISJOINT slope strata add. A principal bound or regular bound
-is still a hypothesis here until its geometric theorem has been proved. -/
 theorem four_strata_count (Γ : Finset F) (drop principal two : F → Prop)
     [DecidablePred drop] [DecidablePred principal] [DecidablePred two]
     (D P J R : ℕ)
@@ -2325,24 +1988,18 @@ theorem four_strata_count (Γ : Finset F) (drop principal two : F → Prop)
     intro γ _
     by_cases hd : drop γ <;> by_cases hp : principal γ <;> by_cases ht : two γ <;> simp [hd,hp,ht]
   omega
-
 end
 end FrobeniusLocator.Strata
-end PackSource_StrataCounting
-
-section PackSource_PunctureBadSlope
-set_option autoImplicit true
+end
+section
 set_option backward.isDefEq.respectTransparency false
 namespace FrobeniusLocator.Strata
 noncomputable section
 open Polynomial Finset
 open scoped BigOperators
 variable {F ι : Type} [Field F] [Fintype ι] [DecidableEq ι]
-
-/-- Lift a support avoiding the punctured node without changing its size. -/
 def liftPuncturedSet (a : ι) (S : Finset ι) : Finset {i // i≠a} :=
   Finset.univ.filter (fun i => i.val∈S)
-
 theorem liftPuncturedSet_image (a : ι) (S : Finset ι) (ha : a∉S) :
     (liftPuncturedSet a S).image Subtype.val=S := by
   ext i
@@ -2352,15 +2009,10 @@ theorem liftPuncturedSet_image (a : ι) (S : Finset ι) (ha : a∉S) :
     exact hj
   · intro hi
     exact ⟨⟨i,by intro h; exact ha (h ▸ hi)⟩,hi,rfl⟩
-
 theorem liftPuncturedSet_card (a : ι) (S : Finset ι) (ha : a∉S) :
     (liftPuncturedSet a S).card=S.card := by
   exact (Finset.card_image_of_injective (liftPuncturedSet a S) Subtype.val_injective).symm.trans
     (congrArg Finset.card (liftPuncturedSet_image a S ha))
-
-/-- Puncturing an ERROR-WITNESS node preserves SAME-SUPPORT MCA badness.
-This does not assert preservation when the removed node lies in the
-agreement witness. -/
 theorem puncture_bad_witness (x u v : ι → F) (k A : ℕ) (γ : F)
     (S : Finset ι) (hS : A≤S.card)
     (hdec : ExtendsOn x (fun i => u i+γ*v i) k S)
@@ -2381,13 +2033,10 @@ theorem puncture_bad_witness (x u v : ι → F) (k A : ℕ) (γ : F)
       exact hPv ⟨i,hne i hi⟩ (Finset.mem_filter.mpr ⟨Finset.mem_univ _,hi⟩)
     · intro i hi
       exact hQv ⟨i,hne i hi⟩ (Finset.mem_filter.mpr ⟨Finset.mem_univ _,hi⟩)
-
 end
 end FrobeniusLocator.Strata
-end PackSource_PunctureBadSlope
-
-section PackSource_ConjugateLocator
-set_option autoImplicit true
+end
+section
 set_option backward.isDefEq.respectTransparency false
 set_option maxHeartbeats 1000000
 namespace FrobeniusLocator.Strata
@@ -2395,15 +2044,12 @@ noncomputable section
 open Polynomial Finset Matrix
 open scoped BigOperators
 variable {F ι β : Type} [Field F] [DecidableEq F] [Fintype ι] [DecidableEq ι] [Fintype β]
-
 theorem locator_coefficient_fixed (σ : F →+* F) (x : ι → F)
     (hfixed : ∀ i, σ (x i)=x i) (E : Finset ι) (j : ℕ) :
     σ ((locator x E).coeff j)=(locator x E).coeff j := by
   have hm : (locator x E).map σ=locator x E := by simp [locator,Polynomial.map_prod,hfixed]
   have hc := congrArg (fun Q : F[X] => Q.coeff j) hm
   simpa only [Polynomial.coeff_map] using hc
-
-/-- All conjugate blocks annihilate the same BASE-NODE locator. -/
 theorem conjugate_locator_annihilates (σ : β → F →+* F) (x w : ι → F)
     (hx : Function.Injective x) (hfixed : ∀ b i, σ b (x i)=x i)
     (k L t : ℕ) (hsize : k+L+t≤Fintype.card ι)
@@ -2425,7 +2071,6 @@ theorem conjugate_locator_annihilates (σ : β → F →+* F) (x w : ι → F)
     locator_coefficient_fixed (σ b.1) x (hfixed b.1) E
   simpa only [Matrix.mulVec,dotProduct,hankel,eval_add,eval_mul,eval_C,eval_X,zero_mul,
     add_zero,Pi.zero_apply,map_sum,map_mul,map_zero,hcoef,conjugateHankel] using hh
-
 theorem locator_in_conjugate_space (σ : β → F →+* F) (x w : ι → F)
     (hx : Function.Injective x) (hfixed : ∀ b i, σ b (x i)=x i)
     (k m t : ℕ) (hsize : k+m≤Fintype.card ι) (htm : t≤m)
@@ -2436,13 +2081,10 @@ theorem locator_in_conjugate_space (σ : β → F →+* F) (x w : ι → F)
   refine ⟨(locator_natDegree x E).trans_le hE,?_⟩
   rw [recurrenceMatrixAll_conjugate]
   exact conjugate_locator_annihilates σ x w hx hfixed k (m-t) t (by omega) P hP E hE hagree
-
 end
 end FrobeniusLocator.Strata
-end PackSource_ConjugateLocator
-
-section PackSource_KernelTwoCount
-set_option autoImplicit true
+end
+section
 set_option backward.isDefEq.respectTransparency false
 set_option maxHeartbeats 2000000
 namespace FrobeniusLocator.Strata
@@ -2451,10 +2093,6 @@ open Polynomial Finset Matrix
 open scoped BigOperators
 variable {F ι β : Type} [Field F] [DecidableEq F] [Fintype ι] [DecidableEq ι] [Fintype β]
 local instance countDecidable (P : Prop) : Decidable P := Classical.propDecidable P
-
-/-- The exact remaining geometric input to the one-root K2 consumer.
-It counts actual SAME-SUPPORT bad slopes with a unique evaluated locator
-on each punctured domain. No assertion of this property is made here. -/
 def PuncturedRegularCap (σ : β → F →+* F) (x u v : ι → F) (k A m t : ℕ) : Prop :=
   ∀ (a : ι) (Γ : Finset F),
     (∀ γ∈Γ, Principal.BadSlope (fun i : {i // i≠a} => x i.val)
@@ -2463,11 +2101,6 @@ def PuncturedRegularCap (σ : β → F →+* F) (x u v : ι → F) (k A m t : �
       (fun b j => σ b (syndrome (fun i : {i // i≠a} => x i.val)
         (fun i => u i.val+γ*v i.val) j)) (m-1) (t-1)).mulVecLin)=1) →
     Γ.card≤(Fintype.card ι-1)^3
-
-/-- Complete elementary K2 consumer on literal bad slopes and evaluated
-kernels. Its ONLY counting input is the explicitly named punctured
-regular-slope cap. Gcd, usable roots, puncturing, same-support badness,
-and the incidence division are all proved here. -/
 theorem nonprincipal_two_kernel_count (σ : β → F →+* F) (x u v : ι → F)
     (hx : Function.Injective x) (hfixed : ∀ b i, σ b (x i)=x i)
     (k A m L t : ℕ) (hkm : k+m=Fintype.card ι) (hm : m=L+t)
@@ -2528,9 +2161,6 @@ theorem nonprincipal_two_kernel_count (σ : β → F →+* F) (x u v : ι → F)
       rw [actual_punctured_nullity_eq_appended σ x (fun i => u i+γ*v i) hx hfixed m t a ht (by omega)]
       exact hTnull g a haT
   exact one_root_incidence_count Γ usable L ((Fintype.card ι-1)^3) hroots hnode
-
-/-- Exact native integer, still explicitly conditional on the geometric
-PuncturedRegularCap. -/
 theorem native_nonprincipal_two_kernel_count (σ : β → F →+* F) (x u v : ι → F)
     (hx : Function.Injective x) (hfixed : ∀ b i, σ b (x i)=x i)
     (hn : Fintype.card ι=262144)
@@ -2545,13 +2175,10 @@ theorem native_nonprincipal_two_kernel_count (σ : β → F →+* F) (x u v : ι
     (by omega) (by decide) (by decide) (by decide) (by decide) hregular Γ hbad hnull hnon
   rw [hn,native_kernel_two_price] at h
   exact h
-
 end
 end FrobeniusLocator.Strata
-end PackSource_KernelTwoCount
-
-section PackSource_PolynomialFamilyOutput
-set_option autoImplicit true
+end
+section
 set_option backward.isDefEq.respectTransparency false
 set_option maxHeartbeats 1000000
 namespace FrobeniusLocator.Strata
@@ -2559,19 +2186,14 @@ noncomputable section
 open Polynomial Finset Matrix
 open scoped BigOperators
 variable {F ι : Type} [Field F] [Fintype ι] [DecidableEq ι]
-
-/-- Interpolate node values that are themselves polynomials in a separate
-parameter. Inner X is the slope parameter, outer X is the RS coordinate. -/
 def interpolationFamily (x : ι → F) (w : ι → F[X]) : Polynomial (Polynomial F) :=
   ∑ i, Polynomial.C (w i)*(Lagrange.basis Finset.univ x i).map (Polynomial.C : F →+* F[X])
-
 theorem interpolationFamily_map_eval (x : ι → F) (w : ι → F[X]) (γ : F) :
     (interpolationFamily x w).map (Polynomial.evalRingHom γ)=
       Lagrange.interpolate Finset.univ x (fun i => (w i).eval γ) := by
   have hcomp : (Polynomial.evalRingHom γ).comp (Polynomial.C : F →+* F[X])=RingHom.id F := by ext c; simp
   simp only [interpolationFamily,Polynomial.map_sum,Polynomial.map_mul,Polynomial.map_C,
     Polynomial.map_map,hcomp,Polynomial.map_id,Lagrange.interpolate_apply,Polynomial.coe_evalRingHom]
-
 theorem interpolationFamily_node (x : ι → F) (hx : Function.Injective x)
     (w : ι → F[X]) (a : ι) :
     (interpolationFamily x w).eval (Polynomial.C (x a))=w a := by
@@ -2584,7 +2206,6 @@ theorem interpolationFamily_node (x : ι → F) (hx : Function.Injective x)
     rw [Lagrange.eval_basis_of_ne hba (Finset.mem_univ a)]
     simp
   · simp
-
 theorem interpolationFamily_coefficient_degree (x : ι → F) (w : ι → F[X]) (B : ℕ)
     (hw : ∀ i, (w i).natDegree≤B) (j : ℕ) :
     ((interpolationFamily x w).coeff j).natDegree≤B := by
@@ -2592,10 +2213,6 @@ theorem interpolationFamily_coefficient_degree (x : ι → F) (w : ι → F[X]) 
   apply Polynomial.natDegree_sum_le_of_forall_le
   intro i _
   exact Polynomial.natDegree_mul_le.trans (by simpa only [Polynomial.natDegree_C,add_zero] using hw i)
-
-/-- Bounded parameter degree upgrades the pointwise RS outputs to ONE
-polynomial family of the same strict X-degree. The field-size condition
-is explicit and will be checked at the native sextic field. -/
 theorem interpolationFamily_degree_lt [Fintype F] (x : ι → F) (hx : Function.Injective x)
     (w : ι → F[X]) (D B : ℕ) (hD : D≤Fintype.card ι)
     (hw : ∀ i, (w i).natDegree≤B) (hB : B<Fintype.card F)
@@ -2622,13 +2239,10 @@ theorem interpolationFamily_degree_lt [Fintype F] (x : ι → F) (hx : Function.
     exact (hc.symm.trans hrzero)
   exact Polynomial.eq_zero_of_natDegree_lt_card_of_eval_eq_zero _ Function.injective_id hzero
     ((interpolationFamily_coefficient_degree x w B hw j).trans_lt hB)
-
 end
 end FrobeniusLocator.Strata
-end PackSource_PolynomialFamilyOutput
-
-section PackSource_ResidualRank
-set_option autoImplicit true
+end
+section
 set_option backward.isDefEq.respectTransparency false
 set_option maxHeartbeats 1000000
 namespace FrobeniusLocator.Strata
@@ -2636,11 +2250,6 @@ noncomputable section
 open Polynomial Finset Matrix
 open scoped BigOperators
 variable {F ι : Type} [Field F] [DecidableEq F] [Fintype ι] [DecidableEq ι]
-
-/-- After principal and nullity-two fibers have been removed, EVERY
-remaining normal decoder has the advertised q<=r-3 and actual-error lower
-bound. This is an implication of actual kernel predicates, not a new
-residual-count hypothesis. -/
 theorem normal_nonprincipal_residual_rank (σ : F →+* F) (x w : ι → F)
     (hx : Function.Injective x) (hfixed : ∀ i, σ (x i)=x i)
     (k L t H r : ℕ) (hsize : k+L+t=Fintype.card ι) (hH : H<L)
@@ -2690,13 +2299,10 @@ theorem normal_nonprincipal_residual_rank (σ : F →+* F) (x w : ι → F)
   rw [Module.finrank_fintype_fun_eq_card,Fintype.card_fin] at hn
   change q≤r-3 ∧ L+H+q+1≤E.card
   omega
-
 end
 end FrobeniusLocator.Strata
-end PackSource_ResidualRank
-
-section PackSource_FiberPrincipal
-set_option autoImplicit true
+end
+section
 set_option backward.isDefEq.respectTransparency false
 set_option maxHeartbeats 1000000
 namespace FrobeniusLocator.Strata
@@ -2704,7 +2310,6 @@ noncomputable section
 open Polynomial Finset Matrix
 open scoped BigOperators
 variable {F β : Type} [Field F] [DecidableEq F] [Fintype β]
-
 theorem constant_multiple_space (f : F[X]) :
     (Polynomial.degreeLT F 1).map (polynomialMul f)=F ∙ f := by
   apply le_antisymm
@@ -2724,8 +2329,6 @@ theorem constant_multiple_space (f : F[X]) :
     · change f*C c=P
       rw [← hc,Polynomial.smul_eq_C_mul]
       ring
-
-/-- An evaluated kernel line containing a full-degree witness is principal. -/
 theorem line_is_principal (K : Submodule F F[X]) (t : ℕ)
     (hK : Module.finrank F K=1) (f : F[X]) (hf : f∈K) (hf0 : f≠0) (hfd : f.natDegree=t) :
     ¬NonprincipalSpace K t := by
@@ -2737,9 +2340,6 @@ theorem line_is_principal (K : Submodule F F[X]) (t : ℕ)
   refine ⟨f,hf0,hfd.le,?_⟩
   rw [hfd,Nat.sub_self,zero_add,constant_multiple_space]
   exact heq.symm
-
-/-- A nonzero full-degree witness and nonprincipality exclude nullities
-zero and one; no dimension-two classification theorem is assumed. -/
 theorem nonprincipal_nullity_ge_two (s : β → ℕ → F) (m t : ℕ)
     (hnon : NonprincipalSpace (recurrenceSpace s m t) t)
     (f : F[X]) (hf : f∈recurrenceSpace s m t) (hf0 : f≠0) (hfd : f.natDegree=t) :
@@ -2754,22 +2354,16 @@ theorem nonprincipal_nullity_ge_two (s : β → ℕ → F) (m t : ℕ)
   have heq := recurrenceSpace_finrank s m t
   change Module.finrank F K=_ at heq
   omega
-
 end
 end FrobeniusLocator.Strata
-end PackSource_FiberPrincipal
-
-section PackSource_LemmaTProfile
-set_option autoImplicit true
+end
+section
 set_option backward.isDefEq.respectTransparency false
 namespace FrobeniusLocator.Strata
 noncomputable section
 open Polynomial Finset Matrix
 open scoped BigOperators
 variable {F ι : Type} [Field F] [Fintype ι] [DecidableEq ι]
-
-/-- Literal connection from the two-active level Hilbert function to the
-polynomial relation matrix's actual generic nullity. -/
 theorem generic_relation_line_of_level (p : ℕ) (x u v : ι → F)
     (m a b c : ℕ) (hc : c≤m) (hsum : a+b+c=2*m+2)
     (ha : a≤b) (hb : b<c) (hc2 : 1<c)
@@ -2781,20 +2375,12 @@ theorem generic_relation_line_of_level (p : ℕ) (x u v : ι → F)
     ((parameterRelation p x u v m (m+1-c)).map (algebraMap F[X] (GenericLayer.GenericField F))).mulVecLin)=1
   rw [parameterRelation_map]
   exact minimal_relation_line _ m a b c hc hsum ha hb hc2 hHF
-
-/-- The exact relation-degree/nullity balance at an arbitrary two-active
-profile. No existence of the binary level resolution is asserted. -/
 theorem relation_degree_nullity_balance (m L t r a b c : ℕ)
     (hm : m=L+t) (hc : c≤m) (hsum : a+b+c=2*m+2) (hr : r+a+b=2*t+2) :
     L+(m+1-c)+r=t+1 := by omega
-
 theorem native_minimal_relation_degree (r a b c : ℕ) (hc : c≤131072)
     (hsum : a+b+c=262146) (hr : r+a+b=163760) (hr7 : 7≤r) :
     49193+(131073-c)+r=81880 ∧ 131073-c≤32680 ∧ 131073-c<49193 := by omega
-
-/-- The complementary transpose is injective BELOW the minimum relation
-index. Thus the native relation factory uses the true minimum degree,
-conditional on the stated level Hilbert function. -/
 theorem no_relation_below_minimal {K : Type} [Field K] (s : Fin 2 → ℕ → K)
     (m a b c H : ℕ) (hc : c≤m) (hsum : a+b+c=2*m+2)
     (ha : a≤b) (hb : b≤c) (hH : H<m+1-c)
@@ -2804,13 +2390,10 @@ theorem no_relation_below_minimal {K : Type} [Field K] (s : Fin 2 → ℕ → K)
   have hd := complementary_nullities s m H
   rw [hHF H hHm] at hd
   omega
-
 end
 end FrobeniusLocator.Strata
-end PackSource_LemmaTProfile
-
-section PackSource_TwistedPolynomialFamily
-set_option autoImplicit true
+end
+section
 set_option backward.isDefEq.respectTransparency false
 set_option maxHeartbeats 2000000
 namespace FrobeniusLocator.Strata
@@ -2818,7 +2401,6 @@ noncomputable section
 open Polynomial Finset Matrix
 open scoped BigOperators
 variable {F ι : Type} [Field F] [Fintype F] [Fintype ι] [DecidableEq ι]
-
 theorem assemble_nodePolynomial (H : ℕ) (q : Fin (H+1) → F[X]) (a : F) :
     (Principal.assemble q).eval (Polynomial.C a)=Principal.nodePolynomial q a := by
   simp only [Principal.assemble,eval_finsetSum,eval_monomial,Principal.nodePolynomial]
@@ -2826,9 +2408,6 @@ theorem assemble_nodePolynomial (H : ℕ) (q : Fin (H+1) → F[X]) (a : F) :
   intro j _
   rw [← Polynomial.C_pow]
   ring
-
-/-- The polynomial-parameter form of Lemma T, including ONE common
-output polynomial R_Z(X). The finite-field size guard is explicit. -/
 theorem polynomial_twisted_output_of_section (p : ℕ) [ExpChar F p] (hp : 1≤p)
     (x u v : ι → F) (hx : Function.Injective x) (k H δ : ℕ)
     (hsize : k+H≤Fintype.card ι) (hcard : δ+p<Fintype.card F)
@@ -2873,10 +2452,6 @@ theorem polynomial_twisted_output_of_section (p : ℕ) [ExpChar F p] (hp : 1≤p
     hsize hword hcard houtput,?_⟩
   intro i
   rw [assemble_nodePolynomial,assemble_nodePolynomial,interpolationFamily_node x hx word i]
-
-/-- Full primitive polynomial Lemma-T section from the ACTUAL generic
-relation-line hypothesis. Minimality/uniqueness may be supplied by
-`generic_relation_line_of_level`; its Hilbert function is still explicit. -/
 theorem lemmaT_polynomial_family (p : ℕ) [ExpChar F p] (hp : 1≤p)
     (x u v : ι → F) (hx : Function.Injective x) (hfixed : ∀ i, x i^p=x i)
     (k m H : ℕ) (hkm : k+m=Fintype.card ι) (hH : H≤m)
@@ -2896,13 +2471,10 @@ theorem lemmaT_polynomial_family (p : ℕ) [ExpChar F p] (hp : 1≤p)
   obtain ⟨R,hR,hRv⟩ := polynomial_twisted_output_of_section p hp x u v hx k H ((2*H+1)*p)
     (by omega) hcard' Q hdeg (by intro γ; obtain ⟨R,_,hR⟩ := hsection γ; exact ⟨R,hR⟩)
   exact ⟨Q,R,hprim,hQ,hdeg,hR,hRv⟩
-
 end
 end FrobeniusLocator.Strata
-end PackSource_TwistedPolynomialFamily
-
-section PackSource_BookedLedger
-set_option autoImplicit true
+end
+section
 set_option backward.isDefEq.respectTransparency false
 set_option maxHeartbeats 2000000
 namespace FrobeniusLocator.Strata
@@ -2911,24 +2483,15 @@ open Polynomial Finset Matrix
 open scoped BigOperators
 variable {F ι β : Type} [Field F] [DecidableEq F] [Fintype ι] [DecidableEq ι] [Fintype β]
 local instance ledgerDecidable (P : Prop) : Decidable P := Classical.propDecidable P
-
 def fiberSequence (σ : β → F →+* F) (x u v : ι → F) (γ : F) : β → ℕ → F :=
   fun b j => σ b (syndrome x (fun i => u i+γ*v i) j)
-
 def principalFiber (σ : β → F →+* F) (x u v : ι → F) (m t : ℕ) (γ : F) : Prop :=
   ¬NonprincipalSpace (recurrenceSpace (fiberSequence σ x u v γ) m t) t
-
 def fiberNullity (σ : β → F →+* F) (x u v : ι → F) (m t : ℕ) (γ : F) : ℕ :=
   Module.finrank F (LinearMap.ker (recurrenceMatrixAll (fiberSequence σ x u v γ) m t).mulVecLin)
-
-/-- Exact principal three-block count still owed by the geometric theorem.
-This is an explicit predicate, NOT a theorem or new axiom. -/
 def EvaluatedPrincipalCap (σ : β → F →+* F) (x u v : ι → F) (k A m t : ℕ) : Prop :=
   ∀ Γ : Finset F, (∀ γ∈Γ, Principal.BadSlope x u v k A γ) →
     (∀ γ∈Γ, principalFiber σ x u v m t γ) → Γ.card≤principalThreePrice (Fintype.card ι) t
-
-/-- Badness supplies a full-degree split locator, so every nonprincipal
-fiber has nullity at least two. -/
 theorem bad_nonprincipal_nullity_ge_two (σ : β → F →+* F) (x u v : ι → F)
     (hx : Function.Injective x) (hfixed : ∀ b i, σ b (x i)=x i)
     (k A m L t : ℕ) (hkm : k+m=Fintype.card ι) (hm : m=L+t) (hA : A=k+L)
@@ -2947,9 +2510,6 @@ theorem bad_nonprincipal_nullity_ge_two (σ : β → F →+* F) (x u v : ι → 
     exact (hPv i hiS).symm
   exact nonprincipal_nullity_ge_two _ m t hnon (locator x E) hloc (locator_monic x E).ne_zero
     ((locator_natDegree x E).trans hE)
-
-/-- The exact requested residual count, after the two BOOKED geometric
-predicates have been imported. Normality refers to the actual old K2. -/
 def NormalResidualCap6915 (p : ℕ) [ExpChar F p] (x u v : ι → F) (r : ℕ) : Prop :=
   ∀ Γ : Finset F, (∀ γ∈Γ, Principal.BadSlope x u v 131072 180265 γ) →
     (∀ γ∈Γ, ((stacked p x u v 49193 81879).map (evalRingHom γ)).rank=81880-r) →
@@ -2957,10 +2517,6 @@ def NormalResidualCap6915 (p : ℕ) [ExpChar F p] (x u v : ι → F) (r : ℕ) :
       (fiberSequence (threeConjugations (frobenius F p)) x u v γ) 131072 81879) 81879) →
     (∀ γ∈Γ, 3≤fiberNullity (threeConjugations (frobenius F p)) x u v 131072 81879 γ) →
     Γ.card≤121058742343964669
-
-/-- Native additive ledger on actual bad slopes. PrincipalCap and
-PuncturedRegularCap remain EXPLICIT geometric hypotheses. Thus this
-statement does not claim the residual is the only remaining formal gap. -/
 theorem native_booked_strata_count [ExpChar F 2130706433]
     (x u v : ι → F) (hx : Function.Injective x) (hfixed : ∀ i, x i^2130706433=x i)
     (hn : Fintype.card ι=262144) (r : ℕ) (hr7 : 7≤r)
@@ -3009,13 +2565,10 @@ theorem native_booked_strata_count [ExpChar F 2130706433]
       omega
   exact (four_strata_count Γ drop princ two 69631486279633 25947601202251264 95993666704888298
     121058742343964669 hD hP hJ hR).trans_eq (by norm_num)
-
 end
 end FrobeniusLocator.Strata
-end PackSource_BookedLedger
-
-section PackSource_PrincipalKernel
-set_option autoImplicit true
+end
+section
 set_option backward.isDefEq.respectTransparency false
 namespace FrobeniusLocator.Principal
 noncomputable section
@@ -3023,9 +2576,6 @@ open Polynomial Finset Matrix
 open scoped BigOperators
 local instance decidablePrincipalKernel (P : Prop) : Decidable P := Classical.propDecidable P
 variable {F ι : Type} [Field F] [Fintype ι] [DecidableEq ι]
-
-/-- Principal homogeneous module data after removing the fixed domain
-factor. Nullity and primitive/cofactor bounds are explicit inputs. -/
 structure MovingPrincipalCertificate (p : ℕ) (x u v : ι → F) (L t : ℕ)
     (Δ : F[X]) where
   fixedRoots : Finset ι
@@ -3044,10 +2594,6 @@ structure MovingPrincipalCertificate (p : ℕ) (x u v : ι → F) (L t : ℕ)
     ((stacked p x u v L t).map (Polynomial.evalRingHom γ)).mulVec
       (multipleCoefficients (locator x fixedRoots * specialize coefficients γ)
         quotientDegree t Q) = 0
-
-/-- Principal generic kernels are cheap at arbitrary nullity. The
-certificate states the module, cofactor, primitive, and normal-rank data;
-the split-locator/root-incidence conclusion is fully proved here. -/
 theorem principal_bad_count (p : ℕ) [ExpChar F p]
     (x : ι → F) (hx : Function.Injective x) (hfixed : ∀ i, x i^p=x i)
     (u v : ι → F) (k A L t δ : ℕ) (hkA : k < A)
@@ -3107,13 +2653,10 @@ theorem principal_bad_count (p : ℕ) [ExpChar F p]
     Δ hΔ hΔdeg Γ hroots
   have hcard : Fintype.card {i // i ∉ H} = Fintype.card ι-H.card := by simp
   simpa only [hcard] using hcount
-
 end
 end FrobeniusLocator.Principal
-end PackSource_PrincipalKernel
-
-section PackSource_ConstantKernel
-set_option autoImplicit true
+end
+section
 set_option backward.isDefEq.respectTransparency false
 namespace FrobeniusLocator.Principal
 noncomputable section
@@ -3121,8 +2664,6 @@ open Polynomial Finset Matrix
 open scoped BigOperators
 local instance decidableConstant (P : Prop) : Decidable P := Classical.propDecidable P
 variable {F ι : Type} [Field F] [Fintype ι] [DecidableEq ι]
-
-/-- A constant polynomial kernel vector separates the ordinary u,v rows. -/
 theorem constant_vector_separates (p : ℕ) (x u v : ι → F) (L t : ℕ)
     (c : Fin (t+1) → F)
     (hc : (stacked p x u v L t).mulVec (fun j => C (c j)) = 0) :
@@ -3143,9 +2684,6 @@ theorem constant_vector_separates (p : ℕ) (x u v : ι → F) (L t : ℕ)
   simp_rw [add_mul] at h
   rw [Finset.sum_add_distrib, hu i, zero_add] at h
   exact h
-
-/-- The precise fixed-subspace normal-fiber contract. It is a mathematical
-certificate, not an assertion that every polynomial matrix has one. -/
 structure ConstantKernelCertificate (p : ℕ) (x u v : ι → F) (L t : ℕ)
     (Δ : F[X]) where
   space : Submodule F (Fin (t+1) → F)
@@ -3153,8 +2691,6 @@ structure ConstantKernelCertificate (p : ℕ) (x u v : ι → F) (L t : ℕ)
     (stacked p x u v L t).mulVec (fun j => C (c j)) = 0
   normal_inclusion : ∀ γ, Δ.eval γ ≠ 0 → ∀ c,
     ((stacked p x u v L t).map (Polynomial.evalRingHom γ)).mulVec c = 0 → c ∈ space
-
-/-- Fixed generic coefficient kernels have no normal MCA-bad slope. -/
 theorem constant_kernel_no_normal_bad (p : ℕ) [ExpChar F p]
     (x : ι → F) (hx : Function.Injective x) (hfixed : ∀ i, x i ^ p = x i)
     (u v : ι → F) (k A L t : ℕ) (hkA : k < A)
@@ -3188,7 +2724,6 @@ theorem constant_kernel_no_normal_bad (p : ℕ) [ExpChar F p]
   have hcomp : Finset.univ \ S = T := by simp [S]
   rw [hcomp] at hU hV
   exact hnonjoint ⟨hU,hV⟩
-
 theorem constant_kernel_count (p : ℕ) [ExpChar F p]
     (x : ι → F) (hx : Function.Injective x) (hfixed : ∀ i, x i ^ p = x i)
     (u v : ι → F) (k A L t δ : ℕ) (hkA : k < A)
@@ -3204,21 +2739,16 @@ theorem constant_kernel_count (p : ℕ) [ExpChar F p]
     exact constant_kernel_no_normal_bad p x hx hfixed u v k A L t hkA hL ht
       Δ hcert γ hn (hΓ γ hγ)
   · exact hΔdeg
-
 end
 end FrobeniusLocator.Principal
-end PackSource_ConstantKernel
-
-section PackSource_TypeOne
-set_option autoImplicit true
+end
+section
 set_option backward.isDefEq.respectTransparency false
 namespace FrobeniusLocator.Principal
 noncomputable section
 open Polynomial Finset
 open scoped BigOperators
 variable {F J : Type*} [Field F]
-
-/-- Type-one polynomial minors force proportional original syndrome rows. -/
 theorem type_one_proportional (a b : J → F) (p : ℕ) (hp : 1 < p)
     (hminor : ∀ i j,
       ((C (a i) + (Polynomial.X : F[X]) * C (b i)) : F[X]) * (C (a j ^ p) + (Polynomial.X : F[X]) ^ p * C (b j ^ p)) =
@@ -3252,29 +2782,22 @@ theorem type_one_proportional (a b : J → F) (p : ℕ) (hp : 1 < p)
   apply (eq_div_iff hj).mpr
   apply (mul_right_inj' hjp).mp
   linear_combination (a j) * h1 - (b j) * h0
-
 end
 end FrobeniusLocator.Principal
-end PackSource_TypeOne
-
-section PackSource_TypeOneCount
-set_option autoImplicit true
+end
+section
 set_option backward.isDefEq.respectTransparency false
 namespace FrobeniusLocator.Principal
 noncomputable section
 open Polynomial Finset
 open scoped BigOperators
 variable {F ι : Type} [Field F] [Fintype ι] [DecidableEq ι]
-
 def TypeOneSyndromes (x u v : ι → F) (k p : ℕ) : Prop :=
   ∀ i j : Fin (Fintype.card ι-k),
     ((C (syndrome x u i.val) + (Polynomial.X : F[X])*C (syndrome x v i.val)) *
       (C (syndrome x u j.val ^ p) + (Polynomial.X : F[X])^p*C (syndrome x v j.val ^ p))) =
     ((C (syndrome x u j.val) + (Polynomial.X : F[X])*C (syndrome x v j.val)) *
       (C (syndrome x u i.val ^ p) + (Polynomial.X : F[X])^p*C (syndrome x v i.val ^ p)))
-
-/-- Type one of the two full syndrome functionals costs at most one
-MCA-bad slope. No generic-rank or primitive-vector hypothesis remains. -/
 theorem type_one_bad_count (x : ι → F) (hx : Function.Injective x)
     (u v : ι → F) (k A p : ℕ) (hk : k ≤ Fintype.card ι) (hp : 1 < p)
     (hminor : ∀ i j : Fin (Fintype.card ι-k),
@@ -3303,20 +2826,16 @@ theorem type_one_bad_count (x : ι → F) (hx : Function.Injective x)
       ring
     apply bad_slope_card_le_one_of_relation x u v k A (-c) 1 (Or.inr one_ne_zero) _ Γ hΓ
     simpa only [one_mul] using hrel
-
 end
 end FrobeniusLocator.Principal
-end PackSource_TypeOneCount
-
-section PackSource_BadSlopeBridge
-set_option autoImplicit true
+end
+section
 set_option backward.isDefEq.respectTransparency false
 namespace FrobeniusLocator.Principal
 noncomputable section
 open Polynomial Finset CoreDefinitions Code LinearCode
 open scoped BigOperators
 variable {F ι : Type} [Field F] [Fintype F] [Fintype ι] [DecidableEq ι]
-
 theorem projected_mem_iff_extendsOn (x : ι ↪ F) (w : ι → F)
     (k : ℕ) [NeZero k] (T : Finset ι) :
     projectedWord w T ∈ projectedCodeSubmod (ReedSolomon.code x k) T ↔
@@ -3340,8 +2859,6 @@ theorem projected_mem_iff_extendsOn (x : ι ↪ F) (w : ι → F)
     · exact ReedSolomon.mem_code_iff_eval_of_ne_zero.mpr ⟨P,hPn,fun _ => rfl⟩
     · funext i
       exact (hPv i.val i.property).symm
-
-/-- Preserve native nonjointness, not just native A-closeness. -/
 theorem isMCA_implies_badSlope (x : ι ↪ F) (U : Fin 2 → ι → F)
     (k A : ℕ) [NeZero k] (δ : ℝ)
     (hthreshold : ∀ T : Finset ι,
@@ -3357,20 +2874,14 @@ theorem isMCA_implies_badSlope (x : ι ↪ F) (U : Fin 2 → ι → F)
     fin_cases j
     · exact hj ((projected_mem_iff_extendsOn x _ k T).mpr h.1)
     · exact hj ((projected_mem_iff_extendsOn x _ k T).mpr h.2)
-
 end
 end FrobeniusLocator.Principal
-end PackSource_BadSlopeBridge
-
-section PackSource_PolynomialRelationCertificate
-set_option autoImplicit true
+end
+section
 namespace FrobeniusLocator.Strata
 noncomputable section
 open Polynomial Matrix
 variable {F ι : Type} [Field F] [Fintype ι] [DecidableEq ι]
-
-/-- A literal finite-parameter primitive Lemma-T witness, with both
-polynomial variables and both degree conventions recorded. -/
 structure PolynomialRelationCertificate (p : ℕ) (x u v : ι → F) (k H : ℕ) where
   coefficients : Fin 2 × Fin (H+1) → F[X]
   output : Polynomial (Polynomial F)
@@ -3384,7 +2895,6 @@ structure PolynomialRelationCertificate (p : ℕ) (x u v : ι → F) (k H : ℕ)
     (Principal.assemble (fun j => coefficients (1,j))).eval (Polynomial.C (x i))*
       (Polynomial.C (u i^p)+(Polynomial.X : F[X])^p*Polynomial.C (v i^p))=
     output.eval (Polynomial.C (x i))
-
 def polynomialRelationCertificate_of_nullity_one [Fintype F]
     (p : ℕ) [ExpChar F p] (hp : 1≤p) (x u v : ι → F)
     (hx : Function.Injective x) (hfixed : ∀ i, x i^p=x i)
@@ -3395,119 +2905,10 @@ def polynomialRelationCertificate_of_nullity_one [Fintype F]
   apply Classical.choice
   obtain ⟨Q,R,hprim,hQ,hdeg,hR,hRv⟩ := lemmaT_polynomial_family p hp x u v hx hfixed k m H hkm hH hcard hnull
   exact ⟨⟨Q,R,hprim,hdeg,fun b => Principal.assemble_natDegree_le _,hR,hRv⟩⟩
-
 end
 end FrobeniusLocator.Strata
-end PackSource_PolynomialRelationCertificate
-
-section PackSource_K1_2BadDeletion
-set_option autoImplicit true
-set_option autoImplicit false
-
-/-! Good-node deletions of the SAME nonjoint support. The lower bound is
-sharp; it does not choose an unrelated decoder after puncturing. -/
-namespace K1_2.Mixed
-open FrobeniusLocator
-open FrobeniusLocator.Principal
-noncomputable section
-open Polynomial Finset
-variable {F ι : Type} [Field F] [DecidableEq ι]
-local instance decProp (P : Prop) : Decidable P := Classical.propDecidable P
-
-def JointOn (x u v : ι → F) (k : ℕ) (S : Finset ι) : Prop :=
-  ExtendsOn x u k S ∧ ExtendsOn x v k S
-
-theorem deletion_intersection_large (S J J' : Finset ι) (k j : ℕ)
-    (hsize : k+2*j ≤ S.card) (hJ : J.card=j) (hJ' : J'.card=j) :
-    k ≤ ((S\J) ∩ (S\J')).card := by
-  have hcover : S ⊆ ((S\J) ∩ (S\J')) ∪ J ∪ J' := by
-    intro i hi
-    by_cases h : i∈J
-    · exact mem_union_left _ (mem_union_right _ h)
-    · by_cases h' : i∈J'
-      · exact mem_union_right _ h'
-      · exact mem_union_left _ (mem_union_left _ (mem_inter.mpr
-          ⟨mem_sdiff.mpr ⟨hi,h⟩,mem_sdiff.mpr ⟨hi,h'⟩⟩))
-  have hc := card_le_card hcover
-  have h1 := card_union_le (((S\J) ∩ (S\J')) ∪ J) J'
-  have h2 := card_union_le ((S\J) ∩ (S\J')) J
-  omega
-
-theorem polynomial_unique_on_deletions (x : ι → F) (hx : Function.Injective x)
-    (u : ι → F) (k j : ℕ) (S J J' : Finset ι)
-    (hsize : k+2*j ≤ S.card) (hJ : J.card=j) (hJ' : J'.card=j)
-    (P Q : F[X]) (hP : P.degree<k) (hQ : Q.degree<k)
-    (hPv : ∀ i∈S\J,P.eval (x i)=u i)
-    (hQv : ∀ i∈S\J',Q.eval (x i)=u i) : P=Q := by
-  have hcard := deletion_intersection_large S J J' k j hsize hJ hJ'
-  apply Polynomial.eq_of_degrees_lt_of_eval_index_eq ((S\J) ∩ (S\J'))
-    (fun a _ b _ hab => hx hab)
-    (hP.trans_le (by exact_mod_cast hcard))
-    (hQ.trans_le (by exact_mod_cast hcard))
-  intro i hi
-  exact (hPv i (mem_inter.mp hi).1).trans (hQv i (mem_inter.mp hi).2).symm
-
-/-- If one retained set is jointly explained, every other such set has
-the SAME explaining polynomial pair. -/
-theorem joint_deletions_same_pair (x : ι → F) (hx : Function.Injective x)
-    (u v : ι → F) (k j : ℕ) (S J J' : Finset ι)
-    (hsize : k+2*j ≤ S.card) (hJ : J.card=j) (hJ' : J'.card=j)
-    (P0 P1 Q0 Q1 : F[X])
-    (hP0 : P0.degree<k) (hP1 : P1.degree<k)
-    (hQ0 : Q0.degree<k) (hQ1 : Q1.degree<k)
-    (hPv0 : ∀ i∈S\J,P0.eval (x i)=u i)
-    (hPv1 : ∀ i∈S\J,P1.eval (x i)=v i)
-    (hQv0 : ∀ i∈S\J',Q0.eval (x i)=u i)
-    (hQv1 : ∀ i∈S\J',Q1.eval (x i)=v i) : P0=Q0 ∧ P1=Q1 :=
-  ⟨polynomial_unique_on_deletions x hx u k j S J J' hsize hJ hJ' P0 Q0 hP0 hQ0 hPv0 hQv0,
-   polynomial_unique_on_deletions x hx v k j S J J' hsize hJ hJ' P1 Q1 hP1 hQ1 hPv1 hQv1⟩
-
-/-- At least choose(B-1,j) agreement-node deletions retain nonjointness,
-provided B-2j>=k. Both polynomial degrees remain <k. -/
-theorem bad_good_deletion_count (x : ι → F) (hx : Function.Injective x)
-    (u v : ι → F) (k j : ℕ) (S : Finset ι)
-    (hsize : k+2*j ≤ S.card) (hbad : ¬JointOn x u v k S) :
-    (S.card-1).choose j ≤
-      ((S.powersetCard j).filter (fun J => ¬JointOn x u v k (S\J))).card := by
-  classical
-  by_cases hex : ∃ J∈S.powersetCard j,JointOn x u v k (S\J)
-  · obtain ⟨J0,hJ0,⟨P0,hP0,hPv0⟩,⟨P1,hP1,hPv1⟩⟩ := hex
-    obtain ⟨i,hi,hfail⟩ : ∃ i∈S,P0.eval (x i)≠u i ∨ P1.eval (x i)≠v i := by
-      by_contra hn
-      push Not at hn
-      exact hbad ⟨⟨P0,hP0,fun i hi => (hn i hi).1⟩,
-        ⟨P1,hP1,fun i hi => (hn i hi).2⟩⟩
-    have hsub : (S.erase i).powersetCard j ⊆
-        (S.powersetCard j).filter (fun J => ¬JointOn x u v k (S\J)) := by
-      intro J hJ
-      obtain ⟨hJS,hJcard⟩ := mem_powersetCard.mp hJ
-      apply mem_filter.mpr
-      refine ⟨mem_powersetCard.mpr ⟨hJS.trans (erase_subset _ _),hJcard⟩,?_⟩
-      rintro ⟨⟨Q0,hQ0,hQv0⟩,⟨Q1,hQ1,hQv1⟩⟩
-      obtain ⟨h0,h1⟩ := joint_deletions_same_pair x hx u v k j S J0 J
-        hsize (mem_powersetCard.mp hJ0).2 hJcard P0 P1 Q0 Q1
-        hP0 hP1 hQ0 hQ1 hPv0 hPv1 hQv0 hQv1
-      have hiJ : i∉J := fun h => (notMem_erase i S) (hJS h)
-      have hi' : i∈S\J := mem_sdiff.mpr ⟨hi,hiJ⟩
-      rcases hfail with h | h
-      · exact h (h0 ▸ hQv0 i hi')
-      · exact h (h1 ▸ hQv1 i hi')
-    have hc := card_le_card hsub
-    simpa only [card_powersetCard,card_erase_of_mem hi] using hc
-  · have heq : (S.powersetCard j).filter (fun J => ¬JointOn x u v k (S\J)) =
-        S.powersetCard j := by
-      apply filter_eq_self.mpr
-      intro J hJ hj
-      exact hex ⟨J,hJ,hj⟩
-    rw [heq,card_powersetCard]
-    exact Nat.choose_le_choose j (Nat.sub_le _ _)
-
 end
-end K1_2.Mixed
-end PackSource_K1_2BadDeletion
-
-section PackSource_CommonCompression
-set_option autoImplicit true
+section
 set_option backward.isDefEq.respectTransparency false
 set_option maxHeartbeats 2000000
 namespace FrobeniusLocator.Strata
@@ -3515,14 +2916,10 @@ noncomputable section
 open Finset Matrix MvPolynomial
 open scoped BigOperators
 variable {F row τ : Type} [Field F] [Fintype row] [DecidableEq row]
-
-/-- Universal constant row-compression coefficients as independent variables. -/
 def universalCompression (r : ℕ) : Matrix (Fin r) row (MvPolynomial (Fin r × row) F) :=
   fun i j => MvPolynomial.X (i,j)
-
 def compressionMinor {r : ℕ} (A : Matrix row (Fin r) F) : MvPolynomial (Fin r × row) F :=
   (universalCompression r*A.map MvPolynomial.C).det
-
 theorem compressionMinor_eval {r : ℕ} (A : Matrix row (Fin r) F) (x : Fin r × row → F) :
     MvPolynomial.eval x (compressionMinor A)=(Matrix.of (fun i j => x (i,j))*A).det := by
   let φ := MvPolynomial.eval₂Hom (RingHom.id F) x
@@ -3534,7 +2931,6 @@ theorem compressionMinor_eval {r : ℕ} (A : Matrix row (Fin r) F) (x : Fin r ×
   ext i j
   simp only [Matrix.map_apply,Matrix.mul_apply,map_sum,map_mul,universalCompression,
     Matrix.of_apply,φ,MvPolynomial.coe_eval₂Hom,MvPolynomial.eval₂_sum,MvPolynomial.eval₂_mul,MvPolynomial.eval₂_X,MvPolynomial.eval₂_C,RingHom.id_apply]
-
 theorem compressionMinor_degree {r : ℕ} (A : Matrix row (Fin r) F) :
     (compressionMinor A).totalDegree≤r := by
   let N : Matrix (Fin r) (Fin r) (MvPolynomial (Fin r × row) F) := universalCompression r*A.map MvPolynomial.C
@@ -3546,7 +2942,6 @@ theorem compressionMinor_degree {r : ℕ} (A : Matrix row (Fin r) F) :
     exact (MvPolynomial.totalDegree_mul _ _).trans (by simp [universalCompression])
   have hh := totalDegree_det_le_row_sum N (fun _ => 1) hentry
   simpa [N,compressionMinor] using hh
-
 theorem compressionMinor_ne_zero {r : ℕ} (A : Matrix row (Fin r) F)
     (hA : A.rank=r) : compressionMinor A≠0 := by
   classical
@@ -3561,10 +2956,6 @@ theorem compressionMinor_ne_zero {r : ℕ} (A : Matrix row (Fin r) F)
     exact hrows
   intro hz
   exact heval (by rw [hz]; simp)
-
-/-- A SINGLE constant row compression avoids the first-column minor at
-all selected points. Native F is finite; the explicit degree/cardinality
-guard replaces an unnecessary algebraic-closure/infinite-field detour. -/
 theorem exists_common_row_compression [Fintype F] [DecidableEq F]
     (S : Finset τ) (r : ℕ) (A : τ → Matrix row (Fin r) F)
     (hA : ∀ z∈S, (A z).rank=r) (hcard : S.card*r<Fintype.card F) :
@@ -3584,188 +2975,10 @@ theorem exists_common_row_compression [Fintype F] [DecidableEq F]
     simpa only [p,map_prod] using hx
   have hn := Finset.prod_ne_zero_iff.mp hprod z hz
   rwa [compressionMinor_eval] at hn
-
 end
 end FrobeniusLocator.Strata
-end PackSource_CommonCompression
-
-section PackSource_K1_2MixedDeletions
-set_option autoImplicit true
-set_option autoImplicit false
-
-namespace K1_2.Mixed
-noncomputable section
-open Finset
-variable {F ι : Type} [Field F] [DecidableEq ι]
-local instance decMixed (P : Prop) : Decidable P := Classical.propDecidable P
-
-theorem disjoint_union_pair_injective (E S : Finset ι) (hES : Disjoint E S)
-    (p q : Finset ι × Finset ι)
-    (hpE : p.1⊆E) (hpS : p.2⊆S) (hqE : q.1⊆E) (hqS : q.2⊆S)
-    (heq : p.1∪p.2=q.1∪q.2) : p=q := by
-  have hd : ∀ i∈E,i∉S := fun i hi => (disjoint_left.mp hES hi)
-  have hfirst : p.1=q.1 := by
-    ext i
-    constructor
-    · intro hi
-      have hm : i∈q.1∪q.2 := heq ▸ mem_union_left _ hi
-      exact (mem_union.mp hm).resolve_right (fun h => hd i (hpE hi) (hqS h))
-    · intro hi
-      have hm : i∈p.1∪p.2 := heq.symm ▸ mem_union_left _ hi
-      exact (mem_union.mp hm).resolve_right (fun h => hd i (hqE hi) (hpS h))
-  have hsecond : p.2=q.2 := by
-    ext i
-    constructor
-    · intro hi
-      have hm : i∈q.1∪q.2 := heq ▸ mem_union_right _ hi
-      exact (mem_union.mp hm).resolve_left (fun h => hd i (hqE h) (hpS hi))
-    · intro hi
-      have hm : i∈p.1∪p.2 := heq.symm ▸ mem_union_right _ hi
-      exact (mem_union.mp hm).resolve_left (fun h => hd i (hpE h) (hqS hi))
-  exact Prod.ext hfirst hsecond
-
-def goodDeletions (x u v : ι→F) (k j : ℕ) (S : Finset ι) : Finset (Finset ι) :=
-  (S.powersetCard j).filter (fun J => ¬JointOn x u v k (S\J))
-
-def mixedDeletions (x u v : ι→F) (k b j : ℕ) (E S : Finset ι) : Finset (Finset ι) :=
-  ((E.powersetCard b).product (goodDeletions x u v k j S)).image (fun p => p.1∪p.2)
-
-theorem mixedDeletions_card (x u v : ι→F) (k b j : ℕ) (E S : Finset ι)
-    (hES : Disjoint E S) :
-    (mixedDeletions x u v k b j E S).card =
-      E.card.choose b*(goodDeletions x u v k j S).card := by
-  unfold mixedDeletions
-  rw [card_image_of_injOn]
-  · simp only [Finset.product_eq_sprod,Finset.card_product,card_powersetCard]
-  intro p hp q hq heq
-  obtain ⟨hpE,hpS⟩ := mem_product.mp hp
-  obtain ⟨hqE,hqS⟩ := mem_product.mp hq
-  apply disjoint_union_pair_injective E S hES p q
-    (mem_powersetCard.mp hpE).1
-    (mem_powersetCard.mp (mem_filter.mp hpS).1).1
-    (mem_powersetCard.mp hqE).1
-    (mem_powersetCard.mp (mem_filter.mp hqS).1).1 heq
-
-theorem mixedDeletions_lower_bound (x u v : ι→F) (hx : Function.Injective x)
-    (k b j : ℕ) (E S : Finset ι) (hES : Disjoint E S)
-    (hsize : k+2*j≤S.card) (hbad : ¬JointOn x u v k S) :
-    E.card.choose b*(S.card-1).choose j ≤
-      (mixedDeletions x u v k b j E S).card := by
-  rw [mixedDeletions_card x u v k b j E S hES]
-  exact Nat.mul_le_mul_left _ (bad_good_deletion_count x hx u v k j S hsize hbad)
-
-theorem mixedDeletions_spec (x u v : ι→F) (k b j : ℕ) (E S I : Finset ι)
-    (hES : Disjoint E S) (hI : I∈mixedDeletions x u v k b j E S) :
-    I⊆E∪S ∧ I.card=b+j ∧ (S\I).card=S.card-j ∧
-      ¬JointOn x u v k (S\I) := by
-  obtain ⟨⟨B,J⟩,hmem,rfl⟩ := mem_image.mp hI
-  obtain ⟨hB,hJ⟩ := mem_product.mp hmem
-  obtain ⟨hBE,hBc⟩ := mem_powersetCard.mp hB
-  obtain ⟨hJS,hJc⟩ := mem_powersetCard.mp (mem_filter.mp hJ).1
-  have hd : Disjoint B J := hES.mono hBE hJS
-  have hremain : S\(B∪J)=S\J := by
-    ext i
-    simp only [mem_sdiff,mem_union,not_or]
-    constructor
-    · exact fun h => ⟨h.1,h.2.2⟩
-    · intro h
-      exact ⟨h.1,fun hi => disjoint_left.mp hES (hBE hi) h.1,h.2⟩
-  refine ⟨union_subset_union hBE hJS,?_,?_,?_⟩
-  · rw [card_union_of_disjoint hd,hBc,hJc]
-  · rw [hremain,card_sdiff_of_subset hJS,hJc]
-  · rw [hremain]
-    exact (mem_filter.mp hJ).2
-
 end
-end K1_2.Mixed
-end PackSource_K1_2MixedDeletions
-
-section PackSource_K1_2SharedMixedCount
-set_option autoImplicit true
-set_option autoImplicit false
-set_option backward.isDefEq.respectTransparency false
-
-/-! This is the complete finite shared-deletion argument. Its remaining
-child-price premise is explicit, and is not a native geometric theorem. -/
-namespace K1_2.Mixed
-noncomputable section
-open Finset
-variable {F ι : Type} [Field F] [DecidableEq F] [DecidableEq ι]
-local instance decSharedMixed (P : Prop) : Decidable P := Classical.propDecidable P
-
-theorem shared_mixed_rational_count (x u v : ι→F) (hx : Function.Injective x)
-    (nodes : Finset ι) (Γ : Finset F) (k A T vcount c numerator denominator : ℕ)
-    (S E : F→Finset ι) (U : F→ℕ)
-    (hAT : T≤A) (hfit : vcount+c≤T) (hguard : k+vcount+2*c≤A)
-    (hwitness : ∀ γ∈Γ, U γ≤vcount ∧ (S γ).card=A+U γ ∧
-      (E γ).card=T-U γ ∧ Disjoint (E γ) (S γ) ∧ E γ∪S γ⊆nodes ∧
-      ¬JointOn x u v k (S γ))
-    (hchild : ∀ I∈nodes.powersetCard (vcount+2*c),
-      denominator*(Γ.filter (fun γ =>
-        I∈mixedDeletions x u v k (vcount-U γ+c) (U γ+c) (E γ) (S γ))).card≤numerator) :
-    denominator*(T.choose (vcount+c)*(A-1).choose c)*Γ.card ≤
-      nodes.card.choose (vcount+2*c)*numerator := by
-  classical
-  let incident : Finset ι→F→Prop := fun I γ =>
-    I∈mixedDeletions x u v k (vcount-U γ+c) (U γ+c) (E γ) (S γ)
-  have hparent : ∀ γ∈Γ,T.choose (vcount+c)*(A-1).choose c≤
-      ((nodes.powersetCard (vcount+2*c)).filter (fun I => incident I γ)).card := by
-    intro γ hγ
-    obtain ⟨hU,hS,hE,hES,hsub,hbad⟩ := hwitness γ hγ
-    have hsize : k+2*(U γ+c)≤(S γ).card := by rw [hS]; omega
-    have hlow := mixedDeletions_lower_bound x u v hx k (vcount-U γ+c) (U γ+c)
-      (E γ) (S γ) hES hsize hbad
-    rw [hS,hE] at hlow
-    have hbeta := deletionBeta_zero_le T A vcount c (U γ) hAT hU hfit
-    have hlow' : T.choose (vcount+c)*(A-1).choose c≤
-        (mixedDeletions x u v k (vcount-U γ+c) (U γ+c) (E γ) (S γ)).card := by
-      have hbeta' : T.choose (vcount+c)*(A-1).choose c≤
-          (T-U γ).choose (vcount-U γ+c)*(A+U γ-1).choose (U γ+c) := by
-        simpa only [deletionBeta,Nat.sub_zero,Nat.add_zero,Nat.zero_add] using hbeta
-      exact hbeta'.trans hlow
-    apply hlow'.trans
-    apply card_le_card
-    intro I hI
-    obtain ⟨hIS,hIc,hremain,hbad'⟩ := mixedDeletions_spec x u v k
-      (vcount-U γ+c) (U γ+c) (E γ) (S γ) I hES hI
-    exact mem_filter.mpr ⟨mem_powersetCard.mpr ⟨hIS.trans hsub,by omega⟩,hI⟩
-  have hh := shared_child_rational_incidence
-    (nodes.powersetCard (vcount+2*c)) Γ incident
-    (T.choose (vcount+c)*(A-1).choose c) numerator denominator
-    (by
-      intro γ hγ
-      convert hparent γ hγ using 1 <;> congr 2)
-    (by
-      intro I hI
-      convert hchild I hI using 1
-      congr 2
-      ext γ
-      simp only [mem_filter,incident])
-  simpa only [card_powersetCard] using hh
-
-theorem shared_mixed_count_floor (x u v : ι→F) (hx : Function.Injective x)
-    (nodes : Finset ι) (Γ : Finset F) (k A T vcount c numerator denominator : ℕ)
-    (S E : F→Finset ι) (U : F→ℕ)
-    (hAT : T≤A) (hfit : vcount+c≤T) (hguard : k+vcount+2*c≤A)
-    (hpositive : 0<denominator*(T.choose (vcount+c)*(A-1).choose c))
-    (hwitness : ∀ γ∈Γ, U γ≤vcount ∧ (S γ).card=A+U γ ∧
-      (E γ).card=T-U γ ∧ Disjoint (E γ) (S γ) ∧ E γ∪S γ⊆nodes ∧
-      ¬JointOn x u v k (S γ))
-    (hchild : ∀ I∈nodes.powersetCard (vcount+2*c),
-      denominator*(Γ.filter (fun γ =>
-        I∈mixedDeletions x u v k (vcount-U γ+c) (U γ+c) (E γ) (S γ))).card≤numerator) :
-    Γ.card≤(nodes.card.choose (vcount+2*c)*numerator)/
-      (denominator*(T.choose (vcount+c)*(A-1).choose c)) := by
-  apply (Nat.le_div_iff_mul_le hpositive).mpr
-  simpa only [Nat.mul_comm Γ.card] using shared_mixed_rational_count x u v hx
-    nodes Γ k A T vcount c numerator denominator S E U hAT hfit hguard hwitness hchild
-
-end
-end K1_2.Mixed
-end PackSource_K1_2SharedMixedCount
-
-section PackSource_CompressedKernel
-set_option autoImplicit true
+section
 set_option backward.isDefEq.respectTransparency false
 set_option maxHeartbeats 1000000
 namespace FrobeniusLocator.Strata
@@ -3773,7 +2986,6 @@ noncomputable section
 open Finset Matrix
 open scoped BigOperators
 variable {F row col : Type} [Field F] [Fintype row] [Fintype col] [DecidableEq col]
-
 theorem kernel_eq_compressed_of_equal_rank (M : Matrix row col F) (r : ℕ)
     (C : Matrix (Fin r) row F) (hMrank : M.rank=(C*M).rank) :
     LinearMap.ker M.mulVecLin=LinearMap.ker (C*M).mulVecLin := by
@@ -3788,7 +3000,6 @@ theorem kernel_eq_compressed_of_equal_rank (M : Matrix row col F) (r : ℕ)
   apply Submodule.eq_of_le_of_finrank_eq hle
   rw [hMrank] at hM
   omega
-
 theorem compressed_rank_eq_of_pivot (M : Matrix row col F) (r : ℕ)
     (C : Matrix (Fin r) row F) (cols : Fin r → col)
     (hdet : ((C*M).submatrix id cols).det≠0) (hrank : M.rank≤r) :
@@ -3799,17 +3010,13 @@ theorem compressed_rank_eq_of_pivot (M : Matrix row col F) (r : ℕ)
   rw [Fintype.card_fin] at hhi
   have hmul := Matrix.rank_mul_le_right C M
   omega
-
 section Ring
 variable {R : Type} [CommRing R] {r : ℕ}
-
 def lastCofactor (N : Matrix (Fin r) (Fin (r+1)) R) : Fin (r+1) → R :=
   GenericCofactor.rawVector N id Fin.castSucc (Fin.last r)
-
 theorem lastCofactor_annihilates (N : Matrix (Fin r) (Fin (r+1)) R) :
     N.mulVec (lastCofactor N)=0 := by
   exact GenericCofactor.selected_annihilates N id Fin.castSucc (Fin.last r)
-
 theorem lastCofactor_last (N : Matrix (Fin r) (Fin (r+1)) R) :
     lastCofactor N (Fin.last r)=(N.submatrix id Fin.castSucc).det := by
   have hne (j : Fin r) : j.castSucc≠Fin.last r := by intro h; have hh := congrArg Fin.val h; have := j.isLt; simp only [Fin.val_castSucc,Fin.val_last] at hh; omega
@@ -3818,7 +3025,6 @@ theorem lastCofactor_last (N : Matrix (Fin r) (Fin (r+1)) R) :
   simp only [Pi.sub_apply,Pi.smul_apply,smul_eq_mul,Pi.single_eq_same,mul_one,Matrix.mulVec,dotProduct,
     GenericCofactor.inclusion,Pi.single_apply,hne',ite_false,zero_mul,Finset.sum_const_zero,sub_zero]
 end Ring
-
 theorem compressed_lastCofactor_kernel {r : ℕ} (M : Matrix row (Fin (r+1)) F)
     (C : Matrix (Fin r) row F)
     (hdet : ((C*M).submatrix id Fin.castSucc).det≠0) (hrank : M.rank≤r) :
@@ -3828,27 +3034,18 @@ theorem compressed_lastCofactor_kernel {r : ℕ} (M : Matrix row (Fin (r+1)) F)
   have hker : lastCofactor (C*M)∈LinearMap.ker (C*M).mulVecLin := lastCofactor_annihilates _
   rw [← heq] at hker
   exact ⟨hker,by rw [lastCofactor_last]; exact hdet⟩
-
 end
 end FrobeniusLocator.Strata
-end PackSource_CompressedKernel
-
-section PackSource_K1_3Moments
-set_option autoImplicit true
+end
+section
 set_option backward.isDefEq.respectTransparency false
-
 namespace K1_3
 noncomputable section
-
 open Polynomial Matrix Finset FrobeniusLocator
 open scoped BigOperators
-
 variable {F ι : Type} [Field F] [Fintype ι] [DecidableEq ι]
-
-/-- Power evaluation on the actual error nodes. -/
 def powers (x : ι → F) (b : ℕ) : Matrix ι (Fin b) F :=
   fun i j => x i ^ j.val
-
 omit [DecidableEq ι] in
 theorem powers_rank (x : ι → F) (hx : Function.Injective x) (b : ℕ) :
     (powers x b).rank = min (Fintype.card ι) b := by
@@ -3861,8 +3058,6 @@ theorem powers_rank (x : ι → F) (hx : Function.Injective x) (b : ℕ) :
   rw [← Strata.boundedEvaluation_rank x hx b, ← he,
     LinearMap.range_comp_of_range_eq_top _ (LinearMap.range_eq_top.mpr e.surjective)]
   rfl
-
-/-- Every moment in the dual range is contributed by the errors. -/
 theorem error_moment (x w : ι → F) (hx : Function.Injective x) (P : F[X])
     (k j : ℕ) (hP : P.degree < k) (hj : k + j < Fintype.card ι)
     (E : Finset ι) (hout : ∀ i, i ∉ E → w i = P.eval (x i)) :
@@ -3873,8 +3068,6 @@ theorem error_moment (x w : ι → F) (hx : Function.Injective x) (P : F[X])
   apply Finset.sum_subset (Finset.subset_univ E)
   intro i _ hi
   simp [hout i hi]
-
-/-- The moment matrix factors through the error set, with one diagonal of errors. -/
 theorem moment_factor (x w : ι → F) (hx : Function.Injective x) (P : F[X])
     (k l b : ℕ) (hP : P.degree < k) (hsize : k + l + b ≤ Fintype.card ι + 1)
     (E : Finset ι) (hout : ∀ i, i ∉ E → w i = P.eval (x i)) :
@@ -3892,7 +3085,6 @@ theorem moment_factor (x w : ι → F) (hx : Function.Injective x) (P : F[X])
   intro a ha
   rw [pow_add]
   ring
-
 theorem evaluated_hankel (x u v : ι → F) (γ : F) (l t : ℕ) :
     (hankel x u v l t).map (evalRingHom γ) =
       Matrix.of (fun (i : Fin l) (j : Fin (t + 1)) =>
@@ -3901,9 +3093,6 @@ theorem evaluated_hankel (x u v : ι → F) (γ : F) (l t : ℕ) :
   simpa only [Matrix.of_apply, Matrix.map_apply, coe_evalRingHom, hankel,
     eval_add, eval_mul, eval_C, eval_X, one_mul] using
       (Principal.syndrome_linear x u v 1 γ (i.val + j.val)).symm
-
-/-- When all error columns fit in the right Vandermonde, the ordinary rank
-is the minimum of the number of rows and the number of nonzero errors. -/
 theorem evaluated_hankel_rank (x u v : ι → F) (hx : Function.Injective x) (γ : F)
     (P : F[X]) (k l t : ℕ) (hP : P.degree < k) (hsize : k + l + t ≤ Fintype.card ι)
     (E : Finset ι) (hE : E.card ≤ t + 1)
@@ -3922,9 +3111,6 @@ theorem evaluated_hankel_rank (x u v : ι → F) (hx : Function.Injective x) (γ
   rw [Matrix.det_diagonal]
   exact Finset.prod_ne_zero_iff.mpr (fun i _ =>
     mul_ne_zero (Strata.weight_ne_zero x hx _) (sub_ne_zero.mpr (hin i.val i.property)))
-
-/-- A square moment matrix on exactly as many distinct nonzero errors as rows
-has nonzero determinant, including the empty square matrix. -/
 theorem moment_det_ne_zero (x w : ι → F) (hx : Function.Injective x) (P : F[X])
     (k d : ℕ) (hP : P.degree < k) (hsize : k + d + d ≤ Fintype.card ι + 1)
     (E : Finset ι) (hE : E.card = d)
@@ -3953,9 +3139,6 @@ theorem moment_det_ne_zero (x w : ι → F) (hx : Function.Injective x) (P : F[X
   rw [hfactor, Matrix.det_mul, Matrix.det_mul, Matrix.det_transpose, Matrix.det_diagonal]
   exact mul_ne_zero (mul_ne_zero hV (Finset.prod_ne_zero_iff.mpr fun i _ =>
     mul_ne_zero (Strata.weight_ne_zero x hx _) (sub_ne_zero.mpr (hin _ (e i).property)))) hV
-
-/-- For a monic locator on the errors, the evaluated cofactor vector is that
-locator's coefficient vector multiplied by the pivot determinant. -/
 theorem cofactor_at_nodes (x u v : ι → F) (hx : Function.Injective x) (γ : F)
     (P : F[X]) (k d : ℕ) (hP : P.degree < k) (hsize : k + d + d ≤ Fintype.card ι)
     (E : Finset ι) (hE : E.card = d)
@@ -4025,22 +3208,16 @@ theorem cofactor_at_nodes (x u v : ι → F) (hx : Function.Injective x) (γ : F
     ring
   · simp only [f, Option.elim_none, Fin.val_last]
     ring
-
 end
 end K1_3
-end PackSource_K1_3Moments
-
-section PackSource_PrincipalRowBasis
-set_option autoImplicit true
+end
+section
 set_option backward.isDefEq.respectTransparency false
 namespace FrobeniusLocator.Principal
 noncomputable section
 open Polynomial Finset Matrix
 open scoped BigOperators
 variable {F ι K : Type} [Field F] [Field K] [Fintype ι] [DecidableEq ι]
-
-/-- A row-basis certificate supplies exactly the normal nullity used by
-the principal specialization theorem. No per-slope rank assumption. -/
 theorem principal_normal_nullity (φ : F[X] →+* K) (hφ : Function.Injective φ)
     (p : ℕ) (x u v : ι → F) (L t a q : ℕ) (haq : a+q=t)
     (B : NormalFiber.RowBasis φ (stacked p x u v L t) a)
@@ -4053,9 +3230,6 @@ theorem principal_normal_nullity (φ : F[X] →+* K) (hφ : Function.Injective �
   change ((stacked p x u v L t).map (Polynomial.evalRingHom γ)).rank + _ = _ at hn
   rw [hrank, Module.finrank_fintype_fun_eq_card, Fintype.card_fin] at hn
   omega
-
-/-- The constant-kernel certificate is automatic from a fixed polynomial
-kernel subspace of the correct generic dimension and a row basis. -/
 def constantCertificateOfRowBasis (φ : F[X] →+* K) (hφ : Function.Injective φ)
     (p : ℕ) (x u v : ι → F) (L t r : ℕ)
     (B : NormalFiber.RowBasis φ (stacked p x u v L t) r)
@@ -4077,7 +3251,6 @@ def constantCertificateOfRowBasis (φ : F[X] →+* K) (hφ : Function.Injective 
       (stacked p x u v L t) r B W (by simpa using hWdim) heval γ hγ
     rw [← heq]
     exact hc
-
 def movingCertificateOfRowBasis (φ : F[X] →+* K) (hφ : Function.Injective φ)
     (p : ℕ) (x u v : ι → F) (L t : ℕ) (H : Finset ι) (d q : ℕ)
     (hd : 0 < d) (hsize : H.card+d+q=t)
@@ -4101,9 +3274,6 @@ def movingCertificateOfRowBasis (φ : F[X] →+* K) (hφ : Function.Injective φ
   no_additional_fixed_root := hfixed
   normal_nullity := principal_normal_nullity φ hφ p x u v L t (H.card+d) q hsize B
   multiples_annihilate := hshift
-
-/-- The principal theorem with the actual generic row-basis degree sum.
-No rank-specialization hypothesis remains in this form. -/
 theorem principal_bad_count_row_sum (φ : F[X] →+* K) (hφ : Function.Injective φ)
     (p : ℕ) [ExpChar F p] (x : ι → F) (hx : Function.Injective x)
     (hfixedNodes : ∀ i, x i^p=x i) (u v : ι → F)
@@ -4124,7 +3294,6 @@ theorem principal_bad_count_row_sum (φ : F[X] →+* K) (hφ : Function.Injectiv
     (NormalFiber.minor_degree_le φ _ _ B _ (stacked_entry_natDegree p x u v L t))
     (movingCertificateOfRowBasis φ hφ p x u v L t H d q hd hsize B coeffs
       hdeg hprimitive hfixed hshift) Γ hΓ
-
 theorem constant_kernel_count_row_sum (φ : F[X] →+* K) (hφ : Function.Injective φ)
     (p : ℕ) [ExpChar F p] (x : ι → F) (hx : Function.Injective x)
     (hfixedNodes : ∀ i, x i^p=x i) (u v : ι → F)
@@ -4138,13 +3307,10 @@ theorem constant_kernel_count_row_sum (φ : F[X] →+* K) (hφ : Function.Inject
     (NormalFiber.pivot B).det B.minor_ne
     (NormalFiber.minor_degree_le φ _ _ B _ (stacked_entry_natDegree p x u v L t))
     (constantCertificateOfRowBasis φ hφ p x u v L t r B W hWdim hW) Γ hΓ
-
 end
 end FrobeniusLocator.Principal
-end PackSource_PrincipalRowBasis
-
-section PackSource_IndependentLocator
-set_option autoImplicit true
+end
+section
 set_option backward.isDefEq.respectTransparency false
 set_option maxHeartbeats 1000000
 namespace FrobeniusLocator.Strata
@@ -4152,14 +3318,11 @@ noncomputable section
 open Finset Matrix MvPolynomial
 open scoped BigOperators
 variable {F ι : Type} [Field F] [DecidableEq F] [Fintype ι] [DecidableEq ι]
-
 def independentLocator (p blocks : ℕ) (x u v : ι → F) (L t : ℕ) :
     Matrix (Fin blocks × Fin L) (Fin (t+1)) (MvPolynomial (Fin blocks) F) := fun b j =>
   MvPolynomial.C (syndrome x u (b.2.val+j.val)^(p^b.1.val))+
     MvPolynomial.X b.1*MvPolynomial.C (syndrome x v (b.2.val+j.val)^(p^b.1.val))
-
 def independentPoint (p blocks : ℕ) (γ : F) : Fin blocks → F := fun b => γ^(p^b.val)
-
 theorem independentLocator_eval (p blocks : ℕ) (x u v : ι → F) (L t : ℕ) (γ : F) :
     (independentLocator p blocks x u v L t).map
       (MvPolynomial.eval₂Hom (RingHom.id F) (independentPoint p blocks γ))=
@@ -4169,7 +3332,6 @@ theorem independentLocator_eval (p blocks : ℕ) (x u v : ι → F) (L t : ℕ) 
     MvPolynomial.eval₂Hom_C,MvPolynomial.eval₂Hom_X',RingHom.id_apply,
     Polynomial.coe_evalRingHom,Polynomial.eval_add,Polynomial.eval_mul,Polynomial.eval_C,
     Polynomial.eval_pow,Polynomial.eval_X]
-
 theorem independentLocator_entry_degree (p blocks : ℕ) (x u v : ι → F) (L t : ℕ)
     (b : Fin blocks × Fin L) (j : Fin (t+1)) :
     (independentLocator p blocks x u v L t b j).totalDegree≤1 := by
@@ -4181,16 +3343,13 @@ theorem independentLocator_entry_degree (p blocks : ℕ) (x u v : ι → F) (L t
   · exact (MvPolynomial.totalDegree_mul _ _).trans (by
       simp only [MvPolynomial.totalDegree_X,MvPolynomial.totalDegree_C,add_zero]
       omega)
-
 def maximalMinorList {row ν : Type} [Fintype row] [DecidableEq row] (t : ℕ)
     (M : Matrix row (Fin (t+1)) (MvPolynomial ν F)) : List (MvPolynomial ν F) :=
   Finset.univ.toList.map (fun rows : Fin (t+1) → row => (M.submatrix rows id).det)
-
 theorem mem_maximalMinorList {row ν : Type} [Fintype row] [DecidableEq row] (t : ℕ)
     (M : Matrix row (Fin (t+1)) (MvPolynomial ν F)) (f : MvPolynomial ν F) :
     f∈maximalMinorList t M ↔ ∃ rows : Fin (t+1) → row, (M.submatrix rows id).det=f := by
   simp only [maximalMinorList,List.mem_map,Finset.mem_toList,Finset.mem_univ,true_and]
-
 theorem maximalMinorList_degree {row ν : Type} [Fintype row] [DecidableEq row] (t : ℕ)
     (M : Matrix row (Fin (t+1)) (MvPolynomial ν F)) (hM : ∀ i j, (M i j).totalDegree≤1) :
     ∀ f∈maximalMinorList t M, f.totalDegree≤t+1 := by
@@ -4198,7 +3357,6 @@ theorem maximalMinorList_degree {row ν : Type} [Fintype row] [DecidableEq row] 
   obtain ⟨rows,rfl⟩ := (mem_maximalMinorList t M f).mp hf
   have hh := totalDegree_det_le_row_sum (M.submatrix rows id) (fun _ => 1) (fun i j => hM (rows i) j)
   simpa using hh
-
 theorem maximalMinorList_eval_zero_of_top_kernel {row ν : Type} [Fintype row] [DecidableEq row]
     (t : ℕ) (M : Matrix row (Fin (t+1)) (MvPolynomial ν F)) (z : ν → F)
     (v : Fin (t+1) → F)
@@ -4218,31 +3376,25 @@ theorem maximalMinorList_eval_zero_of_top_kernel {row ν : Type} [Fintype row] [
   rw [RingHom.mapMatrix_apply] at hm
   change MvPolynomial.aeval z (M.submatrix rows id).det=0
   simpa only [φ, MvPolynomial.aeval_def,Algebra.algebraMap_self,MvPolynomial.coe_eval₂Hom] using hm.trans hd
-
 theorem independentPoint_injective (p blocks : ℕ) (hblocks : 0<blocks) :
     Function.Injective (independentPoint (F := F) p blocks) := by
   intro γ δ h
   have hh := congrFun h ⟨0,hblocks⟩
   simpa only [independentPoint,pow_zero,pow_one] using hh
-
 theorem frobenius_iterate_fixed (p : ℕ) (a : F) (ha : a^p=a) (b : ℕ) : a^(p^b)=a := by
   induction b with
   | zero => simp
   | succ b hb => rw [pow_succ,pow_mul,hb,ha]
-
 end
 end FrobeniusLocator.Strata
-end PackSource_IndependentLocator
-
-section PackSource_TopKernel
-set_option autoImplicit true
+end
+section
 set_option backward.isDefEq.respectTransparency false
 namespace FrobeniusLocator.Strata
 noncomputable section
 open Finset Matrix
 open scoped BigOperators
 variable {F row : Type} [Field F] [Fintype row]
-
 theorem first_columns_injective_of_kernel_line {r : ℕ} (M : Matrix row (Fin (r+1)) F)
     (q : Fin (r+1) → F) (hq : q (Fin.last r)≠0)
     (hline : ∀ v, M.mulVec v=0 → ∃ a : F, v=a • q) :
@@ -4266,7 +3418,6 @@ theorem first_columns_injective_of_kernel_line {r : ℕ} (M : Matrix row (Fin (r
   funext j
   have hh := congrFun ha j.castSucc
   simpa only [w,Fin.lastCases_castSucc,ha0,zero_smul,Pi.zero_apply] using hh
-
 theorem first_columns_rank_of_nullity_one {r : ℕ} (M : Matrix row (Fin (r+1)) F)
     (hnull : Module.finrank F (LinearMap.ker M.mulVecLin)=1)
     (q : Fin (r+1) → F) (hMq : M.mulVec q=0) (hq : q (Fin.last r)≠0) :
@@ -4276,7 +3427,6 @@ theorem first_columns_rank_of_nullity_one {r : ℕ} (M : Matrix row (Fin (r+1)) 
   have hinj := first_columns_injective_of_kernel_line M q hq hline
   change Module.finrank F (LinearMap.range (M.submatrix id Fin.castSucc).mulVecLin)=r
   rw [LinearMap.finrank_range_of_inj hinj,Module.finrank_fintype_fun_eq_card,Fintype.card_fin]
-
 theorem rank_le_of_all_maximal_minors_zero {r : ℕ} (M : Matrix row (Fin (r+1)) F)
     (hminor : ∀ rows : Fin (r+1) → row, (M.submatrix rows id).det=0) : M.rank≤r := by
   classical
@@ -4285,13 +3435,10 @@ theorem rank_le_of_all_maximal_minors_zero {r : ℕ} (M : Matrix row (Fin (r+1))
   have hinj := matrix_injective_of_full_column_rank M (by simpa only [Fintype.card_fin] using hr)
   obtain ⟨rows,hrows⟩ := GenericRank.exists_rows_det_ne_zero M (fun v hv => hinj (hv.trans (map_zero M.mulVecLin).symm))
   exact hrows (hminor rows)
-
 end
 end FrobeniusLocator.Strata
-end PackSource_TopKernel
-
-section PackSource_MultivariateCofactor
-set_option autoImplicit true
+end
+section
 set_option backward.isDefEq.respectTransparency false
 set_option maxHeartbeats 1000000
 namespace FrobeniusLocator.Strata
@@ -4299,16 +3446,13 @@ noncomputable section
 open Finset Matrix MvPolynomial
 open scoped BigOperators
 variable {F ν : Type} [Field F]
-
 theorem totalDegree_neg_le (p : MvPolynomial ν F) : (-p).totalDegree≤p.totalDegree := by
   have hh := MvPolynomial.totalDegree_smul_le (-1 : F) p
   simpa only [neg_one_smul] using hh
-
 theorem totalDegree_sub_le (p q : MvPolynomial ν F) :
     (p-q).totalDegree≤max p.totalDegree q.totalDegree := by
   rw [sub_eq_add_neg]
   exact (MvPolynomial.totalDegree_add _ _).trans (max_le_max le_rfl (totalDegree_neg_le q))
-
 theorem lastCofactor_degree {r : ℕ} (N : Matrix (Fin r) (Fin (r+1)) (MvPolynomial ν F))
     (hN : ∀ i j, (N i j).totalDegree≤1) (c : Fin (r+1)) :
     (lastCofactor N c).totalDegree≤r := by
@@ -4336,22 +3480,17 @@ theorem lastCofactor_degree {r : ℕ} (N : Matrix (Fin r) (Fin (r+1)) (MvPolynom
         simpa only [Matrix.updateCol_self] using hN i (Fin.last r)
       · simpa only [Matrix.updateCol_ne hj,Matrix.submatrix_apply,id_eq] using hN i j.castSucc
     · simp [GenericCofactor.inclusion,Pi.single_apply,hq,Ne.symm hq]
-
 theorem lastCofactor_map {R S : Type} [CommRing R] [CommRing S] {r : ℕ}
     (φ : R →+* S) (N : Matrix (Fin r) (Fin (r+1)) R) (c : Fin (r+1)) :
     lastCofactor (N.map φ) c=φ (lastCofactor N c) :=
   GenericCofactor.map_rawVector φ N id Fin.castSucc (Fin.last r) c
-
-/-- Evaluate the RS coordinate, retaining all independent slope parameters. -/
 def multivariateNodeCut {r : ℕ} (Q : Fin (r+1) → MvPolynomial ν F) (a : F) : MvPolynomial ν F :=
   ∑ j, MvPolynomial.C (a^j.val)*Q j
-
 theorem multivariateNodeCut_degree {r D : ℕ} (Q : Fin (r+1) → MvPolynomial ν F)
     (hQ : ∀ j, (Q j).totalDegree≤D) (a : F) : (multivariateNodeCut Q a).totalDegree≤D := by
   apply MvPolynomial.totalDegree_finsetSum_le
   intro j _
   exact (MvPolynomial.totalDegree_mul _ _).trans (by simpa only [MvPolynomial.totalDegree_C,zero_add] using hQ j)
-
 theorem multivariateNodeCut_map {K : Type} [Field K] {r : ℕ}
     (φ : MvPolynomial ν F →+* K) (Q : Fin (r+1) → MvPolynomial ν F) (a : F) :
     φ (multivariateNodeCut Q a)=(Principal.assemble (fun j => φ (Q j))).eval (φ (MvPolynomial.C a)) := by
@@ -4361,13 +3500,10 @@ theorem multivariateNodeCut_map {K : Type} [Field K] {r : ℕ}
   have hp : φ (MvPolynomial.C (a^j.val))=(φ (MvPolynomial.C a))^j.val := by rw [← map_pow,← map_pow]
   rw [hp]
   ring
-
 end
 end FrobeniusLocator.Strata
-end PackSource_MultivariateCofactor
-
-section PackSource_PrincipalExtraction
-set_option autoImplicit true
+end
+section
 set_option backward.isDefEq.respectTransparency false
 set_option maxHeartbeats 1000000
 namespace FrobeniusLocator.Principal
@@ -4375,10 +3511,6 @@ noncomputable section
 open Polynomial Finset Matrix
 open scoped BigOperators
 variable {F K ι : Type} [Field F] [Field K] [Fintype ι] [DecidableEq ι]
-
-/-- Extract the counting certificate from generic homogeneous principality.
-The fixed squarefree domain factor is supplied explicitly; it need not
-include multiplicities. No per-slope or root-count premise is assumed. -/
 theorem extract_moving_certificate_for_basis (φ : F[X] →+* K) (hφ : Function.Injective φ)
     (p : ℕ) [ExpChar F p] (hp : 1 ≤ p) (x u v : ι → F)
     (m d q : ℕ) (H : Finset ι) (hd : 0 < d) (hL : H.card+d+q < m)
@@ -4493,27 +3625,21 @@ theorem extract_moving_certificate_for_basis (φ : F[X] →+* K) (hφ : Function
   refine ⟨?_⟩
   exact movingCertificateOfRowBasis φ hφ p x u v (m-(a+q)) (a+q)
     H d q hd rfl B coeffs hdegree' hspec hnofixed hshift
-
 end
 end FrobeniusLocator.Principal
-end PackSource_PrincipalExtraction
-
-section PackSource_PrimeGeneric
-set_option autoImplicit true
+end
+section
 set_option backward.isDefEq.respectTransparency false
 namespace FrobeniusLocator.Strata
 noncomputable section
 open Finset Matrix MvPolynomial
 open scoped BigOperators
 variable {F ν : Type} [Field F]
-
 abbrev PrimeGenericField (P : Ideal (MvPolynomial ν F)) [P.IsPrime] :=
   FractionRing (MvPolynomial ν F ⧸ P)
-
 def primeGenericMap (P : Ideal (MvPolynomial ν F)) [P.IsPrime] :
     MvPolynomial ν F →+* PrimeGenericField P :=
   (algebraMap (MvPolynomial ν F ⧸ P) (PrimeGenericField P)).comp (Ideal.Quotient.mk P)
-
 theorem primeGenericMap_zero_iff (P : Ideal (MvPolynomial ν F)) [P.IsPrime] (f : MvPolynomial ν F) :
     primeGenericMap P f=0 ↔ f∈P := by
   constructor
@@ -4524,13 +3650,11 @@ theorem primeGenericMap_zero_iff (P : Ideal (MvPolynomial ν F)) [P.IsPrime] (f 
   · intro hf
     change algebraMap (MvPolynomial ν F ⧸ P) (PrimeGenericField P) (Ideal.Quotient.mk P f)=0
     rw [Ideal.Quotient.eq_zero_iff_mem.mpr hf,map_zero]
-
 theorem primeGenericMap_nonzero_of_point (P : Ideal (MvPolynomial ν F)) [P.IsPrime]
     (z : ν → F) (hz : z∈zeroLocus F P) (f : MvPolynomial ν F) (hf : aeval z f≠0) :
     primeGenericMap P f≠0 := by
   intro hzero
   exact hf (hz f ((primeGenericMap_zero_iff P f).mp hzero))
-
 theorem generic_rank_le_of_maximal_minors {row : Type} [Fintype row] {r : ℕ}
     (P : Ideal (MvPolynomial ν F)) [P.IsPrime]
     (M : Matrix row (Fin (r+1)) (MvPolynomial ν F))
@@ -4545,13 +3669,10 @@ theorem generic_rank_le_of_maximal_minors {row : Type} [Fintype row] {r : ℕ}
       (M.submatrix rows id).map (primeGenericMap P) := rfl
   rw [heq,← hh]
   exact (primeGenericMap_zero_iff P _).mpr (hminor rows)
-
 end
 end FrobeniusLocator.Strata
-end PackSource_PrimeGeneric
-
-section PackSource_ComponentCofactor
-set_option autoImplicit true
+end
+section
 set_option backward.isDefEq.respectTransparency false
 set_option maxHeartbeats 2000000
 namespace FrobeniusLocator.Strata
@@ -4559,13 +3680,9 @@ noncomputable section
 open Finset Matrix MvPolynomial
 open scoped BigOperators
 variable {F ν row : Type} [Field F] [Fintype row] [DecidableEq row]
-
 theorem aeval_self_eq_evalHom (z : ν → F) (f : MvPolynomial ν F) :
     MvPolynomial.aeval z f=MvPolynomial.eval₂Hom (RingHom.id F) z f := by
   simp only [MvPolynomial.aeval_def,Algebra.algebraMap_self,MvPolynomial.coe_eval₂Hom]
-
-/-- Bounded compressed cofactors annihilate the full matrix modulo a
-prime whenever the generic rank is at most the compressed row count. -/
 theorem compressed_cofactor_mod_prime {r : ℕ}
     (P : Ideal (MvPolynomial ν F)) [P.IsPrime]
     (M : Matrix row (Fin (r+1)) (MvPolynomial ν F)) (C : Matrix (Fin r) row F)
@@ -4607,10 +3724,6 @@ theorem compressed_cofactor_mod_prime {r : ℕ}
     apply (primeGenericMap_zero_iff P _).mp
     have hh := congrFun hk i
     simpa only [Matrix.mulVec,dotProduct,Matrix.map_apply,map_sum,map_mul,Pi.zero_apply] using hh
-
-/-- One bounded cofactor section is valid at ALL selected regular points
-of a component. The chosen compression is common to the whole finite
-selected set; the generic kernel and top coordinate are certified. -/
 theorem exists_component_cofactor [Fintype F] [DecidableEq F] {r : ℕ}
     (P : Ideal (MvPolynomial ν F)) [P.IsPrime]
     (M : Matrix row (Fin (r+1)) (MvPolynomial ν F)) (hM : ∀ i j, (M i j).totalDegree≤1)
@@ -4649,13 +3762,10 @@ theorem exists_component_cofactor [Fintype F] [DecidableEq F] {r : ℕ}
   · intro z hz
     rw [lastCofactor_last]
     exact hΔ z hz
-
 end
 end FrobeniusLocator.Strata
-end PackSource_ComponentCofactor
-
-section PackSource_RestrictionKernel
-set_option autoImplicit true
+end
+section
 set_option backward.isDefEq.respectTransparency false
 set_option maxHeartbeats 1000000
 namespace FrobeniusLocator.Strata
@@ -4663,9 +3773,6 @@ noncomputable section
 open Polynomial Finset Matrix
 open scoped BigOperators
 variable {F row : Type} [Field F] [Fintype row]
-
-/-- Multiplication by a fixed nonzero polynomial transports a kernel
-LINE to its deflated line, with nominal degree budgets retained. -/
 theorem restriction_kernel_line (t b d : ℕ) (M : Matrix row (Fin (t+1)) F)
     (g q : F[X]) (hg : g≠0) (hgd : g.natDegree≤b) (hqd : q.natDegree≤d) (hsize : b+d≤t)
     (hline : ∀ v, M.mulVec v=0 → ∃ a : F, v=a • (fun j : Fin (t+1) => (g*q).coeff j.val))
@@ -4689,8 +3796,6 @@ theorem restriction_kernel_line (t b d : ℕ) (M : Matrix row (Fin (t+1)) F)
   funext j
   have hc := congrArg (fun P : F[X] => P.coeff j.val) hfq
   simpa only [f,Principal.assemble_coeff,Polynomial.coeff_smul,Pi.smul_apply] using hc
-
-/-- Deflation preserves one-dimensionality of a kernel generated by g*q. -/
 theorem restriction_nullity_one (t b d : ℕ) (M : Matrix row (Fin (t+1)) F)
     (g q : F[X]) (hg : g≠0) (hq : q≠0) (hgd : g.natDegree≤b) (hqd : q.natDegree≤d) (hsize : b+d≤t)
     (hgen : M.mulVec (fun j : Fin (t+1) => (g*q).coeff j.val)=0)
@@ -4718,9 +3823,6 @@ theorem restriction_nullity_one (t b d : ℕ) (M : Matrix row (Fin (t+1)) F)
       exact hv ▸ hqker
   rw [heq]
   exact finrank_span_singleton hqv
-
-/-- A fixed F[X] multiplier leaves every independent-parameter row-degree
-budget unchanged. -/
 theorem multivariate_restriction_degree {ν : Type} (t d : ℕ)
     (M : Matrix row (Fin (t+1)) (MvPolynomial ν F)) (g : F[X]) (D : row → ℕ)
     (hM : ∀ i j, (M i j).totalDegree≤D i) :
@@ -4734,13 +3836,10 @@ theorem multivariate_restriction_degree {ν : Type} (t d : ℕ)
     rw [← Polynomial.coeff_map,Polynomial.map_mul,Polynomial.map_pow,Polynomial.map_X]
   rw [hc]
   exact (MvPolynomial.totalDegree_mul _ _).trans (by simpa only [MvPolynomial.totalDegree_C,add_zero] using hM i l)
-
 end
 end FrobeniusLocator.Strata
-end PackSource_RestrictionKernel
-
-section PackSource_PrincipalConstantExtraction
-set_option autoImplicit true
+end
+section
 set_option backward.isDefEq.respectTransparency false
 set_option maxHeartbeats 1000000
 namespace FrobeniusLocator.Principal
@@ -4748,7 +3847,6 @@ noncomputable section
 open Polynomial Finset Matrix
 open scoped BigOperators
 variable {F K ι : Type} [Field F] [Field K] [Fintype ι] [DecidableEq ι]
-
 theorem principal_rowBasis (φ : F[X] →+* K) (p : ℕ) (x u v : ι → F)
     (m a q : ℕ)
     (P : PrincipalAt (fun b j => φ (parameterSyndromes p x u v b j)) m a q) :
@@ -4763,9 +3861,6 @@ theorem principal_rowBasis (φ : F[X] →+* K) (p : ℕ) (x u v : ι → F)
     change Module.finrank K (LinearMap.ker (M.map φ).mulVecLin)=q+1 at hnull
     omega
   exact NormalFiber.exists_rowBasis φ M a hrank
-
-/-- A generic fixed generator gives a genuine fixed coefficient kernel;
-the generic scalar is cancelled before specialization, not evaluated. -/
 theorem extract_constant_certificate_for_basis (φ : F[X] →+* K) (hφ : Function.Injective φ)
     (p : ℕ) (x u v : ι → F) (m a q : ℕ) (H : Finset ι) (hHa : H.card=a)
     (P : PrincipalAt (fun b j => φ (parameterSyndromes p x u v b j)) m a q)
@@ -4812,21 +3907,15 @@ theorem extract_constant_certificate_for_basis (φ : F[X] →+* K) (hφ : Functi
     change M.mulVec (fun j : Fin (a+q+1) => C ((locator x H*(Q:F[X])).coeff j.val))=0
     simpa only [E,Polynomial.coeff_map] using hpoly
   exact ⟨constantCertificateOfRowBasis φ hφ p x u v (m-(a+q)) (a+q) a B W hWdim hW⟩
-
 end
 end FrobeniusLocator.Principal
-end PackSource_PrincipalConstantExtraction
-
-section PackSource_GenericFixedRoots
-set_option autoImplicit true
+end
+section
 namespace FrobeniusLocator.Principal
 noncomputable section
 open Polynomial Finset Matrix
 open scoped BigOperators
 variable {F K ι : Type} [Field F] [Field K] [Fintype ι] [DecidableEq ι]
-
-/-- Remove all generic fixed domain roots, with the squarefree factor
-and the remaining nominal homogeneous degree recorded exactly. -/
 theorem generic_fixed_root_factor (ρ : F →+* K) (x : ι → F)
     (hx : Function.Injective x) (g : K[X]) (hg : g ≠ 0) (a : ℕ)
     (hga : g.natDegree ≤ a) :
@@ -4859,13 +3948,10 @@ theorem generic_fixed_root_factor (ρ : F →+* K) (x : ι → F)
     rw [hf,eval_mul]
     change (locator xK H).eval (xK i)*f.eval (ρ (x i))=0
     rw [hzero,mul_zero]
-
 end
 end FrobeniusLocator.Principal
-end PackSource_GenericFixedRoots
-
-section PackSource_GenericPrincipalCount
-set_option autoImplicit true
+end
+section
 set_option backward.isDefEq.respectTransparency false
 set_option maxHeartbeats 1000000
 namespace FrobeniusLocator.Principal
@@ -4873,10 +3959,6 @@ noncomputable section
 open Polynomial Finset Matrix
 open scoped BigOperators
 variable {F K ι : Type} [Field F] [Field K] [Fintype ι] [DecidableEq ι]
-
-/-- Bare generic principality suffices at every nullity. All fixed roots,
-primitive normalization, cofactor heights, and normal-fiber multiplicities
-are derived, including the constant-generator and infinity cases. -/
 theorem generic_principal_bad_count_for_basis (φ : F[X] →+* K) (hφ : Function.Injective φ)
     (p : ℕ) [ExpChar F p] (hp : 1 ≤ p) (x : ι → F) (hx : Function.Injective x)
     (hfixed : ∀ i, x i^p=x i) (u v : ι → F) (k m a q : ℕ)
@@ -4916,7 +3998,6 @@ theorem generic_principal_bad_count_for_basis (φ : F[X] →+* K) (hφ : Functio
       (NormalFiber.pivot B).det B.minor_ne
       (NormalFiber.minor_degree_le φ _ _ B _ (stacked_entry_natDegree p x u v _ _)) cert Γ hΓ
     exact hh.trans (Nat.add_le_add_left (Nat.mul_le_mul_left p (Nat.sub_le _ _)) _)
-
 theorem generic_principal_bad_count (φ : F[X] →+* K) (hφ : Function.Injective φ)
     (p : ℕ) [ExpChar F p] (hp : 1 ≤ p) (x : ι → F) (hx : Function.Injective x)
     (hfixed : ∀ i, x i^p=x i) (u v : ι → F) (k m a q : ℕ)
@@ -4927,7 +4008,6 @@ theorem generic_principal_bad_count (φ : F[X] →+* K) (hφ : Function.Injectiv
       Γ.card ≤ (∑ i, if (B.rows i).1=0 then 1 else p)+p*Fintype.card ι := by
   obtain ⟨B⟩ := principal_rowBasis φ p x u v m a q P
   exact ⟨B,generic_principal_bad_count_for_basis φ hφ p hp x hx hfixed u v k m a q hkm hL P B Γ hΓ⟩
-
 theorem generic_principal_bad_count_coarse (φ : F[X] →+* K) (hφ : Function.Injective φ)
     (p : ℕ) [ExpChar F p] (hp : 1 ≤ p) (x : ι → F) (hx : Function.Injective x)
     (hfixed : ∀ i, x i^p=x i) (u v : ι → F) (k m a q : ℕ)
@@ -4943,13 +4023,10 @@ theorem generic_principal_bad_count_coarse (φ : F[X] →+* K) (hφ : Function.I
   calc
     _ ≤ p*a+p*Fintype.card ι := hcount.trans (Nat.add_le_add_right hdegree _)
     _ = _ := by ring
-
 end
 end FrobeniusLocator.Principal
-end PackSource_GenericPrincipalCount
-
-section PackSource_PolynomialKernelLine
-set_option autoImplicit true
+end
+section
 set_option backward.isDefEq.respectTransparency false
 set_option maxHeartbeats 1000000
 namespace FrobeniusLocator.Strata
@@ -4957,14 +4034,12 @@ noncomputable section
 open Polynomial Finset Matrix
 open scoped BigOperators
 variable {F row : Type} [Field F] [Fintype row]
-
 theorem assemble_smul_vector {R : Type} [CommRing R] {t : ℕ} (a : R) (v : Fin (t+1) → R) :
     Principal.assemble (a • v)=a • Principal.assemble v := by
   simp only [Principal.assemble,Pi.smul_apply,Finset.smul_sum]
   apply Finset.sum_congr rfl
   intro j _
   rw [← Polynomial.smul_monomial]
-
 theorem polynomial_from_kernel_line {t : ℕ} (M : Matrix row (Fin (t+1)) F)
     (hnull : Module.finrank F (LinearMap.ker M.mulVecLin)=1)
     (g : F[X]) (hg : g≠0) (hgd : g.natDegree≤t)
@@ -4983,10 +4058,8 @@ theorem polynomial_from_kernel_line {t : ℕ} (M : Matrix row (Fin (t+1)) F)
     exact hqtop (by rw [ha,hz,zero_smul]; rfl)
   refine ⟨a,ha0,?_⟩
   rw [ha,assemble_smul_vector,Principal.assemble_coefficients t g hgd]
-
 section Parameter
 variable {ν : Type} {t : ℕ}
-
 theorem component_kernel_specializes (P : Ideal (MvPolynomial ν F))
     (M : Matrix row (Fin (t+1)) (MvPolynomial ν F)) (Q : Fin (t+1) → MvPolynomial ν F)
     (hkernel : ∀ i, M.mulVec Q i∈P) (z : ν → F) (hz : z∈MvPolynomial.zeroLocus F P) :
@@ -4996,20 +4069,16 @@ theorem component_kernel_specializes (P : Ideal (MvPolynomial ν F))
   have hh := hz (M.mulVec Q i) (hkernel i)
   rw [aeval_self_eq_evalHom] at hh
   simpa only [Matrix.mulVec,dotProduct,Matrix.map_apply,map_sum,map_mul,Pi.zero_apply] using hh
-
 theorem multivariateNodeCut_eval (Q : Fin (t+1) → MvPolynomial ν F) (z : ν → F) (a : F) :
     MvPolynomial.aeval z (multivariateNodeCut Q a)=
       (Principal.assemble (fun j => MvPolynomial.eval₂Hom (RingHom.id F) z (Q j))).eval a := by
   rw [aeval_self_eq_evalHom,multivariateNodeCut_map]
   simp only [MvPolynomial.eval₂Hom_C,RingHom.id_apply]
 end Parameter
-
 end
 end FrobeniusLocator.Strata
-end PackSource_PolynomialKernelLine
-
-section PackSource_CertificateSpecialization
-set_option autoImplicit true
+end
+section
 set_option backward.isDefEq.respectTransparency false
 set_option maxHeartbeats 1000000
 namespace FrobeniusLocator.Strata
@@ -5017,9 +4086,6 @@ noncomputable section
 open Polynomial Finset Matrix
 open scoped BigOperators
 variable {F ι : Type} [Field F] [Fintype ι] [DecidableEq ι]
-
-/-- The primitive GLOBAL polynomial relation specializes nontrivially at
-EVERY finite slope, with the same strict output-degree guard. -/
 theorem certificate_specializes (p : ℕ) [ExpChar F p] (x u v : ι → F) (k H : ℕ)
     (Crt : PolynomialRelationCertificate p x u v k H) (γ : F) :
     let U := (Principal.assemble (fun j => Crt.coefficients (0,j))).map (Polynomial.evalRingHom γ)
@@ -5049,9 +4115,6 @@ theorem certificate_specializes (p : ℕ) [ExpChar F p] (x u v : ι → F) (k H 
       rw [map_mul] at hp
       exact hp
     simpa only [φ,Polynomial.coe_evalRingHom,Polynomial.eval_C,Polynomial.eval_X,Polynomial.eval_pow,frobenius_def,← hp] using hh
-
-/-- The requested all-node error equation, now directly from a primitive
-polynomial-family certificate rather than a supplied specialized relation. -/
 theorem certificate_error_identity (p : ℕ) [ExpChar F p]
     (x u v : ι → F) (hx : Function.Injective x) (hfixed : ∀ i, x i^p=x i)
     (k H : ℕ) (Crt : PolynomialRelationCertificate p x u v k H) (γ : F)
@@ -5063,13 +4126,10 @@ theorem certificate_error_identity (p : ℕ) [ExpChar F p]
       (u i+γ*v i-P.eval (x i))^p=0 := by
   have hrel := (certificate_specializes p x u v k H Crt γ).2
   exact frobenius_error_identity p x _ hx hfixed k H _ _ _ hrel S hS P hP hagree i
-
 end
 end FrobeniusLocator.Strata
-end PackSource_CertificateSpecialization
-
-section PackSource_AffineLocator
-set_option autoImplicit true
+end
+section
 set_option backward.isDefEq.respectTransparency false
 set_option maxHeartbeats 1000000
 namespace FrobeniusLocator.Strata
@@ -5077,12 +4137,10 @@ noncomputable section
 open Polynomial Finset Matrix
 open scoped BigOperators
 variable {F ι ν : Type} [Field F] [Fintype ι] [DecidableEq ι]
-
 def affineLocator (σ : ν → F →+* F) (x u v : ι → F) (L t : ℕ) :
     Matrix (ν × Fin L) (Fin (t+1)) (MvPolynomial ν F) := fun b j =>
   MvPolynomial.C (σ b.1 (syndrome x u (b.2.val+j.val)))+
     MvPolynomial.X b.1*MvPolynomial.C (σ b.1 (syndrome x v (b.2.val+j.val)))
-
 theorem affineLocator_entry_degree (σ : ν → F →+* F) (x u v : ι → F) (L t : ℕ)
     (b : ν × Fin L) (j : Fin (t+1)) : (affineLocator σ x u v L t b j).totalDegree≤1 := by
   unfold affineLocator
@@ -5091,7 +4149,6 @@ theorem affineLocator_entry_degree (σ : ν → F →+* F) (x u v : ι → F) (L
   · simp only [MvPolynomial.totalDegree_C]; omega
   · exact (MvPolynomial.totalDegree_mul _ _).trans (by
       simp only [MvPolynomial.totalDegree_X,MvPolynomial.totalDegree_C,add_zero]; omega)
-
 theorem affineLocator_eval_slope (σ : ν → F →+* F) (x u v : ι → F) (L t : ℕ) (γ : F) :
     (affineLocator σ x u v L t).map (MvPolynomial.eval₂Hom (RingHom.id F) (fun b => σ b γ))=
       conjugateHankel σ x (fun i => u i+γ*v i) L t := by
@@ -5100,13 +4157,9 @@ theorem affineLocator_eval_slope (σ : ν → F →+* F) (x u v : ι → F) (L t
   simp only [one_mul] at hs
   simp only [Matrix.map_apply,affineLocator,map_add,map_mul,MvPolynomial.eval₂Hom_C,
     MvPolynomial.eval₂Hom_X',RingHom.id_apply,conjugateHankel,hs]
-
 theorem independentLocator_eq_affine (p blocks : ℕ) [ExpChar F p] (x u v : ι → F) (L t : ℕ) :
     independentLocator p blocks x u v L t=
       affineLocator (fun b : Fin blocks => iterateFrobenius F p b.val) x u v L t := rfl
-
-/-- Fixed-locator row relations are EXACTLY the constant linear equations
-used by FixedLocatorStopping. -/
 theorem affineLocator_fixed_multiplier (σ : ν → F →+* F) (x u v : ι → F) (L t : ℕ)
     (g : F[X]) (hg : g.natDegree≤t) (hfixed : ∀ b j, σ b (g.coeff j)=g.coeff j)
     (b : ν × Fin L) :
@@ -5117,13 +4170,10 @@ theorem affineLocator_fixed_multiplier (σ : ν → F →+* F) (x u v : ι → F
   simp only [map_sum,map_mul,hfixed,Matrix.mulVec,dotProduct,affineLocator,Nat.add_comm,
     add_mul,Finset.sum_add_distrib,Finset.mul_sum]
   congr 1 <;> apply Finset.sum_congr rfl <;> intro j _ <;> ring
-
 end
 end FrobeniusLocator.Strata
-end PackSource_AffineLocator
-
-section PackSource_SplitDivisorLocator
-set_option autoImplicit true
+end
+section
 set_option backward.isDefEq.respectTransparency false
 set_option maxHeartbeats 1000000
 namespace FrobeniusLocator.Strata
@@ -5131,9 +4181,6 @@ noncomputable section
 open Polynomial Finset Matrix
 open scoped BigOperators
 variable {F ι : Type} [Field F] [Fintype ι] [DecidableEq ι]
-
-/-- A nonzero divisor of a squarefree domain locator IS a scalar domain
-locator. All roots are retained exactly; there is no implicit root field. -/
 theorem split_divisor_locator_factor (x : ι → F) (hx : Function.Injective x)
     (E : Finset ι) (g : F[X]) (hg : g≠0) (hdiv : g∣locator x E) :
     ∃ B : Finset ι, B⊆E ∧ B.card=g.natDegree ∧ ∃ c : F, c≠0 ∧ g=c • locator x B := by
@@ -5182,40 +4229,23 @@ theorem split_divisor_locator_factor (x : ι → F) (hx : Function.Injective x)
     g=locator x B*Q := hQ
     _ = locator x B*C (Q.coeff 0) := congrArg (fun R : F[X] => locator x B*R) hQC
     _ = Q.coeff 0 • locator x B := by rw [Polynomial.smul_eq_C_mul]; ring
-
 end
 end FrobeniusLocator.Strata
-end PackSource_SplitDivisorLocator
-
-section PackSource_C50DependentMCA
-set_option autoImplicit true
-/-!
-Actual same-support MCA for globally quotient-dependent input pairs.
-No interpolation or geometry, and no restriction on the radius is needed.
--/
+end
+section
 namespace Sol1.C50
-
 noncomputable section
 open Code LinearCode CoreDefinitions
-
 variable {K I A : Type} [Field K] [Fintype K] [Fintype I]
   [AddCommGroup A] [Module K A]
-
 def badSet (C : ModuleCode I K A) (W : Fin 2 → I → A) (delta : ℝ) : Set K :=
   {gamma | IsMCA (AffineLineGenerator K) C gamma W delta}
-
-/-- A concrete nontrivial linear relation between the two classes in the
-quotient by the GLOBAL code. -/
 def DependentModulo (C : ModuleCode I K A) (W : Fin 2 → I → A) : Prop :=
   ∃ a b : K, (a ≠ 0 ∨ b ≠ 0) ∧ a • W 0 + b • W 1 ∈ C
-
 omit [Fintype K] [Fintype I] in
 theorem projected_mem_of_global_mem (C : ModuleCode I K A) (T : Finset I)
     (w : I → A) (hw : w ∈ C) : projectedWord w T ∈ projectedCodeSubmod C T := by
   exact Submodule.mem_map.mpr ⟨w, hw, rfl⟩
-
-/-- A global codeword direction creates no actual MCA event, for ANY radius.
-Both codeword extensions are recovered on the exact candidate witness T. -/
 theorem not_isMCA_of_direction_mem
     (C : ModuleCode I K A) (W : Fin 2 → I → A) (hV : W 1 ∈ C)
     (gamma : K) (delta : ℝ) : ¬ IsMCA (AffineLineGenerator K) C gamma W delta := by
@@ -5236,8 +4266,6 @@ theorem not_isMCA_of_direction_mem
   fin_cases j
   · exact hj hUproj
   · exact hj hVproj
-
-/-- A normalized quotient relation leaves at most the exceptional seed -c. -/
 theorem isMCA_eq_neg_of_relation
     (C : ModuleCode I K A) (W : Fin 2 → I → A) (c : K)
     (hrelation : W 0 - c • W 1 ∈ C)
@@ -5278,21 +4306,17 @@ theorem isMCA_eq_neg_of_relation
   fin_cases j
   · exact hj hUproj
   · exact hj hVproj
-
 theorem badSet_eq_empty_of_direction_mem
     (C : ModuleCode I K A) (W : Fin 2 → I → A) (delta : ℝ) (hV : W 1 ∈ C) :
     badSet C W delta = ∅ := by
   ext gamma
   exact ⟨fun h ↦ (not_isMCA_of_direction_mem C W hV gamma delta h).elim, False.elim⟩
-
 theorem badSet_subset_singleton_of_relation
     (C : ModuleCode I K A) (W : Fin 2 → I → A) (delta : ℝ)
     (c : K) (hrelation : W 0 - c • W 1 ∈ C) : badSet C W delta ⊆ {-c} := by
   intro gamma hgamma
   exact Set.mem_singleton_iff.mpr (isMCA_eq_neg_of_relation C W c hrelation gamma delta hgamma)
-
 omit [Fintype K] [Fintype I] in
-/-- Nontrivial quotient dependence normalizes unless the direction is global. -/
 theorem dependentModulo_normal_form
     (C : ModuleCode I K A) (W : Fin 2 → I → A) (hdependent : DependentModulo C W) :
     W 1 ∈ C ∨ ∃ c : K, W 0 - c • W 1 ∈ C := by
@@ -5309,24 +4333,19 @@ theorem dependentModulo_normal_form
     refine ⟨-(a⁻¹ * b), ?_⟩
     have hscaled := C.smul_mem a⁻¹ hrelation
     simpa [smul_add, smul_smul, inv_mul_cancel₀ ha, neg_smul, sub_neg_eq_add] using hscaled
-
 theorem badSet_subset_singleton_of_dependentModulo
     (C : ModuleCode I K A) (W : Fin 2 → I → A) (delta : ℝ)
     (hdependent : DependentModulo C W) : ∃ gamma0 : K, badSet C W delta ⊆ {gamma0} := by
   rcases dependentModulo_normal_form C W hdependent with hV | ⟨c,hrelation⟩
   · exact ⟨0, by rw [badSet_eq_empty_of_direction_mem C W delta hV]; exact Set.empty_subset _⟩
   · exact ⟨-c, badSet_subset_singleton_of_relation C W delta c hrelation⟩
-
 theorem badSet_finite_ncard_le_one_of_dependentModulo
     (C : ModuleCode I K A) (W : Fin 2 → I → A) (delta : ℝ)
     (hdependent : DependentModulo C W) : (badSet C W delta).Finite ∧ (badSet C W delta).ncard ≤ 1 := by
   obtain ⟨gamma0,hsub⟩ := badSet_subset_singleton_of_dependentModulo C W delta hdependent
   refine ⟨(Set.finite_singleton gamma0).subset hsub, ?_⟩
   exact (Set.ncard_le_ncard hsub).trans (by simp)
-
 omit [Fintype K] [Fintype I] in
-/-- The concrete relation predicate is EXACTLY failure of linear independence
-of the two actual classes in the global-code quotient. -/
 theorem dependentModulo_iff_not_quotient_independent
     (C : ModuleCode I K A) (W : Fin 2 → I → A) :
     DependentModulo C W ↔ ¬ LinearIndependent K
@@ -5350,7 +4369,6 @@ theorem dependentModulo_iff_not_quotient_independent
     refine ⟨a,b,by tauto,?_⟩
     apply (Submodule.Quotient.mk_eq_zero C).mp
     simpa only [Submodule.Quotient.mk_add, Submodule.Quotient.mk_smul] using hq
-
 theorem badSet_finite_ncard_le_one_of_quotient_dependent
     (C : ModuleCode I K A) (W : Fin 2 → I → A) (delta : ℝ)
     (hdependent : ¬ LinearIndependent K
@@ -5358,7 +4376,6 @@ theorem badSet_finite_ncard_le_one_of_quotient_dependent
     (badSet C W delta).Finite ∧ (badSet C W delta).ncard ≤ 1 :=
   badSet_finite_ncard_le_one_of_dependentModulo C W delta
     ((dependentModulo_iff_not_quotient_independent C W).mpr hdependent)
-
 open Classical in
 theorem bad_filter_card_le_one_of_dependentModulo
     (C : ModuleCode I K A) (W : Fin 2 → I → A) (delta : ℝ)
@@ -5373,9 +4390,6 @@ theorem bad_filter_card_le_one_of_dependentModulo
     have hbad : gamma ∈ badSet C W delta := (Finset.mem_filter.mp hgamma).2
     exact Set.mem_singleton_iff.mp (hsubset hbad)
   exact (Finset.card_le_card hfinset).trans (by simp)
-
-/-- The input strata combine by MAX. In particular, a bound B>=1 on the
-quotient-independent pairs is already the same bound on every input pair. -/
 theorem all_pairs_cap_of_independent_pairs
     (C : ModuleCode I K A) (delta : ℝ) (B : ℕ)
     (hindependent : ∀ W : Fin 2 → I → A,
@@ -5390,49 +4404,38 @@ theorem all_pairs_cap_of_independent_pairs
   · exact (hindependent W h).trans (Nat.le_max_left _ _)
   · exact (badSet_finite_ncard_le_one_of_quotient_dependent C W delta h).2.trans
       (Nat.le_max_right _ _)
-
-
 end
 end Sol1.C50
-end PackSource_C50DependentMCA
-
-section PackSource_C64ScalarMCA
-set_option autoImplicit true
+end
+section
 namespace Sol1.C64
 open Polynomial Code LinearCode CoreDefinitions
 noncomputable section
 set_option maxRecDepth 10000
 set_option maxHeartbeats 0
 variable {F K I : Type} [Field F] [Field K]
-
 def liftedNodes (phi : F →+* K) (nodes : I ↪ F) : I ↪ K :=
   ⟨fun i ↦ phi (nodes i),phi.injective.comp nodes.injective⟩
 def evalWord (phi : F →+* K) (nodes : I ↪ F) (P : K[X]) : I → K :=
   fun i ↦ P.eval (phi (nodes i))
 def evalPair (phi : F →+* K) (nodes : I ↪ F) (P : Fin 2 → K[X]) : Fin 2 → I → K :=
   fun j ↦ evalWord phi nodes (P j)
-
 theorem evalWord_add_smul (phi : F →+* K) (nodes : I ↪ F) (P Q : K[X]) (gamma : K) :
     evalWord phi nodes (P+gamma • Q) = evalWord phi nodes P + gamma • evalWord phi nodes Q := by
   ext i
   simp [evalWord,eval_add,eval_smul]
-
 theorem evalWord_mem_code (phi : F →+* K) (nodes : I ↪ F) (k : ℕ) [NeZero k]
     (P : K[X]) (hdegree : P.natDegree < k) :
     evalWord phi nodes P ∈ ReedSolomon.code (liftedNodes phi nodes) k := by
   apply ReedSolomon.mem_code_iff_eval_of_ne_zero.mpr
   exact ⟨P,hdegree,fun _ ↦ rfl⟩
-
 theorem natDegree_lt_of_tail_zero (k : ℕ) (hk : 0 < k) (P : K[X])
     (hcoeff : ∀ i, k ≤ i → P.coeff i = 0) : P.natDegree < k := by
   by_cases hz : P = 0
   · simpa [hz] using hk
   · exact (Polynomial.natDegree_lt_iff_degree_lt hz).mpr
       ((Polynomial.degree_lt_iff_coeff_zero P k).mpr hcoeff)
-
 variable [Fintype I]
-
-/-- Extract the ACTUAL MCA witness support and scalar RS polynomial, keeping the same T. -/
 theorem exists_witness_polynomial [Fintype K]
     (phi : F →+* K) (nodes : I ↪ F) (k A : ℕ) [NeZero k]
     (delta : ℝ)
@@ -5456,7 +4459,6 @@ theorem exists_witness_polynomial [Fintype K]
   change (P 0+gamma • P 1).eval (phi (nodes i)) = w i at hnode
   have heval' : H.eval (phi (nodes i)) = w i := heval i
   rw [eval_sub,hnode,heval',sub_self]
-
 theorem residual_degree (P : Fin 2 → K[X]) (H : K[X]) (gamma : K) (k A : ℕ)
     (hkA : k ≤ A) (hP : ∀ j, (P j).natDegree ≤ A) (hH : H.natDegree < k) :
     ((P 0+gamma • P 1)-H).natDegree ≤ A := by
@@ -5464,14 +4466,11 @@ theorem residual_degree (P : Fin 2 → K[X]) (H : K[X]) (gamma : K) (k A : ℕ)
   apply max_le
   · exact (natDegree_add_le _ _).trans (max_le (hP 0) ((natDegree_smul_le _ _).trans (hP 1)))
   · omega
-
 theorem residual_tail_coeff (P : Fin 2 → K[X]) (H : K[X]) (gamma : K) (k : ℕ)
     (hH : H.natDegree < k) (i : ℕ) (hi : k ≤ i) :
     ((P 0+gamma • P 1)-H).coeff i = (P 0).coeff i+gamma*(P 1).coeff i := by
   have hz : H.coeff i = 0 := coeff_eq_zero_of_natDegree_lt (by omega)
   simp [coeff_sub,coeff_add,coeff_smul,smul_eq_mul,hz]
-
-/-- A single nonzero top-tail minor controls arbitrary extension-valued inputs. -/
 theorem scalar_minor_card_le [Fintype F] [Fintype K]
     (phi : F →+* K) (nodes : I ↪ F) (k A : ℕ) [NeZero k] (hkA : k ≤ A)
     (delta : ℝ) (hthreshold : ∀ t : ℕ, (Fintype.card I : ℝ)*(1-delta) ≤ t → A ≤ t)
@@ -5515,13 +4514,10 @@ theorem scalar_minor_card_le [Fintype F] [Fintype K]
   apply tailRatio_card_le phi _ _ _ _ hminor S
   · exact fun gamma hg ↦ (hdata gamma hg).1
   · exact fun gamma hg ↦ (hdata gamma hg).2
-
 end
 end Sol1.C64
-end PackSource_C64ScalarMCA
-
-section PackSource_C64NativeSetup
-set_option autoImplicit true
+end
+section
 namespace Sol1.C64
 open Polynomial Code LinearCode CoreDefinitions
 open ProximityPrize.Benchmark
@@ -5533,7 +4529,6 @@ abbrev K := IRSProfile.Field
 abbrev I := IRSProfile.Index
 abbrev NativePair := Fin 2 → I → Fin IRSProfile.interleaving → K
 local instance : DecidableEq K := Classical.decEq K
-
 def nativePhi : Base →+* K := algebraMap Base K
 def nativeNodes : I ↪ Base where
   toFun i := IRSProfile.baseNttDomain.node i
@@ -5543,10 +4538,8 @@ def nativeNodes : I ↪ Base where
     change CompPoly.Extension.Ext.ofBase (IRSProfile.baseNttDomain.node i) =
       CompPoly.Extension.Ext.ofBase (IRSProfile.baseNttDomain.node j)
     exact congrArg CompPoly.Extension.Ext.ofBase h
-
 def NativeDegreeStratum (A : ℕ) (U : NativePair) : Prop :=
   ∀ j r, (fun i ↦ U j i r) ∈ ReedSolomon.code IRSProfile.domain (A+1)
-
 theorem nativeDegreeStratum_iff_polynomials (A : ℕ) (U : NativePair) :
     NativeDegreeStratum A U ↔ ∀ j r, ∃ P : K[X], P.natDegree ≤ A ∧
       ∀ i, P.eval (IRSProfile.domain i) = U j i r := by
@@ -5560,51 +4553,33 @@ theorem nativeDegreeStratum_iff_polynomials (A : ℕ) (U : NativePair) :
     obtain ⟨P,hP,heval⟩ := h j r
     apply ReedSolomon.mem_code_iff_eval_of_ne_zero.mpr
     exact ⟨P,by omega,heval⟩
-
-
 theorem native_base_card : Fintype.card Base = 2130706433 := by
   change Fintype.card (ZMod KoalaBear.fieldSize) = 2130706433
   rw [ZMod.card]
   rfl
-
-
 theorem native_field_card : Fintype.card K = (2130706433 : ℕ)^6 := by
   rw [KoalaBear.card_ext6]
   rfl
-
-
 theorem native_projection_room : Fintype.card Base+1 ≤ Fintype.card K := by
   rw [native_base_card,native_field_card]
   norm_num
-
-
 theorem native_lifted_domain : liftedNodes nativePhi nativeNodes =
     IRSProfile.domain := by
   ext i
   rfl
-
-
 theorem native_code_eq : IRSProfile.code =
     ((ReedSolomon.code IRSProfile.domain 131072)^⋈(Fin IRSProfile.interleaving)) := by
   unfold IRSProfile.code ReedSolomon.Interleaved.irsCode
   rfl
-
-
-
 end
 end Sol1.C64
-end PackSource_C64NativeSetup
-
-section PackSource_C42QueryScore
-set_option autoImplicit true
-/-! Exact native grid-radius/score arithmetic only. This is not a ProtocolClaim. -/
+end
+section
 namespace Sol1.C42
-
 noncomputable section
 open ProximityPrize.Benchmark
 open scoped NNReal
 def queryRadius : ℝ≥0 := claimedRadius 81879 262144
-
 theorem query_complement : (1 - queryRadius : ℝ≥0) = 180265 / 262144 := by
   apply NNReal.coe_injective
   have hr : queryRadius ≤ 1 := by
@@ -5612,7 +4587,6 @@ theorem query_complement : (1 - queryRadius : ℝ≥0) = 180265 / 262144 := by
     norm_num [queryRadius, claimedRadius]
   rw [NNReal.coe_sub hr]
   norm_num [queryRadius, claimedRadius]
-
 theorem claimedError_pow_100 (s : ℕ) :
     (claimedError s) ^ 100 = 1 / (2 : ℝ≥0) ^ s := by
   unfold claimedError
@@ -5620,14 +4594,12 @@ theorem claimedError_pow_100 (s : ℕ) :
   have hex : -((s : ℝ) / 100) * ((100 : ℕ) : ℝ) = -(s : ℝ) := by norm_num
   rw [hex, NNReal.rpow_neg, NNReal.rpow_natCast]
   simp only [one_div]
-
 theorem score_lower_integer_cross :
     (180265 : ℕ) ^ 12800 * 2 ^ 6915 ≤ 262144 ^ 12800 := by
   calc
     _ ≤ 2 ^ 223485 * 2 ^ 6915 := Nat.mul_le_mul_right _ score_6915_integer
     _ = 262144 ^ 12800 := by
       rw [show (262144 : ℕ) = 2 ^ 18 by norm_num, ← pow_mul, ← pow_add]
-
 theorem score_upper_integer_cross :
     (262144 : ℕ) ^ 12800 < 180265 ^ 12800 * 2 ^ 6916 := by
   calc
@@ -5635,7 +4607,6 @@ theorem score_upper_integer_cross :
       rw [show (262144 : ℕ) = 2 ^ 18 by norm_num, ← pow_mul, ← pow_add]
     _ < 180265 ^ 12800 * 2 ^ 6916 :=
       Nat.mul_lt_mul_of_pos_right score_not_6916_integer (by positivity)
-
 theorem query_score_6915 :
     (1 - queryRadius) ^ IRSProfile.repetitions ≤ claimedError 6915 := by
   change (1 - queryRadius) ^ 128 ≤ claimedError 6915
@@ -5644,7 +4615,6 @@ theorem query_score_6915 :
   change ((180265 : ℝ≥0) / 262144) ^ 12800 ≤ 1 / (2 : ℝ≥0) ^ 6915
   rw [div_pow, div_le_div_iff₀ (by positivity) (by positivity), one_mul]
   exact_mod_cast score_lower_integer_cross
-
 theorem query_score_below_6916 :
     claimedError 6916 < (1 - queryRadius) ^ IRSProfile.repetitions := by
   change claimedError 6916 < (1 - queryRadius) ^ 128
@@ -5653,17 +4623,12 @@ theorem query_score_below_6916 :
   change 1 / (2 : ℝ≥0) ^ 6916 < ((180265 : ℝ≥0) / 262144) ^ 12800
   rw [div_pow, div_lt_div_iff₀ (by positivity) (by positivity), one_mul]
   exact_mod_cast score_upper_integer_cross
-
 theorem query_admissible : queryRadius ∈ Set.Ioo (0 : ℝ≥0) IRSProfile.minRelativeDistance := by
   constructor <;> norm_num [queryRadius, claimedRadius, IRSProfile.minRelativeDistance]
-
-
 end
 end Sol1.C42
-end PackSource_C42QueryScore
-
-section PackSource_NativeFullRank
-set_option autoImplicit true
+end
+section
 set_option backward.isDefEq.respectTransparency false
 set_option maxRecDepth 10000
 set_option maxHeartbeats 1000000
@@ -5673,17 +4638,13 @@ noncomputable section
 open Polynomial Finset Matrix CoreDefinitions Code
 open ProximityPrize.Benchmark
 open scoped BigOperators
-
 abbrev K := IRSProfile.Field
 abbrev I := IRSProfile.Index
 abbrev p : ℕ := 2130706433
 local instance decidableNativeFullRank (P : Prop) : Decidable P := Classical.propDecidable P
-
-/-- CompPoly's extension has the base characteristic; this is not a registered instance. -/
 instance nativeCharP : CharP K p :=
   charP_of_injective_algebraMap
     (R := KoalaBear.Field) (A := K) (algebraMap KoalaBear.Field K).injective p
-
 theorem native_domain_fixed (i : I) : IRSProfile.domain i ^ p = IRSProfile.domain i := by
   change (CompPoly.Extension.Ext.ofBaseRingHom KoalaBear.ext6Params
     (IRSProfile.baseNttDomain.node i)) ^ p =
@@ -5691,12 +4652,9 @@ theorem native_domain_fixed (i : I) : IRSProfile.domain i ^ p = IRSProfile.domai
   rw [← map_pow]
   exact congrArg (CompPoly.Extension.Ext.ofBaseRingHom KoalaBear.ext6Params)
     (ZMod.pow_card (IRSProfile.baseNttDomain.node i))
-
-/-- A maximal minor certificate for one actual benchmark input. -/
 def FullRankCertificate (u v : I → K) : Prop :=
   ∃ rows : Fin 81880 → Fin 2 × Fin 49193,
     minorPolynomial (stacked p IRSProfile.domain u v 49193 81879) rows ≠ 0
-
 theorem native_full_rank_close_count (u v : I → K) (hfull : FullRankCertificate u v) :
     (Finset.univ.filter (fun γ => Decodable IRSProfile.domain u v 131072 81879 γ)).card ≤
       174462242734040 := by
@@ -5708,13 +4666,10 @@ theorem native_full_rank_close_count (u v : I → K) (hfull : FullRankCertificat
     (fun γ hγ => (Finset.mem_filter.mp hγ).2)
   have hd := minor_natDegree_le p (by norm_num [p]) IRSProfile.domain u v 49193 81879 rows
   exact hh.trans (hd.trans (by norm_num [p]))
-
 end
 end FrobeniusLocator.Native
-end PackSource_NativeFullRank
-
-section PackSource_NativeMCA
-set_option autoImplicit true
+end
+section
 set_option backward.isDefEq.respectTransparency false
 set_option maxRecDepth 10000
 set_option linter.constructorNameAsVariable false
@@ -5724,9 +4679,7 @@ open Polynomial Finset Matrix CoreDefinitions Code
 open ProximityPrize.Benchmark
 local instance decidableNativeMCA (P : Prop) : Decidable P := Classical.propDecidable P
 local instance nonzeroNativeMCA : NeZero (131072 : ℕ) := ⟨by norm_num⟩
-
 def radius : ℝ := (claimedRadius 81879 262144 : ℝ)
-
 theorem native_IsMCA_decodable (u : Fin 2 → I → K) (γ : K)
     (hmca : IsMCA (AffineLineGenerator K) IRSProfile.baseCode γ u radius) :
     Decodable IRSProfile.domain (u 0) (u 1) 131072 81879 γ := by
@@ -5736,7 +4689,6 @@ theorem native_IsMCA_decodable (u : Fin 2 → I → K) (γ : K)
   intro T hT
   norm_num [IRSProfile.card_index, radius, claimedRadius] at hT ⊢
   exact hT
-
 theorem native_full_rank_MCA_count (u : Fin 2 → I → K)
     (hfull : FullRankCertificate (u 0) (u 1)) :
     (Finset.univ.filter (fun γ => IsMCA (AffineLineGenerator K)
@@ -5747,13 +4699,10 @@ theorem native_full_rank_MCA_count (u : Fin 2 → I → K)
   intro γ hγ
   simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hγ ⊢
   exact native_IsMCA_decodable u γ hγ
-
 end
 end FrobeniusLocator.Native
-end PackSource_NativeMCA
-
-section PackSource_NativePrincipal
-set_option autoImplicit true
+end
+section
 set_option backward.isDefEq.respectTransparency false
 set_option maxRecDepth 10000
 set_option linter.constructorNameAsVariable false
@@ -5764,7 +4713,6 @@ open ProximityPrize.Benchmark
 open FrobeniusLocator.Principal
 local instance decidableNativePrincipal (P : Prop) : Decidable P := Classical.propDecidable P
 local instance nonzeroNativePrincipal : NeZero (131072 : ℕ) := ⟨by norm_num⟩
-
 theorem native_IsMCA_badSlope (U : Fin 2 → I → K) (γ : K)
     (hγ : IsMCA (AffineLineGenerator K) IRSProfile.baseCode γ U radius) :
     BadSlope IRSProfile.domain (U 0) (U 1) 131072 180265 γ := by
@@ -5774,12 +4722,10 @@ theorem native_IsMCA_badSlope (U : Fin 2 → I → K) (γ : K)
   intro T hT
   norm_num [IRSProfile.card_index, radius, claimedRadius] at hT ⊢
   exact hT
-
 def PrincipalCertificate (u v : I → K) : Prop :=
   ∃ (Δ : K[X]) (δ : ℕ), Δ ≠ 0 ∧ Δ.natDegree ≤ δ ∧ δ ≤ p*81880 ∧
     (Nonempty (MovingPrincipalCertificate p IRSProfile.domain u v 49193 81879 Δ) ∨
       Nonempty (ConstantKernelCertificate p IRSProfile.domain u v 49193 81879 Δ))
-
 theorem native_principal_MCA_count (U : Fin 2 → I → K)
     (hcert : PrincipalCertificate (U 0) (U 1))
     (Γ : Finset K) (hΓ : ∀ γ ∈ Γ,
@@ -5805,7 +4751,6 @@ theorem native_principal_MCA_count (U : Fin 2 → I → K)
       Δ hΔ hΔdeg cert Γ hbad
     norm_num [p] at hδ
     omega
-
 theorem native_type_one_MCA_count (U : Fin 2 → I → K)
     (htype : TypeOneSyndromes IRSProfile.domain (U 0) (U 1) 131072 p)
     (Γ : Finset K) (hΓ : ∀ γ ∈ Γ,
@@ -5815,15 +4760,11 @@ theorem native_type_one_MCA_count (U : Fin 2 → I → K)
     (by norm_num only [IRSProfile.card_index]) (by norm_num [p]) htype Γ
   intro γ hγ
   exact native_IsMCA_badSlope U γ (hΓ γ hγ)
-
 theorem native_principal_budget : 733014149906392 ≤ 243069641737383864 := by norm_num
-
 end
 end FrobeniusLocator.Native
-end PackSource_NativePrincipal
-
-section PackSource_NativeStrataMCA
-set_option autoImplicit true
+end
+section
 set_option backward.isDefEq.respectTransparency false
 set_option maxHeartbeats 2000000
 namespace FrobeniusLocator.Strata
@@ -5832,7 +4773,6 @@ open Polynomial Finset Matrix CoreDefinitions Code
 open ProximityPrize.Benchmark
 local instance nativeStrataDecidable (P : Prop) : Decidable P := Classical.propDecidable P
 local instance nativeStrataNonzero : NeZero (131072 : ℕ) := ⟨by norm_num⟩
-
 theorem native_IsMCA_badSlope (U : Fin 2 → Native.I → Native.K) (γ : Native.K)
     (hmca : IsMCA (AffineLineGenerator Native.K) IRSProfile.baseCode γ U Native.radius) :
     Principal.BadSlope IRSProfile.domain (U 0) (U 1) 131072 180265 γ := by
@@ -5842,10 +4782,6 @@ theorem native_IsMCA_badSlope (U : Fin 2 → Native.I → Native.K) (γ : Native
   intro T hT
   norm_num [IRSProfile.card_index,Native.radius,claimedRadius] at hT ⊢
   exact hT
-
-/-- Benchmark-native MCA endpoint. The two geometric counts and the
-normal residual cap are shown verbatim in the signature. This is NOT
-an unconditional MCA cap or ProtocolClaim. -/
 theorem native_MCA_count_of_booked_geometry_and_residual (U : Fin 2 → Native.I → Native.K)
     (r : ℕ) (hr7 : 7≤r)
     (hr : GenericLayer.genericRank (stacked Native.p IRSProfile.domain (U 0) (U 1) 49193 81879)=81880-r)
@@ -5861,30 +4797,21 @@ theorem native_MCA_count_of_booked_geometry_and_residual (U : Fin 2 → Native.I
     Native.native_domain_fixed IRSProfile.card_index r hr7 hr hfirst hprincipal hregular hres Γ
   intro γ hγ
   exact native_IsMCA_badSlope U γ (hΓ γ hγ)
-
 end
 end FrobeniusLocator.Strata
-end PackSource_NativeStrataMCA
-
-section PackSource_NativeLemmaT
-set_option autoImplicit true
+end
+section
 set_option backward.isDefEq.respectTransparency false
 namespace FrobeniusLocator.Strata
 noncomputable section
 open Polynomial Matrix
 open ProximityPrize.Benchmark
-
-/-- The field-size guard in the global polynomial output construction
-is discharged at the actual native sextic field for every open H. -/
 theorem native_relation_height_fits_field (H : ℕ) (hH : H≤32680) :
     (2*H+2)*Native.p<Fintype.card Native.K := by
   change (2*H+2)*2130706433<Fintype.card KoalaBear.Ext6
   rw [KoalaBear.card_ext6]
   have hle := Nat.mul_le_mul_right 2130706433 (show 2*H+2≤2*32680+2 by omega)
   exact hle.trans_lt (by norm_num)
-
-/-- Native primitive polynomial Lemma T with all size/degree guards
-proved. The binary level Hilbert function remains an EXPLICIT premise. -/
 def native_lemmaT_of_two_active_level (U : Fin 2 → Native.I → Native.K)
     (r a b c : ℕ) (hr7 : 7≤r) (ha : a≤b) (hb : b≤81879) (hc : 81879<c)
     (hcm : c≤131072) (hsum : a+b+c=262146) (hr : r+a+b=163760)
@@ -5899,51 +4826,6 @@ def native_lemmaT_of_two_active_level (U : Fin 2 → Native.I → Native.K)
     IRSProfile.domain (U 0) (U 1) IRSProfile.domain.injective Native.native_domain_fixed
     131072 131072 (131073-c) (by rw [IRSProfile.card_index]) (by omega)
     (native_relation_height_fits_field _ hH) hline
-
 end
 end FrobeniusLocator.Strata
-end PackSource_NativeLemmaT
-
-section PackSource_NativeGenericPrincipal
-set_option autoImplicit true
-set_option backward.isDefEq.respectTransparency false
-set_option maxRecDepth 10000
-namespace FrobeniusLocator.Native
-noncomputable section
-open Polynomial Finset Matrix CoreDefinitions Code
-open ProximityPrize.Benchmark
-open FrobeniusLocator.Principal
-
-abbrev GenericSlopeField := FractionRing K[X]
-def genericSlopeEmbedding : K[X] →+* GenericSlopeField := algebraMap K[X] GenericSlopeField
-
-def GenericPrincipalCertificate (u v : I → K) : Prop :=
-  ∃ a q : ℕ, a+q=81879 ∧ Nonempty (PrincipalAt
-    (fun b j => genericSlopeEmbedding (parameterSyndromes p IRSProfile.domain u v b j))
-    131072 a q)
-
-/-- Native any-nullity principal-kernel theorem from bare principality
-over K(Z), without a separately supplied cofactor or normal-fiber package. -/
-theorem native_generic_principal_MCA_count (U : Fin 2 → I → K)
-    (hprincipal : GenericPrincipalCertificate (U 0) (U 1))
-    (Γ : Finset K) (hΓ : ∀ γ ∈ Γ,
-      IsMCA (AffineLineGenerator K) IRSProfile.baseCode γ U radius) :
-    Γ.card ≤ 733014149906392 := by
-  obtain ⟨a,q,hsum,⟨P⟩⟩ := hprincipal
-  have hbad : ∀ γ ∈ Γ,
-      BadSlope IRSProfile.domain (U 0) (U 1) 131072 (131072+(131072-(a+q))) γ := by
-    intro γ hγ
-    rw [hsum]
-    exact native_IsMCA_badSlope U γ (hΓ γ hγ)
-  have hh := generic_principal_bad_count_coarse genericSlopeEmbedding
-    (IsFractionRing.injective K[X] GenericSlopeField) p (by norm_num [p])
-    IRSProfile.domain IRSProfile.domain.injective native_domain_fixed (U 0) (U 1)
-    131072 131072 a q (by norm_num only [IRSProfile.card_index]) (by omega) P Γ hbad
-  rw [IRSProfile.card_index] at hh
-  exact hh.trans (calc
-    _ ≤ p*(262144+81880) := Nat.mul_le_mul_left p (by omega)
-    _ = _ := by norm_num [p])
-
 end
-end FrobeniusLocator.Native
-end PackSource_NativeGenericPrincipal

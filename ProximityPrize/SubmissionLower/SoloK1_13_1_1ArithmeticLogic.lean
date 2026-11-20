@@ -1,53 +1,42 @@
 import ProximityPrize.SubmissionLower.Fast040
 set_option Elab.async false
-
-section PackSource_K1_13_1_1ArithmeticLogic
 set_option autoImplicit true
+section
 namespace K1_13_1_1
-
 open scoped BigOperators
-
 set_option maxHeartbeats 1500000
 set_option maxRecDepth 6000
-
 private theorem sumRange_succ (n : ℕ) (f : ℕ → ℕ) :
     sumRange (n + 1) f = sumRange n f + f n := rfl
-
 theorem sumRange_add (a b : ℕ) (f : ℕ → ℕ) :
     sumRange (a + b) f = sumRange a f + sumRange b (fun i => f (i + a)) := by
   induction b with
   | zero => simp [sumRange]
   | succ b ih =>
     rw [Nat.add_succ, sumRange_succ, ih, sumRange_succ, Nat.add_assoc, Nat.add_comm a b]
-
 private theorem sumRange_succ_left (n : ℕ) (f : ℕ → ℕ) :
     sumRange (n + 1) f = f 0 + sumRange n (fun i => f (i + 1)) := by
   rw [Nat.add_comm n 1, sumRange_add]
   simp [sumRange]
-
 private theorem sumRange_zero (n : ℕ) (f : ℕ → ℕ) (h : ∀ i < n, f i = 0) :
     sumRange n f = 0 := by
   rw [sumRange_eq_sum]
   exact Finset.sum_eq_zero fun i hi => h i (Finset.mem_range.mp hi)
-
 private theorem sumRange_congr (n : ℕ) {f g : ℕ → ℕ} (h : ∀ i < n, f i = g i) :
     sumRange n f = sumRange n g := by
   simp only [sumRange_eq_sum]
   exact Finset.sum_congr rfl fun i hi => h i (Finset.mem_range.mp hi)
-
 private theorem sumRange_prefix (n k : ℕ) (f : ℕ → ℕ) (hk : k ≤ n)
     (h : ∀ i, k ≤ i → i < n → f i = 0) :
     sumRange n f = sumRange k f := by
   conv_lhs => rw [← Nat.add_sub_of_le hk, sumRange_add]
   rw [sumRange_zero (n - k) (fun i => f (i + k)) (fun i hi => h _ (by omega) (by omega)),
     add_zero]
-
 private theorem sumRange_suffix (n k : ℕ) (f : ℕ → ℕ) (hk : k ≤ n)
     (h : ∀ i < k, f i = 0) :
     sumRange n f = sumRange (n - k) (fun i => f (i + k)) := by
   conv_lhs => rw [← Nat.add_sub_of_le hk, sumRange_add]
   rw [sumRange_zero k f h, zero_add]
-
 private theorem remainingCap_eq (n start cap : ℕ) (f : ℕ → ℕ) :
     remainingCap f n start cap = cap - sumRange n (fun i => f (i + start)) := by
   induction n generalizing start cap with
@@ -58,13 +47,11 @@ private theorem remainingCap_eq (n start cap : ℕ) (f : ℕ → ℕ) :
     rw [remainingCap, ite_eq_right h, ih, sumRange_succ_left]
     simp only [zero_add, Nat.add_assoc, Nat.add_comm 1 start]
     omega
-
 private theorem sumToCap_eq (n start cap : ℕ) (f : ℕ → ℕ) :
     sumToCap f n start cap = min cap (sumRange n (fun i => f (i + start))) := by
   unfold sumToCap
   rw [remainingCap_eq]
   omega
-
 private theorem activeNatCount_eq (d : ℕ) (lo hi : ℤ) (hhi : 0 ≤ hi) :
     bandCount d lo hi 10 = activeNatCount d lo.toNat hi.toNat := by
   unfold bandCount activeNatCount
@@ -84,7 +71,6 @@ private theorem activeNatCount_eq (d : ℕ) (lo hi : ℤ) (hhi : 0 ≤ hi) :
     intro c _
     unfold intervalSize
     omega
-
 private theorem natLine_eq (d : ℕ) (lo order : ℤ) (ho : 0 ≤ order) (b c : ℕ)
     (hbc : b + c ≤ d) :
     lineBound d lo order b c = natLine d lo.toNat order.toNat b c := by
@@ -97,7 +83,6 @@ private theorem natLine_eq (d : ℕ) (lo order : ℤ) (ho : 0 ≤ order) (b c : 
     min (min d 10 + 1 - lowerNat) (d - b - c + 1 - max lowerNat _)
   rw [hlow]
   congr 1 <;> unfold intervalSize <;> omega
-
 private theorem natPairs_eq (d : ℕ) (lo : ℤ) (b : ℕ) :
     pairBound d lo b = natPairs d lo.toNat b := by
   unfold pairBound natPairs
@@ -105,13 +90,11 @@ private theorem natPairs_eq (d : ℕ) (lo : ℤ) (b : ℕ) :
   intro f hf
   unfold intervalSize
   omega
-
 private theorem natLine_zero (d lo order b c : ℕ) (hbc : b + c ≤ d)
     (h : c < 2 * (d - b) + 1 - order) : natLine d lo order b c = 0 := by
   unfold natLine
   dsimp only
   omega
-
 private theorem innerSlice_eq (d lo order b : ℕ) (hb : b ≤ d) :
     (let startC := 2 * (d - b) + 1 - order
      sumToCap (natLine d lo order b) (d - b + 1 - startC) startC (natPairs d lo b)) =
@@ -130,7 +113,6 @@ private theorem innerSlice_eq (d lo order b : ℕ) (hb : b ≤ d) :
     apply sumRange_zero
     intro c h
     exact natLine_zero d lo order b c (by omega) (by omega)
-
 private theorem fastPascal_eq (s r : ℕ) (h : s + r < 138) :
     fastPascal s r = pascalBound s (offset r) := by
   let d := residualDegree s
@@ -175,7 +157,6 @@ private theorem fastPascal_eq (s r : ℕ) (h : s + r < 138) :
       dsimp [startB] at hb
       omega
     simp [hz]
-
 private theorem fastBlock_eq (s r : ℕ) : fastBlock s r = blockBudget s (offset r) := by
   have h : offset r < 90 - (s : ℤ) ↔ s + r < 138 := by unfold offset; omega
   by_cases hr : s + r < 138
@@ -183,10 +164,8 @@ private theorem fastBlock_eq (s r : ℕ) : fastBlock s r = blockBudget s (offset
       simp [fastBlock, blockBudget, hr, h.mpr hr, fastPascal_eq s r hr, hc]
   · have hg : ¬ offset r < 90 - (s : ℤ) := fun hg => hr (h.mp hg)
     simp [fastBlock, blockBudget, hr, hg]
-
 theorem fastGrade_eq (s : ℕ) : fastGrade s = gradeBudget s := by
   unfold fastGrade gradeBudget
   exact sumRange_congr _ (fun i _ => fastBlock_eq s i)
-
 end K1_13_1_1
-end PackSource_K1_13_1_1ArithmeticLogic
+end

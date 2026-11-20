@@ -1,21 +1,11 @@
-import ProximityPrize.SubmissionLower.Pack_K1Defs
-import ProximityPrize.SubmissionLower.Fast023
-import ProximityPrize.SubmissionLower.Fast029
 import ProximityPrize.SubmissionLower.Pack_K1_14_2_1Arithmetic
 set_option Elab.async false
-
-section PackSource_K1_14_2_1Split
 set_option autoImplicit true
+section
 set_option maxSynthPendingDepth 8
-
 namespace K1_14_2_1
-
 noncomputable section
-
 open K1 K1_14 K1_14_2 Polynomial Finset
-
-/-- Low Hasse derivatives detect the exact power of a moving irreducible.
-The nonzero multiple P supplies the degree bound in the seed variables. -/
 def c1 : Prop :=
   ∀ (G P R : Jet) (U e : ℕ),
     Irreducible G → 0 < G.natDegree → UsesSeed G →
@@ -23,15 +13,11 @@ def c1 : Prop :=
     (∀ j i, ((P.coeff j).coeff i).totalDegree ≤ U) →
     (∀ (i : Fin 2) (r : ℕ), r < e → G ∣ seedHasse i r R) →
     G ^ e ∣ R
-
-/-- At a single cutoff there are at most triangle U seed coordinates
-over each jet grade with admissible outer degree. -/
 def c2 : Prop :=
   ∀ (s : Shape) (V : Submodule FX Jet) (k : ℕ),
     (∀ P ∈ V, RowCaps s P) →
     (∀ P ∈ V, P ≠ 0 → k ≤ P.natDegree) →
     Module.finrank FX V ≤ triangle s.U * shapeSum s (fun _ j => if k ≤ j then 1 else 0)
-
 private theorem last_cutoffs (d N j : ℕ) (hd : 0 < d) :
     (∑ W ∈ range N, if 1 + (N - 1 - W) / d ≤ j then 1 else 0) ≤ d * j := by
   have hfilter : (range N).filter (fun W => 1 + (N - 1 - W) / d ≤ j) =
@@ -45,7 +31,6 @@ private theorem last_cutoffs (d N j : ℕ) (hd : 0 < d) :
     · simp [hW]
   rw [← card_filter, hfilter, Nat.card_Ico]
   omega
-
 private theorem sum_rank_le (rankBound : c2) (rows : Banks) (s : Shape) (h N : ℕ)
     (hh : 0 < h) (hcaps : ∀ W, ∀ P ∈ rows s W, RowCaps s P)
     (hpower : ∀ W < N, ∀ P ∈ rows s W, P ≠ 0 →
@@ -65,7 +50,6 @@ private theorem sum_rank_le (rankBound : c2) (rows : Banks) (s : Shape) (h N : �
       unfold movingCeiling shapeSum
       exact Nat.mul_le_mul_left _ (sum_le_sum fun _ _ =>
         sum_le_sum fun j _ => last_cutoffs (2 * h) N j (by omega))
-
 private theorem source_floor {u del} {M : AnchorModel u del} {Γ}
     {F : AnchoredFamily M Γ} {rows : Banks} (src : JetSource M F rows)
     {s : Shape} (hs : s ∈ scheduled M.overhead) (r : ℕ)
@@ -83,7 +67,6 @@ private theorem source_floor {u del} {M : AnchorModel u del} {Γ}
   change triangle s.U * shapeSum s (fun q j => N + j - q * (131071 - M.overhead.toNat)) ≤
     sourceDebit M.overhead.toNat s + ∑ W ∈ range N, Module.finrank FX (rows s W)
   simpa only [hc] using h
-
 private theorem bank_nonzero {u del} {M : AnchorModel u del} {Γ}
     {F : AnchoredFamily M Γ} {rows : Banks} (src : JetSource M F rows)
     {s : Shape} (hs : s ∈ scheduled M.overhead) (r : ℕ)
@@ -106,7 +89,6 @@ private theorem bank_nonzero {u del} {M : AnchorModel u del} {Γ}
         (hz P (src.nested s hs s hs rfl rfl rfl le_rfl W _ hle hP))
     rw [hb, finrank_bot]
   omega
-
 private theorem stage_shapes {w : ℤ} (hw : w ≤ 3554) {t : Stage} (ht : t ∈ stages) :
     t.cheap ∈ scheduled w ∧ t.layered ∈ scheduled w := by
   have he : scheduled w = stages.flatMap (fun s => [s.cheap, s.layered]) ++
@@ -114,8 +96,6 @@ private theorem stage_shapes {w : ℤ} (hw : w ≤ 3554) {t : Stage} (ht : t ∈
   rw [he]
   exact ⟨List.mem_append_left _ (List.mem_flatMap.mpr ⟨t, ht, by simp⟩),
     List.mem_append_left _ (List.mem_flatMap.mpr ⟨t, ht, by simp⟩)⟩
-
--- Keep the height and cutoff count symbolic when checking the degree of the power.
 private theorem split_row_degree_from_shifts (power : c1) (h N W : ℕ) (hh : 0 < h)
     (hW : W < N) {G P R : Jet} (hi : Irreducible G) (hv : 0 < G.natDegree)
     (hm : UsesSeed G) (hP : P ≠ 0) (hdiv : G ∣ P) {U : ℕ} (hp : U < p)
@@ -132,7 +112,6 @@ private theorem split_row_degree_from_shifts (power : c1) (h N W : ℕ) (hh : 0 
   have hdegree := Polynomial.natDegree_le_of_dvd hpower hnR
   rw [Polynomial.natDegree_pow] at hdegree
   exact (Nat.le_mul_of_pos_right e hv).trans hdegree
-
 private theorem avoids_one {u del} {M : AnchorModel u del} {Γ} {F : AnchoredFamily M Γ}
     {rows : Banks} (src : JetSource M F rows) (power : c1) (rankBound : c2)
     (hh : 0 < M.overhead.toNat) {s : Shape} (hs : s ∈ scheduled M.overhead) (r : ℕ)
@@ -156,7 +135,6 @@ private theorem avoids_one {u del} {M : AnchorModel u del} {Γ} {F : AnchoredFam
   change _ ≤ _ + ∑ W ∈ range N, Module.finrank FX (rows s W) at hf
   change _ + movingCeiling h s < _ at hd
   omega
-
 theorem of_children (h1 : c1) (h2 : c2) : K1_14_2.c1 := by
   intro u del M Γ F hlo hhi rows src t ht
   have h : 0 < M.overhead.toNat := by omega
@@ -173,7 +151,6 @@ theorem of_children (h1 : c1) (h2 : c2) : K1_14_2.c1 := by
   have hcut (s : Shape) : bufferedAt M.overhead t.reserve s =
       cutoffCount M.overhead.toNat t.reserve s - 1 := by unfold bufferedAt cutoffCount; omega
   exact ⟨P, (hcut _).symm ▸ hPm, Q, (hcut _).symm ▸ hQm, hP, hQ, havoid⟩
-
 end
 end K1_14_2_1
-end PackSource_K1_14_2_1Split
+end

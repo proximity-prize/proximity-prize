@@ -1,37 +1,23 @@
-import ProximityPrize.SubmissionLower.Pack_K1Defs
-import ProximityPrize.SubmissionLower.Numeric5Certificate
-import ProximityPrize.SubmissionLower.Fast023
 import ProximityPrize.SubmissionLower.Fast029
+import ProximityPrize.SubmissionLower.Numeric5Certificate
 set_option Elab.async false
-
-section PackSource_K1_14_2_2Split
 set_option autoImplicit true
+section
 set_option backward.isDefEq.respectTransparency false
 set_option maxSynthPendingDepth 8
 set_option maxHeartbeats 1500000
-
 namespace K1_14_2_2
-
 noncomputable section
-
 open K1 K1_14 K1_14_2 Polynomial
 open scoped Classical
-
-/-- Strip all fixed factors, keeping their degree bounds in a single equation. -/
 def c1 : Prop :=
   ∀ P s, P ≠ 0 → RowCaps P s → Nonempty (FixedPart P s)
-
-/-- The two initial residual and ordinary compatibility systems cover every
-mark after seed-only, nondominant-seed, constant-Y and fixed-factor exits. -/
 def c2 : Prop :=
   ∀ u del (M : AnchorModel u del) Γ (F : AnchoredFamily M Γ) rows
     (B : RowPair M.overhead rows 0) (A : FixedPair B),
     (∀ γ ∈ Γ, jetAt B.cheap (M.label γ) (F.scalar γ) = 0 ∧
       jetAt B.layered (M.label γ) (F.scalar γ) = 0) →
     Nonempty (InitialCover M F A.cheap.equation A.layered.equation)
-
-/-- Buffered contact is ordinary local order on rank-two parents and
-local order modulo the jet-image curve on rank-one parents. -/
 def c3 : Prop :=
   ∀ (h : ℕ) (rows : Banks) (s : Shape) (I : Ideal Ambient),
     0 < h → Active I →
@@ -39,10 +25,6 @@ def c3 : Prop :=
     K1_14_3.SeedShift h rows s → bankVanishes rows s I →
     ∀ W r P, r < p → W + 2*h*r ≤ fullCutoff s → P ∈ rows s W →
       orderOn I P (r+1)
-
-/-- A paired stage consumes a shared ordinary gcd budget. The degree
-calculation uses linear residual lengths for rank one and squared lengths
-for rank two. The incoming cap allows componentwise clipping. -/
 def c4 : Prop :=
   ∀ w rows (i : Fin 10) (B : RowPair w rows i) (A : FixedPair B)
     (S : Finset (Ideal Ambient)),
@@ -52,15 +34,10 @@ def c4 : Prop :=
       orderOn I B.layered ((stageAt i).reserve+1)) →
     (i.val ≤ 4 → Fits S (exitBudget i)) ∧
     Fits (S.filter dual) (budget i.val)
-
-/-- Descend the product of rank-one jet-image equations at the bridge stop. -/
 def c5 : Prop :=
   ∀ S : Finset (Ideal Ambient), (∀ I ∈ S, Active I ∧ ¬ dual I) →
     mass S 1 ≤ 93976 → mass S 2 ≤ 507836 →
     ∃ G : ODE, ODECaps G 507836 93976 ∧ ∀ I ∈ S, fixedOn G I
-
-/-- A failed bank or compatibility test supplies a proper cutter within
-the padded stage shape, valid on every original mark of that parent. -/
 def c6 : Prop :=
   ∀ u del (M : AnchorModel u del) Γ (F : AnchoredFamily M Γ) rows,
     M.overhead ≤ 3554 → JetSource M F rows →
@@ -68,9 +45,6 @@ def c6 : Prop :=
     n ≤ 10 → ¬ stageTest pairs n I →
     ∃ P : Jet, RowCaps P (cutShape n) ∧ toJet P ∉ I ∧
       ∀ γ ∈ Γ, OnParent M F I γ → jetAt P (M.label γ) (F.scalar γ) = 0
-
-/-- A proper cut of one active parent supplies the nonconstant-seed curves
-and the number of labels on the constant-seed part. -/
 def c7 : Prop :=
   ∀ u del (M : AnchorModel u del) Γ (F : AnchoredFamily M Γ) (s : Shape)
     (I : Ideal Ambient) (P : Jet),
@@ -78,7 +52,6 @@ def c7 : Prop :=
     ∃ C : CutCover, (∀ fee, C.cost fee ≤ dot (weight s fee) (sectionDegree I)) ∧
       ∀ γ ∈ Γ, OnParent M F I γ → jetAt P (M.label γ) (F.scalar γ) = 0 →
         C.covers M F γ
-
 private theorem selectPair {u del} {M : AnchorModel u del} {Γ} {F : AnchoredFamily M Γ}
     {rows : Banks} (hw : M.overhead ≤ 3554) (hsrc : JetSource M F rows)
     (hbuf : BufferedPairs M.overhead rows) (i : Fin 10) :
@@ -87,7 +60,6 @@ private theorem selectPair {u del} {M : AnchorModel u del} {Γ} {F : AnchoredFam
   exact ⟨⟨P, Q, hpn, hqn, hp, hq,
     hsrc.shape _ (pair_scheduled hw i (by simp [stagePair])) _ P hp,
     hsrc.shape _ (pair_scheduled hw i (by simp [stagePair])) _ Q hq, hnm⟩⟩
-
 private theorem passing_mass (h3 : c3) (h4 : c4)
     {u del} {M : AnchorModel u del} {Γ} {F : AnchoredFamily M Γ} {rows : Banks}
     (hsrc : JetSource M F rows) (hlo : 2601 ≤ M.overhead) (hhi : M.overhead ≤ 3554)
@@ -115,19 +87,16 @@ private theorem passing_mass (h3 : c3) (h4 : c4)
       (hsrc.shift s hs') hv _ _ P hres hsum hp
   exact ⟨hI', hg, hcontact _ (by simp [stagePair]) hg.1.1 _ B.cheap_mem,
     hcontact _ (by simp [stagePair]) hg.1.2.1 _ B.layered_mem⟩
-
 private def stay {w rows} {pairs : ∀ i : Fin 10, RowPair w rows i}
     (parts : ∀ i : Fin 10, FixedPair (pairs i)) (n : ℕ) (I : Ideal Ambient) : Prop :=
   if hn : n < 10 then pairGood (parts ⟨n, hn⟩) I ∧ (n = 4 → dual I)
   else bankVanishes rows full I
-
 private theorem cut_shape_valid (n : ℕ) : (cutShape n).J ≤ (cutShape n).B := by
   by_cases hn : n < 10
   · simp only [cutShape, dite_eq_left hn]
     generalize hi : (⟨n, hn⟩ : Fin 10) = i
     fin_cases i <;> decide
   · simp [cutShape, hn, full]
-
 private theorem after_four {w rows} {pairs : ∀ i : Fin 10, RowPair w rows i}
     (parts : ∀ i : Fin 10, FixedPair (pairs i)) (start : Finset (Ideal Ambient)) :
     ∀ n, 4 ≤ n → ∀ I ∈ timeline start (stay parts) n, dual I := by
@@ -137,13 +106,11 @@ private theorem after_four {w rows} {pairs : ∀ i : Fin 10, RowPair w rows i}
   have hp := (Finset.mem_filter.mp h4).2
   simp only [stay, dite_eq_left (by decide : (4 : ℕ) < 10)] at hp
   exact hp.2 trivial
-
 private def equationFor {w rows} {pairs : ∀ i : Fin 10, RowPair w rows i}
     (parts : ∀ i : Fin 10, FixedPair (pairs i)) (rank : ODE) : FixedTag → ODE
   | .inl t => if t = 0 then rank else 1
   | .inr (i, false) => (parts i).cheap.equation
   | .inr (i, true) => (parts i).layered.equation
-
 private theorem equation_caps {w rows} {pairs : ∀ i : Fin 10, RowPair w rows i}
     (parts : ∀ i : Fin 10, FixedPair (pairs i)) {rank : ODE}
     (hr : ODECaps rank 507836 93976) (t : FixedTag) :
@@ -165,7 +132,6 @@ private theorem equation_caps {w rows} {pairs : ∀ i : Fin 10, RowPair w rows i
   · cases b
     · exact (parts i).cheap.equation_caps
     · exact (parts i).layered.equation_caps
-
 theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) (h4 : c4)
     (h5 : c5) (h6 : c6) (h7 : c7) : K1_14_2.c2 := by
   classical
@@ -342,7 +308,6 @@ theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) (h4 : c4)
       · exact Or.inr (Or.inl (hfixed t γ hγ hf))
       · exact Or.inl (Finset.mem_union_right _ hd)
       · exact Or.inr (Or.inr (Or.inl (Finset.mem_filter.mpr ⟨hγ, J, hJ, hJm⟩)))
-
 end
 end K1_14_2_2
-end PackSource_K1_14_2_2Split
+end
