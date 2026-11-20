@@ -58,42 +58,42 @@ local instance : NeZero (131072 : ℕ) := ⟨by decide⟩
 
 /-- The donor's exact-support pruning argument, instantiated on the
 benchmark's stacked matrix and the small shortened-domain core. -/
-theorem count_le_six (core : ShortenedCap 247446 42657721657869)
-    (u : Words) (hfirst : firstRank u = 49174) (hr : nullity u ≤ 6)
-    (Γ : Finset K) (hΓ : BadFamily u Γ) : Γ.card ≤ 173765030958608237 := by
-  obtain ⟨W⟩ := Pruning.witnessFamily_of_MCA IRSProfile.domain u 131072 180246 (by omega)
+theorem count_le_six (core : ShortenedCap 247465 42657721657869)
+    (u : Words) (hfirst : firstRank u = 49193) (hr : nullity u ≤ 6)
+    (Γ : Finset K) (hΓ : BadFamily u Γ) : Γ.card ≤ 173643196181962951 := by
+  obtain ⟨W⟩ := Pruning.witnessFamily_of_MCA IRSProfile.domain u 131072 180265 (by omega)
     Native.radius (by
       intro T hT
       norm_num [IRSProfile.card_index, Native.radius, claimedRadius] at hT ⊢
       exact hT) Γ hΓ
-  have hpunct : Pruning.PuncturedCap node 131072 180246 67200 Pruning.coreK := by
+  have hpunct : Pruning.PuncturedCap node 131072 180265 67200 Pruning.coreK := by
     exact core
   let φ := algebraMap K[X] Frac
   have hp := Pruning.stacked_pruning_count_of_card p φ (IsFractionRing.injective K[X] Frac)
     node IRSProfile.domain.injective Native.native_domain_fixed (u 0) (u 1)
-    262144 131072 180246 49174 67200 Pruning.coreK IRSProfile.card_index
+    262144 131072 180265 49193 67200 Pruning.coreK IRSProfile.card_index
     (by omega) (by omega) hfirst hpunct Γ W
-  change (Γ.card : ℚ) ≤ Pruning.bound (49174 + p * (stackRank u - 49174))
-    Pruning.coreK (1 + (180246 : ℚ) / ((67200 : ℚ) + 1)) (81899 - stackRank u) at hp
+  change (Γ.card : ℚ) ≤ Pruning.bound (49193 + p * (stackRank u - 49193))
+    Pruning.coreK (1 + (180265 : ℚ) / ((67200 : ℚ) + 1)) (81880 - stackRank u) at hp
   rw [actual_stackRank] at hp
-  have hr' : 81899 - (81899 - nullity u) = nullity u := by omega
-  have hδ : 81899 - nullity u - 49174 = 32725 - nullity u := by omega
+  have hr' : 81880 - (81880 - nullity u) = nullity u := by omega
+  have hδ : 81880 - nullity u - 49193 = 32687 - nullity u := by omega
   rw [hr', hδ] at hp
   apply Pruning.production_count_le (nullity u) Γ.card hr
-  have hC : (1 + (180246 : ℚ) / (67200 + 1)) = Pruning.productionC := by
+  have hC : (1 + (180265 : ℚ) / (67200 + 1)) = Pruning.productionC := by
     norm_num [Pruning.productionC]
   rw [hC] at hp
   exact hp
 
-theorem rank_book (u : Words) (hfirst : firstRank u = 49174) (Γ : Finset K) :
+theorem rank_book (u : Words) (hfirst : firstRank u = 49193) (Γ : Finset K) :
     (abnormalSlopes u Γ).card ≤ rankReserve (nullity u) := by
   classical
-  have hb := Strata.two_block_rank_exception_count p node (u 0) (u 1) 49174 81898
+  have hb := Strata.two_block_rank_exception_count p node (u 0) (u 1) 49193 81879
     (nullity u) (actual_stackRank u) hfirst (abnormalSlopes u Γ) (by
       intro γ hγ
       rw [← actual_stackRank u]
       exact (Finset.mem_filter.mp hγ).2)
-  have he : 81898 + 1 - nullity u - 49174 = 32725 - nullity u := by omega
+  have he : 81879 + 1 - nullity u - 49193 = 32687 - nullity u := by omega
   rw [he] at hb
   exact hb
 
@@ -135,13 +135,13 @@ theorem padded_count {u : Words} {D : Finset I} {Γ : Finset K} {r g : ℕ}
     rw [← Int.cast_natCast, Int.toNat_of_nonneg]
     exact Rat.num_nonneg.mpr (planePrice_nonneg _ _ _ _)
   have hq : (n : ℚ) / d = q := by rw [hn, Rat.num_div_den]
-  have hfit : r - 1 + padding r ≤ 81898 - g := by omega
+  have hfit : r - 1 + padding r ≤ 81879 - g := by omega
   have hden : 0 < (incidenceDenominator r g : ℚ) := by
     unfold incidenceDenominator
     exact_mod_cast Nat.mul_pos (Nat.choose_pos hfit)
-      (Nat.choose_pos (by omega : padding r ≤ 180246 - 1))
+      (Nat.choose_pos (by omega : padding r ≤ 180265 - 1))
   have hcount := Mixed.shared_mixed_rational_count node (u 0) (u 1)
-    IRSProfile.domain.injective D Γ 131072 180246 (81898 - g) (r - 1) (padding r) n d
+    IRSProfile.domain.injective D Γ 131072 180265 (81879 - g) (r - 1) (padding r) n d
     (fun γ => goodSet u D γ (F.decoder γ)) (fun γ => errorSet u D γ (F.decoder γ)) F.slack
     (by omega) hfit (by omega)
     (by
@@ -256,13 +256,13 @@ private theorem plane_le_new (r g : ℕ) (hr : 7 ≤ r) (hr16 : r ≤ 16)
 private theorem reserve_le (r lo g : ℕ) (hr : 7 ≤ r) (hl : lo ≤ g) :
     extraReserve r g ≤ extraReserve r lo := by
   have hH : reducedHeight r g ≤ reducedHeight r lo := by unfold reducedHeight; omega
-  have hd : 49174 - reducedHeight r lo ≤ 49174 - reducedHeight r g := by omega
-  have hdpos : 0 < 49174 - reducedHeight r lo := by unfold reducedHeight; omega
+  have hd : 49193 - reducedHeight r lo ≤ 49193 - reducedHeight r g := by omega
+  have hdpos : 0 < 49193 - reducedHeight r lo := by unfold reducedHeight; omega
   have hz :
-      (2130706433 * 49174 + reducedHeight r g) / (49174 - reducedHeight r g) ≤
-      (2130706433 * 49174 + reducedHeight r lo) / (49174 - reducedHeight r lo) :=
+      (2130706433 * 49193 + reducedHeight r g) / (49193 - reducedHeight r g) ≤
+      (2130706433 * 49193 + reducedHeight r lo) / (49193 - reducedHeight r lo) :=
     (Nat.div_le_div_right (Nat.add_le_add_left hH _)).trans (Nat.div_le_div_left hd hdpos)
-  have hn : 49174 / (49174 - reducedHeight r g) ≤ 49174 / (49174 - reducedHeight r lo) :=
+  have hn : 49193 / (49193 - reducedHeight r g) ≤ 49193 / (49193 - reducedHeight r lo) :=
     Nat.div_le_div_left hd hdpos
   exact Nat.add_le_add (Nat.mul_le_mul (Nat.mul_le_mul_left 2 hH) hz)
     (Nat.mul_le_mul_right (2130706433 + 1) hn)
@@ -276,7 +276,7 @@ private theorem fastChoose_eq (n k : ℕ) : fastChoose n k = n.choose k :=
 
 private def intervalRatio (r lo hi : ℕ) : ℚ :=
   (fastChoose (262144 - lo) (deletionSize r) : ℚ) /
-    (fastChoose (81898 - hi) (r - 1 + padding r) * fastChoose (180246 - 1) (padding r) : ℕ)
+    (fastChoose (81879 - hi) (r - 1 + padding r) * fastChoose (180265 - 1) (padding r) : ℕ)
 
 private theorem ratio_le_interval (r g lo hi : ℕ) (hr16 : r ≤ 16)
     (hl : lo ≤ g) (hh : g ≤ hi) (hhi : hi ≤ fixedLimit r) :
@@ -369,7 +369,7 @@ open K1
 /-- The primitive wide left pair has the shifted-minor seed-height bound. -/
 def c1 : Prop :=
   ∀ (u : Words), MiddleGuard u → ∀ (T : TwoActive u) (R : Relation T),
-    ∀ i, (R.coefficients i).natDegree ≤ 6367000374
+    ∀ i, (R.coefficients i).natDegree ≤ 6347474207
 
 /-- Once the original rank drops have been removed, only the reduced
 resultant and normalization reserves are used to prepare the marked family. -/
@@ -413,11 +413,11 @@ private theorem main_height_guards (r g : ℕ) (hr : 7 ≤ r) (hr16 : r ≤ 16)
   unfold reducedHeight childRows cutoff
   split_ifs <;> omega
 
-private theorem normal_count_large_g (hcore : ShortenedCap 247716 997091057559175)
+private theorem normal_count_large_g (hcore : ShortenedCap 247716 185328514776456)
     (u : Words) (T : TwoActive u) (R : Relation T) (hsat : NormalSaturation R)
     (Γ : Finset K) (hΓ : BadFamily u Γ) (hn : ∀ γ ∈ Γ, Normal u γ)
     (hg : fixedLimit (nullity u) < (fixedNodes R).card) :
-    Γ.card ≤ 997091057559175 := by
+    Γ.card ≤ 185328514776456 := by
   classical
   refine hcore (Finset.univ \ fixedNodes R) ?_ (u 0) (u 1) Γ ?_
   · rw [Finset.card_sdiff_of_subset (Finset.subset_univ _), Finset.card_univ, IRSProfile.card_index]
@@ -430,7 +430,7 @@ private theorem normal_count_large_g (hcore : ShortenedCap 247716 99709105755917
     intro i hi
     exact Finset.mem_sdiff.mpr ⟨Finset.mem_univ _, fun hi' => sat.fixed_errors i hi' (M.hits i hi)⟩
 
-private theorem add_rank_book (u : Words) (Γ : Finset K) (hfirst : firstRank u = 49174)
+private theorem add_rank_book (u : Words) (Γ : Finset K) (hfirst : firstRank u = 49193)
     (b : ℕ) (hb : (normalSlopes u Γ).card ≤ b) :
     Γ.card ≤ rankReserve (nullity u) + b := by
   classical
@@ -447,15 +447,15 @@ private theorem middle_count (h1 : c1) (h2 : c2) (h3 : c3) (h4 : c4)
   have hr : 7 ≤ r := hm.1
   have hr16 : r ≤ 16 := hm.2.1
   have hfirst := hm.2.2.1
-  have hrank : rankReserve r ≤ 69712453124068 := by
+  have hrank : rankReserve r ≤ 69631486279633 := by
     unfold rankReserve
-    have hh : 32725 - r ≤ 32718 := by omega
+    have hh : 32687 - r ≤ 32680 := by omega
     have hmul := Nat.mul_le_mul_left 2130706433 hh
     omega
   obtain ⟨T⟩ := two_active_of_positive u (by omega) hm.2.2.2.1 hm.2.2.2.2.1
   let R : Relation T := Strata.native_lemmaT_of_two_active_level u r
     T.a T.b T.c hr T.ab T.active T.inactive T.top T.degreeSum T.nullitySum T.level
-  have hH : T.height < 49174 := by
+  have hH : T.height < 49193 := by
     have := T.degreeSum
     have := T.nullitySum
     have := T.top
@@ -474,7 +474,7 @@ private theorem middle_count (h1 : c1) (h2 : c2) (h3 : c3) (h4 : c4)
   by_cases hmov : MovingGCD R
   · have hcount := K1_6.normal_growth_count R (h1 u hm T R) hmov hsat N hN hn
     have hh := add_rank_book u Γ hfirst _ hcount
-    change Γ.card ≤ rankReserve r + 1669070946041856 at hh
+    change Γ.card ≤ rankReserve r + 1663952278519808 at hh
     omega
   have hinv : ¬ InvalidLeft R := by
     obtain ⟨γ, hγ⟩ := hnon
@@ -504,14 +504,14 @@ private theorem middle_count (h1 : c1) (h2 : c2) (h3 : c3) (h4 : c4)
     exact_mod_cast hfinal
   · have hc := normal_count_large_g shortened_large u T R hsat N hN hn (Nat.lt_of_not_ge hg)
     have hh := add_rank_book u Γ hfirst _ hc
-    change Γ.card ≤ rankReserve r + 997091057559175 at hh
+    change Γ.card ≤ rankReserve r + 185328514776456 at hh
     omega
 
 theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) (h4 : c4) : K1.c2 := by
   intro u Γ hu hΓ
-  by_cases hd : firstRank u < 49174
+  by_cases hd : firstRank u < 49193
   · exact (K1_3.proof u Γ hd hΓ).trans (by decide)
-  have hfirst : firstRank u = 49174 := by have := firstRank_le u; omega
+  have hfirst : firstRank u = 49193 := by have := firstRank_le u; omega
   by_cases hlow : nullity u ≤ 6
   · exact (count_le_six shortened_small u hfirst hlow Γ hΓ).trans (by decide)
   by_cases ht : TypeAtMostOne u
@@ -1208,7 +1208,7 @@ open K1 K1_2 Polynomial Matrix FrobeniusLocator ProximityPrize.Benchmark
 private theorem twoBlock_atSlope (u : Words) (γ : K) :
     ((twoBlock u).map (evalRingHom γ)) =
       Strata.conjugateHankel (Strata.twoConjugations (frobenius K p))
-        node (fun i => u 0 i + γ * u 1 i) 49174 81898 := by
+        node (fun i => u 0 i + γ * u 1 i) 49193 81879 := by
   rw [twoBlock, Strata.stacked_eq_frobeniusStacked, Strata.frobeniusStacked_eval]
   have h : (fun b : Fin 2 => iterateFrobenius K p b.val) =
       Strata.twoConjugations (frobenius K p) := by
@@ -1229,13 +1229,13 @@ theorem rank_le_errors {u : Words} {γ : K} (M : BadMark u γ)
     fin_cases b <;> simp [Strata.twoConjugations, frobenius_def, Native.native_domain_fixed]
   have h := Strata.conjugateHankel_factorization
     (Strata.twoConjugations (frobenius K p)) node (fun i => u 0 i + γ * u 1 i)
-    IRSProfile.domain.injective hfix M.decoder 131072 49174 81898 M.degree
+    IRSProfile.domain.injective hfix M.decoder 131072 49193 81879 M.degree
     (by rw [IRSProfile.card_index]) E hagree
   change ((twoBlock u).map (evalRingHom γ)).rank = stackRank u at hγ
   rw [← hγ, twoBlock_atSlope, h]
   refine (Matrix.rank_mul_le_right _ _).trans ?_
   simpa only [Fintype.card_coe] using
-    Matrix.rank_le_card_height (Strata.nodeVandermonde (fun i : E => node i.val) 81898)
+    Matrix.rank_le_card_height (Strata.nodeVandermonde (fun i : E => node i.val) 81879)
 
 theorem domain_card (S : Finset I) :
     (Finset.univ \ S).card = 262144 - S.card := by
@@ -1247,9 +1247,9 @@ private theorem mark_counts {u : Words} {γ : K} (M : BadMark u γ)
     (hfixed : ∀ i ∈ S, M.decoder.eval (node i) ≠ u 0 i + γ * u 1 i) :
     let D := Finset.univ \ S
     let G := goodSet u D γ M.decoder
-    let s := G.card - 180246
-    s ≤ nullity u - 1 ∧ G.card = 180246 + s ∧
-      (errorSet u D γ M.decoder).card = 81898 - S.card - s ∧ ¬ JointOn u G := by
+    let s := G.card - 180265
+    s ≤ nullity u - 1 ∧ G.card = 180265 + s ∧
+      (errorSet u D γ M.decoder).card = 81879 - S.card - s ∧ ¬ JointOn u G := by
   classical
   dsimp only
   let D := Finset.univ \ S
@@ -1271,13 +1271,13 @@ private theorem mark_counts {u : Words} {γ : K} (M : BadMark u γ)
     exact Finset.mem_sdiff.mpr ⟨Finset.mem_univ _, fun hG =>
       hne (Finset.mem_filter.mp hG).2.symm⟩
   have hrank := rank_le_errors M hγ E hEg
-  have hrankBound : stackRank u + nullity u = 81899 := by
+  have hrankBound : stackRank u + nullity u = 81880 := by
     simpa only [stackRank, nullity, Fintype.card_fin] using
       GenericLayer.rank_add_nullity (twoBlock u)
   have herror : (errorSet u D γ M.decoder).card = D.card - G.card :=
     Finset.card_sdiff_of_subset hGD
-  change G.card - 180246 ≤ nullity u - 1 ∧ G.card = 180246 + (G.card - 180246) ∧
-    (errorSet u D γ M.decoder).card = 81898 - S.card - (G.card - 180246) ∧ ¬ JointOn u G
+  change G.card - 180265 ≤ nullity u - 1 ∧ G.card = 180265 + (G.card - 180265) ∧
+    (errorSet u D γ M.decoder).card = 81879 - S.card - (G.card - 180265) ∧ ¬ JointOn u G
   refine ⟨by omega, by omega, by omega, ?_⟩
   intro hjoint
   apply M.nonjoint
@@ -1297,7 +1297,7 @@ theorem paddedFamily {u : Words} {T : TwoActive u} {R : Relation T}
   let M (γ : K) (hγ : γ ∈ Γ) : BadMark u γ :=
     Classical.choice (bad_mark u Γ hbad γ hγ)
   let P (γ : K) : K[X] := if hγ : γ ∈ Γ then (M γ hγ).decoder else 0
-  refine ⟨⟨P, fun γ => (goodSet u D γ (P γ)).card - 180246, domain_card _, ?_, ?_⟩⟩
+  refine ⟨⟨P, fun γ => (goodSet u D γ (P γ)).card - 180265, domain_card _, ?_, ?_⟩⟩
   · intro γ hγ
     simpa only [P, dite_eq_left hγ] using (M γ hγ).degree
   · intro γ hγ
@@ -1464,13 +1464,13 @@ bound after deletion of the fixed error columns. -/
 def c1 : Prop :=
   ∀ (u : Words) (T : TwoActive u) (R : Relation T) (A : Reduction u T R)
     (γ : K), BadMark u γ → Normal u γ →
-      49174 + A.height ≤ GenericLayer.genericRank (shortenedStack R)
+      49193 + A.height ≤ GenericLayer.genericRank (shortenedStack R)
 
 /-- The shortened relation supplies all its bounded shifts as left
 dependencies of the shortened stack. -/
 def c2 : Prop :=
   ∀ (u : Words) (T : TwoActive u) (R : Relation T) (A : Reduction u T R),
-    (shifts (pair A) 49174 (49174 - A.height)).transpose * shortenedStack R = 0
+    (shifts (pair A) 49193 (49193 - A.height)).transpose * shortenedStack R = 0
 
 private theorem shifted_pair_height
     (F : Type) [Field F] (L H w q : ℕ) (P : Fin 2 → F[X][X])
@@ -1545,7 +1545,7 @@ theorem of_children (h1 : c1) (h2 : c2) : K1_2.c2 := by
     have hr := hm.2.1
     dsimp [H, reducedHeight]
     omega
-  have hlt : A.height < 49174 := by
+  have hlt : A.height < 49193 := by
     have hr := hm.1
     rw [hheight]
     dsimp [H, reducedHeight]
@@ -1561,15 +1561,15 @@ theorem of_children (h1 : c1) (h2 : c2) : K1_2.c2 := by
       hheight ▸ A.output_degree, hnodes⟩
   have hrank := h1 u T R A γ M (hn γ hγ)
   have hshift := h2 u T R A
-  have hentry (i : Fin 2 × Fin 49174) (j : Fin (81898 - (fixedNodes R).card + 1)) :
+  have hentry (i : Fin 2 × Fin 49193) (j : Fin (81879 - (fixedNodes R).card + 1)) :
       (shortenedStack R i j).natDegree ≤ if i.1 = 0 then 1 else p :=
     stacked_entry_natDegree p (fun i : D => node i.val) (fun i => u 0 i.val)
-      (fun i => u 1 i.val) 49174 (81898 - (fixedNodes R).card) i j
+      (fun i => u 1 i.val) 49193 (81879 - (fixedNodes R).card) i j
   have hp : 1 ≤ p := by decide
-  have hz := shifted_pair_height K 49174 A.height _ p (pair A) (shortenedStack R) hp hlt (pair_degree A)
+  have hz := shifted_pair_height K 49193 A.height _ p (pair A) (shortenedStack R) hp hlt (pair_degree A)
     (pair_primitive A) hrank hshift hentry
   rw [hheight] at hz
-  let ζ := (p * 49174 + H) / (49174 - H)
+  let ζ := (p * 49193 + H) / (49193 - H)
   have hζU (i : ℕ) : (Q.U.coeff i).natDegree ≤ ζ := hz 0 i
   have hζV (i : ℕ) : (Q.V.coeff i).natDegree ≤ ζ := hz 1 i
   obtain ⟨book, hbsub, hbcard, hreg⟩ :=
@@ -2358,14 +2358,14 @@ theorem proof : K1_2_2.c2 := by
   classical
   intro u T R A
   let D := Finset.univ \ fixedNodes R
-  have hheight : T.height ≤ 49174 := by
+  have hheight : T.height ≤ 49193 := by
     unfold TwoActive.height
     have := T.inactive
     omega
-  have hL : A.height + (49174 - A.height) = 49173 + 1 := by
+  have hL : A.height + (49193 - A.height) = 49192 + 1 := by
     have := A.height_eq
     omega
-  have hsize : 131072 + (49173 + 1) + (81898 - (fixedNodes R).card) ≤ Fintype.card D := by
+  have hsize : 131072 + (49192 + 1) + (81879 - (fixedNodes R).card) ≤ Fintype.card D := by
     rw [Fintype.card_coe, domain_card]
     have := A.height_eq
     omega
@@ -2374,7 +2374,7 @@ theorem proof : K1_2_2.c2 := by
     (IRSProfile.domain.injective.comp Subtype.val_injective)
     (fun i => Native.native_domain_fixed i.val)
     (algebraMap K[X] Frac) (IsFractionRing.injective K[X] Frac)
-    131072 A.height 49173 _ _ hL hsize (pair A) A.output (pair_degree A) A.output_degree ?_
+    131072 A.height 49192 _ _ hL hsize (pair A) A.output (pair_degree A) A.output_degree ?_
   apply restricted_nodes p (u := u) (S := fixedNodes R) A.U A.V A.output
   rw [← native_relation]
   exact K1_8.reduced_scaled_relation A (1 : K[X])
@@ -3180,20 +3180,20 @@ theorem proof : K1_2_2.c1 := by
   have hE (i : I) : i ∈ E ↔ w i ≠ M.decoder.eval (node i) := by
     simp [E, G]
   have hS : S ⊆ E := fun i hi => (hE i).2 (A.deleted_error γ hn M i hi).symm
-  have hG : 180246 ≤ G.card := M.agreement.trans (Finset.card_le_card (by
+  have hG : 180265 ≤ G.card := M.agreement.trans (Finset.card_le_card (by
     intro i hi
     exact Finset.mem_filter.mpr ⟨Finset.mem_univ _, (M.hits i hi).symm⟩))
-  have hEcard : E.card ≤ 81898 := by
+  have hEcard : E.card ≤ 81879 := by
     have hg := K1_2_2.domain_card G
     change E.card = 262144 - G.card at hg
     omega
   have hDcard : Fintype.card D = 262144 - S.card := by
     rw [Fintype.card_coe]
     exact K1_2_2.domain_card S
-  have hDsize : 131072 + 49174 + (81898 - S.card) ≤ Fintype.card D := by
+  have hDsize : 131072 + 49193 + (81879 - S.card) ≤ Fintype.card D := by
     have hs := Finset.card_le_card hS
     omega
-  have hE'card : E'.card ≤ 81898 - S.card := by
+  have hE'card : E'.card ≤ 81879 - S.card := by
     have hfilter : E.filter (fun i : I => i ∈ D) = E \ S := by
       ext i
       simp [D]
@@ -3207,28 +3207,28 @@ theorem proof : K1_2_2.c1 := by
   let σ := Strata.twoConjugations (frobenius K p)
   let x (i : D) := node i.val
   let B := Strata.conjugateErrors σ (fun i : E => node i.val)
-    (fun i : E => w i.val - M.decoder.eval (node i.val)) 49174
+    (fun i : E => w i.val - M.decoder.eval (node i.val)) 49193
   let B' := Strata.conjugateErrors σ (fun i : E' => x i.val)
-    (fun i : E' => w i.val.val - M.decoder.eval (x i.val)) 49174
+    (fun i : E' => w i.val.val - M.decoder.eval (x i.val)) 49193
   -- Both Vandermonde factors have full row rank; the weights on each domain
   -- are removed by the existing rank factorization.
   have hfull : ((twoBlock u).map (evalRingHom γ)).rank = B.rank := by
     rw [twoBlock, stacked_at_slope]
     exact Strata.conjugateHankel_error_rank σ node w IRSProfile.domain.injective
-      node_fixed M.decoder 131072 49174 81898 M.degree
+      node_fixed M.decoder 131072 49193 81879 M.degree
       (by rw [IRSProfile.card_index]) E (by omega) hagree
   have hshort : ((K1_2_2.shortenedStack R).map (evalRingHom γ)).rank = B'.rank := by
     change ((stacked p x (fun i : D => u 0 i.val) (fun i : D => u 1 i.val)
-      49174 (81898 - S.card)).map (evalRingHom γ)).rank = B'.rank
+      49193 (81879 - S.card)).map (evalRingHom γ)).rank = B'.rank
     rw [stacked_at_slope]
     exact Strata.conjugateHankel_error_rank σ x (fun i : D => w i.val)
       (IRSProfile.domain.injective.comp Subtype.val_injective)
-      (fun b i => node_fixed b i.val) M.decoder 131072 49174 (81898 - S.card)
+      (fun b i => node_fixed b i.val) M.decoder 131072 49193 (81879 - S.card)
       M.degree hDsize E' (by omega) hagree'
   have hD (i : I) : i ∈ D ↔ i ∉ S := by simp [D]
   have hrank : B.rank ≤ B'.rank + S.card :=
     rank_le_punctured_rank_add_deleted D E S hD hS B
-  have hnormal : ((twoBlock u).map (evalRingHom γ)).rank = 49174 + T.height := by
+  have hnormal : ((twoBlock u).map (evalRingHom γ)).rank = 49193 + T.height := by
     change ((twoBlock u).map (evalRingHom γ)).rank = stackRank u at hn
     rw [hn, actual_stackRank]
     have := T.degreeSum
@@ -3370,39 +3370,6 @@ end
 
 end K1_2_4_2
 end PackSource_K1_2_4_2Proof
-
-section PackSource_K1_2_3Proof
-set_option autoImplicit true
-set_option autoImplicit false
-set_option backward.isDefEq.respectTransparency false
-set_option maxRecDepth 12000
-
-namespace K1_2_3
-
-open Finset Matrix FrobeniusLocator K1 K1_2
-
-theorem proof : K1_2.c3 := by
-  intro u D Γ r g hr hr16 hg F Q hreg J hJ hnon
-  obtain ⟨hH, hR, hRp, hsize⟩ := child_parameters r g hr hr16 hg
-  obtain ⟨hsub, hJc⟩ := Finset.mem_powersetCard.mp hJ
-  have hD : (D \ J).card = 131072 + childRows r + childErrors r g := by
-    rw [Finset.card_sdiff_of_subset hsub, F.domain_card, hJc, hsize]
-  have hmark := fun γ hγ => child_mark F hr hr16 hg (γ := γ) (J := J) hγ
-  have hrank (γ : K) (hγ : γ ∈ childSlopes F J) :=
-    evaluated_rank Q (Finset.sdiff_subset : D \ J ⊆ D) hH hR hD γ
-      (hreg γ (hmark γ hγ).1) (F.decoder γ) (hmark γ hγ).2.1 (hmark γ hγ).2.2.1
-  refine ⟨hD, le_antisymm ?_ ?_, ?_⟩
-  · exact plane_rank_le u (D \ J) (childRows r) (childErrors r g) hRp
-      (formal_graph_rank_le Q Finset.sdiff_subset hH hD)
-  · obtain ⟨γ, hγ⟩ := hnon
-    exact (hrank γ hγ).ge.trans
-      (rank_ge_specialization _ (onGraph γ) _ (IsFractionRing.injective Bivar (FractionRing Bivar)))
-  · intro γ hγ
-    obtain ⟨_, hdegree, hE, hbad⟩ := hmark γ hγ
-    exact ⟨hdegree, hE, hbad, hrank γ hγ⟩
-
-end K1_2_3
-end PackSource_K1_2_3Proof
 
 section PackSource_K1_14_3_2RSplit
 set_option autoImplicit true
@@ -3666,8 +3633,8 @@ private theorem relation_eval (U V : Fin 2 → Polynomial K) (O : Fin 2 → Fin 
 private theorem relation_at_decoder {u : Words} {deleted : Finset I} {h : ℕ}
     {U V : Fin 2 → Polynomial K} (W : Plane u deleted h U V) (P : Puncture deleted)
     (hdeg : (planeRelation U V W.output).weightedTotalDegree (sourceWeights 131071 0) ≤ 131071 + h)
-    (hh : h ≤ 32708) (Q Q' : Polynomial K) (hq : Q.natDegree ≤ 131071)
-    (hq' : Q'.natDegree ≤ 131071) (s t : K) (S : Finset (Fin P.N)) (hS : 180246 ≤ S.card)
+    (hh : h ≤ 32670) (Q Q' : Polynomial K) (hq : Q.natDegree ≤ 131071)
+    (hq' : Q'.natDegree ≤ 131071) (s t : K) (S : Finset (Fin P.N)) (hS : 180265 ≤ S.card)
     (hc : correctOn u P Q Q' s t S) :
     aeval (decoderImages Q Q' s t) (planeRelation U V W.output) = 0 := by
   apply eq_zero_of_many_contacts S P.nodes nodes_injective 1
@@ -3750,7 +3717,7 @@ theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) : K1_10.c1 := by
   have hN : P.N = 262144 - deleted.card := by have := P.size; omega
   obtain ⟨G, hnot, hcontacts⟩ := quotientSource C hdeg hl (by omega) (hN ▸ hs)
   let Q := scalarEliminant 5 G.val a b
-  have hne : Q ≠ 0 := scalarEliminant_ne_zero 720983 131071 5 16 16
+  have hne : Q ≠ 0 := scalarEliminant_ne_zero 721059 131071 5 16 16
     G.val L G.property hnot a b hb hview (h3 u deleted h U V W)
   have hLsource : L ∈ filtered (sourceWeights 131071) (sourceBounds (131071+h) 1 1 1) := by
     apply (mem_filtered _ _ _).mpr
@@ -3758,7 +3725,7 @@ theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) : K1_10.c1 := by
     rw [hdeg j]
     rfl
   obtain ⟨haY, hbY, haS, hbS, haT, hbT⟩ := coeff_bounds L a b _ hLsource hview hb
-  obtain ⟨hY,hS,hT⟩ := polynomialView_source_coefficients 720983 131071 5 16 16 G.val G.property
+  obtain ⟨hY,hS,hT⟩ := polynomialView_source_coefficients 721059 131071 5 16 16 G.val G.property
   have hy : Q.weightedTotalDegree scalarWeightY ≤ 5 :=
     clearedEval_weight_bound scalarWeightY 5 5 1 1 0 (polynomialView G.val) a b
       (by simpa using hY) haY hbY (by decide)
@@ -3773,7 +3740,7 @@ theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) : K1_10.c1 := by
   intro γ M hdis
   rw [toScalarSource_atDecoder]
   let S := indexedSupport P M.support
-  have hS' : 180246 ≤ S.card := by
+  have hS' : 180265 ≤ S.card := by
     rw [indexedSupport_card P M.support
       (fun i hi hid => Finset.disjoint_left.mp hdis hi hid)]
     exact M.agreement
@@ -3782,14 +3749,14 @@ theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) : K1_10.c1 := by
   have hcorrect := correctOn_mark P M
   have hrel := relation_at_decoder W P (le_of_eq (hdeg 0)) (by omega)
     _ _ hd hd' γ (γ ^ p) S hS' hcorrect
-  apply scalarEliminant_annihilates 720983 131071 5 16 16
+  apply scalarEliminant_annihilates 721059 131071 5 16 16
     G.val L G.property a b hview M.decoder (M.decoder.map twist) γ (γ ^ p) hrel
   apply eq_zero_of_many_contacts S P.nodes nodes_injective 4
   · intro i hi
     obtain ⟨R, hR⟩ := hcontacts i
     exact decoder_contact_multiplicity 4 _ _ _ _ _ γ (γ ^ p) _ _ G.val L R.val
       (hcorrect i hi).1 (hcorrect i hi).2 hrel hR
-  · have hdG := decoder_eval_degree 131071 720983 G.val
+  · have hdG := decoder_eval_degree 131071 721059 G.val
       ((mem_filtered _ _ _).mp G.property 0) _ _ hd hd' γ (γ ^ p)
     omega
 
@@ -5664,248 +5631,6 @@ theorem proof : K1_14_3R_2.c4 :=
 end K1_14_3R_2_4
 end PackSource_K1_14_3R_2_4Proof
 
-section PackSource_K1_14_2_2RSplit
-set_option autoImplicit true
-set_option backward.isDefEq.respectTransparency false
-set_option maxSynthPendingDepth 8
-set_option maxHeartbeats 1500000
-
-namespace K1_14_2_2R
-
-noncomputable section
-
-open K1 K1_14 K1_14_2 K1_14_2_2 Polynomial
-open scoped Classical
-open private selectPair cut_shape_valid equationFor equation_caps from ProximityPrize.SubmissionLower.Pack_K1_14_2_2Split
-
-private theorem passing_mass (h3 : K1_14_2_2.c3)
-    (gcds : K1_14_2_2_4.c1) (cancel : K1_14_2_2_4.c3)
-    (lengths : K1_14_2_2_4.c4) (sections : K1_14_2_2_4.c5)
-    {u del} {M : AnchorModel u del} {Γ} {F : AnchoredFamily M Γ} {rows : Banks}
-    (hsrc : JetSource M F rows) (hlo : 2576 ≤ M.overhead) (hhi : M.overhead ≤ 3554)
-    (i : Fin 10) (hi : 0 < i.val) (B : RowPair M.overhead rows i) (A : FixedPair B)
-    (S : Finset (Ideal Ambient)) (hgeom : ∀ I ∈ S, Active I)
-    (hcap : Fits S (budget (i.val-1))) :
-    let R := S.filter (retainPair A)
-    (i.val ≤ 4 → Fits R (exitBudget i)) ∧ Fits (R.filter dual) (budget i.val) := by
-  apply retained_mass gcds cancel lengths sections _ _ i B A _ hi (fits_mono (Finset.filter_subset _ _) hcap)
-  intro I hI
-  obtain ⟨hm, hg⟩ := Finset.mem_filter.mp hI
-  have hI' := hgeom I hm
-  have hcontact (s : Shape) (hs : s ∈ stagePair i) (hv : bankVanishes rows s I)
-      (P : Jet) (hp : P ∈ rows s (bufferedAt M.overhead (stageAt i).reserve s)) :
-      orderOn I P ((stageAt i).reserve+1) := by
-    have hs' := pair_scheduled hhi i hs
-    have hres : (stageAt i).reserve < p := by fin_cases i <;> decide
-    have hfit := buffered_fits hhi i hs
-    have hsum : bufferedAt M.overhead (stageAt i).reserve s +
-        2 * M.overhead.toNat * (stageAt i).reserve ≤ fullCutoff s := by
-      change fullCutoff s - 2*M.overhead.toNat*(stageAt i).reserve + _ ≤ fullCutoff s
-      omega
-    exact h3 _ rows s I (by omega) hI'
-      (hsrc.nested s hs' s hs' rfl rfl rfl le_rfl)
-      (hsrc.shift s hs') hv _ _ P hres hsum hp
-  exact ⟨hI', hg, hcontact _ (by simp [stagePair]) hg.1.1 _ B.cheap_mem,
-    hcontact _ (by simp [stagePair]) hg.1.2.1 _ B.layered_mem⟩
-
-private def stay {w rows} {pairs : ∀ i : Fin 10, RowPair w rows i}
-    (parts : ∀ i : Fin 10, FixedPair (pairs i)) (n : ℕ) (I : Ideal Ambient) : Prop :=
-  if hn : n < 10 then retainPair (parts ⟨n, hn⟩) I ∧ (n = 4 → dual I)
-  else bankVanishes rows full I
-
-private theorem after_four {w rows} {pairs : ∀ i : Fin 10, RowPair w rows i}
-    (parts : ∀ i : Fin 10, FixedPair (pairs i)) (start : Finset (Ideal Ambient)) :
-    ∀ n, 4 ≤ n → ∀ I ∈ timeline start (stay parts) n, dual I := by
-  intro n hn I hI
-  have h4 := timeline_antitone start (stay parts) hn hI
-  change I ∈ (timeline start (stay parts) 3).filter (stay parts 4) at h4
-  have hp := (Finset.mem_filter.mp h4).2
-  simp only [stay, dite_eq_left (by decide : (4 : ℕ) < 10)] at hp
-  exact hp.2 trivial
-
-theorem of_children (h2 : K1_14_2_2.c2) (h3 : K1_14_2_2.c3)
-    (gcds : K1_14_2_2_4.c1) (cancel : K1_14_2_2_4.c3)
-    (lengths : K1_14_2_2_4.c4) (sections : K1_14_2_2_4.c5)
-    (h5 : K1_14_2_2.c5) (h7 : K1_14_2_2.c7) : K1_14_2.c2 := by
-  classical
-  intro u del M Γ F hlo hhi rows hsrc hbuf
-  let pairs (i : Fin 10) : RowPair M.overhead rows i :=
-    Classical.choice (selectPair hhi hsrc hbuf i)
-  let parts (i : Fin 10) : FixedPair (pairs i) :=
-    ⟨Classical.choice (K1_14_2_2_1.proof _ _ (pairs i).cheap_ne (pairs i).cheap_caps),
-     Classical.choice (K1_14_2_2_1.proof _ _ (pairs i).layered_ne (pairs i).layered_caps)⟩
-  obtain ⟨initial⟩ := h2 u del M Γ F rows (pairs 0) (parts 0) (by
-    intro γ hγ
-    exact ⟨hsrc.necessary _ (pair_scheduled hhi 0 (by simp [stagePair]))
-        _ (buffer_lt 0 (by simp [stagePair]) _) _ (pairs 0).cheap_mem γ hγ,
-      hsrc.necessary _ (pair_scheduled hhi 0 (by simp [stagePair]))
-        _ (buffer_lt 0 (by simp [stagePair]) _) _ (pairs 0).layered_mem γ hγ⟩)
-  let S := timeline initial.parents (stay parts)
-  have hsub (n : ℕ) : S (n+1) ⊆ S n := timeline_succ _ _ _
-  have hactive (n : ℕ) : ∀ I ∈ S n, Active I :=
-    fun I hI => initial.geometric I (timeline_antitone _ _ (Nat.zero_le n) hI)
-  have hdual (n : ℕ) (hn : 4 ≤ n) : ∀ I ∈ S n, dual I :=
-    after_four parts initial.parents n hn
-  have hcap (n : ℕ) (hn : n < 10) : Fits (S n) (budget n) := by
-    induction n with
-    | zero => exact initial.initial_mass
-    | succ n ih =>
-      let i : Fin 10 := ⟨n+1, hn⟩
-      let R := (S n).filter (retainPair (parts i))
-      have hb := passing_mass h3 gcds cancel lengths sections hsrc hlo hhi i (by simp [i]) (pairs i) (parts i)
-        (S n) (hactive n) (ih (by omega))
-      have hs (I) (hI : I ∈ S (n+1)) : I ∈ R := by
-        change I ∈ (S n).filter (stay parts (n+1)) at hI
-        obtain ⟨hm, hp⟩ := Finset.mem_filter.mp hI
-        have hp' : retainPair (parts i) I ∧ (n+1 = 4 → dual I) := by
-          simpa only [stay, dite_eq_left hn, i] using hp
-        exact Finset.mem_filter.mpr ⟨hm, hp'.1⟩
-      by_cases hfour : 4 ≤ n+1
-      · apply fits_mono (T := R.filter dual) _ hb.2
-        exact fun I hI => Finset.mem_filter.mpr ⟨hs I hI, hdual _ hfour I hI⟩
-      · have hh := hb.1 (by dsimp [i]; omega)
-        have he : exitBudget i = budget (n+1) := by
-          simp [exitBudget, i, show n+1 ≠ 4 by omega]
-        rw [he] at hh
-        exact fits_mono hs hh
-  let exitPool := (S 3).filter (retainPair (parts 4))
-  let rankOne := exitPool.filter (fun I => ¬ dual I)
-  have hexit : Fits exitPool (exitBudget 4) :=
-    (passing_mass h3 gcds cancel lengths sections hsrc hlo hhi 4 (by decide) (pairs 4) (parts 4)
-      (S 3) (hactive 3) (hcap 3 (by decide))).1 (by decide)
-  have hrank := fits_mono (Finset.filter_subset (fun I => ¬ dual I) exitPool) hexit
-  obtain ⟨rank, hrankCaps, hrankOn⟩ := h5 rankOne
-    (fun I hI => ⟨hactive 3 I ((Finset.mem_filter.mp ((Finset.mem_filter.mp hI).1)).1),
-      (Finset.mem_filter.mp hI).2⟩) (hrank 1) (hrank 2)
-  let equation := equationFor parts rank
-  let removed (n : ℕ) :=
-    (S n \ S (n+1)).filter (fun I => ¬ stagePass pairs (n+1) I)
-  have hstep (n : ℕ) (hn : n < 10) : ∃ C : CutCover,
-      (∀ fee, C.cost fee ≤ dot (weight (cutShape (n+1)) fee) (mass (removed n))) ∧
-      ∀ γ ∈ Γ, (∃ I ∈ removed n, OnParent M F I γ) → C.covers M F γ := by
-    apply combineCuts (removed n) (cutShape (n+1))
-    intro I hI
-    obtain ⟨hsd, hf⟩ := Finset.mem_filter.mp hI
-    obtain ⟨P, hP, hproper, hzero⟩ :=
-      failed_stage hhi hsrc pairs (n+1) I hf
-    obtain ⟨C, hcost, hcover⟩ :=
-      h7 u del M Γ F (cutShape (n+1)) I P (cut_shape_valid _)
-        (hactive n I (Finset.mem_sdiff.mp hsd).1) hP hproper
-    exact ⟨C, hcost, fun γ hγ hmark => hcover γ hγ hmark (hzero γ hγ hmark)⟩
-  let stepCuts (n : ℕ) : CutCover := if hn : n < 10 then Classical.choose (hstep n hn) else emptyCut
-  have hstepCuts (n : ℕ) (hn : n < 10) :
-      (∀ fee, (stepCuts n).cost fee ≤ dot (price fee (n+1)) (mass (removed n))) ∧
-      ∀ γ ∈ Γ, (∃ I ∈ removed n, OnParent M F I γ) → (stepCuts n).covers M F γ := by
-    simpa only [stepCuts, dite_eq_left hn, price, Nat.succ_ne_zero, ite_false] using
-      Classical.choose_spec (hstep n hn)
-  let cuts := joinCuts (Finset.range 10) stepCuts
-  have hcutCap (fee : Fin 3) : cuts.cost fee ≤ feeCap fee := by
-    calc
-      _ ≤ ∑ n ∈ Finset.range 10, (stepCuts n).cost fee := joinCuts_cost _ _ _
-      _ ≤ ∑ n ∈ Finset.range 10, dot (price fee (n+1)) (mass (S n \ S (n+1))) := by
-        apply Finset.sum_le_sum
-        intro n hn
-        exact ((hstepCuts n (Finset.mem_range.mp hn)).1 fee).trans
-          (dot_mono _ _ _ (mass_mono (Finset.filter_subset _ _)))
-      _ ≤ ledger fee 10 :=
-        (Nat.le_add_right _ _).trans (loss_ledger S fee le_rfl (fun i _ => hsub i) hcap)
-      _ ≤ _ := ledger_cap fee
-  have hfollow (γ : K) (hγ : γ ∈ Γ) (I : Ideal Ambient)
-      (hI : I ∈ initial.parents) (hmark : OnParent M F I γ) (n : ℕ) (hn : n ≤ 10) :
-      I ∈ S n ∨ (∃ t, fixedAt (equation t) (F.scalar γ) = 0) ∨ cuts.covers M F γ := by
-    induction n with
-    | zero => exact Or.inl hI
-    | succ n ih =>
-      rcases ih (by omega) with hm | hp
-      · by_cases hout : I ∈ S (n+1)
-        · exact Or.inl hout
-        right
-        have hfail : ¬ stay parts (n+1) I :=
-          fun h => hout (Finset.mem_filter.mpr ⟨hm, h⟩)
-        by_cases ht : stagePass pairs (n+1) I
-        · by_cases hi : n+1 < 10
-          · let i : Fin 10 := ⟨n+1, hi⟩
-            have htest : pairPass (pairs i) I := by
-              simpa only [stagePass, dite_eq_left hi, i] using ht
-            by_cases hcheap : fixedOn (parts i).cheap.equation I
-            · exact Or.inl ⟨cheapTag i, fixed_on_mark hmark hcheap⟩
-            by_cases hlayer : fixedOn (parts i).layered.equation I
-            · exact Or.inl ⟨layeredTag i, fixed_on_mark hmark hlayer⟩
-            have hgood : retainPair (parts i) I := ⟨htest, hcheap, hlayer⟩
-            have hbad : ¬ (n+1 = 4 → dual I) := by
-              intro h
-              exact hfail (by simpa only [stay, dite_eq_left hi, i] using And.intro hgood h)
-            have he : n+1 = 4 := by
-              by_contra hne
-              exact hbad (fun h => (hne h).elim)
-            have hd : ¬ dual I := fun hd => hbad (fun _ => hd)
-            have hnj : n = 3 := by omega
-            subst n
-            have hp : I ∈ rankOne :=
-              Finset.mem_filter.mpr ⟨Finset.mem_filter.mpr ⟨hm, hgood⟩, hd⟩
-            exact Or.inl ⟨rankTag, fixed_on_mark hmark (hrankOn I hp)⟩
-          · exact (hfail (by simpa only [stagePass, stay, dite_eq_right hi] using ht)).elim
-        · have hrem : I ∈ removed n :=
-            Finset.mem_filter.mpr ⟨Finset.mem_sdiff.mpr ⟨hm, hout⟩, ht⟩
-          exact Or.inr (joinCuts_covers (Finset.mem_range.mpr (by omega))
-            ((hstepCuts n (by omega)).2 γ hγ ⟨I, hrem, hmark⟩))
-      · exact Or.inr hp
-  have hterminal (I : Ideal Ambient) (hI : I ∈ S 10) : bankVanishes rows full I := by
-    change I ∈ (S 9).filter (stay parts 10) at hI
-    simpa only [stay, dite_eq_right (by decide : ¬ (10 : ℕ) < 10)] using (Finset.mem_filter.mp hI).2
-  let parents : RetainedParents rows :=
-    ⟨S 10, fun I hI => (hactive 10 I hI).prime,
-      fun I hI => (hactive 10 I hI).seed_finite, fun I hI => (hactive 10 I hI).seed_size,
-      fun I hI => (hactive 10 I hI).jet_finite,
-      fun I hI => ⟨hdual 10 (by decide) I hI, (hactive 10 I hI).jet_lt⟩, hterminal⟩
-  let kept := Γ.filter (fun γ => ∃ I ∈ parents.ideals, OnParent M F I γ)
-  let lost := Γ.filter (fun γ => ∃ I ∈ cuts.curves, OnParent M F I γ)
-  let fixedGroups (k : ℕ × ℕ) :=
-    Γ.filter (fun γ => ∃ t, tagKey t = k ∧ fixedAt (equation t) (F.scalar γ) = 0)
-  have hfixed (t : FixedTag) (γ : K) (hγ : γ ∈ Γ)
-      (hzero : fixedAt (equation t) (F.scalar γ) = 0) :
-      ∃ k ∈ fixedKeys, γ ∈ fixedGroups k :=
-    ⟨tagKey t, tagKey_mem t, Finset.mem_filter.mpr ⟨hγ, t, rfl, hzero⟩⟩
-  refine ⟨{
-    direct := initial.direct ∪ cuts.direct
-    lost := lost
-    kept := kept
-    fixedGroups := fixedGroups
-    parents := parents
-    direct_card := ?_
-    fixed_eq := ?_
-    lost_subset := Finset.filter_subset _ _
-    loss_cover := ?_
-    kept_subset := Finset.filter_subset _ _
-    kept_cover := fun γ hγ => (Finset.mem_filter.mp hγ).2
-    cover := ?_
-  }⟩
-  · exact (Finset.card_union_le _ _).trans
-      ((Nat.add_le_add initial.direct_card (hcutCap 2)).trans direct_cap)
-  · intro k hk
-    obtain ⟨t, rfl⟩ := tagKey_exists hk
-    obtain ⟨hne, hj, hb⟩ := equation_caps parts hrankCaps t
-    refine ⟨Finset.filter_subset _ _, equation t, hne, hj, hb, ?_⟩
-    intro γ hγ
-    obtain ⟨t', he, hz⟩ := (Finset.mem_filter.mp hγ).2
-    simpa only [tagKey_injective he] using hz
-  · exact ⟨cuts.curves, cuts.geometric, hcutCap 0, hcutCap 1,
-      fun γ hγ => (Finset.mem_filter.mp hγ).2⟩
-  · intro γ hγ
-    rcases initial.cover γ hγ with hd | hc | hl | ⟨I, hI, hm⟩
-    · exact Or.inl (Finset.mem_union_left _ hd)
-    · exact Or.inr (Or.inl (hfixed (cheapTag 0) γ hγ hc))
-    · exact Or.inr (Or.inl (hfixed (layeredTag 0) γ hγ hl))
-    · rcases hfollow γ hγ I hI hm 10 le_rfl with hk | ⟨t, hf⟩ | hd | ⟨J, hJ, hJm⟩
-      · exact Or.inr (Or.inr (Or.inr (Finset.mem_filter.mpr ⟨hγ, I, hk, hm⟩)))
-      · exact Or.inr (Or.inl (hfixed t γ hγ hf))
-      · exact Or.inl (Finset.mem_union_right _ hd)
-      · exact Or.inr (Or.inr (Or.inl (Finset.mem_filter.mpr ⟨hγ, J, hJ, hJm⟩)))
-
-end
-end K1_14_2_2R
-end PackSource_K1_14_2_2RSplit
-
 section PackSource_K1_13_4_2_3_1Proof
 set_option autoImplicit true
 namespace K1_13_4_2_3_1
@@ -7754,113 +7479,6 @@ end
 
 end K1_13_5_1
 end PackSource_K1_13_5_1Budget
-
-section PackSource_K1_13_5_1Proof
-set_option autoImplicit true
-namespace K1_13_5_1
-
-noncomputable section
-
-open K1_13 K1_13_5 MvPolynomial UniqueFactorizationMonoid
-open scoped Polynomial BigOperators
-
-theorem proof : K1_13_5.c1 := by
-  classical
-  intro g hg
-  obtain ⟨hg₀, hgt, hgi, hgw⟩ := hg
-  let _ : StrongNormalizationMonoid (Row 3) := UniqueFactorizationMonoid.strongNormalizationMonoid
-  let A := normalizedFactors g
-  let T := A.toFinset
-  let c (f : Row 3) := (view f).natDegree
-  let P := T.filter fun f => 0 < c f
-  let n := Fintype.card ↥P
-  let e : Fin n ≃ ↥P := (Fintype.equivFin ↥P).symm
-  let f : Fin n → Row 3 := fun i => (e i).val
-  let q : Row 2 := ∏ a ∈ T, elimination a
-  have hmem (a : Row 3) (ha : a ∈ T) : a ∈ A := Multiset.mem_toFinset.mp ha
-  have hirr (a : Row 3) (ha : a ∈ T) : Irreducible a :=
-    irreducible_of_normalized_factor a (hmem a ha)
-  have hf (i : Fin n) : f i ∈ T ∧ 0 < c (f i) := Finset.mem_filter.mp (e i).property
-  have hdvd : (∏ a ∈ T, a) ∣ g :=
-    (Multiset.toFinset_prod_dvd_prod A).trans (prod_normalizedFactors hg₀).dvd
-  have hsum (w : Fin 3 → ℕ) :
-      (∑ a ∈ T, a.weightedTotalDegree w) ≤ g.weightedTotalDegree w :=
-    sum_weightedTotalDegree_le_of_prod_dvd w T id hg₀ hdvd
-  have htop (a : Row 3) : c a = a.degreeOf 2 := view_degree a
-  have hc : ∑ a ∈ T, c a ≤ 24 := by
-    have hbound : g.weightedTotalDegree (fun i => i.val) ≤ 48 :=
-      (K1_13_1.indexDegree_eq g) ▸ hgi
-    have h : 2 * (∑ a ∈ T, c a) ≤ 48 := calc
-      _ = ∑ a ∈ T, (2 * c a) := Finset.mul_sum T c 2
-      _ ≤ ∑ a ∈ T, a.weightedTotalDegree (fun i => i.val) := by
-        apply Finset.sum_le_sum
-        intro a _
-        exact (Nat.le_add_left _ _).trans (view_coeff_weight (fun i => i.val) a (c a) le_rfl)
-      _ ≤ _ := (hsum _).trans hbound
-    omega
-  have he₀ (a : Row 3) (ha : a ∈ T) : elimination a ≠ 0 := by
-    have hca : c a ≤ 24 := (Finset.single_le_sum (fun i _ => Nat.zero_le (c i)) ha).trans hc
-    exact elimination_ne_zero (hirr a ha) (hca.trans_lt (by decide))
-  have hq (w : Fin 3 → ℕ) (B : ℕ) (hb : g.weightedTotalDegree w ≤ B)
-      (hB : w 2 * 24 ≤ B) :
-      q.weightedTotalDegree (fun i => w i.castSucc) ≤ 47 * B - w 2 * 24 ^ 2 := by
-    let v : Fin 2 → ℕ := fun i => w i.castSucc
-    rw [show q = ∏ a ∈ T, elimination a from rfl, weightedTotalDegree_prod v T _ he₀]
-    apply aggregate T (fun a => a.weightedTotalDegree w) c
-      (fun a => (elimination a).weightedTotalDegree v) B (w 2) ((hsum w).trans hb) hc hB
-    · intro a _
-      exact (Nat.le_add_left _ _).trans (view_coeff_weight w a (c a) le_rfl)
-    · intro a _ ha
-      exact elimination_weight_zero w a ha
-    · intro a _ ha
-      exact elimination_weight_positive w a ha
-  have hqtotal : q.totalDegree ≤ 5064 := by
-    have h := hq (1 : Fin 3 → ℕ) 120 (by simpa only [weightedTotalDegree_one] using hgt) (by decide)
-    change q.weightedTotalDegree (1 : Fin 2 → ℕ) ≤ 5064 at h
-    simpa only [weightedTotalDegree_one] using h
-  have hqindex : indexDegree q ≤ 1104 := by
-    rw [K1_13_1.indexDegree_eq] at hgi ⊢
-    exact hq (fun i => i.val) 48 hgi (by decide)
-  have hsub (d : Row 3 → ℕ) : (∑ i, d (f i)) ≤ ∑ a ∈ T, d a := by
-    calc
-      _ = ∑ a : ↥P, d a.val := e.sum_comp _
-      _ = ∑ a ∈ P, d a := Finset.sum_coe_sort P d
-      _ ≤ _ := Finset.sum_le_sum_of_subset (Finset.filter_subset _ _)
-  refine ⟨n, f, q, ⟨fun i => hirr _ (hf i).1, fun i => htop _ ▸ (hf i).2, ?_, ?_, ?_, ?_⟩,
-    ⟨Finset.prod_ne_zero_iff.mpr he₀, hqtotal, hqindex⟩, ?_⟩
-  · intro i
-    let E := MvPolynomial.optionEquivRight Geom (Fin 3)
-    have hdi := map_dvd E.symm (dvd_of_mem_normalizedFactors (hmem _ (hf i).1))
-    have hgn : E.symm g ≠ 0 := fun hz => hg₀ (E.symm.injective (hz.trans (map_zero _).symm))
-    exact (K1_13_1.trueWeight_iff _).mpr
-      ((weightedTotalDegree_le_of_dvd _ hdi hgn).trans ((K1_13_1.trueWeight_iff _).mp hgw))
-  · exact (hsub _).trans ((by simpa only [weightedTotalDegree_one] using hsum (1 : Fin 3 → ℕ) :
-      (∑ a ∈ T, a.totalDegree) ≤ g.totalDegree).trans hgt)
-  · exact (hsub _).trans ((by simpa only [← K1_13_1.indexDegree_eq] using hsum (fun i => i.val) :
-      (∑ a ∈ T, indexDegree a) ≤ indexDegree g).trans hgi)
-  · simpa only [htop] using (hsub c).trans hc
-  · intro S hS
-    have hz := map_dvd (eval (jet S)) (prod_normalizedFactors hg₀).symm.dvd
-    change atJet g S ∣ eval (jet S) A.prod at hz
-    rw [hS, zero_dvd_iff, map_multiset_prod, Multiset.prod_eq_zero_iff, Multiset.mem_map] at hz
-    obtain ⟨a, ha, hzero⟩ := hz
-    have haT : a ∈ T := Multiset.mem_toFinset.mpr ha
-    rcases elimination_eval a S hzero with h | ⟨hp, hr⟩
-    · left
-      change eval (jet S) (∏ a ∈ T, elimination a) = 0
-      rw [map_prod]
-      exact Finset.prod_eq_zero haT h
-    · right
-      let j : ↥P := ⟨a, Finset.mem_filter.mpr ⟨haT, hp⟩⟩
-      refine ⟨e.symm j, ?_⟩
-      change RegularAt 2 ((e (e.symm j)).val) S
-      rw [Equiv.apply_symm_apply]
-      exact hr
-
-end
-
-end K1_13_5_1
-end PackSource_K1_13_5_1Proof
 
 section PackSource_K1_13_5_4_1_2Proof
 set_option autoImplicit true

@@ -126,14 +126,14 @@ private theorem certificate_shifts_annihilate_generic {F E ι : Type} [Field F] 
 
 /-- Each prescribed shift satisfies every complementary moment equation. -/
 theorem certificate_shifts_annihilate {u : Words} {T : TwoActive u} (R : Relation T)
-    (s : ℕ) (hL : T.height + s = 49174) :
-    (shifts (fun b => Principal.assemble (fun j => R.coefficients (b, j))) 49174 s).transpose *
+    (s : ℕ) (hL : T.height + s = 49193) :
+    (shifts (fun b => Principal.assemble (fun j => R.coefficients (b, j))) 49193 s).transpose *
       twoBlock u = 0 := by
-  have hsize : 131072 + (49173 + 1) + 81898 ≤ Fintype.card I := by
+  have hsize : 131072 + (49192 + 1) + 81879 ≤ Fintype.card I := by
     rw [IRSProfile.card_index]
   exact certificate_shifts_annihilate_generic p node (u 0) (u 1) IRSProfile.domain.injective
     Native.native_domain_fixed (algebraMap K[X] Frac) (IsFractionRing.injective K[X] Frac)
-    131072 T.height 49173 81898 s hL hsize R _ (fun _ => rfl)
+    131072 T.height 49192 81879 s hL hsize R _ (fun _ => rfl)
 
 end K1_6
 end PackSource_K1_6Aux1
@@ -201,10 +201,10 @@ def Caps {R : Type*} [CommSemiring R] (a : Shape) (F : SeedRow R) : Prop :=
 
 def firstBox : Shape := ⟨6789, 2300, 1150⟩
 def secondBox : Shape := ⟨6820, 2300, 1150⟩
-abbrev firstOrder : ℕ := 5936983
-abbrev secondOrder : ℕ := 2680000
-abbrev firstCut : ℕ := 5000 * 180246 - firstOrder
-abbrev secondCut : ℕ := 5000 * 180246 - secondOrder
+abbrev firstOrder : ℕ := 5746355
+abbrev secondOrder : ℕ := 2769994
+abbrev firstCut : ℕ := 5000 * 180265 - firstOrder
+abbrev secondCut : ℕ := 5000 * 180265 - secondOrder
 
 /-- Use the error in backward Taylor evaluation as the free zeroth variable. -/
 def backwardShift (x v : Geom) (F : PhysicalRow) : PhysicalRow :=
@@ -253,7 +253,7 @@ def HasRank {Γ s} (w : I → K) (P : PoleData Γ s) (L : ResidueChart P)
     ∀ i, Source w P L a t (e i)
 
 def mixedWeight (a : SeedVar →₀ ℕ) : ℕ :=
-  7800 * a none + 49177 * a.some.sum (fun _ e => e)
+  7800 * a none + 49196 * a.some.sum (fun _ e => e)
 
 /-- The outer variables are the increments. The inner variables stay at the
 true jets and formal seed while the coefficient in the increments is taken. -/
@@ -342,7 +342,7 @@ structure PaddedPair (F G : GenericRow) where
 /-- The outer variable is the seed and the inner one is the line parameter.
 Translate the seed by z and take jets at line parameter zero. -/
 def LineOrder (F : GenericX[X][X]) (z : GenericX) (d : ℕ) : Prop :=
-  ∀ i j : ℕ, 7800 * i + 49177 * j < d →
+  ∀ i j : ℕ, 7800 * i + 49196 * j < d →
     ((F.comp (Polynomial.X + Polynomial.C (Polynomial.C z))).coeff i).coeff j = 0
 
 /-- R8 on a line, including vertical content and formal degrees on the fibre. -/
@@ -354,7 +354,7 @@ def LocalResultantBound : Prop :=
 
 theorem native_order_arithmetic :
     7800 * 70000 ≥ firstOrder ∧ 7800 * 70000 ≥ secondOrder ∧
-    (firstOrder * secondOrder + 7800 * 49177 - 1) / (7800 * 49177) = 41481 := by
+    (firstOrder * secondOrder + 7800 * 49196 - 1) / (7800 * 49196) = 41481 := by
   decide
 
 theorem native_degree_arithmetic :
@@ -365,7 +365,7 @@ theorem native_degree_arithmetic :
 theorem native_factor_arithmetic :
     let T := 525913765916471
     let S := 2561085868844197170227
-    49177 * 6820 * T / S = 68 ∧ 49177 * 2300 * T / S = 23 ∧
+    49196 * 6820 * T / S = 68 ∧ 49196 * 2300 * T / S = 23 ∧
       7800 * 6820 * T / S = 10 ∧ 7800 * 2300 * T / S = 3 ∧
       7800 * 70000 * T / S = 112 ∧ 1571799066189253395000 < S := by
   decide
@@ -438,8 +438,8 @@ private theorem line_order (F : GenericRow) (z : GenericX) (y v : Fin 3 → Gene
     rw [← MvPolynomial.mem_support_coeff_optionEquivLeft]
     exact ha
   have hb := hF _ hmem
-  have hweight : mixedWeight (a.optionElim i) = 7800 * i + 49177 * j := by
-    change 7800 * a.optionElim i none + 49177 * (a.optionElim i).some.degree = _
+  have hweight : mixedWeight (a.optionElim i) = 7800 * i + 49196 * j := by
+    change 7800 * a.optionElim i none + 49196 * (a.optionElim i).some.degree = _
     rw [Finsupp.optionElim_apply_none, Finsupp.some_optionElim, hj]
   rw [hweight] at hb
   exact (Nat.not_lt_of_ge hb) h
@@ -786,7 +786,7 @@ open scoped Polynomial BigOperators
 
 /-- Count the admissible columns before imposing contact and pole tests. -/
 def c1 : Prop :=
-  ∀ (b : Bank) (h : ℕ), h ≤ 2575 →
+  ∀ (b : Bank) (h : ℕ), h ≤ 2600 →
     ∃ V : Submodule Geom PhysicalRow, Module.Finite Geom V ∧
       (∀ F ∈ V, Caps b.box F ∧ TrueCut h (b.cut + (b.box.b + b.box.j) * h) F) ∧
       b.targetRank + 262144 * (70001 * b.nodeRank) + h * poleDebit b.box ≤
@@ -4533,10 +4533,10 @@ def c2 : Prop :=
 def c3 : Prop :=
   ∀ (w : I → K) (H res T : Geom[X]) (t k : ℕ) (Q : Row 3),
     T.natDegree ≤ 131071 →
-    (∃ A : Finset I, 180246 ≤ A.card ∧
+    (∃ A : Finset I, 180265 ≤ A.card ∧
       ∀ i ∈ A, (H * T + res).eval (embed (node i)) = embed (w i)) →
     RawContact 5000 w H res Q → RawCut t Q →
-    t + 49177 * k < 5000 * 180246 →
+    t + 49196 * k < 5000 * 180265 →
     LowerOrder (MvPolynomial.map inclX Q) (trajectory T) (k + 1)
 
 private theorem coeff_eq_zero_of_lowerOrder {F : Lower} {x : Fin 3 → GenericX}
@@ -4559,15 +4559,15 @@ private theorem mixedOrder_iff_coeff {F : GenericRow} {z : GenericX}
 
 private theorem weight_add (a b : SeedVar →₀ ℕ) :
     mixedWeight (a + b) = mixedWeight a + mixedWeight b := by
-  change 7800 * (a + b) none + 49177 * (a + b).some.degree =
-    (7800 * a none + 49177 * a.some.degree) + (7800 * b none + 49177 * b.some.degree)
+  change 7800 * (a + b) none + 49196 * (a + b).some.degree =
+    (7800 * a none + 49196 * a.some.degree) + (7800 * b none + 49196 * b.some.degree)
   simp only [Finsupp.add_apply, Finsupp.some_add, map_add, Nat.mul_add]
   ac_rfl
 
 private theorem fixed_seed_order (h2 : c2) (h3 : c3)
     {w Γ s} (hw : Messages w Γ s) (P : PoleData Γ s) (L : ResidueChart P)
     {box t F} (hF : Source w P L box t F) {γ} (hγ : γ ∈ Γ)
-    (k : ℕ) (hk : t + 49177 * k < 5000 * 180246) :
+    (k : ℕ) (hk : t + 49196 * k < 5000 * 180265) :
     LowerOrder (atSeed (inclConst (P.z γ)) (toGeneric F))
       (trajectory (extend (s γ))) (k + 1) := by
   let res := residueAt L.numerator L.denominator (P.z γ)
@@ -4575,7 +4575,7 @@ private theorem fixed_seed_order (h2 : c2) (h3 : c3)
   obtain ⟨T, hT, hST⟩ := L.quotient γ hγ
   change extend (s γ) = P.H * T + res at hST
   obtain ⟨A, hA, hhits⟩ := hw.hits γ hγ
-  have hhit : ∃ B : Finset I, 180246 ≤ B.card ∧
+  have hhit : ∃ B : Finset I, 180265 ≤ B.card ∧
       ∀ i ∈ B, (P.H * T + res).eval (embed (node i)) = embed (w i) := by
     refine ⟨A, hA, fun i hi => ?_⟩
     rw [← hST, extend, Polynomial.eval_map, Polynomial.eval₂_at_apply, hhits i hi]
@@ -4589,7 +4589,7 @@ private theorem fixed_seed_order (h2 : c2) (h3 : c3)
 private theorem source_order (h1 : c1) (h2 : c2) (h3 : c3)
     {w Γ s} (hw : Messages w Γ s) (P : PoleData Γ s) (L : ResidueChart P)
     {box t F} (hF : Source w P L box t F) {γ} (hγ : γ ∈ Γ)
-    {d : ℕ} (hd : t + d ≤ 5000 * 180246) :
+    {d : ℕ} (hd : t + d ≤ 5000 * 180265) :
     MixedOrder (toGeneric F) (inclConst (P.z γ)) (trajectory (extend (s γ))) d := by
   set z := inclConst (P.z γ)
   set y := trajectory (extend (s γ))
@@ -4603,8 +4603,8 @@ private theorem source_order (h1 : c1) (h2 : c2) (h3 : c3)
   have hdis : ∀ i, i ∉ a.support ∨ i ∉ b.support := by
     intro i
     cases i <;> simp [a, b, Finsupp.mem_support_iff]
-  have hlt : t + 7800 * m none + 49177 * m.some.degree < 5000 * 180246 := by
-    change 7800 * m none + 49177 * m.some.degree < d at hm
+  have hlt : t + 7800 * m none + 49196 * m.some.degree < 5000 * 180265 := by
+    change 7800 * m none + 49196 * m.some.degree < d at hm
     omega
   have hD := h1 w Γ s P L box t F hF (m none)
   have ho := fixed_seed_order h2 h3 hw P L hD hγ m.some.degree hlt
@@ -4651,8 +4651,8 @@ theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) : K1_13_4.c3 := by
       obtain ⟨t, F, a, hF, ht, rfl⟩ := hQ
       apply mixedHasse_order
       apply source_order h1 h2 h3 hw P L hF hγ
-      change t + mixedWeight a ≤ 5000 * 180246 - 2680000 at ht
-      change t + (2680000 + mixedWeight a) ≤ 5000 * 180246
+      change t + mixedWeight a ≤ 5000 * 180265 - 2769994 at ht
+      change t + (2769994 + mixedWeight a) ≤ 5000 * 180265
       omega
     | zero =>
       exact mixedOrder_iff_coeff.mpr (fun _ _ => by simp [toGeneric])
@@ -5523,7 +5523,7 @@ structure FactorsFor (moving : Bool) (A : Finset GenericRow) : Prop where
 
 def factorProduct (A : Finset GenericRow) : GenericRow := ∏ f ∈ A, f
 
-def reserveCost (moving : Bool) : ℕ := if moving then 7800 else 49177
+def reserveCost (moving : Bool) : ℕ := if moving then 7800 else 49196
 
 def layerPower (e t : ℕ) : ℕ := 1 + (secondCut - t) / e
 
@@ -7606,14 +7606,14 @@ theorem count_seed_roots (Γ : Finset K) (z : K → Geom) (hz : Function.Injecti
 
 private theorem mixedWeight_add (a b : SeedVar →₀ ℕ) :
     mixedWeight (a + b) = mixedWeight a + mixedWeight b := by
-  change 7800 * (a + b) none + 49177 * (a + b).some.degree =
-    (7800 * a none + 49177 * a.some.degree) + (7800 * b none + 49177 * b.some.degree)
+  change 7800 * (a + b) none + 49196 * (a + b).some.degree =
+    (7800 * a none + 49196 * a.some.degree) + (7800 * b none + 49196 * b.some.degree)
   simp only [Finsupp.add_apply, Finsupp.some_add, map_add]
   omega
 
 private theorem mixedWeight_pos {a : SeedVar →₀ ℕ} (ha : a ≠ 0) : 0 < mixedWeight a := by
   by_contra! h
-  change 7800 * a none + 49177 * a.some.degree ≤ 0 at h
+  change 7800 * a none + 49196 * a.some.degree ≤ 0 at h
   have hn : a none = 0 := by omega
   have hd : a.some.degree = 0 := by omega
   have hs := (Finsupp.degree_eq_zero_iff _).mp hd
@@ -8656,176 +8656,6 @@ end
 end K1_13_4_5
 end PackSource_K1_13_4_5Split
 
-section PackSource_K1_13_4_7Proof
-set_option autoImplicit true
-namespace K1_13_4_7
-
-open K1_13_4 Polynomial
-open scoped Polynomial BigOperators
-
-private theorem resultant_taylor_formal {R : Type*} [CommRing R]
-    (F G : R[X]) (z : R) {m n : ℕ} (hF : F.natDegree ≤ m) (hG : G.natDegree ≤ n) :
-    resultant (F.taylor z) (G.taylor z) m n = resultant F G m n := by
-  obtain ⟨a, rfl⟩ := Nat.exists_eq_add_of_le hF
-  obtain ⟨b, rfl⟩ := Nat.exists_eq_add_of_le hG
-  have expand (P Q : R[X]) :
-      resultant P Q (P.natDegree + a) (Q.natDegree + b) =
-        (-1) ^ ((Q.natDegree + b) * a) * Q.coeff (Q.natDegree + b) ^ a *
-          (P.leadingCoeff ^ b * resultant P Q) := by
-    rw [resultant_add_left_deg _ _ _ _ _ le_rfl,
-      resultant_add_right_deg _ _ _ _ _ le_rfl, coeff_natDegree]
-  have coeff_preserved :
-      (G.taylor z).coeff (G.natDegree + b) = G.coeff (G.natDegree + b) := by
-    by_cases hb : b = 0
-    · simp [hb]
-    · have hlt : G.natDegree < G.natDegree + b := by omega
-      rw [coeff_eq_zero_of_natDegree_lt hlt,
-        coeff_eq_zero_of_natDegree_lt (by simpa only [natDegree_taylor] using hlt)]
-  have h := expand (F.taylor z) (G.taylor z)
-  rw [resultant_taylor] at h
-  simp only [natDegree_taylor, leadingCoeff_taylor, coeff_preserved] at h
-  exact h.trans (expand F G).symm
-
-/-- The part of a mixed order still required after accounting for a seed exponent. -/
-private def weight (d i : ℕ) : ℕ := d - 7800 * i
-
--- Put the variable in the recursive argument of Nat.add.
-private def power (w : ℕ) : ℕ := (49176 + w) / 49177
-
-private theorem coefficient_bound {k : Type*} [CommRing k]
-    (P : k[X][X]) (d e i j : ℕ) (hij : j ≤ i)
-    (hP : ∀ i l : ℕ, 7800 * i + 49177 * l < d → (P.coeff i).coeff l = 0) :
-    (Polynomial.X : k[X]) ^ power (weight (d + e) i - weight e j) ∣ P.coeff (i - j) := by
-  have hweight : weight (d + e) i ≤ weight e j + weight d (i - j) := by
-    unfold weight
-    omega
-  apply X_pow_dvd_iff.mpr
-  intro l hl
-  apply hP
-  unfold power at hl
-  have hsmall : 49177 * l < weight (d + e) i - weight e j := by omega
-  unfold weight at hweight hsmall
-  omega
-
-/-- The two sets of columns shift the coefficients of G and F, respectively.
-Each column uses the weight for the opposite polynomial at its shift. -/
-private def columnWeight {m n : ℕ} (j : Fin (m + n)) : ℕ :=
-  j.addCases (fun j : Fin m => weight firstOrder j) (fun j : Fin n => weight secondOrder j)
-
-private theorem sylvester_entry {k : Type*} [CommRing k]
-    (F G : k[X][X]) (m n : ℕ)
-    (hF : ∀ i l : ℕ, 7800 * i + 49177 * l < firstOrder → (F.coeff i).coeff l = 0)
-    (hG : ∀ i l : ℕ, 7800 * i + 49177 * l < secondOrder → (G.coeff i).coeff l = 0)
-    (i j : Fin (m + n)) :
-    (Polynomial.X : k[X]) ^ power (weight (firstOrder + secondOrder) i - columnWeight j) ∣
-      sylvester F G m n i j := by
-  induction j using Fin.addCases with
-  | left j =>
-    simp only [sylvester, Matrix.of_apply, Fin.addCases_left, columnWeight, Set.mem_Icc]
-    split_ifs with h
-    · simpa only [add_comm secondOrder firstOrder] using
-        coefficient_bound G secondOrder firstOrder i j h.1 hG
-    · exact dvd_zero _
-  | right j =>
-    simp only [sylvester, Matrix.of_apply, Fin.addCases_right, columnWeight, Set.mem_Icc]
-    split_ifs with h
-    · exact coefficient_bound F firstOrder secondOrder i j h.1 hF
-    · exact dvd_zero _
-
-/-- Every Leibniz term uses every row and every column once. Summing the
-entry powers therefore bounds the divisibility of each whole term. -/
-private theorem det_bound {k : Type*} [CommRing k] {N D : ℕ}
-    (M : Matrix (Fin N) (Fin N) k[X]) (row col : Fin N → ℕ)
-    (hM : ∀ i j, (Polynomial.X : k[X]) ^ power (row i - col j) ∣ M i j)
-    (hbudget : (∑ j, col j) + 49177 * D ≤ (∑ i, row i) + 49176) :
-    (Polynomial.X : k[X]) ^ D ∣ M.det := by
-  classical
-  rw [Matrix.det_apply']
-  apply Finset.dvd_sum
-  intro σ _
-  let a : Fin N → ℕ := fun j => power (row (σ j) - col j)
-  have hprod : (Polynomial.X : k[X]) ^ (∑ j, a j) ∣ ∏ j, M (σ j) j := by
-    rw [← Finset.prod_pow_eq_pow_sum]
-    exact Finset.prod_dvd_prod_of_dvd _ _ (fun j _ => hM (σ j) j)
-  have hsum : (∑ i, row i) ≤ (∑ j, col j) + 49177 * (∑ j, a j) := by
-    rw [← Equiv.sum_comp σ row, Finset.mul_sum, ← Finset.sum_add_distrib]
-    apply Finset.sum_le_sum
-    intro j _
-    dsimp only [a, power]
-    omega
-  have hD : D ≤ ∑ j, a j := by omega
-  exact dvd_mul_of_dvd_right ((pow_dvd_pow _ hD).trans hprod) _
-
-private theorem sum_weight {d t N : ℕ} (ht : t ≤ N) (hend : d ≤ 7800 * t)
-    (hbefore : ∀ i < t, 7800 * i ≤ d) :
-    (∑ i : Fin N, weight d i) = t * d - 7800 * (t * (t - 1) / 2) := by
-  rw [Fin.sum_univ_eq_sum_range]
-  have htrim : (∑ i ∈ Finset.range t, weight d i) = ∑ i ∈ Finset.range N, weight d i := by
-    apply Finset.sum_subset (Finset.range_mono ht)
-    intro i _ hi
-    simp only [Finset.mem_range, not_lt] at hi
-    unfold weight
-    omega
-  rw [← htrim]
-  have hsum : (∑ i ∈ Finset.range t, weight d i) + 7800 * (∑ i ∈ Finset.range t, i) =
-      t * d := by
-    rw [Finset.mul_sum, ← Finset.sum_add_distrib]
-    calc
-      _ = ∑ _i ∈ Finset.range t, d := by
-        apply Finset.sum_congr rfl
-        intro i hi
-        have h := hbefore i (Finset.mem_range.mp hi)
-        unfold weight
-        omega
-      _ = _ := by simp [Nat.mul_comm]
-  rw [Finset.sum_range_id] at hsum
-  omega
-
-private theorem benchmark_budget :
-    (∑ j : Fin (70000 + 70000), columnWeight (m := 70000) (n := 70000) j) + 49177 * 41481 ≤
-      (∑ i : Fin (70000 + 70000), weight (firstOrder + secondOrder) i) + 49176 := by
-  have hF : (∑ i : Fin 70000, weight firstOrder i) = 2262441246 := by
-    rw [sum_weight (t := 762) (by decide) (by decide)
-      (by intro i hi; simp only [firstOrder]; omega)]
-    decide
-  have hG : (∑ i : Fin 70000, weight secondOrder i) = 461751200 := by
-    rw [sum_weight (t := 344) (by decide) (by decide)
-      (by intro i hi; simp only [secondOrder]; omega)]
-    decide
-  have hFG : (∑ i : Fin (70000 + 70000), weight (firstOrder + secondOrder) i) =
-      4764078215 := by
-    rw [sum_weight (t := 1105) (by decide) (by decide)
-      (by intro i hi; simp only [firstOrder, secondOrder]; omega)]
-    decide
-  rw [Fin.sum_univ_add, hFG]
-  simp only [columnWeight, Fin.addCases_left, Fin.addCases_right, hF, hG]
-  decide
-
-private theorem resultant_bound
-    (F G : GenericX[X][X]) (z : GenericX) {m n D : ℕ} (hF : F.natDegree ≤ m) (hG : G.natDegree ≤ n)
-    (hFO : ∀ i l : ℕ, 7800 * i + 49177 * l < firstOrder →
-      ((F.taylor (C z)).coeff i).coeff l = 0)
-    (hGO : ∀ i l : ℕ, 7800 * i + 49177 * l < secondOrder →
-      ((G.taylor (C z)).coeff i).coeff l = 0)
-    (hbudget : (∑ j : Fin (m + n), columnWeight (m := m) (n := n) j) + 49177 * D ≤
-      (∑ i : Fin (m + n), weight (firstOrder + secondOrder) i) + 49176) :
-    (Polynomial.X : GenericX[X]) ^ D ∣ resultant F G m n := by
-  rw [← resultant_taylor_formal F G (C z) hF hG]
-  unfold resultant
-  exact det_bound
-    (sylvester (F.taylor (C z)) (G.taylor (C z)) m n)
-    (fun i => weight (firstOrder + secondOrder) i)
-    (columnWeight (m := m) (n := n))
-    (sylvester_entry _ _ m n hFO hGO) hbudget
-
-/-- R8's local bound, obtained by counting the powers in the fixed-size determinant. -/
-theorem proof : K1_13_4.c7 := by
-  intro F G z hF hG _ hFO hGO
-  exact resultant_bound F G z hF hG hFO hGO benchmark_budget
-
-end K1_13_4_7
-end PackSource_K1_13_4_7Proof
-
 section PackSource_K1_13_7_3Defs
 set_option autoImplicit true
 namespace K1_13_7_3
@@ -8938,9 +8768,9 @@ noncomputable section
 
 open Polynomial K1 K1_13
 
-abbrev terminal : ℕ := 3000 * 180246 - 1
-abbrev layerWidth : ℕ := 46603
-abbrev sourceRank : ℕ := 1218261228987542596
+abbrev terminal : ℕ := 3000 * 180265 - 1
+abbrev layerWidth : ℕ := 46597
+abbrev sourceRank : ℕ := 1217307887288627271
 
 /-- Required ordinary jet order at an admitted cutoff. -/
 def requiredOrder (T : ℕ) : ℕ :=

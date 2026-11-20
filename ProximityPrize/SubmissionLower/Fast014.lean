@@ -2274,23 +2274,23 @@ def principalThreePrice (n t : ℕ) : ℕ := n^3+(t+1)*n^2+(t+1)^2*n+(t+1)^3
 
 def kernelTwoPrice (n L : ℕ) : ℕ := n*(n-1)^3/(L+1)
 
-theorem native_principal_three_price : principalThreePrice 262144 81898=25950104848014291 := by
+theorem native_principal_three_price : principalThreePrice 262144 81879=25947601202251264 := by
   norm_num [principalThreePrice]
 
-theorem native_kernel_two_price : kernelTwoPrice 262144 49174=96030756276162174 := by
+theorem native_kernel_two_price : kernelTwoPrice 262144 49193=95993666704888298 := by
   norm_num [kernelTwoPrice]
 
-theorem native_booked_total : 69712453124068+principalThreePrice 262144 81898+
-    kernelTwoPrice 262144 49174=122050573577300533 := by
+theorem native_booked_total : 69631486279633+principalThreePrice 262144 81879+
+    kernelTwoPrice 262144 49193=122010899393419195 := by
   norm_num [principalThreePrice,kernelTwoPrice]
 
-theorem native_residual_ledger : 69712453124068+principalThreePrice 262144 81898+
-    kernelTwoPrice 262144 49174+120994407978421318=243044981555721851 := by
+theorem native_residual_ledger : 69631486279633+principalThreePrice 262144 81879+
+    kernelTwoPrice 262144 49193+121058742343964669=243069641737383864 := by
   norm_num [principalThreePrice,kernelTwoPrice]
 
-theorem native_joint_ledger : 31935746555673236+69712453124068+
-    principalThreePrice 262144 81898+kernelTwoPrice 262144 49174+
-    120994407978421318=274980728111395087 := by
+theorem native_joint_ledger : 31911086374011223+69631486279633+
+    principalThreePrice 262144 81879+kernelTwoPrice 262144 49193+
+    121058742343964669=274980728111395087 := by
   norm_num [principalThreePrice,kernelTwoPrice]
 
 /-- Exact one-root count at the first benchmark cell, conditional ONLY
@@ -2298,10 +2298,10 @@ on the two finite incidence inputs. The regular (n-1)^3 node bound remains
 visible in the theorem signature. -/
 theorem native_kernel_two_incidence_count (Γ : Finset F) (usable : F → Finset ι)
     (hn : Fintype.card ι=262144)
-    (hroots : ∀ γ∈Γ, 49175≤(usable γ).card)
+    (hroots : ∀ γ∈Γ, 49194≤(usable γ).card)
     (hnode : ∀ i, (Γ.filter (fun γ => i∈usable γ)).card≤262143^3) :
-    Γ.card≤96030756276162174 := by
-  have h := one_root_incidence_count Γ usable 49174 (262143^3) hroots hnode
+    Γ.card≤95993666704888298 := by
+  have h := one_root_incidence_count Γ usable 49193 (262143^3) hroots hnode
   rw [hn] at h
   exact h.trans_eq (by norm_num)
 
@@ -2534,14 +2534,14 @@ PuncturedRegularCap. -/
 theorem native_nonprincipal_two_kernel_count (σ : β → F →+* F) (x u v : ι → F)
     (hx : Function.Injective x) (hfixed : ∀ b i, σ b (x i)=x i)
     (hn : Fintype.card ι=262144)
-    (hregular : PuncturedRegularCap σ x u v 131072 180246 131072 81898)
-    (Γ : Finset F) (hbad : ∀ γ∈Γ, Principal.BadSlope x u v 131072 180246 γ)
+    (hregular : PuncturedRegularCap σ x u v 131072 180265 131072 81879)
+    (Γ : Finset F) (hbad : ∀ γ∈Γ, Principal.BadSlope x u v 131072 180265 γ)
     (hnull : ∀ γ∈Γ, Module.finrank F (LinearMap.ker
-      (recurrenceMatrixAll (fun b j => σ b (syndrome x (fun i => u i+γ*v i) j)) 131072 81898).mulVecLin)=2)
+      (recurrenceMatrixAll (fun b j => σ b (syndrome x (fun i => u i+γ*v i) j)) 131072 81879).mulVecLin)=2)
     (hnon : ∀ γ∈Γ, NonprincipalSpace
-      (recurrenceSpace (fun b j => σ b (syndrome x (fun i => u i+γ*v i) j)) 131072 81898) 81898) :
-    Γ.card≤96030756276162174 := by
-  have h := nonprincipal_two_kernel_count σ x u v hx hfixed 131072 180246 131072 49174 81898
+      (recurrenceSpace (fun b j => σ b (syndrome x (fun i => u i+γ*v i) j)) 131072 81879) 81879) :
+    Γ.card≤95993666704888298 := by
+  have h := nonprincipal_two_kernel_count σ x u v hx hfixed 131072 180265 131072 49193 81879
     (by omega) (by decide) (by decide) (by decide) (by decide) hregular Γ hbad hnull hnon
   rw [hn,native_kernel_two_price] at h
   exact h
@@ -2789,8 +2789,8 @@ theorem relation_degree_nullity_balance (m L t r a b c : ℕ)
     L+(m+1-c)+r=t+1 := by omega
 
 theorem native_minimal_relation_degree (r a b c : ℕ) (hc : c≤131072)
-    (hsum : a+b+c=262146) (hr : r+a+b=163798) (hr7 : 7≤r) :
-    49174+(131073-c)+r=81899 ∧ 131073-c≤32718 ∧ 131073-c<49174 := by omega
+    (hsum : a+b+c=262146) (hr : r+a+b=163760) (hr7 : 7≤r) :
+    49193+(131073-c)+r=81880 ∧ 131073-c≤32680 ∧ 131073-c<49193 := by omega
 
 /-- The complementary transpose is injective BELOW the minimum relation
 index. Thus the native relation factory uses the true minimum degree,
@@ -2950,13 +2950,13 @@ theorem bad_nonprincipal_nullity_ge_two (σ : β → F →+* F) (x u v : ι → 
 
 /-- The exact requested residual count, after the two BOOKED geometric
 predicates have been imported. Normality refers to the actual old K2. -/
-def NormalResidualCap6917 (p : ℕ) [ExpChar F p] (x u v : ι → F) (r : ℕ) : Prop :=
-  ∀ Γ : Finset F, (∀ γ∈Γ, Principal.BadSlope x u v 131072 180246 γ) →
-    (∀ γ∈Γ, ((stacked p x u v 49174 81898).map (evalRingHom γ)).rank=81899-r) →
+def NormalResidualCap6915 (p : ℕ) [ExpChar F p] (x u v : ι → F) (r : ℕ) : Prop :=
+  ∀ Γ : Finset F, (∀ γ∈Γ, Principal.BadSlope x u v 131072 180265 γ) →
+    (∀ γ∈Γ, ((stacked p x u v 49193 81879).map (evalRingHom γ)).rank=81880-r) →
     (∀ γ∈Γ, NonprincipalSpace (recurrenceSpace
-      (fiberSequence (threeConjugations (frobenius F p)) x u v γ) 131072 81898) 81898) →
-    (∀ γ∈Γ, 3≤fiberNullity (threeConjugations (frobenius F p)) x u v 131072 81898 γ) →
-    Γ.card≤120994407978421318
+      (fiberSequence (threeConjugations (frobenius F p)) x u v γ) 131072 81879) 81879) →
+    (∀ γ∈Γ, 3≤fiberNullity (threeConjugations (frobenius F p)) x u v 131072 81879 γ) →
+    Γ.card≤121058742343964669
 
 /-- Native additive ledger on actual bad slopes. PrincipalCap and
 PuncturedRegularCap remain EXPLICIT geometric hypotheses. Thus this
@@ -2964,37 +2964,37 @@ statement does not claim the residual is the only remaining formal gap. -/
 theorem native_booked_strata_count [ExpChar F 2130706433]
     (x u v : ι → F) (hx : Function.Injective x) (hfixed : ∀ i, x i^2130706433=x i)
     (hn : Fintype.card ι=262144) (r : ℕ) (hr7 : 7≤r)
-    (hr : GenericLayer.genericRank (stacked 2130706433 x u v 49174 81898)=81899-r)
-    (hfirst : GenericLayer.genericRank (hankel x u v 49174 81898)=49174)
+    (hr : GenericLayer.genericRank (stacked 2130706433 x u v 49193 81879)=81880-r)
+    (hfirst : GenericLayer.genericRank (hankel x u v 49193 81879)=49193)
     (hprincipal : EvaluatedPrincipalCap (threeConjugations (frobenius F 2130706433)) x u v
-      131072 180246 131072 81898)
+      131072 180265 131072 81879)
     (hregular : PuncturedRegularCap (threeConjugations (frobenius F 2130706433)) x u v
-      131072 180246 131072 81898)
-    (hres : NormalResidualCap6917 2130706433 x u v r)
-    (Γ : Finset F) (hbad : ∀ γ∈Γ, Principal.BadSlope x u v 131072 180246 γ) :
-    Γ.card≤243044981555721851 := by
+      131072 180265 131072 81879)
+    (hres : NormalResidualCap6915 2130706433 x u v r)
+    (Γ : Finset F) (hbad : ∀ γ∈Γ, Principal.BadSlope x u v 131072 180265 γ) :
+    Γ.card≤243069641737383864 := by
   let σ := threeConjugations (frobenius F 2130706433)
-  let drop : F → Prop := fun γ => ((stacked 2130706433 x u v 49174 81898).map (evalRingHom γ)).rank≠81899-r
-  let princ := principalFiber σ x u v 131072 81898
-  let two : F → Prop := fun γ => fiberNullity σ x u v 131072 81898 γ=2
+  let drop : F → Prop := fun γ => ((stacked 2130706433 x u v 49193 81879).map (evalRingHom γ)).rank≠81880-r
+  let princ := principalFiber σ x u v 131072 81879
+  let two : F → Prop := fun γ => fiberNullity σ x u v 131072 81879 γ=2
   have hfix : ∀ b i, σ b (x i)=x i := by
     intro b i
     fin_cases b <;> simp [σ,threeConjugations,RingHom.comp_apply,frobenius_def,hfixed]
-  have hD : (Γ.filter drop).card≤69712453124068 :=
+  have hD : (Γ.filter drop).card≤69631486279633 :=
     native_rank_exception_count x u v r hr7 hr hfirst _ (fun γ hγ => (Finset.mem_filter.mp hγ).2)
-  have hP : (Γ.filter (fun γ => ¬drop γ ∧ princ γ)).card≤25950104848014291 := by
+  have hP : (Γ.filter (fun γ => ¬drop γ ∧ princ γ)).card≤25947601202251264 := by
     have hh := hprincipal (Γ.filter (fun γ => ¬drop γ ∧ princ γ))
       (fun γ hγ => hbad γ (Finset.mem_filter.mp hγ).1)
       (fun γ hγ => (Finset.mem_filter.mp hγ).2.2)
     rw [hn,native_principal_three_price] at hh
     exact hh
-  have hJ : (Γ.filter (fun γ => ¬drop γ ∧ ¬princ γ ∧ two γ)).card≤96030756276162174 := by
+  have hJ : (Γ.filter (fun γ => ¬drop γ ∧ ¬princ γ ∧ two γ)).card≤95993666704888298 := by
     apply native_nonprincipal_two_kernel_count σ x u v hx hfix hn hregular
     · intro γ hγ; exact hbad γ (Finset.mem_filter.mp hγ).1
     · intro γ hγ; exact (Finset.mem_filter.mp hγ).2.2.2
     · intro γ hγ
       exact Classical.not_not.mp (Finset.mem_filter.mp hγ).2.2.1
-  have hR : (Γ.filter (fun γ => ¬drop γ ∧ ¬princ γ ∧ ¬two γ)).card≤120994407978421318 := by
+  have hR : (Γ.filter (fun γ => ¬drop γ ∧ ¬princ γ ∧ ¬two γ)).card≤121058742343964669 := by
     apply hres
     · intro γ hγ; exact hbad γ (Finset.mem_filter.mp hγ).1
     · intro γ hγ; exact Classical.not_not.mp (Finset.mem_filter.mp hγ).2.1
@@ -3002,13 +3002,13 @@ theorem native_booked_strata_count [ExpChar F 2130706433]
     · intro γ hγ
       obtain ⟨hγΓ,hd,hp,ht⟩ := Finset.mem_filter.mp hγ
       have hnong := Classical.not_not.mp hp
-      have htwo := bad_nonprincipal_nullity_ge_two σ x u v hx hfix 131072 180246 131072 49174 81898
+      have htwo := bad_nonprincipal_nullity_ge_two σ x u v hx hfix 131072 180265 131072 49193 81879
         (by omega) (by decide) (by decide) (by decide) γ (hbad γ hγΓ) hnong
-      change ¬fiberNullity σ x u v 131072 81898 γ=2 at ht
-      change 3≤fiberNullity σ x u v 131072 81898 γ
+      change ¬fiberNullity σ x u v 131072 81879 γ=2 at ht
+      change 3≤fiberNullity σ x u v 131072 81879 γ
       omega
-  exact (four_strata_count Γ drop princ two 69712453124068 25950104848014291 96030756276162174
-    120994407978421318 hD hP hJ hR).trans_eq (by norm_num)
+  exact (four_strata_count Γ drop princ two 69631486279633 25947601202251264 95993666704888298
+    121058742343964669 hD hP hJ hR).trans_eq (by norm_num)
 
 end
 end FrobeniusLocator.Strata
@@ -5603,9 +5603,9 @@ namespace Sol1.C42
 noncomputable section
 open ProximityPrize.Benchmark
 open scoped NNReal
-def queryRadius : ℝ≥0 := claimedRadius 81898 262144
+def queryRadius : ℝ≥0 := claimedRadius 81879 262144
 
-theorem query_complement : (1 - queryRadius : ℝ≥0) = 180246 / 262144 := by
+theorem query_complement : (1 - queryRadius : ℝ≥0) = 180265 / 262144 := by
   apply NNReal.coe_injective
   have hr : queryRadius ≤ 1 := by
     rw [← NNReal.coe_le_coe]
@@ -5622,35 +5622,35 @@ theorem claimedError_pow_100 (s : ℕ) :
   simp only [one_div]
 
 theorem score_lower_integer_cross :
-    (180246 : ℕ) ^ 12800 * 2 ^ 6917 ≤ 262144 ^ 12800 := by
+    (180265 : ℕ) ^ 12800 * 2 ^ 6915 ≤ 262144 ^ 12800 := by
   calc
-    _ ≤ 2 ^ 223483 * 2 ^ 6917 := Nat.mul_le_mul_right _ score_6917_integer
+    _ ≤ 2 ^ 223485 * 2 ^ 6915 := Nat.mul_le_mul_right _ score_6915_integer
     _ = 262144 ^ 12800 := by
       rw [show (262144 : ℕ) = 2 ^ 18 by norm_num, ← pow_mul, ← pow_add]
 
 theorem score_upper_integer_cross :
-    (262144 : ℕ) ^ 12800 < 180246 ^ 12800 * 2 ^ 6918 := by
+    (262144 : ℕ) ^ 12800 < 180265 ^ 12800 * 2 ^ 6916 := by
   calc
-    _ = 2 ^ 223482 * 2 ^ 6918 := by
+    _ = 2 ^ 223484 * 2 ^ 6916 := by
       rw [show (262144 : ℕ) = 2 ^ 18 by norm_num, ← pow_mul, ← pow_add]
-    _ < 180246 ^ 12800 * 2 ^ 6918 :=
-      Nat.mul_lt_mul_of_pos_right score_not_6918_integer (by positivity)
+    _ < 180265 ^ 12800 * 2 ^ 6916 :=
+      Nat.mul_lt_mul_of_pos_right score_not_6916_integer (by positivity)
 
-theorem query_score_6917 :
-    (1 - queryRadius) ^ IRSProfile.repetitions ≤ claimedError 6917 := by
-  change (1 - queryRadius) ^ 128 ≤ claimedError 6917
+theorem query_score_6915 :
+    (1 - queryRadius) ^ IRSProfile.repetitions ≤ claimedError 6915 := by
+  change (1 - queryRadius) ^ 128 ≤ claimedError 6915
   apply (pow_le_pow_iff_left₀ (by positivity) (by positivity) (by norm_num : (100 : ℕ) ≠ 0)).mp
   rw [← pow_mul, claimedError_pow_100, query_complement]
-  change ((180246 : ℝ≥0) / 262144) ^ 12800 ≤ 1 / (2 : ℝ≥0) ^ 6917
+  change ((180265 : ℝ≥0) / 262144) ^ 12800 ≤ 1 / (2 : ℝ≥0) ^ 6915
   rw [div_pow, div_le_div_iff₀ (by positivity) (by positivity), one_mul]
   exact_mod_cast score_lower_integer_cross
 
-theorem query_score_below_6918 :
-    claimedError 6918 < (1 - queryRadius) ^ IRSProfile.repetitions := by
-  change claimedError 6918 < (1 - queryRadius) ^ 128
+theorem query_score_below_6916 :
+    claimedError 6916 < (1 - queryRadius) ^ IRSProfile.repetitions := by
+  change claimedError 6916 < (1 - queryRadius) ^ 128
   apply (pow_lt_pow_iff_left₀ (by positivity) (by positivity) (by norm_num : (100 : ℕ) ≠ 0)).mp
   rw [claimedError_pow_100, ← pow_mul, query_complement]
-  change 1 / (2 : ℝ≥0) ^ 6918 < ((180246 : ℝ≥0) / 262144) ^ 12800
+  change 1 / (2 : ℝ≥0) ^ 6916 < ((180265 : ℝ≥0) / 262144) ^ 12800
   rw [div_pow, div_lt_div_iff₀ (by positivity) (by positivity), one_mul]
   exact_mod_cast score_upper_integer_cross
 
@@ -5694,19 +5694,19 @@ theorem native_domain_fixed (i : I) : IRSProfile.domain i ^ p = IRSProfile.domai
 
 /-- A maximal minor certificate for one actual benchmark input. -/
 def FullRankCertificate (u v : I → K) : Prop :=
-  ∃ rows : Fin 81899 → Fin 2 × Fin 49174,
-    minorPolynomial (stacked p IRSProfile.domain u v 49174 81898) rows ≠ 0
+  ∃ rows : Fin 81880 → Fin 2 × Fin 49193,
+    minorPolynomial (stacked p IRSProfile.domain u v 49193 81879) rows ≠ 0
 
 theorem native_full_rank_close_count (u v : I → K) (hfull : FullRankCertificate u v) :
-    (Finset.univ.filter (fun γ => Decodable IRSProfile.domain u v 131072 81898 γ)).card ≤
-      174502726156267 := by
+    (Finset.univ.filter (fun γ => Decodable IRSProfile.domain u v 131072 81879 γ)).card ≤
+      174462242734040 := by
   obtain ⟨rows, hrows⟩ := hfull
   have hh := decodable_finset_card_le_minor_degree p IRSProfile.domain
-    IRSProfile.domain.injective native_domain_fixed u v 131072 49174 81898
+    IRSProfile.domain.injective native_domain_fixed u v 131072 49193 81879
     (by norm_num only [IRSProfile.card_index]) rows hrows
-    (Finset.univ.filter (fun γ => Decodable IRSProfile.domain u v 131072 81898 γ))
+    (Finset.univ.filter (fun γ => Decodable IRSProfile.domain u v 131072 81879 γ))
     (fun γ hγ => (Finset.mem_filter.mp hγ).2)
-  have hd := minor_natDegree_le p (by norm_num [p]) IRSProfile.domain u v 49174 81898 rows
+  have hd := minor_natDegree_le p (by norm_num [p]) IRSProfile.domain u v 49193 81879 rows
   exact hh.trans (hd.trans (by norm_num [p]))
 
 end
@@ -5725,14 +5725,14 @@ open ProximityPrize.Benchmark
 local instance decidableNativeMCA (P : Prop) : Decidable P := Classical.propDecidable P
 local instance nonzeroNativeMCA : NeZero (131072 : ℕ) := ⟨by norm_num⟩
 
-def radius : ℝ := (claimedRadius 81898 262144 : ℝ)
+def radius : ℝ := (claimedRadius 81879 262144 : ℝ)
 
 theorem native_IsMCA_decodable (u : Fin 2 → I → K) (γ : K)
     (hmca : IsMCA (AffineLineGenerator K) IRSProfile.baseCode γ u radius) :
-    Decodable IRSProfile.domain (u 0) (u 1) 131072 81898 γ := by
+    Decodable IRSProfile.domain (u 0) (u 1) 131072 81879 γ := by
   change IsMCA (AffineLineGenerator K) (ReedSolomon.code IRSProfile.domain 131072)
     γ u radius at hmca
-  apply isMCA_implies_decodable IRSProfile.domain u 131072 81898 radius ?_ γ hmca
+  apply isMCA_implies_decodable IRSProfile.domain u 131072 81879 radius ?_ γ hmca
   intro T hT
   norm_num [IRSProfile.card_index, radius, claimedRadius] at hT ⊢
   exact hT
@@ -5740,9 +5740,9 @@ theorem native_IsMCA_decodable (u : Fin 2 → I → K) (γ : K)
 theorem native_full_rank_MCA_count (u : Fin 2 → I → K)
     (hfull : FullRankCertificate (u 0) (u 1)) :
     (Finset.univ.filter (fun γ => IsMCA (AffineLineGenerator K)
-      IRSProfile.baseCode γ u radius)).card ≤ 174502726156267 := by
+      IRSProfile.baseCode γ u radius)).card ≤ 174462242734040 := by
   apply (Finset.card_le_card (t := Finset.univ.filter
-    (fun γ => Decodable IRSProfile.domain (u 0) (u 1) 131072 81898 γ)) ?_).trans
+    (fun γ => Decodable IRSProfile.domain (u 0) (u 1) 131072 81879 γ)) ?_).trans
     (native_full_rank_close_count (u 0) (u 1) hfull)
   intro γ hγ
   simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hγ ⊢
@@ -5767,40 +5767,40 @@ local instance nonzeroNativePrincipal : NeZero (131072 : ℕ) := ⟨by norm_num�
 
 theorem native_IsMCA_badSlope (U : Fin 2 → I → K) (γ : K)
     (hγ : IsMCA (AffineLineGenerator K) IRSProfile.baseCode γ U radius) :
-    BadSlope IRSProfile.domain (U 0) (U 1) 131072 180246 γ := by
+    BadSlope IRSProfile.domain (U 0) (U 1) 131072 180265 γ := by
   change IsMCA (AffineLineGenerator K) (ReedSolomon.code IRSProfile.domain 131072)
     γ U radius at hγ
-  apply isMCA_implies_badSlope IRSProfile.domain U 131072 180246 radius ?_ γ hγ
+  apply isMCA_implies_badSlope IRSProfile.domain U 131072 180265 radius ?_ γ hγ
   intro T hT
   norm_num [IRSProfile.card_index, radius, claimedRadius] at hT ⊢
   exact hT
 
 def PrincipalCertificate (u v : I → K) : Prop :=
-  ∃ (Δ : K[X]) (δ : ℕ), Δ ≠ 0 ∧ Δ.natDegree ≤ δ ∧ δ ≤ p*81899 ∧
-    (Nonempty (MovingPrincipalCertificate p IRSProfile.domain u v 49174 81898 Δ) ∨
-      Nonempty (ConstantKernelCertificate p IRSProfile.domain u v 49174 81898 Δ))
+  ∃ (Δ : K[X]) (δ : ℕ), Δ ≠ 0 ∧ Δ.natDegree ≤ δ ∧ δ ≤ p*81880 ∧
+    (Nonempty (MovingPrincipalCertificate p IRSProfile.domain u v 49193 81879 Δ) ∨
+      Nonempty (ConstantKernelCertificate p IRSProfile.domain u v 49193 81879 Δ))
 
 theorem native_principal_MCA_count (U : Fin 2 → I → K)
     (hcert : PrincipalCertificate (U 0) (U 1))
     (Γ : Finset K) (hΓ : ∀ γ ∈ Γ,
       IsMCA (AffineLineGenerator K) IRSProfile.baseCode γ U radius) :
-    Γ.card ≤ 733054633328619 := by
+    Γ.card ≤ 733014149906392 := by
   obtain ⟨Δ,δ,hΔ,hΔdeg,hδ,hcert⟩ := hcert
-  have hbad : ∀ γ ∈ Γ, BadSlope IRSProfile.domain (U 0) (U 1) 131072 180246 γ :=
+  have hbad : ∀ γ ∈ Γ, BadSlope IRSProfile.domain (U 0) (U 1) 131072 180265 γ :=
     fun γ hγ => native_IsMCA_badSlope U γ (hΓ γ hγ)
   rcases hcert with hmoving | hconstant
   · obtain ⟨cert⟩ := hmoving
     have hh := principal_bad_count p IRSProfile.domain IRSProfile.domain.injective
-      native_domain_fixed (U 0) (U 1) 131072 180246 49174 81898 δ
+      native_domain_fixed (U 0) (U 1) 131072 180265 49193 81879 δ
       (by norm_num) (by norm_num) (by norm_num only [IRSProfile.card_index])
       Δ hΔ hΔdeg cert Γ hbad
     rw [IRSProfile.card_index] at hh
     exact hh.trans (calc
-      _ ≤ p*81899+p*262144 := Nat.add_le_add hδ (Nat.mul_le_mul_left p (Nat.sub_le _ _))
+      _ ≤ p*81880+p*262144 := Nat.add_le_add hδ (Nat.mul_le_mul_left p (Nat.sub_le _ _))
       _ = _ := by norm_num [p])
   · obtain ⟨cert⟩ := hconstant
     have hh := constant_kernel_count p IRSProfile.domain IRSProfile.domain.injective
-      native_domain_fixed (U 0) (U 1) 131072 180246 49174 81898 δ
+      native_domain_fixed (U 0) (U 1) 131072 180265 49193 81879 δ
       (by norm_num) (by norm_num) (by norm_num only [IRSProfile.card_index])
       Δ hΔ hΔdeg cert Γ hbad
     norm_num [p] at hδ
@@ -5811,12 +5811,12 @@ theorem native_type_one_MCA_count (U : Fin 2 → I → K)
     (Γ : Finset K) (hΓ : ∀ γ ∈ Γ,
       IsMCA (AffineLineGenerator K) IRSProfile.baseCode γ U radius) : Γ.card ≤ 1 := by
   apply type_one_bad_count IRSProfile.domain IRSProfile.domain.injective
-    (U 0) (U 1) 131072 180246 p
+    (U 0) (U 1) 131072 180265 p
     (by norm_num only [IRSProfile.card_index]) (by norm_num [p]) htype Γ
   intro γ hγ
   exact native_IsMCA_badSlope U γ (hΓ γ hγ)
 
-theorem native_principal_budget : 733054633328619 ≤ 243044981555721851 := by norm_num
+theorem native_principal_budget : 733014149906392 ≤ 243069641737383864 := by norm_num
 
 end
 end FrobeniusLocator.Native
@@ -5835,10 +5835,10 @@ local instance nativeStrataNonzero : NeZero (131072 : ℕ) := ⟨by norm_num⟩
 
 theorem native_IsMCA_badSlope (U : Fin 2 → Native.I → Native.K) (γ : Native.K)
     (hmca : IsMCA (AffineLineGenerator Native.K) IRSProfile.baseCode γ U Native.radius) :
-    Principal.BadSlope IRSProfile.domain (U 0) (U 1) 131072 180246 γ := by
+    Principal.BadSlope IRSProfile.domain (U 0) (U 1) 131072 180265 γ := by
   change IsMCA (AffineLineGenerator Native.K) (ReedSolomon.code IRSProfile.domain 131072)
     γ U Native.radius at hmca
-  apply Principal.isMCA_implies_badSlope IRSProfile.domain U 131072 180246 Native.radius ?_ γ hmca
+  apply Principal.isMCA_implies_badSlope IRSProfile.domain U 131072 180265 Native.radius ?_ γ hmca
   intro T hT
   norm_num [IRSProfile.card_index,Native.radius,claimedRadius] at hT ⊢
   exact hT
@@ -5848,15 +5848,15 @@ normal residual cap are shown verbatim in the signature. This is NOT
 an unconditional MCA cap or ProtocolClaim. -/
 theorem native_MCA_count_of_booked_geometry_and_residual (U : Fin 2 → Native.I → Native.K)
     (r : ℕ) (hr7 : 7≤r)
-    (hr : GenericLayer.genericRank (stacked Native.p IRSProfile.domain (U 0) (U 1) 49174 81898)=81899-r)
-    (hfirst : GenericLayer.genericRank (hankel IRSProfile.domain (U 0) (U 1) 49174 81898)=49174)
+    (hr : GenericLayer.genericRank (stacked Native.p IRSProfile.domain (U 0) (U 1) 49193 81879)=81880-r)
+    (hfirst : GenericLayer.genericRank (hankel IRSProfile.domain (U 0) (U 1) 49193 81879)=49193)
     (hprincipal : EvaluatedPrincipalCap (threeConjugations (frobenius Native.K Native.p)) IRSProfile.domain
-      (U 0) (U 1) 131072 180246 131072 81898)
+      (U 0) (U 1) 131072 180265 131072 81879)
     (hregular : PuncturedRegularCap (threeConjugations (frobenius Native.K Native.p)) IRSProfile.domain
-      (U 0) (U 1) 131072 180246 131072 81898)
-    (hres : NormalResidualCap6917 Native.p IRSProfile.domain (U 0) (U 1) r)
+      (U 0) (U 1) 131072 180265 131072 81879)
+    (hres : NormalResidualCap6915 Native.p IRSProfile.domain (U 0) (U 1) r)
     (Γ : Finset Native.K) (hΓ : ∀ γ∈Γ, IsMCA (AffineLineGenerator Native.K) IRSProfile.baseCode γ U Native.radius) :
-    Γ.card≤243044981555721851 := by
+    Γ.card≤243069641737383864 := by
   apply native_booked_strata_count IRSProfile.domain (U 0) (U 1) IRSProfile.domain.injective
     Native.native_domain_fixed IRSProfile.card_index r hr7 hr hfirst hprincipal hregular hres Γ
   intro γ hγ
@@ -5876,18 +5876,18 @@ open ProximityPrize.Benchmark
 
 /-- The field-size guard in the global polynomial output construction
 is discharged at the actual native sextic field for every open H. -/
-theorem native_relation_height_fits_field (H : ℕ) (hH : H≤32718) :
+theorem native_relation_height_fits_field (H : ℕ) (hH : H≤32680) :
     (2*H+2)*Native.p<Fintype.card Native.K := by
   change (2*H+2)*2130706433<Fintype.card KoalaBear.Ext6
   rw [KoalaBear.card_ext6]
-  have hle := Nat.mul_le_mul_right 2130706433 (show 2*H+2≤2*32718+2 by omega)
+  have hle := Nat.mul_le_mul_right 2130706433 (show 2*H+2≤2*32680+2 by omega)
   exact hle.trans_lt (by norm_num)
 
 /-- Native primitive polynomial Lemma T with all size/degree guards
 proved. The binary level Hilbert function remains an EXPLICIT premise. -/
 def native_lemmaT_of_two_active_level (U : Fin 2 → Native.I → Native.K)
-    (r a b c : ℕ) (hr7 : 7≤r) (ha : a≤b) (hb : b≤81898) (hc : 81898<c)
-    (hcm : c≤131072) (hsum : a+b+c=262146) (hr : r+a+b=163798)
+    (r a b c : ℕ) (hr7 : 7≤r) (ha : a≤b) (hb : b≤81879) (hc : 81879<c)
+    (hcm : c≤131072) (hsum : a+b+c=262146) (hr : r+a+b=163760)
     (hHF : HasLevelHilbertFunction
       (fun b j => algebraMap Native.K[X] (GenericLayer.GenericField Native.K)
         (Principal.parameterSyndromes Native.p IRSProfile.domain (U 0) (U 1) b j)) 131072 a b c) :
@@ -5918,7 +5918,7 @@ abbrev GenericSlopeField := FractionRing K[X]
 def genericSlopeEmbedding : K[X] →+* GenericSlopeField := algebraMap K[X] GenericSlopeField
 
 def GenericPrincipalCertificate (u v : I → K) : Prop :=
-  ∃ a q : ℕ, a+q=81898 ∧ Nonempty (PrincipalAt
+  ∃ a q : ℕ, a+q=81879 ∧ Nonempty (PrincipalAt
     (fun b j => genericSlopeEmbedding (parameterSyndromes p IRSProfile.domain u v b j))
     131072 a q)
 
@@ -5928,7 +5928,7 @@ theorem native_generic_principal_MCA_count (U : Fin 2 → I → K)
     (hprincipal : GenericPrincipalCertificate (U 0) (U 1))
     (Γ : Finset K) (hΓ : ∀ γ ∈ Γ,
       IsMCA (AffineLineGenerator K) IRSProfile.baseCode γ U radius) :
-    Γ.card ≤ 733054633328619 := by
+    Γ.card ≤ 733014149906392 := by
   obtain ⟨a,q,hsum,⟨P⟩⟩ := hprincipal
   have hbad : ∀ γ ∈ Γ,
       BadSlope IRSProfile.domain (U 0) (U 1) 131072 (131072+(131072-(a+q))) γ := by
@@ -5941,7 +5941,7 @@ theorem native_generic_principal_MCA_count (U : Fin 2 → I → K)
     131072 131072 a q (by norm_num only [IRSProfile.card_index]) (by omega) P Γ hbad
   rw [IRSProfile.card_index] at hh
   exact hh.trans (calc
-    _ ≤ p*(262144+81899) := Nat.mul_le_mul_left p (by omega)
+    _ ≤ p*(262144+81880) := Nat.mul_le_mul_left p (by omega)
     _ = _ := by norm_num [p])
 
 end

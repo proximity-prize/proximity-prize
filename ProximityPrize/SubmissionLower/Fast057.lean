@@ -57,27 +57,27 @@ def c3 : Prop :=
 private theorem order_of_source (contact : c1) {u del} {M : AnchorModel u del}
     {Γ} {F : AnchoredFamily M Γ} {rows : Banks} (src : JetSource M F rows)
     {s : Shape} (hs : s ∈ scheduled M.overhead) (hh : 0 < M.overhead.toNat)
-    (hchar : s.m * 180246 < p) {q : Surface} (hq : Parent q)
-    (hv : BankVanishes rows s q) (W : ℕ) (hw : W < s.m * 180246)
+    (hchar : s.m * 180265 < p) {q : Surface} (hq : Parent q)
+    (hv : BankVanishes rows s q) (W : ℕ) (hw : W < s.m * 180265)
     (P : Jet) (hP : P ∈ rows s W) : OrderAt q P (contactPower M.overhead.toNat s W) := by
   let h := M.overhead.toNat
   apply contact _ _ _ hq
-  · have := Nat.div_le_self (s.m * 180246 - 1 - W) (2*h)
-    change 1 + (s.m * 180246 - 1 - W) / (2*h) < p
+  · have := Nat.div_le_self (s.m * 180265 - 1 - W) (2*h)
+    change 1 + (s.m * 180265 - 1 - W) / (2*h) < p
     omega
   intro a b hab
-  change a+b < 1 + (s.m*180246 - 1 - W) / (2*h) at hab
+  change a+b < 1 + (s.m*180265 - 1 - W) / (2*h) at hab
   have hd : 0 < 2*h := by dsimp [h]; omega
-  have hl := (Nat.le_div_iff_mul_le hd).mp (show a+b ≤ (s.m*180246 - 1 - W) / (2*h) by omega)
+  have hl := (Nat.le_div_iff_mul_le hd).mp (show a+b ≤ (s.m*180265 - 1 - W) / (2*h) by omega)
   rw [Nat.mul_comm (a+b), Nat.mul_add] at hl
-  have hle : W + 2*h*a + 2*h*b ≤ s.m*180246 - 1 := by omega
+  have hle : W + 2*h*a + 2*h*b ≤ s.m*180265 - 1 := by omega
   have hA := src.shift s hs W P hP 0 a
   have hB := src.shift s hs _ _ hA 1 b
   exact hv _ (src.nested s hs s hs rfl rfl rfl le_rfl _ _ hle hB)
 
 private theorem paired_mass_of_test (contact : c1) (masses : c2) {u del}
     {M : AnchorModel u del} {Γ} {F : AnchoredFamily M Γ} {rows : Banks}
-    (src : JetSource M F rows) (hl : 3555 ≤ M.overhead) (hu : M.overhead ≤ 32718)
+    (src : JetSource M F rows) (hl : 3555 ≤ M.overhead) (hu : M.overhead ≤ 32680)
     (pairs : ∀ i : Fin 4, BufferedPair M.overhead.toNat rows i)
     (i : Fin 4) (S : Finset Surface) (hS : ∀ q ∈ S, Parent q)
     (hpass : ∀ q ∈ S, stagePass rows pairs i.castSucc q) :
@@ -96,7 +96,7 @@ private theorem paired_mass_of_test (contact : c1) (masses : c2) {u del}
   have ord (s : Shape) (hs : s ∈ [cheapShape i, layeredShape i]) (hv : BankVanishes rows s q)
       (P : Jet) (hP : P ∈ rows s (reserveCutoff M.overhead.toNat s i)) :
       OrderAt q P (reserve i+1) := by
-    have hp : s.m*180246 < p := by
+    have hp : s.m*180265 < p := by
       simp at hs
       rcases hs with rfl | rfl <;> fin_cases i <;> decide
     have hw := buffered_power M.overhead.toNat (by omega) (by omega) i s hs
@@ -177,7 +177,7 @@ theorem of_children (power : K1_14_2_1.c1) (rankBound : K1_14_2_1.c2)
   let w := M.overhead
   let h := w.toNat
   have hln : 3555 ≤ h := by dsimp [h, w]; omega
-  have hun : h ≤ 32718 := by dsimp [h, w]; omega
+  have hun : h ≤ 32680 := by dsimp [h, w]; omega
   let pairs (i : Fin 4) : BufferedPair h rows i :=
     Classical.choice (bufferedPairs power rankBound hJ hl hu i)
   obtain ⟨initial⟩ := initialCover u del M Γ F (pairs 0).cheap (pairs 0).layered
@@ -267,7 +267,7 @@ theorem of_children (power : K1_14_2_1.c1) (rankBound : K1_14_2_1.c2)
       exact ⟨q, hq⟩
     obtain ⟨f, hf⟩ := K1_14_3_7.proof S₄ hne hg₄
     have hs := full_membership hl
-    have hcontacts (W : ℕ) (hw : W < fullShape.m*180246) (P : Jet)
+    have hcontacts (W : ℕ) (hw : W < fullShape.m*180265) (P : Jet)
         (hP : P ∈ rows fullShape W) :
         ∀ q ∈ S₄, OrderAt q P (contactPower h fullShape W) := by
       intro q hq

@@ -11,7 +11,6 @@ import Mathlib.RingTheory.MvPolynomial.Ideal
 import Mathlib.RingTheory.Polynomial.Radical
 import Mathlib.RingTheory.RegularLocalRing.Polynomial
 import Mathlib.RingTheory.Smooth.Field
-import Mathlib.Tactic
 set_option Elab.async false
 
 section PackSource_C42ConsumerArithmetic
@@ -20,15 +19,15 @@ set_option autoImplicit true
 These identities do not assert that the consumer inequality has been proved. -/
 namespace Sol1.C42
 
-def listCap : ℕ := 124031471576872973
-def I1 : ℚ := 131072 / 49174
-def I2 : ℚ := I1 * (131073 / 49175)
+def listCap : ℕ := 123935685281173519
+def I1 : ℚ := 131072 / 49193
+def I2 : ℚ := I1 * (131073 / 49194)
 def b (v : ℕ) : ℕ := 1 + 2 * 131073 * (v - 1)
 def firstOrderCharge (h : ℕ) : ℚ := I1 * h * b h + (h : ℚ) * (h - 1)
 def secondOrderCharge (nu : ℕ) : ℚ := I2 * nu * (b nu : ℚ) ^ 2 + firstOrderCharge (nu ^ 2)
 
 theorem consumer_exact : secondOrderCharge 64 =
-    (149962201104908813314568192 : ℚ) / 1209065725 := by
+    (49987402193335468270948352 : ℚ) / 403333407 := by
   norm_num [secondOrderCharge, firstOrderCharge, I2, I1, b]
 
 theorem consumer_le_cap : secondOrderCharge 64 ≤ (listCap : ℚ) := by
@@ -40,11 +39,11 @@ theorem cap_sub_one_lt_consumer : (listCap : ℚ) - 1 < secondOrderCharge 64 := 
   norm_num [listCap]
 
 theorem listCap_lt_seven_n_cubed : listCap < 7 * 262144 ^ 3 := by norm_num [listCap]
-theorem listCap_gap : listCap + 2069317989500915 = 7 * 262144 ^ 3 := by norm_num [listCap]
+theorem listCap_gap : listCap + 2165104285200369 = 7 * 262144 ^ 3 := by norm_num [listCap]
 theorem characteristic_guard : max (131072 : ℕ) (64 ^ 2) < 2130706433 := by norm_num
-theorem complete_local_X_blocks : (48 : ℕ) * 180246 - 131072 * 64 = 263200 := by norm_num
-theorem complete_local_X_blocks_ge : (48 : ℕ) ≤ 48 * 180246 - 131072 * 64 := by norm_num
-theorem radius_agreement_sum : (81898 : ℕ) + 180246 = 262144 := by norm_num
+theorem complete_local_X_blocks : (48 : ℕ) * 180265 - 131072 * 64 = 264112 := by norm_num
+theorem complete_local_X_blocks_ge : (48 : ℕ) ≤ 48 * 180265 - 131072 * 64 := by norm_num
+theorem radius_agreement_sum : (81879 : ℕ) + 180265 = 262144 := by norm_num
 
 theorem integer_count_le_cap {M : ℕ} (h : (M : ℚ) ≤ secondOrderCharge 64) : M ≤ listCap := by
   exact_mod_cast h.trans consumer_le_cap
@@ -55,14 +54,14 @@ end PackSource_C42ConsumerArithmetic
 
 section PackSource_C42ScoreArithmetic
 set_option autoImplicit true
-/-! Exact integer score separation: at least6917 centibits and below6918.
+/-! Exact integer score separation: at least6915 centibits and below6916.
 This is radius arithmetic, not a protocol or list theorem. -/
 namespace Sol1.C42
 set_option maxRecDepth 100000
 set_option maxHeartbeats 0
 
-theorem score_6917_integer : (180246 : ℕ) ^ 12800 ≤ 2 ^ 223483 := by decide +kernel
-theorem score_not_6918_integer : (2 : ℕ) ^ 223482 < 180246 ^ 12800 := by decide +kernel
+theorem score_6915_integer : (180265 : ℕ) ^ 12800 ≤ 2 ^ 223485 := by decide +kernel
+theorem score_not_6916_integer : (2 : ℕ) ^ 223484 < 180265 ^ 12800 := by decide +kernel
 
 end Sol1.C42
 end PackSource_C42ScoreArithmetic

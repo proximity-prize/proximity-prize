@@ -929,7 +929,7 @@ def sourceSpan (F : Type*) [Field F] : Submodule F (DifferentialPolynomial F 2) 
   Submodule.span F (Set.range fun i : SourceIndex ↦ (columns i).polynomial)
 
 def sourceBand (F : Type*) [Field F] : Submodule F (DifferentialPolynomial F 2) :=
-  restrictWeightAtMost (R := F) (differentialWeight 131072) 8651807 ⊓
+  restrictWeightAtMost (R := F) (differentialWeight 131072) 8652719 ⊓
     (restrictWeightAtMost (R := F) jetDegreeWeight 64 ⊓
       restrictWeightAtMost (R := F) sourceOrderWeight 21)
 

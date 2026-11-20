@@ -22,7 +22,7 @@ abbrev Jet := (s : Fin 65) × (e2 : Fin (min s.val 10 + 1)) ×
 def e1 (j : Jet) : ℕ := j.2.2.val
 def e2 (j : Jet) : ℕ := j.2.1.val
 def e0 (j : Jet) : ℕ := j.1.val - e2 j - e1 j
-def width (j : Jet) : ℕ := 48 * 180246 - 131072 * j.1.val + e1 j + 2 * e2 j
+def width (j : Jet) : ℕ := 48 * 180265 - 131072 * j.1.val + e1 j + 2 * e2 j
 abbrev SourceIndex := (j : Jet) × Fin (width j)
 
 def columns (i : SourceIndex) : SourceColumn 2 where
@@ -41,13 +41,13 @@ theorem jet_order (j : Jet) : e1 j + 2 * e2 j ≤ 21 := by
   simp only [e1, e2]
   omega
 
-theorem width_lower (j : Jet) : 263200 ≤ width j := by
+theorem width_lower (j : Jet) : 264112 ≤ width j := by
   have hs := j.1.isLt
   unfold width
   omega
 
 theorem source_weight_lt (i : SourceIndex) :
-    i.2.val + 131072 * e0 i.1 + 131071 * e1 i.1 + 131070 * e2 i.1 < 48 * 180246 := by
+    i.2.val + 131072 * e0 i.1 + 131071 * e1 i.1 + 131070 * e2 i.1 < 48 * 180265 := by
   have hs := i.1.1.isLt
   have ht := jet_total i.1
   have hx := i.2.isLt
@@ -87,7 +87,7 @@ theorem columns_total_le (i : SourceIndex) : totalJetDegree (columns i).exponent
   omega
 
 theorem columns_weight_lt (i : SourceIndex) :
-    Finsupp.weight (differentialWeight 131072) (columns i).exponent < 48 * 180246 := by
+    Finsupp.weight (differentialWeight 131072) (columns i).exponent < 48 * 180265 := by
   simpa [SourceColumn.weight_exponent, columns, differentialWeight, Fin.sum_univ_two,
     Nat.add_assoc, Nat.mul_comm] using
     source_weight_lt i
@@ -95,11 +95,11 @@ theorem columns_weight_lt (i : SourceIndex) :
 def sourceTotal : ℕ := ∑ j : Jet, width j
 
 theorem jet_count : Fintype.card Jet = 7194 := by decide +kernel
-theorem source_total : sourceTotal = 27306583216 := by decide +kernel
+theorem source_total : sourceTotal = 27313144144 := by decide +kernel
 
 /-- Cardinality is a sum over7194 jet triples, never an enumeration of the
-27306583216-dimensional full source index. -/
-theorem source_card : Fintype.card SourceIndex = 27306583216 := by
+27313144144-dimensional full source index. -/
+theorem source_card : Fintype.card SourceIndex = 27313144144 := by
   rw [Fintype.card_sigma]
   simp only [Fintype.card_fin]
   exact source_total
@@ -975,7 +975,7 @@ theorem local_columns_per_jet : localColumns = Fintype.card Jet * 48 := by
 theorem global_rank_allowance : (262144 : ℕ) * blockUpper = 27294433280 := by
   rw [block_upper]
 
-theorem source_surplus : sourceTotal - 262144 * blockUpper = 12149936 := by
+theorem source_surplus : sourceTotal - 262144 * blockUpper = 18710864 := by
   rw [source_total, block_upper]
 
 theorem strict_source_surplus : 262144 * blockUpper < Fintype.card SourceIndex := by
@@ -1231,7 +1231,7 @@ open ReedSolomon.HiddenDerivative
 
 def Eligible (x a b c : ℕ) : Prop :=
   a + b + c ≤ 64 ∧ b + 2 * c ≤ 21 ∧
-    x + 131072 * a + 131071 * b + 131070 * c < 48 * 180246
+    x + 131072 * a + 131071 * b + 131070 * c < 48 * 180265
 
 theorem columns_eligible (i : SourceIndex) :
     Eligible (columns i).x (columns i).y₀ ((columns i).higher 0) ((columns i).higher 1) := by

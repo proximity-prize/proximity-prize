@@ -37,7 +37,7 @@ def OrderAt {n : ℕ} (P : Row n) (S : Geom[X]) (d : ℕ) : Prop :=
 /-- A physical upper bound also controls the degree in the abscissa. -/
 def TrueWeightLE {n : ℕ} (P : Row n) (D : ℕ) : Prop :=
   ∀ m ∈ P.support, (P.coeff m).natDegree +
-    m.sum (fun i a => (133646 - i.val) * a) ≤ D
+    m.sum (fun i a => (133671 - i.val) * a) ≤ D
 
 def indexDegree {n : ℕ} (P : Row n) : ℕ :=
   P.support.sup (fun m => m.sum (fun i a => i.val * a))
@@ -58,15 +58,15 @@ def Fits {n : ℕ} (a : Fin n → Shape) : Prop :=
 
 structure Messages (w : I → K) (Γ : Finset K) (s : K → K[X]) : Prop where
   distinct : Set.InjOn s (Γ : Set K)
-  degree : ∀ γ ∈ Γ, (s γ).natDegree ≤ 133646
-  hits : ∀ γ ∈ Γ, ∃ T : Finset I, 180246 ≤ T.card ∧ ∀ i ∈ T, (s γ).eval (node i) = w i
+  degree : ∀ γ ∈ Γ, (s γ).natDegree ≤ 133671
+  hits : ∀ γ ∈ Γ, ∃ T : Finset I, 180265 ≤ T.card ∧ ∀ i ∈ T, (s γ).eval (node i) = w i
 
 /-- The projective residue equation is cleared only by factors which are units
 modulo H. Its divisibility is in the polynomial ring, including repeated roots. -/
 structure PoleData (Γ : Finset K) (s : K → K[X]) where
   H : Geom[X]
   monic : H.Monic
-  small : 1 ≤ H.natDegree ∧ H.natDegree ≤ 2575
+  small : 1 ≤ H.natDegree ∧ H.natDegree ≤ 2600
   nodes : ∀ i, H.eval (embed (node i)) ≠ 0
   degree : ∀ γ ∈ Γ, (s γ).natDegree ≤ 131071 + H.natDegree
   z : K → Geom
@@ -83,7 +83,7 @@ structure PoleData (Γ : Finset K) (s : K → K[X]) where
 
 def SmallFactor (f : Row 4) : Prop :=
   Irreducible f ∧ 0 < (shape f).t ∧ InBox (shape f) ⟨120, 48, 10⟩ ∧
-    TrueWeightLE f (90 * 180246 - 1)
+    TrueWeightLE f (90 * 180265 - 1)
 
 /-- Substitute only the lower true jets and extract the original leading
 coefficient in the highest jet. The nonzero test is at generic X. -/
@@ -95,7 +95,7 @@ def OnFactor (f : Row 4) (S : Geom[X]) : Prop :=
   atJet f S = 0 ∧ topLead f S ≠ 0
 
 def LowerRow (g : Row 3) : Prop :=
-  g ≠ 0 ∧ g.totalDegree ≤ 120 ∧ indexDegree g ≤ 48 ∧ TrueWeightLE g (90 * 180246 - 1)
+  g ≠ 0 ∧ g.totalDegree ≤ 120 ∧ indexDegree g ≤ 48 ∧ TrueWeightLE g (90 * 180265 - 1)
 
 structure Cover {n : ℕ} (Γ : Finset K) (s : K → K[X])
     (g : Row 3) (f : Fin n → Row 4) : Prop where
@@ -112,13 +112,13 @@ def Contact (w : I → K) (P : Row 4) : Prop :=
     (Polynomial.X - C (embed (node i))) ^ 3000 ∣ atJet P S
 
 def PrimaryRank (w : I → K) : Prop :=
-  ∃ e : Fin 1218261228987542596 → Row 4, LinearIndependent Geom e ∧
+  ∃ e : Fin 1217307887288627271 → Row 4, LinearIndependent Geom e ∧
     ∀ i, InBox (shape (e i)) ⟨4012, 1650, 550⟩ ∧
-      TrueWeightLE (e i) (3000 * 180246 - 1) ∧ Contact w (e i)
+      TrueWeightLE (e i) (3000 * 180265 - 1) ∧ Contact w (e i)
 
 def ProperCut (f : Row 4) (Γ : Finset K) (s : K → K[X]) (l : ℕ) : Prop :=
   ∃ Q : Row 4, (¬ f ∣ Q) ∧ InBox (shape Q) ⟨4012, 1650, 550⟩ ∧
-    TrueWeightLE Q (3000 * 180246 - 1) ∧ ∀ γ ∈ Γ, OrderAt Q (extend (s γ)) l
+    TrueWeightLE Q (3000 * 180265 - 1) ∧ ∀ γ ∈ Γ, OrderAt Q (extend (s γ)) l
 
 /-- Seed-independent equations in the three lower jets. Clearing a common
 X-denominator preserves multiplicities at the indeterminate abscissa. -/
@@ -149,8 +149,8 @@ def remaining (b j : ℕ) : ℕ :=
 a spent product with index ≥ 3 times its top degree, the residual index bound
 already imposes the residual top bound, since 1650 = 3 * 550. -/
 def LayerBudget {n : ℕ} (a : Fin n → Shape) (l : Fin n → ℕ) : Prop :=
-  26141261914202 ≤
-    ∑ k ∈ Finset.range (1 + (3000 * 180246 - 1) / 46603),
+  26124168665121 ≤
+    ∑ k ∈ Finset.range (1 + (3000 * 180265 - 1) / 46597),
       remaining (∑ i, (k + 1 - l i) * (a i).b) (∑ i, (k + 1 - l i) * (a i).j)
 
 /- Full-space physical and fat factor prices from VERIFY-LOW L11–L16.
@@ -175,7 +175,7 @@ def mixed32 (p q r s : Shape) : ℕ :=
 
 def ceilDiv (a b : ℕ) := (a + b - 1) / b
 
-abbrev taylorLength : ℕ := 133647
+abbrev taylorLength : ℕ := 133672
 
 def chart (L : ℕ) (p : Shape) : Shape :=
   let i := 2*L*(p.j - 3) + L + 3
@@ -203,11 +203,11 @@ def physicalPrice (x : Shape) (l : ℕ) : ℕ :=
   let q : Shape := ⟨4013, 1650, 550⟩
   let h := chart taylorLength p
   let numerator := ceilDiv (surfaceNumerator32 p q) 32 +
-    ceilDiv ((81898 + 2*46600) * x.b * q.b * (chart (taylorLength+1) p).b) 46600
+    ceilDiv ((81879 + 2*46594) * x.b * q.b * (chart (taylorLength+1) p).b) 46594
   let auxBox := q.plus (p.scale 4)
   let curves := mixed32 p q auxBox h + 2*x.t*mixed32 p p p h
   let points := mixed32 p q auxBox p + 2*x.t*mixed32 p p p p
-  ceilDiv numerator l + 2*133646*x.b*q.b + ceilDiv (81898*curves + 2*46600*points) (32*46600)
+  ceilDiv numerator l + 2*133671*x.b*q.b + ceilDiv (81879*curves + 2*46594*points) (32*46594)
 
 def FatEligible (x : Shape) : Prop := x.b ≤ 60 ∧ x.j ≤ 32
 
@@ -217,21 +217,21 @@ def fatPrice (x : Shape) : ℕ :=
   let q : Shape := ⟨952630000, 322000000, 0⟩
   let big : Shape := ⟨35007, 12106, 0⟩
   let cut : Shape := ⟨max (max h.b big.b) (max h.j (big.j+1)), max h.j (big.j+1), max 1 h.t⟩
-  let divisors := ceilDiv (81898 * mixed32 p big cut h) (32*46600) +
-    ceilDiv (mixed32 p big cut p) 32 + 20*p.b*h.b^2 + 5*133646*p.b*h.b + 1
+  let divisors := ceilDiv (81879 * mixed32 p big cut h) (32*46594) +
+    ceilDiv (mixed32 p big cut p) 32 + 20*p.b*h.b^2 + 5*133671*p.b*h.b + 1
   let singular := if 1 < x.t then ceilDiv (4*x.t*mixed32 p p h h) 32 + x.t*x.b^2+1 else 0
-  let curves := ceilDiv (81898*mixed32 p q q h + 46600*mixed32 p q q p) (32*46600*293711590)
+  let curves := ceilDiv (81879*mixed32 p q q h + 46594*mixed32 p q q p) (32*46594*293711590)
   let isolated := ceilDiv (3*q.j^2*(2*q.b - q.j)) (4*41481*(41481 - 33184 + 1)*1037)
   divisors + singular + curves + isolated
 
 theorem primary_layer_threshold :
-    ceilDiv 1218261228987542596 46603 = 26141261914202 := by decide
+    ceilDiv 1217307887288627271 46597 = 26124168665121 := by decide
 
 theorem physical_price_corner :
-    physicalPrice ⟨120,48,10⟩ 58 = 222060174190762111 := by decide
+    physicalPrice ⟨120,48,10⟩ 58 = 222142013343379695 := by decide
 
 theorem fat_price_quadratic :
-    fatPrice ⟨2,6,2⟩ = 96009528363037396 := by decide
+    fatPrice ⟨2,6,2⟩ = 96034767423888601 := by decide
 
 end
 end K1_13
@@ -268,7 +268,7 @@ def c4 : Prop :=
 /-- Aggregate order-at-most-two count, before parameter exceptions. -/
 def c5 : Prop :=
   ∀ w Γ s, Messages w Γ s → ∀ g, LowerRow g →
-    (∀ γ ∈ Γ, atJet g (extend (s γ)) = 0) → Γ.card ≤ 18505867013330940
+    (∀ γ ∈ Γ, atJet g (extend (s γ)) = 0) → Γ.card ≤ 18512789806000648
 
 /-- Proper physical cutter with full jet multiplicity on one leading-unit factor. -/
 def c6 : Prop :=
@@ -287,7 +287,7 @@ def c8 : Prop :=
   ∀ n (a : Fin n → Shape) (l cost : Fin n → ℕ), Fits a → LayerBudget a l →
     (∀ i, 0 < l i → cost i ≤ physicalPrice (a i) (l i)) →
     (∀ i, FatEligible (a i) → cost i ≤ fatPrice (a i)) →
-    (∑ i, cost i) ≤ 222060174190762111
+    (∑ i, cost i) ≤ 222142013343379695
 
 theorem trim_divisor (P : Geom[X]) (hm : P.Monic) (h : ℕ) (hh : h ≤ P.natDegree) :
     ∃ H : Geom[X], H.Monic ∧ H.natDegree = h ∧ H ∣ P := by
@@ -308,7 +308,7 @@ theorem degree_at_height {u D Γ} (M : AnchorModel u D) (F : AnchoredFamily M Γ
   · omega
 
 theorem messages_of_anchor {u D Γ} (M : AnchorModel u D) (F : AnchoredFamily M Γ)
-    (hw : M.overhead ≤ 2575) : Messages M.word Γ F.scalar := by
+    (hw : M.overhead ≤ 2600) : Messages M.word Γ F.scalar := by
   refine ⟨F.distinct, ?_, ?_⟩
   · intro γ hγ
     have := degree_at_height M F γ hγ
@@ -318,7 +318,7 @@ theorem messages_of_anchor {u D Γ} (M : AnchorModel u D) (F : AnchoredFamily M 
     exact ⟨m.bad.support, m.bad.agreement, m.scalar_hits⟩
 
 theorem pole_of_anchor {u D Γ} (M : AnchorModel u D) (F : AnchoredFamily M Γ)
-    (lo : 1 ≤ M.overhead) (hi : M.overhead ≤ 2575) : Nonempty (PoleData Γ F.scalar) := by
+    (lo : 1 ≤ M.overhead) (hi : M.overhead ≤ 2600) : Nonempty (PoleData Γ F.scalar) := by
   have hmax : M.overhead.toNat ≤ (extend M.E).natDegree := by
     rw [Polynomial.natDegree_map]
     unfold AnchorModel.overhead
@@ -378,7 +378,7 @@ theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) (h4 : c4)
   obtain ⟨l, layers, cut⟩ := h3 _ _ _ hmsg (h2 _) _ _ _ cover
   obtain ⟨book, E, booked, hE⟩ := h4 _ _ _ hmsg pole
   let low := Γ.filter (fun γ => atJet g (extend (s γ)) = 0)
-  have low_bound : low.card ≤ 18505867013330940 :=
+  have low_bound : low.card ≤ 18512789806000648 :=
     h5 _ _ _ (hmsg.mono (Finset.filter_subset _ _)) _ cover.lower
       (fun _ h => (Finset.mem_filter.mp h).2)
   let pieces (i : Fin n) := Γ.filter (fun γ => γ ∉ book ∧ OnFactor (f i) (extend (s γ)))
@@ -430,18 +430,18 @@ def SourceEligible (e : SourceExponent) : Prop :=
   e.weight jetDegreeWeight ≤ 4012 ∧
   e.weight jetDerivativeWeight ≤ 1650 ∧
   e.weight topWeight ≤ 550 ∧
-  e.weight (differentialWeight 133646) ≤ 3000 * 180246 - 1
+  e.weight (differentialWeight 133671) ≤ 3000 * 180265 - 1
 
 def sourceExponents : Set SourceExponent := { e | SourceEligible e }
 
 theorem sourceExponents_finite : sourceExponents.Finite := by
-  refine (Finsupp.finite_of_nat_weight_le (differentialWeight (d := 3) 133646)
-    ?_ (3000 * 180246 - 1)).subset (fun e he => he.2.2.2)
+  refine (Finsupp.finite_of_nat_weight_le (differentialWeight (d := 3) 133671)
+    ?_ (3000 * 180265 - 1)).subset (fun e he => he.2.2.2)
   intro v
   cases v with
   | none => decide
   | some j =>
-    exact (differentialWeight_some_pos_of_order_lt_degree (by decide : 3 < 133646) j).ne'
+    exact (differentialWeight_some_pos_of_order_lt_degree (by decide : 3 < 133671) j).ne'
 
 def sourceColumns : Finset SourceExponent := sourceExponents_finite.toFinset
 
@@ -569,13 +569,13 @@ private theorem weight_eq_sum (m : Fin 4 →₀ ℕ) (weight : Fin 4 → ℕ) :
 /-- Extract the support test at the largest X exponent in a nonzero coefficient. -/
 theorem row_bounds (Q : SourceSpace) :
     InBox (shape (toRow Q.1)) ⟨4012, 1650, 550⟩ ∧
-    TrueWeightLE (toRow Q.1) (3000 * 180246 - 1) := by
+    TrueWeightLE (toRow Q.1) (3000 * 180265 - 1) := by
   classical
   have h (m : Fin 4 →₀ ℕ) (hm : m ∈ (toRow Q.1).support) :
       m.sum (fun _ a => a) ≤ 4012 ∧
       m.sum (fun i a => i.val * a) ≤ 1650 ∧ m 3 ≤ 550 ∧
-      ((toRow Q.1).coeff m).natDegree + m.sum (fun i a => (133646 - i.val) * a) ≤
-        3000 * 180246 - 1 := by
+      ((toRow Q.1).coeff m).natDegree + m.sum (fun i a => (133671 - i.val) * a) ≤
+        3000 * 180265 - 1 := by
     let n := ((toRow Q.1).coeff m).natDegree
     have hc : (Q.1).coeff (m.optionElim n) ≠ 0 := by
       rw [← MvPolynomial.optionEquivRight_coeff_coeff]
@@ -588,8 +588,8 @@ theorem row_bounds (Q : SourceSpace) :
       funext v; cases v <;> rfl
     have ji : jetDerivativeWeight (d := 3) = (fun v => v.elim 0 (fun i => i.val)) := by
       funext v; cases v <;> rfl
-    have jw : differentialWeight (d := 3) 133646 =
-        (fun v => v.elim 1 (fun i => 133646 - i.val)) := by
+    have jw : differentialWeight (d := 3) 133671 =
+        (fun v => v.elim 1 (fun i => 133671 - i.val)) := by
       funext v; cases v <;> rfl
     rw [jb] at hb
     rw [ji] at hj
@@ -599,7 +599,7 @@ theorem row_bounds (Q : SourceSpace) :
     rw [Finsupp.weight_single_one_apply] at ht
     rw [weight_eq_sum m (fun _ => 1)] at hb
     rw [weight_eq_sum m (fun i => i.val)] at hj
-    rw [weight_eq_sum m (fun i => 133646 - i.val)] at hw
+    rw [weight_eq_sum m (fun i => 133671 - i.val)] at hw
     exact ⟨by simpa only [one_mul] using hb, hj, ht, hw⟩
   refine ⟨⟨?_, ?_, ?_⟩, ?_⟩
   · exact Finset.sup_le fun m hm => (h m hm).1
@@ -639,7 +639,7 @@ theorem translate_mem_source (x y : Geom) (Q : SourceSpace) :
     ⟨preserve jetDegreeWeight 4012 (fun t ht => (h t ht).1) e he,
       preserve jetDerivativeWeight 1650 (fun t ht => (h t ht).2.1) e he,
       preserve topWeight 550 (fun t ht => (h t ht).2.2.1) e he,
-      preserve (differentialWeight 133646) (3000 * 180246 - 1)
+      preserve (differentialWeight 133671) (3000 * 180265 - 1)
         (fun t ht => (h t ht).2.2.2) e he⟩
 
 def nodeMap (x y : Geom) : SourceSpace →ₗ[Geom] Local :=
@@ -683,7 +683,7 @@ open K1 K1_13 PolynomialDifferential ReedSolomon.HiddenDerivative
 open scoped BigOperators
 
 /-- The monomial columns before the contact constraints. -/
-def c1 : Prop := 91428745188781517892 ≤ sourceColumns.card
+def c1 : Prop := 91427791847082602567 ≤ sourceColumns.card
 
 /-- A certified flag-product estimate for each origin block. -/
 def c2 : Prop :=
@@ -800,8 +800,8 @@ theorem word_rank_le (w : I → K) {b : ℕ}
     _ = 262144 * b := by simp [I, FrobeniusLocator.Native.I, ProximityPrize.Benchmark.IRSProfile.Index]
 
 private theorem surplus {r k n : ℕ}
-    (hr : r ≤ 262144 * 344125686492134) (hn : 91428745188781517892 ≤ n)
-    (he : r + k = n) : 1218261228987542596 ≤ k := by
+    (hr : r ≤ 262144 * 344125686492134) (hn : 91427791847082602567 ≤ n)
+    (he : r + k = n) : 1217307887288627271 ≤ k := by
   omega
 
 private theorem map_independent_family {V W : Type*} [AddCommGroup V] [Module Geom V]
@@ -816,7 +816,7 @@ private theorem family_of_kernel (w : I → K) {n : ℕ}
     (hker : n ≤ Module.finrank Geom (LinearMap.ker (wordMap w))) :
     ∃ e : Fin n → Row 4, LinearIndependent Geom e ∧
       ∀ i, InBox (shape (e i)) ⟨4012, 1650, 550⟩ ∧
-        TrueWeightLE (e i) (3000 * 180246 - 1) ∧ Contact w (e i) := by
+        TrueWeightLE (e i) (3000 * 180265 - 1) ∧ Contact w (e i) := by
   let liftRow : LinearMap.ker (wordMap w) →ₗ[Geom] Row 4 :=
     toRow.toLinearMap.comp (SourceSpace.subtype.comp (LinearMap.ker (wordMap w)).subtype)
   have hinj : Function.Injective liftRow := by
@@ -825,7 +825,7 @@ private theorem family_of_kernel (w : I → K) {n : ℕ}
     apply Subtype.ext
     exact toRow.injective hab
   let admissible (P : Row 4) := InBox (shape P) ⟨4012, 1650, 550⟩ ∧
-    TrueWeightLE P (3000 * 180246 - 1) ∧ Contact w P
+    TrueWeightLE P (3000 * 180265 - 1) ∧ Contact w P
   have hrows (Q : LinearMap.ker (wordMap w)) : admissible (liftRow Q) := by
     obtain ⟨hbox, hwt⟩ := row_bounds Q.1
     have hk : wordMap w Q.1 = 0 := (LinearMap.mem_ker (f := wordMap w)).mp Q.2
@@ -842,7 +842,7 @@ theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) : K1_13.c2 := by
   obtain ⟨power, hpower⟩ := h3
   have hlocal := (origin_rank_le power h2).trans hpower
   have hglobal := word_rank_le w hlocal
-  have hsource : 91428745188781517892 ≤ Module.finrank Geom SourceSpace := by
+  have hsource : 91427791847082602567 ≤ Module.finrank Geom SourceSpace := by
     rw [finrank_source]
     exact h1
   exact family_of_kernel w (surplus hglobal hsource (wordMap w).finrank_range_add_finrank_ker)

@@ -640,13 +640,13 @@ theorem two_block_rank_exception_count (p : ℕ) [ExpChar F p]
 exception, so applies in particular to its MCA-bad subset. -/
 theorem native_rank_exception_count [ExpChar F 2130706433]
     (x u v : ι → F) (r : ℕ) (hr7 : 7≤r)
-    (hr : GenericLayer.genericRank (stacked 2130706433 x u v 49174 81898)=81899-r)
-    (hfirst : GenericLayer.genericRank (hankel x u v 49174 81898)=49174)
+    (hr : GenericLayer.genericRank (stacked 2130706433 x u v 49193 81879)=81880-r)
+    (hfirst : GenericLayer.genericRank (hankel x u v 49193 81879)=49193)
     (Γ : Finset F) (hΓ : ∀ γ∈Γ,
-      ((stacked 2130706433 x u v 49174 81898).map (evalRingHom γ)).rank ≠ 81899-r) :
-    Γ.card ≤ 69712453124068 := by
-  have hb := two_block_rank_exception_count 2130706433 x u v 49174 81898 r hr hfirst Γ hΓ
-  have hs : 81898+1-r-49174 ≤ 32718 := by omega
+      ((stacked 2130706433 x u v 49193 81879).map (evalRingHom γ)).rank ≠ 81880-r) :
+    Γ.card ≤ 69631486279633 := by
+  have hb := two_block_rank_exception_count 2130706433 x u v 49193 81879 r hr hfirst Γ hΓ
+  have hs : 81879+1-r-49193 ≤ 32680 := by omega
   have hm := Nat.mul_le_mul_left 2130706433 hs
   omega
 
