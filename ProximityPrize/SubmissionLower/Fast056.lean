@@ -1684,8 +1684,8 @@ private theorem physical_widen {x x' : Shape} (hx : Widen x x') (vx : Admissible
     omega
   have surface := ceil_mono (surface_widen hp vp) 32
   have component := ceil_mono (Nat.mul_le_mul
-    (Nat.mul_le_mul_right bank.b (Nat.mul_le_mul_left (81889 + 2 * 46584) hx.1))
-    (chart_widen hp (taylorLength + 1)).1) 46584
+    (Nat.mul_le_mul_right bank.b (Nat.mul_le_mul_left (81898 + 2 * 46575) hx.1))
+    (chart_widen hp (taylorLength + 1)).1) 46575
   have curves := Nat.add_le_add
     (mixed_widen hp (Widen.refl bank) hextra hh vp bank_admissible vextra vh)
     (Nat.mul_le_mul (le_of_eq (congrArg (fun t => 2 * t) hx.2.2))
@@ -1696,8 +1696,8 @@ private theorem physical_widen {x x' : Shape} (hx : Widen x x') (vx : Admissible
       (mixed_widen hp hp hp hp vp vp vp vp))
   exact Nat.add_le_add (Nat.add_le_add (ceil_mono (Nat.add_le_add surface component) l)
     (Nat.mul_le_mul_right bank.b (Nat.mul_le_mul_left (2 * 133671) hx.1)))
-    (ceil_mono (Nat.add_le_add (Nat.mul_le_mul_left 81889 curves)
-      (Nat.mul_le_mul_left (2 * 46584) points)) (32 * 46584))
+    (ceil_mono (Nat.add_le_add (Nat.mul_le_mul_left 81898 curves)
+      (Nat.mul_le_mul_left (2 * 46575) points)) (32 * 46575))
 
 /-- Uniform cost per unit of the derivative-index budget. -/
 def rate : ℕ := 4114266963186215
@@ -5632,7 +5632,7 @@ def hypersurfacePrice (x : Shape) : ℕ :=
   let big : Shape := ⟨35007, 12106, 0⟩
   let cut : Shape :=
     ⟨max (max h.b big.b) (max h.j (big.j + 1)), max h.j (big.j + 1), max 1 h.t⟩
-  ceilDiv (81889 * mixed32 p big cut h) (32 * 46584) +
+  ceilDiv (81898 * mixed32 p big cut h) (32 * 46575) +
     ceilDiv (mixed32 p big cut p) 32 + 20 * p.b * h.b ^ 2 + 5 * 133671 * p.b * h.b + 1
 
 def singularPrice (x : Shape) : ℕ :=
@@ -5644,7 +5644,7 @@ def highCurvePrice (x : Shape) : ℕ :=
   let p := x.chamber
   let h := fatChart x
   let q : Shape := ⟨952630000, 322000000, 0⟩
-  ceilDiv (81889 * mixed32 p q q h + 46584 * mixed32 p q q p) (32 * 46584 * 293711590)
+  ceilDiv (81898 * mixed32 p q q h + 46575 * mixed32 p q q p) (32 * 46575 * 293711590)
 
 def isolatedPrice : ℕ :=
   let q : Shape := ⟨952630000, 322000000, 0⟩

@@ -84,10 +84,10 @@ structure Band where
 
 /-- The smaller seed caps belong to the last full bank in each schedule. -/
 def band (w : ℤ) : Band :=
-  if w ≤ 3554 then ⟨3554, 5, 150, 836, 1164, 247, 19371⟩
-  else if w ≤ 8249 then ⟨8249, 4, 100, 358, 500, 105, 6798⟩
+  if w ≤ 3554 then ⟨3554, 5, 155, 836, 1164, 247, 19371⟩
+  else if w ≤ 8249 then ⟨8249, 4, 103, 358, 500, 105, 6798⟩
   else if w ≤ 23999 then ⟨23999, 4, 48, 358, 500, 105, 4860⟩
-  else ⟨32700, 4, 36, 358, 500, 105, 3913⟩
+  else ⟨32718, 4, 37, 358, 500, 105, 3913⟩
 
 def SeedBound (f : Equation) (b : ℕ) : Prop :=
   ∀ i, (f.coeff i).totalDegree ≤ b
@@ -115,7 +115,7 @@ def terminalShape (w : ℤ) : Shape :=
   ⟨b.multiplicity, b.jetBound, b.vBound, b.subbankSeeds⟩
 
 def rawWidth (w : ℤ) (q j : ℕ) : ℕ :=
-  (band w).multiplicity * 180255 + j - q * (131071 - w.toNat)
+  (band w).multiplicity * 180246 + j - q * (131071 - w.toNat)
 
 def rawVolume (w : ℤ) : ℕ :=
   triangle (band w).subbankSeeds * shapeSum (terminalShape w) (rawWidth w)
@@ -124,12 +124,12 @@ def rawVolume (w : ℤ) : ℕ :=
 def subbankDebit (w : ℤ) : ℕ := sourceDebit w.toNat (terminalShape w)
 
 def forcedPower (w : ℤ) (W j : ℕ) : ℕ :=
-  1 + ((band w).multiplicity * 180255 - 1 - W) / (2 * w.toNat) - j
+  1 + ((band w).multiplicity * 180246 - 1 - W) / (2 * w.toNat) - j
 
 /-- Simultaneous divisibility on the retained surfaces. It applies to every
 nonzero row of the *same* smaller terminal bank. -/
 def TerminalDivisibility (w : ℤ) (rows : Banks) (f : Equation) : Prop :=
-  ∀ W < (band w).multiplicity * 180255, ∀ P ∈ rows (terminalShape w) W, P ≠ 0 →
+  ∀ W < (band w).multiplicity * 180246, ∀ P ∈ rows (terminalShape w) W, P ≠ 0 →
     f ^ forcedPower w W P.natDegree ∣ P.leadingCoeff
 
 /-- Only the filtered dimensions and their highest V coefficients enter the
@@ -138,8 +138,8 @@ def TerminalMass (w : ℤ) (f : Equation) : Prop :=
   let b := band w
   ∃ V : ℕ → Submodule FX Jet,
     rawVolume w ≤ subbankDebit w +
-      ∑ W ∈ Finset.range (b.multiplicity * 180255), Module.finrank FX (V W) ∧
-    ∀ W < b.multiplicity * 180255, ∀ P ∈ V W, P ≠ 0 →
+      ∑ W ∈ Finset.range (b.multiplicity * 180246), Module.finrank FX (V W) ∧
+    ∀ W < b.multiplicity * 180246, ∀ P ∈ V W, P ≠ 0 →
       let j := P.natDegree
       let i := P.leadingCoeff.natDegree
       j ≤ b.vBound ∧ i+j ≤ b.jetBound ∧ (i+j)*(131071-w.toNat) ≤ W+j ∧
@@ -158,12 +158,12 @@ the indicated upper degree throughout the same height band. -/
 def simplePrice (w : ℤ) : ℕ :=
   let b := band w
   let d := 131071 + b.endpoint
-  let gap := 180255 - d
+  let gap := 180246 - d
   let T := 2*d-1
   let a := 1+T*(b.yBound-1)
   let B := T*b.seedBound
   let D := b.yBound*B^2 + 2*b.seedBound*a*B
-  (81889*(81889/gap+1)*D + (gap-1)) / gap + b.yBound
+  (81898*(81898/gap+1)*D + (gap-1)) / gap + b.yBound
 
 def singularDegree (w : ℤ) : ℕ :=
   (2*(band w).yBound-1)*(band w).seedBound
@@ -203,7 +203,7 @@ structure JetSource {u del} (M : AnchorModel u del) {Γ} (F : AnchoredFamily M �
   nested : ∀ s ∈ scheduled M.overhead, ∀ s' ∈ scheduled M.overhead,
     s.m = s'.m → s.B = s'.B → s.J = s'.J → s.U ≤ s'.U →
     ∀ W W', W ≤ W' → rows s W ≤ rows s' W'
-  necessary : ∀ s ∈ scheduled M.overhead, ∀ W, W < s.m*180255 → ∀ P ∈ rows s W,
+  necessary : ∀ s ∈ scheduled M.overhead, ∀ W, W < s.m*180246 → ∀ P ∈ rows s W,
     ∀ γ ∈ Γ, jetAt P (M.label γ) (F.scalar γ) = 0
   shape : ∀ s ∈ scheduled M.overhead, ∀ W, ∀ P ∈ rows s W, ∀ j i,
     ((P.coeff j).coeff i) ≠ 0 →
@@ -212,7 +212,7 @@ structure JetSource {u del} (M : AnchorModel u del) {Γ} (F : AnchoredFamily M �
     (P.leadingCoeff.natDegree + P.natDegree)*(131071-M.overhead.toNat) ≤ W + P.natDegree
   shift : ∀ s ∈ scheduled M.overhead, ∀ W, ∀ P ∈ rows s W, ∀ i r,
     seedHasse i r P ∈ rows s (W + 2*M.overhead.toNat*r)
-  floor_bound : ∀ s ∈ scheduled M.overhead, ∀ W, W < s.m*180255 →
+  floor_bound : ∀ s ∈ scheduled M.overhead, ∀ W, W < s.m*180246 →
     (∀ q ≤ s.B, ∀ j ≤ min q s.J, q*(131071-M.overhead.toNat) ≤ W+1+j) →
     triangle s.U * shapeSum s (fun q j => W+1+j - q*(131071-M.overhead.toNat)) ≤
       sourceDebit M.overhead.toNat s + ∑ t ∈ Finset.range (W+1), Module.finrank FX (rows s t)
@@ -438,7 +438,7 @@ private theorem terminal_mem (w : ℤ) : terminalShape w ∈ scheduled w := by
 
 private theorem terminal_width (w : ℤ) (hw : 2601 ≤ w) {q : ℕ}
     (hq : q ≤ (terminalShape w).B) :
-    q * (131071 - w.toNat) ≤ (terminalShape w).m * 180255 := by
+    q * (131071 - w.toNat) ≤ (terminalShape w).m * 180246 := by
   calc
     _ ≤ (terminalShape w).B * 128470 := Nat.mul_le_mul hq (by omega)
     _ ≤ _ := by unfold terminalShape band; split_ifs <;> decide
@@ -452,14 +452,14 @@ theorem terminalMass_of_source {u del} {M : AnchorModel u del} {Γ}
   let w := M.overhead
   let s := terminalShape w
   have hs := terminal_mem w
-  have htop : 0 < s.m * 180255 := by
+  have htop : 0 < s.m * 180246 := by
     unfold s terminalShape band
     split_ifs <;> decide
-  have hent : s.m * 180255 - 1 + 1 = s.m * 180255 := by omega
+  have hent : s.m * 180246 - 1 + 1 = s.m * 180246 := by omega
   refine ⟨rows s, ?_, ?_⟩
-  · have h := hr.floor_bound s hs (s.m*180255-1) (by omega) (by
+  · have h := hr.floor_bound s hs (s.m*180246-1) (by omega) (by
       intro q hq j _
-      have hq' : q * (131071 - M.overhead.toNat) ≤ s.m * 180255 := terminal_width w hlo hq
+      have hq' : q * (131071 - M.overhead.toNat) ≤ s.m * 180246 := terminal_width w hlo hq
       rw [hent]
       exact hq'.trans (Nat.le_add_right _ _))
     rw [hent] at h
@@ -490,7 +490,7 @@ open K1 Polynomial
 /-- The common true-jet source for the two adjacent primary blocks. -/
 def c1 : Prop :=
   ∀ u del (M : AnchorModel u del) Γ (F : AnchoredFamily M Γ),
-    2601 ≤ M.overhead → M.overhead ≤ 32700 →
+    2601 ≤ M.overhead → M.overhead ≤ 32718 →
     ∀ H, AdjacentChart M F H → ∃ rows : Banks, JetSource M F rows
 
 /-- Bridge prefix including its algebraic first-loss curve count. -/
@@ -502,25 +502,25 @@ def c2 : Prop :=
 /-- Paired prefix with the direct Frobenius-graph loss price. -/
 def c3 : Prop :=
   ∀ u del (M : AnchorModel u del) Γ (F : AnchoredFamily M Γ),
-    3555 ≤ M.overhead → M.overhead ≤ 32700 →
+    3555 ≤ M.overhead → M.overhead ≤ 32718 →
     ∀ H, AdjacentChart M F H → ∀ rows, JetSource M F rows → PrefixCover M F rows
 
 /-- The dimension loss if the primitive projected equation exceeds the
 tested total seed degree. -/
 def c4 : Prop :=
-  ∀ (w : ℤ), 2601 ≤ w → w ≤ 32700 → ∀ f : Equation,
+  ∀ (w : ℤ), 2601 ≤ w → w ≤ 32718 → ∀ f : Equation,
     ReducedEquation w f → TerminalMass w f → ¬ SeedBound f (band w).seedBound →
       seedGain w ≤ subbankDebit w
 
 /-- Strict test (T) for each native height, with all four subbank shapes. -/
 def c5 : Prop :=
-  ∀ (w : ℤ), 2601 ≤ w → w ≤ 32700 → subbankDebit w < seedGain w
+  ∀ (w : ℤ), 2601 ≤ w → w ≤ 32718 → subbankDebit w < seedGain w
 
 /-- Count the actual simple polynomial roots via the Taylor map and
 fixed-word incidence at this band's endpoint degree. -/
 def c6 : Prop :=
   ∀ u del (M : AnchorModel u del) Γ (F : AnchoredFamily M Γ),
-    2601 ≤ M.overhead → M.overhead ≤ 32700 → ∀ f : Equation,
+    2601 ≤ M.overhead → M.overhead ≤ 32718 → ∀ f : Equation,
     ReducedEquation M.overhead f → SeedBound f (band M.overhead).seedBound →
     ∀ T ⊆ Γ, (∀ γ ∈ T, atMark f (M.label γ) (F.scalar γ) = 0 ∧
         atMark f.derivative (M.label γ) (F.scalar γ) ≠ 0) →

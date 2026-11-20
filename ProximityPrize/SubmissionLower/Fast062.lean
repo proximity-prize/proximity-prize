@@ -228,14 +228,14 @@ def c2 : Prop :=
 private def seedRate : ℚ := ((p + 1 : ℕ) : ℚ) / 9
 
 private def yRate : ℚ :=
-  15 + (81889 / 45630 : ℚ) * (((2 * endpointDegree - 1 : ℕ) : ℚ) * 15 + 1)
+  15 + (81898 / 45621 : ℚ) * (((2 * endpointDegree - 1 : ℕ) : ℚ) * 15 + 1)
 
 private theorem root_price_bound (g H : ℕ) (hg : g ≤ 8) :
     rootPrice g H ≤ yRate * (H : ℚ) + (g : ℚ) := by
   have hgq : (g : ℚ) ≤ 8 := by exact_mod_cast hg
   have ht : 2 * (g : ℚ) - 1 ≤ 15 := by linarith
   have hd : 0 ≤ ((2 * endpointDegree - 1 : ℕ) : ℚ) := Nat.cast_nonneg _
-  have hb : 0 ≤ (81889 / 45630 : ℚ) := by norm_num
+  have hb : 0 ≤ (81898 / 45621 : ℚ) := by norm_num
   exact add_le_add (mul_le_mul_of_nonneg_right
     (add_le_add ht (mul_le_mul_of_nonneg_left
       (add_le_add (mul_le_mul_of_nonneg_left ht hd) (le_refl (1 : ℚ))) hb))

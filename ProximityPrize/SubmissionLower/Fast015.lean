@@ -418,7 +418,7 @@ def radius6915 : ℝ := (queryRadius : ℝ)
 
 /-- Original scalar RS words lie in the proved augmented ordinary polynomial list. -/
 theorem finset_scalar_list_card_le (w : I → K) (P : Finset (I → K))
-    (hP : ∀ f ∈ P, f ∈ scalarCode ∧ 180255 ≤ agreementCard f w) : P.card ≤ Astra7.weightedListCap := by
+    (hP : ∀ f ∈ P, f ∈ scalarCode ∧ 180246 ≤ agreementCard f w) : P.card ≤ Astra7.weightedListCap := by
   classical
   have : NeZero (131072 : ℕ) := ⟨by norm_num⟩
   choose poly hdegree heval using fun f : P ↦
@@ -437,14 +437,14 @@ theorem finset_scalar_list_card_le (w : I → K) (P : Finset (I → K))
     rw [Finset.card_image_of_injective _ hinj]
     simp
   have hpolys : (polys : Set K[X]) ⊆
-      ReedSolomon.closePolynomialSet IRSProfile.domain w 131073 180255 := by
+      ReedSolomon.closePolynomialSet IRSProfile.domain w 131073 180246 := by
     intro q hq
     obtain ⟨f,_hf,rfl⟩ := Finset.mem_image.mp hq
     refine ⟨?_, ?_⟩
     · have hd : (poly f).natDegree < 131073 := (hdegree f).trans (by norm_num)
       exact (Polynomial.degree_le_natDegree).trans_lt (by exact_mod_cast hd)
     · have hword : (fun i ↦ (poly f).eval (IRSProfile.domain i)) = f.val := funext (heval f)
-      change 180255 ≤ agreementCard (fun i ↦ (poly f).eval (IRSProfile.domain i)) w
+      change 180246 ≤ agreementCard (fun i ↦ (poly f).eval (IRSProfile.domain i)) w
       rw [hword]
       exact (hP f.val f.property).2
   obtain ⟨hfinite,hbound⟩ := Astra7.native_weighted_complete_list w
@@ -457,28 +457,28 @@ theorem list_projection_room : (Astra7.weightedListCap + 1) ^ 2 ≤ Fintype.card
 
 /-- The actual alphabet is Fin2 -> Fin8 -> K; flattening only reindexes its rows. -/
 theorem finset_squared_list_card_le (w : I → A16) (P : Finset (I → A16))
-    (hP : ∀ f ∈ P, f ∈ squaredCode ∧ 180255 ≤ agreementCard f w) : P.card ≤ Astra7.weightedListCap := by
+    (hP : ∀ f ∈ P, f ∈ squaredCode ∧ 180246 ≤ agreementCard f w) : P.card ≤ Astra7.weightedListCap := by
   classical
   let flattened := P.image flatten
   have hflat : ∀ f ∈ flattened,
       (∀ r : R16, (fun i ↦ f i r) ∈ scalarCode) ∧
-        180255 ≤ agreementCard f (flatten w) := by
+        180246 ≤ agreementCard f (flatten w) := by
     intro f hf
     obtain ⟨g,hg,rfl⟩ := Finset.mem_image.mp hf
     obtain ⟨hcode,hagree⟩ := hP g hg
     exact ⟨flatten_rows_mem g hcode,hagree.trans (flatten_agreement_le g w)⟩
-  have hcount := finset_vector_list_card_le scalarCode 180255 Astra7.weightedListCap list_projection_room
+  have hcount := finset_vector_list_card_le scalarCode 180246 Astra7.weightedListCap list_projection_room
     finset_scalar_list_card_le (flatten w) flattened hflat
   have hcard : flattened.card = P.card := Finset.card_image_of_injective P flatten_injective
   rwa [hcard] at hcount
 
 theorem close_agreement_ge (f w : I → A16)
-    (hd : (δᵣ(w,f) : ℝ) ≤ radius6915) : 180255 ≤ agreementCard f w := by
+    (hd : (δᵣ(w,f) : ℝ) ≤ radius6915) : 180246 ≤ agreementCard f w := by
   classical
   have hpos : 0 < Fintype.card I := by norm_num [I,IRSProfile.Index]
-  have hradius : radius6915 = 1 - (180255 : ℝ) / Fintype.card I := by
+  have hradius : radius6915 = 1 - (180246 : ℝ) / Fintype.card I := by
     norm_num [radius6915,queryRadius,claimedRadius,I,IRSProfile.Index]
-  have hagree : (180255 : ℝ) ≤ Code.agree f w :=
+  have hagree : (180246 : ℝ) ≤ Code.agree f w :=
     (Code.relHammingDist_le_one_sub_div_iff hpos).mp (by rwa [← hradius])
   exact_mod_cast hagree
 
@@ -594,7 +594,7 @@ theorem gamma_error_le_of_actualCap (B : ℕ) (hcap : ActualMCACap6915 B)
 /-- Exact native benchmark type, with one mathematical count and the explicit integer budget. -/
 theorem protocolClaim6915_of_actualCap (B : ℕ) (hcap : ActualMCACap6915 B)
     (hbudget : (B + Astra7.weightedListCap) * 2 ^ 128 ≤ (2130706433 : ℕ) ^ 6) :
-    ProtocolClaim 6916 81889 262144 where
+    ProtocolClaim 6917 81898 262144 where
   admissible := query_admissible
   reduction := by
     change ToyProblem.certifiedGammaError IRSProfile.code queryRadius ≤ reductionTarget
@@ -621,7 +621,7 @@ def OneCountGoal6915 : Prop := ActualMCACap6915 Astra7.weightedMCAAllowance
 
 /-- All non-MCA mathematics and arithmetic are discharged for this exact fixed allowance. -/
 theorem protocolClaim6915_of_oneCountGoal (hcap : OneCountGoal6915) :
-    ProtocolClaim 6916 81889 262144 :=
+    ProtocolClaim 6917 81898 262144 :=
   protocolClaim6915_of_actualCap Astra7.weightedMCAAllowance hcap remaining_budget
 
 end
@@ -667,7 +667,7 @@ theorem nativeCap_of_scalarCap (hscalar : ScalarMCACap6915) :
 
 /-- This is the entire protocol bridge needed by a future uniform scalar count. -/
 theorem protocolClaim6915_of_scalarCap (hscalar : ScalarMCACap6915) :
-    ProtocolClaim 6916 81889 262144 :=
+    ProtocolClaim 6917 81898 262144 :=
   Astra7.NativeBudget.protocolClaim6915_of_oneCountGoal (nativeCap_of_scalarCap hscalar)
 
 end

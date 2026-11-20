@@ -226,7 +226,7 @@ open scoped BigOperators Polynomial
 Its coefficient ideal is defined over the constant field. -/
 def c1 : Prop :=
   ∀ f : Row 3, Irreducible f → 0 < f.degreeOf 2 → f.degreeOf 2 ≤ 24 →
-    TrueWeightLE f (90 * 180255 - 1) → Whole f →
+    TrueWeightLE f (90 * 180246 - 1) → Whole f →
     ∃ P : Ideal CoeffRing, FreshChart P (freshRow f) (freshRow (separant f)) ∧
       ∀ S : Geom[X], S.natDegree ≤ 133671 → RegularAt 2 f S →
         coeffPoint S ∈ zeroLocus Geom P

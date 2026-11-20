@@ -4464,8 +4464,8 @@ private theorem nodeCut_vanishes {w : I → K} {f : Row 2} {S : K[X]}
 theorem regular_count {w T s} (h : K1_14_6.FixedWord w T s 134625) (f : Row 2)
     (hf : Irreducible f) (hp : 0 < f.degreeOf 1) {B J : ℕ} (hB : f.totalDegree ≤ B)
     (hJ : f.degreeOf 1 ≤ J) (hreg : ∀ γ ∈ T, RegularAt 1 f (extend (s γ))) :
-    45630 * T.card ≤ 81889 * MvPolynomial.cappedDegreeMixedVolume f.totalDegree
-      (f.degreeOf 1) (chartTotal B) (chartTop B J) + 45630 := by
+    45621 * T.card ≤ 81898 * MvPolynomial.cappedDegreeMixedVolume f.totalDegree
+      (f.degreeOf 1) (chartTotal B) (chartTop B J) + 45621 := by
   classical
   let x (γ : K) := marked (extend (s γ))
   have hx : Set.InjOn x (T : Set K) := by
@@ -5629,7 +5629,7 @@ theorem chart_count {u : Words} {deleted : Finset I} {P : Puncture deleted}
     (chart : TaylorChart u P F b Λ) : (Λ.card : ℚ) ≤ b.chartFee := by
   classical
   let S := Λ.image chart.point
-  let R : ℚ := (131073 / 49184 : ℚ) * b.M
+  let R : ℚ := (131073 / 49175 : ℚ) * b.M
   have hRbig : (262144 : ℚ) ≤ R := by
     cases b <;> norm_num [R, Bank.M, Bank.E, Bank.a, Bank.b, Bank.s, Bank.t, Bank.dS, Bank.dT]
   have hR : 1 ≤ R := (by norm_num : (1 : ℚ) ≤ 262144).trans hRbig
@@ -5641,17 +5641,17 @@ theorem chart_count {u : Words} {deleted : Finset I} {P : Puncture deleted}
   have hcard : S.card = Λ.card := Finset.card_image_of_injOn hinj
   let cuts := nodeCut u P chart.numerator chart.denominator
   have hratio (m : ℕ) (hm : m < 131072) :
-      (((Fintype.card (Fin P.N) - m) * b.M : ℕ) : ℚ) ≤ R * ((180255 - m : ℕ) : ℚ) := by
-    have hnat : (P.N - m) * 49184 ≤ 131073 * (180255 - m) := by omega
-    have hrat : ((P.N - m : ℕ) : ℚ) * 49184 ≤ 131073 * ((180255 - m : ℕ) : ℚ) := by
+      (((Fintype.card (Fin P.N) - m) * b.M : ℕ) : ℚ) ≤ R * ((180246 - m : ℕ) : ℚ) := by
+    have hnat : (P.N - m) * 49175 ≤ 131073 * (180246 - m) := by omega
+    have hrat : ((P.N - m : ℕ) : ℚ) * 49175 ≤ 131073 * ((180246 - m : ℕ) : ℚ) := by
       exact_mod_cast hnat
-    have hh : ((P.N - m : ℕ) : ℚ) ≤ (131073/49184 : ℚ) * ((180255 - m : ℕ) : ℚ) := by
+    have hh : ((P.N - m : ℕ) : ℚ) ≤ (131073/49175 : ℚ) * ((180246 - m : ℕ) : ℚ) := by
       linarith
     rw [Fintype.card_fin, Nat.cast_mul]
     exact (mul_le_mul_of_nonneg_right hh (by positivity : 0 ≤ (b.M : ℚ))).trans_eq (by dsimp [R]; ring)
   rw [← hcard]
   refine surface_count_with_terminal chart.equation chart.denominator chart.equation_ne cuts
-    (L := 131072) (A := 180255) (by decide) chart.equation_degree chart.cut_degree hR hratio S
+    (L := 131072) (A := 180246) (by decide) chart.equation_degree chart.cut_degree hR hratio S
     (fun x hx => ?_) (fun x hx => ?_) (fun J hJ => ?_)
   · obtain ⟨γ, hγ, rfl⟩ := Finset.mem_image.mp hx
     exact ⟨chart.on_equation γ hγ, chart.regular γ hγ⟩
@@ -6994,7 +6994,7 @@ private theorem atSlope_constant (G : K[X]) (γ : K) :
 private theorem twoBlock_atSlope (u : Words) (γ : K) :
     ((twoBlock u).map (evalRingHom γ)) =
       Strata.conjugateHankel (Strata.twoConjugations (frobenius K p))
-        node (fun i => u 0 i + γ * u 1 i) 49183 81889 := by
+        node (fun i => u 0 i + γ * u 1 i) 49174 81898 := by
   rw [twoBlock, Strata.stacked_eq_frobeniusStacked, Strata.frobeniusStacked_eval]
   have h : (fun b : Fin 2 => iterateFrobenius K p b.val) =
       Strata.twoConjugations (frobenius K p) := by
@@ -7005,7 +7005,7 @@ private theorem twoBlock_atSlope (u : Words) (γ : K) :
   rw [h]
 
 private theorem rank_at_normal {u : Words} (T : TwoActive u) {γ : K} (hγ : Normal u γ) :
-    ((twoBlock u).map (evalRingHom γ)).rank = 49183 + T.height := by
+    ((twoBlock u).map (evalRingHom γ)).rank = 49174 + T.height := by
   change _ = stackRank u at hγ
   rw [hγ, actual_stackRank]
   have := T.degreeSum
@@ -7016,17 +7016,17 @@ private theorem rank_at_normal {u : Words} (T : TwoActive u) {γ : K} (hγ : Nor
 
 /-- The original stack has the same rank as its two evaluated error blocks. -/
 private theorem error_rank {u : Words} {γ : K} (M : BadMark u γ)
-    (E : Finset I) (hE : E.card ≤ 81889)
+    (E : Finset I) (hE : E.card ≤ 81898)
     (hEagree : ∀ i ∉ E, u 0 i + γ * u 1 i = M.decoder.eval (node i)) :
     ((twoBlock u).map (evalRingHom γ)).rank =
       (Strata.errorTwoMatrix (frobenius K p) (fun i : E => node i.val)
-        (fun i : E => u 0 i.val + γ * u 1 i.val - M.decoder.eval (node i.val)) 49183).rank := by
+        (fun i : E => u 0 i.val + γ * u 1 i.val - M.decoder.eval (node i.val)) 49174).rank := by
   have hfix : ∀ b i, Strata.twoConjugations (frobenius K p) b (node i) = node i := by
     intro b i
     fin_cases b <;> simp [Strata.twoConjugations, frobenius_def, Native.native_domain_fixed]
   have h := Strata.conjugateHankel_error_rank
     (Strata.twoConjugations (frobenius K p)) node (fun i => u 0 i + γ * u 1 i)
-    IRSProfile.domain.injective hfix M.decoder 131072 49183 81889 M.degree
+    IRSProfile.domain.injective hfix M.decoder 131072 49174 81898 M.degree
     (by rw [IRSProfile.card_index]) E (by omega) hEagree
   rw [Strata.conjugateErrors_two] at h
   rw [twoBlock_atSlope]
@@ -7078,7 +7078,7 @@ theorem proof : K1.c7 := by
   have hEagree (i : I) (hi : i ∉ E) : u 0 i + γ * u 1 i = M.decoder.eval (node i) := by
     by_contra h
     exact hi (Finset.mem_filter.mpr ⟨Finset.mem_univ _, Ne.symm h⟩)
-  have hEcard : E.card ≤ 81889 := by
+  have hEcard : E.card ≤ 81898 := by
     have hsub : E ⊆ Finset.univ \ M.support := by
       intro i hi
       refine Finset.mem_sdiff.mpr ⟨Finset.mem_univ _, fun hs => ?_⟩
@@ -7088,7 +7088,7 @@ theorem proof : K1.c7 := by
       IRSProfile.card_index] at h
     have := M.agreement
     omega
-  have hH : T.height < 49183 := by
+  have hH : T.height < 49174 := by
     have := T.degreeSum
     have := T.nullitySum
     have := hfront.1
@@ -7108,15 +7108,15 @@ theorem proof : K1.c7 := by
   have herror (i : E) : U.eval (x i) * e i + V.eval (x i) * frobenius K p (e i) = 0 :=
     Strata.certificate_error_identity p node (u 0) (u 1) IRSProfile.domain.injective
       Native.native_domain_fixed 131072 T.height R γ M.support hfit M.decoder M.degree M.hits i.val
-  have hrank : (Strata.errorTwoMatrix (frobenius K p) x e 49183).rank = 49183 + T.height :=
+  have hrank : (Strata.errorTwoMatrix (frobenius K p) x e 49174).rank = 49174 + T.height :=
     (error_rank M E hEcard hEagree).symm.trans (rank_at_normal T hγ)
   obtain ⟨hU, hV⟩ := Strata.saturated_coefficients_nonzero (frobenius K p) x e hx U V
-    T.height 49183 hUle hVle hpair hH he herror hrank
+    T.height 49174 hUle hVle hpair hH he herror hrank
   let G := GCDMonoid.gcd U V
   let C₀ := (Finset.univ : Finset E).filter (fun i => G.eval (x i) = 0)
   let S := C₀.image (fun i : E => i.val)
   obtain ⟨hC, hsum, _⟩ := Strata.normal_error_three_rank (frobenius K p) x e hx
-    (fun i => hfix i.val) U V T.height 49183 hUle hVle hpair hH he herror hrank
+    (fun i => hfix i.val) U V T.height 49174 hUle hVle hpair hH he herror hrank
   have hmax : max U.natDegree V.natDegree = T.height := by
     obtain ⟨hle, hred⟩ := Strata.gcd_reduction_degrees U V hU hV
     change max (U / G).natDegree (V / G).natDegree + G.natDegree = T.height at hsum

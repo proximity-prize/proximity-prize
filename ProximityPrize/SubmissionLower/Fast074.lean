@@ -41,7 +41,7 @@ open scoped BigOperators
 def c1 : Prop :=
   ∀ (w : I → K) (T : ℕ) (P : Row 4), T ≤ terminal → BankRow w T P →
     ∀ S : Geom[X], S.natDegree ≤ 133671 →
-      (∃ H : Finset I, 180255 ≤ H.card ∧
+      (∃ H : Finset I, 180246 ≤ H.card ∧
         ∀ i ∈ H, S.eval (embed (node i)) = embed (w i)) →
       OrderAt P S (requiredOrder T)
 
@@ -204,11 +204,11 @@ theorem of_children (h1 : c1) (h2 : c2) : K1_13.c3 := by
     hrank.trans ((Finset.sum_le_sum fun T hT =>
       hcost T (Nat.le_of_lt_succ (Finset.mem_range.mp hT))).trans (sum_by_layer terminal layerWidth (by decide) cost))
   refine ⟨l, ?_, hcut⟩
-  change 25866424310967 ≤ ∑ k ∈ Finset.range (1 + terminal / layerWidth), cost k
-  have hceil : layerWidth * (25866424310967 - 1) < sourceRank := by decide
+  change 25634359767546 ≤ ∑ k ∈ Finset.range (1 + terminal / layerWidth), cost k
+  have hceil : layerWidth * (25634359767546 - 1) < sourceRank := by decide
   by_contra! hsmall
   have hpred : (∑ k ∈ Finset.range (1 + terminal / layerWidth), cost k) ≤
-      25866424310967 - 1 := by omega
+      25634359767546 - 1 := by omega
   exact (not_le_of_gt hceil) (hsum.trans (Nat.mul_le_mul_left layerWidth hpred))
 
 end
@@ -273,7 +273,7 @@ private theorem bounded_pow {f : Polynomial Geom[X]} {b : ℕ} (hf : Bounded f b
     exact bounded_mul ih hf
 
 private theorem line_degree (P : Row 4) (S U : Geom[X]) (T : ℕ)
-    (hP : TrueWeightLE P T) (hS : S.natDegree ≤ 133671) (hU : U.natDegree ≤ 180258)
+    (hP : TrueWeightLE P T) (hS : S.natDegree ≤ 133671) (hU : U.natDegree ≤ 180249)
     (j : ℕ) : ((line P S U).coeff j).natDegree ≤ T + layerWidth * j := by
   let b (i : Fin 4) : ℕ := 133671 - i.val
   let F (i : Fin 4) : Polynomial Geom[X] :=
@@ -285,7 +285,7 @@ private theorem line_degree (P : Row 4) (S U : Geom[X]) (T : ℕ)
     have hu : (jet U i).natDegree ≤ b i + layerWidth := by
       refine (natDegree_hasseDeriv_le U i.val).trans ((Nat.sub_le_sub_right hU _).trans ?_)
       have hi := i.isLt
-      change 180258 - i.val ≤ (133671 - i.val) + 46587
+      change 180249 - i.val ≤ (133671 - i.val) + 46578
       omega
     change ((Polynomial.C (jet S i) + Polynomial.C (jet U i) *
       Polynomial.X).coeff k).natDegree ≤ b i + layerWidth * k
@@ -371,7 +371,7 @@ private theorem line_contacts_zero (Q : Polynomial Geom[X]) (A : Finset I)
 /-- The reserve makes every low coefficient of every locator line vanish. -/
 theorem line_coeff_zero (w : I → K) (T : ℕ) (P : Row 4) (S : Geom[X])
     (hP : BankRow w T P) (hS : S.natDegree ≤ 133671)
-    (A : Finset I) (hA : A.card = 180255)
+    (A : Finset I) (hA : A.card = 180246)
     (hhit : ∀ i ∈ A, S.eval (embed (node i)) = embed (w i))
     (V : Geom[X]) (hV : V.natDegree ≤ 3) (j : ℕ) (hj : T + layerWidth * j ≤ terminal) :
     (line P S (locator (fun i => embed (node i)) A * V)).coeff j = 0 := by
@@ -379,7 +379,7 @@ theorem line_coeff_zero (w : I → K) (T : ℕ) (P : Row 4) (S : Geom[X])
   let x (i : I) : Geom := embed (node i)
   let L := locator x A
   let U := L * V
-  have hU : U.natDegree ≤ 180258 := by
+  have hU : U.natDegree ≤ 180249 := by
     exact natDegree_mul_le.trans (by rw [locator_natDegree, hA]; omega)
   let Q := line P S U
   have hcontact (i : I) (hi : i ∈ A) (c : Geom) :
@@ -4550,17 +4550,17 @@ private theorem moment_eq (B c a d e value : ℕ) (hB : 2300 ≤ B)
 
 set_option maxHeartbeats 300000 in
 private theorem bank_moments :
-    raw .first = 2822945986300079460 ∧ raw .second = 2845454747404906187 ∧
+    raw .first = 2822609751806279460 ∧ raw .second = 2845116664813711187 ∧
       extra 6789 = 129644787051371740 ∧ extra 6820 = 131501361258434295 := by
-  have h₁ := moment_eq 6789 5687627 1 131071 0 2822945986300079460 (by decide) (by decide)
-  have h₂ := moment_eq 6820 4600787 1 131071 0 2845454747404906187 (by decide) (by decide)
+  have h₁ := moment_eq 6789 5642627 1 131071 0 2822609751806279460 (by decide) (by decide)
+  have h₂ := moment_eq 6820 4555787 1 131071 0 2845116664813711187 (by decide) (by decide)
   have h₃ := moment_eq 6789 0 0 2300 1 129644787051371740 (by decide) (by decide)
   have h₄ := moment_eq 6820 0 0 2300 1 131501361258434295 (by decide) (by decide)
-  have r₁ : rawBase .first = 5687627 := by decide
-  have r₂ : rawBase .second = 4600787 := by decide
-  have e₁ : raw .first = moment 6789 5687627 1 131071 0 :=
+  have r₁ : rawBase .first = 5642627 := by decide
+  have r₂ : rawBase .second = 4555787 := by decide
+  have e₁ : raw .first = moment 6789 5642627 1 131071 0 :=
     congrArg (fun base => moment 6789 base 1 131071 0) r₁
-  have e₂ : raw .second = moment 6820 4600787 1 131071 0 :=
+  have e₂ : raw .second = moment 6820 4555787 1 131071 0 :=
     congrArg (fun base => moment 6820 base 1 131071 0) r₂
   exact ⟨e₁.trans h₁, e₂.trans h₂, h₃, h₄⟩
 
@@ -4572,14 +4572,14 @@ private theorem endpoint (b : Bank) :
   · have hB : Bank.first.box.b = 6789 := rfl
     have he := (congrArg extra hB).trans h₃
     have ha : (1 : ℕ) + 262144 * (70001 * 10697571688375) + 2600 * 129644787051371740 ≤
-        70001 * 2822945986300079460 := by decide
+        70001 * 2822609751806279460 := by decide
     exact (congrArg₂ (fun x y : ℕ =>
       Bank.first.targetRank + 262144 * (70001 * Bank.first.nodeRank) + 2600 * x ≤ 70001 * y)
       he h₁).mpr ha
   · have hB : Bank.second.box.b = 6820 := rfl
     have he := (congrArg extra hB).trans h₄
-    have ha : (2534790180548373620227 : ℕ) + 262144 * (70001 * 10697783317215) +
-        2600 * 131501361258434295 ≤ 70001 * 2845454747404906187 := by decide
+    have ha : (2511124061082132425227 : ℕ) + 262144 * (70001 * 10697783317215) +
+        2600 * 131501361258434295 ≤ 70001 * 2845116664813711187 := by decide
     exact (congrArg₂ (fun x y : ℕ =>
       Bank.second.targetRank + 262144 * (70001 * Bank.second.nodeRank) + 2600 * x ≤ 70001 * y)
       he h₂).mpr ha

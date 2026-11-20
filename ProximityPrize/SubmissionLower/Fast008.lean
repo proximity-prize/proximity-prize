@@ -22,7 +22,7 @@ abbrev Jet := (s : Fin 65) × (e2 : Fin (min s.val 10 + 1)) ×
 def e1 (j : Jet) : ℕ := j.2.2.val
 def e2 (j : Jet) : ℕ := j.2.1.val
 def e0 (j : Jet) : ℕ := j.1.val - e2 j - e1 j
-def width (j : Jet) : ℕ := 48 * 180255 - 131072 * j.1.val + e1 j + 2 * e2 j
+def width (j : Jet) : ℕ := 48 * 180246 - 131072 * j.1.val + e1 j + 2 * e2 j
 abbrev SourceIndex := (j : Jet) × Fin (width j)
 
 def columns (i : SourceIndex) : SourceColumn 2 where
@@ -41,17 +41,17 @@ theorem jet_order (j : Jet) : e1 j + 2 * e2 j ≤ 21 - j.1.val / 62 := by
   simp only [e1, e2]
   omega
 
-theorem width_lower (j : Jet) : 263632 ≤ width j := by
+theorem width_lower (j : Jet) : 263200 ≤ width j := by
   have hs : j.1.val ≤ 64 := Nat.le_of_lt_succ j.1.isLt
   have hmul : 131072 * j.1.val ≤ 131072 * 64 := Nat.mul_le_mul_left 131072 hs
-  have hbase : 48 * 180255 - 131072 * 64 ≤ 48 * 180255 - 131072 * j.1.val :=
-    Nat.sub_le_sub_left hmul (48 * 180255)
-  have hnum : 48 * 180255 - 131072 * 64 = 263632 := by decide
+  have hbase : 48 * 180246 - 131072 * 64 ≤ 48 * 180246 - 131072 * j.1.val :=
+    Nat.sub_le_sub_left hmul (48 * 180246)
+  have hnum : 48 * 180246 - 131072 * 64 = 263200 := by decide
   unfold width
   exact ((hnum ▸ hbase).trans (Nat.le_add_right _ (e1 j))).trans (Nat.le_add_right _ (2 * e2 j))
 
 theorem source_weight_lt (i : SourceIndex) :
-    i.2.val + 131072 * e0 i.1 + 131071 * e1 i.1 + 131070 * e2 i.1 < 48 * 180255 := by
+    i.2.val + 131072 * e0 i.1 + 131071 * e1 i.1 + 131070 * e2 i.1 < 48 * 180246 := by
   have hs := i.1.1.isLt
   have ht := jet_total i.1
   have hx := i.2.isLt
@@ -91,7 +91,7 @@ theorem columns_total_le (i : SourceIndex) : totalJetDegree (columns i).exponent
   omega
 
 theorem columns_weight_lt (i : SourceIndex) :
-    Finsupp.weight (differentialWeight 131072) (columns i).exponent < 48 * 180255 := by
+    Finsupp.weight (differentialWeight 131072) (columns i).exponent < 48 * 180246 := by
   simpa [SourceColumn.weight_exponent, columns, differentialWeight, Fin.sum_univ_two,
     Nat.add_assoc, Nat.mul_comm] using
     source_weight_lt i
@@ -99,11 +99,11 @@ theorem columns_weight_lt (i : SourceIndex) :
 def sourceTotal : ℕ := ∑ j : Jet, width j
 
 theorem jet_count : Fintype.card Jet = 7161 := by decide +kernel
-theorem source_total : sourceTotal = 27296665099 := by decide +kernel
+theorem source_total : sourceTotal = 27293571547 := by decide +kernel
 
 /-- Cardinality is a sum over7161 jet triples, never an enumeration of the
-27296665099-dimensional full source index. -/
-theorem source_card : Fintype.card SourceIndex = 27296665099 := by
+27293571547-dimensional full source index. -/
+theorem source_card : Fintype.card SourceIndex = 27293571547 := by
   rw [Fintype.card_sigma]
   simp only [Fintype.card_fin]
   exact source_total
@@ -979,12 +979,8 @@ theorem local_columns_per_jet : localColumns = 345312 := by
 theorem global_rank_allowance : (262144 : ℕ) * blockUpper = 27294433280 := by
   rw [block_upper]
 
-theorem source_surplus : sourceTotal - 262144 * blockUpper = 2231819 := by
-  rw [source_total, block_upper]
-
-theorem strict_source_surplus : 262144 * blockUpper < Fintype.card SourceIndex := by
-  rw [block_upper, source_card]
-  norm_num
+-- source_surplus / strict_source_surplus (blockUpper = 104120) do not hold at A = 180246; the list
+-- interpolation uses Sol1.C52.strict_source_surplusT (exact-fibre bound 104088, Fast010).
 
 
 end Sol1.C42
@@ -1235,7 +1231,7 @@ open ReedSolomon.HiddenDerivative
 
 def Eligible (x a b c : ℕ) : Prop :=
   a + b + c ≤ 64 ∧ b + 2 * c ≤ 21 - (a + b + c) / 62 ∧
-    x + 131072 * a + 131071 * b + 131070 * c < 48 * 180255
+    x + 131072 * a + 131071 * b + 131070 * c < 48 * 180246
 
 theorem columns_eligible (i : SourceIndex) :
     Eligible (columns i).x (columns i).y₀ ((columns i).higher 0) ((columns i).higher 1) := by

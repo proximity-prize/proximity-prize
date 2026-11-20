@@ -49,15 +49,15 @@ def c2 : Prop :=
 theorem of_children (h1 : c1) (h2 : c2) : K1.c6 := by
   intro u front T R moving saturated Γ bad normal
   let P (b : Fin 2) : Bivar := Principal.assemble (fun j => R.coefficients (b, j))
-  let s := 49183 - T.height
-  have hsDef : s = 49183 - T.height := rfl
+  let s := 49174 - T.height
+  have hsDef : s = 49174 - T.height := rfl
   have hP : ∀ b, (P b).natDegree ≤ T.height := R.x_degree
-  have hBalance : 49183 + T.height + nullity u = 81890 ∧ T.height ≤ 32700 ∧ T.height < 49183 :=
+  have hBalance : 49174 + T.height + nullity u = 81899 ∧ T.height ≤ 32718 ∧ T.height < 49174 :=
     Strata.native_minimal_relation_degree (nullity u) T.a T.b T.c
       T.top T.degreeSum T.nullitySum (by have := front.1; omega)
-  have hSum : T.height + s = 49183 := by omega
-  have hs : 16483 ≤ s := by omega
-  have hRank : GenericLayer.genericRank (twoBlock u) + s = 2 * 49183 := by
+  have hSum : T.height + s = 49174 := by omega
+  have hs : 16456 ≤ s := by omega
+  have hRank : GenericLayer.genericRank (twoBlock u) + s = 2 * 49174 := by
     change stackRank u + s = _
     rw [K1.actual_stackRank u]
     omega
@@ -69,14 +69,14 @@ theorem of_children (h1 : c1) (h2 : c2) : K1.c6 := by
     exact R.primitive
   have hKernel := certificate_shifts_annihilate R s hSum
   obtain ⟨hMinors, H, hH, rows, hRows⟩ :=
-    h1 K T.height 49183 s P hSum (by omega) hP hPrim
-  have hBound := h2 K 49183 81890 s p (twoBlock u) (shifts P 49183 s)
+    h1 K T.height 49174 s P hSum (by omega) hP hPrim
+  have hBound := h2 K 49174 81899 s p (twoBlock u) (shifts P 49174 s)
     (by norm_num [Native.p]) hRank hKernel
-    (stacked_entry_natDegree p node (u 0) (u 1) 49183 81889) hMinors rows
+    (stacked_entry_natDegree p node (u 0) (u 1) 49174 81898) hMinors rows
   rw [hRows] at hBound
-  have hProduct : 16483 * H ≤ s * H := Nat.mul_le_mul_right H hs
-  have hCeiling : 49183 * (p + 1) = 104794534543422 := by norm_num [Native.p]
-  have hCap : H ≤ 6357734303 := by omega
+  have hProduct : 16456 * H ≤ s * H := Nat.mul_le_mul_right H hs
+  have hCeiling : 49174 * (p + 1) = 104775358185516 := by norm_num [Native.p]
+  have hCap : H ≤ 6367000374 := by omega
   apply normal_growth_count R _ moving saturated Γ bad normal
   intro i
   rw [← hCoordinates]

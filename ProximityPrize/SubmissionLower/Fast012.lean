@@ -185,7 +185,7 @@ theorem native_choose_two [CharP F 2130706433] (i : ℕ) (hi : 2 < i) (hik : i <
   simpa only [Nat.sub_add_cancel (by omega : 2 ≤ i)] using hh
 
 def weightedRegularCap : ℚ := (145 : ℚ) / 45 *
-  (((131072 : ℚ)*36176145)/49183)^2
+  (((131072 : ℚ)*36176145)/49174)^2
 
 theorem regular64_card [CharP F 2130706433]
     (domain : Fin 262144 ↪ F) (received : Fin 262144 → F)
@@ -193,14 +193,14 @@ theorem regular64_card [CharP F 2130706433]
     (hQ : Q.weightedTotalDegree (jetWeight 1 4 3) ≤ 145)
     (S : Finset (Polynomial F))
     (hsep : ∀ P ∈ S, differentialSpecialization (separant Q (Fin.last 2)) P ≠ 0)
-    (hS : ∀ P ∈ S, P ∈ directJetAgreementSolutions Q domain received 131073 180255) :
+    (hS : ∀ P ∈ S, P ∈ directJetAgreementSolutions Q domain received 131073 180246) :
     (S.card : ℚ) ≤ weightedRegularCap := by
   classical
   have hchar : ∀ j : Fin 3, ((1+4*j.val : ℕ) : F) ≠ 0 := by
     intro j hz
     have hdvd := (CharP.cast_eq_zero_iff F 2130706433 (1+4*j.val)).mp hz
     exact (Nat.not_dvd_of_pos_of_lt (by omega) (by omega)) hdvd
-  have hh := weighted_regular_polynomial_card (r := 2) (n := 262144) (k := 131073) (A := 180255)
+  have hh := weighted_regular_polynomial_card (r := 2) (n := 262144) (k := 131073) (A := 180246)
     1 4 145 (by decide) (by decide) hchar Q hQ
     (by decide) (by decide) domain received native_choose_two S
     (fun P hP => (hS P hP).2.1) (fun P hP => (hS P hP).1) hsep
@@ -467,14 +467,14 @@ theorem regular_order_two_card_le
     (hweight : jetTotalDegree Q ≤ nu)
     (S : Finset E[X])
     (hsep : ∀ P ∈ S, differentialSpecialization (separant Q (Fin.last 2)) P ≠ 0)
-    (hS : ∀ P ∈ S, P ∈ directJetAgreementSolutions Q domain received 131073 180255) :
-    (S.card : ℚ) ≤ dimensionSensitiveIncidenceProduct 262144 180255 131073 1 2 * nu *
+    (hS : ∀ P ∈ S, P ∈ directJetAgreementSolutions Q domain received 131073 180246) :
+    (S.card : ℚ) ≤ dimensionSensitiveIncidenceProduct 262144 180246 131073 1 2 * nu *
       ((1 + 2 * 131073 * (nu - 1) : ℕ) : ℚ) ^ 2 := by
   have hactual := finite_actualStage_regularSolutions_card_le_dimensionSensitive Q (Fin.last 2)
     hhighest 131073 131073 (by norm_num) le_rfl domain received (by norm_num) (by norm_num)
     native_binomial_guard S hsep hS
   exact hactual.trans (directJetStageCharge_le_weight_order (Q, Fin.last 2)
-    262144 180255 131073 131073 nu 2 (by norm_num) hweight (by norm_num))
+    262144 180246 131073 131073 nu 2 (by norm_num) hweight (by norm_num))
 
 
 end Sol1.C40Primitives
@@ -636,14 +636,14 @@ theorem regular_top_card_le (d : ℕ) (hd : d ≤ 2)
     (hhighest : highestActiveJet Q = some (Fin.last d)) (hweight : jetTotalDegree Q ≤ nu)
     (S : Finset E[X])
     (hsep : ∀ P ∈ S, differentialSpecialization (separant Q (Fin.last d)) P ≠ 0)
-    (hS : ∀ P ∈ S, P ∈ directJetAgreementSolutions Q domain received 131073 180255) :
-    (S.card : ℚ) ≤ dimensionSensitiveIncidenceProduct 262144 180255 131073 1 d * nu *
+    (hS : ∀ P ∈ S, P ∈ directJetAgreementSolutions Q domain received 131073 180246) :
+    (S.card : ℚ) ≤ dimensionSensitiveIncidenceProduct 262144 180246 131073 1 d * nu *
       ((1 + 2 * 131073 * (nu - 1) : ℕ) : ℚ) ^ d := by
   have hactual := finite_actualStage_regularSolutions_card_le_dimensionSensitive Q (Fin.last d)
     hhighest 131073 131073 (by omega) le_rfl domain received (by norm_num) (by norm_num)
     (fun r hr ↦ Sol1.C40Primitives.native_binomial_guard r (hr.trans hd)) S hsep hS
   exact hactual.trans (directJetStageCharge_le_weight_order (Q, Fin.last d)
-    262144 180255 131073 131073 nu d (by norm_num) hweight (by simp))
+    262144 180246 131073 131073 nu d (by norm_num) hweight (by simp))
 
 end Native
 
@@ -675,9 +675,9 @@ set_option maxRecDepth 10000
 set_option maxHeartbeats 0
 variable {E : Type*} [Field E] [CharP E 2130706433]
 
-theorem incidence_one : dimensionSensitiveIncidenceProduct 262144 180255 131073 1 1 = I1 := by
+theorem incidence_one : dimensionSensitiveIncidenceProduct 262144 180246 131073 1 1 = I1 := by
   norm_num [dimensionSensitiveIncidenceProduct, I1]
-theorem incidence_two : dimensionSensitiveIncidenceProduct 262144 180255 131073 1 2 = I2 := by
+theorem incidence_two : dimensionSensitiveIncidenceProduct 262144 180246 131073 1 2 = I2 := by
   norm_num [dimensionSensitiveIncidenceProduct, I2, I1]
 
 theorem cast_mul_pred (h : ℕ) : ((h * (h - 1) : ℕ) : ℚ) = (h : ℚ) * (h - 1) := by
@@ -703,7 +703,7 @@ theorem first_order_card_le
     (domain : Fin 262144 ↪ E) (received : Fin 262144 → E)
     (Q : DifferentialPolynomial E 1) (hQ : Q ≠ 0) (h : ℕ) (hbound : h ≤ 4096)
     (hweight : jetTotalDegree Q ≤ h) (S : Finset E[X])
-    (hS : ∀ P ∈ S, P ∈ directJetAgreementSolutions Q domain received 131073 180255) :
+    (hS : ∀ P ∈ S, P ∈ directJetAgreementSolutions Q domain received 131073 180246) :
     (S.card : ℚ) ≤ firstOrderCharge h := by
   classical
   let G := regularPart 0 Q

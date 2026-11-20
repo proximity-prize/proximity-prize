@@ -23,7 +23,7 @@ def AnchorEligible (u : JetVariable 3 →₀ ℕ) : Prop :=
     u.some.weight (fun i => i.val) ≤ 48 ∧
     u (some 3) ≤ 10 ∧
     u (some 1) + u (some 2) + u (some 3) ≤ 48 - (u.some.degree - 113 + 1) / 2 ∧
-    u.weight (differentialWeight 133671) ≤ 90 * 180255 - 1
+    u.weight (differentialWeight 133671) ≤ 90 * 180246 - 1
 
 /-- All abscissa powers up to the true-weight cutoff are included. -/
 def anchorSpace : Submodule Geom (DifferentialPolynomial Geom 3) :=
@@ -87,7 +87,7 @@ private theorem differentialWeight_eq : differentialWeight (d := 3) 133671 =
 
 private theorem anchor_bounds (Q : anchorSpace) :
     InBox (shape (MvPolynomial.optionEquivRight Geom (Fin 4) Q)) ⟨120, 48, 10⟩ ∧
-      TrueWeightLE (MvPolynomial.optionEquivRight Geom (Fin 4) Q) (90 * 180255 - 1) := by
+      TrueWeightLE (MvPolynomial.optionEquivRight Geom (Fin 4) Q) (90 * 180246 - 1) := by
   classical
   let P : Row 4 := MvPolynomial.optionEquivRight Geom (Fin 4) Q
   have hQ := (MvPolynomial.mem_restrictSupport_iff Geom).mp Q.property
@@ -140,7 +140,7 @@ theorem exists_anchor
     (hRank : ∀ x y : Geom, Module.finrank Geom (LinearMap.range (anchorLocal x y)) ≤ 9199626)
     (hDim : 2411626758144 < Module.finrank Geom anchorSpace) (w : I → K) :
     ∃ Q : Row 4, Q ≠ 0 ∧ InBox (shape Q) ⟨120, 48, 10⟩ ∧
-      TrueWeightLE Q (90 * 180255 - 1) ∧
+      TrueWeightLE Q (90 * 180246 - 1) ∧
       ∀ Γ s, Messages w Γ s → ∀ γ ∈ Γ, atJet Q (extend (s γ)) = 0 := by
   let localRows (i : I) := anchorLocal (embed (node i)) (embed (w i))
   have hr : (∑ i, Module.finrank Geom (LinearMap.range (localRows i))) ≤
@@ -160,11 +160,11 @@ theorem exists_anchor
   intro Γ s hm γ hγ
   obtain ⟨T, hT, hhit⟩ := hm.hits γ hγ
   have hdeg : differentialWeightedDegree 133671 (Q : DifferentialPolynomial Geom 3) <
-      90 * 180255 := by
+      90 * 180246 := by
     have h := (trueWeight_iff P).mp hweight
     rw [AlgEquiv.symm_apply_apply] at h
     rw [differentialWeightedDegree, differentialWeight_eq]
-    exact lt_of_le_of_lt h (by decide : 90 * 180255 - 1 < 90 * 180255)
+    exact lt_of_le_of_lt h (by decide : 90 * 180246 - 1 < 90 * 180246)
   have hS : (extend (s γ)).natDegree ≤ 133671 :=
     Polynomial.natDegree_map_le.trans (hm.degree γ hγ)
   rw [atJet_unflatten]
@@ -280,7 +280,7 @@ private theorem anchorLead_term (P : Row 4) (m : Fin 3 →₀ ℕ) (hm : m ∈ (
     exact hweight ▸ Nat.le_add_left _ _
 
 theorem lower_of_anchor (P : Row 4) (hP : P ≠ 0)
-    (hbox : InBox (shape P) ⟨120, 48, 10⟩) (hw : TrueWeightLE P (90 * 180255 - 1)) :
+    (hbox : InBox (shape P) ⟨120, 48, 10⟩) (hw : TrueWeightLE P (90 * 180246 - 1)) :
     LowerRow (anchorLead P) := by
   refine ⟨anchorLead_ne hP, ?_, ?_, ?_⟩
   · rw [← weightedTotalDegree_one, weightedTotalDegree, Finset.sup_le_iff]
@@ -310,7 +310,7 @@ open K1 K1_13 MvPolynomial UniqueFactorizationMonoid
 open scoped BigOperators Polynomial
 
 private theorem factor_small {P f : Row 4} (hP : P ≠ 0)
-    (hbox : InBox (shape P) ⟨120, 48, 10⟩) (hw : TrueWeightLE P (90 * 180255 - 1))
+    (hbox : InBox (shape P) ⟨120, 48, 10⟩) (hw : TrueWeightLE P (90 * 180246 - 1))
     (hf : Irreducible f) (ht : 0 < (shape f).t) (hd : f ∣ P) : SmallFactor f := by
   refine ⟨hf, ht, ⟨?_, ?_, ?_⟩, ?_⟩
   · have h := weightedTotalDegree_le_of_dvd (1 : Fin 4 → ℕ) hd hP
@@ -374,7 +374,7 @@ private theorem fits_of_prod {n : ℕ} (P : Row 4) (hP : P ≠ 0)
 
 theorem cover_of_anchor {Γ : Finset K} {s : K → K[X]} (P : Row 4)
     (hP : P ≠ 0) (hbox : InBox (shape P) ⟨120, 48, 10⟩)
-    (hw : TrueWeightLE P (90 * 180255 - 1))
+    (hw : TrueWeightLE P (90 * 180246 - 1))
     (hz : ∀ γ ∈ Γ, atJet P (extend (s γ)) = 0) :
     ∃ (n : ℕ) (g : Row 3) (f : Fin n → Row 4), Cover Γ s g f := by
   classical

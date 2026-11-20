@@ -2458,7 +2458,7 @@ theorem threefold_pieces_capacity {w Γ s} (C : Pieces Γ) (h : Messages w Γ s)
 private theorem proper_capacity {w Γ s} {x : Shape} (C : Pieces Γ) (h : Messages w Γ s)
     (hc : C.curves s) (hb : 32 * C.total ≤ curveMass32 x)
     (hn : 32 * C.n ≤ componentMass32 x) :
-    C.union.card ≤ ceilDiv (81889 * curveMass32 x) (32 * 46584) +
+    C.union.card ≤ ceilDiv (81898 * curveMass32 x) (32 * 46575) +
       ceilDiv (componentMass32 x) 32 := by
   have hcap := C.curve_capacity h hc
   unfold ceilDiv
@@ -2497,7 +2497,7 @@ theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) (h4 : c4) (h5 : c5) : K1_13_7.
   have hsumI := Finset.card_union_le C.union F.union
   let p := (shape f).chamber
   let h := fatChart (shape f)
-  change Γ.card ≤ ceilDiv (81889 * curveMass32 (shape f)) (32 * 46584) +
+  change Γ.card ≤ ceilDiv (81898 * curveMass32 (shape f)) (32 * 46575) +
     ceilDiv (componentMass32 (shape f)) 32 + 20 * p.b * h.b ^ 2 +
     5 * 133671 * p.b * h.b + 1
   have hreserveC : C.union.card ≤ 5 * 133671 * p.b * h.b := by
@@ -3565,7 +3565,7 @@ as a polynomial identity in the fresh argument. -/
 def c2 : Prop :=
   ∀ (f : Row 4) (P : Ideal GeoJets) (hp : P.IsPrime)
     (hs : toGeneric (separant f) ∉ P),
-    TrueWeightLE f (90 * 180255 - 1) → toGeneric f ∈ P →
+    TrueWeightLE f (90 * 180246 - 1) → toGeneric f ∈ P →
     toGeneric (membershipTest f) ∈ P →
     ∀ δ : Derivation Geom (ChartRing f P) (ChartRing f P),
       FollowsFlow f P δ →
@@ -5082,11 +5082,11 @@ theorem proof : K1_13_7_2_4.c2 := by
   have hU : coeffDeriv d U = 0 :=
     coeffDeriv_zero_of_shift d x hx U (chartTaylor_shift hδ hmem)
   have he : V.eval x = 0 := (eval_chartTrajectory f P f).trans (onChart_zero hf)
-  have hd : V.natDegree ≤ 90 * 180255 - 1 :=
+  have hd : V.natDegree ≤ 90 * 180246 - 1 :=
     rowTrajectory_degree k f U hw (Nat.le_of_lt_succ (chartPolynomial_degree f P))
   have hz : V = 0 := zero_of_stationary_eval d x hx V
     (rowTrajectory_stationary d k hc f U hU) he (fun n hn => chart_factorial_unit f P
-      (hn.trans_lt (hd.trans_lt (by decide : 90 * 180255 - 1 < K1.p))))
+      (hn.trans_lt (hd.trans_lt (by decide : 90 * 180246 - 1 < K1.p))))
   let φ := @genericLift f P hp hs
   have hk : φ.comp (chartConstants f P) = componentConstants P := by
     apply RingHom.ext
@@ -6668,7 +6668,7 @@ private theorem choose_section {w Γ s} (hm : Messages w Γ s) {H : Shape} (C : 
     (hr : ∀ γ ∈ Γ, r.asIdeal ≤ jetPointIdeal (jetPoint (extend (s γ)))) :
     ∃ (F : Jets) (selected : Finset JetPoint), Supported H F ∧ F ∉ r.asIdeal ∧
       (∀ y ∈ selected, r.asIdeal ≤ jetPointIdeal y ∧ MvPolynomial.eval y F = 0) ∧
-      46584 * Γ.card ≤ 81889 * selected.card + 46584 := by
+      46575 * Γ.card ≤ 81898 * selected.card + 46575 := by
   classical
   let proper := (univ : Finset I).filter (fun i => ∃ γ ∈ Γ, (s γ).eval (node i) ≠ w i)
   let hits (i : I) := Γ.filter (fun γ => (s γ).eval (node i) = w i)
@@ -6742,7 +6742,7 @@ theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) : K1_13_7.c5 := by
   have hsections (r : PrimeSpectrum Jets) :
       ∃ (F : Jets) (selected : Finset JetPoint), Supported (fatChart (shape f)) F ∧ F ∉ r.asIdeal ∧
         (∀ y ∈ selected, r.asIdeal ≤ jetPointIdeal y ∧ MvPolynomial.eval y F = 0) ∧
-        46584 * (piece r).card ≤ 81889 * selected.card + 46584 :=
+        46575 * (piece r).card ≤ 81898 * selected.card + 46575 :=
     choose_section (hm.mono (filter_subset _ _)) C
       (fun γ hγ => hC (s γ) (hm.degree γ (mem_filter.mp hγ).1)
         (hOn γ (mem_filter.mp hγ).1).1 (hOn γ (mem_filter.mp hγ).1).2)
@@ -6763,17 +6763,17 @@ theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) : K1_13_7.c5 := by
   have hCount := h3 f P Q hf hpq hbP hbQ R (fun r hr => (hR r hr).1)
     (shape f).chamber (Or.inr rfl) linear singlePoint hLinear
   rw [sum_congr rfl hOne, sum_const, smul_eq_mul, Nat.mul_one] at hCount
-  have hsum : 46584 * Γ.card ≤ 81889 * (∑ r ∈ R, (selected r).card) + 46584 * R.card := calc
-    _ ≤ 46584 * (∑ r ∈ R, (piece r).card) := Nat.mul_le_mul_left _ hcover
-    _ = ∑ r ∈ R, 46584 * (piece r).card := mul_sum ..
-    _ ≤ ∑ r ∈ R, (81889 * (selected r).card + 46584) := sum_le_sum fun r _ => hFee r
+  have hsum : 46575 * Γ.card ≤ 81898 * (∑ r ∈ R, (selected r).card) + 46575 * R.card := calc
+    _ ≤ 46575 * (∑ r ∈ R, (piece r).card) := Nat.mul_le_mul_left _ hcover
+    _ = ∑ r ∈ R, 46575 * (piece r).card := mul_sum ..
+    _ ≤ ∑ r ∈ R, (81898 * (selected r).card + 46575) := sum_le_sum fun r _ => hFee r
     _ = _ := by rw [sum_add_distrib, ← mul_sum, sum_const, smul_eq_mul, Nat.mul_comm R.card]
   change Γ.card ≤ ceilDiv
-    (81889 * mixed32 (shape f).chamber lowerBox lowerBox (fatChart (shape f)) +
-      46584 * mixed32 (shape f).chamber lowerBox lowerBox (shape f).chamber)
-    (32 * 46584 * threshold)
-  rw [Nat.mul_right_comm 32 46584 threshold]
-  exact weighted_ceil (32 * threshold) 81889 46584 (by decide) hsum hDegree hCount
+    (81898 * mixed32 (shape f).chamber lowerBox lowerBox (fatChart (shape f)) +
+      46575 * mixed32 (shape f).chamber lowerBox lowerBox (shape f).chamber)
+    (32 * 46575 * threshold)
+  rw [Nat.mul_right_comm 32 46575 threshold]
+  exact weighted_ceil (32 * threshold) 81898 46575 (by decide) hsum hDegree hCount
 
 end
 end K1_13_7_5
