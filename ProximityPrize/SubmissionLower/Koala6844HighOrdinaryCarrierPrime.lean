@@ -1,7 +1,0 @@
-import ProximityPrize.SubmissionLower.Koala6831CarrierPrime
-
-namespace ProximityPrize.SubmissionLower.Koala6844HighOrdinaryCarrierPrime
-
-export Koala6831CarrierPrime (irreducible_of_linear_primitive)
-
-end ProximityPrize.SubmissionLower.Koala6844HighOrdinaryCarrierPrime

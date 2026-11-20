@@ -1,210 +1,647 @@
-import ProximityPrize.SubmissionLower.Koala6844Submission
-namespace ProximityPrize.Benchmark
-theorem candidate : ProtocolClaim 6844 332529663 1073741824 :=
-  ProximityPrize.SubmissionLower.Koala6844Submission.claim
-end ProximityPrize.Benchmark
+import ProximityPrize.SubmissionLower.Fast000
+import ProximityPrize.SubmissionLower.Fast004
+import ProximityPrize.SubmissionLower.Fast001
+import ProximityPrize.SubmissionLower.Fast002
+import ProximityPrize.SubmissionLower.Fast005
+import ProximityPrize.SubmissionLower.Fast006
+import ProximityPrize.SubmissionLower.Fast003
+import ProximityPrize.SubmissionLower.Fast007
+import ProximityPrize.SubmissionLower.Fast008
+import ProximityPrize.SubmissionLower.Fast009
+import ProximityPrize.SubmissionLower.Fast010
+import ProximityPrize.SubmissionLower.Fast011
+import ProximityPrize.SubmissionLower.Fast012
+import ProximityPrize.SubmissionLower.Fast014
+import ProximityPrize.SubmissionLower.Fast013
+import ProximityPrize.SubmissionLower.Fast015
+import ProximityPrize.SubmissionLower.Pack_K1Defs
+import ProximityPrize.SubmissionLower.Fast076
+import ProximityPrize.SubmissionLower.Fast050
+import ProximityPrize.SubmissionLower.Fast054
+import ProximityPrize.SubmissionLower.Fast072
+import ProximityPrize.SubmissionLower.Fast017
+import ProximityPrize.SubmissionLower.Fast051
+import ProximityPrize.SubmissionLower.Fast022
+import ProximityPrize.SubmissionLower.Numeric6Defs
+import ProximityPrize.SubmissionLower.Numeric6AuxCert
+import ProximityPrize.SubmissionLower.Fast060
+import ProximityPrize.SubmissionLower.Numeric2Aux
+import ProximityPrize.SubmissionLower.Numeric5Defs
+import ProximityPrize.SubmissionLower.Numeric5Certificate
+import ProximityPrize.SubmissionLower.Fast049
+import ProximityPrize.SubmissionLower.Fast061
+import ProximityPrize.SubmissionLower.Fast074
+import ProximityPrize.SubmissionLower.Fast048
+import ProximityPrize.SubmissionLower.Fast018
+import ProximityPrize.SubmissionLower.Fast066
+import ProximityPrize.SubmissionLower.Fast019
+import ProximityPrize.SubmissionLower.Fast020
+import ProximityPrize.SubmissionLower.Pack_K1_13_6_1_4Geometry
+import ProximityPrize.SubmissionLower.Fast063
+import ProximityPrize.SubmissionLower.Fast071
+import ProximityPrize.SubmissionLower.Fast023
+import ProximityPrize.SubmissionLower.Fast065
+import ProximityPrize.SubmissionLower.Fast029
+import ProximityPrize.SubmissionLower.Pack_K1_14_2_1Arithmetic
+import ProximityPrize.SubmissionLower.Pack_K1_14_2_1Split
+import ProximityPrize.SubmissionLower.Pack_K1_14_2_2Split
+import ProximityPrize.SubmissionLower.Fast032
+import ProximityPrize.SubmissionLower.Pack_K1_14_2_2_4Split
+import ProximityPrize.SubmissionLower.Fast062
+import ProximityPrize.SubmissionLower.Pack_K1_14_3Split
+import ProximityPrize.SubmissionLower.Pack_K1_14_3_4Cutter
+import ProximityPrize.SubmissionLower.Fast052
+import ProximityPrize.SubmissionLower.Fast053
+import ProximityPrize.SubmissionLower.Fast057
+import ProximityPrize.SubmissionLower.Fast035
+import ProximityPrize.SubmissionLower.Pack_K1_14_3_2Split
+import ProximityPrize.SubmissionLower.Fast068
+import ProximityPrize.SubmissionLower.Pack_K1_14_3_2_5_3Proof
+import ProximityPrize.SubmissionLower.Pack_K1_14_3_2RTransport
+import ProximityPrize.SubmissionLower.Pack_K1_14_3_2_3Aux3
+import ProximityPrize.SubmissionLower.Fast042
+import ProximityPrize.SubmissionLower.Pack_K1_14_3_2_7Proof
+import ProximityPrize.SubmissionLower.Fast073
+import ProximityPrize.SubmissionLower.Fast040
+import ProximityPrize.SubmissionLower.Fast058
+import ProximityPrize.SubmissionLower.Fast059
+import ProximityPrize.SubmissionLower.Fast055
+import ProximityPrize.SubmissionLower.Fast056
+import ProximityPrize.SubmissionLower.SoloK1_13_1_1ArithmeticLogic
+import ProximityPrize.SubmissionLower.Fast064
+import ProximityPrize.SubmissionLower.Fast070
+import ProximityPrize.SubmissionLower.Fast067
+import ProximityPrize.SubmissionLower.Fast077
+import ProximityPrize.SubmissionLower.Fast044
+import ProximityPrize.SubmissionLower.Pack_K1_14_3_2_3Split
+import ProximityPrize.SubmissionLower.Fast069
+import ProximityPrize.SubmissionLower.Fast075
+set_option Elab.async false
 
+theorem Asm.K1_1 : K1.c1 := K1_1.proof
+theorem Asm.K1_2_1 : K1_2.c1 := K1_2_1.proof
+theorem Asm.K1_2_2_1 : K1_2_2.c1 := K1_2_2_1.proof
+theorem Asm.K1_2_2_2 : K1_2_2.c2 := K1_2_2_2.proof
+theorem Asm.K1_2_2 : K1_2.c2 := K1_2_2.of_children Asm.K1_2_2_1 Asm.K1_2_2_2
+theorem Asm.K1_2_3 : K1_2.c3 := K1_2_3.proof
+theorem Asm.K1_2_4_1_1 : K1_2_4_1.c1 := K1_2_4_1_1.proof
+theorem Asm.K1_2_4_1_2 : K1_2_4_1.c2 := K1_2_4_1_2.proof
+theorem Asm.K1_2_4_1 : K1_2_4.c1 := K1_2_4_1.of_children Asm.K1_2_4_1_1 Asm.K1_2_4_1_2
+theorem Asm.K1_2_4_2 : K1_2_4.c2 := K1_2_4_2.proof
+theorem Asm.K1_2_4_3 : K1_2_4.c3 := K1_2_4_3.proof
+theorem Asm.K1_2_4 : K1_2.c4 := K1_2_4.of_children Asm.K1_2_4_1 Asm.K1_2_4_2 Asm.K1_2_4_3
+theorem Asm.K1_2 : K1.c2 := K1_2.of_children Asm.K1_2_1 Asm.K1_2_2 Asm.K1_2_3 Asm.K1_2_4
+theorem Asm.K1_3 : K1.c3 := K1_3.proof
+theorem Asm.K1_4 : K1.c4 := K1_4.proof
+theorem Asm.K1_5 : K1.c5 := K1_5.proof
+theorem Asm.K1_6_1 : K1_6.c1 := K1_6_1.proof
+theorem Asm.K1_6_2 : K1_6.c2 := K1_6_2.proof
+theorem Asm.K1_6 : K1.c6 := K1_6.of_children Asm.K1_6_1 Asm.K1_6_2
+theorem Asm.K1_7 : K1.c7 := K1_7.proof
+theorem Asm.K1_8_1 : K1_8.c1 := K1_8_1.proof
+theorem Asm.K1_8_2 : K1_8.c2 := K1_8_2.proof
+theorem Asm.K1_8 : K1.c8 := K1_8.of_children Asm.K1_8_1 Asm.K1_8_2
+theorem Asm.K1_9_1 : K1_9.c1 := K1_9_1.proof
+theorem Asm.K1_9_2 : K1_9.c2 := K1_9_2.proof
+theorem Asm.K1_9 : K1.c9 := K1_9.of_children Asm.K1_9_1 Asm.K1_9_2
+theorem Asm.K1_10_1_1 : K1_10_1.c1 := K1_10_1_1.proof
+theorem Asm.K1_10_1_2 : K1_10_1.c2 := K1_10_1_2.proof
+theorem Asm.K1_10_1_3 : K1_10_1.c3 := K1_10_1_3.proof
+theorem Asm.K1_10_1 : K1_10.c1 := K1_10_1.of_children Asm.K1_10_1_1 Asm.K1_10_1_2 Asm.K1_10_1_3
+theorem Asm.K1_10_2_1 : K1_10_2.c1 := K1_10_2_1.proof
+theorem Asm.K1_10_2_2 : K1_10_2.c2 := K1_10_2_2.proof
+theorem Asm.K1_10_2 : K1_10.c2 := K1_10_2.of_children Asm.K1_10_2_1 Asm.K1_10_2_2
+theorem Asm.K1_10 : K1.c10 := K1_10.of_children Asm.K1_10_1 Asm.K1_10_2
+theorem Asm.K1_11_1_1 : K1_11_1.c1 := K1_11_1_1.proof
+theorem Asm.K1_11_1_2 : K1_11_1.c2 := K1_11_1_2.proof
+theorem Asm.K1_11_1 : K1_11.c1 := K1_11_1.of_children Asm.K1_11_1_1 Asm.K1_11_1_2
+theorem Asm.K1_11_2_1 : K1_11_2.c1 := K1_11_2_1.proof
+theorem Asm.K1_11_2_2 : K1_11_2.c2 := K1_11_2_2.proof
+theorem Asm.K1_11_2 : K1_11.c2 := K1_11_2.of_children Asm.K1_11_2_1 Asm.K1_11_2_2
+theorem Asm.K1_11_3_1 : K1_11_3.c1 := K1_11_3_1.proof
+theorem Asm.K1_11_3_2 : K1_11_3.c2 := K1_11_3_2.proof
+theorem Asm.K1_11_3 : K1_11.c3 := K1_11_3.of_children Asm.K1_11_3_1 Asm.K1_11_3_2
+theorem Asm.K1_11 : K1.c11 := K1_11.of_children Asm.K1_11_1 Asm.K1_11_2 Asm.K1_11_3
+theorem Asm.K1_12_1 : K1_12.c1 := K1_12_1.proof
+theorem Asm.K1_12_2 : K1_12.c2 := K1_12_2.proof
+theorem Asm.K1_12 : K1.c12 := K1_12.of_children Asm.K1_12_1 Asm.K1_12_2
+theorem Asm.K1_13_1_1_1 : K1_13_1_1.c1 := K1_13_1_1_1.proof
+theorem Asm.K1_13_1_1_2 : K1_13_1_1.c2 := K1_13_1_1_2.proof
+theorem Asm.K1_13_1_1_3 : K1_13_1_1.c3 := K1_13_1_1_3.proof
+theorem Asm.K1_13_1_1 : K1_13_1.c1 := K1_13_1_1.of_children Asm.K1_13_1_1_1 Asm.K1_13_1_1_2 Asm.K1_13_1_1_3
+theorem Asm.K1_13_1_2 : K1_13_1.c2 := K1_13_1_2.proof
+theorem Asm.K1_13_1 : K1_13.c1 := K1_13_1.of_children Asm.K1_13_1_1 Asm.K1_13_1_2
+theorem Asm.K1_13_2_1 : K1_13_2.c1 := K1_13_2_1.proof
+theorem Asm.K1_13_2_2_1 : K1_13_2_2.c1 := K1_13_2_2_1.proof
+theorem Asm.K1_13_2_2_2 : K1_13_2_2.c2 := K1_13_2_2_2.proof
+theorem Asm.K1_13_2_2_3 : K1_13_2_2.c3 := K1_13_2_2_3.proof
+theorem Asm.K1_13_2_2_4 : K1_13_2_2.c4 := K1_13_2_2_4.proof
+theorem Asm.K1_13_2_2_5 : K1_13_2_2.c5 := K1_13_2_2_5.proof
+theorem Asm.K1_13_2_2 : K1_13_2.c2 := K1_13_2_2.of_children Asm.K1_13_2_2_1 Asm.K1_13_2_2_2 Asm.K1_13_2_2_3 Asm.K1_13_2_2_4 Asm.K1_13_2_2_5
+theorem Asm.K1_13_2_3_1 : K1_13_2_3.c1 := K1_13_2_3_1.proof
+theorem Asm.K1_13_2_3_2 : K1_13_2_3.c2 := K1_13_2_3_2.proof
+theorem Asm.K1_13_2_3_3 : K1_13_2_3.c3 := K1_13_2_3_3.proof
+theorem Asm.K1_13_2_3_4 : K1_13_2_3.c4 := K1_13_2_3_4.proof
+theorem Asm.K1_13_2_3_5 : K1_13_2_3.c5 := K1_13_2_3_5.proof
+theorem Asm.K1_13_2_3_6 : K1_13_2_3.c6 := K1_13_2_3_6.proof
+theorem Asm.K1_13_2_3_7 : K1_13_2_3.c7 := K1_13_2_3_7.proof
+theorem Asm.K1_13_2_3 : K1_13_2.c3 := K1_13_2_3.of_children Asm.K1_13_2_3_1 Asm.K1_13_2_3_2 Asm.K1_13_2_3_3 Asm.K1_13_2_3_4 Asm.K1_13_2_3_5 Asm.K1_13_2_3_6 Asm.K1_13_2_3_7
+theorem Asm.K1_13_2 : K1_13.c2 := K1_13_2.of_children Asm.K1_13_2_1 Asm.K1_13_2_2 Asm.K1_13_2_3
+theorem Asm.K1_13_3_1 : K1_13_3.c1 := K1_13_3_1.proof
+theorem Asm.K1_13_3_2 : K1_13_3.c2 := K1_13_3_2.proof
+theorem Asm.K1_13_3 : K1_13.c3 := K1_13_3.of_children Asm.K1_13_3_1 Asm.K1_13_3_2
+theorem Asm.K1_13_4_1 : K1_13_4.c1 := K1_13_4_1.proof
+theorem Asm.K1_13_4_2_1 : K1_13_4_2.c1 := K1_13_4_2_1.proof
+theorem Asm.K1_13_4_2_2_1 : K1_13_4_2_2.c1 := K1_13_4_2_2_1.proof
+theorem Asm.K1_13_4_2_2_2 : K1_13_4_2_2.c2 := K1_13_4_2_2_2.proof
+theorem Asm.K1_13_4_2_2_3 : K1_13_4_2_2.c3 := K1_13_4_2_2_3.proof
+theorem Asm.K1_13_4_2_2_4 : K1_13_4_2_2.c4 := K1_13_4_2_2_4.proof
+theorem Asm.K1_13_4_2_2_5 : K1_13_4_2_2.c5 := K1_13_4_2_2_5.proof
+theorem Asm.K1_13_4_2_2_6 : K1_13_4_2_2.c6 := K1_13_4_2_2_6.proof
+theorem Asm.K1_13_4_2_2 : K1_13_4_2.c2 := K1_13_4_2_2.of_children Asm.K1_13_4_2_2_1 Asm.K1_13_4_2_2_2 Asm.K1_13_4_2_2_3 Asm.K1_13_4_2_2_4 Asm.K1_13_4_2_2_5 Asm.K1_13_4_2_2_6
+theorem Asm.K1_13_4_2_3_1 : K1_13_4_2_3.c1 := K1_13_4_2_3_1.proof
+theorem Asm.K1_13_4_2_3_2 : K1_13_4_2_3.c2 := K1_13_4_2_3_2.proof
+theorem Asm.K1_13_4_2_3 : K1_13_4_2.c3 := K1_13_4_2_3.of_children Asm.K1_13_4_2_3_1 Asm.K1_13_4_2_3_2
+theorem Asm.K1_13_4_2_4_1 : K1_13_4_2_4.c1 := K1_13_4_2_4_1.proof
+theorem Asm.K1_13_4_2_4_2 : K1_13_4_2_4.c2 := K1_13_4_2_4_2.proof
+theorem Asm.K1_13_4_2_4 : K1_13_4_2.c4 := K1_13_4_2_4.of_children Asm.K1_13_4_2_4_1 Asm.K1_13_4_2_4_2
+theorem Asm.K1_13_4_2 : K1_13_4.c2 := K1_13_4_2.of_children Asm.K1_13_4_2_1 Asm.K1_13_4_2_2 Asm.K1_13_4_2_3 Asm.K1_13_4_2_4
+theorem Asm.K1_13_4_3_1 : K1_13_4_3.c1 := K1_13_4_3_1.proof
+theorem Asm.K1_13_4_3_2 : K1_13_4_3.c2 := K1_13_4_3_2.proof
+theorem Asm.K1_13_4_3_3 : K1_13_4_3.c3 := K1_13_4_3_3.proof
+theorem Asm.K1_13_4_3 : K1_13_4.c3 := K1_13_4_3.of_children Asm.K1_13_4_3_1 Asm.K1_13_4_3_2 Asm.K1_13_4_3_3
+theorem Asm.K1_13_4_4_1 : K1_13_4_4.c1 := K1_13_4_4_1.proof
+theorem Asm.K1_13_4_4_2 : K1_13_4_4.c2 := K1_13_4_4_2.proof
+theorem Asm.K1_13_4_4 : K1_13_4.c4 := K1_13_4_4.of_children Asm.K1_13_4_4_1 Asm.K1_13_4_4_2
+theorem Asm.K1_13_4_5_1 : K1_13_4_5.c1 := K1_13_4_5_1.proof
+theorem Asm.K1_13_4_5_2 : K1_13_4_5.c2 := K1_13_4_5_2.proof
+theorem Asm.K1_13_4_5 : K1_13_4.c5 := K1_13_4_5.of_children Asm.K1_13_4_5_1 Asm.K1_13_4_5_2
+theorem Asm.K1_13_4_6 : K1_13_4.c6 := K1_13_4_6.proof
+theorem Asm.K1_13_4_7 : K1_13_4.c7 := K1_13_4_7.proof
+theorem Asm.K1_13_4 : K1_13.c4 := K1_13_4.of_children Asm.K1_13_4_1 Asm.K1_13_4_2 Asm.K1_13_4_3 Asm.K1_13_4_4 Asm.K1_13_4_5 Asm.K1_13_4_6 Asm.K1_13_4_7
+theorem Asm.K1_13_5_1 : K1_13_5.c1 := K1_13_5_1.proof
+theorem Asm.K1_13_5_2 : K1_13_5.c2 := K1_13_5_2.proof
+theorem Asm.K1_13_5_3 : K1_13_5.c3 := K1_13_5_3.proof
+theorem Asm.K1_13_5_4_1_1 : K1_13_5_4_1.c1 := K1_13_5_4_1_1.proof
+theorem Asm.K1_13_5_4_1_2 : K1_13_5_4_1.c2 := K1_13_5_4_1_2.proof
+theorem Asm.K1_13_5_4_1 : K1_13_5_4.c1 := K1_13_5_4_1.of_children Asm.K1_13_5_4_1_1 Asm.K1_13_5_4_1_2
+theorem Asm.K1_13_5_4_2_1 : K1_13_5_4_2.c1 := K1_13_5_4_2_1.proof
+theorem Asm.K1_13_5_4_2_2_1 : K1_13_5_4_2_2.c1 := K1_13_5_4_2_2_1.proof
+theorem Asm.K1_13_5_4_2_2_2 : K1_13_5_4_2_2.c2 := K1_13_5_4_2_2_2.proof
+theorem Asm.K1_13_5_4_2_2_3 : K1_13_5_4_2_2.c3 := K1_13_5_4_2_2_3.proof
+theorem Asm.K1_13_5_4_2_2 : K1_13_5_4_2.c2 := K1_13_5_4_2_2.of_children Asm.K1_13_5_4_2_2_1 Asm.K1_13_5_4_2_2_2 Asm.K1_13_5_4_2_2_3
+theorem Asm.K1_13_5_4_2_3_1 : K1_13_5_4_2_3.c1 := K1_13_5_4_2_3_1.proof
+theorem Asm.K1_13_5_4_2_3_2 : K1_13_5_4_2_3.c2 := K1_13_5_4_2_3_2.proof
+theorem Asm.K1_13_5_4_2_3 : K1_13_5_4_2.c3 := K1_13_5_4_2_3.of_children Asm.K1_13_5_4_2_3_1 Asm.K1_13_5_4_2_3_2
+theorem Asm.K1_13_5_4_2_4_1_1 : K1_13_5_4_2_4_1.c1 := K1_13_5_4_2_4_1_1.proof
+theorem Asm.K1_13_5_4_2_4_1_2 : K1_13_5_4_2_4_1.c2 := K1_13_5_4_2_4_1_2.proof
+theorem Asm.K1_13_5_4_2_4_1 : K1_13_5_4_2_4.c1 := K1_13_5_4_2_4_1.of_children Asm.K1_13_5_4_2_4_1_1 Asm.K1_13_5_4_2_4_1_2
+theorem Asm.K1_13_5_4_2_4_2_1 : K1_13_5_4_2_4_2.c1 := K1_13_5_4_2_4_2_1.proof
+theorem Asm.K1_13_5_4_2_4_2_2 : K1_13_5_4_2_4_2.c2 := K1_13_5_4_2_4_2_2.proof
+theorem Asm.K1_13_5_4_2_4_2_3_1 : K1_13_5_4_2_4_2_3.c1 := K1_13_5_4_2_4_2_3_1.proof
+theorem Asm.K1_13_5_4_2_4_2_3_2 : K1_13_5_4_2_4_2_3.c2 := K1_13_5_4_2_4_2_3_2.proof
+theorem Asm.K1_13_5_4_2_4_2_3 : K1_13_5_4_2_4_2.c3 := K1_13_5_4_2_4_2_3.of_children Asm.K1_13_5_4_2_4_2_3_1 Asm.K1_13_5_4_2_4_2_3_2
+theorem Asm.K1_13_5_4_2_4_2 : K1_13_5_4_2_4.c2 := K1_13_5_4_2_4_2.of_children Asm.K1_13_5_4_2_4_2_1 Asm.K1_13_5_4_2_4_2_2 Asm.K1_13_5_4_2_4_2_3
+theorem Asm.K1_13_5_4_2_4_3 : K1_13_5_4_2_4.c3 := K1_13_5_4_2_4_3.proof
+theorem Asm.K1_13_5_4_2_4 : K1_13_5_4_2.c4 := K1_13_5_4_2_4.of_children Asm.K1_13_5_4_2_4_1 Asm.K1_13_5_4_2_4_2 Asm.K1_13_5_4_2_4_3
+theorem Asm.K1_13_5_4_2_5_1_1_1 : K1_13_5_4_2_5_1_1.c1 := K1_13_5_4_2_5_1_1_1.proof
+theorem Asm.K1_13_5_4_2_5_1_1_2 : K1_13_5_4_2_5_1_1.c2 := K1_13_5_4_2_5_1_1_2.proof
+theorem Asm.K1_13_5_4_2_5_1_1 : K1_13_5_4_2_5_1.c1 := K1_13_5_4_2_5_1_1.of_children Asm.K1_13_5_4_2_5_1_1_1 Asm.K1_13_5_4_2_5_1_1_2
+theorem Asm.K1_13_5_4_2_5_1_2 : K1_13_5_4_2_5_1.c2 := K1_13_5_4_2_5_1_2.proof
+theorem Asm.K1_13_5_4_2_5_1 : K1_13_5_4_2_5.c1 := K1_13_5_4_2_5_1.of_children Asm.K1_13_5_4_2_5_1_1 Asm.K1_13_5_4_2_5_1_2
+theorem Asm.K1_13_5_4_2_5_2_1_1 : K1_13_5_4_2_5_2_1.c1 := K1_13_5_4_2_5_2_1_1.proof
+theorem Asm.K1_13_5_4_2_5_2_1_2 : K1_13_5_4_2_5_2_1.c2 := K1_13_5_4_2_5_2_1_2.proof
+theorem Asm.K1_13_5_4_2_5_2_1 : K1_13_5_4_2_5_2.c1 := K1_13_5_4_2_5_2_1.of_children Asm.K1_13_5_4_2_5_2_1_1 Asm.K1_13_5_4_2_5_2_1_2
+theorem Asm.K1_13_5_4_2_5_2_2 : K1_13_5_4_2_5_2.c2 := K1_13_5_4_2_5_2_2.proof
+theorem Asm.K1_13_5_4_2_5_2 : K1_13_5_4_2_5.c2 := K1_13_5_4_2_5_2.of_children Asm.K1_13_5_4_2_5_2_1 Asm.K1_13_5_4_2_5_2_2
+theorem Asm.K1_13_5_4_2_5 : K1_13_5_4_2.c5 := K1_13_5_4_2_5.of_children Asm.K1_13_5_4_2_5_1 Asm.K1_13_5_4_2_5_2
+theorem Asm.K1_13_5_4_2 : K1_13_5_4.c2 := K1_13_5_4_2.of_children Asm.K1_13_5_4_2_1 Asm.K1_13_5_4_2_2 Asm.K1_13_5_4_2_3 Asm.K1_13_5_4_2_4 Asm.K1_13_5_4_2_5
+theorem Asm.K1_13_5_4_3_1 : K1_13_5_4_3.c1 := K1_13_5_4_3_1.proof
+theorem Asm.K1_13_5_4_3_2 : K1_13_5_4_3.c2 := K1_13_5_4_3_2.proof
+theorem Asm.K1_13_5_4_3_3 : K1_13_5_4_3.c3 := K1_13_5_4_3_3.proof
+theorem Asm.K1_13_5_4_3_4 : K1_13_5_4_3.c4 := K1_13_5_4_3_4.proof
+theorem Asm.K1_13_5_4_3 : K1_13_5_4.c3 := K1_13_5_4_3.of_children Asm.K1_13_5_4_3_1 Asm.K1_13_5_4_3_2 Asm.K1_13_5_4_3_3 Asm.K1_13_5_4_3_4
+theorem Asm.K1_13_5_4_4_1_1 : K1_13_5_4_4_1.c1 := K1_13_5_4_4_1_1.proof
+theorem Asm.K1_13_5_4_4_1_2 : K1_13_5_4_4_1.c2 := K1_13_5_4_4_1_2.proof
+theorem Asm.K1_13_5_4_4_1 : K1_13_5_4_4.c1 := K1_13_5_4_4_1.of_children Asm.K1_13_5_4_4_1_1 Asm.K1_13_5_4_4_1_2
+theorem Asm.K1_13_5_4_4_2 : K1_13_5_4_4.c2 := K1_13_5_4_4_2.proof
+theorem Asm.K1_13_5_4_4 : K1_13_5_4.c4 := K1_13_5_4_4.of_children Asm.K1_13_5_4_4_1 Asm.K1_13_5_4_4_2
+theorem Asm.K1_13_5_4 : K1_13_5.c4 := K1_13_5_4.of_children Asm.K1_13_5_4_1 Asm.K1_13_5_4_2 Asm.K1_13_5_4_3 Asm.K1_13_5_4_4
+theorem Asm.K1_13_5_5_1_1 : K1_13_5_5_1.c1 := K1_13_5_5_1_1.proof
+theorem Asm.K1_13_5_5_1_2 : K1_13_5_5_1.c2 := K1_13_5_5_1_2.proof
+theorem Asm.K1_13_5_5_1_3 : K1_13_5_5_1.c3 := K1_13_5_5_1_3.proof
+theorem Asm.K1_13_5_5_1 : K1_13_5_5.c1 := K1_13_5_5_1.of_children Asm.K1_13_5_5_1_1 Asm.K1_13_5_5_1_2 Asm.K1_13_5_5_1_3
+theorem Asm.K1_13_5_5_2_1_1_1 : K1_13_5_5_2_1_1.c1 := K1_13_5_5_2_1_1_1.proof
+theorem Asm.K1_13_5_5_2_1_1_2 : K1_13_5_5_2_1_1.c2 := K1_13_5_5_2_1_1_2.proof
+theorem Asm.K1_13_5_5_2_1_1_3 : K1_13_5_5_2_1_1.c3 := K1_13_5_5_2_1_1_3.proof
+theorem Asm.K1_13_5_5_2_1_1 : K1_13_5_5_2_1.c1 := K1_13_5_5_2_1_1.of_children Asm.K1_13_5_5_2_1_1_1 Asm.K1_13_5_5_2_1_1_2 Asm.K1_13_5_5_2_1_1_3
+theorem Asm.K1_13_5_5_2_1_2 : K1_13_5_5_2_1.c2 := K1_13_5_5_2_1_2.proof
+theorem Asm.K1_13_5_5_2_1_3 : K1_13_5_5_2_1.c3 := K1_13_5_5_2_1_3.proof
+theorem Asm.K1_13_5_5_2_1_4_1 : K1_13_5_5_2_1_4.c1 := K1_13_5_5_2_1_4_1.proof
+theorem Asm.K1_13_5_5_2_1_4_2 : K1_13_5_5_2_1_4.c2 := K1_13_5_5_2_1_4_2.proof
+theorem Asm.K1_13_5_5_2_1_4 : K1_13_5_5_2_1.c4 := K1_13_5_5_2_1_4.of_children Asm.K1_13_5_5_2_1_4_1 Asm.K1_13_5_5_2_1_4_2
+theorem Asm.K1_13_5_5_2_1_5 : K1_13_5_5_2_1.c5 := K1_13_5_5_2_1_5.proof
+theorem Asm.K1_13_5_5_2_1_6 : K1_13_5_5_2_1.c6 := K1_13_5_5_2_1_6.proof
+theorem Asm.K1_13_5_5_2_1 : K1_13_5_5_2.c1 := K1_13_5_5_2_1.of_children Asm.K1_13_5_5_2_1_1 Asm.K1_13_5_5_2_1_2 Asm.K1_13_5_5_2_1_3 Asm.K1_13_5_5_2_1_4 Asm.K1_13_5_5_2_1_5 Asm.K1_13_5_5_2_1_6
+theorem Asm.K1_13_5_5_2_2_1 : K1_13_5_5_2_2.c1 := K1_13_5_5_2_2_1.proof
+theorem Asm.K1_13_5_5_2_2_2 : K1_13_5_5_2_2.c2 := K1_13_5_5_2_2_2.proof
+theorem Asm.K1_13_5_5_2_2 : K1_13_5_5_2.c2 := K1_13_5_5_2_2.of_children Asm.K1_13_5_5_2_2_1 Asm.K1_13_5_5_2_2_2
+theorem Asm.K1_13_5_5_2_3_1 : K1_13_5_5_2_3.c1 := K1_13_5_5_2_3_1.proof
+theorem Asm.K1_13_5_5_2_3_2 : K1_13_5_5_2_3.c2 := K1_13_5_5_2_3_2.proof
+theorem Asm.K1_13_5_5_2_3_3 : K1_13_5_5_2_3.c3 := K1_13_5_5_2_3_3.proof
+theorem Asm.K1_13_5_5_2_3 : K1_13_5_5_2.c3 := K1_13_5_5_2_3.of_children Asm.K1_13_5_5_2_3_1 Asm.K1_13_5_5_2_3_2 Asm.K1_13_5_5_2_3_3
+theorem Asm.K1_13_5_5_2 : K1_13_5_5.c2 := K1_13_5_5_2.of_children Asm.K1_13_5_5_2_1 Asm.K1_13_5_5_2_2 Asm.K1_13_5_5_2_3
+theorem Asm.K1_13_5_5 : K1_13_5.c5 := K1_13_5_5.of_children Asm.K1_13_5_5_1 Asm.K1_13_5_5_2
+theorem Asm.K1_13_5 : K1_13.c5 := K1_13_5.of_children Asm.K1_13_5_1 Asm.K1_13_5_2 Asm.K1_13_5_3 Asm.K1_13_5_4 Asm.K1_13_5_5
+theorem Asm.K1_13_6_1_1 : K1_13_6_1.c1 := K1_13_6_1_1.proof
+theorem Asm.K1_13_6_1_2_1 : K1_13_6_1_2.c1 := K1_13_6_1_2_1.proof
+theorem Asm.K1_13_6_1_2_2 : K1_13_6_1_2.c2 := K1_13_6_1_2_2.proof
+theorem Asm.K1_13_6_1_2 : K1_13_6_1.c2 := K1_13_6_1_2.of_children Asm.K1_13_6_1_2_1 Asm.K1_13_6_1_2_2
+theorem Asm.K1_13_6_1_3_1 : K1_13_6_1_3.c1 := K1_13_6_1_3_1.proof
+theorem Asm.K1_13_6_1_3_2 : K1_13_6_1_3.c2 := K1_13_6_1_3_2.proof
+theorem Asm.K1_13_6_1_3_3 : K1_13_6_1_3.c3 := K1_13_6_1_3_3.proof
+theorem Asm.K1_13_6_1_3 : K1_13_6_1.c3 := K1_13_6_1_3.of_children Asm.K1_13_6_1_3_1 Asm.K1_13_6_1_3_2 Asm.K1_13_6_1_3_3
+theorem Asm.K1_13_6_1_4_1_1 : K1_13_6_1_4_1.c1 := K1_13_6_1_4_1_1.proof
+theorem Asm.K1_13_6_1_4_1_2 : K1_13_6_1_4_1.c2 := K1_13_6_1_4_1_2.proof
+theorem Asm.K1_13_6_1_4_1 : K1_13_6_1_4.c1 := K1_13_6_1_4_1.of_children Asm.K1_13_6_1_4_1_1 Asm.K1_13_6_1_4_1_2
+theorem Asm.K1_13_6_1_4_2_1_1_1 : K1_13_6_1_4_2_1_1.c1 := K1_13_6_1_4_2_1_1_1.proof
+theorem Asm.K1_13_6_1_4_2_1_1_2 : K1_13_6_1_4_2_1_1.c2 := K1_13_6_1_4_2_1_1_2.proof
+theorem Asm.K1_13_6_1_4_2_1_1 : K1_13_6_1_4_2_1.c1 := K1_13_6_1_4_2_1_1.of_children Asm.K1_13_6_1_4_2_1_1_1 Asm.K1_13_6_1_4_2_1_1_2
+theorem Asm.K1_13_6_1_4_2_1_2_1 : K1_13_6_1_4_2_1_2.c1 := K1_13_6_1_4_2_1_2_1.proof
+theorem Asm.K1_13_6_1_4_2_1_2_2_1 : K1_13_6_1_4_2_1_2_2.c1 := K1_13_6_1_4_2_1_2_2_1.proof
+theorem Asm.K1_13_6_1_4_2_1_2_2_2 : K1_13_6_1_4_2_1_2_2.c2 := K1_13_6_1_4_2_1_2_2_2.proof
+theorem Asm.K1_13_6_1_4_2_1_2_2 : K1_13_6_1_4_2_1_2.c2 := K1_13_6_1_4_2_1_2_2.of_children Asm.K1_13_6_1_4_2_1_2_2_1 Asm.K1_13_6_1_4_2_1_2_2_2
+theorem Asm.K1_13_6_1_4_2_1_2 : K1_13_6_1_4_2_1.c2 := K1_13_6_1_4_2_1_2.of_children Asm.K1_13_6_1_4_2_1_2_1 Asm.K1_13_6_1_4_2_1_2_2
+theorem Asm.K1_13_6_1_4_2_1 : K1_13_6_1_4_2.c1 := K1_13_6_1_4_2_1.of_children Asm.K1_13_6_1_4_2_1_1 Asm.K1_13_6_1_4_2_1_2
+theorem Asm.K1_13_6_1_4_2_2_1 : K1_13_6_1_4_2_2.c1 := K1_13_6_1_4_2_2_1.proof
+theorem Asm.K1_13_6_1_4_2_2_2 : K1_13_6_1_4_2_2.c2 := K1_13_6_1_4_2_2_2.proof
+theorem Asm.K1_13_6_1_4_2_2 : K1_13_6_1_4_2.c2 := K1_13_6_1_4_2_2.of_children Asm.K1_13_6_1_4_2_2_1 Asm.K1_13_6_1_4_2_2_2
+theorem Asm.K1_13_6_1_4_2 : K1_13_6_1_4.c2 := K1_13_6_1_4_2.of_children Asm.K1_13_6_1_4_2_1 Asm.K1_13_6_1_4_2_2
+theorem Asm.K1_13_6_1_4_3_1 : K1_13_6_1_4_3.c1 := K1_13_6_1_4_3_1.proof
+theorem Asm.K1_13_6_1_4_3_2 : K1_13_6_1_4_3.c2 := K1_13_6_1_4_3_2.proof
+theorem Asm.K1_13_6_1_4_3_3_1_1 : K1_13_6_1_4_3_3_1.c1 := K1_13_6_1_4_3_3_1_1.proof
+theorem Asm.K1_13_6_1_4_3_3_1_2 : K1_13_6_1_4_3_3_1.c2 := K1_13_6_1_4_3_3_1_2.proof
+theorem Asm.K1_13_6_1_4_3_3_1 : K1_13_6_1_4_3_3.c1 := K1_13_6_1_4_3_3_1.of_children Asm.K1_13_6_1_4_3_3_1_1 Asm.K1_13_6_1_4_3_3_1_2
+theorem Asm.K1_13_6_1_4_3_3_2_1 : K1_13_6_1_4_3_3_2.c1 := K1_13_6_1_4_3_3_2_1.proof
+theorem Asm.K1_13_6_1_4_3_3_2_2 : K1_13_6_1_4_3_3_2.c2 := K1_13_6_1_4_3_3_2_2.proof
+theorem Asm.K1_13_6_1_4_3_3_2 : K1_13_6_1_4_3_3.c2 := K1_13_6_1_4_3_3_2.of_children Asm.K1_13_6_1_4_3_3_2_1 Asm.K1_13_6_1_4_3_3_2_2
+theorem Asm.K1_13_6_1_4_3_3_3_1 : K1_13_6_1_4_3_3_3.c1 := K1_13_6_1_4_3_3_3_1.proof
+theorem Asm.K1_13_6_1_4_3_3_3_2_1 : K1_13_6_1_4_3_3_3_2.c1 := K1_13_6_1_4_3_3_3_2_1.proof
+theorem Asm.K1_13_6_1_4_3_3_3_2_2 : K1_13_6_1_4_3_3_3_2.c2 := K1_13_6_1_4_3_3_3_2_2.proof
+theorem Asm.K1_13_6_1_4_3_3_3_2 : K1_13_6_1_4_3_3_3.c2 := K1_13_6_1_4_3_3_3_2.of_children Asm.K1_13_6_1_4_3_3_3_2_1 Asm.K1_13_6_1_4_3_3_3_2_2
+theorem Asm.K1_13_6_1_4_3_3_3 : K1_13_6_1_4_3_3.c3 := K1_13_6_1_4_3_3_3.of_children Asm.K1_13_6_1_4_3_3_3_1 Asm.K1_13_6_1_4_3_3_3_2
+theorem Asm.K1_13_6_1_4_3_3 : K1_13_6_1_4_3.c3 := K1_13_6_1_4_3_3.of_children Asm.K1_13_6_1_4_3_3_1 Asm.K1_13_6_1_4_3_3_2 Asm.K1_13_6_1_4_3_3_3
+theorem Asm.K1_13_6_1_4_3 : K1_13_6_1_4.c3 := K1_13_6_1_4_3.of_children Asm.K1_13_6_1_4_3_1 Asm.K1_13_6_1_4_3_2 Asm.K1_13_6_1_4_3_3
+theorem Asm.K1_13_6_1_4 : K1_13_6_1.c4 := K1_13_6_1_4.of_children Asm.K1_13_6_1_4_1 Asm.K1_13_6_1_4_2 Asm.K1_13_6_1_4_3
+theorem Asm.K1_13_6_1_5_1 : K1_13_6_1_5.c1 := K1_13_6_1_5_1.proof
+theorem Asm.K1_13_6_1_5_2_1 : K1_13_6_1_5_2.c1 := K1_13_6_1_5_2_1.proof
+theorem Asm.K1_13_6_1_5_2_2 : K1_13_6_1_5_2.c2 := K1_13_6_1_5_2_2.proof
+theorem Asm.K1_13_6_1_5_2 : K1_13_6_1_5.c2 := K1_13_6_1_5_2.of_children Asm.K1_13_6_1_5_2_1 Asm.K1_13_6_1_5_2_2
+theorem Asm.K1_13_6_1_5 : K1_13_6_1.c5 := K1_13_6_1_5.of_children Asm.K1_13_6_1_5_1 Asm.K1_13_6_1_5_2
+theorem Asm.K1_13_6_1 : K1_13_6.c1 := K1_13_6_1.of_children Asm.K1_13_6_1_1 Asm.K1_13_6_1_2 Asm.K1_13_6_1_3 Asm.K1_13_6_1_4 Asm.K1_13_6_1_5
+theorem Asm.K1_13_6_2_1 : K1_13_6_2.c1 := K1_13_6_2_1.proof
+theorem Asm.K1_13_6_2_2_1 : K1_13_6_2_2.c1 := K1_13_6_2_2_1.proof
+theorem Asm.K1_13_6_2_2_2 : K1_13_6_2_2.c2 := K1_13_6_2_2_2.proof
+theorem Asm.K1_13_6_2_2 : K1_13_6_2.c2 := K1_13_6_2_2.of_children Asm.K1_13_6_2_2_1 Asm.K1_13_6_2_2_2
+theorem Asm.K1_13_6_2_3_1 : K1_13_6_2_3.c1 := K1_13_6_2_3_1.proof
+theorem Asm.K1_13_6_2_3_2_1 : K1_13_6_2_3_2.c1 := K1_13_6_2_3_2_1.proof
+theorem Asm.K1_13_6_2_3_2_2 : K1_13_6_2_3_2.c2 := K1_13_6_2_3_2_2.proof
+theorem Asm.K1_13_6_2_3_2_3 : K1_13_6_2_3_2.c3 := K1_13_6_2_3_2_3.proof
+theorem Asm.K1_13_6_2_3_2_4 : K1_13_6_2_3_2.c4 := K1_13_6_2_3_2_4.proof
+theorem Asm.K1_13_6_2_3_2_5 : K1_13_6_2_3_2.c5 := K1_13_6_2_3_2_5.proof
+theorem Asm.K1_13_6_2_3_2_6 : K1_13_6_2_3_2.c6 := K1_13_6_2_3_2_6.proof
+theorem Asm.K1_13_6_2_3_2 : K1_13_6_2_3.c2 := K1_13_6_2_3_2.of_children Asm.K1_13_6_2_3_2_1 Asm.K1_13_6_2_3_2_2 Asm.K1_13_6_2_3_2_3 Asm.K1_13_6_2_3_2_4 Asm.K1_13_6_2_3_2_5 Asm.K1_13_6_2_3_2_6
+theorem Asm.K1_13_6_2_3_3_1 : K1_13_6_2_3_3.c1 := K1_13_6_2_3_3_1.proof
+theorem Asm.K1_13_6_2_3_3_2_1 : K1_13_6_2_3_3_2.c1 := K1_13_6_2_3_3_2_1.proof
+theorem Asm.K1_13_6_2_3_3_2_2 : K1_13_6_2_3_3_2.c2 := K1_13_6_2_3_3_2_2.proof
+theorem Asm.K1_13_6_2_3_3_2 : K1_13_6_2_3_3.c2 := K1_13_6_2_3_3_2.of_children Asm.K1_13_6_2_3_3_2_1 Asm.K1_13_6_2_3_3_2_2
+theorem Asm.K1_13_6_2_3_3 : K1_13_6_2_3.c3 := K1_13_6_2_3_3.of_children Asm.K1_13_6_2_3_3_1 Asm.K1_13_6_2_3_3_2
+theorem Asm.K1_13_6_2_3 : K1_13_6_2.c3 := K1_13_6_2_3.of_children Asm.K1_13_6_2_3_1 Asm.K1_13_6_2_3_2 Asm.K1_13_6_2_3_3
+theorem Asm.K1_13_6_2_4_1_1 : K1_13_6_2_4_1.c1 := K1_13_6_2_4_1_1.proof
+theorem Asm.K1_13_6_2_4_1_2 : K1_13_6_2_4_1.c2 := K1_13_6_2_4_1_2.proof
+theorem Asm.K1_13_6_2_4_1 : K1_13_6_2_4.c1 := K1_13_6_2_4_1.of_children Asm.K1_13_6_2_4_1_1 Asm.K1_13_6_2_4_1_2
+theorem Asm.K1_13_6_2_4_2_1 : K1_13_6_2_4_2.c1 := K1_13_6_2_4_2_1.proof
+theorem Asm.K1_13_6_2_4_2_2_1 : K1_13_6_2_4_2_2.c1 := K1_13_6_2_4_2_2_1.proof
+theorem Asm.K1_13_6_2_4_2_2_2 : K1_13_6_2_4_2_2.c2 := K1_13_6_2_4_2_2_2.proof
+theorem Asm.K1_13_6_2_4_2_2 : K1_13_6_2_4_2.c2 := K1_13_6_2_4_2_2.of_children Asm.K1_13_6_2_4_2_2_1 Asm.K1_13_6_2_4_2_2_2
+theorem Asm.K1_13_6_2_4_2 : K1_13_6_2_4.c2 := K1_13_6_2_4_2.of_children Asm.K1_13_6_2_4_2_1 Asm.K1_13_6_2_4_2_2
+theorem Asm.K1_13_6_2_4_3_1 : K1_13_6_2_4_3.c1 := K1_13_6_2_4_3_1.proof
+theorem Asm.K1_13_6_2_4_3_2 : K1_13_6_2_4_3.c2 := K1_13_6_2_4_3_2.proof
+theorem Asm.K1_13_6_2_4_3 : K1_13_6_2_4.c3 := K1_13_6_2_4_3.of_children Asm.K1_13_6_2_4_3_1 Asm.K1_13_6_2_4_3_2
+theorem Asm.K1_13_6_2_4_4 : K1_13_6_2_4.c4 := K1_13_6_2_4_4.proof
+theorem Asm.K1_13_6_2_4_5 : K1_13_6_2_4.c5 := K1_13_6_2_4_5.proof
+theorem Asm.K1_13_6_2_4 : K1_13_6_2.c4 := K1_13_6_2_4.of_children Asm.K1_13_6_2_4_1 Asm.K1_13_6_2_4_2 Asm.K1_13_6_2_4_3 Asm.K1_13_6_2_4_4 Asm.K1_13_6_2_4_5
+theorem Asm.K1_13_6_2 : K1_13_6.c2 := K1_13_6_2.of_children Asm.K1_13_6_2_1 Asm.K1_13_6_2_2 Asm.K1_13_6_2_3 Asm.K1_13_6_2_4
+theorem Asm.K1_13_6_3_1_1 : K1_13_6_3_1.c1 := K1_13_6_3_1_1.proof
+theorem Asm.K1_13_6_3_1_2 : K1_13_6_3_1.c2 := K1_13_6_3_1_2.proof
+theorem Asm.K1_13_6_3_1 : K1_13_6_3.c1 := K1_13_6_3_1.of_children Asm.K1_13_6_3_1_1 Asm.K1_13_6_3_1_2
+theorem Asm.K1_13_6_3_2_1 : K1_13_6_3_2.c1 := K1_13_6_3_2_1.proof
+theorem Asm.K1_13_6_3_2_2 : K1_13_6_3_2.c2 := K1_13_6_3_2_2.proof
+theorem Asm.K1_13_6_3_2_3 : K1_13_6_3_2.c3 := K1_13_6_3_2_3.proof
+theorem Asm.K1_13_6_3_2 : K1_13_6_3.c2 := K1_13_6_3_2.of_children Asm.K1_13_6_3_2_1 Asm.K1_13_6_3_2_2 Asm.K1_13_6_3_2_3
+theorem Asm.K1_13_6_3_3_1 : K1_13_6_3_3.c1 := K1_13_6_3_3_1.proof
+theorem Asm.K1_13_6_3_3_2 : K1_13_6_3_3.c2 := K1_13_6_3_3_2.proof
+theorem Asm.K1_13_6_3_3 : K1_13_6_3.c3 := K1_13_6_3_3.of_children Asm.K1_13_6_3_3_1 Asm.K1_13_6_3_3_2
+theorem Asm.K1_13_6_3_4_1 : K1_13_6_3_4.c1 := K1_13_6_3_4_1.proof
+theorem Asm.K1_13_6_3_4_2 : K1_13_6_3_4.c2 := K1_13_6_3_4_2.proof
+theorem Asm.K1_13_6_3_4_3 : K1_13_6_3_4.c3 := K1_13_6_3_4_3.proof
+theorem Asm.K1_13_6_3_4 : K1_13_6_3.c4 := K1_13_6_3_4.of_children Asm.K1_13_6_3_4_1 Asm.K1_13_6_3_4_2 Asm.K1_13_6_3_4_3
+theorem Asm.K1_13_6_3_5_1_1 : K1_13_6_3_5_1.c1 := K1_13_6_3_5_1_1.proof
+theorem Asm.K1_13_6_3_5_1_2 : K1_13_6_3_5_1.c2 := K1_13_6_3_5_1_2.proof
+theorem Asm.K1_13_6_3_5_1 : K1_13_6_3_5.c1 := K1_13_6_3_5_1.of_children Asm.K1_13_6_3_5_1_1 Asm.K1_13_6_3_5_1_2
+theorem Asm.K1_13_6_3_5_2 : K1_13_6_3_5.c2 := K1_13_6_3_5_2.proof
+theorem Asm.K1_13_6_3_5_3_1 : K1_13_6_3_5_3.c1 := K1_13_6_3_5_3_1.proof
+theorem Asm.K1_13_6_3_5_3_2_1 : K1_13_6_3_5_3_2.c1 := K1_13_6_3_5_3_2_1.proof
+theorem Asm.K1_13_6_3_5_3_2_2 : K1_13_6_3_5_3_2.c2 := K1_13_6_3_5_3_2_2.proof
+theorem Asm.K1_13_6_3_5_3_2 : K1_13_6_3_5_3.c2 := K1_13_6_3_5_3_2.of_children Asm.K1_13_6_3_5_3_2_1 Asm.K1_13_6_3_5_3_2_2
+theorem Asm.K1_13_6_3_5_3_3_1 : K1_13_6_3_5_3_3.c1 := K1_13_6_3_5_3_3_1.proof
+theorem Asm.K1_13_6_3_5_3_3_2 : K1_13_6_3_5_3_3.c2 := K1_13_6_3_5_3_3_2.proof
+theorem Asm.K1_13_6_3_5_3_3_3 : K1_13_6_3_5_3_3.c3 := K1_13_6_3_5_3_3_3.proof
+theorem Asm.K1_13_6_3_5_3_3_4 : K1_13_6_3_5_3_3.c4 := K1_13_6_3_5_3_3_4.proof
+theorem Asm.K1_13_6_3_5_3_3 : K1_13_6_3_5_3.c3 := K1_13_6_3_5_3_3.of_children Asm.K1_13_6_3_5_3_3_1 Asm.K1_13_6_3_5_3_3_2 Asm.K1_13_6_3_5_3_3_3 Asm.K1_13_6_3_5_3_3_4
+theorem Asm.K1_13_6_3_5_3_4 : K1_13_6_3_5_3.c4 := K1_13_6_3_5_3_4.proof
+theorem Asm.K1_13_6_3_5_3_5 : K1_13_6_3_5_3.c5 := K1_13_6_3_5_3_5.proof
+theorem Asm.K1_13_6_3_5_3_6 : K1_13_6_3_5_3.c6 := K1_13_6_3_5_3_6.proof
+theorem Asm.K1_13_6_3_5_3 : K1_13_6_3_5.c3 := K1_13_6_3_5_3.of_children Asm.K1_13_6_3_5_3_1 Asm.K1_13_6_3_5_3_2 Asm.K1_13_6_3_5_3_3 Asm.K1_13_6_3_5_3_4 Asm.K1_13_6_3_5_3_5 Asm.K1_13_6_3_5_3_6
+theorem Asm.K1_13_6_3_5_4 : K1_13_6_3_5.c4 := K1_13_6_3_5_4.proof
+theorem Asm.K1_13_6_3_5_5_1 : K1_13_6_3_5_5.c1 := K1_13_6_3_5_5_1.proof
+theorem Asm.K1_13_6_3_5_5_2 : K1_13_6_3_5_5.c2 := K1_13_6_3_5_5_2.proof
+theorem Asm.K1_13_6_3_5_5_3 : K1_13_6_3_5_5.c3 := K1_13_6_3_5_5_3.proof
+theorem Asm.K1_13_6_3_5_5_4 : K1_13_6_3_5_5.c4 := K1_13_6_3_5_5_4.proof
+theorem Asm.K1_13_6_3_5_5 : K1_13_6_3_5.c5 := K1_13_6_3_5_5.of_children Asm.K1_13_6_3_5_5_1 Asm.K1_13_6_3_5_5_2 Asm.K1_13_6_3_5_5_3 Asm.K1_13_6_3_5_5_4
+theorem Asm.K1_13_6_3_5 : K1_13_6_3.c5 := K1_13_6_3_5.of_children Asm.K1_13_6_3_5_1 Asm.K1_13_6_3_5_2 Asm.K1_13_6_3_5_3 Asm.K1_13_6_3_5_4 Asm.K1_13_6_3_5_5
+theorem Asm.K1_13_6_3_6 : K1_13_6_3.c6 := K1_13_6_3_6.proof
+theorem Asm.K1_13_6_3 : K1_13_6.c3 := K1_13_6_3.of_children Asm.K1_13_6_3_1 Asm.K1_13_6_3_2 Asm.K1_13_6_3_3 Asm.K1_13_6_3_4 Asm.K1_13_6_3_5 Asm.K1_13_6_3_6
+theorem Asm.K1_13_6 : K1_13.c6 := K1_13_6.of_children Asm.K1_13_6_1 Asm.K1_13_6_2 Asm.K1_13_6_3
+theorem Asm.K1_13_7_1_1_1_1_1 : K1_13_7_1_1_1_1.c1 := K1_13_7_1_1_1_1_1.proof
+theorem Asm.K1_13_7_1_1_1_1_2 : K1_13_7_1_1_1_1.c2 := K1_13_7_1_1_1_1_2.proof
+theorem Asm.K1_13_7_1_1_1_1 : K1_13_7_1_1_1.c1 := K1_13_7_1_1_1_1.of_children Asm.K1_13_7_1_1_1_1_1 Asm.K1_13_7_1_1_1_1_2
+theorem Asm.K1_13_7_1_1_1_2_1 : K1_13_7_1_1_1_2.c1 := K1_13_7_1_1_1_2_1.proof
+theorem Asm.K1_13_7_1_1_1_2_2 : K1_13_7_1_1_1_2.c2 := K1_13_7_1_1_1_2_2.proof
+theorem Asm.K1_13_7_1_1_1_2 : K1_13_7_1_1_1.c2 := K1_13_7_1_1_1_2.of_children Asm.K1_13_7_1_1_1_2_1 Asm.K1_13_7_1_1_1_2_2
+theorem Asm.K1_13_7_1_1_1 : K1_13_7_1_1.c1 := K1_13_7_1_1_1.of_children Asm.K1_13_7_1_1_1_1 Asm.K1_13_7_1_1_1_2
+theorem Asm.K1_13_7_1_1_2 : K1_13_7_1_1.c2 := K1_13_7_1_1_2.proof
+theorem Asm.K1_13_7_1_1 : K1_13_7_1.c1 := K1_13_7_1_1.of_children Asm.K1_13_7_1_1_1 Asm.K1_13_7_1_1_2
+theorem Asm.K1_13_7_1_2_1 : K1_13_7_1_2.c1 := K1_13_7_1_2_1.proof
+theorem Asm.K1_13_7_1_2_2_1_1 : K1_13_7_1_2_2_1.c1 := K1_13_7_1_2_2_1_1.proof
+theorem Asm.K1_13_7_1_2_2_1_2 : K1_13_7_1_2_2_1.c2 := K1_13_7_1_2_2_1_2.proof
+theorem Asm.K1_13_7_1_2_2_1 : K1_13_7_1_2_2.c1 := K1_13_7_1_2_2_1.of_children Asm.K1_13_7_1_2_2_1_1 Asm.K1_13_7_1_2_2_1_2
+theorem Asm.K1_13_7_1_2_2_2_1 : K1_13_7_1_2_2_2.c1 := K1_13_7_1_2_2_2_1.proof
+theorem Asm.K1_13_7_1_2_2_2_2 : K1_13_7_1_2_2_2.c2 := K1_13_7_1_2_2_2_2.proof
+theorem Asm.K1_13_7_1_2_2_2 : K1_13_7_1_2_2.c2 := K1_13_7_1_2_2_2.of_children Asm.K1_13_7_1_2_2_2_1 Asm.K1_13_7_1_2_2_2_2
+theorem Asm.K1_13_7_1_2_2 : K1_13_7_1_2.c2 := K1_13_7_1_2_2.of_children Asm.K1_13_7_1_2_2_1 Asm.K1_13_7_1_2_2_2
+theorem Asm.K1_13_7_1_2 : K1_13_7_1.c2 := K1_13_7_1_2.of_children Asm.K1_13_7_1_2_1 Asm.K1_13_7_1_2_2
+theorem Asm.K1_13_7_1 : K1_13_7.c1 := K1_13_7_1.of_children Asm.K1_13_7_1_1 Asm.K1_13_7_1_2
+theorem Asm.K1_13_7_2_1_1 : K1_13_7_2_1.c1 := K1_13_7_2_1_1.proof
+theorem Asm.K1_13_7_2_1_2 : K1_13_7_2_1.c2 := K1_13_7_2_1_2.proof
+theorem Asm.K1_13_7_2_1 : K1_13_7_2.c1 := K1_13_7_2_1.of_children Asm.K1_13_7_2_1_1 Asm.K1_13_7_2_1_2
+theorem Asm.K1_13_7_2_2 : K1_13_7_2.c2 := K1_13_7_2_2.proof
+theorem Asm.K1_13_7_2_3_1_1 : K1_13_7_2_3_1.c1 := K1_13_7_2_3_1_1.proof
+theorem Asm.K1_13_7_2_3_1_2_1 : K1_13_7_2_3_1_2.c1 := K1_13_7_2_3_1_2_1.proof
+theorem Asm.K1_13_7_2_3_1_2_2 : K1_13_7_2_3_1_2.c2 := K1_13_7_2_3_1_2_2.proof
+theorem Asm.K1_13_7_2_3_1_2 : K1_13_7_2_3_1.c2 := K1_13_7_2_3_1_2.of_children Asm.K1_13_7_2_3_1_2_1 Asm.K1_13_7_2_3_1_2_2
+theorem Asm.K1_13_7_2_3_1_3 : K1_13_7_2_3_1.c3 := K1_13_7_2_3_1_3.proof
+theorem Asm.K1_13_7_2_3_1 : K1_13_7_2_3.c1 := K1_13_7_2_3_1.of_children Asm.K1_13_7_2_3_1_1 Asm.K1_13_7_2_3_1_2 Asm.K1_13_7_2_3_1_3
+theorem Asm.K1_13_7_2_3_2 : K1_13_7_2_3.c2 := K1_13_7_2_3_2.of_children Asm.K1_13_6_1_5_2_1 Asm.K1_13_6_1_5_2_2
+theorem Asm.K1_13_7_2_3 : K1_13_7_2.c3 := K1_13_7_2_3.of_children Asm.K1_13_7_2_3_1 Asm.K1_13_7_2_3_2
+theorem Asm.K1_13_7_2_4_1 : K1_13_7_2_4.c1 := K1_13_7_2_4_1.proof
+theorem Asm.K1_13_7_2_4_2 : K1_13_7_2_4.c2 := K1_13_7_2_4_2.proof
+theorem Asm.K1_13_7_2_4_3 : K1_13_7_2_4.c3 := K1_13_7_2_4_3.proof
+theorem Asm.K1_13_7_2_4 : K1_13_7_2.c4 := K1_13_7_2_4.of_children Asm.K1_13_7_2_4_1 Asm.K1_13_7_2_4_2 Asm.K1_13_7_2_4_3
+theorem Asm.K1_13_7_2_5_1 : K1_13_7_2_5.c1 := K1_13_7_2_5_1.proof
+theorem Asm.K1_13_7_2_5_2_1 : K1_13_7_2_5_2.c1 := K1_13_7_2_5_2_1.proof
+theorem Asm.K1_13_7_2_5_2_2 : K1_13_7_2_5_2.c2 := K1_13_7_2_5_2_2.proof
+theorem Asm.K1_13_7_2_5_2 : K1_13_7_2_5.c2 := K1_13_7_2_5_2.of_children Asm.K1_13_7_2_5_2_1 Asm.K1_13_7_2_5_2_2
+theorem Asm.K1_13_7_2_5_3 : K1_13_7_2_5.c3 := K1_13_7_2_5_3.of_children Asm.K1_13_6_3_5_1 Asm.K1_13_6_3_5_2 Asm.K1_13_6_3_5_3 Asm.K1_13_6_3_5_4 Asm.K1_13_6_3_5_5
+theorem Asm.K1_13_7_2_5_4_1_1 : K1_13_7_2_5_4_1.c1 := K1_13_7_2_5_4_1_1.proof
+theorem Asm.K1_13_7_2_5_4_1_2 : K1_13_7_2_5_4_1.c2 := K1_13_7_2_5_4_1_2.proof
+theorem Asm.K1_13_7_2_5_4_1 : K1_13_7_2_5_4.c1 := K1_13_7_2_5_4_1.of_children Asm.K1_13_7_2_5_4_1_1 Asm.K1_13_7_2_5_4_1_2
+theorem Asm.K1_13_7_2_5_4_2 : K1_13_7_2_5_4.c2 := K1_13_7_2_5_4_2.proof
+theorem Asm.K1_13_7_2_5_4 : K1_13_7_2_5.c4 := K1_13_7_2_5_4.of_children Asm.K1_13_7_2_5_4_1 Asm.K1_13_7_2_5_4_2
+theorem Asm.K1_13_7_2_5 : K1_13_7_2.c5 := K1_13_7_2_5.of_children Asm.K1_13_7_2_5_1 Asm.K1_13_7_2_5_2 Asm.K1_13_7_2_5_3 Asm.K1_13_7_2_5_4
+theorem Asm.K1_13_7_2 : K1_13_7.c2 := K1_13_7_2.of_children Asm.K1_13_7_2_1 Asm.K1_13_7_2_2 Asm.K1_13_7_2_3 Asm.K1_13_7_2_4 Asm.K1_13_7_2_5
+theorem Asm.K1_13_7_3_1 : K1_13_7_3.c1 := K1_13_7_3_1.proof
+theorem Asm.K1_13_7_3_2 : K1_13_7_3.c2 := K1_13_7_3_2.proof
+theorem Asm.K1_13_7_3 : K1_13_7.c3 := K1_13_7_3.of_children Asm.K1_13_7_3_1 Asm.K1_13_7_3_2
+theorem Asm.K1_13_7_4_1 : K1_13_7_4.c1 := K1_13_7_4_1.proof
+theorem Asm.K1_13_7_4_2_1 : K1_13_7_4_2.c1 := K1_13_7_4_2_1.proof
+theorem Asm.K1_13_7_4_2_2 : K1_13_7_4_2.c2 := K1_13_7_4_2_2.proof
+theorem Asm.K1_13_7_4_2 : K1_13_7_4.c2 := K1_13_7_4_2.of_children Asm.K1_13_7_4_2_1 Asm.K1_13_7_4_2_2
+theorem Asm.K1_13_7_4 : K1_13_7.c4 := K1_13_7_4.of_children Asm.K1_13_7_4_1 Asm.K1_13_7_4_2
+theorem Asm.K1_13_7_5_1 : K1_13_7_5.c1 := K1_13_7_5_1.proof
+theorem Asm.K1_13_7_5_2 : K1_13_7_5.c2 := K1_13_7_5_2.proof
+theorem Asm.K1_13_7_5_3_1_1 : K1_13_7_5_3_1.c1 := K1_13_7_5_3_1_1.proof
+theorem Asm.K1_13_7_5_3_1_2 : K1_13_7_5_3_1.c2 := K1_13_7_5_3_1_2.proof
+theorem Asm.K1_13_7_5_3_1 : K1_13_7_5_3.c1 := K1_13_7_5_3_1.of_children Asm.K1_13_7_5_3_1_1 Asm.K1_13_7_5_3_1_2
+theorem Asm.K1_13_7_5_3_2 : K1_13_7_5_3.c2 := K1_13_7_5_3_2.proof
+theorem Asm.K1_13_7_5_3_3_1 : K1_13_7_5_3_3.c1 := K1_13_7_5_3_3_1.proof
+theorem Asm.K1_13_7_5_3_3_2_1 : K1_13_7_5_3_3_2.c1 := K1_13_7_5_3_3_2_1.proof
+theorem Asm.K1_13_7_5_3_3_2_2 : K1_13_7_5_3_3_2.c2 := K1_13_7_5_3_3_2_2.proof
+theorem Asm.K1_13_7_5_3_3_2 : K1_13_7_5_3_3.c2 := K1_13_7_5_3_3_2.of_children Asm.K1_13_7_5_3_3_2_1 Asm.K1_13_7_5_3_3_2_2
+theorem Asm.K1_13_7_5_3_3_3_1 : K1_13_7_5_3_3_3.c1 := K1_13_7_5_3_3_3_1.proof
+theorem Asm.K1_13_7_5_3_3_3_2 : K1_13_7_5_3_3_3.c2 := K1_13_7_5_3_3_3_2.proof
+theorem Asm.K1_13_7_5_3_3_3 : K1_13_7_5_3_3.c3 := K1_13_7_5_3_3_3.of_children Asm.K1_13_7_5_3_3_3_1 Asm.K1_13_7_5_3_3_3_2
+theorem Asm.K1_13_7_5_3_3_4 : K1_13_7_5_3_3.c4 := K1_13_7_5_3_3_4.proof
+theorem Asm.K1_13_7_5_3_3 : K1_13_7_5_3.c3 := K1_13_7_5_3_3.of_children Asm.K1_13_7_5_3_3_1 Asm.K1_13_7_5_3_3_2 Asm.K1_13_7_5_3_3_3 Asm.K1_13_7_5_3_3_4
+theorem Asm.K1_13_7_5_3_4 : K1_13_7_5_3.c4 := K1_13_7_5_3_4.proof
+theorem Asm.K1_13_7_5_3 : K1_13_7_5.c3 := K1_13_7_5_3.of_children Asm.K1_13_7_5_3_1 Asm.K1_13_7_5_3_2 Asm.K1_13_7_5_3_3 Asm.K1_13_7_5_3_4
+theorem Asm.K1_13_7_5 : K1_13_7.c5 := K1_13_7_5.of_children Asm.K1_13_7_5_1 Asm.K1_13_7_5_2 Asm.K1_13_7_5_3
+theorem Asm.K1_13_7_6_1 : K1_13_7_6.c1 := K1_13_7_6_1.proof
+theorem Asm.K1_13_7_6_2_1 : K1_13_7_6_2.c1 := K1_13_7_6_2_1.proof
+theorem Asm.K1_13_7_6_2_2 : K1_13_7_6_2.c2 := K1_13_7_6_2_2.proof
+theorem Asm.K1_13_7_6_2 : K1_13_7_6.c2 := K1_13_7_6_2.of_children Asm.K1_13_7_6_2_1 Asm.K1_13_7_6_2_2
+theorem Asm.K1_13_7_6 : K1_13_7.c6 := K1_13_7_6.of_children Asm.K1_13_7_6_1 Asm.K1_13_7_6_2
+theorem Asm.K1_13_7 : K1_13.c7 := K1_13_7.of_children Asm.K1_13_7_1 Asm.K1_13_7_2 Asm.K1_13_7_3 Asm.K1_13_7_4 Asm.K1_13_7_5 Asm.K1_13_7_6
+theorem Asm.K1_13_8_1 : K1_13_8.c1 := K1_13_8_1.proof
+theorem Asm.K1_13_8_2 : K1_13_8.c2 := K1_13_8_2.proof
+theorem Asm.K1_13_8_3 : K1_13_8.c3 := K1_13_8_3.proof
+theorem Asm.K1_13_8_4 : K1_13_8.c4 := K1_13_8_4.proof
+theorem Asm.K1_13_8 : K1_13.c8 := K1_13_8.of_children Asm.K1_13_8_1 Asm.K1_13_8_2 Asm.K1_13_8_3 Asm.K1_13_8_4
+theorem Asm.K1_13 : K1.c13 := K1_13.of_children Asm.K1_13_1 Asm.K1_13_2 Asm.K1_13_3 Asm.K1_13_4 Asm.K1_13_5 Asm.K1_13_6 Asm.K1_13_7 Asm.K1_13_8
+theorem Asm.K1_14_1_1 : K1_14_1.c1 := K1_14_1_1.proof
+theorem Asm.K1_14_1_2 : K1_14_1.c2 := K1_14_1_2.proof
+theorem Asm.K1_14_1_3_1 : K1_14_1_3.c1 := K1_14_1_3_1.proof
+theorem Asm.K1_14_1_3_2 : K1_14_1_3.c2 := K1_14_1_3_2.proof
+theorem Asm.K1_14_1_3 : K1_14_1.c3 := K1_14_1_3.of_children Asm.K1_14_1_3_1 Asm.K1_14_1_3_2
+theorem Asm.K1_14_1_4 : K1_14_1.c4 := K1_14_1_4.proof
+theorem Asm.K1_14_1_5 : K1_14_1.c5 := K1_14_1_5.proof
+theorem Asm.K1_14_1_6 : K1_14_1.c6 := K1_14_1_6.proof
+theorem Asm.K1_14_1_7_1 : K1_14_1_7.c1 := K1_14_1_7_1.proof
+theorem Asm.K1_14_1_7_2_1 : K1_14_1_7_2.c1 := K1_14_1_7_2_1.proof
+theorem Asm.K1_14_1_7_2_2 : K1_14_1_7_2.c2 := K1_14_1_7_2_2.proof
+theorem Asm.K1_14_1_7_2 : K1_14_1_7.c2 := K1_14_1_7_2.of_children Asm.K1_14_1_7_2_1 Asm.K1_14_1_7_2_2
+theorem Asm.K1_14_1_7_3 : K1_14_1_7.c3 := K1_14_1_7_3.proof
+theorem Asm.K1_14_1_7_4 : K1_14_1_7.c4 := K1_14_1_7_4.proof
+theorem Asm.K1_14_1_7 : K1_14_1.c7 := K1_14_1_7.of_children Asm.K1_14_1_7_1 Asm.K1_14_1_7_2 Asm.K1_14_1_7_3 Asm.K1_14_1_7_4
+theorem Asm.K1_14_1_8 : K1_14_1.c8 := K1_14_1_8.proof
+theorem Asm.K1_14_1 : K1_14.c1 := K1_14_1.of_children Asm.K1_14_1_1 Asm.K1_14_1_2 Asm.K1_14_1_3 Asm.K1_14_1_4 Asm.K1_14_1_5 Asm.K1_14_1_6 Asm.K1_14_1_7 Asm.K1_14_1_8
+theorem Asm.K1_14_2_1_1 : K1_14_2_1.c1 := K1_14_2_1_1.proof
+theorem Asm.K1_14_2_1_2 : K1_14_2_1.c2 := K1_14_2_1_2.proof
+theorem Asm.K1_14_2_1 : K1_14_2.c1 := K1_14_2_1.of_children Asm.K1_14_2_1_1 Asm.K1_14_2_1_2
+theorem Asm.K1_14_2_2_2_1 : K1_14_2_2_2.c1 := K1_14_2_2_2_1.proof
+theorem Asm.K1_14_2_2_2_3 : K1_14_2_2_2.c3 := K1_14_2_2_2_3.proof
+theorem Asm.K1_14_2_2_2_4_1 : K1_14_2_2_2_4.c1 := K1_14_2_2_2_4_1.proof
+theorem Asm.K1_14_2_2_2_4_2 : K1_14_2_2_2_4.c2 := K1_14_2_2_2_4_2.proof
+theorem Asm.K1_14_2_2_2_4_3 : K1_14_2_2_2_4.c3 := K1_14_2_2_2_4_3.proof
+theorem Asm.K1_14_2_2_2_4 : K1_14_2_2_2.c4 := K1_14_2_2_2_4.of_children Asm.K1_14_2_2_2_4_1 Asm.K1_14_2_2_2_4_2 Asm.K1_14_2_2_2_4_3
+theorem Asm.K1_14_2_2_2_6_1 : K1_14_2_2_2_6.c1 := K1_14_2_2_2_6_1.proof
+theorem Asm.K1_14_2_2_2_6_2 : K1_14_2_2_2_6.c2 := K1_14_2_2_2_6_2.proof
+theorem Asm.K1_14_2_2_2_6 : K1_14_2_2_2.c6 := K1_14_2_2_2_6.of_children Asm.K1_14_2_2_2_6_1 Asm.K1_14_2_2_2_6_2
+theorem Asm.K1_14_2_2_2R : K1_14_2_2.c2 := K1_14_2_2_2R.of_children Asm.K1_14_2_2_2_1 Asm.K1_14_2_2_2_3 Asm.K1_14_2_2_2_4 Asm.K1_14_2_2_2_6
+theorem Asm.K1_14_2_2_2 : K1_14_2_2.c2 := Asm.K1_14_2_2_2R
+theorem Asm.K1_14_2_2_3_1 : K1_14_2_2_3.c1 := K1_14_2_2_3_1.proof
+theorem Asm.K1_14_2_2_3_2 : K1_14_2_2_3.c2 := K1_14_2_2_3_2.proof
+theorem Asm.K1_14_2_2_3 : K1_14_2_2.c3 := K1_14_2_2_3.of_children Asm.K1_14_2_2_3_1 Asm.K1_14_2_2_3_2
+theorem Asm.K1_14_2_2_4_1 : K1_14_2_2_4.c1 := K1_14_2_2_4_1.proof
+theorem Asm.K1_14_2_2_4_3_1 : K1_14_2_2_4_3.c1 := K1_14_2_2_4_3_1.proof
+theorem Asm.K1_14_2_2_4_3_2 : K1_14_2_2_4_3.c2 := K1_14_2_2_4_3_2.proof
+theorem Asm.K1_14_2_2_4_3 : K1_14_2_2_4.c3 := K1_14_2_2_4_3.of_children Asm.K1_14_2_2_4_3_1 Asm.K1_14_2_2_4_3_2
+theorem Asm.K1_14_2_2_4_4 : K1_14_2_2_4.c4 := K1_14_2_2_4_4.proof
+theorem Asm.K1_14_2_2_4_5_1 : K1_14_2_2_4_5.c1 := K1_14_2_2_4_5_1.proof
+theorem Asm.K1_14_2_2_4_5_2 : K1_14_2_2_4_5.c2 := K1_14_2_2_4_5_2.proof
+theorem Asm.K1_14_2_2_4_5_3 : K1_14_2_2_4_5.c3 := K1_14_2_2_4_5_3.proof
+theorem Asm.K1_14_2_2_4_5_4 : K1_14_2_2_4_5.c4 := K1_14_2_2_4_5_4.proof
+theorem Asm.K1_14_2_2_4_5_5 : K1_14_2_2_4_5.c5 := K1_14_2_2_4_5_5.proof
+theorem Asm.K1_14_2_2_4_5 : K1_14_2_2_4.c5 := K1_14_2_2_4_5.of_children Asm.K1_14_2_2_4_5_1 Asm.K1_14_2_2_4_5_2 Asm.K1_14_2_2_4_5_3 Asm.K1_14_2_2_4_5_4 Asm.K1_14_2_2_4_5_5
+theorem Asm.K1_14_2_2_5_1 : K1_14_2_2_5.c1 := K1_14_2_2_5_1.proof
+theorem Asm.K1_14_2_2_5_2 : K1_14_2_2_5.c2 := K1_14_2_2_5_2.proof
+theorem Asm.K1_14_2_2_5 : K1_14_2_2.c5 := K1_14_2_2_5.of_children Asm.K1_14_2_2_5_1 Asm.K1_14_2_2_5_2
+theorem Asm.K1_14_2_2_7_1 : K1_14_2_2_7.c1 := K1_14_2_2_7_1.proof
+theorem Asm.K1_14_2_2_7_2_1 : K1_14_2_2_7_2.c1 := K1_14_2_2_7_2_1.proof
+theorem Asm.K1_14_2_2_7_2_2_1 : K1_14_2_2_7_2_2.c1 := K1_14_2_2_7_2_2_1.proof
+theorem Asm.K1_14_2_2_7_2_2_2 : K1_14_2_2_7_2_2.c2 := K1_14_2_2_7_2_2_2.proof
+theorem Asm.K1_14_2_2_7_2_2_3 : K1_14_2_2_7_2_2.c3 := K1_14_2_2_7_2_2_3.proof
+theorem Asm.K1_14_2_2_7_2_2 : K1_14_2_2_7_2.c2 := K1_14_2_2_7_2_2.of_children Asm.K1_14_2_2_7_2_2_1 Asm.K1_14_2_2_7_2_2_2 Asm.K1_14_2_2_7_2_2_3
+theorem Asm.K1_14_2_2_7_2_3 : K1_14_2_2_7_2.c3 := K1_14_2_2_7_2_3.proof
+theorem Asm.K1_14_2_2_7_2_4 : K1_14_2_2_7_2.c4 := K1_14_2_2_7_2_4.proof
+theorem Asm.K1_14_2_2_7_2_5 : K1_14_2_2_7_2.c5 := K1_14_2_2_7_2_5.proof
+theorem Asm.K1_14_2_2_7_2 : K1_14_2_2_7.c2 := K1_14_2_2_7_2.of_children Asm.K1_14_2_2_7_2_1 Asm.K1_14_2_2_7_2_2 Asm.K1_14_2_2_7_2_3 Asm.K1_14_2_2_7_2_4 Asm.K1_14_2_2_7_2_5
+theorem Asm.K1_14_2_2_7_3_1 : K1_14_2_2_7_3.c1 := K1_14_2_2_7_3_1.proof
+theorem Asm.K1_14_2_2_7_3_2 : K1_14_2_2_7_3.c2 := K1_14_2_2_7_3_2.proof
+theorem Asm.K1_14_2_2_7_3_3_1_1 : K1_14_2_2_7_3_3_1.c1 := K1_14_2_2_7_3_3_1_1.proof
+theorem Asm.K1_14_2_2_7_3_3_1_2 : K1_14_2_2_7_3_3_1.c2 := K1_14_2_2_7_3_3_1_2.proof
+theorem Asm.K1_14_2_2_7_3_3_1_3 : K1_14_2_2_7_3_3_1.c3 := K1_14_2_2_7_3_3_1_3.proof
+theorem Asm.K1_14_2_2_7_3_3_1_4 : K1_14_2_2_7_3_3_1.c4 := K1_14_2_2_7_3_3_1_4.proof
+theorem Asm.K1_14_2_2_7_3_3_1 : K1_14_2_2_7_3_3.c1 := K1_14_2_2_7_3_3_1.of_children Asm.K1_14_2_2_7_3_3_1_1 Asm.K1_14_2_2_7_3_3_1_2 Asm.K1_14_2_2_7_3_3_1_3 Asm.K1_14_2_2_7_3_3_1_4
+theorem Asm.K1_14_2_2_7_3_3_2 : K1_14_2_2_7_3_3.c2 := K1_14_2_2_7_3_3_2.proof
+theorem Asm.K1_14_2_2_7_3_3 : K1_14_2_2_7_3.c3 := K1_14_2_2_7_3_3.of_children Asm.K1_14_2_2_7_3_3_1 Asm.K1_14_2_2_7_3_3_2
+theorem Asm.K1_14_2_2_7_3 : K1_14_2_2_7.c3 := K1_14_2_2_7_3.of_children Asm.K1_14_2_2_7_3_1 Asm.K1_14_2_2_7_3_2 Asm.K1_14_2_2_7_3_3
+theorem Asm.K1_14_2_2_7_4_1 : K1_14_2_2_7_4.c1 := K1_14_2_2_7_4_1.proof
+theorem Asm.K1_14_2_2_7_4_2 : K1_14_2_2_7_4.c2 := K1_14_2_2_7_4_2.proof
+theorem Asm.K1_14_2_2_7_4_3 : K1_14_2_2_7_4.c3 := K1_14_2_2_7_4_3.proof
+theorem Asm.K1_14_2_2_7_4_4_1 : K1_14_2_2_7_4_4.c1 := K1_14_2_2_7_4_4_1.proof
+theorem Asm.K1_14_2_2_7_4_4_2 : K1_14_2_2_7_4_4.c2 := K1_14_2_2_7_4_4_2.proof
+theorem Asm.K1_14_2_2_7_4_4_3 : K1_14_2_2_7_4_4.c3 := K1_14_2_2_7_4_4_3.proof
+theorem Asm.K1_14_2_2_7_4_4_4 : K1_14_2_2_7_4_4.c4 := K1_14_2_2_7_4_4_4.proof
+theorem Asm.K1_14_2_2_7_4_4_5 : K1_14_2_2_7_4_4.c5 := K1_14_2_2_7_4_4_5.proof
+theorem Asm.K1_14_2_2_7_4_4_6 : K1_14_2_2_7_4_4.c6 := K1_14_2_2_7_4_4_6.proof
+theorem Asm.K1_14_2_2_7_4_4_7_1 : K1_14_2_2_7_4_4_7.c1 := K1_14_2_2_7_4_4_7_1.proof
+theorem Asm.K1_14_2_2_7_4_4_7_2 : K1_14_2_2_7_4_4_7.c2 := K1_14_2_2_7_4_4_7_2.proof
+theorem Asm.K1_14_2_2_7_4_4_7 : K1_14_2_2_7_4_4.c7 := K1_14_2_2_7_4_4_7.of_children Asm.K1_14_2_2_7_4_4_7_1 Asm.K1_14_2_2_7_4_4_7_2
+theorem Asm.K1_14_2_2_7_4_4_8 : K1_14_2_2_7_4_4.c8 := K1_14_2_2_7_4_4_8.proof
+theorem Asm.K1_14_2_2_7_4_4 : K1_14_2_2_7_4.c4 := K1_14_2_2_7_4_4.of_children Asm.K1_14_2_2_7_4_4_1 Asm.K1_14_2_2_7_4_4_2 Asm.K1_14_2_2_7_4_4_3 Asm.K1_14_2_2_7_4_4_4 Asm.K1_14_2_2_7_4_4_5 Asm.K1_14_2_2_7_4_4_6 Asm.K1_14_2_2_7_4_4_7 Asm.K1_14_2_2_7_4_4_8
+theorem Asm.K1_14_2_2_7_4 : K1_14_2_2_7.c4 := K1_14_2_2_7_4.of_children Asm.K1_14_2_2_7_4_1 Asm.K1_14_2_2_7_4_2 Asm.K1_14_2_2_7_4_3 Asm.K1_14_2_2_7_4_4
+theorem Asm.K1_14_2_2_7 : K1_14_2_2.c7 := K1_14_2_2_7.of_children Asm.K1_14_2_2_7_1 Asm.K1_14_2_2_7_2 Asm.K1_14_2_2_7_3 Asm.K1_14_2_2_7_4
+theorem Asm.K1_14_2_2R : K1_14_2.c2 := K1_14_2_2R.of_children Asm.K1_14_2_2_2 Asm.K1_14_2_2_3 Asm.K1_14_2_2_4_1 Asm.K1_14_2_2_4_3 Asm.K1_14_2_2_4_4 Asm.K1_14_2_2_4_5 Asm.K1_14_2_2_5 Asm.K1_14_2_2_7
+theorem Asm.K1_14_2_2 : K1_14_2.c2 := Asm.K1_14_2_2R
+theorem Asm.K1_14_2_3_1 : K1_14_2_3.c1 := K1_14_2_3_1.proof
+theorem Asm.K1_14_2_3_2_1 : K1_14_2_3_2.c1 := K1_14_2_3_2_1.proof
+theorem Asm.K1_14_2_3_2_2 : K1_14_2_3_2.c2 := K1_14_2_3_2_2.proof
+theorem Asm.K1_14_2_3_2 : K1_14_2_3.c2 := K1_14_2_3_2.of_children Asm.K1_14_2_3_2_1 Asm.K1_14_2_3_2_2
+theorem Asm.K1_14_2_3 : K1_14_2.c3 := K1_14_2_3.of_children Asm.K1_14_2_3_1 Asm.K1_14_2_3_2
+theorem Asm.K1_14_2_4_1_1_1 : K1_14_2_4_1_1.c1 := K1_14_2_4_1_1_1.proof
+theorem Asm.K1_14_2_4_1_1_2 : K1_14_2_4_1_1.c2 := K1_14_2_4_1_1_2.proof
+theorem Asm.K1_14_2_4_1_1 : K1_14_2_4_1.c1 := K1_14_2_4_1_1.of_children Asm.K1_14_2_4_1_1_1 Asm.K1_14_2_4_1_1_2
+theorem Asm.K1_14_2_4_1_2_1 : K1_14_2_4_1_2.c1 := K1_14_2_4_1_2_1.proof
+theorem Asm.K1_14_2_4_1_2_2 : K1_14_2_4_1_2.c2 := K1_14_2_4_1_2_2.proof
+theorem Asm.K1_14_2_4_1_2 : K1_14_2_4_1.c2 := K1_14_2_4_1_2.of_children Asm.K1_14_2_4_1_2_1 Asm.K1_14_2_4_1_2_2
+theorem Asm.K1_14_2_4_1_3_1 : K1_14_2_4_1_3.c1 := K1_14_2_4_1_3_1.proof
+theorem Asm.K1_14_2_4_1_3_2_1 : K1_14_2_4_1_3_2.c1 := K1_14_2_4_1_3_2_1.proof
+theorem Asm.K1_14_2_4_1_3_2_2 : K1_14_2_4_1_3_2.c2 := K1_14_2_4_1_3_2_2.proof
+theorem Asm.K1_14_2_4_1_3_2 : K1_14_2_4_1_3.c2 := K1_14_2_4_1_3_2.of_children Asm.K1_14_2_4_1_3_2_1 Asm.K1_14_2_4_1_3_2_2
+theorem Asm.K1_14_2_4_1_3_3_1 : K1_14_2_4_1_3_3.c1 := K1_14_2_4_1_3_3_1.proof
+theorem Asm.K1_14_2_4_1_3_3_2 : K1_14_2_4_1_3_3.c2 := K1_14_2_4_1_3_3_2.proof
+theorem Asm.K1_14_2_4_1_3_3_3 : K1_14_2_4_1_3_3.c3 := K1_14_2_4_1_3_3_3.proof
+theorem Asm.K1_14_2_4_1_3_3 : K1_14_2_4_1_3.c3 := K1_14_2_4_1_3_3.of_children Asm.K1_14_2_4_1_3_3_1 Asm.K1_14_2_4_1_3_3_2 Asm.K1_14_2_4_1_3_3_3
+theorem Asm.K1_14_2_4_1_3 : K1_14_2_4_1.c3 := K1_14_2_4_1_3.of_children Asm.K1_14_2_4_1_3_1 Asm.K1_14_2_4_1_3_2 Asm.K1_14_2_4_1_3_3
+theorem Asm.K1_14_2_4_1_4_1 : K1_14_2_4_1_4.c1 := K1_14_2_4_1_4_1.proof
+theorem Asm.K1_14_2_4_1_4_2 : K1_14_2_4_1_4.c2 := K1_14_2_4_1_4_2.proof
+theorem Asm.K1_14_2_4_1_4_3 : K1_14_2_4_1_4.c3 := K1_14_2_4_1_4_3.proof
+theorem Asm.K1_14_2_4_1_4 : K1_14_2_4_1.c4 := K1_14_2_4_1_4.of_children Asm.K1_14_2_4_1_4_1 Asm.K1_14_2_4_1_4_2 Asm.K1_14_2_4_1_4_3
+theorem Asm.K1_14_2_4_1_5_1 : K1_14_2_4_1_5.c1 := K1_14_2_4_1_5_1.proof
+theorem Asm.K1_14_2_4_1_5_2 : K1_14_2_4_1_5.c2 := K1_14_2_4_1_5_2.proof
+theorem Asm.K1_14_2_4_1_5 : K1_14_2_4_1.c5 := K1_14_2_4_1_5.of_children Asm.K1_14_2_4_1_5_1 Asm.K1_14_2_4_1_5_2
+theorem Asm.K1_14_2_4_1 : K1_14_2_4.c1 := K1_14_2_4_1.of_children Asm.K1_14_2_4_1_1 Asm.K1_14_2_4_1_2 Asm.K1_14_2_4_1_3 Asm.K1_14_2_4_1_4 Asm.K1_14_2_4_1_5
+theorem Asm.K1_14_2_4_2 : K1_14_2_4.c2 := K1_14_2_4_2.proof
+theorem Asm.K1_14_2_4_3_1_1 : K1_14_2_4_3_1.c1 := K1_14_2_4_3_1_1.proof
+theorem Asm.K1_14_2_4_3_1_2 : K1_14_2_4_3_1.c2 := K1_14_2_4_3_1_2.proof
+theorem Asm.K1_14_2_4_3_1 : K1_14_2_4_3.c1 := K1_14_2_4_3_1.of_children Asm.K1_14_2_4_3_1_1 Asm.K1_14_2_4_3_1_2
+theorem Asm.K1_14_2_4_3_2_1 : K1_14_2_4_3_2.c1 := K1_14_2_4_3_2_1.proof
+theorem Asm.K1_14_2_4_3_2_2 : K1_14_2_4_3_2.c2 := K1_14_2_4_3_2_2.proof
+theorem Asm.K1_14_2_4_3_2 : K1_14_2_4_3.c2 := K1_14_2_4_3_2.of_children Asm.K1_14_2_4_3_2_1 Asm.K1_14_2_4_3_2_2
+theorem Asm.K1_14_2_4_3 : K1_14_2_4.c3 := K1_14_2_4_3.of_children Asm.K1_14_2_4_3_1 Asm.K1_14_2_4_3_2
+theorem Asm.K1_14_2_4 : K1_14_2.c4 := K1_14_2_4.of_children Asm.K1_14_2_4_1 Asm.K1_14_2_4_2 Asm.K1_14_2_4_3
+theorem Asm.K1_14_2_5 : K1_14_2.c5 := K1_14_2_5.proof
+theorem Asm.K1_14_2_6_1 : K1_14_2_6.c1 := K1_14_2_6_1.proof
+theorem Asm.K1_14_2_6_2 : K1_14_2_6.c2 := K1_14_2_6_2.proof
+theorem Asm.K1_14_2_6 : K1_14_2.c6 := K1_14_2_6.of_children Asm.K1_14_2_6_1 Asm.K1_14_2_6_2
+theorem Asm.K1_14_2_7 : K1_14_2.c7 := K1_14_2_7.proof
+theorem Asm.K1_14_2 : K1_14.c2 := K1_14_2.of_children Asm.K1_14_2_1 Asm.K1_14_2_2 Asm.K1_14_2_3 Asm.K1_14_2_4 Asm.K1_14_2_5 Asm.K1_14_2_6 Asm.K1_14_2_7
+theorem Asm.K1_14_3_2_5_1 : K1_14_3_2_5.c1 := K1_14_3_2_5_1.proof
+theorem Asm.K1_14_3_2_5_2 : K1_14_3_2_5.c2 := K1_14_3_2_5_2.proof
+theorem Asm.K1_14_3_2_5_3 : K1_14_3_2_5.c3 := K1_14_3_2_5_3.proof
+theorem Asm.K1_14_3_2_5 : K1_14_3_2.c5 := K1_14_3_2_5.of_children Asm.K1_14_3_2_5_1 Asm.K1_14_3_2_5_2 Asm.K1_14_3_2_5_3
+theorem Asm.K1_14_3_2_6_1 : K1_14_3_2_6.c1 := K1_14_3_2_6_1.proof
+theorem Asm.K1_14_3_2_6_2_1 : K1_14_3_2_6_2.c1 := K1_14_3_2_6_2_1.proof
+theorem Asm.K1_14_3_2_6_2_2 : K1_14_3_2_6_2.c2 := K1_14_3_2_6_2_2.proof
+theorem Asm.K1_14_3_2_6_2_3 : K1_14_3_2_6_2.c3 := K1_14_3_2_6_2_3.proof
+theorem Asm.K1_14_3_2_6_2_4 : K1_14_3_2_6_2.c4 := K1_14_3_2_6_2_4.proof
+theorem Asm.K1_14_3_2_6_2 : K1_14_3_2_6.c2 := K1_14_3_2_6_2.of_children Asm.K1_14_3_2_6_2_1 Asm.K1_14_3_2_6_2_2 Asm.K1_14_3_2_6_2_3 Asm.K1_14_3_2_6_2_4
+theorem Asm.K1_14_3_2_6 : K1_14_3_2.c6 := K1_14_3_2_6.of_children Asm.K1_14_3_2_6_1 Asm.K1_14_3_2_6_2
+theorem Asm.K1_14_3_2R : K1_14_3.c2 := K1_14_3_2R.of_children Asm.K1_14_3_2_5 Asm.K1_14_3_2_6
+theorem Asm.K1_14_3_2 : K1_14_3.c2 := Asm.K1_14_3_2R
+theorem Asm.K1_14_3R_1 : K1_14_3R.c1 := K1_14_3R_1.proof
+theorem Asm.K1_14_3R_2_1 : K1_14_3R_2.c1 := K1_14_3R_2_1.proof
+theorem Asm.K1_14_3R_2_2 : K1_14_3R_2.c2 := K1_14_3R_2_2.proof
+theorem Asm.K1_14_3R_2_3 : K1_14_3R_2.c3 := K1_14_3R_2_3.proof
+theorem Asm.K1_14_3R_2_4 : K1_14_3R_2.c4 := K1_14_3R_2_4.proof
+theorem Asm.K1_14_3R_2 : K1_14_3R.c2 := K1_14_3R_2.of_children Asm.K1_14_3R_2_1 Asm.K1_14_3R_2_2 Asm.K1_14_3R_2_3 Asm.K1_14_3R_2_4
+theorem Asm.K1_14_3R_3_1_1 : K1_14_3R_3_1.c1 := K1_14_3R_3_1_1.proof
+theorem Asm.K1_14_3R_3_1_2_1 : K1_14_3R_3_1_2.c1 := K1_14_3R_3_1_2_1.proof
+theorem Asm.K1_14_3R_3_1_2_2 : K1_14_3R_3_1_2.c2 := K1_14_3R_3_1_2_2.proof
+theorem Asm.K1_14_3R_3_1_2_3 : K1_14_3R_3_1_2.c3 := K1_14_3R_3_1_2_3.proof
+theorem Asm.K1_14_3R_3_1_2 : K1_14_3R_3_1.c2 := K1_14_3R_3_1_2.of_children Asm.K1_14_3R_3_1_2_1 Asm.K1_14_3R_3_1_2_2 Asm.K1_14_3R_3_1_2_3
+theorem Asm.K1_14_3R_3_1_3_1 : K1_14_3R_3_1_3.c1 := K1_14_3R_3_1_3_1.proof
+theorem Asm.K1_14_3R_3_1_3_2 : K1_14_3R_3_1_3.c2 := K1_14_3R_3_1_3_2.proof
+theorem Asm.K1_14_3R_3_1_3_3 : K1_14_3R_3_1_3.c3 := K1_14_3R_3_1_3_3.proof
+theorem Asm.K1_14_3R_3_1_3_4 : K1_14_3R_3_1_3.c4 := K1_14_3R_3_1_3_4.proof
+theorem Asm.K1_14_3R_3_1_3_5 : K1_14_3R_3_1_3.c5 := K1_14_3R_3_1_3_5.proof
+theorem Asm.K1_14_3R_3_1_3 : K1_14_3R_3_1.c3 := K1_14_3R_3_1_3.of_children Asm.K1_14_3R_3_1_3_1 Asm.K1_14_3R_3_1_3_2 Asm.K1_14_3R_3_1_3_3 Asm.K1_14_3R_3_1_3_4 Asm.K1_14_3R_3_1_3_5
+theorem Asm.K1_14_3R_3_1_4 : K1_14_3R_3_1.c4 := K1_14_3R_3_1_4.proof
+theorem Asm.K1_14_3R_3_1 : K1_14_3R_3.c1 := K1_14_3R_3_1.of_children Asm.K1_14_3R_3_1_1 Asm.K1_14_3R_3_1_2 Asm.K1_14_3R_3_1_3 Asm.K1_14_3R_3_1_4
+theorem Asm.K1_14_3R_3_2_1 : K1_14_3R_3_2.c1 := K1_14_3R_3_2_1.proof
+theorem Asm.K1_14_3R_3_2_2 : K1_14_3R_3_2.c2 := K1_14_3R_3_2_2.proof
+theorem Asm.K1_14_3R_3_2_3_1 : K1_14_3R_3_2_3.c1 := K1_14_3R_3_2_3_1.proof
+theorem Asm.K1_14_3R_3_2_3_2 : K1_14_3R_3_2_3.c2 := K1_14_3R_3_2_3_2.proof
+theorem Asm.K1_14_3R_3_2_3 : K1_14_3R_3_2.c3 := K1_14_3R_3_2_3.of_children Asm.K1_14_3R_3_2_3_1 Asm.K1_14_3R_3_2_3_2
+theorem Asm.K1_14_3R_3_2_4 : K1_14_3R_3_2.c4 := K1_14_3R_3_2_4.proof
+theorem Asm.K1_14_3R_3_2 : K1_14_3R_3.c2 := K1_14_3R_3_2.of_children Asm.K1_14_3R_3_2_1 Asm.K1_14_3R_3_2_2 Asm.K1_14_3R_3_2_3 Asm.K1_14_3R_3_2_4
+theorem Asm.K1_14_3R_3_3 : K1_14_3R_3.c3 := K1_14_3R_3_3.proof
+theorem Asm.K1_14_3R_3_4 : K1_14_3R_3.c4 := K1_14_3R_3_4.proof
+theorem Asm.K1_14_3R_3 : K1_14_3R.c3 := K1_14_3R_3.of_children Asm.K1_14_3R_3_1 Asm.K1_14_3R_3_2 Asm.K1_14_3R_3_3 Asm.K1_14_3R_3_4
+theorem Asm.K1_14_3_6_1 : K1_14_3_6.c1 := K1_14_3_6_1.proof
+theorem Asm.K1_14_3_6_2 : K1_14_3_6.c2 := K1_14_3_6_2.proof
+theorem Asm.K1_14_3_6 : K1_14_3.c6 := K1_14_3_6.of_children Asm.K1_14_3_6_1 Asm.K1_14_3_6_2
+theorem Asm.K1_14_3R : K1_14.c3 := K1_14_3R.of_children Asm.K1_14_2_1_1 Asm.K1_14_2_1_2 Asm.K1_14_3_2 Asm.K1_14_3R_1 Asm.K1_14_3R_2 Asm.K1_14_3R_3 Asm.K1_14_3_6
+theorem Asm.K1_14_3 : K1_14.c3 := Asm.K1_14_3R
+theorem Asm.K1_14_4 : K1_14.c4 := K1_14_4.proof
+theorem Asm.K1_14_5 : K1_14.c5 := K1_14_5.proof
+theorem Asm.K1_14_6_1 : K1_14_6.c1 := K1_14_6_1.proof
+theorem Asm.K1_14_6_2 : K1_14_6.c2 := K1_14_6_2.proof
+theorem Asm.K1_14_6 : K1_14.c6 := K1_14_6.of_children Asm.K1_14_6_1 Asm.K1_14_6_2
+theorem Asm.K1_14 : K1.c14 := K1_14.of_children Asm.K1_14_1 Asm.K1_14_2 Asm.K1_14_3 Asm.K1_14_4 Asm.K1_14_5 Asm.K1_14_6
+theorem Asm.K1 : FrobeniusLocator.Native.ScalarMCACap6915 := K1.of_children Asm.K1_1 Asm.K1_2 Asm.K1_3 Asm.K1_4 Asm.K1_5 Asm.K1_6 Asm.K1_7 Asm.K1_8 Asm.K1_9 Asm.K1_10 Asm.K1_11 Asm.K1_12 Asm.K1_13 Asm.K1_14
 
-/-
-                                 Apache License
-                           Version 2.0, January 2004
-                        http://www.apache.org/licenses/
-
-   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
-
-   1. Definitions.
-
-      "License" shall mean the terms and conditions for use, reproduction,
-      and distribution as defined by Sections 1 through 9 of this document.
-
-      "Licensor" shall mean the copyright owner or entity authorized by
-      the copyright owner that is granting the License.
-
-      "Legal Entity" shall mean the union of the acting entity and all
-      other entities that control, are controlled by, or are under common
-      control with that entity. For the purposes of this definition,
-      "control" means (i) the power, direct or indirect, to cause the
-      direction or management of such entity, whether by contract or
-      otherwise, or (ii) ownership of fifty percent (50%) or more of the
-      outstanding shares, or (iii) beneficial ownership of such entity.
-
-      "You" (or "Your") shall mean an individual or Legal Entity
-      exercising permissions granted by this License.
-
-      "Source" form shall mean the preferred form for making modifications,
-      including but not limited to software source code, documentation
-      source, and configuration files.
-
-      "Object" form shall mean any form resulting from mechanical
-      transformation or translation of a Source form, including but
-      not limited to compiled object code, generated documentation,
-      and conversions to other media types.
-
-      "Work" shall mean the work of authorship, whether in Source or
-      Object form, made available under the License, as indicated by a
-      copyright notice that is included in or attached to the work
-      (an example is provided in the Appendix below).
-
-      "Derivative Works" shall mean any work, whether in Source or Object
-      form, that is based on (or derived from) the Work and for which the
-      editorial revisions, annotations, elaborations, or other modifications
-      represent, as a whole, an original work of authorship. For the purposes
-      of this License, Derivative Works shall not include works that remain
-      separable from, or merely link (or bind by name) to the interfaces of,
-      the Work and Derivative Works thereof.
-
-      "Contribution" shall mean any work of authorship, including
-      the original version of the Work and any modifications or additions
-      to that Work or Derivative Works thereof, that is intentionally
-      submitted to Licensor for inclusion in the Work by the copyright owner
-      or by an individual or Legal Entity authorized to submit on behalf of
-      the copyright owner. For the purposes of this definition, "submitted"
-      means any form of electronic, verbal, or written communication sent
-      to the Licensor or its representatives, including but not limited to
-      communication on electronic mailing lists, source code control systems,
-      and issue tracking systems that are managed by, or on behalf of, the
-      Licensor for the purpose of discussing and improving the Work, but
-      excluding communication that is conspicuously marked or otherwise
-      designated in writing by the copyright owner as "Not a Contribution."
-
-      "Contributor" shall mean Licensor and any individual or Legal Entity
-      on behalf of whom a Contribution has been received by Licensor and
-      subsequently incorporated within the Work.
-
-   2. Grant of Copyright License. Subject to the terms and conditions of
-      this License, each Contributor hereby grants to You a perpetual,
-      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
-      copyright license to reproduce, prepare Derivative Works of,
-      publicly display, publicly perform, sublicense, and distribute the
-      Work and such Derivative Works in Source or Object form.
-
-   3. Grant of Patent License. Subject to the terms and conditions of
-      this License, each Contributor hereby grants to You a perpetual,
-      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
-      (except as stated in this section) patent license to make, have made,
-      use, offer to sell, sell, import, and otherwise transfer the Work,
-      where such license applies only to those patent claims licensable
-      by such Contributor that are necessarily infringed by their
-      Contribution(s) alone or by combination of their Contribution(s)
-      with the Work to which such Contribution(s) was submitted. If You
-      institute patent litigation against any entity (including a
-      cross-claim or counterclaim in a lawsuit) alleging that the Work
-      or a Contribution incorporated within the Work constitutes direct
-      or contributory patent infringement, then any patent licenses
-      granted to You under this License for that Work shall terminate
-      as of the date such litigation is filed.
-
-   4. Redistribution. You may reproduce and distribute copies of the
-      Work or Derivative Works thereof in any medium, with or without
-      modifications, and in Source or Object form, provided that You
-      meet the following conditions:
-
-      (a) You must give any other recipients of the Work or
-          Derivative Works a copy of this License; and
-
-      (b) You must cause any modified files to carry prominent notices
-          stating that You changed the files; and
-
-      (c) You must retain, in the Source form of any Derivative Works
-          that You distribute, all copyright, patent, trademark, and
-          attribution notices from the Source form of the Work,
-          excluding those notices that do not pertain to any part of
-          the Derivative Works; and
-
-      (d) If the Work includes a "NOTICE" text file as part of its
-          distribution, then any Derivative Works that You distribute must
-          include a readable copy of the attribution notices contained
-          within such NOTICE file, excluding those notices that do not
-          pertain to any part of the Derivative Works, in at least one
-          of the following places: within a NOTICE text file distributed
-          as part of the Derivative Works; within the Source form or
-          documentation, if provided along with the Derivative Works; or,
-          within a display generated by the Derivative Works, if and
-          wherever such third-party notices normally appear. The contents
-          of the NOTICE file are for informational purposes only and
-          do not modify the License. You may add Your own attribution
-          notices within Derivative Works that You distribute, alongside
-          or as an addendum to the NOTICE text from the Work, provided
-          that such additional attribution notices cannot be construed
-          as modifying the License.
-
-      You may add Your own copyright statement to Your modifications and
-      may provide additional or different license terms and conditions
-      for use, reproduction, or distribution of Your modifications, or
-      for any such Derivative Works as a whole, provided Your use,
-      reproduction, and distribution of the Work otherwise complies with
-      the conditions stated in this License.
-
-   5. Submission of Contributions. Unless You explicitly state otherwise,
-      any Contribution intentionally submitted for inclusion in the Work
-      by You to the Licensor shall be under the terms and conditions of
-      this License, without any additional terms or conditions.
-      Notwithstanding the above, nothing herein shall supersede or modify
-      the terms of any separate license agreement you may have executed
-      with Licensor regarding such Contributions.
-
-   6. Trademarks. This License does not grant permission to use the trade
-      names, trademarks, service marks, or product names of the Licensor,
-      except as required for reasonable and customary use in describing the
-      origin of the Work and reproducing the content of the NOTICE file.
-
-   7. Disclaimer of Warranty. Unless required by applicable law or
-      agreed to in writing, Licensor provides the Work (and each
-      Contributor provides its Contributions) on an "AS IS" BASIS,
-      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
-      implied, including, without limitation, any warranties or conditions
-      of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A
-      PARTICULAR PURPOSE. You are solely responsible for determining the
-      appropriateness of using or redistributing the Work and assume any
-      risks associated with Your exercise of permissions under this License.
-
-   8. Limitation of Liability. In no event and under no legal theory,
-      whether in tort (including negligence), contract, or otherwise,
-      unless required by applicable law (such as deliberate and grossly
-      negligent acts) or agreed to in writing, shall any Contributor be
-      liable to You for damages, including any direct, indirect, special,
-      incidental, or consequential damages of any character arising as a
-      result of this License or out of the use or inability to use the
-      Work (including but not limited to damages for loss of goodwill,
-      work stoppage, computer failure or malfunction, or any and all
-      other commercial damages or losses), even if such Contributor
-      has been advised of the possibility of such damages.
-
-   9. Accepting Warranty or Additional Liability. While redistributing
-      the Work or Derivative Works thereof, You may choose to offer,
-      and charge a fee for, acceptance of support, warranty, indemnity,
-      or other liability obligations and/or rights consistent with this
-      License. However, in accepting such obligations, You may act only
-      on Your own behalf and on Your sole responsibility, not on behalf
-      of any other Contributor, and only if You agree to indemnify,
-      defend, and hold each Contributor harmless for any liability
-      incurred by, or claims asserted against, such Contributor by reason
-      of your accepting any such warranty or additional liability.
-
-   END OF TERMS AND CONDITIONS
-
-   APPENDIX: How to apply the Apache License to your work.
-
-      To apply the Apache License to your work, attach the following
-      boilerplate notice, with the fields enclosed by brackets "{}"
-      replaced with your own identifying information. (Don't include
-      the brackets!)  The text should be enclosed in the appropriate
-      comment syntax for the file format. We also recommend that a
-      file or class name and description of purpose be included on the
-      same "printed page" as the copyright notice for easier
-      identification within third-party archives.
-
-   Copyright {yyyy} {name of copyright owner}
-
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
--/
+theorem ProximityPrize.Benchmark.candidate :
+    ProximityPrize.Benchmark.ProtocolClaim 6915 81879 262144 :=
+  FrobeniusLocator.Native.protocolClaim6915_of_scalarCap Asm.K1

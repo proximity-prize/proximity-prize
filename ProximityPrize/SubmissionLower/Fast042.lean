@@ -1,0 +1,1136 @@
+import Mathlib.Algebra.TrivSqZeroExt.Ideal
+import Mathlib.LinearAlgebra.FreeModule.Norm
+import Mathlib.NumberTheory.RatFunc.Ostrowski
+import Mathlib.RingTheory.Artinian.Algebra
+import Mathlib.RingTheory.DedekindDomain.Factorization
+import Mathlib.RingTheory.Localization.NormTrace
+import ProximityPrize.SubmissionLower.Pack_K1Defs
+import ProximityPrize.SubmissionLower.Fast023
+import ProximityPrize.SubmissionLower.Fast029
+import ProximityPrize.SubmissionLower.Pack_K1_14_3_2Split
+set_option Elab.async false
+
+section PackSource_K1_14_3_2_7Localization
+set_option autoImplicit true
+set_option backward.isDefEq.respectTransparency false
+set_option maxRecDepth 3000
+set_option maxHeartbeats 1000000
+
+namespace K1_14_3_2_7
+
+noncomputable section
+
+open K1_14 K1_14_3
+open scoped nonZeroDivisors
+
+variable {B A : Type} [CommRing B] [CommRing A]
+
+abbrev denominators (f : B →+* A) : Submonoid A :=
+  (nonZeroDivisors B).map f.toMonoidHom
+
+abbrev Localized (f : B →+* A) := Localization (M := A) (denominators f)
+
+private def localBase (f : B →+* A) : FractionRing B →+* Localized f :=
+  IsLocalization.lift (M := nonZeroDivisors B)
+    (g := (algebraMap A (Localized f)).comp f)
+    (fun b => IsLocalization.map_units (M := denominators f) (Localized f)
+      ⟨f b, b, b.property, rfl⟩)
+
+instance (f : B →+* A) : Algebra (FractionRing B) (Localized f) :=
+  (localBase f).toAlgebra
+
+@[simp] theorem local_base (f : B →+* A) (b : B) :
+    algebraMap (FractionRing B) (Localized f) (algebraMap B (FractionRing B) b) =
+      algebraMap A (Localized f) (f b) :=
+  IsLocalization.lift_eq _ _
+
+abbrev localizedPrime (f : B →+* A) (I : Ideal A) : Ideal (Localized f) :=
+  I.map (algebraMap A (Localized f))
+
+def GenericFibre (f : B →+* A) (I : Ideal A) := Localized f ⧸ localizedPrime f I
+
+instance (f : B →+* A) (I : Ideal A) : CommRing (GenericFibre f I) :=
+  inferInstanceAs (CommRing (Localized f ⧸ localizedPrime f I))
+
+instance (f : B →+* A) (I : Ideal A) : Algebra (FractionRing B) (GenericFibre f I) :=
+  inferInstanceAs (Algebra (FractionRing B) (Localized f ⧸ localizedPrime f I))
+
+abbrev fibreField (f : B →+* A) (I : Ideal A) [(localizedPrime f I).IsMaximal] :
+    Field (GenericFibre f I) := Ideal.Quotient.field (localizedPrime f I)
+
+def toFibre (f : B →+* A) (I : Ideal A) : A →+* GenericFibre f I :=
+  (Ideal.Quotient.mk _).comp (algebraMap A (Localized f))
+
+@[simp] theorem fibre_base (f : B →+* A) (I : Ideal A) (b : B) :
+    algebraMap (FractionRing B) (GenericFibre f I) (algebraMap B (FractionRing B) b) =
+      toFibre f I (f b) := by
+  change Ideal.Quotient.mk _ (algebraMap (FractionRing B) (Localized f)
+    (algebraMap B (FractionRing B) b)) = _
+  rw [local_base]
+  rfl
+
+variable [IsDomain B]
+
+private theorem disjoint_of_dominant (f : B →+* A) (I : Ideal A)
+    (h : I.comap f = ⊥) :
+    Disjoint (denominators f : Set A) (I : Set A) := by
+  apply Set.disjoint_left.mpr
+  rintro _ ⟨b, hb, rfl⟩ hq
+  have : b ∈ I.comap f := hq
+  rw [h, Ideal.mem_bot] at this
+  exact (mem_nonZeroDivisors_iff_ne_zero.mp hb) this
+
+theorem ker_toFibre (f : B →+* A) (I : Ideal A) [I.IsPrime] (h : I.comap f = ⊥) :
+    RingHom.ker (toFibre f I) = I := by
+  rw [toFibre, ← RingHom.comap_ker, Ideal.mk_ker]
+  exact IsLocalization.under_map_of_isPrime_disjoint (denominators f) (Localized f)
+    ‹I.IsPrime› (disjoint_of_dominant f I h)
+
+private def localizationEval (f : B →+* A) (x : Fin 2 → A) :
+    MvPolynomial (Fin 2) (FractionRing B) →ₐ[FractionRing B] Localized f :=
+  MvPolynomial.aeval (fun i => algebraMap A (Localized f) (x i))
+
+private theorem localizationEval_surjective (f : B →+* A) (x : Fin 2 → A)
+    (hgen : Function.Surjective (MvPolynomial.eval₂Hom f x)) :
+    Function.Surjective (localizationEval f x) := by
+  have heq : (localizationEval f x).toRingHom.comp
+      (MvPolynomial.map (algebraMap B (FractionRing B))) =
+      (algebraMap A (Localized f)).comp (MvPolynomial.eval₂Hom f x) := by
+    apply MvPolynomial.ringHom_ext <;>
+      simp [localizationEval, MvPolynomial.aeval_def, local_base]
+  intro z
+  obtain ⟨⟨a, d⟩, hz⟩ := IsLocalization.surj (denominators f) z
+  obtain ⟨b, hb, hd⟩ := d.property
+  change f b = (d : A) at hd
+  obtain ⟨u, rfl⟩ := hgen a
+  refine ⟨MvPolynomial.map (algebraMap B (FractionRing B)) u *
+    MvPolynomial.C ((algebraMap B (FractionRing B) b)⁻¹), ?_⟩
+  apply (IsLocalization.map_units (M := denominators f) (Localized f) d).mul_right_cancel
+  have hu := RingHom.congr_fun heq u
+  have hb' : algebraMap B (FractionRing B) b ≠ 0 :=
+    fun he => (mem_nonZeroDivisors_iff_ne_zero.mp hb)
+      ((IsFractionRing.injective B (FractionRing B)) (by simpa using he))
+  trans algebraMap A (Localized f) (MvPolynomial.eval₂Hom f x u)
+  · rw [map_mul, ← hd, ← local_base f b]
+    rw [show localizationEval f x (MvPolynomial.C ((algebraMap B (FractionRing B) b)⁻¹)) =
+      algebraMap (FractionRing B) (Localized f) ((algebraMap B (FractionRing B) b)⁻¹) from
+        MvPolynomial.aeval_C _ _]
+    rw [mul_assoc, ← map_mul, inv_mul_cancel₀ hb', map_one, mul_one]
+    exact hu
+  · exact hz.symm
+
+theorem fibre_maximal (f : B →+* A) (x : Fin 2 → A)
+    (hgen : Function.Surjective (MvPolynomial.eval₂Hom f x))
+    (I : Ideal A) [I.IsPrime] (hd : I.comap f = ⊥) (hh : I.height = 2) :
+    (localizedPrime f I).IsMaximal := by
+  have hdisj := disjoint_of_dominant f I hd
+  let : (localizedPrime f I).IsPrime :=
+    IsLocalization.isPrime_of_isPrime_disjoint (denominators f) (Localized f)
+      I ‹I.IsPrime› hdisj
+  have hheight : (localizedPrime f I).height = 2 :=
+    (IsLocalization.height_map_of_disjoint (denominators f) I hdisj).trans hh
+  have hup : ringKrullDim (Localized f) ≤ 2 := by
+    have h := ringKrullDim_le_of_surjective (localizationEval f x).toRingHom
+      (localizationEval_surjective f x hgen)
+    simpa [MvPolynomial.ringKrullDim_of_isNoetherianRing_of_finite,
+      ringKrullDim_eq_zero_of_field] using h
+  have hlow : 2 ≤ ringKrullDim (Localized f) := by
+    simpa only [hheight, WithBot.coe_ofNat] using
+      (Ideal.height_le_ringKrullDim_of_isPrime (I := localizedPrime f I))
+  have hdim := le_antisymm hup hlow
+  let : FiniteRingKrullDim (Localized f) :=
+    finiteRingKrullDim_iff_ne_bot_and_top.mpr (by
+      rw [hdim]
+      exact ⟨WithBot.coe_ne_bot, fun h => ENat.ofNat_ne_top 2 (WithBot.coe_inj.mp h)⟩)
+  exact Ideal.isMaximal_of_height_eq_ringKrullDim (by rw [hheight, hdim, WithBot.coe_ofNat])
+
+theorem fibre_finite (f : B →+* A) (x : Fin 2 → A)
+    (hgen : Function.Surjective (MvPolynomial.eval₂Hom f x))
+    (I : Ideal A) [(localizedPrime f I).IsMaximal] :
+    Module.Finite (FractionRing B) (GenericFibre f I) := by
+  let g := (Ideal.Quotient.mkₐ (FractionRing B) (localizedPrime f I)).comp
+    (localizationEval f x)
+  have hg : Function.Surjective g :=
+    (Ideal.Quotient.mkₐ_surjective (FractionRing B) (localizedPrime f I)).comp (localizationEval_surjective f x hgen)
+  let : Algebra.FiniteType (FractionRing B) (GenericFibre f I) :=
+    Algebra.FiniteType.of_surjective g hg
+  letI : Field (GenericFibre f I) := fibreField f I
+  exact finite_of_finite_type_of_isJacobsonRing (FractionRing B) (GenericFibre f I)
+
+end
+
+end K1_14_3_2_7
+end PackSource_K1_14_3_2_7Localization
+
+section PackSource_K1_14_3_2_7Section
+set_option autoImplicit true
+set_option backward.isDefEq.respectTransparency false
+set_option maxRecDepth 4000
+set_option maxSynthPendingDepth 8
+set_option maxHeartbeats 4000000
+
+namespace K1_14_3_2_7
+
+noncomputable section
+
+open K1_14 K1_14_3 Polynomial
+open scoped TensorProduct nonZeroDivisors
+
+abbrev Four (R : Type) [CommRing R] := Polynomial (Polynomial (MvPolynomial (Fin 2) R))
+
+def scalar {R : Type} [CommRing R] : R →+* Four R := C.comp (C.comp MvPolynomial.C)
+theorem scalar_eq_algebraMap {R : Type} [CommRing R] (a : R) :
+    scalar a = algebraMap R (Four R) a := rfl
+
+def seedVar {R : Type} [CommRing R] (i : Fin 2) : Four R := C (C (MvPolynomial.X i))
+def yVar {R : Type} [CommRing R] : Four R :=
+  Polynomial.C (R := (MvPolynomial (Fin 2) R)[X]) (Polynomial.X (R := MvPolynomial (Fin 2) R))
+def vVar {R : Type} [CommRing R] : Four R :=
+  Polynomial.X (R := (MvPolynomial (Fin 2) R)[X])
+
+theorem four_ext {R T : Type} [CommRing R] [CommRing T] {f g : Four R →+* T}
+    (hc : ∀ a, f (scalar a) = g (scalar a))
+    (ht : ∀ i, f (seedVar i) = g (seedVar i))
+    (hy : f yVar = g yVar) (hv : f vVar = g vVar) : f = g := by
+  apply Polynomial.ringHom_ext' _ hv
+  apply Polynomial.ringHom_ext' _ hy
+  exact MvPolynomial.ringHom_ext hc ht
+
+def evaluate {R T : Type} [CommRing R] [CommRing T] (a : R →+* T)
+    (t : Fin 2 → T) (y v : T) : Four R →+* T :=
+  eval₂RingHom (eval₂RingHom (MvPolynomial.eval₂Hom a t) y) v
+
+@[simp] theorem evaluate_scalar {R T : Type} [CommRing R] [CommRing T]
+    (a : R →+* T) (t : Fin 2 → T) (y v : T) (c : R) :
+    evaluate a t y v (scalar c) = a c := by simp [evaluate, scalar]
+
+@[simp] theorem evaluate_seed {R T : Type} [CommRing R] [CommRing T]
+    (a : R →+* T) (t : Fin 2 → T) (y v : T) (i : Fin 2) :
+    evaluate a t y v (seedVar i) = t i := by simp [evaluate, seedVar]
+
+@[simp] theorem evaluate_y {R T : Type} [CommRing R] [CommRing T]
+    (a : R →+* T) (t : Fin 2 → T) (y v : T) :
+    evaluate a t y v yVar = y := by simp [evaluate, yVar]
+
+@[simp] theorem evaluate_v {R T : Type} [CommRing R] [CommRing T]
+    (a : R →+* T) (t : Fin 2 → T) (y v : T) :
+    evaluate a t y v vVar = v := by simp [evaluate, vVar]
+
+def extendScalars {R G : Type} [CommRing R] [CommRing G] (k : R →+* G) :
+    Four R →+* Four G :=
+  Polynomial.mapRingHom (Polynomial.mapRingHom (MvPolynomial.map k))
+
+@[simp] theorem extend_scalar {R G : Type} [CommRing R] [CommRing G] (k : R →+* G) (c : R) :
+    extendScalars k (scalar c) = scalar (k c) := by simp [extendScalars, scalar]
+
+@[simp] theorem extend_seed {R G : Type} [CommRing R] [CommRing G] (k : R →+* G) (i : Fin 2) :
+    extendScalars k (seedVar i) = seedVar i := by simp [extendScalars, seedVar]
+
+@[simp] theorem extend_y {R G : Type} [CommRing R] [CommRing G] (k : R →+* G) :
+    extendScalars k yVar = yVar := by simp [extendScalars, yVar]
+
+@[simp] theorem extend_v {R G : Type} [CommRing R] [CommRing G] (k : R →+* G) :
+    extendScalars k vVar = vVar := by simp [extendScalars, vVar]
+
+/-- Two cuts that specialize the variables of a polynomial coordinate base. -/
+structure Projection (R G B : Type) [CommRing R] [Field G] [CommRing B] where
+  intoJet : B →+* Four R
+  intoSection : B →+* G
+  injective : Function.Injective intoSection
+  baseScalar : R →+* B
+  baseVar : Fin 2 → B
+  ext : ∀ {T : Type} [CommRing T] {f g : B →+* T},
+    (∀ a, f (baseScalar a) = g (baseScalar a)) →
+    (∀ i, f (baseVar i) = g (baseVar i)) → f = g
+  scalar_jet : ∀ a, intoJet (baseScalar a) = scalar a
+  coeffMap : R →+* G
+  scalar_section : ∀ a, intoSection (baseScalar a) = coeffMap a
+  cutSet : Set (Four G)
+  cuts : cutSet = Set.range
+    (fun i => extendScalars coeffMap (intoJet (baseVar i)) - scalar (intoSection (baseVar i)))
+
+variable {R G B : Type} [CommRing R] [Field G] [CommRing B]
+
+abbrev sectionIdeal (P : Projection R G B) (I : Ideal (Four R)) : Ideal (Four G) :=
+  I.map (extendScalars P.coeffMap) ⊔ Ideal.span P.cutSet
+
+abbrev SectionQuotient (P : Projection R G B) (I : Ideal (Four R)) :=
+  Four G ⧸ sectionIdeal P I
+
+/-- Extending the generic fibre to the common section field realizes the two cuts. -/
+theorem section_finrank [IsDomain B]
+    (P : Projection R G B) (I : Ideal (Four R))
+    [Module.Finite (FractionRing B) (GenericFibre P.intoJet I)] :
+    Module.finrank G (SectionQuotient P I) =
+      Module.finrank (FractionRing B) (GenericFibre P.intoJet I) := by
+  let F := FractionRing B
+  let E := GenericFibre P.intoJet I
+  let S := SectionQuotient P I
+  let sectionBase : F →+* G := IsFractionRing.lift P.injective
+  letI : Algebra F G := sectionBase.toAlgebra
+  letI : Algebra F S := Algebra.compHom S (algebraMap F G)
+  letI : IsScalarTower F G S := IsScalarTower.of_algebraMap_eq' rfl
+  let T := G ⊗[F] E
+  let left : G →+* T := algebraMap G T
+  let right : E →ₐ[F] T := Algebra.TensorProduct.includeRight
+  let j : Four R →+* E := toFibre P.intoJet I
+  let g : Four R →+* T := right.toRingHom.comp j
+  let mk : (Four G) →ₐ[G] S := Ideal.Quotient.mkₐ _ _
+  let image : Four R →+* S := mk.toRingHom.comp (extendScalars P.coeffMap)
+  have hb (b : B) : g (P.intoJet b) = left (P.intoSection b) := by
+    change right (toFibre P.intoJet I (P.intoJet b)) = _
+    rw [← fibre_base P.intoJet I b, right.commutes]
+    change left (sectionBase (algebraMap B F b)) = _
+    rw [IsFractionRing.lift_algebraMap]
+  let out : (Four G) →+* T := evaluate left (fun i => g (seedVar i))
+    (g yVar) (g vVar)
+  have hout : out.comp (extendScalars P.coeffMap) = g := by
+    apply four_ext
+    · intro a
+      change out (extendScalars P.coeffMap (scalar a)) = g (scalar a)
+      rw [extend_scalar, show out (scalar (P.coeffMap a)) = left (P.coeffMap a) from
+        evaluate_scalar left _ _ _ _, ← P.scalar_section a, ← P.scalar_jet a]
+      exact (hb (P.baseScalar a)).symm
+    · intro i; simp [out]
+    · simp [out]
+    · simp [out]
+  let outA : (Four G) →ₐ[G] T :=
+    { out with commutes' := fun c => evaluate_scalar left _ _ _ c }
+  have hkill : sectionIdeal P I ≤ RingHom.ker out := by
+    apply sup_le
+    · rw [Ideal.map_le_iff_le_comap, RingHom.comap_ker, hout]
+      intro a ha
+      change right (j a) = 0
+      rw [show j a = 0 from Ideal.Quotient.eq_zero_iff_mem.mpr (Ideal.mem_map_of_mem _ ha)]
+      exact map_zero _
+    · rw [Ideal.span_le, P.cuts]
+      rintro _ ⟨i, rfl⟩
+      change out (_ - _) = 0
+      rw [map_sub, ← RingHom.comp_apply, hout, sub_eq_zero]
+      simpa [out] using hb (P.baseVar i)
+  let forward : S →ₐ[G] T :=
+    Ideal.Quotient.liftₐ _ outA (fun a ha => hkill ha)
+  have hforward (a : Four R) : forward (image a) = g a := RingHom.congr_fun hout a
+  have hpin : image.comp P.intoJet =
+      (algebraMap G S).comp P.intoSection := by
+    apply P.ext
+    · intro a
+      change mk ((extendScalars P.coeffMap) (P.intoJet (P.baseScalar a))) =
+        algebraMap G S (P.intoSection (P.baseScalar a))
+      rw [P.scalar_jet, P.scalar_section, extend_scalar, scalar_eq_algebraMap, mk.commutes]
+    · intro i
+      have hm : (extendScalars P.coeffMap) (P.intoJet (P.baseVar i)) - (scalar (P.intoSection (P.baseVar i)) : (Four G)) ∈
+          sectionIdeal P I := by
+        have hle : Ideal.span P.cutSet ≤ sectionIdeal P I := le_sup_right
+        exact hle (Ideal.subset_span (by rw [P.cuts]; exact ⟨i, rfl⟩))
+      have hz := (Ideal.Quotient.eq_zero_iff_mem (I := sectionIdeal P I)).mpr hm
+      change mk (_ - _) = 0 at hz
+      rw [map_sub, sub_eq_zero] at hz
+      exact hz
+  have hunits : ∀ d : denominators P.intoJet, IsUnit (image d) := by
+    rintro ⟨_, b, hb', rfl⟩
+    change IsUnit (image (P.intoJet b))
+    rw [← RingHom.comp_apply, hpin, RingHom.comp_apply]
+    exact (isUnit_iff_ne_zero.mpr (fun e => (mem_nonZeroDivisors_iff_ne_zero.mp hb')
+      (P.injective (e.trans (map_zero _).symm)))).map (algebraMap G S)
+  let fromLocal : Localized P.intoJet →+* S := IsLocalization.lift hunits
+  let fromE : E →+* S := Ideal.Quotient.lift _ fromLocal (by
+    have hk : localizedPrime P.intoJet I ≤ RingHom.ker fromLocal := by
+      rw [Ideal.map_le_iff_le_comap, RingHom.comap_ker]
+      change I ≤ RingHom.ker ((IsLocalization.lift (S := Localized P.intoJet) hunits).comp _)
+      rw [IsLocalization.lift_comp]
+      intro a ha
+      have hle : I.map (extendScalars P.coeffMap) ≤ sectionIdeal P I := le_sup_left
+      exact Ideal.Quotient.eq_zero_iff_mem.mpr (hle (Ideal.mem_map_of_mem _ ha))
+    exact fun a ha => hk ha)
+  have hfromE (a : Four R) : fromE (j a) = image a := IsLocalization.lift_eq hunits a
+  let up : E →ₐ[F] S :=
+    { fromE with
+      commutes' := by
+        have hcomm : fromE.comp (algebraMap F E) = algebraMap F S := by
+          apply IsLocalization.ringHom_ext (nonZeroDivisors B)
+          apply RingHom.ext
+          intro b
+          change fromE (algebraMap F E (algebraMap B F b)) =
+            (algebraMap G S) (sectionBase (algebraMap B F b))
+          rw [fibre_base P.intoJet I b, IsFractionRing.lift_algebraMap]
+          exact (hfromE (P.intoJet b)).trans (RingHom.congr_fun hpin b)
+        exact RingHom.congr_fun hcomm }
+  let backward : T →ₐ[G] S := AlgHom.liftEquiv F G E S up
+  have hbackward (a : E) : backward (right a) = up a :=
+    AlgHom.congr_fun ((AlgHom.liftEquiv F G E S).left_inv up) a
+  have h1 : forward.comp backward = AlgHom.id G T := by
+    apply Algebra.TensorProduct.ext_ring
+    apply AlgHom.coe_ringHom_injective
+    apply Ideal.Quotient.ringHom_ext
+    apply IsLocalization.ringHom_ext (denominators P.intoJet)
+    exact RingHom.ext fun a => by
+      change forward (backward (right (j a))) = right (j a)
+      rw [hbackward]
+      exact (congrArg forward (hfromE a)).trans (hforward a)
+  have hround (a : Four R) : backward (forward (image a)) = image a :=
+    (congrArg backward (hforward a)).trans ((hbackward _).trans (hfromE _))
+  have h2 : backward.comp forward = AlgHom.id G S := by
+    apply Ideal.Quotient.algHom_ext
+    apply AlgHom.coe_ringHom_injective
+    apply four_ext
+    · intro c
+      change (backward.comp forward) (mk (scalar c)) = mk (scalar c)
+      rw [scalar_eq_algebraMap, mk.commutes, (backward.comp forward).commutes]
+    · intro i
+      change backward (forward (mk (seedVar i))) = mk (seedVar i)
+      simpa [image] using hround (seedVar i)
+    · change backward (forward (mk yVar)) = mk yVar
+      simpa [image] using hround yVar
+    · change backward (forward (mk vVar)) = mk vVar
+      simpa [image] using hround vVar
+  let e : S ≃ₐ[G] T := AlgEquiv.ofAlgHom forward backward h1 h2
+  let b := Module.finBasis F E
+  change Module.finrank G S = Module.finrank F E
+  rw [e.toLinearEquiv.finrank_eq, Module.finrank_eq_card_basis (b.baseChange G)]
+  exact Fintype.card_fin _
+
+end
+
+end K1_14_3_2_7
+end PackSource_K1_14_3_2_7Section
+
+section PackSource_K1_14_3_2_5Defs
+set_option autoImplicit true
+set_option backward.isDefEq.respectTransparency false
+set_option maxSynthPendingDepth 8
+
+namespace K1_14_3_2_5
+
+noncomputable section
+
+open K1_14 K1_14_3 Polynomial
+
+/-- Contract a surface prime to the original seed plane. -/
+def seedImage (q : Surface) : Ideal Seeds :=
+  q.asIdeal.comap (C.comp C : Seeds →+* Jet)
+
+def sectionIdeal (q : Surface) (s : Slice) : Ideal SectionJet :=
+  q.asIdeal.map sectionMap ⊔ Ideal.span (sectionEquations s)
+
+abbrev SectionRing (q : Surface) (s : Slice) :=
+  SectionJet ⧸ sectionIdeal q s
+
+def sectionParameter (i : Fin 4) : SectionField :=
+  algebraMap (MvPolynomial (Fin 4) FX) SectionField (MvPolynomial.X i)
+
+def seedBase : Seeds →+* SectionSeeds :=
+  MvPolynomial.map (algebraMap FX SectionField)
+
+def seedLine : SectionSeeds :=
+  MvPolynomial.X 0 + MvPolynomial.C (sectionParameter 0) * MvPolynomial.X 1 -
+    MvPolynomial.C (sectionParameter 2)
+
+/-- The first slice of a seed-image hypersurface, over the full mixed section field. -/
+def curveSectionIdeal (f : Seeds) : Ideal SectionSeeds :=
+  Ideal.span {seedBase f, seedLine}
+
+abbrev CurveSection (f : Seeds) :=
+  SectionSeeds ⧸ curveSectionIdeal f
+
+/-- The seed coordinates give the natural map from the sliced image to the mixed section. -/
+def curveSectionMap (q : Surface) (f : Seeds) (he : seedImage q = Ideal.span {f}) :
+    CurveSection f →ₐ[SectionField] SectionRing q .mixed := by
+  let e₁ : SectionSeeds →ₐ[SectionField] Polynomial SectionSeeds := Polynomial.CAlgHom
+  let e₂ : Polynomial SectionSeeds →ₐ[SectionField] SectionJet := Polynomial.CAlgHom
+  let e := (Ideal.Quotient.mkₐ SectionField (sectionIdeal q .mixed)).comp (e₂.comp e₁)
+  apply Ideal.Quotient.liftₐ _ e
+  intro g hg
+  change Ideal.Quotient.mk (sectionIdeal q .mixed) (C (C g)) = 0
+  apply Ideal.Quotient.eq_zero_iff_mem.mpr
+  have hf : f ∈ seedImage q := he ▸ Ideal.subset_span (by simp)
+  have hbase : C (C (seedBase f)) ∈ sectionIdeal q .mixed := by
+    have hx : sectionMap (C (C f)) ∈ sectionIdeal q .mixed :=
+      (le_sup_left : q.asIdeal.map sectionMap ≤ sectionIdeal q .mixed)
+        (Ideal.mem_map_of_mem sectionMap hf)
+    simpa [sectionMap, seedBase] using hx
+  have hline : C (C seedLine) ∈ sectionIdeal q .mixed := by
+    apply (le_sup_right : Ideal.span (sectionEquations .mixed) ≤ sectionIdeal q .mixed)
+    apply Ideal.subset_span
+    left
+    simp [seedLine, sectionScalar, sectionParameter]
+  have hle : curveSectionIdeal f ≤ (sectionIdeal q .mixed).comap (C.comp C) := by
+    apply Ideal.span_le.mpr
+    intro a ha
+    simp only [Set.mem_insert_iff, Set.mem_singleton_iff] at ha
+    rcases ha with rfl | rfl
+    · exact hbase
+    · exact hline
+  exact hle hg
+
+end
+end K1_14_3_2_5
+end PackSource_K1_14_3_2_5Defs
+
+section PackSource_K1_14_3_2_5Points
+set_option autoImplicit true
+set_option backward.isDefEq.respectTransparency false
+set_option maxSynthPendingDepth 8
+set_option maxHeartbeats 1000000
+set_option maxRecDepth 12000
+
+namespace K1_14_3_2_5
+
+noncomputable section
+
+open K1 K1_14 K1_14_3 K1_14_3_2 Polynomial
+
+theorem seedImage_le_mark {q : Surface} {z : K} {S : K[X]} (h : AtSurface q z S) :
+    seedImage q ≤ RingHom.ker (graphEval z) := by
+  intro f hf
+  have hz : markEval z S (C (C f)) = 0 := h hf
+  simpa [markEval] using hz
+
+theorem seedImage_prime (q : Surface) : (seedImage q).IsPrime :=
+  Ideal.comap_isPrime _ _
+
+/-- At an actual mark, a nonzero contraction is either principal or the point kernel. -/
+theorem seedImage_cases {q : Surface} (hproper : ¬ SeedDominant q) {z : K} {S : K[X]}
+    (hmark : AtSurface q z S) :
+    (∃ f : Seeds, f ≠ 0 ∧ seedImage q = Ideal.span {f}) ∨
+      seedImage q = RingHom.ker (graphEval z) := by
+  have : (seedImage q).IsPrime := seedImage_prime q
+  have : (RingHom.ker (graphEval z)).IsPrime := RingHom.ker_isPrime _
+  by_cases hpoint : seedImage q = RingHom.ker (graphEval z)
+  · exact Or.inr hpoint
+  left
+  have hnonzero : seedImage q ≠ ⊥ := hproper
+  have hlt := lt_of_le_of_ne (seedImage_le_mark hmark) hpoint
+  have hdim : ringKrullDim Seeds = 2 := by
+    simp
+  have htop : (RingHom.ker (graphEval z)).height ≤ 2 := by
+    have h := Ideal.height_le_ringKrullDim_of_isPrime (I := RingHom.ker (graphEval z))
+    rw [hdim] at h
+    exact WithBot.coe_le_coe.mp h
+  have hle : (seedImage q).height + 1 ≤ 2 :=
+    (Ideal.height_add_one_le_of_lt_of_isPrime hlt).trans htop
+  have hlo : 1 ≤ (seedImage q).height :=
+    Order.one_le_iff_ne_zero.mpr (Ideal.height_eq_zero_iff_eq_bot.not.mpr hnonzero)
+  have hone : (seedImage q).height = 1 := by
+    apply le_antisymm _ hlo
+    apply (ENat.add_le_add_iff_right (by simp : (1 : ℕ∞) ≠ ⊤)).mp
+    rw [show (1 : ℕ∞) + 1 = 2 by decide]
+    exact hle
+  obtain ⟨f, hf, hp⟩ := Ideal.IsPrime.exists_mem_prime_of_ne_bot ‹(seedImage q).IsPrime› hnonzero
+  exact ⟨f, hp.ne_zero, Ideal.eq_span_singleton_of_height_eq_one hone hf hp⟩
+
+theorem same_mark_seed {q : Surface} {z z' : K} {S : K[X]}
+    (he : seedImage q = RingHom.ker (graphEval z)) (hm : AtSurface q z' S) :
+    (seedEmbedding z', seedEmbedding z' ^ p) =
+      (seedEmbedding z, seedEmbedding z ^ p) := by
+  have h₀ : MvPolynomial.X (0 : Fin 2) - MvPolynomial.C (seedEmbedding z) ∈ seedImage q := by
+    rw [he, RingHom.mem_ker]
+    simp [graphEval]
+  have h₁ : MvPolynomial.X (1 : Fin 2) - MvPolynomial.C (seedEmbedding z ^ p) ∈ seedImage q := by
+    rw [he, RingHom.mem_ker]
+    simp [graphEval]
+  have he₀ := RingHom.mem_ker.mp (seedImage_le_mark hm h₀)
+  have he₁ := RingHom.mem_ker.mp (seedImage_le_mark hm h₁)
+  exact Prod.ext (sub_eq_zero.mp (by simpa [graphEval] using he₀))
+    (sub_eq_zero.mp (by simpa [graphEval] using he₁))
+
+/-- Keep the two jet coordinates and evaluate the two seeds. -/
+private def pointJetMap (z : K) : Jet →+* JetPlane :=
+  Polynomial.mapRingHom (Polynomial.mapRingHom (graphEval z))
+
+/-- Evaluating both seeds has height at least two, witnessed by the two partial kernels. -/
+private theorem evaluationKernel_height {k : Type} [Field k] (a b : k) :
+    2 ≤ (RingHom.ker
+      (Polynomial.mapRingHom (Polynomial.mapRingHom
+        (MvPolynomial.eval ![a, b] : MvPolynomial (Fin 2) k →+* k)))).height := by
+  let s : MvPolynomial (Fin 2) k →+* k := MvPolynomial.eval ![a, b]
+  let t : MvPolynomial (Fin 2) k →+* k[X] :=
+    MvPolynomial.eval₂Hom (Polynomial.C : k →+* k[X]) ![Polynomial.C a, Polynomial.X (R := k)]
+  let e := Polynomial.mapRingHom (Polynomial.mapRingHom s)
+  let g := Polynomial.mapRingHom (Polynomial.mapRingHom t)
+  let j := RingHom.ker e
+  let i := RingHom.ker g
+  change 2 ≤ j.height
+  have : j.IsPrime := RingHom.ker_isPrime e
+  have : i.IsPrime := RingHom.ker_isPrime g
+  have hgraph : (evalRingHom b).comp t = s := by
+    apply MvPolynomial.ringHom_ext
+    · intro x
+      simp [s, t]
+    · intro k
+      fin_cases k <;> simp [s, t]
+  have hij : i ≤ j := by
+    have hgj : e = (Polynomial.mapRingHom (Polynomial.mapRingHom (evalRingHom b))).comp g := by
+      simp only [e, g, Polynomial.mapRingHom_comp, hgraph]
+    intro x hx
+    change e x = 0
+    have hx' : g x = 0 := hx
+    simp [hgj, hx']
+  let f₀ : MvPolynomial (Fin 2) k := MvPolynomial.X 0 - MvPolynomial.C a
+  let f₁ : MvPolynomial (Fin 2) k := MvPolynomial.X 1 - MvPolynomial.C b
+  have hf₀ : f₀ ≠ 0 := by
+    intro hz
+    have hc := congrArg (MvPolynomial.eval ![a + 1, b]) hz
+    simp [f₀] at hc
+  have hi₀ : i ≠ ⊥ := by
+    intro hi
+    have hmem : C (C f₀) ∈ i := by
+      change g (C (C f₀)) = 0
+      simp [g, f₀, t]
+    rw [hi, Ideal.mem_bot, Polynomial.C_eq_zero, Polynomial.C_eq_zero] at hmem
+    exact hf₀ hmem
+  have hij' : i < j := by
+    apply lt_of_le_of_ne hij
+    intro h
+    have hmem : C (C f₁) ∈ j := by
+      change e (C (C f₁)) = 0
+      simp [e, f₁, s]
+    rw [← h] at hmem
+    have hf : g (C (C f₁)) = 0 := hmem
+    have hc : t f₁ = Polynomial.X (R := k) - C b := by
+      simp [f₁, t]
+    simp only [g, Polynomial.coe_mapRingHom, Polynomial.map_C, hc] at hf
+    exact X_sub_C_ne_zero _ (Polynomial.C_eq_zero.mp (Polynomial.C_eq_zero.mp hf))
+  have h₁ : 1 ≤ i.height :=
+    Order.one_le_iff_ne_zero.mpr (Ideal.height_eq_zero_iff_eq_bot.not.mpr hi₀)
+  calc
+    2 = 1 + 1 := by decide
+    _ ≤ i.height + 1 := add_le_add_left h₁ 1
+    _ ≤ j.height := Ideal.height_add_one_le_of_lt_of_isPrime hij'
+
+private theorem pointJetMap_ker_eq {q : Surface} (hh : q.asIdeal.height = 2) {z : K}
+    (he : seedImage q = RingHom.ker (graphEval z)) :
+    RingHom.ker (pointJetMap z) = q.asIdeal := by
+  let j := RingHom.ker (pointJetMap z)
+  have : j.IsPrime := RingHom.ker_isPrime (pointJetMap z)
+  have htwo : 2 ≤ j.height := evaluationKernel_height (seedEmbedding z) (seedEmbedding z ^ p)
+  have hjq : j ≤ q.asIdeal := by
+    change RingHom.ker (pointJetMap z) ≤ q.asIdeal
+    rw [pointJetMap, Polynomial.ker_mapRingHom, Polynomial.ker_mapRingHom, Ideal.map_map, ← he]
+    exact Ideal.map_comap_le
+  classical
+  have : q.asIdeal.IsPrime := q.isPrime
+  have : q.asIdeal.FiniteHeight := by simp [Ideal.finiteHeight_iff, hh]
+  refine eq_of_le_of_not_lt hjq fun hlt => ?_
+  exact (not_lt_of_ge (hh ▸ htwo)) (Ideal.height_strict_mono_of_isPrime_of_isPrime hlt)
+
+private def sectionGraph (z : K) : SectionSeeds →+* SectionField :=
+  MvPolynomial.eval fun i => algebraMap FX SectionField
+    (![seedEmbedding z, seedEmbedding z ^ p] i)
+
+private def pointSectionEval (z : K) : SectionJet →+* SectionField :=
+  eval₂RingHom (eval₂RingHom (sectionGraph z) (sectionParameter 2)) (sectionParameter 3)
+
+private theorem evalMapComp {R A B : Type*} [CommSemiring R] [CommSemiring A] [CommSemiring B]
+    (f : R →+* A) (g : A →+* B) (x : B) :
+    (eval₂RingHom g x).comp (Polynomial.mapRingHom f) = eval₂RingHom (g.comp f) x := by
+  apply RingHom.ext
+  intro a
+  simp only [RingHom.comp_apply, Polynomial.coe_mapRingHom, Polynomial.coe_eval₂RingHom,
+    Polynomial.eval₂_map]
+
+/-- A height-two surface with a rational point as seed image has a one-point jet section. -/
+theorem pointSection_pos {q : Surface} (hh : q.asIdeal.height = 2) {z : K}
+    (he : seedImage q = RingHom.ker (graphEval z)) :
+    1 ≤ sectionDegree q .jets := by
+  let J := sectionIdeal q .jets
+  let Q := SectionRing q .jets
+  let e := pointSectionEval z
+  let m : SectionJet →+* Q := Ideal.Quotient.mk J
+  let a : SectionField →+* Q := algebraMap SectionField Q
+  have hgraph : (sectionGraph z).comp seedBase = (algebraMap FX SectionField).comp (graphEval z) := by
+    apply MvPolynomial.ringHom_ext
+    · intro x
+      simp [sectionGraph, seedBase, graphEval]
+    · intro i
+      simp [sectionGraph, seedBase, graphEval]
+  have hmap : e.comp sectionMap =
+      (eval₂RingHom (eval₂RingHom (algebraMap FX SectionField) (sectionParameter 2))
+        (sectionParameter 3)).comp (pointJetMap z) := by
+    simp only [e, pointSectionEval, sectionMap, pointJetMap, evalMapComp]
+    change eval₂RingHom (eval₂RingHom ((sectionGraph z).comp seedBase) _) _ = _
+    rw [hgraph]
+  let Y₀ : SectionJet := C (Polynomial.X (R := SectionSeeds))
+  let V₀ : SectionJet := Polynomial.X (R := Polynomial SectionSeeds)
+  have hy : Y₀ - sectionScalar 2 ∈ J := by
+    apply (le_sup_right : Ideal.span (sectionEquations .jets) ≤ J)
+    apply Ideal.subset_span
+    left
+    rfl
+  have hv : V₀ - sectionScalar 3 ∈ J := by
+    apply (le_sup_right : Ideal.span (sectionEquations .jets) ≤ J)
+    apply Ideal.subset_span
+    right
+    exact Set.mem_singleton _
+  have hJ : J ≤ RingHom.ker e := by
+    apply sup_le
+    · apply Ideal.map_le_iff_le_comap.mpr
+      intro x hx
+      have hx' : pointJetMap z x = 0 := by
+        change x ∈ RingHom.ker (pointJetMap z)
+        rwa [pointJetMap_ker_eq hh he]
+      change e (sectionMap x) = 0
+      have heq := RingHom.congr_fun hmap x
+      simpa [hx'] using heq
+    · apply Ideal.span_le.mpr
+      intro x hx
+      simp only [sectionEquations, Set.mem_insert_iff, Set.mem_singleton_iff] at hx
+      rcases hx with rfl | rfl <;>
+        simp [e, pointSectionEval, sectionGraph, sectionScalar, sectionParameter]
+  have hseed (i : Fin 2) :
+      C (C (MvPolynomial.X i - MvPolynomial.C
+        (algebraMap FX SectionField (![seedEmbedding z, seedEmbedding z ^ p] i)))) ∈ J := by
+    let f : Seeds :=
+      MvPolynomial.X i - MvPolynomial.C (![seedEmbedding z, seedEmbedding z ^ p] i)
+    have hf : f ∈ seedImage q := by
+      rw [he, RingHom.mem_ker]
+      simp [f, graphEval]
+    have hx : sectionMap (C (C f)) ∈ J :=
+      (le_sup_left : q.asIdeal.map sectionMap ≤ J) (Ideal.mem_map_of_mem sectionMap hf)
+    simpa [sectionMap, f] using hx
+  have hcoeff : (m.comp C).comp C = ((a.comp e).comp C).comp C := by
+    apply MvPolynomial.ringHom_ext
+    · intro r
+      change m (C (C (MvPolynomial.C r))) = a (e (C (C (MvPolynomial.C r))))
+      change a r = a (e (C (C (MvPolynomial.C r))))
+      simp [e, pointSectionEval, sectionGraph]
+    · intro i
+      let r := algebraMap FX SectionField (![seedEmbedding z, seedEmbedding z ^ p] i)
+      change m (C (C (MvPolynomial.X i))) = a (e (C (C (MvPolynomial.X i))))
+      have hx : e (C (C (MvPolynomial.X i))) = r := by
+        simp [e, pointSectionEval, sectionGraph, r]
+      rw [hx]
+      change m (C (C (MvPolynomial.X i))) = m (C (C (MvPolynomial.C r)))
+      rw [← sub_eq_zero, ← map_sub, ← map_sub, ← map_sub]
+      exact Ideal.Quotient.eq_zero_iff_mem.mpr (hseed i)
+  have hmiddle : m.comp C = (a.comp e).comp C := by
+    apply Polynomial.ringHom_ext' hcoeff
+    change m Y₀ = a (e Y₀)
+    have hx : e Y₀ = sectionParameter 2 := by simp [e, pointSectionEval, Y₀]
+    rw [hx]
+    change m Y₀ = m (sectionScalar 2)
+    rw [← sub_eq_zero, ← map_sub]
+    exact Ideal.Quotient.eq_zero_iff_mem.mpr hy
+  have hall : m = a.comp e := by
+    apply Polynomial.ringHom_ext' hmiddle
+    change m V₀ = a (e V₀)
+    have hx : e V₀ = sectionParameter 3 := by simp [e, pointSectionEval, V₀]
+    rw [hx]
+    change m V₀ = m (sectionScalar 3)
+    rw [← sub_eq_zero, ← map_sub]
+    exact Ideal.Quotient.eq_zero_iff_mem.mpr hv
+  have hsurj : Function.Surjective a := by
+    intro b
+    obtain ⟨x, hx⟩ := Ideal.Quotient.mk_surjective (I := J) b
+    exact ⟨e x, (RingHom.congr_fun hall x).symm.trans hx⟩
+  let : Nontrivial Q := Ideal.Quotient.nontrivial_iff.mpr
+    (ne_top_of_le_ne_top (RingHom.ker_ne_top e) hJ)
+  let : Module.Finite SectionField Q :=
+    Module.Finite.of_surjective (Algebra.linearMap SectionField Q) hsurj
+  exact Module.finrank_pos (R := SectionField) (M := Q)
+
+end
+end K1_14_3_2_5
+end PackSource_K1_14_3_2_5Points
+
+section PackSource_K1_14_3_2_5Split
+set_option autoImplicit true
+set_option backward.isDefEq.respectTransparency false
+set_option maxSynthPendingDepth 8
+
+namespace K1_14_3_2_5
+
+noncomputable section
+
+open K1 K1_14 K1_14_3 K1_14_3_2 Polynomial
+open scoped BigOperators
+
+/-- A seed plane equation has its total degree on the independent generic line. -/
+def c1 : Prop :=
+  ∀ f : Seeds, f ≠ 0 → Module.finrank SectionField (CurveSection f) = f.totalDegree
+
+/-- Cutting by an independent generic jet line preserves the sliced seed image. -/
+def c2 : Prop :=
+  ∀ (q : Surface) (f : Seeds), q.asIdeal.height = 2 → f ≠ 0 →
+    ∀ he : seedImage q = Ideal.span {f}, Function.Injective (curveSectionMap q f he)
+
+/-- The mixed section of a height-two prime above a seed curve has finite length. -/
+def c3 : Prop :=
+  ∀ (q : Surface) (f : Seeds), q.asIdeal.height = 2 → f ≠ 0 →
+    seedImage q = Ideal.span {f} → Module.Finite SectionField (SectionRing q .mixed)
+
+private theorem localCover (h1 : c1) (h2 : c2) (h3 : c3)
+    {q : Surface} (hh : q.asIdeal.height = 2) :
+    ∃ C : SeedCover,
+      C.curve.totalDegree ≤ sectionDegree q .mixed ∧ C.points.card ≤ sectionDegree q .jets ∧
+      (¬ SeedDominant q → ∀ z S, AtSurface q z S → C.Covers z) := by
+  classical
+  by_cases hq : ¬ SeedDominant q ∧ ∃ z S, AtSurface q z S
+  · rcases hq with ⟨hproper, z, S, hmark⟩
+    rcases seedImage_cases hproper hmark with ⟨f, hf, he⟩ | he
+    · have hdegree : f.totalDegree ≤ sectionDegree q .mixed := by
+        change f.totalDegree ≤ Module.finrank SectionField (SectionRing q .mixed)
+        let : Module.Finite SectionField (SectionRing q .mixed) := h3 q f hh hf he
+        rw [← h1 f hf]
+        exact LinearMap.finrank_le_finrank_of_injective
+          (f := (curveSectionMap q f he).toLinearMap) (h2 q f hh hf he)
+      refine ⟨⟨f, hf, ∅⟩, hdegree, by simp, ?_⟩
+      intro _ z' S' hm
+      have hmem : f ∈ seedImage q := by rw [he]; exact Ideal.subset_span (by simp)
+      exact Or.inl (RingHom.mem_ker.mp (seedImage_le_mark hm hmem))
+    · refine ⟨⟨1, one_ne_zero, {(seedEmbedding z, seedEmbedding z ^ p)}⟩,
+        by simp, by simpa using pointSection_pos hh he, ?_⟩
+      intro _ z' S' hm
+      exact Or.inr (Finset.mem_singleton.mpr (same_mark_seed he hm))
+  · refine ⟨⟨1, one_ne_zero, ∅⟩, by simp, by simp, ?_⟩
+    intro hproper z S hmark
+    exact (hq ⟨hproper, z, S, hmark⟩).elim
+
+theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) : K1_14_3_2.c5 := by
+  classical
+  intro qs hh
+  have hlocal (q : Surface) (hq : q ∈ qs) :=
+    localCover h1 h2 h3 (hh q hq)
+  let C (q : Surface) : SeedCover :=
+    if hq : q ∈ qs then Classical.choose (hlocal q hq) else ⟨1, one_ne_zero, ∅⟩
+  have hC (q : Surface) (hq : q ∈ qs) :
+      (C q).curve.totalDegree ≤ sectionDegree q .mixed ∧
+      (C q).points.card ≤ sectionDegree q .jets ∧
+      (¬ SeedDominant q → ∀ z S, AtSurface q z S → (C q).Covers z) := by
+    simpa only [C, dite_eq_left hq] using Classical.choose_spec (hlocal q hq)
+  refine ⟨joinCovers qs C, ?_, ?_, ?_⟩
+  · calc
+      _ ≤ ∑ q ∈ qs, ((C q).curve.totalDegree : ℚ) := by exact_mod_cast joinCovers_degree qs C
+      _ ≤ mass qs .mixed := Finset.sum_le_sum fun q hq => by exact_mod_cast (hC q hq).1
+  · calc
+      _ ≤ ∑ q ∈ qs, ((C q).points.card : ℚ) := by exact_mod_cast joinCovers_points qs C
+      _ ≤ mass qs .jets := Finset.sum_le_sum fun q hq => by exact_mod_cast (hC q hq).2.1
+  · intro q hq hp z S hm
+    exact joinCovers_covers hq ((hC q hq).2.2 hp z S hm)
+
+end
+end K1_14_3_2_5
+end PackSource_K1_14_3_2_5Split
+
+section PackSource_K1_14_3_2_3Defs
+set_option autoImplicit true
+set_option autoImplicit false
+
+namespace K1_14_3_2_3
+
+noncomputable section
+
+open K1 K1_14 K1_14_3
+
+abbrev Plane := MvPolynomial (Fin 2) SectionField
+
+/-- The independent slopes (0, 1) and offsets (2, 3) of the generic cuts. -/
+def parameter (i : Fin 4) : SectionField :=
+  algebraMap (MvPolynomial (Fin 4) FX) SectionField (MvPolynomial.X i)
+
+/-- The two seed coordinates on each slice. The free coordinates are
+(Y,V), (t₁,V), (t₁,V), and (t₀,t₁), in slice order. -/
+def seedCoordinates : Slice → Fin 2 → Plane
+  | .seed => ![MvPolynomial.C (parameter 2), MvPolynomial.C (parameter 3)]
+  | .ordinate | .mixed =>
+    ![MvPolynomial.C (parameter 2) - MvPolynomial.C (parameter 0) * MvPolynomial.X 0,
+      MvPolynomial.X 0]
+  | .jets => MvPolynomial.X
+
+def ordinateCoordinate : Slice → Plane
+  | .seed => MvPolynomial.X 0
+  | .ordinate => MvPolynomial.C (parameter 3)
+  | .mixed => MvPolynomial.C (parameter 3) - MvPolynomial.C (parameter 1) * MvPolynomial.X 1
+  | .jets => MvPolynomial.C (parameter 2)
+
+def derivativeCoordinate : Slice → Plane
+  | .jets => MvPolynomial.C (parameter 3)
+  | _ => MvPolynomial.X 1
+
+/-- Elimination of the two linear equations in the definition of a section. -/
+def sliceMap (s : Slice) : SectionJet →ₐ[SectionField] Plane :=
+  Polynomial.aevalTower
+    (Polynomial.aevalTower (MvPolynomial.aeval (seedCoordinates s)) (ordinateCoordinate s))
+    (derivativeCoordinate s)
+
+def planeMap (s : Slice) : Jet →+* Plane :=
+  (sliceMap s).toRingHom.comp sectionMap
+
+def planeIdeal (s : Slice) (q : Surface) : Ideal Plane :=
+  q.asIdeal.map (planeMap s)
+
+/-- A prime disjoint from the generic denominators stays prime, with its
+original contraction. A prime meeting the denominators gives the unit ideal. -/
+def PrimeTransport (s : Slice) : Prop :=
+  ∀ q : Surface, planeIdeal s q = ⊤ ∨
+    (planeIdeal s q).IsPrime ∧ (planeIdeal s q).comap (planeMap s) = q.asIdeal
+
+/-- Properness in the two remaining affine coordinates. -/
+structure PlaneProper (F G : Plane) : Prop where
+  left_ne : F ≠ 0
+  right_ne : G ≠ 0
+  no_common : ∀ D : Plane, Irreducible D → D ∣ F → ¬ D ∣ G
+
+/-- The surviving degree constraints after eliminating the cut equations. -/
+def PlaneCaps (s : Slice) (B J U : ℕ) (F : Plane) : Prop :=
+  match s with
+  | .seed => F.totalDegree ≤ B ∧ F.degreeOf 1 ≤ J
+  | .ordinate => F.degreeOf 0 ≤ U ∧ F.degreeOf 1 ≤ J
+  | .mixed => F.degreeOf 0 ≤ U ∧ F.degreeOf 1 ≤ B
+  | .jets => F.totalDegree ≤ U
+
+/-- Colength of the ideal generated by the two sliced rows. -/
+abbrev PlaneQuotient (F G : Plane) := Plane ⧸ Ideal.span ({F, G} : Set Plane)
+
+end
+end K1_14_3_2_3
+end PackSource_K1_14_3_2_3Defs
+
+section PackSource_K1_14_3_2_3Aux2
+set_option autoImplicit true
+set_option autoImplicit false
+set_option backward.isDefEq.respectTransparency false
+set_option maxSynthPendingDepth 8
+set_option maxHeartbeats 1500000
+
+namespace K1_14_3_2_3
+
+noncomputable section
+
+open K1_14_3 Polynomial
+
+private abbrev t (i : Fin 2) : SectionJet := C (C (MvPolynomial.X i))
+private abbrev y : SectionJet := C (Polynomial.X (R := SectionSeeds))
+private abbrev v : SectionJet := Polynomial.X (R := Polynomial SectionSeeds)
+
+private def free : Slice → Fin 2 → SectionJet
+  | .seed => ![y, v]
+  | .ordinate | .mixed => ![t 1, v]
+  | .jets => ![t 0, t 1]
+
+private abbrev CutQuotient (s : Slice) := SectionJet ⧸ Ideal.span (sectionEquations s)
+
+private def cutMk (s : Slice) : SectionJet →ₐ[SectionField] CutQuotient s :=
+  Ideal.Quotient.mkₐ _ _
+
+private def restore (s : Slice) : Plane →ₐ[SectionField] CutQuotient s :=
+  MvPolynomial.aeval (cutMk s ∘ free s)
+
+@[simp] private theorem slice_t (s : Slice) (i : Fin 2) :
+    sliceMap s (t i) = seedCoordinates s i := by
+  simp [sliceMap]
+
+@[simp] private theorem slice_y (s : Slice) :
+    sliceMap s y = ordinateCoordinate s := by simp [sliceMap]
+
+@[simp] private theorem slice_v (s : Slice) :
+    sliceMap s v = derivativeCoordinate s := by simp [sliceMap]
+
+@[simp] private theorem slice_scalar (s : Slice) (i : Fin 4) :
+    sliceMap s (sectionScalar i) = MvPolynomial.C (parameter i) :=
+  (sliceMap s).commutes (parameter i)
+
+@[simp] private theorem restore_const (s : Slice) (i : Fin 4) :
+    restore s (MvPolynomial.C (parameter i)) = cutMk s (sectionScalar i) :=
+  (restore s).commutes (parameter i)
+
+@[simp] private theorem restore_X (s : Slice) (i : Fin 2) :
+    restore s (MvPolynomial.X i) = cutMk s (free s i) := by simp [restore]
+
+private theorem cut_value (s : Slice) {a b : SectionJet} (h : a - b ∈ sectionEquations s) :
+    cutMk s a = cutMk s b := by
+  apply sub_eq_zero.mp
+  rw [← map_sub]
+  exact Ideal.Quotient.eq_zero_iff_mem.mpr (Ideal.subset_span h)
+
+private theorem seed_line_value (s : Slice) (hs : s = .ordinate ∨ s = .mixed) :
+    cutMk s (t 0) = cutMk s (sectionScalar 2) -
+      cutMk s (sectionScalar 0) * cutMk s (t 1) := by
+  apply eq_sub_of_add_eq
+  have h : t 0 + sectionScalar 0 * t 1 - sectionScalar 2 ∈ sectionEquations s := by
+    rcases hs with rfl | rfl <;> exact Set.mem_insert _ _
+  simpa only [map_add, map_mul] using cut_value s h
+
+private theorem restore_comp (s : Slice) : (restore s).comp (sliceMap s) = cutMk s := by
+  apply Polynomial.algHom_ext'
+  · apply Polynomial.algHom_ext'
+    · apply MvPolynomial.algHom_ext
+      rw [Fin.forall_fin_two]
+      simp only [AlgHom.comp_apply, Polynomial.CAlgHom_apply, slice_t]
+      constructor
+      · cases s
+        · simpa only [seedCoordinates, Matrix.cons_val_zero, restore_const] using
+            (cut_value .seed (a := t 0) (b := sectionScalar 2) (Set.mem_insert _ _)).symm
+        · simpa only [seedCoordinates, Matrix.cons_val_zero, map_sub, map_mul,
+            restore_const, restore_X, free] using
+            (seed_line_value .ordinate (Or.inl rfl)).symm
+        · simpa only [seedCoordinates, Matrix.cons_val_zero, map_sub, map_mul,
+            restore_const, restore_X, free] using
+            (seed_line_value .mixed (Or.inr rfl)).symm
+        · simp [seedCoordinates, free]
+      · cases s
+        · simpa only [seedCoordinates, Matrix.cons_val_one, Matrix.cons_val_zero,
+            restore_const] using
+            (cut_value .seed (a := t 1) (b := sectionScalar 3)
+              (Set.mem_insert_of_mem _ (Set.mem_singleton _))).symm
+        · simp [seedCoordinates, free]
+        · simp [seedCoordinates, free]
+        · simp [seedCoordinates, free]
+    · simp only [AlgHom.comp_apply, Polynomial.CAlgHom_apply, slice_y]
+      cases s
+      · simp [ordinateCoordinate, free]
+      · simpa only [ordinateCoordinate, restore_const] using
+          (cut_value .ordinate (a := y) (b := sectionScalar 3)
+            (Set.mem_insert_of_mem _ (Set.mem_singleton _))).symm
+      · have h : y + sectionScalar 1 * v - sectionScalar 3 ∈ sectionEquations .mixed :=
+          Set.mem_insert_of_mem _ (Set.mem_singleton _)
+        have he : cutMk .mixed y =
+            cutMk .mixed (sectionScalar 3) -
+              cutMk .mixed (sectionScalar 1) * cutMk .mixed v :=
+          eq_sub_of_add_eq (by simpa only [map_add, map_mul] using cut_value .mixed h)
+        simpa only [ordinateCoordinate, map_sub, map_mul, restore_const, restore_X, free,
+          Matrix.cons_val_one, Matrix.cons_val_zero] using he.symm
+      · simpa only [ordinateCoordinate, restore_const] using
+          (cut_value .jets (a := y) (b := sectionScalar 2) (Set.mem_insert _ _)).symm
+  · simp only [AlgHom.comp_apply, slice_v]
+    cases s
+    · simp [derivativeCoordinate, free]
+    · simp [derivativeCoordinate, free]
+    · simp [derivativeCoordinate, free]
+    · simpa only [derivativeCoordinate, restore_const] using
+        (cut_value .jets (a := v) (b := sectionScalar 3)
+          (Set.mem_insert_of_mem _ (Set.mem_singleton _))).symm
+
+/-- The two linear slice equations generate the kernel of the elimination map. -/
+theorem sliceMap_ker (s : Slice) :
+    RingHom.ker (sliceMap s) = Ideal.span (sectionEquations s) := by
+  apply le_antisymm
+  · intro f hf
+    apply Ideal.Quotient.eq_zero_iff_mem.mp
+    have h := AlgHom.congr_fun (restore_comp s) f
+    rw [AlgHom.comp_apply, RingHom.mem_ker.mp hf, map_zero] at h
+    exact h.symm
+  · apply Ideal.span_le.mpr
+    intro f hf
+    apply RingHom.mem_ker.mpr
+    cases s <;>
+      simp only [sectionEquations, Set.mem_insert_iff, Set.mem_singleton_iff] at hf <;>
+      rcases hf with rfl | rfl <;>
+      simp [seedCoordinates, ordinateCoordinate, derivativeCoordinate]
+
+/-- The two free variables lift to the corresponding coordinates of the ambient ring. -/
+theorem sliceMap_surjective (s : Slice) : Function.Surjective (sliceMap s) := by
+  let lift : Plane →ₐ[SectionField] SectionJet := MvPolynomial.aeval (free s)
+  have hcomp : (sliceMap s).comp lift = AlgHom.id _ _ := by
+    apply MvPolynomial.algHom_ext
+    rw [Fin.forall_fin_two]
+    simp only [AlgHom.comp_apply, lift, MvPolynomial.aeval_X, AlgHom.id_apply]
+    cases s <;> simp [free, seedCoordinates, ordinateCoordinate, derivativeCoordinate]
+  intro F
+  exact ⟨lift F, AlgHom.congr_fun hcomp F⟩
+
+end
+end K1_14_3_2_3
+end PackSource_K1_14_3_2_3Aux2
+
+section PackSource_K1_14_3_2_3Aux1
+set_option autoImplicit true
+set_option autoImplicit false
+set_option backward.isDefEq.respectTransparency false
+set_option maxSynthPendingDepth 8
+set_option maxHeartbeats 1500000
+
+namespace K1_14_3_2_3
+
+noncomputable section
+
+open K1 K1_14 K1_14_3 K1_14_3_2
+open scoped BigOperators
+
+/-- The section quotient is obtained by substituting the two linear relations. -/
+theorem sectionLength_eq (s : Slice)
+    (hsurj : Function.Surjective (sliceMap s))
+    (hker : RingHom.ker (sliceMap s) = Ideal.span (sectionEquations s))
+    (q : Surface) :
+    sectionDegree q s = Module.finrank SectionField (Plane ⧸ planeIdeal s q) := by
+  let I := q.asIdeal.map sectionMap ⊔ Ideal.span (sectionEquations s)
+  let J := planeIdeal s q
+  have hmap : I = J.comap (sliceMap s) := by
+    change _ = (q.asIdeal.map ((sliceMap s).toRingHom.comp sectionMap)).comap
+      (sliceMap s).toRingHom
+    rw [← Ideal.map_map, Ideal.comap_map_of_surjective (sliceMap s).toRingHom hsurj]
+    exact congrArg (q.asIdeal.map sectionMap ⊔ ·) hker.symm
+  let f := Ideal.quotientMapₐ J (sliceMap s) hmap.le
+  have hf : Function.Bijective f :=
+    ⟨Ideal.quotientMap_injective' (H := hmap.le) hmap.ge,
+      Ideal.quotientMap_surjective (H := hmap.le) hsurj⟩
+  exact (AlgEquiv.ofBijective f hf).toLinearEquiv.finrank_eq
+
+private theorem sum_quotient_le {k R ι : Type} [Field k] [CommRing R] [Algebra k R]
+    (L : Ideal R) (J : ι → Ideal R) (qs : Finset ι) [Module.Finite k (R ⧸ L)]
+    (hcont : ∀ q ∈ qs, L ≤ J q)
+    (hprime : ∀ q ∈ qs, J q = ⊤ ∨ (J q).IsPrime)
+    (hdisjoint : ∀ q ∈ qs, ∀ r ∈ qs, J q ≠ ⊤ → J r ≠ ⊤ → J q = J r → q = r) :
+    (∑ q ∈ qs, Module.finrank k (R ⧸ J q)) ≤ Module.finrank k (R ⧸ L) := by
+  classical
+  let T := qs.filter fun q => J q ≠ ⊤
+  let J' : T → Ideal R := fun q => J q
+  have hT (q : T) : (q : ι) ∈ qs := (Finset.mem_filter.mp q.property).1
+  have hne (q : T) : J q ≠ ⊤ := (Finset.mem_filter.mp q.property).2
+  have hle (q : T) : L ≤ J q := hcont q (hT q)
+  let (q : T) : Module.Finite k (R ⧸ J' q) :=
+    Module.Finite.of_surjective (Ideal.Quotient.factorₐ k (hle q)).toLinearMap
+      (Ideal.Quotient.factor_surjective (hle q))
+  have hJM (q : T) : (J q).IsMaximal := by
+    let : (J' q).IsPrime := (hprime q (hT q)).resolve_left (hne q)
+    let : IsArtinianRing (R ⧸ J' q) := IsArtinianRing.of_finite k _
+    exact Ideal.Quotient.maximal_of_isField (J' q) (IsArtinianRing.isField_of_isDomain _)
+  have hcop : Pairwise fun q r => IsCoprime (J' q) (J' r) := by
+    intro q r hqr
+    apply Ideal.isCoprime_iff_sup_eq.mpr
+    apply (hJM q).coprime_of_ne
+    · exact hJM r
+    · exact fun h => hqr (Subtype.ext (hdisjoint q (hT q) r (hT r) (hne q) (hne r) h))
+  let f : R ⧸ L →ₗ[k] ∀ q : T, R ⧸ J' q :=
+    LinearMap.pi fun q => (Ideal.Quotient.factorₐ k (hle q)).toLinearMap
+  have hsurj : Function.Surjective f := by
+    intro x
+    obtain ⟨y, hy⟩ := Ideal.quotientInfToPiQuotient_surj hcop x
+    obtain ⟨a, rfl⟩ := Ideal.Quotient.mk_surjective y
+    refine ⟨Ideal.Quotient.mk L a, ?_⟩
+    funext q
+    exact congrFun hy q
+  have hd := LinearMap.finrank_le_finrank_of_surjective hsurj
+  rw [Module.finrank_pi_fintype] at hd
+  change (∑ q : T, Module.finrank k (R ⧸ J q)) ≤ _ at hd
+  rw [Finset.sum_coe_sort T (fun q => Module.finrank k (R ⧸ J q))] at hd
+  change (∑ q ∈ qs.filter (fun q => J q ≠ ⊤), Module.finrank k (R ⧸ J q)) ≤ _ at hd
+  rw [Finset.sum_filter] at hd
+  convert hd using 1
+  symm
+  apply Finset.sum_congr rfl
+  intro q _
+  by_cases h : J q = ⊤
+  · let : Subsingleton (R ⧸ J q) := Ideal.Quotient.subsingleton_iff.mpr h
+    have hzero : Module.finrank k (R ⧸ J q) = 0 := Module.finrank_eq_zero_of_subsingleton k _
+    simp only [hzero, ite_self]
+  · simp [h]
+
+/-- Distinct surviving primes contribute at most the length of the pair quotient. -/
+theorem sum_le_colength (s : Slice) (F G : Plane) (qs : Finset Surface)
+    (hcont : ∀ q ∈ qs, Ideal.span ({F, G} : Set Plane) ≤ planeIdeal s q)
+    (hprime : ∀ q ∈ qs, planeIdeal s q = ⊤ ∨
+      (planeIdeal s q).IsPrime ∧ (planeIdeal s q).comap (planeMap s) = q.asIdeal)
+    (hfin : Module.Finite SectionField (PlaneQuotient F G)) :
+    (∑ q ∈ qs, Module.finrank SectionField (Plane ⧸ planeIdeal s q)) ≤
+      Module.finrank SectionField (PlaneQuotient F G) := by
+  let : Module.Finite SectionField (PlaneQuotient F G) := hfin
+  refine sum_quotient_le _ (planeIdeal s) qs hcont
+    (fun q hq => (hprime q hq).imp_right And.left) ?_
+  intro q hq r hr hneq hner h
+  apply PrimeSpectrum.ext
+  rw [← ((hprime q hq).resolve_left hneq).2, ← ((hprime r hr).resolve_left hner).2, h]
+
+end
+end K1_14_3_2_3
+end PackSource_K1_14_3_2_3Aux1
