@@ -402,7 +402,7 @@ section PackSource_WeightedSquaredList
 set_option autoImplicit true
 /- Adapted from sol1 C62SquaredList, using astra7's stronger unconditional scalar list theorem. -/
 
-/-! Unconditional actual native IRS16 list term at the6917 radius.
+/-! Unconditional actual native IRS16 list term at the6918 radius.
 The full scalar source/consumer and finite row projection are already proved. -/
 namespace Astra7.NativeBudget
 noncomputable section
@@ -414,11 +414,11 @@ set_option maxHeartbeats 0
 local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq A16 := Classical.decEq A16
 
-def radius6917 : ℝ := (queryRadius : ℝ)
+def radius6918 : ℝ := (queryRadius : ℝ)
 
 /-- Original scalar RS words lie in the proved augmented ordinary polynomial list. -/
 theorem finset_scalar_list_card_le (w : I → K) (P : Finset (I → K))
-    (hP : ∀ f ∈ P, f ∈ scalarCode ∧ 180246 ≤ agreementCard f w) : P.card ≤ Astra7.weightedListCap := by
+    (hP : ∀ f ∈ P, f ∈ scalarCode ∧ 180236 ≤ agreementCard f w) : P.card ≤ Astra7.weightedListCap := by
   classical
   have : NeZero (131072 : ℕ) := ⟨by norm_num⟩
   choose poly hdegree heval using fun f : P ↦
@@ -437,14 +437,14 @@ theorem finset_scalar_list_card_le (w : I → K) (P : Finset (I → K))
     rw [Finset.card_image_of_injective _ hinj]
     simp
   have hpolys : (polys : Set K[X]) ⊆
-      ReedSolomon.closePolynomialSet IRSProfile.domain w 131073 180246 := by
+      ReedSolomon.closePolynomialSet IRSProfile.domain w 131073 180236 := by
     intro q hq
     obtain ⟨f,_hf,rfl⟩ := Finset.mem_image.mp hq
     refine ⟨?_, ?_⟩
     · have hd : (poly f).natDegree < 131073 := (hdegree f).trans (by norm_num)
       exact (Polynomial.degree_le_natDegree).trans_lt (by exact_mod_cast hd)
     · have hword : (fun i ↦ (poly f).eval (IRSProfile.domain i)) = f.val := funext (heval f)
-      change 180246 ≤ agreementCard (fun i ↦ (poly f).eval (IRSProfile.domain i)) w
+      change 180236 ≤ agreementCard (fun i ↦ (poly f).eval (IRSProfile.domain i)) w
       rw [hword]
       exact (hP f.val f.property).2
   obtain ⟨hfinite,hbound⟩ := Astra7.native_weighted_complete_list w
@@ -457,38 +457,38 @@ theorem list_projection_room : (Astra7.weightedListCap + 1) ^ 2 ≤ Fintype.card
 
 /-- The actual alphabet is Fin2 -> Fin8 -> K; flattening only reindexes its rows. -/
 theorem finset_squared_list_card_le (w : I → A16) (P : Finset (I → A16))
-    (hP : ∀ f ∈ P, f ∈ squaredCode ∧ 180246 ≤ agreementCard f w) : P.card ≤ Astra7.weightedListCap := by
+    (hP : ∀ f ∈ P, f ∈ squaredCode ∧ 180236 ≤ agreementCard f w) : P.card ≤ Astra7.weightedListCap := by
   classical
   let flattened := P.image flatten
   have hflat : ∀ f ∈ flattened,
       (∀ r : R16, (fun i ↦ f i r) ∈ scalarCode) ∧
-        180246 ≤ agreementCard f (flatten w) := by
+        180236 ≤ agreementCard f (flatten w) := by
     intro f hf
     obtain ⟨g,hg,rfl⟩ := Finset.mem_image.mp hf
     obtain ⟨hcode,hagree⟩ := hP g hg
     exact ⟨flatten_rows_mem g hcode,hagree.trans (flatten_agreement_le g w)⟩
-  have hcount := finset_vector_list_card_le scalarCode 180246 Astra7.weightedListCap list_projection_room
+  have hcount := finset_vector_list_card_le scalarCode 180236 Astra7.weightedListCap list_projection_room
     finset_scalar_list_card_le (flatten w) flattened hflat
   have hcard : flattened.card = P.card := Finset.card_image_of_injective P flatten_injective
   rwa [hcard] at hcount
 
 theorem close_agreement_ge (f w : I → A16)
-    (hd : (δᵣ(w,f) : ℝ) ≤ radius6917) : 180246 ≤ agreementCard f w := by
+    (hd : (δᵣ(w,f) : ℝ) ≤ radius6918) : 180236 ≤ agreementCard f w := by
   classical
   have hpos : 0 < Fintype.card I := by norm_num [I,IRSProfile.Index]
-  have hradius : radius6917 = 1 - (180246 : ℝ) / Fintype.card I := by
-    norm_num [radius6917,queryRadius,claimedRadius,I,IRSProfile.Index]
-  have hagree : (180246 : ℝ) ≤ Code.agree f w :=
+  have hradius : radius6918 = 1 - (180236 : ℝ) / Fintype.card I := by
+    norm_num [radius6918,queryRadius,claimedRadius,I,IRSProfile.Index]
+  have hagree : (180236 : ℝ) ≤ Code.agree f w :=
     (Code.relHammingDist_le_one_sub_div_iff hpos).mp (by rwa [← hradius])
   exact_mod_cast hagree
 
 /-- Actual maximized independent IRS16 list term, with no MCA or list hypothesis. -/
 theorem squared_lambda_le :
-    Code.Lambda (squaredCode : Set (I → A16)) radius6917 ≤ (Astra7.weightedListCap : ℕ∞) := by
+    Code.Lambda (squaredCode : Set (I → A16)) radius6918 ≤ (Astra7.weightedListCap : ℕ∞) := by
   classical
   apply Code.Lambda_le_iff_forall_encard_le.mpr
   intro w
-  have hfinite : (Code.closeCodewordsRel (squaredCode : Set (I → A16)) w radius6917).Finite :=
+  have hfinite : (Code.closeCodewordsRel (squaredCode : Set (I → A16)) w radius6918).Finite :=
     Set.toFinite _
   have hcard : hfinite.toFinset.card ≤ Astra7.weightedListCap := by
     apply finset_squared_list_card_le w hfinite.toFinset
@@ -496,7 +496,7 @@ theorem squared_lambda_le :
     obtain ⟨hcode,hclose⟩ := Code.mem_closeCodewordsRel_iff.mp (hfinite.mem_toFinset.mp hf)
     exact ⟨hcode,close_agreement_ge f w hclose⟩
   calc
-    (Code.closeCodewordsRel (squaredCode : Set (I → A16)) w radius6917).encard =
+    (Code.closeCodewordsRel (squaredCode : Set (I → A16)) w radius6918).encard =
         (hfinite.toFinset.card : ℕ∞) := hfinite.encard_eq_coe_toFinset_card
     _ ≤ (Astra7.weightedListCap : ℕ∞) := by exact_mod_cast hcard
 
@@ -513,7 +513,7 @@ section PackSource_WeightedProtocol
 set_option autoImplicit true
 /- Adapted from sol1 C62OneCountProtocol. The universal MCA count is still an explicit unproved premise. -/
 
-/-! Exact6917 benchmark sufficiency from ONE actual native MCA count.
+/-! Exact6918 benchmark sufficiency from ONE actual native MCA count.
 The MCA count is a hypothesis, never an axiom or a proved universal claim. -/
 namespace Astra7.NativeBudget
 noncomputable section
@@ -524,34 +524,34 @@ set_option maxHeartbeats 0
 
 local instance : DecidableEq K := Classical.decEq K
 
-def ActualMCACap6917 (B : ℕ) : Prop :=
+def ActualMCACap6918 (B : ℕ) : Prop :=
   ∀ U : Fin 2 → I → Fin IRSProfile.interleaving → K,
-    {gamma | IsMCA (AffineLineGenerator K) IRSProfile.code gamma U radius6917}.ncard ≤ B
+    {gamma | IsMCA (AffineLineGenerator K) IRSProfile.code gamma U radius6918}.ncard ≤ B
 
-def badSlopes6917 (U : Fin 2 → I → Fin IRSProfile.interleaving → K) : Finset K := by
+def badSlopes6918 (U : Fin 2 → I → Fin IRSProfile.interleaving → K) : Finset K := by
   classical
   exact Finset.univ.filter fun gamma ↦
-    IsMCA (AffineLineGenerator K) IRSProfile.code gamma U radius6917
+    IsMCA (AffineLineGenerator K) IRSProfile.code gamma U radius6918
 
 theorem badSlopes_card_eq_ncard (U : Fin 2 → I → Fin IRSProfile.interleaving → K) :
-    (badSlopes6917 U).card =
-      {gamma | IsMCA (AffineLineGenerator K) IRSProfile.code gamma U radius6917}.ncard := by
+    (badSlopes6918 U).card =
+      {gamma | IsMCA (AffineLineGenerator K) IRSProfile.code gamma U radius6918}.ncard := by
   classical
-  have hs : {gamma | IsMCA (AffineLineGenerator K) IRSProfile.code gamma U radius6917} =
-      (badSlopes6917 U : Set K) := by
+  have hs : {gamma | IsMCA (AffineLineGenerator K) IRSProfile.code gamma U radius6918} =
+      (badSlopes6918 U : Set K) := by
     ext gamma
-    simp [badSlopes6917]
+    simp [badSlopes6918]
   rw [hs,Set.ncard_coe_finset]
 
 /-- The actual MCA probability, maximizing over arbitrary native IRS8 word pairs. -/
-theorem mca_error_le_of_actualCap (B : ℕ) (hcap : ActualMCACap6917 B) :
-    mcaError (AffineLineGenerator K) IRSProfile.code radius6917 ≤
+theorem mca_error_le_of_actualCap (B : ℕ) (hcap : ActualMCACap6918 B) :
+    mcaError (AffineLineGenerator K) IRSProfile.code radius6918 ≤
       (B : ENNReal) / (Fintype.card K : ENNReal) := by
   classical
   refine iSup_le fun U ↦ ?_
   rw [SampleableType.prEvent_uniformSample_eq_ofReal]
-  change ENNReal.ofReal (((badSlopes6917 U).card : ℝ) / Fintype.card K) ≤ _
-  have hc : (badSlopes6917 U).card ≤ B := by
+  change ENNReal.ofReal (((badSlopes6918 U).card : ℝ) / Fintype.card K) ≤ _
+  have hc : (badSlopes6918 U).card ≤ B := by
     rw [badSlopes_card_eq_ncard]
     exact hcap U
   calc
@@ -563,12 +563,12 @@ theorem mca_error_le_of_actualCap (B : ℕ) (hcap : ActualMCACap6917 B) :
         ENNReal.ofReal_natCast]
 
 /-- The independent IRS16 list is already bounded, so only the MCA cap remains. -/
-theorem gamma_error_le_of_actualCap (B : ℕ) (hcap : ActualMCACap6917 B)
+theorem gamma_error_le_of_actualCap (B : ℕ) (hcap : ActualMCACap6918 B)
     (hbudget : (B + Astra7.weightedListCap) * 2 ^ 128 ≤ Fintype.card K) :
     ToyProblem.certifiedGammaError IRSProfile.code queryRadius ≤ reductionTarget := by
   have hNat := ENat.toNat_le_of_le_natCast squared_lambda_le
   have hList :
-      ((Code.Lambda (squaredCode : Set (I → A16)) radius6917).toNat : ENNReal) /
+      ((Code.Lambda (squaredCode : Set (I → A16)) radius6918).toNat : ENNReal) /
         (Fintype.card K : ENNReal) ≤ (Astra7.weightedListCap : ENNReal) / Fintype.card K :=
     ENNReal.div_le_div_right (by exact_mod_cast hNat) _
   have hreal : ((B + Astra7.weightedListCap : ℕ) : ℝ) / Fintype.card K ≤ (1 : ℝ) / 2 ^ 128 := by
@@ -592,16 +592,16 @@ theorem gamma_error_le_of_actualCap (B : ℕ) (hcap : ActualMCACap6917 B)
       norm_num [reductionTarget,ProximityGap.prizeThreshold]
 
 /-- Exact native benchmark type, with one mathematical count and the explicit integer budget. -/
-theorem protocolClaim6917_of_actualCap (B : ℕ) (hcap : ActualMCACap6917 B)
+theorem protocolClaim6918_of_actualCap (B : ℕ) (hcap : ActualMCACap6918 B)
     (hbudget : (B + Astra7.weightedListCap) * 2 ^ 128 ≤ (2130706433 : ℕ) ^ 6) :
-    ProtocolClaim 6917 81898 262144 where
+    ProtocolClaim 6918 81908 262144 where
   admissible := query_admissible
   reduction := by
     change ToyProblem.certifiedGammaError IRSProfile.code queryRadius ≤ reductionTarget
     apply gamma_error_le_of_actualCap B hcap
     rw [Sol1.Reciprocal.Native.field_card]
     exact hbudget
-  score := query_score_6917
+  score := query_score_6918
 
 
 theorem remaining_budget :
@@ -617,12 +617,12 @@ theorem remaining_budget_maximal :
   norm_num [Astra7.weightedMCAAllowance,Astra7.weightedListCap]
 
 /-- The sole unresolved mathematical gate, stated using the actual native IsMCA. -/
-def OneCountGoal6917 : Prop := ActualMCACap6917 Astra7.weightedMCAAllowance
+def OneCountGoal6918 : Prop := ActualMCACap6918 Astra7.weightedMCAAllowance
 
 /-- All non-MCA mathematics and arithmetic are discharged for this exact fixed allowance. -/
-theorem protocolClaim6917_of_oneCountGoal (hcap : OneCountGoal6917) :
-    ProtocolClaim 6917 81898 262144 :=
-  protocolClaim6917_of_actualCap Astra7.weightedMCAAllowance hcap remaining_budget
+theorem protocolClaim6918_of_oneCountGoal (hcap : OneCountGoal6918) :
+    ProtocolClaim 6918 81908 262144 :=
+  protocolClaim6918_of_actualCap Astra7.weightedMCAAllowance hcap remaining_budget
 
 end
 end Astra7.NativeBudget
@@ -641,34 +641,34 @@ open ProximityPrize.Benchmark
 local instance decidableScalarProtocol (P : Prop) : Decidable P := Classical.propDecidable P
 
 /-- An exact scalar interface; it is a hypothesis, not a theorem about all inputs. -/
-def ScalarMCACap6917 : Prop :=
+def ScalarMCACap6918 : Prop :=
   ∀ (u : Fin 2 → I → K) (Γ : Finset K),
     (∀ γ ∈ Γ, IsMCA (AffineLineGenerator K) IRSProfile.baseCode γ u radius) →
     Γ.card ≤ Astra7.weightedMCAAllowance
 
-theorem nativeCap_of_scalarCap (hscalar : ScalarMCACap6917) :
-    Astra7.NativeBudget.OneCountGoal6917 := by
+theorem nativeCap_of_scalarCap (hscalar : ScalarMCACap6918) :
+    Astra7.NativeBudget.OneCountGoal6918 := by
   intro U
   rw [← Astra7.NativeBudget.badSlopes_card_eq_ncard]
   apply Sol1.C64.restricted_interleaved_card_le IRSProfile.baseCode
     (⊤ : ModuleCode I K K) radius Astra7.weightedMCAAllowance
     (by rw [Sol1.Reciprocal.Native.field_card]; norm_num [Astra7.weightedMCAAllowance])
     (fun u _ Γ hΓ => hscalar u Γ hΓ) U (by simp)
-    (Astra7.NativeBudget.badSlopes6917 U)
+    (Astra7.NativeBudget.badSlopes6918 U)
   intro γ hγ
   have hh : IsMCA (AffineLineGenerator K) IRSProfile.code γ U
-      Astra7.NativeBudget.radius6917 := by
+      Astra7.NativeBudget.radius6918 := by
     change γ ∈ Finset.univ.filter (fun z => IsMCA (AffineLineGenerator K)
-      IRSProfile.code z U Astra7.NativeBudget.radius6917) at hγ
+      IRSProfile.code z U Astra7.NativeBudget.radius6918) at hγ
     simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hγ
     exact hγ
   rw [Sol1.C64.native_code_eq] at hh
   exact hh
 
 /-- This is the entire protocol bridge needed by a future uniform scalar count. -/
-theorem protocolClaim6917_of_scalarCap (hscalar : ScalarMCACap6917) :
-    ProtocolClaim 6917 81898 262144 :=
-  Astra7.NativeBudget.protocolClaim6917_of_oneCountGoal (nativeCap_of_scalarCap hscalar)
+theorem protocolClaim6918_of_scalarCap (hscalar : ScalarMCACap6918) :
+    ProtocolClaim 6918 81908 262144 :=
+  Astra7.NativeBudget.protocolClaim6918_of_oneCountGoal (nativeCap_of_scalarCap hscalar)
 
 end
 end FrobeniusLocator.Native

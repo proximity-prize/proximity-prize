@@ -33,7 +33,7 @@ private theorem valueCut_degree (x a : K) : (valueCut x a).totalDegree ≤ 1 := 
   simpa only [totalDegree_C, totalDegree_X, zero_add] using
     (totalDegree_mul (C ((j.val.choose 0 : Geom) * embed x ^ (j.val - 0))) (MvPolynomial.X j))
 
-private theorem valueCut_eval {S : K[X]} (hS : S.natDegree ≤ 133646) (x a : K) :
+private theorem valueCut_eval {S : K[X]} (hS : S.natDegree ≤ 133634) (x a : K) :
     aeval (coeffPoint (extend S)) (valueCut x a) = 0 ↔ S.eval x = a := by
   have heval : S.eval x = ∑ j : CoeffIndex, S.coeff j.val * x ^ j.val := by
     have hlt : S.natDegree < taylorLength := Nat.lt_succ_of_le hS
@@ -59,7 +59,7 @@ private theorem coeffPoint_injOn {w Γ s} (h : Messages w Γ s) :
   intro j
   by_cases hj : j < taylorLength
   · exact embed.injective (by simpa [coeffPoint] using congrFun heq ⟨j, hj⟩)
-  · change ¬ j < 133647 at hj
+  · change ¬ j < 133635 at hj
     rw [Polynomial.coeff_eq_zero_of_natDegree_lt (p := s γ) (by
           have := h.degree γ hγ
           omega),
@@ -226,9 +226,9 @@ open scoped BigOperators Polynomial
 Its coefficient ideal is defined over the constant field. -/
 def c1 : Prop :=
   ∀ f : Row 3, Irreducible f → 0 < f.degreeOf 2 → f.degreeOf 2 ≤ 24 →
-    TrueWeightLE f (90 * 180246 - 1) → Whole f →
+    TrueWeightLE f (90 * 180236 - 1) → Whole f →
     ∃ P : Ideal CoeffRing, FreshChart P (freshRow f) (freshRow (separant f)) ∧
-      ∀ S : Geom[X], S.natDegree ≤ 133646 → RegularAt 2 f S →
+      ∀ S : Geom[X], S.natDegree ≤ 133634 → RegularAt 2 f S →
         coeffPoint S ∈ zeroLocus Geom P
 
 /-- Compare the coefficient degree with the degree of the hypersurface in
@@ -236,7 +236,7 @@ the independent second-jet projection. -/
 def c2 : Prop :=
   ∀ (P : Ideal CoeffRing) (g d : FreshJetRing), FreshChart P g d →
     (affineHilbertPolynomial P).natDegree = 2 ∧
-      2 * affineDegree P ≤ (133646 : ℚ) * (g.totalDegree : ℚ)
+      2 * affineDegree P ≤ (133634 : ℚ) * (g.totalDegree : ℚ)
 
 private theorem freshRow_degree_le (f : Row 3) : (freshRow f).totalDegree ≤ f.totalDegree := by
   unfold freshRow MvPolynomial.totalDegree
@@ -246,7 +246,7 @@ theorem of_children (h1 : c1) (h2 : c2) : K1_13_5.c5 := by
   classical
   intro w Γ s hm n f hf hcover
   let part (i : Fin n) := Γ.filter fun γ => RegularAt 2 (f i) (extend (s γ)) ∧ Whole (f i)
-  let cap (i : Fin n) := 133646 * (f i).totalDegree
+  let cap (i : Fin n) := 133634 * (f i).totalDegree
   have hsub (i : Fin n) : part i ⊆ Γ := filter_subset _ _
   have hlocal (i : Fin n) : NodeCapacity w (part i) s (cap i) := by
     by_cases hi : Whole (f i)
@@ -278,7 +278,7 @@ theorem of_children (h1 : c1) (h2 : c2) : K1_13_5.c5 := by
       _ ≤ ∑ i, (f i).totalDegree := sum_le_sum fun i _ =>
         (hf.positive i).trans_le (degreeOf_le_totalDegree _ _)
       _ ≤ 120 := hf.total
-  · change (∑ i, 133646 * (f i).totalDegree) ≤ 133646 * 120
+  · change (∑ i, 133634 * (f i).totalDegree) ≤ 133634 * 120
     rw [← mul_sum]
     exact Nat.mul_le_mul_left _ hf.total
 
@@ -1643,7 +1643,7 @@ def c1 : Prop :=
     Q.IsPrime → Q.IsHomogeneous (homogeneousSubmodule CoeffIndex Geom) →
     (affineHilbertPolynomial Q).natDegree = 2 → FiniteJetPair L (jetImage (freshIdeal Q)) →
     2 * affineDegree Q ≤
-      (133646 : ℚ) * (genericFiberDimension L (freshIdeal Q) : ℚ)
+      (133634 : ℚ) * (genericFiberDimension L (freshIdeal Q) : ℚ)
 
 /-- The infinity cycle accounts for the coefficient degree. Repeated primes
 in the list encode multiplicity, which also counts on the generic fiber. -/
@@ -1675,7 +1675,7 @@ theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) : K1_13_5_5.c2 := by
   obtain ⟨n, Q, hQ, hdeg, hfiber⟩ := h2 P hchart.prime hdim
   obtain ⟨L, hL, hfinite, hbudget⟩ := h3 P g d hchart
   have hcurve (i : Fin n) : 2 * affineDegree (Q i) ≤
-      (133646 : ℚ) * (genericFiberDimension L (freshIdeal (Q i)) : ℚ) := by
+      (133634 : ℚ) * (genericFiberDimension L (freshIdeal (Q i)) : ℚ) := by
     obtain ⟨hi, hhom, hd⟩ := hQ i
     have hle : jetImage (freshIdeal (infinityIdeal P)) ≤ jetImage (freshIdeal (Q i)) :=
       Ideal.comap_mono (Ideal.map_mono hi.le)
@@ -1971,7 +1971,7 @@ structure Factorization {A : Type} [CommRing A] (f : A[X]) where
   multiplicity : Fin n → ℕ
   product_eq : f = ∏ i, factor i ^ multiplicity i
   monic : ∀ i, (factor i).Monic
-  multiplicity_bounds : ∀ i, 0 < multiplicity i ∧ multiplicity i ≤ 133646
+  multiplicity_bounds : ∀ i, 0 < multiplicity i ∧ multiplicity i ≤ 133634
   pairwise_coprime : Pairwise (fun i j => IsCoprime (factor i) (factor j))
   derivative_coprime : ∀ i, IsCoprime (factor i) (factor i).derivative
 
@@ -2204,7 +2204,7 @@ theorem monic_chart (Q : Ideal CoeffRing) (hQ : Q.IsPrime)
     (hhom : Q.IsHomogeneous (homogeneousSubmodule CoeffIndex Geom))
     (hdim : (affineHilbertPolynomial Q).natDegree = 2) :
     ∃ i : CoeffIndex, MvPolynomial.X i ∉ Q ∧ IsDomain (ChartRing Q i) ∧
-      (direction Q i).Monic ∧ (direction Q i).natDegree ≤ 133646 := by
+      (direction Q i).Monic ∧ (direction Q i).natDegree ≤ 133634 := by
   obtain ⟨i, hi, hdom, hm, hd⟩ := monic_chart_aux Q hQ hhom (by rw [hdim]; decide)
   exact ⟨i, hi, hdom, hm, hd.trans (Nat.le_of_lt_succ i.isLt)⟩
 
@@ -2678,7 +2678,7 @@ def c1 : Prop :=
 the factors and the Bezout certificates before choosing the fresh center. -/
 def c2 : Prop :=
   ∀ (A : Type) [CommRing A] [IsDomain A] [Algebra Geom A] (f : A[X]),
-    f.Monic → f.natDegree ≤ 133646 →
+    f.Monic → f.natDegree ≤ 133634 →
     ∃ (a : A), a ≠ 0 ∧ Nonempty (Factorization (f.map (algebraMap A (Localization.Away a))))
 
 /-- Remove the common second-jet factor and keep the first two copies of every factor. -/
@@ -2736,7 +2736,7 @@ private theorem trimmedValue_dvd {A : Type} [CommRing A] {f : A[X]}
     (dvd_of_eq s.product_eq.symm)
 
 private theorem full_square_dvd {A : Type} [CommRing A] {f : A[X]}
-    (s : Factorization f) : f ^ 2 ∣ (trimmedValue s) ^ 133646 := by
+    (s : Factorization f) : f ^ 2 ∣ (trimmedValue s) ^ 133634 := by
   refine (dvd_of_eq (congrArg (fun g : A[X] => g ^ 2) s.product_eq)).trans ?_
   rw [trimmedValue, ← Finset.prod_pow, ← Finset.prod_pow]
   apply Finset.prod_dvd_prod_of_dvd
@@ -2752,7 +2752,7 @@ private theorem full_square_dvd {A : Type} [CommRing A] {f : A[X]}
 
 private theorem eval_divisions {A B : Type} [CommRing A] [CommRing B]
     (e : A[X] →+* B) {f : A[X]} (s : Factorization f) :
-    e (trimmedValue s) ∣ e f ∧ e f ^ 2 ∣ e (trimmedValue s) ^ 133646 := by
+    e (trimmedValue s) ∣ e f ∧ e f ^ 2 ∣ e (trimmedValue s) ^ 133634 := by
   exact ⟨map_dvd e (trimmedValue_dvd s),
     by simpa only [map_pow] using map_dvd e (full_square_dvd s)⟩
 
@@ -2788,10 +2788,10 @@ theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) (h4 : c4) (h5 : c5)
   have hdiv := eval_divisions e s
   have hdeq : d 0 = e (trimmedValue s) := congrArg e hq0
   rw [← hdeq] at hdiv
-  obtain ⟨hdfin, hlen⟩ := length_bound x (d 0) 133646 hx hd hdiv.1 hdiv.2
+  obtain ⟨hdfin, hlen⟩ := length_bound x (d 0) 133634 hx hd hdiv.1 hdiv.2
   rw [← hcoeff]
   have hlenQ : 2 * (Module.finrank FreshField (PrincipalQuot x) : ℚ) ≤
-      133646 * (Module.finrank FreshField (PrincipalQuot (d 0)) : ℚ) := by
+      133634 * (Module.finrank FreshField (PrincipalQuot (d 0)) : ℚ) := by
     exact_mod_cast hlen
   by_cases hu : IsUnit (d 0)
   · have hzero : Module.finrank FreshField (PrincipalQuot (d 0)) = 0 := by
@@ -8246,10 +8246,10 @@ private theorem geom_cast_ne_zero {n : ℕ} (hpos : 0 < n) (hsmall : n < K1.p) :
     ((CharP.cast_eq_zero_iff Geom K1.p n).mp h))
 
 private theorem isUnit_C_small {A : Type} [CommRing A] [Algebra Geom A]
-    {n : ℕ} (hpos : 0 < n) (hsmall : n ≤ 133646) : IsUnit (C (n : A)) := by
+    {n : ℕ} (hpos : 0 < n) (hsmall : n ≤ 133634) : IsUnit (C (n : A)) := by
   let ι : Geom →+* A[X] := C.comp (algebraMap Geom A)
   have hu := (isUnit_iff_ne_zero.mpr (geom_cast_ne_zero hpos
-    (hsmall.trans_lt (by decide : 133646 < K1.p)))).map ι
+    (hsmall.trans_lt (by decide : 133634 < K1.p)))).map ι
   simpa only [ι, RingHom.comp_apply, map_natCast] using hu
 
 private theorem not_mem_of_coprime {R : Type} [CommRing R] {P : Ideal R}
@@ -8270,7 +8270,7 @@ private theorem reducedProduct_escapes_prime {A : Type} [CommRing A] [Algebra Ge
   have hgi := hP.mem_of_pow_mem _ hiPow
   let g := s.factor i
   let m := s.multiplicity i
-  have hm : 0 < m ∧ m ≤ 133646 := s.multiplicity_bounds i
+  have hm : 0 < m ∧ m ≤ 133634 := s.multiplicity_bounds i
   have hd : derivative g ∉ P :=
     not_mem_of_coprime hP.ne_top' hgi (s.derivative_coprime i)
   let t := ∏ j ∈ Finset.univ.erase i, reducedPower (s.factor j) (s.multiplicity j)
@@ -8298,9 +8298,9 @@ private theorem reducedProduct_escapes_prime {A : Type} [CommRing A] [Algebra Ge
     let k := m - 2
     have hk : m = k + 2 := hm2
     have hu0 : C ((k + 2 : ℕ) : A) ∉ P :=
-      P.notMem_of_isUnit (isUnit_C_small (by omega : 0 < k + 2) (by omega : k + 2 ≤ 133646))
+      P.notMem_of_isUnit (isUnit_C_small (by omega : 0 < k + 2) (by omega : k + 2 ≤ 133634))
     have hu1 : C ((k + 1 : ℕ) : A) ∉ P :=
-      P.notMem_of_isUnit (isUnit_C_small (by omega : 0 < k + 1) (by omega : k + 1 ≤ 133646))
+      P.notMem_of_isUnit (isUnit_C_small (by omega : 0 < k + 1) (by omega : k + 1 ≤ 133634))
     rw [he, hk]
     let a : A[X] := C ((k + 2 : ℕ) : A)
     let b : A[X] := C ((k + 1 : ℕ) : A)
@@ -8438,9 +8438,9 @@ private theorem eligible_of_le {u v : JetVariable 3 →₀ ℕ}
   have hw (w : Fin 4 → ℕ) : v.some.weight w ≤ u.some.weight w := by
     rw [Finsupp.weight_eq_sum, Finsupp.weight_eq_sum]
     exact Finset.sum_le_sum fun j _ => Nat.mul_le_mul_right (w j) (h (some j))
-  have ht : v.weight (differentialWeight 133646) ≤ u.weight (differentialWeight 133646) := by
+  have ht : v.weight (differentialWeight 133634) ≤ u.weight (differentialWeight 133634) := by
     rw [Finsupp.weight_eq_sum, Finsupp.weight_eq_sum]
-    exact Finset.sum_le_sum fun j _ => Nat.mul_le_mul_right (differentialWeight 133646 j) (h j)
+    exact Finset.sum_le_sum fun j _ => Nat.mul_le_mul_right (differentialWeight 133634 j) (h j)
   obtain ⟨hdeg, hi, hf, htail, hwgt⟩ := hu
   have hcap : 48 - (u.some.degree - 113 + 1) / 2 ≤ 48 - (v.some.degree - 113 + 1) / 2 := by
     omega
@@ -8463,12 +8463,12 @@ theorem translate_mem_anchorSpace (x y : Geom) (Q : anchorSpace) :
 theorem rank_local_le_origin (x y : Geom) :
     Module.finrank Geom (LinearMap.range (anchorLocal x y)) ≤
       Module.finrank Geom (LinearMap.range (anchorLocal 0 0)) := by
-  have hpositive (j : JetVariable 3) : differentialWeight 133646 j ≠ 0 := by
+  have hpositive (j : JetVariable 3) : differentialWeight 133634 j ≠ 0 := by
     cases j with
     | none => decide
     | some j =>
       have hj := j.isLt
-      change 133646 - j.val ≠ 0
+      change 133634 - j.val ≠ 0
       omega
   have : Module.Finite Geom anchorSpace :=
     restrictSupport_finite <|

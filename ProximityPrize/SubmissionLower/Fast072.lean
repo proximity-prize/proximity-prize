@@ -56,7 +56,7 @@ def c1 : Prop :=
 its actual bank, and its exact formal contact with the original words. -/
 def c2 : Prop :=
   ∀ (u : Words) (T : TwoActive u) (R : Relation T) (D : Reduction u T R),
-    columnRank D.U D.V = 4 → T.height ≤ 32718 →
+    columnRank D.U D.V = 4 → T.height ≤ 32738 →
     ∀ (_L : IndependentLift R) (P : Puncture (fixedNodes R)),
       ∃ b, Nonempty (ContactInput u P b D.height)
 
@@ -75,7 +75,7 @@ private theorem card_from_cover (b : Bank) (Γ exceptional : Finset K)
     (charts : Fin 5 → Finset K) (hfee : exceptional.card ≤ b.zeroFee)
     (hcover : ∀ γ ∈ Γ, γ ∈ exceptional ∨ ∃ j, γ ∈ charts j)
     (hcharts : ∀ j, ((charts j).card : ℚ) ≤ b.chartFee) :
-    Γ.card ≤ 98765158849964375 := by
+    Γ.card ≤ 98805339942668965 := by
   classical
   have hsub : Γ ⊆ exceptional ∪ Finset.univ.biUnion charts := by
     intro γ hγ
@@ -97,7 +97,7 @@ theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) : K1.c11 := by
   classical
   rcases Γ.eq_empty_or_nonempty with rfl | ⟨γ, hγ⟩
   · simp
-  have hmax : T.height ≤ 32718 := by
+  have hmax : T.height ≤ 32738 := by
     unfold TwoActive.height
     have := T.nullitySum
     have := T.degreeSum
@@ -399,7 +399,7 @@ def c1 : Prop :=
 and the two parameter degrees of the received-pencil combination. -/
 def c2 : Prop :=
   ∀ (u : Words) (T : TwoActive u) (R : Relation T) (D : Reduction u T R),
-    T.height ≤ 32718 →
+    T.height ≤ 32738 →
     ∀ (A : IndependentLift R) (B : ReducedPair D A) (P : Puncture (fixedNodes R)),
       Nonempty (PlaneOutput u P D.height B.U B.V)
 
@@ -498,41 +498,41 @@ theorem of_children (h1 : c1) (h2 : c2) : K1_11.c1 := by
   intro u front T R D _ hr _
   classical
   let h := T.height
-  let s := 49174 - h
-  have hBalance : 49174 + h + nullity u = 81899 ∧ h ≤ 32718 ∧ h < 49174 :=
+  let s := 49164 - h
+  have hBalance : 49164 + h + nullity u = 81909 ∧ h ≤ 32738 ∧ h < 49164 :=
     Strata.native_minimal_relation_degree (nullity u) T.a T.b T.c
       T.top T.degreeSum T.nullitySum (by have := front.1; omega)
   obtain ⟨hbal, hhi, hL⟩ := hBalance
-  have hsum : h + s = 49174 := by omega
-  have hs : 16456 ≤ s := by omega
+  have hsum : h + s = 49164 := by omega
+  have hs : 16426 ≤ s := by omega
   have hSlice := plane_first_slice_nullity u T hhi
   obtain ⟨Q, hQne, hQ, hPrim⟩ := plane_generator _ (by rw [hSlice]; decide)
-  let M := planeStack p node (u 0) (u 1) 49174 81898
-  let W := K1_6.shifts (planePair Q) 49174 s
-  have hRank : (M.map (algebraMap (Seeds K) (PlaneField K))).rank + s = 2 * 49174 := by
+  let M := planeStack p node (u 0) (u 1) 49164 81908
+  let W := K1_6.shifts (planePair Q) 49164 s
+  have hRank : (M.map (algebraMap (Seeds K) (PlaneField K))).rank + s = 2 * 49164 := by
     rw [plane_stack_rank u, K1.actual_stackRank u]
     omega
   have hker : W.transpose * M = 0 :=
-    shifts_annihilate p node (u 0) (u 1) h 49174 s 81898 hsum Q hQ
-  obtain ⟨hMP, hattain⟩ := h1 K h 49174 s Q hsum (by omega) hQne hPrim
+    shifts_annihilate p node (u 0) (u 1) h 49164 s 81908 hsum Q hQ
+  obtain ⟨hMP, hattain⟩ := h1 K h 49164 s Q hsum (by omega) hQne hPrim
   have hprod (b i : Fin 2) :
-      s * blockDegree Q b i ≤ if b = i then h else 49174 := by
+      s * blockDegree Q b i ≤ if b = i then h else 49164 := by
     by_cases hd : blockDegree Q b i = 0
     · simp [hd]
     obtain ⟨rows, hdet⟩ := hattain b i (Nat.pos_of_ne_zero hd)
-    have hb := h2 K 49174 81899 s M W (by omega) (by omega) hRank hker
+    have hb := h2 K 49164 81909 s M W (by omega) (by omega) hRank hker
       (plane_stack_degree u) hMP b i rows
     rw [hdet] at hb
-    simpa only [show 49174 - s = h by omega] using hb
+    simpa only [show 49164 - s = h by omega] using hb
   have h00 : blockDegree Q 0 0 ≤ 1 := by
     apply Nat.le_of_lt_succ
     exact degree_lt_of_product s _ 2 h (by simpa using hprod 0 0) (by omega)
   have h01 : blockDegree Q 0 1 ≤ 2 := by
     apply Nat.le_of_lt_succ
-    exact degree_lt_of_product s _ 3 49174 (by simpa using hprod 0 1) (by omega)
+    exact degree_lt_of_product s _ 3 49164 (by simpa using hprod 0 1) (by omega)
   have h10 : blockDegree Q 1 0 ≤ 2 := by
     apply Nat.le_of_lt_succ
-    exact degree_lt_of_product s _ 3 49174 (by simpa using hprod 1 0) (by omega)
+    exact degree_lt_of_product s _ 3 49164 (by simpa using hprod 1 0) (by omega)
   have h11 : blockDegree Q 1 1 ≤ 1 := by
     apply Nat.le_of_lt_succ
     exact degree_lt_of_product s _ 2 h (by simpa using hprod 1 1) (by omega)
@@ -550,16 +550,16 @@ theorem of_children (h1 : c1) (h2 : c2) : K1_11.c1 := by
       · exact h10
     exact graph_ne_zero p (by decide) _ hne (hdeg.trans_lt (by decide)) (congrFun hz j)
   obtain ⟨c, hc, hgraphQ⟩ := graph_content u T R Q hQ hgraph
-  have hlo : 24587 ≤ T.height := by
+  have hlo : 24582 ≤ T.height := by
     by_contra! hh
-    change h < 24587 at hh
+    change h < 24582 at hh
     apply exclude_affine D p (by decide) hr Q c hc hgraphQ
     · exact Nat.lt_one_iff.mp
         (degree_lt_of_product s _ 1 h (by simpa using hprod 0 0) (by omega))
     · exact Nat.le_of_lt_succ
-        (degree_lt_of_product s _ 2 49174 (by simpa using hprod 0 1) (by omega))
+        (degree_lt_of_product s _ 2 49164 (by simpa using hprod 0 1) (by omega))
     · exact Nat.le_of_lt_succ
-        (degree_lt_of_product s _ 2 49174 (by simpa using hprod 1 0) (by omega))
+        (degree_lt_of_product s _ 2 49164 (by simpa using hprod 1 0) (by omega))
     · exact Nat.lt_one_iff.mp
         (degree_lt_of_product s _ 1 h (by simpa using hprod 1 1) (by omega))
   refine ⟨{
@@ -4525,7 +4525,7 @@ theorem proof : K1_12.c1 := by
   have hheight := plane_height B P par hdeg'
   have hdvd : B.a ∣ den := hcop.dvd_of_dvd_mul_left
     (hphase ▸ dvd_mul_right B.a (den.map twist))
-  have hbudget : T.height ≤ 32718 := by
+  have hbudget : T.height ≤ 32738 := by
     have hr := hu.1
     have hd := T.degreeSum
     have hn := T.nullitySum
@@ -4687,7 +4687,7 @@ private theorem nodeCut_capped (w : I → K) (f : Row 2)
     ((chart_top f).trans ((degreeOf_le_index f).trans hJ)) _ _
 
 private theorem nodeCut_vanishes {w : I → K} {f : Row 2} {S : K[X]}
-    (hreg : RegularAt 1 f (extend S)) (hD : S.natDegree ≤ 133646) (i : I) :
+    (hreg : RegularAt 1 f (extend S)) (hD : S.natDegree ≤ 133634) (i : I) :
     MvPolynomial.aeval (marked (extend S)) (nodeCut w f i) = 0 ↔
       S.eval (node i) = w i := by
   rw [nodeCut, chart_cut_agreement hreg (Polynomial.natDegree_map_le.trans hD),
@@ -4906,12 +4906,12 @@ private theorem position_sum (top step t j U v : ℕ) (hj : j ≤ t)
   · simp [h]
 
 /-- The exact summation-by-parts identity for the smaller terminal bank. -/
-theorem sum_cutoffCapacity_add_seedGain (w : ℤ) (hlo : 2576 ≤ w) (hhi : w ≤ 32718) :
-    (∑ W ∈ range ((band w).multiplicity * 180246), cutoffCapacity w W) + seedGain w =
+theorem sum_cutoffCapacity_add_seedGain (w : ℤ) (hlo : 2564 ≤ w) (hhi : w ≤ 32738) :
+    (∑ W ∈ range ((band w).multiplicity * 180236), cutoffCapacity w W) + seedGain w =
       rawVolume w := by
   let b := band w
   let k := 131071 - w.toNat
-  let top := b.multiplicity * 180246
+  let top := b.multiplicity * 180236
   have hk : 0 < k := by dsimp [k]; omega
   have hs : 0 < 2 * w.toNat := by omega
   have hswap (F : ℕ → ℕ → ℕ → ℕ) :
@@ -4959,8 +4959,8 @@ theorem proof : K1_14.c4 := by
     Nat.succ_le_of_lt (Nat.lt_of_not_ge (fun h => hbad ((seedDegree_le_iff _ _).mp h)))
   have hk : 0 < 131071 - w.toNat := by omega
   have hceil :
-      (∑ W ∈ range ((band w).multiplicity * 180246), Module.finrank FX (V W)) ≤
-        ∑ W ∈ range ((band w).multiplicity * 180246), cutoffCapacity w W :=
+      (∑ W ∈ range ((band w).multiplicity * 180236), Module.finrank FX (V W)) ≤
+        ∑ W ∈ range ((band w).multiplicity * 180236), cutoffCapacity w W :=
     sum_le_sum fun W hW => cutoff_finrank_le w W (V W) hne hv hk (hrows W (mem_range.mp hW))
   have h := sum_cutoffCapacity_add_seedGain w hlo hhi
   omega
@@ -4994,7 +4994,7 @@ private theorem eval_center (P : Geom[X]) : (P.map constants).eval center = gene
   rw [← Polynomial.hom_eval₂, Polynomial.eval₂_C_X]
 
 /-- Inverse translation of a degree-bounded polynomial from its full Hasse vector. -/
-private theorem eval_taylor (S : K[X]) (hS : S.natDegree ≤ 133646) (x : K) :
+private theorem eval_taylor (S : K[X]) (hS : S.natDegree ≤ 133634) (x : K) :
     (∑ j : TaylorIndex, (constantCoeff x - center) ^ j.val *
       genericCoeff (hasseDeriv j.val (extend S))) = constantCoeff (S.eval x) := by
   let P := (extend S).map constants
@@ -5020,7 +5020,7 @@ private theorem eval_taylor (S : K[X]) (hS : S.natDegree ≤ 133646) (x : K) :
 
 /-- A coefficient chart gives all node evaluations by the inverse Taylor sum. -/
 theorem values_of_coefficients {H : Shape} (T : TaylorChart) (hT : T.Fits H) :
-    ∃ C : ValueChart H, ∀ S : K[X], S.natDegree ≤ 133646 →
+    ∃ C : ValueChart H, ∀ S : K[X], S.natDegree ≤ 133634 →
       T.Recovers (extend S) → C.recovers S := by
   let form (i : I) : AffineForm := (0, fun j => (constantCoeff (node i) - center) ^ j.val)
   refine ⟨⟨T.denom, fun i => T.pullback (form i), supported_of_fits hT.1,

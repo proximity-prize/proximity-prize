@@ -69,7 +69,7 @@ private theorem debit_eq (s : Shape) (h : ℕ) : sourceDebit h s = nodeCost s + 
 /-- Twice the signed volume minus the whole last-cutoff allowance is affine in height. -/
 private def widthBase (s : Shape) : ℤ :=
   ∑ q ∈ range (s.B + 1), (((min q s.J : ℕ) : ℤ) + 1) *
-    (2 * ((s.m : ℤ) * 180246 - (q : ℤ) * 131071) + min q s.J)
+    (2 * ((s.m : ℤ) * 180236 - (q : ℤ) * 131071) + min q s.J)
 
 private def widthSlope (s : Shape) (r mode : ℕ) : ℤ :=
   ∑ q ∈ range (s.B + 1), (((min q s.J : ℕ) : ℤ) + 1) *
@@ -79,11 +79,11 @@ private theorem width_cast (h r : ℕ) (s : Shape) (q j : ℕ)
     (hh : h ≤ 131071) (hq : q ≤ s.B)
     (hw : s.B * (131071 - h) < cutoffCount h r s) :
     (rawWidth h r s q j : ℤ) =
-      (s.m : ℤ) * 180246 - 2 * (h : ℤ) * r + j - (q : ℤ) * (131071 - h) := by
+      (s.m : ℤ) * 180236 - 2 * (h : ℤ) * r + j - (q : ℤ) * (131071 - h) := by
   have hq' := (Nat.mul_le_mul_right (131071 - h) hq).trans hw.le
-  have hbuf : 2 * h * r ≤ s.m * 180246 := by unfold cutoffCount at hw; omega
+  have hbuf : 2 * h * r ≤ s.m * 180236 := by unfold cutoffCount at hw; omega
   unfold rawWidth cutoffCount at *
-  rw [Nat.cast_sub (by omega : q * (131071 - h) ≤ s.m * 180246 - 2 * h * r + j)]
+  rw [Nat.cast_sub (by omega : q * (131071 - h) ≤ s.m * 180236 - 2 * h * r + j)]
   push_cast [Nat.cast_sub hh, Nat.cast_sub hbuf]
   rfl
 
@@ -106,10 +106,10 @@ private theorem volume_eq (h r mode : ℕ) (s : Shape) (hh : h ≤ 131071)
       intro q hqr
       have hq : q ≤ s.B := Nat.le_of_lt_succ (mem_range.mp hqr)
       simp_rw [width_cast h r s q _ hh hq hw]
-      let a : ℤ := (s.m : ℤ) * 180246 - 2 * (h : ℤ) * r - (q : ℤ) * (131071 - h)
+      let a : ℤ := (s.m : ℤ) * 180236 - 2 * (h : ℤ) * r - (q : ℤ) * (131071 - h)
       let b : ℤ := 1 - 2 * (h : ℤ) * mode
       have hrow : ∀ j : ℕ,
-          (s.m : ℤ) * 180246 - 2 * (h : ℤ) * r + j - (q : ℤ) * (131071 - h) -
+          (s.m : ℤ) * 180236 - 2 * (h : ℤ) * r + j - (q : ℤ) * (131071 - h) -
             mode * (2 * (h : ℤ) * j) = a + b * j := by
         intro j
         dsimp [a, b]
@@ -120,7 +120,7 @@ private theorem volume_eq (h r mode : ℕ) (s : Shape) (hh : h ≤ 131071)
       dsimp [a, b]
       ring
 
-private def worstBase (s : Shape) : ℤ := (s.m : ℤ) * 180246 - (s.B : ℤ) * 131071
+private def worstBase (s : Shape) : ℤ := (s.m : ℤ) * 180236 - (s.B : ℤ) * 131071
 private def worstSlope (s : Shape) (r : ℕ) : ℤ := (s.B : ℤ) - 2 * r
 
 private def surplusBase (s : Shape) : ℤ := (triangle s.U : ℤ) * widthBase s - 2 * nodeCost s
@@ -128,9 +128,9 @@ private def surplusSlope (s : Shape) (r mode : ℕ) : ℤ :=
   (triangle s.U : ℤ) * widthSlope s r mode - 2 * poleSlope s
 
 private def Certificate (s : Shape) (r mode : ℕ) : Prop :=
-  0 < worstBase s + 2576 * worstSlope s r ∧
+  0 < worstBase s + 2564 * worstSlope s r ∧
   0 < worstBase s + 3554 * worstSlope s r ∧
-  0 < surplusBase s + 2576 * surplusSlope s r mode ∧
+  0 < surplusBase s + 2564 * surplusSlope s r mode ∧
   0 < surplusBase s + 3554 * surplusSlope s r mode
 
 private def GoodStage (s : Stage) : Prop :=
@@ -256,33 +256,33 @@ private theorem check_stages : stages.all (fun s => decide (GoodStage s)) = true
   · exact ⟨cheapCert_42, layeredCert_42, by decide⟩
   rfl
 
-private theorem affine_positive {a b h : ℤ} (hlo : 2576 ≤ h) (hhi : h ≤ 3554)
-    (ha : 0 < a + 2576 * b) (hb : 0 < a + 3554 * b) : 0 < a + h * b := by
+private theorem affine_positive {a b h : ℤ} (hlo : 2564 ≤ h) (hhi : h ≤ 3554)
+    (ha : 0 < a + 2564 * b) (hb : 0 < a + 3554 * b) : 0 < a + h * b := by
   by_cases hb0 : 0 ≤ b
   · nlinarith only [ha, mul_nonneg (sub_nonneg.mpr hlo) hb0]
   · nlinarith only [hb, mul_nonneg (sub_nonneg.mpr hhi) (neg_nonneg.mpr (le_of_not_ge hb0))]
 
-private theorem test (h r mode : ℕ) (s : Shape) (hlo : 2576 ≤ h) (hhi : h ≤ 3554)
+private theorem test (h r mode : ℕ) (s : Shape) (hlo : 2564 ≤ h) (hhi : h ≤ 3554)
     (hc : Certificate s r mode) :
     s.B * (131071 - h) < cutoffCount h r s ∧
       sourceDebit h s + mode * movingCeiling h s < rawVolume h r s := by
   have hh : h ≤ 131071 := by omega
-  have hloI : (2576 : ℤ) ≤ (h : ℤ) := by exact_mod_cast hlo
+  have hloI : (2564 : ℤ) ≤ (h : ℤ) := by exact_mod_cast hlo
   have hhiI : (h : ℤ) ≤ 3554 := by exact_mod_cast hhi
   obtain ⟨ha, hb, hc, hd⟩ := hc
   have hw := affine_positive hloI hhiI ha hb
   unfold worstBase worstSlope at hw
   have hpos : (s.B : ℤ) * (131071 - (h : ℤ)) <
-      (s.m : ℤ) * 180246 - 2 * (h : ℤ) * r := by nlinarith only [hw]
-  have hbuf : 2 * h * r ≤ s.m * 180246 := by
+      (s.m : ℤ) * 180236 - 2 * (h : ℤ) * r := by nlinarith only [hw]
+  have hbuf : 2 * h * r ≤ s.m * 180236 := by
     have hn : 0 ≤ (s.B : ℤ) * (131071 - (h : ℤ)) := by
       exact mul_nonneg (Int.natCast_nonneg _) (by omega)
-    have ht : 2 * (h : ℤ) * r ≤ (s.m : ℤ) * 180246 := by linarith only [hpos, hn]
+    have ht : 2 * (h : ℤ) * r ≤ (s.m : ℤ) * 180236 := by linarith only [hpos, hn]
     exact_mod_cast ht
   have hwidth : s.B * (131071 - h) < cutoffCount h r s := by
     unfold cutoffCount
     have ht : ((s.B * (131071 - h) : ℕ) : ℤ) <
-        ((s.m * 180246 - 2 * h * r : ℕ) : ℤ) := by
+        ((s.m * 180236 - 2 * h * r : ℕ) : ℤ) := by
       push_cast [Nat.cast_sub hh, Nat.cast_sub hbuf]
       exact hpos
     exact_mod_cast ht
@@ -298,7 +298,7 @@ private theorem test (h r mode : ℕ) (s : Shape) (hlo : 2576 ≤ h) (hhi : h �
   exact_mod_cast ht
 
 /-- The raw-width guard, strict source signs and cheap seed cap for each stage. -/
-theorem native_tests {h : ℕ} (hlo : 2576 ≤ h) (hhi : h ≤ 3554) {s : Stage}
+theorem native_tests {h : ℕ} (hlo : 2564 ≤ h) (hhi : h ≤ 3554) {s : Stage}
     (hs : s ∈ stages) :
     (s.cheap.B * (131071 - h) < cutoffCount h s.reserve s.cheap ∧
       sourceDebit h s.cheap < rawVolume h s.reserve s.cheap) ∧
