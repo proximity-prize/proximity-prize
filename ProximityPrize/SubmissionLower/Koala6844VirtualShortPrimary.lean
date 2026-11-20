@@ -16,7 +16,7 @@ set_option maxHeartbeats 2600000
 
 variable {K I : Type} [Field K]
 
-def shortSymbolicBudget : ℕ := 580871082808028
+def shortSymbolicBudget : ℕ := 580871128665628
 
 private theorem degree_total_of_support (J : MvPolynomial (Fin 3) K) (t : ℕ)
     (ht : ∀ e ∈ J.support, e 1+e 2 ≤ t) :
@@ -30,11 +30,11 @@ private theorem degree_total_of_support (J : MvPolynomial (Fin 3) K) (t : ℕ)
 theorem card_short_primary_excluded [CharP K 2130706433] [Fintype I]
     [DecidableEq I] [DecidableEq K]
     {x : I ↪ K} {nodes : Finset I} {σ : K ≃+* K} {errors excess : ℕ}
-    (data : CenteredVirtualData x nodes σ 131071 180961 errors excess)
-    (support : data.d0.natDegree + affineDegree data.A0 ≤ 6674)
+    (data : CenteredVirtualData x nodes σ 131071 180958 errors excess)
+    (support : data.d0.natDegree + affineDegree data.A0 ≤ 6679)
     (H : ShortCarrier K) (hH : H ≠ 0)
     (hr : wt residualSWeights H ≤ 185) (hy : wt residualYSWeights H ≤ 829)
-    (ht : wt residualTotalWeights H ≤ 40642)
+    (ht : wt residualTotalWeights H ≤ 45585)
     (hnodes : nodes.card ≤ 262144) (germ : DirectGermCount data.seeds data.selected) :
     (shortPrimaryExcluded data.seeds data.selected H (centeredFlow data).flow).card ≤
       shortSymbolicBudget := by
@@ -44,25 +44,25 @@ theorem card_short_primary_excluded [CharP K 2130706433] [Fintype I]
   let sing := (positiveRFactors H).biUnion (shortSingularSeeds A selected)
   let tangent := tangentFactors H (centeredFlow data).flow
   let tangentSeeds := tangent.biUnion (shortFactorSeeds A selected)
-  have hfree : free.card ≤ 40642+2130706433*829 := by
+  have hfree : free.card ≤ 45585+2130706433*829 := by
     have div := rfreeProduct_dvd H hH
     obtain ⟨J,hJ,hcap,hspec⟩ := exists_direct_of_slope_degree_zero (rfreeProduct H)
-      (rfreeProduct_ne_zero H hH) (rfreeProduct_R_degree H) 829 40642
+      (rfreeProduct_ne_zero H hH) (rfreeProduct_R_degree H) 829 45585
       ((weightedTotalDegree_le_of_dvd _ _ _ div hH).trans hy)
       ((weightedTotalDegree_le_of_dvd _ _ _ div hH).trans ht)
     have hfreeSub : free ⊆ A := by
       intro g hg
       simp [free, shortFactorSeeds] at hg
       exact hg.1
-    apply germ J free hfreeSub hJ 829 40642
+    apply germ J free hfreeSub hJ 829 45585
       (MvPolynomial.degreeOf_le_iff.mpr fun e he => (hcap e he).1)
-      (degree_total_of_support J 40642 fun e he => (hcap e he).2) (by decide)
+      (degree_total_of_support J 45585 fun e he => (hcap e he).2) (by decide)
     intro g hg
     change MvPolynomial.aeval ![Polynomial.X,selected g,Polynomial.C g] J = 0
     rw [hspec]
     simp [free, shortFactorSeeds] at hg
     exact hg.2
-  have hsing : sing.card ≤ singularPrice 185 829 40642 := by
+  have hsing : sing.card ≤ singularPrice 185 829 45585 := by
     apply card_biUnion_le_short_singular H hH _ _ (positiveRFactors_product_dvd H hH) hr hy ht
     intro F hF
     obtain ⟨hirr,hdvd,hpositive⟩ := positiveRFactors_spec H F hF
@@ -73,7 +73,7 @@ theorem card_short_primary_excluded [CharP K 2130706433] [Fintype I]
     have htF := (weightedTotalDegree_le_of_dvd residualTotalWeights F H hdvd hH).trans ht
     obtain ⟨J,hJ,hJy,hJt,hvanish⟩ := singular_germ_cut F hirr hpositive hrF hyF htF
     have small : singularTotal (F.degreeOf 2) (wt residualTotalWeights F) < 2130706433 := by
-      change wt residualTotalWeights F ≤ 40642 at htF
+      change wt residualTotalWeights F ≤ 45585 at htF
       unfold singularTotal
       omega
     have subF : shortSingularSeeds A selected F ⊆ A := by
@@ -109,7 +109,7 @@ theorem card_short_primary_excluded [CharP K 2130706433] [Fintype I]
   calc
     _ ≤ free.card+sing.card+tangentSeeds.card :=
       (Finset.card_union_le _ _).trans (Nat.add_le_add_right (Finset.card_union_le _ _) _)
-    _ ≤ (40642+2130706433*829)+singularPrice 185 829 40642+TangentList.listBudget :=
+    _ ≤ (45585+2130706433*829)+singularPrice 185 829 45585+TangentList.listBudget :=
       Nat.add_le_add (Nat.add_le_add hfree hsing) htan
     _ = _ := by norm_num [singularPrice, singularTotal, singularMiddle, TangentList.listBudget,
       shortSymbolicBudget]
@@ -128,12 +128,12 @@ theorem centered_direct_germ_count [DecidableEq I] [DecidableEq K]
 theorem centered_short_primary_cover_and_budget [CharP K 2130706433] [Fintype I]
     [DecidableEq I] [DecidableEq K]
     {x : I ↪ K} {nodes : Finset I} {σ : K ≃+* K} {errors excess : ℕ}
-    (data : CenteredVirtualData x nodes σ 131071 180961 errors excess)
+    (data : CenteredVirtualData x nodes σ 131071 180958 errors excess)
     (hσ : ∀ g ∈ data.seeds, σ g = g^2130706433)
-    (support : data.d0.natDegree + affineDegree data.A0 ≤ 6674)
+    (support : data.d0.natDegree + affineDegree data.A0 ≤ 6679)
     (H : ShortCarrier K) (hH : H ≠ 0)
     (hr : wt residualSWeights H ≤ 185) (hy : wt residualYSWeights H ≤ 829)
-    (ht : wt residualTotalWeights H ≤ 40642)
+    (ht : wt residualTotalWeights H ≤ 45585)
     (hnodes : nodes.card ≤ 262144)
     (hzero : ∀ g ∈ data.seeds, RCN319.specialization K (data.selected g) g H = 0) :
     data.seeds ⊆ shortPrimaryExcluded data.seeds data.selected H (centeredFlow data).flow ∪

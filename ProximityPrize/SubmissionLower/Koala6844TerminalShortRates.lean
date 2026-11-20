@@ -18,12 +18,12 @@ private theorem identity_axis (g : Flag) (hr : 3 ≤ g.r) (hy : g.r+2 ≤ g.y) (
   have h := rawIdentityAbsorption f (cellA g.t g.y) (cellB g.y g.r) (cellS g.r) (by omega) hb hs
   rw [← MovingFiberOrdinaryHigh6815.bound_eq_abs f g.t g.y g.r hr hy,
     ← rawRates_eq_bound g hr hy ht] at h
-  change 131073 * 81184 * identityCurveDegree f (cellA g.t g.y) (cellB g.y g.r) (cellS g.r)
+  change 131073 * 81187 * identityCurveDegree f (cellA g.t g.y) (cellB g.y g.r) (cellS g.r)
     Lower80788.HybridIdentityC2.w ≤ _ at h
   rw [Lower80788.HybridIdentityC2.identityDegree_linear] at h
   have h0 : nodes-degree = 131073 := rfl
-  have h1 : pencilLimit = 81184 := rfl
-  have h2 : agreementGap = 49890 := rfl
+  have h1 : pencilLimit = 81187 := rfl
+  have h2 : agreementGap = 49887 := rfl
   fin_cases j <;>
     simpa only [f,rawIdentity,axisFlag,geometryFlag,increments,FlagIncrements.axis,dot,
       Fin.val_zero,Fin.val_one,show (2 : Fin 3).val = 2 from rfl,Nat.reduceEqDiff,ite_true,ite_false,
@@ -60,7 +60,7 @@ theorem short_rates_raw (f : Flag)
   have hmoving : 2*g.t*(g.t+1) < prime :=
     (Nat.mul_le_mul (Nat.mul_le_mul_left 2 hT') (Nat.succ_le_succ hT')).trans_lt (by decide)
   have hn : pencilLimit ≤ (normalCut g).middle := by
-    simp only [normalCut,show degree = 131071 from rfl,show pencilLimit = 81184 from rfl,Nat.reduceAdd]
+    simp only [normalCut,show degree = 131071 from rfl,show pencilLimit = 81187 from rfl,Nat.reduceAdd]
     omega
   have hgraph : goodGraph g = true := decide_eq_true ⟨by omega,hmoving,hearly,hsharp,hn⟩
   have hraw : rawGeometryGate f = true := by

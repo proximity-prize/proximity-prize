@@ -20,9 +20,9 @@ private def foldedWindow (f : Flag) (src : Sources) (first len best : Nat) : Opt
 namespace TerminalPriceEval
 
 private def graphDirectionClosed (f : Flag) : FlagIncrements :=
-  let lam := 5615700424639119360
-  let rho := 77703775377228
-  ⟨2 * lam * (f.t - f.y) + 2401114277144943360,
+  let lam := 102948316894624481280
+  let rho := 1424545598516040
+  ⟨2 * lam * (f.t - f.y) + 44018678197644270120,
     2 * lam * (f.y - f.r) + rho, 2 * lam * (f.r - 1)⟩
 
 private theorem graphDirectionClosed_eq (f : Flag) : graphDirectionClosed f = graphDirection f := by
@@ -32,7 +32,7 @@ private def graphIdentityClosed (g : Flag) : FlagIncrements :=
   let a := g.r - 3
   let b := g.y - g.r - 2
   let c := g.t - g.y
-  let factor := 6308303300224877952
+  let factor := 115654583506721739480
   ⟨factor * (655365 + 262146 * a), factor * (1310730 + 524292 * a),
     factor * (2097170 + 524292 * a + 524292 * b + 262146 * c)⟩
 
@@ -44,13 +44,13 @@ private def graphBasisClosed (g : Flag) : FlagIncrements :=
   let c₀ := graphFirstCut g 0
   let c₁ := graphFirstCut g 1
   let c₂ := graphFirstCut g 2
-  ⟨(n.middle*c₁.slope+n.slope*(c₂.slope+c₂.middle))*9858733564680,
-    (n.total*c₀.slope+n.middle*c₁.slope+n.slope*(c₂.slope+c₂.middle+c₂.total))*9858733564680,
+  ⟨(n.middle*c₁.slope+n.slope*(c₂.slope+c₂.middle))*180729583954920,
+    (n.total*c₀.slope+n.middle*c₁.slope+n.slope*(c₂.slope+c₂.middle+c₂.total))*180729583954920,
     (n.total*(c₀.slope+c₀.middle)+n.middle*(c₁.slope+c₁.middle+c₁.total)+
-      n.slope*(c₂.slope+c₂.middle+c₂.total))*9858733564680⟩
+      n.slope*(c₂.slope+c₂.middle+c₂.total))*180729583954920⟩
 
 private theorem graphBasisClosed_eq (g : Flag) : graphBasisClosed g = graphBasis g := by
-  have h : graphScale / 3 = 9858733564680 := rfl
+  have h : graphScale / 3 = 180729583954920 := rfl
   simp [graphBasisClosed, graphBasis, FlagIncrements.map, mixedRate, axisFlag, h]
 
 private def graphMoveClosed (j : Nat) (d : FlagIncrements) (u : Nat) : FlagIncrements :=
@@ -68,14 +68,14 @@ private def graphChargeClosed (_f g : Flag) (src : SourceShape) (j : Nat) : Opti
   if pairGate g right && pairGate g helper then
     let normal := (graphNormal g).axis j
     let raw := (graphRaw g).axis j
-    let weight := (524288 * normal + 3 * 65539 * raw) * 9858733564680
+    let weight := (524288 * normal + 3 * 65539 * raw) * 180729583954920
     let move := graphMoveClosed j src.graphIncrement (weight / (src.k + 1))
     let dir := graphDirectionClosed g
     some ⟨move, graphPairRates right dir, graphPairRates helper dir⟩
   else none
 
 private theorem graphChargeClosed_eq (f g : Flag) (src : SourceShape) (j : Nat) : graphChargeClosed f g src j = graphCharge f g src j := by
-  have h : graphScale / 3 = 9858733564680 := rfl
+  have h : graphScale / 3 = 180729583954920 := rfl
   simp only [graphChargeClosed, graphCharge, graphMoveClosed_eq, graphDirectionClosed_eq, h]
 
 private def parameterFlag (a b c : Nat) : Flag :=
@@ -129,13 +129,13 @@ private theorem gate_param (a b c : Nat) :
   constructor
   · constructor
     · calc
-        _ ≤ _ + (21311649742972860 + 13924518322045218*a + 2142811497730380*(a*a) + 9856976702648430*b + 4285622995460760*(a*b)) := Nat.le_add_right _ _
+        _ ≤ _ + (21309691174577667 + 13923410188828761*a + 2142682645565754*(a*a) + 9856383980056569*b + 4285365291131508*(a*b)) := Nat.le_add_right _ _
         _ = _ := by grind only
     · calc
-        _ ≤ _ + (14337890833905180 + 11135014758418146*a + 2142811497730380*(a*a) + 9856976702648430*b + 4285622995460760*(a*b) + 9856976702648430*c + 4285622995460760*(a*c)) := Nat.le_add_right _ _
+        _ ≤ _ + (14335674563540052 + 11133803544413715*a + 2142682645565754*(a*a) + 9856383980056569*b + 4285365291131508*(a*b) + 9856383980056569*c + 4285365291131508*(a*c)) := Nat.le_add_right _ _
         _ = _ := by grind only
   · calc
-      _ ≤ _ + (11112196696907220 + 11135014758418146*a + 2142811497730380*(a*a) + 11135014758418146*b + 2142811497730380*(b*b) + 4285622995460760*(a*b) + 13924518322045218*c + 4285622995460760*(a*c) + 4285622995460760*(b*c)) := Nat.le_add_right _ _
+      _ ≤ _ + (11109361932770208 + 11133803544413715*a + 2142682645565754*(a*a) + 11133803544413715*b + 2142682645565754*(b*b) + 4285365291131508*(a*b) + 13923410188828761*c + 4285365291131508*(a*c) + 4285365291131508*(b*c)) := Nat.le_add_right _ _
       _ = _ := by grind only
 
 private def rawFast (f : Flag) : Option FlagIncrements :=
@@ -320,7 +320,7 @@ private theorem shortSmall_eq (f : Flag) (hf : Small f) :
 private def directCharge (g : Flag) (src : SourceShape) (j : Nat) : GraphCharge :=
   let normal := (graphNormal g).axis j
   let raw := (graphRaw g).axis j
-  let weight := (524288 * normal + 3 * 65539 * raw) * 9858733564680
+  let weight := (524288 * normal + 3 * 65539 * raw) * 180729583954920
   let move := graphMoveClosed j src.graphIncrement (weight / (src.k + 1))
   let dir := graphDirectionClosed g
   ⟨move, graphPairRates src.carrierFlag dir, graphPairRates (helperFlag g src) dir⟩
@@ -346,7 +346,7 @@ private def GoodSources (s : Sources) : Prop :=
   ProfileSmall s.z ∧ ProfileSmall s.yz ∧ ProfileSmall s.all
 
 private theorem directLong_eq (f : Flag) (s : Sources) (hf : Small f) (hs : GoodSources s) :
-    longRates f s = some ⟨directLong (padFlag f 2) s, 29576200694040⟩ := by
+    longRates f s = some ⟨directLong (padFlag f 2) s, 542188751864760⟩ := by
   have hg := padded_small f 2 (by decide) hf
   rw [← uncheckedLong_eq]
   simp only [uncheckedLong, validGraph _ hg, Bool.not_true, Bool.false_eq_true, ite_false,
@@ -375,7 +375,7 @@ private def cellPrice (f : Flag) (src : Sources) (L r y best : Nat) : Nat :=
   let u := dotBase o orr oy
   let w := dotBase v orr oy
   let endT := f.t-(L+1)
-  let d := 29576200694040
+  let d := 542188751864760
   let b₀ := z + ((f.t-y-oy)*o.total + u)
   let b₁ := (L-y)*s.total + z + ((f.t-L-oy)*o.total + u)
   let c₀ := z + ((f.t-y-oy)*v.total + w + d - 1)/d

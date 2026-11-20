@@ -42,9 +42,9 @@ private theorem isCoprime_scale_pair (c : K) (hc : c ≠ 0) {P Q : Polynomial K}
 private theorem pencil_bound_on_subset {F : Type} [Field F]
     (seeds retained : Finset F) (hsub : seeds ⊆ retained)
     (selected : F → Polynomial F) (P0 P1 : Polynomial F)
-    (hBound : (RCN050.pencilSeeds retained selected P0 P1).card ≤ 81184)
+    (hBound : (RCN050.pencilSeeds retained selected P0 P1).card ≤ 81187)
     (dec : DecidablePred (fun g => selected g = P0 + C g * P1)) :
-    (@Finset.filter F (fun g => selected g = P0 + C g * P1) dec seeds).card ≤ 81184 := by
+    (@Finset.filter F (fun g => selected g = P0 + C g * P1) dec seeds).card ≤ 81187 := by
   have hsubset : @Finset.filter F (fun g => selected g = P0 + C g * P1) dec seeds ⊆
       RCN050.pencilSeeds retained selected P0 P1 := by
     intro g hg
@@ -59,9 +59,9 @@ theorem prepare_retained_short
     (h : RetainedComparison received retained selected q)
     (hShort : primitiveExcess 131071 q ≤ 9799)
     (N : NormalForm q 131071 (primitiveExcess 131071 q)) :
-    retained.card ≤ 10^16 ∨
-    ∃ data : CenteredVirtualData x (goodNodes received q) frobenius 131071 180961 81183
-        (primitiveExcess 131071 q), retained.card ≤ data.seeds.card + 10^15 := by
+    retained.card ≤ 11*10^15 ∨
+    ∃ data : CenteredVirtualData x (goodNodes received q) frobenius 131071 180958 81186
+        (primitiveExcess 131071 q), retained.card ≤ data.seeds.card + 20878792628510 := by
   classical
   let δ := primitiveExcess 131071 q
   let nodes := goodNodes received q
@@ -81,16 +81,16 @@ theorem prepare_retained_short
       (fun g hg => (h.good g hg).1)
   have hNodes : nodes.card = 262144 - (badNodes received q).card :=
     goodNodes_card (received := received) (q := q)
-  have hExcess : δ + (badNodes received q).card ≤ 31606 := h.excess_bad
+  have hExcess : δ + (badNodes received q).card ≤ 31612 := h.excess_bad
   have hNodeSmall : 131071 + 2 * δ < nodes.card := by omega
   have hPrep : nodes.card + 1 + (2130706433 + 1) * δ ≤ 21000000000000 := by omega
   have hSubPencil (P0 P1 : Polynomial K) (h0 : P0.natDegree ≤ 131071)
       (h1 : P1.natDegree ≤ 131071) :
-      (seeds.filter fun g => selected g = P0 + C g * P1).card ≤ 81184 := by
+      (seeds.filter fun g => selected g = P0 + C g * P1).card ≤ 81187 := by
     exact pencil_bound_on_subset seeds retained hsub selected P0 P1
       (h.selection.pencil P0 P1 h0 h1) _
   have hSubAgr (g : K) (hg : g ∈ seeds) :
-      180961 ≤ (nodes.filter fun i =>
+      180958 ≤ (nodes.filter fun i =>
         (selected g).eval (x i) = received 0 i + g * received 1 i).card := by
     refine (h.selection.agreement g (hsub hg)).trans (Finset.card_le_card ?_)
     intro i hi
@@ -104,7 +104,7 @@ theorem prepare_retained_short
     rw [goodNodes_eq_sdiff]
     exact Finset.mem_sdiff.mpr ⟨Finset.mem_univ _, hAvoid⟩
   have hSubNorm (g : K) (hg : g ∈ seeds) :
-      180961 ≤ (nodes.filter fun i => (normalized g).eval (x i) = fixed i).card := by
+      180958 ≤ (nodes.filter fun i => (normalized g).eval (x i) = fixed i).card := by
     refine (hSubAgr g hg).trans (Finset.card_le_card ?_)
     intro i hi
     have ⟨hin, hfit⟩ := Finset.mem_filter.mp hi
@@ -127,7 +127,7 @@ theorem prepare_retained_short
   by_cases hW : affineWedge N.A back = 0
   swap
   · have hSmall := nonconjugate_card_le frobenius x nodes seeds selected received fixed N.A N.B N.C
-      N.D N.d₀ N.d₁ 131071 180961 81183 δ N.d₀_ne N.d₁_ne N.first_degree N.second_degree
+      N.D N.d₀ N.d₁ 131071 180958 81186 δ N.d₀_ne N.d₁_ne N.first_degree N.second_degree
       N.left_degree N.right_degree hW (fun i _ => domain_fixed i) (by omega)
       hLeft hRight (fun g hg => h.selection.degree_le g (hsub hg)) hSubAgr hSubPencil
     exact Or.inl (by omega)

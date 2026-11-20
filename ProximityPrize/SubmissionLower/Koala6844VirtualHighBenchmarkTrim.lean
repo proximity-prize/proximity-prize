@@ -18,13 +18,13 @@ variable {nodes : Finset IRSProfile.Index} {excess : ℕ}
 
 def benchmarkTrimDegree : ℕ := 124396
 def benchmarkPlainDegree : ℕ := 144396
-def benchmarkReconstructionBound : ℕ := 124*180961+2*179*10000+179*144396+1
+def benchmarkReconstructionBound : ℕ := 124*180958+2*179*10000+179*144396+1
 
 theorem benchmark_trim_characteristic_bounds :
     2 ≤ benchmarkReconstructionBound ∧
     benchmarkPlainDegree+1 ≤ benchmarkReconstructionBound ∧
     benchmarkReconstructionBound < 2130706433 ∧
-    benchmarkPlainDegree < 180961 ∧
+    benchmarkPlainDegree < 180958 ∧
     benchmarkTrimDegree+1 ≤ (124397 : ℕ) ∧ 2 ≤ (124397 : ℕ) := by decide +kernel
 
 
@@ -32,14 +32,14 @@ theorem benchmark_node_card_le : nodes.card ≤ 262144 := by
   simpa only [IRSProfile.card_index] using Finset.card_le_univ nodes
 
 theorem benchmark_plain_degree (D : BenchmarkVirtualFamily nodes excess)
-    (_hstart : 6675 ≤ D.d0.natDegree + affineDegree D.A0)
+    (_hstart : 6680 ≤ D.d0.natDegree + affineDegree D.A0)
     (hcap : D.d0.natDegree ≤ 10000) :
     131071 + D.d0.natDegree - affineDegree D.A0 ≤ benchmarkPlainDegree := by
   unfold benchmarkPlainDegree
   omega
 
 theorem benchmark_node_reconstruction_average :
-    nodeAverage nodes.card benchmarkPlainDegree 180961 ≤ 4 := by
+    nodeAverage nodes.card benchmarkPlainDegree 180958 ≤ 4 := by
   have h : (nodes.card : ℚ) ≤ 262144 := by exact_mod_cast (benchmark_node_card_le (nodes := nodes))
   unfold nodeAverage benchmarkPlainDegree
   apply (div_le_iff₀ (by norm_num)).2
@@ -48,7 +48,7 @@ theorem benchmark_node_reconstruction_average :
 
 theorem benchmark_uniform_trim (D : BenchmarkVirtualFamily nodes excess)
     (sources : BenchmarkVirtualSources D)
-    (hstart : 6675 ≤ D.d0.natDegree + affineDegree D.A0) :
+    (hstart : 6680 ≤ D.d0.natDegree + affineDegree D.A0) :
     Nonempty (CenteredTrimCarrier D benchmarkTrimDegree benchmarkPlainDegree) :=
   exists_uniform_centered_trim_carrier D (Nat.le_of_add_right_le sources.support_le) hstart
 

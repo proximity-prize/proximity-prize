@@ -11,8 +11,7 @@ set_option maxHeartbeats 0
 set_option maxRecDepth 15000
 
 private def secondFeeStop (r : ℕ) : ℕ :=
-  ([127,126,125,124,123,122,121,120,118,117,116,114,113,111,109,107,105,103,101,98,
-    94,90,85,79,73,65,57,48,38,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50]
+  ([133,132,131,130,129,128,127,126,125,124,122,121,119,118,116,114,112,110,108,105,103,99,95,90,84,78,71,63,54,45,34,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50]
       : List ℕ).getD (r-1) 0
 
 private theorem checkedSecondFeeStop (r : ℕ) (hr₀ : 1 ≤ r) (hr₁ : r ≤ 50) :
@@ -20,7 +19,7 @@ private theorem checkedSecondFeeStop (r : ℕ) (hr₀ : 1 ≤ r) (hr₁ : r ≤ 
     bandCovers firstAdaptiveFlag ⟨r,secondFeeStop r,secondFeeStop r⟩ firstAdaptiveGap = true ∧
     (r < secondFeeStop r →
       germPrice ⟨r,secondFeeStop r - 1,afterRooms.t⟩ (adaptivePartnerFlag secondAdaptiveFlag) ≤
-        7000000000000000) := by
+        5644446294717492) := by
   refine ⟨?_,?_,?_⟩
   · interval_cases r <;> decide +kernel
   · rw [bandCovers, decide_eq_true_eq]
@@ -39,13 +38,13 @@ theorem germPrice_mono_left (f f' g : Flag) (hg : g.ordered)
 theorem first_adaptive_germ_fee (f : Flag) (hfit : f.cumulativeLE afterRooms) :
     (adaptivePartnerFlag firstAdaptiveFlag).ordered ∧
     germDegreeT f (adaptivePartnerFlag firstAdaptiveFlag) < prime ∧
-    germPrice f (adaptivePartnerFlag firstAdaptiveFlag) ≤ 524260340103650 := by
+    germPrice f (adaptivePartnerFlag firstAdaptiveFlag) ≤ 524260341159050 := by
   let g := adaptivePartnerFlag firstAdaptiveFlag
   have hg : g.ordered := ⟨by decide +kernel,by decide +kernel⟩
   exact ⟨hg,(germDegreeT_mono_left f afterRooms g (hg.1.trans hg.2) hfit.1 hfit.2.2).trans_lt
       (by decide +kernel : germDegreeT afterRooms g < prime),
     (germPrice_mono_left f afterRooms g hg hfit).trans
-      (by decide +kernel : germPrice afterRooms g ≤ 524260340103650)⟩
+      (by decide +kernel : germPrice afterRooms g ≤ 524260341159050)⟩
 
 theorem second_adaptive_germ_fee (f : Flag) (hr : 1 ≤ f.r) (hf : f.ordered)
     (hfit : f.cumulativeLE afterRooms)
@@ -53,7 +52,7 @@ theorem second_adaptive_germ_fee (f : Flag) (hr : 1 ≤ f.r) (hf : f.ordered)
       f.toFlagDegree) :
     (adaptivePartnerFlag secondAdaptiveFlag).ordered ∧
     germDegreeT f (adaptivePartnerFlag secondAdaptiveFlag) < prime ∧
-    germPrice f (adaptivePartnerFlag secondAdaptiveFlag) ≤ 7000000000000000 := by
+    germPrice f (adaptivePartnerFlag secondAdaptiveFlag) ≤ 5644446294717492 := by
   let g := adaptivePartnerFlag secondAdaptiveFlag
   have hg : g.ordered := ⟨by decide +kernel,by decide +kernel⟩
   have hd := (germDegreeT_mono_left f afterRooms g (hg.1.trans hg.2) hfit.1 hfit.2.2).trans_lt

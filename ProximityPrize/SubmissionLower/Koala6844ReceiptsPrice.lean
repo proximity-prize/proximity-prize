@@ -284,7 +284,7 @@ def shortenedPairPrice (f g : Flag) : Nat :=
 
 
 def primaryWeight : Nat :=
-  601 * agreements + 742 * poleWidth
+  601 * agreements + 744 * poleWidth
 
 def intrinsicPrice (f : Flag) : Nat :=
   let one := mixed f (scaledDirection f) (scaledLater f) / (geometryScale * geometryScale)
@@ -301,7 +301,7 @@ def intrinsicPrice (f : Flag) : Nat :=
   | none => generic
   | some raw => min generic (dot f.increments raw)
 
-def terminalBudget : Nat := 258251511948629220
+def terminalBudget : Nat := 264883508935605433
 
 inductive EndpointReceipt (f : Flag) (price : Nat) : Type
   | intrinsic (bound : intrinsicPrice f = price)

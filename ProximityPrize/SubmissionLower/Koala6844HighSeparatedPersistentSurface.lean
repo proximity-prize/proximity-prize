@@ -27,7 +27,7 @@ theorem long_persistent_surface_selected_count
     (hfirst : G ∣ surfaceMap (polynomialEmbedding K) (tailNumerator F 131071))
     (hGy : G.degreeOf 0 ≤ 22) (hGz : G.degreeOf 2 ≤ 162)
     (x : I ↪ K) (u₀ u₁ : I → K) (nodes : Finset I)
-    (hAn : 180961 ≤ nodes.card) (haverage : nodeAverage nodes.card 131071 180961 ≤ 3)
+    (hAn : 180958 ≤ nodes.card) (haverage : nodeAverage nodes.card 131071 180958 ≤ 3)
     (seeds allSeeds : Finset K) (hsub : seeds ⊆ allSeeds)
     (selected : K → Polynomial K)
     (hdegree : ∀ g ∈ seeds, (selected g).natDegree ≤ 131071)
@@ -35,10 +35,10 @@ theorem long_persistent_surface_selected_count
     (hreg : ∀ g ∈ seeds, graphSpecialize (selected g) g (g ^ 2130706433)
       (implicitRegularity F) ≠ 0)
     (hzero : ∀ g ∈ seeds, MvPolynomial.eval (selectedGraphPoint 2130706433 selected g) G = 0)
-    (hagreements : ∀ g ∈ seeds, 180961 ≤
+    (hagreements : ∀ g ∈ seeds, 180958 ≤
       (nodes.filter (fun i => (selected g).eval (x i) = u₀ i + g * u₁ i)).card)
     (hpencil : ∀ P₀ P₁ : Polynomial K, P₀.natDegree ≤ 131071 → P₁.natDegree ≤ 131071 →
-      (RCN050.pencilSeeds allSeeds selected P₀ P₁).card ≤ 81184) :
+      (RCN050.pencilSeeds allSeeds selected P₀ P₁).card ≤ 81187) :
     seeds.card ≤ 1050000000000 * G.degreeOf 0 := by
   classical
   let Ω := GenericField K
@@ -107,7 +107,7 @@ theorem long_persistent_surface_selected_count
     have hlocal := persistent_curve_selected_seed_bound F 131071 4000000 p 200 162 c.1 base
       (d c) (p * d c) (fun W => (hpoles W).1) (fun W => by exact_mod_cast (hpoles W).2)
       hFmem hS htail (by decide) (by decide) (by decide) hweight ht hz
-      x u₀ u₁ nodes 180961 81183 (by decide) hAn haverage (onCurve c) allSeeds
+      x u₀ u₁ nodes 180958 81186 (by decide) hAn haverage (onCurve c) allSeeds
       (fun g hg => hsub (hmem g hg).1) selected (fun g => g ^ p)
       (fun g hg => hdegree g (hmem g hg).1)
       (fun g hg => hgraph g (hmem g hg).1)
@@ -116,7 +116,7 @@ theorem long_persistent_surface_selected_count
         exact hreg g (hmem g hg).1)
       (fun g hg => (hmem g hg).2) (fun g hg => hagreements g (hmem g hg).1) hpencil
     refine hlocal.trans ?_
-    change 3 * ((200 + 1) * d c + 162 * (2130706433 * d c)) + (81183 + 1) ≤ 1050000000000 * d c
+    change 3 * ((200 + 1) * d c + 162 * (2130706433 * d c)) + (81186 + 1) ≤ 1050000000000 * d c
     omega
   calc
     _ ≤ ∑ c : C, (onCurve c).card := hcover

@@ -14,10 +14,10 @@ private theorem filter_card_le {I : Type*} (P : I → Prop)
 set_option maxHeartbeats 2000000 in
 theorem protocolClaim_of_scalar_seed_bound
     (hseed : ScalarSeedBound) :
-    ProtocolClaim 6844 332529663 1073741824 := by
+    ProtocolClaim 6844 332541951 1073741824 := by
   apply protocolClaim_of_scalar_bounds hseed
   intro received words hcode hclose
-  have hagreement : Fintype.card IRSProfile.Index - errors = 180961 := by
+  have hagreement : Fintype.card IRSProfile.Index - errors = 180958 := by
     rw [IRSProfile.card_index]
     decide
   refine Koala6844ScalarList.irs_scalar_finite_list_card_le received words hcode ?_

@@ -32,17 +32,17 @@ private theorem exists_retained_carrier
     (hpow : ∀ g : K, σ g = g ^ 2130706433) (hcard : Fintype.card I = 262144)
     (U : Received K I) (retained : Finset K) (P : K → Polynomial K)
     (hdegree : ∀ g ∈ retained, (P g).natDegree ≤ 131071)
-    (hnear : ∀ g ∈ retained, 180961 ≤ (agreementSet x U P g).card)
+    (hnear : ∀ g ∈ retained, 180958 ≤ (agreementSet x U P g).card)
     (q : SymbolicRow (SeedRing K)) (hprim : IsPrimitiveRow q)
     (hf : q.first ≠ 0) (hs : q.second ≠ 0)
-    (hδ : 9800 ≤ primitiveExcess 131071 q) (hδ' : primitiveExcess 131071 q ≤ 31606)
+    (hδ : 9800 ≤ primitiveExcess 131071 q) (hδ' : primitiveExcess 131071 q ≤ 31612)
     (normal : Koala6844Separation.NormalForm q 131071 (primitiveExcess 131071 q))
     (hkeep : ∀ g ∈ retained, primitiveSelected σ 2130706433 q P g = 0 ∧
       Disjoint (agreementSet x U P g)
         (primitiveBadNodes x (conjugateWord σ (U 0)) (conjugateWord σ (U 1)) q)) :
     ∃ G : Carrier K, G ≠ 0 ∧
       (∀ d ∈ G.support, d 1 ≤ 22 ∧ d 1 + d 2 ≤ 200 ∧ d 3 ≤ 162 ∧
-        d 0 + 131071 * d 1 ≤ 16 * 180961 - 1 + 22 * primitiveExcess 131071 q ∧
+        d 0 + 131071 * d 1 ≤ 16 * 180958 - 1 + 22 * primitiveExcess 131071 q ∧
         d 0 + 131071 * d 1 < 2130706433) ∧
       ∀ g ∈ retained, Koala6844HighOrdinaryIntrinsic.graphSpecialize (P g) g (g ^ 2130706433) G = 0 := by
   classical
@@ -71,11 +71,11 @@ private theorem exists_retained_carrier
         (MvPolynomial.C (σ (U 0 i.1)) + MvPolynomial.X 1 * MvPolynomial.C (σ (U 1 i.1))) ≠ 0 := hn
     simpa only [affineSeedWord, u, v, conjugateWord, zero_ne_one, one_ne_zero,
       ite_true, ite_false] using heq
-  have agreeing_count (g : ↥retained) : 180961 ≤ (agreement g).card := by
+  have agreeing_count (g : ↥retained) : 180958 ≤ (agreement g).card := by
     have havoid := Finset.disjoint_left.mp (hkeep g.1 g.2).2
     have eq : (agree g.1).filter (· ∉ bad) = agree g.1 :=
       Finset.filter_true_of_mem (fun i hi hb => havoid hi hb)
-    change 180961 ≤ ((agree g.1).subtype (· ∉ bad)).card
+    change 180958 ≤ ((agree g.1).subtype (· ∉ bad)).card
     rw [Finset.card_subtype, eq]
     exact hnear g.1 g.2
   have natDegree (g : ↥retained) : (P g.1).natDegree ≤ 131071 := hdegree g.1 g.2
@@ -111,12 +111,12 @@ theorem exists_benchmark_carrier
     (normal : Koala6844Separation.NormalForm q 131071 (primitiveExcess 131071 q)) :
     ∃ G : Carrier IRSProfile.Field, G ≠ 0 ∧
       (∀ d ∈ G.support, d 1 ≤ 22 ∧ d 1 + d 2 ≤ 200 ∧ d 3 ≤ 162 ∧
-        d 0 + 131071 * d 1 ≤ 16 * 180961 - 1 + 22 * primitiveExcess 131071 q ∧
+        d 0 + 131071 * d 1 ≤ 16 * 180958 - 1 + 22 * primitiveExcess 131071 q ∧
         d 0 + 131071 * d 1 < 2130706433) ∧
       ∀ g ∈ retained, Koala6844HighOrdinaryIntrinsic.graphSpecialize
         (selected g) g (g ^ 2130706433) G = 0 := by
   classical
-  have upper : primitiveExcess 131071 q ≤ 31606 :=
+  have upper : primitiveExcess 131071 q ≤ 31612 :=
     (Nat.le_add_right _ _).trans data.excess_bad
   exact exists_retained_carrier IRSProfile.domain frobenius.toRingHom domain_fixed frobenius_apply
     IRSProfile.card_index received retained selected data.selection.degree_le data.selection.agreement

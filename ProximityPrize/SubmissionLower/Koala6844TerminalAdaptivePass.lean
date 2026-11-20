@@ -18,7 +18,7 @@ variable {K I : Type} [Field K] [CharP K 2130706433] [DecidableEq K] [DecidableE
 variable {x : I ↪ K} {domain : Finset I} {σ : K ≃+* K} {excess : Nat}
 
 theorem short_pass_residue_card_le_terminal
-    (data : CenteredVirtualData x domain σ 131071 180961 81183 excess)
+    (data : CenteredVirtualData x domain σ 131071 180958 81186 excess)
     (full : Finset I) (hfull : domain ⊆ full) (hcount : full.card = 262144)
     (hSize : Fintype.card I ≤ 262144)
     (hPole : data.d0.natDegree + affineDegree data.A0 ≤ poleWidth)

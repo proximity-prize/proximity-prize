@@ -41,8 +41,8 @@ private theorem degreeOf_le_normalized_weight
 
 theorem centered_tangent_seed_count
     {x : I ↪ K} {nodes : Finset I} {σ : K ≃+* K} {errors excess : ℕ}
-    (data : CenteredVirtualData x nodes σ 131071 180961 errors excess)
-    (support : data.d0.natDegree + affineDegree data.A0 ≤ 6674)
+    (data : CenteredVirtualData x nodes σ 131071 180958 errors excess)
+    (support : data.d0.natDegree + affineDegree data.A0 ≤ 6679)
     (primary : P4 K) (hprimary : primary ≠ 0)
     (factors : Finset (P4 K)) (hproduct : (∏ F ∈ factors, F) ∣ primary)
     (tangent : ∀ F ∈ factors, F ∣ (centeredFlow data).flow F)
@@ -133,14 +133,14 @@ theorem centered_tangent_seed_count
     exact (data.equation0 g (hsub hg)).symm
   rw [← Finset.card_image_of_injOn (f := data.normalized)
       ((Koala6844ActiveGerm.normalized_injOn data).mono hsub)]
-  have hagree : 180961 ≤ nodes.card :=
+  have hagree : 180958 ≤ nodes.card :=
     (data.normalized_agreements 0 data.zero_mem).trans (Finset.card_filter_le _ _)
   apply TangentList.seedless_list_card_le K F hF (hFY.trans hyc) (hFR.trans hrc) hFZ
     (seeds.image data.normalized) nodes x data.fixedWord x.injective.injOn hnodes hagree
   · intro Q hQ
     obtain ⟨g, hg, rfl⟩ := Finset.mem_image.mp hQ
     have h := data.normalized_degree g (hsub hg)
-    change (data.normalized g).natDegree ≤ 137745
+    change (data.normalized g).natDegree ≤ 137750
     omega
   · intro Q hQ
     obtain ⟨g, hg, rfl⟩ := Finset.mem_image.mp hQ

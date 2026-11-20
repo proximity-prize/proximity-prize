@@ -8,15 +8,15 @@ export Koala6831Quotient (separatedExponents SeparatedIndex separatedBox separat
 open scoped BigOperators
 
 theorem longSeparatedDimensionGate (excess : ℕ) (long : 9800 ≤ excess) :
-    separatedColumns (16 * 180961 - 131071 - excess) 131071 21 21 177 161 +
+    separatedColumns (16 * 180958 - 131071 - excess) 131071 21 21 177 161 +
       262144 * (separatedColumns 16 1 15 22 178 162 -
         separatedColumns 15 1 14 21 177 161) <
-      separatedColumns (16 * 180961) 131071 22 22 178 162 := by
+      separatedColumns (16 * 180958) 131071 22 22 178 162 := by
   have threshold :
-      separatedColumns (16 * 180961 - 131071 - 9800) 131071 21 21 177 161 +
+      separatedColumns (16 * 180958 - 131071 - 9800) 131071 21 21 177 161 +
         262144 * (separatedColumns 16 1 15 22 178 162 -
           separatedColumns 15 1 14 21 177 161) <
-        separatedColumns (16 * 180961) 131071 22 22 178 162 := by
+        separatedColumns (16 * 180958) 131071 22 22 178 162 := by
     decide +kernel
   apply lt_of_le_of_lt _ threshold
   exact Nat.add_le_add_right (separatedColumns_mono_cutoff _ _ _ _ _ (Nat.sub_le_sub_left long _)) _
@@ -28,16 +28,16 @@ def ordinaryProfiles : Fin 9 → ℕ × ℕ × ℕ :=
 set_option maxRecDepth 30000 in
 theorem ordinaryDimensionGate (c : Fin 9) (excess : ℕ) (large : 11500 ≤ excess) :
     let (m, y, L) := ordinaryProfiles c
-    ordinaryColumns (m * 180961 - 131071 - excess) 131071 (y - 1) (L - (c.val + 2)) +
+    ordinaryColumns (m * 180958 - 131071 - excess) 131071 (y - 1) (L - (c.val + 2)) +
       262144 * (ordinaryColumns m 1 (m - 1) L -
         ordinaryColumns (m - 1) 1 (m - 2) (L - (c.val + 2))) <
-      ordinaryColumns (m * 180961) 131071 y L := by
+      ordinaryColumns (m * 180958) 131071 y L := by
   have threshold :
       let (m, y, L) := ordinaryProfiles c
-      ordinaryColumns (m * 180961 - 131071 - 11500) 131071 (y - 1) (L - (c.val + 2)) +
+      ordinaryColumns (m * 180958 - 131071 - 11500) 131071 (y - 1) (L - (c.val + 2)) +
         262144 * (ordinaryColumns m 1 (m - 1) L -
           ordinaryColumns (m - 1) 1 (m - 2) (L - (c.val + 2))) <
-        ordinaryColumns (m * 180961) 131071 y L := by
+        ordinaryColumns (m * 180958) 131071 y L := by
     fin_cases c <;> decide +kernel
   cases profile : ordinaryProfiles c with
   | mk m caps =>

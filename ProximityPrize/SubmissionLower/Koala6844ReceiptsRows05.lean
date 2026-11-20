@@ -8,1091 +8,971 @@ set_option Elab.async false
 set_option maxHeartbeats 0
 set_option maxRecDepth 100000
 
-
-private def endpoint_9_66_flag : Flag := ⟨9, 66, 2846⟩
-private def endpoint_9_66_sources : Sources := ⟨contact06, contact06, contact04⟩
-private theorem endpoint_9_66_base : receiptBase endpoint_9_66_flag endpoint_9_66_sources = some 220837329365240501 := by decide +kernel
-private theorem endpoint_9_66_window_0 : receiptWindow endpoint_9_66_flag endpoint_9_66_sources 0 2 220837329365240501 = some 220837329365240501 := by decide +kernel
-private theorem endpoint_9_66_window_2 : receiptWindow endpoint_9_66_flag endpoint_9_66_sources 2 2 220837329365240501 = some 220837329365240501 := by decide +kernel
-private theorem endpoint_9_66_prefix_4 : receiptWindow endpoint_9_66_flag endpoint_9_66_sources 0 4 220837329365240501 = some 220837329365240501 :=
-  join_receipt_window endpoint_9_66_flag endpoint_9_66_sources 0 2 2 220837329365240501 220837329365240501 220837329365240501 endpoint_9_66_window_0 endpoint_9_66_window_2
-private theorem endpoint_9_66_window_4 : receiptWindow endpoint_9_66_flag endpoint_9_66_sources 4 2 220837329365240501 = some 220837329365240501 := by decide +kernel
-private theorem endpoint_9_66_prefix_6 : receiptWindow endpoint_9_66_flag endpoint_9_66_sources 0 6 220837329365240501 = some 220837329365240501 :=
-  join_receipt_window endpoint_9_66_flag endpoint_9_66_sources 0 4 2 220837329365240501 220837329365240501 220837329365240501 endpoint_9_66_prefix_4 endpoint_9_66_window_4
-private theorem endpoint_9_66_window_6 : receiptWindow endpoint_9_66_flag endpoint_9_66_sources 6 2 220837329365240501 = some 220837329365240501 := by decide +kernel
-private theorem endpoint_9_66_prefix_8 : receiptWindow endpoint_9_66_flag endpoint_9_66_sources 0 8 220837329365240501 = some 220837329365240501 :=
-  join_receipt_window endpoint_9_66_flag endpoint_9_66_sources 0 6 2 220837329365240501 220837329365240501 220837329365240501 endpoint_9_66_prefix_6 endpoint_9_66_window_6
-
-def endpoint_9_66 : CertifiedEndpoint :=
-  ⟨⟨9, 66, 2846⟩, 220837329365240501, .terminal ⟨contact06, contact06, contact04⟩ (finish_receipt_window endpoint_9_66_flag endpoint_9_66_sources 8 220837329365240501 220837329365240501 rfl endpoint_9_66_base endpoint_9_66_prefix_8) (by decide)⟩
-private def endpoint_9_67_flag : Flag := ⟨9, 67, 2790⟩
-private def endpoint_9_67_sources : Sources := ⟨contact06, contact06, contact04⟩
-private theorem endpoint_9_67_base : receiptBase endpoint_9_67_flag endpoint_9_67_sources = some 219440703156587646 := by decide +kernel
-private theorem endpoint_9_67_window_0 : receiptWindow endpoint_9_67_flag endpoint_9_67_sources 0 2 219440703156587646 = some 219440703156587646 := by decide +kernel
-private theorem endpoint_9_67_window_2 : receiptWindow endpoint_9_67_flag endpoint_9_67_sources 2 2 219440703156587646 = some 219440703156587646 := by decide +kernel
-private theorem endpoint_9_67_prefix_4 : receiptWindow endpoint_9_67_flag endpoint_9_67_sources 0 4 219440703156587646 = some 219440703156587646 :=
-  join_receipt_window endpoint_9_67_flag endpoint_9_67_sources 0 2 2 219440703156587646 219440703156587646 219440703156587646 endpoint_9_67_window_0 endpoint_9_67_window_2
-private theorem endpoint_9_67_window_4 : receiptWindow endpoint_9_67_flag endpoint_9_67_sources 4 2 219440703156587646 = some 219440703156587646 := by decide +kernel
-private theorem endpoint_9_67_prefix_6 : receiptWindow endpoint_9_67_flag endpoint_9_67_sources 0 6 219440703156587646 = some 219440703156587646 :=
-  join_receipt_window endpoint_9_67_flag endpoint_9_67_sources 0 4 2 219440703156587646 219440703156587646 219440703156587646 endpoint_9_67_prefix_4 endpoint_9_67_window_4
-private theorem endpoint_9_67_window_6 : receiptWindow endpoint_9_67_flag endpoint_9_67_sources 6 2 219440703156587646 = some 219440703156587646 := by decide +kernel
-private theorem endpoint_9_67_prefix_8 : receiptWindow endpoint_9_67_flag endpoint_9_67_sources 0 8 219440703156587646 = some 219440703156587646 :=
-  join_receipt_window endpoint_9_67_flag endpoint_9_67_sources 0 6 2 219440703156587646 219440703156587646 219440703156587646 endpoint_9_67_prefix_6 endpoint_9_67_window_6
-
-def endpoint_9_67 : CertifiedEndpoint :=
-  ⟨⟨9, 67, 2790⟩, 219440703156587646, .terminal ⟨contact06, contact06, contact04⟩ (finish_receipt_window endpoint_9_67_flag endpoint_9_67_sources 8 219440703156587646 219440703156587646 rfl endpoint_9_67_base endpoint_9_67_prefix_8) (by decide)⟩
-private def endpoint_9_68_flag : Flag := ⟨9, 68, 2732⟩
-private def endpoint_9_68_sources : Sources := ⟨contact07, contact07, contact04⟩
-private theorem endpoint_9_68_base : receiptBase endpoint_9_68_flag endpoint_9_68_sources = some 219098537370743316 := by decide +kernel
-private theorem endpoint_9_68_window_0 : receiptWindow endpoint_9_68_flag endpoint_9_68_sources 0 2 219098537370743316 = some 219098537370743316 := by decide +kernel
-private theorem endpoint_9_68_window_2 : receiptWindow endpoint_9_68_flag endpoint_9_68_sources 2 2 219098537370743316 = some 219098537370743316 := by decide +kernel
-private theorem endpoint_9_68_prefix_4 : receiptWindow endpoint_9_68_flag endpoint_9_68_sources 0 4 219098537370743316 = some 219098537370743316 :=
-  join_receipt_window endpoint_9_68_flag endpoint_9_68_sources 0 2 2 219098537370743316 219098537370743316 219098537370743316 endpoint_9_68_window_0 endpoint_9_68_window_2
-private theorem endpoint_9_68_window_4 : receiptWindow endpoint_9_68_flag endpoint_9_68_sources 4 2 219098537370743316 = some 219098537370743316 := by decide +kernel
-private theorem endpoint_9_68_prefix_6 : receiptWindow endpoint_9_68_flag endpoint_9_68_sources 0 6 219098537370743316 = some 219098537370743316 :=
-  join_receipt_window endpoint_9_68_flag endpoint_9_68_sources 0 4 2 219098537370743316 219098537370743316 219098537370743316 endpoint_9_68_prefix_4 endpoint_9_68_window_4
-private theorem endpoint_9_68_window_6 : receiptWindow endpoint_9_68_flag endpoint_9_68_sources 6 2 219098537370743316 = some 219098537370743316 := by decide +kernel
-private theorem endpoint_9_68_prefix_8 : receiptWindow endpoint_9_68_flag endpoint_9_68_sources 0 8 219098537370743316 = some 219098537370743316 :=
-  join_receipt_window endpoint_9_68_flag endpoint_9_68_sources 0 6 2 219098537370743316 219098537370743316 219098537370743316 endpoint_9_68_prefix_6 endpoint_9_68_window_6
-
-def endpoint_9_68 : CertifiedEndpoint :=
-  ⟨⟨9, 68, 2732⟩, 219098537370743316, .terminal ⟨contact07, contact07, contact04⟩ (finish_receipt_window endpoint_9_68_flag endpoint_9_68_sources 8 219098537370743316 219098537370743316 rfl endpoint_9_68_base endpoint_9_68_prefix_8) (by decide)⟩
-private def endpoint_9_69_flag : Flag := ⟨9, 69, 2671⟩
-private def endpoint_9_69_sources : Sources := ⟨contact08, contact08, contact04⟩
-private theorem endpoint_9_69_base : receiptBase endpoint_9_69_flag endpoint_9_69_sources = some 218408253585689114 := by decide +kernel
-private theorem endpoint_9_69_window_0 : receiptWindow endpoint_9_69_flag endpoint_9_69_sources 0 2 218408253585689114 = some 218408253585689114 := by decide +kernel
-private theorem endpoint_9_69_window_2 : receiptWindow endpoint_9_69_flag endpoint_9_69_sources 2 2 218408253585689114 = some 218408253585689114 := by decide +kernel
-private theorem endpoint_9_69_prefix_4 : receiptWindow endpoint_9_69_flag endpoint_9_69_sources 0 4 218408253585689114 = some 218408253585689114 :=
-  join_receipt_window endpoint_9_69_flag endpoint_9_69_sources 0 2 2 218408253585689114 218408253585689114 218408253585689114 endpoint_9_69_window_0 endpoint_9_69_window_2
-private theorem endpoint_9_69_window_4 : receiptWindow endpoint_9_69_flag endpoint_9_69_sources 4 2 218408253585689114 = some 218408253585689114 := by decide +kernel
-private theorem endpoint_9_69_prefix_6 : receiptWindow endpoint_9_69_flag endpoint_9_69_sources 0 6 218408253585689114 = some 218408253585689114 :=
-  join_receipt_window endpoint_9_69_flag endpoint_9_69_sources 0 4 2 218408253585689114 218408253585689114 218408253585689114 endpoint_9_69_prefix_4 endpoint_9_69_window_4
-private theorem endpoint_9_69_window_6 : receiptWindow endpoint_9_69_flag endpoint_9_69_sources 6 2 218408253585689114 = some 218408253585689114 := by decide +kernel
-private theorem endpoint_9_69_prefix_8 : receiptWindow endpoint_9_69_flag endpoint_9_69_sources 0 8 218408253585689114 = some 218408253585689114 :=
-  join_receipt_window endpoint_9_69_flag endpoint_9_69_sources 0 6 2 218408253585689114 218408253585689114 218408253585689114 endpoint_9_69_prefix_6 endpoint_9_69_window_6
-
-def endpoint_9_69 : CertifiedEndpoint :=
-  ⟨⟨9, 69, 2671⟩, 218408253585689114, .terminal ⟨contact08, contact08, contact04⟩ (finish_receipt_window endpoint_9_69_flag endpoint_9_69_sources 8 218408253585689114 218408253585689114 rfl endpoint_9_69_base endpoint_9_69_prefix_8) (by decide)⟩
-private def endpoint_9_70_flag : Flag := ⟨9, 70, 2607⟩
-private def endpoint_9_70_sources : Sources := ⟨contact04, contact04, contact04⟩
-private theorem endpoint_9_70_base : receiptBase endpoint_9_70_flag endpoint_9_70_sources = some 217214297625256046 := by decide +kernel
-private theorem endpoint_9_70_window_0 : receiptWindow endpoint_9_70_flag endpoint_9_70_sources 0 2 217214297625256046 = some 217214297625256046 := by decide +kernel
-private theorem endpoint_9_70_window_2 : receiptWindow endpoint_9_70_flag endpoint_9_70_sources 2 2 217214297625256046 = some 217214297625256046 := by decide +kernel
-private theorem endpoint_9_70_prefix_4 : receiptWindow endpoint_9_70_flag endpoint_9_70_sources 0 4 217214297625256046 = some 217214297625256046 :=
-  join_receipt_window endpoint_9_70_flag endpoint_9_70_sources 0 2 2 217214297625256046 217214297625256046 217214297625256046 endpoint_9_70_window_0 endpoint_9_70_window_2
-private theorem endpoint_9_70_window_4 : receiptWindow endpoint_9_70_flag endpoint_9_70_sources 4 2 217214297625256046 = some 217214297625256046 := by decide +kernel
-private theorem endpoint_9_70_prefix_6 : receiptWindow endpoint_9_70_flag endpoint_9_70_sources 0 6 217214297625256046 = some 217214297625256046 :=
-  join_receipt_window endpoint_9_70_flag endpoint_9_70_sources 0 4 2 217214297625256046 217214297625256046 217214297625256046 endpoint_9_70_prefix_4 endpoint_9_70_window_4
-private theorem endpoint_9_70_window_6 : receiptWindow endpoint_9_70_flag endpoint_9_70_sources 6 2 217214297625256046 = some 217214297625256046 := by decide +kernel
-private theorem endpoint_9_70_prefix_8 : receiptWindow endpoint_9_70_flag endpoint_9_70_sources 0 8 217214297625256046 = some 217214297625256046 :=
-  join_receipt_window endpoint_9_70_flag endpoint_9_70_sources 0 6 2 217214297625256046 217214297625256046 217214297625256046 endpoint_9_70_prefix_6 endpoint_9_70_window_6
-
-def endpoint_9_70 : CertifiedEndpoint :=
-  ⟨⟨9, 70, 2607⟩, 217214297625256046, .terminal ⟨contact04, contact04, contact04⟩ (finish_receipt_window endpoint_9_70_flag endpoint_9_70_sources 8 217214297625256046 217214297625256046 rfl endpoint_9_70_base endpoint_9_70_prefix_8) (by decide)⟩
-private def endpoint_9_71_flag : Flag := ⟨9, 71, 2541⟩
-private def endpoint_9_71_sources : Sources := ⟨contact04, contact04, contact04⟩
-private theorem endpoint_9_71_base : receiptBase endpoint_9_71_flag endpoint_9_71_sources = some 214466887069740073 := by decide +kernel
-private theorem endpoint_9_71_window_0 : receiptWindow endpoint_9_71_flag endpoint_9_71_sources 0 2 214466887069740073 = some 214466887069740073 := by decide +kernel
-private theorem endpoint_9_71_window_2 : receiptWindow endpoint_9_71_flag endpoint_9_71_sources 2 2 214466887069740073 = some 214466887069740073 := by decide +kernel
-private theorem endpoint_9_71_prefix_4 : receiptWindow endpoint_9_71_flag endpoint_9_71_sources 0 4 214466887069740073 = some 214466887069740073 :=
-  join_receipt_window endpoint_9_71_flag endpoint_9_71_sources 0 2 2 214466887069740073 214466887069740073 214466887069740073 endpoint_9_71_window_0 endpoint_9_71_window_2
-private theorem endpoint_9_71_window_4 : receiptWindow endpoint_9_71_flag endpoint_9_71_sources 4 2 214466887069740073 = some 214466887069740073 := by decide +kernel
-private theorem endpoint_9_71_prefix_6 : receiptWindow endpoint_9_71_flag endpoint_9_71_sources 0 6 214466887069740073 = some 214466887069740073 :=
-  join_receipt_window endpoint_9_71_flag endpoint_9_71_sources 0 4 2 214466887069740073 214466887069740073 214466887069740073 endpoint_9_71_prefix_4 endpoint_9_71_window_4
-private theorem endpoint_9_71_window_6 : receiptWindow endpoint_9_71_flag endpoint_9_71_sources 6 2 214466887069740073 = some 214466887069740073 := by decide +kernel
-private theorem endpoint_9_71_prefix_8 : receiptWindow endpoint_9_71_flag endpoint_9_71_sources 0 8 214466887069740073 = some 214466887069740073 :=
-  join_receipt_window endpoint_9_71_flag endpoint_9_71_sources 0 6 2 214466887069740073 214466887069740073 214466887069740073 endpoint_9_71_prefix_6 endpoint_9_71_window_6
-
-def endpoint_9_71 : CertifiedEndpoint :=
-  ⟨⟨9, 71, 2541⟩, 214466887069740073, .terminal ⟨contact04, contact04, contact04⟩ (finish_receipt_window endpoint_9_71_flag endpoint_9_71_sources 8 214466887069740073 214466887069740073 rfl endpoint_9_71_base endpoint_9_71_prefix_8) (by decide)⟩
-private def endpoint_9_72_flag : Flag := ⟨9, 72, 2472⟩
-private def endpoint_9_72_sources : Sources := ⟨contact04, contact04, contact04⟩
-private theorem endpoint_9_72_base : receiptBase endpoint_9_72_flag endpoint_9_72_sources = some 211323839415567049 := by decide +kernel
-private theorem endpoint_9_72_window_0 : receiptWindow endpoint_9_72_flag endpoint_9_72_sources 0 2 211323839415567049 = some 211323839415567049 := by decide +kernel
-private theorem endpoint_9_72_window_2 : receiptWindow endpoint_9_72_flag endpoint_9_72_sources 2 2 211323839415567049 = some 211323839415567049 := by decide +kernel
-private theorem endpoint_9_72_prefix_4 : receiptWindow endpoint_9_72_flag endpoint_9_72_sources 0 4 211323839415567049 = some 211323839415567049 :=
-  join_receipt_window endpoint_9_72_flag endpoint_9_72_sources 0 2 2 211323839415567049 211323839415567049 211323839415567049 endpoint_9_72_window_0 endpoint_9_72_window_2
-private theorem endpoint_9_72_window_4 : receiptWindow endpoint_9_72_flag endpoint_9_72_sources 4 2 211323839415567049 = some 211323839415567049 := by decide +kernel
-private theorem endpoint_9_72_prefix_6 : receiptWindow endpoint_9_72_flag endpoint_9_72_sources 0 6 211323839415567049 = some 211323839415567049 :=
-  join_receipt_window endpoint_9_72_flag endpoint_9_72_sources 0 4 2 211323839415567049 211323839415567049 211323839415567049 endpoint_9_72_prefix_4 endpoint_9_72_window_4
-private theorem endpoint_9_72_window_6 : receiptWindow endpoint_9_72_flag endpoint_9_72_sources 6 2 211323839415567049 = some 211323839415567049 := by decide +kernel
-private theorem endpoint_9_72_prefix_8 : receiptWindow endpoint_9_72_flag endpoint_9_72_sources 0 8 211323839415567049 = some 211323839415567049 :=
-  join_receipt_window endpoint_9_72_flag endpoint_9_72_sources 0 6 2 211323839415567049 211323839415567049 211323839415567049 endpoint_9_72_prefix_6 endpoint_9_72_window_6
-
-def endpoint_9_72 : CertifiedEndpoint :=
-  ⟨⟨9, 72, 2472⟩, 211323839415567049, .terminal ⟨contact04, contact04, contact04⟩ (finish_receipt_window endpoint_9_72_flag endpoint_9_72_sources 8 211323839415567049 211323839415567049 rfl endpoint_9_72_base endpoint_9_72_prefix_8) (by decide)⟩
-private def endpoint_9_73_flag : Flag := ⟨9, 73, 2400⟩
-private def endpoint_9_73_sources : Sources := ⟨contact11, contact11, contact12⟩
-private theorem endpoint_9_73_base : receiptBase endpoint_9_73_flag endpoint_9_73_sources = some 212117908954972679 := by decide +kernel
-private theorem endpoint_9_73_window_0 : receiptWindow endpoint_9_73_flag endpoint_9_73_sources 0 2 212117908954972679 = some 212117908954972679 := by decide +kernel
-private theorem endpoint_9_73_window_2 : receiptWindow endpoint_9_73_flag endpoint_9_73_sources 2 2 212117908954972679 = some 212117908954972679 := by decide +kernel
-private theorem endpoint_9_73_prefix_4 : receiptWindow endpoint_9_73_flag endpoint_9_73_sources 0 4 212117908954972679 = some 212117908954972679 :=
-  join_receipt_window endpoint_9_73_flag endpoint_9_73_sources 0 2 2 212117908954972679 212117908954972679 212117908954972679 endpoint_9_73_window_0 endpoint_9_73_window_2
-private theorem endpoint_9_73_window_4 : receiptWindow endpoint_9_73_flag endpoint_9_73_sources 4 2 212117908954972679 = some 212117908954972679 := by decide +kernel
-private theorem endpoint_9_73_prefix_6 : receiptWindow endpoint_9_73_flag endpoint_9_73_sources 0 6 212117908954972679 = some 212117908954972679 :=
-  join_receipt_window endpoint_9_73_flag endpoint_9_73_sources 0 4 2 212117908954972679 212117908954972679 212117908954972679 endpoint_9_73_prefix_4 endpoint_9_73_window_4
-private theorem endpoint_9_73_window_6 : receiptWindow endpoint_9_73_flag endpoint_9_73_sources 6 2 212117908954972679 = some 212117908954972679 := by decide +kernel
-private theorem endpoint_9_73_prefix_8 : receiptWindow endpoint_9_73_flag endpoint_9_73_sources 0 8 212117908954972679 = some 212117908954972679 :=
-  join_receipt_window endpoint_9_73_flag endpoint_9_73_sources 0 6 2 212117908954972679 212117908954972679 212117908954972679 endpoint_9_73_prefix_6 endpoint_9_73_window_6
-
-def endpoint_9_73 : CertifiedEndpoint :=
-  ⟨⟨9, 73, 2400⟩, 212117908954972679, .terminal ⟨contact11, contact11, contact12⟩ (finish_receipt_window endpoint_9_73_flag endpoint_9_73_sources 8 212117908954972679 212117908954972679 rfl endpoint_9_73_base endpoint_9_73_prefix_8) (by decide)⟩
-private def endpoint_9_74_flag : Flag := ⟨9, 74, 2326⟩
-private def endpoint_9_74_sources : Sources := ⟨contact11, contact11, contact12⟩
-private theorem endpoint_9_74_base : receiptBase endpoint_9_74_flag endpoint_9_74_sources = some 208207574437036509 := by decide +kernel
-private theorem endpoint_9_74_window_0 : receiptWindow endpoint_9_74_flag endpoint_9_74_sources 0 2 208207574437036509 = some 208207574437036509 := by decide +kernel
-private theorem endpoint_9_74_window_2 : receiptWindow endpoint_9_74_flag endpoint_9_74_sources 2 2 208207574437036509 = some 208207574437036509 := by decide +kernel
-private theorem endpoint_9_74_prefix_4 : receiptWindow endpoint_9_74_flag endpoint_9_74_sources 0 4 208207574437036509 = some 208207574437036509 :=
-  join_receipt_window endpoint_9_74_flag endpoint_9_74_sources 0 2 2 208207574437036509 208207574437036509 208207574437036509 endpoint_9_74_window_0 endpoint_9_74_window_2
-private theorem endpoint_9_74_window_4 : receiptWindow endpoint_9_74_flag endpoint_9_74_sources 4 2 208207574437036509 = some 208207574437036509 := by decide +kernel
-private theorem endpoint_9_74_prefix_6 : receiptWindow endpoint_9_74_flag endpoint_9_74_sources 0 6 208207574437036509 = some 208207574437036509 :=
-  join_receipt_window endpoint_9_74_flag endpoint_9_74_sources 0 4 2 208207574437036509 208207574437036509 208207574437036509 endpoint_9_74_prefix_4 endpoint_9_74_window_4
-private theorem endpoint_9_74_window_6 : receiptWindow endpoint_9_74_flag endpoint_9_74_sources 6 2 208207574437036509 = some 208207574437036509 := by decide +kernel
-private theorem endpoint_9_74_prefix_8 : receiptWindow endpoint_9_74_flag endpoint_9_74_sources 0 8 208207574437036509 = some 208207574437036509 :=
-  join_receipt_window endpoint_9_74_flag endpoint_9_74_sources 0 6 2 208207574437036509 208207574437036509 208207574437036509 endpoint_9_74_prefix_6 endpoint_9_74_window_6
-
-def endpoint_9_74 : CertifiedEndpoint :=
-  ⟨⟨9, 74, 2326⟩, 208207574437036509, .terminal ⟨contact11, contact11, contact12⟩ (finish_receipt_window endpoint_9_74_flag endpoint_9_74_sources 8 208207574437036509 208207574437036509 rfl endpoint_9_74_base endpoint_9_74_prefix_8) (by decide)⟩
-private def endpoint_9_75_flag : Flag := ⟨9, 75, 2248⟩
-private def endpoint_9_75_sources : Sources := ⟨contact11, contact11, contact12⟩
-private theorem endpoint_9_75_base : receiptBase endpoint_9_75_flag endpoint_9_75_sources = some 203782947403644794 := by decide +kernel
-private theorem endpoint_9_75_window_0 : receiptWindow endpoint_9_75_flag endpoint_9_75_sources 0 2 203782947403644794 = some 203782947403644794 := by decide +kernel
-private theorem endpoint_9_75_window_2 : receiptWindow endpoint_9_75_flag endpoint_9_75_sources 2 2 203782947403644794 = some 203782947403644794 := by decide +kernel
-private theorem endpoint_9_75_prefix_4 : receiptWindow endpoint_9_75_flag endpoint_9_75_sources 0 4 203782947403644794 = some 203782947403644794 :=
-  join_receipt_window endpoint_9_75_flag endpoint_9_75_sources 0 2 2 203782947403644794 203782947403644794 203782947403644794 endpoint_9_75_window_0 endpoint_9_75_window_2
-private theorem endpoint_9_75_window_4 : receiptWindow endpoint_9_75_flag endpoint_9_75_sources 4 2 203782947403644794 = some 203782947403644794 := by decide +kernel
-private theorem endpoint_9_75_prefix_6 : receiptWindow endpoint_9_75_flag endpoint_9_75_sources 0 6 203782947403644794 = some 203782947403644794 :=
-  join_receipt_window endpoint_9_75_flag endpoint_9_75_sources 0 4 2 203782947403644794 203782947403644794 203782947403644794 endpoint_9_75_prefix_4 endpoint_9_75_window_4
-private theorem endpoint_9_75_window_6 : receiptWindow endpoint_9_75_flag endpoint_9_75_sources 6 2 203782947403644794 = some 203782947403644794 := by decide +kernel
-private theorem endpoint_9_75_prefix_8 : receiptWindow endpoint_9_75_flag endpoint_9_75_sources 0 8 203782947403644794 = some 203782947403644794 :=
-  join_receipt_window endpoint_9_75_flag endpoint_9_75_sources 0 6 2 203782947403644794 203782947403644794 203782947403644794 endpoint_9_75_prefix_6 endpoint_9_75_window_6
-
-def endpoint_9_75 : CertifiedEndpoint :=
-  ⟨⟨9, 75, 2248⟩, 203782947403644794, .terminal ⟨contact11, contact11, contact12⟩ (finish_receipt_window endpoint_9_75_flag endpoint_9_75_sources 8 203782947403644794 203782947403644794 rfl endpoint_9_75_base endpoint_9_75_prefix_8) (by decide)⟩
-private def endpoint_9_76_flag : Flag := ⟨9, 76, 2169⟩
-private def endpoint_9_76_sources : Sources := ⟨contact14, contact14, contact13⟩
-private theorem endpoint_9_76_base : receiptBase endpoint_9_76_flag endpoint_9_76_sources = some 200835511710029401 := by decide +kernel
-private theorem endpoint_9_76_window_0 : receiptWindow endpoint_9_76_flag endpoint_9_76_sources 0 2 200835511710029401 = some 200835511710029401 := by decide +kernel
-private theorem endpoint_9_76_window_2 : receiptWindow endpoint_9_76_flag endpoint_9_76_sources 2 2 200835511710029401 = some 200835511710029401 := by decide +kernel
-private theorem endpoint_9_76_prefix_4 : receiptWindow endpoint_9_76_flag endpoint_9_76_sources 0 4 200835511710029401 = some 200835511710029401 :=
-  join_receipt_window endpoint_9_76_flag endpoint_9_76_sources 0 2 2 200835511710029401 200835511710029401 200835511710029401 endpoint_9_76_window_0 endpoint_9_76_window_2
-private theorem endpoint_9_76_window_4 : receiptWindow endpoint_9_76_flag endpoint_9_76_sources 4 2 200835511710029401 = some 200835511710029401 := by decide +kernel
-private theorem endpoint_9_76_prefix_6 : receiptWindow endpoint_9_76_flag endpoint_9_76_sources 0 6 200835511710029401 = some 200835511710029401 :=
-  join_receipt_window endpoint_9_76_flag endpoint_9_76_sources 0 4 2 200835511710029401 200835511710029401 200835511710029401 endpoint_9_76_prefix_4 endpoint_9_76_window_4
-private theorem endpoint_9_76_window_6 : receiptWindow endpoint_9_76_flag endpoint_9_76_sources 6 2 200835511710029401 = some 200835511710029401 := by decide +kernel
-private theorem endpoint_9_76_prefix_8 : receiptWindow endpoint_9_76_flag endpoint_9_76_sources 0 8 200835511710029401 = some 200835511710029401 :=
-  join_receipt_window endpoint_9_76_flag endpoint_9_76_sources 0 6 2 200835511710029401 200835511710029401 200835511710029401 endpoint_9_76_prefix_6 endpoint_9_76_window_6
-
-def endpoint_9_76 : CertifiedEndpoint :=
-  ⟨⟨9, 76, 2169⟩, 200835511710029401, .terminal ⟨contact14, contact14, contact13⟩ (finish_receipt_window endpoint_9_76_flag endpoint_9_76_sources 8 200835511710029401 200835511710029401 rfl endpoint_9_76_base endpoint_9_76_prefix_8) (by decide)⟩
-private def endpoint_9_77_flag : Flag := ⟨9, 77, 2086⟩
-private def endpoint_9_77_sources : Sources := ⟨contact14, contact14, contact13⟩
-private theorem endpoint_9_77_base : receiptBase endpoint_9_77_flag endpoint_9_77_sources = some 195497430340903989 := by decide +kernel
-private theorem endpoint_9_77_window_0 : receiptWindow endpoint_9_77_flag endpoint_9_77_sources 0 2 195497430340903989 = some 195497430340903989 := by decide +kernel
-private theorem endpoint_9_77_window_2 : receiptWindow endpoint_9_77_flag endpoint_9_77_sources 2 2 195497430340903989 = some 195497430340903989 := by decide +kernel
-private theorem endpoint_9_77_prefix_4 : receiptWindow endpoint_9_77_flag endpoint_9_77_sources 0 4 195497430340903989 = some 195497430340903989 :=
-  join_receipt_window endpoint_9_77_flag endpoint_9_77_sources 0 2 2 195497430340903989 195497430340903989 195497430340903989 endpoint_9_77_window_0 endpoint_9_77_window_2
-private theorem endpoint_9_77_window_4 : receiptWindow endpoint_9_77_flag endpoint_9_77_sources 4 2 195497430340903989 = some 195497430340903989 := by decide +kernel
-private theorem endpoint_9_77_prefix_6 : receiptWindow endpoint_9_77_flag endpoint_9_77_sources 0 6 195497430340903989 = some 195497430340903989 :=
-  join_receipt_window endpoint_9_77_flag endpoint_9_77_sources 0 4 2 195497430340903989 195497430340903989 195497430340903989 endpoint_9_77_prefix_4 endpoint_9_77_window_4
-private theorem endpoint_9_77_window_6 : receiptWindow endpoint_9_77_flag endpoint_9_77_sources 6 2 195497430340903989 = some 195497430340903989 := by decide +kernel
-private theorem endpoint_9_77_prefix_8 : receiptWindow endpoint_9_77_flag endpoint_9_77_sources 0 8 195497430340903989 = some 195497430340903989 :=
-  join_receipt_window endpoint_9_77_flag endpoint_9_77_sources 0 6 2 195497430340903989 195497430340903989 195497430340903989 endpoint_9_77_prefix_6 endpoint_9_77_window_6
-
-def endpoint_9_77 : CertifiedEndpoint :=
-  ⟨⟨9, 77, 2086⟩, 195497430340903989, .terminal ⟨contact14, contact14, contact13⟩ (finish_receipt_window endpoint_9_77_flag endpoint_9_77_sources 8 195497430340903989 195497430340903989 rfl endpoint_9_77_base endpoint_9_77_prefix_8) (by decide)⟩
-private def endpoint_9_78_flag : Flag := ⟨9, 78, 2001⟩
-private def endpoint_9_78_sources : Sources := ⟨contact14, contact14, contact13⟩
-private theorem endpoint_9_78_base : receiptBase endpoint_9_78_flag endpoint_9_78_sources = some 189791269446430391 := by decide +kernel
-private theorem endpoint_9_78_window_0 : receiptWindow endpoint_9_78_flag endpoint_9_78_sources 0 2 189791269446430391 = some 189791269446430391 := by decide +kernel
-private theorem endpoint_9_78_window_2 : receiptWindow endpoint_9_78_flag endpoint_9_78_sources 2 2 189791269446430391 = some 189791269446430391 := by decide +kernel
-private theorem endpoint_9_78_prefix_4 : receiptWindow endpoint_9_78_flag endpoint_9_78_sources 0 4 189791269446430391 = some 189791269446430391 :=
-  join_receipt_window endpoint_9_78_flag endpoint_9_78_sources 0 2 2 189791269446430391 189791269446430391 189791269446430391 endpoint_9_78_window_0 endpoint_9_78_window_2
-private theorem endpoint_9_78_window_4 : receiptWindow endpoint_9_78_flag endpoint_9_78_sources 4 2 189791269446430391 = some 189791269446430391 := by decide +kernel
-private theorem endpoint_9_78_prefix_6 : receiptWindow endpoint_9_78_flag endpoint_9_78_sources 0 6 189791269446430391 = some 189791269446430391 :=
-  join_receipt_window endpoint_9_78_flag endpoint_9_78_sources 0 4 2 189791269446430391 189791269446430391 189791269446430391 endpoint_9_78_prefix_4 endpoint_9_78_window_4
-private theorem endpoint_9_78_window_6 : receiptWindow endpoint_9_78_flag endpoint_9_78_sources 6 2 189791269446430391 = some 189791269446430391 := by decide +kernel
-private theorem endpoint_9_78_prefix_8 : receiptWindow endpoint_9_78_flag endpoint_9_78_sources 0 8 189791269446430391 = some 189791269446430391 :=
-  join_receipt_window endpoint_9_78_flag endpoint_9_78_sources 0 6 2 189791269446430391 189791269446430391 189791269446430391 endpoint_9_78_prefix_6 endpoint_9_78_window_6
-
-def endpoint_9_78 : CertifiedEndpoint :=
-  ⟨⟨9, 78, 2001⟩, 189791269446430391, .terminal ⟨contact14, contact14, contact13⟩ (finish_receipt_window endpoint_9_78_flag endpoint_9_78_sources 8 189791269446430391 189791269446430391 rfl endpoint_9_78_base endpoint_9_78_prefix_8) (by decide)⟩
-private def endpoint_9_79_flag : Flag := ⟨9, 79, 1913⟩
-private def endpoint_9_79_sources : Sources := ⟨contact15, contact15, contact13⟩
-private theorem endpoint_9_79_base : receiptBase endpoint_9_79_flag endpoint_9_79_sources = some 185419971855024149 := by decide +kernel
-private theorem endpoint_9_79_window_0 : receiptWindow endpoint_9_79_flag endpoint_9_79_sources 0 2 185419971855024149 = some 185419971855024149 := by decide +kernel
-private theorem endpoint_9_79_window_2 : receiptWindow endpoint_9_79_flag endpoint_9_79_sources 2 2 185419971855024149 = some 185419971855024149 := by decide +kernel
-private theorem endpoint_9_79_prefix_4 : receiptWindow endpoint_9_79_flag endpoint_9_79_sources 0 4 185419971855024149 = some 185419971855024149 :=
-  join_receipt_window endpoint_9_79_flag endpoint_9_79_sources 0 2 2 185419971855024149 185419971855024149 185419971855024149 endpoint_9_79_window_0 endpoint_9_79_window_2
-private theorem endpoint_9_79_window_4 : receiptWindow endpoint_9_79_flag endpoint_9_79_sources 4 2 185419971855024149 = some 185419971855024149 := by decide +kernel
-private theorem endpoint_9_79_prefix_6 : receiptWindow endpoint_9_79_flag endpoint_9_79_sources 0 6 185419971855024149 = some 185419971855024149 :=
-  join_receipt_window endpoint_9_79_flag endpoint_9_79_sources 0 4 2 185419971855024149 185419971855024149 185419971855024149 endpoint_9_79_prefix_4 endpoint_9_79_window_4
-private theorem endpoint_9_79_window_6 : receiptWindow endpoint_9_79_flag endpoint_9_79_sources 6 2 185419971855024149 = some 185419971855024149 := by decide +kernel
-private theorem endpoint_9_79_prefix_8 : receiptWindow endpoint_9_79_flag endpoint_9_79_sources 0 8 185419971855024149 = some 185419971855024149 :=
-  join_receipt_window endpoint_9_79_flag endpoint_9_79_sources 0 6 2 185419971855024149 185419971855024149 185419971855024149 endpoint_9_79_prefix_6 endpoint_9_79_window_6
-
-def endpoint_9_79 : CertifiedEndpoint :=
-  ⟨⟨9, 79, 1913⟩, 185419971855024149, .terminal ⟨contact15, contact15, contact13⟩ (finish_receipt_window endpoint_9_79_flag endpoint_9_79_sources 8 185419971855024149 185419971855024149 rfl endpoint_9_79_base endpoint_9_79_prefix_8) (by decide)⟩
-private def endpoint_9_80_flag : Flag := ⟨9, 80, 1823⟩
-private def endpoint_9_80_sources : Sources := ⟨contact16, contact16, contact13⟩
-private theorem endpoint_9_80_base : receiptBase endpoint_9_80_flag endpoint_9_80_sources = some 180577663303858695 := by decide +kernel
-private theorem endpoint_9_80_window_0 : receiptWindow endpoint_9_80_flag endpoint_9_80_sources 0 2 180577663303858695 = some 180577663303858695 := by decide +kernel
-private theorem endpoint_9_80_window_2 : receiptWindow endpoint_9_80_flag endpoint_9_80_sources 2 2 180577663303858695 = some 180577663303858695 := by decide +kernel
-private theorem endpoint_9_80_prefix_4 : receiptWindow endpoint_9_80_flag endpoint_9_80_sources 0 4 180577663303858695 = some 180577663303858695 :=
-  join_receipt_window endpoint_9_80_flag endpoint_9_80_sources 0 2 2 180577663303858695 180577663303858695 180577663303858695 endpoint_9_80_window_0 endpoint_9_80_window_2
-private theorem endpoint_9_80_window_4 : receiptWindow endpoint_9_80_flag endpoint_9_80_sources 4 2 180577663303858695 = some 180577663303858695 := by decide +kernel
-private theorem endpoint_9_80_prefix_6 : receiptWindow endpoint_9_80_flag endpoint_9_80_sources 0 6 180577663303858695 = some 180577663303858695 :=
-  join_receipt_window endpoint_9_80_flag endpoint_9_80_sources 0 4 2 180577663303858695 180577663303858695 180577663303858695 endpoint_9_80_prefix_4 endpoint_9_80_window_4
-private theorem endpoint_9_80_window_6 : receiptWindow endpoint_9_80_flag endpoint_9_80_sources 6 2 180577663303858695 = some 180577663303858695 := by decide +kernel
-private theorem endpoint_9_80_prefix_8 : receiptWindow endpoint_9_80_flag endpoint_9_80_sources 0 8 180577663303858695 = some 180577663303858695 :=
-  join_receipt_window endpoint_9_80_flag endpoint_9_80_sources 0 6 2 180577663303858695 180577663303858695 180577663303858695 endpoint_9_80_prefix_6 endpoint_9_80_window_6
-
-def endpoint_9_80 : CertifiedEndpoint :=
-  ⟨⟨9, 80, 1823⟩, 180577663303858695, .terminal ⟨contact16, contact16, contact13⟩ (finish_receipt_window endpoint_9_80_flag endpoint_9_80_sources 8 180577663303858695 180577663303858695 rfl endpoint_9_80_base endpoint_9_80_prefix_8) (by decide)⟩
-private def endpoint_9_81_flag : Flag := ⟨9, 81, 1730⟩
-private def endpoint_9_81_sources : Sources := ⟨contact16, contact16, contact13⟩
-private theorem endpoint_9_81_base : receiptBase endpoint_9_81_flag endpoint_9_81_sources = some 173345882659566943 := by decide +kernel
-private theorem endpoint_9_81_window_0 : receiptWindow endpoint_9_81_flag endpoint_9_81_sources 0 2 173345882659566943 = some 173345882659566943 := by decide +kernel
-private theorem endpoint_9_81_window_2 : receiptWindow endpoint_9_81_flag endpoint_9_81_sources 2 2 173345882659566943 = some 173345882659566943 := by decide +kernel
-private theorem endpoint_9_81_prefix_4 : receiptWindow endpoint_9_81_flag endpoint_9_81_sources 0 4 173345882659566943 = some 173345882659566943 :=
-  join_receipt_window endpoint_9_81_flag endpoint_9_81_sources 0 2 2 173345882659566943 173345882659566943 173345882659566943 endpoint_9_81_window_0 endpoint_9_81_window_2
-private theorem endpoint_9_81_window_4 : receiptWindow endpoint_9_81_flag endpoint_9_81_sources 4 2 173345882659566943 = some 173345882659566943 := by decide +kernel
-private theorem endpoint_9_81_prefix_6 : receiptWindow endpoint_9_81_flag endpoint_9_81_sources 0 6 173345882659566943 = some 173345882659566943 :=
-  join_receipt_window endpoint_9_81_flag endpoint_9_81_sources 0 4 2 173345882659566943 173345882659566943 173345882659566943 endpoint_9_81_prefix_4 endpoint_9_81_window_4
-private theorem endpoint_9_81_window_6 : receiptWindow endpoint_9_81_flag endpoint_9_81_sources 6 2 173345882659566943 = some 173345882659566943 := by decide +kernel
-private theorem endpoint_9_81_prefix_8 : receiptWindow endpoint_9_81_flag endpoint_9_81_sources 0 8 173345882659566943 = some 173345882659566943 :=
-  join_receipt_window endpoint_9_81_flag endpoint_9_81_sources 0 6 2 173345882659566943 173345882659566943 173345882659566943 endpoint_9_81_prefix_6 endpoint_9_81_window_6
-
-def endpoint_9_81 : CertifiedEndpoint :=
-  ⟨⟨9, 81, 1730⟩, 173345882659566943, .terminal ⟨contact16, contact16, contact13⟩ (finish_receipt_window endpoint_9_81_flag endpoint_9_81_sources 8 173345882659566943 173345882659566943 rfl endpoint_9_81_base endpoint_9_81_prefix_8) (by decide)⟩
-private def endpoint_9_82_flag : Flag := ⟨9, 82, 1634⟩
-private def endpoint_9_82_sources : Sources := ⟨contact16, contact16, contact13⟩
-private theorem endpoint_9_82_base : receiptBase endpoint_9_82_flag endpoint_9_82_sources = some 165604336183477697 := by decide +kernel
-private theorem endpoint_9_82_window_0 : receiptWindow endpoint_9_82_flag endpoint_9_82_sources 0 2 165604336183477697 = some 165604336183477697 := by decide +kernel
-private theorem endpoint_9_82_window_2 : receiptWindow endpoint_9_82_flag endpoint_9_82_sources 2 2 165604336183477697 = some 165604336183477697 := by decide +kernel
-private theorem endpoint_9_82_prefix_4 : receiptWindow endpoint_9_82_flag endpoint_9_82_sources 0 4 165604336183477697 = some 165604336183477697 :=
-  join_receipt_window endpoint_9_82_flag endpoint_9_82_sources 0 2 2 165604336183477697 165604336183477697 165604336183477697 endpoint_9_82_window_0 endpoint_9_82_window_2
-private theorem endpoint_9_82_window_4 : receiptWindow endpoint_9_82_flag endpoint_9_82_sources 4 2 165604336183477697 = some 165604336183477697 := by decide +kernel
-private theorem endpoint_9_82_prefix_6 : receiptWindow endpoint_9_82_flag endpoint_9_82_sources 0 6 165604336183477697 = some 165604336183477697 :=
-  join_receipt_window endpoint_9_82_flag endpoint_9_82_sources 0 4 2 165604336183477697 165604336183477697 165604336183477697 endpoint_9_82_prefix_4 endpoint_9_82_window_4
-private theorem endpoint_9_82_window_6 : receiptWindow endpoint_9_82_flag endpoint_9_82_sources 6 2 165604336183477697 = some 165604336183477697 := by decide +kernel
-private theorem endpoint_9_82_prefix_8 : receiptWindow endpoint_9_82_flag endpoint_9_82_sources 0 8 165604336183477697 = some 165604336183477697 :=
-  join_receipt_window endpoint_9_82_flag endpoint_9_82_sources 0 6 2 165604336183477697 165604336183477697 165604336183477697 endpoint_9_82_prefix_6 endpoint_9_82_window_6
-
-def endpoint_9_82 : CertifiedEndpoint :=
-  ⟨⟨9, 82, 1634⟩, 165604336183477697, .terminal ⟨contact16, contact16, contact13⟩ (finish_receipt_window endpoint_9_82_flag endpoint_9_82_sources 8 165604336183477697 165604336183477697 rfl endpoint_9_82_base endpoint_9_82_prefix_8) (by decide)⟩
-def endpoint_9_83 : CertifiedEndpoint :=
-  ⟨⟨9, 83, 1535⟩, 255768284373767388, .intrinsic (by decide +kernel) (by decide)⟩
-def endpoint_9_84 : CertifiedEndpoint :=
-  ⟨⟨9, 84, 1433⟩, 241239192213010385, .intrinsic (by decide +kernel) (by decide)⟩
-def endpoint_9_85 : CertifiedEndpoint :=
-  ⟨⟨9, 85, 1329⟩, 225907419096924806, .intrinsic (by decide +kernel) (by decide)⟩
-def endpoint_9_86 : CertifiedEndpoint :=
-  ⟨⟨9, 86, 1222⟩, 209581636563633142, .intrinsic (by decide +kernel) (by decide)⟩
-def endpoint_9_87 : CertifiedEndpoint :=
-  ⟨⟨9, 87, 1113⟩, 192422385973222170, .intrinsic (by decide +kernel) (by decide)⟩
-def endpoint_9_88 : CertifiedEndpoint :=
-  ⟨⟨9, 88, 1001⟩, 174233940706415705, .intrinsic (by decide +kernel) (by decide)⟩
-def endpoint_9_89 : CertifiedEndpoint :=
-  ⟨⟨9, 89, 885⟩, 154811777829140210, .intrinsic (by decide +kernel) (by decide)⟩
-def endpoint_9_90 : CertifiedEndpoint :=
-  ⟨⟨9, 90, 768⟩, 134690299310440128, .intrinsic (by decide +kernel) (by decide)⟩
-def endpoint_9_91 : CertifiedEndpoint :=
-  ⟨⟨9, 91, 647⟩, 113295519764682932, .intrinsic (by decide +kernel) (by decide)⟩
-def endpoint_9_92 : CertifiedEndpoint :=
-  ⟨⟨9, 92, 524⟩, 90983707171231584, .intrinsic (by decide +kernel) (by decide)⟩
-def endpoint_9_93 : CertifiedEndpoint :=
-  ⟨⟨9, 93, 398⟩, 67548139517313209, .intrinsic (by decide +kernel) (by decide)⟩
-def endpoint_9_94 : CertifiedEndpoint :=
-  ⟨⟨9, 94, 269⟩, 42969025094633765, .intrinsic (by decide +kernel) (by decide)⟩
-def endpoint_9_95 : CertifiedEndpoint :=
-  ⟨⟨9, 95, 137⟩, 17226572194899210, .intrinsic (by decide +kernel) (by decide)⟩
-def endpoint_10_10 : CertifiedEndpoint :=
-  ⟨⟨10, 10, 4316⟩, 61952487996557676, .intrinsic (by decide +kernel) (by decide)⟩
-def endpoint_10_11 : CertifiedEndpoint :=
-  ⟨⟨10, 11, 4297⟩, 65102488377353092, .intrinsic (by decide +kernel) (by decide)⟩
-def endpoint_10_12 : CertifiedEndpoint :=
-  ⟨⟨10, 12, 4278⟩, 68222131154791258, .intrinsic (by decide +kernel) (by decide)⟩
-def endpoint_10_13 : CertifiedEndpoint :=
-  ⟨⟨10, 13, 4259⟩, 78351283842457484, .intrinsic (by decide +kernel) (by decide)⟩
-def endpoint_10_14 : CertifiedEndpoint :=
-  ⟨⟨10, 14, 4240⟩, 88384621992008700, .intrinsic (by decide +kernel) (by decide)⟩
-def endpoint_10_15 : CertifiedEndpoint :=
-  ⟨⟨10, 15, 4221⟩, 98322145603444906, .intrinsic (by decide +kernel) (by decide)⟩
-def endpoint_10_16 : CertifiedEndpoint :=
-  ⟨⟨10, 16, 4202⟩, 108163854676766102, .intrinsic (by decide +kernel) (by decide)⟩
-def endpoint_10_17 : CertifiedEndpoint :=
-  ⟨⟨10, 17, 4182⟩, 117881487589290327, .intrinsic (by decide +kernel) (by decide)⟩
-def endpoint_10_18 : CertifiedEndpoint :=
-  ⟨⟨10, 18, 4163⟩, 127529110803352913, .intrinsic (by decide +kernel) (by decide)⟩
-def endpoint_10_19 : CertifiedEndpoint :=
-  ⟨⟨10, 19, 4143⟩, 137047744290561348, .intrinsic (by decide +kernel) (by decide)⟩
-def endpoint_10_20 : CertifiedEndpoint :=
-  ⟨⟨10, 20, 4123⟩, 146465649673597593, .intrinsic (by decide +kernel) (by decide)⟩
-def endpoint_10_21 : CertifiedEndpoint :=
-  ⟨⟨10, 21, 4102⟩, 155744738197665327, .intrinsic (by decide +kernel) (by decide)⟩
-def endpoint_10_22 : CertifiedEndpoint :=
-  ⟨⟨10, 22, 4082⟩, 164958730589328602, .intrinsic (by decide +kernel) (by decide)⟩
-def endpoint_10_23 : CertifiedEndpoint :=
-  ⟨⟨10, 23, 4061⟩, 174028992555966186, .intrinsic (by decide +kernel) (by decide)⟩
-def endpoint_10_24 : CertifiedEndpoint :=
-  ⟨⟨10, 24, 4040⟩, 182993612852374400, .intrinsic (by decide +kernel) (by decide)⟩
-def endpoint_10_25 : CertifiedEndpoint :=
-  ⟨⟨10, 25, 4019⟩, 191852591478553244, .intrinsic (by decide +kernel) (by decide)⟩
-def endpoint_10_26 : CertifiedEndpoint :=
-  ⟨⟨10, 26, 3997⟩, 200555555764563447, .intrinsic (by decide +kernel) (by decide)⟩
-def endpoint_10_27 : CertifiedEndpoint :=
-  ⟨⟨10, 27, 3976⟩, 209200794267254961, .intrinsic (by decide +kernel) (by decide)⟩
-def endpoint_10_28 : CertifiedEndpoint :=
-  ⟨⟨10, 28, 3954⟩, 217685104863720654, .intrinsic (by decide +kernel) (by decide)⟩
-def endpoint_10_29 : CertifiedEndpoint :=
-  ⟨⟨10, 29, 3932⟩, 226058860223899797, .intrinsic (by decide +kernel) (by decide)⟩
-def endpoint_10_30 : CertifiedEndpoint :=
-  ⟨⟨10, 30, 3909⟩, 234261860545738759, .intrinsic (by decide +kernel) (by decide)⟩
-def endpoint_10_31 : CertifiedEndpoint :=
-  ⟨⟨10, 31, 3886⟩, 242349392065233991, .intrinsic (by decide +kernel) (by decide)⟩
-def endpoint_10_32 : CertifiedEndpoint :=
-  ⟨⟨10, 32, 3863⟩, 250321454782385493, .intrinsic (by decide +kernel) (by decide)⟩
-private def endpoint_10_33_flag : Flag := ⟨10, 33, 3840⟩
-private def endpoint_10_33_sources : Sources := ⟨contact17, contact01, contact10⟩
-private theorem endpoint_10_33_base : receiptBase endpoint_10_33_flag endpoint_10_33_sources = some 170804734459825603 := by decide +kernel
-private theorem endpoint_10_33_window_0 : receiptWindow endpoint_10_33_flag endpoint_10_33_sources 0 2 170804734459825603 = some 170804734459825603 := by decide +kernel
-private theorem endpoint_10_33_window_2 : receiptWindow endpoint_10_33_flag endpoint_10_33_sources 2 2 170804734459825603 = some 170804734459825603 := by decide +kernel
-private theorem endpoint_10_33_prefix_4 : receiptWindow endpoint_10_33_flag endpoint_10_33_sources 0 4 170804734459825603 = some 170804734459825603 :=
-  join_receipt_window endpoint_10_33_flag endpoint_10_33_sources 0 2 2 170804734459825603 170804734459825603 170804734459825603 endpoint_10_33_window_0 endpoint_10_33_window_2
-private theorem endpoint_10_33_window_4 : receiptWindow endpoint_10_33_flag endpoint_10_33_sources 4 2 170804734459825603 = some 170804734459825603 := by decide +kernel
-private theorem endpoint_10_33_prefix_6 : receiptWindow endpoint_10_33_flag endpoint_10_33_sources 0 6 170804734459825603 = some 170804734459825603 :=
-  join_receipt_window endpoint_10_33_flag endpoint_10_33_sources 0 4 2 170804734459825603 170804734459825603 170804734459825603 endpoint_10_33_prefix_4 endpoint_10_33_window_4
-private theorem endpoint_10_33_window_6 : receiptWindow endpoint_10_33_flag endpoint_10_33_sources 6 2 170804734459825603 = some 170804734459825603 := by decide +kernel
-private theorem endpoint_10_33_prefix_8 : receiptWindow endpoint_10_33_flag endpoint_10_33_sources 0 8 170804734459825603 = some 170804734459825603 :=
-  join_receipt_window endpoint_10_33_flag endpoint_10_33_sources 0 6 2 170804734459825603 170804734459825603 170804734459825603 endpoint_10_33_prefix_6 endpoint_10_33_window_6
-private theorem endpoint_10_33_window_8 : receiptWindow endpoint_10_33_flag endpoint_10_33_sources 8 1 170804734459825603 = some 170804734459825603 := by decide +kernel
-private theorem endpoint_10_33_prefix_9 : receiptWindow endpoint_10_33_flag endpoint_10_33_sources 0 9 170804734459825603 = some 170804734459825603 :=
-  join_receipt_window endpoint_10_33_flag endpoint_10_33_sources 0 8 1 170804734459825603 170804734459825603 170804734459825603 endpoint_10_33_prefix_8 endpoint_10_33_window_8
-
-def endpoint_10_33 : CertifiedEndpoint :=
-  ⟨⟨10, 33, 3840⟩, 170804734459825603, .terminal ⟨contact17, contact01, contact10⟩ (finish_receipt_window endpoint_10_33_flag endpoint_10_33_sources 9 170804734459825603 170804734459825603 rfl endpoint_10_33_base endpoint_10_33_prefix_9) (by decide)⟩
-private def endpoint_10_34_flag : Flag := ⟨10, 34, 3816⟩
-private def endpoint_10_34_sources : Sources := ⟨contact17, contact01, contact10⟩
-private theorem endpoint_10_34_base : receiptBase endpoint_10_34_flag endpoint_10_34_sources = some 173963835100331500 := by decide +kernel
-private theorem endpoint_10_34_window_0 : receiptWindow endpoint_10_34_flag endpoint_10_34_sources 0 2 173963835100331500 = some 173963835100331500 := by decide +kernel
-private theorem endpoint_10_34_window_2 : receiptWindow endpoint_10_34_flag endpoint_10_34_sources 2 2 173963835100331500 = some 173963835100331500 := by decide +kernel
-private theorem endpoint_10_34_prefix_4 : receiptWindow endpoint_10_34_flag endpoint_10_34_sources 0 4 173963835100331500 = some 173963835100331500 :=
-  join_receipt_window endpoint_10_34_flag endpoint_10_34_sources 0 2 2 173963835100331500 173963835100331500 173963835100331500 endpoint_10_34_window_0 endpoint_10_34_window_2
-private theorem endpoint_10_34_window_4 : receiptWindow endpoint_10_34_flag endpoint_10_34_sources 4 2 173963835100331500 = some 173963835100331500 := by decide +kernel
-private theorem endpoint_10_34_prefix_6 : receiptWindow endpoint_10_34_flag endpoint_10_34_sources 0 6 173963835100331500 = some 173963835100331500 :=
-  join_receipt_window endpoint_10_34_flag endpoint_10_34_sources 0 4 2 173963835100331500 173963835100331500 173963835100331500 endpoint_10_34_prefix_4 endpoint_10_34_window_4
-private theorem endpoint_10_34_window_6 : receiptWindow endpoint_10_34_flag endpoint_10_34_sources 6 2 173963835100331500 = some 173963835100331500 := by decide +kernel
-private theorem endpoint_10_34_prefix_8 : receiptWindow endpoint_10_34_flag endpoint_10_34_sources 0 8 173963835100331500 = some 173963835100331500 :=
-  join_receipt_window endpoint_10_34_flag endpoint_10_34_sources 0 6 2 173963835100331500 173963835100331500 173963835100331500 endpoint_10_34_prefix_6 endpoint_10_34_window_6
-private theorem endpoint_10_34_window_8 : receiptWindow endpoint_10_34_flag endpoint_10_34_sources 8 1 173963835100331500 = some 173963835100331500 := by decide +kernel
-private theorem endpoint_10_34_prefix_9 : receiptWindow endpoint_10_34_flag endpoint_10_34_sources 0 9 173963835100331500 = some 173963835100331500 :=
-  join_receipt_window endpoint_10_34_flag endpoint_10_34_sources 0 8 1 173963835100331500 173963835100331500 173963835100331500 endpoint_10_34_prefix_8 endpoint_10_34_window_8
-
-def endpoint_10_34 : CertifiedEndpoint :=
-  ⟨⟨10, 34, 3816⟩, 173963835100331500, .terminal ⟨contact17, contact01, contact10⟩ (finish_receipt_window endpoint_10_34_flag endpoint_10_34_sources 9 173963835100331500 173963835100331500 rfl endpoint_10_34_base endpoint_10_34_prefix_9) (by decide)⟩
-private def endpoint_10_35_flag : Flag := ⟨10, 35, 3792⟩
-private def endpoint_10_35_sources : Sources := ⟨contact17, contact01, contact10⟩
-private theorem endpoint_10_35_base : receiptBase endpoint_10_35_flag endpoint_10_35_sources = some 177069828818709737 := by decide +kernel
-private theorem endpoint_10_35_window_0 : receiptWindow endpoint_10_35_flag endpoint_10_35_sources 0 2 177069828818709737 = some 177069828818709737 := by decide +kernel
-private theorem endpoint_10_35_window_2 : receiptWindow endpoint_10_35_flag endpoint_10_35_sources 2 2 177069828818709737 = some 177069828818709737 := by decide +kernel
-private theorem endpoint_10_35_prefix_4 : receiptWindow endpoint_10_35_flag endpoint_10_35_sources 0 4 177069828818709737 = some 177069828818709737 :=
-  join_receipt_window endpoint_10_35_flag endpoint_10_35_sources 0 2 2 177069828818709737 177069828818709737 177069828818709737 endpoint_10_35_window_0 endpoint_10_35_window_2
-private theorem endpoint_10_35_window_4 : receiptWindow endpoint_10_35_flag endpoint_10_35_sources 4 2 177069828818709737 = some 177069828818709737 := by decide +kernel
-private theorem endpoint_10_35_prefix_6 : receiptWindow endpoint_10_35_flag endpoint_10_35_sources 0 6 177069828818709737 = some 177069828818709737 :=
-  join_receipt_window endpoint_10_35_flag endpoint_10_35_sources 0 4 2 177069828818709737 177069828818709737 177069828818709737 endpoint_10_35_prefix_4 endpoint_10_35_window_4
-private theorem endpoint_10_35_window_6 : receiptWindow endpoint_10_35_flag endpoint_10_35_sources 6 2 177069828818709737 = some 177069828818709737 := by decide +kernel
-private theorem endpoint_10_35_prefix_8 : receiptWindow endpoint_10_35_flag endpoint_10_35_sources 0 8 177069828818709737 = some 177069828818709737 :=
-  join_receipt_window endpoint_10_35_flag endpoint_10_35_sources 0 6 2 177069828818709737 177069828818709737 177069828818709737 endpoint_10_35_prefix_6 endpoint_10_35_window_6
-private theorem endpoint_10_35_window_8 : receiptWindow endpoint_10_35_flag endpoint_10_35_sources 8 1 177069828818709737 = some 177069828818709737 := by decide +kernel
-private theorem endpoint_10_35_prefix_9 : receiptWindow endpoint_10_35_flag endpoint_10_35_sources 0 9 177069828818709737 = some 177069828818709737 :=
-  join_receipt_window endpoint_10_35_flag endpoint_10_35_sources 0 8 1 177069828818709737 177069828818709737 177069828818709737 endpoint_10_35_prefix_8 endpoint_10_35_window_8
-
-def endpoint_10_35 : CertifiedEndpoint :=
-  ⟨⟨10, 35, 3792⟩, 177069828818709737, .terminal ⟨contact17, contact01, contact10⟩ (finish_receipt_window endpoint_10_35_flag endpoint_10_35_sources 9 177069828818709737 177069828818709737 rfl endpoint_10_35_base endpoint_10_35_prefix_9) (by decide)⟩
-private def endpoint_10_36_flag : Flag := ⟨10, 36, 3768⟩
-private def endpoint_10_36_sources : Sources := ⟨contact17, contact01, contact10⟩
-private theorem endpoint_10_36_base : receiptBase endpoint_10_36_flag endpoint_10_36_sources = some 180122715614960315 := by decide +kernel
-private theorem endpoint_10_36_window_0 : receiptWindow endpoint_10_36_flag endpoint_10_36_sources 0 2 180122715614960315 = some 180122715614960315 := by decide +kernel
-private theorem endpoint_10_36_window_2 : receiptWindow endpoint_10_36_flag endpoint_10_36_sources 2 2 180122715614960315 = some 180122715614960315 := by decide +kernel
-private theorem endpoint_10_36_prefix_4 : receiptWindow endpoint_10_36_flag endpoint_10_36_sources 0 4 180122715614960315 = some 180122715614960315 :=
-  join_receipt_window endpoint_10_36_flag endpoint_10_36_sources 0 2 2 180122715614960315 180122715614960315 180122715614960315 endpoint_10_36_window_0 endpoint_10_36_window_2
-private theorem endpoint_10_36_window_4 : receiptWindow endpoint_10_36_flag endpoint_10_36_sources 4 2 180122715614960315 = some 180122715614960315 := by decide +kernel
-private theorem endpoint_10_36_prefix_6 : receiptWindow endpoint_10_36_flag endpoint_10_36_sources 0 6 180122715614960315 = some 180122715614960315 :=
-  join_receipt_window endpoint_10_36_flag endpoint_10_36_sources 0 4 2 180122715614960315 180122715614960315 180122715614960315 endpoint_10_36_prefix_4 endpoint_10_36_window_4
-private theorem endpoint_10_36_window_6 : receiptWindow endpoint_10_36_flag endpoint_10_36_sources 6 2 180122715614960315 = some 180122715614960315 := by decide +kernel
-private theorem endpoint_10_36_prefix_8 : receiptWindow endpoint_10_36_flag endpoint_10_36_sources 0 8 180122715614960315 = some 180122715614960315 :=
-  join_receipt_window endpoint_10_36_flag endpoint_10_36_sources 0 6 2 180122715614960315 180122715614960315 180122715614960315 endpoint_10_36_prefix_6 endpoint_10_36_window_6
-private theorem endpoint_10_36_window_8 : receiptWindow endpoint_10_36_flag endpoint_10_36_sources 8 1 180122715614960315 = some 180122715614960315 := by decide +kernel
-private theorem endpoint_10_36_prefix_9 : receiptWindow endpoint_10_36_flag endpoint_10_36_sources 0 9 180122715614960315 = some 180122715614960315 :=
-  join_receipt_window endpoint_10_36_flag endpoint_10_36_sources 0 8 1 180122715614960315 180122715614960315 180122715614960315 endpoint_10_36_prefix_8 endpoint_10_36_window_8
-
-def endpoint_10_36 : CertifiedEndpoint :=
-  ⟨⟨10, 36, 3768⟩, 180122715614960315, .terminal ⟨contact17, contact01, contact10⟩ (finish_receipt_window endpoint_10_36_flag endpoint_10_36_sources 9 180122715614960315 180122715614960315 rfl endpoint_10_36_base endpoint_10_36_prefix_9) (by decide)⟩
-private def endpoint_10_37_flag : Flag := ⟨10, 37, 3743⟩
-private def endpoint_10_37_sources : Sources := ⟨contact17, contact01, contact10⟩
-private theorem endpoint_10_37_base : receiptBase endpoint_10_37_flag endpoint_10_37_sources = some 183074311979832732 := by decide +kernel
-private theorem endpoint_10_37_window_0 : receiptWindow endpoint_10_37_flag endpoint_10_37_sources 0 2 183074311979832732 = some 183074311979832732 := by decide +kernel
-private theorem endpoint_10_37_window_2 : receiptWindow endpoint_10_37_flag endpoint_10_37_sources 2 2 183074311979832732 = some 183074311979832732 := by decide +kernel
-private theorem endpoint_10_37_prefix_4 : receiptWindow endpoint_10_37_flag endpoint_10_37_sources 0 4 183074311979832732 = some 183074311979832732 :=
-  join_receipt_window endpoint_10_37_flag endpoint_10_37_sources 0 2 2 183074311979832732 183074311979832732 183074311979832732 endpoint_10_37_window_0 endpoint_10_37_window_2
-private theorem endpoint_10_37_window_4 : receiptWindow endpoint_10_37_flag endpoint_10_37_sources 4 2 183074311979832732 = some 183074311979832732 := by decide +kernel
-private theorem endpoint_10_37_prefix_6 : receiptWindow endpoint_10_37_flag endpoint_10_37_sources 0 6 183074311979832732 = some 183074311979832732 :=
-  join_receipt_window endpoint_10_37_flag endpoint_10_37_sources 0 4 2 183074311979832732 183074311979832732 183074311979832732 endpoint_10_37_prefix_4 endpoint_10_37_window_4
-private theorem endpoint_10_37_window_6 : receiptWindow endpoint_10_37_flag endpoint_10_37_sources 6 2 183074311979832732 = some 183074311979832732 := by decide +kernel
-private theorem endpoint_10_37_prefix_8 : receiptWindow endpoint_10_37_flag endpoint_10_37_sources 0 8 183074311979832732 = some 183074311979832732 :=
-  join_receipt_window endpoint_10_37_flag endpoint_10_37_sources 0 6 2 183074311979832732 183074311979832732 183074311979832732 endpoint_10_37_prefix_6 endpoint_10_37_window_6
-private theorem endpoint_10_37_window_8 : receiptWindow endpoint_10_37_flag endpoint_10_37_sources 8 1 183074311979832732 = some 183074311979832732 := by decide +kernel
-private theorem endpoint_10_37_prefix_9 : receiptWindow endpoint_10_37_flag endpoint_10_37_sources 0 9 183074311979832732 = some 183074311979832732 :=
-  join_receipt_window endpoint_10_37_flag endpoint_10_37_sources 0 8 1 183074311979832732 183074311979832732 183074311979832732 endpoint_10_37_prefix_8 endpoint_10_37_window_8
-
-def endpoint_10_37 : CertifiedEndpoint :=
-  ⟨⟨10, 37, 3743⟩, 183074311979832732, .terminal ⟨contact17, contact01, contact10⟩ (finish_receipt_window endpoint_10_37_flag endpoint_10_37_sources 9 183074311979832732 183074311979832732 rfl endpoint_10_37_base endpoint_10_37_prefix_9) (by decide)⟩
-private def endpoint_10_38_flag : Flag := ⟨10, 38, 3718⟩
-private def endpoint_10_38_sources : Sources := ⟨contact17, contact01, contact10⟩
-private theorem endpoint_10_38_base : receiptBase endpoint_10_38_flag endpoint_10_38_sources = some 185970633976760239 := by decide +kernel
-private theorem endpoint_10_38_window_0 : receiptWindow endpoint_10_38_flag endpoint_10_38_sources 0 2 185970633976760239 = some 185970633976760239 := by decide +kernel
-private theorem endpoint_10_38_window_2 : receiptWindow endpoint_10_38_flag endpoint_10_38_sources 2 2 185970633976760239 = some 185970633976760239 := by decide +kernel
-private theorem endpoint_10_38_prefix_4 : receiptWindow endpoint_10_38_flag endpoint_10_38_sources 0 4 185970633976760239 = some 185970633976760239 :=
-  join_receipt_window endpoint_10_38_flag endpoint_10_38_sources 0 2 2 185970633976760239 185970633976760239 185970633976760239 endpoint_10_38_window_0 endpoint_10_38_window_2
-private theorem endpoint_10_38_window_4 : receiptWindow endpoint_10_38_flag endpoint_10_38_sources 4 2 185970633976760239 = some 185970633976760239 := by decide +kernel
-private theorem endpoint_10_38_prefix_6 : receiptWindow endpoint_10_38_flag endpoint_10_38_sources 0 6 185970633976760239 = some 185970633976760239 :=
-  join_receipt_window endpoint_10_38_flag endpoint_10_38_sources 0 4 2 185970633976760239 185970633976760239 185970633976760239 endpoint_10_38_prefix_4 endpoint_10_38_window_4
-private theorem endpoint_10_38_window_6 : receiptWindow endpoint_10_38_flag endpoint_10_38_sources 6 2 185970633976760239 = some 185970633976760239 := by decide +kernel
-private theorem endpoint_10_38_prefix_8 : receiptWindow endpoint_10_38_flag endpoint_10_38_sources 0 8 185970633976760239 = some 185970633976760239 :=
-  join_receipt_window endpoint_10_38_flag endpoint_10_38_sources 0 6 2 185970633976760239 185970633976760239 185970633976760239 endpoint_10_38_prefix_6 endpoint_10_38_window_6
-private theorem endpoint_10_38_window_8 : receiptWindow endpoint_10_38_flag endpoint_10_38_sources 8 1 185970633976760239 = some 185970633976760239 := by decide +kernel
-private theorem endpoint_10_38_prefix_9 : receiptWindow endpoint_10_38_flag endpoint_10_38_sources 0 9 185970633976760239 = some 185970633976760239 :=
-  join_receipt_window endpoint_10_38_flag endpoint_10_38_sources 0 8 1 185970633976760239 185970633976760239 185970633976760239 endpoint_10_38_prefix_8 endpoint_10_38_window_8
-
-def endpoint_10_38 : CertifiedEndpoint :=
-  ⟨⟨10, 38, 3718⟩, 185970633976760239, .terminal ⟨contact17, contact01, contact10⟩ (finish_receipt_window endpoint_10_38_flag endpoint_10_38_sources 9 185970633976760239 185970633976760239 rfl endpoint_10_38_base endpoint_10_38_prefix_9) (by decide)⟩
-private def endpoint_10_39_flag : Flag := ⟨10, 39, 3693⟩
-private def endpoint_10_39_sources : Sources := ⟨contact17, contact01, contact10⟩
-private theorem endpoint_10_39_base : receiptBase endpoint_10_39_flag endpoint_10_39_sources = some 188811681605742836 := by decide +kernel
-private theorem endpoint_10_39_window_0 : receiptWindow endpoint_10_39_flag endpoint_10_39_sources 0 2 188811681605742836 = some 188811681605742836 := by decide +kernel
-private theorem endpoint_10_39_window_2 : receiptWindow endpoint_10_39_flag endpoint_10_39_sources 2 2 188811681605742836 = some 188811681605742836 := by decide +kernel
-private theorem endpoint_10_39_prefix_4 : receiptWindow endpoint_10_39_flag endpoint_10_39_sources 0 4 188811681605742836 = some 188811681605742836 :=
-  join_receipt_window endpoint_10_39_flag endpoint_10_39_sources 0 2 2 188811681605742836 188811681605742836 188811681605742836 endpoint_10_39_window_0 endpoint_10_39_window_2
-private theorem endpoint_10_39_window_4 : receiptWindow endpoint_10_39_flag endpoint_10_39_sources 4 2 188811681605742836 = some 188811681605742836 := by decide +kernel
-private theorem endpoint_10_39_prefix_6 : receiptWindow endpoint_10_39_flag endpoint_10_39_sources 0 6 188811681605742836 = some 188811681605742836 :=
-  join_receipt_window endpoint_10_39_flag endpoint_10_39_sources 0 4 2 188811681605742836 188811681605742836 188811681605742836 endpoint_10_39_prefix_4 endpoint_10_39_window_4
-private theorem endpoint_10_39_window_6 : receiptWindow endpoint_10_39_flag endpoint_10_39_sources 6 2 188811681605742836 = some 188811681605742836 := by decide +kernel
-private theorem endpoint_10_39_prefix_8 : receiptWindow endpoint_10_39_flag endpoint_10_39_sources 0 8 188811681605742836 = some 188811681605742836 :=
-  join_receipt_window endpoint_10_39_flag endpoint_10_39_sources 0 6 2 188811681605742836 188811681605742836 188811681605742836 endpoint_10_39_prefix_6 endpoint_10_39_window_6
-private theorem endpoint_10_39_window_8 : receiptWindow endpoint_10_39_flag endpoint_10_39_sources 8 1 188811681605742836 = some 188811681605742836 := by decide +kernel
-private theorem endpoint_10_39_prefix_9 : receiptWindow endpoint_10_39_flag endpoint_10_39_sources 0 9 188811681605742836 = some 188811681605742836 :=
-  join_receipt_window endpoint_10_39_flag endpoint_10_39_sources 0 8 1 188811681605742836 188811681605742836 188811681605742836 endpoint_10_39_prefix_8 endpoint_10_39_window_8
-
-def endpoint_10_39 : CertifiedEndpoint :=
-  ⟨⟨10, 39, 3693⟩, 188811681605742836, .terminal ⟨contact17, contact01, contact10⟩ (finish_receipt_window endpoint_10_39_flag endpoint_10_39_sources 9 188811681605742836 188811681605742836 rfl endpoint_10_39_base endpoint_10_39_prefix_9) (by decide)⟩
-private def endpoint_10_40_flag : Flag := ⟨10, 40, 3667⟩
-private def endpoint_10_40_sources : Sources := ⟨contact17, contact01, contact10⟩
-private theorem endpoint_10_40_base : receiptBase endpoint_10_40_flag endpoint_10_40_sources = some 191546020188804145 := by decide +kernel
-private theorem endpoint_10_40_window_0 : receiptWindow endpoint_10_40_flag endpoint_10_40_sources 0 2 191546020188804145 = some 191546020188804145 := by decide +kernel
-private theorem endpoint_10_40_window_2 : receiptWindow endpoint_10_40_flag endpoint_10_40_sources 2 2 191546020188804145 = some 191546020188804145 := by decide +kernel
-private theorem endpoint_10_40_prefix_4 : receiptWindow endpoint_10_40_flag endpoint_10_40_sources 0 4 191546020188804145 = some 191546020188804145 :=
-  join_receipt_window endpoint_10_40_flag endpoint_10_40_sources 0 2 2 191546020188804145 191546020188804145 191546020188804145 endpoint_10_40_window_0 endpoint_10_40_window_2
-private theorem endpoint_10_40_window_4 : receiptWindow endpoint_10_40_flag endpoint_10_40_sources 4 2 191546020188804145 = some 191546020188804145 := by decide +kernel
-private theorem endpoint_10_40_prefix_6 : receiptWindow endpoint_10_40_flag endpoint_10_40_sources 0 6 191546020188804145 = some 191546020188804145 :=
-  join_receipt_window endpoint_10_40_flag endpoint_10_40_sources 0 4 2 191546020188804145 191546020188804145 191546020188804145 endpoint_10_40_prefix_4 endpoint_10_40_window_4
-private theorem endpoint_10_40_window_6 : receiptWindow endpoint_10_40_flag endpoint_10_40_sources 6 2 191546020188804145 = some 191546020188804145 := by decide +kernel
-private theorem endpoint_10_40_prefix_8 : receiptWindow endpoint_10_40_flag endpoint_10_40_sources 0 8 191546020188804145 = some 191546020188804145 :=
-  join_receipt_window endpoint_10_40_flag endpoint_10_40_sources 0 6 2 191546020188804145 191546020188804145 191546020188804145 endpoint_10_40_prefix_6 endpoint_10_40_window_6
-private theorem endpoint_10_40_window_8 : receiptWindow endpoint_10_40_flag endpoint_10_40_sources 8 1 191546020188804145 = some 191546020188804145 := by decide +kernel
-private theorem endpoint_10_40_prefix_9 : receiptWindow endpoint_10_40_flag endpoint_10_40_sources 0 9 191546020188804145 = some 191546020188804145 :=
-  join_receipt_window endpoint_10_40_flag endpoint_10_40_sources 0 8 1 191546020188804145 191546020188804145 191546020188804145 endpoint_10_40_prefix_8 endpoint_10_40_window_8
-
-def endpoint_10_40 : CertifiedEndpoint :=
-  ⟨⟨10, 40, 3667⟩, 191546020188804145, .terminal ⟨contact17, contact01, contact10⟩ (finish_receipt_window endpoint_10_40_flag endpoint_10_40_sources 9 191546020188804145 191546020188804145 rfl endpoint_10_40_base endpoint_10_40_prefix_9) (by decide)⟩
-private def endpoint_10_41_flag : Flag := ⟨10, 41, 3640⟩
-private def endpoint_10_41_sources : Sources := ⟨contact17, contact01, contact10⟩
-private theorem endpoint_10_41_base : receiptBase endpoint_10_41_flag endpoint_10_41_sources = some 194170398557218290 := by decide +kernel
-private theorem endpoint_10_41_window_0 : receiptWindow endpoint_10_41_flag endpoint_10_41_sources 0 2 194170398557218290 = some 194170398557218290 := by decide +kernel
-private theorem endpoint_10_41_window_2 : receiptWindow endpoint_10_41_flag endpoint_10_41_sources 2 2 194170398557218290 = some 194170398557218290 := by decide +kernel
-private theorem endpoint_10_41_prefix_4 : receiptWindow endpoint_10_41_flag endpoint_10_41_sources 0 4 194170398557218290 = some 194170398557218290 :=
-  join_receipt_window endpoint_10_41_flag endpoint_10_41_sources 0 2 2 194170398557218290 194170398557218290 194170398557218290 endpoint_10_41_window_0 endpoint_10_41_window_2
-private theorem endpoint_10_41_window_4 : receiptWindow endpoint_10_41_flag endpoint_10_41_sources 4 2 194170398557218290 = some 194170398557218290 := by decide +kernel
-private theorem endpoint_10_41_prefix_6 : receiptWindow endpoint_10_41_flag endpoint_10_41_sources 0 6 194170398557218290 = some 194170398557218290 :=
-  join_receipt_window endpoint_10_41_flag endpoint_10_41_sources 0 4 2 194170398557218290 194170398557218290 194170398557218290 endpoint_10_41_prefix_4 endpoint_10_41_window_4
-private theorem endpoint_10_41_window_6 : receiptWindow endpoint_10_41_flag endpoint_10_41_sources 6 2 194170398557218290 = some 194170398557218290 := by decide +kernel
-private theorem endpoint_10_41_prefix_8 : receiptWindow endpoint_10_41_flag endpoint_10_41_sources 0 8 194170398557218290 = some 194170398557218290 :=
-  join_receipt_window endpoint_10_41_flag endpoint_10_41_sources 0 6 2 194170398557218290 194170398557218290 194170398557218290 endpoint_10_41_prefix_6 endpoint_10_41_window_6
-private theorem endpoint_10_41_window_8 : receiptWindow endpoint_10_41_flag endpoint_10_41_sources 8 1 194170398557218290 = some 194170398557218290 := by decide +kernel
-private theorem endpoint_10_41_prefix_9 : receiptWindow endpoint_10_41_flag endpoint_10_41_sources 0 9 194170398557218290 = some 194170398557218290 :=
-  join_receipt_window endpoint_10_41_flag endpoint_10_41_sources 0 8 1 194170398557218290 194170398557218290 194170398557218290 endpoint_10_41_prefix_8 endpoint_10_41_window_8
-
-def endpoint_10_41 : CertifiedEndpoint :=
-  ⟨⟨10, 41, 3640⟩, 194170398557218290, .terminal ⟨contact17, contact01, contact10⟩ (finish_receipt_window endpoint_10_41_flag endpoint_10_41_sources 9 194170398557218290 194170398557218290 rfl endpoint_10_41_base endpoint_10_41_prefix_9) (by decide)⟩
-private def endpoint_10_42_flag : Flag := ⟨10, 42, 3614⟩
-private def endpoint_10_42_sources : Sources := ⟨contact17, contact01, contact10⟩
-private theorem endpoint_10_42_base : receiptBase endpoint_10_42_flag endpoint_10_42_sources = some 196788769789846652 := by decide +kernel
-private theorem endpoint_10_42_window_0 : receiptWindow endpoint_10_42_flag endpoint_10_42_sources 0 2 196788769789846652 = some 196788769789846652 := by decide +kernel
-private theorem endpoint_10_42_window_2 : receiptWindow endpoint_10_42_flag endpoint_10_42_sources 2 2 196788769789846652 = some 196788769789846652 := by decide +kernel
-private theorem endpoint_10_42_prefix_4 : receiptWindow endpoint_10_42_flag endpoint_10_42_sources 0 4 196788769789846652 = some 196788769789846652 :=
-  join_receipt_window endpoint_10_42_flag endpoint_10_42_sources 0 2 2 196788769789846652 196788769789846652 196788769789846652 endpoint_10_42_window_0 endpoint_10_42_window_2
-private theorem endpoint_10_42_window_4 : receiptWindow endpoint_10_42_flag endpoint_10_42_sources 4 2 196788769789846652 = some 196788769789846652 := by decide +kernel
-private theorem endpoint_10_42_prefix_6 : receiptWindow endpoint_10_42_flag endpoint_10_42_sources 0 6 196788769789846652 = some 196788769789846652 :=
-  join_receipt_window endpoint_10_42_flag endpoint_10_42_sources 0 4 2 196788769789846652 196788769789846652 196788769789846652 endpoint_10_42_prefix_4 endpoint_10_42_window_4
-private theorem endpoint_10_42_window_6 : receiptWindow endpoint_10_42_flag endpoint_10_42_sources 6 2 196788769789846652 = some 196788769789846652 := by decide +kernel
-private theorem endpoint_10_42_prefix_8 : receiptWindow endpoint_10_42_flag endpoint_10_42_sources 0 8 196788769789846652 = some 196788769789846652 :=
-  join_receipt_window endpoint_10_42_flag endpoint_10_42_sources 0 6 2 196788769789846652 196788769789846652 196788769789846652 endpoint_10_42_prefix_6 endpoint_10_42_window_6
-private theorem endpoint_10_42_window_8 : receiptWindow endpoint_10_42_flag endpoint_10_42_sources 8 1 196788769789846652 = some 196788769789846652 := by decide +kernel
-private theorem endpoint_10_42_prefix_9 : receiptWindow endpoint_10_42_flag endpoint_10_42_sources 0 9 196788769789846652 = some 196788769789846652 :=
-  join_receipt_window endpoint_10_42_flag endpoint_10_42_sources 0 8 1 196788769789846652 196788769789846652 196788769789846652 endpoint_10_42_prefix_8 endpoint_10_42_window_8
-
-def endpoint_10_42 : CertifiedEndpoint :=
-  ⟨⟨10, 42, 3614⟩, 196788769789846652, .terminal ⟨contact17, contact01, contact10⟩ (finish_receipt_window endpoint_10_42_flag endpoint_10_42_sources 9 196788769789846652 196788769789846652 rfl endpoint_10_42_base endpoint_10_42_prefix_9) (by decide)⟩
-private def endpoint_10_43_flag : Flag := ⟨10, 43, 3587⟩
-private def endpoint_10_43_sources : Sources := ⟨contact00, contact01, contact02⟩
-private theorem endpoint_10_43_base : receiptBase endpoint_10_43_flag endpoint_10_43_sources = some 199785600504524882 := by decide +kernel
-private theorem endpoint_10_43_window_0 : receiptWindow endpoint_10_43_flag endpoint_10_43_sources 0 2 199785600504524882 = some 199785600504524882 := by decide +kernel
-private theorem endpoint_10_43_window_2 : receiptWindow endpoint_10_43_flag endpoint_10_43_sources 2 2 199785600504524882 = some 199785600504524882 := by decide +kernel
-private theorem endpoint_10_43_prefix_4 : receiptWindow endpoint_10_43_flag endpoint_10_43_sources 0 4 199785600504524882 = some 199785600504524882 :=
-  join_receipt_window endpoint_10_43_flag endpoint_10_43_sources 0 2 2 199785600504524882 199785600504524882 199785600504524882 endpoint_10_43_window_0 endpoint_10_43_window_2
-private theorem endpoint_10_43_window_4 : receiptWindow endpoint_10_43_flag endpoint_10_43_sources 4 2 199785600504524882 = some 199785600504524882 := by decide +kernel
-private theorem endpoint_10_43_prefix_6 : receiptWindow endpoint_10_43_flag endpoint_10_43_sources 0 6 199785600504524882 = some 199785600504524882 :=
-  join_receipt_window endpoint_10_43_flag endpoint_10_43_sources 0 4 2 199785600504524882 199785600504524882 199785600504524882 endpoint_10_43_prefix_4 endpoint_10_43_window_4
-private theorem endpoint_10_43_window_6 : receiptWindow endpoint_10_43_flag endpoint_10_43_sources 6 2 199785600504524882 = some 199785600504524882 := by decide +kernel
-private theorem endpoint_10_43_prefix_8 : receiptWindow endpoint_10_43_flag endpoint_10_43_sources 0 8 199785600504524882 = some 199785600504524882 :=
-  join_receipt_window endpoint_10_43_flag endpoint_10_43_sources 0 6 2 199785600504524882 199785600504524882 199785600504524882 endpoint_10_43_prefix_6 endpoint_10_43_window_6
-private theorem endpoint_10_43_window_8 : receiptWindow endpoint_10_43_flag endpoint_10_43_sources 8 1 199785600504524882 = some 199785600504524882 := by decide +kernel
-private theorem endpoint_10_43_prefix_9 : receiptWindow endpoint_10_43_flag endpoint_10_43_sources 0 9 199785600504524882 = some 199785600504524882 :=
-  join_receipt_window endpoint_10_43_flag endpoint_10_43_sources 0 8 1 199785600504524882 199785600504524882 199785600504524882 endpoint_10_43_prefix_8 endpoint_10_43_window_8
-
-def endpoint_10_43 : CertifiedEndpoint :=
-  ⟨⟨10, 43, 3587⟩, 199785600504524882, .terminal ⟨contact00, contact01, contact02⟩ (finish_receipt_window endpoint_10_43_flag endpoint_10_43_sources 9 199785600504524882 199785600504524882 rfl endpoint_10_43_base endpoint_10_43_prefix_9) (by decide)⟩
-private def endpoint_10_44_flag : Flag := ⟨10, 44, 3559⟩
-private def endpoint_10_44_sources : Sources := ⟨contact00, contact01, contact02⟩
-private theorem endpoint_10_44_base : receiptBase endpoint_10_44_flag endpoint_10_44_sources = some 202147256959357387 := by decide +kernel
-private theorem endpoint_10_44_window_0 : receiptWindow endpoint_10_44_flag endpoint_10_44_sources 0 2 202147256959357387 = some 202147256959357387 := by decide +kernel
-private theorem endpoint_10_44_window_2 : receiptWindow endpoint_10_44_flag endpoint_10_44_sources 2 2 202147256959357387 = some 202147256959357387 := by decide +kernel
-private theorem endpoint_10_44_prefix_4 : receiptWindow endpoint_10_44_flag endpoint_10_44_sources 0 4 202147256959357387 = some 202147256959357387 :=
-  join_receipt_window endpoint_10_44_flag endpoint_10_44_sources 0 2 2 202147256959357387 202147256959357387 202147256959357387 endpoint_10_44_window_0 endpoint_10_44_window_2
-private theorem endpoint_10_44_window_4 : receiptWindow endpoint_10_44_flag endpoint_10_44_sources 4 2 202147256959357387 = some 202147256959357387 := by decide +kernel
-private theorem endpoint_10_44_prefix_6 : receiptWindow endpoint_10_44_flag endpoint_10_44_sources 0 6 202147256959357387 = some 202147256959357387 :=
-  join_receipt_window endpoint_10_44_flag endpoint_10_44_sources 0 4 2 202147256959357387 202147256959357387 202147256959357387 endpoint_10_44_prefix_4 endpoint_10_44_window_4
-private theorem endpoint_10_44_window_6 : receiptWindow endpoint_10_44_flag endpoint_10_44_sources 6 2 202147256959357387 = some 202147256959357387 := by decide +kernel
-private theorem endpoint_10_44_prefix_8 : receiptWindow endpoint_10_44_flag endpoint_10_44_sources 0 8 202147256959357387 = some 202147256959357387 :=
-  join_receipt_window endpoint_10_44_flag endpoint_10_44_sources 0 6 2 202147256959357387 202147256959357387 202147256959357387 endpoint_10_44_prefix_6 endpoint_10_44_window_6
-private theorem endpoint_10_44_window_8 : receiptWindow endpoint_10_44_flag endpoint_10_44_sources 8 1 202147256959357387 = some 202147256959357387 := by decide +kernel
-private theorem endpoint_10_44_prefix_9 : receiptWindow endpoint_10_44_flag endpoint_10_44_sources 0 9 202147256959357387 = some 202147256959357387 :=
-  join_receipt_window endpoint_10_44_flag endpoint_10_44_sources 0 8 1 202147256959357387 202147256959357387 202147256959357387 endpoint_10_44_prefix_8 endpoint_10_44_window_8
-
-def endpoint_10_44 : CertifiedEndpoint :=
-  ⟨⟨10, 44, 3559⟩, 202147256959357387, .terminal ⟨contact00, contact01, contact02⟩ (finish_receipt_window endpoint_10_44_flag endpoint_10_44_sources 9 202147256959357387 202147256959357387 rfl endpoint_10_44_base endpoint_10_44_prefix_9) (by decide)⟩
-private def endpoint_10_45_flag : Flag := ⟨10, 45, 3531⟩
-private def endpoint_10_45_sources : Sources := ⟨contact00, contact01, contact02⟩
-private theorem endpoint_10_45_base : receiptBase endpoint_10_45_flag endpoint_10_45_sources = some 204447397642593327 := by decide +kernel
-private theorem endpoint_10_45_window_0 : receiptWindow endpoint_10_45_flag endpoint_10_45_sources 0 2 204447397642593327 = some 204447397642593327 := by decide +kernel
-private theorem endpoint_10_45_window_2 : receiptWindow endpoint_10_45_flag endpoint_10_45_sources 2 2 204447397642593327 = some 204447397642593327 := by decide +kernel
-private theorem endpoint_10_45_prefix_4 : receiptWindow endpoint_10_45_flag endpoint_10_45_sources 0 4 204447397642593327 = some 204447397642593327 :=
-  join_receipt_window endpoint_10_45_flag endpoint_10_45_sources 0 2 2 204447397642593327 204447397642593327 204447397642593327 endpoint_10_45_window_0 endpoint_10_45_window_2
-private theorem endpoint_10_45_window_4 : receiptWindow endpoint_10_45_flag endpoint_10_45_sources 4 2 204447397642593327 = some 204447397642593327 := by decide +kernel
-private theorem endpoint_10_45_prefix_6 : receiptWindow endpoint_10_45_flag endpoint_10_45_sources 0 6 204447397642593327 = some 204447397642593327 :=
-  join_receipt_window endpoint_10_45_flag endpoint_10_45_sources 0 4 2 204447397642593327 204447397642593327 204447397642593327 endpoint_10_45_prefix_4 endpoint_10_45_window_4
-private theorem endpoint_10_45_window_6 : receiptWindow endpoint_10_45_flag endpoint_10_45_sources 6 2 204447397642593327 = some 204447397642593327 := by decide +kernel
-private theorem endpoint_10_45_prefix_8 : receiptWindow endpoint_10_45_flag endpoint_10_45_sources 0 8 204447397642593327 = some 204447397642593327 :=
-  join_receipt_window endpoint_10_45_flag endpoint_10_45_sources 0 6 2 204447397642593327 204447397642593327 204447397642593327 endpoint_10_45_prefix_6 endpoint_10_45_window_6
-private theorem endpoint_10_45_window_8 : receiptWindow endpoint_10_45_flag endpoint_10_45_sources 8 1 204447397642593327 = some 204447397642593327 := by decide +kernel
-private theorem endpoint_10_45_prefix_9 : receiptWindow endpoint_10_45_flag endpoint_10_45_sources 0 9 204447397642593327 = some 204447397642593327 :=
-  join_receipt_window endpoint_10_45_flag endpoint_10_45_sources 0 8 1 204447397642593327 204447397642593327 204447397642593327 endpoint_10_45_prefix_8 endpoint_10_45_window_8
-
-def endpoint_10_45 : CertifiedEndpoint :=
-  ⟨⟨10, 45, 3531⟩, 204447397642593327, .terminal ⟨contact00, contact01, contact02⟩ (finish_receipt_window endpoint_10_45_flag endpoint_10_45_sources 9 204447397642593327 204447397642593327 rfl endpoint_10_45_base endpoint_10_45_prefix_9) (by decide)⟩
-private def endpoint_10_46_flag : Flag := ⟨10, 46, 3502⟩
-private def endpoint_10_46_sources : Sources := ⟨contact00, contact01, contact02⟩
-private theorem endpoint_10_46_base : receiptBase endpoint_10_46_flag endpoint_10_46_sources = some 206627876419334476 := by decide +kernel
-private theorem endpoint_10_46_window_0 : receiptWindow endpoint_10_46_flag endpoint_10_46_sources 0 2 206627876419334476 = some 206627876419334476 := by decide +kernel
-private theorem endpoint_10_46_window_2 : receiptWindow endpoint_10_46_flag endpoint_10_46_sources 2 2 206627876419334476 = some 206627876419334476 := by decide +kernel
-private theorem endpoint_10_46_prefix_4 : receiptWindow endpoint_10_46_flag endpoint_10_46_sources 0 4 206627876419334476 = some 206627876419334476 :=
-  join_receipt_window endpoint_10_46_flag endpoint_10_46_sources 0 2 2 206627876419334476 206627876419334476 206627876419334476 endpoint_10_46_window_0 endpoint_10_46_window_2
-private theorem endpoint_10_46_window_4 : receiptWindow endpoint_10_46_flag endpoint_10_46_sources 4 2 206627876419334476 = some 206627876419334476 := by decide +kernel
-private theorem endpoint_10_46_prefix_6 : receiptWindow endpoint_10_46_flag endpoint_10_46_sources 0 6 206627876419334476 = some 206627876419334476 :=
-  join_receipt_window endpoint_10_46_flag endpoint_10_46_sources 0 4 2 206627876419334476 206627876419334476 206627876419334476 endpoint_10_46_prefix_4 endpoint_10_46_window_4
-private theorem endpoint_10_46_window_6 : receiptWindow endpoint_10_46_flag endpoint_10_46_sources 6 2 206627876419334476 = some 206627876419334476 := by decide +kernel
-private theorem endpoint_10_46_prefix_8 : receiptWindow endpoint_10_46_flag endpoint_10_46_sources 0 8 206627876419334476 = some 206627876419334476 :=
-  join_receipt_window endpoint_10_46_flag endpoint_10_46_sources 0 6 2 206627876419334476 206627876419334476 206627876419334476 endpoint_10_46_prefix_6 endpoint_10_46_window_6
-private theorem endpoint_10_46_window_8 : receiptWindow endpoint_10_46_flag endpoint_10_46_sources 8 1 206627876419334476 = some 206627876419334476 := by decide +kernel
-private theorem endpoint_10_46_prefix_9 : receiptWindow endpoint_10_46_flag endpoint_10_46_sources 0 9 206627876419334476 = some 206627876419334476 :=
-  join_receipt_window endpoint_10_46_flag endpoint_10_46_sources 0 8 1 206627876419334476 206627876419334476 206627876419334476 endpoint_10_46_prefix_8 endpoint_10_46_window_8
-
-def endpoint_10_46 : CertifiedEndpoint :=
-  ⟨⟨10, 46, 3502⟩, 206627876419334476, .terminal ⟨contact00, contact01, contact02⟩ (finish_receipt_window endpoint_10_46_flag endpoint_10_46_sources 9 206627876419334476 206627876419334476 rfl endpoint_10_46_base endpoint_10_46_prefix_9) (by decide)⟩
-private def endpoint_10_47_flag : Flag := ⟨10, 47, 3473⟩
-private def endpoint_10_47_sources : Sources := ⟨contact00, contact01, contact02⟩
-private theorem endpoint_10_47_base : receiptBase endpoint_10_47_flag endpoint_10_47_sources = some 208744680976352864 := by decide +kernel
-private theorem endpoint_10_47_window_0 : receiptWindow endpoint_10_47_flag endpoint_10_47_sources 0 2 208744680976352864 = some 208744680976352864 := by decide +kernel
-private theorem endpoint_10_47_window_2 : receiptWindow endpoint_10_47_flag endpoint_10_47_sources 2 2 208744680976352864 = some 208744680976352864 := by decide +kernel
-private theorem endpoint_10_47_prefix_4 : receiptWindow endpoint_10_47_flag endpoint_10_47_sources 0 4 208744680976352864 = some 208744680976352864 :=
-  join_receipt_window endpoint_10_47_flag endpoint_10_47_sources 0 2 2 208744680976352864 208744680976352864 208744680976352864 endpoint_10_47_window_0 endpoint_10_47_window_2
-private theorem endpoint_10_47_window_4 : receiptWindow endpoint_10_47_flag endpoint_10_47_sources 4 2 208744680976352864 = some 208744680976352864 := by decide +kernel
-private theorem endpoint_10_47_prefix_6 : receiptWindow endpoint_10_47_flag endpoint_10_47_sources 0 6 208744680976352864 = some 208744680976352864 :=
-  join_receipt_window endpoint_10_47_flag endpoint_10_47_sources 0 4 2 208744680976352864 208744680976352864 208744680976352864 endpoint_10_47_prefix_4 endpoint_10_47_window_4
-private theorem endpoint_10_47_window_6 : receiptWindow endpoint_10_47_flag endpoint_10_47_sources 6 2 208744680976352864 = some 208744680976352864 := by decide +kernel
-private theorem endpoint_10_47_prefix_8 : receiptWindow endpoint_10_47_flag endpoint_10_47_sources 0 8 208744680976352864 = some 208744680976352864 :=
-  join_receipt_window endpoint_10_47_flag endpoint_10_47_sources 0 6 2 208744680976352864 208744680976352864 208744680976352864 endpoint_10_47_prefix_6 endpoint_10_47_window_6
-private theorem endpoint_10_47_window_8 : receiptWindow endpoint_10_47_flag endpoint_10_47_sources 8 1 208744680976352864 = some 208744680976352864 := by decide +kernel
-private theorem endpoint_10_47_prefix_9 : receiptWindow endpoint_10_47_flag endpoint_10_47_sources 0 9 208744680976352864 = some 208744680976352864 :=
-  join_receipt_window endpoint_10_47_flag endpoint_10_47_sources 0 8 1 208744680976352864 208744680976352864 208744680976352864 endpoint_10_47_prefix_8 endpoint_10_47_window_8
-
-def endpoint_10_47 : CertifiedEndpoint :=
-  ⟨⟨10, 47, 3473⟩, 208744680976352864, .terminal ⟨contact00, contact01, contact02⟩ (finish_receipt_window endpoint_10_47_flag endpoint_10_47_sources 9 208744680976352864 208744680976352864 rfl endpoint_10_47_base endpoint_10_47_prefix_9) (by decide)⟩
-private def endpoint_10_48_flag : Flag := ⟨10, 48, 3443⟩
-private def endpoint_10_48_sources : Sources := ⟨contact00, contact01, contact02⟩
-private theorem endpoint_10_48_base : receiptBase endpoint_10_48_flag endpoint_10_48_sources = some 210737506730624071 := by decide +kernel
-private theorem endpoint_10_48_window_0 : receiptWindow endpoint_10_48_flag endpoint_10_48_sources 0 2 210737506730624071 = some 210737506730624071 := by decide +kernel
-private theorem endpoint_10_48_window_2 : receiptWindow endpoint_10_48_flag endpoint_10_48_sources 2 2 210737506730624071 = some 210737506730624071 := by decide +kernel
-private theorem endpoint_10_48_prefix_4 : receiptWindow endpoint_10_48_flag endpoint_10_48_sources 0 4 210737506730624071 = some 210737506730624071 :=
-  join_receipt_window endpoint_10_48_flag endpoint_10_48_sources 0 2 2 210737506730624071 210737506730624071 210737506730624071 endpoint_10_48_window_0 endpoint_10_48_window_2
-private theorem endpoint_10_48_window_4 : receiptWindow endpoint_10_48_flag endpoint_10_48_sources 4 2 210737506730624071 = some 210737506730624071 := by decide +kernel
-private theorem endpoint_10_48_prefix_6 : receiptWindow endpoint_10_48_flag endpoint_10_48_sources 0 6 210737506730624071 = some 210737506730624071 :=
-  join_receipt_window endpoint_10_48_flag endpoint_10_48_sources 0 4 2 210737506730624071 210737506730624071 210737506730624071 endpoint_10_48_prefix_4 endpoint_10_48_window_4
-private theorem endpoint_10_48_window_6 : receiptWindow endpoint_10_48_flag endpoint_10_48_sources 6 2 210737506730624071 = some 210737506730624071 := by decide +kernel
-private theorem endpoint_10_48_prefix_8 : receiptWindow endpoint_10_48_flag endpoint_10_48_sources 0 8 210737506730624071 = some 210737506730624071 :=
-  join_receipt_window endpoint_10_48_flag endpoint_10_48_sources 0 6 2 210737506730624071 210737506730624071 210737506730624071 endpoint_10_48_prefix_6 endpoint_10_48_window_6
-private theorem endpoint_10_48_window_8 : receiptWindow endpoint_10_48_flag endpoint_10_48_sources 8 1 210737506730624071 = some 210737506730624071 := by decide +kernel
-private theorem endpoint_10_48_prefix_9 : receiptWindow endpoint_10_48_flag endpoint_10_48_sources 0 9 210737506730624071 = some 210737506730624071 :=
-  join_receipt_window endpoint_10_48_flag endpoint_10_48_sources 0 8 1 210737506730624071 210737506730624071 210737506730624071 endpoint_10_48_prefix_8 endpoint_10_48_window_8
-
-def endpoint_10_48 : CertifiedEndpoint :=
-  ⟨⟨10, 48, 3443⟩, 210737506730624071, .terminal ⟨contact00, contact01, contact02⟩ (finish_receipt_window endpoint_10_48_flag endpoint_10_48_sources 9 210737506730624071 210737506730624071 rfl endpoint_10_48_base endpoint_10_48_prefix_9) (by decide)⟩
-private def endpoint_10_49_flag : Flag := ⟨10, 49, 3412⟩
-private def endpoint_10_49_sources : Sources := ⟨contact00, contact01, contact02⟩
-private theorem endpoint_10_49_base : receiptBase endpoint_10_49_flag endpoint_10_49_sources = some 212603116009958803 := by decide +kernel
-private theorem endpoint_10_49_window_0 : receiptWindow endpoint_10_49_flag endpoint_10_49_sources 0 2 212603116009958803 = some 212603116009958803 := by decide +kernel
-private theorem endpoint_10_49_window_2 : receiptWindow endpoint_10_49_flag endpoint_10_49_sources 2 2 212603116009958803 = some 212603116009958803 := by decide +kernel
-private theorem endpoint_10_49_prefix_4 : receiptWindow endpoint_10_49_flag endpoint_10_49_sources 0 4 212603116009958803 = some 212603116009958803 :=
-  join_receipt_window endpoint_10_49_flag endpoint_10_49_sources 0 2 2 212603116009958803 212603116009958803 212603116009958803 endpoint_10_49_window_0 endpoint_10_49_window_2
-private theorem endpoint_10_49_window_4 : receiptWindow endpoint_10_49_flag endpoint_10_49_sources 4 2 212603116009958803 = some 212603116009958803 := by decide +kernel
-private theorem endpoint_10_49_prefix_6 : receiptWindow endpoint_10_49_flag endpoint_10_49_sources 0 6 212603116009958803 = some 212603116009958803 :=
-  join_receipt_window endpoint_10_49_flag endpoint_10_49_sources 0 4 2 212603116009958803 212603116009958803 212603116009958803 endpoint_10_49_prefix_4 endpoint_10_49_window_4
-private theorem endpoint_10_49_window_6 : receiptWindow endpoint_10_49_flag endpoint_10_49_sources 6 2 212603116009958803 = some 212603116009958803 := by decide +kernel
-private theorem endpoint_10_49_prefix_8 : receiptWindow endpoint_10_49_flag endpoint_10_49_sources 0 8 212603116009958803 = some 212603116009958803 :=
-  join_receipt_window endpoint_10_49_flag endpoint_10_49_sources 0 6 2 212603116009958803 212603116009958803 212603116009958803 endpoint_10_49_prefix_6 endpoint_10_49_window_6
-private theorem endpoint_10_49_window_8 : receiptWindow endpoint_10_49_flag endpoint_10_49_sources 8 1 212603116009958803 = some 212603116009958803 := by decide +kernel
-private theorem endpoint_10_49_prefix_9 : receiptWindow endpoint_10_49_flag endpoint_10_49_sources 0 9 212603116009958803 = some 212603116009958803 :=
-  join_receipt_window endpoint_10_49_flag endpoint_10_49_sources 0 8 1 212603116009958803 212603116009958803 212603116009958803 endpoint_10_49_prefix_8 endpoint_10_49_window_8
-
-def endpoint_10_49 : CertifiedEndpoint :=
-  ⟨⟨10, 49, 3412⟩, 212603116009958803, .terminal ⟨contact00, contact01, contact02⟩ (finish_receipt_window endpoint_10_49_flag endpoint_10_49_sources 9 212603116009958803 212603116009958803 rfl endpoint_10_49_base endpoint_10_49_prefix_9) (by decide)⟩
-private def endpoint_10_50_flag : Flag := ⟨10, 50, 3381⟩
-private def endpoint_10_50_sources : Sources := ⟨contact00, contact01, contact02⟩
-private theorem endpoint_10_50_base : receiptBase endpoint_10_50_flag endpoint_10_50_sources = some 214400734173318385 := by decide +kernel
-private theorem endpoint_10_50_window_0 : receiptWindow endpoint_10_50_flag endpoint_10_50_sources 0 2 214400734173318385 = some 214400734173318385 := by decide +kernel
-private theorem endpoint_10_50_window_2 : receiptWindow endpoint_10_50_flag endpoint_10_50_sources 2 2 214400734173318385 = some 214400734173318385 := by decide +kernel
-private theorem endpoint_10_50_prefix_4 : receiptWindow endpoint_10_50_flag endpoint_10_50_sources 0 4 214400734173318385 = some 214400734173318385 :=
-  join_receipt_window endpoint_10_50_flag endpoint_10_50_sources 0 2 2 214400734173318385 214400734173318385 214400734173318385 endpoint_10_50_window_0 endpoint_10_50_window_2
-private theorem endpoint_10_50_window_4 : receiptWindow endpoint_10_50_flag endpoint_10_50_sources 4 2 214400734173318385 = some 214400734173318385 := by decide +kernel
-private theorem endpoint_10_50_prefix_6 : receiptWindow endpoint_10_50_flag endpoint_10_50_sources 0 6 214400734173318385 = some 214400734173318385 :=
-  join_receipt_window endpoint_10_50_flag endpoint_10_50_sources 0 4 2 214400734173318385 214400734173318385 214400734173318385 endpoint_10_50_prefix_4 endpoint_10_50_window_4
-private theorem endpoint_10_50_window_6 : receiptWindow endpoint_10_50_flag endpoint_10_50_sources 6 2 214400734173318385 = some 214400734173318385 := by decide +kernel
-private theorem endpoint_10_50_prefix_8 : receiptWindow endpoint_10_50_flag endpoint_10_50_sources 0 8 214400734173318385 = some 214400734173318385 :=
-  join_receipt_window endpoint_10_50_flag endpoint_10_50_sources 0 6 2 214400734173318385 214400734173318385 214400734173318385 endpoint_10_50_prefix_6 endpoint_10_50_window_6
-private theorem endpoint_10_50_window_8 : receiptWindow endpoint_10_50_flag endpoint_10_50_sources 8 1 214400734173318385 = some 214400734173318385 := by decide +kernel
-private theorem endpoint_10_50_prefix_9 : receiptWindow endpoint_10_50_flag endpoint_10_50_sources 0 9 214400734173318385 = some 214400734173318385 :=
-  join_receipt_window endpoint_10_50_flag endpoint_10_50_sources 0 8 1 214400734173318385 214400734173318385 214400734173318385 endpoint_10_50_prefix_8 endpoint_10_50_window_8
-
-def endpoint_10_50 : CertifiedEndpoint :=
-  ⟨⟨10, 50, 3381⟩, 214400734173318385, .terminal ⟨contact00, contact01, contact02⟩ (finish_receipt_window endpoint_10_50_flag endpoint_10_50_sources 9 214400734173318385 214400734173318385 rfl endpoint_10_50_base endpoint_10_50_prefix_9) (by decide)⟩
-private def endpoint_10_51_flag : Flag := ⟨10, 51, 3349⟩
-private def endpoint_10_51_sources : Sources := ⟨contact00, contact01, contact02⟩
-private theorem endpoint_10_51_base : receiptBase endpoint_10_51_flag endpoint_10_51_sources = some 216066818965489102 := by decide +kernel
-private theorem endpoint_10_51_window_0 : receiptWindow endpoint_10_51_flag endpoint_10_51_sources 0 2 216066818965489102 = some 216066818965489102 := by decide +kernel
-private theorem endpoint_10_51_window_2 : receiptWindow endpoint_10_51_flag endpoint_10_51_sources 2 2 216066818965489102 = some 216066818965489102 := by decide +kernel
-private theorem endpoint_10_51_prefix_4 : receiptWindow endpoint_10_51_flag endpoint_10_51_sources 0 4 216066818965489102 = some 216066818965489102 :=
-  join_receipt_window endpoint_10_51_flag endpoint_10_51_sources 0 2 2 216066818965489102 216066818965489102 216066818965489102 endpoint_10_51_window_0 endpoint_10_51_window_2
-private theorem endpoint_10_51_window_4 : receiptWindow endpoint_10_51_flag endpoint_10_51_sources 4 2 216066818965489102 = some 216066818965489102 := by decide +kernel
-private theorem endpoint_10_51_prefix_6 : receiptWindow endpoint_10_51_flag endpoint_10_51_sources 0 6 216066818965489102 = some 216066818965489102 :=
-  join_receipt_window endpoint_10_51_flag endpoint_10_51_sources 0 4 2 216066818965489102 216066818965489102 216066818965489102 endpoint_10_51_prefix_4 endpoint_10_51_window_4
-private theorem endpoint_10_51_window_6 : receiptWindow endpoint_10_51_flag endpoint_10_51_sources 6 2 216066818965489102 = some 216066818965489102 := by decide +kernel
-private theorem endpoint_10_51_prefix_8 : receiptWindow endpoint_10_51_flag endpoint_10_51_sources 0 8 216066818965489102 = some 216066818965489102 :=
-  join_receipt_window endpoint_10_51_flag endpoint_10_51_sources 0 6 2 216066818965489102 216066818965489102 216066818965489102 endpoint_10_51_prefix_6 endpoint_10_51_window_6
-private theorem endpoint_10_51_window_8 : receiptWindow endpoint_10_51_flag endpoint_10_51_sources 8 1 216066818965489102 = some 216066818965489102 := by decide +kernel
-private theorem endpoint_10_51_prefix_9 : receiptWindow endpoint_10_51_flag endpoint_10_51_sources 0 9 216066818965489102 = some 216066818965489102 :=
-  join_receipt_window endpoint_10_51_flag endpoint_10_51_sources 0 8 1 216066818965489102 216066818965489102 216066818965489102 endpoint_10_51_prefix_8 endpoint_10_51_window_8
-
-def endpoint_10_51 : CertifiedEndpoint :=
-  ⟨⟨10, 51, 3349⟩, 216066818965489102, .terminal ⟨contact00, contact01, contact02⟩ (finish_receipt_window endpoint_10_51_flag endpoint_10_51_sources 9 216066818965489102 216066818965489102 rfl endpoint_10_51_base endpoint_10_51_prefix_9) (by decide)⟩
-private def endpoint_10_52_flag : Flag := ⟨10, 52, 3316⟩
-private def endpoint_10_52_sources : Sources := ⟨contact00, contact01, contact02⟩
-private theorem endpoint_10_52_base : receiptBase endpoint_10_52_flag endpoint_10_52_sources = some 217598132714281661 := by decide +kernel
-private theorem endpoint_10_52_window_0 : receiptWindow endpoint_10_52_flag endpoint_10_52_sources 0 2 217598132714281661 = some 217598132714281661 := by decide +kernel
-private theorem endpoint_10_52_window_2 : receiptWindow endpoint_10_52_flag endpoint_10_52_sources 2 2 217598132714281661 = some 217598132714281661 := by decide +kernel
-private theorem endpoint_10_52_prefix_4 : receiptWindow endpoint_10_52_flag endpoint_10_52_sources 0 4 217598132714281661 = some 217598132714281661 :=
-  join_receipt_window endpoint_10_52_flag endpoint_10_52_sources 0 2 2 217598132714281661 217598132714281661 217598132714281661 endpoint_10_52_window_0 endpoint_10_52_window_2
-private theorem endpoint_10_52_window_4 : receiptWindow endpoint_10_52_flag endpoint_10_52_sources 4 2 217598132714281661 = some 217598132714281661 := by decide +kernel
-private theorem endpoint_10_52_prefix_6 : receiptWindow endpoint_10_52_flag endpoint_10_52_sources 0 6 217598132714281661 = some 217598132714281661 :=
-  join_receipt_window endpoint_10_52_flag endpoint_10_52_sources 0 4 2 217598132714281661 217598132714281661 217598132714281661 endpoint_10_52_prefix_4 endpoint_10_52_window_4
-private theorem endpoint_10_52_window_6 : receiptWindow endpoint_10_52_flag endpoint_10_52_sources 6 2 217598132714281661 = some 217598132714281661 := by decide +kernel
-private theorem endpoint_10_52_prefix_8 : receiptWindow endpoint_10_52_flag endpoint_10_52_sources 0 8 217598132714281661 = some 217598132714281661 :=
-  join_receipt_window endpoint_10_52_flag endpoint_10_52_sources 0 6 2 217598132714281661 217598132714281661 217598132714281661 endpoint_10_52_prefix_6 endpoint_10_52_window_6
-private theorem endpoint_10_52_window_8 : receiptWindow endpoint_10_52_flag endpoint_10_52_sources 8 1 217598132714281661 = some 217598132714281661 := by decide +kernel
-private theorem endpoint_10_52_prefix_9 : receiptWindow endpoint_10_52_flag endpoint_10_52_sources 0 9 217598132714281661 = some 217598132714281661 :=
-  join_receipt_window endpoint_10_52_flag endpoint_10_52_sources 0 8 1 217598132714281661 217598132714281661 217598132714281661 endpoint_10_52_prefix_8 endpoint_10_52_window_8
-
-def endpoint_10_52 : CertifiedEndpoint :=
-  ⟨⟨10, 52, 3316⟩, 217598132714281661, .terminal ⟨contact00, contact01, contact02⟩ (finish_receipt_window endpoint_10_52_flag endpoint_10_52_sources 9 217598132714281661 217598132714281661 rfl endpoint_10_52_base endpoint_10_52_prefix_9) (by decide)⟩
-private def endpoint_10_53_flag : Flag := ⟨10, 53, 3282⟩
-private def endpoint_10_53_sources : Sources := ⟨contact18, contact01, contact02⟩
-private theorem endpoint_10_53_base : receiptBase endpoint_10_53_flag endpoint_10_53_sources = some 219616264743158235 := by decide +kernel
-private theorem endpoint_10_53_window_0 : receiptWindow endpoint_10_53_flag endpoint_10_53_sources 0 2 219616264743158235 = some 219616264743158235 := by decide +kernel
-private theorem endpoint_10_53_window_2 : receiptWindow endpoint_10_53_flag endpoint_10_53_sources 2 2 219616264743158235 = some 219616264743158235 := by decide +kernel
-private theorem endpoint_10_53_prefix_4 : receiptWindow endpoint_10_53_flag endpoint_10_53_sources 0 4 219616264743158235 = some 219616264743158235 :=
-  join_receipt_window endpoint_10_53_flag endpoint_10_53_sources 0 2 2 219616264743158235 219616264743158235 219616264743158235 endpoint_10_53_window_0 endpoint_10_53_window_2
-private theorem endpoint_10_53_window_4 : receiptWindow endpoint_10_53_flag endpoint_10_53_sources 4 2 219616264743158235 = some 219616264743158235 := by decide +kernel
-private theorem endpoint_10_53_prefix_6 : receiptWindow endpoint_10_53_flag endpoint_10_53_sources 0 6 219616264743158235 = some 219616264743158235 :=
-  join_receipt_window endpoint_10_53_flag endpoint_10_53_sources 0 4 2 219616264743158235 219616264743158235 219616264743158235 endpoint_10_53_prefix_4 endpoint_10_53_window_4
-private theorem endpoint_10_53_window_6 : receiptWindow endpoint_10_53_flag endpoint_10_53_sources 6 2 219616264743158235 = some 219616264743158235 := by decide +kernel
-private theorem endpoint_10_53_prefix_8 : receiptWindow endpoint_10_53_flag endpoint_10_53_sources 0 8 219616264743158235 = some 219616264743158235 :=
-  join_receipt_window endpoint_10_53_flag endpoint_10_53_sources 0 6 2 219616264743158235 219616264743158235 219616264743158235 endpoint_10_53_prefix_6 endpoint_10_53_window_6
-private theorem endpoint_10_53_window_8 : receiptWindow endpoint_10_53_flag endpoint_10_53_sources 8 1 219616264743158235 = some 219616264743158235 := by decide +kernel
-private theorem endpoint_10_53_prefix_9 : receiptWindow endpoint_10_53_flag endpoint_10_53_sources 0 9 219616264743158235 = some 219616264743158235 :=
-  join_receipt_window endpoint_10_53_flag endpoint_10_53_sources 0 8 1 219616264743158235 219616264743158235 219616264743158235 endpoint_10_53_prefix_8 endpoint_10_53_window_8
-
-def endpoint_10_53 : CertifiedEndpoint :=
-  ⟨⟨10, 53, 3282⟩, 219616264743158235, .terminal ⟨contact18, contact01, contact02⟩ (finish_receipt_window endpoint_10_53_flag endpoint_10_53_sources 9 219616264743158235 219616264743158235 rfl endpoint_10_53_base endpoint_10_53_prefix_9) (by decide)⟩
-private def endpoint_10_54_flag : Flag := ⟨10, 54, 3248⟩
-private def endpoint_10_54_sources : Sources := ⟨contact18, contact01, contact02⟩
-private theorem endpoint_10_54_base : receiptBase endpoint_10_54_flag endpoint_10_54_sources = some 220942703714423719 := by decide +kernel
-private theorem endpoint_10_54_window_0 : receiptWindow endpoint_10_54_flag endpoint_10_54_sources 0 2 220942703714423719 = some 220942703714423719 := by decide +kernel
-private theorem endpoint_10_54_window_2 : receiptWindow endpoint_10_54_flag endpoint_10_54_sources 2 2 220942703714423719 = some 220942703714423719 := by decide +kernel
-private theorem endpoint_10_54_prefix_4 : receiptWindow endpoint_10_54_flag endpoint_10_54_sources 0 4 220942703714423719 = some 220942703714423719 :=
-  join_receipt_window endpoint_10_54_flag endpoint_10_54_sources 0 2 2 220942703714423719 220942703714423719 220942703714423719 endpoint_10_54_window_0 endpoint_10_54_window_2
-private theorem endpoint_10_54_window_4 : receiptWindow endpoint_10_54_flag endpoint_10_54_sources 4 2 220942703714423719 = some 220942703714423719 := by decide +kernel
-private theorem endpoint_10_54_prefix_6 : receiptWindow endpoint_10_54_flag endpoint_10_54_sources 0 6 220942703714423719 = some 220942703714423719 :=
-  join_receipt_window endpoint_10_54_flag endpoint_10_54_sources 0 4 2 220942703714423719 220942703714423719 220942703714423719 endpoint_10_54_prefix_4 endpoint_10_54_window_4
-private theorem endpoint_10_54_window_6 : receiptWindow endpoint_10_54_flag endpoint_10_54_sources 6 2 220942703714423719 = some 220942703714423719 := by decide +kernel
-private theorem endpoint_10_54_prefix_8 : receiptWindow endpoint_10_54_flag endpoint_10_54_sources 0 8 220942703714423719 = some 220942703714423719 :=
-  join_receipt_window endpoint_10_54_flag endpoint_10_54_sources 0 6 2 220942703714423719 220942703714423719 220942703714423719 endpoint_10_54_prefix_6 endpoint_10_54_window_6
-private theorem endpoint_10_54_window_8 : receiptWindow endpoint_10_54_flag endpoint_10_54_sources 8 1 220942703714423719 = some 220942703714423719 := by decide +kernel
-private theorem endpoint_10_54_prefix_9 : receiptWindow endpoint_10_54_flag endpoint_10_54_sources 0 9 220942703714423719 = some 220942703714423719 :=
-  join_receipt_window endpoint_10_54_flag endpoint_10_54_sources 0 8 1 220942703714423719 220942703714423719 220942703714423719 endpoint_10_54_prefix_8 endpoint_10_54_window_8
-
-def endpoint_10_54 : CertifiedEndpoint :=
-  ⟨⟨10, 54, 3248⟩, 220942703714423719, .terminal ⟨contact18, contact01, contact02⟩ (finish_receipt_window endpoint_10_54_flag endpoint_10_54_sources 9 220942703714423719 220942703714423719 rfl endpoint_10_54_base endpoint_10_54_prefix_9) (by decide)⟩
-private def endpoint_10_55_flag : Flag := ⟨10, 55, 3212⟩
-private def endpoint_10_55_sources : Sources := ⟨contact18, contact01, contact02⟩
-private theorem endpoint_10_55_base : receiptBase endpoint_10_55_flag endpoint_10_55_sources = some 222058237864841797 := by decide +kernel
-private theorem endpoint_10_55_window_0 : receiptWindow endpoint_10_55_flag endpoint_10_55_sources 0 2 222058237864841797 = some 222058237864841797 := by decide +kernel
-private theorem endpoint_10_55_window_2 : receiptWindow endpoint_10_55_flag endpoint_10_55_sources 2 2 222058237864841797 = some 222058237864841797 := by decide +kernel
-private theorem endpoint_10_55_prefix_4 : receiptWindow endpoint_10_55_flag endpoint_10_55_sources 0 4 222058237864841797 = some 222058237864841797 :=
-  join_receipt_window endpoint_10_55_flag endpoint_10_55_sources 0 2 2 222058237864841797 222058237864841797 222058237864841797 endpoint_10_55_window_0 endpoint_10_55_window_2
-private theorem endpoint_10_55_window_4 : receiptWindow endpoint_10_55_flag endpoint_10_55_sources 4 2 222058237864841797 = some 222058237864841797 := by decide +kernel
-private theorem endpoint_10_55_prefix_6 : receiptWindow endpoint_10_55_flag endpoint_10_55_sources 0 6 222058237864841797 = some 222058237864841797 :=
-  join_receipt_window endpoint_10_55_flag endpoint_10_55_sources 0 4 2 222058237864841797 222058237864841797 222058237864841797 endpoint_10_55_prefix_4 endpoint_10_55_window_4
-private theorem endpoint_10_55_window_6 : receiptWindow endpoint_10_55_flag endpoint_10_55_sources 6 2 222058237864841797 = some 222058237864841797 := by decide +kernel
-private theorem endpoint_10_55_prefix_8 : receiptWindow endpoint_10_55_flag endpoint_10_55_sources 0 8 222058237864841797 = some 222058237864841797 :=
-  join_receipt_window endpoint_10_55_flag endpoint_10_55_sources 0 6 2 222058237864841797 222058237864841797 222058237864841797 endpoint_10_55_prefix_6 endpoint_10_55_window_6
-private theorem endpoint_10_55_window_8 : receiptWindow endpoint_10_55_flag endpoint_10_55_sources 8 1 222058237864841797 = some 222058237864841797 := by decide +kernel
-private theorem endpoint_10_55_prefix_9 : receiptWindow endpoint_10_55_flag endpoint_10_55_sources 0 9 222058237864841797 = some 222058237864841797 :=
-  join_receipt_window endpoint_10_55_flag endpoint_10_55_sources 0 8 1 222058237864841797 222058237864841797 222058237864841797 endpoint_10_55_prefix_8 endpoint_10_55_window_8
-
-def endpoint_10_55 : CertifiedEndpoint :=
-  ⟨⟨10, 55, 3212⟩, 222058237864841797, .terminal ⟨contact18, contact01, contact02⟩ (finish_receipt_window endpoint_10_55_flag endpoint_10_55_sources 9 222058237864841797 222058237864841797 rfl endpoint_10_55_base endpoint_10_55_prefix_9) (by decide)⟩
-private def endpoint_10_56_flag : Flag := ⟨10, 56, 3175⟩
-private def endpoint_10_56_sources : Sources := ⟨contact01, contact01, contact02⟩
-private theorem endpoint_10_56_base : receiptBase endpoint_10_56_flag endpoint_10_56_sources = some 223222010122674527 := by decide +kernel
-private theorem endpoint_10_56_window_0 : receiptWindow endpoint_10_56_flag endpoint_10_56_sources 0 2 223222010122674527 = some 223222010122674527 := by decide +kernel
-private theorem endpoint_10_56_window_2 : receiptWindow endpoint_10_56_flag endpoint_10_56_sources 2 2 223222010122674527 = some 223222010122674527 := by decide +kernel
-private theorem endpoint_10_56_prefix_4 : receiptWindow endpoint_10_56_flag endpoint_10_56_sources 0 4 223222010122674527 = some 223222010122674527 :=
-  join_receipt_window endpoint_10_56_flag endpoint_10_56_sources 0 2 2 223222010122674527 223222010122674527 223222010122674527 endpoint_10_56_window_0 endpoint_10_56_window_2
-private theorem endpoint_10_56_window_4 : receiptWindow endpoint_10_56_flag endpoint_10_56_sources 4 2 223222010122674527 = some 223222010122674527 := by decide +kernel
-private theorem endpoint_10_56_prefix_6 : receiptWindow endpoint_10_56_flag endpoint_10_56_sources 0 6 223222010122674527 = some 223222010122674527 :=
-  join_receipt_window endpoint_10_56_flag endpoint_10_56_sources 0 4 2 223222010122674527 223222010122674527 223222010122674527 endpoint_10_56_prefix_4 endpoint_10_56_window_4
-private theorem endpoint_10_56_window_6 : receiptWindow endpoint_10_56_flag endpoint_10_56_sources 6 2 223222010122674527 = some 223222010122674527 := by decide +kernel
-private theorem endpoint_10_56_prefix_8 : receiptWindow endpoint_10_56_flag endpoint_10_56_sources 0 8 223222010122674527 = some 223222010122674527 :=
-  join_receipt_window endpoint_10_56_flag endpoint_10_56_sources 0 6 2 223222010122674527 223222010122674527 223222010122674527 endpoint_10_56_prefix_6 endpoint_10_56_window_6
-private theorem endpoint_10_56_window_8 : receiptWindow endpoint_10_56_flag endpoint_10_56_sources 8 1 223222010122674527 = some 223222010122674527 := by decide +kernel
-private theorem endpoint_10_56_prefix_9 : receiptWindow endpoint_10_56_flag endpoint_10_56_sources 0 9 223222010122674527 = some 223222010122674527 :=
-  join_receipt_window endpoint_10_56_flag endpoint_10_56_sources 0 8 1 223222010122674527 223222010122674527 223222010122674527 endpoint_10_56_prefix_8 endpoint_10_56_window_8
-
-def endpoint_10_56 : CertifiedEndpoint :=
-  ⟨⟨10, 56, 3175⟩, 223222010122674527, .terminal ⟨contact01, contact01, contact02⟩ (finish_receipt_window endpoint_10_56_flag endpoint_10_56_sources 9 223222010122674527 223222010122674527 rfl endpoint_10_56_base endpoint_10_56_prefix_9) (by decide)⟩
-private def endpoint_10_57_flag : Flag := ⟨10, 57, 3138⟩
-private def endpoint_10_57_sources : Sources := ⟨contact03, contact03, contact04⟩
-private theorem endpoint_10_57_base : receiptBase endpoint_10_57_flag endpoint_10_57_sources = some 226192367166552644 := by decide +kernel
-private theorem endpoint_10_57_window_0 : receiptWindow endpoint_10_57_flag endpoint_10_57_sources 0 2 226192367166552644 = some 226192367166552644 := by decide +kernel
-private theorem endpoint_10_57_window_2 : receiptWindow endpoint_10_57_flag endpoint_10_57_sources 2 2 226192367166552644 = some 226192367166552644 := by decide +kernel
-private theorem endpoint_10_57_prefix_4 : receiptWindow endpoint_10_57_flag endpoint_10_57_sources 0 4 226192367166552644 = some 226192367166552644 :=
-  join_receipt_window endpoint_10_57_flag endpoint_10_57_sources 0 2 2 226192367166552644 226192367166552644 226192367166552644 endpoint_10_57_window_0 endpoint_10_57_window_2
-private theorem endpoint_10_57_window_4 : receiptWindow endpoint_10_57_flag endpoint_10_57_sources 4 2 226192367166552644 = some 226192367166552644 := by decide +kernel
-private theorem endpoint_10_57_prefix_6 : receiptWindow endpoint_10_57_flag endpoint_10_57_sources 0 6 226192367166552644 = some 226192367166552644 :=
-  join_receipt_window endpoint_10_57_flag endpoint_10_57_sources 0 4 2 226192367166552644 226192367166552644 226192367166552644 endpoint_10_57_prefix_4 endpoint_10_57_window_4
-private theorem endpoint_10_57_window_6 : receiptWindow endpoint_10_57_flag endpoint_10_57_sources 6 2 226192367166552644 = some 226192367166552644 := by decide +kernel
-private theorem endpoint_10_57_prefix_8 : receiptWindow endpoint_10_57_flag endpoint_10_57_sources 0 8 226192367166552644 = some 226192367166552644 :=
-  join_receipt_window endpoint_10_57_flag endpoint_10_57_sources 0 6 2 226192367166552644 226192367166552644 226192367166552644 endpoint_10_57_prefix_6 endpoint_10_57_window_6
-private theorem endpoint_10_57_window_8 : receiptWindow endpoint_10_57_flag endpoint_10_57_sources 8 1 226192367166552644 = some 226192367166552644 := by decide +kernel
-private theorem endpoint_10_57_prefix_9 : receiptWindow endpoint_10_57_flag endpoint_10_57_sources 0 9 226192367166552644 = some 226192367166552644 :=
-  join_receipt_window endpoint_10_57_flag endpoint_10_57_sources 0 8 1 226192367166552644 226192367166552644 226192367166552644 endpoint_10_57_prefix_8 endpoint_10_57_window_8
-
-def endpoint_10_57 : CertifiedEndpoint :=
-  ⟨⟨10, 57, 3138⟩, 226192367166552644, .terminal ⟨contact03, contact03, contact04⟩ (finish_receipt_window endpoint_10_57_flag endpoint_10_57_sources 9 226192367166552644 226192367166552644 rfl endpoint_10_57_base endpoint_10_57_prefix_9) (by decide)⟩
-private def endpoint_10_58_flag : Flag := ⟨10, 58, 3099⟩
-private def endpoint_10_58_sources : Sources := ⟨contact03, contact03, contact04⟩
-private theorem endpoint_10_58_base : receiptBase endpoint_10_58_flag endpoint_10_58_sources = some 226818304758078468 := by decide +kernel
-private theorem endpoint_10_58_window_0 : receiptWindow endpoint_10_58_flag endpoint_10_58_sources 0 2 226818304758078468 = some 226818304758078468 := by decide +kernel
-private theorem endpoint_10_58_window_2 : receiptWindow endpoint_10_58_flag endpoint_10_58_sources 2 2 226818304758078468 = some 226818304758078468 := by decide +kernel
-private theorem endpoint_10_58_prefix_4 : receiptWindow endpoint_10_58_flag endpoint_10_58_sources 0 4 226818304758078468 = some 226818304758078468 :=
-  join_receipt_window endpoint_10_58_flag endpoint_10_58_sources 0 2 2 226818304758078468 226818304758078468 226818304758078468 endpoint_10_58_window_0 endpoint_10_58_window_2
-private theorem endpoint_10_58_window_4 : receiptWindow endpoint_10_58_flag endpoint_10_58_sources 4 2 226818304758078468 = some 226818304758078468 := by decide +kernel
-private theorem endpoint_10_58_prefix_6 : receiptWindow endpoint_10_58_flag endpoint_10_58_sources 0 6 226818304758078468 = some 226818304758078468 :=
-  join_receipt_window endpoint_10_58_flag endpoint_10_58_sources 0 4 2 226818304758078468 226818304758078468 226818304758078468 endpoint_10_58_prefix_4 endpoint_10_58_window_4
-private theorem endpoint_10_58_window_6 : receiptWindow endpoint_10_58_flag endpoint_10_58_sources 6 2 226818304758078468 = some 226818304758078468 := by decide +kernel
-private theorem endpoint_10_58_prefix_8 : receiptWindow endpoint_10_58_flag endpoint_10_58_sources 0 8 226818304758078468 = some 226818304758078468 :=
-  join_receipt_window endpoint_10_58_flag endpoint_10_58_sources 0 6 2 226818304758078468 226818304758078468 226818304758078468 endpoint_10_58_prefix_6 endpoint_10_58_window_6
-private theorem endpoint_10_58_window_8 : receiptWindow endpoint_10_58_flag endpoint_10_58_sources 8 1 226818304758078468 = some 226818304758078468 := by decide +kernel
-private theorem endpoint_10_58_prefix_9 : receiptWindow endpoint_10_58_flag endpoint_10_58_sources 0 9 226818304758078468 = some 226818304758078468 :=
-  join_receipt_window endpoint_10_58_flag endpoint_10_58_sources 0 8 1 226818304758078468 226818304758078468 226818304758078468 endpoint_10_58_prefix_8 endpoint_10_58_window_8
-
-def endpoint_10_58 : CertifiedEndpoint :=
-  ⟨⟨10, 58, 3099⟩, 226818304758078468, .terminal ⟨contact03, contact03, contact04⟩ (finish_receipt_window endpoint_10_58_flag endpoint_10_58_sources 9 226818304758078468 226818304758078468 rfl endpoint_10_58_base endpoint_10_58_prefix_9) (by decide)⟩
-private def endpoint_10_59_flag : Flag := ⟨10, 59, 3058⟩
-private def endpoint_10_59_sources : Sources := ⟨contact03, contact03, contact04⟩
-private theorem endpoint_10_59_base : receiptBase endpoint_10_59_flag endpoint_10_59_sources = some 227211567305353337 := by decide +kernel
-private theorem endpoint_10_59_window_0 : receiptWindow endpoint_10_59_flag endpoint_10_59_sources 0 2 227211567305353337 = some 227211567305353337 := by decide +kernel
-private theorem endpoint_10_59_window_2 : receiptWindow endpoint_10_59_flag endpoint_10_59_sources 2 2 227211567305353337 = some 227211567305353337 := by decide +kernel
-private theorem endpoint_10_59_prefix_4 : receiptWindow endpoint_10_59_flag endpoint_10_59_sources 0 4 227211567305353337 = some 227211567305353337 :=
-  join_receipt_window endpoint_10_59_flag endpoint_10_59_sources 0 2 2 227211567305353337 227211567305353337 227211567305353337 endpoint_10_59_window_0 endpoint_10_59_window_2
-private theorem endpoint_10_59_window_4 : receiptWindow endpoint_10_59_flag endpoint_10_59_sources 4 2 227211567305353337 = some 227211567305353337 := by decide +kernel
-private theorem endpoint_10_59_prefix_6 : receiptWindow endpoint_10_59_flag endpoint_10_59_sources 0 6 227211567305353337 = some 227211567305353337 :=
-  join_receipt_window endpoint_10_59_flag endpoint_10_59_sources 0 4 2 227211567305353337 227211567305353337 227211567305353337 endpoint_10_59_prefix_4 endpoint_10_59_window_4
-private theorem endpoint_10_59_window_6 : receiptWindow endpoint_10_59_flag endpoint_10_59_sources 6 2 227211567305353337 = some 227211567305353337 := by decide +kernel
-private theorem endpoint_10_59_prefix_8 : receiptWindow endpoint_10_59_flag endpoint_10_59_sources 0 8 227211567305353337 = some 227211567305353337 :=
-  join_receipt_window endpoint_10_59_flag endpoint_10_59_sources 0 6 2 227211567305353337 227211567305353337 227211567305353337 endpoint_10_59_prefix_6 endpoint_10_59_window_6
-private theorem endpoint_10_59_window_8 : receiptWindow endpoint_10_59_flag endpoint_10_59_sources 8 1 227211567305353337 = some 227211567305353337 := by decide +kernel
-private theorem endpoint_10_59_prefix_9 : receiptWindow endpoint_10_59_flag endpoint_10_59_sources 0 9 227211567305353337 = some 227211567305353337 :=
-  join_receipt_window endpoint_10_59_flag endpoint_10_59_sources 0 8 1 227211567305353337 227211567305353337 227211567305353337 endpoint_10_59_prefix_8 endpoint_10_59_window_8
-
-def endpoint_10_59 : CertifiedEndpoint :=
-  ⟨⟨10, 59, 3058⟩, 227211567305353337, .terminal ⟨contact03, contact03, contact04⟩ (finish_receipt_window endpoint_10_59_flag endpoint_10_59_sources 9 227211567305353337 227211567305353337 rfl endpoint_10_59_base endpoint_10_59_prefix_9) (by decide)⟩
-private def endpoint_10_60_flag : Flag := ⟨10, 60, 3016⟩
-private def endpoint_10_60_sources : Sources := ⟨contact03, contact03, contact04⟩
-private theorem endpoint_10_60_base : receiptBase endpoint_10_60_flag endpoint_10_60_sources = some 227440066563834709 := by decide +kernel
-private theorem endpoint_10_60_window_0 : receiptWindow endpoint_10_60_flag endpoint_10_60_sources 0 2 227440066563834709 = some 227440066563834709 := by decide +kernel
-private theorem endpoint_10_60_window_2 : receiptWindow endpoint_10_60_flag endpoint_10_60_sources 2 2 227440066563834709 = some 227440066563834709 := by decide +kernel
-private theorem endpoint_10_60_prefix_4 : receiptWindow endpoint_10_60_flag endpoint_10_60_sources 0 4 227440066563834709 = some 227440066563834709 :=
-  join_receipt_window endpoint_10_60_flag endpoint_10_60_sources 0 2 2 227440066563834709 227440066563834709 227440066563834709 endpoint_10_60_window_0 endpoint_10_60_window_2
-private theorem endpoint_10_60_window_4 : receiptWindow endpoint_10_60_flag endpoint_10_60_sources 4 2 227440066563834709 = some 227440066563834709 := by decide +kernel
-private theorem endpoint_10_60_prefix_6 : receiptWindow endpoint_10_60_flag endpoint_10_60_sources 0 6 227440066563834709 = some 227440066563834709 :=
-  join_receipt_window endpoint_10_60_flag endpoint_10_60_sources 0 4 2 227440066563834709 227440066563834709 227440066563834709 endpoint_10_60_prefix_4 endpoint_10_60_window_4
-private theorem endpoint_10_60_window_6 : receiptWindow endpoint_10_60_flag endpoint_10_60_sources 6 2 227440066563834709 = some 227440066563834709 := by decide +kernel
-private theorem endpoint_10_60_prefix_8 : receiptWindow endpoint_10_60_flag endpoint_10_60_sources 0 8 227440066563834709 = some 227440066563834709 :=
-  join_receipt_window endpoint_10_60_flag endpoint_10_60_sources 0 6 2 227440066563834709 227440066563834709 227440066563834709 endpoint_10_60_prefix_6 endpoint_10_60_window_6
-private theorem endpoint_10_60_window_8 : receiptWindow endpoint_10_60_flag endpoint_10_60_sources 8 1 227440066563834709 = some 227440066563834709 := by decide +kernel
-private theorem endpoint_10_60_prefix_9 : receiptWindow endpoint_10_60_flag endpoint_10_60_sources 0 9 227440066563834709 = some 227440066563834709 :=
-  join_receipt_window endpoint_10_60_flag endpoint_10_60_sources 0 8 1 227440066563834709 227440066563834709 227440066563834709 endpoint_10_60_prefix_8 endpoint_10_60_window_8
-
-def endpoint_10_60 : CertifiedEndpoint :=
-  ⟨⟨10, 60, 3016⟩, 227440066563834709, .terminal ⟨contact03, contact03, contact04⟩ (finish_receipt_window endpoint_10_60_flag endpoint_10_60_sources 9 227440066563834709 227440066563834709 rfl endpoint_10_60_base endpoint_10_60_prefix_9) (by decide)⟩
-private def endpoint_10_61_flag : Flag := ⟨10, 61, 2972⟩
-private def endpoint_10_61_sources : Sources := ⟨contact03, contact03, contact04⟩
-private theorem endpoint_10_61_base : receiptBase endpoint_10_61_flag endpoint_10_61_sources = some 227425008583308268 := by decide +kernel
-private theorem endpoint_10_61_window_0 : receiptWindow endpoint_10_61_flag endpoint_10_61_sources 0 2 227425008583308268 = some 227425008583308268 := by decide +kernel
-private theorem endpoint_10_61_window_2 : receiptWindow endpoint_10_61_flag endpoint_10_61_sources 2 2 227425008583308268 = some 227425008583308268 := by decide +kernel
-private theorem endpoint_10_61_prefix_4 : receiptWindow endpoint_10_61_flag endpoint_10_61_sources 0 4 227425008583308268 = some 227425008583308268 :=
-  join_receipt_window endpoint_10_61_flag endpoint_10_61_sources 0 2 2 227425008583308268 227425008583308268 227425008583308268 endpoint_10_61_window_0 endpoint_10_61_window_2
-private theorem endpoint_10_61_window_4 : receiptWindow endpoint_10_61_flag endpoint_10_61_sources 4 2 227425008583308268 = some 227425008583308268 := by decide +kernel
-private theorem endpoint_10_61_prefix_6 : receiptWindow endpoint_10_61_flag endpoint_10_61_sources 0 6 227425008583308268 = some 227425008583308268 :=
-  join_receipt_window endpoint_10_61_flag endpoint_10_61_sources 0 4 2 227425008583308268 227425008583308268 227425008583308268 endpoint_10_61_prefix_4 endpoint_10_61_window_4
-private theorem endpoint_10_61_window_6 : receiptWindow endpoint_10_61_flag endpoint_10_61_sources 6 2 227425008583308268 = some 227425008583308268 := by decide +kernel
-private theorem endpoint_10_61_prefix_8 : receiptWindow endpoint_10_61_flag endpoint_10_61_sources 0 8 227425008583308268 = some 227425008583308268 :=
-  join_receipt_window endpoint_10_61_flag endpoint_10_61_sources 0 6 2 227425008583308268 227425008583308268 227425008583308268 endpoint_10_61_prefix_6 endpoint_10_61_window_6
-private theorem endpoint_10_61_window_8 : receiptWindow endpoint_10_61_flag endpoint_10_61_sources 8 1 227425008583308268 = some 227425008583308268 := by decide +kernel
-private theorem endpoint_10_61_prefix_9 : receiptWindow endpoint_10_61_flag endpoint_10_61_sources 0 9 227425008583308268 = some 227425008583308268 :=
-  join_receipt_window endpoint_10_61_flag endpoint_10_61_sources 0 8 1 227425008583308268 227425008583308268 227425008583308268 endpoint_10_61_prefix_8 endpoint_10_61_window_8
-
-def endpoint_10_61 : CertifiedEndpoint :=
-  ⟨⟨10, 61, 2972⟩, 227425008583308268, .terminal ⟨contact03, contact03, contact04⟩ (finish_receipt_window endpoint_10_61_flag endpoint_10_61_sources 9 227425008583308268 227425008583308268 rfl endpoint_10_61_base endpoint_10_61_prefix_9) (by decide)⟩
-private def endpoint_10_62_flag : Flag := ⟨10, 62, 2926⟩
-private def endpoint_10_62_sources : Sources := ⟨contact05, contact05, contact04⟩
-private theorem endpoint_10_62_base : receiptBase endpoint_10_62_flag endpoint_10_62_sources = some 228316012349080696 := by decide +kernel
-private theorem endpoint_10_62_window_0 : receiptWindow endpoint_10_62_flag endpoint_10_62_sources 0 2 228316012349080696 = some 228316012349080696 := by decide +kernel
-private theorem endpoint_10_62_window_2 : receiptWindow endpoint_10_62_flag endpoint_10_62_sources 2 2 228316012349080696 = some 228316012349080696 := by decide +kernel
-private theorem endpoint_10_62_prefix_4 : receiptWindow endpoint_10_62_flag endpoint_10_62_sources 0 4 228316012349080696 = some 228316012349080696 :=
-  join_receipt_window endpoint_10_62_flag endpoint_10_62_sources 0 2 2 228316012349080696 228316012349080696 228316012349080696 endpoint_10_62_window_0 endpoint_10_62_window_2
-private theorem endpoint_10_62_window_4 : receiptWindow endpoint_10_62_flag endpoint_10_62_sources 4 2 228316012349080696 = some 228316012349080696 := by decide +kernel
-private theorem endpoint_10_62_prefix_6 : receiptWindow endpoint_10_62_flag endpoint_10_62_sources 0 6 228316012349080696 = some 228316012349080696 :=
-  join_receipt_window endpoint_10_62_flag endpoint_10_62_sources 0 4 2 228316012349080696 228316012349080696 228316012349080696 endpoint_10_62_prefix_4 endpoint_10_62_window_4
-private theorem endpoint_10_62_window_6 : receiptWindow endpoint_10_62_flag endpoint_10_62_sources 6 2 228316012349080696 = some 228316012349080696 := by decide +kernel
-private theorem endpoint_10_62_prefix_8 : receiptWindow endpoint_10_62_flag endpoint_10_62_sources 0 8 228316012349080696 = some 228316012349080696 :=
-  join_receipt_window endpoint_10_62_flag endpoint_10_62_sources 0 6 2 228316012349080696 228316012349080696 228316012349080696 endpoint_10_62_prefix_6 endpoint_10_62_window_6
-private theorem endpoint_10_62_window_8 : receiptWindow endpoint_10_62_flag endpoint_10_62_sources 8 1 228316012349080696 = some 228316012349080696 := by decide +kernel
-private theorem endpoint_10_62_prefix_9 : receiptWindow endpoint_10_62_flag endpoint_10_62_sources 0 9 228316012349080696 = some 228316012349080696 :=
-  join_receipt_window endpoint_10_62_flag endpoint_10_62_sources 0 8 1 228316012349080696 228316012349080696 228316012349080696 endpoint_10_62_prefix_8 endpoint_10_62_window_8
-
-def endpoint_10_62 : CertifiedEndpoint :=
-  ⟨⟨10, 62, 2926⟩, 228316012349080696, .terminal ⟨contact05, contact05, contact04⟩ (finish_receipt_window endpoint_10_62_flag endpoint_10_62_sources 9 228316012349080696 228316012349080696 rfl endpoint_10_62_base endpoint_10_62_prefix_9) (by decide)⟩
-private def endpoint_10_63_flag : Flag := ⟨10, 63, 2878⟩
-private def endpoint_10_63_sources : Sources := ⟨contact05, contact05, contact04⟩
-private theorem endpoint_10_63_base : receiptBase endpoint_10_63_flag endpoint_10_63_sources = some 227793638897230027 := by decide +kernel
-private theorem endpoint_10_63_window_0 : receiptWindow endpoint_10_63_flag endpoint_10_63_sources 0 2 227793638897230027 = some 227793638897230027 := by decide +kernel
-private theorem endpoint_10_63_window_2 : receiptWindow endpoint_10_63_flag endpoint_10_63_sources 2 2 227793638897230027 = some 227793638897230027 := by decide +kernel
-private theorem endpoint_10_63_prefix_4 : receiptWindow endpoint_10_63_flag endpoint_10_63_sources 0 4 227793638897230027 = some 227793638897230027 :=
-  join_receipt_window endpoint_10_63_flag endpoint_10_63_sources 0 2 2 227793638897230027 227793638897230027 227793638897230027 endpoint_10_63_window_0 endpoint_10_63_window_2
-private theorem endpoint_10_63_window_4 : receiptWindow endpoint_10_63_flag endpoint_10_63_sources 4 2 227793638897230027 = some 227793638897230027 := by decide +kernel
-private theorem endpoint_10_63_prefix_6 : receiptWindow endpoint_10_63_flag endpoint_10_63_sources 0 6 227793638897230027 = some 227793638897230027 :=
-  join_receipt_window endpoint_10_63_flag endpoint_10_63_sources 0 4 2 227793638897230027 227793638897230027 227793638897230027 endpoint_10_63_prefix_4 endpoint_10_63_window_4
-private theorem endpoint_10_63_window_6 : receiptWindow endpoint_10_63_flag endpoint_10_63_sources 6 2 227793638897230027 = some 227793638897230027 := by decide +kernel
-private theorem endpoint_10_63_prefix_8 : receiptWindow endpoint_10_63_flag endpoint_10_63_sources 0 8 227793638897230027 = some 227793638897230027 :=
-  join_receipt_window endpoint_10_63_flag endpoint_10_63_sources 0 6 2 227793638897230027 227793638897230027 227793638897230027 endpoint_10_63_prefix_6 endpoint_10_63_window_6
-private theorem endpoint_10_63_window_8 : receiptWindow endpoint_10_63_flag endpoint_10_63_sources 8 1 227793638897230027 = some 227793638897230027 := by decide +kernel
-private theorem endpoint_10_63_prefix_9 : receiptWindow endpoint_10_63_flag endpoint_10_63_sources 0 9 227793638897230027 = some 227793638897230027 :=
-  join_receipt_window endpoint_10_63_flag endpoint_10_63_sources 0 8 1 227793638897230027 227793638897230027 227793638897230027 endpoint_10_63_prefix_8 endpoint_10_63_window_8
-
-def endpoint_10_63 : CertifiedEndpoint :=
-  ⟨⟨10, 63, 2878⟩, 227793638897230027, .terminal ⟨contact05, contact05, contact04⟩ (finish_receipt_window endpoint_10_63_flag endpoint_10_63_sources 9 227793638897230027 227793638897230027 rfl endpoint_10_63_base endpoint_10_63_prefix_9) (by decide)⟩
-private def endpoint_10_64_flag : Flag := ⟨10, 64, 2828⟩
-private def endpoint_10_64_sources : Sources := ⟨contact06, contact06, contact04⟩
-private theorem endpoint_10_64_base : receiptBase endpoint_10_64_flag endpoint_10_64_sources = some 228214517209994608 := by decide +kernel
-private theorem endpoint_10_64_window_0 : receiptWindow endpoint_10_64_flag endpoint_10_64_sources 0 2 228214517209994608 = some 228214517209994608 := by decide +kernel
-private theorem endpoint_10_64_window_2 : receiptWindow endpoint_10_64_flag endpoint_10_64_sources 2 2 228214517209994608 = some 228214517209994608 := by decide +kernel
-private theorem endpoint_10_64_prefix_4 : receiptWindow endpoint_10_64_flag endpoint_10_64_sources 0 4 228214517209994608 = some 228214517209994608 :=
-  join_receipt_window endpoint_10_64_flag endpoint_10_64_sources 0 2 2 228214517209994608 228214517209994608 228214517209994608 endpoint_10_64_window_0 endpoint_10_64_window_2
-private theorem endpoint_10_64_window_4 : receiptWindow endpoint_10_64_flag endpoint_10_64_sources 4 2 228214517209994608 = some 228214517209994608 := by decide +kernel
-private theorem endpoint_10_64_prefix_6 : receiptWindow endpoint_10_64_flag endpoint_10_64_sources 0 6 228214517209994608 = some 228214517209994608 :=
-  join_receipt_window endpoint_10_64_flag endpoint_10_64_sources 0 4 2 228214517209994608 228214517209994608 228214517209994608 endpoint_10_64_prefix_4 endpoint_10_64_window_4
-private theorem endpoint_10_64_window_6 : receiptWindow endpoint_10_64_flag endpoint_10_64_sources 6 2 228214517209994608 = some 228214517209994608 := by decide +kernel
-private theorem endpoint_10_64_prefix_8 : receiptWindow endpoint_10_64_flag endpoint_10_64_sources 0 8 228214517209994608 = some 228214517209994608 :=
-  join_receipt_window endpoint_10_64_flag endpoint_10_64_sources 0 6 2 228214517209994608 228214517209994608 228214517209994608 endpoint_10_64_prefix_6 endpoint_10_64_window_6
-private theorem endpoint_10_64_window_8 : receiptWindow endpoint_10_64_flag endpoint_10_64_sources 8 1 228214517209994608 = some 228214517209994608 := by decide +kernel
-private theorem endpoint_10_64_prefix_9 : receiptWindow endpoint_10_64_flag endpoint_10_64_sources 0 9 228214517209994608 = some 228214517209994608 :=
-  join_receipt_window endpoint_10_64_flag endpoint_10_64_sources 0 8 1 228214517209994608 228214517209994608 228214517209994608 endpoint_10_64_prefix_8 endpoint_10_64_window_8
-
-def endpoint_10_64 : CertifiedEndpoint :=
-  ⟨⟨10, 64, 2828⟩, 228214517209994608, .terminal ⟨contact06, contact06, contact04⟩ (finish_receipt_window endpoint_10_64_flag endpoint_10_64_sources 9 228214517209994608 228214517209994608 rfl endpoint_10_64_base endpoint_10_64_prefix_9) (by decide)⟩
-private def endpoint_10_65_flag : Flag := ⟨10, 65, 2775⟩
-private def endpoint_10_65_sources : Sources := ⟨contact06, contact06, contact04⟩
-private theorem endpoint_10_65_base : receiptBase endpoint_10_65_flag endpoint_10_65_sources = some 227071418127595034 := by decide +kernel
-private theorem endpoint_10_65_window_0 : receiptWindow endpoint_10_65_flag endpoint_10_65_sources 0 2 227071418127595034 = some 227071418127595034 := by decide +kernel
-private theorem endpoint_10_65_window_2 : receiptWindow endpoint_10_65_flag endpoint_10_65_sources 2 2 227071418127595034 = some 227071418127595034 := by decide +kernel
-private theorem endpoint_10_65_prefix_4 : receiptWindow endpoint_10_65_flag endpoint_10_65_sources 0 4 227071418127595034 = some 227071418127595034 :=
-  join_receipt_window endpoint_10_65_flag endpoint_10_65_sources 0 2 2 227071418127595034 227071418127595034 227071418127595034 endpoint_10_65_window_0 endpoint_10_65_window_2
-private theorem endpoint_10_65_window_4 : receiptWindow endpoint_10_65_flag endpoint_10_65_sources 4 2 227071418127595034 = some 227071418127595034 := by decide +kernel
-private theorem endpoint_10_65_prefix_6 : receiptWindow endpoint_10_65_flag endpoint_10_65_sources 0 6 227071418127595034 = some 227071418127595034 :=
-  join_receipt_window endpoint_10_65_flag endpoint_10_65_sources 0 4 2 227071418127595034 227071418127595034 227071418127595034 endpoint_10_65_prefix_4 endpoint_10_65_window_4
-private theorem endpoint_10_65_window_6 : receiptWindow endpoint_10_65_flag endpoint_10_65_sources 6 2 227071418127595034 = some 227071418127595034 := by decide +kernel
-private theorem endpoint_10_65_prefix_8 : receiptWindow endpoint_10_65_flag endpoint_10_65_sources 0 8 227071418127595034 = some 227071418127595034 :=
-  join_receipt_window endpoint_10_65_flag endpoint_10_65_sources 0 6 2 227071418127595034 227071418127595034 227071418127595034 endpoint_10_65_prefix_6 endpoint_10_65_window_6
-private theorem endpoint_10_65_window_8 : receiptWindow endpoint_10_65_flag endpoint_10_65_sources 8 1 227071418127595034 = some 227071418127595034 := by decide +kernel
-private theorem endpoint_10_65_prefix_9 : receiptWindow endpoint_10_65_flag endpoint_10_65_sources 0 9 227071418127595034 = some 227071418127595034 :=
-  join_receipt_window endpoint_10_65_flag endpoint_10_65_sources 0 8 1 227071418127595034 227071418127595034 227071418127595034 endpoint_10_65_prefix_8 endpoint_10_65_window_8
-
-def endpoint_10_65 : CertifiedEndpoint :=
-  ⟨⟨10, 65, 2775⟩, 227071418127595034, .terminal ⟨contact06, contact06, contact04⟩ (finish_receipt_window endpoint_10_65_flag endpoint_10_65_sources 9 227071418127595034 227071418127595034 rfl endpoint_10_65_base endpoint_10_65_prefix_9) (by decide)⟩
-private def endpoint_10_66_flag : Flag := ⟨10, 66, 2719⟩
-private def endpoint_10_66_sources : Sources := ⟨contact07, contact07, contact04⟩
-private theorem endpoint_10_66_base : receiptBase endpoint_10_66_flag endpoint_10_66_sources = some 226809476938221126 := by decide +kernel
-private theorem endpoint_10_66_window_0 : receiptWindow endpoint_10_66_flag endpoint_10_66_sources 0 2 226809476938221126 = some 226809476938221126 := by decide +kernel
-private theorem endpoint_10_66_window_2 : receiptWindow endpoint_10_66_flag endpoint_10_66_sources 2 2 226809476938221126 = some 226809476938221126 := by decide +kernel
-private theorem endpoint_10_66_prefix_4 : receiptWindow endpoint_10_66_flag endpoint_10_66_sources 0 4 226809476938221126 = some 226809476938221126 :=
-  join_receipt_window endpoint_10_66_flag endpoint_10_66_sources 0 2 2 226809476938221126 226809476938221126 226809476938221126 endpoint_10_66_window_0 endpoint_10_66_window_2
-private theorem endpoint_10_66_window_4 : receiptWindow endpoint_10_66_flag endpoint_10_66_sources 4 2 226809476938221126 = some 226809476938221126 := by decide +kernel
-private theorem endpoint_10_66_prefix_6 : receiptWindow endpoint_10_66_flag endpoint_10_66_sources 0 6 226809476938221126 = some 226809476938221126 :=
-  join_receipt_window endpoint_10_66_flag endpoint_10_66_sources 0 4 2 226809476938221126 226809476938221126 226809476938221126 endpoint_10_66_prefix_4 endpoint_10_66_window_4
-private theorem endpoint_10_66_window_6 : receiptWindow endpoint_10_66_flag endpoint_10_66_sources 6 2 226809476938221126 = some 226809476938221126 := by decide +kernel
-private theorem endpoint_10_66_prefix_8 : receiptWindow endpoint_10_66_flag endpoint_10_66_sources 0 8 226809476938221126 = some 226809476938221126 :=
-  join_receipt_window endpoint_10_66_flag endpoint_10_66_sources 0 6 2 226809476938221126 226809476938221126 226809476938221126 endpoint_10_66_prefix_6 endpoint_10_66_window_6
-private theorem endpoint_10_66_window_8 : receiptWindow endpoint_10_66_flag endpoint_10_66_sources 8 1 226809476938221126 = some 226809476938221126 := by decide +kernel
-private theorem endpoint_10_66_prefix_9 : receiptWindow endpoint_10_66_flag endpoint_10_66_sources 0 9 226809476938221126 = some 226809476938221126 :=
-  join_receipt_window endpoint_10_66_flag endpoint_10_66_sources 0 8 1 226809476938221126 226809476938221126 226809476938221126 endpoint_10_66_prefix_8 endpoint_10_66_window_8
-
-def endpoint_10_66 : CertifiedEndpoint :=
-  ⟨⟨10, 66, 2719⟩, 226809476938221126, .terminal ⟨contact07, contact07, contact04⟩ (finish_receipt_window endpoint_10_66_flag endpoint_10_66_sources 9 226809476938221126 226809476938221126 rfl endpoint_10_66_base endpoint_10_66_prefix_9) (by decide)⟩
-private def endpoint_10_67_flag : Flag := ⟨10, 67, 2661⟩
-private def endpoint_10_67_sources : Sources := ⟨contact08, contact08, contact04⟩
-private theorem endpoint_10_67_base : receiptBase endpoint_10_67_flag endpoint_10_67_sources = some 226276942503114348 := by decide +kernel
-private theorem endpoint_10_67_window_0 : receiptWindow endpoint_10_67_flag endpoint_10_67_sources 0 2 226276942503114348 = some 226276942503114348 := by decide +kernel
-private theorem endpoint_10_67_window_2 : receiptWindow endpoint_10_67_flag endpoint_10_67_sources 2 2 226276942503114348 = some 226276942503114348 := by decide +kernel
-private theorem endpoint_10_67_prefix_4 : receiptWindow endpoint_10_67_flag endpoint_10_67_sources 0 4 226276942503114348 = some 226276942503114348 :=
-  join_receipt_window endpoint_10_67_flag endpoint_10_67_sources 0 2 2 226276942503114348 226276942503114348 226276942503114348 endpoint_10_67_window_0 endpoint_10_67_window_2
-private theorem endpoint_10_67_window_4 : receiptWindow endpoint_10_67_flag endpoint_10_67_sources 4 2 226276942503114348 = some 226276942503114348 := by decide +kernel
-private theorem endpoint_10_67_prefix_6 : receiptWindow endpoint_10_67_flag endpoint_10_67_sources 0 6 226276942503114348 = some 226276942503114348 :=
-  join_receipt_window endpoint_10_67_flag endpoint_10_67_sources 0 4 2 226276942503114348 226276942503114348 226276942503114348 endpoint_10_67_prefix_4 endpoint_10_67_window_4
-private theorem endpoint_10_67_window_6 : receiptWindow endpoint_10_67_flag endpoint_10_67_sources 6 2 226276942503114348 = some 226276942503114348 := by decide +kernel
-private theorem endpoint_10_67_prefix_8 : receiptWindow endpoint_10_67_flag endpoint_10_67_sources 0 8 226276942503114348 = some 226276942503114348 :=
-  join_receipt_window endpoint_10_67_flag endpoint_10_67_sources 0 6 2 226276942503114348 226276942503114348 226276942503114348 endpoint_10_67_prefix_6 endpoint_10_67_window_6
-private theorem endpoint_10_67_window_8 : receiptWindow endpoint_10_67_flag endpoint_10_67_sources 8 1 226276942503114348 = some 226276942503114348 := by decide +kernel
-private theorem endpoint_10_67_prefix_9 : receiptWindow endpoint_10_67_flag endpoint_10_67_sources 0 9 226276942503114348 = some 226276942503114348 :=
-  join_receipt_window endpoint_10_67_flag endpoint_10_67_sources 0 8 1 226276942503114348 226276942503114348 226276942503114348 endpoint_10_67_prefix_8 endpoint_10_67_window_8
-
-def endpoint_10_67 : CertifiedEndpoint :=
-  ⟨⟨10, 67, 2661⟩, 226276942503114348, .terminal ⟨contact08, contact08, contact04⟩ (finish_receipt_window endpoint_10_67_flag endpoint_10_67_sources 9 226276942503114348 226276942503114348 rfl endpoint_10_67_base endpoint_10_67_prefix_9) (by decide)⟩
-private def endpoint_10_68_flag : Flag := ⟨10, 68, 2600⟩
-private def endpoint_10_68_sources : Sources := ⟨contact04, contact04, contact04⟩
-private theorem endpoint_10_68_base : receiptBase endpoint_10_68_flag endpoint_10_68_sources = some 225229623366754603 := by decide +kernel
-private theorem endpoint_10_68_window_0 : receiptWindow endpoint_10_68_flag endpoint_10_68_sources 0 2 225229623366754603 = some 225229623366754603 := by decide +kernel
-private theorem endpoint_10_68_window_2 : receiptWindow endpoint_10_68_flag endpoint_10_68_sources 2 2 225229623366754603 = some 225229623366754603 := by decide +kernel
-private theorem endpoint_10_68_prefix_4 : receiptWindow endpoint_10_68_flag endpoint_10_68_sources 0 4 225229623366754603 = some 225229623366754603 :=
-  join_receipt_window endpoint_10_68_flag endpoint_10_68_sources 0 2 2 225229623366754603 225229623366754603 225229623366754603 endpoint_10_68_window_0 endpoint_10_68_window_2
-private theorem endpoint_10_68_window_4 : receiptWindow endpoint_10_68_flag endpoint_10_68_sources 4 2 225229623366754603 = some 225229623366754603 := by decide +kernel
-private theorem endpoint_10_68_prefix_6 : receiptWindow endpoint_10_68_flag endpoint_10_68_sources 0 6 225229623366754603 = some 225229623366754603 :=
-  join_receipt_window endpoint_10_68_flag endpoint_10_68_sources 0 4 2 225229623366754603 225229623366754603 225229623366754603 endpoint_10_68_prefix_4 endpoint_10_68_window_4
-private theorem endpoint_10_68_window_6 : receiptWindow endpoint_10_68_flag endpoint_10_68_sources 6 2 225229623366754603 = some 225229623366754603 := by decide +kernel
-private theorem endpoint_10_68_prefix_8 : receiptWindow endpoint_10_68_flag endpoint_10_68_sources 0 8 225229623366754603 = some 225229623366754603 :=
-  join_receipt_window endpoint_10_68_flag endpoint_10_68_sources 0 6 2 225229623366754603 225229623366754603 225229623366754603 endpoint_10_68_prefix_6 endpoint_10_68_window_6
-private theorem endpoint_10_68_window_8 : receiptWindow endpoint_10_68_flag endpoint_10_68_sources 8 1 225229623366754603 = some 225229623366754603 := by decide +kernel
-private theorem endpoint_10_68_prefix_9 : receiptWindow endpoint_10_68_flag endpoint_10_68_sources 0 9 225229623366754603 = some 225229623366754603 :=
-  join_receipt_window endpoint_10_68_flag endpoint_10_68_sources 0 8 1 225229623366754603 225229623366754603 225229623366754603 endpoint_10_68_prefix_8 endpoint_10_68_window_8
-
-def endpoint_10_68 : CertifiedEndpoint :=
-  ⟨⟨10, 68, 2600⟩, 225229623366754603, .terminal ⟨contact04, contact04, contact04⟩ (finish_receipt_window endpoint_10_68_flag endpoint_10_68_sources 9 225229623366754603 225229623366754603 rfl endpoint_10_68_base endpoint_10_68_prefix_9) (by decide)⟩
-private def endpoint_10_69_flag : Flag := ⟨10, 69, 2537⟩
-private def endpoint_10_69_sources : Sources := ⟨contact04, contact04, contact04⟩
-private theorem endpoint_10_69_base : receiptBase endpoint_10_69_flag endpoint_10_69_sources = some 222705126810654351 := by decide +kernel
-private theorem endpoint_10_69_window_0 : receiptWindow endpoint_10_69_flag endpoint_10_69_sources 0 2 222705126810654351 = some 222705126810654351 := by decide +kernel
-private theorem endpoint_10_69_window_2 : receiptWindow endpoint_10_69_flag endpoint_10_69_sources 2 2 222705126810654351 = some 222705126810654351 := by decide +kernel
-private theorem endpoint_10_69_prefix_4 : receiptWindow endpoint_10_69_flag endpoint_10_69_sources 0 4 222705126810654351 = some 222705126810654351 :=
-  join_receipt_window endpoint_10_69_flag endpoint_10_69_sources 0 2 2 222705126810654351 222705126810654351 222705126810654351 endpoint_10_69_window_0 endpoint_10_69_window_2
-private theorem endpoint_10_69_window_4 : receiptWindow endpoint_10_69_flag endpoint_10_69_sources 4 2 222705126810654351 = some 222705126810654351 := by decide +kernel
-private theorem endpoint_10_69_prefix_6 : receiptWindow endpoint_10_69_flag endpoint_10_69_sources 0 6 222705126810654351 = some 222705126810654351 :=
-  join_receipt_window endpoint_10_69_flag endpoint_10_69_sources 0 4 2 222705126810654351 222705126810654351 222705126810654351 endpoint_10_69_prefix_4 endpoint_10_69_window_4
-private theorem endpoint_10_69_window_6 : receiptWindow endpoint_10_69_flag endpoint_10_69_sources 6 2 222705126810654351 = some 222705126810654351 := by decide +kernel
-private theorem endpoint_10_69_prefix_8 : receiptWindow endpoint_10_69_flag endpoint_10_69_sources 0 8 222705126810654351 = some 222705126810654351 :=
-  join_receipt_window endpoint_10_69_flag endpoint_10_69_sources 0 6 2 222705126810654351 222705126810654351 222705126810654351 endpoint_10_69_prefix_6 endpoint_10_69_window_6
-private theorem endpoint_10_69_window_8 : receiptWindow endpoint_10_69_flag endpoint_10_69_sources 8 1 222705126810654351 = some 222705126810654351 := by decide +kernel
-private theorem endpoint_10_69_prefix_9 : receiptWindow endpoint_10_69_flag endpoint_10_69_sources 0 9 222705126810654351 = some 222705126810654351 :=
-  join_receipt_window endpoint_10_69_flag endpoint_10_69_sources 0 8 1 222705126810654351 222705126810654351 222705126810654351 endpoint_10_69_prefix_8 endpoint_10_69_window_8
-
-def endpoint_10_69 : CertifiedEndpoint :=
-  ⟨⟨10, 69, 2537⟩, 222705126810654351, .terminal ⟨contact04, contact04, contact04⟩ (finish_receipt_window endpoint_10_69_flag endpoint_10_69_sources 9 222705126810654351 222705126810654351 rfl endpoint_10_69_base endpoint_10_69_prefix_9) (by decide)⟩
-private def endpoint_10_70_flag : Flag := ⟨10, 70, 2471⟩
-private def endpoint_10_70_sources : Sources := ⟨contact04, contact04, contact04⟩
-private theorem endpoint_10_70_base : receiptBase endpoint_10_70_flag endpoint_10_70_sources = some 219772690522187555 := by decide +kernel
-private theorem endpoint_10_70_window_0 : receiptWindow endpoint_10_70_flag endpoint_10_70_sources 0 2 219772690522187555 = some 219772690522187555 := by decide +kernel
-private theorem endpoint_10_70_window_2 : receiptWindow endpoint_10_70_flag endpoint_10_70_sources 2 2 219772690522187555 = some 219772690522187555 := by decide +kernel
-private theorem endpoint_10_70_prefix_4 : receiptWindow endpoint_10_70_flag endpoint_10_70_sources 0 4 219772690522187555 = some 219772690522187555 :=
-  join_receipt_window endpoint_10_70_flag endpoint_10_70_sources 0 2 2 219772690522187555 219772690522187555 219772690522187555 endpoint_10_70_window_0 endpoint_10_70_window_2
-private theorem endpoint_10_70_window_4 : receiptWindow endpoint_10_70_flag endpoint_10_70_sources 4 2 219772690522187555 = some 219772690522187555 := by decide +kernel
-private theorem endpoint_10_70_prefix_6 : receiptWindow endpoint_10_70_flag endpoint_10_70_sources 0 6 219772690522187555 = some 219772690522187555 :=
-  join_receipt_window endpoint_10_70_flag endpoint_10_70_sources 0 4 2 219772690522187555 219772690522187555 219772690522187555 endpoint_10_70_prefix_4 endpoint_10_70_window_4
-private theorem endpoint_10_70_window_6 : receiptWindow endpoint_10_70_flag endpoint_10_70_sources 6 2 219772690522187555 = some 219772690522187555 := by decide +kernel
-private theorem endpoint_10_70_prefix_8 : receiptWindow endpoint_10_70_flag endpoint_10_70_sources 0 8 219772690522187555 = some 219772690522187555 :=
-  join_receipt_window endpoint_10_70_flag endpoint_10_70_sources 0 6 2 219772690522187555 219772690522187555 219772690522187555 endpoint_10_70_prefix_6 endpoint_10_70_window_6
-private theorem endpoint_10_70_window_8 : receiptWindow endpoint_10_70_flag endpoint_10_70_sources 8 1 219772690522187555 = some 219772690522187555 := by decide +kernel
-private theorem endpoint_10_70_prefix_9 : receiptWindow endpoint_10_70_flag endpoint_10_70_sources 0 9 219772690522187555 = some 219772690522187555 :=
-  join_receipt_window endpoint_10_70_flag endpoint_10_70_sources 0 8 1 219772690522187555 219772690522187555 219772690522187555 endpoint_10_70_prefix_8 endpoint_10_70_window_8
-
-def endpoint_10_70 : CertifiedEndpoint :=
-  ⟨⟨10, 70, 2471⟩, 219772690522187555, .terminal ⟨contact04, contact04, contact04⟩ (finish_receipt_window endpoint_10_70_flag endpoint_10_70_sources 9 219772690522187555 219772690522187555 rfl endpoint_10_70_base endpoint_10_70_prefix_9) (by decide)⟩
+def endpoint_7_27 : CertifiedEndpoint :=
+  ⟨⟨7, 27, 4767⟩, 184043025939353428, .intrinsic (by decide +kernel) (by decide)⟩
+def endpoint_7_28 : CertifiedEndpoint :=
+  ⟨⟨7, 28, 4743⟩, 191052779528790819, .intrinsic (by decide +kernel) (by decide)⟩
+def endpoint_7_29 : CertifiedEndpoint :=
+  ⟨⟨7, 29, 4718⟩, 197937932925807537, .intrinsic (by decide +kernel) (by decide)⟩
+def endpoint_7_30 : CertifiedEndpoint :=
+  ⟨⟨7, 30, 4693⟩, 204737219150741721, .intrinsic (by decide +kernel) (by decide)⟩
+def endpoint_7_31 : CertifiedEndpoint :=
+  ⟨⟨7, 31, 4668⟩, 211450638203593371, .intrinsic (by decide +kernel) (by decide)⟩
+def endpoint_7_32 : CertifiedEndpoint :=
+  ⟨⟨7, 32, 4643⟩, 218078190084362487, .intrinsic (by decide +kernel) (by decide)⟩
+def endpoint_7_33 : CertifiedEndpoint :=
+  ⟨⟨7, 33, 4617⟩, 224571039752465926, .intrinsic (by decide +kernel) (by decide)⟩
+def endpoint_7_34 : CertifiedEndpoint :=
+  ⟨⟨7, 34, 4591⟩, 230974654908405163, .intrinsic (by decide +kernel) (by decide)⟩
+def endpoint_7_35 : CertifiedEndpoint :=
+  ⟨⟨7, 35, 4564⟩, 237236833171515387, .intrinsic (by decide +kernel) (by decide)⟩
+def endpoint_7_36 : CertifiedEndpoint :=
+  ⟨⟨7, 36, 4537⟩, 243406409582379741, .intrinsic (by decide +kernel) (by decide)⟩
+def endpoint_7_37 : CertifiedEndpoint :=
+  ⟨⟨7, 37, 4510⟩, 249483384140998225, .intrinsic (by decide +kernel) (by decide)⟩
+def endpoint_7_38 : CertifiedEndpoint :=
+  ⟨⟨7, 38, 4483⟩, 255467756847370839, .intrinsic (by decide +kernel) (by decide)⟩
+def endpoint_7_39 : CertifiedEndpoint :=
+  ⟨⟨7, 39, 4455⟩, 261300590640669436, .intrinsic (by decide +kernel) (by decide)⟩
+private def endpoint_7_40_flag : Flag := ⟨7, 40, 4426⟩
+private def endpoint_7_40_sources : Sources := ⟨contact09, contact09, contact10⟩
+private theorem endpoint_7_40_base : receiptBase endpoint_7_40_flag endpoint_7_40_sources = some 183751431436769938 := by decide +kernel
+private theorem endpoint_7_40_w0 : receiptWindow endpoint_7_40_flag endpoint_7_40_sources 0 2 183751431436769938 = some 183751431436769938 := by decide +kernel
+private theorem endpoint_7_40_w2 : receiptWindow endpoint_7_40_flag endpoint_7_40_sources 2 2 183751431436769938 = some 183751431436769938 := by decide +kernel
+private theorem endpoint_7_40_p4 : receiptWindow endpoint_7_40_flag endpoint_7_40_sources 0 4 183751431436769938 = some 183751431436769938 :=
+  join_receipt_window endpoint_7_40_flag endpoint_7_40_sources 0 2 2 183751431436769938 183751431436769938 183751431436769938 endpoint_7_40_w0 endpoint_7_40_w2
+private theorem endpoint_7_40_w4 : receiptWindow endpoint_7_40_flag endpoint_7_40_sources 4 2 183751431436769938 = some 183751431436769938 := by decide +kernel
+private theorem endpoint_7_40_p6 : receiptWindow endpoint_7_40_flag endpoint_7_40_sources 0 6 183751431436769938 = some 183751431436769938 :=
+  join_receipt_window endpoint_7_40_flag endpoint_7_40_sources 0 4 2 183751431436769938 183751431436769938 183751431436769938 endpoint_7_40_p4 endpoint_7_40_w4
+def endpoint_7_40 : CertifiedEndpoint :=
+  ⟨⟨7, 40, 4426⟩, 183751431436769938, .terminal ⟨contact09, contact09, contact10⟩ (finish_receipt_window endpoint_7_40_flag endpoint_7_40_sources 6 183751431436769938 183751431436769938 rfl endpoint_7_40_base endpoint_7_40_p6) (by decide)⟩
+private def endpoint_7_41_flag : Flag := ⟨7, 41, 4398⟩
+private def endpoint_7_41_sources : Sources := ⟨contact09, contact09, contact10⟩
+private theorem endpoint_7_41_base : receiptBase endpoint_7_41_flag endpoint_7_41_sources = some 186456575197519815 := by decide +kernel
+private theorem endpoint_7_41_w0 : receiptWindow endpoint_7_41_flag endpoint_7_41_sources 0 2 186456575197519815 = some 186456575197519815 := by decide +kernel
+private theorem endpoint_7_41_w2 : receiptWindow endpoint_7_41_flag endpoint_7_41_sources 2 2 186456575197519815 = some 186456575197519815 := by decide +kernel
+private theorem endpoint_7_41_p4 : receiptWindow endpoint_7_41_flag endpoint_7_41_sources 0 4 186456575197519815 = some 186456575197519815 :=
+  join_receipt_window endpoint_7_41_flag endpoint_7_41_sources 0 2 2 186456575197519815 186456575197519815 186456575197519815 endpoint_7_41_w0 endpoint_7_41_w2
+private theorem endpoint_7_41_w4 : receiptWindow endpoint_7_41_flag endpoint_7_41_sources 4 2 186456575197519815 = some 186456575197519815 := by decide +kernel
+private theorem endpoint_7_41_p6 : receiptWindow endpoint_7_41_flag endpoint_7_41_sources 0 6 186456575197519815 = some 186456575197519815 :=
+  join_receipt_window endpoint_7_41_flag endpoint_7_41_sources 0 4 2 186456575197519815 186456575197519815 186456575197519815 endpoint_7_41_p4 endpoint_7_41_w4
+def endpoint_7_41 : CertifiedEndpoint :=
+  ⟨⟨7, 41, 4398⟩, 186456575197519815, .terminal ⟨contact09, contact09, contact10⟩ (finish_receipt_window endpoint_7_41_flag endpoint_7_41_sources 6 186456575197519815 186456575197519815 rfl endpoint_7_41_base endpoint_7_41_p6) (by decide)⟩
+private def endpoint_7_42_flag : Flag := ⟨7, 42, 4368⟩
+private def endpoint_7_42_sources : Sources := ⟨contact09, contact09, contact10⟩
+private theorem endpoint_7_42_base : receiptBase endpoint_7_42_flag endpoint_7_42_sources = some 189027054167464317 := by decide +kernel
+private theorem endpoint_7_42_w0 : receiptWindow endpoint_7_42_flag endpoint_7_42_sources 0 2 189027054167464317 = some 189027054167464317 := by decide +kernel
+private theorem endpoint_7_42_w2 : receiptWindow endpoint_7_42_flag endpoint_7_42_sources 2 2 189027054167464317 = some 189027054167464317 := by decide +kernel
+private theorem endpoint_7_42_p4 : receiptWindow endpoint_7_42_flag endpoint_7_42_sources 0 4 189027054167464317 = some 189027054167464317 :=
+  join_receipt_window endpoint_7_42_flag endpoint_7_42_sources 0 2 2 189027054167464317 189027054167464317 189027054167464317 endpoint_7_42_w0 endpoint_7_42_w2
+private theorem endpoint_7_42_w4 : receiptWindow endpoint_7_42_flag endpoint_7_42_sources 4 2 189027054167464317 = some 189027054167464317 := by decide +kernel
+private theorem endpoint_7_42_p6 : receiptWindow endpoint_7_42_flag endpoint_7_42_sources 0 6 189027054167464317 = some 189027054167464317 :=
+  join_receipt_window endpoint_7_42_flag endpoint_7_42_sources 0 4 2 189027054167464317 189027054167464317 189027054167464317 endpoint_7_42_p4 endpoint_7_42_w4
+def endpoint_7_42 : CertifiedEndpoint :=
+  ⟨⟨7, 42, 4368⟩, 189027054167464317, .terminal ⟨contact09, contact09, contact10⟩ (finish_receipt_window endpoint_7_42_flag endpoint_7_42_sources 6 189027054167464317 189027054167464317 rfl endpoint_7_42_base endpoint_7_42_p6) (by decide)⟩
+private def endpoint_7_43_flag : Flag := ⟨7, 43, 4338⟩
+private def endpoint_7_43_sources : Sources := ⟨contact09, contact09, contact10⟩
+private theorem endpoint_7_43_base : receiptBase endpoint_7_43_flag endpoint_7_43_sources = some 191544825462678025 := by decide +kernel
+private theorem endpoint_7_43_w0 : receiptWindow endpoint_7_43_flag endpoint_7_43_sources 0 2 191544825462678025 = some 191544825462678025 := by decide +kernel
+private theorem endpoint_7_43_w2 : receiptWindow endpoint_7_43_flag endpoint_7_43_sources 2 2 191544825462678025 = some 191544825462678025 := by decide +kernel
+private theorem endpoint_7_43_p4 : receiptWindow endpoint_7_43_flag endpoint_7_43_sources 0 4 191544825462678025 = some 191544825462678025 :=
+  join_receipt_window endpoint_7_43_flag endpoint_7_43_sources 0 2 2 191544825462678025 191544825462678025 191544825462678025 endpoint_7_43_w0 endpoint_7_43_w2
+private theorem endpoint_7_43_w4 : receiptWindow endpoint_7_43_flag endpoint_7_43_sources 4 2 191544825462678025 = some 191544825462678025 := by decide +kernel
+private theorem endpoint_7_43_p6 : receiptWindow endpoint_7_43_flag endpoint_7_43_sources 0 6 191544825462678025 = some 191544825462678025 :=
+  join_receipt_window endpoint_7_43_flag endpoint_7_43_sources 0 4 2 191544825462678025 191544825462678025 191544825462678025 endpoint_7_43_p4 endpoint_7_43_w4
+def endpoint_7_43 : CertifiedEndpoint :=
+  ⟨⟨7, 43, 4338⟩, 191544825462678025, .terminal ⟨contact09, contact09, contact10⟩ (finish_receipt_window endpoint_7_43_flag endpoint_7_43_sources 6 191544825462678025 191544825462678025 rfl endpoint_7_43_base endpoint_7_43_p6) (by decide)⟩
+private def endpoint_7_44_flag : Flag := ⟨7, 44, 4308⟩
+private def endpoint_7_44_sources : Sources := ⟨contact09, contact09, contact10⟩
+private theorem endpoint_7_44_base : receiptBase endpoint_7_44_flag endpoint_7_44_sources = some 194009889083160938 := by decide +kernel
+private theorem endpoint_7_44_w0 : receiptWindow endpoint_7_44_flag endpoint_7_44_sources 0 2 194009889083160938 = some 194009889083160938 := by decide +kernel
+private theorem endpoint_7_44_w2 : receiptWindow endpoint_7_44_flag endpoint_7_44_sources 2 2 194009889083160938 = some 194009889083160938 := by decide +kernel
+private theorem endpoint_7_44_p4 : receiptWindow endpoint_7_44_flag endpoint_7_44_sources 0 4 194009889083160938 = some 194009889083160938 :=
+  join_receipt_window endpoint_7_44_flag endpoint_7_44_sources 0 2 2 194009889083160938 194009889083160938 194009889083160938 endpoint_7_44_w0 endpoint_7_44_w2
+private theorem endpoint_7_44_w4 : receiptWindow endpoint_7_44_flag endpoint_7_44_sources 4 2 194009889083160938 = some 194009889083160938 := by decide +kernel
+private theorem endpoint_7_44_p6 : receiptWindow endpoint_7_44_flag endpoint_7_44_sources 0 6 194009889083160938 = some 194009889083160938 :=
+  join_receipt_window endpoint_7_44_flag endpoint_7_44_sources 0 4 2 194009889083160938 194009889083160938 194009889083160938 endpoint_7_44_p4 endpoint_7_44_w4
+def endpoint_7_44 : CertifiedEndpoint :=
+  ⟨⟨7, 44, 4308⟩, 194009889083160938, .terminal ⟨contact09, contact09, contact10⟩ (finish_receipt_window endpoint_7_44_flag endpoint_7_44_sources 6 194009889083160938 194009889083160938 rfl endpoint_7_44_base endpoint_7_44_p6) (by decide)⟩
+private def endpoint_7_45_flag : Flag := ⟨7, 45, 4277⟩
+private def endpoint_7_45_sources : Sources := ⟨contact09, contact09, contact10⟩
+private theorem endpoint_7_45_base : receiptBase endpoint_7_45_flag endpoint_7_45_sources = some 196376946169668324 := by decide +kernel
+private theorem endpoint_7_45_w0 : receiptWindow endpoint_7_45_flag endpoint_7_45_sources 0 2 196376946169668324 = some 196376946169668324 := by decide +kernel
+private theorem endpoint_7_45_w2 : receiptWindow endpoint_7_45_flag endpoint_7_45_sources 2 2 196376946169668324 = some 196376946169668324 := by decide +kernel
+private theorem endpoint_7_45_p4 : receiptWindow endpoint_7_45_flag endpoint_7_45_sources 0 4 196376946169668324 = some 196376946169668324 :=
+  join_receipt_window endpoint_7_45_flag endpoint_7_45_sources 0 2 2 196376946169668324 196376946169668324 196376946169668324 endpoint_7_45_w0 endpoint_7_45_w2
+private theorem endpoint_7_45_w4 : receiptWindow endpoint_7_45_flag endpoint_7_45_sources 4 2 196376946169668324 = some 196376946169668324 := by decide +kernel
+private theorem endpoint_7_45_p6 : receiptWindow endpoint_7_45_flag endpoint_7_45_sources 0 6 196376946169668324 = some 196376946169668324 :=
+  join_receipt_window endpoint_7_45_flag endpoint_7_45_sources 0 4 2 196376946169668324 196376946169668324 196376946169668324 endpoint_7_45_p4 endpoint_7_45_w4
+def endpoint_7_45 : CertifiedEndpoint :=
+  ⟨⟨7, 45, 4277⟩, 196376946169668324, .terminal ⟨contact09, contact09, contact10⟩ (finish_receipt_window endpoint_7_45_flag endpoint_7_45_sources 6 196376946169668324 196376946169668324 rfl endpoint_7_45_base endpoint_7_45_p6) (by decide)⟩
+private def endpoint_7_46_flag : Flag := ⟨7, 46, 4246⟩
+private def endpoint_7_46_sources : Sources := ⟨contact09, contact09, contact10⟩
+private theorem endpoint_7_46_base : receiptBase endpoint_7_46_flag endpoint_7_46_sources = some 198689567460961939 := by decide +kernel
+private theorem endpoint_7_46_w0 : receiptWindow endpoint_7_46_flag endpoint_7_46_sources 0 2 198689567460961939 = some 198689567460961939 := by decide +kernel
+private theorem endpoint_7_46_w2 : receiptWindow endpoint_7_46_flag endpoint_7_46_sources 2 2 198689567460961939 = some 198689567460961939 := by decide +kernel
+private theorem endpoint_7_46_p4 : receiptWindow endpoint_7_46_flag endpoint_7_46_sources 0 4 198689567460961939 = some 198689567460961939 :=
+  join_receipt_window endpoint_7_46_flag endpoint_7_46_sources 0 2 2 198689567460961939 198689567460961939 198689567460961939 endpoint_7_46_w0 endpoint_7_46_w2
+private theorem endpoint_7_46_w4 : receiptWindow endpoint_7_46_flag endpoint_7_46_sources 4 2 198689567460961939 = some 198689567460961939 := by decide +kernel
+private theorem endpoint_7_46_p6 : receiptWindow endpoint_7_46_flag endpoint_7_46_sources 0 6 198689567460961939 = some 198689567460961939 :=
+  join_receipt_window endpoint_7_46_flag endpoint_7_46_sources 0 4 2 198689567460961939 198689567460961939 198689567460961939 endpoint_7_46_p4 endpoint_7_46_w4
+def endpoint_7_46 : CertifiedEndpoint :=
+  ⟨⟨7, 46, 4246⟩, 198689567460961939, .terminal ⟨contact09, contact09, contact10⟩ (finish_receipt_window endpoint_7_46_flag endpoint_7_46_sources 6 198689567460961939 198689567460961939 rfl endpoint_7_46_base endpoint_7_46_p6) (by decide)⟩
+private def endpoint_7_47_flag : Flag := ⟨7, 47, 4214⟩
+private def endpoint_7_47_sources : Sources := ⟨contact09, contact09, contact10⟩
+private theorem endpoint_7_47_base : receiptBase endpoint_7_47_flag endpoint_7_47_sources = some 200900725977314073 := by decide +kernel
+private theorem endpoint_7_47_w0 : receiptWindow endpoint_7_47_flag endpoint_7_47_sources 0 2 200900725977314073 = some 200900725977314073 := by decide +kernel
+private theorem endpoint_7_47_w2 : receiptWindow endpoint_7_47_flag endpoint_7_47_sources 2 2 200900725977314073 = some 200900725977314073 := by decide +kernel
+private theorem endpoint_7_47_p4 : receiptWindow endpoint_7_47_flag endpoint_7_47_sources 0 4 200900725977314073 = some 200900725977314073 :=
+  join_receipt_window endpoint_7_47_flag endpoint_7_47_sources 0 2 2 200900725977314073 200900725977314073 200900725977314073 endpoint_7_47_w0 endpoint_7_47_w2
+private theorem endpoint_7_47_w4 : receiptWindow endpoint_7_47_flag endpoint_7_47_sources 4 2 200900725977314073 = some 200900725977314073 := by decide +kernel
+private theorem endpoint_7_47_p6 : receiptWindow endpoint_7_47_flag endpoint_7_47_sources 0 6 200900725977314073 = some 200900725977314073 :=
+  join_receipt_window endpoint_7_47_flag endpoint_7_47_sources 0 4 2 200900725977314073 200900725977314073 200900725977314073 endpoint_7_47_p4 endpoint_7_47_w4
+def endpoint_7_47 : CertifiedEndpoint :=
+  ⟨⟨7, 47, 4214⟩, 200900725977314073, .terminal ⟨contact09, contact09, contact10⟩ (finish_receipt_window endpoint_7_47_flag endpoint_7_47_sources 6 200900725977314073 200900725977314073 rfl endpoint_7_47_base endpoint_7_47_p6) (by decide)⟩
+private def endpoint_7_48_flag : Flag := ⟨7, 48, 4181⟩
+private def endpoint_7_48_sources : Sources := ⟨contact09, contact09, contact10⟩
+private theorem endpoint_7_48_base : receiptBase endpoint_7_48_flag endpoint_7_48_sources = some 203007829538000261 := by decide +kernel
+private theorem endpoint_7_48_w0 : receiptWindow endpoint_7_48_flag endpoint_7_48_sources 0 2 203007829538000261 = some 203007829538000261 := by decide +kernel
+private theorem endpoint_7_48_w2 : receiptWindow endpoint_7_48_flag endpoint_7_48_sources 2 2 203007829538000261 = some 203007829538000261 := by decide +kernel
+private theorem endpoint_7_48_p4 : receiptWindow endpoint_7_48_flag endpoint_7_48_sources 0 4 203007829538000261 = some 203007829538000261 :=
+  join_receipt_window endpoint_7_48_flag endpoint_7_48_sources 0 2 2 203007829538000261 203007829538000261 203007829538000261 endpoint_7_48_w0 endpoint_7_48_w2
+private theorem endpoint_7_48_w4 : receiptWindow endpoint_7_48_flag endpoint_7_48_sources 4 2 203007829538000261 = some 203007829538000261 := by decide +kernel
+private theorem endpoint_7_48_p6 : receiptWindow endpoint_7_48_flag endpoint_7_48_sources 0 6 203007829538000261 = some 203007829538000261 :=
+  join_receipt_window endpoint_7_48_flag endpoint_7_48_sources 0 4 2 203007829538000261 203007829538000261 203007829538000261 endpoint_7_48_p4 endpoint_7_48_w4
+def endpoint_7_48 : CertifiedEndpoint :=
+  ⟨⟨7, 48, 4181⟩, 203007829538000261, .terminal ⟨contact09, contact09, contact10⟩ (finish_receipt_window endpoint_7_48_flag endpoint_7_48_sources 6 203007829538000261 203007829538000261 rfl endpoint_7_48_base endpoint_7_48_p6) (by decide)⟩
+private def endpoint_7_49_flag : Flag := ⟨7, 49, 4148⟩
+private def endpoint_7_49_sources : Sources := ⟨contact09, contact09, contact10⟩
+private theorem endpoint_7_49_base : receiptBase endpoint_7_49_flag endpoint_7_49_sources = some 205057041062506724 := by decide +kernel
+private theorem endpoint_7_49_w0 : receiptWindow endpoint_7_49_flag endpoint_7_49_sources 0 2 205057041062506724 = some 205057041062506724 := by decide +kernel
+private theorem endpoint_7_49_w2 : receiptWindow endpoint_7_49_flag endpoint_7_49_sources 2 2 205057041062506724 = some 205057041062506724 := by decide +kernel
+private theorem endpoint_7_49_p4 : receiptWindow endpoint_7_49_flag endpoint_7_49_sources 0 4 205057041062506724 = some 205057041062506724 :=
+  join_receipt_window endpoint_7_49_flag endpoint_7_49_sources 0 2 2 205057041062506724 205057041062506724 205057041062506724 endpoint_7_49_w0 endpoint_7_49_w2
+private theorem endpoint_7_49_w4 : receiptWindow endpoint_7_49_flag endpoint_7_49_sources 4 2 205057041062506724 = some 205057041062506724 := by decide +kernel
+private theorem endpoint_7_49_p6 : receiptWindow endpoint_7_49_flag endpoint_7_49_sources 0 6 205057041062506724 = some 205057041062506724 :=
+  join_receipt_window endpoint_7_49_flag endpoint_7_49_sources 0 4 2 205057041062506724 205057041062506724 205057041062506724 endpoint_7_49_p4 endpoint_7_49_w4
+def endpoint_7_49 : CertifiedEndpoint :=
+  ⟨⟨7, 49, 4148⟩, 205057041062506724, .terminal ⟨contact09, contact09, contact10⟩ (finish_receipt_window endpoint_7_49_flag endpoint_7_49_sources 6 205057041062506724 205057041062506724 rfl endpoint_7_49_base endpoint_7_49_p6) (by decide)⟩
+private def endpoint_7_50_flag : Flag := ⟨7, 50, 4114⟩
+private def endpoint_7_50_sources : Sources := ⟨contact09, contact09, contact10⟩
+private theorem endpoint_7_50_base : receiptBase endpoint_7_50_flag endpoint_7_50_sources = some 206998741390381288 := by decide +kernel
+private theorem endpoint_7_50_w0 : receiptWindow endpoint_7_50_flag endpoint_7_50_sources 0 2 206998741390381288 = some 206998741390381288 := by decide +kernel
+private theorem endpoint_7_50_w2 : receiptWindow endpoint_7_50_flag endpoint_7_50_sources 2 2 206998741390381288 = some 206998741390381288 := by decide +kernel
+private theorem endpoint_7_50_p4 : receiptWindow endpoint_7_50_flag endpoint_7_50_sources 0 4 206998741390381288 = some 206998741390381288 :=
+  join_receipt_window endpoint_7_50_flag endpoint_7_50_sources 0 2 2 206998741390381288 206998741390381288 206998741390381288 endpoint_7_50_w0 endpoint_7_50_w2
+private theorem endpoint_7_50_w4 : receiptWindow endpoint_7_50_flag endpoint_7_50_sources 4 2 206998741390381288 = some 206998741390381288 := by decide +kernel
+private theorem endpoint_7_50_p6 : receiptWindow endpoint_7_50_flag endpoint_7_50_sources 0 6 206998741390381288 = some 206998741390381288 :=
+  join_receipt_window endpoint_7_50_flag endpoint_7_50_sources 0 4 2 206998741390381288 206998741390381288 206998741390381288 endpoint_7_50_p4 endpoint_7_50_w4
+def endpoint_7_50 : CertifiedEndpoint :=
+  ⟨⟨7, 50, 4114⟩, 206998741390381288, .terminal ⟨contact09, contact09, contact10⟩ (finish_receipt_window endpoint_7_50_flag endpoint_7_50_sources 6 206998741390381288 206998741390381288 rfl endpoint_7_50_base endpoint_7_50_p6) (by decide)⟩
+private def endpoint_7_51_flag : Flag := ⟨7, 51, 4080⟩
+private def endpoint_7_51_sources : Sources := ⟨contact09, contact09, contact10⟩
+private theorem endpoint_7_51_base : receiptBase endpoint_7_51_flag endpoint_7_51_sources = some 208880821561593149 := by decide +kernel
+private theorem endpoint_7_51_w0 : receiptWindow endpoint_7_51_flag endpoint_7_51_sources 0 2 208880821561593149 = some 208880821561593149 := by decide +kernel
+private theorem endpoint_7_51_w2 : receiptWindow endpoint_7_51_flag endpoint_7_51_sources 2 2 208880821561593149 = some 208880821561593149 := by decide +kernel
+private theorem endpoint_7_51_p4 : receiptWindow endpoint_7_51_flag endpoint_7_51_sources 0 4 208880821561593149 = some 208880821561593149 :=
+  join_receipt_window endpoint_7_51_flag endpoint_7_51_sources 0 2 2 208880821561593149 208880821561593149 208880821561593149 endpoint_7_51_w0 endpoint_7_51_w2
+private theorem endpoint_7_51_w4 : receiptWindow endpoint_7_51_flag endpoint_7_51_sources 4 2 208880821561593149 = some 208880821561593149 := by decide +kernel
+private theorem endpoint_7_51_p6 : receiptWindow endpoint_7_51_flag endpoint_7_51_sources 0 6 208880821561593149 = some 208880821561593149 :=
+  join_receipt_window endpoint_7_51_flag endpoint_7_51_sources 0 4 2 208880821561593149 208880821561593149 208880821561593149 endpoint_7_51_p4 endpoint_7_51_w4
+def endpoint_7_51 : CertifiedEndpoint :=
+  ⟨⟨7, 51, 4080⟩, 208880821561593149, .terminal ⟨contact09, contact09, contact10⟩ (finish_receipt_window endpoint_7_51_flag endpoint_7_51_sources 6 208880821561593149 208880821561593149 rfl endpoint_7_51_base endpoint_7_51_p6) (by decide)⟩
+private def endpoint_7_52_flag : Flag := ⟨7, 52, 4044⟩
+private def endpoint_7_52_sources : Sources := ⟨contact00, contact01, contact02⟩
+private theorem endpoint_7_52_base : receiptBase endpoint_7_52_flag endpoint_7_52_sources = some 211964503452455762 := by decide +kernel
+private theorem endpoint_7_52_w0 : receiptWindow endpoint_7_52_flag endpoint_7_52_sources 0 2 211964503452455762 = some 211964503452455762 := by decide +kernel
+private theorem endpoint_7_52_w2 : receiptWindow endpoint_7_52_flag endpoint_7_52_sources 2 2 211964503452455762 = some 211964503452455762 := by decide +kernel
+private theorem endpoint_7_52_p4 : receiptWindow endpoint_7_52_flag endpoint_7_52_sources 0 4 211964503452455762 = some 211964503452455762 :=
+  join_receipt_window endpoint_7_52_flag endpoint_7_52_sources 0 2 2 211964503452455762 211964503452455762 211964503452455762 endpoint_7_52_w0 endpoint_7_52_w2
+private theorem endpoint_7_52_w4 : receiptWindow endpoint_7_52_flag endpoint_7_52_sources 4 2 211964503452455762 = some 211964503452455762 := by decide +kernel
+private theorem endpoint_7_52_p6 : receiptWindow endpoint_7_52_flag endpoint_7_52_sources 0 6 211964503452455762 = some 211964503452455762 :=
+  join_receipt_window endpoint_7_52_flag endpoint_7_52_sources 0 4 2 211964503452455762 211964503452455762 211964503452455762 endpoint_7_52_p4 endpoint_7_52_w4
+def endpoint_7_52 : CertifiedEndpoint :=
+  ⟨⟨7, 52, 4044⟩, 211964503452455762, .terminal ⟨contact00, contact01, contact02⟩ (finish_receipt_window endpoint_7_52_flag endpoint_7_52_sources 6 211964503452455762 211964503452455762 rfl endpoint_7_52_base endpoint_7_52_p6) (by decide)⟩
+private def endpoint_7_53_flag : Flag := ⟨7, 53, 4008⟩
+private def endpoint_7_53_sources : Sources := ⟨contact00, contact01, contact02⟩
+private theorem endpoint_7_53_base : receiptBase endpoint_7_53_flag endpoint_7_53_sources = some 213624983707676913 := by decide +kernel
+private theorem endpoint_7_53_w0 : receiptWindow endpoint_7_53_flag endpoint_7_53_sources 0 2 213624983707676913 = some 213624983707676913 := by decide +kernel
+private theorem endpoint_7_53_w2 : receiptWindow endpoint_7_53_flag endpoint_7_53_sources 2 2 213624983707676913 = some 213624983707676913 := by decide +kernel
+private theorem endpoint_7_53_p4 : receiptWindow endpoint_7_53_flag endpoint_7_53_sources 0 4 213624983707676913 = some 213624983707676913 :=
+  join_receipt_window endpoint_7_53_flag endpoint_7_53_sources 0 2 2 213624983707676913 213624983707676913 213624983707676913 endpoint_7_53_w0 endpoint_7_53_w2
+private theorem endpoint_7_53_w4 : receiptWindow endpoint_7_53_flag endpoint_7_53_sources 4 2 213624983707676913 = some 213624983707676913 := by decide +kernel
+private theorem endpoint_7_53_p6 : receiptWindow endpoint_7_53_flag endpoint_7_53_sources 0 6 213624983707676913 = some 213624983707676913 :=
+  join_receipt_window endpoint_7_53_flag endpoint_7_53_sources 0 4 2 213624983707676913 213624983707676913 213624983707676913 endpoint_7_53_p4 endpoint_7_53_w4
+def endpoint_7_53 : CertifiedEndpoint :=
+  ⟨⟨7, 53, 4008⟩, 213624983707676913, .terminal ⟨contact00, contact01, contact02⟩ (finish_receipt_window endpoint_7_53_flag endpoint_7_53_sources 6 213624983707676913 213624983707676913 rfl endpoint_7_53_base endpoint_7_53_p6) (by decide)⟩
+private def endpoint_7_54_flag : Flag := ⟨7, 54, 3970⟩
+private def endpoint_7_54_sources : Sources := ⟨contact00, contact01, contact02⟩
+private theorem endpoint_7_54_base : receiptBase endpoint_7_54_flag endpoint_7_54_sources = some 215114542259248733 := by decide +kernel
+private theorem endpoint_7_54_w0 : receiptWindow endpoint_7_54_flag endpoint_7_54_sources 0 2 215114542259248733 = some 215114542259248733 := by decide +kernel
+private theorem endpoint_7_54_w2 : receiptWindow endpoint_7_54_flag endpoint_7_54_sources 2 2 215114542259248733 = some 215114542259248733 := by decide +kernel
+private theorem endpoint_7_54_p4 : receiptWindow endpoint_7_54_flag endpoint_7_54_sources 0 4 215114542259248733 = some 215114542259248733 :=
+  join_receipt_window endpoint_7_54_flag endpoint_7_54_sources 0 2 2 215114542259248733 215114542259248733 215114542259248733 endpoint_7_54_w0 endpoint_7_54_w2
+private theorem endpoint_7_54_w4 : receiptWindow endpoint_7_54_flag endpoint_7_54_sources 4 2 215114542259248733 = some 215114542259248733 := by decide +kernel
+private theorem endpoint_7_54_p6 : receiptWindow endpoint_7_54_flag endpoint_7_54_sources 0 6 215114542259248733 = some 215114542259248733 :=
+  join_receipt_window endpoint_7_54_flag endpoint_7_54_sources 0 4 2 215114542259248733 215114542259248733 215114542259248733 endpoint_7_54_p4 endpoint_7_54_w4
+def endpoint_7_54 : CertifiedEndpoint :=
+  ⟨⟨7, 54, 3970⟩, 215114542259248733, .terminal ⟨contact00, contact01, contact02⟩ (finish_receipt_window endpoint_7_54_flag endpoint_7_54_sources 6 215114542259248733 215114542259248733 rfl endpoint_7_54_base endpoint_7_54_p6) (by decide)⟩
+private def endpoint_7_55_flag : Flag := ⟨7, 55, 3932⟩
+private def endpoint_7_55_sources : Sources := ⟨contact00, contact01, contact02⟩
+private theorem endpoint_7_55_base : receiptBase endpoint_7_55_flag endpoint_7_55_sources = some 216536874999126837 := by decide +kernel
+private theorem endpoint_7_55_w0 : receiptWindow endpoint_7_55_flag endpoint_7_55_sources 0 2 216536874999126837 = some 216536874999126837 := by decide +kernel
+private theorem endpoint_7_55_w2 : receiptWindow endpoint_7_55_flag endpoint_7_55_sources 2 2 216536874999126837 = some 216536874999126837 := by decide +kernel
+private theorem endpoint_7_55_p4 : receiptWindow endpoint_7_55_flag endpoint_7_55_sources 0 4 216536874999126837 = some 216536874999126837 :=
+  join_receipt_window endpoint_7_55_flag endpoint_7_55_sources 0 2 2 216536874999126837 216536874999126837 216536874999126837 endpoint_7_55_w0 endpoint_7_55_w2
+private theorem endpoint_7_55_w4 : receiptWindow endpoint_7_55_flag endpoint_7_55_sources 4 2 216536874999126837 = some 216536874999126837 := by decide +kernel
+private theorem endpoint_7_55_p6 : receiptWindow endpoint_7_55_flag endpoint_7_55_sources 0 6 216536874999126837 = some 216536874999126837 :=
+  join_receipt_window endpoint_7_55_flag endpoint_7_55_sources 0 4 2 216536874999126837 216536874999126837 216536874999126837 endpoint_7_55_p4 endpoint_7_55_w4
+def endpoint_7_55 : CertifiedEndpoint :=
+  ⟨⟨7, 55, 3932⟩, 216536874999126837, .terminal ⟨contact00, contact01, contact02⟩ (finish_receipt_window endpoint_7_55_flag endpoint_7_55_sources 6 216536874999126837 216536874999126837 rfl endpoint_7_55_base endpoint_7_55_p6) (by decide)⟩
+private def endpoint_7_56_flag : Flag := ⟨7, 56, 3893⟩
+private def endpoint_7_56_sources : Sources := ⟨contact00, contact01, contact02⟩
+private theorem endpoint_7_56_base : receiptBase endpoint_7_56_flag endpoint_7_56_sources = some 217836641731375302 := by decide +kernel
+private theorem endpoint_7_56_w0 : receiptWindow endpoint_7_56_flag endpoint_7_56_sources 0 2 217836641731375302 = some 217836641731375302 := by decide +kernel
+private theorem endpoint_7_56_w2 : receiptWindow endpoint_7_56_flag endpoint_7_56_sources 2 2 217836641731375302 = some 217836641731375302 := by decide +kernel
+private theorem endpoint_7_56_p4 : receiptWindow endpoint_7_56_flag endpoint_7_56_sources 0 4 217836641731375302 = some 217836641731375302 :=
+  join_receipt_window endpoint_7_56_flag endpoint_7_56_sources 0 2 2 217836641731375302 217836641731375302 217836641731375302 endpoint_7_56_w0 endpoint_7_56_w2
+private theorem endpoint_7_56_w4 : receiptWindow endpoint_7_56_flag endpoint_7_56_sources 4 2 217836641731375302 = some 217836641731375302 := by decide +kernel
+private theorem endpoint_7_56_p6 : receiptWindow endpoint_7_56_flag endpoint_7_56_sources 0 6 217836641731375302 = some 217836641731375302 :=
+  join_receipt_window endpoint_7_56_flag endpoint_7_56_sources 0 4 2 217836641731375302 217836641731375302 217836641731375302 endpoint_7_56_p4 endpoint_7_56_w4
+def endpoint_7_56 : CertifiedEndpoint :=
+  ⟨⟨7, 56, 3893⟩, 217836641731375302, .terminal ⟨contact00, contact01, contact02⟩ (finish_receipt_window endpoint_7_56_flag endpoint_7_56_sources 6 217836641731375302 217836641731375302 rfl endpoint_7_56_base endpoint_7_56_p6) (by decide)⟩
+private def endpoint_7_57_flag : Flag := ⟨7, 57, 3852⟩
+private def endpoint_7_57_sources : Sources := ⟨contact00, contact01, contact02⟩
+private theorem endpoint_7_57_base : receiptBase endpoint_7_57_flag endpoint_7_57_sources = some 218955010010100090 := by decide +kernel
+private theorem endpoint_7_57_w0 : receiptWindow endpoint_7_57_flag endpoint_7_57_sources 0 2 218955010010100090 = some 218955010010100090 := by decide +kernel
+private theorem endpoint_7_57_w2 : receiptWindow endpoint_7_57_flag endpoint_7_57_sources 2 2 218955010010100090 = some 218955010010100090 := by decide +kernel
+private theorem endpoint_7_57_p4 : receiptWindow endpoint_7_57_flag endpoint_7_57_sources 0 4 218955010010100090 = some 218955010010100090 :=
+  join_receipt_window endpoint_7_57_flag endpoint_7_57_sources 0 2 2 218955010010100090 218955010010100090 218955010010100090 endpoint_7_57_w0 endpoint_7_57_w2
+private theorem endpoint_7_57_w4 : receiptWindow endpoint_7_57_flag endpoint_7_57_sources 4 2 218955010010100090 = some 218955010010100090 := by decide +kernel
+private theorem endpoint_7_57_p6 : receiptWindow endpoint_7_57_flag endpoint_7_57_sources 0 6 218955010010100090 = some 218955010010100090 :=
+  join_receipt_window endpoint_7_57_flag endpoint_7_57_sources 0 4 2 218955010010100090 218955010010100090 218955010010100090 endpoint_7_57_p4 endpoint_7_57_w4
+def endpoint_7_57 : CertifiedEndpoint :=
+  ⟨⟨7, 57, 3852⟩, 218955010010100090, .terminal ⟨contact00, contact01, contact02⟩ (finish_receipt_window endpoint_7_57_flag endpoint_7_57_sources 6 218955010010100090 218955010010100090 rfl endpoint_7_57_base endpoint_7_57_p6) (by decide)⟩
+private def endpoint_7_58_flag : Flag := ⟨7, 58, 3811⟩
+private def endpoint_7_58_sources : Sources := ⟨contact01, contact01, contact02⟩
+private theorem endpoint_7_58_base : receiptBase endpoint_7_58_flag endpoint_7_58_sources = some 220710247081869442 := by decide +kernel
+private theorem endpoint_7_58_w0 : receiptWindow endpoint_7_58_flag endpoint_7_58_sources 0 2 220710247081869442 = some 220710247081869442 := by decide +kernel
+private theorem endpoint_7_58_w2 : receiptWindow endpoint_7_58_flag endpoint_7_58_sources 2 2 220710247081869442 = some 220710247081869442 := by decide +kernel
+private theorem endpoint_7_58_p4 : receiptWindow endpoint_7_58_flag endpoint_7_58_sources 0 4 220710247081869442 = some 220710247081869442 :=
+  join_receipt_window endpoint_7_58_flag endpoint_7_58_sources 0 2 2 220710247081869442 220710247081869442 220710247081869442 endpoint_7_58_w0 endpoint_7_58_w2
+private theorem endpoint_7_58_w4 : receiptWindow endpoint_7_58_flag endpoint_7_58_sources 4 2 220710247081869442 = some 220710247081869442 := by decide +kernel
+private theorem endpoint_7_58_p6 : receiptWindow endpoint_7_58_flag endpoint_7_58_sources 0 6 220710247081869442 = some 220710247081869442 :=
+  join_receipt_window endpoint_7_58_flag endpoint_7_58_sources 0 4 2 220710247081869442 220710247081869442 220710247081869442 endpoint_7_58_p4 endpoint_7_58_w4
+def endpoint_7_58 : CertifiedEndpoint :=
+  ⟨⟨7, 58, 3811⟩, 220710247081869442, .terminal ⟨contact01, contact01, contact02⟩ (finish_receipt_window endpoint_7_58_flag endpoint_7_58_sources 6 220710247081869442 220710247081869442 rfl endpoint_7_58_base endpoint_7_58_p6) (by decide)⟩
+private def endpoint_7_59_flag : Flag := ⟨7, 59, 3767⟩
+private def endpoint_7_59_sources : Sources := ⟨contact01, contact01, contact02⟩
+private theorem endpoint_7_59_base : receiptBase endpoint_7_59_flag endpoint_7_59_sources = some 221501302643490115 := by decide +kernel
+private theorem endpoint_7_59_w0 : receiptWindow endpoint_7_59_flag endpoint_7_59_sources 0 2 221501302643490115 = some 221501302643490115 := by decide +kernel
+private theorem endpoint_7_59_w2 : receiptWindow endpoint_7_59_flag endpoint_7_59_sources 2 2 221501302643490115 = some 221501302643490115 := by decide +kernel
+private theorem endpoint_7_59_p4 : receiptWindow endpoint_7_59_flag endpoint_7_59_sources 0 4 221501302643490115 = some 221501302643490115 :=
+  join_receipt_window endpoint_7_59_flag endpoint_7_59_sources 0 2 2 221501302643490115 221501302643490115 221501302643490115 endpoint_7_59_w0 endpoint_7_59_w2
+private theorem endpoint_7_59_w4 : receiptWindow endpoint_7_59_flag endpoint_7_59_sources 4 2 221501302643490115 = some 221501302643490115 := by decide +kernel
+private theorem endpoint_7_59_p6 : receiptWindow endpoint_7_59_flag endpoint_7_59_sources 0 6 221501302643490115 = some 221501302643490115 :=
+  join_receipt_window endpoint_7_59_flag endpoint_7_59_sources 0 4 2 221501302643490115 221501302643490115 221501302643490115 endpoint_7_59_p4 endpoint_7_59_w4
+def endpoint_7_59 : CertifiedEndpoint :=
+  ⟨⟨7, 59, 3767⟩, 221501302643490115, .terminal ⟨contact01, contact01, contact02⟩ (finish_receipt_window endpoint_7_59_flag endpoint_7_59_sources 6 221501302643490115 221501302643490115 rfl endpoint_7_59_base endpoint_7_59_p6) (by decide)⟩
+private def endpoint_7_60_flag : Flag := ⟨7, 60, 3723⟩
+private def endpoint_7_60_sources : Sources := ⟨contact01, contact01, contact02⟩
+private theorem endpoint_7_60_base : receiptBase endpoint_7_60_flag endpoint_7_60_sources = some 222214655643542728 := by decide +kernel
+private theorem endpoint_7_60_w0 : receiptWindow endpoint_7_60_flag endpoint_7_60_sources 0 2 222214655643542728 = some 222214655643542728 := by decide +kernel
+private theorem endpoint_7_60_w2 : receiptWindow endpoint_7_60_flag endpoint_7_60_sources 2 2 222214655643542728 = some 222214655643542728 := by decide +kernel
+private theorem endpoint_7_60_p4 : receiptWindow endpoint_7_60_flag endpoint_7_60_sources 0 4 222214655643542728 = some 222214655643542728 :=
+  join_receipt_window endpoint_7_60_flag endpoint_7_60_sources 0 2 2 222214655643542728 222214655643542728 222214655643542728 endpoint_7_60_w0 endpoint_7_60_w2
+private theorem endpoint_7_60_w4 : receiptWindow endpoint_7_60_flag endpoint_7_60_sources 4 2 222214655643542728 = some 222214655643542728 := by decide +kernel
+private theorem endpoint_7_60_p6 : receiptWindow endpoint_7_60_flag endpoint_7_60_sources 0 6 222214655643542728 = some 222214655643542728 :=
+  join_receipt_window endpoint_7_60_flag endpoint_7_60_sources 0 4 2 222214655643542728 222214655643542728 222214655643542728 endpoint_7_60_p4 endpoint_7_60_w4
+def endpoint_7_60 : CertifiedEndpoint :=
+  ⟨⟨7, 60, 3723⟩, 222214655643542728, .terminal ⟨contact01, contact01, contact02⟩ (finish_receipt_window endpoint_7_60_flag endpoint_7_60_sources 6 222214655643542728 222214655643542728 rfl endpoint_7_60_base endpoint_7_60_p6) (by decide)⟩
+private def endpoint_7_61_flag : Flag := ⟨7, 61, 3676⟩
+private def endpoint_7_61_sources : Sources := ⟨contact01, contact01, contact02⟩
+private theorem endpoint_7_61_base : receiptBase endpoint_7_61_flag endpoint_7_61_sources = some 222670622517782763 := by decide +kernel
+private theorem endpoint_7_61_w0 : receiptWindow endpoint_7_61_flag endpoint_7_61_sources 0 2 222670622517782763 = some 222670622517782763 := by decide +kernel
+private theorem endpoint_7_61_w2 : receiptWindow endpoint_7_61_flag endpoint_7_61_sources 2 2 222670622517782763 = some 222670622517782763 := by decide +kernel
+private theorem endpoint_7_61_p4 : receiptWindow endpoint_7_61_flag endpoint_7_61_sources 0 4 222670622517782763 = some 222670622517782763 :=
+  join_receipt_window endpoint_7_61_flag endpoint_7_61_sources 0 2 2 222670622517782763 222670622517782763 222670622517782763 endpoint_7_61_w0 endpoint_7_61_w2
+private theorem endpoint_7_61_w4 : receiptWindow endpoint_7_61_flag endpoint_7_61_sources 4 2 222670622517782763 = some 222670622517782763 := by decide +kernel
+private theorem endpoint_7_61_p6 : receiptWindow endpoint_7_61_flag endpoint_7_61_sources 0 6 222670622517782763 = some 222670622517782763 :=
+  join_receipt_window endpoint_7_61_flag endpoint_7_61_sources 0 4 2 222670622517782763 222670622517782763 222670622517782763 endpoint_7_61_p4 endpoint_7_61_w4
+def endpoint_7_61 : CertifiedEndpoint :=
+  ⟨⟨7, 61, 3676⟩, 222670622517782763, .terminal ⟨contact01, contact01, contact02⟩ (finish_receipt_window endpoint_7_61_flag endpoint_7_61_sources 6 222670622517782763 222670622517782763 rfl endpoint_7_61_base endpoint_7_61_p6) (by decide)⟩
+private def endpoint_7_62_flag : Flag := ⟨7, 62, 3628⟩
+private def endpoint_7_62_sources : Sources := ⟨contact01, contact01, contact02⟩
+private theorem endpoint_7_62_base : receiptBase endpoint_7_62_flag endpoint_7_62_sources = some 222982880871613199 := by decide +kernel
+private theorem endpoint_7_62_w0 : receiptWindow endpoint_7_62_flag endpoint_7_62_sources 0 2 222982880871613199 = some 222982880871613199 := by decide +kernel
+private theorem endpoint_7_62_w2 : receiptWindow endpoint_7_62_flag endpoint_7_62_sources 2 2 222982880871613199 = some 222982880871613199 := by decide +kernel
+private theorem endpoint_7_62_p4 : receiptWindow endpoint_7_62_flag endpoint_7_62_sources 0 4 222982880871613199 = some 222982880871613199 :=
+  join_receipt_window endpoint_7_62_flag endpoint_7_62_sources 0 2 2 222982880871613199 222982880871613199 222982880871613199 endpoint_7_62_w0 endpoint_7_62_w2
+private theorem endpoint_7_62_w4 : receiptWindow endpoint_7_62_flag endpoint_7_62_sources 4 2 222982880871613199 = some 222982880871613199 := by decide +kernel
+private theorem endpoint_7_62_p6 : receiptWindow endpoint_7_62_flag endpoint_7_62_sources 0 6 222982880871613199 = some 222982880871613199 :=
+  join_receipt_window endpoint_7_62_flag endpoint_7_62_sources 0 4 2 222982880871613199 222982880871613199 222982880871613199 endpoint_7_62_p4 endpoint_7_62_w4
+def endpoint_7_62 : CertifiedEndpoint :=
+  ⟨⟨7, 62, 3628⟩, 222982880871613199, .terminal ⟨contact01, contact01, contact02⟩ (finish_receipt_window endpoint_7_62_flag endpoint_7_62_sources 6 222982880871613199 222982880871613199 rfl endpoint_7_62_base endpoint_7_62_p6) (by decide)⟩
+private def endpoint_7_63_flag : Flag := ⟨7, 63, 3577⟩
+private def endpoint_7_63_sources : Sources := ⟨contact03, contact03, contact04⟩
+private theorem endpoint_7_63_base : receiptBase endpoint_7_63_flag endpoint_7_63_sources = some 225392894929357708 := by decide +kernel
+private theorem endpoint_7_63_w0 : receiptWindow endpoint_7_63_flag endpoint_7_63_sources 0 2 225392894929357708 = some 225392894929357708 := by decide +kernel
+private theorem endpoint_7_63_w2 : receiptWindow endpoint_7_63_flag endpoint_7_63_sources 2 2 225392894929357708 = some 225392894929357708 := by decide +kernel
+private theorem endpoint_7_63_p4 : receiptWindow endpoint_7_63_flag endpoint_7_63_sources 0 4 225392894929357708 = some 225392894929357708 :=
+  join_receipt_window endpoint_7_63_flag endpoint_7_63_sources 0 2 2 225392894929357708 225392894929357708 225392894929357708 endpoint_7_63_w0 endpoint_7_63_w2
+private theorem endpoint_7_63_w4 : receiptWindow endpoint_7_63_flag endpoint_7_63_sources 4 2 225392894929357708 = some 225392894929357708 := by decide +kernel
+private theorem endpoint_7_63_p6 : receiptWindow endpoint_7_63_flag endpoint_7_63_sources 0 6 225392894929357708 = some 225392894929357708 :=
+  join_receipt_window endpoint_7_63_flag endpoint_7_63_sources 0 4 2 225392894929357708 225392894929357708 225392894929357708 endpoint_7_63_p4 endpoint_7_63_w4
+def endpoint_7_63 : CertifiedEndpoint :=
+  ⟨⟨7, 63, 3577⟩, 225392894929357708, .terminal ⟨contact03, contact03, contact04⟩ (finish_receipt_window endpoint_7_63_flag endpoint_7_63_sources 6 225392894929357708 225392894929357708 rfl endpoint_7_63_base endpoint_7_63_p6) (by decide)⟩
+private def endpoint_7_64_flag : Flag := ⟨7, 64, 3524⟩
+private def endpoint_7_64_sources : Sources := ⟨contact03, contact03, contact04⟩
+private theorem endpoint_7_64_base : receiptBase endpoint_7_64_flag endpoint_7_64_sources = some 225199326766699310 := by decide +kernel
+private theorem endpoint_7_64_w0 : receiptWindow endpoint_7_64_flag endpoint_7_64_sources 0 2 225199326766699310 = some 225199326766699310 := by decide +kernel
+private theorem endpoint_7_64_w2 : receiptWindow endpoint_7_64_flag endpoint_7_64_sources 2 2 225199326766699310 = some 225199326766699310 := by decide +kernel
+private theorem endpoint_7_64_p4 : receiptWindow endpoint_7_64_flag endpoint_7_64_sources 0 4 225199326766699310 = some 225199326766699310 :=
+  join_receipt_window endpoint_7_64_flag endpoint_7_64_sources 0 2 2 225199326766699310 225199326766699310 225199326766699310 endpoint_7_64_w0 endpoint_7_64_w2
+private theorem endpoint_7_64_w4 : receiptWindow endpoint_7_64_flag endpoint_7_64_sources 4 2 225199326766699310 = some 225199326766699310 := by decide +kernel
+private theorem endpoint_7_64_p6 : receiptWindow endpoint_7_64_flag endpoint_7_64_sources 0 6 225199326766699310 = some 225199326766699310 :=
+  join_receipt_window endpoint_7_64_flag endpoint_7_64_sources 0 4 2 225199326766699310 225199326766699310 225199326766699310 endpoint_7_64_p4 endpoint_7_64_w4
+def endpoint_7_64 : CertifiedEndpoint :=
+  ⟨⟨7, 64, 3524⟩, 225199326766699310, .terminal ⟨contact03, contact03, contact04⟩ (finish_receipt_window endpoint_7_64_flag endpoint_7_64_sources 6 225199326766699310 225199326766699310 rfl endpoint_7_64_base endpoint_7_64_p6) (by decide)⟩
+private def endpoint_7_65_flag : Flag := ⟨7, 65, 3468⟩
+private def endpoint_7_65_sources : Sources := ⟨contact03, contact03, contact04⟩
+private theorem endpoint_7_65_base : receiptBase endpoint_7_65_flag endpoint_7_65_sources = some 224718710344177435 := by decide +kernel
+private theorem endpoint_7_65_w0 : receiptWindow endpoint_7_65_flag endpoint_7_65_sources 0 2 224718710344177435 = some 224718710344177435 := by decide +kernel
+private theorem endpoint_7_65_w2 : receiptWindow endpoint_7_65_flag endpoint_7_65_sources 2 2 224718710344177435 = some 224718710344177435 := by decide +kernel
+private theorem endpoint_7_65_p4 : receiptWindow endpoint_7_65_flag endpoint_7_65_sources 0 4 224718710344177435 = some 224718710344177435 :=
+  join_receipt_window endpoint_7_65_flag endpoint_7_65_sources 0 2 2 224718710344177435 224718710344177435 224718710344177435 endpoint_7_65_w0 endpoint_7_65_w2
+private theorem endpoint_7_65_w4 : receiptWindow endpoint_7_65_flag endpoint_7_65_sources 4 2 224718710344177435 = some 224718710344177435 := by decide +kernel
+private theorem endpoint_7_65_p6 : receiptWindow endpoint_7_65_flag endpoint_7_65_sources 0 6 224718710344177435 = some 224718710344177435 :=
+  join_receipt_window endpoint_7_65_flag endpoint_7_65_sources 0 4 2 224718710344177435 224718710344177435 224718710344177435 endpoint_7_65_p4 endpoint_7_65_w4
+def endpoint_7_65 : CertifiedEndpoint :=
+  ⟨⟨7, 65, 3468⟩, 224718710344177435, .terminal ⟨contact03, contact03, contact04⟩ (finish_receipt_window endpoint_7_65_flag endpoint_7_65_sources 6 224718710344177435 224718710344177435 rfl endpoint_7_65_base endpoint_7_65_p6) (by decide)⟩
+private def endpoint_7_66_flag : Flag := ⟨7, 66, 3410⟩
+private def endpoint_7_66_sources : Sources := ⟨contact03, contact03, contact04⟩
+private theorem endpoint_7_66_base : receiptBase endpoint_7_66_flag endpoint_7_66_sources = some 224008211886690218 := by decide +kernel
+private theorem endpoint_7_66_w0 : receiptWindow endpoint_7_66_flag endpoint_7_66_sources 0 2 224008211886690218 = some 224008211886690218 := by decide +kernel
+private theorem endpoint_7_66_w2 : receiptWindow endpoint_7_66_flag endpoint_7_66_sources 2 2 224008211886690218 = some 224008211886690218 := by decide +kernel
+private theorem endpoint_7_66_p4 : receiptWindow endpoint_7_66_flag endpoint_7_66_sources 0 4 224008211886690218 = some 224008211886690218 :=
+  join_receipt_window endpoint_7_66_flag endpoint_7_66_sources 0 2 2 224008211886690218 224008211886690218 224008211886690218 endpoint_7_66_w0 endpoint_7_66_w2
+private theorem endpoint_7_66_w4 : receiptWindow endpoint_7_66_flag endpoint_7_66_sources 4 2 224008211886690218 = some 224008211886690218 := by decide +kernel
+private theorem endpoint_7_66_p6 : receiptWindow endpoint_7_66_flag endpoint_7_66_sources 0 6 224008211886690218 = some 224008211886690218 :=
+  join_receipt_window endpoint_7_66_flag endpoint_7_66_sources 0 4 2 224008211886690218 224008211886690218 224008211886690218 endpoint_7_66_p4 endpoint_7_66_w4
+def endpoint_7_66 : CertifiedEndpoint :=
+  ⟨⟨7, 66, 3410⟩, 224008211886690218, .terminal ⟨contact03, contact03, contact04⟩ (finish_receipt_window endpoint_7_66_flag endpoint_7_66_sources 6 224008211886690218 224008211886690218 rfl endpoint_7_66_base endpoint_7_66_p6) (by decide)⟩
+private def endpoint_7_67_flag : Flag := ⟨7, 67, 3348⟩
+private def endpoint_7_67_sources : Sources := ⟨contact05, contact05, contact04⟩
+private theorem endpoint_7_67_base : receiptBase endpoint_7_67_flag endpoint_7_67_sources = some 224550842976001417 := by decide +kernel
+private theorem endpoint_7_67_w0 : receiptWindow endpoint_7_67_flag endpoint_7_67_sources 0 2 224550842976001417 = some 224550842976001417 := by decide +kernel
+private theorem endpoint_7_67_w2 : receiptWindow endpoint_7_67_flag endpoint_7_67_sources 2 2 224550842976001417 = some 224550842976001417 := by decide +kernel
+private theorem endpoint_7_67_p4 : receiptWindow endpoint_7_67_flag endpoint_7_67_sources 0 4 224550842976001417 = some 224550842976001417 :=
+  join_receipt_window endpoint_7_67_flag endpoint_7_67_sources 0 2 2 224550842976001417 224550842976001417 224550842976001417 endpoint_7_67_w0 endpoint_7_67_w2
+private theorem endpoint_7_67_w4 : receiptWindow endpoint_7_67_flag endpoint_7_67_sources 4 2 224550842976001417 = some 224550842976001417 := by decide +kernel
+private theorem endpoint_7_67_p6 : receiptWindow endpoint_7_67_flag endpoint_7_67_sources 0 6 224550842976001417 = some 224550842976001417 :=
+  join_receipt_window endpoint_7_67_flag endpoint_7_67_sources 0 4 2 224550842976001417 224550842976001417 224550842976001417 endpoint_7_67_p4 endpoint_7_67_w4
+def endpoint_7_67 : CertifiedEndpoint :=
+  ⟨⟨7, 67, 3348⟩, 224550842976001417, .terminal ⟨contact05, contact05, contact04⟩ (finish_receipt_window endpoint_7_67_flag endpoint_7_67_sources 6 224550842976001417 224550842976001417 rfl endpoint_7_67_base endpoint_7_67_p6) (by decide)⟩
+private def endpoint_7_68_flag : Flag := ⟨7, 68, 3283⟩
+private def endpoint_7_68_sources : Sources := ⟨contact05, contact05, contact04⟩
+private theorem endpoint_7_68_base : receiptBase endpoint_7_68_flag endpoint_7_68_sources = some 223153737812233031 := by decide +kernel
+private theorem endpoint_7_68_w0 : receiptWindow endpoint_7_68_flag endpoint_7_68_sources 0 2 223153737812233031 = some 223153737812233031 := by decide +kernel
+private theorem endpoint_7_68_w2 : receiptWindow endpoint_7_68_flag endpoint_7_68_sources 2 2 223153737812233031 = some 223153737812233031 := by decide +kernel
+private theorem endpoint_7_68_p4 : receiptWindow endpoint_7_68_flag endpoint_7_68_sources 0 4 223153737812233031 = some 223153737812233031 :=
+  join_receipt_window endpoint_7_68_flag endpoint_7_68_sources 0 2 2 223153737812233031 223153737812233031 223153737812233031 endpoint_7_68_w0 endpoint_7_68_w2
+private theorem endpoint_7_68_w4 : receiptWindow endpoint_7_68_flag endpoint_7_68_sources 4 2 223153737812233031 = some 223153737812233031 := by decide +kernel
+private theorem endpoint_7_68_p6 : receiptWindow endpoint_7_68_flag endpoint_7_68_sources 0 6 223153737812233031 = some 223153737812233031 :=
+  join_receipt_window endpoint_7_68_flag endpoint_7_68_sources 0 4 2 223153737812233031 223153737812233031 223153737812233031 endpoint_7_68_p4 endpoint_7_68_w4
+def endpoint_7_68 : CertifiedEndpoint :=
+  ⟨⟨7, 68, 3283⟩, 223153737812233031, .terminal ⟨contact05, contact05, contact04⟩ (finish_receipt_window endpoint_7_68_flag endpoint_7_68_sources 6 223153737812233031 223153737812233031 rfl endpoint_7_68_base endpoint_7_68_p6) (by decide)⟩
+private def endpoint_7_69_flag : Flag := ⟨7, 69, 3215⟩
+private def endpoint_7_69_sources : Sources := ⟨contact05, contact05, contact04⟩
+private theorem endpoint_7_69_base : receiptBase endpoint_7_69_flag endpoint_7_69_sources = some 221434986890090591 := by decide +kernel
+private theorem endpoint_7_69_w0 : receiptWindow endpoint_7_69_flag endpoint_7_69_sources 0 2 221434986890090591 = some 221434986890090591 := by decide +kernel
+private theorem endpoint_7_69_w2 : receiptWindow endpoint_7_69_flag endpoint_7_69_sources 2 2 221434986890090591 = some 221434986890090591 := by decide +kernel
+private theorem endpoint_7_69_p4 : receiptWindow endpoint_7_69_flag endpoint_7_69_sources 0 4 221434986890090591 = some 221434986890090591 :=
+  join_receipt_window endpoint_7_69_flag endpoint_7_69_sources 0 2 2 221434986890090591 221434986890090591 221434986890090591 endpoint_7_69_w0 endpoint_7_69_w2
+private theorem endpoint_7_69_w4 : receiptWindow endpoint_7_69_flag endpoint_7_69_sources 4 2 221434986890090591 = some 221434986890090591 := by decide +kernel
+private theorem endpoint_7_69_p6 : receiptWindow endpoint_7_69_flag endpoint_7_69_sources 0 6 221434986890090591 = some 221434986890090591 :=
+  join_receipt_window endpoint_7_69_flag endpoint_7_69_sources 0 4 2 221434986890090591 221434986890090591 221434986890090591 endpoint_7_69_p4 endpoint_7_69_w4
+def endpoint_7_69 : CertifiedEndpoint :=
+  ⟨⟨7, 69, 3215⟩, 221434986890090591, .terminal ⟨contact05, contact05, contact04⟩ (finish_receipt_window endpoint_7_69_flag endpoint_7_69_sources 6 221434986890090591 221434986890090591 rfl endpoint_7_69_base endpoint_7_69_p6) (by decide)⟩
+private def endpoint_7_70_flag : Flag := ⟨7, 70, 3144⟩
+private def endpoint_7_70_sources : Sources := ⟨contact06, contact06, contact04⟩
+private theorem endpoint_7_70_base : receiptBase endpoint_7_70_flag endpoint_7_70_sources = some 221021504122973585 := by decide +kernel
+private theorem endpoint_7_70_w0 : receiptWindow endpoint_7_70_flag endpoint_7_70_sources 0 2 221021504122973585 = some 221021504122973585 := by decide +kernel
+private theorem endpoint_7_70_w2 : receiptWindow endpoint_7_70_flag endpoint_7_70_sources 2 2 221021504122973585 = some 221021504122973585 := by decide +kernel
+private theorem endpoint_7_70_p4 : receiptWindow endpoint_7_70_flag endpoint_7_70_sources 0 4 221021504122973585 = some 221021504122973585 :=
+  join_receipt_window endpoint_7_70_flag endpoint_7_70_sources 0 2 2 221021504122973585 221021504122973585 221021504122973585 endpoint_7_70_w0 endpoint_7_70_w2
+private theorem endpoint_7_70_w4 : receiptWindow endpoint_7_70_flag endpoint_7_70_sources 4 2 221021504122973585 = some 221021504122973585 := by decide +kernel
+private theorem endpoint_7_70_p6 : receiptWindow endpoint_7_70_flag endpoint_7_70_sources 0 6 221021504122973585 = some 221021504122973585 :=
+  join_receipt_window endpoint_7_70_flag endpoint_7_70_sources 0 4 2 221021504122973585 221021504122973585 221021504122973585 endpoint_7_70_p4 endpoint_7_70_w4
+def endpoint_7_70 : CertifiedEndpoint :=
+  ⟨⟨7, 70, 3144⟩, 221021504122973585, .terminal ⟨contact06, contact06, contact04⟩ (finish_receipt_window endpoint_7_70_flag endpoint_7_70_sources 6 221021504122973585 221021504122973585 rfl endpoint_7_70_base endpoint_7_70_p6) (by decide)⟩
+private def endpoint_7_71_flag : Flag := ⟨7, 71, 3069⟩
+private def endpoint_7_71_sources : Sources := ⟨contact07, contact07, contact04⟩
+private theorem endpoint_7_71_base : receiptBase endpoint_7_71_flag endpoint_7_71_sources = some 220203820256674740 := by decide +kernel
+private theorem endpoint_7_71_w0 : receiptWindow endpoint_7_71_flag endpoint_7_71_sources 0 2 220203820256674740 = some 220203820256674740 := by decide +kernel
+private theorem endpoint_7_71_w2 : receiptWindow endpoint_7_71_flag endpoint_7_71_sources 2 2 220203820256674740 = some 220203820256674740 := by decide +kernel
+private theorem endpoint_7_71_p4 : receiptWindow endpoint_7_71_flag endpoint_7_71_sources 0 4 220203820256674740 = some 220203820256674740 :=
+  join_receipt_window endpoint_7_71_flag endpoint_7_71_sources 0 2 2 220203820256674740 220203820256674740 220203820256674740 endpoint_7_71_w0 endpoint_7_71_w2
+private theorem endpoint_7_71_w4 : receiptWindow endpoint_7_71_flag endpoint_7_71_sources 4 2 220203820256674740 = some 220203820256674740 := by decide +kernel
+private theorem endpoint_7_71_p6 : receiptWindow endpoint_7_71_flag endpoint_7_71_sources 0 6 220203820256674740 = some 220203820256674740 :=
+  join_receipt_window endpoint_7_71_flag endpoint_7_71_sources 0 4 2 220203820256674740 220203820256674740 220203820256674740 endpoint_7_71_p4 endpoint_7_71_w4
+def endpoint_7_71 : CertifiedEndpoint :=
+  ⟨⟨7, 71, 3069⟩, 220203820256674740, .terminal ⟨contact07, contact07, contact04⟩ (finish_receipt_window endpoint_7_71_flag endpoint_7_71_sources 6 220203820256674740 220203820256674740 rfl endpoint_7_71_base endpoint_7_71_p6) (by decide)⟩
+private def endpoint_7_72_flag : Flag := ⟨7, 72, 2991⟩
+private def endpoint_7_72_sources : Sources := ⟨contact07, contact07, contact04⟩
+private theorem endpoint_7_72_base : receiptBase endpoint_7_72_flag endpoint_7_72_sources = some 217360228228491632 := by decide +kernel
+private theorem endpoint_7_72_w0 : receiptWindow endpoint_7_72_flag endpoint_7_72_sources 0 2 217360228228491632 = some 217360228228491632 := by decide +kernel
+private theorem endpoint_7_72_w2 : receiptWindow endpoint_7_72_flag endpoint_7_72_sources 2 2 217360228228491632 = some 217360228228491632 := by decide +kernel
+private theorem endpoint_7_72_p4 : receiptWindow endpoint_7_72_flag endpoint_7_72_sources 0 4 217360228228491632 = some 217360228228491632 :=
+  join_receipt_window endpoint_7_72_flag endpoint_7_72_sources 0 2 2 217360228228491632 217360228228491632 217360228228491632 endpoint_7_72_w0 endpoint_7_72_w2
+private theorem endpoint_7_72_w4 : receiptWindow endpoint_7_72_flag endpoint_7_72_sources 4 2 217360228228491632 = some 217360228228491632 := by decide +kernel
+private theorem endpoint_7_72_p6 : receiptWindow endpoint_7_72_flag endpoint_7_72_sources 0 6 217360228228491632 = some 217360228228491632 :=
+  join_receipt_window endpoint_7_72_flag endpoint_7_72_sources 0 4 2 217360228228491632 217360228228491632 217360228228491632 endpoint_7_72_p4 endpoint_7_72_w4
+def endpoint_7_72 : CertifiedEndpoint :=
+  ⟨⟨7, 72, 2991⟩, 217360228228491632, .terminal ⟨contact07, contact07, contact04⟩ (finish_receipt_window endpoint_7_72_flag endpoint_7_72_sources 6 217360228228491632 217360228228491632 rfl endpoint_7_72_base endpoint_7_72_p6) (by decide)⟩
+private def endpoint_7_73_flag : Flag := ⟨7, 73, 2911⟩
+private def endpoint_7_73_sources : Sources := ⟨contact04, contact04, contact04⟩
+private theorem endpoint_7_73_base : receiptBase endpoint_7_73_flag endpoint_7_73_sources = some 217423848399529621 := by decide +kernel
+private theorem endpoint_7_73_w0 : receiptWindow endpoint_7_73_flag endpoint_7_73_sources 0 2 217423848399529621 = some 217423848399529621 := by decide +kernel
+private theorem endpoint_7_73_w2 : receiptWindow endpoint_7_73_flag endpoint_7_73_sources 2 2 217423848399529621 = some 217423848399529621 := by decide +kernel
+private theorem endpoint_7_73_p4 : receiptWindow endpoint_7_73_flag endpoint_7_73_sources 0 4 217423848399529621 = some 217423848399529621 :=
+  join_receipt_window endpoint_7_73_flag endpoint_7_73_sources 0 2 2 217423848399529621 217423848399529621 217423848399529621 endpoint_7_73_w0 endpoint_7_73_w2
+private theorem endpoint_7_73_w4 : receiptWindow endpoint_7_73_flag endpoint_7_73_sources 4 2 217423848399529621 = some 217423848399529621 := by decide +kernel
+private theorem endpoint_7_73_p6 : receiptWindow endpoint_7_73_flag endpoint_7_73_sources 0 6 217423848399529621 = some 217423848399529621 :=
+  join_receipt_window endpoint_7_73_flag endpoint_7_73_sources 0 4 2 217423848399529621 217423848399529621 217423848399529621 endpoint_7_73_p4 endpoint_7_73_w4
+def endpoint_7_73 : CertifiedEndpoint :=
+  ⟨⟨7, 73, 2911⟩, 217423848399529621, .terminal ⟨contact04, contact04, contact04⟩ (finish_receipt_window endpoint_7_73_flag endpoint_7_73_sources 6 217423848399529621 217423848399529621 rfl endpoint_7_73_base endpoint_7_73_p6) (by decide)⟩
+private def endpoint_7_74_flag : Flag := ⟨7, 74, 2827⟩
+private def endpoint_7_74_sources : Sources := ⟨contact04, contact04, contact04⟩
+private theorem endpoint_7_74_base : receiptBase endpoint_7_74_flag endpoint_7_74_sources = some 213796562969633364 := by decide +kernel
+private theorem endpoint_7_74_w0 : receiptWindow endpoint_7_74_flag endpoint_7_74_sources 0 2 213796562969633364 = some 213796562969633364 := by decide +kernel
+private theorem endpoint_7_74_w2 : receiptWindow endpoint_7_74_flag endpoint_7_74_sources 2 2 213796562969633364 = some 213796562969633364 := by decide +kernel
+private theorem endpoint_7_74_p4 : receiptWindow endpoint_7_74_flag endpoint_7_74_sources 0 4 213796562969633364 = some 213796562969633364 :=
+  join_receipt_window endpoint_7_74_flag endpoint_7_74_sources 0 2 2 213796562969633364 213796562969633364 213796562969633364 endpoint_7_74_w0 endpoint_7_74_w2
+private theorem endpoint_7_74_w4 : receiptWindow endpoint_7_74_flag endpoint_7_74_sources 4 2 213796562969633364 = some 213796562969633364 := by decide +kernel
+private theorem endpoint_7_74_p6 : receiptWindow endpoint_7_74_flag endpoint_7_74_sources 0 6 213796562969633364 = some 213796562969633364 :=
+  join_receipt_window endpoint_7_74_flag endpoint_7_74_sources 0 4 2 213796562969633364 213796562969633364 213796562969633364 endpoint_7_74_p4 endpoint_7_74_w4
+def endpoint_7_74 : CertifiedEndpoint :=
+  ⟨⟨7, 74, 2827⟩, 213796562969633364, .terminal ⟨contact04, contact04, contact04⟩ (finish_receipt_window endpoint_7_74_flag endpoint_7_74_sources 6 213796562969633364 213796562969633364 rfl endpoint_7_74_base endpoint_7_74_p6) (by decide)⟩
+private def endpoint_7_75_flag : Flag := ⟨7, 75, 2740⟩
+private def endpoint_7_75_sources : Sources := ⟨contact04, contact04, contact04⟩
+private theorem endpoint_7_75_base : receiptBase endpoint_7_75_flag endpoint_7_75_sources = some 209784343841368249 := by decide +kernel
+private theorem endpoint_7_75_w0 : receiptWindow endpoint_7_75_flag endpoint_7_75_sources 0 2 209784343841368249 = some 209784343841368249 := by decide +kernel
+private theorem endpoint_7_75_w2 : receiptWindow endpoint_7_75_flag endpoint_7_75_sources 2 2 209784343841368249 = some 209784343841368249 := by decide +kernel
+private theorem endpoint_7_75_p4 : receiptWindow endpoint_7_75_flag endpoint_7_75_sources 0 4 209784343841368249 = some 209784343841368249 :=
+  join_receipt_window endpoint_7_75_flag endpoint_7_75_sources 0 2 2 209784343841368249 209784343841368249 209784343841368249 endpoint_7_75_w0 endpoint_7_75_w2
+private theorem endpoint_7_75_w4 : receiptWindow endpoint_7_75_flag endpoint_7_75_sources 4 2 209784343841368249 = some 209784343841368249 := by decide +kernel
+private theorem endpoint_7_75_p6 : receiptWindow endpoint_7_75_flag endpoint_7_75_sources 0 6 209784343841368249 = some 209784343841368249 :=
+  join_receipt_window endpoint_7_75_flag endpoint_7_75_sources 0 4 2 209784343841368249 209784343841368249 209784343841368249 endpoint_7_75_p4 endpoint_7_75_w4
+def endpoint_7_75 : CertifiedEndpoint :=
+  ⟨⟨7, 75, 2740⟩, 209784343841368249, .terminal ⟨contact04, contact04, contact04⟩ (finish_receipt_window endpoint_7_75_flag endpoint_7_75_sources 6 209784343841368249 209784343841368249 rfl endpoint_7_75_base endpoint_7_75_p6) (by decide)⟩
+private def endpoint_7_76_flag : Flag := ⟨7, 76, 2649⟩
+private def endpoint_7_76_sources : Sources := ⟨contact11, contact11, contact12⟩
+private theorem endpoint_7_76_base : receiptBase endpoint_7_76_flag endpoint_7_76_sources = some 209096499582613571 := by decide +kernel
+private theorem endpoint_7_76_w0 : receiptWindow endpoint_7_76_flag endpoint_7_76_sources 0 2 209096499582613571 = some 209096499582613571 := by decide +kernel
+private theorem endpoint_7_76_w2 : receiptWindow endpoint_7_76_flag endpoint_7_76_sources 2 2 209096499582613571 = some 209096499582613571 := by decide +kernel
+private theorem endpoint_7_76_p4 : receiptWindow endpoint_7_76_flag endpoint_7_76_sources 0 4 209096499582613571 = some 209096499582613571 :=
+  join_receipt_window endpoint_7_76_flag endpoint_7_76_sources 0 2 2 209096499582613571 209096499582613571 209096499582613571 endpoint_7_76_w0 endpoint_7_76_w2
+private theorem endpoint_7_76_w4 : receiptWindow endpoint_7_76_flag endpoint_7_76_sources 4 2 209096499582613571 = some 209096499582613571 := by decide +kernel
+private theorem endpoint_7_76_p6 : receiptWindow endpoint_7_76_flag endpoint_7_76_sources 0 6 209096499582613571 = some 209096499582613571 :=
+  join_receipt_window endpoint_7_76_flag endpoint_7_76_sources 0 4 2 209096499582613571 209096499582613571 209096499582613571 endpoint_7_76_p4 endpoint_7_76_w4
+def endpoint_7_76 : CertifiedEndpoint :=
+  ⟨⟨7, 76, 2649⟩, 209096499582613571, .terminal ⟨contact11, contact11, contact12⟩ (finish_receipt_window endpoint_7_76_flag endpoint_7_76_sources 6 209096499582613571 209096499582613571 rfl endpoint_7_76_base endpoint_7_76_p6) (by decide)⟩
+private def endpoint_7_77_flag : Flag := ⟨7, 77, 2556⟩
+private def endpoint_7_77_sources : Sources := ⟨contact11, contact11, contact12⟩
+private theorem endpoint_7_77_base : receiptBase endpoint_7_77_flag endpoint_7_77_sources = some 204246928296147799 := by decide +kernel
+private theorem endpoint_7_77_w0 : receiptWindow endpoint_7_77_flag endpoint_7_77_sources 0 2 204246928296147799 = some 204246928296147799 := by decide +kernel
+private theorem endpoint_7_77_w2 : receiptWindow endpoint_7_77_flag endpoint_7_77_sources 2 2 204246928296147799 = some 204246928296147799 := by decide +kernel
+private theorem endpoint_7_77_p4 : receiptWindow endpoint_7_77_flag endpoint_7_77_sources 0 4 204246928296147799 = some 204246928296147799 :=
+  join_receipt_window endpoint_7_77_flag endpoint_7_77_sources 0 2 2 204246928296147799 204246928296147799 204246928296147799 endpoint_7_77_w0 endpoint_7_77_w2
+private theorem endpoint_7_77_w4 : receiptWindow endpoint_7_77_flag endpoint_7_77_sources 4 2 204246928296147799 = some 204246928296147799 := by decide +kernel
+private theorem endpoint_7_77_p6 : receiptWindow endpoint_7_77_flag endpoint_7_77_sources 0 6 204246928296147799 = some 204246928296147799 :=
+  join_receipt_window endpoint_7_77_flag endpoint_7_77_sources 0 4 2 204246928296147799 204246928296147799 204246928296147799 endpoint_7_77_p4 endpoint_7_77_w4
+def endpoint_7_77 : CertifiedEndpoint :=
+  ⟨⟨7, 77, 2556⟩, 204246928296147799, .terminal ⟨contact11, contact11, contact12⟩ (finish_receipt_window endpoint_7_77_flag endpoint_7_77_sources 6 204246928296147799 204246928296147799 rfl endpoint_7_77_base endpoint_7_77_p6) (by decide)⟩
+private def endpoint_7_78_flag : Flag := ⟨7, 78, 2459⟩
+private def endpoint_7_78_sources : Sources := ⟨contact11, contact11, contact12⟩
+private theorem endpoint_7_78_base : receiptBase endpoint_7_78_flag endpoint_7_78_sources = some 198904997883465586 := by decide +kernel
+private theorem endpoint_7_78_w0 : receiptWindow endpoint_7_78_flag endpoint_7_78_sources 0 2 198904997883465586 = some 198904997883465586 := by decide +kernel
+private theorem endpoint_7_78_w2 : receiptWindow endpoint_7_78_flag endpoint_7_78_sources 2 2 198904997883465586 = some 198904997883465586 := by decide +kernel
+private theorem endpoint_7_78_p4 : receiptWindow endpoint_7_78_flag endpoint_7_78_sources 0 4 198904997883465586 = some 198904997883465586 :=
+  join_receipt_window endpoint_7_78_flag endpoint_7_78_sources 0 2 2 198904997883465586 198904997883465586 198904997883465586 endpoint_7_78_w0 endpoint_7_78_w2
+private theorem endpoint_7_78_w4 : receiptWindow endpoint_7_78_flag endpoint_7_78_sources 4 2 198904997883465586 = some 198904997883465586 := by decide +kernel
+private theorem endpoint_7_78_p6 : receiptWindow endpoint_7_78_flag endpoint_7_78_sources 0 6 198904997883465586 = some 198904997883465586 :=
+  join_receipt_window endpoint_7_78_flag endpoint_7_78_sources 0 4 2 198904997883465586 198904997883465586 198904997883465586 endpoint_7_78_p4 endpoint_7_78_w4
+def endpoint_7_78 : CertifiedEndpoint :=
+  ⟨⟨7, 78, 2459⟩, 198904997883465586, .terminal ⟨contact11, contact11, contact12⟩ (finish_receipt_window endpoint_7_78_flag endpoint_7_78_sources 6 198904997883465586 198904997883465586 rfl endpoint_7_78_base endpoint_7_78_p6) (by decide)⟩
+private def endpoint_7_79_flag : Flag := ⟨7, 79, 2359⟩
+private def endpoint_7_79_sources : Sources := ⟨contact11, contact11, contact13⟩
+private theorem endpoint_7_79_base : receiptBase endpoint_7_79_flag endpoint_7_79_sources = some 193143335895451831 := by decide +kernel
+private theorem endpoint_7_79_w0 : receiptWindow endpoint_7_79_flag endpoint_7_79_sources 0 2 193143335895451831 = some 193143335895451831 := by decide +kernel
+private theorem endpoint_7_79_w2 : receiptWindow endpoint_7_79_flag endpoint_7_79_sources 2 2 193143335895451831 = some 193143335895451831 := by decide +kernel
+private theorem endpoint_7_79_p4 : receiptWindow endpoint_7_79_flag endpoint_7_79_sources 0 4 193143335895451831 = some 193143335895451831 :=
+  join_receipt_window endpoint_7_79_flag endpoint_7_79_sources 0 2 2 193143335895451831 193143335895451831 193143335895451831 endpoint_7_79_w0 endpoint_7_79_w2
+private theorem endpoint_7_79_w4 : receiptWindow endpoint_7_79_flag endpoint_7_79_sources 4 2 193143335895451831 = some 193143335895451831 := by decide +kernel
+private theorem endpoint_7_79_p6 : receiptWindow endpoint_7_79_flag endpoint_7_79_sources 0 6 193143335895451831 = some 193143335895451831 :=
+  join_receipt_window endpoint_7_79_flag endpoint_7_79_sources 0 4 2 193143335895451831 193143335895451831 193143335895451831 endpoint_7_79_p4 endpoint_7_79_w4
+def endpoint_7_79 : CertifiedEndpoint :=
+  ⟨⟨7, 79, 2359⟩, 193143335895451831, .terminal ⟨contact11, contact11, contact13⟩ (finish_receipt_window endpoint_7_79_flag endpoint_7_79_sources 6 193143335895451831 193143335895451831 rfl endpoint_7_79_base endpoint_7_79_p6) (by decide)⟩
+private def endpoint_7_80_flag : Flag := ⟨7, 80, 2256⟩
+private def endpoint_7_80_sources : Sources := ⟨contact14, contact14, contact13⟩
+private theorem endpoint_7_80_base : receiptBase endpoint_7_80_flag endpoint_7_80_sources = some 189009882051854930 := by decide +kernel
+private theorem endpoint_7_80_w0 : receiptWindow endpoint_7_80_flag endpoint_7_80_sources 0 2 189009882051854930 = some 189009882051854930 := by decide +kernel
+private theorem endpoint_7_80_w2 : receiptWindow endpoint_7_80_flag endpoint_7_80_sources 2 2 189009882051854930 = some 189009882051854930 := by decide +kernel
+private theorem endpoint_7_80_p4 : receiptWindow endpoint_7_80_flag endpoint_7_80_sources 0 4 189009882051854930 = some 189009882051854930 :=
+  join_receipt_window endpoint_7_80_flag endpoint_7_80_sources 0 2 2 189009882051854930 189009882051854930 189009882051854930 endpoint_7_80_w0 endpoint_7_80_w2
+private theorem endpoint_7_80_w4 : receiptWindow endpoint_7_80_flag endpoint_7_80_sources 4 2 189009882051854930 = some 189009882051854930 := by decide +kernel
+private theorem endpoint_7_80_p6 : receiptWindow endpoint_7_80_flag endpoint_7_80_sources 0 6 189009882051854930 = some 189009882051854930 :=
+  join_receipt_window endpoint_7_80_flag endpoint_7_80_sources 0 4 2 189009882051854930 189009882051854930 189009882051854930 endpoint_7_80_p4 endpoint_7_80_w4
+def endpoint_7_80 : CertifiedEndpoint :=
+  ⟨⟨7, 80, 2256⟩, 189009882051854930, .terminal ⟨contact14, contact14, contact13⟩ (finish_receipt_window endpoint_7_80_flag endpoint_7_80_sources 6 189009882051854930 189009882051854930 rfl endpoint_7_80_base endpoint_7_80_p6) (by decide)⟩
+private def endpoint_7_81_flag : Flag := ⟨7, 81, 2150⟩
+private def endpoint_7_81_sources : Sources := ⟨contact14, contact14, contact13⟩
+private theorem endpoint_7_81_base : receiptBase endpoint_7_81_flag endpoint_7_81_sources = some 182224558757115070 := by decide +kernel
+private theorem endpoint_7_81_w0 : receiptWindow endpoint_7_81_flag endpoint_7_81_sources 0 2 182224558757115070 = some 182224558757115070 := by decide +kernel
+private theorem endpoint_7_81_w2 : receiptWindow endpoint_7_81_flag endpoint_7_81_sources 2 2 182224558757115070 = some 182224558757115070 := by decide +kernel
+private theorem endpoint_7_81_p4 : receiptWindow endpoint_7_81_flag endpoint_7_81_sources 0 4 182224558757115070 = some 182224558757115070 :=
+  join_receipt_window endpoint_7_81_flag endpoint_7_81_sources 0 2 2 182224558757115070 182224558757115070 182224558757115070 endpoint_7_81_w0 endpoint_7_81_w2
+private theorem endpoint_7_81_w4 : receiptWindow endpoint_7_81_flag endpoint_7_81_sources 4 2 182224558757115070 = some 182224558757115070 := by decide +kernel
+private theorem endpoint_7_81_p6 : receiptWindow endpoint_7_81_flag endpoint_7_81_sources 0 6 182224558757115070 = some 182224558757115070 :=
+  join_receipt_window endpoint_7_81_flag endpoint_7_81_sources 0 4 2 182224558757115070 182224558757115070 182224558757115070 endpoint_7_81_p4 endpoint_7_81_w4
+def endpoint_7_81 : CertifiedEndpoint :=
+  ⟨⟨7, 81, 2150⟩, 182224558757115070, .terminal ⟨contact14, contact14, contact13⟩ (finish_receipt_window endpoint_7_81_flag endpoint_7_81_sources 6 182224558757115070 182224558757115070 rfl endpoint_7_81_base endpoint_7_81_p6) (by decide)⟩
+def endpoint_7_82 : CertifiedEndpoint :=
+  ⟨⟨7, 82, 2041⟩, 262410391984007269, .intrinsic (by decide +kernel) (by decide)⟩
+def endpoint_7_83 : CertifiedEndpoint :=
+  ⟨⟨7, 83, 1928⟩, 250676764442373399, .intrinsic (by decide +kernel) (by decide)⟩
+def endpoint_7_84 : CertifiedEndpoint :=
+  ⟨⟨7, 84, 1812⟩, 238156837163473180, .intrinsic (by decide +kernel) (by decide)⟩
+def endpoint_7_85 : CertifiedEndpoint :=
+  ⟨⟨7, 85, 1693⟩, 224835457116939106, .intrinsic (by decide +kernel) (by decide)⟩
+def endpoint_7_86 : CertifiedEndpoint :=
+  ⟨⟨7, 86, 1571⟩, 210697471272403671, .intrinsic (by decide +kernel) (by decide)⟩
+def endpoint_7_87 : CertifiedEndpoint :=
+  ⟨⟨7, 87, 1446⟩, 195727726599499369, .intrinsic (by decide +kernel) (by decide)⟩
+def endpoint_7_88 : CertifiedEndpoint :=
+  ⟨⟨7, 88, 1317⟩, 179769633175029681, .intrinsic (by decide +kernel) (by decide)⟩
+def endpoint_7_89 : CertifiedEndpoint :=
+  ⟨⟨7, 89, 1185⟩, 162946107521374446, .intrinsic (by decide +kernel) (by decide)⟩
+def endpoint_7_90 : CertifiedEndpoint :=
+  ⟨⟨7, 90, 1050⟩, 145241996608166158, .intrinsic (by decide +kernel) (by decide)⟩
+def endpoint_7_91 : CertifiedEndpoint :=
+  ⟨⟨7, 91, 912⟩, 126642147405037311, .intrinsic (by decide +kernel) (by decide)⟩
+def endpoint_7_92 : CertifiedEndpoint :=
+  ⟨⟨7, 92, 770⟩, 106983235308628050, .intrinsic (by decide +kernel) (by decide)⟩
+def endpoint_7_93 : CertifiedEndpoint :=
+  ⟨⟨7, 93, 626⟩, 86544766764514733, .intrinsic (by decide +kernel) (by decide)⟩
+def endpoint_7_94 : CertifiedEndpoint :=
+  ⟨⟨7, 94, 478⟩, 65013561926304322, .intrinsic (by decide +kernel) (by decide)⟩
+def endpoint_7_95 : CertifiedEndpoint :=
+  ⟨⟨7, 95, 327⟩, 42522639336621660, .intrinsic (by decide +kernel) (by decide)⟩
+def endpoint_7_96 : CertifiedEndpoint :=
+  ⟨⟨7, 96, 172⟩, 18901939711943556, .intrinsic (by decide +kernel) (by decide)⟩
+def endpoint_8_8 : CertifiedEndpoint :=
+  ⟨⟨8, 8, 5100⟩, 48042905671151484, .intrinsic (by decide +kernel) (by decide)⟩
+def endpoint_8_9 : CertifiedEndpoint :=
+  ⟨⟨8, 9, 5079⟩, 51023509175194398, .intrinsic (by decide +kernel) (by decide)⟩
+def endpoint_8_10 : CertifiedEndpoint :=
+  ⟨⟨8, 10, 5059⟩, 53988461431156121, .intrinsic (by decide +kernel) (by decide)⟩
+def endpoint_8_11 : CertifiedEndpoint :=
+  ⟨⟨8, 11, 5038⟩, 63524311480460923, .intrinsic (by decide +kernel) (by decide)⟩
+def endpoint_8_12 : CertifiedEndpoint :=
+  ⟨⟨8, 12, 5017⟩, 72976682431852027, .intrinsic (by decide +kernel) (by decide)⟩
+def endpoint_8_13 : CertifiedEndpoint :=
+  ⟨⟨8, 13, 4996⟩, 82345574285329433, .intrinsic (by decide +kernel) (by decide)⟩
+def endpoint_8_14 : CertifiedEndpoint :=
+  ⟨⟨8, 14, 4974⟩, 91612535372160294, .intrinsic (by decide +kernel) (by decide)⟩
+def endpoint_8_15 : CertifiedEndpoint :=
+  ⟨⟨8, 15, 4953⟩, 100812527655440218, .intrinsic (by decide +kernel) (by decide)⟩
+def endpoint_8_16 : CertifiedEndpoint :=
+  ⟨⟨8, 16, 4931⟩, 109906706423333425, .intrinsic (by decide +kernel) (by decide)⟩
+def endpoint_8_17 : CertifiedEndpoint :=
+  ⟨⟨8, 17, 4909⟩, 118913523344572762, .intrinsic (by decide +kernel) (by decide)⟩
+def endpoint_8_18 : CertifiedEndpoint :=
+  ⟨⟨8, 18, 4887⟩, 127832978419158229, .intrinsic (by decide +kernel) (by decide)⟩
+def endpoint_8_19 : CertifiedEndpoint :=
+  ⟨⟨8, 19, 4864⟩, 136636913106506549, .intrinsic (by decide +kernel) (by decide)⟩
+def endpoint_8_20 : CertifiedEndpoint :=
+  ⟨⟨8, 20, 4842⟩, 145379703113414190, .intrinsic (by decide +kernel) (by decide)⟩
+def endpoint_8_21 : CertifiedEndpoint :=
+  ⟨⟨8, 21, 4819⟩, 154003089984344512, .intrinsic (by decide +kernel) (by decide)⟩
+def endpoint_8_22 : CertifiedEndpoint :=
+  ⟨⟨8, 22, 4796⟩, 162535232259880792, .intrinsic (by decide +kernel) (by decide)⟩
+def endpoint_8_23 : CertifiedEndpoint :=
+  ⟨⟨8, 23, 4772⟩, 170940205901959409, .intrinsic (by decide +kernel) (by decide)⟩
+def endpoint_8_24 : CertifiedEndpoint :=
+  ⟨⟨8, 24, 4749⟩, 179287917612337519, .intrinsic (by decide +kernel) (by decide)⟩
+def endpoint_8_25 : CertifiedEndpoint :=
+  ⟨⟨8, 25, 4725⟩, 187504577940517794, .intrinsic (by decide +kernel) (by decide)⟩
+def endpoint_8_26 : CertifiedEndpoint :=
+  ⟨⟨8, 26, 4701⟩, 195626110924563855, .intrinsic (by decide +kernel) (by decide)⟩
+def endpoint_8_27 : CertifiedEndpoint :=
+  ⟨⟨8, 27, 4677⟩, 203652516564475702, .intrinsic (by decide +kernel) (by decide)⟩
+def endpoint_8_28 : CertifiedEndpoint :=
+  ⟨⟨8, 28, 4652⟩, 211538163950339284, .intrinsic (by decide +kernel) (by decide)⟩
+def endpoint_8_29 : CertifiedEndpoint :=
+  ⟨⟨8, 29, 4627⟩, 219324801243328480, .intrinsic (by decide +kernel) (by decide)⟩
+def endpoint_8_30 : CertifiedEndpoint :=
+  ⟨⟨8, 30, 4602⟩, 227012428443443290, .intrinsic (by decide +kernel) (by decide)⟩
+def endpoint_8_31 : CertifiedEndpoint :=
+  ⟨⟨8, 31, 4577⟩, 234601045550683714, .intrinsic (by decide +kernel) (by decide)⟩
+def endpoint_8_32 : CertifiedEndpoint :=
+  ⟨⟨8, 32, 4551⟩, 242037256157655357, .intrinsic (by decide +kernel) (by decide)⟩
+def endpoint_8_33 : CertifiedEndpoint :=
+  ⟨⟨8, 33, 4525⟩, 249370573923012442, .intrinsic (by decide +kernel) (by decide)⟩
+def endpoint_8_34 : CertifiedEndpoint :=
+  ⟨⟨8, 34, 4498⟩, 256543719690620402, .intrinsic (by decide +kernel) (by decide)⟩
+def endpoint_8_35 : CertifiedEndpoint :=
+  ⟨⟨8, 35, 4471⟩, 263610089867873632, .intrinsic (by decide +kernel) (by decide)⟩
+private def endpoint_8_36_flag : Flag := ⟨8, 36, 4444⟩
+private def endpoint_8_36_sources : Sources := ⟨contact09, contact09, contact10⟩
+private theorem endpoint_8_36_base : receiptBase endpoint_8_36_flag endpoint_8_36_sources = some 183526271978631762 := by decide +kernel
+private theorem endpoint_8_36_w0 : receiptWindow endpoint_8_36_flag endpoint_8_36_sources 0 2 183526271978631762 = some 183526271978631762 := by decide +kernel
+private theorem endpoint_8_36_w2 : receiptWindow endpoint_8_36_flag endpoint_8_36_sources 2 2 183526271978631762 = some 183526271978631762 := by decide +kernel
+private theorem endpoint_8_36_p4 : receiptWindow endpoint_8_36_flag endpoint_8_36_sources 0 4 183526271978631762 = some 183526271978631762 :=
+  join_receipt_window endpoint_8_36_flag endpoint_8_36_sources 0 2 2 183526271978631762 183526271978631762 183526271978631762 endpoint_8_36_w0 endpoint_8_36_w2
+private theorem endpoint_8_36_w4 : receiptWindow endpoint_8_36_flag endpoint_8_36_sources 4 2 183526271978631762 = some 183526271978631762 := by decide +kernel
+private theorem endpoint_8_36_p6 : receiptWindow endpoint_8_36_flag endpoint_8_36_sources 0 6 183526271978631762 = some 183526271978631762 :=
+  join_receipt_window endpoint_8_36_flag endpoint_8_36_sources 0 4 2 183526271978631762 183526271978631762 183526271978631762 endpoint_8_36_p4 endpoint_8_36_w4
+private theorem endpoint_8_36_w6 : receiptWindow endpoint_8_36_flag endpoint_8_36_sources 6 1 183526271978631762 = some 183526271978631762 := by decide +kernel
+private theorem endpoint_8_36_p7 : receiptWindow endpoint_8_36_flag endpoint_8_36_sources 0 7 183526271978631762 = some 183526271978631762 :=
+  join_receipt_window endpoint_8_36_flag endpoint_8_36_sources 0 6 1 183526271978631762 183526271978631762 183526271978631762 endpoint_8_36_p6 endpoint_8_36_w6
+def endpoint_8_36 : CertifiedEndpoint :=
+  ⟨⟨8, 36, 4444⟩, 183526271978631762, .terminal ⟨contact09, contact09, contact10⟩ (finish_receipt_window endpoint_8_36_flag endpoint_8_36_sources 7 183526271978631762 183526271978631762 rfl endpoint_8_36_base endpoint_8_36_p7) (by decide)⟩
+private def endpoint_8_37_flag : Flag := ⟨8, 37, 4416⟩
+private def endpoint_8_37_sources : Sources := ⟨contact09, contact09, contact10⟩
+private theorem endpoint_8_37_base : receiptBase endpoint_8_37_flag endpoint_8_37_sources = some 186571083292318446 := by decide +kernel
+private theorem endpoint_8_37_w0 : receiptWindow endpoint_8_37_flag endpoint_8_37_sources 0 2 186571083292318446 = some 186571083292318446 := by decide +kernel
+private theorem endpoint_8_37_w2 : receiptWindow endpoint_8_37_flag endpoint_8_37_sources 2 2 186571083292318446 = some 186571083292318446 := by decide +kernel
+private theorem endpoint_8_37_p4 : receiptWindow endpoint_8_37_flag endpoint_8_37_sources 0 4 186571083292318446 = some 186571083292318446 :=
+  join_receipt_window endpoint_8_37_flag endpoint_8_37_sources 0 2 2 186571083292318446 186571083292318446 186571083292318446 endpoint_8_37_w0 endpoint_8_37_w2
+private theorem endpoint_8_37_w4 : receiptWindow endpoint_8_37_flag endpoint_8_37_sources 4 2 186571083292318446 = some 186571083292318446 := by decide +kernel
+private theorem endpoint_8_37_p6 : receiptWindow endpoint_8_37_flag endpoint_8_37_sources 0 6 186571083292318446 = some 186571083292318446 :=
+  join_receipt_window endpoint_8_37_flag endpoint_8_37_sources 0 4 2 186571083292318446 186571083292318446 186571083292318446 endpoint_8_37_p4 endpoint_8_37_w4
+private theorem endpoint_8_37_w6 : receiptWindow endpoint_8_37_flag endpoint_8_37_sources 6 1 186571083292318446 = some 186571083292318446 := by decide +kernel
+private theorem endpoint_8_37_p7 : receiptWindow endpoint_8_37_flag endpoint_8_37_sources 0 7 186571083292318446 = some 186571083292318446 :=
+  join_receipt_window endpoint_8_37_flag endpoint_8_37_sources 0 6 1 186571083292318446 186571083292318446 186571083292318446 endpoint_8_37_p6 endpoint_8_37_w6
+def endpoint_8_37 : CertifiedEndpoint :=
+  ⟨⟨8, 37, 4416⟩, 186571083292318446, .terminal ⟨contact09, contact09, contact10⟩ (finish_receipt_window endpoint_8_37_flag endpoint_8_37_sources 7 186571083292318446 186571083292318446 rfl endpoint_8_37_base endpoint_8_37_p7) (by decide)⟩
+private def endpoint_8_38_flag : Flag := ⟨8, 38, 4388⟩
+private def endpoint_8_38_sources : Sources := ⟨contact09, contact09, contact10⟩
+private theorem endpoint_8_38_base : receiptBase endpoint_8_38_flag endpoint_8_38_sources = some 189562726102297506 := by decide +kernel
+private theorem endpoint_8_38_w0 : receiptWindow endpoint_8_38_flag endpoint_8_38_sources 0 2 189562726102297506 = some 189562726102297506 := by decide +kernel
+private theorem endpoint_8_38_w2 : receiptWindow endpoint_8_38_flag endpoint_8_38_sources 2 2 189562726102297506 = some 189562726102297506 := by decide +kernel
+private theorem endpoint_8_38_p4 : receiptWindow endpoint_8_38_flag endpoint_8_38_sources 0 4 189562726102297506 = some 189562726102297506 :=
+  join_receipt_window endpoint_8_38_flag endpoint_8_38_sources 0 2 2 189562726102297506 189562726102297506 189562726102297506 endpoint_8_38_w0 endpoint_8_38_w2
+private theorem endpoint_8_38_w4 : receiptWindow endpoint_8_38_flag endpoint_8_38_sources 4 2 189562726102297506 = some 189562726102297506 := by decide +kernel
+private theorem endpoint_8_38_p6 : receiptWindow endpoint_8_38_flag endpoint_8_38_sources 0 6 189562726102297506 = some 189562726102297506 :=
+  join_receipt_window endpoint_8_38_flag endpoint_8_38_sources 0 4 2 189562726102297506 189562726102297506 189562726102297506 endpoint_8_38_p4 endpoint_8_38_w4
+private theorem endpoint_8_38_w6 : receiptWindow endpoint_8_38_flag endpoint_8_38_sources 6 1 189562726102297506 = some 189562726102297506 := by decide +kernel
+private theorem endpoint_8_38_p7 : receiptWindow endpoint_8_38_flag endpoint_8_38_sources 0 7 189562726102297506 = some 189562726102297506 :=
+  join_receipt_window endpoint_8_38_flag endpoint_8_38_sources 0 6 1 189562726102297506 189562726102297506 189562726102297506 endpoint_8_38_p6 endpoint_8_38_w6
+def endpoint_8_38 : CertifiedEndpoint :=
+  ⟨⟨8, 38, 4388⟩, 189562726102297506, .terminal ⟨contact09, contact09, contact10⟩ (finish_receipt_window endpoint_8_38_flag endpoint_8_38_sources 7 189562726102297506 189562726102297506 rfl endpoint_8_38_base endpoint_8_38_p7) (by decide)⟩
+private def endpoint_8_39_flag : Flag := ⟨8, 39, 4360⟩
+private def endpoint_8_39_sources : Sources := ⟨contact09, contact09, contact10⟩
+private theorem endpoint_8_39_base : receiptBase endpoint_8_39_flag endpoint_8_39_sources = some 192501200408568941 := by decide +kernel
+private theorem endpoint_8_39_w0 : receiptWindow endpoint_8_39_flag endpoint_8_39_sources 0 2 192501200408568941 = some 192501200408568941 := by decide +kernel
+private theorem endpoint_8_39_w2 : receiptWindow endpoint_8_39_flag endpoint_8_39_sources 2 2 192501200408568941 = some 192501200408568941 := by decide +kernel
+private theorem endpoint_8_39_p4 : receiptWindow endpoint_8_39_flag endpoint_8_39_sources 0 4 192501200408568941 = some 192501200408568941 :=
+  join_receipt_window endpoint_8_39_flag endpoint_8_39_sources 0 2 2 192501200408568941 192501200408568941 192501200408568941 endpoint_8_39_w0 endpoint_8_39_w2
+private theorem endpoint_8_39_w4 : receiptWindow endpoint_8_39_flag endpoint_8_39_sources 4 2 192501200408568941 = some 192501200408568941 := by decide +kernel
+private theorem endpoint_8_39_p6 : receiptWindow endpoint_8_39_flag endpoint_8_39_sources 0 6 192501200408568941 = some 192501200408568941 :=
+  join_receipt_window endpoint_8_39_flag endpoint_8_39_sources 0 4 2 192501200408568941 192501200408568941 192501200408568941 endpoint_8_39_p4 endpoint_8_39_w4
+private theorem endpoint_8_39_w6 : receiptWindow endpoint_8_39_flag endpoint_8_39_sources 6 1 192501200408568941 = some 192501200408568941 := by decide +kernel
+private theorem endpoint_8_39_p7 : receiptWindow endpoint_8_39_flag endpoint_8_39_sources 0 7 192501200408568941 = some 192501200408568941 :=
+  join_receipt_window endpoint_8_39_flag endpoint_8_39_sources 0 6 1 192501200408568941 192501200408568941 192501200408568941 endpoint_8_39_p6 endpoint_8_39_w6
+def endpoint_8_39 : CertifiedEndpoint :=
+  ⟨⟨8, 39, 4360⟩, 192501200408568941, .terminal ⟨contact09, contact09, contact10⟩ (finish_receipt_window endpoint_8_39_flag endpoint_8_39_sources 7 192501200408568941 192501200408568941 rfl endpoint_8_39_base endpoint_8_39_p7) (by decide)⟩
+private def endpoint_8_40_flag : Flag := ⟨8, 40, 4331⟩
+private def endpoint_8_40_sources : Sources := ⟨contact09, contact09, contact10⟩
+private theorem endpoint_8_40_base : receiptBase endpoint_8_40_flag endpoint_8_40_sources = some 195342032488347567 := by decide +kernel
+private theorem endpoint_8_40_w0 : receiptWindow endpoint_8_40_flag endpoint_8_40_sources 0 2 195342032488347567 = some 195342032488347567 := by decide +kernel
+private theorem endpoint_8_40_w2 : receiptWindow endpoint_8_40_flag endpoint_8_40_sources 2 2 195342032488347567 = some 195342032488347567 := by decide +kernel
+private theorem endpoint_8_40_p4 : receiptWindow endpoint_8_40_flag endpoint_8_40_sources 0 4 195342032488347567 = some 195342032488347567 :=
+  join_receipt_window endpoint_8_40_flag endpoint_8_40_sources 0 2 2 195342032488347567 195342032488347567 195342032488347567 endpoint_8_40_w0 endpoint_8_40_w2
+private theorem endpoint_8_40_w4 : receiptWindow endpoint_8_40_flag endpoint_8_40_sources 4 2 195342032488347567 = some 195342032488347567 := by decide +kernel
+private theorem endpoint_8_40_p6 : receiptWindow endpoint_8_40_flag endpoint_8_40_sources 0 6 195342032488347567 = some 195342032488347567 :=
+  join_receipt_window endpoint_8_40_flag endpoint_8_40_sources 0 4 2 195342032488347567 195342032488347567 195342032488347567 endpoint_8_40_p4 endpoint_8_40_w4
+private theorem endpoint_8_40_w6 : receiptWindow endpoint_8_40_flag endpoint_8_40_sources 6 1 195342032488347567 = some 195342032488347567 := by decide +kernel
+private theorem endpoint_8_40_p7 : receiptWindow endpoint_8_40_flag endpoint_8_40_sources 0 7 195342032488347567 = some 195342032488347567 :=
+  join_receipt_window endpoint_8_40_flag endpoint_8_40_sources 0 6 1 195342032488347567 195342032488347567 195342032488347567 endpoint_8_40_p6 endpoint_8_40_w6
+def endpoint_8_40 : CertifiedEndpoint :=
+  ⟨⟨8, 40, 4331⟩, 195342032488347567, .terminal ⟨contact09, contact09, contact10⟩ (finish_receipt_window endpoint_8_40_flag endpoint_8_40_sources 7 195342032488347567 195342032488347567 rfl endpoint_8_40_base endpoint_8_40_p7) (by decide)⟩
+private def endpoint_8_41_flag : Flag := ⟨8, 41, 4302⟩
+private def endpoint_8_41_sources : Sources := ⟨contact09, contact09, contact10⟩
+private theorem endpoint_8_41_base : receiptBase endpoint_8_41_flag endpoint_8_41_sources = some 198127830502884967 := by decide +kernel
+private theorem endpoint_8_41_w0 : receiptWindow endpoint_8_41_flag endpoint_8_41_sources 0 2 198127830502884967 = some 198127830502884967 := by decide +kernel
+private theorem endpoint_8_41_w2 : receiptWindow endpoint_8_41_flag endpoint_8_41_sources 2 2 198127830502884967 = some 198127830502884967 := by decide +kernel
+private theorem endpoint_8_41_p4 : receiptWindow endpoint_8_41_flag endpoint_8_41_sources 0 4 198127830502884967 = some 198127830502884967 :=
+  join_receipt_window endpoint_8_41_flag endpoint_8_41_sources 0 2 2 198127830502884967 198127830502884967 198127830502884967 endpoint_8_41_w0 endpoint_8_41_w2
+private theorem endpoint_8_41_w4 : receiptWindow endpoint_8_41_flag endpoint_8_41_sources 4 2 198127830502884967 = some 198127830502884967 := by decide +kernel
+private theorem endpoint_8_41_p6 : receiptWindow endpoint_8_41_flag endpoint_8_41_sources 0 6 198127830502884967 = some 198127830502884967 :=
+  join_receipt_window endpoint_8_41_flag endpoint_8_41_sources 0 4 2 198127830502884967 198127830502884967 198127830502884967 endpoint_8_41_p4 endpoint_8_41_w4
+private theorem endpoint_8_41_w6 : receiptWindow endpoint_8_41_flag endpoint_8_41_sources 6 1 198127830502884967 = some 198127830502884967 := by decide +kernel
+private theorem endpoint_8_41_p7 : receiptWindow endpoint_8_41_flag endpoint_8_41_sources 0 7 198127830502884967 = some 198127830502884967 :=
+  join_receipt_window endpoint_8_41_flag endpoint_8_41_sources 0 6 1 198127830502884967 198127830502884967 198127830502884967 endpoint_8_41_p6 endpoint_8_41_w6
+def endpoint_8_41 : CertifiedEndpoint :=
+  ⟨⟨8, 41, 4302⟩, 198127830502884967, .terminal ⟨contact09, contact09, contact10⟩ (finish_receipt_window endpoint_8_41_flag endpoint_8_41_sources 7 198127830502884967 198127830502884967 rfl endpoint_8_41_base endpoint_8_41_p7) (by decide)⟩
+private def endpoint_8_42_flag : Flag := ⟨8, 42, 4272⟩
+private def endpoint_8_42_sources : Sources := ⟨contact09, contact09, contact10⟩
+private theorem endpoint_8_42_base : receiptBase endpoint_8_42_flag endpoint_8_42_sources = some 200812255167862356 := by decide +kernel
+private theorem endpoint_8_42_w0 : receiptWindow endpoint_8_42_flag endpoint_8_42_sources 0 2 200812255167862356 = some 200812255167862356 := by decide +kernel
+private theorem endpoint_8_42_w2 : receiptWindow endpoint_8_42_flag endpoint_8_42_sources 2 2 200812255167862356 = some 200812255167862356 := by decide +kernel
+private theorem endpoint_8_42_p4 : receiptWindow endpoint_8_42_flag endpoint_8_42_sources 0 4 200812255167862356 = some 200812255167862356 :=
+  join_receipt_window endpoint_8_42_flag endpoint_8_42_sources 0 2 2 200812255167862356 200812255167862356 200812255167862356 endpoint_8_42_w0 endpoint_8_42_w2
+private theorem endpoint_8_42_w4 : receiptWindow endpoint_8_42_flag endpoint_8_42_sources 4 2 200812255167862356 = some 200812255167862356 := by decide +kernel
+private theorem endpoint_8_42_p6 : receiptWindow endpoint_8_42_flag endpoint_8_42_sources 0 6 200812255167862356 = some 200812255167862356 :=
+  join_receipt_window endpoint_8_42_flag endpoint_8_42_sources 0 4 2 200812255167862356 200812255167862356 200812255167862356 endpoint_8_42_p4 endpoint_8_42_w4
+private theorem endpoint_8_42_w6 : receiptWindow endpoint_8_42_flag endpoint_8_42_sources 6 1 200812255167862356 = some 200812255167862356 := by decide +kernel
+private theorem endpoint_8_42_p7 : receiptWindow endpoint_8_42_flag endpoint_8_42_sources 0 7 200812255167862356 = some 200812255167862356 :=
+  join_receipt_window endpoint_8_42_flag endpoint_8_42_sources 0 6 1 200812255167862356 200812255167862356 200812255167862356 endpoint_8_42_p6 endpoint_8_42_w6
+def endpoint_8_42 : CertifiedEndpoint :=
+  ⟨⟨8, 42, 4272⟩, 200812255167862356, .terminal ⟨contact09, contact09, contact10⟩ (finish_receipt_window endpoint_8_42_flag endpoint_8_42_sources 7 200812255167862356 200812255167862356 rfl endpoint_8_42_base endpoint_8_42_p7) (by decide)⟩
+private def endpoint_8_43_flag : Flag := ⟨8, 43, 4242⟩
+private def endpoint_8_43_sources : Sources := ⟨contact09, contact09, contact10⟩
+private theorem endpoint_8_43_base : receiptBase endpoint_8_43_flag endpoint_8_43_sources = some 203439780206064918 := by decide +kernel
+private theorem endpoint_8_43_w0 : receiptWindow endpoint_8_43_flag endpoint_8_43_sources 0 2 203439780206064918 = some 203439780206064918 := by decide +kernel
+private theorem endpoint_8_43_w2 : receiptWindow endpoint_8_43_flag endpoint_8_43_sources 2 2 203439780206064918 = some 203439780206064918 := by decide +kernel
+private theorem endpoint_8_43_p4 : receiptWindow endpoint_8_43_flag endpoint_8_43_sources 0 4 203439780206064918 = some 203439780206064918 :=
+  join_receipt_window endpoint_8_43_flag endpoint_8_43_sources 0 2 2 203439780206064918 203439780206064918 203439780206064918 endpoint_8_43_w0 endpoint_8_43_w2
+private theorem endpoint_8_43_w4 : receiptWindow endpoint_8_43_flag endpoint_8_43_sources 4 2 203439780206064918 = some 203439780206064918 := by decide +kernel
+private theorem endpoint_8_43_p6 : receiptWindow endpoint_8_43_flag endpoint_8_43_sources 0 6 203439780206064918 = some 203439780206064918 :=
+  join_receipt_window endpoint_8_43_flag endpoint_8_43_sources 0 4 2 203439780206064918 203439780206064918 203439780206064918 endpoint_8_43_p4 endpoint_8_43_w4
+private theorem endpoint_8_43_w6 : receiptWindow endpoint_8_43_flag endpoint_8_43_sources 6 1 203439780206064918 = some 203439780206064918 := by decide +kernel
+private theorem endpoint_8_43_p7 : receiptWindow endpoint_8_43_flag endpoint_8_43_sources 0 7 203439780206064918 = some 203439780206064918 :=
+  join_receipt_window endpoint_8_43_flag endpoint_8_43_sources 0 6 1 203439780206064918 203439780206064918 203439780206064918 endpoint_8_43_p6 endpoint_8_43_w6
+def endpoint_8_43 : CertifiedEndpoint :=
+  ⟨⟨8, 43, 4242⟩, 203439780206064918, .terminal ⟨contact09, contact09, contact10⟩ (finish_receipt_window endpoint_8_43_flag endpoint_8_43_sources 7 203439780206064918 203439780206064918 rfl endpoint_8_43_base endpoint_8_43_p7) (by decide)⟩
+private def endpoint_8_44_flag : Flag := ⟨8, 44, 4211⟩
+private def endpoint_8_44_sources : Sources := ⟨contact09, contact09, contact10⟩
+private theorem endpoint_8_44_base : receiptBase endpoint_8_44_flag endpoint_8_44_sources = some 205962200771640268 := by decide +kernel
+private theorem endpoint_8_44_w0 : receiptWindow endpoint_8_44_flag endpoint_8_44_sources 0 2 205962200771640268 = some 205962200771640268 := by decide +kernel
+private theorem endpoint_8_44_w2 : receiptWindow endpoint_8_44_flag endpoint_8_44_sources 2 2 205962200771640268 = some 205962200771640268 := by decide +kernel
+private theorem endpoint_8_44_p4 : receiptWindow endpoint_8_44_flag endpoint_8_44_sources 0 4 205962200771640268 = some 205962200771640268 :=
+  join_receipt_window endpoint_8_44_flag endpoint_8_44_sources 0 2 2 205962200771640268 205962200771640268 205962200771640268 endpoint_8_44_w0 endpoint_8_44_w2
+private theorem endpoint_8_44_w4 : receiptWindow endpoint_8_44_flag endpoint_8_44_sources 4 2 205962200771640268 = some 205962200771640268 := by decide +kernel
+private theorem endpoint_8_44_p6 : receiptWindow endpoint_8_44_flag endpoint_8_44_sources 0 6 205962200771640268 = some 205962200771640268 :=
+  join_receipt_window endpoint_8_44_flag endpoint_8_44_sources 0 4 2 205962200771640268 205962200771640268 205962200771640268 endpoint_8_44_p4 endpoint_8_44_w4
+private theorem endpoint_8_44_w6 : receiptWindow endpoint_8_44_flag endpoint_8_44_sources 6 1 205962200771640268 = some 205962200771640268 := by decide +kernel
+private theorem endpoint_8_44_p7 : receiptWindow endpoint_8_44_flag endpoint_8_44_sources 0 7 205962200771640268 = some 205962200771640268 :=
+  join_receipt_window endpoint_8_44_flag endpoint_8_44_sources 0 6 1 205962200771640268 205962200771640268 205962200771640268 endpoint_8_44_p6 endpoint_8_44_w6
+def endpoint_8_44 : CertifiedEndpoint :=
+  ⟨⟨8, 44, 4211⟩, 205962200771640268, .terminal ⟨contact09, contact09, contact10⟩ (finish_receipt_window endpoint_8_44_flag endpoint_8_44_sources 7 205962200771640268 205962200771640268 rfl endpoint_8_44_base endpoint_8_44_p7) (by decide)⟩
+private def endpoint_8_45_flag : Flag := ⟨8, 45, 4180⟩
+private def endpoint_8_45_sources : Sources := ⟨contact09, contact09, contact10⟩
+private theorem endpoint_8_45_base : receiptBase endpoint_8_45_flag endpoint_8_45_sources = some 208425856148907190 := by decide +kernel
+private theorem endpoint_8_45_w0 : receiptWindow endpoint_8_45_flag endpoint_8_45_sources 0 2 208425856148907190 = some 208425856148907190 := by decide +kernel
+private theorem endpoint_8_45_w2 : receiptWindow endpoint_8_45_flag endpoint_8_45_sources 2 2 208425856148907190 = some 208425856148907190 := by decide +kernel
+private theorem endpoint_8_45_p4 : receiptWindow endpoint_8_45_flag endpoint_8_45_sources 0 4 208425856148907190 = some 208425856148907190 :=
+  join_receipt_window endpoint_8_45_flag endpoint_8_45_sources 0 2 2 208425856148907190 208425856148907190 208425856148907190 endpoint_8_45_w0 endpoint_8_45_w2
+private theorem endpoint_8_45_w4 : receiptWindow endpoint_8_45_flag endpoint_8_45_sources 4 2 208425856148907190 = some 208425856148907190 := by decide +kernel
+private theorem endpoint_8_45_p6 : receiptWindow endpoint_8_45_flag endpoint_8_45_sources 0 6 208425856148907190 = some 208425856148907190 :=
+  join_receipt_window endpoint_8_45_flag endpoint_8_45_sources 0 4 2 208425856148907190 208425856148907190 208425856148907190 endpoint_8_45_p4 endpoint_8_45_w4
+private theorem endpoint_8_45_w6 : receiptWindow endpoint_8_45_flag endpoint_8_45_sources 6 1 208425856148907190 = some 208425856148907190 := by decide +kernel
+private theorem endpoint_8_45_p7 : receiptWindow endpoint_8_45_flag endpoint_8_45_sources 0 7 208425856148907190 = some 208425856148907190 :=
+  join_receipt_window endpoint_8_45_flag endpoint_8_45_sources 0 6 1 208425856148907190 208425856148907190 208425856148907190 endpoint_8_45_p6 endpoint_8_45_w6
+def endpoint_8_45 : CertifiedEndpoint :=
+  ⟨⟨8, 45, 4180⟩, 208425856148907190, .terminal ⟨contact09, contact09, contact10⟩ (finish_receipt_window endpoint_8_45_flag endpoint_8_45_sources 7 208425856148907190 208425856148907190 rfl endpoint_8_45_base endpoint_8_45_p7) (by decide)⟩
+private def endpoint_8_46_flag : Flag := ⟨8, 46, 4148⟩
+private def endpoint_8_46_sources : Sources := ⟨contact09, contact09, contact10⟩
+private theorem endpoint_8_46_base : receiptBase endpoint_8_46_flag endpoint_8_46_sources = some 210780675930479698 := by decide +kernel
+private theorem endpoint_8_46_w0 : receiptWindow endpoint_8_46_flag endpoint_8_46_sources 0 2 210780675930479698 = some 210780675930479698 := by decide +kernel
+private theorem endpoint_8_46_w2 : receiptWindow endpoint_8_46_flag endpoint_8_46_sources 2 2 210780675930479698 = some 210780675930479698 := by decide +kernel
+private theorem endpoint_8_46_p4 : receiptWindow endpoint_8_46_flag endpoint_8_46_sources 0 4 210780675930479698 = some 210780675930479698 :=
+  join_receipt_window endpoint_8_46_flag endpoint_8_46_sources 0 2 2 210780675930479698 210780675930479698 210780675930479698 endpoint_8_46_w0 endpoint_8_46_w2
+private theorem endpoint_8_46_w4 : receiptWindow endpoint_8_46_flag endpoint_8_46_sources 4 2 210780675930479698 = some 210780675930479698 := by decide +kernel
+private theorem endpoint_8_46_p6 : receiptWindow endpoint_8_46_flag endpoint_8_46_sources 0 6 210780675930479698 = some 210780675930479698 :=
+  join_receipt_window endpoint_8_46_flag endpoint_8_46_sources 0 4 2 210780675930479698 210780675930479698 210780675930479698 endpoint_8_46_p4 endpoint_8_46_w4
+private theorem endpoint_8_46_w6 : receiptWindow endpoint_8_46_flag endpoint_8_46_sources 6 1 210780675930479698 = some 210780675930479698 := by decide +kernel
+private theorem endpoint_8_46_p7 : receiptWindow endpoint_8_46_flag endpoint_8_46_sources 0 7 210780675930479698 = some 210780675930479698 :=
+  join_receipt_window endpoint_8_46_flag endpoint_8_46_sources 0 6 1 210780675930479698 210780675930479698 210780675930479698 endpoint_8_46_p6 endpoint_8_46_w6
+def endpoint_8_46 : CertifiedEndpoint :=
+  ⟨⟨8, 46, 4148⟩, 210780675930479698, .terminal ⟨contact09, contact09, contact10⟩ (finish_receipt_window endpoint_8_46_flag endpoint_8_46_sources 7 210780675930479698 210780675930479698 rfl endpoint_8_46_base endpoint_8_46_p7) (by decide)⟩
+private def endpoint_8_47_flag : Flag := ⟨8, 47, 4115⟩
+private def endpoint_8_47_sources : Sources := ⟨contact09, contact09, contact10⟩
+private theorem endpoint_8_47_base : receiptBase endpoint_8_47_flag endpoint_8_47_sources = some 213023861774057391 := by decide +kernel
+private theorem endpoint_8_47_w0 : receiptWindow endpoint_8_47_flag endpoint_8_47_sources 0 2 213023861774057391 = some 213023861774057391 := by decide +kernel
+private theorem endpoint_8_47_w2 : receiptWindow endpoint_8_47_flag endpoint_8_47_sources 2 2 213023861774057391 = some 213023861774057391 := by decide +kernel
+private theorem endpoint_8_47_p4 : receiptWindow endpoint_8_47_flag endpoint_8_47_sources 0 4 213023861774057391 = some 213023861774057391 :=
+  join_receipt_window endpoint_8_47_flag endpoint_8_47_sources 0 2 2 213023861774057391 213023861774057391 213023861774057391 endpoint_8_47_w0 endpoint_8_47_w2
+private theorem endpoint_8_47_w4 : receiptWindow endpoint_8_47_flag endpoint_8_47_sources 4 2 213023861774057391 = some 213023861774057391 := by decide +kernel
+private theorem endpoint_8_47_p6 : receiptWindow endpoint_8_47_flag endpoint_8_47_sources 0 6 213023861774057391 = some 213023861774057391 :=
+  join_receipt_window endpoint_8_47_flag endpoint_8_47_sources 0 4 2 213023861774057391 213023861774057391 213023861774057391 endpoint_8_47_p4 endpoint_8_47_w4
+private theorem endpoint_8_47_w6 : receiptWindow endpoint_8_47_flag endpoint_8_47_sources 6 1 213023861774057391 = some 213023861774057391 := by decide +kernel
+private theorem endpoint_8_47_p7 : receiptWindow endpoint_8_47_flag endpoint_8_47_sources 0 7 213023861774057391 = some 213023861774057391 :=
+  join_receipt_window endpoint_8_47_flag endpoint_8_47_sources 0 6 1 213023861774057391 213023861774057391 213023861774057391 endpoint_8_47_p6 endpoint_8_47_w6
+def endpoint_8_47 : CertifiedEndpoint :=
+  ⟨⟨8, 47, 4115⟩, 213023861774057391, .terminal ⟨contact09, contact09, contact10⟩ (finish_receipt_window endpoint_8_47_flag endpoint_8_47_sources 7 213023861774057391 213023861774057391 rfl endpoint_8_47_base endpoint_8_47_p7) (by decide)⟩
+private def endpoint_8_48_flag : Flag := ⟨8, 48, 4082⟩
+private def endpoint_8_48_sources : Sources := ⟨contact09, contact09, contact10⟩
+private theorem endpoint_8_48_base : receiptBase endpoint_8_48_flag endpoint_8_48_sources = some 215204551306259454 := by decide +kernel
+private theorem endpoint_8_48_w0 : receiptWindow endpoint_8_48_flag endpoint_8_48_sources 0 2 215204551306259454 = some 215204551306259454 := by decide +kernel
+private theorem endpoint_8_48_w2 : receiptWindow endpoint_8_48_flag endpoint_8_48_sources 2 2 215204551306259454 = some 215204551306259454 := by decide +kernel
+private theorem endpoint_8_48_p4 : receiptWindow endpoint_8_48_flag endpoint_8_48_sources 0 4 215204551306259454 = some 215204551306259454 :=
+  join_receipt_window endpoint_8_48_flag endpoint_8_48_sources 0 2 2 215204551306259454 215204551306259454 215204551306259454 endpoint_8_48_w0 endpoint_8_48_w2
+private theorem endpoint_8_48_w4 : receiptWindow endpoint_8_48_flag endpoint_8_48_sources 4 2 215204551306259454 = some 215204551306259454 := by decide +kernel
+private theorem endpoint_8_48_p6 : receiptWindow endpoint_8_48_flag endpoint_8_48_sources 0 6 215204551306259454 = some 215204551306259454 :=
+  join_receipt_window endpoint_8_48_flag endpoint_8_48_sources 0 4 2 215204551306259454 215204551306259454 215204551306259454 endpoint_8_48_p4 endpoint_8_48_w4
+private theorem endpoint_8_48_w6 : receiptWindow endpoint_8_48_flag endpoint_8_48_sources 6 1 215204551306259454 = some 215204551306259454 := by decide +kernel
+private theorem endpoint_8_48_p7 : receiptWindow endpoint_8_48_flag endpoint_8_48_sources 0 7 215204551306259454 = some 215204551306259454 :=
+  join_receipt_window endpoint_8_48_flag endpoint_8_48_sources 0 6 1 215204551306259454 215204551306259454 215204551306259454 endpoint_8_48_p6 endpoint_8_48_w6
+def endpoint_8_48 : CertifiedEndpoint :=
+  ⟨⟨8, 48, 4082⟩, 215204551306259454, .terminal ⟨contact09, contact09, contact10⟩ (finish_receipt_window endpoint_8_48_flag endpoint_8_48_sources 7 215204551306259454 215204551306259454 rfl endpoint_8_48_base endpoint_8_48_p7) (by decide)⟩
+private def endpoint_8_49_flag : Flag := ⟨8, 49, 4048⟩
+private def endpoint_8_49_sources : Sources := ⟨contact09, contact09, contact10⟩
+private theorem endpoint_8_49_base : receiptBase endpoint_8_49_flag endpoint_8_49_sources = some 217269875777399499 := by decide +kernel
+private theorem endpoint_8_49_w0 : receiptWindow endpoint_8_49_flag endpoint_8_49_sources 0 2 217269875777399499 = some 217269875777399499 := by decide +kernel
+private theorem endpoint_8_49_w2 : receiptWindow endpoint_8_49_flag endpoint_8_49_sources 2 2 217269875777399499 = some 217269875777399499 := by decide +kernel
+private theorem endpoint_8_49_p4 : receiptWindow endpoint_8_49_flag endpoint_8_49_sources 0 4 217269875777399499 = some 217269875777399499 :=
+  join_receipt_window endpoint_8_49_flag endpoint_8_49_sources 0 2 2 217269875777399499 217269875777399499 217269875777399499 endpoint_8_49_w0 endpoint_8_49_w2
+private theorem endpoint_8_49_w4 : receiptWindow endpoint_8_49_flag endpoint_8_49_sources 4 2 217269875777399499 = some 217269875777399499 := by decide +kernel
+private theorem endpoint_8_49_p6 : receiptWindow endpoint_8_49_flag endpoint_8_49_sources 0 6 217269875777399499 = some 217269875777399499 :=
+  join_receipt_window endpoint_8_49_flag endpoint_8_49_sources 0 4 2 217269875777399499 217269875777399499 217269875777399499 endpoint_8_49_p4 endpoint_8_49_w4
+private theorem endpoint_8_49_w6 : receiptWindow endpoint_8_49_flag endpoint_8_49_sources 6 1 217269875777399499 = some 217269875777399499 := by decide +kernel
+private theorem endpoint_8_49_p7 : receiptWindow endpoint_8_49_flag endpoint_8_49_sources 0 7 217269875777399499 = some 217269875777399499 :=
+  join_receipt_window endpoint_8_49_flag endpoint_8_49_sources 0 6 1 217269875777399499 217269875777399499 217269875777399499 endpoint_8_49_p6 endpoint_8_49_w6
+def endpoint_8_49 : CertifiedEndpoint :=
+  ⟨⟨8, 49, 4048⟩, 217269875777399499, .terminal ⟨contact09, contact09, contact10⟩ (finish_receipt_window endpoint_8_49_flag endpoint_8_49_sources 7 217269875777399499 217269875777399499 rfl endpoint_8_49_base endpoint_8_49_p7) (by decide)⟩
+private def endpoint_8_50_flag : Flag := ⟨8, 50, 4013⟩
+private def endpoint_8_50_sources : Sources := ⟨contact09, contact09, contact10⟩
+private theorem endpoint_8_50_base : receiptBase endpoint_8_50_flag endpoint_8_50_sources = some 219217036845177126 := by decide +kernel
+private theorem endpoint_8_50_w0 : receiptWindow endpoint_8_50_flag endpoint_8_50_sources 0 2 219217036845177126 = some 219217036845177126 := by decide +kernel
+private theorem endpoint_8_50_w2 : receiptWindow endpoint_8_50_flag endpoint_8_50_sources 2 2 219217036845177126 = some 219217036845177126 := by decide +kernel
+private theorem endpoint_8_50_p4 : receiptWindow endpoint_8_50_flag endpoint_8_50_sources 0 4 219217036845177126 = some 219217036845177126 :=
+  join_receipt_window endpoint_8_50_flag endpoint_8_50_sources 0 2 2 219217036845177126 219217036845177126 219217036845177126 endpoint_8_50_w0 endpoint_8_50_w2
+private theorem endpoint_8_50_w4 : receiptWindow endpoint_8_50_flag endpoint_8_50_sources 4 2 219217036845177126 = some 219217036845177126 := by decide +kernel
+private theorem endpoint_8_50_p6 : receiptWindow endpoint_8_50_flag endpoint_8_50_sources 0 6 219217036845177126 = some 219217036845177126 :=
+  join_receipt_window endpoint_8_50_flag endpoint_8_50_sources 0 4 2 219217036845177126 219217036845177126 219217036845177126 endpoint_8_50_p4 endpoint_8_50_w4
+private theorem endpoint_8_50_w6 : receiptWindow endpoint_8_50_flag endpoint_8_50_sources 6 1 219217036845177126 = some 219217036845177126 := by decide +kernel
+private theorem endpoint_8_50_p7 : receiptWindow endpoint_8_50_flag endpoint_8_50_sources 0 7 219217036845177126 = some 219217036845177126 :=
+  join_receipt_window endpoint_8_50_flag endpoint_8_50_sources 0 6 1 219217036845177126 219217036845177126 219217036845177126 endpoint_8_50_p6 endpoint_8_50_w6
+def endpoint_8_50 : CertifiedEndpoint :=
+  ⟨⟨8, 50, 4013⟩, 219217036845177126, .terminal ⟨contact09, contact09, contact10⟩ (finish_receipt_window endpoint_8_50_flag endpoint_8_50_sources 7 219217036845177126 219217036845177126 rfl endpoint_8_50_base endpoint_8_50_p7) (by decide)⟩
+private def endpoint_8_51_flag : Flag := ⟨8, 51, 3978⟩
+private def endpoint_8_51_sources : Sources := ⟨contact00, contact01, contact02⟩
+private theorem endpoint_8_51_base : receiptBase endpoint_8_51_flag endpoint_8_51_sources = some 222349448194229857 := by decide +kernel
+private theorem endpoint_8_51_w0 : receiptWindow endpoint_8_51_flag endpoint_8_51_sources 0 2 222349448194229857 = some 222349448194229857 := by decide +kernel
+private theorem endpoint_8_51_w2 : receiptWindow endpoint_8_51_flag endpoint_8_51_sources 2 2 222349448194229857 = some 222349448194229857 := by decide +kernel
+private theorem endpoint_8_51_p4 : receiptWindow endpoint_8_51_flag endpoint_8_51_sources 0 4 222349448194229857 = some 222349448194229857 :=
+  join_receipt_window endpoint_8_51_flag endpoint_8_51_sources 0 2 2 222349448194229857 222349448194229857 222349448194229857 endpoint_8_51_w0 endpoint_8_51_w2
+private theorem endpoint_8_51_w4 : receiptWindow endpoint_8_51_flag endpoint_8_51_sources 4 2 222349448194229857 = some 222349448194229857 := by decide +kernel
+private theorem endpoint_8_51_p6 : receiptWindow endpoint_8_51_flag endpoint_8_51_sources 0 6 222349448194229857 = some 222349448194229857 :=
+  join_receipt_window endpoint_8_51_flag endpoint_8_51_sources 0 4 2 222349448194229857 222349448194229857 222349448194229857 endpoint_8_51_p4 endpoint_8_51_w4
+private theorem endpoint_8_51_w6 : receiptWindow endpoint_8_51_flag endpoint_8_51_sources 6 1 222349448194229857 = some 222349448194229857 := by decide +kernel
+private theorem endpoint_8_51_p7 : receiptWindow endpoint_8_51_flag endpoint_8_51_sources 0 7 222349448194229857 = some 222349448194229857 :=
+  join_receipt_window endpoint_8_51_flag endpoint_8_51_sources 0 6 1 222349448194229857 222349448194229857 222349448194229857 endpoint_8_51_p6 endpoint_8_51_w6
+def endpoint_8_51 : CertifiedEndpoint :=
+  ⟨⟨8, 51, 3978⟩, 222349448194229857, .terminal ⟨contact00, contact01, contact02⟩ (finish_receipt_window endpoint_8_51_flag endpoint_8_51_sources 7 222349448194229857 222349448194229857 rfl endpoint_8_51_base endpoint_8_51_p7) (by decide)⟩
+private def endpoint_8_52_flag : Flag := ⟨8, 52, 3941⟩
+private def endpoint_8_52_sources : Sources := ⟨contact00, contact01, contact02⟩
+private theorem endpoint_8_52_base : receiptBase endpoint_8_52_flag endpoint_8_52_sources = some 224053547472629313 := by decide +kernel
+private theorem endpoint_8_52_w0 : receiptWindow endpoint_8_52_flag endpoint_8_52_sources 0 2 224053547472629313 = some 224053547472629313 := by decide +kernel
+private theorem endpoint_8_52_w2 : receiptWindow endpoint_8_52_flag endpoint_8_52_sources 2 2 224053547472629313 = some 224053547472629313 := by decide +kernel
+private theorem endpoint_8_52_p4 : receiptWindow endpoint_8_52_flag endpoint_8_52_sources 0 4 224053547472629313 = some 224053547472629313 :=
+  join_receipt_window endpoint_8_52_flag endpoint_8_52_sources 0 2 2 224053547472629313 224053547472629313 224053547472629313 endpoint_8_52_w0 endpoint_8_52_w2
+private theorem endpoint_8_52_w4 : receiptWindow endpoint_8_52_flag endpoint_8_52_sources 4 2 224053547472629313 = some 224053547472629313 := by decide +kernel
+private theorem endpoint_8_52_p6 : receiptWindow endpoint_8_52_flag endpoint_8_52_sources 0 6 224053547472629313 = some 224053547472629313 :=
+  join_receipt_window endpoint_8_52_flag endpoint_8_52_sources 0 4 2 224053547472629313 224053547472629313 224053547472629313 endpoint_8_52_p4 endpoint_8_52_w4
+private theorem endpoint_8_52_w6 : receiptWindow endpoint_8_52_flag endpoint_8_52_sources 6 1 224053547472629313 = some 224053547472629313 := by decide +kernel
+private theorem endpoint_8_52_p7 : receiptWindow endpoint_8_52_flag endpoint_8_52_sources 0 7 224053547472629313 = some 224053547472629313 :=
+  join_receipt_window endpoint_8_52_flag endpoint_8_52_sources 0 6 1 224053547472629313 224053547472629313 224053547472629313 endpoint_8_52_p6 endpoint_8_52_w6
+def endpoint_8_52 : CertifiedEndpoint :=
+  ⟨⟨8, 52, 3941⟩, 224053547472629313, .terminal ⟨contact00, contact01, contact02⟩ (finish_receipt_window endpoint_8_52_flag endpoint_8_52_sources 7 224053547472629313 224053547472629313 rfl endpoint_8_52_base endpoint_8_52_p7) (by decide)⟩
+private def endpoint_8_53_flag : Flag := ⟨8, 53, 3904⟩
+private def endpoint_8_53_sources : Sources := ⟨contact00, contact01, contact02⟩
+private theorem endpoint_8_53_base : receiptBase endpoint_8_53_flag endpoint_8_53_sources = some 225687013024915711 := by decide +kernel
+private theorem endpoint_8_53_w0 : receiptWindow endpoint_8_53_flag endpoint_8_53_sources 0 2 225687013024915711 = some 225687013024915711 := by decide +kernel
+private theorem endpoint_8_53_w2 : receiptWindow endpoint_8_53_flag endpoint_8_53_sources 2 2 225687013024915711 = some 225687013024915711 := by decide +kernel
+private theorem endpoint_8_53_p4 : receiptWindow endpoint_8_53_flag endpoint_8_53_sources 0 4 225687013024915711 = some 225687013024915711 :=
+  join_receipt_window endpoint_8_53_flag endpoint_8_53_sources 0 2 2 225687013024915711 225687013024915711 225687013024915711 endpoint_8_53_w0 endpoint_8_53_w2
+private theorem endpoint_8_53_w4 : receiptWindow endpoint_8_53_flag endpoint_8_53_sources 4 2 225687013024915711 = some 225687013024915711 := by decide +kernel
+private theorem endpoint_8_53_p6 : receiptWindow endpoint_8_53_flag endpoint_8_53_sources 0 6 225687013024915711 = some 225687013024915711 :=
+  join_receipt_window endpoint_8_53_flag endpoint_8_53_sources 0 4 2 225687013024915711 225687013024915711 225687013024915711 endpoint_8_53_p4 endpoint_8_53_w4
+private theorem endpoint_8_53_w6 : receiptWindow endpoint_8_53_flag endpoint_8_53_sources 6 1 225687013024915711 = some 225687013024915711 := by decide +kernel
+private theorem endpoint_8_53_p7 : receiptWindow endpoint_8_53_flag endpoint_8_53_sources 0 7 225687013024915711 = some 225687013024915711 :=
+  join_receipt_window endpoint_8_53_flag endpoint_8_53_sources 0 6 1 225687013024915711 225687013024915711 225687013024915711 endpoint_8_53_p6 endpoint_8_53_w6
+def endpoint_8_53 : CertifiedEndpoint :=
+  ⟨⟨8, 53, 3904⟩, 225687013024915711, .terminal ⟨contact00, contact01, contact02⟩ (finish_receipt_window endpoint_8_53_flag endpoint_8_53_sources 7 225687013024915711 225687013024915711 rfl endpoint_8_53_base endpoint_8_53_p7) (by decide)⟩
+private def endpoint_8_54_flag : Flag := ⟨8, 54, 3866⟩
+private def endpoint_8_54_sources : Sources := ⟨contact00, contact01, contact02⟩
+private theorem endpoint_8_54_base : receiptBase endpoint_8_54_flag endpoint_8_54_sources = some 227191786774065387 := by decide +kernel
+private theorem endpoint_8_54_w0 : receiptWindow endpoint_8_54_flag endpoint_8_54_sources 0 2 227191786774065387 = some 227191786774065387 := by decide +kernel
+private theorem endpoint_8_54_w2 : receiptWindow endpoint_8_54_flag endpoint_8_54_sources 2 2 227191786774065387 = some 227191786774065387 := by decide +kernel
+private theorem endpoint_8_54_p4 : receiptWindow endpoint_8_54_flag endpoint_8_54_sources 0 4 227191786774065387 = some 227191786774065387 :=
+  join_receipt_window endpoint_8_54_flag endpoint_8_54_sources 0 2 2 227191786774065387 227191786774065387 227191786774065387 endpoint_8_54_w0 endpoint_8_54_w2
+private theorem endpoint_8_54_w4 : receiptWindow endpoint_8_54_flag endpoint_8_54_sources 4 2 227191786774065387 = some 227191786774065387 := by decide +kernel
+private theorem endpoint_8_54_p6 : receiptWindow endpoint_8_54_flag endpoint_8_54_sources 0 6 227191786774065387 = some 227191786774065387 :=
+  join_receipt_window endpoint_8_54_flag endpoint_8_54_sources 0 4 2 227191786774065387 227191786774065387 227191786774065387 endpoint_8_54_p4 endpoint_8_54_w4
+private theorem endpoint_8_54_w6 : receiptWindow endpoint_8_54_flag endpoint_8_54_sources 6 1 227191786774065387 = some 227191786774065387 := by decide +kernel
+private theorem endpoint_8_54_p7 : receiptWindow endpoint_8_54_flag endpoint_8_54_sources 0 7 227191786774065387 = some 227191786774065387 :=
+  join_receipt_window endpoint_8_54_flag endpoint_8_54_sources 0 6 1 227191786774065387 227191786774065387 227191786774065387 endpoint_8_54_p6 endpoint_8_54_w6
+def endpoint_8_54 : CertifiedEndpoint :=
+  ⟨⟨8, 54, 3866⟩, 227191786774065387, .terminal ⟨contact00, contact01, contact02⟩ (finish_receipt_window endpoint_8_54_flag endpoint_8_54_sources 7 227191786774065387 227191786774065387 rfl endpoint_8_54_base endpoint_8_54_p7) (by decide)⟩
+private def endpoint_8_55_flag : Flag := ⟨8, 55, 3827⟩
+private def endpoint_8_55_sources : Sources := ⟨contact00, contact01, contact02⟩
+private theorem endpoint_8_55_base : receiptBase endpoint_8_55_flag endpoint_8_55_sources = some 228565043371033821 := by decide +kernel
+private theorem endpoint_8_55_w0 : receiptWindow endpoint_8_55_flag endpoint_8_55_sources 0 2 228565043371033821 = some 228565043371033821 := by decide +kernel
+private theorem endpoint_8_55_w2 : receiptWindow endpoint_8_55_flag endpoint_8_55_sources 2 2 228565043371033821 = some 228565043371033821 := by decide +kernel
+private theorem endpoint_8_55_p4 : receiptWindow endpoint_8_55_flag endpoint_8_55_sources 0 4 228565043371033821 = some 228565043371033821 :=
+  join_receipt_window endpoint_8_55_flag endpoint_8_55_sources 0 2 2 228565043371033821 228565043371033821 228565043371033821 endpoint_8_55_w0 endpoint_8_55_w2
+private theorem endpoint_8_55_w4 : receiptWindow endpoint_8_55_flag endpoint_8_55_sources 4 2 228565043371033821 = some 228565043371033821 := by decide +kernel
+private theorem endpoint_8_55_p6 : receiptWindow endpoint_8_55_flag endpoint_8_55_sources 0 6 228565043371033821 = some 228565043371033821 :=
+  join_receipt_window endpoint_8_55_flag endpoint_8_55_sources 0 4 2 228565043371033821 228565043371033821 228565043371033821 endpoint_8_55_p4 endpoint_8_55_w4
+private theorem endpoint_8_55_w6 : receiptWindow endpoint_8_55_flag endpoint_8_55_sources 6 1 228565043371033821 = some 228565043371033821 := by decide +kernel
+private theorem endpoint_8_55_p7 : receiptWindow endpoint_8_55_flag endpoint_8_55_sources 0 7 228565043371033821 = some 228565043371033821 :=
+  join_receipt_window endpoint_8_55_flag endpoint_8_55_sources 0 6 1 228565043371033821 228565043371033821 228565043371033821 endpoint_8_55_p6 endpoint_8_55_w6
+def endpoint_8_55 : CertifiedEndpoint :=
+  ⟨⟨8, 55, 3827⟩, 228565043371033821, .terminal ⟨contact00, contact01, contact02⟩ (finish_receipt_window endpoint_8_55_flag endpoint_8_55_sources 7 228565043371033821 228565043371033821 rfl endpoint_8_55_base endpoint_8_55_p7) (by decide)⟩
+private def endpoint_8_56_flag : Flag := ⟨8, 56, 3786⟩
+private def endpoint_8_56_sources : Sources := ⟨contact01, contact01, contact02⟩
+private theorem endpoint_8_56_base : receiptBase endpoint_8_56_flag endpoint_8_56_sources = some 230549716345725847 := by decide +kernel
+private theorem endpoint_8_56_w0 : receiptWindow endpoint_8_56_flag endpoint_8_56_sources 0 2 230549716345725847 = some 230549716345725847 := by decide +kernel
+private theorem endpoint_8_56_w2 : receiptWindow endpoint_8_56_flag endpoint_8_56_sources 2 2 230549716345725847 = some 230549716345725847 := by decide +kernel
+private theorem endpoint_8_56_p4 : receiptWindow endpoint_8_56_flag endpoint_8_56_sources 0 4 230549716345725847 = some 230549716345725847 :=
+  join_receipt_window endpoint_8_56_flag endpoint_8_56_sources 0 2 2 230549716345725847 230549716345725847 230549716345725847 endpoint_8_56_w0 endpoint_8_56_w2
+private theorem endpoint_8_56_w4 : receiptWindow endpoint_8_56_flag endpoint_8_56_sources 4 2 230549716345725847 = some 230549716345725847 := by decide +kernel
+private theorem endpoint_8_56_p6 : receiptWindow endpoint_8_56_flag endpoint_8_56_sources 0 6 230549716345725847 = some 230549716345725847 :=
+  join_receipt_window endpoint_8_56_flag endpoint_8_56_sources 0 4 2 230549716345725847 230549716345725847 230549716345725847 endpoint_8_56_p4 endpoint_8_56_w4
+private theorem endpoint_8_56_w6 : receiptWindow endpoint_8_56_flag endpoint_8_56_sources 6 1 230549716345725847 = some 230549716345725847 := by decide +kernel
+private theorem endpoint_8_56_p7 : receiptWindow endpoint_8_56_flag endpoint_8_56_sources 0 7 230549716345725847 = some 230549716345725847 :=
+  join_receipt_window endpoint_8_56_flag endpoint_8_56_sources 0 6 1 230549716345725847 230549716345725847 230549716345725847 endpoint_8_56_p6 endpoint_8_56_w6
+def endpoint_8_56 : CertifiedEndpoint :=
+  ⟨⟨8, 56, 3786⟩, 230549716345725847, .terminal ⟨contact01, contact01, contact02⟩ (finish_receipt_window endpoint_8_56_flag endpoint_8_56_sources 7 230549716345725847 230549716345725847 rfl endpoint_8_56_base endpoint_8_56_p7) (by decide)⟩
+private def endpoint_8_57_flag : Flag := ⟨8, 57, 3744⟩
+private def endpoint_8_57_sources : Sources := ⟨contact01, contact01, contact02⟩
+private theorem endpoint_8_57_base : receiptBase endpoint_8_57_flag endpoint_8_57_sources = some 231580348027084457 := by decide +kernel
+private theorem endpoint_8_57_w0 : receiptWindow endpoint_8_57_flag endpoint_8_57_sources 0 2 231580348027084457 = some 231580348027084457 := by decide +kernel
+private theorem endpoint_8_57_w2 : receiptWindow endpoint_8_57_flag endpoint_8_57_sources 2 2 231580348027084457 = some 231580348027084457 := by decide +kernel
+private theorem endpoint_8_57_p4 : receiptWindow endpoint_8_57_flag endpoint_8_57_sources 0 4 231580348027084457 = some 231580348027084457 :=
+  join_receipt_window endpoint_8_57_flag endpoint_8_57_sources 0 2 2 231580348027084457 231580348027084457 231580348027084457 endpoint_8_57_w0 endpoint_8_57_w2
+private theorem endpoint_8_57_w4 : receiptWindow endpoint_8_57_flag endpoint_8_57_sources 4 2 231580348027084457 = some 231580348027084457 := by decide +kernel
+private theorem endpoint_8_57_p6 : receiptWindow endpoint_8_57_flag endpoint_8_57_sources 0 6 231580348027084457 = some 231580348027084457 :=
+  join_receipt_window endpoint_8_57_flag endpoint_8_57_sources 0 4 2 231580348027084457 231580348027084457 231580348027084457 endpoint_8_57_p4 endpoint_8_57_w4
+private theorem endpoint_8_57_w6 : receiptWindow endpoint_8_57_flag endpoint_8_57_sources 6 1 231580348027084457 = some 231580348027084457 := by decide +kernel
+private theorem endpoint_8_57_p7 : receiptWindow endpoint_8_57_flag endpoint_8_57_sources 0 7 231580348027084457 = some 231580348027084457 :=
+  join_receipt_window endpoint_8_57_flag endpoint_8_57_sources 0 6 1 231580348027084457 231580348027084457 231580348027084457 endpoint_8_57_p6 endpoint_8_57_w6
+def endpoint_8_57 : CertifiedEndpoint :=
+  ⟨⟨8, 57, 3744⟩, 231580348027084457, .terminal ⟨contact01, contact01, contact02⟩ (finish_receipt_window endpoint_8_57_flag endpoint_8_57_sources 7 231580348027084457 231580348027084457 rfl endpoint_8_57_base endpoint_8_57_p7) (by decide)⟩
 
 def endpointBlock05 : List CertifiedEndpoint := [
-  endpoint_9_66, endpoint_9_67, endpoint_9_68, endpoint_9_69, endpoint_9_70, endpoint_9_71,
-  endpoint_9_72, endpoint_9_73, endpoint_9_74, endpoint_9_75, endpoint_9_76, endpoint_9_77,
-  endpoint_9_78, endpoint_9_79, endpoint_9_80, endpoint_9_81, endpoint_9_82, endpoint_9_83,
-  endpoint_9_84, endpoint_9_85, endpoint_9_86, endpoint_9_87, endpoint_9_88, endpoint_9_89,
-  endpoint_9_90, endpoint_9_91, endpoint_9_92, endpoint_9_93, endpoint_9_94, endpoint_9_95,
-  endpoint_10_10, endpoint_10_11, endpoint_10_12, endpoint_10_13, endpoint_10_14, endpoint_10_15,
-  endpoint_10_16, endpoint_10_17, endpoint_10_18, endpoint_10_19, endpoint_10_20, endpoint_10_21,
-  endpoint_10_22, endpoint_10_23, endpoint_10_24, endpoint_10_25, endpoint_10_26, endpoint_10_27,
-  endpoint_10_28, endpoint_10_29, endpoint_10_30, endpoint_10_31, endpoint_10_32, endpoint_10_33,
-  endpoint_10_34, endpoint_10_35, endpoint_10_36, endpoint_10_37, endpoint_10_38, endpoint_10_39,
-  endpoint_10_40, endpoint_10_41, endpoint_10_42, endpoint_10_43, endpoint_10_44, endpoint_10_45,
-  endpoint_10_46, endpoint_10_47, endpoint_10_48, endpoint_10_49, endpoint_10_50, endpoint_10_51,
-  endpoint_10_52, endpoint_10_53, endpoint_10_54, endpoint_10_55, endpoint_10_56, endpoint_10_57,
-  endpoint_10_58, endpoint_10_59, endpoint_10_60, endpoint_10_61, endpoint_10_62, endpoint_10_63,
-  endpoint_10_64, endpoint_10_65, endpoint_10_66, endpoint_10_67, endpoint_10_68, endpoint_10_69,
-  endpoint_10_70
+  endpoint_7_27, endpoint_7_28, endpoint_7_29, endpoint_7_30, endpoint_7_31, endpoint_7_32, endpoint_7_33,
+  endpoint_7_34, endpoint_7_35, endpoint_7_36, endpoint_7_37, endpoint_7_38, endpoint_7_39, endpoint_7_40,
+  endpoint_7_41, endpoint_7_42, endpoint_7_43, endpoint_7_44, endpoint_7_45, endpoint_7_46, endpoint_7_47,
+  endpoint_7_48, endpoint_7_49, endpoint_7_50, endpoint_7_51, endpoint_7_52, endpoint_7_53, endpoint_7_54,
+  endpoint_7_55, endpoint_7_56, endpoint_7_57, endpoint_7_58, endpoint_7_59, endpoint_7_60, endpoint_7_61,
+  endpoint_7_62, endpoint_7_63, endpoint_7_64, endpoint_7_65, endpoint_7_66, endpoint_7_67, endpoint_7_68,
+  endpoint_7_69, endpoint_7_70, endpoint_7_71, endpoint_7_72, endpoint_7_73, endpoint_7_74, endpoint_7_75,
+  endpoint_7_76, endpoint_7_77, endpoint_7_78, endpoint_7_79, endpoint_7_80, endpoint_7_81, endpoint_7_82,
+  endpoint_7_83, endpoint_7_84, endpoint_7_85, endpoint_7_86, endpoint_7_87, endpoint_7_88, endpoint_7_89,
+  endpoint_7_90, endpoint_7_91, endpoint_7_92, endpoint_7_93, endpoint_7_94, endpoint_7_95, endpoint_7_96,
+  endpoint_8_8, endpoint_8_9, endpoint_8_10, endpoint_8_11, endpoint_8_12, endpoint_8_13, endpoint_8_14,
+  endpoint_8_15, endpoint_8_16, endpoint_8_17, endpoint_8_18, endpoint_8_19, endpoint_8_20, endpoint_8_21,
+  endpoint_8_22, endpoint_8_23, endpoint_8_24, endpoint_8_25, endpoint_8_26, endpoint_8_27, endpoint_8_28,
+  endpoint_8_29, endpoint_8_30, endpoint_8_31, endpoint_8_32, endpoint_8_33, endpoint_8_34, endpoint_8_35,
+  endpoint_8_36, endpoint_8_37, endpoint_8_38, endpoint_8_39, endpoint_8_40, endpoint_8_41, endpoint_8_42,
+  endpoint_8_43, endpoint_8_44, endpoint_8_45, endpoint_8_46, endpoint_8_47, endpoint_8_48, endpoint_8_49,
+  endpoint_8_50, endpoint_8_51, endpoint_8_52, endpoint_8_53, endpoint_8_54, endpoint_8_55, endpoint_8_56,
+  endpoint_8_57
 ]
-
 end ProximityPrize.SubmissionLower.Koala6844Receipts

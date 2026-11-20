@@ -18,18 +18,18 @@ set_option maxHeartbeats 1300000
 set_option maxRecDepth 20000
 
 abbrev VirtualFamily (nodes : Finset IRSProfile.Index) (excess : ℕ) :=
-  CenteredVirtualData IRSProfile.domain nodes Koala6844BenchmarkField.frobenius 131071 180961 81183 excess
+  CenteredVirtualData IRSProfile.domain nodes Koala6844BenchmarkField.frobenius 131071 180958 81186 excess
 
-def activeBudget : ℕ := 273427938013395819
+def activeBudget : ℕ := 274068484445549948
 
 def LargeSupportBound : Prop :=
   ∀ (nodes : Finset IRSProfile.Index) (excess : ℕ), excess ≤ 9799 →
-    ∀ (data : VirtualFamily nodes excess), 6675 ≤ data.d0.natDegree + affineDegree data.A0 →
+    ∀ (data : VirtualFamily nodes excess), 6680 ≤ data.d0.natDegree + affineDegree data.A0 →
       data.seeds.card ≤ activeBudget
 
 def ShortSupportBound : Prop :=
   ∀ (nodes : Finset IRSProfile.Index) (excess : ℕ), excess ≤ 9799 →
-    ∀ (data : VirtualFamily nodes excess), data.d0.natDegree + affineDegree data.A0 ≤ 6674 →
+    ∀ (data : VirtualFamily nodes excess), data.d0.natDegree + affineDegree data.A0 ≤ 6679 →
     (∀ i ∈ nodes, (data.A0 1).eval (IRSProfile.domain i) ≠ 0) →
       data.seeds.card ≤ activeBudget
 
@@ -43,12 +43,12 @@ private theorem field_larger_than_nodes (nodes : Finset IRSProfile.Index) :
 private theorem active_card_le (hLarge : LargeSupportBound) (hShort : ShortSupportBound)
     {nodes : Finset IRSProfile.Index} {excess : ℕ} (hexcess : excess ≤ 9799)
     (data : VirtualFamily nodes excess) : data.seeds.card ≤ activeBudget + 1 := by
-  by_cases hbig : 6675 ≤ data.d0.natDegree + affineDegree data.A0
+  by_cases hbig : 6680 ≤ data.d0.natDegree + affineDegree data.A0
   · exact (hLarge nodes excess hexcess data hbig).trans (Nat.le_succ _)
-  · have hsmall : data.d0.natDegree + affineDegree data.A0 ≤ 6674 := by omega
+  · have hsmall : data.d0.natDegree + affineDegree data.A0 ≤ 6679 := by omega
     obtain ⟨shifted, hcard, hsupport, hleading⟩ :=
       Koala6844SeedChart.exists_admissible_chart data (field_larger_than_nodes nodes)
-    have hsmall' : shifted.d0.natDegree + affineDegree shifted.A0 ≤ 6674 :=
+    have hsmall' : shifted.d0.natDegree + affineDegree shifted.A0 ≤ 6679 :=
       hsupport ▸ hsmall
     exact hcard.trans (Nat.add_le_add_right (hShort nodes excess hexcess shifted hsmall' hleading) 1)
 
@@ -65,7 +65,7 @@ theorem separated_bound_of_active_counts
         (by decide +kernel)
 
 theorem protocolClaim_of_active_counts (hLarge : LargeSupportBound) (hShort : ShortSupportBound) :
-    ProtocolClaim 6844 332529663 1073741824 :=
+    ProtocolClaim 6844 332541951 1073741824 :=
   protocolClaim_of_separated (separated_bound_of_active_counts hLarge hShort)
 
 end

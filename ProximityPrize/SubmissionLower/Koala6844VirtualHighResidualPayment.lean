@@ -38,7 +38,7 @@ theorem pay_benchmark_residual_factor (D : BenchmarkVirtualFamily nodes excess)
     (bound : ℕ) (hbound : 144397 ≤ bound) (hchar : bound < modulus)
     (hweight : RCN234.wt (![1,144396,0,0] : Fin 4 → ℕ) F < bound)
     (hselected : 131071 + D.d0.natDegree - affineDegree D.A0 ≤ 144396)
-    (haverage : nodeAverage nodes.card 144396 180961 ≤ 4) :
+    (haverage : nodeAverage nodes.card 144396 180958 ≤ 4) :
     (regularSeeds benchmarkVirtualSeed modulus (benchmarkSurfaceValue D) D.seeds F).card ≤
       mixedDegree (integralRectangle F) (tailRectangle 124397 aggregate) (tailRectangle 124398 aggregate) +
         invariantRate*F.degreeOf 1 := by

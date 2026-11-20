@@ -48,14 +48,14 @@ structure FirstJetShape where
   q : Nat
   deriving DecidableEq, Repr
 
-def primaryShape : FirstJetShape := ⟨601, 39900, 185, 742⟩
-def firstRoomShape : FirstJetShape := ⟨2000, 1000000, 600, 2400⟩
-def secondRoomShape : FirstJetShape := ⟨2000, 200000, 600, 2400⟩
-def firstAdaptiveShape : FirstJetShape := secondRoomShape
-def secondAdaptiveShape : FirstJetShape := ⟨60000, 3600000, 18480, 78816⟩
+def primaryShape : FirstJetShape := ⟨601, 44841, 185, 744⟩
+def firstRoomShape : FirstJetShape := ⟨2000, 1224043, 600, 2553⟩
+def secondRoomShape : FirstJetShape := ⟨2000, 217495, 600, 2497⟩
+def firstAdaptiveShape : FirstJetShape := ⟨2000, 200000, 600, 2400⟩
+def secondAdaptiveShape : FirstJetShape := ⟨49000, 3381000, 15166, 59290⟩
 
-def firstRoomCut : Nat := 151639
-def secondRoomCut : Nat := 123348
+def firstRoomCut : Nat := 146938
+def secondRoomCut : Nat := 120222
 
 def flowWidth : Nat := 2 * poleWidth
 
@@ -111,8 +111,8 @@ def firstJetGapTwelve (shape : FirstJetShape) (room : Nat) : Int :=
 def firstJetGap (shape : FirstJetShape) (room : Nat) : Nat :=
   (firstJetGapTwelve shape room / 12).toNat
 
-def firstAdaptiveGap : Nat := 36428658041044173
-def secondAdaptiveGap : Nat := 23136176707006345888468
+def firstAdaptiveGap : Nat := 34649318100835749
+def secondAdaptiveGap : Nat := 12016736462359980596653
 
 def remainingAfterRoom (old : Flag) (source : FirstJetShape) (room : Nat) : Flag :=
   let g := firstJetFlag source room
@@ -127,7 +127,7 @@ def primaryFlag : Flag := firstJetFlag primaryShape 0
 def firstResidualFlag : Flag := remainingAfterRoom primaryFlag firstRoomShape firstRoomCut
 def afterRooms : Flag := remainingAfterRoom firstResidualFlag secondRoomShape secondRoomCut
 
-theorem afterRooms_eq : afterRooms = ⟨50, 230, 20240⟩ := by decide +kernel
+theorem afterRooms_eq : afterRooms = ⟨50, 230, 21999⟩ := by decide +kernel
 
 
 

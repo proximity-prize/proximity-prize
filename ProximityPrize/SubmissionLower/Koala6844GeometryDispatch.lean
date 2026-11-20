@@ -39,7 +39,7 @@ theorem remaining_geometry_of_separated (hSeparated : SeparatedRetainedBound) :
     exact hSeparated received retained selected q h N
 
 theorem protocolClaim_of_separated (hSeparated : SeparatedRetainedBound) :
-    ProtocolClaim 6844 332529663 1073741824 :=
+    ProtocolClaim 6844 332541951 1073741824 :=
   Koala6844Assembly.protocolClaim_of_retained_geometry (remaining_geometry_of_separated hSeparated)
 
 end

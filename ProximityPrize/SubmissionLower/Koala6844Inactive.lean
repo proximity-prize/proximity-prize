@@ -100,9 +100,9 @@ private theorem quotient_list_card_le
     (R : IRSProfile.Field → Polynomial IRSProfile.Field)
     (nodes : Finset IRSProfile.Index) (received : IRSProfile.Index → IRSProfile.Field)
     (hdegree : ∀ g ∈ seeds, (R g).natDegree ≤ 131071)
-    (hclose : ∀ g ∈ seeds, 180961 ≤
+    (hclose : ∀ g ∈ seeds, 180958 ≤
       (nodes.filter (fun i => (R g).eval (IRSProfile.domain i) = received i)).card) :
-    (seeds.image R).card ≤ 122234137536 := by
+    (seeds.image R).card ≤ 113387658701 := by
   let evalWord (Q : Polynomial IRSProfile.Field) (i : IRSProfile.Index) :=
     Q.eval (IRSProfile.domain i)
   let words := (seeds.image R).image evalWord
@@ -148,12 +148,12 @@ theorem card_le_of_inactive
       d₀.map σ.toRingHom * normalized g)
     (hselected : ∀ g ∈ seeds, (selected g).natDegree ≤ 131071)
     (hnormalized : ∀ g ∈ seeds, (normalized g).natDegree ≤ 131071 + d₀.natDegree)
-    (hclose : ∀ g ∈ seeds, 180961 ≤
+    (hclose : ∀ g ∈ seeds, 180958 ≤
       (nodes.filter (fun i => (normalized g).eval (IRSProfile.domain i) = fixedWord i)).card)
     (hpencil : ∀ p₀ p₁ : Polynomial IRSProfile.Field,
        p₀.natDegree ≤ 131071 → p₁.natDegree ≤ 131071 →
-       (seeds.filter (fun g => selected g = p₀ + C g * p₁)).card ≤ 81184) :
-    seeds.card ≤ 9923456221722624 := by
+       (seeds.filter (fun g => selected g = p₀ + C g * p₁)).card ≤ 81187) :
+    seeds.card ≤ 9205603846958087 := by
   let d := d₀ * d₁
   have hd : d ≠ 0 := mul_ne_zero hd₀ hd₁
   have hdiv (g : IRSProfile.Field) (hg : g ∈ seeds) : d ∣ normalized g :=
@@ -173,7 +173,7 @@ theorem card_le_of_inactive
     omega
   let received (i : IRSProfile.Index) := fixedWord i / d.eval (IRSProfile.domain i)
   have hRclose g (hg : g ∈ seeds) :
-      180961 ≤ (nodes.filter (fun i => (R g).eval (IRSProfile.domain i) = received i)).card := by
+      180958 ≤ (nodes.filter (fun i => (R g).eval (IRSProfile.domain i) = received i)).card := by
     refine (hclose g hg).trans (Finset.card_le_card ?_)
     intro i hi
     obtain ⟨hinode, heval⟩ := Finset.mem_filter.mp hi
@@ -193,11 +193,11 @@ theorem card_le_of_inactive
   calc
     seeds.card ≤ ((seeds.image R).biUnion fibers).card := Finset.card_le_card hcover
     _ ≤ ∑ Q ∈ seeds.image R, (fibers Q).card := Finset.card_biUnion_le
-    _ ≤ ∑ _Q ∈ seeds.image R, 81184 := Finset.sum_le_sum (fun Q _ =>
+    _ ≤ ∑ _Q ∈ seeds.image R, 81187 := Finset.sum_le_sum (fun Q _ =>
       fixed_quotient_fiber_le seeds selected R d₀ (A 0 * d) (A 1 * d) C₁ Q
-        131071 81183 hd₀ hselected hrel hpencil)
-    _ = (seeds.image R).card * 81184 := by simp
-    _ ≤ 9923456221722624 := Nat.mul_le_mul_right 81184 hlist
+        131071 81186 hd₀ hselected hrel hpencil)
+    _ = (seeds.image R).card * 81187 := by simp
+    _ ≤ 9205603846958087 := Nat.mul_le_mul_right 81187 hlist
 
 end
 

@@ -1218,7 +1218,7 @@ abbrev conjugateWord (received : ReceivedWords) (which : Fin 2) : ReceivedWords 
   fun j i => if j = 0 then received which i else frobenius (received which i)
 
 abbrev ComparisonRows (received : ReceivedWords) (d : ℕ) :=
-  ComparisonSpace 180961 49890 d IRSProfile.domain
+  ComparisonSpace 180958 49887 d IRSProfile.domain
     (conjugateWord received 0) (conjugateWord received 1)
 
 def rowDeterminant {K : Type*} [Field K] {A a d₀ d₁ : ℕ}
@@ -1239,18 +1239,18 @@ def agreementSet (received : ReceivedWords)
 structure Selection (received : ReceivedWords) (seeds : Finset IRSProfile.Field)
     (selected : IRSProfile.Field → Polynomial IRSProfile.Field) : Prop where
   degree_le : ∀ g ∈ seeds, (selected g).natDegree ≤ 131071
-  agreement : ∀ g ∈ seeds, 180961 ≤ (agreementSet received selected g).card
+  agreement : ∀ g ∈ seeds, 180958 ≤ (agreementSet received selected g).card
   pencil : ∀ p₀ p₁ : Polynomial IRSProfile.Field,
     p₀.natDegree ≤ 131071 → p₁.natDegree ≤ 131071 →
-    (RCN050.pencilSeeds seeds selected p₀ p₁).card ≤ 81184
+    (RCN050.pencilSeeds seeds selected p₀ p₁).card ≤ 81187
 
 theorem exists_comparison_rows (received : ReceivedWords) :
     (∃ θ : ComparisonRows received 4, θ.1 ≠ 0) ∧
     (∃ θ : ComparisonRows received 200, θ.1 ≠ 0) := by
   constructor
-  · exact exists_nonzero_comparison_row 180961 49890 4 81183 IRSProfile.domain
+  · exact exists_nonzero_comparison_row 180958 49887 4 81186 IRSProfile.domain
       (conjugateWord received 0) (conjugateWord received 1) IRSProfile.card_index (by decide)
-  · exact exists_nonzero_comparison_row 180961 49890 200 81183 IRSProfile.domain
+  · exact exists_nonzero_comparison_row 180958 49887 200 81186 IRSProfile.domain
       (conjugateWord received 0) (conjugateWord received 1) IRSProfile.card_index (by decide)
 
 theorem independent_rows_le_seed_budget
@@ -1262,8 +1262,8 @@ theorem independent_rows_le_seed_budget
   unfold coefficientDeterminant rowDeterminant at hdet
   have h := Koala6844RankTwo.independent_mixed_rows_card_le
     (K := IRSProfile.Field) (I := IRSProfile.Index)
-    (A := 180961) (a := 49890) (d₀ := d₀) (d₁ := d₁)
-    (p := prime) (D := 200) (w := 131071) (e := 81183)
+    (A := 180958) (a := 49887) (d₀ := d₀) (d₁ := d₁)
+    (p := prime) (D := 200) (w := 131071) (e := 81186)
     (by decide) (by decide) hle₀ hle₁ IRSProfile.domain received frobenius.toRingHom
     domain_fixed frobenius_apply (by decide) (by decide)
     (by rw [IRSProfile.card_index]; decide)
@@ -1284,10 +1284,10 @@ def RankOneSeedBound : Prop :=
 theorem seed_bound_of_rank_one (hRankOne : RankOneSeedBound) : ScalarSeedBound := by
   unfold ScalarSeedBound RCN050.SelectedNoLargePencilBound
   intro received seeds A selected hdegree hnear hvalue hpencil
-  have hthreshold : Fintype.card IRSProfile.Index - errors = 180961 := by
+  have hthreshold : Fintype.card IRSProfile.Index - errors = 180958 := by
     rw [IRSProfile.card_index]
     decide
-  have hagree : ∀ g ∈ seeds, 180961 ≤ (agreementSet received selected g).card := by
+  have hagree : ∀ g ∈ seeds, 180958 ≤ (agreementSet received selected g).card := by
     intro g hg
     have hn := hnear g hg
     rw [hthreshold] at hn

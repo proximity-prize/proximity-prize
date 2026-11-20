@@ -102,16 +102,16 @@ structure TerminalSeedData (nodes : Finset I) (x u₀ u₁ : I → K)
   injective : Set.InjOn x nodes
   nodes_card : nodes.card = 262144
   selected_degree : ∀ gamma ∈ seeds, (selected gamma).natDegree ≤ 131071
-  agreement : ∀ gamma ∈ seeds, 180961 ≤
+  agreement : ∀ gamma ∈ seeds, 180958 ≤
     (nodes.filter (fun i => (selected gamma).eval (x i) = u₀ i+gamma*u₁ i)).card
-  noPencil : NoLargeSelectedPencil selected seeds 131071 81183
+  noPencil : NoLargeSelectedPencil selected seeds 131071 81186
 
 theorem TerminalSeedData.subset {nodes : Finset I} {x u₀ u₁ : I → K}
     {selected : K → Polynomial K} {seeds sub : Finset K}
     (h : TerminalSeedData nodes x u₀ u₁ selected seeds) (hs : sub ⊆ seeds) :
     TerminalSeedData nodes x u₀ u₁ selected sub :=
   ⟨h.injective,h.nodes_card,fun g hg => h.selected_degree g (hs hg),
-    fun g hg => h.agreement g (hs hg), noLargeSelectedPencil_mono selected seeds sub 131071 81183 hs h.noPencil⟩
+    fun g hg => h.agreement g (hs hg), noLargeSelectedPencil_mono selected seeds sub 131071 81186 hs h.noPencil⟩
 
 theorem short_regular_payment [CharP K 2130706433]
     (H : MvPolynomial (Fin 4) K) (F : RegularIndex H) (D : Nat)
