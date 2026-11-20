@@ -22,14 +22,14 @@ private theorem card_le_of_fixed_normalized
       d0 * selected g + specializeAffine C0 g)
     (hdeg : ∀ g ∈ seeds, (selected g).natDegree ≤ 131071)
     (hPencil : ∀ P0 P1 : Polynomial K, P0.natDegree ≤ 131071 → P1.natDegree ≤ 131071 →
-      (seeds.filter fun g => selected g = P0 + C g * P1).card ≤ 81184)
+      (seeds.filter fun g => selected g = P0 + C g * P1).card ≤ 81186)
     (hfixed : ∀ g ∈ seeds, ∀ h ∈ seeds, normalized g = normalized h) :
-    seeds.card ≤ 81184 := by
+    seeds.card ≤ 81186 := by
   by_cases he : seeds.Nonempty
   · obtain ⟨g0, hg0⟩ := he
     let Q := normalized g0
     apply Koala6844Cramer.card_le_of_common_denominator seeds selected d0
-      (A 0 * Q - C0 0) (A 1 * Q - C0 1) hd0 131071 81183 hdeg _ hPencil
+      (A 0 * Q - C0 0) (A 1 * Q - C0 1) hd0 131071 81185 hdeg _ hPencil
     intro g hg
     have h := hEq g hg
     rw [hfixed g hg g0 hg0] at h
@@ -66,12 +66,12 @@ theorem center_conjugate_koalabear
       (specializeAffine A g).map σ.toRingHom * normalized g =
         d1 * (selected g).map σ.toRingHom - specializeAffine D (σ g))
     (hDeg : ∀ g ∈ seeds, (selected g).natDegree ≤ 131071)
-    (hAgr : ∀ g ∈ seeds, 180961 ≤ (nodes.filter fun i =>
+    (hAgr : ∀ g ∈ seeds, 180959 ≤ (nodes.filter fun i =>
       (selected g).eval (x i) = received 0 i + g * received 1 i).card)
-    (hNormAgr : ∀ g ∈ seeds, 180961 ≤
+    (hNormAgr : ∀ g ∈ seeds, 180959 ≤
       (nodes.filter fun i => (normalized g).eval (x i) = fixed i).card)
     (hPencil : ∀ P0 P1 : Polynomial K, P0.natDegree ≤ 131071 → P1.natDegree ≤ 131071 →
-      (seeds.filter fun g => selected g = P0 + C g * P1).card ≤ 81184)
+      (seeds.filter fun g => selected g = P0 + C g * P1).card ≤ 81186)
     (inactiveCount :
       ∀ (S : Finset K) (P Q : K → Polynomial K) (V : I → K)
         (B : Fin 2 → Polynomial K) (C1 D1 : Polynomial K),
@@ -84,12 +84,12 @@ theorem center_conjugate_koalabear
       (∀ g ∈ S, d1 * (Q g).map σ.toRingHom = d0.map σ.toRingHom * Q g) →
       (∀ g ∈ S, (P g).natDegree ≤ 131071) →
       (∀ g ∈ S, (Q g).natDegree ≤ 131071 + d0.natDegree) →
-      (∀ g ∈ S, 180961 ≤ (nodes.filter fun i => (Q g).eval (x i) = V i).card) →
+      (∀ g ∈ S, 180959 ≤ (nodes.filter fun i => (Q g).eval (x i) = V i).card) →
       (∀ P0 P1 : Polynomial K, P0.natDegree ≤ 131071 → P1.natDegree ≤ 131071 →
-        (S.filter fun g => P g = P0 + C g * P1).card ≤ 81184) →
-      S.card ≤ 9923456221722624) :
-    seeds.card ≤ 9923456221722624 + (1 + d0.natDegree + d1.natDegree) ∨
-    ∃ data : CenteredVirtualData x nodes σ 131071 180961 81183 δ,
+        (S.filter fun g => P g = P0 + C g * P1).card ≤ 81186) →
+      S.card ≤ 9053467972559640) :
+    seeds.card ≤ 9053467972559640 + (1 + d0.natDegree + d1.natDegree) ∨
+    ∃ data : CenteredVirtualData x nodes σ 131071 180959 81185 δ,
       seeds.card ≤ data.seeds.card + (1 + d0.natDegree + d1.natDegree) := by
   classical
   by_cases hSame : ∀ g ∈ seeds, ∀ h ∈ seeds, normalized g = normalized h
@@ -167,17 +167,17 @@ theorem center_conjugate_koalabear
       rw [show A' = centerAffine A r from rfl, specialize_centerAffine]
       exact (hvalid _ (mem_centered_seeds.mp hg)).2.2
     have hNormClose (g : K) (hg : g ∈ G) :
-        180961 ≤ (nodes.filter fun i => (Q' g).eval (x i) = V i).card :=
-      centered_normalized_agreement_cap x nodes fixed Q0 (normalized (r + g)) 180961
+        180959 ≤ (nodes.filter fun i => (Q' g).eval (x i) = V i).card :=
+      centered_normalized_agreement_cap x nodes fixed Q0 (normalized (r + g)) 180959
         (hNormAgr _ (old g hg))
     have hKeepPencil (p₀ p₁ : Polynomial K) (h₀ : p₀.natDegree ≤ 131071)
         (h₁ : p₁.natDegree ≤ 131071) :
-        (keep.filter fun g => selected g = p₀ + C g * p₁).card ≤ 81184 :=
+        (keep.filter fun g => selected g = p₀ + C g * p₁).card ≤ 81186 :=
       (Finset.card_le_card (Finset.filter_subset_filter _ hsub)).trans (hPencil p₀ p₁ h₀ h₁)
     have hPencil' (p₀ p₁ : Polynomial K) (h₀ : p₀.natDegree ≤ 131071)
         (h₁ : p₁.natDegree ≤ 131071) :
-        (G.filter fun g => P' g = p₀ + C g * p₁).card ≤ 81184 :=
-      centered_pencil_cap keep selected r 131071 81183 hP0 hKeepPencil p₀ p₁ h₀ h₁
+        (G.filter fun g => P' g = p₀ + C g * p₁).card ≤ 81186 :=
+      centered_pencil_cap keep selected r 131071 81185 hP0 hKeepPencil p₀ p₁ h₀ h₁
     by_cases hInactive : d1 ∣ D1
     · have hDomain (i : I) (hi : i ∈ nodes) : (d0 * d1).eval (x i) ≠ 0 := by
         rw [eval_mul]
@@ -213,7 +213,7 @@ theorem center_conjugate_koalabear
           rw [natDegree_map]
           have hp := hP'deg g hg
           omega
-      let data : CenteredVirtualData x nodes σ 131071 180961 81183 δ := {
+      let data : CenteredVirtualData x nodes σ 131071 180959 81185 δ := {
         seeds := G
         zero_mem := hG0
         selected := P'
@@ -251,7 +251,7 @@ theorem center_conjugate_koalabear
         received_equation := fun i hi => center_fixed_word received x i d0 A C0 r (fixed i) P0 Q0
           (hleft i hi) (hLeft r (hsub hr))
         agreements := fun g hg =>
-          centered_agreement_cap x nodes received selected r g 180961 (hAgr _ (old g hg))
+          centered_agreement_cap x nodes received selected r g 180959 (hAgr _ (old g hg))
         normalized_agreements := hNormClose
         pencil := hPencil' }
       refine Or.inr ⟨data, ?_⟩

@@ -18,12 +18,12 @@ private theorem identity_axis (g : Flag) (hr : 3 ≤ g.r) (hy : g.r+2 ≤ g.y) (
   have h := rawIdentityAbsorption f (cellA g.t g.y) (cellB g.y g.r) (cellS g.r) (by omega) hb hs
   rw [← MovingFiberOrdinaryHigh6815.bound_eq_abs f g.t g.y g.r hr hy,
     ← rawRates_eq_bound g hr hy ht] at h
-  change 131073 * 81184 * identityCurveDegree f (cellA g.t g.y) (cellB g.y g.r) (cellS g.r)
+  change 131073 * 81186 * identityCurveDegree f (cellA g.t g.y) (cellB g.y g.r) (cellS g.r)
     Lower80788.HybridIdentityC2.w ≤ _ at h
   rw [Lower80788.HybridIdentityC2.identityDegree_linear] at h
   have h0 : nodes-degree = 131073 := rfl
-  have h1 : pencilLimit = 81184 := rfl
-  have h2 : agreementGap = 49890 := rfl
+  have h1 : pencilLimit = 81186 := rfl
+  have h2 : agreementGap = 49888 := rfl
   fin_cases j <;>
     simpa only [f,rawIdentity,axisFlag,geometryFlag,increments,FlagIncrements.axis,dot,
       Fin.val_zero,Fin.val_one,show (2 : Fin 3).val = 2 from rfl,Nat.reduceEqDiff,ite_true,ite_false,
@@ -31,7 +31,7 @@ private theorem identity_axis (g : Flag) (hr : 3 ≤ g.r) (hy : g.r+2 ≤ g.y) (
 
 theorem short_rates_raw (f : Flag)
     (hpos : 1 ≤ f.r) (hry : f.r ≤ f.y) (hyt : f.y ≤ f.t)
-    (hR : f.r ≤ 19) (hY : f.y ≤ 82) (hT : f.t ≤ 3873) :
+    (hR : f.r ≤ 20) (hY : f.y ≤ 86) (hT : f.t ≤ 3873) :
     let g := padFlag f
     GraphGates g.t g.y g.r ∧ shortRates f = ⟨rawRatesAt g,1⟩ := by
   dsimp only
@@ -39,28 +39,28 @@ theorem short_rates_raw (f : Flag)
   have hr : 3 ≤ g.r := Nat.le_max_left _ _
   have hy : g.r+2 ≤ g.y := Nat.le_max_right _ _
   have ht : g.y ≤ g.t := by exact Nat.le_max_right _ _
-  have hR' : g.r ≤ 19 := max_le (by decide) hR
-  have hY' : g.y ≤ 82 := max_le hY (by omega)
+  have hR' : g.r ≤ 20 := max_le (by decide) hR
+  have hY' : g.y ≤ 86 := max_le hY (by omega)
   have hT' : g.t ≤ 3873 := max_le hT (by omega)
   have hearly : g.r * (earlyCut g).middle + g.y * (earlyCut g).slope < prime := by
-    have hm : (earlyCut g).middle ≤ 1 + 262144*79 := by
+    have hm : (earlyCut g).middle ≤ 1 + 262144*83 := by
       simp only [earlyCut,show degree = 131071 from rfl,Nat.reduceAdd,Nat.reduceMul]
       omega
-    have hs : (earlyCut g).slope ≤ 262144*18 := by
+    have hs : (earlyCut g).slope ≤ 262144*19 := by
       simp only [earlyCut,show degree = 131071 from rfl,Nat.reduceAdd,Nat.reduceMul]
       omega
     exact (Nat.add_le_add (Nat.mul_le_mul hR' hm) (Nat.mul_le_mul hY' hs)).trans_lt (by decide)
   have hsharp : g.r * ((2*(g.y-g.r)-1)*degree+1) + g.y * (2*g.r-1)*degree < prime := by
-    have hm : (2*(g.y-g.r)-1)*degree+1 ≤ 157*131071+1 := by
+    have hm : (2*(g.y-g.r)-1)*degree+1 ≤ 165*131071+1 := by
       rw [show degree = 131071 from rfl]
       omega
-    have hs : 2*g.r-1 ≤ 37 := by omega
+    have hs : 2*g.r-1 ≤ 39 := by omega
     exact (Nat.add_le_add (Nat.mul_le_mul hR' hm)
       (Nat.mul_le_mul_right _ (Nat.mul_le_mul hY' hs))).trans_lt (by decide)
   have hmoving : 2*g.t*(g.t+1) < prime :=
     (Nat.mul_le_mul (Nat.mul_le_mul_left 2 hT') (Nat.succ_le_succ hT')).trans_lt (by decide)
   have hn : pencilLimit ≤ (normalCut g).middle := by
-    simp only [normalCut,show degree = 131071 from rfl,show pencilLimit = 81184 from rfl,Nat.reduceAdd]
+    simp only [normalCut,show degree = 131071 from rfl,show pencilLimit = 81186 from rfl,Nat.reduceAdd]
     omega
   have hgraph : goodGraph g = true := decide_eq_true ⟨by omega,hmoving,hearly,hsharp,hn⟩
   have hraw : rawGeometryGate f = true := by
@@ -83,7 +83,7 @@ theorem short_rates_raw (f : Flag)
 
 theorem short_factor_payment (f : Flag)
     (hpos : 1≤f.r) (hry : f.r≤f.y) (hyt : f.y≤f.t)
-    (hR : f.r≤19) (hY : f.y≤82) (hT : f.t≤3873)
+    (hR : f.r≤20) (hY : f.y≤86) (hT : f.t≤3873)
     (left : FlagDegree) (n : Nat)
     (h : n ≤ MovingFiberOrdinaryHigh6815.bound left (padFlag f).t (padFlag f).y (padFlag f).r) :
     (shortRates f).denominator * n ≤ dot (increments left) (shortRates f).numerator := by

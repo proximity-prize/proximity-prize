@@ -89,25 +89,25 @@ theorem exists_centered_firstJet_source
 
 theorem exists_short_primary
     {x : I ↪ K} {nodes : Finset I} {σ : K ≃+* K} {errors excess : ℕ}
-    (data : CenteredVirtualData x nodes σ 131071 180961 errors excess)
-    (hWidth : data.d0.natDegree+affineDegree data.A0 ≤ 6674)
+    (data : CenteredVirtualData x nodes σ 131071 180959 errors excess)
+    (hWidth : data.d0.natDegree+affineDegree data.A0 ≤ 6677)
     (hLead : ∀ i ∈ nodes, (data.A0 1).eval (x i) ≠ 0)
-    (hgap : nodes.card * normalizedRankBudget (fun _ => 601*180961) 131071 601 39900 185 0 829 742 <
-      Fintype.card (NormalizedIndex (fun _ => 601*180961) 131071 (131071+6674) 39900 185 0 829 742)) :
+    (hgap : nodes.card * normalizedRankBudget (fun _ => 601*180959) 131071 601 43009 185 0 829 745 <
+      Fintype.card (NormalizedIndex (fun _ => 601*180959) 131071 (131071+6677) 43009 185 0 829 745)) :
     ∃ P : MvPolynomial (Fin 4) K, P ≠ 0 ∧
-      P ∈ nestedCoefficientBox K (601*180961+742*6674) 131071 40642 829 185 ∧
-      Koala6844Receipts.ClearedForm (centeredFlow data).A (centeredFlow data).numerator 742 P ∧
+      P ∈ nestedCoefficientBox K (601*180959+745*6677) 131071 43754 829 185 ∧
+      Koala6844Receipts.ClearedForm (centeredFlow data).A (centeredFlow data).numerator 745 P ∧
       (∀ i ∈ nodes, ContactAtLeast K (x i) (data.received 0 i) (data.received 1 i) 601 P) ∧
       ∀ g ∈ data.seeds, RCN319.specialization K (data.selected g) g P = 0 := by
-  have hWQ : 131071+data.d0.natDegree ≤ affineDegree data.A0 + (131071+6674) := by omega
-  obtain ⟨P,hP,hbox,hclear,hcontact,hzero⟩ := exists_centered_firstJet_source data (fun _ => 601*180961)
-    (131071+6674) 601 39900 185 829 742 (by decide) (by decide) (by decide)
+  have hWQ : 131071+data.d0.natDegree ≤ affineDegree data.A0 + (131071+6677) := by omega
+  obtain ⟨P,hP,hbox,hclear,hcontact,hzero⟩ := exists_centered_firstJet_source data (fun _ => 601*180959)
+    (131071+6677) 601 43009 185 829 745 (by decide) (by decide) (by decide)
     (by decide) (by decide) (by decide) (by decide) hWQ hLead hgap
   refine ⟨P,hP,?_,hclear,hcontact,hzero⟩
   intro e he
   have hc := hbox he
   exact ⟨hc.1,hc.2.1,hc.2.2.1,hc.2.2.2.trans_le
-    (Nat.add_le_add_left (Nat.mul_le_mul_left 742 (by omega)) _)⟩
+    (Nat.add_le_add_left (Nat.mul_le_mul_left 745 (by omega)) _)⟩
 
 end
 end ProximityPrize.SubmissionLower.Koala6844VirtualShort

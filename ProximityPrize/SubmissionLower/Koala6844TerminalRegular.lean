@@ -102,23 +102,23 @@ structure TerminalSeedData (nodes : Finset I) (x u₀ u₁ : I → K)
   injective : Set.InjOn x nodes
   nodes_card : nodes.card = 262144
   selected_degree : ∀ gamma ∈ seeds, (selected gamma).natDegree ≤ 131071
-  agreement : ∀ gamma ∈ seeds, 180961 ≤
+  agreement : ∀ gamma ∈ seeds, 180959 ≤
     (nodes.filter (fun i => (selected gamma).eval (x i) = u₀ i+gamma*u₁ i)).card
-  noPencil : NoLargeSelectedPencil selected seeds 131071 81183
+  noPencil : NoLargeSelectedPencil selected seeds 131071 81185
 
 theorem TerminalSeedData.subset {nodes : Finset I} {x u₀ u₁ : I → K}
     {selected : K → Polynomial K} {seeds sub : Finset K}
     (h : TerminalSeedData nodes x u₀ u₁ selected seeds) (hs : sub ⊆ seeds) :
     TerminalSeedData nodes x u₀ u₁ selected sub :=
   ⟨h.injective,h.nodes_card,fun g hg => h.selected_degree g (hs hg),
-    fun g hg => h.agreement g (hs hg), noLargeSelectedPencil_mono selected seeds sub 131071 81183 hs h.noPencil⟩
+    fun g hg => h.agreement g (hs hg), noLargeSelectedPencil_mono selected seeds sub 131071 81185 hs h.noPencil⟩
 
 theorem short_regular_payment [CharP K 2130706433]
     (H : MvPolynomial (Fin 4) K) (F : RegularIndex H) (D : Nat)
     (hD : 131072 ≤ D) (hDchar : D < 2130706433)
     (hcontact : MvPolynomial.weightedTotalDegree (contactWeights 131071) F.1 ≤ D-1)
     (f : Flag) (h1 : 1 ≤ f.r) (hf : f.ordered)
-    (hR : f.r ≤ 19) (hY : f.y ≤ 82) (hT : f.t ≤ 3873)
+    (hR : f.r ≤ 20) (hY : f.y ≤ 86) (hT : f.t ≤ 3873)
     (hFf : (physicalFlag F.1).cumulativeLE f)
     (nodes : Finset I) (x u₀ u₁ : I → K) (selected : K → Polynomial K) (seeds : Finset K)
     (data : TerminalSeedData nodes x u₀ u₁ selected seeds) :

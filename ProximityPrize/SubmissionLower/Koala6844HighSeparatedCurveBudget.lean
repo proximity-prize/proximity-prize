@@ -27,7 +27,7 @@ theorem long_factor_seed_count
     (hZ : wt ![0, 0, 0, 1] F ≤ 162)
     (G : MvPolynomial (Fin 3) Ω) (hG : Irreducible G) (hdiv : G ∣ surfaceMap φ F)
     (x : I ↪ K) (u₀ u₁ : I → K) (nodes : Finset I)
-    (hAn : 180961 ≤ nodes.card) (haverage : nodeAverage nodes.card 131071 180961 ≤ 3)
+    (hAn : 180959 ≤ nodes.card) (haverage : nodeAverage nodes.card 131071 180959 ≤ 3)
     (seeds allSeeds : Finset K) (hsub : seeds ⊆ allSeeds)
     (selected : K → Polynomial K)
     (hdegree : ∀ g ∈ seeds, (selected g).natDegree ≤ 131071)
@@ -35,10 +35,10 @@ theorem long_factor_seed_count
     (hreg : ∀ g ∈ seeds,
       graphSpecialize (selected g) g (g ^ 2130706433) (implicitRegularity F) ≠ 0)
     (hzero : ∀ g ∈ seeds, MvPolynomial.eval (selectedGraphPoint 2130706433 selected g) G = 0)
-    (hagreements : ∀ g ∈ seeds, 180961 ≤
+    (hagreements : ∀ g ∈ seeds, 180959 ≤
       (nodes.filter (fun i => (selected g).eval (x i) = u₀ i + g * u₁ i)).card)
     (hpencil : ∀ P₀ P₁ : Polynomial K, P₀.natDegree ≤ 131071 → P₁.natDegree ≤ 131071 →
-      (RCN050.pencilSeeds allSeeds selected P₀ P₁).card ≤ 81184) :
+      (RCN050.pencilSeeds allSeeds selected P₀ P₁).card ≤ 81186) :
     seeds.card ≤ longFactorCharge (G.degreeOf 0) (longMiddleDegree G) (G.degreeOf 2) := by
   classical
   apply long_factor_seed_count_of_persistent_allowance F hp hF hweight hY hT hZ G hG hdiv
@@ -59,7 +59,7 @@ theorem long_factor_seed_count
   let d₀ (a : A) := actualCoordinateDegree Ω (component a).1 1
   let d₁ (a : A) := actualCoordinateDegree Ω (component a).1 2
   have hcount :=
-    long_persistent_selected_sum_le_of_degree F G 4000000 81183 (by decide) (by decide)
+    long_persistent_selected_sum_le_of_degree F G 4000000 81185 (by decide) (by decide)
       (by decide) hweight hT hZ component charts base (fun a => a.2) d₀ d₁
       (fun a => long_literal_seed_degrees_pos F G hdiv hG proper caps (component a))
       (fun a W => by

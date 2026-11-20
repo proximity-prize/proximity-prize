@@ -148,7 +148,7 @@ theorem exists_uniform_centered_trim_carrier
     {x : I ↪ K} {nodes : Finset I} {σ : K ≃+* K} {agreement errors excess : ℕ}
     (data : CenteredVirtualData x nodes σ 131071 agreement errors excess)
     (hD : data.d0.natDegree ≤ 10000)
-    (high : 6675 ≤ data.d0.natDegree + affineDegree data.A0) :
+    (high : 6678 ≤ data.d0.natDegree + affineDegree data.A0) :
     Nonempty (CenteredTrimCarrier data 124396 144396) :=
   exists_centered_trim_carrier data 124396 144396 hD (by omega) (by omega)
 

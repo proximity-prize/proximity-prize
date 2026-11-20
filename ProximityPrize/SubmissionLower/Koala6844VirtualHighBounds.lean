@@ -26,7 +26,7 @@ def adaptive : SourceShape := ⟨4800, 6912, 6975, 133094, 0⟩
 def normalizedDegree (content moving : ℤ) : ℤ := 131071 + content - moving
 
 def cutoff (source : SourceShape) (content : ℤ) : ℤ :=
-  source.ordinaryOrder * 180961 + (2 * (source.virtualOrder : ℤ) - source.room) * content
+  source.ordinaryOrder * 180959 + (2 * (source.virtualOrder : ℤ) - source.room) * content
 
 def virtualRankPerDegree (source : SourceShape) : ℤ :=
   let m : ℤ := source.virtualOrder
@@ -47,19 +47,19 @@ def Passes (source : SourceShape) (content moving perContent : ℤ) : Prop :=
     2 * perContent * content ≤ twiceGap source content moving
 
 theorem primary_passes {d a : ℤ} (_hd : 0 ≤ d) (ha : 0 ≤ a)
-    (hstart : 6675 ≤ d + a) (hend : d + a ≤ 10000) : Passes primary d a 377230 := by
+    (hstart : 6678 ≤ d + a) (hend : d + a ≤ 10000) : Passes primary d a 377230 := by
   norm_num [Passes, primary, cutoff, normalizedDegree, twiceGap, virtualRankPerDegree]
   omega
 
 theorem room_passes {d a : ℤ} (_hd : 0 ≤ d) (ha : 0 ≤ a)
-    (hstart : 6675 ≤ d + a) (hend : d + a ≤ 10000) : Passes roomSource d a 539504259 := by
+    (hstart : 6678 ≤ d + a) (hend : d + a ≤ 10000) : Passes roomSource d a 539504259 := by
   norm_num [Passes, roomSource, cutoff, normalizedDegree, twiceGap, virtualRankPerDegree]
   omega
 
 def adaptiveGap : ℕ := 18069004619508102
 
 theorem adaptive_passes {d a : ℤ} (_hd : 0 ≤ d) (ha : 0 ≤ a)
-    (hstart : 6675 ≤ d + a) (hend : d + a ≤ 10000) : Passes adaptive d a adaptiveGap := by
+    (hstart : 6678 ≤ d + a) (hend : d + a ≤ 10000) : Passes adaptive d a adaptiveGap := by
   norm_num [Passes, adaptive, adaptiveGap, cutoff, normalizedDegree, twiceGap, virtualRankPerDegree]
   omega
 

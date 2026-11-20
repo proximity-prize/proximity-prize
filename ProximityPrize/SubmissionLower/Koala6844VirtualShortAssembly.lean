@@ -45,10 +45,10 @@ private theorem primary_phase_cover (H : MvPolynomial (Fin 4) K)
 private theorem pay_short_phases (n initial a b c d e room₁ room₂ adaptive₁ adaptive₂ : Nat)
     (hn : n ≤ initial+a) (ha : a ≤ room₁+b) (hb : b ≤ room₂+c)
     (hc : c ≤ adaptive₁+d) (hd : d ≤ adaptive₂+e)
-    (h₀ : initial ≤ shortSymbolicBudget) (h₁ : room₁ ≤ 1911243880121235)
-    (h₂ : room₂ ≤ 524153816993650) (h₃ : adaptive₁ ≤ 524260340103650)
-    (h₄ : adaptive₂ ≤ 7000000000000000) (h₅ : e ≤ terminalBudget) :
-    n ≤ 273427938013395819 := by
+    (h₀ : initial ≤ shortSymbolicBudget) (h₁ : room₁ ≤ 1911243881988435)
+    (h₂ : room₂ ≤ 524153819097300) (h₃ : adaptive₁ ≤ 524260340386850)
+    (h₄ : adaptive₂ ≤ 6777813845395257) (h₅ : e ≤ terminalBudget) :
+    n ≤ 271916395051497902 := by
   unfold shortSymbolicBudget at h₀
   unfold terminalBudget at h₅
   omega
@@ -66,7 +66,7 @@ private theorem short_adaptive_field_cap
 variable [Fintype I]
 
 theorem short_centered_support_bound
-    (data : CenteredVirtualData x domain σ degree agreements 81183 excess)
+    (data : CenteredVirtualData x domain σ degree agreements 81185 excess)
     (hσ : ∀ g ∈ data.seeds, σ g = g^2130706433)
     (full : Finset I) (hfull : domain ⊆ full) (hcount : full.card = 262144)
     (hSize : Fintype.card I ≤ 262144) (hField : (185 : ENat) < ENat.card K)
@@ -77,11 +77,11 @@ theorem short_centered_support_bound
     (hTerm : ∀ e ∈ table, terminalMetadata e = true)
     (hRaw : ∀ e ∈ table, intrinsicRawMetadata e = true)
     (margins : ∀ j : Fin contactProfiles.size, sourceMargin contactProfiles[j]) :
-    data.seeds.card ≤ 273427938013395819 := by
+    data.seeds.card ≤ 271916395051497902 := by
   have hsize : domain.card ≤ nodes := (Finset.card_le_univ domain).trans hSize
   have hgap : 0 < firstJetGap primaryShape 0 := by rw [primary_firstJetGap_eq]; decide
   obtain ⟨H,hH,hbox,_,_,hzero⟩ := exists_checked_primary data hsize hpole hLead hgap
-  have hbox' : H ∈ nestedCoefficientBox K primaryWeight 131071 40642 829 185 := hbox
+  have hbox' : H ∈ nestedCoefficientBox K primaryWeight 131071 43754 829 185 := hbox
   obtain ⟨hr,hy,ht,hcontact⟩ := short_primary_box_caps H primaryWeight hbox'
   let D := (centeredFlow data).flow
   let A := transverseRegularFactors H D

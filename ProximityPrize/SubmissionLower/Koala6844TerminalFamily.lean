@@ -56,7 +56,7 @@ theorem terminal_regular_family [CharP K 2130706433]
     (hcontact : MvPolynomial.weightedTotalDegree (contactWeights 131071) H ≤ D-1)
     (outer : Flag) (src : Sources) (price : Nat) (hprice : terminalPrice outer src = some price)
     (hfo : outer.ordered) (hyL : outer.y ≤ src.totalCap) (hLt : src.totalCap+outer.y ≤ outer.t)
-    (hR : outer.r ≤ 19) (hY : outer.y ≤ 82) (hL : src.totalCap ≤ 3873)
+    (hR : outer.r ≤ 20) (hY : outer.y ≤ 86) (hL : src.totalCap ≤ 3873)
     (hfit : (physicalFlag (regularProduct H remaining)).cumulativeLE outer)
     (hshape : ∀ j : Fin 3, (shapeAt src j).carrierFlag.ordered)
     (hdiv : ∀ j : Fin 3, 3*(shapeAt src j).k+3 ∣ graphScale)

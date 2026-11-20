@@ -13,7 +13,7 @@ theorem exists_ordinary_carrier_of_primitive {I Γ : Type*} [Fintype I]
     (nodes : I ↪ K) (u₀ v₀ u₁ v₁ : I → K) (node_count : Fintype.card I ≤ 262144)
     (q : SymbolicRow (SeedRing K)) (hprim : IsPrimitiveRow q)
     (hf : q.first ≠ 0) (hs : q.second ≠ 0)
-    (hlarge : 11500 ≤ primitiveExcess 131071 q) (hsmall : primitiveExcess 131071 q ≤ 31606)
+    (hlarge : 11500 ≤ primitiveExcess 131071 q) (hsmall : primitiveExcess 131071 q ≤ 31610)
     (hc₂ : 2 ≤ weightDegree totalWeights (primitiveRowLift q))
     (hc₁₀ : weightDegree totalWeights (primitiveRowLift q) ≤ 10)
     (hgood : ∀ i, q.atNode (MvPolynomial.C (nodes i))
@@ -21,7 +21,7 @@ theorem exists_ordinary_carrier_of_primitive {I Γ : Type*} [Fintype I]
       (MvPolynomial.C (u₁ i) + MvPolynomial.X 1 * MvPolynomial.C (v₁ i)) = 0)
     (σ : K →+* K) (p : ℕ) (P : K → Polynomial K) (seed : Γ → K)
     (agreement : Γ → Finset I) (hdegree : ∀ g, (P (seed g)).natDegree ≤ 131071)
-    (hsize : ∀ g, 180961 ≤ (agreement g).card)
+    (hsize : ∀ g, 180959 ≤ (agreement g).card)
     (h₀ : ∀ g i, i ∈ agreement g → (P (seed g)).eval (nodes i) = u₀ i + seed g * v₀ i)
     (h₁ : ∀ g i, i ∈ agreement g →
       ((P (seed g)).map σ).eval (nodes i) = u₁ i + (seed g) ^ p * v₁ i)

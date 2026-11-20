@@ -43,7 +43,7 @@ private theorem flag_fit_of_below {f g : Flag} (hf : f.ordered) (hg : g.ordered)
   exact ⟨hr,hy,ht⟩
 
 private theorem seeds_at_endpoint_le
-    (data : CenteredVirtualData x domain σ 131071 180961 81183 excess)
+    (data : CenteredVirtualData x domain σ 131071 180959 81185 excess)
     (full : Finset I) (hfull : domain ⊆ full) (hcount : full.card = 262144)
     (hSize : Fintype.card I ≤ 262144)
     (hPole : data.d0.natDegree + affineDegree data.A0 ≤ poleWidth)
@@ -72,7 +72,7 @@ private theorem seeds_at_endpoint_le
       H hH remaining D hD hDchar hcontact f src price hprice hfit hmeta margins seeds hsub hcover).trans hfits
 
 theorem adaptive_residue_card_le_terminal
-    (data : CenteredVirtualData x domain σ 131071 180961 81183 excess)
+    (data : CenteredVirtualData x domain σ 131071 180959 81185 excess)
     (full : Finset I) (hfull : domain ⊆ full) (hcount : full.card = 262144)
     (hSize : Fintype.card I ≤ 262144)
     (hPole : data.d0.natDegree + affineDegree data.A0 ≤ poleWidth)
@@ -101,7 +101,7 @@ theorem adaptive_residue_card_le_terminal
     have hord : f.ordered := physicalFlag_ordered _
     have hRoom : afterRooms.ordered := by
       rw [afterRooms_eq]
-      change 50 ≤ 230 ∧ 230 ≤ 20240
+      change 50 ≤ 230 ∧ 230 ≤ 20712
       decide
     have hpos : 0 < f.r := by
       have h := aggregateFlag_pos H (Finset.nonempty_iff_ne_empty.mpr hempty)

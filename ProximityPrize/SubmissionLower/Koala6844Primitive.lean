@@ -664,9 +664,9 @@ theorem comparisonSpace_finrank_le_primitiveBox [Fintype I] {A a d w : ℕ}
 theorem primitive_excess_add_badCard_le_31606 [Fintype I]
     (x : I ↪ K) (u v : Fin 2 → I → K) (q : SymbolicRow (SeedRing K))
     (h₀ : q.first ≠ 0) (h₁ : q.second ≠ 0) (hcard : Fintype.card I = 262144)
-    (h : ∀ θ : ComparisonSpace 180961 49890 200 x u v, ∃ m, RowFactors q (rankRow θ.1) m) :
-    primitiveExcess 131071 q + (primitiveBadNodes x u v q).card ≤ 31606 := by
-  have hlo := comparisonSpace_finrank_lower_bound 180961 49890 200 81183 x u v hcard
+    (h : ∀ θ : ComparisonSpace 180959 49888 200 x u v, ∃ m, RowFactors q (rankRow θ.1) m) :
+    primitiveExcess 131071 q + (primitiveBadNodes x u v q).card ≤ 31610 := by
+  have hlo := comparisonSpace_finrank_lower_bound 180959 49888 200 81185 x u v hcard
   have hhi := comparisonSpace_finrank_le_primitiveBox x u v q h₀ h₁ (by decide)
     (w := 131071) (by decide) h
   have hbound := hlo.trans hhi
@@ -1247,9 +1247,9 @@ theorem one_sided_comparison_card_le [Fintype I]
         _ (hagreement g hg) (fun _ hi => (Finset.mem_filter.mp hi).2)
 
 theorem koala_one_sided_budget :
-    max ((262144 - 131071 : ℕ) * (6 * (2130706433 + 1)) / (180961 - 131071))
-      ((131071 + 1) * (5 * (2130706433 + 1)) + (81183 + 1)) =
-      1396379768667424 := by
+    max ((262144 - 131071 : ℕ) * (6 * (2130706433 + 1)) / (180959 - 131071))
+      ((131071 + 1) * (5 * (2130706433 + 1)) + (81185 + 1)) =
+      1396379768667426 := by
   decide +kernel
 
 
@@ -1569,18 +1569,18 @@ theorem retained_card_le [DecidableEq K] (domain : I ↪ K)
     (hbeta : q.beta.natDegree ≤ 131071 + δ)
     (hfirst : q.first.natDegree ≤ δ) (hsecond : q.second.natDegree ≤ δ)
     (hdegree : ∀ g ∈ retained, (selected g).natDegree ≤ 131071)
-    (hcard : ∀ g ∈ retained, 180961 ≤ (agreement g).card)
+    (hcard : ∀ g ∈ retained, 180959 ≤ (agreement g).card)
     (hgood : ∀ g ∈ retained, ∀ i ∈ agreement g,
       q.atNode (MvPolynomial.C (domain i))
         (MvPolynomial.C (word i 0) + MvPolynomial.X 0 * MvPolynomial.C (word i 1))
         (MvPolynomial.C (word i 2) + MvPolynomial.X 1 * MvPolynomial.C (word i 3)) = 0)
     (hfit : ∀ g ∈ retained, ∀ i ∈ agreement g, (selected g).eval (domain i) = word i 0 + g * word i 1)
     (hno : ∀ P₀ P₁ : K[X], P₀.natDegree ≤ 131071 → P₁.natDegree ≤ 131071 →
-      (retained.filter (fun g ↦ selected g = P₀ + C g * P₁)).card ≤ 81184) :
-    retained.card ≤ 81184 := by
+      (retained.filter (fun g ↦ selected g = P₀ + C g * P₁)).card ≤ 81186) :
+    retained.card ≤ 81186 := by
   have hneg : (-q.beta).natDegree ≤ 131071 + δ := by simpa using hbeta
   apply Koala6844CoefficientSystem.card_le_of_nonsingular_coefficients domain retained agreement
-    selected (columns q) (-q.beta) keys word 131071 δ 81183 hdet
+    selected (columns q) (-q.beta) keys word 131071 δ 81185 hdet
     (columns_degree q δ hfirst hsecond) hneg hdegree ?_ ?_ hfit hno
   · intro g hg
     have hn := hcard g hg
@@ -1612,7 +1612,7 @@ theorem one_sided_rows_le_seed_budget
     (seeds : Finset IRSProfile.Field) (selected : IRSProfile.Field → Polynomial IRSProfile.Field)
     (support : Selection received seeds selected) : seeds.card ≤ mcaBudget := by
   have bound := Koala6844OneSided.one_sided_comparison_card_le
-    (p := prime) (w := 131071) (e := 81183)
+    (p := prime) (w := 131071) (e := 81185)
     (by decide) (by decide) IRSProfile.domain received frobenius.toRingHom
     domain_fixed frobenius_apply (by decide) (by decide)
     (by rw [IRSProfile.card_index]; decide)
@@ -1630,7 +1630,7 @@ def TwoSidedPrimitiveSeedBound : Prop :=
       RowFactors q (rankRow row.1) m →
       primitiveExcess 131071 q +
         (primitiveBadNodes IRSProfile.domain (conjugateWord received 0)
-          (conjugateWord received 1) q).card ≤ 31606 →
+          (conjugateWord received 1) q).card ≤ 31610 →
       seeds.card ≤ mcaBudget
 
 private theorem cross_eq_of_symbolic_det_zero {K : Type*} [Field K] {A a d₀ d₁ : ℕ}
@@ -1654,15 +1654,15 @@ private theorem comparison_one_sided_of_factor {K : Type} [Field K] {A a d : ℕ
 
 private theorem card_le_from_primitive_cases {K I : Type} [Field K] [Fintype I]
     (x : I ↪ K) (u v : Fin 2 → I → K) (hcard : Fintype.card I = 262144)
-    (row : ComparisonSpace 180961 49890 4 x u v) (hrow : row.1 ≠ 0)
-    (hdet : ∀ other : ComparisonSpace 180961 49890 200 x u v,
+    (row : ComparisonSpace 180959 49888 4 x u v) (hrow : row.1 ≠ 0)
+    (hdet : ∀ other : ComparisonSpace 180959 49888 200 x u v,
       rowDeterminant row.1 other.1 = 0)
     (seedCount budget : ℕ)
     (honeCase : (let r := symbolicRow row.1
       (r.first ≠ 0 ∧ r.second = 0) ∨ (r.first = 0 ∧ r.second ≠ 0)) → seedCount ≤ budget)
     (hbothCase : ∀ (q : SymbolicRow (SeedRing K)) (m : SeedCoefficients K),
       q.first ≠ 0 → q.second ≠ 0 → m ≠ 0 → IsPrimitiveRow q → RowFactors q (rankRow row.1) m →
-      primitiveExcess 131071 q + (primitiveBadNodes x u v q).card ≤ 31606 → seedCount ≤ budget) :
+      primitiveExcess 131071 q + (primitiveBadNodes x u v q).card ≤ 31610 → seedCount ≤ budget) :
     seedCount ≤ budget := by
   obtain ⟨q, m, hm, hactive, hprimitive, hfactor, hlarge⟩ :=
     exists_primitive_comparison_generator x u v row hrow (by rw [hcard]; decide)
@@ -1713,9 +1713,9 @@ abbrev badNodes (received : ReceivedWords) (q : SymbolicRow (SeedRing IRSProfile
   primitiveBadNodes IRSProfile.domain (Koala6844BenchmarkCases.conjugateWord received 0)
     (Koala6844BenchmarkCases.conjugateWord received 1) q
 
-def commonDiscardBudget : ℕ := 336726191297190
+def commonDiscardBudget : ℕ := 336768805425870
 
-def retainedSeedBudget : ℕ := 274427938013395820
+def retainedSeedBudget : ℕ := 271937273844126413
 
 structure RetainedComparison (received : ReceivedWords) (retained : Finset IRSProfile.Field)
     (selected : IRSProfile.Field → Polynomial IRSProfile.Field)
@@ -1724,11 +1724,11 @@ structure RetainedComparison (received : ReceivedWords) (retained : Finset IRSPr
   first_ne : q.first ≠ 0
   second_ne : q.second ≠ 0
   primitive : IsPrimitiveRow q
-  xDegree : q.beta.natDegree ≤ 180960 ∧ q.first.natDegree ≤ 49889 ∧ q.second.natDegree ≤ 49889
+  xDegree : q.beta.natDegree ≤ 180958 ∧ q.first.natDegree ≤ 49887 ∧ q.second.natDegree ≤ 49887
   seedDegree : ∀ j, ((q.beta.coeff j).degreeOf 0 ≤ 5 ∧ (q.beta.coeff j).degreeOf 1 ≤ 5) ∧
     ((q.first.coeff j).degreeOf 0 ≤ 4 ∧ (q.first.coeff j).degreeOf 1 ≤ 5) ∧
     ((q.second.coeff j).degreeOf 0 ≤ 5 ∧ (q.second.coeff j).degreeOf 1 ≤ 4)
-  excess_bad : primitiveExcess 131071 q + (badNodes received q).card ≤ 31606
+  excess_bad : primitiveExcess 131071 q + (badNodes received q).card ≤ 31610
   good : ∀ g ∈ retained, primitiveSelected frobenius.toRingHom prime q selected g = 0 ∧
     Disjoint (agreementSet received selected g) (badNodes received q)
 
@@ -1754,7 +1754,7 @@ theorem primitive_bound_of_retained (hRetained : RetainedTwoSidedSeedBound) :
     TwoSidedPrimitiveSeedBound := by
   intro received seeds selected support row q m hfirst hsecond hm hprimitive hfactor hcap
   obtain ⟨retained, hsub, hseedCount, hrow⟩ := retain_primitive_rows
-    (A := 180961) (a := 49890) (w := 131071) (p := prime)
+    (A := 180959) (a := 49888) (w := 131071) (p := prime)
     IRSProfile.domain frobenius.toRingHom domain_fixed frobenius_apply (by decide)
     received (by decide) (by decide) row q m hm (Or.inl hfirst) hfactor
     seeds (agreementSet received selected) selected support.degree_le support.agreement
@@ -1763,8 +1763,8 @@ theorem primitive_bound_of_retained (hRetained : RetainedTwoSidedSeedBound) :
   have hB := primitive_seed_degree_caps row.1 q m hm hfactor
   have hretained := hRetained received retained selected q
     ⟨selection_of_subset support hsub, hfirst, hsecond, hprimitive, hX, hB, hcap, hrow⟩
-  have hbad : (badNodes received q).card + 1 ≤ 31607 := by
-    change primitiveExcess 131071 q + (badNodes received q).card ≤ 31606 at hcap
+  have hbad : (badNodes received q).card + 1 ≤ 31611 := by
+    change primitiveExcess 131071 q + (badNodes received q).card ≤ 31610 at hcap
     omega
   have hdiscard : ((badNodes received q).card + 1) * (5 * (prime + 1)) ≤ commonDiscardBudget :=
     (Nat.mul_le_mul_right (5 * (prime + 1)) hbad).trans_eq (by decide +kernel)

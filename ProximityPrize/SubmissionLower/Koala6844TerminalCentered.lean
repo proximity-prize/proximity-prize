@@ -26,7 +26,7 @@ private theorem filter_subset_across_decisions {J : Type} {p : J → Prop} {a b 
 
 omit [CharP K 2130706433] [Fintype I] in
 theorem centered_terminalSeedData
-    (data : CenteredVirtualData x domain σ 131071 180961 81183 excess)
+    (data : CenteredVirtualData x domain σ 131071 180959 81185 excess)
     (full : Finset I) (hfull : domain ⊆ full) (hcount : full.card = 262144) :
     TerminalSeedData full x (data.received 0) (data.received 1) data.selected data.seeds := by
   refine ⟨x.injective.injOn,hcount,data.selected_degree,?_,?_⟩
@@ -51,7 +51,7 @@ private theorem shape_total_le (src : Sources) (j : Fin 3) :
   · exact (le_max_right _ _).trans (le_max_right _ _)
 
 private theorem centered_terminal_route
-    (data : CenteredVirtualData x domain σ 131071 180961 81183 excess)
+    (data : CenteredVirtualData x domain σ 131071 180959 81185 excess)
     (hSize : Fintype.card I ≤ 262144)
     (hPole : data.d0.natDegree + affineDegree data.A0 ≤ poleWidth)
     (hLead : ∀ i ∈ domain, (data.A0 1).eval (x i) ≠ 0)
@@ -83,7 +83,7 @@ private theorem biUnion_cover_across_decisions {A B : Type}
   exact h
 
 theorem centered_terminal_bound
-    (data : CenteredVirtualData x domain σ 131071 180961 81183 excess)
+    (data : CenteredVirtualData x domain σ 131071 180959 81185 excess)
     (full : Finset I) (hfull : domain ⊆ full) (hcount : full.card = 262144)
     (hSize : Fintype.card I ≤ 262144)
     (hPole : data.d0.natDegree + affineDegree data.A0 ≤ poleWidth)
@@ -93,7 +93,7 @@ theorem centered_terminal_bound
     (hcontact : MvPolynomial.weightedTotalDegree (contactWeights 131071) H ≤ D-1)
     (outer : Flag) (src : Sources) (price : Nat) (hprice : terminalPrice outer src = some price)
     (hfo : outer.ordered) (hyL : outer.y ≤ src.totalCap) (hLt : src.totalCap+outer.y ≤ outer.t)
-    (hR : outer.r ≤ 19) (hY : outer.y ≤ 82) (hL : src.totalCap ≤ 3873)
+    (hR : outer.r ≤ 20) (hY : outer.y ≤ 86) (hL : src.totalCap ≤ 3873)
     (hfit : (physicalFlag (regularProduct H remaining)).cumulativeLE outer)
     (hvalid : ∀ j : Fin 3, sourceWellFormed (shapeAt src j) = true ∧ sourceMargin (shapeAt src j))
     (hdiv : ∀ j : Fin 3, 3*(shapeAt src j).k+3 ∣ graphScale)

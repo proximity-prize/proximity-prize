@@ -78,7 +78,7 @@ private theorem lifted_coordinate (d : Fin 4 →₀ ℕ) (i : Fin 4) :
 
 
 theorem support_caps (β a b : Carrier K) (δ : ℕ) (Q : Poly K)
-    (Q_box : Q ∈ separatedBox K (16 * 180961) 131071 22 22 178 162)
+    (Q_box : Q ∈ separatedBox K (16 * 180959) 131071 22 22 178 162)
     (β_value : weightDegree valueWeights (retainCarrier β) = 0)
     (a_value : weightDegree valueWeights (retainCarrier a) = 0)
     (b_value : weightDegree valueWeights (retainCarrier b) = 0)
@@ -92,7 +92,7 @@ theorem support_caps (β a b : Carrier K) (δ : ℕ) (Q : Poly K)
     (a_code : weightDegree (codeWeights 131071) (retainCarrier a) ≤ δ)
     (b_code : weightDegree (codeWeights 131071) (retainCarrier b) ≤ δ) :
     ∀ d ∈ (carrierFromInterpolant β a b 22 Q).support,
-      d 1 ≤ 22 ∧ d 1 + d 2 ≤ 200 ∧ d 3 ≤ 162 ∧ d 0 + 131071 * d 1 ≤ 16 * 180961 - 1 + 22 * δ := by
+      d 1 ≤ 22 ∧ d 1 + d 2 ≤ 200 ∧ d 3 ≤ 162 ∧ d 0 + 131071 * d 1 ≤ 16 * 180959 - 1 + 22 * δ := by
   let G := carrierFromInterpolant β a b 22 Q
   have supp := (MvPolynomial.mem_restrictSupport_iff K).mp Q_box
   have hy : weightDegree valueWeights (retainCarrier G) ≤ 22 := by
@@ -116,9 +116,9 @@ theorem support_caps (β a b : Carrier K) (δ : ℕ) (Q : Poly K)
     intro d hd
     have hd₁ := (supp hd).2.2.2.2
     simpa [rightWeights, Nat.add_comm] using hd₁
-  have hcode : weightDegree (codeWeights 131071) (retainCarrier G) ≤ 16 * 180961 - 1 + 22 * δ := by
+  have hcode : weightDegree (codeWeights 131071) (retainCarrier G) ≤ 16 * 180959 - 1 + 22 * δ := by
     apply cleared_weight_le (codeWeights 131071) β a b Q 22 δ (131071 + δ)
-      (16 * 180961 - 1 + 22 * δ) b_code
+      (16 * 180959 - 1 + 22 * δ) b_code
       (numerator_weight_le _ β a _ β_code (by
         change weightDegree (codeWeights 131071) (retainCarrier a) + 131071 ≤ 131071 + δ
         omega))
@@ -126,7 +126,7 @@ theorem support_caps (β a b : Carrier K) (δ : ℕ) (Q : Poly K)
     have hds := (supp hd).2.2.1
     have hdc := (supp hd).1
     change d 2 ≤ 22 at hds
-    change d 0 + 131071 * (d 1 + d 2) < 16 * 180961 at hdc
+    change d 0 + 131071 * (d 1 + d 2) < 16 * 180959 at hdc
     have hsplit : (22 - d 2) * δ + d 2 * δ = 22 * δ := by
       rw [← Nat.add_mul, Nat.sub_add_cancel hds]
     simp [codeWeights, Nat.mul_add] at *
@@ -154,7 +154,7 @@ theorem support_caps (β a b : Carrier K) (δ : ℕ) (Q : Poly K)
 
 theorem exists_long_carrier {I Γ : Type*} [Fintype I]
     (nodes : I ↪ K) (u₀ v₀ u₁ v₁ : I → K) (node_count : Fintype.card I ≤ 262144)
-    (β a b : Carrier K) (b_ne : b ≠ 0) (δ : ℕ) (large : 9800 ≤ δ) (small : δ ≤ 31606)
+    (β a b : Carrier K) (b_ne : b ≠ 0) (δ : ℕ) (large : 9800 ≤ δ) (small : δ ≤ 31610)
     (β_value : weightDegree valueWeights (retainCarrier β) = 0)
     (a_value : weightDegree valueWeights (retainCarrier a) = 0)
     (b_value : weightDegree valueWeights (retainCarrier b) = 0)
@@ -177,13 +177,13 @@ theorem exists_long_carrier {I Γ : Type*} [Fintype I]
       (centerAtNode (nodes i) (u₀ i) (v₀ i) (u₁ i) (v₁ i) (comparisonRow β a b))).natTrailingDegree = 1)
     (P₀ P₁ : Γ → Polynomial K) (g₀ g₁ : Γ → K) (agreement : Γ → Finset I)
     (degree₀ : ∀ g, (P₀ g).natDegree ≤ 131071) (degree₁ : ∀ g, (P₁ g).natDegree ≤ 131071)
-    (number_agreeing : ∀ g, 180961 ≤ (agreement g).card)
+    (number_agreeing : ∀ g, 180959 ≤ (agreement g).card)
     (agree₀ : ∀ g i, i ∈ agreement g → (P₀ g).eval (nodes i) = u₀ i + g₀ g * v₀ i)
     (agree₁ : ∀ g i, i ∈ agreement g → (P₁ g).eval (nodes i) = u₁ i + g₁ g * v₁ i)
     (q_zero : ∀ g, specialize (P₀ g) (P₁ g) (g₀ g) (g₁ g) (comparisonRow β a b) = 0) :
     ∃ G : Carrier K, G ≠ 0 ∧
       (∀ d ∈ G.support, d 1 ≤ 22 ∧ d 1 + d 2 ≤ 200 ∧ d 3 ≤ 162 ∧
-        d 0 + 131071 * d 1 ≤ 16 * 180961 - 1 + 22 * δ) ∧
+        d 0 + 131071 * d 1 ≤ 16 * 180959 - 1 + 22 * δ) ∧
       ∀ g, MvPolynomial.aeval ![Polynomial.X, P₀ g, Polynomial.C (g₀ g), Polynomial.C (g₁ g)] G = 0 := by
   obtain ⟨Q, hQ, hproper, hcontact⟩ := exists_long_interpolant (fun i => nodes i) u₀ v₀ u₁ v₁
     (comparisonRow β a b) q_prime.ne_zero δ large small node_count q_code q_value q_second
@@ -197,7 +197,7 @@ theorem exists_long_carrier {I Γ : Type*} [Fintype I]
   intro g
   apply carrier_vanishes β a b 22 Q cap (P₀ g) (P₁ g) (g₀ g) (g₁ g) (q_zero g)
   exact specialization_zero_of_relative_contacts nodes (agreement g) u₀ v₀ u₁ v₁
-    (P₀ g) (P₁ g) (g₀ g) (g₁ g) 16 131071 (16 * 180961) Q (comparisonRow β a b)
+    (P₀ g) (P₁ g) (g₀ g) (g₁ g) 16 131071 (16 * 180959) Q (comparisonRow β a b)
     (degree₀ g) (degree₁ g) (by decide) (Nat.mul_le_mul_left 16 (number_agreeing g))
     (fun d hd => (supp hd).1) (q_zero g) (agree₀ g) (agree₁ g) (fun i _ => hcontact i)
 
