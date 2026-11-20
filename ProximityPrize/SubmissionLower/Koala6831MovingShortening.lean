@@ -1,4 +1,6 @@
-import ProximityPrize.SubmissionLower.LowerFoundation
+import ProximityPrize.SubmissionLower.LowerPolynomialFoundation
+
+
 
 namespace ProximityPrize.SubmissionLower.Koala6831Moving
 
@@ -74,6 +76,7 @@ theorem exists_identity_shortened_tail [DecidableEq I]
   change Φ.eval (c (x i)) = j ↔ H.eval (c (x i)) * Q.eval (c (x i)) = j - B.eval (c (x i))
   nth_rw 1 [hfactor]
   rw [Polynomial.eval_add, Polynomial.eval_mul, eq_sub_iff_add_eq, add_comm]
+
 
 end
 

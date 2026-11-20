@@ -1,4 +1,8 @@
+import Mathlib.FieldTheory.RatFunc.Basic
+import Mathlib.FieldTheory.RatFunc.Defs
+import ProximityPrize.SubmissionLower.LowerPolynomialFoundation
 import ProximityPrize.SubmissionLower.Koala6831MovingDerivation
+
 
 namespace ProximityPrize.SubmissionLower.Koala6831Moving
 

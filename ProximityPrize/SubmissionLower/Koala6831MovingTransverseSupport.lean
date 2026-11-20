@@ -6,6 +6,7 @@ import Mathlib.RingTheory.MvPolynomial.Basic
 import Mathlib.RingTheory.MvPolynomial.WeightedHomogeneous
 import ProximityPrize.SubmissionLower.Koala6831MovingTransverseChange
 
+
 namespace ProximityPrize.SubmissionLower.Koala6831Moving
 
 open scoped Pointwise

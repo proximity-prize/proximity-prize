@@ -1,6 +1,7 @@
 import ProximityPrize.SubmissionLower.Koala6831MovingShortenedCut
 import ProximityPrize.SubmissionLower.Koala6831OrdinaryIncidence
 
+
 namespace ProximityPrize.SubmissionLower.Koala6831MovingPairIncidence
 
 open scoped Classical BigOperators
@@ -93,75 +94,7 @@ theorem prime_seed_card_le (φ : Polynomial K →+* E) (hφ : Function.Injective
     exact (show (Γ.card : ℚ) ≤ (e + 1) * z by exact_mod_cast hbound).trans
       (le_add_of_nonneg_left (by positivity))
 
-private theorem selected_eval_surface (φ : Polynomial K →+* E) (selected : K → Polynomial K)
-    (γ : K) (F : MvPolynomial (Fin 4) K) :
-    MvPolynomial.eval (selectedPoint φ selected γ) (surfaceMap φ F) =
-      φ (specialization K (selected γ) γ F) := by
-  rw [selectedPoint_evaluation, eval_polynomialPoint_eq_specialization]
-  have h : Polynomial.eval₂RingHom (φ.comp Polynomial.C) (φ Polynomial.X) = φ := by
-    apply Polynomial.ringHom_ext
-    · intro a
-      simp
-    · simp
-  exact DFunLike.congr_fun h _
 
-theorem prime_fold_seed_card_le (φ : Polynomial K →+* E) (hφ : Function.Injective φ)
-    (P : Ideal (MvPolynomial (Fin 3) E)) [P.IsPrime]
-    (hnonpoint : ∀ q : Fin 3 → E, P ≠ RingHom.ker (MvPolynomial.aeval q).toRingHom)
-    (support : ResidualSupportParameters) {F : MvPolynomial (Fin 4) K}
-    (hData : ResidualSupportData support F) (hF : surfaceMap φ F ∈ P)
-    (hH : surfaceMap φ (polyH K F) ∉ P)
-    (sharp : FlagDegree) (hsharp : PolynomialInFlag sharp (surfaceMap φ (polyH K F)))
-    (selected : K → Polynomial K) (Γ : Finset K)
-    {Node : Type*} (nodes : Finset Node) (x u₀ u₁ : Node → K) (hx : Set.InjOn x nodes)
-    (p w A e : ℕ) [CharP E p] (hw : 1 ≤ w) (hchar : w < p) (hwA : w < A) (hAn : A ≤ nodes.card)
-    (hdegree : ∀ γ ∈ Γ, (selected γ).natDegree ≤ w)
-    (hpoint : ∀ γ ∈ Γ, P ≤ RingHom.ker (MvPolynomial.aeval (selectedPoint φ selected γ)).toRingHom)
-    (hagreement : ∀ γ ∈ Γ, A ≤ (nodes.filter (fun i => (selected γ).eval (x i) = u₀ i + γ * u₁ i)).card)
-    (hnoPencil : NoLargeSelectedPencil selected Γ w e)
-    (z yz all : ℕ) (budget : PrimeFlagZeroBudget P (profile z yz all))
-    (hz : Transcendental E (coordinate E P 2) → 1 ≤ z) :
-    (Γ.card : ℚ) ≤ (profile z yz all (reducedAgreementDirection support) : ℚ) *
-      lengthAverage nodes.card w A + yz * nodeAverage nodes.card w A + (e + 1) * z +
-      profile z yz all sharp := by
-  classical
-  let separant := surfaceMap φ (polyH K F)
-  let point := selectedPoint φ selected
-  let regular := Γ.filter (fun γ => MvPolynomial.eval (point γ) separant ≠ 0)
-  let singular := Γ.filter (fun γ => MvPolynomial.eval (point γ) separant = 0)
-  have hsub : regular ⊆ Γ := Finset.filter_subset _ _
-  have hreg (γ : K) (hγ : γ ∈ regular) : MvPolynomial.eval₂Hom (φ.comp Polynomial.C)
-      (polynomialPoint (φ.comp Polynomial.C) (selected γ) γ (φ Polynomial.X)) (polyH K F) ≠ 0 := by
-    rw [← selectedPoint_evaluation]
-    exact (Finset.mem_filter.mp hγ).2
-  have hsolution (γ : K) (hγ : γ ∈ Γ) : specialization K (selected γ) γ F = 0 := by
-    apply hφ
-    rw [map_zero, ← selected_eval_surface]
-    exact hpoint γ hγ hF
-  have hr := prime_seed_card_le φ hφ P hnonpoint support hData hF hH selected regular
-    nodes x u₀ u₁ hx p w A e hw hchar hwA hAn
-    (fun γ hγ => hdegree γ (hsub hγ)) (fun γ hγ => hsolution γ (hsub hγ)) hreg
-    (fun γ hγ => hpoint γ (hsub hγ)) (fun γ hγ => hagreement γ (hsub hγ))
-    (noLargeSelectedPencil_mono selected Γ regular w e hsub hnoPencil) z yz all budget hz
-  have hs : singular.card ≤ profile z yz all sharp := by
-    let points := singular.image point
-    have hcP (q : Fin 3 → E) (hq : q ∈ points) :
-        P ≤ RingHom.ker (MvPolynomial.aeval q).toRingHom := by
-      obtain ⟨γ, hγ, rfl⟩ := Finset.mem_image.mp hq
-      exact hpoint γ (Finset.mem_filter.mp hγ).1
-    have hcZ (q : Fin 3 → E) (hq : q ∈ points) : MvPolynomial.aeval q separant = 0 := by
-      obtain ⟨γ, hγ, rfl⟩ := Finset.mem_image.mp hq
-      exact (Finset.mem_filter.mp hγ).2
-    have hcount := budget.zero_le sharp separant hsharp hH points hcP hcZ
-    rwa [show points.card = singular.card from
-      Finset.card_image_of_injective _ (selectedPoint_injective φ selected)] at hcount
-  have hsplit : regular.card + singular.card = Γ.card := by
-    simpa only [regular, singular, not_not] using
-      Finset.card_filter_add_card_filter_not (s := Γ)
-        (fun γ => MvPolynomial.eval (point γ) separant ≠ 0)
-  have hsplitRat : (regular.card : ℚ) + singular.card = Γ.card := by exact_mod_cast hsplit
-  rw [← hsplitRat]
-  exact add_le_add hr (by exact_mod_cast hs)
 
 theorem regular_pair_seed_card_le (φ : Polynomial K →+* E) (hφ : Function.Injective φ)
     (support : ResidualSupportParameters) {F : MvPolynomial (Fin 4) K}
@@ -236,72 +169,6 @@ theorem regular_pair_seed_card_le (φ : Polynomial K →+* E) (hφ : Function.In
     _ ≤ _ := add_le_add (add_le_add (mul_le_mul_of_nonneg_right hsumD hlengthCoeff)
       (mul_le_mul_of_nonneg_right hsumYZ hnodeCoeff)) (mul_le_mul_of_nonneg_left hsumZ (by positivity))
 
-theorem fold_pair_seed_card_le_of_component_carriers
-    (φ : Polynomial K →+* E) (hφ : Function.Injective φ)
-    (support : ResidualSupportParameters) (G T H : MvPolynomial (Fin 3) E)
-    (left right sharp : FlagDegree)
-    (B : PrimeFlagBudgetFamily (G := G) (T := T) (H := H) left right)
-    (hz : ∀ C : RegularComponent E G T H, Transcendental E (coordinate E C.1 2) → 1 ≤ B.zCost C)
-    (hcarrier : ∀ C : RegularComponent E G T H, ∃ F : MvPolynomial (Fin 4) K,
-      ResidualSupportData support F ∧ surfaceMap φ F ∈ C.1 ∧ surfaceMap φ (polyH K F) ∉ C.1 ∧
-      PolynomialInFlag sharp (surfaceMap φ (polyH K F)))
-    (selected : K → Polynomial K) (Γ : Finset K)
-    {Node : Type*} (nodes : Finset Node) (x u₀ u₁ : Node → K) (hx : Set.InjOn x nodes)
-    (p w A e : ℕ) [CharP E p] (hw : 1 ≤ w) (hchar : w < p) (hwA : w < A) (hAn : A ≤ nodes.card)
-    (hdegree : ∀ γ ∈ Γ, (selected γ).natDegree ≤ w)
-    (hGpoint : ∀ γ ∈ Γ, MvPolynomial.eval (selectedPoint φ selected γ) G = 0)
-    (hTpoint : ∀ γ ∈ Γ, MvPolynomial.eval (selectedPoint φ selected γ) T = 0)
-    (hHpoint : ∀ γ ∈ Γ, MvPolynomial.eval (selectedPoint φ selected γ) H ≠ 0)
-    (hagreement : ∀ γ ∈ Γ, A ≤ (nodes.filter (fun i => (selected γ).eval (x i) = u₀ i + γ * u₁ i)).card)
-    (hnoPencil : NoLargeSelectedPencil selected Γ w e) :
-    (Γ.card : ℚ) ≤ (flagMixed left right (reducedAgreementDirection support) : ℚ) *
-      lengthAverage nodes.card w A + flagMixed left right unitYZFlag * nodeAverage nodes.card w A +
-      (e + 1) * flagMixed left right unitZFlag + flagMixed left right sharp := by
-  classical
-  let Comp := RegularComponent E G T H
-  let point := selectedPoint φ selected
-  let seeds (C : Comp) := componentSeeds E G T H Γ point C
-  have hcover : (Γ.card : ℚ) ≤ ∑ C : Comp, ((seeds C).card : ℚ) := by
-    exact_mod_cast (card_le_sum_componentSeeds E G T H Γ point hGpoint hTpoint hHpoint)
-  let D := reducedAgreementDirection support
-  let a := lengthAverage nodes.card w A
-  let b := nodeAverage nodes.card w A
-  have ha : 0 ≤ a := by dsimp [a, lengthAverage]; positivity
-  have hb : 0 ≤ b := by
-    dsimp [b, nodeAverage]
-    apply div_nonneg <;> apply sub_nonneg.mpr
-    · exact_mod_cast hwA.le.trans hAn
-    · exact_mod_cast hwA.le
-  have hcomp (C : Comp) : ((seeds C).card : ℚ) ≤ (B.weightedCost D C : ℚ) * a +
-      B.yzCost C * b + (e + 1) * B.zCost C + B.weightedCost sharp C := by
-    have hsub := componentSeeds_subset E G T H Γ point C
-    obtain ⟨F, hData, hFmem, hreg, hsharp⟩ := hcarrier C
-    exact prime_fold_seed_card_le φ hφ C.1 (regularComponent_ne_point E G T H C)
-      support hData hFmem hreg sharp hsharp selected (seeds C) nodes x u₀ u₁ hx p w A e hw hchar hwA hAn
-      (fun γ hγ => hdegree γ (hsub hγ))
-      (fun γ hγ => componentSeeds_on_prime E G T H Γ point C γ hγ)
-      (fun γ hγ => hagreement γ (hsub hγ))
-      (noLargeSelectedPencil_mono selected Γ _ w e hsub hnoPencil)
-      (B.zCost C) (B.yzCost C) (B.allCost C) (B.primeBudget C) (hz C)
-  have hsumD : (∑ C : Comp, (B.weightedCost D C : ℚ)) ≤ flagMixed left right D := by
-    exact_mod_cast B.sum_weightedCost_le D
-  have hsumYZ : (∑ C : Comp, (B.yzCost C : ℚ)) ≤ flagMixed left right unitYZFlag := by
-    exact_mod_cast B.sum_yzCost_le
-  have hsumZ : (∑ C : Comp, (B.zCost C : ℚ)) ≤ flagMixed left right unitZFlag := by
-    exact_mod_cast B.sum_zCost_le
-  have hsumSharp : (∑ C : Comp, (B.weightedCost sharp C : ℚ)) ≤ flagMixed left right sharp := by
-    exact_mod_cast B.sum_weightedCost_le sharp
-  calc
-    _ ≤ ∑ C : Comp, ((seeds C).card : ℚ) := hcover
-    _ ≤ ∑ C : Comp, ((B.weightedCost D C : ℚ) * a + B.yzCost C * b +
-        (e + 1) * B.zCost C + B.weightedCost sharp C) := Finset.sum_le_sum fun C _ => hcomp C
-    _ = (∑ C : Comp, (B.weightedCost D C : ℚ)) * a +
-        (∑ C : Comp, (B.yzCost C : ℚ)) * b + (e + 1) * (∑ C : Comp, (B.zCost C : ℚ)) +
-        (∑ C : Comp, (B.weightedCost sharp C : ℚ)) := by
-      rw [Finset.sum_add_distrib, Finset.sum_add_distrib, Finset.sum_add_distrib, Finset.sum_mul,
-        Finset.sum_mul, Finset.mul_sum]
-    _ ≤ _ := add_le_add (add_le_add (add_le_add (mul_le_mul_of_nonneg_right hsumD ha)
-      (mul_le_mul_of_nonneg_right hsumYZ hb)) (mul_le_mul_of_nonneg_left hsumZ (by positivity))) hsumSharp
 
 theorem exists_pair_budget_of_active_coordinates (G T H : MvPolynomial (Fin 3) E)
     (p : ℕ) [CharP E p] (left right : FlagDegree)
@@ -399,3 +266,4 @@ theorem mul_scale_le_of_pair_bound (support : ResidualSupportParameters)
 end
 
 end ProximityPrize.SubmissionLower.Koala6831MovingPairIncidence
+

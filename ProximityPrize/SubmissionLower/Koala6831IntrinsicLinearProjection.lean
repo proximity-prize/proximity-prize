@@ -1,5 +1,7 @@
+import ProximityPrize.SubmissionLower.LowerFoundation
 import ProximityPrize.SubmissionLower.Koala6831IntrinsicPowers
 import Mathlib.RingTheory.Polynomial.Subring
+
 
 namespace ProximityPrize.SubmissionLower.Koala6831Intrinsic
 

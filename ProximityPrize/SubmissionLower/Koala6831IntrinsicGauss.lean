@@ -2,6 +2,7 @@ import Mathlib.Algebra.Polynomial.Coeff
 import Mathlib.Data.Finset.Lattice.Fold
 import Mathlib.RingTheory.Valuation.Basic
 
+
 namespace ProximityPrize.SubmissionLower.Koala6831Intrinsic
 
 open scoped Polynomial BigOperators

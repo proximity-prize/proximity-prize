@@ -1,9 +1,8 @@
 import ProximityPrize.SubmissionLower.MergedInfra6815_9
 import ProximityPrize.SubmissionLower.MergedInfra6815_12
 import ProximityPrize.SubmissionLower.MergedInfra6815_6
-import ProximityPrize.SubmissionLower.BoundaryTailGates
 import ProximityPrize.SubmissionLower.LowerGeometry
-import ProximityPrize.SubmissionLower.MergedInfra6815_10
+-- Modified from prior Proximity Prize sources.
 set_option Elab.async false
 section MergedPart0
 namespace ProximityPrize.SubmissionLower.HFreeFirstSlice6812
@@ -22,15 +21,18 @@ set_option maxHeartbeats 12000000
 set_option synthInstance.maxHeartbeats 500000
 local notation "w" => RCN326.w
 
+
 section Slice
 variable {K E : Type} [Field K] [Field E] [IsAlgClosed E]
+
 
 end Slice
 
 section Stage
 variable {K I E T : Type} [Field K] [Field E] [IsAlgClosed E]
   [Algebra (GenericField K) E]
-
+local instance : DecidableEq K := Classical.decEq K
+local instance : DecidableEq I := Classical.decEq I
 variable {Gamma : Finset K} {x : I → K} {p : ℕ} {flag : FlagDegree}
   [CharP (GenericField K) p] [CharP E p] {errorCap : ℕ}
   {stageSupport : RCN275.ResidualSupportParameters}
@@ -60,7 +62,8 @@ set_option maxHeartbeats 4000000
 set_option synthInstance.maxHeartbeats 100000
 set_option maxRecDepth 100000
 variable {K I : Type} [Field K]
-
+local instance : DecidableEq K := Classical.decEq K
+local instance : DecidableEq I := Classical.decEq I
 variable {Gamma : Finset K} {x : I → K} {p : ℕ} {flag : FlagDegree}
   [CharP K p] [CharP (GenericField K) p] {errorCap : ℕ}
 local notation "Ω" => GenericField K
@@ -68,6 +71,8 @@ local notation "Ω" => GenericField K
 def rawFirstFlag (t y r : ℕ) : FlagDegree :=
   RCN198.center (cellA t y) (cellB y r) (cellS r) +
     w • (⟨cellA t y,cellB y r+1,cellS r+2⟩ : FlagDegree)
+
+
 
 def channel {t y r : ℕ}
     (S : ResidualStage (polynomialEmbedding K) Gamma x p errorCap flag w (cellSupport t y r))
@@ -96,7 +101,9 @@ set_option Elab.async false
 set_option maxHeartbeats 3000000
 set_option maxRecDepth 100000
 variable {K I : Type} [Field K] [CharP K 2130706433]
-
+local instance : DecidableEq K := Classical.decEq K
+local instance : DecidableEq I := Classical.decEq I
+local instance : CharP (GenericField K) 2130706433 := genericField_charP K 2130706433
 variable {Gamma : Finset K} {x : I → K} {flag : FlagDegree}
 
 end
@@ -116,25 +123,10 @@ set_option Elab.async false
 set_option maxHeartbeats 3000000
 set_option maxRecDepth 100000
 variable {K I : Type} [Field K] [CharP K 2130706433]
+local instance : DecidableEq K := Classical.decEq K
+local instance : DecidableEq I := Classical.decEq I
+local instance : CharP (GenericField K) 2130706433 := genericField_charP K 2130706433
 
 end
 end ProximityPrize.SubmissionLower.MovingFiberRegularGeometry6811
 end MergedPart3
-section MergedPart4
-namespace ProximityPrize.SubmissionLower.MovingFiberRegularData6811
-open scoped Classical BigOperators
-open MvPolynomial RCN135 RCN136 RCN319 RCN238 RCN243 RCN260 RCN174 RCN275 RCN327
-open RCN156 RCN234 LocatorHybridCells LocatorHybridCellsC1 RCN130 RCN095
-noncomputable section
-set_option autoImplicit false
-set_option maxHeartbeats 4000000
-set_option maxRecDepth 100000
-variable {K I : Type} [Field K] [CharP K 2130706433] [Fintype I]
-
-namespace Data
-variable {nodes : I ↪ K} {u0 u1 : I → K}
-
-end Data
-end
-end ProximityPrize.SubmissionLower.MovingFiberRegularData6811
-end MergedPart4

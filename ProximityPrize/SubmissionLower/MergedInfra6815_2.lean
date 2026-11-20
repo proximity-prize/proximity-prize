@@ -577,6 +577,8 @@ def signedOddScalar : ℕ → K
   | 0 => 1
   | m + 1 => -(2 * m + 1 : K) * signedOddScalar m
 
+@[simp] theorem signedOddScalar_zero : signedOddScalar (K := K) 0 = 1 := rfl
+
 @[simp] theorem signedOddScalar_succ (m : ℕ) :
     signedOddScalar (K := K) (m + 1) = -(2 * m + 1 : K) * signedOddScalar m := by
   rfl
@@ -601,7 +603,7 @@ theorem signedOddScalar_ne_zero {p : ℕ} [CharP K p] (m : ℕ)
 theorem refinedCoefficients_zero (F : Poly4) (m : ℕ) :
     refinedCoefficients F m 0 = MvPolynomial.C (signedOddScalar (K := K) m) := by
   induction m with
-  | zero => simp [refinedCoefficients, signedOddScalar]
+  | zero => simp [refinedCoefficients]
   | succ m ih =>
       have hC2 : MvPolynomial.C (2 : K) = (2 : Poly4) :=
         map_natCast (MvPolynomial.C : K →+* Poly4) 2

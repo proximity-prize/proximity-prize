@@ -1,4 +1,5 @@
 import ProximityPrize.SubmissionLower.LowerFoundation
+import ProximityPrize.SubmissionLower.Koala6844VirtualShortBasis
 set_option linter.all false
 
 section Compact_PackedLocatorTail
@@ -35,7 +36,7 @@ open scoped BigOperators
 open RCN081 RCN156 RCN180 RCN234
 noncomputable section
 variable {K:Type*} [Field K]
-
+local instance:DecidableEq K:=Classical.decEq K
 def nestedExponents (D w T YS S:ℕ):Set (Fin 4 →₀ ℕ) :=
   {d | d 1 + d 2 + d 3 ≤ T ∧ d 1 + d 2 ≤ YS ∧ d 2 ≤ S ∧
     d 0 + w * d 1 + (w - 1) * d 2 < D}
@@ -45,9 +46,6 @@ def nestedCoefficientBox (K:Type*) [Field K] (D w T YS S:ℕ) :
 
 def kernelSumRange (f : ℕ → ℕ) : ℕ → ℕ := KernelEval.sumRange f
 
-theorem kernelSumRange_succ (f : ℕ → ℕ) (n : ℕ) :
-    kernelSumRange f (n + 1) = kernelSumRange f n + f n := by
-  exact KernelEval.sumRange_succ f n
 
 theorem kernelSumRange_eq (f : ℕ → ℕ) (n : ℕ) :
     kernelSumRange f n = ∑ i ∈ Finset.range n, f i := by
@@ -119,25 +117,6 @@ theorem nested_mem_weights {D w T YS S:ℕ} {P:MvPolynomial (Fin 4) K}
   have hdYS:=(hP hd).2.1
   rw [weight_fin4]
   simpa [residualYSWeights] using hdYS
-theorem flag_box_ys_bound (D w L s YS:ℕ) (hw:1 ≤ w)
-    (hshape:D + s ≤ w * (YS + 1)) (P:MvPolynomial (Fin 4) K)
-    (hP:P ∈ RCN100.globalCoefficientBox K D w L s) :
-    wt residualYSWeights P ≤ YS:=by
-  apply (weightedTotalDegree_le_iff residualYSWeights P YS).mpr
-  intro d hd
-  have hs:=(hP hd).2.1
-  have hc:=(hP hd).2.2
-  have hwr:w * d 2 = (w - 1) * d 2 + d 2:=by
-    calc
-      w * d 2 = ((w - 1) + 1) * d 2:=by rw [Nat.sub_add_cancel hw]
-      _ = (w - 1) * d 2 + d 2:=by ring
-  have hm:w * (d 1 + d 2) < w * (YS + 1):=by
-    rw [Nat.mul_add, hwr]
-    omega
-  have hlt:d 1 + d 2 < YS + 1 :=
-    (Nat.mul_lt_mul_left (by omega:0 < w)).mp hm
-  rw [weight_fin4]
-  simpa [residualYSWeights] using (Nat.le_of_lt_succ hlt)
 section LinearSelection
 variable {V:Type*} [AddCommGroup V] [Module K V]
 end LinearSelection
@@ -154,21 +133,8 @@ open scoped BigOperators
 open RCN081 RCN100 RCN119 RCN122 RCN156 RCN180 RCN234 RCN313 ContactOrderBridge
 noncomputable section
 variable {K I:Type*} [Field K] [Fintype I]
-
-abbrev P4 (K:Type*) [Field K]:=MvPolynomial (Fin 4) K
-theorem pderiv_R_weight_add_le (weights:Fin 4 → ℕ) (Q:P4 K)
-    (hder:MvPolynomial.pderiv (2:Fin 4) Q ≠ 0) :
-    wt weights (MvPolynomial.pderiv (2:Fin 4) Q) + weights 2 ≤ wt weights Q:=by
-  classical
-  obtain ⟨d, hd, heq⟩:=Finset.exists_mem_eq_sup
-    (MvPolynomial.pderiv (2:Fin 4) Q).support
-    (MvPolynomial.support_nonempty.mpr hder) (Finsupp.weight weights)
-  have hbefore:=support_before_pderiv (2:Fin 4) Q d hd
-  have hbound:=MvPolynomial.le_weightedTotalDegree weights hbefore
-  change wt weights (MvPolynomial.pderiv (2:Fin 4) Q) =
-    Finsupp.weight weights d at heq
-  rw [heq]
-  simpa only [wt, map_add, Finsupp.weight_single, one_nsmul] using hbound
+local instance:DecidableEq K:=Classical.decEq _
+local instance:DecidableEq I:=Classical.decEq _
 end
 end ProximityPrize.SubmissionLower.LocatorContact
 end PackedLocator_LocatorContact
@@ -185,7 +151,8 @@ set_option autoImplicit false
 set_option maxRecDepth 3000
 set_option maxHeartbeats 600000
 variable {K I:Type*} [Field K] [Fintype I]
-
+local instance:DecidableEq K:=Classical.decEq K
+local instance:DecidableEq I:=Classical.decEq I
 end
 end ProximityPrize.SubmissionLower.LocatorLowQuotient
 end PackedLocator_LocatorLowQuotient
@@ -203,10 +170,33 @@ set_option autoImplicit false
 set_option maxRecDepth 20000
 set_option maxHeartbeats 1500000
 variable {K I:Type} [Field K]
-
+local instance:DecidableEq K:=Classical.decEq K
+local instance:DecidableEq I:=Classical.decEq I
 local instance:StrongNormalizationMonoid (MvPolynomial (Fin 4) K) :=
   UniqueFactorizationMonoid.strongNormalizationMonoid
-
+private theorem regular_mem_normalizedFactors
+    (H:MvPolynomial (Fin 4) K) (F:RCN266.RegularIndex H) :
+    F.1 ∈ normalizedFactors H:=by
+  have hactive:F.1 ∈ RCN082.activeFactors H :=
+    (Finset.mem_filter.mp F.2).1
+  have hnf:F.1 ∈ (normalizedFactors H).toFinset :=
+    (Finset.mem_filter.mp hactive).1
+  exact Multiset.mem_toFinset.mp hnf
+def regularIndexSelf (H:MvPolynomial (Fin 4) K)
+    (F:RCN266.RegularIndex H):RCN052.RegularIndex F.1:=by
+  have hF:=RCN167.positiveRFactors_spec H F.1 F.2
+  refine ⟨F.1, ?_⟩
+  change F.1 ∈ (RCN082.activeFactors F.1).filter (fun G => 0 < G.degreeOf 2)
+  refine Finset.mem_filter.mpr ⟨?_, hF.2.2⟩
+  change F.1 ∈ (normalizedFactors F.1).toFinset.filter
+    (fun G => 0 < G.degreeOf 1 + G.degreeOf 2 + G.degreeOf 3)
+  refine Finset.mem_filter.mpr ⟨?_, by omega⟩
+  apply Multiset.mem_toFinset.mpr
+  rw [normalizedFactors_irreducible hF.1,
+    normalize_normalized_factor F.1 (regular_mem_normalizedFactors H F)]
+  exact Multiset.mem_singleton_self _
+@[simp] theorem regularIndexSelf_val (H:MvPolynomial (Fin 4) K)
+    (F:RCN266.RegularIndex H):(regularIndexSelf H F).1 = F.1:=rfl
 end
 end ProximityPrize.SubmissionLower.LocatorCoprimeQuotient
 
@@ -223,6 +213,7 @@ set_option maxRecDepth 20000
 set_option maxHeartbeats 400000
 
 variable {K V I : Type*} [Field K]
+local instance : DecidableEq K := Classical.decEq K
 
 theorem quotient_mem_nestedCoefficientBox_of_mul_eq
     (P F Q : MvPolynomial (Fin 4) K) (D w T YS S : ℕ)
@@ -271,6 +262,7 @@ end LinearDichotomy
 section SecondDerivative
 
 variable [Fintype I]
+local instance : DecidableEq I := Classical.decEq I
 
 end SecondDerivative
 
@@ -292,6 +284,7 @@ set_option maxRecDepth 20000
 set_option maxHeartbeats 800000
 
 variable {K V I : Type*} [Field K]
+local instance : DecidableEq K := Classical.decEq K
 
 section LinearDichotomy
 
@@ -302,6 +295,7 @@ end LinearDichotomy
 section ThirdDerivative
 
 variable [Fintype I]
+local instance : DecidableEq I := Classical.decEq I
 
 end ThirdDerivative
 
@@ -323,6 +317,7 @@ set_option maxRecDepth 20000
 set_option maxHeartbeats 1000000
 
 variable {K V I : Type*} [Field K]
+local instance : DecidableEq K := Classical.decEq K
 
 section LinearDichotomy
 
@@ -333,6 +328,7 @@ end LinearDichotomy
 section FourthDerivative
 
 variable [Fintype I]
+local instance : DecidableEq I := Classical.decEq I
 
 end FourthDerivative
 
@@ -354,6 +350,7 @@ set_option maxRecDepth 20000
 set_option maxHeartbeats 1200000
 
 variable {K V I : Type*} [Field K]
+local instance : DecidableEq K := Classical.decEq K
 
 section LinearDichotomy
 
@@ -364,6 +361,7 @@ end LinearDichotomy
 section FifthDerivative
 
 variable [Fintype I]
+local instance : DecidableEq I := Classical.decEq I
 
 end FifthDerivative
 
@@ -422,6 +420,7 @@ set_option maxRecDepth 100000
 set_option maxHeartbeats 2000000
 
 variable {K V : Type*} [Field K]
+local instance : DecidableEq K := Classical.decEq K
 
 def powerBandBudget
     (delta dT dY dS T YS S : ℕ) : ℕ → ℕ
@@ -452,6 +451,7 @@ theorem powerBandBudget_mono
         · omega
 
 def thinTop (w Dhigh S : ℕ) : ℕ := (Dhigh + S - 1) / w
+
 
 theorem ys_le_thinTop (Dhigh w T YS S : ℕ) (hw : 1 ≤ w) (d : Fin 4 →₀ ℕ)
     (hd : d ∈ nestedExponents Dhigh w T YS S) :
@@ -494,6 +494,7 @@ theorem mem_low_of_highBandMap_cut_eq_zero
     simpa only [highBandMap_apply, he, Pi.zero_apply] using hc
   exact (MvPolynomial.mem_support_iff.mp hd) hcoeff
 
+
 def powerBandBudgetThin
     (w Dh delta dc dT dY dS T YS S : ℕ) : ℕ → ℕ
   | 0 => 0
@@ -516,6 +517,9 @@ theorem powerBandBudgetThin_le (w delta dc dT dY dS : ℕ) :
         (Nat.mul_le_mul_left delta
           (channelCount_mono le_rfl (Nat.min_le_left _ _) le_rfl))
         (ih _ _ _ _)
+
+
+
 
 end
 
@@ -540,6 +544,7 @@ set_option maxRecDepth 100000
 set_option maxHeartbeats 2000000
 
 variable {K I : Type*} [Field K]
+local instance : DecidableEq K := Classical.decEq K
 
 abbrev P4 (K : Type*) [Field K] := MvPolynomial (Fin 4) K
 
@@ -554,48 +559,27 @@ theorem iteratePderivR_succ (j : ℕ) (Q : P4 K) :
       MvPolynomial.pderiv (2 : Fin 4) (iteratePderivR j Q) := by
   simp only [iteratePderivR, Function.iterate_succ_apply']
 
-theorem iteratePderivR_ne_zero_of_succ
-    (Q : P4 K) (j : ℕ)
-    (hne : iteratePderivR (j + 1) Q ≠ 0) :
-    iteratePderivR j Q ≠ 0 := by
-  intro hz
-  apply hne
-  rw [iteratePderivR_succ, hz, map_zero]
-
-theorem iteratePderivR_weight_add_le
-    (weights : Fin 4 → ℕ) (Q : P4 K) (j : ℕ)
-    (hne : iteratePderivR j Q ≠ 0) :
-    wt weights (iteratePderivR j Q) + j * weights 2 ≤ wt weights Q := by
+@[simp] theorem iteratePderivR_zero_poly (j : ℕ) :
+    iteratePderivR (K := K) j 0 = 0 := by
   induction j with
-  | zero =>
-      simp only [iteratePderivR_zero, Nat.zero_mul, Nat.add_zero]
-      exact le_rfl
+  | zero => rfl
   | succ j ih =>
-      have hprev : iteratePderivR j Q ≠ 0 :=
-        iteratePderivR_ne_zero_of_succ Q j (by
-          simpa only [Nat.succ_eq_add_one] using hne)
-      have hstepNe :
-          MvPolynomial.pderiv (2 : Fin 4) (iteratePderivR j Q) ≠ 0 := by
-        simpa only [Nat.succ_eq_add_one, iteratePderivR_succ] using hne
-      have hstep := LocatorContact.pderiv_R_weight_add_le
-        weights (iteratePderivR j Q) hstepNe
-      calc
-        wt weights (iteratePderivR (Nat.succ j) Q) +
-              Nat.succ j * weights 2 =
-            (wt weights (MvPolynomial.pderiv (2 : Fin 4)
-              (iteratePderivR j Q)) + weights 2) + j * weights 2 := by
-              simp only [Nat.succ_eq_add_one, iteratePderivR_succ,
-                Nat.add_mul, one_mul]
-              ac_rfl
-        _ ≤ wt weights (iteratePderivR j Q) + j * weights 2 :=
-          Nat.add_le_add_right hstep _
-        _ ≤ wt weights Q := ih hprev
+      rw [iteratePderivR_succ, ih, map_zero]
+
+
+
+
 
 section KernelVanishing
 
 variable [Fintype I]
+local instance : DecidableEq I := Classical.decEq I
+
 
 end KernelVanishing
+
+
+
 
 end
 
@@ -714,40 +698,15 @@ def middle (p:FlagDegree):ℕ:=p.yz + p.all
 def total (p:FlagDegree):ℕ:=p.zOnly + p.yz + p.all
 def Below (p q:FlagDegree):Prop :=
   p.all ≤ q.all ∧ middle p ≤ middle q ∧ total p ≤ total q
-theorem mixed_expansion (p q r:FlagDegree) :
-    flagMixed p q r =
-      (q.all * r.all + q.yz * r.all + q.all * r.yz) * total p +
-      (q.zOnly * r.all + q.all * r.zOnly) * middle p +
-      (q.yz * r.yz + q.zOnly * r.yz + q.yz * r.zOnly) * p.all:=by
-  simp only [flagMixed, middle, total]
-  ring
-theorem mixed_mono_first {p P:FlagDegree} (h:Below p P) (q r:FlagDegree) :
-    flagMixed p q r ≤ flagMixed P q r:=by
-  rw [mixed_expansion p q r, mixed_expansion P q r]
-  exact Nat.add_le_add
-    (Nat.add_le_add (Nat.mul_le_mul_left _ h.2.2) (Nat.mul_le_mul_left _ h.2.1))
-    (Nat.mul_le_mul_left _ h.1)
-
-theorem mixed_mono_third (p q:FlagDegree) {r R:FlagDegree}
-    (h:Below r R):flagMixed p q r ≤ flagMixed p q R:=by
-  calc
-    flagMixed p q r = flagMixed r q p:=by unfold flagMixed; ring
-    _ ≤ flagMixed R q p:=mixed_mono_first h q p
-    _ = flagMixed p q R:=by unfold flagMixed; ring
-
-theorem sum_mixed_le {I:Type*} [Fintype I]
-    (p:I → FlagDegree) (P q r:FlagDegree)
-    (hs:(∑ i, (p i).all) ≤ P.all)
-    (hy:(∑ i, middle (p i)) ≤ middle P)
-    (ht:(∑ i, total (p i)) ≤ total P) :
-    (∑ i, flagMixed (p i) q r) ≤ flagMixed P q r:=by
-  rw [Finset.sum_congr rfl (fun i _ => mixed_expansion (p i) q r),
-    mixed_expansion P q r]
-  simp only [Finset.sum_add_distrib, ← Finset.mul_sum]
-  exact Nat.add_le_add
-    (Nat.add_le_add (Nat.mul_le_mul_left _ ht) (Nat.mul_le_mul_left _ hy))
-    (Nat.mul_le_mul_left _ hs)
-
+def padS (p:FlagDegree):ℕ:=max p.all 2
+def padY (p:FlagDegree):ℕ:=max (middle p) (padS p + 1)
+def padT (p:FlagDegree):ℕ:=max (total p) (padY p)
+def paddedTail (p:FlagDegree) (d:ℕ):FlagDegree :=
+  ⟨2 * (padT p - padY p) * d,
+    1 + 2 * (padY p - padS p) * d,
+    2 * (padS p - 1) * d⟩
+def paddedCost (d e:ℕ) (p:FlagDegree):ℕ :=
+  flagMixed p (paddedTail p d) (paddedTail p e)
 end ProximityPrize.SubmissionLower.LocatorFactorAggregate
 end PackedLocator_LocatorFactorAggregate
 
@@ -764,6 +723,27 @@ open RCN095 LocatorFactorAggregate
 set_option maxRecDepth 4096
 set_option maxHeartbeats 400000
 
+def rationalFlag (p : FlagDegree) : FlagDegree :=
+  ⟨131072 * (padT p - padY p) + 2 * (padT p - padY p),
+    131072 * (padY p - padS p - 1) + 2 * (padY p - padS p - 1) + 2,
+    131072 * (padS p - 2) + 2 * (padS p - 2) + 3⟩
+
+def movingFiber (p : FlagDegree) : FlagDegree :=
+  ⟨padT p - padY p, padY p - padS p, padS p + 1⟩
+
+def movingCut (p : FlagDegree) : FlagDegree :=
+  rationalFlag p + ⟨0, 131072, 262144⟩
+
+def HybridApplies (p : FlagDegree) : Prop := 2 ≤ p.all ∧ p.all + 2 ≤ middle p
+
+instance (p : FlagDegree) : Decidable (HybridApplies p) := by
+  unfold HybridApplies; infer_instance
+
+
+
+
+
+
 end ProximityPrize.SubmissionLower.LocatorHybridCost
 end PackedLocator_LocatorHybridCost
 
@@ -776,6 +756,16 @@ open RCN095 LocatorFactorAggregate LocatorHybridCost
 
 set_option maxRecDepth 4096
 set_option maxHeartbeats 400000
+
+def hybridCoordinateC1 (p : FlagDegree) : FlagDegree := rationalFlag p
+
+def HybridAppliesC1 (p : FlagDegree) : Prop := 3 ≤ p.all ∧ p.all + 2 ≤ middle p
+
+instance (p : FlagDegree) : Decidable (HybridAppliesC1 p) := by
+  unfold HybridAppliesC1; infer_instance
+
+
+
 
 end ProximityPrize.SubmissionLower.LocatorHybridCostC1
 end PackedLocator_LocatorHybridCostC1
@@ -790,6 +780,20 @@ open RCN095 LocatorFactorAggregate LocatorHybridCost LocatorHybridCostC1
 set_option maxRecDepth 4096
 set_option maxHeartbeats 400000
 
+def reducedTail (p : FlagDegree) : FlagDegree := paddedTail p 131072
+
+
+
+def hybridCostC2 (p : FlagDegree) : ℕ :=
+  flagMixed p (reducedTail p) (hybridCoordinateC1 p) +
+    131076 * flagMixed p (movingFiber p) (movingCut p)
+
+def HybridAppliesC2 (p : FlagDegree) : Prop := 3 ≤ p.all ∧ p.all + 2 ≤ middle p
+
+instance (p : FlagDegree) : Decidable (HybridAppliesC2 p) := by
+  unfold HybridAppliesC2; infer_instance
+
+
 end ProximityPrize.SubmissionLower.LocatorHybridCostC2
 end PackedLocator_LocatorHybridCostC2
 
@@ -798,6 +802,9 @@ section PackedLocator_LocatorHybridCostSelect
 namespace ProximityPrize.SubmissionLower.LocatorHybridCost
 
 open RCN095 LocatorFactorAggregate LocatorHybridCostC2
+
+def ordinaryCostOf (p : FlagDegree) : ℕ :=
+  if HybridAppliesC2 p then hybridCostC2 p else paddedCost 131072 131073 p
 
 end ProximityPrize.SubmissionLower.LocatorHybridCost
 end PackedLocator_LocatorHybridCostSelect
@@ -822,6 +829,8 @@ set_option maxHeartbeats 5000000
 
 variable {K V : Type} [Field K]
 local instance : DecidableEq K := Classical.decEq K
+local instance : StrongNormalizationMonoid (MvPolynomial (Fin 4) K) :=
+  UniqueFactorizationMonoid.strongNormalizationMonoid
 
 abbrev P4 (K : Type) [Field K] := MvPolynomial (Fin 4) K
 
@@ -912,6 +921,7 @@ theorem regularProduct_ne_zero (H : P4 K)
   intro F hF
   exact regularFactor_ne_zero H F
 
+
 theorem regularFactor_mul_cofactor
     (H : P4 K) (A : Finset (RCN266.RegularIndex H))
     (F : RCN266.RegularIndex H) (hFA : F ∈ A) :
@@ -954,6 +964,8 @@ theorem regularFactor_isRelPrime_liftedHelper
   apply hnot
   exact ((regularFactor_isRelPrime_cofactor H A F hFA).pow_right)
     |>.dvd_of_dvd_mul_left hd
+
+
 
 noncomputable def universalFactors
     [AddCommGroup V] [Module K V]
@@ -1005,12 +1017,6 @@ theorem regularProduct_dvd_of_each
       rw [hprod]
       exact hrel.mul_dvd hFdiv hAdiv
 
-theorem regularProduct_dvd_carrier
-    (H : P4 K) (A : Finset (RCN266.RegularIndex H)) :
-    regularProduct H A ∣ H := by
-  apply regularProduct_dvd_of_each
-  intro F _hFA
-  exact (RCN167.positiveRFactors_spec H F.1 F.2).2.1
 
 theorem universalProduct_dvd
     [AddCommGroup V] [Module K V]
@@ -1021,6 +1027,8 @@ theorem universalProduct_dvd
   apply regularProduct_dvd_of_each
   intro F hF
   exact (mem_universalFactors H A q F).mp hF |>.2 v
+
+
 
 def HasBatchExitStage
     [AddCommGroup V] [Module K V]
@@ -1378,6 +1386,8 @@ theorem exists_batchExitStage_of_bandBudgetThin_succ
         · simpa only [Fin.val_zero, zero_mul, Nat.sub_zero] using hqOneBox v
         · exact havoid
 
+
+
 end
 
 end ProximityPrize.SubmissionLower.LocatorBatchProductRoute
@@ -1401,6 +1411,14 @@ noncomputable section
 set_option autoImplicit false
 set_option maxRecDepth 100000
 set_option maxHeartbeats 5000000
+
+abbrev K := IRSProfile.Field
+abbrev I := IRSProfile.Index
+
+local instance : DecidableEq K := Classical.decEq K
+local instance : DecidableEq I := Classical.decEq I
+local instance : CharP K 2130706433 := by
+  simpa [RCN223.prime] using RCN128.challenge_field_characteristic6600
 
 end
 
@@ -1426,6 +1444,14 @@ noncomputable section
 set_option autoImplicit false
 set_option maxRecDepth 100000
 set_option maxHeartbeats 5000000
+
+abbrev K := IRSProfile.Field
+abbrev I := IRSProfile.Index
+
+local instance : DecidableEq K := Classical.decEq K
+local instance : DecidableEq I := Classical.decEq I
+local instance : CharP K 2130706433 := by
+  simpa [RCN223.prime] using RCN128.challenge_field_characteristic6600
 
 end
 
@@ -1463,9 +1489,44 @@ structure SourceNumbers where
   gap : ℕ
   deriving DecidableEq, Repr
 
+def sourceR1200 : SourceNumbers :=
+  ⟨526750, 10983, 2450, 36963750380693986577⟩
+
+def sourceC : SourceNumbers :=
+  ⟨328400, 6641, 1480, 5090867013182078230⟩
+
+def sourceSplit500 : SourceNumbers :=
+  ⟨165000, 3320, 750, 315862958949324685⟩
+
+def sourceSplit390 : SourceNumbers :=
+  ⟨19500, 539, 120, 91073661700890⟩
+
 def SourceNumbers.fuel (s : SourceNumbers) (p : FlagDegree) : ℕ :=
   min (s.totalCap / total p)
     (min (s.middleCap / middle p) (s.slopeCap / p.all))
+
+def SourceNumbers.band (s : SourceNumbers) (p : FlagDegree) : ℕ :=
+  powerBandBudget 50293 (total p) (middle p) p.all
+    (s.totalCap - total p) (s.middleCap - middle p)
+    (s.slopeCap - p.all) (s.fuel p)
+
+def contactDec (p : FlagDegree) : ℕ := 131071 * middle p - p.all
+
+def SourceNumbers.contactCap (s : SourceNumbers) (p : FlagDegree) : ℕ :=
+  (131071 * (s.middleCap + 1) - s.slopeCap) - contactDec p
+
+def SourceNumbers.bandThin (s : SourceNumbers) (p : FlagDegree) : ℕ :=
+  powerBandBudgetThin 131071 (s.contactCap p) 50293 (contactDec p)
+    (total p) (middle p) p.all
+    (s.totalCap - total p) (s.middleCap - middle p)
+    (s.slopeCap - p.all) (s.fuel p)
+
+def SourceNumbers.Routeable (s : SourceNumbers) (p : FlagDegree) : Prop :=
+  1 ≤ p.all ∧ total p ≤ s.totalCap ∧ middle p ≤ s.middleCap ∧
+    p.all ≤ s.slopeCap ∧ (s.band p < s.gap ∨ s.bandThin p < s.gap)
+
+instance (s : SourceNumbers) (p : FlagDegree) : Decidable (s.Routeable p) :=
+  by unfold SourceNumbers.Routeable; infer_instance
 
 def rawFlag (r v z : ℕ) : FlagDegree := ⟨z, v, r⟩
 
@@ -1493,6 +1554,40 @@ def sumFlag {ι : Type} (s : Finset ι) (p : ι → FlagDegree) : FlagDegree :=
     total (sumFlag s p) = ∑ i ∈ s, total (p i) := by
   simp only [sumFlag, total, Finset.sum_add_distrib]
 
+structure ThresholdReceipt where
+  r : ℕ
+  v : ℕ
+  r1200 : ℕ
+  sourceC : ℕ
+  split500 : ℕ
+  split1200 : ℕ
+  split390 : ℕ
+  deriving DecidableEq, Repr
+
+def thresholdBoundary (s : SourceNumbers) (r v threshold : ℕ) : Prop :=
+  let maxZ := 6677 - (r + v)
+  if threshold = 0 then s.Routeable (rawFlag r v 0)
+  else if threshold ≤ maxZ then
+    ¬s.Routeable (rawFlag r v (threshold - 1)) ∧
+      s.Routeable (rawFlag r v threshold)
+  else threshold = maxZ + 1 ∧ ¬s.Routeable (rawFlag r v maxZ)
+
+instance (s : SourceNumbers) (r v threshold : ℕ) :
+    Decidable (thresholdBoundary s r v threshold) := by
+  unfold thresholdBoundary
+  infer_instance
+
+def ThresholdReceipt.Valid (q : ThresholdReceipt) : Prop :=
+  1 ≤ q.r ∧ q.r ≤ 29 ∧ q.r + q.v ≤ 135 ∧
+    thresholdBoundary sourceR1200 q.r q.v q.r1200 ∧
+    thresholdBoundary LocatorPhase6800Oracle.sourceC q.r q.v q.sourceC ∧
+    thresholdBoundary sourceSplit500 q.r q.v q.split500 ∧
+    thresholdBoundary sourceSplit390 q.r q.v q.split390
+
+instance (q : ThresholdReceipt) : Decidable q.Valid := by
+  unfold ThresholdReceipt.Valid
+  infer_instance
+
 structure BaseSegment where
   start : ℕ
   valueAtStart : ℕ
@@ -1516,6 +1611,44 @@ def evalBaseSegments : List BaseSegment → ℕ → ℕ
   | q :: qs, z =>
       (qs.foldl (fun best next => if next.start ≤ z then next else best) q).evalAt z
 
+def BaseRow.evalAt (q : BaseRow) (z : ℕ) : ℕ :=
+  if z = 0 then q.z0
+  else if z = 1 then q.z1
+  else if z = 2 then q.z2
+  else evalBaseSegments q.segments z
+
+def baseRowIndex (r v : ℕ) : ℕ :=
+  (r - 1) * 136 - ((r - 1) * r) / 2 + v
+
+def defaultBaseRow : BaseRow := ⟨0, 0, 0, 0, 0, []⟩
+
+def lookupBaseRow (rows : Array BaseRow) (r v : ℕ) : BaseRow :=
+  (rows[baseRowIndex r v]?).getD defaultBaseRow
+
+def baseTableCap (rows : Array BaseRow) (p : FlagDegree) : ℕ :=
+  (lookupBaseRow rows p.all p.yz).evalAt p.zOnly
+
+def BaseRowsIndexed (rows : Array BaseRow) : Prop :=
+  rows.size = 3509 ∧
+    ∀ r ∈ (List.range 29).map (fun q => q + 1),
+      ∀ v ∈ List.range (136 - r),
+        let q := lookupBaseRow rows r v
+        q.r = r ∧ q.v = v
+
+instance (rows : Array BaseRow) : Decidable (BaseRowsIndexed rows) := by
+  unfold BaseRowsIndexed
+  infer_instance
+
+def BaseRow.ExpectedShape (q : BaseRow) : Prop :=
+  1 ≤ q.r ∧ q.r ≤ 29 ∧ q.r + q.v ≤ 135 ∧
+    q.segments ≠ [] ∧ q.segments.head?.map BaseSegment.start = some 3 ∧
+    q.segments.Pairwise (fun a b => a.start < b.start) ∧
+    ∀ s ∈ q.segments, s.start ≤ 6677 - (q.r + q.v)
+
+instance (q : BaseRow) : Decidable q.ExpectedShape := by
+  unfold BaseRow.ExpectedShape
+  infer_instance
+
 def RawBelow (q p : FlagDegree) : Prop :=
   q.all ≤ p.all ∧ q.yz ≤ p.yz ∧ q.zOnly ≤ p.zOnly
 
@@ -1537,6 +1670,37 @@ open RCN095 LocatorFactorAggregate LocatorHybridCost LocatorHybridCostC1 Locator
 set_option autoImplicit false
 set_option maxRecDepth 100000
 set_option maxHeartbeats 800000
+
+def rawCost (r v z : ℕ) : ℕ := ordinaryCostOf ⟨z, v, r⟩
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 end ProximityPrize.SubmissionLower.LocatorOrdinaryZConvex
 end PackedLocator_LocatorOrdinaryZConvex
@@ -1600,6 +1764,76 @@ theorem powerBandBudget_mono_fuel
         _ = powerBandBudget delta dT dY dS T YS S (k₁ + d.succ) := by
           congr 1
 
+def baseZeroCap (rows : Array BaseRow) (r v : ℕ) : ℕ :=
+  if r = 0 then 0 else baseTableCap rows (rawFlag r v 0)
+
+def candidateSlope (r v : ℕ) : ℕ :=
+  LocatorOrdinaryZConvex.rawCost r v 4 -
+    LocatorOrdinaryZConvex.rawCost r v 3
+
+def candidateLine (rows : Array BaseRow) (R V r v z : ℕ) : ℕ :=
+  LocatorOrdinaryZConvex.rawCost r v 3 +
+    baseZeroCap rows (R - r) (V - v) + candidateSlope r v * (z - 3)
+
+def CandidateRowCheck (rows : Array BaseRow) (R V r v : ℕ) : Prop :=
+  let q := lookupBaseRow rows R V
+  let zero := baseZeroCap rows (R - r) (V - v)
+  LocatorOrdinaryZConvex.rawCost r v 0 + zero ≤ q.z0 ∧
+  LocatorOrdinaryZConvex.rawCost r v 1 + zero ≤ q.z1 ∧
+  LocatorOrdinaryZConvex.rawCost r v 2 + zero ≤ q.z2 ∧
+  match q.segments with
+  | [s] =>
+      s.start = 3 ∧ candidateLine rows R V r v s.start ≤ s.valueAtStart ∧
+        candidateSlope r v ≤ s.slope
+  | [s₁, s₂] =>
+      s₁.start = 3 ∧ s₁.start < s₂.start ∧
+        candidateLine rows R V r v s₁.start ≤ s₁.valueAtStart ∧
+        candidateLine rows R V r v (s₂.start - 1) ≤
+          s₁.evalAt (s₂.start - 1) ∧
+        candidateLine rows R V r v s₂.start ≤ s₂.valueAtStart ∧
+        candidateSlope r v ≤ s₂.slope
+  | _ => False
+
+instance (rows : Array BaseRow) (R V r v : ℕ) :
+    Decidable (CandidateRowCheck rows R V r v) := by
+  unfold CandidateRowCheck
+  dsimp only
+  generalize hq : lookupBaseRow rows R V = q
+  cases hs : q.segments with
+  | nil =>
+      simp only [hs]
+      infer_instance
+  | cons s tail =>
+      cases ht : tail with
+      | nil =>
+          simp only [hs, ht]
+          infer_instance
+      | cons s₂ rest =>
+          cases hu : rest with
+          | nil =>
+              simp only [hs, ht, hu]
+              infer_instance
+          | cons s₃ rest₃ =>
+              simp only [hs, ht, hu]
+              infer_instance
+
+def CandidateRCheck (rows : Array BaseRow) (R : ℕ) : Prop :=
+  ∀ V ∈ List.range (136 - R),
+    ∀ r ∈ List.range (R + 1), 1 ≤ r →
+      ∀ v ∈ List.range (V + 1), (r < R ∨ v = V) →
+        CandidateRowCheck rows R V r v
+
+instance (rows : Array BaseRow) (R : ℕ) : Decidable (CandidateRCheck rows R) := by
+  unfold CandidateRCheck
+  infer_instance
+
+def BaseCandidateChecks (rows : Array BaseRow) : Prop :=
+  ∀ R ∈ List.range 30, 1 ≤ R → CandidateRCheck rows R
+
+instance (rows : Array BaseRow) : Decidable (BaseCandidateChecks rows) := by
+  unfold BaseCandidateChecks
+  infer_instance
+
 end ProximityPrize.SubmissionLower.LocatorPhase6800Audit
 end PackedLocator_LocatorPhase6800Audit
 
@@ -1620,6 +1854,14 @@ noncomputable section
 set_option autoImplicit false
 set_option maxRecDepth 100000
 set_option maxHeartbeats 5000000
+
+abbrev K := IRSProfile.Field
+abbrev I := IRSProfile.Index
+
+local instance : DecidableEq K := Classical.decEq K
+local instance : DecidableEq I := Classical.decEq I
+local instance : CharP K 2130706433 := by
+  simpa [RCN223.prime] using RCN128.challenge_field_characteristic6600
 
 end
 
@@ -1642,419 +1884,29 @@ set_option autoImplicit false
 set_option maxRecDepth 100000
 set_option maxHeartbeats 5000000
 
-def rectangularCount (ni nj offset L : ℕ) : ℕ :=
-  ni * nj * (L + 1 - offset) -
-    (nj * (ni * (ni - 1) / 2) + ni * (nj * (nj - 1) / 2))
 
-private theorem pairIndexSum (ni nj : ℕ) :
-    (∑ i ∈ Finset.range ni, ∑ j ∈ Finset.range nj, (i + j)) =
-      nj * (ni * (ni - 1) / 2) + ni * (nj * (nj - 1) / 2) := by
-  calc
-    (∑ i ∈ Finset.range ni, ∑ j ∈ Finset.range nj, (i + j)) =
-        ∑ i ∈ Finset.range ni,
-          (nj * i + nj * (nj - 1) / 2) := by
-      apply Finset.sum_congr rfl
-      intro i hi
-      rw [Finset.sum_add_distrib, Finset.sum_range_id]
-      simp only [Finset.sum_const, Finset.card_range, Nat.nsmul_eq_mul]
-    _ = nj * (ni * (ni - 1) / 2) + ni * (nj * (nj - 1) / 2) := by
-      rw [Finset.sum_add_distrib, ← Finset.mul_sum, Finset.sum_range_id]
-      simp only [Finset.sum_const, Finset.card_range, Nat.nsmul_eq_mul]
 
-theorem rectangularSum_eq_rectangularCount (ni nj offset L : ℕ)
-    (hbound : offset + (ni - 1) + (nj - 1) ≤ L) :
-    (∑ i ∈ Finset.range ni,
-      ∑ j ∈ Finset.range nj, (L + 1 - offset - i - j)) =
-      rectangularCount ni nj offset L := by
-  have hpoint : ∀ i ∈ Finset.range ni, ∀ j ∈ Finset.range nj,
-      (L + 1 - offset - i - j) + (i + j) = L + 1 - offset := by
-    intro i hi j hj
-    have hil : i ≤ ni - 1 := by
-      have := Finset.mem_range.mp hi
-      omega
-    have hjl : j ≤ nj - 1 := by
-      have := Finset.mem_range.mp hj
-      omega
-    omega
-  have hadd :
-      (∑ i ∈ Finset.range ni,
-        ∑ j ∈ Finset.range nj, (L + 1 - offset - i - j)) +
-          (∑ i ∈ Finset.range ni,
-            ∑ j ∈ Finset.range nj, (i + j)) =
-        ni * nj * (L + 1 - offset) := by
-    calc
-      _ = ∑ i ∈ Finset.range ni,
-          ((∑ j ∈ Finset.range nj, (L + 1 - offset - i - j)) +
-            ∑ j ∈ Finset.range nj, (i + j)) := by
-          rw [Finset.sum_add_distrib]
-      _ = ∑ i ∈ Finset.range ni,
-          ∑ j ∈ Finset.range nj,
-            ((L + 1 - offset - i - j) + (i + j)) := by
-          apply Finset.sum_congr rfl
-          intro i hi
-          exact Finset.sum_add_distrib.symm
-      _ = ∑ i ∈ Finset.range ni,
-          ∑ _j ∈ Finset.range nj, (L + 1 - offset) := by
-          apply Finset.sum_congr rfl
-          intro i hi
-          apply Finset.sum_congr rfl
-          intro j hj
-          exact hpoint i hi j hj
-      _ = ni * nj * (L + 1 - offset) := by
-          simp only [Finset.sum_const, Finset.card_range, Nat.nsmul_eq_mul]
-          ring
-  rw [pairIndexSum] at hadd
-  unfold rectangularCount
-  omega
 
-theorem blockInputCount_eq_rectangularCount (M L s : ℕ)
-    (hbound : M + s ≤ L) :
-    blockInputCount M L s = rectangularCount (M + 1) (s + 1) 0 L := by
-  simpa only [blockInputCount, Nat.zero_add, Nat.sub_zero] using
-    rectangularSum_eq_rectangularCount (M + 1) (s + 1) 0 L (by omega)
 
-theorem blockKernelLowerBound_eq_rectangularCount (M L s h : ℕ)
-    (hbound : M + s ≤ L) :
-    blockKernelLowerBound M L s h =
-      rectangularCount (M + 1 - h) (s + 1 - h) h L := by
-  by_cases hM : h ≤ M
-  · by_cases hs : h ≤ s
-    · have hL : h ≤ L := by omega
-      have hshape : M - h + (s - h) ≤ L - h := by omega
-      have heq : blockKernelLowerBound M L s h =
-          blockInputCount (M - h) (L - h) (s - h) := by
-        have hMr : M + 1 - h = M - h + 1 := by omega
-        have hsr : s + 1 - h = s - h + 1 := by omega
-        have hLr : L + 1 - h = L - h + 1 := by omega
-        unfold blockKernelLowerBound blockInputCount
-        rw [hMr, hsr, hLr]
-      rw [heq, blockInputCount_eq_rectangularCount _ _ _ hshape]
-      have hMr : M + 1 - h = M - h + 1 := by omega
-      have hsr : s + 1 - h = s - h + 1 := by omega
-      have hLr : L + 1 - h = L - h + 1 := by omega
-      unfold rectangularCount
-      rw [hMr, hsr, hLr]
-      simp only [Nat.sub_zero]
-    · have hz : s + 1 - h = 0 := by omega
-      simp [blockKernelLowerBound, rectangularCount, hz]
-  · have hz : M + 1 - h = 0 := by omega
-    simp [blockKernelLowerBound, rectangularCount, hz]
 
-theorem contactRankBound_eq_rectangularCount (M L s h : ℕ)
-    (hbound : M + s ≤ L) :
-    contactRankBound M L s h =
-      rectangularCount (M + 1) (s + 1) 0 L -
-        rectangularCount (M + 1 - h) (s + 1 - h) h L := by
-  unfold contactRankBound
-  rw [blockInputCount_eq_rectangularCount M L s hbound,
-    blockKernelLowerBound_eq_rectangularCount M L s h hbound]
 
-def fastLocalRankBound (m L s : ℕ) : ℕ :=
-  kernelSumRange (fun r =>
-    let M := min r L
-    let h := min (r + 1) (m - r)
-    rectangularCount (M + 1) (s + 1) 0 L -
-      rectangularCount (M + 1 - h) (s + 1 - h) h L) m
 
-theorem localRankBound_eq_fastLocalRankBound (m L s : ℕ)
-    (hshape : m + s ≤ L + 1) :
-    localRankBound m L s = fastLocalRankBound m L s := by
-  unfold localRankBound fastLocalRankBound
-  rw [kernelSumRange_eq]
-  apply Finset.sum_congr rfl
-  intro r hr
-  have hrm : r < m := Finset.mem_range.mp hr
-  have hb : min r L + s ≤ L := by
-    have hm : min r L ≤ r := Nat.min_le_left _ _
-    omega
-  exact contactRankBound_eq_rectangularCount
-    (min r L) L s (min (r + 1) (m - r)) hb
 
-private theorem two_mul_choose_two_add (n : ℕ) :
-    2 * n.choose 2 + n = n * n := by
-  induction n with
-  | zero => decide
-  | succ n ih =>
-      rw [Nat.choose_succ_succ]
-      simp only [Nat.choose_one_right]
-      calc
-        2 * (n + n.choose 2) + (n + 1) =
-            (2 * n.choose 2 + n) + (2 * n + 1) := by ring
-        _ = n * n + (2 * n + 1) := by rw [ih]
-        _ = (n + 1) * (n + 1) := by ring
 
-private theorem kernelSumRange_square_eq_choose (n : ℕ) :
-    kernelSumRange (fun i => i * i) n =
-      2 * n.choose 3 + n.choose 2 := by
-  induction n with
-  | zero => decide
-  | succ n ih =>
-      rw [kernelSumRange_succ, ih, Nat.choose_succ_succ,
-        Nat.choose_succ_succ]
-      simp only [Nat.choose_one_right]
-      rw [← two_mul_choose_two_add n]
-      ring
 
-private theorem finset_sum_range_square_eq_choose (n : ℕ) :
-    (∑ i ∈ Finset.range n, i * i) =
-      2 * n.choose 3 + n.choose 2 := by
-  rw [← kernelSumRange_eq, kernelSumRange_square_eq_choose]
 
-private theorem sum_increasingProduct_eq_choose (U C w N : ℕ) :
-    (∑ h ∈ Finset.range N, (U + h) * (C + w * h)) =
-      N * (U * C) + (U * w + C) * N.choose 2 +
-        w * (2 * N.choose 3 + N.choose 2) := by
-  calc
-    (∑ h ∈ Finset.range N, (U + h) * (C + w * h)) =
-        ∑ h ∈ Finset.range N,
-          (U * C + (U * w + C) * h + w * (h * h)) := by
-      apply Finset.sum_congr rfl
-      intro h hh
-      ring
-    _ = N * (U * C) + (U * w + C) * N.choose 2 +
-          w * (2 * N.choose 3 + N.choose 2) := by
-      rw [Finset.sum_add_distrib, Finset.sum_add_distrib]
-      simp only [Finset.sum_const, Finset.card_range, Nat.nsmul_eq_mul]
-      rw [← Finset.mul_sum, ← Finset.mul_sum, Finset.sum_range_id,
-        finset_sum_range_square_eq_choose, ← Nat.choose_two_right]
 
-private theorem three_mul_choose_three_add_two_mul_choose_two (n : ℕ) :
-    3 * n.choose 3 + 2 * n.choose 2 = n * n.choose 2 := by
-  induction n with
-  | zero => decide
-  | succ n ih =>
-      rw [Nat.choose_succ_succ, Nat.choose_succ_succ]
-      simp only [Nat.choose_one_right]
-      calc
-        3 * (n.choose 2 + n.choose 3) +
-              2 * (n + n.choose 2) =
-            (3 * n.choose 3 + 2 * n.choose 2) +
-              (2 * n.choose 2 + n) + (n.choose 2 + n) := by ring
-        _ = n * n.choose 2 + n * n + (n.choose 2 + n) := by
-          rw [ih, two_mul_choose_two_add]
-        _ = (n + 1) * (n + n.choose 2) := by ring
 
-private theorem oneResidueRow_algebra
-    (U C w r j q N wm T V : ℕ)
-    (hC : C = r + j) (hN : N + j = q + 1) (hw : wm + 2 = w)
-    (hsq : 2 * T + N = N * N)
-    (hcub : 3 * V + 2 * T = N * T) :
-    N * (U * C) + (U * w + C) * T + w * (2 * V + T) =
-      U * (r + q) * N +
-        (U * wm + r + q + (wm + 1)) * T +
-          (2 * wm + 1) * V := by
-  have hCz : (C : ℤ) = (r : ℤ) + j := by exact_mod_cast hC
-  have hNz : (N : ℤ) + j = (q : ℤ) + 1 := by exact_mod_cast hN
-  have hwz : (wm : ℤ) + 2 = w := by exact_mod_cast hw
-  have hsqz : 2 * (T : ℤ) + N = N * N := by exact_mod_cast hsq
-  have hcubz : 3 * (V : ℤ) + 2 * T = N * T := by exact_mod_cast hcub
-  have hqz : (q : ℤ) = N + j - 1 := by linarith
-  apply Nat.cast_injective (R := ℤ)
-  push_cast
-  rw [hCz, ← hwz, hqz]
-  linear_combination (U : ℤ) * hsqz + hcubz
 
-private def oneResidueCoefficientRow (q r w L j : ℕ) : ℕ :=
-  let U := L + 1 - q
-  let N := q + 1 - j
-  U * (r + q) * N.choose 1 +
-    (U * (w - 2) + r + q + ((w - 2) + 1)) * N.choose 2 +
-      (2 * (w - 2) + 1) * N.choose 3
 
-private theorem coefficientColumn_eq_oneResidueCoefficientRow
-    (q r w L j : ℕ) (hw : 2 ≤ w) (hj : j ≤ q)
-    (hL : q ≤ L) (hres : r + j ≤ w) :
-    (∑ i ∈ Finset.range (q + 1),
-      (L + 1 - i - j) *
-        (q * w + r - w * i - (w - 1) * j)) =
-      oneResidueCoefficientRow q r w L j := by
-  let N := q + 1 - j
-  let U := L + 1 - q
-  let C := r + j
-  have hNpos : 0 < N := by simp only [N]; omega
-  have hNq : N ≤ q + 1 := by simp only [N]; omega
-  have hsubset : Finset.range N ⊆ Finset.range (q + 1) :=
-    Finset.range_mono hNq
-  have htrim :
-      (∑ i ∈ Finset.range N,
-        (L + 1 - i - j) *
-          (q * w + r - w * i - (w - 1) * j)) =
-      ∑ i ∈ Finset.range (q + 1),
-        (L + 1 - i - j) *
-          (q * w + r - w * i - (w - 1) * j) := by
-    apply Finset.sum_subset hsubset
-    intro i hi hinot
-    have hiq : i ≤ q := by
-      have := Finset.mem_range.mp hi
-      omega
-    have hiN : N ≤ i := by
-      by_contra hni
-      exact hinot (Finset.mem_range.mpr (by omega))
-    have hij : q + 1 ≤ i + j := by simp only [N] at hiN; omega
-    have hr : r ≤ w - j := by omega
-    have hmul : w * (q + 1) ≤ w * (i + j) :=
-      Nat.mul_le_mul_left w hij
-    have hwj : w * j - j = (w - 1) * j := by
-      symm
-      rw [Nat.sub_mul]
-      simp only [Nat.one_mul]
-    have hweight : q * w + r ≤ w * i + (w - 1) * j := by
-      calc
-        q * w + r ≤ q * w + (w - j) := Nat.add_le_add_left hr _
-        _ = w * (q + 1) - j := by
-          rw [Nat.mul_add, Nat.mul_one, Nat.mul_comm w q]
-          omega
-        _ ≤ w * (i + j) - j := Nat.sub_le_sub_right hmul j
-        _ = w * i + (w - 1) * j := by
-          have hjwj : j ≤ w * j :=
-            Nat.le_mul_of_pos_left j (by omega)
-          rw [Nat.mul_add, Nat.add_sub_assoc hjwj, hwj]
-    have hz : q * w + r - w * i - (w - 1) * j = 0 := by
-      rw [Nat.sub_sub]
-      exact Nat.sub_eq_zero_of_le hweight
-    simp only [hz, Nat.mul_zero]
-  have hreflect :
-      (∑ i ∈ Finset.range N,
-        (L + 1 - i - j) *
-          (q * w + r - w * i - (w - 1) * j)) =
-      ∑ h ∈ Finset.range N, (U + h) * (C + w * h) := by
-    rw [← Finset.sum_range_reflect (fun i =>
-      (L + 1 - i - j) *
-        (q * w + r - w * i - (w - 1) * j)) N]
-    apply Finset.sum_congr rfl
-    intro h hh
-    have hhN : h < N := Finset.mem_range.mp hh
-    have hidx : N - 1 - h = q - j - h := by
-      simp only [N]
-      omega
-    have hqsplit : q = (q - j - h) + j + h := by omega
-    have hwj : w * j = (w - 1) * j + j := by
-      have hw' : w - 1 + 1 = w := by omega
-      calc
-        w * j = (w - 1 + 1) * j := by rw [hw']
-        _ = (w - 1) * j + j := by ring
-    have htotal :
-        q * w + r = w * (q - j - h) + (w - 1) * j +
-          (r + j + w * h) := by
-      calc
-        q * w + r = ((q - j - h) + j + h) * w + r := by rw [← hqsplit]
-        _ = w * (q - j - h) + w * j + w * h + r := by ring
-        _ = w * (q - j - h) + (w - 1) * j +
-            (r + j + w * h) := by rw [hwj]; ring
-    have hfirst : L + 1 - (N - 1 - h) - j = U + h := by
-      simp only [N, U]
-      omega
-    have hsecond :
-        q * w + r - w * (N - 1 - h) - (w - 1) * j =
-          C + w * h := by
-      rw [hidx]
-      simp only [C]
-      omega
-    rw [hfirst, hsecond]
-  have hsum := sum_increasingProduct_eq_choose U C w N
-  have hNj : N + j = q + 1 := by simp only [N]; omega
-  have hwsub : w - 2 + 2 = w := by omega
-  have hsq := two_mul_choose_two_add N
-  have hcub := three_mul_choose_three_add_two_mul_choose_two N
-  rw [← htrim, hreflect, hsum]
-  change N * (U * C) + (U * w + C) * N.choose 2 +
-      w * (2 * N.choose 3 + N.choose 2) =
-    U * (r + q) * N.choose 1 +
-      (U * (w - 2) + r + q + ((w - 2) + 1)) * N.choose 2 +
-        (2 * (w - 2) + 1) * N.choose 3
-  simp only [Nat.choose_one_right]
-  exact oneResidueRow_algebra
-    (U := U) (C := C) (w := w) (r := r) (j := j) (q := q)
-    (N := N) (wm := w - 2) (T := N.choose 2) (V := N.choose 3)
-    (by rfl) hNj hwsub hsq hcub
 
-private theorem sum_range_choose_descending_add (N s k : ℕ)
-    (hs : s ≤ N) :
-    (∑ j ∈ Finset.range (s + 1), (N - j).choose k) +
-        (N - s).choose (k + 1) = (N + 1).choose (k + 1) := by
-  induction s with
-  | zero =>
-      simp only [Nat.sub_zero, Finset.range_one, Finset.sum_singleton]
-      exact (Nat.choose_succ_succ' N k).symm
-  | succ s ih =>
-      have hs' : s ≤ N := by omega
-      rw [Finset.sum_range_succ]
-      have hold := ih hs'
-      have hpred : N - s = (N - (s + 1)) + 1 := by omega
-      have hp := Nat.choose_succ_succ' (N - (s + 1)) k
-      rw [← hpred] at hp
-      omega
 
-private theorem sum_range_choose_descending (N s k : ℕ)
-    (hs : s ≤ N) :
-    (∑ j ∈ Finset.range (s + 1), (N - j).choose k) =
-      (N + 1).choose (k + 1) - (N - s).choose (k + 1) := by
-  have h := sum_range_choose_descending_add N s k hs
-  omega
 
-def smallChoose (n k : ℕ) : ℕ :=
-  n.descFactorial k / Nat.factorial k
 
-private theorem choose_eq_smallChoose (n k : ℕ) :
-    n.choose k = smallChoose n k := by
-  simpa only [smallChoose] using
-    Nat.choose_eq_descFactorial_div_factorial n k
 
-def oneResidueCoefficientCount (q r w L s : ℕ) : ℕ :=
-  let U := L + 1 - q
-  let c1 := U * (r + q)
-  let c2 := U * (w - 2) + r + q + ((w - 2) + 1)
-  let c3 := 2 * (w - 2) + 1
-  c1 * (smallChoose (q + 2) 2 - smallChoose (q + 1 - s) 2) +
-    c2 * (smallChoose (q + 2) 3 - smallChoose (q + 1 - s) 3) +
-      c3 * (smallChoose (q + 2) 4 - smallChoose (q + 1 - s) 4)
 
-theorem coefficientCount_eq_oneResidueCoefficientCount
-    (q r w L s : ℕ) (hw : 2 ≤ w) (hsq : s ≤ q)
-    (hL : q ≤ L) (hres : r + s ≤ w) :
-    coefficientCount (q * w + r) w L s =
-      oneResidueCoefficientCount q r w L s := by
-  have hcutoff : q + 1 ≤ L + 1 := by omega
-  have hweight : q * w + r ≤ w * (q + 1) := by
-    have hrw : r ≤ w := by omega
-    rw [Nat.mul_add, Nat.mul_one, Nat.mul_comm w q]
-    omega
-  rw [coefficientCount_eq_sum_range_of_weighted_cutoff
-    (q * w + r) w L s (q + 1) hcutoff hweight]
-  rw [Finset.sum_comm]
-  have hrows :
-      (∑ j ∈ Finset.range (s + 1),
-        ∑ i ∈ Finset.range (q + 1),
-          (L + 1 - i - j) *
-            (q * w + r - w * i - (w - 1) * j)) =
-      ∑ j ∈ Finset.range (s + 1),
-        oneResidueCoefficientRow q r w L j := by
-    apply Finset.sum_congr rfl
-    intro j hj
-    have hjs : j ≤ s := by
-      have := Finset.mem_range.mp hj
-      omega
-    exact coefficientColumn_eq_oneResidueCoefficientRow q r w L j hw
-      (hjs.trans hsq) hL ((Nat.add_le_add_left hjs r).trans hres)
-  rw [hrows]
-  let U := L + 1 - q
-  let c1 := U * (r + q)
-  let c2 := U * (w - 2) + r + q + ((w - 2) + 1)
-  let c3 := 2 * (w - 2) + 1
-  have h1 := sum_range_choose_descending (q + 1) s 1 (by omega)
-  have h2 := sum_range_choose_descending (q + 1) s 2 (by omega)
-  have h3 := sum_range_choose_descending (q + 1) s 3 (by omega)
-  unfold oneResidueCoefficientRow
-  change (∑ j ∈ Finset.range (s + 1),
-      (c1 * (q + 1 - j).choose 1 +
-        c2 * (q + 1 - j).choose 2 +
-          c3 * (q + 1 - j).choose 3)) = _
-  rw [Finset.sum_add_distrib, Finset.sum_add_distrib,
-    ← Finset.mul_sum, ← Finset.mul_sum, ← Finset.mul_sum, h1, h2, h3]
-  unfold oneResidueCoefficientCount
-  rw [← choose_eq_smallChoose, ← choose_eq_smallChoose,
-    ← choose_eq_smallChoose, ← choose_eq_smallChoose,
-    ← choose_eq_smallChoose, ← choose_eq_smallChoose]
+
+
 
 end ProximityPrize.SubmissionLower.LocatorFastKernelArithmetic
 end PackedLocator_LocatorFastKernelArithmetic
@@ -2309,10 +2161,11 @@ set_option maxRecDepth 100000
 set_option maxHeartbeats 5000000
 
 abbrev K := IRSProfile.Field
-
+abbrev I := IRSProfile.Index
 abbrev P4 := MvPolynomial (Fin 4) K
 
 local instance : DecidableEq K := Classical.decEq K
+local instance : DecidableEq I := Classical.decEq I
 
 def regularAggregateFlag (H : P4) (A : Finset (RegularIndex H)) : FlagDegree :=
   sumFlag A (regularCumulativeFlag H)
@@ -2659,7 +2512,8 @@ theorem stage_card_le_divisorBound
 end BoundedProvider
 
 variable {K I : Type} [Field K]
-
+local instance : DecidableEq K := Classical.decEq K
+local instance : DecidableEq I := Classical.decEq I
 variable {Gamma : Finset K} {x : I → K} {p : ℕ} {flag : FlagDegree}
 variable [CharP (GenericField K) p]
 variable {stageErrorCap : ℕ}
@@ -2691,57 +2545,26 @@ set_option maxHeartbeats 2000000
 set_option maxRecDepth 20000
 
 variable {K : Type} [Field K]
+local instance : DecidableEq K := Classical.decEq K
+local instance : StrongNormalizationMonoid (MvPolynomial (Fin 4) K) :=
+  UniqueFactorizationMonoid.strongNormalizationMonoid
 
 def dR (j : ℕ) (F : MvPolynomial (Fin 4) K) : MvPolynomial (Fin 4) K :=
   (MvPolynomial.pderiv (2 : Fin 4))^[j] F
 
 @[simp] theorem dR_zero (F : MvPolynomial (Fin 4) K) : dR 0 F = F := rfl
 
-theorem dR_succ (j : ℕ) (F : MvPolynomial (Fin 4) K) :
-    dR (j + 1) F = MvPolynomial.pderiv (2 : Fin 4) (dR j F) := by
-  unfold dR
-  exact Function.iterate_succ_apply' _ _ _
 
-theorem dR_R_degree_le (j : ℕ) (F : MvPolynomial (Fin 4) K) :
-    (dR j F).degreeOf 2 ≤ F.degreeOf 2 - j := by
-  induction j with
-  | zero => simp
-  | succ k ih =>
-      rw [dR_succ]
-      have h := pderiv_same_degree_bound (2 : Fin 4) (dR k F) (F.degreeOf 2 - k) ih
-      omega
 
-theorem exists_dR_R_degree_zero (F : MvPolynomial (Fin 4) K) :
-    ∃ j, (dR j F).degreeOf 2 = 0 :=
-  ⟨F.degreeOf 2, Nat.eq_zero_of_le_zero (by simpa using dR_R_degree_le (F.degreeOf 2) F)⟩
 
-def chainLength (F : MvPolynomial (Fin 4) K) : ℕ :=
-  Nat.find (exists_dR_R_degree_zero F)
 
-theorem chainLength_spec (F : MvPolynomial (Fin 4) K) :
-    (dR (chainLength F) F).degreeOf 2 = 0 :=
-  Nat.find_spec (exists_dR_R_degree_zero F)
 
-theorem chainLength_le (F : MvPolynomial (Fin 4) K) : chainLength F ≤ F.degreeOf 2 :=
-  Nat.find_min' (exists_dR_R_degree_zero F)
-    (Nat.eq_zero_of_le_zero (by simpa using dR_R_degree_le (F.degreeOf 2) F))
 
-theorem dR_R_degree_pos_of_lt_chainLength (F : MvPolynomial (Fin 4) K) (j : ℕ)
-    (hj : j < chainLength F) : 0 < (dR j F).degreeOf 2 :=
-  Nat.pos_of_ne_zero (Nat.find_min (exists_dR_R_degree_zero F) hj)
 
-theorem dR_ne_zero (F : MvPolynomial (Fin 4) K) (hF : F ≠ 0) (p : ℕ) [CharP K p]
-    (hsmall : F.degreeOf 2 < p) (j : ℕ) (hj : j ≤ chainLength F) : dR j F ≠ 0 := by
-  induction j with
-  | zero => simpa using hF
-  | succ k ih =>
-      rw [dR_succ]
-      have hk : k < chainLength F := by omega
-      have hpos := dR_R_degree_pos_of_lt_chainLength F k hk
-      have hle : (dR k F).degreeOf 2 < p := by
-        have := dR_R_degree_le k F
-        omega
-      exact R_derivative_nonzero (dR k F) p hpos hle
+
+
+
+
 
 theorem exists_active_factor_of_solution (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0)
     (P : Polynomial K) (γ : K) (hsol : specialization K P γ Q = 0) :
@@ -2757,56 +2580,48 @@ theorem exists_active_factor_of_solution (Q : MvPolynomial (Fin 4) K) (hQ : Q �
     (polynomialEmbedding_injective K) Q hQ v ((heval Q).mpr hsol)
   exact ⟨F, hF, (heval F).mp hz⟩
 
+
 section Counting
 
 variable {Iota : Type}
 local instance : DecidableEq Iota := Classical.decEq Iota
 
-theorem rfree_seed_count_le
-    (S : TightParameters) (J : MvPolynomial (Fin 4) K) (hJ : J ≠ 0)
-    (p : ℕ) [CharP K p]
-    (hbox : J ∈ globalCoefficientBox K S.D S.w S.L S.s) (hJR : J.degreeOf 2 = 0) (hSs : S.s = 1)
-    (hp : 1 < p) (hw : 1 ≤ S.w) (hchar : S.w < p) (hDw : S.w < S.kappa * S.D)
-    (hj : 1 ≤ S.algebraicCap) (hjYSmall : S.implicitYCap < p) (hjZSmall : S.algebraicCap < p)
-    (hmixedSmall : 2 * S.implicitYCap * S.algebraicCap < p)
-    (hwa : S.w < S.a) (han : S.a ≤ S.n)
-    (selected : K → Polynomial K) (Delta : Finset K)
-    (nodes : Finset Iota) (x u0 u1 : Iota → K) (hinj : Set.InjOn x nodes)
-    (hnodes : nodes.card = S.n)
-    (hdegree : ∀ γ ∈ Delta, (selected γ).natDegree ≤ S.w)
-    (hsol : ∀ γ ∈ Delta, specialization K (selected γ) γ J = 0)
-    (hagreement : ∀ γ ∈ Delta, S.a ≤ (nodes.filter (fun i =>
-      (selected γ).eval (x i) = u0 i + γ * u1 i)).card)
-    (hnoPencil : NoLargeSelectedPencil selected Delta S.w S.errors) :
-    Delta.card ≤ S.countCap := by
+
+def rfreeProduct (Q : MvPolynomial (Fin 4) K) : MvPolynomial (Fin 4) K :=
+  ∏ F ∈ (activeFactors Q).filter (fun F => F.degreeOf 2 = 0), F
+
+
+
+
+theorem rfreeProduct_dvd (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0) :
+    rfreeProduct Q ∣ Q := by
   classical
-  have hs1 : 1 ≤ S.s := by omega
-  have hsp : S.s < p := by omega
-  have hcover := card_le_regular_sum_add_singular J J hJ S.D S.w S.L S.s p
-    hs1 hsp hw (by simpa [TightParameters.kappa] using hDw)
-    (by simpa [TightParameters.algebraicCap, TightParameters.kappa] using hj)
-    (by simpa [TightParameters.algebraicCap, TightParameters.kappa] using hjZSmall)
-    hbox selected Delta hsol hsol
-  have hregZero : (∑ F' : RegularIndex J, (regularPairSeeds J J selected Delta F').card) = 0 := by
-    apply Finset.sum_eq_zero
-    intro F' _
-    exfalso
-    obtain ⟨_, hdvd, hpos⟩ := positiveRFactors_spec J F'.1 F'.2
-    have := degreeOf_le_of_dvd (2 : Fin 4) F'.1 J hdvd hJ
-    omega
-  have hsingularOld := RCN292.TightParameters.singularSeeds_count_le_countCap
-    S J hJ hbox hs1 hsp hw hchar hDw hj hjYSmall hjZSmall hmixedSmall
-    hwa han selected Delta nodes x u0 u1 hinj hnodes hdegree hagreement hnoPencil
-  have hsingular : (RCN052.singularSeeds J selected Delta).card ≤ S.countCap := by
-    change (RCN291.singularSeeds J selected Delta).card ≤ S.countCap
-    exact hsingularOld
-  omega
+  unfold rfreeProduct
+  exact (Finset.prod_dvd_prod_of_subset _ (activeFactors Q) id
+    (Finset.filter_subset _ _)).trans (activeFactors_product_dvd Q hQ)
+
+theorem rfreeProduct_ne_zero (Q : MvPolynomial (Fin 4) K) (hQ : Q ≠ 0) :
+    rfreeProduct Q ≠ 0 :=
+  ne_zero_of_dvd_ne_zero hQ (rfreeProduct_dvd Q hQ)
+
+theorem rfreeProduct_R_degree (Q : MvPolynomial (Fin 4) K) :
+    (rfreeProduct Q).degreeOf 2 = 0 := by
+  classical
+  unfold rfreeProduct
+  apply Nat.eq_zero_of_le_zero
+  refine (MvPolynomial.degreeOf_prod_le _ _ _).trans ?_
+  apply Nat.le_of_eq
+  apply Finset.sum_eq_zero
+  intro F hF
+  exact (Finset.mem_filter.mp hF).2
+
 
 end Counting
 
 section Assembly
 
 variable {Iota : Type}
+local instance : DecidableEq Iota := Classical.decEq Iota
 
 end Assembly
 
@@ -2832,8 +2647,12 @@ set_option maxHeartbeats 5000000
 set_option maxRecDepth 100000
 
 variable {K : Type} [Field K]
-
+local instance : DecidableEq K := Classical.decEq K
+local instance : StrongNormalizationMonoid (MvPolynomial (Fin 4) K) :=
+  UniqueFactorizationMonoid.strongNormalizationMonoid
 variable {Iota : Type}
+local instance : DecidableEq Iota := Classical.decEq Iota
+
 
 end
 
@@ -2856,7 +2675,8 @@ set_option maxHeartbeats 5000000
 set_option maxRecDepth 100000
 
 variable {K I : Type} [Field K]
-
+local instance : DecidableEq K := Classical.decEq K
+local instance : DecidableEq I := Classical.decEq I
 variable {Gamma : Finset K} {x : I → K} {p : ℕ} {flag : FlagDegree}
 variable [CharP (GenericField K) p]
 variable {stageErrorCap : ℕ}
@@ -3092,7 +2912,8 @@ set_option maxHeartbeats 5000000
 set_option maxRecDepth 100000
 
 variable {K I : Type} [Field K]
-
+local instance : DecidableEq K := Classical.decEq K
+local instance : DecidableEq I := Classical.decEq I
 variable {Gamma : Finset K} {x : I → K} {p : ℕ} {flag : FlagDegree}
 variable [CharP (GenericField K) p]
 variable {stageErrorCap : ℕ}
@@ -3116,7 +2937,8 @@ set_option maxHeartbeats 8000000
 set_option maxRecDepth 800000
 
 variable {K I : Type} [Field K]
-
+local instance : DecidableEq K := Classical.decEq K
+local instance : DecidableEq I := Classical.decEq I
 variable {Gamma : Finset K} {x : I → K} {p : ℕ} {flag : FlagDegree}
 variable [CharP (GenericField K) p]
 variable {stageErrorCap : ℕ}
@@ -3162,7 +2984,8 @@ open RCN259
 noncomputable section
 variable {R S I:Type*} [CommRing R] [GCDMonoid R]
  [CommRing S] [IsDomain S]
-
+local instance:DecidableEq S:=Classical.decEq S
+local instance:DecidableEq I:=Classical.decEq I
 end
 end ProximityPrize.SubmissionLower.LocatorCover
 end PackedLocator_LocatorCover
@@ -3199,6 +3022,16 @@ set_option autoImplicit false
 set_option maxRecDepth 20000
 set_option maxHeartbeats 3000000
 variable {K I : Type} [Field K]
+local instance : DecidableEq K := Classical.decEq K
+local instance : DecidableEq I := Classical.decEq I
+
+def leftRegularNumerator (P : UnequalParameters) : ℕ :=
+  (P.n - P.w) * RCN294.dot P.leftAgreement P.mixedCost +
+    (P.errors + 1) * P.gap * P.mixedCost.z
+
+def leftRegularCountCap (P : UnequalParameters) : ℕ :=
+  leftRegularNumerator P / P.gap
+
 
 end
 end ProximityPrize.SubmissionLower.AsymmetricHelper
@@ -3234,6 +3067,14 @@ set_option autoImplicit false
 set_option maxRecDepth 100000
 set_option maxHeartbeats 5000000
 
+abbrev K := IRSProfile.Field
+abbrev I := IRSProfile.Index
+
+local instance : DecidableEq K := Classical.decEq K
+local instance : DecidableEq I := Classical.decEq I
+local instance : CharP K 2130706433 := by
+  simpa [RCN223.prime] using RCN128.challenge_field_characteristic6600
+
 end
 
 end ProximityPrize.SubmissionLower.Lower80791.FactorSwitch
@@ -3256,6 +3097,14 @@ set_option autoImplicit false
 set_option maxRecDepth 100000
 set_option maxHeartbeats 5000000
 
+abbrev K := IRSProfile.Field
+abbrev I := IRSProfile.Index
+
+local instance : DecidableEq K := Classical.decEq K
+local instance : DecidableEq I := Classical.decEq I
+local instance : CharP K 2130706433 := by
+  simpa [RCN223.prime] using RCN128.challenge_field_characteristic6600
+
 end
 
 end ProximityPrize.SubmissionLower.Lower80791.PowerRoute
@@ -3276,6 +3125,14 @@ set_option autoImplicit false
 set_option maxRecDepth 100000
 set_option maxHeartbeats 5000000
 
+abbrev K := IRSProfile.Field
+abbrev I := IRSProfile.Index
+
+local instance : DecidableEq K := Classical.decEq K
+local instance : DecidableEq I := Classical.decEq I
+local instance : CharP K 2130706433 := by
+  simpa [RCN223.prime] using RCN128.challenge_field_characteristic6600
+
 end
 
 end ProximityPrize.SubmissionLower.Lower80791.BatchPowerRoute
@@ -3293,6 +3150,40 @@ open Lower80791.PowerRoute Lower80791.FactorSwitch
 open LocatorPhase6800Oracle (Potential rawFlag sumFlag RawBelow RawStrictSlopeBelow)
 set_option autoImplicit false
 set_option maxRecDepth 100000
+
+structure SourceNumbers where
+  totalCap : ℕ
+  middleCap : ℕ
+  slopeCap : ℕ
+  gap : ℕ
+  deriving DecidableEq, Repr
+
+def SourceNumbers.fuel (s : SourceNumbers) (p : FlagDegree) : ℕ :=
+  min (s.totalCap / total p)
+    (min (s.middleCap / middle p) (s.slopeCap / p.all))
+
+def SourceNumbers.band (s : SourceNumbers) (p : FlagDegree) : ℕ :=
+  powerBandBudget 50283 (total p) (middle p) p.all
+    (s.totalCap - total p) (s.middleCap - middle p)
+    (s.slopeCap - p.all) (s.fuel p)
+
+def contactDec (p : FlagDegree) : ℕ := 131071 * middle p - p.all
+
+def SourceNumbers.contactCap (s : SourceNumbers) (p : FlagDegree) : ℕ :=
+  (131071 * (s.middleCap + 1) - s.slopeCap) - contactDec p
+
+def SourceNumbers.bandThin (s : SourceNumbers) (p : FlagDegree) : ℕ :=
+  powerBandBudgetThin 131071 (s.contactCap p) 50283 (contactDec p)
+    (total p) (middle p) p.all
+    (s.totalCap - total p) (s.middleCap - middle p)
+    (s.slopeCap - p.all) (s.fuel p)
+
+def SourceNumbers.Routeable (s : SourceNumbers) (p : FlagDegree) : Prop :=
+  1 ≤ p.all ∧ total p ≤ s.totalCap ∧ middle p ≤ s.middleCap ∧
+    p.all ≤ s.slopeCap ∧ (s.band p < s.gap ∨ s.bandThin p < s.gap)
+
+instance (s : SourceNumbers) (p : FlagDegree) : Decidable (s.Routeable p) :=
+  by unfold SourceNumbers.Routeable; infer_instance
 
 end ProximityPrize.SubmissionLower.Lower80791.Oracle
 
@@ -3319,6 +3210,12 @@ set_option autoImplicit false
 set_option maxRecDepth 100000
 set_option maxHeartbeats 5000000
 
+abbrev K := IRSProfile.Field
+abbrev I := IRSProfile.Index
+
+local instance : DecidableEq K := Classical.decEq K
+local instance : DecidableEq I := Classical.decEq I
+
 end
 
 end ProximityPrize.SubmissionLower.Lower80791.BatchPhase
@@ -3333,202 +3230,19 @@ open LocatorFastKernelArithmetic
 set_option autoImplicit false
 set_option maxHeartbeats 1000000
 
-theorem rectangularCount_twice (a b h L : ℕ)
-    (hb : h + (a - 1) + (b - 1) ≤ L) :
-    2 * (rectangularCount a b h L : ℤ) =
-      (a : ℤ) * b * (2 * (L + 1 - (h : ℤ)) - a - b + 2) := by
-  by_cases ha : a = 0
-  · simp [ha, rectangularCount]
-  by_cases hzero : b = 0
-  · simp [hzero, rectangularCount]
-  have ha1 : 1 ≤ a := by omega
-  have hb1 : 1 ≤ b := by omega
-  have htA : a * (a - 1) / 2 * 2 = a * (a - 1) :=
-    Nat.div_mul_cancel (Nat.two_dvd_mul_sub_one a)
-  have htB : b * (b - 1) / 2 * 2 = b * (b - 1) :=
-    Nat.div_mul_cancel (Nat.two_dvd_mul_sub_one b)
-  have hmass : b * (a * (a - 1) / 2) + a * (b * (b - 1) / 2) ≤
-      a * b * (L + 1 - h) := by
-    have hx := Nat.mul_le_mul_left (a * b)
-      (show (a - 1) + (b - 1) ≤ 2 * (L + 1 - h) by omega)
-    have hi := congrArg (fun x => b*x) htA
-    have hj := congrArg (fun x => a*x) htB
-    nlinarith only [hx, hi, hj]
-  have htAi : (a * (a - 1) / 2 : ℕ) * (2 : ℤ) = (a : ℤ) * (a - 1) := by
-    exact_mod_cast htA
-  have htBi : (b * (b - 1) / 2 : ℕ) * (2 : ℤ) = (b : ℤ) * (b - 1) := by
-    exact_mod_cast htB
-  unfold rectangularCount
-  simp only [Nat.cast_sub hmass, Nat.cast_add, Nat.cast_mul,
-    Nat.cast_sub (show h ≤ L + 1 by omega), Nat.cast_one]
-  nlinarith only [congrArg (fun x : ℤ => b*x) htAi, congrArg (fun x : ℤ => a*x) htBi]
 
-theorem rectangularCount_shift_le (a b h L : ℕ)
-    (hb : (a - 1) + (b - 1) ≤ L) :
-    rectangularCount (a-h) (b-h) h L ≤ rectangularCount a b 0 L := by
-  by_cases ha : a ≤ h
-  · simp [Nat.sub_eq_zero_of_le ha, rectangularCount]
-  by_cases hb' : b ≤ h
-  · simp [Nat.sub_eq_zero_of_le hb', rectangularCount]
-  have hshape : h + (a-h-1) + (b-h-1) ≤ L := by omega
-  rw [← rectangularSum_eq_rectangularCount _ _ _ _ hshape,
-    ← rectangularSum_eq_rectangularCount a b 0 L (by omega)]
-  calc
-    _ ≤ ∑ i ∈ Finset.range (a-h), ∑ j ∈ Finset.range (b-h), (L+1-0-i-j) := by
-      apply Finset.sum_le_sum
-      intro i hi
-      apply Finset.sum_le_sum
-      intro j hj
-      omega
-    _ ≤ ∑ i ∈ Finset.range a, ∑ j ∈ Finset.range b, (L+1-0-i-j) := by
-      apply le_trans (Finset.sum_le_sum (fun i _ =>
-        Finset.sum_le_sum_of_subset_of_nonneg (Finset.range_mono (Nat.sub_le b h))
-          (fun _ _ _ => Nat.zero_le _)))
-      exact Finset.sum_le_sum_of_subset_of_nonneg (Finset.range_mono (Nat.sub_le a h))
-        (fun _ _ _ => Nat.zero_le _)
 
-def rankRow (m L s r : ℕ) : ℕ :=
-  let h := min (r+1) (m-r)
-  rectangularCount (r+1) (s+1) 0 L - rectangularCount (r+1-h) (s+1-h) h L
 
-theorem rankRow_twice (m L s r : ℕ) (hr : r < m)
-    (hshape : m+s ≤ L+1) (hs : 2*s ≤ m) :
-    2 * (rankRow m L s r : ℤ) =
-      (r+1 : ℤ)*(s+1)*(2*L+2-r-s) -
-      if r < m-s then 0 else
-        (2*r+1-m : ℤ)*(s+1-m+r)*(2*L+2-r-s) := by
-  let h := min (r+1) (m-r)
-  have hl : r+s ≤ L := by omega
-  have hle := rectangularCount_shift_le (r+1) (s+1) h L (by omega)
-  have hsource := rectangularCount_twice (r+1) (s+1) 0 L (by omega)
-  have hsource' : 2 * (rectangularCount (r+1) (s+1) 0 L : ℤ) =
-      (r+1 : ℤ)*(s+1)*(2*L+2-r-s) := by
-    push_cast at hsource
-    nlinarith only [hsource]
-  unfold rankRow
-  change 2 * ((rectangularCount (r+1) (s+1) 0 L -
-    rectangularCount (r+1-h) (s+1-h) h L : ℕ) : ℤ) = _
-  rw [Nat.cast_sub hle, mul_sub, hsource']
-  by_cases hearly : r < m-s
-  · rw [if_pos hearly]
-    have hzero : r+1-h = 0 ∨ s+1-h = 0 := by
-      dsimp [h]
-      omega
-    rcases hzero with hzero | hzero <;> simp [hzero, rectangularCount]
-  · rw [if_neg hearly]
-    have heqh : h = m-r := by dsimp [h]; omega
-    have hhr : h ≤ r+1 := by omega
-    have hhs : h ≤ s+1 := by omega
-    have hkernel := rectangularCount_twice (r+1-h) (s+1-h) h L (by omega)
-    simp only [Nat.cast_sub hhr, Nat.cast_sub hhs, Nat.cast_add, Nat.cast_one] at hkernel
-    have hhcast : (h : ℤ) = m-r := by rw [heqh, Nat.cast_sub (by omega : r ≤ m)]
-    rw [hhcast] at hkernel
-    nlinarith only [hkernel]
 
-def sourceTwice (L s r : ℤ) : ℤ := (r+1)*(s+1)*(2*L+2-r-s)
-def removedTwice (m L s j : ℤ) : ℤ := (m+1-2*j)*(s+1-j)*(2*L+2-m-s+j)
 
-def sourceTwelve (m L s : ℤ) : ℤ :=
-  (s+1)*m*(m+1)*(6*(L+1)-2*(m-1)-3*s)
 
-def removedPartialTwelve (m L s k : ℤ) : ℤ :=
-  let c := 2*L+2-m-s
-  let p0 := (m+1)*(s+1)
-  let p1 := -(m+2*s+3)
-  6*p0*c*k + 3*(p0+p1*c)*k*(k+1) +
-    (p1+2*c)*k*(k+1)*(2*k+1) + 3*k*k*(k+1)*(k+1)
 
-theorem sum_sourceTwice (m : ℕ) (L s : ℤ) :
-    6 * (∑ r ∈ Finset.range m, sourceTwice L s r) = sourceTwelve m L s := by
-  induction m with
-  | zero => simp [sourceTwelve]
-  | succ m ih =>
-    rw [Finset.sum_range_succ, mul_add, ih]
-    simp only [Nat.cast_add, Nat.cast_one]
-    unfold sourceTwice sourceTwelve
-    ring
 
-theorem sum_removedTwice (k : ℕ) (m L s : ℤ) :
-    6 * (∑ j ∈ Finset.range k, removedTwice m L s (j+1)) =
-      removedPartialTwelve m L s k := by
-  induction k with
-  | zero => simp [removedPartialTwelve]
-  | succ k ih =>
-    rw [Finset.sum_range_succ, mul_add, ih]
-    simp only [Nat.cast_add, Nat.cast_one]
-    unfold removedTwice removedPartialTwelve
-    ring
 
-theorem sum_removed_rows (m L s : ℕ) (hs : s ≤ m) :
-    (∑ r ∈ Finset.range m, if r < m-s then (0 : ℤ) else
-      removedTwice m L s ((m : ℤ)-r)) =
-      ∑ j ∈ Finset.range s, removedTwice m L s (j+1) := by
-  let f : ℕ → ℤ := fun r => if r < m-s then 0 else removedTwice m L s ((m : ℤ)-r)
-  change (∑ r ∈ Finset.range m, f r) = _
-  have hsplit := Finset.sum_range_add f (m-s) s
-  rw [Nat.sub_add_cancel hs] at hsplit
-  rw [hsplit]
-  have hzero : (∑ r ∈ Finset.range (m-s), f r) = 0 := by
-    apply Finset.sum_eq_zero
-    intro r hr
-    simp [f, Finset.mem_range.mp hr]
-  rw [hzero, zero_add]
-  calc
-    _ = ∑ j ∈ Finset.range s, f (m-s+(s-1-j)) :=
-      (Finset.sum_range_reflect (fun r => f (m-s+r)) s).symm
-    _ = _ := by
-      apply Finset.sum_congr rfl
-      intro j hj
-      have hj' := Finset.mem_range.mp hj
-      have hlate : ¬ m-s+(s-1-j) < m-s := by omega
-      have hindex : (m : ℤ) - (m-s+(s-1-j) : ℕ) = (j : ℤ)+1 := by
-        have heq : m-s+(s-1-j)+j+1 = m := by omega
-        have heqi : ((m-s+(s-1-j) : ℕ) : ℤ) + j + 1 = m := by exact_mod_cast heq
-        omega
-      simp only [f, if_neg hlate, hindex]
 
-theorem fastLocalRankBound_twelve (m L s : ℕ)
-    (hshape : m+s ≤ L+1) (hs : 2*s ≤ m) :
-    12 * (fastLocalRankBound m L s : ℤ) =
-      sourceTwelve m L s - removedPartialTwelve m L s s := by
-  have hfast : fastLocalRankBound m L s = ∑ r ∈ Finset.range m, rankRow m L s r := by
-    unfold fastLocalRankBound
-    rw [LocatorLowQuotient.kernelSumRange_eq]
-    apply Finset.sum_congr rfl
-    intro r hr
-    have hr' := Finset.mem_range.mp hr
-    have hmin : min r L = r := min_eq_left (by omega)
-    simp only [hmin, rankRow]
-  have hrow (r : ℕ) (hr : r ∈ Finset.range m) :
-      2*(rankRow m L s r : ℤ) = sourceTwice L s r -
-        (if r < m-s then 0 else removedTwice m L s ((m : ℤ)-r)) := by
-    rw [rankRow_twice m L s r (Finset.mem_range.mp hr) hshape hs]
-    split_ifs <;> simp only [sourceTwice, removedTwice] <;> ring
-  have hsum : 2*(fastLocalRankBound m L s : ℤ) =
-      (∑ r ∈ Finset.range m, sourceTwice L s r) -
-        ∑ j ∈ Finset.range s, removedTwice m L s (j+1) := by
-    rw [hfast, Nat.cast_sum, Finset.mul_sum]
-    rw [Finset.sum_congr rfl hrow, Finset.sum_sub_distrib,
-      sum_removed_rows m L s (by omega)]
-  have hscaled := congrArg (fun z : ℤ => 6*z) hsum
-  rw [mul_sub, sum_sourceTwice, sum_removedTwice] at hscaled
-  nlinarith only [hscaled]
 
-def closedLocalRankBound (m L s : ℕ) : ℕ :=
-  ((sourceTwelve m L s - removedPartialTwelve m L s s) / 12).toNat
 
-theorem fastLocalRankBound_eq_closed (m L s : ℕ)
-    (hshape : m+s ≤ L+1) (hs : 2*s ≤ m) :
-    fastLocalRankBound m L s = closedLocalRankBound m L s := by
-  unfold closedLocalRankBound
-  rw [← fastLocalRankBound_twelve m L s hshape hs]
-  simp
 
-theorem localRankBound_eq_closed (m L s : ℕ)
-    (hshape : m+s ≤ L+1) (hs : 2*s ≤ m) :
-    RCN119.localRankBound m L s = closedLocalRankBound m L s := by
-  rw [localRankBound_eq_fastLocalRankBound m L s hshape,
-    fastLocalRankBound_eq_closed m L s hshape hs]
 
 end ProximityPrize.SubmissionLower.ClosedRank
 
@@ -3653,7 +3367,8 @@ set_option maxHeartbeats 5000000
 set_option maxRecDepth 100000
 
 variable {K I : Type} [Field K]
-
+local instance : DecidableEq K := Classical.decEq K
+local instance : DecidableEq I := Classical.decEq I
 variable {Gamma : Finset K} {x : I → K} {p : ℕ} {flag : FlagDegree}
 variable [CharP (GenericField K) p]
 variable {stageErrorCap : ℕ}
@@ -3663,448 +3378,12 @@ end ProximityPrize.SubmissionLower.SecondJetHybridProvider
 
 end Compact_SecondJetHybridProvider
 
-section Compact_TriangularKernel
 
-namespace ProximityPrize.SubmissionLower.TriangularKernel
-noncomputable section
-set_option autoImplicit false
 
-variable {K : Type*} [Field K] {n : ℕ}
-variable {V W : Fin n → Type*}
-variable [∀ i, AddCommGroup (V i)] [∀ i, Module K (V i)]
-variable [∀ i, AddCommGroup (W i)] [∀ i, Module K (W i)]
 
-theorem eq_zero_of_triangular
-    (F : (∀ i, V i) →ₗ[K] (∀ i, W i))
-    (D : ∀ i, V i →ₗ[K] W i)
-    (hD : ∀ i, Function.Injective (D i))
-    (hdiag : ∀ v i, (∀ j, j.val < i.val → v j = 0) →
-      F v i = D i (v i))
-    (v : ∀ i, V i) (hv : F v = 0) : v = 0 := by
-  have hall : ∀ k : ℕ, ∀ i : Fin n, i.val = k → v i = 0 := by
-    intro k
-    induction k using Nat.strong_induction_on with
-    | h k ih =>
-      intro i hi
-      apply hD i
-      calc
-        D i (v i) = F v i := (hdiag v i (fun j hj =>
-          ih j.val (by omega) j rfl)).symm
-        _ = 0 := congrFun hv i
-        _ = D i 0 := (map_zero (D i)).symm
-  funext i
-  exact hall i.val i rfl
 
-theorem injective_of_triangular
-    (F : (∀ i, V i) →ₗ[K] (∀ i, W i))
-    (D : ∀ i, V i →ₗ[K] W i)
-    (hD : ∀ i, Function.Injective (D i))
-    (hdiag : ∀ v i, (∀ j, j.val < i.val → v j = 0) →
-      F v i = D i (v i)) : Function.Injective F := by
-  intro v u h
-  apply sub_eq_zero.mp
-  apply eq_zero_of_triangular F D hD hdiag (v-u)
-  rw [map_sub, h, sub_self]
 
-end
-end ProximityPrize.SubmissionLower.TriangularKernel
 
-end Compact_TriangularKernel
-
-section Compact_SecondJetBasis
-
-namespace ProximityPrize.SubmissionLower.SecondJetBasis
-open scoped BigOperators
-noncomputable section
-set_option autoImplicit false
-set_option maxHeartbeats 3000000
-
-variable {K B : Type*} [Field K] [CommRing B] [IsDomain B] [Algebra K B]
-abbrev Jet (B : Type*) [CommRing B] := Polynomial (Polynomial B)
-
-def lift : B →ₐ[K] Jet B :=
-  (Polynomial.CAlgHom (R := K) (A := Polynomial B)).comp
-    (Polynomial.CAlgHom (R := K) (A := B))
-
-def factor (v : B) (r h a b : ℕ) : Jet B :=
-  Polynomial.X^r *
-    (Polynomial.C (Polynomial.X^h) *
-      (Polynomial.C (Polynomial.C v) +
-        Polynomial.X * Polynomial.C Polynomial.X)^a *
-      Polynomial.C (Polynomial.C v)^b)
-
-def term (v : B) (r h a b : ℕ) : B →ₗ[K] Jet B :=
-  (LinearMap.mulLeft K (factor v r h a b)).comp lift.toLinearMap
-
-variable {m s : ℕ}
-
-def truncate : Jet B →ₗ[K] (Fin m → Fin s → B) :=
-  LinearMap.pi (fun r => LinearMap.pi (fun h =>
-    ((Polynomial.lcoeff B h.val).restrictScalars K).comp
-      ((Polynomial.lcoeff (Polynomial B) r.val).restrictScalars K)))
-
-theorem truncate_apply (P : Jet B) (r : Fin m) (h : Fin s) :
-    truncate (K := K) P r h = (P.coeff r.val).coeff h.val := rfl
-
-theorem exponent_budget (m r s h : ℕ) (hr : r ≤ m) (hh : h ≤ s) :
-    let q := max ((m-r+1)/2) (m-r-(s-h))
-    let a := min q (s-h)
-    let b := q-a
-    a+b = q ∧ h+a ≤ s ∧ m ≤ r+2*a+b := by
-  dsimp
-  omega
-
-end
-end ProximityPrize.SubmissionLower.SecondJetBasis
-
-end Compact_SecondJetBasis
-
-section Compact_SecondJetTruncate
-
-namespace ProximityPrize.SubmissionLower.SecondJetBasis
-open scoped BigOperators
-noncomputable section
-set_option autoImplicit false
-set_option maxHeartbeats 3000000
-variable {K B : Type*} [Field K] [CommRing B] [IsDomain B] [Algebra K B]
-
-def truncateOuter (m : ℕ) : Jet B →ₗ[K] Jet B :=
-  (Polynomial.modByMonicHom (Polynomial.X^m : Jet B)).restrictScalars K
-
-theorem truncateOuter_coeff (m : ℕ) (P : Jet B) (r : ℕ) (hr : r < m) :
-    (truncateOuter (K := K) m P).coeff r = P.coeff r := by
-  change (P %ₘ Polynomial.X^m).coeff r = P.coeff r
-  have heq := Polynomial.modByMonic_add_div P (Polynomial.X^m)
-  have hc := congrArg (fun Q : Jet B => Q.coeff r) heq
-  simpa only [Polynomial.coeff_add, Polynomial.coeff_X_pow_mul',
-    if_neg (Nat.not_le.mpr hr), add_zero] using hc
-
-theorem truncateOuter_coeff_high (m : ℕ) (P : Jet B) (r : ℕ) (hr : m ≤ r) :
-    (truncateOuter (K := K) m P).coeff r = 0 := by
-  change (P %ₘ Polynomial.X^m).coeff r = 0
-  apply Polynomial.coeff_eq_zero_of_degree_lt
-  apply (Polynomial.degree_modByMonic_lt P (Polynomial.monic_X_pow m)).trans_le
-  simp only [Polynomial.degree_X_pow]
-  exact_mod_cast hr
-
-theorem truncate_truncateOuter {m s : ℕ} (P : Jet B) :
-    truncate (K := K) (m := m) (s := s) (truncateOuter (K := K) m P) =
-      truncate (K := K) (m := m) (s := s) P := by
-  funext r h
-  exact congrArg (fun Q : Polynomial B => Q.coeff h.val)
-    (truncateOuter_coeff (K := K) m P r.val r.isLt)
-
-theorem truncateOuter_contact {C : Type*} [CommRing C]
-    (φ : Jet B →+* C) (t : C) (m : ℕ) (P : Jet B)
-    (hε : φ Polynomial.X = t) (hP : t^m ∣ φ P) :
-    t^m ∣ φ (truncateOuter (K := K) m P) := by
-  have hd : t^m ∣ φ ((Polynomial.X^m : Jet B) * (P /ₘ Polynomial.X^m)) := by
-    simp only [map_mul, map_pow, hε]
-    exact dvd_mul_right _ _
-  have heq := congrArg φ (Polynomial.modByMonic_add_div P (Polynomial.X^m))
-  rw [map_add] at heq
-  have hsub := dvd_sub hP hd
-  rwa [← heq, add_sub_cancel_right] at hsub
-
-end
-end ProximityPrize.SubmissionLower.SecondJetBasis
-
-end Compact_SecondJetTruncate
-
-section Compact_SecondJetSupport
-
-namespace ProximityPrize.SubmissionLower.SecondJetSupport
-open scoped BigOperators Pointwise
-open MvPolynomial
-noncomputable section
-set_option autoImplicit false
-set_option maxHeartbeats 3000000
-variable {K : Type*} [Field K]
-abbrev Poly := MvPolynomial (Fin 5) K
-
-def Box (lo a r s t : ℕ) (P : Poly (K := K)) : Prop :=
-  ∀ d ∈ P.support, lo ≤ d 0 ∧ d 2 ≤ a ∧ d 3 ≤ r ∧ d 1 ≤ s ∧
-    d 1+d 2+d 3+d 4 ≤ t
-
-def flatEquiv : Poly (K := K) ≃ₐ[K] SecondJetBasis.Jet (MvPolynomial (Fin 3) K) :=
-  (MvPolynomial.finSuccEquiv K 4).trans (Polynomial.mapAlgEquiv (MvPolynomial.finSuccEquiv K 3))
-
-theorem flatEquiv_X (j : Fin 5) :
-    flatEquiv (K := K) (MvPolynomial.X j) =
-      ![Polynomial.X, Polynomial.C Polynomial.X,
-        Polynomial.C (Polynomial.C (MvPolynomial.X 0)),
-        Polynomial.C (Polynomial.C (MvPolynomial.X 1)),
-        Polynomial.C (Polynomial.C (MvPolynomial.X 2))] j := by
-  have h0 : flatEquiv (K := K) (MvPolynomial.X 0) = Polynomial.X := by
-    change Polynomial.map _ ((MvPolynomial.finSuccEquiv K 4) (MvPolynomial.X 0)) = _
-    rw [MvPolynomial.finSuccEquiv_X_zero, Polynomial.map_X]
-  have hs (i : Fin 4) : flatEquiv (K := K) (MvPolynomial.X i.succ) =
-      Polynomial.C ((MvPolynomial.finSuccEquiv K 3) (MvPolynomial.X i)) := by
-    change Polynomial.map _ ((MvPolynomial.finSuccEquiv K 4) (MvPolynomial.X i.succ)) = _
-    rw [MvPolynomial.finSuccEquiv_X_succ, Polynomial.map_C]
-    rfl
-  fin_cases j
-  · exact h0
-  · change flatEquiv (K := K) (MvPolynomial.X (0 : Fin 4).succ) = Polynomial.C Polynomial.X
-    rw [hs, MvPolynomial.finSuccEquiv_X_zero]
-  · change flatEquiv (K := K) (MvPolynomial.X ((0 : Fin 3).succ).succ) = _
-    rw [hs, MvPolynomial.finSuccEquiv_X_succ]
-    rfl
-  · change flatEquiv (K := K) (MvPolynomial.X ((1 : Fin 3).succ).succ) = _
-    rw [hs, MvPolynomial.finSuccEquiv_X_succ]
-    rfl
-  · change flatEquiv (K := K) (MvPolynomial.X ((2 : Fin 3).succ).succ) = _
-    rw [hs, MvPolynomial.finSuccEquiv_X_succ]
-    rfl
-
-theorem flatEquiv_coeff (P : Poly (K := K)) (r h : ℕ) (d : Fin 3 →₀ ℕ) :
-    AddMonoidAlgebra.coeff (((flatEquiv (K := K) P).coeff r).coeff h) d =
-      AddMonoidAlgebra.coeff P ((d.cons h).cons r) := by
-  simp only [flatEquiv, AlgEquiv.trans_apply, Polynomial.coe_mapAlgEquiv, Polynomial.coeff_map]
-  change AddMonoidAlgebra.coeff (((MvPolynomial.finSuccEquiv K 3)
-    (((MvPolynomial.finSuccEquiv K 4) P).coeff r)).coeff h) d = _
-  rw [MvPolynomial.finSuccEquiv_coeff_coeff, MvPolynomial.finSuccEquiv_coeff_coeff]
-
-def truncFlat (m : ℕ) : Poly (K := K) →ₗ[K] Poly (K := K) :=
-  (flatEquiv (K := K)).symm.toLinearMap.comp
-    ((SecondJetBasis.truncateOuter (K := K) m).comp (flatEquiv (K := K)).toLinearMap)
-
-theorem flatEquiv_truncFlat (m : ℕ) (P : Poly (K := K)) :
-    flatEquiv (K := K) (truncFlat (K := K) m P) =
-      SecondJetBasis.truncateOuter (K := K) m (flatEquiv (K := K) P) := by
-  simp [truncFlat]
-
-theorem coeff_truncFlat_cons (m r h : ℕ) (d : Fin 3 →₀ ℕ) (P : Poly (K := K)) :
-    AddMonoidAlgebra.coeff (truncFlat (K := K) m P) ((d.cons h).cons r) =
-      if r < m then AddMonoidAlgebra.coeff P ((d.cons h).cons r) else 0 := by
-  rw [← flatEquiv_coeff, flatEquiv_truncFlat]
-  by_cases hr : r < m
-  · rw [if_pos hr, SecondJetBasis.truncateOuter_coeff m _ r hr, flatEquiv_coeff]
-  · rw [if_neg hr, SecondJetBasis.truncateOuter_coeff_high m _ r (by omega)]
-    simp
-
-theorem support_truncFlat (m : ℕ) (P : Poly (K := K)) (d : Fin 5 →₀ ℕ)
-    (hd : d ∈ (truncFlat (K := K) m P).support) : d 0 < m ∧ d ∈ P.support := by
-  have heq : ((d.tail.tail).cons (d.tail 0)).cons (d 0) = d := by
-    rw [Finsupp.cons_tail, Finsupp.cons_tail]
-  have hne := MvPolynomial.mem_support_iff.mp hd
-  rw [← heq, coeff_truncFlat_cons] at hne
-  split_ifs at hne with h
-  · refine ⟨h, MvPolynomial.mem_support_iff.mpr ?_⟩
-    simpa only [heq] using hne
-  · exact False.elim (hne rfl)
-
-def Allowed (m L s1 s2 : ℕ) (d : Fin 5 →₀ ℕ) : Prop :=
-  d 0 < m ∧ d 2 ≤ d 0 ∧ d 3 ≤ s1 ∧ d 1 ≤ s2 ∧ d 1+d 2+d 3+d 4 ≤ L
-
-end
-end ProximityPrize.SubmissionLower.SecondJetSupport
-
-end Compact_SecondJetSupport
-
-section Compact_SecondJetLocal
-
-namespace ProximityPrize.SubmissionLower.SecondJetLocal
-open scoped BigOperators
-open SecondJetBasis SecondJetSupport
-noncomputable section
-set_option autoImplicit false
-set_option maxHeartbeats 3000000
-variable {K : Type*} [Field K]
-abbrev Base := MvPolynomial (Fin 3) K
-abbrev Target := Polynomial (MvPolynomial (Fin 4) K)
-
-def baseEval : Base (K := K) →ₐ[K] Target (K := K) :=
-  MvPolynomial.aeval ![
-    Polynomial.C (MvPolynomial.X 2)-Polynomial.X*Polynomial.C (MvPolynomial.X 0)+
-      Polynomial.X^2*Polynomial.C (MvPolynomial.X 1),
-    Polynomial.C (MvPolynomial.X 2), Polynomial.C (MvPolynomial.X 3)]
-
-def innerEval : Polynomial (Base (K := K)) →ₐ[K] Target (K := K) :=
-  Polynomial.eval₂AlgHom baseEval (Polynomial.C (MvPolynomial.X 0)) (fun _ => Commute.all _ _)
-
-def contact : Jet (Base (K := K)) →ₐ[K] Target (K := K) :=
-  Polynomial.eval₂AlgHom innerEval Polynomial.X (fun _ => Commute.all _ _)
-
-@[simp] theorem contact_X : contact (K := K) Polynomial.X = Polynomial.X := by
-  simp [contact]
-
-@[simp] theorem contact_C_C (p : Base (K := K)) :
-    contact (K := K) (Polynomial.C (Polynomial.C p)) = baseEval (K := K) p := by
-  simp [contact, innerEval]
-
-@[simp] theorem contact_C_X :
-    contact (K := K) (Polynomial.C Polynomial.X) = Polynomial.C (MvPolynomial.X 0) := by
-  simp [contact, innerEval]
-
-def v : Base (K := K) := MvPolynomial.X 0-MvPolynomial.X 1
-
-theorem v_ne_zero : v (K := K) ≠ 0 := by
-  unfold v
-  apply sub_ne_zero.mpr
-  intro h
-  have hh := MvPolynomial.X_injective h
-  exact (by decide : (0 : Fin 3) ≠ 1) hh
-
-theorem contact_v : contact (K := K) (Polynomial.C (Polynomial.C v)) =
-    (Polynomial.X : Target (K := K)) * (-(Polynomial.C (MvPolynomial.X (0 : Fin 4)) : Target (K := K))+
-      Polynomial.X*Polynomial.C (MvPolynomial.X 1)) := by
-  rw [contact_C_C]
-  simp only [v, map_sub, baseEval, MvPolynomial.aeval_X,
-    Matrix.cons_val_zero, Matrix.cons_val_one]
-  ring
-
-theorem contact_u : contact (K := K)
-    (Polynomial.C (Polynomial.C v)+Polynomial.X*Polynomial.C Polynomial.X) =
-      Polynomial.X^2*Polynomial.C (MvPolynomial.X 1) := by
-  rw [map_add, map_mul, contact_v, contact_X, contact_C_X]
-  ring
-
-end
-end ProximityPrize.SubmissionLower.SecondJetLocal
-
-end Compact_SecondJetLocal
-
-section Compact_FiniteMonomials
-
-namespace ProximityPrize.SubmissionLower.FiniteMonomials
-open scoped BigOperators
-noncomputable section
-set_option autoImplicit false
-variable {K σ I : Type*} [Field K] [Fintype I]
-
-local instance : DecidableEq I := Classical.decEq I
-
-def reconstruct (e : I → σ →₀ ℕ) : (I → K) →ₗ[K] MvPolynomial σ K :=
-  ∑ i, (MvPolynomial.monomial (e i)).comp (LinearMap.proj i)
-
-theorem reconstruct_apply (e : I → σ →₀ ℕ) (c : I → K) :
-    reconstruct e c = ∑ i, MvPolynomial.monomial (e i) (c i) := by
-  simp [reconstruct]
-
-theorem coeff_reconstruct (e : I → σ →₀ ℕ) (he : Function.Injective e)
-    (c : I → K) (i : I) : AddMonoidAlgebra.coeff (reconstruct e c) (e i) = c i := by
-  classical
-  rw [reconstruct_apply, MvPolynomial.coeff_sum]
-  simp only [MvPolynomial.coeff_monomial, he.eq_iff]
-  simp
-
-theorem reconstruct_injective (e : I → σ →₀ ℕ) (he : Function.Injective e) :
-    Function.Injective (reconstruct (K := K) e) := by
-  intro c d h
-  funext i
-  have hh := congrArg (AddMonoidAlgebra.coeff · (e i)) h
-  simpa only [coeff_reconstruct e he] using hh
-
-theorem coeff_reconstruct_of_notmem (e : I → σ →₀ ℕ) (c : I → K)
-    (d : σ →₀ ℕ) (hd : d ∉ Set.range e) :
-    AddMonoidAlgebra.coeff (reconstruct e c) d = 0 := by
-  classical
-  rw [reconstruct_apply, MvPolynomial.coeff_sum]
-  apply Finset.sum_eq_zero
-  intro i _
-  rw [MvPolynomial.coeff_monomial, if_neg (fun h => hd ⟨i,h⟩)]
-
-theorem mem_range_iff (e : I → σ →₀ ℕ) (he : Function.Injective e)
-    (P : MvPolynomial σ K) : P ∈ (reconstruct (K := K) e).range ↔
-      ∀ d ∈ P.support, d ∈ Set.range e := by
-  classical
-  constructor
-  · rintro ⟨c,rfl⟩ d hd
-    by_contra hn
-    exact MvPolynomial.mem_support_iff.mp hd (coeff_reconstruct_of_notmem e c d hn)
-  · intro h
-    refine ⟨fun i => P.coeff (e i), ?_⟩
-    ext d
-    by_cases hd : d ∈ Set.range e
-    · obtain ⟨i,rfl⟩ := hd
-      exact coeff_reconstruct e he _ i
-    · rw [coeff_reconstruct_of_notmem e _ d hd]
-      exact (MvPolynomial.notMem_support_iff.mp (fun hs => hd (h d hs))).symm
-
-end
-end ProximityPrize.SubmissionLower.FiniteMonomials
-
-end Compact_FiniteMonomials
-
-section Compact_SecondJetSpace
-
-namespace ProximityPrize.SubmissionLower.SecondJetSpace
-open scoped BigOperators
-open SecondJetBasis SecondJetSupport
-noncomputable section
-set_option autoImplicit false
-set_option maxHeartbeats 3000000
-variable {K : Type*} [Field K]
-
-def bound (m L s1 s2 : ℕ) : Fin 5 → ℕ := ![m,s2+1,m,s1+1,L+1]
-
-def Index (m L s1 s2 : ℕ) :=
-  {d : ∀ k, Fin (bound m L s1 s2 k) //
-    (d 2).val ≤ (d 0).val ∧ (d 1).val+(d 2).val+(d 3).val+(d 4).val ≤ L}
-
-instance (m L s1 s2 : ℕ) : Fintype (Index m L s1 s2) := by
-  unfold Index
-  infer_instance
-
-def exponent {m L s1 s2 : ℕ} (d : Index m L s1 s2) : Fin 5 →₀ ℕ :=
-  Finsupp.equivFunOnFinite.symm (fun k => (d.val k).val)
-
-@[simp] theorem exponent_apply {m L s1 s2 : ℕ} (d : Index m L s1 s2) (k : Fin 5) :
-    exponent d k = (d.val k).val := by simp [exponent]
-
-theorem exponent_injective (m L s1 s2 : ℕ) :
-    Function.Injective (exponent (m := m) (L := L) (s1 := s1) (s2 := s2)) := by
-  intro d e h
-  apply Subtype.ext
-  funext k
-  apply Fin.ext
-  simpa only [exponent_apply] using congrArg (fun f : Fin 5 →₀ ℕ => f k) h
-
-theorem exponent_allowed {m L s1 s2 : ℕ} (d : Index m L s1 s2) :
-    Allowed m L s1 s2 (exponent d) := by
-  have h0 : (d.val 0).val < m := (d.val 0).isLt
-  have h1 : (d.val 1).val < s2+1 := (d.val 1).isLt
-  have h3 : (d.val 3).val < s1+1 := (d.val 3).isLt
-  simp only [Allowed, exponent_apply]
-  exact ⟨h0,d.property.1,by omega,by omega,d.property.2⟩
-
-theorem mem_range_exponent (m L s1 s2 : ℕ) (d : Fin 5 →₀ ℕ) :
-    d ∈ Set.range (exponent (m := m) (L := L) (s1 := s1) (s2 := s2)) ↔
-      Allowed m L s1 s2 d := by
-  constructor
-  · rintro ⟨e,rfl⟩
-    exact exponent_allowed e
-  · intro h
-    dsimp only [Allowed] at h
-    have hb : ∀ k, d k < bound m L s1 s2 k := by
-      intro k
-      fin_cases k
-      · exact h.1
-      · change d 1 < s2+1
-        omega
-      · change d 2 < m
-        omega
-      · change d 3 < s1+1
-        omega
-      · change d 4 < L+1
-        omega
-    let e : Index m L s1 s2 := ⟨fun k => ⟨d k,hb k⟩,h.2.1,h.2.2.2.2⟩
-    refine ⟨e,?_⟩
-    ext k
-    simp [e, exponent]
-
-def sourceMap (m L s1 s2 : ℕ) : (Index m L s1 s2 → K) →ₗ[K]
-    Jet (MvPolynomial (Fin 3) K) :=
-  (flatEquiv (K := K)).toLinearMap.comp (FiniteMonomials.reconstruct exponent)
-
-def source (m L s1 s2 : ℕ) : Submodule K (Jet (MvPolynomial (Fin 3) K)) :=
-  (sourceMap (K := K) m L s1 s2).range
-
-end
-end ProximityPrize.SubmissionLower.SecondJetSpace
-
-end Compact_SecondJetSpace
 
 section Compact_SecondJetFacetSupport
 
@@ -4131,179 +3410,33 @@ set_option autoImplicit false
 set_option maxHeartbeats 3000000
 variable {K : Type*} [Field K]
 
+def Index (m L B s : ℕ) :=
+  {d : SecondJetSpace.Index m L B s // (d.val 1).val+(d.val 3).val ≤ B}
+
+instance (m L B s : ℕ) : Fintype (Index m L B s) := by
+  unfold Index
+  infer_instance
+
+def exponent {m L B s : ℕ} (d : Index m L B s) : Fin 5 →₀ ℕ :=
+  SecondJetSpace.exponent d.val
+
+def sourceMap (m L B s : ℕ) : (Index m L B s → K) →ₗ[K]
+    Jet (MvPolynomial (Fin 3) K) :=
+  (flatEquiv (K := K)).toLinearMap.comp (FiniteMonomials.reconstruct exponent)
+
+def source (m L B s : ℕ) : Submodule K (Jet (MvPolynomial (Fin 3) K)) :=
+  (sourceMap (K := K) m L B s).range
+
+instance source_finite (m L B s : ℕ) : FiniteDimensional K (source (K := K) m L B s) := by
+  unfold source
+  infer_instance
+
 end
 end ProximityPrize.SubmissionLower.SecondJetFacetSpace
 
 end Compact_SecondJetFacetSpace
 
-section Compact_SecondJetGlobalSupport
 
-namespace ProximityPrize.SubmissionLower.SecondJetGlobalSupport
-open scoped BigOperators Pointwise
-open MvPolynomial SecondJetSupport SecondJetBasis
-noncomputable section
-set_option autoImplicit false
-set_option maxHeartbeats 3000000
-variable {K : Type*} [Field K]
-
-def LocalBound (B s L : ℕ) (P : Poly (K := K)) : Prop :=
-  ∀ d ∈ P.support, d 2 ≤ d 0 ∧ d 1+d 3 ≤ B ∧ d 1 ≤ s ∧ d 1+d 2+d 3+d 4 ≤ L
-
-theorem LocalBound.mono {B s L B' s' L' : ℕ} {P : Poly (K := K)}
-    (h : LocalBound B s L P) (hB : B ≤ B') (hs : s ≤ s') (hL : L ≤ L') :
-    LocalBound B' s' L' P := by
-  intro d hd
-  have hh := h d hd
-  exact ⟨hh.1,hh.2.1.trans hB,hh.2.2.1.trans hs,hh.2.2.2.trans hL⟩
-
-theorem LocalBound.mul {B s L B' s' L' : ℕ} {P Q : Poly (K := K)}
-    (hP : LocalBound B s L P) (hQ : LocalBound B' s' L' Q) :
-    LocalBound (B+B') (s+s') (L+L') (P*Q) := by
-  intro d hd
-  obtain ⟨u,hu,v,hv,rfl⟩ := Finset.mem_add.mp (MvPolynomial.support_mul P Q hd)
-  have hp := hP u hu
-  have hq := hQ v hv
-  simp only [Finsupp.add_apply]
-  omega
-
-theorem LocalBound.add {B s L : ℕ} {P Q : Poly (K := K)}
-    (hP : LocalBound B s L P) (hQ : LocalBound B s L Q) : LocalBound B s L (P+Q) := by
-  intro d hd
-  rcases Finset.mem_union.mp (MvPolynomial.support_add hd) with h | h
-  · exact hP d h
-  · exact hQ d h
-
-theorem local_C (c : K) : LocalBound 0 0 0 (MvPolynomial.C c : Poly (K := K)) := by
-  intro d hd
-  have hd0 : d = 0 := Finset.mem_singleton.mp (MvPolynomial.support_C_subset hd)
-  subst d
-  simp
-
-theorem LocalBound.pow {B s L : ℕ} {P : Poly (K := K)}
-    (hP : LocalBound B s L P) (n : ℕ) : LocalBound (n*B) (n*s) (n*L) (P^n) := by
-  induction n with
-  | zero => simpa using (local_C (K := K) 1)
-  | succ n ih => simpa only [pow_succ, Nat.succ_mul] using ih.mul hP
-
-def localize (x u0 u1 : K) : Poly (K := K) →ₐ[K] Poly (K := K) :=
-  MvPolynomial.aeval ![MvPolynomial.C x+MvPolynomial.X 0,MvPolynomial.X 1,
-    MvPolynomial.C u0+MvPolynomial.C u1*MvPolynomial.X 4+
-      MvPolynomial.X 0*MvPolynomial.X 2,MvPolynomial.X 3,MvPolynomial.X 4]
-
-theorem local_X (j : Fin 5) (hj : j ≠ 2) :
-    LocalBound (if j=1 ∨ j=3 then 1 else 0) (if j=1 then 1 else 0)
-      (if j=0 then 0 else 1) (MvPolynomial.X j : Poly (K := K)) := by
-  intro d hd
-  simp only [MvPolynomial.support_X, Finset.mem_singleton] at hd
-  subst d
-  fin_cases j <;> norm_num [Finsupp.single_apply, Fin.ext_iff] at *
-
-theorem local_epsilon_A : LocalBound 0 0 1
-    (MvPolynomial.X 0*MvPolynomial.X 2 : Poly (K := K)) := by
-  intro d hd
-  rw [MvPolynomial.X, MvPolynomial.X, MvPolynomial.monomial_mul] at hd
-  have hd' := MvPolynomial.support_monomial_subset hd
-  have hd0 := Finset.mem_singleton.mp hd'
-  subst d
-  norm_num [Finsupp.add_apply, Finsupp.single_apply, Fin.ext_iff]
-
-theorem localize_X (x u0 u1 : K) (j : Fin 5) :
-    LocalBound (if j=1 ∨ j=3 then 1 else 0) (if j=1 then 1 else 0)
-      (if j=0 then 0 else 1) (localize x u0 u1 (MvPolynomial.X j)) := by
-  have hE : LocalBound 0 0 0 (MvPolynomial.X 0 : Poly (K := K)) := by
-    simpa using local_X (K := K) 0 (by decide)
-  have hZ : LocalBound 0 0 1 (MvPolynomial.X 4 : Poly (K := K)) := by
-    simpa using local_X (K := K) 4 (by decide)
-  fin_cases j
-  · simpa [localize] using (local_C x).add hE
-  · simpa [localize] using local_X (K := K) 1 (by decide)
-  · have hU : LocalBound 0 0 1 (MvPolynomial.C u0+MvPolynomial.C u1*MvPolynomial.X 4 : Poly (K := K)) :=
-      ((local_C u0).mono (by omega) (by omega) (by omega)).add
-        ((local_C u1).mul hZ)
-    simpa [localize] using hU.add (local_epsilon_A (K := K))
-  · simpa [localize] using local_X (K := K) 3 (by decide)
-  · simpa [localize] using hZ
-
-theorem localize_monomial (x u0 u1 : K) (d : Fin 5 →₀ ℕ) (c : K) :
-    LocalBound (d 1+d 3) (d 1) (d 1+d 2+d 3+d 4)
-      (localize x u0 u1 (MvPolynomial.monomial d c)) := by
-  rw [MvPolynomial.monomial_eq, Finsupp.prod_fintype]
-  · simp only [Fin.prod_univ_succ, Fin.prod_univ_zero, mul_one, map_mul, map_pow,
-      map_C]
-    have h0 := (localize_X x u0 u1 0).pow (d 0)
-    have h1 := (localize_X x u0 u1 1).pow (d 1)
-    have h2 := (localize_X x u0 u1 2).pow (d 2)
-    have h3 := (localize_X x u0 u1 3).pow (d 3)
-    have h4 := (localize_X x u0 u1 4).pow (d 4)
-    simpa [Nat.add_assoc] using (local_C c).mul (h0.mul (h1.mul (h2.mul (h3.mul h4))))
-  · intro i
-    simp
-
-end
-end ProximityPrize.SubmissionLower.SecondJetGlobalSupport
-
-end Compact_SecondJetGlobalSupport
-
-section Compact_SecondJetRank
-
-namespace ProximityPrize.SubmissionLower.SecondJetRank
-open scoped BigOperators
-open SecondJetBasis SecondJetSupport SecondJetLocal SecondJetSpace
-noncomputable section
-set_option autoImplicit false
-set_option maxHeartbeats 3000000
-variable {K : Type*} [Field K]
-
-def q (m s2 r h : ℕ) := max ((m-r+1)/2) (m-r-(s2-h))
-def a (m s2 r h : ℕ) := min (q m s2 r h) (s2-h)
-def b (m s2 r h : ℕ) := q m s2 r h-a m s2 r h
-
-theorem budgets (m s2 r h : ℕ) (hr : r ≤ m) (hh : h ≤ s2) :
-    a m s2 r h+b m s2 r h=q m s2 r h ∧ h+a m s2 r h ≤ s2 ∧
-      m ≤ r+2*a m s2 r h+b m s2 r h :=
-  exponent_budget m r s2 h hr hh
-
-def Block (m L s1 s2 r h : ℕ) :=
-  {d : Fin 3 → Fin (L+1) //
-    (d 0).val+q m s2 r h ≤ r ∧ (d 1).val+q m s2 r h ≤ s1 ∧
-      (d 0).val+(d 1).val+(d 2).val+h+q m s2 r h ≤ L}
-
-instance (m L s1 s2 r h : ℕ) : Fintype (Block m L s1 s2 r h) := by
-  unfold Block
-  infer_instance
-
-def blockExponent {m L s1 s2 r h : ℕ} (d : Block m L s1 s2 r h) : Fin 3 →₀ ℕ :=
-  Finsupp.equivFunOnFinite.symm (fun k => (d.val k).val)
-
-@[simp] theorem blockExponent_apply {m L s1 s2 r h : ℕ}
-    (d : Block m L s1 s2 r h) (k : Fin 3) : blockExponent d k = (d.val k).val := by
-  simp [blockExponent]
-
-theorem blockExponent_injective (m L s1 s2 r h : ℕ) :
-    Function.Injective (blockExponent (m := m) (L := L) (s1 := s1) (s2 := s2) (r := r) (h := h)) := by
-  intro d e hde
-  apply Subtype.ext
-  funext k
-  apply Fin.ext
-  simpa only [blockExponent_apply] using congrArg (fun f : Fin 3 →₀ ℕ => f k) hde
-
-theorem block_monomial (m L s1 s2 r h : ℕ) (d : Block m L s1 s2 r h) :
-    MvPolynomial.monomial (blockExponent d) (1 : K) =
-      MvPolynomial.X 0^(d.val 0).val * MvPolynomial.X 1^(d.val 1).val *
-        MvPolynomial.X 2^(d.val 2).val := by
-  rw [MvPolynomial.monomial_eq, Finsupp.prod_fintype]
-  · simp [Fin.prod_univ_three]
-  · intro i
-    simp
-
-def contactMap (m : ℕ) : Jet (Base (K := K)) →ₗ[K] Target (K := K) :=
-  ((Polynomial.modByMonicHom (Polynomial.X^m : Target (K := K))).restrictScalars K).comp
-    (contact (K := K)).toLinearMap
-
-end
-end ProximityPrize.SubmissionLower.SecondJetRank
-
-end Compact_SecondJetRank
 
 section Compact_SecondJetFacetRank
 
@@ -4321,115 +3454,6 @@ end ProximityPrize.SubmissionLower.SecondJetFacetRank
 
 end Compact_SecondJetFacetRank
 
-section Compact_SecondJetCounts
-
-namespace ProximityPrize.SubmissionLower.SecondJetCounts
-open scoped BigOperators
-open SecondJetSpace SecondJetRank
-noncomputable section
-set_option autoImplicit false
-set_option maxHeartbeats 3000000
-
-abbrev BlockSumIndex (m L s1 s2 r h : ℕ) :=
-  Σ i : Fin (r-q m s2 r h+1), Σ j : Fin (s1-q m s2 r h+1),
-    Fin (L+1-h-q m s2 r h-i.val-j.val)
-
-def blockEquiv (m L s1 s2 r h : ℕ) (hr : q m s2 r h ≤ r) (hs : q m s2 r h ≤ s1) :
-    Block m L s1 s2 r h ≃ BlockSumIndex m L s1 s2 r h where
-  toFun d := by
-    have hd := d.property
-    exact ⟨⟨(d.val 0).val,by omega⟩,⟨(d.val 1).val,by omega⟩,
-      ⟨(d.val 2).val,by dsimp; omega⟩⟩
-  invFun u := by
-    rcases u with ⟨i,j,z⟩
-    have hi := i.isLt
-    have hj := j.isLt
-    have hz := z.isLt
-    let iv : Fin (L+1) := ⟨i.val,by omega⟩
-    let jv : Fin (L+1) := ⟨j.val,by omega⟩
-    let zv : Fin (L+1) := ⟨z.val,by omega⟩
-    refine ⟨![iv,jv,zv],?_,?_,?_⟩
-    · change i.val+q m s2 r h ≤ r
-      omega
-    · change j.val+q m s2 r h ≤ s1
-      omega
-    · change i.val+j.val+z.val+h+q m s2 r h ≤ L
-      omega
-  left_inv d := by
-    apply Subtype.ext
-    funext k
-    apply Fin.ext
-    fin_cases k <;> rfl
-  right_inv u := by
-    rcases u with ⟨i,j,z⟩
-    rfl
-
-theorem card_block_of_le (m L s1 s2 r h : ℕ)
-    (hr : q m s2 r h ≤ r) (hs : q m s2 r h ≤ s1) :
-    Fintype.card (Block m L s1 s2 r h) =
-      ∑ i : Fin (r-q m s2 r h+1), ∑ j : Fin (s1-q m s2 r h+1),
-        (L+1-h-q m s2 r h-i.val-j.val) := by
-  rw [Fintype.card_congr (blockEquiv m L s1 s2 r h hr hs)]
-  simp [BlockSumIndex]
-
-theorem card_block_of_not_le (m L s1 s2 r h : ℕ)
-    (hq : ¬ (q m s2 r h ≤ r ∧ q m s2 r h ≤ s1)) :
-    Fintype.card (Block m L s1 s2 r h) = 0 := by
-  letI : IsEmpty (Block m L s1 s2 r h) := ⟨fun d => by have hd := d.property; omega⟩
-  simp
-
-def rectangle (A B C : ℕ) :=
-  A*B*C-B*(A*(A-1)/2)-A*(B*(B-1)/2)
-
-theorem sum_fin_val (n : ℕ) : (∑ i : Fin n, i.val) = n*(n-1)/2 := by
-  rw [Fin.sum_univ_eq_sum_range (fun i : ℕ => i), Finset.sum_range_id]
-
-theorem sum_rectangle (A B C : ℕ) (h : ∀ i : Fin A, ∀ j : Fin B, i.val+j.val ≤ C) :
-    (∑ i : Fin A, ∑ j : Fin B, (C-i.val-j.val)) = rectangle A B C := by
-  have hs : (∑ i : Fin A, ∑ j : Fin B, ((C-i.val-j.val)+i.val+j.val)) = A*(B*C) := by
-    calc
-      _ = ∑ _i : Fin A, ∑ _j : Fin B, C := by
-        apply Finset.sum_congr rfl
-        intro i _
-        apply Finset.sum_congr rfl
-        intro j _
-        have hij := h i j
-        omega
-      _ = _ := by simp
-  have hs' : (∑ i : Fin A, ∑ j : Fin B, (C-i.val-j.val)) +
-      B*(A*(A-1)/2)+A*(B*(B-1)/2) = A*(B*C) := by
-    simpa only [Finset.sum_add_distrib, Finset.sum_const, Finset.card_univ,
-      Fintype.card_fin, smul_eq_mul, ← Finset.mul_sum, sum_fin_val] using hs
-  unfold rectangle
-  rw [mul_assoc]
-  omega
-
-theorem card_block_closed (m L s1 s2 r h : ℕ) (hL : m+s1+s2 ≤ L)
-    (hrm : r < m) (hhs : h ≤ s2) :
-    Fintype.card (Block m L s1 s2 r h) =
-      if q m s2 r h ≤ r ∧ q m s2 r h ≤ s1 then
-        rectangle (r-q m s2 r h+1) (s1-q m s2 r h+1) (L+1-h-q m s2 r h)
-      else 0 := by
-  split_ifs with hq
-  · rw [card_block_of_le m L s1 s2 r h hq.1 hq.2]
-    apply sum_rectangle
-    intro i j
-    have hi := i.isLt
-    have hj := j.isLt
-    omega
-  · exact card_block_of_not_le m L s1 s2 r h hq
-
-def kernelCell (m L s1 s2 r h : ℕ) : ℕ :=
-  if q m s2 r h ≤ r ∧ q m s2 r h ≤ s1 then
-    rectangle (r-q m s2 r h+1) (s1-q m s2 r h+1) (L+1-h-q m s2 r h)
-  else 0
-
-variable {K : Type*} [Field K]
-
-end
-end ProximityPrize.SubmissionLower.SecondJetCounts
-
-end Compact_SecondJetCounts
 
 section Compact_SecondJetFacetCounts
 
@@ -4496,62 +3520,6 @@ end ProximityPrize.SubmissionLower.SecondJetGlobalIndex
 
 end Compact_SecondJetGlobalIndex
 
-section Compact_SecondJetGlobalCounts
-
-namespace ProximityPrize.SubmissionLower.SecondJetGlobalCounts
-open scoped BigOperators
-open SecondJetGlobalIndex
-noncomputable section
-set_option autoImplicit false
-set_option maxHeartbeats 4000000
-
-theorem sum_range_square_mul_six (n : ℕ) :
-    (∑ i ∈ Finset.range n, i^2)*6 = n*(n-1)*(2*n-1) := by
-  induction n with
-  | zero => simp
-  | succ n ih =>
-    rw [Finset.sum_range_succ]
-    cases n with
-    | zero => simp
-    | succ n =>
-      have h1 : 2*(n+1)-1 = 2*n+1 := by omega
-      have h2 : 2*(n+1+1)-1 = 2*n+3 := by omega
-      simp only [Nat.succ_eq_add_one, Nat.add_sub_cancel, h1] at ih
-      simp only [Nat.succ_eq_add_one, Nat.add_sub_cancel, h2]
-      nlinarith [ih]
-
-theorem sum_fin_square (n : ℕ) :
-    (∑ i : Fin n, i.val^2) = n*(n-1)*(2*n-1)/6 := by
-  rw [Fin.sum_univ_eq_sum_range (fun i : ℕ => i^2), ← sum_range_square_mul_six]
-  exact (Nat.mul_div_cancel _ (by decide : 0 < 6)).symm
-
-def weightedCell (q w C n : ℕ) : ℕ :=
-  n*q*C+w*(n*(n-1)*(2*n-1)/6)-(q+w*C)*(n*(n-1)/2)
-
-theorem sum_weighted_cell (q w C n : ℕ)
-    (hq : ∀ y : Fin n, w*y.val ≤ q) (hC : ∀ y : Fin n, y.val ≤ C) :
-    (∑ y : Fin n, (q-w*y.val)*(C-y.val)) = weightedCell q w C n := by
-  have hcell : ∀ y : Fin n,
-      (q-w*y.val)*(C-y.val)+(q+w*C)*y.val = q*C+w*y.val^2 := by
-    intro y
-    have hqy : q = q-w*y.val+w*y.val := (Nat.sub_add_cancel (hq y)).symm
-    have hCy : C = C-y.val+y.val := (Nat.sub_add_cancel (hC y)).symm
-    calc
-      _ = (q-w*y.val)*(C-y.val)+((q-w*y.val+w*y.val)+w*(C-y.val+y.val))*y.val := by
-        conv_lhs => arg 2; arg 1; rw [hqy, hCy]
-      _ = (q-w*y.val+w*y.val)*(C-y.val+y.val)+w*y.val^2 := by ring
-      _ = _ := by rw [← hqy, ← hCy]
-  have hs := Finset.sum_congr (s₁ := Finset.univ) rfl (fun y _ => hcell y)
-  simp only [Finset.sum_add_distrib, ← Finset.mul_sum, Finset.sum_const,
-    Finset.card_univ, Fintype.card_fin, smul_eq_mul, SecondJetCounts.sum_fin_val, sum_fin_square] at hs
-  unfold weightedCell
-  rw [mul_comm n q, mul_assoc]
-  omega
-
-end
-end ProximityPrize.SubmissionLower.SecondJetGlobalCounts
-
-end Compact_SecondJetGlobalCounts
 
 section Compact_SecondJetFacetReceipt
 
@@ -4890,21 +3858,6 @@ theorem monomial_degree (f : Polynomial K) (z : K) (w : ℕ) (hf : f.natDegree �
   · intro i
     simp
 
-theorem specialization_degree (P : Poly (K := K)) (f : Polynomial K) (z : K) (w D : ℕ)
-    (hf : f.natDegree ≤ w) (hD : 0 < D)
-    (hP : ∀ d ∈ P.support, d 0+w*d 2+(w-1)*d 3+(w-2)*d 1 < D) :
-    (specialize f z P).natDegree < D := by
-  classical
-  have hterms : ∀ d ∈ P.support,
-      (specialize f z (MvPolynomial.monomial d (AddMonoidAlgebra.coeff P d))).natDegree ≤ D-1 := by
-    intro d hd
-    have hw := hP d hd
-    have hh := monomial_degree f z w hf d (AddMonoidAlgebra.coeff P d)
-    omega
-  rw [MvPolynomial.as_sum P, map_sum]
-  have hh := Polynomial.natDegree_sum_le_of_forall_le P.support
-    (fun d => specialize f z (MvPolynomial.monomial d (AddMonoidAlgebra.coeff P d))) hterms
-  exact lt_of_le_of_lt hh (by omega)
 
 end
 end ProximityPrize.SubmissionLower.SecondJetSpecialize
@@ -4919,24 +3872,9 @@ noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 4000000
 variable {K N : Type*} [Field K]
-
+local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq N := Classical.decEq N
 
-theorem eq_zero_of_contact_degree (P : Poly (K := K)) (f : Polynomial K) (z : K)
-    (nodes : N ↪ K) (u0 u1 : N → K) (S : Finset N) (m : ℕ)
-    (hcontact : ∀ i ∈ S, MvPolynomial.X 0^m ∣ substitute (K := K)
-      (localize (nodes i) (u0 i) (u1 i) P))
-    (hvalues : ∀ i ∈ S, f.eval (nodes i) = u0 i+u1 i*z)
-    (hdegree : (specialize f z P).natDegree < m*S.card) : specialize f z P = 0 := by
-  classical
-  by_contra hn
-  have hmult : ∀ i ∈ S, m ≤ (specialize f z P).rootMultiplicity (nodes i) := by
-    intro i hi
-    exact (Polynomial.le_rootMultiplicity_iff hn).mpr
-      (root_contact P f (nodes i) (u0 i) (u1 i) z m (hvalues i hi) (hcontact i hi))
-  have hh := BCHKSSubstitutionVanish.mul_card_le_natDegree_of_rootMultiplicity
-    (specialize f z P) nodes S m hmult
-  exact (Nat.not_le_of_gt hdegree) hh
 
 variable [Fintype N]
 
@@ -6080,6 +5018,8 @@ open scoped Classical
 noncomputable section
 set_option autoImplicit false
 variable {K : Type} [Field K] {Seed : Type*}
+local instance : DecidableEq K := Classical.decEq K
+local instance : DecidableEq Seed := Classical.decEq Seed
 
 theorem component_empty_of_nonvanishing (F A H T : MvPolynomial (Fin 3) K)
     (Gamma : Finset Seed) (point : Seed → Fin 3 → K)
@@ -6114,7 +5054,8 @@ set_option maxHeartbeats 5000000
 set_option maxRecDepth 100000
 
 variable {K I : Type} [Field K]
-
+local instance : DecidableEq K := Classical.decEq K
+local instance : DecidableEq I := Classical.decEq I
 variable {Gamma : Finset K} {x : I → K} {p : ℕ} {flag : FlagDegree}
 variable [CharP (GenericField K) p]
 variable {stageErrorCap : ℕ}
@@ -6138,7 +5079,15 @@ set_option autoImplicit false
 set_option maxRecDepth 100000
 set_option maxHeartbeats 5000000
 def w:ℕ:=131071
-
+def prime:ℕ:=2130706433
+abbrev K:=IRSProfile.Field
+abbrev I:=IRSProfile.Index
+local instance:DecidableEq K:=Classical.decEq K
+local instance:DecidableEq I:=Classical.decEq I
+local instance:DecidableEq (GenericField K):=Classical.decEq _
+local instance:CharP K prime:=by
+  simpa [prime,RCN223.prime] using
+    RCN128.challenge_field_characteristic6600
 theorem tail_support_formula (a b s d:ℕ) :
     reducedResidualAgreementFlag (RCN198.support a b s) d=
       ⟨2 * a * d,1 + 2 * (b + 1) * d,2 * (s + 1) * d⟩:=by
@@ -6184,6 +5133,14 @@ noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 6000000
 set_option maxRecDepth 100000
+abbrev K:=IRSProfile.Field
+abbrev I:=IRSProfile.Index
+local instance:DecidableEq K:=Classical.decEq K
+local instance:DecidableEq I:=Classical.decEq I
+local instance:DecidableEq (GenericField K):=Classical.decEq _
+local instance:CharP K 2130706433:=by
+  simpa [RCN223.prime] using
+    RCN128.challenge_field_characteristic6600
 
 end
 end ProximityPrize.SubmissionLower.Lower80788.Fixed
@@ -6244,6 +5201,12 @@ noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 6000000
 set_option maxRecDepth 100000
+local instance : DecidableEq K := Classical.decEq K
+local instance : DecidableEq I := Classical.decEq I
+local instance : DecidableEq (GenericField K) := Classical.decEq _
+local instance : CharP K 2130706433 := by
+  simpa [RCN223.prime] using
+    RCN128.challenge_field_characteristic6600
 
 end
 end ProximityPrize.SubmissionLower.Lower80788.FixedHybridC2
@@ -6266,6 +5229,12 @@ noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 6000000
 set_option maxRecDepth 100000
+local instance : DecidableEq K := Classical.decEq K
+local instance : DecidableEq I := Classical.decEq I
+local instance : DecidableEq (GenericField K) := Classical.decEq _
+local instance : CharP K 2130706433 := by
+  simpa [RCN223.prime] using
+    RCN128.challenge_field_characteristic6600
 
 end
 end ProximityPrize.SubmissionLower.Lower80788.HybridRealizeC2
@@ -6282,6 +5251,11 @@ noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 2000000
 set_option maxRecDepth 100000
+local instance:DecidableEq K:=Classical.decEq K
+local instance:DecidableEq I:=Classical.decEq I
+local instance:CharP K 2130706433:=by
+  simpa [RCN223.prime] using
+    RCN128.challenge_field_characteristic6600
 
 end
 end ProximityPrize.SubmissionLower.Lower80788.FixedOwnBoundC2
@@ -6298,6 +5272,18 @@ open Lower80788.HybridIdentityC2
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 2000000
+
+theorem cell_first_eq (t y r : ℕ) :
+    cellFirstTail t y r = reducedABS (cellA t y) (cellB y r) (cellS r) := by
+  unfold cellFirstTail cellSupport
+  rw [Lower80788.FixedStage.tail_support_formula]
+  simp only [RCN327.w,reducedABS]
+  congr 1 <;> ring
+
+theorem cell_normal_eq (t y r : ℕ) :
+    cellHybridCoordinateC1 t y r = rationalABS (cellA t y) (cellB y r) (cellS r) := by
+  simp only [cellHybridCoordinateC1,cellRational,cellDirection,directionFlag,rationalABS,RCN327.w]
+  congr 1 <;> ring
 
 end
 end ProximityPrize.SubmissionLower.SecondJetIdentity
@@ -6319,7 +5305,9 @@ set_option maxRecDepth 100000
 
 open RCN084 RCN146 RCN087 RCN335 RCN174 RCN275 RCN234 RCN156
 variable {K I : Type} [Field K] [CharP K 2130706433]
-
+local instance : DecidableEq K := Classical.decEq K
+local instance : DecidableEq I := Classical.decEq I
+local instance : CharP (GenericField K) 2130706433 := genericField_charP K 2130706433
 variable {Gamma : Finset K} {x : I → K} {flag : FlagDegree}
 
 end
@@ -6342,7 +5330,9 @@ set_option maxRecDepth 100000
 
 open RCN084 RCN146 RCN087 RCN335 RCN174 RCN275 RCN234 RCN156
 variable {K I : Type} [Field K] [CharP K 2130706433]
-
+local instance : DecidableEq K := Classical.decEq K
+local instance : DecidableEq I := Classical.decEq I
+local instance : CharP (GenericField K) 2130706433 := genericField_charP K 2130706433
 variable {Gamma : Finset K} {x : I → K} {flag : FlagDegree}
 
 open RCN081 RCN130 RCN221 RCN222 RCN137 RCN238 RCN275
@@ -6361,6 +5351,9 @@ noncomputable section
 set_option maxHeartbeats 3000000
 set_option maxRecDepth 20000
 variable {K : Type} [Field K] {ι : Type*}
+local instance : DecidableEq K := Classical.decEq K
+local instance : DecidableEq ι := Classical.decEq ι
+
 
 end
 end ProximityPrize.SubmissionLower.SecondJetProperCounting
@@ -6375,6 +5368,8 @@ noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 2000000
 variable {K : Type} [Field K]
+
+
 
 end
 end ProximityPrize.SubmissionLower.SecondJetPairBounds
@@ -6392,6 +5387,8 @@ set_option autoImplicit false
 set_option maxHeartbeats 4000000
 set_option maxRecDepth 100000
 variable {K I : Type} [Field K] [CharP K 2130706433] [Fintype I]
+local instance : DecidableEq K := Classical.decEq K
+local instance : DecidableEq I := Classical.decEq I
 
 namespace Data
 variable {nodes : I ↪ K} {u0 u1 : I → K}
@@ -6402,491 +5399,10 @@ end ProximityPrize.SubmissionLower.SecondJetRegularData
 
 end Compact_SecondJetRegularData
 
-section Compact_SecondJetWeightedContact
 
-namespace ProximityPrize.SubmissionLower.SecondJetWeightedContact
-noncomputable section
-set_option autoImplicit false
-set_option maxHeartbeats 3000000
 
-variable {B C : Type*} [CommRing B] [CommRing C]
 
-def V (a r : B) : Polynomial B := Polynomial.C (a-r)
-def U (a r s : B) : Polynomial B :=
-  V a r + Polynomial.X*Polynomial.C s
-def J (a r s : B) : Polynomial B :=
-  Polynomial.C r*V a r + Polynomial.X*Polynomial.C (a*s)
 
-theorem J_eq (a r s : B) :
-    J a r s = Polynomial.C r*U a r s +
-      Polynomial.X*Polynomial.C s*V a r := by
-  simp only [J, U, V, map_sub, map_mul]
-  ring
-
-theorem contact_J (a r s : B) (φ : Polynomial B →+* C) (ε : C)
-    (hε : φ Polynomial.X = ε)
-    (hU : ε^2 ∣ φ (U a r s)) (hV : ε ∣ φ (V a r)) :
-    ε^2 ∣ φ (J a r s) := by
-  obtain ⟨u, hu⟩ := hU
-  obtain ⟨v, hv⟩ := hV
-  refine ⟨φ (Polynomial.C r)*u + φ (Polynomial.C s)*v, ?_⟩
-  rw [J_eq, map_add, map_mul, map_mul, map_mul, hε, hu, hv]
-  ring
-
-def family (a r s z : B) (ρ h u v i j ℓ : ℕ) : Polynomial B :=
-  Polynomial.X^ρ * (Polynomial.C (s^h) *
-    U a r s^(u-ℓ) * J a r s^ℓ * V a r^v *
-    Polynomial.C (a^i*r^(j-ℓ)*z))
-
-theorem family_contact (a r s z : B) (ρ h u v i j ℓ : ℕ)
-    (hℓ : ℓ ≤ u) (φ : Polynomial B →+* C) (ε : C)
-    (hε : φ Polynomial.X = ε)
-    (hU : ε^2 ∣ φ (U a r s)) (hV : ε ∣ φ (V a r)) :
-    ε^(ρ+2*u+v) ∣ φ (family a r s z ρ h u v i j ℓ) := by
-  have hJ := contact_J a r s φ ε hε hU hV
-  obtain ⟨cu, hu⟩ := hU
-  obtain ⟨cv, hv⟩ := hV
-  obtain ⟨cj, hj⟩ := hJ
-  refine ⟨φ (Polynomial.C (s^h))*cu^(u-ℓ)*cj^ℓ*cv^v*
-    φ (Polynomial.C (a^i*r^(j-ℓ)*z)), ?_⟩
-  simp only [family, map_mul, map_pow, hε, hu, hv, hj, mul_pow]
-  have he : ρ+2*u+v = ρ+2*(u-ℓ)+2*ℓ+v := by omega
-  rw [he]
-  simp only [pow_add, pow_mul]
-  ring
-
-theorem family_coeff_lt (a r s z : B) (ρ h u v i j ℓ d : ℕ)
-    (hd : d < ρ) : (family a r s z ρ h u v i j ℓ).coeff d = 0 := by
-  simp [family, Polynomial.coeff_X_pow_mul', Nat.not_le.mpr hd]
-
-theorem family_coeff_self (a r s z : B) (ρ h u v i j ℓ : ℕ)
-    (hu : ℓ ≤ u) (hj : ℓ ≤ j) :
-    (family a r s z ρ h u v i j ℓ).coeff ρ =
-      s^h*(a-r)^(u+v)*(a^i*r^j*z) := by
-  obtain ⟨u', rfl⟩ := Nat.exists_eq_add_of_le hu
-  obtain ⟨j', rfl⟩ := Nat.exists_eq_add_of_le hj
-  simp only [family, Polynomial.coeff_X_pow_mul', Nat.sub_self, if_pos (le_refl ρ)]
-  simp [Polynomial.coeff_zero_eq_eval_zero, U, J, V, pow_add]
-  rw [mul_pow]
-  ring
-
-end
-end ProximityPrize.SubmissionLower.SecondJetWeightedContact
-
-end Compact_SecondJetWeightedContact
-
-section Compact_SecondJetWeightedBasis
-
-namespace ProximityPrize.SubmissionLower.SecondJetWeightedBasis
-open scoped BigOperators
-open SecondJetBasis SecondJetSupport SecondJetRank SecondJetLocal
-open MvPolynomial
-noncomputable section
-set_option autoImplicit false
-set_option maxHeartbeats 4000000
-variable {K : Type*} [Field K]
-
-theorem C_smul_base (c : K) (v : Base (K := K)) :
-    Polynomial.C (c • v) = c • (Polynomial.C v : Polynomial (Base (K := K))) :=
-  map_smul (Polynomial.CAlgHom (R := K) (A := Base (K := K))) c v
-
-def weightedTerm (r h a b : ℕ) (e : Fin 3 →₀ ℕ) : Jet (Base (K := K)) :=
-  SecondJetWeightedContact.family
-    (Polynomial.C (MvPolynomial.X 0)) (Polynomial.C (MvPolynomial.X 1))
-    Polynomial.X (Polynomial.C (MvPolynomial.X 2^(e 2)))
-    r h a b (e 0) (e 1) (min a (e 1))
-
-theorem weightedTerm_coeff_lt (r h a b : ℕ) (e : Fin 3 →₀ ℕ)
-    (d : ℕ) (hd : d < r) : (weightedTerm (K := K) r h a b e).coeff d = 0 :=
-  SecondJetWeightedContact.family_coeff_lt _ _ _ _ _ _ _ _ _ _ _ _ hd
-
-theorem weightedTerm_coeff_self (r h a b : ℕ) (e : Fin 3 →₀ ℕ) :
-    (weightedTerm (K := K) r h a b e).coeff r = Polynomial.X^h *
-      Polynomial.C (SecondJetLocal.v^(a+b)*MvPolynomial.monomial e (1 : K)) := by
-  rw [weightedTerm, SecondJetWeightedContact.family_coeff_self _ _ _ _ _ _ _ _ _ _ _
-    (min_le_left _ _) (min_le_right _ _)]
-  have hm : MvPolynomial.monomial e (1 : K) =
-      MvPolynomial.X 0^(e 0)*MvPolynomial.X 1^(e 1)*MvPolynomial.X 2^(e 2) := by
-    rw [MvPolynomial.monomial_eq, Finsupp.prod_fintype]
-    · simp [Fin.prod_univ_three]
-    · intro i; simp
-  rw [hm]
-  simp only [SecondJetLocal.v, map_sub, map_mul, map_pow, mul_assoc]
-
-variable {m s : ℕ} {I : Fin m → Fin s → Type*} [∀ r h, Fintype (I r h)]
-abbrev Parameters := ∀ r : Fin m, ∀ h : Fin s, I r h → K
-
-def weightedMake (a b : Fin m → Fin s → ℕ)
-    (e : ∀ r h, I r h → Fin 3 →₀ ℕ) : Parameters (K := K) (I := I) →ₗ[K] Jet (Base (K := K)) :=
-  ∑ r, ∑ h, ∑ i, LinearMap.smulRight
-    (((LinearMap.proj i : (I r h → K) →ₗ[K] K).comp
-      (LinearMap.proj h : (∀ h, I r h → K) →ₗ[K] (I r h → K))).comp (LinearMap.proj r : Parameters (K := K) (I := I) →ₗ[K] (∀ h, I r h → K)))
-    (weightedTerm r.val h.val (a r h) (b r h) (e r h i))
-
-theorem weightedMake_apply (a b : Fin m → Fin s → ℕ)
-    (e : ∀ r h, I r h → Fin 3 →₀ ℕ) (p : Parameters (K := K) (I := I)) :
-    weightedMake a b e p = ∑ r, ∑ h, ∑ i,
-      p r h i • weightedTerm r.val h.val (a r h) (b r h) (e r h i) := by
-  simp [weightedMake]
-
-theorem weightedMake_initial (a b : Fin m → Fin s → ℕ)
-    (e : ∀ r h, I r h → Fin 3 →₀ ℕ) (p : Parameters (K := K) (I := I)) (r : Fin m)
-    (hp : ∀ j, j.val < r.val → p j = 0) :
-    (weightedMake a b e p).coeff r.val = ∑ h, Polynomial.X^h.val *
-      Polynomial.C (SecondJetLocal.v^(a r h+b r h)*FiniteMonomials.reconstruct (e r h) (p r h)) := by
-  rw [weightedMake_apply, Polynomial.finsetSum_coeff, Finset.sum_eq_single r]
-  · simp_rw [Polynomial.finsetSum_coeff, Polynomial.coeff_smul, weightedTerm_coeff_self]
-    apply Finset.sum_congr rfl
-    intro h _
-    rw [FiniteMonomials.reconstruct_apply, Finset.mul_sum, map_sum, Finset.mul_sum]
-    apply Finset.sum_congr rfl
-    intro i _
-    have hm : MvPolynomial.monomial (e r h i) (p r h i) =
-        p r h i • MvPolynomial.monomial (e r h i) (1 : K) := by
-      simpa only [smul_eq_mul, mul_one] using
-        (map_smul (MvPolynomial.monomial (e r h i)) (p r h i) (1 : K))
-    rw [hm]
-    simp only [mul_smul_comm, C_smul_base]
-  · intro j _ hj
-    simp only [Polynomial.finsetSum_coeff, Polynomial.coeff_smul]
-    apply Finset.sum_eq_zero
-    intro h _
-    apply Finset.sum_eq_zero
-    intro i _
-    by_cases hlt : j.val < r.val
-    · simp [hp j hlt]
-    · rw [weightedTerm_coeff_lt]
-      · simp
-      · have hne : j.val ≠ r.val := fun he => hj (Fin.ext he)
-        omega
-  · simp
-
-theorem truncate_weightedMake_initial (a b : Fin m → Fin s → ℕ)
-    (e : ∀ r h, I r h → Fin 3 →₀ ℕ) (p : Parameters (K := K) (I := I)) (r : Fin m)
-    (hp : ∀ j, j.val < r.val → p j = 0) :
-    truncate (K := K) (m := m) (s := s) (weightedMake a b e p) r =
-      fun h => SecondJetLocal.v^(a r h+b r h)*FiniteMonomials.reconstruct (e r h) (p r h) := by
-  funext h
-  rw [truncate_apply, weightedMake_initial a b e p r hp, Polynomial.finsetSum_coeff]
-  simp only [Polynomial.coeff_mul_C, Polynomial.coeff_X_pow, Fin.val_inj]
-  simp
-
-theorem truncate_weightedMake_injective (a b : Fin m → Fin s → ℕ)
-    (e : ∀ r h, I r h → Fin 3 →₀ ℕ) (he : ∀ r h, Function.Injective (e r h)) :
-    Function.Injective ((truncate (K := K) (m := m) (s := s)).comp (weightedMake a b e)) := by
-  let D : ∀ r : Fin m, (∀ h : Fin s, I r h → K) →ₗ[K] (Fin s → Base (K := K)) := fun r =>
-    LinearMap.pi (fun h => (LinearMap.mulLeft K (SecondJetLocal.v^(a r h+b r h))).comp
-      ((FiniteMonomials.reconstruct (e r h)).comp (LinearMap.proj h)))
-  apply TriangularKernel.injective_of_triangular _ D
-  · intro r p q hpq
-    funext h i
-    have hh := congrFun hpq h
-    change SecondJetLocal.v^(a r h+b r h)*FiniteMonomials.reconstruct (e r h) (p h) =
-      SecondJetLocal.v^(a r h+b r h)*FiniteMonomials.reconstruct (e r h) (q h) at hh
-    have hz := mul_left_cancel₀ (pow_ne_zero _ (SecondJetLocal.v_ne_zero (K := K))) hh
-    exact congrFun (FiniteMonomials.reconstruct_injective (e r h) (he r h) hz) i
-  · intro p r hp
-    exact truncate_weightedMake_initial a b e p r hp
-
-theorem truncateOuter_weightedMake_injective (a b : Fin m → Fin s → ℕ)
-    (e : ∀ r h, I r h → Fin 3 →₀ ℕ) (he : ∀ r h, Function.Injective (e r h)) :
-    Function.Injective ((truncateOuter (K := K) m).comp (weightedMake a b e)) := by
-  intro p q hpq
-  apply truncate_weightedMake_injective a b e he
-  have hh := congrArg (truncate (K := K) (m := m) (s := s)) hpq
-  simpa only [LinearMap.comp_apply, truncate_truncateOuter] using hh
-
-theorem finite_source_rank {T : Type*} [AddCommGroup T] [Module K T]
-    (W : Submodule K (Jet (Base (K := K)))) [FiniteDimensional K W]
-    (f : W →ₗ[K] T) (a b : Fin m → Fin s → ℕ)
-    (e : ∀ r h, I r h → Fin 3 →₀ ℕ) (he : ∀ r h, Function.Injective (e r h))
-    (hW : ∀ p, truncateOuter (K := K) m (weightedMake a b e p) ∈ W)
-    (hzero : ∀ p, f ⟨truncateOuter (K := K) m (weightedMake a b e p), hW p⟩ = 0) :
-    Module.finrank K f.range + (∑ r : Fin m, ∑ h : Fin s, Fintype.card (I r h)) ≤
-      Module.finrank K W := by
-  let g := (truncateOuter (K := K) m).comp (weightedMake a b e)
-  have hg : Function.Injective g := truncateOuter_weightedMake_injective a b e he
-  let gw : Parameters (K := K) (I := I) →ₗ[K] W := g.codRestrict W hW
-  let gk : Parameters (K := K) (I := I) →ₗ[K] f.ker := gw.codRestrict f.ker hzero
-  have hi : Function.Injective gk := by
-    intro p q hpq
-    apply hg
-    exact congrArg (fun x : f.ker => (x.val : Jet (Base (K := K)))) hpq
-  letI : AddCommGroup W := inferInstance
-  letI : Module K W := W.module
-  letI : FiniteDimensional K f.ker := inferInstance
-  have hdim := LinearMap.finrank_le_finrank_of_injective hi
-  have hsum := f.finrank_range_add_finrank_ker
-  have hd : Module.finrank K (Parameters (K := K) (I := I)) =
-      ∑ r : Fin m, ∑ h : Fin s, Fintype.card (I r h) := by
-    simp [Parameters, Module.finrank_pi_fintype]
-  rw [hd] at hdim
-  omega
-
-end
-end ProximityPrize.SubmissionLower.SecondJetWeightedBasis
-
-end Compact_SecondJetWeightedBasis
-
-section Compact_SecondJetWeightedSupport
-
-namespace ProximityPrize.SubmissionLower.SecondJetWeightedSupport
-open scoped BigOperators Pointwise
-open MvPolynomial SecondJetSupport
-noncomputable section
-set_option autoImplicit false
-set_option maxHeartbeats 4000000
-variable {K : Type*} [Field K]
-
-def weight (w : Fin 5 → ℤ) (e : Fin 5 →₀ ℕ) : ℤ := ∑ j, (e j : ℤ)*w j
-
-def LinearBound (w : Fin 5 → ℤ) (b : ℤ) (P : Poly (K := K)) : Prop :=
-  ∀ e ∈ P.support, weight w e ≤ b
-
-theorem weight_add (w : Fin 5 → ℤ) (e f : Fin 5 →₀ ℕ) :
-    weight w (e+f) = weight w e+weight w f := by
-  simp [weight, Finsupp.add_apply, add_mul, Finset.sum_add_distrib]
-
-theorem LinearBound.mono {w : Fin 5 → ℤ} {b c : ℤ} {P : Poly (K := K)}
-    (h : LinearBound w b P) (hbc : b ≤ c) : LinearBound w c P :=
-  fun e he => (h e he).trans hbc
-
-theorem LinearBound.mul {w : Fin 5 → ℤ} {b c : ℤ} {P Q : Poly (K := K)}
-    (hP : LinearBound w b P) (hQ : LinearBound w c Q) : LinearBound w (b+c) (P*Q) := by
-  intro e he
-  obtain ⟨f,hf,g,hg,rfl⟩ := Finset.mem_add.mp (MvPolynomial.support_mul P Q he)
-  rw [weight_add]
-  exact add_le_add (hP f hf) (hQ g hg)
-
-theorem LinearBound.add {w : Fin 5 → ℤ} {b : ℤ} {P Q : Poly (K := K)}
-    (hP : LinearBound w b P) (hQ : LinearBound w b Q) : LinearBound w b (P+Q) := by
-  intro e he
-  rcases Finset.mem_union.mp (MvPolynomial.support_add he) with h | h
-  · exact hP e h
-  · exact hQ e h
-
-theorem LinearBound.neg {w : Fin 5 → ℤ} {b : ℤ} {P : Poly (K := K)}
-    (hP : LinearBound w b P) : LinearBound w b (-P) := by
-  simpa only [LinearBound, MvPolynomial.support_neg] using hP
-
-theorem linear_one (w : Fin 5 → ℤ) : LinearBound w 0 (1 : Poly (K := K)) := by
-  intro e he
-  simp only [MvPolynomial.support_one, Finset.mem_singleton] at he
-  subst e
-  simp [weight]
-
-theorem LinearBound.pow {w : Fin 5 → ℤ} {b : ℤ} {P : Poly (K := K)}
-    (hP : LinearBound w b P) (n : ℕ) : LinearBound w ((n : ℤ)*b) (P^n) := by
-  induction n with
-  | zero => simpa using linear_one (K := K) w
-  | succ n ih => simpa only [pow_succ, Nat.cast_add, Nat.cast_one, add_mul, one_mul] using ih.mul hP
-
-theorem linear_X (w : Fin 5 → ℤ) (j : Fin 5) :
-    LinearBound w (w j) (MvPolynomial.X j : Poly (K := K)) := by
-  intro e he
-  simp only [MvPolynomial.support_X, Finset.mem_singleton] at he
-  subst e
-  simp [weight, Finsupp.single_apply]
-
-def weightedVector (r h a b i j z l : ℕ) : Poly (K := K) :=
-  MvPolynomial.X 0^r * MvPolynomial.X 1^h *
-    (MvPolynomial.X 2-MvPolynomial.X 3+MvPolynomial.X 0*MvPolynomial.X 1)^(a-l) *
-    (MvPolynomial.X 3*(MvPolynomial.X 2-MvPolynomial.X 3)+
-      MvPolynomial.X 0*MvPolynomial.X 2*MvPolynomial.X 1)^l *
-    (MvPolynomial.X 2-MvPolynomial.X 3)^b *
-    MvPolynomial.X 2^i * MvPolynomial.X 3^(j-l) * MvPolynomial.X 4^z
-
-theorem weightedVector_bound (w : Fin 5 → ℤ) (r h a b i j z l : ℕ) :
-    LinearBound w ((r : ℤ)*w 0+(h : ℤ)*w 1+
-      ((a-l : ℕ) : ℤ)*max (max (w 2) (w 3)) (w 0+w 1)+
-      (l : ℤ)*max (w 3+max (w 2) (w 3)) (w 0+w 2+w 1)+
-      (b : ℤ)*max (w 2) (w 3)+(i : ℤ)*w 2+((j-l : ℕ) : ℤ)*w 3+(z : ℤ)*w 4)
-      (weightedVector (K := K) r h a b i j z l) := by
-  have hE := linear_X (K := K) w 0
-  have hS := linear_X (K := K) w 1
-  have hA := linear_X (K := K) w 2
-  have hR := linear_X (K := K) w 3
-  have hZ := linear_X (K := K) w 4
-  have hV : LinearBound w (max (w 2) (w 3))
-      (MvPolynomial.X 2-MvPolynomial.X 3 : Poly (K := K)) := by
-    rw [sub_eq_add_neg]
-    exact (hA.mono (le_max_left _ _)).add (hR.neg.mono (le_max_right _ _))
-  have hU := (hV.mono (le_max_left _ (w 0+w 1))).add
-    ((hE.mul hS).mono (le_max_right _ _))
-  have hJ := ((hR.mul hV).mono (le_max_left _ (w 0+w 2+w 1))).add
-    (((hE.mul hA).mul hS).mono (le_max_right _ _))
-  exact (((((((hE.pow r).mul (hS.pow h)).mul (hU.pow (a-l))).mul (hJ.pow l)).mul
-    (hV.pow b)).mul (hA.pow i)).mul (hR.pow (j-l))).mul (hZ.pow z)
-
-theorem weightedVector_support (r h a b i j z l : ℕ) (hla : l ≤ a) (hlj : l ≤ j)
-    (e : Fin 5 →₀ ℕ) (he : e ∈ (weightedVector (K := K) r h a b i j z l).support) :
-    r ≤ e 0 ∧ e 2 ≤ i+a+b ∧ e 3 ≤ j+a+b ∧ h ≤ e 1 ∧ e 1 ≤ h+a ∧
-      e 1+e 2+e 3 ≤ i+j+h+a+b ∧ e 1+e 2+e 3+e 4 ≤ i+j+h+a+b+z ∧
-      2*e 1+e 3 ≤ 2*h+2*a+b+j-l := by
-  have h0 := weightedVector_bound (K := K) ![-1,0,0,0,0] r h a b i j z l e he
-  have hA := weightedVector_bound (K := K) ![0,0,1,0,0] r h a b i j z l e he
-  have hR := weightedVector_bound (K := K) ![0,0,0,1,0] r h a b i j z l e he
-  have hSlo := weightedVector_bound (K := K) ![0,-1,0,0,0] r h a b i j z l e he
-  have hShi := weightedVector_bound (K := K) ![0,1,0,0,0] r h a b i j z l e he
-  have hM := weightedVector_bound (K := K) ![0,1,1,1,0] r h a b i j z l e he
-  have hT := weightedVector_bound (K := K) ![0,1,1,1,1] r h a b i j z l e he
-  have hB := weightedVector_bound (K := K) ![0,2,0,1,0] r h a b i j z l e he
-  norm_num [weight, Fin.sum_univ_five, Matrix.cons_val_two, Matrix.cons_val_three, Matrix.cons_val_four] at h0 hA hR hSlo hShi hM hT hB
-  omega
-
-end
-end ProximityPrize.SubmissionLower.SecondJetWeightedSupport
-
-end Compact_SecondJetWeightedSupport
-
-section Compact_SecondJetWeightedLocal
-
-namespace ProximityPrize.SubmissionLower.SecondJetWeightedLocal
-open SecondJetBasis SecondJetSupport SecondJetLocal SecondJetWeightedBasis
-open SecondJetWeightedSupport MvPolynomial
-noncomputable section
-set_option autoImplicit false
-set_option maxHeartbeats 4000000
-variable {K : Type*} [Field K]
-
-theorem flatEquiv_weightedVector (r h a b : ℕ) (e : Fin 3 →₀ ℕ) :
-    flatEquiv (K := K) (weightedVector (K := K) r h a b (e 0) (e 1) (e 2) (min a (e 1))) =
-      weightedTerm (K := K) r h a b e := by
-  simp only [weightedVector, map_mul, map_pow, map_add, map_sub, flatEquiv_X,
-    Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_two,
-    Matrix.cons_val_three, Matrix.cons_val_four]
-  simp only [Matrix.vecHead, Matrix.vecTail, Function.comp_apply,
-    Matrix.cons_val_succ, Matrix.cons_val_zero]
-  simp only [weightedTerm, SecondJetWeightedContact.family, SecondJetWeightedContact.U,
-    SecondJetWeightedContact.V, SecondJetWeightedContact.J, map_mul, map_pow, map_add, map_sub]
-  ring
-
-theorem weightedTerm_vanishes (m r h a b : ℕ) (e : Fin 3 →₀ ℕ)
-    (horder : m ≤ r+2*a+b) :
-    Polynomial.X^m ∣ contact (K := K) (weightedTerm (K := K) r h a b e) := by
-  apply (pow_dvd_pow Polynomial.X horder).trans
-  unfold weightedTerm
-  apply SecondJetWeightedContact.family_contact _ _ _ _ _ _ _ _ _ _ _
-    (min_le_left _ _) (contact (K := K)).toRingHom Polynomial.X contact_X
-  · have hu : (Polynomial.X : Target (K := K))^2 ∣ contact (K := K)
-        (Polynomial.C (Polynomial.C SecondJetLocal.v)+Polynomial.X*Polynomial.C Polynomial.X) :=
-      ⟨Polynomial.C (MvPolynomial.X 1), contact_u⟩
-    simpa only [SecondJetWeightedContact.U, SecondJetWeightedContact.V,
-      SecondJetLocal.v, map_sub, AlgHom.toRingHom_eq_coe, RingHom.coe_coe] using hu
-  · have hv : (Polynomial.X : Target (K := K)) ∣
-        contact (K := K) (Polynomial.C (Polynomial.C SecondJetLocal.v)) := by
-      rw [contact_v]
-      exact dvd_mul_right _ _
-    simpa only [SecondJetWeightedContact.V, SecondJetLocal.v, map_sub, AlgHom.toRingHom_eq_coe, RingHom.coe_coe] using hv
-
-end
-end ProximityPrize.SubmissionLower.SecondJetWeightedLocal
-
-end Compact_SecondJetWeightedLocal
-
-section Compact_SecondJetRelaxedSpace
-
-namespace ProximityPrize.SubmissionLower.SecondJetRelaxedSpace
-open scoped BigOperators
-open SecondJetBasis SecondJetSupport SecondJetWeightedSupport SecondJetWeightedLocal
-noncomputable section
-set_option autoImplicit false
-set_option maxHeartbeats 3000000
-variable {K : Type*} [Field K]
-
-def Index (m L B s U : ℕ) (caps : ℕ → ℕ) :=
-  {d : SecondJetSpace.Index m L B s // 2*(d.val 1).val+(d.val 3).val ≤ B ∧
-    (d.val 1).val+(d.val 2).val+(d.val 3).val ≤ U ∧
-    (d.val 1).val+(d.val 2).val+(d.val 3).val ≤ caps (d.val 1).val}
-
-instance (m L B s U : ℕ) (caps : ℕ → ℕ) : Fintype (Index m L B s U caps) := by
-  unfold Index
-  infer_instance
-
-def exponent {m L B s U : ℕ} {caps : ℕ → ℕ} (d : Index m L B s U caps) : Fin 5 →₀ ℕ :=
-  SecondJetSpace.exponent d.val
-
-theorem exponent_injective (m L B s U : ℕ) (caps : ℕ → ℕ) :
-    Function.Injective (exponent (m := m) (L := L) (B := B) (s := s) (U := U) (caps := caps)) :=
-  (SecondJetSpace.exponent_injective m L B s).comp Subtype.val_injective
-
-theorem mem_range_exponent (m L B s U : ℕ) (caps : ℕ → ℕ) (d : Fin 5 →₀ ℕ) :
-    d ∈ Set.range (exponent (m := m) (L := L) (B := B) (s := s) (U := U) (caps := caps)) ↔
-      Allowed m L B s d ∧ 2*d 1+d 3 ≤ B ∧ d 1+d 2+d 3 ≤ U ∧ d 1+d 2+d 3 ≤ caps (d 1) := by
-  constructor
-  · rintro ⟨e,rfl⟩
-    exact ⟨SecondJetSpace.exponent_allowed e.val,e.property⟩
-  · rintro ⟨hd, hrs⟩
-    obtain ⟨e,he⟩ := (SecondJetSpace.mem_range_exponent m L B s d).mpr hd
-    have hrs' : 2*(e.val 1).val+(e.val 3).val ≤ B ∧ (e.val 1).val+(e.val 2).val+(e.val 3).val ≤ U ∧ (e.val 1).val+(e.val 2).val+(e.val 3).val ≤ caps (e.val 1).val := by
-      simpa only [← he, SecondJetSpace.exponent_apply] using hrs
-    exact ⟨⟨e,hrs'⟩,he⟩
-
-def sourceMap (m L B s U : ℕ) (caps : ℕ → ℕ) : (Index m L B s U caps → K) →ₗ[K]
-    Jet (MvPolynomial (Fin 3) K) :=
-  (flatEquiv (K := K)).toLinearMap.comp (FiniteMonomials.reconstruct exponent)
-
-def source (m L B s U : ℕ) (caps : ℕ → ℕ) : Submodule K (Jet (MvPolynomial (Fin 3) K)) :=
-  (sourceMap (K := K) m L B s U caps).range
-
-instance source_finite (m L B s U : ℕ) (caps : ℕ → ℕ) : FiniteDimensional K (source (K := K) m L B s U caps) := by
-  unfold source
-  infer_instance
-
-theorem sourceMap_injective (m L B s U : ℕ) (caps : ℕ → ℕ) :
-    Function.Injective (sourceMap (K := K) m L B s U caps) :=
-  (flatEquiv (K := K)).injective.comp
-    (FiniteMonomials.reconstruct_injective _ (exponent_injective m L B s U caps))
-
-theorem finrank_source (m L B s U : ℕ) (caps : ℕ → ℕ) :
-    Module.finrank K (source (K := K) m L B s U caps) = Fintype.card (Index m L B s U caps) := by
-  unfold source
-  rw [← (LinearEquiv.ofInjective (sourceMap (K := K) m L B s U caps)
-    (sourceMap_injective m L B s U caps)).finrank_eq]
-  simp
-
-theorem mem_source_iff (m L B s U : ℕ) (caps : ℕ → ℕ) (P : Jet (MvPolynomial (Fin 3) K)) :
-    P ∈ source (K := K) m L B s U caps ↔
-      ∀ d ∈ ((flatEquiv (K := K)).symm P).support,
-        Allowed m L B s d ∧ 2*d 1+d 3 ≤ B ∧ d 1+d 2+d 3 ≤ U ∧ d 1+d 2+d 3 ≤ caps (d 1) := by
-  have hm : P ∈ source (K := K) m L B s U caps ↔
-      (flatEquiv (K := K)).symm P ∈ (FiniteMonomials.reconstruct (K := K)
-        (exponent (m := m) (L := L) (B := B) (s := s) (U := U) (caps := caps))).range := by
-    constructor
-    · rintro ⟨c,hc⟩
-      refine ⟨c,?_⟩
-      have h := congrArg (flatEquiv (K := K)).symm hc
-      simpa [sourceMap] using h
-    · rintro ⟨c,hc⟩
-      refine ⟨c,?_⟩
-      have h := congrArg (flatEquiv (K := K)) hc
-      simpa [sourceMap] using h
-  rw [hm, FiniteMonomials.mem_range_iff _ (exponent_injective m L B s U caps)]
-  simp only [mem_range_exponent]
-
-theorem truncated_weightedTerm_mem (m L B s U : ℕ) (caps : ℕ → ℕ)
-    (r h a b : ℕ) (e : Fin 3 →₀ ℕ)
-    (hi : e 0+a+b ≤ r) (hS : h+a ≤ s)
-    (hB : 2*h+2*a+b+e 1-min a (e 1) ≤ B)
-    (hU : e 0+e 1+h+a+b ≤ U)
-    (hL : e 0+e 1+h+a+b+e 2 ≤ L)
-    (hcaps : ∀ j, h ≤ j → j ≤ h+a → e 0+e 1+h+a+b ≤ caps j) :
-    truncateOuter (K := K) m (SecondJetWeightedBasis.weightedTerm r h a b e) ∈
-      source (K := K) m L B s U caps := by
-  rw [← flatEquiv_weightedVector, ← flatEquiv_truncFlat, mem_source_iff]
-  simp only [AlgEquiv.symm_apply_apply]
-  intro d hd
-  have ht := support_truncFlat m _ d hd
-  obtain ⟨h0,hA,hR,hlo,hhi,hM,hT,hRS⟩ := weightedVector_support r h a b
-    (e 0) (e 1) (e 2) (min a (e 1)) (min_le_left _ _) (min_le_right _ _) d ht.2
-  refine ⟨?_,hRS.trans hB,hM.trans hU,hM.trans (hcaps (d 1) hlo hhi)⟩
-  dsimp only [Allowed]
-  exact ⟨ht.1,by omega,by omega,by omega,hT.trans hL⟩
-
-end
-end ProximityPrize.SubmissionLower.SecondJetRelaxedSpace
-
-end Compact_SecondJetRelaxedSpace
 
 section Compact_SecondJetClippedRectangle
 
@@ -6896,597 +5412,18 @@ open SecondJetCounts
 set_option autoImplicit false
 set_option maxHeartbeats 4000000
 
-def corner (A B H : ℕ) : ℕ := A+B-2-H
 
-def clippedRectangle (A B C H : ℕ) : ℕ :=
-  rectangle A B C - ∑ i ∈ Finset.range (corner A B H),
-    ∑ j ∈ Finset.range (corner A B H),
-      if i+j < corner A B H then C-(A-1-i)-(B-1-j) else 0
 
-theorem outside_sum (A B C H : ℕ) (hA : 0 < A) (hB : 0 < B)
-    (hkA : corner A B H ≤ A) (hkB : corner A B H ≤ B) :
-    (∑ i ∈ Finset.range A, ∑ j ∈ Finset.range B, if H < i+j then C-i-j else 0) =
-      ∑ i ∈ Finset.range (corner A B H), ∑ j ∈ Finset.range (corner A B H),
-        if i+j < corner A B H then C-(A-1-i)-(B-1-j) else 0 := by
-  classical
-  let s := ((Finset.range A) ×ˢ (Finset.range B)).filter (fun p => H < p.1+p.2)
-  let t := ((Finset.range (corner A B H)) ×ˢ (Finset.range (corner A B H))).filter
-    (fun p => p.1+p.2 < corner A B H)
-  have heq : (∑ p ∈ s, (C-p.1-p.2)) =
-      ∑ p ∈ t, (C-(A-1-p.1)-(B-1-p.2)) := by
-    apply Finset.sum_bij (fun p _ => (A-1-p.1,B-1-p.2))
-    · intro p hp
-      simp only [s, Finset.mem_filter, Finset.mem_product, Finset.mem_range] at hp
-      obtain ⟨⟨hp1,hp2⟩,hp3⟩ := hp
-      dsimp [corner] at hkA hkB
-      simp only [t, Finset.mem_filter, Finset.mem_product, Finset.mem_range, corner]
-      refine Finset.mem_filter.mpr ⟨Finset.mem_product.mpr ⟨?_, ?_⟩, ?_⟩
-      · exact Finset.mem_range.mpr (by omega)
-      · exact Finset.mem_range.mpr (by omega)
-      · show (A - 1 - p.1) + (B - 1 - p.2) < A + B - 2 - H
-        omega
-    · intro p hp q hq hpq
-      simp only [s, Finset.mem_filter, Finset.mem_product, Finset.mem_range] at hp hq
-      have h1 := congrArg Prod.fst hpq
-      have h2 := congrArg Prod.snd hpq
-      apply Prod.ext <;> dsimp at h1 h2 ⊢ <;> omega
-    · intro p hp
-      simp only [t, Finset.mem_filter, Finset.mem_product, Finset.mem_range] at hp
-      refine ⟨(A-1-p.1,B-1-p.2),?_,?_⟩
-      · simp only [s, Finset.mem_filter, Finset.mem_product, Finset.mem_range, Prod.fst, Prod.snd]
-        dsimp [corner] at hp hkA hkB
-        omega
-      · apply Prod.ext <;> dsimp <;> omega
-    · intro p hp
-      have hpmem : (p.1 < A ∧ p.2 < B) ∧ H < p.1+p.2 := by
-        simpa only [s, Finset.mem_filter, Finset.mem_product, Finset.mem_range] using hp
-      change C-p.1-p.2 = C-(A-1-(A-1-p.1))-(B-1-(B-1-p.2))
-      omega
-  simpa only [s,t,Finset.sum_filter,Finset.sum_product] using heq
 
-theorem sum_clipped_rectangle (A B C H : ℕ) (hA : 0 < A) (hB : 0 < B)
-    (hkA : corner A B H ≤ A) (hkB : corner A B H ≤ B)
-    (hC : ∀ i : Fin A, ∀ j : Fin B, i.val+j.val ≤ C) :
-    (∑ i : Fin A, ∑ j : Fin B, if i.val+j.val ≤ H then C-i.val-j.val else 0) =
-      clippedRectangle A B C H := by
-  have hsum :
-      (∑ i : Fin A, ∑ j : Fin B, if i.val+j.val ≤ H then C-i.val-j.val else 0) +
-      (∑ i : Fin A, ∑ j : Fin B, if H < i.val+j.val then C-i.val-j.val else 0) =
-        rectangle A B C := by
-    rw [← Finset.sum_add_distrib]
-    calc
-      _ = ∑ i : Fin A, ∑ j : Fin B, (C-i.val-j.val) := by
-        apply Finset.sum_congr rfl
-        intro i _
-        rw [← Finset.sum_add_distrib]
-        apply Finset.sum_congr rfl
-        intro j _
-        by_cases h : i.val+j.val ≤ H <;> simp [h, Nat.not_lt_of_ge, Nat.lt_of_not_ge]
-      _ = _ := sum_rectangle A B C hC
-  have hout := outside_sum A B C H hA hB hkA hkB
-  have houtside :
-      (∑ i : Fin A, ∑ j : Fin B, if H < i.val+j.val then C-i.val-j.val else 0) =
-      ∑ i ∈ Finset.range A, ∑ j ∈ Finset.range B, if H < i+j then C-i-j else 0 := by
-    rw [Fin.sum_univ_eq_sum_range (fun i : ℕ => ∑ j : Fin B, if H < i+j.val then C-i-j.val else 0)]
-    apply Finset.sum_congr rfl
-    intro i _
-    exact Fin.sum_univ_eq_sum_range (fun j : ℕ => if H < i+j then C-i-j else 0) B
-  rw [houtside, hout] at hsum
-  unfold clippedRectangle
-  omega
 
 end ProximityPrize.SubmissionLower.SecondJetClippedRectangle
 
 end Compact_SecondJetClippedRectangle
 
-section Compact_SecondJetRelaxedSourceCounts
 
-namespace ProximityPrize.SubmissionLower.SecondJetRelaxedSourceCounts
-open scoped BigOperators
-open SecondJetRelaxedSpace SecondJetClippedRectangle
-noncomputable section
-set_option autoImplicit false
-set_option maxHeartbeats 4000000
 
-abbrev SourceSumIndex (m L B s U : ℕ) :=
-  Σ r : Fin m, Σ h : Fin (s+1), Σ i : Fin (r.val+1), Σ j : Fin (B-2*h.val+1),
-    Fin (if h.val+i.val+j.val ≤ U then L+1-h.val-i.val-j.val else 0)
 
-def sourceEquiv (m L B s U : ℕ) (caps : ℕ → ℕ) (hsB : 2*s ≤ B)
-    (hcaps : ∀ h, h ≤ s → U ≤ caps h) :
-    Index m L B s U caps ≃ SourceSumIndex m L B s U where
-  toFun d := by
-    have hi := d.val.property.1
-    have ht := d.val.property.2
-    have hd := d.property
-    refine ⟨d.val.val 0,d.val.val 1,⟨(d.val.val 2).val,by omega⟩,
-      ⟨(d.val.val 3).val,by change (d.val.val 3).val < B-2*(d.val.val 1).val+1; omega⟩,
-      ⟨(d.val.val 4).val,?_⟩⟩
-    change (d.val.val 4).val <
-      if (d.val.val 1).val+(d.val.val 2).val+(d.val.val 3).val ≤ U then
-        L+1-(d.val.val 1).val-(d.val.val 2).val-(d.val.val 3).val else 0
-    rw [if_pos hd.2.1]
-    omega
-  invFun u := by
-    rcases u with ⟨r,h,i,j,z⟩
-    have hh := h.isLt
-    have hi := i.isLt
-    have hj := j.isLt
-    have hz := z.isLt
-    have hU : h.val+i.val+j.val ≤ U := by
-      by_contra hn
-      simp only [if_neg hn] at hz
-      omega
-    simp only [if_pos hU] at hz
-    let iv : Fin m := ⟨i.val,by have hr := r.isLt; omega⟩
-    let jv : Fin (B+1) := ⟨j.val,by omega⟩
-    let zv : Fin (L+1) := ⟨z.val,by omega⟩
-    let d : ∀ k, Fin (SecondJetSpace.bound m L B s k) :=
-      Fin.cases r (Fin.cases h (Fin.cases iv (Fin.cases jv (Fin.cases zv (fun i => Fin.elim0 i)))))
-    refine ⟨⟨d,?_,?_⟩,?_,?_,?_⟩
-    · change i.val ≤ r.val
-      omega
-    · change h.val+i.val+j.val+z.val ≤ L
-      omega
-    · change 2*h.val+j.val ≤ B
-      omega
-    · exact hU
-    · exact hU.trans (hcaps h.val (by omega))
-  left_inv d := by
-    apply Subtype.ext
-    apply Subtype.ext
-    funext k
-    apply Fin.ext
-    fin_cases k <;> rfl
-  right_inv u := by
-    rcases u with ⟨r,h,i,j,z⟩
-    rfl
 
-theorem card_source (m L B s U : ℕ) (caps : ℕ → ℕ) (hsB : 2*s ≤ B)
-    (hcaps : ∀ h, h ≤ s → U ≤ caps h) :
-    Fintype.card (Index m L B s U caps) =
-      ∑ r : Fin m, ∑ h : Fin (s+1), ∑ i : Fin (r.val+1), ∑ j : Fin (B-2*h.val+1),
-        if h.val+i.val+j.val ≤ U then L+1-h.val-i.val-j.val else 0 := by
-  rw [Fintype.card_congr (sourceEquiv m L B s U caps hsB hcaps)]
-  simp [SourceSumIndex]
-
-def sourceCount (m L B s U : ℕ) : ℕ :=
-  ∑ r : Fin m, ∑ h : Fin (s+1),
-    clippedRectangle (r.val+1) (B-2*h.val+1) (L+1-h.val) (U-h.val)
-
-theorem card_source_closed (m L B s U : ℕ) (caps : ℕ → ℕ)
-    (hsB : 2*s ≤ B) (hBm : B ≤ m) (hU : m+s ≤ U) (hL : m+B+s ≤ L)
-    (hcaps : ∀ h, h ≤ s → U ≤ caps h) :
-    Fintype.card (Index m L B s U caps) = sourceCount m L B s U := by
-  rw [card_source m L B s U caps hsB hcaps]
-  apply Finset.sum_congr rfl
-  intro r _
-  apply Finset.sum_congr rfl
-  intro h _
-  have hr := r.isLt
-  have hh := h.isLt
-  have heq :
-      (∑ i : Fin (r.val+1), ∑ j : Fin (B-2*h.val+1),
-        if h.val+i.val+j.val ≤ U then L+1-h.val-i.val-j.val else 0) =
-      ∑ i : Fin (r.val+1), ∑ j : Fin (B-2*h.val+1),
-        if i.val+j.val ≤ U-h.val then (L+1-h.val)-i.val-j.val else 0 := by
-    apply Finset.sum_congr rfl
-    intro i _
-    apply Finset.sum_congr rfl
-    intro j _
-    have hc : (h.val+i.val+j.val ≤ U) ↔ (i.val+j.val ≤ U-h.val) := by omega
-    simp only [hc]
-  rw [heq]
-  apply sum_clipped_rectangle
-  · omega
-  · omega
-  · dsimp [corner]
-    omega
-  · dsimp [corner]
-    omega
-  · intro i j
-    have hi := i.isLt
-    have hj := j.isLt
-    omega
-
-end
-end ProximityPrize.SubmissionLower.SecondJetRelaxedSourceCounts
-
-end Compact_SecondJetRelaxedSourceCounts
-
-section Compact_SecondJetRelaxedRank
-
-namespace ProximityPrize.SubmissionLower.SecondJetRelaxedRank
-open scoped BigOperators
-open SecondJetBasis SecondJetSupport SecondJetLocal SecondJetRelaxedSpace
-noncomputable section
-set_option autoImplicit false
-set_option maxHeartbeats 4000000
-variable {K : Type*} [Field K]
-
-def q (m s r h : ℕ) := max ((m-r+1)/2) (m-r-(s-h))
-def a (m s r h : ℕ) := m-r-q m s r h
-def b (m s r h : ℕ) := q m s r h-a m s r h
-
-theorem budgets (m s r h : ℕ) (hr : r ≤ m) (hh : h ≤ s) :
-    a m s r h+b m s r h = q m s r h ∧ h+a m s r h ≤ s ∧
-      r+2*a m s r h+b m s r h = m := by
-  dsimp [a,b,q]
-  omega
-
-def Block (m L B s U : ℕ) (caps : ℕ → ℕ) (r h : ℕ) :=
-  {e : Fin 3 → Fin (L+1) //
-    (e 0).val+q m s r h ≤ r ∧ (e 1).val+q m s r h+2*h ≤ B ∧
-    m-r+2*h ≤ B ∧ (e 0).val+(e 1).val+h+q m s r h ≤ U ∧
-    (e 0).val+(e 1).val+h+q m s r h+(e 2).val ≤ L ∧
-    ∀ j : Fin (a m s r h+1),
-      (e 0).val+(e 1).val+h+q m s r h ≤ caps (h+j.val)}
-
-instance (m L B s U : ℕ) (caps : ℕ → ℕ) (r h : ℕ) :
-    Fintype (Block m L B s U caps r h) := by
-  unfold Block
-  infer_instance
-
-def exponent {m L B s U : ℕ} {caps : ℕ → ℕ} {r h : ℕ}
-    (e : Block m L B s U caps r h) : Fin 3 →₀ ℕ :=
-  Finsupp.equivFunOnFinite.symm (fun j => (e.val j).val)
-
-@[simp] theorem exponent_apply {m L B s U : ℕ} {caps : ℕ → ℕ} {r h : ℕ}
-    (e : Block m L B s U caps r h) (j : Fin 3) : exponent e j = (e.val j).val := by
-  simp [exponent]
-
-theorem exponent_injective (m L B s U : ℕ) (caps : ℕ → ℕ) (r h : ℕ) :
-    Function.Injective (exponent (m := m) (L := L) (B := B) (s := s) (U := U)
-      (caps := caps) (r := r) (h := h)) := by
-  intro e f hef
-  apply Subtype.ext
-  funext j
-  apply Fin.ext
-  simpa only [exponent_apply] using congrArg (fun g : Fin 3 →₀ ℕ => g j) hef
-
-abbrev Parameters (m L B s U : ℕ) (caps : ℕ → ℕ) :=
-  ∀ r : Fin m, ∀ h : Fin (s+1), Block m L B s U caps r.val h.val → K
-
-def make (m L B s U : ℕ) (caps : ℕ → ℕ) :
-    Parameters (K := K) m L B s U caps →ₗ[K] Jet (Base (K := K)) :=
-  (truncateOuter (K := K) m).comp (SecondJetWeightedBasis.weightedMake
-    (fun r h => a m s r.val h.val) (fun r h => b m s r.val h.val)
-    (fun _ _ => exponent))
-
-theorem make_mem_source (m L B s U : ℕ) (caps : ℕ → ℕ)
-    (p : Parameters (K := K) m L B s U caps) :
-    make m L B s U caps p ∈ source (K := K) m L B s U caps := by
-  simp only [make, LinearMap.comp_apply, SecondJetWeightedBasis.weightedMake_apply, map_sum, map_smul]
-  apply Submodule.sum_mem
-  intro r _
-  apply Submodule.sum_mem
-  intro h _
-  apply Submodule.sum_mem
-  intro e _
-  apply Submodule.smul_mem
-  have hb := budgets m s r.val h.val (Nat.le_of_lt r.isLt) (Nat.le_of_lt_succ h.isLt)
-  have he := e.property
-  apply truncated_weightedTerm_mem
-  · simp only [exponent_apply]
-    omega
-  · exact hb.2.1
-  · simp only [exponent_apply]
-    omega
-  · simp only [exponent_apply]
-    omega
-  · simp only [exponent_apply]
-    omega
-  · intro j hj hj'
-    have hd := he.2.2.2.2.2 (⟨j-h.val, by omega⟩ : Fin (a m s r.val h.val+1))
-    simp only [exponent_apply]
-    dsimp at hd
-    have hjj : h.val+(j-h.val)=j := by omega
-    rw [hjj] at hd
-    omega
-
-def restrictedMap (m L B s U : ℕ) (caps : ℕ → ℕ) :
-    source (K := K) m L B s U caps →ₗ[K] Target (K := K) :=
-  (SecondJetRank.contactMap (K := K) m).comp (source (K := K) m L B s U caps).subtype
-
-theorem make_zero (m L B s U : ℕ) (caps : ℕ → ℕ)
-    (p : Parameters (K := K) m L B s U caps) :
-    SecondJetRank.contactMap (K := K) m (make m L B s U caps p) = 0 := by
-  change contact (K := K) (make m L B s U caps p) %ₘ Polynomial.X^m = 0
-  apply (Polynomial.modByMonic_eq_zero_iff_dvd (Polynomial.monic_X_pow m)).mpr
-  change Polynomial.X^m ∣ contact (K := K) (truncateOuter (K := K) m _)
-  apply truncateOuter_contact (K := K) (contact (K := K)).toRingHom Polynomial.X m _ contact_X
-  change Polynomial.X^m ∣ contact (K := K) _
-  rw [SecondJetWeightedBasis.weightedMake_apply, map_sum]
-  apply Finset.dvd_sum
-  intro r _
-  rw [map_sum]
-  apply Finset.dvd_sum
-  intro h _
-  rw [map_sum]
-  apply Finset.dvd_sum
-  intro e _
-  rw [map_smul, Algebra.smul_def]
-  apply dvd_mul_of_dvd_right
-  apply SecondJetWeightedLocal.weightedTerm_vanishes
-  exact le_of_eq (budgets m s r.val h.val (Nat.le_of_lt r.isLt)
-    (Nat.le_of_lt_succ h.isLt)).2.2.symm
-
-theorem local_rank_bound (m L B s U : ℕ) (caps : ℕ → ℕ) :
-    Module.finrank K (restrictedMap (K := K) m L B s U caps).range +
-      (∑ r : Fin m, ∑ h : Fin (s+1), Fintype.card (Block m L B s U caps r.val h.val)) ≤
-        Fintype.card (Index m L B s U caps) := by
-  have h := SecondJetWeightedBasis.finite_source_rank
-    (source (K := K) m L B s U caps) (restrictedMap (K := K) m L B s U caps)
-    (fun r h => a m s r.val h.val) (fun r h => b m s r.val h.val)
-    (fun _ _ => exponent) (fun r h => exponent_injective m L B s U caps r.val h.val)
-    (make_mem_source m L B s U caps) (make_zero m L B s U caps)
-  rwa [finrank_source] at h
-
-end
-end ProximityPrize.SubmissionLower.SecondJetRelaxedRank
-
-end Compact_SecondJetRelaxedRank
-
-section Compact_SecondJetRelaxedKernelCounts
-
-namespace ProximityPrize.SubmissionLower.SecondJetRelaxedKernelCounts
-open scoped BigOperators
-open SecondJetRelaxedRank SecondJetClippedRectangle
-noncomputable section
-set_option autoImplicit false
-set_option maxHeartbeats 5000000
-
-abbrev BlockSumIndex (m L B s U r h : ℕ) :=
-  Σ i : Fin (r-q m s r h+1), Σ j : Fin (B-2*h-q m s r h+1),
-    Fin (if h+q m s r h+i.val+j.val ≤ U then L+1-h-q m s r h-i.val-j.val else 0)
-
-def blockEquiv (m L B s U : ℕ) (caps : ℕ → ℕ) (r h : ℕ)
-    (hrm : r ≤ m) (hhs : h ≤ s)
-    (hr : q m s r h ≤ r) (hB : m-r+2*h ≤ B)
-    (hcaps : ∀ h, h ≤ s → U ≤ caps h) :
-    Block m L B s U caps r h ≃ BlockSumIndex m L B s U r h where
-  toFun d := by
-    have hd := d.property
-    refine ⟨⟨(d.val 0).val,by omega⟩,⟨(d.val 1).val,by omega⟩,
-      ⟨(d.val 2).val,?_⟩⟩
-    change (d.val 2).val < if h+q m s r h+(d.val 0).val+(d.val 1).val ≤ U then
-      L+1-h-q m s r h-(d.val 0).val-(d.val 1).val else 0
-    rw [if_pos (by omega)]
-    omega
-  invFun u := by
-    rcases u with ⟨i,j,z⟩
-    have hi := i.isLt
-    have hj := j.isLt
-    have hz := z.isLt
-    have hU : h+q m s r h+i.val+j.val ≤ U := by
-      by_contra hn
-      simp only [if_neg hn] at hz
-      omega
-    simp only [if_pos hU] at hz
-    have hb := budgets m s r h hrm hhs
-    let iv : Fin (L+1) := ⟨i.val,by omega⟩
-    let jv : Fin (L+1) := ⟨j.val,by omega⟩
-    let zv : Fin (L+1) := ⟨z.val,by omega⟩
-    refine ⟨![iv,jv,zv],?_,?_,?_,?_,?_,?_⟩
-    · change i.val+q m s r h ≤ r
-      omega
-    · change j.val+q m s r h+2*h ≤ B
-      omega
-    · exact hB
-    · change i.val+j.val+h+q m s r h ≤ U
-      omega
-    · change i.val+j.val+h+q m s r h+z.val ≤ L
-      omega
-    · intro t
-      change i.val+j.val+h+q m s r h ≤ caps (h+t.val)
-      have ht := t.isLt
-      have hc := hcaps (h+t.val) (by omega)
-      omega
-  left_inv d := by
-    apply Subtype.ext
-    funext k
-    apply Fin.ext
-    fin_cases k <;> rfl
-  right_inv u := by
-    rcases u with ⟨i,j,z⟩
-    rfl
-
-theorem card_block_of_le (m L B s U : ℕ) (caps : ℕ → ℕ) (r h : ℕ)
-    (hrm : r ≤ m) (hhs : h ≤ s)
-    (hr : q m s r h ≤ r) (hB : m-r+2*h ≤ B)
-    (hcaps : ∀ h, h ≤ s → U ≤ caps h) :
-    Fintype.card (Block m L B s U caps r h) =
-      ∑ i : Fin (r-q m s r h+1), ∑ j : Fin (B-2*h-q m s r h+1),
-        if h+q m s r h+i.val+j.val ≤ U then L+1-h-q m s r h-i.val-j.val else 0 := by
-  rw [Fintype.card_congr (blockEquiv m L B s U caps r h hrm hhs hr hB hcaps)]
-  simp [BlockSumIndex]
-
-theorem card_block_of_not_le (m L B s U : ℕ) (caps : ℕ → ℕ) (r h : ℕ)
-    (hq : ¬ (q m s r h ≤ r ∧ m-r+2*h ≤ B)) :
-    Fintype.card (Block m L B s U caps r h) = 0 := by
-  letI : IsEmpty (Block m L B s U caps r h) := ⟨fun d => by have hd := d.property; omega⟩
-  simp
-
-def kernelCell (m L B s U r h : ℕ) : ℕ :=
-  if q m s r h ≤ r ∧ m-r+2*h ≤ B then
-    clippedRectangle (r-q m s r h+1) (B-2*h-q m s r h+1)
-      (L+1-h-q m s r h) (U-h-q m s r h)
-  else 0
-
-theorem card_block_closed (m L B s U : ℕ) (caps : ℕ → ℕ) (r h : ℕ)
-    (hBm : B ≤ m) (hU : m+s ≤ U) (hL : m+B+s ≤ L)
-    (hrm : r < m) (hhs : h ≤ s)
-    (hcaps : ∀ h, h ≤ s → U ≤ caps h) :
-    Fintype.card (Block m L B s U caps r h) = kernelCell m L B s U r h := by
-  unfold kernelCell
-  split_ifs with hq
-  · rw [card_block_of_le m L B s U caps r h (by omega) hhs hq.1 hq.2 hcaps]
-    have hb := budgets m s r h (by omega) hhs
-    have heq :
-        (∑ i : Fin (r-q m s r h+1), ∑ j : Fin (B-2*h-q m s r h+1),
-          if h+q m s r h+i.val+j.val ≤ U then L+1-h-q m s r h-i.val-j.val else 0) =
-        ∑ i : Fin (r-q m s r h+1), ∑ j : Fin (B-2*h-q m s r h+1),
-          if i.val+j.val ≤ U-h-q m s r h then (L+1-h-q m s r h)-i.val-j.val else 0 := by
-      apply Finset.sum_congr rfl
-      intro i _
-      apply Finset.sum_congr rfl
-      intro j _
-      have hc : (h+q m s r h+i.val+j.val ≤ U) ↔
-          (i.val+j.val ≤ U-h-q m s r h) := by omega
-      simp only [hc]
-    rw [heq]
-    apply sum_clipped_rectangle
-    · omega
-    · omega
-    · dsimp [corner]
-      omega
-    · dsimp [corner]
-      omega
-    · intro i j
-      have hi := i.isLt
-      have hj := j.isLt
-      omega
-  · exact card_block_of_not_le m L B s U caps r h hq
-
-def kernelCount (m L B s U : ℕ) : ℕ :=
-  ∑ r : Fin m, ∑ h : Fin (s+1), kernelCell m L B s U r.val h.val
-
-theorem card_kernel_sum (m L B s U : ℕ) (caps : ℕ → ℕ)
-    (hBm : B ≤ m) (hU : m+s ≤ U) (hL : m+B+s ≤ L)
-    (hcaps : ∀ h, h ≤ s → U ≤ caps h) :
-    (∑ r : Fin m, ∑ h : Fin (s+1), Fintype.card (Block m L B s U caps r.val h.val)) =
-      kernelCount m L B s U := by
-  apply Finset.sum_congr rfl
-  intro r _
-  apply Finset.sum_congr rfl
-  intro h _
-  exact card_block_closed m L B s U caps r.val h.val hBm hU hL r.isLt
-    (Nat.le_of_lt_succ h.isLt) hcaps
-
-end
-end ProximityPrize.SubmissionLower.SecondJetRelaxedKernelCounts
-
-end Compact_SecondJetRelaxedKernelCounts
-
-section Compact_SecondJetRelaxedGlobalSupport
-
-namespace ProximityPrize.SubmissionLower.SecondJetRelaxedGlobalSupport
-open scoped BigOperators
-open MvPolynomial SecondJetSupport SecondJetBasis SecondJetGlobalSupport
-open SecondJetWeightedSupport
-noncomputable section
-set_option autoImplicit false
-set_option maxHeartbeats 4000000
-variable {K : Type*} [Field K]
-
-theorem linear_C (w : Fin 5 → ℤ) (c : K) : LinearBound w 0 (MvPolynomial.C c) := by
-  intro e he
-  have he0 : e = 0 := Finset.mem_singleton.mp (MvPolynomial.support_C_subset he)
-  subst e
-  simp [weight]
-
-theorem localize_X_bound (w : Fin 5 → ℤ) (hw0 : w 0 = 0) (hw4 : w 4 = 0)
-    (hw2 : 0 ≤ w 2) (x u0 u1 : K) (j : Fin 5) :
-    LinearBound w (w j) (localize x u0 u1 (MvPolynomial.X j)) := by
-  have hE := linear_X (K := K) w 0
-  have hZ := linear_X (K := K) w 4
-  fin_cases j
-  · simpa [localize, hw0] using (linear_C w x).add (hE.mono (by omega))
-  · simpa [localize] using linear_X (K := K) w 1
-  · have hU : LinearBound w (w 2)
-        (MvPolynomial.C u0+MvPolynomial.C u1*MvPolynomial.X 4 : Poly (K := K)) :=
-      ((linear_C w u0).mono hw2).add (((linear_C w u1).mul hZ).mono (by omega))
-    have hA := linear_X (K := K) w 2
-    simpa [localize] using hU.add ((hE.mul hA).mono (by omega))
-  · simpa [localize] using linear_X (K := K) w 3
-  · simpa [localize] using hZ
-
-theorem localize_monomial_bound (w : Fin 5 → ℤ) (hw0 : w 0 = 0) (hw4 : w 4 = 0)
-    (hw2 : 0 ≤ w 2) (x u0 u1 : K) (e : Fin 5 →₀ ℕ) (c : K) :
-    LinearBound w (weight w e) (localize x u0 u1 (MvPolynomial.monomial e c)) := by
-  rw [MvPolynomial.monomial_eq, Finsupp.prod_fintype]
-  · simp only [Fin.prod_univ_succ, Fin.prod_univ_zero, mul_one, map_mul, map_pow, map_C]
-    have h0 := (localize_X_bound w hw0 hw4 hw2 x u0 u1 0).pow (e 0)
-    have h1 := (localize_X_bound w hw0 hw4 hw2 x u0 u1 1).pow (e 1)
-    have h2 := (localize_X_bound w hw0 hw4 hw2 x u0 u1 2).pow (e 2)
-    have h3 := (localize_X_bound w hw0 hw4 hw2 x u0 u1 3).pow (e 3)
-    have h4 := (localize_X_bound w hw0 hw4 hw2 x u0 u1 4).pow (e 4)
-    simpa [weight, Fin.sum_univ_five, add_assoc] using
-      (linear_C w c).mul (h0.mul (h1.mul (h2.mul (h3.mul h4))))
-  · intro i
-    simp
-
-theorem localize_support (x u0 u1 : K) (e d : Fin 5 →₀ ℕ) (c : K)
-    (hd : d ∈ (localize x u0 u1 (MvPolynomial.monomial e c)).support) :
-    d 1 = e 1 ∧ 2*d 1+d 3 ≤ 2*e 1+e 3 ∧ d 1+d 2+d 3 ≤ e 1+e 2+e 3 := by
-  have hs := localize_monomial_bound ![0,1,0,0,0] (by rfl) (by rfl) (by decide) x u0 u1 e c d hd
-  have hl := localize_monomial_bound ![0,-1,0,0,0] (by rfl) (by rfl) (by decide) x u0 u1 e c d hd
-  have hB := localize_monomial_bound ![0,2,0,1,0] (by rfl) (by rfl) (by decide) x u0 u1 e c d hd
-  have hM := localize_monomial_bound ![0,1,1,1,0] (by rfl) (by rfl) (by decide) x u0 u1 e c d hd
-  norm_num [weight, Fin.sum_univ_five, Matrix.cons_val_two, Matrix.cons_val_three,
-    Matrix.cons_val_four] at hs hl hB hM
-  omega
-
-theorem middle_cap (e : Fin 5 →₀ ℕ) (w B D : ℕ) (hw : 2 ≤ w)
-    (hB : 2*e 1+e 3 ≤ B)
-    (hD : e 0+w*e 2+(w-1)*e 3+(w-2)*e 1 < D) :
-    e 1+e 2+e 3 ≤ (D+B-1)/w := by
-  apply (Nat.le_div_iff_mul_le (by omega : 0 < w)).mpr
-  have h1 : w-1+1=w := by omega
-  have h2 : w-2+2=w := by omega
-  have hh : (e 1+e 2+e 3)*w < D+B := by nlinarith
-  omega
-
-theorem truncated_local_monomial_mem (x u0 u1 : K) (m L B s U w : ℕ)
-    (D : ℕ → ℕ) (hw : 2 ≤ w) (e : Fin 5 →₀ ℕ) (c : K)
-    (hB : 2*e 1+e 3 ≤ B) (hs : e 1 ≤ s)
-    (hU : e 1+e 2+e 3 ≤ U) (hL : e 1+e 2+e 3+e 4 ≤ L)
-    (hD : e 0+w*e 2+(w-1)*e 3+(w-2)*e 1 < D (e 1)) :
-    truncateOuter (K := K) m (flatEquiv (K := K)
-      (localize x u0 u1 (MvPolynomial.monomial e c))) ∈
-        SecondJetRelaxedSpace.source (K := K) m L B s U (fun h => (D h+B-1)/w) := by
-  rw [← flatEquiv_truncFlat, SecondJetRelaxedSpace.mem_source_iff]
-  simp only [AlgEquiv.symm_apply_apply]
-  intro d hd
-  obtain ⟨hm,hd'⟩ := support_truncFlat m _ d hd
-  have hb := localize_monomial x u0 u1 e c d hd'
-  obtain ⟨hS,hRS,hM⟩ := localize_support x u0 u1 e d c hd'
-  have hcap := middle_cap e w B (D (e 1)) hw hB hD
-  refine ⟨⟨hm,hb.1,by omega,by omega,hb.2.2.2.trans hL⟩,hRS.trans hB,hM.trans hU,?_⟩
-  simpa only [hS] using hM.trans hcap
-
-end
-end ProximityPrize.SubmissionLower.SecondJetRelaxedGlobalSupport
-
-end Compact_SecondJetRelaxedGlobalSupport
-
-section Compact_SecondJetRelaxedGlobalMap
-
-namespace ProximityPrize.SubmissionLower.SecondJetRelaxedGlobalMap
-open scoped BigOperators
-open SecondJetSupport SecondJetBasis SecondJetGlobalSupport
-open SecondJetGlobalMap (coefficientLocal untruncate_contact)
-noncomputable section
-set_option autoImplicit false
-set_option maxHeartbeats 4000000
-variable {K I N : Type*} [Field K] [Fintype I] [Fintype N]
-
-def rankBound (m L B s U : ℕ) (caps : ℕ → ℕ) : ℕ :=
-  Fintype.card (SecondJetRelaxedSpace.Index m L B s U caps) -
-    ∑ r : Fin m, ∑ h : Fin (s+1),
-      Fintype.card (SecondJetRelaxedRank.Block m L B s U caps r.val h.val)
-
-theorem local_rank_le_count (m L B s U : ℕ) (caps : ℕ → ℕ) :
-    Module.finrank K (SecondJetRelaxedRank.restrictedMap (K := K) m L B s U caps).range ≤
-      rankBound m L B s U caps := by
-  have hh := SecondJetRelaxedRank.local_rank_bound (K := K) m L B s U caps
-  unfold rankBound
-  omega
-
-end
-end ProximityPrize.SubmissionLower.SecondJetRelaxedGlobalMap
-
-end Compact_SecondJetRelaxedGlobalMap
 
 section Compact_SecondJetRelaxedCounts
 
@@ -7496,15 +5433,7 @@ open SecondJetRelaxedSourceCounts SecondJetRelaxedKernelCounts
 noncomputable section
 set_option autoImplicit false
 
-def rankBound (m L B s U : ℕ) : ℕ := sourceCount m L B s U-kernelCount m L B s U
 
-theorem rankBound_eq_closed (m L B s U : ℕ) (caps : ℕ → ℕ)
-    (hsB : 2*s ≤ B) (hBm : B ≤ m) (hU : m+s ≤ U) (hL : m+B+s ≤ L)
-    (hcaps : ∀ h, h ≤ s → U ≤ caps h) :
-    SecondJetRelaxedGlobalMap.rankBound m L B s U caps = rankBound m L B s U := by
-  unfold SecondJetRelaxedGlobalMap.rankBound rankBound
-  rw [card_source_closed m L B s U caps hsB hBm hU hL hcaps,
-    card_kernel_sum m L B s U caps hBm hU hL hcaps]
 
 variable {K : Type*} [Field K]
 
@@ -7513,118 +5442,7 @@ end ProximityPrize.SubmissionLower.SecondJetRelaxedCounts
 
 end Compact_SecondJetRelaxedCounts
 
-section Compact_SecondJetRelaxedGlobalIndex
 
-namespace ProximityPrize.SubmissionLower.SecondJetRelaxedGlobalIndex
-open scoped BigOperators
-noncomputable section
-set_option autoImplicit false
-set_option maxHeartbeats 3000000
-
-def budget (D : ℕ → ℕ) (w h r : ℕ) := D h-(w-2)*h-(w-1)*r
-def yCount (D : ℕ → ℕ) (w U h r : ℕ) :=
-  min ((budget D w h r-1)/w+1) (U+1-h-r)
-abbrev Index (D : ℕ → ℕ) (w L B s U : ℕ) :=
-  Σ h : Fin (s+1), Σ r : Fin (B-2*h.val+1), Σ y : Fin (yCount D w U h.val r.val),
-    Fin (budget D w h.val r.val-w*y.val) × Fin (L+1-h.val-r.val-y.val)
-
-def exponent {D : ℕ → ℕ} {w L B s U : ℕ} (i : Index D w L B s U) : Fin 5 →₀ ℕ :=
-  Finsupp.equivFunOnFinite.symm
-    ![i.2.2.2.1.val,i.1.val,i.2.2.1.val,i.2.1.val,i.2.2.2.2.val]
-
-theorem exponent_injective (D : ℕ → ℕ) (w L B s U : ℕ) :
-    Function.Injective (exponent (D := D) (w := w) (L := L) (B := B) (s := s) (U := U)) := by
-  rintro ⟨h,r,y,x,z⟩ ⟨h',r',y',x',z'⟩ he
-  have hv : ∀ k : Fin 5, ![x.val,h.val,y.val,r.val,z.val] k =
-      ![x'.val,h'.val,y'.val,r'.val,z'.val] k := by
-    intro k
-    simpa [exponent] using congrArg (fun d : Fin 5 →₀ ℕ => d k) he
-  have hh : h = h' := Fin.ext (hv 1)
-  subst h'
-  have hr : r = r' := Fin.ext (hv 3)
-  subst r'
-  have hy : y = y' := Fin.ext (hv 2)
-  subst y'
-  have hx : x = x' := Fin.ext (hv 0)
-  have hz : z = z' := Fin.ext (hv 4)
-  subst x'
-  subst z'
-  rfl
-
-theorem exponent_bounds (D : ℕ → ℕ) (w L B s U : ℕ) (hsB : 2*s ≤ B)
-    (i : Index D w L B s U) :
-    2*exponent i 1+exponent i 3 ≤ B ∧ exponent i 1 ≤ s ∧
-      exponent i 1+exponent i 2+exponent i 3 ≤ U ∧
-      exponent i 1+exponent i 2+exponent i 3+exponent i 4 ≤ L ∧
-      exponent i 0+w*exponent i 2+(w-1)*exponent i 3+(w-2)*exponent i 1 < D (exponent i 1) := by
-  rcases i with ⟨h,r,y,x,z⟩
-  have hh := h.isLt
-  have hr := r.isLt
-  have hy := y.isLt
-  have hx := x.isLt
-  have hz := z.isLt
-  simp only [budget] at hx
-  simp only [yCount] at hy
-  simp [exponent]
-  omega
-
-theorem card_index (D : ℕ → ℕ) (w L B s U : ℕ) :
-    Fintype.card (Index D w L B s U) =
-      ∑ h : Fin (s+1), ∑ r : Fin (B-2*h.val+1), ∑ y : Fin (yCount D w U h.val r.val),
-        (budget D w h.val r.val-w*y.val)*(L+1-h.val-r.val-y.val) := by
-  simp [Index]
-
-variable {K N : Type*} [Field K] [Fintype N]
-
-end
-end ProximityPrize.SubmissionLower.SecondJetRelaxedGlobalIndex
-
-end Compact_SecondJetRelaxedGlobalIndex
-
-section Compact_SecondJetRelaxedGlobalCounts
-
-namespace ProximityPrize.SubmissionLower.SecondJetRelaxedGlobalCounts
-open scoped BigOperators
-open SecondJetRelaxedGlobalIndex
-open SecondJetGlobalCounts (weightedCell sum_weighted_cell)
-noncomputable section
-set_option autoImplicit false
-set_option maxHeartbeats 4000000
-
-theorem y_weight_le (D : ℕ → ℕ) (w U h r : ℕ) (y : Fin (yCount D w U h r)) :
-    w*y.val ≤ budget D w h r := by
-  have hy : y.val ≤ (budget D w h r-1)/w := by
-    have hh := y.isLt
-    unfold yCount at hh
-    omega
-  calc
-    w*y.val ≤ w*((budget D w h r-1)/w) := Nat.mul_le_mul_left w hy
-    _ ≤ budget D w h r-1 := by
-      simpa only [mul_comm] using Nat.div_mul_le_self (budget D w h r-1) w
-    _ ≤ budget D w h r := Nat.sub_le _ _
-
-def coefficientCount (D : ℕ → ℕ) (w L B s U : ℕ) : ℕ :=
-  ∑ h : Fin (s+1), ∑ r : Fin (B-2*h.val+1),
-    weightedCell (budget D w h.val r.val) w (L+1-h.val-r.val) (yCount D w U h.val r.val)
-
-theorem card_index_closed (D : ℕ → ℕ) (w L B s U : ℕ) (hUL : U ≤ L) :
-    Fintype.card (Index D w L B s U) = coefficientCount D w L B s U := by
-  rw [card_index]
-  apply Finset.sum_congr rfl
-  intro h _
-  apply Finset.sum_congr rfl
-  intro r _
-  apply sum_weighted_cell
-  · exact y_weight_le D w U h.val r.val
-  · intro y
-    have hy := y.isLt
-    unfold yCount at hy
-    omega
-
-end
-end ProximityPrize.SubmissionLower.SecondJetRelaxedGlobalCounts
-
-end Compact_SecondJetRelaxedGlobalCounts
 
 section Compact_SecondJetRelaxedDifferentiation
 
@@ -7643,40 +5461,7 @@ theorem reserve_ge_order (k n0 h d : ℕ) (hdk : d ≤ k) (hdh : d ≤ h) :
   unfold reserve
   split <;> assumption
 
-theorem derivative_weight (P : Poly (K := K)) (m a w k n0 d : ℕ)
-    (hwa : w-2 ≤ a) (hdm : d ≤ m) (hdk : d ≤ k)
-    (hP : ∀ e ∈ P.support,
-      e 0+w*e 2+(w-1)*e 3+(w-2)*e 1+
-        reserve k n0 (e 1)*(a-(w-2)) < m*a)
-    (e : Fin 5 →₀ ℕ) (he : e ∈ ((pderiv 1)^[d] P).support) :
-    e 0+w*e 2+(w-1)*e 3+(w-2)*e 1 < (m-d)*a := by
-  have hh := hP _ (support_iterate P d e he)
-  simp [Finsupp.add_apply, Finsupp.single_apply, Fin.ext_iff] at hh
-  have hr := reserve_ge_order k n0 (e 1+d) d hdk (by omega)
-  have hp := Nat.mul_le_mul_right (a-(w-2)) hr
-  have ha : a-(w-2)+(w-2) = a := Nat.sub_add_cancel hwa
-  have hm : (m-d)*a+d*a = m*a := by
-    rw [← Nat.add_mul, Nat.sub_add_cancel hdm]
-  nlinarith
 
-theorem derivative_vanish (P : Poly (K := K)) (m a w k n0 d : ℕ)
-    (ha : 0 < a) (hwa : w-2 ≤ a) (hdm : d < m) (hdk : d ≤ k)
-    (hP : ∀ e ∈ P.support,
-      e 0+w*e 2+(w-1)*e 3+(w-2)*e 1+
-        reserve k n0 (e 1)*(a-(w-2)) < m*a)
-    (nodes : N ↪ K) (u0 u1 : N → K)
-    (hcontact : ∀ i, MvPolynomial.X 0^m ∣ substitute (K := K)
-      (localize (nodes i) (u0 i) (u1 i) P))
-    (f : Polynomial K) (hf : f.natDegree ≤ w) (z : K) (S : Finset N)
-    (hS : a ≤ S.card) (hvalues : ∀ i ∈ S, f.eval (nodes i) = u0 i+u1 i*z) :
-    specialize f z ((pderiv 1)^[d] P) = 0 := by
-  refine SecondJetVanish.eq_zero_of_contact_degree _ f z nodes u0 u1 S (m-d) ?_ hvalues ?_
-  · intro i _
-    apply local_derivative_contact (nodes i) (u0 i) (u1 i) P (m-d) d
-    simpa only [Nat.sub_add_cancel (Nat.le_of_lt hdm)] using hcontact i
-  · have hd := specialization_degree ((pderiv 1)^[d] P) f z w ((m-d)*a) hf (Nat.mul_pos (Nat.sub_pos_of_lt hdm) ha)
-      (derivative_weight P m a w k n0 d hwa (Nat.le_of_lt hdm) hdk hP)
-    exact hd.trans_le (Nat.mul_le_mul_left (m-d) hS)
 
 end
 end ProximityPrize.SubmissionLower.SecondJetRelaxedDifferentiation
@@ -7776,7 +5561,8 @@ set_option autoImplicit false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 100000
 variable {K I : Type} [Field K] [CharP K 2130706433] [Fintype I]
-
+local instance : DecidableEq K := Classical.decEq K
+local instance : DecidableEq I := Classical.decEq I
 variable {nodes : I ↪ K} {u0 u1 : I → K}
 
 end
@@ -7807,12 +5593,7 @@ set_option maxHeartbeats 2000000
 variable {K I : Type} [Field K] [CharP K 2130706433] [Fintype I]
 variable {nodes : I ↪ K} {u0 u1 : I → K}
 
-theorem factorial_ne (d : ℕ) (hd : d < 2130706433) : (d.factorial : K) ≠ 0 :=
-  factorial_cast_ne_zero_below_characteristic 2130706433 d hd
 
-theorem two_ne : (2 : K) ≠ 0 := by
-  have h := factorial_ne (K := K) 2 (by decide)
-  simpa only [show Nat.factorial 2 = 2 by decide,Nat.cast_ofNat] using h
 
 end
 end ProximityPrize.SubmissionLower.SecondJetOwnShape
@@ -7855,6 +5636,7 @@ set_option maxHeartbeats 5000000
 set_option maxRecDepth 100000
 variable {K I : Type} [Field K] [CharP K 2130706433] [Fintype I]
 variable {nodes : I ↪ K} {u0 u1 : I → K}
+local instance : CharP (GenericField K) 2130706433 := genericField_charP K 2130706433
 
 end
 end ProximityPrize.SubmissionLower.SecondJetProfileBounds
@@ -7894,6 +5676,18 @@ namespace ProximityPrize.SubmissionLower.SecondJetRowIntervals
 open LocatorPhase6800Oracle
 set_option autoImplicit false
 set_option maxHeartbeats 3000000
+
+def pickTail (z : ℕ) (a : BaseSegment) : List BaseSegment → BaseSegment
+  | [] => a
+  | s::ss => pickTail z (if s.start ≤ z then s else a) ss
+
+def BaseCell (q : BaseRow) (lo hi : ℕ) : Prop :=
+  lo=hi ∨ (3 ≤ lo ∧ match q.segments with
+    | [] => True
+    | a::ss => a.start ≤ lo ∧ ∀ s ∈ ss, s.start ≤ lo ∨ hi < s.start)
+instance (q : BaseRow) (lo hi : ℕ) : Decidable (BaseCell q lo hi) := by
+  unfold BaseCell
+  cases q.segments <;> infer_instance
 
 end ProximityPrize.SubmissionLower.SecondJetRowIntervals
 

@@ -1,6 +1,7 @@
 import ProximityPrize.SubmissionLower.Koala6831IntrinsicTail
 import ProximityPrize.SubmissionLower.Koala6831IntrinsicGaussRoot
 
+
 namespace ProximityPrize.SubmissionLower.Koala6831Intrinsic
 
 open scoped BigOperators
@@ -65,6 +66,7 @@ theorem seedGraphEquation_eval (coeff : K →+* E) (z₀ z₁ : E) (F : Carrier 
     · intro i
       fin_cases i <;> simp [seedGraphEquation]
   exact DFunLike.congr_fun h F
+
 
 private theorem seedGraphEquation_derivative (coeff : K →+* E) (z₀ z₁ : E) (F : Carrier K) :
     (seedGraphEquation coeff z₀ z₁ F).derivative =
@@ -139,7 +141,6 @@ theorem seedGraphEquation_coefficient_value_le (v : Valuation E Γ₀) (coeff : 
   exact hsum F.support (fun _ h => h)
 
 open scoped WithZero in
-
 theorem seedGraphEquation_agreement_pole_le
     (v : Valuation E (WithZero (Multiplicative ℤ))) (coeff : K →+* E)
     (z₀ z₁ : E) (F : Carrier K) (t z n : ℕ) (P : Polynomial E) (x u₀ u₁ : E)

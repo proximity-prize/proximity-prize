@@ -167,6 +167,8 @@ theorem scale_flag (e : ℤ) (he : 0 ≤ e) (a b c : ℤ) :
     max (e * a) (max (e * b) (e * c)) = e * max a (max b c) := by
   rw [mul_max_of_nonneg _ _ he, mul_max_of_nonneg _ _ he]
 
+
+
 end Budget
 
 end ProximityPrize.SubmissionLower.HFree6812

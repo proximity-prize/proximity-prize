@@ -2,6 +2,7 @@ import ProximityPrize.SubmissionLower.Koala6831IntrinsicLinearProjection
 import ProximityPrize.SubmissionLower.Koala6831IntrinsicPDegree
 import ProximityPrize.SubmissionLower.Koala6831IntrinsicSeparableCriterion
 
+
 namespace ProximityPrize.SubmissionLower.Koala6831Intrinsic
 
 open MvPolynomial RCN002 RCN022

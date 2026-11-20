@@ -1,5 +1,7 @@
 import ProximityPrize.SubmissionLower.Koala6831OrdinaryFullTest
 
+
+
 namespace ProximityPrize.SubmissionLower.Koala6831Ordinary
 
 open Koala6831Intrinsic (implicitRegularity)
@@ -131,3 +133,4 @@ theorem shortOrdinaryTest_in_cutFlag (φ : K[X] →+* E) (F : Carrier K)
   exact ⟨hdy, by omega, by omega⟩
 
 end ProximityPrize.SubmissionLower.Koala6831Ordinary
+

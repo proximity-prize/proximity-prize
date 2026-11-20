@@ -1,9 +1,8 @@
 import ProximityPrize.SubmissionLower.LowerGeometry
-import ProximityPrize.SubmissionLower.MergedInfra6815_10
 set_option Elab.async false
 section MergedPart0
 section Compact_MovingFiberScalar6815
-
+-- Modified from prior Proximity Prize sources.
 namespace ProximityPrize.SubmissionLower.MovingFiberScalar6815
 open scoped BigOperators
 open ProximityPrize.Benchmark RCN279 RCN285
@@ -11,6 +10,15 @@ set_option autoImplicit false
 set_option maxRecDepth 20000
 set_option maxHeartbeats 5000000
 set_option Elab.async false
+
+
+
+
+
+
+
+
+
 
 end ProximityPrize.SubmissionLower.MovingFiberScalar6815
 
@@ -26,6 +34,9 @@ set_option maxRecDepth 20000
 set_option maxHeartbeats 5000000
 set_option Elab.async false
 
+def prime : ℕ := 2130706433
+
+
 end
 end ProximityPrize.SubmissionLower.MovingFiberScalarList6815Arithmetic
 
@@ -36,12 +47,17 @@ noncomputable section
 set_option autoImplicit false
 set_option maxRecDepth 50000
 set_option maxHeartbeats 5000000
-
+private abbrev prime:=MovingFiberScalarList6815Arithmetic.prime
 section
 variable (K:Type) [Field K]
-
+local instance:DecidableEq K:=Classical.decEq K
+local instance:DecidableEq (GenericField K):=Classical.decEq (GenericField K)
 end
-
+local instance:DecidableEq IRSProfile.Field:=Classical.decEq _
+local instance:DecidableEq IRSProfile.Index:=Classical.decEq _
+local instance:CharP IRSProfile.Field prime:=by
+ change CharP KoalaBear.Ext6 2130706433
+ exact charP_of_injective_algebraMap' KoalaBear.Field 2130706433
 end
 end ProximityPrize.SubmissionLower.MovingFiberScalarList6815
 
@@ -57,7 +73,6 @@ noncomputable section
 set_option maxRecDepth 20000
 set_option maxHeartbeats 5000000
 set_option Elab.async false
-
 end
 end ProximityPrize.SubmissionLower.MovingFiberProtocol6815Arithmetic
 
@@ -67,20 +82,13 @@ open scoped NNReal
 noncomputable section
 set_option maxRecDepth 3000
 set_option maxHeartbeats 5000000
-
+local instance:DecidableEq IRSProfile.Field:=Classical.decEq _
+local instance:DecidableEq IRSProfile.Index:=Classical.decEq _
 end
 end ProximityPrize.SubmissionLower.MovingFiberProtocol6815
 
 end Compact_MovingFiberProtocol6815
 
-section Compact_Protocol80850
-
-namespace ProximityPrize.SubmissionLower.Lower80860.Protocol
-open ProximityPrize.Benchmark CoreDefinitions ProximityGap ToyProblem RCN018 RCN019 RCN284 RCN280
-
-end ProximityPrize.SubmissionLower.Lower80860.Protocol
-
-end Compact_Protocol80850
 end MergedPart1
 section MergedPart2
 namespace ProximityPrize.SubmissionLower.MovingFiberSourceZeros6811
@@ -412,6 +420,8 @@ set_option synthInstance.maxHeartbeats 300000
 
 variable {K Ω E : Type} [Field K] [Field Ω] [Field E] [IsAlgClosed Ω] [IsAlgClosed E]
   [Algebra Ω E] [Algebra (RatFunc Ω) E] [IsScalarTower Ω (RatFunc Ω) E]
+local instance : DecidableEq Ω := Classical.decEq Ω
+local instance : DecidableEq E := Classical.decEq E
 
 omit [IsAlgClosed Ω] [IsAlgClosed E] [Algebra (RatFunc Ω) E]
   [IsScalarTower Ω (RatFunc Ω) E] in
@@ -638,7 +648,7 @@ set_option maxHeartbeats 400000
 set_option maxRecDepth 50000
 set_option synthInstance.maxHeartbeats 40000
 variable {K Ω : Type} [Field K] [Field Ω] [IsAlgClosed Ω]
-
+local instance : DecidableEq Ω := Classical.decEq Ω
 local notation "Poly3" => MvPolynomial (Fin 3) Ω
 
 def linearZ : Poly3 := MvPolynomial.X 2
@@ -990,6 +1000,8 @@ set_option synthInstance.maxHeartbeats 100000
 set_option maxRecDepth 50000
 variable {K Ω E : Type} [Field K] [Field Ω] [Field E] [IsAlgClosed Ω] [IsAlgClosed E]
   [Algebra Ω E] [Algebra (RatFunc Ω) E] [IsScalarTower Ω (RatFunc Ω) E]
+local instance : DecidableEq Ω := Classical.decEq Ω
+local instance : DecidableEq E := Classical.decEq E
 
 omit [IsAlgClosed Ω] [IsAlgClosed E] [Algebra (RatFunc Ω) E] [IsScalarTower Ω (RatFunc Ω) E] in
 private theorem scalar_surface_MovingFiberDegreeSum6811 (phi : Polynomial K →+* Ω) (F : MvPolynomial (Fin 4) K) :
@@ -1217,6 +1229,88 @@ open RCN260 AsymmetricHelper
 set_option autoImplicit false
 set_option maxHeartbeats 1000000
 
+def pair (capT capY capR r y t : ℕ) : UnequalParameters :=
+  ⟨262144,131071,181245,y,r,t,capY,capR,capT⟩
+
+def numerator (capT capY capR r y t : ℤ) : ℤ :=
+  4*131073*131071*(capT*r*y+capR*t*y+capY*t*r) +
+  131073*(capR-131071*capY)*t +
+  (131073*(capR-131071*capT)+80900*50174*capR)*y +
+  (131073*(capT+capY)+80900*50174*capY)*r
+
+theorem numerator_eq (capT capY capR r y t : ℕ) (hr : 1≤r) :
+    (leftRegularNumerator (pair capT capY capR r y t) : ℤ)=
+      numerator capT capY capR r y t := by
+  have hsub : ((2*r-1 : ℕ) : ℤ)=2*(r:ℤ)-1 := by
+    rw [Nat.cast_sub (by omega : 1≤2*r)]
+    push_cast
+    ring
+  simp only [leftRegularNumerator,pair,UnequalParameters.errors,UnequalParameters.gap,
+    UnequalParameters.leftAgreement,UnequalParameters.mixedCost,RCN294.dot]
+  norm_num only [Nat.cast_add,Nat.cast_mul,Nat.cast_ofNat]
+  rw [hsub]
+  norm_num [numerator]
+  ring
+
+private theorem box_product (x y capX capY : ℤ)
+    (hx : 0≤x) (hy : 0≤y) (hX : x≤capX) (hY : y≤capY) :
+    2*x*y≤capX*y+capY*x := by
+  nlinarith [mul_nonneg (sub_nonneg.mpr hX) hy,mul_nonneg (sub_nonneg.mpr hY) hx]
+
+theorem half_middle_raw (r y t : ℤ)
+    (hr : 0≤r) (hy : 0≤y) (ht : 0≤t)
+    (hR : r≤39) (hY : y≤182) (hT : t≤11192) :
+    numerator 531000 11062 2470 r y t ≤
+      50174*(445577482556*t+42396791527856*y+150966183228926*r) := by
+  have hry := box_product r y 39 182 hr hy hR hY
+  have hrt := box_product r t 39 11192 hr ht hR hT
+  have hty : 4*t*y≤182*t+3*11192*y := by
+    nlinarith [mul_nonneg (sub_nonneg.mpr hY) ht,mul_nonneg (sub_nonneg.mpr hT) hy]
+  dsimp [numerator]
+  nlinarith
+
+theorem final_pass_raw (r y t : ℤ)
+    (hr : 0≤r) (hy : 0≤y) (ht : 0≤t)
+    (hY : y≤182) (hT : t≤11192) :
+    numerator 88902 1382 308 r y t ≤
+      50174*(4690861953401*y+43345274666350*r) := by
+  have hry : r*y≤182*r := by nlinarith [mul_nonneg (sub_nonneg.mpr hY) hr]
+  have hty : t*y≤11192*y := by nlinarith [mul_nonneg (sub_nonneg.mpr hT) hy]
+  have htr : t*r≤11192*r := by nlinarith [mul_nonneg (sub_nonneg.mpr hT) hr]
+  dsimp [numerator]
+  nlinarith
+
+set_option maxRecDepth 1000000 in
+theorem half_middle_count (r y t : ℕ) (hr : 1≤r)
+    (hR : r≤39) (hY : y≤182) (hT : t≤11192) :
+    leftRegularCountCap (pair 531000 11062 2470 r y t) ≤
+      445577482556*t+42396791527856*y+150966183228926*r := by
+  have hz := half_middle_raw (r:ℤ) y t (by positivity) (by positivity) (by positivity)
+    (by exact_mod_cast hR) (by exact_mod_cast hY) (by exact_mod_cast hT)
+  have he := numerator_eq 531000 11062 2470 r y t hr
+  norm_num only [Nat.cast_ofNat] at he
+  rw [← he] at hz
+  have hn : leftRegularNumerator (pair 531000 11062 2470 r y t) ≤
+      50174*(445577482556*t+42396791527856*y+150966183228926*r) := by exact_mod_cast hz
+  have hd := Nat.div_le_div_right (c:=50174) hn
+  simpa [leftRegularCountCap,pair,UnequalParameters.gap] using hd
+
+set_option maxRecDepth 1000000 in
+theorem final_pass_count (r y t : ℕ) (hr : 1≤r)
+    (hY : y≤182) (hT : t≤11192) :
+    leftRegularCountCap (pair 88902 1382 308 r y t) ≤
+      4690861953401*y+43345274666350*r := by
+  have hz := final_pass_raw (r:ℤ) y t (by positivity) (by positivity) (by positivity)
+    (by exact_mod_cast hY) (by exact_mod_cast hT)
+  have he := numerator_eq 88902 1382 308 r y t hr
+  norm_num only [Nat.cast_ofNat] at he
+  rw [← he] at hz
+  have hn : leftRegularNumerator (pair 88902 1382 308 r y t) ≤
+      50174*(4690861953401*y+43345274666350*r) := by exact_mod_cast hz
+  have hd := Nat.div_le_div_right (c:=50174) hn
+  simpa [leftRegularCountCap,pair,UnequalParameters.gap] using hd
+
+
 end ProximityPrize.SubmissionLower.PhasePotential6815
 end MergedPart8
 section MergedPart9
@@ -1225,45 +1319,41 @@ open RCN260 AsymmetricHelper PhasePotential6815
 set_option autoImplicit false
 set_option maxHeartbeats 1400000
 
+def CoefficientsFit (L U S Rcap Ycap Tcap qt qy qr : ℕ) : Prop :=
+  2*131073*131071*((S:ℤ)*Ycap+(U:ℤ)*Rcap)+131073*((S:ℤ)-131071*U)≤50174*(qt:ℤ) ∧
+  2*131073*131071*((L:ℤ)*Rcap+(S:ℤ)*Tcap)+131073*((S:ℤ)-131071*L)+80900*50174*S≤50174*(qy:ℤ) ∧
+  2*131073*131071*((L:ℤ)*Ycap+(U:ℤ)*Tcap)+131073*((L:ℤ)+U)+80900*50174*U≤50174*(qr:ℤ)
+instance (L U S Rcap Ycap Tcap qt qy qr : ℕ) : Decidable (CoefficientsFit L U S Rcap Ycap Tcap qt qy qr) := by
+  unfold CoefficientsFit; infer_instance
+
+theorem box_product (x y capX capY : ℤ) (hx : 0≤x) (hy : 0≤y) (hX : x≤capX) (hY : y≤capY) :
+    2*x*y≤capX*y+capY*x := by
+  nlinarith [mul_nonneg (sub_nonneg.mpr hX) hy,mul_nonneg (sub_nonneg.mpr hY) hx]
+
+set_option maxRecDepth 1000000 in
+theorem count_le (L U S Rcap Ycap Tcap qt qy qr r y t : ℕ)
+    (hf : CoefficientsFit L U S Rcap Ycap Tcap qt qy qr)
+    (hr : 1≤r) (hR : r≤Rcap) (hY : y≤Ycap) (hT : t≤Tcap) :
+    leftRegularCountCap (pair L U S r y t)≤qt*t+qy*y+qr*r := by
+  have hry := box_product r y Rcap Ycap (by positivity) (by positivity)
+    (by exact_mod_cast hR) (by exact_mod_cast hY)
+  have hrt := box_product r t Rcap Tcap (by positivity) (by positivity)
+    (by exact_mod_cast hR) (by exact_mod_cast hT)
+  have hty := box_product t y Tcap Ycap (by positivity) (by positivity)
+    (by exact_mod_cast hT) (by exact_mod_cast hY)
+  have h1 := mul_le_mul_of_nonneg_left hry (show (0:ℤ)≤2*131073*131071*L by positivity)
+  have h2 := mul_le_mul_of_nonneg_left hrt (show (0:ℤ)≤2*131073*131071*U by positivity)
+  have h3 := mul_le_mul_of_nonneg_left hty (show (0:ℤ)≤2*131073*131071*S by positivity)
+  have h4 := mul_le_mul_of_nonneg_right hf.1 (show (0:ℤ)≤t by positivity)
+  have h5 := mul_le_mul_of_nonneg_right hf.2.1 (show (0:ℤ)≤y by positivity)
+  have h6 := mul_le_mul_of_nonneg_right hf.2.2 (show (0:ℤ)≤r by positivity)
+  have hz : numerator L U S r y t≤50174*((qt:ℤ)*t+(qy:ℤ)*y+(qr:ℤ)*r) := by
+    unfold numerator
+    nlinarith only [h1,h2,h3,h4,h5,h6]
+  rw [←numerator_eq L U S r y t hr] at hz
+  have hn : leftRegularNumerator (pair L U S r y t)≤50174*(qt*t+qy*y+qr*r) := by exact_mod_cast hz
+  have hd := Nat.div_le_div_right (c:=50174) hn
+  simpa [leftRegularCountCap,pair,UnequalParameters.gap] using hd
+
 end ProximityPrize.SubmissionLower.BalancedPhasePotential6815
 end MergedPart9
-section MergedPart10
-set_option Elab.async false
-
-namespace ProximityPrize.SubmissionLower.Lower80899.SourceSound
-
-open RCN095 RCN223 RCN260 RCN294 LocatorFactorAggregate
-open Lower80899.FactorSwitch Lower80899.PowerRoute
-open Lower80899.Oracle
-open LocatorPhase6800Oracle (Potential)
-
-set_option autoImplicit false
-set_option maxRecDepth 100000
-set_option maxHeartbeats 4000000
-
-namespace Phase00
-
-end Phase00
-namespace Phase01
-
-end Phase01
-namespace Phase02
-
-end Phase02
-namespace Phase03
-
-end Phase03
-namespace Phase04
-
-end Phase04
-namespace Phase05
-
-end Phase05
-namespace Phase06
-
-end Phase06
-namespace PhaseFinal
-
-end PhaseFinal
-end ProximityPrize.SubmissionLower.Lower80899.SourceSound
-end MergedPart10

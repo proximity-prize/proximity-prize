@@ -2,6 +2,7 @@ import Mathlib.Algebra.Polynomial.Taylor
 import Mathlib.RingTheory.PowerSeries.Inverse
 import Mathlib.RingTheory.PowerSeries.Trunc
 
+
 namespace ProximityPrize.SubmissionLower.Koala6831Moving
 
 open scoped BigOperators

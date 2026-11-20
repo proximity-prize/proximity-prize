@@ -126,7 +126,8 @@ open RCN244 RCN135 RCN095 RCN074 RCN218 RCN186 RCN310 RCN313 RCN086 RCN217 RCN24
 noncomputable section
 set_option autoImplicit false
 variable {K I : Type} [Field K]
-
+local instance : DecidableEq K := Classical.decEq K
+local instance : DecidableEq I := Classical.decEq I
 variable {Gamma : Finset K} {x : I → K} {p : ℕ} {flag : FlagDegree}
   [CharP (GenericField K) p] {errorCap : ℕ}
   {stageSupport : RCN275.ResidualSupportParameters}
@@ -146,7 +147,8 @@ set_option maxHeartbeats 5000000
 set_option synthInstance.maxHeartbeats 300000
 variable {K I E : Type} [Field K] [Field E] [IsAlgClosed E]
   [Algebra (GenericField K) E]
-
+local instance : DecidableEq K := Classical.decEq K
+local instance : DecidableEq I := Classical.decEq I
 variable {Gamma : Finset K} {x : I → K} {p : ℕ} {flag : FlagDegree}
   [CharP (GenericField K) p] {errorCap : ℕ}
   {stageSupport : RCN275.ResidualSupportParameters}

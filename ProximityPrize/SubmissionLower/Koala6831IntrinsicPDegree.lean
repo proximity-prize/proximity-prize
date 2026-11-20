@@ -1,5 +1,6 @@
 import ProximityPrize.SubmissionLower.Koala6831IntrinsicPowers
 
+
 namespace ProximityPrize.SubmissionLower.Koala6831Intrinsic
 
 noncomputable section
@@ -26,6 +27,7 @@ private theorem adjoin_powerField_singleton_eq_top_of_base [Algebra K E] (p : â„
   apply eq_top_iff.mpr
   intro x _
   exact hle (by rw [hgen]; exact IntermediateField.mem_top)
+
 
 theorem adjoin_powerField_singleton_eq_top_of_ratFunc [Algebra K E]
     [Algebra (RatFunc K) E] [IsScalarTower K (RatFunc K) E] (p : â„•)

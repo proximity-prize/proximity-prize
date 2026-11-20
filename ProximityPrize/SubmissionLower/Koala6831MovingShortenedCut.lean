@@ -2,6 +2,7 @@ import ProximityPrize.SubmissionLower.LowerFoundation
 import ProximityPrize.SubmissionLower.Koala6831MovingTaylorDivision
 import ProximityPrize.SubmissionLower.Koala6831MovingShortening
 
+
 namespace ProximityPrize.SubmissionLower.Koala6831MovingShortenedCut
 
 open scoped BigOperators

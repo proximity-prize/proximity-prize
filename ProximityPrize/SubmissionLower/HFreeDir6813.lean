@@ -224,7 +224,8 @@ section Stage
 local notation "w" => RCN326.w
 variable {K I E T : Type} [Field K] [Field E] [IsAlgClosed E]
   [Algebra (GenericField K) E]
-
+local instance : DecidableEq K := Classical.decEq K
+local instance : DecidableEq I := Classical.decEq I
 variable {Gamma : Finset K} {x : I → K} {p : ℕ} {flag : FlagDegree}
   [CharP (GenericField K) p] [CharP E p] {errorCap : ℕ}
   {stageSupport : RCN275.ResidualSupportParameters}
@@ -321,7 +322,8 @@ open RCN340 RCN344
 open LocatorHybridCellsC1 LocatorHybridTransportC2 LocatorHybridTailProvider
 open BoundaryTailProvider MovingFiberThreeSources6811
 variable {K I : Type} [Field K]
-
+local instance : DecidableEq K := Classical.decEq K
+local instance : DecidableEq I := Classical.decEq I
 variable {Gamma : Finset K} {x : I → K} {p : ℕ} {flag : FlagDegree}
   [CharP K p] [CharP (GenericField K) p] {errorCap : ℕ}
 local notation "Ω" => GenericField K
@@ -343,6 +345,7 @@ def numeratorDir {F : MvPolynomial (Fin 4) K} (source : Fin 3 → Source F)
     (4*(w+1)*weight (cellNormal t y r) j*(scale/(3*(source j).d))+
       65539*weight (rawFirstFlag t y r) j*(scale/(source j).d))*
       flagMixed flag (MovingFiberThreeSources6811.direction j) (source j).flag)
+
 
 theorem retained_stage_bound_dir
     (t y r scale : ℕ) (hr3 : 3 ≤ r) (hb : r+2 ≤ y) (hyt : y ≤ t)

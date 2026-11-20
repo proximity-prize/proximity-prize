@@ -1,6 +1,7 @@
 import ProximityPrize.SubmissionLower.Koala6831IntrinsicChartCuts
 import ProximityPrize.SubmissionLower.Koala6831IntrinsicChartWitness
 
+
 namespace ProximityPrize.SubmissionLower.Koala6831Intrinsic
 
 open scoped BigOperators

@@ -1,4 +1,5 @@
-import ProximityPrize.SubmissionLower.LowerFoundation
+import ProximityPrize.SubmissionLower.LowerPolynomialFoundation
+
 
 namespace ProximityPrize.SubmissionLower.Koala6831Intrinsic
 
@@ -61,6 +62,8 @@ theorem poleOrder_eval_le_quotient_caps
     rw [← order.sum_comp (fun i => (d i : ℤ) * poleOrder v (x i)), Fin.sum_univ_three]
     exact quotientExponentPoleWeight_le _ _ _ a b c _ _ _ hi hij hk
       (poleOrder_nonnegative v _) (poleOrder_nonnegative v _)
+
+
 
 end
 

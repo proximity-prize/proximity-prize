@@ -1,4 +1,6 @@
-import ProximityPrize.SubmissionLower.LowerFoundation
+import Mathlib.Algebra.MvPolynomial.PDeriv
+import Mathlib.RingTheory.UniqueFactorizationDomain.Defs
+
 
 namespace ProximityPrize.SubmissionLower.Koala6831Moving
 
@@ -78,11 +80,15 @@ theorem flow_R : B.flow (MvPolynomial.X (2 : Fin 4)) = B.rCoefficient := by
 theorem flow_Z : B.flow (MvPolynomial.X (3 : Fin 4)) = B.denominator^2 := by
   simp [flow_apply, MvPolynomial.pderiv_X]
 
+
+
 def numerator : P4 K := liftX B.d0 * MvPolynomial.X (1 : Fin 4) + B.C
 
 def jetNumerator : P4 K :=
   B.A * (liftX B.d0.derivative * MvPolynomial.X (1 : Fin 4) + liftX B.d0 * MvPolynomial.X (2 : Fin 4) + B.CX) -
     B.AX * B.numerator
+
+
 
 end FlowData
 
@@ -91,35 +97,9 @@ section ExtractPartner
 variable {R : Type*} [CommRing R] [Algebra K R]
 variable [UniqueFactorizationMonoid R]
 
-theorem isRelPrime_iterate_factor_product
-    (D : Derivation K R R) {F S : R} {j : ℕ}
-    (hF : Irreducible F) (hS : ¬F ∣ S) (htrans : ¬F ∣ D F)
-    (hfactorial : IsUnit (j.factorial : R)) :
-    IsRelPrime F ((D : R → R)^[j] (F^j * S)) := by
-  obtain ⟨T, hT⟩ := RCN324.iterate_pow_mul_expansion D F S j j le_rfl
-  simp only [Nat.descFactorial_self, Nat.sub_self, pow_zero, mul_one, zero_add, pow_one] at hT
-  apply hF.isRelPrime_iff_not_dvd.mpr
-  intro hd
-  rw [hT] at hd
-  have hlead := dvd_sub hd (dvd_mul_right F T)
-  rw [add_sub_cancel_right] at hlead
-  rcases hF.prime.dvd_or_dvd hlead with hprod | hpower
-  · rcases hF.prime.dvd_or_dvd hprod with hconst | hsource
-    · exact (not_isUnit_of_not_isUnit_dvd hF.not_isUnit hconst) hfactorial
-    · exact hS hsource
-  · exact htrans (hF.prime.dvd_of_dvd_pow hpower)
 
 end ExtractPartner
 
-theorem flow_partner_of_lt_characteristic
-    {L : Type*} [Field L] {p j : ℕ} [CharP L p]
-    (B : FlowData L) {F S : P4 L}
-    (hF : Irreducible F) (hS : ¬F ∣ S) (htrans : ¬F ∣ B.flow F)
-    (hj : j < p) : IsRelPrime F ((B.flow : P4 L → P4 L)^[j] (F^j * S)) := by
-  apply isRelPrime_iterate_factor_product B.flow hF hS htrans
-  have hne : (j.factorial : L) ≠ 0 :=
-    RCN347.factorial_cast_ne_zero_below_characteristic p j hj
-  simpa only [map_natCast] using (isUnit_iff_ne_zero.mpr hne).map (algebraMap L (P4 L))
 
 end
 
