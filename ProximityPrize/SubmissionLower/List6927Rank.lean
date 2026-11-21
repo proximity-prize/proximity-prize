@@ -16,94 +16,94 @@ open scoped BigOperators Matrix
 
 def columnCount (s : ℕ) (g : ℤ) : ℕ :=
   ∑ e ∈ Finset.range (min s 9 + 1),
-    ((min (min ((s : ℤ) - e) (20 - 2 * (e : ℤ))) (48 - g - 2 * e)) -
+    ((min (min ((s : ℤ) - e) (derivativeCap e : ℤ)) (49 - g - 2 * e)) -
       max 0 (-g - 2 * e) + 1).toNat
 def rowCountEnvelope (s : ℕ) (g : ℤ) : ℕ :=
   ∑ b : Fin (s + 1),
-    (min ((s : ℤ) - b.val) (49 - g - s - 1 - 2 * b.val) -
+    (min ((s : ℤ) - b.val) (50 - g - s - 1 - 2 * b.val) -
       max 0 (max 0 (-g) - s + b.val) + 1).toNat
 
-def envelopeUpper : ℕ := ∑ s : Fin 68, ∑ gi : Fin 69,
+def envelopeUpper : ℕ := ∑ s : Fin 69, ∑ gi : Fin 70,
   min (columnCount s.val ((gi.val : ℤ) - 20))
     (rowCountEnvelope s.val ((gi.val : ℤ) - 20))
 
 
-def gradeUpper (s : ℕ) : ℕ := ∑ gi : Fin 69,
+def gradeUpper (s : ℕ) : ℕ := ∑ gi : Fin 70,
   min (columnCount s ((gi.val : ℤ) - 20)) (rowCountEnvelope s ((gi.val : ℤ) - 20))
 
-private def gradeTable : Fin 68 → ℕ := ![49, 144, 282, 460, 675, 924, 1204, 1512, 1845, 2200, 2535, 2850, 3108, 3312, 3465, 3570, 3630, 3648, 3627, 3570, 3480, 3360, 3240, 3120, 3000, 2880, 2760, 2640, 2520, 2400, 2281, 2163, 2047, 1933, 1822, 1712, 1604, 1500, 1400, 1300, 1205, 1115, 1025, 941, 860, 782, 710, 639, 575, 511, 455, 399, 350, 302, 260, 221, 185, 155, 125, 100, 80, 60, 44, 32, 22, 13, 7, 3]
+private def gradeTable : Fin 69 → ℕ := ![50, 147, 288, 470, 690, 945, 1232, 1548, 1890, 2255, 2600, 2886, 3116, 3330, 3492, 3605, 3672, 3696, 3680, 3627, 3540, 3422, 3304, 3186, 3068, 2950, 2832, 2714, 2596, 2478, 2360, 2243, 2127, 2013, 1901, 1791, 1682, 1576, 1474, 1374, 1276, 1183, 1093, 1005, 923, 842, 766, 694, 625, 561, 499, 443, 389, 340, 294, 252, 215, 179, 149, 121, 96, 76, 58, 42, 30, 21, 13, 7, 3]
 
+private theorem grade_0 : gradeUpper 0 = 50 := by decide +kernel
+private theorem grade_1 : gradeUpper 1 = 147 := by decide +kernel
+private theorem grade_2 : gradeUpper 2 = 288 := by decide +kernel
+private theorem grade_3 : gradeUpper 3 = 470 := by decide +kernel
+private theorem grade_4 : gradeUpper 4 = 690 := by decide +kernel
+private theorem grade_5 : gradeUpper 5 = 945 := by decide +kernel
+private theorem grade_6 : gradeUpper 6 = 1232 := by decide +kernel
+private theorem grade_7 : gradeUpper 7 = 1548 := by decide +kernel
+private theorem grade_8 : gradeUpper 8 = 1890 := by decide +kernel
+private theorem grade_9 : gradeUpper 9 = 2255 := by decide +kernel
+private theorem grade_10 : gradeUpper 10 = 2600 := by decide +kernel
+private theorem grade_11 : gradeUpper 11 = 2886 := by decide +kernel
+private theorem grade_12 : gradeUpper 12 = 3116 := by decide +kernel
+private theorem grade_13 : gradeUpper 13 = 3330 := by decide +kernel
+private theorem grade_14 : gradeUpper 14 = 3492 := by decide +kernel
+private theorem grade_15 : gradeUpper 15 = 3605 := by decide +kernel
+private theorem grade_16 : gradeUpper 16 = 3672 := by decide +kernel
+private theorem grade_17 : gradeUpper 17 = 3696 := by decide +kernel
+private theorem grade_18 : gradeUpper 18 = 3680 := by decide +kernel
+private theorem grade_19 : gradeUpper 19 = 3627 := by decide +kernel
+private theorem grade_20 : gradeUpper 20 = 3540 := by decide +kernel
+private theorem grade_21 : gradeUpper 21 = 3422 := by decide +kernel
+private theorem grade_22 : gradeUpper 22 = 3304 := by decide +kernel
+private theorem grade_23 : gradeUpper 23 = 3186 := by decide +kernel
+private theorem grade_24 : gradeUpper 24 = 3068 := by decide +kernel
+private theorem grade_25 : gradeUpper 25 = 2950 := by decide +kernel
+private theorem grade_26 : gradeUpper 26 = 2832 := by decide +kernel
+private theorem grade_27 : gradeUpper 27 = 2714 := by decide +kernel
+private theorem grade_28 : gradeUpper 28 = 2596 := by decide +kernel
+private theorem grade_29 : gradeUpper 29 = 2478 := by decide +kernel
+private theorem grade_30 : gradeUpper 30 = 2360 := by decide +kernel
+private theorem grade_31 : gradeUpper 31 = 2243 := by decide +kernel
+private theorem grade_32 : gradeUpper 32 = 2127 := by decide +kernel
+private theorem grade_33 : gradeUpper 33 = 2013 := by decide +kernel
+private theorem grade_34 : gradeUpper 34 = 1901 := by decide +kernel
+private theorem grade_35 : gradeUpper 35 = 1791 := by decide +kernel
+private theorem grade_36 : gradeUpper 36 = 1682 := by decide +kernel
+private theorem grade_37 : gradeUpper 37 = 1576 := by decide +kernel
+private theorem grade_38 : gradeUpper 38 = 1474 := by decide +kernel
+private theorem grade_39 : gradeUpper 39 = 1374 := by decide +kernel
+private theorem grade_40 : gradeUpper 40 = 1276 := by decide +kernel
+private theorem grade_41 : gradeUpper 41 = 1183 := by decide +kernel
+private theorem grade_42 : gradeUpper 42 = 1093 := by decide +kernel
+private theorem grade_43 : gradeUpper 43 = 1005 := by decide +kernel
+private theorem grade_44 : gradeUpper 44 = 923 := by decide +kernel
+private theorem grade_45 : gradeUpper 45 = 842 := by decide +kernel
+private theorem grade_46 : gradeUpper 46 = 766 := by decide +kernel
+private theorem grade_47 : gradeUpper 47 = 694 := by decide +kernel
+private theorem grade_48 : gradeUpper 48 = 625 := by decide +kernel
+private theorem grade_49 : gradeUpper 49 = 561 := by decide +kernel
+private theorem grade_50 : gradeUpper 50 = 499 := by decide +kernel
+private theorem grade_51 : gradeUpper 51 = 443 := by decide +kernel
+private theorem grade_52 : gradeUpper 52 = 389 := by decide +kernel
+private theorem grade_53 : gradeUpper 53 = 340 := by decide +kernel
+private theorem grade_54 : gradeUpper 54 = 294 := by decide +kernel
+private theorem grade_55 : gradeUpper 55 = 252 := by decide +kernel
+private theorem grade_56 : gradeUpper 56 = 215 := by decide +kernel
+private theorem grade_57 : gradeUpper 57 = 179 := by decide +kernel
+private theorem grade_58 : gradeUpper 58 = 149 := by decide +kernel
+private theorem grade_59 : gradeUpper 59 = 121 := by decide +kernel
+private theorem grade_60 : gradeUpper 60 = 96 := by decide +kernel
+private theorem grade_61 : gradeUpper 61 = 76 := by decide +kernel
+private theorem grade_62 : gradeUpper 62 = 58 := by decide +kernel
+private theorem grade_63 : gradeUpper 63 = 42 := by decide +kernel
+private theorem grade_64 : gradeUpper 64 = 30 := by decide +kernel
+private theorem grade_65 : gradeUpper 65 = 21 := by decide +kernel
+private theorem grade_66 : gradeUpper 66 = 13 := by decide +kernel
+private theorem grade_67 : gradeUpper 67 = 7 := by decide +kernel
+private theorem grade_68 : gradeUpper 68 = 3 := by decide +kernel
 
-private theorem grade_0 : gradeUpper 0 = 49 := by decide +kernel
-private theorem grade_1 : gradeUpper 1 = 144 := by decide +kernel
-private theorem grade_2 : gradeUpper 2 = 282 := by decide +kernel
-private theorem grade_3 : gradeUpper 3 = 460 := by decide +kernel
-private theorem grade_4 : gradeUpper 4 = 675 := by decide +kernel
-private theorem grade_5 : gradeUpper 5 = 924 := by decide +kernel
-private theorem grade_6 : gradeUpper 6 = 1204 := by decide +kernel
-private theorem grade_7 : gradeUpper 7 = 1512 := by decide +kernel
-private theorem grade_8 : gradeUpper 8 = 1845 := by decide +kernel
-private theorem grade_9 : gradeUpper 9 = 2200 := by decide +kernel
-private theorem grade_10 : gradeUpper 10 = 2535 := by decide +kernel
-private theorem grade_11 : gradeUpper 11 = 2850 := by decide +kernel
-private theorem grade_12 : gradeUpper 12 = 3108 := by decide +kernel
-private theorem grade_13 : gradeUpper 13 = 3312 := by decide +kernel
-private theorem grade_14 : gradeUpper 14 = 3465 := by decide +kernel
-private theorem grade_15 : gradeUpper 15 = 3570 := by decide +kernel
-private theorem grade_16 : gradeUpper 16 = 3630 := by decide +kernel
-private theorem grade_17 : gradeUpper 17 = 3648 := by decide +kernel
-private theorem grade_18 : gradeUpper 18 = 3627 := by decide +kernel
-private theorem grade_19 : gradeUpper 19 = 3570 := by decide +kernel
-private theorem grade_20 : gradeUpper 20 = 3480 := by decide +kernel
-private theorem grade_21 : gradeUpper 21 = 3360 := by decide +kernel
-private theorem grade_22 : gradeUpper 22 = 3240 := by decide +kernel
-private theorem grade_23 : gradeUpper 23 = 3120 := by decide +kernel
-private theorem grade_24 : gradeUpper 24 = 3000 := by decide +kernel
-private theorem grade_25 : gradeUpper 25 = 2880 := by decide +kernel
-private theorem grade_26 : gradeUpper 26 = 2760 := by decide +kernel
-private theorem grade_27 : gradeUpper 27 = 2640 := by decide +kernel
-private theorem grade_28 : gradeUpper 28 = 2520 := by decide +kernel
-private theorem grade_29 : gradeUpper 29 = 2400 := by decide +kernel
-private theorem grade_30 : gradeUpper 30 = 2281 := by decide +kernel
-private theorem grade_31 : gradeUpper 31 = 2163 := by decide +kernel
-private theorem grade_32 : gradeUpper 32 = 2047 := by decide +kernel
-private theorem grade_33 : gradeUpper 33 = 1933 := by decide +kernel
-private theorem grade_34 : gradeUpper 34 = 1822 := by decide +kernel
-private theorem grade_35 : gradeUpper 35 = 1712 := by decide +kernel
-private theorem grade_36 : gradeUpper 36 = 1604 := by decide +kernel
-private theorem grade_37 : gradeUpper 37 = 1500 := by decide +kernel
-private theorem grade_38 : gradeUpper 38 = 1400 := by decide +kernel
-private theorem grade_39 : gradeUpper 39 = 1300 := by decide +kernel
-private theorem grade_40 : gradeUpper 40 = 1205 := by decide +kernel
-private theorem grade_41 : gradeUpper 41 = 1115 := by decide +kernel
-private theorem grade_42 : gradeUpper 42 = 1025 := by decide +kernel
-private theorem grade_43 : gradeUpper 43 = 941 := by decide +kernel
-private theorem grade_44 : gradeUpper 44 = 860 := by decide +kernel
-private theorem grade_45 : gradeUpper 45 = 782 := by decide +kernel
-private theorem grade_46 : gradeUpper 46 = 710 := by decide +kernel
-private theorem grade_47 : gradeUpper 47 = 639 := by decide +kernel
-private theorem grade_48 : gradeUpper 48 = 575 := by decide +kernel
-private theorem grade_49 : gradeUpper 49 = 511 := by decide +kernel
-private theorem grade_50 : gradeUpper 50 = 455 := by decide +kernel
-private theorem grade_51 : gradeUpper 51 = 399 := by decide +kernel
-private theorem grade_52 : gradeUpper 52 = 350 := by decide +kernel
-private theorem grade_53 : gradeUpper 53 = 302 := by decide +kernel
-private theorem grade_54 : gradeUpper 54 = 260 := by decide +kernel
-private theorem grade_55 : gradeUpper 55 = 221 := by decide +kernel
-private theorem grade_56 : gradeUpper 56 = 185 := by decide +kernel
-private theorem grade_57 : gradeUpper 57 = 155 := by decide +kernel
-private theorem grade_58 : gradeUpper 58 = 125 := by decide +kernel
-private theorem grade_59 : gradeUpper 59 = 100 := by decide +kernel
-private theorem grade_60 : gradeUpper 60 = 80 := by decide +kernel
-private theorem grade_61 : gradeUpper 61 = 60 := by decide +kernel
-private theorem grade_62 : gradeUpper 62 = 44 := by decide +kernel
-private theorem grade_63 : gradeUpper 63 = 32 := by decide +kernel
-private theorem grade_64 : gradeUpper 64 = 22 := by decide +kernel
-private theorem grade_65 : gradeUpper 65 = 13 := by decide +kernel
-private theorem grade_66 : gradeUpper 66 = 7 := by decide +kernel
-private theorem grade_67 : gradeUpper 67 = 3 := by decide +kernel
-
-private theorem grade_table (s : Fin 68) : gradeUpper s.val = gradeTable s := by
+private theorem grade_table (s : Fin 69) : gradeUpper s.val = gradeTable s := by
   fin_cases s
   · exact grade_0
   · exact grade_1
@@ -173,12 +173,12 @@ private theorem grade_table (s : Fin 68) : gradeUpper s.val = gradeTable s := by
   · exact grade_65
   · exact grade_66
   · exact grade_67
+  · exact grade_68
 
-
-def blockUpper : ℕ := 100948
+def blockUpper : ℕ := 104045
 
 private theorem envelope_upper_eq : envelopeUpper = blockUpper := by
-  change (∑ s : Fin 68, gradeUpper s.val) = _
+  change (∑ s : Fin 69, gradeUpper s.val) = _
   simp_rw [grade_table]
   decide +kernel
 
@@ -186,18 +186,18 @@ theorem strict_source_surplus : 262144 * blockUpper < Fintype.card SourceIndex :
   rw [source_card]
   decide
 
-abbrev Block := Fin 68 × Fin 69
+abbrev Block := Fin 69 × Fin 70
 def balance (q : Block) : ℤ := (q.2.val : ℤ) - 20
 abbrev ColFiber (q : Block) :=
   (e : Fin (min q.1.val 9 + 1)) ×
-    {a : Fin (min (q.1.val - e.val) (20 - 2 * e.val) + 1) //
-      0 ≤ balance q + a.val + 2 * e.val ∧ balance q + a.val + 2 * e.val < 49}
+    {a : Fin (min (q.1.val - e.val) (derivativeCap e.val) + 1) //
+      0 ≤ balance q + a.val + 2 * e.val ∧ balance q + a.val + 2 * e.val < 50}
 abbrev Col := (q : Block) × ColFiber q
 
 abbrev RowFiber (q : Block) :=
   (b : Fin (q.1.val + 1)) × {f : Fin (q.1.val - b.val + 1) //
     (b.val : ℤ) ≤ balance q + q.1.val + f.val ∧
-      balance q + q.1.val + f.val + 2 * b.val < 49}
+      balance q + q.1.val + f.val + 2 * b.val < 50}
 abbrev Row := (q : Block) × RowFiber q
 
 theorem colFiber_card (q : Block) : Fintype.card (ColFiber q) = columnCount q.1.val (balance q) := by
@@ -206,23 +206,23 @@ theorem colFiber_card (q : Block) : Fintype.card (ColFiber q) = columnCount q.1.
   simp only [Fintype.card_subtype]
   unfold columnCount
   let value (e : ℕ) : ℕ :=
-    (min (min ((q.1.val : ℤ)-e) (20-2*(e:ℤ))) (48-balance q-2*e) -
+    (min (min ((q.1.val : ℤ)-e) (derivativeCap e : ℤ)) (49-balance q-2*e) -
       max 0 (-balance q - 2*e) + 1).toNat
   change _ = ∑ e ∈ Finset.range (min q.1.val 9 + 1), value e
   rw [← Fin.sum_univ_eq_sum_range value]
   apply Finset.sum_congr rfl
   intro e _
-  have hf : (Finset.univ.filter fun a : Fin (min (q.1.val-e.val) (20-2*e.val)+1) =>
-      0 ≤ balance q + a.val + 2*e.val ∧ balance q + a.val + 2*e.val < 49) =
-    (Finset.univ.filter fun a : Fin (min (q.1.val-e.val) (20-2*e.val)+1) =>
-      -balance q - 2*e.val ≤ (a.val:ℤ) ∧ (a.val:ℤ) ≤ 48-balance q-2*e.val) := by
+  have hf : (Finset.univ.filter fun a : Fin (min (q.1.val-e.val) (derivativeCap e.val)+1) =>
+      0 ≤ balance q + a.val + 2*e.val ∧ balance q + a.val + 2*e.val < 50) =
+    (Finset.univ.filter fun a : Fin (min (q.1.val-e.val) (derivativeCap e.val)+1) =>
+      -balance q - 2*e.val ≤ (a.val:ℤ) ∧ (a.val:ℤ) ≤ 49-balance q-2*e.val) := by
     ext a
     simp only [Finset.mem_filter, Finset.mem_univ, true_and]
     omega
   rw [hf, fin_interval_card]
   have he := e.isLt
-  have hcast : ((min (q.1.val-e.val) (20-2*e.val)+1 : ℕ) : ℤ)-1 =
-      min ((q.1.val:ℤ)-e.val) (20-2*(e.val:ℤ)) := by omega
+  have hcast : ((min (q.1.val-e.val) (derivativeCap e.val)+1 : ℕ) : ℤ)-1 =
+      min ((q.1.val:ℤ)-e.val) (derivativeCap e.val : ℤ) := by omega
   rw [hcast]
 
 theorem rowFiber_card (q : Block) : Fintype.card (RowFiber q) =
@@ -235,10 +235,10 @@ theorem rowFiber_card (q : Block) : Fintype.card (RowFiber q) =
   rw [Fintype.card_subtype]
   have hf : (Finset.univ.filter fun f : Fin (q.1.val - b.val + 1) ↦
       (b.val : ℤ) ≤ balance q + q.1.val + f.val ∧
-        balance q + q.1.val + f.val + 2 * b.val < 49) =
+        balance q + q.1.val + f.val + 2 * b.val < 50) =
       (Finset.univ.filter fun f : Fin (q.1.val - b.val + 1) ↦
         max 0 (-(balance q)) - q.1.val + b.val ≤ (f.val : ℤ) ∧
-          (f.val : ℤ) ≤ 49 - balance q - q.1.val - 1 - 2 * b.val) := by
+          (f.val : ℤ) ≤ 50 - balance q - q.1.val - 1 - 2 * b.val) := by
     ext f
     simp only [Finset.mem_filter, Finset.mem_univ, true_and]
     have hb := b.isLt
@@ -262,13 +262,13 @@ def rowExponent (i : Row) : LocalVariable 2 →₀ ℕ :=
   Finsupp.single (localY (0 : Fin 2)) (i.1.1.val - i.2.1.val - i.2.2.1.val) +
   Finsupp.single (localY (1 : Fin 2)) i.2.2.1.val
 
-theorem rowExponent_contact (i : Row) : localContactOrder 2 (rowExponent i) < 49 := by
+theorem rowExponent_contact (i : Row) : localContactOrder 2 (rowExponent i) < 50 := by
   have hp := i.2.2.2
   rw [localContactOrder_eq]
   simp [rowExponent, localT, localE, localAux, localY]
   omega
 
-def rowOriginal (i : Row) : LowContactIndex 2 49 := ⟨rowExponent i, rowExponent_contact i⟩
+def rowOriginal (i : Row) : LowContactIndex 2 50 := ⟨rowExponent i, rowExponent_contact i⟩
 
 theorem rowExponent_jet (i : Row) :
     (rowExponent i).weight (localJetDegreeWeight 2) = i.1.1.val := by
@@ -296,13 +296,13 @@ theorem colOriginal_balance (j : Col) :
   simp only [colOriginal, e1, e2]
   omega
 
-theorem low_column_represented (i : SourceIndex) (hx : i.2.val < 49) :
+theorem low_column_represented (i : SourceIndex) (hx : i.2.val < 50) :
     ∃ j : Col, colOriginal j = i := by
   rcases i with ⟨⟨s,e,a⟩,x⟩
-  change x.val < 49 at hx
+  change x.val < 50 at hx
   have ho := jet_order (⟨s,e,a⟩ : Jet)
   simp only [e1, e2] at ho
-  let gi : Fin 69 := ⟨((x.val : ℤ) - a.val - 2 * e.val + 20).toNat, by omega⟩
+  let gi : Fin 70 := ⟨((x.val : ℤ) - a.val - 2 * e.val + 20).toNat, by omega⟩
   let q : Block := ⟨s,gi⟩
   have hgi : balance q = (x.val : ℤ) - a.val - 2 * e.val := by
     dsimp [balance,q,gi]
@@ -319,35 +319,35 @@ theorem low_column_represented (i : SourceIndex) (hx : i.2.val < 49) :
 
 variable {F : Type*} [Field F]
 
-theorem point_entry_constraint (r : LowContactIndex 2 49) (j : SourceIndex) :
-    pointMatrix (F := F) 49 0 0 r j =
-      (localConstraintAt 49 0 0 (columns j).polynomial).coeff r.val := by
+theorem point_entry_constraint (r : LowContactIndex 2 50) (j : SourceIndex) :
+    pointMatrix (F := F) 50 0 0 r j =
+      (localConstraintAt 50 0 0 (columns j).polynomial).coeff r.val := by
   change (unscaledLocalSubstitution 2 (0 : F) 0 (columns j).polynomial).coeff r.val = _
   simp only [localConstraintAt, LinearMap.comp_apply, AlgHom.toLinearMap_apply,
     coeff_projectLowContact, ite_eq_left r.property]
 
-theorem high_column_zero (j : SourceIndex) (hx : 49 ≤ j.2.val) :
-    (pointMatrix (F := F) 49 0 0).col j = 0 := by
+theorem high_column_zero (j : SourceIndex) (hx : 50 ≤ j.2.val) :
+    (pointMatrix (F := F) 50 0 0).col j = 0 := by
   ext r
-  rw [Matrix.col_apply, point_entry_constraint, origin_high_X_zero 49 j hx]
+  rw [Matrix.col_apply, point_entry_constraint, origin_high_X_zero 50 j hx]
   simp
 
 /-- Every actual nonzero coefficient has a representative in the finite envelope. -/
-theorem nonzero_row_represented (r : LowContactIndex 2 49) (j : SourceIndex)
-    (hne : pointMatrix (F := F) 49 0 0 r j ≠ 0) :
+theorem nonzero_row_represented (r : LowContactIndex 2 50) (j : SourceIndex)
+    (hne : pointMatrix (F := F) 50 0 0 r j ≠ 0) :
     ∃ i : Row, rowOriginal i = r := by
-  have hx : j.2.val < 49 := by
+  have hx : j.2.val < 50 := by
     by_contra hh
     have hz := high_column_zero (F := F) j (by omega)
     exact hne (congrFun hz r)
   have hs : r.val.weight (localJetDegreeWeight 2) = j.1.1.val := by
     by_contra hh
     exact hne ((point_entry_constraint r j).trans
-      (origin_coefficient_zero_of_jet_ne 49 j r.val hh))
+      (origin_coefficient_zero_of_jet_ne 50 j r.val hh))
   have hg : r.val.weight localBalance = (j.2.val : ℤ) - e1 j.1 - 2 * e2 j.1 := by
     by_contra hh
     exact hne ((point_entry_constraint r j).trans
-      (origin_coefficient_zero_of_balance_ne 49 j r.val hh))
+      (origin_coefficient_zero_of_balance_ne 50 j r.val hh))
   have he : r.val (localE 2) ≤ r.val (localT 2) := by
     apply localE_le_localT_of_mem_support (0 : F) 0 (columns j).polynomial
     exact mem_support_iff.mpr hne
@@ -356,7 +356,7 @@ theorem nonzero_row_represented (r : LowContactIndex 2 49) (j : SourceIndex)
   have hsj := row_jet_formula r.val
   have hgj := row_balance_formula r.val
   have ho := jet_order j.1
-  let gi : Fin 69 := ⟨((j.2.val : ℤ) - e1 j.1 - 2 * e2 j.1 + 20).toNat, by omega⟩
+  let gi : Fin 70 := ⟨((j.2.val : ℤ) - e1 j.1 - 2 * e2 j.1 + 20).toNat, by omega⟩
   let q : Block := ⟨j.1.1,gi⟩
   have hq : balance q = (j.2.val : ℤ) - e1 j.1 - 2 * e2 j.1 := by
     dsimp [balance,q,gi]
@@ -391,7 +391,7 @@ theorem nonzero_row_represented (r : LowContactIndex 2 49) (j : SourceIndex)
       simp [rowExponent, localT, localE, localAux, localY, i,b,f]
 
 def finiteMatrix : Matrix Row Col F :=
-  (pointMatrix 49 (0 : F) 0).submatrix rowOriginal colOriginal
+  (pointMatrix 50 (0 : F) 0).submatrix rowOriginal colOriginal
 
 /-- Actual origin coefficients vanish between different s,g blocks. -/
 theorem finiteMatrix_offblock (i : Row) (j : Col) (hne : i.1 ≠ j.1) :
@@ -418,42 +418,42 @@ theorem finiteMatrix_rank : (finiteMatrix (F := F)).rank ≤ blockUpper := by
   apply (rank_le_sum_min_dependent (finiteMatrix (F := F)) finiteMatrix_offblock).trans
   simp_rw [rowFiber_card, colFiber_card]
   rw [Fintype.sum_prod_type]
-  change (∑ s : Fin 68, ∑ gi : Fin 69,
+  change (∑ s : Fin 69, ∑ gi : Fin 70,
     min (rowCountEnvelope s.val ((gi.val : ℤ) - 20))
       (columnCount s.val ((gi.val : ℤ) - 20))) ≤ blockUpper
   simp_rw [min_comm]
   exact envelope_upper_eq.le
 
-/-- Restrict the actual origin columns to X<49 without increasing the rank. -/
+/-- Restrict the actual origin columns to X<50 without increasing the rank. -/
 theorem origin_rank_le_low_columns :
-    (pointMatrix (F := F) 49 0 0).rank ≤
-      ((pointMatrix (F := F) 49 0 0).submatrix id colOriginal).rank := by
+    (pointMatrix (F := F) 50 0 0).rank ≤
+      ((pointMatrix (F := F) 50 0 0).submatrix id colOriginal).rank := by
   apply rank_le_col_representatives
   intro j
-  by_cases hx : j.2.val < 49
+  by_cases hx : j.2.val < 50
   · obtain ⟨c,hc⟩ := low_column_represented j hx
     exact Or.inr ⟨c,by rw [hc]⟩
   · exact Or.inl (high_column_zero j (by omega))
 
 /-- Every nonzero low-column row is represented by the finite target envelope. -/
 theorem low_columns_rank_le_finite :
-    ((pointMatrix (F := F) 49 0 0).submatrix id colOriginal).rank ≤
+    ((pointMatrix (F := F) 50 0 0).submatrix id colOriginal).rank ≤
       (finiteMatrix (F := F)).rank := by
   classical
   apply rank_le_row_representatives
   intro r
-  by_cases hz : ((pointMatrix (F := F) 49 0 0).submatrix id colOriginal) r = 0
+  by_cases hz : ((pointMatrix (F := F) 50 0 0).submatrix id colOriginal) r = 0
   · exact Or.inl hz
   · right
     obtain ⟨c,hc⟩ := Function.ne_iff.mp hz
-    have hc' : pointMatrix (F := F) 49 0 0 r (colOriginal c) ≠ 0 := hc
+    have hc' : pointMatrix (F := F) 50 0 0 r (colOriginal c) ≠ 0 := hc
     obtain ⟨i,hi⟩ := nonzero_row_represented r (colOriginal c) hc'
     refine ⟨i, ?_⟩
-    exact congrArg (fun r : LowContactIndex 2 49 ↦
-      ((pointMatrix (F := F) 49 0 0).submatrix id colOriginal) r) hi.symm
+    exact congrArg (fun r : LowContactIndex 2 50 ↦
+      ((pointMatrix (F := F) 50 0 0).submatrix id colOriginal) r) hi.symm
 
 /-- Kernel-checked static origin rank, valid over every coefficient field. -/
-theorem origin_rank : (pointMatrix (F := F) 49 0 0).rank ≤ blockUpper :=
+theorem origin_rank : (pointMatrix (F := F) 50 0 0).rank ≤ blockUpper :=
   origin_rank_le_low_columns.trans (low_columns_rank_le_finite.trans finiteMatrix_rank)
 
 end

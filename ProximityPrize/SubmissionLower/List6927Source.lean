@@ -11,13 +11,16 @@ noncomputable section
 open MvPolynomial PolynomialDifferential ReedSolomon.HiddenDerivative
 open scoped BigOperators
 
-abbrev Jet := (s : Fin 68) × (e2 : Fin (min s.val 9 + 1)) ×
-  Fin (min (s.val - e2.val) (20 - 2 * e2.val) + 1)
+def derivativeCap (e : ℕ) : ℕ :=
+  min (20 - 2*e) ((47 - 5*e)/2)
+
+abbrev Jet := (s : Fin 69) × (e2 : Fin (min s.val 9 + 1)) ×
+  Fin (min (s.val - e2.val) (derivativeCap e2.val) + 1)
 
 def e1 (j : Jet) : ℕ := j.2.2.val
 def e2 (j : Jet) : ℕ := j.2.1.val
 def e0 (j : Jet) : ℕ := j.1.val - e2 j - e1 j
-def width (j : Jet) : ℕ := 49 * 180139 - 131072 * j.1.val + e1 j + 2 * e2 j
+def width (j : Jet) : ℕ := 50 * 180071 - 131072 * j.1.val + e1 j + 2 * e2 j
 abbrev SourceIndex := (j : Jet) × Fin (width j)
 
 def columns (i : SourceIndex) : SourceColumn 2 where
@@ -31,18 +34,22 @@ theorem jet_total (j : Jet) : e0 j + e1 j + e2 j = j.1.val := by
   simp only [e0, e1, e2]
   omega
 
-theorem jet_order (j : Jet) : e1 j + 2 * e2 j ≤ 20 := by
-  have h1 := j.2.2.isLt
-  simp only [e1, e2]
+theorem jet_orders (j : Jet) : e1 j + 2*e2 j ≤ 20 ∧ 2*e1 j + 5*e2 j ≤ 47 := by
+  have h := j.2.2.isLt
+  have he := j.2.1.isLt
+  unfold derivativeCap at h
+  unfold e1 e2
   omega
 
-theorem width_lower (j : Jet) : 44987 ≤ width j := by
+theorem jet_order (j : Jet) : e1 j + 2 * e2 j ≤ 20 := (jet_orders j).1
+
+theorem width_lower (j : Jet) : 90654 ≤ width j := by
   have hs := j.1.isLt
   unfold width
   omega
 
 theorem source_weight_lt (i : SourceIndex) :
-    i.2.val + 131072 * e0 i.1 + 131071 * e1 i.1 + 131070 * e2 i.1 < 49 * 180139 := by
+    i.2.val + 131072 * e0 i.1 + 131071 * e1 i.1 + 131070 * e2 i.1 < 50 * 180071 := by
   have hs := i.1.1.isLt
   have ht := jet_total i.1
   have hx := i.2.isLt
@@ -68,13 +75,13 @@ theorem columns_injective : Function.Injective columns := by
   subst xb
   rfl
 
-theorem columns_y0_le (i : SourceIndex) : (columns i).y₀ ≤ 67 := by
+theorem columns_y0_le (i : SourceIndex) : (columns i).y₀ ≤ 68 := by
   have ht := jet_total i.1
   have hs := i.1.1.isLt
-  change e0 i.1 ≤ 67
+  change e0 i.1 ≤ 68
   omega
 
-theorem columns_total_le (i : SourceIndex) : totalJetDegree (columns i).exponent ≤ 67 := by
+theorem columns_total_le (i : SourceIndex) : totalJetDegree (columns i).exponent ≤ 68 := by
   rw [SourceColumn.totalJetDegree_exponent]
   have ht := jet_total i.1
   have hs := i.1.1.isLt
@@ -82,19 +89,19 @@ theorem columns_total_le (i : SourceIndex) : totalJetDegree (columns i).exponent
   omega
 
 theorem columns_weight_lt (i : SourceIndex) :
-    Finsupp.weight (differentialWeight 131072) (columns i).exponent < 49 * 180139 := by
+    Finsupp.weight (differentialWeight 131072) (columns i).exponent < 50 * 180071 := by
   simpa [SourceColumn.weight_exponent, columns, differentialWeight, Fin.sum_univ_two,
     Nat.add_assoc, Nat.mul_comm] using
     source_weight_lt i
 
 def sourceTotal : ℕ := ∑ j : Jet, width j
 
-theorem jet_count : Fintype.card Jet = 6960 := by decide +kernel
-theorem source_total : sourceTotal = 26471237490 := by decide +kernel
+theorem jet_count : Fintype.card Jet = 6965 := by decide +kernel
+theorem source_total : sourceTotal = 27275940547 := by decide +kernel
 
-/-- Cardinality is a sum over7194 jet triples, never an enumeration of the
-26471237490-dimensional full source index. -/
-theorem source_card : Fintype.card SourceIndex = 26471237490 := by
+/-- Cardinality is a sum over 6,965 jet triples, never an enumeration of the
+27275940547-dimensional full source index. -/
+theorem source_card : Fintype.card SourceIndex = 27275940547 := by
   rw [Fintype.card_sigma]
   simp only [Fintype.card_fin]
   exact source_total
@@ -106,8 +113,8 @@ theorem jet_top (j : Jet) : e2 j ≤ 9 := by
   omega
 
 def Eligible (x a b c : ℕ) : Prop :=
-  a + b + c ≤ 67 ∧ b + 2 * c ≤ 20 ∧ c ≤ 9 ∧
-    x + 131072 * a + 131071 * b + 131070 * c < 49 * 180139
+  a + b + c ≤ 68 ∧ b + 2 * c ≤ 20 ∧ c ≤ 9 ∧ 2*b + 5*c ≤ 47 ∧
+    x + 131072 * a + 131071 * b + 131070 * c < 50 * 180071
 
 theorem columns_eligible (i : SourceIndex) :
     Eligible (columns i).x (columns i).y₀ ((columns i).higher 0) ((columns i).higher 1) := by
@@ -116,6 +123,7 @@ theorem columns_eligible (i : SourceIndex) :
   have ho := jet_order i.1
   have hw := source_weight_lt i
   have htop := jet_top i.1
+  have hcut := (jet_orders i.1).2
   simp only [Eligible, columns, Matrix.cons_val_zero, Matrix.cons_val_one]
   omega
 
@@ -123,11 +131,11 @@ theorem columns_eligible (i : SourceIndex) :
 actual Sigma-Fin source family; no monomials are lost by the indexing scheme. -/
 theorem index_of_eligible (x a b c : ℕ) (h : Eligible x a b c) :
     ∃ i : SourceIndex, columns i = { x := x, y₀ := a, higher := ![b,c] } := by
-  obtain ⟨htotal, horder, htop, hweight⟩ := h
-  let s : Fin 68 := ⟨a + b + c, by omega⟩
+  obtain ⟨htotal, horder, htop, hcut, hweight⟩ := h
+  let s : Fin 69 := ⟨a + b + c, by omega⟩
   let f2 : Fin (min s.val 9 + 1) := ⟨c, by dsimp [s]; omega⟩
-  let f1 : Fin (min (s.val - f2.val) (20 - 2 * f2.val) + 1) :=
-    ⟨b, by dsimp [s, f2]; omega⟩
+  let f1 : Fin (min (s.val - f2.val) (derivativeCap f2.val) + 1) :=
+    ⟨b, by dsimp [s, f2, derivativeCap]; omega⟩
   let j : Jet := ⟨s, f2, f1⟩
   have h0 : e0 j = a := by dsimp [e0, e1, e2, j, s, f1, f2]; omega
   have h1 : e1 j = b := rfl
@@ -148,14 +156,17 @@ def sourceOrderWeight : JetVariable 2 → ℕ
 def sourceTopWeight : JetVariable 2 → ℕ :=
   fun i => i.elim 0 (Pi.single (2 : Fin 3) (1 : ℕ))
 
+def splitWeight : JetVariable 2 → ℕ := fun i => i.elim 0 ![0,2,5]
+
 def sourceSpan (F : Type*) [Field F] : Submodule F (DifferentialPolynomial F 2) :=
   Submodule.span F (Set.range fun i : SourceIndex ↦ (columns i).polynomial)
 
 def sourceBand (F : Type*) [Field F] : Submodule F (DifferentialPolynomial F 2) :=
-  restrictWeightAtMost (R := F) (differentialWeight 131072) 8826810 ⊓
-    (restrictWeightAtMost (R := F) jetDegreeWeight 67 ⊓
+  restrictWeightAtMost (R := F) (differentialWeight 131072) 9003549 ⊓
+    (restrictWeightAtMost (R := F) jetDegreeWeight 68 ⊓
       (restrictWeightAtMost (R := F) sourceOrderWeight 20 ⊓
-        restrictWeightAtMost (R := F) sourceTopWeight 9))
+        (restrictWeightAtMost (R := F) sourceTopWeight 9 ⊓
+          restrictWeightAtMost (R := F) splitWeight 47)))
 
 theorem column_mem_band (i : SourceIndex) : (columns i).polynomial ∈ sourceBand F := by
   classical
@@ -163,7 +174,7 @@ theorem column_mem_band (i : SourceIndex) : (columns i).polynomial ∈ sourceBan
       u = (columns i).exponent := by
     intro u hu
     exact Finset.mem_singleton.mp (support_monomial_subset hu)
-  refine ⟨?_,?_,?_,?_⟩
+  refine ⟨?_,?_,?_,?_,?_⟩
   · apply mem_restrictWeightAtMost.mpr
     intro u hu
     rw [hs u hu]
@@ -184,6 +195,11 @@ theorem column_mem_band (i : SourceIndex) : (columns i).polynomial ∈ sourceBan
     rw [hs u hu]
     simpa [SourceColumn.weight_exponent, columns, sourceTopWeight, Fin.sum_univ_two]
       using jet_top i.1
+  · apply mem_restrictWeightAtMost.mpr
+    intro u hu
+    rw [hs u hu]
+    simpa [SourceColumn.weight_exponent, columns, splitWeight, Fin.sum_univ_two, Nat.mul_comm] using
+      (jet_orders i.1).2
 
 theorem sourceSpan_le_band : sourceSpan F ≤ sourceBand F := by
   apply Submodule.span_le.mpr
@@ -201,11 +217,12 @@ theorem mem_sourceSpan_of_band (Q : DifferentialPolynomial F 2) (hQ : Q ∈ sour
   have hr := mem_restrictWeightAtMost.mp hQ.1 u hu
   have ht := mem_restrictWeightAtMost.mp hQ.2.1 u hu
   have ho := mem_restrictWeightAtMost.mp hQ.2.2.1 u hu
-  have htop := mem_restrictWeightAtMost.mp hQ.2.2.2 u hu
-  rw [← he] at hr ht ho htop
+  have htop := mem_restrictWeightAtMost.mp hQ.2.2.2.1 u hu
+  have hcut := mem_restrictWeightAtMost.mp hQ.2.2.2.2 u hu
+  rw [← he] at hr ht ho htop hcut
   have heligible : Eligible c.x c.y₀ (c.higher 0) (c.higher 1) := by
     simp [SourceColumn.weight_exponent, differentialWeight, jetDegreeWeight,
-      sourceOrderWeight, sourceTopWeight, Fin.sum_univ_succ, Nat.mul_comm] at hr ht ho htop
+      sourceOrderWeight, sourceTopWeight, splitWeight, Fin.sum_univ_succ, Nat.mul_comm] at hr ht ho htop hcut
     unfold Eligible
     omega
   obtain ⟨i,hi⟩ := index_of_eligible c.x c.y₀ (c.higher 0) (c.higher 1) heligible
@@ -228,7 +245,7 @@ theorem sourceSpan_translation (center received : F) (Q : DifferentialPolynomial
     (hQ : Q ∈ sourceSpan F) : globalPointTranslation center received Q ∈ sourceSpan F := by
   apply mem_sourceSpan_of_band
   have hb := sourceSpan_le_band hQ
-  refine ⟨?_,?_,?_,?_⟩
+  refine ⟨?_,?_,?_,?_,?_⟩
   · exact globalPointTranslation_mem_restrictWeightAtMost (by exact Nat.zero_le _)
       (by exact Nat.zero_le _) center received hb.1
   · exact globalPointTranslation_mem_restrictWeightAtMost (by exact Nat.zero_le _)
@@ -236,7 +253,9 @@ theorem sourceSpan_translation (center received : F) (Q : DifferentialPolynomial
   · exact globalPointTranslation_mem_restrictWeightAtMost (by exact Nat.zero_le _)
       (by exact Nat.zero_le _) center received hb.2.2.1
   · exact globalPointTranslation_mem_restrictWeightAtMost (by exact Nat.zero_le _) (by exact Nat.zero_le _)
-      center received hb.2.2.2
+      center received hb.2.2.2.1
+  · exact globalPointTranslation_mem_restrictWeightAtMost (Nat.zero_le _) (Nat.zero_le _)
+      center received hb.2.2.2.2
 
 def pointMatrix (m : ℕ) (center received : F) : Matrix (LowContactIndex 2 m) SourceIndex F :=
   fun row i ↦ localConstraintCoordinatesAt m center received (columns i).polynomial row
@@ -339,8 +358,8 @@ theorem origin_high_X_zero (m : ℕ) (i : SourceIndex) (hlarge : m ≤ (columns 
 
 end Grading
 
-theorem columns_weight147 (i : SourceIndex) :
-    Finsupp.weight (Astra7.jetWeight 1 4 3) (columns i).exponent ≤ 147 := by
+theorem columns_weight148 (i : SourceIndex) :
+    Finsupp.weight (Astra7.jetWeight 1 4 3) (columns i).exponent ≤ 148 := by
   rw [SourceColumn.weight_exponent]
   have ht := jet_total i.1
   have ho := jet_order i.1

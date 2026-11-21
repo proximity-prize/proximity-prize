@@ -19,9 +19,9 @@ abbrev incidenceGap : ℕ := agreement - physicalDegree
 abbrev anchorCutoff : ℕ := 90 * agreement - 1
 abbrev primaryCutoff : ℕ := 3000 * agreement - 1
 abbrev primaryBox : Shape := ⟨4012, 1650, 550⟩
-abbrev sourceRank : ℕ := 1187923627408492908
+abbrev sourceRank : ℕ := 1188934726272953919
 abbrev layerWidth : ℕ := incidenceGap + 3
-abbrev layerNeed : ℕ := 25491923334947
+abbrev layerNeed : ℕ := 25503222425898
 
 /-- Physical weight uses the full Taylor space through the new low endpoint. -/
 def TrueWeightLE {n : ℕ} (P : Row n) (D : ℕ) : Prop :=
@@ -165,11 +165,11 @@ def c4 : Prop :=
 
 /-- The fixed-chart mixed intersection fee is linear in the lower support. -/
 def supportMixed (b j t : ℕ) : ℕ :=
-  65983021807667 * b + 218189755673514 * j + 3388333121990 * t
+  65897075995541 * b + 217905553809510 * j + 3383919678110 * t
 
 def lowerPrice (g : Row 3) : ℕ :=
   supportMixed g.totalDegree (K1_13.indexDegree g) (K1_13.indexDegree g / 2) +
-    4695613894782
+    4694800000000
 
 def factorPrice (t : ℕ) : ℕ :=
   if t ≤ 7 then 222671385202463816 else 229472479831508835

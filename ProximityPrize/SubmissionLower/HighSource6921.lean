@@ -1,4 +1,4 @@
-import ProximityPrize.SubmissionLower.HighSource6921Rank
+import ProximityPrize.SubmissionLower.BankDebit
 
 set_option Elab.async false
 set_option autoImplicit true
@@ -61,13 +61,9 @@ theorem proof : H21.c1 := by
   have h2 := Necessary.proof
   have h3 := Hasse.proof
   have h4 := Weight.proof
-  have h5 := Ambient.proof
-  have h6 := Physical.proof
-  have h7 := Pole.proof
-  have h8 := Telescope.proof
   intro u del M Γ F hlo hhi H hH
-  have lo : 2472 ≤ M.overhead.toNat := by omega
-  have hi : M.overhead.toNat ≤ 32932 := by omega
+  have lo : 2385 ≤ M.overhead.toNat := by omega
+  have hi : M.overhead.toNat ≤ 33068 := by omega
   obtain ⟨D, hnode, hres⟩ := chart_poles M F H hH
   obtain ⟨Crt⟩ := h1 _ lo hi D
   let word (i : I) : L := algebraMap K L (M.word i)
@@ -91,15 +87,9 @@ theorem proof : H21.c1 := by
     exact h4 _ lo hi D Crt word s W P hP hne
   · intro s _ W P hP i r
     exact h3 _ lo hi D Crt word s W P hP i r
-  · intro s _ W _ hW
-    have hvol := h5 _ lo hi s W hW
-    have hcontact := h6 _ lo hi word s W
-    have hpole := h7 _ lo hi D Crt word s W
-    have hsum := h8 _ lo hi D Crt word s W
-    change rawVolumeAt M.overhead.toNat s W ≤
-      (physicalDebit s + poleSeedDebit M.overhead.toNat s) +
-        ∑ t ∈ Finset.range (W+1), Module.finrank FX (evaluated Crt word s t)
-    omega
+  · intro s hs W _ hW
+    obtain ⟨hB, hU⟩ := H21.scheduled_shape hs
+    exact BankDebit.floor _ lo hi D Crt word s W hW hB hU
 
 end
 end HighSource6921

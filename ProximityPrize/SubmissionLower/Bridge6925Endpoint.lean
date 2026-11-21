@@ -46,7 +46,7 @@ theorem first : H21.c2 := by
       simp only [HighMassBridge6921.choose, P0_10.fullShape, P0_10.terminalShape, H21.terminalShape,
         H21.band, ite_eq_left hu]
       rfl
-    have q := HighMassBridge6921.ordinate raw hl (hu.trans (by decide : (3554 : ℤ) ≤ 32932)) f hf
+    have q := HighMassBridge6921.ordinate raw hl (hu.trans (by decide : (3554 : ℤ) ≤ 33068)) f hf
       (by rw [same]; exact hd)
     simpa only [H21.band,ite_eq_left hu] using q
   have result := P0_10R.Bridge.cover P0_10R_1.proof P0_10R_2.proof P0_10R_Late.proof degree

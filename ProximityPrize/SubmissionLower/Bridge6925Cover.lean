@@ -47,7 +47,7 @@ def c2 : Prop :=
     (∀ I ∈ S, Active I ∧ Bridge.PairPass pair I ∧
       ¬ fixedOn A.equation I ∧ ¬ fixedOn B.equation I ∧
       orderOn I pair.free 7 ∧ orderOn I pair.moving 7) →
-    mass S 1 ≤ 65143 ∧ mass S 2 ≤ 358008 ∧ Fits (S.filter dual) reserveFiveCap
+    mass S 1 ≤ 64220 ∧ mass S 2 ≤ 348044 ∧ Fits (S.filter dual) reserveFiveCap
 
 def lateMass : Prop :=
   ∀ (w : ℤ), lowCutoff + 1 ≤ w → w ≤ 3554 →
@@ -65,7 +65,7 @@ def c3 : Prop :=
   ∀ u del (M : AnchorModel u del) Γ (F : AnchoredFamily M Γ),
     lowCutoff + 1 ≤ M.overhead → M.overhead ≤ 3554 →
     ∀ rows, JetSource M F rows → ∀ f : Equation, f ≠ 0 →
-    FullDivisibility M.overhead rows f → f.natDegree ≤ 12
+    FullDivisibility M.overhead rows f → f.natDegree ≤ 14
 
 end
 
@@ -180,11 +180,11 @@ theorem cover (h1 : c1) (h2 : c2) (nextMass : lateMass) (h3 : c3) :
       exact failed_terminal src hhi (fun h => hnot (Finset.mem_filter.mpr ⟨hb, h⟩)))
   let fixed₄ := Γ.filter fun γ => fixedAt Af.equation (F.scalar γ) = 0
   let fixed₅ := Γ.filter fun γ => fixedAt Bf.equation (F.scalar γ) = 0
-  have fshape : freeShape M.overhead 2 = ⟨230,319,66,4045⟩ := by rw [freeShape,ite_eq_left hhi]; rfl
+  have fshape : freeShape M.overhead 2 = ⟨216,299,66,3130⟩ := by rw [freeShape,ite_eq_left hhi]; rfl
   have mshape := moving_late M.overhead hhi
-  have paid₄ : fixed₄.card ≤ fixedPrice 319 66 :=
+  have paid₄ : fixed₄.card ≤ fixedPrice 299 66 :=
     fixed_group_count hhi (by simpa only [fshape] using Af.equation_caps) (by decide) (by decide) (by decide)
-  have paid₅ : fixed₅.card ≤ fixedPrice 837 168 :=
+  have paid₅ : fixed₅.card ≤ fixedPrice 890 185 :=
     fixed_group_count hhi (by simpa only [mshape,stageLateShape] using Bf.equation_caps) (by decide) (by decide) (by decide)
   let Cₜ : K1_14_2_2.CutCover :=
     ⟨(Cm.direct ∪ Ce.direct) ∪ (fixed₄ ∪ fixed₅), Cm.curves ∪ Ce.curves,
@@ -234,29 +234,29 @@ theorem cover (h1 : c1) (h2 : c2) (nextMass : lateMass) (h3 : c3) :
   let fixed₂ := Γ.filter fun γ => fixedAt A₅.equation (F.scalar γ) = 0
   let fixed₃ := Γ.filter fun γ => fixedAt B₅.equation (F.scalar γ) = 0
   let rank := Γ.filter fun γ => fixedAt G (F.scalar γ) = 0
-  have shape₀ : freeShape M.overhead 0 = ⟨55,76,16,1360⟩ := by
+  have shape₀ : freeShape M.overhead 0 = ⟨57,79,17,1160⟩ := by
     rw [freeShape, ite_eq_left hhi]
     rfl
-  have shape₁ : movingShape M.overhead 0 = ⟨160,222,46,6927⟩ := by
+  have shape₁ : movingShape M.overhead 0 = ⟨191,265,55,6963⟩ := by
     rw [movingShape, ite_eq_left hhi]
     rfl
-  have shape₂ : freeShape M.overhead 1 = ⟨91,126,27,2072⟩ := by
+  have shape₂ : freeShape M.overhead 1 = ⟨96,133,29,1557⟩ := by
     rw [freeShape, ite_eq_left hhi]
     rfl
   have shape₃ := moving_five M.overhead hhi
-  have fixed₀_paid : fixed₀.card ≤ fixedPrice 76 16 :=
+  have fixed₀_paid : fixed₀.card ≤ fixedPrice 79 17 :=
     fixed_group_count hhi (by simpa only [shape₀] using A₀.equation_caps)
       (by decide) (by decide) (by decide)
-  have fixed₁_paid : fixed₁.card ≤ fixedPrice 222 46 :=
+  have fixed₁_paid : fixed₁.card ≤ fixedPrice 265 55 :=
     fixed_group_count hhi (by simpa only [shape₁] using B₀.equation_caps)
       (by decide) (by decide) (by decide)
-  have fixed₂_paid : fixed₂.card ≤ fixedPrice 126 27 :=
+  have fixed₂_paid : fixed₂.card ≤ fixedPrice 133 29 :=
     fixed_group_count hhi (by simpa only [shape₂] using A₅.equation_caps)
       (by decide) (by decide) (by decide)
-  have fixed₃_paid : fixed₃.card ≤ fixedPrice 369 77 :=
+  have fixed₃_paid : fixed₃.card ≤ fixedPrice 439 92 :=
     fixed_group_count hhi (by simpa only [shape₃, stageFiveShape] using B₅.equation_caps)
       (by decide) (by decide) (by decide)
-  have rank_paid : rank.card ≤ fixedPrice 358008 65143 :=
+  have rank_paid : rank.card ≤ fixedPrice 348044 64220 :=
     fixed_group_count hhi hG (by decide) (by decide) (by decide)
   let keep := Γ.filter fun γ => ∃ I ∈ C, OnParent F I γ
   let paid := initial.direct ∪ fixed₀ ∪ fixed₁ ∪ fixed₂ ∪ fixed₃ ∪ rank ∪
@@ -266,8 +266,8 @@ theorem cover (h1 : c1) (h2 : c2) (nextMass : lateMass) (h3 : c3) :
     have hcst : (C₅.direct ∪ Cₜ.direct).card ≤ constantFee :=
       (Finset.card_union_le _ _).trans hconst'
     calc
-      _ ≤ initialFee + fixedPrice 76 16 + fixedPrice 222 46 + fixedPrice 126 27 +
-          fixedPrice 369 77 + fixedPrice 358008 65143 + constantFee + curveFee := by
+      _ ≤ initialFee + fixedPrice 79 17 + fixedPrice 265 55 + fixedPrice 133 29 +
+          fixedPrice 439 92 + fixedPrice 348044 64220 + constantFee + curveFee := by
         exact card_union_bound
           (card_union_bound
             (card_union_bound
@@ -480,7 +480,7 @@ theorem proof : P0_10R.c1 := by
   have ordinary_exists (f : Equation) (hf : f ∈ prep.ordinary) :=
     ordinary_cover f (prep.ordinary_factors f hf).1 (prep.ordinary_factors f hf).2
       (((Finset.single_le_sum (fun _ _ => Nat.zero_le _) hf).trans prep.ordinary_y).trans_lt
-        (prep.gcdY_le.trans_lt (by decide : 76 < p)))
+        (prep.gcdY_le.trans_lt (by decide : 79 < p)))
   let ordinary (f : Equation) : Finset (Ideal Ambient) :=
     if hf : f ∈ prep.ordinary then Classical.choose (ordinary_exists f hf) else ∅
   have hord (f : Equation) (hf : f ∈ prep.ordinary) :
@@ -540,7 +540,7 @@ theorem proof : P0_10R.c1 := by
     simpa only [seedImage, dite_eq_left hi] using Classical.choose_spec (seed_exists I hi)
   let imageCover := joinCovers noSeeds seedImage
   let seedExits := Γ.filter (fun γ => imageCover.Covers (M.label γ))
-  have hseedExits : seedExits.card ≤ (p+1)*828372 + initialE₀ := by
+  have hseedExits : seedExits.card ≤ (p+1)*857477 + initialE₀ := by
     apply cover_count M _ _ _ _ _ (by decide) _ (fun γ hγ => (Finset.mem_filter.mp hγ).2)
     · calc
         _ ≤ ∑ I ∈ noSeeds, (seedImage I).curve.totalDegree := joinCovers_degree _ _
@@ -555,7 +555,7 @@ theorem proof : P0_10R.c1 := by
         _ ≤ _ := by decide
   let onY (I : Ideal Ambient) := Γ.filter (OnParent F I)
   let yExits := constY.biUnion onY
-  have hyExits : yExits.card ≤ 6312 := by
+  have hyExits : yExits.card ≤ 7915 := by
     calc
       _ ≤ ∑ I ∈ constY, (onY I).card := Finset.card_biUnion_le
       _ ≤ mass constY 0 := by
@@ -573,8 +573,8 @@ theorem proof : P0_10R.c1 := by
       _ ≤ _ := hfit 0
   let contentCover : SeedCover := ⟨prep.seedContent, prep.seedContent_ne, ∅⟩
   let contentExits := Γ.filter (fun γ => graphEval (M.label γ) prep.seedContent = 0)
-  have hcontentExits : contentExits.card ≤ (p+1)*(1360+6927) := by
-    have h := cover_count M contentExits contentCover (1360+6927) 0 prep.seedContent_degree
+  have hcontentExits : contentExits.card ≤ (p+1)*(1160+6963) := by
+    have h := cover_count M contentExits contentCover (1160+6963) 0 prep.seedContent_degree
       (by decide) (by simp [contentCover]) (fun γ hγ => Or.inl (Finset.mem_filter.mp hγ).2)
     simpa only [Nat.add_zero] using h
   let direct := (contentExits ∪ seedExits) ∪ yExits
@@ -585,7 +585,7 @@ theorem proof : P0_10R.c1 := by
       direct.card ≤ (contentExits ∪ seedExits).card + yExits.card := Finset.card_union_le _ _
       _ ≤ contentExits.card + seedExits.card + yExits.card :=
         Nat.add_le_add_right (Finset.card_union_le _ _) _
-      _ ≤ (p+1)*(1360+6927) + ((p+1)*828372 + initialE₀) + 6312 :=
+      _ ≤ (p+1)*(1160+6963) + ((p+1)*857477 + initialE₀) + 7915 :=
         Nat.add_le_add (Nat.add_le_add hcontentExits hseedExits) hyExits
       _ = initialFee := by unfold initialFee; ac_rfl
   · intro γ hγ
@@ -704,8 +704,8 @@ open private numerator numerator_bound seedNumerator ordinateNumerator mixedNume
   jetsNumerator ordinate_endpoints mixed_seed_endpoints mixed_ordinate_endpoints
   jets_endpoints from ProximityPrize.SubmissionLower.Fast032
 
-def bridgeFree : Shape := ⟨91, 126, 27, 2072⟩
-def bridgeMoving : Shape := ⟨266, 369, 77, 10980⟩
+def bridgeFree : Shape := ⟨96,133,29,1557⟩
+def bridgeMoving : Shape := ⟨316,439,92,10562⟩
 
 end
 end P0_10R_2
@@ -813,26 +813,26 @@ theorem proof : P0_10R.c2 := by
   obtain ⟨G⟩ := sharedGcd A B pair.free_ne pair.moving_ne hP hQ pair.no_moving
   let x := seedDegree G.ordinary
   let z := G.ordinary.natDegree
-  have hx : x ≤ 2072 := G.seed_le
-  have hz : z ≤ 126 := G.ordinate_le
+  have hx : x ≤ 1557 := G.seed_le
+  have hz : z ≤ 133 := G.ordinate_le
   have hlocal (I) (hI : I ∈ S) :
       Active I ∧ K1_14_2_2R.chainCompatible pair.free pair.moving I ∧
       ¬ fixedOn A.equation I ∧ ¬ fixedOn B.equation I ∧
       orderOn I pair.free 7 ∧ orderOn I pair.moving 7 :=
     ⟨(hpass I hI).1, (hpass I hI).2.1.2.2, (hpass I hI).2.2⟩
-  refine ⟨paired_stage G S false 1 1 65143 (by decide) (by decide) (by simp) hlocal
+  refine ⟨paired_stage G S false 1 1 64220 (by decide) (by decide) (by simp) hlocal
     (PriceReceipt6925.linear_ordinate x z hx hz),
-    paired_stage G S false 2 2 358008 (by decide) (by decide) (by simp) hlocal
+    paired_stage G S false 2 2 348044 (by decide) (by decide) (by simp) hlocal
     (PriceReceipt6925.linear_mixed x z hx hz), ?_⟩
   intro k
   let T := S.filter dual
   have hdual (_ : true = true) (I) (hI : I ∈ T) : dual I := (Finset.mem_filter.mp hI).2
   have hT (I) (hI : I ∈ T) := hlocal I (Finset.mem_filter.mp hI).1
   fin_cases k
-  · exact paired_stage G T true 0 1 358 (by decide) (by decide) hdual hT (PriceReceipt6925.reserve_square 0 x z hx hz)
-  · exact paired_stage G T true 1 1 9306 (by decide) (by decide) hdual hT (PriceReceipt6925.reserve_square 1 x z hx hz)
-  · exact paired_stage G T true 2 3 85921 (by decide) (by decide) hdual hT (PriceReceipt6925.reserve_square 2 x z hx hz)
-  · exact paired_stage G T true 3 3 910022 (by decide) (by decide) hdual hT (PriceReceipt6925.reserve_square 3 x z hx hz)
+  · exact paired_stage G T true 0 1 455 (by decide) (by decide) hdual hT (PriceReceipt6925.reserve_square 0 x z hx hz)
+  · exact paired_stage G T true 1 1 9174 (by decide) (by decide) hdual hT (PriceReceipt6925.reserve_square 1 x z hx hz)
+  · exact paired_stage G T true 2 3 83530 (by decide) (by decide) hdual hT (PriceReceipt6925.reserve_square 2 x z hx hz)
+  · exact paired_stage G T true 3 2 606062 (by decide) (by decide) hdual hT (PriceReceipt6925.reserve_square 3 x z hx hz)
 
 end
 end P0_10R_2
@@ -925,8 +925,8 @@ open private numerator numerator_bound seedNumerator ordinateNumerator mixedNume
   jetsNumerator ordinate_endpoints mixed_seed_endpoints mixed_ordinate_endpoints
   jets_endpoints from ProximityPrize.SubmissionLower.Fast032
 
-def bridgeFree : Shape := ⟨230, 319, 66, 4045⟩
-def bridgeMoving : Shape := ⟨600, 837, 168, 25162⟩
+def bridgeFree : Shape := ⟨216,299,66,3130⟩
+def bridgeMoving : Shape := ⟨641,890,185,25837⟩
 
 end
 end P0_10R_Late
@@ -1034,8 +1034,8 @@ theorem proof : P0_10R.lateMass := by
   obtain ⟨G⟩ := sharedGcd A B pair.free_ne pair.moving_ne hP hQ pair.no_moving
   let x := seedDegree G.ordinary
   let z := G.ordinary.natDegree
-  have hx : x ≤ 4045 := G.seed_le
-  have hz : z ≤ 319 := G.ordinate_le
+  have hx : x ≤ 3130 := G.seed_le
+  have hz : z ≤ 299 := G.ordinate_le
   have hlocal (I) (hI : I ∈ S) :
       Active I ∧ K1_14_2_2R.chainCompatible pair.free pair.moving I ∧
       ¬ fixedOn A.equation I ∧ ¬ fixedOn B.equation I ∧
@@ -1046,10 +1046,10 @@ theorem proof : P0_10R.lateMass := by
   have hdual (_ : true = true) (I) (hI : I ∈ T) : dual I := (Finset.mem_filter.mp hI).2
   have hT (I) (hI : I ∈ T) := hlocal I (Finset.mem_filter.mp hI).1
   fin_cases k
-  · exact paired_stage G T true 0 3 169 (by decide) (by decide) hdual hT (LateReceipt6928.reserve_square 0 x z hx hz)
-  · exact paired_stage G T true 1 3 4062 (by decide) (by decide) hdual hT (LateReceipt6928.reserve_square 1 x z hx hz)
-  · exact paired_stage G T true 2 9 35223 (by decide) (by decide) hdual hT (LateReceipt6928.reserve_square 2 x z hx hz)
-  · exact paired_stage G T true 3 8 281939 (by decide) (by decide) hdual hT (LateReceipt6928.reserve_square 3 x z hx hz)
+  · exact paired_stage G T true 0 3 176 (by decide) (by decide) hdual hT (LateReceipt6928.reserve_square 0 x z hx hz)
+  · exact paired_stage G T true 1 2 3962 (by decide) (by decide) hdual hT (LateReceipt6928.reserve_square 1 x z hx hz)
+  · exact paired_stage G T true 2 8 29245 (by decide) (by decide) hdual hT (LateReceipt6928.reserve_square 2 x z hx hz)
+  · exact paired_stage G T true 3 7 202174 (by decide) (by decide) hdual hT (LateReceipt6928.reserve_square 3 x z hx hz)
 
 end
 end P0_10R_Late

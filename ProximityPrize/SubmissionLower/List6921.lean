@@ -10,7 +10,7 @@ namespace List6921
 
 open Polynomial PolynomialDifferential ReedSolomon.HiddenDerivative MvPolynomial
 open List6927Source (columns point_rank_le_origin columns_injective columns_y0_le
-  columns_total_le columns_weight147 columns_weight_lt)
+  columns_total_le columns_weight148 columns_weight_lt)
 open List6927Rank (blockUpper origin_rank strict_source_surplus)
 open Astra7 (jetWeight generic_source_weight_le generic_source_weight_lt)
 open scoped BigOperators
@@ -20,8 +20,8 @@ noncomputable section
 
 private theorem constraint_matrix_map {R S : Type*} [CommRing R] [CommRing S]
     (phi : R →+* S) (centers received : Fin 262144 → R) :
-    (localConstraintMatrix 49 centers received columns).map phi =
-      localConstraintMatrix 49 (fun i => phi (centers i)) (fun i => phi (received i)) columns := by
+    (localConstraintMatrix 50 centers received columns).map phi =
+      localConstraintMatrix 50 (fun i => phi (centers i)) (fun i => phi (received i)) columns := by
   ext row j
   simp only [Matrix.map_apply, localConstraintMatrix_apply]
   rw [← MvPolynomial.coeff_map, map_unscaledLocalSubstitution]
@@ -32,18 +32,18 @@ private theorem rank_sum_const (n bound : ℕ) : (∑ _i : Fin n, bound) = n * b
 
 private theorem global_rank_le {R F : Type*} [CommRing R] [Field F]
     (centers received : Fin 262144 → R) (phi : R →+* F) :
-    ((localConstraintMatrix 49 centers received columns).map phi).rank ≤ 262144 * blockUpper := by
+    ((localConstraintMatrix 50 centers received columns).map phi).rank ≤ 262144 * blockUpper := by
   classical
   rw [constraint_matrix_map]
   apply (Matrix.rank_prod_rows_le_sum _).trans
   calc
     (∑ i : Fin 262144, Matrix.rank (fun row j =>
-      localConstraintMatrix 49 (fun k => phi (centers k))
+      localConstraintMatrix 50 (fun k => phi (centers k))
         (fun k => phi (received k)) columns (i,row) j)) ≤
         ∑ _i : Fin 262144, blockUpper := by
       apply Finset.sum_le_sum
       intro i _
-      exact (point_rank_le_origin 49 (phi (centers i)) (phi (received i))).trans origin_rank
+      exact (point_rank_le_origin 50 (phi (centers i)) (phi (received i))).trans origin_rank
     _ = 262144 * blockUpper := rank_sum_const 262144 blockUpper
 
 universe u
@@ -52,19 +52,19 @@ attribute [local instance] Classical.propDecidable
 
 theorem extended_uniform_annihilator {F : Type u} [Field F]
     (domain : Fin 262144 ↪ F) (received : Fin 262144 → F) :
-    ∃ Q : DifferentialPolynomial F 2, Q ≠ 0 ∧ jetTotalDegree Q ≤ 67 ∧
-      Q.weightedTotalDegree (jetWeight 1 4 3) ≤ 147 ∧
-      ∀ P ∈ ReedSolomon.closePolynomialSet domain received 131073 180139,
+    ∃ Q : DifferentialPolynomial F 2, Q ≠ 0 ∧ jetTotalDegree Q ≤ 68 ∧
+      Q.weightedTotalDegree (jetWeight 1 4 3) ≤ 148 ∧
+      ∀ P ∈ ReedSolomon.closePolynomialSet domain received 131073 180071,
         differentialSpecialization Q P=0 := by
   classical
   let K := FractionRing (Polynomial F)
   let phi : Polynomial F →+* K := algebraMap (Polynomial F) K
   have hphi : Function.Injective phi := IsFractionRing.injective (Polynomial F) K
-  have hrank : ((localConstraintMatrix 49 (fun i => Polynomial.C (domain i))
+  have hrank : ((localConstraintMatrix 50 (fun i => Polynomial.C (domain i))
       (fun i => Polynomial.C (received i)) columns).map phi).rank ≤ 262144 * blockUpper :=
     global_rank_le (fun i => Polynomial.C (domain i)) (fun i => Polynomial.C (received i)) phi
   obtain ⟨v,_,hvdegree,hspan,_,hconstraints⟩ :=
-    exists_primitive_interpolant_of_rank_le.{u,0,0,u,u} 49 0 67 (fun i => domain i)
+    exists_primitive_interpolant_of_rank_le.{u,0,0,u,u} 50 0 68 (fun i => domain i)
       (fun i => Polynomial.C (received i)) (by intro i; simp) columns
       columns_injective columns_y0_le phi hphi hrank strict_source_surplus
   let Qs : DifferentialPolynomial (Polynomial F) 2 := SourceColumn.interpolant columns v
@@ -73,10 +73,10 @@ theorem extended_uniform_annihilator {F : Type u} [Field F]
   have hQ0 : Q ≠ 0 := by
     exact SourceColumn.map_interpolant_ne_zero columns_injective psi
       (Ideal.comp_ne_zero_of_span_range_eq_top hspan psi)
-  have hjet : jetTotalDegree Q ≤ 67 :=
+  have hjet : jetTotalDegree Q ≤ 68 :=
     SourceColumn.map_interpolant_jetTotalDegree_le psi columns columns_total_le v
-  have hwt : Q.weightedTotalDegree (jetWeight 1 4 3) ≤ 147 :=
-    generic_source_weight_le psi columns v (jetWeight 1 4 3) 147 columns_weight147
+  have hwt : Q.weightedTotalDegree (jetWeight 1 4 3) ≤ 148 :=
+    generic_source_weight_le psi columns v (jetWeight 1 4 3) 148 columns_weight148
   refine ⟨Q,hQ0,hjet,hwt,?_⟩
   intro P hP
   have hPdegree : P.natDegree ≤ 131072 := by
@@ -84,12 +84,12 @@ theorem extended_uniform_annihilator {F : Type u} [Field F]
     · simp [hz]
     · have hh := (Polynomial.natDegree_lt_iff_degree_lt hz).mpr hP.1
       omega
-  have hQweight : differentialWeightedDegree 131072 Q < 49*180139 :=
-    generic_source_weight_lt psi columns v (differentialWeight 131072) (49*180139)
+  have hQweight : differentialWeightedDegree 131072 Q < 50*180071 :=
+    generic_source_weight_lt psi columns v (differentialWeight 131072) (50*180071)
       (by decide) columns_weight_lt
-  have hlocal : ∀ i, SatisfiesLocalConstraints 49 (domain i) (received i) Q := by
+  have hlocal : ∀ i, SatisfiesLocalConstraints 50 (domain i) (received i) Q := by
     intro i
-    have hh := SatisfiesLocalConstraints.map psi 49 (Polynomial.C (domain i))
+    have hh := SatisfiesLocalConstraints.map psi 50 (Polynomial.C (domain i))
       (Polynomial.C (received i)) Qs (hconstraints i)
     simpa [psi,Q] using hh
   let indices := ReedSolomon.polynomialAgreementSet domain received P
@@ -111,11 +111,11 @@ open Sol1.C42 Sol1.C57 Astra7
 noncomputable section
 variable {F E : Type*} [Field F] [Field E] [CharP E 2130706433]
 
-def I1 : ℚ := 131072 / 49067
+def I1 : ℚ := 131072 / 48999
 def firstOrderCharge (h : ℕ) : ℚ := I1 * h * b h + (h : ℚ) * (h - 1)
 
-def weightedRegularCap : ℚ := (147 : ℚ) / 45 *
-  (((131072 : ℚ)*36700437)/49067)^2
+def weightedRegularCap : ℚ := (148 : ℚ) / 45 *
+  (((131072 : ℚ)*36962583)/48999)^2
 
 private theorem characteristic_not_dvd_weight (j : Fin 3) :
     ¬ 2130706433 ∣ 1 + 4 * j.val := by
@@ -127,18 +127,18 @@ private theorem characteristic_not_dvd_weight (j : Fin 3) :
 theorem weighted_regular_card [CharP F 2130706433]
     (domain : Fin 262144 ↪ F) (received : Fin 262144 → F)
     (Q : DifferentialPolynomial F 2)
-    (hQ : Q.weightedTotalDegree (jetWeight 1 4 3) ≤ 147)
+    (hQ : Q.weightedTotalDegree (jetWeight 1 4 3) ≤ 148)
     (S : Finset (Polynomial F))
     (hsep : ∀ P ∈ S, differentialSpecialization (separant Q (Fin.last 2)) P ≠ 0)
-    (hS : ∀ P ∈ S, P ∈ directJetAgreementSolutions Q domain received 131073 180139) :
+    (hS : ∀ P ∈ S, P ∈ directJetAgreementSolutions Q domain received 131073 180071) :
     (S.card : ℚ) ≤ weightedRegularCap := by
   classical
   have hchar : ∀ j : Fin 3, ((1+4*j.val : ℕ) : F) ≠ 0 := by
     intro j hz
     exact characteristic_not_dvd_weight j
       ((CharP.cast_eq_zero_iff F 2130706433 (1 + 4 * j.val)).mp hz)
-  have hh := weighted_regular_polynomial_card (r := 2) (n := 262144) (k := 131073) (A := 180139)
-    1 4 147 (by decide) (by decide) hchar Q hQ
+  have hh := weighted_regular_polynomial_card (r := 2) (n := 262144) (k := 131073) (A := 180071)
+    1 4 148 (by decide) (by decide) hchar Q hQ
     (by decide) (by decide) domain received Astra7.native_choose_two S
     (fun P hP => (hS P hP).2.1) (fun P hP => (hS P hP).1) hsep
     (fun P hP => (hS P hP).2.2)
@@ -153,15 +153,15 @@ theorem regular_top_card_le_at_agreement (d : ℕ) (hd : d ≤ 2)
     (hhighest : highestActiveJet Q = some (Fin.last d)) (hweight : jetTotalDegree Q ≤ nu)
     (S : Finset E[X])
     (hsep : ∀ P ∈ S, differentialSpecialization (separant Q (Fin.last d)) P ≠ 0)
-    (hS : ∀ P ∈ S, P ∈ directJetAgreementSolutions Q domain received 131073 180139) :
-    (S.card : ℚ) ≤ dimensionSensitiveIncidenceProduct 262144 180139 131073 1 d * nu *
+    (hS : ∀ P ∈ S, P ∈ directJetAgreementSolutions Q domain received 131073 180071) :
+    (S.card : ℚ) ≤ dimensionSensitiveIncidenceProduct 262144 180071 131073 1 d * nu *
       ((1 + 2 * 131073 * (nu - 1) : ℕ) : ℚ) ^ d := by
   have hactual := finite_actualStage_regularSolutions_card_le_dimensionSensitive Q (Fin.last d)
     hhighest 131073 131073 (by omega) le_rfl domain received (by norm_num) (by norm_num)
     (fun r hr ↦ Sol1.C40Primitives.native_binomial_guard r (hr.trans hd)) S hsep hS
   exact hactual.trans (directJetStageCharge_le_weight_order (Q, Fin.last d)
-    262144 180139 131073 131073 nu d (by norm_num) hweight (by simp))
-theorem incidence_one : dimensionSensitiveIncidenceProduct 262144 180139 131073 1 1 = I1 := by
+    262144 180071 131073 131073 nu d (by norm_num) hweight (by simp))
+theorem incidence_one : dimensionSensitiveIncidenceProduct 262144 180071 131073 1 1 = I1 := by
   norm_num [dimensionSensitiveIncidenceProduct, I1]
 theorem firstOrderCharge_ge (h : ℕ) : (h : ℚ) ≤ firstOrderCharge h := by
   have hi : (1 : ℚ) ≤ I1 := by norm_num [I1]
@@ -181,7 +181,7 @@ theorem first_order_card_le_at_agreement
     (domain : Fin 262144 ↪ E) (received : Fin 262144 → E)
     (Q : DifferentialPolynomial E 1) (hQ : Q ≠ 0) (h : ℕ) (hbound : h < 2130706433)
     (hweight : jetTotalDegree Q ≤ h) (S : Finset E[X])
-    (hS : ∀ P ∈ S, P ∈ directJetAgreementSolutions Q domain received 131073 180139) :
+    (hS : ∀ P ∈ S, P ∈ directJetAgreementSolutions Q domain received 131073 180071) :
     (S.card : ℚ) ≤ firstOrderCharge h := by
   classical
   let G := regularPart 0 Q
@@ -239,24 +239,24 @@ theorem first_order_card_le_at_agreement
       _ ≤ I1 * h * b h + ((h * (h - 1) : ℕ) : ℚ) :=
         add_le_add hreg (by exact_mod_cast hexc)
       _ = firstOrderCharge h := by rw [Sol1.C57.cast_mul_pred]; rfl
-def weightedFullCharge : ℚ := weightedRegularCap + firstOrderCharge 4422
-def weightedListCap : ℕ := 31410688579691704
+def weightedFullCharge : ℚ := weightedRegularCap + firstOrderCharge 4556
+def weightedListCap : ℕ := 32167385631760994
 
 theorem weighted_budget_exact : weightedFullCharge ≤ weightedListCap := by
   norm_num [weightedFullCharge, weightedRegularCap, firstOrderCharge, I1, b, weightedListCap]
 
 theorem weighted_second_order_card [CharP F 2130706433]
     (domain : Fin 262144 ↪ F) (received : Fin 262144 → F)
-    (Q : DifferentialPolynomial F 2) (hQ : Q ≠ 0) (hjet : jetTotalDegree Q ≤ 67)
-    (hwt : Q.weightedTotalDegree (jetWeight 1 4 3) ≤ 147)
+    (Q : DifferentialPolynomial F 2) (hQ : Q ≠ 0) (hjet : jetTotalDegree Q ≤ 68)
+    (hwt : Q.weightedTotalDegree (jetWeight 1 4 3) ≤ 148)
     (S : Finset F[X])
-    (hS : ∀ P ∈ S, P ∈ directJetAgreementSolutions Q domain received 131073 180139) :
+    (hS : ∀ P ∈ S, P ∈ directJetAgreementSolutions Q domain received 131073 180071) :
     (S.card : ℚ) ≤ weightedFullCharge := by
   classical
   let G := regularPart 1 Q
   have hsplit := split_weight 1 Q
-  have hGjet : jetTotalDegree G ≤ 67 := by dsimp [G]; omega
-  have hGwt : G.weightedTotalDegree (jetWeight 1 4 3) ≤ 147 :=
+  have hGjet : jetTotalDegree G ≤ 68 := by dsimp [G]; omega
+  have hGwt : G.weightedTotalDegree (jetWeight 1 4 3) ≤ 148 :=
     (weightedTotalDegree_le_of_dvd (jetWeight 1 4 3) (Astra7.regularPart_dvd 1 Q) hQ).trans hwt
   have hchar : ringChar F=0 ∨ jetDegree Q (Fin.last 2) < ringChar F := by
     right
@@ -267,7 +267,7 @@ theorem weighted_second_order_card [CharP F 2130706433]
   by_cases hb : jetDegree G (Fin.last 2)=0
   · have hGone : G=1 := regular_eq_one_of_degree_zero 1 Q hb
     have hlow : ∀ P ∈ S, P ∈ directJetAgreementSolutions (lowerPart 1 Q)
-        domain received 131073 180139 := by
+        domain received 131073 180071 := by
       intro P hP
       refine ⟨?_,(hS P hP).2⟩
       rcases root_split 1 Q hQ P (hS P hP).1 with hc | hr
@@ -277,9 +277,9 @@ theorem weighted_second_order_card [CharP F 2130706433]
         have hz : (1 : F[X])=0 := by
           simpa only [differentialSpecialization,map_one] using hr
         exact (one_ne_zero hz).elim
-    have hlowjet : jetTotalDegree (lowerPart 1 Q) ≤ 4422 := by omega
+    have hlowjet : jetTotalDegree (lowerPart 1 Q) ≤ 4556 := by omega
     have hc := first_order_card_le_at_agreement domain received (lowerPart 1 Q) (lower_ne_zero 1 Q)
-      4422 (by decide) hlowjet S hlow
+      4556 (by decide) hlowjet S hlow
     exact hc.trans (le_add_of_nonneg_left hcost)
   · have hbpos : 0 < jetDegree G (Fin.last 2) := by omega
     let good : F[X] → Prop := fun P => differentialSpecialization G P=0 ∧
@@ -295,12 +295,12 @@ theorem weighted_second_order_card [CharP F 2130706433]
         exact ⟨hp.2.1,(hS P hp.1).2⟩
     let R := exceptionalEquation 1 Q
     have hR : R ≠ 0 := exceptional_ne_zero 1 Q hchar
-    have hRjet : jetTotalDegree R ≤ 4422 := by
-      have hh := exceptional_weight_sharp 1 Q 67 hjet
+    have hRjet : jetTotalDegree R ≤ 4556 := by
+      have hh := exceptional_weight_sharp 1 Q 68 hjet
         (hbpos.trans_le (jetDegree_le_total G (Fin.last 2)))
       exact hh
-    have he : (exceptional.card : ℚ) ≤ firstOrderCharge 4422 := by
-      apply first_order_card_le_at_agreement domain received R hR 4422 (by decide) hRjet exceptional
+    have he : (exceptional.card : ℚ) ≤ firstOrderCharge 4556 := by
+      apply first_order_card_le_at_agreement domain received R hR 4556 (by decide) hRjet exceptional
       intro P hP
       have hp := Finset.mem_filter.mp hP
       refine ⟨?_,(hS P hp.1).2⟩
@@ -311,25 +311,25 @@ theorem weighted_second_order_card [CharP F 2130706433]
       Finset.card_filter_add_card_filter_not (s := S) (p := good)
     calc
       (S.card : ℚ)=(regular.card : ℚ)+exceptional.card := by exact_mod_cast hc.symm
-      _ ≤ weightedRegularCap+firstOrderCharge 4422 := add_le_add hr he
+      _ ≤ weightedRegularCap+firstOrderCharge 4556 := add_le_add hr he
       _ = weightedFullCharge := rfl
 
 attribute [local instance] Classical.propDecidable
 
 theorem weighted_complete_list [CharP F 2130706433]
     (domain : Fin 262144 ↪ F) (received : Fin 262144 → F) :
-    (ReedSolomon.closePolynomialSet domain received 131073 180139).Finite ∧
-      (ReedSolomon.closePolynomialSet domain received 131073 180139).ncard ≤ weightedListCap := by
+    (ReedSolomon.closePolynomialSet domain received 131073 180071).Finite ∧
+      (ReedSolomon.closePolynomialSet domain received 131073 180071).ncard ≤ weightedListCap := by
   classical
   obtain ⟨Q,hQ,hjet,hwt,hsound⟩ := extended_uniform_annihilator domain received
   have hf : ∀ S : Finset F[X],
-      (S : Set F[X]) ⊆ ReedSolomon.closePolynomialSet domain received 131073 180139 →
+      (S : Set F[X]) ⊆ ReedSolomon.closePolynomialSet domain received 131073 180071 →
       S.card ≤ weightedListCap := by
     intro S hS
     have hh := weighted_second_order_card domain received Q hQ hjet hwt S
       (fun P hP => ⟨hsound P (hS hP),hS hP⟩)
     exact_mod_cast hh.trans weighted_budget_exact
-  have hfin : (ReedSolomon.closePolynomialSet domain received 131073 180139).Finite := by
+  have hfin : (ReedSolomon.closePolynomialSet domain received 131073 180071).Finite := by
     by_contra hi
     obtain ⟨S,hS,hcard⟩ := Set.Infinite.exists_subset_card_eq hi (weightedListCap+1)
     have hh := hf S hS
@@ -341,8 +341,8 @@ theorem weighted_complete_list [CharP F 2130706433]
 local instance : DecidableEq Sol1.C42.NativeK := Classical.decEq _
 
 theorem native_weighted_complete_list (received : Sol1.C42.NativeIndex → Sol1.C42.NativeK) :
-    (ReedSolomon.closePolynomialSet ProximityPrize.Benchmark.IRSProfile.domain received 131073 180139).Finite ∧
-      (ReedSolomon.closePolynomialSet ProximityPrize.Benchmark.IRSProfile.domain received 131073 180139).ncard ≤
+    (ReedSolomon.closePolynomialSet ProximityPrize.Benchmark.IRSProfile.domain received 131073 180071).Finite ∧
+      (ReedSolomon.closePolynomialSet ProximityPrize.Benchmark.IRSProfile.domain received 131073 180071).ncard ≤
         weightedListCap := by
   let := Sol1.C42.native_charP
   exact weighted_complete_list ProximityPrize.Benchmark.IRSProfile.domain received
@@ -360,11 +360,11 @@ set_option maxHeartbeats 0
 local instance : DecidableEq K := Classical.decEq K
 local instance : DecidableEq A16 := Classical.decEq A16
 
-def radius6921 : ℝ := (335893008 : ℝ) / 1073741824
+def radius6921 : ℝ := (164147 : ℝ) / 524288
 
 /-- Original scalar RS words lie in the proved augmented ordinary polynomial list. -/
 theorem finset_scalar_list_card_le (w : I → K) (P : Finset (I → K))
-    (hP : ∀ f ∈ P, f ∈ scalarCode ∧ 180139 ≤ agreementCard f w) : P.card ≤ List6921.weightedListCap := by
+    (hP : ∀ f ∈ P, f ∈ scalarCode ∧ 180071 ≤ agreementCard f w) : P.card ≤ List6921.weightedListCap := by
   classical
   have : NeZero (131072 : ℕ) := ⟨by norm_num⟩
   choose poly hdegree heval using fun f : P ↦
@@ -383,14 +383,14 @@ theorem finset_scalar_list_card_le (w : I → K) (P : Finset (I → K))
     rw [Finset.card_image_of_injective _ hinj]
     simp
   have hpolys : (polys : Set K[X]) ⊆
-      ReedSolomon.closePolynomialSet IRSProfile.domain w 131073 180139 := by
+      ReedSolomon.closePolynomialSet IRSProfile.domain w 131073 180071 := by
     intro q hq
     obtain ⟨f,_hf,rfl⟩ := Finset.mem_image.mp hq
     refine ⟨?_, ?_⟩
     · have hd : (poly f).natDegree < 131073 := (hdegree f).trans (by norm_num)
       exact (Polynomial.degree_le_natDegree).trans_lt (by exact_mod_cast hd)
     · have hword : (fun i ↦ (poly f).eval (IRSProfile.domain i)) = f.val := funext (heval f)
-      change 180139 ≤ agreementCard (fun i ↦ (poly f).eval (IRSProfile.domain i)) w
+      change 180071 ≤ agreementCard (fun i ↦ (poly f).eval (IRSProfile.domain i)) w
       rw [hword]
       exact (hP f.val f.property).2
   obtain ⟨hfinite,hbound⟩ := List6921.native_weighted_complete_list w
@@ -403,31 +403,31 @@ theorem list_projection_room : (List6921.weightedListCap + 1) ^ 2 ≤ Fintype.ca
 
 /-- The actual alphabet is Fin2 -> Fin8 -> K; flattening only reindexes its rows. -/
 theorem finset_squared_list_card_le (w : I → A16) (P : Finset (I → A16))
-    (hP : ∀ f ∈ P, f ∈ squaredCode ∧ 180139 ≤ agreementCard f w) : P.card ≤ List6921.weightedListCap := by
+    (hP : ∀ f ∈ P, f ∈ squaredCode ∧ 180071 ≤ agreementCard f w) : P.card ≤ List6921.weightedListCap := by
   classical
   let flattened := P.image flatten
   have hflat : ∀ f ∈ flattened,
       (∀ r : R16, (fun i ↦ f i r) ∈ scalarCode) ∧
-        180139 ≤ agreementCard f (flatten w) := by
+        180071 ≤ agreementCard f (flatten w) := by
     intro f hf
     obtain ⟨g,hg,rfl⟩ := Finset.mem_image.mp hf
     obtain ⟨hcode,hagree⟩ := hP g hg
     exact ⟨flatten_rows_mem g hcode,hagree.trans (flatten_agreement_le g w)⟩
-  have hcount := finset_vector_list_card_le scalarCode 180139 List6921.weightedListCap list_projection_room
+  have hcount := finset_vector_list_card_le scalarCode 180071 List6921.weightedListCap list_projection_room
     finset_scalar_list_card_le (flatten w) flattened hflat
   have hcard : flattened.card = P.card := Finset.card_image_of_injective P flatten_injective
   rwa [hcard] at hcount
 
 theorem close_agreement_ge (f w : I → A16)
-    (hd : (δᵣ(w,f) : ℝ) ≤ radius6921) : 180139 ≤ agreementCard f w := by
+    (hd : (δᵣ(w,f) : ℝ) ≤ radius6921) : 180071 ≤ agreementCard f w := by
   classical
   have hpos : 0 < Fintype.card I := by norm_num [I,IRSProfile.Index]
-  have hradius : radius6921 ≤ 1 - (360277 / 2 : ℝ) / Fintype.card I := by
+  have hradius : radius6921 ≤ 1 - (360141 / 2 : ℝ) / Fintype.card I := by
     norm_num [radius6921,I,IRSProfile.Index]
-  have hagree : (360277 / 2 : ℝ) ≤ Code.agree f w :=
+  have hagree : (360141 / 2 : ℝ) ≤ Code.agree f w :=
     (Code.relHammingDist_le_one_sub_div_iff hpos).mp (hd.trans hradius)
-  have hcast : (180138 : ℝ) < (agreementCard f w : ℝ) := by
-    change (360277 / 2 : ℝ) ≤ (agreementCard f w : ℝ) at hagree
+  have hcast : (180070 : ℝ) < (agreementCard f w : ℝ) := by
+    change (360141 / 2 : ℝ) ≤ (agreementCard f w : ℝ) at hagree
     linarith
   exact Nat.succ_le_of_lt (by exact_mod_cast hcast)
 /-- Actual maximized independent IRS16 list term, with no MCA or list hypothesis. -/

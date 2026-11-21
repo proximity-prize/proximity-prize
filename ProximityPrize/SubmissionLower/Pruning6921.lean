@@ -1,7 +1,7 @@
 import ProximityPrize.SubmissionLower.Fast069
 
 /- The punctured-domain support transport is adapted from Dadon's PR 627, Fast067.
-The agreement count, pruning cutoff and both Johnson certificates are for 69.25. -/
+The agreement count, pruning cutoff and both Johnson certificates are for the 69.35-bit target. -/
 namespace Row6921
 noncomputable section
 open Polynomial Finset FrobeniusLocator ProximityPrize.Benchmark K1 CoreDefinitions Code
@@ -13,7 +13,7 @@ set_option maxHeartbeats 1500000
 local instance : NeZero (131072 : ℕ) := ⟨by decide⟩
 abbrev ShortenedCap (n cap : ℕ) : Prop :=
   ∀ (d : Finset I), d.card ≤ n → ∀ u v (Γ : Finset K),
-    (∀ γ ∈ Γ, K1_2.Pruning.BadOn node u v 131072 180139 d γ) → Γ.card ≤ cap
+    (∀ γ ∈ Γ, K1_2.Pruning.BadOn node u v 131072 180071 d γ) → Γ.card ≤ cap
 
 private def rolling (f : ℕ → ℕ) : ℕ → ℕ
   | 0 => 0
@@ -27,15 +27,15 @@ private theorem rolling_eq (f : ℕ → ℕ) (n : ℕ) :
 
 private theorem shortened_from_weighted (N cap m B H : ℕ)
     (hB : B ≤ 2 * 131071 + 1)
-    (hcert : ∀ n ≤ N, IsJohnsonWeightedCertificate n 131071 180139 m B
-      (johnsonWeightedHeight n 131071 180139 m B))
-    (hheight : ∀ n ≤ N, johnsonWeightedHeight n 131071 180139 m B ≤ H)
-    (hprice : ⌊johnsonWeightedRefinedExceptionCount N 131071 180139 B H⌋ ≤ (cap : ℤ)) :
+    (hcert : ∀ n ≤ N, IsJohnsonWeightedCertificate n 131071 180071 m B
+      (johnsonWeightedHeight n 131071 180071 m B))
+    (hheight : ∀ n ≤ N, johnsonWeightedHeight n 131071 180071 m B ≤ H)
+    (hprice : ⌊johnsonWeightedRefinedExceptionCount N 131071 180071 B H⌋ ≤ (cap : ℤ)) :
     ShortenedCap N cap := by
   classical
   letI : DecidableEq K := Classical.decEq K
   intro D hD u v Γ hΓ
-  by_cases hA : 180139 ≤ D.card
+  by_cases hA : 180071 ≤ D.card
   swap
   · have hzero : Γ = ∅ := by
       apply eq_empty_iff_forall_notMem.mpr
@@ -67,7 +67,7 @@ private theorem shortened_from_weighted (N cap m B H : ℕ)
       intro j hj
       obtain ⟨i, _, rfl⟩ := mem_map.mp hj
       exact hhits i
-    have hA' : 180139 ≤ hits.card := hAS.trans (by simpa using card_le_card hinj)
+    have hA' : 180071 ≤ hits.card := hAS.trans (by simpa using card_le_card hinj)
     obtain ⟨pair, h0, h1, _, hsets⟩ := hexact γ hnormal P hP (by simpa only [hits] using hA')
     change hits = ReedSolomon.commonPolynomialAgreementSet x u' v' pair.1 pair.2 at hsets
     have hboth (i : S) : pair.1.eval (node i.val) = u i.val ∧
@@ -78,10 +78,10 @@ private theorem shortened_from_weighted (N cap m B H : ℕ)
         x, Function.Embedding.coeFn_mk, u', v', hf] using hi
     exact hnonjoint ⟨⟨pair.1, h0, fun i hi => (hboth ⟨i, hi⟩).1⟩,
       ⟨pair.2, h1, fun i hi => (hboth ⟨i, hi⟩).2⟩⟩
-  have hmono : johnsonWeightedRefinedExceptionCount D.card 131071 180139 B
-      (johnsonWeightedHeight D.card 131071 180139 m B) ≤
-      johnsonWeightedRefinedExceptionCount N 131071 180139 B H := by
-    let h := johnsonWeightedHeight D.card 131071 180139 m B
+  have hmono : johnsonWeightedRefinedExceptionCount D.card 131071 180071 B
+      (johnsonWeightedHeight D.card 131071 180071 m B) ≤
+      johnsonWeightedRefinedExceptionCount N 131071 180071 B H := by
+    let h := johnsonWeightedHeight D.card 131071 180071 m B
     have hh : h ≤ H := hheight D.card hD
     have hN : D.card - 131071 ≤ N - 131071 := Nat.sub_le_sub_right hD _
     have hN' : D.card - 131071 - 1 ≤ N - 131071 - 1 := Nat.sub_le_sub_right hN _
@@ -101,7 +101,7 @@ private theorem shortened_from_weighted (N cap m B H : ℕ)
         · exact div_nonneg (Nat.cast_nonneg _) (Nat.cast_nonneg _)
     · exact_mod_cast Nat.mul_le_mul_right B hN'
   have hΓq : (Γ.card : ℚ) ≤
-      johnsonWeightedRefinedExceptionCount N 131071 180139 B H :=
+      johnsonWeightedRefinedExceptionCount N 131071 180071 B H :=
     (show (Γ.card : ℚ) ≤ exceptions.card by exact_mod_cast card_le_card hsub).trans
       (hcard.trans hmono)
   have hΓz := (Int.le_floor.mpr (by exact_mod_cast hΓq)).trans hprice
@@ -109,15 +109,15 @@ private theorem shortened_from_weighted (N cap m B H : ℕ)
 
 
 private theorem moments247107 :
-    johnsonWeightedN 131071 180139 151 207 = 2836109224 ∧
-    johnsonWeightedW 131071 180139 151 207 = 195248210352 ∧
-    johnsonWeightedR 151 207 = 11476 ∧ johnsonWeightedT 151 207 = 573800 := by
+    johnsonWeightedN 131071 180071 237 325 = 6969159377 ∧
+    johnsonWeightedW 131071 180071 237 325 = 754068399500 ∧
+    johnsonWeightedR 237 325 = 28203 ∧ johnsonWeightedT 237 325 = 2218636 := by
   unfold johnsonWeightedN johnsonWeightedW johnsonWeightedR johnsonWeightedT johnsonWeightedU
   simp only [← rolling_eq]
   decide +kernel
 
-theorem puncture_247107 : ShortenedCap 247039 12562139547086 := by
-  apply shortened_from_weighted 247039 12562139547086 151 207 49095 (by decide)
+theorem puncture_247107 : ShortenedCap 246971 21621876754460 := by
+  apply shortened_from_weighted 246971 21621876754460 237 325 53731 (by decide)
   · intro n hn
     refine ⟨by decide, by decide, by decide, ?_, rfl⟩
     rw [moments247107.1, moments247107.2.2.1]
@@ -125,25 +125,25 @@ theorem puncture_247107 : ShortenedCap 247039 12562139547086 := by
   · intro n hn
     unfold johnsonWeightedHeight johnsonWeightedHeightInt johnsonWeightedMoment johnsonWeightedSlope
     rw [moments247107.1, moments247107.2.1, moments247107.2.2.1, moments247107.2.2.2]
-    change (max (207 : ℤ) ((195248210352 - (n : ℤ) * 573800) /
-      (2836109224 - (n : ℤ) * 11476))).toNat ≤ 49095
-    have hn' : (n : ℤ) ≤ 247039 := by exact_mod_cast hn
-    have hden : 0 < (2836109224 : ℤ) - n * 11476 := by omega
-    have hquot : (195248210352 - (n : ℤ) * 573800) / (2836109224 - n * 11476) < 49096 :=
+    change (max (325 : ℤ) ((754068399500 - (n : ℤ) * 2218636) /
+      (6969159377 - (n : ℤ) * 28203))).toNat ≤ 53731
+    have hn' : (n : ℤ) ≤ 246971 := by exact_mod_cast hn
+    have hden : 0 < (6969159377 : ℤ) - n * 28203 := by omega
+    have hquot : (754068399500 - (n : ℤ) * 2218636) / (6969159377 - n * 28203) < 53732 :=
       (Int.ediv_lt_iff_lt_mul hden).mpr (by omega)
     omega
   · norm_num [johnsonWeightedRefinedExceptionCount]
 
 private theorem moments247716 :
-    johnsonWeightedN 131071 180139 899 1235 = 100126652466 ∧
-    johnsonWeightedW 131071 180139 899 1235 = 41203847229220 ∧
-    johnsonWeightedR 899 1235 = 404550 ∧ johnsonWeightedT 899 1235 = 121095300 := by
+    johnsonWeightedN 131071 180071 2131 2927 = 561909237240 ∧
+    johnsonWeightedW 131071 180071 2131 2927 = 548172425466448 ∧
+    johnsonWeightedR 2131 2927 = 2271646 ∧ johnsonWeightedT 2131 2927 = 1612868660 := by
   unfold johnsonWeightedN johnsonWeightedW johnsonWeightedR johnsonWeightedT johnsonWeightedU
   simp only [← rolling_eq]
   decide +kernel
 
-theorem puncture_247716 : ShortenedCap 247465 1174666577117268 := by
-  apply shortened_from_weighted 247465 1174666577117268 899 1235 765113 (by decide)
+theorem puncture_247716 : ShortenedCap 247342 15189180114023447 := by
+  apply shortened_from_weighted 247342 15189180114023447 2131 2927 4172005 (by decide)
   · intro n hn
     refine ⟨by decide, by decide, by decide, ?_, rfl⟩
     rw [moments247716.1, moments247716.2.2.1]
@@ -151,52 +151,52 @@ theorem puncture_247716 : ShortenedCap 247465 1174666577117268 := by
   · intro n hn
     unfold johnsonWeightedHeight johnsonWeightedHeightInt johnsonWeightedMoment johnsonWeightedSlope
     rw [moments247716.1, moments247716.2.1, moments247716.2.2.1, moments247716.2.2.2]
-    change (max (1235 : ℤ) ((41203847229220 - (n : ℤ) * 121095300) /
-      (100126652466 - (n : ℤ) * 404550))).toNat ≤ 765113
-    have hn' : (n : ℤ) ≤ 247465 := by exact_mod_cast hn
-    have hden : 0 < (100126652466 : ℤ) - n * 404550 := by omega
-    have hquot : (41203847229220 - (n : ℤ) * 121095300) / (100126652466 - n * 404550) < 765114 :=
+    change (max (2927 : ℤ) ((548172425466448 - (n : ℤ) * 1612868660) /
+      (561909237240 - (n : ℤ) * 2271646))).toNat ≤ 4172005
+    have hn' : (n : ℤ) ≤ 247342 := by exact_mod_cast hn
+    have hden : 0 < (561909237240 : ℤ) - n * 2271646 := by omega
+    have hquot : (548172425466448 - (n : ℤ) * 1612868660) / (561909237240 - n * 2271646) < 4172006 :=
       (Int.ediv_lt_iff_lt_mul hden).mpr (by omega)
     omega
   · norm_num [johnsonWeightedRefinedExceptionCount]
 
-abbrev block (u : Words) := stacked p node (u 0) (u 1) 49067 82005
+abbrev block (u : Words) := stacked p node (u 0) (u 1) 48999 82073
 abbrev nullity (u : Words) := GenericLayer.genericNullity (block u)
-abbrev firstRank (u : Words) := GenericLayer.genericRank (hankel node (u 0) (u 1) 49067 82005)
-def radius : ℝ := (claimedRadius 335893008 1073741824 : ℝ)
+abbrev firstRank (u : Words) := GenericLayer.genericRank (hankel node (u 0) (u 1) 48999 82073)
+def radius : ℝ := (claimedRadius 164147 524288 : ℝ)
 def BadFamily (u : Words) (Γ : Finset K) : Prop :=
   ∀ γ ∈ Γ, IsMCA (AffineLineGenerator K) IRSProfile.baseCode γ u radius
 
-theorem count_nullity_le_six (u : Words) (hfirst : firstRank u = 49067)
+theorem count_nullity_le_six (u : Words) (hfirst : firstRank u = 48999)
     (hr : nullity u ≤ 6) (Γ : Finset K) (hΓ : BadFamily u Γ) :
-    Γ.card ≤ 177894666251477101 := by
-  obtain ⟨W⟩ := K1_2.Pruning.witnessFamily_of_MCA IRSProfile.domain u 131072 180139
+    Γ.card ≤ 178334486367517276 := by
+  obtain ⟨W⟩ := K1_2.Pruning.witnessFamily_of_MCA IRSProfile.domain u 131072 180071
     (by omega) radius (by
       intro T hT
       norm_num [IRSProfile.card_index,radius,claimedRadius] at hT
       by_contra! h
-      have he : (T.card : ℝ) ≤ 180138 := by exact_mod_cast (show T.card ≤ 180138 by omega)
+      have he : (T.card : ℝ) ≤ 180070 := by exact_mod_cast (show T.card ≤ 180070 by omega)
       linarith) Γ hΓ
-  have hcore : K1_2.Pruning.PuncturedCap node 131072 180139 66900 12562139547086 :=
+  have hcore : K1_2.Pruning.PuncturedCap node 131072 180071 66900 21621876754460 :=
     puncture_247107
   let φ := algebraMap K[X] Frac
   have h := K1_2.Pruning.stacked_pruning_count_of_card p φ (IsFractionRing.injective K[X] Frac)
     node IRSProfile.domain.injective Native.native_domain_fixed (u 0) (u 1)
-    262144 131072 180139 49067 66900 12562139547086 IRSProfile.card_index
+    262144 131072 180071 48999 66900 21621876754460 IRSProfile.card_index
     (by decide) (by decide) hfirst hcore Γ W
   let R := GenericLayer.genericRank (block u)
-  have hsum : R + nullity u = 82006 := by
+  have hsum : R + nullity u = 82074 := by
     simpa [R, nullity, block] using GenericLayer.rank_add_nullity (block u)
-  change (Γ.card : ℚ) ≤ K1_2.Pruning.bound (49067+p*(R-49067)) 12562139547086
-    (1+(180139 : ℚ)/(66900+1)) (82006-R) at h
-  have hn : 82006-R = nullity u := by omega
-  have hg : R-49067 = 32939-nullity u := by omega
+  change (Γ.card : ℚ) ≤ K1_2.Pruning.bound (48999+p*(R-48999)) 21621876754460
+    (1+(180071 : ℚ)/(66900+1)) (82074-R) at h
+  have hn : 82074-R = nullity u := by omega
+  have hg : R-48999 = 33075-nullity u := by omega
   rw [hn,hg] at h
   generalize nullity u = r at h hr
-  have bound : K1_2.Pruning.bound (49067+p*(32939-r)) 12562139547086
-      (1+(180139 : ℚ)/(66900+1)) r < 177894666251477102 := by
+  have bound : K1_2.Pruning.bound (48999+p*(33075-r)) 21621876754460
+      (1+(180071 : ℚ)/(66900+1)) r < 178334486367517277 := by
     interval_cases r <;> norm_num [K1_2.Pruning.bound, K1.p, Native.p]
-  have hfinal : Γ.card < 177894666251477102 := by exact_mod_cast lt_of_le_of_lt h bound
+  have hfinal : Γ.card < 178334486367517277 := by exact_mod_cast lt_of_le_of_lt h bound
   omega
 
 end

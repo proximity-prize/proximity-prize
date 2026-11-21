@@ -65,9 +65,9 @@ open private pair_membership from ProximityPrize.SubmissionLower.Hi6921P3Split
 
 private def Certificate (s : Shape) (r mode : ℕ) : Prop :=
   0 < worstBase s + 3555 * worstSlope s r ∧
-  0 < worstBase s + 32932 * worstSlope s r ∧
+  0 < worstBase s + 33068 * worstSlope s r ∧
   0 < surplusBase s + 3555 * surplusSlope s r mode ∧
-  0 < surplusBase s + 32932 * surplusSlope s r mode
+  0 < surplusBase s + 33068 * surplusSlope s r mode
 
 private def stageCheck (i : Fin 4) : Prop :=
   Certificate (cheapShape i) (reserve i) 0 ∧
@@ -81,33 +81,33 @@ set_option maxHeartbeats 0 in
 set_option maxRecDepth 16000 in
 private theorem certificates : ∀ i : Fin 4, stageCheck i := by decide +kernel
 
-private theorem affine_positive {a b h : ℤ} (hlo : 3555 ≤ h) (hhi : h ≤ 32932)
-    (ha : 0 < a + 3555 * b) (hb : 0 < a + 32932 * b) : 0 < a + h * b := by
+private theorem affine_positive {a b h : ℤ} (hlo : 3555 ≤ h) (hhi : h ≤ 33068)
+    (ha : 0 < a + 3555 * b) (hb : 0 < a + 33068 * b) : 0 < a + h * b := by
   by_cases hb0 : 0 ≤ b
   · nlinarith only [ha, mul_nonneg (sub_nonneg.mpr hlo) hb0]
   · nlinarith only [hb, mul_nonneg (sub_nonneg.mpr hhi) (neg_nonneg.mpr (le_of_not_ge hb0))]
 
-private theorem test (h r mode : ℕ) (s : Shape) (hlo : 3555 ≤ h) (hhi : h ≤ 32932)
+private theorem test (h r mode : ℕ) (s : Shape) (hlo : 3555 ≤ h) (hhi : h ≤ 33068)
     (hc : Certificate s r mode) :
     s.B * (131071 - h) < cutoffCount h r s ∧
       sourceDebit h s + mode * movingCeiling h s < rawVolume h r s := by
   have hh : h ≤ 131071 := by omega
   have hloI : (3555 : ℤ) ≤ (h : ℤ) := by exact_mod_cast hlo
-  have hhiI : (h : ℤ) ≤ 32932 := by exact_mod_cast hhi
+  have hhiI : (h : ℤ) ≤ 33068 := by exact_mod_cast hhi
   obtain ⟨ha, hb, hc, hd⟩ := hc
   have hw := affine_positive hloI hhiI ha hb
   unfold worstBase worstSlope at hw
   have hpos : (s.B : ℤ) * (131071 - (h : ℤ)) <
-      (s.m : ℤ) * 180139 - 2 * (h : ℤ) * r := by nlinarith only [hw]
-  have hbuf : 2 * h * r ≤ s.m * 180139 := by
+      (s.m : ℤ) * 180071 - 2 * (h : ℤ) * r := by nlinarith only [hw]
+  have hbuf : 2 * h * r ≤ s.m * 180071 := by
     have hn : 0 ≤ (s.B : ℤ) * (131071 - (h : ℤ)) := by
       exact mul_nonneg (Int.natCast_nonneg _) (by omega)
-    have ht : 2 * (h : ℤ) * r ≤ (s.m : ℤ) * 180139 := by linarith only [hpos, hn]
+    have ht : 2 * (h : ℤ) * r ≤ (s.m : ℤ) * 180071 := by linarith only [hpos, hn]
     exact_mod_cast ht
   have hwidth : s.B * (131071 - h) < cutoffCount h r s := by
     unfold cutoffCount
     have ht : ((s.B * (131071 - h) : ℕ) : ℤ) <
-        ((s.m * 180139 - 2 * h * r : ℕ) : ℤ) := by
+        ((s.m * 180071 - 2 * h * r : ℕ) : ℤ) := by
       push_cast [Nat.cast_sub hh, Nat.cast_sub hbuf]
       exact hpos
     exact_mod_cast ht
@@ -127,11 +127,11 @@ open private fixed_of_no_seed from ProximityPrize.SubmissionLower.Fast051
 theorem bufferedPairs (power : H21_2_1.c1) (rankBound : H21_2_1.c2)
     {u del} {M : AnchorModel u del} {Γ} {F : AnchoredFamily M Γ}
     {rows : Banks} (src : JetSource M F rows) (hl : 3555 ≤ M.overhead)
-    (hu : M.overhead ≤ 32932) (i : Fin 4) :
+    (hu : M.overhead ≤ 33068) (i : Fin 4) :
     Nonempty (BufferedPair M.overhead.toNat rows i) := by
   let h := M.overhead.toNat
   have hlo : 3555 ≤ h := by dsimp [h]; omega
-  have hhi : h ≤ 32932 := by dsimp [h]; omega
+  have hhi : h ≤ 33068 := by dsimp [h]; omega
   obtain ⟨hc, hd⟩ := certificates i
   obtain ⟨cw, cv⟩ := test h (reserve i) 0 _ hlo hhi hc
   obtain ⟨lw, lv⟩ := test h (reserve i) 1 _ hlo hhi hd

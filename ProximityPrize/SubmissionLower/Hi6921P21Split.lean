@@ -32,7 +32,7 @@ private theorem source_floor {u del} {M : AnchorModel u del} {Γ}
       ∑ W ∈ range (cutoffCount M.overhead.toNat r s), Module.finrank FX (rows s W) := by
   let N := cutoffCount M.overhead.toNat r s
   have hN : 0 < N := lt_of_le_of_lt (Nat.zero_le _) hw
-  have hNt : N ≤ s.m * 180139 := Nat.sub_le _ _
+  have hNt : N ≤ s.m * 180071 := Nat.sub_le _ _
   have hc : N - 1 + 1 = N := by omega
   have h := src.floor_bound s hs (N - 1) (by omega) (by
     intro q hq j _
@@ -40,7 +40,8 @@ private theorem source_floor {u del} {M : AnchorModel u del} {Γ}
     exact ((Nat.mul_le_mul_right _ hq).trans hw.le).trans (Nat.le_add_right N j))
   change triangle s.U * shapeSum s (fun q j => N + j - q * (131071 - M.overhead.toNat)) ≤
     sourceDebit M.overhead.toNat s + ∑ W ∈ range N, Module.finrank FX (rows s W)
-  simpa only [hc] using h
+  exact (by simpa only [hc] using h : _ ≤ BankDebit.debit M.overhead.toNat s + _).trans
+    (Nat.add_le_add_right (BankDebit.debit_le _ _) _)
 
 private theorem bank_nonzero {u del} {M : AnchorModel u del} {Γ}
     {F : AnchoredFamily M Γ} {rows : Banks} (src : JetSource M F rows)

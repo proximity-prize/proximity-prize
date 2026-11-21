@@ -18,7 +18,7 @@ theorem Cases6921.K21_2 : K21.c2 := K21_2.of_children Cases6921.K21_2_1 Cases692
 
 namespace Assembly6921
 theorem protocol_of_high (high : K21.c14) :
-    ProximityPrize.Benchmark.ProtocolClaim 6928 335893008 1073741824 :=
+    ProximityPrize.Benchmark.ProtocolClaim 6935 164147 524288 :=
   Protocol6921.protocolClaim_of_scalarCap
     (K21.of_children Cases6921.K21_1 Cases6921.K21_2 Cases6921.K21_3
       Cases6921.K21_4 Cases6921.K21_5 Cases6921.K21_6 Cases6921.K21_7

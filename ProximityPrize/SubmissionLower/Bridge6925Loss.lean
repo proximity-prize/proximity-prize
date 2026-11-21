@@ -1,3 +1,4 @@
+import ProximityPrize.SubmissionLower.CurveBudget
 import ProximityPrize.SubmissionLower.Bridge6925Sections
 import ProximityPrize.SubmissionLower.Fast076
 set_option Elab.async false
@@ -24,7 +25,7 @@ private theorem expand_dot (a b : Fin 4 → ℕ) (h : ∀ j, a j ≤ b j) (v : F
   intro j _
   rw [← Nat.add_mul, show a j + delta a b j = b j from Nat.add_sub_of_le (h j)]
 
-def extraFee (fee : Fin 3) : ℕ := if fee = 2 then fixedPrice 319 66 + fixedPrice 837 168 else 0
+def extraFee (fee : Fin 3) : ℕ := if fee = 2 then fixedPrice 299 66 + fixedPrice 890 185 else 0
 
 private theorem schedule_charge (fee : Fin 3)
     (A B D U V lastSet : Finset (Ideal Ambient)) (hBA : B ⊆ A) (hDB : D ⊆ B)
@@ -64,8 +65,8 @@ theorem loss_bounds (A B D U V lastSet : Finset (Ideal Ambient)) (hBA : B ⊆ A)
   exact ⟨(h 0).trans (by decide +kernel), (h 1).trans (by decide +kernel), (h 2).trans (by decide +kernel)⟩
 
 theorem prefix_ledger (w : ℤ) (hw : w ≤ 3554) :
-    initialFee + fixedPrice 76 16 + fixedPrice 222 46 +
-      fixedPrice 126 27 + fixedPrice 369 77 + fixedPrice 358008 65143 +
+    initialFee + fixedPrice 79 17 + fixedPrice 265 55 +
+      fixedPrice 133 29 + fixedPrice 439 92 + fixedPrice 348044 64220 +
       constantFee + curveFee ≤ P0.highPrefix w := by
   unfold P0.highPrefix K21.highPrefix
   rw [ite_eq_left hw]
@@ -227,8 +228,8 @@ private theorem regular_count_P0_10RBridgeRoot {n U s g H w} (A : RegularChart U
     obtain ⟨hγU, hγhit⟩ := mem_filter.mp hγ
     exact mem_zeroLocus_sup_span_singleton_iff.mpr ⟨hpoints γ hγU, (hcut γ hγU).mpr hγhit⟩
   have hcount := P0_10.section_capacity hw (by decide) D hsection
-  change 45514 * U.card ≤ 82005 * D + 45514 at hcount
-  have hcountQ : (45514 : ℚ) * (U.card : ℚ) ≤ 82005 * (D : ℚ) + 45514 := by
+  change 45446 * U.card ≤ 82073 * D + 45446 at hcount
+  have hcountQ : (45446 : ℚ) * (U.card : ℚ) ≤ 82073 * (D : ℚ) + 45446 := by
     exact_mod_cast hcount
   change (U.card : ℚ) ≤ beta * (D : ℚ) + 1
   unfold beta
@@ -303,71 +304,27 @@ open scoped BigOperators Classical
 private theorem projected_curve : K1_14_2_3.c2 :=
   K1_14_2_3_2.of_children K1_14_2_3_2_1.proof K1_14_2_3_2_2.proof
 
-private def seedRate : ℚ := ((p + 1 : ℕ) : ℚ) / 9
-private def yRate : ℚ := 15 + beta * (((2 * endpointDegree - 1 : ℕ) : ℚ)*15+1)
-
-private theorem root_price_bound (g H : ℕ) (hg : g ≤ 8) :
-    rootPrice g H ≤ yRate * (H : ℚ) + (g : ℚ) := by
-  have hgq : (g : ℚ) ≤ 8 := by exact_mod_cast hg
-  have ht : 2 * (g : ℚ) - 1 ≤ 15 := by linarith
-  have hd : 0 ≤ ((2 * endpointDegree - 1 : ℕ) : ℚ) := Nat.cast_nonneg _
-  have hb : 0 ≤ beta := by unfold beta; positivity
-  exact add_le_add (mul_le_mul_of_nonneg_right
-    (add_le_add ht (mul_le_mul_of_nonneg_left
-      (add_le_add (mul_le_mul_of_nonneg_left ht hd) (le_refl (1 : ℚ))) hb))
-    (Nat.cast_nonneg H)) (le_refl (g : ℚ))
-
-private theorem seedRate_nonneg : 0 ≤ seedRate := by unfold seedRate; positivity
-private theorem yRate_nonneg : 0 ≤ yRate := by unfold yRate beta; positivity
-private theorem seedCap_lt_p : lossSeedCap < p := by decide
-
-private theorem seedCap_le_rate : (lossSeedCap : ℚ) ≤ seedRate := by
-  have h : lossSeedCap * 9 ≤ p + 1 := by decide
-  exact (le_div_iff₀ (by norm_num : (0 : ℚ) < 9)).mpr (by exact_mod_cast h)
-
-private theorem linear_rate (r a b c : ℕ) (hb : (b : ℚ) ≠ 0) :
-    (r : ℚ) + ((a : ℚ)/b)*((c : ℚ)*15+1) =
-      ((r*b+a*(c*15+1) : ℕ) : ℚ)/b := by
-  simp only [Nat.cast_add, Nat.cast_mul, Nat.cast_one, Nat.cast_ofNat]
-  field_simp
-
-private theorem yRate_eq : yRate = ((331197228390 : ℕ) : ℚ) / 45514 := by
-  unfold yRate beta
-  have h := linear_rate 15 82005 45514 (2*endpointDegree-1) (by norm_num : (45514 : ℚ) ≠ 0)
-  have hn : (15 : ℕ) * 45514 + 82005 * ((2*endpointDegree-1)*15+1) = 331197228390 := by decide
-  rw [hn] at h
-  exact h
-
-private theorem tariff_fraction (a b d h c m n : ℕ) (hm : 0 < m) (hn : 0 < n)
-    (hc : a*d*n + b*h*m + d*(m*n) ≤ c*(m*n)) :
-    ((a : ℚ)/m)*d + ((b : ℚ)/n)*h + d ≤ c := by
-  have hm' : (0 : ℚ) < m := by exact_mod_cast hm
-  have hn' : (0 : ℚ) < n := by exact_mod_cast hn
-  apply le_of_mul_le_mul_right _ (mul_pos hm' hn')
-  have hq : (a : ℚ)*d*n + (b : ℚ)*h*m + (d : ℚ)*((m : ℚ)*n) ≤
-      (c : ℚ)*((m : ℚ)*n) := by exact_mod_cast hc
-  convert hq using 1
-  all_goals field_simp
-
-private theorem tariff_ledger :
-    seedRate * (lossSeedCap : ℚ) + yRate * (lossYCap : ℚ) + (lossSeedCap : ℚ) ≤
-      (curveFee : ℚ) := by
-  rw [yRate_eq]
-  exact tariff_fraction (p+1) 331197228390 lossSeedCap lossYCap curveFee 9 45514
-    (by decide) (by decide) (by decide)
-
-private theorem group_price {u del} (M : AnchorModel u del) {Γ} (F : AnchoredFamily M Γ)
-    (hhi : M.overhead ≤ 3554) (T : Finset K) (hT : T ⊆ Γ)
-    (tariff : RootTariff)
+/-- The same marked labels have a seed-curve count and a projected-root count.
+    Average them using the number of seed degrees available in their group. -/
+private theorem marked_group {u del} (M : AnchorModel u del) {Γ} (F : AnchoredFamily M Γ)
+    (T : Finset K) (hT : T ⊆ Γ) (unitRate beta : ℚ)
+    (hrate : 0 ≤ unitRate) (hbeta : 0 ≤ beta)
+    (tariff : ∀ W ⊆ Γ, ∀ I (g H : ℕ), 0 < g → g ≤ 8 → SmallRootCurve I g H →
+      (∀ γ ∈ W, OnRoot I (M.label γ) (F.scalar γ)) →
+      (W.card : ℚ) ≤ (((2*(g : ℚ)-1)*unitRate + beta) * H + g))
     (P : Ideal Seeds) (s : Finset (Ideal Ambient))
     (hne : s.Nonempty) (himage : ∀ I ∈ s, seedImage I = P)
     (hslice : ∀ I ∈ s, SeedSlice I ∧ Module.Finite SeedField (JetYSection I))
-    (hcap : (∑ I ∈ s, seedLength I) ≤ lossSeedCap) :
+    (cap : ℕ) (hsmall : cap < p) (hcap : (∑ I ∈ s, seedLength I) ≤ cap) :
     let W (I : Ideal Ambient) := T.filter (fun γ => OnJet I (M.label γ) (F.scalar γ))
     ((s.biUnion W).card : ℚ) ≤
-      seedRate * (∑ I ∈ s, (seedLength I : ℚ)) +
-      yRate * (∑ I ∈ s, (yLength I : ℚ)) + ∑ I ∈ s, (seedLength I : ℚ) := by
+      max (((p+1 : ℕ) : ℚ)/9) (cap : ℚ) * (∑ I ∈ s, (seedLength I : ℚ)) +
+      (4*unitRate + 8/9*beta) * (∑ I ∈ s, (yLength I : ℚ)) + ∑ I ∈ s, (seedLength I : ℚ) := by
   classical
+  let seedRate : ℚ := max (((p+1 : ℕ) : ℚ)/9) (cap : ℚ)
+  let yRate : ℚ := 4*unitRate + 8/9*beta
+  have seedRate_nonneg : 0 ≤ seedRate := (Nat.cast_nonneg cap).trans (le_max_right _ _)
+  have yRate_nonneg : 0 ≤ yRate := by dsimp [yRate]; positivity
   let W (I : Ideal Ambient) := T.filter (fun γ => OnJet I (M.label γ) (F.scalar γ))
   let U := s.biUnion W
   let D : ℕ := ∑ I ∈ s, seedLength I
@@ -394,55 +351,116 @@ private theorem group_price {u del} (M : AnchorModel u del) {Γ} (F : AnchoredFa
     exact Ideal.mem_span_singleton_self C
   have hcard : (U.image M.label).card = U.card :=
     Finset.card_image_of_injective _ (fun _ _ hab => sub_left_inj.mp hab)
-  by_cases hlarge : 9 * C.totalDegree ≤ D
-  · have hc := seed_graph_count C hC.ne_zero ((hCD.trans hcap).trans_lt seedCap_lt_p)
+
+  have seed : (U.card : ℚ) ≤ ((p+1 : ℕ) : ℚ) * (C.totalDegree : ℚ) := by
+    have hc := seed_graph_count C hC.ne_zero ((hCD.trans hcap).trans_lt hsmall)
       (U.image M.label) hlabels
     rw [hcard] at hc
-    have hcq : (U.card : ℚ) ≤ ((p+1 : ℕ) : ℚ) * (C.totalDegree : ℚ) := by exact_mod_cast hc
-    have hdq : (9 : ℚ) * (C.totalDegree : ℚ) ≤ (D : ℚ) := by exact_mod_cast hlarge
-    apply extend_seed
+    exact_mod_cast hc
+  by_cases hlarge : 9*C.totalDegree ≤ D
+  · apply extend_seed
+    have paid : (9 : ℚ)*C.totalDegree ≤ (D : ℚ) := by exact_mod_cast hlarge
     calc
-      _ ≤ ((p+1 : ℕ) : ℚ) * (C.totalDegree : ℚ) := hcq
-      _ = seedRate * (9 * (C.totalDegree : ℚ)) := by unfold seedRate; ring
-      _ ≤ _ := mul_le_mul_of_nonneg_left hdq seedRate_nonneg
+      _ ≤ _ := seed
+      _ = (((p+1 : ℕ) : ℚ)/9)*(9*(C.totalDegree : ℚ)) := by ring
+      _ ≤ seedRate*(D : ℚ) := mul_le_mul (le_max_left _ _) paid (by positivity) seedRate_nonneg
+  let k := D / C.totalDegree
+  have hk : 1 ≤ k := (Nat.le_div_iff_mul_le hCpos).mpr (by simpa using hCD)
+  have hk8 : k ≤ 8 := Nat.le_of_lt_succ ((Nat.div_lt_iff_lt_mul hCpos).mpr (by omega))
+  have hpaid : (k : ℚ)*(C.totalDegree : ℚ) ≤ (D : ℚ) := by
+    exact_mod_cast Nat.div_mul_le_self D C.totalDegree
   by_cases hconst : DefinedOverConstants P
   · obtain ⟨Q, hQ, hQproj⟩ := hconst
     have hdeg : C.totalDegree = Q.totalDegree := equal_image_degree C hC.ne_zero Q
       (hP.symm.trans hQproj)
+    let rate : ℚ := (2*(k : ℚ)-1)*unitRate+beta
     have hsbound (I : Ideal Ambient) (hI : I ∈ s) :
-        ((W I).card : ℚ) ≤ yRate * (yLength I : ℚ) + (seedLength I : ℚ) := by
+        ((W I).card : ℚ) ≤ rate * (yLength I : ℚ) + (seedLength I : ℚ) := by
       obtain ⟨g, hg, hroot, hgD⟩ :=
         projected_curve I Q (hslice I hI).1 (hslice I hI).2 hQ ((himage I hI).trans hQproj)
-      have hgi : g ≤ 8 := by
-        by_contra! hbad
-        have hsuccess := (Nat.mul_le_mul_left Q.totalDegree hbad).trans
-          (hgD.trans (Finset.single_le_sum (f := seedLength) (fun _ _ => Nat.zero_le _) hI))
-        exact hlarge (by simpa [hdeg, Nat.mul_comm 9] using hsuccess)
-      have hgcap : g ≤ seedLength I :=
-        (Nat.le_mul_of_pos_left g (hdeg ▸ hCpos)).trans hgD
-      have hsub : W I ⊆ Γ := (Finset.filter_subset _ _).trans hT
-      have ht := tariff u del M Γ F hhi (W I) hsub (rootImage I) g (yLength I) hg hgi hroot
+      have hprod : g*C.totalDegree ≤ seedLength I := by simpa [hdeg, Nat.mul_comm] using hgD
+      have hgk : g ≤ k := (Nat.le_div_iff_mul_le hCpos).mpr
+        (hprod.trans (Finset.single_le_sum (f := seedLength) (fun _ _ => Nat.zero_le _) hI))
+      have hgcapq : (g : ℚ) ≤ (seedLength I : ℚ) := by
+        exact_mod_cast (Nat.le_mul_of_pos_right g hCpos).trans hprod
+      have leprice : (2*(g : ℚ)-1)*unitRate+beta ≤ rate := by
+        have hq : (g : ℚ) ≤ k := by exact_mod_cast hgk
+        exact add_le_add (mul_le_mul_of_nonneg_right (show 2*(g : ℚ)-1 ≤ 2*(k : ℚ)-1 by linarith) hrate) le_rfl
+      have ht := tariff (W I) ((Finset.filter_subset _ _).trans hT)
+        (rootImage I) g (yLength I) hg (hgk.trans hk8) hroot
         (fun _ hz => on_root (Finset.mem_filter.mp hz).2)
-      have hgcapq : (g : ℚ) ≤ (seedLength I : ℚ) := by exact_mod_cast hgcap
-      exact ht.trans ((root_price_bound g (yLength I) hgi).trans (add_le_add le_rfl hgcapq))
-    calc
-      (U.card : ℚ) ≤ ∑ I ∈ s, ((W I).card : ℚ) := union_card_le s W
-      _ ≤ ∑ I ∈ s, (yRate * (yLength I : ℚ) + (seedLength I : ℚ)) := Finset.sum_le_sum hsbound
-      _ = yRate * (H : ℚ) + (D : ℚ) := by
-        simp only [H, D, Finset.sum_add_distrib, Finset.mul_sum, Nat.cast_sum]
-      _ ≤ _ := by
-        rw [add_assoc]
-        exact le_add_of_nonneg_left (mul_nonneg seedRate_nonneg (Nat.cast_nonneg D))
+      exact ht.trans (add_le_add (mul_le_mul_of_nonneg_right leprice (Nat.cast_nonneg _)) hgcapq)
+    have root : (U.card : ℚ) ≤ rate*(H : ℚ)+(D : ℚ) := calc
+      _ ≤ ∑ I ∈ s, ((W I).card : ℚ) := union_card_le s W
+      _ ≤ ∑ I ∈ s, (rate*(yLength I : ℚ)+(seedLength I : ℚ)) := Finset.sum_le_sum hsbound
+      _ = _ := by simp only [H, D, Finset.sum_add_distrib, Finset.mul_sum, Nat.cast_sum]
+    have b := CurveBudget.combine hk hk8 hpaid (Nat.cast_nonneg (p+1)) (Nat.cast_nonneg D)
+      (Nat.cast_nonneg H) hbeta hrate seed root
+    exact b.trans (add_le_add (add_le_add
+      (mul_le_mul_of_nonneg_right (le_max_left _ _) (Nat.cast_nonneg D)) le_rfl) le_rfl)
   · have hc := moving_graph_count p C hC (hP ▸ hconst) (U.image M.label) hlabels
     rw [hcard] at hc
     have hq : (U.card : ℚ) ≤ (C.totalDegree : ℚ) ^ 2 := by exact_mod_cast hc
     have hCq : (C.totalDegree : ℚ) ≤ (D : ℚ) := by exact_mod_cast hCD
     have hCr : (C.totalDegree : ℚ) ≤ seedRate :=
-      (by exact_mod_cast (hCD.trans hcap) : (C.totalDegree : ℚ) ≤ (lossSeedCap : ℚ)).trans
-        seedCap_le_rate
+      (by exact_mod_cast (hCD.trans hcap) : (C.totalDegree : ℚ) ≤ (cap : ℚ)).trans (le_max_right _ _)
     exact extend_seed (hq.trans (by
       rw [pow_two]
       exact mul_le_mul hCr hCq (Nat.cast_nonneg C.totalDegree) seedRate_nonneg))
+
+private def seedRate : ℚ := (lossSeedCap : ℚ)
+private def unitRate : ℚ := 1 + beta * ((2 * endpointDegree - 1 : ℕ) : ℚ)
+private def yRate : ℚ := 4*unitRate + 8/9*beta
+
+private theorem seedRate_nonneg : 0 ≤ seedRate := by unfold seedRate; positivity
+private theorem yRate_nonneg : 0 ≤ yRate := by unfold yRate unitRate beta; positivity
+private theorem seedCap_lt_p : lossSeedCap < p := by decide
+
+private theorem seedRate_ge_price : ((p + 1 : ℕ) : ℚ) / 9 ≤ seedRate := by
+  norm_num [seedRate, lossSeedCap, K1.p]
+
+private theorem yRate_eq : yRate = ((397766463506 : ℕ) : ℚ) / 204507 := by
+  norm_num [yRate, unitRate, beta, endpointDegree]
+
+private theorem tariff_fraction (a b d h c m n : ℕ) (hm : 0 < m) (hn : 0 < n)
+    (hc : a*d*n + b*h*m + d*(m*n) ≤ c*(m*n)) :
+    ((a : ℚ)/m)*d + ((b : ℚ)/n)*h + d ≤ c := by
+  have hm' : (0 : ℚ) < m := by exact_mod_cast hm
+  have hn' : (0 : ℚ) < n := by exact_mod_cast hn
+  apply le_of_mul_le_mul_right _ (mul_pos hm' hn')
+  have hq : (a : ℚ)*d*n + (b : ℚ)*h*m + (d : ℚ)*((m : ℚ)*n) ≤
+      (c : ℚ)*((m : ℚ)*n) := by exact_mod_cast hc
+  convert hq using 1
+  all_goals field_simp
+
+private theorem tariff_ledger :
+    seedRate * (lossSeedCap : ℚ) + yRate * (lossYCap : ℚ) + (lossSeedCap : ℚ) ≤
+      (curveFee : ℚ) := by
+  rw [yRate_eq]
+  simpa [seedRate] using tariff_fraction lossSeedCap 397766463506 lossSeedCap lossYCap curveFee 1 204507
+    (by decide) (by decide) (by decide)
+
+private theorem group_price {u del} (M : AnchorModel u del) {Γ} (F : AnchoredFamily M Γ)
+    (hhi : M.overhead ≤ 3554) (T : Finset K) (hT : T ⊆ Γ)
+    (tariff : RootTariff)
+    (P : Ideal Seeds) (s : Finset (Ideal Ambient))
+    (hne : s.Nonempty) (himage : ∀ I ∈ s, seedImage I = P)
+    (hslice : ∀ I ∈ s, SeedSlice I ∧ Module.Finite SeedField (JetYSection I))
+    (hcap : (∑ I ∈ s, seedLength I) ≤ lossSeedCap) :
+    let W (I : Ideal Ambient) := T.filter (fun γ => OnJet I (M.label γ) (F.scalar γ))
+    ((s.biUnion W).card : ℚ) ≤
+      seedRate * (∑ I ∈ s, (seedLength I : ℚ)) +
+      yRate * (∑ I ∈ s, (yLength I : ℚ)) + ∑ I ∈ s, (seedLength I : ℚ) := by
+  classical
+  have hb : 0 ≤ beta := by unfold beta; positivity
+  have huR : 0 ≤ unitRate := by unfold unitRate; positivity
+  have h := marked_group M F T hT unitRate beta huR hb (fun W hW I g H hg hle curve onRoot => by
+    have hprice := tariff u del M Γ F hhi W hW I g H hg hle curve onRoot
+    convert hprice using 1
+    unfold rootPrice unitRate
+    ring) P s hne himage hslice lossSeedCap seedCap_lt_p hcap
+  have hmax : max (((p+1 : ℕ) : ℚ)/9) (lossSeedCap : ℚ) = seedRate := max_eq_right seedRate_ge_price
+  simpa only [hmax, yRate] using h
 
 theorem curve_count (tariff : RootTariff) {u del} (M : AnchorModel u del) {Γ}
     (F : AnchoredFamily M Γ) (hhi : M.overhead ≤ 3554) (T : Finset K) (hT : T ⊆ Γ)

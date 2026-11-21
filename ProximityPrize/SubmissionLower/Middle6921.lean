@@ -705,14 +705,14 @@ open K21
 
 /-- The branch with two active generators in the low-nullity prefix. -/
 def MiddleGuard (u : Words) : Prop :=
-  7 ≤ nullity u ∧ nullity u ≤ 16 ∧ firstRank u = 49067 ∧
+  7 ≤ nullity u ∧ nullity u ≤ 16 ∧ firstRank u = 48999 ∧
     ¬ TypeAtMostOne u ∧ ¬ HomogeneousPrincipal u ∧ ¬ ConstantKernel u
 
 def JointOn (u : Words) (S : Finset I) : Prop :=
   ExtendsOn node (u 0) 131072 S ∧ ExtendsOn node (u 1) 131072 S
 
 def BadOn (D : Finset I) (v w : I → K) (γ : K) : Prop :=
-  ∃ S : Finset I, S ⊆ D ∧ 180139 ≤ S.card ∧
+  ∃ S : Finset I, S ⊆ D ∧ 180071 ≤ S.card ∧
     ExtendsOn node (fun i => v i + γ * w i) 131072 S ∧
     ¬ (ExtendsOn node v 131072 S ∧ ExtendsOn node w 131072 S)
 
@@ -725,22 +725,22 @@ def padding (r : ℕ) : ℕ :=
     if r ≤ 12 then 5 else if r ≤ 14 then 6 else if r = 15 then 7 else 8
 
 def cutoff (r : ℕ) : ℕ := if r = 16 then 3 else 64
-def fixedLimit (_r : ℕ) : ℕ := 14678
+def fixedLimit (_r : ℕ) : ℕ := 14801
 
-def reducedHeight (r g : ℕ) : ℕ := 32939 - r - g
-def childRows (r : ℕ) : ℕ := 49067 - padding r
+def reducedHeight (r g : ℕ) : ℕ := 33075 - r - g
+def childRows (r : ℕ) : ℕ := 48999 - padding r
 def childErrors (r g : ℕ) : ℕ := childRows r + reducedHeight r g
 def deletionSize (r : ℕ) : ℕ := r - 1 + 2 * padding r
 
-def rankReserve (r : ℕ) : ℕ := 49067 + 2130706433 * (32939 - r)
+def rankReserve (r : ℕ) : ℕ := 48999 + 2130706433 * (33075 - r)
 
 def extraReserve (r g : ℕ) : ℕ :=
   let H := reducedHeight r g
-  2 * H * ((2130706433 * 49067 + H) / (49067 - H)) +
-    (49067 / (49067 - H)) * (2130706433 + 1)
+  2 * H * ((2130706433 * 48999 + H) / (48999 - H)) +
+    (48999 / (48999 - H)) * (2130706433 + 1)
 
 def incidenceDenominator (r g : ℕ) : ℕ :=
-  (82005 - g).choose (r - 1 + padding r) * (180139 - 1).choose (padding r)
+  (82073 - g).choose (r - 1 + padding r) * (180071 - 1).choose (padding r)
 
 def incidenceRatio (r g : ℕ) : ℚ :=
   ((262144 - g).choose (deletionSize r) : ℚ) / incidenceDenominator r g
@@ -786,8 +786,8 @@ structure PaddedFamily (u : Words) (D : Finset I) (Γ : Finset K) (r g : ℕ) wh
   degree : ∀ γ ∈ Γ, (decoder γ).degree < 131072
   witness : ∀ γ ∈ Γ,
     slack γ ≤ r - 1 ∧
-    (goodSet u D γ (decoder γ)).card = 180139 + slack γ ∧
-    (errorSet u D γ (decoder γ)).card = 82005 - g - slack γ ∧
+    (goodSet u D γ (decoder γ)).card = 180071 + slack γ ∧
+    (errorSet u D γ (decoder γ)).card = 82073 - g - slack γ ∧
     ¬ JointOn u (goodSet u D γ (decoder γ))
 
 /-- A single deletion union, with the error and agreement parts determined
@@ -1470,10 +1470,10 @@ open K21 Polynomial Matrix FrobeniusLocator
 /-- The two syndrome streams on the complement of the fixed node roots.
 The number of rows stays fixed because all the deleted nodes are errors. -/
 def shortenedStack {u : Words} {T : TwoActive u} (R : Relation T) :
-    Matrix (Fin 2 × Fin 49067) (Fin (82005 - (fixedNodes R).card + 1)) K[X] :=
+    Matrix (Fin 2 × Fin 48999) (Fin (82073 - (fixedNodes R).card + 1)) K[X] :=
   let D := Finset.univ \ fixedNodes R
   stacked p (fun i : D => node i.val) (fun i => u 0 i.val) (fun i => u 1 i.val)
-    49067 (82005 - (fixedNodes R).card)
+    48999 (82073 - (fixedNodes R).card)
 
 /-- Coefficient polynomials in the seed, with the outer variable
 reserved for the evaluation coordinate. -/
@@ -2076,24 +2076,24 @@ private theorem independent_nativeMoments (u : K21.Words)
   simpa [nativeMoments, Principal.parameterSyndromes, map_mul] using hall i j
 
 private theorem locator_matrix (u : K21.Words) :
-    Principal.recurrenceMatrix (nativeMoments u) 131072 82005 =
+    Principal.recurrenceMatrix (nativeMoments u) 131072 82073 =
       (K21.twoBlock u).map (algebraMap K21.K[X] K21.Frac) :=
   Principal.recurrenceMatrix_parameter (algebraMap K21.K[X] K21.Frac)
-    K21.p K21.node (u 0) (u 1) 131072 82005
+    K21.p K21.node (u 0) (u 1) 131072 82073
 
 private theorem locator_nullity (u : K21.Words) :
-    sliceDim (nativeMoments u) 131072 82006 = K21.nullity u := by
-  rw [sliceDim_succ (nativeMoments u) 131072 82005, locator_matrix]
+    sliceDim (nativeMoments u) 131072 82074 = K21.nullity u := by
+  rw [sliceDim_succ (nativeMoments u) 131072 82073, locator_matrix]
   rfl
 
-private theorem principal_of_one_active (u : K21.Words) (a : ℕ) (ha : a ≤ 82005)
+private theorem principal_of_one_active (u : K21.Words) (a : ℕ) (ha : a ≤ 82073)
     (hone : sliceDim (nativeMoments u) 131072 (a+1) = 1)
-    (hnull : K21.nullity u = 82006-a) : K21.HomogeneousPrincipal u := by
+    (hnull : K21.nullity u = 82074-a) : K21.HomogeneousPrincipal u := by
   have hpos : 0 < sliceDim (nativeMoments u) 131072 (a+1) := by omega
-  have hdim : sliceDim (nativeMoments u) 131072 82006 = (82005-a)+1 := by
+  have hdim : sliceDim (nativeMoments u) 131072 82074 = (82073-a)+1 := by
     rw [locator_nullity]
     omega
-  obtain ⟨g, hg, hdeg, hfac⟩ := principal_of_slice (nativeMoments u) 131072 a 82005
+  obtain ⟨g, hg, hdeg, hfac⟩ := principal_of_slice (nativeMoments u) 131072 a 82073
     ha (by decide) hpos hdim
   refine ⟨a, g, hg, hdeg, ha, fun P hP => ?_⟩
   rw [← locator_matrix]
@@ -2106,11 +2106,11 @@ theorem two_active_of_positive (u : K21.Words) (hpos : 0 < K21.nullity u)
     Nonempty (K21.TwoActive u) := by
   obtain ⟨a, b, c, hab, hbc, hc, hsum, hdim⟩ := level_profile
     (nativeMoments u) 131072 (independent_nativeMoments u htype)
-  have hloc := hdim 82006 (by decide)
+  have hloc := hdim 82074 (by decide)
   rw [locator_nullity] at hloc
-  have hinactive : 82005 < c := by omega
-  have ha : a ≤ 82005 := by omega
-  have hb : b ≤ 82005 := by
+  have hinactive : 82073 < c := by omega
+  have ha : a ≤ 82073 := by omega
+  have hb : b ≤ 82073 := by
     by_contra hb
     have hsmall := hdim (a+1) (by omega)
     exact hprincipal (principal_of_one_active u a ha (by omega) (by omega))
@@ -2149,7 +2149,7 @@ private theorem atSlope_constant (G : K[X]) (γ : K) :
 private theorem twoBlock_atSlope (u : Words) (γ : K) :
     ((twoBlock u).map (evalRingHom γ)) =
       Strata.conjugateHankel (Strata.twoConjugations (frobenius K p))
-        node (fun i => u 0 i + γ * u 1 i) 49067 82005 := by
+        node (fun i => u 0 i + γ * u 1 i) 48999 82073 := by
   rw [twoBlock, Strata.stacked_eq_frobeniusStacked, Strata.frobeniusStacked_eval]
   have h : (fun b : Fin 2 => iterateFrobenius K p b.val) =
       Strata.twoConjugations (frobenius K p) := by
@@ -2160,7 +2160,7 @@ private theorem twoBlock_atSlope (u : Words) (γ : K) :
   rw [h]
 
 private theorem rank_at_normal {u : Words} (T : TwoActive u) {γ : K} (hγ : Normal u γ) :
-    ((twoBlock u).map (evalRingHom γ)).rank = 49067 + T.height := by
+    ((twoBlock u).map (evalRingHom γ)).rank = 48999 + T.height := by
   change _ = stackRank u at hγ
   rw [hγ, actual_stackRank]
   have := T.degreeSum
@@ -2171,17 +2171,17 @@ private theorem rank_at_normal {u : Words} (T : TwoActive u) {γ : K} (hγ : Nor
 
 /-- The original stack has the same rank as its two evaluated error blocks. -/
 private theorem error_rank {u : Words} {γ : K} (M : BadMark u γ)
-    (E : Finset I) (hE : E.card ≤ 82005)
+    (E : Finset I) (hE : E.card ≤ 82073)
     (hEagree : ∀ i ∉ E, u 0 i + γ * u 1 i = M.decoder.eval (node i)) :
     ((twoBlock u).map (evalRingHom γ)).rank =
       (Strata.errorTwoMatrix (frobenius K p) (fun i : E => node i.val)
-        (fun i : E => u 0 i.val + γ * u 1 i.val - M.decoder.eval (node i.val)) 49067).rank := by
+        (fun i : E => u 0 i.val + γ * u 1 i.val - M.decoder.eval (node i.val)) 48999).rank := by
   have hfix : ∀ b i, Strata.twoConjugations (frobenius K p) b (node i) = node i := by
     intro b i
     fin_cases b <;> simp [Strata.twoConjugations, frobenius_def, Native.native_domain_fixed]
   have h := Strata.conjugateHankel_error_rank
     (Strata.twoConjugations (frobenius K p)) node (fun i => u 0 i + γ * u 1 i)
-    IRSProfile.domain.injective hfix M.decoder 131072 49067 82005 M.degree
+    IRSProfile.domain.injective hfix M.decoder 131072 48999 82073 M.degree
     (by rw [IRSProfile.card_index]) E (by omega) hEagree
   rw [Strata.conjugateErrors_two] at h
   rw [twoBlock_atSlope]
@@ -2225,7 +2225,7 @@ private theorem valid_of_saturation {u : Words} {T : TwoActive u} (R : Relation 
 /-- Normal saturation depends on the height being strictly below the
 ordinary row count. The same argument covers the middle prefix. -/
 theorem saturation_of_height (u : Words) (T : TwoActive u) (R : Relation T)
-    (hH : T.height < 49067) : NormalSaturation R := by
+    (hH : T.height < 48999) : NormalSaturation R := by
   classical
   intro γ hγ M
   let U := atSlope (leftU R) γ
@@ -2236,7 +2236,7 @@ theorem saturation_of_height (u : Words) (T : TwoActive u) (R : Relation T)
   have hEagree (i : I) (hi : i ∉ E) : u 0 i + γ * u 1 i = M.decoder.eval (node i) := by
     by_contra h
     exact hi (Finset.mem_filter.mpr ⟨Finset.mem_univ _, Ne.symm h⟩)
-  have hEcard : E.card ≤ 82005 := by
+  have hEcard : E.card ≤ 82073 := by
     have hsub : E ⊆ Finset.univ \ M.support := by
       intro i hi
       refine Finset.mem_sdiff.mpr ⟨Finset.mem_univ _, fun hs => ?_⟩
@@ -2260,15 +2260,15 @@ theorem saturation_of_height (u : Words) (T : TwoActive u) (R : Relation T)
   have herror (i : E) : U.eval (x i) * e i + V.eval (x i) * frobenius K p (e i) = 0 :=
     Strata.certificate_error_identity p node (u 0) (u 1) IRSProfile.domain.injective
       Native.native_domain_fixed 131072 T.height R γ M.support hfit M.decoder M.degree M.hits i.val
-  have hrank : (Strata.errorTwoMatrix (frobenius K p) x e 49067).rank = 49067 + T.height :=
+  have hrank : (Strata.errorTwoMatrix (frobenius K p) x e 48999).rank = 48999 + T.height :=
     (error_rank M E hEcard hEagree).symm.trans (rank_at_normal T hγ)
   obtain ⟨hU, hV⟩ := Strata.saturated_coefficients_nonzero (frobenius K p) x e hx U V
-    T.height 49067 hUle hVle hpair hH he herror hrank
+    T.height 48999 hUle hVle hpair hH he herror hrank
   let G := GCDMonoid.gcd U V
   let C₀ := (Finset.univ : Finset E).filter (fun i => G.eval (x i) = 0)
   let S := C₀.image (fun i : E => i.val)
   obtain ⟨hC, hsum, _⟩ := Strata.normal_error_three_rank (frobenius K p) x e hx
-    (fun i => hfix i.val) U V T.height 49067 hUle hVle hpair hH he herror hrank
+    (fun i => hfix i.val) U V T.height 48999 hUle hVle hpair hH he herror hrank
   have hmax : max U.natDegree V.natDegree = T.height := by
     obtain ⟨hle, hred⟩ := Strata.gcd_reduction_degrees U V hU hV
     change max (U / G).natDegree (V / G).natDegree + G.natDegree = T.height at hsum
@@ -2321,15 +2321,15 @@ local instance : NeZero (131072 : ℕ) := ⟨by decide⟩
 
 /-- The donor's exact-support pruning argument, instantiated on the
 benchmark's stacked matrix and the small shortened-domain core. -/
-theorem rank_book (u : Words) (hfirst : firstRank u = 49067) (Γ : Finset K) :
+theorem rank_book (u : Words) (hfirst : firstRank u = 48999) (Γ : Finset K) :
     (abnormalSlopes u Γ).card ≤ rankReserve (nullity u) := by
   classical
-  have hb := Strata.two_block_rank_exception_count p node (u 0) (u 1) 49067 82005
+  have hb := Strata.two_block_rank_exception_count p node (u 0) (u 1) 48999 82073
     (nullity u) (actual_stackRank u) hfirst (abnormalSlopes u Γ) (by
       intro γ hγ
       rw [← actual_stackRank u]
       exact (Finset.mem_filter.mp hγ).2)
-  have he : 82005 + 1 - nullity u - 49067 = 32939 - nullity u := by omega
+  have he : 82073 + 1 - nullity u - 48999 = 33075 - nullity u := by omega
   rw [he] at hb
   exact hb
 
@@ -2337,7 +2337,7 @@ theorem padding_le_eight (r : ℕ) : padding r ≤ 8 := by
   unfold padding
   split_ifs <;> omega
 
-theorem fixedLimit_le (r : ℕ) : fixedLimit r ≤ 14678 := by
+theorem fixedLimit_le (r : ℕ) : fixedLimit r ≤ 14801 := by
   exact le_rfl
 
 theorem planePrice_nonneg (A a b C : ℕ) : 0 ≤ planePrice A a b C := by
@@ -2370,13 +2370,13 @@ theorem padded_count {u : Words} {D : Finset I} {Γ : Finset K} {r g : ℕ}
     rw [← Int.cast_natCast, Int.toNat_of_nonneg]
     exact Rat.num_nonneg.mpr (planePrice_nonneg _ _ _ _)
   have hq : (n : ℚ) / d = q := by rw [hn, Rat.num_div_den]
-  have hfit : r - 1 + padding r ≤ 82005 - g := by omega
+  have hfit : r - 1 + padding r ≤ 82073 - g := by omega
   have hden : 0 < (incidenceDenominator r g : ℚ) := by
     unfold incidenceDenominator
     exact_mod_cast Nat.mul_pos (Nat.choose_pos hfit)
-      (Nat.choose_pos (by omega : padding r ≤ 180139 - 1))
+      (Nat.choose_pos (by omega : padding r ≤ 180071 - 1))
   have hcount := Mixed.shared_mixed_rational_count node (u 0) (u 1)
-    IRSProfile.domain.injective D Γ 131072 180139 (82005 - g) (r - 1) (padding r) n d
+    IRSProfile.domain.injective D Γ 131072 180071 (82073 - g) (r - 1) (padding r) n d
     (fun γ => goodSet u D γ (F.decoder γ)) (fun γ => errorSet u D γ (F.decoder γ)) F.slack
     (by omega) hfit (by omega)
     (by
@@ -2491,13 +2491,13 @@ private theorem plane_le_new (r g : ℕ) (hr : 7 ≤ r) (hr16 : r ≤ 16)
 private theorem reserve_le (r lo g : ℕ) (hr : 7 ≤ r) (hl : lo ≤ g) :
     extraReserve r g ≤ extraReserve r lo := by
   have hH : reducedHeight r g ≤ reducedHeight r lo := by unfold reducedHeight; omega
-  have hd : 49067 - reducedHeight r lo ≤ 49067 - reducedHeight r g := by omega
-  have hdpos : 0 < 49067 - reducedHeight r lo := by unfold reducedHeight; omega
+  have hd : 48999 - reducedHeight r lo ≤ 48999 - reducedHeight r g := by omega
+  have hdpos : 0 < 48999 - reducedHeight r lo := by unfold reducedHeight; omega
   have hz :
-      (2130706433 * 49067 + reducedHeight r g) / (49067 - reducedHeight r g) ≤
-      (2130706433 * 49067 + reducedHeight r lo) / (49067 - reducedHeight r lo) :=
+      (2130706433 * 48999 + reducedHeight r g) / (48999 - reducedHeight r g) ≤
+      (2130706433 * 48999 + reducedHeight r lo) / (48999 - reducedHeight r lo) :=
     (Nat.div_le_div_right (Nat.add_le_add_left hH _)).trans (Nat.div_le_div_left hd hdpos)
-  have hn : 49067 / (49067 - reducedHeight r g) ≤ 49067 / (49067 - reducedHeight r lo) :=
+  have hn : 48999 / (48999 - reducedHeight r g) ≤ 48999 / (48999 - reducedHeight r lo) :=
     Nat.div_le_div_left hd hdpos
   exact Nat.add_le_add (Nat.mul_le_mul (Nat.mul_le_mul_left 2 hH) hz)
     (Nat.mul_le_mul_right (2130706433 + 1) hn)
@@ -2511,7 +2511,7 @@ private theorem fastChoose_eq (n k : ℕ) : fastChoose n k = n.choose k :=
 
 private def intervalRatio (r lo hi : ℕ) : ℚ :=
   (fastChoose (262144 - lo) (deletionSize r) : ℚ) /
-    (fastChoose (82005 - hi) (r - 1 + padding r) * fastChoose (180139 - 1) (padding r) : ℕ)
+    (fastChoose (82073 - hi) (r - 1 + padding r) * fastChoose (180071 - 1) (padding r) : ℕ)
 
 private theorem ratio_le_interval (r g lo hi : ℕ) (hr16 : r ≤ 16)
     (hl : lo ≤ g) (hh : g ≤ hi) (hhi : hi ≤ fixedLimit r) :
@@ -2547,16 +2547,16 @@ private theorem native_le_interval (r g lo hi : ℕ) (hr : 7 ≤ r) (hr16 : r �
       (planePrice_nonneg _ _ _ _) (by unfold intervalRatio; positivity)
 
 private def endpoints : ℕ → List ℕ
-  | 7 => [14678]
-  | 8 => [14678]
-  | 9 => [14678]
-  | 10 => [14678]
-  | 11 => [14678]
-  | 12 => [14678]
-  | 13 => [14678]
-  | 14 => [13380, 14678]
-  | 15 => [9498, 14678]
-  | 16 => [6117, 9629, 11725, 13014, 13826, 14345, 14678]
+  | 7 => [14801]
+  | 8 => [14801]
+  | 9 => [14801]
+  | 10 => [14801]
+  | 11 => [14801]
+  | 12 => [14801]
+  | 13 => [14801]
+  | 14 => [13380, 14801]
+  | 15 => [9498, 14801]
+  | 16 => [3058, 6117, 7873, 9629, 10677, 11725, 12370, 13014, 13420, 13826, 14086, 14345, 14573, 14801]
   | _ => []
 
 private def certified (r : ℕ) : ℕ → List ℕ → Bool
@@ -2609,7 +2609,7 @@ open K21
 /-- The primitive wide left pair has the shifted-minor seed-height bound. -/
 def c1 : Prop :=
   ∀ (u : Words), MiddleGuard u → ∀ (T : TwoActive u) (R : Relation T),
-    ∀ i, (R.coefficients i).natDegree ≤ 6479539670
+    ∀ i, (R.coefficients i).natDegree ≤ 6553416894
 
 /-- Once the original rank drops have been removed, only the reduced
 resultant and normalization reserves are used to prepare the marked family. -/
@@ -2653,11 +2653,11 @@ private theorem main_height_guards (r g : ℕ) (hr : 7 ≤ r) (hr16 : r ≤ 16)
   unfold reducedHeight childRows cutoff
   split_ifs <;> omega
 
-private theorem normal_count_large_g (hcore : ShortenedCap 247465 1174666577117268)
+private theorem normal_count_large_g (hcore : ShortenedCap 247342 15189180114023447)
     (u : Words) (T : TwoActive u) (R : Relation T) (hsat : NormalSaturation R)
     (Γ : Finset K) (hΓ : BadFamily u Γ) (hn : ∀ γ ∈ Γ, Normal u γ)
     (hg : fixedLimit (nullity u) < (fixedNodes R).card) :
-    Γ.card ≤ 1174666577117268 := by
+    Γ.card ≤ 15189180114023447 := by
   classical
   refine hcore (Finset.univ \ fixedNodes R) ?_ (u 0) (u 1) Γ ?_
   · rw [Finset.card_sdiff_of_subset (Finset.subset_univ _), Finset.card_univ, IRSProfile.card_index]
@@ -2670,7 +2670,7 @@ private theorem normal_count_large_g (hcore : ShortenedCap 247465 11746665771172
     intro i hi
     exact Finset.mem_sdiff.mpr ⟨Finset.mem_univ _, fun hi' => sat.fixed_errors i hi' (M.hits i hi)⟩
 
-private theorem add_rank_book (u : Words) (Γ : Finset K) (hfirst : firstRank u = 49067)
+private theorem add_rank_book (u : Words) (Γ : Finset K) (hfirst : firstRank u = 48999)
     (b : ℕ) (hb : (normalSlopes u Γ).card ≤ b) :
     Γ.card ≤ rankReserve (nullity u) + b := by
   classical
@@ -2687,15 +2687,15 @@ private theorem middle_count (h1 : c1) (h2 : c2) (h3 : c3) (h4 : c4)
   have hr : 7 ≤ r := hm.1
   have hr16 : r ≤ 16 := hm.2.1
   have hfirst := hm.2.2.1
-  have hrank : rankReserve r ≤ 70168424300623 := by
+  have hrank : rankReserve r ≤ 70458200375443 := by
     unfold rankReserve
-    have hh : 32939 - r ≤ 32932 := by omega
+    have hh : 33075 - r ≤ 33068 := by omega
     have hmul := Nat.mul_le_mul_left 2130706433 hh
     omega
   obtain ⟨T⟩ := two_active_of_positive u (by omega) hm.2.2.2.1 hm.2.2.2.2.1
   let R : Relation T := Strata6921.native_lemmaT_of_two_active_level u r
     T.a T.b T.c hr T.ab T.active T.inactive T.top T.degreeSum T.nullitySum T.level
-  have hH : T.height < 49067 := by
+  have hH : T.height < 48999 := by
     have := T.degreeSum
     have := T.nullitySum
     have := T.top
@@ -2714,7 +2714,7 @@ private theorem middle_count (h1 : c1) (h2 : c2) (h3 : c3) (h4 : c4)
   by_cases hmov : MovingGCD R
   · have hcount := K21_6.normal_growth_count R (h1 u hm T R) hmov hsat N hN hn
     have hh := add_rank_book u Γ hfirst _ hcount
-    change Γ.card ≤ rankReserve r + 1698572447252480 at hh
+    change Γ.card ≤ rankReserve r + 1717938918260736 at hh
     omega
   have hinv : ¬ InvalidLeft R := by
     obtain ⟨γ, hγ⟩ := hnon
@@ -2744,14 +2744,14 @@ private theorem middle_count (h1 : c1) (h2 : c2) (h3 : c3) (h4 : c4)
     exact_mod_cast hfinal
   · have hc := normal_count_large_g Row6921.puncture_247716 u T R hsat N hN hn (Nat.lt_of_not_ge hg)
     have hh := add_rank_book u Γ hfirst _ hc
-    change Γ.card ≤ rankReserve r + 1174666577117268 at hh
+    change Γ.card ≤ rankReserve r + 15189180114023447 at hh
     omega
 
 theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) (h4 : c4) : K21.c2 := by
   intro u Γ hu hΓ
-  by_cases hd : firstRank u < 49067
+  by_cases hd : firstRank u < 48999
   · exact (K21_3.proof u Γ hd hΓ).trans (by decide)
-  have hfirst : firstRank u = 49067 := by have := firstRank_le u; omega
+  have hfirst : firstRank u = 48999 := by have := firstRank_le u; omega
   by_cases hlow : nullity u ≤ 6
   · exact (Row6921.count_nullity_le_six u hfirst hlow Γ hΓ).trans (by decide)
   by_cases ht : TypeAtMostOne u
@@ -3448,7 +3448,7 @@ open K21 K21_2 Polynomial Matrix FrobeniusLocator ProximityPrize.Benchmark
 private theorem twoBlock_atSlope (u : Words) (γ : K) :
     ((twoBlock u).map (evalRingHom γ)) =
       Strata.conjugateHankel (Strata.twoConjugations (frobenius K p))
-        node (fun i => u 0 i + γ * u 1 i) 49067 82005 := by
+        node (fun i => u 0 i + γ * u 1 i) 48999 82073 := by
   rw [twoBlock, Strata.stacked_eq_frobeniusStacked, Strata.frobeniusStacked_eval]
   have h : (fun b : Fin 2 => iterateFrobenius K p b.val) =
       Strata.twoConjugations (frobenius K p) := by
@@ -3469,13 +3469,13 @@ theorem rank_le_errors {u : Words} {γ : K} (M : BadMark u γ)
     fin_cases b <;> simp [Strata.twoConjugations, frobenius_def, Native.native_domain_fixed]
   have h := Strata.conjugateHankel_factorization
     (Strata.twoConjugations (frobenius K p)) node (fun i => u 0 i + γ * u 1 i)
-    IRSProfile.domain.injective hfix M.decoder 131072 49067 82005 M.degree
+    IRSProfile.domain.injective hfix M.decoder 131072 48999 82073 M.degree
     (by rw [IRSProfile.card_index]) E hagree
   change ((twoBlock u).map (evalRingHom γ)).rank = stackRank u at hγ
   rw [← hγ, twoBlock_atSlope, h]
   refine (Matrix.rank_mul_le_right _ _).trans ?_
   simpa only [Fintype.card_coe] using
-    Matrix.rank_le_card_height (Strata.nodeVandermonde (fun i : E => node i.val) 82005)
+    Matrix.rank_le_card_height (Strata.nodeVandermonde (fun i : E => node i.val) 82073)
 
 theorem domain_card (S : Finset I) :
     (Finset.univ \ S).card = 262144 - S.card := by
@@ -3487,9 +3487,9 @@ private theorem mark_counts {u : Words} {γ : K} (M : BadMark u γ)
     (hfixed : ∀ i ∈ S, M.decoder.eval (node i) ≠ u 0 i + γ * u 1 i) :
     let D := Finset.univ \ S
     let G := goodSet u D γ M.decoder
-    let s := G.card - 180139
-    s ≤ nullity u - 1 ∧ G.card = 180139 + s ∧
-      (errorSet u D γ M.decoder).card = 82005 - S.card - s ∧ ¬ JointOn u G := by
+    let s := G.card - 180071
+    s ≤ nullity u - 1 ∧ G.card = 180071 + s ∧
+      (errorSet u D γ M.decoder).card = 82073 - S.card - s ∧ ¬ JointOn u G := by
   classical
   dsimp only
   let D := Finset.univ \ S
@@ -3511,13 +3511,13 @@ private theorem mark_counts {u : Words} {γ : K} (M : BadMark u γ)
     exact Finset.mem_sdiff.mpr ⟨Finset.mem_univ _, fun hG =>
       hne (Finset.mem_filter.mp hG).2.symm⟩
   have hrank := rank_le_errors M hγ E hEg
-  have hrankBound : stackRank u + nullity u = 82006 := by
+  have hrankBound : stackRank u + nullity u = 82074 := by
     simpa only [stackRank, nullity, Fintype.card_fin] using
       GenericLayer.rank_add_nullity (twoBlock u)
   have herror : (errorSet u D γ M.decoder).card = D.card - G.card :=
     Finset.card_sdiff_of_subset hGD
-  change G.card - 180139 ≤ nullity u - 1 ∧ G.card = 180139 + (G.card - 180139) ∧
-    (errorSet u D γ M.decoder).card = 82005 - S.card - (G.card - 180139) ∧ ¬ JointOn u G
+  change G.card - 180071 ≤ nullity u - 1 ∧ G.card = 180071 + (G.card - 180071) ∧
+    (errorSet u D γ M.decoder).card = 82073 - S.card - (G.card - 180071) ∧ ¬ JointOn u G
   refine ⟨by omega, by omega, by omega, ?_⟩
   intro hjoint
   apply M.nonjoint
@@ -3537,7 +3537,7 @@ theorem paddedFamily {u : Words} {T : TwoActive u} {R : Relation T}
   let M (γ : K) (hγ : γ ∈ Γ) : BadMark u γ :=
     Classical.choice (bad_mark u Γ hbad γ hγ)
   let P (γ : K) : K[X] := if hγ : γ ∈ Γ then (M γ hγ).decoder else 0
-  refine ⟨⟨P, fun γ => (goodSet u D γ (P γ)).card - 180139, domain_card _, ?_, ?_⟩⟩
+  refine ⟨⟨P, fun γ => (goodSet u D γ (P γ)).card - 180071, domain_card _, ?_, ?_⟩⟩
   · intro γ hγ
     simpa only [P, dite_eq_left hγ] using (M γ hγ).degree
   · intro γ hγ
@@ -3704,13 +3704,13 @@ bound after deletion of the fixed error columns. -/
 def c1 : Prop :=
   ∀ (u : Words) (T : TwoActive u) (R : Relation T) (A : Reduction u T R)
     (γ : K), BadMark u γ → Normal u γ →
-      49067 + A.height ≤ GenericLayer.genericRank (shortenedStack R)
+      48999 + A.height ≤ GenericLayer.genericRank (shortenedStack R)
 
 /-- The shortened relation supplies all its bounded shifts as left
 dependencies of the shortened stack. -/
 def c2 : Prop :=
   ∀ (u : Words) (T : TwoActive u) (R : Relation T) (A : Reduction u T R),
-    (shifts (pair A) 49067 (49067 - A.height)).transpose * shortenedStack R = 0
+    (shifts (pair A) 48999 (48999 - A.height)).transpose * shortenedStack R = 0
 
 private theorem shifted_pair_height
     (F : Type) [Field F] (L H w q : ℕ) (P : Fin 2 → F[X][X])
@@ -3785,7 +3785,7 @@ theorem of_children (h1 : c1) (h2 : c2) : K21_2.c2 := by
     have hr := hm.2.1
     dsimp [H, reducedHeight]
     omega
-  have hlt : A.height < 49067 := by
+  have hlt : A.height < 48999 := by
     have hr := hm.1
     rw [hheight]
     dsimp [H, reducedHeight]
@@ -3801,15 +3801,15 @@ theorem of_children (h1 : c1) (h2 : c2) : K21_2.c2 := by
       hheight ▸ A.output_degree, hnodes⟩
   have hrank := h1 u T R A γ M (hn γ hγ)
   have hshift := h2 u T R A
-  have hentry (i : Fin 2 × Fin 49067) (j : Fin (82005 - (fixedNodes R).card + 1)) :
+  have hentry (i : Fin 2 × Fin 48999) (j : Fin (82073 - (fixedNodes R).card + 1)) :
       (shortenedStack R i j).natDegree ≤ if i.1 = 0 then 1 else p :=
     stacked_entry_natDegree p (fun i : D => node i.val) (fun i => u 0 i.val)
-      (fun i => u 1 i.val) 49067 (82005 - (fixedNodes R).card) i j
+      (fun i => u 1 i.val) 48999 (82073 - (fixedNodes R).card) i j
   have hp : 1 ≤ p := by decide
-  have hz := shifted_pair_height K 49067 A.height _ p (pair A) (shortenedStack R) hp hlt (pair_degree A)
+  have hz := shifted_pair_height K 48999 A.height _ p (pair A) (shortenedStack R) hp hlt (pair_degree A)
     (pair_primitive A) hrank hshift hentry
   rw [hheight] at hz
-  let ζ := (p * 49067 + H) / (49067 - H)
+  let ζ := (p * 48999 + H) / (48999 - H)
   have hζU (i : ℕ) : (Q.U.coeff i).natDegree ≤ ζ := hz 0 i
   have hζV (i : ℕ) : (Q.V.coeff i).natDegree ≤ ζ := hz 1 i
   obtain ⟨book, hbsub, hbcard, hreg⟩ :=
@@ -4598,14 +4598,14 @@ theorem proof : K21_2_2.c2 := by
   classical
   intro u T R A
   let D := Finset.univ \ fixedNodes R
-  have hheight : T.height ≤ 49067 := by
+  have hheight : T.height ≤ 48999 := by
     unfold TwoActive.height
     have := T.inactive
     omega
-  have hL : A.height + (49067 - A.height) = 49066 + 1 := by
+  have hL : A.height + (48999 - A.height) = 48998 + 1 := by
     have := A.height_eq
     omega
-  have hsize : 131072 + (49066 + 1) + (82005 - (fixedNodes R).card) ≤ Fintype.card D := by
+  have hsize : 131072 + (48998 + 1) + (82073 - (fixedNodes R).card) ≤ Fintype.card D := by
     rw [Fintype.card_coe, domain_card]
     have := A.height_eq
     omega
@@ -4614,7 +4614,7 @@ theorem proof : K21_2_2.c2 := by
     (IRSProfile.domain.injective.comp Subtype.val_injective)
     (fun i => Native.native_domain_fixed i.val)
     (algebraMap K[X] Frac) (IsFractionRing.injective K[X] Frac)
-    131072 A.height 49066 _ _ hL hsize (pair A) A.output (pair_degree A) A.output_degree ?_
+    131072 A.height 48998 _ _ hL hsize (pair A) A.output (pair_degree A) A.output_degree ?_
   apply restricted_nodes p (u := u) (S := fixedNodes R) A.U A.V A.output
   rw [← native_relation]
   exact K21_8.reduced_scaled_relation A (1 : K[X])
@@ -5420,20 +5420,20 @@ theorem proof : K21_2_2.c1 := by
   have hE (i : I) : i ∈ E ↔ w i ≠ M.decoder.eval (node i) := by
     simp [E, G]
   have hS : S ⊆ E := fun i hi => (hE i).2 (A.deleted_error γ hn M i hi).symm
-  have hG : 180139 ≤ G.card := M.agreement.trans (Finset.card_le_card (by
+  have hG : 180071 ≤ G.card := M.agreement.trans (Finset.card_le_card (by
     intro i hi
     exact Finset.mem_filter.mpr ⟨Finset.mem_univ _, (M.hits i hi).symm⟩))
-  have hEcard : E.card ≤ 82005 := by
+  have hEcard : E.card ≤ 82073 := by
     have hg := K21_2_2.domain_card G
     change E.card = 262144 - G.card at hg
     omega
   have hDcard : Fintype.card D = 262144 - S.card := by
     rw [Fintype.card_coe]
     exact K21_2_2.domain_card S
-  have hDsize : 131072 + 49067 + (82005 - S.card) ≤ Fintype.card D := by
+  have hDsize : 131072 + 48999 + (82073 - S.card) ≤ Fintype.card D := by
     have hs := Finset.card_le_card hS
     omega
-  have hE'card : E'.card ≤ 82005 - S.card := by
+  have hE'card : E'.card ≤ 82073 - S.card := by
     have hfilter : E.filter (fun i : I => i ∈ D) = E \ S := by
       ext i
       simp [D]
@@ -5447,28 +5447,28 @@ theorem proof : K21_2_2.c1 := by
   let σ := Strata.twoConjugations (frobenius K p)
   let x (i : D) := node i.val
   let B := Strata.conjugateErrors σ (fun i : E => node i.val)
-    (fun i : E => w i.val - M.decoder.eval (node i.val)) 49067
+    (fun i : E => w i.val - M.decoder.eval (node i.val)) 48999
   let B' := Strata.conjugateErrors σ (fun i : E' => x i.val)
-    (fun i : E' => w i.val.val - M.decoder.eval (x i.val)) 49067
+    (fun i : E' => w i.val.val - M.decoder.eval (x i.val)) 48999
   -- Both Vandermonde factors have full row rank; the weights on each domain
   -- are removed by the existing rank factorization.
   have hfull : ((twoBlock u).map (evalRingHom γ)).rank = B.rank := by
     rw [twoBlock, stacked_at_slope]
     exact Strata.conjugateHankel_error_rank σ node w IRSProfile.domain.injective
-      node_fixed M.decoder 131072 49067 82005 M.degree
+      node_fixed M.decoder 131072 48999 82073 M.degree
       (by rw [IRSProfile.card_index]) E (by omega) hagree
   have hshort : ((K21_2_2.shortenedStack R).map (evalRingHom γ)).rank = B'.rank := by
     change ((stacked p x (fun i : D => u 0 i.val) (fun i : D => u 1 i.val)
-      49067 (82005 - S.card)).map (evalRingHom γ)).rank = B'.rank
+      48999 (82073 - S.card)).map (evalRingHom γ)).rank = B'.rank
     rw [stacked_at_slope]
     exact Strata.conjugateHankel_error_rank σ x (fun i : D => w i.val)
       (IRSProfile.domain.injective.comp Subtype.val_injective)
-      (fun b i => node_fixed b i.val) M.decoder 131072 49067 (82005 - S.card)
+      (fun b i => node_fixed b i.val) M.decoder 131072 48999 (82073 - S.card)
       M.degree hDsize E' (by omega) hagree'
   have hD (i : I) : i ∈ D ↔ i ∉ S := by simp [D]
   have hrank : B.rank ≤ B'.rank + S.card :=
     rank_le_punctured_rank_add_deleted D E S hD hS B
-  have hnormal : ((twoBlock u).map (evalRingHom γ)).rank = 49067 + T.height := by
+  have hnormal : ((twoBlock u).map (evalRingHom γ)).rank = 48999 + T.height := by
     change ((twoBlock u).map (evalRingHom γ)).rank = stackRank u at hn
     rw [hn, actual_stackRank]
     have := T.degreeSum
@@ -6083,15 +6083,15 @@ open Polynomial FrobeniusLocator K21 K1_6
 theorem proof : K21_2.c1 := by
   intro u guard T R
   let P (b : Fin 2) : Bivar := Principal.assemble (fun j => R.coefficients (b, j))
-  let s := 49067 - T.height
+  let s := 48999 - T.height
   have hP : ∀ b, (P b).natDegree ≤ T.height := R.x_degree
-  have hBalance : 49067 + T.height + nullity u = 82006 ∧
-      T.height ≤ 32932 ∧ T.height < 49067 :=
+  have hBalance : 48999 + T.height + nullity u = 82074 ∧
+      T.height ≤ 33068 ∧ T.height < 48999 :=
     Native6921Balance (nullity u) T.a T.b T.c
       T.top T.degreeSum T.nullitySum (by have := guard.1; omega)
-  have hSum : T.height + s = 49067 := by omega
-  have hs : 16135 ≤ s := by omega
-  have hRank : GenericLayer.genericRank (twoBlock u) + s = 2 * 49067 := by
+  have hSum : T.height + s = 48999 := by omega
+  have hs : 15931 ≤ s := by omega
+  have hRank : GenericLayer.genericRank (twoBlock u) + s = 2 * 48999 := by
     change stackRank u + s = _
     rw [K21.actual_stackRank u]
     omega
@@ -6104,19 +6104,19 @@ theorem proof : K21_2.c1 := by
   have hMinors := shift_minors_primitive P T.height s hP hPrim
   obtain ⟨H, hH, rows, hRows⟩ := shift_minors_height P T.height s hP hPrim
   rw [hSum] at hMinors
-  have hBound := complementary_minor_bound 49067 82006 s p (twoBlock u) (shifts P 49067 s)
+  have hBound := complementary_minor_bound 48999 82074 s p (twoBlock u) (shifts P 48999 s)
     (by norm_num [Native.p]) hRank (K21_6.certificate_shifts_annihilate R s hSum)
-    (stacked_entry_natDegree p node (u 0) (u 1) 49067 82005) hMinors
-  have hRows' : ∃ rows : Fin s → Fin 2 × Fin 49067,
-      (maximalMinors (shifts P 49067 s) rows).natDegree = s * H := by
+    (stacked_entry_natDegree p node (u 0) (u 1) 48999 82073) hMinors
+  have hRows' : ∃ rows : Fin s → Fin 2 × Fin 48999,
+      (maximalMinors (shifts P 48999 s) rows).natDegree = s * H := by
     rw [← hSum]
     exact ⟨rows, hRows⟩
   obtain ⟨rows', hdeg⟩ := hRows'
   have hDegree := hBound rows'
   rw [hdeg] at hDegree
   have hProduct := Nat.mul_le_mul_right H hs
-  have hCeiling : 49067 * (p + 1) = 104547372597078 := by norm_num [Native.p]
-  have hCap : H ≤ 6479539670 := by omega
+  have hCeiling : 48999 * (p + 1) = 104402484559566 := by norm_num [Native.p]
+  have hCap : H ≤ 6553416894 := by omega
   intro i
   rw [← hCoordinates]
   exact (hH i.1 i.2.val).trans hCap

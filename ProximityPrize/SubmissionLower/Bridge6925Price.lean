@@ -10,14 +10,14 @@ set_option Elab.async false
 set_option maxRecDepth 12000
 set_option maxHeartbeats 1200000
 
-def freeZero : Shape := ⟨55,76,16,1360⟩
-def movingZero : Shape := ⟨160,222,46,6927⟩
-def freeFive : Shape := ⟨91,126,27,2072⟩
-def movingFive : Shape := ⟨266,369,77,10980⟩
-def full : Shape := ⟨2048,2845,600,75000⟩
-def initial : Fin 4 → ℕ := ![6312,173392,828372,9420720]
-def dual : Fin 4 → ℕ := ![358,9306,85921,910022]
-def threshold : Fin 4 → ℕ := ![1,1,3,3]
+def freeZero : Shape := ⟨57,79,17,1160⟩
+def movingZero : Shape := ⟨191,265,55,6963⟩
+def freeFive : Shape := ⟨96,133,29,1557⟩
+def movingFive : Shape := ⟨316,439,92,10562⟩
+def full : Shape := ⟨3025,4200,890,84000⟩
+def initial : Fin 4 → ℕ := ![7915,182171,857477,8077080]
+def dual : Fin 4 → ℕ := ![455,9174,83530,606062]
+def threshold : Fin 4 → ℕ := ![1,1,3,2]
 
 private instance (s t : Shape) (d r M : ℕ) (k : Fin 4) :
     Decidable (checkNumerator s t d r M k) := by
@@ -51,13 +51,13 @@ theorem reserve_square (k : Fin 4) (x z : ℕ) (hx : x ≤ freeFive.U) (hz : z �
 
 theorem linear_ordinate (x z : ℕ) (hx : x ≤ freeFive.U) (hz : z ≤ freeFive.B) :
     7*highCap x z 1 + highScale 1 1 * pairCap (residualShape freeFive x z) (residualShape movingFive x z) 1
-      < highScale 1 1*7*(65143+1) := by
+      < highScale 1 1*7*(64220+1) := by
   apply bound (by decide) (by decide) hx hz
   decide +kernel
 
 theorem linear_mixed (x z : ℕ) (hx : x ≤ freeFive.U) (hz : z ≤ freeFive.B) :
     6*highCap x z 2 + highScale 2 2 * pairCap (residualShape freeFive x z) (residualShape movingFive x z) 2
-      < highScale 2 2*6*(358008+1) := by
+      < highScale 2 2*6*(348044+1) := by
   apply bound (by decide) (by decide) hx hz
   decide +kernel
 
@@ -70,14 +70,14 @@ set_option Elab.async false
 set_option maxRecDepth 12000
 set_option maxHeartbeats 1200000
 
-def freeZero : Shape := ⟨55,76,16,1360⟩
-def movingZero : Shape := ⟨160,222,46,6927⟩
-def freeFive : Shape := ⟨230,319,66,4045⟩
-def movingFive : Shape := ⟨600,837,168,25162⟩
-def full : Shape := ⟨2048,2845,600,75000⟩
-def initial : Fin 4 → ℕ := ![6312,173392,828372,9420720]
-def dual : Fin 4 → ℕ := ![169,4062,35223,281939]
-def threshold : Fin 4 → ℕ := ![3,3,9,8]
+def freeZero : Shape := ⟨57,79,17,1160⟩
+def movingZero : Shape := ⟨191,265,55,6963⟩
+def freeFive : Shape := ⟨216,299,66,3130⟩
+def movingFive : Shape := ⟨641,890,185,25837⟩
+def full : Shape := ⟨3025,4200,890,84000⟩
+def initial : Fin 4 → ℕ := ![7915,182171,857477,8077080]
+def dual : Fin 4 → ℕ := ![176,3962,29245,202174]
+def threshold : Fin 4 → ℕ := ![3,2,8,7]
 
 private instance (s t : Shape) (d r M : ℕ) (k : Fin 4) :
     Decidable (checkNumerator s t d r M k) := by
