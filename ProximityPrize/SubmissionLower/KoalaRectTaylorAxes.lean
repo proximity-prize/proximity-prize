@@ -9,17 +9,17 @@ namespace KoalaRectTaylor
 noncomputable section
 
 open K1_14 (FX Equation Seeds)
-open HighCore82219Upper (Input)
-open HighCore82219Upper_3 (JetRing ordinate)
-open HighCore82219Upper_3_1 (coefficientDerivative jetCoeffDerivative jetSeparant
+open HighCore82258Upper (Input)
+open HighCore82258Upper_3 (JetRing ordinate)
+open HighCore82258Upper_3_1 (coefficientDerivative jetCoeffDerivative jetSeparant
   pureDen pureOrdinate secondAlongVelocity velocity velocityNumerator)
-open HighCore82219Upper_3_1_2 (clearedAction reciprocalNumerator reverseEquation sepAlong)
-open private HighCore82219Upper_3_1_1.coeff_coeffDiff HighCore82219Upper_3_1_1.coeff_lift
-  HighCore82219Upper_3_1.coefficientDerivative_zero HighCore82219Upper_3_1_2.inverseOrdinate
-  from ProximityPrize.SubmissionLower.HighCore82219UpperGeometry
-open HighCore82219Upper_3_1_1 (coeff_coeffDiff coeff_lift)
-open HighCore82219Upper_3_1 (coefficientDerivative_zero)
-open HighCore82219Upper_3_1_2 (inverseOrdinate)
+open HighCore82258Upper_3_1_2 (clearedAction reciprocalNumerator reverseEquation sepAlong)
+open private HighCore82258Upper_3_1_1.coeff_coeffDiff HighCore82258Upper_3_1_1.coeff_lift
+  HighCore82258Upper_3_1.coefficientDerivative_zero HighCore82258Upper_3_1_2.inverseOrdinate
+  from ProximityPrize.SubmissionLower.HighCore82258UpperGeometry
+open HighCore82258Upper_3_1_1 (coeff_coeffDiff coeff_lift)
+open HighCore82258Upper_3_1 (coefficientDerivative_zero)
+open HighCore82258Upper_3_1_2 (inverseOrdinate)
 open MvPolynomial (degreeOf degreeOf_le_iff degreeOf_add_le degreeOf_mul_le
   degreeOf_sum_le)
 

@@ -81,10 +81,10 @@ theorem proof : Front82200.c1 := by
       IRSProfile.card_index] at h
     exact h.trans (Nat.sub_le_sub_left M.agreement blockLength)
   have hheight : T.height ≤ heightCap := relation_height_le hfront T
-  have hH : T.height < L := hheight.trans_lt (by change 33385 < 48843; decide)
+  have hH : T.height < L := hheight.trans_lt (by change 33443 < 48814; decide)
   have hfit : k + T.height ≤ M.support.card :=
     have hcap : k + heightCap ≤ agreement := by
-      change 164457 ≤ 179915
+      change 164515 ≤ 179886
       decide
     ((Nat.add_le_add_left hheight k).trans hcap).trans M.agreement
   have hfix (i : I) : frobenius K p (node i) = node i := Native.native_domain_fixed i

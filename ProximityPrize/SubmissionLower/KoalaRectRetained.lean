@@ -8,7 +8,7 @@ set_option backward.isDefEq.respectTransparency false
 namespace KoalaRect
 noncomputable section
 open Polynomial MvPolynomial
-open HighCore82219
+open HighCore82258
 open KoalaRectReceipts (paidCap)
 open K1_14 (Equation FX L SeedBound seedEmbedding liftPoly atMark graphEval)
 open K1_14_4 (seedDegree seedDegree_le_iff)
@@ -47,7 +47,7 @@ private theorem persistent_at_cap {b : Band} {u del} (M : AnchorModel u del)
   have h2w : 2*w ≤ d := by
     have hh := (height_guards b).2
     dsimp only [d]
-    change finish b ≤ 33385 at hh
+    change finish b ≤ 33443 at hh
     omega
   have hInv := band_invoice hwlo hwhi e v
   have hdp : d < K1.p := hInv.degree.trans (by decide)
@@ -65,8 +65,8 @@ private theorem persistent_at_cap {b : Band} {u del} (M : AnchorModel u del)
       let mark := F.mark γ (hT hγ)
       exact ⟨mark.bad.support, mark.bad.agreement, mark.scalar_hits⟩
   have hz : Set.InjOn M.label (T : Set K1.K) := fun _ _ _ _ h => sub_left_inj.mp h
-  obtain ⟨CRT, hCRT⟩ := FrontCore82219.crt_chart M F H hw hH
-  obtain ⟨hmonic, hdeg, hcenter, hnodes⟩ := FrontCore82219.pole_data (M := M) (F := F) hH
+  obtain ⟨CRT, hCRT⟩ := FrontCore82258.crt_chart M F H hw hH
+  obtain ⟨hmonic, hdeg, hcenter, hnodes⟩ := FrontCore82258.pole_data (M := M) (F := F) hH
   have hchart := P1_7_7_2.proof d w e v hw h2w hdp (poleProduct H) hmonic hdeg hcenter hnodes
     f hf.1 le_rfl hseed T M.label F.scalar M.word hword.degree hroots CRT
     (fun γ hγ => hCRT γ (hT hγ))
@@ -94,7 +94,7 @@ private theorem small_ordinate {u del Γ} (M : AnchorModel u del) (F : AnchoredF
     rcases hone with hh | hh <;> simp only [v, hh] <;> decide +kernel
   let bad := T.filter fun γ => graphEval (M.label γ) (f.resultant f.derivative) = 0
   have hb : bad ⊆ T := Finset.filter_subset _ _
-  have hbad := FrontCore82219.resultant_count M hf hseed hsep bad
+  have hbad := FrontCore82258.resultant_count M hf hseed hsep bad
     (fun _ hγ => (Finset.mem_filter.mp hγ).2)
   have hreg : ∀ γ ∈ T \ bad, regularRoot f (M.label γ) (F.scalar γ) := by
     intro γ hγ
@@ -111,7 +111,7 @@ def RectPrice : Prop :=
     InBand .h2367 M.overhead → M.shift ∉ Γ → ∀ H, AdjacentChart M F H →
     ∀ C : ChartSource .h2367 M F, ∀ pairs : Pairs .h2367 M.overhead.toNat C.rows,
     ∀ Q : PrefixInventory .h2367 M F pairs, ∀ f : Equation, Reduced f →
-    ProjectedProduct Q.parents f → 3 ≤ f.natDegree → f.natDegree < 28 → 0 < seedDegree f →
+    ProjectedProduct Q.parents f → 3 ≤ f.natDegree → f.natDegree < 23 → 0 < seedDegree f →
     axisDegree f 0 + axisDegree f 1 ≤ paidCap f.natDegree → ∀ T : Finset K1.K, T ⊆ Γ →
     (∀ γ ∈ T, atMark f (M.label γ) (F.scalar γ) = 0) →
     T.card ≤ retainedCap .h2367
@@ -120,8 +120,8 @@ theorem retained_of_price (hbank : P3_7_1.BankOK (terminal .h2367)) (hPrice : Re
   intro u del M Γ F hw hshift H hH C pairs Q f hf hprod T hT hr
   obtain ⟨he, haxes⟩ := paid_degrees hbank hw C Q hf hprod
   by_cases hz : seedDegree f = 0
-  · have hc := FrontCore82219.fixed_count M F T hT hf.1 ((seedDegree_le_iff f 0).mp hz.le) hr
-    exact hc.trans ((show f.natDegree ≤ 28 by omega).trans (by decide))
+  · have hc := FrontCore82258.fixed_count M F T hT hf.1 ((seedDegree_le_iff f 0).mp hz.le) hr
+    exact hc.trans (by change f.natDegree ≤ 158674232280974309; omega)
   by_cases he2 : f.natDegree ≤ 2
   · exact small_ordinate M F hw hH hf he2 (seedBound_of_axis haxes) hT hr
   exact hPrice u del M Γ F hw hshift H hH C pairs Q f hf hprod (by omega) he

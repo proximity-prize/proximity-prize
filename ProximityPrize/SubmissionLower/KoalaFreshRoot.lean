@@ -7,7 +7,7 @@ set_option maxHeartbeats 1000000
 namespace SplitCut.FreshRoot
 
 open Polynomial StableNode
-open HighCore82219Upper_4 (coeffDeriv coeff_coeffDeriv coeffDeriv_C coeffDeriv_X)
+open HighCore82258Upper_4 (coeffDeriv coeff_coeffDeriv coeffDeriv_C coeffDeriv_X)
 
 private theorem derivative_constant {E : Type} [Field E] (δ : Derivation ℤ E E)
     {P : E[X]} (h : coeffDeriv δ P = 0) : coeffDeriv δ P.derivative = 0 := by

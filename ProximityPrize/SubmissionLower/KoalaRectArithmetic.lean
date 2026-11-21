@@ -1,5 +1,5 @@
-import ProximityPrize.SubmissionLower.HighCore82219Data
-import ProximityPrize.SubmissionLower.HighCore82219TerminalArithmetic
+import ProximityPrize.SubmissionLower.HighCore82258Data
+import ProximityPrize.SubmissionLower.HighCore82258TerminalArithmetic
 import ProximityPrize.SubmissionLower.KoalaRectCharge
 
 set_option Elab.async false
@@ -12,8 +12,8 @@ open P1_7_6 (Quad linearEnd intervalProduct yStart)
 open KoalaRect (rectGain rectDebit rectSlots_antitone)
 open Finset
 open K1_14 (Shape)
-open HighCore82219 (agreement)
-open HighCore82219 (Bank)
+open HighCore82258 (agreement)
+open HighCore82258 (Bank)
 open P1_7_6 (linearEnd Quad prefixProduct intervalProduct yStart)
 
 structure RectArgs where
@@ -65,7 +65,7 @@ theorem seedQuad_eq (s : Shape) (v : RectArgs) (d a : ℕ) (ha : v.Fits (a+d)) :
 def scaledDebit (v : RectArgs) (N P h : ℕ) : ℤ :=
   240*(KoalaRect.rectDebit h N P v.U : ℤ)
 
-abbrev width := HighCore82219TerminalArithmetic.width
+abbrev width := HighCore82258TerminalArithmetic.width
 def surplus (h : ℕ) (b : Bank) (E : ℕ) (v : RectArgs) : ℤ :=
   (rectGain agreement h b.shape E v.U v.order : ℤ) - (rectDebit h b.nodeRows b.poleMoment v.U : ℤ)
 def colEnd (s : Shape) (h t : ℕ) : ℕ :=
@@ -108,8 +108,8 @@ open P1_7_6 (Quad linearEnd intervalProduct yStart)
 open KoalaRect (rectGain rectDebit rectSlots_antitone)
 open Finset
 open K1_14 (Shape shapeSum slots)
-open HighCore82219 (agreement)
-open HighCore82219 (Bank)
+open HighCore82258 (agreement)
+open HighCore82258 (Bank)
 open private rise_of_convex from ProximityPrize.SubmissionLower.UpperBranch6
 theorem width_cast (s : Shape) (h q j t : ℕ) (hh : h ≤ 131071) :
     (↑(s.m * agreement + j - q * (131071-h) - 2*h*t : ℕ) : ℤ) =
@@ -118,7 +118,7 @@ theorem width_cast (s : Shape) (h q j t : ℕ) (hh : h ≤ 131071) :
   have hd : (↑(131071-h : ℕ) : ℤ) = 131071 - h := Nat.cast_sub hh
   have he : (↑(s.m*agreement+j : ℕ) : ℤ) - (↑(q*(131071-h)+2*h*t : ℕ) : ℤ) =
       width s h q j t := by
-    simp only [width, HighCore82219TerminalArithmetic.width, Nat.cast_add, Nat.cast_mul, Nat.cast_ofNat, hd]
+    simp only [width, HighCore82258TerminalArithmetic.width, Nat.cast_add, Nat.cast_mul, Nat.cast_ofNat, hd]
     ring
   generalize s.m*agreement+j = x at *
   generalize q*(131071-h)+2*h*t = y at *
@@ -131,7 +131,7 @@ private theorem width_convex (s : Shape) (h q j t : ℕ) :
       max 0 (width s h q j t) + max 0 (width s (h+2) q j t) := by
   have hlin : width s (h+1) q j t + width s (h+1) q j t =
       width s h q j t + width s (h+2) q j t := by
-    simp only [width, HighCore82219TerminalArithmetic.width, Nat.cast_add, Nat.cast_one, Nat.cast_ofNat]
+    simp only [width, HighCore82258TerminalArithmetic.width, Nat.cast_add, Nat.cast_one, Nat.cast_ofNat]
     ring
   by_cases hn : width s (h+1) q j t ≤ 0
   · rw [max_eq_left hn, zero_add]
@@ -197,7 +197,7 @@ open P1_7_6 (Quad linearEnd intervalProduct yStart)
 open KoalaRect (rectGain rectDebit rectSlots_antitone)
 open Finset
 open K1_14 (Shape shapeSum slots triangle)
-open HighCore82219 (agreement)
+open HighCore82258 (agreement)
 open private sum_range_guard diagonal from ProximityPrize.SubmissionLower.UpperBranch6
 def phase (s : Shape) (h E : ℕ) (v : RectArgs) (d : ℕ) : ℤ :=
   ∑ t ∈ range (s.J + orderEnd s E v), ∑ a ∈ Ico (t-s.J) (min t (orderEnd s E v-1)+1),
@@ -310,10 +310,10 @@ namespace KoalaRectArithmetic
 open P1_7_6 (Quad linearEnd intervalProduct yStart)
 open KoalaRect (rectGain rectDebit rectSlots_antitone)
 open Finset
-open HighCore82219 (agreement)
+open HighCore82258 (agreement)
 open K1_14 (Shape)
 export P1_7_6 (lt_linearEnd)
-export HighCore82219TerminalArithmetic (width_sum twice_width_interval)
+export HighCore82258TerminalArithmetic (width_sum twice_width_interval)
 end KoalaRectArithmetic
 end
 section
@@ -321,13 +321,13 @@ namespace KoalaRectArithmetic
 open P1_7_6 (Quad linearEnd intervalProduct yStart)
 open KoalaRect (rectGain rectDebit rectSlots_antitone)
 open Finset
-open HighCore82219 (agreement)
+open HighCore82258 (agreement)
 open K1_14 (Shape slots triangle)
 open P1_7_6 (intervalProduct_eq)
 open private yStart_eq sum_clipped from ProximityPrize.SubmissionLower.UpperBranch6
 private theorem widthOrigin_eq (s : Shape) (h t a q : ℕ) (hh : h ≤ 131071) (ha : a ≤ t) :
     width s h q (t-a) t = widthOrigin s h t - a - ((131071-h : ℕ) : ℤ)*q := by
-  simp only [width, HighCore82219TerminalArithmetic.width, widthOrigin, Nat.cast_sub hh, Nat.cast_sub ha, Nat.cast_ofNat]
+  simp only [width, HighCore82258TerminalArithmetic.width, widthOrigin, Nat.cast_sub hh, Nat.cast_sub ha, Nat.cast_ofNat]
   ring
 private theorem innerQuad_eq (s : Shape) (h E d t a : ℕ) (hh : h ≤ 131071)
     (he : 0 < E) (ha : a ≤ t) (hl : t-a+E*(a+d) ≤ colEnd s h t) :
@@ -426,7 +426,7 @@ theorem phaseBlock_eq (s : Shape) (h E : ℕ) (v : RectArgs) (d t : ℕ)
   change _ = intervalProduct _ _ L R₁ + if k < s.B+1 then intervalProduct _ _ L R₂ else 0
   rw [hsplit, mul_add, ho, ← intervalProduct_eq (seedQuad s v d) (innerQuad s h E d t), ← hi]
   ring
-theorem blockSurplus_eq (b : HighCore82219.Bank) (h E : ℕ) (v : RectArgs)
+theorem blockSurplus_eq (b : HighCore82258.Bank) (h E : ℕ) (v : RectArgs)
     (hh : h ≤ 131071) (hj : b.shape.J ≤ 131071-h) (he : 0 < E) :
     blockSurplus b.shape b.nodeRows b.poleMoment h E v = 240*surplus h b E v := by
   unfold blockSurplus scaledDebit surplus
@@ -445,7 +445,7 @@ open P1_7_6 (Quad linearEnd intervalProduct yStart)
 open KoalaRect (rectGain rectDebit rectSlots_antitone)
 open Finset
 open K1_14 (Shape)
-open HighCore82219 (agreement)
+open HighCore82258 (agreement)
 open P1_7_6 (intervalProduct_eq)
 open P1_7_6_4 (Core corePrefix diagonalCore)
 def bankCore (s : Shape) (h E : ℕ) (v : RectArgs) (d k : ℕ) : Core :=
@@ -550,7 +550,7 @@ open P1_7_6 (Quad linearEnd intervalProduct yStart)
 open KoalaRect (rectGain rectDebit rectSlots_antitone)
 open Finset
 open K1_14 (Shape)
-open HighCore82219 (agreement)
+open HighCore82258 (agreement)
 open P0_10_5 (Row scan)
 open private scan_sum from ProximityPrize.SubmissionLower.PortHighBase
 def boundary (s : Shape) (h n i : ℕ) : ℕ :=
@@ -631,7 +631,7 @@ open P1_7_6 (Quad linearEnd intervalProduct yStart)
 open KoalaRect (rectGain rectDebit rectSlots_antitone)
 open K1_14 (Shape)
 open P0_10_5 (Row scan joinRows)
-open HighCore82219TerminalArithmetic (Parts)
+open HighCore82258TerminalArithmetic (Parts)
 theorem certify {s : Shape} {N P h E : ℕ} {v : RectArgs} {n last count : ℕ}
     {gain next cost costNext : ℤ}
     (parts : Parts (runRow s h E v n) last 0 count gain next)
@@ -646,7 +646,7 @@ end KoalaRectArithmetic
 end
 
 namespace KoalaRectArithmetic
-open HighCore82219 (agreement Bank)
+open HighCore82258 (agreement Bank)
 open KoalaRect (rectGain rectDebit)
 
 theorem strict_of_checks {lo h E : ℕ} {b : Bank} {v : RectArgs}

@@ -9,13 +9,13 @@ set_option backward.isDefEq.respectTransparency false
 namespace SplitCut.Compression
 noncomputable section
 
-open Polynomial HighCore82219Upper HighCore82219Upper_3
+open Polynomial HighCore82258Upper HighCore82258Upper_3
 open K1_14 (L FX Equation liftPoly atX graphEval atMark seedEmbedding)
 open K1_14_6 (Biform rootPoint)
 open K1_14_6_1 (flatten markEval)
 open P1 (K p)
-open private HighCore82219Upper_3_2.seed_at_mark HighCore82219Upper_3_3_1.mark_biform
-  HighCore82219Upper_2.seed_at_mark from ProximityPrize.SubmissionLower.HighCore82219UpperGeometry
+open private HighCore82258Upper_3_2.seed_at_mark HighCore82258Upper_3_3_1.mark_biform
+  HighCore82258Upper_2.seed_at_mark from ProximityPrize.SubmissionLower.HighCore82258UpperGeometry
 
 structure MarkCompression (J : Input) (v w : ℕ) where
   G : FreshEquation L
@@ -74,7 +74,7 @@ private theorem center_at_mark (J : Input) (G : FreshEquation L) (γ : K)
   rw [FreshRoot.map_substitute, Polynomial.map_zero, Polynomial.map_map] at hh
   have hseed : (mapRingHom constantAbscissa).comp (mapRingHom (evalSeedConstants z)) =
       mapRingHom ((graphEval z).comp liftSeeds) := by
-    rw [HighCore82219Upper_3_2.seed_at_mark]
+    rw [HighCore82258Upper_3_2.seed_at_mark]
     apply RingHom.ext
     intro P
     exact Polynomial.map_map _ _ _
@@ -90,7 +90,7 @@ private theorem center_at_mark (J : Input) (G : FreshEquation L) (γ : K)
   rw [hh, eval_zero]
 
 theorem compress_marks (J : Input) (v w : ℕ) (he : J.e ≤ 21) (hv : v ≤ 445) (hw : w ≤ 445)
-    (hhi : J.hi ≤ 2440)
+    (hhi : J.hi ≤ 2535)
     (haxis : ∀ i, (J.f.coeff i).degreeOf 0 ≤ v ∧ (J.f.coeff i).degreeOf 1 ≤ w) :
     Nonempty (MarkCompression J v w) := by
   classical
@@ -107,7 +107,7 @@ theorem compress_marks (J : Input) (v w : ℕ) (he : J.e ≤ 21) (hv : v ≤ 445
     omega
   have hfit := SplitCut.Raw.root (f:=J.f) le_rfl haxis
   have hS (g : α) : (S g).natDegree ≤ P1_7.degreeAt J.hi :=
-    natDegree_map_le.trans ((HighCore82219Upper.fixed_word J (Finset.Subset.refl _)).degree _ g.property)
+    natDegree_map_le.trans ((HighCore82258Upper.fixed_word J (Finset.Subset.refl _)).degree _ g.property)
   have hroot (g : α) : MvPolynomial.eval (fun i : Option (Fin 2) => i.elim
       (algebraMap L[X] FX (S g)) (fun j => algebraMap L[X] FX (Polynomial.C (z g j))))
         (flatten J.f) = 0 := by
@@ -120,7 +120,7 @@ theorem compress_marks (J : Input) (v w : ℕ) (he : J.e ≤ 21) (hv : v ≤ 445
       | some j => fin_cases j <;> simp [z, rootPoint, seedEmbedding]
     rw [heq]
     exact (K1_14_6_1.eval_flatten _ _ _).trans (J.regular g.val g.property).1
-  have hd : P1_7.degreeAt J.hi ≤ 133511 := by unfold P1_7.degreeAt; omega
+  have hd : P1_7.degreeAt J.hi ≤ 133606 := by unfold P1_7.degreeAt; omega
   have hp : J.e*P1_7.degreeAt J.hi < p := by
     exact (Nat.mul_le_mul he hd).trans_lt (by decide)
   obtain ⟨G,hGn,hGx,hGy,hGz,hGmarks⟩ := compressed_polynomial S z hf hfit hS hroot

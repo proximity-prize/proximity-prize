@@ -1,6 +1,6 @@
 import ProximityPrize.SubmissionLower.KoalaCutMultiplicity
 import ProximityPrize.SubmissionLower.KoalaPointCount
-import ProximityPrize.SubmissionLower.HighCore82219Family
+import ProximityPrize.SubmissionLower.HighCore82258Family
 
 set_option autoImplicit false
 set_option maxHeartbeats 900000
@@ -14,46 +14,46 @@ open scoped BigOperators
 
 /-- The ordinary node incidence bound fits two copies of the second-cut quota
     for a repeated first-cut component. The common sites shorten its node curves. -/
-theorem repeated_tariff {s ell k L : ℕ} (hs : s ≤ 133511) (he₀ : 128631 ≤ ell)
-    (he₁ : ell ≤ L) (he₂ : L ≤ 128717) (hk : k ≤ 4880) :
-    (262144-s)*(ell-s+k) ≤ (179915-s)*(2*(L+2+k)) := by
-  have ha : s ≤ 179915 := by omega
+theorem repeated_tariff {s ell k L : ℕ} (hs : s ≤ 133606) (he₀ : 128536 ≤ ell)
+    (he₁ : ell ≤ L) (he₂ : L ≤ 128657) (hk : k ≤ 5070) :
+    (262144-s)*(ell-s+k) ≤ (179886-s)*(2*(L+2+k)) := by
+  have ha : s ≤ 179886 := by omega
   by_cases hse : s ≤ ell
-  · have hsmall : 179915*(ell-s+k) ≤ (179915-s)*(ell+k) := by
+  · have hsmall : 179886*(ell-s+k) ≤ (179886-s)*(ell+k) := by
       zify [hse, ha]
       nlinarith only [mul_nonneg (show (0 : ℤ) ≤ s by positivity)
-        (show (0 : ℤ) ≤ 179915-ell-k by omega)]
-    refine Nat.le_of_mul_le_mul_left ?_ (by decide : 0 < 179915)
+        (show (0 : ℤ) ≤ 179886-ell-k by omega)]
+    refine Nat.le_of_mul_le_mul_left ?_ (by decide : 0 < 179886)
     calc
-      179915*((262144-s)*(ell-s+k)) = (262144-s)*(179915*(ell-s+k)) := by ring
-      _ ≤ (262144-s)*((179915-s)*(ell+k)) := Nat.mul_le_mul_left _ hsmall
-      _ = (179915-s)*((262144-s)*(ell+k)) := by ring
-      _ ≤ (179915-s)*((179915*2)*(L+2+k)) :=
+      179886*((262144-s)*(ell-s+k)) = (262144-s)*(179886*(ell-s+k)) := by ring
+      _ ≤ (262144-s)*((179886-s)*(ell+k)) := Nat.mul_le_mul_left _ hsmall
+      _ = (179886-s)*((262144-s)*(ell+k)) := by ring
+      _ ≤ (179886-s)*((179886*2)*(L+2+k)) :=
         Nat.mul_le_mul_left _ (Nat.mul_le_mul (by omega) (by omega))
-      _ = 179915*((179915-s)*(2*(L+2+k))) := by ring
+      _ = 179886*((179886-s)*(2*(L+2+k))) := by ring
   · rw [Nat.sub_eq_zero_of_le (by omega : ell ≤ s), zero_add]
-    have hn : 262144-s ≤ 6*(179915-s) := by omega
+    have hn : 262144-s ≤ 6*(179886-s) := by omega
     calc
-      _ ≤ (6*(179915-s))*k := Nat.mul_le_mul_right _ hn
-      _ = (179915-s)*(6*k) := by ring
+      _ ≤ (6*(179886-s))*k := Nat.mul_le_mul_right _ hn
+      _ = (179886-s)*(6*k) := by ring
       _ ≤ _ := Nat.mul_le_mul_left _ (by omega)
 
-theorem stable_tariff {s L k : ℕ} (hs : s ≤ 133511) (hL : 128631 ≤ L) :
-    (262144-s)*129 ≤ (179915-s)*(L+2+k) := by
-  have hn : 262144-s ≤ 6*(179915-s) := by omega
+theorem stable_tariff {s L k : ℕ} (hs : s ≤ 133606) (hL : 128536 ≤ L) :
+    (262144-s)*129 ≤ (179886-s)*(L+2+k) := by
+  have hn : 262144-s ≤ 6*(179886-s) := by omega
   calc
-    _ ≤ (6*(179915-s))*129 := Nat.mul_le_mul_right _ hn
-    _ = (179915-s)*(6*129) := by ring
+    _ ≤ (6*(179886-s))*129 := Nat.mul_le_mul_right _ hn
+    _ = (179886-s)*(6*129) := by ring
     _ ≤ _ := Nat.mul_le_mul_left _ (by omega)
 
 open P1 (I K node)
-open HighCore82219 (FixedWord agreement blockLength persistent_card_le section_incidence)
+open HighCore82258 (FixedWord agreement blockLength persistent_card_le section_incidence)
 open P1_7_3 (persistentNodes)
 
 theorem repeated_marks {word : I → K} {U : Finset K} {S : K → Polynomial K} {d : ℕ}
-    (hword : FixedWord word U S d) (hd : d ≤ 133511)
-    {ell L k δ : ℕ} (he₀ : 128631 ≤ ell) (he₁ : ell ≤ L) (he₂ : L ≤ 128717)
-    (hk : k ≤ 4880) (hδ : 0 < δ)
+    (hword : FixedWord word U S d) (hd : d ≤ 133606)
+    {ell L k δ : ℕ} (he₀ : 128536 ≤ ell) (he₁ : ell ≤ L) (he₂ : L ≤ 128657)
+    (hk : k ≤ 5070) (hδ : 0 < δ)
     (hcuts : ∀ x : I, (∃ γ ∈ U, (S γ).eval (node x) ≠ word x) →
       (U.filter fun γ => (S γ).eval (node x) = word x).card ≤
         (ell-(persistentNodes word U S).card+k)*δ) :
@@ -63,9 +63,9 @@ theorem repeated_marks {word : I → K} {U : Finset K} {S : K → Polynomial K} 
   · let s := (persistentNodes word U S).card
     have hs := (persistent_card_le hword hlarge).trans hd
     have hh := repeated_tariff (s:=s) hs he₀ he₁ he₂ hk
-    have hpos : 0 < 179915-s := by omega
+    have hpos : 0 < 179886-s := by omega
     have h := section_incidence hword ((ell-s+k)*δ) hcuts
-    change (179915-s)*U.card ≤ (262144-s)*((ell-s+k)*δ) at h
+    change (179886-s)*U.card ≤ (262144-s)*((ell-s+k)*δ) at h
     refine Nat.le_of_mul_le_mul_left ?_ hpos
     rw [← mul_assoc]
     rw [← mul_assoc] at h
@@ -73,8 +73,8 @@ theorem repeated_marks {word : I → K} {U : Finset K} {S : K → Polynomial K} 
   · exact (show U.card ≤ 1 by omega).trans (Nat.succ_le_of_lt (Nat.mul_pos (by omega) hδ))
 
 theorem stable_marks {word : I → K} {U : Finset K} {S : K → Polynomial K} {d : ℕ}
-    (hword : FixedWord word U S d) (hd : d ≤ 133511)
-    {L k δ : ℕ} (hL : 128631 ≤ L) (hδ : 0 < δ)
+    (hword : FixedWord word U S d) (hd : d ≤ 133606)
+    {L k δ : ℕ} (hL : 128536 ≤ L) (hδ : 0 < δ)
     (hcuts : ∀ x : I, (∃ γ ∈ U, (S γ).eval (node x) ≠ word x) →
       (U.filter fun γ => (S γ).eval (node x) = word x).card ≤ 129*δ) :
     U.card ≤ (L+2+k)*δ := by
@@ -83,9 +83,9 @@ theorem stable_marks {word : I → K} {U : Finset K} {S : K → Polynomial K} {d
   · let s := (persistentNodes word U S).card
     have hs := (persistent_card_le hword hlarge).trans hd
     have hh := stable_tariff (s:=s) (k:=k) hs hL
-    have hpos : 0 < 179915-s := by omega
+    have hpos : 0 < 179886-s := by omega
     have h := section_incidence hword (129*δ) hcuts
-    change (179915-s)*U.card ≤ (262144-s)*(129*δ) at h
+    change (179886-s)*U.card ≤ (262144-s)*(129*δ) at h
     refine Nat.le_of_mul_le_mul_left ?_ hpos
     rw [← mul_assoc]
     rw [← mul_assoc] at h

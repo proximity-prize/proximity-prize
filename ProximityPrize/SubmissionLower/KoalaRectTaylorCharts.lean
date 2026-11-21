@@ -10,13 +10,13 @@ namespace KoalaRectTaylor
 noncomputable section
 
 open K1_14 (FX)
-open HighCore82219Upper (Input ResidueLift Factors)
-open HighCore82219Upper_3 (JetRing ordinate graphIdeal)
-open HighCore82219Upper_3_1 (velocity)
-open HighCore82219Upper_3_1_2 (finite reciprocal inverseEval seedMap mul_reciprocal clear_overlap)
-open private HighCore82219Upper_3_1_2.eval_coefficient HighCore82219Upper_3_1_2.scale_velocity
-  from ProximityPrize.SubmissionLower.HighCore82219UpperGeometry
-open HighCore82219Upper_3_1_2 (eval_coefficient scale_velocity)
+open HighCore82258Upper (Input ResidueLift Factors)
+open HighCore82258Upper_3 (JetRing ordinate graphIdeal)
+open HighCore82258Upper_3_1 (velocity)
+open HighCore82258Upper_3_1_2 (finite reciprocal inverseEval seedMap mul_reciprocal clear_overlap)
+open private HighCore82258Upper_3_1_2.eval_coefficient HighCore82258Upper_3_1_2.scale_velocity
+  from ProximityPrize.SubmissionLower.HighCore82258UpperGeometry
+open HighCore82258Upper_3_1_2 (eval_coefficient scale_velocity)
 open SplitCut.Rect (Box Section space)
 open scoped BigOperators
 

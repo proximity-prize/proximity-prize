@@ -8,69 +8,59 @@ set_option maxHeartbeats 12000000
 namespace KoalaRectReceipts
 open KoalaRectArithmetic
 open KoalaRect (rectDebit rectGain)
-open HighCore82219 (terminal agreement)
-open HighCore82219TerminalArithmetic (Parts)
+open HighCore82258 (terminal agreement)
+open HighCore82258TerminalArithmetic (Parts)
 
 private abbrev T := terminal .h2367
 def rectWitness : ℕ → RectArgs
-  | 1 => ⟨![225000, 225000], ![479, 479]⟩
-  | 2 => ⟨![396000, 54000], ![239, 240]⟩
-  | 3 => ⟨![355500, 94500], ![309, 309]⟩
-  | 4 => ⟨![382500, 67500], ![258, 259]⟩
-  | 5 => ⟨![396000, 54000], ![227, 227]⟩
-  | 6 => ⟨![409500, 40500], ![204, 205]⟩
-  | 7 => ⟨![396000, 54000], ![223, 223]⟩
-  | 8 => ⟨![382500, 67500], ![223, 223]⟩
-  | 9 => ⟨![382500, 67500], ![223, 223]⟩
-  | 10 => ⟨![382500, 67500], ![220, 221]⟩
-  | 11 => ⟨![382500, 67500], ![209, 210]⟩
-  | 12 => ⟨![396000, 54000], ![199, 200]⟩
-  | 13 => ⟨![396000, 54000], ![191, 191]⟩
-  | 14 => ⟨![396000, 54000], ![183, 184]⟩
-  | 15 => ⟨![396000, 54000], ![176, 177]⟩
-  | 16 => ⟨![396000, 54000], ![170, 171]⟩
-  | 17 => ⟨![225000, 225000], ![165, 165]⟩
-  | 18 => ⟨![225000, 225000], ![160, 160]⟩
-  | 19 => ⟨![225000, 225000], ![155, 156]⟩
-  | 20 => ⟨![225000, 225000], ![151, 152]⟩
-  | 21 => ⟨![225000, 225000], ![147, 148]⟩
-  | 22 => ⟨![225000, 225000], ![102, 103]⟩
-  | 23 => ⟨![225000, 225000], ![100, 100]⟩
-  | 24 => ⟨![225000, 225000], ![98, 98]⟩
-  | 25 => ⟨![225000, 225000], ![96, 96]⟩
-  | 26 => ⟨![225000, 225000], ![94, 94]⟩
-  | 27 => ⟨![225000, 225000], ![92, 92]⟩
-  | 28 => ⟨![225000, 225000], ![0, 0]⟩
+  | 1 => ⟨![276931, 38069], ![234, 235]⟩
+  | 2 => ⟨![276556, 38444], ![232, 233]⟩
+  | 3 => ⟨![276424, 38576], ![230, 231]⟩
+  | 4 => ⟨![276241, 38759], ![227, 228]⟩
+  | 5 => ⟨![275903, 39097], ![225, 226]⟩
+  | 6 => ⟨![275753, 39247], ![222, 223]⟩
+  | 7 => ⟨![275221, 39779], ![220, 221]⟩
+  | 8 => ⟨![274889, 40111], ![217, 218]⟩
+  | 9 => ⟨![274581, 40419], ![214, 215]⟩
+  | 10 => ⟨![274085, 40915], ![211, 212]⟩
+  | 11 => ⟨![273410, 41590], ![208, 209]⟩
+  | 12 => ⟨![272771, 42229], ![205, 206]⟩
+  | 13 => ⟨![272177, 42823], ![201, 202]⟩
+  | 14 => ⟨![271243, 43757], ![197, 198]⟩
+  | 15 => ⟨![269993, 45007], ![193, 194]⟩
+  | 16 => ⟨![268071, 46929], ![189, 190]⟩
+  | 17 => ⟨![264769, 50231], ![183, 184]⟩
+  | 18 => ⟨![159653, 155347], ![166, 167]⟩
+  | 19 => ⟨![158110, 156890], ![134, 135]⟩
+  | 20 => ⟨![157500, 157500], ![100, 100]⟩
+  | 21 => ⟨![157500, 157500], ![63, 63]⟩
+  | 22 => ⟨![157500, 157500], ![24, 24]⟩
+  | 23 => ⟨![157500, 157500], ![0, 0]⟩
   | _ => ⟨![0, 0], ![0, 0]⟩
 
 def paidCap : ℕ → ℕ
-  | 1 => 957
-  | 2 => 478
-  | 3 => 617
-  | 4 => 516
-  | 5 => 453
-  | 6 => 408
-  | 7 => 445
-  | 8 => 445
-  | 9 => 445
-  | 10 => 440
-  | 11 => 418
-  | 12 => 398
-  | 13 => 381
-  | 14 => 366
-  | 15 => 352
-  | 16 => 340
-  | 17 => 329
-  | 18 => 319
-  | 19 => 310
-  | 20 => 302
-  | 21 => 294
-  | 22 => 204
-  | 23 => 199
-  | 24 => 195
-  | 25 => 191
-  | 26 => 187
-  | 27 => 183
+  | 1 => 468
+  | 2 => 464
+  | 3 => 460
+  | 4 => 454
+  | 5 => 450
+  | 6 => 444
+  | 7 => 440
+  | 8 => 434
+  | 9 => 428
+  | 10 => 422
+  | 11 => 416
+  | 12 => 410
+  | 13 => 402
+  | 14 => 394
+  | 15 => 386
+  | 16 => 378
+  | 17 => 366
+  | 18 => 332
+  | 19 => 268
+  | 20 => 199
+  | 21 => 125
+  | 22 => 47
   | _ => 0
 
 local notation "last!" l "," r => Parts.final (gain := l) (next := r)
@@ -82,92 +72,77 @@ local notation "block!" nn "," k "," l "," r "," p => certify
   (by decide +kernel) (by decide) (by decide) (by decide +kernel) (by decide +kernel)
   (by decide +kernel) (by decide +kernel) (by decide) (by decide)
 
-private theorem r1 : BlockChecks T.shape T.nodeRows T.poleMoment 2354 1 (rectWitness 1) :=
-  block! 1980,7,0x3a56169f6e563caa51277c280,0x3a561737b83b4d13ca73235c0,(more! 0x313ca1529273d6e3a95224ea0,0x31451c91e226bf9b43a39c4e0,(more! 0x8e5a3c58a4dcd115b1b14b20,0x8de290ab7a44fca984218400,(last! 0x34309a2dcc40b8a41b97020,0x334425a22547ef1245dd200)))
+private theorem r1 : BlockChecks T.shape T.nodeRows T.poleMoment 2414 1 (rectWitness 1) :=
+  block! 1485,5,0x83d379a3a9c9f897d69db800,0x83d37d9a2e6fea174d41bc00,(more! 0x801e7667043602d82ae18b40,0x802e172a3a1e6883fe76ac40,(last! 0x3b5037367304d65ce1668c0,0x3a592d0f3adaebb552a9c80))
 
-private theorem r2 : BlockChecks T.shape T.nodeRows T.poleMoment 2354 2 (rectWitness 2) :=
-  block! 1736,14,0x18a76524f19d6e8a71277c280,0x18a765bd3b827ef3ea73235c0,(more! 0x157dd8a1c6723959de274ef00,0x15815f0c094ffcb3eb65f59e0,(last! 0x32a0e8aaa544619b98373760,0x32690fc3b9ecc024185ccd00))
+private theorem r2 : BlockChecks T.shape T.nodeRows T.poleMoment 2414 2 (rectWitness 2) :=
+  block! 1488,5,0x84f16e852c2f4dd7af9db800,0x84f1727bb0d53f572641bc00,(more! 0x81387b1c705df3c074e73360,0x81481e1107f77f12f046cf60,(last! 0x3b8fe5b9f4b6bb314ce4080,0x3a98be8c12dd92df737de80))
 
-private theorem r3 : BlockChecks T.shape T.nodeRows T.poleMoment 2354 3 (rectWitness 3) :=
-  block! 1816,1,0x26b825545ec890d959277c280,0x26b825eca8ada142d273235c0,(more! 0x2139f863950ea6cfac99e1700,0x213f8f242eb2aaa2d2259dbe0,(more! 0x57ea0bf7d46c3a351ae58f20,0x57928bf9e61898f6649ed100,(last! 0x4b8b5cb7b0e3327bb7480,0x3a5c6b1e73ec370c3e580)))
+private theorem r3 : BlockChecks T.shape T.nodeRows T.poleMoment 2414 3 (rectWitness 3) :=
+  block! 1490,6,0x8555dfdb97dd5afd9f9db800,0x8555e3d21c834c7d1641bc00,(more! 0x81a7ad0124badf59e1111b20,0x81b734f7e2301c03b0035820,(last! 0x3ae4b17b1b1064aa0432ca0,0x39ef3c5b86392f26ecc8ec0))
 
-private theorem r4 : BlockChecks T.shape T.nodeRows T.poleMoment 2354 4 (rectWitness 4) :=
-  block! 1771,15,0x1dc3216404e2970559277c280,0x1dc321fc4ec7a76ed273235c0,(more! 0x19d35ace33980f274ffeb39a0,0x19d7a047bb6ea5da64340d9a0,(last! 0x3f08ba94af2dcd5750a67000,0x3ec50c6723944fcf303d0da0))
+private theorem r4 : BlockChecks T.shape T.nodeRows T.poleMoment 2414 4 (rectWitness 4) :=
+  block! 1493,6,0x85e0f0b5731d1b628e9db800,0x85e0f4abf7c30ce20541bc00,(more! 0x8235b5a1a07590c9c4c3a480,0x82452d03f06680da7f5a8a00,(last! 0x3ab3d25075a77e564c6d700,0x39bf693b05abe5a4a8d5a80))
 
-private theorem r5 : BlockChecks T.shape T.nodeRows T.poleMoment 2354 5 (rectWitness 5) :=
-  block! 1748,14,0x18a76524f19d6e8a71277c280,0x18a765bd3b827ef3ea73235c0,(more! 0x158790ad3a69b0ff06b8501c0,0x158b177586b3b5c54285371e0,(last! 0x320374a1ddefa770ded894a0,0x31cb95a2db2770c6b64b4e40))
+private theorem r5 : BlockChecks T.shape T.nodeRows T.poleMoment 2414 5 (rectWitness 5) :=
+  block! 1496,6,0x86e13b24339b241a3e9db800,0x86e13f1ab8411599b541bc00,(more! 0x833804bb47ad49896f8f9780,0x83477763df63ea416c35b200,(last! 0x3a94b414579e04cc5e56b00,0x39a09c1840c7362a4199100))
 
-private theorem r6 : BlockChecks T.shape T.nodeRows T.poleMoment 2354 6 (rectWitness 6) :=
-  block! 1708,13,0x13202cb69a217e5999277c280,0x13202d4ee4068ec31273235c0,(more! 0x10deb0691319f63ab2a2841a0,0x10e168b1d017065fd1027f260,(last! 0x24180a89eae8b5d3596cca60,0x23ecf568b376df8971721a00))
+private theorem r6 : BlockChecks T.shape T.nodeRows T.poleMoment 2414 6 (rectWitness 6) :=
+  block! 1499,6,0x8752bc4794859204de9db800,0x8752c03e192b83845541bc00,(more! 0x83b0bb56bd411c6ba5ff0d80,0x83c0185ce3a9deb7fa308680,(last! 0x3a204f301d1d0bc929edf00,0x392d939e40df5b5398c3000))
 
-private theorem r7 : BlockChecks T.shape T.nodeRows T.poleMoment 2354 7 (rectWitness 7) :=
-  block! 1753,14,0x18a76524f19d6e8a71277c280,0x18a765bd3b827ef3ea73235c0,(more! 0x159558c99294a0c0dec811a60,0x1598df275c1a040a3c70afe20,(last! 0x312830b71a6760520d986a20,0x30f058826e45b7aca9588960))
+private theorem r7 : BlockChecks T.shape T.nodeRows T.poleMoment 2414 7 (rectWitness 7) :=
+  block! 1503,6,0x88e4234637ae07cf169db800,0x88e4273cbc53f94e8d41bc00,(more! 0x853d963bcaeb90914edde580,0x854d01d5c5470bb64beb5000,(last! 0x3a6aaefacf4420e8e4733c0,0x397712bfcb43b325c7ad200))
 
-private theorem r8 : BlockChecks T.shape T.nodeRows T.poleMoment 2354 8 (rectWitness 8) :=
-  block! 1813,1,0x1dc3216404e2970559277c280,0x1dc321fc4ec7a76ed273235c0,(more! 0x19d5959b7088cb4a411aff660,0x19d9dde04e8a44f32ae474aa0,(more! 0x3ed824a881a3abaee87cab40,0x3e948ad0df1ff7562db971e0,(last! 0xbd199bbe29e26bc69d20,0x7ab69973807b9b73df40)))
+private theorem r8 : BlockChecks T.shape T.nodeRows T.poleMoment 2414 8 (rectWitness 8) :=
+  block! 1507,6,0x89ddb844e70d3b769e9db800,0x89ddbc3b6bb32cf61541bc00,(more! 0x8638b92609fa04e8d17ad080,0x864821079e0a9de2952c7080,(last! 0x3a51365c81559e0c7a1abc0,0x395ddad0fc10428c3847080))
 
-private theorem r9 : BlockChecks T.shape T.nodeRows T.poleMoment 2354 9 (rectWitness 9) :=
-  block! 1813,1,0x1dc3216404e2970559277c280,0x1dc321fc4ec7a76ed273235c0,(more! 0x19e5a8752dfaca143e38066e0,0x19e9efdc21df16846988359a0,(more! 0x3dda24b3faa41b63021f5080,0x3d968d4367e0582a405934e0,(last! 0x9b407444725de706e360,0x64a9d20a90b43cb14740)))
+private theorem r9 : BlockChecks T.shape T.nodeRows T.poleMoment 2414 9 (rectWitness 9) :=
+  block! 1511,6,0x8ac4a124229ed254169db800,0x8ac4a51aa744c3d38d41bc00,(more! 0x872425e537bae1f6acbeb080,0x873386728d996a91c5672900,(last! 0x3a08a2608b031bf1e80cc00,0x3915c0e4fb752b9acd2b900))
 
-private theorem r10 : BlockChecks T.shape T.nodeRows T.poleMoment 2354 10 (rectWitness 10) :=
-  block! 1816,1,0x1dc3216404e2970559277c280,0x1dc321fc4ec7a76ed273235c0,(more! 0x19f27a81beda40b7acd073c00,0x19f6c15d7279fdbe18e1d22e0,(more! 0x3d0e4312db7a3a2ed9b462a0,0x3ccac3298f1c42a756995cc0,(last! 0x11f90466baa8afe364d40,0xda57267076aa69316480)))
+private theorem r10 : BlockChecks T.shape T.nodeRows T.poleMoment 2414 10 (rectWitness 10) :=
+  block! 1516,7,0x8c373578e7fd58c6f69db800,0x8c37396f6ca34a466d41bc00,(more! 0x8894dd36faec2c3eae3fd900,0x88a448dfc268883517f8c000,(last! 0x3a266e50c9ddef6488bf600,0x3932e2dfd5854e421c47a00))
 
-private theorem r11 : BlockChecks T.shape T.nodeRows T.poleMoment 2354 11 (rectWitness 11) :=
-  block! 1832,1,0x1dc3216404e2970559277c280,0x1dc321fc4ec7a76ed273235c0,(more! 0x19f40f1df66c6608fb1766200,0x19f856caf755229ab4da4c6e0,(more! 0x3ceb19ffa2421bfa5dd186e0,0x3ca7ecaec2bfbe546f1884c0,(last! 0x749dd745809c4b61b3f80,0x6a48dfaf1a61b87b5b580)))
+private theorem r11 : BlockChecks T.shape T.nodeRows T.poleMoment 2414 11 (rectWitness 11) :=
+  block! 1522,7,0x8e2cff8f32327d91eb9db800,0x8e2d0385b6d86f116241bc00,(more! 0x8a83d154a00ac1f1e51da420,0x8a93589a40bfbd2c4f4f2820,(last! 0x3a942b0102785081fb42f20,0x399ef04e09922bb5e082900))
 
-private theorem r12 : BlockChecks T.shape T.nodeRows T.poleMoment 2354 12 (rectWitness 12) :=
-  block! 1781,15,0x18a76524f19d6e8a71277c280,0x18a765bd3b827ef3ea73235c0,(more! 0x15abdc7502bedb06488fe3520,0x15af63176182f9da4a54d8ae0,(last! 0x2fbdaf9ee26aad51332df360,0x2f85d2dee43feee8f976c120))
+private theorem r12 : BlockChecks T.shape T.nodeRows T.poleMoment 2414 12 (rectWitness 12) :=
+  block! 1528,7,0x900557420f20e2b7569db800,0x90055b3893c6d436cd41bc00,(more! 0x8c5a16e9faa40a3701acaf80,0x8c69b3e4da1b2f7c31065480,(last! 0x3ab623c9595f215a3c50e80,0x39bf97bcd32733f620c3400))
 
-private theorem r13 : BlockChecks T.shape T.nodeRows T.poleMoment 2354 13 (rectWitness 13) :=
-  block! 1793,16,0x18a76524f19d6e8a71277c280,0x18a765bd3b827ef3ea73235c0,(more! 0x15ad336eac0633d708d2044a0,0x15b0ba91f372e0da510ea3aa0,(last! 0x2fa5e7456e84d91ddd4712a0,0x2f6e02345793867c6a25a0e0))
+private theorem r13 : BlockChecks T.shape T.nodeRows T.poleMoment 2414 13 (rectWitness 13) :=
+  block! 1535,7,0x91ba13fa9aaf10974e9db800,0x91ba17f11f550216c541bc00,(more! 0x8e0d10a6e20d5eef2e438c80,0x8e1cc14875a1f1d3eb5a6400,(last! 0x3ad112cf1364617ad395640,0x39d9555933e016e37eb8800))
 
-private theorem r14 : BlockChecks T.shape T.nodeRows T.poleMoment 2354 14 (rectWitness 14) :=
-  block! 1804,16,0x18a76524f19d6e8a71277c280,0x18a765bd3b827ef3ea73235c0,(more! 0x15b117ee6af692852ecf242e0,0x15b49f4a11c7b33bc7930ede0,(last! 0x2f665eae7e7f65bf4c3408c0,0x2f2e75f38547738269682fc0))
+private theorem r14 : BlockChecks T.shape T.nodeRows T.poleMoment 2414 14 (rectWitness 14) :=
+  block! 1544,8,0x94643c79cee7928b269db800,0x94644070538d840a9d41bc00,(more! 0x90acba743203dcb010ba9c00,0x90bc9d2157703a698eb8ed80,(last! 0x3b786b7a3db66df4f47de80,0x3a7d9b835d4dfd8b763a080))
 
-private theorem r15 : BlockChecks T.shape T.nodeRows T.poleMoment 2354 15 (rectWitness 15) :=
-  block! 1816,1,0x18a76524f19d6e8a71277c280,0x18a765bd3b827ef3ea73235c0,(more! 0x15b5b318d36512c283a94b880,0x15b93a9b16ed68cff859979e0,(more! 0x2f1b7d16530608d094bc45e0,0x2ee39c4c1dae3dd256e928c0,(last! 0x28073525a021f01a5680,0x1d8eea27978cb901a680)))
+private theorem r15 : BlockChecks T.shape T.nodeRows T.poleMoment 2414 15 (rectWitness 15) :=
+  block! 1555,8,0x97ec75b56ba930d5de9db800,0x97ec79abf04f22555541bc00,(more! 0x9424de114a4cfffd9f0bcc00,0x94350cc4094941e1d1105180,(last! 0x3c7a275701e2aad40f45b80,0x3b7aa9fece3930b8517f940))
 
-private theorem r16 : BlockChecks T.shape T.nodeRows T.poleMoment 2354 16 (rectWitness 16) :=
-  block! 1826,1,0x18a76524f19d6e8a71277c280,0x18a765bd3b827ef3ea73235c0,(more! 0x15bbbbc724d3c7acce91c8e80,0x15bf433d6cc1786b475d7a2e0,(more! 0x2eba6ca799b639795686ed80,0x2e828feebb719e74a5ce1de0,(last! 0x671d30b66c689fc95600,0x594a8f5ebf3a0e66ff00)))
+private theorem r16 : BlockChecks T.shape T.nodeRows T.poleMoment 2414 16 (rectWitness 16) :=
+  block! 1570,9,0x9d474ce81fa050440e9db800,0x9d4750dea44641c38541bc00,(more! 0x9961248e5bee20385424a780,0x9971d728061d04780b50d380,(last! 0x3e6507f27caccec374adc00,0x3d5d69104a0946ace94d500))
 
-private theorem r17 : BlockChecks T.shape T.nodeRows T.poleMoment 2354 17 (rectWitness 17) :=
-  block! 1929,5,0x3a56169f6e563caa51277c280,0x3a561737b83b4d13ca73235c0,(more! 0x32da7bcb77f25d2f4c04643c0,0x32e2f17fe471c5fa7a07e01e0,(more! 0x77b362dc52c3cc1d2f2eaa60,0x772df0fc485118efa21e4700,(last! 0x6e324e60c0a28e3a1c860,0x639ee738fd27d4f40d000)))
+private theorem r17 : BlockChecks T.shape T.nodeRows T.poleMoment 2414 17 (rectWitness 17) :=
+  block! 1596,10,0xa64340a53ca9b058ae9db800,0xa643449bc14fa1d82541bc00,(more! 0xa2199b0e6aa5f60b944da600,0xa22b49747ecbda2c3ea5a800,(last! 0x429b7731cf2bb4fe166cc00,0x41844b87bb239b859ff5e00))
 
-private theorem r18 : BlockChecks T.shape T.nodeRows T.poleMoment 2354 18 (rectWitness 18) :=
-  block! 1906,4,0x3a56169f6e563caa51277c280,0x3a561737b83b4d13ca73235c0,(more! 0x3303247e0c4cc7ed7ad752740,0x330b95b2c9d2d86b3fd350440,(more! 0x754041633806ccfa91703220,0x74ba8e4e3ea29b20f4f7e5c0,(last! 0x86dc51ebfb9c6273ec40,0x68b5e4c9b3288d1a4600)))
+private theorem r18 : BlockChecks T.shape T.nodeRows T.poleMoment 2414 18 (rectWitness 18) :=
+  block! 1671,12,0x135ec5c2c4abdffa4f69db800,0x135ec6022cf63f1246d41bc00,(more! 0x12c379453d40d0dc048dff900,0x12c5b0c592ff8564d5cfd7300,(last! 0x9b4cbf5d657570722532400,0x991bfb8bc5ff52c698b8c00))
 
-private theorem r19 : BlockChecks T.shape T.nodeRows T.poleMoment 2354 19 (rectWitness 19) :=
-  block! 1885,3,0x3a56169f6e563caa51277c280,0x3a561737b83b4d13ca73235c0,(more! 0x332881a53f86a522eca474260,0x3330eea9cd22d269390cc1580,(more! 0x72fb003ed4842eace2ebed80,0x727573ca1b88c0f9fae9f960,(last! 0x0,0x0)))
+private theorem r19 : BlockChecks T.shape T.nodeRows T.poleMoment 2414 19 (rectWitness 19) :=
+  block! 1653,12,0x135f9fde534aed1be8b9db800,0x135fa01dbb954c33e0241bc00,(more! 0x12c8efdc56d9b8c54a4c1a9e0,0x12cb2673366c3e39646aaf4a0,(last! 0x96b05963ad22dcc52867540,0x94807f49b675a53c4aa0740))
 
-private theorem r20 : BlockChecks T.shape T.nodeRows T.poleMoment 2354 20 (rectWitness 20) :=
-  block! 1867,3,0x3a56169f6e563caa51277c280,0x3a561737b83b4d13ca73235c0,(more! 0x334aee517391ee87cccebd7c0,0x3353576f247d5b11ff63eb820,(more! 0x70e34b26a581bda4b3208d40,0x705dfec88adf7527cbeff980,(last! 0x0,0x0)))
+private theorem r20 : BlockChecks T.shape T.nodeRows T.poleMoment 2414 20 (rectWitness 20) :=
+  block! 1636,11,0x135fb2e7a1b794c20af9db800,0x135fb3270a01f3da02641bc00,(more! 0x12cd56ca6f9660051f0434960,0x12cf8cd3735783cc60b66bb60,(last! 0x925c79d07af3918290c5c00,0x902d2d90d9d7da4368971e0))
 
-private theorem r21 : BlockChecks T.shape T.nodeRows T.poleMoment 2354 21 (rectWitness 21) :=
-  block! 1850,2,0x3a56169f6e563caa51277c280,0x3a561737b83b4d13ca73235c0,(more! 0x336a7eaca8874a3faa774d0e0,0x3372e4307343a84e04b8c95c0,(more! 0x6ef84a51db78e7e9fd826aa0,0x6e73391cf2f8e92b5d307420,(last! 0x0,0x0)))
+private theorem r21 : BlockChecks T.shape T.nodeRows T.poleMoment 2414 21 (rectWitness 21) :=
+  block! 1621,10,0x135fb2e7a1b794c20af9db800,0x135fb3270a01f3da02641bc00,(more! 0x12d1619cae077c72a7e0378c0,0x12d39787168b5fe211f285600,(last! 0x8e518180713031d33442100,0x8c2253d0014be3026d03300))
 
-private theorem r22 : BlockChecks T.shape T.nodeRows T.poleMoment 2354 22 (rectWitness 22) :=
-  block! 1834,1,0x3a56169f6e563caa51277c280,0x3a561737b83b4d13ca73235c0,(more! 0x3375d8af2b0d16a9b1c627820,0x337e3db4b627e07b2a3c88600,(more! 0x6e42cc65e5070562426ca100,0x6dbdc316ea84b78bdf992cc0,(last! 0x0,0x0)))
+private theorem r22 : BlockChecks T.shape T.nodeRows T.poleMoment 2414 22 (rectWitness 22) :=
+  block! 1608,10,0x135fb2e7a1b794c20af9db800,0x135fb3270a01f3da02641bc00,(more! 0x12d53c9bdc8c7d46d78e78e80,0x12d772b6a45b2b23265555be0,(last! 0x8a7741892ca1ef670c2fb40,0x8847e38750e7ca7dbd7dae0))
 
-private theorem r23 : BlockChecks T.shape T.nodeRows T.poleMoment 2354 23 (rectWitness 23) :=
-  block! 1820,1,0x3a56169f6e563caa51277c280,0x3a561737b83b4d13ca73235c0,(more! 0x3392bb19f48934a37fda45f60,0x339b1cb2dcc9dc0467f0b4a00,(more! 0x6c824a9ef01db4e8ea1a9320,0x6bfd799aa9e69221dae49840,(last! 0x0,0x0)))
+private theorem r23 : BlockChecks T.shape T.nodeRows T.poleMoment 2414 23 (rectWitness 23) :=
+  block! 1596,10,0x135fb2e7a1b794c20af9db800,0x135fb3270a01f3da02641bc00,(more! 0x12db543fedd3864e23345f9a0,0x12dd86b02f00ce4b10e73f1c0,(last! 0x8485b375d9caf7fb1a8e400,0x825a040c8f44c06dfce18c0))
 
-private theorem r24 : BlockChecks T.shape T.nodeRows T.poleMoment 2354 24 (rectWitness 24) :=
-  block! 1807,16,0x3a56169f6e563caa51277c280,0x3a561737b83b4d13ca73235c0,(more! 0x33ad86fc2ca1db0670d370460,0x33b5e5639ab450b6614bafa20,(last! 0x6ae259f4505d55e677e976c0,0x6a5dbd70660e604b6be5e4e0))
-
-private theorem r25 : BlockChecks T.shape T.nodeRows T.poleMoment 2354 25 (rectWitness 25) :=
-  block! 1795,16,0x3a56169f6e563caa51277c280,0x3a561737b83b4d13ca73235c0,(more! 0x33c647afc43ad0fb7cca167c0,0x33cea3225f6d4e86d031b3e00,(last! 0x6962366ab1f839a7d6f5b6c0,0x68ddca836570e99c85fcd340))
-
-private theorem r26 : BlockChecks T.shape T.nodeRows T.poleMoment 2354 26 (rectWitness 26) :=
-  block! 1784,16,0x3a56169f6e563caa51277c280,0x3a561737b83b4d13ca73235c0,(more! 0x33dd369d7e82ce62a2ab4f960,0x33e58f519842e666a803feba0,(last! 0x67fe608b12aeccb26023bfc0,0x677a21c48c21de7b72ab4860))
-
-private theorem r27 : BlockChecks T.shape T.nodeRows T.poleMoment 2354 27 (rectWitness 27) :=
-  block! 1774,15,0x3a56169f6e563caa51277c280,0x3a561737b83b4d13ca73235c0,(more! 0x33f2851c109db336aa8fc3840,0x33fadb42453713ba893a90d80,(last! 0x66b3d70a49044cdc94b50e80,0x662fc2462c6790d2d270dec0))
-
-private theorem r28 : BlockChecks T.shape T.nodeRows T.poleMoment 2354 28 (rectWitness 28) :=
-  block! 1765,15,0x3a56169f6e563caa51277c280,0x3a561737b83b4d13ca73235c0,(more! 0x33edc264a0b74515f45a8e360,0x33f61a24542d002656984b6a0,(last! 0x66f71dbbdeba3e4d5ae5cfc0,0x6672ee632abb0af4742ca180))
-
-theorem rectChecks {E : ℕ} (hl : 1 ≤ E) (hu : E ≤ 28) :
-    BlockChecks T.shape T.nodeRows T.poleMoment 2354 E (rectWitness E) := by
+theorem rectChecks {E : ℕ} (hl : 1 ≤ E) (hu : E ≤ 23) :
+    BlockChecks T.shape T.nodeRows T.poleMoment 2414 E (rectWitness E) := by
   interval_cases E
   · exact r1
   · exact r2
@@ -192,25 +167,20 @@ theorem rectChecks {E : ℕ} (hl : 1 ≤ E) (hu : E ≤ 28) :
   · exact r21
   · exact r22
   · exact r23
-  · exact r24
-  · exact r25
-  · exact r26
-  · exact r27
-  · exact r28
 
-theorem witness_guards {E : ℕ} (hl : 1 ≤ E) (hu : E ≤ 28) :
+theorem witness_guards {E : ℕ} (hl : 1 ≤ E) (hu : E ≤ 23) :
     (rectWitness E).U 1 ≤ (rectWitness E).U 0 ∧
       (rectWitness E).U 0 + (rectWitness E).U 1 ≤ T.shape.U := by
   interval_cases E <;> decide
 
-theorem paid_order {E : ℕ} (hl : 1 ≤ E) (hu : E < 28) :
+theorem paid_order {E : ℕ} (hl : 1 ≤ E) (hu : E < 23) :
     (rectWitness E).order 0 ≤ (rectWitness E).order 1 ∧
       (rectWitness E).order 1 ≤ (rectWitness E).order 0 + 1 ∧
       (rectWitness E).order 0 + (rectWitness E).order 1 = paidCap E + 1 := by
   interval_cases E <;> decide
 
-theorem rect_bounds {h E : ℕ} (hl : 2354 ≤ h) (hu : h ≤ 2440)
-    (hel : 1 ≤ E) (heu : E ≤ 28) :
+theorem rect_bounds {h E : ℕ} (hl : 2414 ≤ h) (hu : h ≤ 2535)
+    (hel : 1 ≤ E) (heu : E ≤ 23) :
     rectDebit h T.nodeRows T.poleMoment (rectWitness E).U <
       rectGain agreement h T.shape E (rectWitness E).U (rectWitness E).order := by
   exact strict_of_checks hl (by omega) (by decide) (by decide) (by omega) (rectChecks hel heu)

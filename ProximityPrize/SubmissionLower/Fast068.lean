@@ -5095,6 +5095,7 @@ theorem fibrePoint_eq_ker (y v : SeedClosure) :
 instance fibrePoint_isPrime (y v : SeedClosure) : (fibrePoint y v).IsPrime := by
   rw [fibrePoint_eq_ker]
   exact RingHom.ker_isPrime (fibreEvaluation y v)
+def triangularLength (n : ℕ) : ℕ := n * (n + 1) / 2
 end
 end K1_14_3_4_3
 end

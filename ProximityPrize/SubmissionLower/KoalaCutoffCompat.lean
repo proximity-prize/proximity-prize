@@ -6,21 +6,21 @@ set_option maxHeartbeats 900000
 namespace SplitCut.StableFlow
 noncomputable section
 
-open Polynomial HighCore82219Upper HighCore82219Upper_3 HighCore82219Upper_3_1
+open Polynomial HighCore82258Upper HighCore82258Upper_3 HighCore82258Upper_3_1
 open K1_14 (L FX)
 open P1 (K p)
-open private HighCore82219Upper_3_3_1.mark_biform HighCore82219Upper_5_1.marked_coefficient
-  HighCore82219Upper_2.jet HighCore82219Upper_2.jet_poly HighCore82219Upper_3.oldDenominator_eq
-  from ProximityPrize.SubmissionLower.HighCore82219UpperGeometry
+open private HighCore82258Upper_3_3_1.mark_biform HighCore82258Upper_5_1.marked_coefficient
+  HighCore82258Upper_2.jet HighCore82258Upper_2.jet_poly HighCore82258Upper_3.oldDenominator_eq
+  from ProximityPrize.SubmissionLower.HighCore82258UpperGeometry
 
 theorem omitted_at_mark (J : Input) (B : ResidueLift J) (γ : K) (hγ : γ ∈ J.marks)
     {r : ℕ} (hr : J.ell < r) (hp : r < p) : markPoint J γ (oldNumerator J B r) = 0 := by
-  obtain ⟨T, hT, hcoef⟩ := HighCore82219Upper_2.marked_quotient J B γ hγ
+  obtain ⟨T, hT, hcoef⟩ := HighCore82258Upper_2.marked_quotient J B γ hγ
   change markPoint J γ (C (MvPolynomial.optionEquivLeft FX (Fin 2) (quotientNumerator J B r))) = 0
-  rw [HighCore82219Upper_3_3_1.mark_biform,
-    HighCore82219Upper_5_1.marked_coefficient J B γ hγ T hcoef hp]
-  have hz : HighCore82219Upper_2.jet (algebraMap L[X] FX T) r = 0 := by
-    rw [HighCore82219Upper_2.jet_poly _ hp]
+  rw [HighCore82258Upper_3_3_1.mark_biform,
+    HighCore82258Upper_5_1.marked_coefficient J B γ hγ T hcoef hp]
+  have hz : HighCore82258Upper_2.jet (algebraMap L[X] FX T) r = 0 := by
+    rw [HighCore82258Upper_2.jet_poly _ hp]
     apply coeff_eq_zero_of_natDegree_lt
     rw [natDegree_taylor]
     exact natDegree_map_le.trans_lt (hT.trans_lt hr)
@@ -34,7 +34,7 @@ theorem open_nonmem {J : Input} {B : ResidueLift J} (P : Ideal JetRing) [P.IsPri
   have hp (n : ℕ) : residueInJet B * jetSeparant J.f ^ n ∉ P := fun h =>
     hs (‹P.IsPrime›.mem_of_pow_mem _ ((‹P.IsPrime›.mem_or_mem h).resolve_left hD))
   refine ⟨hs, ?_, ?_⟩
-  · rw [HighCore82219Upper_3.oldDenominator_eq]; exact hp _
+  · rw [HighCore82258Upper_3.oldDenominator_eq]; exact hp _
   · exact hp _
 
 theorem relative_cutoff_mem {J : Input} {B : ResidueLift J} {D : Factors J B}

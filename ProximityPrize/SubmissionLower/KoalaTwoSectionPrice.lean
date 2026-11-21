@@ -6,7 +6,7 @@ set_option maxRecDepth 18000
 set_option maxHeartbeats 14000000
 
 namespace KoalaTwoSectionPrice
-open HighCore82219 (agreement start finish retainedCap)
+open HighCore82258 (agreement start finish retainedCap)
 open P1 (blockLength p)
 open P1_7 (ceilRatio degreeAt quotientOrder singularDegree singularFee)
 open KoalaRectReceipts (paidCap)
@@ -40,7 +40,7 @@ private theorem ceilRatio_le_self (n d : ℕ) (hd : 0 < d) : ceilRatio n d ≤ n
     _ ≤ n*d+d := Nat.add_le_add_right (Nat.le_mul_of_pos_right n hd) d
     _ = (n+1)*d := by ring
 
-theorem liftIndex_le {hi : ℕ} (hhi : hi ≤ 2440) (v₀ v₁ : ℕ) : liftIndex hi v₀ v₁ ≤ 4880 := by
+theorem liftIndex_le {hi : ℕ} (hhi : hi ≤ 2535) (v₀ v₁ : ℕ) : liftIndex hi v₀ v₁ ≤ 5070 := by
   unfold liftIndex
   apply max_le (by decide)
   exact max_le ((ceilRatio_le_self _ _ (lt_of_lt_of_le Nat.zero_lt_one (le_max_left _ _))).trans (by omega))

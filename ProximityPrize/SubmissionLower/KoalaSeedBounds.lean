@@ -10,7 +10,7 @@ noncomputable section
 
 open Polynomial
 open K1_14 (FX L Seeds Equation)
-open HighCore82219Upper (SeedConstants liftSeeds center)
+open HighCore82258Upper (SeedConstants liftSeeds center)
 
 private def axisSpace (F : Type*) [Field F] (i : Fin 2) (d : ℕ) : Submodule F (SeedPoly F) :=
   MvPolynomial.restrictSupport F {m | m i ≤ d}

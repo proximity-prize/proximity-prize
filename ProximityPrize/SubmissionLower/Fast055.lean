@@ -1789,9 +1789,6 @@ structure FixedWord (w : I → K) (T : Finset K) (s : K → K[X]) (d : ℕ) : Pr
   distinct : Set.InjOn s (T : Set K)
   degree : ∀ γ ∈ T, (s γ).natDegree ≤ d
   hits : ∀ γ ∈ T, ∃ B : Finset I, 180265 ≤ B.card ∧ ∀ i ∈ B, (s γ).eval (node i) = w i
-theorem FixedWord.mono {w T s d} (h : FixedWord w T s d) {U : Finset K} (hU : U ⊆ T) :
-    FixedWord w U s d :=
-  ⟨h.distinct.mono hU, fun γ hγ => h.degree γ (hU hγ), fun γ hγ => h.hits γ (hU hγ)⟩
 end
 end K1_14_6
 end
@@ -2209,53 +2206,6 @@ def c5 : Prop :=
       (∀ γ ∈ V, pt γ ∈ MvPolynomial.zeroLocus FX B ∧
         MvPolynomial.aeval (pt γ) (parameterInclusion n q) = 0) →
       V.card ≤ q.totalDegree * H
-theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) (h4 : c4) (h5 : c5) :
-    K1_14_2_4.c1 := by
-  classical
-  intro T z s J g H hg h8 hcurve hinj hmark
-  obtain ⟨hJ, C₀, hC₀, hseed, hsf, hs, hyf, hy⟩ := hcurve
-  let : Fact (Irreducible C₀) := ⟨hC₀⟩
-  obtain ⟨R⟩ := h1 C₀ J g hJ hseed hsf hs hg
-  obtain ⟨n, A, t, hbase, hpoints, hroots⟩ := h2 C₀ J g R T z s hmark
-  have hheight := h3 C₀ J g H n R A hg hyf hy
-  obtain ⟨hdim, hslices⟩ := h4 C₀ J g H n R A hheight hyf hy
-  let q := chartResultant A.equation g
-  let point (γ : K) := baseMark (z γ) (t γ)
-  let U := T.filter fun γ => MvPolynomial.aeval (point γ) (parameterInclusion n q) ≠ 0
-  have hU : U ⊆ T := Finset.filter_subset _ _
-  have hpt : Set.InjOn point (T : Set K) := by
-    intro γ hγ η hη heq
-    apply hinj hγ hη
-    apply seedEmbedding.injective
-    exact congrFun heq (Sum.inl 0)
-  have hbad_inj : Set.InjOn point ((T \ U : Finset K) : Set K) :=
-    hpt.mono (by
-      intro γ hγ
-      exact (Finset.mem_sdiff.mp hγ).1)
-  have hbudget := h5 n H (chartBase A) (RingHom.ker_isPrime (chartBaseMap A)) hheight q
-    (chartResultant_proper A hg h8) (T \ U) point hbad_inj (by
-      intro γ hγ
-      obtain ⟨hγT, hγU⟩ := Finset.mem_sdiff.mp hγ
-      refine ⟨hbase γ hγT, ?_⟩
-      by_contra hn
-      exact hγU (Finset.mem_filter.mpr ⟨hγT, hn⟩))
-  have hsrc : (chartSource A).IsPrime :=
-    ((Ideal.span_singleton_prime R.irreducible.ne_zero).mpr
-      (UniqueFactorizationMonoid.irreducible_iff_prime.mp R.irreducible)).comap (chartRootMap A)
-  refine ⟨U, hU, hbudget.trans (Nat.mul_le_mul_right H (chartResultant_degree A.degree hg)),
-    n, ⟨{
-      equation := A.equation
-      equation_degree := A.degree
-      parameter := t
-      source := chartSource A
-      source_prime := hsrc
-      source_dim := hdim
-      slices := hslices
-      lies_on := fun γ hγ => hpoints γ (hU hγ)
-      root := fun γ hγ => hroots γ (hU hγ)
-      simple := ?_ }⟩⟩
-  intro γ hγ
-  exact simple_of_resultant A.degree hg (hroots γ (hU hγ)) (Finset.mem_filter.mp hγ).2
 end
 end K1_14_2_4_1
 end
@@ -6066,7 +6016,6 @@ private theorem card_le_sum_cover {α β : Type*} (U : Finset α) (Ps : Finset �
     U.card ≤ ∑ P ∈ Ps, (part P).card := by
   classical
   exact (card_le_card fun γ hγ => mem_biUnion.mpr (h γ hγ)).trans card_biUnion_le
-def curveFactor (d : ℕ) : ℕ := 81879 / (180265 - d) + 1
 private def LinearCover.slice {T s d e b} (C : LinearCover T s d e b)
     (U : Finset K) (P : Ideal (LinearRing d e b)) : Finset K := by
   classical
@@ -6146,112 +6095,6 @@ private theorem curve_degree_nat {k σ : Type*} [Field k] [Finite σ]
     rw [hdiff] at hpos
     exact_mod_cast sub_pos.mp hpos
   exact ⟨m-n, Nat.sub_pos_of_lt hmn, hdiff.trans (Nat.cast_sub hmn.le).symm⟩
-private theorem LinearCover.curve_count {T s d e b w} (C : LinearCover T s d e b)
-    {U : Finset K} (hU : U ⊆ T) (hword : FixedWord w U s d) (hd : d < 180265)
-    (P : Ideal (LinearRing d e b)) (hP : P.IsPrime)
-    (hdim : (affineHilbertPolynomial P).natDegree = 1)
-    (hpoints : ∀ γ ∈ U, C.point γ ∈ zeroLocus ClosedField P) :
-    (U.card : ℚ) ≤ (curveFactor d : ℚ) * affineDegree P := by
-  classical
-  obtain ⟨δ, hδ, hδdeg⟩ := curve_degree_nat P hP hdim
-  have hsection (i : I) (hi : ∃ γ ∈ U, (s γ).eval (node i) ≠ w i) :
-      (U.filter fun γ => (s γ).eval (node i) = w i).card ≤ δ := by
-    let V := U.filter fun γ => (s γ).eval (node i) = w i
-    let Qs := C.section P (node i) (w i)
-    obtain ⟨hsum, dims, degree⟩ := C.cut_data hU hP hpoints hi
-    have hone (Q : Ideal (LinearRing d e b)) (hQ : Q ∈ Qs) :
-        ((C.slice V Q).card : ℚ) ≤ affineDegree Q := by
-      have hQdim := (dims Q hQ).2
-      rw [hdim] at hQdim
-      exact C.zero_dim_count ((filter_subset _ _).trans ((filter_subset _ _).trans hU))
-        Q (by omega) (fun _ hγ => (mem_filter.mp hγ).2)
-    have hsumQ : (V.card : ℚ) ≤ ∑ Q ∈ Qs, ((C.slice V Q).card : ℚ) := by
-      exact_mod_cast hsum
-    have hbound := hsumQ.trans ((sum_le_sum hone).trans (degree.trans_eq hδdeg))
-    exact_mod_cast hbound
-  have hcount := section_capacity hword hd δ hsection
-  let gap := 180265 - d
-  have hgap : 0 < gap := Nat.sub_pos_of_lt hd
-  have hfactor : 81879 < gap * curveFactor d := by
-    change 81879 < gap * (81879 / gap + 1)
-    rw [Nat.mul_add, Nat.mul_one]
-    have heq := Nat.mod_add_div 81879 gap
-    have hr := Nat.mod_lt 81879 hgap
-    omega
-  suffices hcard : U.card ≤ curveFactor d * δ by
-    rw [hδdeg, ← Nat.cast_mul]
-    exact_mod_cast hcard
-  by_contra! hbad
-  have hstep := Nat.mul_le_mul_left gap (show curveFactor d * δ + 1 ≤ U.card by omega)
-  rw [Nat.mul_add, Nat.mul_one, ← Nat.mul_assoc] at hstep
-  have hstrict := Nat.mul_lt_mul_of_pos_right hfactor hδ
-  change gap * U.card ≤ 81879 * δ + gap at hcount
-  omega
-private theorem LinearCover.surface_count {T s d e b w} (C : LinearCover T s d e b)
-    {U : Finset K} (hU : U ⊆ T) (hword : FixedWord w U s d) (hd : d < 180265)
-    (P : Ideal (LinearRing d e b)) (hP : P.IsPrime)
-    (hdim : (affineHilbertPolynomial P).natDegree = 2)
-    (hpoints : ∀ γ ∈ U, C.point γ ∈ zeroLocus ClosedField P) :
-    ((180265 - d : ℕ) : ℚ) * U.card ≤
-      81879 * (curveFactor d : ℚ) * affineDegree P + ((180265 - d : ℕ) : ℚ) := by
-  classical
-  let r := (curveFactor d : ℚ) * affineDegree P
-  have hr : 0 ≤ r := mul_nonneg (Nat.cast_nonneg _) (affineDegree_nonneg P)
-  have hsection (i : I) (hi : ∃ γ ∈ U, (s γ).eval (node i) ≠ w i) :
-      (U.filter fun γ => (s γ).eval (node i) = w i).card ≤ ⌊r⌋₊ := by
-    apply (Nat.le_floor_iff hr).mpr
-    let V := U.filter fun γ => (s γ).eval (node i) = w i
-    let Qs := C.section P (node i) (w i)
-    obtain ⟨hsum, dims, degree⟩ := C.cut_data hU hP hpoints hi
-    have hone (Q : Ideal (LinearRing d e b)) (hQ : Q ∈ Qs) :
-        ((C.slice V Q).card : ℚ) ≤ (curveFactor d : ℚ) * affineDegree Q := by
-      obtain ⟨hpr, hdimQ⟩ := dims Q hQ
-      rw [hdim] at hdimQ
-      have hVU : C.slice V Q ⊆ U := (filter_subset _ _).trans (filter_subset _ _)
-      exact C.curve_count (hVU.trans hU) (hword.mono hVU) hd Q hpr (by omega)
-        (fun _ hγ => (mem_filter.mp hγ).2)
-    have hsumQ : (V.card : ℚ) ≤ ∑ Q ∈ Qs, ((C.slice V Q).card : ℚ) := by
-      exact_mod_cast hsum
-    refine hsumQ.trans ((sum_le_sum hone).trans ?_)
-    rw [← mul_sum]
-    exact mul_le_mul_of_nonneg_left degree (Nat.cast_nonneg _)
-  have hcount := section_capacity hword hd ⌊r⌋₊ hsection
-  have hcountQ : ((180265 - d : ℕ) : ℚ) * U.card ≤
-      81879 * (⌊r⌋₊ : ℚ) + ((180265 - d : ℕ) : ℚ) := by exact_mod_cast hcount
-  have hfloor := Nat.floor_le hr
-  dsimp only [r] at hfloor
-  linarith only [hcountQ, hfloor]
-theorem LinearCover.count {T s d e b w} (C : LinearCover T s d e b)
-    (hword : FixedWord w T s d) (hd : d < 180265) :
-    (180265 - d) * T.card ≤ 81879 * curveFactor d * mixedDegree d e b + (180265 - d) * e := by
-  classical
-  let gap : ℕ := 180265 - d
-  have hcover : T.card ≤ ∑ P ∈ C.components, (C.slice T P).card := by
-    apply card_le_sum_cover
-    intro γ hγ
-    obtain ⟨P, hP, hpoint⟩ := C.covers γ hγ
-    exact ⟨P, hP, mem_filter.mpr ⟨hγ, hpoint⟩⟩
-  have hcoverQ : (T.card : ℚ) ≤ ∑ P ∈ C.components, ((C.slice T P).card : ℚ) := by
-    exact_mod_cast hcover
-  have hone (P : Ideal (LinearRing d e b)) (hP : P ∈ C.components) :
-      (gap : ℚ) * ((C.slice T P).card : ℚ) ≤
-        81879 * (curveFactor d : ℚ) * affineDegree P + (gap : ℚ) :=
-    C.surface_count (filter_subset _ _) (hword.mono (filter_subset _ _)) hd
-      P (C.is_prime P hP) (C.dimension P hP) (fun _ hγ => (mem_filter.mp hγ).2)
-  have hcount : (gap : ℚ) * T.card ≤
-      81879 * (curveFactor d : ℚ) * (mixedDegree d e b : ℚ) + (gap : ℚ) * e := by
-    calc
-      _ ≤ (gap : ℚ) * ∑ P ∈ C.components, ((C.slice T P).card : ℚ) :=
-        mul_le_mul_of_nonneg_left hcoverQ (Nat.cast_nonneg _)
-      _ = ∑ P ∈ C.components, (gap : ℚ) * ((C.slice T P).card : ℚ) := mul_sum ..
-      _ ≤ ∑ P ∈ C.components, (81879 * (curveFactor d : ℚ) * affineDegree P + (gap : ℚ)) :=
-        sum_le_sum hone
-      _ = 81879 * (curveFactor d : ℚ) * (∑ P ∈ C.components, affineDegree P) +
-          (gap : ℚ) * (C.components.card : ℚ) := by
-        rw [sum_add_distrib, ← mul_sum, sum_const, nsmul_eq_mul, mul_comm (C.components.card : ℚ)]
-      _ ≤ _ := add_le_add (mul_le_mul_of_nonneg_left C.degree_sum (by positivity))
-        (mul_le_mul_of_nonneg_left (Nat.cast_le.mpr C.component_count) (Nat.cast_nonneg _))
-  exact_mod_cast hcount
 end
 end K1_14_6
 end
@@ -6864,58 +6707,6 @@ def c2 : Prop :=
       (∀ γ ∈ T, atMark f (z γ) (s γ) = 0 ∧ atMark f.derivative (z γ) (s γ) ≠ 0) →
       ∀ C : TaylorChart d e b, (∀ γ ∈ T, C.Recovers (z γ) (s γ)) →
         Nonempty (LinearCover T s d e b)
-theorem of_children (h1 : c1) (h2 : c2) : K1_14.c6 := by
-  intro u del M Γ F _hlo hhi f hf hseed T hT hroots
-  let w := M.overhead
-  let d := 131071 + (band w).endpoint
-  let e := (band w).yBound
-  let b := (band w).seedBound
-  have hend : w ≤ ((band w).endpoint : ℤ) := by
-    unfold band
-    split_ifs with hfirst hsecond hthird
-    · exact hfirst
-    · exact hsecond
-    · exact hthird
-    · exact hhi
-  have hd0 : 0 < d := by dsimp only [d]; omega
-  have hd : d < 180265 := by
-    dsimp only [d, band]
-    split_ifs <;> decide
-  have hdp : d < p := hd.trans (by decide)
-  have hb0 : 0 < b := by
-    dsimp only [b, band]
-    split_ifs <;> decide
-  obtain ⟨hf0, hfe, hprimitive, hsep⟩ := hf
-  have hword : FixedWord M.word T F.scalar d := by
-    refine ⟨F.distinct.mono hT, ?_, ?_⟩
-    · intro γ hγ
-      rcases (F.mark γ (hT hγ)).scalar_degree with hzero | hdeg
-      · simp [hzero]
-      · have hcast : ((F.scalar γ).natDegree : ℤ) ≤ (d : ℤ) := by
-          dsimp only [d]
-          push_cast
-          exact hdeg.trans (add_le_add_right hend _)
-        exact_mod_cast hcast
-    · intro γ hγ
-      let m := F.mark γ (hT hγ)
-      exact ⟨m.bad.support, m.bad.agreement, m.scalar_hits⟩
-  have hlabel : Set.InjOn M.label (T : Set K) := by
-    intro γ _ η _ h
-    exact sub_left_inj.mp h
-  obtain ⟨C, hC⟩ := h1 d e b hd0 hdp f hf0 hfe hseed
-  obtain ⟨cover⟩ := h2 d e b hd0 hb0 f hf0 hfe hprimitive hsep hseed T M.label F.scalar
-    hlabel hroots C (fun γ hγ => hC _ _ (hword.degree γ hγ) (hroots γ hγ).1 (hroots γ hγ).2)
-  have hcount := cover.count hword hd
-  let gap := 180265 - d
-  let total := 81879 * curveFactor d * mixedDegree d e b
-  have hgap : 0 < gap := Nat.sub_pos_of_lt hd
-  change gap * T.card ≤ total + gap * e at hcount
-  change T.card ≤ (total + (gap - 1)) / gap + e
-  have hmul : (T.card - e) * gap ≤ total + (gap - 1) := by
-    rw [Nat.sub_mul, Nat.mul_comm T.card, Nat.mul_comm e]
-    omega
-  have hdiv := (Nat.le_div_iff_mul_le hgap).mpr hmul
-  omega
 end
 end K1_14_6
 end

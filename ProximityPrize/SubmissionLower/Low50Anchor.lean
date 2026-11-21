@@ -1,4 +1,4 @@
-import ProximityPrize.SubmissionLower.Low48AnchorSpace
+import ProximityPrize.SubmissionLower.Low50AnchorDimension
 set_option Elab.async false
 set_option maxHeartbeats 1800000
 set_option maxRecDepth 12000

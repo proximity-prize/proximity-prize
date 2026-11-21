@@ -9,8 +9,8 @@ namespace SplitCut.Rect
 noncomputable section
 open MvPolynomial
 open K1_14 (FX)
-open HighCore82219Upper (Input ResidueLift Factors)
-open HighCore82219Upper_3 (JetRing tangentEquation rootIdeal graphIdeal openFactor)
+open HighCore82258Upper (Input ResidueLift Factors)
+open HighCore82258Upper_3 (JetRing tangentEquation rootIdeal graphIdeal openFactor)
 open KoalaRectTaylor (jetToRect rectIdeal)
 
 private theorem graphCut_eq {J : Input} {B : ResidueLift J} (D : Factors J B) :

@@ -15,10 +15,10 @@ open MvPolynomial Finset
 open P1 (K p)
 open P1_7 (quotientOrder degreeAt)
 open K1_14 (FX)
-open HighCore82219 (FixedWord start finish)
-open HighCore82219Upper (Input ResidueLift Factors componentMarks mem_componentMarks)
-open HighCore82219Upper_3 (JetRing graphIdeal markPoint openFactor)
-open HighCore82219Upper_3_2 (mark_regular)
+open HighCore82258 (FixedWord start finish)
+open HighCore82258Upper (Input ResidueLift Factors componentMarks mem_componentMarks)
+open HighCore82258Upper_3 (JetRing graphIdeal markPoint openFactor)
+open HighCore82258Upper_3_2 (mark_regular)
 open K1_13_6_3_5 (boundaryWeight)
 open KoalaRectTaylor (jetToRect rectIdeal Represented EquationAxis)
 open KoalaTwoSectionPrice (liftIndex graphDegree secondCut)
@@ -140,7 +140,7 @@ theorem two_cut_count : KoalaTwoSectionPrice.TwoCutIncidence := by
   intro J B D hlo hhi he₀ he₁ hword v w hsum hpaid haxis
   have he : 4 ≤ J.e := by omega
   have hvw : v+w ≤ 445 := (hsum.trans hpaid).le.trans (KoalaTwoSectionPrice.paid_le he₀ he₁)
-  have hhi' : J.hi ≤ 2440 := hhi.le.trans (by decide)
+  have hhi' : J.hi ≤ 2535 := hhi.le.trans (by decide)
   obtain ⟨V,_,hbad,hGood⟩ := Compression.compress_good J v w he₀ he₁
     ((Nat.le_add_right v w).trans hvw) ((Nat.le_add_left w v).trans hvw) hhi' haxis
   let A := componentMarks J D.proper

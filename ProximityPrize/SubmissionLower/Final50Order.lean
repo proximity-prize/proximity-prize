@@ -1,5 +1,5 @@
 import ProximityPrize.SubmissionLower.Final50Price
-import ProximityPrize.SubmissionLower.CutterTaperFamily
+import ProximityPrize.SubmissionLower.Wide50EulerPrimaryFamily
 import ProximityPrize.SubmissionLower.PrimaryTaperActive
 
 set_option Elab.async false
@@ -13,7 +13,7 @@ abbrev physicalDegree := Final50Price.physicalDegree
 abbrev agreement := Final50Price.agreement
 abbrev primaryBox := Final50Price.primaryBox
 abbrev primaryCutoff := Final50Price.primaryCutoff
-abbrev sourceRank := CutterTaperTheta.sourceRank agreement physicalDegree
+abbrev sourceRank := Wide50EulerPrimary.sourceRank agreement physicalDegree
 abbrev layerWidth := Final50Price.layerWidth
 abbrev layerNeed := Final50Price.layerNeed
 abbrev Messages := Final50Price.Messages
@@ -21,10 +21,10 @@ abbrev ProperCut := Final50Price.ProperCut
 abbrev LayerBudget := @Final50Price.LayerBudget
 
 /-- Exact dimension supplied by the compact source and the uniform node rank cap. -/
-theorem sourceRank_eq : sourceRank = 1076149877049520115 := by decide
+theorem sourceRank_eq : sourceRank = 993533597967758343 := by decide
 
 /-- The number of layers guaranteed by the stronger compact certificate. -/
-theorem certified_layers : sourceRank / layerWidth + 1 = 23145994688552 := by decide
+theorem certified_layers : sourceRank / layerWidth + 1 = 21410054907182 := by decide
 
 def PrimaryRank (w : I → K) : Prop :=
   ∃ e : Fin sourceRank → Row 4, LinearIndependent Geom e ∧
@@ -658,14 +658,14 @@ export Final50OrderProof (BankRow requiredOrder)
 export Final50OrderProof_1 (order_of_contact)
 
 theorem messages_of_family {cap u del Γ} (M : P1.ModelAt cap u del)
-    (F : P1.FamilyAt agreement M Γ) (hh : M.overhead ≤ 2353) :
+    (F : P1.FamilyAt agreement M Γ) (hh : M.overhead ≤ 2413) :
     Messages M.word Γ F.scalar := by
   refine ⟨F.distinct, ?_, ?_⟩
   · intro γ hγ
     obtain hz | hd := (F.mark γ hγ).scalar_degree
     · simp [hz]
     · change ((F.scalar γ).natDegree : ℤ) ≤ (131072 : ℤ) - 1 + M.overhead at hd
-      change (F.scalar γ).natDegree ≤ 133424
+      change (F.scalar γ).natDegree ≤ 133484
       omega
   · intro γ hγ
     let m := F.mark γ hγ
@@ -683,9 +683,9 @@ theorem proper_layers_of_rank {w Γ s n} {f : Fin n → Row 4}
     Final50OrderProof_2.proof Final50OrderProof_3.proof
     hm hr hirr hpos htop hdiff
 
-/-- Supply the compact primary bank at height 2353. -/
+/-- Supply the compact primary bank at height 2413. -/
 theorem primary_rank (w : P3.I → K) : PrimaryRank w :=
-  CutterTaperTheta.primary_family agreement physicalDegree (by decide) (by decide)
+  Wide50EulerPrimary.primary_family agreement physicalDegree (by decide) (by decide)
     (by decide) w (n := sourceRank) le_rfl
 
 /-- A common evaluation point gives an independent symbol family at each cutoff. -/

@@ -12,8 +12,8 @@ noncomputable section
 open MvPolynomial
 open K1_14 (FX)
 open K1_14_6_1 (flatten)
-open HighCore82219Upper (Input ResidueLift Factors)
-open HighCore82219Upper_3 (JetRing tangentEquation rootIdeal)
+open HighCore82258Upper (Input ResidueLift Factors)
+open HighCore82258Upper_3 (JetRing tangentEquation rootIdeal)
 open KoalaRectTaylor (jetToRect jetToRect_C)
 
 def inRect (I : Ideal JetRing) : Ideal (Ring FX) := I.comap jetToRect.symm.toRingHom
@@ -123,7 +123,7 @@ theorem graph_budget (J : Input) {B : ResidueLift J} (D : Factors J B) {v w : �
   have hc : 0 < c := lt_of_lt_of_le Nat.zero_lt_one (le_max_left _ _)
   have hg : rectRoot D ≠ 0 :=
     (map_ne_zero_iff jetToRect jetToRect.injective).mpr
-      (Polynomial.C_ne_zero.mpr (HighCore82219Upper_3_2.proper_ne_zero D))
+      (Polynomial.C_ne_zero.mpr (HighCore82258Upper_3_2.proper_ne_zero D))
   have hreg := rect_tangent_regular D hTangent
   have hproj : Function.Surjective (project FX a b c) := project_surjective hb hc
   obtain ⟨hdim, hcomp⟩ := graph_pure (project FX a b c) hproj hg hreg ht

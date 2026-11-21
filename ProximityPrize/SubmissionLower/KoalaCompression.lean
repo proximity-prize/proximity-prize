@@ -171,11 +171,11 @@ theorem compress_box {α : Type*} [Finite α] (S : α → F[X]) (z : α → Fin 
 
 /-- Simple uniform compression guard for the active 69.50 grade range. -/
 theorem koala_guard {e v w d : ℕ} (he : e ≤ 21) (hv : v ≤ 445) (hw : w ≤ 445)
-    (hd : d ≤ 133511) :
+    (hd : d ≤ 133606) :
     Fintype.card (exps e (v+128) (w+128)) * (e*d) < (129*129)*2130706433 := by
   rw [card_exps]
   calc
-    (e+1)*(v+128+1)*(w+128+1)*(e*d) ≤ 22*574*574*(21*133511) := by
+    (e+1)*(v+128+1)*(w+128+1)*(e*d) ≤ 22*574*574*(21*133606) := by
       exact Nat.mul_le_mul (Nat.mul_le_mul (Nat.mul_le_mul (by omega) (by omega)) (by omega))
         (Nat.mul_le_mul he hd)
     _ < _ := by decide

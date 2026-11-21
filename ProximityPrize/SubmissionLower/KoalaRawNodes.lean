@@ -9,11 +9,11 @@ open P1 (K I node)
 open K1_14 (FX seedEmbedding)
 open K1_14_6 (Biform rootPoint)
 open K1_14_6_1 (flatten separant markEval)
-open HighCore82219Upper HighCore82219Upper_3 HighCore82219Upper_3_3
+open HighCore82258Upper HighCore82258Upper_3 HighCore82258Upper_3_3
 open MvPolynomial SplitCut.BoxDegree
-open HighCore82219Upper_3_3_1
+open HighCore82258Upper_3_3_1
 open scoped BigOperators
-open private HighCore82219Upper_3_3_1.mark_biform HighCore82219Upper_3.seedBiform_image from ProximityPrize.SubmissionLower.HighCore82219UpperGeometry
+open private HighCore82258Upper_3_3_1.mark_biform HighCore82258Upper_3.seedBiform_image from ProximityPrize.SubmissionLower.HighCore82258UpperGeometry
 
 abbrev ev (J : Input) (γ : K) : Biform →+* FX := markEval (J.model.label γ) (J.family.scalar γ)
 abbrev sepF (J : Input) := separant (flatten J.f)
@@ -52,14 +52,14 @@ theorem node_fit {J : Input} (B : ResidueLift J) (s : Finset I) (x : I)
 
 private theorem eval_seed (J : Input) (γ : K) (t : SeedConstants) :
     ev J γ (seedBiform t) = markPoint J γ (seedInJet t) := by
-  rw [← HighCore82219Upper_3_3_1.mark_biform, HighCore82219Upper_3.seedBiform_image]
+  rw [← HighCore82258Upper_3_3_1.mark_biform, HighCore82258Upper_3.seedBiform_image]
   rfl
 
 theorem den_ne {J : Input} (B : ResidueLift J) {γ : K} (hγ : γ ∈ J.marks) (r : ℕ) :
     ev J γ (quotientDenominator J B r) ≠ 0 := by
   have hδ : ev J γ (seedBiform B.denominator) ≠ 0 := by
     rw [eval_seed]
-    have h := (HighCore82219Upper_3_3_1.proof J B γ hγ).1
+    have h := (HighCore82258Upper_3_3_1.proof J B γ hγ).1
     rw [openFactor,map_mul,mul_ne_zero_iff] at h
     exact h.1
   have hsep : ev J γ (sepF J) ≠ 0 := by
@@ -92,7 +92,7 @@ private theorem normalize_rawjet {J : Input} (B : ResidueLift J) {γ : K} (hγ :
   have hj : j.val ≤ r := Nat.lt_succ_iff.mp (sectionIndex J s j).isLt
   have hj' : 2*j.val-1 ≤ 2*r-1 := by omega
   change _ = (markPoint J γ (oldNumerator J B j.val)) / (markPoint J γ (oldDenominator J B j.val))
-  rw [oldNumerator,oldDenominator,HighCore82219Upper_3_3_1.mark_biform,HighCore82219Upper_3_3_1.mark_biform]
+  rw [oldNumerator,oldDenominator,HighCore82258Upper_3_3_1.mark_biform,HighCore82258Upper_3_3_1.mark_biform]
   apply (div_eq_div_iff (den_ne B hγ r) (den_ne B hγ j.val)).2
   unfold rawJet quotientDenominator
   simp only [map_mul,map_pow]
@@ -113,7 +113,7 @@ theorem node_eval {J : Input} (B : ResidueLift J) (s : Finset I) (x : I)
     ev J γ (nodeCut B s x b a) = 0 ↔ (J.family.scalar γ).eval (node x) = J.model.word x := by
   let φ := markPoint J γ
   let r := J.ell-s.card
-  have hspec := (HighCore82219Upper_3_3_1.proof J B γ hγ).2
+  have hspec := (HighCore82258Upper_3_3_1.proof J B γ hγ).2
   have hfixed : ∀ i ∈ s, reconstructedValue J (residueValue φ B) (canonicalJet φ J B) i =
       algebraMap FX FX (wordAt J i) := by
     intro i hi

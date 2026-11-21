@@ -34,21 +34,6 @@ private theorem valueCut_eval {S : K[X]} (hS : S.natDegree ≤ 133671) (x a : K)
     Algebra.algebraMap_self_apply]
   rw [heval, ← hmap]
   exact embed.injective.eq_iff
-private theorem coeffPoint_injOn {w Γ s} (h : Messages w Γ s) :
-    Set.InjOn (fun γ => coeffPoint (extend (s γ))) (Γ : Set K) := by
-  intro γ hγ η hη heq
-  apply h.distinct hγ hη
-  apply Polynomial.ext
-  intro j
-  by_cases hj : j < taylorLength
-  · exact embed.injective (by simpa [coeffPoint] using congrFun heq ⟨j, hj⟩)
-  · change ¬ j < 133672 at hj
-    rw [Polynomial.coeff_eq_zero_of_natDegree_lt (p := s γ) (by
-          have := h.degree γ hγ
-          omega),
-        Polynomial.coeff_eq_zero_of_natDegree_lt (p := s η) (by
-          have := h.degree η hη
-          omega)]
 private theorem nodeCapacity_of_sections {w Γ s d}
     (hcap : ∀ i : I, (∃ γ ∈ Γ, (s γ).eval (node i) ≠ w i) →
       (Γ.filter fun γ => (s γ).eval (node i) = w i).card ≤ d) :
@@ -61,66 +46,6 @@ private theorem nodeCapacity_of_sections {w Γ s d}
     apply hcap i
     by_contra! hall
     exact hi (mem_filter.mpr ⟨mem_univ _, hall⟩)
-private theorem zeroDim_count {w Γ s} (h : Messages w Γ s) (P : Ideal CoeffRing)
-    (hdim : (affineHilbertPolynomial P).natDegree = 0)
-    (hpoints : ∀ γ ∈ Γ, coeffPoint (extend (s γ)) ∈ zeroLocus Geom P) :
-    (Γ.card : ℚ) ≤ affineDegree P := by
-  classical
-  let A := Γ.image (fun γ => coeffPoint (extend (s γ)))
-  have hA : A.card = Γ.card := card_image_of_injOn (coeffPoint_injOn h)
-  have hsub : (A : Set _) ⊆ zeroLocus Geom P := by
-    intro y hy
-    obtain ⟨γ, hγ, rfl⟩ := mem_image.mp hy
-    exact hpoints γ hγ
-  obtain ⟨hfinite, hdegree⟩ :=
-    finite_zeroLocus_and_ncard_le_affineDegree (K := Geom) P hdim
-  have hn := Set.ncard_le_ncard hsub hfinite
-  rw [Set.ncard_coe_finset, hA] at hn
-  exact (Nat.cast_le.mpr hn).trans hdegree
-private theorem section_count {w Γ s} (h : Messages w Γ s) {P : Ideal CoeffRing}
-    (hP : P.IsPrime) (hpoints : ∀ γ ∈ Γ, coeffPoint (extend (s γ)) ∈ zeroLocus Geom P)
-    (x a : K) (hmiss : ∃ γ ∈ Γ, (s γ).eval x ≠ a)
-    {c : ℚ} (hc : 0 ≤ c)
-    (bound : ∀ (V : Finset K), V ⊆ Γ → ∀ (Q : Ideal CoeffRing), Q.IsPrime →
-      (affineHilbertPolynomial Q).natDegree + 1 = (affineHilbertPolynomial P).natDegree →
-      (∀ γ ∈ V, coeffPoint (extend (s γ)) ∈ zeroLocus Geom Q) →
-      (V.card : ℚ) ≤ c * affineDegree Q) :
-    ((Γ.filter fun γ => (s γ).eval x = a).card : ℚ) ≤ c * affineDegree P := by
-  classical
-  let prime := hP
-  let cut := valueCut x a
-  let Ps := (P ⊔ Ideal.span {cut}).minimalPrimesFinset
-  let U := Γ.filter fun γ => (s γ).eval x = a
-  let part (Q : Ideal CoeffRing) := U.filter fun γ => coeffPoint (extend (s γ)) ∈ zeroLocus Geom Q
-  have hproper : cut ∉ P := by
-    obtain ⟨γ, hγ, hv⟩ := hmiss
-    intro hm
-    exact hv ((valueCut_eval (h.degree γ hγ) x a).mp (hpoints γ hγ _ hm))
-  have hcover : U ⊆ Ps.biUnion part := by
-    intro γ hγ
-    obtain ⟨hγΓ, hv⟩ := mem_filter.mp hγ
-    have hp : coeffPoint (extend (s γ)) ∈ zeroLocus Geom (P ⊔ Ideal.span {cut}) :=
-      mem_zeroLocus_sup_span_singleton_iff.mpr
-        ⟨hpoints γ hγΓ, (valueCut_eval (h.degree γ hγΓ) x a).mpr hv⟩
-    obtain ⟨Q, hQ, hγQ⟩ := exists_retainedMinimalPrime_of_mem_zeroLocus _ 1 _ hp (by simp)
-    exact mem_biUnion.mpr ⟨Q, Ideal.mem_minimalPrimesFinset.mpr (Ideal.mem_retainedMinimalPrimes.mp hQ).1,
-      mem_filter.mpr ⟨hγ, hγQ⟩⟩
-  have hsum : U.card ≤ ∑ Q ∈ Ps, (part Q).card :=
-    (card_le_card hcover).trans card_biUnion_le
-  have hdeg : (∑ Q ∈ Ps, affineDegree Q) ≤ affineDegree P := by
-    simpa only [Ps, Nat.cast_one, one_mul] using
-      principalCut_sum_affineDegree_minimalPrimes_le hproper (valueCut_degree x a)
-  change (U.card : ℚ) ≤ c * affineDegree P
-  calc
-    _ ≤ ∑ Q ∈ Ps, ((part Q).card : ℚ) := by exact_mod_cast hsum
-    _ ≤ ∑ Q ∈ Ps, c * affineDegree Q := by
-      apply sum_le_sum
-      intro Q hQ
-      have hmin := Ideal.mem_minimalPrimesFinset.mp hQ
-      exact bound _ ((filter_subset _ _).trans (filter_subset _ _)) Q hmin.isPrime
-        (principalCut_natDegree_affineHilbertPolynomial_add_one hproper hmin)
-        (fun _ hγ => (mem_filter.mp hγ).2)
-    _ ≤ c * affineDegree P := by rw [← mul_sum]; exact mul_le_mul_of_nonneg_left hdeg hc
 private theorem curve_degree_nat (P : Ideal CoeffRing) (hP : P.IsPrime)
     (hdim : (affineHilbertPolynomial P).natDegree = 1) :
     ∃ δ : ℕ, 0 < δ ∧ affineDegree P = (δ : ℚ) := by
@@ -146,36 +71,6 @@ private theorem curve_degree_nat (P : Ideal CoeffRing) (hP : P.IsPrime)
     rw [hdiff] at hpos
     exact_mod_cast sub_pos.mp hpos
   exact ⟨m-n, Nat.sub_pos_of_lt hmn, hdiff.trans (Nat.cast_sub hmn.le).symm⟩
-private theorem curve_count {w Γ s} (h : Messages w Γ s) {P : Ideal CoeffRing}
-    (hP : P.IsPrime) (hdim : (affineHilbertPolynomial P).natDegree = 1)
-    (hpoints : ∀ γ ∈ Γ, coeffPoint (extend (s γ)) ∈ zeroLocus Geom P) :
-    (Γ.card : ℚ) ≤ 2 * affineDegree P := by
-  classical
-  obtain ⟨δ, hδ, hdeg⟩ := curve_degree_nat P hP hdim
-  have hcap : NodeCapacity w Γ s δ := by
-    apply nodeCapacity_of_sections
-    intro i hi
-    have hcount := section_count h hP hpoints (node i) (w i) hi (c := 1) zero_le_one
-      (fun V hV Q _ hQ hp => by
-        rw [one_mul]
-        exact zeroDim_count (h.mono hV) Q (by omega) hp)
-    rw [one_mul, hdeg] at hcount
-    exact_mod_cast hcount
-  have hcount := nodeCapacity_count h hcap
-  have hi : Γ.card ≤ 2 * δ := by omega
-  rw [hdeg]
-  exact_mod_cast hi
-theorem surface_nodeCapacity {w Γ s} {d : ℕ} (h : Messages w Γ s) {P : Ideal CoeffRing}
-    (hP : P.IsPrime) (hdim : (affineHilbertPolynomial P).natDegree = 2)
-    (hpoints : ∀ γ ∈ Γ, coeffPoint (extend (s γ)) ∈ zeroLocus Geom P)
-    (hd : 2 * affineDegree P ≤ (d : ℚ)) :
-    NodeCapacity w Γ s d := by
-  classical
-  apply nodeCapacity_of_sections
-  intro i hi
-  have hcount := section_count h hP hpoints (node i) (w i) hi (c := 2) (by norm_num)
-    (fun _ hV _ hQ hdimQ hp => curve_count (h.mono hV) hQ (by omega) hp)
-  exact_mod_cast hcount.trans hd
 end
 end K1_13_5_5
 end
@@ -196,48 +91,6 @@ def c2 : Prop :=
   ∀ (P : Ideal CoeffRing) (g d : FreshJetRing), FreshChart P g d →
     (affineHilbertPolynomial P).natDegree = 2 ∧
       2 * affineDegree P ≤ (133671 : ℚ) * (g.totalDegree : ℚ)
-private theorem freshRow_degree_le (f : Row 3) : (freshRow f).totalDegree ≤ f.totalDegree := by
-  unfold freshRow MvPolynomial.totalDegree
-  exact Finset.sup_mono (support_map_subset (algebraMap Geom[X] FreshField) f)
-theorem of_children (h1 : c1) (h2 : c2) : K1_13_5.c5 := by
-  classical
-  intro w Γ s hm n f hf hcover
-  let part (i : Fin n) := Γ.filter fun γ => RegularAt 2 (f i) (extend (s γ)) ∧ Whole (f i)
-  let cap (i : Fin n) := 133671 * (f i).totalDegree
-  have hsub (i : Fin n) : part i ⊆ Γ := filter_subset _ _
-  have hlocal (i : Fin n) : NodeCapacity w (part i) s (cap i) := by
-    by_cases hi : Whole (f i)
-    · have htop : (f i).degreeOf 2 ≤ 24 :=
-        (single_le_sum (f := fun j => (f j).degreeOf 2) (fun _ _ => Nat.zero_le _) (mem_univ i)).trans
-          hf.top
-      obtain ⟨P, hp, hall⟩ := h1 _ (hf.irreducible i) (hf.positive i) htop (hf.weight i) hi
-      obtain ⟨hdim, hdeg⟩ := h2 _ _ _ hp
-      apply surface_nodeCapacity (hm.mono (hsub i)) hp.prime hdim
-      · intro γ hγ
-        have hγΓ := hsub i hγ
-        exact hall _ (Polynomial.natDegree_map_le.trans (hm.degree γ hγΓ))
-          (mem_filter.mp hγ).2.1
-      · have hle : ((freshRow (f i)).totalDegree : ℚ) ≤ ((f i).totalDegree : ℚ) :=
-          Nat.cast_le.mpr (freshRow_degree_le (f i))
-        simpa only [cap, Nat.cast_mul, Nat.cast_ofNat] using
-          hdeg.trans (mul_le_mul_of_nonneg_left hle (by norm_num))
-    · have hempty : part i = ∅ := by simp [part, hi]
-      rw [hempty]
-      exact ⟨∅, by simp, by simp⟩
-  let C : NodeFamily w Γ s := ⟨n, part, cap, hsub, hlocal⟩
-  refine ⟨C, ?_, ?_, ?_⟩
-  · intro γ hγ
-    obtain ⟨i, hi, hwhole⟩ := hcover γ hγ
-    exact mem_biUnion.mpr ⟨i, mem_univ _, mem_filter.mpr ⟨hγ, hi, hwhole⟩⟩
-  · change n ≤ 120
-    calc
-      n = ∑ _i : Fin n, 1 := by simp
-      _ ≤ ∑ i, (f i).totalDegree := sum_le_sum fun i _ =>
-        (hf.positive i).trans_le (degreeOf_le_totalDegree _ _)
-      _ ≤ 120 := hf.total
-  · change (∑ i, 133671 * (f i).totalDegree) ≤ 133671 * 120
-    rw [← mul_sum]
-    exact Nat.mul_le_mul_left _ hf.total
 end
 end K1_13_5_5
 end
@@ -1406,23 +1259,6 @@ def c3 : Prop :=
       FiniteJetPair L (jetImage (freshIdeal (infinityIdeal P))) ∧
       Module.Finite PairField (genericFiber L (freshIdeal (infinityIdeal P))) ∧
       genericFiberDimension L (freshIdeal (infinityIdeal P)) ≤ g.totalDegree
-theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) : K1_13_5_5.c2 := by
-  intro P g d hchart
-  have hdim := chart_dimension P g d hchart
-  refine ⟨hdim, ?_⟩
-  obtain ⟨n, Q, hQ, hdeg, hfiber⟩ := h2 P hchart.prime hdim
-  obtain ⟨L, hL, hfinite, hbudget⟩ := h3 P g d hchart
-  have hcurve (i : Fin n) : 2 * affineDegree (Q i) ≤
-      (133671 : ℚ) * (genericFiberDimension L (freshIdeal (Q i)) : ℚ) := by
-    obtain ⟨hi, hhom, hd⟩ := hQ i
-    have hle : jetImage (freshIdeal (infinityIdeal P)) ≤ jetImage (freshIdeal (Q i)) :=
-      Ideal.comap_mono (Ideal.map_mono hi.le)
-    exact h1 (Q i) L hi.isPrime hhom hd (hL.of_le hle)
-  have hsum := Finset.sum_le_sum (s := Finset.univ) (fun i _ => hcurve i)
-  rw [← Finset.mul_sum, ← Finset.mul_sum] at hsum
-  rw [hdeg]
-  refine hsum.trans (mul_le_mul_of_nonneg_left ?_ (by norm_num))
-  exact_mod_cast (hfiber L hfinite).trans hbudget
 end
 end K1_13_5_5_2
 end
@@ -1798,10 +1634,6 @@ private theorem chart_domain {k σ : Type} [Field k] (Q : Ideal (MvPolynomial σ
       exact Ideal.Quotient.eq_zero_iff_mem.mp
         (hπH ▸ Ideal.Quotient.eq_zero_iff_mem.mpr ((show Q ≤ I from le_sup_left) hH))
   exact (Ideal.Quotient.isDomain_iff_prime I).2 (hI.symm ▸ RingHom.ker_isPrime ψ)
-theorem chartRing_isDomain (Q : Ideal CoeffRing) (hQ : Q.IsPrime)
-    (hhom : Q.IsHomogeneous (homogeneousSubmodule CoeffIndex Geom)) (i : CoeffIndex)
-    (hi : MvPolynomial.X i ∉ Q) : IsDomain (ChartRing Q i) :=
-  chart_domain Q hQ hhom i hi
 private theorem exists_coordinate {k σ : Type} [Field k] [Finite σ]
     (Q : Ideal (MvPolynomial σ k)) (hdim : (affineHilbertPolynomial Q).natDegree ≠ 0) :
     ∃ i : σ, MvPolynomial.X i ∉ Q := by
@@ -1863,13 +1695,6 @@ private theorem monic_chart_aux {k : Type} [Field k] {n : ℕ}
   have hn : (chartDirection Q i).natDegree = i.val :=
     Polynomial.natDegree_eq_of_le_of_coeff_ne_zero hle (by rw [hcoeffi]; exact one_ne_zero)
   exact ⟨i, hiQ, hdom, by rw [Polynomial.Monic, Polynomial.leadingCoeff, hn, hcoeffi], hle⟩
-theorem monic_chart (Q : Ideal CoeffRing) (hQ : Q.IsPrime)
-    (hhom : Q.IsHomogeneous (homogeneousSubmodule CoeffIndex Geom))
-    (hdim : (affineHilbertPolynomial Q).natDegree = 2) :
-    ∃ i : CoeffIndex, MvPolynomial.X i ∉ Q ∧ IsDomain (ChartRing Q i) ∧
-      (direction Q i).Monic ∧ (direction Q i).natDegree ≤ 133671 := by
-  obtain ⟨i, hi, hdom, hm, hd⟩ := monic_chart_aux Q hQ hhom (by rw [hdim]; decide)
-  exact ⟨i, hi, hdom, hm, hd.trans (Nat.le_of_lt_succ i.isLt)⟩
 end
 end K1_13_5_5_2_1
 end
@@ -2313,79 +2138,6 @@ private theorem trimmedValue_dvd {A : Type} [CommRing A] {f : A[X]}
     (s : Factorization f) : trimmedValue s ∣ f := by
   exact (Finset.prod_dvd_prod_of_dvd _ _ (fun i _ => pow_dvd_pow _ (min_le_left _ _))).trans
     (dvd_of_eq s.product_eq.symm)
-private theorem full_square_dvd {A : Type} [CommRing A] {f : A[X]}
-    (s : Factorization f) : f ^ 2 ∣ (trimmedValue s) ^ 133671 := by
-  refine (dvd_of_eq (congrArg (fun g : A[X] => g ^ 2) s.product_eq)).trans ?_
-  rw [trimmedValue, ← Finset.prod_pow, ← Finset.prod_pow]
-  apply Finset.prod_dvd_prod_of_dvd
-  intro i _
-  rw [← pow_mul, ← pow_mul]
-  apply pow_dvd_pow
-  have hi := s.multiplicity_bounds i
-  by_cases h : s.multiplicity i ≤ 2
-  · rw [min_eq_left h]
-    omega
-  · rw [min_eq_right (by omega)]
-    omega
-private theorem eval_divisions {A B : Type} [CommRing A] [CommRing B]
-    (e : A[X] →+* B) {f : A[X]} (s : Factorization f) :
-    e (trimmedValue s) ∣ e f ∧ e f ^ 2 ∣ e (trimmedValue s) ^ 133671 := by
-  exact ⟨map_dvd e (trimmedValue_dvd s),
-    by simpa only [map_pow] using map_dvd e (full_square_dvd s)⟩
-theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) (h4 : c4) (h5 : c5)
-    (h6 : c6) : K1_13_5_5_2.c1 := by
-  intro Q L hQ hhom hdim hL
-  obtain ⟨i, hi, hchart, hmonic, hdegree⟩ := monic_chart Q hQ hhom hdim
-  let : IsDomain (ChartRing Q i) := hchart
-  obtain ⟨a, ha, ⟨s⟩⟩ := h2 (ChartRing Q i) (direction Q i) hmonic hdegree
-  obtain ⟨hdom, heval, hfinite, hcoeff⟩ := h1 Q i a hQ hhom hdim hi hchart ha
-  let : IsDomain (FreshOpen Q i a) := hdom
-  let : IsDomain (OpenRing Q i a) := IsLocalization.Away.isDomain _ ha
-  change Factorization (openDirection Q i a) at s
-  obtain ⟨q, hq0, hq, hqspan⟩ := h3 (OpenRing Q i a) (openDirection Q i a) s
-  let e : (OpenRing Q i a)[X] →+* FreshOpen Q i a := freshEval (OpenRing Q i a)
-  let x := e (openDirection Q i a)
-  let b := e (commonFactor s)
-  let d : Fin 3 → FreshOpen Q i a := fun j => e (q j)
-  have hx : x ≠ 0 := by
-    simpa only [e, x, openDirection, map_zero] using
-      heval.ne (hmonic.map (algebraMap _ (OpenRing Q i a))).ne_zero
-  have hb : b ≠ 0 := by
-    simpa only [e, b, map_zero] using heval.ne (commonFactor_monic s).ne_zero
-  have hd : d 0 ≠ 0 := by
-    simpa only [d, hq0, e, map_zero] using heval.ne (trimmedValue_monic s).ne_zero
-  have htrim : ∀ j, b * d j = e (Polynomial.hasseDeriv j.val (openDirection Q i a)) := by
-    intro j
-    exact (e.map_mul _ _).symm.trans (congrArg e (hq j))
-  have hspan : Ideal.span (Set.range d) = ⊤ := by
-    have hm := congrArg (Ideal.map e) hqspan
-    rwa [Ideal.map_top, Ideal.map_span, ← Set.range_comp] at hm
-  let : Module.Finite FreshField (PrincipalQuot x) := hfinite
-  have hdiv := eval_divisions e s
-  have hdeq : d 0 = e (trimmedValue s) := congrArg e hq0
-  rw [← hdeq] at hdiv
-  obtain ⟨hdfin, hlen⟩ := length_bound x (d 0) 133671 hx hd hdiv.1 hdiv.2
-  rw [← hcoeff]
-  have hlenQ : 2 * (Module.finrank FreshField (PrincipalQuot x) : ℚ) ≤
-      133671 * (Module.finrank FreshField (PrincipalQuot (d 0)) : ℚ) := by
-    exact_mod_cast hlen
-  by_cases hu : IsUnit (d 0)
-  · have hzero : Module.finrank FreshField (PrincipalQuot (d 0)) = 0 := by
-      have : Subsingleton (PrincipalQuot (d 0)) :=
-        Ideal.Quotient.subsingleton_iff.mpr (Ideal.span_singleton_eq_top.mpr hu)
-      exact Module.finrank_zero_of_subsingleton
-    exact hlenQ.trans (by rw [hzero, Nat.cast_zero, mul_zero]; positivity)
-  · obtain ⟨hk, hcomparison⟩ := h4 Q i a hQ hhom hdim hi hchart ha hdom b d hb htrim
-    obtain ⟨hpairfin, hrank⟩ := hcomparison L hL
-    have hL' : FiniteJetPair L (coneJetIdeal d) := hk ▸ hL
-    obtain ⟨M, w, hM, hMw, hinj, hw⟩ := h5 _ d L hd hu hspan hL'
-    obtain ⟨hwfin, hwRank⟩ := h6 _ d L M hL' hpairfin hM hinj
-    rw [hMw] at hwfin hwRank hinj
-    let : Module.Finite PairField (pairFiber (valuePairMap (d 0) w)) := hwfin
-    let : Module.Finite FreshField (PrincipalQuot (d 0)) := hdfin
-    have hbound := pin_bound (d 0) w hw hinj
-    rw [hwRank, hrank] at hbound
-    exact hlenQ.trans (mul_le_mul_of_nonneg_left (by exact_mod_cast hbound) (by norm_num))
 end
 end K1_13_5_5_2_1
 end

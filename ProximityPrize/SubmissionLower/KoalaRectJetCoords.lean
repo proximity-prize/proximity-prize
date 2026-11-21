@@ -1,4 +1,4 @@
-import ProximityPrize.SubmissionLower.HighCore82219UpperGeometry
+import ProximityPrize.SubmissionLower.HighCore82258UpperGeometry
 import ProximityPrize.SubmissionLower.KoalaRectSections
 
 set_option autoImplicit false
@@ -10,8 +10,8 @@ namespace KoalaRectTaylor
 noncomputable section
 
 open K1_14 (FX Equation)
-open HighCore82219Upper_3 (JetRing ordinate seedVar)
-open HighCore82219Upper_3_1 (velocity)
+open HighCore82258Upper_3 (JetRing ordinate seedVar)
+open HighCore82258Upper_3_1 (velocity)
 open MvPolynomial
 
 /-- Affine coordinates in the order ordinate, velocity, and the two seeds. -/

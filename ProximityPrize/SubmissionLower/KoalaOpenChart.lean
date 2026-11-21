@@ -7,20 +7,20 @@ set_option backward.isDefEq.respectTransparency false
 namespace SplitCut.LocalModel
 noncomputable section
 
-open Polynomial HighCore82219Upper HighCore82219Upper_3
-open HighCore82219Upper_4 (point modelValue origin)
-open HighCore82219Upper_5_1 (valuePolynomial)
-open HighCore82219Upper_3_1 (jetSeparant)
-open HighCore82219Upper_3_1_2 (seedMap)
-open HighCore82219Upper_3_3 (nodeAt wordAt)
+open Polynomial HighCore82258Upper HighCore82258Upper_3
+open HighCore82258Upper_4 (point modelValue origin)
+open HighCore82258Upper_5_1 (valuePolynomial)
+open HighCore82258Upper_3_1 (jetSeparant)
+open HighCore82258Upper_3_1_2 (seedMap)
+open HighCore82258Upper_3_3 (nodeAt wordAt)
 open K1_14 (FX L Seeds Equation seedEmbedding)
 open K1_14_6 (Biform)
 open K1_14_6_1 (flatten separant markEval)
 open P1 (K I node)
 open StableFlow (CurveField curveMap)
-open private HighCore82219Upper_3_1_2.eval_coefficient HighCore82219Upper_3_3_1.mark_biform
-  HighCore82219Upper_3.seedBiform_image HighCore82219Upper_3_3.rootInJet_separant
-  from ProximityPrize.SubmissionLower.HighCore82219UpperGeometry
+open private HighCore82258Upper_3_1_2.eval_coefficient HighCore82258Upper_3_3_1.mark_biform
+  HighCore82258Upper_3.seedBiform_image HighCore82258Upper_3_3.rootInJet_separant
+  from ProximityPrize.SubmissionLower.HighCore82258UpperGeometry
 
 abbrev openImage (J : Input) (B : ResidueLift J) (P : Ideal JetRing) : JetRing ⧸ P :=
   Ideal.Quotient.mk P (openFactor J B)
@@ -57,7 +57,7 @@ theorem chartProduct {A : Type} [CommRing A] (φ : JetRing →+* A) (J : Input) 
       (φ.comp rootInJet.toRingHom) (separant (flatten J.f)) = φ (openFactor J B) := by
   change φ (C ((MvPolynomial.optionEquivLeft FX (Fin 2)) (seedBiform B.denominator))) *
     φ (rootInJet (separant (flatten J.f))) = φ (openFactor J B)
-  rw [HighCore82219Upper_3.seedBiform_image, HighCore82219Upper_3_3.rootInJet_separant,
+  rw [HighCore82258Upper_3.seedBiform_image, HighCore82258Upper_3_3.rootInJet_separant,
     openFactor, map_mul]
   rfl
 
@@ -67,14 +67,14 @@ theorem root_point {A : Type} [Field A] (φ : JetRing →+* A) :
   intro f
   change φ (C (MvPolynomial.optionEquivLeft FX (Fin 2) f)) =
     (MvPolynomial.optionEquivLeft FX (Fin 2) f).eval₂ (seedMap φ) (φ ordinate)
-  exact HighCore82219Upper_3_1_2.eval_coefficient φ _
+  exact HighCore82258Upper_3_1_2.eval_coefficient φ _
 
 theorem seed_lift_point {A : Type} [CommRing A] (φ : JetRing →+* A) :
     (φ.comp rootInJet.toRingHom).comp seedBiform = (seedMap φ).comp liftSeeds := by
   apply RingHom.ext
   intro s
   change φ (C ((MvPolynomial.optionEquivLeft FX (Fin 2)) (seedBiform s))) = _
-  rw [HighCore82219Upper_3.seedBiform_image]
+  rw [HighCore82258Upper_3.seedBiform_image]
   rfl
 
 private theorem inv_image {A : Type} [Field A] {J : Input} {B : ResidueLift J}
@@ -147,7 +147,7 @@ theorem chart_at_mark {J : Input} {B : ResidueLift J} {D : Factors J B}
   let φ := (markPoint J γ).toRingHom
   let f := Ideal.Quotient.lift P φ (fun a ha => RingHom.mem_ker.mp (C.liesOn γ hγ ha))
   have hγ' := C.sub hγ
-  have hunit : IsUnit (f g) := isUnit_iff_ne_zero.mpr (HighCore82219Upper_3_3_1.proof J B γ hγ').1
+  have hunit : IsUnit (f g) := isUnit_iff_ne_zero.mpr (HighCore82258Upper_3_3_1.proof J B γ hγ').1
   let ψ : Chart J B P →+* FX := IsLocalization.Away.lift g hunit
   have hψ (a : A) : ψ (algebraMap A (Chart J B P) a) = f a := IsLocalization.Away.lift_eq g hunit a
   have hc : ψ.comp (chartPoint J B P) = φ := by
@@ -158,7 +158,7 @@ theorem chart_at_mark {J : Input} {B : ResidueLift J} {D : Factors J B}
   have hφ : φ.comp rootInJet.toRingHom = markEval (J.model.label γ) (J.family.scalar γ) := by
     apply RingHom.ext
     intro a
-    exact HighCore82219Upper_3_3_1.mark_biform J γ a
+    exact HighCore82258Upper_3_3_1.mark_biform J γ a
   have hθ (s : SeedConstants) : ψ (chartSeed J B P s) = (φ.comp rootInJet.toRingHom) (seedBiform s) :=
     RingHom.congr_fun hc (rootInJet (seedBiform s))
   have hv : ψ (chartSeed J B P (MvPolynomial.C (algebraMap K L (node x)))) = seedEmbedding (node x) := by
@@ -168,7 +168,7 @@ theorem chart_at_mark {J : Input} {B : ResidueLift J} {D : Factors J B}
     rw [MvPolynomial.map_C, MvPolynomial.rename_C]
     exact MvPolynomial.eval_C _
   change ψ ((_ : (Chart J B P)[X]).eval _) = _
-  rw [← eval_map_apply, hv, model_specialization ψ φ hc (HighCore82219Upper_3_3_1.proof J B γ hγ').1, hφ]
+  rw [← eval_map_apply, hv, model_specialization ψ φ hc (HighCore82258Upper_3_3_1.proof J B γ hγ').1, hφ]
   exact value_at_mark J B γ hγ' x
 
 end

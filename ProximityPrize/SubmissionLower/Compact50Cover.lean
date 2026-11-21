@@ -7,12 +7,15 @@ namespace Compact50Cover
 open K1_13 (Shape)
 open K1_13_8 (Valid)
 open Final50PriceCaps (Band start)
-open Final50PriceTableBase (Covered OldReceipt PointReceipt oldRectangle point)
+open Final50SharedPrice (Rate)
+open Final50PriceTableBase (Covered OldReceipt PointReceipt SharedReceipt
+  coveredRectangle coveredPoint sharedPoint)
 
 /-- A price bound for a rectangle, or an exact price bound for a single shape. -/
 inductive Tile where
   | rectangle (widthLow indexLow widthHigh indexHigh order : ℕ)
   | point (width index order : ℕ)
+  | shared (width index order : ℕ) (rate : Rate)
 
 structure Rectangle where
   widthLow : ℕ
@@ -22,11 +25,12 @@ structure Rectangle where
 
 def Tile.bounds : Tile → Rectangle
   | .rectangle b j B J _ => ⟨b,j,B,J⟩
-  | .point b j _ => ⟨b,j,b,j⟩
+  | .point b j _ | .shared b j _ _ => ⟨b,j,b,j⟩
 
 def Tile.Paid (k : Band) (t : ℕ) : Tile → Prop
   | .rectangle b j B J l => OldReceipt ((start k).t+t) k b j B J t l
   | .point b j l => PointReceipt ((start k).t+t) k b j t l
+  | .shared b j l u => k = .empty ∧ SharedReceipt t b j l u
 
 instance (k : Band) (t : ℕ) (tile : Tile) : Decidable (tile.Paid k t) := by
   cases tile <;> unfold Tile.Paid <;> infer_instance
@@ -59,10 +63,14 @@ private def InRectangle (r : Rectangle) (width index : ℕ) : Prop :=
 private theorem tile_covered {tile : Tile} {k : Band} {t : ℕ} {a : Shape}
     (paid : tile.Paid k t) (bounds : InRectangle tile.bounds a.b a.j)
     (ht : a.t = t) (hi : 3 * a.t ≤ a.j) : Covered ((start k).t+t) k a := by
-  rcases tile with ⟨b,j,B,J,l⟩ | ⟨b,j,l⟩
-  · exact oldRectangle paid bounds.1 bounds.2.2.1 bounds.2.1 bounds.2.2.2 ht hi
+  rcases tile with ⟨b,j,B,J,l⟩ | ⟨b,j,l⟩ | ⟨b,j,l,u⟩
+  · exact coveredRectangle paid bounds.1 bounds.2.2.1 bounds.2.1 bounds.2.2.2 ht hi
   · obtain ⟨hb,hB,hj,hJ⟩ := bounds
-    exact point paid (Nat.le_antisymm hB hb) (Nat.le_antisymm hJ hj) ht hi
+    exact coveredPoint paid (Nat.le_antisymm hB hb) (Nat.le_antisymm hJ hj) ht hi
+  · obtain ⟨rfl,h⟩ := paid
+    obtain ⟨hb,hB,hj,hJ⟩ := bounds
+    simpa only [start, Nat.zero_add] using
+      sharedPoint h (Nat.le_antisymm hB hb) (Nat.le_antisymm hJ hj) ht
 
 /-- Extend the covered width prefix when this tile contains its next width. -/
 private def step (index firstMissing : ℕ) (tile : Tile) : ℕ :=

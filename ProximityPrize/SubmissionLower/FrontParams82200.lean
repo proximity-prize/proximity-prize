@@ -13,7 +13,7 @@ export P0 (K I Words node p blockLength k Frac Bivar TypeAtMostOne coefficientBl
   extendSeed IsCommonGCD atSlope seed liftX twist amplitudeDegree sixNorm columnRank
   threeU threeV sameDirection relationOn)
 abbrev Rung := P1.Rung
-abbrev target : Rung := ⟨179915, 336814079, 1073741824, 2333, 272487701262633501, 2493026848761586⟩
+abbrev target : Rung := ⟨179886, 336932863, 1073741824, 2413, 268014976625055642, 6965751486339445⟩
 abbrev agreement := target.agreement
 abbrev radiusNumerator := target.numerator
 abbrev radiusDenominator := target.denominator
@@ -23,8 +23,8 @@ abbrev listCap := target.listBound
 abbrev t : ℕ := blockLength - agreement
 abbrev L : ℕ := agreement - k
 abbrev heightCap : ℕ := t + 1 - L - 2
-abbrev rankFee : ℕ := 71133634314548
-abbrev anchorFee : ℕ := 71133634594621
+abbrev rankFee : ℕ := 71257215287633
+abbrev anchorFee : ℕ := 71257215567851
 abbrev budget : ℕ := 0x3d0ed83eb28710f
 def queryRadius : ℝ≥0 := claimedRadius radiusNumerator radiusDenominator
 def radius : ℝ := queryRadius
@@ -155,8 +155,8 @@ abbrev AnchorModel.label {u deleted} (M : AnchorModel u deleted) := ModelAt.labe
 abbrev AnchorModel.amplitude {u deleted} (M : AnchorModel u deleted) := ModelAt.amplitude M
 abbrev AnchorModel.decoder {u deleted} (M : AnchorModel u deleted) {γ : K} (B : BadMark u γ) :=
   ModelAt.decoder M B
-abbrev lowCap : ℕ := 272345433993724332
-abbrev highCap : ℕ := 272345433993724332
+abbrev lowCap : ℕ := 267872462194200158
+abbrev highCap : ℕ := 267872462194200158
 end
 end Front82200
 end

@@ -1,5 +1,5 @@
 import ProximityPrize.SubmissionLower.KoalaRectTaylorCharts
-import ProximityPrize.SubmissionLower.HighCore82219UpperCertificates
+import ProximityPrize.SubmissionLower.HighCore82258UpperCertificates
 
 set_option autoImplicit false
 set_option Elab.async false
@@ -13,36 +13,36 @@ open P1 (I)
 open K1_14 (FX Equation Seeds)
 open K1_14_6 (Biform)
 open K1_14_6_1 (flatten cleared box)
-open HighCore82219Upper (Input ResidueLift Factors liftTaylor liftSeeds SeedConstants
+open HighCore82258Upper (Input ResidueLift Factors liftTaylor liftSeeds SeedConstants
   constantAbscissa inverseBlockCoeff ordinateTaylorNum)
-open HighCore82219Upper_3 (JetRing ordinate rootInJet graphIdeal proper_mem_graph
+open HighCore82258Upper_3 (JetRing ordinate rootInJet graphIdeal proper_mem_graph
   residueInJet jetDenominator oldDenominator oldNumerator le_saturate
   tangentEquation openFactor)
-open HighCore82219Upper_3_1 (jetSeparant velocityNumerator pureDegree pureDen pureOrdinate
+open HighCore82258Upper_3_1 (jetSeparant velocityNumerator pureDegree pureDen pureOrdinate
   embed_separant)
-open HighCore82219Upper_3_1_2 (finite reciprocal inverseEval mul_reciprocal)
-open HighCore82219Upper_3_3 (residueCut residueAtNode seedInJet wordAt prefixLength sectionIndex)
-open private HighCore82219Upper_3.inversePart HighCore82219Upper_3.inversePart_bound
-  HighCore82219Upper_3.oldDenominator_eq HighCore82219Upper_3_1.embed_C
-  HighCore82219Upper_3_1.pureOrdinate_bound HighCore82219Upper_3_1.root_degree
-  HighCore82219Upper_3_1.separant_glue
-  HighCore82219Upper_3_1.liftTaylor_box HighCore82219Upper_3_1.embed_oldNumerator
-  HighCore82219Upper_3_1.comparison_of_powers HighCore82219Upper_3_1.crt_comparison
-  HighCore82219Upper_3_1.shortQuotient
-  HighCore82219Upper_3_1_2.coord_transition HighCore82219Upper_3_1_2.inverseOrdinate
-  HighCore82219Upper_3_1_2.inverseOrdinate_bound
-  HighCore82219Upper_3_1_1.tangentIdeal HighCore82219Upper_3_1_1.comparison
-  HighCore82219Upper_3_3.residue_degree
-  from ProximityPrize.SubmissionLower.HighCore82219UpperGeometry
-open private HighCore82219GeometryCert_1.inverse_flow
-  from ProximityPrize.SubmissionLower.HighCore82219UpperCertificates
-open HighCore82219Upper_3 (inversePart inversePart_bound oldDenominator_eq)
-open HighCore82219Upper_3_1 (pureOrdinate_bound root_degree liftTaylor_box embed_oldNumerator
+open HighCore82258Upper_3_1_2 (finite reciprocal inverseEval mul_reciprocal)
+open HighCore82258Upper_3_3 (residueCut residueAtNode seedInJet wordAt prefixLength sectionIndex)
+open private HighCore82258Upper_3.inversePart HighCore82258Upper_3.inversePart_bound
+  HighCore82258Upper_3.oldDenominator_eq HighCore82258Upper_3_1.embed_C
+  HighCore82258Upper_3_1.pureOrdinate_bound HighCore82258Upper_3_1.root_degree
+  HighCore82258Upper_3_1.separant_glue
+  HighCore82258Upper_3_1.liftTaylor_box HighCore82258Upper_3_1.embed_oldNumerator
+  HighCore82258Upper_3_1.comparison_of_powers HighCore82258Upper_3_1.crt_comparison
+  HighCore82258Upper_3_1.shortQuotient
+  HighCore82258Upper_3_1_2.coord_transition HighCore82258Upper_3_1_2.inverseOrdinate
+  HighCore82258Upper_3_1_2.inverseOrdinate_bound
+  HighCore82258Upper_3_1_1.tangentIdeal HighCore82258Upper_3_1_1.comparison
+  HighCore82258Upper_3_3.residue_degree
+  from ProximityPrize.SubmissionLower.HighCore82258UpperGeometry
+open private HighCore82258GeometryCert_1.inverse_flow
+  from ProximityPrize.SubmissionLower.HighCore82258UpperCertificates
+open HighCore82258Upper_3 (inversePart inversePart_bound oldDenominator_eq)
+open HighCore82258Upper_3_1 (pureOrdinate_bound root_degree liftTaylor_box embed_oldNumerator
   comparison_of_powers crt_comparison shortQuotient embed_C separant_glue)
-open HighCore82219Upper_3_1_2 (coord_transition inverseOrdinate inverseOrdinate_bound)
-open HighCore82219Upper_3_1_1 (tangentIdeal comparison)
-open HighCore82219Upper_3_3 (residue_degree)
-open HighCore82219GeometryCert_1 (finite_flow inverse_flow)
+open HighCore82258Upper_3_1_2 (coord_transition inverseOrdinate inverseOrdinate_bound)
+open HighCore82258Upper_3_1_1 (tangentIdeal comparison)
+open HighCore82258Upper_3_3 (residue_degree)
+open HighCore82258GeometryCert_1 (finite_flow inverse_flow)
 open SplitCut.Rect (Box Section space)
 open scoped BigOperators
 
@@ -134,7 +134,7 @@ private theorem separant_section (J : Input) (B : ResidueLift J) (D : Factors J 
         Polynomial.C (Polynomial.C (J.e : Seeds)) * Polynomial.C J.f := by
       rw [pow_one]
       exact @separant_glue Equation JetRing (@Polynomial.commRing Seeds inferInstance)
-        HighCore82219Upper_3.jetCommRing Polynomial.C Polynomial.X J.f.derivative
+        HighCore82258Upper_3.jetCommRing Polynomial.C Polynomial.X J.f.derivative
         (Polynomial.C (J.e : Seeds)) J.f
     rw [heq]
     exact (graphIdeal J B D).mul_mem_left _ hf'

@@ -9,14 +9,14 @@ noncomputable section
 
 open P1 (I)
 open K1_14 (FX)
-open HighCore82219Upper (Input ResidueLift Factors)
-open HighCore82219Upper_3 (JetRing graphIdeal jetDenominator oldDenominator oldNumerator
+open HighCore82258Upper (Input ResidueLift Factors)
+open HighCore82258Upper_3 (JetRing graphIdeal jetDenominator oldDenominator oldNumerator
   residueInJet openFactor)
-open HighCore82219Upper_3_3 (residueCut residueValue canonicalJet curveValue FixedWeights
+open HighCore82258Upper_3_3 (residueCut residueValue canonicalJet curveValue FixedWeights
   prefixLength prefixIndex sectionIndex wordAt)
-open private HighCore82219Upper_3.oldDenominator_eq
-  from ProximityPrize.SubmissionLower.HighCore82219UpperGeometry
-open HighCore82219Upper_3 (oldDenominator_eq)
+open private HighCore82258Upper_3.oldDenominator_eq
+  from ProximityPrize.SubmissionLower.HighCore82258UpperGeometry
+open HighCore82258Upper_3 (oldDenominator_eq)
 open scoped BigOperators
 
 variable {E : Type} [Field E] [Algebra FX E]
