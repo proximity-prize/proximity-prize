@@ -16,11 +16,11 @@ open private Low Low.mk cut localGen high_gen mul_add_pow_mem mul_shift_pow_mem
   K1_14_1_6.seedC K1_14_1_6.sx K1_14_1_6.sy K1_14_1_6.sv K1_14_1_6.physical_x
   K1_14_1_6.physical_y K1_14_1_6.physical_v K1_14_1_6.physical_seed from ProximityPrize.SubmissionLower.Fast065
 
-private abbrev RectGen (s : Shape) (U : Fin 2 → ℕ) :=
+abbrev RectGen (s : Shape) (U : Fin 2 → ℕ) :=
   (Σ q : Fin (s.B+1), Σ k : Fin (min q.val s.J+1),
     Fin (s.m + min q.val s.J - (q.val + 2*k.val))) × AxisIndex U
 
-private theorem rectGen_card (s : Shape) (U : Fin 2 → ℕ) :
+theorem rectGen_card (s : Shape) (U : Fin 2 → ℕ) :
     Fintype.card (RectGen s U) = shapeSum s (fun q k => s.m + min q s.J - (q + 2*k)) * area U := by
   unfold RectGen
   rw [Fintype.card_prod, axis_card, shapeSum]
@@ -31,16 +31,16 @@ private theorem rectGen_card (s : Shape) (U : Fin 2 → ℕ) :
   refine Finset.sum_congr rfl (fun q _ => ?_)
   exact Fin.sum_univ_eq_sum_range (fun k => s.m + min q s.J - (q + 2*k)) (min q s.J+1)
 
-private def rectGenerators (s : Shape) (U : Fin 2 → ℕ) (i : RectGen s U) : Low s.m → L :=
+def rectGenerators (s : Shape) (U : Fin 2 → ℕ) (i : RectGen s U) : Low s.m → L :=
   cut s (localGen i.1.1.val (min i.1.1.val s.J) i.1.2.1.val i.1.2.2.val (axisExponent i.2))
 
-private def rectSpan (s : Shape) (U : Fin 2 → ℕ) : Submodule L (Low s.m → L) :=
+def rectSpan (s : Shape) (U : Fin 2 → ℕ) : Submodule L (Low s.m → L) :=
   Submodule.span L (Set.range (rectGenerators s U))
 
-private abbrev rectPreimage (s : Shape) (U : Fin 2 → ℕ) : Submodule L Source :=
+abbrev rectPreimage (s : Shape) (U : Fin 2 → ℕ) : Submodule L Source :=
   (rectSpan s U).comap (cut s)
 
-private theorem rect_gen_mem (s : Shape) (U : Fin 2 → ℕ) (q k a : ℕ) (e : Fin 2 →₀ ℕ)
+theorem rect_gen_mem (s : Shape) (U : Fin 2 → ℕ) (q k a : ℕ) (e : Fin 2 →₀ ℕ)
     (hq : q ≤ s.B) (hk : k ≤ min q s.J) (he : ∀ z, e z ≤ U z) :
     localGen q (min q s.J) k a e ∈ rectPreimage s U := by
   change cut s _ ∈ rectSpan s U
@@ -52,7 +52,7 @@ private theorem rect_gen_mem (s : Shape) (U : Fin 2 → ℕ) (q k a : ℕ) (e : 
   · rw [LinearMap.mem_ker.mp (high_gen s q (min q s.J) k a e (by omega))]
     exact (rectSpan s U).zero_mem
 
-private theorem shifted_rect_mem (s : Shape) (U : Fin 2 → ℕ) (a b j : ℕ) (e : Fin 2 →₀ ℕ)
+theorem shifted_rect_mem (s : Shape) (U : Fin 2 → ℕ) (a b j : ℕ) (e : Fin 2 →₀ ℕ)
     (hq : b+j ≤ s.B) (hj : j ≤ s.J) (he : ∀ z, e z ≤ U z) :
     K1_14_1_6.seedC (MvPolynomial.monomial e 1) * K1_14_1_6.sx^a * shiftedY^b * K1_14_1_6.sv^j ∈ rectPreimage s U := by
   let q := b+j
@@ -79,7 +79,7 @@ private theorem shifted_rect_mem (s : Shape) (U : Fin 2 → ℕ) (a b j : ℕ) (
     (K1_14_1_6.seedC (MvPolynomial.monomial e 1) * K1_14_1_6.sx^a), ← hpow] at hexpand
   exact hexpand
 
-private theorem translated_rect_mem (s : Shape) (U : Fin 2 → ℕ) (x r : L) (a b j : ℕ)
+theorem translated_rect_mem (s : Shape) (U : Fin 2 → ℕ) (x r : L) (a b j : ℕ)
     (e : Fin 2 →₀ ℕ) (hq : b+j ≤ s.B) (hj : j ≤ s.J) (he : ∀ z, e z ≤ U z) :
     K1_14_1_6.seedC (MvPolynomial.monomial e 1) * (K1_14_1_6.sx + algebraMap L Source x)^a *
       (shiftedY + algebraMap L Source r)^b * K1_14_1_6.sv^j ∈ rectPreimage s U := by
@@ -101,7 +101,7 @@ private theorem translated_rect_mem (s : Shape) (U : Fin 2 → ℕ) (x r : L) (a
   rw [move_v] at h
   exact h
 
-private theorem atPhysical_rect (h : ℕ) (s : Shape) (W : ℕ) (U : Fin 2 → ℕ) (x r : L)
+theorem atPhysical_rect (h : ℕ) (s : Shape) (W : ℕ) (U : Fin 2 → ℕ) (x r : L)
     (P : rectAmbient h s W U) : cut s (atPhysical x r P.val) ∈ rectSpan s U := by
   change P.val ∈ (rectPreimage s U).comap (atPhysical x r).toLinearMap
   apply mem_of_monomials

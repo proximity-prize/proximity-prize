@@ -28,8 +28,8 @@ def jetAxes : Option (Option (Fin 2)) ≃ Fin 4 where
     · fin_cases i <;> rfl
   right_inv := by intro i; fin_cases i <;> rfl
 
-private abbrev flatEq := (optionEquivLeft FX (Fin 2)).symm
-private abbrev flatJet := (optionEquivLeft FX (Option (Fin 2))).symm
+abbrev flatEq := (optionEquivLeft FX (Fin 2)).symm
+abbrev flatJet := (optionEquivLeft FX (Option (Fin 2))).symm
 
 def jetToRect : JetRing ≃ₐ[FX] SplitCut.Rect.Ring FX :=
   ((Polynomial.mapAlgEquiv flatEq).trans flatJet).trans (renameEquiv FX jetAxes)
@@ -67,7 +67,7 @@ theorem jetToRect_C (f : Equation) :
 def seedExponent (m : Fin 4 →₀ ℕ) : Fin 2 →₀ ℕ :=
   Finsupp.equivFunOnFinite.symm (fun i => m i.succ.succ)
 
-private theorem coeff_flat {σ : Type} (p : Polynomial (MvPolynomial σ FX)) (m : Option σ →₀ ℕ) :
+theorem coeff_flat {σ : Type} (p : Polynomial (MvPolynomial σ FX)) (m : Option σ →₀ ℕ) :
     ((optionEquivLeft FX σ).symm p).coeff m = (p.coeff (m none)).coeff m.some := by
   have h := optionEquivLeft_coeff_coeff FX ((optionEquivLeft FX σ).symm p) (m none) m.some
   rw [AlgEquiv.apply_symm_apply, Finsupp.optionElim_some] at h

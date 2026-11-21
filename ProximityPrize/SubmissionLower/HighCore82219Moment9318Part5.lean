@@ -8,15 +8,15 @@ namespace HighCore82219BankProof
 open P1_7_1_3 (momentEstimate blockEstimate block_append)
 
 
-private theorem block9318_25 : blockEstimate 9318 1962 9962 320 = 0x50faf5831d7 := by decide +kernel
+theorem block9318_25 : blockEstimate 9318 1962 9962 320 = 0x50faf5831d7 := by decide +kernel
 
-private theorem block9318_26 : blockEstimate 9318 1962 10282 320 = 0x43ce6bfdeb6 := by decide +kernel
+theorem block9318_26 : blockEstimate 9318 1962 10282 320 = 0x43ce6bfdeb6 := by decide +kernel
 
-private theorem block9318_27 : blockEstimate 9318 1962 10602 320 = 0x37229927a3c := by decide +kernel
+theorem block9318_27 : blockEstimate 9318 1962 10602 320 = 0x37229927a3c := by decide +kernel
 
-private theorem block9318_28 : blockEstimate 9318 1962 10922 320 = 0x2b3c3555ade := by decide +kernel
+theorem block9318_28 : blockEstimate 9318 1962 10922 320 = 0x2b3c3555ade := by decide +kernel
 
-private theorem block9318_29 : blockEstimate 9318 1962 11242 320 = 0x204de23623b := by decide +kernel
+theorem block9318_29 : blockEstimate 9318 1962 11242 320 = 0x204de23623b := by decide +kernel
 
 theorem sum9318_9962_640 : blockEstimate 9318 1962 9962 640 = 0x94c9618108d :=
   block_append (B := 9318) (J := 1962) (start := 9962) (next := 10282)

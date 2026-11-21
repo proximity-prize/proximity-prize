@@ -73,7 +73,7 @@ theorem mark_secondCut (J : Input) (B : ResidueLift J) (D : Factors J B) {γ : K
     markPoint J γ (secondCut J B) = 0 :=
   mark_cutoff_zero J B D hγ hproper (by omega) (second_order_lt_char J)
 
-private theorem denominator_notMem {J : Input} {B : ResidueLift J} {P : Ideal JetRing}
+theorem denominator_notMem {J : Input} {B : ResidueLift J} {P : Ideal JetRing}
     (hP : P.IsPrime) (hopen : openFactor J B ∉ P) (n : ℕ) :
     residueInJet B * Polynomial.C J.f.derivative ^ n ∉ P := by
   have hB : residueInJet B ∉ P := fun hm => hopen (Ideal.mul_mem_right _ _ hm)
@@ -136,10 +136,6 @@ theorem cutoff_regularities (J : Input) (B : ResidueLift J) (D : Factors J B) :
   obtain ⟨S, hS, hAgree⟩ := firstCut_relative J B D
   rw [← hS]
   exact HighCore82219Upper_3_2_1.proof J B D S hAgree
-
-theorem tangent_regular (J : Input) (B : ResidueLift J) (D : Factors J B) :
-    IsLeftRegular (Ideal.Quotient.mk (rootIdeal D) (tangentEquation J.f)) :=
-  (cutoff_regularities J B D).1
 
 theorem firstCut_regular (J : Input) (B : ResidueLift J) (D : Factors J B) :
     IsLeftRegular (Ideal.Quotient.mk (graphIdeal J B D) (firstCut J B)) :=

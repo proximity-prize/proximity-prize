@@ -21,7 +21,7 @@ def fixedFee (hi B J : ℕ) : ℕ :=
   let jet := min base (lam*d*(2*J-1 : ℕ))
   (((B-J : ℕ) : ℚ)*jet + J*base).ceil.toNat + B^2
 
-private def stageCost (hi : ℕ) (s : Stage) : ℕ :=
+def stageCost (hi : ℕ) (s : Stage) : ℕ :=
   fixedFee hi s.free.shape.B s.free.shape.J + fixedFee hi s.moving.shape.B s.moving.shape.J
 
 def fixedBudget (b : HighBand) : ℕ :=
@@ -52,13 +52,6 @@ theorem fixed_exact (b : HighBand) : fixedBudget b = (book b).fixedODE := by
   unfold fixedBudget stageAt
   rw [sum_stages]
   cases b <;> decide +kernel
-
-theorem loss_discount (b : HighBand) : HighBanks82180.start b < 7773 →
-    HighLoss82180.factor * ((fees b).loss : ℚ) ≤ ((book b).loss : ℚ) := by
-  cases b <;> decide +kernel
-
-theorem loss_direct (b : HighBand) : 7773 ≤ HighBanks82180.start b →
-    (fees b).loss = (book b).loss := by cases b <;> decide +kernel
 
 theorem total_exact (b : HighBand) : prefixTotal b + HighPrices82180.cap b + 1 = total b := by
   cases b <;> decide +kernel

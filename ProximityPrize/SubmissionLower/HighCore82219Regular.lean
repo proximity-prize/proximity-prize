@@ -136,8 +136,8 @@ theorem section_capacity {w T s d} (h : FixedWord w T s d) (hd : d < agreement) 
   have hx : agreement - d ≤ x := by dsimp [x]; omega
   have hnodes : nodes.card = x + HighCore82219.t := by
     rw [card_sdiff_of_subset (subset_univ common), card_univ, IRSProfile.card_index]
-    change 262144 - common.card = (179915 - common.card) + 82229
-    have hbound : common.card ≤ 179915 := hcommon.trans hd.le
+    change 262144 - common.card = (179905 - common.card) + 82239
+    have hbound : common.card ≤ 179905 := hcommon.trans hd.le
     omega
   have exists_trim (γ : K) : ∃ B : Finset I, γ ∈ T → B ⊆ hits γ \ common ∧ B.card = x := by
     by_cases hγ : γ ∈ T
@@ -197,7 +197,7 @@ open HighCore82219Upper (Input ResidueLift Factors ProperCurve ProperCover FlatS
   ratio_le_ceil)
 open private persistent_le_degree from ProximityPrize.SubmissionLower.HighCore82219UpperGeometry
 open scoped BigOperators
-private theorem restrict_word {word U scalar d} (hword : FixedWord word U scalar d)
+theorem restrict_word {word U scalar d} (hword : FixedWord word U scalar d)
     {V : Finset K} (hV : V ⊆ U) : FixedWord word V scalar d :=
   ⟨hword.distinct.mono hV, fun γ hγ => hword.degree γ (hV hγ),
     fun γ hγ => hword.hits γ (hV hγ)⟩
@@ -378,7 +378,7 @@ theorem of_children (inverse : c1) (profiles : c2) : HighCore82219.c5 := by
   have hell : 0 < quotientOrder M.overhead.toNat := by
     change 0 < 131071 - M.overhead.toNat
     omega
-  have hd : degreeAt (finish b) ≤ 164456 := Nat.add_le_add_left hhi 131071
+  have hd : degreeAt (finish b) ≤ 164476 := Nat.add_le_add_left hhi 131071
   have hgap₃ : degreeAt (finish b) < agreement := hd.trans_lt (by decide)
   have hfac : degreeAt (finish b) + 1 < p :=
     (Nat.succ_le_of_lt hgap₃).trans_lt (by decide)

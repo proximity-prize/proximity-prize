@@ -38,9 +38,6 @@ def sumRange (f : ℕ → ℕ) : ℕ → ℕ
   | 0 => 0
   | n + 1 => sumRange f n + f n
 
-def valueRow (s : ℕ) : ℕ := sumRange (valueRowCell s) 1136
-
-
 open K1_13_2_3_7 (fastCum signedKernel)
 open private chart oldCount_eq kernel_eq residual_eq zero_residual blockBound_eq
   from ProximityPrize.SubmissionLower.Fast060
@@ -106,7 +103,7 @@ theorem old_bound_eq (i : BlockIndex) (p : Fin 11 → ℕ) :
   simp only [TaperNormalize.bound, old_flag_eq, hA, blockBound]
   rfl
 
-private theorem power_zero : (Powers.expand ⟨0, 0, 0⟩) = (fun _ => 0) := by
+theorem power_zero : (Powers.expand ⟨0, 0, 0⟩) = (fun _ => 0) := by
   funext x
   fin_cases x <;> rfl
 
@@ -144,7 +141,7 @@ private theorem sumRange_eq (f : ℕ → ℕ) (n : ℕ) :
   | zero => simp [sumRange]
   | succ n ih => rw [sumRange, Finset.sum_range_succ, ih]
 
-private theorem sumRange_fin (f : ℕ → ℕ) (n : ℕ) :
+theorem sumRange_fin (f : ℕ → ℕ) (n : ℕ) :
     sumRange f n = ∑ k : Fin n, f k.val := by
   rw [sumRange_eq, Fin.sum_univ_eq_sum_range]
 
@@ -197,7 +194,7 @@ private theorem old_eq (d j : ℕ) :
 
 private def removed (d q : ℕ) : ℕ := (3003 + d - q) / 4
 
-private theorem natKernel_eq_for (d q j : ℕ) (hq : 3514 ≤ q) (hj : q + j < 4650)
+theorem natKernel_eq_for (d q j : ℕ) (hq : 3514 ≤ q) (hj : q + j < 4650)
     (hD : d ≤ 1650) :
     natKernel d j (4650 - q - j) (removed d q) =
       (signedKernel d j (4649 - (q : ℤ) - j)).toNat := by
@@ -246,9 +243,6 @@ theorem natCell_eq (t j : ℕ) : natCell t j = fastCell t j := by
   push_cast
   rw [show (4649 : ℤ) - (3514 + t) - j = 1135 - t - j by omega]
 
-def natRow (t : ℕ) : ℕ := sumRange (natCell t) (1136-t)
-
-
 def sumChunk (f : ℕ → ℕ) (lo n : ℕ) : ℕ :=
   sumRange (fun i => f (lo + i)) n
 
@@ -292,7 +286,7 @@ private theorem fees_le_baseline (p₁ p₂ p₃ : BlockIndex → Powers) (i : B
 
 private abbrev zeroPowers : BlockIndex → Powers := fun _ => ⟨0,0,0⟩
 
-private theorem saved_pointwise (p₁ p₂ p₃ : BlockIndex → Powers) (i : BlockIndex) :
+theorem saved_pointwise (p₁ p₂ p₃ : BlockIndex → Powers) (i : BlockIndex) :
     savings i (combine p₁ p₂ p₃ zeroPowers i) + tailSaving i ≤ baseline i - fees p₁ p₂ p₃ i := by
   by_cases hi : i.1.val < 3514
   · simp [fees, tailSaving, hi, show ¬3514 ≤ i.1.val by omega, savings]
@@ -302,7 +296,7 @@ private theorem saved_pointwise (p₁ p₂ p₃ : BlockIndex → Powers) (i : Bl
       Nat.sub_self, Nat.zero_add, fees, tailSaving, show 3514 ≤ i.1.val by omega, ite_true]
     exact Nat.sub_le_sub_left (min_le_right _ _) _
 
-private theorem saved_on (S : Finset BlockIndex) (p₁ p₂ p₃ : BlockIndex → Powers) :
+theorem saved_on (S : Finset BlockIndex) (p₁ p₂ p₃ : BlockIndex → Powers) :
     (∑ i ∈ S, savings i (combine p₁ p₂ p₃ zeroPowers i)) + (∑ i ∈ S, tailSaving i) ≤
       ∑ i ∈ S, (baseline i - fees p₁ p₂ p₃ i) := by
   rw [← Finset.sum_add_distrib]

@@ -14,7 +14,7 @@ open KoalaRectReceipts (paidCap)
 def liftIndex (hi v₀ v₁ : ℕ) : ℕ :=
   max 1 (max (ceilRatio (2*hi) (max 1 v₀)) (ceilRatio (2*hi) (max 1 v₁)))
 
-private theorem le_mul_ceilRatio (n d : ℕ) (hd : 0 < d) :
+theorem le_mul_ceilRatio (n d : ℕ) (hd : 0 < d) :
     n ≤ d * ceilRatio n d := by
   have he := Nat.div_add_mod (n + (d-1)) d
   have hr := Nat.mod_lt (n + (d-1)) hd
@@ -31,7 +31,7 @@ theorem liftIndex_spec (hi v₀ v₁ : ℕ) :
   · exact (le_mul_ceilRatio _ _ (lt_of_lt_of_le Nat.zero_lt_one (le_max_left ..))).trans
       (Nat.mul_le_mul_left _ ((le_max_right ..).trans (le_max_right ..)))
 
-private theorem ceilRatio_le_self (n d : ℕ) (hd : 0 < d) : ceilRatio n d ≤ n := by
+theorem ceilRatio_le_self (n d : ℕ) (hd : 0 < d) : ceilRatio n d ≤ n := by
   change (n+(d-1))/d ≤ n
   apply Nat.le_of_lt_succ
   apply (Nat.div_lt_iff_lt_mul hd).mpr
@@ -40,7 +40,7 @@ private theorem ceilRatio_le_self (n d : ℕ) (hd : 0 < d) : ceilRatio n d ≤ n
     _ ≤ n*d+d := Nat.add_le_add_right (Nat.le_mul_of_pos_right n hd) d
     _ = (n+1)*d := by ring
 
-theorem liftIndex_le {hi : ℕ} (hhi : hi ≤ 2440) (v₀ v₁ : ℕ) : liftIndex hi v₀ v₁ ≤ 4880 := by
+theorem liftIndex_le {hi : ℕ} (hhi : hi ≤ 2465) (v₀ v₁ : ℕ) : liftIndex hi v₀ v₁ ≤ 4930 := by
   unfold liftIndex
   apply max_le (by decide)
   exact max_le ((ceilRatio_le_self _ _ (lt_of_lt_of_le Nat.zero_lt_one (le_max_left _ _))).trans (by omega))
@@ -81,7 +81,7 @@ def charge (A lo hi e v₀ v₁ : ℕ) : ℕ :=
   properCharge A lo hi e v₀ v₁ +
     ceilRatio ((blockLength-A)*(p+1)*(v₀+v₁)) (A-degreeAt hi) + singularFee e (v₀+v₁) + e
 
-private def GradeCheck (e : ℕ) : Prop :=
+def GradeCheck (e : ℕ) : Prop :=
   ∀ a : Fin (paidCap e + 1),
     charge agreement (start .h2367) (finish .h2367) e a.val (paidCap e - a.val) ≤
       retainedCap .h2367

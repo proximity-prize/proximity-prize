@@ -52,7 +52,7 @@ def c7 : Prop :=
     ∃ C : CutCover, (∀ fee, C.cost fee ≤ dot (weight s fee) (sectionDegree I)) ∧
       ∀ γ ∈ Γ, OnParent M F I γ → jetAt P (M.label γ) (F.scalar γ) = 0 →
         C.covers M F γ
-private theorem selectPair {u del} {M : AnchorModel u del} {Γ} {F : AnchoredFamily M Γ}
+theorem selectPair {u del} {M : AnchorModel u del} {Γ} {F : AnchoredFamily M Γ}
     {rows : Banks} (hw : M.overhead ≤ 3554) (hsrc : JetSource M F rows)
     (hbuf : BufferedPairs M.overhead rows) (i : Fin 10) :
     Nonempty (RowPair M.overhead rows i) := by
@@ -60,7 +60,7 @@ private theorem selectPair {u del} {M : AnchorModel u del} {Γ} {F : AnchoredFam
   exact ⟨⟨P, Q, hpn, hqn, hp, hq,
     hsrc.shape _ (pair_scheduled hw i (by simp [stagePair])) _ P hp,
     hsrc.shape _ (pair_scheduled hw i (by simp [stagePair])) _ Q hq, hnm⟩⟩
-private theorem passing_mass (h3 : c3) (h4 : c4)
+theorem passing_mass (h3 : c3) (h4 : c4)
     {u del} {M : AnchorModel u del} {Γ} {F : AnchoredFamily M Γ} {rows : Banks}
     (hsrc : JetSource M F rows) (hlo : 2601 ≤ M.overhead) (hhi : M.overhead ≤ 3554)
     (i : Fin 10) (hi : 0 < i.val) (B : RowPair M.overhead rows i) (A : FixedPair B)
@@ -91,13 +91,13 @@ private def stay {w rows} {pairs : ∀ i : Fin 10, RowPair w rows i}
     (parts : ∀ i : Fin 10, FixedPair (pairs i)) (n : ℕ) (I : Ideal Ambient) : Prop :=
   if hn : n < 10 then pairGood (parts ⟨n, hn⟩) I ∧ (n = 4 → dual I)
   else bankVanishes rows full I
-private theorem cut_shape_valid (n : ℕ) : (cutShape n).J ≤ (cutShape n).B := by
+theorem cut_shape_valid (n : ℕ) : (cutShape n).J ≤ (cutShape n).B := by
   by_cases hn : n < 10
   · simp only [cutShape, dite_eq_left hn]
     generalize hi : (⟨n, hn⟩ : Fin 10) = i
     fin_cases i <;> decide
   · simp [cutShape, hn, full]
-private theorem after_four {w rows} {pairs : ∀ i : Fin 10, RowPair w rows i}
+theorem after_four {w rows} {pairs : ∀ i : Fin 10, RowPair w rows i}
     (parts : ∀ i : Fin 10, FixedPair (pairs i)) (start : Finset (Ideal Ambient)) :
     ∀ n, 4 ≤ n → ∀ I ∈ timeline start (stay parts) n, dual I := by
   intro n hn I hI
@@ -106,7 +106,7 @@ private theorem after_four {w rows} {pairs : ∀ i : Fin 10, RowPair w rows i}
   have hp := (Finset.mem_filter.mp h4).2
   simp only [stay, dite_eq_left (by decide : (4 : ℕ) < 10)] at hp
   exact hp.2 trivial
-private def equationFor {w rows} {pairs : ∀ i : Fin 10, RowPair w rows i}
+def equationFor {w rows} {pairs : ∀ i : Fin 10, RowPair w rows i}
     (parts : ∀ i : Fin 10, FixedPair (pairs i)) (rank : ODE) : FixedTag → ODE
   | .inl t => if t = 0 then rank else 1
   | .inr (i, false) => (parts i).cheap.equation

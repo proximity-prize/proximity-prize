@@ -57,7 +57,7 @@ private def oriented (S : Axes) (side : Bool) (q u : ℕ) :
     Matrix (Axis S (!side) q u) (Axis S side q u) (ZMod CJ0.p) :=
   fun r c => (orientedEntry S side q u r.1 r.2 c.1 c.2 : ZMod CJ0.p)
 
-private theorem rank_oriented (S : Axes) (side : Bool) (q u : ℕ) : (oriented S side q u).rank = (packet S q u).rank := by
+theorem rank_oriented (S : Axes) (side : Bool) (q u : ℕ) : (oriented S side q u).rank = (packet S q u).rank := by
   cases side
   · congr 1
     ext r c
@@ -82,13 +82,13 @@ def Guard (S : Axes) (q u : ℕ) (w : Witness) : Prop :=
     w.free[j].2 < S.fiber w.onRows q u w.free[j].1
 instance (S : Axes) (q u : ℕ) (w : Witness) : Decidable (Guard S q u w) := by unfold Guard; infer_instance
 
-private def freeAxis (S : Axes) (q u : ℕ) (w : Witness) (hw : Guard S q u w) (j : Fin w.free.length) : Axis S w.onRows q u :=
+def freeAxis (S : Axes) (q u : ℕ) (w : Witness) (hw : Guard S q u w) (j : Fin w.free.length) : Axis S w.onRows q u :=
   ⟨⟨w.free[j].1,(hw.2 j).1⟩,⟨w.free[j].2,(hw.2 j).2⟩⟩
 
-private def atoms (S : Axes) (q u : ℕ) (w : Witness) (j : Fin w.free.length) : List (Axis S w.onRows q u × ℤ) :=
+def atoms (S : Axes) (q u : ℕ) (w : Witness) (j : Fin w.free.length) : List (Axis S w.onRows q u × ℤ) :=
   (w.vectors[j.val]?.getD []).filterMap fun (i,k,v) => (decode S w.onRows q u i k).map (fun c => (c,v))
 
-private def atCoeff {ι : Type*} [DecidableEq ι] (xs : List (ι × ℤ)) (i : ι) : ℤ :=
+def atCoeff {ι : Type*} [DecidableEq ι] (xs : List (ι × ℤ)) (i : ι) : ℤ :=
   (xs.map fun (j,v) => if i = j then v else 0).sum
 
 def Dots (S : Axes) (q u : ℕ) (w : Witness) : Prop :=
@@ -100,7 +100,7 @@ def Identity (S : Axes) (q u : ℕ) (w : Witness) (hw : Guard S q u w) : Prop :=
   ∀ i j : Fin w.free.length, atCoeff (atoms S q u w j) (freeAxis S q u w hw i) = if i=j then 1 else 0
 instance (S : Axes) (q u : ℕ) (w : Witness) (hw : Guard S q u w) : Decidable (Identity S q u w hw) := by unfold Identity; infer_instance
 
-private theorem sum_atoms {ι : Type*} [Fintype ι] [DecidableEq ι] (xs : List (ι × ℤ)) (f : ι → ℤ) :
+theorem sum_atoms {ι : Type*} [Fintype ι] [DecidableEq ι] (xs : List (ι × ℤ)) (f : ι → ℤ) :
     (∑ i, (f i : ZMod CJ0.p) * (atCoeff xs i : ZMod CJ0.p)) =
       (((xs.map fun (i,v) => f i*v).sum : ℤ) : ZMod CJ0.p) := by
   induction xs with

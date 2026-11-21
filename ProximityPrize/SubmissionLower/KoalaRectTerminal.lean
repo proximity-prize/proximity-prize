@@ -17,7 +17,7 @@ open K1_14 (Equation)
 open K1_14_3 (ProjectedProduct)
 open KoalaRectAxes
 
-private theorem reject_shape {u del Γ} {M : AnchorModel u del} {F : AnchoredFamily M Γ}
+theorem reject_shape {u del Γ} {M : AnchorModel u del} {F : AnchoredFamily M Γ}
     (hbank : P3_7_1.BankOK (terminal .h2367)) (hw : InBand .h2367 M.overhead) (C : ChartSource .h2367 M F)
     {pairs : Pairs .h2367 M.overhead.toNat C.rows}
     (Q : PrefixInventory .h2367 M F pairs) {f : Equation} (hf : Reduced f)
@@ -29,9 +29,9 @@ private theorem reject_shape {u del Γ} {M : AnchorModel u del} {F : AnchoredFam
   let h := M.overhead.toNat
   let t := terminal .h2367
   obtain ⟨hl, hu⟩ := window_nat hw
-  have hl' : 2354 ≤ h := hl
-  have hu' : h ≤ 2440 := hu
-  have hpos : 0 < h := lt_of_lt_of_le (by decide : 0 < 2354) hl'
+  have hl' : 2378 ≤ h := hl
+  have hu' : h ≤ 2465 := hu
+  have hpos : 0 < h := lt_of_lt_of_le (by decide : 0 < 2378) hl'
   have hraw : h ≤ 131070 := hu'.trans (by decide)
   have hchar : h < K1.p := hu'.trans_lt (by decide)
   obtain ⟨_, _, hA, hsmall, hwidth⟩ := terminal_guards .h2367

@@ -20,7 +20,7 @@ private theorem triangle_succ (n : ℕ) : triangle (n+1) = triangle n + (n+2) :=
   rw [show (n+1+1)*(n+1+2) = (n+1)*(n+2) + (n+2)*2 by ring,
     Nat.add_mul_div_right _ _ (by decide : 0 < 2)]
 
-private theorem count_eq (B J : ℕ) :
+theorem count_eq (B J : ℕ) :
     (∑ q ∈ range (B+1), (min q J+1)) =
       triangle (min B J) + (B-min B J)*(min B J+1) := by
   induction B with
@@ -54,7 +54,7 @@ def gain (h r : ℕ) (s : Shape) (mode : ℕ) : ℕ :=
 def adjusted (t : Bank) : Bank :=
   {t with nodeRows := t.nodeRows + count t.shape*(19*t.shape.m)}
 
-private theorem at_most_old (h r : ℕ) (s : Shape) (mode : ℕ) :
+theorem at_most_old (h r : ℕ) (s : Shape) (mode : ℕ) :
     P3_7_2.gain h r s mode ≤ gain h r s mode + triangle s.U*(count s*(19*s.m)) := by
   have term_bound (q j : ℕ) :
       P3_7_2.rawWidth h r s q j - mode*(2*h*j) ≤ width h r s q j mode + 19*s.m := by

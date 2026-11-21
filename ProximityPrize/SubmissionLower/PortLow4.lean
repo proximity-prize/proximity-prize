@@ -169,7 +169,7 @@ private theorem degreeOf_le_of_support_subset {P Q : GenericRow} (h : P.support 
   apply degreeOf_le_iff.mpr
   intro m hm
   exact le_degreeOf_of_mem_support i (h hm)
-private theorem moved_weight (w : SeedVar → ℕ) (i j : SeedVar) (P : GenericRow) (d : ℕ)
+theorem moved_weight (w : SeedVar → ℕ) (i j : SeedVar) (P : GenericRow) (d : ℕ)
     (h : w j ≤ w i + d) :
     (MvPolynomial.X j * pderiv i P).weightedTotalDegree w ≤ P.weightedTotalDegree w + d := by
   apply Finset.sup_le
@@ -467,7 +467,7 @@ private theorem column_li (b : Bank) (h : ℕ) :
   exact (Pi.basisFun Geom (Column b h)).linearIndependent
 private def space (b : Bank) (h : ℕ) : Submodule Geom PhysicalRow :=
   Submodule.span Geom (Set.range (column (b := b) (h := h)))
-private theorem occurs_in_column {b : Bank} {h : ℕ} {F : PhysicalRow}
+theorem occurs_in_column {b : Bank} {h : ℕ} {F : PhysicalRow}
     (hF : F ∈ space b h) {e : SeedVar →₀ ℕ} {x : ℕ} (hne : (F.coeff e).coeff x ≠ 0) :
     ∃ c : Column b h, colExp c = e ∧ colX c = x := by
   classical

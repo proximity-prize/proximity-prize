@@ -15,10 +15,10 @@ def inputWeight (a : ℕ) (w : JetVariable 1 → ℕ) (v : JetVariable 2) : ℕ 
   (topVariableEquiv 1 v).elim a w
 private def coeffMap : K →+* K1_13.Geom[X] :=
   Polynomial.C.comp K1_13.embed
-private theorem coeffMap_injective : Function.Injective coeffMap :=
+theorem coeffMap_injective : Function.Injective coeffMap :=
   Polynomial.C_injective.comp (RingHom.injective K1_13.embed)
-private def lowerEquiv : JetVariable 1 ≃ Fin 3 := (finSuccEquiv 2).symm
-private def higherEquiv : JetVariable 2 ≃ Fin 4 :=
+def lowerEquiv : JetVariable 1 ≃ Fin 3 := (finSuccEquiv 2).symm
+def higherEquiv : JetVariable 2 ≃ Fin 4 :=
   ((topVariableEquiv 1).trans (Equiv.optionCongr lowerEquiv)).trans finSuccEquivLast.symm
 private def lowerMap : DifferentialPolynomial K 1 →+* K1_13.Row 3 :=
   (MvPolynomial.map coeffMap).comp (rename (R := K) lowerEquiv).toRingHom
@@ -84,7 +84,7 @@ private theorem view_row (G : DifferentialPolynomial K 2) :
 private theorem row_degree (G : DifferentialPolynomial K 2) :
     (K1_13_5_1.view (row G)).natDegree = (topPresentation 1 G).natDegree := by
   rw [view_row, natDegree_map_eq_of_injective lowerMap_injective]
-private theorem row_elimination (G : DifferentialPolynomial K 2) :
+theorem row_elimination (G : DifferentialPolynomial K 2) :
     K1_13_5_1.elimination (row G) = lowerMap (eliminate G) := by
   unfold K1_13_5_1.elimination eliminate
   simp only [row_degree]
@@ -370,9 +370,9 @@ theorem initial_top (G : DifferentialPolynomial K 1) :
       (MvPolynomial.degrees_map_le (p := G) (f := embed))
 private theorem exponent_sufficient : TaylorExponentSufficient 1 k t₁ :=
   taylorExponentSufficient_firstOrder_tight N
-private def shiftedWeight (z : Geo) (l i : ℕ) : Geo :=
+def shiftedWeight (z : Geo) (l i : ℕ) : Geo :=
   (l.choose i : Geo) * z ^ (l-i)
-private theorem coeff_taylor_sum {m : ℕ} (z : Geo) (a : Fin m → Geo) (i : ℕ) :
+theorem coeff_taylor_sum {m : ℕ} (z : Geo) (a : Fin m → Geo) (i : ℕ) :
     (taylor z (∑ l : Fin m, monomial l.val (a l))).coeff i =
       ∑ l : Fin m, shiftedWeight z l.val i * a l := by
   rw [map_sum, Polynomial.finsetSum_coeff]
@@ -381,7 +381,7 @@ private theorem coeff_taylor_sum {m : ℕ} (z : Geo) (a : Fin m → Geo) (i : �
   rw [Polynomial.taylor_coeff, Polynomial.hasseDeriv_monomial, Polynomial.eval_monomial]
   unfold shiftedWeight
   ring
-private theorem readJet_coeff {P : Geo[X]} (hP : P.degree < k) (i : ℕ) :
+theorem readJet_coeff {P : Geo[X]} (hP : P.degree < k) (i : ℕ) :
     readJet (fun j => P.coeff j.val) i = (taylor center P).coeff i := by
   have hnat : P.natDegree < k := by
     by_cases hz : P = 0
@@ -414,7 +414,7 @@ private theorem denominator_band (s : Source) (G : DifferentialPolynomial K 1)
   refine ⟨hdt, le_min ((MvPolynomial.degreeOf_le_totalDegree _ _).trans hdt) ?_⟩
   exact (MvPolynomial.degreeOf_pow_le _ _ _).trans
     ((Nat.mul_le_mul_left _ hi).trans (by unfold k; omega))
-private theorem padded_band (s : Source) (G : DifferentialPolynomial K 1)
+theorem padded_band (s : Source) (G : DifferentialPolynomial K 1)
     (hIpos : 0 < I₁ s) (hT : jetTotalDegree G ≤ H s)
     (hI : jetDegree G (Fin.last 1) ≤ I₁ s) (l : Fin k) :
     inBand₁ s (padded G l) := by
@@ -433,7 +433,7 @@ private theorem padded_band (s : Source) (G : DifferentialPolynomial K 1)
     (I₁ s) k t₁ exponent_sufficient hIpos hm l).trans (by
       have hl := l.isLt
       omega)
-private theorem combine_band (s : Source) {m : ℕ} (P : Fin m → InitialRing 1)
+theorem combine_band (s : Source) {m : ℕ} (P : Fin m → InitialRing 1)
     (h : ∀ l, inBand₁ s (P l)) (i : ℕ) : inBand₁ s (combine P i) := by
   unfold inBand₁ combine
   constructor
@@ -453,7 +453,7 @@ theorem chart_bands (s : Source) (G : DifferentialPolynomial K 1)
   simp only [chart]
   exact ⟨denominator_band s G hT hI, fun i : Fin k =>
     combine_band s (m := k) (padded G) (padded_band s G hIpos hT hI) i.val⟩
-private theorem eval_combine {m : ℕ} (u : Fin 2 → Geo) (P : Fin m → InitialRing 1)
+theorem eval_combine {m : ℕ} (u : Fin 2 → Geo) (P : Fin m → InitialRing 1)
     (d : Geo) (hd : d ≠ 0) (a : Fin m → Geo) (h : ∀ l, MvPolynomial.eval u (P l) = d * a l)
     (i : ℕ) : MvPolynomial.eval u (combine P i) / d =
       (taylor (-center) (∑ l : Fin m, monomial l.val (a l))).coeff i := by
@@ -462,7 +462,7 @@ private theorem eval_combine {m : ℕ} (u : Fin 2 → Geo) (P : Fin m → Initia
   intro l _
   rw [map_mul, MvPolynomial.eval_C, h]
   field_simp
-private theorem output_coeff (G : DifferentialPolynomial K 1) (g : InitialRing 1)
+theorem output_coeff (G : DifferentialPolynomial K 1) (g : InitialRing 1)
     (u : Fin 2 → Geo) (hu : MvPolynomial.eval u (denominator G) ≠ 0) (i : Fin k) :
     (chart G g).output u i =
       (rationalTaylorPolynomial center (centeredEquation G) k u).coeff i.val := by
@@ -497,7 +497,7 @@ theorem chart_ok (G : DifferentialPolynomial K 1) {g : InitialRing 1}
   exact h
 def mark (f : K[X]) : Fin 2 → Geo :=
   polynomialJet center (f.map embed)
-private theorem eval_mapped_at_center (f : K[X]) : (f.map embed).eval center = centerMap f := by
+theorem eval_mapped_at_center (f : K[X]) : (f.map embed).eval center = centerMap f := by
   rw [Polynomial.eval_map]
   change Polynomial.eval₂RingHom embed center f = centerMap f
   congr 1
@@ -505,7 +505,7 @@ private theorem eval_mapped_at_center (f : K[X]) : (f.map embed).eval center = c
   · intro a
     simp [centerMap, embed]
   · simp [centerMap, center]
-private theorem eval_mark (G : DifferentialPolynomial K 1) (f : K[X]) :
+theorem eval_mark (G : DifferentialPolynomial K 1) (f : K[X]) :
     jetEvaluation (centeredEquation G) center (mark f) =
       centerMap (differentialSpecialization G f) := by
   rw [mark, ← eval_differentialSpecialization, centeredEquation,
@@ -514,7 +514,7 @@ theorem initial_mark (G : DifferentialPolynomial K 1) (f : K[X])
     (h : differentialSpecialization G f = 0) : MvPolynomial.eval (mark f) (initial G) = 0 := by
   change MvPolynomial.eval (mark f) (initialJetEquation center (centeredEquation G)) = 0
   rw [← MvPolynomial.aeval_eq_eval, aeval_initialJetEquation, eval_mark, h, map_zero]
-private theorem sep_mark (G : DifferentialPolynomial K 1) (f : K[X])
+theorem sep_mark (G : DifferentialPolynomial K 1) (f : K[X])
     (h : differentialSpecialization (separant G (Fin.last 1)) f ≠ 0) :
     MvPolynomial.eval (mark f) (sep G) ≠ 0 := by
   rw [← MvPolynomial.aeval_eq_eval, sep, aeval_initialJetSeparant, centeredEquation, ← map_separant]
@@ -579,7 +579,7 @@ private theorem root_in_factor {P : InitialRing 1} (hP : P ≠ 0) (u : Fin 2 →
   have hd := map_dvd (MvPolynomial.eval u) (prod_normalizedFactors hP).symm.dvd
   rw [h, zero_dvd_iff, map_multiset_prod, Multiset.prod_eq_zero_iff, Multiset.mem_map] at hd
   exact hd
-private theorem positive_total {g : InitialRing 1} (hg : Irreducible g) :
+theorem positive_total {g : InitialRing 1} (hg : Irreducible g) :
     1 ≤ g.totalDegree := by
   by_contra! h
   have hc := MvPolynomial.totalDegree_eq_zero_iff_eq_C.mp (Nat.lt_one_iff.mp h)
@@ -691,7 +691,7 @@ def equationIdeal {r : ℕ} (T : Chart r) : Ideal (InitialRing r) :=
 theorem equationIdeal_prime {r : ℕ} {T : Chart r} (hT : ChartOK T) :
     (equationIdeal T).IsPrime :=
   (Ideal.span_singleton_prime hT.irreducible.ne_zero).mpr hT.irreducible.prime
-private theorem mem_locus_iff {r : ℕ} (T : Chart r) (u : Fin (r+1) → Geo) :
+theorem mem_locus_iff {r : ℕ} (T : Chart r) (u : Fin (r+1) → Geo) :
     u ∈ T.locus ↔ u ∈ zeroLocus Geo (equationIdeal T) ∧ aeval u T.denominator ≠ 0 := by
   rw [equationIdeal, zeroLocus_span]
   simp only [Chart.locus, Set.mem_ofPred_eq, Set.mem_singleton_iff, forall_eq, aeval_eq_eval]
@@ -718,7 +718,7 @@ private def jetForm {r : ℕ} (j : Fin (r+1)) : CoeffRing :=
   ∑ i : Fin CJ0.k, C ((i.val.choose j.val : Geo) * center^(i.val-j.val)) * MvPolynomial.X i
 private def jetMap (r : ℕ) : InitialRing r →ₐ[Geo] CoeffRing :=
   aeval jetForm
-private theorem aeval_jetMap {r : ℕ} (y : Fin CJ0.k → Geo) (g : InitialRing r) :
+theorem aeval_jetMap {r : ℕ} (y : Fin CJ0.k → Geo) (g : InitialRing r) :
     aeval y (jetMap r g) = aeval (fun j => readJet y j.val) g := by
   have h : (aeval y).comp (jetMap r) = aeval (fun j => readJet y j.val) := by
     apply algHom_ext
@@ -749,7 +749,7 @@ theorem image_dimension_lower {r : ℕ} {T : Chart r} (hT : ChartOK T) :
   rw [heq] at h
   change (affineHilbertPolynomial (equationIdeal T)).natDegree + 1 = r+1 at hdim
   omega
-private theorem curve_image {T : Chart 1} (hT : ChartOK T) {a d : ℕ}
+theorem curve_image {T : Chart 1} (hT : ChartOK T) {a d : ℕ}
     (ha : 0 < a) (hd : 0 < d)
     (hD : T.denominator ∈ restrictCappedDegree (Fin 2) Geo 1 a d)
     (hN : ∀ j, T.numerator j ∈ restrictCappedDegree (Fin 2) Geo 1 a d) :
@@ -822,7 +822,7 @@ private theorem curve_image {T : Chart 1} (hT : ChartOK T) {a d : ℕ}
   refine ⟨hQ, le_antisymm hdQ hlower, hbQ.trans ?_⟩
   exact affineDegree_comap_cappedDegree_span_singleton_le ha hd hT.irreducible.ne_zero
     (K1_13_5_3.mem_capped T.equation le_rfl le_rfl)
-private theorem chart_caps (s : Source) :
+theorem chart_caps (s : Source) :
     0 < a₁ s ∧ 0 < d₁ s ∧ d₁ s ≤ a₁ s := by
   have ha : 0 < a₁ s := by unfold a₁; omega
   have hk : 1 < CJ0.k := by decide
@@ -853,7 +853,7 @@ section
 namespace CJ0_8
 open Polynomial PolynomialDifferential MvPolynomial
 open CJ0 Sol1.C57
-private theorem regularRoot_of_simple (Q : DifferentialPolynomial K 1) (f : K[X]) :
+theorem regularRoot_of_simple (Q : DifferentialPolynomial K 1) (f : K[X]) :
     differentialSpecialization Q f = 0 →
     differentialSpecialization (separant Q (Fin.last 1)) f ≠ 0 →
     RegularRoot Q f := by
@@ -883,7 +883,7 @@ private theorem regularRoot_of_simple (Q : DifferentialPolynomial K 1) (f : K[X]
         exact hsep (by rw [hz, h_a, mul_zero, mul_zero, add_zero])
       obtain ⟨g, hg, hdvd, hzero, hnonzero⟩ := ih h_a haSep
       exact ⟨g, hg, hdvd.trans (dvd_mul_left a i), hzero, hnonzero⟩
-private theorem height_bounds {s : Source} (hs : ShapeOK s) :
+theorem height_bounds {s : Source} (hs : ShapeOK s) :
     2 ≤ H s ∧ H s < p := by
   have hB : 2 ≤ s.B := by
     have := hs.top_pos

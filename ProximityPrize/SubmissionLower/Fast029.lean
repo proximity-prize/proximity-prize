@@ -69,7 +69,7 @@ def rootMarkHom (z : K) (S : K[X]) : RootAmbient →+* FX :=
   MvPolynomial.eval ![seedEmbedding z, (seedEmbedding z)^p, atX S]
 def jetMarkHom (z : K) (S : K[X]) : Ambient →+* FX :=
   MvPolynomial.eval ![seedEmbedding z, (seedEmbedding z)^p, atX S, atX S.derivative]
-private theorem eval_root (a b y : FX) (f : Equation) :
+theorem eval_root (a b y : FX) (f : Equation) :
     MvPolynomial.eval ![a,b,y] (toRoot f) = f.eval₂ (MvPolynomial.eval ![a,b]) y := by
   have hseed : (MvPolynomial.eval ![a,b,y]).comp rootSeeds = MvPolynomial.eval ![a,b] := by
     apply RingHom.ext
@@ -233,10 +233,10 @@ def c7 : Prop :=
     2601 ≤ M.overhead → M.overhead ≤ 3554 →
     ∀ rows, JetSource M F rows → ∀ f : Equation, f ≠ 0 →
     FullDivisibility M.overhead rows f → f.natDegree ≤ 5
-private def unionOf (groups : (ℕ × ℕ) → Finset K) (keys : List (ℕ × ℕ)) : Finset K := by
+def unionOf (groups : (ℕ × ℕ) → Finset K) (keys : List (ℕ × ℕ)) : Finset K := by
   classical
   exact keys.foldr (fun k acc => groups k ∪ acc) ∅
-private theorem mem_unionOf (groups : (ℕ × ℕ) → Finset K)
+theorem mem_unionOf (groups : (ℕ × ℕ) → Finset K)
     {keys : List (ℕ × ℕ)} {k : ℕ × ℕ} {γ : K}
     (hk : k ∈ keys) (hγ : γ ∈ groups k) : γ ∈ unionOf groups keys := by
   classical
@@ -248,7 +248,7 @@ private theorem mem_unionOf (groups : (ℕ × ℕ) → Finset K)
     rcases hk with rfl | hk
     · exact Finset.mem_union_left _ hγ
     · exact Finset.mem_union_right _ (ih hk)
-private theorem card_unionOf_le (groups : (ℕ × ℕ) → Finset K)
+theorem card_unionOf_le (groups : (ℕ × ℕ) → Finset K)
     (keys : List (ℕ × ℕ)) (h : ∀ k ∈ keys, (groups k).card ≤ fixedPrice k.1 k.2) :
     (unionOf groups keys).card ≤ (keys.map fun k => fixedPrice k.1 k.2).sum := by
   classical
@@ -336,7 +336,7 @@ set_option maxSynthPendingDepth 8
 namespace K1_14_2_1
 noncomputable section
 open K1_14 K1_14_2 Polynomial UniqueFactorizationMonoid
-private def divisible (V : Submodule FX Jet) (G : Jet) : Submodule FX V where
+def divisible (V : Submodule FX Jet) (G : Jet) : Submodule FX V where
   carrier := {Q | G ∣ (Q : Jet)}
   zero_mem' := dvd_zero G
   add_mem' := fun hP hQ => dvd_add hP hQ
@@ -760,8 +760,6 @@ theorem pair_scheduled {w : ℤ} (hw : w ≤ 3554) (i : Fin 10) {s : Shape}
     simp [scheduled, hw, stages, full]
   rw [he]
   exact List.mem_append_left _ (List.mem_flatMap.mpr ⟨_, stage_mem i, hs⟩)
-theorem full_scheduled {w : ℤ} (hw : w ≤ 3554) : full ∈ scheduled w := by
-  simp [scheduled, hw, full]
 theorem positive_m (i : Fin 10) :
     0 < (stageAt i).cheap.m ∧ 0 < (stageAt i).layered.m := by
   fin_cases i <;> decide
@@ -815,7 +813,7 @@ def jump (fee : Fin 3) (n : ℕ) (k : Fin 4) : ℕ :=
   price fee (n+1) k - price fee n k
 def ledger (fee : Fin 3) (n : ℕ) : ℕ :=
   ∑ i ∈ Finset.range n, dot (jump fee i) (budget i)
-private theorem price_step : ∀ (i : Fin 10) (fee : Fin 3) (k : Fin 4),
+theorem price_step : ∀ (i : Fin 10) (fee : Fin 3) (k : Fin 4),
     price fee i.val k ≤ price fee (i.val+1) k := by
   decide +kernel
 theorem dot_mono (w a b : Fin 4 → ℕ) (h : ∀ k, a k ≤ b k) : dot w a ≤ dot w b :=
@@ -832,7 +830,7 @@ theorem dot_mass_sdiff {S T : Finset (Ideal Ambient)} (h : T ⊆ S) (w : Fin 4 �
   rw [← Nat.mul_add]
   congr 1
   exact Finset.sum_sdiff h
-private theorem price_jump (fee : Fin 3) {n : ℕ} (hn : n < 10) (a : Fin 4 → ℕ) :
+theorem price_jump (fee : Fin 3) {n : ℕ} (hn : n < 10) (a : Fin 4 → ℕ) :
     dot (price fee (n+1)) a = dot (price fee n) a + dot (jump fee n) a := by
   unfold dot
   rw [← Finset.sum_add_distrib]

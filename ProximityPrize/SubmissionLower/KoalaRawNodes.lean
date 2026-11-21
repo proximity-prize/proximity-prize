@@ -69,7 +69,7 @@ theorem den_ne {J : Input} (B : ResidueLift J) {γ : K} (hγ : γ ∈ J.marks) (
   rw [map_mul,map_pow]
   exact mul_ne_zero hδ (pow_ne_zero _ hsep)
 
-private theorem normalize_rawres {J : Input} (B : ResidueLift J) {γ : K} (hγ : γ ∈ J.marks)
+theorem normalize_rawres {J : Input} (B : ResidueLift J) {γ : K} (hγ : γ ∈ J.marks)
     (r : ℕ) (x : I) :
     ev J γ (rawRes B r x) / ev J γ (quotientDenominator J B r) =
       residueValue (markPoint J γ) B x := by
@@ -83,7 +83,7 @@ private theorem normalize_rawres {J : Input} (B : ResidueLift J) {γ : K} (hγ :
     ← eval_seed]
   field_simp
 
-private theorem normalize_rawjet {J : Input} (B : ResidueLift J) {γ : K} (hγ : γ ∈ J.marks)
+theorem normalize_rawjet {J : Input} (B : ResidueLift J) {γ : K} (hγ : γ ∈ J.marks)
     (s : Finset I) (j : Fin (prefixLength J s)) :
     let r := J.ell-s.card
     ev J γ (rawJet B r j.val) / ev J γ (quotientDenominator J B r) =

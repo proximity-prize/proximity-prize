@@ -16,7 +16,7 @@ private instance (h N W q j : ℕ) : Decidable (eligible h N W q j) := by
 private def positions (s : Shape) (h N W : ℕ) : Finset (Σ _ : ℕ, ℕ) :=
   ((range (s.B + 1)).sigma (fun q => range (min q s.J + 1))).filter
     (fun a => eligible h N W a.1 a.2)
-private theorem positions_card (s : Shape) (h N W : ℕ) :
+theorem positions_card (s : Shape) (h N W : ℕ) :
     (positions s h N W).card =
       shapeSum s (fun q j => if eligible h N W q j then 1 else 0) := by
   unfold positions shapeSum

@@ -16,7 +16,7 @@ private def z1 : CJ1.Block where
 private def b1 := bands [(34,36,1),(33,34,3),(32,32,5),(31,31,6),(30,30,7),(29,29,8),(28,28,9),(27,27,10),(26,26,10),(25,25,10),(24,24,9),(23,23,8),(22,22,7),(21,21,6),(20,20,5),(19,19,4),(18,18,3),(17,17,2),(16,16,1)]
 private theorem k1v0 : good true 36 l1v0 b1 := rfl
 private theorem v1j0 : CJ6.VectorDots 36 16 z1 0 := v! true, 36, b1, l1v0, k1v0
-private theorem k1v1 : good true 36 l1v1 b1 := rfl
+theorem k1v1 : good true 36 l1v1 b1 := rfl
 private theorem v1j1 : CJ6.VectorDots 36 16 z1 1 := v! true, 36, b1, l1v1, k1v1
 theorem r1 : (CJ0.blockMatrix CJ6.source 36 ((16 : ℤ)-20)).rank ≤ 108 :=
   (CJ6.block_rank_le 36 16).trans (CJ6.rank_of_dots (z := z1) (by decide) (CJ6.belowSucc (CJ6.belowSucc CJ6.belowZero v1j0) v1j1))
@@ -47,7 +47,7 @@ private def z3 : CJ1.Block where
   free := [(9,0)]
   vectors := [l3v0].map (vectorData true 38 15)
 private def b3 := bands [(35,37,2),(34,35,4),(33,33,6),(32,32,7),(31,31,8),(30,30,9),(29,29,10),(28,28,10),(27,27,10),(26,26,9),(25,25,8),(24,24,7),(23,23,6),(22,22,5),(21,21,4),(20,20,3),(19,19,2),(18,18,1)]
-private theorem k3v0 : good true 38 l3v0 b3 := rfl
+theorem k3v0 : good true 38 l3v0 b3 := rfl
 private theorem v3j0 : CJ6.VectorDots 38 15 z3 0 := v! true, 38, b3, l3v0, k3v0
 theorem r3 : (CJ0.blockMatrix CJ6.source 38 ((15 : ℤ)-20)).rank ≤ 99 :=
   (CJ6.block_rank_le 38 15).trans (CJ6.rank_of_dots (z := z3) (by decide) (CJ6.belowSucc CJ6.belowZero v3j0))
@@ -83,7 +83,7 @@ private theorem sumFrom_eq (f : ℕ → ℕ) (j n : ℕ) :
 private def runValue (s j code : ℕ) : ℕ :=
   if code % 2147483648 = 0 then 0
   else sumFrom (fun u => blockSaving s u (decode code)) j (runLength code)
-private theorem runValue_eq (s j code : ℕ) :
+theorem runValue_eq (s j code : ℕ) :
     runValue s j code = ∑ k ∈ Finset.range (runLength code),
       blockSaving s (j + k) (decode code) := by
   unfold runValue
@@ -97,7 +97,7 @@ private theorem runValue_eq (s j code : ℕ) :
 private def rowValue (s j : ℕ) : List ℕ → ℕ
   | [] => 0
   | code :: tail => runValue s j code + rowValue s (j + runLength code) tail
-private theorem rowValue_eq (s j : ℕ) (row : List ℕ) :
+theorem rowValue_eq (s j : ℕ) (row : List ℕ) :
     rowValue s j row = ∑ k ∈ Finset.range (rowLength row),
       blockSaving s (j + k) (rowPower k row) := by
   induction row generalizing j with
@@ -133,7 +133,7 @@ theorem fits_append (s : ℕ) (a b : List (List ℕ)) :
   | cons row tail ih =>
     simp only [List.cons_append, fits, List.length_cons, ih, Bool.and_assoc]
     rw [show s + 1 + tail.length = s + (tail.length + 1) by omega]
-private theorem rows_eq (s : ℕ) (rows : List (List ℕ)) :
+theorem rows_eq (s : ℕ) (rows : List (List ℕ)) :
     value s rows = ∑ k ∈ Finset.range rows.length,
       rowValue (s + k) (rowStart (s + k)) (rows[k]?.getD []) := by
   induction rows generalizing s with
@@ -146,7 +146,7 @@ private theorem rows_eq (s : ℕ) (rows : List (List ℕ)) :
     apply Finset.sum_congr rfl
     intro k hk
     rw [show s + 1 + k = s + (k + 1) by omega]
-private theorem fit_row (s : ℕ) (rows : List (List ℕ)) (h : fits s rows = true)
+theorem fit_row (s : ℕ) (rows : List (List ℕ)) (h : fits s rows = true)
     (k : ℕ) (hk : k < rows.length) :
     rowStart (s + k) + rowLength (rows[k]?.getD []) ≤ 409 ∧
       s + k + rowStart (s + k) + rowLength (rows[k]?.getD []) ≤ 3797 := by
@@ -160,15 +160,15 @@ private theorem fit_row (s : ℕ) (rows : List (List ℕ)) (h : fits s rows = tr
       have he : s + (k + 1) = s + 1 + k := by omega
       simpa only [Nat.succ_eq_add_one, he, List.getElem?_cons_succ] using
         ih (s + 1) hs.2 k (by simpa using hk)
-private def wrap (n : ℕ) (hn : 0 < n) (i : ℕ) : Fin n := ⟨i % n, Nat.mod_lt _ hn⟩
-private theorem wrap_val (n : ℕ) (hn : 0 < n) (i : Fin n) : wrap n hn i.val = i := by
+def wrap (n : ℕ) (hn : 0 < n) (i : ℕ) : Fin n := ⟨i % n, Nat.mod_lt _ hn⟩
+theorem wrap_val (n : ℕ) (hn : 0 < n) (i : Fin n) : wrap n hn i.val = i := by
   apply Fin.ext
   exact Nat.mod_eq_of_lt i.isLt
-private theorem sum_wrap (n : ℕ) (hn : 0 < n) (f : Fin n → ℕ) :
+theorem sum_wrap (n : ℕ) (hn : 0 < n) (f : Fin n → ℕ) :
     (∑ i : Fin n, f i) = ∑ j ∈ Finset.range n, f (wrap n hn j) := by
   simpa only [wrap_val] using
     (Fin.sum_univ_eq_sum_range (fun j => f (wrap n hn j)) n)
-private theorem sum_subinterval (f : ℕ → ℕ) {a b n : ℕ} (h : a + b ≤ n) :
+theorem sum_subinterval (f : ℕ → ℕ) {a b n : ℕ} (h : a + b ≤ n) :
     (∑ j ∈ Finset.range b, f (a + j)) ≤ ∑ j ∈ Finset.range n, f j := by
   apply le_trans _ (Finset.sum_le_sum_of_subset_of_nonneg (Finset.range_mono h)
     (fun _ _ _ => Nat.zero_le _))

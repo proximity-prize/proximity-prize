@@ -23,7 +23,7 @@ open private HighCore82219Upper_3_1_2.eval_coefficient HighCore82219Upper_3_2.ma
   HighCore82219Upper_2.seed_at_mark HighCore82219Upper_2.factorial_ne_zero HighCore82219Upper_5_2.charFX
   from ProximityPrize.SubmissionLower.HighCore82219UpperGeometry
 
-private theorem seed_fit {e v w : ℕ} (g : SeedConstants)
+theorem seed_fit {e v w : ℕ} (g : SeedConstants)
     (hv : g.degreeOf 0 ≤ v) (hw : g.degreeOf 1 ≤ w) :
     seedBiform g ∈ BoxDegree.space FX e v w := by
   have he : seedBiform g = flatten (C (liftSeeds g)) := by
@@ -42,7 +42,7 @@ private theorem seed_fit {e v w : ℕ} (g : SeedConstants)
     exact ⟨(h 0).trans hv,(h 1).trans hw⟩
   | succ i => simp
 
-private theorem mark_seed_projection {J : Input} {B : ResidueLift J} {P : Ideal JetRing}
+theorem mark_seed_projection {J : Input} {B : ResidueLift J} {P : Ideal JetRing}
     (γ : K) (ψ : Chart J B P →+* FX) (hψ : ψ.comp (chartPoint J B P) = (markPoint J γ).toRingHom) :
     ψ.comp (chartSeed J B P) = constantAbscissa.comp (evalSeedConstants (J.model.label γ)) := by
   apply RingHom.ext
@@ -54,7 +54,7 @@ private theorem mark_seed_projection {J : Input} {B : ResidueLift J} {P : Ideal 
       HighCore82219Upper_3_3_1.mark_biform J γ _
     _ = _ := RingHom.congr_fun (HighCore82219Upper_2.seed_at_mark (J.model.label γ) (J.family.scalar γ)) g
 
-private theorem center_zero_on_curve {J : Input} {B : ResidueLift J} {D : Factors J B}
+theorem center_zero_on_curve {J : Input} {B : ResidueLift J} {D : Factors J B}
     (C₀ : CurveMarks J B D) (G : FreshEquation L)
     (hs : ∀ q ∈ C₀.prime, action J.f q ∈ C₀.prime) (hG : C (centerEquation G) ∈ C₀.prime)
     (hw : G.natDegree + J.e*P1_7.degreeAt J.hi < p)
@@ -214,7 +214,7 @@ theorem stable_node {J : Input} {v w : ℕ} (M : MarkCompression J v w)
       exact (HighCore82219Upper_3_2.mark_C J γ _).trans (M.atMarks γ (C₀.sub hγ))
 
 theorem compress_good (J : Input) (v w : ℕ) (_he : 7 ≤ J.e) (he : J.e ≤ 21)
-    (hv : v ≤ 445) (hw : w ≤ 445) (hhi : J.hi ≤ 2440)
+    (hv : v ≤ 445) (hw : w ≤ 445) (hhi : J.hi ≤ 2465)
     (haxis : ∀ i, (J.f.coeff i).degreeOf 0 ≤ v ∧ (J.f.coeff i).degreeOf 1 ≤ w) :
     ∃ U : Finset K, U ⊆ J.marks ∧ (J.marks \ U).card ≤ (p+1)*(v+w+256) ∧
       ∀ (B : ResidueLift J) (D : Factors J B) (C₀ : CurveMarks J B D), C₀.marks ⊆ U →

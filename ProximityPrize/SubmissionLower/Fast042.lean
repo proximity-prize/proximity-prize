@@ -68,10 +68,10 @@ private theorem mass_biUnion {ι : Type*} (I : Finset ι) (T : ι → Finset Sur
   | @insert i I hi ih =>
     rw [Finset.biUnion_insert, Finset.sum_insert hi]
     exact (mass_union (T i) (I.biUnion T) s).trans (add_le_add le_rfl ih)
-private theorem total_cast (qs : Finset Surface) (s : Slice) :
+theorem total_cast (qs : Finset Surface) (s : Slice) :
     (totalSectionDegree qs s : ℚ) = mass qs s := by
   simp [totalSectionDegree, mass]
-private theorem sum_ordinary {F : Finset Equation} {T : Equation → Finset Surface}
+theorem sum_ordinary {F : Finset Equation} {T : Equation → Finset Surface}
     (hc : ∀ f ∈ F, FourMassCap (T f) f.natDegree (ordinarySeedDegree f)
       (2 * (ordinarySeedDegree f : ℚ) * f.natDegree) ((ordinarySeedDegree f : ℚ)^2))
     (hu : ∑ f ∈ F, ordinarySeedDegree f ≤ 812) (hb : ∑ f ∈ F, f.natDegree ≤ 63) :
@@ -109,7 +109,7 @@ private theorem sum_ordinary {F : Finset Equation} {T : Equation → Finset Surf
         exact mul_le_mul_of_nonneg_right (huf f hf) (by positivity)
       _ = (812 : ℚ) * ∑ f ∈ F, (ordinarySeedDegree f : ℚ) := (Finset.mul_sum _ _ _).symm
       _ ≤ 659344 := by linarith only [hu']
-private theorem unionCaps {A B : Finset Surface}
+theorem unionCaps {A B : Finset Surface}
     (hA : FourMassCap A 2828 60186 278957 2360484)
     (hB : FourMassCap B 63 812 102312 659344) :
     FourMassCap (A ∪ B) 2891 60998 381269 3019828 := by
@@ -118,7 +118,7 @@ private theorem unionCaps {A B : Finset Surface}
   · linarith only [mass_union A B .ordinate, hA.ordinate, hB.ordinate]
   · linarith only [mass_union A B .mixed, hA.mixed, hB.mixed]
   · linarith only [mass_union A B .jets, hA.jets, hB.jets]
-private theorem ordCover (test : c2) (bound : c4)
+theorem ordCover (test : c2) (bound : c4)
     (f : Equation) (hi : Irreducible f) (hd : 0 < f.natDegree) (hp : f.natDegree < p) :
     ∃ qs : Finset Surface, TwoDimensional qs ∧
       FourMassCap qs f.natDegree (ordinarySeedDegree f)
@@ -130,7 +130,7 @@ private theorem ordCover (test : c2) (bound : c4)
   intro z S hz
   apply hcover z S ?_ (htest z S hz)
   simpa only [jetAt, eval₂_C, coe_eval₂RingHom, atMark] using hz
-private theorem allOrdinary (test : c2) (bound : c4) {P Q : Jet} (B : PreparedPair P Q) :
+theorem allOrdinary (test : c2) (bound : c4) {P Q : Jet} (B : PreparedPair P Q) :
     ∃ qs : Finset Surface, TwoDimensional qs ∧ FourMassCap qs 63 812 102312 659344 ∧
       ∀ f ∈ B.ordinary, ∀ z S, atMark f z S = 0 → ∃ q ∈ qs, AtSurface q z S := by
   have branch (f : Equation) (hf : f ∈ B.ordinary) :=
@@ -153,7 +153,7 @@ private theorem allOrdinary (test : c2) (bound : c4) {P Q : Jet} (B : PreparedPa
   · intro f hf z S hz
     obtain ⟨q, hq, hmark⟩ := (data f hf).2.2 z S hz
     exact ⟨q, Finset.mem_biUnion.mpr ⟨f, hf, hq⟩, hmark⟩
-private theorem allSurfaces (test : c2) (residual : c3) (ordinary : c4)
+theorem allSurfaces (test : c2) (residual : c3) (ordinary : c4)
     {P Q : Jet} (B : PreparedPair P Q) :
     ∃ qs : Finset Surface, TwoDimensional qs ∧ FourMassCap qs 2891 60998 381269 3019828 ∧
       ∀ z S, jetAt P z S = 0 → jetAt Q z S = 0 →
@@ -175,7 +175,7 @@ private theorem allSurfaces (test : c2) (residual : c3) (ordinary : c4)
       exact Or.inr (Or.inr (Or.inr ⟨q, Finset.mem_union_left D hq, h⟩))
     · obtain ⟨q, hq, h⟩ := hDcover f hf z S hz
       exact Or.inr (Or.inr (Or.inr ⟨q, Finset.mem_union_right A hq, h⟩))
-private theorem section_le_total {qs : Finset Surface} {q : Surface} (hq : q ∈ qs) (s : Slice) :
+theorem section_le_total {qs : Finset Surface} {q : Surface} (hq : q ∈ qs) (s : Slice) :
     sectionDegree q s ≤ totalSectionDegree qs s := by
   unfold totalSectionDegree
   exact Finset.single_le_sum (fun r _ => Nat.zero_le (sectionDegree r s)) hq
@@ -274,7 +274,7 @@ variable {B A : Type} [CommRing B] [CommRing A]
 abbrev denominators (f : B →+* A) : Submonoid A :=
   (nonZeroDivisors B).map f.toMonoidHom
 abbrev Localized (f : B →+* A) := Localization (M := A) (denominators f)
-private def localBase (f : B →+* A) : FractionRing B →+* Localized f :=
+def localBase (f : B →+* A) : FractionRing B →+* Localized f :=
   IsLocalization.lift (M := nonZeroDivisors B)
     (g := (algebraMap A (Localized f)).comp f)
     (fun b => IsLocalization.map_units (M := denominators f) (Localized f)
@@ -304,7 +304,7 @@ def toFibre (f : B →+* A) (I : Ideal A) : A →+* GenericFibre f I :=
   rw [local_base]
   rfl
 variable [IsDomain B]
-private theorem disjoint_of_dominant (f : B →+* A) (I : Ideal A)
+theorem disjoint_of_dominant (f : B →+* A) (I : Ideal A)
     (h : I.comap f = ⊥) :
     Disjoint (denominators f : Set A) (I : Set A) := by
   apply Set.disjoint_left.mpr
@@ -317,10 +317,10 @@ theorem ker_toFibre (f : B →+* A) (I : Ideal A) [I.IsPrime] (h : I.comap f = �
   rw [toFibre, ← RingHom.comap_ker, Ideal.mk_ker]
   exact IsLocalization.under_map_of_isPrime_disjoint (denominators f) (Localized f)
     ‹I.IsPrime› (disjoint_of_dominant f I h)
-private def localizationEval (f : B →+* A) (x : Fin 2 → A) :
+def localizationEval (f : B →+* A) (x : Fin 2 → A) :
     MvPolynomial (Fin 2) (FractionRing B) →ₐ[FractionRing B] Localized f :=
   MvPolynomial.aeval (fun i => algebraMap A (Localized f) (x i))
-private theorem localizationEval_surjective (f : B →+* A) (x : Fin 2 → A)
+theorem localizationEval_surjective (f : B →+* A) (x : Fin 2 → A)
     (hgen : Function.Surjective (MvPolynomial.eval₂Hom f x)) :
     Function.Surjective (localizationEval f x) := by
   have heq : (localizationEval f x).toRingHom.comp
@@ -703,9 +703,9 @@ theorem same_mark_seed {q : Surface} {z z' : K} {S : K[X]}
   have he₁ := RingHom.mem_ker.mp (seedImage_le_mark hm h₁)
   exact Prod.ext (sub_eq_zero.mp (by simpa [graphEval] using he₀))
     (sub_eq_zero.mp (by simpa [graphEval] using he₁))
-private def pointJetMap (z : K) : Jet →+* JetPlane :=
+def pointJetMap (z : K) : Jet →+* JetPlane :=
   Polynomial.mapRingHom (Polynomial.mapRingHom (graphEval z))
-private theorem evaluationKernel_height {k : Type} [Field k] (a b : k) :
+theorem evaluationKernel_height {k : Type} [Field k] (a b : k) :
     2 ≤ (RingHom.ker
       (Polynomial.mapRingHom (Polynomial.mapRingHom
         (MvPolynomial.eval ![a, b] : MvPolynomial (Fin 2) k →+* k)))).height := by
@@ -763,7 +763,7 @@ private theorem evaluationKernel_height {k : Type} [Field k] (a b : k) :
     2 = 1 + 1 := by decide
     _ ≤ i.height + 1 := add_le_add_left h₁ 1
     _ ≤ j.height := Ideal.height_add_one_le_of_lt_of_isPrime hij'
-private theorem pointJetMap_ker_eq {q : Surface} (hh : q.asIdeal.height = 2) {z : K}
+theorem pointJetMap_ker_eq {q : Surface} (hh : q.asIdeal.height = 2) {z : K}
     (he : seedImage q = RingHom.ker (graphEval z)) :
     RingHom.ker (pointJetMap z) = q.asIdeal := by
   let j := RingHom.ker (pointJetMap z)
@@ -778,12 +778,12 @@ private theorem pointJetMap_ker_eq {q : Surface} (hh : q.asIdeal.height = 2) {z 
   have : q.asIdeal.FiniteHeight := by simp [Ideal.finiteHeight_iff, hh]
   refine eq_of_le_of_not_lt hjq fun hlt => ?_
   exact (not_lt_of_ge (hh ▸ htwo)) (Ideal.height_strict_mono_of_isPrime_of_isPrime hlt)
-private def sectionGraph (z : K) : SectionSeeds →+* SectionField :=
+def sectionGraph (z : K) : SectionSeeds →+* SectionField :=
   MvPolynomial.eval fun i => algebraMap FX SectionField
     (![seedEmbedding z, seedEmbedding z ^ p] i)
-private def pointSectionEval (z : K) : SectionJet →+* SectionField :=
+def pointSectionEval (z : K) : SectionJet →+* SectionField :=
   eval₂RingHom (eval₂RingHom (sectionGraph z) (sectionParameter 2)) (sectionParameter 3)
-private theorem evalMapComp {R A B : Type*} [CommSemiring R] [CommSemiring A] [CommSemiring B]
+theorem evalMapComp {R A B : Type*} [CommSemiring R] [CommSemiring A] [CommSemiring B]
     (f : R →+* A) (g : A →+* B) (x : B) :
     (eval₂RingHom g x).comp (Polynomial.mapRingHom f) = eval₂RingHom (g.comp f) x := by
   apply RingHom.ext
@@ -906,7 +906,7 @@ def c2 : Prop :=
 def c3 : Prop :=
   ∀ (q : Surface) (f : Seeds), q.asIdeal.height = 2 → f ≠ 0 →
     seedImage q = Ideal.span {f} → Module.Finite SectionField (SectionRing q .mixed)
-private theorem localCover (h1 : c1) (h2 : c2) (h3 : c3)
+theorem localCover (h1 : c1) (h2 : c2) (h3 : c3)
     {q : Surface} (hh : q.asIdeal.height = 2) :
     ∃ C : SeedCover,
       C.curve.totalDegree ≤ sectionDegree q .mixed ∧ C.points.card ≤ sectionDegree q .jets ∧
@@ -1019,7 +1019,7 @@ private def free : Slice → Fin 2 → SectionJet
   | .ordinate | .mixed => ![t 1, v]
   | .jets => ![t 0, t 1]
 private abbrev CutQuotient (s : Slice) := SectionJet ⧸ Ideal.span (sectionEquations s)
-private def cutMk (s : Slice) : SectionJet →ₐ[SectionField] CutQuotient s :=
+def cutMk (s : Slice) : SectionJet →ₐ[SectionField] CutQuotient s :=
   Ideal.Quotient.mkₐ _ _
 private def restore (s : Slice) : Plane →ₐ[SectionField] CutQuotient s :=
   MvPolynomial.aeval (cutMk s ∘ free s)
@@ -1038,91 +1038,6 @@ private def restore (s : Slice) : Plane →ₐ[SectionField] CutQuotient s :=
   (restore s).commutes (parameter i)
 @[simp] private theorem restore_X (s : Slice) (i : Fin 2) :
     restore s (MvPolynomial.X i) = cutMk s (free s i) := by simp [restore]
-private theorem cut_value (s : Slice) {a b : SectionJet} (h : a - b ∈ sectionEquations s) :
-    cutMk s a = cutMk s b := by
-  apply sub_eq_zero.mp
-  rw [← map_sub]
-  exact Ideal.Quotient.eq_zero_iff_mem.mpr (Ideal.subset_span h)
-private theorem seed_line_value (s : Slice) (hs : s = .ordinate ∨ s = .mixed) :
-    cutMk s (t 0) = cutMk s (sectionScalar 2) -
-      cutMk s (sectionScalar 0) * cutMk s (t 1) := by
-  apply eq_sub_of_add_eq
-  have h : t 0 + sectionScalar 0 * t 1 - sectionScalar 2 ∈ sectionEquations s := by
-    rcases hs with rfl | rfl <;> exact Set.mem_insert _ _
-  simpa only [map_add, map_mul] using cut_value s h
-private theorem restore_comp (s : Slice) : (restore s).comp (sliceMap s) = cutMk s := by
-  apply Polynomial.algHom_ext'
-  · apply Polynomial.algHom_ext'
-    · apply MvPolynomial.algHom_ext
-      rw [Fin.forall_fin_two]
-      simp only [AlgHom.comp_apply, Polynomial.CAlgHom_apply, slice_t]
-      constructor
-      · cases s
-        · simpa only [seedCoordinates, Matrix.cons_val_zero, restore_const] using
-            (cut_value .seed (a := t 0) (b := sectionScalar 2) (Set.mem_insert _ _)).symm
-        · simpa only [seedCoordinates, Matrix.cons_val_zero, map_sub, map_mul,
-            restore_const, restore_X, free] using
-            (seed_line_value .ordinate (Or.inl rfl)).symm
-        · simpa only [seedCoordinates, Matrix.cons_val_zero, map_sub, map_mul,
-            restore_const, restore_X, free] using
-            (seed_line_value .mixed (Or.inr rfl)).symm
-        · simp [seedCoordinates, free]
-      · cases s
-        · simpa only [seedCoordinates, Matrix.cons_val_one, Matrix.cons_val_zero,
-            restore_const] using
-            (cut_value .seed (a := t 1) (b := sectionScalar 3)
-              (Set.mem_insert_of_mem _ (Set.mem_singleton _))).symm
-        · simp [seedCoordinates, free]
-        · simp [seedCoordinates, free]
-        · simp [seedCoordinates, free]
-    · simp only [AlgHom.comp_apply, Polynomial.CAlgHom_apply, slice_y]
-      cases s
-      · simp [ordinateCoordinate, free]
-      · simpa only [ordinateCoordinate, restore_const] using
-          (cut_value .ordinate (a := y) (b := sectionScalar 3)
-            (Set.mem_insert_of_mem _ (Set.mem_singleton _))).symm
-      · have h : y + sectionScalar 1 * v - sectionScalar 3 ∈ sectionEquations .mixed :=
-          Set.mem_insert_of_mem _ (Set.mem_singleton _)
-        have he : cutMk .mixed y =
-            cutMk .mixed (sectionScalar 3) -
-              cutMk .mixed (sectionScalar 1) * cutMk .mixed v :=
-          eq_sub_of_add_eq (by simpa only [map_add, map_mul] using cut_value .mixed h)
-        simpa only [ordinateCoordinate, map_sub, map_mul, restore_const, restore_X, free,
-          Matrix.cons_val_one, Matrix.cons_val_zero] using he.symm
-      · simpa only [ordinateCoordinate, restore_const] using
-          (cut_value .jets (a := y) (b := sectionScalar 2) (Set.mem_insert _ _)).symm
-  · simp only [AlgHom.comp_apply, slice_v]
-    cases s
-    · simp [derivativeCoordinate, free]
-    · simp [derivativeCoordinate, free]
-    · simp [derivativeCoordinate, free]
-    · simpa only [derivativeCoordinate, restore_const] using
-        (cut_value .jets (a := v) (b := sectionScalar 3)
-          (Set.mem_insert_of_mem _ (Set.mem_singleton _))).symm
-theorem sliceMap_ker (s : Slice) :
-    RingHom.ker (sliceMap s) = Ideal.span (sectionEquations s) := by
-  apply le_antisymm
-  · intro f hf
-    apply Ideal.Quotient.eq_zero_iff_mem.mp
-    have h := AlgHom.congr_fun (restore_comp s) f
-    rw [AlgHom.comp_apply, RingHom.mem_ker.mp hf, map_zero] at h
-    exact h.symm
-  · apply Ideal.span_le.mpr
-    intro f hf
-    apply RingHom.mem_ker.mpr
-    cases s <;>
-      simp only [sectionEquations, Set.mem_insert_iff, Set.mem_singleton_iff] at hf <;>
-      rcases hf with rfl | rfl <;>
-      simp [seedCoordinates, ordinateCoordinate, derivativeCoordinate]
-theorem sliceMap_surjective (s : Slice) : Function.Surjective (sliceMap s) := by
-  let lift : Plane →ₐ[SectionField] SectionJet := MvPolynomial.aeval (free s)
-  have hcomp : (sliceMap s).comp lift = AlgHom.id _ _ := by
-    apply MvPolynomial.algHom_ext
-    rw [Fin.forall_fin_two]
-    simp only [AlgHom.comp_apply, lift, MvPolynomial.aeval_X, AlgHom.id_apply]
-    cases s <;> simp [free, seedCoordinates, ordinateCoordinate, derivativeCoordinate]
-  intro F
-  exact ⟨lift F, AlgHom.congr_fun hcomp F⟩
 end
 end K1_14_3_2_3
 end

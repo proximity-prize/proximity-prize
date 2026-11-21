@@ -13,7 +13,7 @@ open private pairedSum pair evenSlice oddSlice from ProximityPrize.SubmissionLow
 open scoped BigOperators Pointwise
 noncomputable section
 
-private def sumSlices (b j t n : ℚ) : ℚ :=
+def sumSlices (b j t n : ℚ) : ℚ :=
   let f : ℚ → ℚ := fun h => sliceFour (b - h / 2) (j - 2 * h) (t - h)
   n * f 0 + n * (n - 1) / 2 * (f 1 - f 0) +
     n * (n - 1) * (n - 2) / 6 * (f 2 - 2 * f 1 + f 0) +
@@ -114,7 +114,7 @@ private def coeff5 (b j t h : ℚ) : ℚ :=
 
 def bentIntegral (b j t h : ℚ) : ℚ := 60 * coeff5 b j t h
 
-private theorem sumSlices_eval (b j t h n : ℚ) :
+theorem sumSlices_eval (b j t h n : ℚ) :
     sumSlices (n * b) (n * j) (n * t) (2 * n * h + 1) =
       coeff5 b j t h * n^5 + coeff4 b j t h * n^4 +
         coeff3 b j t h * n^3 + coeff2 b j t h * n^2 + coeff1 b j t h * n + 1 := by

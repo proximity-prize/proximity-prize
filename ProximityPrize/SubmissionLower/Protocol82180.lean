@@ -1,4 +1,5 @@
-import ProximityPrize.SubmissionLower.CurveList51
+import ProximityPrize.SubmissionLower.RungSplit
+import ProximityPrize.SubmissionLower.Numeric6Defs
 import ProximityPrize.SubmissionLower.FrontBranch12
 
 set_option Elab.async false
@@ -143,20 +144,6 @@ theorem protocol_claim_of_scalar_cap (hlist : CJ0.ScalarList agreement listCap)
   reduction := gamma_error_le_of_scalar_cap hlist hscalar
   score := query_score
 
-/-- Bound the number of slopes for one arbitrary pair of scalar received words.
-    This hypothesis implies the full 69.46-bit claim. -/
-theorem of_bad_slopes (bound : ∀ (u : Words) (Γ : Finset K),
-    (∀ γ ∈ Γ, Principal.BadSlope node (u 0) (u 1) k agreement γ) → Γ.card ≤ scalarCap) :
-    ProtocolClaim 6946 336613375 1073741824 := by
-  apply protocol_claim_of_scalar_cap CurveList51.scalar_list
-  intro u Γ hΓ
-  apply bound u Γ
-  intro γ hγ
-  let : NeZero k := ⟨by decide⟩
-  exact Principal.isMCA_implies_badSlope node u k agreement radius
-    (fun _ h => agreement_of_threshold h) γ (hΓ γ hγ)
-
-#print axioms of_bad_slopes
 
 end
 end Protocol82180

@@ -1,8 +1,15 @@
-import ProximityPrize.SubmissionLower.FrontCases82180
+import ProximityPrize.SubmissionLower.FrontParams82180
 import ProximityPrize.SubmissionLower.HighTerminal82180
 import ProximityPrize.SubmissionLower.GoldBranch7
 set_option Elab.async false
 set_option autoImplicit true
+-- The high-band case of the 82,180 front, moved here from `FrontCases82180` (its other cases are unused).
+namespace Front82180
+def c7 : Prop :=
+  ∀ (b : HighBand) u deleted (M : AnchorModel u deleted) Γ, AnchoredFamily M Γ →
+    ((Front82180.row b).lo : ℤ) ≤ M.overhead → M.overhead ≤ ((Front82180.row b).hi : ℤ) →
+    Γ.card ≤ (Front82180.row b).prefixFee + (Front82180.row b).retained + 1
+end Front82180
 section
 namespace HighFamily82180
 open Front82180 (HighBand)

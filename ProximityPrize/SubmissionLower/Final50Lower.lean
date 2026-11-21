@@ -6,7 +6,7 @@ set_option autoImplicit true
 section
 namespace Final50Lower_1
 noncomputable section
-variable {top : Fin 14}
+variable {top : Fin 15}
 open P3 (I K)
 open Final50Price (Messages taylorLength physicalDegree)
 open Final50Lower (ProperCover SecondFactors Whole mixedBudget invariantBudget)
@@ -16,16 +16,16 @@ open K1_13_5_4 (GeometricX GeoRow genericRow genericCoeff genericCoeff_injective
   jetPoint regularLocus eval_genericRow_at_point jetPoint_injOn)
 open Polynomial
 open scoped BigOperators
-def c1 (top : Fin 14) : Prop :=
+def c1 (top : Fin 15) : Prop :=
   ∀ n (f : Fin n → Row 3), SecondFactors top f → ∀ T : ∀ i, LiftedChart top (f i),
     Nonempty (MixedSections top f T)
-def c2 (top : Fin 14) : Prop :=
+def c2 (top : Fin 15) : Prop :=
   ∀ n (f : Fin n → Row 3), SecondFactors top f → ∀ a ∈ properComponents f,
     SimpleInvariant (f a.1) a.2 →
     ∃ Q : CoefficientIdeal, ActualSolutionCurve (f a.1) Q ∧
       ∀ S : Geom[X], S.natDegree ≤ physicalDegree → jetPoint S ∈ regularLocus (f a.1) a.2 →
         coefficientPoint S ∈ MvPolynomial.zeroLocus GeometricX Q
-def c3 (top : Fin 14) : Prop :=
+def c3 (top : Fin 15) : Prop :=
   ∀ n (f : Fin n → Row 3), SecondFactors top f →
     (∀ i, (oldCut (f i)).totalDegree ≤
       1 + (2 * (taylorLength + 1) - 7) * ((f i).totalDegree - 1)) →
@@ -211,7 +211,7 @@ section
 set_option autoImplicit false
 namespace Final50Lower_1_1
 noncomputable section
-variable {top : Fin 14}
+variable {top : Fin 15}
 open K1_13 (Row)
 open K1_13_5 (separant)
 open Final50Lower (graphBox liftedBox)
@@ -225,17 +225,17 @@ def factorCurves (f : Row 3) : Finset (Ideal (GeoRow 3)) := by
   classical
   exact if Whole f then ∅ else
     (oldCutIdeal f).retainedMinimalPrimes (genericRow (separant f))
-abbrev lastBox (top : Fin 14) := liftedBox top (taylorLength + 2)
-abbrev lastExponents (top : Fin 14) := boxExponents (lastBox top) taylorLength
-abbrev lastMap (top : Fin 14) := monomialMap GeometricX (lastExponents top)
-def sectionIdeal (top : Fin 14) (f : Row 3) (P : Ideal (GeoRow 3)) :
+abbrev lastBox (top : Fin 15) := liftedBox top (taylorLength + 2)
+abbrev lastExponents (top : Fin 15) := boxExponents (lastBox top) taylorLength
+abbrev lastMap (top : Fin 15) := monomialMap GeometricX (lastExponents top)
+def sectionIdeal (top : Fin 15) (f : Row 3) (P : Ideal (GeoRow 3)) :
     Ideal (MvPolynomial (lastExponents top) GeometricX) :=
   (graphCurve f P).comap (lastMap top)
-def IsSectionCurve (top : Fin 14) (f : Row 3) (P : Ideal (GeoRow 3)) : Prop :=
+def IsSectionCurve (top : Fin 15) (f : Row 3) (P : Ideal (GeoRow 3)) : Prop :=
   (sectionIdeal top f P).IsPrime ∧ (affineHilbertPolynomial (sectionIdeal top f P)).natDegree = 1
-def sectionDegree (top : Fin 14) (f : Row 3) (P : Ideal (GeoRow 3)) : ℚ :=
+def sectionDegree (top : Fin 15) (f : Row 3) (P : Ideal (GeoRow 3)) : ℚ :=
   affineDegree (sectionIdeal top f P)
-structure GenericSection (top : Fin 14) (f : Row 3) where
+structure GenericSection (top : Fin 15) (f : Row 3) where
   polynomial : GeoRow 4
   support : InLiftedBox polynomial (lastBox top) taylorLength
   points : Ideal (GeoRow 3) → Finset JetPoint
@@ -245,7 +245,7 @@ structure GenericSection (top : Fin 14) (f : Row 3) where
     y ∈ graphLocus f P ∧ eval y polynomial = 0
   off_other_curves : ∀ P ∈ factorCurves f, ∀ P' ∈ factorCurves f, P ≠ P' →
     ∀ y ∈ points P, y ∉ graphLocus f P'
-def lastMixedVolume (top : Fin 14) (first : Set ExponentSpace) : ℝ :=
+def lastMixedVolume (top : Fin 15) (first : Set ExponentSpace) : ℝ :=
   mixedVolume4 ![first, capBody (graphBox top) 1,
     capBody (liftedBox top (taylorLength + 1)) (taylorLength - 1),
     capBody (lastBox top) taylorLength]
@@ -256,7 +256,7 @@ section
 set_option autoImplicit false
 namespace Final50Lower_1_1
 noncomputable section
-variable {top : Fin 14}
+variable {top : Fin 15}
 open K1_13 (Row Geom Shape)
 open K1_13_5 (separant)
 open K1_13_5_4 (GeometricX GeoRow genericCoeff genericCoeff_injective genericRow
@@ -341,7 +341,7 @@ private theorem single_mem_box (s : Shape) (h : ℕ)
 theorem lastExponents_single (i : Fin 4) : Finsupp.single i 1 ∈ (lastExponents top) :=
   single_mem_box (lastBox top) taylorLength
     (show 1 ≤ (lastBox top).b by fin_cases top <;> decide) (show 2 ≤ (lastBox top).j by fin_cases top <;> decide)
-    (show 1 ≤ (lastBox top).t by fin_cases top <;> decide) (show 1 ≤ 133425 by decide) i
+    (show 1 ≤ (lastBox top).t by fin_cases top <;> decide) (show 1 ≤ 133449 by decide) i
 private theorem cut_regular {f : Row 3} (hf : Irreducible f) (hw : ¬ Whole f) :
     IsLeftRegular
       (Ideal.Quotient.mk (Ideal.span {genericRow f}) (genericRow (oldCut f))) := by
@@ -479,7 +479,7 @@ section
 set_option autoImplicit false
 namespace Final50Lower_1_1
 noncomputable section
-variable {top : Fin 14}
+variable {top : Fin 15}
 open Final50Lower (graphBox liftedBox)
 open K1_13_5_4 (InLiftedBox GeoRow)
 open K1_13_5_4_2 (JetPoint fourCutIdeal pointIdeal pointLength downBody capBody)
@@ -558,7 +558,7 @@ section
 set_option autoImplicit false
 namespace Final50Lower_1_1
 noncomputable section
-variable {top : Fin 14}
+variable {top : Fin 15}
 open K1_13 (Row Shape indexDegree)
 open K1_13_5 (separant)
 open Final50Lower (lowBox liftedBox mixedCoefficients)
@@ -680,7 +680,7 @@ section
 set_option autoImplicit false
 namespace Final50Lower_1_1
 noncomputable section
-variable {top : Fin 14}
+variable {top : Fin 15}
 open K1_13 (Row)
 open K1_13_5_4 (GeoRow genericRow liftRow graph)
 open K1_13_5_4_2 (JetPoint graphLocus graphCurve fourCutIdeal pointIdeal pointLength downBody
@@ -690,16 +690,16 @@ open Final50Lower_1 (LiftedChart CurveIndex properComponents componentLength)
 open MvPolynomial
 open scoped BigOperators
 open private lift_generic_ne_zero from ProximityPrize.SubmissionLower.Fast048
-def c1 (top : Fin 14) : Prop :=
+def c1 (top : Fin 15) : Prop :=
   ∀ (f : Row 3), (∀ P ∈ factorCurves f, IsSectionCurve top f P) →
     Nonempty (GenericSection top f)
-def c2 (top : Fin 14) : Prop :=
+def c2 (top : Fin 15) : Prop :=
   ∀ (f : Row 3), Irreducible f → 0 < f.degreeOf 2 → ∀ (T : LiftedChart top f) (L : GeoRow 4),
     (∀ P ∈ factorCurves f, L ∉ graphCurve f P) →
     ∀ P ∈ factorCurves f, ∀ y ∈ graphLocus f P, eval y L = 0 →
       let J := fourCutIdeal (liftRow (genericRow f)) (graph f) T.cut L
       pointIdeal y ∈ J.minimalPrimes ∧ componentLength f P ≤ pointLength J y
-def c3 (top : Fin 14) : Prop :=
+def c3 (top : Fin 15) : Prop :=
   ∀ n (f : Fin n → Row 3), SecondFactors top f →
     (∑ i, lastMixedVolume top (downBody (liftRow (genericRow (f i))))) ≤ (mixedBudget top : ℝ)
 private theorem section_cost (hlocal : c2 top) {f : Row 3}
@@ -779,7 +779,7 @@ section
 set_option autoImplicit false
 namespace Final50Lower_1_1_1
 noncomputable section
-variable {top : Fin 14}
+variable {top : Fin 15}
 open K1_13 (Row)
 open K1_13_5 (separant lowerTangent)
 open K1_13_5_4 (GeoRow GeometricX genericRow liftRow regularLocus graph graphPoint)
@@ -790,8 +790,8 @@ open Final50Lower_1_1 (factorCurves mem_factorCurves lastExponents lastExponents
 open MvPolynomial
 open private K1_13_5_4_2.three_ne_zero from ProximityPrize.SubmissionLower.Fast048
 open private graphCurve_comap from ProximityPrize.SubmissionLower.Fast048
-abbrev EmbeddedPoint (top : Fin 14) := (lastExponents top) → GeometricX
-def jetOfEmbedded (top : Fin 14) (z : (EmbeddedPoint top)) : JetPoint :=
+abbrev EmbeddedPoint (top : Fin 15) := (lastExponents top) → GeometricX
+def jetOfEmbedded (top : Fin 15) (z : (EmbeddedPoint top)) : JetPoint :=
   fun i => z ⟨Finsupp.single i 1, lastExponents_single i⟩
 private theorem jetOf_monomialPoint (y : JetPoint) :
     jetOfEmbedded top (monomialPoint (lastExponents top) y) = y :=
@@ -920,7 +920,7 @@ section
 set_option autoImplicit false
 namespace Final50Lower_1_1_1
 noncomputable section
-variable {top : Fin 14}
+variable {top : Fin 15}
 open K1_13_5_4 (GeoRow GeometricX InLiftedBox)
 open K1_13_5_4_2 (JetPoint graphLocus graphCurve)
 open K1_13_5_4_2_2 (linearForm fiberIdeal totalDegree_hyperplane_le_one zeroLocus_fiber_iff
@@ -1032,7 +1032,7 @@ section
 set_option autoImplicit false
 namespace Final50Lower_1_1_2
 noncomputable section
-variable {top : Fin 14}
+variable {top : Fin 15}
 open K1_13 (Row)
 open K1_13_5 (lowerTangent)
 open K1_13_5_4 (GeoRow GeometricX genericRow liftRow graph graphIdeal)
@@ -1154,7 +1154,7 @@ section
 set_option autoImplicit false
 namespace Final50Lower_1_1_2
 noncomputable section
-variable {top : Fin 14}
+variable {top : Fin 15}
 open K1_13 (Row)
 open K1_13_5_4 (GeoRow GeometricX genericRow regularLocus liftRow graph graphIdeal graphPoint)
 open K1_13_5_4_2 (JetPoint graphLocus graphCurve fourCutIdeal pointIdeal
@@ -1340,7 +1340,7 @@ section
 set_option autoImplicit false
 namespace Final50Lower_1_1_3
 noncomputable section
-variable {top : Fin 14}
+variable {top : Fin 15}
 open K1_13 (Shape)
 open Final50Lower (lowBox liftedBox mixedCoefficients)
 open K1_13_5_4_2 K1_13_5_4_2_5 K1_13_5_4_2_5_2
@@ -1553,7 +1553,7 @@ section
 set_option autoImplicit false
 namespace Final50Lower_1_1_3
 noncomputable section
-variable {top : Fin 14}
+variable {top : Fin 15}
 open K1_13 (Shape)
 open Final50Lower (lowBox graphBox liftedBox mixedCoefficients)
 open K1_13_5_4_2 (ExponentSpace capBody mixedVolume4)
@@ -1569,13 +1569,13 @@ open private K1_13_5_4_2_5.sumShape sumChamber sum_capBody capBody_zero from Pro
 open private labelHull_eq positivePolynomial from ProximityPrize.SubmissionLower.Fast071
 open private weights polar_linear from ProximityPrize.SubmissionLower.Fast048
 open private volume_zero_height from ProximityPrize.SubmissionLower.Fast048
-def boxShape (top : Fin 14) : Fin 4 → Shape := ![lowBox, (graphBox top), liftedBox top (taylorLength + 1), (lastBox top)]
+def boxShape (top : Fin 15) : Fin 4 → Shape := ![lowBox, (graphBox top), liftedBox top (taylorLength + 1), (lastBox top)]
 def boxHeight : Fin 4 → ℕ := ![0, 1, taylorLength - 1, taylorLength]
-abbrev baseShape (top : Fin 14) (S : Finset (Fin 4)) : Shape := K1_13_5_4_2_5.sumShape S (boxShape top)
+abbrev baseShape (top : Fin 15) (S : Finset (Fin 4)) : Shape := K1_13_5_4_2_5.sumShape S (boxShape top)
 def baseHeight (S : Finset (Fin 4)) : ℕ := ∑ i ∈ S, boxHeight i
-private def base (top : Fin 14) (S : Finset (Fin 4)) : Set ExponentSpace :=
+private def base (top : Fin 15) (S : Finset (Fin 4)) : Set ExponentSpace :=
   capBody (baseShape top S) (baseHeight S)
-private def slots (top : Fin 14) (P : Set ExponentSpace) : Fin 4 → Set ExponentSpace :=
+private def slots (top : Fin 15) (P : Set ExponentSpace) : Fin 4 → Set ExponentSpace :=
   Function.update (fun i => capBody ((boxShape top) i) (boxHeight i)) 0 P
 private theorem mixed_eq (P : Set ExponentSpace) : lastMixedVolume top P = mixedVolume4 (slots top P) := by
   unfold lastMixedVolume
@@ -1720,7 +1720,7 @@ section
 set_option autoImplicit false
 namespace Final50Lower_1_1_3
 noncomputable section
-variable {top : Fin 14}
+variable {top : Fin 15}
 open K1_13 (Shape)
 open Final50Lower (lowBox liftedBox mixedCoefficients)
 open K1_13_5_4_2 (ExponentSpace capBody)
@@ -1744,7 +1744,7 @@ private theorem twice_variation (s : Shape) (h : ℕ) (hs : Chamber s) (B J T : 
   simp only [capFirstVariation, coefficients, Nat.cast_mul, Nat.cast_add, Nat.cast_ofNat,
     Nat.cast_sub hB, Nat.cast_sub hJ, Nat.cast_sub ht, Nat.cast_sub hb]
   ring
-private def row (top : Fin 14) (S : Finset (Fin 4)) : ℕ × ℕ × ℕ :=
+private def row (top : Fin 15) (S : Finset (Fin 4)) : ℕ × ℕ × ℕ :=
   coefficients (baseShape top S) (baseHeight S)
 private theorem alternating_three (F : Finset (Fin 4) → ℝ) :
     (∑ S ∈ rest.powerset, (-1 : ℝ) ^ (3 - S.card) * F S) =
@@ -1770,7 +1770,7 @@ private def alternate {A : Type*} [AddGroup A] (F : Finset (Fin 4) → A) : A :=
 
 private def coordinate (x : ℕ × ℕ × ℕ) : Fin 3 → ℕ := ![x.1, x.2.1, x.2.2]
 
-private theorem mixed_receipt (top : Fin 14) (i : Fin 3) :
+private theorem mixed_receipt (top : Fin 15) (i : Fin 3) :
     alternate (fun S => (coordinate (row top S) i : ℤ)) =
       2 * (coordinate (mixedCoefficients top) i : ℤ) := by
   fin_cases top <;> fin_cases i <;> decide
@@ -1803,7 +1803,7 @@ theorem mixed_formula (P : Set ExponentSpace) (hP : FirstBody P) (hsub : P ⊆ c
   change alternate (fun S => ((row top S).2.2 : ℝ)) = 2 * ((mixedCoefficients top).2.2 : ℝ) at hT
   unfold alternate at hB hJ hT
   linear_combination B * hB + J * hJ + T * hT
-theorem price_eq (top : Fin 14) :
+theorem price_eq (top : Fin 15) :
     (mixedCoefficients top).1 * (Final50Price.lowerWidth top : ℝ) +
     (mixedCoefficients top).2.1 * (Final50Price.lowerIndex top : ℝ) +
     (mixedCoefficients top).2.2 * (Final50Price.lowerTop top : ℝ) =
@@ -1819,7 +1819,7 @@ section
 set_option autoImplicit false
 namespace Final50Lower_1_1_3
 noncomputable section
-variable {top : Fin 14}
+variable {top : Fin 15}
 open K1_13 (Row indexDegree)
 open Final50Lower (lowBox liftedBox mixedCoefficients)
 open K1_13_5_4 (genericRow liftRow)
@@ -1928,7 +1928,7 @@ set_option autoImplicit false
 set_option maxHeartbeats 900000
 namespace Final50Lower_1_2
 noncomputable section
-variable {top : Fin 14}
+variable {top : Fin 15}
 open K1_13 (Row)
 open K1_13_5 (compatibilityNumerator separant tangentNumerator)
 open K1_13_5_4 (GeoRow genericRow genericCoeff genericCoeff_injective)
@@ -2089,7 +2089,7 @@ set_option autoImplicit false
 set_option maxHeartbeats 800000
 namespace Final50Lower_1_2
 noncomputable section
-variable {top : Fin 14}
+variable {top : Fin 15}
 open K1_13 (Row Geom)
 open K1_13_5 (separant)
 open K1_13_5_4 (GeoRow GeometricX genericRow regularLocus extendedAtJet)
@@ -2129,13 +2129,13 @@ theorem stable_taylor {f : Row 3} {P : Ideal (GeoRow 3)}
     rw [localTaylor, natDegree_taylor, natDegree_le_iff_coeff_eq_zero]
     intro j hj
     have hsmall : 3 ≤ j := by
-      change 133424 < j at hj
+      change 133448 < j at hj
       omega
     obtain ⟨n, rfl⟩ := Nat.exists_eq_add_of_le hsmall
     rw [Nat.add_comm 3 n, centred, coeff_jetPolynomial]
     have hn : taylorLength - 3 ≤ n := by
-      change 133424 < 3 + n at hj
-      change 133422 ≤ n
+      change 133448 < 3 + n at hj
+      change 133446 ≤ n
       omega
     have hz : localJet f P (n + 3) = 0 := by
       rw [localJet, chart_zero f P (numerator_mem h hcut hn), mul_zero, zero_mul, zero_mul]
@@ -2164,7 +2164,7 @@ set_option autoImplicit false
 set_option maxHeartbeats 1000000
 namespace Final50Lower_1_2
 noncomputable section
-variable {top : Fin 14}
+variable {top : Fin 15}
 open K1_13 (Geom)
 open K1_13_5 (RegularAt separant)
 open K1_13_5_4 (GeoRow GeometricX extendedAtJet genericCoeff genericCoeff_injective
@@ -2177,7 +2177,7 @@ open Final50Price (physicalDegree taylorLength)
 open Final50Lower_1 (Coefficients coefficientPoint coefficientPolynomial oldCutIdeal mem_properComponents)
 open Polynomial MvPolynomial
 private theorem length_le : taylorLength ≤ K1_13.taylorLength := by
-  change 133425 ≤ 133672
+  change 133449 ≤ 133672
   decide
 private def pad {m n : ℕ} (a : Fin m → GeometricX) (i : Fin n) : GeometricX :=
   if h : i.val < m then a ⟨i.val, h⟩ else 0
@@ -2305,7 +2305,7 @@ theorem proof : Final50Lower_1.c2 top := by
     have hr : RegularAt 2 (f i) S :=
       ⟨genericCoeff_injective (he.trans genericCoeff.map_zero.symm),
         fun h => hn (by rw [show K1_13.atJet (separant (f i)) S = 0 from h, map_zero])⟩
-    have hS' : S.natDegree ≤ 133671 := hS.trans (by change 133424 ≤ 133671; decide)
+    have hS' : S.natDegree ≤ 133671 := hS.trans (by change 133448 ≤ 133671; decide)
     have hres := hmem (reconstructAt (f i) (jetPoint S)) ⟨jetPoint S, hy, rfl⟩
     rw [reconstructAt_mark (f i) S hS' hr] at hres
     exact hres
@@ -2316,7 +2316,7 @@ section
 set_option autoImplicit false
 namespace Final50Lower_1_3
 noncomputable section
-variable {top : Fin 14}
+variable {top : Fin 15}
 open K1_13_5_4 (GeometricX)
 open MvPolynomial
 open scoped BigOperators
@@ -2393,7 +2393,7 @@ section
 set_option autoImplicit false
 namespace Final50Lower_1_3
 noncomputable section
-variable {top : Fin 14}
+variable {top : Fin 15}
 open K1_13 (Geom Row embed)
 open K1_13_5 (separant)
 open K1_13_5_4 (GeometricX extendedAtJet)
@@ -2599,7 +2599,7 @@ set_option maxRecDepth 6000
 set_option maxHeartbeats 1000000
 namespace Final50Lower_2
 noncomputable section
-variable {top : Fin 14}
+variable {top : Fin 15}
 open P3 (K I node)
 open Final50Price (Messages)
 open K1_13 (Geom embed extend taylorLength)
@@ -2619,10 +2619,10 @@ private theorem coeffPoint_injOn {w Γ s} (h : Messages w Γ s) :
   · exact embed.injective (by simpa [coeffPoint] using congrFun heq ⟨j, hj⟩)
   · change ¬ j < 133672 at hj
     rw [Polynomial.coeff_eq_zero_of_natDegree_lt (p := s γ) (by
-          have hdeg : (s γ).natDegree ≤ 133424 := h.degree γ hγ
+          have hdeg : (s γ).natDegree ≤ 133448 := h.degree γ hγ
           omega),
         Polynomial.coeff_eq_zero_of_natDegree_lt (p := s η) (by
-          have hdeg : (s η).natDegree ≤ 133424 := h.degree η hη
+          have hdeg : (s η).natDegree ≤ 133448 := h.degree η hη
           omega)]
 private theorem zeroDim_count {w Γ s} (h : Messages w Γ s) (P : Ideal CoeffRing)
     (hdim : (affineHilbertPolynomial P).natDegree = 0)
@@ -2656,7 +2656,7 @@ private theorem section_count {w Γ s} (h : Messages w Γ s) {P : Ideal CoeffRin
   let U := Γ.filter fun γ => (s γ).eval x = a
   let part (Q : Ideal CoeffRing) := U.filter fun γ => coeffPoint (extend (s γ)) ∈ zeroLocus Geom Q
   have hdegree (γ : K) (hγ : γ ∈ Γ) : (s γ).natDegree ≤ 133671 :=
-    (h.degree γ hγ).trans (by decide : 133424 ≤ 133671)
+    (h.degree γ hγ).trans (by decide : 133448 ≤ 133671)
   have hproper : cut ∉ P := by
     obtain ⟨γ, hγ, hv⟩ := hmiss
     intro hm
@@ -2724,7 +2724,7 @@ set_option backward.isDefEq.respectTransparency false
 set_option maxHeartbeats 1000000
 namespace Final50Lower_2
 noncomputable section
-variable {top : Fin 14}
+variable {top : Fin 15}
 open K1_13 (Geom embed Row atJet)
 open K1_13_5 (RegularAt separant compatibilityNumerator)
 open K1_13_5_5 K1_13_5_5_1
@@ -2754,7 +2754,7 @@ private theorem degree_trajectory {F : Type} [Field F] (k : Geom →+* F) {U : F
       (Nat.sub_le_sub_right (Nat.le_of_lt_succ hU) _))
   exact (Polynomial.natDegree_mul_le_of_le Polynomial.natDegree_map_le hprod).trans (hf m hm)
 private theorem separant_regular_contracted (f : Row 3) (hf : Irreducible f) (hd : 0 < f.degreeOf 2)
-    (hmax : f.degreeOf 2 ≤ 25) : freshRow (separant f) ∉ chartIdeal f := by
+    (hmax : f.degreeOf 2 ≤ 26) : freshRow (separant f) ∉ chartIdeal f := by
   change separant f ∉ (chartIdeal f).comap rowMap
   rw [chart_contract f hf hd]
   have : CharP Geom K1.p := charP_of_injective_ringHom embed.injective K1.p
@@ -2763,7 +2763,7 @@ private theorem separant_regular_contracted (f : Row 3) (hf : Irreducible f) (hd
   have hcast : (f.degreeOf 2 : Geom[X]) ≠ 0 := by
     intro h
     have hp := (CharP.cast_eq_zero_iff Geom[X] K1.p (f.degreeOf 2)).mp h
-    exact (not_le_of_gt (hmax.trans_lt (by decide : 25 < K1.p))) (Nat.le_of_dvd hd hp)
+    exact (not_le_of_gt (hmax.trans_lt (by decide : 26 < K1.p))) (Nat.le_of_dvd hd hp)
   have hsep : separant f ≠ 0 := MvPolynomial.pderiv_ne_zero_of_natCast_ne_zero 2 f hcast
   intro hmem
   obtain ⟨g, hg⟩ := Ideal.mem_span_singleton.mp hmem
@@ -2776,7 +2776,7 @@ private theorem separant_regular_contracted (f : Row 3) (hf : Irreducible f) (hd
   change (separant f).degreeOf 2 ≤ f.degreeOf 2 - 1 at hdeg
   omega
 theorem chart_of_whole (f : Row 3) (hf : Irreducible f)
-    (hd : 0 < f.degreeOf 2) (hmax : f.degreeOf 2 ≤ 25)
+    (hd : 0 < f.degreeOf 2) (hmax : f.degreeOf 2 ≤ 26)
     (hw : TrueWeightLE f anchorCutoff) (hwhole : Whole f) :
     ∃ P : Ideal CoeffRing, FreshChart P (freshRow f) (freshRow (separant f)) ∧
       LowSupport P ∧ ∀ S : Geom[X], S.natDegree ≤ physicalDegree → RegularAt 2 f S →
@@ -2881,7 +2881,7 @@ set_option backward.isDefEq.respectTransparency false
 set_option maxHeartbeats 1200000
 namespace Final50Lower_2
 noncomputable section
-variable {top : Fin 14}
+variable {top : Fin 15}
 open K1_13 (Geom)
 open K1_13_5_5 K1_13_5_5_2 K1_13_5_5_2_1
 open Final50Price (physicalDegree)
@@ -2999,7 +2999,7 @@ section
 set_option maxHeartbeats 1000000
 namespace Final50Lower_2
 noncomputable section
-variable {top : Fin 14}
+variable {top : Fin 15}
 open P3 (K)
 open Final50Lower (Whole)
 open K1_13 (Row Geom extend)
@@ -3014,16 +3014,16 @@ theorem proof : Final50Lower.c2 top := by
   classical
   intro w Γ s hm n f hf hcover
   let part (i : Fin n) := Γ.filter fun γ => RegularAt 2 (f i) (extend (s γ)) ∧ Whole (f i)
-  let cap (i : Fin n) := 133424 * (f i).totalDegree
+  let cap (i : Fin n) := 133448 * (f i).totalDegree
   have hsub (i : Fin n) : part i ⊆ Γ := filter_subset _ _
   have hlocal (i : Fin n) : NodeCapacity w (part i) s (cap i) := by
     by_cases hi : Whole (f i)
-    · have htop : (f i).degreeOf 2 ≤ 25 :=
+    · have htop : (f i).degreeOf 2 ≤ 26 :=
         (single_le_sum (f := fun j => (f j).degreeOf 2) (fun _ _ => Nat.zero_le _) (mem_univ i)).trans
           (hf.coordinate.trans (by fin_cases top <;> decide))
       obtain ⟨P, hp, hsupport, hall⟩ := chart_of_whole _ (hf.irreducible i) (hf.positive i) htop (hf.weight i) hi
       obtain ⟨hdim, hdeg⟩ := chart_degree _ _ _ hp hsupport
-      change 2 * affineDegree P ≤ (133424 : ℚ) * ((freshRow (f i)).totalDegree : ℚ) at hdeg
+      change 2 * affineDegree P ≤ (133448 : ℚ) * ((freshRow (f i)).totalDegree : ℚ) at hdeg
       apply surface_nodeCapacity (hm.mono (hsub i)) hp.prime hdim
       · intro γ hγ
         have hγΓ := hsub i hγ
@@ -3047,7 +3047,7 @@ theorem proof : Final50Lower.c2 top := by
       _ ≤ ∑ i, (f i).totalDegree := sum_le_sum fun i _ =>
         (hf.positive i).trans_le (degreeOf_le_totalDegree _ _)
       _ ≤ Final50Price.lowerWidth top := hf.total
-  · change (∑ i, 133424 * (f i).totalDegree) ≤ 133424 * Final50Price.lowerWidth top
+  · change (∑ i, 133448 * (f i).totalDegree) ≤ 133448 * Final50Price.lowerWidth top
     rw [← mul_sum]
     exact Nat.mul_le_mul_left _ hf.total
 end
@@ -3055,16 +3055,16 @@ end Final50Lower_2
 end
 
 namespace Final50Lower
-variable {top : Fin 14}
-private theorem gateFinal50Lower_1_1_1 : Final50Lower_1_1.c1 top := Final50Lower_1_1_1.proof
-private theorem gateFinal50Lower_1_1_2 : Final50Lower_1_1.c2 top := Final50Lower_1_1_2.proof
-private theorem gateFinal50Lower_1_1_3 {top : Fin 14} : Final50Lower_1_1.c3 top := Final50Lower_1_1_3.proof
-private theorem gateFinal50Lower_1_1 {top : Fin 14} : Final50Lower_1.c1 top := Final50Lower_1_1.of_children gateFinal50Lower_1_1_1 gateFinal50Lower_1_1_2 gateFinal50Lower_1_1_3
-private theorem gateFinal50Lower_1_2 {top : Fin 14} : Final50Lower_1.c2 top := Final50Lower_1_2.proof
-private theorem gateFinal50Lower_1_3 {top : Fin 14} : Final50Lower_1.c3 top := Final50Lower_1_3.proof
-private theorem gateFinal50Lower_1 {top : Fin 14} : Final50Lower.c1 top := Final50Lower_1.of_children gateFinal50Lower_1_1 gateFinal50Lower_1_2 gateFinal50Lower_1_3
-private theorem gateFinal50Lower_2 {top : Fin 14} : Final50Lower.c2 top := Final50Lower_2.proof
-theorem lower_count {t : ℕ} (ht : t ≤ 13) : Final50Price.c5 t :=
+variable {top : Fin 15}
+theorem gateFinal50Lower_1_1_1 : Final50Lower_1_1.c1 top := Final50Lower_1_1_1.proof
+theorem gateFinal50Lower_1_1_2 : Final50Lower_1_1.c2 top := Final50Lower_1_1_2.proof
+theorem gateFinal50Lower_1_1_3 {top : Fin 15} : Final50Lower_1_1.c3 top := Final50Lower_1_1_3.proof
+theorem gateFinal50Lower_1_1 {top : Fin 15} : Final50Lower_1.c1 top := Final50Lower_1_1.of_children gateFinal50Lower_1_1_1 gateFinal50Lower_1_1_2 gateFinal50Lower_1_1_3
+theorem gateFinal50Lower_1_2 {top : Fin 15} : Final50Lower_1.c2 top := Final50Lower_1_2.proof
+theorem gateFinal50Lower_1_3 {top : Fin 15} : Final50Lower_1.c3 top := Final50Lower_1_3.proof
+theorem gateFinal50Lower_1 {top : Fin 15} : Final50Lower.c1 top := Final50Lower_1.of_children gateFinal50Lower_1_1 gateFinal50Lower_1_2 gateFinal50Lower_1_3
+theorem gateFinal50Lower_2 {top : Fin 15} : Final50Lower.c2 top := Final50Lower_2.proof
+theorem lower_count {t : ℕ} (ht : t ≤ 14) : Final50Price.c5 t :=
   of_children (top := ⟨t, by omega⟩) gateFinal50Lower_1 gateFinal50Lower_2
 
 #print axioms lower_count

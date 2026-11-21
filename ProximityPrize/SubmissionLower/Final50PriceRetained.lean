@@ -5,149 +5,143 @@ set_option maxRecDepth 18000
 set_option maxHeartbeats 2400000
 
 namespace Final50PriceRetained
-open K1_13 (Shape InBox remaining)
+open K1_13 (Shape InBox)
 open K1_13_8 (Valid zeroShape zeroMass)
-open Final50PriceLayer (layerTerm layerCount)
 open P0_9_8 (symbol_count)
 open Final50Price (layerNeed)
+open Final50PriceLayer (layerTerm layerCount)
 open scoped BigOperators
 open private P3_6_8.shapeSum P3_6_8.shapeSum_empty P3_6_8.shapeSum_valid_or_empty P3_6_8.spend_le
   P3_6_8_1.sumBelow P3_6_8_1.term P3_6_8_1.mass_eq P3_6_8_1.extend
   from ProximityPrize.SubmissionLower.GoldBranch6N8
 
 
-
 def Box (a : Shape) : Prop :=
-  a.b ≤ 23 ∧ a.j ≤ 7 ∧ (4 ≤ a.j → a.b ≤ 21) ∧ (5 ≤ a.j → a.b ≤ 18) ∧
-  (6 ≤ a.j → a.b ≤ 13) ∧ (7 ≤ a.j → a.b ≤ 6)
+  a.b ≤ 25 ∧ a.j ≤ 7 ∧ (4 ≤ a.j → a.b ≤ 22) ∧ (5 ≤ a.j → a.b ≤ 19) ∧
+  (6 ≤ a.j → a.b ≤ 15) ∧ (7 ≤ a.j → a.b ≤ 9)
 def combined {n : ℕ} (a : Fin n → Shape) (z : Finset (Fin n)) := P3_6_8.shapeSum a z
 
 local notation "row!" h "," len "," nxt "," v "," z =>
   P3_6_8_1.extend (n := len) (N := nxt) (y := v) (total := z) h rfl rfl rfl
 
-private theorem reject3 : zeroMass 24 3 < layerNeed := by
-  rw [P3_6_8_1.mass_eq (b := 24) (j := 3) (m := 167) (by decide) (Or.inl (by decide))]
-  have r0 : P3_6_8_1.sumBelow (P3_6_8_1.term 24 3) 0 = 0 := rfl
-  have r1 := row! r0,12,12,4524766555282,4524766555282
-  have r2 := row! r1,12,24,3862963391974,8387729947256
-  have r3 := row! r2,12,36,3262846079770,11650576027026
-  have r4 := row! r3,12,48,2720826787822,14371402814848
-  have r5 := row! r4,12,60,2233419022114,16604821836962
-  have r6 := row! r5,12,72,1797237625462,18402059462424
-  have r7 := row! r6,12,84,1408998777514,19811058239938
-  have r8 := row! r7,12,96,1065519994750,20876578234688
-  have r9 := row! r8,12,108,763720130482,21640298365170
-  have r10 := row! r9,12,120,500646774200,22140945139370
-  have r11 := row! r10,12,132,275946015463,22416891154833
-  have r12 := row! r11,12,144,103939662330,22520830817163
-  have r13 := row! r12,12,156,16415639747,22537246456910
-  have r14 := row! r13,11,167,397884432,22537644341342
-  rw [r14]
+theorem reject3 : zeroMass 26 3 < layerNeed := by
+  rw [P3_6_8_1.mass_eq (b := 26) (j := 3) (m := 154) (by decide) (Or.inl (by decide))]
+  have r0 : P3_6_8_1.sumBelow (P3_6_8_1.term 26 3) 0 = 0 := rfl
+  have r1 := row! r0,12,12,4506050141484,4506050141484
+  have r2 := row! r1,12,24,3812811581688,8318861723172
+  have r3 := row! r2,12,36,3185519361108,11504381084280
+  have r4 := row! r3,12,48,2620295355264,14124676439544
+  have r5 := row! r4,12,60,2113371734460,16238048174004
+  have r6 := row! r5,12,72,1661090963784,17899139137788
+  have r7 := row! r6,12,84,1259905803108,19159044940896
+  have r8 := row! r7,12,96,906379307088,20065424247984
+  have r9 := row! r8,12,108,597192602880,20662616850864
+  have r10 := row! r9,12,120,331204292460,20993821143324
+  have r11 := row! r10,12,132,124526225160,21118347368484
+  have r12 := row! r11,12,144,18692802809,21137040171293
+  have r13 := row! r12,10,154,359753742,21137399925035
+  rw [r13]
   decide
 
-private theorem reject4 : zeroMass 22 4 < layerNeed := by
-  rw [P3_6_8_1.mass_eq (b := 22) (j := 4) (m := 182) (by decide) (Or.inl (by decide))]
-  have r0 : P3_6_8_1.sumBelow (P3_6_8_1.term 22 4) 0 = 0 := rfl
-  have r1 := row! r0,12,12,4494787893028,4494787893028
-  have r2 := row! r1,12,24,3790886488388,8285674381416
-  have r3 := row! r2,12,36,3165958957156,11451633338572
-  have r4 := row! r3,12,48,2614190482564,14065823821136
-  have r5 := row! r4,12,60,2129980353956,16195804175092
-  have r6 := row! r5,12,72,1707941966788,17903746141880
-  have r7 := row! r6,12,84,1342902822628,19246648964508
-  have r8 := row! r7,12,96,1029904529156,20276553493664
-  have r9 := row! r8,12,108,764202800164,21040756293828
-  have r10 := row! r9,12,120,541267455556,21582023749384
-  have r11 := row! r10,12,132,356782422384,21938806171768
-  have r12 := row! r11,12,144,206829164170,22145635335938
-  have r13 := row! r12,12,156,91343958058,22236979293996
-  have r14 := row! r13,12,168,20893146940,22257872440936
-  have r15 := row! r14,12,180,1036878942,22258909319878
-  have r16 := row! r15,2,182,46871,22258909366749
-  rw [r16]
+theorem reject4 : zeroMass 23 4 < layerNeed := by
+  rw [P3_6_8_1.mass_eq (b := 23) (j := 4) (m := 174) (by decide) (Or.inl (by decide))]
+  have r0 : P3_6_8_1.sumBelow (P3_6_8_1.term 23 4) 0 = 0 := rfl
+  have r1 := row! r0,12,12,4485571975228,4485571975228
+  have r2 := row! r1,12,24,3766699705644,8252271680872
+  have r3 := row! r2,12,36,3129542015772,11381813696644
+  have r4 := row! r3,12,48,2568031469068,13949845165712
+  have r5 := row! r4,12,60,2076325351932,16026170517644
+  have r6 := row! r5,12,72,1648805673708,17674976191352
+  have r7 := row! r6,12,84,1280079166684,18955055358036
+  have r8 := row! r7,12,96,964977286092,19920032644128
+  have r9 := row! r8,12,108,698556210108,20618588854236
+  have r10 := row! r9,12,120,476096839852,21094685694088
+  have r11 := row! r10,12,132,293125129224,21387810823312
+  have r12 := row! r11,12,144,147129238370,21534940061682
+  have r13 := row! r12,12,156,45704367459,21580644429141
+  have r14 := row! r13,12,168,4426866335,21585071295476
+  have r15 := row! r14,6,174,18369367,21585089664843
+  rw [r15]
   decide
 
-private theorem reject5 : zeroMass 19 5 < layerNeed := by
-  rw [P3_6_8_1.mass_eq (b := 19) (j := 5) (m := 211) (by decide) (Or.inl (by decide))]
-  have r0 : P3_6_8_1.sumBelow (P3_6_8_1.term 19 5) 0 = 0 := rfl
-  have r1 := row! r0,12,12,4473726084803,4473726084803
-  have r2 := row! r1,12,24,3741000382827,8214726467630
-  have r3 := row! r2,12,36,3100073376611,11314799844241
-  have r4 := row! r3,12,48,2543084581355,13857884425596
-  have r5 := row! r4,12,60,2062519976259,15920404401855
-  have r6 := row! r5,12,72,1651212004523,17571616406378
-  have r7 := row! r6,12,84,1302339573347,18873955979725
-  have r8 := row! r7,12,96,1009428053931,19883384033656
-  have r9 := row! r8,12,108,766349281475,20649733315131
-  have r10 := row! r9,12,120,567321555179,21217054870310
-  have r11 := row! r10,12,132,406909638243,21623964508553
-  have r12 := row! r11,12,144,280024757867,21903989266420
-  have r13 := row! r12,12,156,181924605251,22085913871671
-  have r14 := row! r13,12,168,108213335595,22194127207266
-  have r15 := row! r14,12,180,54878851631,22249006058897
-  have r16 := row! r15,12,192,19304284391,22268310343288
-  have r17 := row! r16,12,204,2452448089,22270762791377
-  have r18 := row! r17,7,211,15381961,22270778173338
-  rw [r18]
+theorem reject5 : zeroMass 20 5 < layerNeed := by
+  rw [P3_6_8_1.mass_eq (b := 20) (j := 5) (m := 200) (by decide) (Or.inl (by decide))]
+  have r0 : P3_6_8_1.sumBelow (P3_6_8_1.term 20 5) 0 = 0 := rfl
+  have r1 := row! r0,12,12,4464650819928,4464650819928
+  have r2 := row! r1,12,24,3717680731508,8182331551436
+  have r3 := row! r2,12,36,3065812876088,11248144427524
+  have r4 := row! r3,12,48,2500800517668,13748944945192
+  have r5 := row! r4,12,60,2014764120248,15763709065440
+  have r6 := row! r5,12,72,1600191347828,17363900413268
+  have r7 := row! r6,12,84,1249937064408,18613837477676
+  have r8 := row! r7,12,96,957223333988,19571060811664
+  have r9 := row! r8,12,108,715639420568,20286700232232
+  have r10 := row! r9,12,120,519141788148,20805842020380
+  have r11 := row! r10,12,132,362054100728,21167896121108
+  have r12 := row! r11,12,144,239067222308,21406963343416
+  have r13 := row! r12,12,156,145239216888,21552202560304
+  have r14 := row! r13,12,168,76030644068,21628233204372
+  have r15 := row! r14,12,180,28477980752,21656711185124
+  have r16 := row! r15,12,192,4277265324,21660988450448
+  have r17 := row! r16,8,200,49565740,21661038016188
+  rw [r17]
   decide
 
-private theorem reject6 : zeroMass 14 6 < layerNeed := by
-  rw [P3_6_8_1.mass_eq (b := 14) (j := 6) (m := 275) (by decide) (Or.inr (by decide))]
-  have r0 : P3_6_8_1.sumBelow (P3_6_8_1.term 14 6) 0 = 0 := rfl
-  have r1 := row! r0,12,12,4470109216199,4470109216199
-  have r2 := row! r1,12,24,3733364001563,8203473217762
-  have r3 := row! r2,12,36,3091676644943,11295149862705
-  have r4 := row! r3,12,48,2536495972451,13831645835156
-  have r5 := row! r4,12,60,2059673918039,15891319753195
-  have r6 := row! r5,12,72,1653465523499,17544785276694
-  have r7 := row! r6,12,84,1310528938463,18855314215157
-  have r8 := row! r7,12,96,1023925420403,19879239635560
-  have r9 := row! r8,12,108,787119334631,20666358970191
-  have r10 := row! r9,12,120,593978154299,21260337124490
-  have r11 := row! r10,12,132,438772460399,21699109584889
-  have r12 := row! r11,12,144,316175941763,22015285526652
-  have r13 := row! r12,12,156,221265395063,22236550921715
-  have r14 := row! r13,12,168,149520724811,22386071646526
-  have r15 := row! r14,12,180,96824943359,22482896589885
-  have r16 := row! r15,12,192,59464170899,22542360760784
-  have r17 := row! r16,12,204,34127635463,22576488396247
-  have r18 := row! r17,12,216,17907672923,22594396069170
-  have r19 := row! r18,12,228,8299726991,22602695796161
-  have r20 := row! r19,12,240,3202349219,22605898145380
-  have r21 := row! r20,12,252,917198999,22606815344379
-  have r22 := row! r21,12,264,149043563,22606964387942
-  have r23 := row! r22,11,275,5757983,22606970145925
-  rw [r23]
+theorem reject6 : zeroMass 16 6 < layerNeed := by
+  rw [P3_6_8_1.mass_eq (b := 16) (j := 6) (m := 250) (by decide) (Or.inl (by decide))]
+  have r0 : P3_6_8_1.sumBelow (P3_6_8_1.term 16 6) 0 = 0 := rfl
+  have r1 := row! r0,12,12,4452236740149,4452236740149
+  have r2 := row! r1,12,24,3688415547153,8140652287302
+  have r3 := row! r2,12,36,3027292299789,11167944587091
+  have r4 := row! r3,12,48,2459227806249,13627172393340
+  have r5 := row! r4,12,60,1975057646181,15602230039521
+  have r6 := row! r5,12,72,1566092170689,17168322210210
+  have r7 := row! r6,12,84,1224116502333,18392438712543
+  have r8 := row! r7,12,96,941390535129,19333829247672
+  have r9 := row! r8,12,108,710648934549,20044478182221
+  have r10 := row! r9,12,120,525101137521,20569579319742
+  have r11 := row! r10,12,132,378431352429,20948010672171
+  have r12 := row! r11,12,144,264798559113,21212809231284
+  have r13 := row! r12,12,156,178836508869,21391645740153
+  have r14 := row! r13,12,168,115653724449,21507299464602
+  have r15 := row! r14,12,180,70833500061,21578132964663
+  have r16 := row! r15,12,192,40433901369,21618566866032
+  have r17 := row! r16,12,204,20987765493,21639554631525
+  have r18 := row! r17,12,216,9502701009,21649057332534
+  have r19 := row! r18,12,228,3461087949,21652518420483
+  have r20 := row! r19,12,240,820143351,21653338563834
+  have r21 := row! r20,10,250,46422905,21653384986739
+  rw [r21]
   decide
 
-private theorem reject7 : zeroMass 7 7 < layerNeed := by
-  rw [P3_6_8_1.mass_eq (b := 7) (j := 7) (m := 235) (by decide) (Or.inr (by decide))]
-  have r0 : P3_6_8_1.sumBelow (P3_6_8_1.term 7 7) 0 = 0 := rfl
-  have r1 := row! r0,12,12,4483126465980,4483126465980
-  have r2 := row! r1,12,24,3763215762552,8246342228532
-  have r3 := row! r2,12,36,3129616788460,11375959016992
-  have r4 := row! r3,12,48,2575724450328,13951683467320
-  have r5 := row! r4,12,60,2095149399036,16046832866356
-  have r6 := row! r5,12,72,1681718029720,17728550896076
-  have r7 := row! r6,12,84,1329472481772,19058023377848
-  have r8 := row! r7,12,96,1032670638840,20090694016688
-  have r9 := row! r8,12,108,785786128828,20876480145516
-  have r10 := row! r9,12,120,583508323896,21459988469412
-  have r11 := row! r10,12,132,420742340460,21880730809872
-  have r12 := row! r11,12,144,292609039192,22173339849064
-  have r13 := row! r12,12,156,194445025020,22367784874084
-  have r14 := row! r13,12,168,121802647128,22489587521212
-  have r15 := row! r14,12,180,70449998956,22560037520168
-  have r16 := row! r15,12,192,36370918200,22596408438368
-  have r17 := row! r16,12,204,15764986812,22612173425180
-  have r18 := row! r17,12,216,5047531000,22617220956180
-  have r19 := row! r18,12,228,849621228,22618070577408
-  have r20 := row! r19,7,235,19892080,22618090469488
+theorem reject7 : zeroMass 10 7 < layerNeed := by
+  rw [P3_6_8_1.mass_eq (b := 10) (j := 7) (m := 235) (by decide) (Or.inr rfl)]
+  have r0 : P3_6_8_1.sumBelow (P3_6_8_1.term 10 7) 0 = 0 := rfl
+  have r1 := row! r0,12,12,4456729984713,4456729984713
+  have r2 := row! r1,12,24,3698265082881,8154995067594
+  have r3 := row! r2,12,36,3038986509241,11193981576835
+  have r4 := row! r3,12,48,2470117587633,13664099164468
+  have r5 := row! r4,12,60,1983268084905,15647367249373
+  have r6 := row! r5,12,72,1570434210913,17217801460286
+  have r7 := row! r6,12,84,1223998618521,18441800078807
+  have r8 := row! r7,12,96,936730403601,19378530482408
+  have r9 := row! r8,12,108,701785105033,20080315587441
+  have r10 := row! r9,12,120,512704704705,20593020292146
+  have r11 := row! r10,12,132,363417627513,20956437919659
+  have r12 := row! r11,12,144,248238741361,21204676661020
+  have r13 := row! r12,12,156,161869357161,21366546018181
+  have r14 := row! r13,12,168,99397228833,21465943247014
+  have r15 := row! r14,12,180,56296553305,21522239800319
+  have r16 := row! r15,12,192,28427970513,21550667770832
+  have r17 := row! r16,12,204,12038563401,21562706334233
+  have r18 := row! r17,12,216,3761857921,21566468192154
+  have r19 := row! r18,12,228,617823033,21567086015187
+  have r20 := row! r19,7,235,14133535,21567100148722
   rw [r20]
   decide
 
-private theorem reject8 : zeroMass 3 8 < layerNeed := by
-  rw [P3_6_8_1.mass_eq (b := 3) (j := 8) (m := 206) (by decide) (Or.inr (by decide))]
+theorem reject8 : zeroMass 3 8 < layerNeed := by
+  rw [P3_6_8_1.mass_eq (b := 3) (j := 8) (m := 206) (by decide) (Or.inr rfl)]
   have r0 : P3_6_8_1.sumBelow (P3_6_8_1.term 3 8) 0 = 0 := rfl
   have r1 := row! r0,12,12,4468671078718,4468671078718
   have r2 := row! r1,12,24,3721807051950,8190478130668
@@ -179,7 +173,7 @@ theorem mass_le {n : ℕ} {a : Fin n → Shape} {l : Fin n → ℕ}
   · exact P3_6_8.spend_le (fun i => (a i).b) hz hs hdisj hq.1
   · exact P3_6_8.spend_le (fun i => (a i).j) hz hs hdisj hq.2.1
 private theorem zeroMass_upper {b j : ℕ} (hj : 0 < j) :
-    (∑ k ∈ Finset.range layerCount, remaining ((k + 1) * b) ((k + 1) * j)) ≤
+    (∑ k ∈ Finset.range layerCount, K1_13.remaining ((k + 1) * b) ((k + 1) * j)) ≤
       zeroMass b j := by
   unfold zeroMass
   simp only [symbol_count]
@@ -189,7 +183,7 @@ private theorem zeroMass_upper {b j : ℕ} (hj : 0 < j) :
 
 private theorem retained_bound {r : Shape} (hr : Valid r)
     (hmass : layerNeed ≤ ∑ k ∈ Finset.range layerCount,
-      remaining ((k + 1) * r.b) ((k + 1) * r.j)) : Box r := by
+      K1_13.remaining ((k + 1) * r.b) ((k + 1) * r.j)) : Box r := by
   have reject {b j : ℕ} (hb : b ≤ r.b) (hj : j ≤ r.j) (hjpos : 0 < j)
       (hsmall : zeroMass b j < layerNeed) : False := by
     have hle : layerNeed ≤ zeroMass b j := hmass.trans <|
@@ -217,10 +211,12 @@ theorem no_cut_shape {n : ℕ} (a : Fin n → Shape) (l : Fin n → ℕ)
     let r := P3_6_8.shapeSum a z
     have hb := mass_le hl (s := ∅) (q := r) (L := 0) hz (by simp) (by simp)
       (show InBox r r from ⟨le_rfl, le_rfl, le_rfl⟩)
-    have hp : layerNeed ≤ ∑ k ∈ Finset.range layerCount,
-        Final50Price.remaining ((k + 1) * r.b) ((k + 1) * r.j) := by
-      simpa only [layerTerm, P3_6_8.shapeSum_empty, zeroShape, Nat.mul_zero, Nat.add_zero] using hb
-    have hbox : Box r := retained_bound hr (hp.trans (Finset.sum_le_sum fun _ _ => min_le_right _ _))
+    have hbox : Box r := retained_bound hr (by
+      have hcost : layerNeed ≤ ∑ k ∈ Finset.range layerCount, layerTerm r zeroShape 0 k := by
+        simpa only [P3_6_8.shapeSum_empty] using hb
+      refine hcost.trans (Finset.sum_le_sum fun k _ => ?_)
+      simp only [layerTerm, zeroShape, Nat.mul_zero, Nat.add_zero, Final50Price.remaining]
+      exact min_le_right _ _)
     refine ⟨hbox, hr.1, ?_⟩
     have hjet := hr.2.1
     have hj := hbox.2.1

@@ -7,12 +7,15 @@ namespace Compact50Cover
 open K1_13 (Shape)
 open K1_13_8 (Valid)
 open Final50PriceCaps (Band start)
-open Final50PriceTableBase (Covered OldReceipt PointReceipt oldRectangle point)
+open Final50SharedPrice (Rate)
+open Final50PriceTableBase (Covered OldReceipt PointReceipt SharedReceipt
+  coveredRectangle coveredPoint sharedPoint)
 
 /-- A price bound for a rectangle, or an exact price bound for a single shape. -/
 inductive Tile where
   | rectangle (widthLow indexLow widthHigh indexHigh order : ℕ)
   | point (width index order : ℕ)
+  | shared (width index order : ℕ) (rate : Rate)
 
 structure Rectangle where
   widthLow : ℕ
@@ -22,11 +25,12 @@ structure Rectangle where
 
 def Tile.bounds : Tile → Rectangle
   | .rectangle b j B J _ => ⟨b,j,B,J⟩
-  | .point b j _ => ⟨b,j,b,j⟩
+  | .point b j _ | .shared b j _ _ => ⟨b,j,b,j⟩
 
 def Tile.Paid (k : Band) (t : ℕ) : Tile → Prop
   | .rectangle b j B J l => OldReceipt ((start k).t+t) k b j B J t l
   | .point b j l => PointReceipt ((start k).t+t) k b j t l
+  | .shared b j l u => k = .empty ∧ SharedReceipt t b j l u
 
 instance (k : Band) (t : ℕ) (tile : Tile) : Decidable (tile.Paid k t) := by
   cases tile <;> unfold Tile.Paid <;> infer_instance
@@ -44,7 +48,7 @@ abbrev PaidBatch (k : Band) (t : ℕ) := {tiles : List Tile // pays k t tiles = 
 def tilesOf {k : Band} {t : ℕ} (batches : List (PaidBatch k t)) : List Tile :=
   batches.flatMap Subtype.val
 
-private theorem batches_pay {k : Band} {t : ℕ} (batches : List (PaidBatch k t)) :
+theorem batches_pay {k : Band} {t : ℕ} (batches : List (PaidBatch k t)) :
     pays k t (tilesOf batches) = true := by
   induction batches with
   | nil => rfl
@@ -53,16 +57,20 @@ private theorem batches_pay {k : Band} {t : ℕ} (batches : List (PaidBatch k t)
     rw [pays_append, head.property, ih]
     rfl
 
-private def InRectangle (r : Rectangle) (width index : ℕ) : Prop :=
+def InRectangle (r : Rectangle) (width index : ℕ) : Prop :=
   r.widthLow ≤ width ∧ width ≤ r.widthHigh ∧ r.indexLow ≤ index ∧ index ≤ r.indexHigh
 
-private theorem tile_covered {tile : Tile} {k : Band} {t : ℕ} {a : Shape}
+theorem tile_covered {tile : Tile} {k : Band} {t : ℕ} {a : Shape}
     (paid : tile.Paid k t) (bounds : InRectangle tile.bounds a.b a.j)
     (ht : a.t = t) (hi : 3 * a.t ≤ a.j) : Covered ((start k).t+t) k a := by
-  rcases tile with ⟨b,j,B,J,l⟩ | ⟨b,j,l⟩
-  · exact oldRectangle paid bounds.1 bounds.2.2.1 bounds.2.1 bounds.2.2.2 ht hi
+  rcases tile with ⟨b,j,B,J,l⟩ | ⟨b,j,l⟩ | ⟨b,j,l,u⟩
+  · exact coveredRectangle paid bounds.1 bounds.2.2.1 bounds.2.1 bounds.2.2.2 ht hi
   · obtain ⟨hb,hB,hj,hJ⟩ := bounds
-    exact point paid (Nat.le_antisymm hB hb) (Nat.le_antisymm hJ hj) ht hi
+    exact coveredPoint paid (Nat.le_antisymm hB hb) (Nat.le_antisymm hJ hj) ht hi
+  · obtain ⟨rfl,h⟩ := paid
+    obtain ⟨hb,hB,hj,hJ⟩ := bounds
+    simpa only [start, Nat.zero_add] using
+      sharedPoint h (Nat.le_antisymm hB hb) (Nat.le_antisymm hJ hj) ht
 
 /-- Extend the covered width prefix when this tile contains its next width. -/
 private def step (index firstMissing : ℕ) (tile : Tile) : ℕ :=
@@ -71,7 +79,7 @@ private def step (index firstMissing : ℕ) (tile : Tile) : ℕ :=
     max firstMissing (r.widthHigh+1)
   else firstMissing
 
-private theorem step_cover {tile : Tile} {j first b : ℕ}
+theorem step_cover {tile : Tile} {j first b : ℕ}
     (hFirst : first ≤ b) (h : b < step j first tile) : InRectangle tile.bounds b j := by
   dsimp only [step] at h
   split at h
@@ -80,7 +88,7 @@ private theorem step_cover {tile : Tile} {j first b : ℕ}
     exact ⟨hb.trans hFirst, by omega, hj, hJ⟩
   · omega
 
-private theorem fold_cover (tiles : List Tile) (j first b : ℕ)
+theorem fold_cover (tiles : List Tile) (j first b : ℕ)
     (hFirst : first ≤ b) (h : b < tiles.foldl (step j) first) :
     ∃ tile ∈ tiles, InRectangle tile.bounds b j := by
   induction tiles generalizing first with

@@ -28,7 +28,7 @@ theorem rectRoot_ideal {J : Input} {B : ResidueLift J} (D : Factors J B) :
 def graphCut {J : Input} {B : ResidueLift J} (D : Factors J B) : Ideal (Ring FX) :=
   Ideal.span {rectRoot D} ⊔ Ideal.span {jetToRect (tangentEquation J.f)}
 
-private theorem rect_tangent_regular {J : Input} {B : ResidueLift J} (D : Factors J B)
+theorem rect_tangent_regular {J : Input} {B : ResidueLift J} (D : Factors J B)
     (hTangent : IsLeftRegular (Ideal.Quotient.mk (rootIdeal D) (tangentEquation J.f))) :
     IsLeftRegular (Ideal.Quotient.mk (Ideal.span {rectRoot D})
       (jetToRect (tangentEquation J.f))) := by
@@ -36,7 +36,7 @@ private theorem rect_tangent_regular {J : Input} {B : ResidueLift J} (D : Factor
   exact regular_comap jetToRect.symm.toRingHom (I := rootIdeal D)
     (jetToRect.symm_apply_apply (tangentEquation J.f)) hTangent
 
-private theorem rectRoot_degrees {J : Input} {B : ResidueLift J} (D : Factors J B) {v w : ℕ}
+theorem rectRoot_degrees {J : Input} {B : ResidueLift J} (D : Factors J B) {v w : ℕ}
     (haxis : ∀ i, (J.f.coeff i).degreeOf 0 ≤ v ∧ (J.f.coeff i).degreeOf 1 ≤ w) :
     (rectRoot D).degreeOf 1 = 0 ∧ ordinateWeight (rectRoot D) ≤ J.e ∧
       (rectRoot D).degreeOf 2 ≤ v ∧ (rectRoot D).degreeOf 3 ≤ w := by
@@ -49,7 +49,7 @@ private theorem rectRoot_degrees {J : Input} {B : ResidueLift J} (D : Factors J 
   exact ⟨Nat.eq_zero_of_le_zero hVel, by simpa only [Nat.mul_zero, Nat.add_zero] using hOrd,
     hSeed₀, hSeed₁⟩
 
-private theorem mixedLead_root_mono (a b c h : ℕ) {y z s e v w : ℕ}
+theorem mixedLead_root_mono (a b c h : ℕ) {y z s e v w : ℕ}
     (hy : y ≤ e) (hz : z ≤ v) (hs : s ≤ w) :
     2 * mixedLead a b c y z s h 1 v w ≤ 2 * mixedLead a b c e v w h 1 v w := by
   have hy' : (y : ℚ) ≤ (e : ℚ) := by exact_mod_cast hy
@@ -58,7 +58,7 @@ private theorem mixedLead_root_mono (a b c h : ℕ) {y z s e v w : ℕ}
   unfold mixedLead
   gcongr
 
-private theorem graphDegree_eq_mixed (e v w : ℕ) (he : 4 ≤ e) :
+theorem graphDegree_eq_mixed (e v w : ℕ) (he : 4 ≤ e) :
     (KoalaTwoSectionPrice.graphDegree e v w : ℚ) =
       2 * mixedLead (e - 3 : ℕ) (max 1 v : ℕ) (max 1 w : ℕ) e v w (e - 2 : ℕ) 1 v w := by
   unfold KoalaTwoSectionPrice.graphDegree mixedLead
@@ -68,7 +68,7 @@ private theorem graphDegree_eq_mixed (e v w : ℕ) (he : 4 ≤ e) :
     Nat.cast_sub (show 2 ≤ 2 * (e - 1) by omega)]
   ring
 
-private theorem graphCut_mixed_bound (J : Input) {B : ResidueLift J} (D : Factors J B)
+theorem graphCut_mixed_bound (J : Input) {B : ResidueLift J} (D : Factors J B)
     {a b c v w : ℕ} (ha : 0 < a) (hb : 0 < b) (hc : 0 < c)
     (haxis : ∀ i, (J.f.coeff i).degreeOf 0 ≤ v ∧ (J.f.coeff i).degreeOf 1 ≤ w)
     (hg : rectRoot D ≠ 0)

@@ -15,7 +15,7 @@ open HighPrices82180 (finish)
 open scoped BigOperators
 
 abbrev factor : ℚ := 101 / 100
-private theorem one_le : (1 : ℚ) ≤ factor := by norm_num [factor]
+theorem one_le : (1 : ℚ) ≤ factor := by norm_num [factor]
 private theorem positive : (0 : ℚ) ≤ factor := by norm_num [factor]
 
 private def alpha (A h : ℕ) : ℚ := 1 + 2 * ((262144 : ℚ)/A) * degreeAt h
@@ -23,7 +23,7 @@ private def mu (A h : ℕ) : ℚ := ((262144 - degreeAt h : ℕ) : ℚ) / (A - d
 
 def curve (A h g : ℕ) : ℚ := (2*(g : ℚ)-1)*alpha A h + mu A h
 
-private theorem old_curve (h g : ℕ) : curve 179983 h g = P3_7.curveUnit h g := rfl
+theorem old_curve (h g : ℕ) : curve 179983 h g = P3_7.curveUnit h g := rfl
 
 theorem curve_le (b : HighBand) {g : ℕ} (hg : 0 < g) :
     curve 179964 (finish b) g ≤ factor * P3_7.curveUnit b.row.hi g := by
@@ -45,7 +45,7 @@ structure Rate (b : HighBand) (a h : ℚ) : Prop where
   interpolation : ∀ g : ℕ, 0 < g → g ≤ 80 →
     max 0 (1-a*g/((p+1 : ℕ) : ℚ)) * curve 179964 (finish b) g ≤ h
 
-private theorem lift_rate (b : HighBand) {a h : ℚ} (r : P3_7_3.RateOK b.row.hi a h) :
+theorem lift_rate (b : HighBand) {a h : ℚ} (r : P3_7_3.RateOK b.row.hi a h) :
     Rate b (factor*a) (factor*h) := by
   have ha : 0 ≤ a := (by positivity : (0 : ℚ) ≤ ((p+1 : ℕ) : ℚ) / 81).trans r.degree
   have hscale : a ≤ factor*a := by simpa only [one_mul] using mul_le_mul_of_nonneg_right one_le ha
@@ -72,14 +72,14 @@ private theorem lift_rate (b : HighBand) {a h : ℚ} (r : P3_7_3.RateOK b.row.hi
     _ = factor * (large * P3_7.curveUnit b.row.hi g) := by ring
     _ ≤ _ := mul_le_mul_of_nonneg_left (r.interpolation g hg hu) positive
 
-private theorem fold_nonneg {α : Type*} (f : ℚ → α → ℚ)
+theorem fold_nonneg {α : Type*} (f : ℚ → α → ℚ)
     (hf : ∀ a i, 0 ≤ a → 0 ≤ f a i) (xs : List α) (a : ℚ) (ha : 0 ≤ a) :
     0 ≤ xs.foldl f a := by
   induction xs generalizing a with
   | nil => exact ha
   | cons i xs ih => exact ih _ (hf _ i ha)
 
-private theorem history_nonneg (b : HighBand) (i : ℕ) (k : Fin 4) : 0 ≤ history b i k := by
+theorem history_nonneg (b : HighBand) (i : ℕ) (k : Fin 4) : 0 ≤ history b i k := by
   have corner (s t : K1_14.Shape) (r m : ℕ) (v : Bool) : 0 ≤ P1_7_4.cornerBound s t r m v k := by
     unfold P1_7_4.cornerBound
     exact fold_nonneg max (fun a x h => h.trans (le_max_left a x)) _ 0 le_rfl
@@ -90,17 +90,17 @@ private theorem history_nonneg (b : HighBand) (i : ℕ) (k : Fin 4) : 0 ≤ hist
     unfold P3_7_3.stageCap P1_7_4.pairedCap
     exact fold_nonneg _ (fun a j ha => le_min ha (corner _ _ _ _ _)) _ _ (corner _ _ _ _ _)
 
-private theorem seed_nonneg (b : HighBand) : 0 ≤ seedLimit b :=
+theorem seed_nonneg (b : HighBand) : 0 ≤ seedLimit b :=
   Finset.sum_nonneg fun i _ => P1_7_4.dotQ_nonneg (fun _ => sub_nonneg.mpr (le_max_left _ _))
     (history_nonneg b i)
 
-private theorem scale_running (v : ℕ → Mass) (n : ℕ) (k : Fin 4) :
+theorem scale_running (v : ℕ → Mass) (n : ℕ) (k : Fin 4) :
     running (fun i j => factor*v i j) n k = factor*running v n k := by
   induction n with
   | zero => simp [running]
   | succ n ih => change max _ _ = _ * max _ _; rw [ih, mul_max_of_nonneg _ _ positive]
 
-private theorem scale_bill (n : ℕ) (v hist : ℕ → Mass) :
+theorem scale_bill (n : ℕ) (v hist : ℕ → Mass) :
     weightedBill n (fun i k => factor*v i k) hist = factor * weightedBill n v hist := by
   unfold weightedBill
   rw [Finset.mul_sum]
@@ -111,13 +111,13 @@ private theorem scale_bill (n : ℕ) (v hist : ℕ → Mass) :
   intro k _
   ring
 
-private theorem old_discount (b : HighBand) : start b < 7773 → b.row.lo < 7773 := by
+theorem old_discount (b : HighBand) : start b < 7773 → b.row.lo < 7773 := by
   cases b <;> decide +kernel
 
-private theorem old_direct (b : HighBand) : 7773 ≤ start b → 7773 ≤ b.row.lo := by
+theorem old_direct (b : HighBand) : 7773 ≤ start b → 7773 ≤ b.row.lo := by
   cases b <;> decide +kernel
 
-private theorem rescale_cost {x y z : ℚ} (hc : x+y ≤ z) (hy : y ≤ factor*y) :
+theorem rescale_cost {x y z : ℚ} (hc : x+y ≤ z) (hy : y ≤ factor*y) :
     factor*x+y ≤ factor*z := by
   calc
     _ ≤ factor*x + factor*y := add_le_add le_rfl hy

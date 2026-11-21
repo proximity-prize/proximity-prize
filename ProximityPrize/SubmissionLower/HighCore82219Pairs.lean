@@ -56,12 +56,12 @@ private theorem bank_nonzero {b u del} {M : AnchorModel u del} {Γ}
     rw [hb, finrank_bot]
   change _ ≤ _ + ∑ W ∈ range N, Module.finrank FX (rows t.shape W) at hf
   omega
-private theorem gain_le_raw (h r : ℕ) (s : Shape) :
+theorem gain_le_raw (h r : ℕ) (s : Shape) :
     gain h r s 1 ≤ gain h r s 0 := by
   unfold gain shapeSum
   simp only [zero_mul, Nat.sub_zero]
   exact Nat.mul_le_mul_left _ (sum_le_sum fun _ _ => sum_le_sum fun _ _ => Nat.sub_le _ _)
-private theorem order_from_shifts (h N W : ℕ) (hh : 0 < h) (hW : W < N)
+theorem order_from_shifts (h N W : ℕ) (hh : 0 < h) (hW : W < N)
     {G P R : Jet} (hi : Irreducible G) (hv : 0 < G.natDegree)
     (hm : UsesSeed G) (hP : P ≠ 0) (hdiv : G ∣ P) {U : ℕ} (hp : U < p)
     (hseed : ∀ j i, ((P.coeff j).coeff i).totalDegree ≤ U) (hnR : R ≠ 0)
@@ -82,7 +82,7 @@ private theorem order_from_shifts (h N W : ℕ) (hh : 0 < h) (hW : W < N)
   have ht := (Nat.div_lt_iff_lt_mul (by omega : 0 < 2*h)).mp hdiv'
   rw [Nat.mul_comm R.natDegree] at ht
   omega
-private theorem moving_rank_bound (rows : Banks) (s : Shape) (h r : ℕ)
+theorem moving_rank_bound (rows : Banks) (s : Shape) (h r : ℕ)
     (hk : 1 ≤ 131071-h)
     (hcaps : ∀ W, ∀ P ∈ rows s W, K1_14_3.RowCaps P s)
     (hlead : K1_14_3.LeadingFilter h rows s)

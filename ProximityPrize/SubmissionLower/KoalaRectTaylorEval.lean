@@ -21,7 +21,7 @@ open scoped BigOperators
 
 variable {E : Type} [Field E] [Algebra FX E]
 
-private theorem open_denominator {J : Input} {B : ResidueLift J} (φ : JetRing →ₐ[FX] E)
+theorem open_denominator {J : Input} {B : ResidueLift J} (φ : JetRing →ₐ[FX] E)
     (hu : φ (openFactor J B) ≠ 0) (j : ℕ) :
     φ (residueInJet B * Polynomial.C J.f.derivative^j) ≠ 0 := by
   rw [openFactor,map_mul,mul_ne_zero_iff] at hu
@@ -41,7 +41,7 @@ theorem taylor_ratio {J : Input} {B : ResidueLift J} {D : Factors J B}
   rw [map_sub,map_mul,map_mul,sub_eq_zero,mul_comm (φ (oldDenominator J B j))] at h
   exact (div_eq_div_iff hd ho).mpr h
 
-private theorem residue_ratio {J : Input} {B : ResidueLift J} (φ : JetRing →ₐ[FX] E)
+theorem residue_ratio {J : Input} {B : ResidueLift J} (φ : JetRing →ₐ[FX] E)
     (hu : φ (openFactor J B) ≠ 0) (r : ℕ) (x : I) :
     φ (residueCut J B r x) / φ (jetDenominator J B r) = residueValue φ B x := by
   rw [residueValue]

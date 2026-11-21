@@ -7,7 +7,7 @@ set_option maxSynthPendingDepth 8
 namespace K1_14_3_2
 noncomputable section
 open K1_14 K1_14_3
-private theorem minimalPairHeight {P Q : Jet} (h : ProperPair P Q)
+theorem minimalPairHeight {P Q : Jet} (h : ProperPair P Q)
     {q : Ideal Jet} (hq : q ∈ (Ideal.span {P, Q}).minimalPrimes) : q.height = 2 := by
   classical
   have : q.IsPrime := hq.1.1

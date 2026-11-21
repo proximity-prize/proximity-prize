@@ -68,7 +68,7 @@ private theorem pair_membership {w : ℤ} (hw : 3555 ≤ w) (i : Fin 4) {s : Sha
 private theorem full_membership {w : ℤ} (hw : 3555 ≤ w) : fullShape ∈ scheduled w := by
   have hn : ¬ w ≤ 3554 := by omega
   simp [scheduled, hn, fullShape]
-private theorem source_data {u del} {M : AnchorModel u del} {Γ}
+theorem source_data {u del} {M : AnchorModel u del} {Γ}
     {F : AnchoredFamily M Γ} {rows : Banks} (h : JetSource M F rows) {s : Shape}
     (hs : s ∈ scheduled M.overhead) :
     (∀ W, ∀ P ∈ rows s W, RowCaps P s) ∧
@@ -209,7 +209,7 @@ private theorem paid_complement (ode : c6) {u del}
       have hf := endpoint_fees M.overhead hl
       change _ ≤ highPrefix M.overhead
       omega
-private theorem split_terminal_divisibility {w : ℤ} {rows : Banks} {f : Equation}
+theorem split_terminal_divisibility {w : ℤ} {rows : Banks} {f : Equation}
     (hm : (band w).multiplicity = fullShape.m)
     (hsub : ∀ W, rows (terminalShape w) W ≤ rows fullShape W)
     (hfull : ∀ W < fullShape.m * 180265, ∀ P ∈ rows fullShape W, P ≠ 0 →

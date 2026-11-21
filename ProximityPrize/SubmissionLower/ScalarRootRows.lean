@@ -26,24 +26,14 @@ private theorem specialize (Q : DifferentialPolynomial Geom 2) (S : Geom[X]) :
   rw [differentialSpecializationHom, MvPolynomial.aeval_X, MvPolynomial.aeval_X]
   cases v <;> rfl
 
-/-- Express the native rank witness as a geometric equation whose solutions contain the
-entire close list. The physical weight and both jet bounds survive coefficient extension. -/
-theorem exists_row_with_top {A R : ℕ} (s : Source) (hs : ShapeOK s)
-    (hw : s.m ≤ s.m*A - N*s.B) (surplus : Surplus A s R) (rank : RankCertificate A s R)
-    (w : Node → K) : ∃ P : Row 3, P ≠ 0 ∧ P.totalDegree ≤ s.B ∧ K1_13.indexDegree P ≤ s.J ∧
+/-- Extend the coefficients of a native equation while preserving its physical and jet bounds. -/
+theorem row_of_native {s : Source} {W : ℕ} {Q : DifferentialPolynomial K 2}
+    (hQ : OrderTwo s Q) (hwt : differentialWeightedDegree N Q < W) :
+    ∃ P : Row 3, P ≠ 0 ∧ P.totalDegree ≤ s.B ∧ K1_13.indexDegree P ≤ s.J ∧
       P.degreeOf 2 ≤ s.C ∧
-      (∀ m ∈ P.support, (P.coeff m).natDegree + m.sum (fun i a => (N-i.val)*a) < s.m*A) ∧
-      ∀ f ∈ close A w, atJet P (extend f) = 0 := by
+      (∀ m ∈ P.support, (P.coeff m).natDegree + m.sum (fun i a => (N-i.val)*a) < W) ∧
+      ∀ f : K[X], differentialSpecialization Q f = 0 → atJet P (extend f) = 0 := by
   classical
-  have horig : originRank A s ≤ R := by
-    rcases rank with h | ⟨cut,hcut,htail,hpre⟩
-    · exact h
-    · exact (CJ0_1.proof A s cut hs hw hcut htail).trans hpre
-  have hr := (CJ0_2.proof A s hs hw w).trans (Nat.mul_le_mul_left n horig)
-  have hdim := source_dimension A s hs hw
-  unfold Surplus at surplus
-  have hsmall : stackRank A s w < Fintype.card (ColumnIndex A s) := by omega
-  obtain ⟨Q,hQ,hwt,hloc⟩ := interpolant hs hw w hsmall
   let Q' := MvPolynomial.map K1_13.embed Q
   let P := MvPolynomial.optionEquivRight Geom (Fin 3) Q'
   have hne : Q' ≠ 0 := fun h => hQ.1 (MvPolynomial.map_injective K1_13.embed
@@ -82,7 +72,25 @@ theorem exists_row_with_top {A R : ℕ} (s : Source) (hs : ShapeOK s)
     simpa only [Finsupp.weight_apply, smul_eq_mul, Nat.mul_comm] using h
   · intro f hf
     rw [show P = MvPolynomial.optionEquivRight Geom (Fin 3) Q' from rfl,
-      specialize, ← map_differentialSpecialization, specializes hwt hloc f hf, Polynomial.map_zero]
+      specialize, ← map_differentialSpecialization, hf, Polynomial.map_zero]
+
+theorem exists_row_with_top {A R : ℕ} (s : Source) (hs : ShapeOK s)
+    (hw : s.m ≤ s.m*A - N*s.B) (surplus : Surplus A s R) (rank : RankCertificate A s R)
+    (w : Node → K) : ∃ P : Row 3, P ≠ 0 ∧ P.totalDegree ≤ s.B ∧ K1_13.indexDegree P ≤ s.J ∧
+      P.degreeOf 2 ≤ s.C ∧
+      (∀ m ∈ P.support, (P.coeff m).natDegree + m.sum (fun i a => (N-i.val)*a) < s.m*A) ∧
+      ∀ f ∈ close A w, atJet P (extend f) = 0 := by
+  have horig : originRank A s ≤ R := by
+    rcases rank with h | ⟨cut,hcut,htail,hpre⟩
+    · exact h
+    · exact (CJ0_1.proof A s cut hs hw hcut htail).trans hpre
+  have hr := (CJ0_2.proof A s hs hw w).trans (Nat.mul_le_mul_left n horig)
+  have hdim := source_dimension A s hs hw
+  unfold Surplus at surplus
+  have hsmall : stackRank A s w < Fintype.card (ColumnIndex A s) := by omega
+  obtain ⟨Q,hQ,hwt,hloc⟩ := interpolant hs hw w hsmall
+  obtain ⟨P,hP,hB,hJ,hC,hweight,hroot⟩ := row_of_native hQ hwt
+  exact ⟨P,hP,hB,hJ,hC,hweight,fun f hf => hroot f (specializes hwt hloc f hf)⟩
 
 theorem exists_row {A R : ℕ} (s : Source) (hs : ShapeOK s)
     (hw : s.m ≤ s.m*A - N*s.B) (surplus : Surplus A s R) (rank : RankCertificate A s R)

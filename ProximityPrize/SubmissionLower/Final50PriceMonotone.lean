@@ -44,7 +44,7 @@ private theorem graph_mono {x y : Shape} (h : InBox x y) :
     InBox (graphShape x) (graphShape y) := by
   obtain ⟨hb, hj, ht⟩ := h
   refine ⟨?_, ?_, ?_⟩ <;> dsimp [graphShape] <;> gcongr
-private theorem surface_mono {p p' q : Shape} (hp : InBox p p') (hp' : Chamber p') (hq : Chamber q) :
+theorem surface_mono {p p' q : Shape} (hp : InBox p p') (hp' : Chamber p') (hq : Chamber q) :
     Final50Price.surfaceNumerator32 p q ≤ Final50Price.surfaceNumerator32 p' q := by
   let L := Final50Price.taylorLength
   have hchart : mixed32 p q (chart (L+1) p) (chart (L+2) p) ≤
@@ -101,15 +101,17 @@ end
 
 namespace Final50PriceMonotone
 open K1_13 (Shape)
-open Final50Price (physicalPrice physicalPriceOld physicalPriceTilted physicalPriceWith)
+open Final50Price (physicalPrice physicalPriceOld physicalPriceTilted physicalPriceActive physicalPriceWith)
 
 theorem physicalPrice_le_old (x : Shape) (l K : ℕ) : physicalPrice x l K ≤ physicalPriceOld x l := by
   unfold physicalPrice
   split
-  · exact min_le_left _ _
+  · split
+    · exact (min_le_left _ _).trans (min_le_left _ _)
+    · exact min_le_left _ _
   · exact le_rfl
 
-private theorem with_anti (a : Shape) (s : ℕ) {l u : ℕ} (hl : 0 < l) (h : l ≤ u) :
+theorem with_anti (a : Shape) (s : ℕ) {l u : ℕ} (hl : 0 < l) (h : l ≤ u) :
     physicalPriceWith a u s ≤ physicalPriceWith a l s := by
   unfold physicalPriceWith
   exact Nat.add_le_add_right
@@ -122,8 +124,11 @@ theorem physicalPrice_anti (a : Shape) (K : ℕ) {l u : ℕ} (hl : 0 < l) (h : l
     exact Nat.add_le_add_right
       (Nat.add_le_add_right (K1_13_8.ceilDiv_anti _ hl h) _) _
   have hnew : physicalPriceTilted a u ≤ physicalPriceTilted a l := with_anti a _ hl h
+  have hactive : physicalPriceActive a u K ≤ physicalPriceActive a l K := with_anti a _ hl h
   unfold physicalPrice
   split
-  · exact min_le_min hold hnew
+  · split
+    · exact min_le_min (min_le_min hold hnew) hactive
+    · exact min_le_min hold hnew
   · exact hold
 end Final50PriceMonotone

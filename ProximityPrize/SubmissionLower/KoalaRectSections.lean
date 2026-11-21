@@ -189,7 +189,7 @@ structure Section {F : Type*} [Field F] (I : Ideal (Ring F)) (d : Box) where
   inverse_bound : inverse ∈ space F (d.pad order)
   glue : X (0 : Fin 4)^order * finite - inverse ∈ I
 
-private theorem shift_mem {F : Type*} [Field F] (m : Exp) (c : F) (f : Ring F)
+theorem shift_mem {F : Type*} [Field F] (m : Exp) (c : F) (f : Ring F)
     (d k : Box) (hf : f ∈ space F d) (hm : ∀ n ∈ d.support, m+n ∈ k.support) :
     monomial m c * f ∈ space F k := by
   classical

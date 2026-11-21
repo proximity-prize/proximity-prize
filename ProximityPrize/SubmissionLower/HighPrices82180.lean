@@ -29,12 +29,6 @@ def price (A lo hi e v : ℕ) : ℕ := Id.run do
     v^2*((ac-2*bc)*bn + an*bc)) scale
   return singularFee e v + (proper + ceilRatio ((262144-A)*(P3.p+1)*v) gap + e)
 
-theorem old_price (lo hi e v : ℕ) : price 179983 lo hi e v = P3_7.wholePrice lo hi e v := by
-  by_cases hv : v = 0 <;> by_cases he : e ≤ 2 <;>
-    simp [price, P3_7.wholePrice, hv, he, P3_7.tangentFee, P3_7.properFee, P3_7.flatFee,
-      P3_7.persistentFee, P3_7.scale, P3_7.gap, P3_7.lambdaNum, P3_7.muNum]
-  all_goals rfl
-
 def finish : HighBand → ℕ
   | .h2274 => 2342
   | .h2294 => 7772
@@ -45,11 +39,11 @@ def cap : HighBand → ℕ
   | .h2294 => 147576176549741790
   | .h7773 => 294196720412100
 
-private def maxPrice (lo hi e : ℕ) : List Grade → ℕ
+def maxPrice (lo hi e : ℕ) : List Grade → ℕ
   | [] => 0
   | g :: gs => max (price 179964 lo hi e g.seedCap) (maxPrice lo hi (e+1) gs)
 
-private theorem get_le (lo hi e : ℕ) (gs : List Grade) (i : Fin gs.length) :
+theorem get_le (lo hi e : ℕ) (gs : List Grade) (i : Fin gs.length) :
     price 179964 lo hi (i.val+e) (gs.get i).seedCap ≤ maxPrice lo hi e gs := by
   induction gs generalizing e with
   | nil => exact Fin.elim0 i

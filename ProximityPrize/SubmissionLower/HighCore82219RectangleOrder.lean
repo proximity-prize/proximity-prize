@@ -2,7 +2,7 @@ import Mathlib.Data.Nat.Basic
 
 namespace HighCore82219
 
-private theorem transfer_capacity {x y d : ℕ} (hxy : y ≤ x) :
+theorem transfer_capacity {x y d : ℕ} (hxy : y ≤ x) :
     (x + d) * (y - d) ≤ x * y := by
   by_cases hdy : d ≤ y
   · calc

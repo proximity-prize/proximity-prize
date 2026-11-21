@@ -62,16 +62,16 @@ private theorem bounded_add {u : Ex} {P Q : DP} (h : Bounded u P) (k : Bounded u
   intro v hv
   exact (Finset.mem_union.mp (support_add hv)).elim (h v) (k v)
 
-private theorem monomial_related {u : Ex} {a : Geom} {v : Ex}
+theorem monomial_related {u : Ex} {a : Geom} {v : Ex}
     (h : v ∈ (monomial (top u) a).support) : Related u v := by
   have hv := Finset.mem_singleton.mp (support_monomial_subset h)
   simpa only [hv] using top_related u
 
-private theorem top_idx (u : Ex) : jidx (top u) = jidx u := by
+theorem top_idx (u : Ex) : jidx (top u) = jidx u := by
   unfold jidx top
   simp [Finsupp.some_add, Finsupp.some_single_none]
 
-private theorem bounded_mul_left {u v : Ex} {P Q : DP} (h : Bounded u P)
+theorem bounded_mul_left {u v : Ex} {P Q : DP} (h : Bounded u P)
     (k : ∀ a ∈ Q.support, Related v a) : Bounded (u+v) (P*Q) := by
   intro z hz
   obtain ⟨a, ha, b, hb, rfl⟩ := Finset.mem_add.mp (support_mul _ _ hz)
@@ -79,7 +79,7 @@ private theorem bounded_mul_left {u v : Ex} {P Q : DP} (h : Bounded u P)
   have hk := k b hb
   exact ⟨hr.add hk, by simpa using Nat.add_lt_add_of_lt_of_le hi hk.2.1⟩
 
-private theorem bounded_mul_right {u v : Ex} {P Q : DP} (h : ∀ a ∈ P.support, Related u a)
+theorem bounded_mul_right {u v : Ex} {P Q : DP} (h : ∀ a ∈ P.support, Related u a)
     (k : Bounded v Q) : Bounded (u+v) (P*Q) := by
   rw [add_comm, mul_comm]
   exact bounded_mul_left k h
@@ -130,14 +130,14 @@ theorem HasTop.pow {u : Ex} {a : Geom} {P : DP} (h : HasTop u a P) (n : ℕ) :
     rw [pow_succ, pow_succ, succ_nsmul]
     exact ih.mul h
 
-private def eulTerm (i k : ℕ) (hk : k < 4) : DP :=
+def eulTerm (i k : ℕ) (hk : k < 4) : DP :=
   monomial (Finsupp.single none k + Finsupp.single (some ⟨k,hk⟩) 1)
-    ((-1 : Geom)^k * (133424-k).choose (i-k))
+    ((-1 : Geom)^k * (133448-k).choose (i-k))
 
 def eul (i : Fin 4) : DP :=
   ∑ k : Fin (i.val+1), eulTerm i.val k.val (by omega)
 
-private theorem eulTerm_related (i k : Fin 4) (h : k ≤ i) :
+theorem eulTerm_related (i k : Fin 4) (h : k ≤ i) :
     Related (Finsupp.single (some i) 1)
       (Finsupp.single none k.val + Finsupp.single (some k) 1) := by
   have hval : k.val ≤ i.val := h
@@ -165,17 +165,17 @@ theorem eul_top (i : Fin 4) : HasTop (Finsupp.single (some i) 1) ((-1 : Geom)^i.
 
 
 def ColumnEligible (u : Ex) : Prop :=
-  jdeg u ≤ 122 ∧ jidx u ≤ 50 ∧ u (some 3) ≤ 13 ∧
-    jdeg u ≤ Low48AnchorSpace.gradeLimit (jdiff u) ∧
-    u none + 133424*jdeg u < 91*179915 + 2*jidx u
+  jdeg u ≤ 125 ∧ jidx u ≤ 52 ∧ u (some 3) ≤ 14 ∧
+    jdeg u ≤ Final50AnchorSpace.gradeLimit (jdiff u) ∧
+    u none + 133448*jdeg u < 93*179905 + 2*jidx u
 
-private def orth (u : Ex) : DP :=
+def orth (u : Ex) : DP :=
   eul 0 ^ u (some 0) * eul 1 ^ u (some 1) *
     eul 2 ^ u (some 2) * eul 3 ^ u (some 3)
 
-private def jetOnly (u : Ex) : Ex := u.some.optionElim 0
+def jetOnly (u : Ex) : Ex := u.some.optionElim 0
 
-private theorem normalized_jet (u : Ex) :
+theorem normalized_jet (u : Ex) :
     u (some 0) • Finsupp.single (some (0 : Fin 4)) 1 +
       u (some 1) • Finsupp.single (some (1 : Fin 4)) 1 +
       u (some 2) • Finsupp.single (some (2 : Fin 4)) 1 +
@@ -189,13 +189,13 @@ private def sign (u : Ex) : Geom :=
   ((-1 : Geom)^0) ^ u (some 0) * ((-1 : Geom)^1) ^ u (some 1) *
     ((-1 : Geom)^2) ^ u (some 2) * ((-1 : Geom)^3) ^ u (some 3)
 
-private theorem sign_ne_zero (u : Ex) : sign u ≠ 0 := by simp [sign]
+theorem sign_ne_zero (u : Ex) : sign u ≠ 0 := by simp [sign]
 
-private theorem orth_top (u : Ex) : HasTop (jetOnly u) (sign u) (orth u) := by
+theorem orth_top (u : Ex) : HasTop (jetOnly u) (sign u) (orth u) := by
   rw [← normalized_jet]
   exact ((((eul_top 0).pow _).mul ((eul_top 1).pow _)).mul ((eul_top 2).pow _)).mul ((eul_top 3).pow _)
 
-private theorem single_top (x : ℕ) : HasTop (Finsupp.single none x) 1
+theorem single_top (x : ℕ) : HasTop (Finsupp.single none x) 1
     (monomial (Finsupp.single none x) 1) := by
   refine ⟨0, ?_, by simp [Bounded]⟩
   simp [top,jidx,Finsupp.some_single_none]
@@ -203,11 +203,11 @@ private theorem single_top (x : ℕ) : HasTop (Finsupp.single none x) 1
 private def adjusted (u : Ex) : Ex :=
   Finsupp.single none (u none - jidx u) + jetOnly u
 
-private theorem adjusted_idx (u : Ex) : jidx (adjusted u) = jidx u := by
+theorem adjusted_idx (u : Ex) : jidx (adjusted u) = jidx u := by
   rw [adjusted,jidx,Finsupp.some_add,Finsupp.some_single_none,zero_add,jetOnly,Finsupp.some_optionElim]
   rfl
 
-private theorem adjusted_top (u : Ex) (h : jidx u ≤ u none) : top (adjusted u) = u := by
+theorem adjusted_top (u : Ex) (h : jidx u ≤ u none) : top (adjusted u) = u := by
   rw [top,adjusted_idx]
   ext k
   cases k with
@@ -218,7 +218,7 @@ def column (u : Ex) : DP :=
   if u none < jidx u then monomial u 1 else
     monomial (Finsupp.single none (u none - jidx u)) 1 * orth u
 
-private theorem column_hasTop (u : Ex) (h : ¬ u none < jidx u) :
+theorem column_hasTop (u : Ex) (h : ¬ u none < jidx u) :
     HasTop (adjusted u) (sign u) (column u) := by
   simpa only [column, ite_eq_right h, one_mul, adjusted] using (single_top _).mul (orth_top u)
 
@@ -246,21 +246,21 @@ private theorem jet_weight (m : Fin 4 →₀ ℕ) (w : Fin 4 → ℕ) :
     m.weight w = m 0 * w 0 + m 1 * w 1 + m 2 * w 2 + m 3 * w 3 := by
   simp [Finsupp.weight_apply, Finsupp.sum_fintype, Fin.sum_univ_succ, smul_eq_mul, add_assoc]
 
-private theorem weight_formula (u : Ex) :
-    u.weight (differentialWeight 133424) + jidx u = u none + 133424*jdeg u := by
-  have he : differentialWeight (d := 3) 133424 = fun i =>
-      i.elim 1 (fun k => 133424 - k.val) := by
+theorem weight_formula (u : Ex) :
+    u.weight (differentialWeight 133448) + jidx u = u none + 133448*jdeg u := by
+  have he : differentialWeight (d := 3) 133448 = fun i =>
+      i.elim 1 (fun k => 133448 - k.val) := by
     funext i
     cases i <;> rfl
   conv_lhs => enter [1]; rw [← Finsupp.optionElim_some u,he,Finsupp.weight_optionElim,one_mul]
   unfold jidx jdeg
   rw [Finsupp.degree_eq_weight_one, jet_weight, jet_weight, jet_weight]
-  change u none + (u.some 0*133424 + u.some 1*133423 + u.some 2*133422 + u.some 3*133421) +
+  change u none + (u.some 0*133448 + u.some 1*133447 + u.some 2*133446 + u.some 3*133445) +
       (u.some 0*0 + u.some 1*1 + u.some 2*2 + u.some 3*3) =
-    u none + 133424 * (u.some 0*1 + u.some 1*1 + u.some 2*1 + u.some 3*1)
+    u none + 133448 * (u.some 0*1 + u.some 1*1 + u.some 2*1 + u.some 3*1)
   omega
 
-private theorem adjusted_shape (u : Ex) :
+theorem adjusted_shape (u : Ex) :
     jdeg (adjusted u) = jdeg u ∧ jdiff (adjusted u) = jdiff u ∧
       adjusted u (some 3) = u (some 3) ∧ adjusted u none = u none - jidx u := by
   have he : (adjusted u).some = u.some := by
@@ -289,13 +289,13 @@ theorem column_wide {u : Ex} (h : ColumnEligible u) :
     rw [hat] at hvt
     rw [hax] at hvx
     refine ⟨hvd.le.trans hd,hvi.trans hi,hvt.trans ht,?_ ,?_⟩
-    · exact hvd.le.trans (hf.trans (Low48AnchorSpace.gradeLimit_antitone hvf))
+    · exact hvd.le.trans (hf.trans (Final50AnchorSpace.gradeLimit_antitone hvf))
     · omega
 
 
 
-private theorem spec_eul (S : Geom[X]) (i : Fin 4) :
-    differentialSpecializationHom S (eul i) = EulerJetDegree.euler 133424 i.val S := by
+theorem spec_eul (S : Geom[X]) (i : Fin 4) :
+    differentialSpecializationHom S (eul i) = EulerJetDegree.euler 133448 i.val S := by
   rw [eul, map_sum, EulerJetDegree.euler, ← Fin.sum_univ_eq_sum_range]
   refine Finset.sum_congr rfl fun k _ => ?_
   unfold eulTerm
@@ -303,25 +303,25 @@ private theorem spec_eul (S : Geom[X]) (i : Fin 4) :
     map_mul, map_mul, map_pow]
   simp [differentialSpecializationHom, mul_assoc]
 
-private theorem natDegree_prod_bound (S : Geom[X]) (u : Ex) (hS : S.natDegree ≤ 133424) :
-    (differentialSpecializationHom S (orth u)).natDegree ≤ 133424*jdeg u - jidx u := by
+theorem natDegree_prod_bound (S : Geom[X]) (u : Ex) (hS : S.natDegree ≤ 133448) :
+    (differentialSpecializationHom S (orth u)).natDegree ≤ 133448*jdeg u - jidx u := by
   rw [orth,map_mul,map_mul,map_mul,map_pow,map_pow,map_pow,map_pow,spec_eul,spec_eul,spec_eul,spec_eul]
   have hh (i : Fin 4) := (Polynomial.natDegree_pow_le
-    (p := EulerJetDegree.euler 133424 i.val S) (n := u (some i))).trans
+    (p := EulerJetDegree.euler 133448 i.val S) (n := u (some i))).trans
       (Nat.mul_le_mul_left _ (EulerJetDegree.natDegree_euler_le_sub (i := i.val) hS))
   have ha := Polynomial.natDegree_mul_le.trans (Nat.add_le_add
     (Polynomial.natDegree_mul_le.trans (Nat.add_le_add
       (Polynomial.natDegree_mul_le.trans (Nat.add_le_add (hh 0) (hh 1))) (hh 2))) (hh 3))
   refine ha.trans ?_
   rw [jdeg, Finsupp.degree_eq_weight_one, jidx, jet_weight, jet_weight]
-  change (u (some 0)*133424 + u (some 1)*133423 + u (some 2)*133422 + u (some 3)*133421) ≤
-    133424 * (u (some 0)*1+u (some 1)*1+u (some 2)*1+u (some 3)*1) -
+  change (u (some 0)*133448 + u (some 1)*133447 + u (some 2)*133446 + u (some 3)*133445) ≤
+    133448 * (u (some 0)*1+u (some 1)*1+u (some 2)*1+u (some 3)*1) -
     (u (some 0)*0+u (some 1)*1+u (some 2)*2+u (some 3)*3)
   omega
 
 theorem column_eval_degree (S : Geom[X]) {u : Ex} (h : ColumnEligible u)
-    (hs : S.natDegree ≤ 133424) :
-    (differentialSpecialization (column u) S).natDegree ≤ 91 * 179915 - 1 := by
+    (hs : S.natDegree ≤ 133448) :
+    (differentialSpecialization (column u) S).natDegree ≤ 93 * 179905 - 1 := by
   obtain ⟨hd,hi,_,_,hw⟩ := h
   by_cases hcut : u none < jidx u
   · rw [column,ite_eq_left hcut]
@@ -340,11 +340,11 @@ theorem column_eval_degree (S : Geom[X]) {u : Ex} (h : ColumnEligible u)
     refine Polynomial.natDegree_mul_le.trans ?_
     rw [Polynomial.natDegree_X_pow]
     · have hrel := natDegree_prod_bound S u hs
-      have hz : jidx u ≤ 133424*jdeg u := by
+      have hz : jidx u ≤ 133448*jdeg u := by
         have hh := weight_formula u
-        have hwnd : u none ≤ u.weight (differentialWeight 133424) := by
-          have he : differentialWeight (d := 3) 133424 = fun i =>
-              i.elim 1 (fun k => 133424 - k.val) := by
+        have hwnd : u none ≤ u.weight (differentialWeight 133448) := by
+          have he : differentialWeight (d := 3) 133448 = fun i =>
+              i.elim 1 (fun k => 133448 - k.val) := by
             funext i
             cases i <;> rfl
           rw [← Finsupp.optionElim_some u,he,Finsupp.weight_optionElim,one_mul]

@@ -17,11 +17,11 @@ abbrev node := P3.node
 abbrev k := P3.k
 open scoped NNReal
 
-abbrev agreement : ℕ := 179915
-abbrev radiusNumerator : ℕ := 336814079
+abbrev agreement : ℕ := 179905
+abbrev radiusNumerator : ℕ := 336855039
 abbrev radiusDenominator : ℕ := 1073741824
-abbrev listCap : ℕ := 2493026848761586
-abbrev scalarCap : ℕ := 272487701262633501
+abbrev listCap : ℕ := 2002422605167821
+abbrev scalarCap : ℕ := 272978305506227266
 def queryRadius : ℝ≥0 := claimedRadius radiusNumerator radiusDenominator
 def radius : ℝ := queryRadius
 def BadFamily (u : Words) (Γ : Finset K) : Prop :=
@@ -30,22 +30,22 @@ def BadFamily (u : Words) (Γ : Finset K) : Prop :=
 theorem agreement_of_threshold {s : ℕ}
     (hs : (Fintype.card I : ℝ) * (1-radius) ≤ s) : agreement ≤ s := by
   rw [IRSProfile.card_index] at hs
-  have p : (179914 : ℝ) < 262144*(1-radius) := by norm_num [radius, queryRadius, claimedRadius]
-  exact (show 179914 < s by exact_mod_cast p.trans_le hs)
-theorem query_score : (1 - queryRadius) ^ IRSProfile.repetitions ≤ claimedError 6951 := by
-  have hcomplement : (1 - queryRadius : ℝ≥0) = 736927745 / 0x40000000 := by
+  have p : (179904 : ℝ) < 262144*(1-radius) := by norm_num [radius, queryRadius, claimedRadius]
+  exact (show 179904 < s by exact_mod_cast p.trans_le hs)
+theorem query_score : (1 - queryRadius) ^ IRSProfile.repetitions ≤ claimedError 6952 := by
+  have hcomplement : (1 - queryRadius : ℝ≥0) = 736886785 / 0x40000000 := by
     apply NNReal.coe_injective
     have hr : queryRadius ≤ 1 := by
       rw [← NNReal.coe_le_coe]
       norm_num [queryRadius, claimedRadius]
     rw [NNReal.coe_sub hr]
     norm_num [queryRadius, claimedRadius]
-  change (1 - queryRadius) ^ 128 ≤ claimedError 6951
+  change (1 - queryRadius) ^ 128 ≤ claimedError 6952
   apply (pow_le_pow_iff_left₀ (by positivity) (by positivity) (by decide : (100 : ℕ) ≠ 0)).mp
   rw [← pow_mul, Sol1.C42.claimedError_pow_100, hcomplement]
-  change ((736927745 : ℝ≥0) / 0x40000000) ^ 12800 ≤ 1 / (2 : ℝ≥0) ^ 6951
+  change ((736886785 : ℝ≥0) / 0x40000000) ^ 12800 ≤ 1 / (2 : ℝ≥0) ^ 6952
   rw [div_pow, div_le_div_iff₀ (by positivity) (by positivity), one_mul]
-  exact_mod_cast (show (736927745 : ℕ)^12800 * 2^6951 ≤ 1073741824^12800 by decide +kernel)
+  exact_mod_cast (show (736886785 : ℕ)^12800 * 2^6952 ≤ 1073741824^12800 by decide +kernel)
 theorem query_admissible : queryRadius ∈ Set.Ioo (0 : ℝ≥0) IRSProfile.minRelativeDistance := by
   constructor <;> norm_num [queryRadius, claimedRadius, IRSProfile.minRelativeDistance]
 theorem scalar_projection_room : scalarCap + 1 < (0x7f000001 : ℕ) ^ 6 := by decide
@@ -137,7 +137,7 @@ theorem gamma_error_le_of_scalar_cap (hlist : CJ0.ScalarList agreement listCap)
       norm_num [reductionTarget, ProximityGap.prizeThreshold]
 theorem protocol_claim_of_scalar_cap (hlist : CJ0.ScalarList agreement listCap)
     (hscalar : ∀ u Γ, BadFamily u Γ → Γ.card ≤ scalarCap) :
-    ProtocolClaim 6951 radiusNumerator radiusDenominator where
+    ProtocolClaim 6952 radiusNumerator radiusDenominator where
   admissible := query_admissible
   reduction := gamma_error_le_of_scalar_cap hlist hscalar
   score := query_score
@@ -146,7 +146,7 @@ theorem protocol_claim_of_scalar_cap (hlist : CJ0.ScalarList agreement listCap)
 theorem of_bad_slopes (hlist : CJ0.ScalarList agreement listCap)
     (bound : ∀ (u : Words) (Γ : Finset K),
     (∀ γ ∈ Γ, Principal.BadSlope node (u 0) (u 1) k agreement γ) → Γ.card ≤ scalarCap) :
-    ProtocolClaim 6951 336814079 1073741824 := by
+    ProtocolClaim 6952 336855039 1073741824 := by
   apply protocol_claim_of_scalar_cap hlist
   intro u Γ hΓ
   apply bound u Γ

@@ -17,7 +17,7 @@ private theorem twice_sum_linear (a b : ℤ) (n : ℕ) :
 private def nodeRow (k d : ℕ) : ℕ :=
   let n := min k ((d + 1) / 2)
   n * (d + 1 - n)
-private theorem nodeRow_eq (k d : ℕ) :
+theorem nodeRow_eq (k d : ℕ) :
     (∑ i ∈ range k, (d - 2 * i)) = nodeRow k d := by
   let n := min k ((d + 1) / 2)
   have hnk : n ≤ k := Nat.min_le_left _ _
@@ -55,7 +55,7 @@ private theorem debit_eq (s : Shape) (h : ℕ) : sourceDebit h s = nodeCost s + 
   unfold sourceDebit nodeCost poleSlope shapeSum
   simp_rw [← Nat.sub_sub, nodeRow_eq, sum_const, card_range, Nat.nsmul_eq_mul]
   ring
-private def widthBase (s : Shape) : ℤ :=
+def widthBase (s : Shape) : ℤ :=
   ∑ q ∈ range (s.B + 1), (((min q s.J : ℕ) : ℤ) + 1) *
     (2 * ((s.m : ℤ) * 180265 - (q : ℤ) * 131071) + min q s.J)
 private def widthSlope (s : Shape) (r mode : ℕ) : ℤ :=
@@ -114,7 +114,7 @@ private def Certificate (s : Shape) (r mode : ℕ) : Prop :=
   0 < worstBase s + 3554 * worstSlope s r ∧
   0 < surplusBase s + 2601 * surplusSlope s r mode ∧
   0 < surplusBase s + 3554 * surplusSlope s r mode
-private def GoodStage (s : Stage) : Prop :=
+def GoodStage (s : Stage) : Prop :=
   Certificate s.cheap s.reserve 0 ∧ Certificate s.layered s.reserve 1 ∧ s.cheap.U < p
 private instance (s : Stage) : Decidable (GoodStage s) := by
   unfold GoodStage Certificate
@@ -122,72 +122,72 @@ private instance (s : Stage) : Decidable (GoodStage s) := by
 section
 set_option maxHeartbeats 0
 set_option maxRecDepth 16000
-private theorem cheapCert_0 : Certificate ⟨59,82,18,1899⟩ 0 0 := by
+theorem cheapCert_0 : Certificate ⟨59,82,18,1899⟩ 0 0 := by
   unfold Certificate
   decide +kernel
-private theorem layeredCert_0 : Certificate ⟨136,190,40,8441⟩ 0 1 := by
+theorem layeredCert_0 : Certificate ⟨136,190,40,8441⟩ 0 1 := by
   unfold Certificate
   decide +kernel
-private theorem cheapCert_1 : Certificate ⟨66,92,21,2076⟩ 1 0 := by
+theorem cheapCert_1 : Certificate ⟨66,92,21,2076⟩ 1 0 := by
   unfold Certificate
   decide +kernel
-private theorem layeredCert_1 : Certificate ⟨150,210,44,9356⟩ 1 1 := by
+theorem layeredCert_1 : Certificate ⟨150,210,44,9356⟩ 1 1 := by
   unfold Certificate
   decide +kernel
-private theorem cheapCert_2 : Certificate ⟨73,102,23,2261⟩ 2 0 := by
+theorem cheapCert_2 : Certificate ⟨73,102,23,2261⟩ 2 0 := by
   unfold Certificate
   decide +kernel
-private theorem layeredCert_2 : Certificate ⟨164,229,48,10272⟩ 2 1 := by
+theorem layeredCert_2 : Certificate ⟨164,229,48,10272⟩ 2 1 := by
   unfold Certificate
   decide +kernel
-private theorem cheapCert_3 : Certificate ⟨80,112,25,2455⟩ 3 0 := by
+theorem cheapCert_3 : Certificate ⟨80,112,25,2455⟩ 3 0 := by
   unfold Certificate
   decide +kernel
-private theorem layeredCert_3 : Certificate ⟨178,249,52,11191⟩ 3 1 := by
+theorem layeredCert_3 : Certificate ⟨178,249,52,11191⟩ 3 1 := by
   unfold Certificate
   decide +kernel
-private theorem cheapCert_5 : Certificate ⟨94,131,30,2824⟩ 5 0 := by
+theorem cheapCert_5 : Certificate ⟨94,131,30,2824⟩ 5 0 := by
   unfold Certificate
   decide +kernel
-private theorem layeredCert_5 : Certificate ⟨213,298,62,12959⟩ 5 1 := by
+theorem layeredCert_5 : Certificate ⟨213,298,62,12959⟩ 5 1 := by
   unfold Certificate
   decide +kernel
-private theorem cheapCert_8 : Certificate ⟨115,160,36,3401⟩ 8 0 := by
+theorem cheapCert_8 : Certificate ⟨115,160,36,3401⟩ 8 0 := by
   unfold Certificate
   decide +kernel
-private theorem layeredCert_8 : Certificate ⟨262,366,77,15611⟩ 8 1 := by
+theorem layeredCert_8 : Certificate ⟨262,366,77,15611⟩ 8 1 := by
   unfold Certificate
   decide +kernel
-private theorem cheapCert_12 : Certificate ⟨136,190,43,4204⟩ 12 0 := by
+theorem cheapCert_12 : Certificate ⟨136,190,43,4204⟩ 12 0 := by
   unfold Certificate
   decide +kernel
-private theorem layeredCert_12 : Certificate ⟨325,454,96,19187⟩ 12 1 := by
+theorem layeredCert_12 : Certificate ⟨325,454,96,19187⟩ 12 1 := by
   unfold Certificate
   decide +kernel
-private theorem cheapCert_18 : Certificate ⟨178,248,56,5332⟩ 18 0 := by
+theorem cheapCert_18 : Certificate ⟨178,248,56,5332⟩ 18 0 := by
   unfold Certificate
   decide +kernel
-private theorem layeredCert_18 : Certificate ⟨409,572,121,24615⟩ 18 1 := by
+theorem layeredCert_18 : Certificate ⟨409,572,121,24615⟩ 18 1 := by
   unfold Certificate
   decide +kernel
-private theorem cheapCert_28 : Certificate ⟨241,336,78,7235⟩ 28 0 := by
+theorem cheapCert_28 : Certificate ⟨241,336,78,7235⟩ 28 0 := by
   unfold Certificate
   decide +kernel
-private theorem layeredCert_28 : Certificate ⟨570,797,169,33523⟩ 28 1 := by
+theorem layeredCert_28 : Certificate ⟨570,797,169,33523⟩ 28 1 := by
   unfold Certificate
   decide +kernel
-private theorem cheapCert_42 : Certificate ⟨325,453,104,9976⟩ 42 0 := by
+theorem cheapCert_42 : Certificate ⟨325,453,104,9976⟩ 42 0 := by
   unfold Certificate
   decide +kernel
-private theorem layeredCert_42 : Certificate ⟨759,1061,224,46271⟩ 42 1 := by
+theorem layeredCert_42 : Certificate ⟨759,1061,224,46271⟩ 42 1 := by
   unfold Certificate
   decide +kernel
 end
-private theorem stageConsChecked {s : Stage} {tail : List Stage}
+theorem stageConsChecked {s : Stage} {tail : List Stage}
     (hs : GoodStage s) (ht : tail.all (fun t => decide (GoodStage t)) = true) :
     (s :: tail).all (fun t => decide (GoodStage t)) = true := by
   simpa only [List.all_cons, decide_eq_true hs, Bool.true_and] using ht
-private theorem check_stages : stages.all (fun s => decide (GoodStage s)) = true := by
+theorem check_stages : stages.all (fun s => decide (GoodStage s)) = true := by
   refine stageConsChecked ?_ ?_
   · exact ⟨cheapCert_0, layeredCert_0, by decide⟩
   refine stageConsChecked ?_ ?_

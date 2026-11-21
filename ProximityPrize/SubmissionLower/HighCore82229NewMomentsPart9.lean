@@ -5,17 +5,27 @@ set_option maxRecDepth 18000
 set_option maxHeartbeats 14000000
 
 namespace HighCore82219BankProof
-open P1_7_1_3 (momentEstimate blockEstimate block_append)
+open P1_7_1_3 (blockEstimate)
 
-theorem nb136_30_0 : blockEstimate 136 30 30 166 = 0x9a30e6 := by decide +kernel
-theorem nb1687_355_0 : blockEstimate 1687 355 355 800 = 0x12470a8053 := by decide +kernel
-theorem nb188_41_0 : blockEstimate 188 41 41 229 = 0x224f886 := by decide +kernel
-theorem nb2096_448_0 : blockEstimate 2096 448 448 800 = 0x1b8194c890 := by decide +kernel
-theorem nb2179_461_0 : blockEstimate 2179 461 461 800 = 0x1d4a7f9c3b := by decide +kernel
-theorem nb371_84_0 : blockEstimate 371 84 84 455 = 0x20c08c09 := by decide +kernel
-theorem nb4935_1017_0 : blockEstimate 4935 1017 1017 800 = 0x5677881be8 := by decide +kernel
-theorem nb5036_1070_0 : blockEstimate 5036 1070 1070 800 = 0x587b2c19c8 := by decide +kernel
-theorem nb595_125_0 : blockEstimate 595 125 125 720 = 0xcaca5052 := by decide +kernel
-theorem nb7120_1510_0 : blockEstimate 7120 1510 1510 800 = 0x820aba0748 := by decide +kernel
+theorem w6010_1275_9 : blockEstimate 6010 1275 3075 200 = 0x13446afbcb8 := by decide +kernel
+theorem w6010_1275_21 : blockEstimate 6010 1275 5475 200 = 0x1741769e2b8 := by decide +kernel
+theorem w6010_1275_33 : blockEstimate 6010 1275 7875 200 = 0x16cb8ba579 := by decide +kernel
+theorem w4863_1027_9 : blockEstimate 4863 1027 2827 200 = 0xc49a9eafe8 := by decide +kernel
+theorem w4863_1027_21 : blockEstimate 4863 1027 5227 200 = 0x6eea8c63d1 := by decide +kernel
+theorem w3850_812_4 : blockEstimate 3850 812 1612 200 = 0x371c2cdb09 := by decide +kernel
+theorem w3850_812_11 : blockEstimate 3850 812 3012 200 = 0x6f145ae668 := by decide +kernel
+theorem w3142_664_0 : blockEstimate 3142 664 664 200 = 0xf16c038a := by decide +kernel
+theorem w3142_664_8 : blockEstimate 3142 664 2264 200 = 0x3d06c8bd40 := by decide +kernel
+theorem w2235_472_0 : blockEstimate 2235 472 472 200 = 0xa84155a2 := by decide +kernel
+theorem w2235_472_12 : blockEstimate 2235 472 2872 200 = 0x1232f5782 := by decide +kernel
+theorem w1815_383_0 : blockEstimate 1815 383 383 200 = 0x865fcfc2 := by decide +kernel
+theorem w1815_383_10 : blockEstimate 1815 383 2383 198 = 0x43f1ea7b := by decide +kernel
+theorem w1202_254_6 : blockEstimate 1202 254 1454 200 = 0x5ab47210 := by decide +kernel
+theorem w952_201_3 : blockEstimate 952 201 801 200 = 0x165274341 := by decide +kernel
+theorem w1101_233_6 : blockEstimate 1101 233 1433 134 = 0xcd6047f := by decide +kernel
+theorem w692_155_2 : blockEstimate 692 155 555 200 = 0x91cd6c03 := by decide +kernel
+theorem w522_118_1 : blockEstimate 522 118 318 200 = 0x477f677c := by decide +kernel
+theorem w706_149_4 : blockEstimate 706 149 949 55 = 0x9c11c2 := by decide +kernel
+theorem w3142_664_19 : blockEstimate 3142 664 4464 6 = 0x1a101 := by decide +kernel
 
 end HighCore82219BankProof

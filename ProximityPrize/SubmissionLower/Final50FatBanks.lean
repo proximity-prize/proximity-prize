@@ -27,22 +27,22 @@ open scoped BigOperators Polynomial
 noncomputable section
 open private Column colExp colX column column_li coordinate coordinate_column column_bounds
   space space_bounds from ProximityPrize.SubmissionLower.PortLow4
-private abbrev NewColumn (b : Bank) (h : ℕ) :=
+abbrev NewColumn (b : Bank) (h : ℕ) :=
   Σ q : Fin (b.box.b + 1), Σ k : Fin (min q.val 1150 + 1),
     Σ l : Fin (min (q.val - k.val) (2300 - 2 * k.val) + 1),
       Fin (width b h q.val k.val l.val) × Fin 70001
 private def offset (b : Bank) : ℕ := P0_9_4_1.cut b - cut b
-private theorem cut_shift (b : Bank) : cut b + offset b = P0_9_4_1.cut b := by
+theorem cut_shift (b : Bank) : cut b + offset b = P0_9_4_1.cut b := by
   have h : cut b ≤ P0_9_4_1.cut b := by cases b <;> decide
   unfold offset
   omega
-private theorem width_shift (b : Bank) (h q k l : ℕ) :
+theorem width_shift (b : Bank) (h q k l : ℕ) :
     width b h q k l + offset b = P0_9_4_1.width b h q k l := by
   have hc := cut_shift b
   have hl := cut_large b
   unfold width P0_9_4_1.width rawBase P0_9_4_1.rawBase
   omega
-private def inOld (b : Bank) (h d : ℕ) (hd : d ≤ offset b) : NewColumn b h ↪ Column b h :=
+def inOld (b : Bank) (h d : ℕ) (hd : d ≤ offset b) : NewColumn b h ↪ Column b h :=
   (Embedding.refl _).sigmaMap fun q =>
     (Embedding.refl _).sigmaMap fun k =>
       (Embedding.refl _).sigmaMap fun l =>
@@ -50,9 +50,9 @@ private def inOld (b : Bank) (h d : ℕ) (hd : d ≤ offset b) : NewColumn b h �
           ((Nat.add_le_add_left hd _).trans_eq (width_shift b h q.val k.val l.val)))).prodMap
           (Embedding.refl _)
 private abbrev base (b : Bank) (h : ℕ) := inOld b h 0 (Nat.zero_le _)
-private def newSpace (b : Bank) (h : ℕ) : Submodule Geom PhysicalRow :=
+def newSpace (b : Bank) (h : ℕ) : Submodule Geom PhysicalRow :=
   Submodule.span Geom (Set.range (column ∘ base b h))
-private theorem occurs {b : Bank} {h : ℕ} {F : PhysicalRow}
+theorem occurs {b : Bank} {h : ℕ} {F : PhysicalRow}
     (hF : F ∈ newSpace b h) {e : SeedVar →₀ ℕ} {x : ℕ} (hne : (F.coeff e).coeff x ≠ 0) :
     ∃ c : NewColumn b h, colExp (base b h c) = e ∧ colX (base b h c) = x := by
   classical
@@ -117,48 +117,48 @@ private theorem volume_eq (b : Bank) (h : ℕ) :
   simp only [width, rawVolume, moment, credit, jetSum, sum_mul, ← sum_add_distrib]
   refine sum_congr rfl fun q _ => sum_congr rfl fun k _ => sum_congr rfl fun l _ => ?_
   ring
-private theorem first_raw : rawVolume .first = 2808662087478223140 := by
-  change moment 6789 3775939 1 131071 0 = _
-  refine moment_eq 6789 3775939 1 131071 0 _ (by decide) ?_
-  change antidifference (slice 6789 3775939 1 131071 0) 1151 = _
-  have h0 : slice 6789 3775939 1 131071 0 0 = 707255794560098160 := by decide
-  have h1 : slice 6789 3775939 1 131071 0 1 = 706624425380562480 := by decide
-  have h2 : slice 6789 3775939 1 131071 0 2 = 705993099588957024 := by decide
-  have h3 : slice 6789 3775939 1 131071 0 3 = 705361817147533920 := by decide
-  have h4 : slice 6789 3775939 1 131071 0 4 = 704730578018545296 := by decide
+theorem first_raw : rawVolume .first = 2808706537678303500 := by
+  change moment 6789 3781888 1 131071 0 = _
+  refine moment_eq 6789 3781888 1 131071 0 _ (by decide) ?_
+  change antidifference (slice 6789 3781888 1 131071 0) 1151 = _
+  have h0 : slice 6789 3781888 1 131071 0 0 = 707266911933270000 := by decide
+  have h1 : slice 6789 3781888 1 131071 0 1 = 706635533090654640 := by decide
+  have h2 : slice 6789 3781888 1 131071 0 2 = 706004197635969504 := by decide
+  have h3 : slice 6789 3781888 1 131071 0 3 = 705372905531466720 := by decide
+  have h4 : slice 6789 3781888 1 131071 0 4 = 704741656739398416 := by decide
   unfold antidifference
   rw [h0, h1, h2, h3, h4]
   decide
-private theorem second_raw : rawVolume .second = 2829290320015851434 := by
-  change moment 6820 2449244 1 131071 0 = _
-  refine moment_eq 6820 2449244 1 131071 0 _ (by decide) ?_
-  change antidifference (slice 6820 2449244 1 131071 0) 1151 = _
-  have h0 : slice 6820 2449244 1 131071 0 0 = 712415087063536896 := by decide
-  have h1 : slice 6820 2449244 1 131071 0 1 = 711779233502692080 := by decide
-  have h2 : slice 6820 2449244 1 131071 0 2 = 711143423329759632 := by decide
-  have h3 : slice 6820 2449244 1 131071 0 3 = 710507656506991680 := by decide
-  have h4 : slice 6820 2449244 1 131071 0 4 = 709871932996640352 := by decide
+theorem second_raw : rawVolume .second = 2829544603202108900 := by
+  change moment 6820 2483090 1 131071 0 = _
+  refine moment_eq 6820 2483090 1 131071 0 _ (by decide) ?_
+  change antidifference (slice 6820 2483090 1 131071 0) 1151 = _
+  have h0 : slice 6820 2483090 1 131071 0 0 = 712478685451572000 := by decide
+  have h1 : slice 6820 2483090 1 131071 0 1 = 711842776611815376 := by decide
+  have h2 : slice 6820 2483090 1 131071 0 2 = 711206911159971120 := by decide
+  have h3 : slice 6820 2483090 1 131071 0 3 = 710571089058291360 := by decide
+  have h4 : slice 6820 2483090 1 131071 0 4 = 709935310269028224 := by decide
   unfold antidifference
   rw [h0, h1, h2, h3, h4]
   decide
 private theorem endpoint (b : Bank) :
-    targetRank b + 262144 * (70001 * b.nodeRank) + 2353 * extra b.box.b ≤
+    targetRank b + 262144 * (70001 * b.nodeRank) + 2377 * extra b.box.b ≤
       70001 * rawVolume b := by
   obtain ⟨_, _, hfirst, hsecond⟩ := bank_moments
   cases b
   · have he : extra Bank.first.box.b = 0x1cc973f372d9cdc := hfirst
-    have ha : (1 : ℕ) + 262144 * (70001 * 0x9bab8f5dfb7) + 2353 * 0x1cc973f372d9cdc ≤
-        70001 * 2808662087478223140 := by decide
+    have ha : (1 : ℕ) + 262144 * (70001 * 0x9bab8f5dfb7) + 2377 * 0x1cc973f372d9cdc ≤
+        70001 * 2808706537678303500 := by decide
     exact (congrArg₂ (fun x y : ℕ =>
-      targetRank Bank.first + 262144 * (70001 * Bank.first.nodeRank) + 2353 * x ≤ 70001 * y)
+      targetRank Bank.first + 262144 * (70001 * Bank.first.nodeRank) + 2377 * x ≤ 70001 * y)
       he first_raw).mpr ha
   · have he : extra Bank.second.box.b = 0x1d32fca954a0ef7 := hsecond
-    have ha : (1435744580951965830001 : ℕ) + 262144 * (70001 * 0x9bac59312df) +
-        2353 * 0x1d32fca954a0ef7 ≤ 70001 * 2829290320015851434 := by decide
+    have ha : (1450388809571960381603 : ℕ) + 262144 * (70001 * 0x9bac59312df) +
+        2377 * 0x1d32fca954a0ef7 ≤ 70001 * 2829544603202108900 := by decide
     exact (congrArg₂ (fun x y : ℕ =>
-      targetRank Bank.second + 262144 * (70001 * Bank.second.nodeRank) + 2353 * x ≤ 70001 * y)
+      targetRank Bank.second + 262144 * (70001 * Bank.second.nodeRank) + 2377 * x ≤ 70001 * y)
       he second_raw).mpr ha
-theorem budget (b : Bank) (h : ℕ) (hh : h ≤ 2353) :
+theorem budget (b : Bank) (h : ℕ) (hh : h ≤ 2377) :
     targetRank b + 262144 * (70001 * b.nodeRank) + h * poleDebit b.box ≤
       70001 * jetSum b.box.b (width b h) := by
   have he := endpoint b
@@ -175,15 +175,15 @@ open K1 K1_13 K1_13_4 K1_13_4_2
 open scoped Polynomial BigOperators
 open private codim_inf_le codim_finset_inf_le separable_rank dimension_of_debits
   from ProximityPrize.SubmissionLower.Fast050
-private theorem contact_bound : K1_13_4_2.c2 :=
+theorem contact_bound : K1_13_4_2.c2 :=
   K1_13_4_2_2.of_children K1_13_4_2_2_1.proof K1_13_4_2_2_2.proof K1_13_4_2_2_3.proof
     K1_13_4_2_2_4.proof K1_13_4_2_2_5.proof K1_13_4_2_2_6.proof
-private theorem simple_pole_bound : K1_13_4_2.c3 :=
+theorem simple_pole_bound : K1_13_4_2.c3 :=
   K1_13_4_2_3.of_children K1_13_4_2_3_1.proof K1_13_4_2_3_2.proof
 private theorem deformation_bound : K1_13_4_2.c4 :=
   K1_13_4_2_4.of_children K1_13_4_2_4_1.proof K1_13_4_2_4_2.proof
 private theorem rank_of_bounds (b : Bank) (w : I → K) {Γ s}
-    (P : PoleData Γ s) (L : ResidueChart P) (hh : P.H.natDegree ≤ 2353) :
+    (P : PoleData Γ s) (L : ResidueChart P) (hh : P.H.natDegree ≤ 2377) :
     HasRank w P L b.box (cut b) (targetRank b) := by
   classical
   obtain ⟨V, hV, hbox, hdimV⟩ := ambient b P.H.natDegree

@@ -23,10 +23,10 @@ open K1_13_6_3_5 (boundaryWeight)
 open KoalaRectTaylor (jetToRect rectIdeal Represented EquationAxis)
 open KoalaTwoSectionPrice (liftIndex graphDegree secondCut)
 
-private abbrev firstLength (J : Input) (v w : ℕ) := quotientOrder J.lo+1+liftIndex J.hi v w
-private abbrev secondLength (J : Input) (v w : ℕ) := quotientOrder J.lo+2+liftIndex J.hi v w
+abbrev firstLength (J : Input) (v w : ℕ) := quotientOrder J.lo+1+liftIndex J.hi v w
+abbrev secondLength (J : Input) (v w : ℕ) := quotientOrder J.lo+2+liftIndex J.hi v w
 
-private theorem graph_and_cut_budget (J : Input) (B : ResidueLift J) (D : Factors J B)
+theorem graph_and_cut_budget (J : Input) (B : ResidueLift J) (D : Factors J B)
     (v w : ℕ) (he : 4 ≤ J.e)
     (haxis : ∀ i, (J.f.coeff i).degreeOf 0 ≤ v ∧ (J.f.coeff i).degreeOf 1 ≤ w)
     {γ : K} (hγ : γ ∈ componentMarks J D.proper) :
@@ -140,7 +140,7 @@ theorem two_cut_count : KoalaTwoSectionPrice.TwoCutIncidence := by
   intro J B D hlo hhi he₀ he₁ hword v w hsum hpaid haxis
   have he : 4 ≤ J.e := by omega
   have hvw : v+w ≤ 445 := (hsum.trans hpaid).le.trans (KoalaTwoSectionPrice.paid_le he₀ he₁)
-  have hhi' : J.hi ≤ 2440 := hhi.le.trans (by decide)
+  have hhi' : J.hi ≤ 2465 := hhi.le.trans (by decide)
   obtain ⟨V,_,hbad,hGood⟩ := Compression.compress_good J v w he₀ he₁
     ((Nat.le_add_right v w).trans hvw) ((Nat.le_add_left w v).trans hvw) hhi' haxis
   let A := componentMarks J D.proper

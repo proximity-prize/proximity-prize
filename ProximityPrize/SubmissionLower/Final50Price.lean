@@ -8,31 +8,31 @@ open K1_13 (Geom extend Row Shape shape Fits InBox Contact chart liftedChart mix
   OnFactor FatEligible OrderAt indexDegree)
 open scoped BigOperators Polynomial
 
-abbrev agreement : ℕ := 179915
-abbrev errors : ℕ := 82229
-abbrev physicalDegree : ℕ := 133424
+abbrev agreement : ℕ := 179905
+abbrev errors : ℕ := 82239
+abbrev physicalDegree : ℕ := 133448
 abbrev taylorLength : ℕ := physicalDegree + 1
 abbrev incidenceGap : ℕ := agreement - physicalDegree
-abbrev anchorCutoff : ℕ := 91 * agreement - 1 + 50
+abbrev anchorCutoff : ℕ := 93 * agreement - 1 + 52
 abbrev primaryCutoff : ℕ := 3000 * agreement - 1
 abbrev primaryBox : Shape := ⟨4012, 1650, 550⟩
-abbrev layerNeed : ℕ := 23145994688552
+abbrev layerNeed : ℕ := 22403222113791
 abbrev layerWidth : ℕ := agreement - physicalDegree + 3
 def TrueWeightLE {n : ℕ} (P : Row n) (D : ℕ) : Prop :=
   ∀ m ∈ P.support, (P.coeff m).natDegree +
     m.sum (fun i a => (physicalDegree - i.val) * a) ≤ D
-def fullCap (top : ℕ) : Shape := ⟨122, 50, top⟩
+def fullCap (top : ℕ) : Shape := ⟨125, 52, top⟩
 def Fits (top : ℕ) {n : ℕ} (a : Fin n → Shape) : Prop :=
-  (∀ i, K1_13_8.Valid (a i)) ∧ (∑ i, (a i).b) ≤ 122 ∧ (∑ i, (a i).j) ≤ 50 ∧
+  (∀ i, K1_13_8.Valid (a i)) ∧ (∑ i, (a i).b) ≤ 125 ∧ (∑ i, (a i).j) ≤ 52 ∧
     (∑ i, (a i).t) ≤ top
-def lowerWidth (top : ℕ) : ℕ := 122 - top
-def lowerIndex (top : ℕ) : ℕ := 50 - 3 * top
+def lowerWidth (top : ℕ) : ℕ := 125 - top
+def lowerIndex (top : ℕ) : ℕ := 52 - 3 * top
 def lowerTop (top : ℕ) : ℕ := lowerIndex top / 2
 def LowerRow (top : ℕ) (g : Row 3) : Prop :=
   g ≠ 0 ∧ g.totalDegree ≤ lowerWidth top ∧ indexDegree g ≤ lowerIndex top ∧
     TrueWeightLE g anchorCutoff
 def SmallFactor (f : Row 4) : Prop :=
-  Irreducible f ∧ 0 < (shape f).t ∧ InBox (shape f) (fullCap 13) ∧ TrueWeightLE f anchorCutoff
+  Irreducible f ∧ 0 < (shape f).t ∧ InBox (shape f) (fullCap 14) ∧ TrueWeightLE f anchorCutoff
 def ActiveFits (f : Row 4) (K : ℕ) : Prop :=
   ∀ m ∈ f.support, m 0 + 2*m 1 + 2*m 2 + 2*m 3 ≤ K
 
@@ -48,26 +48,27 @@ def LayerBudget {n : ℕ} (a : Fin n → Shape) (l : Fin n → ℕ) : Prop :=
   layerNeed ≤ ∑ r ∈ Finset.range (1 + primaryCutoff / layerWidth),
     remaining (∑ i, (r + 1 - l i) * (a i).b) (∑ i, (r + 1 - l i) * (a i).j)
 abbrev FatEquations := P3_6.FatEquations
-abbrev fatOrder : ℕ := 55667
-abbrev divisorOrder : ℕ := 50954
-abbrev isolatedOrder : ℕ := 645
+abbrev fatOrder : ℕ := 53178
+abbrev divisorOrder : ℕ := 48817
+abbrev isolatedOrder : ℕ := 596
 abbrev commonBox := P3_6.commonBox
 abbrev resultantBox := P3_6.resultantBox
 def lowerCap : ℕ → ℕ
-  | 0 => 20187022304470849
-  | 1 => 17978871219378084
-  | 2 => 15887687927077392
-  | 3 => 13915255263532224
-  | 4 => 12064058021474515
-  | 5 => 10335968834949477
-  | 6 => 8733387863853487
-  | 7 => 7258265884526994
-  | 8 => 5912930283708828
-  | 9 => 4699397916465177
-  | 10 => 3619935663838307
-  | 11 => 2676613988267677
-  | 12 => 1871651940342942
-  | 13 => 1207160710741395
+  | 0 => 22258212026003248
+  | 1 => 19914652156004755
+  | 2 => 17690054217600253
+  | 3 => 15586159007729913
+  | 4 => 13605491615199925
+  | 5 => 11749888854712210
+  | 6 => 10021785058608165
+  | 7 => 8423101210093614
+  | 8 => 6956192938405237
+  | 9 => 5623053137790453
+  | 10 => 4425971195945761
+  | 11 => 3366999252493415
+  | 12 => 2448373323358719
+  | 13 => 1672191719667549
+  | 14 => 1040650363547452
   | _ => 0
 def Holds (E : FatEquations) (S : Geom[X]) : Prop :=
   atJet E.common S = 0 ∨ OrderAt E.residual S fatOrder
@@ -178,9 +179,10 @@ def physicalPriceTilted (x : Shape) (l : ℕ) : ℕ :=
 def physicalPriceActive (x : Shape) (l K : ℕ) : ℕ :=
   physicalPriceWith x l (tiltedSurfaceActive x.chamber primaryBox K)
 
-def physicalPrice (x : Shape) (l _K : ℕ) : ℕ :=
+def physicalPrice (x : Shape) (l K : ℕ) : ℕ :=
   if tiltedFits x then
-    min (physicalPriceOld x l) (physicalPriceTilted x l)
+    let base := min (physicalPriceOld x l) (physicalPriceTilted x l)
+    if activeFitsPrice x K then min base (physicalPriceActive x l K) else base
   else physicalPriceOld x l
 
 def fatPrice (x : Shape) : ℕ :=

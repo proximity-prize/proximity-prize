@@ -29,18 +29,18 @@ private theorem coeff_dx (g : ClearedEquation) (j : ℕ) :
   · intro hj
     have h : g.coeff j = 0 := by simpa [Polynomial.mem_support_iff] using hj
     simp [h]
-private def innerTest (g : ClearedEquation) : ClearedEquation :=
+def innerTest (g : ClearedEquation) : ClearedEquation :=
   clearedDx g + (Polynomial.X (R := ClearedSeeds)) * g.derivative
-private theorem inner_coeff (g : ClearedEquation) (j : ℕ) :
+theorem inner_coeff (g : ClearedEquation) (j : ℕ) :
     (innerTest g).coeff j = dx (g.coeff j) + g.coeff j * (j : ClearedSeeds) := by
   cases j with
   | zero => simp [innerTest, coeff_dx]
   | succ j => simp only [innerTest, coeff_add, coeff_dx, coeff_X_mul, coeff_derivative, Nat.cast_succ]
-private theorem inner_degree (g : ClearedEquation) : (innerTest g).natDegree ≤ g.natDegree := by
+theorem inner_degree (g : ClearedEquation) : (innerTest g).natDegree ≤ g.natDegree := by
   apply natDegree_le_iff_coeff_eq_zero.mpr
   intro n hn
   simp [inner_coeff, coeff_eq_zero_of_natDegree_lt hn, dx]
-private theorem eval_dx (A : ClearedSeeds) (t : Fin 2 → L) :
+theorem eval_dx (A : ClearedSeeds) (t : Fin 2 → L) :
     MvPolynomial.eval (fun i => C (t i)) (dx A) =
       (MvPolynomial.eval (fun i => C (t i)) A).derivative := by
   classical
@@ -52,7 +52,7 @@ private theorem eval_dx (A : ClearedSeeds) (t : Fin 2 → L) :
     simp only [Finsupp.prod, map_prod, map_pow]
   rw [hprod, mul_comm _ (C _), derivative_mul, derivative_C]
   ring
-private theorem specialize_nonzero (A : ClearedSeeds) (hA : A ≠ 0) :
+theorem specialize_nonzero (A : ClearedSeeds) (hA : A ≠ 0) :
     ∃ t : Fin 2 → L, MvPolynomial.eval (fun i => C (t i)) A ≠ 0 := by
   classical
   by_contra! h
@@ -63,7 +63,7 @@ private theorem specialize_nonzero (A : ClearedSeeds) (hA : A ≠ 0) :
   choose t ht using fun i => hx i (Set.mem_univ i)
   have he : x = fun i => C (t i) := funext fun i => (ht i).symm
   rw [he, h, map_zero]
-private theorem no_log_derivative {A B : L[X]} (hab : A * B ≠ 0)
+theorem no_log_derivative {A B : L[X]} (hab : A * B ≠ 0)
     {n : ℕ} (hn : (n : L) ≠ 0) :
     A.derivative * B ≠ A * B.derivative + C (n : L) * (A * B) := by
   intro he
@@ -77,7 +77,7 @@ private theorem no_log_derivative {A B : L[X]} (hab : A * B ≠ 0)
     coeff_mul_degree_add_degree, dz, dz, zero_mul, mul_zero, zero_add] at hh
   exact (mul_ne_zero hn (mul_ne_zero (leadingCoeff_ne_zero.mpr (left_ne_zero_of_mul hab))
     (leadingCoeff_ne_zero.mpr (right_ne_zero_of_mul hab)))) hh.symm
-private theorem no_cross {A B : ClearedSeeds} (ha : A ≠ 0) (hb : B ≠ 0)
+theorem no_cross {A B : ClearedSeeds} (ha : A ≠ 0) (hb : B ≠ 0)
     {n : ℕ} (hn : (n : L) ≠ 0) :
     dx A * B ≠ A * (dx B + B * (n : ClearedSeeds)) := by
   intro he
@@ -92,16 +92,16 @@ private theorem no_cross {A B : ClearedSeeds} (ha : A ≠ 0) (hb : B ≠ 0)
 private abbrev toSeed : Seeds →+* SeedField := algebraMap _ _
 private abbrev liftSeed : ClearedSeeds →+* Seeds := MvPolynomial.map (algebraMap L[X] FX)
 private abbrev toField : ClearedSeeds →+* SeedField := toSeed.comp liftSeed
-private theorem liftSeed_inj : Function.Injective liftSeed :=
+theorem liftSeed_inj : Function.Injective liftSeed :=
   MvPolynomial.map_injective _ (IsFractionRing.injective L[X] FX)
-private theorem toField_inj : Function.Injective toField :=
+theorem toField_inj : Function.Injective toField :=
   (IsFractionRing.injective Seeds SeedField).comp liftSeed_inj
-private theorem at_fibre (f : Equation) (y v : SeedClosure) :
+theorem at_fibre (f : Equation) (y v : SeedClosure) :
     seedFibreEval y v (C f) = aeval y (f.map toSeed) := by
   change (eval₂RingHom (eval₂RingHom seedGeneric y) v) (C f) = _
   rw [coe_eval₂RingHom, eval₂_C, coe_eval₂RingHom, aeval_def, eval₂_map]
   rfl
-private theorem eqn_minimal {f : Equation} (hirr : Irreducible f) (hd : 0 < f.natDegree) :
+theorem eqn_minimal {f : Equation} (hirr : Irreducible f) (hd : 0 < f.natDegree) :
     Irreducible (f.map toSeed) := by
   let : UniqueFactorizationMonoid Seeds := MvPolynomial.uniqueFactorizationMonoid (σ := Fin 2)
   let := UniqueFactorizationMonoid.strongNormalizationMonoid (α := Seeds)
@@ -118,7 +118,7 @@ private theorem eqn_minimal {f : Equation} (hirr : Irreducible f) (hd : 0 < f.na
       simp only [natDegree_C] at he
       omega
   exact (hprim.irreducible_iff_irreducible_map_fraction_map (K := SeedField)).mp hirr
-private theorem constant_ne {f : Equation} {q : Surface} (hq : Parent q)
+theorem constant_ne {f : Equation} {q : Surface} (hq : Parent q)
     (hf : Irreducible f) (hmem : C f ∈ q.asIdeal) : f.coeff 0 ≠ 0 := by
   intro hz
   have divX := (Polynomial.prime_X (R := Seeds)).irreducible.dvd_symm hf (Polynomial.X_dvd_iff.mpr hz)
@@ -135,11 +135,11 @@ private theorem constant_ne {f : Equation} {q : Surface} (hq : Parent q)
     (algebraMap JetField JetClosure).injective.comp (IsFractionRing.injective JetPlane JetField)
   have h0 := hjinj (hj.trans (map_zero jetGeneric).symm)
   simp [ordVar] at h0
-private theorem mapped_lift (g : ClearedEquation) :
+theorem mapped_lift (g : ClearedEquation) :
     (liftEquation g).map toSeed = g.map toField := by
   change (g.map liftSeed).map toSeed = _
   rw [Polynomial.map_map]
-private theorem exclude_inner {f : Equation} {q : Surface} (hq : Parent q)
+theorem exclude_inner {f : Equation} {q : Surface} (hq : Parent q)
     (hi : Irreducible f) (hd : 0 < f.natDegree) (hp : f.natDegree < p)
     (hm : C f ∈ q.asIdeal) {g : ClearedEquation} {a : L[X]} (hg : IsClearing f g a)
     (ht : C (liftEquation (innerTest g)) ∈ q.asIdeal) : False := by
@@ -202,12 +202,12 @@ private theorem exclude_inner {f : Equation} {q : Surface} (hq : Parent q)
   ring
 set_option linter.unreachableTactic false in
 set_option linter.unusedTactic false in
-private theorem cutter_reading (g : ClearedEquation) :
+theorem cutter_reading (g : ClearedEquation) :
     ordinaryCutter g = C (liftEquation (clearedDx g)) +
       C (Polynomial.X : Equation) * C (liftEquation g.derivative) ∨
     ordinaryCutter g = graphCutter g := by
   first | exact Or.inl rfl | exact Or.inr rfl
-private theorem lift_inner (g : ClearedEquation) :
+theorem lift_inner (g : ClearedEquation) :
     C (liftEquation (innerTest g)) = C (liftEquation (clearedDx g)) +
       C (Polynomial.X : Equation) * C (liftEquation g.derivative) := by
   have hx : liftEquation (Polynomial.X : ClearedEquation) = (Polynomial.X : Equation) :=
@@ -284,7 +284,7 @@ private theorem differentialWeight_eq : differentialWeight (d := 3) 133671 =
     fun v => v.elim 1 (fun i => 133671 - i.val) := by
   funext v
   cases v <;> rfl
-private theorem anchor_bounds (Q : anchorSpace) :
+theorem anchor_bounds (Q : anchorSpace) :
     InBox (shape (MvPolynomial.optionEquivRight Geom (Fin 4) Q)) ⟨120, 48, 10⟩ ∧
       TrueWeightLE (MvPolynomial.optionEquivRight Geom (Fin 4) Q) (90 * 180265 - 1) := by
   classical
@@ -387,10 +387,10 @@ theorem anchorLead_ne {P : Row 4} (hP : P ≠ 0) : anchorLead P ≠ 0 :=
 theorem anchorLead_mul (P Q : Row 4) : anchorLead (P * Q) = anchorLead P * anchorLead Q := by
   rw [anchorLead, map_mul, Polynomial.leadingCoeff_mul]
   rfl
-private def partialEval (S : Geom[X]) : Row 4 →+* Geom[X][X] :=
+def partialEval (S : Geom[X]) : Row 4 →+* Geom[X][X] :=
   eval₂Hom Polynomial.C fun i : Fin 4 =>
     if i = 3 then Polynomial.X else Polynomial.C (jet S i)
-private theorem partialEval_eq_map (P : Row 4) (S : Geom[X]) :
+theorem partialEval_eq_map (P : Row 4) (S : Geom[X]) :
     partialEval S P = (topView P).map (eval (jet S)) := by
   have hlast : finSuccEquivLast (3 : Fin 4) = none := finSuccEquivLast_last
   have h : partialEval S = (Polynomial.mapRingHom (eval (jet S))).comp topView.toRingHom := by
@@ -532,7 +532,7 @@ private theorem index_bounds (P : Row 4) :
         Finset.mul_sum, Nat.mul_comm]
     have hdeg : m.degree ≤ P.totalDegree := le_totalDegree hm
     exact hle.trans (he.trans_le (Nat.mul_le_mul_left 3 hdeg))
-private theorem fits_of_prod {n : ℕ} (P : Row 4) (hP : P ≠ 0)
+theorem fits_of_prod {n : ℕ} (P : Row 4) (hP : P ≠ 0)
     (hbox : InBox (shape P) ⟨120, 48, 10⟩) (f : Fin n → Row 4)
     (ht : ∀ i, 0 < (shape (f i)).t) (hd : (∏ i, f i) ∣ P) :
     Fits (fun i => shape (f i)) := by

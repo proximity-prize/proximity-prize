@@ -9,7 +9,7 @@ noncomputable section
 open K1_13_5_4_2_4 K1_13_5_4_2_4_2 K1_13_7_5_3_3_3 MvPolynomial
 open scoped Pointwise
 variable {A : Fin 4 → Finset Exponent}
-private def relIdeal (I : Ideal (Row A)) : Ideal (model A) where
+def relIdeal (I : Ideal (Row A)) : Ideal (model A) where
   carrier := {f | ∀ d, (f : Ambient A).coeff d ∈ I}
   zero_mem' := by simp
   add_mem' := by
@@ -21,7 +21,7 @@ private def relIdeal (I : Ideal (Row A)) : Ideal (model A) where
     change ((f : Ambient A) * (g : Ambient A)).coeff d ∈ I
     rw [coeff_mul]
     exact I.sum_mem fun e _ => I.mul_mem_left _ (hg e.2)
-private theorem mem_relIdeal_of_val {I : Ideal (Row A)} {f : model A} {d : Exponent}
+theorem mem_relIdeal_of_val {I : Ideal (Row A)} {f : model A} {d : Exponent}
     {p : Row A} (h : (f : Ambient A) = monomial d p) (hp : p ∈ I) : f ∈ relIdeal I := by
   classical
   intro k
@@ -37,7 +37,7 @@ private def cut (i : Fin 4) : model A :=
     simpa [shift, Finsupp.single_eq_pi_single] using equation_mul_mem_piece i h)
 private def target (A : Fin 4 → Finset Exponent) (i : Fin 4) : Ideal (model A) :=
   Ideal.span {cut i} ⊔ relIdeal (prefixIdeal A i.val)
-private theorem mem_target {i : Fin 4} {f : model A} :
+theorem mem_target {i : Fin 4} {f : model A} :
     f ∈ target A i ↔ ∃ r : model A, f - cut i * r ∈ relIdeal (prefixIdeal A i.val) := by
   rw [target, Ideal.mem_span_singleton_sup]
   constructor
@@ -65,7 +65,7 @@ private theorem chart_degree (d : Degree) (i : Fin 4) (m : ℕ) :
   ext j
   change m + (d j + (Finsupp.single i 1 : Exponent) j) = (Finsupp.single i 1 : Exponent) j + (d j + m)
   omega
-private theorem monomial_mul_sub {R : Type*} [CommRing R] (a b c d : Exponent)
+theorem monomial_mul_sub {R : Type*} [CommRing R] (a b c d : Exponent)
     (h : a + b = c + d) (p q r s : R) :
     (monomial a p : MvPolynomial (Fin 4) R) * monomial b q - monomial c r * monomial d s =
       monomial (c + d) (p * q - r * s) := by
@@ -93,12 +93,12 @@ private theorem chart_lift (h : ChartLifting A) (i : Fin 4) (d : Degree) {p : Ro
     _ = _ := by
       rw [chart_pow_val]
       exact monomial_mul_sub _ _ _ _ (chart_degree d i m) (chartPower a m) p (genericEquation A i) r
-private theorem pow_mul_mem_of_le {R : Type*} [CommRing R] (J : Ideal R) (x f : R)
+theorem pow_mul_mem_of_le {R : Type*} [CommRing R] (J : Ideal R) (x f : R)
     {l m : ℕ} (h : l ≤ m) (hl : x ^ l * f ∈ J) : x ^ m * f ∈ J := by
   obtain ⟨k, rfl⟩ := Nat.exists_eq_add_of_le h
   rw [add_comm l k, pow_add, mul_assoc]
   exact J.mul_mem_left _ hl
-private theorem uniform_power {R : Type*} [CommRing R] [IsNoetherianRing R]
+theorem uniform_power {R : Type*} [CommRing R] [IsNoetherianRing R]
     (J : Ideal R) (x : R) : ∃ M : ℕ, ∀ f : R,
       (∃ m : ℕ, x ^ m * f ∈ J) → x ^ M * f ∈ J := by
   let C : ℕ →o Submodule R R :=
@@ -116,10 +116,10 @@ private theorem uniform_power {R : Type*} [CommRing R] [IsNoetherianRing R]
     simpa only [Submodule.mem_colon_singleton, smul_eq_mul, mul_comm f] using hm
   have hmem' : f ∈ J.colon {x ^ M} := hle hmem
   simpa only [Submodule.mem_colon_singleton, smul_eq_mul, mul_comm f] using hmem'
-private def gens (A : Fin 4 → Finset Exponent) (i : Fin 4) (b : ℕ) : Set (model A) :=
+def gens (A : Fin 4 → Finset Exponent) (i : Fin 4) (b : ℕ) : Set (model A) :=
   {f | ∃ (d : Degree) (p : Row A) (hp : p ∈ piece A (shift d i 1)),
     (∀ j, d j ≤ b) ∧ p ∈ prefixIdeal A (i.val + 1) ∧ f = tag (stamp (shift d i 1)) hp}
-private theorem bounded_gens (i : Fin 4) : ∃ B : ℕ, ∀ (d : Degree) {p : Row A}
+theorem bounded_gens (i : Fin 4) : ∃ B : ℕ, ∀ (d : Degree) {p : Row A}
     (hp : p ∈ piece A (shift d i 1)), p ∈ prefixIdeal A (i.val + 1) →
       tag (stamp (shift d i 1)) hp ∈ Ideal.span (gens A i B) := by
   classical
@@ -133,20 +133,20 @@ private theorem bounded_gens (i : Fin 4) : ∃ B : ℕ, ∀ (d : Degree) {p : Ro
     Ideal.subset_span ⟨d, p, hp, fun j => (Finset.le_sup (Finset.mem_univ j)).trans (le_max_right _ _),
       hrel, rfl⟩
   rwa [← hB _ (le_max_left _ _)] at h
-private theorem proj_mul_tag {f : model A} {d e : Exponent} {p : Row A}
+theorem proj_mul_tag {f : model A} {d e : Exponent} {p : Row A}
     (hp : p ∈ piece A e) : proj (d + e) (f * tag e hp) = proj d f * tag e hp := by
   apply Subtype.ext
   change monomial (d + e) (((f : Ambient A) * monomial e p).coeff (d + e)) =
     monomial d ((f : Ambient A).coeff d) * monomial e p
   rw [monomial_mul_monomial, coeff_mul_monomial]
-private theorem proj_add (d : Exponent) (f g : model A) :
+theorem proj_add (d : Exponent) (f g : model A) :
     proj d (f + g) = proj d f + proj d g := by
   apply Subtype.ext
   change monomial d (((f : Ambient A) + (g : Ambient A)).coeff d) =
     monomial d ((f : Ambient A).coeff d) + monomial d ((g : Ambient A).coeff d)
   change monomial d ((f : Ambient A).coeff d + (g : Ambient A).coeff d) = _
   exact map_add (monomial d) _ _
-private theorem stable_cut (hz : ∀ i, 0 ∈ A i) (h : ChartLifting A) (i : Fin 4) :
+theorem stable_cut (hz : ∀ i, 0 ∈ A i) (h : ChartLifting A) (i : Fin 4) :
     ∃ b : ℕ, ∀ (d : Degree), (∀ j, b ≤ d j) →
       ∀ p ∈ piece A (shift d i 1), p ∈ prefixIdeal A (i.val + 1) →
         ∃ r ∈ piece A d, p - genericEquation A i * r ∈ prefixIdeal A i.val := by
@@ -252,7 +252,7 @@ private theorem map_component (p : MvPolynomial σ k) (n : ℕ) :
   ext d
   by_cases hd : d.degree = n <;>
     simp only [MvPolynomial.coeff_map, coeff_homogeneousComponent, hd, ite_true, ite_false, map_zero]
-private theorem ideal_eq_of_le_of_hilbert_eq [Finite σ]
+theorem ideal_eq_of_le_of_hilbert_eq [Finite σ]
     {A B : Ideal (MvPolynomial σ E)} (hAB : A ≤ B)
     (h : affineHilbertPolynomial A = affineHilbertPolynomial B) : A = B := by
   obtain ⟨a, ha⟩ := exists_eval_affineHilbertPolynomial A
@@ -301,7 +301,7 @@ private theorem boundary_map (I : Ideal (MvPolynomial TaylorIndex k)) :
       (Finset.sup_mono (support_map_subset (algebraMap k E) p)).trans hn, rfl⟩
   · rw [K1_13_5_5_2.hilbertPolynomial_map, K1_13_5_4_4_2.hilbertPolynomial_boundary,
       K1_13_5_4_4_2.hilbertPolynomial_boundary, K1_13_5_5_2.hilbertPolynomial_map]
-private theorem affine_regular {t : Option TaylorIndex → E} (ht : AlgebraicIndependent k t)
+theorem affine_regular {t : Option TaylorIndex → E} (ht : AlgebraicIndependent k t)
     (I : Ideal (MvPolynomial TaylorIndex k)) :
     IsLeftRegular (Ideal.Quotient.mk (I.map (MvPolynomial.map (algebraMap k E)))
       (affinePolynomial t)) := by
@@ -322,9 +322,9 @@ private def slope (t : Option TaylorIndex → E) : MvPolynomial TaylorIndex E :=
 private theorem linear_sum_homogeneous {σ F : Type} [Fintype σ] [Field F] (a : σ → F) :
     (∑ i, C (a i) * MvPolynomial.X i).IsHomogeneous 1 :=
   (homogeneousSubmodule σ F 1).sum_mem fun i _ => isHomogeneous_C_mul_X _ i
-private theorem slope_homogeneous (t : Option TaylorIndex → E) : (slope t).IsHomogeneous 1 :=
+theorem slope_homogeneous (t : Option TaylorIndex → E) : (slope t).IsHomogeneous 1 :=
   linear_sum_homogeneous (fun i : TaylorIndex => t (some i))
-private theorem generic_slope_eventually_regular {t : Option TaylorIndex → E}
+theorem generic_slope_eventually_regular {t : Option TaylorIndex → E}
     (ht : AlgebraicIndependent k t) (I : Ideal (MvPolynomial TaylorIndex k)) :
     EventuallyRegularHomogeneous
       (boundaryIdeal (I.map (MvPolynomial.map (algebraMap k E)))) (slope t) := by
@@ -350,7 +350,7 @@ private theorem generic_slope_eventually_regular {t : Option TaylorIndex → E}
     rw [← map_mul]
     exact Ideal.Quotient.eq_zero_iff_mem.mpr hm
   exact hi (hP.isPrime.mem_of_pow_mem _ hpow)
-private theorem degree_drop {p : MvPolynomial σ E} {n : ℕ}
+theorem degree_drop {p : MvPolynomial σ E} {n : ℕ}
     (hp : p.totalDegree ≤ n + 1) (h : homogeneousComponent (n + 1) p = 0) :
     p.totalDegree ≤ n := by
   apply Finset.sup_le
@@ -361,7 +361,7 @@ private theorem degree_drop {p : MvPolynomial σ E} {n : ℕ}
     apply mem_support_iff.mp hd
     simpa [coeff_homogeneousComponent, he] using congrArg (fun q : MvPolynomial σ E => q.coeff d) h
   exact Nat.le_of_lt_succ (lt_of_le_of_ne (show d.degree ≤ n + 1 from hle) hne)
-private theorem strict_filtered {t : Option TaylorIndex → E}
+theorem strict_filtered {t : Option TaylorIndex → E}
     {J : Ideal (MvPolynomial TaylorIndex E)}
     (h : EventuallyRegularHomogeneous (boundaryIdeal J) (slope t)) :
     ∃ N : ℕ, ∀ n ≥ N, ∀ x ∈ quotientDegreeLE J (n + 1),

@@ -98,7 +98,7 @@ theorem digit_eval (F : ℕ[X]) (B n : ℕ) (h : F.eval 1 < B) :
       Nat.div_eq_of_lt h₀, zero_add, ih _ hd, coeff_divX]
 def signWeight (c w : ℕ) : ℕ :=
   if c % 2 = 0 then w else (CJ0.p - 1) * w
-private theorem signWeight_cast (c w : ℕ) :
+theorem signWeight_cast (c w : ℕ) :
     (signWeight c w : ZMod CJ0.p) = (-1)^c * (w : ZMod CJ0.p) := by
   have hp : ((CJ0.p-1 : ℕ) : ZMod CJ0.p) = -1 := by
     rw [Nat.cast_sub (by decide : 1 ≤ CJ0.p), ZMod.natCast_self, Nat.cast_one, zero_sub]
@@ -122,7 +122,7 @@ def factor (left : Bool) (x outA inA : ℕ) : ℕ :=
 theorem eval_piece (left : Bool) (outA inA pos w x : ℕ) :
     (piece left outA inA pos w).eval x = factor left x outA inA * (w * x^pos) := by
   cases left <;> simp [piece, slice, factor] <;> ring
-private theorem fastChoose_eq (n k : ℕ) : CJ1.fastChoose n k = n.choose k :=
+theorem fastChoose_eq (n k : ℕ) : CJ1.fastChoose n k = n.choose k :=
   (Nat.choose_eq_descFactorial_div_factorial n k).symm
 theorem coeff_entry (left : Bool) (q : ℕ) (o v : CJ0.Jet) (w : ℕ)
     (ho : o.q = q) (hv : v.q = q) :
@@ -194,7 +194,7 @@ def pack (left : Bool) (q : ℕ) : List Input → List Bucket
 def value (big : Bool) (f : ℕ → ℕ) : List Bucket → ℕ
   | [] => 0
   | (a,s,v)::bs => f a * (if big then v else s) + value big f bs
-private theorem value_insert (big : Bool) (f : ℕ → ℕ) (a s v : ℕ) (bs : List Bucket) :
+theorem value_insert (big : Bool) (f : ℕ → ℕ) (a s v : ℕ) (bs : List Bucket) :
     value big f (insert a s v bs) = f a * (if big then v else s) + value big f bs := by
   induction bs with
   | nil => simp [insert, value]
@@ -305,7 +305,7 @@ private theorem entryZ_cast (r c : CJ0.Jet) : (entryZ r c : ZMod CJ0.p) = CJ0.bl
 private def oriented (side : Bool) (q u : ℕ) :
     Matrix (Axis (!side) q u) (Axis side q u) (ZMod CJ0.p) :=
   fun r c => (orientedEntry side q u r.1 r.2 c.1 c.2 : ZMod CJ0.p)
-private theorem oriented_rank (side : Bool) (q u : ℕ) :
+theorem oriented_rank (side : Bool) (q u : ℕ) :
     (oriented side q u).rank = (packet q u).rank := by
   cases side
   · have he : oriented false q u = packet q u := by
@@ -321,14 +321,14 @@ private theorem oriented_rank (side : Bool) (q u : ℕ) :
 private def vectors (q u : ℕ) (z : Block) :
     Matrix (Axis z.bank.onRows q u) (Fin z.free.length) (ZMod CJ0.p) :=
   fun c j => (z.coeff j c.1 c.2 : ZMod CJ0.p)
-private theorem sum_axis {α : Type*} [AddCommMonoid α] (side : Bool) (q u : ℕ) (f : ℕ → ℕ → α) :
+theorem sum_axis {α : Type*} [AddCommMonoid α] (side : Bool) (q u : ℕ) (f : ℕ → ℕ → α) :
     (∑ x : Axis side q u, f x.1 x.2) =
       total (fun i => total (f i) (fiber side q u i)) (outer side q) := by
   rw [← Finset.univ_sigma_univ, Finset.sum_sigma, total_eq_sum, ← Fin.sum_univ_eq_sum_range]
   apply Finset.sum_congr rfl
   intro i _
   rw [total_eq_sum, ← Fin.sum_univ_eq_sum_range]
-private theorem mul_eq_dot (q u : ℕ) (z : Block) (r : Axis (!z.bank.onRows) q u)
+theorem mul_eq_dot (q u : ℕ) (z : Block) (r : Axis (!z.bank.onRows) q u)
     (j : Fin z.free.length) :
     (oriented z.bank.onRows q u * vectors q u z) r j = (dot q u z j r.1 r.2 : ZMod CJ0.p) := by
   rw [Matrix.mul_apply, dot, ← sum_axis, Int.cast_sum]
@@ -371,7 +371,7 @@ def inputs (q u : ℕ) (z : Block) (j : ℕ) : List Input :=
     (fun i k => (point z.bank.onRows q u i k, z.coeff j i k))
 def outputs (q u : ℕ) (z : Block) : List CJ0.Jet :=
   axisList (outer (!z.bank.onRows) q) (fiber (!z.bank.onRows) q u) (point (!z.bank.onRows) q u)
-private theorem dot_eq (q u : ℕ) (z : Block) (j i k : ℕ) :
+theorem dot_eq (q u : ℕ) (z : Block) (j i k : ℕ) :
     dot q u z j i k = ((inputs q u z j).map (intTerm z.bank.onRows (point (!z.bank.onRows) q u i k))).sum := by
   rw [inputs, CJ6.Packed.sum_axis, dot]
   congr 1
@@ -450,7 +450,7 @@ private def ramp (s a b n : ℕ) :=
   let t := (b-a+s-1)/s
   let d := n-t
   d*(a+s*t-b) + s*triangle d
-private theorem ramp_eq (s a b n : ℕ) (hs : s=1 ∨ s=2) :
+theorem ramp_eq (s a b n : ℕ) (hs : s=1 ∨ s=2) :
     total (fun i => a+s*i-b) n = ramp s a b n := by
   let t := (b-a+s-1)/s
   have ht₀ : b ≤ a+s*t := by dsimp [t]; rcases hs with rfl|rfl <;> omega
@@ -471,11 +471,11 @@ private theorem ramp_eq (s a b n : ℕ) (hs : s=1 ∨ s=2) :
         rcases hs with rfl|rfl <;> omega
       rw [hd, triangle_succ, Nat.add_mul, one_mul, Nat.mul_add, hv]
       omega
-private def quickRows (q u : ℕ) :=
+def quickRows (q u : ℕ) :=
   let a := u+2*q+1
   let n := q+1
   ramp 1 a 20 n + ramp 2 a (72+n) n - (ramp 2 a (20+n) n + ramp 1 a 72 n)
-private theorem quickRows_eq (q u : ℕ) : rows q u = quickRows q u := by
+theorem quickRows_eq (q u : ℕ) : rows q u = quickRows q u := by
   let a := u+2*q+1
   let n := q+1
   have summation (j : ℕ) (hj : j ≤ n) :
@@ -497,25 +497,25 @@ private theorem quickRows_eq (q u : ℕ) : rows q u = quickRows q u := by
       ramp_eq 1 _ _ _ (Or.inl rfl), ramp_eq 2 _ _ _ (Or.inr rfl)] at eq
   change total (rowLen q u) n = ramp 1 a 20 n + ramp 2 a (72+n) n - (ramp 2 a (20+n) n + ramp 1 a 72 n)
   omega
-private theorem cols_large (q u : ℕ) (hq : 20 ≤ q) : cols q u = cols 20 (min u 20) := by
+theorem cols_large (q u : ℕ) (hq : 20 ≤ q) : cols q u = cols 20 (min u 20) := by
   unfold cols
   rw [min_eq_right hq]
   congr 1
   funext b
   unfold colLen colHi colLo
   omega
-private def colTable (u : ℕ) : ℕ := (0x78777674726f6c68645f5a544e47403830271e140a >>> (8*u)) % 256
-private theorem colTable_eq : ∀ u < 21, cols 20 u = colTable u :=
+def colTable (u : ℕ) : ℕ := (0x78777674726f6c68645f5a544e47403830271e140a >>> (8*u)) % 256
+theorem colTable_eq : ∀ u < 21, cols 20 u = colTable u :=
   (belowSucc (belowSucc (belowSucc (belowSucc (belowSucc (belowSucc (belowSucc (belowSucc (belowSucc (belowSucc (belowSucc (belowSucc (belowSucc (belowSucc (belowSucc (belowSucc (belowSucc (belowSucc (belowSucc (belowSucc (belowSucc (belowZero (P := fun u => cols 20 u = colTable u)) rfl) rfl) rfl) rfl) rfl) rfl) rfl) rfl) rfl) rfl) rfl) rfl) rfl) rfl) rfl) rfl) rfl) rfl) rfl) rfl) rfl)
-private def quickCols (q u : ℕ) := if q < 20 then cols q u else colTable (min u 20)
-private theorem quickCols_eq (q u : ℕ) : cols q u = quickCols q u := by
+def quickCols (q u : ℕ) := if q < 20 then cols q u else colTable (min u 20)
+theorem quickCols_eq (q u : ℕ) : cols q u = quickCols q u := by
   unfold quickCols
   split
   · rfl
   · exact (cols_large _ _ (by omega)).trans (colTable_eq _ (by omega))
-private def quickGrade (q : ℕ) := total (fun u =>
+def quickGrade (q : ℕ) := total (fun u =>
   boundIn q u (min (quickRows q u) (quickCols q u)) (cells q)) (72-q)
-private theorem grade_eq_quick (q : ℕ) : grade q = quickGrade q := by
+theorem grade_eq_quick (q : ℕ) : grade q = quickGrade q := by
   unfold grade quickGrade allowance nominal
   simp only [quickRows_eq, quickCols_eq]
 private theorem step {n s x y : ℕ} (hs : total grade n = s)
@@ -523,77 +523,77 @@ private theorem step {n s x y : ℕ} (hs : total grade n = s)
   rw [total, hs, grade_eq_quick, hx, hy]
 local notation "row!" p "," v => step p (x := v) rfl rfl
 private theorem s0 : total grade 0 = 0 := rfl
-private theorem s1 : total grade 1 = 52 := row! s0,52
-private theorem s2 : total grade 2 = 205 := row! s1,153
-private theorem s3 : total grade 3 = 505 := row! s2,300
-private theorem s4 : total grade 4 = 995 := row! s3,490
-private theorem s5 : total grade 5 = 1715 := row! s4,720
-private theorem s6 : total grade 6 = 2702 := row! s5,987
-private theorem s7 : total grade 7 = 3990 := row! s6,1288
-private theorem s8 : total grade 8 = 5610 := row! s7,1620
-private theorem s9 : total grade 9 = 7590 := row! s8,1980
-private theorem s10 : total grade 10 = 9955 := row! s9,2365
-private theorem s11 : total grade 11 = 12685 := row! s10,2730
-private theorem s12 : total grade 12 = 15760 := row! s11,3075
-private theorem s13 : total grade 13 = 19120 := row! s12,3360
-private theorem s14 : total grade 14 = 22708 := row! s13,3588
-private theorem s15 : total grade 15 = 26470 := row! s14,3762
-private theorem s16 : total grade 16 = 30355 := row! s15,3885
-private theorem s17 : total grade 17 = 34315 := row! s16,3960
-private theorem s18 : total grade 18 = 38305 := row! s17,3990
-private theorem s19 : total grade 19 = 42283 := row! s18,3978
-private theorem s20 : total grade 20 = 46210 := row! s19,3927
-private theorem s21 : total grade 21 = 50050 := row! s20,3840
-private theorem s22 : total grade 22 = 53770 := row! s21,3720
-private theorem s23 : total grade 23 = 57370 := row! s22,3600
-private theorem s24 : total grade 24 = 60850 := row! s23,3480
-private theorem s25 : total grade 25 = 64210 := row! s24,3360
-private theorem s26 : total grade 26 = 67450 := row! s25,3240
-private theorem s27 : total grade 27 = 70570 := row! s26,3120
-private theorem s28 : total grade 28 = 73570 := row! s27,3000
-private theorem s29 : total grade 29 = 76450 := row! s28,2880
-private theorem s30 : total grade 30 = 79210 := row! s29,2760
-private theorem s31 : total grade 31 = 81850 := row! s30,2640
-private theorem s32 : total grade 32 = 84370 := row! s31,2520
-private theorem s33 : total grade 33 = 86770 := row! s32,2400
-private theorem s34 : total grade 34 = 89051 := row! s33,2281
-private theorem s35 : total grade 35 = 91214 := row! s34,2163
-private theorem s36 : total grade 36 = 93260 := row! s35,2046
-private theorem s37 : total grade 37 = 95191 := row! s36,1931
-private theorem s38 : total grade 38 = 97009 := row! s37,1818
-private theorem s39 : total grade 39 = 98716 := row! s38,1707
-private theorem s40 : total grade 40 = 100315 := row! s39,1599
-private theorem s41 : total grade 41 = 101809 := row! s40,1494
-private theorem s42 : total grade 42 = 103201 := row! s41,1392
-private theorem s43 : total grade 43 = 104495 := row! s42,1294
-private theorem s44 : total grade 44 = 105694 := row! s43,1199
-private theorem s45 : total grade 45 = 106802 := row! s44,1108
-private theorem s46 : total grade 46 = 107822 := row! s45,1020
-private theorem s47 : total grade 47 = 108759 := row! s46,937
-private theorem s48 : total grade 48 = 109615 := row! s47,856
-private theorem s49 : total grade 49 = 110395 := row! s48,780
-private theorem s50 : total grade 50 = 111102 := row! s49,707
-private theorem s51 : total grade 51 = 111740 := row! s50,638
-private theorem s52 : total grade 52 = 112312 := row! s51,572
-private theorem s53 : total grade 53 = 112823 := row! s52,511
-private theorem s54 : total grade 54 = 113275 := row! s53,452
-private theorem s55 : total grade 55 = 113673 := row! s54,398
-private theorem s56 : total grade 56 = 114020 := row! s55,347
-private theorem s57 : total grade 57 = 114320 := row! s56,300
-private theorem s58 : total grade 58 = 114576 := row! s57,256
-private theorem s59 : total grade 59 = 114793 := row! s58,217
-private theorem s60 : total grade 60 = 114973 := row! s59,180
-private theorem s61 : total grade 61 = 115121 := row! s60,148
-private theorem s62 : total grade 62 = 115240 := row! s61,119
-private theorem s63 : total grade 63 = 115334 := row! s62,94
-private theorem s64 : total grade 64 = 115406 := row! s63,72
-private theorem s65 : total grade 65 = 115460 := row! s64,54
-private theorem s66 : total grade 66 = 115499 := row! s65,39
-private theorem s67 : total grade 67 = 115526 := row! s66,27
-private theorem s68 : total grade 68 = 115544 := row! s67,18
-private theorem s69 : total grade 69 = 115555 := row! s68,11
-private theorem s70 : total grade 70 = 115561 := row! s69,6
-private theorem s71 : total grade 71 = 115564 := row! s70,3
+theorem s1 : total grade 1 = 52 := row! s0,52
+theorem s2 : total grade 2 = 205 := row! s1,153
+theorem s3 : total grade 3 = 505 := row! s2,300
+theorem s4 : total grade 4 = 995 := row! s3,490
+theorem s5 : total grade 5 = 1715 := row! s4,720
+theorem s6 : total grade 6 = 2702 := row! s5,987
+theorem s7 : total grade 7 = 3990 := row! s6,1288
+theorem s8 : total grade 8 = 5610 := row! s7,1620
+theorem s9 : total grade 9 = 7590 := row! s8,1980
+theorem s10 : total grade 10 = 9955 := row! s9,2365
+theorem s11 : total grade 11 = 12685 := row! s10,2730
+theorem s12 : total grade 12 = 15760 := row! s11,3075
+theorem s13 : total grade 13 = 19120 := row! s12,3360
+theorem s14 : total grade 14 = 22708 := row! s13,3588
+theorem s15 : total grade 15 = 26470 := row! s14,3762
+theorem s16 : total grade 16 = 30355 := row! s15,3885
+theorem s17 : total grade 17 = 34315 := row! s16,3960
+theorem s18 : total grade 18 = 38305 := row! s17,3990
+theorem s19 : total grade 19 = 42283 := row! s18,3978
+theorem s20 : total grade 20 = 46210 := row! s19,3927
+theorem s21 : total grade 21 = 50050 := row! s20,3840
+theorem s22 : total grade 22 = 53770 := row! s21,3720
+theorem s23 : total grade 23 = 57370 := row! s22,3600
+theorem s24 : total grade 24 = 60850 := row! s23,3480
+theorem s25 : total grade 25 = 64210 := row! s24,3360
+theorem s26 : total grade 26 = 67450 := row! s25,3240
+theorem s27 : total grade 27 = 70570 := row! s26,3120
+theorem s28 : total grade 28 = 73570 := row! s27,3000
+theorem s29 : total grade 29 = 76450 := row! s28,2880
+theorem s30 : total grade 30 = 79210 := row! s29,2760
+theorem s31 : total grade 31 = 81850 := row! s30,2640
+theorem s32 : total grade 32 = 84370 := row! s31,2520
+theorem s33 : total grade 33 = 86770 := row! s32,2400
+theorem s34 : total grade 34 = 89051 := row! s33,2281
+theorem s35 : total grade 35 = 91214 := row! s34,2163
+theorem s36 : total grade 36 = 93260 := row! s35,2046
+theorem s37 : total grade 37 = 95191 := row! s36,1931
+theorem s38 : total grade 38 = 97009 := row! s37,1818
+theorem s39 : total grade 39 = 98716 := row! s38,1707
+theorem s40 : total grade 40 = 100315 := row! s39,1599
+theorem s41 : total grade 41 = 101809 := row! s40,1494
+theorem s42 : total grade 42 = 103201 := row! s41,1392
+theorem s43 : total grade 43 = 104495 := row! s42,1294
+theorem s44 : total grade 44 = 105694 := row! s43,1199
+theorem s45 : total grade 45 = 106802 := row! s44,1108
+theorem s46 : total grade 46 = 107822 := row! s45,1020
+theorem s47 : total grade 47 = 108759 := row! s46,937
+theorem s48 : total grade 48 = 109615 := row! s47,856
+theorem s49 : total grade 49 = 110395 := row! s48,780
+theorem s50 : total grade 50 = 111102 := row! s49,707
+theorem s51 : total grade 51 = 111740 := row! s50,638
+theorem s52 : total grade 52 = 112312 := row! s51,572
+theorem s53 : total grade 53 = 112823 := row! s52,511
+theorem s54 : total grade 54 = 113275 := row! s53,452
+theorem s55 : total grade 55 = 113673 := row! s54,398
+theorem s56 : total grade 56 = 114020 := row! s55,347
+theorem s57 : total grade 57 = 114320 := row! s56,300
+theorem s58 : total grade 58 = 114576 := row! s57,256
+theorem s59 : total grade 59 = 114793 := row! s58,217
+theorem s60 : total grade 60 = 114973 := row! s59,180
+theorem s61 : total grade 61 = 115121 := row! s60,148
+theorem s62 : total grade 62 = 115240 := row! s61,119
+theorem s63 : total grade 63 = 115334 := row! s62,94
+theorem s64 : total grade 64 = 115406 := row! s63,72
+theorem s65 : total grade 65 = 115460 := row! s64,54
+theorem s66 : total grade 66 = 115499 := row! s65,39
+theorem s67 : total grade 67 = 115526 := row! s66,27
+theorem s68 : total grade 68 = 115544 := row! s67,18
+theorem s69 : total grade 69 = 115555 := row! s68,11
+theorem s70 : total grade 70 = 115561 := row! s69,6
+theorem s71 : total grade 71 = 115564 := row! s70,3
 theorem budget : total grade 72 = 115565 := row! s71,1
 end CJ6
 end
@@ -646,7 +646,7 @@ def c5 : Prop := Checks rows5
 def c6 : Prop := Checks rows6
 def c7 : Prop := Checks rows7
 def c8 : Prop := Checks rows8
-private theorem rank_bound (q u : ℕ) (xs : List Cell) (h : Checks xs) :
+theorem rank_bound (q u : ℕ) (xs : List Cell) (h : Checks xs) :
     (CJ0.blockMatrix source q ((u : ℤ)-20)).rank ≤ boundIn q u (nominal q u) xs := by
   induction xs with
   | nil => exact (block_rank_le q u).trans (rank_le_nominal q u)
@@ -753,7 +753,7 @@ private theorem fastC_eq (d u : ℤ) : fastC d u = cumulative d u := by
     · simp (disch := omega) only [h₂, ite_false, hden, sub_zero]
 private def fastOld (d lower cap : ℤ) : ℤ :=
   fastC d (3 * cap) - fastC d (min (3 * cap) (lower - 1))
-private theorem fastOld_eq (d lower cap order : ℤ) (hc : 0 ≤ cap) :
+theorem fastOld_eq (d lower cap order : ℤ) (hc : 0 ≤ cap) :
     fastOld d lower cap = oldCount ⟨d, lower, 3 * cap, cap, order⟩ := by
   simp only [fastOld, fastC_eq, oldCount, cappedCount, not_lt.mpr hc, ite_false]
   have hz (u : ℤ) (h : u ≤ 3 * cap) :

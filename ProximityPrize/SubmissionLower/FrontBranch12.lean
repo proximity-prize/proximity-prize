@@ -228,7 +228,7 @@ private theorem eval_atSlope (P : Bivar) (a γ : K) :
     (atSlope P γ).eval a = (P.eval (C a)).eval γ := by
   simpa only [atSlope, Polynomial.coe_evalRingHom, Polynomial.eval_C] using
     (Polynomial.eval_map_apply (Polynomial.evalRingHom γ) (C a) (p := P))
-private theorem atSlope_constant (G : K[X]) (γ : K) :
+theorem atSlope_constant (G : K[X]) (γ : K) :
     atSlope (G.map C) γ = G := by
   rw [atSlope, Polynomial.map_map]
   have h : (Polynomial.evalRingHom γ).comp C = RingHom.id K := by

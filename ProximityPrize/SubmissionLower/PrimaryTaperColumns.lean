@@ -54,11 +54,11 @@ private noncomputable def tuples (A D : ℕ) : Finset vectors :=
   (range 4013).sigma fun q =>
     (cumulativeColumns (gradeCap q) 1650).sigma fun m => range (width A D q m)
 
-private def jetOf (e : SourceExponent) : JetExp := e.some
+def jetOf (e : SourceExponent) : JetExp := e.some
 
-private def jetCount (e : SourceExponent) : ℕ := e.weight jetDegreeWeight
+def jetCount (e : SourceExponent) : ℕ := e.weight jetDegreeWeight
 
-private def fill (q : ℕ) (m : JetExp) : JetExp := m + Finsupp.single 0 (q-gradeCap q)
+def fill (q : ℕ) (m : JetExp) : JetExp := m + Finsupp.single 0 (q-gradeCap q)
 
 private def trim (q : ℕ) (m : JetExp) : JetExp :=
   Finsupp.equivFunOnFinite.symm ![m 0 - (q-gradeCap q),m 1,m 2,m 3]
@@ -82,7 +82,7 @@ private theorem sumDifferentiated (e : SourceExponent) :
     e.weight TaperNormalize.differentiated = e (some 1) + e (some 2) + e (some 3) := by
   simp [Finsupp.weight_eq_sum, Fintype.sum_option, Fin.sum_univ_four, TaperNormalize.differentiated]
 
-private theorem sumTop (e : SourceExponent) : e.weight topWeight = e (some 3) := by
+theorem sumTop (e : SourceExponent) : e.weight topWeight = e (some 3) := by
   simp [Finsupp.weight_eq_sum, Fintype.sum_option, topWeight,
     Pi.single_apply, smul_eq_mul]
 
@@ -111,7 +111,7 @@ private theorem weight_add (D : ℕ) (hD : 3 < D) (e : SourceExponent) :
   have h₃ := hs 3 (e (some 3)) (by omega)
   omega
 
-private theorem eligible_iff (A D : ℕ) (hA : 0 < A) (hD : 3 < D) (e : SourceExponent) :
+theorem eligible_iff (A D : ℕ) (hA : 0 < A) (hD : 3 < D) (e : SourceExponent) :
     Eligible A D e ↔
       e.weight jetDegreeWeight ≤ 4012 ∧ e.weight jetDerivativeWeight ≤ 1650 ∧
       e.weight TaperNormalize.differentiated ≤ cap (e.weight jetDegreeWeight) ∧
@@ -122,27 +122,27 @@ private theorem eligible_iff (A D : ℕ) (hA : 0 < A) (hD : 3 < D) (e : SourceEx
   have ht := sumTop e
   omega
 
-private theorem fill_succ (q : ℕ) (m : JetExp) (i : Fin 4) (hi : i ≠ 0) : fill q m i = m i := by
+theorem fill_succ (q : ℕ) (m : JetExp) (i : Fin 4) (hi : i ≠ 0) : fill q m i = m i := by
   simp [fill, Finsupp.single_eq_of_ne hi]
 
-private theorem fill_zero (q : ℕ) (m : JetExp) : fill q m 0 = m 0 + (q-gradeCap q) := by
+theorem fill_zero (q : ℕ) (m : JetExp) : fill q m 0 = m 0 + (q-gradeCap q) := by
   simp [fill]
 
-private theorem trim_succ (q : ℕ) (m : JetExp) (i : Fin 4) (hi : i ≠ 0) : trim q m i = m i := by
+theorem trim_succ (q : ℕ) (m : JetExp) (i : Fin 4) (hi : i ≠ 0) : trim q m i = m i := by
   fin_cases i <;> simp_all [trim]
 
-private theorem trim_zero (q : ℕ) (m : JetExp) : trim q m 0 = m 0 - (q-gradeCap q) := by
+theorem trim_zero (q : ℕ) (m : JetExp) : trim q m 0 = m 0 - (q-gradeCap q) := by
   simp [trim]
 
-private theorem jetOf_some (e : SourceExponent) (i : Fin 4) : jetOf e i = e (some i) := by
+theorem jetOf_some (e : SourceExponent) (i : Fin 4) : jetOf e i = e (some i) := by
   rfl
 
-private theorem encode_some (u : vectors) (i : Fin 4) : encode u (some i) = fill u.1 u.2.1 i := by
+theorem encode_some (u : vectors) (i : Fin 4) : encode u (some i) = fill u.1 u.2.1 i := by
   simp [encode]
 
-private theorem encode_none (u : vectors) : encode u none = u.2.2 := by simp [encode]
+theorem encode_none (u : vectors) : encode u none = u.2.2 := by simp [encode]
 
-private theorem encode_grade (q : ℕ) (m : JetExp) (x : ℕ)
+theorem encode_grade (q : ℕ) (m : JetExp) (x : ℕ)
     (hm : m.weight gradeWeight = gradeCap q) :
     (encode ⟨q,m,x⟩).weight jetDegreeWeight = q := by
   rw [sumGrade] at hm
@@ -152,12 +152,12 @@ private theorem encode_grade (q : ℕ) (m : JetExp) (x : ℕ)
   have hq : gradeCap q ≤ q := min_le_left _ _
   omega
 
-private theorem encode_index (q : ℕ) (m : JetExp) (x : ℕ) :
+theorem encode_index (q : ℕ) (m : JetExp) (x : ℕ) :
     (encode ⟨q,m,x⟩).weight jetDerivativeWeight = m.weight oldWeight := by
   rw [sumIndex, sumOld, encode_some, encode_some, encode_some,
     fill_succ _ _ 1 (by decide), fill_succ _ _ 2 (by decide), fill_succ _ _ 3 (by decide)]
 
-private theorem decode_mem (A D : ℕ) (hA : 0 < A) (hD : 3 < D) (e : SourceExponent)
+theorem decode_mem (A D : ℕ) (hA : 0 < A) (hD : 3 < D) (e : SourceExponent)
     (he : e ∈ columns A D hD) : decode e ∈ tuples A D := by
   have he' : Eligible A D e := by
     change e ∈ exponents A D
@@ -187,7 +187,7 @@ private theorem decode_mem (A D : ℕ) (hA : 0 < A) (hD : 3 < D) (e : SourceExpo
   · exact K1_13_2_2.mem_cumulativeColumns.mpr ⟨by exact_mod_cast hdeg, by exact_mod_cast hidx.trans_le hj⟩
   · exact mem_range.mpr (by rwa [width, hidx])
 
-private theorem encode_mem (A D : ℕ) (hA : 0 < A) (hD : 3 < D) (u : vectors)
+theorem encode_mem (A D : ℕ) (hA : 0 < A) (hD : 3 < D) (u : vectors)
     (hu : u ∈ tuples A D) : encode u ∈ columns A D hD := by
   obtain ⟨q,m,x⟩ := u
   obtain ⟨hq, hm, hx⟩ := by simpa only [tuples, mem_sigma, mem_range] using hu
@@ -207,7 +207,7 @@ private theorem encode_mem (A D : ℕ) (hA : 0 < A) (hD : 3 < D) (u : vectors)
   change m 1+m 2+m 3 ≤ cap q
   omega
 
-private theorem encode_decode (A D : ℕ) (hA : 0 < A) (hD : 3 < D)
+theorem encode_decode (A D : ℕ) (hA : 0 < A) (hD : 3 < D)
     (e : SourceExponent) (he : e ∈ columns A D hD) : encode (decode e) = e := by
   have he' : Eligible A D e := by
     change e ∈ exponents A D
@@ -231,7 +231,7 @@ private theorem encode_decode (A D : ℕ) (hA : 0 < A) (hD : 3 < D)
       omega
     · rw [fill_succ _ _ _ hi, trim_succ _ _ _ hi, jetOf_some]
 
-private theorem decode_encode (A D : ℕ) (u : vectors) (hu : u ∈ tuples A D) :
+theorem decode_encode (A D : ℕ) (u : vectors) (hu : u ∈ tuples A D) :
     decode (encode u) = u := by
   obtain ⟨q,m,x⟩ := u
   obtain ⟨_, hm, _⟩ := by simpa only [tuples, mem_sigma, mem_range] using hu
@@ -252,7 +252,7 @@ theorem card_columns (A D : ℕ) (hA : 0 < A) (hD : 3 < D) :
     (decode_mem A D hA hD) (encode_mem A D hA hD) (encode_decode A D hA hD) (decode_encode A D)
 
 
-private theorem scaled_grade_columns (hc : CumulativeCount) (A D q : ℕ)
+theorem scaled_grade_columns (hc : CumulativeCount) (A D q : ℕ)
     (hb : D*q ≤ 3000*A) :
     24 * (∑ e ∈ cumulativeColumns (gradeCap q) 1650, (width A D q e : ℤ)) =
       (24 * (3000*(A : ℤ) - (D : ℤ)*q)) * cumulative (gradeCap q) 1650 +
@@ -303,7 +303,7 @@ noncomputable def jetColumns : Finset JetExp := jetExponents_finite.toFinset
 private noncomputable def jetTuples : Finset (Σ _ : ℕ, JetExp) :=
   (range 4013).sigma fun q => cumulativeColumns (gradeCap q) 1650
 
-private theorem jet_mem_source_zero (m : JetExp) :
+theorem jet_mem_source_zero (m : JetExp) :
     (m.optionElim 0) ∈ columns 1000000 4 (by decide) ↔ m ∈ jetExponents := by
   rw [columns, Set.Finite.mem_toFinset]
   change Eligible 1000000 4 (m.optionElim 0) ↔ _

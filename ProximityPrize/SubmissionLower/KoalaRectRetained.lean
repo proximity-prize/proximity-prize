@@ -32,7 +32,7 @@ theorem seedBound_of_axis {f : Equation} {v : ℕ}
   rw [Finsupp.sum_fintype _ _ (by simp), Fin.sum_univ_two]
   omega
 
-private theorem persistent_at_cap {b : Band} {u del} (M : AnchorModel u del)
+theorem persistent_at_cap {b : Band} {u del} (M : AnchorModel u del)
     {Γ} (F : AnchoredFamily M Γ) (hband : InBand b M.overhead)
     {H} (hH : AdjacentChart M F H) {f : Equation} (hf : Reduced f) {v : ℕ}
     (hseed : SeedBound f v) :
@@ -47,7 +47,7 @@ private theorem persistent_at_cap {b : Band} {u del} (M : AnchorModel u del)
   have h2w : 2*w ≤ d := by
     have hh := (height_guards b).2
     dsimp only [d]
-    change finish b ≤ 33385 at hh
+    change finish b ≤ 33405 at hh
     omega
   have hInv := band_invoice hwlo hwhi e v
   have hdp : d < K1.p := hInv.degree.trans (by decide)
@@ -77,7 +77,7 @@ private theorem persistent_at_cap {b : Band} {u del} (M : AnchorModel u del)
   apply fee_of_bound hInv.scale_pos
   exact hcount.trans (add_le_add hsum (mul_le_mul_of_nonneg_left (Nat.cast_le.mpr hcard) (by positivity)))
 
-private theorem small_ordinate {u del Γ} (M : AnchorModel u del) (F : AnchoredFamily M Γ)
+theorem small_ordinate {u del Γ} (M : AnchorModel u del) (F : AnchoredFamily M Γ)
     (hw : InBand .h2367 M.overhead) {H} (hH : AdjacentChart M F H) {f : Equation}
     (hf : Reduced f) (he : f.natDegree ≤ 2) (hseed : SeedBound f (paidCap f.natDegree))
     {T : Finset K1.K} (hT : T ⊆ Γ)

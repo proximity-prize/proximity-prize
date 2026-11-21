@@ -18,7 +18,7 @@ def c2 : Prop :=
     (∀ P ∈ V, RowCaps s P) →
     (∀ P ∈ V, P ≠ 0 → k ≤ P.natDegree) →
     Module.finrank FX V ≤ triangle s.U * shapeSum s (fun _ j => if k ≤ j then 1 else 0)
-private theorem last_cutoffs (d N j : ℕ) (hd : 0 < d) :
+theorem last_cutoffs (d N j : ℕ) (hd : 0 < d) :
     (∑ W ∈ range N, if 1 + (N - 1 - W) / d ≤ j then 1 else 0) ≤ d * j := by
   have hfilter : (range N).filter (fun W => 1 + (N - 1 - W) / d ≤ j) =
       Ico (N - d * j) N := by
@@ -31,7 +31,7 @@ private theorem last_cutoffs (d N j : ℕ) (hd : 0 < d) :
     · simp [hW]
   rw [← card_filter, hfilter, Nat.card_Ico]
   omega
-private theorem sum_rank_le (rankBound : c2) (rows : Banks) (s : Shape) (h N : ℕ)
+theorem sum_rank_le (rankBound : c2) (rows : Banks) (s : Shape) (h N : ℕ)
     (hh : 0 < h) (hcaps : ∀ W, ∀ P ∈ rows s W, RowCaps s P)
     (hpower : ∀ W < N, ∀ P ∈ rows s W, P ≠ 0 →
       1 + (N - 1 - W) / (2 * h) ≤ P.natDegree) :
@@ -89,14 +89,14 @@ private theorem bank_nonzero {u del} {M : AnchorModel u del} {Γ}
         (hz P (src.nested s hs s hs rfl rfl rfl le_rfl W _ hle hP))
     rw [hb, finrank_bot]
   omega
-private theorem stage_shapes {w : ℤ} (hw : w ≤ 3554) {t : Stage} (ht : t ∈ stages) :
+theorem stage_shapes {w : ℤ} (hw : w ≤ 3554) {t : Stage} (ht : t ∈ stages) :
     t.cheap ∈ scheduled w ∧ t.layered ∈ scheduled w := by
   have he : scheduled w = stages.flatMap (fun s => [s.cheap, s.layered]) ++
       [full, terminalShape w] := by rw [scheduled, ite_eq_left hw]; rfl
   rw [he]
   exact ⟨List.mem_append_left _ (List.mem_flatMap.mpr ⟨t, ht, by simp⟩),
     List.mem_append_left _ (List.mem_flatMap.mpr ⟨t, ht, by simp⟩)⟩
-private theorem split_row_degree_from_shifts (power : c1) (h N W : ℕ) (hh : 0 < h)
+theorem split_row_degree_from_shifts (power : c1) (h N W : ℕ) (hh : 0 < h)
     (hW : W < N) {G P R : Jet} (hi : Irreducible G) (hv : 0 < G.natDegree)
     (hm : UsesSeed G) (hP : P ≠ 0) (hdiv : G ∣ P) {U : ℕ} (hp : U < p)
     (hseed : ∀ j i, ((P.coeff j).coeff i).totalDegree ≤ U) (hnR : R ≠ 0)

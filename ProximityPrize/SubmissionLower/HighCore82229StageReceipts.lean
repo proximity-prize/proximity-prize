@@ -29,60 +29,51 @@ private theorem certificates (b : Band) : Checks (start b) (stages b) := by
   cases b with
   | h2367 =>
     rw [stages]
-    refine cons (bank! 106,158255,0x256fa49ff0,0x89a58cff50) (bank! 561,346706,0xf1f0ba9f974,0x44b35a545d1b2c) ?_
-    refine cons (bank! 113,152103,0x128ff4b4c,0xe3578b0d20) (bank! 594,412297,0x5a3342771d38,0x69235a825fcac0) ?_
-    refine cons (bank! 109,127226,0xaf9cf1370,0xfffa95ee38) (bank! 541,268811,0x5919b98db2f0,0x6b0c5f90f85448) ?_
-    refine cons (bank! 126,93309,0x296e33c1b8,0x13ad68cc478) (bank! 614,352059,0x2dcbf660e4b8,0x9de48bba2aa2f4) ?_
-    refine cons (bank! 137,112034,0x5c654646e4,0x1b50ba34324) (bank! 681,410430,0x127c0c76b31f4,0xe85066cd3a81b8) ?_
-    refine cons (bank! 152,155636,0xb048016ae0,0x24f35d4f5f0) (bank! 737,522887,0xacc631efbe70,0x14b1b90b4791678) ?_
-    refine cons (bank! 162,123163,0x86f4f1bd50,0x32fcd259ce0) (bank! 880,514176,0xd908cc9466b0,0x200b5ef9c25bb08) ?_
-    refine cons (bank! 174,188378,0xbdecfe4880,0x5e18a94f360) (bank! 973,588384,0x4d8a9ac0a8090,0x38d0da7b5cc4748) ?_
-    refine cons (bank! 189,231980,0xeddbc350a0,0x775fb7d19f0) (bank! 1151,752368,0x1af2f81e8e2cc,0x5c3855260d9e884) ?_
-    refine cons (bank! 214,238401,0x234a850a900,0xf66c9a30e00) (bank! 1232,747237,0x4ea88dac7dd2c,0xa5209ade6ab6e7c) ?_
-    refine cons (bank! 234,168747,0x3d99ce517f8,0x1fb4af464bf0) (bank! 1717,1146901,0x2c830f80e4f3d8,0x1fb1a7538e3ef184) ?_
-    refine cons (bank! 245,206304,0x10f5aa2ff68,0xebdea59a070) (bank! 1304,835193,0x5d2ea82457e0,0xb7c6779c89d7a98) ?_
-    refine cons (bank! 269,137987,0x2cd4a148768,0x607ec2fc37c0) (bank! 1682,1001864,0x1ae5623de9b9bc,0x317ffdea95e910a0) ?_
-    refine cons (bank! 301,355835,0xae04bcc5a18,0x2275d2023540) (bank! 1294,715409,0x27d58fbb4bab0,0x1562222435ed6e20) ?_
-    refine cons (bank! 393,364721,0x330f565feb4,0x5d82de78fe00) (bank! 1831,1197945,0xb7d7a24941328,0x3ff8f154c78afe60) ?_
-    refine cons (bank! 308,136812,0xcd52f5aaa80,0xa4cc163a86f0) (bank! 2091,1412704,0x62a90007cb04f8,0x70864c327dbc14e4) ?_
-    refine cons (bank! 381,252426,0x1a74ad6df818,0xf82a64e272e0) (bank! 2173,1320638,0x5daad43b3869dc,0xb6e54543ceb86458) ?_
-    refine cons (bank! 416,216958,0x15e2b48d7ac0,0x24db6f48d8300) (bank! 2472,1538930,0x40071b7713eef0,0x17064cc42ce12d024) ?_
-    refine cons (bank! 372,307849,0x16f56f1397d0,0x3873a74985320) (bank! 1970,1030342,0x16c69e4e99f984,0x156767bc26a80af38) ?_
-    refine cons (bank! 415,128096,0x15d9eae456f0,0x10029aafd868db8) (bank! 2385,978849,0x5d858dba03acf4,0x37e4a9cf278dd86c4) ?_
-    refine cons (bank! 553,333110,0x2334bcae80c8,0x74a3f5fdabde0) (bank! 3233,1782556,0x1e717a941d4bfe0,0x5431d3e8e7c72f600) ?_
-    refine cons (bank! 408,124832,0x9bd2860b1e0,0x100f5cd974dca4f0) (bank! 2088,958714,0x1275ba9bb4dc0c,0xbce04840a862432a4) ?_
-    refine cons (bank! 693,446481,0x795f338443b0,0xbf3737f25bda0) (bank! 3774,2018411,0x2b9bd0e272abebc,0xa747f41c2dab644c4) ?_
-    refine cons (bank! 845,577987,0x33a8ed6ba3d8,0x2ec55c30e38438) (bank! 5020,2900303,0xc557403893cdc0,0x28e4cd3ff666e93800) ?_
-    refine cons (bank! 912,429796,0x3e8a69aa16a30,0x5d8cd972b32e0a38) (bank! 4900,267958,0xabdeb898cbd7f98,0x1ae147a2f519618b9fc) ?_
-    refine cons (bank! 1107,730952,0x36767ee3da4a8,0xb7038b76dde930) (bank! 6456,3040345,0x2435dd746a636d28,0x9a860d4302d1399474) ?_
+    refine cons (bank! 106,160015,0xcc276c00,0x817c005c00) (bank! 607,373141,0x9a3b29b4c61c,0x4abc20a2df071c) ?_
+    refine cons (bank! 116,127664,0x2f55441600,0xc705d07580) (bank! 605,445866,0xa857dda6e40,0x6758b859d649a4) ?_
+    refine cons (bank! 128,197737,0x58871015d0,0x121b6544728) (bank! 705,524970,0xeed426e24a10,0xaaf0d5b804c7a0) ?_
+    refine cons (bank! 138,165386,0x42fbf34b40,0x19db5d8ce40) (bank! 684,395499,0x38c2284658e0,0xe0ec94e67e9428) ?_
+    refine cons (bank! 149,184247,0x2cb55a1860,0x23ed1b06280) (bank! 730,536423,0x86f6a9cecf58,0x14103bffe0a5254) ?_
+    refine cons (bank! 162,125627,0x88e7d52288,0x3133e6881d0) (bank! 889,501169,0x34ad2f74e210,0x20247faf4ff9fa0) ?_
+    refine cons (bank! 176,113463,0xd3bb021ca0,0x59a6bd6fb28) (bank! 950,685897,0x1b879d68c4adc,0x3646a2b7db04e20) ?_
+    refine cons (bank! 198,146429,0x191b4f44728,0xcd87d9a8f70) (bank! 1199,701374,0xacc40e9c13df0,0x85df8eaf07d41e8) ?_
+    refine cons (bank! 238,187418,0x32919ac2960,0x487d45b20618) (bank! 1408,812963,0x10a8e97119d890,0x1a47bfb8f005dc08) ?_
+    refine cons (bank! 248,188359,0x2b481c321a0,0xc61a0a4f698) (bank! 1099,746207,0x39e29e7f98834,0x75dd5c4146cfd64) ?_
+    refine cons (bank! 348,404564,0xfb8b7e00ec4,0x4d797ee87d54) (bank! 1810,1103110,0x12556cde19e080,0x3e593433f7cce010) ?_
+    refine cons (bank! 363,216147,0xf3a04a931bc,0x31a884487cb80) (bank! 2029,1158568,0x4b04ba94d68460,0x114e45c394c335370) ?_
+    refine cons (bank! 479,404535,0x4d64fddb5288,0x15b16d53d878c) (bank! 2228,1331044,0x754f3e1f310fe8,0xf93c852154215fe4) ?_
+    refine cons (bank! 523,437175,0x190d174b4388,0x56abfb2dddd38) (bank! 3129,1482915,0x1fdfd30c1d5d718,0x429c9767726ea1ae0) ?_
+    refine cons (bank! 832,651929,0x1be4fa4200a40,0x2896f4e85d43e0) (bank! 4839,1687203,0x4b4f70088eeaeb0,0x23be30b6aae329e2d8) ?_
+    refine cons (bank! 693,355583,0x215794bc0af8,0x115ff25b8666360) (bank! 3832,1427914,0xc4e6ebf3ac883c,0x2c36e18e81cf7f7208) ?_
+    refine cons (bank! 1127,684674,0x5004109df4540,0xb886fa66608840) (bank! 6624,1099991,0xfa685466b6e5720,0xa91dedbec540a3f6a0) ?_
     exact nil
   | h2395 =>
     rw [stages]
-    refine cons (bank! 102,142165,0x3e283719a30,0x5999f7d6b0) (bank! 489,430010,0x48e6ce55b9e528,0x137b6c3f207f50) ?_
-    refine cons (bank! 109,136448,0x5de81280d80,0x8e9a96ee30) (bank! 479,323393,0x6a0b5a5ba0d768,0x1bae0b12e63dc4) ?_
-    refine cons (bank! 120,155956,0x822d4702664,0xcf6f37d484) (bank! 535,440461,0x988cdfb891fd04,0x2abb0b26091ba0) ?_
-    refine cons (bank! 131,175464,0xaf56443af30,0x127cffca880) (bank! 571,354059,0xd455c34cfc2b70,0x3e855e95b63340) ?_
-    refine cons (bank! 142,194972,0xe77e2a18000,0x19a9cb9f200) (bank! 608,447572,0x11e50bf9329b1ec,0x59507662186980) ?_
-    refine cons (bank! 151,111910,0x132419edc3b8,0x23880d56168) (bank! 725,505840,0x182add152b31a10,0x8a2ce80e5bae60) ?_
-    refine cons (bank! 150,235658,0x1d88e0415618,0x3691e9ca5f0) (bank! 791,647298,0x200dd0a12de49fc,0xc4c1d0d016964c) ?_
-    refine cons (bank! 198,159000,0x3cba387fa6f8,0x8820d397760) (bank! 966,658180,0x50040b8f2157bd8,0x2365d40b6fb8d44) ?_
-    refine cons (bank! 227,177653,0x10fe6ca6469d0,0x29fec3c97b20) (bank! 1181,860263,0xebb614ad16887c8,0x776efa8a72ccbb0) ?_
-    refine cons (bank! 307,312559,0xd548353dc90c,0x28051be8e84c) (bank! 1321,885084,0x1468e937c881a620,0xb39cd8e604cb644) ?_
-    refine cons (bank! 295,207592,0x31b9d6018cdd0,0x97ca6bb4f6e0) (bank! 1547,1111557,0x2b8d2af665ca4b20,0x1c33f35097fac490) ?_
-    refine cons (bank! 363,237531,0x765e377697dc0,0x1a19c8c7c6d50) (bank! 2029,1426001,0x73389fe7643b879c,0x567176a39ba59b20) ?_
-    refine cons (bank! 342,220508,0x2cb73fdfdd91240,0x9a16da5d0c8f30) (bank! 1692,1164068,0xf459230dba92bec0,0x9e0a3eb8491ddec0) ?_
-    refine cons (bank! 387,340061,0x399ac4c3dd53930,0xdda953150a8e98) (bank! 1720,1002806,0x57925e7017a4839e0,0x33b8220d953a756a8) ?_
-    refine cons (bank! 741,624782,0x155bcdf1cb3f88,0x8ee01e25ec948) (bank! 3123,2164422,0x2ec4a87ada09fbfa0,0x2c775efc98ca2faac) ?_
-    refine cons (bank! 884,630123,0x5daa5e2f6091c0,0x2e44242c81f940) (bank! 4818,3346368,0x10553bfb2e491bdc18,0x12e4691aefe48bf028) ?_
-    refine cons (bank! 1073,874650,0xc9523a629d3880,0x74ced5af83e780) (bank! 5783,3960610,0x268cee171771ccde40,0x2fd5eabf77c0407820) ?_
-    refine cons (bank! 1444,1199270,0x261a3228f49a1c8,0x1c1f056956403b0) (bank! 7609,5087635,0x8ead34dee91ebc4510,0xbd1985ee14ee72ee98) ?_
+    refine cons (bank! 102,143960,0x1c131c87f0,0x4ff08e32e0) (bank! 489,438715,0x18cda1c728a0,0x122b0fd274eb08) ?_
+    refine cons (bank! 109,138318,0x351efc12d0,0x7f4d1e7fc8) (bank! 479,331893,0x3446a6b47500,0x1956c1a247b700) ?_
+    refine cons (bank! 120,157971,0x438ec770e0,0xbb6d859810) (bank! 535,449886,0x45c757c838a0,0x278c2607b42e84) ?_
+    refine cons (bank! 131,177624,0x9d3c52b80,0x10dcabfb500) (bank! 571,364099,0x2ce1120a21e4,0x3a0a8b178d1b34) ?_
+    refine cons (bank! 142,197277,0x6f4cf713c0,0x17a21d4fd60) (bank! 608,458217,0x89115c333c30,0x5335bbd20e4c28) ?_
+    refine cons (bank! 151,114330,0x623420ca90,0x20cf93e1bb0) (bank! 725,518520,0x123adfc8b9084,0x83a9c2878933b0) ?_
+    refine cons (bank! 150,238003,0x5c924c5524,0x3174c2451d8) (bank! 791,661098,0x3941b04cf1d8,0xbc902913ab43b4) ?_
+    refine cons (bank! 198,162005,0x23a56c06fd0,0x7fe5e0c71c0) (bank! 966,674920,0xbbefe3329428,0x22221759f65b6b0) ?_
+    refine cons (bank! 227,180873,0x8eca774c88,0x2690fa52f0b0) (bank! 1181,880528,0x7a871aa02d610,0x737e37dbd44d078) ?_
+    refine cons (bank! 307,317099,0x3d7f12c04c0,0x26c1c43f755c) (bank! 1321,907764,0x10fe81297cf9f0,0xaeb23123f443af8) ?_
+    refine cons (bank! 295,211622,0x119f5a80980,0x8e1ef53ad490) (bank! 1547,1137957,0x7c897b865e600,0x1b8d4be32e0f7920) ?_
+    refine cons (bank! 363,242371,0xf3d0d4311b8,0x18bca3d97bb90) (bank! 2029,1460621,0x5200a2953e4a14,0x5506331bec8780a0) ?_
+    refine cons (bank! 342,224773,0x15307d45940,0x5a64714ffd1000) (bank! 1692,1192468,0x216c9b2ec0bd90,0x974fe4df46602990) ?_
+    refine cons (bank! 387,344821,0x103738d41128,0x91395efe28d630) (bank! 1720,1031431,0x1474c7b83ab9e4,0x2e7b205192ab77020) ?_
+    refine cons (bank! 741,635242,0x1159bb164c170,0x8d69a025cfef8) (bank! 3123,2217477,0xe4c3ff5ee1ccb0,0x2bfe52d1b60bd73e4) ?_
+    refine cons (bank! 884,641778,0x27f412dd14d78,0x2dba155877dff8) (bank! 4818,3428328,0x3ec9350637262c0,0x12c65c7e468dc35ac0) ?_
+    refine cons (bank! 1073,888710,0x38c2a87f22600,0x73c1b09afc7300) (bank! 5783,4058860,0xfc69bff41941e7c,0x2f95bd7dcad9f6274c) ?_
+    refine cons (bank! 1444,1218175,0xd0e7569de28b0,0x1bf54ac48278960) (bank! 7609,5216765,0xfe8f5052ad4bd80,0xbc467c310227267500) ?_
     exact nil
   | h7773 =>
     rw [stages]
-    refine cons (bank! 16,130405,0x70bc3900,0x2732ca0) (bank! 29,147468,0x403f3acb8,0x1ed6b828) ?_
-    refine cons (bank! 30,172831,0x24fd10298,0xdcaf4a8) (bank! 54,273530,0x1b27516900,0x12e56bc00) ?_
-    refine cons (bank! 48,246372,0xa5f89b20c,0x5f3406e4) (bank! 90,467574,0xa8185e8600,0xa785fbb80) ?_
-    refine cons (bank! 76,315570,0x366bd1f578,0x30ef7df80) (bank! 142,637471,0x3a585060b90,0x62bc51df10) ?_
+    refine cons (bank! 16,130295,0x18313410,0x25e61b0) (bank! 29,147268,0xa590fe10,0x1e94b8a0) ?_
+    refine cons (bank! 30,172621,0xfcffec10,0xdcaf4a8) (bank! 54,273150,0x6c49368b4,0x13219a0d0) ?_
+    refine cons (bank! 48,246032,0x4de284960,0x603dd280) (bank! 90,466934,0xe3b48fe00,0xaa53368c0) ?_
+    refine cons (bank! 76,315030,0x7faa66588,0x319dbdce8) (bank! 142,636461,0x5fd8186a0,0x64fe02fbb0) ?_
     exact nil
 
 theorem stage_bounds (b : Band) {s : Stage} (hs : s ∈ stages b)

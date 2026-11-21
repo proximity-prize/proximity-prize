@@ -10,32 +10,6 @@ open Polynomial Finset CoreDefinitions Code LinearCode
 open scoped BigOperators
 local instance decidableMCABridge (P : Prop) : Decidable P := Classical.propDecidable P
 variable {F ι : Type} [Field F] [Fintype F] [Fintype ι] [DecidableEq ι]
-theorem isMCA_implies_decodable (x : ι ↪ F) (u : Fin 2 → ι → F)
-    (k t : ℕ) [NeZero k] (δ : ℝ)
-    (hthreshold : ∀ T : Finset ι,
-      (Fintype.card ι : ℝ) * (1 - δ) ≤ T.card → Fintype.card ι - t ≤ T.card)
-    (γ : F) (hmca : IsMCA (AffineLineGenerator F) (ReedSolomon.code x k) γ u δ) :
-    Decodable x (u 0) (u 1) k t γ := by
-  classical
-  obtain ⟨T, hT, hcomb, _⟩ := hmca
-  rw [LinearCode.mem_projectedCodeSubmod_iff] at hcomb
-  obtain ⟨c, hc, hproj⟩ := hcomb
-  obtain ⟨P, hP, heval⟩ := ReedSolomon.mem_code_iff_eval_of_ne_zero.mp hc
-  refine ⟨P, Polynomial.degree_le_natDegree.trans_lt (by exact_mod_cast hP), ?_⟩
-  have hagree : ∀ i ∈ T, u 0 i + γ * u 1 i = P.eval (x i) := by
-    intro i hi
-    have hh := congrFun hproj ⟨i, hi⟩
-    simpa [AffineLineGenerator, Fin.sum_univ_two, LinearCode.projectedWord,
-      heval i, smul_eq_mul, mul_comm] using hh
-  have hs : Finset.univ.filter (fun i => u 0 i + γ * u 1 i ≠ P.eval (x i)) ⊆
-      Finset.univ \ T := by
-    intro i hi
-    have hne := (Finset.mem_filter.mp hi).2
-    exact Finset.mem_sdiff.mpr ⟨Finset.mem_univ _, fun hit => hne (hagree i hit)⟩
-  have hcard := Finset.card_le_card hs
-  rw [Finset.card_sdiff_of_subset (Finset.subset_univ T), Finset.card_univ] at hcard
-  have := hthreshold T hT
-  omega
 end
 end FrobeniusLocator
 end
@@ -1251,88 +1225,6 @@ theorem mem_recurrenceSpace (s : β → ℕ → F) (m t : ℕ) (P : F[X]) :
       ∀ b j, j<m-t → Principal.recurrenceEval (s b) j P=0 := by
   simp only [recurrenceSpace,Submodule.mem_inf,Polynomial.mem_degreeLT,Submodule.mem_iInf,
     LinearMap.mem_ker,Fin.forall_iff]
-theorem recurrence_product_zero (s : ℕ → F) (f Q : F[X]) (j N : ℕ)
-    (hQ : Q.degree<N) (hrec : ∀ l<N, Principal.recurrenceEval s (j+l) f=0) :
-    Principal.recurrenceEval s j (f*Q)=0 := by
-  by_cases hq : Q=0
-  · simp [hq]
-  have hn := (natDegree_lt_iff_degree_lt hq).mpr hQ
-  conv_lhs => rw [Q.as_sum_range' N hn,Finset.mul_sum,map_sum]
-  apply Finset.sum_eq_zero
-  intro l hl
-  have hpoly : f*Polynomial.monomial l (Q.coeff l)=Q.coeff l • (f*(Polynomial.X : F[X])^l) := by
-    rw [← Polynomial.C_mul_X_pow_eq_monomial,Polynomial.smul_eq_C_mul]
-    ring
-  rw [hpoly,map_smul,Principal.recurrenceEval_shift,hrec l (Finset.mem_range.mp hl),smul_zero]
-def NonprincipalSpace (K : Submodule F F[X]) (t : ℕ) : Prop :=
-  ¬ ∃ G : F[X], G≠0 ∧ G.natDegree≤t ∧
-    K=(Polynomial.degreeLT F (t-G.natDegree+1)).map (polynomialMul G)
-theorem nonprincipal_two_generator_gcd_bound (s : β → ℕ → F) (m t : ℕ)
-    (htm : t≤m) (f g : F[X]) (hf : f≠0) (hg : g≠0)
-    (hfd : f.natDegree=t) (hgd : g.natDegree≤t)
-    (hspan : recurrenceSpace s m t=Submodule.span F ({f,g} : Set F[X]))
-    (hnon : NonprincipalSpace (recurrenceSpace s m t) t) :
-    (GCDMonoid.gcd f g).natDegree+m+1≤2*t := by
-  let G := GCDMonoid.gcd f g
-  let d := G.natDegree
-  have hG : G≠0 := gcd_ne_zero_of_right hg
-  have hd : d≤t := by
-    have hh := (gcd_reduction_degrees f g hf hg).1
-    simpa only [hfd,max_eq_left hgd] using hh
-  have hfK : f∈recurrenceSpace s m t := by rw [hspan]; exact Submodule.subset_span (by simp)
-  have hgK : g∈recurrenceSpace s m t := by rw [hspan]; exact Submodule.subset_span (by simp)
-  have hfm := (mem_recurrenceSpace s m t f).mp hfK
-  have hgm := (mem_recurrenceSpace s m t g).mp hgK
-  change d+m+1≤2*t
-  by_contra hbound
-  have hlen : t-d≤m-t := by omega
-  have hGsmall : ∀ b j, j<m-d → Principal.recurrenceEval (s b) j G=0 := by
-    intro b j hj
-    have hrep : ∃ A B : F[X], A.degree<m-t ∧ B.degree<m-t ∧
-        G*(Polynomial.X : F[X])^j=f*A+g*B := by
-      apply (gcd_span_iff f g _ (m-t) hf hg (by simpa only [hfd,max_eq_left hgd] using hlen)).mpr
-      refine ⟨(Polynomial.X : F[X])^j,?_,rfl⟩
-      have he : (m-t)+(max f.natDegree g.natDegree-G.natDegree)=m-d := by rw [hfd,max_eq_left hgd]; omega
-      rw [he]
-      exact (degree_X_pow_le j).trans_lt (by exact_mod_cast hj)
-    obtain ⟨A,B,hA,hB,heq⟩ := hrep
-    have hzA := recurrence_product_zero (s b) f A 0 (m-t) hA (by simpa using hfm.2 b)
-    have hzB := recurrence_product_zero (s b) g B 0 (m-t) hB (by simpa using hgm.2 b)
-    have hz : Principal.recurrenceEval (s b) 0 (G*(Polynomial.X : F[X])^j)=0 := by
-      rw [heq,map_add,hzA,hzB,add_zero]
-    simpa only [Principal.recurrenceEval_shift,zero_add] using hz
-  apply hnon
-  refine ⟨G,hG,hd,le_antisymm ?_ ?_⟩
-  · rw [hspan]
-    apply Submodule.span_le.mpr
-    intro P hP
-    have hPcase : P=f ∨ P=g := by simpa only [Set.mem_insert_iff,Set.mem_singleton_iff] using hP
-    rcases hPcase with hPf | hPg
-    · subst P
-      refine ⟨f/G,?_,(EuclideanDomain.mul_div_cancel' hG (gcd_dvd_left f g))⟩
-      have hfn := natDegree_mul hG (left_div_gcd_ne_zero hf (q := g))
-      rw [EuclideanDomain.mul_div_cancel' hG (gcd_dvd_left f g),hfd] at hfn
-      change t=d+(f/G).natDegree at hfn
-      exact Polynomial.mem_degreeLT.mpr (degree_le_natDegree.trans_lt (by exact_mod_cast (show (f/G).natDegree<t-d+1 by omega)))
-    · subst P
-      refine ⟨g/G,?_,(EuclideanDomain.mul_div_cancel' hG (gcd_dvd_right f g))⟩
-      have hgn := natDegree_mul hG (right_div_gcd_ne_zero hg (p := f))
-      rw [EuclideanDomain.mul_div_cancel' hG (gcd_dvd_right f g)] at hgn
-      change g.natDegree=d+(g/G).natDegree at hgn
-      exact Polynomial.mem_degreeLT.mpr (degree_le_natDegree.trans_lt (by exact_mod_cast (show (g/G).natDegree<t-d+1 by omega)))
-  · rintro _ ⟨Q,hQ,rfl⟩
-    apply (mem_recurrenceSpace s m t _).mpr
-    refine ⟨?_,?_⟩
-    · have hmul := degree_mul_lt_add G Q d (t-d+1) (by rfl) (Polynomial.mem_degreeLT.mp hQ)
-      have hcast : ((t-d+1 : ℕ) : WithBot ℕ)+(d : WithBot ℕ)=((t+1 : ℕ) : WithBot ℕ) := by
-        norm_cast
-        omega
-      rw [hcast] at hmul
-      exact hmul
-    · intro b j hj
-      apply recurrence_product_zero (s b) G Q j (t-d+1) (Polynomial.mem_degreeLT.mp hQ)
-      intro l hl
-      exact hGsmall b (j+l) (by omega)
 end
 end FrobeniusLocator.Strata
 end
@@ -1387,47 +1279,6 @@ theorem recurrenceSpace_finrank (s : β → ℕ → F) (m t : ℕ) :
     Module.finrank F (recurrenceSpace s m t)=
       Module.finrank F (LinearMap.ker (recurrenceMatrixAll s m t).mulVecLin) :=
   (kernelPolynomialEquiv s m t).finrank_eq.symm
-theorem dimension_two_basis (K : Submodule F F[X])
-    (hK : Module.finrank F K=2) (f : F[X]) (hfK : f∈K) (hf : f≠0) :
-    ∃ g : F[X], g∈K ∧ g≠0 ∧ K=Submodule.span F ({f,g} : Set F[X]) := by
-  letI : FiniteDimensional F K := FiniteDimensional.of_finrank_pos (by omega)
-  let fK : K := ⟨f,hfK⟩
-  have hfK0 : fK≠0 := by intro hz; exact hf (congrArg Subtype.val hz)
-  have hline : Module.finrank F (F ∙ fK)=1 := finrank_span_singleton hfK0
-  obtain ⟨gK,hgK⟩ : ∃ gK : K, gK∉F ∙ fK := by
-    by_contra h
-    push Not at h
-    have heq : (F ∙ fK : Submodule F K)=⊤ := by
-      exact top_unique (fun v _ => h v)
-    rw [heq,finrank_top,hK] at hline
-    omega
-  have hgK0 : gK≠0 := by intro hz; exact hgK (hz ▸ Submodule.zero_mem _)
-  have hdim : Module.finrank F ((F ∙ fK) ⊔ F ∙ gK : Submodule F K)=2 := by
-    rw [Submodule.finrank_sup_span_singleton hgK,hline]
-  have htop : ((F ∙ fK) ⊔ F ∙ gK : Submodule F K)=⊤ :=
-    Submodule.eq_top_of_finrank_eq (hdim.trans hK.symm)
-  refine ⟨gK.val,gK.property,?_,?_⟩
-  · intro hz
-    apply hgK0
-    exact Subtype.ext hz
-  · have hm := congrArg (Submodule.map K.subtype) htop
-    rw [Submodule.map_sup,Submodule.map_span,Submodule.map_span,Submodule.map_top,
-      Submodule.range_subtype] at hm
-    have hsetf : K.subtype '' ({fK} : Set K)=({f} : Set F[X]) := by ext P; simp [fK]
-    have hsetg : K.subtype '' ({gK} : Set K)=({gK.val} : Set F[X]) := by ext P; simp
-    rw [hsetf,hsetg,← Submodule.span_union] at hm
-    simpa only [Set.singleton_union] using hm.symm
-theorem dimension_two_gcd_bound (s : β → ℕ → F) (m t : ℕ) (htm : t≤m)
-    (hnull : Module.finrank F (LinearMap.ker (recurrenceMatrixAll s m t).mulVecLin)=2)
-    (hnon : NonprincipalSpace (recurrenceSpace s m t) t)
-    (f : F[X]) (hf : f∈recurrenceSpace s m t) (hf0 : f≠0) (hfd : f.natDegree=t) :
-    ∃ g : F[X], g∈recurrenceSpace s m t ∧ g≠0 ∧
-      recurrenceSpace s m t=Submodule.span F ({f,g} : Set F[X]) ∧
-      (GCDMonoid.gcd f g).natDegree+m+1≤2*t := by
-  obtain ⟨g,hg,hg0,hspan⟩ := dimension_two_basis (recurrenceSpace s m t)
-    ((recurrenceSpace_finrank s m t).trans hnull) f hf hf0
-  have hgd := ((recurrenceSpace_matrix s m t g).mp hg).1
-  exact ⟨g,hg,hg0,hspan,nonprincipal_two_generator_gcd_bound s m t htm f g hf0 hg0 hfd hgd hspan hnon⟩
 end
 end FrobeniusLocator.Strata
 end
@@ -1439,55 +1290,6 @@ noncomputable section
 open Polynomial Finset Matrix
 open scoped BigOperators
 variable {F ι : Type} [Field F] [DecidableEq F] [Fintype ι] [DecidableEq ι]
-theorem punctured_weight (x : ι → F) (hx : Function.Injective x) (a : ι)
-    (i : {i // i≠a}) :
-    weight x i.val*(x i.val-x a)=weight (fun j : {j // j≠a} => x j.val) i := by
-  let T := ((Finset.univ : Finset ι).erase i.val).erase a
-  have hprod : (∏ j∈((Finset.univ : Finset {j // j≠a}).erase i), (x i.val-x j.val))=
-      ∏ j∈T, (x i.val-x j) := by
-    apply Finset.prod_bij (fun j _ => j.val)
-    · intro j hj
-      simp only [T,Finset.mem_erase,Finset.mem_univ,true_and]
-      exact ⟨j.property,⟨by intro heq; exact (Finset.mem_erase.mp hj).1 (Subtype.ext heq),trivial⟩⟩
-    · intro j hj k hk heq
-      exact Subtype.ext heq
-    · intro j hj
-      have hja : j≠a := (Finset.mem_erase.mp hj).1
-      have hji : j≠i.val := (Finset.mem_erase.mp (Finset.mem_erase.mp hj).2).1
-      refine ⟨⟨j,hja⟩,Finset.mem_erase.mpr ⟨?_,Finset.mem_univ _⟩,rfl⟩
-      intro heq
-      exact hji (congrArg Subtype.val heq)
-    · intro j hj
-      rfl
-  have ha : a∈(Finset.univ : Finset ι).erase i.val :=
-    Finset.mem_erase.mpr ⟨Ne.symm i.property,Finset.mem_univ _⟩
-  have horig : (∏ j∈((Finset.univ : Finset ι).erase i.val), (x i.val-x j))=
-      (x i.val-x a)*(∏ j∈T, (x i.val-x j)) :=
-    (Finset.mul_prod_erase _ _ ha).symm
-  have hxa : x i.val-x a≠0 := sub_ne_zero.mpr (fun h => i.property (hx h))
-  dsimp [weight]
-  rw [horig,hprod]
-  rw [_root_.mul_inv_rev,mul_assoc,inv_mul_cancel₀ hxa,mul_one]
-theorem punctured_syndrome (x w : ι → F) (hx : Function.Injective x) (a : ι) (j : ℕ) :
-    syndrome (fun i : {i // i≠a} => x i.val) (fun i => w i.val) j =
-      syndrome x w (j+1)-x a*syndrome x w j := by
-  have hsum : (∑ i : {i // i≠a}, weight x i.val*(x i.val-x a)*w i.val*x i.val^j)=
-      ∑ i∈(Finset.univ : Finset ι).erase a, weight x i*(x i-x a)*w i*x i^j := by
-    apply Finset.sum_bij (fun i _ => i.val)
-    · intro i _; exact Finset.mem_erase.mpr ⟨i.property,Finset.mem_univ _⟩
-    · intro i hi k hk heq; exact Subtype.ext heq
-    · intro i hi
-      exact ⟨⟨i,(Finset.mem_erase.mp hi).1⟩,Finset.mem_univ _,rfl⟩
-    · intro i _; rfl
-  simp only [syndrome,← punctured_weight x hx a]
-  rw [hsum]
-  have hz : weight x a*(x a-x a)*w a*x a^j=0 := by simp
-  rw [Finset.sum_erase_eq_sub (Finset.mem_univ a),hz,sub_zero]
-  simp only [Finset.mul_sum,← Finset.sum_sub_distrib]
-  apply Finset.sum_congr rfl
-  intro i _
-  rw [pow_succ]
-  ring
 end
 end FrobeniusLocator.Strata
 end
@@ -1500,58 +1302,10 @@ open Polynomial Finset Matrix
 open scoped BigOperators
 variable {F ι : Type} [Field F] [DecidableEq F] [Fintype ι] [DecidableEq ι]
 def twoConjugations (σ : F →+* F) : Fin 2 → F →+* F := ![RingHom.id F,σ]
-def threeConjugations (σ : F →+* F) : Fin 3 → F →+* F := ![RingHom.id F,σ,σ.comp σ]
 theorem conjugateErrors_two (σ : F →+* F) (x e : ι → F) (L : ℕ) :
     conjugateErrors (twoConjugations σ) x e L=errorTwoMatrix σ x e L := by
   ext ⟨b,j⟩ i
   fin_cases b <;> simp [conjugateErrors,twoConjugations,errorTwoMatrix]
-theorem conjugateErrors_three (σ : F →+* F) (x e : ι → F) (L : ℕ) :
-    conjugateErrors (threeConjugations σ) x e L=errorThreeMatrix σ x e L := by
-  ext ⟨b,j⟩ i
-  fin_cases b <;> simp [conjugateErrors,threeConjugations,errorThreeMatrix,RingHom.comp_apply]
-theorem normal_slope_three_rank (σ : F →+* F) (x w : ι → F)
-    (hx : Function.Injective x) (hfixed : ∀ i, σ (x i)=x i)
-    (k L t H : ℕ) (hsize : k+L+t≤Fintype.card ι) (hH : H<L)
-    (U V R : F[X]) (hpair : U≠0 ∨ V≠0)
-    (rel : TwistedRelation σ x w k H U V R)
-    (P : F[X]) (hP : P.degree<k) (S : Finset ι) (hS : S.card≤t)
-    (hagree : ∀ i, i∉S → w i=P.eval (x i))
-    (hexact : ∀ i∈S, w i≠P.eval (x i))
-    (hnormal : (conjugateHankel (twoConjugations σ) x w L t).rank=L+H) :
-    let G := GCDMonoid.gcd U V
-    let u := U/G
-    let v := V/G
-    let d := max u.natDegree v.natDegree
-    let q := d-(GCDMonoid.gcd u (v.map σ)).natDegree
-    (conjugateHankel (threeConjugations σ) x w L t).rank=min S.card (L+H+q) := by
-  have hfix2 : ∀ b i, twoConjugations σ b (x i)=x i := by
-    intro b i
-    fin_cases b <;> simp [twoConjugations,hfixed]
-  have hfix3 : ∀ b i, threeConjugations σ b (x i)=x i := by
-    intro b i
-    fin_cases b <;> simp [threeConjugations,hfixed,RingHom.comp_apply]
-  have h2 := conjugateHankel_error_rank (twoConjugations σ) x w hx hfix2 P k L t hP hsize S
-    (by omega) hagree
-  have h3 := conjugateHankel_error_rank (threeConjugations σ) x w hx hfix3 P k L t hP hsize S
-    (by omega) hagree
-  rw [conjugateErrors_two] at h2
-  rw [conjugateErrors_three] at h3
-  have he : ∀ i : S, w i.val-P.eval (x i.val)≠0 :=
-    fun i => sub_ne_zero.mpr (hexact i.val i.property)
-  have hr : ∀ i : S, U.eval (x i.val)*(w i.val-P.eval (x i.val))+
-      V.eval (x i.val)*σ (w i.val-P.eval (x i.val))=0 := by
-    intro i
-    apply decoder_error_identity σ x w hx hfixed k H U V R rel (Finset.univ\S)
-      (by rw [Finset.card_sdiff_of_subset (Finset.subset_univ S),Finset.card_univ]; omega) P hP
-      (fun j hj => (hagree j (Finset.mem_sdiff.mp hj).2).symm) i.val
-  have hn : (errorTwoMatrix σ (fun i : S => x i.val) (fun i : S => w i.val-P.eval (x i.val)) L).rank=L+H := by
-    rw [h2] at hnormal
-    exact hnormal
-  have hR3 := (normal_error_three_rank σ (fun i : S => x i.val)
-    (fun i : S => w i.val-P.eval (x i.val)) (hx.comp Subtype.val_injective)
-    (fun i => hfixed i.val) U V H L rel.degree_U rel.degree_V hpair hH he hr hn).2.2
-  rw [h3]
-  simpa only [Fintype.card_coe] using hR3
 def frobeniusStacked (p blocks : ℕ) (x u v : ι → F) (L t : ℕ) :
     Matrix (Fin blocks × Fin L) (Fin (t+1)) F[X] := fun b j =>
   C (syndrome x u (b.2.val+j.val)^(p^b.1.val))+
@@ -1585,77 +1339,6 @@ noncomputable section
 open Polynomial Finset Matrix
 open scoped BigOperators
 variable {F β : Type} [Field F] [DecidableEq F] [Fintype β]
-def contractSequence (s : β → ℕ → F) (a : F) : β → ℕ → F :=
-  fun b j => s b (j+1)-a*s b j
-def evalFunctional (a : F) : F[X] →ₗ[F] F where
-  toFun P := P.eval a
-  map_add' P Q := eval_add
-  map_smul' c P := by simp
-theorem recurrenceEval_contract (s : ℕ → F) (a : F) (j : ℕ) (Q : F[X]) :
-    Principal.recurrenceEval (fun i => s (i+1)-a*s i) j Q=
-      Principal.recurrenceEval s (j+1) Q-a*Principal.recurrenceEval s j Q := by
-  induction Q using Polynomial.induction_on' with
-  | add Q R hQ hR => simp only [map_add,hQ,hR]; ring
-  | monomial i c => simp only [Principal.recurrenceEval_monomial]; ring
-theorem recurrenceEval_X_sub_C (s : ℕ → F) (a : F) (j : ℕ) (Q : F[X]) :
-    Principal.recurrenceEval s j (((Polynomial.X : F[X])-C a)*Q)=
-      Principal.recurrenceEval (fun i => s (i+1)-a*s i) j Q := by
-  rw [recurrenceEval_contract]
-  have heq : ((Polynomial.X : F[X])-C a)*Q=Q*(Polynomial.X : F[X])^1-a • Q := by
-    simp only [pow_one,Polynomial.smul_eq_C_mul]
-    ring
-  rw [heq,map_sub,map_smul,Principal.recurrenceEval_shift]
-  simp only [smul_eq_mul,RingHom.id_apply]
-theorem contracted_recurrence_membership (s : β → ℕ → F) (a : F) (m t : ℕ)
-    (ht : 1≤t) (htm : t≤m) (Q : F[X]) :
-    Q∈recurrenceSpace (contractSequence s a) (m-1) (t-1) ↔
-      ((Polynomial.X : F[X])-C a)*Q∈recurrenceSpace s m t := by
-  rw [mem_recurrenceSpace,mem_recurrenceSpace]
-  have hlen : (m-1)-(t-1)=m-t := by omega
-  have hbound : (t-1)+1=t := by omega
-  rw [hlen,hbound]
-  have hdegree : Q.degree<t ↔ ((((Polynomial.X : F[X])-C a)*Q).degree<(t+1 : ℕ)) := by
-    by_cases hq : Q=0
-    · simp [hq]
-    have hp : (Polynomial.X : F[X])-C a≠0 := (Polynomial.monic_X_sub_C a).ne_zero
-    rw [← natDegree_lt_iff_degree_lt hq,← natDegree_lt_iff_degree_lt (mul_ne_zero hp hq),
-      natDegree_mul hp hq,Polynomial.natDegree_X_sub_C]
-    omega
-  rw [hdegree]
-  constructor
-  · rintro ⟨hQ,hrec⟩
-    refine ⟨hQ,?_⟩
-    intro b j hj
-    rw [recurrenceEval_X_sub_C]
-    exact hrec b j hj
-  · rintro ⟨hQ,hrec⟩
-    refine ⟨hQ,?_⟩
-    intro b j hj
-    change Principal.recurrenceEval (fun i => s b (i+1)-a*s b i) j Q=0
-    rw [← recurrenceEval_X_sub_C]
-    exact hrec b j hj
-def puncturedKernelEquiv (s : β → ℕ → F) (a : F) (m t : ℕ) (ht : 1≤t) (htm : t≤m) :
-    recurrenceSpace (contractSequence s a) (m-1) (t-1) ≃ₗ[F]
-      (recurrenceSpace s m t ⊓ LinearMap.ker (evalFunctional a) : Submodule F F[X]) := by
-  let f : recurrenceSpace (contractSequence s a) (m-1) (t-1) →ₗ[F]
-      (recurrenceSpace s m t ⊓ LinearMap.ker (evalFunctional a) : Submodule F F[X]) :=
-    { toFun := fun Q => ⟨((Polynomial.X : F[X])-C a)*Q.val,
-        ⟨(contracted_recurrence_membership s a m t ht htm Q.val).mp Q.property,by simp [evalFunctional]⟩⟩
-      map_add' := by intro Q R; apply Subtype.ext; simp only [Submodule.coe_add,mul_add]
-      map_smul' := by intro c Q; apply Subtype.ext; simp only [Submodule.coe_smul,mul_smul_comm,RingHom.id_apply] }
-  apply LinearEquiv.ofBijective f
-  constructor
-  · intro Q R hQR
-    apply Subtype.ext
-    exact mul_left_cancel₀ (Polynomial.monic_X_sub_C a).ne_zero (congrArg Subtype.val hQR)
-  · intro P
-    have hz : P.val.eval a=0 := P.property.2
-    obtain ⟨Q,hQ⟩ := (Polynomial.dvd_iff_isRoot.mpr hz)
-    refine ⟨⟨Q,(contracted_recurrence_membership s a m t ht htm Q).mpr ?_⟩,?_⟩
-    · rw [← hQ]
-      exact P.property.1
-    · apply Subtype.ext
-      exact hQ.symm
 end
 end FrobeniusLocator.Strata
 end
@@ -1668,65 +1351,6 @@ open Polynomial Finset Matrix
 open scoped BigOperators
 local instance strataDecidable (P : Prop) : Decidable P := Classical.propDecidable P
 variable {F ι β : Type} [Field F] [DecidableEq F] [Fintype ι] [DecidableEq ι] [Fintype β]
-theorem gcd_eval_zero_iff (f g : F[X]) (a : F) :
-    (GCDMonoid.gcd f g).eval a=0 ↔ f.eval a=0 ∧ g.eval a=0 := by
-  change (GCDMonoid.gcd f g).IsRoot a ↔ f.IsRoot a ∧ g.IsRoot a
-  simp only [← Polynomial.dvd_iff_isRoot,_root_.dvd_gcd_iff]
-theorem locator_common_roots_card_le (x : ι → F) (hx : Function.Injective x)
-    (S : Finset ι) (g : F[X]) :
-    (S.filter (fun i => g.eval (x i)=0)).card≤(GCDMonoid.gcd (locator x S) g).natDegree := by
-  classical
-  have hdiv : GCDMonoid.gcd (locator x S) g∣locator x S := gcd_dvd_left _ _
-  have hG0 : GCDMonoid.gcd (locator x S) g≠0 := ne_zero_of_dvd_ne_zero (locator_monic x S).ne_zero hdiv
-  apply root_nodes_card_le x hx _ hG0
-  intro i hi
-  exact (gcd_eval_zero_iff _ _ _).mpr
-    ⟨locator_eval_zero x S i (Finset.mem_filter.mp hi).1,(Finset.mem_filter.mp hi).2⟩
-theorem active_root_nullity_one (s : β → ℕ → F) (m t : ℕ)
-    (hnull : Module.finrank F (LinearMap.ker (recurrenceMatrixAll s m t).mulVecLin)=2)
-    (g : F[X]) (hg : g∈recurrenceSpace s m t) (a : F) (hga : g.eval a≠0) :
-    Module.finrank F (LinearMap.ker (AppendConstants.appendOne (recurrenceMatrixAll s m t)
-      (fun j => a^j.val)).mulVecLin)=1 := by
-  have hm := (recurrenceSpace_matrix s m t g).mp hg
-  have hactive : ∃ v : Fin (t+1) → F, (recurrenceMatrixAll s m t).mulVec v=0 ∧
-      AppendConstants.functional (fun j => a^j.val) v≠0 := by
-    refine ⟨fun j => g.coeff j.val,hm.2,?_⟩
-    change (∑ j : Fin (t+1), a^j.val*g.coeff j.val)≠0
-    have heq : (∑ j : Fin (t+1), a^j.val*g.coeff j.val)=g.eval a := by
-      rw [← sum_coeff_eval g t hm.1 a]
-      apply Finset.sum_congr rfl
-      intro j _
-      ring
-    rwa [heq]
-  have hh := AppendConstants.nullity_drop_one (recurrenceMatrixAll s m t) (fun j => a^j.val) hactive
-  rw [hnull] at hh
-  omega
-theorem nonprincipal_two_kernel_usable_roots (s : β → ℕ → F) (m t L : ℕ)
-    (hm : m=L+t) (x : ι → F) (hx : Function.Injective x)
-    (hnull : Module.finrank F (LinearMap.ker (recurrenceMatrixAll s m t).mulVecLin)=2)
-    (hnon : NonprincipalSpace (recurrenceSpace s m t) t)
-    (S : Finset ι) (hS : S.card=t) (hf : locator x S∈recurrenceSpace s m t) :
-    ∃ T : Finset ι, T⊆S ∧ L+1≤T.card ∧
-      ∀ i∈T, Module.finrank F
-        (LinearMap.ker (AppendConstants.appendOne (recurrenceMatrixAll s m t)
-          (fun j => x i^j.val)).mulVecLin)=1 := by
-  classical
-  have hf0 := (locator_monic x S).ne_zero
-  have hfd : (locator x S).natDegree=t := (locator_natDegree x S).trans hS
-  obtain ⟨g,hg,hg0,hspan,hbound⟩ := dimension_two_gcd_bound s m t (by omega)
-    hnull hnon (locator x S) hf hf0 hfd
-  let T := S.filter (fun i => g.eval (x i)≠0)
-  have hzero : (S.filter (fun i => g.eval (x i)=0)).card≤
-      (GCDMonoid.gcd (locator x S) g).natDegree := locator_common_roots_card_le x hx S g
-  have hTcard : T.card=t-(S.filter (fun i => g.eval (x i)=0)).card := by
-    have heq : T=S\S.filter (fun i => g.eval (x i)=0) := by
-      ext i
-      simp only [T,Finset.mem_filter,Finset.mem_sdiff]
-      tauto
-    rw [heq,Finset.card_sdiff_of_subset (Finset.filter_subset _ _),hS]
-  refine ⟨T,Finset.filter_subset _ _,by omega,?_⟩
-  intro i hi
-  exact active_root_nullity_one s m t hnull g hg (x i) (Finset.mem_filter.mp hi).2
 end
 end FrobeniusLocator.Strata
 end
@@ -1757,77 +1381,6 @@ theorem locator_dvd_of_eval_zero (x : ι → F) (hx : Function.Injective x)
     obtain ⟨i,hi,rfl⟩ := Multiset.mem_map.mp ha
     exact (Polynomial.mem_roots hP).mpr (hz i hi)
   exact (Principal.locator_splits x S).dvd_of_roots_le_roots (locator_monic x S).ne_zero hroots
-theorem bounded_locator_quotient (x : ι → F) (S : Finset ι) (P : F[X]) (t : ℕ)
-    (hS : S.card≤t) (hP : P.natDegree≤t) (hdiv : locator x S∣P) :
-    ∃ Q : F[X], Q.degree<(t-S.card+1 : ℕ) ∧ P=locator x S*Q := by
-  obtain ⟨Q,hQ⟩ := hdiv
-  refine ⟨Q,?_,hQ⟩
-  by_cases hq : Q=0
-  · simp [hq]
-  have hd := natDegree_mul (locator_monic x S).ne_zero hq
-  rw [← hQ,locator_natDegree] at hd
-  exact degree_le_natDegree.trans_lt (by exact_mod_cast (show Q.natDegree<t-S.card+1 by omega))
-theorem recurrenceMatrixAll_conjugate (σ : β → F →+* F) (x w : ι → F) (m t : ℕ) :
-    recurrenceMatrixAll (fun b j => σ b (syndrome x w j)) m t=
-      conjugateHankel σ x w (m-t) t := by
-  ext b j
-  simp only [recurrenceMatrixAll,conjugateHankel,Nat.add_comm]
-theorem full_error_rank_principal (σ : β → F →+* F) (x w : ι → F)
-    (hx : Function.Injective x) (hfixed : ∀ b i, σ b (x i)=x i)
-    (k m t : ℕ) (hkm : k+m=Fintype.card ι) (htm : t≤m)
-    (P : F[X]) (hP : P.degree<k) (E : Finset ι) (hE : E.card≤t)
-    (hagree : ∀ i, i∉E → w i=P.eval (x i))
-    (hfull : (conjugateErrors σ (fun i : E => x i.val)
-      (fun i : E => w i.val-P.eval (x i.val)) (m-t)).rank=E.card) :
-    recurrenceSpace (fun b j => σ b (syndrome x w j)) m t=
-      (Polynomial.degreeLT F (t-E.card+1)).map (polynomialMul (locator x E)) := by
-  let M := conjugateHankel σ x w (m-t) t
-  let A : Matrix (β × Fin (m-t)) E F := Matrix.of (fun b i =>
-    weight x i.val*σ b.1 (w i.val-P.eval (x i.val))*x i.val^b.2.val)
-  let B := nodeVandermonde (fun i : E => x i.val) t
-  have hfactor : M=A*B := conjugateHankel_factorization σ x w hx hfixed P k (m-t) t hP
-    (by omega) E hagree
-  have hB : Function.Surjective B.mulVecLin := nodeVandermonde_surjective (fun i : E => x i.val)
-    (fun i j hij => Subtype.ext (hx hij)) t (by rw [Fintype.card_coe]; omega)
-  have hM : M.rank=E.card := (conjugateHankel_error_rank σ x w hx hfixed P k (m-t) t hP
-    (by omega) E (by omega) hagree).trans hfull
-  have hA : A.rank=Fintype.card E := by rw [hfactor,rank_mul_of_surjective A B hB] at hM; simpa using hM
-  have hinj := matrix_injective_of_full_column_rank A hA
-  have hcoeff (Q : F[X]) (hQ : Q.natDegree≤t) :
-      B.mulVec (fun j : Fin (t+1) => Q.coeff j.val) = fun i : E => Q.eval (x i.val) := by
-    funext i
-    change (∑ j : Fin (t+1), x i.val^j.val*Q.coeff j.val)=Q.eval (x i.val)
-    rw [← sum_coeff_eval Q t hQ (x i.val)]
-    apply Finset.sum_congr rfl
-    intro j _
-    ring
-  have hker_iff (Q : F[X]) (hQ : Q.natDegree≤t) :
-      M.mulVec (fun j : Fin (t+1) => Q.coeff j.val)=0 ↔ ∀ i∈E, Q.eval (x i)=0 := by
-    rw [hfactor,← Matrix.mulVec_mulVec,hcoeff Q hQ]
-    constructor
-    · intro hz i hi
-      have hvec : (fun i : E => Q.eval (x i.val))=0 := hinj (hz.trans (map_zero A.mulVecLin).symm)
-      exact congrFun hvec ⟨i,hi⟩
-    · intro hz
-      have hvec : (fun i : E => Q.eval (x i.val))=0 := funext (fun i => hz i.val i.property)
-      rw [hvec,Matrix.mulVec_zero]
-  apply le_antisymm
-  · intro Q hQ
-    have hm := (recurrenceSpace_matrix _ m t Q).mp hQ
-    rw [recurrenceMatrixAll_conjugate] at hm
-    have hz := (hker_iff Q hm.1).mp hm.2
-    obtain ⟨R,hR,hQR⟩ := bounded_locator_quotient x E Q t hE hm.1 (locator_dvd_of_eval_zero x hx E Q hz)
-    exact ⟨R,Polynomial.mem_degreeLT.mpr hR,hQR.symm⟩
-  · rintro _ ⟨R,hR,rfl⟩
-    have hRn := Principal.degreeLT_natDegree_le (q := t-E.card) ⟨R,hR⟩
-    change R.natDegree≤t-E.card at hRn
-    have hdeg : (locator x E*R).natDegree≤t := natDegree_mul_le.trans (by rw [locator_natDegree]; omega)
-    apply (recurrenceSpace_matrix _ m t _).mpr
-    refine ⟨hdeg,?_⟩
-    rw [recurrenceMatrixAll_conjugate]
-    apply (hker_iff _ hdeg).mpr
-    intro i hi
-    simp only [eval_mul,locator_eval_zero x E i hi,zero_mul]
 end
 end FrobeniusLocator.Strata
 end
@@ -1839,83 +1392,8 @@ noncomputable section
 open Polynomial Finset Matrix
 open scoped BigOperators
 variable {F β : Type} [Field F] [DecidableEq F] [Fintype β]
-theorem functional_coefficients_eval (t : ℕ) (P : F[X]) (hP : P.natDegree≤t) (a : F) :
-    AppendConstants.functional (fun j : Fin (t+1) => a^j.val) (fun j => P.coeff j.val)=P.eval a := by
-  change (∑ j : Fin (t+1), a^j.val*P.coeff j.val)=P.eval a
-  rw [← sum_coeff_eval P t hP a]
-  apply Finset.sum_congr rfl
-  intro j _
-  ring
-def appendedPolynomialEquiv (s : β → ℕ → F) (m t : ℕ) (a : F) :
-    (recurrenceSpace s m t ⊓ LinearMap.ker (evalFunctional a) : Submodule F F[X]) ≃ₗ[F]
-      LinearMap.ker (AppendConstants.appendOne (recurrenceMatrixAll s m t)
-        (fun j => a^j.val)).mulVecLin := by
-  let f : (recurrenceSpace s m t ⊓ LinearMap.ker (evalFunctional a) : Submodule F F[X]) →ₗ[F]
-      LinearMap.ker (AppendConstants.appendOne (recurrenceMatrixAll s m t) (fun j => a^j.val)).mulVecLin :=
-    { toFun := fun P => ⟨fun j => P.val.coeff j.val,by
-        change (AppendConstants.appendOne (recurrenceMatrixAll s m t) (fun j => a^j.val)).mulVec
-          (fun j => P.val.coeff j.val)=0
-        apply (AppendConstants.appendOne_kernel _ _ _).mpr
-        have hmem := (recurrenceSpace_matrix s m t P.val).mp P.property.1
-        refine ⟨hmem.2,?_⟩
-        rw [functional_coefficients_eval t P.val hmem.1 a]
-        exact P.property.2⟩
-      map_add' := by
-        intro P Q
-        apply Subtype.ext
-        funext j
-        change (P.val+Q.val).coeff j.val=P.val.coeff j.val+Q.val.coeff j.val
-        simp only [Polynomial.coeff_add]
-      map_smul' := by intro c P; apply Subtype.ext; funext j; simp only [Submodule.coe_smul,Polynomial.coeff_smul,Pi.smul_apply,RingHom.id_apply] }
-  apply LinearEquiv.ofBijective f
-  constructor
-  · intro P Q hPQ
-    apply Subtype.ext
-    apply Principal.coefficients_injective_bounded t P.val Q.val
-      ((recurrenceSpace_matrix s m t _).mp P.property.1).1
-      ((recurrenceSpace_matrix s m t _).mp Q.property.1).1
-    exact congrFun (congrArg Subtype.val hPQ)
-  · intro c
-    have hcp : (AppendConstants.appendOne (recurrenceMatrixAll s m t) (fun j => a^j.val)).mulVec c.val=0 := c.property
-    have hc := (AppendConstants.appendOne_kernel _ _ _).mp hcp
-    let P := Principal.assemble c.val
-    have hp : P∈recurrenceSpace s m t := (recurrenceSpace_matrix s m t P).mpr
-      ⟨Principal.assemble_natDegree_le _,by simpa only [P,Principal.assemble_coeff] using hc.1⟩
-    have hPa : P.eval a=0 := by
-      rw [← functional_coefficients_eval t P (Principal.assemble_natDegree_le _) a]
-      simpa only [P,Principal.assemble_coeff] using hc.2
-    refine ⟨⟨P,hp,hPa⟩,?_⟩
-    apply Subtype.ext
-    funext j
-    exact Principal.assemble_coeff c.val j
-theorem punctured_nullity_eq_appended (s : β → ℕ → F) (m t : ℕ) (a : F)
-    (ht : 1≤t) (htm : t≤m) :
-    Module.finrank F (LinearMap.ker
-      (recurrenceMatrixAll (contractSequence s a) (m-1) (t-1)).mulVecLin)=
-    Module.finrank F (LinearMap.ker (AppendConstants.appendOne (recurrenceMatrixAll s m t)
-      (fun j => a^j.val)).mulVecLin) := by
-  rw [← recurrenceSpace_finrank]
-  exact (puncturedKernelEquiv s a m t ht htm).finrank_eq.trans (appendedPolynomialEquiv s m t a).finrank_eq
 section Domain
 variable {ι : Type} [Fintype ι] [DecidableEq ι]
-theorem punctured_conjugate_sequence (σ : β → F →+* F) (x w : ι → F)
-    (hx : Function.Injective x) (hfixed : ∀ b i, σ b (x i)=x i) (a : ι) :
-    (fun b j => σ b (syndrome (fun i : {i // i≠a} => x i.val) (fun i => w i.val) j))=
-      contractSequence (fun b j => σ b (syndrome x w j)) (x a) := by
-  funext b j
-  rw [punctured_syndrome x w hx a j,map_sub,map_mul,hfixed]
-  rfl
-theorem actual_punctured_nullity_eq_appended (σ : β → F →+* F) (x w : ι → F)
-    (hx : Function.Injective x) (hfixed : ∀ b i, σ b (x i)=x i) (m t : ℕ) (a : ι)
-    (ht : 1≤t) (htm : t≤m) :
-    Module.finrank F (LinearMap.ker (recurrenceMatrixAll
-      (fun b j => σ b (syndrome (fun i : {i // i≠a} => x i.val) (fun i => w i.val) j))
-      (m-1) (t-1)).mulVecLin)=
-    Module.finrank F (LinearMap.ker (AppendConstants.appendOne
-      (recurrenceMatrixAll (fun b j => σ b (syndrome x w j)) m t)
-      (fun j => x a^j.val)).mulVecLin) := by
-  rw [punctured_conjugate_sequence σ x w hx hfixed a]
-  exact punctured_nullity_eq_appended _ m t (x a) ht htm
 end Domain
 end
 end FrobeniusLocator.Strata
@@ -1927,67 +1405,6 @@ noncomputable section
 open Finset
 open scoped BigOperators
 variable {F ι : Type} [DecidableEq F] [Fintype ι] [DecidableEq ι]
-theorem one_root_incidence_count (Γ : Finset F) (usable : F → Finset ι)
-    (L M : ℕ) (hroots : ∀ γ∈Γ, L+1≤(usable γ).card)
-    (hnode : ∀ i, (Γ.filter (fun γ => i∈usable γ)).card≤M) :
-    Γ.card≤Fintype.card ι*M/(L+1) := by
-  classical
-  have hlow : Γ.card*(L+1)≤∑ γ∈Γ, (usable γ).card := by
-    calc
-      _ = ∑ γ∈Γ, (L+1) := by simp
-      _ ≤ _ := Finset.sum_le_sum hroots
-  have hswap : (∑ γ∈Γ, (usable γ).card)=
-      ∑ i : ι, (Γ.filter (fun γ => i∈usable γ)).card := by
-    simp only [Finset.card_eq_sum_ones,Finset.sum_filter]
-    have hgamma (γ : F) : (∑ i∈usable γ, (1 : ℕ))=
-        ∑ i : ι, if i∈usable γ then 1 else 0 := by simp
-    simp_rw [hgamma]
-    exact Finset.sum_comm
-  have hhigh : (∑ i : ι, (Γ.filter (fun γ => i∈usable γ)).card)≤Fintype.card ι*M :=
-    (Finset.sum_le_sum (fun i _ => hnode i)).trans_eq (by simp)
-  exact (Nat.le_div_iff_mul_le (by omega)).mpr (hlow.trans (hswap.trans_le hhigh))
-def principalThreePrice (n t : ℕ) : ℕ := n^3+(t+1)*n^2+(t+1)^2*n+(t+1)^3
-def kernelTwoPrice (n L : ℕ) : ℕ := n*(n-1)^3/(L+1)
-theorem native_principal_three_price : principalThreePrice 262144 81879=25947601202251264 := by
-  norm_num [principalThreePrice]
-theorem native_kernel_two_price : kernelTwoPrice 262144 49193=95993666704888298 := by
-  norm_num [kernelTwoPrice]
-theorem native_booked_total : 69631486279633+principalThreePrice 262144 81879+
-    kernelTwoPrice 262144 49193=122010899393419195 := by
-  norm_num [principalThreePrice,kernelTwoPrice]
-theorem native_residual_ledger : 69631486279633+principalThreePrice 262144 81879+
-    kernelTwoPrice 262144 49193+121058742343964669=243069641737383864 := by
-  norm_num [principalThreePrice,kernelTwoPrice]
-theorem native_joint_ledger : 31911086374011223+69631486279633+
-    principalThreePrice 262144 81879+kernelTwoPrice 262144 49193+
-    121058742343964669=274980728111395087 := by
-  norm_num [principalThreePrice,kernelTwoPrice]
-theorem native_kernel_two_incidence_count (Γ : Finset F) (usable : F → Finset ι)
-    (hn : Fintype.card ι=262144)
-    (hroots : ∀ γ∈Γ, 49194≤(usable γ).card)
-    (hnode : ∀ i, (Γ.filter (fun γ => i∈usable γ)).card≤262143^3) :
-    Γ.card≤95993666704888298 := by
-  have h := one_root_incidence_count Γ usable 49193 (262143^3) hroots hnode
-  rw [hn] at h
-  exact h.trans_eq (by norm_num)
-theorem four_strata_count (Γ : Finset F) (drop principal two : F → Prop)
-    [DecidablePred drop] [DecidablePred principal] [DecidablePred two]
-    (D P J R : ℕ)
-    (hD : (Γ.filter drop).card≤D)
-    (hP : (Γ.filter (fun γ => ¬drop γ ∧ principal γ)).card≤P)
-    (hJ : (Γ.filter (fun γ => ¬drop γ ∧ ¬principal γ ∧ two γ)).card≤J)
-    (hR : (Γ.filter (fun γ => ¬drop γ ∧ ¬principal γ ∧ ¬two γ)).card≤R) :
-    Γ.card≤D+P+J+R := by
-  classical
-  have hpart : Γ.card=(Γ.filter drop).card+
-      (Γ.filter (fun γ => ¬drop γ ∧ principal γ)).card+
-      (Γ.filter (fun γ => ¬drop γ ∧ ¬principal γ ∧ two γ)).card+
-      (Γ.filter (fun γ => ¬drop γ ∧ ¬principal γ ∧ ¬two γ)).card := by
-    simp only [Finset.card_eq_sum_ones,Finset.sum_filter,← Finset.sum_add_distrib]
-    apply Finset.sum_congr rfl
-    intro γ _
-    by_cases hd : drop γ <;> by_cases hp : principal γ <;> by_cases ht : two γ <;> simp [hd,hp,ht]
-  omega
 end
 end FrobeniusLocator.Strata
 end
@@ -1998,41 +1415,6 @@ noncomputable section
 open Polynomial Finset
 open scoped BigOperators
 variable {F ι : Type} [Field F] [Fintype ι] [DecidableEq ι]
-def liftPuncturedSet (a : ι) (S : Finset ι) : Finset {i // i≠a} :=
-  Finset.univ.filter (fun i => i.val∈S)
-theorem liftPuncturedSet_image (a : ι) (S : Finset ι) (ha : a∉S) :
-    (liftPuncturedSet a S).image Subtype.val=S := by
-  ext i
-  simp only [liftPuncturedSet,Finset.mem_image,Finset.mem_filter,Finset.mem_univ,true_and]
-  constructor
-  · rintro ⟨j,hj,rfl⟩
-    exact hj
-  · intro hi
-    exact ⟨⟨i,by intro h; exact ha (h ▸ hi)⟩,hi,rfl⟩
-theorem liftPuncturedSet_card (a : ι) (S : Finset ι) (ha : a∉S) :
-    (liftPuncturedSet a S).card=S.card := by
-  exact (Finset.card_image_of_injective (liftPuncturedSet a S) Subtype.val_injective).symm.trans
-    (congrArg Finset.card (liftPuncturedSet_image a S ha))
-theorem puncture_bad_witness (x u v : ι → F) (k A : ℕ) (γ : F)
-    (S : Finset ι) (hS : A≤S.card)
-    (hdec : ExtendsOn x (fun i => u i+γ*v i) k S)
-    (hbad : ¬(ExtendsOn x u k S ∧ ExtendsOn x v k S)) (a : ι) (ha : a∉S) :
-    Principal.BadSlope (fun i : {i // i≠a} => x i.val) (fun i => u i.val) (fun i => v i.val) k A γ := by
-  let T := liftPuncturedSet a S
-  have hTS : T.card=S.card := liftPuncturedSet_card a S ha
-  refine ⟨T,by omega,?_,?_⟩
-  · obtain ⟨P,hP,hPv⟩ := hdec
-    refine ⟨P,hP,?_⟩
-    intro i hi
-    exact hPv i.val (Finset.mem_filter.mp hi).2
-  · rintro ⟨⟨P,hP,hPv⟩,⟨Q,hQ,hQv⟩⟩
-    apply hbad
-    have hne (i : ι) (hi : i∈S) : i≠a := by intro h; exact ha (h ▸ hi)
-    refine ⟨⟨P,hP,?_⟩,⟨Q,hQ,?_⟩⟩
-    · intro i hi
-      exact hPv ⟨i,hne i hi⟩ (Finset.mem_filter.mpr ⟨Finset.mem_univ _,hi⟩)
-    · intro i hi
-      exact hQv ⟨i,hne i hi⟩ (Finset.mem_filter.mpr ⟨Finset.mem_univ _,hi⟩)
 end
 end FrobeniusLocator.Strata
 end
@@ -2044,43 +1426,6 @@ noncomputable section
 open Polynomial Finset Matrix
 open scoped BigOperators
 variable {F ι β : Type} [Field F] [DecidableEq F] [Fintype ι] [DecidableEq ι] [Fintype β]
-theorem locator_coefficient_fixed (σ : F →+* F) (x : ι → F)
-    (hfixed : ∀ i, σ (x i)=x i) (E : Finset ι) (j : ℕ) :
-    σ ((locator x E).coeff j)=(locator x E).coeff j := by
-  have hm : (locator x E).map σ=locator x E := by simp [locator,Polynomial.map_prod,hfixed]
-  have hc := congrArg (fun Q : F[X] => Q.coeff j) hm
-  simpa only [Polynomial.coeff_map] using hc
-theorem conjugate_locator_annihilates (σ : β → F →+* F) (x w : ι → F)
-    (hx : Function.Injective x) (hfixed : ∀ b i, σ b (x i)=x i)
-    (k L t : ℕ) (hsize : k+L+t≤Fintype.card ι)
-    (P : F[X]) (hP : P.degree<k) (E : Finset ι) (hE : E.card≤t)
-    (hagree : ∀ i, i∉E → w i=P.eval (x i)) :
-    (conjugateHankel σ x w L t).mulVec
-      (fun j : Fin (t+1) => (locator x E).coeff j.val)=0 := by
-  have hloc : (locator x E).natDegree≤t := (locator_natDegree x E).trans_le hE
-  have hpoint : ∀ i, (locator x E).eval (x i)*(w i+(0:F)*(0:F))=
-      (locator x E).eval (x i)*P.eval (x i) := by
-    intro i
-    by_cases hi : i∈E
-    · simp [locator_eval_zero x E i hi]
-    · simp [hagree i hi]
-  have hfirst := hankel_annihilates x hx w (fun _ => 0) 0 k L t hsize P (locator x E) hP hloc hpoint
-  funext b
-  have hh := congrArg (σ b.1) (congrFun hfirst b.2)
-  have hcoef : ∀ j, σ b.1 ((locator x E).coeff j)=(locator x E).coeff j :=
-    locator_coefficient_fixed (σ b.1) x (hfixed b.1) E
-  simpa only [Matrix.mulVec,dotProduct,hankel,eval_add,eval_mul,eval_C,eval_X,zero_mul,
-    add_zero,Pi.zero_apply,map_sum,map_mul,map_zero,hcoef,conjugateHankel] using hh
-theorem locator_in_conjugate_space (σ : β → F →+* F) (x w : ι → F)
-    (hx : Function.Injective x) (hfixed : ∀ b i, σ b (x i)=x i)
-    (k m t : ℕ) (hsize : k+m≤Fintype.card ι) (htm : t≤m)
-    (P : F[X]) (hP : P.degree<k) (E : Finset ι) (hE : E.card≤t)
-    (hagree : ∀ i, i∉E → w i=P.eval (x i)) :
-    locator x E∈recurrenceSpace (fun b j => σ b (syndrome x w j)) m t := by
-  apply (recurrenceSpace_matrix _ m t _).mpr
-  refine ⟨(locator_natDegree x E).trans_le hE,?_⟩
-  rw [recurrenceMatrixAll_conjugate]
-  exact conjugate_locator_annihilates σ x w hx hfixed k (m-t) t (by omega) P hP E hE hagree
 end
 end FrobeniusLocator.Strata
 end
@@ -2093,88 +1438,6 @@ open Polynomial Finset Matrix
 open scoped BigOperators
 variable {F ι β : Type} [Field F] [DecidableEq F] [Fintype ι] [DecidableEq ι] [Fintype β]
 local instance countDecidable (P : Prop) : Decidable P := Classical.propDecidable P
-def PuncturedRegularCap (σ : β → F →+* F) (x u v : ι → F) (k A m t : ℕ) : Prop :=
-  ∀ (a : ι) (Γ : Finset F),
-    (∀ γ∈Γ, Principal.BadSlope (fun i : {i // i≠a} => x i.val)
-      (fun i => u i.val) (fun i => v i.val) k A γ) →
-    (∀ γ∈Γ, Module.finrank F (LinearMap.ker (recurrenceMatrixAll
-      (fun b j => σ b (syndrome (fun i : {i // i≠a} => x i.val)
-        (fun i => u i.val+γ*v i.val) j)) (m-1) (t-1)).mulVecLin)=1) →
-    Γ.card≤(Fintype.card ι-1)^3
-theorem nonprincipal_two_kernel_count (σ : β → F →+* F) (x u v : ι → F)
-    (hx : Function.Injective x) (hfixed : ∀ b i, σ b (x i)=x i)
-    (k A m L t : ℕ) (hkm : k+m=Fintype.card ι) (hm : m=L+t)
-    (hA : A=k+L) (hkA : k<A) (ht : 1≤t)
-    (hregular : PuncturedRegularCap σ x u v k A m t)
-    (Γ : Finset F) (hbad : ∀ γ∈Γ, Principal.BadSlope x u v k A γ)
-    (hnull : ∀ γ∈Γ, Module.finrank F (LinearMap.ker
-      (recurrenceMatrixAll (fun b j => σ b (syndrome x (fun i => u i+γ*v i) j)) m t).mulVecLin)=2)
-    (hnon : ∀ γ∈Γ, NonprincipalSpace
-      (recurrenceSpace (fun b j => σ b (syndrome x (fun i => u i+γ*v i) j)) m t) t) :
-    Γ.card≤kernelTwoPrice (Fintype.card ι) L := by
-  let G := {γ // γ∈Γ}
-  have hwitness : ∀ γ : G, ∃ S : Finset ι, S.card=A ∧
-      ExtendsOn x (fun i => u i+γ.val*v i) k S ∧
-      ¬(ExtendsOn x u k S ∧ ExtendsOn x v k S) := by
-    intro γ
-    exact Principal.bad_slope_exact x hx u v k A hkA γ.val (hbad γ.val γ.property)
-  choose W hWcard hWdec hWbad using hwitness
-  have hPexists : ∀ γ : G, ∃ P : F[X], P.degree<k ∧
-      ∀ i∈W γ, P.eval (x i)=u i+γ.val*v i := hWdec
-  choose P hPdeg hPval using hPexists
-  let E : G → Finset ι := fun γ => Finset.univ\W γ
-  have hEcard (γ : G) : (E γ).card=t := by
-    simp only [E,Finset.card_sdiff_of_subset (Finset.subset_univ _),Finset.card_univ,hWcard]
-    omega
-  have hloc (γ : G) : locator x (E γ)∈recurrenceSpace
-      (fun b j => σ b (syndrome x (fun i => u i+γ.val*v i) j)) m t := by
-    apply locator_in_conjugate_space σ x _ hx hfixed k m t hkm.le (by omega) (P γ) (hPdeg γ)
-      (E γ) (hEcard γ).le
-    intro i hi
-    have hiW : i∈W γ := by simpa only [E,Finset.mem_sdiff,Finset.mem_univ,true_and,not_not] using hi
-    exact (hPval γ i hiW).symm
-  have husable : ∀ γ : G, ∃ T : Finset ι, T⊆E γ ∧ L+1≤T.card ∧
-      ∀ i∈T, Module.finrank F (LinearMap.ker (AppendConstants.appendOne
-        (recurrenceMatrixAll (fun b j => σ b (syndrome x (fun i => u i+γ.val*v i) j)) m t)
-        (fun j => x i^j.val)).mulVecLin)=1 := by
-    intro γ
-    exact nonprincipal_two_kernel_usable_roots _ m t L hm x hx
-      (hnull γ.val γ.property) (hnon γ.val γ.property) (E γ) (hEcard γ) (hloc γ)
-  choose T hTE hTcard hTnull using husable
-  let usable : F → Finset ι := fun γ => if h : γ∈Γ then T ⟨γ,h⟩ else ∅
-  have hroots : ∀ γ∈Γ, L+1≤(usable γ).card := by
-    intro γ hγ
-    simpa only [usable,dif_pos hγ] using hTcard ⟨γ,hγ⟩
-  have hnode (a : ι) : (Γ.filter (fun γ => a∈usable γ)).card≤(Fintype.card ι-1)^3 := by
-    apply hregular a
-    · intro γ hγ
-      obtain ⟨hγΓ,ha⟩ := Finset.mem_filter.mp hγ
-      let g : G := ⟨γ,hγΓ⟩
-      have haT : a∈T g := by simpa only [usable,dif_pos hγΓ] using ha
-      have haE : a∈E g := hTE g haT
-      have haW : a∉W g := (Finset.mem_sdiff.mp haE).2
-      exact puncture_bad_witness x u v k A γ (W g) (hWcard g).ge (hWdec g) (hWbad g) a haW
-    · intro γ hγ
-      obtain ⟨hγΓ,ha⟩ := Finset.mem_filter.mp hγ
-      let g : G := ⟨γ,hγΓ⟩
-      have haT : a∈T g := by simpa only [usable,dif_pos hγΓ] using ha
-      rw [actual_punctured_nullity_eq_appended σ x (fun i => u i+γ*v i) hx hfixed m t a ht (by omega)]
-      exact hTnull g a haT
-  exact one_root_incidence_count Γ usable L ((Fintype.card ι-1)^3) hroots hnode
-theorem native_nonprincipal_two_kernel_count (σ : β → F →+* F) (x u v : ι → F)
-    (hx : Function.Injective x) (hfixed : ∀ b i, σ b (x i)=x i)
-    (hn : Fintype.card ι=262144)
-    (hregular : PuncturedRegularCap σ x u v 131072 180265 131072 81879)
-    (Γ : Finset F) (hbad : ∀ γ∈Γ, Principal.BadSlope x u v 131072 180265 γ)
-    (hnull : ∀ γ∈Γ, Module.finrank F (LinearMap.ker
-      (recurrenceMatrixAll (fun b j => σ b (syndrome x (fun i => u i+γ*v i) j)) 131072 81879).mulVecLin)=2)
-    (hnon : ∀ γ∈Γ, NonprincipalSpace
-      (recurrenceSpace (fun b j => σ b (syndrome x (fun i => u i+γ*v i) j)) 131072 81879) 81879) :
-    Γ.card≤95993666704888298 := by
-  have h := nonprincipal_two_kernel_count σ x u v hx hfixed 131072 180265 131072 49193 81879
-    (by omega) (by decide) (by decide) (by decide) (by decide) hregular Γ hbad hnull hnon
-  rw [hn,native_kernel_two_price] at h
-  exact h
 end
 end FrobeniusLocator.Strata
 end
@@ -2250,55 +1513,6 @@ noncomputable section
 open Polynomial Finset Matrix
 open scoped BigOperators
 variable {F ι : Type} [Field F] [DecidableEq F] [Fintype ι] [DecidableEq ι]
-theorem normal_nonprincipal_residual_rank (σ : F →+* F) (x w : ι → F)
-    (hx : Function.Injective x) (hfixed : ∀ i, σ (x i)=x i)
-    (k L t H r : ℕ) (hsize : k+L+t=Fintype.card ι) (hH : H<L)
-    (hbalance : L+H+r=t+1) (U V R : F[X]) (hpair : U≠0 ∨ V≠0)
-    (rel : TwistedRelation σ x w k H U V R)
-    (P : F[X]) (hP : P.degree<k) (E : Finset ι) (hE : E.card≤t)
-    (hagree : ∀ i, i∉E → w i=P.eval (x i))
-    (hexact : ∀ i∈E, w i≠P.eval (x i))
-    (hnormal : (conjugateHankel (twoConjugations σ) x w L t).rank=L+H)
-    (hnon : NonprincipalSpace (recurrenceSpace
-      (fun b j => threeConjugations σ b (syndrome x w j)) (L+t) t) t)
-    (hdim : 3≤Module.finrank F (LinearMap.ker
-      (conjugateHankel (threeConjugations σ) x w L t).mulVecLin)) :
-    let G := GCDMonoid.gcd U V
-    let u := U/G
-    let v := V/G
-    let d := max u.natDegree v.natDegree
-    let q := d-(GCDMonoid.gcd u (v.map σ)).natDegree
-    q≤r-3 ∧ L+H+q+1≤E.card := by
-  let G := GCDMonoid.gcd U V
-  let u := U/G
-  let v := V/G
-  let d := max u.natDegree v.natDegree
-  let q := d-(GCDMonoid.gcd u (v.map σ)).natDegree
-  let M := conjugateHankel (threeConjugations σ) x w L t
-  have hrank : M.rank=min E.card (L+H+q) := normal_slope_three_rank σ x w hx hfixed k L t H
-    hsize.le hH U V R hpair rel P hP E hE hagree hexact hnormal
-  have hfix3 : ∀ b i, threeConjugations σ b (x i)=x i := by
-    intro b i
-    fin_cases b <;> simp [threeConjugations,hfixed,RingHom.comp_apply]
-  have hnotfull : M.rank≠E.card := by
-    intro hfull
-    have hfactor := conjugateHankel_error_rank (threeConjugations σ) x w hx hfix3
-      P k L t hP hsize.le E (by omega) hagree
-    have herr : (conjugateErrors (threeConjugations σ) (fun i : E => x i.val)
-      (fun i : E => w i.val-P.eval (x i.val)) L).rank=E.card := hfactor.symm.trans hfull
-    have hp := full_error_rank_principal (threeConjugations σ) x w hx hfix3 k (L+t) t
-      (by omega) (by omega) P hP E hE hagree (by rw [show L+t-t=L by omega]; exact herr)
-    apply hnon
-    refine ⟨locator x E,(locator_monic x E).ne_zero,?_,?_⟩
-    · rw [locator_natDegree]
-      exact hE
-    · simpa only [locator_natDegree] using hp
-  change 3≤Module.finrank F (LinearMap.ker M.mulVecLin) at hdim
-  have hn := LinearMap.finrank_range_add_finrank_ker M.mulVecLin
-  change M.rank+Module.finrank F (LinearMap.ker M.mulVecLin)=_ at hn
-  rw [Module.finrank_fintype_fun_eq_card,Fintype.card_fin] at hn
-  change q≤r-3 ∧ L+H+q+1≤E.card
-  omega
 end
 end FrobeniusLocator.Strata
 end
@@ -2310,50 +1524,6 @@ noncomputable section
 open Polynomial Finset Matrix
 open scoped BigOperators
 variable {F β : Type} [Field F] [DecidableEq F] [Fintype β]
-theorem constant_multiple_space (f : F[X]) :
-    (Polynomial.degreeLT F 1).map (polynomialMul f)=F ∙ f := by
-  apply le_antisymm
-  · rintro _ ⟨Q,hQ,rfl⟩
-    have hn := Principal.degreeLT_natDegree_le (q := 0) ⟨Q,hQ⟩
-    have hQC : Q=C (Q.coeff 0) := Polynomial.eq_C_of_natDegree_eq_zero (by change Q.natDegree≤0 at hn; omega)
-    apply Submodule.mem_span_singleton.mpr
-    refine ⟨Q.coeff 0,?_⟩
-    change (Q.coeff 0) • f=f*Q
-    calc
-      (Q.coeff 0) • f=f*C (Q.coeff 0) := by simp only [Polynomial.smul_eq_C_mul,mul_comm]
-      _ = f*Q := congrArg (fun R : F[X] => f*R) hQC.symm
-  · intro P hP
-    obtain ⟨c,hc⟩ := Submodule.mem_span_singleton.mp hP
-    refine ⟨C c,?_,?_⟩
-    · exact Polynomial.mem_degreeLT.mpr (degree_le_natDegree.trans_lt (by simp))
-    · change f*C c=P
-      rw [← hc,Polynomial.smul_eq_C_mul]
-      ring
-theorem line_is_principal (K : Submodule F F[X]) (t : ℕ)
-    (hK : Module.finrank F K=1) (f : F[X]) (hf : f∈K) (hf0 : f≠0) (hfd : f.natDegree=t) :
-    ¬NonprincipalSpace K t := by
-  letI : FiniteDimensional F K := FiniteDimensional.of_finrank_pos (by omega)
-  have hline : F ∙ f≤K := Submodule.span_le.mpr (by intro P hP; rw [Set.mem_singleton_iff] at hP; exact hP ▸ hf)
-  have heq : F ∙ f=K := Submodule.eq_of_le_of_finrank_eq hline ((finrank_span_singleton hf0).trans hK.symm)
-  intro hn
-  apply hn
-  refine ⟨f,hf0,hfd.le,?_⟩
-  rw [hfd,Nat.sub_self,zero_add,constant_multiple_space]
-  exact heq.symm
-theorem nonprincipal_nullity_ge_two (s : β → ℕ → F) (m t : ℕ)
-    (hnon : NonprincipalSpace (recurrenceSpace s m t) t)
-    (f : F[X]) (hf : f∈recurrenceSpace s m t) (hf0 : f≠0) (hfd : f.natDegree=t) :
-    2≤Module.finrank F (LinearMap.ker (recurrenceMatrixAll s m t).mulVecLin) := by
-  let K := recurrenceSpace s m t
-  letI : FiniteDimensional F K := Module.Finite.equiv (kernelPolynomialEquiv s m t)
-  have hpos : 0<Module.finrank F K := Module.finrank_pos_iff_exists_ne_zero.mpr
-    ⟨⟨f,hf⟩,by intro hz; exact hf0 (congrArg Subtype.val hz)⟩
-  have hne : Module.finrank F K≠1 := by
-    intro hone
-    exact line_is_principal K t hone f hf hf0 hfd hnon
-  have heq := recurrenceSpace_finrank s m t
-  change Module.finrank F K=_ at heq
-  omega
 end
 end FrobeniusLocator.Strata
 end
@@ -2381,15 +1551,6 @@ theorem relation_degree_nullity_balance (m L t r a b c : ℕ)
 theorem native_minimal_relation_degree (r a b c : ℕ) (hc : c≤131072)
     (hsum : a+b+c=262146) (hr : r+a+b=163760) (hr7 : 7≤r) :
     49193+(131073-c)+r=81880 ∧ 131073-c≤32680 ∧ 131073-c<49193 := by omega
-theorem no_relation_below_minimal {K : Type} [Field K] (s : Fin 2 → ℕ → K)
-    (m a b c H : ℕ) (hc : c≤m) (hsum : a+b+c=2*m+2)
-    (ha : a≤b) (hb : b≤c) (hH : H<m+1-c)
-    (hHF : HasLevelHilbertFunction s m a b c) :
-    Module.finrank K (LinearMap.ker (relationMatrix s m H).mulVecLin)=0 := by
-  have hHm : H<m := by omega
-  have hd := complementary_nullities s m H
-  rw [hHF H hHm] at hd
-  omega
 end
 end FrobeniusLocator.Strata
 end
@@ -2483,88 +1644,6 @@ open Polynomial Finset Matrix
 open scoped BigOperators
 variable {F ι β : Type} [Field F] [DecidableEq F] [Fintype ι] [DecidableEq ι] [Fintype β]
 local instance ledgerDecidable (P : Prop) : Decidable P := Classical.propDecidable P
-def fiberSequence (σ : β → F →+* F) (x u v : ι → F) (γ : F) : β → ℕ → F :=
-  fun b j => σ b (syndrome x (fun i => u i+γ*v i) j)
-def principalFiber (σ : β → F →+* F) (x u v : ι → F) (m t : ℕ) (γ : F) : Prop :=
-  ¬NonprincipalSpace (recurrenceSpace (fiberSequence σ x u v γ) m t) t
-def fiberNullity (σ : β → F →+* F) (x u v : ι → F) (m t : ℕ) (γ : F) : ℕ :=
-  Module.finrank F (LinearMap.ker (recurrenceMatrixAll (fiberSequence σ x u v γ) m t).mulVecLin)
-def EvaluatedPrincipalCap (σ : β → F →+* F) (x u v : ι → F) (k A m t : ℕ) : Prop :=
-  ∀ Γ : Finset F, (∀ γ∈Γ, Principal.BadSlope x u v k A γ) →
-    (∀ γ∈Γ, principalFiber σ x u v m t γ) → Γ.card≤principalThreePrice (Fintype.card ι) t
-theorem bad_nonprincipal_nullity_ge_two (σ : β → F →+* F) (x u v : ι → F)
-    (hx : Function.Injective x) (hfixed : ∀ b i, σ b (x i)=x i)
-    (k A m L t : ℕ) (hkm : k+m=Fintype.card ι) (hm : m=L+t) (hA : A=k+L)
-    (hkA : k<A) (γ : F) (hbad : Principal.BadSlope x u v k A γ)
-    (hnon : NonprincipalSpace (recurrenceSpace (fiberSequence σ x u v γ) m t) t) :
-    2≤fiberNullity σ x u v m t γ := by
-  obtain ⟨S,hS,⟨P,hP,hPv⟩,_⟩ := Principal.bad_slope_exact x hx u v k A hkA γ hbad
-  let E := Finset.univ\S
-  have hE : E.card=t := by
-    rw [Finset.card_sdiff_of_subset (Finset.subset_univ S),Finset.card_univ,hS]
-    omega
-  have hloc : locator x E∈recurrenceSpace (fiberSequence σ x u v γ) m t := by
-    apply locator_in_conjugate_space σ x _ hx hfixed k m t hkm.le (by omega) P hP E hE.le
-    intro i hi
-    have hiS : i∈S := by simpa only [E,Finset.mem_sdiff,Finset.mem_univ,true_and,not_not] using hi
-    exact (hPv i hiS).symm
-  exact nonprincipal_nullity_ge_two _ m t hnon (locator x E) hloc (locator_monic x E).ne_zero
-    ((locator_natDegree x E).trans hE)
-def NormalResidualCap6915 (p : ℕ) [ExpChar F p] (x u v : ι → F) (r : ℕ) : Prop :=
-  ∀ Γ : Finset F, (∀ γ∈Γ, Principal.BadSlope x u v 131072 180265 γ) →
-    (∀ γ∈Γ, ((stacked p x u v 49193 81879).map (evalRingHom γ)).rank=81880-r) →
-    (∀ γ∈Γ, NonprincipalSpace (recurrenceSpace
-      (fiberSequence (threeConjugations (frobenius F p)) x u v γ) 131072 81879) 81879) →
-    (∀ γ∈Γ, 3≤fiberNullity (threeConjugations (frobenius F p)) x u v 131072 81879 γ) →
-    Γ.card≤121058742343964669
-theorem native_booked_strata_count [ExpChar F 2130706433]
-    (x u v : ι → F) (hx : Function.Injective x) (hfixed : ∀ i, x i^2130706433=x i)
-    (hn : Fintype.card ι=262144) (r : ℕ) (hr7 : 7≤r)
-    (hr : GenericLayer.genericRank (stacked 2130706433 x u v 49193 81879)=81880-r)
-    (hfirst : GenericLayer.genericRank (hankel x u v 49193 81879)=49193)
-    (hprincipal : EvaluatedPrincipalCap (threeConjugations (frobenius F 2130706433)) x u v
-      131072 180265 131072 81879)
-    (hregular : PuncturedRegularCap (threeConjugations (frobenius F 2130706433)) x u v
-      131072 180265 131072 81879)
-    (hres : NormalResidualCap6915 2130706433 x u v r)
-    (Γ : Finset F) (hbad : ∀ γ∈Γ, Principal.BadSlope x u v 131072 180265 γ) :
-    Γ.card≤243069641737383864 := by
-  let σ := threeConjugations (frobenius F 2130706433)
-  let drop : F → Prop := fun γ => ((stacked 2130706433 x u v 49193 81879).map (evalRingHom γ)).rank≠81880-r
-  let princ := principalFiber σ x u v 131072 81879
-  let two : F → Prop := fun γ => fiberNullity σ x u v 131072 81879 γ=2
-  have hfix : ∀ b i, σ b (x i)=x i := by
-    intro b i
-    fin_cases b <;> simp [σ,threeConjugations,RingHom.comp_apply,frobenius_def,hfixed]
-  have hD : (Γ.filter drop).card≤69631486279633 :=
-    native_rank_exception_count x u v r hr7 hr hfirst _ (fun γ hγ => (Finset.mem_filter.mp hγ).2)
-  have hP : (Γ.filter (fun γ => ¬drop γ ∧ princ γ)).card≤25947601202251264 := by
-    have hh := hprincipal (Γ.filter (fun γ => ¬drop γ ∧ princ γ))
-      (fun γ hγ => hbad γ (Finset.mem_filter.mp hγ).1)
-      (fun γ hγ => (Finset.mem_filter.mp hγ).2.2)
-    rw [hn,native_principal_three_price] at hh
-    exact hh
-  have hJ : (Γ.filter (fun γ => ¬drop γ ∧ ¬princ γ ∧ two γ)).card≤95993666704888298 := by
-    apply native_nonprincipal_two_kernel_count σ x u v hx hfix hn hregular
-    · intro γ hγ; exact hbad γ (Finset.mem_filter.mp hγ).1
-    · intro γ hγ; exact (Finset.mem_filter.mp hγ).2.2.2
-    · intro γ hγ
-      exact Classical.not_not.mp (Finset.mem_filter.mp hγ).2.2.1
-  have hR : (Γ.filter (fun γ => ¬drop γ ∧ ¬princ γ ∧ ¬two γ)).card≤121058742343964669 := by
-    apply hres
-    · intro γ hγ; exact hbad γ (Finset.mem_filter.mp hγ).1
-    · intro γ hγ; exact Classical.not_not.mp (Finset.mem_filter.mp hγ).2.1
-    · intro γ hγ; exact Classical.not_not.mp (Finset.mem_filter.mp hγ).2.2.1
-    · intro γ hγ
-      obtain ⟨hγΓ,hd,hp,ht⟩ := Finset.mem_filter.mp hγ
-      have hnong := Classical.not_not.mp hp
-      have htwo := bad_nonprincipal_nullity_ge_two σ x u v hx hfix 131072 180265 131072 49193 81879
-        (by omega) (by decide) (by decide) (by decide) γ (hbad γ hγΓ) hnong
-      change ¬fiberNullity σ x u v 131072 81879 γ=2 at ht
-      change 3≤fiberNullity σ x u v 131072 81879 γ
-      omega
-  exact (four_strata_count Γ drop princ two 69631486279633 25947601202251264 95993666704888298
-    121058742343964669 hD hP hJ hR).trans_eq (by norm_num)
 end
 end FrobeniusLocator.Strata
 end
@@ -2916,65 +1995,6 @@ noncomputable section
 open Finset Matrix MvPolynomial
 open scoped BigOperators
 variable {F row τ : Type} [Field F] [Fintype row] [DecidableEq row]
-def universalCompression (r : ℕ) : Matrix (Fin r) row (MvPolynomial (Fin r × row) F) :=
-  fun i j => MvPolynomial.X (i,j)
-def compressionMinor {r : ℕ} (A : Matrix row (Fin r) F) : MvPolynomial (Fin r × row) F :=
-  (universalCompression r*A.map MvPolynomial.C).det
-theorem compressionMinor_eval {r : ℕ} (A : Matrix row (Fin r) F) (x : Fin r × row → F) :
-    MvPolynomial.eval x (compressionMinor A)=(Matrix.of (fun i j => x (i,j))*A).det := by
-  let φ := MvPolynomial.eval₂Hom (RingHom.id F) x
-  have hd := φ.map_det (universalCompression r*A.map MvPolynomial.C)
-  rw [RingHom.mapMatrix_apply] at hd
-  change φ (universalCompression r*A.map MvPolynomial.C).det=_
-  rw [hd]
-  congr 1
-  ext i j
-  simp only [Matrix.map_apply,Matrix.mul_apply,map_sum,map_mul,universalCompression,
-    Matrix.of_apply,φ,MvPolynomial.coe_eval₂Hom,MvPolynomial.eval₂_sum,MvPolynomial.eval₂_mul,MvPolynomial.eval₂_X,MvPolynomial.eval₂_C,RingHom.id_apply]
-theorem compressionMinor_degree {r : ℕ} (A : Matrix row (Fin r) F) :
-    (compressionMinor A).totalDegree≤r := by
-  let N : Matrix (Fin r) (Fin r) (MvPolynomial (Fin r × row) F) := universalCompression r*A.map MvPolynomial.C
-  have hentry : ∀ i j, (N i j).totalDegree≤1 := by
-    intro i j
-    change (∑ k : row, (universalCompression r i k)*MvPolynomial.C (A k j)).totalDegree≤1
-    apply MvPolynomial.totalDegree_finsetSum_le
-    intro k _
-    exact (MvPolynomial.totalDegree_mul _ _).trans (by simp [universalCompression])
-  have hh := totalDegree_det_le_row_sum N (fun _ => 1) hentry
-  simpa [N,compressionMinor] using hh
-theorem compressionMinor_ne_zero {r : ℕ} (A : Matrix row (Fin r) F)
-    (hA : A.rank=r) : compressionMinor A≠0 := by
-  classical
-  have hinj := matrix_injective_of_full_column_rank A (by simpa only [Fintype.card_fin] using hA)
-  obtain ⟨rows,hrows⟩ := GenericRank.exists_rows_det_ne_zero A (fun v hv => hinj (hv.trans (map_zero A.mulVecLin).symm))
-  let x : Fin r × row → F := fun b => if b.2=rows b.1 then 1 else 0
-  have hselector : Matrix.of (fun i j => x (i,j))*A=A.submatrix rows id := by
-    ext i j
-    simp [Matrix.mul_apply,x]
-  have heval : MvPolynomial.eval x (compressionMinor A)≠0 := by
-    rw [compressionMinor_eval,hselector]
-    exact hrows
-  intro hz
-  exact heval (by rw [hz]; simp)
-theorem exists_common_row_compression [Fintype F] [DecidableEq F]
-    (S : Finset τ) (r : ℕ) (A : τ → Matrix row (Fin r) F)
-    (hA : ∀ z∈S, (A z).rank=r) (hcard : S.card*r<Fintype.card F) :
-    ∃ C : Matrix (Fin r) row F, ∀ z∈S, (C*A z).det≠0 := by
-  classical
-  let p := ∏ z∈S, compressionMinor (A z)
-  have hp : p≠0 := Finset.prod_ne_zero_iff.mpr (fun z hz => compressionMinor_ne_zero (A z) (hA z hz))
-  have hdeg : p.totalDegree<Fintype.card F := by
-    have hh := MvPolynomial.totalDegree_finsetProd S (fun z => compressionMinor (A z))
-    have hs : (∑ z∈S, (compressionMinor (A z)).totalDegree)≤S.card*r :=
-      (Finset.sum_le_sum (fun z _ => compressionMinor_degree (A z))).trans_eq (by simp)
-    exact (hh.trans hs).trans_lt hcard
-  obtain ⟨x,hx⟩ := exists_nonzero_evaluation_finite_variables p hp hdeg
-  refine ⟨Matrix.of (fun i j => x (i,j)),?_⟩
-  intro z hz
-  have hprod : (∏ z∈S, MvPolynomial.eval x (compressionMinor (A z)))≠0 := by
-    simpa only [p,map_prod] using hx
-  have hn := Finset.prod_ne_zero_iff.mp hprod z hz
-  rwa [compressionMinor_eval] at hn
 end
 end FrobeniusLocator.Strata
 end
@@ -2986,54 +2006,9 @@ noncomputable section
 open Finset Matrix
 open scoped BigOperators
 variable {F row col : Type} [Field F] [Fintype row] [Fintype col] [DecidableEq col]
-theorem kernel_eq_compressed_of_equal_rank (M : Matrix row col F) (r : ℕ)
-    (C : Matrix (Fin r) row F) (hMrank : M.rank=(C*M).rank) :
-    LinearMap.ker M.mulVecLin=LinearMap.ker (C*M).mulVecLin := by
-  have hle : LinearMap.ker M.mulVecLin≤LinearMap.ker (C*M).mulVecLin := by
-    intro v hv
-    change (C*M).mulVec v=0
-    rw [← Matrix.mulVec_mulVec,show M.mulVec v=0 from hv,Matrix.mulVec_zero]
-  have hM := LinearMap.finrank_range_add_finrank_ker M.mulVecLin
-  have hN := LinearMap.finrank_range_add_finrank_ker (C*M).mulVecLin
-  change M.rank+_= _ at hM
-  change (C*M).rank+_= _ at hN
-  apply Submodule.eq_of_le_of_finrank_eq hle
-  rw [hMrank] at hM
-  omega
-theorem compressed_rank_eq_of_pivot (M : Matrix row col F) (r : ℕ)
-    (C : Matrix (Fin r) row F) (cols : Fin r → col)
-    (hdet : ((C*M).submatrix id cols).det≠0) (hrank : M.rank≤r) :
-    M.rank=r ∧ (C*M).rank=r := by
-  have hlo := Matrix.rank_submatrix_le (C*M) id cols
-  rw [Matrix.rank_of_det_ne_zero hdet,Fintype.card_fin] at hlo
-  have hhi := Matrix.rank_le_card_height (C*M)
-  rw [Fintype.card_fin] at hhi
-  have hmul := Matrix.rank_mul_le_right C M
-  omega
 section Ring
 variable {R : Type} [CommRing R] {r : ℕ}
-def lastCofactor (N : Matrix (Fin r) (Fin (r+1)) R) : Fin (r+1) → R :=
-  GenericCofactor.rawVector N id Fin.castSucc (Fin.last r)
-theorem lastCofactor_annihilates (N : Matrix (Fin r) (Fin (r+1)) R) :
-    N.mulVec (lastCofactor N)=0 := by
-  exact GenericCofactor.selected_annihilates N id Fin.castSucc (Fin.last r)
-theorem lastCofactor_last (N : Matrix (Fin r) (Fin (r+1)) R) :
-    lastCofactor N (Fin.last r)=(N.submatrix id Fin.castSucc).det := by
-  have hne (j : Fin r) : j.castSucc≠Fin.last r := by intro h; have hh := congrArg Fin.val h; have := j.isLt; simp only [Fin.val_castSucc,Fin.val_last] at hh; omega
-  have hne' (j : Fin r) : Fin.last r≠j.castSucc := (hne j).symm
-  rw [lastCofactor,GenericCofactor.rawVector_apply]
-  simp only [Pi.sub_apply,Pi.smul_apply,smul_eq_mul,Pi.single_eq_same,mul_one,Matrix.mulVec,dotProduct,
-    GenericCofactor.inclusion,Pi.single_apply,hne',ite_false,zero_mul,Finset.sum_const_zero,sub_zero]
 end Ring
-theorem compressed_lastCofactor_kernel {r : ℕ} (M : Matrix row (Fin (r+1)) F)
-    (C : Matrix (Fin r) row F)
-    (hdet : ((C*M).submatrix id Fin.castSucc).det≠0) (hrank : M.rank≤r) :
-    M.mulVec (lastCofactor (C*M))=0 ∧ lastCofactor (C*M) (Fin.last r)≠0 := by
-  obtain ⟨hM,hN⟩ := compressed_rank_eq_of_pivot M r C Fin.castSucc hdet hrank
-  have heq := kernel_eq_compressed_of_equal_rank M r C (hM.trans hN.symm)
-  have hker : lastCofactor (C*M)∈LinearMap.ker (C*M).mulVecLin := lastCofactor_annihilates _
-  rw [← heq] at hker
-  exact ⟨hker,by rw [lastCofactor_last]; exact hdet⟩
 end
 end FrobeniusLocator.Strata
 end
@@ -3274,39 +2249,6 @@ def movingCertificateOfRowBasis (φ : F[X] →+* K) (hφ : Function.Injective φ
   no_additional_fixed_root := hfixed
   normal_nullity := principal_normal_nullity φ hφ p x u v L t (H.card+d) q hsize B
   multiples_annihilate := hshift
-theorem principal_bad_count_row_sum (φ : F[X] →+* K) (hφ : Function.Injective φ)
-    (p : ℕ) [ExpChar F p] (x : ι → F) (hx : Function.Injective x)
-    (hfixedNodes : ∀ i, x i^p=x i) (u v : ι → F)
-    (k A L t : ℕ) (hkA : k < A) (hL : k+L=A) (ht : A+t=Fintype.card ι)
-    (H : Finset ι) (d q : ℕ) (hd : 0 < d) (hsize : H.card+d+q=t)
-    (B : NormalFiber.RowBasis φ (stacked p x u v L t) (H.card+d))
-    (coeffs : Fin (d+1) → F[X])
-    (hdeg : ∀ j, (coeffs j).natDegree ≤ p*d)
-    (hprimitive : ∀ γ, specialize coeffs γ ≠ 0)
-    (hfixed : ∀ i, i ∉ H → nodePolynomial coeffs (x i) ≠ 0)
-    (hshift : ∀ γ (Q : Polynomial.degreeLT F (q+1)),
-      ((stacked p x u v L t).map (Polynomial.evalRingHom γ)).mulVec
-        (multipleCoefficients (locator x H * specialize coeffs γ) q t Q)=0)
-    (Γ : Finset F) (hΓ : ∀ γ ∈ Γ, BadSlope x u v k A γ) :
-    Γ.card ≤ (∑ i, if (B.rows i).1=0 then 1 else p)+p*(Fintype.card ι-H.card) := by
-  apply principal_bad_count p x hx hfixedNodes u v k A L t _ hkA hL ht
-    (NormalFiber.pivot B).det B.minor_ne
-    (NormalFiber.minor_degree_le φ _ _ B _ (stacked_entry_natDegree p x u v L t))
-    (movingCertificateOfRowBasis φ hφ p x u v L t H d q hd hsize B coeffs
-      hdeg hprimitive hfixed hshift) Γ hΓ
-theorem constant_kernel_count_row_sum (φ : F[X] →+* K) (hφ : Function.Injective φ)
-    (p : ℕ) [ExpChar F p] (x : ι → F) (hx : Function.Injective x)
-    (hfixedNodes : ∀ i, x i^p=x i) (u v : ι → F)
-    (k A L t r : ℕ) (hkA : k < A) (hL : k+L=A) (ht : A+t=Fintype.card ι)
-    (B : NormalFiber.RowBasis φ (stacked p x u v L t) r)
-    (W : Submodule F (Fin (t+1) → F)) (hWdim : Module.finrank F W=t+1-r)
-    (hW : ∀ c ∈ W, (stacked p x u v L t).mulVec (fun j => C (c j))=0)
-    (Γ : Finset F) (hΓ : ∀ γ ∈ Γ, BadSlope x u v k A γ) :
-    Γ.card ≤ ∑ i, if (B.rows i).1=0 then 1 else p := by
-  apply constant_kernel_count p x hx hfixedNodes u v k A L t _ hkA hL ht
-    (NormalFiber.pivot B).det B.minor_ne
-    (NormalFiber.minor_degree_le φ _ _ B _ (stacked_entry_natDegree p x u v L t))
-    (constantCertificateOfRowBasis φ hφ p x u v L t r B W hWdim hW) Γ hΓ
 end
 end FrobeniusLocator.Principal
 end
@@ -3318,73 +2260,6 @@ noncomputable section
 open Finset Matrix MvPolynomial
 open scoped BigOperators
 variable {F ι : Type} [Field F] [DecidableEq F] [Fintype ι] [DecidableEq ι]
-def independentLocator (p blocks : ℕ) (x u v : ι → F) (L t : ℕ) :
-    Matrix (Fin blocks × Fin L) (Fin (t+1)) (MvPolynomial (Fin blocks) F) := fun b j =>
-  MvPolynomial.C (syndrome x u (b.2.val+j.val)^(p^b.1.val))+
-    MvPolynomial.X b.1*MvPolynomial.C (syndrome x v (b.2.val+j.val)^(p^b.1.val))
-def independentPoint (p blocks : ℕ) (γ : F) : Fin blocks → F := fun b => γ^(p^b.val)
-theorem independentLocator_eval (p blocks : ℕ) (x u v : ι → F) (L t : ℕ) (γ : F) :
-    (independentLocator p blocks x u v L t).map
-      (MvPolynomial.eval₂Hom (RingHom.id F) (independentPoint p blocks γ))=
-      (frobeniusStacked p blocks x u v L t).map (Polynomial.evalRingHom γ) := by
-  ext b j
-  simp only [Matrix.map_apply,independentLocator,frobeniusStacked,independentPoint,map_add,map_mul,
-    MvPolynomial.eval₂Hom_C,MvPolynomial.eval₂Hom_X',RingHom.id_apply,
-    Polynomial.coe_evalRingHom,Polynomial.eval_add,Polynomial.eval_mul,Polynomial.eval_C,
-    Polynomial.eval_pow,Polynomial.eval_X]
-theorem independentLocator_entry_degree (p blocks : ℕ) (x u v : ι → F) (L t : ℕ)
-    (b : Fin blocks × Fin L) (j : Fin (t+1)) :
-    (independentLocator p blocks x u v L t b j).totalDegree≤1 := by
-  unfold independentLocator
-  apply (MvPolynomial.totalDegree_add _ _).trans
-  apply max_le
-  · simp only [MvPolynomial.totalDegree_C]
-    omega
-  · exact (MvPolynomial.totalDegree_mul _ _).trans (by
-      simp only [MvPolynomial.totalDegree_X,MvPolynomial.totalDegree_C,add_zero]
-      omega)
-def maximalMinorList {row ν : Type} [Fintype row] [DecidableEq row] (t : ℕ)
-    (M : Matrix row (Fin (t+1)) (MvPolynomial ν F)) : List (MvPolynomial ν F) :=
-  Finset.univ.toList.map (fun rows : Fin (t+1) → row => (M.submatrix rows id).det)
-theorem mem_maximalMinorList {row ν : Type} [Fintype row] [DecidableEq row] (t : ℕ)
-    (M : Matrix row (Fin (t+1)) (MvPolynomial ν F)) (f : MvPolynomial ν F) :
-    f∈maximalMinorList t M ↔ ∃ rows : Fin (t+1) → row, (M.submatrix rows id).det=f := by
-  simp only [maximalMinorList,List.mem_map,Finset.mem_toList,Finset.mem_univ,true_and]
-theorem maximalMinorList_degree {row ν : Type} [Fintype row] [DecidableEq row] (t : ℕ)
-    (M : Matrix row (Fin (t+1)) (MvPolynomial ν F)) (hM : ∀ i j, (M i j).totalDegree≤1) :
-    ∀ f∈maximalMinorList t M, f.totalDegree≤t+1 := by
-  intro f hf
-  obtain ⟨rows,rfl⟩ := (mem_maximalMinorList t M f).mp hf
-  have hh := totalDegree_det_le_row_sum (M.submatrix rows id) (fun _ => 1) (fun i j => hM (rows i) j)
-  simpa using hh
-theorem maximalMinorList_eval_zero_of_top_kernel {row ν : Type} [Fintype row] [DecidableEq row]
-    (t : ℕ) (M : Matrix row (Fin (t+1)) (MvPolynomial ν F)) (z : ν → F)
-    (v : Fin (t+1) → F)
-    (hMv : (M.map (MvPolynomial.eval₂Hom (RingHom.id F) z)).mulVec v=0)
-    (htop : v (Fin.last t)≠0) :
-    ∀ f∈maximalMinorList t M, MvPolynomial.aeval z f=0 := by
-  intro f hf
-  obtain ⟨rows,rfl⟩ := (mem_maximalMinorList t M f).mp hf
-  let φ := MvPolynomial.eval₂Hom (RingHom.id F) z
-  have hsel : ((M.submatrix rows id).map φ).mulVec v=0 := by
-    funext i
-    exact congrFun hMv (rows i)
-  have hd : ((M.submatrix rows id).map φ).det=0 :=
-    Matrix.det_eq_zero_of_mulVec_eq_zero_of_mem_nonZeroDivisors hsel
-      (i := Fin.last t) (mem_nonZeroDivisors_of_ne_zero htop)
-  have hm := φ.map_det (M.submatrix rows id)
-  rw [RingHom.mapMatrix_apply] at hm
-  change MvPolynomial.aeval z (M.submatrix rows id).det=0
-  simpa only [φ, MvPolynomial.aeval_def,Algebra.algebraMap_self,MvPolynomial.coe_eval₂Hom] using hm.trans hd
-theorem independentPoint_injective (p blocks : ℕ) (hblocks : 0<blocks) :
-    Function.Injective (independentPoint (F := F) p blocks) := by
-  intro γ δ h
-  have hh := congrFun h ⟨0,hblocks⟩
-  simpa only [independentPoint,pow_zero,pow_one] using hh
-theorem frobenius_iterate_fixed (p : ℕ) (a : F) (ha : a^p=a) (b : ℕ) : a^(p^b)=a := by
-  induction b with
-  | zero => simp
-  | succ b hb => rw [pow_succ,pow_mul,hb,ha]
 end
 end FrobeniusLocator.Strata
 end
@@ -3395,46 +2270,6 @@ noncomputable section
 open Finset Matrix
 open scoped BigOperators
 variable {F row : Type} [Field F] [Fintype row]
-theorem first_columns_injective_of_kernel_line {r : ℕ} (M : Matrix row (Fin (r+1)) F)
-    (q : Fin (r+1) → F) (hq : q (Fin.last r)≠0)
-    (hline : ∀ v, M.mulVec v=0 → ∃ a : F, v=a • q) :
-    Function.Injective (M.submatrix id Fin.castSucc).mulVecLin := by
-  classical
-  apply LinearMap.ker_eq_bot.mp
-  apply LinearMap.ker_eq_bot'.mpr
-  intro v hv
-  let w : Fin (r+1) → F := Fin.lastCases 0 v
-  have hM : M.mulVec w=0 := by
-    funext i
-    change (∑ j : Fin (r+1), M i j*w j)=0
-    rw [Fin.sum_univ_castSucc]
-    simpa only [w,Fin.lastCases_castSucc,Fin.lastCases_last,mul_zero,add_zero,Matrix.mulVec,
-      dotProduct,Matrix.submatrix_apply,id_eq,Matrix.mulVecLin_apply,Pi.zero_apply] using congrFun hv i
-  obtain ⟨a,ha⟩ := hline w hM
-  have hlast := congrFun ha (Fin.last r)
-  have ha0 : a=0 := by
-    have hz : a*q (Fin.last r)=0 := by simpa only [w,Fin.lastCases_last,Pi.smul_apply,smul_eq_mul] using hlast.symm
-    exact (mul_eq_zero.mp hz).resolve_right hq
-  funext j
-  have hh := congrFun ha j.castSucc
-  simpa only [w,Fin.lastCases_castSucc,ha0,zero_smul,Pi.zero_apply] using hh
-theorem first_columns_rank_of_nullity_one {r : ℕ} (M : Matrix row (Fin (r+1)) F)
-    (hnull : Module.finrank F (LinearMap.ker M.mulVecLin)=1)
-    (q : Fin (r+1) → F) (hMq : M.mulVec q=0) (hq : q (Fin.last r)≠0) :
-    (M.submatrix id Fin.castSucc).rank=r := by
-  have hq0 : q≠0 := by intro hz; exact hq (congrFun hz (Fin.last r))
-  have hline := GenericRank.kernel_line_of_finrank M hnull q hq0 hMq
-  have hinj := first_columns_injective_of_kernel_line M q hq hline
-  change Module.finrank F (LinearMap.range (M.submatrix id Fin.castSucc).mulVecLin)=r
-  rw [LinearMap.finrank_range_of_inj hinj,Module.finrank_fintype_fun_eq_card,Fintype.card_fin]
-theorem rank_le_of_all_maximal_minors_zero {r : ℕ} (M : Matrix row (Fin (r+1)) F)
-    (hminor : ∀ rows : Fin (r+1) → row, (M.submatrix rows id).det=0) : M.rank≤r := by
-  classical
-  by_contra hn
-  have hr : M.rank=r+1 := by have hh := Matrix.rank_le_card_width M; rw [Fintype.card_fin] at hh; omega
-  have hinj := matrix_injective_of_full_column_rank M (by simpa only [Fintype.card_fin] using hr)
-  obtain ⟨rows,hrows⟩ := GenericRank.exists_rows_det_ne_zero M (fun v hv => hinj (hv.trans (map_zero M.mulVecLin).symm))
-  exact hrows (hminor rows)
 end
 end FrobeniusLocator.Strata
 end
@@ -3446,60 +2281,6 @@ noncomputable section
 open Finset Matrix MvPolynomial
 open scoped BigOperators
 variable {F ν : Type} [Field F]
-theorem totalDegree_neg_le (p : MvPolynomial ν F) : (-p).totalDegree≤p.totalDegree := by
-  have hh := MvPolynomial.totalDegree_smul_le (-1 : F) p
-  simpa only [neg_one_smul] using hh
-theorem totalDegree_sub_le (p q : MvPolynomial ν F) :
-    (p-q).totalDegree≤max p.totalDegree q.totalDegree := by
-  rw [sub_eq_add_neg]
-  exact (MvPolynomial.totalDegree_add _ _).trans (max_le_max le_rfl (totalDegree_neg_le q))
-theorem lastCofactor_degree {r : ℕ} (N : Matrix (Fin r) (Fin (r+1)) (MvPolynomial ν F))
-    (hN : ∀ i j, (N i j).totalDegree≤1) (c : Fin (r+1)) :
-    (lastCofactor N c).totalDegree≤r := by
-  classical
-  have hsum : (∑ _i : Fin r, (1 : ℕ))=r := by simp
-  rw [lastCofactor,GenericCofactor.rawVector_apply]
-  simp only [Pi.sub_apply,Pi.smul_apply,smul_eq_mul]
-  apply (totalDegree_sub_le _ _).trans
-  apply max_le
-  · by_cases hc : Fin.last r=c
-    · subst c
-      simp only [Pi.single_eq_same,mul_one]
-      exact (totalDegree_det_le_row_sum _ (fun _ => 1) (fun i j => hN i j.castSucc)).trans_eq hsum
-    · simp [Pi.single_apply,hc,Ne.symm hc]
-  · change (∑ q, GenericCofactor.inclusion Fin.castSucc c q*
-      (N.submatrix id Fin.castSucc).cramer (fun q => N q (Fin.last r)) q).totalDegree≤r
-    apply MvPolynomial.totalDegree_finsetSum_le
-    intro q _
-    by_cases hq : q.castSucc=c
-    · simp only [GenericCofactor.inclusion,hq,Pi.single_eq_same,one_mul,Matrix.cramer_apply]
-      apply (totalDegree_det_le_row_sum _ (fun _ => 1) ?_).trans_eq hsum
-      intro i j
-      by_cases hj : j=q
-      · subst j
-        simpa only [Matrix.updateCol_self] using hN i (Fin.last r)
-      · simpa only [Matrix.updateCol_ne hj,Matrix.submatrix_apply,id_eq] using hN i j.castSucc
-    · simp [GenericCofactor.inclusion,Pi.single_apply,hq,Ne.symm hq]
-theorem lastCofactor_map {R S : Type} [CommRing R] [CommRing S] {r : ℕ}
-    (φ : R →+* S) (N : Matrix (Fin r) (Fin (r+1)) R) (c : Fin (r+1)) :
-    lastCofactor (N.map φ) c=φ (lastCofactor N c) :=
-  GenericCofactor.map_rawVector φ N id Fin.castSucc (Fin.last r) c
-def multivariateNodeCut {r : ℕ} (Q : Fin (r+1) → MvPolynomial ν F) (a : F) : MvPolynomial ν F :=
-  ∑ j, MvPolynomial.C (a^j.val)*Q j
-theorem multivariateNodeCut_degree {r D : ℕ} (Q : Fin (r+1) → MvPolynomial ν F)
-    (hQ : ∀ j, (Q j).totalDegree≤D) (a : F) : (multivariateNodeCut Q a).totalDegree≤D := by
-  apply MvPolynomial.totalDegree_finsetSum_le
-  intro j _
-  exact (MvPolynomial.totalDegree_mul _ _).trans (by simpa only [MvPolynomial.totalDegree_C,zero_add] using hQ j)
-theorem multivariateNodeCut_map {K : Type} [Field K] {r : ℕ}
-    (φ : MvPolynomial ν F →+* K) (Q : Fin (r+1) → MvPolynomial ν F) (a : F) :
-    φ (multivariateNodeCut Q a)=(Principal.assemble (fun j => φ (Q j))).eval (φ (MvPolynomial.C a)) := by
-  simp only [multivariateNodeCut,map_sum,map_mul,Principal.assemble,Polynomial.eval_finsetSum,Polynomial.eval_monomial]
-  apply Finset.sum_congr rfl
-  intro j _
-  have hp : φ (MvPolynomial.C (a^j.val))=(φ (MvPolynomial.C a))^j.val := by rw [← map_pow,← map_pow]
-  rw [hp]
-  ring
 end
 end FrobeniusLocator.Strata
 end
@@ -3635,40 +2416,6 @@ noncomputable section
 open Finset Matrix MvPolynomial
 open scoped BigOperators
 variable {F ν : Type} [Field F]
-abbrev PrimeGenericField (P : Ideal (MvPolynomial ν F)) [P.IsPrime] :=
-  FractionRing (MvPolynomial ν F ⧸ P)
-def primeGenericMap (P : Ideal (MvPolynomial ν F)) [P.IsPrime] :
-    MvPolynomial ν F →+* PrimeGenericField P :=
-  (algebraMap (MvPolynomial ν F ⧸ P) (PrimeGenericField P)).comp (Ideal.Quotient.mk P)
-theorem primeGenericMap_zero_iff (P : Ideal (MvPolynomial ν F)) [P.IsPrime] (f : MvPolynomial ν F) :
-    primeGenericMap P f=0 ↔ f∈P := by
-  constructor
-  · intro hz
-    apply Ideal.Quotient.eq_zero_iff_mem.mp
-    apply IsFractionRing.injective (MvPolynomial ν F ⧸ P) (PrimeGenericField P)
-    exact hz.trans (map_zero _).symm
-  · intro hf
-    change algebraMap (MvPolynomial ν F ⧸ P) (PrimeGenericField P) (Ideal.Quotient.mk P f)=0
-    rw [Ideal.Quotient.eq_zero_iff_mem.mpr hf,map_zero]
-theorem primeGenericMap_nonzero_of_point (P : Ideal (MvPolynomial ν F)) [P.IsPrime]
-    (z : ν → F) (hz : z∈zeroLocus F P) (f : MvPolynomial ν F) (hf : aeval z f≠0) :
-    primeGenericMap P f≠0 := by
-  intro hzero
-  exact hf (hz f ((primeGenericMap_zero_iff P f).mp hzero))
-theorem generic_rank_le_of_maximal_minors {row : Type} [Fintype row] {r : ℕ}
-    (P : Ideal (MvPolynomial ν F)) [P.IsPrime]
-    (M : Matrix row (Fin (r+1)) (MvPolynomial ν F))
-    (hminor : ∀ rows : Fin (r+1) → row, (M.submatrix rows id).det∈P) :
-    (M.map (primeGenericMap P)).rank≤r := by
-  classical
-  apply rank_le_of_all_maximal_minors_zero
-  intro rows
-  have hh := (primeGenericMap P).map_det (M.submatrix rows id)
-  rw [RingHom.mapMatrix_apply] at hh
-  have heq : (M.map (primeGenericMap P)).submatrix rows id=
-      (M.submatrix rows id).map (primeGenericMap P) := rfl
-  rw [heq,← hh]
-  exact (primeGenericMap_zero_iff P _).mpr (hminor rows)
 end
 end FrobeniusLocator.Strata
 end
@@ -3680,88 +2427,6 @@ noncomputable section
 open Finset Matrix MvPolynomial
 open scoped BigOperators
 variable {F ν row : Type} [Field F] [Fintype row] [DecidableEq row]
-theorem aeval_self_eq_evalHom (z : ν → F) (f : MvPolynomial ν F) :
-    MvPolynomial.aeval z f=MvPolynomial.eval₂Hom (RingHom.id F) z f := by
-  simp only [MvPolynomial.aeval_def,Algebra.algebraMap_self,MvPolynomial.coe_eval₂Hom]
-theorem compressed_cofactor_mod_prime {r : ℕ}
-    (P : Ideal (MvPolynomial ν F)) [P.IsPrime]
-    (M : Matrix row (Fin (r+1)) (MvPolynomial ν F)) (C : Matrix (Fin r) row F)
-    (hM : ∀ i j, (M i j).totalDegree≤1)
-    (hrank : (M.map (primeGenericMap P)).rank≤r)
-    (hdet : (((C.map MvPolynomial.C*M).submatrix id Fin.castSucc).det)∉P) :
-    let N := C.map MvPolynomial.C*M
-    (∀ j, (lastCofactor N j).totalDegree≤r) ∧
-      (∀ i, M.mulVec (lastCofactor N) i∈P) := by
-  classical
-  let N := C.map MvPolynomial.C*M
-  let φ := primeGenericMap P
-  let C' := C.map (φ.comp MvPolynomial.C)
-  have hNmap : N.map φ=C'*(M.map φ) := by
-    ext i j
-    simp only [N,C',Matrix.map_apply,Matrix.mul_apply,map_sum,map_mul,RingHom.comp_apply]
-  have hmap := φ.map_det (N.submatrix id Fin.castSucc)
-  rw [RingHom.mapMatrix_apply] at hmap
-  have hdetK : ((C'*(M.map φ)).submatrix id Fin.castSucc).det≠0 := by
-    rw [← hNmap]
-    change ((N.submatrix id Fin.castSucc).map φ).det≠0
-    rw [← hmap]
-    exact fun hz => hdet ((primeGenericMap_zero_iff P _).mp hz)
-  have hk := (compressed_lastCofactor_kernel (M.map φ) C' hdetK hrank).1
-  have hqmap : lastCofactor (C'*(M.map φ))=fun j => φ (lastCofactor N j) := by
-    rw [← hNmap]
-    funext j
-    exact lastCofactor_map φ N j
-  rw [hqmap] at hk
-  refine ⟨?_,?_⟩
-  · have hN : ∀ i j, (N i j).totalDegree≤1 := by
-      intro i j
-      change (∑ k : row, MvPolynomial.C (C i k)*M k j).totalDegree≤1
-      apply MvPolynomial.totalDegree_finsetSum_le
-      intro k _
-      exact (MvPolynomial.totalDegree_mul _ _).trans (by simpa only [MvPolynomial.totalDegree_C,zero_add] using hM k j)
-    exact lastCofactor_degree N hN
-  · intro i
-    apply (primeGenericMap_zero_iff P _).mp
-    have hh := congrFun hk i
-    simpa only [Matrix.mulVec,dotProduct,Matrix.map_apply,map_sum,map_mul,Pi.zero_apply] using hh
-theorem exists_component_cofactor [Fintype F] [DecidableEq F] {r : ℕ}
-    (P : Ideal (MvPolynomial ν F)) [P.IsPrime]
-    (M : Matrix row (Fin (r+1)) (MvPolynomial ν F)) (hM : ∀ i j, (M i j).totalDegree≤1)
-    (hrank : (M.map (primeGenericMap P)).rank≤r)
-    (S : Finset (ν → F)) (hSne : S.Nonempty) (hSP : ∀ z∈S, z∈zeroLocus F P)
-    (hfirst : ∀ z∈S, ((M.map (MvPolynomial.eval₂Hom (RingHom.id F) z)).submatrix id Fin.castSucc).rank=r)
-    (hcard : S.card*r<Fintype.card F) :
-    ∃ Q : Fin (r+1) → MvPolynomial ν F,
-      (∀ j, (Q j).totalDegree≤r) ∧ (∀ i, M.mulVec Q i∈P) ∧ Q (Fin.last r)∉P ∧
-      ∀ z∈S, MvPolynomial.aeval z (Q (Fin.last r))≠0 := by
-  classical
-  let A : (ν → F) → Matrix row (Fin r) F := fun z =>
-    (M.map (MvPolynomial.eval₂Hom (RingHom.id F) z)).submatrix id Fin.castSucc
-  obtain ⟨C,hC⟩ := exists_common_row_compression S r A hfirst hcard
-  let N := C.map MvPolynomial.C*M
-  let Δ := (N.submatrix id Fin.castSucc).det
-  have heval (z : ν → F) : MvPolynomial.aeval z Δ=(C*A z).det := by
-    rw [aeval_self_eq_evalHom]
-    let ψ := MvPolynomial.eval₂Hom (RingHom.id F) z
-    have hh := ψ.map_det (N.submatrix id Fin.castSucc)
-    rw [RingHom.mapMatrix_apply] at hh
-    change ψ Δ=(C*A z).det
-    rw [hh]
-    congr 1
-    ext i j
-    simp only [N,A,Matrix.map_apply,Matrix.submatrix_apply,id_eq,Matrix.mul_apply,map_sum,map_mul,
-      ψ,MvPolynomial.eval₂Hom_C,RingHom.id_apply]
-  have hΔ (z : ν → F) (hz : z∈S) : MvPolynomial.aeval z Δ≠0 := by rw [heval]; exact hC z hz
-  have hΔP : Δ∉P := by
-    obtain ⟨z,hz⟩ := hSne
-    intro hmem
-    exact hΔ z hz (hSP z hz Δ hmem)
-  obtain ⟨hdeg,hkernel⟩ := compressed_cofactor_mod_prime P M C hM hrank hΔP
-  refine ⟨lastCofactor N,hdeg,hkernel,?_,?_⟩
-  · rwa [lastCofactor_last]
-  · intro z hz
-    rw [lastCofactor_last]
-    exact hΔ z hz
 end
 end FrobeniusLocator.Strata
 end
@@ -3773,69 +2438,6 @@ noncomputable section
 open Polynomial Finset Matrix
 open scoped BigOperators
 variable {F row : Type} [Field F] [Fintype row]
-theorem restriction_kernel_line (t b d : ℕ) (M : Matrix row (Fin (t+1)) F)
-    (g q : F[X]) (hg : g≠0) (hgd : g.natDegree≤b) (hqd : q.natDegree≤d) (hsize : b+d≤t)
-    (hline : ∀ v, M.mulVec v=0 → ∃ a : F, v=a • (fun j : Fin (t+1) => (g*q).coeff j.val))
-    (v : Fin (d+1) → F) (hv : (Principal.restrictByFamily t d M g).mulVec v=0) :
-    ∃ a : F, v=a • (fun j : Fin (d+1) => q.coeff j.val) := by
-  let f := Principal.assemble v
-  have hfd : f.natDegree≤d := Principal.assemble_natDegree_le v
-  rw [Principal.restrictByFamily_mulVec] at hv
-  obtain ⟨a,ha⟩ := hline _ hv
-  have hgf : (g*f).natDegree≤t := Polynomial.natDegree_mul_le.trans (by omega)
-  have hgq : (a • (g*q)).natDegree≤t := (Polynomial.natDegree_smul_le a (g*q)).trans
-    (Polynomial.natDegree_mul_le.trans (by omega))
-  have hpoly : g*f=a • (g*q) := Principal.coefficients_injective_bounded t _ _ hgf hgq (by
-    intro j
-    have hh := congrFun ha j
-    simpa only [Polynomial.coeff_smul,Pi.smul_apply] using hh)
-  have hfq : f=a • q := by
-    apply mul_left_cancel₀ hg
-    rw [hpoly,mul_smul_comm]
-  refine ⟨a,?_⟩
-  funext j
-  have hc := congrArg (fun P : F[X] => P.coeff j.val) hfq
-  simpa only [f,Principal.assemble_coeff,Polynomial.coeff_smul,Pi.smul_apply] using hc
-theorem restriction_nullity_one (t b d : ℕ) (M : Matrix row (Fin (t+1)) F)
-    (g q : F[X]) (hg : g≠0) (hq : q≠0) (hgd : g.natDegree≤b) (hqd : q.natDegree≤d) (hsize : b+d≤t)
-    (hgen : M.mulVec (fun j : Fin (t+1) => (g*q).coeff j.val)=0)
-    (hline : ∀ v, M.mulVec v=0 → ∃ a : F, v=a • (fun j : Fin (t+1) => (g*q).coeff j.val)) :
-    Module.finrank F (LinearMap.ker (Principal.restrictByFamily t d M g).mulVecLin)=1 := by
-  classical
-  let qv := fun j : Fin (d+1) => q.coeff j.val
-  have hqv : qv≠0 := by
-    intro hz
-    apply hq
-    apply Principal.coefficients_injective_bounded d q 0 hqd (by simp)
-    intro j
-    exact congrFun hz j
-  have hqker : (Principal.restrictByFamily t d M g).mulVec qv=0 := by
-    rw [Principal.restrictByFamily_mulVec,Principal.assemble_coefficients d q hqd]
-    exact hgen
-  have heq : LinearMap.ker (Principal.restrictByFamily t d M g).mulVecLin=F ∙ qv := by
-    apply le_antisymm
-    · intro v hv
-      obtain ⟨a,ha⟩ := restriction_kernel_line t b d M g q hg hgd hqd hsize hline v hv
-      exact Submodule.mem_span_singleton.mpr ⟨a,ha.symm⟩
-    · apply Submodule.span_le.mpr
-      rintro v hv
-      rw [Set.mem_singleton_iff] at hv
-      exact hv ▸ hqker
-  rw [heq]
-  exact finrank_span_singleton hqv
-theorem multivariate_restriction_degree {ν : Type} (t d : ℕ)
-    (M : Matrix row (Fin (t+1)) (MvPolynomial ν F)) (g : F[X]) (D : row → ℕ)
-    (hM : ∀ i j, (M i j).totalDegree≤D i) :
-    ∀ i j, (Principal.restrictByFamily t d M (g.map (MvPolynomial.C : F →+* MvPolynomial ν F)) i j).totalDegree≤D i := by
-  intro i j
-  simp only [Principal.restrictByFamily,Matrix.mul_apply,Principal.multiplicationMatrix]
-  apply MvPolynomial.totalDegree_finsetSum_le
-  intro l _
-  have hc : ((g.map MvPolynomial.C)*(Polynomial.X : Polynomial (MvPolynomial ν F))^j.val).coeff l.val=
-      MvPolynomial.C ((g*(Polynomial.X : F[X])^j.val).coeff l.val) := by
-    rw [← Polynomial.coeff_map,Polynomial.map_mul,Polynomial.map_pow,Polynomial.map_X]
-  rw [hc]
-  exact (MvPolynomial.totalDegree_mul _ _).trans (by simpa only [MvPolynomial.totalDegree_C,add_zero] using hM i l)
 end
 end FrobeniusLocator.Strata
 end
@@ -4034,46 +2636,8 @@ noncomputable section
 open Polynomial Finset Matrix
 open scoped BigOperators
 variable {F row : Type} [Field F] [Fintype row]
-theorem assemble_smul_vector {R : Type} [CommRing R] {t : ℕ} (a : R) (v : Fin (t+1) → R) :
-    Principal.assemble (a • v)=a • Principal.assemble v := by
-  simp only [Principal.assemble,Pi.smul_apply,Finset.smul_sum]
-  apply Finset.sum_congr rfl
-  intro j _
-  rw [← Polynomial.smul_monomial]
-theorem polynomial_from_kernel_line {t : ℕ} (M : Matrix row (Fin (t+1)) F)
-    (hnull : Module.finrank F (LinearMap.ker M.mulVecLin)=1)
-    (g : F[X]) (hg : g≠0) (hgd : g.natDegree≤t)
-    (hMg : M.mulVec (fun j : Fin (t+1) => g.coeff j.val)=0)
-    (q : Fin (t+1) → F) (hMq : M.mulVec q=0) (hqtop : q (Fin.last t)≠0) :
-    ∃ a : F, a≠0 ∧ Principal.assemble q=a • g := by
-  classical
-  have hgv : (fun j : Fin (t+1) => g.coeff j.val)≠0 := by
-    intro hz
-    apply hg
-    apply Principal.coefficients_injective_bounded t g 0 hgd (by simp)
-    exact fun j => congrFun hz j
-  obtain ⟨a,ha⟩ := GenericRank.kernel_line_of_finrank M hnull _ hgv hMg q hMq
-  have ha0 : a≠0 := by
-    intro hz
-    exact hqtop (by rw [ha,hz,zero_smul]; rfl)
-  refine ⟨a,ha0,?_⟩
-  rw [ha,assemble_smul_vector,Principal.assemble_coefficients t g hgd]
 section Parameter
 variable {ν : Type} {t : ℕ}
-theorem component_kernel_specializes (P : Ideal (MvPolynomial ν F))
-    (M : Matrix row (Fin (t+1)) (MvPolynomial ν F)) (Q : Fin (t+1) → MvPolynomial ν F)
-    (hkernel : ∀ i, M.mulVec Q i∈P) (z : ν → F) (hz : z∈MvPolynomial.zeroLocus F P) :
-    (M.map (MvPolynomial.eval₂Hom (RingHom.id F) z)).mulVec
-      (fun j => MvPolynomial.eval₂Hom (RingHom.id F) z (Q j))=0 := by
-  funext i
-  have hh := hz (M.mulVec Q i) (hkernel i)
-  rw [aeval_self_eq_evalHom] at hh
-  simpa only [Matrix.mulVec,dotProduct,Matrix.map_apply,map_sum,map_mul,Pi.zero_apply] using hh
-theorem multivariateNodeCut_eval (Q : Fin (t+1) → MvPolynomial ν F) (z : ν → F) (a : F) :
-    MvPolynomial.aeval z (multivariateNodeCut Q a)=
-      (Principal.assemble (fun j => MvPolynomial.eval₂Hom (RingHom.id F) z (Q j))).eval a := by
-  rw [aeval_self_eq_evalHom,multivariateNodeCut_map]
-  simp only [MvPolynomial.eval₂Hom_C,RingHom.id_apply]
 end Parameter
 end
 end FrobeniusLocator.Strata
@@ -4137,39 +2701,6 @@ noncomputable section
 open Polynomial Finset Matrix
 open scoped BigOperators
 variable {F ι ν : Type} [Field F] [Fintype ι] [DecidableEq ι]
-def affineLocator (σ : ν → F →+* F) (x u v : ι → F) (L t : ℕ) :
-    Matrix (ν × Fin L) (Fin (t+1)) (MvPolynomial ν F) := fun b j =>
-  MvPolynomial.C (σ b.1 (syndrome x u (b.2.val+j.val)))+
-    MvPolynomial.X b.1*MvPolynomial.C (σ b.1 (syndrome x v (b.2.val+j.val)))
-theorem affineLocator_entry_degree (σ : ν → F →+* F) (x u v : ι → F) (L t : ℕ)
-    (b : ν × Fin L) (j : Fin (t+1)) : (affineLocator σ x u v L t b j).totalDegree≤1 := by
-  unfold affineLocator
-  apply (MvPolynomial.totalDegree_add _ _).trans
-  apply max_le
-  · simp only [MvPolynomial.totalDegree_C]; omega
-  · exact (MvPolynomial.totalDegree_mul _ _).trans (by
-      simp only [MvPolynomial.totalDegree_X,MvPolynomial.totalDegree_C,add_zero]; omega)
-theorem affineLocator_eval_slope (σ : ν → F →+* F) (x u v : ι → F) (L t : ℕ) (γ : F) :
-    (affineLocator σ x u v L t).map (MvPolynomial.eval₂Hom (RingHom.id F) (fun b => σ b γ))=
-      conjugateHankel σ x (fun i => u i+γ*v i) L t := by
-  ext b j
-  have hs := Principal.syndrome_linear x u v 1 γ (b.2.val+j.val)
-  simp only [one_mul] at hs
-  simp only [Matrix.map_apply,affineLocator,map_add,map_mul,MvPolynomial.eval₂Hom_C,
-    MvPolynomial.eval₂Hom_X',RingHom.id_apply,conjugateHankel,hs]
-theorem independentLocator_eq_affine (p blocks : ℕ) [ExpChar F p] (x u v : ι → F) (L t : ℕ) :
-    independentLocator p blocks x u v L t=
-      affineLocator (fun b : Fin blocks => iterateFrobenius F p b.val) x u v L t := rfl
-theorem affineLocator_fixed_multiplier (σ : ν → F →+* F) (x u v : ι → F) (L t : ℕ)
-    (g : F[X]) (hg : g.natDegree≤t) (hfixed : ∀ b j, σ b (g.coeff j)=g.coeff j)
-    (b : ν × Fin L) :
-    (affineLocator σ x u v L t).mulVec (fun j => MvPolynomial.C (g.coeff j.val)) b=
-      MvPolynomial.C (σ b.1 (Principal.recurrenceEval (syndrome x u) b.2.val g))+
-      MvPolynomial.X b.1*MvPolynomial.C (σ b.1 (Principal.recurrenceEval (syndrome x v) b.2.val g)) := by
-  rw [Principal.recurrenceEval_eq_sum _ _ t g hg,Principal.recurrenceEval_eq_sum _ _ t g hg]
-  simp only [map_sum,map_mul,hfixed,Matrix.mulVec,dotProduct,affineLocator,Nat.add_comm,
-    add_mul,Finset.sum_add_distrib,Finset.mul_sum]
-  congr 1 <;> apply Finset.sum_congr rfl <;> intro j _ <;> ring
 end
 end FrobeniusLocator.Strata
 end
@@ -4238,172 +2769,6 @@ noncomputable section
 open Code LinearCode CoreDefinitions
 variable {K I A : Type} [Field K] [Fintype K] [Fintype I]
   [AddCommGroup A] [Module K A]
-def badSet (C : ModuleCode I K A) (W : Fin 2 → I → A) (delta : ℝ) : Set K :=
-  {gamma | IsMCA (AffineLineGenerator K) C gamma W delta}
-def DependentModulo (C : ModuleCode I K A) (W : Fin 2 → I → A) : Prop :=
-  ∃ a b : K, (a ≠ 0 ∨ b ≠ 0) ∧ a • W 0 + b • W 1 ∈ C
-omit [Fintype K] [Fintype I] in
-theorem projected_mem_of_global_mem (C : ModuleCode I K A) (T : Finset I)
-    (w : I → A) (hw : w ∈ C) : projectedWord w T ∈ projectedCodeSubmod C T := by
-  exact Submodule.mem_map.mpr ⟨w, hw, rfl⟩
-theorem not_isMCA_of_direction_mem
-    (C : ModuleCode I K A) (W : Fin 2 → I → A) (hV : W 1 ∈ C)
-    (gamma : K) (delta : ℝ) : ¬ IsMCA (AffineLineGenerator K) C gamma W delta := by
-  classical
-  rintro ⟨T, _hsize, hcombo, j, hj⟩
-  have hVproj := projected_mem_of_global_mem C T (W 1) hV
-  have hcombo' : projectedWord (W 0 + gamma • W 1) T ∈ projectedCodeSubmod C T := by
-    simpa only [AffineMCALemmas.affineLineGenerator_sum_smul] using hcombo
-  have heq : projectedWord (W 0) T = projectedWord (W 0 + gamma • W 1) T -
-      gamma • projectedWord (W 1) T := by
-    funext i
-    change W 0 i.val = (W 0 i.val + gamma • W 1 i.val) - gamma • W 1 i.val
-    abel
-  have hUproj : projectedWord (W 0) T ∈ projectedCodeSubmod C T := by
-    rw [heq]
-    exact (projectedCodeSubmod C T).sub_mem hcombo'
-      ((projectedCodeSubmod C T).smul_mem gamma hVproj)
-  fin_cases j
-  · exact hj hUproj
-  · exact hj hVproj
-theorem isMCA_eq_neg_of_relation
-    (C : ModuleCode I K A) (W : Fin 2 → I → A) (c : K)
-    (hrelation : W 0 - c • W 1 ∈ C)
-    (gamma : K) (delta : ℝ) (hbad : IsMCA (AffineLineGenerator K) C gamma W delta) :
-    gamma = -c := by
-  classical
-  by_contra hne
-  obtain ⟨T, _hsize, hcombo, j, hj⟩ := hbad
-  have hWproj := projected_mem_of_global_mem C T (W 0 - c • W 1) hrelation
-  have hcombo' : projectedWord (W 0 + gamma • W 1) T ∈ projectedCodeSubmod C T := by
-    simpa only [AffineMCALemmas.affineLineGenerator_sum_smul] using hcombo
-  have hscalar : gamma + c ≠ 0 := by
-    intro hz
-    apply hne
-    calc gamma = (gamma + c) - c := by abel
-         _ = -c := by rw [hz]; simp
-  have hdiff : projectedWord (W 0 + gamma • W 1) T - projectedWord (W 0 - c • W 1) T =
-      (gamma + c) • projectedWord (W 1) T := by
-    funext i
-    change (W 0 i.val + gamma • W 1 i.val) - (W 0 i.val - c • W 1 i.val) =
-      (gamma + c) • W 1 i.val
-    rw [add_smul]
-    abel
-  have hscaled : (gamma + c) • projectedWord (W 1) T ∈ projectedCodeSubmod C T := by
-    rw [← hdiff]
-    exact (projectedCodeSubmod C T).sub_mem hcombo' hWproj
-  have hVproj : projectedWord (W 1) T ∈ projectedCodeSubmod C T :=
-    ((projectedCodeSubmod C T).smul_mem_iff hscalar).mp hscaled
-  have hUeq : projectedWord (W 0) T = projectedWord (W 0 - c • W 1) T +
-      c • projectedWord (W 1) T := by
-    funext i
-    change W 0 i.val = (W 0 i.val - c • W 1 i.val) + c • W 1 i.val
-    abel
-  have hUproj : projectedWord (W 0) T ∈ projectedCodeSubmod C T := by
-    rw [hUeq]
-    exact (projectedCodeSubmod C T).add_mem hWproj
-      ((projectedCodeSubmod C T).smul_mem c hVproj)
-  fin_cases j
-  · exact hj hUproj
-  · exact hj hVproj
-theorem badSet_eq_empty_of_direction_mem
-    (C : ModuleCode I K A) (W : Fin 2 → I → A) (delta : ℝ) (hV : W 1 ∈ C) :
-    badSet C W delta = ∅ := by
-  ext gamma
-  exact ⟨fun h ↦ (not_isMCA_of_direction_mem C W hV gamma delta h).elim, False.elim⟩
-theorem badSet_subset_singleton_of_relation
-    (C : ModuleCode I K A) (W : Fin 2 → I → A) (delta : ℝ)
-    (c : K) (hrelation : W 0 - c • W 1 ∈ C) : badSet C W delta ⊆ {-c} := by
-  intro gamma hgamma
-  exact Set.mem_singleton_iff.mpr (isMCA_eq_neg_of_relation C W c hrelation gamma delta hgamma)
-omit [Fintype K] [Fintype I] in
-theorem dependentModulo_normal_form
-    (C : ModuleCode I K A) (W : Fin 2 → I → A) (hdependent : DependentModulo C W) :
-    W 1 ∈ C ∨ ∃ c : K, W 0 - c • W 1 ∈ C := by
-  classical
-  by_cases hV : W 1 ∈ C
-  · exact Or.inl hV
-  · right
-    obtain ⟨a,b,hnonzero,hrelation⟩ := hdependent
-    have ha : a ≠ 0 := by
-      intro ha0
-      have hb : b ≠ 0 := hnonzero.resolve_left (not_not.mpr ha0)
-      have hscaled : b • W 1 ∈ C := by simpa only [ha0, zero_smul, zero_add] using hrelation
-      exact hV ((C.smul_mem_iff hb).mp hscaled)
-    refine ⟨-(a⁻¹ * b), ?_⟩
-    have hscaled := C.smul_mem a⁻¹ hrelation
-    simpa [smul_add, smul_smul, inv_mul_cancel₀ ha, neg_smul, sub_neg_eq_add] using hscaled
-theorem badSet_subset_singleton_of_dependentModulo
-    (C : ModuleCode I K A) (W : Fin 2 → I → A) (delta : ℝ)
-    (hdependent : DependentModulo C W) : ∃ gamma0 : K, badSet C W delta ⊆ {gamma0} := by
-  rcases dependentModulo_normal_form C W hdependent with hV | ⟨c,hrelation⟩
-  · exact ⟨0, by rw [badSet_eq_empty_of_direction_mem C W delta hV]; exact Set.empty_subset _⟩
-  · exact ⟨-c, badSet_subset_singleton_of_relation C W delta c hrelation⟩
-theorem badSet_finite_ncard_le_one_of_dependentModulo
-    (C : ModuleCode I K A) (W : Fin 2 → I → A) (delta : ℝ)
-    (hdependent : DependentModulo C W) : (badSet C W delta).Finite ∧ (badSet C W delta).ncard ≤ 1 := by
-  obtain ⟨gamma0,hsub⟩ := badSet_subset_singleton_of_dependentModulo C W delta hdependent
-  refine ⟨(Set.finite_singleton gamma0).subset hsub, ?_⟩
-  exact (Set.ncard_le_ncard hsub).trans (by simp)
-omit [Fintype K] [Fintype I] in
-theorem dependentModulo_iff_not_quotient_independent
-    (C : ModuleCode I K A) (W : Fin 2 → I → A) :
-    DependentModulo C W ↔ ¬ LinearIndependent K
-      ![(Submodule.Quotient.mk (W 0) : (I → A) ⧸ C), Submodule.Quotient.mk (W 1)] := by
-  classical
-  rw [LinearIndependent.pair_iff]
-  constructor
-  · rintro ⟨a,b,hnonzero,hrelation⟩ hindependent
-    have hq : a • (Submodule.Quotient.mk (W 0) : (I → A) ⧸ C) +
-        b • Submodule.Quotient.mk (W 1) = 0 := by
-      have hz := (Submodule.Quotient.mk_eq_zero C).mpr hrelation
-      simpa only [Submodule.Quotient.mk_add, Submodule.Quotient.mk_smul] using hz
-    obtain ⟨ha,hb⟩ := hindependent a b hq
-    exact hnonzero.elim (fun h ↦ h ha) (fun h ↦ h hb)
-  · intro hnot
-    by_contra hnodep
-    apply hnot
-    intro a b hq
-    by_contra hnonzero
-    apply hnodep
-    refine ⟨a,b,by tauto,?_⟩
-    apply (Submodule.Quotient.mk_eq_zero C).mp
-    simpa only [Submodule.Quotient.mk_add, Submodule.Quotient.mk_smul] using hq
-theorem badSet_finite_ncard_le_one_of_quotient_dependent
-    (C : ModuleCode I K A) (W : Fin 2 → I → A) (delta : ℝ)
-    (hdependent : ¬ LinearIndependent K
-      ![(Submodule.Quotient.mk (W 0) : (I → A) ⧸ C), Submodule.Quotient.mk (W 1)]) :
-    (badSet C W delta).Finite ∧ (badSet C W delta).ncard ≤ 1 :=
-  badSet_finite_ncard_le_one_of_dependentModulo C W delta
-    ((dependentModulo_iff_not_quotient_independent C W).mpr hdependent)
-open Classical in
-theorem bad_filter_card_le_one_of_dependentModulo
-    (C : ModuleCode I K A) (W : Fin 2 → I → A) (delta : ℝ)
-    (hdependent : DependentModulo C W) :
-    (Finset.univ.filter fun gamma ↦ IsMCA (AffineLineGenerator K) C gamma W delta).card ≤ 1 := by
-  classical
-  obtain ⟨gamma0,hsubset⟩ := badSet_subset_singleton_of_dependentModulo C W delta hdependent
-  have hfinset : (Finset.univ.filter fun gamma ↦
-      IsMCA (AffineLineGenerator K) C gamma W delta) ⊆ {gamma0} := by
-    intro gamma hgamma
-    apply Finset.mem_singleton.mpr
-    have hbad : gamma ∈ badSet C W delta := (Finset.mem_filter.mp hgamma).2
-    exact Set.mem_singleton_iff.mp (hsubset hbad)
-  exact (Finset.card_le_card hfinset).trans (by simp)
-theorem all_pairs_cap_of_independent_pairs
-    (C : ModuleCode I K A) (delta : ℝ) (B : ℕ)
-    (hindependent : ∀ W : Fin 2 → I → A,
-      LinearIndependent K
-        ![(Submodule.Quotient.mk (W 0) : (I → A) ⧸ C), Submodule.Quotient.mk (W 1)] →
-      (badSet C W delta).ncard ≤ B) :
-    ∀ W : Fin 2 → I → A, (badSet C W delta).ncard ≤ max B 1 := by
-  classical
-  intro W
-  by_cases h : LinearIndependent K
-      ![(Submodule.Quotient.mk (W 0) : (I → A) ⧸ C), Submodule.Quotient.mk (W 1)]
-  · exact (hindependent W h).trans (Nat.le_max_left _ _)
-  · exact (badSet_finite_ncard_le_one_of_quotient_dependent C W delta h).2.trans
-      (Nat.le_max_right _ _)
 end
 end Sol1.C50
 end
@@ -4414,106 +2779,7 @@ noncomputable section
 set_option maxRecDepth 10000
 set_option maxHeartbeats 0
 variable {F K I : Type} [Field F] [Field K]
-def liftedNodes (phi : F →+* K) (nodes : I ↪ F) : I ↪ K :=
-  ⟨fun i ↦ phi (nodes i),phi.injective.comp nodes.injective⟩
-def evalWord (phi : F →+* K) (nodes : I ↪ F) (P : K[X]) : I → K :=
-  fun i ↦ P.eval (phi (nodes i))
-def evalPair (phi : F →+* K) (nodes : I ↪ F) (P : Fin 2 → K[X]) : Fin 2 → I → K :=
-  fun j ↦ evalWord phi nodes (P j)
-theorem evalWord_add_smul (phi : F →+* K) (nodes : I ↪ F) (P Q : K[X]) (gamma : K) :
-    evalWord phi nodes (P+gamma • Q) = evalWord phi nodes P + gamma • evalWord phi nodes Q := by
-  ext i
-  simp [evalWord,eval_add,eval_smul]
-theorem evalWord_mem_code (phi : F →+* K) (nodes : I ↪ F) (k : ℕ) [NeZero k]
-    (P : K[X]) (hdegree : P.natDegree < k) :
-    evalWord phi nodes P ∈ ReedSolomon.code (liftedNodes phi nodes) k := by
-  apply ReedSolomon.mem_code_iff_eval_of_ne_zero.mpr
-  exact ⟨P,hdegree,fun _ ↦ rfl⟩
-theorem natDegree_lt_of_tail_zero (k : ℕ) (hk : 0 < k) (P : K[X])
-    (hcoeff : ∀ i, k ≤ i → P.coeff i = 0) : P.natDegree < k := by
-  by_cases hz : P = 0
-  · simpa [hz] using hk
-  · exact (Polynomial.natDegree_lt_iff_degree_lt hz).mpr
-      ((Polynomial.degree_lt_iff_coeff_zero P k).mpr hcoeff)
 variable [Fintype I]
-theorem exists_witness_polynomial [Fintype K]
-    (phi : F →+* K) (nodes : I ↪ F) (k A : ℕ) [NeZero k]
-    (delta : ℝ)
-    (hthreshold : ∀ t : ℕ, (Fintype.card I : ℝ)*(1-delta) ≤ t → A ≤ t)
-    (P : Fin 2 → K[X]) (gamma : K)
-    (hbad : IsMCA (AffineLineGenerator K) (ReedSolomon.code (liftedNodes phi nodes) k)
-      gamma (evalPair phi nodes P) delta) :
-    ∃ T : Finset I, ∃ H : K[X], A ≤ T.card ∧ H.natDegree < k ∧
-      ∀ i ∈ T, ((P 0+gamma • P 1)-H).eval (phi (nodes i)) = 0 := by
-  classical
-  obtain ⟨T,hT,hcombo,_hfail⟩ := hbad
-  have hc : projectedWord (evalWord phi nodes (P 0)+gamma • evalWord phi nodes (P 1)) T ∈
-      projectedCodeSubmod (ReedSolomon.code (liftedNodes phi nodes) k) T := by
-    simpa only [AffineMCALemmas.affineLineGenerator_sum_smul,evalPair] using hcombo
-  rw [← evalWord_add_smul] at hc
-  obtain ⟨w,hw,heq⟩ := (LinearCode.mem_projectedCodeSubmod_iff _ T _).mp hc
-  obtain ⟨H,hH,heval⟩ := ReedSolomon.mem_code_iff_eval_of_ne_zero.mp hw
-  refine ⟨T,H,hthreshold T.card hT,hH,?_⟩
-  intro i hi
-  have hnode := congrFun heq ⟨i,hi⟩
-  change (P 0+gamma • P 1).eval (phi (nodes i)) = w i at hnode
-  have heval' : H.eval (phi (nodes i)) = w i := heval i
-  rw [eval_sub,hnode,heval',sub_self]
-theorem residual_degree (P : Fin 2 → K[X]) (H : K[X]) (gamma : K) (k A : ℕ)
-    (hkA : k ≤ A) (hP : ∀ j, (P j).natDegree ≤ A) (hH : H.natDegree < k) :
-    ((P 0+gamma • P 1)-H).natDegree ≤ A := by
-  apply (natDegree_sub_le _ _).trans
-  apply max_le
-  · exact (natDegree_add_le _ _).trans (max_le (hP 0) ((natDegree_smul_le _ _).trans (hP 1)))
-  · omega
-theorem residual_tail_coeff (P : Fin 2 → K[X]) (H : K[X]) (gamma : K) (k : ℕ)
-    (hH : H.natDegree < k) (i : ℕ) (hi : k ≤ i) :
-    ((P 0+gamma • P 1)-H).coeff i = (P 0).coeff i+gamma*(P 1).coeff i := by
-  have hz : H.coeff i = 0 := coeff_eq_zero_of_natDegree_lt (by omega)
-  simp [coeff_sub,coeff_add,coeff_smul,smul_eq_mul,hz]
-theorem scalar_minor_card_le [Fintype F] [Fintype K]
-    (phi : F →+* K) (nodes : I ↪ F) (k A : ℕ) [NeZero k] (hkA : k ≤ A)
-    (delta : ℝ) (hthreshold : ∀ t : ℕ, (Fintype.card I : ℝ)*(1-delta) ≤ t → A ≤ t)
-    (P : Fin 2 → K[X]) (hP : ∀ j, (P j).natDegree ≤ A)
-    (i : ℕ) (hi : k ≤ i)
-    (hminor : (P 0).coeff i*(P 1).coeff A-(P 1).coeff i*(P 0).coeff A ≠ 0)
-    (S : Finset K)
-    (hS : ∀ gamma ∈ S, IsMCA (AffineLineGenerator K)
-      (ReedSolomon.code (liftedNodes phi nodes) k) gamma (evalPair phi nodes P) delta) :
-    S.card ≤ Fintype.card F := by
-  classical
-  have hdata (gamma : K) (hg : gamma ∈ S) :
-      (P 0).coeff A+gamma*(P 1).coeff A ≠ 0 ∧
-      ∃ c : F, phi c = tailRatio ((P 0).coeff i) ((P 1).coeff i)
-        ((P 0).coeff A) ((P 1).coeff A) gamma := by
-    obtain ⟨T,H,hT,hH,hroot⟩ := exists_witness_polynomial phi nodes k A delta hthreshold P gamma (hS gamma hg)
-    let R := (P 0+gamma • P 1)-H
-    have hdeg : R.natDegree ≤ A := residual_degree P H gamma k A hkA hP hH
-    have hr : R ≠ 0 := by
-      intro hz
-      have hzi : (P 0).coeff i+gamma*(P 1).coeff i = 0 := by
-        rw [← residual_tail_coeff P H gamma k hH i hi]
-        change R.coeff i = 0
-        rw [hz,coeff_zero]
-      have hzA : (P 0).coeff A+gamma*(P 1).coeff A = 0 := by
-        rw [← residual_tail_coeff P H gamma k hH A hkA]
-        change R.coeff A = 0
-        rw [hz,coeff_zero]
-      apply hminor
-      linear_combination (P 1).coeff A*hzi-(P 1).coeff i*hzA
-    obtain ⟨hnad,hcard⟩ := root_saturation phi nodes T R hr A hdeg hT hroot
-    have hcoeff : R.coeff A ≠ 0 := by rw [← hnad,coeff_natDegree]; exact leadingCoeff_ne_zero.mpr hr
-    have hden : (P 0).coeff A+gamma*(P 1).coeff A ≠ 0 := by
-      rwa [residual_tail_coeff P H gamma k hH A hkA] at hcoeff
-    refine ⟨hden,?_⟩
-    obtain ⟨c,hc⟩ := locator_tail_ratio phi nodes T R hr (hdeg.trans hT) hroot i
-    refine ⟨c,?_⟩
-    rw [hcard,residual_tail_coeff P H gamma k hH i hi,
-      residual_tail_coeff P H gamma k hH A hkA] at hc
-    exact hc
-  apply tailRatio_card_le phi _ _ _ _ hminor S
-  · exact fun gamma hg ↦ (hdata gamma hg).1
-  · exact fun gamma hg ↦ (hdata gamma hg).2
 end
 end Sol1.C64
 end
@@ -4529,43 +2795,8 @@ abbrev K := IRSProfile.Field
 abbrev I := IRSProfile.Index
 abbrev NativePair := Fin 2 → I → Fin IRSProfile.interleaving → K
 local instance : DecidableEq K := Classical.decEq K
-def nativePhi : Base →+* K := algebraMap Base K
-def nativeNodes : I ↪ Base where
-  toFun i := IRSProfile.baseNttDomain.node i
-  inj' := by
-    intro i j h
-    apply IRSProfile.domain.injective
-    change CompPoly.Extension.Ext.ofBase (IRSProfile.baseNttDomain.node i) =
-      CompPoly.Extension.Ext.ofBase (IRSProfile.baseNttDomain.node j)
-    exact congrArg CompPoly.Extension.Ext.ofBase h
-def NativeDegreeStratum (A : ℕ) (U : NativePair) : Prop :=
-  ∀ j r, (fun i ↦ U j i r) ∈ ReedSolomon.code IRSProfile.domain (A+1)
-theorem nativeDegreeStratum_iff_polynomials (A : ℕ) (U : NativePair) :
-    NativeDegreeStratum A U ↔ ∀ j r, ∃ P : K[X], P.natDegree ≤ A ∧
-      ∀ i, P.eval (IRSProfile.domain i) = U j i r := by
-  classical
-  let : NeZero (A+1) := ⟨by omega⟩
-  constructor
-  · intro h j r
-    obtain ⟨P,hP,heval⟩ := ReedSolomon.mem_code_iff_eval_of_ne_zero.mp (h j r)
-    exact ⟨P,by omega,heval⟩
-  · intro h j r
-    obtain ⟨P,hP,heval⟩ := h j r
-    apply ReedSolomon.mem_code_iff_eval_of_ne_zero.mpr
-    exact ⟨P,by omega,heval⟩
-theorem native_base_card : Fintype.card Base = 2130706433 := by
-  change Fintype.card (ZMod KoalaBear.fieldSize) = 2130706433
-  rw [ZMod.card]
-  rfl
 theorem native_field_card : Fintype.card K = (2130706433 : ℕ)^6 := by
   rw [KoalaBear.card_ext6]
-  rfl
-theorem native_projection_room : Fintype.card Base+1 ≤ Fintype.card K := by
-  rw [native_base_card,native_field_card]
-  norm_num
-theorem native_lifted_domain : liftedNodes nativePhi nativeNodes =
-    IRSProfile.domain := by
-  ext i
   rfl
 theorem native_code_eq : IRSProfile.code =
     ((ReedSolomon.code IRSProfile.domain 131072)^⋈(Fin IRSProfile.interleaving)) := by
@@ -4580,13 +2811,6 @@ noncomputable section
 open ProximityPrize.Benchmark
 open scoped NNReal
 def queryRadius : ℝ≥0 := claimedRadius 81879 262144
-theorem query_complement : (1 - queryRadius : ℝ≥0) = 180265 / 262144 := by
-  apply NNReal.coe_injective
-  have hr : queryRadius ≤ 1 := by
-    rw [← NNReal.coe_le_coe]
-    norm_num [queryRadius, claimedRadius]
-  rw [NNReal.coe_sub hr]
-  norm_num [queryRadius, claimedRadius]
 theorem claimedError_pow_100 (s : ℕ) :
     (claimedError s) ^ 100 = 1 / (2 : ℝ≥0) ^ s := by
   unfold claimedError
@@ -4594,35 +2818,6 @@ theorem claimedError_pow_100 (s : ℕ) :
   have hex : -((s : ℝ) / 100) * ((100 : ℕ) : ℝ) = -(s : ℝ) := by norm_num
   rw [hex, NNReal.rpow_neg, NNReal.rpow_natCast]
   simp only [one_div]
-theorem score_lower_integer_cross :
-    (180265 : ℕ) ^ 12800 * 2 ^ 6915 ≤ 262144 ^ 12800 := by
-  calc
-    _ ≤ 2 ^ 223485 * 2 ^ 6915 := Nat.mul_le_mul_right _ score_6915_integer
-    _ = 262144 ^ 12800 := by
-      rw [show (262144 : ℕ) = 2 ^ 18 by norm_num, ← pow_mul, ← pow_add]
-theorem score_upper_integer_cross :
-    (262144 : ℕ) ^ 12800 < 180265 ^ 12800 * 2 ^ 6916 := by
-  calc
-    _ = 2 ^ 223484 * 2 ^ 6916 := by
-      rw [show (262144 : ℕ) = 2 ^ 18 by norm_num, ← pow_mul, ← pow_add]
-    _ < 180265 ^ 12800 * 2 ^ 6916 :=
-      Nat.mul_lt_mul_of_pos_right score_not_6916_integer (by positivity)
-theorem query_score_6915 :
-    (1 - queryRadius) ^ IRSProfile.repetitions ≤ claimedError 6915 := by
-  change (1 - queryRadius) ^ 128 ≤ claimedError 6915
-  apply (pow_le_pow_iff_left₀ (by positivity) (by positivity) (by norm_num : (100 : ℕ) ≠ 0)).mp
-  rw [← pow_mul, claimedError_pow_100, query_complement]
-  change ((180265 : ℝ≥0) / 262144) ^ 12800 ≤ 1 / (2 : ℝ≥0) ^ 6915
-  rw [div_pow, div_le_div_iff₀ (by positivity) (by positivity), one_mul]
-  exact_mod_cast score_lower_integer_cross
-theorem query_score_below_6916 :
-    claimedError 6916 < (1 - queryRadius) ^ IRSProfile.repetitions := by
-  change claimedError 6916 < (1 - queryRadius) ^ 128
-  apply (pow_lt_pow_iff_left₀ (by positivity) (by positivity) (by norm_num : (100 : ℕ) ≠ 0)).mp
-  rw [claimedError_pow_100, ← pow_mul, query_complement]
-  change 1 / (2 : ℝ≥0) ^ 6916 < ((180265 : ℝ≥0) / 262144) ^ 12800
-  rw [div_pow, div_lt_div_iff₀ (by positivity) (by positivity), one_mul]
-  exact_mod_cast score_upper_integer_cross
 theorem query_admissible : queryRadius ∈ Set.Ioo (0 : ℝ≥0) IRSProfile.minRelativeDistance := by
   constructor <;> norm_num [queryRadius, claimedRadius, IRSProfile.minRelativeDistance]
 end
@@ -4652,20 +2847,6 @@ theorem native_domain_fixed (i : I) : IRSProfile.domain i ^ p = IRSProfile.domai
   rw [← map_pow]
   exact congrArg (CompPoly.Extension.Ext.ofBaseRingHom KoalaBear.ext6Params)
     (ZMod.pow_card (IRSProfile.baseNttDomain.node i))
-def FullRankCertificate (u v : I → K) : Prop :=
-  ∃ rows : Fin 81880 → Fin 2 × Fin 49193,
-    minorPolynomial (stacked p IRSProfile.domain u v 49193 81879) rows ≠ 0
-theorem native_full_rank_close_count (u v : I → K) (hfull : FullRankCertificate u v) :
-    (Finset.univ.filter (fun γ => Decodable IRSProfile.domain u v 131072 81879 γ)).card ≤
-      174462242734040 := by
-  obtain ⟨rows, hrows⟩ := hfull
-  have hh := decodable_finset_card_le_minor_degree p IRSProfile.domain
-    IRSProfile.domain.injective native_domain_fixed u v 131072 49193 81879
-    (by norm_num only [IRSProfile.card_index]) rows hrows
-    (Finset.univ.filter (fun γ => Decodable IRSProfile.domain u v 131072 81879 γ))
-    (fun γ hγ => (Finset.mem_filter.mp hγ).2)
-  have hd := minor_natDegree_le p (by norm_num [p]) IRSProfile.domain u v 49193 81879 rows
-  exact hh.trans (hd.trans (by norm_num [p]))
 end
 end FrobeniusLocator.Native
 end
@@ -4680,25 +2861,6 @@ open ProximityPrize.Benchmark
 local instance decidableNativeMCA (P : Prop) : Decidable P := Classical.propDecidable P
 local instance nonzeroNativeMCA : NeZero (131072 : ℕ) := ⟨by norm_num⟩
 def radius : ℝ := (claimedRadius 81879 262144 : ℝ)
-theorem native_IsMCA_decodable (u : Fin 2 → I → K) (γ : K)
-    (hmca : IsMCA (AffineLineGenerator K) IRSProfile.baseCode γ u radius) :
-    Decodable IRSProfile.domain (u 0) (u 1) 131072 81879 γ := by
-  change IsMCA (AffineLineGenerator K) (ReedSolomon.code IRSProfile.domain 131072)
-    γ u radius at hmca
-  apply isMCA_implies_decodable IRSProfile.domain u 131072 81879 radius ?_ γ hmca
-  intro T hT
-  norm_num [IRSProfile.card_index, radius, claimedRadius] at hT ⊢
-  exact hT
-theorem native_full_rank_MCA_count (u : Fin 2 → I → K)
-    (hfull : FullRankCertificate (u 0) (u 1)) :
-    (Finset.univ.filter (fun γ => IsMCA (AffineLineGenerator K)
-      IRSProfile.baseCode γ u radius)).card ≤ 174462242734040 := by
-  apply (Finset.card_le_card (t := Finset.univ.filter
-    (fun γ => Decodable IRSProfile.domain (u 0) (u 1) 131072 81879 γ)) ?_).trans
-    (native_full_rank_close_count (u 0) (u 1) hfull)
-  intro γ hγ
-  simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hγ ⊢
-  exact native_IsMCA_decodable u γ hγ
 end
 end FrobeniusLocator.Native
 end
@@ -4722,35 +2884,6 @@ theorem native_IsMCA_badSlope (U : Fin 2 → I → K) (γ : K)
   intro T hT
   norm_num [IRSProfile.card_index, radius, claimedRadius] at hT ⊢
   exact hT
-def PrincipalCertificate (u v : I → K) : Prop :=
-  ∃ (Δ : K[X]) (δ : ℕ), Δ ≠ 0 ∧ Δ.natDegree ≤ δ ∧ δ ≤ p*81880 ∧
-    (Nonempty (MovingPrincipalCertificate p IRSProfile.domain u v 49193 81879 Δ) ∨
-      Nonempty (ConstantKernelCertificate p IRSProfile.domain u v 49193 81879 Δ))
-theorem native_principal_MCA_count (U : Fin 2 → I → K)
-    (hcert : PrincipalCertificate (U 0) (U 1))
-    (Γ : Finset K) (hΓ : ∀ γ ∈ Γ,
-      IsMCA (AffineLineGenerator K) IRSProfile.baseCode γ U radius) :
-    Γ.card ≤ 733014149906392 := by
-  obtain ⟨Δ,δ,hΔ,hΔdeg,hδ,hcert⟩ := hcert
-  have hbad : ∀ γ ∈ Γ, BadSlope IRSProfile.domain (U 0) (U 1) 131072 180265 γ :=
-    fun γ hγ => native_IsMCA_badSlope U γ (hΓ γ hγ)
-  rcases hcert with hmoving | hconstant
-  · obtain ⟨cert⟩ := hmoving
-    have hh := principal_bad_count p IRSProfile.domain IRSProfile.domain.injective
-      native_domain_fixed (U 0) (U 1) 131072 180265 49193 81879 δ
-      (by norm_num) (by norm_num) (by norm_num only [IRSProfile.card_index])
-      Δ hΔ hΔdeg cert Γ hbad
-    rw [IRSProfile.card_index] at hh
-    exact hh.trans (calc
-      _ ≤ p*81880+p*262144 := Nat.add_le_add hδ (Nat.mul_le_mul_left p (Nat.sub_le _ _))
-      _ = _ := by norm_num [p])
-  · obtain ⟨cert⟩ := hconstant
-    have hh := constant_kernel_count p IRSProfile.domain IRSProfile.domain.injective
-      native_domain_fixed (U 0) (U 1) 131072 180265 49193 81879 δ
-      (by norm_num) (by norm_num) (by norm_num only [IRSProfile.card_index])
-      Δ hΔ hΔdeg cert Γ hbad
-    norm_num [p] at hδ
-    omega
 theorem native_type_one_MCA_count (U : Fin 2 → I → K)
     (htype : TypeOneSyndromes IRSProfile.domain (U 0) (U 1) 131072 p)
     (Γ : Finset K) (hΓ : ∀ γ ∈ Γ,
@@ -4760,7 +2893,6 @@ theorem native_type_one_MCA_count (U : Fin 2 → I → K)
     (by norm_num only [IRSProfile.card_index]) (by norm_num [p]) htype Γ
   intro γ hγ
   exact native_IsMCA_badSlope U γ (hΓ γ hγ)
-theorem native_principal_budget : 733014149906392 ≤ 243069641737383864 := by norm_num
 end
 end FrobeniusLocator.Native
 end
@@ -4782,21 +2914,6 @@ theorem native_IsMCA_badSlope (U : Fin 2 → Native.I → Native.K) (γ : Native
   intro T hT
   norm_num [IRSProfile.card_index,Native.radius,claimedRadius] at hT ⊢
   exact hT
-theorem native_MCA_count_of_booked_geometry_and_residual (U : Fin 2 → Native.I → Native.K)
-    (r : ℕ) (hr7 : 7≤r)
-    (hr : GenericLayer.genericRank (stacked Native.p IRSProfile.domain (U 0) (U 1) 49193 81879)=81880-r)
-    (hfirst : GenericLayer.genericRank (hankel IRSProfile.domain (U 0) (U 1) 49193 81879)=49193)
-    (hprincipal : EvaluatedPrincipalCap (threeConjugations (frobenius Native.K Native.p)) IRSProfile.domain
-      (U 0) (U 1) 131072 180265 131072 81879)
-    (hregular : PuncturedRegularCap (threeConjugations (frobenius Native.K Native.p)) IRSProfile.domain
-      (U 0) (U 1) 131072 180265 131072 81879)
-    (hres : NormalResidualCap6915 Native.p IRSProfile.domain (U 0) (U 1) r)
-    (Γ : Finset Native.K) (hΓ : ∀ γ∈Γ, IsMCA (AffineLineGenerator Native.K) IRSProfile.baseCode γ U Native.radius) :
-    Γ.card≤243069641737383864 := by
-  apply native_booked_strata_count IRSProfile.domain (U 0) (U 1) IRSProfile.domain.injective
-    Native.native_domain_fixed IRSProfile.card_index r hr7 hr hfirst hprincipal hregular hres Γ
-  intro γ hγ
-  exact native_IsMCA_badSlope U γ (hΓ γ hγ)
 end
 end FrobeniusLocator.Strata
 end

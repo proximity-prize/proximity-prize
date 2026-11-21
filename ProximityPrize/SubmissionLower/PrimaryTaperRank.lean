@@ -263,7 +263,7 @@ open private rank_zero_of_order_nonpos lower_le_kernel from ProximityPrize.Submi
 def initialFlag (i : BlockIndex) : Flag :=
   {K1_13_2.initialFlag i with degree := (residualDegree k i : ℤ)}
 
-private theorem taper_active_range_le (i : BlockIndex) :
+theorem taper_active_range_le (i : BlockIndex) :
     LinearMap.range (flagContact (activeFlag k i)) ≤
       LinearMap.range (flagContact (initialFlag k i)) := by
   rintro _ ⟨p, rfl⟩
@@ -338,11 +338,11 @@ def Eligible (cap : ℕ → ℕ) (e : SourceExponent) : Prop :=
 
 def space (cap : ℕ → ℕ) : Submodule Geom SourcePolynomial := restrictSupport Geom {e | Eligible cap e}
 
-private theorem differentiated_eq (e : SourceExponent) :
+theorem differentiated_eq (e : SourceExponent) :
     e.weight differentiated = e (some 1) + e (some 2) + e (some 3) := by
   simp [Finsupp.weight_eq_sum, Fintype.sum_option, Fin.sum_univ_four, differentiated]
 
-private theorem translate_monomial {cap : ℕ → ℕ} (hc : Antitone cap)
+theorem translate_monomial {cap : ℕ → ℕ} (hc : Antitone cap)
     (x y : Geom) (e : SourceExponent) (c : Geom) (he : Eligible cap e) :
     globalPointTranslation x y (monomial e c) ∈ space cap := by
   have preserve {w : JetVariable 3 → ℕ} {n : ℕ} (h : e.weight w ≤ n) :

@@ -28,7 +28,7 @@ def GoodNodes (J : Input) (v w : ℕ) (T : Finset K) : Prop :=
         rootInJet g ∉ C.prime ∧ ∀ γ ∈ C.marks,
           (J.family.scalar γ).eval (node x) = J.model.word x → markPoint J γ (rootInJet g) = 0
 
-private theorem small_node_box (J : Input) (v w : ℕ) (he : 4 ≤ J.e) (P : Ideal JetRing)
+theorem small_node_box (J : Input) (v w : ℕ) (he : 4 ≤ J.e) (P : Ideal JetRing)
     {g : Biform} (hg : g ∈ BoxDegree.space FX J.e (v+128) (w+128)) :
     Represented P (box J v w 129) (rootInJet g) := by
   apply KoalaRectTaylor.represented_of_mem
@@ -90,8 +90,8 @@ theorem stable_count (J : Input) (B : ResidueLift J) (D : Factors J B) (v w : �
   obtain ⟨δ,hδ,hval⟩ := PointCount.curve_degree_nat (‹(eIdeal J v w P).IsPrime›.ne_top) hDim
   have hw : FixedWord J.model.word U J.family.scalar (degreeAt J.hi) :=
     ⟨hword.distinct.mono hSub, fun γ hγ => hword.degree γ (hSub hγ), fun γ hγ => hword.hits γ (hSub hγ)⟩
-  have hD : degreeAt J.hi ≤ 133511 := by rw [hhi]; decide
-  have hL : 128631 ≤ L := by dsimp [L]; rw [hlo]; decide
+  have hD : degreeAt J.hi ≤ 133536 := by rw [hhi]; decide
+  have hL : 128606 ≤ L := by dsimp [L]; rw [hlo]; decide
   have hCuts (x : I) (hFail : ∃ γ ∈ U, (J.family.scalar γ).eval (node x) ≠ J.model.word x) :
       (U.filter fun γ => (J.family.scalar γ).eval (node x) = J.model.word x).card ≤ 129*δ := by
     obtain ⟨g,hg,hn,hits⟩ := hGood B D C hTU hs x hFail

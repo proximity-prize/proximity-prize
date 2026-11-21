@@ -80,31 +80,6 @@ theorem squared_lambda_le {A cap} (hlist : ScalarList A cap)
     (Code.closeCodewordsRel (squaredCode : Set (Node → A16)) w radius).encard =
         (hfinite.toFinset.card : ℕ∞) := hfinite.encard_eq_coe_toFinset_card
     _ ≤ (cap : ℕ∞) := by exact_mod_cast hcard
-theorem squared_lambda_at_cutoff {A cap} (hlist : ScalarList A cap)
-    (hroom : (cap+1)^2 ≤ Fintype.card K) :
-    Code.Lambda (squaredCode : Set (Node → A16)) (1-(A : ℝ)/n) ≤ (cap : ℕ∞) := by
-  apply squared_lambda_le hlist hroom
-  intro f w hd
-  have hpos : 0 < Fintype.card Node := by rw [IRSProfile.card_index]; decide
-  have hdist : (δᵣ(w,f) : ℝ) ≤ 1-(A : ℝ)/Fintype.card Node := by
-    rwa [IRSProfile.card_index]
-  have hc : A ≤ Code.agree f w := by
-    exact_mod_cast (Code.relHammingDist_le_one_sub_div_iff hpos).mp hdist
-  apply hc.trans
-  unfold Code.agree agreementCard
-  apply Finset.card_le_card
-  intro i hi
-  simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hi ⊢
-  exact hi
-theorem squared_lambda_180120_of_list (hlist : At180120) :
-    Code.Lambda (squaredCode : Set (Node → A16)) (1-(180120 : ℝ)/n) ≤
-      (5307340521807720 : ℕ∞) :=
-  squared_lambda_at_cutoff (A := 180120) (cap := 5307340521807720) hlist
-    (Sol1.OneCount.projection_room _ (by decide))
-theorem p0_squared_lambda_le {cap} (hlist : ScalarList P0.agreement cap)
-    (hroom : (cap+1)^2 ≤ Fintype.card K) :
-    Code.Lambda (squaredCode : Set (Node → A16)) P0.radius ≤ (cap : ℕ∞) :=
-  squared_lambda_le hlist hroom P0.radius P0.close_agreement_ge
 theorem anchored_list_count {cap} (hlist : ScalarList P0.agreement cap) {u deleted} (M : P0.AnchorModel u deleted)
     (Γ : Finset K) (F : P0.AnchoredFamily M Γ) (hw : M.overhead ≤ 0) :
     Γ.card ≤ cap := by
@@ -344,7 +319,6 @@ abbrev AnchorModel.label {u deleted} (M : AnchorModel u deleted) := ModelAt.labe
 abbrev AnchorModel.amplitude {u deleted} (M : AnchorModel u deleted) := ModelAt.amplitude M
 abbrev AnchorModel.decoder {u deleted} (M : AnchorModel u deleted) {γ : K} (B : BadMark u γ) :=
   ModelAt.decoder M B
-def listSource : CJ0.Source := ⟨53,72,21,10, CJ0.fullBox 72 21 10⟩
 structure HighRow where
   lo : ℕ
   hi : ℕ
@@ -446,95 +420,6 @@ namespace P1
 theorem high_with_reserve (b : HighBand) :
     b.row.prefixFee + b.row.retained + 1 + anchorFee + rankFee ≤ scalarCap := by
   cases b <;> decide
-theorem high_coverage (w : ℤ) (hl : lowCutoff + 1 ≤ w) (hr : w ≤ (heightCap : ℤ)) :
-    ∃ b : HighBand, (b.row.lo : ℤ) ≤ w ∧ w ≤ (b.row.hi : ℤ) := by
-  change 2370 ≤ w at hl
-  change w ≤ 33327 at hr
-  by_cases h0 : w ≤ 2669
-  · by_cases h1 : w ≤ 2539
-    · by_cases h2 : w ≤ 2459
-      · by_cases h3 : w ≤ 2409
-        · by_cases h4 : w ≤ 2389
-          · exact ⟨.h2370, (show 2370 ≤ w by omega), (show w ≤ 2389 by omega)⟩
-          · exact ⟨.h2390, (show 2390 ≤ w by omega), (show w ≤ 2409 by omega)⟩
-        · by_cases h4 : w ≤ 2419
-          · exact ⟨.h2410, (show 2410 ≤ w by omega), (show w ≤ 2419 by omega)⟩
-          · by_cases h5 : w ≤ 2439
-            · exact ⟨.h2420, (show 2420 ≤ w by omega), (show w ≤ 2439 by omega)⟩
-            · exact ⟨.h2440, (show 2440 ≤ w by omega), (show w ≤ 2459 by omega)⟩
-      · by_cases h3 : w ≤ 2499
-        · by_cases h4 : w ≤ 2479
-          · exact ⟨.h2460, (show 2460 ≤ w by omega), (show w ≤ 2479 by omega)⟩
-          · exact ⟨.h2480, (show 2480 ≤ w by omega), (show w ≤ 2499 by omega)⟩
-        · by_cases h4 : w ≤ 2519
-          · exact ⟨.h2500, (show 2500 ≤ w by omega), (show w ≤ 2519 by omega)⟩
-          · by_cases h5 : w ≤ 2529
-            · exact ⟨.h2520, (show 2520 ≤ w by omega), (show w ≤ 2529 by omega)⟩
-            · exact ⟨.h2530, (show 2530 ≤ w by omega), (show w ≤ 2539 by omega)⟩
-    · by_cases h2 : w ≤ 2589
-      · by_cases h3 : w ≤ 2559
-        · by_cases h4 : w ≤ 2549
-          · exact ⟨.h2540, (show 2540 ≤ w by omega), (show w ≤ 2549 by omega)⟩
-          · exact ⟨.h2550, (show 2550 ≤ w by omega), (show w ≤ 2559 by omega)⟩
-        · by_cases h4 : w ≤ 2569
-          · exact ⟨.h2560, (show 2560 ≤ w by omega), (show w ≤ 2569 by omega)⟩
-          · by_cases h5 : w ≤ 2584
-            · exact ⟨.h2570, (show 2570 ≤ w by omega), (show w ≤ 2584 by omega)⟩
-            · exact ⟨.h2585, (show 2585 ≤ w by omega), (show w ≤ 2589 by omega)⟩
-      · by_cases h3 : w ≤ 2610
-        · by_cases h4 : w ≤ 2599
-          · exact ⟨.h2590, (show 2590 ≤ w by omega), (show w ≤ 2599 by omega)⟩
-          · by_cases h5 : w ≤ 2600
-            · exact ⟨.h2600, (show 2600 ≤ w by omega), (show w ≤ 2600 by omega)⟩
-            · exact ⟨.h2601, (show 2601 ≤ w by omega), (show w ≤ 2610 by omega)⟩
-        · by_cases h4 : w ≤ 2620
-          · exact ⟨.h2611, (show 2611 ≤ w by omega), (show w ≤ 2620 by omega)⟩
-          · by_cases h5 : w ≤ 2639
-            · exact ⟨.h2621, (show 2621 ≤ w by omega), (show w ≤ 2639 by omega)⟩
-            · exact ⟨.h2640, (show 2640 ≤ w by omega), (show w ≤ 2669 by omega)⟩
-  · by_cases h1 : w ≤ 3399
-    · by_cases h2 : w ≤ 2949
-      · by_cases h3 : w ≤ 2749
-        · by_cases h4 : w ≤ 2699
-          · exact ⟨.h2670, (show 2670 ≤ w by omega), (show w ≤ 2699 by omega)⟩
-          · exact ⟨.h2700, (show 2700 ≤ w by omega), (show w ≤ 2749 by omega)⟩
-        · by_cases h4 : w ≤ 2799
-          · exact ⟨.h2750, (show 2750 ≤ w by omega), (show w ≤ 2799 by omega)⟩
-          · by_cases h5 : w ≤ 2899
-            · exact ⟨.h2800, (show 2800 ≤ w by omega), (show w ≤ 2899 by omega)⟩
-            · exact ⟨.h2900, (show 2900 ≤ w by omega), (show w ≤ 2949 by omega)⟩
-      · by_cases h3 : w ≤ 3049
-        · by_cases h4 : w ≤ 2979
-          · exact ⟨.h2950, (show 2950 ≤ w by omega), (show w ≤ 2979 by omega)⟩
-          · by_cases h5 : w ≤ 2999
-            · exact ⟨.h2980, (show 2980 ≤ w by omega), (show w ≤ 2999 by omega)⟩
-            · exact ⟨.h3000, (show 3000 ≤ w by omega), (show w ≤ 3049 by omega)⟩
-        · by_cases h4 : w ≤ 3099
-          · exact ⟨.h3050, (show 3050 ≤ w by omega), (show w ≤ 3099 by omega)⟩
-          · by_cases h5 : w ≤ 3199
-            · exact ⟨.h3100, (show 3100 ≤ w by omega), (show w ≤ 3199 by omega)⟩
-            · exact ⟨.h3200, (show 3200 ≤ w by omega), (show w ≤ 3399 by omega)⟩
-    · by_cases h2 : w ≤ 7999
-      · by_cases h3 : w ≤ 3999
-        · by_cases h4 : w ≤ 3554
-          · exact ⟨.h3400, (show 3400 ≤ w by omega), (show w ≤ 3554 by omega)⟩
-          · exact ⟨.h3555, (show 3555 ≤ w by omega), (show w ≤ 3999 by omega)⟩
-        · by_cases h4 : w ≤ 4799
-          · exact ⟨.h4000, (show 4000 ≤ w by omega), (show w ≤ 4799 by omega)⟩
-          · by_cases h5 : w ≤ 7772
-            · exact ⟨.h4800, (show 4800 ≤ w by omega), (show w ≤ 7772 by omega)⟩
-            · exact ⟨.h7773, (show 7773 ≤ w by omega), (show w ≤ 7999 by omega)⟩
-      · by_cases h3 : w ≤ 23999
-        · by_cases h4 : w ≤ 14499
-          · exact ⟨.h8000, (show 8000 ≤ w by omega), (show w ≤ 14499 by omega)⟩
-          · by_cases h5 : w ≤ 21472
-            · exact ⟨.h14500, (show 14500 ≤ w by omega), (show w ≤ 21472 by omega)⟩
-            · exact ⟨.h21473, (show 21473 ≤ w by omega), (show w ≤ 23999 by omega)⟩
-        · by_cases h4 : w ≤ 28322
-          · exact ⟨.h24000, (show 24000 ≤ w by omega), (show w ≤ 28322 by omega)⟩
-          · by_cases h5 : w ≤ 32432
-            · exact ⟨.h28323, (show 28323 ≤ w by omega), (show w ≤ 32432 by omega)⟩
-            · exact ⟨.h32433, (show 32433 ≤ w by omega), (show w ≤ 33327 by omega)⟩
 end P1
 end
 section
@@ -1035,7 +920,6 @@ namespace CJ6
 def source : CJ0.Source := ⟨52, 71, 20, 9, CJ0.fullBox 71 20 9⟩
 def At : Prop := CJ0.ScalarList 179983 7541063022938771
 def Cert : Prop := CJ0.prefixRank source 72 ≤ 115565
-def Instance : Prop := CJ0.Main → Cert → At
 end CJ6
 end
 section
@@ -1152,7 +1036,7 @@ private theorem denPrefix_step (n : ℤ) (hn : 0 ≤ n) :
   generalize n % 6 = r at hden hlo hhi ⊢
   interval_cases r <;> norm_num [denPrefixPolynomial, denPolynomial] at hden ⊢ <;>
     linear_combination (norm := ring_nf) -12 * hden
-private theorem denPrefix_eq (n : ℕ) :
+theorem denPrefix_eq (n : ℕ) :
     24 * (∑ u ∈ range n, denominator (u : ℤ)) = denPrefix n := by
   induction n with
   | zero => decide
@@ -1180,7 +1064,7 @@ def cumulativePrefix (d n : ℕ) : ℤ :=
     denPrefix (n - (d + 3) : ℕ) + denPrefix (n - (2 * d + 3) : ℕ) +
     denPrefix (n - (2 * d + 4) : ℕ) + denPrefix (n - (2 * d + 5) : ℕ) -
     denPrefix (n - (3 * d + 6) : ℕ)
-private theorem cumulative_expand (d u : ℕ) (hu : u ≤ 3 * d) :
+theorem cumulative_expand (d u : ℕ) (hu : u ≤ 3 * d) :
     cumulative (d : ℤ) (u : ℤ) =
       denominator u - denominator ((u : ℤ) - (d + 1 : ℕ)) -
         denominator ((u : ℤ) - (d + 2 : ℕ)) - denominator ((u : ℤ) - (d + 3 : ℕ)) +

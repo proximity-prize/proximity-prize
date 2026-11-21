@@ -46,7 +46,7 @@ theorem embed_biform {p : Biform} {e v w : ℕ}
   obtain ⟨he,hv,hw⟩ := hp hj
   exact ⟨h1.le, by simpa [h0,h1] using he, h2.le.trans hv, h3.le.trans hw⟩
 
-private theorem add_velocity {p : Ring FX} {e v w : ℕ} (hp : p ∈ space FX ⟨e,0,v,w⟩) :
+theorem add_velocity {p : Ring FX} {e v w : ℕ} (hp : p ∈ space FX ⟨e,0,v,w⟩) :
     MvPolynomial.X (1 : Fin 4)*p ∈ space FX ⟨e,1,v,w⟩ := by
   classical
   intro m hm
@@ -64,13 +64,13 @@ private theorem add_velocity {p : Ring FX} {e v w : ℕ} (hp : p ∈ space FX �
     Nat.zero_add]
   omega
 
-private theorem pad_velocity {p : Ring FX} {e v w : ℕ} (hp : p ∈ space FX ⟨e+2,0,v,w⟩) :
+theorem pad_velocity {p : Ring FX} {e v w : ℕ} (hp : p ∈ space FX ⟨e+2,0,v,w⟩) :
     p ∈ space FX ⟨e,1,v,w⟩ := by
   intro m hm
   obtain ⟨h1,h0,h2,h3⟩ := hp hm
   exact ⟨h1.trans (Nat.zero_le 1), h0, h2, h3⟩
 
-private theorem inverse_axes (J : Input) {u v : ℕ}
+theorem inverse_axes (J : Input) {u v : ℕ}
     (h : ∀ i, (J.f.coeff i).degreeOf 0 ≤ u ∧ (J.f.coeff i).degreeOf 1 ≤ v) :
     ∀ i, ((HighCore82219Upper_3.inversePart J).coeff i).degreeOf 0 ≤ u ∧
       ((HighCore82219Upper_3.inversePart J).coeff i).degreeOf 1 ≤ v := by

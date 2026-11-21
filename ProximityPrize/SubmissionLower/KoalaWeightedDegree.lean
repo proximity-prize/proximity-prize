@@ -11,11 +11,11 @@ open scoped BigOperators
 
 variable {σ F : Type*} [Field F]
 
-private def recordWeight (w : σ → ℕ) :
+def recordWeight (w : σ → ℕ) :
     MvPolynomial σ F →+* Polynomial (MvPolynomial σ F) :=
   eval₂Hom (Polynomial.C.comp MvPolynomial.C) (fun i => Polynomial.C (X i) * Polynomial.X^(w i))
 
-private theorem record_monomial (w : σ → ℕ) (m : σ →₀ ℕ) (c : F) :
+theorem record_monomial (w : σ → ℕ) (m : σ →₀ ℕ) (c : F) :
     recordWeight w (monomial m c) = Polynomial.monomial (Finsupp.weight w m) (monomial m c) := by
   change (monomial m c).eval₂ _ _ = _
   rw [eval₂_monomial]
@@ -26,7 +26,7 @@ private theorem record_monomial (w : σ → ℕ) (m : σ →₀ ℕ) (c : F) :
   rw [hmono, Polynomial.C_mul_X_pow_eq_monomial]
   simp [Finsupp.weight_apply, Finsupp.sum, nsmul_eq_mul, Nat.mul_comm]
 
-private theorem record_coeff (w : σ → ℕ) (f : MvPolynomial σ F) (n : ℕ) (m : σ →₀ ℕ) :
+theorem record_coeff (w : σ → ℕ) (f : MvPolynomial σ F) (n : ℕ) (m : σ →₀ ℕ) :
     ((recordWeight w f).coeff n).coeff m = if Finsupp.weight w m = n then f.coeff m else 0 := by
   classical
   have hf := f.support_sum_monomial_coeff
@@ -48,7 +48,7 @@ private theorem record_coeff (w : σ → ℕ) (f : MvPolynomial σ F) (n : ℕ) 
     · simp [h, MvPolynomial.coeff_monomial, hne]
     · simp [Polynomial.coeff_monomial, h]
 
-private theorem record_degree (w : σ → ℕ) (f : MvPolynomial σ F) :
+theorem record_degree (w : σ → ℕ) (f : MvPolynomial σ F) :
     (recordWeight w f).natDegree = f.weightedTotalDegree w := by
   apply le_antisymm
   · apply Polynomial.natDegree_le_iff_coeff_eq_zero.mpr
@@ -67,7 +67,7 @@ private theorem record_degree (w : σ → ℕ) (f : MvPolynomial σ F) :
     simp [record_coeff] at hh
     exact (mem_support_iff.mp hm) hh
 
-private theorem record_ne_zero (w : σ → ℕ) {f : MvPolynomial σ F} (hf : f ≠ 0) :
+theorem record_ne_zero (w : σ → ℕ) {f : MvPolynomial σ F} (hf : f ≠ 0) :
     recordWeight w f ≠ 0 := by
   intro h
   obtain ⟨m, hm⟩ := MvPolynomial.ne_zero_iff.mp hf

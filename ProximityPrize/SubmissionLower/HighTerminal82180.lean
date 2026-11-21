@@ -16,7 +16,7 @@ open private slots_anti from ProximityPrize.SubmissionLower.UpperBranch6
 private def weighted (c f : ℕ → ℕ) (g : ℕ) : ℕ :=
   (∑ a ∈ range g, (c a - c (a+1)) * f a) + c g * f g
 
-private theorem total_weight (c : ℕ → ℕ) (hc : Antitone c) (g : ℕ) :
+theorem total_weight (c : ℕ → ℕ) (hc : Antitone c) (g : ℕ) :
     (∑ a ∈ range g, (c a - c (a+1))) + c g = c 0 := by
   induction g with
   | zero => simp
@@ -26,7 +26,7 @@ private theorem total_weight (c : ℕ → ℕ) (hc : Antitone c) (g : ℕ) :
     change _ + c (g+1) = c 0
     omega
 
-private theorem perturb (c f f' : ℕ → ℕ) (g d : ℕ) (hc : Antitone c)
+theorem perturb (c f f' : ℕ → ℕ) (g d : ℕ) (hc : Antitone c)
     (he : ∀ a, f a ≤ f' a + d) :
     weighted c f g ≤ weighted c f' g + c 0 * d := by
   calc
@@ -47,7 +47,7 @@ private def entry (A h : ℕ) (s : Shape) (E v q j : ℕ) :=
 def gain (h : ℕ) (s : Shape) (E v : ℕ) :=
   shapeSum s (entry 179964 h s E v)
 
-private theorem joint_upper (h : ℕ) (s : Shape) (E v : ℕ) :
+theorem joint_upper (h : ℕ) (s : Shape) (E v : ℕ) :
     P3_7.jointGain h s E v ≤ gain h s E v + triangle s.U * (count s*(19*s.m)) := by
   have bound (q j : ℕ) :
       entry 179983 h s E v q j ≤ entry 179964 h s E v q j + triangle s.U*(19*s.m) := by
@@ -67,7 +67,7 @@ private theorem joint_upper (h : ℕ) (s : Shape) (E v : ℕ) :
   change shapeSum s (entry 179983 h s E v) ≤ shapeSum s (entry 179964 h s E v) + _
   simpa only [Nat.mul_left_comm] using le
 
-private theorem from_blocks {t : Bank} {lo h E v : ℕ}
+theorem from_blocks {t : Bank} {lo h E v : ℕ}
     (hl : lo ≤ h) (hh : h < 131071) (hj : t.shape.J ≤ 131071-(lo+1))
     (he : 0 < E) (c : BlockChecks t.shape (adjusted t).nodeRows t.poleMoment lo E v) :
     debit h t < gain h t.shape E v := by
@@ -96,7 +96,7 @@ private def Checks (b : HighBand) (x : Test b) : Prop :=
   let t := tested b x
   BlockChecks t.shape (adjusted t).nodeRows t.poleMoment (start b) (threshold b x) (seedThreshold b x)
 
-private theorem grade_checks (b : HighBand) (hz : Checks b none)
+theorem grade_checks (b : HighBand) (hz : Checks b none)
     (hs : P3_7_4.GradeChecks (adjusted (terminal b)) (start b) 1 (grades b)) (x : Test b) :
     Checks b x := by
   cases x with

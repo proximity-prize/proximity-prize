@@ -109,7 +109,7 @@ abbrev CurveField (P : Ideal JetRing) := FractionRing (JetRing ⧸ P)
 abbrev curveMap (P : Ideal JetRing) : JetRing →+* CurveField P :=
   (algebraMap (JetRing ⧸ P) (CurveField P)).comp (Ideal.Quotient.mk P)
 
-private def scaledDerivation {E : Type} [Field E] (a : E) (d : E →+ E)
+def scaledDerivation {E : Type} [Field E] (a : E) (d : E →+ E)
     (hd : ∀ x y, d (x*y) = x*d y + y*d x) : Derivation ℤ E E := by
   let d' : E →+ E := ⟨⟨fun x => a*d x, by rw [map_zero, mul_zero]⟩,
     fun x y => by
@@ -159,16 +159,16 @@ theorem differential_curve (f : Equation) (P : Ideal JetRing) [P.IsPrime]
 private def jetPoint {E : Type} [Field E] (T : JetTaylor.Data E) (y : E) : JetRing →+* E :=
   eval₂RingHom (eval₂RingHom T.ι y) (T.δ y)
 
-private theorem jetPoint_C {E : Type} [Field E] (T : JetTaylor.Data E) (y : E) (q : Equation) :
+theorem jetPoint_C {E : Type} [Field E] (T : JetTaylor.Data E) (y : E) (q : Equation) :
     jetPoint T y (C q) = q.eval₂ T.ι y := eval₂_C _ _
 
-private theorem point_flatten_eval {E : Type} [Field E] (ι : Seeds →+* E) (y : E) (q : Equation) :
+theorem point_flatten_eval {E : Type} [Field E] (ι : Seeds →+* E) (y : E) (q : Equation) :
     point ι y (flatten q) = q.eval₂ ι y := by
   change eval₂ ι y ((MvPolynomial.optionEquivLeft FX (Fin 2))
     ((MvPolynomial.optionEquivLeft FX (Fin 2)).symm q)) = _
   rw [AlgEquiv.apply_symm_apply]
 
-private theorem jetPoint_chain {E : Type} [Field E] (T : JetTaylor.Data E) (y : E)
+theorem jetPoint_chain {E : Type} [Field E] (T : JetTaylor.Data E) (y : E)
     (f : Equation) (hf : jetPoint T y (C f) = 0) :
     jetPoint T y (tangentEquation f) = 0 ∧
     (∀ p, jetPoint T y (jetSeparant f) * T.δ (jetPoint T y p) = jetPoint T y (action f p)) ∧
@@ -197,12 +197,12 @@ private theorem jetPoint_chain {E : Type} [Field E] (T : JetTaylor.Data E) (y : 
     linear_combination h
   exact ⟨ht, HighCore82219GeometryCert_1.jet_chain T.δ ev f hC hx, hs⟩
 
-private theorem root_data (J : Input) (B : ResidueLift J) (D : Factors J B) :
+theorem root_data (J : Input) (B : ResidueLift J) (D : Factors J B) :
     (generic D.proper).Separable ∧ D.proper.IsPrimitive := by
   have hd : D.proper ∣ J.f := ⟨_, D.product⟩
   exact ⟨J.reduced.2.2.of_dvd (Polynomial.map_dvd _ hd), isPrimitive_of_dvd J.reduced.2.1 hd⟩
 
-private theorem graph_mem_of_roots (J : Input) (B : ResidueLift J) (D : Factors J B)
+theorem graph_mem_of_roots (J : Input) (B : ResidueLift J) (D : Factors J B)
     (T : JetTaylor.Data (SplitField D.proper)) (hι : T.ι = HighCore82219Upper_4.splitMap D.proper)
     (N : JetRing) (hroot : ∀ y ∈ geomRoots D.proper, jetPoint T y (C J.f) = 0)
     (hN : ∀ y ∈ geomRoots D.proper, jetPoint T y N = 0) : N ∈ graphIdeal J B D := by

@@ -18,7 +18,7 @@ open scoped BigOperators
 open private local_range_finite from ProximityPrize.SubmissionLower.PrimaryTaperFamily
 open private map_independent_family from ProximityPrize.SubmissionLower.PortLowBase
 
-private theorem rank_at_position {A D : ℕ} (x y : Geom) :
+theorem rank_at_position {A D : ℕ} (x y : Geom) :
     Module.finrank Geom (LinearMap.range (nodeMap (A:=A) (D:=D) x y)) ≤ localRank := by
   letI := local_range_finite x y
   apply (Submodule.finrank_mono ?_).trans (node_rank x y)
@@ -74,10 +74,6 @@ theorem primary_family (A D : ℕ) (hA : 0<A) (hD : 3<D) (hBudget : D*4012 ≤ 3
   obtain ⟨hbox,hweight,hJets⟩ := row_bounds Q.1
   exact ⟨hbox,hweight,hJets,contact_of_word_kernel w Q.1 (LinearMap.mem_ker.mp Q.2)⟩
 
-
-theorem source_rank_2353 : sourceRank 179915 133424 = 1076149877049520115 := by decide
-
-theorem layer_need_2353 : layerNeed 179915 133424 = 23145994688552 := by decide
 
 #print axioms primary_family
 end

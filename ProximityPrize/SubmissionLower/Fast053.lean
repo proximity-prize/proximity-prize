@@ -11,12 +11,12 @@ set_option maxRecDepth 4000
 set_option maxHeartbeats 800000
 set_option maxSynthPendingDepth 8
 private abbrev toSeed : Seeds →+* SeedField := algebraMap _ _
-private abbrev toClosure : SeedField →+* SeedClosure := algebraMap _ _
-private theorem toSeed_injective : Function.Injective toSeed :=
+abbrev toClosure : SeedField →+* SeedClosure := algebraMap _ _
+theorem toSeed_injective : Function.Injective toSeed :=
   IsFractionRing.injective Seeds SeedField
 private theorem seedGeneric_injective : Function.Injective seedGeneric :=
   toClosure.injective.comp toSeed_injective
-private theorem pair_pow_le {S : Type*} [CommRing S] (I J : Ideal S) (n j : ℕ) :
+theorem pair_pow_le {S : Type*} [CommRing S] (I J : Ideal S) (n j : ℕ) :
     (I ⊔ J) ^ (n+j) ≤ I ^ n ⊔ J ^ (j+1) := by
   rw [← Ideal.add_eq_sup, add_pow, Ideal.sum_eq_sup]
   apply Finset.sup_le
@@ -27,7 +27,7 @@ private theorem pair_pow_le {S : Type*} [CommRing S] (I J : Ideal S) (n j : ℕ)
   · refine Ideal.mul_le_left.trans
       (Ideal.mul_le_right.trans ((Ideal.pow_le_pow_right ?_).trans le_sup_right))
     omega
-private theorem leading_dvd_of_contact {S : Type*} [CommRing S]
+theorem leading_dvd_of_contact {S : Type*} [CommRing S]
     (a b : S) (G : Polynomial S) (k : ℕ)
     (h : G ∈ (Ideal.span ({C a, Polynomial.X - C b} : Set S[X])) ^ k) :
     a ^ (k - G.natDegree) ∣ G.leadingCoeff := by
@@ -81,7 +81,7 @@ private theorem leading_dvd_of_contact {S : Type*} [CommRing S]
   apply Ideal.Quotient.eq_zero_iff_mem.mp
   change π (G.coeff j) = 0
   rw [← coeff_map, show G.map π = 0 from hzero, coeff_zero]
-private theorem fibre_leading_dvd {q : Surface} {y v : SeedClosure}
+theorem fibre_leading_dvd {q : Surface} {y v : SeedClosure}
     (hq : OnSeedFibre q y v) {P : Jet} {k : ℕ} (h : OrderAt q P k) :
     (Polynomial.X - C y) ^ (k - P.natDegree) ∣ P.leadingCoeff.map seedGeneric := by
   have hi : Function.Injective (Polynomial.mapRingHom seedGeneric) :=
@@ -90,7 +90,7 @@ private theorem fibre_leading_dvd {q : Surface} {y v : SeedClosure}
   unfold fibreRow at hc
   rw [natDegree_map_eq_of_injective hi, leadingCoeff_map_of_injective hi] at hc
   exact hc
-private theorem minpoly_pow_dvd {y : SeedClosure} (hy : IsSeparable SeedField y)
+theorem minpoly_pow_dvd {y : SeedClosure} (hy : IsSeparable SeedField y)
     {n : ℕ} {g : SeedField[X]} (h : (Polynomial.X - C y) ^ n ∣ g.map toClosure) :
     minpoly SeedField y ^ n ∣ g := by
   induction n generalizing g with
@@ -122,7 +122,7 @@ private theorem minpoly_pow_dvd {y : SeedClosure} (hy : IsSeparable SeedField y)
   let : UniqueFactorizationMonoid Seeds := MvPolynomial.uniqueFactorizationMonoid (σ := Fin 2)
   let := UniqueFactorizationMonoid.strongNormalizationMonoid (α := Seeds)
   exact UniqueFactorizationMonoid.toNormalizedGCDMonoid Seeds
-private theorem primitive_model (g : SeedField[X]) (hg : g ≠ 0) :
+theorem primitive_model (g : SeedField[X]) (hg : g ≠ 0) :
     ∃ f : Equation, f.IsPrimitive ∧ Associated (f.map toSeed) g := by
   classical
   let := seedGCD
@@ -145,7 +145,7 @@ private theorem primitive_model (g : SeedField[X]) (hg : g ≠ 0) :
   have hunit : Associated (C (toSeed a) * g) g := associated_unit_mul_left _ _ ha'
   rw [← hscale] at hunit
   exact (associated_unit_mul_right _ _ hcontent).trans hunit
-private theorem eval_at_fibre_C (f : Equation) (y v : SeedClosure) :
+theorem eval_at_fibre_C (f : Equation) (y v : SeedClosure) :
     seedFibreEval y v (C f) = aeval y (f.map toSeed) := by
   change (eval₂RingHom (eval₂RingHom seedGeneric y) v) (C f) = _
   rw [coe_eval₂RingHom, eval₂_C, coe_eval₂RingHom, aeval_def, eval₂_map]
@@ -222,12 +222,12 @@ set_option maxRecDepth 30000
 set_option Elab.async false
 set_option maxHeartbeats 4000000
 open private fastPascal_eq from ProximityPrize.SubmissionLower.SoloK1_13_1_1ArithmeticLogic
-private def bfPlane (r o : ℕ) : ℕ :=
+def bfPlane (r o : ℕ) : ℕ :=
   let lo := 48 - (r : ℤ)
   min (bandCount 48 lo 48 10)
     (sumRange 49 fun b =>
       min (pairBound 48 lo b) (sumRange (48 - b + 1) (lineBound 48 lo (o : ℤ) b)))
-private theorem bfPascal (s r : ℕ) (hs : 75 ≤ s ∧ s ≤ 89) (hr : s + r < 138) :
+theorem bfPascal (s r : ℕ) (hs : 75 ≤ s ∧ s ≤ 89) (hr : s + r < 138) :
     fastPascal s r = bfPlane r (138 - (s + r)) := by
   have hd : residualDegree s = 48 := by unfold residualDegree; omega
   have hl : -(offset r) = 48 - (r : ℤ) := by unfold offset; omega
@@ -238,16 +238,16 @@ private theorem bfPascal (s r : ℕ) (hs : 75 ≤ s ∧ s ≤ 89) (hr : s + r < 
   rw [fastPascal_eq s r hr]
   unfold pascalBound bfPlane
   rw [hd, hl, hh, ho]
-private theorem bfSumMono (n : ℕ) {f g : ℕ → ℕ} (h : ∀ i, f i ≤ g i) :
+theorem bfSumMono (n : ℕ) {f g : ℕ → ℕ} (h : ∀ i, f i ≤ g i) :
     sumRange n f ≤ sumRange n g := by
   induction n with
   | zero => exact Nat.le_refl _
   | succ n ih => exact Nat.add_le_add ih (h n)
-private theorem bfInterval {a b c d : ℤ} (h : c ≤ a) (k : b ≤ d) :
+theorem bfInterval {a b c d : ℤ} (h : c ≤ a) (k : b ≤ d) :
     intervalSize a b ≤ intervalSize c d := by
   unfold intervalSize
   omega
-private theorem bfBandMono {x y : ℤ} (h : y ≤ x) :
+theorem bfBandMono {x y : ℤ} (h : y ≤ x) :
     bandCount 48 x 48 10 ≤ bandCount 48 y 48 10 := by
   unfold bandCount
   apply bfSumMono
@@ -256,14 +256,14 @@ private theorem bfBandMono {x y : ℤ} (h : y ≤ x) :
   intro c
   apply bfInterval _ le_rfl
   omega
-private theorem bfPairMono {x y : ℤ} (h : y ≤ x) (b : ℕ) :
+theorem bfPairMono {x y : ℤ} (h : y ≤ x) (b : ℕ) :
     pairBound 48 x b ≤ pairBound 48 y b := by
   unfold pairBound
   apply bfSumMono
   intro f
   apply bfInterval _ le_rfl
   omega
-private theorem bfLineMono {x y u v : ℤ} (h : y ≤ x) (k : u ≤ v) (b c : ℕ) :
+theorem bfLineMono {x y u v : ℤ} (h : y ≤ x) (k : u ≤ v) (b c : ℕ) :
     lineBound 48 x u b c ≤ lineBound 48 y v b c := by
   unfold lineBound
   dsimp only
@@ -271,7 +271,7 @@ private theorem bfLineMono {x y u v : ℤ} (h : y ≤ x) (k : u ≤ v) (b c : �
       max 0 ((x - b - 2 * (min c 24 : ℕ) + 2) / 3) := by omega
   apply min_le_min (bfInterval hl le_rfl)
   exact bfInterval (max_le_max hl (by omega)) le_rfl
-private theorem bfMono {a b c d : ℕ} (hr : a ≤ c) (ho : b ≤ d) :
+theorem bfMono {a b c d : ℕ} (hr : a ≤ c) (ho : b ≤ d) :
     bfPlane a b ≤ bfPlane c d := by
   unfold bfPlane
   dsimp only
@@ -286,7 +286,7 @@ private theorem bfMono {a b c d : ℕ} (hr : a ≤ c) (ho : b ≤ d) :
 private structure BfEvaluator where
   get : ℕ → ℕ → ℕ
   correct : ∀ r o, bfPlane r o = get r o
-private def bfLeaf (a b c d v : ℕ) (hl : bfPlane a b = v) (hu : bfPlane c d ≤ v) :
+def bfLeaf (a b c d v : ℕ) (hl : bfPlane a b = v) (hu : bfPlane c d ≤ v) :
     BfEvaluator := ⟨fun r o =>
       if a ≤ r ∧ b ≤ o ∧ r ≤ c ∧ o ≤ d then v else bfPlane r o, by
     intro r o
@@ -295,27 +295,27 @@ private def bfLeaf (a b c d v : ℕ) (hl : bfPlane a b = v) (hu : bfPlane c d �
       exact Nat.le_antisymm ((bfMono h.2.2.1 h.2.2.2).trans hu)
         (hl.ge.trans (bfMono h.1 h.2.1))
     · rfl⟩
-private def bfSplitR (k : ℕ) (l h : BfEvaluator) : BfEvaluator :=
+def bfSplitR (k : ℕ) (l h : BfEvaluator) : BfEvaluator :=
   ⟨fun r o => if r < k then l.get r o else h.get r o, by
     intro r o
     split
     · exact l.correct r o
     · exact h.correct r o⟩
-private def bfSplitO (k : ℕ) (l h : BfEvaluator) : BfEvaluator :=
+def bfSplitO (k : ℕ) (l h : BfEvaluator) : BfEvaluator :=
   ⟨fun r o => if o < k then l.get r o else h.get r o, by
     intro r o
     split
     · exact l.correct r o
     · exact h.correct r o⟩
-private def bfPairsAt (k : ℕ) : ℕ :=
+def bfPairsAt (k : ℕ) : ℕ :=
   (0x60b11161c21272c32373d42484d53585e63696e73787d81868a8e9296999da0a3a6a9abaeb0b2b4b6b7b9babbbcbdbdbe >>> (8 * k)) % 256
-private def bfActiveAt (k : ℕ) : ℕ :=
+def bfActiveAt (k : ℕ) : ℕ :=
   (0xbe1762292d637e4204bd5545e66726f977a7f686c8dd9489aea0ea69abeb0eb59b9fbe0c1dc55c89cb9ce5d0dd32d53d71d8cda4db9dccddcdeadf6e00e08e0fe14e18e1be1de1ee1f >>> (12 * k)) % 4096
-private theorem bfPairsChecked : ∀ k : Fin 49, natPairs 48 k.val 0 = bfPairsAt k.val := by
+theorem bfPairsChecked : ∀ k : Fin 49, natPairs 48 k.val 0 = bfPairsAt k.val := by
   decide +kernel
-private theorem bfActiveChecked : ∀ k : Fin 49, activeNatCount 48 k.val 48 = bfActiveAt k.val := by
+theorem bfActiveChecked : ∀ k : Fin 49, activeNatCount 48 k.val 48 = bfActiveAt k.val := by
   decide +kernel
-private theorem bfPairsLookup (lo b : ℕ) (h : lo ≤ 48) :
+theorem bfPairsLookup (lo b : ℕ) (h : lo ≤ 48) :
     natPairs 48 lo b = bfPairsAt (lo - b) := by
   calc
     natPairs 48 lo b = natPairs 48 (lo - b) 0 := by
@@ -326,28 +326,28 @@ private theorem bfPairsLookup (lo b : ℕ) (h : lo ≤ 48) :
     _ = bfPairsAt (lo - b) := bfPairsChecked ⟨lo - b, by omega⟩
 open private sumRange_prefix sumRange_zero sumRange_congr activeNatCount_eq
   from ProximityPrize.SubmissionLower.SoloK1_13_1_1ArithmeticLogic
-private theorem bfFullBand (r : ℕ) : bandCount 48 (-(offset r)) 48 10 = bfActiveAt (48 - r) := by
+theorem bfFullBand (r : ℕ) : bandCount 48 (-(offset r)) 48 10 = bfActiveAt (48 - r) := by
   have hl : (-(offset r)).toNat = 48 - r := by unfold offset; omega
   rw [activeNatCount_eq _ _ _ (by decide), hl]
   exact bfActiveChecked ⟨48 - r, by omega⟩
-private theorem bfPlaneCap (r o : ℕ) : bfPlane r o ≤ bfActiveAt (48 - r) := by
+theorem bfPlaneCap (r o : ℕ) : bfPlane r o ≤ bfActiveAt (48 - r) := by
   have hl : 48 - (r : ℤ) = -(offset r) := by unfold offset; omega
   unfold bfPlane
   rw [hl]
   exact (min_le_left _ _).trans (bfFullBand r).le
-private def bfTargetLit (d : ℕ) (lo ord : ℤ) : ℕ :=
+def bfTargetLit (d : ℕ) (lo ord : ℤ) : ℕ :=
   sumRange (min (d + 1) ((ord.toNat + 2) / 3)) fun a =>
     sumRange (min (d - a + 1) ((ord.toNat - 3 * a + 1) / 2)) fun f =>
       intervalSize (max 0 (lo - d + a - 2 * f))
         (min ((d : ℤ) - a - f) (ord - 1 - 3 * a - 2 * f))
-private theorem bfTarget_zero {lo ord : ℤ} (d a f : ℕ) (h : ord ≤ 3 * (a : ℤ) + 2 * f) :
+theorem bfTarget_zero {lo ord : ℤ} (d a f : ℕ) (h : ord ≤ 3 * (a : ℤ) + 2 * f) :
     intervalSize (max 0 (lo - d + a - 2 * f))
       (min ((d : ℤ) - a - f) (ord - 1 - 3 * a - 2 * f)) = 0 := by
   unfold intervalSize
   have hu := min_le_right ((d : ℤ) - a - f) (ord - 1 - 3 * a - 2 * f)
   have hl := le_max_left (0 : ℤ) (lo - d + a - 2 * f)
   exact Int.toNat_of_nonpos (by omega)
-private theorem bfTargetLit_eq (d : ℕ) (lo ord : ℤ) :
+theorem bfTargetLit_eq (d : ℕ) (lo ord : ℤ) :
     targetCount d lo ord = bfTargetLit d lo ord := by
   unfold targetCount bfTargetLit
   rw [sumRange_prefix (d + 1) (min (d + 1) ((ord.toNat + 2) / 3)) _ (min_le_left _ _)]
@@ -363,7 +363,7 @@ private theorem bfTargetLit_eq (d : ℕ) (lo ord : ℤ) :
     intro f _
     apply bfTarget_zero
     omega
-private def bfFlagValue (s r : ℕ) (v : FactorPowers) : ℕ :=
+def bfFlagValue (s r : ℕ) (v : FactorPowers) : ℕ :=
   let count := bfActiveAt (48 - r)
   if v.degree ≤ 48 ∧ v.maxIndex ≤ 48 ∧ v.maxTop ≤ 10 then
     let d := 48 - v.degree
@@ -372,20 +372,20 @@ private def bfFlagValue (s r : ℕ) (v : FactorPowers) : ℕ :=
     let ord := orderCutoff s (offset r) - (v.minOrder : ℤ)
     count - (bandCount d lo hi (10 - v.maxTop) - bfTargetLit d lo ord)
   else count
-private theorem bfFlagValue_eq (s r : ℕ) (hs : 75 ≤ s ∧ s ≤ 89) (v : FactorPowers) :
+theorem bfFlagValue_eq (s r : ℕ) (hs : 75 ≤ s ∧ s ≤ 89) (v : FactorPowers) :
     flagBound s (offset r) v = bfFlagValue s r v := by
   have hd : residualDegree s = 48 := by unfold residualDegree; omega
   simp only [flagBound, bfFlagValue, hd, bfFullBand, bfTargetLit_eq]
 open private natLine_eq natPairs_eq sumRange_suffix from ProximityPrize.SubmissionLower.SoloK1_13_1_1ArithmeticLogic
-private def bfLowerC (lo o b k : ℕ) : ℕ :=
+def bfLowerC (lo o b k : ℕ) : ℕ :=
   max (2 * (48 - b) + k + 1 - o) ((lo - (b + 3 * (10 - k)) + 1) / 2)
-private def bfUpperC (lo b k : ℕ) : ℕ :=
+def bfUpperC (lo b k : ℕ) : ℕ :=
   min (48 - b + 1 - k) (3 * (48 - b) + b + 1 - (lo + 3 * k))
-private theorem bfThird (x y z : ℕ) :
+theorem bfThird (x y z : ℕ) :
     (x - y + 2) / 3 ≤ z ↔ x ≤ y + 3 * z := by omega
-private theorem bfHalf (x y z : ℕ) :
+theorem bfHalf (x y z : ℕ) :
     (x - y + 1) / 2 ≤ z ↔ x ≤ y + 2 * z := by omega
-private theorem bfHeight (k m t c z : ℕ) (hk : k < 11) (hc : c ≤ t) :
+theorem bfHeight (k m t c z : ℕ) (hk : k < 11) (hc : c ≤ t) :
     k < min (11 - m) (t - c + 1 - max m z) ↔
       m ≤ 10 - k ∧ c + k ≤ t ∧ m ≤ t - (c + k) ∧ z ≤ t - (c + k) := by
   rw [lt_min_iff]
@@ -397,7 +397,7 @@ private theorem bfHeight (k m t c z : ℕ) (hk : k < 11) (hc : c ≤ t) :
   · rintro ⟨h, hck, h₁, h₂⟩
     have hg := max_le h₁ h₂
     exact ⟨by omega, by omega⟩
-private theorem bfCoordinates (lo o b c k t : ℕ) (hk : k < 11) :
+theorem bfCoordinates (lo o b c k t : ℕ) (hk : k < 11) :
     (lo ≤ b + 2 * c + 3 * (10 - k) ∧ c + k ≤ t ∧
        lo ≤ b + 2 * c + 3 * (t - (c + k)) ∧
        3 * t + 1 - (2 * c + o) ≤ t - (c + k)) ↔
@@ -411,7 +411,7 @@ private theorem bfCoordinates (lo o b c k t : ℕ) (hk : k < 11) :
     have h : c + k ≤ t := by omega
     have hh := Nat.sub_add_cancel h
     exact ⟨by omega, h, by omega, by omega⟩
-private theorem bfLineTest (lo o b c k : ℕ) (hl : lo ≤ 48) (hb : b ≤ 48)
+theorem bfLineTest (lo o b c k : ℕ) (hl : lo ≤ 48) (hb : b ≤ 48)
     (hc : c ≤ 48 - b) (hk : k < 11) :
     k < natLine 48 lo o b c ↔ bfLowerC lo o b k ≤ c ∧ c < bfUpperC lo b k := by
   have hm : lo - (b + 2 * min c 24) = lo - (b + 2 * c) := by omega
@@ -423,7 +423,7 @@ private theorem bfLineTest (lo o b c k : ℕ) (hl : lo ≤ 48) (hb : b ≤ 48)
   change k < min (11 - _) (_ - c + 1 - max _ _) ↔ _
   rw [bfHeight k _ (48 - b) c _ hk hc, bfThird, bfThird, max_le_iff, bfHalf, lt_min_iff]
   exact bfCoordinates lo o b c k (48 - b) hk
-private theorem bfCount (n a b : ℕ) :
+theorem bfCount (n a b : ℕ) :
     sumRange n (fun i => if a ≤ i ∧ i < b then 1 else 0) = min n b - a := by
   induction n with
   | zero => simp [sumRange]
@@ -431,14 +431,14 @@ private theorem bfCount (n a b : ℕ) :
     change sumRange n _ + (if a ≤ n ∧ n < b then 1 else 0) = _
     rw [ih]
     split <;> omega
-private theorem bfSwap (n m : ℕ) (f : ℕ → ℕ → ℕ) :
+theorem bfSwap (n m : ℕ) (f : ℕ → ℕ → ℕ) :
     sumRange n (fun i => sumRange m (f i)) =
       sumRange m (fun j => sumRange n (fun i => f i j)) := by
   simp only [sumRange_eq_sum]
   exact Finset.sum_comm
-private def bfRow (lo o b : ℕ) : ℕ :=
+def bfRow (lo o b : ℕ) : ℕ :=
   sumRange 11 fun k => bfUpperC lo b k - bfLowerC lo o b k
-private theorem bfRow_eq (lo o b : ℕ) (hl : lo ≤ 48) (hb : b ≤ 48) :
+theorem bfRow_eq (lo o b : ℕ) (hl : lo ≤ 48) (hb : b ≤ 48) :
     sumRange (48 - b + 1) (natLine 48 lo o b) = bfRow lo o b := by
   let f := fun c k => if bfLowerC lo o b k ≤ c ∧ c < bfUpperC lo b k then 1 else 0
   calc
@@ -462,11 +462,11 @@ private theorem bfRow_eq (lo o b : ℕ) (hl : lo ≤ 48) (hb : b ≤ 48) :
         (fun c => if bfLowerC lo o b k ≤ c ∧ c < bfUpperC lo b k then 1 else 0) = _
       rw [bfCount, min_eq_right]
       exact (min_le_left _ _).trans (Nat.sub_le _ _)
-private def bfPlainRow (t o : ℕ) : ℕ :=
+def bfPlainRow (t o : ℕ) : ℕ :=
   sumRange 11 fun k => (t + 1 - k) - (2 * t + k + 1 - o)
-private def bfFastRow (lo o b : ℕ) : ℕ :=
+def bfFastRow (lo o b : ℕ) : ℕ :=
   if lo ≤ b then bfPlainRow (48 - b) o else bfRow lo o b
-private theorem bfFastRow_eq (lo o b : ℕ) : bfFastRow lo o b = bfRow lo o b := by
+theorem bfFastRow_eq (lo o b : ℕ) : bfFastRow lo o b = bfRow lo o b := by
   unfold bfFastRow
   split
   · rename_i h
@@ -480,12 +480,12 @@ private theorem bfFastRow_eq (lo o b : ℕ) : bfFastRow lo o b = bfRow lo o b :=
       simp [bfLowerC, hz]
     rw [hu, hl]
   · rfl
-private def bfRectTotal (lo o : ℕ) : ℕ :=
+def bfRectTotal (lo o : ℕ) : ℕ :=
   let start := 49 - o
   min (bfActiveAt lo) (sumRange (49 - start) fun i =>
     let b := i + start
     min (bfPairsAt (lo - b)) (bfFastRow lo o b))
-private theorem bfPlaneTotal (r o : ℕ) :
+theorem bfPlaneTotal (r o : ℕ) :
     bfPlane r o = bfRectTotal (48 - r) o := by
   have hl : (48 - (r : ℤ)).toNat = 48 - r := by omega
   have hh : bandCount 48 (48 - (r : ℤ)) 48 10 = bfActiveAt (48 - r) := by
@@ -521,11 +521,11 @@ private theorem bfPlaneTotal (r o : ℕ) :
           apply le_trans _ (le_max_left _ _)
           omega
         simp [g, hz]
-private def bfTriangle (o : ℕ) : ℕ :=
+def bfTriangle (o : ℕ) : ℕ :=
   let start := 49 - o
   sumRange (49 - start) fun i =>
     bfPlainRow (48 - (i + start)) o
-private theorem bfTopBound (r o : ℕ) : bfPlane r o ≤ bfTriangle o := by
+theorem bfTopBound (r o : ℕ) : bfPlane r o ≤ bfTriangle o := by
   rw [bfPlaneTotal]
   unfold bfRectTotal bfTriangle
   dsimp only
@@ -539,289 +539,289 @@ private theorem bfTopBound (r o : ℕ) : bfPlane r o ≤ bfTriangle o := by
   have hl : 2 * (48 - b) + k + 1 - o ≤ bfLowerC (48 - r) o b k := le_max_left _ _
   change bfUpperC (48 - r) b k - bfLowerC (48 - r) o b k ≤ _
   omega
-private theorem bfTopAt (r o : ℕ) {v : ℕ} (h : bfTriangle o = v) : bfPlane r o ≤ v :=
+theorem bfTopAt (r o : ℕ) {v : ℕ} (h : bfTriangle o = v) : bfPlane r o ≤ v :=
   (bfTopBound r o).trans h.le
-private theorem bfPoint48_1 : bfPlane 48 1 = 1 :=
+theorem bfPoint48_1 : bfPlane 48 1 = 1 :=
   (bfPlaneTotal 48 1).trans (by decide +kernel : bfRectTotal 0 1 = 1)
-private def bfValue1 : BfEvaluator :=
+def bfValue1 : BfEvaluator :=
   bfLeaf 48 1 62 1 1 bfPoint48_1 (bfTopAt 62 1 (by decide +kernel))
-private theorem bfPoint47_2 : bfPlane 47 2 = 2 :=
+theorem bfPoint47_2 : bfPlane 47 2 = 2 :=
   (bfPlaneTotal 47 2).trans (by decide +kernel : bfRectTotal 1 2 = 2)
-private def bfValue2 : BfEvaluator :=
+def bfValue2 : BfEvaluator :=
   bfLeaf 47 2 61 2 2 bfPoint47_2 (bfTopAt 61 2 (by decide +kernel))
-private theorem bfPoint46_3 : bfPlane 46 3 = 4 :=
+theorem bfPoint46_3 : bfPlane 46 3 = 4 :=
   (bfPlaneTotal 46 3).trans (by decide +kernel : bfRectTotal 2 3 = 4)
-private def bfValue4 : BfEvaluator :=
+def bfValue4 : BfEvaluator :=
   bfLeaf 46 3 60 3 4 bfPoint46_3 (bfTopAt 60 3 (by decide +kernel))
-private theorem bfPoint45_4 : bfPlane 45 4 = 7 :=
+theorem bfPoint45_4 : bfPlane 45 4 = 7 :=
   (bfPlaneTotal 45 4).trans (by decide +kernel : bfRectTotal 3 4 = 7)
-private def bfValue7 : BfEvaluator :=
+def bfValue7 : BfEvaluator :=
   bfLeaf 45 4 59 4 7 bfPoint45_4 (bfTopAt 59 4 (by decide +kernel))
-private theorem bfPoint44_5 : bfPlane 44 5 = 11 :=
+theorem bfPoint44_5 : bfPlane 44 5 = 11 :=
   (bfPlaneTotal 44 5).trans (by decide +kernel : bfRectTotal 4 5 = 11)
-private def bfValue11 : BfEvaluator :=
+def bfValue11 : BfEvaluator :=
   bfLeaf 44 5 58 5 11 bfPoint44_5 (bfTopAt 58 5 (by decide +kernel))
-private theorem bfPoint43_6 : bfPlane 43 6 = 16 :=
+theorem bfPoint43_6 : bfPlane 43 6 = 16 :=
   (bfPlaneTotal 43 6).trans (by decide +kernel : bfRectTotal 5 6 = 16)
-private def bfValue16 : BfEvaluator :=
+def bfValue16 : BfEvaluator :=
   bfLeaf 43 6 57 6 16 bfPoint43_6 (bfTopAt 57 6 (by decide +kernel))
-private theorem bfPoint42_7 : bfPlane 42 7 = 23 :=
+theorem bfPoint42_7 : bfPlane 42 7 = 23 :=
   (bfPlaneTotal 42 7).trans (by decide +kernel : bfRectTotal 6 7 = 23)
-private def bfValue23 : BfEvaluator :=
+def bfValue23 : BfEvaluator :=
   bfLeaf 42 7 56 7 23 bfPoint42_7 (bfTopAt 56 7 (by decide +kernel))
-private theorem bfPoint41_8 : bfPlane 41 8 = 31 :=
+theorem bfPoint41_8 : bfPlane 41 8 = 31 :=
   (bfPlaneTotal 41 8).trans (by decide +kernel : bfRectTotal 7 8 = 31)
-private def bfValue31 : BfEvaluator :=
+def bfValue31 : BfEvaluator :=
   bfLeaf 41 8 55 8 31 bfPoint41_8 (bfTopAt 55 8 (by decide +kernel))
-private theorem bfPoint40_9 : bfPlane 40 9 = 41 :=
+theorem bfPoint40_9 : bfPlane 40 9 = 41 :=
   (bfPlaneTotal 40 9).trans (by decide +kernel : bfRectTotal 8 9 = 41)
-private def bfValue41 : BfEvaluator :=
+def bfValue41 : BfEvaluator :=
   bfLeaf 40 9 54 9 41 bfPoint40_9 (bfTopAt 54 9 (by decide +kernel))
-private theorem bfPoint39_10 : bfPlane 39 10 = 53 :=
+theorem bfPoint39_10 : bfPlane 39 10 = 53 :=
   (bfPlaneTotal 39 10).trans (by decide +kernel : bfRectTotal 9 10 = 53)
-private def bfValue53 : BfEvaluator :=
+def bfValue53 : BfEvaluator :=
   bfLeaf 39 10 53 10 53 bfPoint39_10 (bfTopAt 53 10 (by decide +kernel))
-private theorem bfPoint38_11 : bfPlane 38 11 = 67 :=
+theorem bfPoint38_11 : bfPlane 38 11 = 67 :=
   (bfPlaneTotal 38 11).trans (by decide +kernel : bfRectTotal 10 11 = 67)
-private def bfValue67 : BfEvaluator :=
+def bfValue67 : BfEvaluator :=
   bfLeaf 38 11 52 11 67 bfPoint38_11 (bfTopAt 52 11 (by decide +kernel))
-private theorem bfPoint37_12 : bfPlane 37 12 = 83 :=
+theorem bfPoint37_12 : bfPlane 37 12 = 83 :=
   (bfPlaneTotal 37 12).trans (by decide +kernel : bfRectTotal 11 12 = 83)
-private def bfValue83 : BfEvaluator :=
+def bfValue83 : BfEvaluator :=
   bfLeaf 37 12 51 12 83 bfPoint37_12 (bfTopAt 51 12 (by decide +kernel))
-private theorem bfPoint36_13 : bfPlane 36 13 = 102 :=
+theorem bfPoint36_13 : bfPlane 36 13 = 102 :=
   (bfPlaneTotal 36 13).trans (by decide +kernel : bfRectTotal 12 13 = 102)
-private def bfValue102 : BfEvaluator :=
+def bfValue102 : BfEvaluator :=
   bfLeaf 36 13 50 13 102 bfPoint36_13 (bfTopAt 50 13 (by decide +kernel))
-private theorem bfPoint35_14 : bfPlane 35 14 = 123 :=
+theorem bfPoint35_14 : bfPlane 35 14 = 123 :=
   (bfPlaneTotal 35 14).trans (by decide +kernel : bfRectTotal 13 14 = 123)
-private def bfValue123 : BfEvaluator :=
+def bfValue123 : BfEvaluator :=
   bfLeaf 35 14 49 14 123 bfPoint35_14 (bfTopAt 49 14 (by decide +kernel))
-private theorem bfPoint34_15 : bfPlane 34 15 = 147 :=
+theorem bfPoint34_15 : bfPlane 34 15 = 147 :=
   (bfPlaneTotal 34 15).trans (by decide +kernel : bfRectTotal 14 15 = 147)
-private def bfValue147 : BfEvaluator :=
+def bfValue147 : BfEvaluator :=
   bfLeaf 34 15 48 15 147 bfPoint34_15 (bfTopAt 48 15 (by decide +kernel))
-private theorem bfPoint33_16 : bfPlane 33 16 = 174 :=
+theorem bfPoint33_16 : bfPlane 33 16 = 174 :=
   (bfPlaneTotal 33 16).trans (by decide +kernel : bfRectTotal 15 16 = 174)
-private def bfValue174 : BfEvaluator :=
+def bfValue174 : BfEvaluator :=
   bfLeaf 33 16 47 16 174 bfPoint33_16 (bfTopAt 47 16 (by decide +kernel))
-private theorem bfPoint0_49 : bfPlane 0 49 = 190 :=
+theorem bfPoint0_49 : bfPlane 0 49 = 190 :=
   (bfPlaneTotal 0 49).trans (by decide +kernel : bfRectTotal 48 49 = 190)
-private def bfValue190 : BfEvaluator :=
+def bfValue190 : BfEvaluator :=
   bfLeaf 0 49 0 63 190 bfPoint0_49 (bfPlaneCap 0 63)
-private theorem bfPoint32_17 : bfPlane 32 17 = 204 :=
+theorem bfPoint32_17 : bfPlane 32 17 = 204 :=
   (bfPlaneTotal 32 17).trans (by decide +kernel : bfRectTotal 16 17 = 204)
-private def bfValue204 : BfEvaluator :=
+def bfValue204 : BfEvaluator :=
   bfLeaf 32 17 46 17 204 bfPoint32_17 (bfTopAt 46 17 (by decide +kernel))
-private theorem bfPoint31_18 : bfPlane 31 18 = 237 :=
+theorem bfPoint31_18 : bfPlane 31 18 = 237 :=
   (bfPlaneTotal 31 18).trans (by decide +kernel : bfRectTotal 17 18 = 237)
-private def bfValue237 : BfEvaluator :=
+def bfValue237 : BfEvaluator :=
   bfLeaf 31 18 45 18 237 bfPoint31_18 (bfTopAt 45 18 (by decide +kernel))
-private theorem bfPoint30_19 : bfPlane 30 19 = 274 :=
+theorem bfPoint30_19 : bfPlane 30 19 = 274 :=
   (bfPlaneTotal 30 19).trans (by decide +kernel : bfRectTotal 18 19 = 274)
-private def bfValue274 : BfEvaluator :=
+def bfValue274 : BfEvaluator :=
   bfLeaf 30 19 44 19 274 bfPoint30_19 (bfTopAt 44 19 (by decide +kernel))
-private theorem bfPoint29_20 : bfPlane 29 20 = 314 :=
+theorem bfPoint29_20 : bfPlane 29 20 = 314 :=
   (bfPlaneTotal 29 20).trans (by decide +kernel : bfRectTotal 19 20 = 314)
-private def bfValue314 : BfEvaluator :=
+def bfValue314 : BfEvaluator :=
   bfLeaf 29 20 43 20 314 bfPoint29_20 (bfTopAt 43 20 (by decide +kernel))
-private theorem bfPoint28_21 : bfPlane 28 21 = 358 :=
+theorem bfPoint28_21 : bfPlane 28 21 = 358 :=
   (bfPlaneTotal 28 21).trans (by decide +kernel : bfRectTotal 20 21 = 358)
-private def bfValue358 : BfEvaluator :=
+def bfValue358 : BfEvaluator :=
   bfLeaf 28 21 42 21 358 bfPoint28_21 (bfTopAt 42 21 (by decide +kernel))
-private theorem bfPoint1_48 : bfPlane 1 48 = 374 :=
+theorem bfPoint1_48 : bfPlane 1 48 = 374 :=
   (bfPlaneTotal 1 48).trans (by decide +kernel : bfRectTotal 47 48 = 374)
-private def bfValue374 : BfEvaluator :=
+def bfValue374 : BfEvaluator :=
   bfLeaf 1 48 1 62 374 bfPoint1_48 (bfPlaneCap 1 62)
-private theorem bfPoint27_22 : bfPlane 27 22 = 406 :=
+theorem bfPoint27_22 : bfPlane 27 22 = 406 :=
   (bfPlaneTotal 27 22).trans (by decide +kernel : bfRectTotal 21 22 = 406)
-private def bfValue406 : BfEvaluator :=
+def bfValue406 : BfEvaluator :=
   bfLeaf 27 22 41 22 406 bfPoint27_22 (bfTopAt 41 22 (by decide +kernel))
-private theorem bfPoint26_23 : bfPlane 26 23 = 458 :=
+theorem bfPoint26_23 : bfPlane 26 23 = 458 :=
   (bfPlaneTotal 26 23).trans (by decide +kernel : bfRectTotal 22 23 = 458)
-private def bfValue458 : BfEvaluator :=
+def bfValue458 : BfEvaluator :=
   bfLeaf 26 23 40 23 458 bfPoint26_23 (bfTopAt 40 23 (by decide +kernel))
-private theorem bfPoint25_24 : bfPlane 25 24 = 514 :=
+theorem bfPoint25_24 : bfPlane 25 24 = 514 :=
   (bfPlaneTotal 25 24).trans (by decide +kernel : bfRectTotal 23 24 = 514)
-private def bfValue514 : BfEvaluator :=
+def bfValue514 : BfEvaluator :=
   bfLeaf 25 24 39 24 514 bfPoint25_24 (bfTopAt 39 24 (by decide +kernel))
-private theorem bfPoint2_47 : bfPlane 2 47 = 553 :=
+theorem bfPoint2_47 : bfPlane 2 47 = 553 :=
   (bfPlaneTotal 2 47).trans (by decide +kernel : bfRectTotal 46 47 = 553)
-private def bfValue553 : BfEvaluator :=
+def bfValue553 : BfEvaluator :=
   bfLeaf 2 47 2 61 553 bfPoint2_47 (bfPlaneCap 2 61)
-private theorem bfPoint24_25 : bfPlane 24 25 = 575 :=
+theorem bfPoint24_25 : bfPlane 24 25 = 575 :=
   (bfPlaneTotal 24 25).trans (by decide +kernel : bfRectTotal 24 25 = 575)
-private def bfValue575 : BfEvaluator :=
+def bfValue575 : BfEvaluator :=
   bfLeaf 24 25 38 25 575 bfPoint24_25 (bfTopAt 38 25 (by decide +kernel))
-private theorem bfPoint23_26 : bfPlane 23 26 = 640 :=
+theorem bfPoint23_26 : bfPlane 23 26 = 640 :=
   (bfPlaneTotal 23 26).trans (by decide +kernel : bfRectTotal 25 26 = 640)
-private def bfValue640 : BfEvaluator :=
+def bfValue640 : BfEvaluator :=
   bfLeaf 23 26 37 26 640 bfPoint23_26 (bfTopAt 37 26 (by decide +kernel))
-private theorem bfPoint22_27 : bfPlane 22 27 = 710 :=
+theorem bfPoint22_27 : bfPlane 22 27 = 710 :=
   (bfPlaneTotal 22 27).trans (by decide +kernel : bfRectTotal 26 27 = 710)
-private def bfValue710 : BfEvaluator :=
+def bfValue710 : BfEvaluator :=
   bfLeaf 22 27 36 27 710 bfPoint22_27 (bfTopAt 36 27 (by decide +kernel))
-private theorem bfPoint3_46 : bfPlane 3 46 = 726 :=
+theorem bfPoint3_46 : bfPlane 3 46 = 726 :=
   (bfPlaneTotal 3 46).trans (by decide +kernel : bfRectTotal 45 46 = 726)
-private def bfValue726 : BfEvaluator :=
+def bfValue726 : BfEvaluator :=
   bfLeaf 3 46 3 60 726 bfPoint3_46 (bfPlaneCap 3 60)
-private theorem bfPoint21_28 : bfPlane 21 28 = 785 :=
+theorem bfPoint21_28 : bfPlane 21 28 = 785 :=
   (bfPlaneTotal 21 28).trans (by decide +kernel : bfRectTotal 27 28 = 785)
-private def bfValue785 : BfEvaluator :=
+def bfValue785 : BfEvaluator :=
   bfLeaf 21 28 35 28 785 bfPoint21_28 (bfTopAt 35 28 (by decide +kernel))
-private theorem bfPoint20_29 : bfPlane 20 29 = 865 :=
+theorem bfPoint20_29 : bfPlane 20 29 = 865 :=
   (bfPlaneTotal 20 29).trans (by decide +kernel : bfRectTotal 28 29 = 865)
-private def bfValue865 : BfEvaluator :=
+def bfValue865 : BfEvaluator :=
   bfLeaf 20 29 34 29 865 bfPoint20_29 (bfTopAt 34 29 (by decide +kernel))
-private theorem bfPoint4_45 : bfPlane 4 45 = 894 :=
+theorem bfPoint4_45 : bfPlane 4 45 = 894 :=
   (bfPlaneTotal 4 45).trans (by decide +kernel : bfRectTotal 44 45 = 894)
-private def bfValue894 : BfEvaluator :=
+def bfValue894 : BfEvaluator :=
   bfLeaf 4 45 4 59 894 bfPoint4_45 (bfPlaneCap 4 59)
-private theorem bfPoint19_30 : bfPlane 19 30 = 950 :=
+theorem bfPoint19_30 : bfPlane 19 30 = 950 :=
   (bfPlaneTotal 19 30).trans (by decide +kernel : bfRectTotal 29 30 = 950)
-private def bfValue950 : BfEvaluator :=
+def bfValue950 : BfEvaluator :=
   bfLeaf 19 30 33 30 950 bfPoint19_30 (bfTopAt 33 30 (by decide +kernel))
-private theorem bfPoint18_31 : bfPlane 18 31 = 1041 :=
+theorem bfPoint18_31 : bfPlane 18 31 = 1041 :=
   (bfPlaneTotal 18 31).trans (by decide +kernel : bfRectTotal 30 31 = 1041)
-private def bfValue1041 : BfEvaluator :=
+def bfValue1041 : BfEvaluator :=
   bfLeaf 18 31 32 31 1041 bfPoint18_31 (bfTopAt 32 31 (by decide +kernel))
-private theorem bfPoint5_44 : bfPlane 5 44 = 1056 :=
+theorem bfPoint5_44 : bfPlane 5 44 = 1056 :=
   (bfPlaneTotal 5 44).trans (by decide +kernel : bfRectTotal 43 44 = 1056)
-private def bfValue1056 : BfEvaluator :=
+def bfValue1056 : BfEvaluator :=
   bfLeaf 5 44 5 58 1056 bfPoint5_44 (bfPlaneCap 5 58)
-private theorem bfPoint17_32 : bfPlane 17 32 = 1137 :=
+theorem bfPoint17_32 : bfPlane 17 32 = 1137 :=
   (bfPlaneTotal 17 32).trans (by decide +kernel : bfRectTotal 31 32 = 1137)
-private def bfValue1137 : BfEvaluator :=
+def bfValue1137 : BfEvaluator :=
   bfLeaf 17 32 31 32 1137 bfPoint17_32 (bfTopAt 31 32 (by decide +kernel))
-private theorem bfPoint6_43 : bfPlane 6 43 = 1213 :=
+theorem bfPoint6_43 : bfPlane 6 43 = 1213 :=
   (bfPlaneTotal 6 43).trans (by decide +kernel : bfRectTotal 42 43 = 1213)
-private def bfValue1213 : BfEvaluator :=
+def bfValue1213 : BfEvaluator :=
   bfLeaf 6 43 6 57 1213 bfPoint6_43 (bfPlaneCap 6 57)
-private theorem bfPoint16_33 : bfPlane 16 33 = 1239 :=
+theorem bfPoint16_33 : bfPlane 16 33 = 1239 :=
   (bfPlaneTotal 16 33).trans (by decide +kernel : bfRectTotal 32 33 = 1239)
-private def bfValue1239 : BfEvaluator :=
+def bfValue1239 : BfEvaluator :=
   bfLeaf 16 33 30 33 1239 bfPoint16_33 (bfTopAt 30 33 (by decide +kernel))
-private theorem bfPoint15_34 : bfPlane 15 34 = 1346 :=
+theorem bfPoint15_34 : bfPlane 15 34 = 1346 :=
   (bfPlaneTotal 15 34).trans (by decide +kernel : bfRectTotal 33 34 = 1346)
-private def bfValue1346 : BfEvaluator :=
+def bfValue1346 : BfEvaluator :=
   bfLeaf 15 34 29 34 1346 bfPoint15_34 (bfTopAt 29 34 (by decide +kernel))
-private theorem bfPoint7_42 : bfPlane 7 42 = 1364 :=
+theorem bfPoint7_42 : bfPlane 7 42 = 1364 :=
   (bfPlaneTotal 7 42).trans (by decide +kernel : bfRectTotal 41 42 = 1364)
-private def bfValue1364 : BfEvaluator :=
+def bfValue1364 : BfEvaluator :=
   bfLeaf 7 42 7 56 1364 bfPoint7_42 (bfPlaneCap 7 56)
-private theorem bfPoint14_35 : bfPlane 14 35 = 1459 :=
+theorem bfPoint14_35 : bfPlane 14 35 = 1459 :=
   (bfPlaneTotal 14 35).trans (by decide +kernel : bfRectTotal 34 35 = 1459)
-private def bfValue1459 : BfEvaluator :=
+def bfValue1459 : BfEvaluator :=
   bfLeaf 14 35 28 35 1459 bfPoint14_35 (bfTopAt 28 35 (by decide +kernel))
-private theorem bfPoint8_41 : bfPlane 8 41 = 1510 :=
+theorem bfPoint8_41 : bfPlane 8 41 = 1510 :=
   (bfPlaneTotal 8 41).trans (by decide +kernel : bfRectTotal 40 41 = 1510)
-private def bfValue1510 : BfEvaluator :=
+def bfValue1510 : BfEvaluator :=
   bfLeaf 8 41 8 55 1510 bfPoint8_41 (bfPlaneCap 8 55)
-private theorem bfPoint13_36 : bfPlane 13 36 = 1577 :=
+theorem bfPoint13_36 : bfPlane 13 36 = 1577 :=
   (bfPlaneTotal 13 36).trans (by decide +kernel : bfRectTotal 35 36 = 1577)
-private def bfValue1577 : BfEvaluator :=
+def bfValue1577 : BfEvaluator :=
   bfLeaf 13 36 27 36 1577 bfPoint13_36 (bfTopAt 27 36 (by decide +kernel))
-private theorem bfPoint9_40 : bfPlane 9 40 = 1650 :=
+theorem bfPoint9_40 : bfPlane 9 40 = 1650 :=
   (bfPlaneTotal 9 40).trans (by decide +kernel : bfRectTotal 39 40 = 1650)
-private def bfValue1650 : BfEvaluator :=
+def bfValue1650 : BfEvaluator :=
   bfLeaf 9 40 9 54 1650 bfPoint9_40 (bfPlaneCap 9 54)
-private theorem bfPoint12_37 : bfPlane 12 37 = 1700 :=
+theorem bfPoint12_37 : bfPlane 12 37 = 1700 :=
   (bfPlaneTotal 12 37).trans (by decide +kernel : bfRectTotal 36 37 = 1700)
-private def bfValue1700 : BfEvaluator :=
+def bfValue1700 : BfEvaluator :=
   bfLeaf 12 37 12 37 1700 bfPoint12_37 bfPoint12_37.le
-private theorem bfPoint13_37 : bfPlane 13 37 = 1701 :=
+theorem bfPoint13_37 : bfPlane 13 37 = 1701 :=
   (bfPlaneTotal 13 37).trans (by decide +kernel : bfRectTotal 35 37 = 1701)
-private def bfValue1701 : BfEvaluator :=
+def bfValue1701 : BfEvaluator :=
   bfLeaf 13 37 26 37 1701 bfPoint13_37 (bfTopAt 26 37 (by decide +kernel))
-private theorem bfPoint10_39 : bfPlane 10 39 = 1785 :=
+theorem bfPoint10_39 : bfPlane 10 39 = 1785 :=
   (bfPlaneTotal 10 39).trans (by decide +kernel : bfRectTotal 38 39 = 1785)
-private def bfValue1785 : BfEvaluator :=
+def bfValue1785 : BfEvaluator :=
   bfLeaf 10 39 10 53 1785 bfPoint10_39 (bfPlaneCap 10 53)
-private theorem bfPoint11_38 : bfPlane 11 38 = 1827 :=
+theorem bfPoint11_38 : bfPlane 11 38 = 1827 :=
   (bfPlaneTotal 11 38).trans (by decide +kernel : bfRectTotal 37 38 = 1827)
-private def bfValue1827 : BfEvaluator :=
+def bfValue1827 : BfEvaluator :=
   bfLeaf 11 38 11 38 1827 bfPoint11_38 bfPoint11_38.le
-private theorem bfPoint12_38 : bfPlane 12 38 = 1829 :=
+theorem bfPoint12_38 : bfPlane 12 38 = 1829 :=
   (bfPlaneTotal 12 38).trans (by decide +kernel : bfRectTotal 36 38 = 1829)
-private def bfValue1829 : BfEvaluator :=
+def bfValue1829 : BfEvaluator :=
   bfLeaf 12 38 12 38 1829 bfPoint12_38 bfPoint12_38.le
-private theorem bfPoint13_38 : bfPlane 13 38 = 1830 :=
+theorem bfPoint13_38 : bfPlane 13 38 = 1830 :=
   (bfPlaneTotal 13 38).trans (by decide +kernel : bfRectTotal 35 38 = 1830)
-private def bfValue1830 : BfEvaluator :=
+def bfValue1830 : BfEvaluator :=
   bfLeaf 13 38 25 38 1830 bfPoint13_38 (bfTopAt 25 38 (by decide +kernel))
-private theorem bfPoint11_39 : bfPlane 11 39 = 1914 :=
+theorem bfPoint11_39 : bfPlane 11 39 = 1914 :=
   (bfPlaneTotal 11 39).trans (by decide +kernel : bfRectTotal 37 39 = 1914)
-private def bfValue1914 : BfEvaluator :=
+def bfValue1914 : BfEvaluator :=
   bfLeaf 11 39 11 52 1914 bfPoint11_39 (bfPlaneCap 11 52)
-private theorem bfPoint12_39 : bfPlane 12 39 = 1963 :=
+theorem bfPoint12_39 : bfPlane 12 39 = 1963 :=
   (bfPlaneTotal 12 39).trans (by decide +kernel : bfRectTotal 36 39 = 1963)
-private def bfValue1963 : BfEvaluator :=
+def bfValue1963 : BfEvaluator :=
   bfLeaf 12 39 12 39 1963 bfPoint12_39 bfPoint12_39.le
-private theorem bfPoint13_39 : bfPlane 13 39 = 1964 :=
+theorem bfPoint13_39 : bfPlane 13 39 = 1964 :=
   (bfPlaneTotal 13 39).trans (by decide +kernel : bfRectTotal 35 39 = 1964)
-private def bfValue1964 : BfEvaluator :=
+def bfValue1964 : BfEvaluator :=
   bfLeaf 13 39 13 39 1964 bfPoint13_39 bfPoint13_39.le
-private theorem bfPoint14_39 : bfPlane 14 39 = 1965 :=
+theorem bfPoint14_39 : bfPlane 14 39 = 1965 :=
   (bfPlaneTotal 14 39).trans (by decide +kernel : bfRectTotal 34 39 = 1965)
-private def bfValue1965 : BfEvaluator :=
+def bfValue1965 : BfEvaluator :=
   bfLeaf 14 39 24 39 1965 bfPoint14_39 (bfTopAt 24 39 (by decide +kernel))
-private theorem bfPoint12_40 : bfPlane 12 40 = 2038 :=
+theorem bfPoint12_40 : bfPlane 12 40 = 2038 :=
   (bfPlaneTotal 12 40).trans (by decide +kernel : bfRectTotal 36 40 = 2038)
-private def bfValue2038 : BfEvaluator :=
+def bfValue2038 : BfEvaluator :=
   bfLeaf 12 40 12 51 2038 bfPoint12_40 (bfPlaneCap 12 51)
-private theorem bfPoint13_40 : bfPlane 13 40 = 2104 :=
+theorem bfPoint13_40 : bfPlane 13 40 = 2104 :=
   (bfPlaneTotal 13 40).trans (by decide +kernel : bfRectTotal 35 40 = 2104)
-private def bfValue2104 : BfEvaluator :=
+def bfValue2104 : BfEvaluator :=
   bfLeaf 13 40 13 40 2104 bfPoint13_40 bfPoint13_40.le
-private theorem bfPoint14_40 : bfPlane 14 40 = 2105 :=
+theorem bfPoint14_40 : bfPlane 14 40 = 2105 :=
   (bfPlaneTotal 14 40).trans (by decide +kernel : bfRectTotal 34 40 = 2105)
-private def bfValue2105 : BfEvaluator :=
+def bfValue2105 : BfEvaluator :=
   bfLeaf 14 40 23 40 2105 bfPoint14_40 (bfTopAt 23 40 (by decide +kernel))
-private theorem bfPoint13_41 : bfPlane 13 41 = 2156 :=
+theorem bfPoint13_41 : bfPlane 13 41 = 2156 :=
   (bfPlaneTotal 13 41).trans (by decide +kernel : bfRectTotal 35 41 = 2156)
-private def bfValue2156 : BfEvaluator :=
+def bfValue2156 : BfEvaluator :=
   bfLeaf 13 41 13 50 2156 bfPoint13_41 (bfPlaneCap 13 50)
-private theorem bfPoint14_41 : bfPlane 14 41 = 2250 :=
+theorem bfPoint14_41 : bfPlane 14 41 = 2250 :=
   (bfPlaneTotal 14 41).trans (by decide +kernel : bfRectTotal 34 41 = 2250)
-private def bfValue2250 : BfEvaluator :=
+def bfValue2250 : BfEvaluator :=
   bfLeaf 14 41 14 41 2250 bfPoint14_41 bfPoint14_41.le
-private theorem bfPoint15_41 : bfPlane 15 41 = 2251 :=
+theorem bfPoint15_41 : bfPlane 15 41 = 2251 :=
   (bfPlaneTotal 15 41).trans (by decide +kernel : bfRectTotal 33 41 = 2251)
-private def bfValue2251 : BfEvaluator :=
+def bfValue2251 : BfEvaluator :=
   bfLeaf 15 41 22 41 2251 bfPoint15_41 (bfTopAt 22 41 (by decide +kernel))
-private theorem bfPoint14_42 : bfPlane 14 42 = 2269 :=
+theorem bfPoint14_42 : bfPlane 14 42 = 2269 :=
   (bfPlaneTotal 14 42).trans (by decide +kernel : bfRectTotal 34 42 = 2269)
-private def bfValue2269 : BfEvaluator :=
+def bfValue2269 : BfEvaluator :=
   bfLeaf 14 42 14 49 2269 bfPoint14_42 (bfPlaneCap 14 49)
-private theorem bfPoint15_42 : bfPlane 15 42 = 2376 :=
+theorem bfPoint15_42 : bfPlane 15 42 = 2376 :=
   (bfPlaneTotal 15 42).trans (by decide +kernel : bfRectTotal 33 42 = 2376)
-private def bfValue2376 : BfEvaluator :=
+def bfValue2376 : BfEvaluator :=
   bfLeaf 15 42 15 48 2376 bfPoint15_42 (bfPlaneCap 15 48)
-private theorem bfPoint16_42 : bfPlane 16 42 = 2402 :=
+theorem bfPoint16_42 : bfPlane 16 42 = 2402 :=
   (bfPlaneTotal 16 42).trans (by decide +kernel : bfRectTotal 32 42 = 2402)
-private def bfValue2402 : BfEvaluator :=
+def bfValue2402 : BfEvaluator :=
   bfLeaf 16 42 21 42 2402 bfPoint16_42 (bfTopAt 21 42 (by decide +kernel))
-private theorem bfPoint16_43 : bfPlane 16 43 = 2478 :=
+theorem bfPoint16_43 : bfPlane 16 43 = 2478 :=
   (bfPlaneTotal 16 43).trans (by decide +kernel : bfRectTotal 32 43 = 2478)
-private def bfValue2478 : BfEvaluator :=
+def bfValue2478 : BfEvaluator :=
   bfLeaf 16 43 16 47 2478 bfPoint16_43 (bfPlaneCap 16 47)
-private theorem bfPoint17_43 : bfPlane 17 43 = 2559 :=
+theorem bfPoint17_43 : bfPlane 17 43 = 2559 :=
   (bfPlaneTotal 17 43).trans (by decide +kernel : bfRectTotal 31 43 = 2559)
-private def bfValue2559 : BfEvaluator :=
+def bfValue2559 : BfEvaluator :=
   bfLeaf 17 43 20 43 2559 bfPoint17_43 (bfTopAt 20 43 (by decide +kernel))
-private theorem bfPoint17_44 : bfPlane 17 44 = 2574 :=
+theorem bfPoint17_44 : bfPlane 17 44 = 2574 :=
   (bfPlaneTotal 17 44).trans (by decide +kernel : bfRectTotal 31 44 = 2574)
-private def bfValue2574 : BfEvaluator :=
+def bfValue2574 : BfEvaluator :=
   bfLeaf 17 44 17 46 2574 bfPoint17_44 (bfPlaneCap 17 46)
-private theorem bfPoint18_44 : bfPlane 18 44 = 2665 :=
+theorem bfPoint18_44 : bfPlane 18 44 = 2665 :=
   (bfPlaneTotal 18 44).trans (by decide +kernel : bfRectTotal 30 44 = 2665)
-private def bfValue2665 : BfEvaluator :=
+def bfValue2665 : BfEvaluator :=
   bfLeaf 18 44 18 45 2665 bfPoint18_44 (bfPlaneCap 18 45)
-private theorem bfPoint19_44 : bfPlane 19 44 = 2721 :=
+theorem bfPoint19_44 : bfPlane 19 44 = 2721 :=
   (bfPlaneTotal 19 44).trans (by decide +kernel : bfRectTotal 29 44 = 2721)
-private def bfValue2721 : BfEvaluator :=
+def bfValue2721 : BfEvaluator :=
   bfLeaf 19 44 19 44 2721 bfPoint19_44 bfPoint19_44.le
-private def bfModel : BfEvaluator :=
+def bfModel : BfEvaluator :=
   (bfSplitO 36
     (bfSplitO 18
       (bfSplitO 9
@@ -885,35 +885,35 @@ private def bfModel : BfEvaluator :=
                   (bfSplitO 44
                     bfValue2559
                     (bfSplitR 18 bfValue2574 (bfSplitR 19 bfValue2665 bfValue2721)))))))))))
-private def bfBlockValue (s r : ℕ) : ℕ :=
+def bfBlockValue (s r : ℕ) : ℕ :=
   if s + r < 138 then
     let p := bfModel.get r (138 - (s + r))
     match selectedFactors s (offset r) with
     | none => p
     | some v => min p (bfFlagValue s r v)
   else 0
-private theorem bfBlockValue_eq (s r : ℕ) (hs : 75 ≤ s ∧ s ≤ 89) :
+theorem bfBlockValue_eq (s r : ℕ) (hs : 75 ≤ s ∧ s ≤ 89) :
     fastBlock s r = bfBlockValue s r := by
   by_cases h : s + r < 138
   · cases e : selectedFactors s (offset r) <;>
       simp only [fastBlock, bfBlockValue, ite_eq_left h, e, bfPascal s r hs h, bfModel.correct, bfFlagValue_eq s r hs]
   · simp only [fastBlock, bfBlockValue, ite_eq_right h]
-private theorem bfChunk (s start n : ℕ) (hs : 75 ≤ s ∧ s ≤ 89) :
+theorem bfChunk (s start n : ℕ) (hs : 75 ≤ s ∧ s ≤ 89) :
     sumRange n (fun i => fastBlock s (i + start)) =
       sumRange n (fun i => bfBlockValue s (i + start)) :=
   congrArg (sumRange n) (funext fun i => bfBlockValue_eq s (i + start) hs)
-private theorem budgetFRangeAdd (a b : ℕ) (f : ℕ → ℕ) :
+theorem budgetFRangeAdd (a b : ℕ) (f : ℕ → ℕ) :
     sumRange (a + b) f = sumRange a f + sumRange b (fun i => f (i + a)) := by
   have hsucc (n : ℕ) (g : ℕ → ℕ) : sumRange (n + 1) g = sumRange n g + g n := rfl
   induction b with
   | zero => simp [sumRange]
   | succ b ih =>
     rw [Nat.add_succ, hsucc, ih, hsucc, Nat.add_assoc, Nat.add_comm a b]
-private theorem budgetFRangeJoin (f : ℕ → ℕ) (a b : ℕ) {x y : ℕ}
+theorem budgetFRangeJoin (f : ℕ → ℕ) (a b : ℕ) {x y : ℕ}
     (ha : sumRange a f = x) (hb : sumRange b (fun i => f (i + a)) = y) :
     sumRange (a + b) f = x + y :=
   (budgetFRangeAdd a b f).trans (congrArg₂ Nat.add ha hb)
-private theorem budgetFZeroTail (s start n : ℕ) (h : 138 ≤ s + start) :
+theorem budgetFZeroTail (s start n : ℕ) (h : 138 ≤ s + start) :
     sumRange n (fun i => fastBlock s (i + start)) = 0 := by
   induction n with
   | zero => rfl
@@ -921,55 +921,55 @@ private theorem budgetFZeroTail (s start n : ℕ) (h : 138 ≤ s + start) :
     have hn : ¬ s + (n + start) < 138 := by omega
     have hz : fastBlock s (n + start) = 0 := by simp only [fastBlock, ite_eq_right hn]
     exact congrArg₂ Nat.add ih hz
-private theorem budgetFBlocks75_00 :
+theorem budgetFBlocks75_00 :
     sumRange 4 (fastBlock 75) = 1843 :=
   (bfChunk 75 0 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks75_04 :
+theorem budgetFBlocks75_04 :
     sumRange 4 (fun i => fastBlock 75 (i + 4)) = 4527 :=
   (bfChunk 75 4 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks75_08 :
+theorem budgetFBlocks75_08 :
     sumRange 4 (fun i => fastBlock 75 (i + 8)) = 6859 :=
   (bfChunk 75 8 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks75_12 :
+theorem budgetFBlocks75_12 :
     sumRange 4 (fun i => fastBlock 75 (i + 12)) = 8839 :=
   (bfChunk 75 12 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks75_16 :
+theorem budgetFBlocks75_16 :
     sumRange 4 (fun i => fastBlock 75 (i + 16)) = 10347 :=
   (bfChunk 75 16 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks75_20 :
+theorem budgetFBlocks75_20 :
     sumRange 4 (fun i => fastBlock 75 (i + 20)) = 9312 :=
   (bfChunk 75 20 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks75_24 :
+theorem budgetFBlocks75_24 :
     sumRange 4 (fun i => fastBlock 75 (i + 24)) = 7073 :=
   (bfChunk 75 24 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks75_28 :
+theorem budgetFBlocks75_28 :
     sumRange 4 (fun i => fastBlock 75 (i + 28)) = 5181 :=
   (bfChunk 75 28 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks75_32 :
+theorem budgetFBlocks75_32 :
     sumRange 4 (fun i => fastBlock 75 (i + 32)) = 3641 :=
   (bfChunk 75 32 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks75_36 :
+theorem budgetFBlocks75_36 :
     sumRange 4 (fun i => fastBlock 75 (i + 36)) = 2439 :=
   (bfChunk 75 36 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks75_40 :
+theorem budgetFBlocks75_40 :
     sumRange 4 (fun i => fastBlock 75 (i + 40)) = 1536 :=
   (bfChunk 75 40 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks75_44 :
+theorem budgetFBlocks75_44 :
     sumRange 4 (fun i => fastBlock 75 (i + 44)) = 889 :=
   (bfChunk 75 44 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks75_48 :
+theorem budgetFBlocks75_48 :
     sumRange 4 (fun i => fastBlock 75 (i + 48)) = 455 :=
   (bfChunk 75 48 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks75_52 :
+theorem budgetFBlocks75_52 :
     sumRange 4 (fun i => fastBlock 75 (i + 52)) = 192 :=
   (bfChunk 75 52 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks75_56 :
+theorem budgetFBlocks75_56 :
     sumRange 4 (fun i => fastBlock 75 (i + 56)) = 57 :=
   (bfChunk 75 56 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks75_60 :
+theorem budgetFBlocks75_60 :
     sumRange 3 (fun i => fastBlock 75 (i + 60)) = 7 :=
   (bfChunk 75 60 3 (by decide)).trans (by decide +kernel)
-private theorem grade75 : fastGrade 75 = 63197 := by
+theorem grade75 : fastGrade 75 = 63197 := by
   have h8 := budgetFRangeJoin (fastBlock 75) 4 4 budgetFBlocks75_00 budgetFBlocks75_04
   have h12 := budgetFRangeJoin (fastBlock 75) 8 4 h8 budgetFBlocks75_08
   have h16 := budgetFRangeJoin (fastBlock 75) 12 4 h12 budgetFBlocks75_12
@@ -987,55 +987,55 @@ private theorem grade75 : fastGrade 75 = 63197 := by
   have h63 := budgetFRangeJoin (fastBlock 75) 60 3 h60 budgetFBlocks75_60
   exact budgetFRangeJoin (fastBlock 75) 63 75 h63
     (budgetFZeroTail 75 63 75 (by decide))
-private theorem budgetFBlocks76_00 :
+theorem budgetFBlocks76_00 :
     sumRange 4 (fastBlock 76) = 1843 :=
   (bfChunk 76 0 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks76_04 :
+theorem budgetFBlocks76_04 :
     sumRange 4 (fun i => fastBlock 76 (i + 4)) = 4527 :=
   (bfChunk 76 4 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks76_08 :
+theorem budgetFBlocks76_08 :
     sumRange 4 (fun i => fastBlock 76 (i + 8)) = 6859 :=
   (bfChunk 76 8 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks76_12 :
+theorem budgetFBlocks76_12 :
     sumRange 4 (fun i => fastBlock 76 (i + 12)) = 8839 :=
   (bfChunk 76 12 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks76_16 :
+theorem budgetFBlocks76_16 :
     sumRange 4 (fun i => fastBlock 76 (i + 16)) = 10169 :=
   (bfChunk 76 16 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks76_20 :
+theorem budgetFBlocks76_20 :
     sumRange 4 (fun i => fastBlock 76 (i + 20)) = 8723 :=
   (bfChunk 76 20 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks76_24 :
+theorem budgetFBlocks76_24 :
     sumRange 4 (fun i => fastBlock 76 (i + 24)) = 6567 :=
   (bfChunk 76 24 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks76_28 :
+theorem budgetFBlocks76_28 :
     sumRange 4 (fun i => fastBlock 76 (i + 28)) = 4763 :=
   (bfChunk 76 28 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks76_32 :
+theorem budgetFBlocks76_32 :
     sumRange 4 (fun i => fastBlock 76 (i + 32)) = 3310 :=
   (bfChunk 76 32 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks76_36 :
+theorem budgetFBlocks76_36 :
     sumRange 4 (fun i => fastBlock 76 (i + 36)) = 2187 :=
   (bfChunk 76 36 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks76_40 :
+theorem budgetFBlocks76_40 :
     sumRange 4 (fun i => fastBlock 76 (i + 40)) = 1352 :=
   (bfChunk 76 40 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks76_44 :
+theorem budgetFBlocks76_44 :
     sumRange 4 (fun i => fastBlock 76 (i + 44)) = 762 :=
   (bfChunk 76 44 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks76_48 :
+theorem budgetFBlocks76_48 :
     sumRange 4 (fun i => fastBlock 76 (i + 48)) = 375 :=
   (bfChunk 76 48 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks76_52 :
+theorem budgetFBlocks76_52 :
     sumRange 4 (fun i => fastBlock 76 (i + 52)) = 148 :=
   (bfChunk 76 52 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks76_56 :
+theorem budgetFBlocks76_56 :
     sumRange 4 (fun i => fastBlock 76 (i + 56)) = 38 :=
   (bfChunk 76 56 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks76_60 :
+theorem budgetFBlocks76_60 :
     sumRange 2 (fun i => fastBlock 76 (i + 60)) = 3 :=
   (bfChunk 76 60 2 (by decide)).trans (by decide +kernel)
-private theorem grade76 : fastGrade 76 = 60465 := by
+theorem grade76 : fastGrade 76 = 60465 := by
   have h8 := budgetFRangeJoin (fastBlock 76) 4 4 budgetFBlocks76_00 budgetFBlocks76_04
   have h12 := budgetFRangeJoin (fastBlock 76) 8 4 h8 budgetFBlocks76_08
   have h16 := budgetFRangeJoin (fastBlock 76) 12 4 h12 budgetFBlocks76_12
@@ -1053,55 +1053,55 @@ private theorem grade76 : fastGrade 76 = 60465 := by
   have h62 := budgetFRangeJoin (fastBlock 76) 60 2 h60 budgetFBlocks76_60
   exact budgetFRangeJoin (fastBlock 76) 62 76 h62
     (budgetFZeroTail 76 62 76 (by decide))
-private theorem budgetFBlocks77_00 :
+theorem budgetFBlocks77_00 :
     sumRange 4 (fastBlock 77) = 1843 :=
   (bfChunk 77 0 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks77_04 :
+theorem budgetFBlocks77_04 :
     sumRange 4 (fun i => fastBlock 77 (i + 4)) = 4527 :=
   (bfChunk 77 4 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks77_08 :
+theorem budgetFBlocks77_08 :
     sumRange 4 (fun i => fastBlock 77 (i + 8)) = 6859 :=
   (bfChunk 77 8 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks77_12 :
+theorem budgetFBlocks77_12 :
     sumRange 4 (fun i => fastBlock 77 (i + 12)) = 8839 :=
   (bfChunk 77 12 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks77_16 :
+theorem budgetFBlocks77_16 :
     sumRange 4 (fun i => fastBlock 77 (i + 16)) = 9960 :=
   (bfChunk 77 16 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks77_20 :
+theorem budgetFBlocks77_20 :
     sumRange 4 (fun i => fastBlock 77 (i + 20)) = 8151 :=
   (bfChunk 77 20 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks77_24 :
+theorem budgetFBlocks77_24 :
     sumRange 4 (fun i => fastBlock 77 (i + 24)) = 6083 :=
   (bfChunk 77 24 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks77_28 :
+theorem budgetFBlocks77_28 :
     sumRange 4 (fun i => fastBlock 77 (i + 28)) = 4367 :=
   (bfChunk 77 28 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks77_32 :
+theorem budgetFBlocks77_32 :
     sumRange 4 (fun i => fastBlock 77 (i + 32)) = 3000 :=
   (bfChunk 77 32 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks77_36 :
+theorem budgetFBlocks77_36 :
     sumRange 4 (fun i => fastBlock 77 (i + 36)) = 1953 :=
   (bfChunk 77 36 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks77_40 :
+theorem budgetFBlocks77_40 :
     sumRange 4 (fun i => fastBlock 77 (i + 40)) = 1183 :=
   (bfChunk 77 40 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks77_44 :
+theorem budgetFBlocks77_44 :
     sumRange 4 (fun i => fastBlock 77 (i + 44)) = 648 :=
   (bfChunk 77 44 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks77_48 :
+theorem budgetFBlocks77_48 :
     sumRange 4 (fun i => fastBlock 77 (i + 48)) = 305 :=
   (bfChunk 77 48 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks77_52 :
+theorem budgetFBlocks77_52 :
     sumRange 4 (fun i => fastBlock 77 (i + 52)) = 111 :=
   (bfChunk 77 52 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks77_56 :
+theorem budgetFBlocks77_56 :
     sumRange 4 (fun i => fastBlock 77 (i + 56)) = 24 :=
   (bfChunk 77 56 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks77_60 :
+theorem budgetFBlocks77_60 :
     sumRange 1 (fun i => fastBlock 77 (i + 60)) = 1 :=
   (bfChunk 77 60 1 (by decide)).trans (by decide +kernel)
-private theorem grade77 : fastGrade 77 = 57854 := by
+theorem grade77 : fastGrade 77 = 57854 := by
   have h8 := budgetFRangeJoin (fastBlock 77) 4 4 budgetFBlocks77_00 budgetFBlocks77_04
   have h12 := budgetFRangeJoin (fastBlock 77) 8 4 h8 budgetFBlocks77_08
   have h16 := budgetFRangeJoin (fastBlock 77) 12 4 h12 budgetFBlocks77_12
@@ -1119,52 +1119,52 @@ private theorem grade77 : fastGrade 77 = 57854 := by
   have h61 := budgetFRangeJoin (fastBlock 77) 60 1 h60 budgetFBlocks77_60
   exact budgetFRangeJoin (fastBlock 77) 61 77 h61
     (budgetFZeroTail 77 61 77 (by decide))
-private theorem budgetFBlocks78_00 :
+theorem budgetFBlocks78_00 :
     sumRange 4 (fastBlock 78) = 1843 :=
   (bfChunk 78 0 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks78_04 :
+theorem budgetFBlocks78_04 :
     sumRange 4 (fun i => fastBlock 78 (i + 4)) = 4527 :=
   (bfChunk 78 4 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks78_08 :
+theorem budgetFBlocks78_08 :
     sumRange 4 (fun i => fastBlock 78 (i + 8)) = 6859 :=
   (bfChunk 78 8 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks78_12 :
+theorem budgetFBlocks78_12 :
     sumRange 4 (fun i => fastBlock 78 (i + 12)) = 8839 :=
   (bfChunk 78 12 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks78_16 :
+theorem budgetFBlocks78_16 :
     sumRange 4 (fun i => fastBlock 78 (i + 16)) = 9599 :=
   (bfChunk 78 16 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks78_20 :
+theorem budgetFBlocks78_20 :
     sumRange 4 (fun i => fastBlock 78 (i + 20)) = 7601 :=
   (bfChunk 78 20 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks78_24 :
+theorem budgetFBlocks78_24 :
     sumRange 4 (fun i => fastBlock 78 (i + 24)) = 5621 :=
   (bfChunk 78 24 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks78_28 :
+theorem budgetFBlocks78_28 :
     sumRange 4 (fun i => fastBlock 78 (i + 28)) = 3993 :=
   (bfChunk 78 28 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks78_32 :
+theorem budgetFBlocks78_32 :
     sumRange 4 (fun i => fastBlock 78 (i + 32)) = 2710 :=
   (bfChunk 78 32 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks78_36 :
+theorem budgetFBlocks78_36 :
     sumRange 4 (fun i => fastBlock 78 (i + 36)) = 1736 :=
   (bfChunk 78 36 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks78_40 :
+theorem budgetFBlocks78_40 :
     sumRange 4 (fun i => fastBlock 78 (i + 40)) = 1029 :=
   (bfChunk 78 40 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks78_44 :
+theorem budgetFBlocks78_44 :
     sumRange 4 (fun i => fastBlock 78 (i + 44)) = 546 :=
   (bfChunk 78 44 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks78_48 :
+theorem budgetFBlocks78_48 :
     sumRange 4 (fun i => fastBlock 78 (i + 48)) = 244 :=
   (bfChunk 78 48 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks78_52 :
+theorem budgetFBlocks78_52 :
     sumRange 4 (fun i => fastBlock 78 (i + 52)) = 81 :=
   (bfChunk 78 52 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks78_56 :
+theorem budgetFBlocks78_56 :
     sumRange 4 (fun i => fastBlock 78 (i + 56)) = 14 :=
   (bfChunk 78 56 4 (by decide)).trans (by decide +kernel)
-private theorem grade78 : fastGrade 78 = 55242 := by
+theorem grade78 : fastGrade 78 = 55242 := by
   have h8 := budgetFRangeJoin (fastBlock 78) 4 4 budgetFBlocks78_00 budgetFBlocks78_04
   have h12 := budgetFRangeJoin (fastBlock 78) 8 4 h8 budgetFBlocks78_08
   have h16 := budgetFRangeJoin (fastBlock 78) 12 4 h12 budgetFBlocks78_12
@@ -1181,52 +1181,52 @@ private theorem grade78 : fastGrade 78 = 55242 := by
   have h60 := budgetFRangeJoin (fastBlock 78) 56 4 h56 budgetFBlocks78_56
   exact budgetFRangeJoin (fastBlock 78) 60 78 h60
     (budgetFZeroTail 78 60 78 (by decide))
-private theorem budgetFBlocks79_00 :
+theorem budgetFBlocks79_00 :
     sumRange 4 (fastBlock 79) = 1843 :=
   (bfChunk 79 0 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks79_04 :
+theorem budgetFBlocks79_04 :
     sumRange 4 (fun i => fastBlock 79 (i + 4)) = 4527 :=
   (bfChunk 79 4 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks79_08 :
+theorem budgetFBlocks79_08 :
     sumRange 4 (fun i => fastBlock 79 (i + 8)) = 6859 :=
   (bfChunk 79 8 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks79_12 :
+theorem budgetFBlocks79_12 :
     sumRange 4 (fun i => fastBlock 79 (i + 12)) = 8839 :=
   (bfChunk 79 12 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks79_16 :
+theorem budgetFBlocks79_16 :
     sumRange 4 (fun i => fastBlock 79 (i + 16)) = 9156 :=
   (bfChunk 79 16 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks79_20 :
+theorem budgetFBlocks79_20 :
     sumRange 4 (fun i => fastBlock 79 (i + 20)) = 7073 :=
   (bfChunk 79 20 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks79_24 :
+theorem budgetFBlocks79_24 :
     sumRange 4 (fun i => fastBlock 79 (i + 24)) = 5181 :=
   (bfChunk 79 24 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks79_28 :
+theorem budgetFBlocks79_28 :
     sumRange 4 (fun i => fastBlock 79 (i + 28)) = 3641 :=
   (bfChunk 79 28 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks79_32 :
+theorem budgetFBlocks79_32 :
     sumRange 4 (fun i => fastBlock 79 (i + 32)) = 2439 :=
   (bfChunk 79 32 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks79_36 :
+theorem budgetFBlocks79_36 :
     sumRange 4 (fun i => fastBlock 79 (i + 36)) = 1536 :=
   (bfChunk 79 36 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks79_40 :
+theorem budgetFBlocks79_40 :
     sumRange 4 (fun i => fastBlock 79 (i + 40)) = 889 :=
   (bfChunk 79 40 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks79_44 :
+theorem budgetFBlocks79_44 :
     sumRange 4 (fun i => fastBlock 79 (i + 44)) = 455 :=
   (bfChunk 79 44 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks79_48 :
+theorem budgetFBlocks79_48 :
     sumRange 4 (fun i => fastBlock 79 (i + 48)) = 192 :=
   (bfChunk 79 48 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks79_52 :
+theorem budgetFBlocks79_52 :
     sumRange 4 (fun i => fastBlock 79 (i + 52)) = 57 :=
   (bfChunk 79 52 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks79_56 :
+theorem budgetFBlocks79_56 :
     sumRange 3 (fun i => fastBlock 79 (i + 56)) = 7 :=
   (bfChunk 79 56 3 (by decide)).trans (by decide +kernel)
-private theorem grade79 : fastGrade 79 = 52694 := by
+theorem grade79 : fastGrade 79 = 52694 := by
   have h8 := budgetFRangeJoin (fastBlock 79) 4 4 budgetFBlocks79_00 budgetFBlocks79_04
   have h12 := budgetFRangeJoin (fastBlock 79) 8 4 h8 budgetFBlocks79_08
   have h16 := budgetFRangeJoin (fastBlock 79) 12 4 h12 budgetFBlocks79_12
@@ -1243,52 +1243,52 @@ private theorem grade79 : fastGrade 79 = 52694 := by
   have h59 := budgetFRangeJoin (fastBlock 79) 56 3 h56 budgetFBlocks79_56
   exact budgetFRangeJoin (fastBlock 79) 59 79 h59
     (budgetFZeroTail 79 59 79 (by decide))
-private theorem budgetFBlocks80_00 :
+theorem budgetFBlocks80_00 :
     sumRange 4 (fastBlock 80) = 1843 :=
   (bfChunk 80 0 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks80_04 :
+theorem budgetFBlocks80_04 :
     sumRange 4 (fun i => fastBlock 80 (i + 4)) = 4527 :=
   (bfChunk 80 4 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks80_08 :
+theorem budgetFBlocks80_08 :
     sumRange 4 (fun i => fastBlock 80 (i + 8)) = 6859 :=
   (bfChunk 80 8 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks80_12 :
+theorem budgetFBlocks80_12 :
     sumRange 4 (fun i => fastBlock 80 (i + 12)) = 8839 :=
   (bfChunk 80 12 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks80_16 :
+theorem budgetFBlocks80_16 :
     sumRange 4 (fun i => fastBlock 80 (i + 16)) = 8668 :=
   (bfChunk 80 16 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks80_20 :
+theorem budgetFBlocks80_20 :
     sumRange 4 (fun i => fastBlock 80 (i + 20)) = 6567 :=
   (bfChunk 80 20 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks80_24 :
+theorem budgetFBlocks80_24 :
     sumRange 4 (fun i => fastBlock 80 (i + 24)) = 4763 :=
   (bfChunk 80 24 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks80_28 :
+theorem budgetFBlocks80_28 :
     sumRange 4 (fun i => fastBlock 80 (i + 28)) = 3310 :=
   (bfChunk 80 28 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks80_32 :
+theorem budgetFBlocks80_32 :
     sumRange 4 (fun i => fastBlock 80 (i + 32)) = 2187 :=
   (bfChunk 80 32 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks80_36 :
+theorem budgetFBlocks80_36 :
     sumRange 4 (fun i => fastBlock 80 (i + 36)) = 1352 :=
   (bfChunk 80 36 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks80_40 :
+theorem budgetFBlocks80_40 :
     sumRange 4 (fun i => fastBlock 80 (i + 40)) = 762 :=
   (bfChunk 80 40 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks80_44 :
+theorem budgetFBlocks80_44 :
     sumRange 4 (fun i => fastBlock 80 (i + 44)) = 375 :=
   (bfChunk 80 44 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks80_48 :
+theorem budgetFBlocks80_48 :
     sumRange 4 (fun i => fastBlock 80 (i + 48)) = 148 :=
   (bfChunk 80 48 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks80_52 :
+theorem budgetFBlocks80_52 :
     sumRange 4 (fun i => fastBlock 80 (i + 52)) = 38 :=
   (bfChunk 80 52 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks80_56 :
+theorem budgetFBlocks80_56 :
     sumRange 2 (fun i => fastBlock 80 (i + 56)) = 3 :=
   (bfChunk 80 56 2 (by decide)).trans (by decide +kernel)
-private theorem grade80 : fastGrade 80 = 50241 := by
+theorem grade80 : fastGrade 80 = 50241 := by
   have h8 := budgetFRangeJoin (fastBlock 80) 4 4 budgetFBlocks80_00 budgetFBlocks80_04
   have h12 := budgetFRangeJoin (fastBlock 80) 8 4 h8 budgetFBlocks80_08
   have h16 := budgetFRangeJoin (fastBlock 80) 12 4 h12 budgetFBlocks80_12
@@ -1305,52 +1305,52 @@ private theorem grade80 : fastGrade 80 = 50241 := by
   have h58 := budgetFRangeJoin (fastBlock 80) 56 2 h56 budgetFBlocks80_56
   exact budgetFRangeJoin (fastBlock 80) 58 80 h58
     (budgetFZeroTail 80 58 80 (by decide))
-private theorem budgetFBlocks81_00 :
+theorem budgetFBlocks81_00 :
     sumRange 4 (fastBlock 81) = 1843 :=
   (bfChunk 81 0 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks81_04 :
+theorem budgetFBlocks81_04 :
     sumRange 4 (fun i => fastBlock 81 (i + 4)) = 4527 :=
   (bfChunk 81 4 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks81_08 :
+theorem budgetFBlocks81_08 :
     sumRange 4 (fun i => fastBlock 81 (i + 8)) = 6859 :=
   (bfChunk 81 8 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks81_12 :
+theorem budgetFBlocks81_12 :
     sumRange 4 (fun i => fastBlock 81 (i + 12)) = 8777 :=
   (bfChunk 81 12 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks81_16 :
+theorem budgetFBlocks81_16 :
     sumRange 4 (fun i => fastBlock 81 (i + 16)) = 8145 :=
   (bfChunk 81 16 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks81_20 :
+theorem budgetFBlocks81_20 :
     sumRange 4 (fun i => fastBlock 81 (i + 20)) = 6083 :=
   (bfChunk 81 20 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks81_24 :
+theorem budgetFBlocks81_24 :
     sumRange 4 (fun i => fastBlock 81 (i + 24)) = 4367 :=
   (bfChunk 81 24 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks81_28 :
+theorem budgetFBlocks81_28 :
     sumRange 4 (fun i => fastBlock 81 (i + 28)) = 3000 :=
   (bfChunk 81 28 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks81_32 :
+theorem budgetFBlocks81_32 :
     sumRange 4 (fun i => fastBlock 81 (i + 32)) = 1953 :=
   (bfChunk 81 32 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks81_36 :
+theorem budgetFBlocks81_36 :
     sumRange 4 (fun i => fastBlock 81 (i + 36)) = 1183 :=
   (bfChunk 81 36 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks81_40 :
+theorem budgetFBlocks81_40 :
     sumRange 4 (fun i => fastBlock 81 (i + 40)) = 648 :=
   (bfChunk 81 40 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks81_44 :
+theorem budgetFBlocks81_44 :
     sumRange 4 (fun i => fastBlock 81 (i + 44)) = 305 :=
   (bfChunk 81 44 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks81_48 :
+theorem budgetFBlocks81_48 :
     sumRange 4 (fun i => fastBlock 81 (i + 48)) = 111 :=
   (bfChunk 81 48 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks81_52 :
+theorem budgetFBlocks81_52 :
     sumRange 4 (fun i => fastBlock 81 (i + 52)) = 24 :=
   (bfChunk 81 52 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks81_56 :
+theorem budgetFBlocks81_56 :
     sumRange 1 (fun i => fastBlock 81 (i + 56)) = 1 :=
   (bfChunk 81 56 1 (by decide)).trans (by decide +kernel)
-private theorem grade81 : fastGrade 81 = 47826 := by
+theorem grade81 : fastGrade 81 = 47826 := by
   have h8 := budgetFRangeJoin (fastBlock 81) 4 4 budgetFBlocks81_00 budgetFBlocks81_04
   have h12 := budgetFRangeJoin (fastBlock 81) 8 4 h8 budgetFBlocks81_08
   have h16 := budgetFRangeJoin (fastBlock 81) 12 4 h12 budgetFBlocks81_12
@@ -1367,49 +1367,49 @@ private theorem grade81 : fastGrade 81 = 47826 := by
   have h57 := budgetFRangeJoin (fastBlock 81) 56 1 h56 budgetFBlocks81_56
   exact budgetFRangeJoin (fastBlock 81) 57 81 h57
     (budgetFZeroTail 81 57 81 (by decide))
-private theorem budgetFBlocks82_00 :
+theorem budgetFBlocks82_00 :
     sumRange 4 (fastBlock 82) = 1843 :=
   (bfChunk 82 0 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks82_04 :
+theorem budgetFBlocks82_04 :
     sumRange 4 (fun i => fastBlock 82 (i + 4)) = 4527 :=
   (bfChunk 82 4 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks82_08 :
+theorem budgetFBlocks82_08 :
     sumRange 4 (fun i => fastBlock 82 (i + 8)) = 6859 :=
   (bfChunk 82 8 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks82_12 :
+theorem budgetFBlocks82_12 :
     sumRange 4 (fun i => fastBlock 82 (i + 12)) = 8686 :=
   (bfChunk 82 12 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks82_16 :
+theorem budgetFBlocks82_16 :
     sumRange 4 (fun i => fastBlock 82 (i + 16)) = 7601 :=
   (bfChunk 82 16 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks82_20 :
+theorem budgetFBlocks82_20 :
     sumRange 4 (fun i => fastBlock 82 (i + 20)) = 5621 :=
   (bfChunk 82 20 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks82_24 :
+theorem budgetFBlocks82_24 :
     sumRange 4 (fun i => fastBlock 82 (i + 24)) = 3993 :=
   (bfChunk 82 24 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks82_28 :
+theorem budgetFBlocks82_28 :
     sumRange 4 (fun i => fastBlock 82 (i + 28)) = 2710 :=
   (bfChunk 82 28 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks82_32 :
+theorem budgetFBlocks82_32 :
     sumRange 4 (fun i => fastBlock 82 (i + 32)) = 1736 :=
   (bfChunk 82 32 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks82_36 :
+theorem budgetFBlocks82_36 :
     sumRange 4 (fun i => fastBlock 82 (i + 36)) = 1029 :=
   (bfChunk 82 36 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks82_40 :
+theorem budgetFBlocks82_40 :
     sumRange 4 (fun i => fastBlock 82 (i + 40)) = 546 :=
   (bfChunk 82 40 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks82_44 :
+theorem budgetFBlocks82_44 :
     sumRange 4 (fun i => fastBlock 82 (i + 44)) = 244 :=
   (bfChunk 82 44 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks82_48 :
+theorem budgetFBlocks82_48 :
     sumRange 4 (fun i => fastBlock 82 (i + 48)) = 81 :=
   (bfChunk 82 48 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks82_52 :
+theorem budgetFBlocks82_52 :
     sumRange 4 (fun i => fastBlock 82 (i + 52)) = 14 :=
   (bfChunk 82 52 4 (by decide)).trans (by decide +kernel)
-private theorem grade82 : fastGrade 82 = 45490 := by
+theorem grade82 : fastGrade 82 = 45490 := by
   have h8 := budgetFRangeJoin (fastBlock 82) 4 4 budgetFBlocks82_00 budgetFBlocks82_04
   have h12 := budgetFRangeJoin (fastBlock 82) 8 4 h8 budgetFBlocks82_08
   have h16 := budgetFRangeJoin (fastBlock 82) 12 4 h12 budgetFBlocks82_12
@@ -1425,49 +1425,49 @@ private theorem grade82 : fastGrade 82 = 45490 := by
   have h56 := budgetFRangeJoin (fastBlock 82) 52 4 h52 budgetFBlocks82_52
   exact budgetFRangeJoin (fastBlock 82) 56 82 h56
     (budgetFZeroTail 82 56 82 (by decide))
-private theorem budgetFBlocks83_00 :
+theorem budgetFBlocks83_00 :
     sumRange 4 (fastBlock 83) = 1843 :=
   (bfChunk 83 0 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks83_04 :
+theorem budgetFBlocks83_04 :
     sumRange 4 (fun i => fastBlock 83 (i + 4)) = 4527 :=
   (bfChunk 83 4 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks83_08 :
+theorem budgetFBlocks83_08 :
     sumRange 4 (fun i => fastBlock 83 (i + 8)) = 6859 :=
   (bfChunk 83 8 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks83_12 :
+theorem budgetFBlocks83_12 :
     sumRange 4 (fun i => fastBlock 83 (i + 12)) = 8488 :=
   (bfChunk 83 12 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks83_16 :
+theorem budgetFBlocks83_16 :
     sumRange 4 (fun i => fastBlock 83 (i + 16)) = 7073 :=
   (bfChunk 83 16 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks83_20 :
+theorem budgetFBlocks83_20 :
     sumRange 4 (fun i => fastBlock 83 (i + 20)) = 5181 :=
   (bfChunk 83 20 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks83_24 :
+theorem budgetFBlocks83_24 :
     sumRange 4 (fun i => fastBlock 83 (i + 24)) = 3641 :=
   (bfChunk 83 24 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks83_28 :
+theorem budgetFBlocks83_28 :
     sumRange 4 (fun i => fastBlock 83 (i + 28)) = 2439 :=
   (bfChunk 83 28 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks83_32 :
+theorem budgetFBlocks83_32 :
     sumRange 4 (fun i => fastBlock 83 (i + 32)) = 1536 :=
   (bfChunk 83 32 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks83_36 :
+theorem budgetFBlocks83_36 :
     sumRange 4 (fun i => fastBlock 83 (i + 36)) = 889 :=
   (bfChunk 83 36 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks83_40 :
+theorem budgetFBlocks83_40 :
     sumRange 4 (fun i => fastBlock 83 (i + 40)) = 455 :=
   (bfChunk 83 40 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks83_44 :
+theorem budgetFBlocks83_44 :
     sumRange 4 (fun i => fastBlock 83 (i + 44)) = 192 :=
   (bfChunk 83 44 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks83_48 :
+theorem budgetFBlocks83_48 :
     sumRange 4 (fun i => fastBlock 83 (i + 48)) = 57 :=
   (bfChunk 83 48 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks83_52 :
+theorem budgetFBlocks83_52 :
     sumRange 3 (fun i => fastBlock 83 (i + 52)) = 7 :=
   (bfChunk 83 52 3 (by decide)).trans (by decide +kernel)
-private theorem grade83 : fastGrade 83 = 43187 := by
+theorem grade83 : fastGrade 83 = 43187 := by
   have h8 := budgetFRangeJoin (fastBlock 83) 4 4 budgetFBlocks83_00 budgetFBlocks83_04
   have h12 := budgetFRangeJoin (fastBlock 83) 8 4 h8 budgetFBlocks83_08
   have h16 := budgetFRangeJoin (fastBlock 83) 12 4 h12 budgetFBlocks83_12
@@ -1483,49 +1483,49 @@ private theorem grade83 : fastGrade 83 = 43187 := by
   have h55 := budgetFRangeJoin (fastBlock 83) 52 3 h52 budgetFBlocks83_52
   exact budgetFRangeJoin (fastBlock 83) 55 83 h55
     (budgetFZeroTail 83 55 83 (by decide))
-private theorem budgetFBlocks84_00 :
+theorem budgetFBlocks84_00 :
     sumRange 4 (fastBlock 84) = 1843 :=
   (bfChunk 84 0 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks84_04 :
+theorem budgetFBlocks84_04 :
     sumRange 4 (fun i => fastBlock 84 (i + 4)) = 4527 :=
   (bfChunk 84 4 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks84_08 :
+theorem budgetFBlocks84_08 :
     sumRange 4 (fun i => fastBlock 84 (i + 8)) = 6859 :=
   (bfChunk 84 8 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks84_12 :
+theorem budgetFBlocks84_12 :
     sumRange 4 (fun i => fastBlock 84 (i + 12)) = 8257 :=
   (bfChunk 84 12 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks84_16 :
+theorem budgetFBlocks84_16 :
     sumRange 4 (fun i => fastBlock 84 (i + 16)) = 6567 :=
   (bfChunk 84 16 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks84_20 :
+theorem budgetFBlocks84_20 :
     sumRange 4 (fun i => fastBlock 84 (i + 20)) = 4763 :=
   (bfChunk 84 20 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks84_24 :
+theorem budgetFBlocks84_24 :
     sumRange 4 (fun i => fastBlock 84 (i + 24)) = 3310 :=
   (bfChunk 84 24 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks84_28 :
+theorem budgetFBlocks84_28 :
     sumRange 4 (fun i => fastBlock 84 (i + 28)) = 2187 :=
   (bfChunk 84 28 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks84_32 :
+theorem budgetFBlocks84_32 :
     sumRange 4 (fun i => fastBlock 84 (i + 32)) = 1352 :=
   (bfChunk 84 32 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks84_36 :
+theorem budgetFBlocks84_36 :
     sumRange 4 (fun i => fastBlock 84 (i + 36)) = 762 :=
   (bfChunk 84 36 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks84_40 :
+theorem budgetFBlocks84_40 :
     sumRange 4 (fun i => fastBlock 84 (i + 40)) = 375 :=
   (bfChunk 84 40 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks84_44 :
+theorem budgetFBlocks84_44 :
     sumRange 4 (fun i => fastBlock 84 (i + 44)) = 148 :=
   (bfChunk 84 44 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks84_48 :
+theorem budgetFBlocks84_48 :
     sumRange 4 (fun i => fastBlock 84 (i + 48)) = 38 :=
   (bfChunk 84 48 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks84_52 :
+theorem budgetFBlocks84_52 :
     sumRange 2 (fun i => fastBlock 84 (i + 52)) = 3 :=
   (bfChunk 84 52 2 (by decide)).trans (by decide +kernel)
-private theorem grade84 : fastGrade 84 = 40991 := by
+theorem grade84 : fastGrade 84 = 40991 := by
   have h8 := budgetFRangeJoin (fastBlock 84) 4 4 budgetFBlocks84_00 budgetFBlocks84_04
   have h12 := budgetFRangeJoin (fastBlock 84) 8 4 h8 budgetFBlocks84_08
   have h16 := budgetFRangeJoin (fastBlock 84) 12 4 h12 budgetFBlocks84_12
@@ -1541,49 +1541,49 @@ private theorem grade84 : fastGrade 84 = 40991 := by
   have h54 := budgetFRangeJoin (fastBlock 84) 52 2 h52 budgetFBlocks84_52
   exact budgetFRangeJoin (fastBlock 84) 54 84 h54
     (budgetFZeroTail 84 54 84 (by decide))
-private theorem budgetFBlocks85_00 :
+theorem budgetFBlocks85_00 :
     sumRange 4 (fastBlock 85) = 1843 :=
   (bfChunk 85 0 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks85_04 :
+theorem budgetFBlocks85_04 :
     sumRange 4 (fun i => fastBlock 85 (i + 4)) = 4527 :=
   (bfChunk 85 4 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks85_08 :
+theorem budgetFBlocks85_08 :
     sumRange 4 (fun i => fastBlock 85 (i + 8)) = 6859 :=
   (bfChunk 85 8 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks85_12 :
+theorem budgetFBlocks85_12 :
     sumRange 4 (fun i => fastBlock 85 (i + 12)) = 7902 :=
   (bfChunk 85 12 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks85_16 :
+theorem budgetFBlocks85_16 :
     sumRange 4 (fun i => fastBlock 85 (i + 16)) = 6083 :=
   (bfChunk 85 16 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks85_20 :
+theorem budgetFBlocks85_20 :
     sumRange 4 (fun i => fastBlock 85 (i + 20)) = 4367 :=
   (bfChunk 85 20 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks85_24 :
+theorem budgetFBlocks85_24 :
     sumRange 4 (fun i => fastBlock 85 (i + 24)) = 3000 :=
   (bfChunk 85 24 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks85_28 :
+theorem budgetFBlocks85_28 :
     sumRange 4 (fun i => fastBlock 85 (i + 28)) = 1953 :=
   (bfChunk 85 28 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks85_32 :
+theorem budgetFBlocks85_32 :
     sumRange 4 (fun i => fastBlock 85 (i + 32)) = 1183 :=
   (bfChunk 85 32 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks85_36 :
+theorem budgetFBlocks85_36 :
     sumRange 4 (fun i => fastBlock 85 (i + 36)) = 648 :=
   (bfChunk 85 36 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks85_40 :
+theorem budgetFBlocks85_40 :
     sumRange 4 (fun i => fastBlock 85 (i + 40)) = 305 :=
   (bfChunk 85 40 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks85_44 :
+theorem budgetFBlocks85_44 :
     sumRange 4 (fun i => fastBlock 85 (i + 44)) = 111 :=
   (bfChunk 85 44 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks85_48 :
+theorem budgetFBlocks85_48 :
     sumRange 4 (fun i => fastBlock 85 (i + 48)) = 24 :=
   (bfChunk 85 48 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks85_52 :
+theorem budgetFBlocks85_52 :
     sumRange 1 (fun i => fastBlock 85 (i + 52)) = 1 :=
   (bfChunk 85 52 1 (by decide)).trans (by decide +kernel)
-private theorem grade85 : fastGrade 85 = 38806 := by
+theorem grade85 : fastGrade 85 = 38806 := by
   have h8 := budgetFRangeJoin (fastBlock 85) 4 4 budgetFBlocks85_00 budgetFBlocks85_04
   have h12 := budgetFRangeJoin (fastBlock 85) 8 4 h8 budgetFBlocks85_08
   have h16 := budgetFRangeJoin (fastBlock 85) 12 4 h12 budgetFBlocks85_12
@@ -1599,46 +1599,46 @@ private theorem grade85 : fastGrade 85 = 38806 := by
   have h53 := budgetFRangeJoin (fastBlock 85) 52 1 h52 budgetFBlocks85_52
   exact budgetFRangeJoin (fastBlock 85) 53 85 h53
     (budgetFZeroTail 85 53 85 (by decide))
-private theorem budgetFBlocks86_00 :
+theorem budgetFBlocks86_00 :
     sumRange 4 (fastBlock 86) = 1843 :=
   (bfChunk 86 0 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks86_04 :
+theorem budgetFBlocks86_04 :
     sumRange 4 (fun i => fastBlock 86 (i + 4)) = 4527 :=
   (bfChunk 86 4 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks86_08 :
+theorem budgetFBlocks86_08 :
     sumRange 4 (fun i => fastBlock 86 (i + 8)) = 6859 :=
   (bfChunk 86 8 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks86_12 :
+theorem budgetFBlocks86_12 :
     sumRange 4 (fun i => fastBlock 86 (i + 12)) = 7533 :=
   (bfChunk 86 12 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks86_16 :
+theorem budgetFBlocks86_16 :
     sumRange 4 (fun i => fastBlock 86 (i + 16)) = 5621 :=
   (bfChunk 86 16 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks86_20 :
+theorem budgetFBlocks86_20 :
     sumRange 4 (fun i => fastBlock 86 (i + 20)) = 3993 :=
   (bfChunk 86 20 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks86_24 :
+theorem budgetFBlocks86_24 :
     sumRange 4 (fun i => fastBlock 86 (i + 24)) = 2710 :=
   (bfChunk 86 24 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks86_28 :
+theorem budgetFBlocks86_28 :
     sumRange 4 (fun i => fastBlock 86 (i + 28)) = 1736 :=
   (bfChunk 86 28 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks86_32 :
+theorem budgetFBlocks86_32 :
     sumRange 4 (fun i => fastBlock 86 (i + 32)) = 1029 :=
   (bfChunk 86 32 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks86_36 :
+theorem budgetFBlocks86_36 :
     sumRange 4 (fun i => fastBlock 86 (i + 36)) = 546 :=
   (bfChunk 86 36 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks86_40 :
+theorem budgetFBlocks86_40 :
     sumRange 4 (fun i => fastBlock 86 (i + 40)) = 244 :=
   (bfChunk 86 40 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks86_44 :
+theorem budgetFBlocks86_44 :
     sumRange 4 (fun i => fastBlock 86 (i + 44)) = 81 :=
   (bfChunk 86 44 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks86_48 :
+theorem budgetFBlocks86_48 :
     sumRange 4 (fun i => fastBlock 86 (i + 48)) = 14 :=
   (bfChunk 86 48 4 (by decide)).trans (by decide +kernel)
-private theorem grade86 : fastGrade 86 = 36736 := by
+theorem grade86 : fastGrade 86 = 36736 := by
   have h8 := budgetFRangeJoin (fastBlock 86) 4 4 budgetFBlocks86_00 budgetFBlocks86_04
   have h12 := budgetFRangeJoin (fastBlock 86) 8 4 h8 budgetFBlocks86_08
   have h16 := budgetFRangeJoin (fastBlock 86) 12 4 h12 budgetFBlocks86_12
@@ -1653,46 +1653,46 @@ private theorem grade86 : fastGrade 86 = 36736 := by
   have h52 := budgetFRangeJoin (fastBlock 86) 48 4 h48 budgetFBlocks86_48
   exact budgetFRangeJoin (fastBlock 86) 52 86 h52
     (budgetFZeroTail 86 52 86 (by decide))
-private theorem budgetFBlocks87_00 :
+theorem budgetFBlocks87_00 :
     sumRange 4 (fastBlock 87) = 1843 :=
   (bfChunk 87 0 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks87_04 :
+theorem budgetFBlocks87_04 :
     sumRange 4 (fun i => fastBlock 87 (i + 4)) = 4527 :=
   (bfChunk 87 4 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks87_08 :
+theorem budgetFBlocks87_08 :
     sumRange 4 (fun i => fastBlock 87 (i + 8)) = 6859 :=
   (bfChunk 87 8 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks87_12 :
+theorem budgetFBlocks87_12 :
     sumRange 4 (fun i => fastBlock 87 (i + 12)) = 7057 :=
   (bfChunk 87 12 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks87_16 :
+theorem budgetFBlocks87_16 :
     sumRange 4 (fun i => fastBlock 87 (i + 16)) = 5181 :=
   (bfChunk 87 16 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks87_20 :
+theorem budgetFBlocks87_20 :
     sumRange 4 (fun i => fastBlock 87 (i + 20)) = 3641 :=
   (bfChunk 87 20 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks87_24 :
+theorem budgetFBlocks87_24 :
     sumRange 4 (fun i => fastBlock 87 (i + 24)) = 2439 :=
   (bfChunk 87 24 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks87_28 :
+theorem budgetFBlocks87_28 :
     sumRange 4 (fun i => fastBlock 87 (i + 28)) = 1536 :=
   (bfChunk 87 28 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks87_32 :
+theorem budgetFBlocks87_32 :
     sumRange 4 (fun i => fastBlock 87 (i + 32)) = 889 :=
   (bfChunk 87 32 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks87_36 :
+theorem budgetFBlocks87_36 :
     sumRange 4 (fun i => fastBlock 87 (i + 36)) = 455 :=
   (bfChunk 87 36 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks87_40 :
+theorem budgetFBlocks87_40 :
     sumRange 4 (fun i => fastBlock 87 (i + 40)) = 192 :=
   (bfChunk 87 40 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks87_44 :
+theorem budgetFBlocks87_44 :
     sumRange 4 (fun i => fastBlock 87 (i + 44)) = 57 :=
   (bfChunk 87 44 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks87_48 :
+theorem budgetFBlocks87_48 :
     sumRange 3 (fun i => fastBlock 87 (i + 48)) = 7 :=
   (bfChunk 87 48 3 (by decide)).trans (by decide +kernel)
-private theorem grade87 : fastGrade 87 = 34683 := by
+theorem grade87 : fastGrade 87 = 34683 := by
   have h8 := budgetFRangeJoin (fastBlock 87) 4 4 budgetFBlocks87_00 budgetFBlocks87_04
   have h12 := budgetFRangeJoin (fastBlock 87) 8 4 h8 budgetFBlocks87_08
   have h16 := budgetFRangeJoin (fastBlock 87) 12 4 h12 budgetFBlocks87_12
@@ -1707,46 +1707,46 @@ private theorem grade87 : fastGrade 87 = 34683 := by
   have h51 := budgetFRangeJoin (fastBlock 87) 48 3 h48 budgetFBlocks87_48
   exact budgetFRangeJoin (fastBlock 87) 51 87 h51
     (budgetFZeroTail 87 51 87 (by decide))
-private theorem budgetFBlocks88_00 :
+theorem budgetFBlocks88_00 :
     sumRange 4 (fastBlock 88) = 1843 :=
   (bfChunk 88 0 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks88_04 :
+theorem budgetFBlocks88_04 :
     sumRange 4 (fun i => fastBlock 88 (i + 4)) = 4527 :=
   (bfChunk 88 4 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks88_08 :
+theorem budgetFBlocks88_08 :
     sumRange 4 (fun i => fastBlock 88 (i + 8)) = 6859 :=
   (bfChunk 88 8 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks88_12 :
+theorem budgetFBlocks88_12 :
     sumRange 4 (fun i => fastBlock 88 (i + 12)) = 6566 :=
   (bfChunk 88 12 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks88_16 :
+theorem budgetFBlocks88_16 :
     sumRange 4 (fun i => fastBlock 88 (i + 16)) = 4763 :=
   (bfChunk 88 16 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks88_20 :
+theorem budgetFBlocks88_20 :
     sumRange 4 (fun i => fastBlock 88 (i + 20)) = 3310 :=
   (bfChunk 88 20 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks88_24 :
+theorem budgetFBlocks88_24 :
     sumRange 4 (fun i => fastBlock 88 (i + 24)) = 2187 :=
   (bfChunk 88 24 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks88_28 :
+theorem budgetFBlocks88_28 :
     sumRange 4 (fun i => fastBlock 88 (i + 28)) = 1352 :=
   (bfChunk 88 28 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks88_32 :
+theorem budgetFBlocks88_32 :
     sumRange 4 (fun i => fastBlock 88 (i + 32)) = 762 :=
   (bfChunk 88 32 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks88_36 :
+theorem budgetFBlocks88_36 :
     sumRange 4 (fun i => fastBlock 88 (i + 36)) = 375 :=
   (bfChunk 88 36 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks88_40 :
+theorem budgetFBlocks88_40 :
     sumRange 4 (fun i => fastBlock 88 (i + 40)) = 148 :=
   (bfChunk 88 40 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks88_44 :
+theorem budgetFBlocks88_44 :
     sumRange 4 (fun i => fastBlock 88 (i + 44)) = 38 :=
   (bfChunk 88 44 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks88_48 :
+theorem budgetFBlocks88_48 :
     sumRange 2 (fun i => fastBlock 88 (i + 48)) = 3 :=
   (bfChunk 88 48 2 (by decide)).trans (by decide +kernel)
-private theorem grade88 : fastGrade 88 = 32733 := by
+theorem grade88 : fastGrade 88 = 32733 := by
   have h8 := budgetFRangeJoin (fastBlock 88) 4 4 budgetFBlocks88_00 budgetFBlocks88_04
   have h12 := budgetFRangeJoin (fastBlock 88) 8 4 h8 budgetFBlocks88_08
   have h16 := budgetFRangeJoin (fastBlock 88) 12 4 h12 budgetFBlocks88_12
@@ -1761,46 +1761,46 @@ private theorem grade88 : fastGrade 88 = 32733 := by
   have h50 := budgetFRangeJoin (fastBlock 88) 48 2 h48 budgetFBlocks88_48
   exact budgetFRangeJoin (fastBlock 88) 50 88 h50
     (budgetFZeroTail 88 50 88 (by decide))
-private theorem budgetFBlocks89_00 :
+theorem budgetFBlocks89_00 :
     sumRange 4 (fastBlock 89) = 1843 :=
   (bfChunk 89 0 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks89_04 :
+theorem budgetFBlocks89_04 :
     sumRange 4 (fun i => fastBlock 89 (i + 4)) = 4527 :=
   (bfChunk 89 4 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks89_08 :
+theorem budgetFBlocks89_08 :
     sumRange 4 (fun i => fastBlock 89 (i + 8)) = 6769 :=
   (bfChunk 89 8 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks89_12 :
+theorem budgetFBlocks89_12 :
     sumRange 4 (fun i => fastBlock 89 (i + 12)) = 6082 :=
   (bfChunk 89 12 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks89_16 :
+theorem budgetFBlocks89_16 :
     sumRange 4 (fun i => fastBlock 89 (i + 16)) = 4367 :=
   (bfChunk 89 16 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks89_20 :
+theorem budgetFBlocks89_20 :
     sumRange 4 (fun i => fastBlock 89 (i + 20)) = 3000 :=
   (bfChunk 89 20 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks89_24 :
+theorem budgetFBlocks89_24 :
     sumRange 4 (fun i => fastBlock 89 (i + 24)) = 1953 :=
   (bfChunk 89 24 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks89_28 :
+theorem budgetFBlocks89_28 :
     sumRange 4 (fun i => fastBlock 89 (i + 28)) = 1183 :=
   (bfChunk 89 28 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks89_32 :
+theorem budgetFBlocks89_32 :
     sumRange 4 (fun i => fastBlock 89 (i + 32)) = 648 :=
   (bfChunk 89 32 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks89_36 :
+theorem budgetFBlocks89_36 :
     sumRange 4 (fun i => fastBlock 89 (i + 36)) = 305 :=
   (bfChunk 89 36 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks89_40 :
+theorem budgetFBlocks89_40 :
     sumRange 4 (fun i => fastBlock 89 (i + 40)) = 111 :=
   (bfChunk 89 40 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks89_44 :
+theorem budgetFBlocks89_44 :
     sumRange 4 (fun i => fastBlock 89 (i + 44)) = 24 :=
   (bfChunk 89 44 4 (by decide)).trans (by decide +kernel)
-private theorem budgetFBlocks89_48 :
+theorem budgetFBlocks89_48 :
     sumRange 1 (fun i => fastBlock 89 (i + 48)) = 1 :=
   (bfChunk 89 48 1 (by decide)).trans (by decide +kernel)
-private theorem grade89 : fastGrade 89 = 30813 := by
+theorem grade89 : fastGrade 89 = 30813 := by
   have h8 := budgetFRangeJoin (fastBlock 89) 4 4 budgetFBlocks89_00 budgetFBlocks89_04
   have h12 := budgetFRangeJoin (fastBlock 89) 8 4 h8 budgetFBlocks89_08
   have h16 := budgetFRangeJoin (fastBlock 89) 12 4 h12 budgetFBlocks89_12
@@ -1820,31 +1820,31 @@ private theorem sumStep (f : ℕ → ℕ) (n a b : ℕ)
     sumRange (n + 1) f = a + b :=
   (show sumRange (n + 1) f = sumRange n f + f n from rfl).trans (congrArg₂ Nat.add ha hb)
 private def gradeFrom (i : ℕ) : ℕ := fastGrade (i + 75)
-private theorem prefix75 : sumRange 1 gradeFrom = 63197 :=
+theorem prefix75 : sumRange 1 gradeFrom = 63197 :=
   sumStep gradeFrom 0 0 63197 rfl grade75
 private theorem prefix76 : sumRange 2 gradeFrom = 123662 :=
   sumStep gradeFrom 1 63197 60465 prefix75 grade76
-private theorem prefix77 : sumRange 3 gradeFrom = 181516 :=
+theorem prefix77 : sumRange 3 gradeFrom = 181516 :=
   sumStep gradeFrom 2 123662 57854 prefix76 grade77
-private theorem prefix78 : sumRange 4 gradeFrom = 236758 :=
+theorem prefix78 : sumRange 4 gradeFrom = 236758 :=
   sumStep gradeFrom 3 181516 55242 prefix77 grade78
-private theorem prefix79 : sumRange 5 gradeFrom = 289452 :=
+theorem prefix79 : sumRange 5 gradeFrom = 289452 :=
   sumStep gradeFrom 4 236758 52694 prefix78 grade79
 private theorem prefix80 : sumRange 6 gradeFrom = 339693 :=
   sumStep gradeFrom 5 289452 50241 prefix79 grade80
-private theorem prefix81 : sumRange 7 gradeFrom = 387519 :=
+theorem prefix81 : sumRange 7 gradeFrom = 387519 :=
   sumStep gradeFrom 6 339693 47826 prefix80 grade81
-private theorem prefix82 : sumRange 8 gradeFrom = 433009 :=
+theorem prefix82 : sumRange 8 gradeFrom = 433009 :=
   sumStep gradeFrom 7 387519 45490 prefix81 grade82
-private theorem prefix83 : sumRange 9 gradeFrom = 476196 :=
+theorem prefix83 : sumRange 9 gradeFrom = 476196 :=
   sumStep gradeFrom 8 433009 43187 prefix82 grade83
 private theorem prefix84 : sumRange 10 gradeFrom = 517187 :=
   sumStep gradeFrom 9 476196 40991 prefix83 grade84
-private theorem prefix85 : sumRange 11 gradeFrom = 555993 :=
+theorem prefix85 : sumRange 11 gradeFrom = 555993 :=
   sumStep gradeFrom 10 517187 38806 prefix84 grade85
-private theorem prefix86 : sumRange 12 gradeFrom = 592729 :=
+theorem prefix86 : sumRange 12 gradeFrom = 592729 :=
   sumStep gradeFrom 11 555993 36736 prefix85 grade86
-private theorem prefix87 : sumRange 13 gradeFrom = 627412 :=
+theorem prefix87 : sumRange 13 gradeFrom = 627412 :=
   sumStep gradeFrom 12 592729 34683 prefix86 grade87
 private theorem prefix88 : sumRange 14 gradeFrom = 660145 :=
   sumStep gradeFrom 13 627412 32733 prefix87 grade88
@@ -1865,7 +1865,7 @@ private abbrev Ambient := MvPolynomial Coordinates FX
 private def toJet : Ambient ≃+* Jet :=
   (optionEquivLeft FX (Option (Fin 2))).toRingEquiv.trans
     (Polynomial.mapEquiv (optionEquivLeft FX (Fin 2)).toRingEquiv)
-private theorem degree_of_height_two {k σ : Type*} [Field k] [Finite σ]
+theorem degree_of_height_two {k σ : Type*} [Field k] [Finite σ]
     (A : Ideal (MvPolynomial σ k)) [A.IsPrime] (hA : A.height = 2) :
     (affineHilbertPolynomial A).natDegree + 2 = Nat.card σ := by
   have hA₀ : A ≠ ⊥ := Ideal.height_eq_zero_iff_eq_bot.not.mp (by simp [hA])
@@ -3036,7 +3036,7 @@ theorem boundary_component_mem (I : Ideal (MvPolynomial σ k)) {q : MvPolynomial
     (hq : q ∈ boundaryIdeal I) (n : ℕ) : homogeneousComponent n q ∈ boundaryIdeal I := by
   obtain ⟨p, hp, hd, he⟩ := lift_boundary_component I hq n
   exact Ideal.subset_span ⟨p, n, hp, hd, he.symm⟩
-private theorem leading_component [LinearOrder σ] [WellFoundedGT σ]
+theorem leading_component [LinearOrder σ] [WellFoundedGT σ]
     {p : MvPolynomial σ k} (hp : p ≠ 0) :
     (homogeneousComponent p.totalDegree p) ≠ 0 ∧
       MonomialOrder.degLex.degree (homogeneousComponent p.totalDegree p) =
@@ -3090,7 +3090,7 @@ namespace K1_13_5_4_4_2
 noncomputable section
 open MvPolynomial K1_13_6_3_4
 variable {k K σ : Type*} [Field k] [Field K] [Algebra k K]
-private theorem linear_cut_regular (I : Ideal (MvPolynomial σ k)) (i : σ) :
+theorem linear_cut_regular (I : Ideal (MvPolynomial σ k)) (i : σ) :
     IsLeftRegular (Ideal.Quotient.mk (boundaryIdeal I) (MvPolynomial.X i - 1)) := by
   rw [isLeftRegular_iff_right_eq_zero_of_mul]
   intro z hz
@@ -3120,7 +3120,7 @@ theorem boundaryChart_dimension [Finite σ] [LinearOrder σ] [WellFoundedGT σ]
     (linear_cut_regular I i) hdeg).1
   rw [hilbertPolynomial_boundary I, hI] at h
   exact Nat.eq_zero_of_le_zero h
-private theorem drop_component {p : MvPolynomial σ k} {n : ℕ} (h : p.totalDegree ≤ n + 1) :
+theorem drop_component {p : MvPolynomial σ k} {n : ℕ} (h : p.totalDegree ≤ n + 1) :
     (p - homogeneousComponent (n + 1) p).totalDegree ≤ n := by
   refine Finset.sup_le fun d hd => ?_
   change d.degree ≤ n
@@ -3294,11 +3294,11 @@ namespace K1_13_6_3_5_3
 noncomputable section
 open Polynomial UniqueFactorizationMonoid
 open scoped Polynomial
-private theorem cast_ne_zero_of_pos_lt {F : Type} [Field F] {p n : ℕ} [CharP F p]
+theorem cast_ne_zero_of_pos_lt {F : Type} [Field F] {p n : ℕ} [CharP F p]
     (hpos : 0 < n) (hlt : n < p) : (n : F) ≠ 0 := by
   intro h
   exact (not_le_of_gt hlt) (Nat.le_of_dvd hpos ((CharP.cast_eq_zero_iff F p n).mp h))
-private theorem separable_of_small_degree {F : Type} [Field F] {p : ℕ} [CharP F p]
+theorem separable_of_small_degree {F : Type} [Field F] {p : ℕ} [CharP F p]
     {q : F[X]} (hirr : Irreducible q) (hdeg : q.natDegree < p) : q.Separable := by
   apply (Polynomial.separable_iff_derivative_ne_zero hirr).mpr
   have hstep : q.natDegree - 1 + 1 = q.natDegree := by have := hirr.natDegree_pos; omega
@@ -3411,7 +3411,7 @@ def c6 : Prop :=
         ∑ r, B.multiplicity r * poleOrder v ((B.factor r).eval₂ j a) ∧
       tuplePole v (ratios (jetTuple (n := 3) j a f) 0) =
         ∑ r, min (B.multiplicity r) 2 * zeroOrder v ((B.factor r).eval₂ j a)
-private theorem hasFiniteSupport_tuplePole {k L σ : Type}
+theorem hasFiniteSupport_tuplePole {k L σ : Type}
     [Field k] [Field L] [Algebra k L] [Fintype σ]
     (h : PrincipalDivisors k L) (u : σ → L) :
     (fun v : CurvePlace k L => tuplePole v.value u).HasFiniteSupport := by
@@ -3456,7 +3456,7 @@ private theorem finsum_weighted {α σ : Type} [Fintype σ] (c : σ → ℕ) (f 
   apply Finset.sum_congr rfl
   intro i _
   rw [finsum_eq_finsetSum_of_support_subset _ (hi i), Finset.mul_sum]
-private theorem jet_eval_sum {F L : Type} [Field F] [Field L]
+theorem jet_eval_sum {F L : Type} [Field F] [Field L]
     (j : F →+* L) (a : L) (f : F[X]) {N : ℕ} (hn : f.natDegree < N) (i : ℕ) :
     (Polynomial.hasseDeriv i f).eval₂ j a =
       ∑ x : Fin N, ((x.val.choose i : L) * a ^ (x.val - i)) * j (f.coeff x.val) := by
@@ -3467,7 +3467,7 @@ private theorem jet_eval_sum {F L : Type} [Field F] [Field L]
   intro x _
   simp only [Polynomial.eval₂_monomial, map_mul, map_natCast]
   ring
-private theorem cone_eval_hasse {k F L : Type} [Field k] [Field F] [Field L] [Algebra k L]
+theorem cone_eval_hasse {k F L : Type} [Field k] [Field F] [Field L] [Algebra k L]
     (j : F →+* L) (a : k) (f : F[X]) {N n : ℕ} (hdeg : f.natDegree < N) :
     (coneEval k (coefficientTuple (N := N) j f)).comp
       (MvPolynomial.eval₂Hom MvPolynomial.C (fun i : Fin n =>
@@ -3639,7 +3639,7 @@ def c2 : Prop :=
     ∃ e : ZeroPlaces k L x ≃ (origin k L x).primesOver (Normalization k L x),
       ∀ v, zeroOrder v.val.value x = (e v).val.ramificationIdx (ParameterRing k L x)
 variable {k L : Type} [Field k] [Field L] [Algebra k L]
-private theorem finite_parameter (h : CurveField k L) {x : L}
+theorem finite_parameter (h : CurveField k L) {x : L}
     (hx : Transcendental k x) : Module.Finite (IntermediateField.adjoin k {x}) L := by
   obtain ⟨t, ht, hfin⟩ := h
   have ht' : IsAlgebraic (IntermediateField.adjoin k {x}) t :=
@@ -3679,11 +3679,6 @@ private def originEquiv {x : L} (hx : Transcendental k x) :
   · rw [show (Ideal.span {Polynomial.X} : Ideal k[X]) =
         Ideal.span {Polynomial.X - Polynomial.C (0 : k)} by rw [map_zero, sub_zero]]
     exact Polynomial.quotientSpanXSubCAlgEquiv (0 : k)
-theorem origin_ne_bot {x : L} (hx : Transcendental k x) :
-    origin k L x ≠ ⊥ := by
-  rw [origin, Ne, Ideal.span_singleton_eq_bot]
-  intro h
-  exact hx.ne_zero (congrArg Subtype.val h)
 theorem origin_isMaximal {x : L} (hx : Transcendental k x) :
     (origin k L x).IsMaximal :=
   Ideal.Quotient.maximal_of_isField _ ((originEquiv hx).toRingEquiv.isField (Field.toIsField k))
@@ -3701,7 +3696,7 @@ private theorem normalization_dedekind {x : L} (hx : Transcendental k x)
     { (inferInstance : IsNoetherianRing B),
       Ring.DimensionLEOne.of_isIntegral A B,
       integralClosure.isIntegrallyClosedOfFiniteExtension K with }
-private theorem sum_origin_indices [IsAlgClosed k] {x : L} (hx : Transcendental k x)
+theorem sum_origin_indices [IsAlgClosed k] {x : L} (hx : Transcendental k x)
     [Module.Finite (IntermediateField.adjoin k {x}) L]
     [Module.Finite (ParameterRing k L x) (Normalization k L x)] :
     (∑ᶠ P : (origin k L x).primesOver (Normalization k L x),
@@ -3747,7 +3742,7 @@ private theorem sum_origin_indices [IsAlgClosed k] {x : L} (hx : Transcendental 
   change (∑ᶠ P : p.primesOver B, P.val.ramificationIdx A) = Module.finrank K L
   rw [finsum_eq_sum_of_fintype, ← hrank, ← Ideal.sum_ramification_inertia_eq_finrank p B]
   exact Finset.sum_congr rfl fun P _ => by rw [hdeg, mul_one]
-private theorem zero_sum [IsAlgClosed k] (h1 : c1) (h2 : c2) (h : CurveField k L)
+theorem zero_sum [IsAlgClosed k] (h1 : c1) (h2 : c2) (h : CurveField k L)
     {x : L} (hx : Transcendental k x) :
     (fun v : CurvePlace k L => zeroOrder v.value x).HasFiniteSupport ∧
       (∑ᶠ v : CurvePlace k L, zeroOrder v.value x) =
@@ -3783,7 +3778,7 @@ private theorem adjoin_inv (x : L) :
     change x ∈ IntermediateField.adjoin k ({x⁻¹} : Set L)
     simpa only [inv_inv] using
       (IntermediateField.adjoin k ({x⁻¹} : Set L)).inv_mem (mem_adjoin_simple_self k x⁻¹)
-private theorem zeroOrder_inv (v : Valuation L ℤᵐ⁰) (x : L) :
+theorem zeroOrder_inv (v : Valuation L ℤᵐ⁰) (x : L) :
     zeroOrder v x⁻¹ = poleOrder v x := by
   simp [zeroOrder, poleOrder, map_inv₀, WithZero.log_inv]
 theorem of_children (h1 : c1) (h2 : c2) : K1_13_6_3_5_3.c2 := by
@@ -3899,7 +3894,7 @@ theorem closureIdeal_homogeneous (A : Ideal (MvPolynomial σ k)) :
   · subst m
     rw [← coeff_closureMap, hf, Polynomial.coeff_zero]
   · simp
-private theorem atInfinity_rename (f : MvPolynomial σ k) :
+theorem atInfinity_rename (f : MvPolynomial σ k) :
     atInfinity (rename some f) = f := by
   have h : (atInfinity (k := k) (σ := σ)).comp (rename some) = AlgHom.id k _ := by
     ext i
@@ -4038,20 +4033,20 @@ theorem poleOrder_eq_zero_iff (v : Valuation L ℤᵐ⁰) (x : L) :
   have hv := (v.ne_zero_iff).2 hx
   rw [poleOrder, Int.toNat_eq_zero]
   simpa only [WithZero.exp_zero] using (WithZero.log_le_iff_le_exp (a := 0) hv)
-private theorem poleOrder_mono_value (v : Valuation L ℤᵐ⁰) {x y : L} (h : v x ≤ v y) :
+theorem poleOrder_mono_value (v : Valuation L ℤᵐ⁰) {x y : L} (h : v x ≤ v y) :
     poleOrder v x ≤ poleOrder v y := by
   by_cases hx : x = 0
   · simp [poleOrder, hx]
   have hvx := (v.ne_zero_iff).2 hx
   have hvy : v y ≠ 0 := ne_of_gt ((zero_lt_iff.mpr hvx).trans_le h)
   exact Int.toNat_le_toNat ((WithZero.log_le_log hvx hvy).2 h)
-private theorem poleOrder_constant (v : CurvePlace k L) (c : k) :
+theorem poleOrder_constant (v : CurvePlace k L) (c : k) :
     poleOrder v.value (algebraMap k L c) = 0 := by
   apply (poleOrder_eq_zero_iff _ _).2
   by_cases hc : c = 0
   · simp [hc]
   · exact (v.on_constants c hc).le
-private theorem exists_constant [IsAlgClosed k] {x : L} (hx : ¬ Transcendental k x) :
+theorem exists_constant [IsAlgClosed k] {x : L} (hx : ¬ Transcendental k x) :
     ∃ c : k, algebraMap k L c = x := by
   have halg : IsAlgebraic k x := not_not.mp hx
   have := IntermediateField.isAlgebraic_adjoin_simple halg.isIntegral
@@ -4083,18 +4078,18 @@ theorem height_pos_iff [IsAlgClosed k] (hf : CurveField k L) (h : PrincipalDivis
       rw [← hc]
       exact poleOrder_constant v c
     simp [tupleHeight, hzero] at hp
-private def maxValue (v : CurvePlace k L) (r : σ → L) : ℤᵐ⁰ :=
+def maxValue (v : CurvePlace k L) (r : σ → L) : ℤᵐ⁰ :=
   max 1 (Finset.univ.sup fun j => v.value (r j))
-private theorem value_le_max (v : CurvePlace k L) (r : σ → L) (j : σ) :
+theorem value_le_max (v : CurvePlace k L) (r : σ → L) (j : σ) :
     v.value (r j) ≤ maxValue v r :=
   (Finset.le_sup (s := Finset.univ) (f := fun j => v.value (r j))
     (Finset.mem_univ j)).trans (le_max_right _ _)
-private theorem value_smul_le (v : CurvePlace k L) (c : k) (x : L) :
+theorem value_smul_le (v : CurvePlace k L) (c : k) (x : L) :
     v.value (c • x) ≤ v.value x := by
   by_cases hc : c = 0
   · simp [hc]
   rw [Algebra.smul_def, map_mul, v.on_constants c hc, one_mul]
-private theorem linearValue_le_max (v : CurvePlace k L) (r : σ → L) (a : σ → k) :
+theorem linearValue_le_max (v : CurvePlace k L) (r : σ → L) (a : σ → k) :
     v.value (linearValue a r) ≤ maxValue v r := by
   apply v.value.map_sum_le
   intro j _
@@ -4204,7 +4199,7 @@ theorem lineProjection_linear (i : σ) (a : σ → k) :
     intro l _
     exact (isHomogeneous_C _ _).mul (isHomogeneous_X _ l)
 omit [Fintype σ] in
-private theorem coneEval_monomial (u : σ → L) (d : σ →₀ ℕ) (c : k) :
+theorem coneEval_monomial (u : σ → L) (d : σ →₀ ℕ) (c : k) :
     coneEval k u (monomial d c) = Polynomial.monomial d.degree (aeval u (monomial d c)) := by
   rw [coneEval, coe_eval₂Hom, eval₂_monomial, aeval_monomial]
   simp only [RingHom.comp_apply, Finsupp.prod, Finsupp.degree_apply]
@@ -4244,7 +4239,7 @@ theorem coneIdeal_homogeneous (u : σ → L) :
       simp [hn, homogeneousComponent_eq_zero n p hdeg]
   rw [hs _ (homogeneousComponent_isHomogeneous _ _), ← hcoeff, RingHom.mem_ker.mp hp]
   simp
-private theorem cone_finrank_tower (E F : IntermediateField k L) (h : E ≤ F) :
+theorem cone_finrank_tower (E F : IntermediateField k L) (h : E ≤ F) :
     letI := (IntermediateField.inclusion h).toAlgebra
     Module.finrank E F * Module.finrank F L = Module.finrank E L := by
   let : Algebra E F := (IntermediateField.inclusion h).toAlgebra
@@ -4272,7 +4267,7 @@ theorem component_mul {g : MvPolynomial σ k} {b : ℕ}
     DirectSum.coe_decompose_mul_of_right_mem (homogeneousSubmodule σ k) i (a := p) hg
 private def truncate (n : ℕ) (p : MvPolynomial σ k) : MvPolynomial σ k :=
   ∑ i ∈ Finset.range (n + 1), homogeneousComponent i p
-private theorem totalDegree_truncate (n : ℕ) (p : MvPolynomial σ k) :
+theorem totalDegree_truncate (n : ℕ) (p : MvPolynomial σ k) :
     (truncate n p).totalDegree ≤ n := by
   rw [← mem_restrictTotalDegree]
   apply Submodule.sum_mem
@@ -4280,13 +4275,13 @@ private theorem totalDegree_truncate (n : ℕ) (p : MvPolynomial σ k) :
   rw [mem_restrictTotalDegree]
   exact (homogeneousComponent_isHomogeneous i p).totalDegree_le.trans
     (Nat.le_of_lt_succ (Finset.mem_range.mp hi))
-private theorem component_truncate (n : ℕ) (p : MvPolynomial σ k) (i : ℕ) :
+theorem component_truncate (n : ℕ) (p : MvPolynomial σ k) (i : ℕ) :
     homogeneousComponent i (truncate n p) = if i ≤ n then homogeneousComponent i p else 0 := by
   classical
   simp only [truncate, map_sum,
     fun j => homogeneousComponent_of_mem (m := i) (homogeneousComponent_mem j p)]
   simp [Finset.sum_ite_eq]
-private theorem truncate_mul_mod {I : Ideal (MvPolynomial σ k)}
+theorem truncate_mul_mod {I : Ideal (MvPolynomial σ k)}
     (hI : I.IsHomogeneous (homogeneousSubmodule σ k))
     {p f g : MvPolynomial σ k} {b n : ℕ}
     (hp : p.totalDegree ≤ n) (hg : g.IsHomogeneous b) (hbn : b ≤ n)
@@ -4436,7 +4431,7 @@ theorem chart_generates (I : Ideal (MvPolynomial σ k)) [I.IsPrime] (a : σ) :
   rw [IntermediateField.lift_adjoin, IntermediateField.lift_top]
   rw [← Set.range_comp]
   rfl
-private theorem eval₂_scaled {A : Type} [CommRing A] (f : k →+* A)
+theorem eval₂_scaled {A : Type} [CommRing A] (f : k →+* A)
     (u : σ → A) (z : A) {p : MvPolynomial σ k} {d : ℕ} (hp : p.IsHomogeneous d) :
     p.eval₂ f (fun i => u i * z) = p.eval₂ f u * z ^ d := by
   classical
@@ -4449,13 +4444,13 @@ private theorem eval₂_scaled {A : Type} [CommRing A] (f : k →+* A)
     by_contra h
     exact (mem_support_iff.mp hm) (hp.coeff_eq_zero h)
   exact congrArg (fun n => z ^ n) hd
-private theorem coneEval_homogeneous {L : Type} [Field L] [Algebra k L]
+theorem coneEval_homogeneous {L : Type} [Field L] [Algebra k L]
     (u : σ → L) {p : MvPolynomial σ k} {d : ℕ} (hp : p.IsHomogeneous d) :
     coneEval k u p = Polynomial.C (p.eval₂ (algebraMap k L) u) * Polynomial.X ^ d := by
   rw [coneEval, coe_eval₂Hom, eval₂_scaled _ _ _ hp]
   congr 1
   exact (hom_eval₂ p _ (Polynomial.C : L →+* L[X]) u).symm
-private theorem coneEval_coeff {L : Type} [Field L] [Algebra k L]
+theorem coneEval_coeff {L : Type} [Field L] [Algebra k L]
     (u : σ → L) (p : MvPolynomial σ k) (d : ℕ) :
     (coneEval k u p).coeff d =
       (homogeneousComponent d p).eval₂ (algebraMap k L) u := by
@@ -4477,7 +4472,7 @@ private theorem coneEval_coeff {L : Type} [Field L] [Algebra k L]
       rw [Finset.mem_range] at hj
       omega
     simp [Ne.symm hne]
-private theorem is_mem_iff_chart_eval {I : Ideal (MvPolynomial σ k)} [I.IsPrime] {a : σ}
+theorem is_mem_iff_chart_eval {I : Ideal (MvPolynomial σ k)} [I.IsPrime] {a : σ}
     (ha : MvPolynomial.X a ∉ I) {p : MvPolynomial σ k} {d : ℕ} (hp : p.IsHomogeneous d) :
     p ∈ I ↔ p.eval₂ (algebraMap k (chartField I a)) (chartPoint I a) = 0 := by
   let j := (chartField I a).val
@@ -4564,7 +4559,7 @@ def c4 : Prop :=
     Module.Finite (IntermediateField.adjoin k {linearValue a (ratios u i)}) L →
     (coneIdeal k u).comap (lineProjection i a).toRingHom = ⊥ →
     residueDegree (lineProjection i a).toRingHom (coneIdeal k u) = projectiveDegree u i a
-private theorem integral_of_places (h : c1) {k L : Type} [Field k] [IsAlgClosed k]
+theorem integral_of_places (h : c1) {k L : Type} [Field k] [IsAlgClosed k]
     [Field L] [Algebra k L] (hL : CurveField k L) {x t : L}
     (hx : ∀ w : CurvePlace k L, w.value t ≤ 1 → w.value x ≤ 1) :
     IsIntegral (Algebra.adjoin k {t}) x := by
@@ -4585,7 +4580,7 @@ private theorem integral_of_places (h : c1) {k L : Type} [Field k] [IsAlgClosed 
   apply hxV
   rw [← hw] at htV ⊢
   exact hx w htV
-private theorem integral_on_charts (h : c1) {k L σ : Type} [Field k] [IsAlgClosed k]
+theorem integral_on_charts (h : c1) {k L σ : Type} [Field k] [IsAlgClosed k]
     [Field L] [Algebra k L] [Fintype σ] (hL : CurveField k L) {r : σ → L} {z : L}
     (hz : z ≠ 0)
     (hbound : ∀ (w : CurvePlace k L) j, w.value (r j) ≤ max 1 (w.value z)) :
@@ -4678,7 +4673,7 @@ variable (φ : MvPolynomial (Fin 2) k →ₐ[k] MvPolynomial σ k)
 abbrev planeIdeal : Ideal (MvPolynomial (Fin 2) k) := P.comap φ.toRingHom
 private def truncate {τ : Type} (n : ℕ) (p : MvPolynomial τ k) : MvPolynomial τ k :=
   ∑ i ∈ Finset.range (n + 1), homogeneousComponent i p
-private theorem truncate_eq {τ : Type} {p : MvPolynomial τ k} {n : ℕ}
+theorem truncate_eq {τ : Type} {p : MvPolynomial τ k} {n : ℕ}
     (hp : p.totalDegree ≤ n) : truncate n p = p := by
   symm
   calc
@@ -4689,7 +4684,7 @@ private theorem truncate_eq {τ : Type} {p : MvPolynomial τ k} {n : ℕ}
   apply Finset.sum_subset (Finset.range_subset_range.mpr (Nat.succ_le_succ hp))
   intro i _ hi
   exact homogeneousComponent_eq_zero i p (by simpa using hi)
-private theorem truncate_degree {τ : Type} (n : ℕ) (p : MvPolynomial τ k) :
+theorem truncate_degree {τ : Type} (n : ℕ) (p : MvPolynomial τ k) :
     (truncate n p).totalDegree ≤ n := by
   rw [← mem_restrictTotalDegree]
   apply Submodule.sum_mem
@@ -4697,7 +4692,7 @@ private theorem truncate_degree {τ : Type} (n : ℕ) (p : MvPolynomial τ k) :
   rw [mem_restrictTotalDegree]
   exact (homogeneousComponent_isHomogeneous i p).totalDegree_le.trans
     (Nat.le_of_lt_succ (Finset.mem_range.mp hi))
-private theorem truncate_component {τ : Type} (n i : ℕ) (p : MvPolynomial τ k) :
+theorem truncate_component {τ : Type} (n i : ℕ) (p : MvPolynomial τ k) :
     homogeneousComponent i (truncate n p) = if i ≤ n then homogeneousComponent i p else 0 := by
   classical
   simp only [truncate, map_sum,
@@ -4708,7 +4703,7 @@ private theorem projection_homogeneous (hφ : IsLinearProjection φ)
     (φ p).IsHomogeneous i := by
   rw [DFunLike.congr_fun (aeval_unique φ) p, aeval_def, algebraMap_eq]
   simpa only [one_mul] using hp.eval₂ C (φ ∘ MvPolynomial.X) (isHomogeneous_C _) hφ
-private theorem projection_component (hφ : IsLinearProjection φ)
+theorem projection_component (hφ : IsLinearProjection φ)
     (p : MvPolynomial (Fin 2) k) (i : ℕ) :
     homogeneousComponent i (φ p) = φ (homogeneousComponent i p) := by
   classical
@@ -4719,7 +4714,7 @@ private theorem projection_component (hφ : IsLinearProjection φ)
   · simp [Finset.sum_ite_eq, hi]
   · rw [homogeneousComponent_eq_zero i p (by omega), map_zero]
     simp [Finset.sum_ite_eq, hi]
-private theorem filtered_of_generators
+theorem filtered_of_generators
     (hP : P.IsHomogeneous (homogeneousSubmodule σ k)) (hφ : IsLinearProjection φ)
     {ι : Type} [Fintype ι] (b : ι → MvPolynomial σ k) (d : ι → ℕ)
     (hb : ∀ j, (b j).IsHomogeneous (d j))
@@ -4897,7 +4892,7 @@ private theorem ratFunc_map_X {F L : Type} [Field F] [Field L] [Algebra F L] :
     algebraMap (RatFunc F) (RatFunc L) RatFunc.X = RatFunc.X := by
   simpa only [RatFunc.algebraMap_X, Polynomial.map_X] using
     ratFunc_map_poly (L := L) (Polynomial.X : F[X])
-private theorem ratFunc_map_comp {E F L : Type} [Field E] [Field F] [Field L]
+theorem ratFunc_map_comp {E F L : Type} [Field E] [Field F] [Field L]
     [Algebra E F] [Algebra F L] [Algebra E L] [IsScalarTower E F L] :
     (algebraMap (RatFunc F) (RatFunc L)).comp (algebraMap (RatFunc E) (RatFunc F)) =
       algebraMap (RatFunc E) (RatFunc L) := by
@@ -4957,7 +4952,7 @@ private theorem fractionEquiv {k L σ : Type} [Field k] [Field L] [Algebra k L]
   ext1 x
   change g (g.rangeRestrictFieldEquiv.symm _) = f x
   exact RingHom.rangeRestrictFieldEquiv_apply_symm_apply _ _
-private theorem finrank_cone {E F L KU KV : Type}
+theorem finrank_cone {E F L KU KV : Type}
     [Field E] [Field F] [Field L] [Field KU] [Field KV]
     [Algebra E F] [Algebra F L] [Algebra E L] [IsScalarTower E F L]
     (f : KV →+* KU) (eV : KV ≃+* RatFunc E) (eU : KU ≃+* RatFunc F)
@@ -5075,7 +5070,7 @@ private theorem trdeg_fraction (A F : Type) [CommRing A] [IsDomain A] [Field F]
     Algebra.trdeg k F = Algebra.trdeg k A := by
   have : Algebra.IsAlgebraic A F := IsLocalization.isAlgebraic _ A⁰
   rw [← trdeg_add_eq k A (A := F), trdeg_eq_zero (R := A) (A := F), add_zero]
-private theorem trdeg_of_finite {A B : Type} [CommRing A] [IsDomain A] [CommRing B]
+theorem trdeg_of_finite {A B : Type} [CommRing A] [IsDomain A] [CommRing B]
     [IsDomain B] [Algebra k A] [Algebra k B] (g : B →ₐ[k] A) (hg : Function.Injective g)
     (hfinite : g.Finite) : Algebra.trdeg k A = Algebra.trdeg k B := by
   let algebra := g.toRingHom.toAlgebra
@@ -5086,7 +5081,7 @@ private theorem trdeg_of_finite {A B : Type} [CommRing A] [IsDomain A] [CommRing
   have : Algebra.IsAlgebraic B A := Algebra.IsIntegral.isAlgebraic
   simpa only [trdeg_eq_zero (R := B) (A := A), add_zero] using
     (trdeg_add_eq k B (A := A)).symm
-private theorem trdeg_cone [Finite σ] (I : Ideal (MvPolynomial σ k)) [I.IsPrime] :
+theorem trdeg_cone [Finite σ] (I : Ideal (MvPolynomial σ k)) [I.IsPrime] :
     Algebra.trdeg k (ConeFrac I) = (dimension I : Cardinal) := by
   obtain ⟨d, g, hg, hfinite⟩ := exists_finite_inj_algHom_of_fg k (ConeRing I)
   have hdim := natDegree_affineHilbertPolynomial_eq_card_of_finite_of_injective g hfinite hg
@@ -5096,7 +5091,7 @@ private theorem trdeg_cone [Finite σ] (I : Ideal (MvPolynomial σ k)) [I.IsPrim
     _ = Algebra.trdeg k (MvPolynomial (Fin d) k) := trdeg_of_finite g hg hfinite
     _ = (d : Cardinal) := by simp [MvPolynomial.trdeg_of_isDomain]
     _ = (dimension I : Cardinal) := congrArg (fun n : ℕ => (n : Cardinal)) hdim.symm
-private theorem trdeg_cone_chart (I : Ideal (MvPolynomial σ k)) [I.IsPrime] (a : σ)
+theorem trdeg_cone_chart (I : Ideal (MvPolynomial σ k)) [I.IsPrime] (a : σ)
     (heq : coneIdeal k (chartPoint I a) = I) (ha : MvPolynomial.X a ∉ I) :
     Algebra.trdeg k (ConeFrac I) = Algebra.trdeg k (chartField I a) + 1 := by
   let L := chartField I a
@@ -5352,9 +5347,9 @@ open Filter MvPolynomial Polynomial
 open scoped BigOperators
 variable {k σ τ : Type*} [Field k] [Finite σ] [Finite τ]
 variable {I : Ideal (MvPolynomial σ k)} {J : Ideal (MvPolynomial τ k)}
-private abbrev Piece (g : (MvPolynomial τ k ⧸ J) →ₐ[k] (MvPolynomial σ k ⧸ I)) (n : ℕ) :=
+abbrev Piece (g : (MvPolynomial τ k ⧸ J) →ₐ[k] (MvPolynomial σ k ⧸ I)) (n : ℕ) :=
   (quotientDegreeLE J n).map g.toLinearMap
-private theorem degreeShift [IsDomain (MvPolynomial σ k ⧸ I)]
+theorem degreeShift [IsDomain (MvPolynomial σ k ⧸ I)]
     (g : (MvPolynomial τ k ⧸ J) →ₐ[k] (MvPolynomial σ k ⧸ I))
     (i : τ) {ℓ : MvPolynomial σ k}
     (hℓ : g (Ideal.Quotient.mk J (MvPolynomial.X i)) = Ideal.Quotient.mk I ℓ)
@@ -5595,7 +5590,7 @@ private def universalTrajectory (R : Row 4) : CoeffRing[X] :=
 private def coeffEval {F : Type*} [Field F] (k : Geom →+* F) (U : F[X]) :
     CoeffRing →+* F :=
   MvPolynomial.eval₂Hom k (fun j => U.coeff j.val)
-private theorem map_universalPolynomial {F : Type*} [Field F]
+theorem map_universalPolynomial {F : Type*} [Field F]
     (k : Geom →+* F) {U : F[X]} (hd : U.natDegree < taylorLength) :
     universalPolynomial.map (coeffEval k U) = U := by
   change Polynomial.mapRingHom (coeffEval k U) universalPolynomial = U
@@ -5603,7 +5598,7 @@ private theorem map_universalPolynomial {F : Type*} [Field F]
     coeffEval, MvPolynomial.eval₂Hom_X']
   rw [Fin.sum_univ_eq_sum_range (fun n : ℕ => Polynomial.monomial n (U.coeff n))]
   exact (U.as_sum_range' _ hd).symm
-private theorem map_universalTrajectory {F : Type*} [Field F]
+theorem map_universalTrajectory {F : Type*} [Field F]
     (k : Geom →+* F) {U : F[X]} (hd : U.natDegree < taylorLength) (R : Row 4) :
     (universalTrajectory R).map (coeffEval k U) = trajectory k R U := by
   change Polynomial.mapRingHom (coeffEval k U) (universalTrajectory R) = _
@@ -5628,7 +5623,7 @@ private theorem evaluateFresh_hasse (i : ℕ) :
     map_mul, map_natCast, MvPolynomial.map_X]
   rw [map_pow]
   ac_rfl
-private theorem evaluateFresh_trajectory (R : Row 4) :
+theorem evaluateFresh_trajectory (R : Row 4) :
     evaluateFresh (universalTrajectory R) = freshJetMap (toGeneric R) := by
   change (evaluateFresh.comp
       (MvPolynomial.eval₂Hom (Polynomial.mapRingHom MvPolynomial.C)
@@ -5655,7 +5650,7 @@ private theorem evaluateFresh_trajectory (R : Row 4) :
   · intro i
     simpa only [RingHom.comp_apply, MvPolynomial.eval₂Hom_X', MvPolynomial.map_X,
       freshJetMap] using evaluateFresh_hasse i.val
-private theorem fresh_mem_of_trajectory_zero {F : Type*} [Field F] (k : Geom →+* F)
+theorem fresh_mem_of_trajectory_zero {F : Type*} [Field F] (k : Geom →+* F)
     {U : F[X]} (hd : U.natDegree < taylorLength) (R : Row 4)
     (hR : trajectory k R U = 0) :
     toGeneric R ∈ freshImage (coefficientKernel k U) := by
@@ -5673,11 +5668,11 @@ private theorem fresh_mem_of_trajectory_zero {F : Type*} [Field F] (k : Geom →
   intro n _
   rw [evaluateFresh, Polynomial.coe_eval₂RingHom, Polynomial.eval₂_monomial]
   exact Ideal.mul_mem_right _ _ (Ideal.mem_map_of_mem _ (hc n))
-private def oldCoeffs (P : JetIdeal) : GeoField →+* JetField P :=
+def oldCoeffs (P : JetIdeal) : GeoField →+* JetField P :=
   (onComponent P).comp MvPolynomial.C
-private def oldEval (P : JetIdeal) (U : (JetField P)[X]) : FreshCoeffRing →+* JetField P :=
+def oldEval (P : JetIdeal) (U : (JetField P)[X]) : FreshCoeffRing →+* JetField P :=
   MvPolynomial.eval₂Hom (oldCoeffs P) (fun j => U.coeff j.val)
-private theorem oldEval_jetLinear (P : JetIdeal) [P.IsPrime] {U : (JetField P)[X]}
+theorem oldEval_jetLinear (P : JetIdeal) [P.IsPrime] {U : (JetField P)[X]}
     (hd : U.natDegree < taylorLength) (i : ℕ) :
     oldEval P U (jetLinear genericArgument i) =
       (Polynomial.hasseDeriv i U).eval (oldCoeffs P genericArgument) := by
@@ -6166,13 +6161,13 @@ namespace K1_13_6_3_5_3_2_1
 open K1_13_6_3_5_3_2 IntermediateField
 open scoped algebraAdjoinAdjoin Polynomial
 noncomputable section
-private def frobeniusRange (k A : Type) [Field k] [IsAlgClosed k]
+def frobeniusRange (k A : Type) [Field k] [IsAlgClosed k]
     [CommRing A] [Algebra k A] (p n : ℕ) [ExpChar k p] [ExpChar A p] : Subalgebra k A :=
   { (iterateFrobenius A p n).range.toSubsemiring with
     algebraMap_mem' r := by
       obtain ⟨s, hs⟩ := IsAlgClosed.exists_pow_nat_eq r (expChar_pow_pos k p n)
       exact ⟨algebraMap k A s, by rw [iterateFrobenius_def, ← map_pow, hs]⟩ }
-private theorem finite_over_frobeniusRange (k A : Type) [Field k] [IsAlgClosed k]
+theorem finite_over_frobeniusRange (k A : Type) [Field k] [IsAlgClosed k]
     [CommRing A] [Algebra k A] (p n : ℕ) [ExpChar k p] [ExpChar A p]
     (z : A) (hz : Algebra.adjoin k ({z} : Set A) = ⊤) :
     Module.Finite (frobeniusRange k A p n) A := by
@@ -6473,7 +6468,7 @@ def c3 : Prop :=
     ValueReduction I (jetLinear genericArgument 0)
 private def jetAlg : GeoJets →ₐ[GeoField] FreshCoeffRing :=
   aeval (fun i : Fin 4 ↦ jetLinear genericArgument i.val)
-private theorem jetAlg_apply (p : GeoJets) : jetAlg p = freshJetMap p := rfl
+theorem jetAlg_apply (p : GeoJets) : jetAlg p = freshJetMap p := rfl
 private def jetQuot (A : CoeffIdeal) :
     (GeoJets ⧸ freshImage A) →ₐ[GeoField] (FreshCoeffRing ⧸ extendIdeal A) :=
   Ideal.quotientMapₐ (extendIdeal A) jetAlg (by
@@ -6492,7 +6487,7 @@ private theorem jetQuot_injective (A : CoeffIdeal) : Function.Injective (jetQuot
   obtain ⟨p, rfl⟩ := Ideal.Quotient.mk_surjective z
   rw [jetQuot_mk, Ideal.Quotient.eq_zero_iff_mem] at hz
   exact Ideal.Quotient.eq_zero_iff_mem.mpr hz
-private theorem birational_quotient {A : CoeffIdeal} (hb : FreshBirational A)
+theorem birational_quotient {A : CoeffIdeal} (hb : FreshBirational A)
     (x : FreshCoeffRing ⧸ extendIdeal A) :
     ∃ a b, jetQuot A b ≠ 0 ∧ jetQuot A b * x = jetQuot A a := by
   obtain ⟨p, rfl⟩ := Ideal.Quotient.mk_surjective x
@@ -6528,7 +6523,7 @@ noncomputable section
 open K1_13 K1_13_6 K1_13_6_3 MvPolynomial RingTheory.Sequence
 open scoped TensorProduct Pointwise
 attribute [local instance] MvPolynomial.algebraMvPolynomial
-private theorem geometryCoeffs_injective : Function.Injective genericCoeffs :=
+theorem geometryCoeffs_injective : Function.Injective genericCoeffs :=
   (algebraMap GenericField GeoField).injective.comp
     (IsFractionRing.injective (K := GenericField) _)
 theorem totalDegree_toGeneric (f : Row 4) :
@@ -6558,7 +6553,7 @@ private theorem weaklyRegular_pair_iff {R : Type} [CommRing R] (f Q : R) :
   have h : f • (⊤ : Submodule R R) = (Ideal.span {f} : Submodule R R) := by
     rw [← Submodule.ideal_span_singleton_smul, smul_eq_mul, Ideal.mul_top]
   exact and_congr_right' ((Submodule.quotEquivOfEq _ _ h).isSMulRegular_congr Q)
-private theorem physical_weaklyRegular {f Q : Row 4} (hf : SmallFactor f)
+theorem physical_weaklyRegular {f Q : Row 4} (hf : SmallFactor f)
     (hQ : ¬ f ∣ Q) : IsWeaklyRegular (Row 4) [f, Q] := by
   let I : Ideal (Row 4) := Ideal.span {f}
   have hprim : I.IsPrime := (Ideal.span_singleton_prime hf.1.ne_zero).2 hf.1.prime
@@ -6665,13 +6660,13 @@ theorem component_mem_boundary {I : Ideal (MvPolynomial σ k)}
 private abbrev equations (I : Ideal (MvPolynomial σ k)) (n : ℕ) :
     Submodule k (MvPolynomial σ k) :=
   I.restrictScalars k ⊓ restrictTotalDegree σ k n
-private theorem equations_finite [Finite σ] (I : Ideal (MvPolynomial σ k)) (n : ℕ) :
+theorem equations_finite [Finite σ] (I : Ideal (MvPolynomial σ k)) (n : ℕ) :
     Module.Finite k (equations I n) :=
   Module.Finite.of_injective (Submodule.inclusion inf_le_right) (Submodule.inclusion_injective _)
-private def leadingMap (I : Ideal (MvPolynomial σ k)) (n : ℕ) :
+def leadingMap (I : Ideal (MvPolynomial σ k)) (n : ℕ) :
     equations I n →ₗ[k] MvPolynomial σ k :=
   (homogeneousComponent n).domRestrict (equations I n)
-private theorem range_le (I : Ideal (MvPolynomial σ k)) (n : ℕ) :
+theorem range_le (I : Ideal (MvPolynomial σ k)) (n : ℕ) :
     LinearMap.range (leadingMap I n) ≤ LinearMap.range (leadingMap (boundaryIdeal I) n) := by
   rintro _ ⟨p, rfl⟩
   have hp := (Submodule.mem_inf.mp p.property).1
@@ -6681,7 +6676,7 @@ private theorem range_le (I : Ideal (MvPolynomial σ k)) (n : ℕ) :
   refine ⟨⟨homogeneousComponent n p, Submodule.mem_inf.mpr ⟨
     component_mem_boundary hp hdeg, (mem_restrictTotalDegree σ n _).mpr hh.totalDegree_le⟩⟩, ?_⟩
   exact homogeneousComponent_eq_self hh
-private theorem leading_zero_iff {p : MvPolynomial σ k} {n : ℕ}
+theorem leading_zero_iff {p : MvPolynomial σ k} {n : ℕ}
     (hp : p.totalDegree ≤ n + 1) :
     homogeneousComponent (n + 1) p = 0 ↔ p.totalDegree ≤ n := by
   constructor
@@ -6697,7 +6692,7 @@ private theorem leading_zero_iff {p : MvPolynomial σ k} {n : ℕ}
     exact Nat.le_of_lt_succ (lt_of_le_of_ne hle hne)
   · intro h
     exact homogeneousComponent_eq_zero _ _ (Nat.lt_succ_of_le h)
-private theorem finrank_leading_ker_succ (I : Ideal (MvPolynomial σ k)) (n : ℕ) :
+theorem finrank_leading_ker_succ (I : Ideal (MvPolynomial σ k)) (n : ℕ) :
     Module.finrank k (LinearMap.ker (leadingMap I (n + 1))) =
       Module.finrank k (equations I n) := by
   have hle : equations I n ≤ equations I (n + 1) := by
@@ -6717,7 +6712,7 @@ private theorem finrank_leading_ker_succ (I : Ideal (MvPolynomial σ k)) (n : �
     exact ⟨fun h ↦ ⟨hp, h⟩, And.right⟩
   rw [he]
   exact (Submodule.comapSubtypeEquivOfLe hle).finrank_eq
-private theorem finrank_leading_ker_zero (I : Ideal (MvPolynomial σ k)) :
+theorem finrank_leading_ker_zero (I : Ideal (MvPolynomial σ k)) :
     Module.finrank k (LinearMap.ker (leadingMap I 0)) = 0 := by
   have hker : LinearMap.ker (leadingMap I 0) = ⊥ := by
     rw [LinearMap.ker_eq_bot']
@@ -6729,7 +6724,7 @@ private theorem finrank_leading_ker_zero (I : Ideal (MvPolynomial σ k)) :
     rw [homogeneousComponent_zero] at hp
     exact (totalDegree_eq_zero_iff_eq_C.mp (Nat.le_zero.mp hdeg)).trans hp
   rw [hker, finrank_bot]
-private theorem finrank_equations_le [Finite σ] (I : Ideal (MvPolynomial σ k)) (n : ℕ) :
+theorem finrank_equations_le [Finite σ] (I : Ideal (MvPolynomial σ k)) (n : ℕ) :
     Module.finrank k (equations I n) ≤ Module.finrank k (equations (boundaryIdeal I) n) := by
   have (J : Ideal (MvPolynomial σ k)) (d : ℕ) := equations_finite J d
   have step (d : ℕ) :=
@@ -6745,7 +6740,7 @@ private theorem finrank_equations_le [Finite σ] (I : Ideal (MvPolynomial σ k))
     have hB := (leadingMap (boundaryIdeal I) (n + 1)).finrank_range_add_finrank_ker
     rw [finrank_leading_ker_succ] at hI hB
     exact hI ▸ hB ▸ Nat.add_le_add (step (n + 1)) ih
-private theorem hilbert_add_finrank_equations [Finite σ] (I : Ideal (MvPolynomial σ k)) (n : ℕ) :
+theorem hilbert_add_finrank_equations [Finite σ] (I : Ideal (MvPolynomial σ k)) (n : ℕ) :
     affineHilbertFunction I n + Module.finrank k (equations I n) =
       Module.finrank k (restrictTotalDegree σ k n) := by
   let f := (Ideal.Quotient.mkₐ k I).toLinearMap.domRestrict (restrictTotalDegree σ k n)
@@ -6777,7 +6772,7 @@ section
 set_option autoImplicit false
 namespace K1_13_6_3_5_5
 noncomputable section
-private theorem local_residue_rank {R S : Type} [CommRing R] [CommRing S]
+theorem local_residue_rank {R S : Type} [CommRing R] [CommRing S]
     (f : R →+* S) (p : Ideal S) [p.IsPrime] (q : Ideal R) [q.IsPrime]
     (h : q = p.comap f) :
     letI := (Localization.localRingHom q p f h).toAlgebra
@@ -6869,7 +6864,7 @@ private theorem component_mul (a b : MvPolynomial σ k) (n : ℕ) :
             (DirectSum.decompose grades b ij.2 : MvPolynomial σ k) := by
       rw [DirectSum.decompose_mul, DirectSum.coe_mul_apply_eq_sum_antidiagonal]
     _ = _ := by simp only [grades, decompose_apply]
-private theorem component_mul_of_homogeneous {a b : MvPolynomial σ k} {i j : ℕ}
+theorem component_mul_of_homogeneous {a b : MvPolynomial σ k} {i j : ℕ}
     (ha : a.IsHomogeneous i) :
     homogeneousComponent (i + j) (a * b) = a * homogeneousComponent j b := by
   simpa only [decompose_apply, Nat.add_sub_cancel_left] using
@@ -6914,7 +6909,7 @@ private theorem lift_boundary_component (I : Ideal (MvPolynomial σ k))
       refine Finset.sum_congr rfl fun ij hij ↦ ?_
       rw [← mem_antidiagonal.mp hij,
         component_mul_of_homogeneous (homogeneousComponent_isHomogeneous ij.1 a), hrComponent]
-private theorem coordinate_power_mem [Finite σ] [IsAlgClosed k]
+theorem coordinate_power_mem [Finite σ] [IsAlgClosed k]
     {I : Ideal (MvPolynomial σ k)} {ℓ : MvPolynomial σ k} (h : NoBoundaryZero I ℓ) (i : σ) :
     ∃ e : ℕ, MvPolynomial.X i ^ e ∈ boundaryIdeal I ⊔ Ideal.span {ℓ} := by
   let J := boundaryIdeal I ⊔ Ideal.span {ℓ}
@@ -6926,7 +6921,7 @@ private theorem coordinate_power_mem [Finite σ] [IsAlgClosed k]
     simp only [aeval_X, h b hbI hbℓ, Pi.zero_apply]
   rw [vanishingIdeal_zeroLocus_eq_radical] at hx
   exact Ideal.mem_radical_iff.mp hx
-private theorem homogeneous_mem_of_coordinate_powers [Fintype σ]
+theorem homogeneous_mem_of_coordinate_powers [Fintype σ]
     {J : Ideal (MvPolynomial σ k)} (e : σ → ℕ) (he : ∀ i, MvPolynomial.X i ^ e i ∈ J)
     {n : ℕ} (hn : (∑ i, e i) < n) {q : MvPolynomial σ k} (hq : q.IsHomogeneous n) : q ∈ J := by
   classical
@@ -7038,7 +7033,7 @@ private theorem baseQuot_tmul (I : Ideal (MvPolynomial σ k)) (a : L)
   simp only [AlgEquiv.trans_apply, Algebra.TensorProduct.tensorQuotientEquiv_apply_tmul,
     Ideal.quotientEquivAlg_mk, MvPolynomial.algebraTensorAlgEquiv_tmul]
   exact map_smul (Ideal.Quotient.mkₐ L (baseIdeal L I)) a _
-private theorem baseIdeal_comap (I : Ideal (MvPolynomial σ k)) :
+theorem baseIdeal_comap (I : Ideal (MvPolynomial σ k)) :
     (baseIdeal L I).comap (MvPolynomial.map (algebraMap k L)) = I := by
   refine le_antisymm (fun p hp => ?_) Ideal.le_comap_map
   have hz : Ideal.Quotient.mk (baseIdeal L I) (MvPolynomial.map (algebraMap k L) p) = 0 :=
@@ -7057,7 +7052,7 @@ variable [Finite σ] [IsAlgClosed k]
 private def pointEval (I : Ideal (MvPolynomial σ k)) (x : σ → k)
     (hx : x ∈ zeroLocus k I) : (MvPolynomial σ k ⧸ I) →ₐ[k] k :=
   Ideal.Quotient.liftₐ I (aeval x) (mem_zeroLocus_iff.mp hx)
-private theorem exists_point (I : Ideal (MvPolynomial σ k)) (hI : I.IsPrime)
+theorem exists_point (I : Ideal (MvPolynomial σ k)) (hI : I.IsPrime)
     (u v : MvPolynomial σ k ⧸ I) (hu : u ≠ 0) (hv : v ≠ 0) :
     ∃ x : σ → k, ∃ hx : x ∈ zeroLocus k I,
       pointEval I x hx u ≠ 0 ∧ pointEval I x hx v ≠ 0 := by
@@ -7075,7 +7070,7 @@ private theorem exists_point (I : Ideal (MvPolynomial σ k)) (hI : I.IsPrime)
   obtain ⟨x, hx, h⟩ := hx
   rw [map_mul, mul_ne_zero_iff] at h
   exact ⟨x, hx, h⟩
-private theorem tensor_mul_ne_zero (I : Ideal (MvPolynomial σ k)) (hI : I.IsPrime)
+theorem tensor_mul_ne_zero (I : Ideal (MvPolynomial σ k)) (hI : I.IsPrime)
     {a b : L ⊗[k] (MvPolynomial σ k ⧸ I)} (ha : a ≠ 0) (hb : b ≠ 0) :
     a * b ≠ 0 := by
   classical
@@ -7107,7 +7102,7 @@ private theorem tensor_mul_ne_zero (I : Ideal (MvPolynomial σ k)) (hI : I.IsPri
   have hprod : r (m a) * r (m b) = 0 := by simpa only [map_mul, map_zero] using h
   exact (mul_ne_zero (fun h => nonzero_image a i ha' (r.injective (h.trans r.map_zero.symm)))
     (fun h => nonzero_image b j hb' (r.injective (h.trans r.map_zero.symm)))) hprod
-private theorem baseIdeal_prime (I : Ideal (MvPolynomial σ k)) (hI : I.IsPrime) :
+theorem baseIdeal_prime (I : Ideal (MvPolynomial σ k)) (hI : I.IsPrime) :
     (baseIdeal L I).IsPrime := by
   refine ⟨fun h => hI.ne_top ((baseIdeal_comap (L := L) I).symm.trans (by rw [h, Ideal.comap_top])),
     fun {p q} hpq => ?_⟩
@@ -7125,7 +7120,7 @@ private theorem baseIdeal_prime (I : Ideal (MvPolynomial σ k)) (hI : I.IsPrime)
 end Prime
 section Hilbert
 variable [Finite σ]
-private theorem baseIdeal_hilbertFunction (I : Ideal (MvPolynomial σ k)) (n : ℕ) :
+theorem baseIdeal_hilbertFunction (I : Ideal (MvPolynomial σ k)) (n : ℕ) :
     affineHilbertFunction (baseIdeal L I) n = affineHilbertFunction I n := by
   classical
   let W := quotientDegreeLE I n
@@ -7166,7 +7161,7 @@ private theorem baseIdeal_hilbertFunction (I : Ideal (MvPolynomial σ k)) (n : �
   let B := Module.Free.chooseBasis k W
   change Module.finrank L V = Module.finrank k W
   rw [Module.finrank_eq_nat_card_basis ((B.baseChange L).map e), Module.finrank_eq_nat_card_basis B]
-private theorem baseIdeal_hilbertPolynomial (I : Ideal (MvPolynomial σ k)) :
+theorem baseIdeal_hilbertPolynomial (I : Ideal (MvPolynomial σ k)) :
     affineHilbertPolynomial (baseIdeal L I) = affineHilbertPolynomial I := by
   obtain ⟨n₀, hn₀⟩ := exists_eval_affineHilbertPolynomial I
   refine (eq_affineHilbertPolynomial_of_eval_eq (N₀ := n₀) fun n hn => ?_).symm
@@ -7192,14 +7187,14 @@ theorem linearForm_homogeneous (a : σ → k) : (linearForm a).IsHomogeneous 1 :
   classical
   unfold linearForm
   exact (homogeneousSubmodule σ k 1).sum_mem fun i _ => isHomogeneous_C_mul_X (a i) i
-private def pairing (z : σ → k) : (σ → k) →ₗ[k] k := by
+def pairing (z : σ → k) : (σ → k) →ₗ[k] k := by
   classical
   letI := Fintype.ofFinite σ
   exact ∑ i, z i • LinearMap.proj i
-private theorem pairing_eval (z a : σ → k) : pairing z a = eval z (linearForm a) := by
+theorem pairing_eval (z a : σ → k) : pairing z a = eval z (linearForm a) := by
   classical
   simp [pairing, linearForm, mul_comm]
-private theorem pairing_ker_ne_top (z : σ → k) {i : σ} (hi : z i ≠ 0) :
+theorem pairing_ker_ne_top (z : σ → k) {i : σ} (hi : z i ≠ 0) :
     LinearMap.ker (pairing z) ≠ ⊤ := by
   classical
   letI := Fintype.ofFinite σ
@@ -7249,7 +7244,7 @@ private theorem normalize_boundary (I : Ideal (MvPolynomial σ k))
     rw [map_sub, eval_X, map_one]
     exact sub_eq_zero.mpr (inv_mul_cancel₀ hi)
 omit [Finite σ] in
-private theorem boundary_chart_coordinate (I : Ideal (MvPolynomial σ k)) {i : σ}
+theorem boundary_chart_coordinate (I : Ideal (MvPolynomial σ k)) {i : σ}
     (z : zeroLocus k (boundaryChart I i)) : z.val i = 1 := by
   have h : eval z.val (MvPolynomial.X i - 1) = 0 :=
     z.property _ (Ideal.mem_sup_right (Ideal.mem_span_singleton_self _))
@@ -7321,7 +7316,7 @@ def c4 : Prop :=
       ∃ B : FractionSubalgebra (Localization.AtPrime q),
         (∑ p : fibrePrimes f (Ideal.span {f w}) q, branchLength f (Ideal.span {f w}) q p) ≤
           sectionLength (algebraMap R (Localization.AtPrime q) w) B
-private theorem length_le_of_finite_spans {L M : Type} [Ring L] [AddCommGroup M] [Module L M]
+theorem length_le_of_finite_spans {L M : Type} [Ring L] [AddCommGroup M] [Module L M]
     (n : ℕ∞) (h : ∀ s : Finset M, Module.length L (Submodule.span L (s : Set M)) ≤ n) :
     Module.length L M ≤ n := by
   classical
@@ -7346,7 +7341,7 @@ private theorem length_le_of_finite_spans {L M : Type} [Ring L] [AddCommGroup M]
     _ ≤ Order.krullDim (Submodule L N) := Order.LTSeries.length_le_krullDim u
     _ = (Module.length L N : WithBot ℕ∞) := (Module.coe_length L N).symm
     _ ≤ _ := WithBot.coe_le_coe.mpr (h s)
-private theorem principal_fibre_bound (h3 : c3) (h4 : c4)
+theorem principal_fibre_bound (h3 : c3) (h4 : c4)
     {R S F : Type} [CommRing R] [IsDomain R] [IsNoetherianRing R]
     [CommRing S] [IsNoetherianRing S] [Field F] [Algebra R F] [IsFractionRing R F]
     (f : R →+* S) (e : S →+* F) (he : Function.Injective e)

@@ -94,12 +94,12 @@ theorem jetToRect_C_mem_box {q : Equation} {d : Box}
   subst j
   simpa only [Polynomial.coeff_C_zero,Nat.mul_zero,Nat.add_zero] using hy
 
-private theorem equation_nat_axis {z : Fin 2} (n : ℕ) :
+theorem equation_nat_axis {z : Fin 2} (n : ℕ) :
     EquationAxis z (n : Equation) 0 := by
   rw [← map_natCast (Polynomial.C : Seeds →+* Equation),← map_natCast (MvPolynomial.C : FX →+* Seeds)]
   exact EquationAxis.scalar _
 
-private theorem inverse_part_axis (J : Input) {v : Fin 2 → ℕ}
+theorem inverse_part_axis (J : Input) {v : Fin 2 → ℕ}
     (hf : ∀ z, EquationAxis z J.f (v z)) (z : Fin 2) :
     EquationAxis z (inversePart J) (v z) := by
   have h1 : EquationAxis z (Polynomial.X*J.f.derivative) (v z) :=
@@ -116,7 +116,7 @@ private theorem inverse_part_axis (J : Input) {v : Fin 2 → ℕ}
   rw [hneg]
   exact max_le (h1 i) (h2 i)
 
-private theorem separant_section (J : Input) (B : ResidueLift J) (D : Factors J B)
+theorem separant_section (J : Input) (B : ResidueLift J) (D : Factors J B)
     {v : Fin 2 → ℕ} (hf : ∀ z, EquationAxis z J.f (v z)) :
     Represented (graphIdeal J B D) ⟨J.e-2,0,v 0,v 1⟩ (jetSeparant J.f) := by
   have he : 3 ≤ J.e := J.sheets
@@ -139,11 +139,11 @@ private theorem separant_section (J : Input) (B : ResidueLift J) (D : Factors J 
     rw [heq]
     exact (graphIdeal J B D).mul_mem_left _ hf'
 
-private theorem pure_sep_room (J : Input) (r : ℕ) :
+theorem pure_sep_room (J : Input) (r : ℕ) :
     (r-1)*(J.e-2) ≤ r*(J.e-1) :=
   Nat.mul_le_mul (Nat.sub_le r 1) (Nat.sub_le_sub_left (by decide : 1 ≤ 2) J.e)
 
-private theorem pureDen_section (J : Input) (B : ResidueLift J) (D : Factors J B)
+theorem pureDen_section (J : Input) (B : ResidueLift J) (D : Factors J B)
     {v : Fin 2 → ℕ} (hf : ∀ z, EquationAxis z J.f (v z)) (r : ℕ) :
     Represented (graphIdeal J B D) (pureBox J v r) (pureDen J r) := by
   have h := (separant_section J B D hf).pow (r-1)
@@ -155,12 +155,12 @@ private theorem pureDen_section (J : Input) (B : ResidueLift J) (D : Factors J B
   · exact Nat.mul_le_mul_right _ (Nat.sub_le _ _)
   · exact Nat.mul_le_mul_right _ (Nat.sub_le _ _)
 
-private theorem ordinate_section (Q : Ideal JetRing) :
+theorem ordinate_section (Q : Ideal JetRing) :
     Represented Q (⟨1,0,0,0⟩ : Box) ordinate := by
   apply represented_of_mem
   exact jetToRect_C_mem_box (by simp) EquationAxis.variableX EquationAxis.variableX
 
-private theorem pureOrdinate_zero_section (J : Input) (B : ResidueLift J) (D : Factors J B)
+theorem pureOrdinate_zero_section (J : Input) (B : ResidueLift J) (D : Factors J B)
     {v : Fin 2 → ℕ} (hf : ∀ z, EquationAxis z J.f (v z)) (r : ℕ) :
     Represented (graphIdeal J B D) (pureBox J v r) (pureOrdinate J r 0) := by
   have h := ((separant_section J B D hf).pow (r-1)).mul (ordinate_section (graphIdeal J B D))
@@ -172,7 +172,7 @@ private theorem pureOrdinate_zero_section (J : Input) (B : ResidueLift J) (D : F
   · simpa [pureBox,Box.add] using Nat.mul_le_mul_right (v 0) (Nat.sub_le r 1)
   · simpa [pureBox,Box.add] using Nat.mul_le_mul_right (v 1) (Nat.sub_le r 1)
 
-private theorem pureOrdinate_section (J : Input) (B : ResidueLift J) (D : Factors J B)
+theorem pureOrdinate_section (J : Input) (B : ResidueLift J) (D : Factors J B)
     {v : Fin 2 → ℕ} (hf : ∀ z, EquationAxis z J.f (v z)) {r i : ℕ} (hi : i ≤ r) :
     Represented (graphIdeal J B D) (pureBox J v r) (pureOrdinate J r i) := by
   cases i with
@@ -190,17 +190,17 @@ private theorem pureOrdinate_section (J : Input) (B : ResidueLift J) (D : Factor
     · exact coord_transition J hi (finite J B D) (reciprocal J B D) hd hδ
         (mul_reciprocal J B D) hc
 
-private theorem seed_constant_axis {J : Input} {s : SeedConstants} (hs : s.totalDegree ≤ 2*J.w)
+theorem seed_constant_axis {J : Input} {s : SeedConstants} (hs : s.totalDegree ≤ 2*J.w)
     (z : Fin 2) : (liftSeeds s).degreeOf z ≤ 2*J.w :=
   (MvPolynomial.degreeOf_le_totalDegree _ _).trans
     ((Finset.sup_mono (MvPolynomial.support_map_subset constantAbscissa s)).trans hs)
 
-private theorem seed_section (J : Input) (Q : Ideal JetRing) {s : SeedConstants}
+theorem seed_section (J : Input) (Q : Ideal JetRing) {s : SeedConstants}
     (hs : s.totalDegree ≤ 2*J.w) : Represented Q (residueBox J) (seedInJet s) :=
   represented_of_mem (jetToRect_C_mem_box (Polynomial.natDegree_C (liftSeeds s)).le
     (EquationAxis.C (seed_constant_axis hs 0)) (EquationAxis.C (seed_constant_axis hs 1)))
 
-private theorem box_C_degree {p : Biform} {a s : ℕ} (hp : p ∈ box a s) :
+theorem box_C_degree {p : Biform} {a s : ℕ} (hp : p ∈ box a s) :
     (MvPolynomial.optionEquivLeft FX (Fin 2) p).natDegree ≤ a := by
   apply Polynomial.natDegree_le_iff_coeff_eq_zero.mpr
   intro i hi
@@ -211,7 +211,7 @@ private theorem box_C_degree {p : Biform} {a s : ℕ} (hp : p ∈ box a s) :
   have h := (MvPolynomial.mem_restrictBidegree.mp hp) _ (MvPolynomial.mem_support_iff.mpr hn)
   exact (not_le_of_gt hi) (by simpa using h.1)
 
-private theorem box_C_axis {p : Biform} {a s : ℕ} (hp : p ∈ box a s) (z : Fin 2) :
+theorem box_C_axis {p : Biform} {a s : ℕ} (hp : p ∈ box a s) (z : Fin 2) :
     EquationAxis z (MvPolynomial.optionEquivLeft FX (Fin 2) p) s := by
   intro i
   apply (MvPolynomial.degreeOf_le_totalDegree _ z).trans
@@ -222,7 +222,7 @@ private theorem box_C_axis {p : Biform} {a s : ℕ} (hp : p ∈ box a s) (z : Fi
   change (Finsupp.optionElim i m).some.sum (fun _ n => n) ≤ s at h
   simpa only [Finsupp.some_optionElim] using h
 
-private theorem residue_taylor_section (J : Input) (B : ResidueLift J) (Q : Ideal JetRing)
+theorem residue_taylor_section (J : Input) (B : ResidueLift J) (Q : Ideal JetRing)
     (i : ℕ) : Represented Q (residueBox J) (rootInJet (liftTaylor B.numerator i)) := by
   have h := liftTaylor_box J B i
   exact represented_of_mem (jetToRect_C_mem_box (box_C_degree h)
@@ -247,7 +247,7 @@ theorem numerator_section (J : Input) (B : ResidueLift J) (D : Factors J B)
     simpa [taylorBox,Box.add,Nat.add_comm] using h
   · exact (pureDen_section J B D hf r).mul (residue_taylor_section J B (graphIdeal J B D) i)
 
-private theorem compare_velocity (J : Input) (B : ResidueLift J) (D : Factors J B) (k : ℕ) :
+theorem compare_velocity (J : Input) (B : ResidueLift J) (D : Factors J B) (k : ℕ) :
     jetSeparant J.f^(2*k+1)*velocityNumerator J.f k -
       rootInJet (cleared (flatten J.f) k)*jetSeparant J.f^k ∈ graphIdeal J B D := by
   have hle : tangentIdeal J.f ≤ graphIdeal J B D :=

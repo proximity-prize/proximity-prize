@@ -609,12 +609,6 @@ def fatPrice (x : Shape) : ℕ :=
   let curves := ceilDiv (81879*mixed32 p q q h + 46594*mixed32 p q q p) (32*46594*293711590)
   let isolated := ceilDiv (3*q.j^2*(2*q.b - q.j)) (4*41481*(41481 - 33184 + 1)*1037)
   divisors + singular + curves + isolated
-theorem primary_layer_threshold :
-    ceilDiv 1217307887288627271 46597 = 26124168665121 := by decide
-theorem physical_price_corner :
-    physicalPrice ⟨120,48,10⟩ 58 = 222142013343379695 := by decide
-theorem fat_price_quadratic :
-    fatPrice ⟨2,6,2⟩ = 96034767423888601 := by decide
 end
 end K1_13
 end
@@ -1081,7 +1075,7 @@ private theorem map_independent_family {V W : Type*} [AddCommGroup V] [Module Ge
     ∃ e : Fin n → W, LinearIndependent Geom e ∧ ∀ i, P (e i) := by
   obtain ⟨e, he⟩ := exists_linearIndependent_of_le_finrank hn
   exact ⟨f ∘ e, he.map' f (LinearMap.ker_eq_bot_of_injective hf), fun i => hP (e i)⟩
-private theorem family_of_kernel (w : I → K) {n : ℕ}
+theorem family_of_kernel (w : I → K) {n : ℕ}
     (hker : n ≤ Module.finrank Geom (LinearMap.ker (wordMap w))) :
     ∃ e : Fin n → Row 4, LinearIndependent Geom e ∧
       ∀ i, InBox (shape (e i)) ⟨4012, 1650, 550⟩ ∧

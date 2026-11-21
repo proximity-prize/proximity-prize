@@ -1,3 +1,4 @@
+import ProximityPrize.SubmissionLower.HighCore82219Source
 import ProximityPrize.SubmissionLower.HighCore82229NewMoments
 
 set_option Elab.async false
@@ -15,52 +16,43 @@ local notation "pass!" depth "," grade "," deriv "," nodes "," moment ";" witnes
   checked _ (m := depth) (B := grade) (J := deriv) (N := nodes) (M := moment)
     rfl rfl rfl rfl rfl (by decide) (by decide) rfl (by decide) witness
 
-private theorem terminal_ok (b : Band) : BankOK (terminal b) := by
+theorem terminal_ok (b : Band) : BankOK (terminal b) := by
   cases b with
-  | h2367 => exact (pass! 5119,7120,1510,0xe128896c00000,0x3f15ec384879; nextMoment7120_1510)
+  | h2367 => exact (pass! 4322,6010,1275,0x878be47080000,0x200a9f6cd5af; nextMoment6010_1275)
   | h2395 => exact (pass! 7550,10506,2218,0x2cfea55aa80000,0x129e297a45c0c; moment10506_2218)
   | h7773 => exact (pass! 124,173,32,0xc4fd80000,0x15c66e5; moment173_32)
 
-private def StageOK (ss : List Stage) : Prop :=
+def StageOK (ss : List Stage) : Prop :=
   ∀ s ∈ ss, BankOK s.free ∧ BankOK s.moving
 
-private theorem stages_nil : StageOK [] :=
+theorem stages_nil : StageOK [] :=
   fun _ hs => (List.not_mem_nil hs).elim
 
-private theorem stages_cons {s : Stage} {ss : List Stage}
+theorem stages_cons {s : Stage} {ss : List Stage}
     (hf : BankOK s.free) (hm : BankOK s.moving) (ht : StageOK ss) : StageOK (s :: ss) :=
   List.forall_mem_cons.mpr ⟨⟨hf, hm⟩, ht⟩
 
-private theorem stages_ok (b : Band) : StageOK (stages b) := by
+theorem stages_ok (b : Band) : StageOK (stages b) := by
   cases b with
   | h2367 =>
     rw [stages]
-    refine stages_cons (pass! 76,105,23,0x345100000,0x3777f9; moment105_23) (pass! 404,562,118,0x1c6edf40000,0xa178c6a5; nextMoment562_118) ?_
-    refine stages_cons (pass! 81,112,24,0x3e2240000,0x464bcb; nextMoment112_24) (pass! 428,595,125,0x21c85ec0000,0xcaca5052; nextMoment595_125) ?_
-    refine stages_cons (pass! 78,108,23,0x376900000,0x3ca9b9; nextMoment108_23) (pass! 390,543,114,0x199ac680000,0x8cc85625; moment543_114) ?_
-    refine stages_cons (pass! 90,125,27,0x558480000,0x6ce383; moment125_27) (pass! 442,615,129,0x252cb940000,0xe712e33d; nextMoment615_129) ?_
-    refine stages_cons (pass! 98,136,30,0x6f9680000,0x9a30e6; nextMoment136_30) (pass! 491,683,143,0x32d29400000,0x15e85234c; nextMoment683_143) ?_
-    refine stages_cons (pass! 109,151,33,0x979280000,0xe74c1b; nextMoment151_33) (pass! 531,738,155,0x40589300000,0x1de880865; nextMoment738_155) ?_
-    refine stages_cons (pass! 116,161,35,0xb5c380000,0x128bb48; moment161_35) (pass! 634,882,186,0x6dc80e00000,0x3d18186c7; nextMoment882_186) ?_
-    refine stages_cons (pass! 125,173,38,0xe40bc0000,0x18d4b08; nextMoment173_38) (pass! 701,975,205,0x93eccb80000,0x5aef90203; nextMoment975_205) ?_
-    refine stages_cons (pass! 136,188,41,0x1230340000,0x224f886; nextMoment188_41) (pass! 830,1154,244,0xf64247c0000,0xb2ffabfb1; nextMoment1154_244) ?_
-    refine stages_cons (pass! 154,213,47,0x1a8b200000,0x38bfb68; nextMoment213_47) (pass! 888,1235,261,0x12d6ab5c0000,0xea98932cb; nextMoment1235_261) ?_
-    refine stages_cons (pass! 168,233,51,0x223cd80000,0x507dc25; nextMoment233_51) (pass! 1238,1721,365,0x3316da1c0000,0x37562c3cfd; nextMoment1721_365) ?_
-    refine stages_cons (pass! 176,244,54,0x27a0ec0000,0x6176fe9; nextMoment244_54) (pass! 940,1307,276,0x165246500000,0x125fc26c02; nextMoment1307_276) ?_
-    refine stages_cons (pass! 193,268,58,0x3355540000,0x8b05777; nextMoment268_58) (pass! 1213,1687,355,0x2fca43300000,0x32c91050b2; nextMoment1687_355) ?_
-    refine stages_cons (pass! 217,300,67,0x4a41300000,0xdedff80; nextMoment300_67) (pass! 933,1298,273,0x15c511280000,0x11d168cd1f; nextMoment1298_273) ?_
-    refine stages_cons (pass! 283,392,88,0xa4c1a80000,0x2881bf10; nextMoment392_88) (pass! 1320,1835,388,0x3dc53d480000,0x47547d44aa; nextMoment1835_388) ?_
-    refine stages_cons (pass! 221,307,67,0x4d57b00000,0xeffb6fa; nextMoment307_67) (pass! 1508,2096,448,0x5ccf20680000,0x7a60dae739; nextMoment2096_448) ?_
-    refine stages_cons (pass! 274,380,84,0x9407640000,0x235f32c1; nextMoment380_84) (pass! 1567,2179,461,0x67590c380000,0x8dc92dfed1; nextMoment2179_461) ?_
-    refine stages_cons (pass! 299,415,91,0xbf09300000,0x31e9f423; nextMoment415_91) (pass! 1783,2479,526,0x988329100000,0xedf44d5ab0; nextMoment2479_526) ?_
-    refine stages_cons (pass! 268,371,84,0x8ce2900000,0x20c08c09; nextMoment371_84) (pass! 1421,1977,416,0x4ccddb6c0000,0x5fb60cd0a4; nextMoment1977_416) ?_
-    refine stages_cons (pass! 298,414,87,0xb74a900000,0x2fd6e865; nextMoment414_87) (pass! 1720,2395,500,0x876425080000,0xccb7865054; nextMoment2395_500) ?_
-    refine stages_cons (pass! 398,552,121,0x1c06f240000,0x9b6be4a3; nextMoment552_121) (pass! 2332,3244,683,0x1531f7ce80000,0x2b4fcb8af08; nextMoment3244_683) ?_
-    refine stages_cons (pass! 293,407,89,0xb38f080000,0x2e1859e9; nextMoment407_89) (pass! 1506,2096,439,0x5b1c71d00000,0x787427c579; nextMoment2096_439) ?_
-    refine stages_cons (pass! 499,692,155,0x38015300000,0x185234383; nextMoment692_155) (pass! 2722,3787,799,0x21c10b6c00000,0x508a478f764; nextMoment3787_799) ?_
-    refine stages_cons (pass! 609,844,187,0x64c14500000,0x3540983af; nextMoment844_187) (pass! 3621,5036,1070,0x4fd4b92ec0000,0xfd1cefeba54; nextMoment5036_1070) ?_
-    refine stages_cons (pass! 657,911,204,0x7f80d840000,0x48d3f0165; nextMoment911_204) (pass! 3535,4935,1017,0x48c5840680000,0xe3e67c2d9d6; nextMoment4935_1017) ?_
-    refine stages_cons (pass! 798,1106,244,0xe18c53c0000,0x9c255acf1; nextMoment1106_244) (pass! 4657,6482,1369,0xa91a172280000,0x2b334b40c95c; nextMoment6482_1369) ?_
+    refine stages_cons (pass! 76,105,23,0x345100000,0x3777f9; moment105_23) (pass! 437,608,128,0x2407b5c0000,0xdd657d32; nextMoment608_128) ?_
+    refine stages_cons (pass! 83,115,25,0x439080000,0x4ed4ac; moment115_25) (pass! 436,606,128,0x23d8b880000,0xdb115372; nextMoment606_128) ?_
+    refine stages_cons (pass! 92,127,28,0x5c3600000,0x75b415; moment127_28) (pass! 508,706,149,0x389233c0000,0x19280bd7d; nextMoment706_149) ?_
+    refine stages_cons (pass! 99,137,30,0x722180000,0x9dd5af; moment137_30) (pass! 493,686,144,0x338ed2c0000,0x1656b0db4; nextMoment686_144) ?_
+    refine stages_cons (pass! 107,148,33,0x917680000,0xd8f2fa; nextMoment148_33) (pass! 526,731,154,0x3eb17680000,0x1cdc7da38; nextMoment731_154) ?_
+    refine stages_cons (pass! 116,161,35,0xb5c380000,0x128bb48; moment161_35) (pass! 641,892,188,0x716c8a40000,0x3fe068fa5; nextMoment892_188) ?_
+    refine stages_cons (pass! 126,175,39,0xec9f00000,0x1a458a5; nextMoment175_39) (pass! 685,952,201,0x8a677880000,0x52f0bdb9b; nextMoment952_201) ?_
+    refine stages_cons (pass! 142,197,43,0x14bde80000,0x294fec6; moment197_43) (pass! 864,1202,254,0x115b81bc0000,0xd28832ce8; nextMoment1202_254) ?_
+    refine stages_cons (pass! 171,237,50,0x2316e80000,0x53b7f45; moment237_50) (pass! 1015,1412,298,0x1c16f6f00000,0x1901657cf3; nextMoment1412_298) ?_
+    refine stages_cons (pass! 178,247,55,0x2932d00000,0x66c8fdf; nextMoment247_55) (pass! 792,1101,233,0xd623cb40000,0x947787094; nextMoment1101_233) ?_
+    refine stages_cons (pass! 251,347,78,0x7322680000,0x18f6d6a4; nextMoment347_78) (pass! 1305,1815,383,0x3b9eea000000,0x442ac5ba92; nextMoment1815_383) ?_
+    refine stages_cons (pass! 261,362,81,0x813b280000,0x1d6fb003; moment362_81) (pass! 1463,2035,429,0x53ea2df80000,0x6b96ecc888; nextMoment2035_429) ?_
+    refine stages_cons (pass! 345,478,108,0x12b1e340000,0x59a98629; nextMoment478_108) (pass! 1607,2235,472,0x6f51ac300000,0x9cb2a062f8; nextMoment2235_472) ?_
+    refine stages_cons (pass! 377,522,118,0x185d2840000,0x7f6275d9; nextMoment522_118) (pass! 2257,3142,664,0x1348521240000,0x263b0eab16b; nextMoment3142_664) ?_
+    refine stages_cons (pass! 600,831,188,0x61d88780000,0x32de21d13; nextMoment831_188) (pass! 3490,4863,1027,0x47409d2380000,0xdb0e8041cee; nextMoment4863_1027) ?_
+    refine stages_cons (pass! 499,692,155,0x38015300000,0x185234383; nextMoment692_155) (pass! 2764,3850,812,0x235cb8ba00000,0x5601e71ab3f; nextMoment3850_812) ?_
+    refine stages_cons (pass! 812,1126,252,0xf04a9400000,0xa99a27482; moment1126_252) (pass! 4778,6667,1405,0xb6aa96ebc0000,0x304357eb723c; moment6667_1405) ?_
     exact stages_nil
   | h2395 =>
     rw [stages]

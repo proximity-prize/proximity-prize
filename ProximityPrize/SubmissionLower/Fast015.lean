@@ -18,122 +18,14 @@ def GlobalBlockRankGate (domain : Fin 262144 ↪ E) (received : Fin 262144 → E
   ((supportedLocalConstraintMatrix 48 (fun i ↦ Polynomial.C (domain i))
       (fun i ↦ Polynomial.C (received i)) columns).map
     (algebraMap (Polynomial E) (FractionRing (Polynomial E)))).rank ≤ 262144 * blockUpper
-open Classical in
-def UniformAnnihilator (domain : Fin 262144 ↪ E) (received : Fin 262144 → E) : Prop :=
-  ∃ Q : DifferentialPolynomial E 2, Q ≠ 0 ∧ jetTotalDegree Q ≤ 64 ∧
-    ∀ P ∈ ReedSolomon.closePolynomialSet domain received 131073 180265,
-      differentialSpecialization Q P = 0
-open Classical in
-def C40ConsumerGate (domain : Fin 262144 ↪ E) (received : Fin 262144 → E) : Prop :=
-  ∀ Q : DifferentialPolynomial E 2, Q ≠ 0 → jetTotalDegree Q ≤ 64 →
-    ∀ S : Finset E[X],
-      (∀ P ∈ S, P ∈ ReedSolomon.closePolynomialSet domain received 131073 180265 ∧
-        differentialSpecialization Q P = 0) →
-      (S.card : ℚ) ≤ secondOrderCharge 64
-private theorem certificate_at_zero_degree {P : ℕ → Prop} (r n ν : ℕ)
-    (h : P (r * (0 * ν) / (n - r))) : P 0 := by
-  simpa only [Nat.zero_mul, Nat.mul_zero, Nat.zero_div] using h
-open Classical in
-theorem certificate_of_block_rank
-    (domain : Fin 262144 ↪ E) (received : Fin 262144 → E)
-    (hrank : GlobalBlockRankGate domain received) :
-    Nonempty (SymbolicReceivedCurve.Certificate 180265 131073 0 64 2 0 domain
-      (fun i ↦ Polynomial.C (received i))) := by
-  classical
-  have h := SymbolicReceivedCurve.exists_certificate_of_monomial_rank_bound
-    (F := E) (K := FractionRing (Polynomial E))
-    (d := 2) (D := 131072) (m := 48) (A := 180265) (k := 131073)
-    (ℓ := 0) (ν := 64) (r := 262144 * blockUpper)
-    (by norm_num) (by norm_num) domain (fun i ↦ Polynomial.C (received i))
-    (by intro i; simp) columns columns_injective columns_y0_le columns_total_le columns_weight_lt
-    (algebraMap (Polynomial E) (FractionRing (Polynomial E)))
-    (IsFractionRing.injective (Polynomial E) (FractionRing (Polynomial E))) hrank strict_source_surplus
-  exact certificate_at_zero_degree
-    (P := fun b ↦ Nonempty (SymbolicReceivedCurve.Certificate 180265 131073 0 64 2 b
-      domain (fun i ↦ Polynomial.C (received i))))
-    (262144 * blockUpper) (Fintype.card SourceIndex) 64 h
-open Classical in
-theorem annihilator_of_block_rank
-    (domain : Fin 262144 ↪ E) (received : Fin 262144 → E)
-    (hrank : GlobalBlockRankGate domain received) : UniformAnnihilator domain received := by
-  classical
-  obtain ⟨cert⟩ := certificate_of_block_rank domain received hrank
-  let Q : DifferentialPolynomial E 2 :=
-    MvPolynomial.map (Polynomial.eval₂RingHom (RingHom.id E) 0) cert.Q
-  obtain ⟨hQ, hdegree, hsound⟩ := cert.specialization_sound (RingHom.id E) (0 : E)
-  refine ⟨Q, hQ, hdegree, ?_⟩
-  intro P hP
-  let indices := ReedSolomon.polynomialAgreementSet domain received P
-  apply hsound indices P hP.1 hP.2
-  intro i hi
-  simpa only [Polynomial.eval₂_C, RingHom.id_apply] using (Finset.mem_filter.mp hi).2
-open Classical in
-theorem list_cap_of_annihilator_and_consumer
-    (domain : Fin 262144 ↪ E) (received : Fin 262144 → E)
-    (hsource : UniformAnnihilator domain received)
-    (hconsumer : C40ConsumerGate domain received) :
-    (ReedSolomon.closePolynomialSet domain received 131073 180265).Finite ∧
-      (ReedSolomon.closePolynomialSet domain received 131073 180265).ncard ≤ listCap := by
-  classical
-  obtain ⟨Q, hQ, hweight, hsound⟩ := hsource
-  have hfinite_subsets : ∀ S : Finset E[X],
-      (S : Set E[X]) ⊆ ReedSolomon.closePolynomialSet domain received 131073 180265 →
-      S.card ≤ listCap := by
-    intro S hS
-    apply integer_count_le_cap
-    exact hconsumer Q hQ hweight S (fun P hP ↦ ⟨hS hP, hsound P (hS hP)⟩)
-  have hfinite : (ReedSolomon.closePolynomialSet domain received 131073 180265).Finite := by
-    by_contra hinfinite
-    obtain ⟨S, hS, hcard⟩ := Set.Infinite.exists_subset_card_eq hinfinite (listCap + 1)
-    have h := hfinite_subsets S hS
-    omega
-  refine ⟨hfinite, ?_⟩
-  rw [Set.ncard_eq_toFinset_card _ hfinite]
-  exact hfinite_subsets hfinite.toFinset (fun P hP ↦ hfinite.mem_toFinset.mp hP)
-open Classical in
-theorem list_cap_of_named_gates
-    (domain : Fin 262144 ↪ E) (received : Fin 262144 → E)
-    (hrank : GlobalBlockRankGate domain received)
-    (hconsumer : C40ConsumerGate domain received) :
-    (ReedSolomon.closePolynomialSet domain received 131073 180265).Finite ∧
-      (ReedSolomon.closePolynomialSet domain received 131073 180265).ncard ≤ listCap :=
-  list_cap_of_annihilator_and_consumer domain received
-    (annihilator_of_block_rank domain received hrank) hconsumer
 abbrev NativeK := IRSProfile.Field
 abbrev NativeIndex := IRSProfile.Index
 local instance : DecidableEq NativeK := Classical.decEq NativeK
-def nativeRadius6915 : ℝ := 81879 / 262144
 theorem native_characteristic : ringChar NativeK = 2130706433 := by
   have : CharP NativeK 2130706433 := charP_of_injective_ringHom
     (f := algebraMap KoalaBear.Field NativeK) (algebraMap KoalaBear.Field NativeK).injective 2130706433
   exact ringChar.eq NativeK 2130706433
 theorem native_charP : CharP NativeK 2130706433 := ringChar.of_eq native_characteristic
-theorem native_candidate_degree_iff (P : NativeK[X]) :
-    P.degree < 131073 ↔ P.natDegree ≤ 131072 := by
-  change P.degree < ((131073 : ℕ) : WithBot ℕ) ↔ P.natDegree ≤ 131072
-  by_cases hP : P = 0
-  · rw [hP, degree_zero, natDegree_zero]
-    exact ⟨fun _ ↦ by norm_num, fun _ ↦ WithBot.bot_lt_coe _⟩
-  · exact (Polynomial.natDegree_lt_iff_degree_lt (n := 131073) hP).symm.trans (by omega)
-open Classical in
-def NativeOrdinaryKList6915 : Prop :=
-  ∀ received : NativeIndex → NativeK,
-    (ReedSolomon.closePolynomialSet IRSProfile.domain received 131073 180265).Finite ∧
-      (ReedSolomon.closePolynomialSet IRSProfile.domain received 131073 180265).ncard ≤ listCap
-theorem native_support_threshold (T : Finset NativeIndex) :
-    (T.card : ℝ) ≥ Fintype.card NativeIndex * (1 - nativeRadius6915) ↔ 180265 ≤ T.card := by
-  have heq : (Fintype.card NativeIndex : ℝ) * (1 - nativeRadius6915) = (180265 : ℝ) := by
-    norm_num [NativeIndex, IRSProfile.Index, nativeRadius6915]
-  rw [heq]
-  exact_mod_cast (Iff.rfl : 180265 ≤ T.card ↔ 180265 ≤ T.card)
-open Classical in
-theorem native_ordinary_list_6915_of_named_gates
-    (hrank : ∀ received : NativeIndex → NativeK, GlobalBlockRankGate IRSProfile.domain received)
-    (hconsumer : ∀ received : NativeIndex → NativeK, C40ConsumerGate IRSProfile.domain received) :
-    NativeOrdinaryKList6915 := by
-  intro received
-  exact list_cap_of_named_gates (E := NativeK) IRSProfile.domain received
-    (hrank received) (hconsumer received)
 end
 end Sol1.C42
 end
@@ -150,7 +42,7 @@ theorem constraint_matrix_map {R S : Type*} [CommRing R] [CommRing S]
   simp only [Matrix.map_apply, localConstraintMatrix_apply]
   rw [← MvPolynomial.coeff_map, map_unscaledLocalSubstitution]
   simp [SourceColumn.polynomial]
-private theorem rankTransport_sum_const (n bound : ℕ) :
+theorem rankTransport_sum_const (n bound : ℕ) :
     (∑ _i : Fin n, bound) = n * bound := by
   simp
 open Classical in
@@ -175,33 +67,7 @@ theorem global_block_rank_of_origin {E : Type*} [Field E]
       change (pointMatrix 48 (phi (C (domain i))) (phi (C (received i)))).rank ≤ blockUpper
       exact (point_rank_le_origin 48 (phi (C (domain i))) (phi (C (received i)))).trans horigin
     _ = 262144 * blockUpper := rankTransport_sum_const 262144 blockUpper
-open Classical in
-theorem annihilator_of_origin_rank {E : Type*} [Field E]
-    (domain : Fin 262144 ↪ E) (received : Fin 262144 → E)
-    (horigin : (pointMatrix (F := FractionRing (Polynomial E)) 48 0 0).rank ≤ blockUpper) :
-    UniformAnnihilator domain received :=
-  annihilator_of_block_rank domain received (global_block_rank_of_origin domain received horigin)
-open Classical in
-theorem list_cap_of_origin_rank_and_consumer {E : Type*} [Field E]
-    (domain : Fin 262144 ↪ E) (received : Fin 262144 → E)
-    (horigin : (pointMatrix (F := FractionRing (Polynomial E)) 48 0 0).rank ≤ blockUpper)
-    (hconsumer : C40ConsumerGate domain received) :
-    (ReedSolomon.closePolynomialSet domain received 131073 180265).Finite ∧
-      (ReedSolomon.closePolynomialSet domain received 131073 180265).ncard ≤ listCap :=
-  list_cap_of_annihilator_and_consumer domain received
-    (annihilator_of_origin_rank domain received horigin) hconsumer
-def NativeOriginRankGate : Prop :=
-  (pointMatrix (F := FractionRing (Polynomial NativeK)) 48 0 0).rank ≤ blockUpper
 local instance : DecidableEq NativeK := Classical.decEq NativeK
-open Classical in
-theorem native_list_6915_of_origin_rank_and_consumer
-    (horigin : NativeOriginRankGate)
-    (hconsumer : ∀ received : NativeIndex → NativeK,
-      C40ConsumerGate ProximityPrize.Benchmark.IRSProfile.domain received) :
-    NativeOrdinaryKList6915 := by
-  intro received
-  exact list_cap_of_origin_rank_and_consumer ProximityPrize.Benchmark.IRSProfile.domain received
-    horigin (hconsumer received)
 end
 end Sol1.C42
 end
@@ -212,16 +78,6 @@ open Sol1.C42
 noncomputable section
 set_option maxRecDepth 10000
 set_option maxHeartbeats 0
-theorem native_origin_rank_gate : NativeOriginRankGate := origin_rank
-open Classical in
-theorem uniform_annihilator {E : Type*} [Field E]
-    (domain : Fin 262144 ↪ E) (received : Fin 262144 → E) :
-    UniformAnnihilator domain received :=
-  annihilator_of_origin_rank domain received origin_rank
-open Classical in
-theorem native_uniform_annihilator (received : NativeIndex → NativeK) :
-    UniformAnnihilator ProximityPrize.Benchmark.IRSProfile.domain received :=
-  uniform_annihilator ProximityPrize.Benchmark.IRSProfile.domain received
 end
 end Sol1.C52
 end
@@ -472,13 +328,6 @@ def nodes : Index ↪ Base where
 def D : Finset Base := baseNodeSet nodes
 def radius : ℝ := 338557 / 1048576
 def cap : ℕ := 7 * 262144 ^ 3
-theorem domain_eq : liftedDomain phi nodes = IRSProfile.domain := by
-  ext i
-  rfl
-theorem code_eq : IRSProfile.code = repeatedRS phi nodes 131072 := by
-  unfold IRSProfile.code ReedSolomon.Interleaved.irsCode repeatedRS
-  rw [domain_eq]
-  rfl
 theorem domain_card : D.card = 262144 := by
   rw [D, baseNodeSet_card]
   norm_num [Index, IRSProfile.Index]
@@ -488,87 +337,13 @@ theorem field_card : Fintype.card K = 2130706433 ^ 6 := by
   rfl
 theorem threshold : (Fintype.card Index : ℝ) * (1 - radius) ≤ (177505 : ℝ) := by
   norm_num [Index, IRSProfile.Index, radius]
-theorem support_threshold_iff (T : Finset Index) :
-    (T.card : ℝ) ≥ Fintype.card Index * (1 - radius) ↔ 177505 ≤ T.card := by
-  have hexact : (Fintype.card Index : ℝ) * (1 - radius) = (710019 : ℝ) / 4 := by
-    norm_num [Index, IRSProfile.Index, radius]
-  rw [hexact]
-  constructor
-  · intro h
-    by_contra hsmall
-    have hn : T.card ≤ 177504 := by omega
-    have hr : (T.card : ℝ) ≤ 177504 := by exact_mod_cast hn
-    linarith
-  · intro h
-    have hr : (177505 : ℝ) ≤ T.card := by exact_mod_cast h
-    linarith
 theorem room : D.card + 131072 * (cap + 1) ^ 2 < Fintype.card K := by
   rw [domain_card, field_card]
   exact native_evaluation_separation_budget
-open Classical in
-def UniversalMCACap : Prop :=
-  ∀ U : Fin 2 → Index → Fin 8 → K,
-    {gamma | IsMCA (AffineLineGenerator K) IRSProfile.code gamma U radius}.ncard ≤ cap
-open Classical in
-def OrdinaryBaseListCap : Prop :=
-  ∀ w : Base → Base, (baseCloseSet D w 131072 177505).Finite ∧
-    (baseCloseSet D w 131072 177505).ncard ≤ cap
-theorem native_pole_cap (hcap : UniversalMCACap) (w : Base → Base)
-    (alpha : K) (halpha : ∀ x ∈ D, phi x ≠ alpha) :
-    (poleMCASet phi D w alpha 131072 177505).ncard ≤ cap := by
-  classical
-  refine pole_cap_of_actual_cap phi nodes w 131072 177505 cap radius
-    (by norm_num) (by norm_num) threshold ?_ alpha halpha
-  intro U
-  rw [← code_eq]
-  exact hcap U
-theorem universal_native_mca_cap_implies_ordinary_base_list_cap
-    (hcap : UniversalMCACap) : OrdinaryBaseListCap := by
-  classical
-  intro w
-  apply base_list_finite_ncard_le_of_pole_cap phi D w 131072 177505 cap
-    (by norm_num) (by norm_num) room
-  exact native_pole_cap hcap w
 def extendWord (w : Index → Base) : Base → Base :=
   Function.extend nodes w (fun _ ↦ 0)
 @[simp] theorem extendWord_nodes (w : Index → Base) (i : Index) :
     extendWord w (nodes i) = w i := nodes.injective.extend_apply _ _ _
-open Classical in
-def indexBaseCloseSet (w : Index → Base) : Set (Polynomial Base) :=
-  {P | P.natDegree ≤ 131072 ∧
-    177505 ≤ (Finset.univ.filter fun i ↦ P.eval (nodes i) = w i).card}
-theorem agreement_card (w : Index → Base) (P : Polynomial Base) :
-    (D.filter fun x ↦ P.eval x = extendWord w x).card =
-      (Finset.univ.filter fun i ↦ P.eval (nodes i) = w i).card := by
-  classical
-  symm
-  apply Finset.card_bij (fun i _ ↦ nodes i)
-  · intro i hi
-    obtain ⟨_, hagree⟩ := Finset.mem_filter.mp hi
-    apply Finset.mem_filter.mpr
-    exact ⟨(mem_baseNodeSet nodes (nodes i)).mpr ⟨i, rfl⟩, by simpa using hagree⟩
-  · intro i _ j _ h
-    exact nodes.injective h
-  · intro x hx
-    obtain ⟨hxD, hagree⟩ := Finset.mem_filter.mp hx
-    obtain ⟨i, rfl⟩ := (mem_baseNodeSet nodes x).mp hxD
-    exact ⟨i, Finset.mem_filter.mpr ⟨Finset.mem_univ _, by simpa using hagree⟩, rfl⟩
-theorem index_list_eq (w : Index → Base) :
-    indexBaseCloseSet w = baseCloseSet D (extendWord w) 131072 177505 := by
-  classical
-  ext P
-  change (P.natDegree ≤ 131072 ∧
-    177505 ≤ (Finset.univ.filter fun i ↦ P.eval (nodes i) = w i).card) ↔ _
-  have heq := agreement_card w P
-  simpa only [baseCloseSet, Set.mem_ofPred_eq] using
-    (and_congr_right fun _ ↦ (show
-      177505 ≤ (Finset.univ.filter fun i ↦ P.eval (nodes i) = w i).card ↔
-      177505 ≤ (D.filter fun x ↦ P.eval x = extendWord w x).card by rw [heq]))
-theorem universal_native_mca_cap_implies_index_base_list_cap
-    (hcap : UniversalMCACap) (w : Index → Base) :
-    (indexBaseCloseSet w).Finite ∧ (indexBaseCloseSet w).ncard ≤ cap := by
-  rw [index_list_eq]
-  exact universal_native_mca_cap_implies_ordinary_base_list_cap hcap (extendWord w)
 end
 end Sol1.Reciprocal.Native
 end
@@ -847,9 +622,6 @@ theorem squared_lambda_le :
     (Code.closeCodewordsRel (squaredCode : Set (I → A16)) w radius6915).encard =
         (hfinite.toFinset.card : ℕ∞) := hfinite.encard_eq_coe_toFinset_card
     _ ≤ (Astra7.weightedListCap : ℕ∞) := by exact_mod_cast hcard
-theorem actual_squared_lambda_le :
-    Code.Lambda
-      ((IRSProfile.code ^⋈ (Fin 2) : ModuleCode I K A16) : Set (I → A16)) (queryRadius : ℝ) ≤ (Astra7.weightedListCap : ℕ∞) := squared_lambda_le
 end
 end Astra7.NativeBudget
 end
@@ -861,89 +633,6 @@ open ProximityPrize.Benchmark Sol1.OneCount Sol1.C42
 set_option maxRecDepth 10000
 set_option maxHeartbeats 0
 local instance : DecidableEq K := Classical.decEq K
-def ActualMCACap6915 (B : ℕ) : Prop :=
-  ∀ U : Fin 2 → I → Fin IRSProfile.interleaving → K,
-    {gamma | IsMCA (AffineLineGenerator K) IRSProfile.code gamma U radius6915}.ncard ≤ B
-def badSlopes6915 (U : Fin 2 → I → Fin IRSProfile.interleaving → K) : Finset K := by
-  classical
-  exact Finset.univ.filter fun gamma ↦
-    IsMCA (AffineLineGenerator K) IRSProfile.code gamma U radius6915
-theorem badSlopes_card_eq_ncard (U : Fin 2 → I → Fin IRSProfile.interleaving → K) :
-    (badSlopes6915 U).card =
-      {gamma | IsMCA (AffineLineGenerator K) IRSProfile.code gamma U radius6915}.ncard := by
-  classical
-  have hs : {gamma | IsMCA (AffineLineGenerator K) IRSProfile.code gamma U radius6915} =
-      (badSlopes6915 U : Set K) := by
-    ext gamma
-    simp [badSlopes6915]
-  rw [hs,Set.ncard_coe_finset]
-theorem mca_error_le_of_actualCap (B : ℕ) (hcap : ActualMCACap6915 B) :
-    mcaError (AffineLineGenerator K) IRSProfile.code radius6915 ≤
-      (B : ENNReal) / (Fintype.card K : ENNReal) := by
-  classical
-  refine iSup_le fun U ↦ ?_
-  rw [SampleableType.prEvent_uniformSample_eq_ofReal]
-  change ENNReal.ofReal (((badSlopes6915 U).card : ℝ) / Fintype.card K) ≤ _
-  have hc : (badSlopes6915 U).card ≤ B := by
-    rw [badSlopes_card_eq_ncard]
-    exact hcap U
-  calc
-    _ ≤ ENNReal.ofReal ((B : ℝ) / Fintype.card K) := by
-      apply ENNReal.ofReal_le_ofReal
-      exact div_le_div_of_nonneg_right (by exact_mod_cast hc) (by positivity)
-    _ = _ := by
-      rw [ENNReal.ofReal_div_of_pos (by positivity), ENNReal.ofReal_natCast,
-        ENNReal.ofReal_natCast]
-theorem gamma_error_le_of_actualCap (B : ℕ) (hcap : ActualMCACap6915 B)
-    (hbudget : (B + Astra7.weightedListCap) * 2 ^ 128 ≤ Fintype.card K) :
-    ToyProblem.certifiedGammaError IRSProfile.code queryRadius ≤ reductionTarget := by
-  have hNat := ENat.toNat_le_of_le_natCast squared_lambda_le
-  have hList :
-      ((Code.Lambda (squaredCode : Set (I → A16)) radius6915).toNat : ENNReal) /
-        (Fintype.card K : ENNReal) ≤ (Astra7.weightedListCap : ENNReal) / Fintype.card K :=
-    ENNReal.div_le_div_right (by exact_mod_cast hNat) _
-  have hreal : ((B + Astra7.weightedListCap : ℕ) : ℝ) / Fintype.card K ≤ (1 : ℝ) / 2 ^ 128 := by
-    apply (div_le_div_iff₀ (by positivity) (by positivity)).2
-    norm_num only [one_mul]
-    exact_mod_cast hbudget
-  have hENN : ((B + Astra7.weightedListCap : ℕ) : ENNReal) / Fintype.card K ≤
-      (1 : ENNReal) / 2 ^ 128 := by
-    have h := ENNReal.ofReal_le_ofReal hreal
-    rw [ENNReal.ofReal_div_of_pos (by positivity), ENNReal.ofReal_natCast,
-      ENNReal.ofReal_natCast, ENNReal.ofReal_div_of_pos (by positivity)] at h
-    simpa using h
-  rw [← ENNReal.coe_le_coe,ToyProblem.coe_certifiedGammaError]
-  calc
-    _ ≤ (B : ENNReal) / Fintype.card K + (Astra7.weightedListCap : ENNReal) / Fintype.card K :=
-      add_le_add (mca_error_le_of_actualCap B hcap) hList
-    _ = ((B + Astra7.weightedListCap : ℕ) : ENNReal) / Fintype.card K := by
-      rw [← ENNReal.add_div,Nat.cast_add]
-    _ ≤ (1 : ENNReal) / 2 ^ 128 := hENN
-    _ = (reductionTarget : ENNReal) := by
-      norm_num [reductionTarget,ProximityGap.prizeThreshold]
-theorem protocolClaim6915_of_actualCap (B : ℕ) (hcap : ActualMCACap6915 B)
-    (hbudget : (B + Astra7.weightedListCap) * 2 ^ 128 ≤ (2130706433 : ℕ) ^ 6) :
-    ProtocolClaim 6915 81879 262144 where
-  admissible := query_admissible
-  reduction := by
-    change ToyProblem.certifiedGammaError IRSProfile.code queryRadius ≤ reductionTarget
-    apply gamma_error_le_of_actualCap B hcap
-    rw [Sol1.Reciprocal.Native.field_card]
-    exact hbudget
-  score := query_score_6915
-theorem remaining_budget :
-    (Astra7.weightedMCAAllowance + Astra7.weightedListCap) * 2 ^ 128 ≤ (2130706433 : ℕ) ^ 6 := by
-  norm_num [Astra7.weightedMCAAllowance,Astra7.weightedListCap]
-theorem remaining_allowance_exact :
-    Astra7.weightedMCAAllowance + Astra7.weightedListCap = 274980728111395087 := by
-  norm_num [Astra7.weightedMCAAllowance,Astra7.weightedListCap]
-theorem remaining_budget_maximal :
-    (2130706433 : ℕ) ^ 6 < (Astra7.weightedMCAAllowance + Astra7.weightedListCap + 1) * 2 ^ 128 := by
-  norm_num [Astra7.weightedMCAAllowance,Astra7.weightedListCap]
-def OneCountGoal6915 : Prop := ActualMCACap6915 Astra7.weightedMCAAllowance
-theorem protocolClaim6915_of_oneCountGoal (hcap : OneCountGoal6915) :
-    ProtocolClaim 6915 81879 262144 :=
-  protocolClaim6915_of_actualCap Astra7.weightedMCAAllowance hcap remaining_budget
 end
 end Astra7.NativeBudget
 end
@@ -961,27 +650,6 @@ def ScalarMCACap6915 : Prop :=
   ∀ (u : Fin 2 → I → K) (Γ : Finset K),
     (∀ γ ∈ Γ, IsMCA (AffineLineGenerator K) IRSProfile.baseCode γ u radius) →
     Γ.card ≤ Astra7.weightedMCAAllowance
-theorem nativeCap_of_scalarCap (hscalar : ScalarMCACap6915) :
-    Astra7.NativeBudget.OneCountGoal6915 := by
-  intro U
-  rw [← Astra7.NativeBudget.badSlopes_card_eq_ncard]
-  apply Sol1.C64.restricted_interleaved_card_le IRSProfile.baseCode
-    (⊤ : ModuleCode I K K) radius Astra7.weightedMCAAllowance
-    (by rw [Sol1.Reciprocal.Native.field_card]; norm_num [Astra7.weightedMCAAllowance])
-    (fun u _ Γ hΓ => hscalar u Γ hΓ) U (by simp)
-    (Astra7.NativeBudget.badSlopes6915 U)
-  intro γ hγ
-  have hh : IsMCA (AffineLineGenerator K) IRSProfile.code γ U
-      Astra7.NativeBudget.radius6915 := by
-    change γ ∈ Finset.univ.filter (fun z => IsMCA (AffineLineGenerator K)
-      IRSProfile.code z U Astra7.NativeBudget.radius6915) at hγ
-    simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hγ
-    exact hγ
-  rw [Sol1.C64.native_code_eq] at hh
-  exact hh
-theorem protocolClaim6915_of_scalarCap (hscalar : ScalarMCACap6915) :
-    ProtocolClaim 6915 81879 262144 :=
-  Astra7.NativeBudget.protocolClaim6915_of_oneCountGoal (nativeCap_of_scalarCap hscalar)
 end
 end FrobeniusLocator.Native
 end

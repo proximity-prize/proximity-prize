@@ -12,9 +12,9 @@ noncomputable section
 open K1_14 K1_14_3 K1_14_3_2_5 Polynomial
 open scoped nonZeroDivisors
 private abbrev SurfaceRing (q : Surface) := Jet ⧸ q.asIdeal
-private abbrev Numerators (q : Surface) := MvPolynomial (Fin 2) (SurfaceRing q)
+abbrev Numerators (q : Surface) := MvPolynomial (Fin 2) (SurfaceRing q)
 private abbrev Parameters := MvPolynomial (Fin 4) FX
-private theorem surfaceDimension (q : Surface) (hh : q.asIdeal.height = 2) :
+theorem surfaceDimension (q : Surface) (hh : q.asIdeal.height = 2) :
     ringKrullDim (SurfaceRing q) ≤ 2 := by
   let e := PrimeSpectrum.comap (Ideal.Quotient.mk q.asIdeal)
   have hm : Monotone e := fun _ _ h => Ideal.comap_mono h
@@ -41,7 +41,7 @@ private theorem surfaceDimension (q : Surface) (hh : q.asIdeal.height = 2) :
         exact WithBot.coe_le_coe.mp hsum)
   rw [ringKrullDim, ← Order.coheight_bot_eq_krullDim]
   exact WithBot.coe_le_coe.mpr (hc.trans hle)
-private theorem affineTrdegLe (A : Type) [CommRing A] [IsDomain A] [Algebra FX A]
+theorem affineTrdegLe (A : Type) [CommRing A] [IsDomain A] [Algebra FX A]
     [Algebra.FiniteType FX A] (hA : ringKrullDim A ≤ 4) :
     Algebra.trdeg FX A ≤ 4 := by
   obtain ⟨n, g, hg, hint⟩ := exists_integral_inj_algHom_of_fg FX A
@@ -71,7 +71,7 @@ private theorem affineTrdegLe (A : Type) [CommRing A] [IsDomain A] [Algebra FX A
   rw [← trdeg_add_eq FX P (A := A), trdeg_eq_zero (R := P) (A := A), add_zero,
     MvPolynomial.trdeg_of_isDomain]
   simpa using (show (n : Cardinal.{0}) ≤ 4 by exact_mod_cast hn')
-private theorem numeratorTrdeg (q : Surface) (hh : q.asIdeal.height = 2) :
+theorem numeratorTrdeg (q : Surface) (hh : q.asIdeal.height = 2) :
     Algebra.trdeg FX (Numerators q) ≤ 4 := by
   apply affineTrdegLe
   rw [MvPolynomial.ringKrullDim_of_isNoetherianRing_of_finite]
@@ -82,9 +82,9 @@ private theorem numeratorTrdeg (q : Surface) (hh : q.asIdeal.height = 2) :
     _ = 4 := by norm_num
 private def coordinates (i : Fin 4) : Jet :=
   ![C (C (MvPolynomial.X 0)), C (C (MvPolynomial.X 1)), C Polynomial.X, Polynomial.X] i
-private def sectionCoordinates (i : Fin 4) : SectionJet :=
+def sectionCoordinates (i : Fin 4) : SectionJet :=
   ![C (C (MvPolynomial.X 0)), C (C (MvPolynomial.X 1)), C Polynomial.X, Polynomial.X] i
-private theorem sectionMap_coordinates (i : Fin 4) :
+theorem sectionMap_coordinates (i : Fin 4) :
     sectionMap (coordinates i) = sectionCoordinates i := by
   fin_cases i <;> simp [coordinates, sectionCoordinates, sectionMap]
 private def parameterMap (q : Surface) : Parameters →ₐ[FX] Numerators q :=
@@ -92,36 +92,36 @@ private def parameterMap (q : Surface) : Parameters →ₐ[FX] Numerators q :=
   MvPolynomial.aeval
     ![MvPolynomial.X 0, MvPolynomial.X 1, x 0 + MvPolynomial.X 0 * x 1,
       x 2 + MvPolynomial.X 1 * x 3]
-private abbrev SliceRing (q : Surface) := SectionRing q .mixed
+abbrev SliceRing (q : Surface) := SectionRing q .mixed
 private def sectionMk (q : Surface) : SectionJet →+* SliceRing q :=
   Ideal.Quotient.mk (sectionIdeal q .mixed)
-private def surfaceMap (q : Surface) : SurfaceRing q →+* SliceRing q :=
+def surfaceMap (q : Surface) : SurfaceRing q →+* SliceRing q :=
   Ideal.Quotient.lift q.asIdeal ((sectionMk q).comp sectionMap) fun _ hx =>
     Ideal.Quotient.eq_zero_iff_mem.mpr
       ((le_sup_left : q.asIdeal.map sectionMap ≤ sectionIdeal q .mixed)
         (Ideal.mem_map_of_mem sectionMap hx))
-private def numeratorMap (q : Surface) : Numerators q →+* SliceRing q :=
+def numeratorMap (q : Surface) : Numerators q →+* SliceRing q :=
   MvPolynomial.eval₂Hom (surfaceMap q)
     ![algebraMap SectionField (SliceRing q) (sectionParameter 0),
       algebraMap SectionField (SliceRing q) (sectionParameter 1)]
-private theorem numeratorMap_coordinates (q : Surface) (i : Fin 4) :
+theorem numeratorMap_coordinates (q : Surface) (i : Fin 4) :
     numeratorMap q (MvPolynomial.C (Ideal.Quotient.mk q.asIdeal (coordinates i))) =
       sectionMk q (sectionCoordinates i) := by
   rw [numeratorMap, MvPolynomial.eval₂Hom_C]
   change sectionMk q (sectionMap (coordinates i)) = _
   rw [sectionMap_coordinates]
-private theorem parameterScalar (q : Surface) (i : Fin 4) :
+theorem parameterScalar (q : Surface) (i : Fin 4) :
     algebraMap SectionField (SliceRing q) (sectionParameter i) =
       sectionMk q (sectionScalar i) := rfl
-private theorem numeratorMap_X_zero (q : Surface) :
+theorem numeratorMap_X_zero (q : Surface) :
     numeratorMap q (MvPolynomial.X 0) = sectionMk q (sectionScalar 0) := by
   rw [numeratorMap, MvPolynomial.eval₂Hom_X']
   exact parameterScalar q 0
-private theorem numeratorMap_X_one (q : Surface) :
+theorem numeratorMap_X_one (q : Surface) :
     numeratorMap q (MvPolynomial.X 1) = sectionMk q (sectionScalar 1) := by
   rw [numeratorMap, MvPolynomial.eval₂Hom_X']
   exact parameterScalar q 1
-private theorem parameterSquare (q : Surface) :
+theorem parameterSquare (q : Surface) :
     (numeratorMap q).comp (parameterMap q).toRingHom =
       (algebraMap SectionField (SliceRing q)).comp (algebraMap Parameters SectionField) := by
   have hline (x : SectionJet) (i : Fin 4)
@@ -162,13 +162,13 @@ private theorem parameterSquare (q : Surface) :
       apply hline
       right
       rfl
-private theorem sectionFieldTrdeg : Algebra.trdeg FX SectionField = 4 := by
+theorem sectionFieldTrdeg : Algebra.trdeg FX SectionField = 4 := by
   let : Algebra.IsAlgebraic Parameters SectionField :=
     IsLocalization.isAlgebraic SectionField (nonZeroDivisors Parameters)
   rw [← trdeg_add_eq FX Parameters (A := SectionField), trdeg_eq_zero (R := Parameters) (A := SectionField),
     add_zero, MvPolynomial.trdeg_of_isDomain]
   simp
-private theorem integralOfTrdegLe (D : Type) [CommRing D] [IsDomain D] [Algebra FX D]
+theorem integralOfTrdegLe (D : Type) [CommRing D] [IsDomain D] [Algebra FX D]
     [Algebra SectionField D] [IsScalarTower FX SectionField D]
     (hd : Algebra.trdeg FX D ≤ 4) : Algebra.IsIntegral SectionField D := by
   have hsum := trdeg_add_eq FX SectionField (A := D)
@@ -179,7 +179,7 @@ private theorem integralOfTrdegLe (D : Type) [CommRing D] [IsDomain D] [Algebra 
       exact hd
     exact le_antisymm ((Cardinal.add_nat_le_add_nat_iff 4).mp hbound) bot_le
   exact Algebra.isAlgebraic_iff_isIntegral.mp (trdeg_eq_zero_iff.mp hzero)
-private theorem sectionLiftSurjective (q : Surface) {D : Type} [CommRing D]
+theorem sectionLiftSurjective (q : Surface) {D : Type} [CommRing D]
     (u : SectionField →+* D) (v : D →+* SliceRing q)
     (hv : v.comp u = algebraMap SectionField (SliceRing q))
     (coord : Fin 4 → D)
@@ -209,7 +209,7 @@ private theorem sectionLiftSurjective (q : Surface) {D : Type} [CommRing D]
   intro x
   obtain ⟨p, hp⟩ := Ideal.Quotient.mk_surjective (I := sectionIdeal q .mixed) x
   exact ⟨eval p, (RingHom.congr_fun heval p).trans hp⟩
-private theorem finiteOfParameterMap {A S : Type} [CommRing A] [IsDomain A] [Algebra FX A]
+theorem finiteOfParameterMap {A S : Type} [CommRing A] [IsDomain A] [Algebra FX A]
     [CommRing S] [Algebra SectionField S] [Algebra.FiniteType SectionField S]
     (j : Parameters →ₐ[FX] A) (m : A →+* S)
     (hm : m.comp j.toRingHom =
@@ -272,7 +272,7 @@ private theorem finiteOfParameterMap {A S : Type} [CommRing A] [IsDomain A] [Alg
     obtain ⟨y, rfl⟩ := hsurj x
     exact (Algebra.IsIntegral.isIntegral y).map e⟩
   exact Algebra.IsIntegral.finite
-private theorem mixedFinite (q : Surface) (hh : q.asIdeal.height = 2) :
+theorem mixedFinite (q : Surface) (hh : q.asIdeal.height = 2) :
     Module.Finite SectionField (SliceRing q) := by
   apply finiteOfParameterMap (parameterMap q) (numeratorMap q)
     (parameterSquare q) (numeratorTrdeg q hh)

@@ -78,7 +78,7 @@ theorem bank_zero {b u del} {M : AnchorModel u del} {Γ} {F : AnchoredFamily M �
     (hW : W ≤ fullCutoff t.shape) (hP : P ∈ rows t.shape W) :
     ∀ γ ∈ Γ, jetAt P (M.label γ) (F.scalar γ) = 0 :=
   src.necessary t ht W (by unfold fullCutoff at hW; omega) P hP
-private theorem buffer_spend {b w} (hw : InBand b w) {r : ℕ} {s : Shape}
+theorem buffer_spend {b w} (hw : InBand b w) {r : ℕ} {s : Shape}
     (guard : BankGuard (finish b) r s) :
     buffered w.toNat r s + 2*w.toNat*r ≤ fullCutoff s := by
   have h := Nat.mul_le_mul_right r (Nat.mul_le_mul_left 2 (window_nat hw).2)
@@ -120,7 +120,7 @@ theorem surface_pass {h rows s} {pair : HighCore82219.BufferedPair h rows s}
     {I : Ideal Ambient} (hI : I.IsPrime) (hp : PairPass pair I) :
     HighCore82219.PairPass pair (P0_10R.Bridge.surfaceOf I hI) :=
   ⟨hp.1, hp.2.1, hp.2.2⟩
-private theorem shifted_contact {A : Type*} [CommRing A] (a : K1_14.Seeds →+* A)
+theorem shifted_contact {A : Type*} [CommRing A] (a : K1_14.Seeds →+* A)
     {rows : Banks} {s : Shape} {I : Ideal Ambient} {h W r : ℕ} {P : Jet}
     (hn : ∀ W W', W ≤ W' → rows s W ≤ rows s W')
     (hs : K1_14_3.SeedShift h rows s) (hv : BankPass rows s I)
@@ -158,7 +158,7 @@ theorem buffered_order {b u del} {M : AnchorModel u del} {Γ} {F : AnchoredFamil
     change fibreContact (I.map (imageFibreMap I)) (imageFibreMap I (toJet P)) r at hc
     rw [he] at hc ⊢
     exact divisor_contact hg hdeg hr hc
-private theorem envelope_caps {s : Stage} {P : Jet}
+theorem envelope_caps {s : Stage} {P : Jet}
     (hb : s.free.shape.J ≤ s.free.shape.B) (hc : s.moving.shape.J ≤ s.moving.shape.B)
     (hP : RowCaps P s.free.shape ∨ RowCaps P s.moving.shape) : RowCaps P (envelope s) := by
   have ha : s.free.shape.B ≤ (envelope s).B :=
@@ -284,12 +284,12 @@ theorem Process.lost_sub {b h rows} {pairs : HighCore82219.Pairs b h rows} (R : 
     (i : ℕ) : R.lost i ⊆ R.kept i := by
   unfold Process.lost
   split <;> exact Finset.filter_subset _ _
-private theorem Process.tested_anti {b h rows} {pairs : HighCore82219.Pairs b h rows} (R : Process pairs)
+theorem Process.tested_anti {b h rows} {pairs : HighCore82219.Pairs b h rows} (R : Process pairs)
     {i j : ℕ} (hij : i ≤ j) : R.tested j ⊆ R.tested i := by
   intro I hI
   obtain ⟨hm, hc, hp⟩ := Finset.mem_filter.mp hI
   exact Finset.mem_filter.mpr ⟨hm, hc, fun k hpos hk => hp k hpos (hk.trans hij)⟩
-private theorem Process.kept_anti {b h rows} {pairs : HighCore82219.Pairs b h rows} (R : Process pairs)
+theorem Process.kept_anti {b h rows} {pairs : HighCore82219.Pairs b h rows} (R : Process pairs)
     {i j : ℕ} (hij : i ≤ j) : R.kept j ⊆ R.kept i := by
   intro I hI
   obtain ⟨hm, hp⟩ := Finset.mem_filter.mp hI
@@ -319,7 +319,7 @@ theorem Process.lost_diff {b h rows} {pairs : HighCore82219.Pairs b h rows} (R :
           simpa only [Process.lost, dite_eq_right (Nat.lt_irrefl _)] using hm)).2
     have hf' : I ∈ R.final := by simpa [Process.live] using hn
     exact hf (Finset.mem_filter.mp hf').2
-private theorem Process.local_cap {b u del} {M : AnchorModel u del} {Γ} {F : AnchoredFamily M Γ}
+theorem Process.local_cap {b u del} {M : AnchorModel u del} {Γ} {F : AnchoredFamily M Γ}
     {rows : Banks} {pairs : HighCore82219.Pairs b M.overhead.toNat rows} (R : Process pairs)
     (estimate : PairedMass) (src : Source b M F rows) (hw : InBand b M.overhead)
     (i : StageIndex b) (hi : 0 < i.val) (square : Bool)
@@ -434,7 +434,7 @@ open K1_14_2_3 (SeedSlice seedImage rootImage constantCoefficients DefinedOverCo
 open private on_root on_seed moving_graph_count seed_graph_count equal_image_degree
   union_card_le from ProximityPrize.SubmissionLower.Fast062
 open scoped BigOperators Classical
-private theorem projected_curve : K1_14_2_3.c2 :=
+theorem projected_curve : K1_14_2_3.c2 :=
   K1_14_2_3_2.of_children K1_14_2_3_2_1.proof K1_14_2_3_2_2.proof
 private theorem seed_slice {I : Ideal Ambient} (h : CurveGeometry I) : SeedSlice I :=
   ⟨h.1, h.2.1, h.2.2.1, h.2.2.2.1⟩
@@ -499,7 +499,7 @@ private theorem interpolate (hi g : ℕ) (a h d H T : ℚ) (hg : 0 < g)
           simpa only [one_mul] using
             mul_le_mul_of_nonneg_right (sub_le_self 1 hθ) (Nat.cast_nonneg (α := ℚ) g)
         exact add_le_add (add_le_add le_rfl (mul_le_mul_of_nonneg_right hh hH)) hlast
-private theorem rated_component {b u del} {M : AnchorModel u del} {Γ} (F : AnchoredFamily M Γ)
+theorem rated_component {b u del} {M : AnchorModel u del} {Γ} (F : AnchoredFamily M Γ)
     (tariff : CurveTariff b M F) {a h globalCap localCap : ℚ} (hu : RateOK (finish b) a h)
     (hmin : min globalCap localCap ≤ a) {I : Ideal Ambient} (geom : CurveGeometry I)
     (hglobal : (seedLength I : ℚ) ≤ globalCap) (hlocal : (seedLength I : ℚ) ≤ localCap)
@@ -606,7 +606,7 @@ structure FailureBooks {b u del} {M : AnchorModel u del} {Γ} (F : AnchoredFamil
   point_le : point.card ≤ (fees b).point
   covers : ∀ i ≤ laterCount b, ∀ γ ∈ Γ, ∀ I ∈ R.lost i,
     OnParent F I γ → γ ∈ point ∨ γ ∈ loss
-private theorem properBin {b u del} {M : AnchorModel u del} {Γ} {F : AnchoredFamily M Γ}
+theorem properBin {b u del} {M : AnchorModel u del} {Γ} {F : AnchoredFamily M Γ}
     {rows : Banks} {pairs : HighCore82219.Pairs b M.overhead.toNat rows} (R : Process pairs)
     (src : Source b M F rows) (i : ℕ) :
     ∃ C : CutCover, (∀ fee, (C.cost fee : ℚ) ≤ dotQ (cutWeight b fee i) (massQ (R.lost i))) ∧
@@ -769,19 +769,19 @@ def c2 : Prop :=
     (∀ γ ∈ T, fixedAt G (F.scalar γ) = 0) → T.card ≤ fixedFee (finish b) B J
 def c3 : Prop := ∀ b : HighCore82219.Band, ScheduleOK b
 def c4 : Prop := ∀ b : HighCore82219.Band, LossLedger b
-private def fixedMarks {u del} {M : AnchorModel u del} {Γ} (F : AnchoredFamily M Γ)
+def fixedMarks {u del} {M : AnchorModel u del} {Γ} (F : AnchoredFamily M Γ)
     (G : ODE) : Finset K := Γ.filter fun γ => fixedAt G (F.scalar γ) = 0
-private theorem fixed_paid (hcount : c2) {b u del} {M : AnchorModel u del} {Γ}
+theorem fixed_paid (hcount : c2) {b u del} {M : AnchorModel u del} {Γ}
     (F : AnchoredFamily M Γ) (hw : InBand b M.overhead) {B J : ℕ}
     (guard : ODEGuard B J) {G : ODE} (cap : ODECaps G B J) :
     (fixedMarks F G).card ≤ fixedFee (finish b) B J :=
   hcount b u del M Γ F hw B J guard G cap _ (Finset.filter_subset _ _)
     (fun _ hγ => (Finset.mem_filter.mp hγ).2)
-private def fixedBook {b u del} {M : AnchorModel u del} {Γ} (F : AnchoredFamily M Γ)
+def fixedBook {b u del} {M : AnchorModel u del} {Γ} (F : AnchoredFamily M Γ)
     {rows : Banks} {pairs : HighCore82219.Pairs b M.overhead.toNat rows} (R : Process pairs) : Finset K :=
   Finset.univ.biUnion fun i : StageIndex b =>
     fixedMarks F (R.fixed i).free.equation ∪ fixedMarks F (R.fixed i).moving.equation
-private theorem fixed_book_paid (hcount : c2) {b u del} {M : AnchorModel u del} {Γ}
+theorem fixed_book_paid (hcount : c2) {b u del} {M : AnchorModel u del} {Γ}
     (F : AnchoredFamily M Γ) (hw : InBand b M.overhead) {rows : Banks}
     {pairs : HighCore82219.Pairs b M.overhead.toNat rows} (R : Process pairs) :
     (fixedBook F R).card ≤ (fees b).fixedODE := by
@@ -801,12 +801,12 @@ private theorem fixed_book_paid (hcount : c2) {b u del} {M : AnchorModel u del} 
         (fixed_paid hcount F hw gb.ode (R.fixed i).moving.equation_caps))
     _ = fixedBudget b := Fin.sum_univ_eq_sum_range price (stages b).length
     _ ≤ _ := R.sched.fixed
-private theorem mem_fixed_left {b u del} {M : AnchorModel u del} {Γ} (F : AnchoredFamily M Γ)
+theorem mem_fixed_left {b u del} {M : AnchorModel u del} {Γ} (F : AnchoredFamily M Γ)
     {rows : Banks} {pairs : HighCore82219.Pairs b M.overhead.toNat rows} (R : Process pairs)
     (i : StageIndex b) {γ : K} (hγ : γ ∈ Γ) (hz : fixedAt (R.fixed i).free.equation (F.scalar γ) = 0) :
     γ ∈ fixedBook F R :=
   Finset.mem_biUnion.mpr ⟨i, Finset.mem_univ _, Finset.mem_union_left _ (Finset.mem_filter.mpr ⟨hγ, hz⟩)⟩
-private theorem mem_fixed_right {b u del} {M : AnchorModel u del} {Γ} (F : AnchoredFamily M Γ)
+theorem mem_fixed_right {b u del} {M : AnchorModel u del} {Γ} (F : AnchoredFamily M Γ)
     {rows : Banks} {pairs : HighCore82219.Pairs b M.overhead.toNat rows} (R : Process pairs)
     (i : StageIndex b) {γ : K} (hγ : γ ∈ Γ) (hz : fixedAt (R.fixed i).moving.equation (F.scalar γ) = 0) :
     γ ∈ fixedBook F R :=
@@ -980,7 +980,7 @@ open scoped BigOperators Classical
 open private gcd_caps multiset_prod_ne_zero distinct_le_degree seed_degree_mul
   atMark_prod_eq_zero jetAt_mul jetAt_ordinary from ProximityPrize.SubmissionLower.Fast051
 open private sharedBound_zero P1_7_4_1_1.floor_bound from ProximityPrize.SubmissionLower.UpperBranch4
-private theorem zero_ledger {b : HighCore82219.Band} (empty : (introIndices b).isEmpty = true)
+theorem zero_ledger {b : HighCore82219.Band} (empty : (introIndices b).isEmpty = true)
     {x z : ℕ} (k : Fin 4)
     (hx : x ≤ min (stageAt b 0).free.shape.U (stageAt b 0).moving.shape.U)
     (hz : z ≤ min (stageAt b 0).free.shape.B (stageAt b 0).moving.shape.B)
@@ -1088,7 +1088,7 @@ open K1_14_2_2_2 (ordinaryBudget)
 open K1_14_3 (NoMovingCommon)
 open scoped BigOperators Classical
 open private irreducible_cut terminal_piece from ProximityPrize.SubmissionLower.UpperBranch4
-private theorem intro_components {b : HighCore82219.Band} (sched : ScheduleOK b)
+theorem intro_components {b : HighCore82219.Band} (sched : ScheduleOK b)
     {P Q : Jet} (hQ : Q ≠ 0) (hnc : NoMovingCommon P Q)
     (hQc : RowCaps Q (stageAt b 0).moving.shape) (later : ℕ → Jet)
     (rows : ∀ i ∈ introIndices b, later i ≠ 0 ∧ RowCaps (later i) (stageAt b i).free.shape) :
@@ -1356,19 +1356,19 @@ open K1_13_5 (RegularAt)
 open K1_14_3_6 (power totalCap topCap)
 open private weights rho_at_endpoint from ProximityPrize.SubmissionLower.HighCore82219Family
 open HighCore82219PrefixHelpers (section_bound fixed_bound)
-private theorem word_subset {w T s d} (hw : FixedWord w T s d) {U : Finset K}
+theorem word_subset {w T s d} (hw : FixedWord w T s d) {U : Finset K}
     (hU : U ⊆ T) : FixedWord w U s d :=
   ⟨hw.distinct.mono hU, fun γ hγ => hw.degree γ (hU hγ), fun γ hγ => hw.hits γ (hU hγ)⟩
-private def siteRatio (m : ℕ) : ℚ :=
+def siteRatio (m : ℕ) : ℚ :=
   ((blockLength - m : ℕ) : ℚ) / ((agreement - m : ℕ) : ℚ)
 private abbrev density : ℚ := (blockLength : ℚ) / agreement
-private def persistentTotal (d B : ℕ) : ℚ := siteRatio d + 2 * density * d * (B-1 : ℕ)
-private def persistentTop (d B J : ℕ) : ℚ :=
+def persistentTotal (d B : ℕ) : ℚ := siteRatio d + 2 * density * d * (B-1 : ℕ)
+def persistentTop (d B J : ℕ) : ℚ :=
   min (persistentTotal d B) (density * d * (2*J-1 : ℕ))
-private theorem persistentTotal_nonneg (d B : ℕ) : 0 ≤ persistentTotal d B := by
+theorem persistentTotal_nonneg (d B : ℕ) : 0 ≤ persistentTotal d B := by
   unfold persistentTotal siteRatio
   positivity
-private theorem caps_weighted {d m B J : ℕ} (hl : 131071 ≤ d) (hh : d ≤ 164456)
+theorem caps_weighted {d m B J : ℕ} (hl : 131071 ≤ d) (hh : d ≤ 164476)
     (hm : m ≤ d) (hJ : 0 < J) :
     let t := max 1 (d-m)
     siteRatio m * totalCap t B ≤ persistentTotal d B ∧
@@ -1404,8 +1404,8 @@ private theorem caps_weighted {d m B J : ℕ} (hl : 131071 ≤ d) (hh : d ≤ 16
         mul_le_mul_of_nonneg_left (by exact_mod_cast hcap) hRatio
       _ = (siteRatio m * t) * (2*J-1 : ℕ) := by push_cast; ring
       _ ≤ _ := mul_le_mul_of_nonneg_right hLambda (Nat.cast_nonneg _)
-private theorem persistent_regular {w T s d B J} (hw : FixedWord w T s d)
-    (hl : 131071 ≤ d) (hh : d ≤ 164456) (hJ : 0 < J)
+theorem persistent_regular {w T s d B J} (hw : FixedWord w T s d)
+    (hl : 131071 ≤ d) (hh : d ≤ 164476) (hJ : 0 < J)
     (f : Row 2) (hf : Irreducible f) (hfpos : 0 < f.degreeOf 1)
     (hb : f.totalDegree ≤ B) (hj : f.degreeOf 1 ≤ J)
     (hreg : ∀ γ ∈ T, RegularAt 1 f (extend (s γ))) :
@@ -1462,7 +1462,7 @@ theorem proof : HighCore82219_3.c2 := by
   intro b u del M Γ F hband B J guard G hG T hT hroot
   let d := degreeAt (finish b)
   have hdl : 131071 ≤ d := Nat.le_add_right _ _
-  have hdu : d ≤ 164456 := Nat.add_le_add_left (HighCore82219.terminal_guards b).2.1 131071
+  have hdu : d ≤ 164476 := Nat.add_le_add_left (HighCore82219.terminal_guards b).2.1 131071
   have hw : FixedWord M.word T F.scalar d := by
     refine ⟨F.distinct.mono hT, ?_, ?_⟩
     · intro γ hγ

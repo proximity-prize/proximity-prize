@@ -12,7 +12,7 @@ noncomputable section
 open K1 K1_14 K1_14_2 MvPolynomial
 open scoped Polynomial
 open scoped BigOperators
-private theorem constantCoefficients_apply (a : L) :
+theorem constantCoefficients_apply (a : L) :
     constantCoefficients a = algebraMap L FX a := by
   rw [IsScalarTower.algebraMap_apply L L[X] FX]
   rfl
@@ -21,7 +21,7 @@ theorem constant_map_degree (Q : MvPolynomial (Fin 2) L) :
   unfold totalDegree
   rw [support_map_of_injective Q (fun a b hab => (algebraMap L FX).injective
     (by simpa only [constantCoefficients_apply] using hab))]
-private theorem constant_equation (C : Seeds) (hC : C ≠ 0) :
+theorem constant_equation (C : Seeds) (hC : C ≠ 0) :
     ∃ Q : MvPolynomial (Fin 2) L, Q ≠ 0 ∧ Q.totalDegree ≤ C.totalDegree ∧
       ∀ x : Fin 2 → L, MvPolynomial.eval (constantCoefficients ∘ x) C = 0 →
         MvPolynomial.eval x Q = 0 := by
@@ -67,7 +67,7 @@ private theorem constant_equation (C : Seeds) (hC : C ≠ 0) :
       rw [eval_monomial, constantCoefficients_apply, mul_comm (C.coeff m), ← Algebra.smul_def,
         map_smul, smul_eq_mul, mul_comm]
     rw [heval, hx, map_zero]
-private theorem plane_intersection {k : Type} [Field k]
+theorem plane_intersection {k : Type} [Field k]
     (A B : MvPolynomial (Fin 2) k) (hA : Irreducible A)
     (hB : B ∉ Ideal.span {A}) (S : Finset (Fin 2 → k))
     (hzero : ∀ x ∈ S, MvPolynomial.eval x A = 0 ∧ MvPolynomial.eval x B = 0) :
@@ -190,10 +190,10 @@ def c2 : Prop :=
     seedImage I = Ideal.span {MvPolynomial.map constantCoefficients C} →
     ∃ g : ℕ, 0 < g ∧ SmallRootCurve (rootImage I) g (yLength I) ∧
       C.totalDegree * g ≤ seedLength I
-private def seedRate : ℚ := ((p + 1 : ℕ) : ℚ) / 9
-private def yRate : ℚ :=
+def seedRate : ℚ := ((p + 1 : ℕ) : ℚ) / 9
+def yRate : ℚ :=
   15 + (11697 / 6520 : ℚ) * (((2 * endpointDegree - 1 : ℕ) : ℚ) * 15 + 1)
-private theorem root_price_bound (g H : ℕ) (hg : g ≤ 8) :
+theorem root_price_bound (g H : ℕ) (hg : g ≤ 8) :
     rootPrice g H ≤ yRate * (H : ℚ) + (g : ℚ) := by
   have hgq : (g : ℚ) ≤ 8 := by exact_mod_cast hg
   have ht : 2 * (g : ℚ) - 1 ≤ 15 := by linarith
@@ -203,14 +203,14 @@ private theorem root_price_bound (g H : ℕ) (hg : g ≤ 8) :
     (add_le_add ht (mul_le_mul_of_nonneg_left
       (add_le_add (mul_le_mul_of_nonneg_left ht hd) (le_refl (1 : ℚ))) hb))
     (Nat.cast_nonneg H)) (le_refl (g : ℚ))
-private theorem seedRate_nonneg : 0 ≤ seedRate := by unfold seedRate; positivity
-private theorem yRate_nonneg : 0 ≤ yRate := by unfold yRate; positivity
-private theorem seedCap_lt_p : lossSeedCap < p := by decide +kernel
-private theorem seedCap_le_rate : (lossSeedCap : ℚ) ≤ seedRate := by decide +kernel
+theorem seedRate_nonneg : 0 ≤ seedRate := by unfold seedRate; positivity
+theorem yRate_nonneg : 0 ≤ yRate := by unfold yRate; positivity
+theorem seedCap_lt_p : lossSeedCap < p := by decide +kernel
+theorem seedCap_le_rate : (lossSeedCap : ℚ) ≤ seedRate := by decide +kernel
 private theorem ledger :
     seedRate * (lossSeedCap : ℚ) + yRate * (lossYCap : ℚ) + (lossSeedCap : ℚ) ≤
       (movingPrice : ℚ) := by decide +kernel
-private theorem eval_root_image (a b y v : FX) (q : RootAmbient) :
+theorem eval_root_image (a b y v : FX) (q : RootAmbient) :
     MvPolynomial.eval ![a,b,y,v] (rootIncl q) = MvPolynomial.eval ![a,b,y] q := by
   change MvPolynomial.eval ![a,b,y,v] (MvPolynomial.rename (Fin.castLE (by decide : 3 ≤ 4)) q) = _
   rw [MvPolynomial.eval_rename]
@@ -218,7 +218,7 @@ private theorem eval_root_image (a b y v : FX) (q : RootAmbient) :
     funext i
     fin_cases i <;> rfl
   rw [hv]
-private theorem eval_seed_image (a b y : FX) (C : Seeds) :
+theorem eval_seed_image (a b y : FX) (C : Seeds) :
     MvPolynomial.eval ![a,b,y] (rootSeeds C) = MvPolynomial.eval ![a,b] C := by
   change MvPolynomial.eval ![a,b,y] (MvPolynomial.rename (Fin.castLE (by decide : 2 ≤ 3)) C) = _
   rw [MvPolynomial.eval_rename]
@@ -283,7 +283,7 @@ private theorem equal_image_degree (C : Seeds) (hC : C ≠ 0) (Q : MvPolynomial 
 private theorem union_card_le {ι : Type*} (s : Finset ι) (W : ι → Finset K) :
     ((s.biUnion W).card : ℚ) ≤ ∑ i ∈ s, ((W i).card : ℚ) := by
   exact_mod_cast (Finset.card_biUnion_le (s := s) (t := W))
-private theorem group_price {u del} (M : AnchorModel u del) {Γ} (F : AnchoredFamily M Γ)
+theorem group_price {u del} (M : AnchorModel u del) {Γ} (F : AnchoredFamily M Γ)
     (hhi : M.overhead ≤ 3554) (T : Finset K) (hT : T ⊆ Γ)
     (h1 : c1) (h2 : c2) (tariff : RootTariff)
     (P : Ideal Seeds) (s : Finset (Ideal Ambient))
@@ -434,12 +434,12 @@ def eliminate : MvPolynomial (Fin 2) SeedField →ₐ[SeedField] SeedField[X] :=
   MvPolynomial.aeval (lineValues (generic 0) (generic 1))
 def lineRestriction : Seeds →+* SeedField[X] :=
   eliminate.toRingHom.comp (MvPolynomial.map (algebraMap FX SeedField))
-private theorem fin_two_sum (e : Fin 2 →₀ ℕ) : e.sum (fun _ m => m) = e 0 + e 1 := by
+theorem fin_two_sum (e : Fin 2 →₀ ℕ) : e.sum (fun _ m => m) = e 0 + e 1 := by
   simp [Finsupp.sum_of_support_subset e (Finset.subset_univ e.support)]
-private def integralRestriction : Seeds →+* Seeds[X] :=
+def integralRestriction : Seeds →+* Seeds[X] :=
   MvPolynomial.eval₂Hom (Polynomial.C.comp (MvPolynomial.C : FX →+* Seeds))
     (lineValues (MvPolynomial.X 0) (MvPolynomial.X 1))
-private theorem restriction_map :
+theorem restriction_map :
     (mapRingHom (algebraMap Seeds SeedField)).comp integralRestriction = lineRestriction := by
   apply MvPolynomial.ringHom_ext
   · intro a
@@ -448,13 +448,13 @@ private theorem restriction_map :
   · intro k
     fin_cases k <;>
       simp [integralRestriction, lineRestriction, eliminate, lineValues, RingHom.comp_apply, generic]
-private theorem lineValue_natDegree {R : Type} [CommRing R] (s t : R) :
+theorem lineValue_natDegree {R : Type} [CommRing R] (s t : R) :
     (lineValues s t 0).natDegree ≤ 1 := by
   change (Polynomial.C t - Polynomial.C s * (Polynomial.X : R[X])).natDegree ≤ 1
   have hs : (Polynomial.C s * (Polynomial.X : R[X])).natDegree ≤ 1 := by
     simpa only [pow_one] using natDegree_C_mul_X_pow_le s 1
   exact (natDegree_sub_le _ _).trans (max_le (by simp) hs)
-private theorem coeff_integralRestriction_monomial (e : Fin 2 →₀ ℕ) (a : FX) (d : ℕ)
+theorem coeff_integralRestriction_monomial (e : Fin 2 →₀ ℕ) (a : FX) (d : ℕ)
     (he : e 0 + e 1 ≤ d) :
     (integralRestriction (MvPolynomial.monomial e a)).coeff d =
       if e 0 + e 1 = d then MvPolynomial.C a * (-MvPolynomial.X 0) ^ e 0 else 0 := by
@@ -593,7 +593,7 @@ def c2 : Prop :=
 private abbrev seedIncl : Seeds →+* Ambient := rootIncl.comp rootSeeds
 private theorem seedImage_prime (I : Ideal Ambient) [I.IsPrime] : (seedImage I).IsPrime :=
   (inferInstance : I.IsPrime).comap seedIncl
-private theorem eval_seed_rename {k : Type} [CommRing k] (a b y v : k)
+theorem eval_seed_rename {k : Type} [CommRing k] (a b y v : k)
     (f : MvPolynomial (Fin 2) k) :
     MvPolynomial.eval ![a, b, y, v]
       (MvPolynomial.rename (Fin.castLE (by decide : 3 ≤ 4))
@@ -606,7 +606,7 @@ private theorem eval_seed_rename {k : Type} [CommRing k] (a b y v : k)
     funext i
     fin_cases i <;> rfl
   rw [he]
-private theorem seed_image_eval {I : Ideal Ambient} {z : K} {R : Polynomial K}
+theorem seed_image_eval {I : Ideal Ambient} {z : K} {R : Polynomial K}
     (h : OnJet I z R) : seedImage I ≤ RingHom.ker (graphEval z) := by
   intro f hf
   have hmem : seedIncl f ∈ I := hf
@@ -614,11 +614,11 @@ private theorem seed_image_eval {I : Ideal Ambient} {z : K} {R : Polynomial K}
     eval_seed_rename (seedEmbedding z) (seedEmbedding z ^ p) (atX R) (atX R.derivative) f
   exact RingHom.mem_ker.mpr (he.symm.trans (RingHom.mem_ker.mp (h hmem)))
 private abbrev SurfaceField (I : Ideal Ambient) := FractionRing (Ambient ⧸ I)
-private def surfaceFractionMap (I : Ideal Ambient) : Ambient →+* SurfaceField I := by
+def surfaceFractionMap (I : Ideal Ambient) : Ambient →+* SurfaceField I := by
   let q : Ambient →+* (Ambient ⧸ I) := Ideal.Quotient.mk I
   let ι : (Ambient ⧸ I) →+* SurfaceField I := algebraMap _ _
   exact ι.comp q
-private theorem seedImage_ne_bot (I : Ideal Ambient) [I.IsPrime]
+theorem seedImage_ne_bot (I : Ideal Ambient) [I.IsPrime]
     [Module.Finite SeedField (OverSeeds I)] (hz : sectionDegree I 0 = 0) :
     seedImage I ≠ ⊥ := by
   intro hI
@@ -660,7 +660,7 @@ private theorem seedImage_ne_bot (I : Ideal Ambient) [I.IsPrime]
     Ideal.Quotient.subsingleton_iff.mp
       ((Module.finrank_eq_zero_iff_of_free SeedField (OverSeeds I)).mp hz)
   exact RingHom.ker_ne_top e (top_unique (htop ▸ hmap))
-private theorem seedImage_principal (I : Ideal Ambient) [I.IsPrime]
+theorem seedImage_principal (I : Ideal Ambient) [I.IsPrime]
     (hn : seedImage I ≠ ⊥) (hm : ¬ (seedImage I).IsMaximal) :
     ∃ f : Seeds, f ≠ 0 ∧ seedImage I = Ideal.span {f} := by
   let P := seedImage I
@@ -686,7 +686,7 @@ private theorem seedImage_principal (I : Ideal Ambient) [I.IsPrime]
   have : UniqueFactorizationMonoid Seeds := MvPolynomial.uniqueFactorizationMonoid (Fin 2)
   obtain ⟨f, hmem, hf⟩ := Ideal.IsPrime.exists_mem_prime_of_ne_bot (seedImage_prime I) hn
   exact ⟨f, hf.ne_zero, Ideal.eq_span_singleton_of_height_eq_one (hle.antisymm hlo) hmem hf⟩
-private theorem same_seed {I : Ideal Ambient} (hI : (seedImage I).IsMaximal)
+theorem same_seed {I : Ideal Ambient} (hI : (seedImage I).IsMaximal)
     {z w : K} {R S : Polynomial K} (hz : OnJet I z R) (hw : OnJet I w S) :
     (seedEmbedding z, seedEmbedding z ^ p) = (seedEmbedding w, seedEmbedding w ^ p) := by
   have hker := hI.eq_of_le (RingHom.ker_ne_top (graphEval z)) (seed_image_eval hz)
@@ -802,12 +802,12 @@ private theorem coefficientToFrac_base {n : ℕ} (I : Ideal (Raw n)) (i j : Fin 
     coefficientToFrac I i j (algebraMap Seeds SeedField d) =
       algebraMap (CoordinateRing I)[X] (FunctionField I) (parameterMap I i j d) :=
   IsFractionRing.lift_algebraMap _ d
-private theorem coefficientToFrac_generic {n : ℕ} (I : Ideal (Raw n)) (i j : Fin n)
+theorem coefficientToFrac_generic {n : ℕ} (I : Ideal (Raw n)) (i j : Fin n)
     [I.IsPrime] [Nontrivial (Slice I i j)] (k : Fin 2) :
     coefficientToFrac I i j (generic k) =
       algebraMap (CoordinateRing I)[X] (FunctionField I) (parameterMap I i j (MvPolynomial.X k)) :=
   coefficientToFrac_base I i j _
-private def polynomialToFrac {n : ℕ} (I : Ideal (Raw n)) (i j : Fin n)
+def polynomialToFrac {n : ℕ} (I : Ideal (Raw n)) (i j : Fin n)
     [I.IsPrime] [Nontrivial (Slice I i j)] : Over n →+* FunctionField I :=
   MvPolynomial.eval₂Hom (coefficientToFrac I i j)
     (fun k => algebraMap (CoordinateRing I)[X] (FunctionField I) (Polynomial.C (coord I k)))
@@ -825,12 +825,12 @@ private theorem originalToFrac {n : ℕ} (I : Ideal (Raw n)) (i j : Fin n)
     rfl
   · intro k
     simp [polynomialToFrac, RingHom.comp_apply]
-private theorem map_seedLine {n : ℕ} {B : Type} [CommRing B] (f : Over n →+* B)
+theorem map_seedLine {n : ℕ} {B : Type} [CommRing B] (f : Over n →+* B)
     (i j : Fin n) : f (seedLine i j) =
       f (MvPolynomial.X i) + f (MvPolynomial.C (generic 0)) * f (MvPolynomial.X j) -
         f (MvPolynomial.C (generic 1)) := by
   simp only [seedLine, map_sub, map_add, map_mul]
-private theorem map_affine_relation {A B : Type} [CommRing A] [CommRing B] (f : A →+* B)
+theorem map_affine_relation {A B : Type} [CommRing A] [CommRing B] (f : A →+* B)
     (a b s : A) : f a + f s * f b - f (a + s * b) = 0 := by
   rw [f.map_add, f.map_mul, sub_self]
 set_option maxHeartbeats 1500000 in
@@ -917,13 +917,13 @@ private theorem clear_denominator {n : ℕ} (I : Ideal (Raw n)) (i j : Fin n)
       (RingHom.congr_fun hcomp g).symm
 abbrev PlaneSlice (P : Ideal Seeds) := Slice P 0 1
 private abbrev seedIncl := rootIncl.comp rootSeeds
-private abbrev seedInclOver : Over 2 →ₐ[SeedField] Over 4 :=
+abbrev seedInclOver : Over 2 →ₐ[SeedField] Over 4 :=
   MvPolynomial.rename (Fin.castLE (by decide : 2 ≤ 4))
 theorem seedImage_prime (I : Ideal Ambient) [I.IsPrime] : (seedImage I).IsPrime :=
   (inferInstance : I.IsPrime).comap seedIncl
 private def seedToJet (I : Ideal Ambient) : CoordinateRing (seedImage I) →+* CoordinateRing I :=
   Ideal.quotientMap I seedIncl le_rfl
-private theorem seedToJet_injective (I : Ideal Ambient) : Function.Injective (seedToJet I) :=
+theorem seedToJet_injective (I : Ideal Ambient) : Function.Injective (seedToJet I) :=
   Ideal.quotientMap_injective
 theorem plane_parameter_injective (I : Ideal Ambient) [Nontrivial (JetSeedSection I)] :
     Function.Injective (parameterMap (seedImage I) 0 1) := by
@@ -946,7 +946,7 @@ theorem plane_parameter_injective (I : Ideal Ambient) [Nontrivial (JetSeedSectio
     rw [h]
     exact parameter_injective I 0 1
   exact Function.Injective.of_comp hinj
-private theorem seedIncl_square :
+theorem seedIncl_square :
     (seedInclOver.toRingHom).comp (MvPolynomial.map (algebraMap FX SeedField)) =
       (MvPolynomial.map (algebraMap FX SeedField)).comp seedIncl := by
   apply MvPolynomial.ringHom_ext
@@ -954,9 +954,9 @@ private theorem seedIncl_square :
     simp [rootIncl, rootSeeds, RingHom.comp_apply]
   · intro k
     simp [rootIncl, rootSeeds, RingHom.comp_apply]
-private theorem seedLine_map : seedInclOver (seedLine 0 1) = seedLine 0 1 := by
+theorem seedLine_map : seedInclOver (seedLine 0 1) = seedLine 0 1 := by
   simp [seedLine]
-private theorem plane_le (I : Ideal Ambient) :
+theorem plane_le (I : Ideal Ambient) :
     sectionIdeal (seedImage I) 0 1 ≤ (sectionIdeal I 0 1).comap seedInclOver := by
   refine sup_le (Ideal.map_le_iff_le_comap.mpr ?_) (Ideal.span_le.mpr ?_)
   · intro p hp
@@ -973,7 +973,7 @@ private theorem plane_le (I : Ideal Ambient) :
       (Ideal.mem_span_singleton_self _)
 def planeToJet (I : Ideal Ambient) : PlaneSlice (seedImage I) →ₐ[SeedField] JetSeedSection I :=
   Ideal.quotientMapₐ (sectionIdeal I 0 1) seedInclOver (plane_le I)
-private theorem plane_slope_commutes (I : Ideal Ambient) :
+theorem plane_slope_commutes (I : Ideal Ambient) :
     (planeToJet I).toRingHom.comp (slopeToSlice (seedImage I) 0 1) =
       (slopeToSlice I 0 1).comp (Polynomial.mapRingHom (seedToJet I)) := by
   apply Polynomial.ringHom_ext
@@ -1029,7 +1029,7 @@ def imageToSurface (I : Ideal Ambient) : Image I →+* Surface I :=
 theorem imageToSurface_injective (I : Ideal Ambient) :
     Function.Injective (imageToSurface I) :=
   Ideal.quotientMap_injective
-private theorem finiteType_dimension (k R : Type) [Field k] [CommRing R] [IsDomain R]
+theorem finiteType_dimension (k R : Type) [Field k] [CommRing R] [IsDomain R]
     [Algebra k R] [Algebra.FiniteType k R] :
     ∃ n : ℕ, ringKrullDim R = n ∧ trdeg k R = n := by
   obtain ⟨n, g, hg, hint⟩ := exists_integral_inj_algHom_of_fg k R
@@ -1067,7 +1067,7 @@ private theorem finiteType_dimension (k R : Type) [Field k] [CommRing R] [IsDoma
     calc
       trdeg k R = trdeg k N + trdeg N R := (trdeg_add_eq k N (A := R)).symm
       _ = n := by rw [hN, hzero, add_zero]
-private theorem algebraic_polynomial_eval {k B A : Type} [CommRing k] [CommRing B]
+theorem algebraic_polynomial_eval {k B A : Type} [CommRing k] [CommRing B]
     [IsDomain B] [CommRing A] [Algebra B A] {n : ℕ} (q : MvPolynomial (Fin n) k →+* A)
     (hC : ∀ a, IsAlgebraic B (q (MvPolynomial.C a)))
     (hX : ∀ i, IsAlgebraic B (q (MvPolynomial.X i)))
@@ -1080,7 +1080,7 @@ private theorem algebraic_polynomial_eval {k B A : Type} [CommRing k] [CommRing 
   | mul_X p i hp =>
     rw [map_mul]
     exact hp.mul (hX i)
-private theorem relative_not_algebraic (I : Ideal Ambient) [I.IsPrime]
+theorem relative_not_algebraic (I : Ideal Ambient) [I.IsPrime]
     (hdim : ringKrullDim (Surface I) = 2) (f : Seeds) (hf : f ≠ 0)
     (hgen : seedImage I = Ideal.span {f}) :
     letI : Algebra (Image I) (Surface I) :=
@@ -1130,7 +1130,7 @@ private theorem relative_not_algebraic (I : Ideal Ambient) [I.IsPrime]
 def lineEval {B A : Type} [CommRing B] [CommRing A] (i : B →+* A) (y v : A) :
     B[X][X] →+* A[X] :=
   Polynomial.eval₂RingHom (Polynomial.mapRingHom i) (Polynomial.C y + Polynomial.X * Polynomial.C v)
-private theorem lineEval_injective {B A : Type} [CommRing B] [IsDomain B] [Infinite B]
+theorem lineEval_injective {B A : Type} [CommRing B] [IsDomain B] [Infinite B]
     [CommRing A] [Algebra B A] (y v : A)
     (h : ¬ (IsAlgebraic B y ∧ IsAlgebraic B v)) :
     Function.Injective (lineEval (algebraMap B A) y v) := by
@@ -1205,11 +1205,11 @@ namespace K1_14_2_3_1
 noncomputable section
 open K1 K1_14 K1_14_2 K1_14_2_3 Polynomial
 open scoped Polynomial BigOperators
-private theorem elimination_line : eliminate (seedLine 0 1) = 0 := by
+theorem elimination_line : eliminate (seedLine 0 1) = 0 := by
   simp [eliminate, lineValues, seedLine, Polynomial.algebraMap_eq]
 private def reconstruct (P : Ideal Seeds) : SeedField[X] →ₐ[SeedField] PlaneSlice P :=
   aeval (Ideal.Quotient.mk (sectionIdeal P 0 1) (MvPolynomial.X 1))
-private theorem elimination_reconstruct (P : Ideal Seeds) :
+theorem elimination_reconstruct (P : Ideal Seeds) :
     (reconstruct P).comp eliminate = Ideal.Quotient.mkₐ SeedField (sectionIdeal P 0 1) := by
   apply MvPolynomial.algHom_ext
   intro i
@@ -1290,9 +1290,9 @@ namespace K1_14_2_4_1_1
 noncomputable section
 open K1 K1_14 K1_14_2 K1_14_2_4_1 K1_14_2_3_1
 open scoped Polynomial
-private theorem root_index_zero : finSuccEquivLast (0 : Fin 3) = some 0 := rfl
-private theorem root_index_one : finSuccEquivLast (1 : Fin 3) = some 1 := rfl
-private theorem root_index_two : finSuccEquivLast (2 : Fin 3) = none := finSuccEquivLast_last
+theorem root_index_zero : finSuccEquivLast (0 : Fin 3) = some 0 := rfl
+theorem root_index_one : finSuccEquivLast (1 : Fin 3) = some 1 := rfl
+theorem root_index_two : finSuccEquivLast (2 : Fin 3) = none := finSuccEquivLast_last
 theorem rootView_seed : (rootView.toRingEquiv.toRingHom).comp rootSeeds = Polynomial.C := by
   apply MvPolynomial.ringHom_ext
   · intro a
@@ -1492,25 +1492,25 @@ private def constants {R : Type} [CommRing R] : R →+* Triple R :=
 def integralRestriction : Seeds →+* Params[X] :=
   MvPolynomial.eval₂Hom (Polynomial.C.comp MvPolynomial.C)
     (K1_14_2_3_1.lineValues (MvPolynomial.X 0) (MvPolynomial.X 2))
-private def parameterToTriple : Params →+* Triple Seeds :=
+def parameterToTriple : Params →+* Triple Seeds :=
   let x : Fin 4 → Triple Seeds :=
     ![Polynomial.X, Polynomial.C (Polynomial.C Polynomial.X),
       constants (MvPolynomial.X (0 : Fin 2) : Seeds) +
         Polynomial.X * constants (MvPolynomial.X (1 : Fin 2) : Seeds),
       Polynomial.C Polynomial.X]
   MvPolynomial.eval₂Hom ((constants (R := Seeds)).comp (MvPolynomial.C : FX →+* Seeds)) x
-private def toTriple : Params[X] →+* Triple Seeds :=
+def toTriple : Params[X] →+* Triple Seeds :=
   Polynomial.eval₂RingHom parameterToTriple (constants (MvPolynomial.X 1))
-private def fromTriple : Triple Seeds →+* Params[X] :=
+def fromTriple : Triple Seeds →+* Params[X] :=
   Polynomial.eval₂RingHom
     (Polynomial.eval₂RingHom
       (Polynomial.eval₂RingHom integralRestriction (Polynomial.C (MvPolynomial.X 1)))
       (Polynomial.C (MvPolynomial.X 3)))
     (Polynomial.C (MvPolynomial.X 0))
-private theorem fromTriple_constants (f : Seeds) :
+theorem fromTriple_constants (f : Seeds) :
     fromTriple (constants f) = integralRestriction f := by
   simp [fromTriple, constants, RingHom.comp_apply]
-private theorem fromTriple_left : fromTriple.comp toTriple = RingHom.id _ := by
+theorem fromTriple_left : fromTriple.comp toTriple = RingHom.id _ := by
   have h : fromTriple.comp parameterToTriple = Polynomial.C := by
     apply MvPolynomial.ringHom_ext
     · intro a
@@ -1525,7 +1525,7 @@ private theorem fromTriple_left : fromTriple.comp toTriple = RingHom.id _ := by
     simpa [RingHom.comp_apply, toTriple] using RingHom.congr_fun h a
   · simp [RingHom.comp_apply, toTriple, fromTriple_constants, integralRestriction,
       K1_14_2_3_1.lineValues]
-private theorem toTriple_restriction (f : Seeds) :
+theorem toTriple_restriction (f : Seeds) :
     toTriple (integralRestriction f) = constants f := by
   suffices toTriple.comp integralRestriction = constants by
     exact RingHom.congr_fun this f
@@ -1552,12 +1552,12 @@ def rawParameters (I : Ideal Ambient) : Params →+* Double (Surface I) :=
       coords I 2 + Polynomial.C Polynomial.X * coords I 3]
 def rawEval (I : Ideal Ambient) : Params[X] →+* Double (Surface I) :=
   Polynomial.eval₂RingHom (rawParameters I) (coords I 1)
-private def tripleQuotient (I : Ideal Ambient) : Triple Seeds →+* Triple (Image I) :=
+def tripleQuotient (I : Ideal Ambient) : Triple Seeds →+* Triple (Image I) :=
   Polynomial.mapRingHom (Polynomial.mapRingHom (Polynomial.mapRingHom (Ideal.Quotient.mk (seedImage I))))
-private def tripleJet (I : Ideal Ambient) : Triple (Image I) →+* Double (Surface I) :=
+def tripleJet (I : Ideal Ambient) : Triple (Image I) →+* Double (Surface I) :=
   Polynomial.mapRingHom
     (lineEval (B := Image I) (A := Surface I) (imageToSurface I) (coord I 2) (coord I 3))
-private theorem rawEval_factor (I : Ideal Ambient) :
+theorem rawEval_factor (I : Ideal Ambient) :
     rawEval I = (tripleJet I).comp ((tripleQuotient I).comp toTriple) := by
   have h : rawParameters I = (tripleJet I).comp ((tripleQuotient I).comp parameterToTriple) := by
     apply MvPolynomial.ringHom_ext
@@ -1676,11 +1676,11 @@ namespace K1_14_2_4_1_1_1
 noncomputable section
 open K1_14 K1_14_2_4_1 K1_14_2_4_1_1
 open scoped Polynomial
-private abbrev PolynomialSeeds := MvPolynomial (Fin 2) L[X]
-private def exchangeX : ConstantSeeds[X] ≃+* PolynomialSeeds :=
+abbrev PolynomialSeeds := MvPolynomial (Fin 2) L[X]
+def exchangeX : ConstantSeeds[X] ≃+* PolynomialSeeds :=
   ((MvPolynomial.optionEquivLeft L (Fin 2)).symm.trans
     (MvPolynomial.optionEquivRight L (Fin 2))).toRingEquiv
-private theorem exchange_constant (a : ConstantSeeds) :
+theorem exchange_constant (a : ConstantSeeds) :
     exchangeX (Polynomial.C a) = MvPolynomial.map Polynomial.C a := by
   have h : exchangeX.toRingHom.comp Polynomial.C = MvPolynomial.map Polynomial.C := by
     apply MvPolynomial.ringHom_ext
@@ -1693,31 +1693,31 @@ private theorem exchange_constant (a : ConstantSeeds) :
         ((MvPolynomial.optionEquivLeft L (Fin 2)).symm (Polynomial.C (MvPolynomial.X i))) = _
       simp
   exact DFunLike.congr_fun h a
-private theorem exchange_indeterminate :
+theorem exchange_indeterminate :
     exchangeX Polynomial.X = MvPolynomial.C Polynomial.X := by
   change MvPolynomial.optionEquivRight L (Fin 2)
     ((MvPolynomial.optionEquivLeft L (Fin 2)).symm Polynomial.X) = _
   simp
 private def baseChange : PolynomialSeeds →+* Seeds :=
   MvPolynomial.map (algebraMap L[X] FX)
-private def quotientPolynomial (C₀ : ConstantSeeds) :
+def quotientPolynomial (C₀ : ConstantSeeds) :
     ConstantSeeds[X] →+* (ConstantSeedRing C₀)[X] :=
   Polynomial.mapRingHom (Ideal.Quotient.mk (constantIdeal C₀))
-private def intoFunctionField (C₀ : ConstantSeeds) :
+def intoFunctionField (C₀ : ConstantSeeds) :
     (ConstantSeedRing C₀)[X] →+* ConstantSeedX C₀ :=
   (insertX C₀).comp (Polynomial.mapRingHom
     (algebraMap (ConstantSeedRing C₀) (ConstantSeedField C₀)))
-private theorem intoFunctionField_injective (C₀ : ConstantSeeds) [Fact (Irreducible C₀)] :
+theorem intoFunctionField_injective (C₀ : ConstantSeeds) [Fact (Irreducible C₀)] :
     Function.Injective (intoFunctionField C₀) :=
   (IsFractionRing.injective (ConstantSeedField C₀)[X] (ConstantSeedX C₀)).comp
     (Polynomial.map_injective _ (IsFractionRing.injective
       (ConstantSeedRing C₀) (ConstantSeedField C₀)))
-private theorem extend_on_polynomial (C₀ : ConstantSeeds) [Fact (Irreducible C₀)] (p : L[X]) :
+theorem extend_on_polynomial (C₀ : ConstantSeeds) [Fact (Irreducible C₀)] (p : L[X]) :
     extendX C₀ (algebraMap L[X] FX p) = insertX C₀ (p.map (constToSeed C₀)) := by
   unfold extendX IsFractionRing.map
   rw [IsLocalization.map_eq]
   rfl
-private theorem generic_comp (C₀ : ConstantSeeds) [Fact (Irreducible C₀)] :
+theorem generic_comp (C₀ : ConstantSeeds) [Fact (Irreducible C₀)] :
     (genericSeedMap C₀).comp (baseChange.comp exchangeX.toRingHom) =
       (intoFunctionField C₀).comp (quotientPolynomial C₀) := by
   apply Polynomial.ringHom_ext'
@@ -1736,7 +1736,7 @@ private theorem generic_comp (C₀ : ConstantSeeds) [Fact (Irreducible C₀)] :
       intoFunctionField C₀ (quotientPolynomial C₀ Polynomial.X)
     simp [exchange_indeterminate, baseChange, genericSeedMap, intoFunctionField,
       quotientPolynomial, extend_on_polynomial]
-private theorem generic_kernel (C₀ : ConstantSeeds) [Fact (Irreducible C₀)] :
+theorem generic_kernel (C₀ : ConstantSeeds) [Fact (Irreducible C₀)] :
     RingHom.ker (genericSeedMap C₀) = seedEquation C₀ := by
   let : Algebra PolynomialSeeds Seeds := MvPolynomial.algebraMvPolynomial
   let M : Submonoid PolynomialSeeds := (nonZeroDivisors L[X]).map MvPolynomial.C
@@ -1758,7 +1758,7 @@ private theorem generic_kernel (C₀ : ConstantSeeds) [Fact (Irreducible C₀)] 
   rw [exchange_constant]
   simp only [baseChange, seedEquation, MvPolynomial.map_map]
 attribute [local instance] Polynomial.algebra in
-private theorem polynomial_fractions (R F E : Type*) [CommRing R] [Field F] [Field E]
+theorem polynomial_fractions (R F E : Type*) [CommRing R] [Field F] [Field E]
     [Algebra R F] [IsFractionRing R F] [Algebra F[X] E] [IsFractionRing F[X] E]
     (z : E) :
     ∃ a b : R[X],
@@ -1780,7 +1780,7 @@ private theorem polynomial_fractions (R F E : Type*) [CommRing R] [Field F] [Fie
   refine ⟨a, b, ?_⟩
   rw [← ha', ← hb', mul_div_mul_right _ _ ht]
   exact hz.symm
-private theorem quotient_isFractionRing {R F : Type*} [CommRing R] [Field F]
+theorem quotient_isFractionRing {R F : Type*} [CommRing R] [Field F]
     (f : R →+* F) (I : Ideal R) (h : RingHom.ker f = I)
     (hfractions : ∀ z : F, ∃ a b : R, z = f a / f b) :
     letI : Algebra (R ⧸ I) F :=
@@ -1825,7 +1825,7 @@ open K1 K1_14 K1_14_2 K1_14_2_2 K1_14_2_3 K1_14_2_2_2_6 Polynomial
 open scoped Polynomial
 private abbrev mixedIdeal (I : Ideal Ambient) :=
   I.map sectionBase ⊔ Ideal.span {sectionSeedLine, sectionJetLine}
-private abbrev FieldOf (I : Ideal Ambient) [I.IsPrime] :=
+abbrev FieldOf (I : Ideal Ambient) [I.IsPrime] :=
   FractionRing (Double (Surface I))
 private abbrev embed (I : Ideal Ambient) [I.IsPrime] :
     Double (Surface I) →+* FieldOf I := algebraMap _ _
@@ -1833,14 +1833,14 @@ private def coefficients (I : Ideal Ambient) [I.IsPrime]
     (h : Function.Injective (rawParameters I)) : SectionField →+* FieldOf I :=
   IsFractionRing.lift (g := (embed I).comp (rawParameters I))
     ((IsFractionRing.injective (Double (Surface I)) (FieldOf I)).comp h)
-private theorem coefficients_apply (I : Ideal Ambient) [I.IsPrime]
+theorem coefficients_apply (I : Ideal Ambient) [I.IsPrime]
     (h : Function.Injective (rawParameters I)) (d : Params) :
     coefficients I h (algebraMap Params SectionField d) = embed I (rawParameters I d) :=
   IsFractionRing.lift_algebraMap _ d
-private def evalInField (I : Ideal Ambient) [I.IsPrime]
+def evalInField (I : Ideal Ambient) [I.IsPrime]
     (h : Function.Injective (rawParameters I)) : SectionAmbient →+* FieldOf I :=
   MvPolynomial.eval₂Hom (coefficients I h) (fun i => embed I (coords I i))
-private theorem evalInField_base (I : Ideal Ambient) [I.IsPrime]
+theorem evalInField_base (I : Ideal Ambient) [I.IsPrime]
     (h : Function.Injective (rawParameters I)) :
     (evalInField I h).comp sectionBase =
       ((embed I).comp (Polynomial.C.comp Polynomial.C)).comp (Ideal.Quotient.mk I) := by
@@ -1852,7 +1852,7 @@ private theorem evalInField_base (I : Ideal Ambient) [I.IsPrime]
     rfl
   · intro i
     simp [evalInField, sectionBase, RingHom.comp_apply]
-private def mixedToField (I : Ideal Ambient) [I.IsPrime]
+def mixedToField (I : Ideal Ambient) [I.IsPrime]
     (h : Function.Injective (rawParameters I)) : OverMixed I →+* FieldOf I :=
   Ideal.Quotient.lift (mixedIdeal I) (evalInField I h) <| by
     change mixedIdeal I ≤ RingHom.ker (evalInField I h)
@@ -1866,13 +1866,13 @@ private def mixedToField (I : Ideal Ambient) [I.IsPrime]
         simp [RingHom.mem_ker, sectionSeedLine, sectionJetLine, evalInField,
           sliceParameter, coefficients_apply, rawParameters, coords]
       all_goals ring
-private theorem mixed_scalar (I : Ideal Ambient) (a : SectionField) :
+theorem mixed_scalar (I : Ideal Ambient) (a : SectionField) :
     Ideal.Quotient.mk (mixedIdeal I) (MvPolynomial.C a) = algebraMap SectionField (OverMixed I) a := by
   simpa only [MvPolynomial.algebraMap_eq] using
     (Ideal.Quotient.mk_algebraMap (R₁ := SectionField) (mixedIdeal I) a)
 private def seedEval (I : Ideal Ambient) : SectionField[X] →ₐ[SectionField] OverMixed I :=
   Polynomial.aeval (Ideal.Quotient.mk (mixedIdeal I) (MvPolynomial.X 1))
-private theorem seedEval_restriction (I : Ideal Ambient) (f : Seeds)
+theorem seedEval_restriction (I : Ideal Ambient) (f : Seeds)
     (hf : f ∈ seedImage I) : seedEval I (mixedSeedRestriction f) = 0 := by
   let π := Ideal.Quotient.mk (mixedIdeal I)
   have hline : π sectionSeedLine = 0 :=
@@ -1902,7 +1902,7 @@ private theorem seedEval_restriction (I : Ideal Ambient) (f : Seeds)
   exact (RingHom.congr_fun he f).trans (Ideal.Quotient.eq_zero_iff_mem.mpr
     ((show I.map sectionBase ≤ mixedIdeal I from le_sup_left)
       (Ideal.mem_map_of_mem sectionBase (show K1_14_2_2_2_6_1.seedIncl f ∈ I from hf))))
-private theorem seedEval_toField (I : Ideal Ambient) [I.IsPrime]
+theorem seedEval_toField (I : Ideal Ambient) [I.IsPrime]
     (h : Function.Injective (rawParameters I)) :
     (mixedToField I h).comp (seedEval I).toRingHom =
       Polynomial.eval₂RingHom (coefficients I h) (embed I (coords I 1)) := by
@@ -1971,19 +1971,19 @@ namespace K1_14_2_2_3_2
 noncomputable section
 open Polynomial
 open scoped BigOperators Polynomial
-private theorem fin_two_sum (e : Fin 2 →₀ ℕ) : e.sum (fun _ m => m) = e 0 + e 1 := by
+theorem fin_two_sum (e : Fin 2 →₀ ℕ) : e.sum (fun _ m => m) = e 0 + e 1 := by
   simp [Finsupp.sum_of_support_subset e (Finset.subset_univ e.support)]
 def integralRestriction {F : Type} [Field F] :
     MvPolynomial (Fin 2) F →+* (MvPolynomial (Fin 2) F)[X] :=
   MvPolynomial.eval₂Hom (Polynomial.C.comp (MvPolynomial.C : F →+* MvPolynomial (Fin 2) F))
     (K1_14_2_3_1.lineValues (R := MvPolynomial (Fin 2) F) (MvPolynomial.X 0) (MvPolynomial.X 1))
-private theorem lineValue_natDegree {R : Type} [CommRing R] (s t : R) :
+theorem lineValue_natDegree {R : Type} [CommRing R] (s t : R) :
     (K1_14_2_3_1.lineValues s t 0).natDegree ≤ 1 := by
   change (Polynomial.C t - Polynomial.C s * (Polynomial.X : R[X])).natDegree ≤ 1
   have hs : (Polynomial.C s * (Polynomial.X : R[X])).natDegree ≤ 1 := by
     simpa only [pow_one] using natDegree_C_mul_X_pow_le s 1
   exact (natDegree_sub_le _ _).trans (max_le (by simp) hs)
-private theorem coeff_integralRestriction_monomial {F : Type} [Field F]
+theorem coeff_integralRestriction_monomial {F : Type} [Field F]
     (e : Fin 2 →₀ ℕ) (a : F) (d : ℕ)
     (he : e 0 + e 1 ≤ d) :
     (integralRestriction (MvPolynomial.monomial e a)).coeff d =
@@ -2073,7 +2073,7 @@ open K1 K1_14 K1_14_2 K1_14_2_3_1 K1_14_2_4_1 K1_14_2_4_1_1
 open scoped Polynomial
 local instance (I : Ideal Seeds) : CommRing (CoordinateRing I)[X] :=
   @Polynomial.commRing (CoordinateRing I) (Ideal.Quotient.commRing I)
-private theorem plane_denominator (I : Ideal Seeds) (x : PlaneSlice I) :
+theorem plane_denominator (I : Ideal Seeds) (x : PlaneSlice I) :
     ∃ (q : (CoordinateRing I)[X]) (d : Seeds), d ∈ nonZeroDivisors Seeds ∧
       x * algebraMap SeedField (PlaneSlice I) (algebraMap Seeds SeedField d) =
         slopeToSlice I 0 1 q := by
@@ -2103,7 +2103,7 @@ private theorem plane_denominator (I : Ideal Seeds) (x : PlaneSlice I) :
       (map_mul _ _ _).symm
     _ = _ := (congrArg (Ideal.Quotient.mk (sectionIdeal I 0 1)) hgm').trans
       (RingHom.congr_fun hcomp g).symm
-private theorem plane_domain (I : Ideal Seeds) [I.IsPrime] [Nontrivial (PlaneSlice I)] :
+theorem plane_domain (I : Ideal Seeds) [I.IsPrime] [Nontrivial (PlaneSlice I)] :
     IsDomain (PlaneSlice I) := by
   let : IsDomain (CoordinateRing I) := Ideal.Quotient.isDomain I
   let scale : Seeds →+* PlaneSlice I :=
@@ -2164,22 +2164,22 @@ open K1_14 K1_14_2 K1_14_2_2 K1_14_2_2_3 Polynomial
 open scoped Polynomial
 private abbrev JetParams (I : Ideal Ambient) :=
   Polynomial (MvPolynomial (Fin 2) (JetImageField I))
-private abbrev MixedField (I : Ideal Ambient) := FractionRing (JetParams I)
-private def jetVal (I : Ideal Ambient) (i : Fin 2) : JetImageField I :=
+abbrev MixedField (I : Ideal Ambient) := FractionRing (JetParams I)
+def jetVal (I : Ideal Ambient) (i : Fin 2) : JetImageField I :=
   jetImageMap I (MvPolynomial.X i)
-private def paramOrder : Fin 4 ≃ Fin 4 where
+def paramOrder : Fin 4 ≃ Fin 4 where
   toFun := ![2, 0, 3, 1]
   invFun := ![1, 3, 0, 2]
   left_inv := by intro i; fin_cases i <;> rfl
   right_inv := by intro i; fin_cases i <;> rfl
-private def coefficientParams (I : Ideal Ambient) :
+def coefficientParams (I : Ideal Ambient) :
     MvPolynomial (Fin 3) FX →+* JetParams I :=
   MvPolynomial.eval₂Hom
     (Polynomial.C.comp (MvPolynomial.C.comp ((jetImageMap I).comp MvPolynomial.C)))
     ![Polynomial.C (MvPolynomial.C (jetVal I 0)) +
         Polynomial.X * Polynomial.C (MvPolynomial.C (jetVal I 1)),
       Polynomial.C (MvPolynomial.X 0), Polynomial.C (MvPolynomial.X 1)]
-private theorem coefficientParams_injective_at_zero {I : Ideal Ambient} (hI : Active I)
+theorem coefficientParams_injective_at_zero {I : Ideal Ambient} (hI : Active I)
     [(I.comap jetInclude).IsPrime] :
     Function.Injective (constantCoeff.comp (coefficientParams I)) := by
   let a : FX[X] →+* JetImageField I :=
@@ -2222,7 +2222,7 @@ private theorem coefficientParams_injective_at_zero {I : Ideal Ambient} (hI : Ac
         fin_cases j <;> simp
   rw [he]
   exact (MvPolynomial.map_injective _ ha).comp b.injective
-private theorem eval_X_injective_of_constantCoeff {A B : Type*} [CommRing A] [CommRing B]
+theorem eval_X_injective_of_constantCoeff {A B : Type*} [CommRing A] [CommRing B]
     [IsDomain B] (f : A →+* B[X]) (hf : Function.Injective (constantCoeff.comp f)) :
     Function.Injective (eval₂RingHom f Polynomial.X) := by
   let e := eval₂RingHom f Polynomial.X
@@ -2247,15 +2247,15 @@ private theorem eval_X_injective_of_constantCoeff {A B : Type*} [CommRing A] [Co
     have hX : e Polynomial.X = Polynomial.X := by simp [e]
     rw [map_mul, hX] at hz
     rw [ih ((mul_eq_zero.mp hz).resolve_right X_ne_zero), zero_mul]
-private def sectionParams (I : Ideal Ambient) :
+def sectionParams (I : Ideal Ambient) :
     MvPolynomial (Fin 4) FX →+* JetParams I :=
   (eval₂RingHom (coefficientParams I) Polynomial.X).comp
     ((MvPolynomial.finSuccEquiv FX 3).toRingHom.comp (MvPolynomial.renameEquiv FX paramOrder).toRingHom)
-private theorem sectionParams_injective {I : Ideal Ambient} (hI : Active I)
+theorem sectionParams_injective {I : Ideal Ambient} (hI : Active I)
     [(I.comap jetInclude).IsPrime] : Function.Injective (sectionParams I) :=
   (eval_X_injective_of_constantCoeff _ (coefficientParams_injective_at_zero hI)).comp
     ((MvPolynomial.finSuccEquiv FX 3).injective.comp (MvPolynomial.renameEquiv FX paramOrder).injective)
-private def sectionCoeff {I : Ideal Ambient} (hI : Active I)
+def sectionCoeff {I : Ideal Ambient} (hI : Active I)
     [(I.comap jetInclude).IsPrime] : SectionField →+* MixedField I :=
   IsFractionRing.lift (K := SectionField)
     (g := (algebraMap (JetParams I) (MixedField I)).comp (sectionParams I))
@@ -2263,13 +2263,13 @@ private def sectionCoeff {I : Ideal Ambient} (hI : Active I)
 private def seedCoeff (I : Ideal Ambient) :
     MvPolynomial (Fin 2) (JetImageField I) →+* MixedField I :=
   (algebraMap (JetParams I) (MixedField I)).comp Polynomial.C
-private theorem sectionCoeff_C {I : Ideal Ambient} (hI : Active I)
+theorem sectionCoeff_C {I : Ideal Ambient} (hI : Active I)
     [(I.comap jetInclude).IsPrime] (c : FX) :
     sectionCoeff hI (algebraMap FX SectionField c) =
       seedCoeff I (MvPolynomial.C (jetImageMap I (MvPolynomial.C c))) := by
   rw [IsScalarTower.algebraMap_apply FX (MvPolynomial (Fin 4) FX) SectionField]
   simp [sectionCoeff, sectionParams, coefficientParams, seedCoeff, MvPolynomial.finSuccEquiv_apply]
-private theorem sectionParams_X (I : Ideal Ambient) (i : Fin 4) :
+theorem sectionParams_X (I : Ideal Ambient) (i : Fin 4) :
     sectionParams I (MvPolynomial.X i) =
       ![Polynomial.C (MvPolynomial.X 0), Polynomial.X, Polynomial.C (MvPolynomial.X 1),
         Polynomial.C (MvPolynomial.C (jetVal I 0)) +
@@ -2294,7 +2294,7 @@ private theorem sectionParams_X (I : Ideal Ambient) (i : Fin 4) :
       (MvPolynomial.finSuccEquiv FX 3 (MvPolynomial.X (0 : Fin 3).succ)) = _
     rw [MvPolynomial.finSuccEquiv_X_succ]
     simp [coefficientParams]
-private theorem sectionCoeff_params {I : Ideal Ambient} (hI : Active I)
+theorem sectionCoeff_params {I : Ideal Ambient} (hI : Active I)
     [(I.comap jetInclude).IsPrime] (i : Fin 4) :
     sectionCoeff hI (sliceParameter i) =
       ![seedCoeff I (MvPolynomial.X 0), algebraMap (JetParams I) (MixedField I) Polynomial.X,
@@ -2445,7 +2445,7 @@ noncomputable section
 open K1 K1_14 K1_14_2 K1_14_2_2 K1_14_2_3
 open scoped nonZeroDivisors
 private abbrev JetPlane (k : Type) [CommRing k] := MvPolynomial (Fin 2) k
-private theorem eval_seed_inclusion {k : Type} [CommRing k] (a b y v : k)
+theorem eval_seed_inclusion {k : Type} [CommRing k] (a b y v : k)
     (f : MvPolynomial (Fin 2) k) :
     MvPolynomial.eval ![a, b, y, v]
       (MvPolynomial.rename (Fin.castLE (by decide : 3 ≤ 4))
@@ -2458,7 +2458,7 @@ private theorem eval_seed_inclusion {k : Type} [CommRing k] (a b y v : k)
     funext i
     fin_cases i <;> rfl
   rw [hvec]
-private theorem seedImage_eq_ker {I : Ideal Ambient} {z : K} {R : Polynomial K}
+theorem seedImage_eq_ker {I : Ideal Ambient} {z : K} {R : Polynomial K}
     (hm : (seedImage I).IsMaximal) (hmark : OnJet I z R) :
     seedImage I = RingHom.ker (graphEval z) := by
   apply hm.eq_of_le (RingHom.ker_ne_top (graphEval z))
@@ -2467,7 +2467,7 @@ private theorem seedImage_eq_ker {I : Ideal Ambient} {z : K} {R : Polynomial K}
   have he : jetMarkHom z R ((rootIncl.comp rootSeeds) f) = graphEval z f :=
     eval_seed_inclusion (seedEmbedding z) (seedEmbedding z ^ p) (atX R) (atX R.derivative) f
   exact RingHom.mem_ker.mpr (he.symm.trans (RingHom.mem_ker.mp (hmark hmem)))
-private theorem seedRelations {I : Ideal Ambient} {z : K} {R : Polynomial K}
+theorem seedRelations {I : Ideal Ambient} {z : K} {R : Polynomial K}
     (hm : (seedImage I).IsMaximal) (hmark : OnJet I z R) :
     (MvPolynomial.X 0 - MvPolynomial.C (seedEmbedding z) : Ambient) ∈ I ∧
     (MvPolynomial.X 1 - MvPolynomial.C (seedEmbedding z ^ p) : Ambient) ∈ I := by
@@ -2480,12 +2480,12 @@ private theorem seedRelations {I : Ideal Ambient} {z : K} {R : Polynomial K}
   have lift_mem (f : Seeds) (hf : f ∈ seedImage I) : rootIncl (rootSeeds f) ∈ I := hf
   exact ⟨by simpa [rootIncl, rootSeeds] using lift_mem _ h₀,
     by simpa [rootIncl, rootSeeds] using lift_mem _ h₁⟩
-private def jetIncl {k : Type} [CommRing k] : JetPlane k →+* MvPolynomial (Fin 4) k :=
+def jetIncl {k : Type} [CommRing k] : JetPlane k →+* MvPolynomial (Fin 4) k :=
   MvPolynomial.eval₂Hom MvPolynomial.C ![MvPolynomial.X 2, MvPolynomial.X 3]
-private def fixSeed {k : Type} [CommRing k] (a b : k) : MvPolynomial (Fin 4) k →+* JetPlane k :=
+def fixSeed {k : Type} [CommRing k] (a b : k) : MvPolynomial (Fin 4) k →+* JetPlane k :=
   MvPolynomial.eval₂Hom MvPolynomial.C
     ![MvPolynomial.C a, MvPolynomial.C b, MvPolynomial.X 0, MvPolynomial.X 1]
-private theorem fixSeed_kills {k : Type} [Field k] {I : Ideal (MvPolynomial (Fin 4) k)}
+theorem fixSeed_kills {k : Type} [Field k] {I : Ideal (MvPolynomial (Fin 4) k)}
     (hdim : ringKrullDim (CoordinateRing I) = 2) {a b : k}
     (h₀ : MvPolynomial.X 0 - MvPolynomial.C a ∈ I)
     (h₁ : MvPolynomial.X 1 - MvPolynomial.C b ∈ I) :
@@ -2532,7 +2532,7 @@ private theorem fixSeed_kills {k : Type} [Field k] {I : Ideal (MvPolynomial (Fin
   change (j.comp (fixSeed a b)) f = 0
   rw [hcomp]
   exact Ideal.Quotient.eq_zero_iff_mem.mpr hf
-private theorem jetSection_pos (I : Ideal Ambient) [Module.Finite SeedField (OverJets I)]
+theorem jetSection_pos (I : Ideal Ambient) [Module.Finite SeedField (OverJets I)]
     (a b : FX) (hI : I ≤ RingHom.ker (fixSeed a b)) : 0 < sectionDegree I 3 := by
   let e : FibreRing →+* SeedField :=
     MvPolynomial.eval ![algebraMap FX SeedField a, algebraMap FX SeedField b]
@@ -2589,11 +2589,11 @@ open scoped Polynomial
 private def substitute : SectionSeeds →ₐ[SectionField] SectionField[X] :=
   MvPolynomial.aeval (K1_14_2_3_1.lineValues (sectionParameter 0) (sectionParameter 2))
 private def restriction (f : Seeds) : SectionField[X] := substitute (seedBase f)
-private theorem substitute_line : substitute seedLine = 0 := by
+theorem substitute_line : substitute seedLine = 0 := by
   simp [substitute, K1_14_2_3_1.lineValues, seedLine, Polynomial.algebraMap_eq]
 private def restore (f : Seeds) : SectionField[X] →ₐ[SectionField] CurveSection f :=
   Polynomial.aeval (Ideal.Quotient.mk (curveSectionIdeal f) (MvPolynomial.X 1))
-private theorem restore_substitute (f : Seeds) :
+theorem restore_substitute (f : Seeds) :
     (restore f).comp substitute = Ideal.Quotient.mkₐ SectionField (curveSectionIdeal f) := by
   apply MvPolynomial.algHom_ext
   intro i
@@ -2649,21 +2649,21 @@ private def sectionEquiv (f : Seeds) :
     rw [AlgHom.comp_assoc, hfrom, AlgHom.id_comp]
     change toSection.comp (B.comp substitute) = A
     rw [← AlgHom.comp_assoc, hto, restore_substitute]
-private def parameterIndices : Fin 2 → Fin 4 := ![0, 2]
-private theorem parameterIndices_injective : Function.Injective parameterIndices := by
+def parameterIndices : Fin 2 → Fin 4 := ![0, 2]
+theorem parameterIndices_injective : Function.Injective parameterIndices := by
   intro i j hij
   fin_cases i <;> fin_cases j <;> simp_all [parameterIndices]
 private def parameterMap : Seeds →+* SectionField :=
   (algebraMap (MvPolynomial (Fin 4) FX) SectionField).comp
     (MvPolynomial.rename parameterIndices).toRingHom
-private def extendParameters : K1_14_2.SeedField →+* SectionField :=
+def extendParameters : K1_14_2.SeedField →+* SectionField :=
   IsFractionRing.lift (g := parameterMap)
     ((IsFractionRing.injective (MvPolynomial (Fin 4) FX) SectionField).comp
       (MvPolynomial.rename_injective parameterIndices parameterIndices_injective))
-private theorem extendParameters_apply (r : Seeds) :
+theorem extendParameters_apply (r : Seeds) :
     extendParameters (algebraMap Seeds K1_14_2.SeedField r) = parameterMap r :=
   IsFractionRing.lift_algebraMap _ r
-private theorem restriction_map :
+theorem restriction_map :
     (Polynomial.mapRingHom extendParameters).comp K1_14_2_3_1.lineRestriction =
       substitute.toRingHom.comp seedBase := by
   apply MvPolynomial.ringHom_ext
@@ -2704,31 +2704,31 @@ local instance (I : Ideal Seeds) : CommRing (PlaneSlice I)[X] :=
 private def rootPolynomial (R : Type) [CommRing R] :
     MvPolynomial (Fin 3) R ≃ₐ[R] (MvPolynomial (Fin 2) R)[X] :=
   (MvPolynomial.renameEquiv R finSuccEquivLast).trans (MvPolynomial.optionEquivLeft R (Fin 2))
-private theorem root_index_zero : finSuccEquivLast (0 : Fin 3) = some 0 := rfl
-private theorem root_index_one : finSuccEquivLast (1 : Fin 3) = some 1 := rfl
-private theorem root_index_two : finSuccEquivLast (2 : Fin 3) = none := finSuccEquivLast_last
+theorem root_index_zero : finSuccEquivLast (0 : Fin 3) = some 0 := rfl
+theorem root_index_one : finSuccEquivLast (1 : Fin 3) = some 1 := rfl
+theorem root_index_two : finSuccEquivLast (2 : Fin 3) = none := finSuccEquivLast_last
 private abbrev incl (R : Type) [CommRing R] :
     MvPolynomial (Fin 2) R →+* MvPolynomial (Fin 3) R :=
   (MvPolynomial.rename (Fin.castLE (by decide : 2 ≤ 3))).toRingHom
-private theorem rootPolynomial_incl (R : Type) [CommRing R] :
+theorem rootPolynomial_incl (R : Type) [CommRing R] :
     (rootPolynomial R).toRingEquiv.toRingHom.comp (incl R) = Polynomial.C := by
   apply MvPolynomial.ringHom_ext
   · intro a
     simp [rootPolynomial]
   · intro i
     fin_cases i <;> simp [rootPolynomial, root_index_zero, root_index_one]
-private abbrev toOver (n : ℕ) : Raw n →+* Over n :=
+abbrev toOver (n : ℕ) : Raw n →+* Over n :=
   MvPolynomial.map (algebraMap FX SeedField)
-private theorem incl_coeff :
+theorem incl_coeff :
     (incl SeedField).comp (toOver 2) = (toOver 3).comp rootSeeds := by
   apply MvPolynomial.ringHom_ext
   · intro a
     simp [rootSeeds]
   · intro i
     simp [rootSeeds]
-private theorem incl_line : incl SeedField (seedLine 0 1) = seedLine 0 1 := by
+theorem incl_line : incl SeedField (seedLine 0 1) = seedLine 0 1 := by
   simp [seedLine]
-private theorem root_coeff :
+theorem root_coeff :
     (rootPolynomial SeedField).toRingEquiv.toRingHom.comp (toOver 3) =
       (Polynomial.mapRingHom (toOver 2)).comp rootView.toRingEquiv.toRingHom := by
   apply MvPolynomial.ringHom_ext
@@ -2736,7 +2736,7 @@ private theorem root_coeff :
     simp [rootPolynomial, rootView]
   · intro i
     fin_cases i <;> simp [rootPolynomial, rootView, root_index_zero, root_index_one, root_index_two]
-private theorem generic_ideal (C₀ : ConstantSeeds) [Fact (Irreducible C₀)]
+theorem generic_ideal (C₀ : ConstantSeeds) [Fact (Irreducible C₀)]
     (hC : SeedLocalization C₀) (P : Ideal (ConstantSeedX C₀)[X]) :
     (P.comap (genericRootMap C₀)).map (genericRootMap C₀) = P := by
   let A := Seeds ⧸ seedEquation C₀
@@ -2779,11 +2779,11 @@ private theorem seed_le (C₀ : ConstantSeeds) [Fact (Irreducible C₀)]
 private def planePolynomial (I : Ideal Seeds) : Over 3 →ₐ[SeedField] (PlaneSlice I)[X] :=
   (Polynomial.mapAlgHom (Ideal.Quotient.mkₐ SeedField (sectionIdeal I 0 1))).comp
     (rootPolynomial SeedField).toAlgHom
-private theorem planePolynomial_surjective (I : Ideal Seeds) :
+theorem planePolynomial_surjective (I : Ideal Seeds) :
     Function.Surjective (planePolynomial I) :=
   (Polynomial.map_surjective _ Ideal.Quotient.mk_surjective).comp
     (rootPolynomial SeedField).surjective
-private theorem planePolynomial_ker (I : Ideal Seeds) :
+theorem planePolynomial_ker (I : Ideal Seeds) :
     RingHom.ker (planePolynomial I).toRingHom =
       (sectionIdeal I 0 1).map (incl SeedField) := by
   let e := (rootPolynomial SeedField).toRingEquiv
@@ -2792,7 +2792,7 @@ private theorem planePolynomial_ker (I : Ideal Seeds) :
   rw [← RingHom.comap_ker, Polynomial.ker_mapRingHom, Ideal.mk_ker,
     ← rootPolynomial_incl SeedField, ← Ideal.map_map]
   exact Ideal.comap_map_of_bijective e.toRingHom e.bijective
-private def rootSliceEquiv (I : Ideal Seeds) (J : Ideal RootAmbient)
+def rootSliceEquiv (I : Ideal Seeds) (J : Ideal RootAmbient)
     (hseed : I.map rootSeeds ≤ J) :
     RootSeedSection J ≃ₐ[SeedField]
       ((PlaneSlice I)[X] ⧸ (J.map (toOver 3)).map (planePolynomial I).toRingHom) := by
@@ -2819,7 +2819,7 @@ private def rootSliceEquiv (I : Ideal Seeds) (J : Ideal RootAmbient)
       ← RingHom.ker_eq_comap_bot, hW]
   exact (Ideal.quotientEquivAlgOfEq SeedField hgker.symm).trans
     (Ideal.quotientKerAlgEquivOfSurjective hg)
-private theorem quotient_rank {T B : Type} [Field T] [Field B]
+theorem quotient_rank {T B : Type} [Field T] [Field B]
     (η : T →+* B) (P : Ideal T[X]) :
     Module.finrank B (B[X] ⧸ P.map (Polynomial.mapRingHom η)) =
       Module.finrank T (T[X] ⧸ P) := by
@@ -2831,7 +2831,7 @@ private theorem quotient_rank {T B : Type} [Field T] [Field B]
   rw [← hp, Ideal.map_span, Set.image_singleton, finrank_quotient_span_eq_natDegree,
     finrank_quotient_span_eq_natDegree]
   exact Polynomial.natDegree_map_eq_of_injective η.injective p
-private theorem section_rank {F T B R : Type} [Field F] [Field T] [Field B]
+theorem section_rank {F T B R : Type} [Field F] [Field T] [Field B]
     [CommRing R] [Algebra F R] [Algebra F B] (η : T →+* B) (P : Ideal T[X])
     (e : R ≃ₐ[F] (B[X] ⧸ P.map (Polynomial.mapRingHom η))) :
     Module.finrank F R = Module.finrank F B * Module.finrank T (T[X] ⧸ P) := by
@@ -2962,7 +2962,7 @@ private abbrev BeforeLocalization := MvPolynomial (Fin 4) Seeds
 private abbrev denominators : Submonoid BeforeLocalization :=
   Seeds⁰.map (MvPolynomial.C (σ := Fin 4))
 private def beforeBase : Ambient →+* BeforeLocalization := MvPolynomial.map MvPolynomial.C
-private def beforeLine : BeforeLocalization :=
+def beforeLine : BeforeLocalization :=
   MvPolynomial.X 0 + MvPolynomial.C (MvPolynomial.X 0) * MvPolynomial.X 1 -
     MvPolynomial.C (MvPolynomial.X 1)
 private def beforeEval (I : Ideal Ambient) : BeforeLocalization →+* (CoordinateRing I)[X] :=
@@ -2998,7 +2998,7 @@ private theorem localized_beforeBase :
     rfl
   · intro i
     simp only [RingHom.comp_apply, beforeBase, seedBase, MvPolynomial.map_X]
-private theorem localized_beforeLine :
+theorem localized_beforeLine :
     algebraMap BeforeLocalization SeedAmbient beforeLine = seedLine 0 1 := by
   change MvPolynomial.map (algebraMap Seeds SeedField) beforeLine = seedLine 0 1
   simp only [beforeLine, map_add, map_mul, map_sub, MvPolynomial.map_X, MvPolynomial.map_C,
@@ -3103,15 +3103,15 @@ private theorem trdeg_seedField : Algebra.trdeg FX SeedField = 2 := by
   let : Algebra.IsAlgebraic Seeds SeedField := IsLocalization.isAlgebraic SeedField Seeds⁰
   simpa [Seeds, trdeg_eq_zero (R := Seeds) (A := SeedField), Cardinal.mk_fin] using
     (trdeg_add_eq (A := SeedField) FX Seeds).symm
-private theorem regular_denominators {I : Ideal Ambient} [I.IsPrime] (hI : Active I) :
+theorem regular_denominators {I : Ideal Ambient} [I.IsPrime] (hI : Active I) :
     seedDenominators I ≤ (CoordinateRing I)[X]⁰ :=
   map_le_nonZeroDivisors_of_injective (parameterMap I 0 1) (parameter_injective_of_active hI) le_rfl
-private theorem seed_section_domain {I : Ideal Ambient} [I.IsPrime] (hI : Active I) :
+theorem seed_section_domain {I : Ideal Ambient} [I.IsPrime] (hI : Active I) :
     IsDomain (JetSeedSection I) := by
   let : Algebra ((CoordinateRing I)[X]) (JetSeedSection I) := sectionAlgebra I
   let : IsLocalization (seedDenominators I) (JetSeedSection I) := localization_of_seed_section I
   exact IsLocalization.isDomain_of_le_nonZeroDivisors (JetSeedSection I) (regular_denominators hI)
-private theorem section_constants (I : Ideal Ambient) (a : FX) :
+theorem section_constants (I : Ideal Ambient) (a : FX) :
     algebraMap FX (JetSeedSection I) a =
       slopeToSlice I 0 1 (algebraMap FX (CoordinateRing I)[X] a) := by
   change Ideal.Quotient.mk (seedIdeal I) (MvPolynomial.C (algebraMap FX SeedField a)) =
@@ -3190,7 +3190,7 @@ namespace K1_14_2_3_1
 noncomputable section
 open K1 K1_14 K1_14_2 K1_14_2_3
 open scoped Polynomial
-private theorem seedImage_ne_bot (I : Ideal Ambient) [I.IsPrime] [Nontrivial (JetSeedSection I)]
+theorem seedImage_ne_bot (I : Ideal Ambient) [I.IsPrime] [Nontrivial (JetSeedSection I)]
     [Module.Finite SeedField (JetSeedSection I)] : seedImage I ≠ ⊥ := by
   have hf := Module.Finite.of_injective (planeToJet I).toLinearMap (planeToJet_injective I)
   intro h
@@ -3201,7 +3201,7 @@ private theorem seedImage_ne_bot (I : Ideal Ambient) [I.IsPrime] [Nontrivial (Je
       (SeedField[X] ⧸ (⊥ : Ideal SeedField[X])) := he ▸ e
   exact Polynomial.not_finite
     (Module.Finite.equiv (e'.trans (AlgEquiv.quotientBot SeedField SeedField[X])).toLinearEquiv)
-private theorem seedImage_not_maximal (I : Ideal Ambient) [Nontrivial (JetSeedSection I)] :
+theorem seedImage_not_maximal (I : Ideal Ambient) [Nontrivial (JetSeedSection I)] :
     ¬ (seedImage I).IsMaximal := by
   intro hM
   let P := seedImage I
@@ -3222,7 +3222,7 @@ private theorem seedImage_not_maximal (I : Ideal Ambient) [Nontrivial (JetSeedSe
     simpa only [Cardinal.lift_id, Cardinal.mk_fin, Nat.cast_ofNat] using hdim
   have hn : (2 : ℕ) ≤ 1 := by exact_mod_cast hbad
   omega
-private theorem seedImage_height (I : Ideal Ambient) [I.IsPrime] [Nontrivial (JetSeedSection I)]
+theorem seedImage_height (I : Ideal Ambient) [I.IsPrime] [Nontrivial (JetSeedSection I)]
     [Module.Finite SeedField (JetSeedSection I)] : (seedImage I).height = 1 := by
   let P := seedImage I
   let : P.IsPrime := seedImage_prime I
@@ -3292,17 +3292,17 @@ set_option maxHeartbeats 4000000
 open private sumToCap_eq innerSlice_eq sumRange_suffix sumRange_congr sumRange_zero natLine_zero
   activeNatCount_eq sumRange_prefix sumRange_succ_left
   from ProximityPrize.SubmissionLower.SoloK1_13_1_1ArithmeticLogic
-private def dActive (lo : ℕ) : ℕ := activeNatCount 48 lo 48
-private def dTarget (lo o : ℕ) : ℕ :=
+def dActive (lo : ℕ) : ℕ := activeNatCount 48 lo 48
+def dTarget (lo o : ℕ) : ℕ :=
   sumRange 49 fun b =>
     min (natPairs 48 lo b) (sumRange (48 - b + 1) (natLine 48 lo o b))
-private def dCapped (lo o cap : ℕ) : ℕ :=
+def dCapped (lo o cap : ℕ) : ℕ :=
   let startB := 49 - o
   sumToCap (fun b =>
     let startC := 2 * (48 - b) + 1 - o
     sumToCap (natLine 48 lo o b) (48 - b + 1 - startC) startC (natPairs 48 lo b))
     (49 - startB) startB cap
-private theorem dCapped_eq (lo o cap : ℕ) :
+theorem dCapped_eq (lo o cap : ℕ) :
     dCapped lo o cap = min cap (dTarget lo o) := by
   unfold dCapped dTarget
   rw [sumToCap_eq]
@@ -3318,19 +3318,19 @@ private theorem dCapped_eq (lo o cap : ℕ) :
       intro c hc
       exact natLine_zero 48 lo o b c (by omega) (by omega)
     simp [hz]
-private theorem dSumMono (n : ℕ) (f g : ℕ → ℕ) (h : ∀ i, f i ≤ g i) :
+theorem dSumMono (n : ℕ) (f g : ℕ → ℕ) (h : ∀ i, f i ≤ g i) :
     sumRange n f ≤ sumRange n g := by
   induction n with
   | zero => exact le_rfl
   | succ n ih => exact Nat.add_le_add ih (h n)
-private theorem dActive_antitone {u v : ℕ} (h : u ≤ v) : dActive v ≤ dActive u := by
+theorem dActive_antitone {u v : ℕ} (h : u ≤ v) : dActive v ≤ dActive u := by
   unfold dActive activeNatCount
   apply dSumMono
   intro f
   apply dSumMono
   intro c
   exact Nat.sub_le_sub_left (Nat.sub_le_sub_right h _) _
-private theorem dTarget_mono {l₁ l₂ o₁ o₂ : ℕ} (hl : l₂ ≤ l₁) (ho : o₁ ≤ o₂) :
+theorem dTarget_mono {l₁ l₂ o₁ o₂ : ℕ} (hl : l₂ ≤ l₁) (ho : o₁ ≤ o₂) :
     dTarget l₁ o₁ ≤ dTarget l₂ o₂ := by
   unfold dTarget
   apply dSumMono
@@ -3350,13 +3350,13 @@ private theorem dTarget_mono {l₁ l₂ o₁ o₂ : ℕ} (hl : l₂ ≤ l₁) (h
     apply min_le_min (Nat.sub_le_sub_left hf _)
     apply Nat.sub_le_sub_left
     exact max_le_max hf (by omega)
-private def dField (data i : ℕ) : ℕ := (data >>> (12 * i)) % 4096
-private def dActiveVal := dField 0xbe1762292d637e4204bd5545e66726f977a7f686c8dd9489aea0ea69abeb0eb59b9fbe0c1dc55c89cb9ce5d0dd32d53d71d8cda4db9dccddcdeadf6e00e08e0fe14e18e1be1de1ee1f
-private def dTargetVal := dField 0xd61ca9bf6b49aa19ff9628cb8397ad7266a56295b35424d74714113b63613112c628023f2021ca19616613a1120ed0cc0ae09307b06605304303502901f01701000b007004002001000
-private theorem dActiveTable : ∀ i : Fin 49, dActive i = dActiveVal i := by decide +kernel
-private def dLine (o b c : ℕ) : ℕ :=
+def dField (data i : ℕ) : ℕ := (data >>> (12 * i)) % 4096
+def dActiveVal := dField 0xbe1762292d637e4204bd5545e66726f977a7f686c8dd9489aea0ea69abeb0eb59b9fbe0c1dc55c89cb9ce5d0dd32d53d71d8cda4db9dccddcdeadf6e00e08e0fe14e18e1be1de1ee1f
+def dTargetVal := dField 0xd61ca9bf6b49aa19ff9628cb8397ad7266a56295b35424d74714113b63613112c628023f2021ca19616613a1120ed0cc0ae09307b06605304303502901f01701000b007004002001000
+theorem dActiveTable : ∀ i : Fin 49, dActive i = dActiveVal i := by decide +kernel
+def dLine (o b c : ℕ) : ℕ :=
   min 11 (min (49 - b - c) (2 * b + c + o - 96))
-private theorem dLine_eq (lo o b c : ℕ) (hl : lo ≤ 19) (ho : o ≤ 48) (hbc : b + c ≤ 48) :
+theorem dLine_eq (lo o b c : ℕ) (hl : lo ≤ 19) (ho : o ≤ 48) (hbc : b + c ≤ 48) :
     natLine 48 lo o b c = dLine o b c := by
   have hrow : 49 - b - c - (145 - (3 * b + 2 * c + o)) =
       min (49 - b - c) (2 * b + c + o - 96) := by omega
@@ -3372,9 +3372,9 @@ private theorem dLine_eq (lo o b c : ℕ) (hl : lo ≤ 19) (ho : o ≤ 48) (hbc 
     have hempty : 49 - b - c ≤ max ((lo - (b + 2 * min c 24) + 2) / 3)
         (145 - (3 * b + 2 * c + o)) := hle.trans (le_max_right _ _)
     simp only [hx, Nat.sub_eq_zero_of_le hz, Nat.sub_eq_zero_of_le hempty, Nat.min_zero]
-private def dLines (o b : ℕ) := sumRange (49 - b) (dLine o b)
-private theorem dPairCover : ∀ b : Fin 49, dLines 48 b ≤ natPairs 48 19 b := by decide +kernel
-private theorem dSlice_eq (lo o b : ℕ) (hl : lo ≤ 19) (ho : o ≤ 48) (hb : b < 49) :
+def dLines (o b : ℕ) := sumRange (49 - b) (dLine o b)
+theorem dPairCover : ∀ b : Fin 49, dLines 48 b ≤ natPairs 48 19 b := by decide +kernel
+theorem dSlice_eq (lo o b : ℕ) (hl : lo ≤ 19) (ho : o ≤ 48) (hb : b < 49) :
     min (natPairs 48 lo b) (sumRange (48 - b + 1) (natLine 48 lo o b)) = dLines o b := by
   have hn : 48 - b + 1 = 49 - b := by omega
   rw [hn, show sumRange (49 - b) (natLine 48 lo o b) = dLines o b from
@@ -3393,13 +3393,13 @@ private theorem dSlice_eq (lo o b : ℕ) (hl : lo ≤ 19) (ho : o ≤ 48) (hb : 
       intro f
       apply Nat.sub_le_sub_left
       omega
-private def dShortTarget (o : ℕ) : ℕ :=
+def dShortTarget (o : ℕ) : ℕ :=
   let start := 49 - o
   sumRange o fun i =>
     let b := i + start
     let first := 97 - (2 * b + o)
     sumRange (49 - b - first) fun j => dLine o b (j + first)
-private theorem dTarget_short (lo o : ℕ) (hl : lo ≤ 19) (ho : o ≤ 48) :
+theorem dTarget_short (lo o : ℕ) (hl : lo ≤ 19) (ho : o ≤ 48) :
     dTarget lo o = dShortTarget o := by
   have h : dTarget lo o = sumRange 49 (dLines o) :=
     sumRange_congr _ fun b hb => dSlice_eq lo o b hl ho hb
@@ -3419,18 +3419,18 @@ private theorem dTarget_short (lo o : ℕ) (hl : lo ≤ 19) (ho : o ≤ 48) :
     intro c hc
     unfold dLine
     omega
-private def dUncappedArea (n t : ℕ) : ℕ :=
+def dUncappedArea (n t : ℕ) : ℕ :=
   let d := n - t
   n * (n + 1) / 2 - ((d + 1) / 2) * ((d + 2) / 2)
-private def dRowArea (n t : ℕ) : ℕ :=
+def dRowArea (n t : ℕ) : ℕ :=
   dUncappedArea n t - dUncappedArea (n + t - 22) 0
-private def dRowSum (n t : ℕ) : ℕ :=
+def dRowSum (n t : ℕ) : ℕ :=
   sumRange n fun j => min 11 (min (n - j) (t + j))
-private theorem dAreaStep : ∀ (n : Fin 49) (t : Fin 12),
+theorem dAreaStep : ∀ (n : Fin 49) (t : Fin 12),
     dRowArea (n.val + 1) t.val =
       min 11 (min (n.val + 1) t.val) + dRowArea n.val (min 11 (t.val + 1)) := by
   decide +kernel
-private theorem dRow_sum_step (n t : ℕ) :
+theorem dRow_sum_step (n t : ℕ) :
     dRowSum (n + 1) t = min 11 (min (n + 1) t) + dRowSum n (t + 1) := by
   unfold dRowSum
   rw [sumRange_succ_left]
@@ -3438,7 +3438,7 @@ private theorem dRow_sum_step (n t : ℕ) :
   apply sumRange_congr
   intro i hi
   rw [show n + 1 - (i + 1) = n - i by omega, show t + (i + 1) = t + 1 + i by omega]
-private theorem dRowArea_eq (n t : ℕ) (hn : n ≤ 49) :
+theorem dRowArea_eq (n t : ℕ) (hn : n ≤ 49) :
     dRowSum n t = dRowArea n (min 11 t) := by
   induction n generalizing t with
   | zero => simp [dRowSum, sumRange, dRowArea, dUncappedArea]
@@ -3450,12 +3450,12 @@ private theorem dRowArea_eq (n t : ℕ) (hn : n ≤ 49) :
     rw [show min 11 (min (n + 1) (min 11 t)) = min 11 (min (n + 1) t) by omega,
       show min 11 (min 11 t + 1) = min 11 (t + 1) by omega] at h
     exact h.symm
-private def dAreaTarget (o : ℕ) : ℕ :=
+def dAreaTarget (o : ℕ) : ℕ :=
   sumRange o fun i =>
     let b := i + (49 - o)
     let first := 97 - (2 * b + o)
     dRowArea (49 - b - first) (min 11 (2 * b + o + first - 96))
-private theorem dAreaTarget_eq (o : ℕ) : dShortTarget o = dAreaTarget o := by
+theorem dAreaTarget_eq (o : ℕ) : dShortTarget o = dAreaTarget o := by
   unfold dShortTarget dAreaTarget
   apply sumRange_congr
   intro i hi
@@ -3470,14 +3470,14 @@ private theorem dAreaTarget_eq (o : ℕ) : dShortTarget o = dAreaTarget o := by
   unfold dLine
   rw [show 49 - b - (j + first) = 49 - b - first - j by omega,
     show 2 * b + (j + first) + o - 96 = 2 * b + o + first - 96 + j by dsimp [first]; omega]
-private theorem dShortTable : ∀ i : Fin 49, dAreaTarget i = dTargetVal i := by decide +kernel
-private theorem dTarget_small (lo o : ℕ) (ho : o < 49) (hl : lo ≤ o - 29) :
+theorem dShortTable : ∀ i : Fin 49, dAreaTarget i = dTargetVal i := by decide +kernel
+theorem dTarget_small (lo o : ℕ) (ho : o < 49) (hl : lo ≤ o - 29) :
     dTarget lo o = dTargetVal o := by
   rw [dTarget_short _ _ (by omega) (by omega), dAreaTarget_eq]
   exact dShortTable ⟨o, ho⟩
-private theorem dFullLow : dCapped 24 49 3615 = 3615 := by decide +kernel
-private theorem dFullHigh : dCapped 48 49 3040 = 3040 := by decide +kernel
-private theorem dTarget_large (lo o : ℕ) (hl : lo ≤ 48) (ho : 49 ≤ o) :
+theorem dFullLow : dCapped 24 49 3615 = 3615 := by decide +kernel
+theorem dFullHigh : dCapped 48 49 3040 = 3040 := by decide +kernel
+theorem dTarget_large (lo o : ℕ) (hl : lo ≤ 48) (ho : 49 ≤ o) :
     dActive lo ≤ dTarget lo o := by
   by_cases h : lo ≤ 24
   · have h₁ := dFullLow
@@ -3492,11 +3492,11 @@ private theorem dTarget_large (lo o : ℕ) (hl : lo ≤ 48) (ho : 49 ≤ o) :
     have h₃ : dActive 25 = 3040 := dActiveTable 25
     have h₄ : dTarget 48 49 ≤ dTarget lo o := dTarget_mono hl ho
     omega
-private def dPascal (s r : ℕ) : ℕ :=
+def dPascal (s r : ℕ) : ℕ :=
   let lo := 48 - r
   let o := 138 - (s + r)
   if o < 49 then min (dActiveVal lo) (dTargetVal o) else dActiveVal lo
-private theorem dPascal_eq (s r : ℕ) (hs : 49 ≤ s) (hs' : s ≤ 61) (hr : s + r < 138) :
+theorem dPascal_eq (s r : ℕ) (hs : 49 ≤ s) (hs' : s ≤ 61) (hr : s + r < 138) :
     fastPascal s r = dPascal s r := by
   have hd : residualDegree s = 48 := by unfold residualDegree; omega
   have hh : min 48 (137 - r) = 48 := by omega
@@ -3513,15 +3513,15 @@ private theorem dPascal_eq (s r : ℕ) (hs : 49 ≤ s) (hs' : s ≤ 61) (hr : s 
     rw [ha, dTarget_small _ _ h (by omega)]
   · rename_i h
     rw [min_eq_left (dTarget_large _ _ (Nat.sub_le _ _) (by omega)), ha]
-private theorem dIntervalNat (l a b : ℤ) :
+theorem dIntervalNat (l a b : ℤ) :
     intervalSize (max 0 l) (min a b) = min (a + 1).toNat (b + 1).toNat - l.toNat := by
   unfold intervalSize
   omega
-private def dBand (d lo upper top : ℕ) : ℕ :=
+def dBand (d lo upper top : ℕ) : ℕ :=
   sumRange (min d top + 1) fun f =>
     sumRange (min (d - f) ((upper - 1 - 3 * f) / 2) + 1) fun c =>
       min (d - f - c + 1) (upper - (2 * c + 3 * f)) - (lo - (2 * c + 3 * f))
-private theorem dBand_eq (d : ℕ) (lo hi : ℤ) (top : ℕ) :
+theorem dBand_eq (d : ℕ) (lo hi : ℤ) (top : ℕ) :
     bandCount d lo hi top = dBand d lo.toNat (hi + 1).toNat top := by
   unfold bandCount dBand
   apply sumRange_congr
@@ -3535,13 +3535,13 @@ private theorem dBand_eq (d : ℕ) (lo hi : ℤ) (top : ℕ) :
   have h₂ : (hi - 2 * c - 3 * f + 1).toNat = (hi + 1).toNat - (2 * c + 3 * f : ℕ) := by omega
   have h₃ : (lo - 2 * c - 3 * f).toNat = lo.toNat - (2 * c + 3 * f : ℕ) := by omega
   rw [h₁, h₂, h₃]
-private def dCount (d lo upper : ℕ) : ℕ :=
+def dCount (d lo upper : ℕ) : ℕ :=
   sumRange (d + 1) fun a =>
     let x := d - a
     let u := upper - 3 * a
     sumRange (min (x + 1) ((u + 1) / 2)) fun f =>
       min (x + 1 - f) (u - 2 * f) - (lo - (x + 2 * f))
-private theorem dCount_eq (d : ℕ) (lo o : ℤ) :
+theorem dCount_eq (d : ℕ) (lo o : ℤ) :
     targetCount d lo o = dCount d lo.toNat o.toNat := by
   unfold targetCount dCount
   apply sumRange_congr
@@ -3560,7 +3560,7 @@ private theorem dCount_eq (d : ℕ) (lo o : ℤ) :
     rw [dIntervalNat]
     have h₂ : (o - 1 - 3 * a - 2 * f + 1).toNat = 0 := by omega
     simp only [h₂, Nat.min_zero, Nat.zero_sub]
-private def dFlag (s r : ℕ) (v : FactorPowers) : ℕ :=
+def dFlag (s r : ℕ) (v : FactorPowers) : ℕ :=
   let g := offset r
   let count := dActiveVal (48 - r)
   if v.degree ≤ 48 ∧ v.maxIndex ≤ 48 ∧ v.maxTop ≤ 10 then
@@ -3570,7 +3570,7 @@ private def dFlag (s r : ℕ) (v : FactorPowers) : ℕ :=
     let order := (orderCutoff s g - (v.minOrder : ℤ)).toNat
     count - (dBand d' lo' upper (10 - v.maxTop) - dCount d' lo' order)
   else count
-private theorem dFlag_eq (s r : ℕ) (v : FactorPowers) (hs : 49 ≤ s) (hs' : s ≤ 61) :
+theorem dFlag_eq (s r : ℕ) (v : FactorPowers) (hs : 49 ≤ s) (hs' : s ≤ 61) :
     flagBound s (offset r) v = dFlag s r v := by
   have hd : residualDegree s = 48 := by unfold residualDegree; omega
   have ha : bandCount 48 (-(offset r)) 48 10 = dActiveVal (48 - r) := by
@@ -3579,22 +3579,22 @@ private theorem dFlag_eq (s r : ℕ) (v : FactorPowers) (hs : 49 ≤ s) (hs' : s
     rw [hl]
     exact dActiveTable ⟨48 - r, by omega⟩
   simp only [flagBound, dFlag, hd, ha, dBand_eq, dCount_eq]
-private def dBlock (s r : ℕ) : ℕ :=
+def dBlock (s r : ℕ) : ℕ :=
   if s + r < 138 then
     match selectedFactors s (offset r) with
     | none => dPascal s r
     | some v => min (dPascal s r) (dFlag s r v)
   else 0
-private theorem dBlock_eq (s r : ℕ) (hs : 49 ≤ s) (hs' : s ≤ 61) :
+theorem dBlock_eq (s r : ℕ) (hs : 49 ≤ s) (hs' : s ≤ 61) :
     fastBlock s r = dBlock s r := by
   unfold fastBlock dBlock
   by_cases hr : s + r < 138
   · cases h : selectedFactors s (offset r) <;> simp [hr, dPascal_eq s r hs hs' hr, dFlag_eq s r _ hs hs']
   · simp only [ite_eq_right hr]
-private theorem dBlockSum_eq (s k n : ℕ) (hs : 49 ≤ s) (hs' : s ≤ 61) :
+theorem dBlockSum_eq (s k n : ℕ) (hs : 49 ≤ s) (hs' : s ≤ 61) :
     sumRange n (fun i => fastBlock s (i + k)) = sumRange n (fun i => dBlock s (i + k)) :=
   sumRange_congr _ fun i _ => dBlock_eq s (i + k) hs hs'
-private theorem budgetDAddRanges (a b : ℕ) (f : ℕ → ℕ) :
+theorem budgetDAddRanges (a b : ℕ) (f : ℕ → ℕ) :
     sumRange (a + b) f = sumRange a f + sumRange b (fun i => f (i + a)) := by
   induction b with
   | zero => exact (Nat.add_zero (sumRange a f)).symm
@@ -3602,84 +3602,84 @@ private theorem budgetDAddRanges (a b : ℕ) (f : ℕ → ℕ) :
     change sumRange (a + b) f + f (a + b) =
       sumRange a f + (sumRange b (fun i => f (i + a)) + f (b + a))
     rw [ih, Nat.add_comm b a, Nat.add_assoc]
-private theorem budgetDAppend (f : ℕ → ℕ) (start len lhs rhs : ℕ)
+theorem budgetDAppend (f : ℕ → ℕ) (start len lhs rhs : ℕ)
     (hp : sumRange start f = lhs)
     (hc : sumRange len (fun i => f (i + start)) = rhs) :
     sumRange (start + len) f = lhs + rhs :=
   (budgetDAddRanges start len f).trans (congrArg₂ Nat.add hp hc)
-private theorem budgetDGrade49At0 :
+theorem budgetDGrade49At0 :
     sumRange 4 (fun i => fastBlock 49 (i + 0)) = 1843 :=
   (dBlockSum_eq 49 0 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade49At4 :
+theorem budgetDGrade49At4 :
     sumRange 4 (fun i => fastBlock 49 (i + 4)) = 4527 :=
   (dBlockSum_eq 49 4 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade49At8 :
+theorem budgetDGrade49At8 :
     sumRange 4 (fun i => fastBlock 49 (i + 8)) = 6859 :=
   (dBlockSum_eq 49 8 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade49At12 :
+theorem budgetDGrade49At12 :
     sumRange 4 (fun i => fastBlock 49 (i + 12)) = 8839 :=
   (dBlockSum_eq 49 12 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade49At16 :
+theorem budgetDGrade49At16 :
     sumRange 4 (fun i => fastBlock 49 (i + 16)) = 10467 :=
   (dBlockSum_eq 49 16 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade49At20 :
+theorem budgetDGrade49At20 :
     sumRange 4 (fun i => fastBlock 49 (i + 20)) = 11750 :=
   (dBlockSum_eq 49 20 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade49At24 :
+theorem budgetDGrade49At24 :
     sumRange 4 (fun i => fastBlock 49 (i + 24)) = 12724 :=
   (dBlockSum_eq 49 24 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade49At28 :
+theorem budgetDGrade49At28 :
     sumRange 4 (fun i => fastBlock 49 (i + 28)) = 13431 :=
   (dBlockSum_eq 49 28 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade49At32 :
+theorem budgetDGrade49At32 :
     sumRange 4 (fun i => fastBlock 49 (i + 32)) = 13914 :=
   (dBlockSum_eq 49 32 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade49At36 :
+theorem budgetDGrade49At36 :
     sumRange 4 (fun i => fastBlock 49 (i + 36)) = 14216 :=
   (dBlockSum_eq 49 36 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade49At40 :
+theorem budgetDGrade49At40 :
     sumRange 4 (fun i => fastBlock 49 (i + 40)) = 13312 :=
   (dBlockSum_eq 49 40 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade49At44 :
+theorem budgetDGrade49At44 :
     sumRange 4 (fun i => fastBlock 49 (i + 44)) = 10571 :=
   (dBlockSum_eq 49 44 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade49At48 :
+theorem budgetDGrade49At48 :
     sumRange 4 (fun i => fastBlock 49 (i + 48)) = 8151 :=
   (dBlockSum_eq 49 48 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade49At52 :
+theorem budgetDGrade49At52 :
     sumRange 4 (fun i => fastBlock 49 (i + 52)) = 6083 :=
   (dBlockSum_eq 49 52 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade49At56 :
+theorem budgetDGrade49At56 :
     sumRange 4 (fun i => fastBlock 49 (i + 56)) = 4367 :=
   (dBlockSum_eq 49 56 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade49At60 :
+theorem budgetDGrade49At60 :
     sumRange 4 (fun i => fastBlock 49 (i + 60)) = 3000 :=
   (dBlockSum_eq 49 60 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade49At64 :
+theorem budgetDGrade49At64 :
     sumRange 4 (fun i => fastBlock 49 (i + 64)) = 1953 :=
   (dBlockSum_eq 49 64 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade49At68 :
+theorem budgetDGrade49At68 :
     sumRange 4 (fun i => fastBlock 49 (i + 68)) = 1183 :=
   (dBlockSum_eq 49 68 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade49At72 :
+theorem budgetDGrade49At72 :
     sumRange 4 (fun i => fastBlock 49 (i + 72)) = 648 :=
   (dBlockSum_eq 49 72 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade49At76 :
+theorem budgetDGrade49At76 :
     sumRange 4 (fun i => fastBlock 49 (i + 76)) = 305 :=
   (dBlockSum_eq 49 76 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade49At80 :
+theorem budgetDGrade49At80 :
     sumRange 4 (fun i => fastBlock 49 (i + 80)) = 111 :=
   (dBlockSum_eq 49 80 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade49At84 :
+theorem budgetDGrade49At84 :
     sumRange 4 (fun i => fastBlock 49 (i + 84)) = 24 :=
   (dBlockSum_eq 49 84 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade49At88 :
+theorem budgetDGrade49At88 :
     sumRange 4 (fun i => fastBlock 49 (i + 88)) = 1 :=
   (dBlockSum_eq 49 88 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade49At92 :
+theorem budgetDGrade49At92 :
     sumRange 46 (fun i => fastBlock 49 (i + 92)) = 0 :=
   (dBlockSum_eq 49 92 46 (by decide) (by decide)).trans (by decide +kernel)
-private theorem grade49 : fastGrade 49 = 148279 := by
+theorem grade49 : fastGrade 49 = 148279 := by
   have prefix4 : sumRange 4 (fastBlock 49) = 1843 :=
     budgetDAppend (fastBlock 49) 0 4 0 1843 rfl budgetDGrade49At0
   have prefix8 : sumRange 8 (fastBlock 49) = 6370 :=
@@ -3729,76 +3729,76 @@ private theorem grade49 : fastGrade 49 = 148279 := by
   have prefix138 : sumRange 138 (fastBlock 49) = 148279 :=
     budgetDAppend (fastBlock 49) 92 46 148279 0 prefix92 budgetDGrade49At92
   exact prefix138
-private theorem budgetDGrade50At0 :
+theorem budgetDGrade50At0 :
     sumRange 4 (fun i => fastBlock 50 (i + 0)) = 1843 :=
   (dBlockSum_eq 50 0 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade50At4 :
+theorem budgetDGrade50At4 :
     sumRange 4 (fun i => fastBlock 50 (i + 4)) = 4527 :=
   (dBlockSum_eq 50 4 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade50At8 :
+theorem budgetDGrade50At8 :
     sumRange 4 (fun i => fastBlock 50 (i + 8)) = 6859 :=
   (dBlockSum_eq 50 8 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade50At12 :
+theorem budgetDGrade50At12 :
     sumRange 4 (fun i => fastBlock 50 (i + 12)) = 8839 :=
   (dBlockSum_eq 50 12 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade50At16 :
+theorem budgetDGrade50At16 :
     sumRange 4 (fun i => fastBlock 50 (i + 16)) = 10467 :=
   (dBlockSum_eq 50 16 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade50At20 :
+theorem budgetDGrade50At20 :
     sumRange 4 (fun i => fastBlock 50 (i + 20)) = 11750 :=
   (dBlockSum_eq 50 20 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade50At24 :
+theorem budgetDGrade50At24 :
     sumRange 4 (fun i => fastBlock 50 (i + 24)) = 12724 :=
   (dBlockSum_eq 50 24 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade50At28 :
+theorem budgetDGrade50At28 :
     sumRange 4 (fun i => fastBlock 50 (i + 28)) = 13431 :=
   (dBlockSum_eq 50 28 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade50At32 :
+theorem budgetDGrade50At32 :
     sumRange 4 (fun i => fastBlock 50 (i + 32)) = 13914 :=
   (dBlockSum_eq 50 32 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade50At36 :
+theorem budgetDGrade50At36 :
     sumRange 4 (fun i => fastBlock 50 (i + 36)) = 14216 :=
   (dBlockSum_eq 50 36 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade50At40 :
+theorem budgetDGrade50At40 :
     sumRange 4 (fun i => fastBlock 50 (i + 40)) = 12617 :=
   (dBlockSum_eq 50 40 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade50At44 :
+theorem budgetDGrade50At44 :
     sumRange 4 (fun i => fastBlock 50 (i + 44)) = 9933 :=
   (dBlockSum_eq 50 44 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade50At48 :
+theorem budgetDGrade50At48 :
     sumRange 4 (fun i => fastBlock 50 (i + 48)) = 7601 :=
   (dBlockSum_eq 50 48 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade50At52 :
+theorem budgetDGrade50At52 :
     sumRange 4 (fun i => fastBlock 50 (i + 52)) = 5621 :=
   (dBlockSum_eq 50 52 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade50At56 :
+theorem budgetDGrade50At56 :
     sumRange 4 (fun i => fastBlock 50 (i + 56)) = 3993 :=
   (dBlockSum_eq 50 56 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade50At60 :
+theorem budgetDGrade50At60 :
     sumRange 4 (fun i => fastBlock 50 (i + 60)) = 2710 :=
   (dBlockSum_eq 50 60 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade50At64 :
+theorem budgetDGrade50At64 :
     sumRange 4 (fun i => fastBlock 50 (i + 64)) = 1736 :=
   (dBlockSum_eq 50 64 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade50At68 :
+theorem budgetDGrade50At68 :
     sumRange 4 (fun i => fastBlock 50 (i + 68)) = 1029 :=
   (dBlockSum_eq 50 68 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade50At72 :
+theorem budgetDGrade50At72 :
     sumRange 4 (fun i => fastBlock 50 (i + 72)) = 546 :=
   (dBlockSum_eq 50 72 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade50At76 :
+theorem budgetDGrade50At76 :
     sumRange 4 (fun i => fastBlock 50 (i + 76)) = 244 :=
   (dBlockSum_eq 50 76 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade50At80 :
+theorem budgetDGrade50At80 :
     sumRange 4 (fun i => fastBlock 50 (i + 80)) = 81 :=
   (dBlockSum_eq 50 80 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade50At84 :
+theorem budgetDGrade50At84 :
     sumRange 4 (fun i => fastBlock 50 (i + 84)) = 14 :=
   (dBlockSum_eq 50 84 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade50At88 :
+theorem budgetDGrade50At88 :
     sumRange 50 (fun i => fastBlock 50 (i + 88)) = 0 :=
   (dBlockSum_eq 50 88 50 (by decide) (by decide)).trans (by decide +kernel)
-private theorem grade50 : fastGrade 50 = 144695 := by
+theorem grade50 : fastGrade 50 = 144695 := by
   have prefix4 : sumRange 4 (fastBlock 50) = 1843 :=
     budgetDAppend (fastBlock 50) 0 4 0 1843 rfl budgetDGrade50At0
   have prefix8 : sumRange 8 (fastBlock 50) = 6370 :=
@@ -3846,76 +3846,76 @@ private theorem grade50 : fastGrade 50 = 144695 := by
   have prefix138 : sumRange 138 (fastBlock 50) = 144695 :=
     budgetDAppend (fastBlock 50) 88 50 144695 0 prefix88 budgetDGrade50At88
   exact prefix138
-private theorem budgetDGrade51At0 :
+theorem budgetDGrade51At0 :
     sumRange 4 (fun i => fastBlock 51 (i + 0)) = 1843 :=
   (dBlockSum_eq 51 0 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade51At4 :
+theorem budgetDGrade51At4 :
     sumRange 4 (fun i => fastBlock 51 (i + 4)) = 4527 :=
   (dBlockSum_eq 51 4 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade51At8 :
+theorem budgetDGrade51At8 :
     sumRange 4 (fun i => fastBlock 51 (i + 8)) = 6859 :=
   (dBlockSum_eq 51 8 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade51At12 :
+theorem budgetDGrade51At12 :
     sumRange 4 (fun i => fastBlock 51 (i + 12)) = 8839 :=
   (dBlockSum_eq 51 12 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade51At16 :
+theorem budgetDGrade51At16 :
     sumRange 4 (fun i => fastBlock 51 (i + 16)) = 10467 :=
   (dBlockSum_eq 51 16 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade51At20 :
+theorem budgetDGrade51At20 :
     sumRange 4 (fun i => fastBlock 51 (i + 20)) = 11750 :=
   (dBlockSum_eq 51 20 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade51At24 :
+theorem budgetDGrade51At24 :
     sumRange 4 (fun i => fastBlock 51 (i + 24)) = 12724 :=
   (dBlockSum_eq 51 24 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade51At28 :
+theorem budgetDGrade51At28 :
     sumRange 4 (fun i => fastBlock 51 (i + 28)) = 13431 :=
   (dBlockSum_eq 51 28 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade51At32 :
+theorem budgetDGrade51At32 :
     sumRange 4 (fun i => fastBlock 51 (i + 32)) = 13914 :=
   (dBlockSum_eq 51 32 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade51At36 :
+theorem budgetDGrade51At36 :
     sumRange 4 (fun i => fastBlock 51 (i + 36)) = 14067 :=
   (dBlockSum_eq 51 36 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade51At40 :
+theorem budgetDGrade51At40 :
     sumRange 4 (fun i => fastBlock 51 (i + 40)) = 11913 :=
   (dBlockSum_eq 51 40 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade51At44 :
+theorem budgetDGrade51At44 :
     sumRange 4 (fun i => fastBlock 51 (i + 44)) = 9317 :=
   (dBlockSum_eq 51 44 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade51At48 :
+theorem budgetDGrade51At48 :
     sumRange 4 (fun i => fastBlock 51 (i + 48)) = 7073 :=
   (dBlockSum_eq 51 48 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade51At52 :
+theorem budgetDGrade51At52 :
     sumRange 4 (fun i => fastBlock 51 (i + 52)) = 5181 :=
   (dBlockSum_eq 51 52 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade51At56 :
+theorem budgetDGrade51At56 :
     sumRange 4 (fun i => fastBlock 51 (i + 56)) = 3641 :=
   (dBlockSum_eq 51 56 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade51At60 :
+theorem budgetDGrade51At60 :
     sumRange 4 (fun i => fastBlock 51 (i + 60)) = 2439 :=
   (dBlockSum_eq 51 60 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade51At64 :
+theorem budgetDGrade51At64 :
     sumRange 4 (fun i => fastBlock 51 (i + 64)) = 1536 :=
   (dBlockSum_eq 51 64 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade51At68 :
+theorem budgetDGrade51At68 :
     sumRange 4 (fun i => fastBlock 51 (i + 68)) = 889 :=
   (dBlockSum_eq 51 68 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade51At72 :
+theorem budgetDGrade51At72 :
     sumRange 4 (fun i => fastBlock 51 (i + 72)) = 455 :=
   (dBlockSum_eq 51 72 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade51At76 :
+theorem budgetDGrade51At76 :
     sumRange 4 (fun i => fastBlock 51 (i + 76)) = 192 :=
   (dBlockSum_eq 51 76 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade51At80 :
+theorem budgetDGrade51At80 :
     sumRange 4 (fun i => fastBlock 51 (i + 80)) = 57 :=
   (dBlockSum_eq 51 80 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade51At84 :
+theorem budgetDGrade51At84 :
     sumRange 4 (fun i => fastBlock 51 (i + 84)) = 7 :=
   (dBlockSum_eq 51 84 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade51At88 :
+theorem budgetDGrade51At88 :
     sumRange 50 (fun i => fastBlock 51 (i + 88)) = 0 :=
   (dBlockSum_eq 51 88 50 (by decide) (by decide)).trans (by decide +kernel)
-private theorem grade51 : fastGrade 51 = 141121 := by
+theorem grade51 : fastGrade 51 = 141121 := by
   have prefix4 : sumRange 4 (fastBlock 51) = 1843 :=
     budgetDAppend (fastBlock 51) 0 4 0 1843 rfl budgetDGrade51At0
   have prefix8 : sumRange 8 (fastBlock 51) = 6370 :=
@@ -3963,76 +3963,76 @@ private theorem grade51 : fastGrade 51 = 141121 := by
   have prefix138 : sumRange 138 (fastBlock 51) = 141121 :=
     budgetDAppend (fastBlock 51) 88 50 141121 0 prefix88 budgetDGrade51At88
   exact prefix138
-private theorem budgetDGrade52At0 :
+theorem budgetDGrade52At0 :
     sumRange 4 (fun i => fastBlock 52 (i + 0)) = 1843 :=
   (dBlockSum_eq 52 0 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade52At4 :
+theorem budgetDGrade52At4 :
     sumRange 4 (fun i => fastBlock 52 (i + 4)) = 4527 :=
   (dBlockSum_eq 52 4 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade52At8 :
+theorem budgetDGrade52At8 :
     sumRange 4 (fun i => fastBlock 52 (i + 8)) = 6859 :=
   (dBlockSum_eq 52 8 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade52At12 :
+theorem budgetDGrade52At12 :
     sumRange 4 (fun i => fastBlock 52 (i + 12)) = 8839 :=
   (dBlockSum_eq 52 12 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade52At16 :
+theorem budgetDGrade52At16 :
     sumRange 4 (fun i => fastBlock 52 (i + 16)) = 10467 :=
   (dBlockSum_eq 52 16 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade52At20 :
+theorem budgetDGrade52At20 :
     sumRange 4 (fun i => fastBlock 52 (i + 20)) = 11750 :=
   (dBlockSum_eq 52 20 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade52At24 :
+theorem budgetDGrade52At24 :
     sumRange 4 (fun i => fastBlock 52 (i + 24)) = 12724 :=
   (dBlockSum_eq 52 24 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade52At28 :
+theorem budgetDGrade52At28 :
     sumRange 4 (fun i => fastBlock 52 (i + 28)) = 13431 :=
   (dBlockSum_eq 52 28 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade52At32 :
+theorem budgetDGrade52At32 :
     sumRange 4 (fun i => fastBlock 52 (i + 32)) = 13914 :=
   (dBlockSum_eq 52 32 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade52At36 :
+theorem budgetDGrade52At36 :
     sumRange 4 (fun i => fastBlock 52 (i + 36)) = 13746 :=
   (dBlockSum_eq 52 36 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade52At40 :
+theorem budgetDGrade52At40 :
     sumRange 4 (fun i => fastBlock 52 (i + 40)) = 11231 :=
   (dBlockSum_eq 52 40 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade52At44 :
+theorem budgetDGrade52At44 :
     sumRange 4 (fun i => fastBlock 52 (i + 44)) = 8723 :=
   (dBlockSum_eq 52 44 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade52At48 :
+theorem budgetDGrade52At48 :
     sumRange 4 (fun i => fastBlock 52 (i + 48)) = 6567 :=
   (dBlockSum_eq 52 48 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade52At52 :
+theorem budgetDGrade52At52 :
     sumRange 4 (fun i => fastBlock 52 (i + 52)) = 4763 :=
   (dBlockSum_eq 52 52 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade52At56 :
+theorem budgetDGrade52At56 :
     sumRange 4 (fun i => fastBlock 52 (i + 56)) = 3310 :=
   (dBlockSum_eq 52 56 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade52At60 :
+theorem budgetDGrade52At60 :
     sumRange 4 (fun i => fastBlock 52 (i + 60)) = 2187 :=
   (dBlockSum_eq 52 60 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade52At64 :
+theorem budgetDGrade52At64 :
     sumRange 4 (fun i => fastBlock 52 (i + 64)) = 1352 :=
   (dBlockSum_eq 52 64 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade52At68 :
+theorem budgetDGrade52At68 :
     sumRange 4 (fun i => fastBlock 52 (i + 68)) = 762 :=
   (dBlockSum_eq 52 68 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade52At72 :
+theorem budgetDGrade52At72 :
     sumRange 4 (fun i => fastBlock 52 (i + 72)) = 375 :=
   (dBlockSum_eq 52 72 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade52At76 :
+theorem budgetDGrade52At76 :
     sumRange 4 (fun i => fastBlock 52 (i + 76)) = 148 :=
   (dBlockSum_eq 52 76 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade52At80 :
+theorem budgetDGrade52At80 :
     sumRange 4 (fun i => fastBlock 52 (i + 80)) = 38 :=
   (dBlockSum_eq 52 80 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade52At84 :
+theorem budgetDGrade52At84 :
     sumRange 4 (fun i => fastBlock 52 (i + 84)) = 3 :=
   (dBlockSum_eq 52 84 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade52At88 :
+theorem budgetDGrade52At88 :
     sumRange 50 (fun i => fastBlock 52 (i + 88)) = 0 :=
   (dBlockSum_eq 52 88 50 (by decide) (by decide)).trans (by decide +kernel)
-private theorem grade52 : fastGrade 52 = 137559 := by
+theorem grade52 : fastGrade 52 = 137559 := by
   have prefix4 : sumRange 4 (fastBlock 52) = 1843 :=
     budgetDAppend (fastBlock 52) 0 4 0 1843 rfl budgetDGrade52At0
   have prefix8 : sumRange 8 (fastBlock 52) = 6370 :=
@@ -4080,76 +4080,76 @@ private theorem grade52 : fastGrade 52 = 137559 := by
   have prefix138 : sumRange 138 (fastBlock 52) = 137559 :=
     budgetDAppend (fastBlock 52) 88 50 137559 0 prefix88 budgetDGrade52At88
   exact prefix138
-private theorem budgetDGrade53At0 :
+theorem budgetDGrade53At0 :
     sumRange 4 (fun i => fastBlock 53 (i + 0)) = 1843 :=
   (dBlockSum_eq 53 0 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade53At4 :
+theorem budgetDGrade53At4 :
     sumRange 4 (fun i => fastBlock 53 (i + 4)) = 4527 :=
   (dBlockSum_eq 53 4 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade53At8 :
+theorem budgetDGrade53At8 :
     sumRange 4 (fun i => fastBlock 53 (i + 8)) = 6859 :=
   (dBlockSum_eq 53 8 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade53At12 :
+theorem budgetDGrade53At12 :
     sumRange 4 (fun i => fastBlock 53 (i + 12)) = 8839 :=
   (dBlockSum_eq 53 12 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade53At16 :
+theorem budgetDGrade53At16 :
     sumRange 4 (fun i => fastBlock 53 (i + 16)) = 10467 :=
   (dBlockSum_eq 53 16 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade53At20 :
+theorem budgetDGrade53At20 :
     sumRange 4 (fun i => fastBlock 53 (i + 20)) = 11750 :=
   (dBlockSum_eq 53 20 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade53At24 :
+theorem budgetDGrade53At24 :
     sumRange 4 (fun i => fastBlock 53 (i + 24)) = 12724 :=
   (dBlockSum_eq 53 24 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade53At28 :
+theorem budgetDGrade53At28 :
     sumRange 4 (fun i => fastBlock 53 (i + 28)) = 13431 :=
   (dBlockSum_eq 53 28 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade53At32 :
+theorem budgetDGrade53At32 :
     sumRange 4 (fun i => fastBlock 53 (i + 32)) = 13914 :=
   (dBlockSum_eq 53 32 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade53At36 :
+theorem budgetDGrade53At36 :
     sumRange 4 (fun i => fastBlock 53 (i + 36)) = 13260 :=
   (dBlockSum_eq 53 36 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade53At40 :
+theorem budgetDGrade53At40 :
     sumRange 4 (fun i => fastBlock 53 (i + 40)) = 10571 :=
   (dBlockSum_eq 53 40 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade53At44 :
+theorem budgetDGrade53At44 :
     sumRange 4 (fun i => fastBlock 53 (i + 44)) = 8151 :=
   (dBlockSum_eq 53 44 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade53At48 :
+theorem budgetDGrade53At48 :
     sumRange 4 (fun i => fastBlock 53 (i + 48)) = 6083 :=
   (dBlockSum_eq 53 48 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade53At52 :
+theorem budgetDGrade53At52 :
     sumRange 4 (fun i => fastBlock 53 (i + 52)) = 4367 :=
   (dBlockSum_eq 53 52 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade53At56 :
+theorem budgetDGrade53At56 :
     sumRange 4 (fun i => fastBlock 53 (i + 56)) = 3000 :=
   (dBlockSum_eq 53 56 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade53At60 :
+theorem budgetDGrade53At60 :
     sumRange 4 (fun i => fastBlock 53 (i + 60)) = 1953 :=
   (dBlockSum_eq 53 60 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade53At64 :
+theorem budgetDGrade53At64 :
     sumRange 4 (fun i => fastBlock 53 (i + 64)) = 1183 :=
   (dBlockSum_eq 53 64 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade53At68 :
+theorem budgetDGrade53At68 :
     sumRange 4 (fun i => fastBlock 53 (i + 68)) = 648 :=
   (dBlockSum_eq 53 68 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade53At72 :
+theorem budgetDGrade53At72 :
     sumRange 4 (fun i => fastBlock 53 (i + 72)) = 305 :=
   (dBlockSum_eq 53 72 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade53At76 :
+theorem budgetDGrade53At76 :
     sumRange 4 (fun i => fastBlock 53 (i + 76)) = 111 :=
   (dBlockSum_eq 53 76 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade53At80 :
+theorem budgetDGrade53At80 :
     sumRange 4 (fun i => fastBlock 53 (i + 80)) = 24 :=
   (dBlockSum_eq 53 80 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade53At84 :
+theorem budgetDGrade53At84 :
     sumRange 4 (fun i => fastBlock 53 (i + 84)) = 1 :=
   (dBlockSum_eq 53 84 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade53At88 :
+theorem budgetDGrade53At88 :
     sumRange 50 (fun i => fastBlock 53 (i + 88)) = 0 :=
   (dBlockSum_eq 53 88 50 (by decide) (by decide)).trans (by decide +kernel)
-private theorem grade53 : fastGrade 53 = 134011 := by
+theorem grade53 : fastGrade 53 = 134011 := by
   have prefix4 : sumRange 4 (fastBlock 53) = 1843 :=
     budgetDAppend (fastBlock 53) 0 4 0 1843 rfl budgetDGrade53At0
   have prefix8 : sumRange 8 (fastBlock 53) = 6370 :=
@@ -4197,73 +4197,73 @@ private theorem grade53 : fastGrade 53 = 134011 := by
   have prefix138 : sumRange 138 (fastBlock 53) = 134011 :=
     budgetDAppend (fastBlock 53) 88 50 134011 0 prefix88 budgetDGrade53At88
   exact prefix138
-private theorem budgetDGrade54At0 :
+theorem budgetDGrade54At0 :
     sumRange 4 (fun i => fastBlock 54 (i + 0)) = 1843 :=
   (dBlockSum_eq 54 0 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade54At4 :
+theorem budgetDGrade54At4 :
     sumRange 4 (fun i => fastBlock 54 (i + 4)) = 4527 :=
   (dBlockSum_eq 54 4 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade54At8 :
+theorem budgetDGrade54At8 :
     sumRange 4 (fun i => fastBlock 54 (i + 8)) = 6859 :=
   (dBlockSum_eq 54 8 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade54At12 :
+theorem budgetDGrade54At12 :
     sumRange 4 (fun i => fastBlock 54 (i + 12)) = 8839 :=
   (dBlockSum_eq 54 12 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade54At16 :
+theorem budgetDGrade54At16 :
     sumRange 4 (fun i => fastBlock 54 (i + 16)) = 10467 :=
   (dBlockSum_eq 54 16 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade54At20 :
+theorem budgetDGrade54At20 :
     sumRange 4 (fun i => fastBlock 54 (i + 20)) = 11750 :=
   (dBlockSum_eq 54 20 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade54At24 :
+theorem budgetDGrade54At24 :
     sumRange 4 (fun i => fastBlock 54 (i + 24)) = 12724 :=
   (dBlockSum_eq 54 24 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade54At28 :
+theorem budgetDGrade54At28 :
     sumRange 4 (fun i => fastBlock 54 (i + 28)) = 13431 :=
   (dBlockSum_eq 54 28 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade54At32 :
+theorem budgetDGrade54At32 :
     sumRange 4 (fun i => fastBlock 54 (i + 32)) = 13914 :=
   (dBlockSum_eq 54 32 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade54At36 :
+theorem budgetDGrade54At36 :
     sumRange 4 (fun i => fastBlock 54 (i + 36)) = 12617 :=
   (dBlockSum_eq 54 36 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade54At40 :
+theorem budgetDGrade54At40 :
     sumRange 4 (fun i => fastBlock 54 (i + 40)) = 9933 :=
   (dBlockSum_eq 54 40 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade54At44 :
+theorem budgetDGrade54At44 :
     sumRange 4 (fun i => fastBlock 54 (i + 44)) = 7601 :=
   (dBlockSum_eq 54 44 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade54At48 :
+theorem budgetDGrade54At48 :
     sumRange 4 (fun i => fastBlock 54 (i + 48)) = 5621 :=
   (dBlockSum_eq 54 48 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade54At52 :
+theorem budgetDGrade54At52 :
     sumRange 4 (fun i => fastBlock 54 (i + 52)) = 3993 :=
   (dBlockSum_eq 54 52 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade54At56 :
+theorem budgetDGrade54At56 :
     sumRange 4 (fun i => fastBlock 54 (i + 56)) = 2710 :=
   (dBlockSum_eq 54 56 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade54At60 :
+theorem budgetDGrade54At60 :
     sumRange 4 (fun i => fastBlock 54 (i + 60)) = 1736 :=
   (dBlockSum_eq 54 60 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade54At64 :
+theorem budgetDGrade54At64 :
     sumRange 4 (fun i => fastBlock 54 (i + 64)) = 1029 :=
   (dBlockSum_eq 54 64 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade54At68 :
+theorem budgetDGrade54At68 :
     sumRange 4 (fun i => fastBlock 54 (i + 68)) = 546 :=
   (dBlockSum_eq 54 68 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade54At72 :
+theorem budgetDGrade54At72 :
     sumRange 4 (fun i => fastBlock 54 (i + 72)) = 244 :=
   (dBlockSum_eq 54 72 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade54At76 :
+theorem budgetDGrade54At76 :
     sumRange 4 (fun i => fastBlock 54 (i + 76)) = 81 :=
   (dBlockSum_eq 54 76 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade54At80 :
+theorem budgetDGrade54At80 :
     sumRange 4 (fun i => fastBlock 54 (i + 80)) = 14 :=
   (dBlockSum_eq 54 80 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade54At84 :
+theorem budgetDGrade54At84 :
     sumRange 54 (fun i => fastBlock 54 (i + 84)) = 0 :=
   (dBlockSum_eq 54 84 54 (by decide) (by decide)).trans (by decide +kernel)
-private theorem grade54 : fastGrade 54 = 130479 := by
+theorem grade54 : fastGrade 54 = 130479 := by
   have prefix4 : sumRange 4 (fastBlock 54) = 1843 :=
     budgetDAppend (fastBlock 54) 0 4 0 1843 rfl budgetDGrade54At0
   have prefix8 : sumRange 8 (fastBlock 54) = 6370 :=
@@ -4309,73 +4309,73 @@ private theorem grade54 : fastGrade 54 = 130479 := by
   have prefix138 : sumRange 138 (fastBlock 54) = 130479 :=
     budgetDAppend (fastBlock 54) 84 54 130479 0 prefix84 budgetDGrade54At84
   exact prefix138
-private theorem budgetDGrade55At0 :
+theorem budgetDGrade55At0 :
     sumRange 4 (fun i => fastBlock 55 (i + 0)) = 1843 :=
   (dBlockSum_eq 55 0 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade55At4 :
+theorem budgetDGrade55At4 :
     sumRange 4 (fun i => fastBlock 55 (i + 4)) = 4527 :=
   (dBlockSum_eq 55 4 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade55At8 :
+theorem budgetDGrade55At8 :
     sumRange 4 (fun i => fastBlock 55 (i + 8)) = 6859 :=
   (dBlockSum_eq 55 8 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade55At12 :
+theorem budgetDGrade55At12 :
     sumRange 4 (fun i => fastBlock 55 (i + 12)) = 8839 :=
   (dBlockSum_eq 55 12 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade55At16 :
+theorem budgetDGrade55At16 :
     sumRange 4 (fun i => fastBlock 55 (i + 16)) = 10467 :=
   (dBlockSum_eq 55 16 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade55At20 :
+theorem budgetDGrade55At20 :
     sumRange 4 (fun i => fastBlock 55 (i + 20)) = 11750 :=
   (dBlockSum_eq 55 20 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade55At24 :
+theorem budgetDGrade55At24 :
     sumRange 4 (fun i => fastBlock 55 (i + 24)) = 12724 :=
   (dBlockSum_eq 55 24 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade55At28 :
+theorem budgetDGrade55At28 :
     sumRange 4 (fun i => fastBlock 55 (i + 28)) = 13431 :=
   (dBlockSum_eq 55 28 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade55At32 :
+theorem budgetDGrade55At32 :
     sumRange 4 (fun i => fastBlock 55 (i + 32)) = 13817 :=
   (dBlockSum_eq 55 32 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade55At36 :
+theorem budgetDGrade55At36 :
     sumRange 4 (fun i => fastBlock 55 (i + 36)) = 11913 :=
   (dBlockSum_eq 55 36 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade55At40 :
+theorem budgetDGrade55At40 :
     sumRange 4 (fun i => fastBlock 55 (i + 40)) = 9317 :=
   (dBlockSum_eq 55 40 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade55At44 :
+theorem budgetDGrade55At44 :
     sumRange 4 (fun i => fastBlock 55 (i + 44)) = 7073 :=
   (dBlockSum_eq 55 44 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade55At48 :
+theorem budgetDGrade55At48 :
     sumRange 4 (fun i => fastBlock 55 (i + 48)) = 5181 :=
   (dBlockSum_eq 55 48 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade55At52 :
+theorem budgetDGrade55At52 :
     sumRange 4 (fun i => fastBlock 55 (i + 52)) = 3641 :=
   (dBlockSum_eq 55 52 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade55At56 :
+theorem budgetDGrade55At56 :
     sumRange 4 (fun i => fastBlock 55 (i + 56)) = 2439 :=
   (dBlockSum_eq 55 56 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade55At60 :
+theorem budgetDGrade55At60 :
     sumRange 4 (fun i => fastBlock 55 (i + 60)) = 1536 :=
   (dBlockSum_eq 55 60 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade55At64 :
+theorem budgetDGrade55At64 :
     sumRange 4 (fun i => fastBlock 55 (i + 64)) = 889 :=
   (dBlockSum_eq 55 64 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade55At68 :
+theorem budgetDGrade55At68 :
     sumRange 4 (fun i => fastBlock 55 (i + 68)) = 455 :=
   (dBlockSum_eq 55 68 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade55At72 :
+theorem budgetDGrade55At72 :
     sumRange 4 (fun i => fastBlock 55 (i + 72)) = 192 :=
   (dBlockSum_eq 55 72 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade55At76 :
+theorem budgetDGrade55At76 :
     sumRange 4 (fun i => fastBlock 55 (i + 76)) = 57 :=
   (dBlockSum_eq 55 76 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade55At80 :
+theorem budgetDGrade55At80 :
     sumRange 4 (fun i => fastBlock 55 (i + 80)) = 7 :=
   (dBlockSum_eq 55 80 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade55At84 :
+theorem budgetDGrade55At84 :
     sumRange 54 (fun i => fastBlock 55 (i + 84)) = 0 :=
   (dBlockSum_eq 55 84 54 (by decide) (by decide)).trans (by decide +kernel)
-private theorem grade55 : fastGrade 55 = 126957 := by
+theorem grade55 : fastGrade 55 = 126957 := by
   have prefix4 : sumRange 4 (fastBlock 55) = 1843 :=
     budgetDAppend (fastBlock 55) 0 4 0 1843 rfl budgetDGrade55At0
   have prefix8 : sumRange 8 (fastBlock 55) = 6370 :=
@@ -4421,73 +4421,73 @@ private theorem grade55 : fastGrade 55 = 126957 := by
   have prefix138 : sumRange 138 (fastBlock 55) = 126957 :=
     budgetDAppend (fastBlock 55) 84 54 126957 0 prefix84 budgetDGrade55At84
   exact prefix138
-private theorem budgetDGrade56At0 :
+theorem budgetDGrade56At0 :
     sumRange 4 (fun i => fastBlock 56 (i + 0)) = 1843 :=
   (dBlockSum_eq 56 0 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade56At4 :
+theorem budgetDGrade56At4 :
     sumRange 4 (fun i => fastBlock 56 (i + 4)) = 4527 :=
   (dBlockSum_eq 56 4 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade56At8 :
+theorem budgetDGrade56At8 :
     sumRange 4 (fun i => fastBlock 56 (i + 8)) = 6859 :=
   (dBlockSum_eq 56 8 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade56At12 :
+theorem budgetDGrade56At12 :
     sumRange 4 (fun i => fastBlock 56 (i + 12)) = 8839 :=
   (dBlockSum_eq 56 12 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade56At16 :
+theorem budgetDGrade56At16 :
     sumRange 4 (fun i => fastBlock 56 (i + 16)) = 10467 :=
   (dBlockSum_eq 56 16 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade56At20 :
+theorem budgetDGrade56At20 :
     sumRange 4 (fun i => fastBlock 56 (i + 20)) = 11750 :=
   (dBlockSum_eq 56 20 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade56At24 :
+theorem budgetDGrade56At24 :
     sumRange 4 (fun i => fastBlock 56 (i + 24)) = 12724 :=
   (dBlockSum_eq 56 24 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade56At28 :
+theorem budgetDGrade56At28 :
     sumRange 4 (fun i => fastBlock 56 (i + 28)) = 13431 :=
   (dBlockSum_eq 56 28 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade56At32 :
+theorem budgetDGrade56At32 :
     sumRange 4 (fun i => fastBlock 56 (i + 32)) = 13553 :=
   (dBlockSum_eq 56 32 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade56At36 :
+theorem budgetDGrade56At36 :
     sumRange 4 (fun i => fastBlock 56 (i + 36)) = 11231 :=
   (dBlockSum_eq 56 36 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade56At40 :
+theorem budgetDGrade56At40 :
     sumRange 4 (fun i => fastBlock 56 (i + 40)) = 8723 :=
   (dBlockSum_eq 56 40 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade56At44 :
+theorem budgetDGrade56At44 :
     sumRange 4 (fun i => fastBlock 56 (i + 44)) = 6567 :=
   (dBlockSum_eq 56 44 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade56At48 :
+theorem budgetDGrade56At48 :
     sumRange 4 (fun i => fastBlock 56 (i + 48)) = 4763 :=
   (dBlockSum_eq 56 48 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade56At52 :
+theorem budgetDGrade56At52 :
     sumRange 4 (fun i => fastBlock 56 (i + 52)) = 3310 :=
   (dBlockSum_eq 56 52 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade56At56 :
+theorem budgetDGrade56At56 :
     sumRange 4 (fun i => fastBlock 56 (i + 56)) = 2187 :=
   (dBlockSum_eq 56 56 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade56At60 :
+theorem budgetDGrade56At60 :
     sumRange 4 (fun i => fastBlock 56 (i + 60)) = 1352 :=
   (dBlockSum_eq 56 60 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade56At64 :
+theorem budgetDGrade56At64 :
     sumRange 4 (fun i => fastBlock 56 (i + 64)) = 762 :=
   (dBlockSum_eq 56 64 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade56At68 :
+theorem budgetDGrade56At68 :
     sumRange 4 (fun i => fastBlock 56 (i + 68)) = 375 :=
   (dBlockSum_eq 56 68 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade56At72 :
+theorem budgetDGrade56At72 :
     sumRange 4 (fun i => fastBlock 56 (i + 72)) = 148 :=
   (dBlockSum_eq 56 72 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade56At76 :
+theorem budgetDGrade56At76 :
     sumRange 4 (fun i => fastBlock 56 (i + 76)) = 38 :=
   (dBlockSum_eq 56 76 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade56At80 :
+theorem budgetDGrade56At80 :
     sumRange 4 (fun i => fastBlock 56 (i + 80)) = 3 :=
   (dBlockSum_eq 56 80 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade56At84 :
+theorem budgetDGrade56At84 :
     sumRange 54 (fun i => fastBlock 56 (i + 84)) = 0 :=
   (dBlockSum_eq 56 84 54 (by decide) (by decide)).trans (by decide +kernel)
-private theorem grade56 : fastGrade 56 = 123452 := by
+theorem grade56 : fastGrade 56 = 123452 := by
   have prefix4 : sumRange 4 (fastBlock 56) = 1843 :=
     budgetDAppend (fastBlock 56) 0 4 0 1843 rfl budgetDGrade56At0
   have prefix8 : sumRange 8 (fastBlock 56) = 6370 :=
@@ -4533,73 +4533,73 @@ private theorem grade56 : fastGrade 56 = 123452 := by
   have prefix138 : sumRange 138 (fastBlock 56) = 123452 :=
     budgetDAppend (fastBlock 56) 84 54 123452 0 prefix84 budgetDGrade56At84
   exact prefix138
-private theorem budgetDGrade57At0 :
+theorem budgetDGrade57At0 :
     sumRange 4 (fun i => fastBlock 57 (i + 0)) = 1843 :=
   (dBlockSum_eq 57 0 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade57At4 :
+theorem budgetDGrade57At4 :
     sumRange 4 (fun i => fastBlock 57 (i + 4)) = 4527 :=
   (dBlockSum_eq 57 4 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade57At8 :
+theorem budgetDGrade57At8 :
     sumRange 4 (fun i => fastBlock 57 (i + 8)) = 6859 :=
   (dBlockSum_eq 57 8 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade57At12 :
+theorem budgetDGrade57At12 :
     sumRange 4 (fun i => fastBlock 57 (i + 12)) = 8839 :=
   (dBlockSum_eq 57 12 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade57At16 :
+theorem budgetDGrade57At16 :
     sumRange 4 (fun i => fastBlock 57 (i + 16)) = 10467 :=
   (dBlockSum_eq 57 16 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade57At20 :
+theorem budgetDGrade57At20 :
     sumRange 4 (fun i => fastBlock 57 (i + 20)) = 11750 :=
   (dBlockSum_eq 57 20 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade57At24 :
+theorem budgetDGrade57At24 :
     sumRange 4 (fun i => fastBlock 57 (i + 24)) = 12724 :=
   (dBlockSum_eq 57 24 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade57At28 :
+theorem budgetDGrade57At28 :
     sumRange 4 (fun i => fastBlock 57 (i + 28)) = 13431 :=
   (dBlockSum_eq 57 28 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade57At32 :
+theorem budgetDGrade57At32 :
     sumRange 4 (fun i => fastBlock 57 (i + 32)) = 13131 :=
   (dBlockSum_eq 57 32 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade57At36 :
+theorem budgetDGrade57At36 :
     sumRange 4 (fun i => fastBlock 57 (i + 36)) = 10571 :=
   (dBlockSum_eq 57 36 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade57At40 :
+theorem budgetDGrade57At40 :
     sumRange 4 (fun i => fastBlock 57 (i + 40)) = 8151 :=
   (dBlockSum_eq 57 40 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade57At44 :
+theorem budgetDGrade57At44 :
     sumRange 4 (fun i => fastBlock 57 (i + 44)) = 6083 :=
   (dBlockSum_eq 57 44 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade57At48 :
+theorem budgetDGrade57At48 :
     sumRange 4 (fun i => fastBlock 57 (i + 48)) = 4367 :=
   (dBlockSum_eq 57 48 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade57At52 :
+theorem budgetDGrade57At52 :
     sumRange 4 (fun i => fastBlock 57 (i + 52)) = 3000 :=
   (dBlockSum_eq 57 52 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade57At56 :
+theorem budgetDGrade57At56 :
     sumRange 4 (fun i => fastBlock 57 (i + 56)) = 1953 :=
   (dBlockSum_eq 57 56 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade57At60 :
+theorem budgetDGrade57At60 :
     sumRange 4 (fun i => fastBlock 57 (i + 60)) = 1183 :=
   (dBlockSum_eq 57 60 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade57At64 :
+theorem budgetDGrade57At64 :
     sumRange 4 (fun i => fastBlock 57 (i + 64)) = 648 :=
   (dBlockSum_eq 57 64 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade57At68 :
+theorem budgetDGrade57At68 :
     sumRange 4 (fun i => fastBlock 57 (i + 68)) = 305 :=
   (dBlockSum_eq 57 68 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade57At72 :
+theorem budgetDGrade57At72 :
     sumRange 4 (fun i => fastBlock 57 (i + 72)) = 111 :=
   (dBlockSum_eq 57 72 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade57At76 :
+theorem budgetDGrade57At76 :
     sumRange 4 (fun i => fastBlock 57 (i + 76)) = 24 :=
   (dBlockSum_eq 57 76 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade57At80 :
+theorem budgetDGrade57At80 :
     sumRange 4 (fun i => fastBlock 57 (i + 80)) = 1 :=
   (dBlockSum_eq 57 80 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade57At84 :
+theorem budgetDGrade57At84 :
     sumRange 54 (fun i => fastBlock 57 (i + 84)) = 0 :=
   (dBlockSum_eq 57 84 54 (by decide) (by decide)).trans (by decide +kernel)
-private theorem grade57 : fastGrade 57 = 119968 := by
+theorem grade57 : fastGrade 57 = 119968 := by
   have prefix4 : sumRange 4 (fastBlock 57) = 1843 :=
     budgetDAppend (fastBlock 57) 0 4 0 1843 rfl budgetDGrade57At0
   have prefix8 : sumRange 8 (fastBlock 57) = 6370 :=
@@ -4645,70 +4645,70 @@ private theorem grade57 : fastGrade 57 = 119968 := by
   have prefix138 : sumRange 138 (fastBlock 57) = 119968 :=
     budgetDAppend (fastBlock 57) 84 54 119968 0 prefix84 budgetDGrade57At84
   exact prefix138
-private theorem budgetDGrade58At0 :
+theorem budgetDGrade58At0 :
     sumRange 4 (fun i => fastBlock 58 (i + 0)) = 1843 :=
   (dBlockSum_eq 58 0 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade58At4 :
+theorem budgetDGrade58At4 :
     sumRange 4 (fun i => fastBlock 58 (i + 4)) = 4527 :=
   (dBlockSum_eq 58 4 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade58At8 :
+theorem budgetDGrade58At8 :
     sumRange 4 (fun i => fastBlock 58 (i + 8)) = 6859 :=
   (dBlockSum_eq 58 8 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade58At12 :
+theorem budgetDGrade58At12 :
     sumRange 4 (fun i => fastBlock 58 (i + 12)) = 8839 :=
   (dBlockSum_eq 58 12 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade58At16 :
+theorem budgetDGrade58At16 :
     sumRange 4 (fun i => fastBlock 58 (i + 16)) = 10467 :=
   (dBlockSum_eq 58 16 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade58At20 :
+theorem budgetDGrade58At20 :
     sumRange 4 (fun i => fastBlock 58 (i + 20)) = 11750 :=
   (dBlockSum_eq 58 20 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade58At24 :
+theorem budgetDGrade58At24 :
     sumRange 4 (fun i => fastBlock 58 (i + 24)) = 12724 :=
   (dBlockSum_eq 58 24 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade58At28 :
+theorem budgetDGrade58At28 :
     sumRange 4 (fun i => fastBlock 58 (i + 28)) = 13431 :=
   (dBlockSum_eq 58 28 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade58At32 :
+theorem budgetDGrade58At32 :
     sumRange 4 (fun i => fastBlock 58 (i + 32)) = 12562 :=
   (dBlockSum_eq 58 32 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade58At36 :
+theorem budgetDGrade58At36 :
     sumRange 4 (fun i => fastBlock 58 (i + 36)) = 9933 :=
   (dBlockSum_eq 58 36 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade58At40 :
+theorem budgetDGrade58At40 :
     sumRange 4 (fun i => fastBlock 58 (i + 40)) = 7601 :=
   (dBlockSum_eq 58 40 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade58At44 :
+theorem budgetDGrade58At44 :
     sumRange 4 (fun i => fastBlock 58 (i + 44)) = 5621 :=
   (dBlockSum_eq 58 44 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade58At48 :
+theorem budgetDGrade58At48 :
     sumRange 4 (fun i => fastBlock 58 (i + 48)) = 3993 :=
   (dBlockSum_eq 58 48 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade58At52 :
+theorem budgetDGrade58At52 :
     sumRange 4 (fun i => fastBlock 58 (i + 52)) = 2710 :=
   (dBlockSum_eq 58 52 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade58At56 :
+theorem budgetDGrade58At56 :
     sumRange 4 (fun i => fastBlock 58 (i + 56)) = 1736 :=
   (dBlockSum_eq 58 56 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade58At60 :
+theorem budgetDGrade58At60 :
     sumRange 4 (fun i => fastBlock 58 (i + 60)) = 1029 :=
   (dBlockSum_eq 58 60 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade58At64 :
+theorem budgetDGrade58At64 :
     sumRange 4 (fun i => fastBlock 58 (i + 64)) = 546 :=
   (dBlockSum_eq 58 64 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade58At68 :
+theorem budgetDGrade58At68 :
     sumRange 4 (fun i => fastBlock 58 (i + 68)) = 244 :=
   (dBlockSum_eq 58 68 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade58At72 :
+theorem budgetDGrade58At72 :
     sumRange 4 (fun i => fastBlock 58 (i + 72)) = 81 :=
   (dBlockSum_eq 58 72 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade58At76 :
+theorem budgetDGrade58At76 :
     sumRange 4 (fun i => fastBlock 58 (i + 76)) = 14 :=
   (dBlockSum_eq 58 76 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade58At80 :
+theorem budgetDGrade58At80 :
     sumRange 58 (fun i => fastBlock 58 (i + 80)) = 0 :=
   (dBlockSum_eq 58 80 58 (by decide) (by decide)).trans (by decide +kernel)
-private theorem grade58 : fastGrade 58 = 116510 := by
+theorem grade58 : fastGrade 58 = 116510 := by
   have prefix4 : sumRange 4 (fastBlock 58) = 1843 :=
     budgetDAppend (fastBlock 58) 0 4 0 1843 rfl budgetDGrade58At0
   have prefix8 : sumRange 8 (fastBlock 58) = 6370 :=
@@ -4752,70 +4752,70 @@ private theorem grade58 : fastGrade 58 = 116510 := by
   have prefix138 : sumRange 138 (fastBlock 58) = 116510 :=
     budgetDAppend (fastBlock 58) 80 58 116510 0 prefix80 budgetDGrade58At80
   exact prefix138
-private theorem budgetDGrade59At0 :
+theorem budgetDGrade59At0 :
     sumRange 4 (fun i => fastBlock 59 (i + 0)) = 1843 :=
   (dBlockSum_eq 59 0 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade59At4 :
+theorem budgetDGrade59At4 :
     sumRange 4 (fun i => fastBlock 59 (i + 4)) = 4527 :=
   (dBlockSum_eq 59 4 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade59At8 :
+theorem budgetDGrade59At8 :
     sumRange 4 (fun i => fastBlock 59 (i + 8)) = 6859 :=
   (dBlockSum_eq 59 8 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade59At12 :
+theorem budgetDGrade59At12 :
     sumRange 4 (fun i => fastBlock 59 (i + 12)) = 8839 :=
   (dBlockSum_eq 59 12 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade59At16 :
+theorem budgetDGrade59At16 :
     sumRange 4 (fun i => fastBlock 59 (i + 16)) = 10467 :=
   (dBlockSum_eq 59 16 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade59At20 :
+theorem budgetDGrade59At20 :
     sumRange 4 (fun i => fastBlock 59 (i + 20)) = 11750 :=
   (dBlockSum_eq 59 20 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade59At24 :
+theorem budgetDGrade59At24 :
     sumRange 4 (fun i => fastBlock 59 (i + 24)) = 12724 :=
   (dBlockSum_eq 59 24 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade59At28 :
+theorem budgetDGrade59At28 :
     sumRange 4 (fun i => fastBlock 59 (i + 28)) = 13369 :=
   (dBlockSum_eq 59 28 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade59At32 :
+theorem budgetDGrade59At32 :
     sumRange 4 (fun i => fastBlock 59 (i + 32)) = 11913 :=
   (dBlockSum_eq 59 32 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade59At36 :
+theorem budgetDGrade59At36 :
     sumRange 4 (fun i => fastBlock 59 (i + 36)) = 9317 :=
   (dBlockSum_eq 59 36 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade59At40 :
+theorem budgetDGrade59At40 :
     sumRange 4 (fun i => fastBlock 59 (i + 40)) = 7073 :=
   (dBlockSum_eq 59 40 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade59At44 :
+theorem budgetDGrade59At44 :
     sumRange 4 (fun i => fastBlock 59 (i + 44)) = 5181 :=
   (dBlockSum_eq 59 44 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade59At48 :
+theorem budgetDGrade59At48 :
     sumRange 4 (fun i => fastBlock 59 (i + 48)) = 3641 :=
   (dBlockSum_eq 59 48 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade59At52 :
+theorem budgetDGrade59At52 :
     sumRange 4 (fun i => fastBlock 59 (i + 52)) = 2439 :=
   (dBlockSum_eq 59 52 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade59At56 :
+theorem budgetDGrade59At56 :
     sumRange 4 (fun i => fastBlock 59 (i + 56)) = 1536 :=
   (dBlockSum_eq 59 56 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade59At60 :
+theorem budgetDGrade59At60 :
     sumRange 4 (fun i => fastBlock 59 (i + 60)) = 889 :=
   (dBlockSum_eq 59 60 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade59At64 :
+theorem budgetDGrade59At64 :
     sumRange 4 (fun i => fastBlock 59 (i + 64)) = 455 :=
   (dBlockSum_eq 59 64 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade59At68 :
+theorem budgetDGrade59At68 :
     sumRange 4 (fun i => fastBlock 59 (i + 68)) = 192 :=
   (dBlockSum_eq 59 68 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade59At72 :
+theorem budgetDGrade59At72 :
     sumRange 4 (fun i => fastBlock 59 (i + 72)) = 57 :=
   (dBlockSum_eq 59 72 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade59At76 :
+theorem budgetDGrade59At76 :
     sumRange 4 (fun i => fastBlock 59 (i + 76)) = 7 :=
   (dBlockSum_eq 59 76 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade59At80 :
+theorem budgetDGrade59At80 :
     sumRange 58 (fun i => fastBlock 59 (i + 80)) = 0 :=
   (dBlockSum_eq 59 80 58 (by decide) (by decide)).trans (by decide +kernel)
-private theorem grade59 : fastGrade 59 = 113078 := by
+theorem grade59 : fastGrade 59 = 113078 := by
   have prefix4 : sumRange 4 (fastBlock 59) = 1843 :=
     budgetDAppend (fastBlock 59) 0 4 0 1843 rfl budgetDGrade59At0
   have prefix8 : sumRange 8 (fastBlock 59) = 6370 :=
@@ -4859,70 +4859,70 @@ private theorem grade59 : fastGrade 59 = 113078 := by
   have prefix138 : sumRange 138 (fastBlock 59) = 113078 :=
     budgetDAppend (fastBlock 59) 80 58 113078 0 prefix80 budgetDGrade59At80
   exact prefix138
-private theorem budgetDGrade60At0 :
+theorem budgetDGrade60At0 :
     sumRange 4 (fun i => fastBlock 60 (i + 0)) = 1843 :=
   (dBlockSum_eq 60 0 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade60At4 :
+theorem budgetDGrade60At4 :
     sumRange 4 (fun i => fastBlock 60 (i + 4)) = 4527 :=
   (dBlockSum_eq 60 4 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade60At8 :
+theorem budgetDGrade60At8 :
     sumRange 4 (fun i => fastBlock 60 (i + 8)) = 6859 :=
   (dBlockSum_eq 60 8 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade60At12 :
+theorem budgetDGrade60At12 :
     sumRange 4 (fun i => fastBlock 60 (i + 12)) = 8839 :=
   (dBlockSum_eq 60 12 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade60At16 :
+theorem budgetDGrade60At16 :
     sumRange 4 (fun i => fastBlock 60 (i + 16)) = 10467 :=
   (dBlockSum_eq 60 16 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade60At20 :
+theorem budgetDGrade60At20 :
     sumRange 4 (fun i => fastBlock 60 (i + 20)) = 11750 :=
   (dBlockSum_eq 60 20 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade60At24 :
+theorem budgetDGrade60At24 :
     sumRange 4 (fun i => fastBlock 60 (i + 24)) = 12724 :=
   (dBlockSum_eq 60 24 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade60At28 :
+theorem budgetDGrade60At28 :
     sumRange 4 (fun i => fastBlock 60 (i + 28)) = 13204 :=
   (dBlockSum_eq 60 28 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade60At32 :
+theorem budgetDGrade60At32 :
     sumRange 4 (fun i => fastBlock 60 (i + 32)) = 11231 :=
   (dBlockSum_eq 60 32 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade60At36 :
+theorem budgetDGrade60At36 :
     sumRange 4 (fun i => fastBlock 60 (i + 36)) = 8723 :=
   (dBlockSum_eq 60 36 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade60At40 :
+theorem budgetDGrade60At40 :
     sumRange 4 (fun i => fastBlock 60 (i + 40)) = 6567 :=
   (dBlockSum_eq 60 40 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade60At44 :
+theorem budgetDGrade60At44 :
     sumRange 4 (fun i => fastBlock 60 (i + 44)) = 4763 :=
   (dBlockSum_eq 60 44 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade60At48 :
+theorem budgetDGrade60At48 :
     sumRange 4 (fun i => fastBlock 60 (i + 48)) = 3310 :=
   (dBlockSum_eq 60 48 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade60At52 :
+theorem budgetDGrade60At52 :
     sumRange 4 (fun i => fastBlock 60 (i + 52)) = 2187 :=
   (dBlockSum_eq 60 52 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade60At56 :
+theorem budgetDGrade60At56 :
     sumRange 4 (fun i => fastBlock 60 (i + 56)) = 1352 :=
   (dBlockSum_eq 60 56 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade60At60 :
+theorem budgetDGrade60At60 :
     sumRange 4 (fun i => fastBlock 60 (i + 60)) = 762 :=
   (dBlockSum_eq 60 60 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade60At64 :
+theorem budgetDGrade60At64 :
     sumRange 4 (fun i => fastBlock 60 (i + 64)) = 375 :=
   (dBlockSum_eq 60 64 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade60At68 :
+theorem budgetDGrade60At68 :
     sumRange 4 (fun i => fastBlock 60 (i + 68)) = 148 :=
   (dBlockSum_eq 60 68 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade60At72 :
+theorem budgetDGrade60At72 :
     sumRange 4 (fun i => fastBlock 60 (i + 72)) = 38 :=
   (dBlockSum_eq 60 72 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade60At76 :
+theorem budgetDGrade60At76 :
     sumRange 4 (fun i => fastBlock 60 (i + 76)) = 3 :=
   (dBlockSum_eq 60 76 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade60At80 :
+theorem budgetDGrade60At80 :
     sumRange 58 (fun i => fastBlock 60 (i + 80)) = 0 :=
   (dBlockSum_eq 60 80 58 (by decide) (by decide)).trans (by decide +kernel)
-private theorem grade60 : fastGrade 60 = 109672 := by
+theorem grade60 : fastGrade 60 = 109672 := by
   have prefix4 : sumRange 4 (fastBlock 60) = 1843 :=
     budgetDAppend (fastBlock 60) 0 4 0 1843 rfl budgetDGrade60At0
   have prefix8 : sumRange 8 (fastBlock 60) = 6370 :=
@@ -4966,70 +4966,70 @@ private theorem grade60 : fastGrade 60 = 109672 := by
   have prefix138 : sumRange 138 (fastBlock 60) = 109672 :=
     budgetDAppend (fastBlock 60) 80 58 109672 0 prefix80 budgetDGrade60At80
   exact prefix138
-private theorem budgetDGrade61At0 :
+theorem budgetDGrade61At0 :
     sumRange 4 (fun i => fastBlock 61 (i + 0)) = 1843 :=
   (dBlockSum_eq 61 0 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade61At4 :
+theorem budgetDGrade61At4 :
     sumRange 4 (fun i => fastBlock 61 (i + 4)) = 4527 :=
   (dBlockSum_eq 61 4 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade61At8 :
+theorem budgetDGrade61At8 :
     sumRange 4 (fun i => fastBlock 61 (i + 8)) = 6859 :=
   (dBlockSum_eq 61 8 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade61At12 :
+theorem budgetDGrade61At12 :
     sumRange 4 (fun i => fastBlock 61 (i + 12)) = 8839 :=
   (dBlockSum_eq 61 12 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade61At16 :
+theorem budgetDGrade61At16 :
     sumRange 4 (fun i => fastBlock 61 (i + 16)) = 10467 :=
   (dBlockSum_eq 61 16 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade61At20 :
+theorem budgetDGrade61At20 :
     sumRange 4 (fun i => fastBlock 61 (i + 20)) = 11750 :=
   (dBlockSum_eq 61 20 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade61At24 :
+theorem budgetDGrade61At24 :
     sumRange 4 (fun i => fastBlock 61 (i + 24)) = 12724 :=
   (dBlockSum_eq 61 24 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade61At28 :
+theorem budgetDGrade61At28 :
     sumRange 4 (fun i => fastBlock 61 (i + 28)) = 12887 :=
   (dBlockSum_eq 61 28 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade61At32 :
+theorem budgetDGrade61At32 :
     sumRange 4 (fun i => fastBlock 61 (i + 32)) = 10571 :=
   (dBlockSum_eq 61 32 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade61At36 :
+theorem budgetDGrade61At36 :
     sumRange 4 (fun i => fastBlock 61 (i + 36)) = 8151 :=
   (dBlockSum_eq 61 36 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade61At40 :
+theorem budgetDGrade61At40 :
     sumRange 4 (fun i => fastBlock 61 (i + 40)) = 6083 :=
   (dBlockSum_eq 61 40 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade61At44 :
+theorem budgetDGrade61At44 :
     sumRange 4 (fun i => fastBlock 61 (i + 44)) = 4367 :=
   (dBlockSum_eq 61 44 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade61At48 :
+theorem budgetDGrade61At48 :
     sumRange 4 (fun i => fastBlock 61 (i + 48)) = 3000 :=
   (dBlockSum_eq 61 48 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade61At52 :
+theorem budgetDGrade61At52 :
     sumRange 4 (fun i => fastBlock 61 (i + 52)) = 1953 :=
   (dBlockSum_eq 61 52 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade61At56 :
+theorem budgetDGrade61At56 :
     sumRange 4 (fun i => fastBlock 61 (i + 56)) = 1183 :=
   (dBlockSum_eq 61 56 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade61At60 :
+theorem budgetDGrade61At60 :
     sumRange 4 (fun i => fastBlock 61 (i + 60)) = 648 :=
   (dBlockSum_eq 61 60 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade61At64 :
+theorem budgetDGrade61At64 :
     sumRange 4 (fun i => fastBlock 61 (i + 64)) = 305 :=
   (dBlockSum_eq 61 64 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade61At68 :
+theorem budgetDGrade61At68 :
     sumRange 4 (fun i => fastBlock 61 (i + 68)) = 111 :=
   (dBlockSum_eq 61 68 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade61At72 :
+theorem budgetDGrade61At72 :
     sumRange 4 (fun i => fastBlock 61 (i + 72)) = 24 :=
   (dBlockSum_eq 61 72 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade61At76 :
+theorem budgetDGrade61At76 :
     sumRange 4 (fun i => fastBlock 61 (i + 76)) = 1 :=
   (dBlockSum_eq 61 76 4 (by decide) (by decide)).trans (by decide +kernel)
-private theorem budgetDGrade61At80 :
+theorem budgetDGrade61At80 :
     sumRange 58 (fun i => fastBlock 61 (i + 80)) = 0 :=
   (dBlockSum_eq 61 80 58 (by decide) (by decide)).trans (by decide +kernel)
-private theorem grade61 : fastGrade 61 = 106293 := by
+theorem grade61 : fastGrade 61 = 106293 := by
   have prefix4 : sumRange 4 (fastBlock 61) = 1843 :=
     budgetDAppend (fastBlock 61) 0 4 0 1843 rfl budgetDGrade61At0
   have prefix8 : sumRange 8 (fastBlock 61) = 6370 :=
@@ -5078,29 +5078,29 @@ private theorem sumStep (f : ℕ → ℕ) (n a b : ℕ)
     sumRange (n + 1) f = a + b :=
   (show sumRange (n + 1) f = sumRange n f + f n from rfl).trans (congrArg₂ Nat.add ha hb)
 private def gradeFrom (i : ℕ) : ℕ := fastGrade (i + 49)
-private theorem prefix49 : sumRange 1 gradeFrom = 148279 :=
+theorem prefix49 : sumRange 1 gradeFrom = 148279 :=
   sumStep gradeFrom 0 0 148279 rfl grade49
-private theorem prefix50 : sumRange 2 gradeFrom = 292974 :=
+theorem prefix50 : sumRange 2 gradeFrom = 292974 :=
   sumStep gradeFrom 1 148279 144695 prefix49 grade50
-private theorem prefix51 : sumRange 3 gradeFrom = 434095 :=
+theorem prefix51 : sumRange 3 gradeFrom = 434095 :=
   sumStep gradeFrom 2 292974 141121 prefix50 grade51
-private theorem prefix52 : sumRange 4 gradeFrom = 571654 :=
+theorem prefix52 : sumRange 4 gradeFrom = 571654 :=
   sumStep gradeFrom 3 434095 137559 prefix51 grade52
-private theorem prefix53 : sumRange 5 gradeFrom = 705665 :=
+theorem prefix53 : sumRange 5 gradeFrom = 705665 :=
   sumStep gradeFrom 4 571654 134011 prefix52 grade53
-private theorem prefix54 : sumRange 6 gradeFrom = 836144 :=
+theorem prefix54 : sumRange 6 gradeFrom = 836144 :=
   sumStep gradeFrom 5 705665 130479 prefix53 grade54
-private theorem prefix55 : sumRange 7 gradeFrom = 963101 :=
+theorem prefix55 : sumRange 7 gradeFrom = 963101 :=
   sumStep gradeFrom 6 836144 126957 prefix54 grade55
-private theorem prefix56 : sumRange 8 gradeFrom = 1086553 :=
+theorem prefix56 : sumRange 8 gradeFrom = 1086553 :=
   sumStep gradeFrom 7 963101 123452 prefix55 grade56
-private theorem prefix57 : sumRange 9 gradeFrom = 1206521 :=
+theorem prefix57 : sumRange 9 gradeFrom = 1206521 :=
   sumStep gradeFrom 8 1086553 119968 prefix56 grade57
-private theorem prefix58 : sumRange 10 gradeFrom = 1323031 :=
+theorem prefix58 : sumRange 10 gradeFrom = 1323031 :=
   sumStep gradeFrom 9 1206521 116510 prefix57 grade58
-private theorem prefix59 : sumRange 11 gradeFrom = 1436109 :=
+theorem prefix59 : sumRange 11 gradeFrom = 1436109 :=
   sumStep gradeFrom 10 1323031 113078 prefix58 grade59
-private theorem prefix60 : sumRange 12 gradeFrom = 1545781 :=
+theorem prefix60 : sumRange 12 gradeFrom = 1545781 :=
   sumStep gradeFrom 11 1436109 109672 prefix59 grade60
 theorem budgetD : sumRange 13 (fun i => fastGrade (i + 49)) = 1652074 :=
   sumStep gradeFrom 12 1545781 106293 prefix60 grade61
@@ -5112,12 +5112,12 @@ open K1_13_2
 set_option Elab.async false
 set_option maxRecDepth 50000
 set_option maxHeartbeats 0
-private def daTriple (x : ℤ) : ℤ :=
+def daTriple (x : ℤ) : ℤ :=
   denominator (x - 1) + denominator (x - 2) + denominator (x - 3)
-private theorem daDenNeg (x : ℤ) (h : x < 0) : denominator x = 0 := ite_eq_left h
-private theorem daCumNeg (d u : ℤ) (h : u < 0) : cumulative d u = 0 := by
+theorem daDenNeg (x : ℤ) (h : x < 0) : denominator x = 0 := ite_eq_left h
+theorem daCumNeg (d u : ℤ) (h : u < 0) : cumulative d u = 0 := by
   simp [cumulative, h]
-private theorem daCum (d u : ℤ) (hd : 0 ≤ d) (hu : u ≤ 2 * d) :
+theorem daCum (d u : ℤ) (hd : 0 ≤ d) (hu : u ≤ 2 * d) :
     cumulative d u = denominator u - daTriple (u - d) := by
   by_cases h : u < 0
   · rw [daCumNeg d u h, daDenNeg u h, daTriple,
@@ -5128,21 +5128,21 @@ private theorem daCum (d u : ℤ) (hd : 0 ≤ d) (hu : u ≤ 2 * d) :
       daDenNeg (u - 2 * d - 3) (by omega), daDenNeg (u - 2 * d - 4) (by omega),
       daDenNeg (u - 2 * d - 5) (by omega), daDenNeg (u - 3 * d - 6) (by omega), daTriple]
     omega
-private theorem daCumLow (d u : ℤ) (hd : 0 ≤ d) (hu : u ≤ d) :
+theorem daCumLow (d u : ℤ) (hd : 0 ≤ d) (hu : u ≤ d) :
     cumulative d u = denominator u := by
   rw [daCum d u hd (by omega), daTriple, daDenNeg (u - d - 1) (by omega), daDenNeg (u - d - 2) (by omega),
     daDenNeg (u - d - 3) (by omega)]
   omega
-private theorem daCap (d u c : ℤ) (hc : 0 ≤ c) (hu : u ≤ 3 * c) :
+theorem daCap (d u c : ℤ) (hc : 0 ≤ c) (hu : u ≤ 3 * c) :
     cappedCount d u c = cumulative d u := by
   simp [cappedCount, show ¬ c < 0 by omega, daCumNeg (d - c - 1) (u - 3 * (c + 1)) (by omega)]
-private def daOld (d s q k : ℤ) : ℤ :=
+def daOld (d s q k : ℤ) : ℤ :=
   denominator (1650 - 3 * k) - daTriple (1650 - d) - denominator (s - 1351 - q - 2 * k)
-private def daTarget (d q k : ℤ) : ℤ :=
+def daTarget (d q k : ℤ) : ℤ :=
   denominator (1649 - q - 3 * k) - daTriple (1649 - q - d)
-private def daFlag (d s q k : ℤ) : Flag :=
+def daFlag (d s q k : ℤ) : Flag :=
   ⟨d - 3 * k, s - 1350 - q - 2 * k, 1650 - 3 * k, 550 - k, 1650 - q - 3 * k⟩
-private theorem daCounts (d s q k : ℤ)
+theorem daCounts (d s q k : ℤ)
     (hd : 1419 ≤ d) (hD : d ≤ 1650) (hs : 1419 ≤ s) (hS : s ≤ 1757)
     (hq : 0 ≤ q) (hQ : q ≤ 70) (hk : 0 ≤ k) (hK : k ≤ 256) :
     oldCount (daFlag d s q k) = daOld d s q k ∧
@@ -5189,20 +5189,20 @@ private theorem daCounts (d s q k : ℤ)
   simp only [show ¬ D < 0 by omega, show ¬ U < 0 by omega, show ¬ C < 0 by omega,
     decide_false, Bool.false_or, Bool.false_eq_true, ite_false]
   rw [ho, ht]
-private def daSavings (s q k : ℕ) : ℕ :=
+def daSavings (s q k : ℕ) : ℕ :=
   let d := min (s : ℤ) 1650
   let old := daOld d s q 0
   let low := max 0 (old - daTarget d q 0)
   let res := daOld d s q k - daTarget d q k
   (old - low).toNat - (old - max low res).toNat
-private theorem daWindow (s q : ℕ) (hs : s ≤ 1757) :
+theorem daWindow (s q : ℕ) (hs : s ≤ 1757) :
     windowFlag s (3000 + q - s) = daFlag (min (s : ℤ) 1650) s q 0 := by
   simp [windowFlag, daFlag, Nat.cast_sub (show s ≤ 3000 + q by omega)]
   omega
-private theorem daCubic (d s q : ℤ) (k : ℕ) :
+theorem daCubic (d s q : ℤ) (k : ℕ) :
     cubicFlag (daFlag d s q 0) k = daFlag d s q k := by
   simp [cubicFlag, daFlag]
-private theorem daSavings_eq (s q k : ℕ) (hs : 1419 ≤ s) (hS : s ≤ 1757)
+theorem daSavings_eq (s q k : ℕ) (hs : 1419 ≤ s) (hS : s ≤ 1757)
     (hq : q ≤ 70) (hk : k ≤ 256) (hk' : k ≠ 0) :
     cubicSavings s (3000 + q - s) k = daSavings s q k := by
   let d := min (s : ℤ) 1650
@@ -5218,11 +5218,11 @@ private theorem daSavings_eq (s q k : ℕ) (hs : 1419 ≤ s) (hS : s ≤ 1757)
       (kernelLower (daFlag d s q k))).toNat = _
   rw [hb.1, hb.2, hr.2]
   rfl
-private def daDenValue (n : ℕ) : ℕ :=
+def daDenValue (n : ℕ) : ℕ :=
   (n * (n * (2 * n + 15) + 30) + 25) / 72
-private def daTripleValue (n : ℕ) : ℕ :=
+def daTripleValue (n : ℕ) : ℕ :=
   (n * (n * (2 * n + 9) + 10) + 3) / 24
-private theorem daDenResidue (a r : ℤ) (hr : 0 ≤ r) (hR : r ≤ 11) :
+theorem daDenResidue (a r : ℤ) (hr : 0 ≤ r) (hR : r ≤ 11) :
     let q := 2 * a + r / 6
     let m := r % 6
     let z := 12 * a + r
@@ -5231,7 +5231,7 @@ private theorem daDenResidue (a r : ℤ) (hr : 0 ≤ r) (hR : r ≤ 11) :
       ((z + 1) * ((z + 1) * (2 * (z + 1) + 15) + 30) + 25) / 72 := by
   dsimp only
   interval_cases r <;> norm_num <;> ring_nf <;> omega
-private theorem daDenValue_eq (x : ℤ) :
+theorem daDenValue_eq (x : ℤ) :
     denominator x = (daDenValue (x + 1).toNat : ℤ) := by
   by_cases hx : x < 0
   · rw [show (x + 1).toNat = 0 by omega, denominator, ite_eq_left hx]
@@ -5247,13 +5247,13 @@ private theorem daDenValue_eq (x : ℤ) :
     push_cast
     rw [show ((x + 1).toNat : ℤ) = x + 1 by omega]
     exact hv
-private theorem daTriResidue (a r : ℤ) (hr : 0 ≤ r) (hR : r ≤ 11) :
+theorem daTriResidue (a r : ℤ) (hr : 0 ≤ r) (hR : r ≤ 11) :
     let f := fun t : ℤ => (t * (t * (2 * t + 15) + 30) + 25) / 72
     let z := 12 * a + r
     f z + f (z - 1) + f (z - 2) = (z * (z * (2 * z + 9) + 10) + 3) / 24 := by
   dsimp only
   interval_cases r <;> ring_nf <;> omega
-private theorem daTripleValue_eq (x : ℤ) :
+theorem daTripleValue_eq (x : ℤ) :
     daTriple x = (daTripleValue x.toNat : ℤ) := by
   by_cases hn : x < 0
   · rw [show x.toNat = 0 by omega]
@@ -5272,7 +5272,7 @@ private theorem daTripleValue_eq (x : ℤ) :
   have hv := daTriResidue (x / 12) (x % 12) (by omega) (by omega)
   dsimp only at hv
   rwa [show 12 * (x / 12) + x % 12 = x by omega] at hv
-private def daNatSavings (s q k : ℕ) : ℕ :=
+def daNatSavings (s q k : ℕ) : ℕ :=
   let d := min s 1650
   let upperCorr := daTripleValue (1650 - d)
   let targetCorr := daTripleValue (1649 - q - d)
@@ -5282,7 +5282,7 @@ private def daNatSavings (s q k : ℕ) : ℕ :=
   let gain := daDenValue (1651 - 3 * k) + targetCorr -
     (upperCorr + daDenValue (s - 1350 - q - 2 * k) + daDenValue (1650 - q - 3 * k) + low)
   min rank gain
-private theorem daNatClip (p t b a v pk bk ak : ℕ) :
+theorem daNatClip (p t b a v pk bk ak : ℕ) :
     let old : ℤ := (p : ℤ) - t - b
     let low := max 0 (old - ((a : ℤ) - v))
     let res := (pk : ℤ) - t - bk - ((ak : ℤ) - v)
@@ -5291,7 +5291,7 @@ private theorem daNatClip (p t b a v pk bk ak : ℕ) :
       min (p - (t + b + natLow)) (pk + v - (t + bk + ak + natLow)) := by
   dsimp only
   omega
-private theorem daNatSavings_eq (s q k : ℕ) : daSavings s q k = daNatSavings s q k := by
+theorem daNatSavings_eq (s q k : ℕ) : daSavings s q k = daNatSavings s q k := by
   let d := min s 1650
   have hd' : min (s : ℤ) 1650 = (d : ℤ) := by dsimp [d]; omega
   have ht (z : ℤ) (n : ℕ) (hn : z.toNat = n) :
@@ -5310,12 +5310,12 @@ private theorem daNatSavings_eq (s q k : ℕ) : daSavings s q k = daNatSavings s
       hv (1649 - (q : ℤ) - 3 * (k : ℤ)) (1650 - q - 3 * k) (by omega)]
   rw [show daDenValue 1651 = 125576826 by decide +kernel]
   exact daNatClip _ _ _ _ _ _ _ _
-private def daEntry (s q k : ℕ) : ℕ :=
+def daEntry (s q k : ℕ) : ℕ :=
   let j := 3000 + q - s
   if 993 ≤ j ∧ j ≤ 1581 then
     if k = 0 then 0 else if k ≤ 256 then daNatSavings s q k else cubicSavings s j k
   else 0
-private theorem daEntry_eq (s q k : ℕ) (hs : 1419 ≤ s) (hS : s ≤ 1757) (hq : q ≤ 70) :
+theorem daEntry_eq (s q k : ℕ) (hs : 1419 ≤ s) (hS : s ≤ 1757) (hq : q ≤ 70) :
     entry s q k = daEntry s q k := by
   by_cases hz : k = 0
   · simp [entry, daEntry, hz, cubicSavings]
@@ -5323,15 +5323,15 @@ private theorem daEntry_eq (s q k : ℕ) (hs : 1419 ≤ s) (hS : s ≤ 1757) (hq
     · simp only [entry, daEntry, ite_eq_right hz, ite_eq_left hK,
         daSavings_eq s q k hs hS hq hK hz, daNatSavings_eq s q k]
     · simp only [entry, daEntry, ite_eq_right hz, ite_eq_right hK]
-private theorem daRowZero (s q n : ℕ) : rowSum s q 0 n = 0 := by
+theorem daRowZero (s q n : ℕ) : rowSum s q 0 n = 0 := by
   induction n generalizing q with
   | zero => rfl
   | succ n ih => simp [rowSum, entry, cubicSavings, ih]
-private def daRow (s q code : ℕ) : ℕ → ℕ
+def daRow (s q code : ℕ) : ℕ → ℕ
   | 0 => 0
   | n + 1 => if code = 0 then 0 else
       daEntry s q (code % 512) + daRow s (q + 1) (code / 512) n
-private theorem daRow_eq (s q code n : ℕ) (hs : 1419 ≤ s) (hS : s ≤ 1757)
+theorem daRow_eq (s q code n : ℕ) (hs : 1419 ≤ s) (hS : s ≤ 1757)
     (hn : q + n ≤ 71) : rowSum s q code n = daRow s q code n := by
   induction n generalizing code q with
   | zero => rfl
@@ -5341,10 +5341,10 @@ private theorem daRow_eq (s q code n : ℕ) (hs : 1419 ≤ s) (hS : s ≤ 1757)
       simp [daRowZero, daRow]
     · rw [rowSum, daRow, ite_eq_right hz, daEntry_eq s q _ hs hS (by omega),
         ih (q + 1) (code / 512) (by omega)]
-private def daRows (s : ℕ) : List ℕ → ℕ
+def daRows (s : ℕ) : List ℕ → ℕ
   | [] => 0
   | code :: more => daRow s 0 code 71 + daRows (s + 1) more
-private theorem daRows_eq (s : ℕ) (xs : List ℕ) (hs : 1419 ≤ s) (he : s + xs.length ≤ 1758) :
+theorem daRows_eq (s : ℕ) (xs : List ℕ) (hs : 1419 ≤ s) (he : s + xs.length ≤ 1758) :
     rowsSum s xs = daRows s xs := by
   induction xs generalizing s with
   | nil => rfl
@@ -5352,109 +5352,109 @@ private theorem daRows_eq (s : ℕ) (xs : List ℕ) (hs : 1419 ≤ s) (he : s + 
     simp only [List.length_cons] at he
     rw [rowsSum, daRows, daRow_eq s 0 c 71 hs (by omega) (by decide),
       ih (s + 1) (by omega) (by omega)]
-private theorem daChecked (s : ℕ) (xs : List ℕ) (n total : ℕ)
+theorem daChecked (s : ℕ) (xs : List ℕ) (n total : ℕ)
     (h : xs.length = n ∧ 1419 ≤ s ∧ s + n ≤ 1758 ∧ daRows s xs = total) :
     xs.length = n ∧ rowsSum s xs = total :=
   ⟨h.1, (daRows_eq s xs h.2.1 (h.1.symm ▸ h.2.2.1)).trans h.2.2.2⟩
-private theorem daAppend {s n m a b : ℕ} {xs ys : List ℕ}
+theorem daAppend {s n m a b : ℕ} {xs ys : List ℕ}
     (hx : xs.length = n ∧ rowsSum s xs = a)
     (hy : ys.length = m ∧ rowsSum (s + n) ys = b) :
     (xs ++ ys).length = n + m ∧ rowsSum s (xs ++ ys) = a + b := by
   simp only [List.length_append, rowsSum_append, hx.1, hx.2, hy.1, hy.2, and_self]
-private def rowsA1_chunk000 : List ℕ := [1,1,2,2]
-private theorem rowsA1_chunk000_checked : rowsA1_chunk000.length = 4 ∧ rowsSum 1419 rowsA1_chunk000 = 184 := by
+def rowsA1_chunk000 : List ℕ := [1,1,2,2]
+theorem rowsA1_chunk000_checked : rowsA1_chunk000.length = 4 ∧ rowsSum 1419 rowsA1_chunk000 = 184 := by
   apply daChecked
   decide +kernel
-private def rowsA1_chunk004 : List ℕ := [3,3,4,4]
-private theorem rowsA1_chunk004_checked : rowsA1_chunk004.length = 4 ∧ rowsSum 1423 rowsA1_chunk004 = 1104 := by
+def rowsA1_chunk004 : List ℕ := [3,3,4,4]
+theorem rowsA1_chunk004_checked : rowsA1_chunk004.length = 4 ∧ rowsSum 1423 rowsA1_chunk004 = 1104 := by
   apply daChecked
   decide +kernel
-private def rowsA1_chunk008 : List ℕ := [5,6,6,6]
-private theorem rowsA1_chunk008_checked : rowsA1_chunk008.length = 4 ∧ rowsSum 1427 rowsA1_chunk008 = 2856 := by
+def rowsA1_chunk008 : List ℕ := [5,6,6,6]
+theorem rowsA1_chunk008_checked : rowsA1_chunk008.length = 4 ∧ rowsSum 1427 rowsA1_chunk008 = 2856 := by
   apply daChecked
   decide +kernel
-private def rowsA1_chunk012 : List ℕ := [7,8,8,8]
-private theorem rowsA1_chunk012_checked : rowsA1_chunk012.length = 4 ∧ rowsSum 1431 rowsA1_chunk012 = 5512 := by
+def rowsA1_chunk012 : List ℕ := [7,8,8,8]
+theorem rowsA1_chunk012_checked : rowsA1_chunk012.length = 4 ∧ rowsSum 1431 rowsA1_chunk012 = 5512 := by
   apply daChecked
   decide +kernel
-private def rowsA1_chunk016 : List ℕ := [9,9,10,12]
-private theorem rowsA1_chunk016_checked : rowsA1_chunk016.length = 4 ∧ rowsSum 1435 rowsA1_chunk016 = 9050 := by
+def rowsA1_chunk016 : List ℕ := [9,9,10,12]
+theorem rowsA1_chunk016_checked : rowsA1_chunk016.length = 4 ∧ rowsSum 1435 rowsA1_chunk016 = 9050 := by
   apply daChecked
   decide +kernel
-private def rowsA1_chunk020 : List ℕ := [12,12,12,12]
-private theorem rowsA1_chunk020_checked : rowsA1_chunk020.length = 4 ∧ rowsSum 1439 rowsA1_chunk020 = 13632 := by
+def rowsA1_chunk020 : List ℕ := [12,12,12,12]
+theorem rowsA1_chunk020_checked : rowsA1_chunk020.length = 4 ∧ rowsSum 1439 rowsA1_chunk020 = 13632 := by
   apply daChecked
   decide +kernel
-private def rowsA1_chunk024 : List ℕ := [13,13,16,16]
-private theorem rowsA1_chunk024_checked : rowsA1_chunk024.length = 4 ∧ rowsSum 1443 rowsA1_chunk024 = 19103 := by
+def rowsA1_chunk024 : List ℕ := [13,13,16,16]
+theorem rowsA1_chunk024_checked : rowsA1_chunk024.length = 4 ∧ rowsSum 1443 rowsA1_chunk024 = 19103 := by
   apply daChecked
   decide +kernel
-private def rowsA1_chunk028 : List ℕ := [16,16,16,529]
-private theorem rowsA1_chunk028_checked : rowsA1_chunk028.length = 4 ∧ rowsSum 1447 rowsA1_chunk028 = 25884 := by
+def rowsA1_chunk028 : List ℕ := [16,16,16,529]
+theorem rowsA1_chunk028_checked : rowsA1_chunk028.length = 4 ∧ rowsSum 1447 rowsA1_chunk028 = 25884 := by
   apply daChecked
   decide +kernel
-private def rowsA1_chunk032 : List ℕ := [1041,1042,1554,1555]
-private theorem rowsA1_chunk032_checked : rowsA1_chunk032.length = 4 ∧ rowsSum 1451 rowsA1_chunk032 = 34333 := by
+def rowsA1_chunk032 : List ℕ := [1041,1042,1554,1555]
+theorem rowsA1_chunk032_checked : rowsA1_chunk032.length = 4 ∧ rowsSum 1451 rowsA1_chunk032 = 34333 := by
   apply daChecked
   decide +kernel
-private def rowsA1_chunk036 : List ℕ := [2067,2068,2584,3096]
-private theorem rowsA1_chunk036_checked : rowsA1_chunk036.length = 4 ∧ rowsSum 1455 rowsA1_chunk036 = 44501 := by
+def rowsA1_chunk036 : List ℕ := [2067,2068,2584,3096]
+theorem rowsA1_chunk036_checked : rowsA1_chunk036.length = 4 ∧ rowsSum 1455 rowsA1_chunk036 = 44501 := by
   apply daChecked
   decide +kernel
-private def rowsA1_chunk040 : List ℕ := [3096,3096,3608,4120]
-private theorem rowsA1_chunk040_checked : rowsA1_chunk040.length = 4 ∧ rowsSum 1459 rowsA1_chunk040 = 57794 := by
+def rowsA1_chunk040 : List ℕ := [3096,3096,3608,4120]
+theorem rowsA1_chunk040_checked : rowsA1_chunk040.length = 4 ∧ rowsSum 1459 rowsA1_chunk040 = 57794 := by
   apply daChecked
   decide +kernel
-private def rowsA1_chunk044 : List ℕ := [4120,4120,4632,4633]
-private theorem rowsA1_chunk044_checked : rowsA1_chunk044.length = 4 ∧ rowsSum 1463 rowsA1_chunk044 = 73760 := by
+def rowsA1_chunk044 : List ℕ := [4120,4120,4632,4633]
+theorem rowsA1_chunk044_checked : rowsA1_chunk044.length = 4 ∧ rowsSum 1463 rowsA1_chunk044 = 73760 := by
   apply daChecked
   decide +kernel
-private def rowsA1_chunk048 : List ℕ := [5145,6170,6170,6171]
-private theorem rowsA1_chunk048_checked : rowsA1_chunk048.length = 4 ∧ rowsSum 1467 rowsA1_chunk048 = 91810 := by
+def rowsA1_chunk048 : List ℕ := [5145,6170,6170,6171]
+theorem rowsA1_chunk048_checked : rowsA1_chunk048.length = 4 ∧ rowsSum 1467 rowsA1_chunk048 = 91810 := by
   apply daChecked
   decide +kernel
-private def rowsA1_chunk052 : List ℕ := [6171,6688,268832,269344]
-private theorem rowsA1_chunk052_checked : rowsA1_chunk052.length = 4 ∧ rowsSum 1471 rowsA1_chunk052 = 111993 := by
+def rowsA1_chunk052 : List ℕ := [6171,6688,268832,269344]
+theorem rowsA1_chunk052_checked : rowsA1_chunk052.length = 4 ∧ rowsSum 1471 rowsA1_chunk052 = 111993 := by
   apply daChecked
   decide +kernel
-private def rowsA1_chunk056 : List ℕ := [532512,532512,794656,794656]
-private theorem rowsA1_chunk056_checked : rowsA1_chunk056.length = 4 ∧ rowsSum 1475 rowsA1_chunk056 = 136932 := by
+def rowsA1_chunk056 : List ℕ := [532512,532512,794656,794656]
+theorem rowsA1_chunk056_checked : rowsA1_chunk056.length = 4 ∧ rowsSum 1475 rowsA1_chunk056 = 136932 := by
   apply daChecked
   decide +kernel
-private def rowsA1_chunk060 : List ℕ := [1056800,1319456,1581601,1582113]
-private theorem rowsA1_chunk060_checked : rowsA1_chunk060.length = 4 ∧ rowsSum 1479 rowsA1_chunk060 = 166213 := by
+def rowsA1_chunk060 : List ℕ := [1056800,1319456,1581601,1582113]
+theorem rowsA1_chunk060_checked : rowsA1_chunk060.length = 4 ∧ rowsSum 1479 rowsA1_chunk060 = 166213 := by
   apply daChecked
   decide +kernel
-private def rowsA1_chunk064 : List ℕ := [1582114,1844770,2106915,2107427]
-private theorem rowsA1_chunk064_checked : rowsA1_chunk064.length = 4 ∧ rowsSum 1483 rowsA1_chunk064 = 199448 := by
+def rowsA1_chunk064 : List ℕ := [1582114,1844770,2106915,2107427]
+theorem rowsA1_chunk064_checked : rowsA1_chunk064.length = 4 ∧ rowsSum 1483 rowsA1_chunk064 = 199448 := by
   apply daChecked
   decide +kernel
-private def rowsA1_chunk068 : List ℕ := [2109476,2371620,2371620,2633766]
-private theorem rowsA1_chunk068_checked : rowsA1_chunk068.length = 4 ∧ rowsSum 1487 rowsA1_chunk068 = 236173 := by
+def rowsA1_chunk068 : List ℕ := [2109476,2371620,2371620,2633766]
+theorem rowsA1_chunk068_checked : rowsA1_chunk068.length = 4 ∧ rowsSum 1487 rowsA1_chunk068 = 236173 := by
   apply daChecked
   decide +kernel
-private def rowsA1_chunk072 : List ℕ := [3158054,3158054,137375782,137375784]
-private theorem rowsA1_chunk072_checked : rowsA1_chunk072.length = 4 ∧ rowsSum 1491 rowsA1_chunk072 = 279400 := by
+def rowsA1_chunk072 : List ℕ := [3158054,3158054,137375782,137375784]
+theorem rowsA1_chunk072_checked : rowsA1_chunk072.length = 4 ∧ rowsSum 1491 rowsA1_chunk072 = 279400 := by
   apply daChecked
   decide +kernel
-private def rowsA1_chunk076 : List ℕ := [271594032,406073904,406336560,541078576]
-private theorem rowsA1_chunk076_checked : rowsA1_chunk076.length = 4 ∧ rowsSum 1495 rowsA1_chunk076 = 323511 := by
+def rowsA1_chunk076 : List ℕ := [271594032,406073904,406336560,541078576]
+theorem rowsA1_chunk076_checked : rowsA1_chunk076.length = 4 ∧ rowsSum 1495 rowsA1_chunk076 = 323511 := by
   apply daChecked
   decide +kernel
-private def rowsA1_chunk080 : List ℕ := [541079088,675296816,809515056,809517104]
-private theorem rowsA1_chunk080_checked : rowsA1_chunk080.length = 4 ∧ rowsSum 1499 rowsA1_chunk080 = 380169 := by
+def rowsA1_chunk080 : List ℕ := [541079088,675296816,809515056,809517104]
+theorem rowsA1_chunk080_checked : rowsA1_chunk080.length = 4 ∧ rowsSum 1499 rowsA1_chunk080 = 380169 := by
   apply daChecked
   decide +kernel
-private def rowsA1_chunk084 : List ℕ := [809779248,943996976,1078476848,1078476848]
-private theorem rowsA1_chunk084_checked : rowsA1_chunk084.length = 4 ∧ rowsSum 1503 rowsA1_chunk084 = 443081 := by
+def rowsA1_chunk084 : List ℕ := [809779248,943996976,1078476848,1078476848]
+theorem rowsA1_chunk084_checked : rowsA1_chunk084.length = 4 ∧ rowsSum 1503 rowsA1_chunk084 = 443081 := by
   apply daChecked
   decide +kernel
-private def rowsA1_chunk088 : List ℕ := [1078738992,1212956720]
-private theorem rowsA1_chunk088_checked : rowsA1_chunk088.length = 2 ∧ rowsSum 1507 rowsA1_chunk088 = 247486 := by
+def rowsA1_chunk088 : List ℕ := [1078738992,1212956720]
+theorem rowsA1_chunk088_checked : rowsA1_chunk088.length = 2 ∧ rowsSum 1507 rowsA1_chunk088 = 247486 := by
   apply daChecked
   decide +kernel
-private def rowsA1 : List ℕ := rowsA1_chunk000 ++ rowsA1_chunk004 ++ rowsA1_chunk008 ++ rowsA1_chunk012 ++ rowsA1_chunk016 ++ rowsA1_chunk020 ++ rowsA1_chunk024 ++ rowsA1_chunk028 ++ rowsA1_chunk032 ++ rowsA1_chunk036 ++ rowsA1_chunk040 ++ rowsA1_chunk044 ++ rowsA1_chunk048 ++ rowsA1_chunk052 ++ rowsA1_chunk056 ++ rowsA1_chunk060 ++ rowsA1_chunk064 ++ rowsA1_chunk068 ++ rowsA1_chunk072 ++ rowsA1_chunk076 ++ rowsA1_chunk080 ++ rowsA1_chunk084 ++ rowsA1_chunk088
-private theorem rowsA1_checked :
+def rowsA1 : List ℕ := rowsA1_chunk000 ++ rowsA1_chunk004 ++ rowsA1_chunk008 ++ rowsA1_chunk012 ++ rowsA1_chunk016 ++ rowsA1_chunk020 ++ rowsA1_chunk024 ++ rowsA1_chunk028 ++ rowsA1_chunk032 ++ rowsA1_chunk036 ++ rowsA1_chunk040 ++ rowsA1_chunk044 ++ rowsA1_chunk048 ++ rowsA1_chunk052 ++ rowsA1_chunk056 ++ rowsA1_chunk060 ++ rowsA1_chunk064 ++ rowsA1_chunk068 ++ rowsA1_chunk072 ++ rowsA1_chunk076 ++ rowsA1_chunk080 ++ rowsA1_chunk084 ++ rowsA1_chunk088
+theorem rowsA1_checked :
     rowsA1.length = 90 ∧ rowsSum 1419 rowsA1 = 2903929 :=
   daAppend rowsA1_chunk000_checked <|
   daAppend rowsA1_chunk004_checked <|
@@ -5479,80 +5479,80 @@ private theorem rowsA1_checked :
   daAppend rowsA1_chunk080_checked <|
   daAppend rowsA1_chunk084_checked <|
   rowsA1_chunk088_checked
-private def rowsA2_chunk000 : List ℕ := [1213218864,70336397360,70336397872,139055874609]
-private theorem rowsA2_chunk000_checked : rowsA2_chunk000.length = 4 ∧ rowsSum 1509 rowsA2_chunk000 = 549100 := by
+def rowsA2_chunk000 : List ℕ := [1213218864,70336397360,70336397872,139055874609]
+theorem rowsA2_chunk000_checked : rowsA2_chunk000.length = 4 ∧ rowsSum 1509 rowsA2_chunk000 = 549100 := by
   apply daChecked
   decide +kernel
-private def rowsA2_chunk004 : List ℕ := [139055875121,207775352370,207909570098,276629047347]
-private theorem rowsA2_chunk004_checked : rowsA2_chunk004.length = 4 ∧ rowsSum 1513 rowsA2_chunk004 = 631098 := by
+def rowsA2_chunk004 : List ℕ := [139055875121,207775352370,207909570098,276629047347]
+theorem rowsA2_chunk004_checked : rowsA2_chunk004.length = 4 ∧ rowsSum 1513 rowsA2_chunk004 = 631098 := by
   apply daChecked
   decide +kernel
-private def rowsA2_chunk008 : List ℕ := [276763265075,345751439412,414470917172,414471179316]
-private theorem rowsA2_chunk008_checked : rowsA2_chunk008.length = 4 ∧ rowsSum 1517 rowsA2_chunk008 = 721185 := by
+def rowsA2_chunk008 : List ℕ := [276763265075,345751439412,414470917172,414471179316]
+theorem rowsA2_chunk008_checked : rowsA2_chunk008.length = 4 ∧ rowsSum 1517 rowsA2_chunk008 = 721185 := by
   apply daChecked
   decide +kernel
-private def rowsA2_chunk012 : List ℕ := [483190656054,551910394934,552044613686,552044879926]
-private theorem rowsA2_chunk012_checked : rowsA2_chunk012.length = 4 ∧ rowsSum 1521 rowsA2_chunk012 = 818867 := by
+def rowsA2_chunk012 : List ℕ := [483190656054,551910394934,552044613686,552044879926]
+theorem rowsA2_chunk012_checked : rowsA2_chunk012.length = 4 ∧ rowsSum 1521 rowsA2_chunk012 = 818867 := by
   apply daChecked
   decide +kernel
-private def rowsA2_chunk016 : List ℕ := [620899622968,35805405929536,35874125406272,71196070666304]
-private theorem rowsA2_chunk016_checked : rowsA2_chunk016.length = 4 ∧ rowsSum 1525 rowsA2_chunk016 = 919874 := by
+def rowsA2_chunk016 : List ℕ := [620899622968,35805405929536,35874125406272,71196070666304]
+theorem rowsA2_chunk016_checked : rowsA2_chunk016.length = 4 ∧ rowsSum 1525 rowsA2_chunk016 = 919874 := by
   apply daChecked
   decide +kernel
-private def rowsA2_chunk020 : List ℕ := [71196607537216,0x60c0c0806040,0x60c0c0806040,0x80c0c0806040]
-private theorem rowsA2_chunk020_checked : rowsA2_chunk020.length = 4 ∧ rowsSum 1529 rowsA2_chunk020 = 1043682 := by
+def rowsA2_chunk020 : List ℕ := [71196607537216,0x60c0c0806040,0x60c0c0806040,0x80c0c0806040]
+theorem rowsA2_chunk020_checked : rowsA2_chunk020.length = 4 ∧ rowsSum 1529 rowsA2_chunk020 = 1043682 := by
   apply daChecked
   decide +kernel
-private def rowsA2_chunk024 : List ℕ := [0x80d0c0846040,0xa0e0c0846040,0xc100c0886040,0xc100c0886040]
-private theorem rowsA2_chunk024_checked : rowsA2_chunk024.length = 4 ∧ rowsSum 1533 rowsA2_chunk024 = 1181252 := by
+def rowsA2_chunk024 : List ℕ := [0x80d0c0846040,0xa0e0c0846040,0xc100c0886040,0xc100c0886040]
+theorem rowsA2_chunk024_checked : rowsA2_chunk024.length = 4 ∧ rowsSum 1533 rowsA2_chunk024 = 1181252 := by
   apply daChecked
   decide +kernel
-private def rowsA2_chunk028 : List ℕ := [0xe100c08c6040,282577852981312,282577987461184,282646706937920]
-private theorem rowsA2_chunk028_checked : rowsA2_chunk028.length = 4 ∧ rowsSum 1537 rowsA2_chunk028 = 1328543 := by
+def rowsA2_chunk028 : List ℕ := [0xe100c08c6040,282577852981312,282577987461184,282646706937920]
+theorem rowsA2_chunk028_checked : rowsA2_chunk028.length = 4 ∧ rowsSum 1537 rowsA2_chunk028 = 1328543 := by
   apply daChecked
   decide +kernel
-private def rowsA2_chunk032 : List ℕ := [0x412110d8906240,0x412120d8986240,0x814120e0986441,0x81813100986441]
-private theorem rowsA2_chunk032_checked : rowsA2_chunk032.length = 4 ∧ rowsSum 1541 rowsA2_chunk032 = 1486575 := by
+def rowsA2_chunk032 : List ℕ := [0x412110d8906240,0x412120d8986240,0x814120e0986441,0x81813100986441]
+theorem rowsA2_chunk032_checked : rowsA2_chunk032.length = 4 ∧ rowsSum 1541 rowsA2_chunk032 = 1486575 := by
   apply daChecked
   decide +kernel
-private def rowsA2_chunk036 : List ℕ := [0xc1813100986642,0xc1818100a06642,72481460078012483,90531042959583299]
-private theorem rowsA2_chunk036_checked : rowsA2_chunk036.length = 4 ∧ rowsSum 1545 rowsA2_chunk036 = 1653595 := by
+def rowsA2_chunk036 : List ℕ := [0xc1813100986642,0xc1818100a06642,72481460078012483,90531042959583299]
+theorem rowsA2_chunk036_checked : rowsA2_chunk036.length = 4 ∧ rowsSum 1545 rowsA2_chunk036 = 1653595 := by
   apply daChecked
   decide +kernel
-private def rowsA2_chunk040 : List ℕ := [0x181a18100c06844,0x181c18100c06c44,0x182018100c06c44,0x1c2018100c06c46]
-private theorem rowsA2_chunk040_checked : rowsA2_chunk040.length = 4 ∧ rowsSum 1549 rowsA2_chunk040 = 1814289 := by
+def rowsA2_chunk040 : List ℕ := [0x181a18100c06844,0x181c18100c06c44,0x182018100c06c44,0x1c2018100c06c46]
+theorem rowsA2_chunk040_checked : rowsA2_chunk040.length = 4 ∧ rowsSum 1549 rowsA2_chunk040 = 1814289 := by
   apply daChecked
   decide +kernel
-private def rowsA2_chunk044 : List ℕ := [0x202018108c07046,0x202018110c07046,0x8202019110c08046,0x8242219118c08048]
-private theorem rowsA2_chunk044_checked : rowsA2_chunk044.length = 4 ∧ rowsSum 1553 rowsA2_chunk044 = 1964020 := by
+def rowsA2_chunk044 : List ℕ := [0x202018108c07046,0x202018110c07046,0x8202019110c08046,0x8242219118c08048]
+theorem rowsA2_chunk044_checked : rowsA2_chunk044.length = 4 ∧ rowsSum 1553 rowsA2_chunk044 = 1964020 := by
   apply daChecked
   decide +kernel
-private def rowsA2_chunk048 : List ℕ := [0x1024221a118c08048,0x1030241a120c08048,0x1830261b120c08048,0x2030261c120c08048]
-private theorem rowsA2_chunk048_checked : rowsA2_chunk048.length = 4 ∧ rowsSum 1557 rowsA2_chunk048 = 2129047 := by
+def rowsA2_chunk048 : List ℕ := [0x1024221a118c08048,0x1030241a120c08048,0x1830261b120c08048,0x2030261c120c08048]
+theorem rowsA2_chunk048_checked : rowsA2_chunk048.length = 4 ∧ rowsSum 1557 rowsA2_chunk048 = 2129047 := by
   apply daChecked
   decide +kernel
-private def rowsA2_chunk052 : List ℕ := [0x20302820130c0804c,0x28303020130c0804c,0x30343020130c4804c,0x30343020130c4804c]
-private theorem rowsA2_chunk052_checked : rowsA2_chunk052.length = 4 ∧ rowsSum 1561 rowsA2_chunk052 = 2309631 := by
+def rowsA2_chunk052 : List ℕ := [0x20302820130c0804c,0x28303020130c0804c,0x30343020130c4804c,0x30343020130c4804c]
+theorem rowsA2_chunk052_checked : rowsA2_chunk052.length = 4 ∧ rowsSum 1561 rowsA2_chunk052 = 2309631 := by
   apply daChecked
   decide +kernel
-private def rowsA2_chunk056 : List ℕ := [0x30383020140c8804c,0x38403020180c8804c,0x40403020180cc804c,0x1040403020180cc804c]
-private theorem rowsA2_chunk056_checked : rowsA2_chunk056.length = 4 ∧ rowsSum 1565 rowsA2_chunk056 = 2504617 := by
+def rowsA2_chunk056 : List ℕ := [0x30383020140c8804c,0x38403020180c8804c,0x40403020180cc804c,0x1040403020180cc804c]
+theorem rowsA2_chunk056_checked : rowsA2_chunk056.length = 4 ∧ rowsSum 1565 rowsA2_chunk056 = 2504617 := by
   apply daChecked
   decide +kernel
-private def rowsA2_chunk060 : List ℕ := [0x1048403020180d08050,0x2048443221180d08060,0x2050443221180d08060,0x3060483422180d88260]
-private theorem rowsA2_chunk060_checked : rowsA2_chunk060.length = 4 ∧ rowsSum 1569 rowsA2_chunk060 = 2708537 := by
+def rowsA2_chunk060 : List ℕ := [0x1048403020180d08050,0x2048443221180d08060,0x2050443221180d08060,0x3060483422180d88260]
+theorem rowsA2_chunk060_checked : rowsA2_chunk060.length = 4 ∧ rowsSum 1569 rowsA2_chunk060 = 2708537 := by
   apply daChecked
   decide +kernel
-private def rowsA2_chunk064 : List ℕ := [0x4060483423180d88460,0x40604c3623180d88460,0x50604c3624180d88660,0x6060503824180e08660]
-private theorem rowsA2_chunk064_checked : rowsA2_chunk064.length = 4 ∧ rowsSum 1573 rowsA2_chunk064 = 2946193 := by
+def rowsA2_chunk064 : List ℕ := [0x4060483423180d88460,0x40604c3623180d88460,0x50604c3624180d88660,0x6060503824180e08660]
+theorem rowsA2_chunk064_checked : rowsA2_chunk064.length = 4 ∧ rowsSum 1573 rowsA2_chunk064 = 2946193 := by
   apply daChecked
   decide +kernel
-private def rowsA2_chunk068 : List ℕ := [0x6068604024181008860,0x6068604026181008860]
-private theorem rowsA2_chunk068_checked : rowsA2_chunk068.length = 2 ∧ rowsSum 1577 rowsA2_chunk068 = 1563390 := by
+def rowsA2_chunk068 : List ℕ := [0x6068604024181008860,0x6068604026181008860]
+theorem rowsA2_chunk068_checked : rowsA2_chunk068.length = 2 ∧ rowsSum 1577 rowsA2_chunk068 = 1563390 := by
   apply daChecked
   decide +kernel
-private def rowsA2 : List ℕ := rowsA2_chunk000 ++ rowsA2_chunk004 ++ rowsA2_chunk008 ++ rowsA2_chunk012 ++ rowsA2_chunk016 ++ rowsA2_chunk020 ++ rowsA2_chunk024 ++ rowsA2_chunk028 ++ rowsA2_chunk032 ++ rowsA2_chunk036 ++ rowsA2_chunk040 ++ rowsA2_chunk044 ++ rowsA2_chunk048 ++ rowsA2_chunk052 ++ rowsA2_chunk056 ++ rowsA2_chunk060 ++ rowsA2_chunk064 ++ rowsA2_chunk068
-private theorem rowsA2_checked :
+def rowsA2 : List ℕ := rowsA2_chunk000 ++ rowsA2_chunk004 ++ rowsA2_chunk008 ++ rowsA2_chunk012 ++ rowsA2_chunk016 ++ rowsA2_chunk020 ++ rowsA2_chunk024 ++ rowsA2_chunk028 ++ rowsA2_chunk032 ++ rowsA2_chunk036 ++ rowsA2_chunk040 ++ rowsA2_chunk044 ++ rowsA2_chunk048 ++ rowsA2_chunk052 ++ rowsA2_chunk056 ++ rowsA2_chunk060 ++ rowsA2_chunk064 ++ rowsA2_chunk068
+theorem rowsA2_checked :
     rowsA2.length = 70 ∧ rowsSum 1509 rowsA2 = 28273495 :=
   daAppend rowsA2_chunk000_checked <|
   daAppend rowsA2_chunk004_checked <|
@@ -5572,52 +5572,52 @@ private theorem rowsA2_checked :
   daAppend rowsA2_chunk060_checked <|
   daAppend rowsA2_chunk064_checked <|
   rowsA2_chunk068_checked
-private def rowsA3_chunk000 : List ℕ := [0x7080604026181008860,0x208080604026181008c60,0x208080604026181008c60,0x409080604028189008c60]
-private theorem rowsA3_chunk000_checked : rowsA3_chunk000.length = 4 ∧ rowsSum 1579 rowsA3_chunk000 = 3338238 := by
+def rowsA3_chunk000 : List ℕ := [0x7080604026181008860,0x208080604026181008c60,0x208080604026181008c60,0x409080604028189008c60]
+theorem rowsA3_chunk000_checked : rowsA3_chunk000.length = 4 ∧ rowsSum 1579 rowsA3_chunk000 = 3338238 := by
   apply daChecked
   decide +kernel
-private def rowsA3_chunk004 : List ℕ := [0x409080604030189008c60,0x60a088604030191009060,0x60c088644230191009060,0x80c090644230199009060]
-private theorem rowsA3_chunk004_checked : rowsA3_chunk004.length = 4 ∧ rowsSum 1583 rowsA3_chunk004 = 3625471 := by
+def rowsA3_chunk004 : List ℕ := [0x409080604030189008c60,0x60a088604030191009060,0x60c088644230191009060,0x80c090644230199009060]
+theorem rowsA3_chunk004_checked : rowsA3_chunk004.length = 4 ∧ rowsSum 1583 rowsA3_chunk004 = 3625471 := by
   apply daChecked
   decide +kernel
-private def rowsA3_chunk008 : List ℕ := [0xa0c090684430199009060,0xc0c0986844301a1009060,0xc0c0a06c46301a1009060,0xc0d0c07046301a1009860]
-private theorem rowsA3_chunk008_checked : rowsA3_chunk008.length = 4 ∧ rowsSum 1587 rowsA3_chunk008 = 3946296 := by
+def rowsA3_chunk008 : List ℕ := [0xa0c090684430199009060,0xc0c0986844301a1009060,0xc0c0a06c46301a1009060,0xc0d0c07046301a1009860]
+theorem rowsA3_chunk008_checked : rowsA3_chunk008.length = 4 ∧ rowsSum 1587 rowsA3_chunk008 = 3946296 := by
   apply daChecked
   decide +kernel
-private def rowsA3_chunk012 : List ℕ := [0xe0e0c08048301b1009860,0x410100c08048301b1009860,0x410100c0804c301b1009860,0x810100c0804c301b1049860]
-private theorem rowsA3_chunk012_checked : rowsA3_chunk012.length = 4 ∧ rowsSum 1591 rowsA3_chunk012 = 4286127 := by
+def rowsA3_chunk012 : List ℕ := [0xe0e0c08048301b1009860,0x410100c08048301b1009860,0x410100c0804c301b1009860,0x810100c0804c301b1049860]
+theorem rowsA3_chunk012_checked : rowsA3_chunk012.length = 4 ∧ rowsSum 1591 rowsA3_chunk012 = 4286127 := by
   apply daChecked
   decide +kernel
-private def rowsA3_chunk016 : List ℕ := [0x812100c0804c301c1089860,0xc14100c0804c30201089860,0x1018110c08050302010ca060,0x1018110c88050302010ca060]
-private theorem rowsA3_chunk016_checked : rowsA3_chunk016.length = 4 ∧ rowsSum 1595 rowsA3_chunk016 = 4649499 := by
+def rowsA3_chunk016 : List ℕ := [0x812100c0804c301c1089860,0xc14100c0804c30201089860,0x1018110c08050302010ca060,0x1018110c88050302010ca060]
+theorem rowsA3_chunk016_checked : rowsA3_chunk016.length = 4 ∧ rowsSum 1595 rowsA3_chunk016 = 4649499 := by
   apply daChecked
   decide +kernel
-private def rowsA3_chunk020 : List ℕ := [0x1418120c880603120110c060,0x1818130d084603120110c060,0x1818130d088603220110c060,0x181a140d888603220118c060]
-private theorem rowsA3_chunk020_checked : rowsA3_chunk020.length = 4 ∧ rowsSum 1599 rowsA3_chunk020 = 5008695 := by
+def rowsA3_chunk020 : List ℕ := [0x1418120c880603120110c060,0x1818130d084603120110c060,0x1818130d088603220110c060,0x181a140d888603220118c060]
+theorem rowsA3_chunk020_checked : rowsA3_chunk020.length = 4 ∧ rowsSum 1599 rowsA3_chunk020 = 5008695 := by
   apply daChecked
   decide +kernel
-private def rowsA3_chunk024 : List ℕ := [0x81c1a180d88c603320118c060,0x8201c180e08c603320118c060,0x1020201810090603420118c061,0x1024201810090603420120c061]
-private theorem rowsA3_chunk024_checked : rowsA3_chunk024.length = 4 ∧ rowsSum 1603 rowsA3_chunk024 = 5391796 := by
+def rowsA3_chunk024 : List ℕ := [0x81c1a180d88c603320118c060,0x8201c180e08c603320118c060,0x1020201810090603420118c061,0x1024201810090603420120c061]
+theorem rowsA3_chunk024_checked : rowsA3_chunk024.length = 4 ∧ rowsSum 1603 rowsA3_chunk024 = 5391796 := by
   apply daChecked
   decide +kernel
-private def rowsA3_chunk028 : List ℕ := [0x1824201810090603420120c062,0x1828201810098603620120c062,0x2030221810098603620120c063,0x2030221810098603620120c063]
-private theorem rowsA3_chunk028_checked : rowsA3_chunk028.length = 4 ∧ rowsSum 1607 rowsA3_chunk028 = 5767634 := by
+def rowsA3_chunk028 : List ℕ := [0x1824201810090603420120c062,0x1828201810098603620120c062,0x2030221810098603620120c063,0x2030221810098603620120c063]
+theorem rowsA3_chunk028_checked : rowsA3_chunk028.length = 4 ∧ rowsSum 1607 rowsA3_chunk028 = 5767634 := by
   apply daChecked
   decide +kernel
-private def rowsA3_chunk032 : List ℕ := [0x30302419100a0603820130c064,0x30302419100a0603820930c064,0x3030261a108c0604020930c064,0x103834281a108c0604021130c066]
-private theorem rowsA3_chunk032_checked : rowsA3_chunk032.length = 4 ∧ rowsSum 1611 rowsA3_chunk032 = 6156288 := by
+def rowsA3_chunk032 : List ℕ := [0x30302419100a0603820130c064,0x30302419100a0603820930c064,0x3030261a108c0604020930c064,0x103834281a108c0604021130c066]
+theorem rowsA3_chunk032_checked : rowsA3_chunk032.length = 4 ∧ rowsSum 1611 rowsA3_chunk032 = 6156288 := by
   apply daChecked
   decide +kernel
-private def rowsA3_chunk036 : List ℕ := [0x104038301b110c0624021130c066,0x204040301b110c0644021930c066,0x204040301c118c0644021930c066,0x3048403020120c0664022130c068]
-private theorem rowsA3_chunk036_checked : rowsA3_chunk036.length = 4 ∧ rowsSum 1615 rowsA3_chunk036 = 6577418 := by
+def rowsA3_chunk036 : List ℕ := [0x104038301b110c0624021130c066,0x204040301b110c0644021930c066,0x204040301c118c0644021930c066,0x3048403020120c0664022130c068]
+theorem rowsA3_chunk036_checked : rowsA3_chunk036.length = 4 ∧ rowsSum 1615 rowsA3_chunk036 = 6577418 := by
   apply daChecked
   decide +kernel
-private def rowsA3_chunk040 : List ℕ := [0x3050403020120c0664022140c068,0x4060403020120c0684022140c068]
-private theorem rowsA3_chunk040_checked : rowsA3_chunk040.length = 2 ∧ rowsSum 1619 rowsA3_chunk040 = 3462537 := by
+def rowsA3_chunk040 : List ℕ := [0x3050403020120c0664022140c068,0x4060403020120c0684022140c068]
+theorem rowsA3_chunk040_checked : rowsA3_chunk040.length = 2 ∧ rowsSum 1619 rowsA3_chunk040 = 3462537 := by
   apply daChecked
   decide +kernel
-private def rowsA3 : List ℕ := rowsA3_chunk000 ++ rowsA3_chunk004 ++ rowsA3_chunk008 ++ rowsA3_chunk012 ++ rowsA3_chunk016 ++ rowsA3_chunk020 ++ rowsA3_chunk024 ++ rowsA3_chunk028 ++ rowsA3_chunk032 ++ rowsA3_chunk036 ++ rowsA3_chunk040
-private theorem rowsA3_checked :
+def rowsA3 : List ℕ := rowsA3_chunk000 ++ rowsA3_chunk004 ++ rowsA3_chunk008 ++ rowsA3_chunk012 ++ rowsA3_chunk016 ++ rowsA3_chunk020 ++ rowsA3_chunk024 ++ rowsA3_chunk028 ++ rowsA3_chunk032 ++ rowsA3_chunk036 ++ rowsA3_chunk040
+theorem rowsA3_checked :
     rowsA3.length = 42 ∧ rowsSum 1579 rowsA3 = 52209999 :=
   daAppend rowsA3_chunk000_checked <|
   daAppend rowsA3_chunk004_checked <|
@@ -5630,40 +5630,40 @@ private theorem rowsA3_checked :
   daAppend rowsA3_chunk032_checked <|
   daAppend rowsA3_chunk036_checked <|
   rowsA3_chunk040_checked
-private def rowsA4_chunk000 : List ℕ := [0x5060443020130c0684023180c068,0x6060483020130c0684023180c068,0x6060483220130c06c4023180c06c,0x60604c3220130c06c4024180c06c]
-private theorem rowsA4_chunk000_checked : rowsA4_chunk000.length = 4 ∧ rowsSum 1621 rowsA4_chunk000 = 7260342 := by
+def rowsA4_chunk000 : List ℕ := [0x5060443020130c0684023180c068,0x6060483020130c0684023180c068,0x6060483220130c06c4023180c06c,0x60604c3220130c06c4024180c06c]
+theorem rowsA4_chunk000_checked : rowsA4_chunk000.length = 4 ∧ rowsSum 1621 rowsA4_chunk000 = 7260342 := by
   apply daChecked
   decide +kernel
-private def rowsA4_chunk004 : List ℕ := [0x2070684c3420140c06c4024180c06c,0x208068503421180c06c4024180c06c,0x408080603622180c0704024180c06c,0x609080603622180c0804024180c06c]
-private theorem rowsA4_chunk004_checked : rowsA4_chunk004.length = 4 ∧ rowsSum 1625 rowsA4_chunk004 = 7766341 := by
+def rowsA4_chunk004 : List ℕ := [0x2070684c3420140c06c4024180c06c,0x208068503421180c06c4024180c06c,0x408080603622180c0704024180c06c,0x609080603622180c0804024180c06c]
+theorem rowsA4_chunk004_checked : rowsA4_chunk004.length = 4 ∧ rowsSum 1625 rowsA4_chunk004 = 7766341 := by
   apply daChecked
   decide +kernel
-private def rowsA4_chunk008 : List ℕ := [0x609080603823180c4804124180c06c,0x80a080604023180c4804126180c06c,0x80c080604024180c8804226180c070,0xa0c088604024180cc804226180c280]
-private theorem rowsA4_chunk008_checked : rowsA4_chunk008.length = 4 ∧ rowsSum 1629 rowsA4_chunk008 = 8309886 := by
+def rowsA4_chunk008 : List ℕ := [0x609080603823180c4804124180c06c,0x80a080604023180c4804126180c06c,0x80c080604024180c8804226180c070,0xa0c088604024180cc804226180c280]
+theorem rowsA4_chunk008_checked : rowsA4_chunk008.length = 4 ∧ rowsSum 1629 rowsA4_chunk008 = 8309886 := by
   apply daChecked
   decide +kernel
-private def rowsA4_chunk012 : List ℕ := [0xc0c088604024180cc804326180c280,0xc0c090604026180d0804426180c480,0x40e0c098644026180d0804426180c480,0x4100d098644026180d0804426180c680]
-private theorem rowsA4_chunk012_checked : rowsA4_chunk012.length = 4 ∧ rowsSum 1633 rowsA4_chunk012 = 8898525 := by
+def rowsA4_chunk012 : List ℕ := [0xc0c088604024180cc804326180c280,0xc0c090604026180d0804426180c480,0x40e0c098644026180d0804426180c480,0x4100d098644026180d0804426180c680]
+theorem rowsA4_chunk012_checked : rowsA4_chunk012.length = 4 ∧ rowsSum 1633 rowsA4_chunk012 = 8898525 := by
   apply daChecked
   decide +kernel
-private def rowsA4_chunk016 : List ℕ := [0x8100e0a0684028180d8804628180c680,0x810100c0684228180d8804628180c880,0xc12100c06c4230180d8804628180c880,0x1012100c0704430180d8804630180c880]
-private theorem rowsA4_chunk016_checked : rowsA4_chunk016.length = 4 ∧ rowsSum 1637 rowsA4_chunk016 = 9516978 := by
+def rowsA4_chunk016 : List ℕ := [0x8100e0a0684028180d8804628180c680,0x810100c0684228180d8804628180c880,0xc12100c06c4230180d8804628180c880,0x1012100c0704430180d8804630180c880]
+theorem rowsA4_chunk016_checked : rowsA4_chunk016.length = 4 ∧ rowsSum 1637 rowsA4_chunk016 = 9516978 := by
   apply daChecked
   decide +kernel
-private def rowsA4_chunk020 : List ℕ := [0x1014100c0804630180e0804830180cc80,0x1418100c080463018900804830180cc80,0x1818110c080483018900804830180cc80,0x1818120c080483019100824830180cc80]
-private theorem rowsA4_chunk020_checked : rowsA4_chunk020.length = 4 ∧ rowsSum 1641 rowsA4_chunk020 = 10091626 := by
+def rowsA4_chunk020 : List ℕ := [0x1014100c0804630180e0804830180cc80,0x1418100c080463018900804830180cc80,0x1818110c080483018900804830180cc80,0x1818120c080483019100824830180cc80]
+theorem rowsA4_chunk020_checked : rowsA4_chunk020.length = 4 ∧ rowsSum 1641 rowsA4_chunk020 = 10091626 := by
   apply daChecked
   decide +kernel
-private def rowsA4_chunk024 : List ℕ := [0x81818120c080483019100824830180d080,0x8201a130c8804c3019900844c30180d080,0x10201a130c8804c301a100844c30180d080,0x18201c140d0804c301a100864c30180d080]
-private theorem rowsA4_chunk024_checked : rowsA4_chunk024.length = 4 ∧ rowsSum 1645 rowsA4_chunk024 = 10709640 := by
+def rowsA4_chunk024 : List ℕ := [0x81818120c080483019100824830180d080,0x8201a130c8804c3019900844c30180d080,0x10201a130c8804c301a100844c30180d080,0x18201c140d0804c301a100864c30180d080]
+theorem rowsA4_chunk024_checked : rowsA4_chunk024.length = 4 ∧ rowsSum 1645 rowsA4_chunk024 = 10709640 := by
   apply daChecked
   decide +kernel
-private def rowsA4_chunk028 : List ℕ := [0x182420180d08450301a100884c30180d080,0x202420180d88450301b100884c30180d880,0x202820180e08860301b100884c30180d880,0x283020181008860301b1008c4c30180d880]
-private theorem rowsA4_chunk028_checked : rowsA4_chunk028.length = 4 ∧ rowsSum 1649 rowsA4_chunk028 = 11354713 := by
+def rowsA4_chunk028 : List ℕ := [0x182420180d08450301a100884c30180d080,0x202420180d88450301b100884c30180d880,0x202820180e08860301b100884c30180d880,0x283020181008860301b1008c4c30180d880]
+theorem rowsA4_chunk028_checked : rowsA4_chunk028.length = 4 ∧ rowsSum 1649 rowsA4_chunk028 = 11354713 := by
   apply daChecked
   decide +kernel
-private def rowsA4 : List ℕ := rowsA4_chunk000 ++ rowsA4_chunk004 ++ rowsA4_chunk008 ++ rowsA4_chunk012 ++ rowsA4_chunk016 ++ rowsA4_chunk020 ++ rowsA4_chunk024 ++ rowsA4_chunk028
-private theorem rowsA4_checked :
+def rowsA4 : List ℕ := rowsA4_chunk000 ++ rowsA4_chunk004 ++ rowsA4_chunk008 ++ rowsA4_chunk012 ++ rowsA4_chunk016 ++ rowsA4_chunk020 ++ rowsA4_chunk024 ++ rowsA4_chunk028
+theorem rowsA4_checked :
     rowsA4.length = 32 ∧ rowsSum 1621 rowsA4 = 73908051 :=
   daAppend rowsA4_chunk000_checked <|
   daAppend rowsA4_chunk004_checked <|
@@ -5673,36 +5673,36 @@ private theorem rowsA4_checked :
   daAppend rowsA4_chunk020_checked <|
   daAppend rowsA4_chunk024_checked <|
   rowsA4_chunk028_checked
-private def rowsA5_chunk000 : List ℕ := [0x303022181008c60301b1008c4c30180d880,0x303022181008c60311c1008c5030184d880,0x1038302418100906031201008c5030184d880,0x204034241810090603220100906030188d880]
-private theorem rowsA5_chunk000_checked : rowsA5_chunk000.length = 4 ∧ rowsSum 1653 rowsA5_chunk000 = 12030169 := by
+def rowsA5_chunk000 : List ℕ := [0x303022181008c60301b1008c4c30180d880,0x303022181008c60311c1008c5030184d880,0x1038302418100906031201008c5030184d880,0x204034241810090603220100906030188d880]
+theorem rowsA5_chunk000_checked : rowsA5_chunk000.length = 4 ∧ rowsSum 1653 rowsA5_chunk000 = 12030169 := by
   apply daChecked
   decide +kernel
-private def rowsA5_chunk004 : List ℕ := [0x204034261910098603220100906030188d880,0x304038281a1009860332010490603018ce080,0x304840301a10098603320104906030190e080,0x404840301b108986034201089060301910080]
-private theorem rowsA5_chunk004_checked : rowsA5_chunk004.length = 4 ∧ rowsSum 1657 rowsA5_chunk004 = 12736568 := by
+def rowsA5_chunk004 : List ℕ := [0x204034261910098603220100906030188d880,0x304038281a1009860332010490603018ce080,0x304840301a10098603320104906030190e080,0x404840301b108986034201089060301910080]
+theorem rowsA5_chunk004_checked : rowsA5_chunk004.length = 4 ∧ rowsSum 1657 rowsA5_chunk004 = 12736568 := by
   apply daChecked
   decide +kernel
-private def rowsA5_chunk008 : List ℕ := [0x506040301b108a06034201089860301910080,0x606040301c110c060342010c9860301990080,0x6060443020110c06036201109860301990080,0x206060443020118c06036201109860301990080]
-private theorem rowsA5_chunk008_checked : rowsA5_chunk008.length = 4 ∧ rowsSum 1661 rowsA5_chunk008 = 13509033 := by
+def rowsA5_chunk008 : List ℕ := [0x506040301b108a06034201089860301910080,0x606040301c110c060342010c9860301990080,0x6060443020110c06036201109860301990080,0x206060443020118c06036201109860301990080]
+theorem rowsA5_chunk008_checked : rowsA5_chunk008.length = 4 ∧ rowsSum 1661 rowsA5_chunk008 = 13509033 := by
   apply daChecked
   decide +kernel
-private def rowsA5_chunk012 : List ℕ := [0x207060483020118c06036201109860301990080,0x408068483020120c06238201189860301a10080,0x6080684c3220120c06238201189860301a10081,0x609080503220130c06440201189860301a10081]
-private theorem rowsA5_chunk012_checked : rowsA5_chunk012.length = 4 ∧ rowsSum 1665 rowsA5_chunk012 = 14361060 := by
+def rowsA5_chunk012 : List ℕ := [0x207060483020118c06036201109860301990080,0x408068483020120c06238201189860301a10080,0x6080684c3220120c06238201189860301a10081,0x609080503220130c06440201189860301a10081]
+theorem rowsA5_chunk012_checked : rowsA5_chunk012.length = 4 ∧ rowsSum 1665 rowsA5_chunk012 = 14361060 := by
   apply daChecked
   decide +kernel
-private def rowsA5_chunk016 : List ℕ := [0x809080603420130c0644020118a060301a10082,0x80a080603420130c0664020120a060301a10082,0xa0c080603621130c0664020920c060301a10083,0xc0c080603821140c0684020920c060309b10084]
-private theorem rowsA5_chunk016_checked : rowsA5_chunk016.length = 4 ∧ rowsSum 1669 rowsA5_chunk016 = 15213582 := by
+def rowsA5_chunk016 : List ℕ := [0x809080603420130c0644020118a060301a10082,0x80a080603420130c0664020120a060301a10082,0xa0c080603621130c0664020920c060301a10083,0xc0c080603821140c0684020920c060309b10084]
+theorem rowsA5_chunk016_checked : rowsA5_chunk016.length = 4 ∧ rowsSum 1669 rowsA5_chunk016 = 15213582 := by
   apply daChecked
   decide +kernel
-private def rowsA5_chunk020 : List ℕ := [0x40c0c088604022180c0684021120c060309b10084,0x40e0c088604023180c06c4021120c060311b10084,0x8100d090604023180c06c4021930c060311b10086,0xc100d098604024180c06c4022130c060319b10086]
-private theorem rowsA5_chunk020_checked : rowsA5_chunk020.length = 4 ∧ rowsSum 1673 rowsA5_chunk020 = 16020251 := by
+def rowsA5_chunk020 : List ℕ := [0x40c0c088604022180c0684021120c060309b10084,0x40e0c088604023180c06c4021120c060311b10084,0x8100d090604023180c06c4021930c060311b10086,0xc100d098604024180c06c4022130c060319b10086]
+theorem rowsA5_chunk020_checked : rowsA5_chunk020.length = 4 ∧ rowsSum 1673 rowsA5_chunk020 = 16020251 := by
   apply daChecked
   decide +kernel
-private def rowsA5_chunk024 : List ℕ := [0xc100e098644024180c06c4022130c060321b10086,0x1012100a0644024180c4704022130c060321b10086,0x1014100c0684026180c8704023130c060321c10088]
-private theorem rowsA5_chunk024_checked : rowsA5_chunk024.length = 3 ∧ rowsSum 1677 rowsA5_chunk024 = 12595054 := by
+def rowsA5_chunk024 : List ℕ := [0xc100e098644024180c06c4022130c060321b10086,0x1012100a0644024180c4704022130c060321b10086,0x1014100c0684026180c8704023130c060321c10088]
+theorem rowsA5_chunk024_checked : rowsA5_chunk024.length = 3 ∧ rowsSum 1677 rowsA5_chunk024 = 12595054 := by
   apply daChecked
   decide +kernel
-private def rowsA5 : List ℕ := rowsA5_chunk000 ++ rowsA5_chunk004 ++ rowsA5_chunk008 ++ rowsA5_chunk012 ++ rowsA5_chunk016 ++ rowsA5_chunk020 ++ rowsA5_chunk024
-private theorem rowsA5_checked :
+def rowsA5 : List ℕ := rowsA5_chunk000 ++ rowsA5_chunk004 ++ rowsA5_chunk008 ++ rowsA5_chunk012 ++ rowsA5_chunk016 ++ rowsA5_chunk020 ++ rowsA5_chunk024
+theorem rowsA5_checked :
     rowsA5.length = 27 ∧ rowsSum 1653 rowsA5 = 96465717 :=
   daAppend rowsA5_chunk000_checked <|
   daAppend rowsA5_chunk004_checked <|
@@ -5711,32 +5711,32 @@ private theorem rowsA5_checked :
   daAppend rowsA5_chunk016_checked <|
   daAppend rowsA5_chunk020_checked <|
   rowsA5_chunk024_checked
-private def rowsA6_chunk000 : List ℕ := [0x1418100c0684026180c8804023130c060331c10088,0x1818100c06c4226180cc804023130c060332010088,0x81818110c0704228180cc804023140c060332010088,0x81c18110c0804428180d0804124140c060332010088]
-private theorem rowsA6_chunk000_checked : rowsA6_chunk000.length = 4 ∧ rowsSum 1680 rowsA6_chunk000 = 17567317 := by
+def rowsA6_chunk000 : List ℕ := [0x1418100c0684026180c8804023130c060331c10088,0x1818100c06c4226180cc804023130c060332010088,0x81818110c0704228180cc804023140c060332010088,0x81c18110c0804428180d0804124140c060332010088]
+theorem rowsA6_chunk000_checked : rowsA6_chunk000.length = 4 ∧ rowsSum 1680 rowsA6_chunk000 = 17567317 := by
   apply daChecked
   decide +kernel
-private def rowsA6_chunk004 : List ℕ := [0x102018120c0804430180d0804124140c060342010088,0x18201a120c0804630180d0804224180c06034201008c,0x18201c130c0804830180d8804224180c06034201008c,0x202420140c8804830180d8804324180c06034201008c]
-private theorem rowsA6_chunk004_checked : rowsA6_chunk004.length = 4 ∧ rowsSum 1684 rowsA6_chunk004 = 18497024 := by
+def rowsA6_chunk004 : List ℕ := [0x102018120c0804430180d0804124140c060342010088,0x18201a120c0804630180d0804224180c06034201008c,0x18201c130c0804830180d8804224180c06034201008c,0x202420140c8804830180d8804324180c06034201008c]
+theorem rowsA6_chunk004_checked : rowsA6_chunk004.length = 4 ∧ rowsSum 1684 rowsA6_chunk004 = 18497024 := by
   apply daChecked
   decide +kernel
-private def rowsA6_chunk008 : List ℕ := [0x202820180d0804830180d8804326180c06134201008c,0x283020180d0804c30188e0804426180c06136201008c,0x303020180d8804c30190e0804426180c06236201008c,0x10303022180d8844c3019100804626180c06236201008c]
-private theorem rowsA6_chunk008_checked : rowsA6_chunk008.length = 4 ∧ rowsSum 1688 rowsA6_chunk008 = 19536570 := by
+def rowsA6_chunk008 : List ℕ := [0x202820180d0804830180d8804326180c06134201008c,0x283020180d0804c30188e0804426180c06136201008c,0x303020180d8804c30190e0804426180c06236201008c,0x10303022180d8844c3019100804626180c06236201008c]
+theorem rowsA6_chunk008_checked : rowsA6_chunk008.length = 4 ∧ rowsSum 1688 rowsA6_chunk008 = 19536570 := by
   apply daChecked
   decide +kernel
-private def rowsA6_chunk012 : List ℕ := [0x20383022180e084503019900804626180c06336201008c,0x204030241810088503019900804626180c064362010290,0x30403424181008c60301a100804626180c064362010290,0x30403826181008c60301a100824828180c064362010490]
-private theorem rowsA6_chunk012_checked : rowsA6_chunk012.length = 4 ∧ rowsSum 1692 rowsA6_chunk012 = 20635869 := by
+def rowsA6_chunk012 : List ℕ := [0x20383022180e084503019900804626180c06336201008c,0x204030241810088503019900804626180c064362010290,0x30403424181008c60301a100804626180c064362010290,0x30403826181008c60301a100824828180c064362010490]
+theorem rowsA6_chunk012_checked : rowsA6_chunk012.length = 4 ∧ rowsSum 1692 rowsA6_chunk012 = 20635869 := by
   apply daChecked
   decide +kernel
-private def rowsA6_chunk016 : List ℕ := [0x40484026191009060301b100824828180c066362010490,0x50504030191009060301b100844828180c066382010690,0x606040301a1009060301b100844830180c066382010690,0x20606040301a1009860311b100864830180c066402010890]
-private theorem rowsA6_chunk016_checked : rowsA6_chunk016.length = 4 ∧ rowsSum 1696 rowsA6_chunk016 = 21713176 := by
+def rowsA6_chunk016 : List ℕ := [0x40484026191009060301b100824828180c066362010490,0x50504030191009060301b100844828180c066382010690,0x606040301a1009060301b100844830180c066382010690,0x20606040301a1009860311b100864830180c066402010890]
+theorem rowsA6_chunk016_checked : rowsA6_chunk016.length = 4 ∧ rowsSum 1696 rowsA6_chunk016 = 21713176 := by
   apply daChecked
   decide +kernel
-private def rowsA6_chunk020 : List ℕ := [0x20606044301b1009860311c100884c30180c068402010890,0x40706044301c1089860321c100884c30180c068402010890,0x408068483020110a0603220100884c30180c068402010c90]
-private theorem rowsA6_chunk020_checked : rowsA6_chunk020.length = 3 ∧ rowsSum 1700 rowsA6_chunk020 = 16957259 := by
+def rowsA6_chunk020 : List ℕ := [0x20606044301b1009860311c100884c30180c068402010890,0x40706044301c1089860321c100884c30180c068402010890,0x408068483020110a0603220100884c30180c068402010c90]
+theorem rowsA6_chunk020_checked : rowsA6_chunk020.length = 3 ∧ rowsSum 1700 rowsA6_chunk020 = 16957259 := by
   apply daChecked
   decide +kernel
-private def rowsA6 : List ℕ := rowsA6_chunk000 ++ rowsA6_chunk004 ++ rowsA6_chunk008 ++ rowsA6_chunk012 ++ rowsA6_chunk016 ++ rowsA6_chunk020
-private theorem rowsA6_checked :
+def rowsA6 : List ℕ := rowsA6_chunk000 ++ rowsA6_chunk004 ++ rowsA6_chunk008 ++ rowsA6_chunk012 ++ rowsA6_chunk016 ++ rowsA6_chunk020
+theorem rowsA6_checked :
     rowsA6.length = 23 ∧ rowsSum 1680 rowsA6 = 114907215 :=
   daAppend rowsA6_chunk000_checked <|
   daAppend rowsA6_chunk004_checked <|
@@ -5744,84 +5744,84 @@ private theorem rowsA6_checked :
   daAppend rowsA6_chunk012_checked <|
   daAppend rowsA6_chunk016_checked <|
   rowsA6_chunk020_checked
-private def rowsA7_chunk000 : List ℕ := [0x608068483020110a06033201008c4c30180c268402010c90,0x8090704c3020118c06034201008c4c30180c468402010c98,0x8090804c3220118c06034201008c4c30180c46c402010c98,0xa0a080603220120c06034201048c4c30180c66c402011098]
-private theorem rowsA7_chunk000_checked : rowsA7_chunk000.length = 4 ∧ rowsSum 1703 rowsA7_chunk000 = 23599906 := by
+def rowsA7_chunk000 : List ℕ := [0x608068483020110a06033201008c4c30180c268402010c90,0x8090704c3020118c06034201008c4c30180c468402010c98,0x8090804c3220118c06034201008c4c30180c46c402010c98,0xa0a080603220120c06034201048c4c30180c66c402011098]
+theorem rowsA7_chunk000_checked : rowsA7_chunk000.length = 4 ∧ rowsSum 1703 rowsA7_chunk000 = 23599906 := by
   apply daChecked
   decide +kernel
-private def rowsA7_chunk004 : List ℕ := [0x40c0c080603420120c0603620104905030180c66c402011098,0x40c0c080603420130c0603620108905030180c86c402011098,0x80e0c088603620130c0623620108905030180c86c402011098,0x8100c088603821130c062382010c906030180c86c402011098]
-private theorem rowsA7_chunk004_checked : rowsA7_chunk004.length = 4 ∧ rowsSum 1707 rowsA7_chunk004 = 24803520 := by
+def rowsA7_chunk004 : List ℕ := [0x40c0c080603420120c0603620104905030180c66c402011098,0x40c0c080603420130c0603620108905030180c86c402011098,0x80e0c088603620130c0623620108905030180c86c402011098,0x8100c088603821130c062382010c906030180c86c402011098]
+theorem rowsA7_chunk004_checked : rowsA7_chunk004.length = 4 ∧ rowsSum 1707 rowsA7_chunk004 = 24803520 := by
   apply daChecked
   decide +kernel
-private def rowsA7_chunk008 : List ℕ := [0xc100d090604021130c0643820110906030180cc6c402011898,0xc100d090604022140c0644020110986030180cc6c402011898,0x10120e098604023180c0664020110986030180cc70402011898,0x1414100a0644023180c0684020118986030180d070402051898]
-private theorem rowsA7_chunk008_checked : rowsA7_chunk008.length = 4 ∧ rowsSum 1711 rowsA7_chunk008 = 26030978 := by
+def rowsA7_chunk008 : List ℕ := [0xc100d090604021130c0643820110906030180cc6c402011898,0xc100d090604022140c0644020110986030180cc6c402011898,0x10120e098604023180c0664020110986030180cc70402011898,0x1414100a0644023180c0684020118986030180d070402051898]
+theorem rowsA7_chunk008_checked : rowsA7_chunk008.length = 4 ∧ rowsSum 1711 rowsA7_chunk008 = 26030978 := by
   apply daChecked
   decide +kernel
-private def rowsA7_chunk012 : List ℕ := [0x1818100c0644024180c0684020118986030180d0804020518c0,0x81818100c0684024180c0684020118986030184d0804020918c0,0x101818100c0684024180c06c4020918986030184d0804020918c0,0x102018110c06c4026180c06c4020920986030188d0804020d18c0]
-private theorem rowsA7_chunk012_checked : rowsA7_chunk012.length = 4 ∧ rowsSum 1715 rowsA7_chunk012 = 27292478 := by
+def rowsA7_chunk012 : List ℕ := [0x1818100c0644024180c0684020118986030180d0804020518c0,0x81818100c0684024180c0684020118986030184d0804020918c0,0x101818100c0684024180c06c4020918986030184d0804020918c0,0x102018110c06c4026180c06c4020920986030188d0804020d18c0]
+theorem rowsA7_chunk012_checked : rowsA7_chunk012.length = 4 ∧ rowsSum 1715 rowsA7_chunk012 = 27292478 := by
   apply daChecked
   decide +kernel
-private def rowsA7_chunk016 : List ℕ := [0x18201a110c0704226180c46c4021120a06030188d0804021120c0,0x18201a120c0804226180c4704021920a0603018cd8804021120c0,0x20241c130c0804428180c8704021920a06030190d8804021120c0,0x282420130c0804628180cc804022120c06030190d8804021920c0]
-private theorem rowsA7_chunk016_checked : rowsA7_chunk016.length = 4 ∧ rowsSum 1719 rowsA7_chunk016 = 28642995 := by
+def rowsA7_chunk016 : List ℕ := [0x18201a110c0704226180c46c4021120a06030188d0804021120c0,0x18201a120c0804226180c4704021920a0603018cd8804021120c0,0x20241c130c0804428180c8704021920a06030190d8804021120c0,0x282420130c0804628180cc804022120c06030190d8804021920c0]
+theorem rowsA7_chunk016_checked : rowsA7_chunk016.length = 4 ∧ rowsSum 1719 rowsA7_chunk016 = 28642995 := by
   apply daChecked
   decide +kernel
-private def rowsA7 : List ℕ := rowsA7_chunk000 ++ rowsA7_chunk004 ++ rowsA7_chunk008 ++ rowsA7_chunk012 ++ rowsA7_chunk016
-private theorem rowsA7_checked :
+def rowsA7 : List ℕ := rowsA7_chunk000 ++ rowsA7_chunk004 ++ rowsA7_chunk008 ++ rowsA7_chunk012 ++ rowsA7_chunk016
+theorem rowsA7_checked :
     rowsA7.length = 20 ∧ rowsSum 1703 rowsA7 = 130369877 :=
   daAppend rowsA7_chunk000_checked <|
   daAppend rowsA7_chunk004_checked <|
   daAppend rowsA7_chunk008_checked <|
   daAppend rowsA7_chunk012_checked <|
   rowsA7_chunk016_checked
-private def rowsA8_chunk000 : List ℕ := [0x302820140c8804630180cc804022130c06030190d8804021920c0,0x10303020180c8804830180d0804022130c06030198d8804021920c0,0x20303020180d0804830180d0804023130c06030198d8804021920c0,0x20383022180d8804830180d0804023130c06030198d8804022120c0]
-private theorem rowsA8_chunk000_checked : rowsA8_chunk000.length = 4 ∧ rowsSum 1723 rowsA8_chunk000 = 29931024 := by
+def rowsA8_chunk000 : List ℕ := [0x302820140c8804630180cc804022130c06030190d8804021920c0,0x10303020180c8804830180d0804022130c06030198d8804021920c0,0x20303020180d0804830180d0804023130c06030198d8804021920c0,0x20383022180d8804830180d0804023130c06030198d8804022120c0]
+theorem rowsA8_chunk000_checked : rowsA8_chunk000.length = 4 ∧ rowsSum 1723 rowsA8_chunk000 = 29931024 := by
   apply daChecked
   decide +kernel
-private def rowsA8_chunk004 : List ℕ := [0x30403022180d8804c30180d8804123130c06030198e0804022120c0,0x30403424180e0844c30188d8804124130c060301a0e0804022120c0,0x4048382418100844c30188d8804224130c060309a0e0804022120c0,0x5048402618100885030190e0804224140c060311a100804022130c0]
-private theorem rowsA8_chunk004_checked : rowsA8_chunk004.length = 4 ∧ rowsSum 1727 rowsA8_chunk004 = 31362247 := by
+def rowsA8_chunk004 : List ℕ := [0x30403022180d8804c30180d8804123130c06030198e0804022120c0,0x30403424180e0844c30188d8804124130c060301a0e0804022120c0,0x4048382418100844c30188d8804224130c060309a0e0804022120c0,0x5048402618100885030190e0804224140c060311a100804022130c0]
+theorem rowsA8_chunk004_checked : rowsA8_chunk004.length = 4 ∧ rowsSum 1727 rowsA8_chunk004 = 31362247 := by
   apply daChecked
   decide +kernel
-private def rowsA8_chunk008 : List ℕ := [0x60504028191008c5030190e0804324140c060311a1008040a2130c0,0x2060604030191008c603019900804424140c060319a1008040a3130c0,0x40606040301a10090603019900804424180c060319b100804123130c0,0x40706044301a1009060301a100804426180c060321b100804123130c0]
-private theorem rowsA8_chunk008_checked : rowsA8_chunk008.length = 4 ∧ rowsSum 1731 rowsA8_chunk008 = 32793617 := by
+def rowsA8_chunk008 : List ℕ := [0x60504028191008c5030190e0804324140c060311a1008040a2130c0,0x2060604030191008c603019900804424140c060319a1008040a3130c0,0x40606040301a10090603019900804424180c060319b100804123130c0,0x40706044301a1009060301a100804426180c060321b100804123130c0]
+theorem rowsA8_chunk008_checked : rowsA8_chunk008.length = 4 ∧ rowsSum 1731 rowsA8_chunk008 = 32793617 := by
   apply daChecked
   decide +kernel
-private def rowsA8_chunk012 : List ℕ := [0x60806044301b1009060301a100804626180c060321b1008041a3130c0,0x60806848301b1009860301b100804626180c060321b1008041a3130c0,0x8090684830201089860301b100824626180c060331b100804223130c0,0xa090804c30201109860311b100824826180c060331b100804223130c0]
-private theorem rowsA8_chunk012_checked : rowsA8_chunk012.length = 4 ∧ rowsSum 1735 rowsA8_chunk012 = 34383972 := by
+def rowsA8_chunk012 : List ℕ := [0x60806044301b1009060301a100804626180c060321b1008041a3130c0,0x60806848301b1009860301b100804626180c060321b1008041a3130c0,0x8090684830201089860301b100824626180c060331b100804223130c0,0xa090804c30201109860311b100824826180c060331b100804223130c0]
+theorem rowsA8_chunk012_checked : rowsA8_chunk012.length = 4 ∧ rowsSum 1735 rowsA8_chunk012 = 34383972 := by
   apply daChecked
   decide +kernel
-private def rowsA8_chunk016 : List ℕ := [0x40c0a0804c3020110a060321b100844826180c060331b100804224130c0,0x40c0c080603220118a060321c100844826180c060341c100804324130c0]
-private theorem rowsA8_chunk016_checked : rowsA8_chunk016.length = 2 ∧ rowsSum 1739 rowsA8_chunk016 = 17805320 := by
+def rowsA8_chunk016 : List ℕ := [0x40c0a0804c3020110a060321b100844826180c060331b100804224130c0,0x40c0c080603220118a060321c100844826180c060341c100804324130c0]
+theorem rowsA8_chunk016_checked : rowsA8_chunk016.length = 2 ∧ rowsSum 1739 rowsA8_chunk016 = 17805320 := by
   apply daChecked
   decide +kernel
-private def rowsA8 : List ℕ := rowsA8_chunk000 ++ rowsA8_chunk004 ++ rowsA8_chunk008 ++ rowsA8_chunk012 ++ rowsA8_chunk016
-private theorem rowsA8_checked :
+def rowsA8 : List ℕ := rowsA8_chunk000 ++ rowsA8_chunk004 ++ rowsA8_chunk008 ++ rowsA8_chunk012 ++ rowsA8_chunk016
+theorem rowsA8_checked :
     rowsA8.length = 18 ∧ rowsSum 1723 rowsA8 = 146276180 :=
   daAppend rowsA8_chunk000_checked <|
   daAppend rowsA8_chunk004_checked <|
   daAppend rowsA8_chunk008_checked <|
   daAppend rowsA8_chunk012_checked <|
   rowsA8_chunk016_checked
-private def rowsA9_chunk000 : List ℕ := [0x80c0c080603420118c0603320100864828180c061341c100804324130c0,0x8100c080603420120c0603320100884828180c062341c100804324130c0,0xc100c088603620120c0603420100884830180c0623420100804424130c0,0x10100d090603620130c0603420100884c30180c0633420100804424180c0]
-private theorem rowsA9_chunk000_checked : rowsA9_chunk000.length = 4 ∧ rowsSum 1741 rowsA9_chunk000 = 36670908 := by
+def rowsA9_chunk000 : List ℕ := [0x80c0c080603420118c0603320100864828180c061341c100804324130c0,0x8100c080603420120c0603320100884828180c062341c100804324130c0,0xc100c088603620120c0603420100884830180c0623420100804424130c0,0x10100d090603620130c0603420100884c30180c0633420100804424180c0]
+theorem rowsA9_chunk000_checked : rowsA9_chunk000.length = 4 ∧ rowsSum 1741 rowsA9_chunk000 = 36670908 := by
   apply daChecked
   decide +kernel
-private def rowsA9_chunk004 : List ℕ := [0x10120e090603821130c06036201008c4c30180c0633420100804424180c0,0x141210098604021130c06036201008c4c30180c0643620100804424180c0,0x8181810098604022130c06236201048c4c30180c0643620100814424180c0,0x81818100c0644023140c0643620108904c30180c0643620100814424180c0]
-private theorem rowsA9_chunk004_checked : rowsA9_chunk004.length = 4 ∧ rowsSum 1745 rowsA9_chunk004 = 38204146 := by
+def rowsA9_chunk004 : List ℕ := [0x10120e090603821130c06036201008c4c30180c0633420100804424180c0,0x141210098604021130c06036201008c4c30180c0643620100804424180c0,0x8181810098604022130c06236201048c4c30180c0643620100814424180c0,0x81818100c0644023140c0643620108904c30180c0643620100814424180c0]
+theorem rowsA9_chunk004_checked : rowsA9_chunk004.length = 4 ∧ rowsSum 1745 rowsA9_chunk004 = 38204146 := by
   apply daChecked
   decide +kernel
-private def rowsA9_chunk008 : List ℕ := [0x101c18100c0644023180c0643820108904c30180c0663620100824624180c0,0x182018110c0684024180c066402010c904c30180c0663620100834626180c0,0x182018110c06c4024180c066402010c905030180c0663620100834626180c0,0x20201a120c06c4024180c0684020110905030180c2683620100844626180c0]
-private theorem rowsA9_chunk008_checked : rowsA9_chunk008.length = 4 ∧ rowsSum 1749 rowsA9_chunk008 = 39928229 := by
+def rowsA9_chunk008 : List ℕ := [0x101c18100c0644023180c0643820108904c30180c0663620100824624180c0,0x182018110c0684024180c066402010c904c30180c0663620100834626180c0,0x182018110c06c4024180c066402010c905030180c0663620100834626180c0,0x20201a120c06c4024180c0684020110905030180c2683620100844626180c0]
+theorem rowsA9_chunk008_checked : rowsA9_chunk008.length = 4 ∧ rowsSum 1749 rowsA9_chunk008 = 39928229 := by
   apply daChecked
   decide +kernel
-private def rowsA9_chunk012 : List ℕ := [0x20241c120c0704226180c0684020110905030180c2683820100844626180c0,0x10302820130c0804226180c06c4020118986030180c4683820100844626180c0,0x10303020130c0804426180c46c4020118986030180c6683820100864626180c0,0x20303020180c8804428180c46c4020918986030180c6684020100864826180c0]
-private theorem rowsA9_chunk012_checked : rowsA9_chunk012.length = 4 ∧ rowsSum 1753 rowsA9_chunk012 = 41715946 := by
+def rowsA9_chunk012 : List ℕ := [0x20241c120c0704226180c0684020110905030180c2683820100844626180c0,0x10302820130c0804226180c06c4020118986030180c4683820100844626180c0,0x10303020130c0804426180c46c4020118986030180c6683820100864626180c0,0x20303020180c8804428180c46c4020918986030180c6684020100864826180c0]
+theorem rowsA9_chunk012_checked : rowsA9_chunk012.length = 4 ∧ rowsSum 1753 rowsA9_chunk012 = 41715946 := by
   apply daChecked
   decide +kernel
-private def rowsA9_chunk016 : List ℕ := [0x20383020180c8804628180c86c4020918986030180c8684020100864826180c0]
-private theorem rowsA9_chunk016_checked : rowsA9_chunk016.length = 1 ∧ rowsSum 1757 rowsA9_chunk016 = 10717684 := by
+def rowsA9_chunk016 : List ℕ := [0x20383020180c8804628180c86c4020918986030180c8684020100864826180c0]
+theorem rowsA9_chunk016_checked : rowsA9_chunk016.length = 1 ∧ rowsSum 1757 rowsA9_chunk016 = 10717684 := by
   apply daChecked
   decide +kernel
-private def rowsA9 : List ℕ := rowsA9_chunk000 ++ rowsA9_chunk004 ++ rowsA9_chunk008 ++ rowsA9_chunk012 ++ rowsA9_chunk016
-private theorem rowsA9_checked :
+def rowsA9 : List ℕ := rowsA9_chunk000 ++ rowsA9_chunk004 ++ rowsA9_chunk008 ++ rowsA9_chunk012 ++ rowsA9_chunk016
+theorem rowsA9_checked :
     rowsA9.length = 17 ∧ rowsSum 1741 rowsA9 = 167236913 :=
   daAppend rowsA9_chunk000_checked <|
   daAppend rowsA9_chunk004_checked <|
@@ -5850,31 +5850,31 @@ open private fastDen fastC fastOld fastKernel from ProximityPrize.SubmissionLowe
 open private decode runLength rowLength rowValue rowStart runValue sumFrom from ProximityPrize.SubmissionLower.Numeric6AuxCert
 set_option maxRecDepth 50000
 set_option maxHeartbeats 0
-private def auxCDen (k : ℕ) : ℕ :=
+def auxCDen (k : ℕ) : ℕ :=
   let lin := Nat.add (Nat.mul 2 k) 15
   let quad := Nat.add (Nat.mul k lin) 30
   Nat.div (Nat.add (Nat.mul k quad) 25) 72
-private def auxCExc (k : ℕ) : ℕ :=
+def auxCExc (k : ℕ) : ℕ :=
   let lin := Nat.add (Nat.mul 2 k) 9
   let quad := Nat.add (Nat.mul k lin) 10
   Nat.div (Nat.add (Nat.mul k quad) 3) 24
-private theorem auxCDen_formula (k : ℕ) :
+theorem auxCDen_formula (k : ℕ) :
     auxCDen k = (k * (k * (2*k+15)+30)+25) / 72 := rfl
-private theorem auxCExc_formula (k : ℕ) :
+theorem auxCExc_formula (k : ℕ) :
     auxCExc k = (k * (k * (2*k+9)+10)+3) / 24 := rfl
-private theorem auxCDen_step (k : ℕ) :
+theorem auxCDen_step (k : ℕ) :
     auxCDen (k+12) = auxCDen k + (k*(k+17)+83) := by
   simp only [auxCDen_formula]
   rw [show (k+12)*((k+12)*(2*(k+12)+15)+30)+25 =
       (k*(k*(2*k+15)+30)+25) + 72*(k*(k+17)+83) by ring, Nat.add_mul_div_left _ _ (by decide)]
-private theorem auxCExc_step (k : ℕ) :
+theorem auxCExc_step (k : ℕ) :
     auxCExc (k+12) = auxCExc k + (k*(3*k+45)+203) := by
   simp only [auxCExc_formula]
   rw [show (k+12)*((k+12)*(2*(k+12)+9)+10)+3 =
       (k*(k*(2*k+9)+10)+3) + 24*(k*(3*k+45)+203) by ring, Nat.add_mul_div_left _ _ (by decide)]
-private theorem auxCExc_small : ∀ i : Fin 14, auxCExc i.val =
+theorem auxCExc_small : ∀ i : Fin 14, auxCExc i.val =
     auxCDen i.val + auxCDen (i.val-1) + auxCDen (i.val-2) := by decide +kernel
-private theorem auxCExc_correct (k : ℕ) :
+theorem auxCExc_correct (k : ℕ) :
     auxCExc k = auxCDen k + auxCDen (k-1) + auxCDen (k-2) := by
   induction k using Nat.strong_induction_on with
   | h k ih =>
@@ -5887,7 +5887,7 @@ private theorem auxCExc_correct (k : ℕ) :
         show n+14 = (n+2)+12 by omega, auxCExc_step, auxCDen_step (n+2),
         auxCDen_step (n+1), auxCDen_step n, hi]
       ring
-private theorem auxCDen_eq (u : ℤ) : fastDen u = (auxCDen (u+1).toNat : ℤ) := by
+theorem auxCDen_eq (u : ℤ) : fastDen u = (auxCDen (u+1).toNat : ℤ) := by
   by_cases hu : u < 0
   · rw [fastDen, ite_eq_left hu, show (u+1).toNat = 0 by omega]
     rfl
@@ -5897,12 +5897,12 @@ private theorem auxCDen_eq (u : ℤ) : fastDen u = (auxCDen (u+1).toNat : ℤ) :
       Nat.cast_add, Nat.cast_one, Nat.cast_mul, Nat.cast_ofNat]
     congr 1
     ring
-private theorem auxCExc_eq (x : ℤ) :
+theorem auxCExc_eq (x : ℤ) :
     (auxCExc x.toNat : ℤ) = fastDen (x-1) + fastDen (x-2) + fastDen (x-3) := by
   simp only [auxCExc_correct, Nat.cast_add, auxCDen_eq]
   rw [show (x-1+1).toNat = x.toNat by omega,
     show (x-2+1).toNat = x.toNat-1 by omega, show (x-3+1).toNat = x.toNat-2 by omega]
-private theorem auxCCum (d u : ℤ) (hd : 0 ≤ d) (h₁ : u ≤ 3*d) (h₂ : u ≤ 2*d+2) :
+theorem auxCCum (d u : ℤ) (hd : 0 ≤ d) (h₁ : u ≤ 3*d) (h₂ : u ≤ 2*d+2) :
     fastC d u = (auxCDen (u+1).toNat : ℤ) - auxCExc (u-d).toNat := by
   rw [← auxCDen_eq, auxCExc_eq]
   have hz (a : ℤ) (ha : a < 0) : fastDen a = 0 := by simp [fastDen, ha]
@@ -5917,16 +5917,16 @@ private theorem auxCCum (d u : ℤ) (hd : 0 ≤ d) (h₁ : u ≤ 3*d) (h₂ : u 
         hz _ (show u-d-3 < 0 by omega)]
     · rw [ite_eq_left (show u-d ≤ d+2 by omega)]
       omega
-private def auxCRem (d l o : ℕ) := (o + d - (1+l)) / 4 + 1
-private def auxCK (d l cap o : ℕ) :=
+def auxCRem (d l o : ℕ) := (o + d - (1+l)) / 4 + 1
+def auxCK (d l cap o : ℕ) :=
   let m := auxCRem d l o
   auxCDen (3*cap+1) + auxCDen (o - 3*m) + auxCExc (l - (1+(d-m))) -
     (auxCExc (3*cap-d) + auxCDen o + auxCDen l)
-private def auxCGood (d l cap o : ℕ) : Bool :=
+def auxCGood (d l cap o : ℕ) : Bool :=
   let m := auxCRem d l o
   1+l ≤ o+d && m ≤ d && l ≤ 3*cap+1 && 3*cap ≤ 2*d+2 && cap ≤ d &&
     o ≤ d+1 && l ≤ 3*(d-m)+1 && l ≤ 2*(d-m)+3
-private theorem auxCK_eq (d l cap o : ℕ) (hg : auxCGood d l cap o = true) :
+theorem auxCK_eq (d l cap o : ℕ) (hg : auxCGood d l cap o = true) :
     (fastKernel d l cap o).toNat = auxCK d l cap o := by
   let m := auxCRem d l o
   simp only [auxCGood, Bool.and_eq_true, decide_eq_true_eq] at hg
@@ -5958,7 +5958,7 @@ private theorem auxCK_eq (d l cap o : ℕ) (hg : auxCGood d l cap o = true) :
   change _ = auxCDen (3*cap+1) + auxCDen (o-3*m) + auxCExc (l-(1+(d-m))) -
     (auxCExc (3*cap-d) + auxCDen o + auxCDen l)
   omega
-private theorem auxCOld (j : ℕ) :
+theorem auxCOld (j : ℕ) :
     (fastOld 1650 (1650-j) 550).toNat = auxCDen 1651 - auxCDen (1650-j) := by
   unfold fastOld
   rw [min_eq_right (show (1650:ℤ)-j-1 ≤ 3*550 by omega)]
@@ -5968,20 +5968,20 @@ private theorem auxCOld (j : ℕ) :
     show ((1650 : ℤ)-j-1-1650).toNat = 0 by omega]
   change ((auxCDen 1651 : ℤ) - 0 - (auxCDen (1650-j) - 0)).toNat = _
   omega
-private theorem auxCClip (old initial residual : ℤ) :
+theorem auxCClip (old initial residual : ℤ) :
     min old.toNat residual.toNat - initial.toNat =
       (old - max 0 initial).toNat - (old - max (max 0 initial) residual).toNat := by
   omega
-private def auxCBox (s j n a b c : ℕ) : Bool :=
+def auxCBox (s j n a b c : ℕ) : Bool :=
   3100 ≤ s && s ≤ 3200 && 200 ≤ j && j+n ≤ 410 && 3360 ≤ s+j &&
     a+4*c ≤ 384 && b ≤ 256 && a ≤ b+360
-private def auxCQuick (s j a b c : ℕ) : ℕ :=
+def auxCQuick (s j a b c : ℕ) : ℕ :=
   let l := 1650-j
   let o := 4650-(s+j)
   Nat.min (auxCDen 1651 - auxCDen l)
     (auxCK (1650-(a+b+3*c)) (l-(3*b+2*c)) (550-(b+c)) (o-(2*b+3*c))) -
     auxCK 1650 l 550 o
-private theorem auxCQuick_eq (s j a b c : ℕ)
+theorem auxCQuick_eq (s j a b c : ℕ)
     (hs : 3100 ≤ s) (hs' : s ≤ 3200) (hj : 200 ≤ j) (hj' : j ≤ 409)
     (hsj : 3360 ≤ s+j) (ha : a+4*c ≤ 384) (hb : b ≤ 256) (hab : a ≤ b+360) :
     auxCQuick s j a b c = blockSaving s j ⟨a,b,c⟩ := by
@@ -6013,17 +6013,17 @@ private theorem auxCQuick_eq (s j a b c : ℕ)
     show (o' : ℤ) = 4650-s-j-(2*b+3*c) by omega, show (l : ℤ) = 1650-j by omega,
     show (o : ℤ) = 4650-s-j by omega]
   exact auxCClip _ _ _
-private def auxCForce {α : Type} (x : ℕ) (f : ℕ → α) : α :=
+def auxCForce {α : Type} (x : ℕ) (f : ℕ → α) : α :=
   match x with
   | 0 => f 0
   | n+1 => f n.succ
-private theorem auxCForce_eq {α : Type} (x : ℕ) (f : ℕ → α) :
+theorem auxCForce_eq {α : Type} (x : ℕ) (f : ℕ → α) :
     auxCForce x f = f x := by cases x <;> rfl
-private def auxCAt (h e x y o l i : ℕ) :=
+def auxCAt (h e x y o l i : ℕ) :=
   let positive := Nat.add (Nat.add h (auxCDen (Nat.sub x i))) (auxCExc (Nat.sub y i))
   let negative := Nat.add (Nat.add e (auxCDen (Nat.sub o i))) (auxCDen (Nat.sub l i))
   Nat.sub positive negative
-private def auxCWithK {α : Type} (d l cap o : ℕ) (f : (ℕ → ℕ) → α) : α :=
+def auxCWithK {α : Type} (d l cap o : ℕ) (f : (ℕ → ℕ) → α) : α :=
   let m := auxCRem d l o
   auxCForce (auxCDen (3*cap+1)) fun h =>
   auxCForce (auxCExc (3*cap-d)) fun e =>
@@ -6032,7 +6032,7 @@ private def auxCWithK {α : Type} (d l cap o : ℕ) (f : (ℕ → ℕ) → α) :
   auxCForce o fun o' =>
   auxCForce l fun l' =>
   f (auxCAt h e x y o' l')
-private theorem auxCAt_eq (d l cap o i : ℕ) (hl : i ≤ l) (ho : i ≤ o) :
+theorem auxCAt_eq (d l cap o i : ℕ) (hl : i ≤ l) (ho : i ≤ o) :
     auxCAt (auxCDen (3*cap+1)) (auxCExc (3*cap-d)) (o-3*auxCRem d l o)
       (l-(1+(d-auxCRem d l o))) o l i = auxCK d (l-i) cap (o-i) := by
   simp only [auxCK, auxCAt]
@@ -6042,7 +6042,7 @@ private theorem auxCAt_eq (d l cap o i : ℕ) (hl : i ≤ l) (ho : i ≤ o) :
   rw [hm, show o-i-3*auxCRem d l o = o-3*auxCRem d l o-i by omega,
     show l-i-(1+(d-auxCRem d l o)) = l-(1+(d-auxCRem d l o))-i by omega]
   rfl
-private def auxCOffsetSum (s j a b c n : ℕ) :=
+def auxCOffsetSum (s j a b c n : ℕ) :=
   let l := 1650-j
   let o := 4650-(s+j)
   let d := 1650-(a+b+3*c)
@@ -6051,7 +6051,7 @@ private def auxCOffsetSum (s j a b c n : ℕ) :=
   auxCWithK d (l-(3*b+2*c)) cap (o-(2*b+3*c)) fun res =>
   sumFrom (fun i => auxCForce (res i) fun residual =>
     Nat.sub (Nat.min (Nat.sub 125576826 (auxCDen (Nat.sub l i))) residual) (init i)) 0 n
-private theorem auxCOffsetSum_eq (s j a b c n : ℕ)
+theorem auxCOffsetSum_eq (s j a b c n : ℕ)
     (hbox : auxCBox s j n a b c = true) : auxCOffsetSum s j a b c n =
     sumFrom (fun u => blockSaving s u ⟨a,b,c⟩) j n := by
   simp only [auxCBox, Bool.and_eq_true, decide_eq_true_eq] at hbox
@@ -6079,7 +6079,7 @@ private theorem auxCOffsetSum_eq (s j a b c n : ℕ)
   | zero => rfl
   | succ k ih =>
     rw [sumFrom, sumFrom, ih (fun i hi => h i (by omega)), Nat.zero_add, h k (by omega)]
-private def auxCRun (s j code : ℕ) : ℕ :=
+def auxCRun (s j code : ℕ) : ℕ :=
   let n := runLength code
   let a := code % 2048
   let b := code / 2048 % 1024
@@ -6087,7 +6087,7 @@ private def auxCRun (s j code : ℕ) : ℕ :=
   if code % 2147483648 = 0 then 0 else
     if auxCBox s j n a b c then auxCOffsetSum s j a b c n
     else runValue s j code
-private theorem auxCRun_eq (s j code : ℕ) : auxCRun s j code = runValue s j code := by
+theorem auxCRun_eq (s j code : ℕ) : auxCRun s j code = runValue s j code := by
   unfold auxCRun
   dsimp only
   split <;> rename_i hz
@@ -6096,20 +6096,20 @@ private theorem auxCRun_eq (s j code : ℕ) : auxCRun s j code = runValue s j co
     · rw [runValue, ite_eq_right hz]
       exact auxCOffsetSum_eq _ _ _ _ _ _ h
     · rfl
-private def auxCRow (s j : ℕ) : List ℕ → ℕ
+def auxCRow (s j : ℕ) : List ℕ → ℕ
   | [] => 0
   | code :: tail => auxCRun s j code + auxCForce (j + runLength code) (fun j' => auxCRow s j' tail)
-private theorem auxCRow_eq (s j : ℕ) (row : List ℕ) :
+theorem auxCRow_eq (s j : ℕ) (row : List ℕ) :
     auxCRow s j row = rowValue s j row := by
   induction row generalizing j with
   | nil => rfl
   | cons code tail ih => rw [auxCRow, auxCForce_eq, auxCRun_eq, ih, rowValue]
-private def auxCChecks (s : ℕ) : List (List ℕ) → List ℕ → Bool
+def auxCChecks (s : ℕ) : List (List ℕ) → List ℕ → Bool
   | [], [] => true
   | row :: rest, v :: vs =>
       (auxCRow s (rowStart s) row == v) && auxCChecks (s+1) rest vs
   | _, _ => false
-private theorem auxCChecks_sound (s : ℕ) (rows : List (List ℕ)) (vs : List ℕ)
+theorem auxCChecks_sound (s : ℕ) (rows : List (List ℕ)) (vs : List ℕ)
     (h : auxCChecks s rows vs = true) :
     rows.length = vs.length ∧ value s rows = vs.sum := by
   induction rows generalizing s vs with
@@ -6122,20 +6122,20 @@ private theorem auxCChecks_sound (s : ℕ) (rows : List (List ℕ)) (vs : List �
       obtain ⟨hn, hv⟩ := ih (s+1) vs p.2
       refine ⟨congrArg Nat.succ hn, ?_⟩
       exact congrArg₂ Nat.add ((auxCRow_eq s (rowStart s) row).symm.trans (eq_of_beq p.1)) hv
-private def auxCBatch (s : ℕ) (rows : List (List ℕ)) (n w : ℕ) : Prop :=
+def auxCBatch (s : ℕ) (rows : List (List ℕ)) (n w : ℕ) : Prop :=
   rows.length = n ∧ fits s rows = true ∧ value s rows = w
-private theorem auxCChecked (s : ℕ) (rows : List (List ℕ)) (vs : List ℕ)
+theorem auxCChecked (s : ℕ) (rows : List (List ℕ)) (vs : List ℕ)
     (h : fits s rows = true ∧ auxCChecks s rows vs = true) : auxCBatch s rows vs.length vs.sum := by
   have p := auxCChecks_sound s rows vs h.2
   exact ⟨p.1, h.1, p.2⟩
-private theorem auxCMerge (s : ℕ) (a b : List (List ℕ)) (n m x y : ℕ)
+theorem auxCMerge (s : ℕ) (a b : List (List ℕ)) (n m x y : ℕ)
     (ha : auxCBatch s a n x) (hb : auxCBatch (s+n) b m y) :
     auxCBatch s (a++b) (n+m) (x+y) := by
   obtain ⟨hn, hf, hv⟩ := ha
   obtain ⟨hm, hg, hw⟩ := hb
   exact ⟨by rw [List.length_append, hn, hm], by rw [fits_append, hn, hf, hg]; rfl,
     by rw [value_append, hn, hv, hw]⟩
-private def auxCData3103 : List (List ℕ) := [
+def auxCData3103 : List (List ℕ) := [
     [77309411328,4496818176,2282225664,2349203456,13019512832,6543507456,4362469376,
     2248409088,4362338304,2198077440,33816576,6442713472,6442647936,8590131456,4295098624,
     98560,2147549440,2147533056,33024,24832,16640,264,259,15032385792,2147483872,
@@ -6172,10 +6172,10 @@ private def auxCData3103 : List (List ℕ) := [
     112,108,102,98,6442451040,80,76,70,66,2147483712,54,50,2147483696,38,34,32,26,
     24,18,16,12,6,2]
   ]
-private theorem auxCValues3103 : auxCBatch 3103 auxCData3103 6 533140834 :=
+theorem auxCValues3103 : auxCBatch 3103 auxCData3103 6 533140834 :=
   auxCChecked 3103 auxCData3103
     [87538471,88431136,88445518,89347227,89301948,90076534] (by decide +kernel)
-private def auxCData3109 : List (List ℕ) := [
+def auxCData3109 : List (List ℕ) := [
     [81604378624,4496818176,4429709312,201719808,13019512832,6543507456,6509953024,
     100925440,4362338304,2198077440,12885164416,8590131584,6442647808,2147614976,98560,
     2147549440,2147533056,33024,24832,16640,272,268,262,257,15032385792,224,2147483864,
@@ -6211,10 +6211,10 @@ private def auxCData3109 : List (List ℕ) := [
     196,17179869376,160,2147483800,144,140,136,132,8589934720,108,104,100,8589934688,
     76,72,68,4294967360,52,4294967344,36,2147483680,2147483672,16,12,8,4]
   ]
-private theorem auxCValues3109 : auxCBatch 3109 auxCData3109 6 551130453 :=
+theorem auxCValues3109 : auxCBatch 3109 auxCData3109 6 551130453 :=
   auxCChecked 3109 auxCData3109
     [90766116,90885142,91739364,91775485,92704907,93259439] (by decide +kernel)
-private def auxCData3115 : List (List ℕ) := [
+def auxCData3115 : List (List ℕ) := [
     [88046829568,4496818176,6577192960,10872029184,8690991104,4362469376,2198208512,
     4362338304,50593792,15032648064,10737615232,4295164160,2147614976,98560,4295033088,
     2147533056,33024,2147483928,272,268,264,259,15032385792,2147483872,2147483864,208,
@@ -6251,10 +6251,10 @@ private def auxCData3115 : List (List ℕ) := [
     112,108,102,98,6442451040,80,76,70,66,2147483712,54,50,2147483696,38,34,32,26,
     24,18,16,12,6,2]
   ]
-private theorem auxCValues3115 : auxCBatch 3115 auxCData3115 6 569091567 :=
+theorem auxCValues3115 : auxCBatch 3115 auxCData3115 6 569091567 :=
   auxCChecked 3115 auxCData3115
     [93388796,94248210,94182920,95243120,95854815,96173706] (by decide +kernel)
-private def auxCData3121 : List (List ℕ) := [
+def auxCData3121 : List (List ℕ) := [
     [92341796864,4496818176,8724676608,10872029184,6543507456,6509953024,2198208512,
     2214854656,21475099008,12885098880,2147680512,131328,2147582208,2147549440,2147533056,
     33024,288,2147483928,2147483920,268,262,257,15032385792,224,2147483864,2147483856,
@@ -6290,10 +6290,10 @@ private def auxCData3121 : List (List ℕ) := [
     200,196,17179869376,160,2147483800,144,140,136,132,8589934720,108,104,100,
     8589934688,76,72,68,4294967360,52,4294967344,36,2147483680,2147483672,16,12,8,4]
   ]
-private theorem auxCValues3121 : auxCBatch 3121 auxCData3121 6 588624088 :=
+theorem auxCValues3121 : auxCBatch 3121 auxCData3121 6 588624088 :=
   auxCChecked 3121 auxCData3121
     [96895255,96783674,97940204,98480426,98977850,99546679] (by decide +kernel)
-private def auxCData3127 : List (List ℕ) := [
+def auxCData3127 : List (List ℕ) := [
     [98784247808,2349334528,10872160256,8724545536,6543507456,6509953024,2198208512,
     2181431296,25770066304,12885098880,2147680512,2147582208,4295033088,49408,304,
     4294967584,2147483928,272,268,264,259,15032385792,2147483872,2147483864,208,204,200,
@@ -6329,10 +6329,10 @@ private def auxCData3127 : List (List ℕ) := [
     102,98,6442451040,80,76,70,66,2147483712,54,50,2147483696,38,34,32,26,24,18,
     16,12,6,2]
   ]
-private theorem auxCValues3127 : auxCBatch 3127 auxCData3127 6 608227577 :=
+theorem auxCValues3127 : auxCBatch 3127 auxCData3127 6 608227577 :=
   auxCChecked 3127 auxCData3127
     [99738493,100649740,101225458,101742608,102334122,102537156] (by decide +kernel)
-private def auxCData3133 : List (List ℕ) := [
+def auxCData3133 : List (List ℕ) := [
     [103079215104,2349334528,13019643904,101187584,4429578240,8690991104,4362469376,
     2198208512,2181431296,25559040,25770066304,17180066176,98688,2147582208,2147549440,
     49408,2147483952,4294967584,2147483928,2147483920,268,262,257,15032385792,224,
@@ -6369,10 +6369,10 @@ private def auxCData3133 : List (List ℕ) := [
     108,104,100,8589934688,76,72,68,4294967360,52,4294967344,36,2147483680,2147483672,
     16,12,8,4]
   ]
-private theorem auxCValues3133 : auxCBatch 3133 auxCData3133 6 629231195 :=
+theorem auxCValues3133 : auxCBatch 3133 auxCData3133 6 629231195 :=
   auxCChecked 3133 auxCData3133
     [103444958,104227698,104582763,105169767,105502099,106303910] (by decide +kernel)
-private def auxCData3139 : List (List ℕ) := [
+def auxCData3139 : List (List ℕ) := [
     [109521666048,2349334528,13019643904,101187584,4429578240,6543507456,6509953024,
     2198208512,2181431296,25559040,17170432,25770066304,15032582528,4295065984,4295033088,
     6442451248,4294967584,2147483928,272,268,264,259,15032385792,2147483872,2147483864,
@@ -6410,10 +6410,10 @@ private def auxCData3139 : List (List ℕ) := [
     130,6442451072,112,108,102,98,6442451040,80,76,70,66,2147483712,54,50,2147483696,
     38,34,32,26,24,18,16,12,6,2]
   ]
-private theorem auxCValues3139 : auxCBatch 3139 auxCData3139 6 649902183 :=
+theorem auxCValues3139 : auxCBatch 3139 auxCData3139 6 649902183 :=
   auxCChecked 3139 auxCData3139
     [106663438,107462595,108401759,108389864,109408998,109575529] (by decide +kernel)
-private def auxCData3145 : List (List ℕ) := [
+def auxCData3145 : List (List ℕ) := [
     [113816633344,2349334528,13019643904,4396154880,134610944,8690991104,4362469376,
     2198208512,2181431296,25559040,17170432,8781824,25770066304,15032582528,4295065984,
     65920,65792,2147483968,6442451248,4294967584,2147483928,2147483920,268,262,257,
@@ -6451,10 +6451,10 @@ private def auxCData3145 : List (List ℕ) := [
     8589934720,108,104,100,8589934688,76,72,68,4294967360,52,4294967344,36,2147483680,
     2147483672,16,12,8,4]
   ]
-private theorem auxCValues3145 : auxCBatch 3145 auxCData3145 6 672517077 :=
+theorem auxCValues3145 : auxCBatch 3145 auxCData3145 6 672517077 :=
   auxCChecked 3145 auxCData3145
     [110571115,111455567,111522245,112665163,112711833,113591154] (by decide +kernel)
-private def auxCData3151 : List (List ℕ) := [
+def auxCData3151 : List (List ℕ) := [
     [120259084288,201850880,13019643904,6543638528,134610944,6543507456,4362469376,
     4345692160,33947648,25559040,17170432,12976128,4587520,393600,25770066304,12885098880,
     4295065984,4295033216,4294967616,6442451248,4294967584,2147483928,272,268,264,259,
@@ -6492,10 +6492,10 @@ private def auxCData3151 : List (List ℕ) := [
     2147483800,2147483792,140,134,130,6442451072,112,108,102,98,6442451040,80,76,70,
     66,2147483712,54,50,2147483696,38,34,32,26,24,18,16,12,6,2]
   ]
-private theorem auxCValues3151 : auxCBatch 3151 auxCData3151 6 694058266 :=
+theorem auxCValues3151 : auxCBatch 3151 auxCData3151 6 694058266 :=
   auxCChecked 3151 auxCData3151
     [113925853,114679591,115690581,115887800,116779841,117094600] (by decide +kernel)
-private def auxCData3157 : List (List ℕ) := [
+def auxCData3157 : List (List ℕ) := [
     [124554051584,2349334528,10872160256,8691122176,67633152,4396023808,6509953024,
     2198208512,2181431296,25559040,17170432,8781824,4295360896,25770066304,10737615232,
     6442549632,4295033216,4294967616,6442451248,4294967584,2147483928,2147483920,268,262,
@@ -6528,38 +6528,38 @@ private def auxCData3157 : List (List ℕ) := [
     2147483800,2147483792,140,134,129,6442451072,112,108,102,97,6442451040,80,76,70,
     65,2147483712,54,49,2147483696,38,33,32,25,24,17,16,12,6,1]
   ]
-private theorem auxCValues3157 : auxCBatch 3157 auxCData3157 5 595226413 :=
+theorem auxCValues3157 : auxCBatch 3157 auxCData3157 5 595226413 :=
   auxCChecked 3157 auxCData3157
     [117742062,118322356,118983761,119938168,120240066] (by decide +kernel)
-private def auxCRows3157 := auxCData3157
-private theorem auxCBatch3157 : auxCBatch 3157 auxCRows3157 5 595226413 :=
+def auxCRows3157 := auxCData3157
+theorem auxCBatch3157 : auxCBatch 3157 auxCRows3157 5 595226413 :=
   auxCValues3157
-private def auxCRows3151 := auxCData3151 ++ auxCRows3157
-private theorem auxCBatch3151 : auxCBatch 3151 auxCRows3151 11 1289284679 :=
+def auxCRows3151 := auxCData3151 ++ auxCRows3157
+theorem auxCBatch3151 : auxCBatch 3151 auxCRows3151 11 1289284679 :=
   auxCMerge 3151 auxCData3151 auxCRows3157 6 5 694058266 595226413 auxCValues3151 auxCBatch3157
-private def auxCRows3145 := auxCData3145 ++ auxCRows3151
-private theorem auxCBatch3145 : auxCBatch 3145 auxCRows3145 17 1961801756 :=
+def auxCRows3145 := auxCData3145 ++ auxCRows3151
+theorem auxCBatch3145 : auxCBatch 3145 auxCRows3145 17 1961801756 :=
   auxCMerge 3145 auxCData3145 auxCRows3151 6 11 672517077 1289284679 auxCValues3145 auxCBatch3151
-private def auxCRows3139 := auxCData3139 ++ auxCRows3145
-private theorem auxCBatch3139 : auxCBatch 3139 auxCRows3139 23 2611703939 :=
+def auxCRows3139 := auxCData3139 ++ auxCRows3145
+theorem auxCBatch3139 : auxCBatch 3139 auxCRows3139 23 2611703939 :=
   auxCMerge 3139 auxCData3139 auxCRows3145 6 17 649902183 1961801756 auxCValues3139 auxCBatch3145
-private def auxCRows3133 := auxCData3133 ++ auxCRows3139
-private theorem auxCBatch3133 : auxCBatch 3133 auxCRows3133 29 3240935134 :=
+def auxCRows3133 := auxCData3133 ++ auxCRows3139
+theorem auxCBatch3133 : auxCBatch 3133 auxCRows3133 29 3240935134 :=
   auxCMerge 3133 auxCData3133 auxCRows3139 6 23 629231195 2611703939 auxCValues3133 auxCBatch3139
-private def auxCRows3127 := auxCData3127 ++ auxCRows3133
-private theorem auxCBatch3127 : auxCBatch 3127 auxCRows3127 35 3849162711 :=
+def auxCRows3127 := auxCData3127 ++ auxCRows3133
+theorem auxCBatch3127 : auxCBatch 3127 auxCRows3127 35 3849162711 :=
   auxCMerge 3127 auxCData3127 auxCRows3133 6 29 608227577 3240935134 auxCValues3127 auxCBatch3133
-private def auxCRows3121 := auxCData3121 ++ auxCRows3127
-private theorem auxCBatch3121 : auxCBatch 3121 auxCRows3121 41 4437786799 :=
+def auxCRows3121 := auxCData3121 ++ auxCRows3127
+theorem auxCBatch3121 : auxCBatch 3121 auxCRows3121 41 4437786799 :=
   auxCMerge 3121 auxCData3121 auxCRows3127 6 35 588624088 3849162711 auxCValues3121 auxCBatch3127
-private def auxCRows3115 := auxCData3115 ++ auxCRows3121
-private theorem auxCBatch3115 : auxCBatch 3115 auxCRows3115 47 5006878366 :=
+def auxCRows3115 := auxCData3115 ++ auxCRows3121
+theorem auxCBatch3115 : auxCBatch 3115 auxCRows3115 47 5006878366 :=
   auxCMerge 3115 auxCData3115 auxCRows3121 6 41 569091567 4437786799 auxCValues3115 auxCBatch3121
-private def auxCRows3109 := auxCData3109 ++ auxCRows3115
-private theorem auxCBatch3109 : auxCBatch 3109 auxCRows3109 53 5558008819 :=
+def auxCRows3109 := auxCData3109 ++ auxCRows3115
+theorem auxCBatch3109 : auxCBatch 3109 auxCRows3109 53 5558008819 :=
   auxCMerge 3109 auxCData3109 auxCRows3115 6 47 551130453 5006878366 auxCValues3109 auxCBatch3115
-private def auxCRows3103 := auxCData3103 ++ auxCRows3109
-private theorem auxCBatch3103 : auxCBatch 3103 auxCRows3103 59 6091149653 :=
+def auxCRows3103 := auxCData3103 ++ auxCRows3109
+theorem auxCBatch3103 : auxCBatch 3103 auxCRows3103 59 6091149653 :=
   auxCMerge 3103 auxCData3103 auxCRows3109 6 53 533140834 5558008819 auxCValues3103 auxCBatch3109
 def rowsC : List (List ℕ) := auxCRows3103
 theorem checkC :
@@ -6722,7 +6722,7 @@ theorem chartMap_surjective : Function.Surjective chartMap := by
   change (Finsupp.single i 1).degree ≤ totalCap ∧
     Finsupp.single i 1 1 + 2 * Finsupp.single i 1 2 ≤ 2 * halfIndexCap
   fin_cases i <;> norm_num [Finsupp.degree_single, Finsupp.single_apply, totalCap, halfIndexCap]
-private theorem cap_add_subset (b j b' j' : ℕ) :
+theorem cap_add_subset (b j b' j' : ℕ) :
     cap b j + cap b' j' ⊆ cap (b + b') (j + j') := by
   rintro _ ⟨e, he, e', he', rfl⟩
   change e.degree ≤ b ∧ e 1 + 2 * e 2 ≤ j at he
@@ -6731,7 +6731,7 @@ private theorem cap_add_subset (b j b' j' : ℕ) :
     (e + e') 1 + 2 * (e + e') 2 ≤ j + j'
   simp only [map_add, Finsupp.add_apply]
   omega
-private theorem nsmul_cap_subset (b j n : ℕ) : n • cap b j ⊆ cap (b * n) (j * n) := by
+theorem nsmul_cap_subset (b j n : ℕ) : n • cap b j ⊆ cap (b * n) (j * n) := by
   induction n with
   | zero =>
       rw [zero_smul, Set.zero_subset]
@@ -6743,7 +6743,7 @@ private theorem indexWeight_eq (e : Fin 3 →₀ ℕ) :
     (e.sum fun i a => i.val * a) = e 1 + 2 * e 2 := by
   rw [Finsupp.sum_fintype _ _ (fun _ => by simp), Fin.sum_univ_three]
   simp
-private theorem genericRow_mem_chart (P : Row 3) (hP : LowerCaps P totalCap (2 * halfIndexCap)) :
+theorem genericRow_mem_chart (P : Row 3) (hP : LowerCaps P totalCap (2 * halfIndexCap)) :
     genericRow P ∈ restrictSupport GeometricX chartExponents := by
   intro e he
   have he' : e ∈ P.support := support_map_subset _ _ he
@@ -6772,7 +6772,7 @@ theorem chartDegree_eq_one {σ : Type} [Finite σ]
   let e := Ideal.quotientKerAlgEquivOfSurjective hψ
   let := Module.Finite.of_surjective e.symm.toLinearMap e.symm.surjective
   rw [affineDegree_eq_finrank, e.toLinearEquiv.finrank_eq, Module.finrank_self, Nat.cast_one]
-private theorem chartHilbert_le (n : ℕ) :
+theorem chartHilbert_le (n : ℕ) :
     affineHilbertFunction (RingHom.ker chartMap) n ≤
       (cap (totalCap * n) ((2 * halfIndexCap) * n)).ncard := by
   let S := cap (totalCap * n) ((2 * halfIndexCap) * n)

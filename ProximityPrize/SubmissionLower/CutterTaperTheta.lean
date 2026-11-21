@@ -21,7 +21,7 @@ private abbrev z : BlockIndex → Powers := ThetaPrimary.zeroPowers
 private def combined (p : BlockIndex → Powers) (i : BlockIndex) : ℕ :=
   if i.1.val < 3012 then ThetaPrimary.bound (combine z z p z) i else fees z z p i
 
-private theorem thinned_fee (p : BlockIndex → Powers) (i : BlockIndex) :
+theorem thinned_fee (p : BlockIndex → Powers) (i : BlockIndex) :
     combined p i + ThetaSum.stripSave i = fees z z p i := by
   by_cases hi : i.1.val < 3012
   · have hj : i.1.val < 3514 := by omega

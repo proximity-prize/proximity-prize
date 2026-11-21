@@ -134,7 +134,7 @@ def c1 : Prop :=
               JetPolys (SeedFrac F)) ∣ forward H lift P
 private abbrev ScalarRow {h : ℕ} (s : Shape) (d : Fin (2*h) → Fin (poleRows s) → ℕ) :=
   Σ t : Fin (2*h), Σ r : Fin (poleRows s), Fin (triangle s.U + (s.U+1)*d t r)
-private theorem scalarRow_card_le {h : ℕ} (s : Shape)
+theorem scalarRow_card_le {h : ℕ} (s : Shape)
     (d : Fin (2*h) → Fin (poleRows s) → ℕ) (hd : ∀ t, (∑ r, d t r) ≤ groupedPoleMoment s.B s.J) :
     Fintype.card (ScalarRow s d) ≤ poleCredit h s + 2*h*(s.U+1)*groupedPoleMoment s.B s.J := by
   classical
@@ -322,9 +322,9 @@ theorem jet_bounds (s : Shape) (t : Offset s) (q : Grade s) (i : ℕ)
   unfold firstJet
   rw [le_min_iff]
   omega
-private abbrev AllPivots (s : Shape) := Σ t : Offset s, Pivot s t
-private abbrev AllLocalRows (s : Shape) := Σ q : Grade s, LocalRow s q.val
-private def toLocal (s : Shape) (r : AllPivots s) : AllLocalRows s :=
+abbrev AllPivots (s : Shape) := Σ t : Offset s, Pivot s t
+abbrev AllLocalRows (s : Shape) := Σ q : Grade s, LocalRow s q.val
+def toLocal (s : Shape) (r : AllPivots s) : AllLocalRows s :=
   let t := r.1
   let q := r.2.1
   let i := r.2.2.val
@@ -339,7 +339,7 @@ private def toLocal (s : Shape) (r : AllPivots s) : AllLocalRows s :=
     dsimp [x, j, firstJet, outputLength] at *
     omega
   ⟨q, ⟨x, hrow⟩, ⟨j, Nat.lt_succ_of_le hj⟩⟩
-private theorem toLocal_injective (s : Shape) : Function.Injective (toLocal s) := by
+theorem toLocal_injective (s : Shape) : Function.Injective (toLocal s) := by
   rintro ⟨t, q, i⟩ ⟨t', q', i'⟩ h
   have hq : q = q' := congrArg Sigma.fst h
   have hx := congrArg (fun y : AllLocalRows s => y.2.1.val) h
@@ -356,7 +356,7 @@ private theorem toLocal_injective (s : Shape) : Function.Injective (toLocal s) :
   have hi : i = i' := Fin.ext (by omega)
   subst i'
   rfl
-private theorem toLocal_surjective (s : Shape) : Function.Surjective (toLocal s) := by
+theorem toLocal_surjective (s : Shape) : Function.Surjective (toLocal s) := by
   rintro ⟨q, x, j⟩
   have hq := q.isLt
   have hx := x.isLt
@@ -383,7 +383,7 @@ private theorem toLocal_surjective (s : Shape) : Function.Surjective (toLocal s)
   · change t.val + (firstJet s t + i) - s.J = x.val
     omega
   · exact hji
-private theorem allPivots_card (s : Shape) :
+theorem allPivots_card (s : Shape) :
     Fintype.card (AllPivots s) = poleRows s := by
   classical
   rw [Fintype.card_congr (Equiv.ofBijective _ ⟨toLocal_injective s, toLocal_surjective s⟩)]
@@ -416,7 +416,7 @@ open Matrix
 open scoped BigOperators Matrix
 private def consecutive {R : Type} [Semiring R] (l m : ℕ) : Matrix (Fin m) (Fin m) R :=
   fun i j => ((l + j.val).choose i.val : R)
-private theorem consecutive_det {R : Type} [CommRing R] (l m : ℕ) :
+theorem consecutive_det {R : Type} [CommRing R] (l m : ℕ) :
     (consecutive (R := R) l m).det = 1 := by
   let L : Matrix (Fin m) (Fin m) R := fun i k =>
     if k.val ≤ i.val then (l.choose (i.val - k.val) : R) else 0
@@ -492,9 +492,9 @@ open K1_14 (Shape)
 open K1_14_1_7 (Grade)
 open P1_7_1 (columnCount pivotCount largestGradeSum offsetMoment)
 open scoped BigOperators Matrix Polynomial
-private def minorGrade {s : Shape} {t : Offset s} (e : Pivot s t ↪ Column s t) : ℕ :=
+def minorGrade {s : Shape} {t : Offset s} (e : Pivot s t ↪ Column s t) : ℕ :=
   (∑ r, (e r).1.val) - ∑ r : Pivot s t, r.1.val
-private theorem minorGrade_le {s : Shape} {t : Offset s} (e : Pivot s t ↪ Column s t) :
+theorem minorGrade_le {s : Shape} {t : Offset s} (e : Pivot s t ↪ Column s t) :
     minorGrade e ≤ offsetMoment s.B s.J t.val := by
   classical
   have hpivot : (∑ r : Pivot s t, r.1.val) =
@@ -530,7 +530,7 @@ private theorem minorGrade_le {s : Shape} {t : Offset s} (e : Pivot s t ↪ Colu
       rw [Fin.sum_univ_eq_sum_range (fun q => pivotCount s.B s.J t.val q) (s.B+1),
         Fin.sum_univ_eq_sum_range (fun q => columnCount s.B s.J t.val q * (q-k)) (s.B+1)]
       simp only [Nat.mul_comm (columnCount s.B s.J t.val _) (_ - _)]
-private theorem minor_power {R : Type} [CommRing R] {s : Shape} {t : Offset s}
+theorem minor_power {R : Type} [CommRing R] {s : Shape} {t : Offset s}
     (e : Pivot s t ↪ Column s t) (z : R) :
     ((poleMatrix s t z).submatrix id e).det =
       ((poleMatrix s t (1 : R)).submatrix id e).det * z ^ minorGrade e := by
@@ -555,7 +555,7 @@ private theorem minor_power {R : Type} [CommRing R] {s : Shape} {t : Offset s}
       simp [poleMatrix, not_le_of_gt hi]
     rw [Finset.prod_eq_zero (Finset.mem_univ i) (hz z),
       Finset.prod_eq_zero (Finset.mem_univ i) (hz 1), zero_mul]
-private theorem nonzero_minor {R : Type} [Field R] (s : Shape) (t : Offset s) (z : R) :
+theorem nonzero_minor {R : Type} [Field R] (s : Shape) (t : Offset s) (z : R) :
     ∃ e : Pivot s t ↪ Column s t, ((poleMatrix s t z).submatrix id e).det ≠ 0 := by
   classical
   have h (q : Grade s) := pascal_minor R (firstJet s t) (columnCount s.B s.J t.val q.val)
@@ -678,24 +678,24 @@ open scoped BigOperators Matrix Polynomial
 open private taylor_seed_degree seedWeight_add window_sum from ProximityPrize.SubmissionLower.Fast065
 private def seedMap (F : Type) [Field F] (side : Fin 2) : F[X] →+* SeedFrac F :=
   (algebraMap (Seed F) (SeedFrac F)).comp (Polynomial.toMvPolynomial side).toRingHom
-private def fractionSeedMap (F : Type) [Field F] (side : Fin 2) :
+def fractionSeedMap (F : Type) [Field F] (side : Fin 2) :
     OneSeedFrac F →+* SeedFrac F :=
   IsFractionRing.lift (g := seedMap F side)
     ((IsFractionRing.injective (Seed F) (SeedFrac F)).comp
       (Polynomial.toMvPolynomial_injective side))
-private theorem fractionSeedMap_polynomial {F : Type} [Field F] (side : Fin 2) (g : F[X]) :
+theorem fractionSeedMap_polynomial {F : Type} [Field F] (side : Fin 2) (g : F[X]) :
     fractionSeedMap F side (algebraMap F[X] (OneSeedFrac F) g) =
       algebraMap (Seed F) (SeedFrac F) (g.toMvPolynomial side) := by
   rw [fractionSeedMap, IsFractionRing.lift_algebraMap]
   rfl
-private theorem fractionSeedMap_scalar {F : Type} [Field F] (side : Fin 2) (a : F) :
+theorem fractionSeedMap_scalar {F : Type} [Field F] (side : Fin 2) (a : F) :
     fractionSeedMap F side (algebraMap F (OneSeedFrac F) a) =
       algebraMap F (SeedFrac F) a := by
   rw [IsScalarTower.algebraMap_apply F F[X] (OneSeedFrac F), fractionSeedMap_polynomial]
   change algebraMap (Seed F) (SeedFrac F) ((Polynomial.C a).toMvPolynomial side) = _
   rw [Polynomial.toMvPolynomial_C]
   exact (IsScalarTower.algebraMap_apply F (Seed F) (SeedFrac F) a).symm
-private theorem fractionSeedMap_residue {F : Type} [Field F] (side : Fin 2) (a b c : F) :
+theorem fractionSeedMap_residue {F : Type} [Field F] (side : Fin 2) (a b c : F) :
     fractionSeedMap F side (oneResidue a b c) = residue side a b c := by
   simp only [oneResidue, residue, map_div₀, map_add, map_mul, fractionSeedMap_scalar,
     fractionSeedMap_polynomial, Polynomial.toMvPolynomial_X]
@@ -850,9 +850,9 @@ open K1_14_1_7 K1_14_1_7_2 P1_7_1_1
 open P1_7_1 (columnCount pivotCount)
 open scoped BigOperators Matrix Polynomial
 open private coeff_zeroGrade from ProximityPrize.SubmissionLower.Fast065
-private abbrev JetIndex (s : Shape) (t : Offset s) (q : Grade s) :=
+abbrev JetIndex (s : Shape) (t : Offset s) (q : Grade s) :=
   Fin (columnCount s.B s.J t.val q.val)
-private theorem sum_embedding {A D M : Type} [Fintype A] [Fintype D] [AddCommMonoid M]
+theorem sum_embedding {A D M : Type} [Fintype A] [Fintype D] [AddCommMonoid M]
     (e : A ↪ D) (f : D → M) (h : ∀ d, (∀ a, e a ≠ d) → f d = 0) :
     ∑ d, f d = ∑ a, f (e a) := by
   classical
@@ -861,7 +861,7 @@ private theorem sum_embedding {A D M : Type} [Fintype A] [Fintype D] [AddCommMon
   apply Finset.sum_subset (Finset.subset_univ _)
   intro d _ hd
   exact h d fun a ha => hd (Finset.mem_map.mpr ⟨a, Finset.mem_univ _, ha⟩)
-private theorem column_index (s : Shape) (t : Offset s) (q : Grade s) (j : ℕ)
+theorem column_index (s : Shape) (t : Offset s) (q : Grade s) (j : ℕ)
     (hj : j ≤ min q.val s.J) (hfirst : firstJet s t ≤ j)
     (hx : t.val + j - s.J < s.B + s.J) :
     j - firstJet s t < columnCount s.B s.J t.val q.val := by
@@ -872,34 +872,34 @@ private theorem column_index (s : Shape) (t : Offset s) (q : Grade s) (j : ℕ)
   change j - firstJet s t < min q.val (min s.J (s.B + 2*s.J - 1 - t.val)) + 1 -
     firstJet s t
   omega
-private theorem columnCount_le (s : Shape) (t : Offset s) {q q' : Grade s}
+theorem columnCount_le (s : Shape) (t : Offset s) {q q' : Grade s}
     (h : q.val ≤ q'.val) :
     columnCount s.B s.J t.val q.val ≤ columnCount s.B s.J t.val q'.val := by
   unfold columnCount
   exact Nat.sub_le_sub_right (Nat.add_le_add_right (min_le_min_right _ h) 1) _
-private def gradeShift (s : Shape) (q : Grade s) : Shift s q ↪ Grade s where
+def gradeShift (s : Shape) (q : Grade s) : Shift s q ↪ Grade s where
   toFun p := ⟨q.val + p.val, by
     have hq := q.isLt
     have hp := p.isLt
     omega⟩
   inj' _ _ h := Fin.ext (Nat.add_left_cancel (congrArg Fin.val h))
-private def slotEmbedding (s : Shape) (t : Offset s) (q : Grade s) :
+def slotEmbedding (s : Shape) (t : Offset s) (q : Grade s) :
     JetIndex s t q ↪ GradeSlot s q.val where
   toFun a := ⟨firstJet s t + a.val,
     Nat.lt_succ_of_le (jet_bounds s t q a.val a.isLt).1⟩
   inj' _ _ h := Fin.ext (Nat.add_left_cancel (congrArg Fin.val h))
-private def translatedCoeff {F : Type} [Field F] {s : Shape}
+def translatedCoeff {F : Type} [Field F] {s : Shape}
     (α : F) (z : SeedFrac F) (P : TrueSource F) (q : Grade s) (j x : ℕ) : SeedFrac F :=
   ∑ p : Shift s q,
     (((q.val - j + p.val).choose (q.val - j) : SeedFrac F) * z ^ p.val) *
       algebraMap (Seed F) (SeedFrac F) (inputTaylorCoeff α j (q.val - j + p.val) x P)
-private theorem localSlots_coeff {F : Type} [Field F] (s : Shape)
+theorem localSlots_coeff {F : Type} [Field F] (s : Shape)
     (α : F) (z : SeedFrac F) (P : TrueSource F) (q : Grade s) (j : GradeSlot s q.val)
     (x : ℕ) :
     (localSlots s α z P q j).coeff x = translatedCoeff α z P q j.val x := by
   simp only [localSlots, finsetSum_coeff, coeff_C_mul, coeff_map, inputOrdinate,
     translatedCoeff, inputTaylorCoeff_apply]
-private theorem pivot_read {F : Type} [Field F] (s : Shape) (t : Offset s)
+theorem pivot_read {F : Type} [Field F] (s : Shape) (t : Offset s)
     (α : F) (z : SeedFrac F) (P : TrueSource F) (q : Grade s)
     (i : Fin (pivotCount s.B s.J t.val q.val)) :
     (poleMatrix s t z *ᵥ
@@ -962,7 +962,7 @@ private theorem pivot_read {F : Type} [Field F] (s : Shape) (t : Offset s)
       unfold poleMatrix
       exact ite_eq_right (fun h => hl h.1)
     simp only [f, hz, zero_mul]
-private theorem coeff_read {F : Type} [Field F] (s : Shape) (t : Offset s)
+theorem coeff_read {F : Type} [Field F] (s : Shape) (t : Offset s)
     (α : F) (z : SeedFrac F) (P : TrueSource F) (q : Grade s)
     (k : GradeSlot s q.val) (l : ℕ) (hl : l < s.B + s.J)
     (ht : t.val + q.val + k.val = l + s.J) :
@@ -1006,7 +1006,7 @@ private theorem coeff_read {F : Type} [Field F] (s : Shape) (t : Offset s)
       change firstJet s t + (j.val - firstJet s t) = j.val
       omega
     · rfl
-private theorem pascal_sum_zero {E : Type} [Field E] {a n h : ℕ}
+theorem pascal_sum_zero {E : Type} [Field E] {a n h : ℕ}
     (hs : PascalSpans E a n h) (v : Fin n → E)
     (hv : ∀ r, (∑ j, pascal a n h r j * v j) = 0) (k : ℕ) (hk : k < h) :
     (∑ j : Fin n, ((a + j.val).choose k : E) * v j) = 0 := by
@@ -1141,13 +1141,13 @@ local notation "φ" => algebraMap F[X] K
 def leadingRows (Q : Matrix ι κ F[X]) (d : ι → ℕ) : Matrix ι κ F :=
   fun i j => (Q i j).coeff (d i)
 omit [Fintype ι] in
-private theorem no_zero_row {Q : Matrix ι κ F[X]} {T : Matrix κ ι F[X]}
+theorem no_zero_row {Q : Matrix ι κ F[X]} {T : Matrix κ ι F[X]}
     (h : Q * T = 1) (p : ι) : Q p ≠ 0 := by
   intro hp
   have hpp := congrFun (congrFun h p) p
   rw [Matrix.mul_apply, hp] at hpp
   simp at hpp
-private theorem reduce_step (Q : Matrix ι κ F[X]) (T : Matrix κ ι F[X]) (d : ι → ℕ)
+theorem reduce_step (Q : Matrix ι κ F[X]) (T : Matrix κ ι F[X]) (d : ι → ℕ)
     (hQT : Q * T = 1) (hdeg : ∀ r u, (Q r u).natDegree ≤ d r)
     (hbad : ¬ LinearIndependent F (leadingRows Q d).row) :
     ∃ (E : Matrix ι ι F[X]) (d' : ι → ℕ), IsUnit E.det ∧
@@ -1276,7 +1276,7 @@ variable {F ι κ : Type} [Field F] [Fintype ι] [DecidableEq ι] [Fintype κ]
 local notation "K" => P1_7_1_1.OneSeedFrac F
 local notation "φ" => algebraMap F[X] K
 omit [Fintype ι] in
-private theorem coeff_weighted_prod {s : Finset ι} (p : ι → F[X]) (d : ι → ℕ)
+theorem coeff_weighted_prod {s : Finset ι} (p : ι → F[X]) (d : ι → ℕ)
     (h : ∀ i ∈ s, (p i).natDegree ≤ d i) :
     (∏ i ∈ s, p i).coeff (∑ i ∈ s, d i) = ∏ i ∈ s, (p i).coeff (d i) := by
   induction s using Finset.induction_on with
@@ -1287,7 +1287,7 @@ private theorem coeff_weighted_prod {s : Finset ι} (p : ι → F[X]) (d : ι �
     · exact congrArg ((p i).coeff (d i) * ·) (ih fun j hj => h j (Finset.mem_insert_of_mem hj))
     · exact (Polynomial.natDegree_prod_le _ _).trans
         (Finset.sum_le_sum fun j hj => h j (Finset.mem_insert_of_mem hj))
-private theorem exists_full_minor (B : Matrix ι κ F) (hB : LinearIndependent F B.row) :
+theorem exists_full_minor (B : Matrix ι κ F) (hB : LinearIndependent F B.row) :
     ∃ e : ι ↪ κ, (B.submatrix id e).det ≠ 0 := by
   classical
   have hr : B.rank = Fintype.card ι := by
@@ -1318,7 +1318,7 @@ theorem exists_minor_of_degree_sum (Q : Matrix ι κ F[X]) (d : ι → ℕ)
     rw [coeff_weighted_prod _ d (fun i _ => hdeg i (e (σ i)))]
   have hne : (Q.submatrix id e).det.coeff (∑ r, d r) ≠ 0 := hcoeff.trans_ne he
   exact ⟨e, fun hz => hne (by rw [hz, Polynomial.coeff_zero]), Polynomial.le_natDegree_of_ne_zero hne⟩
-private theorem det_rectangular_mul {R : Type} [CommRing R]
+theorem det_rectangular_mul {R : Type} [CommRing R]
     (Q : Matrix ι κ R) (T : Matrix κ ι R) :
     (Q * T).det = ∑ f : ι → κ, (∏ j, T (f j) j) * (Q.submatrix id f).det := by
   classical
@@ -1333,7 +1333,7 @@ private theorem det_rectangular_mul {R : Type} [CommRing R]
       intro f _
       simp only [Matrix.det_apply', Finset.mul_sum, Matrix.submatrix_apply, id_eq,
         Finset.prod_mul_distrib, mul_comm, mul_assoc]
-private theorem scale_polynomial (Q : Matrix ι κ F[X]) (T : Matrix κ ι F[X])
+theorem scale_polynomial (Q : Matrix ι κ F[X]) (T : Matrix κ ι F[X])
     (hQT : Q * T = 1) (t : K)
     (h : ∀ f : ι → κ, ∃ g : F[X], φ g = t * φ (Q.submatrix id f).det) :
     ∃ g : F[X], φ g = t := by
@@ -1408,12 +1408,12 @@ open K1_14 (Shape shapeSum)
 open P1_7_1 (nodeRows)
 open scoped BigOperators
 open private shape_sum_flip from ProximityPrize.SubmissionLower.Fast063
-private def atNode (m J q j : ℕ) : ℕ := m + min q J - (q + 2*j)
-private def twiceGrade (k i : ℕ) : ℕ :=
+def atNode (m J q j : ℕ) : ℕ := m + min q J - (q + 2*j)
+def twiceGrade (k i : ℕ) : ℕ :=
   k*(k+1) + (6*k+2)*i + 8*i*i
 def sixPerNode (k J : ℕ) : ℕ :=
   3*(J+1)*k*(k+1) + 3*(3*k+1)*J*(J+1) + 4*J*(J+1)*(2*J+1)
-private theorem twice_descending (d : ℕ) :
+theorem twice_descending (d : ℕ) :
     2 * (∑ i ∈ range d, (d-i)) = d*(d+1) := by
   induction d with
   | zero => simp
@@ -1421,7 +1421,7 @@ private theorem twice_descending (d : ℕ) :
     rw [sum_range_succ']
     simp only [Nat.succ_sub_succ_eq_sub, Nat.sub_zero, mul_add, ih]
     ring
-private theorem three_grade_sum (k J : ℕ) :
+theorem three_grade_sum (k J : ℕ) :
     3 * (∑ i ∈ range (J+1), twiceGrade k i) = sixPerNode k J := by
   induction J with
   | zero => simp [twiceGrade, sixPerNode, mul_assoc]
@@ -1429,7 +1429,7 @@ private theorem three_grade_sum (k J : ℕ) :
     rw [sum_range_succ, mul_add, ih]
     unfold twiceGrade sixPerNode
     ring
-private theorem twice_at_derivative {m B J j : ℕ} (hm : 2*J ≤ m)
+theorem twice_at_derivative {m B J j : ℕ} (hm : 2*J ≤ m)
     (hB : m+J ≤ B+1) (hj : j ≤ J) :
     2 * (∑ q ∈ Ico j (B+1), atNode m J q j) = twiceGrade (m-2*J) (J-j) := by
   let d := m - 2*j
@@ -1556,26 +1556,26 @@ private theorem product_sum (n a b : ℕ) :
     cases n with
     | zero => simp [productSum6, Nat.mul_assoc]
     | succ m => simp only [productSum6, Nat.succ_sub_one]; ring
-private theorem count_sum (n : ℕ) :
+theorem count_sum (n : ℕ) :
     6 * (∑ i ∈ range n, (i+1)) = 3*n*(n+1) := by
   induction n with
   | zero => simp
   | succ n ih => rw [sum_range_succ, Nat.mul_add, ih]; ring
-private theorem sum_after (f : ℕ → ℕ) (N s : ℕ) (hz : ∀ q < s, f q = 0) :
+theorem sum_after (f : ℕ → ℕ) (N s : ℕ) (hz : ∀ q < s, f q = 0) :
     (∑ q ∈ range N, f q) = ∑ i ∈ range (N-s), f (s+i) := by
   by_cases h : s ≤ N
   · conv_lhs => rw [← Nat.add_sub_of_le h, sum_range_add]
     rw [sum_eq_zero (fun q hq => hz q (mem_range.mp hq)), zero_add]
   · rw [Nat.sub_eq_zero_of_le (by omega : N ≤ s), sum_range_zero]
     exact sum_eq_zero fun q hq => hz q (by have := mem_range.mp hq; omega)
-private theorem ramp_count (N a : ℕ) :
+theorem ramp_count (N a : ℕ) :
     6 * (∑ q ∈ range N, ramp a q) = rampCount6 N a := by
   rw [sum_after (ramp a) N a (fun q hq => by unfold ramp; omega)]
   unfold rampCount6
   rw [← count_sum]
   congr 1
   exact sum_congr rfl fun i _ => by unfold ramp; omega
-private theorem ramp_weight (N a : ℕ) :
+theorem ramp_weight (N a : ℕ) :
     6 * (∑ q ∈ range N, q * ramp a q) = rampWeight6 N a := by
   rw [sum_after (fun q => q * ramp a q) N a
     (fun q hq => by rw [show ramp a q = 0 by unfold ramp; omega, mul_zero])]
@@ -1584,7 +1584,7 @@ private theorem ramp_weight (N a : ℕ) :
   congr 1
   exact sum_congr rfl fun i _ => by
     rw [show ramp a (a+i) = 1+i by unfold ramp; omega]
-private theorem ramp_excess (N k a : ℕ) :
+theorem ramp_excess (N k a : ℕ) :
     6 * (∑ q ∈ range N, (q-k) * ramp a q) = rampExcess6 N k a := by
   let s := max (k+1) a
   have hs₁ : k+1 ≤ s := le_max_left _ _
@@ -1599,12 +1599,12 @@ private theorem ramp_excess (N k a : ℕ) :
   congr 1
   exact sum_congr rfl fun i _ => by
     rw [show s+i-k = s-k+i by omega, show ramp a (s+i) = s+1-a+i by unfold ramp; omega]
-private theorem column_row (B J t q : ℕ) :
+theorem column_row (B J t q : ℕ) :
     columnCount B J t q + ramp (low J t + width B J t) q = ramp (low J t) q := by
   unfold columnCount ramp width low high
   dsimp only
   omega
-private theorem pivot_row (B J t q : ℕ) :
+theorem pivot_row (B J t q : ℕ) :
     pivotCount B J t q + ramp (low J t + peak B J t) q +
       ramp (edge B J t + 1 - peak B J t) q =
         ramp (low J t) q + ramp (edge B J t + 1) q := by
@@ -1627,7 +1627,7 @@ private theorem pivot_row (B J t q : ℕ) :
   · by_cases hq' : q < e+1-h
     · omega
     · omega
-private theorem pivot_volume (B J t : ℕ) (f stat : ℕ → ℕ)
+theorem pivot_volume (B J t : ℕ) (f stat : ℕ → ℕ)
     (hs : ∀ a, stat a = 6 * (∑ q ∈ range (B+1), f q * ramp a q)) :
     6 * (∑ q ∈ range (B+1), f q * pivotCount B J t q) = pivotVolume6 B J t stat := by
   unfold pivotVolume6
@@ -1641,7 +1641,7 @@ private theorem pivot_volume (B J t : ℕ) (f stat : ℕ → ℕ)
     simp only [← Nat.mul_add, pivot_row]
   simp only [sum_add_distrib] at heq
   omega
-private theorem column_volume (B J t : ℕ) (f stat : ℕ → ℕ)
+theorem column_volume (B J t : ℕ) (f stat : ℕ → ℕ)
     (hs : ∀ a, stat a = 6 * (∑ q ∈ range (B+1), f q * ramp a q)) :
     6 * (∑ q ∈ range (B+1), f q * columnCount B J t q) = columnVolume6 B J t stat := by
   unfold columnVolume6
@@ -1666,7 +1666,7 @@ theorem column_excess (B J t k : ℕ) :
     6 * (∑ q ∈ range (B+1), (q-k) * columnCount B J t q) = excess6 B J t k :=
   column_volume B J t (fun q => q-k) (rampExcess6 (B+1) k)
     (fun a => (ramp_excess (B+1) k a).symm)
-private theorem threshold_le (B J t : ℕ) : threshold B J t ≤ B := by
+theorem threshold_le (B J t : ℕ) : threshold B J t ≤ B := by
   dsimp only [threshold]
   split
   · exact Nat.sub_le _ _
@@ -1690,7 +1690,7 @@ theorem evaluate_eq (f : ℕ → ℕ) (n : ℕ) : evaluate f n = ∑ t ∈ range
   induction n with
   | zero => simp [evaluate]
   | succ n ih => rw [evaluate, sum_range_succ, ih]
-private theorem offset_zero (B J t : ℕ) (ht : t < J) : offsetMoment B J t = 0 := by
+theorem offset_zero (B J t : ℕ) (ht : t < J) : offsetMoment B J t = 0 := by
   have hp (q : ℕ) (hq : q ∈ range (B+1)) : pivotCount B J t q = columnCount B J t q := by
     have hq' := mem_range.mp hq
     have hc : columnCount B J t q ≤ t+1 := by
@@ -1736,7 +1736,7 @@ def CheckedBlocks (B J : ℕ) : ℕ → List (ℕ × ℕ) → Prop
   | _, [] => True
   | start, (length, total) :: rest =>
     blockEstimate B J start length = total ∧ CheckedBlocks B J (start + length) rest
-private theorem block_total {B J : ℕ} (blocks : List (ℕ × ℕ)) (start : ℕ)
+theorem block_total {B J : ℕ} (blocks : List (ℕ × ℕ)) (start : ℕ)
     (checked : CheckedBlocks B J start blocks) :
     blockEstimate B J start (blocks.map Prod.fst).sum = (blocks.map Prod.snd).sum := by
   induction blocks generalizing start with

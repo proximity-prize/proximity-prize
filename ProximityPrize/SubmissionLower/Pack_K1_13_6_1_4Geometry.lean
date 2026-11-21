@@ -520,7 +520,7 @@ private theorem le_ceil {n d count : ℕ} (hd : 0 < d) (h : count*d ≤ n) :
     count ≤ ceilDiv n d := by
   unfold ceilDiv
   exact (Nat.le_div_iff_mul_le hd).mpr (by omega)
-private theorem price_formula (x : Shape) (l : ℕ) :
+theorem price_formula (x : Shape) (l : ℕ) :
     physicalPrice x l =
       ceilDiv (ceilDiv (surfaceNumerator32 x.chamber cutterBox) 32 +
         ceilDiv ((81879 + 2*46594) * membershipDegree x) 46594) l +

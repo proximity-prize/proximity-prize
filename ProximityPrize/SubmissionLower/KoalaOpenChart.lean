@@ -77,7 +77,7 @@ theorem seed_lift_point {A : Type} [CommRing A] (φ : JetRing →+* A) :
   rw [HighCore82219Upper_3.seedBiform_image]
   rfl
 
-private theorem inv_image {A : Type} [Field A] {J : Input} {B : ResidueLift J}
+theorem inv_image {A : Type} [Field A] {J : Input} {B : ResidueLift J}
     {P : Ideal JetRing} (ψ : Chart J B P →+* A) :
     ψ (IsLocalization.Away.invSelf (openImage J B P)) = (ψ (chartPoint J B P (openFactor J B)))⁻¹ := by
   have he : chartPoint J B P (openFactor J B) *
@@ -89,7 +89,7 @@ private theorem inv_image {A : Type} [Field A] {J : Input} {B : ResidueLift J}
     rw [← map_mul, he, map_one]
   exact (inv_eq_of_mul_eq_one_right hm).symm
 
-private theorem model_specialization {A : Type} [Field A] {J : Input} {B : ResidueLift J}
+theorem model_specialization {A : Type} [Field A] {J : Input} {B : ResidueLift J}
     {P : Ideal JetRing} (ψ : Chart J B P →+* A) (φ : JetRing →+* A)
     (hψ : ψ.comp (chartPoint J B P) = φ) (ho : φ (openFactor J B) ≠ 0) :
     (chartModel J B P).map ψ = valuePolynomial (φ.comp rootInJet.toRingHom) J B := by

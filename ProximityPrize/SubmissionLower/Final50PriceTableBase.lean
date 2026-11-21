@@ -1,5 +1,6 @@
 import ProximityPrize.SubmissionLower.Final50PriceMonotone
 import ProximityPrize.SubmissionLower.Final50PriceCaps
+import ProximityPrize.SubmissionLower.Final50SharedPrice
 
 set_option Elab.async false
 set_option maxHeartbeats 4000000
@@ -37,7 +38,37 @@ theorem point {top : ℕ} {k : Band} {a : Shape} {b j t l : ℕ}
   cases a
   subst_vars
   exact (physicalPrice_anti _ _ hl hlo).trans hbill
-abbrev Covered (top : ℕ) (k : Band) (a : Shape) : Prop :=
-  physicalPrice a (order k a) (activeCap k) ≤ allowance top k a.j
+open Final50SharedPrice (Rate RateFits)
 
+def Covered (top : ℕ) (k : Band) (a : Shape) : Prop :=
+  physicalPrice a (order k a) (activeCap k) ≤ allowance top k a.j ∨
+  ∃ u l, k = .empty ∧ 0 < l ∧ l ≤ order k a ∧ RateFits a u ∧
+    Final50SharedPrice.price a l (activeCap k) u ≤ allowance top k a.j
+
+abbrev SharedReceipt (t b j l : ℕ) (u : Rate) : Prop :=
+  0 < l ∧ l ≤ order .empty ⟨b,j,t⟩ ∧ RateFits ⟨b,j,t⟩ u ∧
+    Final50SharedPrice.price ⟨b,j,t⟩ l (activeCap .empty) u ≤ allowance t .empty j
+
+theorem sharedPoint {a : Shape} {b j t l : ℕ} {u : Rate}
+    (h : SharedReceipt t b j l u) (hb : a.b = b) (hj : a.j = j) (ht : a.t = t) :
+    Covered t .empty a := by
+  cases a
+  subst_vars
+  exact Or.inr ⟨u,l,rfl,h⟩
+
+theorem covered_mono {k : Band} {a : Shape} {top next : ℕ}
+    (h : Covered top k a) (hm : top ≤ next) (hn : next ≤ 14) : Covered next k a := by
+  rcases h with h | ⟨u,l,he,hl,ho,hu,hp⟩
+  · exact Or.inl (h.trans (Final50PriceCaps.allowance_mono k hm hn))
+  · exact Or.inr ⟨u,l,he,hl,ho,hu,hp.trans (Final50PriceCaps.allowance_mono k hm hn)⟩
+
+theorem coveredPoint {top : ℕ} {k : Band} {a : Shape} {b j t l : ℕ}
+    (h : PointReceipt top k b j t l) (hb : a.b=b) (hj : a.j=j) (ht : a.t=t)
+    (ha : 3*a.t ≤ a.j) : Covered top k a := Or.inl (point h hb hj ht ha)
+
+theorem coveredRectangle {top : ℕ} {k : Band} {a : Shape} {bl jl bh jh t l : ℕ}
+    (h : OldReceipt top k bl jl bh jh t l)
+    (hb : bl ≤ a.b) (hj : jl ≤ a.j) (hb' : a.b ≤ bh) (hj' : a.j ≤ jh)
+    (ht : a.t = t) (ha : 3*a.t ≤ a.j) : Covered top k a :=
+  Or.inl (oldRectangle h hb hj hb' hj' ht ha)
 end Final50PriceTableBase

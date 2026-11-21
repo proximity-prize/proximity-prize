@@ -129,7 +129,7 @@ open private evalRow coeffValue jetValue existsDerivation deriv_poly deriv_jet
   evalNumerator iterate_value from ProximityPrize.SubmissionLower.Fast071
 open private reconstruct mapCoeffs_trajectory eq_zero_of_constant_coeffs
   from ProximityPrize.SubmissionLower.Fast071
-private theorem reconstruct_solution {F : Type} [Field F] [CharP F K1.p]
+theorem reconstruct_solution {F : Type} [Field F] [CharP F K1.p]
     (D : Derivation ℕ F F) (L : ℕ) (hL : 3 ≤ L) (hchar : L < K1.p)
     (f : Row 3) (k : Geom →+* F) (x : F) (y : Fin 3 → F)
     (hx : D x = 1) (hk : ∀ a, D (k a) = 0)
@@ -205,7 +205,7 @@ open scoped BigOperators Polynomial TensorProduct
 attribute [local instance] MvPolynomial.gradedAlgebra
 open private monic_chart_aux from ProximityPrize.SubmissionLower.Fast064
 open private commonFactor_monic trimmedValue_monic trimmedValue_dvd from ProximityPrize.SubmissionLower.Fast064
-private theorem square_dvd_trimmed_pow {A : Type} [CommRing A] [IsDomain A]
+theorem square_dvd_trimmed_pow {A : Type} [CommRing A] [IsDomain A]
     {f : A[X]} (s : Factorization f) {d : ℕ} (hf : f.natDegree ≤ d) (hd : 2 ≤ d) :
     f ^ 2 ∣ (trimmedValue s) ^ d := by
   classical

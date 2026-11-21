@@ -51,13 +51,13 @@ noncomputable section
 open K1 K1_14 K1_14_2 K1_14_2_2
 def residualScale (square : Bool) (k : Fin 4) (n : ℕ) : ℕ :=
   if square = true ∨ k = 3 then n ^ 2 else n
-private def seedNumerator (s t : Shape) (d r z : ℕ) : ℕ :=
+def seedNumerator (s t : Shape) (d r z : ℕ) : ℕ :=
   d * z + r * pairCap (residualShape s 0 z) (residualShape t 0 z) 0
-private def ordinateNumerator (s t : Shape) (d r x : ℕ) : ℕ :=
+def ordinateNumerator (s t : Shape) (d r x : ℕ) : ℕ :=
   d * x + r * ((s.U - x) * t.J + (t.U - x) * s.J)
-private def mixedNumerator (s t : Shape) (d r x z : ℕ) : ℕ :=
+def mixedNumerator (s t : Shape) (d r x z : ℕ) : ℕ :=
   d * (2 * x * z) + r ^ 2 * ((s.U - x) * (t.B - z) + (t.U - x) * (s.B - z))
-private def jetsNumerator (s t : Shape) (d r x : ℕ) : ℕ :=
+def jetsNumerator (s t : Shape) (d r x : ℕ) : ℕ :=
   d * (x * x) + r ^ 2 * ((s.U - x) * (t.U - x))
 private def numerator (s t : Shape) (d r x z : ℕ) (k : Fin 4) : ℕ :=
   ![seedNumerator s t d r z, ordinateNumerator s t d r x,
@@ -73,7 +73,7 @@ private theorem numerator_bound (s t : Shape) (d r x z : ℕ) (k : Fin 4) :
       (Nat.mul_le_mul_left _ (min_le_left _ _)) (Nat.mul_le_mul_left _ (min_le_left _ _)))) _
   · exact le_rfl
   · exact le_rfl
-private theorem affine_bound {x bound a b c M : ℕ} (hx : x ≤ bound)
+theorem affine_bound {x bound a b c M : ℕ} (hx : x ≤ bound)
     (h0 : b * bound + c < M) (hX : a * bound + c < M) :
     a * x + b * (bound - x) + c < M := by
   by_cases hab : a ≤ b
@@ -88,7 +88,7 @@ private theorem affine_bound {x bound a b c M : ℕ} (hx : x ≤ bound)
         Nat.add_le_add_right (Nat.add_le_add_left (Nat.mul_le_mul_right _ hba) _) _
       _ = a * bound + c := by rw [← Nat.mul_add, Nat.add_sub_of_le hx]
       _ < M := hX
-private theorem affine_endpoints {F : ℕ → ℕ} {x bound a b c M : ℕ}
+theorem affine_endpoints {F : ℕ → ℕ} {x bound a b c M : ℕ}
     (hx : x ≤ bound) (he : ∀ j ≤ bound, F j = a * j + b * (bound - j) + c)
     (h0 : F 0 < M) (hX : F bound < M) : F x < M := by
   rw [he x hx]
@@ -106,7 +106,7 @@ private theorem ordinate_endpoints (s t : Shape) {d r x M : ℕ} (hx : x ≤ s.U
   have hsub : t.U - j = (t.U - s.U) + (s.U - j) := by omega
   simp only [ordinateNumerator, hsub]
   ring
-private theorem mixed_seed_endpoints (s t : Shape) {d r x z M : ℕ}
+theorem mixed_seed_endpoints (s t : Shape) {d r x z M : ℕ}
     (hx : x ≤ s.U) (hu : s.U ≤ t.U)
     (h0 : mixedNumerator s t d r 0 z < M) (hU : mixedNumerator s t d r s.U z < M) :
     mixedNumerator s t d r x z < M := by
@@ -117,7 +117,7 @@ private theorem mixed_seed_endpoints (s t : Shape) {d r x z M : ℕ}
   have hsub : t.U - j = (t.U - s.U) + (s.U - j) := by omega
   simp only [mixedNumerator, hsub]
   ring
-private theorem mixed_ordinate_endpoints (s t : Shape) {d r x z M : ℕ}
+theorem mixed_ordinate_endpoints (s t : Shape) {d r x z M : ℕ}
     (hz : z ≤ s.B) (hb : s.B ≤ t.B)
     (h0 : mixedNumerator s t d r x 0 < M) (hB : mixedNumerator s t d r x s.B < M) :
     mixedNumerator s t d r x z < M := by
@@ -128,7 +128,7 @@ private theorem mixed_ordinate_endpoints (s t : Shape) {d r x z M : ℕ}
   have hsub : t.B - j = (t.B - s.B) + (s.B - j) := by omega
   simp only [mixedNumerator, hsub]
   ring
-private theorem jets_endpoints (s t : Shape) {d r x M : ℕ} (hx : x ≤ s.U)
+theorem jets_endpoints (s t : Shape) {d r x M : ℕ} (hx : x ≤ s.U)
     (h0 : jetsNumerator s t d r 0 < M) (hU : jetsNumerator s t d r s.U < M) :
     jetsNumerator s t d r x < M := by
   have hle : jetsNumerator s t d r x ≤ d * s.U * x + r ^ 2 * t.U * (s.U - x) := by
@@ -143,7 +143,7 @@ private theorem jets_endpoints (s t : Shape) {d r x M : ℕ} (hx : x ≤ s.U)
   have hU' : (d * s.U) * s.U + 0 < M := by
     simpa [jetsNumerator, Nat.mul_assoc] using hU
   simpa using affine_bound (x := x) hx h0' hU'
-private def checkNumerator (s t : Shape) (d r M : ℕ) (k : Fin 4) : Prop :=
+def checkNumerator (s t : Shape) (d r M : ℕ) (k : Fin 4) : Prop :=
   match k.val with
   | 0 => ∀ z : Fin (s.B + 1), seedNumerator s t d r z.val < M
   | 1 => ordinateNumerator s t d r 0 < M ∧ ordinateNumerator s t d r s.U < M
@@ -154,7 +154,7 @@ private instance (s t : Shape) (d r M : ℕ) (k : Fin 4) :
     Decidable (checkNumerator s t d r M k) := by
   unfold checkNumerator
   split <;> infer_instance
-private theorem checked_bound (s t : Shape) (d r M x z : ℕ) (k : Fin 4)
+theorem checked_bound (s t : Shape) (d r M x z : ℕ) (k : Fin 4)
     (hu : s.U ≤ t.U) (hb : s.B ≤ t.B) (hx : x ≤ s.U) (hz : z ≤ s.B)
     (h : checkNumerator s t d r M k) : numerator s t d r x z k < M := by
   fin_cases k
@@ -165,12 +165,12 @@ private theorem checked_bound (s t : Shape) (d r M x z : ℕ) (k : Fin 4)
       (mixed_ordinate_endpoints s t hz hb h00 h0B)
       (mixed_ordinate_endpoints s t hz hb hU0 hUB)
   · exact jets_endpoints s t hx h.1 h.2
-private def linearThreshold (i : Fin 10) (k : Fin 4) : ℕ :=
+def linearThreshold (i : Fin 10) (k : Fin 4) : ℕ :=
   match i.val with
   | 3 => ![1,1,1,2] k
   | 4 => ![1,1,2,2] k
   | _ => 1
-private def squareThreshold (i : Fin 10) (k : Fin 4) : ℕ :=
+def squareThreshold (i : Fin 10) (k : Fin 4) : ℕ :=
   match i.val with
   | 4 => ![1,1,3,2] k
   | 5 => ![1,1,4,3] k
@@ -192,17 +192,17 @@ private instance (i : Fin 10) (square : Bool) (cap : Fin 4 → ℕ)
   infer_instance
 set_option maxRecDepth 8000 in
 set_option maxHeartbeats 1000000 in
-private theorem linear_checked :
+theorem linear_checked :
     ∀ i : Fin 10, 0 < i.val → i.val ≤ 4 → ∀ k : Fin 4,
       certificate i false (exitBudget i) k (linearThreshold i k) := by
   decide +kernel
 set_option maxRecDepth 8000 in
 set_option maxHeartbeats 1000000 in
-private theorem square_checked :
+theorem square_checked :
     ∀ i : Fin 10, 4 ≤ i.val → ∀ k : Fin 4,
       certificate i true (budget i.val) k (squareThreshold i k) := by
   decide +kernel
-private theorem shape_order :
+theorem shape_order :
     ∀ i : Fin 10, (stageAt i).cheap.U ≤ (stageAt i).layered.U ∧
       (stageAt i).cheap.B ≤ (stageAt i).layered.B := by
   decide +kernel
@@ -277,10 +277,10 @@ private theorem cancel_fixed {I : Ideal Ambient} (hp : I.IsPrime) (G : ODE) (P :
   obtain ⟨a, ha, h⟩ := ho
   refine ⟨a * toJet (fixedIncl G), fun hn => (hp.mem_or_mem hn).elim ha hG, ?_⟩
   simpa only [map_mul, mul_assoc] using h
-private theorem cheap_small :
+theorem cheap_small :
     ∀ i : Fin 10, (stageAt i).cheap.U < p ∧ (stageAt i).cheap.B < p := by
   decide +kernel
-private theorem from_paired_bounds {S : Finset (Ideal Ambient)} {k : Fin 4}
+theorem from_paired_bounds {S : Finset (Ideal Ambient)} {k : Fin 4}
     (H : Equation) (r g d high low cap : ℕ)
     (hh : g * mass (S.filter (HighOn H r)) k ≤ high)
     (hl : d * mass (S.filter fun I => ¬ HighOn H r I) k ≤ low)

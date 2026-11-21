@@ -11,7 +11,7 @@ noncomputable section
 open Polynomial Matrix FrobeniusLocator Front82200
 open ProximityPrize.Benchmark
 open private eval_atSlope commonGCD_of_roots lift_dvd_atSlope from ProximityPrize.SubmissionLower.FrontBranch12
-private theorem twoBlock_atSlope (u : Words) (γ : K) :
+theorem twoBlock_atSlope (u : Words) (γ : K) :
     ((twoBlock u).map (evalRingHom γ)) =
       Strata.conjugateHankel (Strata.twoConjugations (frobenius K p))
         node (fun i => u 0 i + γ * u 1 i) L t := by
@@ -23,13 +23,13 @@ private theorem twoBlock_atSlope (u : Words) (γ : K) :
     · exact iterateFrobenius_zero K p
     · exact iterateFrobenius_one K p
   rw [h]
-private theorem rank_at_normal {u : Words} (T : TwoActive u) {γ : K} (hγ : Normal u γ) :
+theorem rank_at_normal {u : Words} (T : TwoActive u) {γ : K} (hγ : Normal u γ) :
     ((twoBlock u).map (evalRingHom γ)).rank = L + T.height := by
   change _ = stackRank u at hγ
   rw [hγ, actual_stackRank]
   have h := relation_height_balance T
   omega
-private theorem error_rank {u : Words} {γ : K} (M : BadMark u γ)
+theorem error_rank {u : Words} {γ : K} (M : BadMark u γ)
     (E : Finset I) (hE : E.card ≤ t)
     (hEagree : ∀ i ∉ E, u 0 i + γ * u 1 i = M.decoder.eval (node i)) :
     ((twoBlock u).map (evalRingHom γ)).rank =
@@ -45,7 +45,7 @@ private theorem error_rank {u : Words} {γ : K} (M : BadMark u γ)
   rw [Strata.conjugateErrors_two] at h
   rw [twoBlock_atSlope]
   exact h
-private theorem valid_of_saturation {u : Words} {T : TwoActive u} (R : Relation T)
+theorem valid_of_saturation {u : Words} {T : TwoActive u} (R : Relation T)
     (γ : K) (S : Finset I)
     (hdegree : max (atSlope (leftU R) γ).natDegree (atSlope (leftV R) γ).natDegree = T.height)
     (hG : IsCommonGCD (locator node S) (atSlope (leftU R) γ) (atSlope (leftV R) γ)) :
@@ -81,10 +81,10 @@ theorem proof : Front82200.c1 := by
       IRSProfile.card_index] at h
     exact h.trans (Nat.sub_le_sub_left M.agreement blockLength)
   have hheight : T.height ≤ heightCap := relation_height_le hfront T
-  have hH : T.height < L := hheight.trans_lt (by change 33385 < 48843; decide)
+  have hH : T.height < L := hheight.trans_lt (by change 33405 < 48833; decide)
   have hfit : k + T.height ≤ M.support.card :=
     have hcap : k + heightCap ≤ agreement := by
-      change 164457 ≤ 179915
+      change 164477 ≤ 179905
       decide
     ((Nat.add_le_add_left hheight k).trans hcap).trans M.agreement
   have hfix (i : I) : frobenius K p (node i) = node i := Native.native_domain_fixed i

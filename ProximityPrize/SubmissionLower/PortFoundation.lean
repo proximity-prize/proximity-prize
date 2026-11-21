@@ -97,8 +97,6 @@ def Main : Prop :=
     s.m ≤ s.m*A - N*s.B → Surplus A s R → RankCertificate A s R →
     ScalarList A (L A s)
 def source180120 : Source := ⟨46, 63, 18, 8, fullBox 63 18 8⟩
-def At180120 : Prop := ScalarList 180120 5307340521807720
-def Cert180120 : Prop := prefixRank source180120 64 ≤ 74502
 def indexWeight {r : ℕ} : JetVariable r → ℕ := fun j => j.elim 0 Fin.val
 def OrderTwo (s : Source) (Q : DifferentialPolynomial K 2) : Prop :=
   Q ≠ 0 ∧ jetTotalDegree Q ≤ s.B ∧ Q.weightedTotalDegree indexWeight ≤ s.J ∧
@@ -171,101 +169,17 @@ theorem mem_fullBox {B J C : ℕ} (hBJ : J ≤ B) (hJC : 2*C ≤ J) (j : Jet) :
   rcases j with ⟨c, b, a⟩
   simp only [fullBox, mem_sigma, mem_range, Jet.q, Jet.v, Jet.c, Jet.b, Jet.a]
   omega
-private theorem native_shape : ShapeOK source180120 := by
-  have hmem := mem_fullBox (B := 63) (J := 18) (C := 8) (by decide) (by decide)
-  refine ⟨by decide, by decide, by decide, by decide, by decide, fun j hj => (hmem j).mp hj, ?_⟩
-  intro j hj hpos
-  obtain ⟨hq, hv, hc⟩ := (hmem j).mp hj
-  apply (hmem _).mpr
-  refine ⟨?_, hv, hc⟩
-  change j.a-1 + j.b + j.c ≤ 63
-  unfold Jet.q at hq
-  omega
 private def runLength (c b : ℕ) := 63 - (b+c) + 1
 private def bRange (c : ℕ) := range (18 - 2*c + 1)
 private def countRow (c : ℕ) := ∑ b ∈ bRange c, runLength c b
 private def totalRow (c : ℕ) := ∑ b ∈ bRange c,
   (runLength c b * (runLength c b - 1) / 2 + runLength c b * (b+c))
 private def indexRow (c : ℕ) := ∑ b ∈ bRange c, runLength c b * (b+2*c)
-private theorem box_count : source180120.E.card = ∑ c ∈ range 9, countRow c := by
-  simp only [source180120, fullBox, card_sigma, card_range, countRow, bRange, runLength]
-private theorem box_total : (∑ j ∈ source180120.E, j.q) = ∑ c ∈ range 9, totalRow c := by
-  simp only [source180120, fullBox, sum_sigma, totalRow, bRange, runLength, Jet.q, Jet.a, Jet.b, Jet.c]
-  apply sum_congr rfl
-  intro c _
-  apply sum_congr rfl
-  intro b _
-  simp only [Nat.add_assoc, sum_add_distrib, sum_range_id, sum_const, card_range, smul_eq_mul, Nat.mul_add]
 private theorem box_index : (∑ j ∈ source180120.E, j.v) = ∑ c ∈ range 9, indexRow c := by
   simp only [source180120, fullBox, sum_sigma, indexRow, bRange, runLength, Jet.v, Jet.b, Jet.c,
     sum_const, card_range, smul_eq_mul]
-private theorem row0 : countRow 0 = 1045 ∧ totalRow 0 = 37335 ∧ indexRow 0 = 8835 := by
-  decide
-private theorem row1 : countRow 1 = 935 ∧ totalRow 1 = 33456 ∧ indexRow 1 = 8942 := by
-  decide
-private theorem row2 : countRow 2 = 825 ∧ totalRow 2 = 29560 ∧ indexRow 2 = 8795 := by
-  decide
-private theorem row3 : countRow 3 = 715 ∧ totalRow 3 = 25649 ∧ indexRow 3 = 8398 := by
-  decide
-private theorem row4 : countRow 4 = 605 ∧ totalRow 4 = 21725 ∧ indexRow 4 = 7755 := by
-  decide
-private theorem row5 : countRow 5 = 495 ∧ totalRow 5 = 17790 ∧ indexRow 5 = 6870 := by
-  decide
-private theorem row6 : countRow 6 = 385 ∧ totalRow 6 = 13846 ∧ indexRow 6 = 5747 := by
-  decide
-private theorem row7 : countRow 7 = 275 ∧ totalRow 7 = 9895 ∧ indexRow 7 = 4390 := by
-  decide
 private theorem row8 : countRow 8 = 165 ∧ totalRow 8 = 5939 ∧ indexRow 8 = 2803 := by
   decide
-private theorem sum_nine (f : ℕ → ℕ) : (∑ i ∈ range 9, f i) =
-    f 0 + f 1 + f 2 + f 3 + f 4 + f 5 + f 6 + f 7 + f 8 := by
-  simp only [sum_range_succ, sum_range_zero, zero_add]
-theorem moments180120 : source180120.E.card = 5445 ∧ (∑ j ∈ source180120.E, j.q) = 195195 ∧
-    (∑ j ∈ source180120.E, j.v) = 62535 := by
-  refine ⟨?_, ?_, ?_⟩
-  · rw [box_count, sum_nine, row0.1, row1.1, row2.1, row3.1, row4.1,
-      row5.1, row6.1, row7.1, row8.1]
-  · rw [box_total, sum_nine, row0.2.1, row1.2.1, row2.2.1, row3.2.1, row4.2.1,
-      row5.2.1, row6.2.1, row7.2.1, row8.2.1]
-  · rw [box_index, sum_nine, row0.2.2, row1.2.2, row2.2.2, row3.2.2, row4.2.2,
-      row5.2.2, row6.2.2, row7.2.2, row8.2.2]
-private theorem native_surplus : Surplus 180120 source180120 74502 := by
-  obtain ⟨hT, hS, hV⟩ := moments180120
-  unfold Surplus
-  rw [hT, hS, hV]
-  exact (by decide : 262144*74502 + 131071*195195 < 46*180120*5445 + 62535)
-theorem price180120 : L 180120 source180120 = 5307340521807720 := by
-  let s := source180120
-  have hB : s.B = 63 := rfl
-  have hJ : s.J = 18 := rfl
-  have hC : s.C = 8 := rfl
-  have ht : t = 262137 := by decide
-  have ht₁ : t₁ = 262139 := by decide
-  have ha : a₀ s = 16252495 := by rw [a₀, ht, hB]
-  have hD : D s = 4325263 := by rw [D, ht, hJ]; decide
-  have he : e s = 1966029 := by rw [e, ht, hC, hD]; decide
-  have hR₂ : R₂ s = 1586820991206662 := by rw [R₂, hC, hD, he, hJ, ha, hB]
-  have hH : H s = 881 := by rw [H, hB, hC]; decide
-  have hI : I₁ s = 142 := by rw [I₁, hJ, hC]; decide
-  have ha₁ : a₁ s = 230682321 := by rw [a₁, ht₁, hH]
-  have hd₁ : d₁ s = 37092670 := by rw [d₁, ha₁, ht₁, hI]; decide
-  have hR₁ : R₁ s = 60168372712 := by rw [R₁, hH, hd₁, hI, ha₁]
-  have hu : errors 180120 = 82024 := by decide
-  have hv : gap 180120 = 49049 := by decide
-  have hc : chargeNumerator 180120 s = 260319745254146827840 := by
-    rw [chargeNumerator, hu, hv, hB, hH, hR₂, hR₁]
-    decide
-  change L 180120 s = _
-  rw [L, hc, hv]
-theorem at180120_of_main_and_certificate (hmain : Main) (hcert : Cert180120) : At180120 := by
-  have hA : AgreementOK 180120 := ⟨by decide, by decide, by decide, by decide⟩
-  have htail : SilentTail source180120 64 := by
-    intro j hj hcut
-    have hq : j.q ≤ 63 := (native_shape.support j hj).1
-    omega
-  have h := hmain 180120 source180120 74502 hA native_shape (by decide) native_surplus
-    (Or.inr ⟨64, le_rfl, htail, hcert⟩)
-  rwa [price180120] at h
 end
 end CJ0
 end
@@ -582,7 +496,7 @@ private theorem dyadic_mul {a i j x y u v z w e s : ℕ}
     _ ≤ (z * 2 ^ w) * 2 ^ (u + v) := Nat.mul_le_mul_right _ hc
     _ = z * (2 ^ (u + v) * 2 ^ w) := by ac_rfl
     _ = z * 2 ^ (u + v + w) := congrArg (z * ·) (pow_add (2 : ℕ) (u + v) w).symm
-private theorem complement_pow_1600 : (738168533 : ℕ) ^ 1600 ≤ 2 ^ 47135 := by
+theorem complement_pow_1600 : (738168533 : ℕ) ^ 1600 ≤ 2 ^ 47135 := by
   have h1 : (738168533 : ℕ) ^ 1 ≤ 738168533 * 2 ^ 0 := by decide
   have h2 : (738168533 : ℕ) ^ 2 ≤ 0x78fd9196a06fd39 * 2 ^ 0 :=
     dyadic_mul h1 h1 (z := 0x78fd9196a06fd39) (w := 0) (e := 2)

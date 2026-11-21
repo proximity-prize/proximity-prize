@@ -6,7 +6,7 @@ noncomputable section
 open MvPolynomial
 variable {F : Type*} [Field F]
 
-private def takeBox (m : Exp) (a b c : ℕ) : Exp :=
+def takeBox (m : Exp) (a b c : ℕ) : Exp :=
   Finsupp.equivFunOnFinite.symm fun i : Idx => i.elim (min (m none) a)
     ![min (m (some 0)) b,min (m (some 1)) c]
 

@@ -31,7 +31,7 @@ theorem stage_mem {b : Band} {i : ℕ} (hi : i < (stages b).length) :
   exact List.getElem_mem hi
 def laterCount (b : Band) := (stages b).length - 1
 def introIndices : Band → List ℕ
-  | .h2367 => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]
+  | .h2367 => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
   | .h2395 => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
   | .h7773 => []
 def stopIndex (_ : Band) : ℕ := 0

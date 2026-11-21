@@ -59,7 +59,7 @@ private def firstJet {R : Type*} [CommRing R] (f : Equation) (ev : JetRing →+*
     · exact map_mul ev N M
     · change ev (flow f (N*M)) = ev N * ev (flow f M) + ev (flow f N) * ev M
       rw [flow_mul, map_add, map_mul, map_mul]
-private theorem kills_saturation {R : Type*} [CommRing R] (ev : JetRing →+* R)
+theorem kills_saturation {R : Type*} [CommRing R] (ev : JetRing →+* R)
     {I : Ideal JetRing} {g : JetRing} (hg : IsUnit (ev g)) (hI : I ≤ RingHom.ker ev)
     {N : JetRing} (hN : N ∈ HighCore82219Upper_3.saturate I g) : ev N = 0 := by
   obtain ⟨n, hn⟩ := hN
@@ -235,12 +235,12 @@ private theorem jet_chain {R : Type*} [CommRing R] (δ : ChartDerivation R)
   | monomial n s ih =>
     rw [pow_succ, ← mul_assoc]
     exact hstep _ _ ih hx
-private theorem ordinate_deriv {R : Type*} [CommRing R] (δ : ChartDerivation R)
+theorem ordinate_deriv {R : Type*} [CommRing R] (δ : ChartDerivation R)
     {y z v : R} (hy : y*z = 1) (hv : δ y = v) : δ z = -(v*z^2) := by
   have h := congrArg (fun t => δ t) hy
   rw [deriv_mul, Derivation.map_one_eq_zero, hv] at h
   linear_combination z * h - δ z * hy
-private theorem reverse_euler (f : Equation) (e : ℕ) (hf : f.natDegree ≤ e) :
+theorem reverse_euler (f : Equation) (e : ℕ) (hf : f.natDegree ≤ e) :
     (Polynomial.X * f.derivative).reflect e + Polynomial.X * (f.reflect e).derivative =
       C (e : Seeds) * f.reflect e := by
   have hcoeff (g : Equation) (n : ℕ) : (Polynomial.X*g.derivative).coeff n = g.coeff n * (n : Seeds) := by
@@ -256,7 +256,7 @@ private theorem reverse_euler (f : Equation) (e : ℕ) (hf : f.natDegree ≤ e) 
   · rw [Polynomial.revAt_eq_self_of_lt (Nat.lt_of_not_ge hn),
       Polynomial.coeff_eq_zero_of_natDegree_lt (hf.trans_lt (Nat.lt_of_not_ge hn))]
     simp
-private theorem reverse_chart {R : Type*} [CommRing R] (φ : JetRing →+* R)
+theorem reverse_chart {R : Type*} [CommRing R] (φ : JetRing →+* R)
     (z : R) (hy : φ ordinate * z = 1) (f : Equation) {e : ℕ}
     (hf : f.natDegree ≤ e) (he : 2 ≤ e) (hroot : φ (C f) = 0) :
     inverseEval φ z (C (f.reflect e)) = 0 ∧
@@ -371,22 +371,22 @@ noncomputable section
 open K1_14 (FX)
 open HighCore82219Upper_3 HighCore82219Upper_3_2_4 MvPolynomial
 open scoped BigOperators MonomialOrder
-private def finiteDegLex (α : Type) [Fintype α] : MonomialOrder α := by
+def finiteDegLex (α : Type) [Fintype α] : MonomialOrder α := by
   classical
   let _ : LinearOrder α := LinearOrder.lift' _ (Fintype.equivFin α).injective
   have : WellFoundedGT α := Finite.to_wellFoundedGT
   exact MonomialOrder.degLex
-private def termOrder : MonomialOrder CoxVar := finiteDegLex CoxVar
+def termOrder : MonomialOrder CoxVar := finiteDegLex CoxVar
 private def leading (L : Layer) (d : Degree) : Set Exponent :=
   {m | ∃ p : Cox, p ∈ L d ∧ p ≠ 0 ∧ termOrder.degree p = m}
 private def initial (L : Layer) : Set Exponent :=
   {m | m ∈ leading L (Finsupp.weight coxWeight m)}
-private theorem leading_weight {L : Layer} {d : Degree} (hL : Stable L)
+theorem leading_weight {L : Layer} {d : Degree} (hL : Stable L)
     {m : Exponent} (hm : m ∈ leading L d) : Finsupp.weight coxWeight m = d := by
   obtain ⟨p, hp, hp0, rfl⟩ := hm
   have hp' : p.IsWeightedHomogeneous coxWeight d := hL.1 d hp
   exact hp' (MonomialOrder.coeff_degree_ne_zero_iff.mpr hp0)
-private theorem initial_upper {L : Layer} (hL : Stable L) : IsUpperSet (initial L) := by
+theorem initial_upper {L : Layer} (hL : Stable L) : IsUpperSet (initial L) := by
   classical
   intro m n hmn hm
   obtain ⟨p, hp, hp0, hd⟩ := hm
@@ -402,10 +402,10 @@ private theorem initial_upper {L : Layer} (hL : Stable L) : IsUpperSet (initial 
     exact hL.2 _ _ hq hp
   · rw [termOrder.degree_mul hq0 hp0, hd]
     simp only [q, termOrder.degree_monomial, one_ne_zero, ite_false, tsub_add_cancel_of_le hmn]
-private theorem leading_finite {L : Layer} (hL : Stable L) (d : Degree) :
+theorem leading_finite {L : Layer} (hL : Stable L) (d : Degree) :
     (leading L d).Finite :=
   (finite_weight d).subset fun _ hm => leading_weight hL hm
-private theorem mem_leading_iff {L : Layer} (hL : Stable L) {d : Degree} {m : Exponent} :
+theorem mem_leading_iff {L : Layer} (hL : Stable L) {d : Degree} {m : Exponent} :
     m ∈ leading L d ↔ m ∈ initial L ∧ Finsupp.weight coxWeight m = d := by
   constructor
   · intro hm
@@ -413,7 +413,7 @@ private theorem mem_leading_iff {L : Layer} (hL : Stable L) {d : Degree} {m : Ex
     exact ⟨show m ∈ leading L (Finsupp.weight coxWeight m) from hw.symm ▸ hm, hw⟩
   · rintro ⟨hm, hw⟩
     exact hw ▸ (show m ∈ leading L (Finsupp.weight coxWeight m) from hm)
-private theorem independent_of_leading {σ K ι : Type} [Field K] [Fintype ι]
+theorem independent_of_leading {σ K ι : Type} [Field K] [Fintype ι]
     (m : MonomialOrder σ) (p : ι → MvPolynomial σ K) (hp : ∀ i, p i ≠ 0)
     (hd : Function.Injective fun i => m.degree (p i)) : LinearIndependent K p := by
   classical
@@ -437,7 +437,7 @@ private theorem independent_of_leading {σ K ι : Type} [Field K] [Fintype ι]
       have hlt := lt_of_le_of_ne hle (fun he => hai (hd (m.toSyn.injective he)))
       rw [m.coeff_eq_zero_of_lt hlt, mul_zero]
   · simp
-private theorem rank_leading {L : Layer} (hL : Stable L) (d : Degree) :
+theorem rank_leading {L : Layer} (hL : Stable L) (d : Degree) :
     Module.finrank FX (L d) = (leading L d).ncard := by
   classical
   let : Fintype (leading L d) := (leading_finite hL d).fintype
@@ -508,15 +508,15 @@ def rv {R : Type} [Semiring R] (r : ℕ) (a b : Prop) [Decidable a] [Decidable b
   else 0
 def seeds {R : Type} [Semiring R] (r : ℕ) (S S₂ Q : R) : R :=
   if r = 1 then 1 else if r = 2 then S else if r = 3 then Q * S * S₂ else 0
-private def velocities (B : Block) (b : ℕ) : Finset ℕ :=
+def velocities (B : Block) (b : ℕ) : Finset ℕ :=
   if v₀ ∈ B.free then (if v₁ ∈ B.free then Finset.range (b+1) else {b})
   else if v₁ ∈ B.free then {0} else ∅
-private theorem mem_velocities (B : Block) {b j : ℕ} (hb : 0 < b) :
+theorem mem_velocities (B : Block) {b j : ℕ} (hb : 0 < b) :
     j ∈ velocities B b ↔ j ≤ b ∧ (v₀ ∉ B.free → j = 0) ∧
       (v₁ ∉ B.free → b-j = 0) := by
   by_cases h₀' : v₀ ∈ B.free <;> by_cases h₁' : v₁ ∈ B.free <;>
     simp [velocities, h₀', h₁'] <;> omega
-private theorem mem_comp {n d : ℕ} {F : Finset (Fin n)} {f : Fin n →₀ ℕ} :
+theorem mem_comp {n d : ℕ} {F : Finset (Fin n)} {f : Fin n →₀ ℕ} :
     f ∈ F.finsuppAntidiag d ↔ (∑ i, f i) = d ∧ ∀ i ∉ F, f i = 0 := by
   rw [Finset.mem_finsuppAntidiag', Finsupp.sum_fintype _ _ (fun _ => rfl)]
   refine and_congr_right fun _ => ⟨?_, ?_⟩
@@ -528,9 +528,9 @@ private def project {n : ℕ} (m : Exponent) (f : Fin n → CoxVar) : Fin n →�
   Finsupp.equivFunOnFinite.symm (fun i => m (f i))
 private def pack (r : Fin 2 →₀ ℕ) (j b : ℕ) (z : Fin 3 →₀ ℕ) : Exponent :=
   Finsupp.equivFunOnFinite.symm (Sum.elim r (Sum.elim ![j,b-j] z))
-private abbrev Increments (B : Block) (d : Degree) :=
+abbrev Increments (B : Block) (d : Degree) :=
   {m : Exponent // (∀ i ∉ B.free, m i = 0) ∧ Finsupp.weight coxWeight m = d}
-private def enum (B : Block) (a b c : ℕ) (hb : 0 < b) :
+def enum (B : Block) (a b c : ℕ) (hb : 0 < b) :
     Increments B (nefDegree a b c) ≃
       (Σ j : velocities B b, (rootFree B).finsuppAntidiag (a+2*j.val)) ×
         (seedFree B).finsuppAntidiag c where
@@ -617,7 +617,7 @@ private def shift (B : Block) (d e : Degree) (hw : Finsupp.weight coxWeight B.ba
       · rintro ⟨_, ⟨m, hm, rfl⟩, h⟩
         rw [map_add, ← hw] at h
         exact ⟨⟨m, hm, add_left_cancel h⟩, rfl⟩)
-private theorem comp_card {ι : Type} [DecidableEq ι] (F : Finset ι)
+theorem comp_card {ι : Type} [DecidableEq ι] (F : Finset ι)
     {n : ℕ} (hn : 0 < n) (hF : F.card ≤ 3) :
     (F.finsuppAntidiag n).card =
       if F.card = 0 then 0 else if F.card = 1 then 1
@@ -637,7 +637,7 @@ private theorem sum_widths (a b : ℕ) :
   | succ b ih =>
     rw [Finset.sum_range_succ, ih]
     ring
-private theorem root_velocity_card (B : Block) {a b : ℕ} (ha : 0 < a) :
+theorem root_velocity_card (B : Block) {a b : ℕ} (ha : 0 < a) :
     (∑ j ∈ velocities B b, ((rootFree B).finsuppAntidiag (a+2*j)).card) =
       rv (rootFree B).card (v₀ ∈ B.free) (v₁ ∈ B.free)
         (b+1) (a+1) (a+b+1) (a+2*b+1) := by
@@ -673,14 +673,14 @@ namespace HighCore82219GeometryCert_2_2
 noncomputable section
 open HighCore82219Upper_3 HighCore82219Upper_3_2 HighCore82219Upper_3_2_4 MvPolynomial
 private abbrev Exp := Fin 3 →₀ ℕ
-private theorem coeff_add_apply (p q : HilbertPoly) (m : Exp) :
+theorem coeff_add_apply (p q : HilbertPoly) (m : Exp) :
     (p+q).coeff m = p.coeff m + q.coeff m := by simp
-private theorem coeff_nonneg {p : HilbertPoly} (hp : NonnegativeTop p)
+theorem coeff_nonneg {p : HilbertPoly} (hp : NonnegativeTop p)
     {m : Exp} (hm : p.totalDegree ≤ m.degree) : 0 ≤ p.coeff m := by
   rcases lt_or_eq_of_le hm with h | h
   · rw [coeff_eq_zero_of_totalDegree_lt h]
   · exact hp m h.symm
-private theorem top_add_right {p q : HilbertPoly} (hp : NonnegativeTop p)
+theorem top_add_right {p q : HilbertPoly} (hp : NonnegativeTop p)
     (hq : NonnegativeTop q) (hq' : q ≠ 0) (h : p.totalDegree ≤ q.totalDegree) :
     NonnegativeTop (p+q) := by
   obtain ⟨m, hm, hd⟩ := Finset.exists_mem_eq_sup q.support (support_nonempty.mpr hq')
@@ -708,7 +708,7 @@ private theorem top_add {p q : HilbertPoly} (hp : NonnegativeTop p)
   · exact top_add_right hp hq hq' h
   · rw [add_comm]
     exact top_add_right hq hp hp' h
-private theorem top_zero : NonnegativeTop (0 : HilbertPoly) := by
+theorem top_zero : NonnegativeTop (0 : HilbertPoly) := by
   intro m _
   simp
 private theorem top_mul {p q : HilbertPoly} (hp : NonnegativeTop p)
@@ -738,11 +738,11 @@ private theorem top_C (r : ℚ) (hr : 0 ≤ r) : NonnegativeTop (C r : HilbertPo
   split_ifs
   · exact hr
   · exact le_rfl
-private theorem top_one : NonnegativeTop (1 : HilbertPoly) := by
+theorem top_one : NonnegativeTop (1 : HilbertPoly) := by
   simpa only [map_one] using top_C 1 zero_le_one
 private def affine (i j : Fin 3) (r b : ℚ) : HilbertPoly :=
   MvPolynomial.X i + C r * MvPolynomial.X j + C b
-private theorem top_affine (i j : Fin 3) {r : ℚ} (hr : 0 ≤ r) (b : ℚ) :
+theorem top_affine (i j : Fin 3) {r : ℚ} (hr : 0 ≤ r) (b : ℚ) :
     NonnegativeTop (affine i j r b) := by
   classical
   have hX (k : Fin 3) (m : Exp) : 0 ≤ (MvPolynomial.X k : HilbertPoly).coeff m := by
@@ -774,7 +774,7 @@ private theorem top_affine (i j : Fin 3) {r : ℚ} (hr : 0 ≤ r) (b : ℚ) :
   have hm' : (C b : HilbertPoly).totalDegree < m.degree := by rwa [hm]
   rw [coeff_add_apply, coeff_eq_zero_of_totalDegree_lt hm', add_zero]
   exact hp m
-private def baseDegree (B : Block) : Degree := Finsupp.weight coxWeight B.base
+def baseDegree (B : Block) : Degree := Finsupp.weight coxWeight B.base
 private def profile (B : Block) : HilbertPoly :=
   let (u,v,w) := baseDegree B
   rv (rootFree B).card (v₀ ∈ B.free) (v₁ ∈ B.free)
@@ -782,7 +782,7 @@ private def profile (B : Block) : HilbertPoly :=
     (affine 0 1 1 (1+v-u)) (affine 0 1 2 (1-u)) *
   seeds (seedFree B).card
     (affine 2 2 0 (1-w)) (affine 2 2 0 (2-w)) (C (1/2))
-private theorem profile_top (B : Block) : NonnegativeTop (profile B) := by
+theorem profile_top (B : Block) : NonnegativeTop (profile B) := by
   change NonnegativeTop (rv _ _ _ _ _ _ _ * seeds _ _ _ _)
   apply top_mul
   · unfold rv
@@ -802,7 +802,7 @@ private theorem profile_top (B : Block) : NonnegativeTop (profile B) := by
 private def threshold (B : Block) : ℕ :=
   let (u,v,w) := baseDegree B
   u+v+w+1
-private theorem profile_eval (B : Block) (h t s : ℕ)
+theorem profile_eval (B : Block) (h t s : ℕ)
     (hh : threshold B ≤ h) (ht : threshold B ≤ t) (hs : threshold B ≤ s) :
     (exponentCount B.exponents (nefDegree h t s) : ℚ) = evalHilbert (profile B) h t s := by
   rcases hbase : baseDegree B with ⟨u,v,w⟩
@@ -835,7 +835,7 @@ private theorem profile_eval (B : Block) (h t s : ℕ)
     interval_cases (seedFree B).card <;>
       simp [E, seeds, affine, c, Nat.cast_choose_two,
         Nat.cast_sub (show w ≤ s by omega)] <;> ring
-private theorem sum_top (blocks : Finset Block) : NonnegativeTop (∑ B ∈ blocks, profile B) := by
+theorem sum_top (blocks : Finset Block) : NonnegativeTop (∑ B ∈ blocks, profile B) := by
   classical
   induction blocks using Finset.induction_on with
   | empty => simpa using top_zero

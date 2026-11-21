@@ -151,13 +151,6 @@ def sourceRank (A D : ℕ) : ℕ := compactCount A D - 262144 * 343903138965692
 
 def layerNeed (A D : ℕ) : ℕ := sourceRank A D / (A-D+3) + 1
 
-theorem layers_2290 : layerNeed 179876 133361 = 22743015940819 := by decide
-theorem layers_2291 : layerNeed 179876 133362 = 22722820712529 := by decide
-theorem layers_2293 : layerNeed 179876 133364 = 22682427650953 := by decide
-theorem layers_2300 : layerNeed 179876 133371 = 22541024577103 := by decide
-theorem layers_2379 : layerNeed 179935 133450 = 22464548730548 := by decide
-theorem layers_2381 : layerNeed 179935 133452 = 22424119358196 := by decide
-
 theorem primary_family_of_local (hLoc : LocalRankBound) (A D : ℕ) (hA : 0<A) (hD : 3<D) (hBudget : D*4012 ≤ 3000*A)
     (w : I → K) {n : ℕ} (hn : n ≤ sourceRank A D) :
     ∃ e : Fin n → Row 4, LinearIndependent Geom e ∧

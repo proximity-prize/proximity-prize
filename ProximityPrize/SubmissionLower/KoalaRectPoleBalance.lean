@@ -19,7 +19,7 @@ def Balanced {F : Type} [Field F] {h : ℕ} {H : F[X]} {lift : (SeedFrac F)[X]}
     (G : SimplePoles h H lift) : Prop :=
   ∃ e : Fin (2*h) ≃ Fin 2 × Fin h, ∀ t, G.side t = (e t).1
 
-private theorem balanced_simple_poles {h : ℕ} (hlo : 0 < h) (hhi : h < K1.p) (D : PoleData h)
+theorem balanced_simple_poles {h : ℕ} (hlo : 0 < h) (hhi : h < K1.p) (D : PoleData h)
     (lift : (SeedFrac GenericField)[X])
     (hcentre : ∀ i α, (genericBlock D i).eval α = 0 →
       ((D.constant i).map constGeneric).eval α ≠ 0 →

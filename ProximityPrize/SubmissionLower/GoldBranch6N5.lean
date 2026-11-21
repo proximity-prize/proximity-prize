@@ -339,16 +339,6 @@ open K1_13 (Row Geom embed extend atJet)
 open K1_13_5 (FirstRow RegularAt NodeFamily mixed3 lowBox graphBox liftedBox)
 open Polynomial
 open scoped BigOperators
-theorem mixedBudget_eq : mixedBudget = 0x416ec2354e7138 := by
-  have hxy : mixed3 lowBox (liftedBox (taylorLength + 1)) (liftedBox (taylorLength + 2)) =
-      0x15fb843b3751d0 := rfl
-  have hgy : mixed3 lowBox graphBox (liftedBox (taylorLength + 2)) = 0xaad6de6d8 := rfl
-  have hgx : mixed3 lowBox graphBox (liftedBox (taylorLength + 1)) = 0xaad68a768 := rfl
-  change mixed3 lowBox (liftedBox (taylorLength + 1)) (liftedBox (taylorLength + 2)) +
-    (taylorLength - 1) * mixed3 lowBox graphBox (liftedBox (taylorLength + 2)) +
-    taylorLength * mixed3 lowBox graphBox (liftedBox (taylorLength + 1)) = _
-  rw [hxy, hgy, hgx]
-  rfl
 end
 end P3_6_5
 end

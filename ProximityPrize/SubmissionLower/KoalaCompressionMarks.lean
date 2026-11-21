@@ -64,7 +64,7 @@ theorem bad_bound {J : Input} {v w : ℕ} (M : MarkCompression J v w) (hv : v �
 
 end MarkCompression
 
-private theorem center_at_mark (J : Input) (G : FreshEquation L) (γ : K)
+theorem center_at_mark (J : Input) (G : FreshEquation L) (γ : K)
     (h : StableNode.substitute (liftPoly (J.family.scalar γ))
       (G.map (mapRingHom (evalSeedConstants (J.model.label γ)))) = 0) :
     atMark (centerEquation G) (J.model.label γ) (J.family.scalar γ) = 0 := by
@@ -90,7 +90,7 @@ private theorem center_at_mark (J : Input) (G : FreshEquation L) (γ : K)
   rw [hh, eval_zero]
 
 theorem compress_marks (J : Input) (v w : ℕ) (he : J.e ≤ 21) (hv : v ≤ 445) (hw : w ≤ 445)
-    (hhi : J.hi ≤ 2440)
+    (hhi : J.hi ≤ 2465)
     (haxis : ∀ i, (J.f.coeff i).degreeOf 0 ≤ v ∧ (J.f.coeff i).degreeOf 1 ≤ w) :
     Nonempty (MarkCompression J v w) := by
   classical
@@ -120,7 +120,7 @@ theorem compress_marks (J : Input) (v w : ℕ) (he : J.e ≤ 21) (hv : v ≤ 445
       | some j => fin_cases j <;> simp [z, rootPoint, seedEmbedding]
     rw [heq]
     exact (K1_14_6_1.eval_flatten _ _ _).trans (J.regular g.val g.property).1
-  have hd : P1_7.degreeAt J.hi ≤ 133511 := by unfold P1_7.degreeAt; omega
+  have hd : P1_7.degreeAt J.hi ≤ 133536 := by unfold P1_7.degreeAt; omega
   have hp : J.e*P1_7.degreeAt J.hi < p := by
     exact (Nat.mul_le_mul he hd).trans_lt (by decide)
   obtain ⟨G,hGn,hGx,hGy,hGz,hGmarks⟩ := compressed_polynomial S z hf hfit hS hroot

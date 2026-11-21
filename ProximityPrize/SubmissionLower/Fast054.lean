@@ -145,7 +145,7 @@ private theorem coeff_det_uniform {F : Type*} [Field F] {s : ℕ}
   simpa only [Finset.card_univ, Fintype.card_fin, Matrix.map_apply] using
     Polynomial.coeff_prod_of_natDegree_le (Finset.univ : Finset (Fin s))
       (fun i => A (σ i) i) H (fun i _ => hdegree (σ i) i)
-private theorem shift_minors_height {F : Type} [Field F]
+theorem shift_minors_height {F : Type} [Field F]
     (P : Fin 2 → F[X][X]) (h s : ℕ) (hdegree : ∀ b, (P b).natDegree ≤ h)
     (hprimitive : PrimitiveVector.IsPrimitive (pairCoordinates P h)) :
     ∃ H : ℕ, (∀ b j, ((P b).coeff j).natDegree ≤ H) ∧
@@ -276,14 +276,14 @@ namespace K1_13_1_1
 set_option maxRecDepth 30000
 set_option Elab.async false
 set_option maxHeartbeats 4000000
-private theorem budgetGRangeAdd (a b : ℕ) (f : ℕ → ℕ) :
+theorem budgetGRangeAdd (a b : ℕ) (f : ℕ → ℕ) :
     sumRange (a + b) f = sumRange a f + sumRange b (fun i => f (i + a)) :=
   sumRange_add a b f
-private theorem budgetGRangeJoin (f : ℕ → ℕ) (a b : ℕ) {x y : ℕ}
+theorem budgetGRangeJoin (f : ℕ → ℕ) (a b : ℕ) {x y : ℕ}
     (ha : sumRange a f = x) (hb : sumRange b (fun i => f (i + a)) = y) :
     sumRange (a + b) f = x + y :=
   (budgetGRangeAdd a b f).trans (congrArg₂ Nat.add ha hb)
-private theorem budgetGZeroTail (s start n : ℕ) (h : 138 ≤ s + start) :
+theorem budgetGZeroTail (s start n : ℕ) (h : 138 ≤ s + start) :
     sumRange n (fun i => fastBlock s (i + start)) = 0 := by
   induction n with
   | zero => rfl
@@ -292,28 +292,28 @@ private theorem budgetGZeroTail (s start n : ℕ) (h : 138 ≤ s + start) :
     have hz : fastBlock s (n + start) = 0 := by simp only [fastBlock, ite_eq_right hn]
     exact congrArg₂ Nat.add ih hz
 open private activeNatCount_eq sumRange_prefix sumRange_congr sumToCap_eq innerSlice_eq from ProximityPrize.SubmissionLower.SoloK1_13_1_1ArithmeticLogic
-private theorem budgetGSucc (n : ℕ) (f : ℕ → ℕ) :
+theorem budgetGSucc (n : ℕ) (f : ℕ → ℕ) :
     sumRange (n + 1) f = sumRange n f + f n := rfl
-private theorem budgetGInterval (n lo hi : ℕ) :
+theorem budgetGInterval (n lo hi : ℕ) :
     sumRange n (fun i => if lo ≤ i ∧ i < hi then 1 else 0) = min n hi - lo := by
   induction n with
   | zero => simp [sumRange]
   | succ n ih =>
     rw [budgetGSucc, ih]
     split <;> omega
-private theorem budgetGTranspose (n m : ℕ) (f : ℕ → ℕ → ℕ) :
+theorem budgetGTranspose (n m : ℕ) (f : ℕ → ℕ → ℕ) :
     sumRange n (fun i => sumRange m (f i)) =
       sumRange m (fun j => sumRange n (fun i => f i j)) := by
   simp only [sumRange_eq_sum]
   exact Finset.sum_comm
-private def budgetGLower (k r o t : ℕ) : ℕ :=
+def budgetGLower (k r o t : ℕ) : ℕ :=
   max ((k - (r + 3 * (10 - t)) + 1) / 2) (2 * k + t + 1 - o)
-private def budgetGUpper (k r t : ℕ) : ℕ :=
+def budgetGUpper (k r t : ℕ) : ℕ :=
   min (k + 1 - t) (2 * k + 1 + r - 3 * t)
-private theorem budgetGRoom (a z t : ℕ) : t < a+1-z ↔ t ≤ a ∧ z ≤ a-t := by omega
-private theorem budgetGCeilThird (k x v : ℕ) : (k-x+2)/3 ≤ v ↔ k ≤ x+3*v := by omega
-private theorem budgetGCeilHalf (k x v : ℕ) : (k-x+1)/2 ≤ v ↔ k ≤ x+2*v := by omega
-private theorem budgetGCell (k r o c t : ℕ) (hk : k ≤ 48) (hr : r ≤ 48)
+theorem budgetGRoom (a z t : ℕ) : t < a+1-z ↔ t ≤ a ∧ z ≤ a-t := by omega
+theorem budgetGCeilThird (k x v : ℕ) : (k-x+2)/3 ≤ v ↔ k ≤ x+3*v := by omega
+theorem budgetGCeilHalf (k x v : ℕ) : (k-x+1)/2 ≤ v ↔ k ≤ x+2*v := by omega
+theorem budgetGCell (k r o c t : ℕ) (hk : k ≤ 48) (hr : r ≤ 48)
     (hc : c ≤ k) (ht : t < 11) :
     t < natLine 48 (48 - r) o (48 - k) c ↔
       budgetGLower k r o t ≤ c ∧ c < budgetGUpper k r t := by
@@ -323,9 +323,9 @@ private theorem budgetGCell (k r o c t : ℕ) (hk : k ≤ 48) (hr : r ≤ 48)
   simp only [natLine, show min 48 10 = 10 by decide, hf, hk', hp, budgetGLower, budgetGUpper,
     lt_min_iff, budgetGRoom, max_le_iff, budgetGCeilThird, budgetGCeilHalf, Nat.sub_le_iff_le_add]
   omega
-private def budgetGSlice (k r o : ℕ) : ℕ :=
+def budgetGSlice (k r o : ℕ) : ℕ :=
   sumRange 11 fun t => budgetGUpper k r t - budgetGLower k r o t
-private theorem budgetGSliceEq (k r o : ℕ) (hk : k ≤ 48) (hr : r ≤ 48) :
+theorem budgetGSliceEq (k r o : ℕ) (hk : k ≤ 48) (hr : r ≤ 48) :
     sumRange (k + 1) (natLine 48 (48 - r) o (48 - k)) = budgetGSlice k r o := by
   let line := natLine 48 (48 - r) o (48 - k)
   have expand (c : ℕ) : line c =
@@ -352,10 +352,10 @@ private theorem budgetGSliceEq (k r o : ℕ) (hk : k ≤ 48) (hr : r ≤ 48) :
       rw [h, budgetGInterval, Nat.min_eq_right]
       unfold budgetGUpper
       omega
-private def budgetGCheck (p : ℕ → Bool) : ℕ → Bool
+def budgetGCheck (p : ℕ → Bool) : ℕ → Bool
   | 0 => true
   | n+1 => budgetGCheck p n && p n
-private theorem budgetGChecked {p : ℕ → Bool} {n : ℕ} (ok : budgetGCheck p n = true)
+theorem budgetGChecked {p : ℕ → Bool} {n : ℕ} (ok : budgetGCheck p n = true)
     (i : ℕ) (hi : i < n) : p i = true := by
   induction n with
   | zero => omega
@@ -364,13 +364,13 @@ private theorem budgetGChecked {p : ℕ → Bool} {n : ℕ} (ok : budgetGCheck p
     rcases Nat.lt_or_eq_of_le (Nat.le_of_lt_succ hi) with h | rfl
     · exact ih hp h
     · exact hn
-private def budgetGBand (r : ℕ) : ℕ := (0xe1fe1ee1de1be18e14e0fe08e00df6deaddcdccdb9da4d8cd71d53d32d0dce5cb9c89c55c1dbe0b9fb59b0eabea69a0e9ae9488dd86c7f677a6f96725e65544bd42037e2d62291760be >>> (12*r)) % 4096
-private def budgetGPair (t : ℕ) : ℕ := (0x60b11161c21272c32373d42484d53585e63696e73787d81868a8e9296999da0a3a6a9abaeb0b2b4b6b7b9babbbcbdbdbe >>> (8*t)) % 256
-private theorem budgetGBandEq (r : ℕ) (hr : r < 49) :
+def budgetGBand (r : ℕ) : ℕ := (0xe1fe1ee1de1be18e14e0fe08e00df6deaddcdccdb9da4d8cd71d53d32d0dce5cb9c89c55c1dbe0b9fb59b0eabea69a0e9ae9488dd86c7f677a6f96725e65544bd42037e2d62291760be >>> (12*r)) % 4096
+def budgetGPair (t : ℕ) : ℕ := (0x60b11161c21272c32373d42484d53585e63696e73787d81868a8e9296999da0a3a6a9abaeb0b2b4b6b7b9babbbcbdbdbe >>> (8*t)) % 256
+theorem budgetGBandEq (r : ℕ) (hr : r < 49) :
     activeNatCount 48 (48-r) 48 = budgetGBand r :=
   of_decide_eq_true (budgetGChecked (p := fun i => decide
     (activeNatCount 48 (48-i) 48 = budgetGBand i)) (n := 49) (by decide +kernel) r hr)
-private theorem budgetGPairEq (k r : ℕ) (hk : k ≤ 48) (hr : r ≤ 48) :
+theorem budgetGPairEq (k r : ℕ) (hk : k ≤ 48) (hr : r ≤ 48) :
     natPairs 48 (48-r) (48-k) = budgetGPair (k-r) := by
   have h : natPairs 48 (k-r) 0 = budgetGPair (k-r) :=
     of_decide_eq_true (budgetGChecked (p := fun i => decide
@@ -380,11 +380,11 @@ private theorem budgetGPairEq (k r : ℕ) (hk : k ≤ 48) (hr : r ≤ 48) :
   apply sumRange_congr
   intro f _
   rw [Nat.zero_add, show 48-r-(48-k+3*f) = k-r-3*f by omega]
-private def budgetGPascal (r o : ℕ) : ℕ :=
+def budgetGPascal (r o : ℕ) : ℕ :=
   min (budgetGBand r) (sumRange o fun i =>
     let k := o-1-i
     min (budgetGPair (k-r)) (budgetGSlice k r o))
-private theorem budgetGPascalEq (s r : ℕ) (hs : 90 ≤ s) (hs' : s ≤ 109)
+theorem budgetGPascalEq (s r : ℕ) (hs : 90 ≤ s) (hs' : s ≤ 109)
     (h : s + r < 138) : fastPascal s r = budgetGPascal r (138-(s+r)) := by
   let o := 138-(s+r)
   have hd : residualDegree s = 48 := by unfold residualDegree; omega
@@ -404,9 +404,9 @@ private theorem budgetGPascalEq (s r : ℕ) (hs : 90 ≤ s) (hs' : s ≤ 109)
   have he : i + (49-o) = 48-k := by dsimp [k]; omega
   rw [innerSlice_eq _ _ _ _ hb, he, budgetGPairEq k r hk hr,
     show 48-(48-k) = k by omega, budgetGSliceEq k r o hk hr]
-private def budgetGRamp₁ (x : ℕ) : ℕ := x * (x+1) / 2
-private def budgetGRamp₂ (x : ℕ) : ℕ := ((x+1)/2) * (x/2+1)
-private theorem budgetGRamp₁Step (x : ℕ) :
+def budgetGRamp₁ (x : ℕ) : ℕ := x * (x+1) / 2
+def budgetGRamp₂ (x : ℕ) : ℕ := ((x+1)/2) * (x/2+1)
+theorem budgetGRamp₁Step (x : ℕ) :
     budgetGRamp₁ x = x + budgetGRamp₁ (x-1) := by
   cases x with
   | zero => rfl
@@ -414,7 +414,7 @@ private theorem budgetGRamp₁Step (x : ℕ) :
     change (x+1)*(x+1+1)/2 = (x+1) + x*(x+1)/2
     rw [show (x+1)*(x+1+1) = x*(x+1) + 2*(x+1) by ring]
     omega
-private theorem budgetGRamp₂Step (x : ℕ) :
+theorem budgetGRamp₂Step (x : ℕ) :
     budgetGRamp₂ x = x + budgetGRamp₂ (x-2) := by
   obtain _ | _ | x := x
   · rfl
@@ -423,7 +423,7 @@ private theorem budgetGRamp₂Step (x : ℕ) :
     rw [show (x+2+1)/2 = (x+1)/2+1 by omega, show (x+2)/2 = x/2+1 by omega]
     simp only [Nat.add_mul, Nat.mul_add, Nat.one_mul, Nat.mul_one]
     omega
-private theorem budgetGRampSum (n x step : ℕ) (ramp : ℕ → ℕ)
+theorem budgetGRampSum (n x step : ℕ) (ramp : ℕ → ℕ)
     (hs : ∀ a, ramp a = a + ramp (a-step)) :
     sumRange n (fun i => x-step*i) = ramp x - ramp (x-step*n) := by
   suffices h : sumRange n (fun i => x-step*i) + ramp (x-step*n) = ramp x by omega
@@ -431,7 +431,7 @@ private theorem budgetGRampSum (n x step : ℕ) (ramp : ℕ → ℕ)
   | zero => simp [sumRange]
   | succ n ih =>
     rw [budgetGSucc, Nat.mul_succ, ← Nat.sub_sub, Nat.add_assoc, ← hs, ih]
-private theorem budgetGSumDiff (n : ℕ) (f g : ℕ → ℕ) (h : ∀ i < n, g i ≤ f i) :
+theorem budgetGSumDiff (n : ℕ) (f g : ℕ → ℕ) (h : ∀ i < n, g i ≤ f i) :
     sumRange n (fun i => f i-g i) = sumRange n f - sumRange n g := by
   suffices hh : sumRange n (fun i => f i-g i) + sumRange n g = sumRange n f by omega
   induction n with
@@ -441,10 +441,10 @@ private theorem budgetGSumDiff (n : ℕ) (f g : ℕ → ℕ) (h : ∀ i < n, g i
     have hn := h n (by omega)
     simp only [budgetGSucc]
     omega
-private def budgetGCumulative (n d x : ℕ) : ℕ :=
+def budgetGCumulative (n d x : ℕ) : ℕ :=
   (budgetGRamp₂ x - budgetGRamp₂ (x - 2*n)) -
     (budgetGRamp₁ (x-(d+1)) - budgetGRamp₁ (x-(d+1)-n))
-private theorem budgetGCumulativeEq (n d x : ℕ) (hn : n ≤ d+1) :
+theorem budgetGCumulativeEq (n d x : ℕ) (hn : n ≤ d+1) :
     sumRange n (fun i => min (d+1-i) (x-2*i)) = budgetGCumulative n d x := by
   let f := fun i => x-2*i
   let g := fun i => x-(d+1)-i
@@ -456,13 +456,13 @@ private theorem budgetGCumulativeEq (n d x : ℕ) (hn : n ≤ d+1) :
   simpa only [Nat.one_mul] using congrArg
     (fun a => (budgetGRamp₂ x - budgetGRamp₂ (x-2*n))-a)
     (budgetGRampSum n (x-(d+1)) 1 budgetGRamp₁ budgetGRamp₁Step)
-private def budgetGFlagRow (n d : ℕ) (lo hi : ℤ) : ℕ :=
+def budgetGFlagRow (n d : ℕ) (lo hi : ℤ) : ℕ :=
   if hi < lo then 0 else
     budgetGCumulative n d (hi+1).toNat - budgetGCumulative n d lo.toNat
-private theorem budgetGIntervalDiff (a b l : ℤ) (h : l ≤ b) :
+theorem budgetGIntervalDiff (a b l : ℤ) (h : l ≤ b) :
     (min a b + 1 - max 0 l).toNat =
       min (a+1).toNat (b+1).toNat - min (a+1).toNat l.toNat := by omega
-private theorem budgetGFlagRowEq (n d : ℕ) (lo hi : ℤ) (hn : n ≤ d+1) :
+theorem budgetGFlagRowEq (n d : ℕ) (lo hi : ℤ) (hn : n ≤ d+1) :
     sumRange n (fun i : ℕ => intervalSize (max 0 (lo-2*i))
       (min ((d : ℤ)-i) (hi-2*i))) = budgetGFlagRow n d lo hi := by
   unfold budgetGFlagRow
@@ -487,11 +487,11 @@ private theorem budgetGFlagRowEq (n d : ℕ) (lo hi : ℤ) (hn : n ≤ d+1) :
         simp only [ha, hb, hc, top, bot])
     rw [h, budgetGSumDiff n top bot (fun i _ => by dsimp [top, bot]; omega)]
     exact congrArg₂ Nat.sub (budgetGCumulativeEq n d _ hn) (budgetGCumulativeEq n d _ hn)
-private def budgetGFastBand (d : ℕ) (lo hi : ℤ) (top : ℕ) : ℕ :=
+def budgetGFastBand (d : ℕ) (lo hi : ℤ) (top : ℕ) : ℕ :=
   sumRange (min d top + 1) fun f =>
     let h := hi-3*(f : ℤ)
     budgetGFlagRow (min (d-f) (h/2).toNat+1) (d-f) (lo-3*f) h
-private theorem budgetGFastBandEq (d : ℕ) (lo hi : ℤ) (top : ℕ) :
+theorem budgetGFastBandEq (d : ℕ) (lo hi : ℤ) (top : ℕ) :
     bandCount d lo hi top = budgetGFastBand d lo hi top := by
   unfold bandCount budgetGFastBand
   apply sumRange_congr
@@ -502,17 +502,17 @@ private theorem budgetGFastBandEq (d : ℕ) (lo hi : ℤ) (top : ℕ) :
   intro c _
   rw [hd, show lo - 2*(c : ℤ) - 3*f = lo-3*f-2*c by omega,
     show hi - 2*(c : ℤ) - 3*f = hi-3*f-2*c by omega]
-private theorem budgetGFlagRowZero (n d : ℕ) (lo hi : ℤ) (hh : hi < 0) :
+theorem budgetGFlagRowZero (n d : ℕ) (lo hi : ℤ) (hh : hi < 0) :
     budgetGFlagRow n d lo hi = 0 := by
   unfold budgetGFlagRow
   split
   · rfl
   · have hz : (hi+1).toNat = 0 := by omega
     simp [hz, budgetGCumulative, budgetGRamp₁, budgetGRamp₂]
-private def budgetGFastTarget (d : ℕ) (lo o : ℤ) : ℕ :=
+def budgetGFastTarget (d : ℕ) (lo o : ℤ) : ℕ :=
   sumRange (min (d+1) ((o.toNat+2)/3)) fun a =>
     budgetGFlagRow (d-a+1) (d-a) (lo-d+a) (o-1-3*a)
-private theorem budgetGFastTargetEq (d : ℕ) (lo o : ℤ) :
+theorem budgetGFastTargetEq (d : ℕ) (lo o : ℤ) :
     targetCount d lo o = budgetGFastTarget d lo o := by
   unfold targetCount budgetGFastTarget
   rw [← sumRange_prefix (d+1) (min (d+1) ((o.toNat+2)/3)) _ (by omega)
@@ -521,7 +521,7 @@ private theorem budgetGFastTargetEq (d : ℕ) (lo o : ℤ) :
   intro a ha
   have hd : ((d-a : ℕ) : ℤ) = (d : ℤ)-a := by omega
   rw [← budgetGFlagRowEq _ _ _ _ (by omega), hd]
-private def budgetGFlagCore (s d count : ℕ) (g : ℤ) (v : FactorPowers) : ℕ :=
+def budgetGFlagCore (s d count : ℕ) (g : ℤ) (v : FactorPowers) : ℕ :=
   if v.degree ≤ d ∧ v.maxIndex ≤ 48 ∧ v.maxTop ≤ 10 then
     let d' := d - v.degree
     let lo' := -g - (v.minIndex : ℤ)
@@ -529,10 +529,10 @@ private def budgetGFlagCore (s d count : ℕ) (g : ℤ) (v : FactorPowers) : ℕ
     let order' := orderCutoff s g - (v.minOrder : ℤ)
     count - (budgetGFastBand d' lo' hi' (10-v.maxTop) - budgetGFastTarget d' lo' order')
   else count
-private def budgetGFlag (s : ℕ) (g : ℤ) (v : FactorPowers) : ℕ :=
+def budgetGFlag (s : ℕ) (g : ℤ) (v : FactorPowers) : ℕ :=
   let d := residualDegree s
   budgetGFlagCore s d (budgetGFastBand d (-g) 48 10) g v
-private theorem budgetGFlagCoreEq (s r : ℕ) (v : FactorPowers) (hs : 90 ≤ s) (hs' : s ≤ 109)
+theorem budgetGFlagCoreEq (s r : ℕ) (v : FactorPowers) (hs : 90 ≤ s) (hs' : s ≤ 109)
     (hr : r ≤ 48) : budgetGFlag s (offset r) v = budgetGFlagCore s 48 (budgetGBand r) (offset r) v := by
   have hd : residualDegree s = 48 := by unfold residualDegree; omega
   have hl : (-(offset r)).toNat = 48-r := by unfold offset; omega
@@ -542,35 +542,35 @@ private theorem budgetGFlagCoreEq (s r : ℕ) (v : FactorPowers) (hs : 90 ≤ s)
   rw [budgetGBandEq r (by omega)] at hc
   change budgetGFlagCore s (residualDegree s) (budgetGFastBand (residualDegree s) (-(offset r)) 48 10) (offset r) v = _
   rw [hd, hc]
-private theorem budgetGFlagEq (s : ℕ) (g : ℤ) (v : FactorPowers) :
+theorem budgetGFlagEq (s : ℕ) (g : ℤ) (v : FactorPowers) :
     flagBound s g v = budgetGFlag s g v := by
   simp only [flagBound, budgetGFlag, budgetGFlagCore, budgetGFastBandEq, budgetGFastTargetEq]
-private def budgetGPack (f : ℕ → ℕ) : ℕ → ℕ
+def budgetGPack (f : ℕ → ℕ) : ℕ → ℕ
   | 0 => 0
   | n+1 => 16384 * budgetGPack f n + f n
-private theorem budgetGPackCong (n : ℕ) {f g : ℕ → ℕ} (h : ∀ i < n, f i = g i) :
+theorem budgetGPackCong (n : ℕ) {f g : ℕ → ℕ} (h : ∀ i < n, f i = g i) :
     budgetGPack f n = budgetGPack g n := by
   induction n with
   | zero => rfl
   | succ n ih => rw [budgetGPack, budgetGPack, ih (fun i hi => h i (by omega)), h n (by omega)]
-private theorem budgetGPackScale (n c : ℕ) (f : ℕ → ℕ) :
+theorem budgetGPackScale (n c : ℕ) (f : ℕ → ℕ) :
     budgetGPack (fun i => f i*c) n = budgetGPack f n*c := by
   induction n with
   | zero => simp [budgetGPack]
   | succ n ih => simp only [budgetGPack, ih]; ring
-private theorem budgetGPackAdd (n : ℕ) (f g : ℕ → ℕ) :
+theorem budgetGPackAdd (n : ℕ) (f g : ℕ → ℕ) :
     budgetGPack f n + budgetGPack g n = budgetGPack (fun i => f i+g i) n := by
   induction n with
   | zero => rfl
   | succ n ih => simp only [budgetGPack]; omega
-private theorem budgetGPackSub (n : ℕ) (f g : ℕ → ℕ) (h : ∀ i < n, g i ≤ f i) :
+theorem budgetGPackSub (n : ℕ) (f g : ℕ → ℕ) (h : ∀ i < n, g i ≤ f i) :
     budgetGPack f n - budgetGPack g n = budgetGPack (fun i => f i-g i) n := by
   suffices hx : budgetGPack (fun i => f i-g i) n + budgetGPack g n = budgetGPack f n by omega
   rw [budgetGPackAdd]
   apply budgetGPackCong n
   intro i hi
   exact Nat.sub_add_cancel (h i hi)
-private theorem budgetGAndJoin (a b x y : ℕ) (hx : x < 16384) (hy : y < 16384) :
+theorem budgetGAndJoin (a b x y : ℕ) (hx : x < 16384) (hy : y < 16384) :
     ((16384*a+x) &&& (16384*b+y)) = 16384*(a &&& b) + (x &&& y) := by
   have hd : ((16384*a+x) &&& (16384*b+y)) / 16384 = a &&& b := by
     change (_ &&& _) / 2^14 = _
@@ -581,7 +581,7 @@ private theorem budgetGAndJoin (a b x y : ℕ) (hx : x < 16384) (hy : y < 16384)
     rw [Nat.and_mod_two_pow]
     congr 1 <;> change _ % 16384 = _ <;> omega
   omega
-private theorem budgetGPackAnd (n : ℕ) (f g : ℕ → ℕ)
+theorem budgetGPackAnd (n : ℕ) (f g : ℕ → ℕ)
     (hf : ∀ i < n, f i < 16384) (hg : ∀ i < n, g i < 16384) :
     (budgetGPack f n &&& budgetGPack g n) = budgetGPack (fun i => f i &&& g i) n := by
   induction n with
@@ -589,7 +589,7 @@ private theorem budgetGPackAnd (n : ℕ) (f g : ℕ → ℕ)
   | succ n ih =>
     simp only [budgetGPack, budgetGAndJoin _ _ _ _ (hf n (by omega)) (hg n (by omega)),
       ih (fun i hi => hf i (by omega)) (fun i hi => hg i (by omega))]
-private theorem budgetGGuardBit (x : ℕ) (hx : x < 16384) :
+theorem budgetGGuardBit (x : ℕ) (hx : x < 16384) :
     (x &&& 8192) = x/8192*8192 := by
   have hd : (x &&& 8192) / 8192 = x/8192 := by
     change (_ &&& _) / 2^13 = _
@@ -603,10 +603,10 @@ private theorem budgetGGuardBit (x : ℕ) (hx : x < 16384) :
     change _ &&& 0 = 0
     simp
   omega
-private def budgetGSatWith (guard x y : ℕ) : ℕ :=
+def budgetGSatWith (guard x y : ℕ) : ℕ :=
   let z := guard + x - y
   z &&& (((z &&& guard)/8192)*8191)
-private theorem budgetGSatWithEq (n guard : ℕ) (hm : guard = budgetGPack (fun _ => 8192) n) (f g : ℕ → ℕ)
+theorem budgetGSatWithEq (n guard : ℕ) (hm : guard = budgetGPack (fun _ => 8192) n) (f g : ℕ → ℕ)
     (hf : ∀ i < n, f i < 8192) (hg : ∀ i < n, g i < 8192) :
     budgetGSatWith guard (budgetGPack f n) (budgetGPack g n) = budgetGPack (fun i => f i-g i) n := by
   let z := fun i => 8192+f i-g i
@@ -636,35 +636,35 @@ private theorem budgetGSatWithEq (n guard : ℕ) (hm : guard = budgetGPack (fun 
     omega
   · have hu : flag i = 0 := by dsimp [flag,z]; omega
     simp [hu, Nat.sub_eq_zero_of_le (by omega : f i ≤ g i)]
-private def budgetGSat := budgetGSatWith (8192*((16384^49-1)/16383))
-private theorem budgetGSatEq (f g : ℕ → ℕ)
+def budgetGSat := budgetGSatWith (8192*((16384^49-1)/16383))
+theorem budgetGSatEq (f g : ℕ → ℕ)
     (hf : ∀ i < 49, f i < 8192) (hg : ∀ i < 49, g i < 8192) :
     budgetGSat (budgetGPack f 49) (budgetGPack g 49) = budgetGPack (fun i => f i-g i) 49 :=
   budgetGSatWithEq 49 _ (by decide +kernel) f g hf hg
-private theorem budgetGPackTotal (n : ℕ) (f : ℕ → ℕ) :
+theorem budgetGPackTotal (n : ℕ) (f : ℕ → ℕ) :
     budgetGPack f n % 16383 = sumRange n f % 16383 := by
   induction n with
   | zero => rfl
   | succ n ih =>
     rw [budgetGPack, budgetGSucc, Nat.add_mod (16384 * _) _ _, Nat.mul_mod,
       show 16384 % 16383 = 1 by decide, Nat.one_mul, Nat.mod_mod, ih, ← Nat.add_mod]
-private def budgetGPairVector (r : ℕ) : ℕ := (190*((16384^49-1)/16383)) - (0x400100080030010005001c008002800c0038010004c015006001b0078021009402800b003000d003800f4041011804b0140055016c060019806b01c407601f0081021c08c024809702740a202a00ad02cc0b8 >>> (14*r))
-private theorem budgetGPairVectorEq (r : ℕ) (hr : r < 49) :
+def budgetGPairVector (r : ℕ) : ℕ := (190*((16384^49-1)/16383)) - (0x400100080030010005001c008002800c0038010004c015006001b0078021009402800b003000d003800f4041011804b0140055016c060019806b01c407601f0081021c08c024809702740a202a00ad02cc0b8 >>> (14*r))
+theorem budgetGPairVectorEq (r : ℕ) (hr : r < 49) :
     budgetGPairVector r = budgetGPack (fun k => budgetGPair (k-r)) 49 :=
   of_decide_eq_true (budgetGChecked (p := fun r => decide
     (budgetGPairVector r = budgetGPack (fun k => budgetGPair (k-r)) 49))
     (n := 49) (by decide +kernel) r hr)
-private theorem budgetGVecMin (f g : ℕ → ℕ)
+theorem budgetGVecMin (f g : ℕ → ℕ)
     (hf : ∀ i < 49, f i < 8192) (hg : ∀ i < 49, g i < 8192) :
     budgetGPack f 49 - budgetGSat (budgetGPack f 49) (budgetGPack g 49) =
       budgetGPack (fun i => min (f i) (g i)) 49 := by
   rw [budgetGSatEq f g hf hg, budgetGPackSub 49 _ _ (fun i _ => Nat.sub_le _ _)]
   exact budgetGPackCong _ fun i _ => by omega
-private theorem budgetGPackZero (n : ℕ) : budgetGPack (fun _ => 0) n = 0 := by
+theorem budgetGPackZero (n : ℕ) : budgetGPack (fun _ => 0) n = 0 := by
   induction n with
   | zero => rfl
   | succ n ih => simp [budgetGPack, ih]
-private theorem budgetGPackSum (n : ℕ) (f : ℕ → ℕ → ℕ) :
+theorem budgetGPackSum (n : ℕ) (f : ℕ → ℕ → ℕ) :
     sumRange n (fun t => budgetGPack (f t) 49) =
     budgetGPack (fun k => sumRange n (fun t => f t k)) 49 := by
   induction n with
@@ -674,19 +674,19 @@ private theorem budgetGPackSum (n : ℕ) (f : ℕ → ℕ → ℕ) :
     apply budgetGPackCong
     intro k _
     exact (budgetGSucc n (fun t => f t k)).symm
-private theorem budgetGSumBound (n c : ℕ) (f : ℕ → ℕ) (h : ∀ i < n, f i ≤ c) :
+theorem budgetGSumBound (n c : ℕ) (f : ℕ → ℕ) (h : ∀ i < n, f i ≤ c) :
     sumRange n f ≤ n*c := by
   induction n with
   | zero => simp [sumRange]
   | succ n ih =>
     rw [budgetGSucc, Nat.succ_mul]
     exact Nat.add_le_add (ih (fun i hi => h i (by omega))) (h n (by omega))
-private def budgetGGrid (f : ℕ → ℕ → ℕ) : ℕ :=
+def budgetGGrid (f : ℕ → ℕ → ℕ) : ℕ :=
   budgetGPack (fun i => f (i/49) (i%49)) 539
-private theorem budgetGGridCong {f g : ℕ → ℕ → ℕ}
+theorem budgetGGridCong {f g : ℕ → ℕ → ℕ}
     (h : ∀ t < 11, ∀ k < 49, f t k = g t k) : budgetGGrid f = budgetGGrid g :=
   budgetGPackCong _ fun i hi => h _ (by omega) _ (by omega)
-private theorem budgetGPackAppend (a b : ℕ) (f : ℕ → ℕ) :
+theorem budgetGPackAppend (a b : ℕ) (f : ℕ → ℕ) :
     budgetGPack f (a+b) =
       16384^b * budgetGPack f a + budgetGPack (fun i => f (a+i)) b := by
   induction b with
@@ -694,7 +694,7 @@ private theorem budgetGPackAppend (a b : ℕ) (f : ℕ → ℕ) :
   | succ b ih =>
     rw [Nat.add_succ, budgetGPack, ih, budgetGPack, Nat.pow_succ]
     ring
-private theorem budgetGCollect (n : ℕ) (f : ℕ → ℕ → ℕ) :
+theorem budgetGCollect (n : ℕ) (f : ℕ → ℕ → ℕ) :
     budgetGPack (fun i => f (i/49) (i%49)) (49*n) % (16384^49-1) =
       sumRange n (fun t => budgetGPack (f t) 49) % (16384^49-1) := by
   induction n with
@@ -708,34 +708,34 @@ private theorem budgetGCollect (n : ℕ) (f : ℕ → ℕ → ℕ) :
           Nat.add_zero, Nat.mul_add_mod, Nat.mod_eq_of_lt hi]
     rw [hc, Nat.add_mod (16384^49 * _) _ _, Nat.mul_mod,
       show 16384^49 % (16384^49-1) = 1 by decide, Nat.one_mul, Nat.mod_mod, ih, ← Nat.add_mod]
-private def budgetGOnes : ℕ := (16384^539-1)/16383
-private def budgetGGuard : ℕ := budgetGOnes * 8192
-private def budgetGEven : ℕ := budgetGOnes * 16382
-private def budgetGGridSat := budgetGSatWith budgetGGuard
-private theorem budgetGGridSatEq (f g : ℕ → ℕ → ℕ)
+def budgetGOnes : ℕ := (16384^539-1)/16383
+def budgetGGuard : ℕ := budgetGOnes * 8192
+def budgetGEven : ℕ := budgetGOnes * 16382
+def budgetGGridSat := budgetGSatWith budgetGGuard
+theorem budgetGGridSatEq (f g : ℕ → ℕ → ℕ)
     (hf : ∀ t < 11, ∀ k < 49, f t k < 8192) (hg : ∀ t < 11, ∀ k < 49, g t k < 8192) :
     budgetGGridSat (budgetGGrid f) (budgetGGrid g) = budgetGGrid (fun t k => f t k-g t k) :=
   budgetGSatWithEq 539 _ (by decide +kernel) _ _
     (fun i hi => hf _ (by omega) _ (by omega)) (fun i hi => hg _ (by omega) _ (by omega))
-private theorem budgetGGridAdd (f g : ℕ → ℕ → ℕ) :
+theorem budgetGGridAdd (f g : ℕ → ℕ → ℕ) :
     budgetGGrid f + budgetGGrid g = budgetGGrid (fun t k => f t k+g t k) :=
   budgetGPackAdd _ _ _
-private theorem budgetGGridSub (f g : ℕ → ℕ → ℕ) (h : ∀ t < 11, ∀ k < 49, g t k ≤ f t k) :
+theorem budgetGGridSub (f g : ℕ → ℕ → ℕ) (h : ∀ t < 11, ∀ k < 49, g t k ≤ f t k) :
     budgetGGrid f - budgetGGrid g = budgetGGrid (fun t k => f t k-g t k) :=
   budgetGPackSub _ _ _ (fun i hi => h _ (by omega) _ (by omega))
-private theorem budgetGGridMin (f g : ℕ → ℕ → ℕ)
+theorem budgetGGridMin (f g : ℕ → ℕ → ℕ)
     (hf : ∀ t < 11, ∀ k < 49, f t k < 8192) (hg : ∀ t < 11, ∀ k < 49, g t k < 8192) :
     budgetGGrid f - budgetGGridSat (budgetGGrid f) (budgetGGrid g) =
       budgetGGrid (fun t k => min (f t k) (g t k)) := by
   rw [budgetGGridSatEq f g hf hg, budgetGGridSub _ _ (fun t _ k _ => Nat.sub_le _ _)]
   exact budgetGGridCong fun t _ k _ => by omega
-private theorem budgetGGridMax (f g : ℕ → ℕ → ℕ)
+theorem budgetGGridMax (f g : ℕ → ℕ → ℕ)
     (hf : ∀ t < 11, ∀ k < 49, f t k < 8192) (hg : ∀ t < 11, ∀ k < 49, g t k < 8192) :
     budgetGGrid f + budgetGGridSat (budgetGGrid g) (budgetGGrid f) =
       budgetGGrid (fun t k => max (f t k) (g t k)) := by
   rw [budgetGGridSatEq g f hg hf, budgetGGridAdd]
   exact budgetGGridCong fun t _ k _ => by omega
-private theorem budgetGBroadcast (x : ℕ) : budgetGOnes*x = budgetGGrid (fun _ _ => x) := by
+theorem budgetGBroadcast (x : ℕ) : budgetGOnes*x = budgetGGrid (fun _ _ => x) := by
   have h : budgetGOnes = budgetGGrid (fun _ _ => 1) := by decide +kernel
   rw [h]
   unfold budgetGGrid
@@ -743,10 +743,10 @@ private theorem budgetGBroadcast (x : ℕ) : budgetGOnes*x = budgetGGrid (fun _ 
   apply budgetGPackCong
   intro i _
   exact Nat.one_mul _
-private theorem budgetGEvenDigit (x : ℕ) (hx : x < 64) : (x &&& 16382) = (x/2)*2 :=
+theorem budgetGEvenDigit (x : ℕ) (hx : x < 64) : (x &&& 16382) = (x/2)*2 :=
   of_decide_eq_true (budgetGChecked (p := fun x => decide ((x &&& 16382) = (x/2)*2))
     (n := 64) (by decide +kernel) x hx)
-private theorem budgetGGridHalf (f : ℕ → ℕ → ℕ) (hf : ∀ t < 11, ∀ k < 49, f t k < 64) :
+theorem budgetGGridHalf (f : ℕ → ℕ → ℕ) (hf : ∀ t < 11, ∀ k < 49, f t k < 64) :
     (budgetGGrid f &&& budgetGEven)/2 = budgetGGrid (fun t k => f t k/2) := by
   unfold budgetGEven
   rw [budgetGBroadcast]
@@ -757,27 +757,27 @@ private theorem budgetGGridHalf (f : ℕ → ℕ → ℕ) (hf : ∀ t < 11, ∀ 
     (f := fun i => f (i/49) (i%49) &&& 16382) (g := fun i => (f (i/49) (i%49)/2)*2)
     (fun i hi => budgetGEvenDigit _ (hf _ (by omega) _ (by omega)))
   rw [he, budgetGPackScale, Nat.mul_div_cancel _ (by decide : 0 < 2)]
-private def budgetGColumnIndices : ℕ :=
+def budgetGColumnIndices : ℕ :=
   ((16384^49 - 49*16384 + 48) / 16383^2) * ((16384^539-1) / (16384^49-1))
-private def budgetGHeightIndices : ℕ :=
+def budgetGHeightIndices : ℕ :=
   ((16384^539 - 11*16384^49 + 10) / (16384^49-1)^2) * ((16384^49-1) / 16383)
-private def budgetGColumnLimit : ℕ := budgetGGridSat (budgetGColumnIndices + budgetGOnes) budgetGHeightIndices
-private def budgetGDoubleColumn : ℕ := 2*budgetGColumnIndices + budgetGOnes
-private def budgetGTripleHeight : ℕ := 3*budgetGHeightIndices
-private def budgetGHalfBoundBase : ℕ := budgetGGridSat budgetGColumnIndices (3*(10*budgetGOnes-budgetGHeightIndices))
-private def budgetGOrderBoundBase : ℕ := budgetGDoubleColumn + budgetGHeightIndices
-private theorem budgetGColumnLimitEq : budgetGColumnLimit = budgetGGrid (fun t k => k+1-t) := by decide +kernel
-private theorem budgetGDoubleColumnEq : budgetGDoubleColumn = budgetGGrid (fun _ k => 2*k+1) := by decide +kernel
-private theorem budgetGTripleHeightEq : budgetGTripleHeight = budgetGGrid (fun t _ => 3*t) := by decide +kernel
-private theorem budgetGHalfBoundBaseEq : budgetGHalfBoundBase = budgetGGrid (fun t k => k-3*(10-t)) := by decide +kernel
-private theorem budgetGOrderBoundBaseEq : budgetGOrderBoundBase = budgetGGrid (fun t k => 2*k+t+1) := by decide +kernel
-private def budgetGGridWidths (r o : ℕ) : ℕ :=
+def budgetGColumnLimit : ℕ := budgetGGridSat (budgetGColumnIndices + budgetGOnes) budgetGHeightIndices
+def budgetGDoubleColumn : ℕ := 2*budgetGColumnIndices + budgetGOnes
+def budgetGTripleHeight : ℕ := 3*budgetGHeightIndices
+def budgetGHalfBoundBase : ℕ := budgetGGridSat budgetGColumnIndices (3*(10*budgetGOnes-budgetGHeightIndices))
+def budgetGOrderBoundBase : ℕ := budgetGDoubleColumn + budgetGHeightIndices
+theorem budgetGColumnLimitEq : budgetGColumnLimit = budgetGGrid (fun t k => k+1-t) := by decide +kernel
+theorem budgetGDoubleColumnEq : budgetGDoubleColumn = budgetGGrid (fun _ k => 2*k+1) := by decide +kernel
+theorem budgetGTripleHeightEq : budgetGTripleHeight = budgetGGrid (fun t _ => 3*t) := by decide +kernel
+theorem budgetGHalfBoundBaseEq : budgetGHalfBoundBase = budgetGGrid (fun t k => k-3*(10-t)) := by decide +kernel
+theorem budgetGOrderBoundBaseEq : budgetGOrderBoundBase = budgetGGrid (fun t k => 2*k+t+1) := by decide +kernel
+def budgetGGridWidths (r o : ℕ) : ℕ :=
   let upperTilt := budgetGGridSat (budgetGDoubleColumn + budgetGOnes*r) budgetGTripleHeight
   let upper := budgetGColumnLimit - budgetGGridSat budgetGColumnLimit upperTilt
   let lowerHalf := ((budgetGGridSat budgetGHalfBoundBase (budgetGOnes*r) + budgetGOnes) &&& budgetGEven)/2
   let lowerOrder := budgetGGridSat budgetGOrderBoundBase (budgetGOnes*o)
   budgetGGridSat upper (lowerHalf + budgetGGridSat lowerOrder lowerHalf)
-private theorem budgetGGridWidthsEq (r o : ℕ) (hr : r ≤ 48) (ho : o ≤ 48) :
+theorem budgetGGridWidthsEq (r o : ℕ) (hr : r ≤ 48) (ho : o ≤ 48) :
     budgetGGridWidths r o = budgetGGrid (fun t k => budgetGUpper k r t-budgetGLower k r o t) := by
   have one : budgetGOnes = budgetGGrid (fun _ _ => 1) := by decide +kernel
   unfold budgetGGridWidths
@@ -795,7 +795,7 @@ private theorem budgetGGridWidthsEq (r o : ℕ) (hr : r ≤ 48) (ho : o ≤ 48) 
   intro t ht k hk
   dsimp [budgetGUpper, budgetGLower]
   rw [show k-3*(10-t)-r = k-(r+3*(10-t)) by omega]
-private theorem budgetGPackedBound (f : ℕ → ℕ) (h : ∀ k < 49, f k < 8192) :
+theorem budgetGPackedBound (f : ℕ → ℕ) (h : ∀ k < 49, f k < 8192) :
     budgetGPack f 49 < 16384^49-1 := by
   have le (n : ℕ) (hn : n ≤ 49) : budgetGPack f n ≤ budgetGPack (fun _ => 8192) n := by
     induction n with
@@ -803,10 +803,10 @@ private theorem budgetGPackedBound (f : ℕ → ℕ) (h : ∀ k < 49, f k < 8192
     | succ n ih =>
       exact Nat.add_le_add (Nat.mul_le_mul_left 16384 (ih (by omega))) (Nat.le_of_lt (h n (by omega)))
   exact Nat.lt_of_le_of_lt (le 49 (by decide)) (by decide +kernel)
-private def budgetGVectorUncut (r o : ℕ) : ℕ :=
+def budgetGVectorUncut (r o : ℕ) : ℕ :=
   let a := budgetGGridWidths r o % (16384^49-1)
   (a - budgetGSat a (budgetGPairVector r)) % 16383
-private theorem budgetGVectorPascalEq (r o : ℕ) (hr : r ≤ 48) (ho : o ≤ 48) :
+theorem budgetGVectorPascalEq (r o : ℕ) (hr : r ≤ 48) (ho : o ≤ 48) :
     budgetGPascal r o = min (budgetGBand r) (budgetGVectorUncut r o) := by
   let f := fun k => min (budgetGSlice k r o) (budgetGPair (k-r))
   have hp (k : ℕ) : budgetGPair (k-r) < 256 := Nat.mod_lt _ (by decide)
@@ -845,25 +845,25 @@ private theorem budgetGVectorPascalEq (r o : ℕ) (hr : r ≤ 48) (ho : o ≤ 48
   apply sumRange_congr
   intro i _
   exact Nat.min_comm _ _
-private def budgetGBlock (s r : ℕ) : ℕ :=
+def budgetGBlock (s r : ℕ) : ℕ :=
   let p := min (budgetGBand r) (budgetGVectorUncut r (138-(s+r)))
   match selectedFactors s (offset r) with
   | none => p
   | some v => min p (budgetGFlagCore s 48 (budgetGBand r) (offset r) v)
-private theorem budgetGBlockEq (s r : ℕ) (hs : 90 ≤ s) (hs' : s ≤ 109)
+theorem budgetGBlockEq (s r : ℕ) (hs : 90 ≤ s) (hs' : s ≤ 109)
     (h : s + r < 138) : fastBlock s r = budgetGBlock s r := by
   have hvec := budgetGVectorPascalEq r (138-(s+r)) (by omega) (by omega)
   cases hv : selectedFactors s (offset r) <;>
     simp [fastBlock, h, budgetGBlock, hv, budgetGPascalEq s r hs hs' h, budgetGFlagEq, hvec, fun v => budgetGFlagCoreEq s r v hs hs' (by omega)]
-private theorem budgetGChunk (s a n : ℕ) (hs : 90 ≤ s) (hs' : s ≤ 109)
+theorem budgetGChunk (s a n : ℕ) (hs : 90 ≤ s) (hs' : s ≤ 109)
     (h : s+a+n ≤ 138) :
     sumRange n (fun i => fastBlock s (i+a)) = sumRange n (fun i => budgetGBlock s (i+a)) :=
   sumRange_congr _ (fun i hi => budgetGBlockEq _ _ hs hs' (by omega))
-private def budgetGGroupLen (s g : ℕ) : ℕ := min 4 (138-s-4*g)
-private def budgetGGroupValue (table g : ℕ) : ℕ := (table >>> (14*g)) % 16384
-private abbrev budgetGGroupFact (s table g : ℕ) : Prop :=
+def budgetGGroupLen (s g : ℕ) : ℕ := min 4 (138-s-4*g)
+def budgetGGroupValue (table g : ℕ) : ℕ := (table >>> (14*g)) % 16384
+abbrev budgetGGroupFact (s table g : ℕ) : Prop :=
   sumRange (budgetGGroupLen s g) (fun i => fastBlock s (i+4*g)) = budgetGGroupValue table g
-private theorem budgetGReadGroups (s table : ℕ) (hs : 90 ≤ s) (hh : s ≤ 109)
+theorem budgetGReadGroups (s table : ℕ) (hs : 90 ≤ s) (hh : s ≤ 109)
     (checks : budgetGCheck (fun g => decide
       (sumRange (budgetGGroupLen s g) (fun i => budgetGBlock s (i+4*g)) = budgetGGroupValue table g))
       ((138-s+3)/4) = true) : ∀ g < (138-s+3)/4, budgetGGroupFact s table g := by
@@ -872,33 +872,33 @@ private theorem budgetGReadGroups (s table : ℕ) (hs : 90 ≤ s) (hh : s ≤ 10
   exact of_decide_eq_true (budgetGChecked (p := fun j => decide
     (sumRange (budgetGGroupLen s j) (fun i => budgetGBlock s (i+4*j)) = budgetGGroupValue table j))
     checks g hg)
-private theorem budgetGRow90 : ∀ g < 12, budgetGGroupFact 90 0x3805103d022210146c82a58f9957d59f446bc733 g :=
+theorem budgetGRow90 : ∀ g < 12, budgetGGroupFact 90 0x3805103d022210146c82a58f9957d59f446bc733 g :=
   budgetGReadGroups 90 0x3805103d022210146c82a58f9957d59f446bc733 (by decide) (by decide) (by decide +kernel)
-private theorem budgetGBlocks90_00 :
+theorem budgetGBlocks90_00 :
     sumRange 4 (fastBlock 90) = 1843 := budgetGRow90 0 (by decide)
-private theorem budgetGBlocks90_04 :
+theorem budgetGBlocks90_04 :
     sumRange 4 (fun i => fastBlock 90 (i + 4)) = 4527 := budgetGRow90 1 (by decide)
-private theorem budgetGBlocks90_08 :
+theorem budgetGBlocks90_08 :
     sumRange 4 (fun i => fastBlock 90 (i + 8)) = 6644 := budgetGRow90 2 (by decide)
-private theorem budgetGBlocks90_12 :
+theorem budgetGBlocks90_12 :
     sumRange 4 (fun i => fastBlock 90 (i + 12)) = 5621 := budgetGRow90 3 (by decide)
-private theorem budgetGBlocks90_16 :
+theorem budgetGBlocks90_16 :
     sumRange 4 (fun i => fastBlock 90 (i + 16)) = 3993 := budgetGRow90 4 (by decide)
-private theorem budgetGBlocks90_20 :
+theorem budgetGBlocks90_20 :
     sumRange 4 (fun i => fastBlock 90 (i + 20)) = 2710 := budgetGRow90 5 (by decide)
-private theorem budgetGBlocks90_24 :
+theorem budgetGBlocks90_24 :
     sumRange 4 (fun i => fastBlock 90 (i + 24)) = 1736 := budgetGRow90 6 (by decide)
-private theorem budgetGBlocks90_28 :
+theorem budgetGBlocks90_28 :
     sumRange 4 (fun i => fastBlock 90 (i + 28)) = 1029 := budgetGRow90 7 (by decide)
-private theorem budgetGBlocks90_32 :
+theorem budgetGBlocks90_32 :
     sumRange 4 (fun i => fastBlock 90 (i + 32)) = 546 := budgetGRow90 8 (by decide)
-private theorem budgetGBlocks90_36 :
+theorem budgetGBlocks90_36 :
     sumRange 4 (fun i => fastBlock 90 (i + 36)) = 244 := budgetGRow90 9 (by decide)
-private theorem budgetGBlocks90_40 :
+theorem budgetGBlocks90_40 :
     sumRange 4 (fun i => fastBlock 90 (i + 40)) = 81 := budgetGRow90 10 (by decide)
-private theorem budgetGBlocks90_44 :
+theorem budgetGBlocks90_44 :
     sumRange 4 (fun i => fastBlock 90 (i + 44)) = 14 := budgetGRow90 11 (by decide)
-private theorem grade90 : fastGrade 90 = 28988 := by
+theorem grade90 : fastGrade 90 = 28988 := by
   have h8 := budgetGRangeJoin (fastBlock 90) 4 4 budgetGBlocks90_00 budgetGBlocks90_04
   have h12 := budgetGRangeJoin (fastBlock 90) 8 4 h8 budgetGBlocks90_08
   have h16 := budgetGRangeJoin (fastBlock 90) 12 4 h12 budgetGBlocks90_12
@@ -912,33 +912,33 @@ private theorem grade90 : fastGrade 90 = 28988 := by
   have h48 := budgetGRangeJoin (fastBlock 90) 44 4 h44 budgetGBlocks90_44
   exact budgetGRangeJoin (fastBlock 90) 48 90 h48
     (budgetGZeroTail 90 48 90 (by decide))
-private theorem budgetGRow91 : ∀ g < 12, budgetGGroupFact 91 0x1c03903001c70de4600261ce3950f592146bc733 g :=
+theorem budgetGRow91 : ∀ g < 12, budgetGGroupFact 91 0x1c03903001c70de4600261ce3950f592146bc733 g :=
   budgetGReadGroups 91 0x1c03903001c70de4600261ce3950f592146bc733 (by decide) (by decide) (by decide +kernel)
-private theorem budgetGBlocks91_00 :
+theorem budgetGBlocks91_00 :
     sumRange 4 (fastBlock 91) = 1843 := budgetGRow91 0 (by decide)
-private theorem budgetGBlocks91_04 :
+theorem budgetGBlocks91_04 :
     sumRange 4 (fun i => fastBlock 91 (i + 4)) = 4527 := budgetGRow91 1 (by decide)
-private theorem budgetGBlocks91_08 :
+theorem budgetGBlocks91_08 :
     sumRange 4 (fun i => fastBlock 91 (i + 8)) = 6433 := budgetGRow91 2 (by decide)
-private theorem budgetGBlocks91_12 :
+theorem budgetGBlocks91_12 :
     sumRange 4 (fun i => fastBlock 91 (i + 12)) = 5181 := budgetGRow91 3 (by decide)
-private theorem budgetGBlocks91_16 :
+theorem budgetGBlocks91_16 :
     sumRange 4 (fun i => fastBlock 91 (i + 16)) = 3641 := budgetGRow91 4 (by decide)
-private theorem budgetGBlocks91_20 :
+theorem budgetGBlocks91_20 :
     sumRange 4 (fun i => fastBlock 91 (i + 20)) = 2439 := budgetGRow91 5 (by decide)
-private theorem budgetGBlocks91_24 :
+theorem budgetGBlocks91_24 :
     sumRange 4 (fun i => fastBlock 91 (i + 24)) = 1536 := budgetGRow91 6 (by decide)
-private theorem budgetGBlocks91_28 :
+theorem budgetGBlocks91_28 :
     sumRange 4 (fun i => fastBlock 91 (i + 28)) = 889 := budgetGRow91 7 (by decide)
-private theorem budgetGBlocks91_32 :
+theorem budgetGBlocks91_32 :
     sumRange 4 (fun i => fastBlock 91 (i + 32)) = 455 := budgetGRow91 8 (by decide)
-private theorem budgetGBlocks91_36 :
+theorem budgetGBlocks91_36 :
     sumRange 4 (fun i => fastBlock 91 (i + 36)) = 192 := budgetGRow91 9 (by decide)
-private theorem budgetGBlocks91_40 :
+theorem budgetGBlocks91_40 :
     sumRange 4 (fun i => fastBlock 91 (i + 40)) = 57 := budgetGRow91 10 (by decide)
-private theorem budgetGBlocks91_44 :
+theorem budgetGBlocks91_44 :
     sumRange 3 (fun i => fastBlock 91 (i + 44)) = 7 := budgetGRow91 11 (by decide)
-private theorem grade91 : fastGrade 91 = 27200 := by
+theorem grade91 : fastGrade 91 = 27200 := by
   have h8 := budgetGRangeJoin (fastBlock 91) 4 4 budgetGBlocks91_00 budgetGBlocks91_04
   have h12 := budgetGRangeJoin (fastBlock 91) 8 4 h8 budgetGBlocks91_08
   have h16 := budgetGRangeJoin (fastBlock 91) 12 4 h12 budgetGBlocks91_12
@@ -952,33 +952,33 @@ private theorem grade91 : fastGrade 91 = 27200 := by
   have h47 := budgetGRangeJoin (fastBlock 91) 44 3 h44 budgetGBlocks91_44
   exact budgetGRangeJoin (fastBlock 91) 47 91 h47
     (budgetGZeroTail 91 47 91 (by decide))
-private theorem budgetGRow92 : ∀ g < 12, budgetGGroupFact 92 0xc02602501770be8548222ccee4a6d83046bc733 g :=
+theorem budgetGRow92 : ∀ g < 12, budgetGGroupFact 92 0xc02602501770be8548222ccee4a6d83046bc733 g :=
   budgetGReadGroups 92 0xc02602501770be8548222ccee4a6d83046bc733 (by decide) (by decide) (by decide +kernel)
-private theorem budgetGBlocks92_00 :
+theorem budgetGBlocks92_00 :
     sumRange 4 (fastBlock 92) = 1843 := budgetGRow92 0 (by decide)
-private theorem budgetGBlocks92_04 :
+theorem budgetGBlocks92_04 :
     sumRange 4 (fun i => fastBlock 92 (i + 4)) = 4527 := budgetGRow92 1 (by decide)
-private theorem budgetGBlocks92_08 :
+theorem budgetGBlocks92_08 :
     sumRange 4 (fun i => fastBlock 92 (i + 8)) = 6192 := budgetGRow92 2 (by decide)
-private theorem budgetGBlocks92_12 :
+theorem budgetGBlocks92_12 :
     sumRange 4 (fun i => fastBlock 92 (i + 12)) = 4763 := budgetGRow92 3 (by decide)
-private theorem budgetGBlocks92_16 :
+theorem budgetGBlocks92_16 :
     sumRange 4 (fun i => fastBlock 92 (i + 16)) = 3310 := budgetGRow92 4 (by decide)
-private theorem budgetGBlocks92_20 :
+theorem budgetGBlocks92_20 :
     sumRange 4 (fun i => fastBlock 92 (i + 20)) = 2187 := budgetGRow92 5 (by decide)
-private theorem budgetGBlocks92_24 :
+theorem budgetGBlocks92_24 :
     sumRange 4 (fun i => fastBlock 92 (i + 24)) = 1352 := budgetGRow92 6 (by decide)
-private theorem budgetGBlocks92_28 :
+theorem budgetGBlocks92_28 :
     sumRange 4 (fun i => fastBlock 92 (i + 28)) = 762 := budgetGRow92 7 (by decide)
-private theorem budgetGBlocks92_32 :
+theorem budgetGBlocks92_32 :
     sumRange 4 (fun i => fastBlock 92 (i + 32)) = 375 := budgetGRow92 8 (by decide)
-private theorem budgetGBlocks92_36 :
+theorem budgetGBlocks92_36 :
     sumRange 4 (fun i => fastBlock 92 (i + 36)) = 148 := budgetGRow92 9 (by decide)
-private theorem budgetGBlocks92_40 :
+theorem budgetGBlocks92_40 :
     sumRange 4 (fun i => fastBlock 92 (i + 40)) = 38 := budgetGRow92 10 (by decide)
-private theorem budgetGBlocks92_44 :
+theorem budgetGBlocks92_44 :
     sumRange 2 (fun i => fastBlock 92 (i + 44)) = 3 := budgetGRow92 11 (by decide)
-private theorem grade92 : fastGrade 92 = 25500 := by
+theorem grade92 : fastGrade 92 = 25500 := by
   have h8 := budgetGRangeJoin (fastBlock 92) 4 4 budgetGBlocks92_00 budgetGBlocks92_04
   have h12 := budgetGRangeJoin (fastBlock 92) 8 4 h8 budgetGBlocks92_08
   have h16 := budgetGRangeJoin (fastBlock 92) 12 4 h12 budgetGBlocks92_12
@@ -992,33 +992,33 @@ private theorem grade92 : fastGrade 92 = 25500 := by
   have h46 := budgetGRangeJoin (fastBlock 92) 44 2 h44 budgetGBlocks92_44
   exact budgetGRangeJoin (fastBlock 92) 46 92 h46
     (budgetGZeroTail 92 46 92 (by decide))
-private theorem budgetGRow93 : ∀ g < 12, budgetGGroupFact 93 0x401801bc1310a2049f1e84bb8443d6f146bc733 g :=
+theorem budgetGRow93 : ∀ g < 12, budgetGGroupFact 93 0x401801bc1310a2049f1e84bb8443d6f146bc733 g :=
   budgetGReadGroups 93 0x401801bc1310a2049f1e84bb8443d6f146bc733 (by decide) (by decide) (by decide +kernel)
-private theorem budgetGBlocks93_00 :
+theorem budgetGBlocks93_00 :
     sumRange 4 (fastBlock 93) = 1843 := budgetGRow93 0 (by decide)
-private theorem budgetGBlocks93_04 :
+theorem budgetGBlocks93_04 :
     sumRange 4 (fun i => fastBlock 93 (i + 4)) = 4527 := budgetGRow93 1 (by decide)
-private theorem budgetGBlocks93_08 :
+theorem budgetGBlocks93_08 :
     sumRange 4 (fun i => fastBlock 93 (i + 8)) = 5873 := budgetGRow93 2 (by decide)
-private theorem budgetGBlocks93_12 :
+theorem budgetGBlocks93_12 :
     sumRange 4 (fun i => fastBlock 93 (i + 12)) = 4367 := budgetGRow93 3 (by decide)
-private theorem budgetGBlocks93_16 :
+theorem budgetGBlocks93_16 :
     sumRange 4 (fun i => fastBlock 93 (i + 16)) = 3000 := budgetGRow93 4 (by decide)
-private theorem budgetGBlocks93_20 :
+theorem budgetGBlocks93_20 :
     sumRange 4 (fun i => fastBlock 93 (i + 20)) = 1953 := budgetGRow93 5 (by decide)
-private theorem budgetGBlocks93_24 :
+theorem budgetGBlocks93_24 :
     sumRange 4 (fun i => fastBlock 93 (i + 24)) = 1183 := budgetGRow93 6 (by decide)
-private theorem budgetGBlocks93_28 :
+theorem budgetGBlocks93_28 :
     sumRange 4 (fun i => fastBlock 93 (i + 28)) = 648 := budgetGRow93 7 (by decide)
-private theorem budgetGBlocks93_32 :
+theorem budgetGBlocks93_32 :
     sumRange 4 (fun i => fastBlock 93 (i + 32)) = 305 := budgetGRow93 8 (by decide)
-private theorem budgetGBlocks93_36 :
+theorem budgetGBlocks93_36 :
     sumRange 4 (fun i => fastBlock 93 (i + 36)) = 111 := budgetGRow93 9 (by decide)
-private theorem budgetGBlocks93_40 :
+theorem budgetGBlocks93_40 :
     sumRange 4 (fun i => fastBlock 93 (i + 40)) = 24 := budgetGRow93 10 (by decide)
-private theorem budgetGBlocks93_44 :
+theorem budgetGBlocks93_44 :
     sumRange 1 (fun i => fastBlock 93 (i + 44)) = 1 := budgetGRow93 11 (by decide)
-private theorem grade93 : fastGrade 93 = 23835 := by
+theorem grade93 : fastGrade 93 = 23835 := by
   have h8 := budgetGRangeJoin (fastBlock 93) 4 4 budgetGBlocks93_00 budgetGBlocks93_04
   have h12 := budgetGRangeJoin (fastBlock 93) 8 4 h8 budgetGBlocks93_08
   have h16 := budgetGRangeJoin (fastBlock 93) 12 4 h12 budgetGBlocks93_12
@@ -1032,31 +1032,31 @@ private theorem grade93 : fastGrade 93 = 23835 := by
   have h45 := budgetGRangeJoin (fastBlock 93) 44 1 h44 budgetGBlocks93_44
   exact budgetGRangeJoin (fastBlock 93) 45 93 h45
     (budgetGZeroTail 93 45 93 (by decide))
-private theorem budgetGRow94 : ∀ g < 11, budgetGGroupFact 94 0xe01440f408884051b20a963e655a846bc733 g :=
+theorem budgetGRow94 : ∀ g < 11, budgetGGroupFact 94 0xe01440f408884051b20a963e655a846bc733 g :=
   budgetGReadGroups 94 0xe01440f408884051b20a963e655a846bc733 (by decide) (by decide) (by decide +kernel)
-private theorem budgetGBlocks94_00 :
+theorem budgetGBlocks94_00 :
     sumRange 4 (fastBlock 94) = 1843 := budgetGRow94 0 (by decide)
-private theorem budgetGBlocks94_04 :
+theorem budgetGBlocks94_04 :
     sumRange 4 (fun i => fastBlock 94 (i + 4)) = 4527 := budgetGRow94 1 (by decide)
-private theorem budgetGBlocks94_08 :
+theorem budgetGBlocks94_08 :
     sumRange 4 (fun i => fastBlock 94 (i + 8)) = 5544 := budgetGRow94 2 (by decide)
-private theorem budgetGBlocks94_12 :
+theorem budgetGBlocks94_12 :
     sumRange 4 (fun i => fastBlock 94 (i + 12)) = 3993 := budgetGRow94 3 (by decide)
-private theorem budgetGBlocks94_16 :
+theorem budgetGBlocks94_16 :
     sumRange 4 (fun i => fastBlock 94 (i + 16)) = 2710 := budgetGRow94 4 (by decide)
-private theorem budgetGBlocks94_20 :
+theorem budgetGBlocks94_20 :
     sumRange 4 (fun i => fastBlock 94 (i + 20)) = 1736 := budgetGRow94 5 (by decide)
-private theorem budgetGBlocks94_24 :
+theorem budgetGBlocks94_24 :
     sumRange 4 (fun i => fastBlock 94 (i + 24)) = 1029 := budgetGRow94 6 (by decide)
-private theorem budgetGBlocks94_28 :
+theorem budgetGBlocks94_28 :
     sumRange 4 (fun i => fastBlock 94 (i + 28)) = 546 := budgetGRow94 7 (by decide)
-private theorem budgetGBlocks94_32 :
+theorem budgetGBlocks94_32 :
     sumRange 4 (fun i => fastBlock 94 (i + 32)) = 244 := budgetGRow94 8 (by decide)
-private theorem budgetGBlocks94_36 :
+theorem budgetGBlocks94_36 :
     sumRange 4 (fun i => fastBlock 94 (i + 36)) = 81 := budgetGRow94 9 (by decide)
-private theorem budgetGBlocks94_40 :
+theorem budgetGBlocks94_40 :
     sumRange 4 (fun i => fastBlock 94 (i + 40)) = 14 := budgetGRow94 10 (by decide)
-private theorem grade94 : fastGrade 94 = 22267 := by
+theorem grade94 : fastGrade 94 = 22267 := by
   have h8 := budgetGRangeJoin (fastBlock 94) 4 4 budgetGBlocks94_00 budgetGBlocks94_04
   have h12 := budgetGRangeJoin (fastBlock 94) 8 4 h8 budgetGBlocks94_08
   have h16 := budgetGRangeJoin (fastBlock 94) 12 4 h12 budgetGBlocks94_12
@@ -1069,31 +1069,31 @@ private theorem grade94 : fastGrade 94 = 22267 := by
   have h44 := budgetGRangeJoin (fastBlock 94) 40 4 h40 budgetGBlocks94_40
   exact budgetGRangeJoin (fastBlock 94) 44 94 h44
     (budgetGZeroTail 94 44 94 (by decide))
-private theorem budgetGRow95 : ∀ g < 11, budgetGGroupFact 95 0x700e40c0071c379180098738e541046bc733 g :=
+theorem budgetGRow95 : ∀ g < 11, budgetGGroupFact 95 0x700e40c0071c379180098738e541046bc733 g :=
   budgetGReadGroups 95 0x700e40c0071c379180098738e541046bc733 (by decide) (by decide) (by decide +kernel)
-private theorem budgetGBlocks95_00 :
+theorem budgetGBlocks95_00 :
     sumRange 4 (fastBlock 95) = 1843 := budgetGRow95 0 (by decide)
-private theorem budgetGBlocks95_04 :
+theorem budgetGBlocks95_04 :
     sumRange 4 (fun i => fastBlock 95 (i + 4)) = 4527 := budgetGRow95 1 (by decide)
-private theorem budgetGBlocks95_08 :
+theorem budgetGBlocks95_08 :
     sumRange 4 (fun i => fastBlock 95 (i + 8)) = 5136 := budgetGRow95 2 (by decide)
-private theorem budgetGBlocks95_12 :
+theorem budgetGBlocks95_12 :
     sumRange 4 (fun i => fastBlock 95 (i + 12)) = 3641 := budgetGRow95 3 (by decide)
-private theorem budgetGBlocks95_16 :
+theorem budgetGBlocks95_16 :
     sumRange 4 (fun i => fastBlock 95 (i + 16)) = 2439 := budgetGRow95 4 (by decide)
-private theorem budgetGBlocks95_20 :
+theorem budgetGBlocks95_20 :
     sumRange 4 (fun i => fastBlock 95 (i + 20)) = 1536 := budgetGRow95 5 (by decide)
-private theorem budgetGBlocks95_24 :
+theorem budgetGBlocks95_24 :
     sumRange 4 (fun i => fastBlock 95 (i + 24)) = 889 := budgetGRow95 6 (by decide)
-private theorem budgetGBlocks95_28 :
+theorem budgetGBlocks95_28 :
     sumRange 4 (fun i => fastBlock 95 (i + 28)) = 455 := budgetGRow95 7 (by decide)
-private theorem budgetGBlocks95_32 :
+theorem budgetGBlocks95_32 :
     sumRange 4 (fun i => fastBlock 95 (i + 32)) = 192 := budgetGRow95 8 (by decide)
-private theorem budgetGBlocks95_36 :
+theorem budgetGBlocks95_36 :
     sumRange 4 (fun i => fastBlock 95 (i + 36)) = 57 := budgetGRow95 9 (by decide)
-private theorem budgetGBlocks95_40 :
+theorem budgetGBlocks95_40 :
     sumRange 3 (fun i => fastBlock 95 (i + 40)) = 7 := budgetGRow95 10 (by decide)
-private theorem grade95 : fastGrade 95 = 20722 := by
+theorem grade95 : fastGrade 95 = 20722 := by
   have h8 := budgetGRangeJoin (fastBlock 95) 4 4 budgetGBlocks95_00 budgetGBlocks95_04
   have h12 := budgetGRangeJoin (fastBlock 95) 8 4 h8 budgetGBlocks95_08
   have h16 := budgetGRangeJoin (fastBlock 95) 12 4 h12 budgetGBlocks95_12
@@ -1106,31 +1106,31 @@ private theorem grade95 : fastGrade 95 = 20722 := by
   have h43 := budgetGRangeJoin (fastBlock 95) 40 3 h40 budgetGBlocks95_40
   exact budgetGRangeJoin (fastBlock 95) 43 95 h43
     (budgetGZeroTail 95 43 95 (by decide))
-private theorem budgetGRow96 : ∀ g < 11, budgetGGroupFact 96 0x3009809405dc2fa152088b33b927f46bc733 g :=
+theorem budgetGRow96 : ∀ g < 11, budgetGGroupFact 96 0x3009809405dc2fa152088b33b927f46bc733 g :=
   budgetGReadGroups 96 0x3009809405dc2fa152088b33b927f46bc733 (by decide) (by decide) (by decide +kernel)
-private theorem budgetGBlocks96_00 :
+theorem budgetGBlocks96_00 :
     sumRange 4 (fastBlock 96) = 1843 := budgetGRow96 0 (by decide)
-private theorem budgetGBlocks96_04 :
+theorem budgetGBlocks96_04 :
     sumRange 4 (fun i => fastBlock 96 (i + 4)) = 4527 := budgetGRow96 1 (by decide)
-private theorem budgetGBlocks96_08 :
+theorem budgetGBlocks96_08 :
     sumRange 4 (fun i => fastBlock 96 (i + 8)) = 4735 := budgetGRow96 2 (by decide)
-private theorem budgetGBlocks96_12 :
+theorem budgetGBlocks96_12 :
     sumRange 4 (fun i => fastBlock 96 (i + 12)) = 3310 := budgetGRow96 3 (by decide)
-private theorem budgetGBlocks96_16 :
+theorem budgetGBlocks96_16 :
     sumRange 4 (fun i => fastBlock 96 (i + 16)) = 2187 := budgetGRow96 4 (by decide)
-private theorem budgetGBlocks96_20 :
+theorem budgetGBlocks96_20 :
     sumRange 4 (fun i => fastBlock 96 (i + 20)) = 1352 := budgetGRow96 5 (by decide)
-private theorem budgetGBlocks96_24 :
+theorem budgetGBlocks96_24 :
     sumRange 4 (fun i => fastBlock 96 (i + 24)) = 762 := budgetGRow96 6 (by decide)
-private theorem budgetGBlocks96_28 :
+theorem budgetGBlocks96_28 :
     sumRange 4 (fun i => fastBlock 96 (i + 28)) = 375 := budgetGRow96 7 (by decide)
-private theorem budgetGBlocks96_32 :
+theorem budgetGBlocks96_32 :
     sumRange 4 (fun i => fastBlock 96 (i + 32)) = 148 := budgetGRow96 8 (by decide)
-private theorem budgetGBlocks96_36 :
+theorem budgetGBlocks96_36 :
     sumRange 4 (fun i => fastBlock 96 (i + 36)) = 38 := budgetGRow96 9 (by decide)
-private theorem budgetGBlocks96_40 :
+theorem budgetGBlocks96_40 :
     sumRange 2 (fun i => fastBlock 96 (i + 40)) = 3 := budgetGRow96 10 (by decide)
-private theorem grade96 : fastGrade 96 = 19280 := by
+theorem grade96 : fastGrade 96 = 19280 := by
   have h8 := budgetGRangeJoin (fastBlock 96) 4 4 budgetGBlocks96_00 budgetGBlocks96_04
   have h12 := budgetGRangeJoin (fastBlock 96) 8 4 h8 budgetGBlocks96_08
   have h16 := budgetGRangeJoin (fastBlock 96) 12 4 h12 budgetGBlocks96_12
@@ -1143,31 +1143,31 @@ private theorem grade96 : fastGrade 96 = 19280 := by
   have h42 := budgetGRangeJoin (fastBlock 96) 40 2 h40 budgetGBlocks96_40
   exact budgetGRangeJoin (fastBlock 96) 42 96 h42
     (budgetGZeroTail 96 42 96 (by decide))
-private theorem budgetGRow97 : ∀ g < 11, budgetGGroupFact 97 0x1006006f04c4288127c7a12ee10fd4574733 g :=
+theorem budgetGRow97 : ∀ g < 11, budgetGGroupFact 97 0x1006006f04c4288127c7a12ee10fd4574733 g :=
   budgetGReadGroups 97 0x1006006f04c4288127c7a12ee10fd4574733 (by decide) (by decide) (by decide +kernel)
-private theorem budgetGBlocks97_00 :
+theorem budgetGBlocks97_00 :
     sumRange 4 (fastBlock 97) = 1843 := budgetGRow97 0 (by decide)
-private theorem budgetGBlocks97_04 :
+theorem budgetGBlocks97_04 :
     sumRange 4 (fun i => fastBlock 97 (i + 4)) = 4445 := budgetGRow97 1 (by decide)
-private theorem budgetGBlocks97_08 :
+theorem budgetGBlocks97_08 :
     sumRange 4 (fun i => fastBlock 97 (i + 8)) = 4349 := budgetGRow97 2 (by decide)
-private theorem budgetGBlocks97_12 :
+theorem budgetGBlocks97_12 :
     sumRange 4 (fun i => fastBlock 97 (i + 12)) = 3000 := budgetGRow97 3 (by decide)
-private theorem budgetGBlocks97_16 :
+theorem budgetGBlocks97_16 :
     sumRange 4 (fun i => fastBlock 97 (i + 16)) = 1953 := budgetGRow97 4 (by decide)
-private theorem budgetGBlocks97_20 :
+theorem budgetGBlocks97_20 :
     sumRange 4 (fun i => fastBlock 97 (i + 20)) = 1183 := budgetGRow97 5 (by decide)
-private theorem budgetGBlocks97_24 :
+theorem budgetGBlocks97_24 :
     sumRange 4 (fun i => fastBlock 97 (i + 24)) = 648 := budgetGRow97 6 (by decide)
-private theorem budgetGBlocks97_28 :
+theorem budgetGBlocks97_28 :
     sumRange 4 (fun i => fastBlock 97 (i + 28)) = 305 := budgetGRow97 7 (by decide)
-private theorem budgetGBlocks97_32 :
+theorem budgetGBlocks97_32 :
     sumRange 4 (fun i => fastBlock 97 (i + 32)) = 111 := budgetGRow97 8 (by decide)
-private theorem budgetGBlocks97_36 :
+theorem budgetGBlocks97_36 :
     sumRange 4 (fun i => fastBlock 97 (i + 36)) = 24 := budgetGRow97 9 (by decide)
-private theorem budgetGBlocks97_40 :
+theorem budgetGBlocks97_40 :
     sumRange 1 (fun i => fastBlock 97 (i + 40)) = 1 := budgetGRow97 10 (by decide)
-private theorem grade97 : fastGrade 97 = 17862 := by
+theorem grade97 : fastGrade 97 = 17862 := by
   have h8 := budgetGRangeJoin (fastBlock 97) 4 4 budgetGBlocks97_00 budgetGBlocks97_04
   have h12 := budgetGRangeJoin (fastBlock 97) 8 4 h8 budgetGBlocks97_08
   have h16 := budgetGRangeJoin (fastBlock 97) 12 4 h12 budgetGBlocks97_12
@@ -1180,29 +1180,29 @@ private theorem grade97 : fastGrade 97 = 17862 := by
   have h41 := budgetGRangeJoin (fastBlock 97) 40 1 h40 budgetGBlocks97_40
   exact budgetGRangeJoin (fastBlock 97) 41 97 h41
     (budgetGZeroTail 97 41 97 (by decide))
-private theorem budgetGRow98 : ∀ g < 10, budgetGGroupFact 98 0x3805103d022210146c82a58f8d4414733 g :=
+theorem budgetGRow98 : ∀ g < 10, budgetGGroupFact 98 0x3805103d022210146c82a58f8d4414733 g :=
   budgetGReadGroups 98 0x3805103d022210146c82a58f8d4414733 (by decide) (by decide) (by decide +kernel)
-private theorem budgetGBlocks98_00 :
+theorem budgetGBlocks98_00 :
     sumRange 4 (fastBlock 98) = 1843 := budgetGRow98 0 (by decide)
-private theorem budgetGBlocks98_04 :
+theorem budgetGBlocks98_04 :
     sumRange 4 (fun i => fastBlock 98 (i + 4)) = 4357 := budgetGRow98 1 (by decide)
-private theorem budgetGBlocks98_08 :
+theorem budgetGBlocks98_08 :
     sumRange 4 (fun i => fastBlock 98 (i + 8)) = 3981 := budgetGRow98 2 (by decide)
-private theorem budgetGBlocks98_12 :
+theorem budgetGBlocks98_12 :
     sumRange 4 (fun i => fastBlock 98 (i + 12)) = 2710 := budgetGRow98 3 (by decide)
-private theorem budgetGBlocks98_16 :
+theorem budgetGBlocks98_16 :
     sumRange 4 (fun i => fastBlock 98 (i + 16)) = 1736 := budgetGRow98 4 (by decide)
-private theorem budgetGBlocks98_20 :
+theorem budgetGBlocks98_20 :
     sumRange 4 (fun i => fastBlock 98 (i + 20)) = 1029 := budgetGRow98 5 (by decide)
-private theorem budgetGBlocks98_24 :
+theorem budgetGBlocks98_24 :
     sumRange 4 (fun i => fastBlock 98 (i + 24)) = 546 := budgetGRow98 6 (by decide)
-private theorem budgetGBlocks98_28 :
+theorem budgetGBlocks98_28 :
     sumRange 4 (fun i => fastBlock 98 (i + 28)) = 244 := budgetGRow98 7 (by decide)
-private theorem budgetGBlocks98_32 :
+theorem budgetGBlocks98_32 :
     sumRange 4 (fun i => fastBlock 98 (i + 32)) = 81 := budgetGRow98 8 (by decide)
-private theorem budgetGBlocks98_36 :
+theorem budgetGBlocks98_36 :
     sumRange 4 (fun i => fastBlock 98 (i + 36)) = 14 := budgetGRow98 9 (by decide)
-private theorem grade98 : fastGrade 98 = 16541 := by
+theorem grade98 : fastGrade 98 = 16541 := by
   have h8 := budgetGRangeJoin (fastBlock 98) 4 4 budgetGBlocks98_00 budgetGBlocks98_04
   have h12 := budgetGRangeJoin (fastBlock 98) 8 4 h8 budgetGBlocks98_08
   have h16 := budgetGRangeJoin (fastBlock 98) 12 4 h12 budgetGBlocks98_12
@@ -1214,29 +1214,29 @@ private theorem grade98 : fastGrade 98 = 16541 := by
   have h40 := budgetGRangeJoin (fastBlock 98) 36 4 h36 budgetGBlocks98_36
   exact budgetGRangeJoin (fastBlock 98) 40 98 h40
     (budgetGZeroTail 98 40 98 (by decide))
-private theorem budgetGRow99 : ∀ g < 10, budgetGGroupFact 99 0x1c03903001c70de4600261ce324190733 g :=
+theorem budgetGRow99 : ∀ g < 10, budgetGGroupFact 99 0x1c03903001c70de4600261ce324190733 g :=
   budgetGReadGroups 99 0x1c03903001c70de4600261ce324190733 (by decide) (by decide) (by decide +kernel)
-private theorem budgetGBlocks99_00 :
+theorem budgetGBlocks99_00 :
     sumRange 4 (fastBlock 99) = 1843 := budgetGRow99 0 (by decide)
-private theorem budgetGBlocks99_04 :
+theorem budgetGBlocks99_04 :
     sumRange 4 (fun i => fastBlock 99 (i + 4)) = 4196 := budgetGRow99 1 (by decide)
-private theorem budgetGBlocks99_08 :
+theorem budgetGBlocks99_08 :
     sumRange 4 (fun i => fastBlock 99 (i + 8)) = 3634 := budgetGRow99 2 (by decide)
-private theorem budgetGBlocks99_12 :
+theorem budgetGBlocks99_12 :
     sumRange 4 (fun i => fastBlock 99 (i + 12)) = 2439 := budgetGRow99 3 (by decide)
-private theorem budgetGBlocks99_16 :
+theorem budgetGBlocks99_16 :
     sumRange 4 (fun i => fastBlock 99 (i + 16)) = 1536 := budgetGRow99 4 (by decide)
-private theorem budgetGBlocks99_20 :
+theorem budgetGBlocks99_20 :
     sumRange 4 (fun i => fastBlock 99 (i + 20)) = 889 := budgetGRow99 5 (by decide)
-private theorem budgetGBlocks99_24 :
+theorem budgetGBlocks99_24 :
     sumRange 4 (fun i => fastBlock 99 (i + 24)) = 455 := budgetGRow99 6 (by decide)
-private theorem budgetGBlocks99_28 :
+theorem budgetGBlocks99_28 :
     sumRange 4 (fun i => fastBlock 99 (i + 28)) = 192 := budgetGRow99 7 (by decide)
-private theorem budgetGBlocks99_32 :
+theorem budgetGBlocks99_32 :
     sumRange 4 (fun i => fastBlock 99 (i + 32)) = 57 := budgetGRow99 8 (by decide)
-private theorem budgetGBlocks99_36 :
+theorem budgetGBlocks99_36 :
     sumRange 3 (fun i => fastBlock 99 (i + 36)) = 7 := budgetGRow99 9 (by decide)
-private theorem grade99 : fastGrade 99 = 15248 := by
+theorem grade99 : fastGrade 99 = 15248 := by
   have h8 := budgetGRangeJoin (fastBlock 99) 4 4 budgetGBlocks99_00 budgetGBlocks99_04
   have h12 := budgetGRangeJoin (fastBlock 99) 8 4 h8 budgetGBlocks99_08
   have h16 := budgetGRangeJoin (fastBlock 99) 12 4 h12 budgetGBlocks99_12
@@ -1248,29 +1248,29 @@ private theorem grade99 : fastGrade 99 = 15248 := by
   have h39 := budgetGRangeJoin (fastBlock 99) 36 3 h36 budgetGBlocks99_36
   exact budgetGRangeJoin (fastBlock 99) 39 99 h39
     (budgetGZeroTail 99 39 99 (by decide))
-private theorem budgetGRow100 : ∀ g < 10, budgetGGroupFact 100 0xc02602501770be8548222ccea3efc733 g :=
+theorem budgetGRow100 : ∀ g < 10, budgetGGroupFact 100 0xc02602501770be8548222ccea3efc733 g :=
   budgetGReadGroups 100 0xc02602501770be8548222ccea3efc733 (by decide) (by decide) (by decide +kernel)
-private theorem budgetGBlocks100_00 :
+theorem budgetGBlocks100_00 :
     sumRange 4 (fastBlock 100) = 1843 := budgetGRow100 0 (by decide)
-private theorem budgetGBlocks100_04 :
+theorem budgetGBlocks100_04 :
     sumRange 4 (fun i => fastBlock 100 (i + 4)) = 4031 := budgetGRow100 1 (by decide)
-private theorem budgetGBlocks100_08 :
+theorem budgetGBlocks100_08 :
     sumRange 4 (fun i => fastBlock 100 (i + 8)) = 3306 := budgetGRow100 2 (by decide)
-private theorem budgetGBlocks100_12 :
+theorem budgetGBlocks100_12 :
     sumRange 4 (fun i => fastBlock 100 (i + 12)) = 2187 := budgetGRow100 3 (by decide)
-private theorem budgetGBlocks100_16 :
+theorem budgetGBlocks100_16 :
     sumRange 4 (fun i => fastBlock 100 (i + 16)) = 1352 := budgetGRow100 4 (by decide)
-private theorem budgetGBlocks100_20 :
+theorem budgetGBlocks100_20 :
     sumRange 4 (fun i => fastBlock 100 (i + 20)) = 762 := budgetGRow100 5 (by decide)
-private theorem budgetGBlocks100_24 :
+theorem budgetGBlocks100_24 :
     sumRange 4 (fun i => fastBlock 100 (i + 24)) = 375 := budgetGRow100 6 (by decide)
-private theorem budgetGBlocks100_28 :
+theorem budgetGBlocks100_28 :
     sumRange 4 (fun i => fastBlock 100 (i + 28)) = 148 := budgetGRow100 7 (by decide)
-private theorem budgetGBlocks100_32 :
+theorem budgetGBlocks100_32 :
     sumRange 4 (fun i => fastBlock 100 (i + 32)) = 38 := budgetGRow100 8 (by decide)
-private theorem budgetGBlocks100_36 :
+theorem budgetGBlocks100_36 :
     sumRange 2 (fun i => fastBlock 100 (i + 36)) = 3 := budgetGRow100 9 (by decide)
-private theorem grade100 : fastGrade 100 = 14045 := by
+theorem grade100 : fastGrade 100 = 14045 := by
   have h8 := budgetGRangeJoin (fastBlock 100) 4 4 budgetGBlocks100_00 budgetGBlocks100_04
   have h12 := budgetGRangeJoin (fastBlock 100) 8 4 h8 budgetGBlocks100_08
   have h16 := budgetGRangeJoin (fastBlock 100) 12 4 h12 budgetGBlocks100_12
@@ -1282,29 +1282,29 @@ private theorem grade100 : fastGrade 100 = 14045 := by
   have h38 := budgetGRangeJoin (fastBlock 100) 36 2 h36 budgetGBlocks100_36
   exact budgetGRangeJoin (fastBlock 100) 38 100 h38
     (budgetGZeroTail 100 38 100 (by decide))
-private theorem budgetGRow101 : ∀ g < 10, budgetGGroupFact 101 0x401801bc1310a2049f1e84bb63b88733 g :=
+theorem budgetGRow101 : ∀ g < 10, budgetGGroupFact 101 0x401801bc1310a2049f1e84bb63b88733 g :=
   budgetGReadGroups 101 0x401801bc1310a2049f1e84bb63b88733 (by decide) (by decide) (by decide +kernel)
-private theorem budgetGBlocks101_00 :
+theorem budgetGBlocks101_00 :
     sumRange 4 (fastBlock 101) = 1843 := budgetGRow101 0 (by decide)
-private theorem budgetGBlocks101_04 :
+theorem budgetGBlocks101_04 :
     sumRange 4 (fun i => fastBlock 101 (i + 4)) = 3810 := budgetGRow101 1 (by decide)
-private theorem budgetGBlocks101_08 :
+theorem budgetGBlocks101_08 :
     sumRange 4 (fun i => fastBlock 101 (i + 8)) = 2998 := budgetGRow101 2 (by decide)
-private theorem budgetGBlocks101_12 :
+theorem budgetGBlocks101_12 :
     sumRange 4 (fun i => fastBlock 101 (i + 12)) = 1953 := budgetGRow101 3 (by decide)
-private theorem budgetGBlocks101_16 :
+theorem budgetGBlocks101_16 :
     sumRange 4 (fun i => fastBlock 101 (i + 16)) = 1183 := budgetGRow101 4 (by decide)
-private theorem budgetGBlocks101_20 :
+theorem budgetGBlocks101_20 :
     sumRange 4 (fun i => fastBlock 101 (i + 20)) = 648 := budgetGRow101 5 (by decide)
-private theorem budgetGBlocks101_24 :
+theorem budgetGBlocks101_24 :
     sumRange 4 (fun i => fastBlock 101 (i + 24)) = 305 := budgetGRow101 6 (by decide)
-private theorem budgetGBlocks101_28 :
+theorem budgetGBlocks101_28 :
     sumRange 4 (fun i => fastBlock 101 (i + 28)) = 111 := budgetGRow101 7 (by decide)
-private theorem budgetGBlocks101_32 :
+theorem budgetGBlocks101_32 :
     sumRange 4 (fun i => fastBlock 101 (i + 32)) = 24 := budgetGRow101 8 (by decide)
-private theorem budgetGBlocks101_36 :
+theorem budgetGBlocks101_36 :
     sumRange 1 (fun i => fastBlock 101 (i + 36)) = 1 := budgetGRow101 9 (by decide)
-private theorem grade101 : fastGrade 101 = 12876 := by
+theorem grade101 : fastGrade 101 = 12876 := by
   have h8 := budgetGRangeJoin (fastBlock 101) 4 4 budgetGBlocks101_00 budgetGBlocks101_04
   have h12 := budgetGRangeJoin (fastBlock 101) 8 4 h8 budgetGBlocks101_08
   have h16 := budgetGRangeJoin (fastBlock 101) 12 4 h12 budgetGBlocks101_12
@@ -1316,27 +1316,27 @@ private theorem grade101 : fastGrade 101 = 12876 := by
   have h37 := budgetGRangeJoin (fastBlock 101) 36 1 h36 budgetGBlocks101_36
   exact budgetGRangeJoin (fastBlock 101) 37 101 h37
     (budgetGZeroTail 101 37 101 (by decide))
-private theorem budgetGRow102 : ∀ g < 9, budgetGGroupFact 102 0xe01440f408884051b20a95380c733 g :=
+theorem budgetGRow102 : ∀ g < 9, budgetGGroupFact 102 0xe01440f408884051b20a95380c733 g :=
   budgetGReadGroups 102 0xe01440f408884051b20a95380c733 (by decide) (by decide) (by decide +kernel)
-private theorem budgetGBlocks102_00 :
+theorem budgetGBlocks102_00 :
     sumRange 4 (fastBlock 102) = 1843 := budgetGRow102 0 (by decide)
-private theorem budgetGBlocks102_04 :
+theorem budgetGBlocks102_04 :
     sumRange 4 (fun i => fastBlock 102 (i + 4)) = 3587 := budgetGRow102 1 (by decide)
-private theorem budgetGBlocks102_08 :
+theorem budgetGBlocks102_08 :
     sumRange 4 (fun i => fastBlock 102 (i + 8)) = 2709 := budgetGRow102 2 (by decide)
-private theorem budgetGBlocks102_12 :
+theorem budgetGBlocks102_12 :
     sumRange 4 (fun i => fastBlock 102 (i + 12)) = 1736 := budgetGRow102 3 (by decide)
-private theorem budgetGBlocks102_16 :
+theorem budgetGBlocks102_16 :
     sumRange 4 (fun i => fastBlock 102 (i + 16)) = 1029 := budgetGRow102 4 (by decide)
-private theorem budgetGBlocks102_20 :
+theorem budgetGBlocks102_20 :
     sumRange 4 (fun i => fastBlock 102 (i + 20)) = 546 := budgetGRow102 5 (by decide)
-private theorem budgetGBlocks102_24 :
+theorem budgetGBlocks102_24 :
     sumRange 4 (fun i => fastBlock 102 (i + 24)) = 244 := budgetGRow102 6 (by decide)
-private theorem budgetGBlocks102_28 :
+theorem budgetGBlocks102_28 :
     sumRange 4 (fun i => fastBlock 102 (i + 28)) = 81 := budgetGRow102 7 (by decide)
-private theorem budgetGBlocks102_32 :
+theorem budgetGBlocks102_32 :
     sumRange 4 (fun i => fastBlock 102 (i + 32)) = 14 := budgetGRow102 8 (by decide)
-private theorem grade102 : fastGrade 102 = 11789 := by
+theorem grade102 : fastGrade 102 = 11789 := by
   have h8 := budgetGRangeJoin (fastBlock 102) 4 4 budgetGBlocks102_00 budgetGBlocks102_04
   have h12 := budgetGRangeJoin (fastBlock 102) 8 4 h8 budgetGBlocks102_08
   have h16 := budgetGRangeJoin (fastBlock 102) 12 4 h12 budgetGBlocks102_12
@@ -1347,27 +1347,27 @@ private theorem grade102 : fastGrade 102 = 11789 := by
   have h36 := budgetGRangeJoin (fastBlock 102) 32 4 h32 budgetGBlocks102_32
   exact budgetGRangeJoin (fastBlock 102) 36 102 h36
     (budgetGZeroTail 102 36 102 (by decide))
-private theorem budgetGRow103 : ∀ g < 9, budgetGGroupFact 103 0x700e40c0071c379180098733ec733 g :=
+theorem budgetGRow103 : ∀ g < 9, budgetGGroupFact 103 0x700e40c0071c379180098733ec733 g :=
   budgetGReadGroups 103 0x700e40c0071c379180098733ec733 (by decide) (by decide) (by decide +kernel)
-private theorem budgetGBlocks103_00 :
+theorem budgetGBlocks103_00 :
     sumRange 4 (fastBlock 103) = 1843 := budgetGRow103 0 (by decide)
-private theorem budgetGBlocks103_04 :
+theorem budgetGBlocks103_04 :
     sumRange 4 (fun i => fastBlock 103 (i + 4)) = 3323 := budgetGRow103 1 (by decide)
-private theorem budgetGBlocks103_08 :
+theorem budgetGBlocks103_08 :
     sumRange 4 (fun i => fastBlock 103 (i + 8)) = 2439 := budgetGRow103 2 (by decide)
-private theorem budgetGBlocks103_12 :
+theorem budgetGBlocks103_12 :
     sumRange 4 (fun i => fastBlock 103 (i + 12)) = 1536 := budgetGRow103 3 (by decide)
-private theorem budgetGBlocks103_16 :
+theorem budgetGBlocks103_16 :
     sumRange 4 (fun i => fastBlock 103 (i + 16)) = 889 := budgetGRow103 4 (by decide)
-private theorem budgetGBlocks103_20 :
+theorem budgetGBlocks103_20 :
     sumRange 4 (fun i => fastBlock 103 (i + 20)) = 455 := budgetGRow103 5 (by decide)
-private theorem budgetGBlocks103_24 :
+theorem budgetGBlocks103_24 :
     sumRange 4 (fun i => fastBlock 103 (i + 24)) = 192 := budgetGRow103 6 (by decide)
-private theorem budgetGBlocks103_28 :
+theorem budgetGBlocks103_28 :
     sumRange 4 (fun i => fastBlock 103 (i + 28)) = 57 := budgetGRow103 7 (by decide)
-private theorem budgetGBlocks103_32 :
+theorem budgetGBlocks103_32 :
     sumRange 3 (fun i => fastBlock 103 (i + 32)) = 7 := budgetGRow103 8 (by decide)
-private theorem grade103 : fastGrade 103 = 10741 := by
+theorem grade103 : fastGrade 103 = 10741 := by
   have h8 := budgetGRangeJoin (fastBlock 103) 4 4 budgetGBlocks103_00 budgetGBlocks103_04
   have h12 := budgetGRangeJoin (fastBlock 103) 8 4 h8 budgetGBlocks103_08
   have h16 := budgetGRangeJoin (fastBlock 103) 12 4 h12 budgetGBlocks103_12
@@ -1378,27 +1378,27 @@ private theorem grade103 : fastGrade 103 = 10741 := by
   have h35 := budgetGRangeJoin (fastBlock 103) 32 3 h32 budgetGBlocks103_32
   exact budgetGRangeJoin (fastBlock 103) 35 103 h35
     (budgetGZeroTail 103 35 103 (by decide))
-private theorem budgetGRow104 : ∀ g < 9, budgetGGroupFact 104 0x3009809405dc2fa152088b2fc8733 g :=
+theorem budgetGRow104 : ∀ g < 9, budgetGGroupFact 104 0x3009809405dc2fa152088b2fc8733 g :=
   budgetGReadGroups 104 0x3009809405dc2fa152088b2fc8733 (by decide) (by decide) (by decide +kernel)
-private theorem budgetGBlocks104_00 :
+theorem budgetGBlocks104_00 :
     sumRange 4 (fastBlock 104) = 1843 := budgetGRow104 0 (by decide)
-private theorem budgetGBlocks104_04 :
+theorem budgetGBlocks104_04 :
     sumRange 4 (fun i => fastBlock 104 (i + 4)) = 3058 := budgetGRow104 1 (by decide)
-private theorem budgetGBlocks104_08 :
+theorem budgetGBlocks104_08 :
     sumRange 4 (fun i => fastBlock 104 (i + 8)) = 2187 := budgetGRow104 2 (by decide)
-private theorem budgetGBlocks104_12 :
+theorem budgetGBlocks104_12 :
     sumRange 4 (fun i => fastBlock 104 (i + 12)) = 1352 := budgetGRow104 3 (by decide)
-private theorem budgetGBlocks104_16 :
+theorem budgetGBlocks104_16 :
     sumRange 4 (fun i => fastBlock 104 (i + 16)) = 762 := budgetGRow104 4 (by decide)
-private theorem budgetGBlocks104_20 :
+theorem budgetGBlocks104_20 :
     sumRange 4 (fun i => fastBlock 104 (i + 20)) = 375 := budgetGRow104 5 (by decide)
-private theorem budgetGBlocks104_24 :
+theorem budgetGBlocks104_24 :
     sumRange 4 (fun i => fastBlock 104 (i + 24)) = 148 := budgetGRow104 6 (by decide)
-private theorem budgetGBlocks104_28 :
+theorem budgetGBlocks104_28 :
     sumRange 4 (fun i => fastBlock 104 (i + 28)) = 38 := budgetGRow104 7 (by decide)
-private theorem budgetGBlocks104_32 :
+theorem budgetGBlocks104_32 :
     sumRange 2 (fun i => fastBlock 104 (i + 32)) = 3 := budgetGRow104 8 (by decide)
-private theorem grade104 : fastGrade 104 = 9766 := by
+theorem grade104 : fastGrade 104 = 9766 := by
   have h8 := budgetGRangeJoin (fastBlock 104) 4 4 budgetGBlocks104_00 budgetGBlocks104_04
   have h12 := budgetGRangeJoin (fastBlock 104) 8 4 h8 budgetGBlocks104_08
   have h16 := budgetGRangeJoin (fastBlock 104) 12 4 h12 budgetGBlocks104_12
@@ -1409,27 +1409,27 @@ private theorem grade104 : fastGrade 104 = 9766 := by
   have h34 := budgetGRangeJoin (fastBlock 104) 32 2 h32 budgetGBlocks104_32
   exact budgetGRangeJoin (fastBlock 104) 34 104 h34
     (budgetGZeroTail 104 34 104 (by decide))
-private theorem budgetGRow105 : ∀ g < 9, budgetGGroupFact 105 0x1006006f04c4288127c7a12bc4719 g :=
+theorem budgetGRow105 : ∀ g < 9, budgetGGroupFact 105 0x1006006f04c4288127c7a12bc4719 g :=
   budgetGReadGroups 105 0x1006006f04c4288127c7a12bc4719 (by decide) (by decide) (by decide +kernel)
-private theorem budgetGBlocks105_00 :
+theorem budgetGBlocks105_00 :
     sumRange 4 (fastBlock 105) = 1817 := budgetGRow105 0 (by decide)
-private theorem budgetGBlocks105_04 :
+theorem budgetGBlocks105_04 :
     sumRange 4 (fun i => fastBlock 105 (i + 4)) = 2801 := budgetGRow105 1 (by decide)
-private theorem budgetGBlocks105_08 :
+theorem budgetGBlocks105_08 :
     sumRange 4 (fun i => fastBlock 105 (i + 8)) = 1953 := budgetGRow105 2 (by decide)
-private theorem budgetGBlocks105_12 :
+theorem budgetGBlocks105_12 :
     sumRange 4 (fun i => fastBlock 105 (i + 12)) = 1183 := budgetGRow105 3 (by decide)
-private theorem budgetGBlocks105_16 :
+theorem budgetGBlocks105_16 :
     sumRange 4 (fun i => fastBlock 105 (i + 16)) = 648 := budgetGRow105 4 (by decide)
-private theorem budgetGBlocks105_20 :
+theorem budgetGBlocks105_20 :
     sumRange 4 (fun i => fastBlock 105 (i + 20)) = 305 := budgetGRow105 5 (by decide)
-private theorem budgetGBlocks105_24 :
+theorem budgetGBlocks105_24 :
     sumRange 4 (fun i => fastBlock 105 (i + 24)) = 111 := budgetGRow105 6 (by decide)
-private theorem budgetGBlocks105_28 :
+theorem budgetGBlocks105_28 :
     sumRange 4 (fun i => fastBlock 105 (i + 28)) = 24 := budgetGRow105 7 (by decide)
-private theorem budgetGBlocks105_32 :
+theorem budgetGBlocks105_32 :
     sumRange 1 (fun i => fastBlock 105 (i + 32)) = 1 := budgetGRow105 8 (by decide)
-private theorem grade105 : fastGrade 105 = 8843 := by
+theorem grade105 : fastGrade 105 = 8843 := by
   have h8 := budgetGRangeJoin (fastBlock 105) 4 4 budgetGBlocks105_00 budgetGBlocks105_04
   have h12 := budgetGRangeJoin (fastBlock 105) 8 4 h8 budgetGBlocks105_08
   have h16 := budgetGRangeJoin (fastBlock 105) 12 4 h12 budgetGBlocks105_12
@@ -1440,25 +1440,25 @@ private theorem grade105 : fastGrade 105 = 8843 := by
   have h33 := budgetGRangeJoin (fastBlock 105) 32 1 h32 budgetGBlocks105_32
   exact budgetGRangeJoin (fastBlock 105) 33 105 h33
     (budgetGZeroTail 105 33 105 (by decide))
-private theorem budgetGRow106 : ∀ g < 8, budgetGGroupFact 106 0x3805103d022210146c827e86e6 g :=
+theorem budgetGRow106 : ∀ g < 8, budgetGGroupFact 106 0x3805103d022210146c827e86e6 g :=
   budgetGReadGroups 106 0x3805103d022210146c827e86e6 (by decide) (by decide) (by decide +kernel)
-private theorem budgetGBlocks106_00 :
+theorem budgetGBlocks106_00 :
     sumRange 4 (fastBlock 106) = 1766 := budgetGRow106 0 (by decide)
-private theorem budgetGBlocks106_04 :
+theorem budgetGBlocks106_04 :
     sumRange 4 (fun i => fastBlock 106 (i + 4)) = 2554 := budgetGRow106 1 (by decide)
-private theorem budgetGBlocks106_08 :
+theorem budgetGBlocks106_08 :
     sumRange 4 (fun i => fastBlock 106 (i + 8)) = 1736 := budgetGRow106 2 (by decide)
-private theorem budgetGBlocks106_12 :
+theorem budgetGBlocks106_12 :
     sumRange 4 (fun i => fastBlock 106 (i + 12)) = 1029 := budgetGRow106 3 (by decide)
-private theorem budgetGBlocks106_16 :
+theorem budgetGBlocks106_16 :
     sumRange 4 (fun i => fastBlock 106 (i + 16)) = 546 := budgetGRow106 4 (by decide)
-private theorem budgetGBlocks106_20 :
+theorem budgetGBlocks106_20 :
     sumRange 4 (fun i => fastBlock 106 (i + 20)) = 244 := budgetGRow106 5 (by decide)
-private theorem budgetGBlocks106_24 :
+theorem budgetGBlocks106_24 :
     sumRange 4 (fun i => fastBlock 106 (i + 24)) = 81 := budgetGRow106 6 (by decide)
-private theorem budgetGBlocks106_28 :
+theorem budgetGBlocks106_28 :
     sumRange 4 (fun i => fastBlock 106 (i + 28)) = 14 := budgetGRow106 7 (by decide)
-private theorem grade106 : fastGrade 106 = 7970 := by
+theorem grade106 : fastGrade 106 = 7970 := by
   have h8 := budgetGRangeJoin (fastBlock 106) 4 4 budgetGBlocks106_00 budgetGBlocks106_04
   have h12 := budgetGRangeJoin (fastBlock 106) 8 4 h8 budgetGBlocks106_08
   have h16 := budgetGRangeJoin (fastBlock 106) 12 4 h12 budgetGBlocks106_12
@@ -1468,25 +1468,25 @@ private theorem grade106 : fastGrade 106 = 7970 := by
   have h32 := budgetGRangeJoin (fastBlock 106) 28 4 h28 budgetGBlocks106_28
   exact budgetGRangeJoin (fastBlock 106) 32 106 h32
     (budgetGZeroTail 106 32 106 (by decide))
-private theorem budgetGRow107 : ∀ g < 8, budgetGGroupFact 107 0x1c03903001c70de460024386a2 g :=
+theorem budgetGRow107 : ∀ g < 8, budgetGGroupFact 107 0x1c03903001c70de460024386a2 g :=
   budgetGReadGroups 107 0x1c03903001c70de460024386a2 (by decide) (by decide) (by decide +kernel)
-private theorem budgetGBlocks107_00 :
+theorem budgetGBlocks107_00 :
     sumRange 4 (fastBlock 107) = 1698 := budgetGRow107 0 (by decide)
-private theorem budgetGBlocks107_04 :
+theorem budgetGBlocks107_04 :
     sumRange 4 (fun i => fastBlock 107 (i + 4)) = 2318 := budgetGRow107 1 (by decide)
-private theorem budgetGBlocks107_08 :
+theorem budgetGBlocks107_08 :
     sumRange 4 (fun i => fastBlock 107 (i + 8)) = 1536 := budgetGRow107 2 (by decide)
-private theorem budgetGBlocks107_12 :
+theorem budgetGBlocks107_12 :
     sumRange 4 (fun i => fastBlock 107 (i + 12)) = 889 := budgetGRow107 3 (by decide)
-private theorem budgetGBlocks107_16 :
+theorem budgetGBlocks107_16 :
     sumRange 4 (fun i => fastBlock 107 (i + 16)) = 455 := budgetGRow107 4 (by decide)
-private theorem budgetGBlocks107_20 :
+theorem budgetGBlocks107_20 :
     sumRange 4 (fun i => fastBlock 107 (i + 20)) = 192 := budgetGRow107 5 (by decide)
-private theorem budgetGBlocks107_24 :
+theorem budgetGBlocks107_24 :
     sumRange 4 (fun i => fastBlock 107 (i + 24)) = 57 := budgetGRow107 6 (by decide)
-private theorem budgetGBlocks107_28 :
+theorem budgetGBlocks107_28 :
     sumRange 3 (fun i => fastBlock 107 (i + 28)) = 7 := budgetGRow107 7 (by decide)
-private theorem grade107 : fastGrade 107 = 7152 := by
+theorem grade107 : fastGrade 107 = 7152 := by
   have h8 := budgetGRangeJoin (fastBlock 107) 4 4 budgetGBlocks107_00 budgetGBlocks107_04
   have h12 := budgetGRangeJoin (fastBlock 107) 8 4 h8 budgetGBlocks107_08
   have h16 := budgetGRangeJoin (fastBlock 107) 12 4 h12 budgetGBlocks107_12
@@ -1496,25 +1496,25 @@ private theorem grade107 : fastGrade 107 = 7152 := by
   have h31 := budgetGRangeJoin (fastBlock 107) 28 3 h28 budgetGBlocks107_28
   exact budgetGRangeJoin (fastBlock 107) 31 107 h31
     (budgetGZeroTail 107 31 107 (by decide))
-private theorem budgetGRow108 : ∀ g < 8, budgetGGroupFact 108 0xc02602501770be854820b4665 g :=
+theorem budgetGRow108 : ∀ g < 8, budgetGGroupFact 108 0xc02602501770be854820b4665 g :=
   budgetGReadGroups 108 0xc02602501770be854820b4665 (by decide) (by decide) (by decide +kernel)
-private theorem budgetGBlocks108_00 :
+theorem budgetGBlocks108_00 :
     sumRange 4 (fastBlock 108) = 1637 := budgetGRow108 0 (by decide)
-private theorem budgetGBlocks108_04 :
+theorem budgetGBlocks108_04 :
     sumRange 4 (fun i => fastBlock 108 (i + 4)) = 2093 := budgetGRow108 1 (by decide)
-private theorem budgetGBlocks108_08 :
+theorem budgetGBlocks108_08 :
     sumRange 4 (fun i => fastBlock 108 (i + 8)) = 1352 := budgetGRow108 2 (by decide)
-private theorem budgetGBlocks108_12 :
+theorem budgetGBlocks108_12 :
     sumRange 4 (fun i => fastBlock 108 (i + 12)) = 762 := budgetGRow108 3 (by decide)
-private theorem budgetGBlocks108_16 :
+theorem budgetGBlocks108_16 :
     sumRange 4 (fun i => fastBlock 108 (i + 16)) = 375 := budgetGRow108 4 (by decide)
-private theorem budgetGBlocks108_20 :
+theorem budgetGBlocks108_20 :
     sumRange 4 (fun i => fastBlock 108 (i + 20)) = 148 := budgetGRow108 5 (by decide)
-private theorem budgetGBlocks108_24 :
+theorem budgetGBlocks108_24 :
     sumRange 4 (fun i => fastBlock 108 (i + 24)) = 38 := budgetGRow108 6 (by decide)
-private theorem budgetGBlocks108_28 :
+theorem budgetGBlocks108_28 :
     sumRange 2 (fun i => fastBlock 108 (i + 28)) = 3 := budgetGRow108 7 (by decide)
-private theorem grade108 : fastGrade 108 = 6408 := by
+theorem grade108 : fastGrade 108 = 6408 := by
   have h8 := budgetGRangeJoin (fastBlock 108) 4 4 budgetGBlocks108_00 budgetGBlocks108_04
   have h12 := budgetGRangeJoin (fastBlock 108) 8 4 h8 budgetGBlocks108_08
   have h16 := budgetGRangeJoin (fastBlock 108) 12 4 h12 budgetGBlocks108_12
@@ -1524,25 +1524,25 @@ private theorem grade108 : fastGrade 108 = 6408 := by
   have h30 := budgetGRangeJoin (fastBlock 108) 28 2 h28 budgetGBlocks108_28
   exact budgetGRangeJoin (fastBlock 108) 30 108 h30
     (budgetGZeroTail 108 30 108 (by decide))
-private theorem budgetGRow109 : ∀ g < 8, budgetGGroupFact 109 0x401801bc1310a2049f1d68601 g :=
+theorem budgetGRow109 : ∀ g < 8, budgetGGroupFact 109 0x401801bc1310a2049f1d68601 g :=
   budgetGReadGroups 109 0x401801bc1310a2049f1d68601 (by decide) (by decide) (by decide +kernel)
-private theorem budgetGBlocks109_00 :
+theorem budgetGBlocks109_00 :
     sumRange 4 (fastBlock 109) = 1537 := budgetGRow109 0 (by decide)
-private theorem budgetGBlocks109_04 :
+theorem budgetGBlocks109_04 :
     sumRange 4 (fun i => fastBlock 109 (i + 4)) = 1882 := budgetGRow109 1 (by decide)
-private theorem budgetGBlocks109_08 :
+theorem budgetGBlocks109_08 :
     sumRange 4 (fun i => fastBlock 109 (i + 8)) = 1183 := budgetGRow109 2 (by decide)
-private theorem budgetGBlocks109_12 :
+theorem budgetGBlocks109_12 :
     sumRange 4 (fun i => fastBlock 109 (i + 12)) = 648 := budgetGRow109 3 (by decide)
-private theorem budgetGBlocks109_16 :
+theorem budgetGBlocks109_16 :
     sumRange 4 (fun i => fastBlock 109 (i + 16)) = 305 := budgetGRow109 4 (by decide)
-private theorem budgetGBlocks109_20 :
+theorem budgetGBlocks109_20 :
     sumRange 4 (fun i => fastBlock 109 (i + 20)) = 111 := budgetGRow109 5 (by decide)
-private theorem budgetGBlocks109_24 :
+theorem budgetGBlocks109_24 :
     sumRange 4 (fun i => fastBlock 109 (i + 24)) = 24 := budgetGRow109 6 (by decide)
-private theorem budgetGBlocks109_28 :
+theorem budgetGBlocks109_28 :
     sumRange 1 (fun i => fastBlock 109 (i + 28)) = 1 := budgetGRow109 7 (by decide)
-private theorem grade109 : fastGrade 109 = 5691 := by
+theorem grade109 : fastGrade 109 = 5691 := by
   have h8 := budgetGRangeJoin (fastBlock 109) 4 4 budgetGBlocks109_00 budgetGBlocks109_04
   have h12 := budgetGRangeJoin (fastBlock 109) 8 4 h8 budgetGBlocks109_08
   have h16 := budgetGRangeJoin (fastBlock 109) 12 4 h12 budgetGBlocks109_12
@@ -1557,43 +1557,43 @@ private theorem sumStep (f : ℕ → ℕ) (n a b : ℕ)
     sumRange (n + 1) f = a + b :=
   (show sumRange (n + 1) f = sumRange n f + f n from rfl).trans (congrArg₂ Nat.add ha hb)
 private def gradeFrom (i : ℕ) : ℕ := fastGrade (i + 90)
-private theorem prefix90 : sumRange 1 gradeFrom = 28988 :=
+theorem prefix90 : sumRange 1 gradeFrom = 28988 :=
   sumStep gradeFrom 0 0 28988 rfl grade90
-private theorem prefix91 : sumRange 2 gradeFrom = 56188 :=
+theorem prefix91 : sumRange 2 gradeFrom = 56188 :=
   sumStep gradeFrom 1 28988 27200 prefix90 grade91
 private theorem prefix92 : sumRange 3 gradeFrom = 81688 :=
   sumStep gradeFrom 2 56188 25500 prefix91 grade92
-private theorem prefix93 : sumRange 4 gradeFrom = 105523 :=
+theorem prefix93 : sumRange 4 gradeFrom = 105523 :=
   sumStep gradeFrom 3 81688 23835 prefix92 grade93
-private theorem prefix94 : sumRange 5 gradeFrom = 127790 :=
+theorem prefix94 : sumRange 5 gradeFrom = 127790 :=
   sumStep gradeFrom 4 105523 22267 prefix93 grade94
-private theorem prefix95 : sumRange 6 gradeFrom = 148512 :=
+theorem prefix95 : sumRange 6 gradeFrom = 148512 :=
   sumStep gradeFrom 5 127790 20722 prefix94 grade95
-private theorem prefix96 : sumRange 7 gradeFrom = 167792 :=
+theorem prefix96 : sumRange 7 gradeFrom = 167792 :=
   sumStep gradeFrom 6 148512 19280 prefix95 grade96
-private theorem prefix97 : sumRange 8 gradeFrom = 185654 :=
+theorem prefix97 : sumRange 8 gradeFrom = 185654 :=
   sumStep gradeFrom 7 167792 17862 prefix96 grade97
-private theorem prefix98 : sumRange 9 gradeFrom = 202195 :=
+theorem prefix98 : sumRange 9 gradeFrom = 202195 :=
   sumStep gradeFrom 8 185654 16541 prefix97 grade98
-private theorem prefix99 : sumRange 10 gradeFrom = 217443 :=
+theorem prefix99 : sumRange 10 gradeFrom = 217443 :=
   sumStep gradeFrom 9 202195 15248 prefix98 grade99
-private theorem prefix100 : sumRange 11 gradeFrom = 231488 :=
+theorem prefix100 : sumRange 11 gradeFrom = 231488 :=
   sumStep gradeFrom 10 217443 14045 prefix99 grade100
-private theorem prefix101 : sumRange 12 gradeFrom = 244364 :=
+theorem prefix101 : sumRange 12 gradeFrom = 244364 :=
   sumStep gradeFrom 11 231488 12876 prefix100 grade101
-private theorem prefix102 : sumRange 13 gradeFrom = 256153 :=
+theorem prefix102 : sumRange 13 gradeFrom = 256153 :=
   sumStep gradeFrom 12 244364 11789 prefix101 grade102
-private theorem prefix103 : sumRange 14 gradeFrom = 266894 :=
+theorem prefix103 : sumRange 14 gradeFrom = 266894 :=
   sumStep gradeFrom 13 256153 10741 prefix102 grade103
-private theorem prefix104 : sumRange 15 gradeFrom = 276660 :=
+theorem prefix104 : sumRange 15 gradeFrom = 276660 :=
   sumStep gradeFrom 14 266894 9766 prefix103 grade104
-private theorem prefix105 : sumRange 16 gradeFrom = 285503 :=
+theorem prefix105 : sumRange 16 gradeFrom = 285503 :=
   sumStep gradeFrom 15 276660 8843 prefix104 grade105
-private theorem prefix106 : sumRange 17 gradeFrom = 293473 :=
+theorem prefix106 : sumRange 17 gradeFrom = 293473 :=
   sumStep gradeFrom 16 285503 7970 prefix105 grade106
-private theorem prefix107 : sumRange 18 gradeFrom = 300625 :=
+theorem prefix107 : sumRange 18 gradeFrom = 300625 :=
   sumStep gradeFrom 17 293473 7152 prefix106 grade107
-private theorem prefix108 : sumRange 19 gradeFrom = 307033 :=
+theorem prefix108 : sumRange 19 gradeFrom = 307033 :=
   sumStep gradeFrom 18 300625 6408 prefix107 grade108
 theorem budgetG : sumRange 20 (fun i => fastGrade (i + 90)) = 312724 :=
   sumStep gradeFrom 19 307033 5691 prefix108 grade109
@@ -1624,20 +1624,20 @@ private def exponents (a b c f : ℕ) : Fin 4 →₀ ℕ :=
   Finsupp.equivFunOnFinite.symm ![a, b, c, f]
 @[simp] private theorem exponents_apply (a b c f : ℕ) (j : Fin 4) :
     exponents a b c f j = ![a, b, c, f] j := by simp [exponents]
-private theorem exponents_coords (m : Fin 4 →₀ ℕ) :
+theorem exponents_coords (m : Fin 4 →₀ ℕ) :
     exponents (m 0) (m 1) (m 2) (m 3) = m := by
   ext i
   fin_cases i <;> simp
-private theorem interval_iff (lo hi : ℤ) (j : ℕ) :
+theorem interval_iff (lo hi : ℤ) (j : ℕ) :
     j < intervalSize lo hi ↔ lo + (j : ℤ) ≤ hi := by
   unfold intervalSize
   omega
-private abbrev BandSlots (d : ℕ) (lo hi : ℤ) (top : ℕ) :=
+abbrev BandSlots (d : ℕ) (lo hi : ℤ) (top : ℕ) :=
   Σ f : Fin (min d top + 1),
     Σ c : Fin (min (d - f.val) ((hi - 3 * f.val) / 2).toNat + 1),
       Fin (intervalSize (max 0 (lo - 2 * c.val - 3 * f.val))
         (min ((d : ℤ) - f.val - c.val) (hi - 2 * c.val - 3 * f.val)))
-private def bandEncoding (d : ℕ) (lo hi : ℤ) (top : ℕ) (p : BandSlots d lo hi top) :
+def bandEncoding (d : ℕ) (lo hi : ℤ) (top : ℕ) (p : BandSlots d lo hi top) :
     {m : Fin 4 →₀ ℕ // BandExponent d lo hi top m} := by
   obtain ⟨f, c, j⟩ := p
   let lower : ℤ := max 0 (lo - 2 * c.val - 3 * f.val)
@@ -1657,7 +1657,7 @@ private def bandEncoding (d : ℕ) (lo hi : ℤ) (top : ℕ) (p : BandSlots d lo
   dsimp only [upper] at hj
   change lo - 2 * c.val - 3 * f.val ≤ lower at hlow
   omega
-private theorem bandEncoding_bijective (d : ℕ) (lo hi : ℤ) (top : ℕ) :
+theorem bandEncoding_bijective (d : ℕ) (lo hi : ℤ) (top : ℕ) :
     Function.Bijective (bandEncoding d lo hi top) := by
   constructor
   · rintro ⟨⟨f, hf⟩, ⟨c, hc⟩, ⟨j, hj⟩⟩ ⟨⟨f', hf'⟩, ⟨c', hc'⟩, ⟨j', hj'⟩⟩ h
@@ -1710,11 +1710,11 @@ def TargetExponent (d : ℕ) (lo order : ℤ) (m : Fin 4 →₀ ℕ) : Prop :=
   m.degree = d ∧ lo ≤ (m.weight jetIndex : ℤ) ∧ (m.weight targetOrder : ℤ) < order
 def targetSpace (d : ℕ) (lo order : ℤ) : Submodule Geom Form :=
   restrictSupport Geom {m | TargetExponent d lo order m}
-private abbrev TargetSlots (d : ℕ) (lo order : ℤ) :=
+abbrev TargetSlots (d : ℕ) (lo order : ℤ) :=
   Σ a : Fin (d + 1), Σ f : Fin (d - a.val + 1),
     Fin (intervalSize (max 0 (lo - d + a.val - 2 * f.val))
       (min ((d : ℤ) - a.val - f.val) (order - 1 - 3 * a.val - 2 * f.val)))
-private def targetEncoding (d : ℕ) (lo order : ℤ) (p : TargetSlots d lo order) :
+def targetEncoding (d : ℕ) (lo order : ℤ) (p : TargetSlots d lo order) :
     {m : Fin 4 →₀ ℕ // TargetExponent d lo order m} := by
   obtain ⟨a, f, j⟩ := p
   let lower : ℤ := max 0 (lo - d + a.val - 2 * f.val)
@@ -1733,7 +1733,7 @@ private def targetEncoding (d : ℕ) (lo order : ℤ) (p : TargetSlots d lo orde
   dsimp only [upper] at hj
   change lo - d + a.val - 2 * f.val ≤ lower at hlow
   omega
-private theorem targetEncoding_bijective (d : ℕ) (lo order : ℤ) :
+theorem targetEncoding_bijective (d : ℕ) (lo order : ℤ) :
     Function.Bijective (targetEncoding d lo order) := by
   constructor
   · rintro ⟨⟨a, ha⟩, ⟨f, hf⟩, ⟨j, hj⟩⟩ ⟨⟨a', ha'⟩, ⟨f', hf'⟩, ⟨j', hj'⟩⟩ h
@@ -1817,7 +1817,7 @@ theorem backShift_index_order {Q : Form} {n : ℕ}
     change valueForm ∈ restrictWeightedOrder jetIndex 0
     simp
   · exact X_mem_restrictWeightedOrder _ _ le_rfl
-private theorem coefficient_of_filter {p : (Fin 4 →₀ ℕ) → Prop} [DecidablePred p]
+theorem coefficient_of_filter {p : (Fin 4 →₀ ℕ) → Prop} [DecidablePred p]
     {Q : Form} {e : Fin 4 →₀ ℕ} (h : e ∈ (filterSupport p Q).support) :
     p e ∧ e ∈ Q.support := by
   have hne := MvPolynomial.mem_support_iff.mp h
@@ -1952,13 +1952,13 @@ private theorem monomial_band (a b c f : ℕ) {d top : ℕ} {lo hi : ℤ}
   rw [monomial_eq, Finsupp.prod_fintype _ _ (fun _ => pow_zero _), Fin.prod_univ_four,
     MvPolynomial.C_1, one_mul] at hm
   simpa [hval] using hm
-private theorem x₀_band : x₀ ∈ bandSpace 1 0 0 0 := by
+theorem x₀_band : x₀ ∈ bandSpace 1 0 0 0 := by
   simpa using monomial_band 1 0 0 0 (d := 1) (lo := 0) (hi := 0) (top := 0)
     (by decide) (by decide) (by decide) (by decide)
-private theorem x₂_band : x₂ ∈ bandSpace 1 2 2 0 := by
+theorem x₂_band : x₂ ∈ bandSpace 1 2 2 0 := by
   simpa using monomial_band 0 0 1 0 (d := 1) (lo := 2) (hi := 2) (top := 0)
     (by decide) (by decide) (by decide) (by decide)
-private theorem quad_band : quad ∈ bandSpace 2 1 2 0 := by
+theorem quad_band : quad ∈ bandSpace 2 1 2 0 := by
   have hm (a b c : ℕ) (h : a + b + c = 2) (hl : 1 ≤ b + 2 * c) (hh : b + 2 * c ≤ 2) :
       x₀ ^ a * x₁ ^ b * x₂ ^ c ∈ bandSpace 2 1 2 0 := by
     simpa using monomial_band a b c 0 (d := 2) (lo := 1) (hi := 2) (top := 0)
@@ -1967,7 +1967,7 @@ private theorem quad_band : quad ∈ bandSpace 2 1 2 0 := by
     (sub_mem (by simpa using hm 1 1 0 (by decide) (by decide) (by decide))
       (by simpa using hm 0 2 0 (by decide) (by decide) (by decide)))
     (by simpa using hm 1 0 1 (by decide) (by decide) (by decide))
-private theorem cubic_band : cubic ∈ bandSpace 3 2 3 1 := by
+theorem cubic_band : cubic ∈ bandSpace 3 2 3 1 := by
   have hm (a b c f : ℕ) (h : a + b + c + f = 3) (hl : 2 ≤ b + 2*c + 3*f)
       (hh : b + 2*c + 3*f ≤ 3) (hf : f ≤ 1) :
       x₀ ^ a * x₁ ^ b * x₂ ^ c * x₃ ^ f ∈ bandSpace 3 2 3 1 :=
@@ -2007,13 +2007,13 @@ theorem flagFactor_mem_band (v : FactorPowers) :
     simp [FactorPowers.maxTop]
   rw [hd, hl, hh, ht] at h
   exact h
-private def evaluateAtJetOne : Form →ₐ[Geom] Geom :=
+def evaluateAtJetOne : Form →ₐ[Geom] Geom :=
   MvPolynomial.aeval (fun j : Fin 4 => if j = 1 then 1 else 0)
-private theorem quad_ne_zero : quad ≠ 0 := by
+theorem quad_ne_zero : quad ≠ 0 := by
   intro h
   have he := congrArg evaluateAtJetOne h
   simp [evaluateAtJetOne] at he
-private theorem cubic_ne_zero : cubic ≠ 0 := by
+theorem cubic_ne_zero : cubic ≠ 0 := by
   intro h
   have he := congrArg evaluateAtJetOne h
   simp [evaluateAtJetOne] at he
@@ -2023,7 +2023,7 @@ theorem flagFactor_ne_zero (v : FactorPowers) : flagFactor v ≠ 0 :=
 private theorem capX (i : Fin 4) :
     MvPolynomial.X (R := Geom) i ∈ restrictWeightedOrder targetOrder (targetOrder i) :=
   X_mem_restrictWeightedOrder _ _ le_rfl
-private theorem shift_quad_order : backShift quad ∈ restrictWeightedOrder targetOrder 2 := by
+theorem shift_quad_order : backShift quad ∈ restrictWeightedOrder targetOrder 2 := by
   have h : backShift quad = x₁ * (x₀ + x₃) + ((x₀ + x₃) - x₂) * x₂ := by
     simp only [map_add, map_sub, map_mul, backShift_X_zero, backShift_X_of_ne 1 (by decide),
       backShift_X_of_ne 2 (by decide), pow_two]
@@ -2036,7 +2036,7 @@ private theorem shift_quad_order : backShift quad ∈ restrictWeightedOrder targ
     sub_mem (restrictWeightedOrder_anti _ (by decide) ha) (capX 2)
   exact add_mem (mul_mem_restrictWeightedOrder (capX 1) ha)
     (mul_mem_restrictWeightedOrder hb (capX 2))
-private theorem shift_cubic_order : backShift cubic ∈ restrictWeightedOrder targetOrder 3 := by
+theorem shift_cubic_order : backShift cubic ∈ restrictWeightedOrder targetOrder 3 := by
   let U := x₀ + x₃ - x₂
   have h : backShift cubic = -(x₁ ^ 2 * x₀) + 2 * (x₁ * U * x₃) + U ^ 2 * (x₃ + x₂) := by
     simp only [map_add, map_sub, map_mul, map_pow, map_ofNat, backShift_X_zero,
@@ -2191,17 +2191,17 @@ open K1_13 MvPolynomial
 open scoped BigOperators
 noncomputable section
 set_option maxHeartbeats 1600000
-private theorem coeff_projectJet (j : Fin 4) (k : ℕ) (P : Form) (e : Fin 4 →₀ ℕ) :
+theorem coeff_projectJet (j : Fin 4) (k : ℕ) (P : Form) (e : Fin 4 →₀ ℕ) :
     (projectJet j k P).coeff e = if e j = k then P.coeff e else 0 :=
   coeff_filterSupport _ _ _
-private theorem support_projectJet {j : Fin 4} {k : ℕ} {P : Form} {e : Fin 4 →₀ ℕ}
+theorem support_projectJet {j : Fin 4} {k : ℕ} {P : Form} {e : Fin 4 →₀ ℕ}
     (he : e ∈ (projectJet j k P).support) : e j = k ∧ e ∈ P.support := by
   have hc := MvPolynomial.mem_support_iff.mp he
   rw [coeff_projectJet] at hc
   by_cases h : e j = k
   · simpa [h, MvPolynomial.mem_support_iff] using hc
   · simp [h] at hc
-private theorem rank_le_projected_sum {V : Type*} [AddCommGroup V] [Module Geom V]
+theorem rank_le_projected_sum {V : Type*} [AddCommGroup V] [Module Geom V]
     (j : Fin 4) (n : ℕ) (φ : V →ₗ[Geom] Form)
     (hb : ∀ v e, e ∈ (φ v).support → e j < n) :
     Module.finrank Geom (LinearMap.range φ) ≤
@@ -2241,7 +2241,7 @@ private theorem rank_le_projected_sum {V : Type*} [AddCommGroup V] [Module Geom 
     _ = Module.finrank Geom (LinearMap.range π) := (LinearMap.finrank_range_of_inj hinj).symm
     _ = Module.finrank Geom (LinearMap.range collect) := by rw [hrange]
     _ ≤ _ := LinearMap.finrank_range_pi_le_sum _
-private theorem degree_of_mem_blockMap {s : ℕ} {g : ℤ}
+theorem degree_of_mem_blockMap {s : ℕ} {g : ℤ}
     (Q : bandSpace (residualDegree s) (-g) 48 10) {e : Fin 4 →₀ ℕ}
     (he : e ∈ (blockMap s g Q).support) : e.degree = residualDegree s := by
   have hQ : (Q : Form).IsWeightedHomogeneous (fun _ => (1 : ℕ)) (residualDegree s) := by
@@ -3329,7 +3329,7 @@ private def slices (b j t : ℕ) :=
   Σ z : Fin (2 * t + 1), Σ y : Fin ((2 * j - 3 * z.val) / 2 + 1),
     Σ x : Fin (2 * j - 3 * z.val - 2 * y.val + 1),
       Fin (2 * b - (z.val + y.val + x.val) + 1)
-private def cap_slices (p : Shape) (hp : ChamberBox p) :
+def cap_slices (p : Shape) (hp : ChamberBox p) :
     capExponents p ≃ slices p.b p.j p.t where
   toFun e := by
     have he := (cap_coords p e.val).mp e.property
@@ -3404,7 +3404,7 @@ private theorem slice_count (W C : ℕ) (h : W ≤ C) :
       push_cast
       rw [hW]
       ring
-private theorem cap_count (p : Shape) (hp : ChamberBox p) :
+theorem cap_count (p : Shape) (hp : ChamberBox p) :
     ((capExponents p).ncard : ℚ) =
       ∑ z ∈ range (2 * p.t + 1), slice (2 * p.j - 3 * z) (2 * p.b - z) := by
   classical
@@ -3429,7 +3429,7 @@ private theorem cap_count (p : Shape) (hp : ChamberBox p) :
 private def evenSlice (b j i : ℚ) : ℚ := (j - 3 * i + 1) ^ 2 * (2 * b + 1 - j + i)
 private def oddSlice (b j i : ℚ) : ℚ :=
   (j - 3 * i - 1) * (j - 3 * i) * (2 * b + 3 / 2 - j + i)
-private theorem slice_even (b j i : ℕ) (hi : 3 * i ≤ j) (hb : j ≤ b) :
+theorem slice_even (b j i : ℕ) (hi : 3 * i ≤ j) (hb : j ≤ b) :
     slice (2 * j - 3 * (2 * i)) (2 * b - 2 * i) = evenSlice b j i := by
   have hW : 2 * j - 3 * (2 * i) = 2 * (j - 3 * i) := by omega
   have hC : 2 * i ≤ 2 * b := by omega
@@ -3438,7 +3438,7 @@ private theorem slice_even (b j i : ℕ) (hi : 3 * i ≤ j) (hb : j ≤ b) :
     Nat.mul_mod_right, Nat.cast_zero, add_zero]
   push_cast [Nat.cast_sub hi, Nat.cast_sub hC]
   ring
-private theorem slice_odd (b j i : ℕ) (hi : 3 * i + 3 ≤ j) (hb : j ≤ b) :
+theorem slice_odd (b j i : ℕ) (hi : 3 * i + 3 ≤ j) (hb : j ≤ b) :
     slice (2 * j - 3 * (2 * i + 1)) (2 * b - (2 * i + 1)) = oddSlice b j i := by
   have hW : 3 * (2 * i + 1) ≤ 2 * j := by omega
   have hC : 2 * i + 1 ≤ 2 * b := by omega
@@ -3470,7 +3470,7 @@ private theorem paired_sum (b j : ℚ) (n : ℕ) :
     push_cast
     dsimp [pairedSum, pair, evenSlice, oddSlice]
     ring
-private theorem count_formula (p : Shape) (hp : ChamberBox p) :
+theorem count_formula (p : Shape) (hp : ChamberBox p) :
     ((capExponents p).ncard : ℚ) = pairedSum p.b p.j p.t + evenSlice p.b p.j p.t := by
   rw [cap_count p hp, sum_range_succ, sum_pair, slice_even _ _ _ hp.2.1 hp.1, ← paired_sum]
   congr 1
@@ -3904,7 +3904,7 @@ theorem allowed_coordinate {a : K1_13.Shape × ℕ}
     simp only [m, Finsupp.single_apply]
     split <;> decide
   exact ⟨hold.trans hb, hindex.trans hj, (hsingle _).trans ht, (hsingle _).trans hd⟩
-private theorem constant_box (a : K1_13.Shape × ℕ) (s : GeoField) :
+theorem constant_box (a : K1_13.Shape × ℕ) (s : GeoField) :
     Box5 a.1 a.2 (MvPolynomial.C s) := by
   classical
   apply box5_iff.mpr
@@ -3913,7 +3913,7 @@ private theorem constant_box (a : K1_13.Shape × ℕ) (s : GeoField) :
   · simp [hs] at hm
   · rw [MvPolynomial.support_C, ite_eq_right hs, Finset.mem_singleton] at hm
     exact hm ▸ allowed_zero a
-private theorem coordinate_box {a : K1_13.Shape × ℕ}
+theorem coordinate_box {a : K1_13.Shape × ℕ}
     (h : 1 ≤ a.1.b ∧ 3 ≤ a.1.j ∧ 1 ≤ a.1.t ∧ 1 ≤ a.2)
     (z : Fin 5 → GeoField) (i : Fin 5) :
     Box5 a.1 a.2 (MvPolynomial.X i - MvPolynomial.C (z i)) := by
@@ -4800,17 +4800,17 @@ def coefficientDiff {n : ℕ} (P : Row n) : Row n :=
   split_ifs with hm
   · rfl
   · rw [notMem_support_iff.mp hm, map_zero]
-private theorem coefficientDiff_C {n : ℕ} (c : Geom[X]) :
+theorem coefficientDiff_C {n : ℕ} (c : Geom[X]) :
     coefficientDiff (C c : Row n) = C (Polynomial.derivative c) := by
   classical
   ext m
   rw [coeff_coefficientDiff]
   by_cases hm : 0 = m <;> simp [coeff_C, hm]
-private theorem coefficientDiff_add {n : ℕ} (P Q : Row n) :
+theorem coefficientDiff_add {n : ℕ} (P Q : Row n) :
     coefficientDiff (P + Q) = coefficientDiff P + coefficientDiff Q := by
   ext m
   simp
-private theorem coefficientDiff_mul_X {n : ℕ} (P : Row n) (j : Fin n) :
+theorem coefficientDiff_mul_X {n : ℕ} (P : Row n) (j : Fin n) :
     coefficientDiff (P * MvPolynomial.X j) = coefficientDiff P * MvPolynomial.X j := by
   classical
   ext m
@@ -4956,7 +4956,7 @@ private theorem hilbert_difference (h1 : c1)
     simp only [sliceCount, hB, outside, Set.mem_ofPred_eq]
   rw [eqI, eqK]
   exact h1 slot A B hAB
-private theorem read_cap (h1 : c1) (h2 : c2) (h3 : c3) (h4 : c4) (h5 : c5)
+theorem read_cap (h1 : c1) (h2 : c2) (h3 : c3) (h4 : c4) (h5 : c5)
     {ι : Type} [Fintype ι] [DecidableEq ι] (shapes : ι → Shape) (J : Ideal GeoJets)
     (base : ι) (used : List ι) (hsh : ∀ i, ChamberBox (shapes i))
     (hb : base ∉ used) (hn : used.Nodup) (hd : dimension J ≤ used.length) :
@@ -5072,7 +5072,7 @@ theorem negQuarter_mul_four : negQuarter * (4 : Geom) = -1 := by
     exact (by decide : ¬ 4 % K1.p = 0) (Nat.dvd_iff_mod_eq_zero.mp hd)
   rw [negQuarter, neg_mul, inv_mul_cancel₀ h]
 abbrev q (g : Row 4) : Chart g := constants g (Polynomial.C negQuarter)
-private theorem q_mul_four (g : Row 4) : q g * 4 = -1 := by
+theorem q_mul_four (g : Row 4) : q g * 4 = -1 := by
   let e := (constants g).comp Polynomial.C
   change e negQuarter * 4 = -1
   calc
@@ -5080,7 +5080,7 @@ private theorem q_mul_four (g : Row 4) : q g * 4 = -1 := by
     _ = e (negQuarter * 4) := (map_mul _ _ _).symm
     _ = _ := by rw [negQuarter_mul_four, map_neg, map_one]
 def W (g : Row 4) : Chart g := q g * incl g (partialFlow g) * invS g
-private theorem four_mul_W (g : Row 4) : 4 * W g = -(incl g (partialFlow g) * invS g) := by
+theorem four_mul_W (g : Row 4) : 4 * W g = -(incl g (partialFlow g) * invS g) := by
   unfold W
   calc
     _ = (q g * 4) * (incl g (partialFlow g) * invS g) := by ring
@@ -5102,20 +5102,20 @@ def graphMap (g : Row 4) : Row 5 →+* Chart g :=
     · intro i
       simp
   exact DFunLike.congr_fun h P
-private def oldJet (g : Row 4) : Row 4 →+* Dual (Chart g) :=
+def oldJet (g : Row 4) : Row 4 →+* Dual (Chart g) :=
   eval₂Hom (coefficientJet (constants g))
     (fun i => (incl g (MvPolynomial.X i),
       Fin.lastCases (4 * W g)
         (fun j : Fin 3 => (j.val + 1 : ℕ) * incl g (MvPolynomial.X j.succ)) i))
-private theorem oldJet_C (g : Row 4) (a : Geom[X]) :
+theorem oldJet_C (g : Row 4) (a : Geom[X]) :
     oldJet g (C a) = (constants g a, constants g (Polynomial.derivative a)) :=
   eval₂Hom_C _ _ _
-private theorem oldJet_X (g : Row 4) (i : Fin 4) :
+theorem oldJet_X (g : Row 4) (i : Fin 4) :
     oldJet g (MvPolynomial.X i) = (incl g (MvPolynomial.X i),
       Fin.lastCases (4 * W g)
         (fun j : Fin 3 => (j.val + 1 : ℕ) * incl g (MvPolynomial.X j.succ)) i) :=
   eval₂Hom_X' _ _ _
-private theorem oldJet_fst (g P : Row 4) : (oldJet g P).fst = incl g P := by
+theorem oldJet_fst (g P : Row 4) : (oldJet g P).fst = incl g P := by
   have h : (TrivSqZeroExt.fstHom (Chart g) (Chart g) (Chart g)).toRingHom.comp
       (oldJet g) = incl g := by
     apply MvPolynomial.ringHom_ext
@@ -5134,7 +5134,7 @@ private def localJet (g : Row 4) : Chart g →+* Dual (Chart g) :=
       exact IsLocalization.Away.algebraMap_isUnit _))
 @[simp] private theorem localJet_incl (g P : Row 4) :
     localJet g (incl g P) = oldJet g P := IsLocalization.Away.lift_eq _ _ _
-private theorem localJet_fst (g : Row 4) (a : Chart g) : (localJet g a).fst = a := by
+theorem localJet_fst (g : Row 4) (a : Chart g) : (localJet g a).fst = a := by
   have h : (TrivSqZeroExt.fstHom (Chart g) (Chart g) (Chart g)).toRingHom.comp
       (localJet g) = RingHom.id _ := by
     apply IsLocalization.ringHom_ext (Submonoid.powers (separant g))
@@ -5187,7 +5187,7 @@ theorem D_incl (g P : Row 4) : S g * D g (incl g P) = incl g (flowNumerator g P)
   have hm : S g * (incl g (partialFlow g) * invS g) = incl g (partialFlow g) := by
     rw [← mul_left_comm, S_mul_invS, mul_one]
   linear_combination -incl g (separant P) * hm
-private theorem D_graphMap_X (g : Row 4) (i : Fin 4) :
+theorem D_graphMap_X (g : Row 4) (i : Fin 4) :
     D g (graphMap g (MvPolynomial.X i.castSucc)) = (i.val + 1 : ℕ) * graphMap g (MvPolynomial.X i.succ) := by
   refine Fin.lastCases ?_ (fun j => ?_) i
   · change D g (graphMap g (MvPolynomial.X (Fin.last 3).castSucc)) =
@@ -5207,7 +5207,7 @@ theorem D_graphMap (g : Row 4) (P : Row 5) :
     ∑ i, D g (graphMap g (MvPolynomial.X i)) * graphMap g (pderiv i P) at h
   rw [h, Fin.sum_univ_castSucc, graphMap_X_last, ← add_assoc]
   simp only [D_graphMap_X, fixedFlow, map_add, map_sum, map_mul, map_natCast]
-private theorem graph_zero (g : Row 4) : graphMap g (rawGraph g) = 0 := by
+theorem graph_zero (g : Row 4) : graphMap g (rawGraph g) = 0 := by
   rw [rawGraph, map_add, map_mul, map_mul, graphMap_lift, graphMap_lift, graphMap_X_last,
     graphMap_C, map_ofNat]
   change incl g (partialFlow g) + 4 * S g * W g = 0
@@ -5220,11 +5220,11 @@ private theorem graph_zero (g : Row 4) : graphMap g (rawGraph g) = 0 := by
   intro hv
   obtain ⟨i, _, hi⟩ := mem_vars_rename Fin.castSucc P hv
   exact Fin.castSucc_ne_last i hi
-private theorem pderiv_graph (g : Row 4) :
+theorem pderiv_graph (g : Row 4) :
     pderiv (Fin.last 4) (rawGraph g) = C (4 : Geom[X]) * lift4 (separant g) := by
   rw [rawGraph, map_add, pderiv_last_lift, zero_add, pderiv_mul, pderiv_C_mul,
     pderiv_last_lift, mul_zero, zero_mul, pderiv_X_self, mul_one, zero_add]
-private theorem D_W (g : Row 4) : S g * D g (W g) = graphMap g (fifthFlow g) := by
+theorem D_W (g : Row 4) : S g * D g (W g) = graphMap g (fifthFlow g) := by
   have h := congrArg (D g) (graph_zero g)
   rw [map_zero, D_graphMap, pderiv_graph, map_mul, graphMap_C, map_ofNat, graphMap_lift] at h
   change graphMap g (fixedFlow (rawGraph g)) + D g (W g) * (4 * S g) = 0 at h
@@ -5271,7 +5271,7 @@ namespace K1_13_6_2_4_2
 noncomputable section
 open K1_13 K1_13_6 K1_13_6_2 K1_13_6_2_4 MvPolynomial
 open scoped BigOperators
-private theorem dim_le_of_integral_injective {R S : Type*} [CommRing R] [CommRing S]
+theorem dim_le_of_integral_injective {R S : Type*} [CommRing R] [CommRing S]
     (f : R →+* S) (hf : f.IsIntegral) (hinj : Function.Injective f) :
     ringKrullDim R ≤ ringKrullDim S := by
   let : Algebra R S := f.toAlgebra
@@ -5292,7 +5292,7 @@ theorem hilbert_degree_le {σ : Type*} [Finite σ] {P : Ideal (MvPolynomial σ G
   rw [natDegree_affineHilbertPolynomial_eq_card_of_finite_of_injective g hfin hinj, Nat.card_fin]
   have hdim := (dim_le_of_integral_injective g.toRingHom hfin.to_isIntegral hinj).trans hd
   simpa [MvPolynomial.ringKrullDim_of_isNoetherianRing_of_finite, ringKrullDim_eq_zero_of_field] using hdim
-private theorem zero_in_box (a : Shape × ℕ) : (0 : Exponent) ∈ latticePoints a := by
+theorem zero_in_box (a : Shape × ℕ) : (0 : Exponent) ∈ latticePoints a := by
   change Allowed (a.1.scale 2, 2 * a.2) 0
   simp [Allowed]
 theorem diagonal_surjective {B : Boxes} (hB : Admissible B) {t : Fin 5 → ℕ}
@@ -5370,7 +5370,7 @@ private lemma polarize_congr {H G : Shape → ℚ} (h : ∀ p, ChamberBox p → 
     have hq := hboxes q List.mem_cons_self
     have hr := fun r hr => hboxes r (List.mem_cons_of_mem _ hr)
     simp only [polarize, ih hr (chamber_plus hp hq), ih hr hp]
-private lemma polarize_sum {ι : Type*} (S : Finset ι) (w : ι → ℚ) (H : ι → Shape → ℚ)
+lemma polarize_sum {ι : Type*} (S : Finset ι) (w : ι → ℚ) (H : ι → Shape → ℚ)
     (boxes : List Shape) (p : Shape) :
     polarize (fun x => ∑ i ∈ S, w i * H i x) boxes p =
       ∑ i ∈ S, w i * polarize (H i) boxes p := by
@@ -5395,7 +5395,7 @@ private lemma cap_dimension (J : Ideal GeoJets) {p : Shape} (hp : ChamberBox p) 
       dimension J :=
   MvPolynomial.natDegree_affineHilbertPolynomial_comap_of_surjective
     (capMap p) (capMap_surjective hp) J
-private lemma mixed_zero_of_lt {J : Ideal GeoJets} {boxes : List Shape}
+lemma mixed_zero_of_lt {J : Ideal GeoJets} {boxes : List Shape}
     (hboxes : ∀ p ∈ boxes, ChamberBox p) (hd : dimension J < boxes.length) :
     mixedDegree J boxes = 0 := by
   have hz (p : Shape) (hp : ChamberBox p) : capCoeff J boxes.length p = 0 :=
@@ -5468,7 +5468,7 @@ private lemma mixed_nonneg (h2 : c2) {P : Ideal GeoJets} (hP : P.IsPrime)
           (by norm_num)
       | cons q boxes =>
         exact h2 P (p :: q :: boxes) hP hboxes heq (by simp)
-private lemma mixed_cycle (h1 : c1) (J : Ideal GeoJets) (boxes : List Shape)
+lemma mixed_cycle (h1 : c1) (J : Ideal GeoJets) (boxes : List Shape)
     (hboxes : ∀ q ∈ boxes, ChamberBox q) (hd : dimension J ≤ boxes.length) :
     mixedDegree J boxes =
       ∑ P ∈ J.minimalPrimesFinset, (localWeight J P : ℚ) * mixedDegree P boxes := by
@@ -5497,7 +5497,7 @@ open scoped BigOperators
 def capPlus (x y : Shape × ℕ) : Shape × ℕ := (x.1.plus y.1, x.2 + y.2)
 def volumeProduct (x : Shape × ℕ) : ℚ := (volume32 x.1 : ℚ) * x.2
 def diagonal (J : Finset (Fin 5)) (i : Fin 5) : ℕ := if i ∈ J then 2 else 1
-private theorem diagonal_sum_insert (w : Fin 5 → ℕ) {i : Fin 5} {J : Finset (Fin 5)}
+theorem diagonal_sum_insert (w : Fin 5 → ℕ) {i : Fin 5} {J : Finset (Fin 5)}
     (hi : i ∉ J) :
     (∑ k, diagonal (insert i J) k * w k) =
       (∑ k, diagonal J k * w k) + w i := by
@@ -5510,7 +5510,7 @@ private theorem diagonal_sum_insert (w : Fin 5 → ℕ) {i : Fin 5} {J : Finset 
         simp [diagonal, hi, two_mul]
       · simp [diagonal, h]
     _ = _ := by simp [Finset.sum_add_distrib]
-private theorem sumCap_insert (B : Boxes) {i : Fin 5} {J : Finset (Fin 5)} (hi : i ∉ J) :
+theorem sumCap_insert (B : Boxes) {i : Fin 5} {J : Finset (Fin 5)} (hi : i ∉ J) :
     sumCap B (diagonal (insert i J)) = capPlus (sumCap B (diagonal J)) (B i) := by
   simp only [sumCap, capPlus, Shape.plus, diagonal_sum_insert _ hi]
 private def alt (B : Boxes) (s : Finset (Fin 5)) (F : Shape × ℕ → ℚ) : ℚ :=
@@ -5545,35 +5545,35 @@ private theorem alt_insert (B : Boxes) {s : Finset (Fin 5)} {i : Fin 5}
     pow_succ, sumCap_insert B (hJ J hJs)]
   simp only [Nat.add_sub_add_right, capDiff]
   ring
-private def signed4 (p q r s : Shape) : ℤ :=
+def signed4 (p q r s : Shape) : ℤ :=
   difference (difference (difference (difference volume32 p) q) r) s ⟨0, 0, 0⟩
 private theorem signed4_le (p q r s : Shape) : (signed4 p q r s : ℚ) ≤ mixed32 p q r s := by
   have h : signed4 p q r s ≤ ((signed4 p q r s).toNat : ℤ) := by omega
   exact_mod_cast h
-private def shapeVolume (x : Shape) : ℚ := (volume32 x : ℚ)
-private def shapeShift (a : Shape) (F : Shape → ℚ) (x : Shape) : ℚ := F (x.plus a)
-private def shapeDiff (a : Shape) (F : Shape → ℚ) (x : Shape) : ℚ := F (x.plus a) - F x
-private theorem shapeDiff_shift (a b : Shape) (F : Shape → ℚ) :
+def shapeVolume (x : Shape) : ℚ := (volume32 x : ℚ)
+def shapeShift (a : Shape) (F : Shape → ℚ) (x : Shape) : ℚ := F (x.plus a)
+def shapeDiff (a : Shape) (F : Shape → ℚ) (x : Shape) : ℚ := F (x.plus a) - F x
+theorem shapeDiff_shift (a b : Shape) (F : Shape → ℚ) :
     shapeDiff b (shapeShift a F) = shapeShift a (shapeDiff b F) := by
   funext x
   have h : (x.plus b).plus a = (x.plus a).plus b := by
     simp [Shape.plus, Nat.add_comm, Nat.add_left_comm]
   simp only [shapeDiff, shapeShift, h]
-private def constantInterval (F : Shape → ℚ) (x : Shape × ℕ) : ℚ := F x.1
-private def linearInterval (F : Shape → ℚ) (x : Shape × ℕ) : ℚ := F x.1 * x.2
-private theorem capDiff_add (a : Shape × ℕ) (F G : Shape × ℕ → ℚ) :
+def constantInterval (F : Shape → ℚ) (x : Shape × ℕ) : ℚ := F x.1
+def linearInterval (F : Shape → ℚ) (x : Shape × ℕ) : ℚ := F x.1 * x.2
+theorem capDiff_add (a : Shape × ℕ) (F G : Shape × ℕ → ℚ) :
     capDiff a (fun x => F x + G x) = fun x => capDiff a F x + capDiff a G x := by
   funext x
   unfold capDiff
   ring
-private theorem capDiff_smul (a : Shape × ℕ) (d : ℚ) (F : Shape × ℕ → ℚ) :
+theorem capDiff_smul (a : Shape × ℕ) (d : ℚ) (F : Shape × ℕ → ℚ) :
     capDiff a (fun x => d * F x) = fun x => d * capDiff a F x := by
   funext x
   unfold capDiff
   ring
-private theorem capDiff_constantInterval (a : Shape) (d : ℕ) (F : Shape → ℚ) :
+theorem capDiff_constantInterval (a : Shape) (d : ℕ) (F : Shape → ℚ) :
     capDiff (a, d) (constantInterval F) = constantInterval (shapeDiff a F) := rfl
-private theorem capDiff_linearInterval (a : Shape) (d : ℕ) (F : Shape → ℚ) :
+theorem capDiff_linearInterval (a : Shape) (d : ℕ) (F : Shape → ℚ) :
     capDiff (a, d) (linearInterval F) =
       fun x => linearInterval (shapeDiff a F) x + (d : ℚ) * constantInterval (shapeShift a F) x := by
   funext x
@@ -5581,7 +5581,7 @@ private theorem capDiff_linearInterval (a : Shape) (d : ℕ) (F : Shape → ℚ)
   ring
 set_option maxHeartbeats 2500000 in
 set_option maxRecDepth 4096 in
-private theorem fourth_difference (p q r s : Shape) :
+theorem fourth_difference (p q r s : Shape) :
     shapeDiff s (shapeDiff r (shapeDiff q (shapeDiff p shapeVolume))) =
       fun _ => (signed4 p q r s : ℚ) := by
   funext x
@@ -5726,13 +5726,13 @@ private theorem gradedIdeal_colon {B : Boxes} {P Q : Ideal GeoJets5} {g : SlotRi
   change z ∈ (gradedIdeal B P).colon {g} ↔ z ∈ gradedIdeal B Q
   rw [Submodule.mem_colon_singleton, smul_eq_mul, mem_gradedIdeal_of_grade hzg,
     mem_gradedIdeal_of_grade hz, map_mul, h]
-private theorem allowed_scaled {a : Shape × ℕ} {m : Exponent} (h : Allowed a m) :
+theorem allowed_scaled {a : Shape × ℕ} {m : Exponent} (h : Allowed a m) :
     m ∈ latticePoints a := by
   obtain ⟨h₁, h₂, h₃, h₄⟩ := h
   change Allowed (a.1.scale 2, 2 * a.2) m
   simp only [Allowed, Shape.scale]
   exact ⟨by omega, by omega, by omega, by omega⟩
-private theorem allowed_add_scaled {a : Shape × ℕ} {m n : Exponent}
+theorem allowed_add_scaled {a : Shape × ℕ} {m n : Exponent}
     (hm : Allowed a m) (hn : Allowed a n) : m + n ∈ latticePoints a := by
   obtain ⟨hm₁, hm₂, hm₃, hm₄⟩ := hm
   obtain ⟨hn₁, hn₂, hn₃, hn₄⟩ := hn
@@ -5837,7 +5837,7 @@ theorem zero_mem_latticePoints (a : Shape × ℕ) : 0 ∈ latticePoints a := by
 theorem zero_mem_diagonalExponents (B : Boxes) (t : Fin 5 → ℕ) :
     0 ∈ diagonalExponents B t :=
   ⟨fun _ _ => 0, fun i _ => zero_mem_latticePoints (B i), by simp⟩
-private theorem nsmul_monomial_preimage {S : Set Exponent} {n : ℕ} {m : Exponent}
+theorem nsmul_monomial_preimage {S : Set Exponent} {n : ℕ} {m : Exponent}
     (hm : m ∈ n • S) :
     ∃ P : MvPolynomial S GeoField,
       P.totalDegree ≤ n ∧ monomialMap GeoField S P = monomial m 1 := by
@@ -5956,7 +5956,7 @@ private theorem le_shift {k : ℕ} (w : Fin k → ℕ) (i : Fin k) (n : ℕ) (j 
   · subst j
     simp [shift]
   · simp [shift, Function.update_of_ne h]
-private theorem diff_congr {k : ℕ} {F G : (Fin k → ℕ) → ℚ} {T : ℕ}
+theorem diff_congr {k : ℕ} {F G : (Fin k → ℕ) → ℚ} {T : ℕ}
     (h : ∀ w, (∀ i, T ≤ w i) → F w = G w)
     (dirs : List (Fin k)) (n : ℕ) (w : Fin k → ℕ) (hw : ∀ i, T ≤ w i) :
     diff F dirs n w = diff G dirs n w := by
@@ -5964,14 +5964,14 @@ private theorem diff_congr {k : ℕ} {F G : (Fin k → ℕ) → ℚ} {T : ℕ}
   | nil => exact h w hw
   | cons i rest ih =>
     rw [diff, diff, ih w hw, ih (shift w i n) (fun j => (hw j).trans (le_shift w i n j))]
-private theorem diff_sum {k r : ℕ} (F : Fin r → (Fin k → ℕ) → ℚ)
+theorem diff_sum {k r : ℕ} (F : Fin r → (Fin k → ℕ) → ℚ)
     (dirs : List (Fin k)) (n : ℕ) (w : Fin k → ℕ) :
     diff (fun v => ∑ a, F a v) dirs n w = ∑ a, diff (F a) dirs n w := by
   induction dirs generalizing w with
   | nil => rfl
   | cons i rest ih =>
     simp only [diff, ih, Finset.sum_sub_distrib]
-private theorem diff_prod {k : ℕ} (f : Fin k → ℕ → ℚ) (dirs : List (Fin k))
+theorem diff_prod {k : ℕ} (f : Fin k → ℕ → ℚ) (dirs : List (Fin k))
     (hd : dirs.Nodup) (n : ℕ) (w : Fin k → ℕ) :
     diff (fun v => ∏ i, f i (v i)) dirs n w =
       ∏ i, if i ∈ dirs then f i (w i + n) - f i (w i) else f i (w i) := by
@@ -6001,7 +6001,7 @@ private theorem diff_prod {k : ℕ} (f : Fin k → ℕ → ℚ) (dirs : List (Fi
       g w i * (∏ j ∈ s, g w j) = h i * (∏ j ∈ s, h j)
     rw [hs, hh, ← sub_mul]
     simp [g, h, shift, hi]
-private theorem standard_diff_nonneg (h : c2) {k m : ℕ}
+theorem standard_diff_nonneg (h : c2) {k m : ℕ}
     (slot : Fin m → Fin k) (bad : Finset (Fin m →₀ ℕ))
     (dirs : List (Fin k)) (hd : dirs.Nodup) :
     ∃ T : ℕ, ∀ n (w : Fin k → ℕ), (∀ i, T ≤ w i) →
@@ -6042,7 +6042,7 @@ private lemma monomial_preimage (S : Set (Fin 4 →₀ ℕ)) (n : ℕ) (e : Fin 
     refine ⟨f * MvPolynomial.X ⟨b, hb⟩, (totalDegree_mul _ _).trans ?_, ?_⟩
     · simpa only [totalDegree_X] using Nat.add_le_add_right hn 1
     · rw [map_mul, hf, monomialMap_X, MvPolynomial.monomial_mul_monomial, mul_one]
-private theorem capPiece_scale (P : Ideal GeoJets) {p : Shape} (hp : ChamberBox p) (n : ℕ) :
+theorem capPiece_scale (P : Ideal GeoJets) {p : Shape} (hp : ChamberBox p) (n : ℕ) :
     Module.finrank GeoField (capPiece P (p.scale n)) = affineHilbertFunction (capIdeal P p) n := by
   let I := capIdeal P p
   let g := Ideal.quotientMapₐ P (capMap p) (le_rfl : I ≤ capIdeal P p)
@@ -6067,7 +6067,7 @@ private theorem capPiece_scale (P : Ideal GeoJets) {p : Shape} (hp : ChamberBox 
         rw [hφ]⟩
   rw [← hmap]
   exact (Submodule.equivMapOfInjective _ hg V).finrank_eq.symm
-private lemma capPiece_mono (P : Ideal GeoJets) {p q : Shape} (h : InBox p q) :
+lemma capPiece_mono (P : Ideal GeoJets) {p q : Shape} (h : InBox p q) :
     Module.finrank GeoField (capPiece P p) ≤ Module.finrank GeoField (capPiece P q) := by
   have := restrictSupport_finite (R := GeoField) (Set.toFinite (capExponents q))
   have : Module.Finite GeoField (capPiece P q) := by unfold capPiece; infer_instance
@@ -6092,7 +6092,7 @@ private lemma sumShape_chamber {k : ℕ} (boxes : Fin k → Shape) (w : Fin k �
   · change 0 < ∑ j, w j * (boxes j).t
     exact (Nat.mul_pos hi (hb i).2.2).trans_le
       (Finset.single_le_sum (fun j _ => Nat.zero_le (w j * (boxes j).t)) (Finset.mem_univ i))
-private lemma sumShape_shift {k : ℕ} (boxes : Fin k → Shape) (w : Fin k → ℕ) (i : Fin k) :
+lemma sumShape_shift {k : ℕ} (boxes : Fin k → Shape) (w : Fin k → ℕ) (i : Fin k) :
     sumShape boxes (shift w i 1) = (sumShape boxes w).plus (boxes i) := by
   have h (a : Fin k → ℕ) :
       (∑ j, shift w i 1 j * a j) = (∑ j, w j * a j) + a i := by
@@ -6106,19 +6106,19 @@ private lemma sumShape_shift {k : ℕ} (boxes : Fin k → Shape) (w : Fin k → 
         · simp [shift, hj]
       _ = _ := by simp [Finset.sum_add_distrib]
   simp only [sumShape, Shape.plus, h]
-private lemma sumShape_ray {k : ℕ} (boxes : Fin k → Shape) (w : Fin k → ℕ) (N T : ℕ) :
+lemma sumShape_ray {k : ℕ} (boxes : Fin k → Shape) (w : Fin k → ℕ) (N T : ℕ) :
     sumShape boxes (fun i => N * w i + T) =
       ((sumShape boxes w).scale N).plus (sumShape boxes (fun _ => T)) := by
   simp only [sumShape, Shape.scale, Shape.plus, Nat.add_mul, Finset.sum_add_distrib,
     Nat.mul_assoc, Finset.mul_sum]
-private lemma cast_ray_shift {k : ℕ} (w : Fin k → ℕ) (i : Fin k) (N T : ℕ) :
+lemma cast_ray_shift {k : ℕ} (w : Fin k → ℕ) (i : Fin k) (N T : ℕ) :
     shift (fun j => N * w j + T) i N = fun j => N * shift w i 1 j + T := by
   funext j
   by_cases h : j = i
   · subst j
     simp [shift, Nat.mul_add, Nat.add_right_comm]
   · simp [shift, Function.update_of_ne h]
-private lemma capPiece_ray_bounds {k : ℕ} (P : Ideal GeoJets) (boxes : Fin k → Shape)
+lemma capPiece_ray_bounds {k : ℕ} (P : Ideal GeoJets) (boxes : Fin k → Shape)
     (w : Fin k → ℕ) (hp : ChamberBox (sumShape boxes w)) (T : ℕ) :
     ∃ C : ℕ, ∀ N,
       affineHilbertFunction (capIdeal P (sumShape boxes w)) N ≤
@@ -6144,7 +6144,7 @@ private lemma capPiece_ray_bounds {k : ℕ} (P : Ideal GeoJets) (boxes : Fin k �
     exact ⟨by simpa [Shape.scale, Shape.plus, Nat.add_mul] using Nat.add_le_add_left hb (N * p.b),
       by simpa [Shape.scale, Shape.plus, Nat.add_mul] using Nat.add_le_add_left hj (N * p.j),
       by simpa [Shape.scale, Shape.plus, Nat.add_mul] using Nat.add_le_add_left ht (N * p.t)⟩
-private theorem diff_bounds {k : ℕ} (P : Ideal GeoJets) (boxes : Fin k → Shape)
+theorem diff_bounds {k : ℕ} (P : Ideal GeoJets) (boxes : Fin k → Shape)
     (hb : ∀ i, ChamberBox (boxes i)) (d T : ℕ) (hd : dimension P ≤ d)
     (dirs : List (Fin k)) (w : Fin k → ℕ) (hw : ∃ i, 0 < w i) :
     ∃ L U : ℚ[X], L.natDegree ≤ d ∧ U.natDegree ≤ d ∧
@@ -6185,7 +6185,7 @@ private theorem diff_bounds {k : ℕ} (P : Ideal GeoJets) (boxes : Fin k → Sha
     · filter_upwards [he₁, he₀] with N a b
       simp only [diff, cast_ray_shift, Polynomial.eval_sub]
       exact ⟨sub_le_sub a.1 b.2, sub_le_sub a.2 b.1⟩
-private lemma diff_polarize {k : ℕ} (boxes : Fin k → Shape) (H : Shape → ℚ)
+lemma diff_polarize {k : ℕ} (boxes : Fin k → Shape) (H : Shape → ℚ)
     (dirs : List (Fin k)) (w : Fin k → ℕ) :
     diff (fun v => H (sumShape boxes v)) dirs 1 w =
       polarize H (dirs.map boxes) (sumShape boxes w) := by
@@ -6301,7 +6301,7 @@ private theorem capExponents_zero : capExponents ⟨0, 0, 0⟩ = 0 := by
     · change m 3 = 0; omega
   · rintro rfl
     simp
-private theorem sum_add_step_mul {ι : Type} [Fintype ι] [DecidableEq ι] (a : ι → ℕ)
+theorem sum_add_step_mul {ι : Type} [Fintype ι] [DecidableEq ι] (a : ι → ℕ)
     (i : ι) (f : ι → ℕ) :
     (∑ k, (a + step i) k * f k) = (∑ k, a k * f k) + f i := by
   simp only [Pi.add_apply, add_mul, Finset.sum_add_distrib]
@@ -6310,15 +6310,15 @@ private theorem sum_add_step_mul {ι : Type} [Fintype ι] [DecidableEq ι] (a : 
   · simp [step]
   · intro k hki
     simp [step, Pi.single_eq_of_ne hki]
-private theorem shapeSum_add_step {ι : Type} [Fintype ι] [DecidableEq ι] (shapes : ι → Shape)
+theorem shapeSum_add_step {ι : Type} [Fintype ι] [DecidableEq ι] (shapes : ι → Shape)
     (a : ι → ℕ) (i : ι) :
     shapeSum shapes (a + step i) = (shapeSum shapes a).plus (shapes i) := by
   simp only [shapeSum, Shape.plus, sum_add_step_mul]
-private theorem exists_nonzero_slot {ι : Type} (a : ι → ℕ) (ha : a ≠ 0) :
+theorem exists_nonzero_slot {ι : Type} (a : ι → ℕ) (ha : a ≠ 0) :
     ∃ i, a i ≠ 0 := by
   by_contra! h
   exact ha (funext h)
-private theorem chamber_shapeSum {ι : Type} [Fintype ι] (shapes : ι → Shape)
+theorem chamber_shapeSum {ι : Type} [Fintype ι] (shapes : ι → Shape)
     (hsh : ∀ i, ChamberBox (shapes i)) (a : ι → ℕ) (ha : a ≠ 0) :
     ChamberBox (shapeSum shapes a) := by
   refine ⟨Finset.sum_le_sum fun i _ => Nat.mul_le_mul_left (a i) (hsh i).1, ?_, ?_⟩
@@ -6380,7 +6380,7 @@ theorem ray_eval (P : MvPolynomial ι ℚ) (u v : ι → ℕ) (n : ℕ) :
     funext i
     simp [φ, Polynomial.aeval_def, mul_comm, add_comm]
   rw [he]
-private theorem prod_top (f : ι → Polynomial ℚ) (e : ι →₀ ℕ)
+theorem prod_top (f : ι → Polynomial ℚ) (e : ι →₀ ℕ)
     (h : ∀ i, (f i).natDegree ≤ 1) (s : Finset ι) :
     (∏ i ∈ s, f i ^ e i).natDegree ≤ ∑ i ∈ s, e i ∧
     (∏ i ∈ s, f i ^ e i).coeff (∑ i ∈ s, e i) = ∏ i ∈ s, (f i).coeff 1 ^ e i := by
@@ -6395,7 +6395,7 @@ private theorem prod_top (f : ι → Polynomial ℚ) (e : ι →₀ ℕ)
     rw [Polynomial.coeff_mul_add_eq_of_natDegree_le hpow ih.1, ih.2]
     rw [show (f i ^ e i).coeff (e i) = (f i).coeff 1 ^ e i by
       simpa only [mul_one] using Polynomial.coeff_pow_of_natDegree_le (m := e i) (h i)]
-private theorem affine_top (f : ι → Polynomial ℚ) (h : ∀ i, (f i).natDegree ≤ 1)
+theorem affine_top (f : ι → Polynomial ℚ) (h : ∀ i, (f i).natDegree ≤ 1)
     (P : MvPolynomial ι ℚ) (d : ℕ) (hd : P.totalDegree ≤ d) :
     (MvPolynomial.aeval f P).coeff d =
       MvPolynomial.eval (fun i => (f i).coeff 1) (homogeneousComponent d P) := by
@@ -6456,11 +6456,11 @@ namespace K1_13_6_2_3_2_4
 noncomputable section
 open K1_13 K1_13_6 K1_13_6_2_3 K1_13_6_2_3_2 MvPolynomial
 open scoped BigOperators
-private theorem weight_mapDomain {α β : Type} (f : α → β) (w : β → Fin 4 →₀ ℕ)
+theorem weight_mapDomain {α β : Type} (f : α → β) (w : β → Fin 4 →₀ ℕ)
     (e : α →₀ ℕ) : Finsupp.weight w (e.mapDomain f) = Finsupp.weight (w ∘ f) e := by
   simp only [Finsupp.weight_apply]
   exact Finsupp.sum_mapDomain_index (fun _ => zero_smul _ _) (fun _ _ _ => add_smul ..)
-private theorem unit_weight (p : Shape) (e : CapVar (fun _ : Unit => p) →₀ ℕ) :
+theorem unit_weight (p : Shape) (e : CapVar (fun _ : Unit => p) →₀ ℕ) :
     Finsupp.weight (step ∘ capSlot (fun _ : Unit => p)) e = fun _ => e.degree := by
   have h : step ∘ capSlot (fun _ : Unit => p) = fun _ _ => (1 : ℕ) := by
     funext v i
@@ -6470,7 +6470,7 @@ private theorem unit_weight (p : Shape) (e : CapVar (fun _ : Unit => p) →₀ �
   rw [h, Finsupp.weight_apply, Finsupp.degree_apply]
   funext i
   simp [Finsupp.sum, Finset.sum_apply]
-private theorem monomialMap_monomial_one (p : Shape) (e : capExponents p →₀ ℕ) :
+theorem monomialMap_monomial_one (p : Shape) (e : capExponents p →₀ ℕ) :
     monomialMap GeoField (capExponents p) (monomial e 1) =
       monomial (Finsupp.weight Subtype.val e) 1 := by
   rw [monomialMap, aeval_monomial, map_one, one_mul, Finsupp.weight_apply]
@@ -6479,7 +6479,7 @@ private theorem monomialMap_monomial_one (p : Shape) (e : capExponents p →₀ 
   change (∏ i ∈ e.support, M (Multiplicative.ofAdd (e i • i.val))) =
     M (Multiplicative.ofAdd (∑ i ∈ e.support, e i • i.val))
   rw [ofAdd_sum, map_prod]
-private theorem image_weight_degreeLE (p : Shape) (n : ℕ) :
+theorem image_weight_degreeLE (p : Shape) (n : ℕ) :
     Finsupp.weight (fun i : capExponents p => i.val) '' {e | e.degree ≤ n} =
       productExponents (fun _ : Unit => p) (fun _ => n) := by
   classical
@@ -6503,7 +6503,7 @@ private theorem image_weight_degreeLE (p : Shape) (n : ℕ) :
     rw [Finsupp.degree_mapDomain]
     rw [unit_weight] at hdegree
     exact (congrFun hdegree ()).le
-private theorem map_restrictTotalDegree (p : Shape) (n : ℕ) :
+theorem map_restrictTotalDegree (p : Shape) (n : ℕ) :
     (restrictTotalDegree (capExponents p) GeoField n).map
       (monomialMap GeoField (capExponents p)).toLinearMap =
       restrictSupport GeoField (productExponents (fun _ : Unit => p) (fun _ => n)) := by
@@ -6738,7 +6738,7 @@ theorem totalDegree_le_of_lines {p : Form} {d : ℕ}
   exact (mem_support_iff.mp ha) hcoeff
 theorem positiveDiagonal_apply (J : Finset (Fin 5)) (j : Fin 5) :
     positiveDiagonal J j = if j ∈ J then 2 else 1 := rfl
-private theorem cube_prod (I : Finset (Fin 5)) (f : Fin 5 → ℚ) :
+theorem cube_prod (I : Finset (Fin 5)) (f : Fin 5 → ℚ) :
     (∑ J ∈ I.powerset, (-1 : ℚ) ^ (I.card - J.card) * ∏ j ∈ J, f j) =
       ∏ j ∈ I, (f j - 1) := by
   classical
@@ -6756,7 +6756,7 @@ private theorem cube_prod (I : Finset (Fin 5)) (f : Fin 5 → ℚ) :
   · intro J hJ
     simp [Finset.sdiff_sdiff_eq_self (Finset.mem_powerset.mp hJ),
       Finset.card_sdiff_of_subset (Finset.mem_powerset.mp hJ)]
-private theorem cube_monomial (I : Finset (Fin 5)) (a : Grade) (r : ℚ) :
+theorem cube_monomial (I : Finset (Fin 5)) (a : Grade) (r : ℚ) :
     (∑ J ∈ I.powerset, (-1 : ℚ) ^ (I.card - J.card) *
       eval (fun j => (positiveDiagonal J j : ℚ)) (monomial a r)) =
       r * ∏ j ∈ I, ((2 : ℚ) ^ a j - 1) := by
@@ -6769,7 +6769,7 @@ private theorem cube_monomial (I : Finset (Fin 5)) (a : Grade) (r : ℚ) :
   simp_rw [he]
   rw [Finset.prod_ite_mem, Finset.univ_inter]
   ring
-private theorem cube_monomial_top (I : Finset (Fin 5)) {a : Grade} (ha : a.degree = I.card)
+theorem cube_monomial_top (I : Finset (Fin 5)) {a : Grade} (ha : a.degree = I.card)
     (r : ℚ) :
     (∑ J ∈ I.powerset, (-1 : ℚ) ^ (I.card - J.card) *
       eval (fun j => (positiveDiagonal J j : ℚ)) (monomial a r)) =
@@ -6909,7 +6909,7 @@ theorem lift_mul_mem_iff {ι : Type} {shapes : ι → Shape} {i : ι} {D : GeoJe
     split_ifs
     · exact (hD _).mpr (h _)
     · exact J.zero_mem
-private theorem mem_cut_iff (J : Ideal GeoJets) (D x : GeoJets) :
+theorem mem_cut_iff (J : Ideal GeoJets) (D x : GeoJets) :
     x ∈ cut J D ↔ ∃ r : GeoJets ⧸ J, Ideal.Quotient.mk J x = Ideal.Quotient.mk J D * r := by
   rw [show cut J D = Ideal.span {D} ⊔ J from sup_comm _ _, Ideal.mem_span_singleton_sup]
   constructor

@@ -23,7 +23,7 @@ abbrev weight (J : Input) (k : ℕ) := 2*nodeVelocity J+muNum J.hi*k
 abbrev rootDegree (J : Input) (v w : ℕ) :=
   2*(J.e*max 1 v*max 1 w+v*(J.e-1)*max 1 w+w*(J.e-1)*max 1 v)
 
-private theorem diagonal_lift {J : Input} {v w k u : ℕ} (hk : 0<k)
+theorem diagonal_lift {J : Input} {v w k u : ℕ} (hk : 0<k)
     (hv : 2*J.hi ≤ k*max 1 v) (hw : 2*J.hi ≤ k*max 1 w) {f : Biform}
     (hf : f ∈ space FX (1+u*(J.e-1)) (u*v+2*J.w) (u*w+2*J.w)) :
     ∃ p : MvPolynomial (exps (J.e-1) (max 1 v) (max 1 w)) FX,
@@ -39,13 +39,13 @@ private theorem diagonal_lift {J : Input} {v w k u : ℕ} (hk : 0<k)
   · rw [Nat.mul_add, Nat.mul_comm (max 1 w) u, Nat.mul_comm (max 1 w) k]
     exact Nat.add_le_add (Nat.mul_le_mul_left _ (le_max_right _ _)) (hhi.trans hw)
 
-private theorem lift_eval {J : Input} {a b c : ℕ} {f : Biform}
+theorem lift_eval {J : Input} {a b c : ℕ} {f : Biform}
     {p : MvPolynomial (exps a b c) FX} (hp : proj FX a b c p = f) (γ : K) :
     aeval (RootSurface.liftPoint a b c J γ) p = Raw.ev J γ f := by
   rw [aeval_monomialPoint,hp]
   rfl
 
-private theorem marked_curve (J : Input) (B : ResidueLift J) {v w k : ℕ} (hk : 0<k)
+theorem marked_curve (J : Input) (B : ResidueLift J) {v w k : ℕ} (hk : 0<k)
     (hv : 2*J.hi ≤ k*max 1 v) (hw : 2*J.hi ≤ k*max 1 w)
     (hf : flatten J.f ∈ space FX J.e v w)
     (hword : FixedWord J.model.word J.marks J.family.scalar (degreeAt J.hi))

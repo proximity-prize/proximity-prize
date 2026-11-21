@@ -14,9 +14,10 @@ open P0_9_8 (symbol_count)
 open private P3_6_8_1.sumBelow P3_6_8_1.sumBelow_eq P3_6_8_1.sumBelow_add
   from ProximityPrize.SubmissionLower.GoldBranch6N8
 
-private theorem mass_eq (r y : Shape) (L : ℕ) (_hj : 0 < r.j+y.j) : availableMass r y L =
+private theorem mass_eq (r y : Shape) (L : ℕ) (hr : r = zeroShape ∨ 0 < r.j)
+    (hj : 0 < r.j+y.j) : availableMass r y L =
     P3_6_8_1.sumBelow (fastLayer r y L) (L + 1650 / (r.j+y.j)) := by
-  exact (P3_6_8_1.sumBelow_eq (fastLayer r y L) _).symm
+  rw [P3_6_8_1.sumBelow_eq, Final50PriceLayer.availableMass_eq_sum hr hj le_rfl]
 
 private def check (f : ℕ → ℕ) (offset length : ℕ) : List ℕ → Bool
   | [] => decide (length = 0)
@@ -24,7 +25,7 @@ private def check (f : ℕ → ℕ) (offset length : ℕ) : List ℕ → Bool
       decide (P3_6_8_1.sumBelow (fun k => f (offset + k)) (min length 12) = v) &&
         check f (offset + min length 12) (length - 12) vs
 
-private theorem check_sum (f : ℕ → ℕ) (offset length : ℕ) (values : List ℕ)
+theorem check_sum (f : ℕ → ℕ) (offset length : ℕ) (values : List ℕ)
     (h : check f offset length values = true) :
     P3_6_8_1.sumBelow f (offset + length) = P3_6_8_1.sumBelow f offset + values.sum := by
   induction values generalizing offset length with
@@ -41,7 +42,7 @@ private theorem check_sum (f : ℕ → ℕ) (offset length : ℕ) (values : List
       _ = P3_6_8_1.sumBelow f (offset + min length 12) + vs.sum := ih _ _ hr
       _ = _ := by rw [P3_6_8_1.sumBelow_add, hv, List.sum_cons, Nat.add_assoc]
 
-private theorem mass_of_checks (f : ℕ → ℕ) (N : ℕ) (values : List ℕ)
+theorem mass_of_checks (f : ℕ → ℕ) (N : ℕ) (values : List ℕ)
     (h : check f 0 N values = true) (hv : values.sum < layerNeed) :
     P3_6_8_1.sumBelow f N < layerNeed := by
   have hs := check_sum f 0 N values h
@@ -49,367 +50,495 @@ private theorem mass_of_checks (f : ℕ → ℕ) (N : ℕ) (values : List ℕ)
     simpa only [Nat.zero_add, P3_6_8_1.sumBelow] using hs
   rwa [hsum]
 
-private theorem m0_0 : availableMass (start .empty) ⟨1,9,0⟩ 2 < layerNeed := by
-  rw [mass_eq (start .empty) ⟨1,9,0⟩ 2 (by decide)]
-  exact mass_of_checks _ 185 [4568938228762, 3763116369948, 3044428803120, 2418920096916, 1881638323464, 1427253641292, 1050058295328, 743966616900, 502515023736, 318862019964, 185788196112, 95696229108, 40610882280, 12179005356, 1669534464, 14065080] (by decide +kernel) (by decide)
-
-private theorem m0_1 : availableMass (start .empty) ⟨1,15,0⟩ 9 < layerNeed := by
-  rw [mass_eq (start .empty) ⟨1,15,0⟩ 9 (by decide)]
-  exact mass_of_checks _ 119 [4826922552889, 3820116248514, 2669151592494, 1764590647194, 1083571583814, 599943325554, 284265547614, 103808677194, 22553893494, 1193287973] (by decide +kernel) (by decide)
-
-private theorem m0_2 : availableMass (start .empty) ⟨1,27,0⟩ 34 < layerNeed := by
-  rw [mass_eq (start .empty) ⟨1,27,0⟩ 34 (by decide)]
-  exact mass_of_checks _ 95 [4881692334132, 4881692334132, 4831459599162, 3261679315212, 1577219396664, 587067999132, 129833340600, 6983229411] (by decide +kernel) (by decide)
-
-private theorem m0_3 : availableMass (start .empty) ⟨2,12,0⟩ 3 < layerNeed := by
-  rw [mass_eq (start .empty) ⟨2,12,0⟩ 3 (by decide)]
-  exact mass_of_checks _ 140 [4535671237641, 3495109692912, 2597751497328, 1863114603504, 1277589891696, 826564951536, 494424082032, 264548291568, 119315297904, 40099528176, 7272118896, 209081376] (by decide +kernel) (by decide)
-
-private theorem m0_4 : availableMass (start .empty) ⟨2,18,0⟩ 10 < layerNeed := by
-  rw [mass_eq (start .empty) ⟨2,18,0⟩ 10 (by decide)]
-  exact mass_of_checks _ 101 [4848879172827, 3743364319365, 2405735665905, 1419591058941, 740654141097, 318601937397, 97064855265, 13626684525, 124970775] (by decide +kernel) (by decide)
-
-private theorem m0_5 : availableMass (start .empty) ⟨2,29,0⟩ 36 < layerNeed := by
-  rw [mass_eq (start .empty) ⟨2,29,0⟩ 36 (by decide)]
-  exact mass_of_checks _ 92 [4881692334132, 4881692334132, 4881692334132, 3530615278224, 1643837087964, 571284260032, 107986821180, 3384383084] (by decide +kernel) (by decide)
-
-private theorem m0_6 : availableMass (start .empty) ⟨3,9,0⟩ 10 < layerNeed := by
-  rw [mass_eq (start .empty) ⟨3,9,0⟩ 10 (by decide)]
-  exact mass_of_checks _ 193 [4866555313648, 4274565471312, 3469991518644, 2771499764184, 2172147095292, 1664854350432, 1242406319172, 897451742184, 622503311244, 409937669232, 251995410132, 140781079032, 68263172124, 26274136704, 6510371172, 532225032, 24238] (by decide +kernel) (by decide)
-
-private theorem m0_7 : availableMass (start .empty) ⟨3,30,0⟩ 37 < layerNeed := by
-  rw [mass_eq (start .empty) ⟨3,30,0⟩ 37 (by decide)]
-  exact mass_of_checks _ 92 [4881692334132, 4881692334132, 4881692334132, 3687339190621, 1686996413986, 567833964394, 99690745522, 2367013108] (by decide +kernel) (by decide)
-
-private theorem m0_8 : availableMass (start .empty) ⟨4,12,0⟩ 22 < layerNeed := by
-  rw [mass_eq (start .empty) ⟨4,12,0⟩ 22 (by decide)]
-  exact mass_of_checks _ 159 [4881692334132, 4860150408740, 4078248937748, 3062964613652, 2229248223764, 1560404633876, 1039308728084, 648405408788, 369709596692, 184806230804, 74850268436, 20566685204, 2250475028, 4628828] (by decide +kernel) (by decide)
-
-private theorem m0_9 : availableMass (start .empty) ⟨4,32,0⟩ 38 < layerNeed := by
-  rw [mass_eq (start .empty) ⟨4,32,0⟩ 38 (by decide)]
-  exact mass_of_checks _ 89 [4881692334132, 4881692334132, 4881692334132, 3813288660586, 1673296577264, 513832219568, 71719531632, 601241862] (by decide +kernel) (by decide)
-
-private theorem m0_10 : availableMass (start .empty) ⟨7,21,0⟩ 32 < layerNeed := by
-  rw [mass_eq (start .empty) ⟨7,21,0⟩ 32 (by decide)]
-  exact mass_of_checks _ 110 [4881692334132, 4881692334132, 4743269261113, 3244800828659, 1840214716331, 910326952211, 361173207659, 94756396019, 9046672619, 5012037] (by decide +kernel) (by decide)
-
-private theorem m0_11 : availableMass (start .empty) ⟨10,30,0⟩ 39 < layerNeed := by
-  rw [mass_eq (start .empty) ⟨10,30,0⟩ 39 (by decide)]
-  exact mass_of_checks _ 94 [4881692334132, 4881692334132, 4881692334132, 4024311291825, 1895284999241, 665813815181, 133509652721, 5477515555] (by decide +kernel) (by decide)
-
-private theorem m0_12 : availableMass (start .empty) ⟨12,36,0⟩ 42 < layerNeed := by
-  rw [mass_eq (start .empty) ⟨12,36,0⟩ 42 (by decide)]
-  exact mass_of_checks _ 87 [4881692334132, 4881692334132, 4881692334132, 4393568516688, 1983731303628, 554313284172, 62315765964, 148290372] (by decide +kernel) (by decide)
-
-private theorem m0_13 : availableMass (start .empty) ⟨14,6,0⟩ 1 < layerNeed := by
-  rw [mass_eq (start .empty) ⟨14,6,0⟩ 1 (by decide)]
-  exact mass_of_checks _ 276 [4533921676766, 3791007916751, 3141731239139, 2579658446999, 2096607881963, 1684800993503, 1336862338931, 1045819583399, 805103499899, 608547969263, 450389980163, 325269629111, 228230120459, 154717766399, 100581986963, 62075310023, 35853371291, 18974914319, 8901790499, 3498959063, 1034487083, 179549471, 8428979] (by decide +kernel) (by decide)
-
-private theorem m0_14 : availableMass (start .empty) ⟨18,6,0⟩ 5 < layerNeed := by
-  rw [mass_eq (start .empty) ⟨18,6,0⟩ 5 (by decide)]
-  exact mass_of_checks _ 280 [4723583907733, 3958963884463, 3233765578675, 2612581360087, 2085002772763, 1641167795839, 1271760843523, 968012765095, 721700844907, 525148802383, 371226792019, 253351403383, 165485661115, 102139024927, 58367389603, 29773084999, 12504888091, 3318028741, 169842118, 0, 0, 0, 0, 0] (by decide +kernel) (by decide)
-
-private theorem m0_15 : availableMass (start .empty) ⟨25,3,0⟩ 1 < layerNeed := by
-  rw [mass_eq (start .empty) ⟨25,3,0⟩ 1 (by decide)]
-  exact mass_of_checks _ 551 [4572717010964, 3891857891345, 3272979155489, 2714490577025, 2212756176113, 1764245788721, 1365535066625, 1013305477409, 704344304465, 435804996491, 211704324347, 58658334055, 4707436387, 10656725, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] (by decide +kernel) (by decide)
-
-private theorem m0_16 : availableMass (start .empty) ⟨32,3,0⟩ 6 < layerNeed := by
-  rw [mass_eq (start .empty) ⟨32,3,0⟩ 6 (by decide)]
-  exact mass_of_checks _ 556 [4769349457218, 4045985379030, 3298406730258, 2627164236270, 2027577476010, 1495103197062, 1025335315650, 614185573814, 269061302512, 51929851668, 1367953532, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] (by decide +kernel) (by decide)
-
-private theorem m0_17 : availableMass (start .empty) ⟨33,6,0⟩ 18 < layerNeed := by
-  rw [mass_eq (start .empty) ⟨33,6,0⟩ 18 (by decide)]
-  exact mass_of_checks _ 293 [4881692334132, 4726497233312, 3781159553572, 2873440552228, 2123781080164, 1513835749348, 1026343083940, 645125520292, 355089944499, 143930988805, 22955636671, 181853441, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] (by decide +kernel) (by decide)
-
-private theorem m0_18 : availableMass (start .empty) ⟨33,9,0⟩ 20 < layerNeed := by
-  rw [mass_eq (start .empty) ⟨33,9,0⟩ 20 (by decide)]
-  exact mass_of_checks _ 203 [4881692334132, 4790087392154, 3742303350174, 2664866241474, 1833683898102, 1208748286842, 753543296142, 435044736114, 223720338534, 93529805948, 22698505600, 621949707, 0, 0, 0, 0, 0] (by decide +kernel) (by decide)
-
-private theorem m0_19 : availableMass (start .empty) ⟨36,18,0⟩ 35 < layerNeed := by
-  rw [mass_eq (start .empty) ⟨36,18,0⟩ 35 (by decide)]
-  exact mass_of_checks _ 126 [4881692334132, 4881692334132, 4867260778230, 3589658624799, 2023925405427, 1035634081383, 462058415739, 167319153711, 42384022659, 5067732087, 55478871] (by decide +kernel) (by decide)
-
-private theorem m0_20 : availableMass (start .empty) ⟨39,33,0⟩ 45 < layerNeed := by
-  rw [mass_eq (start .empty) ⟨39,33,0⟩ 45 (by decide)]
-  exact mass_of_checks _ 95 [4881692334132, 4881692334132, 4881692334132, 4732355242419, 2499644780224, 811303531612, 155133009664, 7112043840] (by decide +kernel) (by decide)
-
-private theorem m0_21 : availableMass (start .empty) ⟨47,3,0⟩ 9 < layerNeed := by
-  rw [mass_eq (start .empty) ⟨47,3,0⟩ 9 (by decide)]
-  exact mass_of_checks _ 559 [4840905597120, 4042937393439, 3047958044151, 2161909449231, 1377916489383, 690737337562, 165008747242, 3863238762, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] (by decide +kernel) (by decide)
-
-private theorem m0_22 : availableMass (start .empty) ⟨48,6,0⟩ 24 < layerNeed := by
-  rw [mass_eq (start .empty) ⟨48,6,0⟩ 24 (by decide)]
-  exact mass_of_checks _ 299 [4881692334132, 4881692334132, 4166277123349, 2969240276593, 1997142777325, 1222937147017, 621215195651, 182905733105, 7497491728, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] (by decide +kernel) (by decide)
-
-private theorem m0_23 : availableMass (start .empty) ⟨62,3,0⟩ 11 < layerNeed := by
-  rw [mass_eq (start .empty) ⟨62,3,0⟩ 11 (by decide)]
-  exact mass_of_checks _ 561 [4874050239971, 4058556876111, 2811721765719, 1706752791831, 738405296107, 90871716472, 41176380, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] (by decide +kernel) (by decide)
-
-private theorem m0_24 : availableMass (start .empty) ⟨62,15,0⟩ 32 < layerNeed := by
-  rw [mass_eq (start .empty) ⟨62,15,0⟩ 32 (by decide)]
-  exact mass_of_checks _ 142 [4881692334132, 4881692334132, 4718257223955, 3021330754001, 1556015745521, 678920024081, 212725763106, 20958756015, 0, 0, 0, 0] (by decide +kernel) (by decide)
-
-private theorem m0_25 : availableMass (start .empty) ⟨62,27,0⟩ 36 < layerNeed := by
-  rw [mass_eq (start .empty) ⟨62,27,0⟩ 36 (by decide)]
-  exact mass_of_checks _ 97 [4881692334132, 4881692334132, 4881692334132, 3230355754950, 1242765452634, 355872720894, 58772384754, 2593504374, 1607] (by decide +kernel) (by decide)
-
-private theorem m0_26 : availableMass (start .empty) ⟨63,6,0⟩ 30 < layerNeed := by
-  rw [mass_eq (start .empty) ⟨63,6,0⟩ 30 (by decide)]
-  exact mass_of_checks _ 305 [4881692334132, 4881692334132, 4651050608282, 3294615403642, 2040164602258, 1050080165330, 306983089092, 8644569552, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] (by decide +kernel) (by decide)
-
-private theorem m0_27 : availableMass (start .empty) ⟨63,29,0⟩ 37 < layerNeed := by
-  rw [mass_eq (start .empty) ⟨63,29,0⟩ 37 (by decide)]
-  exact mass_of_checks _ 93 [4881692334132, 4881692334132, 4881692334132, 3396998770994, 1247472480911, 328607538279, 45224080439, 1104707064] (by decide +kernel) (by decide)
-
-private theorem m0_28 : availableMass (start .empty) ⟨64,32,0⟩ 40 < layerNeed := by
-  rw [mass_eq (start .empty) ⟨64,32,0⟩ 40 (by decide)]
-  exact mass_of_checks _ 91 [4881692334132, 4881692334132, 4881692334132, 3975754594666, 1489344601176, 371092403544, 44339842648, 589371720] (by decide +kernel) (by decide)
-
-private theorem m0_29 : availableMass (start .empty) ⟨65,21,0⟩ 39 < layerNeed := by
-  rw [mass_eq (start .empty) ⟨65,21,0⟩ 39 (by decide)]
-  exact mass_of_checks _ 117 [4881692334132, 4881692334132, 4881692334132, 4010572796313, 1913546861832, 745873336884, 213503947752, 31060993662, 180845681, 0] (by decide +kernel) (by decide)
-
-private theorem m0_30 : availableMass (start .empty) ⟨65,36,0⟩ 47 < layerNeed := by
-  rw [mass_eq (start .empty) ⟨65,36,0⟩ 47 (by decide)]
-  exact mass_of_checks _ 92 [4881692334132, 4881692334132, 4881692334132, 4852008373926, 2655400550550, 716552137590, 100475020374, 2201304132] (by decide +kernel) (by decide)
-
-private theorem m0_31 : availableMass (start .empty) ⟨66,27,0⟩ 43 < layerNeed := by
-  rw [mass_eq (start .empty) ⟨66,27,0⟩ 43 (by decide)]
-  exact mass_of_checks _ 104 [4881692334132, 4881692334132, 4881692334132, 4525485498084, 2193595878669, 739819696677, 167987755509, 16826273277, 147357963] (by decide +kernel) (by decide)
-
-private theorem m0_32 : availableMass (start .empty) ⟨78,3,0⟩ 14 < layerNeed := by
-  rw [mass_eq (start .empty) ⟨78,3,0⟩ 14 (by decide)]
-  exact mass_of_checks _ 564 [4881692334132, 4272977620288, 2748038584306, 1385578444101, 287723640154, 902114101, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] (by decide +kernel) (by decide)
-
-private theorem m0_33 : availableMass (start .empty) ⟨78,6,0⟩ 36 < layerNeed := by
-  rw [mass_eq (start .empty) ⟨78,6,0⟩ 36 (by decide)]
-  exact mass_of_checks _ 311 [4881692334132, 4881692334132, 4881692334132, 3898189982599, 2295013460443, 1031451423347, 162828471024, 64445436, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] (by decide +kernel) (by decide)
-
-private theorem m0_34 : availableMass (start .empty) ⟨93,3,0⟩ 16 < layerNeed := by
-  rw [mass_eq (start .empty) ⟨93,3,0⟩ 16 (by decide)]
-  exact mass_of_checks _ 566 [4881692334132, 4418004895870, 2690964623611, 1087873293076, 76206371127, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] (by decide +kernel) (by decide)
-
-private theorem m0_35 : availableMass (start .empty) ⟨93,9,0⟩ 40 < layerNeed := by
-  rw [mass_eq (start .empty) ⟨93,9,0⟩ 40 (by decide)]
-  exact mass_of_checks _ 223 [4881692334132, 4881692334132, 4881692334132, 4299954516220, 2342368843422, 871966684660, 68078260111, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] (by decide +kernel) (by decide)
-
-private theorem m0_36 : availableMass (start .empty) ⟨93,15,0⟩ 43 < layerNeed := by
-  rw [mass_eq (start .empty) ⟨93,15,0⟩ 43 (by decide)]
-  exact mass_of_checks _ 153 [4881692334132, 4881692334132, 4881692334132, 4584353280797, 2496611831026, 935218312006, 138704504210, 5775565, 0, 0, 0, 0, 0] (by decide +kernel) (by decide)
-
-private theorem m0_37 : availableMass (start .empty) ⟨93,30,0⟩ 45 < layerNeed := by
-  rw [mass_eq (start .empty) ⟨93,30,0⟩ 45 (by decide)]
-  exact mass_of_checks _ 100 [4881692334132, 4881692334132, 4881692334132, 4707679028755, 2228969345704, 576690622072, 70988978480, 309767028, 0] (by decide +kernel) (by decide)
-
-private theorem m0_38 : availableMass (start .empty) ⟨94,22,0⟩ 44 < layerNeed := by
-  rw [mass_eq (start .empty) ⟨94,22,0⟩ 44 (by decide)]
-  exact mass_of_checks _ 119 [4881692334132, 4881692334132, 4881692334132, 4640168460087, 2343341604227, 748025560919, 108744705333, 28461305, 0, 0] (by decide +kernel) (by decide)
-
-private theorem m0_39 : availableMass (start .empty) ⟨94,32,0⟩ 46 < layerNeed := by
-  rw [mass_eq (start .empty) ⟨94,32,0⟩ 46 (by decide)]
-  exact mass_of_checks _ 97 [4881692334132, 4881692334132, 4881692334132, 4789940613770, 2371038107508, 589535130772, 68893288884, 453782043, 0] (by decide +kernel) (by decide)
-
-private theorem m0_40 : availableMass (start .empty) ⟨94,43,0⟩ 49 < layerNeed := by
-  rw [mass_eq (start .empty) ⟨94,43,0⟩ 49 (by decide)]
-  exact mass_of_checks _ 87 [4881692334132, 4881692334132, 4881692334132, 4881692334132, 2864763202753, 547268811690, 35434962510, 22511282] (by decide +kernel) (by decide)
-
-private theorem m0_41 : availableMass (start .empty) ⟨95,33,0⟩ 47 < layerNeed := by
-  rw [mass_eq (start .empty) ⟨95,33,0⟩ 47 (by decide)]
-  exact mass_of_checks _ 97 [4881692334132, 4881692334132, 4881692334132, 4850401888506, 2573012324855, 638074733159, 75126781055, 662027794, 0] (by decide +kernel) (by decide)
-
-private theorem m0_42 : availableMass (start .empty) ⟨96,36,0⟩ 48 < layerNeed := by
-  rw [mass_eq (start .empty) ⟨96,36,0⟩ 48 (by decide)]
-  exact mass_of_checks _ 93 [4881692334132, 4881692334132, 4881692334132, 4881692334132, 2741371883604, 634058513748, 65507239764, 532899578] (by decide +kernel) (by decide)
-
-private theorem m0_43 : availableMass (start .empty) ⟨102,47,0⟩ 50 < layerNeed := by
-  rw [mass_eq (start .empty) ⟨102,47,0⟩ 50 (by decide)]
-  exact mass_of_checks _ 85 [4881692334132, 4881692334132, 4881692334132, 4881692334132, 3046192538777, 515251817113, 23056358305, 7050] (by decide +kernel) (by decide)
-
-private theorem m0_44 : availableMass (start .empty) ⟨108,3,0⟩ 18 < layerNeed := by
-  rw [mass_eq (start .empty) ⟨108,3,0⟩ 18 (by decide)]
-  exact mass_of_checks _ 568 [4881692334132, 4573614600122, 2716549058566, 873302389114, 14615902590, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] (by decide +kernel) (by decide)
-
-private theorem m0_45 : availableMass (start .empty) ⟨108,46,0⟩ 50 < layerNeed := by
-  rw [mass_eq (start .empty) ⟨108,46,0⟩ 50 (by decide)]
-  exact mass_of_checks _ 85 [4881692334132, 4881692334132, 4881692334132, 4881692334132, 3044603737820, 514744602787, 23474700687, 489643] (by decide +kernel) (by decide)
-
-private theorem m0_46 : availableMass (start .empty) ⟨109,39,0⟩ 49 < layerNeed := by
-  rw [mass_eq (start .empty) ⟨109,39,0⟩ 49 (by decide)]
-  exact mass_of_checks _ 91 [4881692334132, 4881692334132, 4881692334132, 4881692334132, 2894739187475, 576807261428, 40469515451, 2793627] (by decide +kernel) (by decide)
-
-private theorem m0_47 : availableMass (start .empty) ⟨116,44,0⟩ 50 < layerNeed := by
-  rw [mass_eq (start .empty) ⟨116,44,0⟩ 50 (by decide)]
-  exact mass_of_checks _ 87 [4881692334132, 4881692334132, 4881692334132, 4881692334132, 3055148663056, 525356571036, 24718546046, 0] (by decide +kernel) (by decide)
-
-private theorem m0_48 : availableMass (start .empty) ⟨120,43,0⟩ 50 < layerNeed := by
-  rw [mass_eq (start .empty) ⟨120,43,0⟩ 50 (by decide)]
-  exact mass_of_checks _ 88 [4881692334132, 4881692334132, 4881692334132, 4881692334132, 3060004314089, 528957183490, 24305067206, 0] (by decide +kernel) (by decide)
-
-private theorem m1_0 : availableMass (start .one) ⟨1,9,0⟩ 2 < layerNeed := by
-  rw [mass_eq (start .one) ⟨1,9,0⟩ 2 (by decide)]
-  exact mass_of_checks _ 139 [4416069346931, 3372582946326, 2496548606694, 1781535154614, 1213814030982, 778653386070, 460318079526, 242069680374, 106166467014, 33863427222, 5412258150, 93823898] (by decide +kernel) (by decide)
-
-private theorem m1_1 : availableMass (start .one) ⟨1,15,0⟩ 9 < layerNeed := by
-  rw [mass_eq (start .one) ⟨1,15,0⟩ 9 (by decide)]
-  exact mass_of_checks _ 100 [4681131389983, 3427533067863, 2168846984091, 1252225380351, 632253119619, 257468447271, 70362991083, 7381761231, 9683904] (by decide +kernel) (by decide)
-
-private theorem m1_2 : availableMass (start .one) ⟨1,26,0⟩ 35 < layerNeed := by
-  rw [mass_eq (start .one) ⟨1,26,0⟩ 35 (by decide)]
-  exact mass_of_checks _ 91 [4740005313959, 4439709210263, 4136526561088, 2674349755910, 1135576391362, 330902859094, 40107832514, 144841468] (by decide +kernel) (by decide)
-
-private theorem m1_3 : availableMass (start .one) ⟨2,6,0⟩ 11 < layerNeed := by
-  rw [mass_eq (start .one) ⟨2,6,0⟩ 11 (by decide)]
-  exact mass_of_checks _ 194 [4735842229374, 4086252931992, 3305845855932, 2629989821472, 2051711482884, 1563901445544, 1159314265932, 830568451632, 570146461332, 370394704824, 223523543004, 121607287872, 56584202532, 20256501192, 4290349164, 215918294, 0] (by decide +kernel) (by decide)
-
-private theorem m1_4 : availableMass (start .one) ⟨2,27,0⟩ 38 < layerNeed := by
-  rw [mass_eq (start .one) ⟨2,27,0⟩ 38 (by decide)]
-  exact mass_of_checks _ 93 [4740005313959, 4439709210263, 4152103344383, 3091081841285, 1344208141978, 406862605762, 54682470826, 373312895] (by decide +kernel) (by decide)
-
-private theorem m1_5 : availableMass (start .one) ⟨3,9,0⟩ 25 < layerNeed := by
-  rw [mass_eq (start .one) ⟨3,9,0⟩ 25 (by decide)]
-  exact mass_of_checks _ 162 [4740005313959, 4439709210263, 3784414357772, 2819928710348, 2032531855244, 1405412204876, 921328189964, 562608259532, 311150880908, 148424539724, 55467739916, 12889003724, 866871692, 0] (by decide +kernel) (by decide)
-
-private theorem m1_6 : availableMass (start .one) ⟨4,12,0⟩ 40 < layerNeed := by
-  rw [mass_eq (start .one) ⟨4,12,0⟩ 40 (by decide)]
-  exact mass_of_checks _ 150 [4740005313959, 4439709210263, 4152103344383, 3622392136873, 2517202164488, 1632707495348, 982121553608, 531148291268, 244441900328, 85606812788, 17197700648, 721399815, 0] (by decide +kernel) (by decide)
-
-private theorem m1_7 : availableMass (start .one) ⟨7,21,0⟩ 48 < layerNeed := by
-  rw [mass_eq (start .one) ⟨7,21,0⟩ 48 (by decide)]
-  exact mass_of_checks _ 116 [4740005313959, 4439709210263, 4152103344383, 3876938262239, 2751701664488, 1366145661992, 544805823848, 144231497384, 14092322792, 9979604] (by decide +kernel) (by decide)
-
-private theorem m1_8 : availableMass (start .one) ⟨9,27,0⟩ 52 < layerNeed := by
-  rw [mass_eq (start .one) ⟨9,27,0⟩ 52 (by decide)]
-  exact mass_of_checks _ 107 [4740005313959, 4439709210263, 4152103344383, 3876938262239, 3097613020431, 1368038056445, 414843504065, 58206586085, 546823300] (by decide +kernel) (by decide)
-
-private theorem m1_9 : availableMass (start .one) ⟨17,3,0⟩ 5 < layerNeed := by
-  rw [mass_eq (start .one) ⟨17,3,0⟩ 5 (by decide)]
-  exact mass_of_checks _ 280 [4629821325071, 3849174507937, 3139861484749, 2532965125081, 2018160953797, 1585670930833, 1226263451197, 931253344969, 692501877301, 502416748417, 353952093613, 240608483257, 156432922789, 96018852721, 54506148637, 27581121193, 11476517844, 3016409215, 149476240, 0, 0, 0, 0, 0] (by decide +kernel) (by decide)
-
-private theorem m1_10 : availableMass (start .one) ⟨32,3,0⟩ 25 < layerNeed := by
-  rw [mass_eq (start .one) ⟨32,3,0⟩ 25 (by decide)]
-  exact mass_of_checks _ 300 [4740005313959, 4439709210263, 3821366734024, 2924841420616, 2183752719112, 1579962767368, 1096417615432, 717147225544, 427265472136, 212990045347, 65938098949, 4195954964, 31465, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] (by decide +kernel) (by decide)
-
-private theorem m1_11 : availableMass (start .one) ⟨47,3,0⟩ 34 < layerNeed := by
-  rw [mass_eq (start .one) ⟨47,3,0⟩ 34 (by decide)]
-  exact mass_of_checks _ 309 [4740005313959, 4439709210263, 4132329744725, 3257750633677, 2283466094089, 1503626452261, 893167669537, 428674698601, 104791085779, 1857992032, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] (by decide +kernel) (by decide)
-
-private theorem m1_12 : availableMass (start .one) ⟨62,3,0⟩ 43 < layerNeed := by
-  rw [mass_eq (start .one) ⟨62,3,0⟩ 43 (by decide)]
-  exact mass_of_checks _ 318 [4740005313959, 4439709210263, 4152103344383, 3763329589191, 2662391834362, 1648439400754, 860669513002, 273423323263, 10095889828, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] (by decide +kernel) (by decide)
-
-private theorem m1_13 : availableMass (start .one) ⟨64,18,0⟩ 49 < layerNeed := by
-  rw [mass_eq (start .one) ⟨64,18,0⟩ 49 (by decide)]
-  exact mass_of_checks _ 127 [4740005313959, 4439709210263, 4152103344383, 3876938262239, 2713481718429, 1167619391805, 400434023037, 92273147805, 8565307439, 766480, 0] (by decide +kernel) (by decide)
-
-private theorem m1_14 : availableMass (start .one) ⟨64,32,0⟩ 58 < layerNeed := by
-  rw [mass_eq (start .one) ⟨64,32,0⟩ 58 (by decide)]
-  exact mass_of_checks _ 105 [4740005313959, 4439709210263, 4152103344383, 3876938262239, 3547160553433, 1653663022679, 372823315839, 33486007199, 78616103] (by decide +kernel) (by decide)
-
-private theorem m1_15 : availableMass (start .one) ⟨92,6,0⟩ 46 < layerNeed := by
-  rw [mass_eq (start .one) ⟨92,6,0⟩ 46 (by decide)]
-  exact mass_of_checks _ 229 [4740005313959, 4439709210263, 4152103344383, 3840678252367, 2524710442494, 1159968748674, 263935915239, 750563196, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] (by decide +kernel) (by decide)
-
-private theorem m1_16 : availableMass (start .one) ⟨92,26,0⟩ 51 < layerNeed := by
-  rw [mass_eq (start .one) ⟨92,26,0⟩ 51 (by decide)]
-  exact mass_of_checks _ 107 [4740005313959, 4439709210263, 4152103344383, 3876938262239, 2756828849995, 841628230399, 146925839687, 6253969304, 0] (by decide +kernel) (by decide)
-
-private theorem m1_17 : availableMass (start .one) ⟨92,27,0⟩ 54 < layerNeed := by
-  rw [mass_eq (start .one) ⟨92,27,0⟩ 54 (by decide)]
-  exact mass_of_checks _ 109 [4740005313959, 4439709210263, 4152103344383, 3876938262239, 3183706435218, 1123547740900, 219924123892, 14274889877, 0, 0] (by decide +kernel) (by decide)
-
-private theorem m1_18 : availableMass (start .one) ⟨92,37,0⟩ 59 < layerNeed := by
-  rw [mass_eq (start .one) ⟨92,37,0⟩ 59 (by decide)]
-  exact mass_of_checks _ 100 [4740005313959, 4439709210263, 4152103344383, 3876938262239, 3586378113773, 1586448989244, 247166746588, 9031867008, 0] (by decide +kernel) (by decide)
-
-private theorem m1_19 : availableMass (start .one) ⟨92,38,0⟩ 60 < layerNeed := by
-  rw [mass_eq (start .one) ⟨92,38,0⟩ 60 (by decide)]
-  exact mass_of_checks _ 100 [4740005313959, 4439709210263, 4152103344383, 3876938262239, 3613962830135, 1760179189582, 278535248962, 10526970470, 0] (by decide +kernel) (by decide)
-
-private theorem m1_20 : availableMass (start .one) ⟨93,39,0⟩ 61 < layerNeed := by
-  rw [mass_eq (start .one) ⟨93,39,0⟩ 61 (by decide)]
-  exact mass_of_checks _ 100 [4740005313959, 4439709210263, 4152103344383, 3876938262239, 3613962830135, 1953459328989, 312641104881, 12143729829, 0] (by decide +kernel) (by decide)
-
-private theorem m1_21 : availableMass (start .one) ⟨94,21,0⟩ 55 < layerNeed := by
-  rw [mass_eq (start .one) ⟨94,21,0⟩ 55 (by decide)]
-  exact mass_of_checks _ 123 [4740005313959, 4439709210263, 4152103344383, 3876938262239, 3338971348154, 1427979153560, 372168789080, 37695445457, 0, 0, 0] (by decide +kernel) (by decide)
-
-private theorem m1_22 : availableMass (start .one) ⟨94,24,0⟩ 58 < layerNeed := by
-  rw [mass_eq (start .one) ⟨94,24,0⟩ 58 (by decide)]
-  exact mass_of_checks _ 119 [4740005313959, 4439709210263, 4152103344383, 3876938262239, 3551914960811, 1746783200475, 455076556227, 56006073064, 165794666, 0] (by decide +kernel) (by decide)
-
-private theorem m2_0 : availableMass (start .two) ⟨1,3,0⟩ 25 < layerNeed := by
-  rw [mass_eq (start .two) ⟨1,3,0⟩ 25 (by decide)]
-  exact mass_of_checks _ 208 [4577344072499, 4003054728023, 3366791307861, 2682487153221, 2096347002909, 1601272799709, 1190030437509, 855249761301, 589424567181, 384912602349, 233935565109, 128579104869, 60792822141, 22390268541, 5048946789, 310310709, 0, 0] (by decide +kernel) (by decide)
-
-private theorem m2_1 : availableMass (start .two) ⟨1,24,0⟩ 60 < layerNeed := by
-  rw [mass_eq (start .two) ⟨1,24,0⟩ 60 (by decide)]
-  exact mass_of_checks _ 115 [4577344072499, 4003054728023, 3477982715867, 3000104969663, 2567371549187, 1524775181542, 495564099550, 79760254678, 1317405376, 0] (by decide +kernel) (by decide)
-
-private theorem m2_2 : availableMass (start .two) ⟨2,6,0⟩ 48 < layerNeed := by
-  rw [mass_eq (start .two) ⟨2,6,0⟩ 48 (by decide)]
-  exact mass_of_checks _ 185 [4577344072499, 4003054728023, 3477982715867, 3000104969663, 2356295261492, 1661150503604, 1116637475636, 705272743604, 409142891828, 209904522932, 88784257844, 26578735796, 3654614324, 31891402, 0, 0] (by decide +kernel) (by decide)
-
-private theorem m2_3 : availableMass (start .two) ⟨2,26,0⟩ 62 < layerNeed := by
-  rw [mass_eq (start .two) ⟨2,26,0⟩ 62 (by decide)]
-  exact mass_of_checks _ 113 [4577344072499, 4003054728023, 3477982715867, 3000104969663, 2567371549187, 1673833415844, 525784065424, 76335388816, 780459112, 0] (by decide +kernel) (by decide)
-
-private theorem m2_4 : availableMass (start .two) ⟨3,27,0⟩ 64 < layerNeed := by
-  rw [mass_eq (start .two) ⟨3,27,0⟩ 64 (by decide)]
-  exact mass_of_checks _ 114 [4577344072499, 4003054728023, 3477982715867, 3000104969663, 2567371549187, 1828729553885, 602295224360, 91061665268, 1139238016, 0] (by decide +kernel) (by decide)
-
-private theorem m2_5 : availableMass (start .two) ⟨4,12,0⟩ 66 < layerNeed := by
-  rw [mass_eq (start .two) ⟨4,12,0⟩ 66 (by decide)]
-  exact mass_of_checks _ 157 [4577344072499, 4003054728023, 3477982715867, 3000104969663, 2567371549187, 2078109449434, 1236119571567, 620159220603, 252244055079, 69709281651, 7713324639, 17052237, 0, 0] (by decide +kernel) (by decide)
-
-private theorem m2_6 : availableMass (start .two) ⟨6,18,0⟩ 79 < layerNeed := by
-  rw [mass_eq (start .two) ⟨6,18,0⟩ 79 (by decide)]
-  exact mass_of_checks _ 147 [4577344072499, 4003054728023, 3477982715867, 3000104969663, 2567371549187, 2177705640359, 1735750384073, 843751828688, 277184644592, 47668671248, 1120343040, 0, 0] (by decide +kernel) (by decide)
-
-private theorem m2_7 : availableMass (start .two) ⟨8,24,0⟩ 86 < layerNeed := by
-  rw [mass_eq (start .two) ⟨8,24,0⟩ 86 (by decide)]
-  exact mass_of_checks _ 141 [4577344072499, 4003054728023, 3477982715867, 3000104969663, 2567371549187, 2177705640359, 1829003555243, 1146834983193, 321837754235, 36031408655, 84435245, 0] (by decide +kernel) (by decide)
-
-private theorem m2_8 : availableMass (start .two) ⟨31,3,0⟩ 52 < layerNeed := by
-  rw [mass_eq (start .two) ⟨31,3,0⟩ 52 (by decide)]
-  exact mass_of_checks _ 235 [4577344072499, 4003054728023, 3477982715867, 3000104969663, 2453544850597, 1711020073794, 1138350781302, 722283437562, 431441555982, 237940571634, 117387841254, 48882643242, 15016177662, 1971687490, 252960, 0, 0, 0, 0, 0] (by decide +kernel) (by decide)
-
-private theorem m2_9 : availableMass (start .two) ⟨33,9,0⟩ 74 < layerNeed := by
-  rw [mass_eq (start .two) ⟨33,9,0⟩ 74 (by decide)]
-  exact mass_of_checks _ 184 [4577344072499, 4003054728023, 3477982715867, 3000104969663, 2567371549187, 2177705640359, 1592633557989, 857197900739, 408540807299, 163367772059, 48961531019, 8351220179, 312618070, 0, 0, 0] (by decide +kernel) (by decide)
-
-private theorem m2_10 : availableMass (start .two) ⟨61,3,0⟩ 66 < layerNeed := by
-  rw [mass_eq (start .two) ⟨61,3,0⟩ 66 (by decide)]
-  exact mass_of_checks _ 249 [4577344072499, 4003054728023, 3477982715867, 3000104969663, 2567371549187, 2088683457025, 1297185738072, 701433238812, 315759309504, 88000214322, 2219144462, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] (by decide +kernel) (by decide)
-
-private theorem m2_11 : availableMass (start .two) ⟨63,15,0⟩ 83 < layerNeed := by
-  rw [mass_eq (start .two) ⟨63,15,0⟩ 83 (by decide)]
-  exact mass_of_checks _ 161 [4577344072499, 4003054728023, 3477982715867, 3000104969663, 2567371549187, 2177705640359, 1821315286979, 991136033223, 326391315855, 70785828735, 6311355927, 30256257, 0, 0] (by decide +kernel) (by decide)
-
-private theorem m2_12 : availableMass (start .two) ⟨64,32,0⟩ 89 < layerNeed := by
-  rw [mass_eq (start .two) ⟨64,32,0⟩ 89 (by decide)]
-  exact mass_of_checks _ 132 [4577344072499, 4003054728023, 3477982715867, 3000104969663, 2567371549187, 2177705640359, 1829003555243, 1233735321217, 234526402763, 8500466884, 0] (by decide +kernel) (by decide)
-
-private theorem m2_13 : availableMass (start .two) ⟨91,24,0⟩ 88 < layerNeed := by
-  rw [mass_eq (start .two) ⟨91,24,0⟩ 88 (by decide)]
-  exact mass_of_checks _ 143 [4577344072499, 4003054728023, 3477982715867, 3000104969663, 2567371549187, 2177705640359, 1829003555243, 1196899933913, 268308192724, 22319391220, 77181770, 0] (by decide +kernel) (by decide)
-
-private theorem m2_14 : availableMass (start .two) ⟨92,6,0⟩ 71 < layerNeed := by
-  rw [mass_eq (start .two) ⟨92,6,0⟩ 71 (by decide)]
-  exact mass_of_checks _ 208 [4577344072499, 4003054728023, 3477982715867, 3000104969663, 2567371549187, 2170795762323, 1319764745042, 533021687234, 117329949479, 421523906, 0, 0, 0, 0, 0, 0, 0, 0] (by decide +kernel) (by decide)
-
-private theorem m2_15 : availableMass (start .two) ⟨107,39,0⟩ 90 < layerNeed := by
-  rw [mass_eq (start .two) ⟨107,39,0⟩ 90 (by decide)]
-  exact mass_of_checks _ 126 [4577344072499, 4003054728023, 3477982715867, 3000104969663, 2567371549187, 2177705640359, 1829003555243, 1248809202907, 168336881589, 1495917897, 0] (by decide +kernel) (by decide)
-
-private theorem m2_16 : availableMass (start .two) ⟨107,41,0⟩ 91 < layerNeed := by
-  rw [mass_eq (start .two) ⟨107,41,0⟩ 91 (by decide)]
-  exact mass_of_checks _ 126 [4577344072499, 4003054728023, 3477982715867, 3000104969663, 2567371549187, 2177705640359, 1829003555243, 1314091962201, 192040382718, 1619549780, 0] (by decide +kernel) (by decide)
-
-private theorem thresholds_valid (k : Band) (q : Threshold) (hq : q ∈ thresholds k) :
+theorem m0_0 : availableMass (start .empty) ⟨3,9,0⟩ 8 < layerNeed := by
+  rw [mass_eq (start .empty) ⟨3,9,0⟩ 8 (Or.inl rfl) (by decide)]
+  exact mass_of_checks _ 191 [4825948217084, 4132812429204, 3346395229824, 2664912491052, 2081398425432, 1588751196612, 1179732919344, 846969659484, 582951433992, 380032210932, 230429909472, 126226399884, 59367503544, 21662992932, 4786591632, 275974332] (by decide +kernel) (by decide +kernel)
+
+theorem m0_1 : availableMass (start .empty) ⟨4,10,0⟩ 13 < layerNeed := by
+  rw [mass_eq (start .empty) ⟨4,10,0⟩ 13 (Or.inl rfl) (by decide)]
+  exact mass_of_checks _ 178 [4881692334132, 4442155510380, 3525029122525, 2741171948913, 2082291123621, 1537845443449, 1097196937197, 749610865665, 484255721653, 290203229961, 156428347389, 71809262737, 25127396805, 5067402393, 217600323] (by decide +kernel) (by decide +kernel)
+
+theorem m0_2 : availableMass (start .empty) ⟨4,12,0⟩ 20 < layerNeed := by
+  rw [mass_eq (start .empty) ⟨4,12,0⟩ 20 (Or.inl rfl) (by decide)]
+  exact mass_of_checks _ 157 [4881692334132, 4804946414772, 3895730412212, 2911848547124, 2106781953716, 1463763834164, 965597408948, 594655916852, 332882614964, 161790778676, 62463701684, 15554695988, 1287091892, 79630] (by decide +kernel) (by decide +kernel)
+
+theorem m0_3 : availableMass (start .empty) ⟨10,8,0⟩ 7 < layerNeed := by
+  rw [mass_eq (start .empty) ⟨10,8,0⟩ 7 (Or.inl rfl) (by decide)]
+  exact mass_of_checks _ 213 [4793673263835, 4045916974340, 3265316219748, 2600070158276, 2038789804580, 1570624092804, 1185259876580, 872921929028, 624372942756, 430913529860, 284382221924, 177155470020, 102147644708, 52811036036, 23135853540, 7650226244, 1420202660, 50147242] (by decide +kernel) (by decide +kernel)
+
+theorem m0_4 : availableMass (start .empty) ⟨11,7,0⟩ 2 < layerNeed := by
+  rw [mass_eq (start .empty) ⟨11,7,0⟩ 2 (Or.inl rfl) (by decide)]
+  exact mass_of_checks _ 237 [4576725944226, 3797718552125, 3113305534285, 2524422475669, 2021938291349, 1597165238989, 1241858918845, 948218273765, 708885589189, 516946493149, 365929956269, 249808291765, 162997155445, 100355545709, 57185803549, 29233612549, 12687998885, 4181331325, 789321229, 31102506] (by decide +kernel) (by decide +kernel)
+
+theorem m0_5 : availableMass (start .empty) ⟨5,15,0⟩ 27 < layerNeed := by
+  rw [mass_eq (start .empty) ⟨5,15,0⟩ 27 (Or.inl rfl) (by decide)]
+  exact mass_of_checks _ 137 [4881692334132, 4881692334132, 4437255256635, 3154442137598, 2118080059058, 1335147950918, 771962125178, 393789133838, 164845768898, 48299062358, 6266286218, 39699549] (by decide +kernel) (by decide +kernel)
+
+theorem m0_6 : availableMass (start .empty) ⟨6,18,0⟩ 32 < layerNeed := by
+  rw [mass_eq (start .empty) ⟨6,18,0⟩ 32 (Or.inl rfl) (by decide)]
+  exact mass_of_checks _ 123 [4881692334132, 4881692334132, 4763608135197, 3451951091511, 2160613118979, 1236119571567, 620159220603, 252244055079, 69709281651, 7713324639, 17052237] (by decide +kernel) (by decide +kernel)
+
+theorem m0_7 : availableMass (start .empty) ⟨18,6,0⟩ 4 < layerNeed := by
+  rw [mass_eq (start .empty) ⟨18,6,0⟩ 4 (Or.inl rfl) (by decide)]
+  exact mass_of_checks _ 279 [4677119384250, 3894294222043, 3178174636159, 2565180895363, 2044950079975, 1607665705387, 1244057722063, 945402515539, 703522906423, 510788150395, 360113938207, 244962395683, 159342083719, 97807998283, 55461570415, 27950666227, 11469647021, 2842448701, 110010100, 0, 0, 0, 0, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m0_8 : availableMass (start .empty) ⟨8,24,0⟩ 38 < layerNeed := by
+  rw [mass_eq (start .empty) ⟨8,24,0⟩ 38 (Or.inl rfl) (by decide)]
+  exact mass_of_checks _ 106 [4881692334132, 4881692334132, 4881692334132, 4034607422866, 2218587115688, 1036617456104, 371811488552, 78425324648, 3837150724] (by decide +kernel) (by decide +kernel)
+
+theorem m0_9 : availableMass (start .empty) ⟨33,5,0⟩ 16 < layerNeed := by
+  rw [mass_eq (start .empty) ⟨33,5,0⟩ 16 (Or.inl rfl) (by decide)]
+  exact mass_of_checks _ 346 [4881692334132, 4635795893868, 3709228724609, 2870619424897, 2161142255905, 1567953728033, 1078847119681, 682252477249, 367329153517, 131960742747, 14310064598, 34731191, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m0_10 : availableMass (start .empty) ⟨33,6,0⟩ 18 < layerNeed := by
+  rw [mass_eq (start .empty) ⟨33,6,0⟩ 18 (Or.inl rfl) (by decide)]
+  exact mass_of_checks _ 293 [4881692334132, 4726497233312, 3781159553572, 2873440552228, 2123781080164, 1513835749348, 1026343083940, 645125520292, 355089944499, 143930988805, 22955636671, 181853441, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m0_11 : availableMass (start .empty) ⟨34,9,0⟩ 24 < layerNeed := by
+  rw [mass_eq (start .empty) ⟨34,9,0⟩ 24 (Or.inl rfl) (by decide)]
+  exact mass_of_checks _ 207 [4881692334132, 4881692334132, 4155061442049, 2974508646993, 2059427297673, 1367503668009, 860036885937, 501938933409, 261734646393, 111561763727, 28061103148, 876352872, 0, 0, 0, 0, 0, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m0_12 : availableMass (start .empty) ⟨13,39,0⟩ 44 < layerNeed := by
+  rw [mass_eq (start .empty) ⟨13,39,0⟩ 44 (Or.inl rfl) (by decide)]
+  exact mass_of_checks _ 86 [4881692334132, 4881692334132, 4881692334132, 4625783876254, 2193723787754, 570305888534, 52234475402, 15876318] (by decide +kernel) (by decide +kernel)
+
+theorem m0_13 : availableMass (start .empty) ⟨64,4,0⟩ 32 < layerNeed := by
+  rw [mass_eq (start .empty) ⟨64,4,0⟩ 32 (Or.inl rfl) (by decide)]
+  exact mass_of_checks _ 444 [4881692334132, 4881692334132, 4784452944186, 3640887556676, 2374770061700, 1297187869066, 413066750396, 15429985030, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m0_14 : availableMass (start .empty) ⟨64,5,0⟩ 32 < layerNeed := by
+  rw [mass_eq (start .empty) ⟨64,5,0⟩ 32 (Or.inl rfl) (by decide)]
+  exact mass_of_checks _ 362 [4881692334132, 4881692334132, 4778130961275, 3579103133936, 2288416295700, 1229631223424, 393154559215, 15374694923, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m0_15 : availableMass (start .empty) ⟨64,6,0⟩ 33 < layerNeed := by
+  rw [mass_eq (start .empty) ⟨64,6,0⟩ 33 (Or.inl rfl) (by decide)]
+  exact mass_of_checks _ 308 [4881692334132, 4881692334132, 4816672740210, 3641030334669, 2302372410249, 1240630875813, 427459431655, 23932786880, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m0_16 : availableMass (start .empty) ⟨65,7,0⟩ 34 < layerNeed := by
+  rw [mass_eq (start .empty) ⟨65,7,0⟩ 34 (Or.inl rfl) (by decide)]
+  exact mass_of_checks _ 269 [4881692334132, 4881692334132, 4847733561916, 3703132247209, 2297233928969, 1218213918961, 422279450344, 25397754716, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m0_17 : availableMass (start .empty) ⟨65,9,0⟩ 35 < layerNeed := by
+  rw [mass_eq (start .empty) ⟨65,9,0⟩ 35 (Or.inl rfl) (by decide)]
+  exact mass_of_checks _ 218 [4881692334132, 4881692334132, 4869681942938, 3744275280765, 2244546827493, 1161778346277, 419735400835, 35486857925, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m0_18 : availableMass (start .empty) ⟨65,10,0⟩ 35 < layerNeed := by
+  rw [mass_eq (start .empty) ⟨65,10,0⟩ 35 (Or.inl rfl) (by decide)]
+  exact mass_of_checks _ 200 [4881692334132, 4881692334132, 4869018683879, 3698711251436, 2168503417956, 1096989792476, 391096458647, 34270888409, 0, 0, 0, 0, 0, 0, 0, 0, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m0_19 : availableMass (start .empty) ⟨65,12,0⟩ 36 < layerNeed := by
+  rw [mass_eq (start .empty) ⟨65,12,0⟩ 36 (Or.inl rfl) (by decide)]
+  exact mass_of_checks _ 173 [4881692334132, 4881692334132, 4881692334132, 3769988691498, 2130784764234, 1043076571242, 375382717633, 42844993836, 249900, 0, 0, 0, 0, 0, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m0_20 : availableMass (start .empty) ⟨66,16,0⟩ 39 < layerNeed := by
+  rw [mass_eq (start .empty) ⟨66,16,0⟩ 39 (Or.inl rfl) (by decide)]
+  exact mass_of_checks _ 142 [4881692334132, 4881692334132, 4881692334132, 4124154209185, 2204589682932, 1001428115156, 348354916532, 56012033930, 59555595, 0, 0, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m0_21 : availableMass (start .empty) ⟨66,18,0⟩ 39 < layerNeed := by
+  rw [mass_eq (start .empty) ⟨66,18,0⟩ 39 (Or.inl rfl) (by decide)]
+  exact mass_of_checks _ 130 [4881692334132, 4881692334132, 4881692334132, 4076492128074, 2080072146321, 888880487229, 286825687497, 44334361883, 59555595, 0, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m0_22 : availableMass (start .empty) ⟨67,20,0⟩ 40 < layerNeed := by
+  rw [mass_eq (start .empty) ⟨67,20,0⟩ 40 (Or.inl rfl) (by decide)]
+  exact mass_of_checks _ 122 [4881692334132, 4881692334132, 4881692334132, 4188643362892, 2084580273444, 841655623828, 251924265732, 36819536571, 72751124, 0, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m0_23 : availableMass (start .empty) ⟨66,22,0⟩ 41 < layerNeed := by
+  rw [mass_eq (start .empty) ⟨66,22,0⟩ 41 (Or.inl rfl) (by decide)]
+  exact mass_of_checks _ 116 [4881692334132, 4881692334132, 4881692334132, 4309120735189, 2128138725943, 824831527387, 235504529567, 35620234378, 452655058, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m0_24 : availableMass (start .empty) ⟨66,24,0⟩ 42 < layerNeed := by
+  rw [mass_eq (start .empty) ⟨66,24,0⟩ 42 (Or.inl rfl) (by decide)]
+  exact mass_of_checks _ 110 [4881692334132, 4881692334132, 4881692334132, 4424058554462, 2176196361496, 801683072728, 211939283608, 28845858904, 505158728, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m0_25 : availableMass (start .empty) ⟨67,28,0⟩ 43 < layerNeed := by
+  rw [mass_eq (start .empty) ⟨67,28,0⟩ 43 (Or.inl rfl) (by decide)]
+  exact mass_of_checks _ 101 [4881692334132, 4881692334132, 4881692334132, 4515407663255, 2137300605000, 688815571704, 143701645480, 11773877592, 42210998] (by decide +kernel) (by decide +kernel)
+
+theorem m0_26 : availableMass (start .empty) ⟨68,27,0⟩ 43 < layerNeed := by
+  rw [mass_eq (start .empty) ⟨68,27,0⟩ 43 (Or.inl rfl) (by decide)]
+  exact mass_of_checks _ 104 [4881692334132, 4881692334132, 4881692334132, 4522350741384, 2175920575665, 723498464265, 159928337193, 14994976785, 93996274] (by decide +kernel) (by decide +kernel)
+
+theorem m0_27 : availableMass (start .empty) ⟨68,30,0⟩ 44 < layerNeed := by
+  rw [mass_eq (start .empty) ⟨68,30,0⟩ 44 (Or.inl rfl) (by decide)]
+  exact mass_of_checks _ 99 [4881692334132, 4881692334132, 4881692334132, 4621914009735, 2221293901653, 675890992881, 125962234029, 7680751497, 3051063] (by decide +kernel) (by decide +kernel)
+
+theorem m0_28 : availableMass (start .empty) ⟨68,33,0⟩ 45 < layerNeed := by
+  rw [mass_eq (start .empty) ⟨68,33,0⟩ 45 (Or.inl rfl) (by decide)]
+  exact mass_of_checks _ 95 [4881692334132, 4881692334132, 4881692334132, 4713403633292, 2294459305859, 639080627339, 98445368675, 3315302389] (by decide +kernel) (by decide +kernel)
+
+theorem m0_29 : availableMass (start .empty) ⟨69,45,0⟩ 47 < layerNeed := by
+  rw [mass_eq (start .empty) ⟨69,45,0⟩ 47 (Or.inl rfl) (by decide)]
+  exact mass_of_checks _ 83 [4881692334132, 4881692334132, 4881692334132, 4845762669415, 2335659223362, 419641515222, 19277143259] (by decide +kernel) (by decide +kernel)
+
+theorem m0_30 : availableMass (start .empty) ⟨71,43,0⟩ 47 < layerNeed := by
+  rw [mass_eq (start .empty) ⟨71,43,0⟩ 47 (Or.inl rfl) (by decide)]
+  exact mass_of_checks _ 85 [4881692334132, 4881692334132, 4881692334132, 4846809406261, 2388436467983, 465493169239, 28125584383, 266745] (by decide +kernel) (by decide +kernel)
+
+theorem m0_31 : availableMass (start .empty) ⟨69,49,0⟩ 47 < layerNeed := by
+  rw [mass_eq (start .empty) ⟨69,49,0⟩ 47 (Or.inl rfl) (by decide)]
+  exact mass_of_checks _ 80 [4881692334132, 4881692334132, 4881692334132, 4843213012092, 2213651195119, 326897441183, 7463477446] (by decide +kernel) (by decide +kernel)
+
+theorem m0_32 : availableMass (start .empty) ⟨97,28,0⟩ 45 < layerNeed := by
+  rw [mass_eq (start .empty) ⟨97,28,0⟩ 45 (Or.inl rfl) (by decide)]
+  exact mass_of_checks _ 103 [4881692334132, 4881692334132, 4881692334132, 4712125300543, 2273798939836, 606202225612, 71194671746, 13716081, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m0_33 : availableMass (start .empty) ⟨98,31,0⟩ 45 < layerNeed := by
+  rw [mass_eq (start .empty) ⟨98,31,0⟩ 45 (Or.inl rfl) (by decide)]
+  exact mass_of_checks _ 98 [4881692334132, 4881692334132, 4881692334132, 4700836472654, 2154320283129, 513180639801, 50059257997, 3321960, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m0_34 : availableMass (start .empty) ⟨84,46,0⟩ 47 < layerNeed := by
+  rw [mass_eq (start .empty) ⟨84,46,0⟩ 47 (Or.inl rfl) (by decide)]
+  exact mass_of_checks _ 82 [4881692334132, 4881692334132, 4881692334132, 4843393484827, 2231091807703, 351894275523, 12169373699] (by decide +kernel) (by decide +kernel)
+
+theorem m0_35 : availableMass (start .empty) ⟨97,36,0⟩ 46 < layerNeed := by
+  rw [mass_eq (start .empty) ⟨97,36,0⟩ 46 (Or.inl rfl) (by decide)]
+  exact mass_of_checks _ 91 [4881692334132, 4881692334132, 4881692334132, 4781577465255, 2214539958918, 462844591302, 37299512838, 61338664] (by decide +kernel) (by decide +kernel)
+
+theorem m0_36 : availableMass (start .empty) ⟨97,37,0⟩ 46 < layerNeed := by
+  rw [mass_eq (start .empty) ⟨97,37,0⟩ 46 (Or.inl rfl) (by decide)]
+  exact mass_of_checks _ 90 [4881692334132, 4881692334132, 4881692334132, 4779750717817, 2181543308011, 438331781139, 32379031707, 43085789] (by decide +kernel) (by decide +kernel)
+
+theorem m0_37 : availableMass (start .empty) ⟨98,44,0⟩ 47 < layerNeed := by
+  rw [mass_eq (start .empty) ⟨98,44,0⟩ 47 (Or.inl rfl) (by decide)]
+  exact mass_of_checks _ 84 [4881692334132, 4881692334132, 4881692334132, 4843043065581, 2219190855948, 350088812652, 13582511308] (by decide +kernel) (by decide +kernel)
+
+theorem m0_38 : availableMass (start .empty) ⟨105,43,0⟩ 47 < layerNeed := by
+  rw [mass_eq (start .empty) ⟨105,43,0⟩ 47 (Or.inl rfl) (by decide)]
+  exact mass_of_checks _ 85 [4881692334132, 4881692334132, 4881692334132, 4842864306633, 2211625505839, 345751438567, 13312871567, 3177] (by decide +kernel) (by decide +kernel)
+
+theorem m0_39 : availableMass (start .empty) ⟨98,52,0⟩ 48 < layerNeed := by
+  rw [mass_eq (start .empty) ⟨98,52,0⟩ 48 (Or.inl rfl) (by decide)]
+  exact mass_of_checks _ 79 [4881692334132, 4881692334132, 4881692334132, 4881692334132, 2303473978020, 272560553476, 3645523230] (by decide +kernel) (by decide +kernel)
+
+theorem m0_40 : availableMass (start .empty) ⟨112,41,0⟩ 47 < layerNeed := by
+  rw [mass_eq (start .empty) ⟨112,41,0⟩ 47 (Or.inl rfl) (by decide)]
+  exact mass_of_checks _ 87 [4881692334132, 4881692334132, 4881692334132, 4843314922666, 2230952093039, 357143460959, 13937804449, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m0_41 : availableMass (start .empty) ⟨105,51,0⟩ 48 < layerNeed := by
+  rw [mass_eq (start .empty) ⟨105,51,0⟩ 48 (Or.inl rfl) (by decide)]
+  exact mass_of_checks _ 80 [4881692334132, 4881692334132, 4881692334132, 4881692334132, 2298793551355, 272729779867, 4047264754] (by decide +kernel) (by decide +kernel)
+
+theorem m0_42 : availableMass (start .empty) ⟨119,40,0⟩ 47 < layerNeed := by
+  rw [mass_eq (start .empty) ⟨119,40,0⟩ 47 (Or.inl rfl) (by decide)]
+  exact mass_of_checks _ 88 [4881692334132, 4881692334132, 4881692334132, 4843130547107, 2220665734970, 346097396138, 10847488171, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m0_43 : availableMass (start .empty) ⟨111,50,0⟩ 48 < layerNeed := by
+  rw [mass_eq (start .empty) ⟨111,50,0⟩ 48 (Or.inl rfl) (by decide)]
+  exact mass_of_checks _ 81 [4881692334132, 4881692334132, 4881692334132, 4881692334132, 2297578703854, 273787098046, 4394098198] (by decide +kernel) (by decide +kernel)
+
+theorem m0_44 : availableMass (start .empty) ⟨116,49,0⟩ 48 < layerNeed := by
+  rw [mass_eq (start .empty) ⟨116,49,0⟩ 48 (Or.inl rfl) (by decide)]
+  exact mass_of_checks _ 81 [4881692334132, 4881692334132, 4881692334132, 4881692334132, 2300038288243, 276070542003, 4682415405] (by decide +kernel) (by decide +kernel)
+
+theorem m0_45 : availableMass (start .empty) ⟨122,48,0⟩ 48 < layerNeed := by
+  rw [mass_eq (start .empty) ⟨122,48,0⟩ 48 (Or.inl rfl) (by decide)]
+  exact mass_of_checks _ 82 [4881692334132, 4881692334132, 4881692334132, 4881692334132, 2297525080152, 274344020760, 4527733246] (by decide +kernel) (by decide +kernel)
+
+theorem m1_0 : availableMass (start .one3) ⟨2,5,0⟩ 5 < layerNeed := by
+  rw [mass_eq (start .one3) ⟨2,5,0⟩ 5 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 211 [4642206004513, 3908443939100, 3226450469852, 2627896253340, 2107591612508, 1660290247196, 1280689234140, 963429026972, 703093456220, 494209729308, 331248430556, 208623521180, 120692339292, 61755599900, 26057394908, 7785193116, 1069840220, 9396582] (by decide +kernel) (by decide +kernel)
+
+theorem m1_1 : availableMass (start .one3) ⟨2,6,0⟩ 13 < layerNeed := by
+  rw [mass_eq (start .one3) ⟨2,6,0⟩ 13 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 196 [4740005313959, 4179716912532, 3387268510392, 2700137567964, 2111365856064, 1613859096612, 1200386962632, 863583078252, 595945018704, 389834310324, 237476430552, 130960807932, 62240822112, 23133803844, 5321034984, 347748492, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m1_2 : availableMass (start .one3) ⟨3,9,0⟩ 29 < layerNeed := by
+  rw [mass_eq (start .one3) ⟨3,9,0⟩ 29 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 166 [4740005313959, 4439709210263, 3994562913573, 3043800793124, 2213691030116, 1548101679524, 1029898667492, 641517938468, 364965455204, 181817198756, 73219168484, 19887382052, 2107875428, 3342188] (by decide +kernel) (by decide +kernel)
+
+theorem m1_3 : availableMass (start .one3) ⟨5,15,0⟩ 43 < layerNeed := by
+  rw [mass_eq (start .one3) ⟨5,15,0⟩ 43 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 134 [4740005313959, 4439709210263, 4152103344383, 3743774803957, 2530520535747, 1495074929079, 787026332811, 346582096959, 111772789203, 18452194887, 370607902, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m1_4 : availableMass (start .one3) ⟨7,20,0⟩ 48 < layerNeed := by
+  rw [mass_eq (start .one3) ⟨7,20,0⟩ 48 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 119 [4740005313959, 4439709210263, 4152103344383, 3876938262239, 2786514673371, 1432208984315, 606052134443, 180917044395, 24546638267, 196931359] (by decide +kernel) (by decide +kernel)
+
+theorem m1_5 : availableMass (start .one3) ⟨8,24,0⟩ 51 < layerNeed := by
+  rw [mass_eq (start .one3) ⟨8,24,0⟩ 51 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 112 [4740005313959, 4439709210263, 4152103344383, 3876938262239, 3039057113695, 1435254996957, 510577153917, 105534727413, 4813289894, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m1_6 : availableMass (start .one3) ⟨64,4,0⟩ 43 < layerNeed := by
+  rw [mass_eq (start .one3) ⟨64,4,0⟩ 43 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 278 [4740005313959, 4439709210263, 4152103344383, 3752572946018, 2584412352118, 1537580638914, 756538432182, 206861471946, 3709972440, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m1_7 : availableMass (start .one3) ⟨64,5,0⟩ 44 < layerNeed := by
+  rw [mass_eq (start .one3) ⟨64,5,0⟩ 44 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 250 [4740005313959, 4439709210263, 4152103344383, 3788468710533, 2618219619544, 1535932399352, 755413805080, 224757329025, 6718188686, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m1_8 : availableMass (start .one3) ⟨65,15,0⟩ 50 < layerNeed := by
+  rw [mass_eq (start .one3) ⟨65,15,0⟩ 50 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 141 [4740005313959, 4439709210263, 4152103344383, 3876938262239, 2919910046415, 1388504358813, 546251175849, 155289513621, 18975298538, 1028805, 0, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m1_9 : availableMass (start .one3) ⟨68,28,0⟩ 55 < layerNeed := by
+  rw [mass_eq (start .one3) ⟨68,28,0⟩ 55 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 108 [4740005313959, 4439709210263, 4152103344383, 3876938262239, 3320523117932, 1340356667044, 320282700704, 35041311940, 342645406] (by decide +kernel) (by decide +kernel)
+
+theorem m1_10 : availableMass (start .one3) ⟨67,33,0⟩ 56 < layerNeed := by
+  rw [mass_eq (start .one3) ⟨67,33,0⟩ 56 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 101 [4740005313959, 4439709210263, 4152103344383, 3876938262239, 3392497504446, 1313387025948, 250090524828, 14379748380, 26822] (by decide +kernel) (by decide +kernel)
+
+theorem m1_11 : availableMass (start .one3) ⟨69,34,0⟩ 57 < layerNeed := by
+  rw [mass_eq (start .one3) ⟨69,34,0⟩ 57 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 101 [4740005313959, 4439709210263, 4152103344383, 3876938262239, 3474743873132, 1419128395642, 266257085374, 14737998554, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m1_12 : availableMass (start .one3) ⟨69,37,0⟩ 57 < layerNeed := by
+  rw [mass_eq (start .one3) ⟨69,37,0⟩ 57 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 98 [4740005313959, 4439709210263, 4152103344383, 3876938262239, 3466173771004, 1333832623220, 209801422420, 6493192690, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m1_13 : availableMass (start .one3) ⟨97,46,0⟩ 59 < layerNeed := by
+  rw [mass_eq (start .one3) ⟨97,46,0⟩ 59 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 92 [4740005313959, 4439709210263, 4152103344383, 3876938262239, 3581379588887, 1374151293959, 124761144119, 469732184] (by decide +kernel) (by decide +kernel)
+
+theorem m2_0 : availableMass (start .one4) ⟨2,4,0⟩ 7 < layerNeed := by
+  rw [mass_eq (start .one4) ⟨2,4,0⟩ 7 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 213 [4636977785678, 3912580500272, 3219286747952, 2613633150768, 2089569294128, 1641073074992, 1262150701872, 946836694832, 689193885488, 483313417008, 323314744112, 203345633072, 117582161712, 60228719408, 25518007088, 7711037232, 1097133872, 11640792] (by decide +kernel) (by decide +kernel)
+
+theorem m2_1 : availableMass (start .one4) ⟨2,5,0⟩ 17 < layerNeed := by
+  rw [mass_eq (start .one4) ⟨2,5,0⟩ 17 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 200 [4679106249028, 4183913043040, 3409585951707, 2711153918907, 2115152177931, 1613509753995, 1198140555771, 860943375387, 593801888427, 388584653931, 237145114395, 131321595771, 62937307467, 23800342347, 5703676731, 425170395, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m2_2 : availableMass (start .one4) ⟨2,6,0⟩ 25 < layerNeed := by
+  rw [mass_eq (start .one4) ⟨2,6,0⟩ 25 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 190 [4679106249028, 4274622143268, 3657323123495, 2854104521163, 2177212718351, 1616157199859, 1160350682487, 799109115035, 521651678303, 317100785091, 174482080199, 82724440427, 30659974575, 7024023443, 455159831, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m2_3 : availableMass (start .one4) ⟨3,9,0⟩ 38 < layerNeed := by
+  rw [mass_eq (start .one4) ⟨3,9,0⟩ 38 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 164 [4679106249028, 4274622143268, 3894297784836, 3263401128705, 2329064903829, 1587884949717, 1022498622133, 609743987061, 326109840213, 147735707029, 50411842677, 9579232053, 333494466, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m2_4 : availableMass (start .one4) ⟨4,12,0⟩ 46 < layerNeed := by
+  rw [mass_eq (start .one4) ⟨4,12,0⟩ 46 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 149 [4679106249028, 4274622143268, 3894297784836, 3517174336304, 2589820855372, 1635468552364, 948733647116, 486824113516, 206041955788, 61783208492, 8537936524, 76625962, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m2_5 : availableMass (start .one4) ⟨5,15,0⟩ 51 < layerNeed := by
+  rw [mass_eq (start .one4) ⟨5,15,0⟩ 51 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 137 [4679106249028, 4274622143268, 3894297784836, 3537370752484, 2862169086096, 1697595233155, 887766733835, 387241499923, 122864943451, 19538690723, 337168944, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m2_6 : availableMass (start .one4) ⟨6,17,0⟩ 53 < layerNeed := by
+  rw [mass_eq (start .one4) ⟨6,17,0⟩ 53 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 131 [4679106249028, 4274622143268, 3894297784836, 3537370752484, 2961341454934, 1711809284646, 830702543754, 319708835886, 79035689298, 6394162998, 225008] (by decide +kernel) (by decide +kernel)
+
+theorem m2_7 : availableMass (start .one4) ⟨9,27,0⟩ 60 < layerNeed := by
+  rw [mass_eq (start .one4) ⟨9,27,0⟩ 60 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 113 [4679106249028, 4274622143268, 3894297784836, 3537370752484, 3203080394436, 1982706982542, 684114467842, 131929261614, 4744475064, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m2_8 : availableMass (start .one4) ⟨67,26,0⟩ 61 < layerNeed := by
+  rw [mass_eq (start .one4) ⟨67,26,0⟩ 61 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 116 [4679106249028, 4274622143268, 3894297784836, 3537370752484, 3203080394436, 1960569472300, 563014499740, 92405737420, 3757559740, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m2_9 : availableMass (start .one4) ⟨67,38,0⟩ 64 < layerNeed := by
+  rw [mass_eq (start .one4) ⟨67,38,0⟩ 64 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 103 [4679106249028, 4274622143268, 3894297784836, 3537370752484, 3203080394436, 2215799707106, 470185681162, 28649772274, 65774] (by decide +kernel) (by decide +kernel)
+
+theorem m2_10 : availableMass (start .one4) ⟨67,39,0⟩ 64 < layerNeed := by
+  rw [mass_eq (start .one4) ⟨67,39,0⟩ 64 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 102 [4679106249028, 4274622143268, 3894297784836, 3537370752484, 3203080394436, 2204497947150, 449862398117, 24142520077, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m3_0 : availableMass (start .one5) ⟨1,3,0⟩ 8 < layerNeed := by
+  rw [mass_eq (start .one5) ⟨1,3,0⟩ 8 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 214 [4607716673582, 3898952186250, 3218197064346, 2620784491690, 2101527076794, 1655180805066, 1276445038810, 959962517226, 700319356410, 492045049354, 329612465946, 207437852970, 119880834106, 61244409930, 25774957914, 7662232426, 1039364730, 8531027] (by decide +kernel) (by decide +kernel)
+
+theorem m3_1 : availableMass (start .one5) ⟨2,5,0⟩ 31 < layerNeed := by
+  rw [mass_eq (start .one5) ⟨2,5,0⟩ 31 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 196 [4628005587678, 4137434455250, 3638699625154, 2893820959159, 2209769463699, 1642357177359, 1180966288939, 814882219239, 533293621059, 325292379199, 179873610459, 85935663639, 32280119539, 7611790959, 538722699, 0, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m3_2 : availableMass (start .one5) ⟨2,6,0⟩ 37 < layerNeed := by
+  rw [mass_eq (start .one5) ⟨2,6,0⟩ 37 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 187 [4628005587678, 4137434455250, 3682501885502, 3051842347402, 2281199441886, 1651255490898, 1148449116454, 758988943770, 468853601262, 263791720546, 129321936438, 50732886954, 13083213310, 1201559922, 432433, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m3_3 : availableMass (start .one5) ⟨3,9,0⟩ 49 < layerNeed := by
+  rw [mass_eq (start .one5) ⟨3,9,0⟩ 49 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 166 [4628005587678, 4137434455250, 3682501885502, 3261913664034, 2589701257010, 1738963263890, 1096866764082, 635184596498, 325044738098, 136930303890, 40679546930, 5485858322, 43264833, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m3_4 : availableMass (start .one5) ⟨5,15,0⟩ 60 < layerNeed := by
+  rw [mass_eq (start .one5) ⟨5,15,0⟩ 60 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 142 [4628005587678, 4137434455250, 3682501885502, 3261913664034, 2874369528446, 2025884627542, 1065987819926, 469160399830, 151170200854, 24909664598, 496790898, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m3_5 : availableMass (start .one5) ⟨7,19,0⟩ 64 < layerNeed := by
+  rw [mass_eq (start .one5) ⟨7,19,0⟩ 64 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 132 [4628005587678, 4137434455250, 3682501885502, 3261913664034, 2874369528446, 2228680476695, 1076006409926, 392125707734, 86056245734, 4823182628, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m3_6 : availableMass (start .one5) ⟨8,24,0⟩ 67 < layerNeed := by
+  rw [mass_eq (start .one5) ⟨8,24,0⟩ 67 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 123 [4628005587678, 4137434455250, 3682501885502, 3261913664034, 2874369528446, 2365540332364, 1087312256608, 309873279852, 37024304592, 138425081, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m3_7 : availableMass (start .one5) ⟨13,39,0⟩ 71 < layerNeed := by
+  rw [mass_eq (start .one5) ⟨13,39,0⟩ 71 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 108 [4628005587678, 4137434455250, 3682501885502, 3261913664034, 2874369528446, 2501539610304, 1075679297314, 130013272866, 506475111] (by decide +kernel) (by decide +kernel)
+
+theorem m3_8 : availableMass (start .one5) ⟨67,37,0⟩ 72 < layerNeed := by
+  rw [mass_eq (start .one5) ⟨67,37,0⟩ 72 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 111 [4628005587678, 4137434455250, 3682501885502, 3261913664034, 2874369528446, 2518563168338, 1136182967326, 140813672230, 1593196826, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m3_9 : availableMass (start .one5) ⟨69,38,0⟩ 72 < layerNeed := by
+  rw [mass_eq (start .one5) ⟨69,38,0⟩ 72 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 110 [4628005587678, 4137434455250, 3682501885502, 3261913664034, 2874369528446, 2518563168338, 1116361829451, 128285624875, 1033940566, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m4_0 : availableMass (start .one6) ⟨1,3,0⟩ 31 < layerNeed := by
+  rw [mass_eq (start .one6) ⟨1,3,0⟩ 31 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 214 [4577344072499, 4003054728023, 3452917072720, 2789531199726, 2187519628506, 1677766461774, 1253060268234, 906053567694, 629262831066, 415068480366, 255714888714, 143310380334, 69827230554, 27101665806, 6833863626, 587952654, 79630, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m4_1 : availableMass (start .one6) ⟨2,6,0⟩ 54 < layerNeed := by
+  rw [mass_eq (start .one6) ⟨2,6,0⟩ 54 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 191 [4577344072499, 4003054728023, 3477982715867, 3000104969663, 2510563557359, 1820141469596, 1239592784924, 796603565468, 473367890972, 251649859484, 112783587356, 37673209244, 6792878108, 194317800, 0, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m4_2 : availableMass (start .one6) ⟨6,18,0⟩ 76 < layerNeed := by
+  rw [mass_eq (start .one6) ⟨6,18,0⟩ 76 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 144 [4577344072499, 4003054728023, 3477982715867, 3000104969663, 2567371549187, 2177705640359, 1609639076261, 704972902424, 213031930712, 29753673368, 275870212, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m4_3 : availableMass (start .one6) ⟨11,33,0⟩ 82 < layerNeed := by
+  rw [mass_eq (start .one6) ⟨11,33,0⟩ 82 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 124 [4577344072499, 4003054728023, 3477982715867, 3000104969663, 2567371549187, 2177705640359, 1794849109317, 689274807257, 76153300337, 157266145, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m5_0 : availableMass (start .one7) ⟨1,3,0⟩ 73 < layerNeed := by
+  rw [mass_eq (start .one7) ⟨1,3,0⟩ 73 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 238 [4518321774336, 3849816668780, 3250457160752, 2716533600588, 2244324484544, 1830096454796, 1408219159335, 994497916451, 670643424767, 425849636283, 249213734999, 129736136915, 56320490031, 17773674347, 2805801863, 47475750, 0, 0, 0, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m5_1 : availableMass (start .one7) ⟨2,6,0⟩ 90 < layerNeed := by
+  rw [mass_eq (start .one7) ⟨2,6,0⟩ 90 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 216 [4518321774336, 3849816668780, 3250457160752, 2716533600588, 2244324484544, 1830096454796, 1470104299440, 1127927471185, 705005565795, 389918428843, 186201221523, 69815329755, 16372869187, 1136685195, 0, 0, 0, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m5_2 : availableMass (start .one7) ⟨4,12,0⟩ 101 < layerNeed := by
+  rw [mass_eq (start .one7) ⟨4,12,0⟩ 101 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 187 [4518321774336, 3849816668780, 3250457160752, 2716533600588, 2244324484544, 1830096454796, 1470104299440, 1160590952492, 827098232466, 371051764125, 115686222677, 17613333845, 250903269, 0, 0, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m5_3 : availableMass (start .one7) ⟨8,24,0⟩ 108 < layerNeed := by
+  rw [mass_eq (start .one7) ⟨8,24,0⟩ 108 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 161 [4518321774336, 3849816668780, 3250457160752, 2716533600588, 2244324484544, 1830096454796, 1470104299440, 1160590952492, 897787493888, 396586615042, 50103348366, 266091540, 0, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m6_0 : availableMass (start .two6thin) ⟨1,3,0⟩ 31 < layerNeed := by
+  rw [mass_eq (start .two6thin) ⟨1,3,0⟩ 31 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 214 [4577344072499, 4003054728023, 3452917072720, 2789531199726, 2187519628506, 1677766461774, 1253060268234, 906053567694, 629262831066, 415068480366, 255714888714, 143310380334, 69827230554, 27101665806, 6833863626, 587952654, 79630, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m6_1 : availableMass (start .two6thin) ⟨2,6,0⟩ 54 < layerNeed := by
+  rw [mass_eq (start .two6thin) ⟨2,6,0⟩ 54 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 191 [4577344072499, 4003054728023, 3477982715867, 3000104969663, 2510563557359, 1820141469596, 1239592784924, 796603565468, 473367890972, 251649859484, 112783587356, 37673209244, 6792878108, 194317800, 0, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m6_2 : availableMass (start .two6thin) ⟨4,12,0⟩ 70 < layerNeed := by
+  rw [mass_eq (start .two6thin) ⟨4,12,0⟩ 70 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 161 [4577344072499, 4003054728023, 3477982715867, 3000104969663, 2567371549187, 2163298428558, 1412812132599, 733439567811, 315742085679, 97538622267, 14471331303, 181944312, 0, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m6_3 : availableMass (start .two6thin) ⟨6,18,0⟩ 76 < layerNeed := by
+  rw [mass_eq (start .two6thin) ⟨6,18,0⟩ 76 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 144 [4577344072499, 4003054728023, 3477982715867, 3000104969663, 2567371549187, 2177705640359, 1609639076261, 704972902424, 213031930712, 29753673368, 275870212, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m6_4 : availableMass (start .two6thin) ⟨7,19,0⟩ 77 < layerNeed := by
+  rw [mass_eq (start .two6thin) ⟨7,19,0⟩ 77 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 143 [4577344072499, 4003054728023, 3477982715867, 3000104969663, 2567371549187, 2177705640359, 1647841005765, 715749796229, 205107476965, 25000873501, 107964733, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m6_5 : availableMass (start .two6thin) ⟨7,21,0⟩ 78 < layerNeed := by
+  rw [mass_eq (start .two6thin) ⟨7,21,0⟩ 78 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 139 [4577344072499, 4003054728023, 3477982715867, 3000104969663, 2567371549187, 2177705640359, 1679373264208, 706376946732, 178118993688, 15092927484, 1404874, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m6_6 : availableMass (start .two6thin) ⟨65,17,0⟩ 78 < layerNeed := by
+  rw [mass_eq (start .two6thin) ⟨65,17,0⟩ 78 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 149 [4577344072499, 4003054728023, 3477982715867, 3000104969663, 2567371549187, 2177705640359, 1661629786489, 657175695689, 168585025913, 21966066657, 455958501, 0, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m6_7 : availableMass (start .two6thin) ⟨66,30,0⟩ 82 < layerNeed := by
+  rw [mass_eq (start .two6thin) ⟨66,30,0⟩ 82 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 127 [4577344072499, 4003054728023, 3477982715867, 3000104969663, 2567371549187, 2177705640359, 1791579919530, 655587567492, 76242010884, 666185970, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m6_8 : availableMass (start .two6thin) ⟨68,35,0⟩ 83 < layerNeed := by
+  rw [mass_eq (start .two6thin) ⟨68,35,0⟩ 83 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 123 [4577344072499, 4003054728023, 3477982715867, 3000104969663, 2567371549187, 2177705640359, 1814597463416, 664694653705, 54911149345, 45707932, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m6_9 : availableMass (start .two6thin) ⟨67,39,0⟩ 84 < layerNeed := by
+  rw [mass_eq (start .two6thin) ⟨67,39,0⟩ 84 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 120 [4577344072499, 4003054728023, 3477982715867, 3000104969663, 2567371549187, 2177705640359, 1829003555243, 712086006111, 47272342119, 856774] (by decide +kernel) (by decide +kernel)
+
+theorem m6_10 : availableMass (start .two6thin) ⟨96,36,0⟩ 84 < layerNeed := by
+  rw [mass_eq (start .two6thin) ⟨96,36,0⟩ 84 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 123 [4577344072499, 4003054728023, 3477982715867, 3000104969663, 2567371549187, 2177705640359, 1829003555243, 712728298643, 52640163167, 43783433, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m6_11 : availableMass (start .two6thin) ⟨96,43,0⟩ 84 < layerNeed := by
+  rw [mass_eq (start .two6thin) ⟨96,43,0⟩ 84 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 117 [4577344072499, 4003054728023, 3477982715867, 3000104969663, 2567371549187, 2177705640359, 1829003555243, 639537380329, 25912393069, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m6_12 : availableMass (start .two6thin) ⟨110,42,0⟩ 84 < layerNeed := by
+  rw [mass_eq (start .two6thin) ⟨110,42,0⟩ 84 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 118 [4577344072499, 4003054728023, 3477982715867, 3000104969663, 2567371549187, 2177705640359, 1829003555243, 635296154672, 26102579888, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m7_0 : availableMass (start .two6wide) ⟨1,3,0⟩ 87 < layerNeed := by
+  rw [mass_eq (start .two6wide) ⟨1,3,0⟩ 87 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 270 [4487981692249, 3778312455973, 3156060990097, 2613764138653, 2144290189897, 1740838876309, 1396941374593, 1075387724567, 756227964504, 511021542036, 329455388136, 199914958164, 111858982104, 55819464564, 23401684776, 7284196596, 1218828504, 31977764, 0, 0, 0, 0, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m7_1 : availableMass (start .two6wide) ⟨3,9,0⟩ 111 < layerNeed := by
+  rw [mass_eq (start .two6wide) ⟨3,9,0⟩ 111 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 221 [4487981692249, 3778312455973, 3156060990097, 2613764138653, 2144290189897, 1740838876309, 1396941374593, 1106460305677, 863589734713, 601607165778, 306913439410, 130723319950, 41466040090, 7114199830, 196161520, 0, 0, 0, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m7_2 : availableMass (start .two6wide) ⟨5,14,0⟩ 117 < layerNeed := by
+  rw [mass_eq (start .two6wide) ⟨5,14,0⟩ 117 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 199 [4487981692249, 3778312455973, 3156060990097, 2613764138653, 2144290189897, 1740838876309, 1396941374593, 1106460305677, 863589734713, 650239136147, 317811646758, 100333116838, 16934732838, 433998245, 0, 0, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m7_3 : availableMass (start .two6wide) ⟨63,33,0⟩ 125 < layerNeed := by
+  rw [mass_eq (start .two6wide) ⟨63,33,0⟩ 125 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 167 [4487981692249, 3778312455973, 3156060990097, 2613764138653, 2144290189897, 1740838876309, 1396941374593, 1106460305677, 863589734713, 662855171077, 385822161295, 36882344590, 67406562, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m7_4 : availableMass (start .two6wide) ⟨63,36,0⟩ 126 < layerNeed := by
+  rw [mass_eq (start .two6wide) ⟨63,36,0⟩ 126 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 165 [4487981692249, 3778312455973, 3156060990097, 2613764138653, 2144290189897, 1740838876309, 1396941374593, 1106460305677, 863589734713, 662855171077, 407078198593, 39159019732, 33468580, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m7_5 : availableMass (start .two6wide) ⟨62,39,0⟩ 126 < layerNeed := by
+  rw [mass_eq (start .two6wide) ⟨62,39,0⟩ 126 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 162 [4487981692249, 3778312455973, 3156060990097, 2613764138653, 2144290189897, 1740838876309, 1396941374593, 1106460305677, 863589734713, 662855171077, 402608593994, 32978057931, 2291912, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m7_6 : availableMass (start .two6wide) ⟨89,40,0⟩ 126 < layerNeed := by
+  rw [mass_eq (start .two6wide) ⟨89,40,0⟩ 126 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 161 [4487981692249, 3778312455973, 3156060990097, 2613764138653, 2144290189897, 1740838876309, 1396941374593, 1106460305677, 863589734713, 662855171077, 395559396946, 26305504650, 205040, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m7_7 : availableMass (start .two6wide) ⟨89,45,0⟩ 127 < layerNeed := by
+  rw [mass_eq (start .two6wide) ⟨89,45,0⟩ 127 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 159 [4487981692249, 3778312455973, 3156060990097, 2613764138653, 2144290189897, 1740838876309, 1396941374593, 1106460305677, 863589734713, 662855171077, 417080626593, 27746500043, 0, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m7_8 : availableMass (start .two6wide) ⟨101,42,0⟩ 127 < layerNeed := by
+  rw [mass_eq (start .two6wide) ⟨101,42,0⟩ 127 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 161 [4487981692249, 3778312455973, 3156060990097, 2613764138653, 2144290189897, 1740838876309, 1396941374593, 1106460305677, 863589734713, 662855171077, 418451656460, 30005078958, 255245, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m8_0 : availableMass (start .two7) ⟨1,3,0⟩ 73 < layerNeed := by
+  rw [mass_eq (start .two7) ⟨1,3,0⟩ 73 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 238 [4518321774336, 3849816668780, 3250457160752, 2716533600588, 2244324484544, 1830096454796, 1408219159335, 994497916451, 670643424767, 425849636283, 249213734999, 129736136915, 56320490031, 17773674347, 2805801863, 47475750, 0, 0, 0, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m8_1 : availableMass (start .two7) ⟨4,11,0⟩ 100 < layerNeed := by
+  rw [mass_eq (start .two7) ⟨4,11,0⟩ 100 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 191 [4518321774336, 3849816668780, 3250457160752, 2716533600588, 2244324484544, 1830096454796, 1470104299440, 1160590952492, 814034305382, 373494946704, 125419148016, 22921199376, 690879744, 0, 0, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m8_2 : availableMass (start .two7) ⟨4,12,0⟩ 101 < layerNeed := by
+  rw [mass_eq (start .two7) ⟨4,12,0⟩ 101 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 187 [4518321774336, 3849816668780, 3250457160752, 2716533600588, 2244324484544, 1830096454796, 1470104299440, 1160590952492, 827098232466, 371051764125, 115686222677, 17613333845, 250903269, 0, 0, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m8_3 : availableMass (start .two7) ⟨7,19,0⟩ 106 < layerNeed := by
+  rw [mass_eq (start .two7) ⟨7,19,0⟩ 106 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 169 [4518321774336, 3849816668780, 3250457160752, 2716533600588, 2244324484544, 1830096454796, 1470104299440, 1160590952492, 885706724675, 379639173521, 70000365133, 2166533734, 0, 0, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m8_4 : availableMass (start .two7) ⟨8,23,0⟩ 108 < layerNeed := by
+  rw [mass_eq (start .two7) ⟨8,23,0⟩ 108 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 163 [4518321774336, 3849816668780, 3250457160752, 2716533600588, 2244324484544, 1830096454796, 1470104299440, 1160590952492, 897787493888, 405359163390, 56706387510, 531336300, 0, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m8_5 : availableMass (start .two7) ⟨66,32,0⟩ 110 < layerNeed := by
+  rw [mass_eq (start .two7) ⟨66,32,0⟩ 110 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 152 [4518321774336, 3849816668780, 3250457160752, 2716533600588, 2244324484544, 1830096454796, 1470104299440, 1160590952492, 897787493888, 403741179632, 23445662966, 0, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m8_6 : availableMass (start .two7) ⟨67,34,0⟩ 111 < layerNeed := by
+  rw [mass_eq (start .two7) ⟨67,34,0⟩ 111 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 151 [4518321774336, 3849816668780, 3250457160752, 2716533600588, 2244324484544, 1830096454796, 1470104299440, 1160590952492, 897787493888, 439251600632, 25351611719, 0, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m8_7 : availableMass (start .two7) ⟨66,36,0⟩ 111 < layerNeed := by
+  rw [mass_eq (start .two7) ⟨66,36,0⟩ 111 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 149 [4518321774336, 3849816668780, 3250457160752, 2716533600588, 2244324484544, 1830096454796, 1470104299440, 1160590952492, 897787493888, 431266990800, 20851946805, 0, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m8_8 : availableMass (start .two7) ⟨67,35,0⟩ 111 < layerNeed := by
+  rw [mass_eq (start .two7) ⟨67,35,0⟩ 111 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 150 [4518321774336, 3849816668780, 3250457160752, 2716533600588, 2244324484544, 1830096454796, 1470104299440, 1160590952492, 897787493888, 435074373624, 22955783763, 0, 0] (by decide +kernel) (by decide +kernel)
+
+theorem m8_9 : availableMass (start .two7) ⟨95,40,0⟩ 111 < layerNeed := by
+  rw [mass_eq (start .two7) ⟨95,40,0⟩ 111 (Or.inr (by decide)) (by decide)]
+  exact mass_of_checks _ 146 [4518321774336, 3849816668780, 3250457160752, 2716533600588, 2244324484544, 1830096454796, 1470104299440, 1160590952492, 897787493888, 407803507722, 12107189699, 0, 0] (by decide +kernel) (by decide +kernel)
+
+theorem thresholds_valid (k : Band) (q : Threshold) (hq : q ∈ thresholds k) :
     0 < q.j ∧ availableMass (start k) ⟨q.b,q.j,0⟩ (q.l-1) < layerNeed := by
   cases k
   · simp only [thresholds, List.mem_cons, List.not_mem_nil, or_false] at hq
-    rcases hq with rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl
+    rcases hq with rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl
     · exact ⟨by decide, m0_0⟩
     · exact ⟨by decide, m0_1⟩
     · exact ⟨by decide, m0_2⟩
@@ -456,11 +585,8 @@ private theorem thresholds_valid (k : Band) (q : Threshold) (hq : q ∈ threshol
     · exact ⟨by decide, m0_43⟩
     · exact ⟨by decide, m0_44⟩
     · exact ⟨by decide, m0_45⟩
-    · exact ⟨by decide, m0_46⟩
-    · exact ⟨by decide, m0_47⟩
-    · exact ⟨by decide, m0_48⟩
   · simp only [thresholds, List.mem_cons, List.not_mem_nil, or_false] at hq
-    rcases hq with rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl
+    rcases hq with rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl
     · exact ⟨by decide, m1_0⟩
     · exact ⟨by decide, m1_1⟩
     · exact ⟨by decide, m1_2⟩
@@ -475,17 +601,8 @@ private theorem thresholds_valid (k : Band) (q : Threshold) (hq : q ∈ threshol
     · exact ⟨by decide, m1_11⟩
     · exact ⟨by decide, m1_12⟩
     · exact ⟨by decide, m1_13⟩
-    · exact ⟨by decide, m1_14⟩
-    · exact ⟨by decide, m1_15⟩
-    · exact ⟨by decide, m1_16⟩
-    · exact ⟨by decide, m1_17⟩
-    · exact ⟨by decide, m1_18⟩
-    · exact ⟨by decide, m1_19⟩
-    · exact ⟨by decide, m1_20⟩
-    · exact ⟨by decide, m1_21⟩
-    · exact ⟨by decide, m1_22⟩
   · simp only [thresholds, List.mem_cons, List.not_mem_nil, or_false] at hq
-    rcases hq with rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl
+    rcases hq with rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl
     · exact ⟨by decide, m2_0⟩
     · exact ⟨by decide, m2_1⟩
     · exact ⟨by decide, m2_2⟩
@@ -497,12 +614,68 @@ private theorem thresholds_valid (k : Band) (q : Threshold) (hq : q ∈ threshol
     · exact ⟨by decide, m2_8⟩
     · exact ⟨by decide, m2_9⟩
     · exact ⟨by decide, m2_10⟩
-    · exact ⟨by decide, m2_11⟩
-    · exact ⟨by decide, m2_12⟩
-    · exact ⟨by decide, m2_13⟩
-    · exact ⟨by decide, m2_14⟩
-    · exact ⟨by decide, m2_15⟩
-    · exact ⟨by decide, m2_16⟩
+  · simp only [thresholds, List.mem_cons, List.not_mem_nil, or_false] at hq
+    rcases hq with rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl
+    · exact ⟨by decide, m3_0⟩
+    · exact ⟨by decide, m3_1⟩
+    · exact ⟨by decide, m3_2⟩
+    · exact ⟨by decide, m3_3⟩
+    · exact ⟨by decide, m3_4⟩
+    · exact ⟨by decide, m3_5⟩
+    · exact ⟨by decide, m3_6⟩
+    · exact ⟨by decide, m3_7⟩
+    · exact ⟨by decide, m3_8⟩
+    · exact ⟨by decide, m3_9⟩
+  · simp only [thresholds, List.mem_cons, List.not_mem_nil, or_false] at hq
+    rcases hq with rfl | rfl | rfl | rfl
+    · exact ⟨by decide, m4_0⟩
+    · exact ⟨by decide, m4_1⟩
+    · exact ⟨by decide, m4_2⟩
+    · exact ⟨by decide, m4_3⟩
+  · simp only [thresholds, List.mem_cons, List.not_mem_nil, or_false] at hq
+    rcases hq with rfl | rfl | rfl | rfl
+    · exact ⟨by decide, m5_0⟩
+    · exact ⟨by decide, m5_1⟩
+    · exact ⟨by decide, m5_2⟩
+    · exact ⟨by decide, m5_3⟩
+  · simp only [thresholds, List.mem_cons, List.not_mem_nil, or_false] at hq
+    rcases hq with rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl
+    · exact ⟨by decide, m6_0⟩
+    · exact ⟨by decide, m6_1⟩
+    · exact ⟨by decide, m6_2⟩
+    · exact ⟨by decide, m6_3⟩
+    · exact ⟨by decide, m6_4⟩
+    · exact ⟨by decide, m6_5⟩
+    · exact ⟨by decide, m6_6⟩
+    · exact ⟨by decide, m6_7⟩
+    · exact ⟨by decide, m6_8⟩
+    · exact ⟨by decide, m6_9⟩
+    · exact ⟨by decide, m6_10⟩
+    · exact ⟨by decide, m6_11⟩
+    · exact ⟨by decide, m6_12⟩
+  · simp only [thresholds, List.mem_cons, List.not_mem_nil, or_false] at hq
+    rcases hq with rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl
+    · exact ⟨by decide, m7_0⟩
+    · exact ⟨by decide, m7_1⟩
+    · exact ⟨by decide, m7_2⟩
+    · exact ⟨by decide, m7_3⟩
+    · exact ⟨by decide, m7_4⟩
+    · exact ⟨by decide, m7_5⟩
+    · exact ⟨by decide, m7_6⟩
+    · exact ⟨by decide, m7_7⟩
+    · exact ⟨by decide, m7_8⟩
+  · simp only [thresholds, List.mem_cons, List.not_mem_nil, or_false] at hq
+    rcases hq with rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl
+    · exact ⟨by decide, m8_0⟩
+    · exact ⟨by decide, m8_1⟩
+    · exact ⟨by decide, m8_2⟩
+    · exact ⟨by decide, m8_3⟩
+    · exact ⟨by decide, m8_4⟩
+    · exact ⟨by decide, m8_5⟩
+    · exact ⟨by decide, m8_6⟩
+    · exact ⟨by decide, m8_7⟩
+    · exact ⟨by decide, m8_8⟩
+    · exact ⟨by decide, m8_9⟩
 
 theorem order_valid (k : Band) (x : Shape) : order k x = 1 ∨
     availableMass (start k) x (order k x - 1) < layerNeed := by
@@ -512,7 +685,8 @@ theorem order_valid (k : Band) (x : Shape) : order k x = 1 ∨
     change order k x = q.l at he
     rw [he]
     obtain ⟨hpos, hsmall⟩ := thresholds_valid k q hq
+    have hr : start k = zeroShape ∨ 0 < (start k).j := by cases k <;> decide
     have hi : 0 < (start k).j + q.j := by omega
-    exact (Final50PriceLayer.availableMass_anti_prefix (y := ⟨q.b,q.j,0⟩) hi hb hj).trans_lt hsmall
+    exact (Final50PriceLayer.availableMass_anti_prefix (y := ⟨q.b,q.j,0⟩) hr hi hb hj).trans_lt hsmall
 #print axioms order_valid
 end Final50PriceMass

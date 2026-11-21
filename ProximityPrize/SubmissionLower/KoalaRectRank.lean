@@ -15,7 +15,7 @@ open private Position boundaryMap sourceCoord boundaryDegree sourceCoord_degree 
   from ProximityPrize.SubmissionLower.Fast065
 open private zero_of_strict_cutoff from ProximityPrize.SubmissionLower.UpperBranch1
 
-private def rectInclusion {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (word : I → L)
+def rectInclusion {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (word : I → L)
     (s : Shape) (W : ℕ) (U : Fin 2 → ℕ) : rectComplete Crt word s W U →ₗ[L] complete Crt word s W :=
   Submodule.inclusion inf_le_left
 
@@ -25,11 +25,11 @@ private instance rectCompleteFinite {h : ℕ} {D : PoleData h} (Crt : CRTLift D)
   exact Module.Finite.of_injective (rectInclusion Crt word s W U)
     (Submodule.inclusion_injective inf_le_left)
 
-private def rectBoundary {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (word : I → L)
+def rectBoundary {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (word : I → L)
     (s : Shape) (W : ℕ) (U : Fin 2 → ℕ) : rectComplete Crt word s W U →ₗ[L] (Position → L) :=
   (boundaryMap Crt word s W).comp (rectInclusion Crt word s W U)
 
-private theorem rectBoundary_rank {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (word : I → L)
+theorem rectBoundary_rank {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (word : I → L)
     (s : Shape) (W : ℕ) (U : Fin 2 → ℕ) :
     Module.finrank L (rectBoundary Crt word s W U).range ≤
       Module.finrank FX (rectEvaluated Crt word s W U) := by
@@ -62,7 +62,7 @@ private theorem rectBoundary_rank {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (
   have hu : LinearIndependent FX u := LinearIndependent.of_comp R.subtype heval
   simpa [F, R] using hu.fintype_card_le_finrank
 
-private theorem rectStrict {h : ℕ} {D : PoleData h} {Crt : CRTLift D} {word : I → L}
+theorem rectStrict {h : ℕ} {D : PoleData h} {Crt : CRTLift D} {word : I → L}
     {s : Shape} {W : ℕ} {U : Fin 2 → ℕ} (P : (rectBoundary Crt word s W U).ker)
     {j i a : ℕ} {e : Fin 2 →₀ ℕ} (hn : coeffAt (P.1 : Source) j i a e ≠ 0) :
     a + (i+j)*(131071+h) < W+(s.B+s.J)*(2*h)+j := by

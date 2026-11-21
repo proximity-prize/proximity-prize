@@ -8,7 +8,7 @@ namespace HighCore82219BankProof
 open P1_7_1_3 (momentEstimate blockEstimate block_append)
 
 
-private theorem block9318_35 : blockEstimate 9318 1962 13162 80 = 0x18f30800 := by decide +kernel
+theorem block9318_35 : blockEstimate 9318 1962 13162 80 = 0x18f30800 := by decide +kernel
 
 theorem moment9318_group7 : blockEstimate 9318 1962 13162 80 = 0x18f30800 := block9318_35
 

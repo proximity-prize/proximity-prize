@@ -15,7 +15,7 @@ def diagonal (a b c n : ℕ) : Box := ⟨a*n, n, b*n, c*n⟩
 abbrev project (F : Type*) [Field F] (a b c : ℕ) :=
   monomialMap F (diagonal a b c 1).support
 
-private theorem add_support (a b c n : ℕ) :
+theorem add_support (a b c n : ℕ) :
     (diagonal a b c n).support + (diagonal a b c 1).support ⊆
       (diagonal a b c (n+1)).support := by
   rintro _ ⟨u, hu, v, hv, rfl⟩
@@ -41,18 +41,18 @@ private def take (m : Exp) (a b c : ℕ) : Exp :=
   Finsupp.equivFunOnFinite.symm
     ![min (m 0) (a+2*(1-j)), j, min (m 2) b, min (m 3) c]
 
-private theorem take_mem (m : Exp) (a b c : ℕ) :
+theorem take_mem (m : Exp) (a b c : ℕ) :
     take m a b c ∈ (diagonal a b c 1).support := by
   change min (m 1) 1 ≤ 1 ∧
     min (m 0) (a+2*(1-min (m 1) 1)) + 2*min (m 1) 1 ≤ a*1+2*1 ∧
     min (m 2) b ≤ b*1 ∧ min (m 3) c ≤ c*1
   omega
 
-private theorem take_le (m : Exp) (a b c : ℕ) : take m a b c ≤ m := by
+theorem take_le (m : Exp) (a b c : ℕ) : take m a b c ≤ m := by
   intro i
   fin_cases i <;> exact min_le_left _ _
 
-private theorem rest_mem {m : Exp} {a b c n : ℕ} (hm : m ∈ (diagonal a b c (n+1)).support) :
+theorem rest_mem {m : Exp} {a b c n : ℕ} (hm : m ∈ (diagonal a b c (n+1)).support) :
     m - take m a b c ∈ (diagonal a b c n).support := by
   rcases hm with ⟨hv, hy, hu, hw⟩
   simp only [diagonal, Nat.mul_succ] at hv hy hu hw

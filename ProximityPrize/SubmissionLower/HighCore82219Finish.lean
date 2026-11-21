@@ -12,8 +12,8 @@ theorem prefix_inventory : c3 :=
 
 theorem ordinary_high
     (hBridge : RetainedCountAt .h2367) {u del} (M : AnchorModel u del) {Γ} (F : AnchoredFamily M Γ)
-    (hl : 2354 ≤ M.overhead) (hu : M.overhead ≤ (heightCap : ℤ)) :
-    Γ.card ≤ 272316635316572668 :=
+    (hl : 2378 ≤ M.overhead) (hu : M.overhead ≤ (heightCap : ℤ)) :
+    Γ.card ≤ 272100187954834303 :=
   all_high_of_prefix_and_retained HighCore82219BankProof.interpolation_sources_for_crt
     prefix_inventory (fun band => by
       by_cases hb : band = .h2367
