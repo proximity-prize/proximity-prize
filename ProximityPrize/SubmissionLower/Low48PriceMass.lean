@@ -105,7 +105,99 @@ private theorem m0_3 : availableMass (start .empty) (⟨6,17,0⟩ : Shape) 26 < 
   rw [s11]
   decide
 
-private theorem m0_4 : availableMass (start .empty) (⟨17,6,0⟩ : Shape) 2 < layerNeed := by
+private theorem m0_4 : availableMass (start .empty) (⟨8,24,0⟩ : Shape) 31 < layerNeed := by
+  rw [mass_eq (start .empty) (⟨8,24,0⟩ : Shape) 31 (Or.inl rfl) (by decide)]
+  have s0 : P3_6_8_1.sumBelow (fastLayer (start .empty) (⟨8,24,0⟩ : Shape) 31) 0 = 0 := rfl
+  have s1 := row! s0,12,12,4907511165456,4907511165456
+  have s2 := row! s1,12,24,4907511165456,9815022330912
+  have s3 := row! s2,12,36,4659130936588,14474153267500
+  have s4 := row! s3,12,48,2896963190648,17371116458148
+  have s5 := row! s4,12,60,1458129625784,18829246083932
+  have s6 := row! s5,12,72,595155903992,19424401987924
+  have s7 := row! s6,12,84,165164681528,19589566669452
+  have s8 := row! s7,12,96,18398907512,19607965576964
+  have s9 := row! s8,3,99,42170024,19608007746988
+  change P3_6_8_1.sumBelow _ 99 < layerNeed
+  rw [s9]
+  decide
+
+private theorem m0_5 : availableMass (start .empty) (⟨9,27,0⟩ : Shape) 36 < layerNeed := by
+  rw [mass_eq (start .empty) (⟨9,27,0⟩ : Shape) 36 (Or.inl rfl) (by decide)]
+  have s0 : P3_6_8_1.sumBelow (fastLayer (start .empty) (⟨9,27,0⟩ : Shape) 36) 0 = 0 := rfl
+  have s1 := row! s0,12,12,4907511165456,4907511165456
+  have s2 := row! s1,12,24,4907511165456,9815022330912
+  have s3 := row! s2,12,36,4907511165456,14722533496368
+  have s4 := row! s3,12,48,3568197554637,18290731051005
+  have s5 := row! s4,12,60,1732073735013,20022804786018
+  have s6 := row! s5,12,72,663788906709,20686593692727
+  have s7 := row! s6,12,84,161491857693,20848085550420
+  have s8 := row! s7,12,96,12311415357,20860396965777
+  have s9 := row! s8,1,97,24238,20860396990015
+  change P3_6_8_1.sumBelow _ 97 < layerNeed
+  rw [s9]
+  decide
+
+private theorem m0_6 : availableMass (start .empty) (⟨10,28,0⟩ : Shape) 38 < layerNeed := by
+  rw [mass_eq (start .empty) (⟨10,28,0⟩ : Shape) 38 (Or.inl rfl) (by decide)]
+  have s0 : P3_6_8_1.sumBelow (fastLayer (start .empty) (⟨10,28,0⟩ : Shape) 38) 0 = 0 := rfl
+  have s1 := row! s0,12,12,4907511165456,4907511165456
+  have s2 := row! s1,12,24,4907511165456,9815022330912
+  have s3 := row! s2,12,36,4907511165456,14722533496368
+  have s4 := row! s3,12,48,3907780403608,18630313899976
+  have s5 := row! s4,12,60,1898028658476,20528342558452
+  have s6 := row! s5,12,72,722514681804,21250857240256
+  have s7 := row! s6,12,84,173660264812,21424517505068
+  have s8 := row! s7,12,96,12814101516,21437331606584
+  change P3_6_8_1.sumBelow _ 96 < layerNeed
+  rw [s8]
+  decide
+
+private theorem m0_7 : availableMass (start .empty) (⟨10,30,0⟩ : Shape) 39 < layerNeed := by
+  rw [mass_eq (start .empty) (⟨10,30,0⟩ : Shape) 39 (Or.inl rfl) (by decide)]
+  have s0 : P3_6_8_1.sumBelow (fastLayer (start .empty) (⟨10,30,0⟩ : Shape) 39) 0 = 0 := rfl
+  have s1 := row! s0,12,12,4907511165456,4907511165456
+  have s2 := row! s1,12,24,4907511165456,9815022330912
+  have s3 := row! s2,12,36,4907511165456,14722533496368
+  have s4 := row! s3,12,48,4030765999656,18753299496024
+  have s5 := row! s4,12,60,1895284999241,20648584495265
+  have s6 := row! s5,12,72,665813815181,21314398310446
+  have s7 := row! s6,12,84,133509652721,21447907963167
+  have s8 := row! s7,10,94,5477515555,21453385478722
+  change P3_6_8_1.sumBelow _ 94 < layerNeed
+  rw [s8]
+  decide
+
+private theorem m0_8 : availableMass (start .empty) (⟨11,31,0⟩ : Shape) 40 < layerNeed := by
+  rw [mass_eq (start .empty) (⟨11,31,0⟩ : Shape) 40 (Or.inl rfl) (by decide)]
+  have s0 : P3_6_8_1.sumBelow (fastLayer (start .empty) (⟨11,31,0⟩ : Shape) 40) 0 = 0 := rfl
+  have s1 := row! s0,12,12,4907511165456,4907511165456
+  have s2 := row! s1,12,24,4907511165456,9815022330912
+  have s3 := row! s2,12,36,4907511165456,14722533496368
+  have s4 := row! s3,12,48,4174339927616,18896873423984
+  have s5 := row! s4,12,60,1965527115830,20862400539814
+  have s6 := row! s5,12,72,672529897434,21534930437248
+  have s7 := row! s6,12,84,127216167734,21662146604982
+  have s8 := row! s7,9,93,4271570598,21666418175580
+  change P3_6_8_1.sumBelow _ 93 < layerNeed
+  rw [s8]
+  decide
+
+private theorem m0_9 : availableMass (start .empty) (⟨12,36,0⟩ : Shape) 41 < layerNeed := by
+  rw [mass_eq (start .empty) (⟨12,36,0⟩ : Shape) 41 (Or.inl rfl) (by decide)]
+  have s0 : P3_6_8_1.sumBelow (fastLayer (start .empty) (⟨12,36,0⟩ : Shape) 41) 0 = 0 := rfl
+  have s1 := row! s0,12,12,4907511165456,4907511165456
+  have s2 := row! s1,12,24,4907511165456,9815022330912
+  have s3 := row! s2,12,36,4907511165456,14722533496368
+  have s4 := row! s3,12,48,4248954442632,18971487939000
+  have s5 := row! s4,12,60,1816894413828,20788382352828
+  have s6 := row! s5,12,72,484363591812,21272745944640
+  have s7 := row! s6,12,84,47779073028,21320525017668
+  have s8 := row! s7,2,86,35791398,21320560809066
+  change P3_6_8_1.sumBelow _ 86 < layerNeed
+  rw [s8]
+  decide
+
+private theorem m0_10 : availableMass (start .empty) (⟨17,6,0⟩ : Shape) 2 < layerNeed := by
   rw [mass_eq (start .empty) (⟨17,6,0⟩ : Shape) 2 (Or.inl rfl) (by decide)]
   have s0 : P3_6_8_1.sumBelow (fastLayer (start .empty) (⟨17,6,0⟩ : Shape) 2) 0 = 0 := rfl
   have s1 := row! s0,12,12,4577682559690,4577682559690
@@ -136,39 +228,7 @@ private theorem m0_4 : availableMass (start .empty) (⟨17,6,0⟩ : Shape) 2 < l
   rw [s24]
   decide
 
-private theorem m0_5 : availableMass (start .empty) (⟨8,24,0⟩ : Shape) 31 < layerNeed := by
-  rw [mass_eq (start .empty) (⟨8,24,0⟩ : Shape) 31 (Or.inl rfl) (by decide)]
-  have s0 : P3_6_8_1.sumBelow (fastLayer (start .empty) (⟨8,24,0⟩ : Shape) 31) 0 = 0 := rfl
-  have s1 := row! s0,12,12,4907511165456,4907511165456
-  have s2 := row! s1,12,24,4907511165456,9815022330912
-  have s3 := row! s2,12,36,4659130936588,14474153267500
-  have s4 := row! s3,12,48,2896963190648,17371116458148
-  have s5 := row! s4,12,60,1458129625784,18829246083932
-  have s6 := row! s5,12,72,595155903992,19424401987924
-  have s7 := row! s6,12,84,165164681528,19589566669452
-  have s8 := row! s7,12,96,18398907512,19607965576964
-  have s9 := row! s8,3,99,42170024,19608007746988
-  change P3_6_8_1.sumBelow _ 99 < layerNeed
-  rw [s9]
-  decide
-
-private theorem m0_6 : availableMass (start .empty) (⟨9,27,0⟩ : Shape) 36 < layerNeed := by
-  rw [mass_eq (start .empty) (⟨9,27,0⟩ : Shape) 36 (Or.inl rfl) (by decide)]
-  have s0 : P3_6_8_1.sumBelow (fastLayer (start .empty) (⟨9,27,0⟩ : Shape) 36) 0 = 0 := rfl
-  have s1 := row! s0,12,12,4907511165456,4907511165456
-  have s2 := row! s1,12,24,4907511165456,9815022330912
-  have s3 := row! s2,12,36,4907511165456,14722533496368
-  have s4 := row! s3,12,48,3568197554637,18290731051005
-  have s5 := row! s4,12,60,1732073735013,20022804786018
-  have s6 := row! s5,12,72,663788906709,20686593692727
-  have s7 := row! s6,12,84,161491857693,20848085550420
-  have s8 := row! s7,12,96,12311415357,20860396965777
-  have s9 := row! s8,1,97,24238,20860396990015
-  change P3_6_8_1.sumBelow _ 97 < layerNeed
-  rw [s9]
-  decide
-
-private theorem m0_7 : availableMass (start .empty) (⟨32,5,0⟩ : Shape) 1 < layerNeed := by
+private theorem m0_11 : availableMass (start .empty) (⟨32,5,0⟩ : Shape) 1 < layerNeed := by
   rw [mass_eq (start .empty) (⟨32,5,0⟩ : Shape) 1 (Or.inl rfl) (by decide)]
   have s0 : P3_6_8_1.sumBelow (fastLayer (start .empty) (⟨32,5,0⟩ : Shape) 1) 0 = 0 := rfl
   have s1 := row! s0,12,12,4438740442702,4438740442702
@@ -203,22 +263,7 @@ private theorem m0_7 : availableMass (start .empty) (⟨32,5,0⟩ : Shape) 1 < l
   rw [s28]
   decide
 
-private theorem m0_8 : availableMass (start .empty) (⟨10,28,0⟩ : Shape) 38 < layerNeed := by
-  rw [mass_eq (start .empty) (⟨10,28,0⟩ : Shape) 38 (Or.inl rfl) (by decide)]
-  have s0 : P3_6_8_1.sumBelow (fastLayer (start .empty) (⟨10,28,0⟩ : Shape) 38) 0 = 0 := rfl
-  have s1 := row! s0,12,12,4907511165456,4907511165456
-  have s2 := row! s1,12,24,4907511165456,9815022330912
-  have s3 := row! s2,12,36,4907511165456,14722533496368
-  have s4 := row! s3,12,48,3907780403608,18630313899976
-  have s5 := row! s4,12,60,1898028658476,20528342558452
-  have s6 := row! s5,12,72,722514681804,21250857240256
-  have s7 := row! s6,12,84,173660264812,21424517505068
-  have s8 := row! s7,12,96,12814101516,21437331606584
-  change P3_6_8_1.sumBelow _ 96 < layerNeed
-  rw [s8]
-  decide
-
-private theorem m0_9 : availableMass (start .empty) (⟨32,6,0⟩ : Shape) 4 < layerNeed := by
+private theorem m0_12 : availableMass (start .empty) (⟨32,6,0⟩ : Shape) 4 < layerNeed := by
   rw [mass_eq (start .empty) (⟨32,6,0⟩ : Shape) 4 (Or.inl rfl) (by decide)]
   have s0 : P3_6_8_1.sumBelow (fastLayer (start .empty) (⟨32,6,0⟩ : Shape) 4) 0 = 0 := rfl
   have s1 := row! s0,12,12,4626249913698,4626249913698
@@ -249,37 +294,7 @@ private theorem m0_9 : availableMass (start .empty) (⟨32,6,0⟩ : Shape) 4 < l
   rw [s24]
   decide
 
-private theorem m0_10 : availableMass (start .empty) (⟨10,30,0⟩ : Shape) 39 < layerNeed := by
-  rw [mass_eq (start .empty) (⟨10,30,0⟩ : Shape) 39 (Or.inl rfl) (by decide)]
-  have s0 : P3_6_8_1.sumBelow (fastLayer (start .empty) (⟨10,30,0⟩ : Shape) 39) 0 = 0 := rfl
-  have s1 := row! s0,12,12,4907511165456,4907511165456
-  have s2 := row! s1,12,24,4907511165456,9815022330912
-  have s3 := row! s2,12,36,4907511165456,14722533496368
-  have s4 := row! s3,12,48,4030765999656,18753299496024
-  have s5 := row! s4,12,60,1895284999241,20648584495265
-  have s6 := row! s5,12,72,665813815181,21314398310446
-  have s7 := row! s6,12,84,133509652721,21447907963167
-  have s8 := row! s7,10,94,5477515555,21453385478722
-  change P3_6_8_1.sumBelow _ 94 < layerNeed
-  rw [s8]
-  decide
-
-private theorem m0_11 : availableMass (start .empty) (⟨11,31,0⟩ : Shape) 40 < layerNeed := by
-  rw [mass_eq (start .empty) (⟨11,31,0⟩ : Shape) 40 (Or.inl rfl) (by decide)]
-  have s0 : P3_6_8_1.sumBelow (fastLayer (start .empty) (⟨11,31,0⟩ : Shape) 40) 0 = 0 := rfl
-  have s1 := row! s0,12,12,4907511165456,4907511165456
-  have s2 := row! s1,12,24,4907511165456,9815022330912
-  have s3 := row! s2,12,36,4907511165456,14722533496368
-  have s4 := row! s3,12,48,4174339927616,18896873423984
-  have s5 := row! s4,12,60,1965527115830,20862400539814
-  have s6 := row! s5,12,72,672529897434,21534930437248
-  have s7 := row! s6,12,84,127216167734,21662146604982
-  have s8 := row! s7,9,93,4271570598,21666418175580
-  change P3_6_8_1.sumBelow _ 93 < layerNeed
-  rw [s8]
-  decide
-
-private theorem m0_12 : availableMass (start .empty) (⟨33,9,0⟩ : Shape) 11 < layerNeed := by
+private theorem m0_13 : availableMass (start .empty) (⟨33,9,0⟩ : Shape) 11 < layerNeed := by
   rw [mass_eq (start .empty) (⟨33,9,0⟩ : Shape) 11 (Or.inl rfl) (by decide)]
   have s0 : P3_6_8_1.sumBelow (fastLayer (start .empty) (⟨33,9,0⟩ : Shape) 11) 0 = 0 := rfl
   have s1 := row! s0,12,12,4897302402457,4897302402457
@@ -301,21 +316,6 @@ private theorem m0_12 : availableMass (start .empty) (⟨33,9,0⟩ : Shape) 11 <
   have s17 := row! s16,2,194,0,17012938146371
   change P3_6_8_1.sumBelow _ 194 < layerNeed
   rw [s17]
-  decide
-
-private theorem m0_13 : availableMass (start .empty) (⟨12,36,0⟩ : Shape) 41 < layerNeed := by
-  rw [mass_eq (start .empty) (⟨12,36,0⟩ : Shape) 41 (Or.inl rfl) (by decide)]
-  have s0 : P3_6_8_1.sumBelow (fastLayer (start .empty) (⟨12,36,0⟩ : Shape) 41) 0 = 0 := rfl
-  have s1 := row! s0,12,12,4907511165456,4907511165456
-  have s2 := row! s1,12,24,4907511165456,9815022330912
-  have s3 := row! s2,12,36,4907511165456,14722533496368
-  have s4 := row! s3,12,48,4248954442632,18971487939000
-  have s5 := row! s4,12,60,1816894413828,20788382352828
-  have s6 := row! s5,12,72,484363591812,21272745944640
-  have s7 := row! s6,12,84,47779073028,21320525017668
-  have s8 := row! s7,2,86,35791398,21320560809066
-  change P3_6_8_1.sumBelow _ 86 < layerNeed
-  rw [s8]
   decide
 
 private theorem m0_14 : availableMass (start .empty) (⟨62,4,0⟩ : Shape) 1 < layerNeed := by
@@ -503,23 +503,7 @@ private theorem m0_20 : availableMass (start .empty) (⟨65,24,0⟩ : Shape) 39 
   rw [s9]
   decide
 
-private theorem m0_21 : availableMass (start .empty) (⟨66,29,0⟩ : Shape) 44 < layerNeed := by
-  rw [mass_eq (start .empty) (⟨66,29,0⟩ : Shape) 44 (Or.inl rfl) (by decide)]
-  have s0 : P3_6_8_1.sumBelow (fastLayer (start .empty) (⟨66,29,0⟩ : Shape) 44) 0 = 0 := rfl
-  have s1 := row! s0,12,12,4907511165456,4907511165456
-  have s2 := row! s1,12,24,4907511165456,9815022330912
-  have s3 := row! s2,12,36,4907511165456,14722533496368
-  have s4 := row! s3,12,48,4647095591605,19369629087973
-  have s5 := row! s4,12,60,2281843945660,21651473033633
-  have s6 := row! s5,12,72,731439648656,22382912682289
-  have s7 := row! s6,12,84,150773862652,22533686544941
-  have s8 := row! s7,12,96,11885464576,22545572009517
-  have s9 := row! s8,4,100,30171447,22545602180964
-  change P3_6_8_1.sumBelow _ 100 < layerNeed
-  rw [s9]
-  decide
-
-private theorem m0_22 : availableMass (start .empty) (⟨65,31,0⟩ : Shape) 44 < layerNeed := by
+private theorem m0_21 : availableMass (start .empty) (⟨65,31,0⟩ : Shape) 44 < layerNeed := by
   rw [mass_eq (start .empty) (⟨65,31,0⟩ : Shape) 44 (Or.inl rfl) (by decide)]
   have s0 : P3_6_8_1.sumBelow (fastLayer (start .empty) (⟨65,31,0⟩ : Shape) 44) 0 = 0 := rfl
   have s1 := row! s0,12,12,4907511165456,4907511165456
@@ -532,6 +516,22 @@ private theorem m0_22 : availableMass (start .empty) (⟨65,31,0⟩ : Shape) 44 
   have s8 := row! s7,12,96,5985274904,22338198873506
   have s9 := row! s8,1,97,17506,22338198891012
   change P3_6_8_1.sumBelow _ 97 < layerNeed
+  rw [s9]
+  decide
+
+private theorem m0_22 : availableMass (start .empty) (⟨66,29,0⟩ : Shape) 44 < layerNeed := by
+  rw [mass_eq (start .empty) (⟨66,29,0⟩ : Shape) 44 (Or.inl rfl) (by decide)]
+  have s0 : P3_6_8_1.sumBelow (fastLayer (start .empty) (⟨66,29,0⟩ : Shape) 44) 0 = 0 := rfl
+  have s1 := row! s0,12,12,4907511165456,4907511165456
+  have s2 := row! s1,12,24,4907511165456,9815022330912
+  have s3 := row! s2,12,36,4907511165456,14722533496368
+  have s4 := row! s3,12,48,4647095591605,19369629087973
+  have s5 := row! s4,12,60,2281843945660,21651473033633
+  have s6 := row! s5,12,72,731439648656,22382912682289
+  have s7 := row! s6,12,84,150773862652,22533686544941
+  have s8 := row! s7,12,96,11885464576,22545572009517
+  have s9 := row! s8,4,100,30171447,22545602180964
+  change P3_6_8_1.sumBelow _ 100 < layerNeed
   rw [s9]
   decide
 
@@ -654,16 +654,16 @@ private theorem m0_30 : availableMass (start .empty) (⟨109,43,0⟩ : Shape) 48
   rw [s8]
   decide
 
-private theorem m0_31 : availableMass (start .empty) (⟨118,49,0⟩ : Shape) 49 < layerNeed := by
-  rw [mass_eq (start .empty) (⟨118,49,0⟩ : Shape) 49 (Or.inl rfl) (by decide)]
-  have s0 : P3_6_8_1.sumBelow (fastLayer (start .empty) (⟨118,49,0⟩ : Shape) 49) 0 = 0 := rfl
+private theorem m0_31 : availableMass (start .empty) (⟨119,49,0⟩ : Shape) 49 < layerNeed := by
+  rw [mass_eq (start .empty) (⟨119,49,0⟩ : Shape) 49 (Or.inl rfl) (by decide)]
+  have s0 : P3_6_8_1.sumBelow (fastLayer (start .empty) (⟨119,49,0⟩ : Shape) 49) 0 = 0 := rfl
   have s1 := row! s0,12,12,4907511165456,4907511165456
   have s2 := row! s1,12,24,4907511165456,9815022330912
   have s3 := row! s2,12,36,4907511165456,14722533496368
   have s4 := row! s3,12,48,4907511165456,19630044661824
-  have s5 := row! s4,12,60,2629388336951,22259432998775
-  have s6 := row! s5,12,72,338799804311,22598232803086
-  have s7 := row! s6,10,82,7283677089,22605516480175
+  have s5 := row! s4,12,60,2625438798872,22255483460696
+  have s6 := row! s5,12,72,335839076364,22591322537060
+  have s7 := row! s6,10,82,7054597571,22598377134631
   change P3_6_8_1.sumBelow _ 82 < layerNeed
   rw [s7]
   decide
@@ -887,23 +887,7 @@ private theorem m1_10 : availableMass (start .one) (⟨65,27,0⟩ : Shape) 55 < 
   rw [s10]
   decide
 
-private theorem m1_11 : availableMass (start .one) (⟨66,30,0⟩ : Shape) 56 < layerNeed := by
-  rw [mass_eq (start .one) (⟨66,30,0⟩ : Shape) 56 (Or.inr (by decide)) (by decide)]
-  have s0 : P3_6_8_1.sumBelow (fastLayer (start .one) (⟨66,30,0⟩ : Shape) 56) 0 = 0 := rfl
-  have s1 := row! s0,12,12,4740005313959,4740005313959
-  have s2 := row! s1,12,24,4439709210263,9179714524222
-  have s3 := row! s2,12,36,4152103344383,13331817868605
-  have s4 := row! s3,12,48,3876938262239,17208756130844
-  have s5 := row! s4,12,60,3407153525396,20615909656240
-  have s6 := row! s5,12,72,1413132153750,22029041809990
-  have s7 := row! s6,12,84,320316966090,22349358776080
-  have s8 := row! s7,12,96,30036712158,22379395488238
-  have s9 := row! s8,10,106,113983282,22379509471520
-  change P3_6_8_1.sumBelow _ 106 < layerNeed
-  rw [s9]
-  decide
-
-private theorem m1_12 : availableMass (start .one) (⟨65,36,0⟩ : Shape) 58 < layerNeed := by
+private theorem m1_11 : availableMass (start .one) (⟨65,36,0⟩ : Shape) 58 < layerNeed := by
   rw [mass_eq (start .one) (⟨65,36,0⟩ : Shape) 58 (Or.inr (by decide)) (by decide)]
   have s0 : P3_6_8_1.sumBelow (fastLayer (start .one) (⟨65,36,0⟩ : Shape) 58) 0 = 0 := rfl
   have s1 := row! s0,12,12,4740005313959,4740005313959
@@ -919,22 +903,23 @@ private theorem m1_12 : availableMass (start .one) (⟨65,36,0⟩ : Shape) 58 < 
   rw [s9]
   decide
 
-private theorem m1_13 : availableMass (start .one) (⟨67,41,0⟩ : Shape) 59 < layerNeed := by
-  rw [mass_eq (start .one) (⟨67,41,0⟩ : Shape) 59 (Or.inr (by decide)) (by decide)]
-  have s0 : P3_6_8_1.sumBelow (fastLayer (start .one) (⟨67,41,0⟩ : Shape) 59) 0 = 0 := rfl
+private theorem m1_12 : availableMass (start .one) (⟨66,30,0⟩ : Shape) 56 < layerNeed := by
+  rw [mass_eq (start .one) (⟨66,30,0⟩ : Shape) 56 (Or.inr (by decide)) (by decide)]
+  have s0 : P3_6_8_1.sumBelow (fastLayer (start .one) (⟨66,30,0⟩ : Shape) 56) 0 = 0 := rfl
   have s1 := row! s0,12,12,4740005313959,4740005313959
   have s2 := row! s1,12,24,4439709210263,9179714524222
   have s3 := row! s2,12,36,4152103344383,13331817868605
   have s4 := row! s3,12,48,3876938262239,17208756130844
-  have s5 := row! s4,12,60,3586371387357,20795127518201
-  have s6 := row! s5,12,72,1577397344638,22372524862839
-  have s7 := row! s6,12,84,228437078062,22600961940901
-  have s8 := row! s7,12,96,4897904836,22605859845737
-  change P3_6_8_1.sumBelow _ 96 < layerNeed
-  rw [s8]
+  have s5 := row! s4,12,60,3407153525396,20615909656240
+  have s6 := row! s5,12,72,1413132153750,22029041809990
+  have s7 := row! s6,12,84,320316966090,22349358776080
+  have s8 := row! s7,12,96,30036712158,22379395488238
+  have s9 := row! s8,10,106,113983282,22379509471520
+  change P3_6_8_1.sumBelow _ 106 < layerNeed
+  rw [s9]
   decide
 
-private theorem m1_14 : availableMass (start .one) (⟨94,38,0⟩ : Shape) 59 < layerNeed := by
+private theorem m1_13 : availableMass (start .one) (⟨94,38,0⟩ : Shape) 59 < layerNeed := by
   rw [mass_eq (start .one) (⟨94,38,0⟩ : Shape) 59 (Or.inr (by decide)) (by decide)]
   have s0 : P3_6_8_1.sumBelow (fastLayer (start .one) (⟨94,38,0⟩ : Shape) 59) 0 = 0 := rfl
   have s1 := row! s0,12,12,4740005313959,4740005313959
@@ -1184,7 +1169,7 @@ private theorem thresholds_valid (k : Band) (q : Threshold) (hq : q ∈ threshol
     · exact ⟨by decide, m0_30⟩
     · exact ⟨by decide, m0_31⟩
   · simp only [thresholds, List.mem_cons, List.not_mem_nil, or_false] at hq
-    rcases hq with rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl
+    rcases hq with rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl
     · exact ⟨by decide, m1_0⟩
     · exact ⟨by decide, m1_1⟩
     · exact ⟨by decide, m1_2⟩
@@ -1199,7 +1184,6 @@ private theorem thresholds_valid (k : Band) (q : Threshold) (hq : q ∈ threshol
     · exact ⟨by decide, m1_11⟩
     · exact ⟨by decide, m1_12⟩
     · exact ⟨by decide, m1_13⟩
-    · exact ⟨by decide, m1_14⟩
   · simp only [thresholds, List.mem_cons, List.not_mem_nil, or_false] at hq
     rcases hq with rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl
     · exact ⟨by decide, m2_0⟩

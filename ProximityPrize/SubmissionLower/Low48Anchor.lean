@@ -29,19 +29,19 @@ private theorem centered {u v : JetVariable 3 →₀ ℕ}
   have hsum := add_le_add (add_le_add (h (some 1)) (h (some 2))) (h (some 3))
   refine ⟨hd.trans hdeg,hi.trans hidx,(h _).trans ht,hd.trans (htail.trans (gradeLimit_antitone hsum)),?_⟩
   have hw := Finsupp.weight_le_weight
-    (w := fun j : Fin 4 => 133437 - j.val) (w' := fun _ => 133437)
+    (w := fun j : Fin 4 => 133426 - j.val) (w' := fun _ => 133426)
     (fun j => Nat.sub_le _ _) v.some
-  have he : v.some.weight (fun _ => 133437) = 133437 * v.some.degree := by
+  have he : v.some.weight (fun _ => 133426) = 133426 * v.some.degree := by
     simp only [Finsupp.weight_apply, Finsupp.degree_apply, Finsupp.sum, smul_eq_mul,
       Finset.mul_sum, Nat.mul_comm]
   rw [he] at hw
-  have hweight : differentialWeight (d := 3) 133437 =
-      fun j => j.elim 1 (fun i => 133437 - i.val) := by
+  have hweight : differentialWeight (d := 3) 133426 =
+      fun j => j.elim 1 (fun i => 133426 - i.val) := by
     funext j
     cases j <;> rfl
   rw [← Finsupp.optionElim_some v, hweight, Finsupp.weight_optionElim, one_mul]
   calc
-    _ ≤ 89 + 133437 * 121 :=
+    _ ≤ 89 + 133426 * 121 :=
       Nat.add_le_add (Nat.le_of_lt_succ hx)
         (hw.trans (Nat.mul_le_mul_left _ (hd.trans hdeg)))
     _ ≤ _ := by decide
@@ -64,12 +64,12 @@ private theorem centered_in_space (x y : Geom) (Q : anchorSpace) :
 theorem rank_at_point_le_origin (x y : Geom) :
     Module.finrank Geom (LinearMap.range (anchorLocal x y)) ≤
       Module.finrank Geom (LinearMap.range (anchorLocal 0 0)) := by
-  have hpositive (j : JetVariable 3) : differentialWeight 133437 j ≠ 0 := by
+  have hpositive (j : JetVariable 3) : differentialWeight 133426 j ≠ 0 := by
     cases j with
     | none => decide
     | some j =>
       have hj := j.isLt
-      change 133437 - j.val ≠ 0
+      change 133426 - j.val ≠ 0
       omega
   have : Module.Finite Geom anchorSpace :=
     restrictSupport_finite <|
@@ -96,7 +96,7 @@ theorem per_position
   (rank_at_point_le_origin x y).trans hRank
 
 theorem margin :
-    Module.finrank Geom anchorSpace - 262144 * 10053422 = 120250334 := by
+    Module.finrank Geom anchorSpace - 262144 * 10053422 = 108644306 := by
   rw [anchor_finrank]
 
 private theorem shape_bound (Q : anchorSpace) :
@@ -129,9 +129,9 @@ private theorem shape_bound (Q : anchorSpace) :
 theorem exists_anchor
     (hRank : Module.finrank Geom (LinearMap.range (anchorLocal 0 0)) ≤ 10053422) (w : I → K) :
     ∃ P : Row 4, P ≠ 0 ∧ InBox (shape P) ⟨121,49,13⟩ ∧
-      differentialWeightedDegree 133437 ((MvPolynomial.optionEquivRight Geom (Fin 4)).symm P) <
-        90 * 179944 ∧
-      ∀ (S : K[X]) (T : Finset I), S.natDegree ≤ 133437 → 179944 ≤ T.card →
+      differentialWeightedDegree 133426 ((MvPolynomial.optionEquivRight Geom (Fin 4)).symm P) <
+        90 * 179935 ∧
+      ∀ (S : K[X]) (T : Finset I), S.natDegree ≤ 133426 → 179935 ≤ T.card →
         (∀ i ∈ T, S.eval (node i) = w i) → atJet P (extend S) = 0 := by
   let rows (i : I) := anchorLocal (embed (node i)) (embed (w i))
   have hr : (∑ i, Module.finrank Geom (LinearMap.range (rows i))) ≤ 262144 * 10053422 := calc
@@ -146,10 +146,10 @@ theorem exists_anchor
     intro h
     exact hQ (Subtype.ext ((MvPolynomial.optionEquivRight Geom (Fin 4)).injective
       (h.trans (map_zero _).symm)))
-  have hdeg : differentialWeightedDegree 133437 (Q : DifferentialPolynomial Geom 3) <
-      90 * 179944 := by
-    have hw : differentialWeightedDegree 133437 (Q : DifferentialPolynomial Geom 3) ≤
-        90 * 179944 - 1 := by
+  have hdeg : differentialWeightedDegree 133426 (Q : DifferentialPolynomial Geom 3) <
+      90 * 179935 := by
+    have hw : differentialWeightedDegree 133426 (Q : DifferentialPolynomial Geom 3) ≤
+        90 * 179935 - 1 := by
       rw [differentialWeightedDegree, MvPolynomial.weightedTotalDegree, Finset.sup_le_iff]
       exact fun m hm => (Q.property hm).2.2.2.2
     exact lt_of_le_of_lt hw (by decide)
@@ -157,7 +157,7 @@ theorem exists_anchor
   · simpa only [P, AlgEquiv.symm_apply_apply] using hdeg
   · intro S T hd hT hits
     rw [atJet_unflatten]
-    have hS : (extend S).natDegree ≤ 133437 := Polynomial.natDegree_map_le.trans hd
+    have hS : (extend S).natDegree ≤ 133426 := Polynomial.natDegree_map_le.trans hd
     refine differentialSpecialization_eq_zero_of_differentialWeightedDegree_lt
       (fun i => embed (node i)) (fun i => embed (w i)) T hdeg
       (fun i _ => hlocal i) _ hS

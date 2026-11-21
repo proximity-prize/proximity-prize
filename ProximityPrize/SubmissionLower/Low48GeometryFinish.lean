@@ -16,9 +16,9 @@ open PolynomialDifferential ReedSolomon.HiddenDerivative
 open scoped BigOperators Polynomial
 
 /-- Count an ordinary low-height family given the proper-cut price proof. -/
-theorem of_cut {cap u del Γ} (M : P1.ModelAt cap u del) (F : P1.FamilyAt 179944 M Γ)
-    (lo : 1 ≤ M.overhead) (hi : M.overhead ≤ 2366)
-    (proper : Low48Price.c6) : Γ.card ≤ 266624925740859468 := by
+theorem of_cut {cap u del Γ} (M : P1.ModelAt cap u del) (F : P1.FamilyAt 179935 M Γ)
+    (lo : 1 ≤ M.overhead) (hi : M.overhead ≤ 2355)
+    (proper : Low48Price.c6) : Γ.card ≤ 268648687130152327 := by
   have hm := Low48Order.messages_of_family M F hi
   have hmsg : Messages M.word Γ F.scalar := ⟨F.distinct, hm.degree, hm.hits⟩
   obtain ⟨P, hP, hbox, hw, hz⟩ := Low48Rank.exists_anchor M.word
@@ -42,8 +42,8 @@ theorem of_cut {cap u del Γ} (M : P1.ModelAt cap u del) (F : P1.FamilyAt 179944
       Nat.add_le_add_left htotal _
     _ = Low48PriceCaps.budget := Nat.add_sub_of_le hcap
 
-theorem count {cap u del Γ} (M : P1.ModelAt cap u del) (F : P1.FamilyAt 179944 M Γ)
-    (lo : 1 ≤ M.overhead) (hi : M.overhead ≤ 2366) : Γ.card ≤ 266624925740859468 :=
+theorem count {cap u del Γ} (M : P1.ModelAt cap u del) (F : P1.FamilyAt 179935 M Γ)
+    (lo : 1 ≤ M.overhead) (hi : M.overhead ≤ 2355) : Γ.card ≤ 268648687130152327 :=
   of_cut M F lo hi (Low48GeometryCut.proof Low48BentCycle.mixed_tilted)
 
 #print axioms count

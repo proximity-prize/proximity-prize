@@ -72,7 +72,7 @@ open Low48Fat (mixedWeight secondCut bankRank)
 open scoped Polynomial BigOperators
 open private line line_zero line_toGeneric transverse pow_dvd_of_coeff positive_jet_degree
   from ProximityPrize.SubmissionLower.Fast076
-def reserveCost (moving : Bool) : ℕ := if moving then 7098 else 48875
+def reserveCost (moving : Bool) : ℕ := if moving then 7065 else 48866
 def layerPower (e t : ℕ) : ℕ := 1 + (secondCut - t) / e
 private theorem choose_coordinate {moving : Bool} {A : Finset GenericRow}
     (hA : FactorsFor moving A) {F f : GenericRow} (hF : F ≠ 0) (hcap : Caps secondBox F)
@@ -134,9 +134,9 @@ theorem factor_power (moving : Bool) (A : Finset GenericRow) (F : PhysicalRow) (
 set_option maxRecDepth 1024
 theorem factor_arithmetic :
     let T := 0x1de50d7332f37
-    48875 * 6820 * T / bankRank = 121 ∧ 48875 * 2300 * T / bankRank = 40 ∧
-      7098 * 6820 * T / bankRank = 17 ∧ 7098 * 2300 * T / bankRank = 5 ∧
-      7098 * 70000 * T / bankRank = 180 := by decide
+    48866 * 6820 * T / bankRank = 121 ∧ 48866 * 2300 * T / bankRank = 41 ∧
+      7065 * 6820 * T / bankRank = 17 ∧ 7065 * 2300 * T / bankRank = 5 ∧
+      7065 * 70000 * T / bankRank = 180 := by decide
 theorem resource_bound {e V d : ℕ} (he : 0 < e) (r : ℕ → ℕ)
     (hr : bankRank ≤ ∑ t ∈ Finset.range (secondCut + 1), r t)
     (hcap : ∀ t ≤ secondCut, r t ≤ topSlots 0)
@@ -172,8 +172,8 @@ theorem resource_bound {e V d : ℕ} (he : 0 < e) (r : ℕ → ℕ)
     _ = e * V * topSlots 0 := by ring
 theorem top_exclusion (r : ℕ → ℕ)
     (hr : bankRank ≤ ∑ t ∈ Finset.range (secondCut + 1), r t)
-    (h : ∀ t ≤ secondCut, r t ≤ topSlots (layerPower 7098 t)) : False := by
-  have hb := cutoff_sum_le (W := secondCut) (n := 1150) (by decide : 0 < 7098)
+    (h : ∀ t ≤ secondCut, r t ≤ topSlots (layerPower 7065 t)) : False := by
+  have hb := cutoff_sum_le (W := secondCut) (n := 1150) (by decide : 0 < 7065)
     r (fun k => topSlots (1 + k)) h (fun k hk => by
       have hk' : 1151 - (1 + k) = 0 := by omega
       simp [topSlots, hk'])
@@ -182,7 +182,7 @@ theorem top_exclusion (r : ℕ → ℕ)
     0x5535180af365254238 / 7800 at hs
   rw [Nat.mul_div_cancel_left _ (by decide : 0 < 7800)] at hs
   rw [hs] at hb
-  exact (not_le_of_gt (by decide : 7098 * (0x5535180af365254238 / 7800) < bankRank)) (hr.trans hb)
+  exact (not_le_of_gt (by decide : 7065 * (0x5535180af365254238 / 7800) < bankRank)) (hr.trans hb)
 end
 end Low48FatFactors
 end
@@ -289,7 +289,7 @@ private theorem excludes_top {Γ s} {w : I → K} {P : PoleData Γ s}
     (hb : ∀ t ≤ secondCut, ∃ u : Fin (r t) → GenericRow,
       LinearIndependent GenericX u ∧ ∀ i, u i ∈ layerSpan w P L t)
     (hdvd : ∀ t ≤ secondCut,
-      layerSpan w P L t ≤ multiples (factorProduct A ^ layerPower 7098 t)) :
+      layerSpan w P L t ≤ multiples (factorProduct A ^ layerPower 7065 t)) :
     ∀ f ∈ A, f.degreeOf (some 2) = 0 := by
   classical
   let v : SeedVar → ℕ := Pi.single (some 2) 1
@@ -302,7 +302,7 @@ private theorem excludes_top {Γ s} {w : I → K} {P : PoleData Γ s}
     have h := MvPolynomial.weightedTotalDegree_le_of_dvd v
       (mem_multiples.mp (hdvd t ht hR)) hRne
     rw [weighted_pow _ _ (product_ne_zero hA)] at h
-    have hle := Nat.mul_le_mul_left (layerPower 7098 t) (Nat.pos_of_ne_zero hn)
+    have hle := Nat.mul_le_mul_left (layerPower 7065 t) (Nat.pos_of_ne_zero hn)
     rw [Nat.mul_one] at hle
     simpa only [v, MvPolynomial.weightedTotalDegree_piSingle] using hle.trans h
   intro f hf

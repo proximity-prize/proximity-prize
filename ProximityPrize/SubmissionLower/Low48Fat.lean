@@ -56,7 +56,7 @@ theorem fat_equations : Equations := by
   rcases hcover γ hγ hb with he | ho
   · exact Or.inl (eval_cleared mapQ _ he)
   · refine Or.inr (order_cleared mapR _ ?_)
-    have hres : LowerOrder R (trajectory (extend (s γ))) 58872 :=
+    have hres : LowerOrder R (trajectory (extend (s γ))) 58231 :=
       resultant_order (pad D.left J.a) (pad D.right J.b) (inclConst (P.z γ)) _
         J.degree_left.le J.degree_right.le ⟨mixedOrder_pad J.a ho.1, mixedOrder_pad J.b ho.2⟩
     exact hres
