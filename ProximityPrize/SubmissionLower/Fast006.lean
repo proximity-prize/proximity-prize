@@ -2603,17 +2603,6 @@ theorem PrincipalAt.small_kernel_line {s : Fin 2 → ℕ → K} {m a q : ℕ}
     intro c hc
     rw [Set.mem_singleton_iff] at hc
     exact hc ▸ hgen.2
-theorem PrincipalAt.small_nullity_one {s : Fin 2 → ℕ → K} {m a q : ℕ}
-    (P : PrincipalAt s m a q) (hL : a+q < m) :
-    Module.finrank K (LinearMap.ker (recurrenceMatrix s m a).mulVecLin) = 1 := by
-  rw [P.small_kernel_line hL]
-  apply finrank_span_singleton
-  intro hzero
-  have hcoeff : ∀ i : Fin (a+1), P.generator.coeff i.val=(0:K[X]).coeff i.val := by
-    intro i
-    simpa using congrFun hzero i
-  exact P.nonzero (coefficients_injective_bounded a P.generator 0 P.degree_bound
-    (by simp) hcoeff)
 end
 end FrobeniusLocator.Principal
 end
@@ -2723,17 +2712,6 @@ theorem two_block_rank_exception_count (p : ℕ) [ExpChar F p]
   by_contra hn
   exact hΓ γ hγ (NormalFiber.rank_specializes _
     (IsFractionRing.injective F[X] (GenericLayer.GenericField F)) _ _ B γ hn)
-theorem native_rank_exception_count [ExpChar F 2130706433]
-    (x u v : ι → F) (r : ℕ) (hr7 : 7≤r)
-    (hr : GenericLayer.genericRank (stacked 2130706433 x u v 49193 81879)=81880-r)
-    (hfirst : GenericLayer.genericRank (hankel x u v 49193 81879)=49193)
-    (Γ : Finset F) (hΓ : ∀ γ∈Γ,
-      ((stacked 2130706433 x u v 49193 81879).map (evalRingHom γ)).rank ≠ 81880-r) :
-    Γ.card ≤ 69631486279633 := by
-  have hb := two_block_rank_exception_count 2130706433 x u v 49193 81879 r hr hfirst Γ hΓ
-  have hs : 81879+1-r-49193 ≤ 32680 := by omega
-  have hm := Nat.mul_le_mul_left 2130706433 hs
-  omega
 end
 end FrobeniusLocator.Strata
 end
