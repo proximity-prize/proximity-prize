@@ -4186,33 +4186,6 @@ theorem chamber_has_simplex {a : Shape} (ha : Chamber a) (ht : 0 < a.t) :
 end K1_13_7_2_3_2
 end
 section
-namespace K1_13_1_1
-private theorem combine (f : ℕ → ℕ) (a b x y : ℕ)
-    (ha : sumRange a f = x) (hb : sumRange b (fun i => f (i + a)) = y) :
-    sumRange (a + b) f = x + y :=
-  (sumRange_add a b f).trans (congrArg₂ Nat.add ha hb)
-private theorem budgetTailG : sumRange 31 (fun i => fastGrade (i + 90)) = 342718 :=
-  combine _ 20 11 312724 29994 budgetG budgetH
-private theorem budgetTailF : sumRange 46 (fun i => fastGrade (i + 75)) = 1033676 :=
-  combine _ 15 31 690958 342718 budgetF budgetTailG
-private theorem budgetTailE : sumRange 59 (fun i => fastGrade (i + 62)) = 2125001 :=
-  combine _ 13 46 1091325 1033676 budgetE budgetTailF
-private theorem budgetTailD : sumRange 72 (fun i => fastGrade (i + 49)) = 3777075 :=
-  combine _ 13 59 1652074 2125001 budgetD budgetTailE
-private theorem budgetTailC : sumRange 85 (fun i => fastGrade (i + 36)) = 5992382 :=
-  combine _ 13 72 2215307 3777075 budgetC budgetTailD
-private theorem budgetTailB : sumRange 101 (fun i => fastGrade (i + 20)) = 8573209 :=
-  combine _ 16 85 2580827 5992382 budgetB budgetTailC
-private theorem budgetTailA : sumRange 121 (fun i => fastGrade (i + 0)) = 9199626 :=
-  combine _ 20 101 626417 8573209 budgetA budgetTailB
-theorem totalBudget_eq : totalBudget = 9199626 := by
-  unfold totalBudget
-  have h : gradeBudget = fastGrade := funext fun s => (fastGrade_eq s).symm
-  rw [h]
-  exact budgetTailA
-end K1_13_1_1
-end
-section
 namespace K1_13_7_5
 noncomputable section
 open Polynomial Finset K1 K1_13 K1_13_7

@@ -2466,51 +2466,6 @@ end
 end K1_14_2_2_2_1
 end
 section
-namespace K1_13_1_1
-set_option maxRecDepth 30000
-set_option Elab.async false
-set_option maxHeartbeats 4000000
-private theorem grade110 : fastGrade 110 = 5032 := by decide +kernel
-private theorem grade111 : fastGrade 111 = 4448 := by decide +kernel
-private theorem grade112 : fastGrade 112 = 3884 := by decide +kernel
-private theorem grade113 : fastGrade 113 = 3384 := by decide +kernel
-private theorem grade114 : fastGrade 114 = 2936 := by decide +kernel
-private theorem grade115 : fastGrade 115 = 2520 := by decide +kernel
-private theorem grade116 : fastGrade 116 = 2145 := by decide +kernel
-private theorem grade117 : fastGrade 117 = 1825 := by decide +kernel
-private theorem grade118 : fastGrade 118 = 1520 := by decide +kernel
-private theorem grade119 : fastGrade 119 = 1270 := by decide +kernel
-private theorem grade120 : fastGrade 120 = 1030 := by decide +kernel
-private theorem sumStep (f : ℕ → ℕ) (n a b : ℕ)
-    (ha : sumRange n f = a) (hb : f n = b) :
-    sumRange (n + 1) f = a + b :=
-  (show sumRange (n + 1) f = sumRange n f + f n from rfl).trans (congrArg₂ Nat.add ha hb)
-private def gradeFrom (i : ℕ) : ℕ := fastGrade (i + 110)
-private theorem prefix110 : sumRange 1 gradeFrom = 5032 :=
-  sumStep gradeFrom 0 0 5032 rfl grade110
-private theorem prefix111 : sumRange 2 gradeFrom = 9480 :=
-  sumStep gradeFrom 1 5032 4448 prefix110 grade111
-private theorem prefix112 : sumRange 3 gradeFrom = 13364 :=
-  sumStep gradeFrom 2 9480 3884 prefix111 grade112
-private theorem prefix113 : sumRange 4 gradeFrom = 16748 :=
-  sumStep gradeFrom 3 13364 3384 prefix112 grade113
-private theorem prefix114 : sumRange 5 gradeFrom = 19684 :=
-  sumStep gradeFrom 4 16748 2936 prefix113 grade114
-private theorem prefix115 : sumRange 6 gradeFrom = 22204 :=
-  sumStep gradeFrom 5 19684 2520 prefix114 grade115
-private theorem prefix116 : sumRange 7 gradeFrom = 24349 :=
-  sumStep gradeFrom 6 22204 2145 prefix115 grade116
-private theorem prefix117 : sumRange 8 gradeFrom = 26174 :=
-  sumStep gradeFrom 7 24349 1825 prefix116 grade117
-private theorem prefix118 : sumRange 9 gradeFrom = 27694 :=
-  sumStep gradeFrom 8 26174 1520 prefix117 grade118
-private theorem prefix119 : sumRange 10 gradeFrom = 28964 :=
-  sumStep gradeFrom 9 27694 1270 prefix118 grade119
-theorem budgetH : sumRange 11 (fun i => fastGrade (i + 110)) = 29994 :=
-  sumStep gradeFrom 10 28964 1030 prefix119 grade120
-end K1_13_1_1
-end
-section
 namespace K1_14_3_8
 noncomputable section
 open K1_14 K1_14_3 Polynomial

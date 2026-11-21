@@ -391,16 +391,6 @@ theorem numeric_le_savings : natChunk 0 499 ≤ savingsSum w4 witness := by
 end K1_13_2_3_7
 end
 section
-namespace K1_13_2_3_7
-theorem proof : K1_13_2_3.c7 := by
-  refine ⟨witness, ?_⟩
-  calc
-    174062508216 ≤ 177382348097 := by decide
-    _ = natChunk 0 499 := numeric_total.symm
-    _ ≤ _ := numeric_le_savings
-end K1_13_2_3_7
-end
-section
 set_option autoImplicit false
 set_option maxHeartbeats 1000000
 namespace K1_13_6_1_4_1_1

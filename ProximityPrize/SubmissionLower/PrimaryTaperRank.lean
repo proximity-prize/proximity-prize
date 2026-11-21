@@ -1,4 +1,4 @@
-import ProximityPrize.SubmissionLower.Primary82170
+import ProximityPrize.SubmissionLower.PortLowBase
 
 set_option Elab.async false
 set_option maxHeartbeats 1200000

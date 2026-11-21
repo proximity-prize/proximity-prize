@@ -98,9 +98,7 @@ private theorem p223_49_49 : blockEstimate 223 49 49 215 = 0x40b7288 := by decid
 private theorem p223_49_264 : blockEstimate 223 49 264 57 = 0x320fe3 := by decide +kernel
 
 private theorem s223_49_49_272 : blockEstimate 223 49 49 272 = 0x43d826b :=
-  block_append (B := 223) (J := 49) (start := 49) (next := 264)
-    (a := 215) (b := 57) (n := 272) (x := 0x40b7288) (y := 0x320fe3) (z := 0x43d826b)
-    p223_49_49 p223_49_264 rfl rfl rfl
+  block_append p223_49_49 p223_49_264 rfl rfl rfl
 
 theorem moment223_49 : momentEstimate 223 49 = 0x43d826b := s223_49_49_272
 
@@ -108,9 +106,7 @@ private theorem p233_50_50 : blockEstimate 233 50 50 215 = 0x49ecaa2 := by decid
 private theorem p233_50_265 : blockEstimate 233 50 265 68 = 0x55b9c3 := by decide +kernel
 
 private theorem s233_50_50_283 : blockEstimate 233 50 50 283 = 0x4f48465 :=
-  block_append (B := 233) (J := 50) (start := 50) (next := 265)
-    (a := 215) (b := 68) (n := 283) (x := 0x49ecaa2) (y := 0x55b9c3) (z := 0x4f48465)
-    p233_50_50 p233_50_265 rfl rfl rfl
+  block_append p233_50_50 p233_50_265 rfl rfl rfl
 
 theorem moment233_50 : momentEstimate 233 50 = 0x4f48465 := s233_50_50_283
 
@@ -118,9 +114,7 @@ private theorem p248_55_55 : blockEstimate 248 55 55 215 = 0x5c739b3 := by decid
 private theorem p248_55_270 : blockEstimate 248 55 270 88 = 0xbac300 := by decide +kernel
 
 private theorem s248_55_55_303 : blockEstimate 248 55 55 303 = 0x681fcb3 :=
-  block_append (B := 248) (J := 55) (start := 55) (next := 270)
-    (a := 215) (b := 88) (n := 303) (x := 0x5c739b3) (y := 0xbac300) (z := 0x681fcb3)
-    p248_55_55 p248_55_270 rfl rfl rfl
+  block_append p248_55_55 p248_55_270 rfl rfl rfl
 
 theorem moment248_55 : momentEstimate 248 55 = 0x681fcb3 := s248_55_55_303
 
@@ -128,9 +122,7 @@ private theorem p263_59_59 : blockEstimate 263 59 59 215 = 0x6f6726d := by decid
 private theorem p263_59_274 : blockEstimate 263 59 274 107 = 0x15334c8 := by decide +kernel
 
 private theorem s263_59_59_322 : blockEstimate 263 59 59 322 = 0x849a735 :=
-  block_append (B := 263) (J := 59) (start := 59) (next := 274)
-    (a := 215) (b := 107) (n := 322) (x := 0x6f6726d) (y := 0x15334c8) (z := 0x849a735)
-    p263_59_59 p263_59_274 rfl rfl rfl
+  block_append p263_59_59 p263_59_274 rfl rfl rfl
 
 theorem moment263_59 : momentEstimate 263 59 = 0x849a735 := s263_59_59_322
 
@@ -138,9 +130,7 @@ private theorem p267_58_58 : blockEstimate 267 58 58 215 = 0x72289d3 := by decid
 private theorem p267_58_273 : blockEstimate 267 58 273 110 = 0x17354b5 := by decide +kernel
 
 private theorem s267_58_58_325 : blockEstimate 267 58 58 325 = 0x895de88 :=
-  block_append (B := 267) (J := 58) (start := 58) (next := 273)
-    (a := 215) (b := 110) (n := 325) (x := 0x72289d3) (y := 0x17354b5) (z := 0x895de88)
-    p267_58_58 p267_58_273 rfl rfl rfl
+  block_append p267_58_58 p267_58_273 rfl rfl rfl
 
 theorem moment267_58 : momentEstimate 267 58 = 0x895de88 := s267_58_58_325
 
@@ -148,9 +138,7 @@ private theorem p291_64_64 : blockEstimate 291 64 64 215 = 0x9282f7c := by decid
 private theorem p291_64_279 : blockEstimate 291 64 279 140 = 0x30a85ec := by decide +kernel
 
 private theorem s291_64_64_355 : blockEstimate 291 64 64 355 = 0xc32b568 :=
-  block_append (B := 291) (J := 64) (start := 64) (next := 279)
-    (a := 215) (b := 140) (n := 355) (x := 0x9282f7c) (y := 0x30a85ec) (z := 0xc32b568)
-    p291_64_64 p291_64_279 rfl rfl rfl
+  block_append p291_64_64 p291_64_279 rfl rfl rfl
 
 theorem moment291_64 : momentEstimate 291 64 = 0xc32b568 := s291_64_64_355
 
@@ -158,9 +146,7 @@ private theorem p346_77_77 : blockEstimate 346 77 77 215 = 0xe3ca6ec := by decid
 private theorem p346_77_292 : blockEstimate 346 77 292 208 = 0xa40e994 := by decide +kernel
 
 private theorem s346_77_77_423 : blockEstimate 346 77 77 423 = 0x187d9080 :=
-  block_append (B := 346) (J := 77) (start := 77) (next := 292)
-    (a := 215) (b := 208) (n := 423) (x := 0xe3ca6ec) (y := 0xa40e994) (z := 0x187d9080)
-    p346_77_77 p346_77_292 rfl rfl rfl
+  block_append p346_77_77 p346_77_292 rfl rfl rfl
 
 theorem moment346_77 : momentEstimate 346 77 = 0x187d9080 := s346_77_77_423
 
@@ -174,9 +160,7 @@ private theorem s351_80_295_216 : blockEstimate 351 80 295 216 = 0xb7f3e33 :=
     p351_80_295 p351_80_510 rfl rfl rfl
 
 private theorem s351_80_80_431 : blockEstimate 351 80 80 431 = 0x1a683d4b :=
-  block_append (B := 351) (J := 80) (start := 80) (next := 295)
-    (a := 215) (b := 216) (n := 431) (x := 0xee8ff18) (y := 0xb7f3e33) (z := 0x1a683d4b)
-    p351_80_80 s351_80_295_216 rfl rfl rfl
+  block_append p351_80_80 s351_80_295_216 rfl rfl rfl
 
 theorem moment351_80 : momentEstimate 351 80 = 0x1a683d4b := s351_80_80_431
 
@@ -190,9 +174,7 @@ private theorem s369_82_297_236 : blockEstimate 369 82 297 236 = 0xf1d0f53 :=
     p369_82_297 p369_82_512 rfl rfl rfl
 
 private theorem s369_82_82_451 : blockEstimate 369 82 82 451 = 0x1f9950b6 :=
-  block_append (B := 369) (J := 82) (start := 82) (next := 297)
-    (a := 215) (b := 236) (n := 451) (x := 0x107c4163) (y := 0xf1d0f53) (z := 0x1f9950b6)
-    p369_82_82 s369_82_297_236 rfl rfl rfl
+  block_append p369_82_82 s369_82_297_236 rfl rfl rfl
 
 theorem moment369_82 : momentEstimate 369 82 = 0x1f9950b6 := s369_82_82_451
 
@@ -201,14 +183,10 @@ private theorem p409_90_305 : blockEstimate 409 90 305 215 = 0x1a139b0d := by de
 private theorem p409_90_520 : blockEstimate 409 90 520 69 = 0xa80f27 := by decide +kernel
 
 private theorem s409_90_305_284 : blockEstimate 409 90 305 284 = 0x1abbaa34 :=
-  block_append (B := 409) (J := 90) (start := 305) (next := 520)
-    (a := 215) (b := 69) (n := 284) (x := 0x1a139b0d) (y := 0xa80f27) (z := 0x1abbaa34)
-    p409_90_305 p409_90_520 rfl rfl rfl
+  block_append p409_90_305 p409_90_520 rfl rfl rfl
 
 private theorem s409_90_90_499 : blockEstimate 409 90 90 499 = 0x2f3b1229 :=
-  block_append (B := 409) (J := 90) (start := 90) (next := 305)
-    (a := 215) (b := 284) (n := 499) (x := 0x147f67f5) (y := 0x1abbaa34) (z := 0x2f3b1229)
-    p409_90_90 s409_90_305_284 rfl rfl rfl
+  block_append p409_90_90 s409_90_305_284 rfl rfl rfl
 
 theorem moment409_90 : momentEstimate 409 90 = 0x2f3b1229 := s409_90_90_499
 
@@ -217,14 +195,10 @@ private theorem p439_98_313 : blockEstimate 439 98 313 215 = 0x24fc1588 := by de
 private theorem p439_98_528 : blockEstimate 439 98 528 107 = 0x27852f1 := by decide +kernel
 
 private theorem s439_98_313_322 : blockEstimate 439 98 313 322 = 0x27746879 :=
-  block_append (B := 439) (J := 98) (start := 313) (next := 528)
-    (a := 215) (b := 107) (n := 322) (x := 0x24fc1588) (y := 0x27852f1) (z := 0x27746879)
-    p439_98_313 p439_98_528 rfl rfl rfl
+  block_append p439_98_313 p439_98_528 rfl rfl rfl
 
 private theorem s439_98_98_537 : blockEstimate 439 98 98 537 = 0x3f4c6dc0 :=
-  block_append (B := 439) (J := 98) (start := 98) (next := 313)
-    (a := 215) (b := 322) (n := 537) (x := 0x17d80547) (y := 0x27746879) (z := 0x3f4c6dc0)
-    p439_98_98 s439_98_313_322 rfl rfl rfl
+  block_append p439_98_98 s439_98_313_322 rfl rfl rfl
 
 theorem moment439_98 : momentEstimate 439 98 = 0x3f4c6dc0 := s439_98_98_537
 
@@ -233,14 +207,10 @@ private theorem p491_103_318 : blockEstimate 491 103 318 215 = 0x3824db56 := by 
 private theorem p491_103_533 : blockEstimate 491 103 533 164 = 0x93c1919 := by decide +kernel
 
 private theorem s491_103_318_379 : blockEstimate 491 103 318 379 = 0x4160f46f :=
-  block_append (B := 491) (J := 103) (start := 318) (next := 533)
-    (a := 215) (b := 164) (n := 379) (x := 0x3824db56) (y := 0x93c1919) (z := 0x4160f46f)
-    p491_103_318 p491_103_533 rfl rfl rfl
+  block_append p491_103_318 p491_103_533 rfl rfl rfl
 
 private theorem s491_103_103_594 : blockEstimate 491 103 103 594 = 0x5e3742a9 :=
-  block_append (B := 491) (J := 103) (start := 103) (next := 318)
-    (a := 215) (b := 379) (n := 594) (x := 0x1cd64e3a) (y := 0x4160f46f) (z := 0x5e3742a9)
-    p491_103_103 s491_103_318_379 rfl rfl rfl
+  block_append p491_103_103 s491_103_318_379 rfl rfl rfl
 
 theorem moment491_103 : momentEstimate 491 103 = 0x5e3742a9 := s491_103_103_594
 
@@ -249,14 +219,10 @@ private theorem p502_114_329 : blockEstimate 502 114 329 215 = 0x4101d085 := by 
 private theorem p502_114_544 : blockEstimate 502 114 544 186 = 0xd6a2631 := by decide +kernel
 
 private theorem s502_114_329_401 : blockEstimate 502 114 329 401 = 0x4e6bf6b6 :=
-  block_append (B := 502) (J := 114) (start := 329) (next := 544)
-    (a := 215) (b := 186) (n := 401) (x := 0x4101d085) (y := 0xd6a2631) (z := 0x4e6bf6b6)
-    p502_114_329 p502_114_544 rfl rfl rfl
+  block_append p502_114_329 p502_114_544 rfl rfl rfl
 
 private theorem s502_114_114_616 : blockEstimate 502 114 114 616 = 0x6d68a9c9 :=
-  block_append (B := 502) (J := 114) (start := 114) (next := 329)
-    (a := 215) (b := 401) (n := 616) (x := 0x1efcb313) (y := 0x4e6bf6b6) (z := 0x6d68a9c9)
-    p502_114_114 s502_114_329_401 rfl rfl rfl
+  block_append p502_114_114 s502_114_329_401 rfl rfl rfl
 
 theorem moment502_114 : momentEstimate 502 114 = 0x6d68a9c9 := s502_114_114_616
 
@@ -265,14 +231,10 @@ private theorem p523_114_329 : blockEstimate 523 114 329 215 = 0x49220e59 := by 
 private theorem p523_114_544 : blockEstimate 523 114 544 207 = 0x12cc8c51 := by decide +kernel
 
 private theorem s523_114_329_422 : blockEstimate 523 114 329 422 = 0x5bee9aaa :=
-  block_append (B := 523) (J := 114) (start := 329) (next := 544)
-    (a := 215) (b := 207) (n := 422) (x := 0x49220e59) (y := 0x12cc8c51) (z := 0x5bee9aaa)
-    p523_114_329 p523_114_544 rfl rfl rfl
+  block_append p523_114_329 p523_114_544 rfl rfl rfl
 
 private theorem s523_114_114_637 : blockEstimate 523 114 114 637 = 0x7cce7b05 :=
-  block_append (B := 523) (J := 114) (start := 114) (next := 329)
-    (a := 215) (b := 422) (n := 637) (x := 0x20dfe05b) (y := 0x5bee9aaa) (z := 0x7cce7b05)
-    p523_114_114 s523_114_329_422 rfl rfl rfl
+  block_append p523_114_114 s523_114_329_422 rfl rfl rfl
 
 theorem moment523_114 : momentEstimate 523 114 = 0x7cce7b05 := s523_114_114_637
 

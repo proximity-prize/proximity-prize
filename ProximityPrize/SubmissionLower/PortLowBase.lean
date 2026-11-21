@@ -146,8 +146,6 @@ private theorem origin_truncateX (Q : DifferentialPolynomial Geom 3) :
   split
   · rfl
   · rw [map_zero, origin_monomial_zero _ _ (by omega)]
-private theorem old_rank : K1_13_1.c1 :=
-  K1_13_1_1.of_children K1_13_1_1_1.proof K1_13_1_1_2.proof K1_13_1_1_3.proof
 end
 end P0_9_1
 end
@@ -279,13 +277,6 @@ private theorem high_monomial_vanishes (e : SourceExponent) (c : Geom) (he : 300
     | some j => simp
   · exact (MvPolynomial.monomial_mem_restrictWeightedOrder _ _ _ _).mpr
       (Or.inl (by simpa only [Finsupp.weight_elim_one_zero] using he))
-private theorem origin_rank :
-    Module.finrank Geom (LinearMap.range (K1_13_2.nodeMap 0 0)) ≤ 344125686492134 := by
-  have hBlock := K1_13_2_2.of_children K1_13_2_2_1.proof K1_13_2_2_2.proof K1_13_2_2_3.proof
-    K1_13_2_2_4.proof K1_13_2_2_5.proof
-  obtain ⟨power, hp⟩ := K1_13_2_3.of_children K1_13_2_3_1.proof K1_13_2_3_2.proof
-    K1_13_2_3_3.proof K1_13_2_3_4.proof K1_13_2_3_5.proof K1_13_2_3_6.proof K1_13_2_3_7.proof
-  exact (K1_13_2.origin_rank_le power hBlock).trans hp
 private theorem map_independent_family {V W : Type*} [AddCommGroup V] [Module Geom V]
     [AddCommGroup W] [Module Geom W] {n : ℕ} (f : V →ₗ[Geom] W)
     (hf : Function.Injective f) (P : W → Prop) (hP : ∀ x, P (f x))

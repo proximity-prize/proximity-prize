@@ -1,5 +1,6 @@
 import ProximityPrize.SubmissionLower.HighCore82706Family
 import ProximityPrize.SubmissionLower.UpperBranch8
+import ProximityPrize.SubmissionLower.Effective70Poles
 
 set_option Elab.async false
 set_option autoImplicit true
@@ -116,7 +117,6 @@ open Polynomial Finset
 open P1 (K I Words p node blockLength)
 open HighCore82706 (AnchorModel AnchoredFamily agreement)
 open P1_7 (Reduced regularRoot degreeAt quotientOrder singularDegree)
-open FrontCore82706 (AdjacentChart)
 open K1_14 (L FX Seeds Equation SeedBound liftPoly atMark seedEmbedding)
 open K1_14_4 (seedDegree)
 open K1_14_6 (Biform)
@@ -129,8 +129,10 @@ structure Input where
   labels : Finset K
   family : AnchoredFamily model labels
   shift_out : model.shift ∉ labels
+  height : ℕ := model.overhead.toNat
+  overhead_le_height : model.overhead.toNat ≤ height := by rfl
   block : L[X]
-  chart : AdjacentChart model family block
+  chart : Effective70Poles.Chart height model family block
   marks : Finset K
   marks_sub : marks ⊆ labels
   f : Equation
@@ -142,15 +144,20 @@ structure Input where
   seed_bound : SeedBound f v
   lo : ℕ
   hi : ℕ
-  lower : lo ≤ model.overhead.toNat
-  upper : model.overhead.toNat ≤ hi
-  positive : 0 < model.overhead.toNat
-  quotient_pos : 0 < quotientOrder model.overhead.toNat
+  lower : lo ≤ height
+  upper : height ≤ hi
+  positive : 0 < height
+  quotient_pos : 0 < quotientOrder height
   agreement_gap : degreeAt hi < agreement
   factorial_guard : degreeAt hi + 1 < p
   separant_guard : singularDegree f.natDegree v < p
   flat_guard : f.natDegree * degreeAt hi + v < p
-abbrev Input.w (J : Input) : ℕ := J.model.overhead.toNat
+abbrev Input.w (J : Input) : ℕ := J.height
+
+theorem Input.scalar_degree (J : Input) (γ : K) (hγ : γ ∈ J.labels) :
+    (J.family.scalar γ).natDegree ≤ degreeAt J.w :=
+  (HighCore82706.degree_at_height J.model J.family γ hγ).trans
+    (Nat.add_le_add_left J.overhead_le_height _)
 abbrev Input.ell (J : Input) : ℕ := quotientOrder J.w
 abbrev Input.e (J : Input) : ℕ := J.f.natDegree
 def Input.secondBlock (J : Input) : L[X] := J.block.map (frobenius L p)
@@ -416,12 +423,7 @@ theorem fixed_word (J : Input) {U : Finset K} (hU : U ⊆ J.marks) :
   have hsub := hU.trans J.marks_sub
   refine ⟨J.family.distinct.mono hsub, ?_, ?_⟩
   · intro γ hγ
-    rcases (J.family.mark γ (hsub hγ)).scalar_degree with hz | hd
-    · simp [hz]
-    · have hh := J.upper
-      change ((J.family.scalar γ).natDegree : ℤ) ≤ 131072 - 1 + J.model.overhead at hd
-      change (J.family.scalar γ).natDegree ≤ 131071 + J.hi
-      omega
+    exact (J.scalar_degree γ (hsub hγ)).trans (Nat.add_le_add_left J.upper _)
   · intro γ hγ
     let mark := J.family.mark γ (hsub hγ)
     exact ⟨mark.bad.support, mark.bad.agreement, mark.scalar_hits⟩
@@ -3049,7 +3051,7 @@ theorem marked_quotient (J : Input) (B : ResidueLift J) (γ : K) (hγ : γ ∈ J
     apply max_le
     · exact (natDegree_C_mul_le _ _).trans (by
         rw [liftPoly, Polynomial.natDegree_map]
-        exact HighCore82706.degree_at_height J.model J.family γ hγ')
+        exact J.scalar_degree γ hγ')
     · have h := (natDegree_map_le (p := B.numerator) (f := ev)).trans B.numerator_width.le
       have hp : 0 < 131071 - J.w := J.quotient_pos
       unfold degreeAt

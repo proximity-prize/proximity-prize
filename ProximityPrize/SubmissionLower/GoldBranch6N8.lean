@@ -66,7 +66,7 @@ open K1_13 PolynomialDifferential ReedSolomon.HiddenDerivative
 open K1_13_2 (SourceExponent Local toRow)
 open P3 (I K node)
 open scoped BigOperators
-open private high_monomial_vanishes origin_rank map_independent_family from ProximityPrize.SubmissionLower.PortLowBase
+open private high_monomial_vanishes map_independent_family from ProximityPrize.SubmissionLower.PortLowBase
 private theorem old_eligible (e : SourceExponent) (he : SourceEligible e)
     (hx : e none < 3000) : K1_13_2.SourceEligible e := by
   have hw := weight_le_add_mul_totalJetDegree 133671 e
