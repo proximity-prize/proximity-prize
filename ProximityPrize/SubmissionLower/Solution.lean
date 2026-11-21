@@ -1,7 +1,8 @@
-import ProximityPrize.SubmissionLower.Soundness82200
+import ProximityPrize.SubmissionLower.KoalaSoundness6950
+import ProximityPrize.SubmissionLower.KoalaTwoCutProof
 
 theorem ProximityPrize.Benchmark.candidate :
-    ProximityPrize.Benchmark.ProtocolClaim 6948 2892190570074008202 9223372036854549289 :=
-  Soundness82200.protocol
+    ProximityPrize.Benchmark.ProtocolClaim 6950 2892859073143766509 9223372036854774115 :=
+  KoalaSoundness6950.of_two_cut SplitCut.TwoCut.two_cut_count
 
 #print axioms ProximityPrize.Benchmark.candidate

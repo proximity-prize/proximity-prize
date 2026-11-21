@@ -10,9 +10,9 @@ open Low48Price (Messages lowerCap ProperCut LayerBudget Holds)
 open scoped BigOperators Polynomial
 open Polynomial PolynomialDifferential ReedSolomon.HiddenDerivative
 
-theorem pole_of_anchor {cap u D Γ} (M : P1.ModelAt cap u D) (F : P1.FamilyAt 179944 M Γ)
-    (lo : 1 ≤ M.overhead) (hi : M.overhead ≤ 2366) :
-    ∃ P : K1_13.PoleData Γ F.scalar, P.H.natDegree ≤ 2366 := by
+theorem pole_of_anchor {cap u D Γ} (M : P1.ModelAt cap u D) (F : P1.FamilyAt 179925 M Γ)
+    (lo : 1 ≤ M.overhead) (hi : M.overhead ≤ 2341) :
+    ∃ P : K1_13.PoleData Γ F.scalar, P.H.natDegree ≤ 2341 := by
   have hmax : M.overhead.toNat ≤ (extend M.E).natDegree := by
     rw [Polynomial.natDegree_map]
     change M.overhead.toNat ≤ M.E.natDegree
@@ -57,7 +57,7 @@ theorem pole_of_anchor {cap u D Γ} (M : P1.ModelAt cap u D) (F : P1.FamilyAt 17
     simp only [Polynomial.map_add, Polynomial.map_mul, Polynomial.map_C] at mapped
     rw [← amp]
     exact mapped ▸ hdiv.trans (dvd_mul_right _ _)
-  · change H.natDegree ≤ 2366
+  · change H.natDegree ≤ 2341
     rw [hd]
     omega
 
@@ -77,10 +77,10 @@ theorem count_of_data {w Γ s} (hmsg : Messages w Γ s)
       Low48Price.Fits top a → LayerBudget a l →
       (∀ i, 0 < l i → cost i ≤ Low48Price.physicalPrice (a i) (l i)) →
       (∀ i, K1_13.FatEligible (a i) → cost i ≤ Low48Price.fatPrice (a i)) →
-      lowerCap top + (∑ i, cost i) ≤ 266624925740719468)
+      lowerCap top + (∑ i, cost i) ≤ 268648601901754977)
     (book : Finset K) (E : Low48Price.FatEquations) (booked : book.card ≤ 140000)
     (hE : ∀ γ ∈ Γ, γ ∉ book → Holds E (extend (s γ))) :
-    Γ.card ≤ 266624925740859468 := by
+    Γ.card ≤ 268648601901894977 := by
   classical
   obtain ⟨top, n, g, f, htop, cover⟩ := Low48GeometryCover.cover_of_anchor P hP hbox hw hz
   have hm : Low48Order.Messages w Γ s := ⟨hmsg.degree, hmsg.hits⟩
@@ -117,7 +117,7 @@ theorem count_of_data {w Γ s} (hmsg : Messages w Γ s)
     _ = book.card + (low.card + ∑ i, (pieces i).card) := Nat.add_assoc _ _ _
     _ ≤ 140000 + (lowerCap top + ∑ i, (pieces i).card) :=
       Nat.add_le_add booked (Nat.add_le_add_right low_bound _)
-    _ ≤ 266624925740859468 := Nat.add_le_add_left total _
+    _ ≤ 268648601901894977 := Nat.add_le_add_left total _
 
 #print axioms count_of_data
 end

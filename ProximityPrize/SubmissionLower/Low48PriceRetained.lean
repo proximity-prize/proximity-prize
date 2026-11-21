@@ -19,7 +19,7 @@ abbrev layerCount : ℕ := 1 + Low48Price.primaryCutoff / Low48Price.layerWidth
 
 def Box (a : Shape) : Prop :=
   a.b ≤ 23 ∧ a.j ≤ 7 ∧ (4 ≤ a.j → a.b ≤ 21) ∧ (5 ≤ a.j → a.b ≤ 18) ∧
-  (6 ≤ a.j → a.b ≤ 13) ∧ (7 ≤ a.j → a.b ≤ 7)
+  (6 ≤ a.j → a.b ≤ 13) ∧ (7 ≤ a.j → a.b ≤ 6)
 def combined {n : ℕ} (a : Fin n → Shape) (z : Finset (Fin n)) := P3_6_8.shapeSum a z
 
 local notation "row!" h "," len "," nxt "," v "," z =>
@@ -92,7 +92,7 @@ private theorem reject5 : zeroMass 19 5 < layerNeed := by
   decide
 
 private theorem reject6 : zeroMass 14 6 < layerNeed := by
-  rw [P3_6_8_1.mass_eq (b := 14) (j := 6) (m := 275) (by decide) (Or.inr rfl)]
+  rw [P3_6_8_1.mass_eq (b := 14) (j := 6) (m := 275) (by decide) (Or.inr (by decide))]
   have r0 : P3_6_8_1.sumBelow (P3_6_8_1.term 14 6) 0 = 0 := rfl
   have r1 := row! r0,12,12,4470109216199,4470109216199
   have r2 := row! r1,12,24,3733364001563,8203473217762
@@ -120,34 +120,34 @@ private theorem reject6 : zeroMass 14 6 < layerNeed := by
   rw [r23]
   decide
 
-private theorem reject7 : zeroMass 8 7 < layerNeed := by
-  rw [P3_6_8_1.mass_eq (b := 8) (j := 7) (m := 235) (by decide) (Or.inr rfl)]
-  have r0 : P3_6_8_1.sumBelow (P3_6_8_1.term 8 7) 0 = 0 := rfl
-  have r1 := row! r0,12,12,4474327638891,4474327638891
-  have r2 := row! r1,12,24,3741565535995,8215893174886
-  have r3 := row! r2,12,36,3099406695387,11315299870273
-  have r4 := row! r3,12,48,2540522162763,13855822033036
-  have r5 := row! r4,12,60,2057855627659,15913677660695
-  have r6 := row! r5,12,72,1644623423451,17558301084146
-  have r7 := row! r6,12,84,1294314527355,18852615611501
-  have r8 := row! r7,12,96,1000690560427,19853306171928
-  have r9 := row! r8,12,108,757785787563,20611091959491
-  have r10 := row! r9,12,120,559907117499,21170999076990
-  have r11 := row! r10,12,132,401634102811,21572633179801
-  have r12 := row! r11,12,144,277818939915,21850452119716
-  have r13 := row! r12,12,156,183586469067,22034038588783
-  have r14 := row! r13,12,168,114334174363,22148372763146
-  have r15 := row! r14,12,180,65732183739,22214104946885
-  have r16 := row! r15,12,192,33723268971,22247828215856
-  have r17 := row! r16,12,204,14522845675,22262351061531
-  have r18 := row! r17,12,216,4618973307,22266970034838
-  have r19 := row! r18,12,228,772355163,22267742390001
-  have r20 := row! r19,7,235,17972565,22267760362566
+private theorem reject7 : zeroMass 7 7 < layerNeed := by
+  rw [P3_6_8_1.mass_eq (b := 7) (j := 7) (m := 235) (by decide) (Or.inr (by decide))]
+  have r0 : P3_6_8_1.sumBelow (P3_6_8_1.term 7 7) 0 = 0 := rfl
+  have r1 := row! r0,12,12,4483126465980,4483126465980
+  have r2 := row! r1,12,24,3763215762552,8246342228532
+  have r3 := row! r2,12,36,3129616788460,11375959016992
+  have r4 := row! r3,12,48,2575724450328,13951683467320
+  have r5 := row! r4,12,60,2095149399036,16046832866356
+  have r6 := row! r5,12,72,1681718029720,17728550896076
+  have r7 := row! r6,12,84,1329472481772,19058023377848
+  have r8 := row! r7,12,96,1032670638840,20090694016688
+  have r9 := row! r8,12,108,785786128828,20876480145516
+  have r10 := row! r9,12,120,583508323896,21459988469412
+  have r11 := row! r10,12,132,420742340460,21880730809872
+  have r12 := row! r11,12,144,292609039192,22173339849064
+  have r13 := row! r12,12,156,194445025020,22367784874084
+  have r14 := row! r13,12,168,121802647128,22489587521212
+  have r15 := row! r14,12,180,70449998956,22560037520168
+  have r16 := row! r15,12,192,36370918200,22596408438368
+  have r17 := row! r16,12,204,15764986812,22612173425180
+  have r18 := row! r17,12,216,5047531000,22617220956180
+  have r19 := row! r18,12,228,849621228,22618070577408
+  have r20 := row! r19,7,235,19892080,22618090469488
   rw [r20]
   decide
 
 private theorem reject8 : zeroMass 3 8 < layerNeed := by
-  rw [P3_6_8_1.mass_eq (b := 3) (j := 8) (m := 206) (by decide) (Or.inr rfl)]
+  rw [P3_6_8_1.mass_eq (b := 3) (j := 8) (m := 206) (by decide) (Or.inr (by decide))]
   have r0 : P3_6_8_1.sumBelow (P3_6_8_1.term 3 8) 0 = 0 := rfl
   have r1 := row! r0,12,12,4468671078718,4468671078718
   have r2 := row! r1,12,24,3721807051950,8190478130668
