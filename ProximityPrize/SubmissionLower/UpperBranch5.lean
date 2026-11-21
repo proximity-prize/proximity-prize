@@ -209,27 +209,5 @@ private theorem position_sum (top step t j U v g : ℕ) (hj : j ≤ t) (hs : 0 <
     intro a _
     simp only [show a < L W ↔ W+step*(j+a) < top from power_threshold _ _ _ _ _ hWt hs]
   · simp [h]
-theorem cutoff_total (h : ℕ) (s : Shape) (E v : ℕ) (hh : 0 < 2*h) (hk : 1 ≤ 131071-h) :
-    (∑ W ∈ range (s.m*agreement), cutoffCapacity h s E v W) + jointGain h s E v =
-      triangle s.U * shapeSum s (fun q j => s.m*agreement+j-q*(131071-h)) := by
-  have hswap (F : ℕ → ℕ → ℕ → ℕ) :
-      (∑ W ∈ range (s.m*agreement), shapeSum s (F W)) =
-        shapeSum s (fun q j => ∑ W ∈ range (s.m*agreement), F W q j) := by
-    unfold shapeSum
-    rw [sum_comm]
-    apply sum_congr rfl
-    intro q _
-    rw [sum_comm]
-  simp only [cutoffCapacity, jointGain]
-  rw [hswap]
-  simp only [shapeSum, ← sum_add_distrib, mul_sum]
-  apply sum_congr rfl
-  intro q _
-  apply sum_congr rfl
-  intro j hj
-  have hjq : j ≤ q := (Nat.le_of_lt_succ (mem_range.mp hj)).trans (min_le_left _ _)
-  have hq : q ≤ q*(131071-h) := by simpa using Nat.mul_le_mul_left q hk
-  exact position_sum (s.m*agreement) (2*h) (q*(131071-h)) j s.U v ((q-j)/E)
-    (hjq.trans hq) hh
 end P1_7_5
 end

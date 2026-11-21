@@ -3,20 +3,6 @@ set_option Elab.async false
 set_option autoImplicit true
 section
 namespace P1_7_2
-open P1 (agreement)
-open K1_14 (Shape triangle shapeSum)
-def cutoffCount (h r : ℕ) (s : Shape) : ℕ :=
-  s.m * agreement - 2 * h * r
-def rawWidth (h r : ℕ) (s : Shape) (q j : ℕ) : ℕ :=
-  cutoffCount h r s + j - q * (131071 - h)
-def WidthGuard (h r : ℕ) (s : Shape) : Prop :=
-  s.B * (131071 - h) < cutoffCount h r s
-def gain (h r : ℕ) (s : Shape) (mode : ℕ) : ℕ :=
-  triangle s.U * shapeSum s (fun q j => rawWidth h r s q j - mode * (2 * h * j))
-end P1_7_2
-end
-section
-namespace P1_7_2
 noncomputable section
 open K1_14 (Shape Jet Seeds Equation FX Banks triangle shapeSum)
 open K1_14_3 (RowCaps LeadingFilter)
@@ -151,25 +137,6 @@ private theorem cutoff_total (s : Shape) (h N : ℕ) (hk : 1 ≤ 131071-h) :
   have hjq : j ≤ q := (Nat.le_of_lt_succ (mem_range.mp hj)).trans (min_le_left _ _)
   have hq : q ≤ q*(131071-h) := by simpa using Nat.mul_le_mul_left q hk
   exact position_sum h N q j (hjq.trans hq)
-theorem moving_rank_bound (rows : Banks) (s : Shape) (h r : ℕ) (hk : 1 ≤ 131071-h)
-    (hcaps : ∀ W, ∀ P ∈ rows s W, RowCaps P s)
-    (hlead : LeadingFilter h rows s)
-    (horder : ∀ W < cutoffCount h r s, ∀ P ∈ rows s W, P ≠ 0 →
-      cutoffCount h r s ≤ W + 2*h*P.natDegree) :
-    (∑ W ∈ range (cutoffCount h r s), Module.finrank FX (rows s W)) + gain h r s 1 ≤
-      gain h r s 0 := by
-  let N := cutoffCount h r s
-  have hsum : (∑ W ∈ range N, Module.finrank FX (rows s W)) ≤
-      triangle s.U * (∑ W ∈ range N, shapeSum s (fun q j =>
-        if eligible h N W q j then 1 else 0)) := by
-    rw [mul_sum]
-    exact sum_le_sum (fun W hW =>
-      cutoff_finrank_le s h N W _ (hcaps W) (hlead W) (horder W (mem_range.mp hW)))
-  have heq := congrArg (triangle s.U * ·) (cutoff_total s h N hk)
-  rw [Nat.mul_add] at heq
-  unfold gain rawWidth
-  simp only [one_mul, zero_mul, Nat.sub_zero]
-  exact (Nat.add_le_add_right hsum _).trans_eq heq
 end
 end P1_7_2
 end

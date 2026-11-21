@@ -791,15 +791,6 @@ theorem grade_of_literals {lo hi fullU cap e v U D m price : ℕ}
     (hprice : wholePrice lo hi e v = price) (hle : price ≤ cap) :
     GradeOK lo hi fullU cap e ⟨v,U⟩ :=
   ⟨hU, hD.le.trans_lt hDp, hm.le.trans_lt hmp, hprice.le.trans hle⟩
-theorem sheets_le_price (lo hi e v : ℕ) : e ≤ wholePrice lo hi e v := by
-  unfold wholePrice
-  split
-  · exact le_rfl
-  · split
-    · dsimp only [persistentFee]
-      omega
-    · unfold tangentFee
-      omega
 end P1_7
 end
 section
@@ -856,10 +847,6 @@ def fees : HighBand → PrefixFees
   | .h24000 => ⟨18370950873948,147204,0xf414000810,23196140876,218042600,556114379274⟩
   | .h28323 => ⟨0xfa96e003f24,126954,933249418956,18817884470,223664856,543330140670⟩
   | .h32433 => ⟨2627161033122,18700,485801067512,7906309075,14370002,202417111230⟩
-theorem fees_total (b : HighBand) :
-    (fees b).loss + (fees b).point + (fees b).lowSeed + (fees b).lowJet +
-      (fees b).fixedODE + (fees b).content = b.row.prefixFee := by
-  cases b <;> rfl
 structure PrefixBooks (b : HighBand) where
   loss : Finset K
   point : Finset K
@@ -875,12 +862,6 @@ structure PrefixBooks (b : HighBand) where
   content_le : content.card ≤ (fees b).content
 noncomputable def PrefixBooks.union {b} (B : PrefixBooks b) : Finset K := by
   classical exact B.loss ∪ B.point ∪ B.lowSeed ∪ B.lowJet ∪ B.fixedODE ∪ B.content
-private theorem union_le {A B : Finset K} {a b : ℕ} (ha : A.card ≤ a) (hb : B.card ≤ b) :
-    (A ∪ B).card ≤ a+b := (Finset.card_union_le _ _).trans (Nat.add_le_add ha hb)
-theorem PrefixBooks.card_union {b} (B : PrefixBooks b) : B.union.card ≤ b.row.prefixFee := by
-  rw [← fees_total b]
-  exact union_le (union_le (union_le (union_le (union_le B.loss_le B.point_le)
-    B.lowSeed_le) B.lowJet_le) B.fixedODE_le) B.content_le
 end P1_7
 end
 section
@@ -2370,9 +2351,6 @@ def Reduced (f : Equation) : Prop :=
 def regularRoot (f : Equation) (z : K) (S : K[X]) : Prop :=
   atMark f z S = 0 ∧ graphEval z (f.resultant f.derivative) ≠ 0 ∧
     atMark f.derivative z S ≠ 0
-def RegularCount {u del} (M : AnchorModel u del) {Γ}
-    (F : AnchoredFamily M Γ) (f : Equation) (fee : ℕ) : Prop :=
-  ∀ T ⊆ Γ, (∀ γ ∈ T, regularRoot f (M.label γ) (F.scalar γ)) → T.card ≤ fee
 end
 end P1_7
 end
@@ -2518,200 +2496,6 @@ theorem window_nat {b : HighBand} {w : ℤ} (hw : InBand b w) :
     b.row.lo ≤ w.toNat ∧ w.toNat ≤ b.row.hi := by
   obtain ⟨hl, hh⟩ := hw
   omega
-theorem tested_spec (b : HighBand) (x : Test b) :
-    Listed b (tested b x) ∧ (tested b x).shape.m = (terminal b).shape.m ∧
-    (tested b x).shape.B = (terminal b).shape.B ∧ (tested b x).shape.J = (terminal b).shape.J ∧
-    (tested b x).shape.U ≤ (terminal b).shape.U := by
-  cases x with
-  | none => exact ⟨Or.inl rfl, rfl, rfl, rfl, le_rfl⟩
-  | some i => exact ⟨Or.inr (Or.inr ⟨i, rfl⟩), rfl, rfl, rfl, (grade_checked b i).sub⟩
-private theorem order_of_full {b u del} {M : AnchorModel u del} {Γ} {F : AnchoredFamily M Γ}
-    {rows : Banks} (src : Source b M F rows) (hw : InBand b M.overhead)
-    (x : Test b) {q : Surface} (hq : Parent q) (hv : BankPass rows (terminal b).shape q)
-    {W} (hW : W < (tested b x).shape.m * agreement) {P : Jet}
-    (hP : P ∈ rows (tested b x).shape W) :
-    OrderAt q P (contactPower M.overhead.toNat (tested b x).shape W) := by
-  let h := M.overhead.toNat
-  let t := tested b x
-  obtain ⟨ht, hm, hb, hj, hu⟩ := tested_spec b x
-  have hchar : t.shape.m * agreement < p := hm ▸ (terminal_guards b).2.2.2.1
-  apply K1_14_3R_1.proof _ _ _ hq
-  · have hd := Nat.div_le_self (fullCutoff t.shape - W) (2*h)
-    change 1 + (fullCutoff t.shape - W)/(2*h) < p
-    change W < t.shape.m * agreement at hW
-    unfold fullCutoff at *
-    omega
-  intro a c hac
-  change a + c < 1 + (fullCutoff t.shape - W)/(2*h) at hac
-  have hh : 0 < h := (terminal_guards b).1.trans_le (window_nat hw).1
-  have hc := (Nat.le_div_iff_mul_le (by omega : 0 < 2*h)).mp
-    (show a+c ≤ (fullCutoff t.shape - W)/(2*h) by omega)
-  rw [Nat.mul_comm (a+c), Nat.mul_add] at hc
-  have top : fullCutoff t.shape = fullCutoff (terminal b).shape :=
-    congrArg (fun m => m * agreement - 1) hm
-  have hwc : W ≤ fullCutoff t.shape := by
-    change W < t.shape.m * agreement at hW
-    unfold fullCutoff
-    omega
-  have hw' : W + 2*h*a + 2*h*c ≤ fullCutoff (terminal b).shape := by omega
-  have ha := src.shift t ht W P hP 0 a
-  have hc' := src.shift t ht _ _ ha 1 c
-  exact hv _ (src.nested t ht _ (Or.inl rfl) hm hb hj hu _ _ hw' hc')
-theorem trace_of_full {b u del} {M : AnchorModel u del} {Γ} {F : AnchoredFamily M Γ}
-    {rows : Banks} (src : Source b M F rows) (hw : InBand b M.overhead)
-    {qs : Finset Surface} (hq : ∀ q ∈ qs, Parent q)
-    (hp : ∀ q ∈ qs, BankPass rows (terminal b).shape q) {f : Equation}
-    (hf : ProjectedProduct qs f) (x : Test b) :
-    TerminalTrace M.overhead.toNat (tested b x) rows f := by
-  have ht := (tested_spec b x).1
-  refine ⟨src.floor_bound _ ht, src.shape _ ht, src.leading _ ht, ?_⟩
-  intro W hW P hP hn
-  exact hf.divides_leading P _ hn
-    (fun q h => order_of_full src hw x (hq q h) (hp q h) hW hP)
-theorem grade_of_rejections {b : HighBand} {f : Equation} (hp : 0 < f.natDegree)
-    (reject : ∀ x : Test b, threshold b x ≤ f.natDegree →
-      seedThreshold b x ≤ seedDegree f → False) :
-    ∃ i : GradeIndex b, f.natDegree = i.val+1 ∧ SeedBound f ((grades b).get i).seedCap := by
-  have he : f.natDegree ≤ (grades b).length := by
-    by_contra! hlo
-    exact reject none hlo (Nat.zero_le _)
-  let i : GradeIndex b := ⟨f.natDegree-1, by omega⟩
-  have hidx : f.natDegree = i.val+1 := by dsimp [i]; omega
-  refine ⟨i, hidx, (seedDegree_le_iff _ _).mp ?_⟩
-  by_contra! hlow
-  exact reject (some i) hidx.ge hlow
-end
-end P1_7
-end
-section
-namespace P1_7
-noncomputable section
-open Polynomial
-open P1 (HighBand AnchorModel AnchoredFamily K)
-open K1_14 (Banks Equation SeedBound atMark graphEval)
-open K1_14_4 (seedDegree seedDegree_le_iff)
-def c1 : Prop :=
-  ∀ (b : HighBand) u del (M : AnchorModel u del) Γ (F : AnchoredFamily M Γ),
-    InBand b M.overhead → M.shift ∉ Γ → ∀ H, AdjacentChart M F H →
-    ∃ rows : Banks, Source b M F rows
-def c2 : Prop :=
-  ∀ (b : HighBand) u del (M : AnchorModel u del) Γ (F : AnchoredFamily M Γ),
-    InBand b M.overhead → M.shift ∉ Γ → ∀ rows, Source b M F rows →
-    Nonempty (Pairs b M.overhead.toNat rows)
-def c3 : Prop :=
-  ∀ (b : HighBand) u del (M : AnchorModel u del) Γ (F : AnchoredFamily M Γ),
-    InBand b M.overhead → M.shift ∉ Γ → b.row.lo < 7773 → CurveTariff b M F
-def c4 : Prop :=
-  ∀ (b : HighBand) u del (M : AnchorModel u del) Γ (F : AnchoredFamily M Γ),
-    InBand b M.overhead → M.shift ∉ Γ → ∀ H, AdjacentChart M F H →
-    (b.row.lo < 7773 → CurveTariff b M F) →
-    ∀ rows, Source b M F rows → ∀ pairs : Pairs b M.overhead.toNat rows,
-    Nonempty (PrefixInventory b M F pairs)
-def c5 : Prop :=
-  ∀ (b : HighBand) h, b.row.lo ≤ h → h ≤ b.row.hi → ∀ (x : Test b) rows f,
-    Reduced f → TerminalTrace h (tested b x) rows f →
-    threshold b x ≤ f.natDegree → seedThreshold b x ≤ seedDegree f →
-    jointGain h (tested b x).shape (threshold b x) (seedThreshold b x) ≤ debit h (tested b x)
-def c6 : Prop :=
-  ∀ (b : HighBand) h, b.row.lo ≤ h → h ≤ b.row.hi → ∀ x : Test b,
-    debit h (tested b x) < jointGain h (tested b x).shape (threshold b x) (seedThreshold b x)
-def c7 : Prop :=
-  ∀ (b : HighBand) u del (M : AnchorModel u del) Γ (F : AnchoredFamily M Γ),
-    InBand b M.overhead → M.shift ∉ Γ → ∀ H, AdjacentChart M F H →
-    ∀ (i : GradeIndex b) f, Reduced f → f.natDegree = i.val+1 → f.natDegree ≤ 2 →
-    0 < seedDegree f → SeedBound f ((grades b).get i).seedCap →
-    RegularCount M F f (persistentFee b.row.lo b.row.hi f.natDegree ((grades b).get i).seedCap)
-def c8 : Prop :=
-  ∀ (b : HighBand) u del (M : AnchorModel u del) Γ (F : AnchoredFamily M Γ),
-    InBand b M.overhead → M.shift ∉ Γ → ∀ H, AdjacentChart M F H →
-    ∀ (i : GradeIndex b) f, Reduced f → f.natDegree = i.val+1 → 3 ≤ f.natDegree →
-    0 < seedDegree f → SeedBound f ((grades b).get i).seedCap →
-    RegularCount M F f (tangentFee b.row.lo b.row.hi f.natDegree ((grades b).get i).seedCap)
-private theorem retained_count (h7 : c7) (h8 : c8) {b u del}
-    (M : AnchorModel u del) {Γ} (F : AnchoredFamily M Γ)
-    (hw : InBand b M.overhead) (hshift : M.shift ∉ Γ) {H} (hH : AdjacentChart M F H)
-    (T : Finset K) (hT : T ⊆ Γ) (f : Equation) (hf : Reduced f)
-    (i : GradeIndex b) (he : f.natDegree = i.val+1) (hs : SeedBound f ((grades b).get i).seedCap)
-    (hr : ∀ γ ∈ T, atMark f (M.label γ) (F.scalar γ) = 0) : T.card ≤ b.row.retained := by
-  classical
-  let v := ((grades b).get i).seedCap
-  have cert := grade_checked b i
-  rw [← he] at cert
-  have hprice : wholePrice b.row.lo b.row.hi f.natDegree v ≤ b.row.retained := cert.fee
-  by_cases hzero : seedDegree f = 0
-  · have hfix := fixed_count M F T hT hf.1 ((seedDegree_le_iff f 0).mp hzero.le) hr
-    exact hfix.trans ((sheets_le_price _ _ _ _).trans hprice)
-  have hpos := Nat.pos_of_ne_zero hzero
-  have hv : v ≠ 0 := Nat.ne_of_gt (hpos.trans_le ((seedDegree_le_iff _ _).mpr hs))
-  let bad := T.filter fun γ => graphEval (M.label γ) (f.resultant f.derivative) = 0
-  have hb : bad ⊆ T := Finset.filter_subset _ _
-  have hbad := resultant_count M hf hs cert.separant bad
-    (fun _ hγ => (Finset.mem_filter.mp hγ).2)
-  have hreg : ∀ γ ∈ T \ bad, regularRoot f (M.label γ) (F.scalar γ) := by
-    intro γ hγ
-    obtain ⟨ht, hn⟩ := Finset.mem_sdiff.mp hγ
-    exact regular_of_resultant hf.1 (hr γ ht) (fun hz => hn (Finset.mem_filter.mpr ⟨ht,hz⟩))
-  have hpartition := Finset.card_sdiff_add_card_eq_card hb
-  have hsub : T \ bad ⊆ Γ := Finset.sdiff_subset.trans hT
-  apply le_trans _ hprice
-  by_cases hsmall : f.natDegree ≤ 2
-  · have hreg' := h7 b u del M Γ F hw hshift H hH i f hf he hsmall hpos hs _ hsub hreg
-    simp only [wholePrice, ite_eq_right hv, ite_eq_left hsmall]
-    change bad.card ≤ singularFee f.natDegree v at hbad
-    change (T \ bad).card ≤ persistentFee b.row.lo b.row.hi f.natDegree v at hreg'
-    omega
-  · have hreg' := h8 b u del M Γ F hw hshift H hH i f hf he (by omega) hpos hs _ hsub hreg
-    simp only [wholePrice, ite_eq_right hv, ite_eq_right hsmall]
-    change bad.card ≤ singularFee f.natDegree v at hbad
-    change (T \ bad).card ≤ tangentFee b.row.lo b.row.hi f.natDegree v at hreg'
-    omega
-theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) (h4 : c4)
-    (h5 : c5) (h6 : c6) (h7 : c7) (h8 : c8) : P1.c7 := by
-  classical
-  intro b u del M Γ F hlo hhi
-  have hw : InBand b M.overhead := ⟨hlo,hhi⟩
-  let regular := Γ.erase M.shift
-  have hreg : regular ⊆ Γ := Finset.erase_subset _ _
-  have hshift : M.shift ∉ regular := Finset.notMem_erase _ _
-  let G : AnchoredFamily M regular :=
-    ⟨F.scalar, fun γ hγ => F.mark γ (hreg hγ), F.distinct.mono hreg⟩
-  suffices hc : regular.card ≤ b.row.prefixFee + b.row.retained by
-    have herase : Γ.card - 1 ≤ regular.card := Finset.pred_card_le_card_erase
-    omega
-  obtain ⟨H,hH⟩ := adjacent_chart M G
-  obtain ⟨rows,src⟩ := h1 b u del M regular G hw hshift H hH
-  obtain ⟨pairs⟩ := h2 b u del M regular G hw hshift rows src
-  obtain ⟨Q⟩ := h4 b u del M regular G hw hshift H hH
-    (h3 b u del M regular G hw hshift) rows src pairs
-  let keep := regular \ Q.books.union
-  have hk : keep ⊆ regular := Finset.sdiff_subset
-  have hpaid : (regular \ keep).card ≤ b.row.prefixFee := by
-    apply (Finset.card_le_card ?_).trans Q.books.card_union
-    intro γ hγ
-    obtain ⟨ha,hn⟩ := Finset.mem_sdiff.mp hγ
-    by_contra hm
-    exact hn (Finset.mem_sdiff.mpr ⟨ha,hm⟩)
-  have cover : ∀ γ ∈ keep, ∃ q ∈ Q.parents, MarkOn M G q γ := fun γ hγ =>
-    (Q.covers γ (hk hγ)).resolve_left (Finset.mem_sdiff.mp hγ).2
-  suffices hkept : keep.card ≤ b.row.retained by
-    have hpart := Finset.card_sdiff_add_card_eq_card hk
-    omega
-  by_cases hm : keep.Nonempty
-  · obtain ⟨γ,hγ⟩ := hm
-    obtain ⟨q,hq,_⟩ := cover γ hγ
-    obtain ⟨f,hf⟩ := K1_14_3_7.proof Q.parents ⟨q,hq⟩ Q.geometric
-    have hred : Reduced f := ⟨hf.positive, hf.primitive, hf.separable⟩
-    obtain ⟨hl,hu⟩ := window_nat hw
-    obtain ⟨i,he,hs⟩ := grade_of_rejections (b := b) hf.positive (by
-      intro x hE hv
-      have trace := trace_of_full src hw Q.geometric Q.terminal_pass hf x
-      exact (h6 b _ hl hu x).not_ge (h5 b _ hl hu x rows f hred trace hE hv))
-    apply retained_count h7 h8 M G hw hshift hH keep hk f hred i he hs
-    intro η hη
-    obtain ⟨q',hq',hon⟩ := cover η hη
-    have hz := RingHom.mem_ker.mp (hon (hf.vanishes q' hq'))
-    simpa only [coe_eval₂RingHom, eval₂_C, atMark] using hz
-  · simp [Finset.not_nonempty_iff_eq_empty.mp hm]
 end
 end P1_7
 end

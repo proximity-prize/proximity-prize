@@ -960,110 +960,11 @@ noncomputable section
 open Finset
 open CJ0 (ShapeOK mem_fullBox Jet fullBox Surplus AgreementOK SilentTail)
 open scoped BigOperators
-private theorem native_shape : ShapeOK listSource := by
-  have hmem := mem_fullBox (B := 72) (J := 21) (C := 10) (by decide) (by decide)
-  refine ⟨by decide, by decide, by decide, by decide, by decide, fun j hj => (hmem j).mp hj, ?_⟩
-  intro j hj hpos
-  obtain ⟨hq, hv, hc⟩ := (hmem j).mp hj
-  apply (hmem _).mpr
-  refine ⟨?_, hv, hc⟩
-  change j.a-1 + j.b + j.c ≤ 72
-  unfold Jet.q at hq
-  omega
-private def runLength (c b : ℕ) := 72 - (b+c) + 1
-private def bRange (c : ℕ) := range (21 - 2*c + 1)
-private def countRow (c : ℕ) := ∑ b ∈ bRange c, runLength c b
-private def totalRow (c : ℕ) := ∑ b ∈ bRange c,
-  (runLength c b * (runLength c b - 1) / 2 + runLength c b * (b+c))
-private def indexRow (c : ℕ) := ∑ b ∈ bRange c, runLength c b * (b+2*c)
-private theorem box_count : listSource.E.card = ∑ c ∈ range 11, countRow c := by
-  simp only [listSource, fullBox, card_sigma, card_range, countRow, bRange, runLength]
-private theorem box_total : (∑ j ∈ listSource.E, j.q) = ∑ c ∈ range 11, totalRow c := by
-  simp only [listSource, fullBox, sum_sigma, totalRow, bRange, runLength, Jet.q, Jet.a, Jet.b, Jet.c]
-  apply sum_congr rfl
-  intro c _
-  apply sum_congr rfl
-  intro b _
-  simp only [Nat.add_assoc, sum_add_distrib, sum_range_id, sum_const, card_range, smul_eq_mul, Nat.mul_add]
-private theorem box_index : (∑ j ∈ listSource.E, j.v) = ∑ c ∈ range 11, indexRow c := by
-  simp only [listSource, fullBox, sum_sigma, indexRow, bRange, runLength, Jet.v, Jet.b, Jet.c,
-    sum_const, card_range, smul_eq_mul]
-private theorem row0 : countRow 0 = 1375 ∧ totalRow 0 = 56276 ∧ indexRow 0 = 13552 := by
-  decide
-private theorem row1 : countRow 1 = 1250 ∧ totalRow 1 = 51230 ∧ indexRow 1 = 13710 := by
-  decide
-private theorem row2 : countRow 2 = 1125 ∧ totalRow 2 = 46164 ∧ indexRow 2 = 13578 := by
-  decide
-private theorem row3 : countRow 3 = 1000 ∧ totalRow 3 = 41080 ∧ indexRow 3 = 13160 := by
-  decide
-private theorem row4 : countRow 4 = 875 ∧ totalRow 4 = 35980 ∧ indexRow 4 = 12460 := by
-  decide
-private theorem row5 : countRow 5 = 750 ∧ totalRow 5 = 30866 ∧ indexRow 5 = 11482 := by
-  decide
-private theorem row6 : countRow 6 = 625 ∧ totalRow 6 = 25740 ∧ indexRow 6 = 10230 := by
-  decide
-private theorem row7 : countRow 7 = 500 ∧ totalRow 7 = 20604 ∧ indexRow 7 = 8708 := by
-  decide
-private theorem row8 : countRow 8 = 375 ∧ totalRow 8 = 15460 ∧ indexRow 8 = 6920 := by
-  decide
-private theorem row9 : countRow 9 = 250 ∧ totalRow 9 = 10310 ∧ indexRow 9 = 4870 := by
-  decide
-private theorem row10 : countRow 10 = 125 ∧ totalRow 10 = 5156 ∧ indexRow 10 = 2562 := by
-  decide
-private theorem sum_eleven (f : ℕ → ℕ) : (∑ i ∈ range 11, f i) =
-    f 0 + f 1 + f 2 + f 3 + f 4 + f 5 + f 6 + f 7 + f 8 + f 9 + f 10 := by
-  simp only [sum_range_succ, sum_range_zero, zero_add]
-theorem list_moments : listSource.E.card = 8250 ∧ (∑ j ∈ listSource.E, j.q) = 338866 ∧
-    (∑ j ∈ listSource.E, j.v) = 111232 := by
-  refine ⟨?_, ?_, ?_⟩
-  · rw [box_count, sum_eleven, row0.1, row1.1, row2.1, row3.1, row4.1, row5.1,
-      row6.1, row7.1, row8.1, row9.1, row10.1]
-  · rw [box_total, sum_eleven, row0.2.1, row1.2.1, row2.2.1, row3.2.1, row4.2.1, row5.2.1,
-      row6.2.1, row7.2.1, row8.2.1, row9.2.1, row10.2.1]
-  · rw [box_index, sum_eleven, row0.2.2, row1.2.2, row2.2.2, row3.2.2, row4.2.2, row5.2.2,
-      row6.2.2, row7.2.2, row8.2.2, row9.2.2, row10.2.2]
-theorem list_surplus : Surplus agreement listSource 130679 := by
-  obtain ⟨hT, hS, hV⟩ := list_moments
-  unfold Surplus
-  rw [hT, hS, hV]
-  exact (by decide : 262144*130679 + 131071*338866 < 53*179944*8250 + 111232)
-theorem list_price : CJ0.L agreement listSource = listCap := by
-  let s := listSource
-  have hB : s.B = 72 := rfl
-  have hJ : s.J = 21 := rfl
-  have hC : s.C = 10 := rfl
-  have ht : CJ0.t = 262137 := by decide
-  have ht₁ : CJ0.t₁ = 262139 := by decide
-  have ha : CJ0.a₀ s = 18611728 := by rw [CJ0.a₀, ht, hB]
-  have hD : CJ0.D s = 5111674 := by rw [CJ0.D, ht, hJ]; decide
-  have he : CJ0.e s = 2490303 := by rw [CJ0.e, ht, hC, hD]; decide
-  have hR₂ : CJ0.R₂ s = 2524362670526425 := by rw [CJ0.R₂, hC, hD, he, hJ, ha, hB]
-  have hH : CJ0.H s = 1268 := by rw [CJ0.H, hB, hC]; decide
-  have hI : CJ0.I₁ s = 199 := by rw [CJ0.I₁, hJ, hC]; decide
-  have ha₁ : CJ0.a₁ s = 332130114 := by rw [CJ0.a₁, ht₁, hH]
-  have hd₁ : CJ0.d₁ s = 52034593 := by rw [CJ0.d₁, ha₁, ht₁, hI]; decide
-  have hR₁ : CJ0.R₁ s = 121718872603 := by rw [CJ0.R₁, hH, hd₁, hI, ha₁]
-  have hu : CJ0.errors agreement = 82200 := by decide
-  have hv : CJ0.gap agreement = 48873 := by decide
-  have hc : CJ0.chargeNumerator agreement s = 415015228404454937808 := by
-    rw [CJ0.chargeNumerator, hu, hv, hB, hH, hR₂, hR₁]
-    decide
-  change CJ0.L agreement s = _
-  rw [CJ0.L, hc, hv]
 private theorem curve_johnson : CJ0.Main :=
   CJ0.of_children CJ0_1.proof CJ0_2.proof
     (CJ0_3.of_children CJ0_3_1.proof CJ0_3_2.proof)
     (CJ0_4.of_children CJ0_4_1.proof CJ0_4_2.proof)
     CJ0_5.proof CJ0_6.proof CJ0_7.proof CJ0_8.proof
-theorem list_of_prefix_rank (hrank : CJ0.prefixRank listSource 73 ≤ 130679) : CJ0.ScalarList agreement listCap := by
-  have hA : AgreementOK agreement := ⟨by decide, by decide, by decide, by decide⟩
-  have htail : SilentTail listSource 73 := by
-    intro j hj hcut
-    have hq : j.q ≤ 72 := (native_shape.support j hj).1
-    omega
-  have h := curve_johnson agreement listSource 130679 hA native_shape (by decide) list_surplus
-    (Or.inr ⟨73, le_rfl, htail, hrank⟩)
-  rwa [list_price] at h
 end
 end P1
 end
@@ -1073,56 +974,6 @@ set_option backward.isDefEq.respectTransparency false
 namespace P1
 noncomputable section
 open Polynomial FrobeniusLocator ProximityPrize.Benchmark
-def c1 : Prop :=
-  ∀ u, FrontRemainder u → ∀ (T : TwoActive u) (R : Relation T), NormalSaturation R
-def c2 : Prop :=
-  ∀ u, FrontRemainder u → ∀ (T : TwoActive u) (R : Relation T)
-    (D : Reduction u T R) (B : RankThree u T R D),
-    NormalSaturation R → Parallel B → ¬ UnitNorm B →
-    ∀ Γ, BadFamily u Γ → (∀ γ ∈ Γ, Normal u γ) → Γ.card ≤ t + 1
-def c3 : Prop :=
-  ∀ u, FrontRemainder u → ∀ (T : TwoActive u) (R : Relation T)
-    (D : Reduction u T R) (B : RankThree u T R D),
-    NormalSaturation R → Nonparallel B →
-    ∀ Γ, BadFamily u Γ → (∀ γ ∈ Γ, Normal u γ) → Γ.card ≤ 174479971347934942
-def c4 : Prop :=
-  ∀ u, FrontRemainder u → ∀ (T : TwoActive u) (R : Relation T) (D : Reduction u T R),
-    NormalSaturation R → columnRank D.U D.V = 4 →
-    ∀ Γ, BadFamily u Γ → (∀ γ ∈ Γ, Normal u γ) → Γ.card ≤ 139174733275325973
-def c5 : Prop :=
-  ∀ u, FrontRemainder u → ∀ (T : TwoActive u) (R : Relation T)
-    (D : Reduction u T R) (B : RankThree u T R D),
-    NormalSaturation R → Parallel B → UnitNorm B →
-    ∀ Γ, BadFamily u Γ → (∀ γ ∈ Γ, Normal u γ) →
-    Γ.card ≤ anchorFee ∨
-      ∃ book : Finset K, book ⊆ Γ ∧ book.card ≤ anchorFee ∧
-        ∃ M : AnchorModel u (fixedNodes R), Nonempty (AnchoredFamily M (Γ \ book))
-def c6 : Prop :=
-  ∀ u deleted (M : AnchorModel u deleted) Γ, AnchoredFamily M Γ →
-    1 ≤ M.overhead → M.overhead ≤ lowCutoff →
-    Γ.card ≤ 259967560664163328 + 1010930246923036
-def c7 : Prop :=
-  ∀ (b : HighBand) u deleted (M : AnchorModel u deleted) Γ, AnchoredFamily M Γ →
-    (b.row.lo : ℤ) ≤ M.overhead → M.overhead ≤ (b.row.hi : ℤ) →
-    Γ.card ≤ b.row.prefixFee + b.row.retained + 1
-def c8 : Prop := CJ0.ScalarList agreement listCap
-theorem c8_of_prefix_rank (hrank : CJ0.prefixRank listSource 73 ≤ 130679) : c8 :=
-  list_of_prefix_rank hrank
-theorem mem_normalSlopes {u : Words} {Γ : Finset K} {γ : K} :
-    γ ∈ normalSlopes u Γ ↔ γ ∈ Γ ∧ Normal u γ := by
-  classical exact Finset.mem_filter
-theorem normal_badFamily {u : Words} {Γ : Finset K} (hΓ : BadFamily u Γ) :
-    BadFamily u (normalSlopes u Γ) :=
-  fun γ hγ => hΓ γ (mem_normalSlopes.mp hγ).1
-theorem normal_on_normalSlopes {u : Words} {Γ : Finset K} :
-    ∀ γ ∈ normalSlopes u Γ, Normal u γ :=
-  fun _ hγ => (mem_normalSlopes.mp hγ).2
-theorem add_rank_exceptions (u : Words) (hu : FrontRemainder u) (Γ : Finset K)
-    (b : ℕ) (hb : (normalSlopes u Γ).card ≤ b) :
-    Γ.card ≤ b + rankFee := by
-  classical
-  rw [← Finset.card_filter_add_card_filter_not (s := Γ) (p := Normal u)]
-  exact Nat.add_le_add hb (rank_exceptions u hu Γ)
 theorem anchored_list_count {A h cap} (hlist : CJ0.ScalarList A cap) {u deleted} (M : ModelAt h u deleted)
     (Γ : Finset K) (F : FamilyAt A M Γ) (hw : M.overhead ≤ 0) :
     Γ.card ≤ cap := by
@@ -1149,90 +1000,6 @@ theorem anchored_list_count {A h cap} (hlist : CJ0.ScalarList A cap) {u deleted}
     _ ≤ hfinite.toFinset.card := Finset.card_le_card hsub
     _ = _ := (Set.ncard_eq_toFinset_card _ hfinite).symm
     _ ≤ cap := hprice
-theorem low_with_reserve :
-    (259967560664163328 + 1010930246923036) + anchorFee + rankFee = 261120511018049218 := by
-  decide
-theorem binding_high_with_reserve :
-    HighBand.h2370.row.prefixFee + HighBand.h2370.row.retained + 1 + anchorFee + rankFee =
-      scalarCap := by decide
-private theorem coherent_count (h5 : c5) (h6 : c6) (h7 : c7) (hlist : c8)
-    (u : Words) (hu : FrontRemainder u) (T : TwoActive u) (R : Relation T)
-    (D : Reduction u T R) (B : RankThree u T R D) (hsat : NormalSaturation R)
-    (hp : Parallel B) (hn : UnitNorm B) (Γ : Finset K) (hΓ : BadFamily u Γ) :
-    Γ.card ≤ scalarCap := by
-  classical
-  let N := normalSlopes u Γ
-  rcases h5 u hu T R D B hsat hp hn N (normal_badFamily hΓ) normal_on_normalSlopes with
-    hcheap | ⟨book, hs, hb, M, ⟨F⟩⟩
-  · exact (add_rank_exceptions u hu Γ _ hcheap).trans (by decide)
-  · have htotal : Γ.card ≤ (N \ book).card + book.card + rankFee :=
-      add_rank_exceptions u hu Γ _ (Finset.card_sdiff_add_card_eq_card hs).ge
-    have hreserve (b : ℕ) (h : (N \ book).card ≤ b) : Γ.card ≤ b + anchorFee + rankFee :=
-      htotal.trans (Nat.add_le_add_right (Nat.add_le_add h hb) rankFee)
-    have hwmax : M.overhead ≤ (heightCap : ℤ) := by
-      have hh := M.height_bound
-      unfold AnchorModel.overhead ModelAt.overhead
-      omega
-    by_cases hw₀ : M.overhead ≤ 0
-    · exact (hreserve _ (anchored_list_count hlist M _ F hw₀)).trans (by decide)
-    by_cases hwL : M.overhead ≤ lowCutoff
-    · exact (hreserve _ (h6 u _ M _ F (by omega) hwL)).trans
-        (low_with_reserve.le.trans (by decide))
-    · obtain ⟨b, hlo, hhi⟩ := high_coverage M.overhead (by omega) hwmax
-      exact (hreserve _ (h7 b u _ M _ F hlo hhi)).trans (high_with_reserve b)
-private theorem scalar_count (h1 : c1) (h2 : c2) (h3 : c3) (h4 : c4)
-    (h5 : c5) (h6 : c6) (h7 : c7) (hlist : c8)
-    (u : Words) (Γ : Finset K) (hΓ : BadFamily u Γ) : Γ.card ≤ scalarCap := by
-  classical
-  by_cases hdef : firstRank u < L
-  · exact (deficient_count u Γ hdef hΓ).trans (by decide)
-  have hfirst := Nat.le_antisymm (firstRank_le u) (Nat.le_of_not_gt hdef)
-  by_cases hz : nullity u = 0
-  · exact (full_column_count u Γ hfirst hz hΓ).trans (by decide)
-  by_cases htype : TypeAtMostOne u
-  · exact (type_one_count u htype Γ hΓ).trans (by decide)
-  by_cases hprincipal : HomogeneousPrincipal u
-  · exact (principal_count u Γ hprincipal hΓ).trans (by decide)
-  by_cases hconstant : ConstantKernel u
-  · exact (constant_count u Γ hconstant hΓ).trans (by decide)
-  obtain ⟨T⟩ := two_active_of_positive u (Nat.pos_of_ne_zero hz) htype hprincipal
-  have hu : FrontRemainder u := ⟨two_active_nullity T, hfirst, htype, hprincipal, hconstant⟩
-  let R := relation_of_two_active hu T
-  have hsat := h1 u hu T R
-  let N := normalSlopes u Γ
-  have hN := normal_badFamily hΓ
-  have hnormal := @normal_on_normalSlopes u Γ
-  by_cases hmoving : MovingGCD R
-  · exact (add_rank_exceptions u hu Γ _ (moving_count u hu T R hmoving hsat N hN hnormal)).trans
-      (by decide)
-  have hnone (he : N = ∅) : Γ.card ≤ scalarCap :=
-    (add_rank_exceptions u hu Γ 0 (by rw [show normalSlopes u Γ = ∅ from he]; simp)).trans
-      (by decide)
-  by_cases hinvalid : InvalidLeft R
-  · apply hnone
-    apply Finset.eq_empty_iff_forall_notMem.mpr
-    intro γ hγ
-    obtain ⟨hγΓ, hnγ⟩ := mem_normalSlopes.mp hγ
-    obtain ⟨M⟩ := bad_mark u Γ hΓ γ hγΓ
-    exact (hsat γ hnγ M).valid hinvalid
-  by_cases hne : N.Nonempty
-  · obtain ⟨γ, hγ⟩ := hne
-    obtain ⟨hγΓ, hnγ⟩ := mem_normalSlopes.mp hγ
-    obtain ⟨D, hfour | ⟨B, hnp | hpar⟩⟩ := classify_fixed hu T R hmoving hinvalid hsat
-      ⟨γ, hnγ, bad_mark u Γ hΓ γ hγΓ⟩
-    · exact (add_rank_exceptions u hu Γ _ (h4 u hu T R D hsat hfour N hN hnormal)).trans
-        (by decide)
-    · exact (add_rank_exceptions u hu Γ _ (h3 u hu T R D B hsat hnp N hN hnormal)).trans
-        (by decide)
-    · by_cases hn : UnitNorm B
-      · exact coherent_count h5 h6 h7 hlist u hu T R D B hsat hpar hn Γ hΓ
-      · exact (add_rank_exceptions u hu Γ _ (h2 u hu T R D B hsat hpar hn N hN hnormal)).trans
-          (by decide)
-  · exact hnone (Finset.not_nonempty_iff_eq_empty.mp hne)
-theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) (h4 : c4)
-    (h5 : c5) (h6 : c6) (h7 : c7) (h8 : c8) :
-    ProtocolClaim 6948 336691697 1073741824 :=
-  protocol_claim_of_scalar_cap h8 (scalar_count h1 h2 h3 h4 h5 h6 h7 h8)
 end
 end P1
 end

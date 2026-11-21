@@ -215,14 +215,6 @@ theorem deficient_hankel_count (x u v : ι → F) (hx : Function.Injective x)
         (fun γ hg => (hPS γ hg).2.2.2)
       omega
   · simp [Finset.not_nonempty_iff_eq_empty.mp hG0]
-theorem proof : K1.c3 := by
-  intro u Γ hrank hΓ
-  have h := deficient_hankel_count K1.node (u 0) (u 1) K1.node.injective
-    131072 49193 81879 (K1.firstRank u)
-    (by rw [ProximityPrize.Benchmark.IRSProfile.card_index]) hrank rfl Γ
-    (fun γ hγ => Strata.native_IsMCA_badSlope u γ (hΓ γ hγ))
-  rw [ProximityPrize.Benchmark.IRSProfile.card_index] at h
-  omega
 end
 end K1_3
 end
@@ -590,8 +582,6 @@ structure Regular (F : Direction u deleted) (γ : K) : Prop where
   adjacent : IsCoprime (F.amp γ) ((F.amp γ).map twist)
   content_unit : IsCoprime (F.amp γ) F.U
   node_unit : ∀ i ∉ deleted, (F.amp γ).eval (node i) ≠ 0
-def excluded (F : Direction u deleted) (Γ : Finset K) : Finset K := by
-  classical exact Γ.filter (fun γ => ¬ Regular F γ)
 structure CrossLift (F : Direction u deleted) where
   G : K[X]
   L : K[X]
@@ -713,120 +703,6 @@ theorem invariant_multiple (W : K[X]) (hu : ∀ i, W.eval (node i) ≠ 0) :
     simpa only [hc, mul_assoc] using hs
 variable {u : Words} {deleted : Finset I} {F : Direction u deleted} {η γ : K}
   {anchor : BadMark u η}
-def Offset.translated (O : Offset F anchor) (m : BadMark u γ) :=
-  m.decoder - anchor.decoder - C (γ-η) * O.pencil
-def Offset.numerator (O : Offset F anchor) (m : BadMark u γ) :=
-  O.E * O.translated m - C (γ-η) * O.Q
-theorem Offset.E_nodes (O : Offset F anchor) (i : I) : O.E.eval (node i) ≠ 0 :=
-  eval_unit_of_dvd (O.left.trans F.U_dvd) (F.den_nodes i)
-theorem Offset.translated_degree (O : Offset F anchor) (m : BadMark u γ) :
-    (O.translated m).degree < 131072 := by
-  unfold Offset.translated
-  rw [C_mul']
-  exact Principal.degree_sub_lt (Principal.degree_sub_lt m.degree anchor.degree)
-    (Principal.degree_smul_lt _ O.pencil_degree)
-theorem Offset.numerator_degree (O : Offset F anchor) (m : BadMark u γ) :
-    (O.numerator m).natDegree < 131072 + O.E.natDegree := by
-  have hQ := O.proper.trans_le (degree_le_natDegree (p := O.E))
-  by_cases hz : O.numerator m = 0
-  · simp [hz]
-  apply (natDegree_lt_iff_degree_lt hz).mpr
-  apply Principal.degree_sub_lt (Strata.degree_mul_lt_add O.E (O.translated m)
-    O.E.natDegree 131072 le_rfl (O.translated_degree m))
-  rw [C_mul']
-  exact Principal.degree_smul_lt _ (hQ.trans_le (by exact_mod_cast Nat.le_add_left _ _))
-theorem Offset.hits (O : Offset F anchor) (W : K[X]) (hW : F.den = O.E * W)
-    (m : BadMark u γ) (avoid : Disjoint m.support deleted) (i : I) (hi : i ∈ m.support) :
-    W.eval (node i) * (O.numerator m).eval (node i) = (F.amp γ).eval (node i) * O.raw i := by
-  have hd := Finset.disjoint_left.mp avoid hi
-  have he := O.E_nodes i
-  have hf := O.first i hd
-  have hs := O.second i hd
-  have hn := F.den_nodes i
-  have hw : F.den.eval (node i) = O.E.eval (node i) * W.eval (node i) := by rw [hW, eval_mul]
-  simp only [Direction.amp, eval_add, eval_C, eval_mul] at hf ⊢
-  rw [eq_div_iff hn] at hf
-  have hs' : O.E.eval (node i) * F.den.eval (node i) * (u 1 i - O.pencil.eval (node i)) =
-      F.den.eval (node i) * O.Q.eval (node i) + O.E.eval (node i) * ((F.A 1).eval (node i) * O.raw i) := by
-    rw [hs]
-    field_simp [he, hn]
-  simp only [Offset.numerator, Offset.translated, eval_sub, eval_mul, eval_C, m.hits i hi]
-  apply mul_left_cancel₀ he
-  rw [← mul_assoc, ← hw]
-  linear_combination O.E.eval (node i) * hf + (γ - η) * hs'
-theorem Offset.fixed_numerator (O : Offset F anchor) (W : K[X]) (hW : F.den = O.E * W)
-    (m : BadMark u γ) (avoid : Disjoint m.support deleted) (reg : Regular F γ) :
-    ∃ N : K[X], O.numerator m = F.amp γ * N ∧ (W*N).map twist = W*N := by
-  classical
-  obtain ⟨l, hl⟩ := O.left
-  obtain ⟨r, hr⟩ := O.right
-  have hl0 : l ≠ 0 := fun hz => F.U_ne (by simp [hl, hz])
-  have hr0 : r ≠ 0 := fun hz => F.V_ne (by simp [hr, hz])
-  have hWnodes (i : I) : W.eval (node i) ≠ 0 :=
-    eval_unit_of_dvd (hW ▸ dvd_mul_left W O.E) (F.den_nodes i)
-  have hEσ : O.E.map twist ≠ 0 := (O.E_monic.map twist).ne_zero
-  have hphase : l * W.map twist = r * W := by
-    apply mul_left_cancel₀ (mul_ne_zero O.E_monic.ne_zero hEσ)
-    have h := F.phase
-    rw [hl, hr, hW, Polynomial.map_mul] at h
-    linear_combination h
-  let a := F.amp γ
-  let P := O.numerator m
-  let diff := l * a.map twist * P - r * a * P.map twist
-  have zero_at (i : I) (hi : i ∈ m.support) : diff.eval (node i) = 0 := by
-    have hrw := O.raw_fixed i (Finset.disjoint_left.mp avoid hi)
-    have h1 := O.hits W hW m avoid i hi
-    have h2 := congrArg twist h1
-    simp only [map_mul, hrw] at h2
-    have h3 := congrArg (eval (node i)) hphase
-    simp only [eval_mul, eval_twist] at h3
-    simp only [diff, eval_sub, eval_mul, eval_twist]
-    change W.eval (node i) * P.eval (node i) = a.eval (node i) * O.raw i at h1
-    change twist (W.eval (node i)) * twist (P.eval (node i)) =
-      twist (a.eval (node i)) * O.raw i at h2
-    apply (mul_eq_zero.mp (show W.eval (node i) * _ = 0 from ?_)).resolve_left (hWnodes i)
-    linear_combination l.eval (node i) * twist (a.eval (node i)) * h1 -
-      l.eval (node i) * a.eval (node i) * h2 +
-      a.eval (node i) * twist (P.eval (node i)) * h3
-  have ident : diff = 0 := by
-    by_contra hne
-    have hroot := Strata.root_nodes_card_le node IRSProfile.domain.injective diff hne m.support zero_at
-    have hld : O.E.natDegree + l.natDegree = F.U.natDegree := by
-      rw [hl, natDegree_mul O.E_monic.ne_zero hl0]
-    have hrd : O.E.natDegree + r.natDegree = F.U.natDegree := by
-      rw [← F.degrees_eq, hr, natDegree_mul hEσ hr0, natDegree_map_eq_of_injective twist.injective]
-    have hP := O.numerator_degree m
-    have hA := reg.degree_eq
-    have hheight := F.height
-    change F.U.natDegree + F.s + deleted.card ≤ 32680 at hheight
-    have hdeg : diff.natDegree ≤ max (l.natDegree + a.natDegree + P.natDegree)
-        (r.natDegree + a.natDegree + P.natDegree) := by
-      apply (natDegree_sub_le _ _).trans
-      exact max_le_max
-        (natDegree_mul_le.trans (Nat.add_le_add_right
-          (natDegree_mul_le.trans (Nat.add_le_add_left natDegree_map_le _)) _))
-        (natDegree_mul_le.trans (Nat.add_le_add natDegree_mul_le natDegree_map_le))
-    change P.natDegree < _ at hP
-    change a.natDegree = _ at hA
-    have hcount := m.agreement
-    omega
-  have eqn : l * a.map twist * P = r * a * P.map twist := sub_eq_zero.mp ident
-  have hlU : l ∣ F.U := hl ▸ dvd_mul_left l O.E
-  have cop : IsCoprime a (l * a.map twist) :=
-    (reg.content_unit.of_isCoprime_of_dvd_right hlU).mul_right reg.adjacent
-  have hdvd : a ∣ P := by
-    apply cop.dvd_of_dvd_mul_left
-    rw [eqn]
-    exact (dvd_mul_left a r).mul_right _
-  obtain ⟨N, hN⟩ := hdvd
-  refine ⟨N, hN, ?_⟩
-  have hred : l*N = r*N.map twist := by
-    apply mul_left_cancel₀ (mul_ne_zero reg.amp_ne ((Polynomial.map_ne_zero_iff twist.injective).mpr reg.amp_ne))
-    rw [hN, Polynomial.map_mul] at eqn
-    linear_combination eqn
-  rw [Polynomial.map_mul]
-  apply mul_left_cancel₀ hl0
-  linear_combination N.map twist * hphase - W * hred
 end
 end K1_12
 end
@@ -902,76 +778,6 @@ private theorem cancel_pair (deleted : Finset I) (w : I → K) (A P : Fin 2 → 
     simp only [eval_add, eval_mul, eval_one] at h
     simp only [leftLift, eval_add, eval_mul, hn i hi]
     linear_combination w i * h
-theorem cross_lift {u deleted} (F : Direction u deleted) : Nonempty (CrossLift F) := by
-  classical
-  let d := 131072 + F.U.natDegree + F.s
-  let w (i : I) := (F.A 0).eval (node i) * u 1 i - (F.A 1).eval (node i) * u 0 i
-  let A' (j : Fin 2) := (F.A j).map twist
-  let P (j : Fin 2) := F.A 0 * F.out j 1 - F.A 1 * F.out j 0
-  let P' (j : Fin 2) := A' 1 * F.out 0 j - A' 0 * F.out 1 j
-  have hheight := F.height
-  change F.U.natDegree + F.s + deleted.card ≤ 32680 at hheight
-  have hroom : d + 2*F.s + deleted.card ≤ 262144 := by dsimp [d]; omega
-  have hpos : 0 < d := by dsimp [d]; omega
-  have ha (j : Fin 2) : (F.A j).natDegree ≤ F.s := by
-    fin_cases j
-    · exact le_max_left _ _
-    · exact le_max_right _ _
-  have ha' (j : Fin 2) : (A' j).natDegree ≤ F.s := natDegree_map_le.trans (ha j)
-  have hout (i j : Fin 2) : (F.out i j).natDegree < d :=
-    natDegree_lt_of_degree_lt_pos hpos (F.out_degree i j)
-  have hprod {a : K[X]} (ha : a.natDegree ≤ F.s) (i j : Fin 2) :
-      (a * F.out i j).natDegree < d + F.s :=
-    natDegree_mul_le.trans_lt (by have := hout i j; omega)
-  obtain ⟨leftLift,hY,hYn⟩ := cancel_pair deleted (fun i => F.U.eval (node i)*w i) A' P d F.s
-    (by simp only [A', natDegree_map_eq_of_injective twist.injective]; rfl)
-    (F.primitive.map (Polynomial.mapRingHom twist)) hpos hroom
-    (fun j => (natDegree_sub_le _ _).trans_lt (max_lt (hprod (ha 0) j 1) (hprod (ha 1) j 0)))
-    (by intro i hi j; simp only [P, A', w, eval_sub, eval_mul, F.nodes i hi]; ring)
-  obtain ⟨rightLift,hZ,hZn⟩ := cancel_pair deleted (fun i => F.V.eval (node i)*twist (w i)) F.A P' d F.s
-    rfl F.primitive hpos hroom
-    (fun j => (natDegree_sub_le _ _).trans_lt (max_lt (hprod (ha' 1) 0 j) (hprod (ha' 0) 1 j)))
-    (by intro i hi j
-        simp only [P', A', w, eval_sub, eval_mul, F.nodes i hi, eval_twist, map_sub, map_mul]
-        ring)
-  let f : RatFunc K := algebraMap K[X] (RatFunc K) leftLift / algebraMap K[X] (RatFunc K) F.U
-  have heq : f.num * F.U = leftLift * f.denom := (RatFunc.num_mul_eq_mul_denom_iff F.U_ne).mpr rfl
-  have hn (i : I) (hi : i ∉ deleted) : f.num.eval (node i) = f.denom.eval (node i) * w i := by
-    have h := congrArg (eval (node i)) heq
-    simp only [eval_mul, hYn i hi] at h
-    apply mul_left_cancel₀ (eval_unit_of_dvd F.U_dvd (F.den_nodes i))
-    linear_combination h
-  have hleft : f.denom ∣ F.U := RatFunc.denom_div_dvd _ _
-  have hdegG := natDegree_le_of_dvd hleft F.U_ne
-  have hnf : f.num.natDegree < 131072 + F.s + f.denom.natDegree := by
-    by_cases hzero : f.num = 0
-    · simp [hzero]
-    have hy : leftLift ≠ 0 := by
-      intro hz
-      rw [hz,zero_mul] at heq
-      exact mul_ne_zero hzero F.U_ne heq
-    have h := congrArg natDegree heq
-    rw [natDegree_mul hzero F.U_ne, natDegree_mul hy f.denom_ne_zero] at h
-    dsimp [d] at hY
-    omega
-  have heq' : f.denom.map twist * rightLift = f.num.map twist * F.V := by
-    apply eq_on_puncture (deleted := deleted) (d := d+F.U.natDegree) (by dsimp [d]; omega)
-    · apply natDegree_mul_le.trans_lt
-      have hg : (f.denom.map twist).natDegree ≤ f.denom.natDegree := natDegree_map_le
-      omega
-    · apply natDegree_mul_le.trans_lt
-      have hg : (f.num.map twist).natDegree ≤ f.num.natDegree := natDegree_map_le
-      have hh := F.degrees_eq
-      dsimp [d]
-      omega
-    · intro i hi
-      simp only [eval_mul, eval_twist, hn i hi, hZn i hi, map_mul]
-      ring
-  have hcop : IsCoprime (f.denom.map twist) (f.num.map twist) :=
-    f.isCoprime_num_denom.symm.map (Polynomial.mapRingHom twist)
-  exact ⟨⟨f.denom, f.num, f.monic_denom, hleft,
-    hcop.dvd_of_dvd_mul_left (by rw [← heq']; exact dvd_mul_right _ _),
-    degree_le_natDegree.trans_lt (by exact_mod_cast hnf), hn⟩⟩
 end
 end K1_12
 end
@@ -982,35 +788,6 @@ set_option backward.isDefEq.respectTransparency false
 namespace K1_12
 noncomputable section
 open Polynomial K1 FrobeniusLocator
-private theorem other_hits {u deleted} {M : AnchorModel u deleted} {γ δ : K} {S : K[X]}
-    (m : AnchorMark M γ S) (n : AnchorMark M δ S) (i : I) (hi : i ∈ m.bad.support) :
-    n.bad.decoder.eval (node i) = u 0 i + δ * u 1 i := by
-  have hd := Finset.disjoint_left.mp m.avoids_deleted hi
-  have h0 := M.first_word i hd
-  have h1 := M.second_word i hd
-  have h := congrArg (eval (node i)) n.identity
-  simp only [AnchorModel.decoder, AnchorModel.amplitude, AnchorModel.label, eval_sub,
-    eval_mul, eval_C, eval_add, m.scalar_hits i hi] at h
-  apply sub_eq_zero.mp
-  apply (mul_eq_zero.mp (show M.E.eval (node i) * _ = 0 from ?_)).resolve_left (M.E_nodes i)
-  linear_combination h - h0 - (δ - M.shift) * h1
-theorem same_scalar_label {u deleted} {M : AnchorModel u deleted} {γ δ : K} {S : K[X]}
-    (m : AnchorMark M γ S) (n : AnchorMark M δ S) : γ = δ := by
-  by_contra hne
-  let V := (δ-γ)⁻¹ • (n.bad.decoder - m.bad.decoder)
-  have hd : δ-γ ≠ 0 := sub_ne_zero.mpr (Ne.symm hne)
-  have hV : V.degree < 131072 := Principal.degree_smul_lt _
-    (Principal.degree_sub_lt n.bad.degree m.bad.degree)
-  have hv (i : I) (hi : i ∈ m.bad.support) : V.eval (node i) = u 1 i := by
-    simp only [V, eval_smul, eval_sub, smul_eq_mul, other_hits m n i hi, m.bad.hits i hi]
-    field_simp [hd]
-    ring
-  apply m.bad.nonjoint
-  refine ⟨⟨m.bad.decoder - γ • V, Principal.degree_sub_lt m.bad.degree
-    (Principal.degree_smul_lt _ hV), ?_⟩, ⟨V, hV, hv⟩⟩
-  intro i hi
-  simp only [eval_sub, eval_smul, smul_eq_mul, m.bad.hits i hi, hv i hi]
-  ring
 private theorem coprime_factor_of_label {E Q P c a S : K[X]} {z : K} (hz : z ≠ 0)
     (reduced : IsCoprime Q E) (hid : E * P - C z * Q = c * a * S) :
     IsCoprime E c := by
@@ -1021,122 +798,6 @@ private theorem coprime_factor_of_label {E Q P c a S : K[X]} {z : K} (hz : z ≠
     rw [← he, ← mul_assoc, inv, one_mul]
   rw [eqQ] at hxy
   exact ⟨x * C z⁻¹ * P + y, -(x * C z⁻¹ * a * S), by linear_combination hxy⟩
-theorem family_of_offset {u deleted} (F : Direction u deleted) (Γ : Finset K)
-    (reg : ∀ γ ∈ Γ, Regular F γ) (m : ∀ g : Γ, BadMark u g.val)
-    (avoid : ∀ g, Disjoint (m g).support deleted) (η ζ : Γ) (hne : ζ.val ≠ η.val)
-    (O : Offset F (m η)) : ∃ M : AnchorModel u deleted, Nonempty (AnchoredFamily M Γ) := by
-  classical
-  obtain ⟨W,hW⟩ := O.left.trans F.U_dvd
-  have hWn (i : I) : W.eval (node i) ≠ 0 :=
-    eval_unit_of_dvd (hW ▸ dvd_mul_left W O.E) (F.den_nodes i)
-  obtain ⟨L,c,hL,hLf,hLn,hsplit⟩ := invariant_multiple W hWn
-  have hcn (i : I) : c.eval (node i) ≠ 0 :=
-    eval_unit_of_dvd (hL ▸ dvd_mul_left c W) (hLn i)
-  have hscalar (g : Γ) : ∃ S : K[X], S.map twist = S ∧
-      O.numerator (m g) = c * F.amp g.val * S := by
-    obtain ⟨N, hN, hfix⟩ := O.fixed_numerator W hW (m g) (avoid g) (reg g.val g.property)
-    obtain ⟨S,hS,hNS⟩ := hsplit N hfix
-    exact ⟨S,hS,by rw [hN,hNS]; ring⟩
-  choose S hS ident using hscalar
-  let word (i : I) := if i ∈ deleted then 0 else O.raw i / L.eval (node i)
-  have hword (i : I) (hi : i ∉ deleted) : word i = O.raw i / L.eval (node i) := by simp [word, hi]
-  have hden (i : I) : F.den.eval (node i) = O.E.eval (node i) * W.eval (node i) := by
-    rw [hW, eval_mul]
-  have hLval (i : I) : L.eval (node i) = W.eval (node i) * c.eval (node i) := by rw [hL, eval_mul]
-  have hs : amplitudeDegree (F.amp η.val) (F.A 1) = F.s := by
-    unfold amplitudeDegree
-    rw [(reg η.val η.property).degree_eq]
-    exact max_eq_left (le_max_right _ _)
-  have hcop : IsCoprime O.E c := coprime_factor_of_label (sub_ne_zero.mpr hne) O.reduced (ident ζ)
-  let M : AnchorModel u deleted := {
-    shift := η.val
-    pencil₀ := (m η).decoder
-    pencil₁ := O.pencil
-    pencil₀_degree := (m η).degree
-    pencil₁_degree := O.pencil_degree
-    E := O.E
-    factor := c
-    Q := O.Q
-    A₀ := F.amp η.val
-    A₁ := F.A 1
-    word := word
-    word_fixed := by
-      intro i
-      by_cases hi : i ∈ deleted
-      · simp [word,hi]
-      · rw [hword i hi, map_div₀, O.raw_fixed i hi, ← eval_twist L i, hLf]
-    word_deleted := fun i hi => by simp [word, hi]
-    E_monic := O.E_monic
-    E_nodes := O.E_nodes
-    factor_nodes := fun i _ => hcn i
-    coprime_factor := hcop
-    offset_proper := O.proper
-    offset_reduced := O.reduced
-    adjacent_coprime := F.coprime.mono O.left O.right
-    amplitudes_primitive := by
-      obtain ⟨x,y,hxy⟩ := F.primitive
-      exact ⟨x,y - x*C η.val,by unfold Direction.amp; linear_combination hxy⟩
-    first_amplitude_unit := (reg η.val η.property).content_unit.of_isCoprime_of_dvd_right O.left
-    height_bound := by
-      rw [hs]
-      have h := F.height
-      change F.U.natDegree + F.s + deleted.card ≤ 32680 at h
-      have hd := natDegree_le_of_dvd O.left F.U_ne
-      omega
-    first_word := by
-      intro i hi
-      rw [O.first i hi, hword i hi]
-      field_simp [F.den_nodes i, hLn i]
-      rw [hden, hLval]
-      ring
-    second_word := by
-      intro i hi
-      rw [O.second i hi, hword i hi]
-      field_simp [O.E_nodes i, F.den_nodes i, hLn i]
-      rw [hden, hLval]
-      ring }
-  have amp_eq (g : Γ) : M.amplitude g.val = F.amp g.val := by
-    change F.amp η.val + C (g.val-η.val) * F.A 1 = F.amp g.val
-    simp only [Direction.amp, map_sub]
-    ring
-  let scalar (γ : K) := if h : γ ∈ Γ then S ⟨γ,h⟩ else 0
-  have marks (g : Γ) : AnchorMark M g.val (scalar g.val) := by
-    have hreg := reg g.val g.property
-    rw [show scalar g.val = S g by simp [scalar, g.property]]
-    refine {
-      bad := m g
-      avoids_deleted := avoid g
-      scalar_fixed := hS g
-      scalar_degree := ?_
-      scalar_hits := ?_
-      pole_unit := ?_
-      identity := ?_ }
-    · by_cases hz : S g = 0
-      · exact Or.inl hz
-      right
-      have hc : c ≠ 0 := fun h => hcn 0 (by rw [h, eval_zero])
-      have hd := O.numerator_degree (m g)
-      rw [ident g, natDegree_mul (mul_ne_zero hc hreg.amp_ne) hz,
-        natDegree_mul hc hreg.amp_ne, hreg.degree_eq] at hd
-      change (S g).natDegree ≤ (131071 : ℤ) + (O.E.natDegree - c.natDegree -
-        (amplitudeDegree (F.amp η.val) (F.A 1) : ℤ))
-      rw [hs]
-      omega
-    · intro i hi
-      have hits := O.hits W hW (m g) (avoid g) i hi
-      rw [ident g, eval_mul, eval_mul] at hits
-      change (S g).eval (node i) = word i
-      have hd := Finset.disjoint_left.mp (avoid g) hi
-      rw [hword i hd, eq_div_iff (hLn i), hLval]
-      apply mul_left_cancel₀ (hreg.node_unit i hd)
-      linear_combination hits
-    · rw [amp_eq]
-      exact hreg.content_unit.of_isCoprime_of_dvd_right O.left
-    · rw [amp_eq]
-      exact ident g
-  refine ⟨M, ⟨⟨scalar, fun γ hγ => marks ⟨γ,hγ⟩, ?_⟩⟩⟩
-  intro γ hγ δ hδ h
-  exact same_scalar_label (marks ⟨γ,hγ⟩) (h ▸ marks ⟨δ,hδ⟩)
 end
 end K1_12
 end
@@ -1397,143 +1058,6 @@ private instance finiteBank (w : I → K) (T : ℕ) : Module.Finite Geom (bank w
   have hz := f.map_sub P Q
   rw [h, sub_self] at hz
   exact hzero (P - Q) hz
-private def symbolLinear (x : Geom) : Row 4 →ₗ[Geom] Symbol :=
-  ({ symbolAt x with
-      commutes' := by
-        intro a
-        change MvPolynomial.map (evalRingHom x) (MvPolynomial.C (Polynomial.C a)) =
-          MvPolynomial.C a
-        simp } : Row 4 →ₐ[Geom] Symbol).toLinearMap
-private def bankEval (w : I → K) (x : Geom) (T : ℕ) : bank w T →ₗ[Geom] Symbol :=
-  (symbolLinear x).comp (bank w T).subtype
-private def linearFactor (x : Geom) : Geom[X] := (Polynomial.X : Geom[X]) - Polynomial.C x
-private theorem linearFactor_ne (x : Geom) : linearFactor x ≠ 0 := X_sub_C_ne_zero x
-private theorem linearFactor_degree (x : Geom) : (linearFactor x).natDegree = 1 :=
-  natDegree_X_sub_C x
-private theorem divide_specialization (P : Row 4) (x : Geom) (hP : symbolAt x P = 0) :
-    ∃ Q : Row 4, MvPolynomial.C (linearFactor x) * Q = P := by
-  let Q : Row 4 := AddMonoidAlgebra.ofCoeff
-    (Finsupp.mapRange.linearMap (divByMonicHom (linearFactor x)) (AddMonoidAlgebra.coeff P))
-  refine ⟨Q, MvPolynomial.ext _ _ fun m => ?_⟩
-  have hroot : (P.coeff m).eval x = 0 := by
-    have h := congrArg (fun B : Symbol => B.coeff m) hP
-    change (symbolAt x P).coeff m = (0 : Symbol).coeff m at h
-    rw [symbolAt, MvPolynomial.coeff_map] at h
-    exact h
-  rw [MvPolynomial.coeff_C_mul]
-  change (linearFactor x) * ((P.coeff m) /ₘ (linearFactor x)) = P.coeff m
-  exact mul_divByMonic_eq_iff_isRoot.mpr hroot
-private theorem support_linear_mul (x : Geom) (P : Row 4) :
-    (MvPolynomial.C (linearFactor x) * P).support = P.support := by
-  ext m
-  rw [MvPolynomial.mem_support_iff, MvPolynomial.mem_support_iff, MvPolynomial.coeff_C_mul]
-  exact mul_ne_zero_iff.trans (and_iff_right (linearFactor_ne x))
-private theorem mul_cutoff_iff (w : I → K) (x : Geom) (hx : ∀ i : I, x ≠ embed (node i))
-    (T : ℕ) (P : Row 4) :
-    BankRow w (T + 1) (MvPolynomial.C (linearFactor x) * P) ↔ BankRow w T P := by
-  rw [bankRow_iff, bankRow_iff, support_linear_mul]
-  apply and_congr
-  · refine forall_congr' fun m => forall_congr' fun hm => ?_
-    rw [MvPolynomial.coeff_C_mul, natDegree_mul (linearFactor_ne x)
-      (MvPolynomial.mem_support_iff.mp hm), linearFactor_degree]
-    omega
-  · simp only [Contact, atJet, map_mul, MvPolynomial.eval_C]
-    apply forall_congr'
-    intro i
-    apply forall_congr'
-    intro S
-    apply forall_congr'
-    intro hS
-    generalize (3000 : ℕ) = m
-    have hc : IsCoprime (linearFactor (embed (node i))) (linearFactor x) :=
-      isCoprime_X_sub_C_of_isUnit_sub (sub_ne_zero.mpr (hx i).symm).isUnit
-    have hd : IsCoprime (linearFactor (embed (node i)) ^ m) (linearFactor x) := hc.pow_left
-    exact hd.dvd_mul_left_iff
-private theorem zero_cutoff_kernel (w : I → K) (x : Geom) :
-    LinearMap.ker (bankEval w x 0) = ⊥ := by
-  apply LinearMap.ker_eq_bot'.mpr
-  intro P hP
-  change symbolAt x P.val = 0 at hP
-  obtain ⟨Q, hQ⟩ := divide_specialization P.val x hP
-  have hp : TrueWeightLE P.val 0 := P.property.2.1
-  apply Subtype.ext
-  change P.val = 0
-  rw [← hQ]
-  suffices Q = 0 by simp [this]
-  apply MvPolynomial.ext
-  intro m
-  change _ = 0
-  by_contra hnz
-  have hm : m ∈ P.val.support := by
-    rw [← hQ, support_linear_mul]
-    exact MvPolynomial.mem_support_iff.mpr hnz
-  have h := hp m hm
-  rw [← hQ, MvPolynomial.coeff_C_mul, natDegree_mul (linearFactor_ne x) hnz,
-    linearFactor_degree] at h
-  omega
-private theorem kernel_finrank (w : I → K) (x : Geom) (hx : ∀ i : I, x ≠ embed (node i))
-    (T : ℕ) : Module.finrank Geom (LinearMap.ker (bankEval w x (T + 1))) =
-      Module.finrank Geom (bank w T) := by
-  let L : bank w T →ₗ[Geom] (LinearMap.ker (bankEval w x (T + 1))) :=
-    LinearMap.codRestrict _ (LinearMap.codRestrict (bank w (T + 1))
-      ((LinearMap.mulLeft Geom (MvPolynomial.C (linearFactor x))).comp (bank w T).subtype)
-      (fun P => (mul_cutoff_iff w x hx T P.val).mpr P.property)) (fun P => by
-        rw [LinearMap.mem_ker]
-        change symbolAt x (MvPolynomial.C (linearFactor x) * P.val) = 0
-        simp [symbolAt, linearFactor])
-  have hL : Function.Bijective L := by
-    have hnz : (MvPolynomial.C (linearFactor x) : Row 4) ≠ 0 := by
-      simpa only [ne_eq, MvPolynomial.C_eq_zero] using linearFactor_ne x
-    constructor
-    · intro P Q h
-      apply Subtype.ext
-      have heq := congrArg (fun V : LinearMap.ker (bankEval w x (T + 1)) => V.val.val) h
-      change MvPolynomial.C (linearFactor x) * P.val = MvPolynomial.C (linearFactor x) * Q.val at heq
-      exact mul_left_cancel₀ hnz heq
-    · intro P
-      have h : symbolAt x P.val.val = 0 := LinearMap.mem_ker.mp P.property
-      obtain ⟨Q, hQ⟩ := divide_specialization P.val.val x h
-      have hmem : BankRow w (T + 1) (MvPolynomial.C (linearFactor x) * Q) := by
-        rw [hQ]
-        exact P.val.property
-      refine ⟨⟨Q, (mul_cutoff_iff w x hx T Q).mp hmem⟩, Subtype.ext (Subtype.ext hQ)⟩
-  exact (LinearEquiv.ofBijective L hL).finrank_eq.symm
-theorem cutoff_rank (w : I → K) (x : Geom) (hr : PrimaryRank w)
-    (hx : ∀ i : I, x ≠ embed (node i)) :
-    ∃ r : ℕ → ℕ, sourceRank ≤ ∑ T ∈ Finset.range (terminal + 1), r T ∧
-      ∀ T ≤ terminal, ∃ e : Fin (r T) → Row 4,
-        (∀ i, BankRow w T (e i)) ∧
-        LinearIndependent Geom (fun i => symbolAt x (e i)) := by
-  classical
-  let r (T : ℕ) := Module.finrank Geom (LinearMap.range (bankEval w x T))
-  refine ⟨r, ?_, fun T _ => ?_⟩
-  · have heq (T : ℕ) : Module.finrank Geom (bank w T) =
-        ∑ V ∈ Finset.range (T + 1), r V := by
-      induction T with
-      | zero =>
-        have h := LinearMap.finrank_range_add_finrank_ker
-          (K := Geom) (V := bank w 0) (V₂ := Symbol) (bankEval w x 0)
-        rw [zero_cutoff_kernel, finrank_bot, Nat.add_zero] at h
-        simpa only [Nat.zero_add, Finset.sum_range_one] using h.symm
-      | succ T ih =>
-        have h := LinearMap.finrank_range_add_finrank_ker
-          (K := Geom) (V := bank w (T + 1)) (V₂ := Symbol) (bankEval w x (T + 1))
-        rw [kernel_finrank w x hx, ih, Nat.add_comm] at h
-        rw [Finset.sum_range_succ]
-        exact h.symm
-    obtain ⟨e, he, hmem⟩ := hr
-    have hi : LinearIndependent Geom (fun i => (⟨e i, hmem i⟩ : bank w terminal)) :=
-      LinearIndependent.of_comp (bank w terminal).subtype he
-    rw [← heq]
-    simpa only [Fintype.card_fin] using hi.fintype_card_le_finrank
-  · let b := Module.finBasis Geom (LinearMap.range (bankEval w x T))
-    choose e he using fun i : Fin (r T) => LinearMap.mem_range.mp (b i).property
-    refine ⟨fun i => (e i).val, fun i => (e i).property, ?_⟩
-    have h : LinearIndependent Geom (fun i => (b i).val) :=
-      b.linearIndependent.map' (LinearMap.range (bankEval w x T)).subtype
-        (LinearMap.ker_eq_bot.mpr Subtype.val_injective)
-    have heq : (fun i => symbolAt x (e i).val) = fun i => (b i).val := funext he
-    rwa [heq]
 end
 end K1_13_3
 end
@@ -1583,98 +1107,6 @@ theorem regular_data_of_bad_slopes [Fintype ν] [DecidableEq ν]
     exact (hPv i hiT).symm
   · have hcomp : Finset.univ\E=T := by ext i; simp [E]
     rwa [hcomp]
-theorem regular_data_minor_zeros [Fintype ν] [DecidableEq ν]
-    (σ : ν → F →+* F) (x u v : ι → F) (k m t : ℕ)
-    (Γ : Finset (ν → F)) (hdata : RegularLocatorData σ x u v k m t Γ) :
-    ∀ z∈Γ, ∀ f∈maximalMinorList t (affineLocator σ x u v (m-t) t), MvPolynomial.aeval z f=0 := by
-  intro z hz
-  obtain ⟨_,E,hE,hker,_⟩ := hdata z hz
-  apply maximalMinorList_eval_zero_of_top_kernel t _ z _ hker
-  have hc : (locator x E).coeff t=1 := by rw [← hE,← locator_natDegree x E]; exact (locator_monic x E).coeff_natDegree
-  simpa only [Fin.val_last,hc] using (one_ne_zero : (1 : F)≠0)
-end
-end FrobeniusLocator.Strata
-end
-section
-set_option backward.isDefEq.respectTransparency false
-set_option maxHeartbeats 1000000
-namespace FrobeniusLocator.Strata
-noncomputable section
-open Polynomial Finset Matrix
-open scoped BigOperators
-variable {F ν : Type} [Field F] [DecidableEq F] [Fintype ν]
-theorem recurrenceSpace_mul (s : ν → ℕ → F) (m a q : ℕ) (hsize : a+q≤m)
-    (f Q : F[X]) (hf : f∈recurrenceSpace s m a) (hQ : Q.natDegree≤q) :
-    f*Q∈recurrenceSpace s m (a+q) := by
-  have hfm := (recurrenceSpace_matrix s m a f).mp hf
-  have hrec := (mem_recurrenceSpace s m a f).mp hf
-  apply (mem_recurrenceSpace s m (a+q) _).mpr
-  refine ⟨degree_le_natDegree.trans_lt (by
-    have hh := Polynomial.natDegree_mul_le (p := f) (q := Q)
-    exact_mod_cast (show (f*Q).natDegree<a+q+1 by omega)),?_⟩
-  intro b j hj
-  apply recurrence_product_zero (s b) f Q j (q+1)
-    (degree_le_natDegree.trans_lt (by exact_mod_cast (show Q.natDegree<q+1 by omega)))
-  intro l hl
-  exact hrec.2 b (j+l) (by omega)
-theorem recurrenceSpace_mono_slice (s : ν → ℕ → F) (m a e : ℕ) (hae : a≤e)
-    (f : F[X]) (hf : f∈recurrenceSpace s m a) : f∈recurrenceSpace s m e := by
-  obtain ⟨hdeg,hrec⟩ := (mem_recurrenceSpace s m a f).mp hf
-  exact (mem_recurrenceSpace s m e f).mpr ⟨hdeg.trans_le (by exact_mod_cast (show a+1≤e+1 by omega)),
-    fun b j hj => hrec b j (by omega)⟩
-theorem kernel_dimension_ge_multiples (s : ν → ℕ → F) (m a e : ℕ)
-    (hae : a≤e) (hem : e≤m) (f : F[X]) (hf : f∈recurrenceSpace s m a) (hf0 : f≠0) :
-    e-a+1≤Module.finrank F (LinearMap.ker (recurrenceMatrixAll s m e).mulVecLin) := by
-  let L := Principal.multipleCoefficients f (e-a) e
-  have hfd := ((recurrenceSpace_matrix s m a f).mp hf).1
-  have hinj := Principal.multipleCoefficients_injective f a (e-a) e hf0 hfd (by omega)
-  have hdim : Module.finrank F (LinearMap.range L)=e-a+1 := by
-    rw [LinearMap.finrank_range_of_inj hinj]
-    exact (Polynomial.degreeLTEquiv F (e-a+1)).finrank_eq.trans (by simp)
-  have hsub : LinearMap.range L≤LinearMap.ker (recurrenceMatrixAll s m e).mulVecLin := by
-    rintro _ ⟨Q,rfl⟩
-    have hh := recurrenceSpace_mul s m a (e-a) (by omega) f Q hf (Principal.degreeLT_natDegree_le Q)
-    rw [show a+(e-a)=e by omega] at hh
-    exact ((recurrenceSpace_matrix s m e _).mp hh).2
-  exact hdim.symm.trans_le (Submodule.finrank_mono hsub)
-theorem no_lower_kernel_of_unique_slice (s : ν → ℕ → F) (m e a : ℕ)
-    (hem : e≤m) (hae : a<e)
-    (hunique : Module.finrank F (LinearMap.ker (recurrenceMatrixAll s m e).mulVecLin)=1)
-    (f : F[X]) (hf : f∈recurrenceSpace s m a) : f=0 := by
-  by_contra hf0
-  have hh := kernel_dimension_ge_multiples s m a e hae.le hem f hf hf0
-  rw [hunique] at hh
-  omega
-theorem zero_slice_full_column_rank (s : ν → ℕ → F) (m a : ℕ)
-    (hzero : ∀ f∈recurrenceSpace s m a, f=(0 : F[X])) :
-    (recurrenceMatrixAll s m a).rank=a+1 := by
-  have hinj : Function.Injective (recurrenceMatrixAll s m a).mulVecLin := by
-    apply LinearMap.ker_eq_bot.mp
-    apply LinearMap.ker_eq_bot'.mpr
-    intro v hv
-    let f := Principal.assemble v
-    have hf : f∈recurrenceSpace s m a := (recurrenceSpace_matrix s m a f).mpr
-      ⟨Principal.assemble_natDegree_le _,by simpa only [f,Principal.assemble_coeff,Matrix.mulVecLin_apply] using hv⟩
-    have hf0 := hzero f hf
-    funext j
-    have hc := congrArg (fun P : F[X] => P.coeff j.val) hf0
-    simpa only [f,Principal.assemble_coeff,Polynomial.coeff_zero,Pi.zero_apply] using hc
-  change Module.finrank F (LinearMap.range (recurrenceMatrixAll s m a).mulVecLin)=a+1
-  rw [LinearMap.finrank_range_of_inj hinj,Module.finrank_fintype_fun_eq_card,Fintype.card_fin]
-theorem slice_nonzero_iff_rank_le (s : ν → ℕ → F) (m a : ℕ) (ham : a≤m) :
-    (∃ f : F[X], f∈recurrenceSpace s m a ∧ f≠0) ↔ (recurrenceMatrixAll s m a).rank≤a := by
-  constructor
-  · rintro ⟨f,hf,hf0⟩
-    have hh := kernel_dimension_ge_multiples s m a a (by omega) ham f hf hf0
-    have hn := LinearMap.finrank_range_add_finrank_ker (recurrenceMatrixAll s m a).mulVecLin
-    change (recurrenceMatrixAll s m a).rank+_=_ at hn
-    rw [Module.finrank_fintype_fun_eq_card,Fintype.card_fin] at hn
-    omega
-  · intro hrank
-    by_contra hn
-    push Not at hn
-    have hfull := zero_slice_full_column_rank s m a (by intro f hf; exact hn f hf)
-    omega
 end
 end FrobeniusLocator.Strata
 end
@@ -3956,50 +3388,6 @@ private theorem support_mul_C_subset {A : Type*} [CommSemiring A]
   intro m hm
   simp only [MvPolynomial.mem_support_iff, MvPolynomial.coeff_C_mul] at hm ⊢
   exact right_ne_zero_of_mul hm
-def admissible (P Q : Row 3) : Submodule Geom (Row 3) where
-  carrier := {R | LowerCaps R 952630000 322000000 ∧
-    ∀ S : Geom[X], OrderAt P S 41481 → OrderAt Q S 8298 → OrderAt R S 1037}
-  zero_mem' := by
-    constructor
-    · simp [LowerCaps, indexDegree]
-    · intro S _ _
-      change ∀ m ∈ (shiftHom S 0).support, _
-      simp
-  add_mem' := by
-    intro R T hR hT
-    change LowerCaps R _ _ ∧ _ at hR
-    change LowerCaps T _ _ ∧ _ at hT
-    obtain ⟨⟨hRb, hRj⟩, hr⟩ := hR
-    obtain ⟨⟨hTb, hTj⟩, ht⟩ := hT
-    change LowerCaps (R + T) _ _ ∧ _
-    refine ⟨⟨(MvPolynomial.totalDegree_add R T).trans (max_le hRb hTb), ?_⟩, ?_⟩
-    · apply Finset.sup_le
-      intro m hm
-      rcases Finset.mem_union.mp (MvPolynomial.support_add hm) with hm | hm
-      · exact (Finset.le_sup hm).trans hRj
-      · exact (Finset.le_sup hm).trans hTj
-    · intro S hp hq m hm
-      change m ∈ (shiftHom S (R + T)).support at hm
-      rw [map_add] at hm
-      rcases Finset.mem_union.mp (MvPolynomial.support_add hm) with hm | hm
-      · exact hr S hp hq m hm
-      · exact ht S hp hq m hm
-  smul_mem' := by
-    intro a R hR
-    change LowerCaps R _ _ ∧ _ at hR
-    obtain ⟨⟨hRb, hRj⟩, hr⟩ := hR
-    change LowerCaps (a • R) _ _ ∧ _
-    have hs : a • R = MvPolynomial.C (Polynomial.C a) * R := by
-      rw [Algebra.smul_def, IsScalarTower.algebraMap_eq Geom Geom[X] (Row 3)]
-      rfl
-    rw [hs]
-    refine ⟨⟨?_, ?_⟩, ?_⟩
-    · exact (Finset.sup_mono (support_mul_C_subset R (Polynomial.C a))).trans hRb
-    · exact (Finset.sup_mono (support_mul_C_subset R (Polynomial.C a))).trans hRj
-    · intro S hp hq m hm
-      change m ∈ (shiftHom S (MvPolynomial.C (Polynomial.C a) * R)).support at hm
-      rw [map_mul, shiftHom, MvPolynomial.eval₂Hom_C] at hm
-      exact hr S hp hq m (support_mul_C_subset _ _ hm)
 theorem exists_avoiding (V : Submodule Geom (Row 3)) (I : Set (Ideal Lower))
     (hfin : I.Finite) (hw : ∀ p ∈ I, ∃ R ∈ V, genericRow R ∉ p) :
     ∃ R ∈ V, ∀ p ∈ I, genericRow R ∉ p := by
@@ -4289,109 +3677,6 @@ private theorem hasse_caps (a : Fin 3 →₀ ℕ) {F : Row 3} {b j : ℕ}
     intro m hm
     obtain ⟨v, hv, h⟩ := hweight Fin.val hm
     exact h.trans ((Finset.le_sup (f := fun m => m.sum (fun i k => i.val * k)) hv).trans hF.2)
-private theorem avoid_low (h1 : c1) (h2 : c2) {P Q : Row 3}
-    (hpq : ProperLowerPair P Q) (hp : LowerCaps P 952630000 322000000)
-    (hq : LowerCaps Q 952630000 322000000) :
-    ∃ R ∈ admissible P Q, ∀ (q : PrimeSpectrum Lower),
-      q.asIdeal ∈ (pairIdeal P Q).minimalPrimes →
-      localColength q (pairIdeal P Q) < 293711590 → genericRow R ∉ q.asIdeal := by
-  classical
-  let partials (F : Row 3) (d : ℕ) : Set (Row 3) :=
-    {D | ∃ a, multiOrder a < d ∧ D = hassePartial a F}
-  let V := Submodule.span Geom (partials P 40445 ∪ partials Q 7262)
-  have hadm : V ≤ admissible P Q := by
-    apply Submodule.span_le.mpr
-    rintro D (⟨a, ha, rfl⟩ | ⟨a, ha, rfl⟩)
-    · refine ⟨hasse_caps a hp, ?_⟩
-      intro S hPS _ m hm
-      exact (by omega : 1037 ≤ 41481 - multiOrder a).trans (hasse_order P S a _ hPS m hm)
-    · refine ⟨hasse_caps a hq, ?_⟩
-      intro S _ hQS m hm
-      exact (by omega : 1037 ≤ 8298 - multiOrder a).trans (hasse_order Q S a _ hQS m hm)
-  let bad := {p : Ideal Lower | p ∈ (pairIdeal P Q).minimalPrimes ∧
-    ∃ q : PrimeSpectrum Lower, q.asIdeal = p ∧ localColength q (pairIdeal P Q) < 293711590}
-  have hf : bad.Finite :=
-    (pairIdeal P Q).finite_minimalPrimes_of_isNoetherianRing.subset fun _ h => h.1
-  have hw : ∀ p ∈ bad, ∃ R ∈ V, genericRow R ∉ p := by
-    intro p hp'
-    obtain ⟨hmin, q, rfl, hsmall⟩ := hp'
-    have hheight : q.asIdeal.height = 2 := pair_height hpq hmin
-    by_contra! h
-    have hP : VanishesTo q (genericRow P) 40445 := by
-      exact h1 q P 40445 hheight fun a ha => h _ (Submodule.subset_span (Or.inl ⟨a, ha, rfl⟩))
-    have hQ : VanishesTo q (genericRow Q) 7262 := by
-      exact h1 q Q 7262 hheight fun a ha => h _ (Submodule.subset_span (Or.inr ⟨a, ha, rfl⟩))
-    have hrange : Ideal.span (Set.range ![genericRow P, genericRow Q]) = pairIdeal P Q := by
-      simp only [pairIdeal, Matrix.range_cons, Matrix.range_empty, Set.union_empty,
-        Set.singleton_union]
-    have hlarge := h2 2 (Or.inl rfl) q ![genericRow P, genericRow Q] ![40445, 7262]
-      hheight (hrange ▸ hmin)
-      (by simp [Fin.forall_fin_two]) (by simpa [Fin.forall_fin_two] using And.intro hP hQ)
-    have hnum : (↑(∏ i : Fin 2, (![40445, 7262] : Fin 2 → ℕ) i) : ℕ∞) = 293711590 := by
-      norm_num [Fin.prod_univ_two]
-    rw [hnum, hrange] at hlarge
-    exact (not_le_of_gt hsmall) hlarge
-  obtain ⟨R, hR, havoid⟩ := exists_avoiding V bad hf hw
-  exact ⟨R, hadm hR, fun q hmin hlow => havoid q.asIdeal ⟨hmin, q, rfl, hlow⟩⟩
-theorem of_children (h1 : c1) (h2 : c2) : K1_13_7.c4 := by
-  intro P Q hpq hP hQ
-  obtain ⟨R, hR, havoid⟩ := avoid_low h1 h2 hpq hP hQ
-  refine ⟨R, hR.1, ?_⟩
-  intro S hPS hQS
-  by_cases hhigh : HighCurve P Q (lowerPoint S)
-  · exact Or.inl hhigh
-  right
-  let q := pointPrime (lowerPoint S)
-  have hRub := hR.2 S hPS hQS
-  have hp := point_order hPS
-  have hq := point_order hQS
-  have hr := point_order hRub
-  have hle : tripleIdeal P Q R ≤ q.asIdeal := triple_le_iff.mpr
-    ⟨vanishes_at_prime (by decide) hp, vanishes_at_prime (by decide) hq,
-      vanishes_at_prime (by decide) hr⟩
-  have height_three_of_le (p : PrimeSpectrum Lower)
-      (hpI : tripleIdeal P Q R ≤ p.asIdeal) (hpq' : p.asIdeal ≤ q.asIdeal) :
-      p.asIdeal.height = 3 := by
-    obtain ⟨I, hI, hIp⟩ := Ideal.exists_minimalPrimes_le
-      (pair_le_iff.mpr ⟨(triple_le_iff.mp hpI).1, (triple_le_iff.mp hpI).2.1⟩)
-    let t : PrimeSpectrum Lower := ⟨I, hI.isPrime⟩
-    have : I.IsPrime := hI.isPrime
-    have ht : t.asIdeal.height = 2 := pair_height hpq hI
-    have hlow : localColength t (pairIdeal P Q) < 293711590 := by
-      apply lt_of_not_ge
-      intro h
-      exact hhigh ⟨t, hI, ht, hIp.trans hpq', h, localColength_lt_top hI⟩
-    have hlt : t.asIdeal < p.asIdeal := by
-      apply lt_of_le_of_ne hIp
-      intro heq
-      apply havoid t hI hlow
-      change genericRow R ∈ I
-      rw [heq]
-      exact (triple_le_iff.mp hpI).2.2
-    have hh := Ideal.height_add_one_le_of_lt_of_isPrime hlt
-    rw [ht] at hh
-    exact le_antisymm (height_le_three p) hh
-  have hheight := height_three_of_le q hle le_rfl
-  have hmin : q.asIdeal ∈ (tripleIdeal P Q R).minimalPrimes := by
-    refine ⟨⟨q.isPrime, hle⟩, ?_⟩
-    intro I hI hIq
-    let p : PrimeSpectrum Lower := ⟨I, hI.1⟩
-    have : I.IsPrime := hI.1
-    have hph := height_three_of_le p hI.2 hIq
-    have heq : I = q.asIdeal := Ideal.eq_of_le_of_height_le I hIq (by
-      change q.asIdeal.height ≤ p.asIdeal.height
-      rw [hheight, hph])
-    exact heq.ge
-  refine ⟨q, rfl, hmin, ?_, localColength_lt_top hmin⟩
-  have hrange : Ideal.span (Set.range ![genericRow P, genericRow Q, genericRow R]) =
-      tripleIdeal P Q R := by
-    simp only [tripleIdeal, Matrix.range_cons, Matrix.range_empty, Set.union_empty,
-      Set.singleton_union]
-  have hlen := h2 3 (Or.inr rfl) q ![genericRow P, genericRow Q, genericRow R]
-    ![41481, 8298, 1037] hheight (hrange ▸ hmin) (by simp [Fin.forall_fin_succ])
-    (by simpa [Fin.forall_fin_succ] using And.intro hp (And.intro hq hr))
-  rw [hrange] at hlen
-  simpa [Fin.prod_univ_succ, Nat.mul_assoc] using hlen
 end
 end K1_13_7_4
 end
@@ -4754,10 +4039,6 @@ theorem seedInclusion_injective : Function.Injective seedInclusion :=
   IsFractionRing.injective K[X] Frac
 theorem extendSeed_injective : Function.Injective extendSeed :=
   Polynomial.map_injective seedInclusion seedInclusion_injective
-theorem mem_fixed_iff {u : Words} {T : TwoActive u} (R : Relation T) (i : I) :
-    i ∈ fixedNodes R ↔ (leftU R).eval (C (node i)) = 0 ∧ (leftV R).eval (C (node i)) = 0 := by
-  classical
-  simp [fixedNodes]
 theorem eval_liftX (f : K[X]) (x : K) : (liftX f).eval (C x) = C (f.eval x) := by
   simp [liftX, eval_map]
 theorem lift_locator_dvd (S : Finset I) (P : Bivar)
@@ -4790,66 +4071,6 @@ private theorem certificate_output_zero {F ι : Type} [Field F] {q k H : ℕ} {x
     (hV : (Principal.assemble (fun j => R.coefficients (1, j))).eval (C (x i)) = 0) :
     R.output.eval (C (x i)) = 0 := by
   simpa only [hU, hV, zero_mul, zero_add] using (R.nodes i).symm
-theorem puncture {u : Words} {T : TwoActive u} (R : Relation T)
-    (hs : NormalSaturation R) (hw : ∃ γ, Normal u γ ∧ Nonempty (BadMark u γ))
-    (hgcd : IsCommonGCD (extendSeed (liftX (locator node (fixedNodes R))))
-      (extendSeed (leftU R)) (extendSeed (leftV R))) : Nonempty (Reduction u T R) := by
-  classical
-  obtain ⟨γ, hγ, ⟨M⟩⟩ := hw
-  have h := hs γ hγ M
-  let B := fixedNodes R
-  let G := liftX (locator node B)
-  have hG : G.Monic := (locator_monic node B).map Polynomial.C
-  have hGd : G.natDegree = B.card := by
-    change ((locator node B).map Polynomial.C).natDegree = _
-    rw [Polynomial.natDegree_map_eq_of_injective Polynomial.C_injective, locator_natDegree]
-  obtain ⟨U, hU⟩ := lift_locator_dvd B (leftU R)
-    (fun i hi => (mem_fixed_iff R i |>.mp hi).1)
-  obtain ⟨V, hV⟩ := lift_locator_dvd B (leftV R)
-    (fun i hi => (mem_fixed_iff R i |>.mp hi).2)
-  obtain ⟨W, hW⟩ := lift_locator_dvd B R.output (fun i hi => by
-    have hroot := (mem_fixed_iff R i).mp hi
-    exact certificate_output_zero R i hroot.1 hroot.2)
-  have hu : U ≠ 0 := by
-    intro hz
-    apply h.U_ne
-    rw [hU, hz, mul_zero, atSlope, Polynomial.map_zero]
-  have hv : V ≠ 0 := by
-    intro hz
-    apply h.V_ne
-    rw [hV, hz, mul_zero, atSlope, Polynomial.map_zero]
-  have hdeg : max (leftU R).natDegree (leftV R).natDegree = T.height := by
-    apply le_antisymm (max_le (R.x_degree 0) (R.x_degree 1))
-    exact Nat.le_of_not_gt fun hlt => h.valid (Or.inl hlt)
-  have hdu := congrArg Polynomial.natDegree hU
-  have hdv := congrArg Polynomial.natDegree hV
-  change (leftU R).natDegree = (G * U).natDegree at hdu
-  change (leftV R).natDegree = (G * V).natDegree at hdv
-  rw [natDegree_mul hG.ne_zero hu, hGd] at hdu
-  rw [natDegree_mul hG.ne_zero hv, hGd] at hdv
-  let H := max U.natDegree V.natDegree
-  have hH : H + B.card = T.height := by
-    dsimp [H]
-    omega
-  have hout : W.degree < (131072 + H : ℕ) := by
-    by_cases hzero : W = 0
-    · rw [hzero, degree_zero]
-      exact WithBot.bot_lt_coe _
-    have hRout : R.output ≠ 0 := by rw [hW]; exact mul_ne_zero hG.ne_zero hzero
-    have hd := (natDegree_lt_iff_degree_lt hRout).mpr R.output_degree
-    rw [hW] at hd
-    change (G * W).natDegree < _ at hd
-    rw [natDegree_mul hG.ne_zero hzero, hGd] at hd
-    exact (natDegree_lt_iff_degree_lt hzero).mp (by omega)
-  have hcop : IsCoprime (extendSeed U) (extendSeed V) := by
-    apply coprime_after_factor (extendSeed G) _ _ hgcd.1
-      (fun hz => hu (extendSeed_injective (hz.trans (Polynomial.map_zero _).symm)))
-    intro Q hqu hqv
-    apply hgcd.2.2.2 Q
-    · simpa only [hU, extendSeed, Polynomial.map_mul] using hqu
-    · simpa only [hV, extendSeed, Polynomial.map_mul] using hqv
-  exact ⟨⟨U, V, W, H, hH, rfl, hu, hv, hcop, hU, hV, hW, hout,
-    fun γ hn M => (hs γ hn M).fixed_errors⟩⟩
 end
 end K1_8
 end
@@ -4899,19 +4120,6 @@ private theorem transfer_at {u : Words} {q k H : ℕ}
   simp only [hU, hV, hW, eval_mul] at hn
   simpa only [eval_mul, eval_C] using
     (cancel_and_scale (e := e) (hG i hi) hn)
-theorem reduced_scaled_relation {u : Words} {T : TwoActive u} {R : Relation T}
-    (D : Reduction u T R) (e : K[X]) :
-    relationOn u (fixedNodes R) (C e * D.U) (C e * D.V) (C e * D.output) := by
-  let G := liftX (locator node (fixedNodes R))
-  have hG : ∀ i ∉ fixedNodes R, G.eval (C (node i)) ≠ 0 := by
-    intro i hi
-    change (liftX (locator node (fixedNodes R))).eval (C (node i)) ≠ 0
-    rw [eval_liftX, C_ne_zero]
-    exact fun hz => hi ((Principal.locator_eval_zero_iff node
-      ProximityPrize.Benchmark.IRSProfile.domain.injective _ i).mp hz)
-  change relationOnAt p u (fixedNodes R) (C e * D.U) (C e * D.V) (C e * D.output)
-  exact @transfer_at u p 131072 T.height R (fixedNodes R) G D.U D.V D.output
-    hG D.U_factor D.V_factor D.output_factor e
 end
 end K1_8
 end
@@ -5007,67 +4215,6 @@ private theorem descend_scalar {ι : Type*} [Fintype ι]
       ring
     _ = s * seedInclusion (∑ i, w i * A i) := by simp only [map_sum, map_mul]
     _ = s := by rw [hw, map_one, mul_one]
-theorem seed_multiplier {u : Words} {T : TwoActive u} {R : Relation T}
-    (D : Reduction u T R) (P Q : Bivar) (hcross : sameDirection D.U D.V P Q)
-    (hp : P.natDegree ≤ D.height) (hq : Q.natDegree ≤ D.height) :
-    ∃ e : K[X], P = C e * D.U ∧ Q = C e * D.V := by
-  have hext (F : Bivar) : (extendSeedHom F).natDegree = F.natDegree :=
-    natDegree_map_eq_of_injective seedInclusion_injective F
-  have hne (F : Bivar) (hF : F ≠ 0) : extendSeedHom F ≠ 0 :=
-    fun hz => hF (extendSeed_injective (hz.trans (Polynomial.map_zero _).symm))
-  have hxy : extendSeedHom D.U * extendSeedHom Q = extendSeedHom D.V * extendSeedHom P := by
-    have h := congrArg extendSeedHom hcross
-    simpa only [map_mul] using h
-  have hcop : IsCoprime (extendSeedHom D.U) (extendSeedHom D.V) := D.coprime
-  obtain ⟨E, heP, heQ⟩ := common_multiplier hcop hxy
-  have hEd := multiplier_degree_zero (hne _ D.U_ne) (hne _ D.V_ne) heP heQ
-    (by simpa only [hext] using D.max_degree)
-    (by simpa only [hext] using hp) (by simpa only [hext] using hq)
-  let s := E.coeff 0
-  have hE : E = C s := eq_C_of_natDegree_eq_zero hEd
-  rw [hE] at heP heQ
-  let G := liftX (locator node (fixedNodes R))
-  have hLeftU : extendSeedHom (G * P) = C s * extendSeedHom (leftU R) := by
-    rw [D.U_factor]
-    change extendSeedHom (G * P) = C s * extendSeedHom (G * D.U)
-    rw [map_mul, map_mul, heP]
-    ac_rfl
-  have hLeftV : extendSeedHom (G * Q) = C s * extendSeedHom (leftV R) := by
-    rw [D.V_factor]
-    change extendSeedHom (G * Q) = C s * extendSeedHom (G * D.V)
-    rw [map_mul, map_mul, heQ]
-    ac_rfl
-  let F : Fin 2 → Bivar := ![G * P, G * Q]
-  let A : Fin 2 × Fin (T.height + 1) → K[X] :=
-    fun j => (F j.1).coeff j.2.val
-  have hA : ∀ j, seedInclusion (A j) = s * seedInclusion (R.coefficients j) := by
-    rintro ⟨i, j⟩
-    fin_cases i
-    · have hc := seed_scalar_coeff j.val hLeftU
-      rw [leftU, Principal.assemble_coeff] at hc
-      exact hc
-    · have hc := seed_scalar_coeff j.val hLeftV
-      rw [leftV, Principal.assemble_coeff] at hc
-      exact hc
-  obtain ⟨e, he⟩ := descend_scalar R.coefficients A R.primitive s hA
-  have hmapC : extendSeedHom (C e) = C s := by
-    change (C e).map seedInclusion = C s
-    rw [Polynomial.map_C, he]
-  refine ⟨e, extendSeed_injective ?_, extendSeed_injective ?_⟩
-  · change extendSeedHom P = extendSeedHom (C e * D.U)
-    rw [map_mul, hmapC, heP]
-  · change extendSeedHom Q = extendSeedHom (C e * D.V)
-    rw [map_mul, hmapC, heQ]
-theorem canonical_output {u : Words} {T : TwoActive u} {R : Relation T}
-    (D : Reduction u T R) (P Q : Bivar) (hcross : sameDirection D.U D.V P Q)
-    (hp : P.natDegree ≤ D.height) (hq : Q.natDegree ≤ D.height) :
-    ∃ W : Bivar, W.degree < (131072 + D.height : ℕ) ∧ relationOn u (fixedNodes R) P Q W := by
-  obtain ⟨e, rfl, rfl⟩ := seed_multiplier D P Q hcross hp hq
-  refine ⟨C e * D.output, ?_, ?_⟩
-  · have hdeg : (C e * D.output).degree ≤ D.output.degree := by
-      simpa only [smul_eq_C_mul] using degree_smul_le e D.output
-    exact hdeg.trans_lt D.output_degree
-  · exact reduced_scaled_relation D e
 private theorem proportional_amplitudes {α β : Fin 2 → K[X]}
     (ha : IsCoprime (α 0) (α 1)) (hb : IsCoprime (β 0) (β 1))
     (hd : α 0 * β 1 = α 1 * β 0) :
@@ -5099,34 +4246,6 @@ private theorem rescale_threeU (a : K[X]) (α β : Fin 2 → K[X]) (t : K)
     threeU (a * C t) α = threeU a β := by
   rw [← threeUAt_native]
   exact rescale_at p a α β t heq
-theorem rank_three_branch {u : Words} {T : TwoActive u} {R : Relation T}
-    (D : Reduction u T R) (hr : columnRank D.U D.V = 3) (S : AmplitudeDirection D.U D.V)
-    (ha : S.a.natDegree + amplitudeDegree (S.β 0) (S.β 1) ≤ D.height)
-    (hb : S.b.natDegree + amplitudeDegree (S.α 0) (S.α 1) ≤ D.height) :
-    ∃ B : RankThree u T R D, Nonparallel B ∨ Parallel B := by
-  obtain ⟨W, hW, hnodes⟩ := canonical_output D _ _ S.direction
-    ((threeU_height _ _).trans ha) ((threeV_height _ _).trans hb)
-  by_cases hd : S.α 0 * S.β 1 - S.α 1 * S.β 0 = 0
-  · obtain ⟨t, ht, htβ⟩ := proportional_amplitudes S.α_primitive S.β_primitive (sub_eq_zero.mp hd)
-    have htσ : twist t ≠ 0 := fun hz => ht (twist.injective (hz.trans (map_zero twist).symm))
-    let a := S.a * C (twist t)
-    have heq (i : Fin 2) : (S.β i).map twist = C (twist t) * (S.α i).map twist := by
-      rw [htβ i, Polynomial.map_mul, Polynomial.map_C]
-    have hU : threeU a S.α = threeU S.a S.β := rescale_threeU S.a S.α S.β (twist t) heq
-    have hdeg (i : Fin 2) : (S.β i).natDegree = (S.α i).natDegree := by
-      rw [htβ i, natDegree_C_mul ht]
-    have ha' : a.natDegree + amplitudeDegree (S.α 0) (S.α 1) ≤ D.height := by
-      simpa only [a, natDegree_mul_C htσ, amplitudeDegree, hdeg] using ha
-    have hdir : sameDirection D.U D.V (threeU a S.α) (threeV S.b S.α) := by
-      rw [hU]
-      exact S.direction
-    have hn : relationOn u (fixedNodes R) (threeU a S.α) (threeV S.b S.α) W := by
-      rw [hU]
-      exact hnodes
-    exact ⟨⟨hr, S.α, S.α, a, S.b, mul_ne_zero S.a_ne (C_ne_zero.mpr htσ), S.b_ne,
-      S.α_primitive, S.α_primitive, ha', hb, hdir, W, hW, hn⟩, Or.inr rfl⟩
-  · exact ⟨⟨hr, S.α, S.β, S.a, S.b, S.a_ne, S.b_ne,
-      S.α_primitive, S.β_primitive, ha, hb, S.direction, W, hW, hnodes⟩, Or.inl hd⟩
 end
 end K1_8
 end
@@ -5228,116 +4347,6 @@ end
 section
 set_option backward.isDefEq.respectTransparency false
 set_option maxRecDepth 12000
-set_option maxHeartbeats 1600000
-namespace K1_8
-noncomputable section
-open Polynomial K1 FrobeniusLocator ProximityPrize.Benchmark
-private def constantsInFrac : K →+* Frac :=
-  seedInclusion.comp Polynomial.C
-private theorem extend_liftX (G : K[X]) :
-    extendSeed (liftX G) = G.map constantsInFrac :=
-  Polynomial.map_map Polynomial.C seedInclusion G
-private theorem fixed_case_maximal {u : Words} {T : TwoActive u} (R : Relation T)
-    (hi : ¬ InvalidLeft R) (hf : FixedLeftGCD R) :
-    ∀ H : Frac[X], H ∣ extendSeed (leftU R) → H ∣ extendSeed (leftV R) →
-      H ∣ extendSeed (liftX (locator node (fixedNodes R))) := by
-  classical
-  obtain ⟨g, hg, hgu, hgv, hgmax⟩ := hf
-  change g.map constantsInFrac ≠ 0 at hg
-  change g.map constantsInFrac ∣ _ at hgu hgv
-  change ∀ H : Frac[X], H ∣ extendSeed (leftU R) → H ∣ extendSeed (leftV R) →
-    H ∣ g.map constantsInFrac at hgmax
-  have hg0 : g ≠ 0 := by
-    intro hz
-    exact hg (by rw [hz, Polynomial.map_zero])
-  let g₀ := g * C g.leadingCoeff⁻¹
-  have hm : g₀.Monic := monic_mul_leadingCoeff_inv hg0
-  have hnorm (P : Frac[X]) (hd : g.map constantsInFrac ∣ P) :
-      g₀.map constantsInFrac ∣ P := by
-    apply ((Polynomial.map_dvd_map' constantsInFrac).mpr ?_).trans hd
-    exact (dvd_mul_leadingCoeff_inv hg0).mp dvd_rfl
-  have hlift (P : Bivar) (hd : g.map constantsInFrac ∣ extendSeed P) :
-      liftX g₀ ∣ P := by
-    apply (Polynomial.map_dvd_map seedInclusion seedInclusion_injective (hm.map Polynomial.C)).mp
-    change extendSeed (liftX g₀) ∣ extendSeed P
-    rw [extend_liftX]
-    exact hnorm _ hd
-  have hu := hlift _ hgu
-  have hv := hlift _ hgv
-  have hdom : g₀ ∣ locator node Finset.univ := by
-    by_contra h
-    exact hi (Or.inr ⟨g₀, hm.ne_zero, hu, hv, h⟩)
-  obtain ⟨S, _, _, t, ht, hS⟩ :=
-    Strata.split_divisor_locator_factor node IRSProfile.domain.injective Finset.univ g₀ hm.ne_zero hdom
-  have hsub : S ⊆ fixedNodes R := by
-    intro i his
-    have hz : g₀.eval (node i) = 0 := by
-      rw [hS, eval_smul, locator_eval_zero node S i his, smul_zero]
-    have hlzero : (liftX g₀).eval (C (node i)) = 0 := by
-      rw [eval_liftX, hz, C_0]
-    obtain ⟨U, hU⟩ := hu
-    obtain ⟨V, hV⟩ := hv
-    exact (mem_fixed_iff R i).mpr ⟨by rw [hU, eval_mul, hlzero, zero_mul],
-      by rw [hV, eval_mul, hlzero, zero_mul]⟩
-  have hg₀dvd : g₀ ∣ locator node (fixedNodes R) := by
-    rw [hS, Polynomial.smul_eq_C_mul, (isUnit_C.mpr (isUnit_iff_ne_zero.mpr ht)).mul_left_dvd]
-    exact Strata.locator_dvd_of_eval_zero node IRSProfile.domain.injective S _
-      (fun i his => locator_eval_zero node _ i (hsub his))
-  intro H hU hV
-  rw [extend_liftX]
-  exact (hgmax H hU hV).trans
-    ((Polynomial.map_dvd_map' constantsInFrac).mpr
-      ((dvd_mul_right g (C g.leadingCoeff⁻¹)).trans hg₀dvd))
-theorem fixed_gcd {u : Words} {T : TwoActive u} (R : Relation T)
-    (hu : leftU R ≠ 0) (hm : ¬ MovingGCD R) (hi : ¬ InvalidLeft R) :
-    IsCommonGCD (extendSeed (liftX (locator node (fixedNodes R))))
-      (extendSeed (leftU R)) (extendSeed (leftV R)) := by
-  classical
-  let S := fixedNodes R
-  let Δ := liftX (locator node S)
-  let A := extendSeed (leftU R)
-  let B := extendSeed (leftV R)
-  have hΔ : Δ.Monic := (locator_monic node S).map Polynomial.C
-  have hΔ0 : extendSeed Δ ≠ 0 := (hΔ.map seedInclusion).ne_zero
-  have hA0 : A ≠ 0 :=
-    fun h => hu (extendSeed_injective (h.trans (Polynomial.map_zero _).symm))
-  have hΔA : extendSeed Δ ∣ A := by
-    exact _root_.map_dvd (Polynomial.mapRingHom seedInclusion)
-      (lift_locator_dvd S (leftU R) (fun i h => ((mem_fixed_iff R i).mp h).1))
-  have hΔB : extendSeed Δ ∣ B := by
-    exact _root_.map_dvd (Polynomial.mapRingHom seedInclusion)
-      (lift_locator_dvd S (leftV R) (fun i h => ((mem_fixed_iff R i).mp h).2))
-  refine ⟨hΔ0, hΔA, hΔB, ?_⟩
-  by_cases hf : FixedLeftGCD R
-  · exact fixed_case_maximal R hi hf
-  let G := EuclideanDomain.gcd A B
-  have hGA : G ∣ A := EuclideanDomain.gcd_dvd_left _ _
-  have hGB : G ∣ B := EuclideanDomain.gcd_dvd_right _ _
-  have hG : G ≠ 0 := fun hz => hA0 (zero_dvd_iff.mp (hz ▸ hGA))
-  have hGd : G.natDegree ≤ S.card := by
-    apply Nat.le_of_not_gt
-    exact fun h => hm ⟨hf, G, hG, hGA, hGB, h⟩
-  have hΔd : (extendSeed Δ).natDegree = S.card := by
-    rw [extend_liftX, natDegree_map_eq_of_injective constantsInFrac.injective, locator_natDegree]
-  obtain ⟨q, hq⟩ := EuclideanDomain.dvd_gcd hΔA hΔB
-  change G = extendSeed Δ * q at hq
-  have hq0 : q ≠ 0 := by intro h; exact hG (by rw [hq, h, mul_zero])
-  have hd := congrArg Polynomial.natDegree hq
-  rw [natDegree_mul hΔ0 hq0, hΔd] at hd
-  have hqC : q = C (q.coeff 0) := eq_C_of_natDegree_eq_zero (by omega)
-  have hqU : IsUnit q := by
-    rw [hqC, isUnit_C, isUnit_iff_ne_zero]
-    intro hz
-    exact hq0 (by rwa [hz, C_0] at hqC)
-  intro H hHA hHB
-  have hHG : H ∣ G := EuclideanDomain.dvd_gcd hHA hHB
-  rwa [hq, hqU.dvd_mul_right] at hHG
-end
-end K1_8
-end
-section
-set_option backward.isDefEq.respectTransparency false
-set_option maxRecDepth 12000
 namespace K1_8
 noncomputable section
 open Polynomial K1
@@ -5351,25 +4360,6 @@ def c2 : Prop :=
     ∀ S : AmplitudeDirection U V,
       S.a.natDegree + amplitudeDegree (S.β 0) (S.β 1) ≤ H ∧
       S.b.natDegree + amplitudeDegree (S.α 0) (S.α 1) ≤ H
-theorem of_children (h1 : c1) (h2 : c2) : K1.c8 := by
-  intro u _ T R hmove hinvalid hsat hw
-  have hu : leftU R ≠ 0 := by
-    obtain ⟨γ, hγ, ⟨M⟩⟩ := hw
-    intro hz
-    exact (hsat γ hγ M).U_ne (by rw [atSlope, hz, Polynomial.map_zero])
-  obtain ⟨D⟩ := puncture R hsat hw (fixed_gcd R hu hmove hinvalid)
-  refine ⟨D, ?_⟩
-  rcases rank_cases D.U D.V D.U_ne D.V_ne with hfour | hthree
-  · exact Or.inl hfour
-  · obtain ⟨S⟩ := h1 D.U D.V D.U_ne D.V_ne hthree
-    have hsmall : D.height < p - 1 := by
-      have hh := D.height_eq
-      have hc := T.inactive
-      unfold TwoActive.height at hh
-      change D.height < 2130706432
-      omega
-    obtain ⟨ha, hb⟩ := h2 D.U D.V D.height D.U_ne D.V_ne D.coprime D.max_degree hsmall S
-    exact Or.inr (rank_three_branch D hthree S ha hb)
 end
 end K1_8
 end
@@ -5828,14 +4818,6 @@ def crossValue (u : K1.Words) (a b : K[X]) (A : Fin 2 → K[X])
     (i : I) (l j : Fin 2) : K :=
   a.eval (node i) * twist ((A l).eval (node i)) * u j i -
     b.eval (node i) * (A j).eval (node i) * twist (u l i)
-def FirstEvaluation (a : K[X]) (A : Fin 2 → K[X]) (i : I) : Prop :=
-  (K1.threeU a A).eval (C (node i)) =
-    C (a.eval (node i)) * (C (twist ((A 0).eval (node i))) +
-      Polynomial.X ^ K1.p * C (twist ((A 1).eval (node i))))
-def _root_.K1_9_1.firstEvaluationAt (n : ℕ) (a : K[X]) (A : Fin 2 → K[X]) (i : I) : Prop :=
-  (K1_8.threeUAt n a A).eval (C (node i)) =
-    C (a.eval (node i)) * (C (twist ((A 0).eval (node i))) +
-      Polynomial.X ^ n * C (twist ((A 1).eval (node i))))
 def CoefficientIdentities (u : K1.Words) (a b : K[X]) (A : Fin 2 → K[X])
     (P : K1.Bivar) (i : I) : Prop :=
   (seedCoeff P 0).eval (node i) = crossValue u a b A i 0 0 ∧
@@ -5857,15 +4839,6 @@ structure PolarData (u : K1.Words) where
     (Q r s).eval (node i) =
       a.eval (node i) * twist ((pencil (A 0) (A 1) r).eval (node i)) * fold u s i -
       b.eval (node i) * (pencil (A 0) (A 1) s).eval (node i) * twist (fold u r i)
-abbrev PolarData.amp {u : K1.Words} (D : PolarData u) := pencil (D.A 0) (D.A 1)
-theorem PolarData.left_bound {u : K1.Words} (D : PolarData u) (z : K) :
-    (D.a * (D.amp z).map twist).natDegree ≤ 32685 :=
-  natDegree_mul_le.trans <|
-    (Nat.add_le_add_left (natDegree_map_le.trans (pencil_natDegree ..)) _).trans D.a_bound
-theorem PolarData.right_bound {u : K1.Words} (D : PolarData u) (z : K) :
-    (D.b * D.amp z).natDegree ≤ 32685 :=
-  natDegree_mul_le.trans <|
-    (Nat.add_le_add_left (pencil_natDegree ..) _).trans D.b_bound
 private theorem iterate_six : iterateFrobenius K K1.p 6 = RingHom.id K := by
   apply RingHom.ext
   intro x
@@ -5913,209 +4886,12 @@ private theorem affine_zero (f χ : K → K) (h : Function.Injective χ)
   have hz : f z = f 0 := by simpa [hd] using hf z
   have hrr : f r = f 0 := by simpa [hd] using h₁
   exact hz.trans (hrr.symm.trans hr)
-private theorem PolarData.amp_bound {u} (D : PolarData u) (z : K) :
-    (D.amp z).natDegree ≤ 32685 :=
-  (pencil_natDegree ..).trans (Nat.le_trans (Nat.le_add_left _ _) D.a_bound)
-private theorem PolarData.amp_nonzero_at {u} (D : PolarData u) {r s : K}
-    (hrs : r ≠ s) (i : I) : (D.amp r).eval (node i) ≠ 0 ∨ (D.amp s).eval (node i) ≠ 0 := by
-  by_contra! hz
-  obtain ⟨hr, hs⟩ := hz
-  simp only [PolarData.amp, pencil, eval_add, eval_mul, eval_C] at hr hs
-  have hb : (r-s) * (D.A 1).eval (node i) = 0 := by linear_combination hr - hs
-  have h1 := (mul_eq_zero.mp hb).resolve_left (sub_ne_zero.mpr hrs)
-  have h0 : (D.A 0).eval (node i) = 0 := by simpa [h1] using hr
-  obtain ⟨P, Q, hPQ⟩ := D.primitive
-  have h := congrArg (Polynomial.eval (node i)) hPQ
-  simp only [eval_add, eval_mul, h0, h1, mul_zero, add_zero, eval_one, zero_ne_one] at h
-private def PolarData.cross {u} (D : PolarData u) (r s : K) (P Q : K[X]) : K[X] :=
-  D.a * (D.amp r).map twist * Q - D.b * D.amp s * P.map twist
-private theorem PolarData.cross_degree {u} (D : PolarData u) (r s : K)
-    {P Q : K[X]} (hP : P.degree < 131072) (hQ : Q.degree < 131072) :
-    (D.cross r s P Q).degree < 163757 :=
-  degree_sub_lt
-    (Strata.degree_mul_lt_add _ _ 32685 131072 (D.left_bound r) hQ)
-    (Strata.degree_mul_lt_add _ _ 32685 131072 (D.right_bound s) (degree_map_le.trans_lt hP))
-private theorem PolarData.decoder_identity {u} (D : PolarData u) (z : K)
-    (S : Finset I) (P : K[X]) (hS : 180265 ≤ S.card) (hP : P.degree < 131072)
-    (hits : ∀ i ∈ S, P.eval (node i) = fold u z i) : D.cross z z P P = D.Q z z := by
-  have hcard : 163757 ≤ S.card := by omega
-  have hb : (163757 : WithBot ℕ) ≤ S.card := by exact_mod_cast hcard
-  apply eq_on_nodes S _ _ ((D.cross_degree z z hP hP).trans_le hb) ((D.Q_degree z z).trans_le hb)
-  intro i hi
-  simp only [PolarData.cross, eval_sub, eval_mul, map_eval_node, hits i hi, D.nodes]
 private def residual (u : K1.Words) (P Q : K[X]) : K1.Words :=
   fun j i => u j i - (if j = 0 then P else Q).eval (node i)
 private theorem fold_residual (u : K1.Words) (P Q : K[X]) (z : K) (i : I) :
     fold (residual u P Q) z i = fold u z i - (pencil P Q z).eval (node i) := by
   simp [fold, pencil, residual]
   ring
-private def PolarData.subtract {u} (D : PolarData u) (P Q : K[X])
-    (hP : P.degree < 131072) (hQ : Q.degree < 131072) : PolarData (residual u P Q) where
-  a := D.a
-  b := D.b
-  A := D.A
-  Q r s := D.Q r s - D.cross r s (pencil P Q r) (pencil P Q s)
-  a_ne := D.a_ne
-  norms_ne := D.norms_ne
-  primitive := D.primitive
-  a_bound := D.a_bound
-  b_bound := D.b_bound
-  Q_degree r s := degree_sub_lt (D.Q_degree r s)
-    (D.cross_degree r s (pencil_degree hP hQ r) (pencil_degree hP hQ s))
-  nodes r s i := by
-    simp only [eval_sub, D.nodes, PolarData.cross, eval_mul, map_eval_node, fold_residual, map_sub]
-    ring
-private theorem PolarData.offdiag_zero {u} (D : PolarData u) {r s : K}
-    (hr : D.amp r ≠ 0) (hs : D.amp s ≠ 0) (hrr : D.Q r r = 0) (hss : D.Q s s = 0) :
-    D.Q r s = 0 := by
-  let E := D.amp s * (D.amp r).map twist
-  have ha : D.a.natDegree ≤ 32685 := (Nat.le_add_right _ _).trans D.a_bound
-  have hb : D.b.natDegree ≤ 32685 := (Nat.le_add_right _ _).trans D.b_bound
-  have hE : E.natDegree ≤ 65370 := natDegree_mul_le.trans
-    (Nat.add_le_add (D.amp_bound s) (natDegree_map_le.trans (D.amp_bound r)))
-  have hl : (D.b * E * (D.Q r s).map twist).degree < 261812 :=
-    Strata.degree_mul_lt_add _ _ 98055 163757
-      (natDegree_mul_le.trans (Nat.add_le_add hb hE)) (degree_map_le.trans_lt (D.Q_degree r s))
-  have ht : (D.a.map twist * E.map twist * D.Q r s).degree < 261812 :=
-    Strata.degree_mul_lt_add _ _ 98055 163757
-      (natDegree_mul_le.trans (Nat.add_le_add (natDegree_map_le.trans ha) (natDegree_map_le.trans hE)))
-      (D.Q_degree r s)
-  have heq : D.b * E * (D.Q r s).map twist = D.a.map twist * E.map twist * D.Q r s := by
-    apply eq_on_nodes Finset.univ _ _
-      (by rw [all_card]; exact hl.trans (by norm_num)) (by rw [all_card]; exact ht.trans (by norm_num))
-    intro i _
-    have h₁ := (D.nodes r r i).symm
-    have h₂ := (D.nodes s s i).symm
-    rw [hrr, eval_zero] at h₁
-    rw [hss, eval_zero] at h₂
-    have hσ := congrArg (fun x => twist x) h₁
-    simp only [map_sub, map_mul, map_zero] at hσ
-    simp only [E, eval_mul, map_eval_node, D.nodes, map_sub, map_mul]
-    linear_combination
-      -(twist (D.a.eval (node i))) * twist (twist ((D.amp r).eval (node i))) *
-        twist ((D.amp r).eval (node i)) * h₂ +
-      D.b.eval (node i) * (D.amp s).eval (node i) * twist ((D.amp s).eval (node i)) * hσ
-  by_contra hne
-  have hn : E ≠ 0 := mul_ne_zero hs ((Polynomial.map_ne_zero_iff twist.injective).mpr hr)
-  have hN := congrArg K1.sixNorm heq
-  simp only [sixNorm_mul, sixNorm_twist] at hN
-  exact D.norms_ne (mul_right_cancel₀ (sixNorm_ne_zero hn)
-    (mul_right_cancel₀ (sixNorm_ne_zero hne) hN.symm))
-private theorem PolarData.zero_of_diagonal_zeros {u} (D : PolarData u) {r s : K}
-    (hrs : r ≠ s) (hr : D.amp r ≠ 0) (hs : D.amp s ≠ 0)
-    (hrr : D.Q r r = 0) (hss : D.Q s s = 0) (y z : K) : D.Q y z = 0 := by
-  have hrs' := D.offdiag_zero hr hs hrr hss
-  have hsr' := D.offdiag_zero hs hr hss hrr
-  apply eq_on_nodes Finset.univ _ _ (by rw [all_card]; exact (D.Q_degree y z).trans (by norm_num))
-    (by rw [all_card, degree_zero]; exact WithBot.bot_lt_coe 262144)
-  intro i _
-  let f (r s : K) := (D.Q r s).eval (node i)
-  have right (x γ : K) : f x γ = f x 0 + id γ * (f x 1 - f x 0) := by
-    simp only [f, D.nodes, pencil, fold, eval_add, eval_mul, eval_C, id_eq]
-    ring
-  have left (x γ : K) : f γ x = f 0 x + twist γ * (f 1 x - f 0 x) := by
-    simp only [f, D.nodes, pencil, fold, eval_add, eval_mul, eval_C, map_add, map_mul,
-      map_zero, map_one]
-    ring
-  have h₁ : f r z = 0 := affine_zero (f r) id Function.injective_id hrs (right r)
-    (by simp [f, hrr]) (by simp [f, hrs']) z
-  have h₂ : f s z = 0 := affine_zero (f s) id Function.injective_id hrs (right s)
-    (by simp [f, hsr']) (by simp [f, hss]) z
-  simpa only [eval_zero] using affine_zero (fun γ => f γ z) twist twist.injective hrs (left z) h₁ h₂ y
-private theorem PolarData.decoder_zero {u} (D : PolarData u) (hQ : ∀ r s, D.Q r s = 0) (z : K)
-    (S : Finset I) (P : K[X]) (hS : 180265 ≤ S.card) (hP : P.degree < 131072)
-    (hits : ∀ i ∈ S, P.eval (node i) = fold u z i) : P = 0 := by
-  classical
-  by_cases hz : D.amp z = 0
-  · let S' := S.filter (fun i => D.a.eval (node i) ≠ 0)
-    let roots := S.filter (fun i => D.a.eval (node i) = 0)
-    have hroots : roots.card ≤ D.a.natDegree := by
-      rw [← Finset.card_image_of_injective roots node.injective]
-      apply Polynomial.card_le_degree_of_subset_roots
-      intro x hx
-      obtain ⟨i, hi, rfl⟩ := Finset.mem_image.mp hx
-      exact (Polynomial.mem_roots D.a_ne).mpr (Finset.mem_filter.mp hi).2
-    have hsum : roots.card + S'.card = S.card := Finset.card_filter_add_card_filter_not ..
-    have ha : D.a.natDegree ≤ 32685 := (Nat.le_add_right _ _).trans D.a_bound
-    have hcard : 131072 ≤ S'.card := by omega
-    apply eq_on_nodes S' _ _ (hP.trans_le (by exact_mod_cast hcard))
-      (by rw [degree_zero]; exact WithBot.bot_lt_coe _)
-    intro i hi
-    have hi' : i ∈ S ∧ D.a.eval (node i) ≠ 0 := Finset.mem_filter.mp hi
-    obtain ⟨hiS, hia⟩ := hi'
-    rw [hits i hiS, eval_zero]
-    obtain ⟨r, hr⟩ : ∃ r, (D.amp r).eval (node i) ≠ 0 := by
-      rcases D.amp_nonzero_at zero_ne_one i with h | h
-      · exact ⟨0, h⟩
-      · exact ⟨1, h⟩
-    have he := (D.nodes r z i).symm
-    simp only [hQ, hz, eval_zero, mul_zero, zero_mul, sub_zero] at he
-    have ht : twist ((D.amp r).eval (node i)) ≠ 0 := by
-      intro h
-      exact hr (twist.injective (h.trans (map_zero twist).symm))
-    exact (mul_eq_zero.mp he).resolve_left (mul_ne_zero hia ht)
-  · have he := D.decoder_identity z S P hS hP hits
-    rw [hQ, PolarData.cross] at he
-    by_contra hne
-    have hN := congrArg K1.sixNorm (sub_eq_zero.mp he)
-    simp only [sixNorm_mul, sixNorm_twist] at hN
-    exact D.norms_ne (mul_right_cancel₀ (sixNorm_ne_zero hz)
-      (mul_right_cancel₀ (sixNorm_ne_zero hne) hN))
-theorem pencil_of_marks {u : K1.Words} (D : PolarData u) (Γ : Finset K)
-    (M : ∀ z ∈ Γ, K1.BadMark u z) :
-    Γ.card ≤ 2 ∨ ∃ P Q : K[X], P.degree < 131072 ∧ Q.degree < 131072 ∧
-      ∀ z (hz : z ∈ Γ), (M z hz).decoder = pencil P Q z := by
-  classical
-  let G := Γ.filter (fun z => D.amp z ≠ 0)
-  by_cases hsmall : G.card ≤ 1
-  · let zeros := Γ.filter (fun z => D.amp z = 0)
-    have hZ : zeros.card ≤ 1 := by
-      apply Finset.card_le_one_iff.mpr
-      intro r s hr hs
-      by_contra hrs
-      have hr' := (Finset.mem_filter.mp hr).2
-      have hs' := (Finset.mem_filter.mp hs).2
-      simpa [hr', hs'] using D.amp_nonzero_at hrs (0 : I)
-    have hsum : zeros.card + G.card = Γ.card := Finset.card_filter_add_card_filter_not ..
-    exact Or.inl (by omega)
-  right
-  obtain ⟨r, hr, s, hs, hrs⟩ := Finset.one_lt_card.mp (by omega : 1 < G.card)
-  obtain ⟨hrΓ, hrA⟩ := Finset.mem_filter.mp hr
-  obtain ⟨hsΓ, hsA⟩ := Finset.mem_filter.mp hs
-  let Wr := (M r hrΓ).decoder
-  let Ws := (M s hsΓ).decoder
-  let Q := C ((s-r)⁻¹) * (Ws-Wr)
-  let P := Wr - C r * Q
-  have hWr : Wr.degree < 131072 := (M r hrΓ).degree
-  have hWs : Ws.degree < 131072 := (M s hsΓ).degree
-  have scale (c : K) (V : K[X]) (hV : V.degree < 131072) : (C c * V).degree < 131072 := by
-    by_cases hc : c = 0
-    · rw [hc, map_zero, zero_mul, degree_zero]
-      exact WithBot.bot_lt_coe 131072
-    · simpa only [degree_C_mul hc] using hV
-  have hQ : Q.degree < 131072 := scale _ _ (degree_sub_lt hWs hWr)
-  have hP : P.degree < 131072 := degree_sub_lt hWr (scale _ _ hQ)
-  have hpr : pencil P Q r = Wr := by simp [pencil, P]
-  have hps : pencil P Q s = Ws := by
-    have hc : (C s - C r : K[X]) * C ((s-r)⁻¹) = 1 := by
-      rw [← map_sub, ← map_mul, mul_inv_cancel₀ (sub_ne_zero.mpr hrs.symm), map_one]
-    calc
-      pencil P Q s = Wr + ((C s - C r) * C ((s-r)⁻¹)) * (Ws-Wr) := by
-        simp only [pencil, P, Q]
-        ring
-      _ = Ws := by rw [hc, one_mul, add_comm, sub_add_cancel]
-  let D' := D.subtract P Q hP hQ
-  have hd (z : K) (hz : z ∈ Γ) (h : pencil P Q z = (M z hz).decoder) : D'.Q z z = 0 := by
-    change D.Q z z - D.cross z z (pencil P Q z) (pencil P Q z) = 0
-    rw [h, D.decoder_identity z _ _ (M z hz).agreement (M z hz).degree (M z hz).hits, sub_self]
-  have hzero := D'.zero_of_diagonal_zeros hrs hrA hsA (hd r hrΓ hpr) (hd s hsΓ hps)
-  refine ⟨P, Q, hP, hQ, fun z hz => sub_eq_zero.mp ?_⟩
-  let W := M z hz
-  change W.decoder - pencil P Q z = 0
-  apply D'.decoder_zero hzero z W.support _ W.agreement (degree_sub_lt W.degree (pencil_degree hP hQ z))
-  intro i hi
-  rw [fold_residual, eval_sub, W.hits i hi]
-  rfl
 end
 end K1_9
 end
@@ -6195,61 +4971,6 @@ theorem coefficients_at_node
   simp only [eval_seedCoeff, hexpand, coeff_add, coeff_C, coeff_C_mul_X, coeff_C_mul_X_pow,
     h0, h0.symm, h1, h1.symm, hs0, hs0.symm, hs1, hs1.symm, hs, hs.symm, ite_true, ite_false, and_self,
     Nat.zero_ne_one, Nat.one_ne_zero, zero_add, add_zero, q]
-private theorem polarData_of_set {u : K1.Words} (S : Finset I) (height : ℕ)
-    (a b : K[X]) (A : Fin 2 → K[X]) (output : K1.Bivar)
-    (hh : height + S.card ≤ 32685)
-    (hout : output.degree < (131072 + height : ℕ))
-    (hfirst : a.natDegree + K1.amplitudeDegree (A 0) (A 1) ≤ height)
-    (hsecond : b.natDegree + K1.amplitudeDegree (A 0) (A 1) ≤ height)
-    (hane : a ≠ 0) (hn : K1.sixNorm a ≠ K1.sixNorm b) (hA : IsCoprime (A 0) (A 1))
-    (hc : ∀ i ∉ S, CoefficientIdentities u a b A output i) : Nonempty (PolarData u) := by
-  classical
-  let g := locator node S
-  let t (j : ℕ) := g * seedCoeff output j
-  have hg : g.natDegree = S.card := locator_natDegree _ _
-  have hd (j : ℕ) : (t j).degree < 163757 := by
-    have h := Strata.degree_mul_lt_add g (seedCoeff output j) g.natDegree
-      (131072 + height) le_rfl (seedCoeff_degree _ _ _ hout)
-    exact h.trans_le (by exact_mod_cast (show 131072 + height + g.natDegree ≤ 163757 by omega))
-  have ha : (g * a).natDegree + K1.amplitudeDegree (A 0) (A 1) ≤ 32685 := by
-    have h := natDegree_mul_le (p := g) (q := a)
-    omega
-  have hb : (g * b).natDegree + K1.amplitudeDegree (A 0) (A 1) ≤ 32685 := by
-    have h := natDegree_mul_le (p := g) (q := b)
-    omega
-  have hgn : g ≠ 0 := (locator_monic node S).ne_zero
-  refine ⟨⟨g * a, g * b, A,
-    fun r s => pencil (pencil (t 0) (t 1) s) (pencil (t K1.p) (t (K1.p + 1)) s) (twist r),
-    mul_ne_zero hgn hane, ?_, hA, ha, hb, ?_, ?_⟩⟩
-  · intro h
-    rw [sixNorm_mul, sixNorm_mul] at h
-    exact hn (mul_left_cancel₀ (sixNorm_ne_zero hgn) h)
-  · intro r s
-    exact pencil_degree (pencil_degree (hd 0) (hd 1) s)
-      (pencil_degree (hd K1.p) (hd (K1.p + 1)) s) _
-  · intro r s i
-    by_cases hi : i ∈ S
-    · have hz : g.eval (node i) = 0 := locator_eval_zero node _ i hi
-      simp only [pencil, t, eval_mul, eval_add, eval_C, hz, zero_mul, mul_zero, add_zero, sub_zero]
-    obtain ⟨h0, h1, h2, h3⟩ := hc i hi
-    simp only [pencil, fold, t, eval_add, eval_mul, eval_C, h0, h1, h2, h3,
-      crossValue, map_add, map_mul]
-    ring
-theorem polarData_of_coefficients {u : K1.Words} {T : K1.TwoActive u} {R : K1.Relation T}
-    {D : K1.Reduction u T R} (B : K1.RankThree u T R D)
-    (hp : K1.Parallel B) (hn : ¬ K1.UnitNorm B)
-    (hc : ∀ i ∉ K1.fixedNodes R, CoefficientIdentities u B.a B.b B.α B.output i) :
-    Nonempty (PolarData u) := by
-  have hh : D.height + (K1.fixedNodes R).card ≤ 32685 := by
-    rw [D.height_eq, K1.TwoActive.height]
-    have h₁ := T.ab
-    have h₂ := T.active
-    have h₃ := T.degreeSum
-    omega
-  have hfirst := (congrArg (fun A : Fin 2 → K[X] =>
-    B.a.natDegree + K1.amplitudeDegree (A 0) (A 1) ≤ D.height) hp).mpr B.first_degree
-  exact polarData_of_set (K1.fixedNodes R) D.height B.a B.b B.α B.output hh
-    B.output_degree hfirst B.second_degree B.a_ne hn B.α_primitive hc
 end
 end K1_9
 end
@@ -6365,8 +5086,6 @@ noncomputable section
 open K1_14 K1_14_3 Polynomial
 set_option backward.isDefEq.respectTransparency false
 set_option maxSynthPendingDepth 8
-abbrev ParentLocalRing (q : Surface) := Localization.AtPrime q.asIdeal
-def fibreMap : Jet →+* FibreJet := mapRingHom (mapRingHom seedGeneric)
 def fibreEvaluation (y v : SeedClosure) : FibreJet →+* SeedClosure :=
   (evalRingHom y).comp (evalRingHom (C v))
 theorem fibrePoint_eq_ker (y v : SeedClosure) :
@@ -6376,30 +5095,6 @@ theorem fibrePoint_eq_ker (y v : SeedClosure) :
 instance fibrePoint_isPrime (y v : SeedClosure) : (fibrePoint y v).IsPrime := by
   rw [fibrePoint_eq_ker]
   exact RingHom.ker_isPrime (fibreEvaluation y v)
-abbrev FibreLocalRing (y v : SeedClosure) := Localization.AtPrime (fibrePoint y v)
-theorem fibreEvaluation_comp (y v : SeedClosure) :
-    (fibreEvaluation y v).comp fibreMap = seedFibreEval y v := by
-  apply RingHom.ext
-  intro G
-  change ((G.map (mapRingHom seedGeneric)).eval (C v)).eval y =
-    G.eval₂ (eval₂RingHom seedGeneric y) v
-  rw [eval_map]
-  change evalRingHom y (G.eval₂ (mapRingHom seedGeneric) (C v)) = _
-  rw [hom_eval₂]
-  congr 1
-  · apply RingHom.ext
-    intro H
-    exact eval_map seedGeneric y
-  · simp
-theorem fibrePoint_comap {q : Surface} {y v : SeedClosure} (h : OnSeedFibre q y v) :
-    q.asIdeal = (fibrePoint y v).comap fibreMap := by
-  rw [fibrePoint_eq_ker, RingHom.comap_ker, fibreEvaluation_comp]
-  exact h.symm
-def fibreLocalMap (q : Surface) (y v : SeedClosure) (h : OnSeedFibre q y v) :=
-  Localization.localRingHom q.asIdeal (fibrePoint y v) fibreMap (fibrePoint_comap h)
-def idealColength {A : Type*} [CommRing A] (J : Ideal A) : ℕ∞ :=
-  Module.length A (A ⧸ J)
-def triangularLength (n : ℕ) : ℕ := n * (n + 1) / 2
 end
 end K1_14_3_4_3
 end

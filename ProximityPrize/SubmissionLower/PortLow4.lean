@@ -8,40 +8,8 @@ open K1 (I K)
 open K1_13 (Geom Shape)
 open K1_13_4
 open scoped Polynomial BigOperators
-def asOldPole {Γ s} (P : P0_9.PoleData Γ s) : K1_13.PoleData Γ s where
-  H := P.H
-  monic := P.monic
-  small := ⟨P.small.1, P.small.2.trans (by decide)⟩
-  nodes := P.nodes
-  degree := P.degree
-  z := P.z
-  injective := P.injective
-  c := P.c
-  q := P.q
-  a₀ := P.a₀
-  a₁ := P.a₁
-  c_unit := P.c_unit
-  q_unit := P.q_unit
-  a₀_unit := P.a₀_unit
-  regular := P.regular
-  residue := P.residue
 abbrev firstCut : ℕ := 5000 * P0.agreement - firstOrder
 abbrev secondCut : ℕ := 5000 * P0.agreement - secondOrder
-abbrev bankRank : ℕ := 2450646728375256245627
-def mixedWeight (a : SeedVar →₀ ℕ) : ℕ :=
-  7800 * a none + 49148 * a.some.degree
-theorem mixedWeight_add (a b : SeedVar →₀ ℕ) :
-    mixedWeight (a + b) = mixedWeight a + mixedWeight b := by
-  simp only [mixedWeight, Finsupp.add_apply, Finsupp.some_add, map_add, Nat.mul_add]
-  ac_rfl
-def Necessary {Γ s} (w : I → K) (P : K1_13.PoleData Γ s) (L : ResidueChart P) :
-    Submodule Geom PhysicalRow :=
-  Submodule.span Geom {Q | ∃ t F a, Source w P L secondBox t F ∧
-    t + mixedWeight a ≤ secondCut ∧ Q = mixedHasse a F}
-def MixedOrder (F : GenericRow) (z : GenericX) (y : Fin 3 → GenericX) (d : ℕ) : Prop :=
-  ∀ a ∈ (translate (atPoint z y) F).support, d ≤ mixedWeight a
-def PairOrders (F G : GenericRow) (z : GenericX) (y : Fin 3 → GenericX) : Prop :=
-  MixedOrder F z y firstOrder ∧ MixedOrder G z y secondOrder
 structure CommonPair (F G : GenericRow) where
   fixed : Finset GenericRow
   moving : Finset GenericRow
@@ -235,109 +203,6 @@ private theorem seed_weight (P : GenericRow) :
     P.weightedTotalDegree (Pi.single none 1) = seedDegree P := by
   rw [seedDegree, degreeOf_eq_sup, weightedTotalDegree]
   simp only [Finsupp.weight_single_one_apply]
-private theorem small_cast_ne_zero (n : ℕ) (hpos : 0 < n) (hsmall : n ≤ 11) :
-    (n : GenericX) ≠ 0 := by
-  let : CharP GenericX K1.p := charP_of_injective_ringHom (inclConst.comp embed).injective K1.p
-  intro hz
-  have hlarge : 11 < K1.p := by decide
-  exact (not_le_of_gt (hsmall.trans_lt hlarge))
-    (Nat.le_of_dvd hpos ((CharP.cast_eq_zero_iff GenericX K1.p n).mp hz))
-private theorem pderiv_moved {P : GenericRow} {i j k : SeedVar} (h : P.degreeOf k = 0) :
-    pderiv k (MvPolynomial.X j * pderiv i P) = pderiv k (MvPolynomial.X j : GenericRow) * pderiv i P := by
-  have hzero : pderiv k (pderiv i P) = 0 :=
-    pderiv_eq_zero_of_degreeOf_eq_zero (Nat.eq_zero_of_le_zero ((degreeOf_pderiv_le i k P).trans_eq h))
-  rw [pderiv_mul, hzero, mul_zero, add_zero]
-private theorem partial_not_dvd {f g : GenericRow} (i k : SeedVar) (a : GenericX)
-    (hi : 0 < f.degreeOf i) (hsmall : f.degreeOf i ≤ 11) (hk : f.degreeOf k = 0)
-    (ha : a ≠ 0) (hg : pderiv k g = C a * pderiv i f) : ¬ f ∣ g := by
-  have hpartial : pderiv i f ≠ 0 :=
-    pderiv_ne_zero_of_natCast_ne_zero i f (small_cast_ne_zero _ hi hsmall)
-  have hnonzero : C a * pderiv i f ≠ 0 := mul_ne_zero (C_ne_zero.mpr ha) hpartial
-  have hdegree : (C a * pderiv i f).degreeOf i ≤ f.degreeOf i - 1 :=
-    (degreeOf_C_mul_le _ _ _).trans (degreeOf_pderiv_le_sub_one i f)
-  rintro ⟨q, hq⟩
-  rw [hq, pderiv_mul, pderiv_eq_zero_of_degreeOf_eq_zero hk, zero_mul, zero_add] at hg
-  have hq' : pderiv k q ≠ 0 := by
-    intro hz
-    exact hnonzero (by rw [← hg, hz, mul_zero])
-  rw [← hg, degreeOf_mul_eq (ne_zero_of_degreeOf_ne_zero hi.ne') hq'] at hdegree
-  omega
-private theorem dotted_relPrime {f r : GenericRow} (hf : Irreducible f)
-    (hb : 0 < jetTotal f) (ht : jetTotal f ≤ 11) (htop : f.degreeOf (some 2) = 0)
-    (hr : r.support ⊆ f.support) (a : GenericX) (ha : a ≠ 0) :
-    IsRelPrime f (dotted r (C a * f)) := by
-  have hd (i : SeedVar) : (C a * f).degreeOf i = f.degreeOf i := by
-    rw [degreeOf_mul_eq (C_ne_zero.mpr ha) hf.ne_zero, degreeOf_C, zero_add]
-  have hsmall (i : Fin 3) : f.degreeOf (some i) ≤ 11 :=
-    (degreeOf_le_weightedTotalDegree (fun j : SeedVar => j.elim 0 (fun _ => 1))
-      (some i) (show 0 < (1 : ℕ) by decide) f).trans ht
-  have hzero (i : SeedVar) (hi : f.degreeOf i = 0) : pderiv i r = 0 :=
-    pderiv_eq_zero_of_degreeOf_eq_zero (Nat.eq_zero_of_le_zero
-      ((degreeOf_le_of_support_subset hr i).trans_eq hi))
-  have htop' : (C a * f).degreeOf (some 2) = 0 := (hd _).trans htop
-  apply hf.isRelPrime_iff_not_dvd.mpr
-  by_cases h₁ : f.degreeOf (some 1) = 0
-  · have h₀ : 0 < f.degreeOf (some 0) := by
-      by_contra! h₀
-      have hz : jetTotal f ≤ 0 := by
-        apply Finset.sup_le
-        intro m hm
-        have hm₀ := (le_degreeOf_of_mem_support (some 0) hm).trans h₀
-        have hm₁ := (le_degreeOf_of_mem_support (some 1) hm).trans_eq h₁
-        have hm₂ := (le_degreeOf_of_mem_support (some 2) hm).trans_eq htop
-        rw [Finsupp.weight_eq_sum, Fintype.sum_option, Fin.sum_univ_three]
-        simp [Nat.eq_zero_of_le_zero hm₀, Nat.eq_zero_of_le_zero hm₁, Nat.eq_zero_of_le_zero hm₂]
-      omega
-    have h₁' : (C a * f).degreeOf (some 1) = 0 := (hd _).trans h₁
-    refine partial_not_dvd (some 0) (some 1) a h₀ (hsmall 0) h₁ ha ?_
-    unfold dotted
-    rw [pderiv_eq_zero_of_degreeOf_eq_zero h₁']
-    simp only [mul_zero, add_zero, map_add, hzero _ h₁, zero_add, pderiv_moved h₁',
-      pderiv_X_self, one_mul]
-    rw [pderiv_C_mul]
-  · refine partial_not_dvd (some 1) (some 2) ((2 : GenericX) * a) (Nat.pos_of_ne_zero h₁)
-      (hsmall 1) htop (mul_ne_zero (small_cast_ne_zero 2 (by decide) (by decide)) ha) ?_
-    unfold dotted
-    rw [map_add, map_add, hzero _ htop, pderiv_moved (i := some 0) (j := some 1) htop',
-      pderiv_X_of_ne (by decide : (some 1 : SeedVar) ≠ some 2), zero_mul, add_zero,
-      pderiv_C_mul, pderiv_moved htop', pderiv_X_self, one_mul, pderiv_C_mul]
-    simp only [zero_add, map_mul, mul_assoc]
-theorem moving_cutter (f : GenericRow) (hf : Irreducible f)
-    (hb : 0 < jetTotal f) (ht : jetTotal f ≤ 11) (htop : f.degreeOf (some 2) = 0) :
-    ∃ g : GenericRow, IsRelPrime f g ∧ seedDegree g ≤ seedDegree f ∧
-      jetTotal g ≤ jetTotal f ∧ jetIndex g ≤ jetIndex f + 1 ∧
-      ∀ (z : Geom) (S : Geom[X]),
-        eval (atPoint (inclConst z) (trajectory S)) f = 0 →
-        eval (atPoint (inclConst z) (trajectory S)) g = 0 := by
-  obtain ⟨d, P, hd, hs, hP⟩ := clear_denominators f
-  let r := MvPolynomial.map inclX (coefficientDerivative P)
-  let A := MvPolynomial.map inclX P
-  have hA : A.support = f.support := (support_map_of_injective P inclX_injective).trans hs
-  have hr : r.support ⊆ f.support := by
-    intro m hm
-    rw [← hs, MvPolynomial.mem_support_iff]
-    rw [MvPolynomial.mem_support_iff, coeff_map, coeff_coefficientDerivative] at hm
-    intro hz
-    exact hm (by rw [hz, map_zero, map_zero])
-  have htopP : P.degreeOf (some 2) = 0 := by rwa [degreeOf_eq_sup, hs, ← degreeOf_eq_sup]
-  have ha : inclX d ≠ 0 := (map_ne_zero_iff inclX inclX_injective).mpr hd
-  refine ⟨dotted r A, ?_, ?_, ?_, ?_, ?_⟩
-  · rw [show A = C (inclX d) * f from hP]
-    exact dotted_relPrime hf hb ht htop hr _ ha
-  · rw [← seed_weight, ← seed_weight]
-    simpa [weightedTotalDegree, hA] using
-      dotted_weight (Pi.single none 1) r A 0 (hA.symm ▸ hr) (by decide) (by decide)
-  · simpa [jetTotal, weightedTotalDegree, hA] using
-      dotted_weight (fun i => i.elim 0 (fun _ => 1)) r A 0 (hA.symm ▸ hr) (by decide) (by decide)
-  · simpa [jetIndex, weightedTotalDegree, hA] using
-      dotted_weight (fun i => i.elim 0 Fin.val) r A 1 (hA.symm ▸ hr) (by decide) (by decide)
-  · intro z S hz
-    have hzP : eval (polynomialPoint z S) P = 0 := by
-      apply inclX_injective
-      rw [map_zero, ← eval_map_point, hP, map_mul, hz, mul_zero]
-    have hmap : dotted r A = MvPolynomial.map inclX (dotted (coefficientDerivative P) P) := by
-      simp only [dotted, A, r, map_add, map_mul, map_X, pderiv_map, map_ofNat]
-    rw [hmap, eval_map_point, eval_dotted P z S htopP, hzP, map_zero, map_zero]
 end
 end P0_9_4
 end
@@ -350,72 +215,6 @@ set_option maxRecDepth 12000
 private def line (Q : Row 3) (T U : Geom[X]) : Polynomial Geom[X] :=
   MvPolynomial.eval₂ Polynomial.C
     (fun i => Polynomial.C (jet T i) + Polynomial.C (jet U i) * Polynomial.X) Q
-private def Bounded (F : Polynomial Geom[X]) (b : ℕ) : Prop :=
-  ∀ j, (F.coeff j).natDegree ≤ b + 49148 * j
-private theorem bounded_mul {F G : Polynomial Geom[X]} {a b : ℕ}
-    (hF : Bounded F a) (hG : Bounded G b) : Bounded (F * G) (a + b) := by
-  intro j
-  rw [Polynomial.coeff_mul]
-  apply natDegree_sum_le_of_forall_le
-  intro ij hij
-  have hsum := Finset.HasAntidiagonal.mem_antidiagonal.mp hij
-  refine natDegree_mul_le.trans ((Nat.add_le_add (hF ij.1) (hG ij.2)).trans ?_)
-  rw [← hsum, Nat.mul_add]
-  omega
-private theorem bounded_C (f : Geom[X]) {a : ℕ} (hf : f.natDegree ≤ a) :
-    Bounded (Polynomial.C f) a := by
-  intro j
-  by_cases h : j = 0
-  · simpa [h] using hf
-  · simp [Polynomial.coeff_C, h]
-private theorem bounded_prod {ι : Type*} (A : Finset ι)
-    (f : ι → Polynomial Geom[X]) (b : ι → ℕ) (hf : ∀ i ∈ A, Bounded (f i) (b i)) :
-    Bounded (∏ i ∈ A, f i) (∑ i ∈ A, b i) := by
-  classical
-  induction A using Finset.induction_on with
-  | empty => simpa using bounded_C (1 : Geom[X]) (a := 0) (by simp)
-  | insert i A hi ih =>
-    rw [Finset.prod_insert hi, Finset.sum_insert hi]
-    exact bounded_mul (hf i (Finset.mem_insert_self _ _))
-      (ih fun k hk => hf k (Finset.mem_insert_of_mem hk))
-private theorem bounded_pow {f : Polynomial Geom[X]} {b : ℕ} (hf : Bounded f b) (n : ℕ) :
-    Bounded (f ^ n) (b * n) := by
-  induction n with
-  | zero => simpa using bounded_C (1 : Geom[X]) (a := 0) (by simp)
-  | succ n ih =>
-    rw [pow_succ, Nat.mul_succ]
-    exact bounded_mul ih hf
-private theorem line_degree (Q : Row 3) (T U : Geom[X]) (t : ℕ)
-    (hQ : RawCut t Q) (hT : T.natDegree ≤ 131071) (hU : U.natDegree ≤ 180219)
-    (j : ℕ) : ((line Q T U).coeff j).natDegree ≤ t + 49148 * j := by
-  let b (i : Fin 3) : ℕ := 131071 - i.val
-  let F (i : Fin 3) : Polynomial Geom[X] :=
-    Polynomial.C (jet T i) + Polynomial.C (jet U i) * Polynomial.X
-  have hF (i : Fin 3) : Bounded (F i) (b i) := by
-    intro k
-    have ht : (jet T i).natDegree ≤ b i :=
-      (natDegree_hasseDeriv_le T i.val).trans (Nat.sub_le_sub_right hT _)
-    have hu : (jet U i).natDegree ≤ b i + 49148 := by
-      refine (natDegree_hasseDeriv_le U i.val).trans ((Nat.sub_le_sub_right hU _).trans ?_)
-      have hi := i.isLt
-      change 180219 - i.val ≤ (131071 - i.val) + 49148
-      omega
-    change ((F i).coeff k).natDegree ≤ b i + 49148 * k
-    rw [show F i = _ from rfl, Polynomial.coeff_add, Polynomial.coeff_C,
-      Polynomial.coeff_C_mul_X]
-    by_cases h0 : k = 0
-    · simpa [h0] using ht
-    · by_cases h1 : k = 1
-      · simpa [h1] using hu
-      · simp [h0, h1]
-  unfold line
-  rw [MvPolynomial.eval₂_eq, Polynomial.finsetSum_coeff]
-  apply natDegree_sum_le_of_forall_le
-  intro a ha
-  have hterm := bounded_mul (bounded_C (Q.coeff a) le_rfl)
-    (bounded_prod a.support (fun i => F i ^ a i) (fun i => b i * a i)
-      (fun i _ => bounded_pow (hF i) (a i))) j
-  exact hterm.trans (Nat.add_le_add_right (hQ a ha) _)
 private theorem eval_line (Q : Row 3) (T U : Geom[X]) (c : Geom) :
     (line Q T U).eval (Polynomial.C c) = atJet Q (T + c • U) := by
   change (evalRingHom (Polynomial.C c))
@@ -466,34 +265,6 @@ private theorem coeff_contact (F : Polynomial Geom[X]) (x : Geom) (r : ℕ)
   intro i hi
   change (f (F.coeff j)).coeff i = 0
   rw [← Polynomial.coeff_map, ← swapped_coeff, hzero i hi, Polynomial.coeff_zero]
-private theorem line_coeff_zero (w : I → K) (H res T : Geom[X]) (t r : ℕ) (Q : Row 3)
-    (hT : T.natDegree ≤ 131071) (hQ : RawCut t Q) (hcontact : RawContact r w H res Q)
-    (A : Finset I) (hA : A.card = 180217)
-    (hhit : ∀ i ∈ A, (H * T + res).eval (embed (node i)) = embed (w i))
-    (V : Geom[X]) (hV : V.natDegree ≤ 2) (j : ℕ) (hj : t + 49148 * j < r * 180217) :
-    (line Q T (locator (fun i => embed (node i)) A * V)).coeff j = 0 := by
-  classical
-  let x (i : I) : Geom := embed (node i)
-  let L := locator x A
-  let U := L * V
-  have hU : U.natDegree ≤ 180219 :=
-    natDegree_mul_le.trans (by rw [locator_natDegree, hA]; omega)
-  have hc (i : I) (hi : i ∈ A) (c : Geom) :
-      (Polynomial.X - C (x i)) ^ r ∣ (line Q T U).eval (C c) := by
-    rw [eval_line]
-    apply hcontact i
-    have hL : L.eval (x i) = 0 := locator_eval_zero x A i hi
-    have hU0 : U.eval (x i) = 0 := by simp [U, hL]
-    have ht : (T + c • U).eval (x i) = T.eval (x i) := by simp [eval_smul, hU0]
-    change (H * (T + c • U) + res).eval (x i) = _
-    rw [eval_add, eval_mul, ht, ← eval_mul, ← eval_add]
-    exact hhit i hi
-  have hx : Function.Injective x :=
-    (RingHom.injective embed).comp IRSProfile.domain.injective
-  apply K1_11.eq_zero_of_many_contacts A x hx r
-  · exact fun i hi => coeff_contact _ _ _ (hc i hi) j
-  · rw [hA]
-    exact (line_degree Q T U t hQ hT hU j).trans_lt hj
 private theorem exists_direction (L : Geom[X]) (x : Geom) (hx : L.eval x ≠ 0)
     (v : Fin 3 → Geom) :
     ∃ V : Geom[X], V.natDegree ≤ 2 ∧ ∀ i : Fin 3, (jet (L * V) i).eval x = v i := by
@@ -606,25 +377,6 @@ private theorem translate_map (Q : Row 3) (T : Geom[X]) :
     · intro i
       simp [left, right, K1_13_4.translate, trajectory]
   exact DFunLike.congr_fun h Q
-theorem raw_locator_order (w : I → K) (H res T : Geom[X]) (t k : ℕ) (Q : Row 3)
-    (hT : T.natDegree ≤ 131071)
-    (hhits : ∃ A : Finset I, 180217 ≤ A.card ∧
-      ∀ i ∈ A, (H * T + res).eval (embed (node i)) = embed (w i))
-    (hc : RawContact 5000 w H res Q) (hQ : RawCut t Q)
-    (hcut : t + 49148 * k < 5000 * 180217) :
-    LowerOrder (MvPolynomial.map inclX Q) (trajectory T) (k + 1) := by
-  obtain ⟨B, hB, hhits⟩ := hhits
-  obtain ⟨A, hAB, hA⟩ := Finset.exists_subset_card_eq hB
-  let x (i : I) := embed (node i)
-  have ho : OrderAt Q T (k + 1) := by
-    apply order_of_locator_lines Q T (locator x A) (locator_monic x A).ne_zero
-    intro V hV j hj
-    exact line_coeff_zero w H res T t 5000 Q hT hQ hc A hA
-      (fun i hi => hhits i (hAB hi)) V hV j (by omega)
-  intro a
-  rw [translate_map]
-  intro ha
-  exact ho a (MvPolynomial.support_map_subset _ _ ha)
 end
 end P0_9_4
 end
@@ -634,9 +386,6 @@ open K1_13_4_2 (Bank)
 def cut : Bank → ℕ
   | .first => P0_9_4.firstCut
   | .second => P0_9_4.secondCut
-def targetRank : Bank → ℕ
-  | .first => 1
-  | .second => P0_9_4.bankRank
 theorem cut_large (b : Bank) : 131071 * b.box.b ≤ cut b + 1 := by
   cases b <;> decide
 def rawBase (b : Bank) : ℕ := cut b + 1 - 131071 * b.box.b
@@ -816,23 +565,6 @@ private theorem space_bounds (b : Bank) (h : ℕ) (F : PhysicalRow) (hF : F ∈ 
     obtain ⟨c, rfl, hx⟩ := he e hm
     rw [← hx]
     exact (column_bounds c).2.2.2.2
-theorem ambient (b : Bank) (h : ℕ) :
-    ∃ V : Submodule Geom PhysicalRow, Module.Finite Geom V ∧
-      (∀ F ∈ V, Caps b.box F ∧ TrueCut h (cut b + (b.box.b + b.box.j) * h) F) ∧
-      Module.finrank Geom V = 70001 * jetSum b.box.b (width b h) := by
-  refine ⟨space b h, Module.Finite.span_of_finite _ (Set.finite_range _), space_bounds b h, ?_⟩
-  rw [space, finrank_span_eq_card (column_li b h)]
-  simp only [Column, Fintype.card_sigma, Fintype.card_prod, Fintype.card_fin,
-    Nat.mul_comm _ 70001]
-  unfold jetSum
-  simp only [Finset.mul_sum]
-  rw [← Fin.sum_univ_eq_sum_range]
-  apply Finset.sum_congr rfl
-  intro q _
-  rw [← Fin.sum_univ_eq_sum_range]
-  apply Finset.sum_congr rfl
-  intro k _
-  rw [← Fin.sum_univ_eq_sum_range]
 end
 end P0_9_4_1
 end

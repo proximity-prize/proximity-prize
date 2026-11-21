@@ -2115,104 +2115,6 @@ def c1 : Prop :=
       rowAt k x (jetAt x U) (separant f) ≠ 0 →
       ∀ a : CoeffIndex, rowAt k x (jetAt x U) (separant f) ^ m * U.coeff a.val =
         rowAt k x (jetAt x U) (v a)
-def c2 : Prop :=
-  ∀ (f : Row 3) (hp : (chartIdeal f).IsPrime),
-    letI := hp
-    freshRow (separant f) ∉ chartIdeal f → Whole f →
-      Nonempty (Tangent (chartConstants f) (chartCenter f) (chartJets f))
-def c3 : Prop :=
-  ∀ (f : Row 3) (F : Type) [Field F] (k : Geom →+* F) (x : F) (y : Fin 3 → F),
-    TrueWeightLE f (90 * 180265 - 1) → rowAt k x y f = 0 → Tangent k x y →
-      ∃ U : F[X], U.natDegree < taylorLength ∧ trajectory k U f = 0 ∧ jetAt x U = y
-theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) : K1_13_5_5.c1 := by
-  intro f hf hd hmax hw hwhole
-  let hp : (chartIdeal f).IsPrime := chart_prime f hf hd
-  have hs := separant_regular f hf hd hmax
-  obtain ⟨δ⟩ := h2 f hp hs hwhole
-  have hzero : rowAt (chartConstants f) (chartCenter f) (chartJets f) f = 0 := by
-    rw [rowAt_chart]
-    exact (onChart_eq_zero f _).mpr (Ideal.mem_span_singleton_self _)
-  obtain ⟨U, hU, hsol, hinit⟩ :=
-    h3 f (ChartField f) (chartConstants f) (chartCenter f) (chartJets f) hw hzero δ
-  obtain ⟨m, v, hv⟩ := h1 f
-  let k := chartConstants f
-  let point : CoeffIndex → ChartField f := fun a => U.coeff a.val
-  let P := RingHom.ker (coeffEval k point)
-  have hbase := freshIdeal_eq_ker k point
-  have himage := freshJetEval_ker f hf hd U hU hsol hinit
-  have hD : onChart f (freshRow (separant f)) ≠ 0 :=
-    fun h => hs ((onChart_eq_zero f _).mp h)
-  have hUreg : trajectory k U (separant f) ≠ 0 := by
-    intro hz
-    have h := eval_trajectory k U (chartCenter f) (separant f)
-    rw [hz, Polynomial.eval_zero, hinit, rowAt_chart] at h
-    exact hD h.symm
-  refine ⟨P, ⟨RingHom.ker_isPrime _, ?_, ?_, hs, ?_⟩, ?_⟩
-  · exact fun h => hf.ne_zero (rowMap_injective (h.trans (map_zero _).symm))
-  · change (freshIdeal P).comap freshProjection.toRingHom = chartIdeal f
-    rw [hbase, RingHom.comap_ker]
-    exact himage
-  · intro a
-    refine ⟨freshRow (v a), m, ?_⟩
-    have hU' : (U.map (newConstants : ChartField f →+* NewField (ChartField f))).natDegree <
-        taylorLength := Polynomial.natDegree_map_le.trans_lt hU
-    have hsol' : trajectory (newConstants.comp k) (U.map newConstants) f = 0 := by
-      rw [← map_trajectory, hsol, Polynomial.map_zero]
-    have hs' : rowAt (newConstants.comp k) newCenter
-        (jetAt newCenter (U.map newConstants)) (separant f) ≠ 0 := by
-      rw [newTrajectory_eval]
-      exact fun h => hUreg ((IsFractionRing.injective _ _) (h.trans (map_zero _).symm))
-    have h := hv (NewField (ChartField f)) (newConstants.comp k) (U.map newConstants) newCenter
-      hU' hsol' hs' a
-    rw [newTrajectory_eval, newTrajectory_eval, Polynomial.coeff_map,
-      ← freshJetEval_row k U hU, ← freshJetEval_row k U hU] at h
-    exact fresh_recovered_mem k U a m _ _ h
-  · intro S hS hreg
-    let e : FreshJetRing →+* ChartField f := onChart f
-    let g : FreshJetRing →+* FreshField :=
-      MvPolynomial.eval (jetAt freshCenter (S.map freshConstants))
-    let b : Geom →+* FreshJetRing := MvPolynomial.C.comp freshConstants
-    have hg (q : Row 3) : g (freshRow q) = algebraMap Geom[X] FreshField (atJet q S) := by
-      rw [← actual_eval, actual_eval_fresh]
-      rfl
-    have hreg' : g (freshRow (separant f)) ≠ 0 := by
-      rw [hg]
-      exact fun h => hreg.2 ((IsFractionRing.injective _ _) (h.trans (map_zero _).symm))
-    have hker : RingHom.ker e ≤ RingHom.ker g := by
-      rw [show RingHom.ker e = chartIdeal f by
-        ext q
-        exact onChart_eq_zero f q]
-      apply (Ideal.span_singleton_le_iff_mem _).mpr
-      rw [RingHom.mem_ker, hg, hreg.1, map_zero]
-    have hS' : (S.map freshConstants).natDegree < taylorLength :=
-      Polynomial.natDegree_map_le.trans_lt (Nat.lt_succ_of_le hS)
-    have hsolS : trajectory freshConstants (S.map freshConstants) f = 0 := by
-      simpa only [trajectory_actual, hreg.1, Polynomial.map_zero, RingHom.comp_id] using
-        (map_trajectory (RingHom.id Geom) freshConstants S f).symm
-    have hrecU (a : CoeffIndex) :
-        e (freshRow (separant f)) ^ m * point a = e (freshRow (v a)) := by
-      have hc := hv (ChartField f) k U (chartCenter f) hU hsol
-        (by rwa [hinit, rowAt_chart]) a
-      rwa [hinit, rowAt_chart] at hc
-    have hrecS (a : CoeffIndex) :
-        g (freshRow (separant f)) ^ m * freshConstants (S.coeff a.val) = g (freshRow (v a)) := by
-      have hc := hv FreshField freshConstants (S.map freshConstants) freshCenter hS' hsolS
-        (by rwa [actual_eval_fresh]) a
-      rwa [actual_eval_fresh, Polynomial.coeff_map] at hc
-    have hle := eval_kernel_le_of_cleared b e g hker (freshRow (separant f)) m
-      (fun a => freshRow (v a)) hD hreg' point (freshConstants ∘ coeffPoint S) hrecU hrecS
-    intro q hq
-    have hz := hle hq
-    change MvPolynomial.eval₂Hom (g.comp b) (freshConstants ∘ coeffPoint S) q = 0 at hz
-    have hqmap : MvPolynomial.eval₂Hom (g.comp b) (freshConstants ∘ coeffPoint S) =
-        freshConstants.comp (MvPolynomial.aeval (coeffPoint S)).toRingHom := by
-      apply MvPolynomial.ringHom_ext
-      · intro a
-        simp [b, g]
-      · intro a
-        simp
-    rw [hqmap] at hz
-    exact freshConstants.injective (hz.trans (map_zero _).symm)
 end
 end K1_13_5_5_1
 end
@@ -2655,33 +2557,6 @@ private theorem chartTangent (hz : evalRow e f = 0) (hwhole : Whole f) :
     first := deriv_jet e f D hD 1
     cutoff := deriv_cutoff e f D hD hs hz hwhole }⟩
 end Cutoff
-private theorem tangentFromProjection {A B : Type*} [CommRing A] [IsDomain A]
-    [Field B] [Algebra A B] [IsFractionRing A B] (q : FreshJetRing →+* A) (f : Row 3)
-    (hq : Function.Surjective q) (hk : RingHom.ker q = chartIdeal f)
-    (hs : evalRow (fractionMap (B := B) q) (separant f) ≠ 0) (hwhole : Whole f) :
-    Nonempty (Tangent ((freshValue (fractionMap (B := B) q)).comp freshConstants)
-      (fractionMap q (MvPolynomial.C freshCenter)) (jetValue (fractionMap q))) := by
-  obtain ⟨D, hD⟩ := existsDerivation (B := B) q f hq hk hs
-  exact chartTangent (fractionMap q) f D hD hs (evalRow_self q f hk) hwhole
-theorem proof : K1_13_5_5_1.c2 := by
-  intro f hp
-  let : (chartIdeal f).IsPrime := hp
-  change freshRow (separant f) ∉ chartIdeal f → Whole f →
-    Nonempty (Tangent (chartConstants f) (chartCenter f) (chartJets f))
-  intro hs hwhole
-  let π : FreshJetRing →+* ChartRing f := Ideal.Quotient.mk (chartIdeal f)
-  have hsurj : Function.Surjective π := Ideal.Quotient.mk_surjective
-  have hker : RingHom.ker π = chartIdeal f := Ideal.mk_ker
-  have hregular : onChart f (freshRow (separant f)) ≠ 0 :=
-    fun h => hs ((onChart_eq_zero f _).mp h)
-  let qr : CommRing (ChartRing f) := Ideal.Quotient.commRing (chartIdeal f)
-  let qd : IsDomain (ChartRing f) := Ideal.Quotient.isDomain (chartIdeal f)
-  let kf : Field (ChartField f) := FractionRing.field (ChartRing f)
-  let ka : Algebra (ChartRing f) (ChartField f) := inferInstance
-  let kl : IsFractionRing (ChartRing f) (ChartField f) := inferInstance
-  have h := @tangentFromProjection (ChartRing f) (ChartField f) qr qd kf ka kl π f
-    hsurj hker hregular hwhole
-  exact h
 end
 end K1_13_5_5_1_2
 end
@@ -2693,20 +2568,11 @@ noncomputable section
 open K1_13 K1_13_5_5_1 Polynomial
 open scoped BigOperators Differential
 variable {F : Type*} [Field F]
-private abbrev differentialOfTangent {k : Geom →+* F} {x : F} {y : Fin 3 → F}
-    (h : Tangent k x y) : Differential F :=
-  ⟨Derivation.mk' h.deriv.toIntLinearMap (by
-    intro a b
-    change h.deriv (a * b) = a * h.deriv b + b * h.deriv a
-    exact h.leibniz a b)⟩
 private theorem factorial_ne_zero [CharP F K1.p] {n : ℕ} (hn : n < K1.p) :
     (n.factorial : F) ≠ 0 := by
   intro hz
   have hp := CharP.char_is_prime_of_two_le F K1.p (by decide)
   exact (not_le_of_gt hn) (hp.dvd_factorial.mp ((CharP.cast_eq_zero_iff F K1.p _).mp hz))
-private theorem iterate_zero_of_eq {D E : F → F} (hDE : D = E) (L : ℕ) (a : F)
-    (hE : E^[L] a = 0) : D^[L] a = 0 := by
-  simpa only [hDE] using hE
 variable [Differential F]
 private def normalizedJet (a : F) (n : ℕ) : F :=
   ((Differential.deriv : F → F)^[n]) a / n.factorial
@@ -2878,19 +2744,6 @@ private theorem reconstruct [CharP F K1.p] {L : ℕ} (hL : 3 ≤ L) (hchar : L <
       exact h2
     norm_num
     exact (div_eq_iff htwo).2 (mul_comm _ _)
-theorem proof : K1_13_5_5_1.c3 := by
-  intro f F _ k x y hweight hzero h
-  let _ : CharP F K1.p := charP_of_injective_ringHom (k.comp embed).injective K1.p
-  let _ : Differential F := differentialOfTangent h
-  have hx : x′ = 1 := h.center
-  have heq : (Differential.deriv : F → F) = (h.deriv : F → F) := rfl
-  obtain ⟨U, hU, hc, hjet⟩ := reconstruct (L := taylorLength) (by decide) (by decide) x y
-    hx h.value h.first (iterate_zero_of_eq heq taylorLength (y 0) h.cutoff)
-  have hroot : (trajectory k U f).eval x = 0 :=
-    (eval_trajectory k U x f).trans ((congrArg (fun z => rowAt k x z f) hjet).trans hzero)
-  refine ⟨U, hU, ?_, hjet⟩
-  apply eq_zero_of_constant_coeffs x hx _ ((degree_trajectory k hU f hweight).trans_lt
-    (by decide : 90 * 180265 - 1 < K1.p)) (mapCoeffs_trajectory k h.constants hc f) hroot
 end
 end K1_13_5_5_1_3
 end
@@ -3054,17 +2907,6 @@ private theorem factor_caps {P D T : Jet} {H : Equation} {s : Shape}
   have hu := (seedDegree_le_iff T _).mp huT j i
   have hjT := le_natDegree_of_ne_zero (show T.coeff j ≠ 0 from fun hz => hij (by simp [hz]))
   exact ⟨hb, Nat.le_min.mpr ⟨by omega, by omega⟩, hu⟩
-private theorem fixed_of_not_usesSeed (F : Jet) (h : ¬ UsesSeed F) :
-    ∃ G : ODE, fixedIncl G = F := by
-  refine ⟨F.map (mapRingHom MvPolynomial.constantCoeff), ?_⟩
-  apply Polynomial.ext
-  intro j
-  apply Polynomial.ext
-  intro i
-  simp only [fixedIncl, K1_14_3.fixedEmbedding, coe_mapRingHom, coeff_map]
-  have hz : ((F.coeff j).coeff i).totalDegree = 0 :=
-    Nat.eq_zero_of_not_pos (fun hi => h ⟨j, i, hi⟩)
-  exact (MvPolynomial.totalDegree_eq_zero_iff_eq_C.mp hz).symm
 private theorem natDegree_zero_of_factors (D : Jet)
     (h : ∀ G : Jet, Irreducible G → G ∣ D → G.natDegree = 0) : D.natDegree = 0 := by
   induction D using WfDvdMonoid.induction_on_irreducible with
@@ -3079,56 +2921,6 @@ private theorem dvd_of_dvd_residual {P F : Jet} {s : Shape} (A : FixedPart P s)
     F ∣ fixedIncl A.equation * A.residual :=
       dvd_mul_of_dvd_right (α := Jet) h (fixedIncl A.equation)
     _ = P := A.factorization.symm
-theorem proof : K1_14_2_2_4.c1 := by
-  intro w rows i B A
-  let : UniqueFactorizationMonoid Seeds := MvPolynomial.uniqueFactorizationMonoid (Fin 2)
-  let : UniqueFactorizationMonoid Equation := Polynomial.uniqueFactorizationMonoid (D := Seeds)
-  let : UniqueFactorizationMonoid Jet := Polynomial.uniqueFactorizationMonoid (D := Equation)
-  let gcdJet : GCDMonoid Jet := UniqueFactorizationMonoid.toGCDMonoid Jet
-  let D : Jet := gcdJet.gcd A.cheap.residual A.layered.residual
-  obtain ⟨P, Q, hP, hQ, hrel⟩ := @extract_gcd Jet _ gcdJet A.cheap.residual A.layered.residual
-  change A.cheap.residual = D * P at hP
-  change A.layered.residual = D * Q at hQ
-  have hF : B.cheap = fixedIncl A.cheap.equation * (D * P) :=
-    A.cheap.factorization.trans (congrArg (fixedIncl A.cheap.equation * ·) hP)
-  have hG : B.layered = fixedIncl A.layered.equation * (D * Q) :=
-    A.layered.factorization.trans (congrArg (fixedIncl A.layered.equation * ·) hQ)
-  have hFne : fixedIncl A.cheap.equation * (D * P) ≠ 0 := by rw [← hF]; exact B.cheap_ne
-  have hGne : fixedIncl A.layered.equation * (D * Q) ≠ 0 := by rw [← hG]; exact B.layered_ne
-  have hDne := left_ne_zero_of_mul (right_ne_zero_of_mul hFne)
-  have hPne := right_ne_zero_of_mul (right_ne_zero_of_mul hFne)
-  have hQne := right_ne_zero_of_mul (right_ne_zero_of_mul hGne)
-  have hDdeg : D.natDegree = 0 := by
-    apply natDegree_zero_of_factors
-    intro F hIrr hfd
-    by_contra hpos
-    have hd : 0 < F.natDegree := Nat.pos_of_ne_zero hpos
-    have hcheap : F ∣ A.cheap.residual :=
-      hfd.trans (gcdJet.gcd_dvd_left A.cheap.residual A.layered.residual)
-    have hlayered : F ∣ A.layered.residual :=
-      hfd.trans (gcdJet.gcd_dvd_right A.cheap.residual A.layered.residual)
-    by_cases hseed : UsesSeed F
-    · exact B.no_moving F hIrr (dvd_of_dvd_residual A.cheap hcheap) hd hseed
-        (dvd_of_dvd_residual A.layered hlayered)
-    · obtain ⟨G, rfl⟩ := fixed_of_not_usesSeed F hseed
-      exact A.cheap.stripped G hIrr hcheap
-  let H := D.coeff 0
-  have hD : D = C H := eq_C_of_natDegree_eq_zero hDdeg
-  have hH : H ≠ 0 := fun hz => hDne (by rw [hD, hz, map_zero])
-  rw [hD] at hF hG
-  obtain ⟨hFu, hFb, hPc⟩ := factor_caps B.cheap_ne hH B.cheap_caps hF
-  obtain ⟨hGu, hGb, hQc⟩ := factor_caps B.layered_ne hH B.layered_caps hG
-  have hprime : IsRelPrime (toJet P) (toJet Q) := by
-    have hr := (@gcd_isUnit_iff_isRelPrime Jet _ gcdJet P Q).mp hrel
-    rw [toJet_equiv]
-    intro E hEP hEQ
-    have h1 : ambientToJet E ∣ P := by
-      simpa using map_dvd ambientToJet.toRingHom hEP
-    have h2 : ambientToJet E ∣ Q := by
-      simpa using map_dvd ambientToJet.toRingHom hEQ
-    simpa using (hr h1 h2).map ambientToJet.symm.toRingHom
-  exact ⟨⟨H, P, Q, hH, hPne, hQne, hF, hG, hprime, le_min hFu hGu,
-    le_min hFb hGb, hPc, hQc⟩⟩
 end
 end K1_14_2_2_4_1
 end
@@ -4402,246 +4194,8 @@ private theorem scalar_total_weight_le (G : MvPolynomial (Fin 4) F) (a b : ℕ)
     Finsupp.sum_fintype,Fin.sum_univ_succ,smul_eq_mul] at ha hb ⊢
   omega
 open K1
-private theorem bank_cancel (b : Bank) : 1 + (b.dT - 1) = b.dT := by cases b <;> rfl
-theorem exists_annihilator {u : Words} {deleted : Finset I} {P : Puncture deleted}
-    {b : Bank} {H : ℕ} (C : ContactInput u P b H) (h : ℕ)
-    (hmin : 24597 ≤ h) (hmax : h ≤ 32680) (hH : H + deleted.card = h)
-    {Γ : Finset K} (F : Marks u deleted Γ) : Nonempty (Annihilator F b) := by
-  obtain ⟨G, hG, hgAnn⟩ := exists_two_decoder_source C h hmin hmax hH
-  let Q := scalarEliminant 5 G.val C.numerator C.denominator
-  have hne : Q ≠ 0 := scalarEliminant_ne_zero 721059 131071 5 b.s b.t
-    G.val C.L G.property hG C.numerator C.denominator C.denominator_ne C.linear C.primitive
-  obtain ⟨hY, hS, hT⟩ := polynomialView_source_coefficients 721059 131071 5 b.s b.t G.val G.property
-  have hy : Q.weightedTotalDegree scalarWeightY ≤ 5 := by
-    simpa [Q, scalarEliminant] using
-      clearedEval_weight_bound scalarWeightY 5 5 1 1 0 (polynomialView G.val)
-        C.numerator C.denominator (by simpa using hY) C.numerator_Y C.denominator_Y (by omega)
-  have hs : Q.weightedTotalDegree scalarWeightYS ≤ b.a := by
-    simpa [Q, scalarEliminant, Bank.a] using
-      clearedEval_weight_bound scalarWeightYS 5 b.s 0 b.dS b.dS (polynomialView G.val)
-        C.numerator C.denominator (by simpa using hS) C.numerator_S C.denominator_S (by omega)
-  have ht : Q.weightedTotalDegree scalarWeightT ≤ b.b := by
-    simpa [Q, scalarEliminant, Bank.b] using
-      clearedEval_weight_bound scalarWeightT 5 b.t 1 b.dT (b.dT-1) (polynomialView G.val)
-        C.numerator C.denominator (by simpa using hT) C.numerator_T C.denominator_T (bank_cancel b).ge
-  refine ⟨⟨Q, hne, hy, hs, ht, scalar_total_weight_le Q b.a b.b hs ht, ?_⟩⟩
-  intro γ hγ
-  let M := F.mark γ hγ
-  let S := indexedSupport P M.support
-  have hS : 180265 ≤ S.card := by
-    rw [indexedSupport_card P M.support (F.survives γ hγ)]
-    exact M.agreement
-  have hd := mark_degree M
-  have hd' : (M.decoder.map twist).natDegree ≤ 131071 :=
-    Polynomial.natDegree_map_le.trans hd
-  have hcorrect := correctOn_mark P M
-  have hrel := relation_annihilates C (by omega) _ _ hd hd' γ (γ ^ p) S hS hcorrect
-  exact scalarEliminant_annihilates 721059 131071 5 b.s b.t G.val C.L G.property
-    C.numerator C.denominator C.linear _ _ γ (γ^p) hrel
-    (hgAnn _ _ hd hd' γ (γ^p) S hS hcorrect)
 end
 end K1_11
-end
-section
-namespace K1_13_5_2
-noncomputable section
-open K1_13 K1_13_5 MvPolynomial UniqueFactorizationMonoid
-open scoped BigOperators Polynomial
-private def firstView : Row 2 ≃ₐ[Geom[X]] (Row 1)[X] :=
-  (renameEquiv Geom[X] finSuccEquivLast).trans (optionEquivLeft Geom[X] (Fin 1))
-private abbrev valueView : Row 1 ≃ₐ[Geom[X]] Geom[X][X] :=
-  uniqueAlgEquiv Geom[X] (Fin 1)
-private theorem firstView_degree (f : Row 2) : (firstView f).natDegree = f.degreeOf 1 := by
-  change (optionEquivLeft _ _ (rename finSuccEquivLast f)).natDegree = f.degreeOf 1
-  rw [natDegree_optionEquivLeft]
-  exact degreeOf_rename_of_injective finSuccEquivLast.injective (Fin.last 1)
-private theorem firstView_pderiv (f : Row 2) :
-    firstView (pderiv 1 f) = (firstView f).derivative := by
-  change optionEquivLeft _ _ (rename finSuccEquivLast (pderiv 1 f)) =
-    (optionEquivLeft _ _ (rename finSuccEquivLast f)).derivative
-  rw [← pderiv_rename finSuccEquivLast.injective,
-    show finSuccEquivLast (1 : Fin 2) = none from finSuccEquivLast_last,
-    optionEquivLeft_pderiv_none]
-private theorem valueView_eval (g : Row 1) (S : Geom[X]) :
-    (valueView g).eval S = MvPolynomial.eval (jet S) g := by
-  have h := eval₂_uniqueAlgEquiv (f := g) (φ := RingHom.id Geom[X]) (a := jet S)
-  have hzero : jet S (default : Fin 1) = S := by
-    change Polynomial.hasseDeriv 0 S = S
-    simp
-  simpa only [Polynomial.eval₂_id, MvPolynomial.eval₂_id, hzero] using h
-private theorem firstView_eval (f : Row 2) (S : Geom[X]) :
-    ((firstView f).map (MvPolynomial.eval (jet S))).eval (jet S (1 : Fin 2)) =
-      atJet f S := by
-  rw [firstView, AlgEquiv.trans_apply, renameEquiv_apply, ← optionEquivLeft_elim_eval,
-    eval_rename, atJet]
-  apply congrArg (fun x : Fin 2 → Geom[X] => MvPolynomial.eval x f)
-  funext i
-  fin_cases i <;> rfl
-private theorem valueView_degree_le (g : Row 1) : (valueView g).natDegree ≤ g.totalDegree := by
-  apply Polynomial.natDegree_le_iff_coeff_eq_zero.mpr
-  intro k hk
-  rw [valueView, coeff_uniqueAlgEquiv]
-  by_contra hn
-  have h := le_totalDegree (mem_support_iff.mpr hn)
-  change (Finsupp.single (default : Fin 1) k).degree ≤ g.totalDegree at h
-  rw [Finsupp.degree_single] at h
-  exact (not_le_of_gt hk) h
-private theorem firstView_coeff_bound (f : Row 2) (k : ℕ) (hk : k ≤ f.totalDegree) :
-    k + (valueView ((firstView f).coeff k)).natDegree ≤ f.totalDegree := by
-  change k + (valueView ((optionEquivLeft _ _ (rename finSuccEquivLast f)).coeff k)).natDegree ≤ _
-  have hdeg : (rename finSuccEquivLast f).totalDegree = f.totalDegree :=
-    totalDegree_renameEquiv finSuccEquivLast f
-  have hh := totalDegree_coeff_optionEquivLeft_add_le Geom[X] (Fin 1)
-    (rename finSuccEquivLast f) k
-    (by rw [hdeg]; exact hk)
-  rw [hdeg] at hh
-  exact (Nat.add_le_add_left (valueView_degree_le _) _).trans (by simpa [add_comm] using hh)
-private def eliminant (f : Row 2) : Geom[X][X] :=
-  let A := firstView f
-  if 0 < A.natDegree then
-    valueView (A.resultant A.derivative A.natDegree (A.natDegree - 1))
-  else valueView (A.coeff 0)
-set_option maxHeartbeats 600000 in
-private theorem eliminant_spec (f : Row 2) (hf : Irreducible f) (hb : f.totalDegree ≤ 5064) :
-    eliminant f ≠ 0 ∧ (eliminant f).natDegree ≤ f.totalDegree * (5064 - 1) ∧
-      ∀ S : Geom[X], atJet f S = 0 → (eliminant f).eval S = 0 ∨
-        (0 < f.degreeOf 1 ∧ RegularAt 1 f S) := by
-  let A := firstView f
-  let c := A.natDegree
-  let b := f.totalDegree
-  have hcb : c ≤ b := by
-    change (firstView f).natDegree ≤ f.totalDegree
-    exact (firstView_degree f).le.trans (f.degreeOf_le_totalDegree 1)
-  have hAb : A ≠ 0 := (map_ne_zero_iff _ firstView.injective).mpr hf.ne_zero
-  by_cases hc : 0 < c
-  · let R := A.resultant A.derivative c (c - 1)
-    have hform : eliminant f = valueView R := ite_eq_left hc
-    have hcast : (c : Row 1) ≠ 0 := by
-      have : CharP Geom K1.p := charP_of_injective_ringHom embed.injective K1.p
-      have : CharP Geom[X] K1.p :=
-        charP_of_injective_ringHom (Polynomial.C_injective (R := Geom)) K1.p
-      have : CharP (Row 1) K1.p :=
-        charP_of_injective_ringHom (MvPolynomial.C_injective (σ := Fin 1) (R := Geom[X])) K1.p
-      intro h
-      have hp : K1.p ∣ c := (CharP.cast_eq_zero_iff (Row 1) K1.p c).mp h
-      exact (not_le_of_gt (hcb.trans_lt (hb.trans_lt (by decide : 5064 < K1.p))))
-        (Nat.le_of_dvd hc hp)
-    have hder : A.derivative ≠ 0 := by
-      intro h
-      have hz := congrArg (fun P : (Row 1)[X] => P.coeff (c - 1)) h
-      rw [Polynomial.coeff_derivative, Nat.sub_add_cancel hc, Polynomial.coeff_zero] at hz
-      have hnat : (((c - 1 : ℕ) : Row 1) + 1) = (c : Row 1) := calc
-        _ = ((c - 1 + 1 : ℕ) : Row 1) := by rw [Nat.cast_add, Nat.cast_one]
-        _ = _ := congrArg (fun k : ℕ => (k : Row 1)) (Nat.sub_add_cancel hc)
-      rw [hnat] at hz
-      change A.leadingCoeff * (c : Row 1) = 0 at hz
-      exact (mul_ne_zero (Polynomial.leadingCoeff_ne_zero.mpr hAb) hcast) hz
-    have hR : R ≠ 0 :=
-      Polynomial.resultant_derivative_ne_zero_of_irreducible A (hf.map firstView) hder
-    have hdeg : (valueView R).natDegree + c ^ 2 ≤ (2 * c - 1) * b := by
-      let B := A.map valueView.toRingHom
-      have h := Polynomial.natDegree_resultant_derivative_padded_add_sq_le B c b (by
-        intro k hk
-        rw [Polynomial.coeff_map]
-        exact firstView_coeff_bound f k (hk.trans hcb))
-      dsimp only [B] at h
-      rw [Polynomial.derivative_map, Polynomial.resultant_map_map] at h
-      exact h
-    have hbudget : (valueView R).natDegree ≤ b * (b - 1) := by
-      have hbpos : 1 ≤ b := hc.trans_le hcb
-      have hcpos : 1 ≤ 2 * c := by omega
-      zify [hbpos, hcpos] at hdeg ⊢
-      nlinarith [sq_nonneg ((b : ℤ) - (c : ℤ))]
-    refine ⟨by rw [hform]; exact (map_ne_zero_iff _ valueView.injective).mpr hR, ?_, ?_⟩
-    · rw [hform]
-      exact hbudget.trans (Nat.mul_le_mul_left b (Nat.sub_le_sub_right hb 1))
-    · intro S hS
-      by_cases hS' : atJet (pderiv 1 f) S = 0
-      · left
-        rw [hform, valueView_eval]
-        exact Polynomial.map_resultant_eq_zero_of_common_root (MvPolynomial.eval (jet S))
-          A A.derivative le_rfl (Polynomial.natDegree_derivative_le A) (Or.inl hc.ne')
-          (jet S (1 : Fin 2)) ((firstView_eval f S).trans hS) (by
-            rw [show A.derivative = firstView (pderiv 1 f) from (firstView_pderiv f).symm]
-            exact (firstView_eval _ S).trans hS')
-      · exact Or.inr ⟨(firstView_degree f) ▸ hc, hS, hS'⟩
-  · have hform : eliminant f = valueView (A.coeff 0) := ite_eq_right hc
-    have hAc : A = Polynomial.C (A.coeff 0) :=
-      Polynomial.eq_C_of_natDegree_le_zero (Nat.eq_zero_of_not_pos hc).le
-    have hA0 : A.coeff 0 ≠ 0 := fun h => hAb (by simpa [h] using hAc)
-    refine ⟨by rw [hform]; exact (map_ne_zero_iff _ valueView.injective).mpr hA0, ?_, ?_⟩
-    · rw [hform]
-      have h := firstView_coeff_bound f 0 (Nat.zero_le _)
-      exact (by simpa using h : (valueView (A.coeff 0)).natDegree ≤ b).trans
-        (by simpa using Nat.mul_le_mul_left b (by decide : 1 ≤ 5064 - 1))
-    · intro S hS
-      left
-      have h := (firstView_eval f S).trans hS
-      change (A.map _).eval _ = 0 at h
-      conv at h => lhs; rw [hAc]
-      rw [hform, valueView_eval]
-      simpa only [Polynomial.map_C, Polynomial.eval_C] using h
-theorem proof : K1_13_5.c2 := by
-  classical
-  intro q hq
-  let _ : StrongNormalizationMonoid (Row 2) :=
-    UniqueFactorizationMonoid.strongNormalizationMonoid
-  let M := normalizedFactors q
-  let A := M.toFinset
-  let T := A.filter fun g => 0 < g.degreeOf 1
-  let n := Fintype.card ↥T
-  let e : Fin n ≃ ↥T := (Fintype.equivFin ↥T).symm
-  let f : Fin n → Row 2 := fun i => (e i).val
-  have hA : ∀ g ∈ A, Irreducible g := fun g hg =>
-    irreducible_of_normalized_factor g (Multiset.mem_toFinset.mp hg)
-  have hdiv : (∏ g ∈ A, g) ∣ q :=
-    (Multiset.toFinset_prod_dvd_prod M).trans (prod_normalizedFactors hq.ne_zero).dvd
-  have hcap : (∑ g ∈ A, g.totalDegree) ≤ 5064 := by
-    have h := sum_weightedTotalDegree_le_of_prod_dvd (1 : Fin 2 → ℕ) A id hq.ne_zero hdiv
-    simp only [id_eq, weightedTotalDegree_one] at h
-    exact h.trans hq.total
-  have hfactor : ∀ i, f i ∈ A ∧ 0 < (f i).degreeOf 1 := fun i =>
-    Finset.mem_filter.mp (e i).property
-  have hfdiv : (∏ i, f i) ∣ q := by
-    rw [show (∏ i, f i) = ∏ g : ↥T, id g.val from e.prod_comp Subtype.val,
-      Finset.prod_coe_sort T id]
-    exact (Finset.prod_dvd_prod_of_subset T A id (Finset.filter_subset _ _)).trans hdiv
-  have hf : FirstFactors f := by
-    refine ⟨fun i => hA _ (hfactor i).1, fun i => (hfactor i).2, ?_, ?_⟩
-    · have h := sum_weightedTotalDegree_le_of_prod_dvd (1 : Fin 2 → ℕ) Finset.univ f hq.ne_zero hfdiv
-      simp only [weightedTotalDegree_one] at h
-      exact h.trans hq.total
-    · have h := sum_weightedTotalDegree_le_of_prod_dvd (fun i : Fin 2 => i.val)
-        Finset.univ f hq.ne_zero hfdiv
-      simp only [← K1_13_1.indexDegree_eq] at h
-      exact h.trans hq.index
-  have hspec (g : Row 2) (hg : g ∈ A) :=
-    eliminant_spec g (hA g hg) ((Finset.single_le_sum (fun x _ => Nat.zero_le x.totalDegree) hg).trans hcap)
-  let u := ∏ g ∈ A, eliminant g
-  refine ⟨n, f, u, hf, Finset.prod_ne_zero_iff.mpr (fun g hg => (hspec g hg).1), ?_, ?_⟩
-  · calc
-      u.natDegree ≤ ∑ g ∈ A, (eliminant g).natDegree := Polynomial.natDegree_prod_le _ _
-      _ ≤ ∑ g ∈ A, g.totalDegree * (5064 - 1) := Finset.sum_le_sum fun g hg => (hspec g hg).2.1
-      _ ≤ 5064 * (5064 - 1) := by rw [← Finset.sum_mul]; exact Nat.mul_le_mul_right _ hcap
-  · intro S hS
-    have hroot : MvPolynomial.eval (jet S) M.prod = 0 := by
-      have hd := map_dvd (MvPolynomial.eval (jet S)) (prod_normalizedFactors hq.ne_zero).symm.dvd
-      change atJet q S ∣ _ at hd
-      rwa [hS, zero_dvd_iff] at hd
-    rw [map_multiset_prod, Multiset.prod_eq_zero_iff, Multiset.mem_map] at hroot
-    obtain ⟨g, hgM, hgS⟩ := hroot
-    have hgA : g ∈ A := Multiset.mem_toFinset.mpr hgM
-    rcases (hspec g hgA).2.2 S hgS with hzero | ⟨hpos, hreg⟩
-    · left
-      change Polynomial.evalRingHom S u = 0
-      rw [show u = ∏ g ∈ A, eliminant g from rfl, map_prod]
-      exact Finset.prod_eq_zero_iff.mpr ⟨g, hgA, hzero⟩
-    · right
-      let j := e.symm ⟨g, Finset.mem_filter.mpr ⟨hgA, hpos⟩⟩
-      have hj : f j = g := congrArg Subtype.val (e.apply_symm_apply _)
-      exact ⟨j, hj ▸ hreg⟩
-end
-end K1_13_5_2
 end
 section
 set_option autoImplicit false
@@ -5720,32 +5274,6 @@ private theorem positivePolynomial (h1 : c1) (h2 : c2)
   intro F hF
   rw [flagSimplex, simplex_volume, ← heval, oriented_eval (q F) (hn F hF) w hw]
   ring
-theorem of_children (h1 : c1) (h2 : c2) : K1_13_5_4_2_5_2.c1 := by
-  classical
-  intro P hP _
-  have hslot (i : Fin 4) :
-      ∃ v : Finset ExponentSpace, slots P i = convexHull ℝ (v : Set ExponentSpace) := by
-    by_cases hi : i = 0
-    · subst i
-      obtain ⟨s, hs, hr⟩ := hP.polytope
-      exact ⟨hs.toFinset, by simpa [slots] using hr⟩
-    · rw [slots, Function.update_of_ne hi]
-      have hc : Chamber (slotShape i) := by
-        fin_cases i <;> exact ⟨by decide, by decide⟩
-      exact cap_polytope _ _ hc
-  choose v hv using hslot
-  obtain ⟨p, hp, he⟩ := positivePolynomial h1 h2 (slots P) v hv
-  refine ⟨p, hp, closedOrthant (slots P) ?_ ?_ ?_ p he⟩
-  · intro i
-    rw [hv i]
-    exact convex_convexHull _ _
-  · intro i
-    by_cases hi : i = 0
-    · simpa [slots, hi] using hP.zero_mem
-    · simp [slots, Function.update_of_ne hi, capBody]
-  · intro w
-    rw [← labelHull_eq (slots P) v hv w]
-    exact (Set.finite_range _).isCompact_convexHull ℝ
 end
 end K1_13_5_4_2_5_2_1
 end

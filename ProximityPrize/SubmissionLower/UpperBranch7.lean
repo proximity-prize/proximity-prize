@@ -112,42 +112,6 @@ private theorem common_agrees {word U S} {γ : K} (hγ : γ ∈ U) {j : I}
     (hj : j ∈ common word U S) : (S γ).eval (node j) = word j := by
   classical
   exact (mem_filter.mp hj).2 γ hγ
-private theorem common_bound {word T S d} (hword : FixedWord word T S d)
-    {U : Finset K} (hU : U ⊆ T) (hsize : 1 < U.card) :
-    (common word U S).card ≤ d := by
-  obtain ⟨γ, hγ, η, hη, hne⟩ := one_lt_card.mp hsize
-  let P := S γ - S η
-  have hp : P ≠ 0 := sub_ne_zero.mpr fun he => hne (hword.distinct (hU hγ) (hU hη) he)
-  refine (FrobeniusLocator.Strata.root_nodes_card_le node IRSProfile.domain.injective
-    P hp _ ?_).trans ((natDegree_sub_le _ _).trans (max_le (hword.degree γ (hU hγ))
-      (hword.degree η (hU hη))))
-  intro j hj
-  change ((S γ) - (S η)).eval (node j) = 0
-  rw [Polynomial.eval_sub, common_agrees hγ hj, common_agrees hη hj, sub_self]
-private theorem residual_incidence {word T S d} (hword : FixedWord word T S d)
-    {U : Finset K} (hU : U ⊆ T) (cap : ℚ)
-    (hcap : ∀ j ∉ common word U S, ((U.filter fun γ => (S γ).eval (node j) = word j).card : ℚ) ≤ cap) :
-    ((agreement - (common word U S).card : ℕ) : ℚ) * U.card ≤
-      ((blockLength - (common word U S).card : ℕ) : ℚ) * cap := by
-  classical
-  let sites := common word U S
-  let J : Finset I := univ \ sites
-  let rel (γ : K) (j : I) := (S γ).eval (node j) = word j
-  have hJ : J.card = blockLength - sites.card := by
-    rw [card_sdiff_of_subset (subset_univ sites), card_univ, IRSProfile.card_index]
-  have hrows (γ : K) (hγ : γ ∈ U) :
-      ((agreement - sites.card : ℕ) : ℚ) ≤ (J.bipartiteAbove rel γ).card := by
-    obtain ⟨H, hH, heval⟩ := hword.hits γ (hU hγ)
-    have hcover : H \ sites ⊆ J.bipartiteAbove rel γ := fun j hj =>
-      mem_filter.mpr
-        ⟨mem_sdiff.mpr ⟨mem_univ _, (mem_sdiff.mp hj).2⟩, heval j (mem_sdiff.mp hj).1⟩
-    exact_mod_cast (Nat.sub_le_sub_right hH sites.card).trans
-      ((le_card_sdiff _ _).trans (card_le_card hcover))
-  have hcols (j : I) (hj : j ∈ J) :
-      ((U.bipartiteBelow rel j).card : ℚ) ≤ cap := hcap j (mem_sdiff.mp hj).2
-  have he := card_nsmul_le_card_nsmul rel hrows hcols
-  rw [nsmul_eq_mul, nsmul_eq_mul, hJ, mul_comm (U.card : ℚ)] at he
-  exact he
 structure Invoice (d w e v a b D : ℕ) : Prop where
   scale_pos : 0 < D
   ordinate : D ≤ a
@@ -155,149 +119,6 @@ structure Invoice (d w e v a b D : ℕ) : Prop where
   degree : d < agreement
   fits : ∀ s ≤ d, D * (blockLength-s) * localOrd d w e s ≤ (agreement-s) * a ∧
     D * (blockLength-s) * localSeed d w v s ≤ (agreement-s) * b
-private theorem count_step {d w e v a b D : ℕ} (hInv : Invoice d w e v a b D)
-    (hcut : WeightedCut) {word T z S} (hword : FixedWord word T S d)
-    (hchart : ShortCharts d w e v word T z S)
-    {U : Finset K} (hU : U ⊆ T) (hsize : 1 < U.card) (P : Ideal (BoxRing a b))
-    (hP : P.IsPrime) (hbase : RingHom.ker (boxMap a b) ≤ P)
-    (hdim : 0 < (affineHilbertPolynomial P).natDegree)
-    (hpoints : ∀ γ ∈ U, point a b z S γ ∈ zeroLocus ClosedField P)
-    {c : ℚ} (hc : 0 < c)
-    (hchildren : ∀ (V : Finset K), V ⊆ U → ∀ (Q : Ideal (BoxRing a b)), Q.IsPrime →
-      RingHom.ker (boxMap a b) ≤ Q →
-      (affineHilbertPolynomial Q).natDegree + 1 = (affineHilbertPolynomial P).natDegree →
-      (∀ γ ∈ V, point a b z S γ ∈ zeroLocus ClosedField Q) →
-      c * V.card ≤ affineDegree Q) :
-    (D : ℚ) * c * U.card ≤ affineDegree P := by
-  classical
-  let sites := common word U S
-  let s := sites.card
-  let r := D * (blockLength-s)
-  let t := agreement-s
-  have hs : s ≤ d := common_bound hword hU hsize
-  have ht : 0 < t := Nat.sub_pos_of_lt (hs.trans_lt hInv.degree)
-  have hn : 0 < blockLength-s :=
-    Nat.sub_pos_of_lt (hs.trans_lt (hInv.degree.trans (by decide)))
-  have hr : 0 < r := Nat.mul_pos hInv.scale_pos hn
-  have ha := hInv.scale_pos.trans_le hInv.ordinate
-  have hb := hInv.scale_pos.trans_le hInv.seed
-  let : P.IsPrime := hP
-  obtain ⟨cut, hcut_box, hcut_eval⟩ := hchart U hU sites hs
-    (fun _ hγ _ hj => common_agrees hγ hj)
-  let ι := algebraMap FX ClosedField
-  have hsection (j : I) (hj : j ∉ sites) :
-      (r : ℚ) * (c * ((U.filter fun γ => (S γ).eval (node j) = word j).card : ℚ)) ≤
-        (t : ℚ) * affineDegree P := by
-    let V := U.filter fun γ => (S γ).eval (node j) = word j
-    obtain ⟨q, hq⟩ := bidegreeMap_surjective (R := ClosedField) ha hb (MvPolynomial.map ι (cut j))
-    have heval (γ : K) (hγ : γ ∈ U) :
-        aeval (point a b z S γ) q = 0 ↔ (S γ).eval (node j) = word j := by
-      rw [point, aeval_monomialPoint, ← bidegreeMap_eq_monomialMap, hq]
-      change MvPolynomial.eval (ι ∘ rootPoint (z γ) (S γ)) (MvPolynomial.map ι (cut j)) = 0 ↔ _
-      rw [eval_extend, ← map_zero ι, ι.injective.eq_iff]
-      exact hcut_eval γ hγ j
-    have hproper : q ∉ P := by
-      intro hqP
-      apply hj
-      exact mem_filter.mpr ⟨mem_univ _, fun γ hγ => (heval γ hγ).mp (hpoints γ hγ q hqP)⟩
-    let Qs := (P ⊔ Ideal.span {q}).minimalPrimesFinset
-    have hdeg : (r : ℚ) * (∑ Q ∈ Qs, affineDegree Q) ≤ (t : ℚ) * affineDegree P :=
-      hcut a b _ _ r t ha hb hr ht (hInv.fits s hs).1 (hInv.fits s hs).2
-        P hP hbase hdim q hproper (by rw [hq]; exact extend_mem (hcut_box j))
-    have hcover : V.card ≤ ∑ Q ∈ Qs, (slice z S V Q).card := by
-      apply card_le_sum_cover
-      intro γ hγ
-      obtain ⟨hγU, hv⟩ := mem_filter.mp hγ
-      have hγP : point a b z S γ ∈ zeroLocus ClosedField (P ⊔ Ideal.span {q}) :=
-        mem_zeroLocus_sup_span_singleton_iff.mpr ⟨hpoints γ hγU, (heval γ hγU).mpr hv⟩
-      obtain ⟨Q, hQ, hγQ⟩ := exists_retainedMinimalPrime_of_mem_zeroLocus _ 1 _ hγP (by simp)
-      exact ⟨Q, Ideal.mem_minimalPrimesFinset.mpr (Ideal.mem_retainedMinimalPrimes.mp hQ).1,
-        mem_filter.mpr ⟨hγ, hγQ⟩⟩
-    have hparts (Q : Ideal (BoxRing a b)) (hQ : Q ∈ Qs) :
-        c * ((slice z S V Q).card : ℚ) ≤ affineDegree Q := by
-      have hmin := Ideal.mem_minimalPrimesFinset.mp hQ
-      exact hchildren _ ((slice_subset Q).trans (filter_subset _ _)) Q hmin.isPrime
-        (hbase.trans (le_sup_left.trans hmin.le))
-        (principalCut_natDegree_affineHilbertPolynomial_add_one hproper hmin)
-        (fun _ hγ => slice_on Q hγ)
-    have hcoverQ : (V.card : ℚ) ≤ ∑ Q ∈ Qs, ((slice z S V Q).card : ℚ) := by
-      exact_mod_cast hcover
-    have hsum : c * (V.card : ℚ) ≤ ∑ Q ∈ Qs, affineDegree Q := by
-      refine (mul_le_mul_of_nonneg_left hcoverQ hc.le).trans ?_
-      rw [mul_sum]
-      exact sum_le_sum hparts
-    exact (mul_le_mul_of_nonneg_left hsum (Nat.cast_nonneg r)).trans hdeg
-  let cap : ℚ := (t : ℚ) * affineDegree P / ((r : ℚ) * c)
-  have hrc : 0 < (r : ℚ) * c := mul_pos (Nat.cast_pos.mpr hr) hc
-  have hinc := residual_incidence hword hU cap (fun j hj => by
-    apply (le_div_iff₀ hrc).mpr
-    calc
-      _ = (r : ℚ) * (c * ((U.filter fun γ => (S γ).eval (node j) = word j).card : ℚ)) := by ring
-      _ ≤ _ := hsection j hj)
-  change (t : ℚ) * U.card ≤ ((blockLength-s : ℕ) : ℚ) * cap at hinc
-  have hnQ : (0 : ℚ) < ((blockLength-s : ℕ) : ℚ) := Nat.cast_pos.mpr hn
-  have htQ : (0 : ℚ) < (t : ℚ) := Nat.cast_pos.mpr ht
-  apply le_of_mul_le_mul_left _ (mul_pos hnQ htQ)
-  calc
-    _ = ((r : ℚ) * c) * ((t : ℚ) * U.card) := by simp only [r, Nat.cast_mul]; ring
-    _ ≤ ((r : ℚ) * c) * (((blockLength-s : ℕ) : ℚ) * cap) :=
-      mul_le_mul_of_nonneg_left hinc hrc.le
-    _ = _ := by dsimp only [cap]; field_simp [hrc.ne']
-theorem count_cover {d w e v a b D : ℕ} (hInv : Invoice d w e v a b D)
-    (hcut : WeightedCut) (hscale : CurveScale) {word T z S} (hword : FixedWord word T S d)
-    (hchart : ShortCharts d w e v word T z S) (hz : Set.InjOn z (T : Set K))
-    (Ps : Finset (Ideal (BoxRing a b)))
-    (hPs : ∀ P ∈ Ps, P.IsPrime ∧ RingHom.ker (boxMap a b) ≤ P ∧
-      (affineHilbertPolynomial P).natDegree = 2)
-    (hcover : ∀ γ ∈ T, ∃ P ∈ Ps, point a b z S γ ∈ zeroLocus ClosedField P) :
-    (D : ℚ)^2 * T.card ≤ (∑ P ∈ Ps, affineDegree P) + (D : ℚ)^2 * Ps.card := by
-  classical
-  have hinj := point_injective (hInv.scale_pos.trans_le hInv.ordinate)
-    (hInv.scale_pos.trans_le hInv.seed) (S := S) hz
-  have curve {U : Finset K} (hU : U ⊆ T) (P : Ideal (BoxRing a b))
-      (hP : P.IsPrime) (hbase : RingHom.ker (boxMap a b) ≤ P)
-      (hdim : (affineHilbertPolynomial P).natDegree = 1)
-      (hpoints : ∀ γ ∈ U, point a b z S γ ∈ zeroLocus ClosedField P) :
-      (D : ℚ) * U.card ≤ affineDegree P := by
-    by_cases hsize : 1 < U.card
-    · simpa only [mul_one] using
-        count_step hInv hcut hword hchart hU hsize P hP hbase (by omega) hpoints
-          (by norm_num : (0 : ℚ) < 1) (fun V hv Q _ _ hdimQ hpointQ => by
-            rw [one_mul]
-            exact zero_dim_count (hv.trans hU) hinj Q (by omega) hpointQ)
-    · have hu : (U.card : ℚ) ≤ 1 := by exact_mod_cast (show U.card ≤ 1 by omega)
-      calc
-        _ ≤ (D : ℚ) * 1 := mul_le_mul_of_nonneg_left hu (Nat.cast_nonneg D)
-        _ ≤ affineDegree P := by
-          rw [mul_one]
-          exact hscale a b D hInv.scale_pos hInv.ordinate hInv.seed P hP hbase hdim
-  have surface (P : Ideal (BoxRing a b)) (hP : P ∈ Ps) :
-      (D : ℚ)^2 * ((slice z S T P).card : ℚ) ≤ affineDegree P + (D : ℚ)^2 := by
-    obtain ⟨hp, hk, hd⟩ := hPs P hP
-    by_cases hsize : 1 < (slice z S T P).card
-    · rw [pow_two]
-      exact (count_step hInv hcut hword hchart (slice_subset P) hsize P hp hk (by omega)
-        (fun _ hγ => slice_on P hγ) (Nat.cast_pos.mpr hInv.scale_pos)
-        (fun V hv Q hQ hQk hQd hQV => curve (hv.trans (slice_subset P)) Q hQ hQk (by omega) hQV)).trans
-          (le_add_of_nonneg_right (by positivity))
-    · have hu : ((slice z S T P).card : ℚ) ≤ 1 := by
-        exact_mod_cast (show (slice z S T P).card ≤ 1 by omega)
-      calc
-        _ ≤ (D : ℚ)^2 * 1 := mul_le_mul_of_nonneg_left hu (by positivity)
-        _ ≤ _ := by rw [mul_one]; exact le_add_of_nonneg_left (affineDegree_nonneg P)
-  have hsum : T.card ≤ ∑ P ∈ Ps, (slice z S T P).card := by
-    apply card_le_sum_cover
-    intro γ hγ
-    obtain ⟨P, hP, hγP⟩ := hcover γ hγ
-    exact ⟨P, hP, mem_filter.mpr ⟨hγ, hγP⟩⟩
-  have hsumQ : (T.card : ℚ) ≤ ∑ P ∈ Ps, ((slice z S T P).card : ℚ) := by exact_mod_cast hsum
-  calc
-    _ ≤ (D : ℚ)^2 * ∑ P ∈ Ps, ((slice z S T P).card : ℚ) :=
-      mul_le_mul_of_nonneg_left hsumQ (by positivity)
-    _ ≤ ∑ P ∈ Ps, (affineDegree P + (D : ℚ)^2) := by
-      rw [mul_sum]
-      exact sum_le_sum surface
-    _ = _ := by rw [sum_add_distrib, sum_const, nsmul_eq_mul, mul_comm (Ps.card : ℚ)]
 end
 end P1_7_7
 end
@@ -305,8 +126,6 @@ section
 namespace P1_7_7
 open P1 (HighBand agreement blockLength)
 open P1_7 (degreeAt gap scale quotientOrder muNum lambdaNum ceilRatio persistentFee)
-def ordinateFee (lo hi e : ℕ) := muNum hi + 2 * (lambdaNum hi * quotientOrder lo) * (e - 1)
-def seedFee (lo hi v : ℕ) := 2 * hi * muNum hi + 2 * (lambdaNum hi * quotientOrder lo) * v
 private theorem cross_ratio {A n d s : ℕ} (hn : A ≤ n) (hd : d ≤ A) (hs : s ≤ d) :
     (A-d) * (n-s) ≤ (A-s) * (n-d) := by
   have h : 0 ≤ ((n : ℤ)-A) * ((d : ℤ)-s) :=
@@ -365,44 +184,6 @@ private theorem coordinate_bounds {A n d hi ell w e v s : ℕ}
       _ ≤ ((A-s) * m) * (2*height) + ((A-s) * t) * (2*v) :=
         Nat.add_le_add (Nat.mul_le_mul hmu (Nat.mul_le_mul_left _ hheight)) (Nat.mul_le_mul_right _ htime)
       _ = _ := by ring
-theorem band_invoice {b : HighBand} {w : ℕ} (hwlo : b.row.lo ≤ w) (hwhi : w ≤ b.row.hi)
-    (e v : ℕ) :
-    Invoice (131071+w) w e v (ordinateFee b.row.lo b.row.hi e) (seedFee b.row.lo b.row.hi v)
-      (scale b.row.hi) := by
-  obtain ⟨hlo, hhi, _, _, _⟩ := P1_7.terminal_guards b
-  have hdhi : degreeAt b.row.hi < agreement := by
-    change 131071 + b.row.hi < 179944
-    omega
-  have hd : 131071+w < agreement := (Nat.add_le_add_left hwhi _).trans_lt hdhi
-  have hA : agreement ≤ blockLength := by decide
-  have hD : 0 < scale b.row.hi := Nat.mul_pos (by decide) (Nat.sub_pos_of_lt hdhi)
-  have hm : scale b.row.hi ≤ muNum b.row.hi :=
-    Nat.mul_le_mul_left _ (Nat.sub_le_sub_right hA _)
-  have hpos : 1 ≤ 2*b.row.hi := by omega
-  refine ⟨hD, hm.trans (Nat.le_add_right _ _), ?_, hd, ?_⟩
-  · exact hm.trans ((by
-      simpa only [one_mul] using Nat.mul_le_mul_right (muNum b.row.hi) hpos :
-      muNum b.row.hi ≤ 2*b.row.hi*muNum b.row.hi).trans (Nat.le_add_right _ _))
-  · intro s hs
-    have hord : (131071+w) - 2*w ≤ quotientOrder b.row.lo := by
-      unfold quotientOrder
-      omega
-    exact coordinate_bounds hA (Nat.add_le_add_left hwhi _) hdhi hwhi hord hs
-theorem fee_of_bound {lo hi e v count : ℕ} (hD : 0 < scale hi)
-    (hcount : ((scale hi : ℕ) : ℚ)^2 * count ≤
-      ((e * (seedFee lo hi v)^2 + 2*v*(ordinateFee lo hi e)*(seedFee lo hi v) : ℕ) : ℚ) +
-        ((scale hi : ℕ) : ℚ)^2 * e) :
-    count ≤ persistentFee lo hi e v := by
-  let D := (scale hi)^2
-  let num := e * (seedFee lo hi v)^2 + 2*v*(ordinateFee lo hi e)*(seedFee lo hi v)
-  have hd : 0 < D := pow_pos hD _
-  have h : D * count ≤ num + D * e := by exact_mod_cast hcount
-  have hmul : (count-e) * D ≤ num := by
-    rw [Nat.sub_mul, Nat.mul_comm count, Nat.mul_comm e]
-    omega
-  have hdiv := (Nat.le_div_iff_mul_le hd).mpr (hmul.trans (Nat.le_add_right num (D-1)))
-  change count ≤ (num + (D-1)) / D + e
-  omega
 end P1_7_7
 end
 section
@@ -648,44 +429,6 @@ private theorem pole_data {u del} {M : AnchorModel u del} {Γ} {F : AnchoredFami
     rw [heval]
     exact (map_ne_zero_iff incl (IsFractionRing.injective L[X] FX)).mpr
       ((map_ne_zero_iff _ Polynomial.C_injective).mpr hval)
-theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) : P1_7.c7 := by
-  intro b u del M Γ F hband _hshift H hH i f hf _he _htwo _hpositiveSeed hseed T hT hroots
-  let w := M.overhead.toNat
-  let d := 131071 + w
-  let e := f.natDegree
-  let v := ((grades b).get i).seedCap
-  obtain ⟨hwlo, hwhi⟩ := P1_7.window_nat hband
-  obtain ⟨hlo, hhi, _, _, _⟩ := P1_7.terminal_guards b
-  have hw : 0 < w := hlo.trans_le hwlo
-  have h2w : 2 * w ≤ d := by dsimp only [d]; omega
-  have hInv := band_invoice hwlo hwhi e v
-  have hdp : d < p := hInv.degree.trans (by decide)
-  have hword : FixedWord M.word T F.scalar d := by
-    refine ⟨F.distinct.mono hT, ?_, ?_⟩
-    · intro γ hγ
-      rcases (F.mark γ (hT hγ)).scalar_degree with hz | hdeg
-      · simp only [hz, natDegree_zero, Nat.zero_le]
-      · change ((F.scalar γ).natDegree : ℤ) ≤ 131072 - 1 + M.overhead at hdeg
-        have hd' : ((F.scalar γ).natDegree : ℤ) ≤ 131071 + (w : ℤ) := by
-          dsimp only [w]
-          omega
-        exact_mod_cast hd'
-    · intro γ hγ
-      let mark := F.mark γ (hT hγ)
-      exact ⟨mark.bad.support, mark.bad.agreement, mark.scalar_hits⟩
-  have hz : Set.InjOn M.label (T : Set K) := fun _ _ _ _ h => sub_left_inj.mp h
-  obtain ⟨CRT, hCRT⟩ := h1 u del M Γ F H hw hH
-  obtain ⟨hmonic, hdeg, hcenter, hnodes⟩ := pole_data hH
-  have hchart := h2 d w e v hw h2w hdp (poleProduct H) hmonic hdeg hcenter hnodes
-    f hf.1 le_rfl hseed T M.label F.scalar M.word hword.degree hroots CRT
-    (fun γ hγ => hCRT γ (hT hγ))
-  obtain ⟨Ps, hPs, hcard, hsum, hcover⟩ := sheet_cover
-    (hInv.scale_pos.trans_le hInv.ordinate) (hInv.scale_pos.trans_le hInv.seed)
-    f hf.1 (show f.natDegree ≤ e from le_rfl) hseed T M.label F.scalar hroots
-  have hcount := count_cover hInv h3 (curve_scale_of_cut h3) hword hchart hz Ps hPs hcover
-  apply fee_of_bound hInv.scale_pos
-  refine hcount.trans (add_le_add hsum ?_)
-  exact mul_le_mul_of_nonneg_left (Nat.cast_le.mpr hcard) (by positivity)
 end
 end P1_7_7
 end

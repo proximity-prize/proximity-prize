@@ -721,60 +721,6 @@ local notation "z!" l "," r => Parts.final (gain := l) (next := r) (Row.eq_of_ch
 local notation "r!" nn "," d ";" l "," r ";" p => certify
   (n := nn) (last := d) (cost := l) (costNext := r)
   p rfl (by decide) (by decide) rfl rfl rfl rfl (by decide) (by decide)
-private theorem r0 : BlockChecks (S 946) N P 7773 7 0 :=
-  r! 57,1;0x1e110619562db71c0,0x1e1109a388df00e80; (z! 0x1e170bd72aee0e480,0x1e1713d446d33f5c0)
-private theorem r1 : BlockChecks (S 886) N P 7773 1 26 :=
-  r! 67,2;0x1a6770724bb553ec0,0x1a6773c31431c0c80; (z! 0x1a6c14eaf40e08420,0x1a6c1c1d901a4af00)
-private theorem r2 : BlockChecks (S 913) N P 7773 2 24 :=
-  r! 71,2;0x1c05d1e372dd1a280,0x1c05d54e118aea700; (z! 0x1c09805f614986ba0,0x1c0987deabfc71960)
-private theorem r3 : BlockChecks (S 946) N P 7773 3 22 :=
-  r! 76,3;0x1e110619562db71c0,0x1e1109a388df00e80; (z! 0x1e15edfeeac865a80,0x1e15f5f27d5a52500)
-private theorem r4 : BlockChecks (S 946) N P 7773 4 19 :=
-  r! 76,3;0x1e110619562db71c0,0x1e1109a388df00e80; (z! 0x1e164d1f9c2cf9420,0x1e1655163799283a0)
-private theorem r5 : BlockChecks (S 946) N P 7773 5 14 :=
-  r! 67,2;0x1e110619562db71c0,0x1e1109a388df00e80; (z! 0x1e15565b8c4b42100,0x1e155e4a3faae98c0)
-private theorem r6 : BlockChecks (S 946) N P 7773 6 8 :=
-  r! 61,1;0x1e110619562db71c0,0x1e1109a388df00e80; (z! 0x1e16bd15d1e123400,0x1e16c51055c53dac0)
-theorem checks_7773 : ∀ x : Test .h7773, TestChecks .h7773 x :=
-  tests_of_gradeChecks .h7773 r0 ⟨r1, r2, r3, r4, r5, r6, trivial⟩
-end P3_7_4
-end
-section
-namespace P3_7_4
-open P3 (HighBand)
-open P3_7 (Test debit jointGain tested threshold seedThreshold terminal)
-def c1 : Prop := ∀ x : Test .h2274, TestChecks .h2274 x
-def c2 : Prop := ∀ x : Test .h2294, TestChecks .h2294 x
-private theorem window (b : HighBand) :
-    (terminal b).shape.J ≤ 2218 := by
-  cases b <;> decide
-private theorem checked_interval (b : HighBand) (h : ℕ) (hl : b.row.lo ≤ h) (hu : h ≤ b.row.hi)
-    (x : Test b) (hc : TestChecks b x) :
-    debit h (tested b x) < jointGain h (tested b x).shape (threshold b x) (seedThreshold b x) := by
-  let t := tested b x
-  let E := threshold b x
-  let v := seedThreshold b x
-  have hj : t.shape.J = (terminal b).shape.J := by cases x <;> rfl
-  have he : 0 < E := by cases x <;> exact Nat.succ_pos _
-  have hJ := window b
-  have hu' := (P3_7.terminal_guards b).2.1
-  have hw : b.row.lo+1 ≤ 131071 := by omega
-  have hJ' : t.shape.J ≤ 131071-b.row.lo := by omega
-  have hJ'' : t.shape.J ≤ 131071-(b.row.lo+1) := by omega
-  change BlockChecks t.shape t.nodeRows t.poleMoment b.row.lo E v at hc
-  unfold BlockChecks at hc
-  rw [blockSurplus_eq t b.row.lo E v (by omega) hJ' he,
-    blockSurplus_eq t (b.row.lo+1) E v hw hJ'' he] at hc
-  obtain ⟨hp, hr⟩ := hc
-  change debit h t < jointGain h t.shape E v
-  exact strict_of_first_difference hl (by omega) (by omega) (by omega)
-theorem of_children (h1 : c1) (h2 : c2) : P3_7.c4 := by
-  intro b h hl hu x
-  apply checked_interval b h hl hu x
-  cases b with
-  | h2274 => exact h1 x
-  | h2294 => exact h2 x
-  | h7773 => exact checks_7773 x
 end P3_7_4
 end
 section
@@ -790,54 +736,6 @@ local notation "p!" l "," r ";" p => Parts.more (gain := l) (next := r) (Row.eq_
 local notation "r!" nn "," d ";" l "," r ";" p => certify
   (n := nn) (last := d) (cost := l) (costNext := r)
   p rfl (by decide) (by decide) rfl rfl rfl rfl (by decide) (by decide)
-private theorem r0 : BlockChecks (S 211000) N P 2274 23 0 :=
-  r! 2351,2;0x371c3bf7415ff2e6c1a241e00,0x371c3d81824c7d3b16ce29d00; (p! 0x32d28e9ee7391a7eed47a2d20,0x32d88d87de97a27b7ed816560; p! 0x44a20da3aa6955c42e1b99c0,0x444351676213c090d0de1660; z! 0,0)
-private theorem r1 : BlockChecks (S 162873) N P 2274 1 359 :=
-  r! 2406,3;0x20d8c3ac1b073a9e789752c00,0x20d8c4dc6f2da339acd4c2200; (p! 0x1dc09a84692f1941609ff13c0,0x1dc42a52f762c93aff79d3500; p! 0x31533cdd2c0e13a2edfc8420,0x311ca40e992ae0e150f4ebc0; z! 0x2f603d33c7d1d85794b960,0x2db69faf21fc0c60e0cdc0)
-private theorem r2 : BlockChecks (S 164297) N P 2274 2 354 :=
-  r! 2417,4;0x216c59316c087c8d9bcd30c00,0x216c5a646954a2c8934fff200; (p! 0x1e4b0f08306648b71825a66e0,0x1e4eaf11ac4970f03c35a3de0; p! 0x31daea9971de84d400ee43c0,0x31a37b65796e30ca7107f580; z! 0x39dc6d2604690b39c6cc20,0x3808a4039331c526145120)
-private theorem r3 : BlockChecks (S 166033) N P 2274 3 349 :=
-  r! 2428,4;0x2222014655ee7e9abfab9fc00,0x2222027c919dddfbb7eedda00; (p! 0x1ef46f7f4c08a64a909cb0080,0x1ef823813e4b373472e6e0f60; p! 0x3293a62a920fcc858ca427e0,0x325b2553e0fa74bfbe11dd00; z! 0x45d095b2b0ba3da2d71140,0x43d2bff318b713020f8940)
-private theorem r4 : BlockChecks (S 167408) N P 2274 4 343 :=
-  r! 2441,5;0x22b33d8a45ccb5a08abcc2e00,0x22b33ec313319a4ea74833500; (p! 0x1f7d79ecd5fac288454759be0,0x1f813df26a4f840cbcff731e0; p! 0x330b0f3dc1cb294308ae6a00,0x32d1b1297e0d9102693004a0; z! 0x515ae2a220938792083140,0x4f3d18f1a413eeda6d5a20)
-private theorem r5 : BlockChecks (S 169216) N P 2274 5 337 :=
-  r! 2455,5;0x2374089b0793dbefaa4bf0e00,0x237409d735cca01dd5c7e8500; (p! 0x20319e973312ba8285fe9c200,0x203577d9c429e4752de7b5280; p! 0x33c8a543b511dcd3aa6cc260,0x338e170baa16a6152f297400; z! 0x5e241e575038799436c980,0x5be6b49bb830563c51c3a0)
-private theorem r6 : BlockChecks (S 171591) N P 2274 6 331 :=
-  r! 2471,6;0x24746edda94f255eb4daff000,0x2474701e4792e7121f0236800; (p! 0x211f6d8626f6656af881c01c0,0x2123630341c70c90515b03b40; p! 0x34e40f90ce5b855b107d3600,0x34a7e347f260795420419040; z! 0x6c548edc39b8b49ac8ace0,0x69f6f39997169fe082d360)
-private theorem r7 : BlockChecks (S 173880) N P 2274 7 324 :=
-  r! 2489,6;0x256eed8bd5a5c0b3969361e00,0x256eeed0bad1805603c8d9d00; (p! 0x220864d70fcb55cf40fb10f20,0x220c75f5ff25c51bb8754d300; p! 0x35ef51561768d6e992c5c700,0x35b1872f8b63bbe4a2e76600; z! 0x7959fc10d1d50f877a6700,0x76e55d23c18f573a610fc0)
-private theorem r8 : BlockChecks (S 177154) N P 2274 8 317 :=
-  r! 2511,7;0x26dafb393fd87be866aa32a00,0x26dafc844314e45f2e5c48f00; (p! 0x2358372dda46dcbda865b8e80,0x235c706cccd79a5fdd2ca21c0; p! 0x37a4aa912f61b17ecb2bb700,0x37648119b7f2c793bc28a5c0; z! 0x87cbfd590e9f3a2c4b8fc0,0x853c5331bdfac5382f5ec0)
-private theorem r9 : BlockChecks (S 180959) N P 2274 9 309 :=
-  r! 2538,8;0x288a9b4fa3c12f0015e884000,0x288a9ca1c30d0b2360b9e6000; (p! 0x24e58598708c19d8186516dc0,0x24e9ee77f3177e463a61f5a20; p! 0x39bc71a041e93bb2deebbcc0,0x39796f1a6fb73390269fe140; z! 0x94fcfb37f416a858e399c0,0x92555c43f1dfa1fe3d7940)
-private theorem r10 : BlockChecks (S 187112) N P 2274 10 301 :=
-  r! 2574,9;0x2b57fa517058f8d709039be00,0x2b57fbaf0ed507ca504d80d00; (p! 0x27754d343240cfc79b56a39c0,0x277a05304eb145b29b55f7c00; p! 0x3d860f9065b2a851dbfc5160,0x3d3e55390134d75fa6b226a0; z! 0xa53bda6022de435dc505e0,0xa2694f97766293c8228800)
-private theorem r11 : BlockChecks (S 195637) N P 2274 11 291 :=
-  r! 2625,11;0x2f6182d0afc4de7a16610f400,0x2f61843e3c0cc17ed83760e00; (p! 0x2b2299d6266b2b5baebc29c20,0x2b27c3f99dc2699d7d9d28540; p! 0x433971020f308bfb0c89fe00,0x42eae8577a8ee3fffb22db60; z! 0xb591a3da6898c1a4bd61e0,0xb2808891932c7faa66a940)
-private theorem r12 : BlockChecks (S 211000) N P 2274 12 278 :=
-  r! 2711,14;0x371c3bf7415ff2e6c1a241e00,0x371c3d81824c7d3b16ce29d00; (p! 0x32239f191ff250da45f4b5c40,0x3229a40d74e22de5baf925540; p! 0x4eb97ca41032e6d230df71e0,0x4e5e00a627b0f943528a9840; z! 0xd054441370d1dc1fe95560,0xccb291cdc1181501083260)
-private theorem r13 : BlockChecks (S 211000) N P 2274 13 263 :=
-  r! 2658,12;0x371c3bf7415ff2e6c1a241e00,0x371c3d81824c7d3b16ce29d00; (p! 0x3239831888f165c999ccb3800,0x323f8791953b8a29009fd0080; p! 0x4d94d87cdc9ad4ac758779e0,0x4d38c721659503a1fd5f7420; z! 0x96ff6192ace31e5d645000,0x93fac65f05770eb4bfa060)
-private theorem r14 : BlockChecks (S 211000) N P 2274 14 245 :=
-  r! 2608,11;0x371c3bf7415ff2e6c1a241e00,0x371c3d81824c7d3b16ce29d00; (p! 0x324d061ca490221a721e66140,0x32530a2c8275ecde5f733ef60; p! 0x4c8d7e68f168a8a3e404ffa0,0x4c30da93b810a54418afcac0; z! 0x65e14d0261809f9a9621e0,0x6375b36f850f0e17f269c0)
-private theorem r15 : BlockChecks (S 211000) N P 2274 15 226 :=
-  r! 2564,9;0x371c3bf7415ff2e6c1a241e00,0x371c3d81824c7d3b16ce29d00; (p! 0x32607053aef28b0bffac74e60,0x326673ccc7e47df2ddd6998e0; p! 0x4b800a8ef03dd6a1e5a29540,0x4b22d450cfdaaa4af4307740; z! 0x3d52c40ee3904a326818e0,0x3b830f84991d110e556d60)
-private theorem r16 : BlockChecks (S 211000) N P 2274 16 203 :=
-  r! 2526,8;0x371c3bf7415ff2e6c1a241e00,0x371c3d81824c7d3b16ce29d00; (p! 0x3270d02341e84e79f7056c680,0x3276d335cca9c39e2fb939da0; p! 0x4a96f855ae163bdddb0252e0,0x4a3936d506fbc1d03a1fd0c0; z! 0x1ff889298ac232d8658d80,0x1eba711cd3034de65aafc0)
-private theorem r17 : BlockChecks (S 211000) N P 2274 17 178 :=
-  r! 2492,7;0x371c3bf7415ff2e6c1a241e00,0x371c3d81824c7d3b16ce29d00; (p! 0x328048aabb3f18d27fc79ff60,0x32864b4bf4799cc6592b790e0; p! 0x49b260fd0fb95a236fa151c0,0x4954207893686586dc70e0e0; z! 0xcdbadb0bd8fc9782605e0,0xc23a7a4ea71190b8255e0)
-private theorem r18 : BlockChecks (S 211000) N P 2274 18 151 :=
-  r! 2462,5;0x371c3bf7415ff2e6c1a241e00,0x371c3d81824c7d3b16ce29d00; (p! 0x328edb2f0942e368d9b0222c0,0x3294dd58879e71f2010689600; p! 0x48d30cd3ef4d0a04b9931100,0x4874668e7726e3bc7419a000; z! 0x3107097ad4f4cadd15440,0x2c5a6898504e8fc0e0300)
-private theorem r19 : BlockChecks (S 211000) N P 2274 19 122 :=
-  r! 2435,5;0x371c3bf7415ff2e6c1a241e00,0x371c3d81824c7d3b16ce29d00; (p! 0x329c8d5c0e411f77f7e8bbe20,0x32a28f0adca6e4aec35240ba0; p! 0x47fb093ae06d3005a13ce0a0,0x479c28e23230cd2ee46bbfc0; z! 0x20caf44eee6ce6916ca0,0x17c30893569ecbadb100)
-private theorem r20 : BlockChecks (S 211000) N P 2274 20 90 :=
-  r! 2411,4;0x371c3bf7415ff2e6c1a241e00,0x371c3d81824c7d3b16ce29d00; (p! 0x32a8c34b8e71e4c3c9035e420,0x32aec493c14c6513d5b1a5220; p! 0x47379c74ba2d2fa6301084c0,0x46d8b9773ba40034ab3c8f60; z! 0,0)
-private theorem r21 : BlockChecks (S 211000) N P 2274 21 56 :=
-  r! 2389,3;0x371c3bf7415ff2e6c1a241e00,0x371c3d81824c7d3b16ce29d00; (p! 0x32b4433f982a9379efea582a0,0x32ba4420206bd41d0748677a0; p! 0x467f8d7b3528c6ad40c00220,0x4620b0f574e4630e2e4c58a0; z! 0,0)
-private theorem r22 : BlockChecks (S 211000) N P 2274 22 20 :=
-  r! 2369,2;0x371c3bf7415ff2e6c1a241e00,0x371c3d81824c7d3b16ce29d00; (p! 0x32bf14afbf849b319698c21a0,0x32c515295622a3f93644a4760; p! 0x45d27c03e576605c8c1a2c40,0x4573a5ecd60430ba3e24d8e0; z! 0,0)
-theorem proof : P3_7_4.c1 :=
-  tests_of_gradeChecks .h2274 r0 ⟨r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15, r16, r17, r18, r19, r20, r21, r22, trivial⟩
 end P3_7_4_1
 end
 section
@@ -854,22 +752,6 @@ local notation "p!" l "," r ";" p => Parts.more (gain := l) (next := r) (Row.eq_
 local notation "r!" nn "," d ";" l "," r ";" p => certify
   (n := nn) (last := d) (cost := l) (costNext := r)
   p rfl (by decide) (by decide) rfl rfl rfl rfl (by decide) (by decide)
-private theorem r0 : BlockChecks (S 234728) N P 2294 22 0 :=
-  r! 2696,3;0x6590e50f38b8b871c5c744a00,0x6590e7fd67fe5196d46fe2900; (p! 0x4d463ec84376f01a0731fffe0,0x4d5ba78802b2e35ad61970880; p! 0x11b694283fc23343bd6bfe800,0x11b46663e2b18a509266ecfc0; p! 0x695127cee3fe54cfc177d7a0,0x681fabb9f84d05fc86a01660; z! 0,0)
-private theorem r1 : BlockChecks (S 179424) N P 2294 1 331 :=
-  r! 2761,6;0x3b5cf34f1895ff896a1267a00,0x3b5cf58c880247776096c2100; (p! 0x2c3453c9b6e60b5650ffc2700,0x2c40c4098b7f993c508c31040; p! 0xa4c0fa73e87a5755876730c0,0xa4ad1e0ff6814f1f99e22840; p! 0x4cb9d2520119b76c67f5f0c0,0x4c13137513f821369b72de40; z! 0x10f5764ab3d859a212236c0,0x1043fb9019d7ee476c18ce0)
-private theorem r2 : BlockChecks (S 180915) N P 2294 2 326 :=
-  r! 2773,6;0x3c5a668c1c1ccdf433232c800,0x3c5a68ce4f6bc0198189bb400; (p! 0x2cfa0137d291bb4a798fe5b00,0x2d06a7848295e188bf5e5b680; p! 0xa78d4c2b779d80b625ad39a0,0xa77918660bc3b887d79ffe80; p! 0x4d4ae32db5429eaab55a3e40,0x4ca18bc4b3b9e0320401e4c0; z! 0x12e5696c53947cef4e704c0,0x122d35cffd300712ec5f280)
-private theorem r3 : BlockChecks (S 182775) N P 2294 3 321 :=
-  r! 2788,7;0x3d99839f403e2917326663000,0x3d9985e76556ff8bd848ff800; (p! 0x2df083eaa11107ab12d76e6a0,0x2dfd6e3789173c89a02331c40; p! 0xab1277134de14a0178f6a000,0xaafdd586017a23c526386500; p! 0x4e2dce4946f1b5a999eb54a0,0x4d81179a0a0940629c9e84a0; z! 0x150237c5654806ec9e2e060,0x14434057c0a646f14e0cbc0)
-private theorem r4 : BlockChecks (S 185099) N P 2294 4 316 :=
-  r! 2804,7;0x3f2cd18a8f5012ee5ebdab800,0x3f2cd3da21d3d373926aa0c00; (p! 0x2f25a6e75920864b97b6a9340,0x2f32e719f01d62208947d3680; p! 0xaf84c3ba066c3d4022e4dd00,0xaf6f97a5f956b6bb7b9c6680; p! 0x4f79a136080b902de0310040,0x4ec88f633bdff219952e6500; z! 0x175354d795e912334cd0f00,0x168d5a8ec2a6f5cb7d8b300)
-private theorem r5 : BlockChecks (S 187083) N P 2294 5 310 :=
-  r! 2822,8;0x4089262419526063fd6bc3800,0x4089287a0313e13dd2ae1cc00; (p! 0x303316b179fc3c3f7064bc600,0x3040a151ca47bd206b868c880; p! 0xb35f178eeebe8d615ed80a00,0xb34972f2450ecacaead49a00; p! 0x506d2fa0cd25a379274065e0,0x4fb838d3e203dd9b5d5d13a0; z! 0x195642a5dfba4c10898f200,0x188c271e097a4d2cf528fa0)
-theorem ordinary : TestChecks .h2294 none := r0
-theorem grades1 (tail : GradeChecks (terminal .h2294) 2294 6 ((grades .h2294).drop 5))
-    : GradeChecks (terminal .h2294) 2294 1 (grades .h2294) :=
-  ⟨r1, r2, r3, r4, r5, tail⟩
 end P3_7_4_2
 end
 section
@@ -885,19 +767,6 @@ local notation "p!" l "," r ";" p => Parts.more (gain := l) (next := r) (Row.eq_
 local notation "r!" nn "," d ";" l "," r ";" p => certify
   (n := nn) (last := d) (cost := l) (costNext := r)
   p rfl (by decide) (by decide) rfl rfl rfl rfl (by decide) (by decide)
-private theorem r6 : BlockChecks (S 189769) N P 2294 6 304 :=
-  r! 2843,9;0x4266a4919cb2f469c3045c400,0x4266a6f01c0c7229c8b5dca00; (p! 0x31a0719df9affcca80ee1c5e0,0x31ae622764a2f0f0aee638940; p! 0xb8a58ece9fdc73c62cc60040,0xb88f457a8e27d81beb2eac00; p! 0x5205822401091a99e3e83560,0x514b2ada886e898941045a00; z! 0x1b8f4741b7b6bfa26262820,0x1ac03606a766d9df76b3240)
-private theorem r7 : BlockChecks (S 192397) N P 2294 7 297 :=
-  r! 2866,9;0x444068d6fa4343043dfa72c00,0x44406b3ddfc09cf24d5150e00; (p! 0x330bcd1c33eafc7d747db7a40,0x331a2304c91f649a14f0524c0; p! 0xbde4dc2cd3a9c15367f6aa40,0xbdcdee81ea90e3d00282d9c0; p! 0x538e1013b5b2901df69a5c60,0x52ce3fa180b42b0aec116800; z! 0x1d71ba66da1a4cf9f0034e0,0x1c9fbf88a44e11ee532b300)
-private theorem r8 : BlockChecks (S 196316) N P 2294 8 290 :=
-  r! 2895,10;0x470f0248484c911b8d3eb9200,0x470f04bbb42e58e2550d11d00; (p! 0x352cb2d3b0b811fdfed920100,0x353ba244b788fd2f18540b3c0; p! 0xc5d74c7e72724169ba1bd700,0xc5bf6688c5cdb6aaca4db640; p! 0x565343c90475003ec4e9be60,0x558b39acb19f72228a9b3de0; z! 0x1fabf8ef25ebe0ace282a20,0x1ed48545d6079f705b00080)
-private theorem r9 : BlockChecks (S 201102) N P 2294 9 282 :=
-  r! 2932,12;0x4a9039803382dd03d3aa6e600,0x4a903c02eb22a375bb10e4f00; (p! 0x37d239a1b40f1fc5962881500,0x37e1e900873133cb9c4454a60; p! 0xcfc671a3939b2f2cfa16a360,0xcfad54f96441aa1e7b967520; p! 0x59fcfcd3fdf884ef485124a0,0x592aa38ea7734fda9bd80ea0; z! 0x21c8fcf16967f480effc4e0,0x20eb24527d1dc95e6a23000)
-private theorem r10 : BlockChecks (S 209391) N P 2294 10 274 :=
-  r! 2983,14;0x50d53a92fd0c246d31b986000,0x50d53d303272f11fa603df000; (p! 0x3c8352c89c6f41de7c7d13be0,0x3c94593060a3dda25008ae380; p! 0xe187bc540664fd14ae7814a0,0xe16c755cb8445d52d8921a80; p! 0x6146169b393fd9ce1d19b440,0x60619d9501c667d845728700; z! 0x2519f9c2ad2692a43158e80,0x242bd1f0cc4457326e25920)
-theorem grades2 (tail : GradeChecks (terminal .h2294) 2294 11 ((grades .h2294).drop 10))
-    : GradeChecks (terminal .h2294) 2294 6 ((grades .h2294).drop 5) :=
-  ⟨r6, r7, r8, r9, r10, tail⟩
 end P3_7_4_2
 end
 section
@@ -913,19 +782,6 @@ local notation "p!" l "," r ";" p => Parts.more (gain := l) (next := r) (Row.eq_
 local notation "r!" nn "," d ";" l "," r ";" p => certify
   (n := nn) (last := d) (cost := l) (costNext := r)
   p rfl (by decide) (by decide) rfl rfl rfl rfl (by decide) (by decide)
-private theorem r11 : BlockChecks (S 221352) N P 2294 11 263 :=
-  r! 3060,16;0x5a536dd25592197a347bdca00,0x5a537095c50e158df97f9e900; (p! 0x439337f3693405235fdcbf5a0,0x43a6471607a6aa0e2888c6620; p! 0xfc7b4082a8ee0d17db798420,0xfc5cae3d60f1b54945aaa060; p! 0x6cf221ff77f00bbd22f492e0,0x6bf264cb6cbb17317135ec40; z! 0x2960ca68b3314f9ff4f6ce0,0x28560622097a5d2789320e0)
-private theorem r12 : BlockChecks (S 234728) N P 2294 12 250 :=
-  r! 3094,2;0x6590e50f38b8b871c5c744a00,0x6590e7fd67fe5196d46fe2900; (p! 0x4bf8a3eee2f1335f03f779980,0x4c0e1b43fc9041523b5133660; p! 0x11c5c98be74ab90acedc46280,0x11c3a199df302c4fc1607a9a0; p! 0x7a82aa94c2c8425539b0bf60,0x7962087e7eb8a18190ac5a60; p! 0x2a5d0b33b766ca1f1abefe0,0x293aec39ff575bc319ef060; z! 0,0)
-private theorem r13 : BlockChecks (S 234728) N P 2294 13 234 :=
-  r! 3027,15;0x6590e50f38b8b871c5c744a00,0x6590e7fd67fe5196d46fe2900; (p! 0x4c2418a6f67a84f7400041e80,0x4c398f2e922cbbb950274e0e0; p! 0x11c4bc9d2133989bfa8f84b00,0x11c293c2f2f91566d47727900; p! 0x787ee07c0472e3e17d51eb00,0x775bd7ca2756c18ea5475ac0; z! 0x20367bea3d50108b35ef400,0x1f3c7c39c6f4e3d8588e440)
-private theorem r14 : BlockChecks (S 234728) N P 2294 14 215 :=
-  r! 2969,13;0x6590e50f38b8b871c5c744a00,0x6590e7fd67fe5196d46fe2900; (p! 0x4c4ab702cbc865e2046177aa0,0x4c602cf373bfd32e62272d380; p! 0x11c3dff278852bbd0817e29c0,0x11c1b630f86c7c236036f80c0; p! 0x76afe15269e41de562f289c0,0x758a7b488d3d29a755263b80; z! 0x175a5d710cd7c5bfd7205e0,0x1687afca464a251fadd01c0)
-private theorem r15 : BlockChecks (S 234728) N P 2294 15 194 :=
-  r! 2919,11;0x6590e50f38b8b871c5c744a00,0x6590e7fd67fe5196d46fe2900; (p! 0x4c6f744ac13f266bf592cf040,0x4c84e951a13333fb25a92ef20; p! 0x11c2c1c83ddc32e18a4f035a0,0x11c097379b785ebf3ea1db260; p! 0x74eee8af2d76827f425e5220,0x73c71cfcd7af01ae09cf7ee0; z! 0xfca5fb3b22b847b94d49e0,0xf1fc4f285e597003749f00)
-theorem grades3 (tail : GradeChecks (terminal .h2294) 2294 16 ((grades .h2294).drop 15))
-    : GradeChecks (terminal .h2294) 2294 11 ((grades .h2294).drop 10) :=
-  ⟨r11, r12, r13, r14, r15, tail⟩
 end P3_7_4_2
 end
 section
@@ -941,25 +797,5 @@ local notation "p!" l "," r ";" p => Parts.more (gain := l) (next := r) (Row.eq_
 local notation "r!" nn "," d ";" l "," r ";" p => certify
   (n := nn) (last := d) (cost := l) (costNext := r)
   p rfl (by decide) (by decide) rfl rfl rfl rfl (by decide) (by decide)
-private theorem r16 : BlockChecks (S 234728) N P 2294 16 171 :=
-  r! 2875,10;0x6590e50f38b8b871c5c744a00,0x6590e7fd67fe5196d46fe2900; (p! 0x4c9238c223d92265fef275ee0,0x4ca7aca1801ceba7008accae0; p! 0x11c1753132a586050565d6f00,0x11bf49e963345aa934faa3240; p! 0x7338e03c42daea1da6893c00,0x720eafe5f9b6722885764bc0; z! 0x9bac520fc9adc6ea71e080,0x93853bebe490fa41401360)
-private theorem r17 : BlockChecks (S 234728) N P 2294 17 145 :=
-  r! 2837,8;0x6590e50f38b8b871c5c744a00,0x6590e7fd67fe5196d46fe2900; (p! 0x4cb10ec47a4c6f45c1bf1cac0,0x4cc681baa4d59b4ce1b6b55a0; p! 0x11c062db708319e09f7147220,0x11be36e32398b86afdb7d84e0; p! 0x71a3b9c07b15220df52d1500,0x70773990f1845786c3914be0; z! 0x5452b19170487343bee160,0x4e9501653c8802c91bf640)
-private theorem r18 : BlockChecks (S 234728) N P 2294 18 117 :=
-  r! 2802,7;0x6590e50f38b8b871c5c744a00,0x6590e7fd67fe5196d46fe2900; (p! 0x4cce38d245d00aa7fc43aaae0,0x4ce3aab6e39d07454a5a633e0; p! 0x11bf341c3e8a61b585c40d200,0x11bd0787fc497899e6e2434c0; p! 0x7013999b31a370b3ecf2a640,0x6ee4f736872850409029bc40; z! 0x24e20601a37559cbc57140,0x21616185e06ab054b51bc0)
-private theorem r19 : BlockChecks (S 234728) N P 2294 19 86 :=
-  r! 2771,6;0x6590e50f38b8b871c5c744a00,0x6590e7fd67fe5196d46fe2900; (p! 0x4ce813d1b20e9e966a5b5d360,0x4cfd84e5d109d5f9485e41b80; p! 0x11be412ae1b0414d7ebfd6700,0x11bc13fec6f7527f67d6207c0; p! 0x6e9e8f00903690e13f493080,0x6d6e236c1d4a7b39e300c880; z! 0xadafff0fb064bce62c360,0x939fb281047c7d3ba2f80)
-private theorem r20 : BlockChecks (S 234728) N P 2294 20 53 :=
-  r! 2744,5;0x6590e50f38b8b871c5c744a00,0x6590e7fd67fe5196d46fe2900; (p! 0x4d008a525aeb13e7e11a82700,0x4d15fa7c7ae75ca2f7ee36200; p! 0x11bd3d9211a9fde2652ddc1a0,0x11bb0fde7d35d737339d8c800; p! 0x6d30dfd49a7cf1976c62b7e0,0x6bff4595fb9a7d5e9b9a25a0; z! 0x11c25988f5a8a73b0eba0,0xc0d6c2a900a17b544e00)
-private theorem r21 : BlockChecks (S 234728) N P 2294 21 18 :=
-  r! 2719,4;0x6590e50f38b8b871c5c744a00,0x6590e7fd67fe5196d46fe2900; (p! 0x4d17a0ee8e76c37e46661ba20,0x4d2d101fe7aac9de8299ace80; p! 0x11bc31e61188deea2097757a0,0x11ba03b8ced11f3d04f8209a0; p! 0x6bd146c0dc978ce37ce22de0,0x6a9f6855f04e9cec9e4c5e80; z! 0,0)
-theorem grades4 : GradeChecks (terminal .h2294) 2294 16 ((grades .h2294).drop 15) :=
-  ⟨r16, r17, r18, r19, r20, r21, trivial⟩
-end P3_7_4_2
-end
-section
-namespace P3_7_4_2
-theorem proof : P3_7_4.c2 :=
-  P3_7_4.tests_of_gradeChecks .h2294 ordinary (grades1 (grades2 (grades3 grades4)))
 end P3_7_4_2
 end

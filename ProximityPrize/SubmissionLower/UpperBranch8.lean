@@ -13,9 +13,6 @@ structure FixedWord (w : I → K) (T : Finset K) (s : K → K[X]) (d : ℕ) : Pr
   distinct : Set.InjOn s (T : Set K)
   degree : ∀ γ ∈ T, (s γ).natDegree ≤ d
   hits : ∀ γ ∈ T, ∃ B : Finset I, agreement ≤ B.card ∧ ∀ i ∈ B, (s γ).eval (node i) = w i
-theorem FixedWord.mono {w T s d} (h : FixedWord w T s d) {U : Finset K} (hU : U ⊆ T) :
-    FixedWord w U s d :=
-  ⟨h.distinct.mono hU, fun γ hγ => h.degree γ (hU hγ), fun γ hγ => h.hits γ (hU hγ)⟩
 open private incidence_arithmetic from ProximityPrize.SubmissionLower.PortHighBase
 theorem section_capacity {w T s d} (h : FixedWord w T s d) (hd : d < agreement) (cap : ℕ)
     (hsection : ∀ i : I, (∃ γ ∈ T, (s γ).eval (node i) ≠ w i) →
@@ -311,81 +308,6 @@ theorem lambda_cross {A n l s : ℕ} (hA : A ≤ n) (hl : l ≤ A) (hs : s ≤ A
     push_cast [Nat.cast_sub hsn, Nat.cast_sub ht, Nat.cast_sub hs]
     nlinarith only [h₁, h₂]
   · simp [Nat.sub_eq_zero_of_le (Nat.le_of_lt (Nat.lt_of_not_ge ht))]
-def nodeVelocity (J : Input) : ℕ := lambdaNum J.hi * quotientOrder J.lo
-def nodeReducedOrdinate (J : Input) : ℕ := muNum J.hi + (J.e-3)*nodeVelocity J
-def nodeSeed (J : Input) : ℕ := nodeVelocity J*J.v + 2*J.hi*muNum J.hi
-def weightedSection (J : Input) (h t s : ℕ) : ℕ :=
-  nodeReducedOrdinate J*h + nodeVelocity J*t + nodeSeed J*s
-theorem incidence_weights (J : Input) (s : ℕ) (hs : s ≤ degreeAt J.hi) :
-    scale J.hi * (blockLength-s) ≤ (agreement-s) * muNum J.hi ∧
-    scale J.hi * (blockLength-s) * (J.ell-s) ≤ (agreement-s) * nodeVelocity J := by
-  have hAn : agreement ≤ blockLength := by decide
-  have hL : quotientOrder J.lo ≤ agreement :=
-    (Nat.sub_le _ _).trans (by decide : 131071 ≤ agreement)
-  have hr : J.ell-s ≤ quotientOrder J.lo-s := by
-    exact Nat.sub_le_sub_right (Nat.sub_le_sub_left J.lower _) _
-  have hMu := Nat.mul_le_mul_left agreement (mu_cross hAn J.agreement_gap.le hs)
-  have hLam := Nat.mul_le_mul_left (gap J.hi)
-    (lambda_cross hAn hL (hs.trans J.agreement_gap.le))
-  constructor
-  · unfold scale muNum gap
-    simpa only [Nat.mul_assoc, Nat.mul_left_comm, Nat.mul_comm] using hMu
-  · calc
-      _ ≤ scale J.hi * (blockLength-s) * (quotientOrder J.lo-s) :=
-        Nat.mul_le_mul_left _ hr
-      _ ≤ _ := by
-        unfold scale nodeVelocity lambdaNum
-        convert hLam using 1 <;> ring
-theorem scale_pos (J : Input) : 0 < scale J.hi :=
-  Nat.mul_pos (by decide) (Nat.sub_pos_of_lt J.agreement_gap)
-theorem unit_le_weight (J : Input) {h t s : ℕ} (hp : 0 < s) :
-    scale J.hi ≤ weightedSection J h t s := by
-  have hAn : agreement ≤ blockLength := by decide
-  have hm : scale J.hi ≤ muNum J.hi :=
-    Nat.mul_le_mul_left agreement (Nat.sub_le_sub_right hAn _)
-  have hw : 1 ≤ 2*J.hi := by
-    have := J.positive.trans_le J.upper
-    omega
-  have hn : muNum J.hi ≤ nodeSeed J := by
-    have H := Nat.mul_le_mul_right (muNum J.hi) hw
-    rw [Nat.one_mul] at H
-    exact H.trans (Nat.le_add_left _ _)
-  exact (hm.trans hn).trans
-    ((by simpa only [Nat.mul_one] using Nat.mul_le_mul_left (nodeSeed J) hp :
-      nodeSeed J ≤ nodeSeed J*s).trans (Nat.le_add_left _ _))
-theorem mix_to_fee (J : Input) {k : ℕ}
-    (h : scale J.hi*k ≤
-      weightedSection J (J.v*cutSeed J + J.v^2*cutVelocity J)
-        (2*J.e*J.v*cutSeed J + J.v^2*cutOrdinate J)
-        (J.e*cutSeed J + J.v*((2*J.e-2)*cutVelocity J + cutOrdinate J))) :
-    k ≤ properFee J.lo J.hi J.e J.v := by
-  have he : (J.e-3)+2 = J.e-1 := by have h : 3 ≤ J.e := J.sheets; omega
-  have he' : (2*J.e-2)+2 = 2*J.e := by have h : 3 ≤ J.e := J.sheets; omega
-  have hco : 2*cutVelocity J ≤ cutOrdinate J := by
-    have htwo : 2 ≤ J.e-1 := by have h : 3 ≤ J.e := J.sheets; omega
-    exact (by simpa only [Nat.mul_comm] using Nat.mul_le_mul_left (cutVelocity J) htwo :
-      2*cutVelocity J ≤ cutVelocity J*(J.e-1)).trans (Nat.le_add_left _ _)
-  let nA := muNum J.hi + nodeVelocity J*(J.e-1)
-  have hnA : nodeReducedOrdinate J + 2*nodeVelocity J = nA := by
-    unfold nodeReducedOrdinate
-    dsimp only [nA]
-    rw [← he]
-    ring
-  have hc : cutOrdinate J - 2*cutVelocity J + 2*cutVelocity J = cutOrdinate J :=
-    Nat.sub_add_cancel hco
-  unfold properFee
-  apply ratio_le_ceil (scale_pos J)
-  refine h.trans_eq ?_
-  change weightedSection J _ _ _ =
-    J.e*cutSeed J*nodeSeed J +
-      J.v*(nodeSeed J*((2*J.e-2)*cutVelocity J + cutOrdinate J) +
-        cutSeed J*((2*J.e-2)*nodeVelocity J + nA)) +
-      J.v^2*((cutOrdinate J - 2*cutVelocity J)*nodeVelocity J + nA*cutVelocity J)
-  generalize 2*J.e-2 = em at he' ⊢
-  generalize cutOrdinate J - 2*cutVelocity J = ac0 at hc ⊢
-  rw [← hnA, ← he', ← hc]
-  unfold weightedSection
-  ring
 end
 end P1_7_8
 end
@@ -433,70 +355,6 @@ private theorem persistent_le_degree (J : Input) {B : ResidueLift J} {D : Factor
   intro x hx
   change (J.family.scalar a - J.family.scalar b).eval (node x) = 0
   rw [eval_sub, C.hits a ha x hx, C.hits b hb x hx, sub_self]
-theorem proper_curve_count (J : Input) {B : ResidueLift J} {D : Factors J B}
-    (C : ProperCurve J B D) :
-    scale J.hi * C.marks.card ≤ weightedSection J C.fiber C.tangent C.seed := by
-  classical
-  by_cases hsmall : C.marks.card ≤ 1
-  · have hm := Nat.mul_le_mul_left (scale J.hi) hsmall
-    rw [Nat.mul_one] at hm
-    exact hm.trans (unit_le_weight J C.positive_seed)
-  let s := C.persistent.card
-  let r := J.ell - s
-  let N := (univ : Finset I) \ C.persistent
-  let hit (γ : K) (x : I) := (J.family.scalar γ).eval (node x) = J.model.word x
-  have hsd : s ≤ degreeAt J.hi := persistent_le_degree J C (by omega)
-  have hs : 0 < agreement - s := Nat.sub_pos_of_lt (hsd.trans_lt J.agreement_gap)
-  have hN : N.card = blockLength - s := by
-    rw [card_sdiff_of_subset (subset_univ _), card_univ]
-    exact congrArg (· - s) ProximityPrize.Benchmark.IRSProfile.card_index
-  have hagree (γ : K) (hγ : γ ∈ C.marks) : agreement - s ≤ (N.filter (hit γ)).card := by
-    obtain ⟨Aγ,hAγ,he⟩ := (fixed_word J C.sub).hits γ hγ
-    have hsub : Aγ \ C.persistent ⊆ N.filter (hit γ) := by
-      intro x hx
-      obtain ⟨hxa,hxp⟩ := mem_sdiff.mp hx
-      exact mem_filter.mpr ⟨mem_sdiff.mpr ⟨mem_univ _, hxp⟩, he x hxa⟩
-    have hbound := card_le_card hsub
-    have hpart := card_sdiff_add_card_eq_card (inter_subset_left :
-      Aγ ∩ C.persistent ⊆ Aγ)
-    have hs' := card_le_card (inter_subset_right : Aγ ∩ C.persistent ⊆ C.persistent)
-    have heq : Aγ \ (Aγ ∩ C.persistent) = Aγ \ C.persistent := by
-      ext x
-      simp only [mem_sdiff, mem_inter]
-      tauto
-    rw [heq] at hpart
-    omega
-  let sec := (1+(J.e-3)*r)*C.fiber + r*C.tangent + (r*J.v + 2*J.w)*C.seed
-  have hsums :
-      (agreement-s)*C.marks.card ≤ (blockLength-s)*sec := by
-    calc
-      _ = ∑ γ ∈ C.marks, (agreement-s) := by rw [sum_const, smul_eq_mul, Nat.mul_comm]
-      _ ≤ ∑ γ ∈ C.marks, (N.filter (hit γ)).card := sum_le_sum hagree
-      _ = ∑ x ∈ N, (C.marks.filter (fun γ => hit γ x)).card := by
-        simp only [card_filter]
-        rw [sum_comm]
-      _ ≤ ∑ _x ∈ N, sec :=
-        sum_le_sum fun x hx => C.sections x (mem_sdiff.mp hx).2
-      _ = _ := by rw [sum_const, smul_eq_mul, hN]
-  obtain ⟨hMu, hLam⟩ := incidence_weights J s hsd
-  have hw : 2*J.w ≤ 2*J.hi := Nat.mul_le_mul_left 2 J.upper
-  have h0 := Nat.mul_le_mul_right C.fiber hMu
-  have h1 := Nat.mul_le_mul_right ((J.e-3)*C.fiber+C.tangent+J.v*C.seed) hLam
-  have h2 := Nat.mul_le_mul_right C.seed (Nat.mul_le_mul hMu hw)
-  apply Nat.le_of_mul_le_mul_left _ hs
-  calc
-    _ = scale J.hi * ((agreement-s)*C.marks.card) := by ring
-    _ ≤ scale J.hi * ((blockLength-s)*sec) := Nat.mul_le_mul_left _ hsums
-    _ = scale J.hi*(blockLength-s)*C.fiber +
-        scale J.hi*(blockLength-s)*r*((J.e-3)*C.fiber+C.tangent+J.v*C.seed) +
-        scale J.hi*(blockLength-s)*(2*J.w)*C.seed := by
-      dsimp only [sec]
-      ring
-    _ ≤ (agreement-s)*muNum J.hi*C.fiber +
-        (agreement-s)*nodeVelocity J*((J.e-3)*C.fiber+C.tangent+J.v*C.seed) +
-        ((agreement-s)*muNum J.hi)*(2*J.hi)*C.seed :=
-      Nat.add_le_add (Nat.add_le_add h0 h1) h2
-    _ = _ := by unfold weightedSection nodeReducedOrdinate nodeSeed; ring
 def componentMarks (J : Input) (q : Equation) : Finset K := by
   classical
   exact J.marks.filter (rootOn J q)
@@ -504,75 +362,6 @@ theorem mem_componentMarks {J : Input} {q : Equation} {γ : K} :
     γ ∈ componentMarks J q ↔ γ ∈ J.marks ∧ rootOn J q γ := by
   classical
   exact mem_filter
-theorem proper_count (J : Input) {B : ResidueLift J} {D : Factors J B}
-    (C : ProperCover J B D) :
-    (componentMarks J D.proper).card ≤ properFee J.lo J.hi J.e J.v := by
-  classical
-  have hcov := card_le_cover (componentMarks J D.proper)
-      (fun j => (C.curves j).marks) (fun γ hγ =>
-        C.covers γ (mem_componentMarks.mp hγ).1 (mem_componentMarks.mp hγ).2)
-  apply mix_to_fee J
-  calc
-    _ ≤ ∑ j, scale J.hi * (C.curves j).marks.card := by
-      rw [← mul_sum]
-      exact Nat.mul_le_mul_left _ hcov
-    _ ≤ ∑ j, weightedSection J (C.curves j).fiber (C.curves j).tangent (C.curves j).seed :=
-      sum_le_sum fun j _ => proper_curve_count J (C.curves j)
-    _ = weightedSection J (∑ j, (C.curves j).fiber) (∑ j, (C.curves j).tangent)
-          (∑ j, (C.curves j).seed) := by
-      simp only [weightedSection, sum_add_distrib, mul_sum]
-    _ ≤ _ :=
-      Nat.add_le_add
-        (Nat.add_le_add (Nat.mul_le_mul_left _ C.fiber) (Nat.mul_le_mul_left _ C.tangent))
-        (Nat.mul_le_mul_left _ C.seed)
-theorem flat_component_count (J : Input) (q : Equation) (hq : seedDegree q < p)
-    (B : FlatSections J q) :
-    gap J.hi * (componentMarks J q).card ≤ P1.t * ((p+1)*seedDegree q) + gap J.hi := by
-  classical
-  let U := componentMarks J q
-  have hU : U ⊆ J.marks := fun _ hz => (mem_componentMarks.mp hz).1
-  apply section_capacity (fixed_word J hU) J.agreement_gap ((p+1)*seedDegree q)
-  intro x hx
-  obtain ⟨γ,hγ,hval⟩ := hx
-  obtain ⟨g,hg,hgd,he⟩ := B x ⟨γ,(mem_componentMarks.mp hγ).1,(mem_componentMarks.mp hγ).2,hval⟩
-  let V := U.filter fun γ => (J.family.scalar γ).eval (node x) = J.model.word x
-  let C : K1_14_3.SeedCover := ⟨g,hg,∅⟩
-  have hcount := K1_14_3.seed_count (T := V) (label := J.model.label)
-      (fun _ _ _ _ heq => sub_left_inj.mp heq) C (hgd.trans_lt hq) (by
-        intro η hη
-        obtain ⟨hm,ht⟩ := mem_filter.mp hη
-        exact Or.inl (he η (mem_componentMarks.mp hm).1 (mem_componentMarks.mp hm).2 ht))
-  exact (by simpa only [C, card_empty, Nat.add_zero] using hcount :
-    V.card ≤ (p+1)*g.totalDegree).trans (Nat.mul_le_mul_left _ hgd)
-theorem flat_count (J : Input) {B : ResidueLift J} (D : Factors J B)
-    (hsections : ∀ j, FlatSections J (D.flat j)) :
-    (∑ j, (componentMarks J (D.flat j)).card) ≤ flatFee J.hi J.v + J.e := by
-  classical
-  let U := fun j => componentMarks J (D.flat j)
-  let n := ∑ j, (U j).card
-  let g := gap J.hi
-  have hg : 0 < g := Nat.sub_pos_of_lt J.agreement_gap
-  have hv : J.v < p := (Nat.le_add_left J.v (J.e * degreeAt J.hi)).trans_lt J.flat_guard
-  have hsum : g*n ≤ P1.t*(p+1)*J.v + g*D.count := by
-    calc
-      _ = ∑ j, g*(U j).card := mul_sum ..
-      _ ≤ ∑ j, (P1.t*((p+1)*seedDegree (D.flat j)) + g) := by
-        refine sum_le_sum fun j _ => ?_
-        have hu : seedDegree (D.flat j) ≤ ∑ i, seedDegree (D.flat i) :=
-          single_le_sum (f := fun i => seedDegree (D.flat i)) (fun _ _ => Nat.zero_le _) (mem_univ j)
-        exact flat_component_count J (D.flat j) (hu.trans_lt (D.seed_sum.trans_lt hv)) (hsections j)
-      _ = P1.t*(p+1)*(∑ j, seedDegree (D.flat j)) + g*D.count := by
-        rw [sum_add_distrib, sum_const, smul_eq_mul, card_univ, Fintype.card_fin,
-          ← mul_sum, ← mul_sum, mul_assoc, Nat.mul_comm D.count]
-      _ ≤ _ := Nat.add_le_add_right (Nat.mul_le_mul_left _ D.seed_sum) _
-  have hrem : g*(n-D.count) ≤ P1.t*(p+1)*J.v := by
-    rw [Nat.mul_sub_left_distrib]
-    omega
-  have hceil := ratio_le_ceil hg hrem
-  have hsize : D.count ≤ J.e := D.sheets
-  change n ≤ flatFee J.hi J.v + J.e
-  change n-D.count ≤ flatFee J.hi J.v at hceil
-  omega
 theorem root_component (J : Input) {B : ResidueLift J} (D : Factors J B)
     {γ : K} (hγ : γ ∈ J.marks) :
     rootOn J D.proper γ ∨ ∃ j, rootOn J (D.flat j) γ := by
@@ -583,25 +372,6 @@ theorem root_component (J : Input) {B : ResidueLift J} (D : Factors J B)
   · exact Or.inl h
   · obtain ⟨j, _, hj⟩ := Finset.prod_eq_zero_iff.mp h
     exact Or.inr ⟨j, hj⟩
-theorem count (J : Input) {B : ResidueLift J} {D : Factors J B}
-    (C : ProperCover J B D) (hsections : ∀ j, FlatSections J (D.flat j)) :
-    J.marks.card ≤ P1_7.tangentFee J.lo J.hi J.e J.v := by
-  classical
-  let T := componentMarks J D.proper
-  let U := fun j => componentMarks J (D.flat j)
-  have hcov : J.marks ⊆ T ∪ univ.biUnion U := by
-    intro γ hγ
-    rcases root_component J D hγ with ht | ⟨j, hu⟩
-    · exact mem_union.mpr (Or.inl (mem_componentMarks.mpr ⟨hγ,ht⟩))
-    · exact mem_union.mpr (Or.inr (mem_biUnion.mpr ⟨j,mem_univ _,mem_componentMarks.mpr ⟨hγ,hu⟩⟩))
-  have hc := (card_le_card hcov).trans (card_union_le _ _)
-  have hp := proper_count J C
-  have hf := card_biUnion_le.trans (flat_count J D hsections)
-  change T.card ≤ properFee J.lo J.hi J.e J.v at hp
-  change (univ.biUnion U).card ≤ flatFee J.hi J.v + J.e at hf
-  change J.marks.card ≤ T.card + (univ.biUnion U).card at hc
-  unfold P1_7.tangentFee
-  omega
 end
 end P1_7_8
 end
@@ -623,38 +393,6 @@ def c4 : Prop :=
 def c5 : Prop :=
   ∀ (J : Input) (B : ResidueLift J) (D : Factors J B) (j : Fin D.count),
     DifferentialProduct J B (D.flat j) → FlatSections J (D.flat j)
-theorem of_children (crt : c1) (factor : c2) (proper : c3) (descend : c4)
-    (sections : c5) : P1_7.c8 := by
-  intro b u del M Γ F hw hshift H hH i f hred he hlarge hpos hseed T hT hreg
-  obtain ⟨hl,hu⟩ := window_nat hw
-  obtain ⟨hlo,hhi,-,-,-⟩ := terminal_guards b
-  have h : 0 < M.overhead.toNat := hlo.trans_le hl
-  have hell : 0 < quotientOrder M.overhead.toNat := by
-    unfold quotientOrder
-    omega
-  have hgap : degreeAt b.row.hi < P1.agreement := by
-    have hb : degreeAt b.row.hi ≤ 164398 := Nat.add_le_add_left hhi 131071
-    exact hb.trans_lt (by decide)
-  have hfac : degreeAt b.row.hi + 1 < P1.p := by
-    have hb := Nat.succ_le_of_lt hgap
-    exact hb.trans_lt (by decide)
-  have hc := grade_checked b i
-  rw [← he] at hc
-  let J : Input := {
-    words := u, deleted := del, model := M, labels := Γ, family := F
-    shift_out := hshift, block := H, chart := hH, marks := T, marks_sub := hT
-    f := f, regular := hreg, reduced := hred, sheets := hlarge, seed_pos := hpos
-    v := ((P1_7.grades b).get i).seedCap, seed_bound := hseed
-    lo := b.row.lo, hi := b.row.hi, lower := hl, upper := hu, positive := h
-    quotient_pos := hell, agreement_gap := hgap, factorial_guard := hfac
-    separant_guard := hc.separant, flat_guard := hc.flat }
-  obtain ⟨B⟩ := crt J
-  obtain ⟨D⟩ := factor J B
-  obtain ⟨C⟩ := proper J B D
-  apply count J C
-  intro j
-  obtain ⟨E⟩ := descend J B D j
-  exact sections J B D j E
 end
 end P1_7_8
 end

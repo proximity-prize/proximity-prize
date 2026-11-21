@@ -2,14 +2,6 @@ import ProximityPrize.SubmissionLower.FrontBranch4
 set_option Elab.async false
 set_option autoImplicit true
 section
-namespace CJ4
-def source : CJ0.Source := ⟨53, 72, 21, 9, CJ0.fullBox 72 21 9⟩
-def At : Prop := CJ0.ScalarList 179935 8352383558747982
-def Cert : Prop := CJ0.prefixRank source 73 ≤ 128719
-def Instance : Prop := CJ0.Main → Cert → At
-end CJ4
-end
-section
 set_option maxRecDepth 12000
 set_option backward.isDefEq.respectTransparency false
 namespace P2
@@ -24,15 +16,9 @@ abbrev target : Rung := ⟨179935,336731609,1073741824,2365,0x3a5b3ea2263e00a,83
 abbrev agreement := target.agreement
 abbrev radiusNumerator := target.numerator
 abbrev radiusDenominator := target.denominator
-abbrev lowCutoff : ℤ := target.lowEnd
-abbrev scalarCap := target.mcaBound
-abbrev listCap := target.listBound
 abbrev t : ℕ := blockLength - agreement
 abbrev L : ℕ := agreement - k
 abbrev heightCap : ℕ := t + 1 - L - 2
-abbrev rankFee : ℕ := 71048406057248
-abbrev anchorFee : ℕ := 71048406337221
-abbrev budget : ℕ := 0x3d0ed83eb28710f
 def queryRadius : ℝ≥0 := claimedRadius radiusNumerator radiusDenominator
 def radius : ℝ := queryRadius
 def BadFamily (u : Words) (Γ : Finset K) : Prop :=
@@ -41,26 +27,10 @@ abbrev BadMarkAt := P1.BadMarkAt
 abbrev BadMark := BadMarkAt agreement
 def ordinary (u : Words) := hankel node (u 0) (u 1) L t
 def twoBlock (u : Words) := stacked p node (u 0) (u 1) L t
-def firstRank (u : Words) := GenericLayer.genericRank (ordinary u)
 def stackRank (u : Words) := GenericLayer.genericRank (twoBlock u)
 def nullity (u : Words) := GenericLayer.genericNullity (twoBlock u)
 def Normal (u : Words) (γ : K) : Prop :=
   ((twoBlock u).map (evalRingHom γ)).rank = stackRank u
-def normalSlopes (u : Words) (Γ : Finset K) : Finset K := by
-  classical exact Γ.filter (Normal u)
-def abnormalSlopes (u : Words) (Γ : Finset K) : Finset K := by
-  classical exact Γ.filter (fun γ => ¬ Normal u γ)
-def HomogeneousPrincipal (u : Words) : Prop :=
-  ∃ (a : ℕ) (g : Frac[X]), g ≠ 0 ∧ g.natDegree ≤ a ∧ a ≤ t ∧
-    ∀ P : Frac[X], P.natDegree ≤ t →
-      (((twoBlock u).map (algebraMap K[X] Frac)).mulVec (fun i => P.coeff i.val) = 0 ↔
-        ∃ Q : Frac[X], Q.natDegree ≤ t - a ∧ P = g * Q)
-abbrev coefficientStack (u : Words) := coefficientBlocks p node (u 0) (u 1) L t
-def ConstantKernel (u : Words) : Prop :=
-  stackRank u = (coefficientStack u).rank
-def FrontRemainder (u : Words) : Prop :=
-  2 ≤ nullity u ∧ firstRank u = L ∧ ¬ TypeAtMostOne u ∧
-    ¬ HomogeneousPrincipal u ∧ ¬ ConstantKernel u
 structure TwoActive (u : Words) where
   a : ℕ
   b : ℕ
@@ -85,12 +55,6 @@ def fixedNodes {u : Words} {T : TwoActive u} (R : Relation T) : Finset I := by
   classical
   exact Finset.univ.filter fun i =>
     (leftU R).eval (C (node i)) = 0 ∧ (leftV R).eval (C (node i)) = 0
-def FixedLeftGCD {u : Words} {T : TwoActive u} (R : Relation T) : Prop :=
-  ∃ G : K[X], IsCommonGCD (G.map (algebraMap K Frac))
-    (extendSeed (leftU R)) (extendSeed (leftV R))
-def MovingGCD {u : Words} {T : TwoActive u} (R : Relation T) : Prop :=
-  ¬ FixedLeftGCD R ∧ ∃ G : Frac[X], G ≠ 0 ∧ G ∣ extendSeed (leftU R) ∧
-    G ∣ extendSeed (leftV R) ∧ (fixedNodes R).card < G.natDegree
 def InvalidLeft {u : Words} {T : TwoActive u} (R : Relation T) : Prop :=
   max (leftU R).natDegree (leftV R).natDegree < T.height ∨
     ∃ G : K[X], G ≠ 0 ∧ G.map Polynomial.C ∣ leftU R ∧ G.map Polynomial.C ∣ leftV R ∧
@@ -106,8 +70,6 @@ structure SaturatedAt {u : Words} {T : TwoActive u} (R : Relation T)
     IsCommonGCD (locator node errors) (atSlope (leftU R) γ) (atSlope (leftV R) γ)
   fixed_errors : ∀ i ∈ fixedNodes R, M.decoder.eval (node i) ≠ u 0 i + γ * u 1 i
   valid : ¬ InvalidLeft R
-def NormalSaturation {u : Words} {T : TwoActive u} (R : Relation T) : Prop :=
-  ∀ γ, Normal u γ → ∀ M : BadMark u γ, SaturatedAt R M
 structure Reduction (u : Words) (T : TwoActive u) (R : Relation T) where
   U : Bivar
   V : Bivar
@@ -141,28 +103,14 @@ structure RankThree (u : Words) (T : TwoActive u) (R : Relation T)
   output : Bivar
   output_degree : output.degree < (k + D.height : ℕ)
   nodes : relationOn u (fixedNodes R) (threeU a β) (threeV b α) output
-def Parallel {u T R D} (B : RankThree u T R D) : Prop :=
-  B.α = B.β
-def Nonparallel {u T R D} (B : RankThree u T R D) : Prop :=
-  B.α 0 * B.β 1 - B.α 1 * B.β 0 ≠ 0
-def UnitNorm {u T R D} (B : RankThree u T R D) : Prop :=
-  sixNorm B.a = sixNorm B.b
 abbrev ModelAt := P1.ModelAt
-abbrev MarkAt := @P1.MarkAt
 abbrev FamilyAt := @P1.FamilyAt
 abbrev ModelAt.overhead := @P1.ModelAt.overhead
 abbrev ModelAt.label := @P1.ModelAt.label
-abbrev ModelAt.amplitude := @P1.ModelAt.amplitude
-abbrev ModelAt.decoder := @P1.ModelAt.decoder
 abbrev AnchorModel := ModelAt heightCap
-abbrev AnchorMark {u deleted} (M : AnchorModel u deleted) := MarkAt (A := agreement) M
 abbrev AnchoredFamily {u deleted} (M : AnchorModel u deleted) := FamilyAt agreement M
 abbrev AnchorModel.overhead {u deleted} (M : AnchorModel u deleted) := ModelAt.overhead M
 abbrev AnchorModel.label {u deleted} (M : AnchorModel u deleted) := ModelAt.label M
-abbrev AnchorModel.amplitude {u deleted} (M : AnchorModel u deleted) := ModelAt.amplitude M
-abbrev AnchorModel.decoder {u deleted} (M : AnchorModel u deleted) {γ : K} (B : BadMark u γ) :=
-  ModelAt.decoder M B
-abbrev listSource := CJ4.source
 abbrev HighRow := P1.HighRow
 inductive HighBand where
   | h2366
@@ -331,17 +279,11 @@ def Bank.t : Bank → ℕ
   | .w32 => 8
   | .w33 => 8
   | .w33Swapped => 6
-def Bank.heightFloor : Bank → ℕ
-  | .w22 | .w22Swapped | .w12 | .w21 => 24432
-  | _ => 32576
 def Bank.a (b : Bank) : ℕ := b.s + 5 * b.dS
 def Bank.b (b : Bank) : ℕ := b.t + 5 * (b.dT - 1)
 def Bank.E (b : Bank) : ℕ := b.a + b.b
 def Bank.M (b : Bank) : ℕ := (2 * 131071 - 1) * (b.E - 1) + 1
 def Bank.zeroFee (b : Bank) : ℕ := b.a + p * b.b
-def Bank.chartRate (b : Bank) : ℚ := (43691 / 16288 : ℚ) * b.M
-def Bank.chartFee (b : Bank) : ℚ := b.E * b.chartRate ^ 2
-abbrev weightedCutoff : ℕ := 4 * agreement - 1
 abbrev nodeCut := K1_11.nodeCut
 def Bank.relationBounds (b : Bank) (H : ℕ) : Fin 4 → ℕ := ![131071 + H, 1, b.dS, b.dT]
 structure ContactInput (u : Words) {deleted : Finset I} (P : Puncture deleted)
@@ -540,31 +482,6 @@ open private
   dims_5_7_8 dims_4_4_7 jets_4_7_8 jets_3_4_7
   dims_5_6_8 dims_4_3_6 jets_4_6_8 jets_3_3_6
   dims_4_3_5 jets_3_3_5 from ProximityPrize.SubmissionLower.FrontBranch4
-private theorem surplus_of_stats (h H e N lo s t ds dt c g c' g' j : ℕ)
-    (hlo : lo ≤ h) (hmax : h ≤ 33345) (hH : H + e = h) (hN : N + e = 262144)
-    (hc : count 5 s t = c) (hg : grade 5 s t = g)
-    (hc' : count 4 (s-ds) (t-dt) = c') (hg' : grade 4 (s-ds) (t-dt) = g')
-    (hj : J 4 s t - J 3 (s-ds) (t-dt) = j) (hgain : c' ≤ j)
-    (hmargin : 262144 * j + (588669 - lo) * c' + 131071 * g <
-      719740 * c + 131071 * g') :
-    N * (J 4 s t - J 3 (s-ds) (t-dt)) + V (719739 - 131071 - H) 131071 4 (s-ds) (t-dt)
-      < V 719739 131071 5 s t := by
-  have hv := V_affine 719739 131071 5 s t (by decide)
-  have hv' := V_affine (719739 - 131071 - H) 131071 4 (s-ds) (t-dt) (by omega)
-  rw [hc, hg] at hv
-  rw [hc', hg'] at hv'
-  have hw : 719739 - 131071 - H + 1 ≤ (588669 - lo) + e := by omega
-  have hm : N * j + (719739 - 131071 - H + 1) * c' ≤
-      262144 * j + (588669 - lo) * c' := by
-    calc
-      _ ≤ N * j + ((588669 - lo) + e) * c' :=
-        Nat.add_le_add_left (Nat.mul_le_mul_right _ hw) _
-      _ = N * j + e * c' + (588669 - lo) * c' := by ring
-      _ ≤ N * j + e * j + (588669 - lo) * c' :=
-        Nat.add_le_add_right (Nat.add_le_add_left (Nat.mul_le_mul_left _ hgain) _) _
-      _ = _ := by rw [← Nat.add_mul, hN]
-  rw [hj]
-  omega
 private theorem dims_5_10_11 : count 5 10 11 = 2002 ∧ grade 5 10 11 = 6174 := by
   constructor
   · have r0 : countRow 5 10 11 0 = 627 := by decide
@@ -631,86 +548,6 @@ private theorem jets_3_5_3 : J 3 5 3 = 191 := by
   have r1 : contactRow 3 5 3 1 = 55 := by decide
   have r2 : contactRow 3 5 3 2 = 16 := by decide
   simp only [sum_range_succ, sum_range_zero, r0, r1, r2, zero_add]
-theorem bank_surplus (b : Bank) (h H e N : ℕ) (hlo : b.heightFloor ≤ h)
-    (hmax : h ≤ heightCap) (hH : H + e = h) (hN : N + e = blockLength) :
-    N * (J 4 b.s b.t - J 3 (b.s - b.dS) (b.t - b.dT)) +
-      V (weightedCutoff - 131071 - H) 131071 4 (b.s - b.dS) (b.t - b.dT) <
-      V weightedCutoff 131071 5 b.s b.t := by
-  cases b with
-  | w12 =>
-    exact surplus_of_stats h H e N 24432 16 10 1 2 2982 9324 1675 4189 2010
-      hlo hmax hH hN dims_5_16_10.1 dims_5_16_10.2 dims_4_15_8.1 dims_4_15_8.2
-      (by rw [jets_4_16_10, jets_3_15_8]) (by decide) (by decide)
-  | w13 =>
-    exact surplus_of_stats h H e N 32576 8 7 1 3 952 2814 355 809 855
-      hlo hmax hH hN dims_5_8_7.1 dims_5_8_7.2 dims_4_7_4.1 dims_4_7_4.2
-      (by rw [jets_4_8_7, jets_3_7_4]) (by decide) (by decide)
-  | w21 =>
-    exact surplus_of_stats h H e N 24432 10 16 2 1 2982 9324 1675 4189 2010
-      hlo hmax hH hN dims_5_10_16.1 dims_5_10_16.2 dims_4_8_15.1 dims_4_8_15.2
-      (by rw [jets_4_10_16, jets_3_8_15]) (by decide) (by decide)
-  | w22 =>
-    exact surplus_of_stats h H e N 24432 11 10 2 2 2002 6174 985 2419 1495
-      hlo hmax hH hN dims_5_11_10.1 dims_5_11_10.2 dims_4_9_8.1 dims_4_9_8.2
-      (by rw [jets_4_11_10, jets_3_9_8]) (by decide) (by decide)
-  | w22Swapped =>
-    exact surplus_of_stats h H e N 24432 10 11 2 2 2002 6174 985 2419 1495
-      hlo hmax hH hN dims_5_10_11.1 dims_5_10_11.2 dims_4_8_9.1 dims_4_8_9.2
-      (by rw [jets_4_10_11, jets_3_8_9]) (by decide) (by decide)
-  | w23 =>
-    exact surplus_of_stats h H e N 32576 8 6 2 3 798 2324 215 459 800
-      hlo hmax hH hN dims_5_8_6.1 dims_5_8_6.2 dims_4_6_3.1 dims_4_6_3.2
-      (by rw [jets_4_8_6, jets_3_6_3]) (by decide) (by decide)
-  | w31 =>
-    exact surplus_of_stats h H e N 32576 7 8 3 1 952 2814 355 809 855
-      hlo hmax hH hN dims_5_7_8.1 dims_5_7_8.2 dims_4_4_7.1 dims_4_4_7.2
-      (by rw [jets_4_7_8, jets_3_4_7]) (by decide) (by decide)
-  | w32 =>
-    exact surplus_of_stats h H e N 32576 6 8 3 2 798 2324 215 459 800
-      hlo hmax hH hN dims_5_6_8.1 dims_5_6_8.2 dims_4_3_6.1 dims_4_3_6.2
-      (by rw [jets_4_6_8, jets_3_3_6]) (by decide) (by decide)
-  | w33 =>
-    exact surplus_of_stats h H e N 32576 6 8 3 3 798 2324 175 364 835
-      hlo hmax hH hN dims_5_6_8.1 dims_5_6_8.2 dims_4_3_5.1 dims_4_3_5.2
-      (by rw [jets_4_6_8, jets_3_3_5]) (by decide) (by decide)
-  | w33Swapped =>
-    exact surplus_of_stats h H e N 32576 8 6 3 3 798 2324 175 364 835
-      hlo hmax hH hN dims_5_8_6.1 dims_5_8_6.2 dims_4_5_3.1 dims_4_5_3.2
-      (by rw [jets_4_8_6, jets_3_5_3]) (by decide) (by decide)
-def Bank.regularCap : Bank → ℕ
-  | .w12 => 109025269285433940
-  | .w13 => 62374341477419119
-  | .w21 => 109025271416140372
-  | .w22 => 109025269285433940
-  | .w22Swapped => 109025271416140372
-  | .w23 => 91536734556610809
-  | .w31 => 62374322301061231
-  | .w32 => 91536728164491513
-  | .w33 => 139226005688825105
-  | .w33Swapped => 139226001427412241
-theorem bank_fee (b : Bank) : (b.zeroFee : ℚ) + 5 * b.chartFee ≤ b.regularCap := by
-  cases b with
-  | w12 => exact rational_fee 36 9174936 31960596516 109025269285433940 43691 16288 (by decide) (by decide)
-  | w13 => exact rational_fee 30 7602090 36222009374 62374341477419119 43691 16288 (by decide) (by decide)
-  | w21 => exact rational_fee 36 9174936 34091302948 109025271416140372 43691 16288 (by decide) (by decide)
-  | w22 => exact rational_fee 36 9174936 31960596516 109025269285433940 43691 16288 (by decide) (by decide)
-  | w22Swapped => exact rational_fee 36 9174936 34091302948 109025271416140372 43691 16288 (by decide) (by decide)
-  | w23 => exact rational_fee 34 8650654 34091302946 91536734556610809 43691 16288 (by decide) (by decide)
-  | w31 => exact rational_fee 30 7602090 17045651486 62374322301061231 43691 16288 (by decide) (by decide)
-  | w32 => exact rational_fee 34 8650654 27699183650 91536728164491513 43691 16288 (by decide) (by decide)
-  | w33 => exact rational_fee 39 9961359 38352715815 139226005688825105 43691 16288 (by decide) (by decide)
-  | w33Swapped => exact rational_fee 39 9961359 34091302951 139226001427412241 43691 16288 (by decide) (by decide)
-theorem bank_cap (b : Bank) : b.regularCap ≤ 139226005688825105 := by
-  cases b <;> decide
-theorem bank_rate_ge (b : Bank) : (262144 : ℚ) ≤ b.chartRate := by
-  have hm : (262144 : ℕ) ≤ b.M := by cases b <;> decide
-  have hr : (1 : ℚ) ≤ 43691 / 16288 := by
-    apply (le_div_iff₀ (by positivity : (0 : ℚ) < 16288)).mpr
-    rw [one_mul]
-    exact_mod_cast (show (16288 : ℕ) ≤ 43691 by decide)
-  exact (by exact_mod_cast hm : (262144 : ℚ) ≤ b.M).trans
-    (by simpa only [one_mul, Bank.chartRate] using
-      mul_le_mul_of_nonneg_right hr (by positivity : (0 : ℚ) ≤ b.M))
 end P2_4
 end
 section
@@ -728,8 +565,6 @@ open K1_11 (V J filtered filteredMul filteredMul_injective mem_filteredMul_range
   truncated_mul_mem_jet contact_product_not_high_order
   jetSpace_support_bound)
 open private exists_kernel_outside from ProximityPrize.SubmissionLower.Fast065
-abbrev Source (F : Type*) [Field F] (b : Bank) :=
-  filtered (F := F) (sourceWeights 131071) (sourceBounds weightedCutoff 5 b.s b.t)
 abbrev Multipliers (F : Type*) [Field F] (b : Bank) := JetSpace F 2 (b.s - b.dS) (b.t - b.dT)
 variable {F : Type*} [Field F]
 structure ContactData (N : ℕ) (L : MvPolynomial (Fin 5) F) (b : Bank) where
@@ -789,266 +624,8 @@ private theorem local_finrank (i : Fin N) :
     jetSpace_finrank] at hq
   change Module.finrank F (LocalSpace D i) + J 3 (b.s-b.dS) (b.t-b.dT) = J 4 b.s b.t at hq
   omega
-private def nodeMap (i : Fin N) : Source F b →ₗ[F] LocalSpace D i :=
-  (LinearMap.range (localMultiply D i)).mkQ.comp
-    (sourceToJet weightedCutoff 131071 5 b.s b.t 3 (D.x i) (D.first i) (D.firstSlope i) (D.second i) (D.secondSlope i))
-private theorem localContact (Q : Source F b) (i : Fin N) (hi : nodeMap D i Q = 0) :
-    ∃ R : Multipliers F b, D.shifted i Q.val - D.shifted i L * R.val ∈
-      restrictWeightedOrder contactWeight 4 := by
-  have hmem : sourceToJet weightedCutoff 131071 5 b.s b.t 3 (D.x i)
-      (D.first i) (D.firstSlope i) (D.second i) (D.secondSlope i) Q ∈
-      LinearMap.range (localMultiply D i) :=
-    (Submodule.Quotient.mk_eq_zero _).mp hi
-  obtain ⟨R, hR⟩ := hmem
-  refine ⟨R, (weightedTruncation_eq_zero_iff _ _ _).mp ?_⟩
-  rw [map_sub]
-  exact sub_eq_zero.mpr (congrArg Subtype.val hR).symm
-theorem exists_quotient_source (h e : ℕ) (hmin : b.heightFloor ≤ h) (hmax : h ≤ heightCap)
-    (hH : H + e = h) (hN : N + e = 262144)
-    (hdeg : ∀ j, L.weightedTotalDegree (sourceWeights 131071 j) = b.relationBounds H j) :
-    ∃ Q : Source F b, ¬ L ∣ Q.val ∧ ∀ i, ∃ R : Multipliers F b,
-      D.shifted i Q.val - D.shifted i L * R.val ∈ restrictWeightedOrder contactWeight 4 := by
-  have hupper : H ≤ 33345 := by
-    have hh : h ≤ 33345 := hmax
-    omega
-  have hD : weightedCutoff = 719739 := rfl
-  have hfit : ∀ i, b.relationBounds H i ≤ sourceBounds weightedCutoff 5 b.s b.t i := by
-    intro i
-    cases b <;> fin_cases i <;>
-      simp [Bank.relationBounds, Bank.s, Bank.t, Bank.dS, Bank.dT, sourceBounds, hD] <;> omega
-  have hshift : (fun i => sourceBounds weightedCutoff 5 b.s b.t i - b.relationBounds H i) =
-      sourceBounds (weightedCutoff - 131071 - H) 4 (b.s-b.dS) (b.t-b.dT) := by
-    funext i
-    fin_cases i <;> simp [sourceBounds, Bank.relationBounds, hD] <;> omega
-  let mult := filteredMul (sourceWeights 131071) (sourceBounds weightedCutoff 5 b.s b.t)
-    (b.relationBounds H) L D.nonzero hdeg hfit
-  have hdimMult : Module.finrank F (LinearMap.range mult) =
-      V (weightedCutoff - 131071 - H) 131071 4 (b.s-b.dS) (b.t-b.dT) := by
-    rw [LinearMap.finrank_range_of_inj
-      (filteredMul_injective _ _ _ L D.nonzero hdeg hfit), hshift, source_filtered_finrank]
-  have hdimLocal : Module.finrank F (∀ i : Fin N, LocalSpace D i) =
-      N * (J 4 b.s b.t - J 3 (b.s-b.dS) (b.t-b.dT)) := by
-    letI (i : Fin N) : Module.Free F (LocalSpace D i) := Module.Free.of_divisionRing F _
-    rw [Module.finrank_pi_fintype]
-    simp only [local_finrank D, Finset.sum_const, Finset.card_univ, Fintype.card_fin, smul_eq_mul]
-  have hdim : Module.finrank F (∀ i : Fin N, LocalSpace D i) +
-      Module.finrank F (LinearMap.range mult) < Module.finrank F (Source F b) := by
-    rw [hdimLocal, hdimMult, source_filtered_finrank]
-    exact bank_surplus b h H e N hmin hmax hH hN
-  letI : Module F (∀ i : Fin N, LocalSpace D i) := Pi.module _ _ _
-  obtain ⟨Q, hQ, hnot⟩ := exists_kernel_outside (G := ∀ i : Fin N, LocalSpace D i)
-    (LinearMap.pi (nodeMap D)) (LinearMap.range mult) hdim
-  exact ⟨Q, (mem_filteredMul_range_iff _ _ _ L D.nonzero hdeg hfit Q).not.mp hnot,
-    fun i => localContact D Q i (congrFun hQ i)⟩
 end
 end P2_4
-end
-section
-set_option maxRecDepth 12000
-set_option linter.constructorNameAsVariable false
-set_option backward.isDefEq.respectTransparency false
-namespace P2
-noncomputable section
-open Polynomial Code LinearCode CoreDefinitions ToyProblem
-open FrobeniusLocator ProximityPrize.Benchmark
-open Sol1.OneCount Sol1.FiniteRowProjection
-open scoped NNReal
-theorem support_threshold :
-    (Fintype.card I : ℝ) * (1 - radius) = (737010215 : ℝ) / 4096 := by
-  rw [IRSProfile.card_index]
-  norm_num [radius, queryRadius, claimedRadius]
-theorem allowed_errors : blockLength * radiusNumerator / radiusDenominator = 82209 := by
-  decide
-theorem agreement_of_threshold {s : ℕ}
-    (hs : (Fintype.card I : ℝ) * (1 - radius) ≤ s) : agreement ≤ s := by
-  rw [support_threshold] at hs
-  have hlt : (179934 : ℝ) < (737010215 : ℝ) / 4096 := by norm_num
-  have hn : 179934 < s := by exact_mod_cast hlt.trans_le hs
-  exact hn
-theorem bad_slope (u : Words) (γ : K)
-    (hγ : IsMCA (AffineLineGenerator K) IRSProfile.baseCode γ u radius) :
-    Principal.BadSlope node (u 0) (u 1) k agreement γ := by
-  let : NeZero k := ⟨by decide⟩
-  exact Principal.isMCA_implies_badSlope node u k agreement radius
-    (fun _ hT => agreement_of_threshold hT) γ hγ
-theorem bad_mark (u : Words) (Γ : Finset K) (hΓ : BadFamily u Γ) (γ : K) (hγ : γ ∈ Γ) :
-    Nonempty (BadMark u γ) := by
-  obtain ⟨S, hS, ⟨P, hP, he⟩, hn⟩ := bad_slope u γ (hΓ γ hγ)
-  exact ⟨⟨S, P, hS, hP, he, hn⟩⟩
-open private dyadic_mul from ProximityPrize.SubmissionLower.PortFoundation
-private theorem complement_pow : (737010215 : ℕ) ^ 12800 ≤ 0xffffa4a5f3217e2 * 2 ^ 376991 := by
-  have h1 : (737010215 : ℕ) ^ 1 ≤ 737010215 * 2 ^ 0 := by decide
-  have h2 : (737010215 : ℕ) ^ 2 ≤ 0x789c7059dfee1f1 * 2 ^ 0 :=
-    dyadic_mul h1 h1 (z := 0x789c7059dfee1f1) (w := 0) (e := 2)
-      (s := 0) (by decide) (by decide) (by decide)
-  have h4 : (737010215 : ℕ) ^ 4 ≤ 0xe34c23b5831bab5 * 2 ^ 58 :=
-    dyadic_mul h2 h2 (z := 0xe34c23b5831bab5) (w := 58) (e := 4)
-      (s := 58) (by decide) (by decide) (by decide)
-  have h8 : (737010215 : ℕ) ^ 8 ≤ 0xc9d01df91f440cd * 2 ^ 176 :=
-    dyadic_mul h4 h4 (z := 0xc9d01df91f440cd) (w := 60) (e := 8)
-      (s := 176) (by decide) (by decide) (by decide)
-  have h16 : (737010215 : ℕ) ^ 16 ≤ 0x9f187841eb6e0e4 * 2 ^ 412 :=
-    dyadic_mul h8 h8 (z := 0x9f187841eb6e0e4) (w := 60) (e := 16)
-      (s := 412) (by decide) (by decide) (by decide)
-  have h24 : (737010215 : ℕ) ^ 24 ≤ 0xfad719dc1e86c6e * 2 ^ 647 :=
-    dyadic_mul h16 h8 (z := 0xfad719dc1e86c6e) (w := 59) (e := 24)
-      (s := 647) (by decide) (by decide) (by decide)
-  have h25 : (737010215 : ℕ) ^ 25 ≤ 0xac2ce04c1608a6b * 2 ^ 677 :=
-    dyadic_mul h24 h1 (z := 0xac2ce04c1608a6b) (w := 30) (e := 25)
-      (s := 677) (by decide) (by decide) (by decide)
-  have h50 : (737010215 : ℕ) ^ 50 ≤ 0xe798aa883890e05 * 2 ^ 1413 :=
-    dyadic_mul h25 h25 (z := 0xe798aa883890e05) (w := 59) (e := 50)
-      (s := 1413) (by decide) (by decide) (by decide)
-  have h100 : (737010215 : ℕ) ^ 100 ≤ 0xd184deccc971d48 * 2 ^ 2886 :=
-    dyadic_mul h50 h50 (z := 0xd184deccc971d48) (w := 60) (e := 100)
-      (s := 2886) (by decide) (by decide) (by decide)
-  have h200 : (737010215 : ℕ) ^ 200 ≤ 0xab7a38c0e6036b9 * 2 ^ 5832 :=
-    dyadic_mul h100 h100 (z := 0xab7a38c0e6036b9) (w := 60) (e := 200)
-      (s := 5832) (by decide) (by decide) (by decide)
-  have h400 : (737010215 : ℕ) ^ 400 ≤ 0xe5b90457af7185f * 2 ^ 11723 :=
-    dyadic_mul h200 h200 (z := 0xe5b90457af7185f) (w := 59) (e := 400)
-      (s := 11723) (by decide) (by decide) (by decide)
-  have h800 : (737010215 : ℕ) ^ 800 ≤ 0xce24877c26af874 * 2 ^ 23506 :=
-    dyadic_mul h400 h400 (z := 0xce24877c26af874) (w := 60) (e := 800)
-      (s := 23506) (by decide) (by decide) (by decide)
-  have h1600 : (737010215 : ℕ) ^ 1600 ≤ 0xa5fecf4230e18c1 * 2 ^ 47072 :=
-    dyadic_mul h800 h800 (z := 0xa5fecf4230e18c1) (w := 60) (e := 1600)
-      (s := 47072) (by decide) (by decide) (by decide)
-  have h3200 : (737010215 : ℕ) ^ 3200 ≤ 0xd744e996844fb4a * 2 ^ 94203 :=
-    dyadic_mul h1600 h1600 (z := 0xd744e996844fb4a) (w := 59) (e := 3200)
-      (s := 94203) (by decide) (by decide) (by decide)
-  have h6400 : (737010215 : ℕ) ^ 6400 ≤ 0xb504d2e7bf57812 * 2 ^ 188466 :=
-    dyadic_mul h3200 h3200 (z := 0xb504d2e7bf57812) (w := 60) (e := 6400)
-      (s := 188466) (by decide) (by decide) (by decide)
-  have h12800 : (737010215 : ℕ) ^ 12800 ≤ 0xffffa4a5f3217e2 * 2 ^ 376991 :=
-    dyadic_mul h6400 h6400 (z := 0xffffa4a5f3217e2) (w := 59) (e := 12800)
-      (s := 376991) (by decide) (by decide) (by decide)
-  exact h12800
-theorem score_integer_cross :
-    (737010215 : ℕ) ^ 12800 * 2 ^ 6949 ≤ 1073741824 ^ 12800 := by
-  calc
-    _ ≤ (0xffffa4a5f3217e2 * (2 : ℕ) ^ 376991) * 2 ^ 6949 :=
-      Nat.mul_le_mul_right _ complement_pow
-    _ = 0xffffa4a5f3217e2 * (2 : ℕ) ^ 383940 := by
-      rw [mul_assoc, ← pow_add]
-    _ ≤ 2 ^ 60 * (2 : ℕ) ^ 383940 :=
-      Nat.mul_le_mul_right _ (by decide)
-    _ = (2 ^ 30) ^ 12800 := by
-      rw [← pow_add, ← pow_mul]
-    _ = 1073741824 ^ 12800 := congrArg (fun q : ℕ => q ^ 12800) (by decide)
-theorem query_score : (1 - queryRadius) ^ IRSProfile.repetitions ≤ claimedError 6949 := by
-  have hcomplement : (1 - queryRadius : ℝ≥0) = 737010215 / 1073741824 := by
-    apply NNReal.coe_injective
-    have hr : queryRadius ≤ 1 := by
-      rw [← NNReal.coe_le_coe]
-      norm_num [queryRadius, claimedRadius]
-    rw [NNReal.coe_sub hr]
-    norm_num [queryRadius, claimedRadius]
-  change (1 - queryRadius) ^ 128 ≤ claimedError 6949
-  apply (pow_le_pow_iff_left₀ (by positivity) (by positivity) (by decide : (100 : ℕ) ≠ 0)).mp
-  rw [← pow_mul, Sol1.C42.claimedError_pow_100, hcomplement]
-  change ((737010215 : ℝ≥0) / 1073741824) ^ 12800 ≤ 1 / (2 : ℝ≥0) ^ 6949
-  rw [div_pow, div_le_div_iff₀ (by positivity) (by positivity), one_mul]
-  exact_mod_cast score_integer_cross
-theorem query_admissible : queryRadius ∈ Set.Ioo (0 : ℝ≥0) IRSProfile.minRelativeDistance := by
-  constructor <;> norm_num [queryRadius, claimedRadius, IRSProfile.minRelativeDistance]
-theorem scalar_projection_room : scalarCap + 1 < (2130706433 : ℕ) ^ 6 := by decide
-theorem list_projection_room : (listCap + 1) ^ 2 < (2130706433 : ℕ) ^ 6 := by decide
-theorem close_agreement_ge (f w : I → A16)
-    (hd : (δᵣ(w,f) : ℝ) ≤ radius) : agreement ≤ agreementCard f w := by
-  classical
-  have hpos : 0 < Fintype.card I := by rw [IRSProfile.card_index]; decide
-  have hposR : (0 : ℝ) < Fintype.card I := by exact_mod_cast hpos
-  have hradius : radius =
-      1 - ((Fintype.card I : ℝ) * (1 - radius)) / Fintype.card I := by
-    rw [mul_comm, mul_div_cancel_right₀ _ hposR.ne']
-    ring
-  have hagree := (Code.relHammingDist_le_one_sub_div_iff hpos).mp
-    (show (δᵣ(w,f) : ℝ) ≤ 1 - ((Fintype.card I : ℝ) * (1 - radius)) / Fintype.card I by
-      rwa [← hradius])
-  have hcard : Code.agree f w ≤ agreementCard f w := by
-    unfold Code.agree agreementCard
-    apply Finset.card_le_card
-    intro i hi
-    simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hi ⊢
-    exact hi
-  exact (agreement_of_threshold hagree).trans hcard
-theorem squared_lambda_le (hlist : CJ0.ScalarList agreement listCap) :
-    Code.Lambda (squaredCode : Set (I → A16)) radius ≤ (listCap : ℕ∞) :=
-  CJ0.squared_lambda_le hlist (Sol1.C64.native_field_card ▸ list_projection_room.le)
-    radius close_agreement_ge
-def nativeBadSlopes (U : Sol1.C64.NativePair) : Finset K := by
-  classical
-  exact Finset.univ.filter fun γ => IsMCA (AffineLineGenerator K) IRSProfile.code γ U radius
-theorem native_cap_of_scalar_cap
-    (hscalar : ∀ u Γ, BadFamily u Γ → Γ.card ≤ scalarCap) (U : Sol1.C64.NativePair) :
-    (nativeBadSlopes U).card ≤ scalarCap := by
-  classical
-  apply Sol1.C64.restricted_interleaved_card_le IRSProfile.baseCode
-    (⊤ : ModuleCode I K K) radius scalarCap
-    (by rw [Sol1.C64.native_field_card]; exact scalar_projection_room.le)
-    (fun u _ Γ hΓ => hscalar u Γ hΓ) U (by simp) (nativeBadSlopes U)
-  intro γ hγ
-  change γ ∈ Finset.univ.filter (fun z => IsMCA (AffineLineGenerator K)
-    IRSProfile.code z U radius) at hγ
-  simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hγ
-  rw [Sol1.C64.native_code_eq] at hγ
-  exact hγ
-theorem mca_error_le_of_scalar_cap (hscalar : ∀ u Γ, BadFamily u Γ → Γ.card ≤ scalarCap) :
-    mcaError (AffineLineGenerator K) IRSProfile.code radius ≤
-      (scalarCap : ENNReal) / (Fintype.card K : ENNReal) := by
-  classical
-  refine iSup_le fun U => ?_
-  rw [SampleableType.prEvent_uniformSample_eq_ofReal]
-  change ENNReal.ofReal (((nativeBadSlopes U).card : ℝ) / Fintype.card K) ≤ _
-  calc
-    _ ≤ ENNReal.ofReal ((scalarCap : ℝ) / Fintype.card K) := by
-      apply ENNReal.ofReal_le_ofReal
-      exact div_le_div_of_nonneg_right (by exact_mod_cast native_cap_of_scalar_cap hscalar U)
-        (by positivity)
-    _ = _ := by
-      rw [ENNReal.ofReal_div_of_pos (by positivity), ENNReal.ofReal_natCast,
-        ENNReal.ofReal_natCast]
-theorem budget_exact : (2130706433 : ℕ) ^ 6 / 2 ^ 128 = budget := by decide
-theorem budget_slack : scalarCap + listCap + 0xd8d26f1b889b7 = budget := by decide
-theorem error_budget :
-    (scalarCap + listCap) * 2 ^ 128 ≤ (2130706433 : ℕ) ^ 6 := by decide
-theorem gamma_error_le_of_scalar_cap (hlist : CJ0.ScalarList agreement listCap)
-    (hscalar : ∀ u Γ, BadFamily u Γ → Γ.card ≤ scalarCap) :
-    ToyProblem.certifiedGammaError IRSProfile.code queryRadius ≤ reductionTarget := by
-  have hNat := ENat.toNat_le_of_le_natCast (squared_lambda_le hlist)
-  have hList :
-      ((Code.Lambda (squaredCode : Set (I → A16)) radius).toNat : ENNReal) /
-        (Fintype.card K : ENNReal) ≤ (listCap : ENNReal) / Fintype.card K :=
-    ENNReal.div_le_div_right (by exact_mod_cast hNat) _
-  have hreal : ((scalarCap + listCap : ℕ) : ℝ) / Fintype.card K ≤ (1 : ℝ) / 2 ^ 128 := by
-    apply (div_le_div_iff₀ (by positivity) (by positivity)).2
-    norm_num only [one_mul]
-    exact_mod_cast (Sol1.C64.native_field_card ▸ error_budget :
-      (scalarCap + listCap) * 2 ^ 128 ≤ Fintype.card K)
-  have hENN : ((scalarCap + listCap : ℕ) : ENNReal) / Fintype.card K ≤
-      (1 : ENNReal) / 2 ^ 128 := by
-    have h := ENNReal.ofReal_le_ofReal hreal
-    rw [ENNReal.ofReal_div_of_pos (by positivity), ENNReal.ofReal_natCast,
-      ENNReal.ofReal_natCast, ENNReal.ofReal_div_of_pos (by positivity)] at h
-    simpa using h
-  rw [← ENNReal.coe_le_coe, ToyProblem.coe_certifiedGammaError]
-  calc
-    _ ≤ (scalarCap : ENNReal) / Fintype.card K + (listCap : ENNReal) / Fintype.card K :=
-      add_le_add (mca_error_le_of_scalar_cap hscalar) hList
-    _ = ((scalarCap + listCap : ℕ) : ENNReal) / Fintype.card K := by
-      rw [← ENNReal.add_div, Nat.cast_add]
-    _ ≤ (1 : ENNReal) / 2 ^ 128 := hENN
-    _ = (reductionTarget : ENNReal) := by
-      norm_num [reductionTarget, ProximityGap.prizeThreshold]
-theorem protocol_claim_of_scalar_cap (hlist : CJ0.ScalarList agreement listCap)
-    (hscalar : ∀ u Γ, BadFamily u Γ → Γ.card ≤ scalarCap) :
-    ProtocolClaim 6949 radiusNumerator radiusDenominator where
-  admissible := query_admissible
-  reduction := gamma_error_le_of_scalar_cap hlist hscalar
-  score := query_score
-end
-end P2
 end
 section
 set_option autoImplicit false
@@ -1089,50 +666,6 @@ private theorem contact_order_one_mem {σ : Type*} (v : σ → ℕ) (L : MvPolyn
   intro d hd
   apply Polynomial.coeff_eq_zero_of_lt_natTrailingDegree
   omega
-theorem relation_annihilates (hH : H ≤ 33345) (Q Q' : Polynomial K)
-    (hQ : Q.natDegree ≤ 131071) (hQ' : Q'.natDegree ≤ 131071)
-    (s t : K) (S : Finset (Fin P.N)) (hS : 179935 ≤ S.card) (hc : correctOn u P Q Q' s t S) :
-    aeval (decoderImages Q Q' s t) D.L = 0 := by
-  apply eq_zero_of_many_contacts S P.nodes nodes_injective 1
-  · intro i hi
-    have ho := contact_order_one_mem contactWeight (D.shifted i D.L) (D.order_one i)
-    have hd := pow_dvd_eval₂Hom_of_mem_restrictWeightedOrder Polynomial.C ho
-      (contactDecoderImages_vanish _ _ _ _ _ s t Q Q' (hc i hi).1 (hc i hi).2)
-    change (Polynomial.X-Polynomial.C (P.nodes i))^1 ∣
-      aeval (contactDecoderImages (P.nodes i) (u 0 (P.index i)) (u 1 (P.index i))
-        (u 0 (P.index i)^p) (u 1 (P.index i)^p) s t Q Q') (D.shifted i D.L) at hd
-    rwa [ContactInput.shifted, decoder_contact_composition] at hd
-  · have hdeg : D.L.weightedTotalDegree (sourceWeights 131071 0) ≤ 131071+H :=
-      le_of_eq (D.degrees 0)
-    have hd := decoder_eval_degree 131071 (131071+H) D.L hdeg Q Q' hQ hQ' s t
-    omega
-theorem exists_two_decoder_source (h : ℕ) (hmin : b.heightFloor ≤ h) (hmax : h ≤ heightCap)
-    (hH : H + deleted.card = h) :
-    ∃ G : Source K b, ¬ D.L ∣ G.val ∧
-      ∀ (Q Q' : Polynomial K), Q.natDegree ≤ 131071 → Q'.natDegree ≤ 131071 →
-        ∀ (s t : K) (S : Finset (Fin P.N)), 179935 ≤ S.card → correctOn u P Q Q' s t S →
-          aeval (decoderImages Q Q' s t) G.val = 0 := by
-  obtain ⟨G, hnot, hnode⟩ := exists_quotient_source (asContactData D) h deleted.card hmin hmax hH P.size D.degrees
-  refine ⟨G, hnot, ?_⟩
-  intro Q Q' hQ hQ' s t S hS hc
-  have hmax' : h ≤ 33345 := hmax
-  have hrel := relation_annihilates D (by omega) Q Q' hQ hQ' s t S hS hc
-  apply eq_zero_of_many_contacts S P.nodes nodes_injective 4
-  · intro i hi
-    obtain ⟨R, hR⟩ := hnode i
-    exact decoder_contact_multiplicity 4 _ _ _ _ _ s t Q Q' G.val D.L R.val
-      (hc i hi).1 (hc i hi).2 hrel hR
-  · have hd := decoder_eval_degree 131071 weightedCutoff G.val
-      ((mem_filtered _ _ _).mp G.property 0) Q Q' hQ hQ' s t
-    change _ ≤ 719739 at hd
-    omega
-def selectMarks {u : Words} {T : TwoActive u} {R : Relation T} (D : Reduction u T R)
-    {Γ : Finset K} (hΓ : BadFamily u Γ) (hn : ∀ γ ∈ Γ, Normal u γ) :
-    Marks u (fixedNodes R) Γ where
-  mark γ hγ := Classical.choice (P2.bad_mark u Γ hΓ γ hγ)
-  survives γ hγ i hi hid :=
-    (D.deleted_error γ (hn γ hγ) _ i hid)
-      ((Classical.choice (P2.bad_mark u Γ hΓ γ hγ)).hits i hi)
 theorem mark_degree {u : Words} {γ : K} (M : BadMark u γ) :
     M.decoder.natDegree ≤ 131071 := by
   apply Polynomial.natDegree_le_of_degree_le
@@ -1148,43 +681,6 @@ theorem correctOn_mark {u : Words} {deleted : Finset I} (P : Puncture deleted)
   rw [Strata.eval_coefficient_map twist M.decoder _ (Native.native_domain_fixed (P.index i)), h]
   simp only [map_add, map_mul, P0.twist, frobenius_def]
 private theorem bank_cancel (b : Bank) : 1 + (b.dT - 1) = b.dT := by cases b <;> rfl
-theorem exists_annihilator {u : Words} {deleted : Finset I} {P : Puncture deleted}
-    {b : Bank} {H : ℕ} (C : ContactInput u P b H) (h : ℕ)
-    (hmin : b.heightFloor ≤ h) (hmax : h ≤ heightCap) (hH : H + deleted.card = h)
-    {Γ : Finset K} (F : Marks u deleted Γ) : Nonempty (Annihilator F b) := by
-  obtain ⟨G, hG, hgAnn⟩ := exists_two_decoder_source C h hmin hmax hH
-  let Q := scalarEliminant 5 G.val C.numerator C.denominator
-  have hne : Q ≠ 0 := scalarEliminant_ne_zero weightedCutoff 131071 5 b.s b.t
-    G.val C.L G.property hG C.numerator C.denominator C.denominator_ne C.linear C.primitive
-  obtain ⟨hY, hS, hT⟩ := polynomialView_source_coefficients weightedCutoff 131071 5 b.s b.t G.val G.property
-  have hy : Q.weightedTotalDegree scalarWeightY ≤ 5 := by
-    simpa [Q, scalarEliminant] using
-      clearedEval_weight_bound scalarWeightY 5 5 1 1 0 (polynomialView G.val)
-        C.numerator C.denominator (by simpa using hY) C.numerator_Y C.denominator_Y (by omega)
-  have hs : Q.weightedTotalDegree scalarWeightYS ≤ b.a := by
-    simpa [Q, scalarEliminant, Bank.a] using
-      clearedEval_weight_bound scalarWeightYS 5 b.s 0 b.dS b.dS (polynomialView G.val)
-        C.numerator C.denominator (by simpa using hS) C.numerator_S C.denominator_S (by omega)
-  have ht : Q.weightedTotalDegree scalarWeightT ≤ b.b := by
-    simpa [Q, scalarEliminant, Bank.b] using
-      clearedEval_weight_bound scalarWeightT 5 b.t 1 b.dT (b.dT-1) (polynomialView G.val)
-        C.numerator C.denominator (by simpa using hT) C.numerator_T C.denominator_T (bank_cancel b).ge
-  refine ⟨⟨Q, hne, hy, hs, ht, scalar_total_weight_le Q b.a b.b hs ht, ?_⟩⟩
-  intro γ hγ
-  let M := F.mark γ hγ
-  let S := indexedSupport P M.support
-  have hS : 179935 ≤ S.card := by
-    rw [indexedSupport_card P M.support (F.survives γ hγ)]
-    exact M.agreement
-  have hd := mark_degree M
-  have hd' : (M.decoder.map twist).natDegree ≤ 131071 :=
-    Polynomial.natDegree_map_le.trans hd
-  have hcorrect := correctOn_mark P M
-  have hmax' : h ≤ 33345 := hmax
-  have hrel := relation_annihilates C (by omega) _ _ hd hd' γ (γ ^ p) S hS hcorrect
-  exact scalarEliminant_annihilates weightedCutoff 131071 5 b.s b.t G.val C.L G.property
-    C.numerator C.denominator C.linear _ _ γ (γ^p) hrel
-    (hgAnn _ _ hd hd' γ (γ^p) S hS hcorrect)
 end
 end P2_4
 end
@@ -1264,16 +760,6 @@ theorem chart_cut_iff (γ : K) (hγ : γ ∈ Λ) (i : Fin P.N) :
     exact (algebraMap K Frac).injective (mul_left_cancel₀ (chart.regular γ hγ) h)
   · intro h
     rw [h]
-theorem chart_agreements (γ : K) (hγ : γ ∈ Λ) :
-    179935 ≤ {i | MvPolynomial.eval (chart.point γ) (nodeCut u P chart.numerator chart.denominator i) = 0}.ncard := by
-  let M := F.mark γ (chart.subset hγ)
-  have hsub : (indexedSupport P M.support : Set (Fin P.N)) ⊆
-      {i | MvPolynomial.eval (chart.point γ) (nodeCut u P chart.numerator chart.denominator i) = 0} := by
-    intro i hi
-    exact (chart_cut_iff chart γ hγ i).mpr (M.hits _ ((mem_indexedSupport P M.support i).mp hi))
-  have h := Set.ncard_le_ncard hsub
-  rw [Set.ncard_coe_finset, indexedSupport_card P M.support (F.survives γ (chart.subset hγ))] at h
-  exact M.agreement.trans h
 theorem chart_persistent (J : Ideal (MvPolynomial (Fin 3) Frac)) (W : Finset K) (hW : W ⊆ Λ)
     (hzero : ∀ γ ∈ W, chart.point γ ∈ zeroLocus Frac J)
     (hpersist : 131072 ≤ {i | nodeCut u P chart.numerator chart.denominator i ∈ J}.ncard) :
@@ -1310,53 +796,6 @@ theorem chart_persistent (J : Ideal (MvPolynomial (Fin 3) Frac)) (W : Finset K) 
     rw [Polynomial.eval_add, Polynomial.eval_mul, Polynomial.eval_C]
     exact (chart_cut_iff chart γ (hW hγ) i).mp hz |>.trans (by
       rw [Lagrange.eval_interpolate_at_node _ hinj hi, Lagrange.eval_interpolate_at_node _ hinj hi])
-theorem chart_count {u : Words} {deleted : Finset I} {P : Puncture deleted}
-    {Γ Λ : Finset K} {F : Marks u deleted Γ} {b : Bank}
-    (chart : TaylorChart u P F b Λ) : (Λ.card : ℚ) ≤ b.chartFee := by
-  classical
-  let S := Λ.image chart.point
-  let R : ℚ := b.chartRate
-  have hRbig : (262144 : ℚ) ≤ R := bank_rate_ge b
-  have hone : (1 : ℚ) ≤ 262144 := by
-    exact_mod_cast (show (1 : ℕ) ≤ 262144 by decide)
-  have hR : 1 ≤ R := hone.trans hRbig
-  have hN : P.N ≤ 262144 := by have := P.size; omega
-  have hinj : Set.InjOn chart.point (Λ : Set K) := by
-    intro γ hγ δ hδ he
-    apply (algebraMap K Frac).injective
-    exact (chart.slope γ hγ).symm.trans ((congrFun he 1).trans (chart.slope δ hδ))
-  have hcard : S.card = Λ.card := Finset.card_image_of_injOn hinj
-  let cuts := nodeCut u P chart.numerator chart.denominator
-  have hratio (m : ℕ) (hm : m < 131072) :
-      (((Fintype.card (Fin P.N) - m) * b.M : ℕ) : ℚ) ≤ R * ((179935 - m : ℕ) : ℚ) := by
-    have hnat : (P.N - m) * 16288 ≤ 43691 * (179935 - m) := by omega
-    have hrat : ((P.N - m : ℕ) : ℚ) * 16288 ≤ 43691 * ((179935 - m : ℕ) : ℚ) := by
-      exact_mod_cast hnat
-    have hh : ((P.N - m : ℕ) : ℚ) ≤ (43691/16288 : ℚ) * ((179935 - m : ℕ) : ℚ) := by
-      linarith
-    rw [Fintype.card_fin, Nat.cast_mul]
-    exact (mul_le_mul_of_nonneg_right hh (by positivity : 0 ≤ (b.M : ℚ))).trans_eq (by dsimp [R, Bank.chartRate]; ring)
-  rw [← hcard]
-  refine surface_count_with_terminal chart.equation chart.denominator chart.equation_ne cuts
-    (L := 131072) (A := 179935) (by decide) chart.equation_degree chart.cut_degree hR hratio S
-    (fun x hx => ?_) (fun x hx => ?_) (fun J hJ => ?_)
-  · obtain ⟨γ, hγ, rfl⟩ := Finset.mem_image.mp hx
-    exact ⟨chart.on_equation γ hγ, chart.regular γ hγ⟩
-  · obtain ⟨γ, hγ, rfl⟩ := Finset.mem_image.mp hx
-    exact chart_agreements chart γ hγ
-  · let W := Λ.filter fun γ => chart.point γ ∈ zeroLocus Frac J
-    have hW : W ⊆ Λ := Finset.filter_subset _ _
-    have hWimage : W.image chart.point = S.filter (· ∈ zeroLocus Frac J) := by
-      ext x
-      simp only [W, S, Finset.mem_image, Finset.mem_filter]
-      constructor
-      · rintro ⟨γ, ⟨hγ, hJγ⟩, rfl⟩
-        exact ⟨⟨γ, hγ, rfl⟩, hJγ⟩
-      · rintro ⟨⟨γ, hγ, rfl⟩, hJγ⟩
-        exact ⟨γ, ⟨hγ, hJγ⟩, rfl⟩
-    have hbound := chart_persistent chart J W hW (fun γ hγ => (Finset.mem_filter.mp hγ).2) hJ
-    rw [ncard_inter_filter, ← hWimage, Finset.card_image_of_injOn (hinj.mono hW)]
-    exact (by exact_mod_cast hbound.trans hN : (W.card : ℚ) ≤ 262144).trans hRbig
 end
 end P2_4
 end
@@ -2223,131 +1662,6 @@ end P2_7
 end
 section
 namespace P2_7
-open P2 (HighBand agreement p blockLength)
-abbrev degreeAt := P1_7.degreeAt
-abbrev quotientOrder := P1_7.quotientOrder
-def gap (hi : ℕ) := agreement - degreeAt hi
-def scale (hi : ℕ) := agreement * gap hi
-def muNum (hi : ℕ) := agreement * (blockLength - degreeAt hi)
-def lambdaNum (hi : ℕ) := blockLength * gap hi
-abbrev ceilRatio := P1_7.ceilRatio
-abbrev singularDegree := P1_7.singularDegree
-abbrev singularFee := P1_7.singularFee
-def persistentFee (lo hi e v : ℕ) : ℕ :=
-  let t := lambdaNum hi * quotientOrder lo
-  let a := muNum hi + 2 * t * (e - 1)
-  let b := 2 * hi * muNum hi + 2 * t * v
-  ceilRatio (e * b^2 + 2 * v * a * b) ((scale hi)^2) + e
-def properFee (lo hi e v : ℕ) : ℕ :=
-  let bc := quotientOrder lo + 1
-  let ac := 1 + bc * (e - 1)
-  let cc := bc * v + 2 * hi
-  let bn := lambdaNum hi * quotientOrder lo
-  let an := muNum hi + bn * (e - 1)
-  let cn := bn * v + 2 * hi * muNum hi
-  ceilRatio (e * cc * cn +
-    v * (cn * ((2*e-2)*bc + ac) + cc * ((2*e-2)*bn + an)) +
-    v^2 * ((ac - 2*bc) * bn + an * bc)) (scale hi)
-def flatFee (hi v : ℕ) : ℕ := ceilRatio (P2.t * (p+1) * v) (gap hi)
-def tangentFee (lo hi e v : ℕ) : ℕ := properFee lo hi e v + flatFee hi v + e
-def firstCutDegree (lo hi e u : ℕ) : ℕ :=
-  let b := quotientOrder lo + 1
-  let a := 1 + b*(e-1)
-  let c := b*u + 2*hi
-  e*c + u*((2*e-2)*b + a)
-def secondCutDegree (lo hi e u : ℕ) : ℕ :=
-  let b := quotientOrder lo + 1
-  let y := b + 1
-  let a := 1 + b*(e-1)
-  let x := 1 + y*(e-1)
-  let c := b*u + 2*hi
-  let z := y*u + 2*hi
-  e*c*z + u*(c*((2*e-2)*y + x) + z*((2*e-2)*b + a)) +
-    u^2*((a-2*b)*y + x*b)
-def compressionFee (e u r : ℕ) := (p+1)*e*((u+r)+u)
-def twoCutRegular (lo hi e u : ℕ) :=
-  secondCutDegree lo hi e u + (2*u+e)*firstCutDegree lo hi e u + flatFee hi u + e
-def twoCutPrice (lo hi e u r : ℕ) :=
-  compressionFee e u r + singularFee e u + twoCutRegular lo hi e u
-structure TwoCutGuard (lo hi e u r : ℕ) : Prop where
-  sheets : 3 ≤ e
-  seed_pos : 0 < u
-  order_pos : 0 < quotientOrder hi
-  factorial : quotientOrder lo + 2 < p
-  degree : degreeAt hi < agreement
-  johnson : agreement^2 ≤ blockLength * degreeAt lo
-  beta_lo : gap lo ≤ P2.t
-  beta_hi : P2.t < 2 * gap hi
-  flat : e*degreeAt hi + u < p
-  separant : singularDegree e u < p
-  compression : (e+1)*e*degreeAt hi*K1_14.triangle (u+r) < p*K1_14.triangle r
-  graph : e*((u+r)+u) < p
-def wholePrice (lo hi e : ℕ) (g : Grade) : ℕ :=
-  if g.seedCap = 0 then e else
-    match g.buffer with
-    | none => singularFee e g.seedCap + persistentFee lo hi e g.seedCap
-    | some r => twoCutPrice lo hi e g.seedCap r
-def ChoiceOK (lo hi e : ℕ) (g : Grade) : Prop :=
-  match g.buffer with
-  | none => g.seedCap = 0 ∨ e ≤ 2 ∨ 2 * gap hi ≤ P2.t
-  | some r => TwoCutGuard lo hi e g.seedCap r ∧
-      twoCutPrice lo hi e g.seedCap r ≤ singularFee e g.seedCap + persistentFee lo hi e g.seedCap ∧
-      twoCutPrice lo hi e g.seedCap r ≤ singularFee e g.seedCap + tangentFee lo hi e g.seedCap
-structure GradeOK (lo hi fullU cap e : ℕ) (g : Grade) : Prop where
-  sub : g.slots ≤ fullU
-  separant : singularDegree e g.seedCap < p
-  flat : e*degreeAt hi + g.seedCap < p
-  choice : ChoiceOK lo hi e g
-  fixed : e ≤ cap
-  fee : wholePrice lo hi e g ≤ cap
-def AllGrades (lo hi fullU cap : ℕ) : ℕ → List Grade → Prop
-  | _, [] => True
-  | e, g :: gs => GradeOK lo hi fullU cap e g ∧ AllGrades lo hi fullU cap (e+1) gs
-theorem get_grade {lo hi fullU cap : ℕ} (gs : List Grade) (e : ℕ)
-    (hall : AllGrades lo hi fullU cap e gs) (i : Fin gs.length) :
-    GradeOK lo hi fullU cap (i.val + e) (gs.get i) := by
-  induction gs generalizing e with
-  | nil => exact Fin.elim0 i
-  | cons g gs ih =>
-    rcases i with ⟨_ | j, hj⟩
-    · change GradeOK lo hi fullU cap (0+e) g
-      simpa only [Nat.zero_add] using hall.1
-    · have h := ih (e+1) hall.2 ⟨j, by simpa using hj⟩
-      simpa only [List.get_cons_succ, Nat.succ_add, Nat.add_succ] using h
-theorem grade_of_literals {lo hi fullU cap e v U D m price : ℕ} {r : Option ℕ}
-    (hU : U ≤ fullU) (hD : singularDegree e v = D) (hDp : D < p)
-    (hm : e * degreeAt hi + v = m) (hmp : m < p)
-    (hc : ChoiceOK lo hi e ⟨v,U,r⟩) (he : e ≤ cap)
-    (hprice : wholePrice lo hi e ⟨v,U,r⟩ = price) (hle : price ≤ cap) :
-    GradeOK lo hi fullU cap e ⟨v,U,r⟩ :=
-  ⟨hU, hD.le.trans_lt hDp, hm.le.trans_lt hmp, hc, he, hprice.le.trans hle⟩
-structure CutWindow (lo hi : ℕ) : Prop where
-  order_pos : 0 < quotientOrder hi
-  factorial : quotientOrder lo + 2 < p
-  degree : degreeAt hi < agreement
-  johnson : agreement^2 ≤ blockLength * degreeAt lo
-  beta_lo : gap lo ≤ P2.t
-  beta_hi : P2.t < 2 * gap hi
-theorem guard_of_literals {lo hi e v r m D lhs rhs graph : ℕ} (band : CutWindow lo hi)
-    (he : 3 ≤ e) (hv : 0 < v)
-    (hm : e*degreeAt hi+v = m) (hmp : m < p) (hD : singularDegree e v = D) (hDp : D < p)
-    (hl : (e+1)*e*degreeAt hi*K1_14.triangle (v+r) = lhs)
-    (hr : p*K1_14.triangle r = rhs) (hlt : lhs < rhs)
-    (hg : e*((v+r)+v) = graph) (hgp : graph < p) : TwoCutGuard lo hi e v r :=
-  ⟨he, hv, band.order_pos, band.factorial, band.degree, band.johnson, band.beta_lo, band.beta_hi,
-    hm.le.trans_lt hmp, hD.le.trans_lt hDp, hl.le.trans_lt (hlt.trans_le hr.ge), hg.le.trans_lt hgp⟩
-theorem two_choice {lo hi e v U r price ordinary tangent : ℕ}
-    (guard : TwoCutGuard lo hi e v r)
-    (hprice : twoCutPrice lo hi e v r = price)
-    (hP : singularFee e v + persistentFee lo hi e v = ordinary)
-    (hT : singularFee e v + tangentFee lo hi e v = tangent)
-    (hp : price ≤ ordinary) (ht : price ≤ tangent) :
-    ChoiceOK lo hi e ⟨v,U,some r⟩ :=
-  ⟨guard, hprice.le.trans (hp.trans hP.ge), hprice.le.trans (ht.trans hT.ge)⟩
-end P2_7
-end
-section
-namespace P2_7
 open P2 (K HighBand)
 structure PrefixFees where
   loss : ℕ
@@ -2401,10 +1715,6 @@ def fees : HighBand → PrefixFees
   | .h24000 => ⟨18370950873948,147204,0xf414000810,23193953813,218022042,556114379274⟩
   | .h28300 => ⟨0xfa96e003f24,126954,933249418956,18816293570,223645947,543330140670⟩
   | .h32411 => ⟨2627161033122,18700,485801067512,7907570234,14372295,202417111230⟩
-theorem fees_total (b : HighBand) :
-    (fees b).loss + (fees b).point + (fees b).lowSeed + (fees b).lowJet +
-      (fees b).fixedODE + (fees b).content = b.row.prefixFee := by
-  cases b <;> rfl
 structure PrefixBooks (b : HighBand) where
   loss : Finset K
   point : Finset K
@@ -2420,12 +1730,6 @@ structure PrefixBooks (b : HighBand) where
   content_le : content.card ≤ (fees b).content
 noncomputable def PrefixBooks.union {b} (B : PrefixBooks b) : Finset K := by
   classical exact B.loss ∪ B.point ∪ B.lowSeed ∪ B.lowJet ∪ B.fixedODE ∪ B.content
-private theorem union_le {A B : Finset K} {a b : ℕ} (ha : A.card ≤ a) (hb : B.card ≤ b) :
-    (A ∪ B).card ≤ a+b := (Finset.card_union_le _ _).trans (Nat.add_le_add ha hb)
-theorem PrefixBooks.card_union {b} (B : PrefixBooks b) : B.union.card ≤ b.row.prefixFee := by
-  rw [← fees_total b]
-  exact union_le (union_le (union_le (union_le (union_le B.loss_le B.point_le)
-    B.lowSeed_le) B.lowJet_le) B.fixedODE_le) B.content_le
 end P2_7
 end
 section
@@ -2437,24 +1741,6 @@ open K1_14 (L FX Seeds Equation Shape Jet Banks SeedBound liftPoly graphEval atX
   jetAt triangle slots shapeSum)
 open K1_14_3 (Surface Parent)
 open scoped BigOperators
-def InBand (b : HighBand) (w : ℤ) : Prop := (b.row.lo : ℤ) ≤ w ∧ w ≤ (b.row.hi : ℤ)
-def AdjacentChart {u del} (M : AnchorModel u del) {Γ} (F : AnchoredFamily M Γ)
-    (H : L[X]) : Prop :=
-  let σ := frobenius L p
-  let H' := H.map σ
-  H.Monic ∧ H.natDegree = M.overhead.toNat ∧ H ∣ liftPoly M.E ∧
-  H'.Monic ∧ H'.natDegree = M.overhead.toNat ∧ H' ∣ liftPoly (M.E.map twist) ∧
-  IsCoprime H H' ∧
-  (∀ i, H.eval (algebraMap K L (node i)) ≠ 0 ∧ H'.eval (algebraMap K L (node i)) ≠ 0) ∧
-  IsCoprime (liftPoly (M.Q * M.factor * M.A₀)) H ∧
-  IsCoprime ((liftPoly (M.Q * M.factor * M.A₀)).map σ) H' ∧
-  ∀ γ ∈ Γ,
-    let z := algebraMap K L (M.label γ)
-    let D := liftPoly (M.factor * M.amplitude γ)
-    let S := liftPoly (F.scalar γ)
-    IsCoprime D H ∧ IsCoprime (D.map σ) H' ∧
-    H ∣ D * S + C z * liftPoly M.Q ∧
-    H' ∣ D.map σ * S + C (z ^ p) * (liftPoly M.Q).map σ
 abbrev GradeIndex (b : HighBand) := Fin (grades b).length
 def Listed (b : HighBand) (t : Bank) : Prop :=
   t = terminal b ∨ (∃ s ∈ stages b, t = s.free ∨ t = s.moving) ∨
@@ -2508,51 +1794,13 @@ structure PrefixInventory (b : HighBand) {u del} (M : AnchorModel u del) {Γ}
     PairPass (pairs s hs) q
   terminal_pass : ∀ q ∈ parents, BankPass rows (terminal b).shape q
   covers : ∀ γ ∈ Γ, γ ∈ books.union ∨ ∃ q ∈ parents, MarkOn M F q γ
-def curveUnit (hi g : ℕ) : ℚ :=
-  let d := degreeAt hi
-  (2*(g : ℚ)-1) * (1 + 2*((P2.blockLength : ℚ)/agreement)*d) +
-    ((P2.blockLength - d : ℕ) : ℚ) / gap hi
-def CurveTariff (b : HighBand) {u del} (M : AnchorModel u del) {Γ}
-    (F : AnchoredFamily M Γ) : Prop :=
-  ∀ T ⊆ Γ, ∀ J g H, 0 < g → g ≤ 145 →
-    K1_14_2.SmallRootCurve J g H →
-    Module.finrank K1_14_2.SeedField (K1_14_2.RootSeedSection J) < p →
-    (∀ γ ∈ T, K1_14_2.OnRoot J (M.label γ) (F.scalar γ)) →
-    (T.card : ℚ) ≤ curveUnit b.row.hi g * H + g
-abbrev Test (b : HighBand) := Option (GradeIndex b)
-def tested (b : HighBand) : Test b → Bank
-  | none => terminal b
-  | some i => subbank b ((grades b).get i)
-def threshold (b : HighBand) : Test b → ℕ
-  | none => (grades b).length + 1
-  | some i => i.val + 1
-def seedThreshold (b : HighBand) : Test b → ℕ
-  | none => 0
-  | some i => ((grades b).get i).seedCap + 1
 def contactPower (h : ℕ) (s : Shape) (W : ℕ) := 1 + (fullCutoff s - W)/(2*h)
-def jointGain (h : ℕ) (s : Shape) (E v : ℕ) : ℕ :=
-  shapeSum s fun q j =>
-    let g := (q-j)/E
-    let x := s.m*agreement+j - q*(131071-h)
-    let c := fun a => slots s.U (a*v)
-    (∑ a ∈ Finset.range g, (c a - c (a+1)) * (x - 2*h*(j+a))) +
-      c g * (x - 2*h*(j+g))
 structure TerminalTrace (h : ℕ) (t : Bank) (rows : Banks) (f : Equation) : Prop where
   floor_bound : RankFloor h t rows
   shape : ∀ W, ∀ P ∈ rows t.shape W, K1_14_3.RowCaps P t.shape
   leading : K1_14_3.LeadingFilter h rows t.shape
   divides : ∀ W < t.shape.m * agreement, ∀ P ∈ rows t.shape W, P ≠ 0 →
     f ^ (contactPower h t.shape W - P.natDegree) ∣ P.leadingCoeff
-abbrev Reduced := P1_7.Reduced
-abbrev regularRoot := P1_7.regularRoot
-def RegularCount {u del} (M : AnchorModel u del) {Γ}
-    (F : AnchoredFamily M Γ) (f : Equation) (fee : ℕ) : Prop :=
-  ∀ T ⊆ Γ, (∀ γ ∈ T, regularRoot f (M.label γ) (F.scalar γ)) → T.card ≤ fee
-def WeightedRepresentative (d : ℕ) (f : Equation) : Prop :=
-  ∃ Q : Polynomial (MvPolynomial (Fin 2) (Polynomial L)),
-    Q.map (MvPolynomial.map (algebraMap (Polynomial L) FX)) = f ∧
-    ∀ j m, (Q.coeff j).coeff m ≠ 0 →
-      ((Q.coeff j).coeff m).natDegree + j*d < p
 end
 end P2_7
 end
@@ -2578,13 +1826,6 @@ open P2_7 (Bank Stage debit)
 open P2_7_2 (cutoffCount rawWidth WidthGuard gain)
 open K1_14 (Shape shapeSum triangle)
 open private twice_sum_linear from ProximityPrize.SubmissionLower.Pack_K1_14_2_1Arithmetic
-private theorem agreement_cast : (agreement : ℤ) = 179935 := rfl
-private def cut (s : Shape) (r lo : ℕ) : ℕ :=
-  min (s.B+1) ((cutoffCount lo r s - 1 - (2*lo-1)*s.J) / (131071-lo) + 1)
-private def tailLength (s : Shape) (r lo q : ℕ) : ℕ :=
-  min (min q s.J+1) ((rawWidth lo r s q 0 - 1) / (2*lo-1) + 1)
-private def support (s : Shape) (r lo q : ℕ) : ℕ :=
-  if q < cut s r lo then min q s.J+1 else tailLength s r lo q
 private def row (x y z : ℤ) (q n : ℕ) : ℤ :=
   (n : ℤ) * (x + y*q + z*((n : ℤ)-1))
 private def rising (x y z : ℤ) (n : ℕ) : ℤ :=
@@ -2615,157 +1856,5 @@ private theorem tailSum_eq (f : ℕ → ℤ) (k n : ℕ) :
   induction n with
   | zero => simp [tailSum]
   | succ n ih => rw [tailSum, sum_range_succ, ih]
-private def total (s : Shape) (r lo : ℕ) (x y z : ℤ) : ℤ :=
-  let k := cut s r lo
-  rising x y z s.J + level x y z s.J (k-s.J) +
-    6*tailSum (fun q => row x y z q (tailLength s r lo q)) k (s.B+1-k)
-private theorem total_eq (s : Shape) (r lo : ℕ) (x y z : ℤ)
-    (hj : s.J ≤ cut s r lo) :
-    total s r lo x y z = 6*(∑ q ∈ range (s.B+1), row x y z q (support s r lo q)) := by
-  let k := cut s r lo
-  let f := fun q => row x y z q (support s r lo q)
-  have hk : k ≤ s.B+1 := min_le_left _ _
-  have hsplit := sum_range_add f k (s.B+1-k)
-  have hprefix := sum_range_add f s.J (k-s.J)
-  rw [Nat.add_sub_of_le hk] at hsplit
-  rw [Nat.add_sub_of_le hj] at hprefix
-  change _ = 6*(∑ q ∈ range (s.B+1), f q)
-  rw [hsplit, hprefix, mul_add, mul_add]
-  have hfirst : (∑ q ∈ range s.J, f q) = ∑ q ∈ range s.J, row x y z q (q+1) := by
-    apply sum_congr rfl
-    intro q hq
-    have hq' := mem_range.mp hq
-    simp only [f, support, ite_eq_left (hq'.trans_le hj), min_eq_left hq'.le]
-  have hmiddle : (∑ i ∈ range (k-s.J), f (s.J+i)) =
-      ∑ i ∈ range (k-s.J), row x y z (s.J+i) (s.J+1) := by
-    apply sum_congr rfl
-    intro i hi
-    have hi' := mem_range.mp hi
-    have hlt : s.J+i < cut s r lo := by change s.J+i < k; omega
-    simp only [f, support, ite_eq_left hlt, min_eq_right (Nat.le_add_right _ _)]
-  have hlast : (∑ i ∈ range (s.B+1-k), f (k+i)) =
-      ∑ i ∈ range (s.B+1-k), row x y z (k+i) (tailLength s r lo (k+i)) := by
-    apply sum_congr rfl
-    intro i _
-    have hge : cut s r lo ≤ k+i := Nat.le_add_right k i
-    simp only [f, support, ite_eq_right (not_lt_of_ge hge)]
-  rw [hfirst, hmiddle, hlast, sum_rising, sum_level]
-  dsimp only [total]
-  rw [tailSum_eq]
-private def origin (s : Shape) (r : ℕ) (h : ℤ) : ℤ := (s.m : ℤ)*agreement - 2*h*r
-private def signedWidth (s : Shape) (r : ℕ) (h : ℤ) (q j : ℕ) : ℤ :=
-  origin s r h - (131071-h)*q + (1-2*h)*j
-private def leftTotal (s : Shape) (r lo : ℕ) : ℤ :=
-  total s r lo (2*origin s r lo) (-2*(131071-(lo : ℤ))) (1-2*(lo : ℤ))
-private def slopeTotal (s : Shape) (r lo : ℕ) : ℤ :=
-  total s r lo (-4*(r : ℤ)) 2 (-2)
-private theorem signed_le (s : Shape) (r h q j : ℕ) (hh : h ≤ 131071) :
-    signedWidth s r h q j ≤ ((rawWidth h r s q j - 2*h*j : ℕ) : ℤ) := by
-  have cast_sub_le (a b : ℕ) : (a : ℤ)-b ≤ ((a-b : ℕ) : ℤ) := by omega
-  have hcut := cast_sub_le (s.m*agreement) (2*h*r)
-  have hraw := cast_sub_le (cutoffCount h r s+j) (q*(131071-h))
-  have hloss := cast_sub_le (rawWidth h r s q j) (2*h*j)
-  change _ ≤ (cutoffCount h r s : ℤ) at hcut
-  change _ ≤ (rawWidth h r s q j : ℤ) at hraw
-  push_cast [Nat.cast_sub hh] at hcut hraw hloss
-  unfold signedWidth origin
-  rw [agreement_cast]
-  nlinarith only [hcut, hraw, hloss]
-private theorem row_affine (s : Shape) (r lo h q n : ℕ) :
-    row (2*origin s r lo) (-2*(131071-(lo : ℤ))) (1-2*(lo : ℤ)) q n +
-      ((h : ℤ)-lo)*row (-4*(r : ℤ)) 2 (-2) q n =
-    2*(∑ j ∈ range n, signedWidth s r h q j) := by
-  change _ = 2*(∑ j ∈ range n, (origin s r h - (131071-(h : ℤ))*q + (1-2*(h : ℤ))*j))
-  rw [twice_sum_linear]
-  unfold row origin
-  ring
-private theorem support_le (s : Shape) (r lo h : ℕ) (hh : h ≤ 131071)
-    (hj : s.J ≤ cut s r lo) :
-    leftTotal s r lo + ((h : ℤ)-lo)*slopeTotal s r lo ≤
-      12*(shapeSum s (fun q j => rawWidth h r s q j - 2*h*j) : ℤ) := by
-  let f := fun q => row (2*origin s r lo) (-2*(131071-(lo : ℤ))) (1-2*(lo : ℤ)) q
-    (support s r lo q)
-  let g := fun q => row (-4*(r : ℤ)) 2 (-2) q (support s r lo q)
-  have hsum : (∑ q ∈ range (s.B+1), f q) + ((h : ℤ)-lo)*(∑ q ∈ range (s.B+1), g q) ≤
-      2*(shapeSum s (fun q j => rawWidth h r s q j - 2*h*j) : ℤ) := by
-    unfold shapeSum
-    push_cast [Nat.cast_sum]
-    rw [mul_sum, ← sum_add_distrib, mul_sum]
-    apply sum_le_sum
-    intro q _
-    rw [show f q + ((h : ℤ)-lo)*g q = _ from row_affine s r lo h q (support s r lo q)]
-    have hsub : range (support s r lo q) ⊆ range (min q s.J+1) := by
-      apply range_mono
-      unfold support
-      split
-      · rfl
-      · exact min_le_left _ _
-    apply mul_le_mul_of_nonneg_left _ (by decide : (0 : ℤ) ≤ 2)
-    calc
-      _ ≤ ∑ j ∈ range (support s r lo q), ((rawWidth h r s q j - 2*h*j : ℕ) : ℤ) :=
-        sum_le_sum fun j _ => signed_le s r h q j hh
-      _ ≤ _ := sum_le_sum_of_subset_of_nonneg hsub (fun _ _ _ => Int.natCast_nonneg _)
-  unfold leftTotal slopeTotal
-  rw [total_eq _ _ _ _ _ _ hj, total_eq _ _ _ _ _ _ hj]
-  have hz := mul_le_mul_of_nonneg_left hsum (by decide : (0 : ℤ) ≤ 6)
-  dsimp only [f, g] at hz
-  nlinarith only [hz]
-private theorem positive_between {x y lo hi h : ℤ} (hl : lo ≤ h) (hu : h ≤ hi)
-    (h₀ : 0 < x) (h₁ : 0 < x + (hi-lo)*y) : 0 < x + (h-lo)*y := by
-  by_cases hy : 0 ≤ y
-  · exact add_pos_of_pos_of_nonneg h₀ (mul_nonneg (sub_nonneg.mpr hl) hy)
-  · nlinarith only [h₁, mul_nonneg (sub_nonneg.mpr hu) (neg_nonneg.mpr (le_of_not_ge hy))]
-private def worstWidth (s : Shape) (r : ℕ) (h : ℤ) : ℤ :=
-  origin s r h - (131071-h)*s.B
-private theorem width_of_pos (s : Shape) (r h : ℕ) (hh : h ≤ 131071)
-    (hw : 0 < worstWidth s r h) : WidthGuard h r s := by
-  have hn : 0 ≤ (131071-(h : ℤ))*(s.B : ℤ) := by
-    exact mul_nonneg (sub_nonneg.mpr (Int.ofNat_le.mpr hh)) (Int.natCast_nonneg _)
-  unfold worstWidth origin at hw
-  have hbuf : 2*h*r ≤ s.m*agreement := by
-    have hz : 2*(h : ℤ)*r ≤ (s.m : ℤ)*agreement := by nlinarith only [hn, hw]
-    exact_mod_cast hz
-  unfold WidthGuard cutoffCount
-  apply Int.ofNat_lt.mp
-  push_cast [Nat.cast_sub hh, Nat.cast_sub hbuf]
-  rw [agreement_cast] at hw
-  nlinarith only [hw]
-private def leftSurplus (t : Bank) (r lo : ℕ) : ℤ :=
-  (triangle t.shape.U : ℤ)*leftTotal t.shape r lo - 12*(debit lo t : ℤ)
-private def slopeSurplus (t : Bank) (r lo : ℕ) : ℤ :=
-  (triangle t.shape.U : ℤ)*slopeTotal t.shape r lo - 24*((t.shape.U : ℤ)+1)*t.poleMoment
-def check (lo hi : ℕ) (s : Stage) : Bool :=
-  let t := s.moving
-  let r := s.reserve
-  let w := worstWidth t.shape r lo
-  let d := (hi : ℤ)-lo
-  let z := leftSurplus t r lo
-  decide (hi ≤ 131071) && decide (t.shape.J ≤ cut t.shape r lo) &&
-    decide (0 < w) && decide (0 < w+d*((t.shape.B : ℤ)-2*r)) &&
-    decide (0 < z) && decide (0 < z+d*slopeSurplus t r lo)
-theorem test {lo hi h : ℕ} {s : Stage} (hl : lo ≤ h) (hu : h ≤ hi)
-    (hc : check lo hi s = true) :
-    WidthGuard h s.reserve s.moving.shape ∧ debit h s.moving < gain h s.reserve s.moving.shape 1 := by
-  simp only [check, Bool.and_eq_true, decide_eq_true_eq] at hc
-  obtain ⟨⟨⟨⟨⟨hk, hj⟩, hw₀⟩, hw₁⟩, hz₀⟩, hz₁⟩ := hc
-  have hl' : (lo : ℤ) ≤ h := Int.ofNat_le.mpr hl
-  have hu' : (h : ℤ) ≤ hi := Int.ofNat_le.mpr hu
-  have hh := hu.trans hk
-  have hw := positive_between hl' hu' hw₀ hw₁
-  have he : worstWidth s.moving.shape s.reserve h =
-      worstWidth s.moving.shape s.reserve lo +
-        ((h : ℤ)-lo)*((s.moving.shape.B : ℤ)-2*s.reserve) := by
-    unfold worstWidth origin
-    ring
-  refine ⟨width_of_pos _ _ _ hh (he.symm ▸ hw), ?_⟩
-  have hz := positive_between hl' hu' hz₀ hz₁
-  have hs := mul_le_mul_of_nonneg_left (support_le _ _ _ _ hh hj)
-    (Int.natCast_nonneg (triangle s.moving.shape.U))
-  unfold leftSurplus slopeSurplus debit at hz
-  unfold gain debit
-  simp only [one_mul]
-  apply Int.ofNat_lt.mp
-  push_cast at hz ⊢
-  nlinarith only [hz, hs]
 end P2_7_2_2
 end
