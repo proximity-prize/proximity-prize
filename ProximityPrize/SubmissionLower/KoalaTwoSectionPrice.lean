@@ -1,0 +1,136 @@
+import ProximityPrize.SubmissionLower.KoalaRectReceipts
+
+set_option Elab.async false
+set_option autoImplicit false
+set_option maxRecDepth 18000
+set_option maxHeartbeats 14000000
+
+namespace KoalaTwoSectionPrice
+open HighCore82229 (agreement start finish retainedCap)
+open P1 (blockLength p)
+open P1_7 (ceilRatio degreeAt quotientOrder singularDegree singularFee)
+open KoalaRectReceipts (paidCap)
+
+def liftIndex (hi v₀ v₁ : ℕ) : ℕ :=
+  max 1 (max (ceilRatio (2*hi) (max 1 v₀)) (ceilRatio (2*hi) (max 1 v₁)))
+
+private theorem le_mul_ceilRatio (n d : ℕ) (hd : 0 < d) :
+    n ≤ d * ceilRatio n d := by
+  have he := Nat.div_add_mod (n + (d-1)) d
+  have hr := Nat.mod_lt (n + (d-1)) hd
+  change n ≤ d * ((n + (d-1)) / d)
+  omega
+
+theorem liftIndex_spec (hi v₀ v₁ : ℕ) :
+    0 < liftIndex hi v₀ v₁ ∧
+    2*hi ≤ max 1 v₀ * liftIndex hi v₀ v₁ ∧
+    2*hi ≤ max 1 v₁ * liftIndex hi v₀ v₁ := by
+  refine ⟨lt_of_lt_of_le Nat.zero_lt_one (le_max_left ..), ?_, ?_⟩
+  · exact (le_mul_ceilRatio _ _ (lt_of_lt_of_le Nat.zero_lt_one (le_max_left ..))).trans
+      (Nat.mul_le_mul_left _ ((le_max_left ..).trans (le_max_right ..)))
+  · exact (le_mul_ceilRatio _ _ (lt_of_lt_of_le Nat.zero_lt_one (le_max_left ..))).trans
+      (Nat.mul_le_mul_left _ ((le_max_right ..).trans (le_max_right ..)))
+
+private theorem ceilRatio_le_self (n d : ℕ) (hd : 0 < d) : ceilRatio n d ≤ n := by
+  change (n+(d-1))/d ≤ n
+  apply Nat.le_of_lt_succ
+  apply (Nat.div_lt_iff_lt_mul hd).mpr
+  calc
+    n+(d-1) < n+d := Nat.add_lt_add_left (by omega) n
+    _ ≤ n*d+d := Nat.add_le_add_right (Nat.le_mul_of_pos_right n hd) d
+    _ = (n+1)*d := by ring
+
+theorem liftIndex_le {hi : ℕ} (hhi : hi ≤ 2439) (v₀ v₁ : ℕ) : liftIndex hi v₀ v₁ ≤ 4878 := by
+  unfold liftIndex
+  apply max_le (by decide)
+  exact max_le ((ceilRatio_le_self _ _ (lt_of_lt_of_le Nat.zero_lt_one (le_max_left _ _))).trans (by omega))
+    ((ceilRatio_le_self _ _ (lt_of_lt_of_le Nat.zero_lt_one (le_max_left _ _))).trans (by omega))
+
+def surfaceDegree (e v₀ v₁ : ℕ) : ℕ :=
+  let b := max 1 v₀
+  let c := max 1 v₁
+  2*(e*b*c + v₀*(e-1)*c + v₁*(e-1)*b)
+
+def properBudget (A lo hi e v₀ v₁ : ℕ) : ℕ :=
+  let d := degreeAt hi
+  let ell := quotientOrder lo
+  let k := liftIndex hi v₀ v₁
+  surfaceDegree e v₀ v₁ * (2*ell+1+k) *
+    (2*blockLength*(A-d)*ell + A*(blockLength-d)*k)
+
+def singleCut (e : ℕ) : Prop := e ≤ 6 ∨ 22 ≤ e
+
+instance (e : ℕ) : Decidable (singleCut e) := inferInstanceAs (Decidable (e ≤ 6 ∨ 22 ≤ e))
+
+def graphDegree (e v₀ v₁ : ℕ) : ℕ :=
+  let b := max 1 v₀
+  let c := max 1 v₁
+  let h := e-1
+  2*(e*b*c + (v₀*c+v₁*b)*(2*e-2+h) + v₀*v₁*(2*h-2))
+
+def secondCut (lo hi e v₀ v₁ : ℕ) : ℕ :=
+  let k := liftIndex hi v₀ v₁
+  let ell := quotientOrder lo
+  graphDegree e v₀ v₁ * (ell+1+k) * (ell+2+k) + (p+1)*e*(2*(v₀+v₁)+256)
+
+def properCharge (A lo hi e v₀ v₁ : ℕ) : ℕ :=
+  if singleCut e then ceilRatio (properBudget A lo hi e v₀ v₁) (A*(A-degreeAt hi))
+  else secondCut lo hi e v₀ v₁
+
+def charge (A lo hi e v₀ v₁ : ℕ) : ℕ :=
+  properCharge A lo hi e v₀ v₁ +
+    ceilRatio ((blockLength-A)*(p+1)*(v₀+v₁)) (A-degreeAt hi) + singularFee e (v₀+v₁) + e
+
+private def GradeCheck (e : ℕ) : Prop :=
+  ∀ a : Fin (paidCap e + 1),
+    charge agreement (start .h2367) (finish .h2367) e a.val (paidCap e - a.val) ≤
+      retainedCap .h2367
+
+private instance (e : ℕ) : Decidable (GradeCheck e) :=
+  inferInstanceAs (Decidable (∀ _a : Fin (paidCap e + 1), _ ≤ _))
+
+private theorem grade3 : GradeCheck 3 := by decide +kernel
+private theorem grade4 : GradeCheck 4 := by decide +kernel
+private theorem grade5 : GradeCheck 5 := by decide +kernel
+private theorem grade6 : GradeCheck 6 := by decide +kernel
+private theorem grade7 : GradeCheck 7 := by decide +kernel
+private theorem grade8 : GradeCheck 8 := by decide +kernel
+private theorem grade9 : GradeCheck 9 := by decide +kernel
+private theorem grade10 : GradeCheck 10 := by decide +kernel
+private theorem grade11 : GradeCheck 11 := by decide +kernel
+private theorem grade12 : GradeCheck 12 := by decide +kernel
+private theorem grade13 : GradeCheck 13 := by decide +kernel
+private theorem grade14 : GradeCheck 14 := by decide +kernel
+private theorem grade15 : GradeCheck 15 := by decide +kernel
+private theorem grade16 : GradeCheck 16 := by decide +kernel
+private theorem grade17 : GradeCheck 17 := by decide +kernel
+private theorem grade18 : GradeCheck 18 := by decide +kernel
+private theorem grade19 : GradeCheck 19 := by decide +kernel
+private theorem grade20 : GradeCheck 20 := by decide +kernel
+private theorem grade21 : GradeCheck 21 := by decide +kernel
+private theorem grade22 : GradeCheck 22 := by decide +kernel
+private theorem grade23 : GradeCheck 23 := by decide +kernel
+private theorem grade24 : GradeCheck 24 := by decide +kernel
+private theorem grade25 : GradeCheck 25 := by decide +kernel
+private theorem grade26 : GradeCheck 26 := by decide +kernel
+private theorem grade27 : GradeCheck 27 := by decide +kernel
+
+theorem charge_le {e v₀ v₁ : ℕ} (hel : 3 ≤ e) (heu : e < 28)
+    (hsum : v₀+v₁ = paidCap e) :
+    charge agreement (start .h2367) (finish .h2367) e v₀ v₁ ≤ retainedCap .h2367 := by
+  have hcheck : GradeCheck e := by
+    interval_cases e <;> first | exact grade3 | exact grade4 | exact grade5 | exact grade6 | exact grade7 | exact grade8 | exact grade9 | exact grade10 | exact grade11 | exact grade12 | exact grade13 | exact grade14 | exact grade15 | exact grade16 | exact grade17 | exact grade18 | exact grade19 | exact grade20 | exact grade21 | exact grade22 | exact grade23 | exact grade24 | exact grade25 | exact grade26 | exact grade27
+  let a : Fin (paidCap e + 1) := ⟨v₀, by omega⟩
+  have hv : paidCap e - v₀ = v₁ := by omega
+  simpa only [a, hv] using hcheck a
+
+theorem guards {e : ℕ} (hel : 3 ≤ e) (heu : e < 28) :
+    singularDegree e (paidCap e) < p ∧ e * degreeAt (finish .h2367) + paidCap e < p := by
+  interval_cases e <;> decide +kernel
+
+theorem paid_le {e : ℕ} (hel : 7 ≤ e) (heu : e ≤ 21) : paidCap e ≤ 445 := by
+  interval_cases e <;> decide
+
+#print axioms charge_le
+#print axioms guards
+end KoalaTwoSectionPrice

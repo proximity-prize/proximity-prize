@@ -282,6 +282,9 @@ private theorem mixedFinite (q : Surface) (hh : q.asIdeal.height = 2) :
   apply sectionLiftSurjective q u v hv coord
   intro i
   exact (RingHom.congr_fun hw _).trans (numeratorMap_coordinates q i)
+theorem proof : K1_14_3_2_5.c3 := by
+  intro q _ hh _ _
+  exact mixedFinite q hh
 end
 end K1_14_3_2_5_3
 end
