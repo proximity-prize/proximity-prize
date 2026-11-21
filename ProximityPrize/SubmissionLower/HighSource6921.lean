@@ -67,7 +67,7 @@ theorem proof : H21.c1 := by
   have h8 := Telescope.proof
   intro u del M Γ F hlo hhi H hH
   have lo : 2472 ≤ M.overhead.toNat := by omega
-  have hi : M.overhead.toNat ≤ 32932 := by omega
+  have hi : M.overhead.toNat ≤ 32950 := by omega
   obtain ⟨D, hnode, hres⟩ := chart_poles M F H hH
   obtain ⟨Crt⟩ := h1 _ lo hi D
   let word (i : I) : L := algebraMap K L (M.word i)

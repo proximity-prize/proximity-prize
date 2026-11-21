@@ -21,14 +21,15 @@ abbrev twoStart : Shape := ⟨2, 6, 2⟩
 
 /-- Each empty-start threshold supplies an order on the quadrant above it. -/
 def emptyThresholds : List Threshold :=
-  [⟨107,46,56⟩, ⟨14,41,53⟩, ⟨61,31,52⟩, ⟨8,13,32⟩, ⟨9,7,9⟩, ⟨22,4,8⟩, ⟨3,7,4⟩, ⟨109,10,50⟩, ⟨98,11,49⟩, ⟨88,12,48⟩, ⟨7,20,42⟩, ⟨119,48,56⟩, ⟨107,10,50⟩, ⟨96,11,49⟩, ⟨87,12,48⟩]
+  [⟨107,46,55⟩, ⟨14,41,53⟩, ⟨61,31,51⟩, ⟨8,13,31⟩, ⟨9,7,9⟩, ⟨22,4,8⟩, ⟨3,7,4⟩, ⟨109,10,50⟩, ⟨98,11,49⟩, ⟨88,12,48⟩, ⟨7,20,42⟩, ⟨119,48,56⟩, ⟨107,10,50⟩, ⟨96,11,49⟩, ⟨87,12,48⟩, ⟨118,48,56⟩]
 
 def emptyOrder (x : Shape) : ℕ := orderFor x.b x.j emptyThresholds
 
 /-- For a retained factor of top degree one, use only the positive index spend. -/
-def oneOrder (x : Shape) : ℕ := if x.j ≤ 3 then 1 else (3 * x.j - 4) / 2
+def oneOrder (x : Shape) : ℕ := if x.j ≤ 3 then 1 else if x.j = 4 then 3 else (3 * x.j - 4) / 2
 
-def twoOrder (a : Shape) : ℕ := if a.j < 5 then 72 else if a.j < 42 then 85 else 90
+def twoOrder (a : Shape) : ℕ :=
+  if a.j < 4 then 68 else if a.j < 5 then 72 else if a.j < 6 then 84 else if a.j < 42 then 85 else 90
 
 def indexBudget (r : Shape) (cap j : ℕ) : ℕ := cap * j / (48 - r.j)
 
@@ -127,11 +128,11 @@ theorem orderFor_mono {b b' j j' : ℕ} (hb : b ≤ b') (hj : j ≤ j') (ss : Li
 
 theorem oneOrder_pos (x : Shape) : 0 < oneOrder x := by
   unfold oneOrder
-  split <;> omega
+  split_ifs <;> omega
 
 theorem oneOrder_mono {x y : Shape} (h : x.j ≤ y.j) : oneOrder x ≤ oneOrder y := by
   unfold oneOrder
-  split <;> split <;> omega
+  split_ifs <;> omega
 
 /-- An index-linear potential turns single-factor charges into a prefix bound. -/
 theorem bellman_of_budget (r : Shape) (cap tcap : ℕ) (order : Shape → ℕ)
@@ -264,7 +265,7 @@ private theorem empty_bellman (tcap : ℕ) (horder : c2) (hprice : c3) :
   · exact Or.inl he
   · have hj0 : 0 < s.j := by
       simp [emptyThresholds] at hs
-      rcases hs with rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl <;> decide
+      rcases hs with rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl <;> decide
     right
     change emptyOrder x = s.l at he
     rw [he]
@@ -410,7 +411,7 @@ theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) (h4 : c4) (h5 : c5)
   let tcap := ∑ i, (a i).t
   have cap_min : factorCap ≤ P0_9.factorPrice tcap := by
     unfold P0_9.factorPrice
-    split <;> decide
+    split_ifs <;> decide
   have account : ∃ (q : Shape) (cap : ℕ), InBox q r ∧ (q = zeroShape ∨ 0 < q.j) ∧
       Bellman q cap tcap ∧ (∑ i ∈ z, cost i) + cap ≤ P0_9.factorPrice tcap := by
     rcases shapeSum_valid_or_empty ha z with hempty | hr

@@ -15,48 +15,48 @@ open scoped BigOperators
 
 /-- Generic CRT lift with denominators regular at every permitted specialization. -/
 def CRTReady : Prop :=
-  ∀ h, 2472 ≤ h → h ≤ 32932 → ∀ D : PoleData h, Nonempty (CRTLift D)
+  ∀ h, 2472 ≤ h → h ≤ 32950 → ∀ D : PoleData h, Nonempty (CRTLift D)
 
 /-- Contact and the unpunctured agreement force each evaluated row to be an identity. -/
 def ContactNecessary : Prop :=
-  ∀ h, 2472 ≤ h → h ≤ 32932 → ∀ (D : PoleData h) (Crt : CRTLift D) (word : I → L),
+  ∀ h, 2472 ≤ h → h ≤ 32950 → ∀ (D : PoleData h) (Crt : CRTLift D) (word : I → L),
     (∀ i k, (D.block i).eval (nodeL k) ≠ 0) →
     ∀ z S, MarkResidues D z S → (liftPoly S).natDegree ≤ 131071+h →
-    ∀ hits : Finset I, 180139 ≤ hits.card → (∀ k ∈ hits, (liftPoly S).eval (nodeL k) = word k) →
-    ∀ s W, W < s.m*180139 → ∀ P ∈ evaluated Crt word s W, jetAt P z S = 0
+    ∀ hits : Finset I, 180130 ≤ hits.card → (∀ k ∈ hits, (liftPoly S).eval (nodeL k) = word k) →
+    ∀ s W, W < s.m*180130 → ∀ P ∈ evaluated Crt word s W, jetAt P z S = 0
 
 /-- Fixed-true-jet seed derivatives consume at most 2h of cutoff per order. -/
 def HasseClosed : Prop :=
-  ∀ h, 2472 ≤ h → h ≤ 32932 → ∀ (D : PoleData h) (Crt : CRTLift D) (word : I → L),
+  ∀ h, 2472 ≤ h → h ≤ 32950 → ∀ (D : PoleData h) (Crt : CRTLift D) (word : I → L),
     ∀ s W, ∀ P ∈ evaluated Crt word s W, ∀ i r,
       seedHasse i r P ∈ evaluated Crt word s (W+2*h*r)
 
 /-- The leading V,Y position of an evaluated row satisfies the raw cutoff. -/
 def LeadingWeight : Prop :=
-  ∀ h, 2472 ≤ h → h ≤ 32932 → ∀ (D : PoleData h) (Crt : CRTLift D) (word : I → L),
+  ∀ h, 2472 ≤ h → h ≤ 32950 → ∀ (D : PoleData h) (Crt : CRTLift D) (word : I → L),
     ∀ s W, ∀ P ∈ evaluated Crt word s W, P ≠ 0 →
       (P.leadingCoeff.natDegree + P.natDegree)*(131071-h) ≤ W+P.natDegree
 
 /-- Count the true ambient monomials before the two sets of constraints. -/
 def AmbientRank : Prop :=
-  ∀ h, 2472 ≤ h → h ≤ 32932 → ∀ s W, rawWidthCond h s W →
+  ∀ h, 2472 ≤ h → h ≤ 32950 → ∀ s W, rawWidthCond h s W →
     rawVolumeAt h s W + poleCredit h s ≤ Module.finrank L (ambient h s W)
 
 /-- Restricting to the physical contacts costs at most the sum of the node debits. -/
 def ContactRank : Prop :=
-  ∀ h, 2472 ≤ h → h ≤ 32932 → ∀ (word : I → L) s W,
+  ∀ h, 2472 ≤ h → h ≤ 32950 → ∀ (word : I → L) s W,
     Module.finrank L (ambient h s W) ≤
       physicalDebit s + Module.finrank L (contacted h word s W)
 
 /-- Full primary divisibility costs at most the main pole credit and seed debit. -/
 def PoleRank : Prop :=
-  ∀ h, 2472 ≤ h → h ≤ 32932 → ∀ (D : PoleData h) (Crt : CRTLift D) (word : I → L) s W,
+  ∀ h, 2472 ≤ h → h ≤ 32950 → ∀ (D : PoleData h) (Crt : CRTLift D) (word : I → L) s W,
     Module.finrank L (contacted h word s W) ≤
       poleCredit h s + poleSeedDebit h s + Module.finrank L (complete Crt word s W)
 
 /-- Whole-cutoff sum of evaluated dimensions dominates the symbolic dimension. -/
 def CutoffRank : Prop :=
-  ∀ h, 2472 ≤ h → h ≤ 32932 → ∀ (D : PoleData h) (Crt : CRTLift D) (word : I → L) s W,
+  ∀ h, 2472 ≤ h → h ≤ 32950 → ∀ (D : PoleData h) (Crt : CRTLift D) (word : I → L) s W,
     Module.finrank L (complete Crt word s W) ≤
       ∑ t ∈ Finset.range (W+1), Module.finrank FX (evaluated Crt word s t)
 
@@ -232,9 +232,9 @@ theorem zero_of_poles_and_hits {h : ℕ} {D : PoleData h}
     {s : Shape} {W : ℕ} {Q : L[X]}
     (hdeg : Q.natDegree ≤ W+(s.B+s.J)*(2*h))
     (hpole : poleProduct D ^ (s.B+s.J) ∣ Q)
-    (hits : Finset I) (hcard : 180139 ≤ hits.card)
+    (hits : Finset I) (hcard : 180130 ≤ hits.card)
     (hcontact : ∀ k ∈ hits, (Polynomial.X-C (nodeL k)) ^ s.m ∣ Q)
-    (hW : W < s.m*180139) : Q = 0 := by
+    (hW : W < s.m*180130) : Q = 0 := by
   by_contra hne
   obtain ⟨T, hT⟩ := hpole
   have hTne : T ≠ 0 := by intro he; simp [hT, he] at hne

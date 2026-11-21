@@ -10,7 +10,7 @@ namespace HighJoint6921
 open K1_14 K1_14_4 Polynomial
 open scoped BigOperators
 
-def top (s : Shape) : ℕ := s.m * 180139
+def top (s : Shape) : ℕ := s.m * 180130
 
 def base (h : ℕ) : ℕ := 131071 - h
 

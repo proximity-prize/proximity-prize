@@ -2007,6 +2007,16 @@ structure LinearCover (T : Finset K) (s : K → K[X]) (d e b : ℕ) where
   covers : ∀ γ ∈ T, ∃ P ∈ components, point γ ∈ MvPolynomial.zeroLocus ClosedField P
   component_count : components.card ≤ e
   degree_sum : ∑ P ∈ components, MvPolynomial.affineDegree P ≤ (mixedDegree d e b : ℚ)
+  /-- First seed coordinate of each mark, injective on the marks. -/
+  firstSeed : K → ClosedField
+  firstSeed_inj : Set.InjOn firstSeed (T : Set K)
+  /-- Low-degree first-seed cut: linear in the chart, it vanishes exactly at the marks whose first
+  seed lies in `c`, and if it lies in a prime above a component then that prime's marks share one seed. -/
+  seedCut : ∀ c : Finset ClosedField, c.card ≤ parameterBound d b →
+    ∃ L : LinearRing d e b, L.totalDegree ≤ 1 ∧
+      (∀ γ ∈ T, MvPolynomial.aeval (point γ) L = 0 ↔ firstSeed γ ∈ c) ∧
+      ∀ P ∈ components, ∀ Q : Ideal (LinearRing d e b), Q.IsPrime → P ≤ Q → L ∈ Q →
+        ∃ k ∈ c, ∀ γ ∈ T, point γ ∈ MvPolynomial.zeroLocus ClosedField Q → firstSeed γ = k
 
 /-- Component slices inherit the degree, injectivity and agreements of
 distinct selected polynomials against the same word. -/
@@ -7351,9 +7361,10 @@ theorem regularComponents {a c e b : ℕ} (ha : 0 < a) (hc : 0 < c)
       (∀ P ∈ Q, P.IsPrime ∧ (affineHilbertPolynomial P).natDegree = 2) ∧
       Q.card ≤ e ∧
       (∑ P ∈ Q, affineDegree P) ≤ (e * c ^ 2 + 2 * b * a * c : ℕ) ∧
-      ∀ x : Option (Fin 2) → F, f.eval₂ (MvPolynomial.eval (x ∘ some)) (x none) = 0 →
+      (∀ x : Option (Fin 2) → F, f.eval₂ (MvPolynomial.eval (x ∘ some)) (x none) = 0 →
         f.derivative.eval₂ (MvPolynomial.eval (x ∘ some)) (x none) ≠ 0 →
-        ∃ P ∈ Q, monomialPoint (bidegreeExponents (Fin 2) a c) x ∈ zeroLocus F P := by
+        ∃ P ∈ Q, monomialPoint (bidegreeExponents (Fin 2) a c) x ∈ zeroLocus F P) ∧
+      ∀ P ∈ Q, RingHom.ker (bidegreeMap (Fin 2) F a c) ≤ P := by
   classical
   let phi := bidegreeMap (Fin 2) F a c
   let fs := ((factors f).filter (fun g => 0 < g.natDegree)).toFinset
@@ -7367,7 +7378,7 @@ theorem regularComponents {a c e b : ℕ} (ha : 0 < a) (hc : 0 < c)
       (optionEquivLeft F (Fin 2)).surjective (factor_span_minimal hf hfac)
     rw [comap_span_flatten, comap_span_flatten] at h
     exact Ideal.minimalPrimes_comap_of_surjective (bidegreeMap_surjective ha hc) h
-  refine ⟨Q, ?_, Finset.card_image_le.trans ((positiveFactors_card_le f hf).trans he), ?_, ?_⟩
+  refine ⟨Q, ?_, Finset.card_image_le.trans ((positiveFactors_card_le f hf).trans he), ?_, ?_, ?_⟩
   · intro P hP
     obtain ⟨g, hg, rfl⟩ := Finset.mem_image.mp hP
     have hp := (hminimal hg).isPrime
@@ -7404,6 +7415,95 @@ theorem regularComponents {a c e b : ℕ} (ha : 0 < a) (hc : 0 < c)
       mem_zeroLocus_iff_le_ker_aeval, Ideal.span_singleton_le_iff_mem, RingHom.mem_ker]
     change MvPolynomial.eval x (flatten g) = 0
     rwa [eval_flatten]
+  · intro P hP y hy
+    obtain ⟨g, _, rfl⟩ := Finset.mem_image.mp hP
+    change y ∈ (Ideal.span {flatten g}).comap phi
+    have hzero : phi y = 0 := (RingHom.mem_ker).mp hy
+    rw [Ideal.mem_comap, hzero]
+    exact Ideal.zero_mem _
+
+private theorem seedCut_C_mem (x : F) {u v : ℕ} :
+    MvPolynomial.C x ∈ restrictBidegree (Fin 2) F u v := by
+  rw [mem_restrictBidegree_iff_weightedTotalDegree_le]
+  simp
+
+private theorem seedCut_X_mem :
+    (MvPolynomial.X (some (0 : Fin 2)) : MvPolynomial (Option (Fin 2)) F) ∈
+      restrictBidegree (Fin 2) F 0 1 := by
+  rw [mem_restrictBidegree]
+  intro m hm
+  rw [support_X, Finset.mem_singleton] at hm
+  subst m
+  simp [Finsupp.some_single_none, Finsupp.some_single_some]
+
+/-- The product of first-seed factors over a finite set of values lies in the bidegree box
+with ordinate degree 0 and seed degree `c.card`. -/
+theorem seedProduct_mem (c : Finset F) {a b : ℕ} (hb : c.card ≤ b) :
+    (∏ k ∈ c, (MvPolynomial.X (some (0 : Fin 2)) - MvPolynomial.C k :
+      MvPolynomial (Option (Fin 2)) F)) ∈ restrictBidegree (Fin 2) F a b := by
+  classical
+  have key : ∀ d : Finset F, (∏ k ∈ d, (MvPolynomial.X (some (0 : Fin 2)) - MvPolynomial.C k :
+      MvPolynomial (Option (Fin 2)) F)) ∈ restrictBidegree (Fin 2) F 0 d.card := by
+    intro d
+    induction d using Finset.induction_on with
+    | empty => simpa using (seedCut_C_mem (1 : F) (u := 0) (v := 0))
+    | insert k d hk ih =>
+      rw [Finset.prod_insert hk, Finset.card_insert_of_notMem hk]
+      have hfac : (MvPolynomial.X (some (0 : Fin 2)) - MvPolynomial.C k :
+          MvPolynomial (Option (Fin 2)) F) ∈ restrictBidegree (Fin 2) F 0 1 :=
+        Submodule.sub_mem _ seedCut_X_mem (seedCut_C_mem k)
+      exact mem_restrictBidegree_mono (mul_mem_restrictBidegree hfac ih) (by omega) (by omega)
+  exact mem_restrictBidegree_mono (key c) (Nat.zero_le a) hb
+
+/-- Its linear lift cuts exactly the monomial points whose first seed coordinate lies in `c`. -/
+theorem aeval_seedCut (c : Finset F) {a b : ℕ} (hb : c.card ≤ b) (x : Option (Fin 2) → F) :
+    MvPolynomial.aeval (monomialPoint (bidegreeExponents (Fin 2) a b) x)
+        (bidegreeLift _ (seedProduct_mem c (a := a) hb)) = 0 ↔ x (some 0) ∈ c := by
+  classical
+  rw [aeval_monomialPoint, ← bidegreeMap_eq_monomialMap, bidegreeMap_bidegreeLift]
+  simp [map_prod, Finset.prod_eq_zero_iff, sub_eq_zero]
+
+theorem totalDegree_seedCut_le_one (c : Finset F) {a b : ℕ} (hb : c.card ≤ b) :
+    (bidegreeLift _ (seedProduct_mem c (a := a) hb)).totalDegree ≤ 1 :=
+  totalDegree_bidegreeLift_le_one _ _
+
+/-- A prime containing the kernel of the bidegree map and the lifted first-seed product over `c`
+pins the first seed coordinate of every monomial point of its zero locus to one value of `c`. -/
+theorem seedCut_prime {a b : ℕ} (ha : 0 < a) (hb0 : 0 < b) (c : Finset F) (hb : c.card ≤ b)
+    {Q : Ideal (MvPolynomial (bidegreeExponents (Fin 2) a b) F)} (hQ : Q.IsPrime)
+    (hker : RingHom.ker (bidegreeMap (Fin 2) F a b) ≤ Q)
+    (hmem : bidegreeLift _ (seedProduct_mem c (a := a) hb) ∈ Q) :
+    ∃ k ∈ c, ∀ x : Option (Fin 2) → F,
+      monomialPoint (bidegreeExponents (Fin 2) a b) x ∈ zeroLocus F Q → x (some 0) = k := by
+  classical
+  have hsurj : Function.Surjective (bidegreeMap (Fin 2) F a b) := bidegreeMap_surjective ha hb0
+  haveI := hQ
+  have hprime : (Q.map (bidegreeMap (Fin 2) F a b)).IsPrime :=
+    Ideal.map_isPrime_of_surjective hsurj hker
+  haveI := hprime
+  have hprod : (∏ k ∈ c, (MvPolynomial.X (some (0 : Fin 2)) - MvPolynomial.C k :
+      MvPolynomial (Option (Fin 2)) F)) ∈ Q.map (bidegreeMap (Fin 2) F a b) := by
+    have h := Ideal.mem_map_of_mem (bidegreeMap (Fin 2) F a b) hmem
+    rwa [bidegreeMap_bidegreeLift] at h
+  obtain ⟨k, hk, hkQ⟩ := Ideal.IsPrime.prod_mem_iff.mp hprod
+  have hfac : (MvPolynomial.X (some (0 : Fin 2)) - MvPolynomial.C k :
+      MvPolynomial (Option (Fin 2)) F) ∈ restrictBidegree (Fin 2) F a b :=
+    mem_restrictBidegree_mono (Submodule.sub_mem _ seedCut_X_mem (seedCut_C_mem k))
+      (Nat.zero_le a) (by omega)
+  have hLQ : bidegreeLift _ hfac ∈ Q := by
+    have hmap : bidegreeMap (Fin 2) F a b (bidegreeLift _ hfac) ∈
+        Q.map (bidegreeMap (Fin 2) F a b) := by
+      rw [bidegreeMap_bidegreeLift]
+      exact hkQ
+    obtain ⟨r, hr, he⟩ := (Ideal.mem_map_iff_of_surjective _ hsurj).mp hmap
+    have hdiff : bidegreeLift _ hfac - r ∈ Q := by
+      apply hker
+      rw [RingHom.mem_ker, map_sub, he, sub_self]
+    simpa using Q.add_mem hdiff hr
+  refine ⟨k, hk, fun x hx => ?_⟩
+  have h0 := hx _ hLQ
+  rw [aeval_monomialPoint, ← bidegreeMap_eq_monomialMap, bidegreeMap_bidegreeLift] at h0
+  simpa [sub_eq_zero] using h0
 
 end
 end K1_14_6_2
@@ -8496,7 +8596,7 @@ theorem proof : K1_14_6.c2 := by
     change ((f.map (MvPolynomial.map ι)).coeff j).totalDegree ≤ b
     rw [Polynomial.coeff_map]
     exact (Finset.sup_mono (support_map_subset _ _)).trans (hfseed j)
-  obtain ⟨components, hdim, hcount, hsum, hcover⟩ :=
+  obtain ⟨components, hdim, hcount, hsum, hcover, hker⟩ :=
     regularComponents ha hc F hF (hnat.trans_le hfe) hcoeff
   let pt := fun γ => monomialPoint (bidegreeExponents (Fin 2) a c) (closedPoint (z γ) (s γ))
   let sectionPoly := fun x y => MvPolynomial.map ι (C.numerator x - seedEmbedding y • C.denominator)
@@ -8505,7 +8605,8 @@ theorem proof : K1_14_6.c2 := by
       (Submodule.smul_mem _ _ C.denominator_bound))
   let cut := fun x y => bidegreeLift (sectionPoly x y) (hsection x y)
   refine ⟨⟨pt, ?_, cut, fun x y => totalDegree_bidegreeLift_le_one _ _, ?_,
-    components, fun P hP => (hdim P hP).1, fun P hP => (hdim P hP).2, ?_, hcount, ?_⟩⟩
+    components, fun P hP => (hdim P hP).1, fun P hP => (hdim P hP).2, ?_, hcount, ?_,
+    fun γ => closedPoint (z γ) (s γ) (some 0), ?_, ?_⟩⟩
   · intro γ hγ η hη hpt
     have hcoords : closedPoint (z γ) (s γ) = closedPoint (z η) (s η) :=
       monomialPoint_injective (fun i => single_mem_bidegreeExponents ha hc i) hpt
@@ -8523,6 +8624,16 @@ theorem proof : K1_14_6.c2 := by
         extendEquation_eval]
       simpa only [map_zero] using ι.injective.ne (hroots γ hγ).2
   · exact hsum
+  · intro γ hγ η hη hfs
+    change ι (seedEmbedding (z γ)) = ι (seedEmbedding (z η)) at hfs
+    exact hz hγ hη (seedEmbedding.injective (ι.injective hfs))
+  · intro cs hcs
+    refine ⟨bidegreeLift _ (seedProduct_mem cs (a := a) hcs),
+      totalDegree_seedCut_le_one cs (a := a) hcs,
+      fun γ _ => aeval_seedCut cs (a := a) hcs (closedPoint (z γ) (s γ)),
+      fun P hP Q hQ hPQ hL => ?_⟩
+    obtain ⟨k, hk, hall⟩ := seedCut_prime ha hc cs hcs hQ ((hker P hP).trans hPQ) hL
+    exact ⟨k, hk, fun γ _ hγQ => hall _ hγQ⟩
 
 end
 end K1_14_6_2

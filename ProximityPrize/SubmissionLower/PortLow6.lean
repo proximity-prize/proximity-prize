@@ -413,14 +413,14 @@ private theorem occupancy {α ι : Type*} [DecidableEq α] [DecidableEq ι]
   exact sum_le_sum hocc
 
 /-- The final step of the incidence inequality, with the benchmark's
-two deficiencies 82005 and 46597. -/
+two deficiencies 82014 and 46588. -/
 private theorem incidence_arithmetic (m x : ℕ) (d : ℕ)
-    (hm : 0 < m) (hx : 46597 ≤ x)
-    (hsec : (m*x)^2 ≤ (x+82005) * (m * (x + (m-1)*(x-46597))))
-    (hfirst : m*x ≤ (x+82005)*d) :
-    46597*m ≤ 82005*d + 46597 := by
+    (hm : 0 < m) (hx : 46588 ≤ x)
+    (hsec : (m*x)^2 ≤ (x+82014) * (m * (x + (m-1)*(x-46588))))
+    (hfirst : m*x ≤ (x+82014)*d) :
+    46588*m ≤ 82014*d + 46588 := by
   have hcancel :
-      m*x^2 ≤ (x+82005) * (x + (m-1)*(x-46597)) := by
+      m*x^2 ≤ (x+82014) * (x + (m-1)*(x-46588)) := by
     apply Nat.le_of_mul_le_mul_left _ hm
     calc
       _ = (m*x)^2 := by ring
@@ -428,35 +428,35 @@ private theorem incidence_arithmetic (m x : ℕ) (d : ℕ)
       _ = _ := by ring
   have hM : ((m - 1 : ℕ) : ℤ) = (m : ℤ)-1 := by
     exact Int.ofNat_sub (by omega)
-  have hX : ((x - 46597 : ℕ) : ℤ) = (x : ℤ)-46597 := Int.ofNat_sub hx
+  have hX : ((x - 46588 : ℕ) : ℤ) = (x : ℤ)-46588 := Int.ofNat_sub hx
   have hcancelZ := (Int.ofNat_le.mpr hcancel)
   push_cast [hM, hX] at hcancelZ
   have hfirstZ := (Int.ofNat_le.mpr hfirst)
   push_cast at hfirstZ
-  have secondZ : ((m : ℤ)*82005 - ((m : ℤ)-1)*46597)*x ≥
-      ((m : ℤ)-1)*82005*46597 := by
+  have secondZ : ((m : ℤ)*82014 - ((m : ℤ)-1)*46588)*x ≥
+      ((m : ℤ)-1)*82014*46588 := by
     nlinarith only [hcancelZ]
-  have firstZ : ((m : ℤ)-(d : ℤ))*x ≤ (d : ℤ)*82005 := by
+  have firstZ : ((m : ℤ)-(d : ℤ))*x ≤ (d : ℤ)*82014 := by
     nlinarith only [hfirstZ]
   by_contra! h
-  have hbad : (d : ℤ)*82005 < ((m : ℤ)-1)*46597 := by omega
+  have hbad : (d : ℤ)*82014 < ((m : ℤ)-1)*46588 := by omega
   have hxpos : 0 < (x : ℤ) := by omega
-  have cmp : (m : ℤ)*82005 - ((m : ℤ)-1)*46597 < ((m : ℤ)-(d : ℤ))*82005 := by
+  have cmp : (m : ℤ)*82014 - ((m : ℤ)-1)*46588 < ((m : ℤ)-(d : ℤ))*82014 := by
     linarith only [hbad]
   have left := mul_lt_mul_of_pos_right cmp hxpos
-  have right := mul_le_mul_of_nonneg_right firstZ (by norm_num : (0 : ℤ) ≤ 82005)
+  have right := mul_le_mul_of_nonneg_right firstZ (by norm_num : (0 : ℤ) ≤ 82014)
   have impossible := secondZ.trans_lt (left.trans_le (show
-      ((m : ℤ)-(d : ℤ))*82005*x ≤ (d : ℤ)*82005*82005 from by
+      ((m : ℤ)-(d : ℤ))*82014*x ≤ (d : ℤ)*82014*82014 from by
         convert right using 1; ring))
-  have bigger := mul_lt_mul_of_pos_right hbad (by norm_num : (0 : ℤ) < 82005)
+  have bigger := mul_lt_mul_of_pos_right hbad (by norm_num : (0 : ℤ) < 82014)
   nlinarith only [impossible, bigger]
 
 /-- A proper section occupancy bound d implies fixed-word capacity
-(82005/46597)d + 1. Common agreement nodes are removed before counting. -/
+(82014/46588)d + 1. Common agreement nodes are removed before counting. -/
 theorem section_capacity {w Γ s} (h : Messages w Γ s) (d : ℕ)
     (hsection : ∀ i : I, (∃ γ ∈ Γ, (s γ).eval (node i) ≠ w i) →
       (Γ.filter fun γ => (s γ).eval (node i) = w i).card ≤ d) :
-    46597 * Γ.card ≤ 82005*d + 46597 := by
+    46588 * Γ.card ≤ 82014*d + 46588 := by
   classical
   by_cases hm : Γ.card ≤ 1
   · omega
@@ -466,7 +466,7 @@ theorem section_capacity {w Γ s} (h : Messages w Γ s) (d : ℕ)
   have common_le (γ : K) (hγ : γ ∈ Γ) : common ⊆ hits γ := by
     intro i hi
     exact mem_filter.mpr ⟨mem_univ _, (mem_filter.mp hi).2 γ hγ⟩
-  have hit_count (γ : K) (hγ : γ ∈ Γ) : 180139 ≤ (hits γ).card := by
+  have hit_count (γ : K) (hγ : γ ∈ Γ) : 180130 ≤ (hits γ).card := by
     obtain ⟨T, hT, ht⟩ := h.hits γ hγ
     exact hT.trans (card_le_card fun i hi => mem_filter.mpr ⟨mem_univ _, ht i hi⟩)
   have pair_count (a : K) (ha : a ∈ Γ) (b : K) (hb : b ∈ Γ) (hab : a ≠ b) :
@@ -482,11 +482,11 @@ theorem section_capacity {w Γ s} (h : Messages w Γ s) (d : ℕ)
   have hcommon : common.card ≤ 133542 :=
     (card_le_card (subset_inter (common_le a ha) (common_le b hb))).trans
       (pair_count a ha b hb hab)
-  let x := 180139 - common.card
+  let x := 180130 - common.card
   let t := 133542 - common.card
-  have ht : t = x - 46597 := by dsimp [t, x]; omega
-  have hx : 46597 ≤ x := by dsimp [x]; omega
-  have hnodes : nodes.card = x + 82005 := by
+  have ht : t = x - 46588 := by dsimp [t, x]; omega
+  have hx : 46588 ≤ x := by dsimp [x]; omega
+  have hnodes : nodes.card = x + 82014 := by
     rw [card_sdiff_of_subset (subset_univ common), card_univ, IRSProfile.card_index]
     dsimp [x]
     omega
@@ -535,7 +535,7 @@ theorem section_capacity {w Γ s} (h : Messages w Γ s) (d : ℕ)
   exact incidence_arithmetic _ _ _ (by omega) hx sec first
 
 theorem curve_capacity {w Γ s d} (h : Messages w Γ s) (hc : CurveSections Γ s d) :
-    46597 * Γ.card ≤ 82005*d + 46597 :=
+    46588 * Γ.card ≤ 82014*d + 46588 :=
   section_capacity h d (fun i => hc (node i) (w i))
 
 theorem curve_capacity_integral {w Γ s d} (h : Messages w Γ s)
@@ -544,14 +544,14 @@ theorem curve_capacity_integral {w Γ s d} (h : Messages w Γ s)
   omega
 
 theorem pieces_curve_capacity {w Γ s} (C : Pieces Γ) (h : Messages w Γ s)
-    (hc : C.curves s) : 46597 * C.union.card ≤ 82005 * C.total + 46597 * C.n := by
+    (hc : C.curves s) : 46588 * C.union.card ≤ 82014 * C.total + 46588 * C.n := by
   classical
   have hc' (i : Fin C.n) := P0_9_6.curve_capacity (h.mono (C.subset i)) (hc i)
   calc
-    _ ≤ 46597 * ∑ i, (C.piece i).card :=
+    _ ≤ 46588 * ∑ i, (C.piece i).card :=
       Nat.mul_le_mul_left _ (by exact card_biUnion_le)
-    _ = ∑ i, 46597 * (C.piece i).card := by rw [mul_sum]
-    _ ≤ ∑ i : Fin C.n, (82005 * C.degree i + 46597) := sum_le_sum fun i _ => hc' i
+    _ = ∑ i, 46588 * (C.piece i).card := by rw [mul_sum]
+    _ ≤ ∑ i : Fin C.n, (82014 * C.degree i + 46588) := sum_le_sum fun i _ => hc' i
     _ = _ := by simp [Pieces.total, sum_add_distrib, mul_sum, Nat.mul_comm]
 
 theorem pieces_curve_capacity_integral {w Γ s} (C : Pieces Γ) (h : Messages w Γ s)
@@ -665,9 +665,9 @@ private theorem le_ceil {n d count : ℕ} (hd : 0 < d) (h : count*d ≤ n) :
 private theorem price_formula (x : Shape) (l : ℕ) :
     physicalPrice x l =
       ceilDiv (ceilDiv (surfaceNumerator32 x.chamber primaryBox) 32 +
-        ceilDiv ((82005 + 2*46597) * membershipDegree x) 46597) l +
+        ceilDiv ((82014 + 2*46588) * membershipDegree x) 46588) l +
       2 * (133542 * x.b * primaryBox.b) +
-      ceilDiv (82005 * auxCurves32 x + 2*46597 * auxPoints32 x) (32*46597) := by
+      ceilDiv (82014 * auxCurves32 x + 2*46588 * auxPoints32 x) (32*46588) := by
   simp only [physicalPrice, auxCurves32, auxPoints32, membershipDegree, Nat.mul_assoc]
   rfl
 
@@ -710,7 +710,7 @@ theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) : P0_9.c6 := by
           (Nat.add_le_add (Finset.card_union_le _ _) (Finset.card_union_le _ _)) _) _
   let x := shape f
   have aux_bound : aux ≤
-      ceilDiv (82005 * auxCurves32 x + 2*46597 * auxPoints32 x) (32*46597) := by
+      ceilDiv (82014 * auxCurves32 x + 2*46588 * auxPoints32 x) (32*46588) := by
     apply le_ceil (by decide)
     have hA' := pieces_curve_capacity A hm hA
     change 32 * A.total ≤ auxCurves32 x at haCurves
@@ -723,7 +723,7 @@ theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) : P0_9.c6 := by
     have h := (Nat.mul_le_mul_left (32*l) hC').trans hcBudget
     simpa only [mixed, x, Nat.mul_assoc, Nat.mul_left_comm, Nat.mul_comm] using h
   have curve_bound : l * D.union.card ≤
-      ceilDiv ((82005 + 2*46597) * membershipDegree x) 46597 := by
+      ceilDiv ((82014 + 2*46588) * membershipDegree x) 46588 := by
     apply le_ceil (by decide)
     have hD' := Nat.mul_le_mul_left l (pieces_curve_capacity_integral D hm hD hdPos)
     change l * D.total ≤ membershipDegree x at hdBudget
@@ -733,7 +733,7 @@ theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) : P0_9.c6 := by
     omega
   have main_bound : mixed + D.union.card ≤
       ceilDiv (ceilDiv (surfaceNumerator32 x.chamber primaryBox) 32 +
-        ceilDiv ((82005 + 2*46597) * membershipDegree x) 46597) l := by
+        ceilDiv ((82014 + 2*46588) * membershipDegree x) 46588) l := by
     apply le_ceil hl
     rw [Nat.add_mul, Nat.mul_comm mixed l, Nat.mul_comm D.union.card l]
     exact Nat.add_le_add mixed_bound curve_bound
@@ -744,9 +744,9 @@ theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) : P0_9.c6 := by
   rw [price_formula]
   change Γ.card ≤
     ceilDiv (ceilDiv (surfaceNumerator32 x.chamber primaryBox) 32 +
-      ceilDiv ((82005 + 2*46597) * membershipDegree x) 46597) l +
+      ceilDiv ((82014 + 2*46588) * membershipDegree x) 46588) l +
     2*(133542*x.b*primaryBox.b) +
-    ceilDiv (82005 * auxCurves32 x + 2*46597 * auxPoints32 x) (32*46597)
+    ceilDiv (82014 * auxCurves32 x + 2*46588 * auxPoints32 x) (32*46588)
   omega
 
 end

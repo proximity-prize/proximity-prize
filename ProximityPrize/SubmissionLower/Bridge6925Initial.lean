@@ -97,10 +97,10 @@ def stageLateShape : Shape := ⟨600,837,168,25162⟩
 def lateCap : Fin 4 → ℕ := ![169,4062,35223,281939]
 def lossSeedCap : ℕ := 230165867
 def lossYCap : ℕ := 3168268898
-def constantFee : ℕ := 157253942415
-def curveFee : ℕ := 77545580555522242
+def constantFee : ℕ := 157297219649
+def curveFee : ℕ := 77552671119557230
 
-def beta : ℚ := (82005 : ℚ) / 45514
+def beta : ℚ := (82014 : ℚ) / 45505
 
 def rootPrice (g H : ℕ) : ℚ :=
   let s : ℚ := 2 * (g : ℚ) - 1

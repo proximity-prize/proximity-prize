@@ -19,9 +19,9 @@ abbrev incidenceGap : ℕ := agreement - physicalDegree
 abbrev anchorCutoff : ℕ := 90 * agreement - 1
 abbrev primaryCutoff : ℕ := 3000 * agreement - 1
 abbrev primaryBox : Shape := ⟨4012, 1650, 550⟩
-abbrev sourceRank : ℕ := 1187923627408492908
+abbrev sourceRank : ℕ := 1176881727286216908
 abbrev layerWidth : ℕ := incidenceGap + 3
-abbrev layerNeed : ℕ := 25491923334947
+abbrev layerNeed : ℕ := 25259851200580
 
 /-- Physical weight uses the full Taylor space through the new low endpoint. -/
 def TrueWeightLE {n : ℕ} (P : Row n) (D : ℕ) : Prop :=
@@ -169,10 +169,10 @@ def supportMixed (b j t : ℕ) : ℕ :=
 
 def lowerPrice (g : Row 3) : ℕ :=
   supportMixed g.totalDegree (K1_13.indexDegree g) (K1_13.indexDegree g / 2) +
-    4695613894782
+    4697034128334
 
 def factorPrice (t : ℕ) : ℕ :=
-  if t ≤ 7 then 222671385202463816 else 229472479831508835
+  if t ≤ 7 then 222672674688503043 else if t ≤ 9 then 229472478411275283 else 229473781150506218
 
 /-- Aggregate order-at-most-two count before the single seed book. -/
 def c5 : Prop :=
@@ -292,12 +292,10 @@ theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) (h4 : c4)
       242144488021490537 := by
     have hB := cover.lower.2.1
     have hJ := cover.lower.2.2.1
+    have hb := cover.lead_total
+    have hj := cover.lead_index
     unfold lowerPrice supportMixed factorPrice
-    split
-    · omega
-    · have hb := cover.lead_total
-      have hj := cover.lead_index
-      omega
+    split_ifs <;> omega
   have covers : Γ ⊆ book ∪ low ∪ Finset.univ.biUnion pieces := by
     intro γ hγ
     by_cases hb : γ ∈ book

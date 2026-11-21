@@ -19,9 +19,9 @@ private theorem later_bank {w : ℤ} (lo : 3555 ≤ w) :
 
 /-- Ordinate exclusion for each remaining band using its common actual full bank. -/
 theorem later {u del} (M : AnchorModel u del) {Γ} (F : AnchoredFamily M Γ)
-    (hl : 3555 ≤ M.overhead) (hu : M.overhead ≤ 32932) (rows : Banks)
+    (hl : 3555 ≤ M.overhead) (hu : M.overhead ≤ 32950) (rows : Banks)
     (hJ : JetSource M F rows) (f : Equation) (hf : f ≠ 0)
-    (hd : ∀ W < H21_3.fullShape.m*180139, ∀ P ∈ rows H21_3.fullShape W, P ≠ 0 →
+    (hd : ∀ W < H21_3.fullShape.m*180130, ∀ P ∈ rows H21_3.fullShape W, P ≠ 0 →
       f ^ (H21_3.contactPower M.overhead.toNat H21_3.fullShape W - P.natDegree) ∣ P.leadingCoeff) :
     f.natDegree ≤ (H21.band M.overhead).yBound := by
   have hbank := later_bank hl

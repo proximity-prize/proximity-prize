@@ -188,7 +188,7 @@ private theorem PolarData.cross_degree {u} (D : PolarData u) (r s : K)
     (Strata.degree_mul_lt_add _ _ 32937 131072 (D.right_bound s) (degree_map_le.trans_lt hP))
 
 private theorem PolarData.decoder_identity {u} (D : PolarData u) (z : K)
-    (S : Finset I) (P : K[X]) (hS : 180139 ≤ S.card) (hP : P.degree < 131072)
+    (S : Finset I) (P : K[X]) (hS : 180130 ≤ S.card) (hP : P.degree < 131072)
     (hits : ∀ i ∈ S, P.eval (node i) = fold u z i) : D.cross z z P P = D.Q z z := by
   have hcard : 164009 ≤ S.card := by omega
   have hb : (164009 : WithBot ℕ) ≤ S.card := by exact_mod_cast hcard
@@ -293,7 +293,7 @@ private theorem PolarData.zero_of_diagonal_zeros {u} (D : PolarData u) {r s : K}
 /-- A vanishing polarized relation forces every close decoder to be zero, including
 the zero-amplitude case, where enough agreeing nodes survive the zeros of the left scalar. -/
 private theorem PolarData.decoder_zero {u} (D : PolarData u) (hQ : ∀ r s, D.Q r s = 0) (z : K)
-    (S : Finset I) (P : K[X]) (hS : 180139 ≤ S.card) (hP : P.degree < 131072)
+    (S : Finset I) (P : K[X]) (hS : 180130 ≤ S.card) (hP : P.degree < 131072)
     (hits : ∀ i ∈ S, P.eval (node i) = fold u z i) : P = 0 := by
   classical
   by_cases hz : D.amp z = 0
@@ -566,7 +566,7 @@ def c2 : Prop :=
 private theorem pencil_count {u : K21.Words} (Γ : Finset K)
     (M : ∀ z ∈ Γ, K21.BadMark u z) {P Q : K[X]} (hP : P.degree < 131072)
     (hQ : Q.degree < 131072) (h : ∀ z (hz : z ∈ Γ), (M z hz).decoder = pencil P Q z) :
-    Γ.card ≤ 82006 := by
+    Γ.card ≤ 82015 := by
   classical
   by_cases hΓ : Γ.Nonempty
   swap
@@ -611,7 +611,7 @@ private theorem pencil_count {u : K21.Words} (Γ : Finset K)
     exact unique (Finset.mem_erase.mp z.property).2 (Finset.mem_erase.mp t.property).2 (hf z) ht (hn z)
   have hcard := Finset.card_le_card_of_injective hg
   have he := Finset.card_erase_add_one hr
-  have hS : 180139 ≤ S.card := (M r hr).agreement
+  have hS : 180130 ≤ S.card := (M r hr).agreement
   rw [Finset.card_sdiff_of_subset (Finset.subset_univ _), Finset.card_univ, IRSProfile.card_index] at hcard
   omega
 

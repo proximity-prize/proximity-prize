@@ -1,5 +1,6 @@
 import ProximityPrize.SubmissionLower.Low27Definitions
 import ProximityPrize.SubmissionLower.LowPrimary6921Source
+import ProximityPrize.SubmissionLower.SharpBudget6929
 set_option Elab.async false
 
 section PackSource_P0_9_1Defs
@@ -132,7 +133,7 @@ private theorem old_rank : K1_13_1.c1 :=
   K1_13_1_1.of_children K1_13_1_1_1.proof K1_13_1_1_2.proof K1_13_1_1_3.proof
 
 theorem rank_local (x y : Geom) :
-    Module.finrank Geom (LinearMap.range (anchorLocal x y)) ≤ 9199626 := by
+    Module.finrank Geom (LinearMap.range (anchorLocal x y)) ≤ 9198441 := by
   have hpositive (j : JetVariable 3) : differentialWeight 133671 j ≠ 0 := by
     cases j with
     | none => decide
@@ -154,7 +155,7 @@ theorem rank_local (x y : Geom) :
       localConstraintAt 90 0 0 (truncateX (globalPointTranslation x y Q))
     rw [origin_truncateX, localConstraintAt_eq_zero_globalPointTranslation]
   rw [h]
-  exact (LinearMap.finrank_range_comp_le_left (K1_13_1.anchorLocal 0 0) tr).trans (old_rank 0 0)
+  exact (LinearMap.finrank_range_comp_le_left (K1_13_1.anchorLocal 0 0) tr).trans (K1_13_1_1.sharpRank 0 0)
 
 end
 end P0_9_1
@@ -183,7 +184,7 @@ private def gradeSlots (a b c : ℕ) : ℕ :=
   gradeCeiling a b c + 1 - (a + b + c)
 
 private def firstWidth (a b c : ℕ) : ℕ :=
-  90 * 180139 - 133542 * gradeCeiling a b c + indexWeight a b c
+  90 * 180130 - 133542 * gradeCeiling a b c + indexWeight a b c
 
 /-- The grade falls by j from its ceiling, so each step adds 133542 abscissa slots. -/
 private def abscissaWidth (a b c j : ℕ) : ℕ := firstWidth a b c + 133542 * j
@@ -222,19 +223,19 @@ private theorem true_weight (x v a b c : ℕ) :
 private theorem eligible_exponent (x v a b c : ℕ) :
     AnchorEligible (exponent x v a b c) ↔
       c ≤ 10 ∧ indexWeight a b c ≤ 48 ∧ v + (a + b + c) ≤ gradeCeiling a b c ∧
-        x + 133542 * (v + (a + b + c)) < 90 * 180139 + indexWeight a b c := by
+        x + 133542 * (v + (a + b + c)) < 90 * 180130 + indexWeight a b c := by
   unfold AnchorEligible gradeCeiling indexWeight
   rw [show P0_9.physicalDegree = 133542 from rfl,
     Finsupp.degree_eq_weight_one, jet_weight, jet_weight, true_weight]
   simp only [mul_one, Finsupp.some_apply, exponent_some, Matrix.cons_val_zero, le_min_iff]
   change (v + a + b + c ≤ 120 ∧ v * 0 + a * 1 + b * 2 + c * 3 ≤ 48 ∧
     c ≤ 10 ∧ a + b + c ≤ 48 - (v + a + b + c - 113 + 1) / 2 ∧
-    x + (v * 133542 + a * 133541 + b * 133540 + c * 133539) ≤ 90 * 180139 - 1) ↔ _
+    x + (v * 133542 + a * 133541 + b * 133540 + c * 133539) ≤ 90 * 180130 - 1) ↔ _
   by_cases h : a + b + c = 0 <;> omega
 
 private theorem width_iff (a b c j x : ℕ) (hj : j ≤ gradeCeiling a b c) :
     x < abscissaWidth a b c j ↔
-      x + 133542 * (gradeCeiling a b c - j) < 90 * 180139 + indexWeight a b c := by
+      x + 133542 * (gradeCeiling a b c - j) < 90 * 180130 + indexWeight a b c := by
   have hgrade : gradeCeiling a b c ≤ 120 := min_le_left _ _
   unfold abscissaWidth firstWidth
   omega
@@ -350,11 +351,11 @@ private theorem slot_card : Fintype.card Slot = sumRange sliceCount 11 := by
 
 set_option maxRecDepth 10000 in
 set_option maxHeartbeats 2000000 in
-private theorem totalCount : sumRange sliceCount 11 = 2411639399501 := by
+private theorem totalCount : sumRange sliceCount 11 = 2411350415801 := by
   decide +kernel
 
 /-- Exact dimension of the order-90 anchor bank. -/
-theorem anchor_finrank : Module.finrank Geom anchorSpace = 2411639399501 := by
+theorem anchor_finrank : Module.finrank Geom anchorSpace = 2411350415801 := by
   let e : Slot ≃ Eligible :=
     Equiv.ofBijective slotExponent ⟨slotExponent_injective, slotExponent_surjective⟩
   let b := MvPolynomial.basisRestrictSupport Geom {u : Exponent | AnchorEligible u}
@@ -447,11 +448,11 @@ private theorem exists_anchor (w : I → K) :
       ∀ Γ s, Messages w Γ s → ∀ γ ∈ Γ, atJet Q (extend (s γ)) = 0 := by
   let localRows (i : I) := anchorLocal (embed (node i)) (embed (w i))
   have hr : (∑ i, Module.finrank Geom (LinearMap.range (localRows i))) ≤
-      2411626758144 := by
+      2411316117504 := by
     calc
-      _ ≤ ∑ _ : I, (9199626 : ℕ) := Finset.sum_le_sum fun i _ => rank_local _ _
+      _ ≤ ∑ _ : I, (9198441 : ℕ) := Finset.sum_le_sum fun i _ => rank_local _ _
       _ = _ := by simp
-  have hDim : 2411626758144 < Module.finrank Geom anchorSpace := by
+  have hDim : 2411316117504 < Module.finrank Geom anchorSpace := by
     rw [anchor_finrank]
     decide
   obtain ⟨Q, hQ, hlocal⟩ :=

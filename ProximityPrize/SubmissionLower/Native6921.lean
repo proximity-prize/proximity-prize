@@ -11,14 +11,14 @@ local instance : NeZero (131072 : ℕ) := ⟨by decide⟩
 abbrev radius := Protocol6921.radius
 theorem native_IsMCA_badSlope (U : Fin 2 → I → K) (γ : K)
     (hγ : IsMCA (AffineLineGenerator K) IRSProfile.baseCode γ U Native6921.radius) :
-    BadSlope IRSProfile.domain (U 0) (U 1) 131072 180139 γ := by
+    BadSlope IRSProfile.domain (U 0) (U 1) 131072 180130 γ := by
   change IsMCA (AffineLineGenerator K) (ReedSolomon.code IRSProfile.domain 131072)
     γ U Native6921.radius at hγ
-  apply isMCA_implies_badSlope IRSProfile.domain U 131072 180139 Native6921.radius ?_ γ hγ
+  apply isMCA_implies_badSlope IRSProfile.domain U 131072 180130 Native6921.radius ?_ γ hγ
   intro T hT
   norm_num [IRSProfile.card_index, radius, Protocol6921.radius, List6921.Native.radius6921, claimedRadius] at hT ⊢
   by_contra! h
-  have he : (T.card : ℝ) ≤ 180138 := by exact_mod_cast (show T.card ≤ 180138 by omega)
+  have he : (T.card : ℝ) ≤ 180129 := by exact_mod_cast (show T.card ≤ 180129 by omega)
   linarith
 
 theorem native_type_one_MCA_count (U : Fin 2 → I → K)
@@ -26,13 +26,13 @@ theorem native_type_one_MCA_count (U : Fin 2 → I → K)
     (Γ : Finset K) (hΓ : ∀ γ ∈ Γ,
       IsMCA (AffineLineGenerator K) IRSProfile.baseCode γ U Native6921.radius) : Γ.card ≤ 1 := by
   apply type_one_bad_count IRSProfile.domain IRSProfile.domain.injective
-    (U 0) (U 1) 131072 180139 p
+    (U 0) (U 1) 131072 180130 p
     (by norm_num only [IRSProfile.card_index]) (by norm_num [p]) htype Γ
   intro γ hγ
   exact Native6921.native_IsMCA_badSlope U γ (hΓ γ hγ)
 
 def PrincipalCert (u v : I → K) : Prop :=
-  ∃ a q : ℕ, a+q=82005 ∧ Nonempty (PrincipalAt
+  ∃ a q : ℕ, a+q=82014 ∧ Nonempty (PrincipalAt
     (fun b j => genericSlopeEmbedding (parameterSyndromes p IRSProfile.domain u v b j))
     131072 a q)
 
@@ -42,7 +42,7 @@ theorem native_generic_principal_MCA_count (U : Fin 2 → I → K)
     (hprincipal : PrincipalCert (U 0) (U 1))
     (Γ : Finset K) (hΓ : ∀ γ ∈ Γ,
       IsMCA (AffineLineGenerator K) IRSProfile.baseCode γ U Native6921.radius) :
-    Γ.card ≤ 733282618916950 := by
+    Γ.card ≤ 733301795274847 := by
   obtain ⟨a,q,hsum,⟨P⟩⟩ := hprincipal
   have hbad : ∀ γ ∈ Γ,
       BadSlope IRSProfile.domain (U 0) (U 1) 131072 (131072+(131072-(a+q))) γ := by
@@ -55,7 +55,7 @@ theorem native_generic_principal_MCA_count (U : Fin 2 → I → K)
     131072 131072 a q (by norm_num only [IRSProfile.card_index]) (by omega) P Γ hbad
   rw [IRSProfile.card_index] at hh
   exact hh.trans (calc
-    _ ≤ p*(262144+82006) := Nat.mul_le_mul_left p (by omega)
+    _ ≤ p*(262144+82015) := Nat.mul_le_mul_left p (by omega)
     _ = _ := by norm_num [p])
 
 
@@ -65,23 +65,23 @@ namespace FrobeniusLocator.Strata6921
 noncomputable section
 open Polynomial Matrix Finset Strata
 open ProximityPrize.Benchmark
-theorem native_relation_height_fits_field (H : ℕ) (hH : H≤32932) :
+theorem native_relation_height_fits_field (H : ℕ) (hH : H≤32950) :
     (2*H+2)*Native.p<Fintype.card Native.K := by
   change (2*H+2)*2130706433<Fintype.card KoalaBear.Ext6
   rw [KoalaBear.card_ext6]
-  have hle := Nat.mul_le_mul_right 2130706433 (show 2*H+2≤2*32932+2 by omega)
+  have hle := Nat.mul_le_mul_right 2130706433 (show 2*H+2≤2*32950+2 by omega)
   exact hle.trans_lt (by norm_num)
 
 /-- Native primitive polynomial Lemma T with all size/degree guards
 proved. The binary level Hilbert function remains an EXPLICIT premise. -/
 def native_lemmaT_of_two_active_level (U : Fin 2 → Native.I → Native.K)
-    (r a b c : ℕ) (hr7 : 7≤r) (ha : a≤b) (hb : b≤82005) (hc : 82005<c)
-    (hcm : c≤131072) (hsum : a+b+c=262146) (hr : r+a+b=164012)
+    (r a b c : ℕ) (hr7 : 7≤r) (ha : a≤b) (hb : b≤82014) (hc : 82014<c)
+    (hcm : c≤131072) (hsum : a+b+c=262146) (hr : r+a+b=164030)
     (hHF : HasLevelHilbertFunction
       (fun b j => algebraMap Native.K[X] (GenericLayer.GenericField Native.K)
         (Principal.parameterSyndromes Native.p IRSProfile.domain (U 0) (U 1) b j)) 131072 a b c) :
     PolynomialRelationCertificate Native.p IRSProfile.domain (U 0) (U 1) 131072 (131073-c) := by
-  have hH : 131073-c ≤ 32932 := by omega
+  have hH : 131073-c ≤ 32950 := by omega
   have hline := generic_relation_line_of_level Native.p IRSProfile.domain (U 0) (U 1)
     131072 a b c hcm hsum ha (by omega) (by omega) hHF
   exact polynomialRelationCertificate_of_nullity_one Native.p (by norm_num [Native.p])
@@ -92,13 +92,13 @@ def native_lemmaT_of_two_active_level (U : Fin 2 → Native.I → Native.K)
 variable {F ι : Type*} [Field F] [Fintype ι] [DecidableEq ι]
 theorem native_rank_exception_count [ExpChar F 2130706433]
     (x u v : ι → F) (r : ℕ) (hr7 : 7≤r)
-    (hr : GenericLayer.genericRank (stacked 2130706433 x u v 49067 82005)=82006-r)
-    (hfirst : GenericLayer.genericRank (hankel x u v 49067 82005)=49067)
+    (hr : GenericLayer.genericRank (stacked 2130706433 x u v 49058 82014)=82015-r)
+    (hfirst : GenericLayer.genericRank (hankel x u v 49058 82014)=49058)
     (Γ : Finset F) (hΓ : ∀ γ∈Γ,
-      ((stacked 2130706433 x u v 49067 82005).map (evalRingHom γ)).rank ≠ 82006-r) :
-    Γ.card ≤ 70168424300623 := by
-  have hb := two_block_rank_exception_count 2130706433 x u v 49067 82005 r hr hfirst Γ hΓ
-  have hs : 82005+1-r-49067 ≤ 32932 := by omega
+      ((stacked 2130706433 x u v 49058 82014).map (evalRingHom γ)).rank ≠ 82015-r) :
+    Γ.card ≤ 70206777016408 := by
+  have hb := two_block_rank_exception_count 2130706433 x u v 49058 82014 r hr hfirst Γ hΓ
+  have hs : 82014+1-r-49058 ≤ 32950 := by omega
   have hm := Nat.mul_le_mul_left 2130706433 hs
   omega
 

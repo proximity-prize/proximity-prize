@@ -15,10 +15,10 @@ open scoped BigOperators Polynomial
 open MvPolynomial (mem_support_iff)
 
 abbrev degreeBound : ℕ := 133542
-abbrev agreement : ℕ := 180139
+abbrev agreement : ℕ := 180130
 abbrev terminal : ℕ := 3000 * agreement - 1
 abbrev layerWidth : ℕ := 46600
-abbrev sourceRank : ℕ := 1187923627408492908
+abbrev sourceRank : ℕ := 1176881727286216908
 
 def WeightLE {n : ℕ} (P : Row n) (T : ℕ) : Prop :=
   ∀ m ∈ P.support, (P.coeff m).natDegree +
@@ -57,7 +57,7 @@ instance : Module.Finite Geom SourceSpace :=
 private abbrev Column := Σ _ : ℕ, Σ _ : ℕ, Σ _ : ℕ, Σ _ : ℕ, ℕ
 
 private def width (a b c f : ℕ) : ℕ :=
-  540417000 + b + 2 * c + 3 * f - 133542 * (a + b + c + f)
+  540390000 + b + 2 * c + 3 * f - 133542 * (a + b + c + f)
 
 private def tuples : Finset Column :=
   (range 551).sigma fun f =>
@@ -100,11 +100,11 @@ private theorem card_columns : sourceColumns.card = tuples.card := by
   exact (Finset.card_equiv e (fun t => (mem_columns t).symm)).symm
 
 private def widthInt (a b c f : ℤ) : ℤ :=
-  540417000 + b + 2 * c + 3 * f - 133542 * (a + b + c + f)
+  540390000 + b + 2 * c + 3 * f - 133542 * (a + b + c + f)
 
 private theorem cast_width (a b c f : ℕ) (h : a + b + c + f ≤ 4012) :
     (width a b c f : ℤ) = widthInt a b c f := by
-  have hpos : 133542 * (a + b + c + f) ≤ 540417000 + b + 2 * c + 3 * f := by omega
+  have hpos : 133542 * (a + b + c + f) ≤ 540390000 + b + 2 * c + 3 * f := by omega
   simp [width, widthInt, Nat.cast_sub hpos]
 
 /-- Verify a polynomial prefix by its initial value and forward difference. -/
@@ -220,11 +220,11 @@ private theorem sum_eq_evaluate (g : ℕ → ℤ) (n : ℕ) :
 
 set_option maxRecDepth 10000 in
 set_option maxHeartbeats 3000000 in
-private theorem evaluate_closedC : evaluate closedC 551 = 26322741385114310842752 := by
+private theorem evaluate_closedC : evaluate closedC 551 = 26319561317879095354752 := by
   rfl
 
-theorem exact_source_columns : sourceColumns.card = 91398407587202468204 := by
-  have h : 288 * (tuples.card : ℤ) = 26322741385114310842752 := by
+theorem exact_source_columns : sourceColumns.card = 91387365687080192204 := by
+  have h : 288 * (tuples.card : ℤ) = 26319561317879095354752 := by
     rw [card_tuples_int, mul_sum]
     calc
       _ = ∑ f ∈ range 551, closedC f :=
@@ -467,7 +467,7 @@ theorem primary_rank (w : I → K) : PrimaryRank w := by
   obtain ⟨power, hpower⟩ := OldGeometry.K1_13_2_3
   have hlocal := (K1_13_2.origin_rank_le power OldGeometry.K1_13_2_2).trans hpower
   have hglobal := word_rank_le w hlocal
-  have hsize : Module.finrank Geom SourceSpace = 91398407587202468204 :=
+  have hsize : Module.finrank Geom SourceSpace = 91387365687080192204 :=
     finrank_source.trans exact_source_columns
   have hdim := (wordMap w).finrank_range_add_finrank_ker
   have hker : sourceRank ≤ Module.finrank Geom (LinearMap.ker (wordMap w)) := by

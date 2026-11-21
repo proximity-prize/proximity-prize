@@ -149,546 +149,444 @@ private theorem interval {top rate lo b hi j l : ℕ} (hb : lo ≤ b) (hu : b �
     _ ≤ P0_9.physicalPrice (peak top hi j) l := physical_mono (x := peak top b j) (y := peak top hi j)
       ⟨hu,le_rfl,le_rfl⟩ (peak_index top b j) (peak_index top hi j) l
     _ ≤ _ := cost
-private theorem row7_3 (b : ℕ) (hb : b ≤ 120) (hv : 3 ≤ 3*b) : Paid 7 222671385202463816 b 3 := by
+private theorem row7_3 (b : ℕ) (hb : b ≤ 120) (hv : 3 ≤ 3*b) : Paid 7 222672674688503043 b 3 := by
   exact interval (lo := 1) (hi := 120) (l := 1) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row7_4 (b : ℕ) (hb : b ≤ 120) (hv : 4 ≤ 3*b) : Paid 7 222671385202463816 b 4 := by
-  by_cases h0 : b ≤ 21
-  · exact interval (lo := 2) (hi := 21) (l := 1) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 22) (hi := 120) (l := 8) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row7_5 (b : ℕ) (hb : b ≤ 120) (hv : 5 ≤ 3*b) : Paid 7 222671385202463816 b 5 := by
-  by_cases h0 : b ≤ 21
-  · exact interval (lo := 2) (hi := 21) (l := 1) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 22) (hi := 120) (l := 8) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row7_6 (b : ℕ) (hb : b ≤ 120) (hv : 6 ≤ 3*b) : Paid 7 222671385202463816 b 6 := by
-  by_cases h0 : b ≤ 21
-  · exact interval (lo := 2) (hi := 21) (l := 1) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 22) (hi := 120) (l := 8) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row7_7 (b : ℕ) (hb : b ≤ 120) (hv : 7 ≤ 3*b) : Paid 7 222671385202463816 b 7 := by
-  by_cases h0 : b ≤ 8
-  · exact interval (lo := 3) (hi := 8) (l := 4) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 9) (hi := 120) (l := 9) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row7_8 (b : ℕ) (hb : b ≤ 120) (hv : 8 ≤ 3*b) : Paid 7 222671385202463816 b 8 := by
-  by_cases h0 : b ≤ 8
-  · exact interval (lo := 3) (hi := 8) (l := 4) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 9) (hi := 120) (l := 9) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row7_9 (b : ℕ) (hb : b ≤ 120) (hv : 9 ≤ 3*b) : Paid 7 222671385202463816 b 9 := by
-  by_cases h0 : b ≤ 8
-  · exact interval (lo := 3) (hi := 8) (l := 4) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 9) (hi := 120) (l := 9) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row7_10 (b : ℕ) (hb : b ≤ 120) (hv : 10 ≤ 3*b) : Paid 7 222671385202463816 b 10 := by
-  by_cases h0 : b ≤ 8
-  · exact interval (lo := 4) (hi := 8) (l := 4) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row7_4 (b : ℕ) (hb : b ≤ 120) (hv : 4 ≤ 3*b) : Paid 7 222672674688503043 b 4 := by
+  by_cases h0 : b ≤ 66
+  · exact interval (lo := 2) (hi := 66) (l := 1) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  exact interval (lo := 67) (hi := 120) (l := 8) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row7_5 (b : ℕ) (hb : b ≤ 120) (hv : 5 ≤ 3*b) : Paid 7 222672674688503043 b 5 := by
+  by_cases h0 : b ≤ 38
+  · exact interval (lo := 2) (hi := 38) (l := 1) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  exact interval (lo := 39) (hi := 120) (l := 8) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row7_6 (b : ℕ) (hb : b ≤ 120) (hv : 6 ≤ 3*b) : Paid 7 222672674688503043 b 6 := by
+  by_cases h0 : b ≤ 26
+  · exact interval (lo := 2) (hi := 26) (l := 1) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  exact interval (lo := 27) (hi := 120) (l := 8) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row7_7 (b : ℕ) (hb : b ≤ 120) (hv : 7 ≤ 3*b) : Paid 7 222672674688503043 b 7 := by
+  by_cases h0 : b ≤ 78
+  · exact interval (lo := 3) (hi := 78) (l := 4) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  exact interval (lo := 79) (hi := 120) (l := 9) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row7_8 (b : ℕ) (hb : b ≤ 120) (hv : 8 ≤ 3*b) : Paid 7 222672674688503043 b 8 := by
+  by_cases h0 : b ≤ 63
+  · exact interval (lo := 3) (hi := 63) (l := 4) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  exact interval (lo := 64) (hi := 120) (l := 9) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row7_9 (b : ℕ) (hb : b ≤ 120) (hv : 9 ≤ 3*b) : Paid 7 222672674688503043 b 9 := by
+  by_cases h0 : b ≤ 53
+  · exact interval (lo := 3) (hi := 53) (l := 4) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  exact interval (lo := 54) (hi := 120) (l := 9) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row7_10 (b : ℕ) (hb : b ≤ 120) (hv : 10 ≤ 3*b) : Paid 7 222672674688503043 b 10 := by
+  by_cases h0 : b ≤ 46
+  · exact interval (lo := 4) (hi := 46) (l := 4) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
   by_cases h1 : b ≤ 106
-  · exact interval (lo := 9) (hi := 106) (l := 9) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  · exact interval (lo := 47) (hi := 106) (l := 9) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
   exact interval (lo := 107) (hi := 120) (l := 50) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row7_11 (b : ℕ) (hb : b ≤ 120) (hv : 11 ≤ 3*b) : Paid 7 222671385202463816 b 11 := by
-  by_cases h0 : b ≤ 8
-  · exact interval (lo := 4) (hi := 8) (l := 4) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row7_11 (b : ℕ) (hb : b ≤ 120) (hv : 11 ≤ 3*b) : Paid 7 222672674688503043 b 11 := by
+  by_cases h0 : b ≤ 41
+  · exact interval (lo := 4) (hi := 41) (l := 4) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
   by_cases h1 : b ≤ 95
-  · exact interval (lo := 9) (hi := 95) (l := 9) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h2 : b ≤ 106
-  · exact interval (lo := 96) (hi := 106) (l := 49) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 107) (hi := 120) (l := 50) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row7_12 (b : ℕ) (hb : b ≤ 120) (hv : 12 ≤ 3*b) : Paid 7 222671385202463816 b 12 := by
-  by_cases h0 : b ≤ 8
-  · exact interval (lo := 4) (hi := 8) (l := 4) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  · exact interval (lo := 42) (hi := 95) (l := 9) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  exact interval (lo := 96) (hi := 120) (l := 49) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row7_12 (b : ℕ) (hb : b ≤ 120) (hv : 12 ≤ 3*b) : Paid 7 222672674688503043 b 12 := by
+  by_cases h0 : b ≤ 37
+  · exact interval (lo := 4) (hi := 37) (l := 4) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
   by_cases h1 : b ≤ 86
-  · exact interval (lo := 9) (hi := 86) (l := 9) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h2 : b ≤ 95
-  · exact interval (lo := 87) (hi := 95) (l := 48) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h3 : b ≤ 106
-  · exact interval (lo := 96) (hi := 106) (l := 49) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 107) (hi := 120) (l := 50) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row7_13 (b : ℕ) (hb : b ≤ 120) (hv : 13 ≤ 3*b) : Paid 7 222671385202463816 b 13 := by
-  by_cases h0 : b ≤ 7
-  · exact interval (lo := 5) (hi := 7) (l := 4) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h1 : b ≤ 86
-  · exact interval (lo := 8) (hi := 86) (l := 32) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h2 : b ≤ 95
-  · exact interval (lo := 87) (hi := 95) (l := 48) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h3 : b ≤ 106
-  · exact interval (lo := 96) (hi := 106) (l := 49) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 107) (hi := 120) (l := 50) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row7_14 (b : ℕ) (hb : b ≤ 120) (hv : 14 ≤ 3*b) : Paid 7 222671385202463816 b 14 := by
-  by_cases h0 : b ≤ 7
-  · exact interval (lo := 5) (hi := 7) (l := 4) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h1 : b ≤ 86
-  · exact interval (lo := 8) (hi := 86) (l := 32) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h2 : b ≤ 95
-  · exact interval (lo := 87) (hi := 95) (l := 48) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h3 : b ≤ 106
-  · exact interval (lo := 96) (hi := 106) (l := 49) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 107) (hi := 120) (l := 50) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row7_15 (b : ℕ) (hb : b ≤ 120) (hv : 15 ≤ 3*b) : Paid 7 222671385202463816 b 15 := by
-  by_cases h0 : b ≤ 7
-  · exact interval (lo := 5) (hi := 7) (l := 4) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h1 : b ≤ 86
-  · exact interval (lo := 8) (hi := 86) (l := 32) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h2 : b ≤ 95
-  · exact interval (lo := 87) (hi := 95) (l := 48) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h3 : b ≤ 106
-  · exact interval (lo := 96) (hi := 106) (l := 49) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 107) (hi := 120) (l := 50) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row7_16 (b : ℕ) (hb : b ≤ 120) (hv : 16 ≤ 3*b) : Paid 7 222671385202463816 b 16 := by
-  by_cases h0 : b ≤ 7
-  · exact interval (lo := 6) (hi := 7) (l := 4) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h1 : b ≤ 86
-  · exact interval (lo := 8) (hi := 86) (l := 32) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h2 : b ≤ 95
-  · exact interval (lo := 87) (hi := 95) (l := 48) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h3 : b ≤ 106
-  · exact interval (lo := 96) (hi := 106) (l := 49) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 107) (hi := 120) (l := 50) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row7_17 (b : ℕ) (hb : b ≤ 120) (hv : 17 ≤ 3*b) : Paid 7 222671385202463816 b 17 := by
-  by_cases h0 : b ≤ 7
-  · exact interval (lo := 6) (hi := 7) (l := 4) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h1 : b ≤ 86
-  · exact interval (lo := 8) (hi := 86) (l := 32) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h2 : b ≤ 95
-  · exact interval (lo := 87) (hi := 95) (l := 48) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h3 : b ≤ 106
-  · exact interval (lo := 96) (hi := 106) (l := 49) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 107) (hi := 120) (l := 50) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row7_18 (b : ℕ) (hb : b ≤ 120) (hv : 18 ≤ 3*b) : Paid 7 222671385202463816 b 18 := by
-  by_cases h0 : b ≤ 7
-  · exact interval (lo := 6) (hi := 7) (l := 4) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h1 : b ≤ 86
-  · exact interval (lo := 8) (hi := 86) (l := 32) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h2 : b ≤ 95
-  · exact interval (lo := 87) (hi := 95) (l := 48) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h3 : b ≤ 106
-  · exact interval (lo := 96) (hi := 106) (l := 49) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 107) (hi := 120) (l := 50) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row7_19 (b : ℕ) (hb : b ≤ 120) (hv : 19 ≤ 3*b) : Paid 7 222671385202463816 b 19 := by
-  by_cases h0 : b ≤ 7
-  · exact interval (lo := 7) (hi := 7) (l := 4) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h1 : b ≤ 86
-  · exact interval (lo := 8) (hi := 86) (l := 32) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h2 : b ≤ 95
-  · exact interval (lo := 87) (hi := 95) (l := 48) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h3 : b ≤ 106
-  · exact interval (lo := 96) (hi := 106) (l := 49) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 107) (hi := 120) (l := 50) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row7_20 (b : ℕ) (hb : b ≤ 120) (hv : 20 ≤ 3*b) : Paid 7 222671385202463816 b 20 := by
-  by_cases h0 : b ≤ 86
-  · exact interval (lo := 7) (hi := 86) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h1 : b ≤ 95
-  · exact interval (lo := 87) (hi := 95) (l := 48) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h2 : b ≤ 106
-  · exact interval (lo := 96) (hi := 106) (l := 49) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 107) (hi := 120) (l := 50) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row7_21 (b : ℕ) (hb : b ≤ 120) (hv : 21 ≤ 3*b) : Paid 7 222671385202463816 b 21 := by
-  by_cases h0 : b ≤ 86
-  · exact interval (lo := 7) (hi := 86) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h1 : b ≤ 95
-  · exact interval (lo := 87) (hi := 95) (l := 48) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h2 : b ≤ 106
-  · exact interval (lo := 96) (hi := 106) (l := 49) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 107) (hi := 120) (l := 50) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row7_22 (b : ℕ) (hb : b ≤ 120) (hv : 22 ≤ 3*b) : Paid 7 222671385202463816 b 22 := by
-  by_cases h0 : b ≤ 86
-  · exact interval (lo := 8) (hi := 86) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h1 : b ≤ 95
-  · exact interval (lo := 87) (hi := 95) (l := 48) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h2 : b ≤ 106
-  · exact interval (lo := 96) (hi := 106) (l := 49) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 107) (hi := 120) (l := 50) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row7_23 (b : ℕ) (hb : b ≤ 120) (hv : 23 ≤ 3*b) : Paid 7 222671385202463816 b 23 := by
-  by_cases h0 : b ≤ 86
-  · exact interval (lo := 8) (hi := 86) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h1 : b ≤ 95
-  · exact interval (lo := 87) (hi := 95) (l := 48) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h2 : b ≤ 106
-  · exact interval (lo := 96) (hi := 106) (l := 49) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 107) (hi := 120) (l := 50) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row7_24 (b : ℕ) (hb : b ≤ 120) (hv : 24 ≤ 3*b) : Paid 7 222671385202463816 b 24 := by
-  by_cases h0 : b ≤ 86
-  · exact interval (lo := 8) (hi := 86) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h1 : b ≤ 95
-  · exact interval (lo := 87) (hi := 95) (l := 48) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h2 : b ≤ 106
-  · exact interval (lo := 96) (hi := 106) (l := 49) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 107) (hi := 120) (l := 50) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row7_25 (b : ℕ) (hb : b ≤ 120) (hv : 25 ≤ 3*b) : Paid 7 222671385202463816 b 25 := by
-  by_cases h0 : b ≤ 86
-  · exact interval (lo := 9) (hi := 86) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h1 : b ≤ 95
-  · exact interval (lo := 87) (hi := 95) (l := 48) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h2 : b ≤ 106
-  · exact interval (lo := 96) (hi := 106) (l := 49) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 107) (hi := 120) (l := 50) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row7_26 (b : ℕ) (hb : b ≤ 120) (hv : 26 ≤ 3*b) : Paid 7 222671385202463816 b 26 := by
-  by_cases h0 : b ≤ 86
-  · exact interval (lo := 9) (hi := 86) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h1 : b ≤ 95
-  · exact interval (lo := 87) (hi := 95) (l := 48) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h2 : b ≤ 106
-  · exact interval (lo := 96) (hi := 106) (l := 49) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 107) (hi := 120) (l := 50) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row7_27 (b : ℕ) (hb : b ≤ 120) (hv : 27 ≤ 3*b) : Paid 7 222671385202463816 b 27 := by
-  by_cases h0 : b ≤ 86
-  · exact interval (lo := 9) (hi := 86) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h1 : b ≤ 95
-  · exact interval (lo := 87) (hi := 95) (l := 48) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h2 : b ≤ 106
-  · exact interval (lo := 96) (hi := 106) (l := 49) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 107) (hi := 120) (l := 50) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row7_28 (b : ℕ) (hb : b ≤ 120) (hv : 28 ≤ 3*b) : Paid 7 222671385202463816 b 28 := by
-  by_cases h0 : b ≤ 86
-  · exact interval (lo := 10) (hi := 86) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h1 : b ≤ 95
-  · exact interval (lo := 87) (hi := 95) (l := 48) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h2 : b ≤ 106
-  · exact interval (lo := 96) (hi := 106) (l := 49) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 107) (hi := 120) (l := 50) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row7_29 (b : ℕ) (hb : b ≤ 120) (hv : 29 ≤ 3*b) : Paid 7 222671385202463816 b 29 := by
-  by_cases h0 : b ≤ 86
-  · exact interval (lo := 10) (hi := 86) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h1 : b ≤ 95
-  · exact interval (lo := 87) (hi := 95) (l := 48) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h2 : b ≤ 106
-  · exact interval (lo := 96) (hi := 106) (l := 49) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 107) (hi := 120) (l := 50) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row7_30 (b : ℕ) (hb : b ≤ 120) (hv : 30 ≤ 3*b) : Paid 7 222671385202463816 b 30 := by
-  by_cases h0 : b ≤ 86
-  · exact interval (lo := 10) (hi := 86) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h1 : b ≤ 95
-  · exact interval (lo := 87) (hi := 95) (l := 48) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h2 : b ≤ 106
-  · exact interval (lo := 96) (hi := 106) (l := 49) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 107) (hi := 120) (l := 50) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row7_31 (b : ℕ) (hb : b ≤ 120) (hv : 31 ≤ 3*b) : Paid 7 222671385202463816 b 31 := by
-  by_cases h0 : b ≤ 60
-  · exact interval (lo := 11) (hi := 60) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 61) (hi := 120) (l := 52) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row7_32 (b : ℕ) (hb : b ≤ 120) (hv : 32 ≤ 3*b) : Paid 7 222671385202463816 b 32 := by
-  by_cases h0 : b ≤ 60
-  · exact interval (lo := 11) (hi := 60) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 61) (hi := 120) (l := 52) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row7_33 (b : ℕ) (hb : b ≤ 120) (hv : 33 ≤ 3*b) : Paid 7 222671385202463816 b 33 := by
-  by_cases h0 : b ≤ 60
-  · exact interval (lo := 11) (hi := 60) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 61) (hi := 120) (l := 52) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row7_34 (b : ℕ) (hb : b ≤ 120) (hv : 34 ≤ 3*b) : Paid 7 222671385202463816 b 34 := by
-  by_cases h0 : b ≤ 60
-  · exact interval (lo := 12) (hi := 60) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 61) (hi := 120) (l := 52) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row7_35 (b : ℕ) (hb : b ≤ 120) (hv : 35 ≤ 3*b) : Paid 7 222671385202463816 b 35 := by
-  by_cases h0 : b ≤ 60
-  · exact interval (lo := 12) (hi := 60) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 61) (hi := 120) (l := 52) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row7_36 (b : ℕ) (hb : b ≤ 120) (hv : 36 ≤ 3*b) : Paid 7 222671385202463816 b 36 := by
-  by_cases h0 : b ≤ 60
-  · exact interval (lo := 12) (hi := 60) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 61) (hi := 120) (l := 52) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row7_37 (b : ℕ) (hb : b ≤ 120) (hv : 37 ≤ 3*b) : Paid 7 222671385202463816 b 37 := by
-  by_cases h0 : b ≤ 60
-  · exact interval (lo := 13) (hi := 60) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 61) (hi := 120) (l := 52) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row7_38 (b : ℕ) (hb : b ≤ 120) (hv : 38 ≤ 3*b) : Paid 7 222671385202463816 b 38 := by
-  by_cases h0 : b ≤ 60
-  · exact interval (lo := 13) (hi := 60) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 61) (hi := 120) (l := 52) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row7_39 (b : ℕ) (hb : b ≤ 120) (hv : 39 ≤ 3*b) : Paid 7 222671385202463816 b 39 := by
-  by_cases h0 : b ≤ 60
-  · exact interval (lo := 13) (hi := 60) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 61) (hi := 120) (l := 52) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row7_40 (b : ℕ) (hb : b ≤ 120) (hv : 40 ≤ 3*b) : Paid 7 222671385202463816 b 40 := by
-  by_cases h0 : b ≤ 60
-  · exact interval (lo := 14) (hi := 60) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 61) (hi := 120) (l := 52) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row7_41 (b : ℕ) (hb : b ≤ 120) (hv : 41 ≤ 3*b) : Paid 7 222671385202463816 b 41 := by
+  · exact interval (lo := 38) (hi := 86) (l := 9) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  exact interval (lo := 87) (hi := 120) (l := 48) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row7_13 (b : ℕ) (hb : b ≤ 120) (hv : 13 ≤ 3*b) : Paid 7 222672674688503043 b 13 := by
+  by_cases h0 : b ≤ 33
+  · exact interval (lo := 5) (hi := 33) (l := 4) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  exact interval (lo := 34) (hi := 120) (l := 31) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row7_14 (b : ℕ) (hb : b ≤ 120) (hv : 14 ≤ 3*b) : Paid 7 222672674688503043 b 14 := by
+  by_cases h0 : b ≤ 30
+  · exact interval (lo := 5) (hi := 30) (l := 4) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  exact interval (lo := 31) (hi := 120) (l := 31) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row7_15 (b : ℕ) (hb : b ≤ 120) (hv : 15 ≤ 3*b) : Paid 7 222672674688503043 b 15 := by
+  by_cases h0 : b ≤ 28
+  · exact interval (lo := 5) (hi := 28) (l := 4) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  exact interval (lo := 29) (hi := 120) (l := 31) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row7_16 (b : ℕ) (hb : b ≤ 120) (hv : 16 ≤ 3*b) : Paid 7 222672674688503043 b 16 := by
+  by_cases h0 : b ≤ 25
+  · exact interval (lo := 6) (hi := 25) (l := 4) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  exact interval (lo := 26) (hi := 120) (l := 31) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row7_17 (b : ℕ) (hb : b ≤ 120) (hv : 17 ≤ 3*b) : Paid 7 222672674688503043 b 17 := by
+  by_cases h0 : b ≤ 23
+  · exact interval (lo := 6) (hi := 23) (l := 4) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  exact interval (lo := 24) (hi := 120) (l := 31) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row7_18 (b : ℕ) (hb : b ≤ 120) (hv : 18 ≤ 3*b) : Paid 7 222672674688503043 b 18 := by
+  by_cases h0 : b ≤ 22
+  · exact interval (lo := 6) (hi := 22) (l := 4) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  exact interval (lo := 23) (hi := 120) (l := 31) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row7_19 (b : ℕ) (hb : b ≤ 120) (hv : 19 ≤ 3*b) : Paid 7 222672674688503043 b 19 := by
+  by_cases h0 : b ≤ 20
+  · exact interval (lo := 7) (hi := 20) (l := 4) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  exact interval (lo := 21) (hi := 120) (l := 31) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row7_20 (b : ℕ) (hb : b ≤ 120) (hv : 20 ≤ 3*b) : Paid 7 222672674688503043 b 20 := by
+  exact interval (lo := 7) (hi := 120) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row7_21 (b : ℕ) (hb : b ≤ 120) (hv : 21 ≤ 3*b) : Paid 7 222672674688503043 b 21 := by
+  exact interval (lo := 7) (hi := 120) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row7_22 (b : ℕ) (hb : b ≤ 120) (hv : 22 ≤ 3*b) : Paid 7 222672674688503043 b 22 := by
+  exact interval (lo := 8) (hi := 120) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row7_23 (b : ℕ) (hb : b ≤ 120) (hv : 23 ≤ 3*b) : Paid 7 222672674688503043 b 23 := by
+  exact interval (lo := 8) (hi := 120) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row7_24 (b : ℕ) (hb : b ≤ 120) (hv : 24 ≤ 3*b) : Paid 7 222672674688503043 b 24 := by
+  exact interval (lo := 8) (hi := 120) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row7_25 (b : ℕ) (hb : b ≤ 120) (hv : 25 ≤ 3*b) : Paid 7 222672674688503043 b 25 := by
+  exact interval (lo := 9) (hi := 120) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row7_26 (b : ℕ) (hb : b ≤ 120) (hv : 26 ≤ 3*b) : Paid 7 222672674688503043 b 26 := by
+  exact interval (lo := 9) (hi := 120) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row7_27 (b : ℕ) (hb : b ≤ 120) (hv : 27 ≤ 3*b) : Paid 7 222672674688503043 b 27 := by
+  exact interval (lo := 9) (hi := 120) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row7_28 (b : ℕ) (hb : b ≤ 120) (hv : 28 ≤ 3*b) : Paid 7 222672674688503043 b 28 := by
+  exact interval (lo := 10) (hi := 120) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row7_29 (b : ℕ) (hb : b ≤ 120) (hv : 29 ≤ 3*b) : Paid 7 222672674688503043 b 29 := by
+  exact interval (lo := 10) (hi := 120) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row7_30 (b : ℕ) (hb : b ≤ 120) (hv : 30 ≤ 3*b) : Paid 7 222672674688503043 b 30 := by
+  exact interval (lo := 10) (hi := 120) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row7_31 (b : ℕ) (hb : b ≤ 120) (hv : 31 ≤ 3*b) : Paid 7 222672674688503043 b 31 := by
+  exact interval (lo := 11) (hi := 120) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row7_32 (b : ℕ) (hb : b ≤ 120) (hv : 32 ≤ 3*b) : Paid 7 222672674688503043 b 32 := by
+  exact interval (lo := 11) (hi := 120) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row7_33 (b : ℕ) (hb : b ≤ 120) (hv : 33 ≤ 3*b) : Paid 7 222672674688503043 b 33 := by
+  exact interval (lo := 11) (hi := 120) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row7_34 (b : ℕ) (hb : b ≤ 120) (hv : 34 ≤ 3*b) : Paid 7 222672674688503043 b 34 := by
+  exact interval (lo := 12) (hi := 120) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row7_35 (b : ℕ) (hb : b ≤ 120) (hv : 35 ≤ 3*b) : Paid 7 222672674688503043 b 35 := by
+  exact interval (lo := 12) (hi := 120) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row7_36 (b : ℕ) (hb : b ≤ 120) (hv : 36 ≤ 3*b) : Paid 7 222672674688503043 b 36 := by
+  exact interval (lo := 12) (hi := 120) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row7_37 (b : ℕ) (hb : b ≤ 120) (hv : 37 ≤ 3*b) : Paid 7 222672674688503043 b 37 := by
+  by_cases h0 : b ≤ 116
+  · exact interval (lo := 13) (hi := 116) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  exact interval (lo := 117) (hi := 120) (l := 51) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row7_38 (b : ℕ) (hb : b ≤ 120) (hv : 38 ≤ 3*b) : Paid 7 222672674688503043 b 38 := by
+  by_cases h0 : b ≤ 113
+  · exact interval (lo := 13) (hi := 113) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  exact interval (lo := 114) (hi := 120) (l := 51) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row7_39 (b : ℕ) (hb : b ≤ 120) (hv : 39 ≤ 3*b) : Paid 7 222672674688503043 b 39 := by
+  by_cases h0 : b ≤ 110
+  · exact interval (lo := 13) (hi := 110) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  exact interval (lo := 111) (hi := 120) (l := 51) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row7_40 (b : ℕ) (hb : b ≤ 120) (hv : 40 ≤ 3*b) : Paid 7 222672674688503043 b 40 := by
+  by_cases h0 : b ≤ 107
+  · exact interval (lo := 14) (hi := 107) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  exact interval (lo := 108) (hi := 120) (l := 51) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row7_41 (b : ℕ) (hb : b ≤ 120) (hv : 41 ≤ 3*b) : Paid 7 222672674688503043 b 41 := by
   exact interval (lo := 14) (hi := 120) (l := 53) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row7_42 (b : ℕ) (hb : b ≤ 120) (hv : 42 ≤ 3*b) : Paid 7 222671385202463816 b 42 := by
+private theorem row7_42 (b : ℕ) (hb : b ≤ 120) (hv : 42 ≤ 3*b) : Paid 7 222672674688503043 b 42 := by
   exact interval (lo := 14) (hi := 120) (l := 53) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row7_43 (b : ℕ) (hb : b ≤ 120) (hv : 43 ≤ 3*b) : Paid 7 222671385202463816 b 43 := by
+private theorem row7_43 (b : ℕ) (hb : b ≤ 120) (hv : 43 ≤ 3*b) : Paid 7 222672674688503043 b 43 := by
   exact interval (lo := 15) (hi := 120) (l := 53) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row7_44 (b : ℕ) (hb : b ≤ 120) (hv : 44 ≤ 3*b) : Paid 7 222671385202463816 b 44 := by
+private theorem row7_44 (b : ℕ) (hb : b ≤ 120) (hv : 44 ≤ 3*b) : Paid 7 222672674688503043 b 44 := by
   exact interval (lo := 15) (hi := 120) (l := 53) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row7_45 (b : ℕ) (hb : b ≤ 120) (hv : 45 ≤ 3*b) : Paid 7 222671385202463816 b 45 := by
+private theorem row7_45 (b : ℕ) (hb : b ≤ 120) (hv : 45 ≤ 3*b) : Paid 7 222672674688503043 b 45 := by
   exact interval (lo := 15) (hi := 120) (l := 53) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row7_46 (b : ℕ) (hb : b ≤ 120) (hv : 46 ≤ 3*b) : Paid 7 222671385202463816 b 46 := by
-  by_cases h0 : b ≤ 106
-  · exact interval (lo := 16) (hi := 106) (l := 53) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 107) (hi := 120) (l := 56) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row7_47 (b : ℕ) (hb : b ≤ 120) (hv : 47 ≤ 3*b) : Paid 7 222671385202463816 b 47 := by
-  by_cases h0 : b ≤ 106
-  · exact interval (lo := 16) (hi := 106) (l := 53) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 107) (hi := 120) (l := 56) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row7_48 (b : ℕ) (hb : b ≤ 120) (hv : 48 ≤ 3*b) : Paid 7 222671385202463816 b 48 := by
-  by_cases h0 : b ≤ 106
-  · exact interval (lo := 16) (hi := 106) (l := 53) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 107) (hi := 120) (l := 56) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row10_3 (b : ℕ) (hb : b ≤ 120) (hv : 3 ≤ 3*b) : Paid 10 229472479831508835 b 3 := by
+private theorem row7_46 (b : ℕ) (hb : b ≤ 120) (hv : 46 ≤ 3*b) : Paid 7 222672674688503043 b 46 := by
+  by_cases h0 : b ≤ 118
+  · exact interval (lo := 16) (hi := 118) (l := 53) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  exact interval (lo := 119) (hi := 120) (l := 55) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row7_47 (b : ℕ) (hb : b ≤ 120) (hv : 47 ≤ 3*b) : Paid 7 222672674688503043 b 47 := by
+  by_cases h0 : b ≤ 115
+  · exact interval (lo := 16) (hi := 115) (l := 53) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  exact interval (lo := 116) (hi := 120) (l := 55) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row7_48 (b : ℕ) (hb : b ≤ 120) (hv : 48 ≤ 3*b) : Paid 7 222672674688503043 b 48 := by
+  by_cases h0 : b ≤ 113
+  · exact interval (lo := 16) (hi := 113) (l := 53) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  by_cases h1 : b ≤ 117
+  · exact interval (lo := 114) (hi := 117) (l := 55) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  exact interval (lo := 118) (hi := 120) (l := 56) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row9_3 (b : ℕ) (hb : b ≤ 120) (hv : 3 ≤ 3*b) : Paid 9 229472478411275283 b 3 := by
   exact interval (lo := 1) (hi := 120) (l := 1) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row10_4 (b : ℕ) (hb : b ≤ 120) (hv : 4 ≤ 3*b) : Paid 10 229472479831508835 b 4 := by
+private theorem row9_4 (b : ℕ) (hb : b ≤ 120) (hv : 4 ≤ 3*b) : Paid 9 229472478411275283 b 4 := by
+  by_cases h0 : b ≤ 68
+  · exact interval (lo := 2) (hi := 68) (l := 1) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  exact interval (lo := 69) (hi := 120) (l := 8) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row9_5 (b : ℕ) (hb : b ≤ 120) (hv : 5 ≤ 3*b) : Paid 9 229472478411275283 b 5 := by
+  by_cases h0 : b ≤ 39
+  · exact interval (lo := 2) (hi := 39) (l := 1) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  exact interval (lo := 40) (hi := 120) (l := 8) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row9_6 (b : ℕ) (hb : b ≤ 120) (hv : 6 ≤ 3*b) : Paid 9 229472478411275283 b 6 := by
+  by_cases h0 : b ≤ 26
+  · exact interval (lo := 2) (hi := 26) (l := 1) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  exact interval (lo := 27) (hi := 120) (l := 8) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row9_7 (b : ℕ) (hb : b ≤ 120) (hv : 7 ≤ 3*b) : Paid 9 229472478411275283 b 7 := by
+  by_cases h0 : b ≤ 81
+  · exact interval (lo := 3) (hi := 81) (l := 4) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  exact interval (lo := 82) (hi := 120) (l := 9) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row9_8 (b : ℕ) (hb : b ≤ 120) (hv : 8 ≤ 3*b) : Paid 9 229472478411275283 b 8 := by
+  by_cases h0 : b ≤ 65
+  · exact interval (lo := 3) (hi := 65) (l := 4) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  exact interval (lo := 66) (hi := 120) (l := 9) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row9_9 (b : ℕ) (hb : b ≤ 120) (hv : 9 ≤ 3*b) : Paid 9 229472478411275283 b 9 := by
+  by_cases h0 : b ≤ 55
+  · exact interval (lo := 3) (hi := 55) (l := 4) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  exact interval (lo := 56) (hi := 120) (l := 9) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row9_10 (b : ℕ) (hb : b ≤ 120) (hv : 10 ≤ 3*b) : Paid 9 229472478411275283 b 10 := by
+  by_cases h0 : b ≤ 48
+  · exact interval (lo := 4) (hi := 48) (l := 4) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  by_cases h1 : b ≤ 110
+  · exact interval (lo := 49) (hi := 110) (l := 9) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  exact interval (lo := 111) (hi := 120) (l := 50) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row9_11 (b : ℕ) (hb : b ≤ 120) (hv : 11 ≤ 3*b) : Paid 9 229472478411275283 b 11 := by
+  by_cases h0 : b ≤ 43
+  · exact interval (lo := 4) (hi := 43) (l := 4) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  by_cases h1 : b ≤ 98
+  · exact interval (lo := 44) (hi := 98) (l := 9) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  exact interval (lo := 99) (hi := 120) (l := 49) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row9_12 (b : ℕ) (hb : b ≤ 120) (hv : 12 ≤ 3*b) : Paid 9 229472478411275283 b 12 := by
+  by_cases h0 : b ≤ 38
+  · exact interval (lo := 4) (hi := 38) (l := 4) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  by_cases h1 : b ≤ 88
+  · exact interval (lo := 39) (hi := 88) (l := 9) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  exact interval (lo := 89) (hi := 120) (l := 48) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row9_13 (b : ℕ) (hb : b ≤ 120) (hv : 13 ≤ 3*b) : Paid 9 229472478411275283 b 13 := by
+  by_cases h0 : b ≤ 35
+  · exact interval (lo := 5) (hi := 35) (l := 4) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  exact interval (lo := 36) (hi := 120) (l := 31) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row9_14 (b : ℕ) (hb : b ≤ 120) (hv : 14 ≤ 3*b) : Paid 9 229472478411275283 b 14 := by
+  by_cases h0 : b ≤ 31
+  · exact interval (lo := 5) (hi := 31) (l := 4) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  exact interval (lo := 32) (hi := 120) (l := 31) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row9_15 (b : ℕ) (hb : b ≤ 120) (hv : 15 ≤ 3*b) : Paid 9 229472478411275283 b 15 := by
+  by_cases h0 : b ≤ 29
+  · exact interval (lo := 5) (hi := 29) (l := 4) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  exact interval (lo := 30) (hi := 120) (l := 31) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row9_16 (b : ℕ) (hb : b ≤ 120) (hv : 16 ≤ 3*b) : Paid 9 229472478411275283 b 16 := by
+  by_cases h0 : b ≤ 26
+  · exact interval (lo := 6) (hi := 26) (l := 4) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  exact interval (lo := 27) (hi := 120) (l := 31) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row9_17 (b : ℕ) (hb : b ≤ 120) (hv : 17 ≤ 3*b) : Paid 9 229472478411275283 b 17 := by
+  by_cases h0 : b ≤ 24
+  · exact interval (lo := 6) (hi := 24) (l := 4) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  exact interval (lo := 25) (hi := 120) (l := 31) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row9_18 (b : ℕ) (hb : b ≤ 120) (hv : 18 ≤ 3*b) : Paid 9 229472478411275283 b 18 := by
+  by_cases h0 : b ≤ 22
+  · exact interval (lo := 6) (hi := 22) (l := 4) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  exact interval (lo := 23) (hi := 120) (l := 31) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row9_19 (b : ℕ) (hb : b ≤ 120) (hv : 19 ≤ 3*b) : Paid 9 229472478411275283 b 19 := by
   by_cases h0 : b ≤ 21
-  · exact interval (lo := 2) (hi := 21) (l := 1) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 22) (hi := 120) (l := 8) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row10_5 (b : ℕ) (hb : b ≤ 120) (hv : 5 ≤ 3*b) : Paid 10 229472479831508835 b 5 := by
-  by_cases h0 : b ≤ 21
-  · exact interval (lo := 2) (hi := 21) (l := 1) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 22) (hi := 120) (l := 8) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row10_6 (b : ℕ) (hb : b ≤ 120) (hv : 6 ≤ 3*b) : Paid 10 229472479831508835 b 6 := by
-  by_cases h0 : b ≤ 21
-  · exact interval (lo := 2) (hi := 21) (l := 1) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 22) (hi := 120) (l := 8) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row10_7 (b : ℕ) (hb : b ≤ 120) (hv : 7 ≤ 3*b) : Paid 10 229472479831508835 b 7 := by
-  by_cases h0 : b ≤ 8
-  · exact interval (lo := 3) (hi := 8) (l := 4) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 9) (hi := 120) (l := 9) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row10_8 (b : ℕ) (hb : b ≤ 120) (hv : 8 ≤ 3*b) : Paid 10 229472479831508835 b 8 := by
-  by_cases h0 : b ≤ 8
-  · exact interval (lo := 3) (hi := 8) (l := 4) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 9) (hi := 120) (l := 9) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row10_9 (b : ℕ) (hb : b ≤ 120) (hv : 9 ≤ 3*b) : Paid 10 229472479831508835 b 9 := by
-  by_cases h0 : b ≤ 8
-  · exact interval (lo := 3) (hi := 8) (l := 4) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 9) (hi := 120) (l := 9) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row10_10 (b : ℕ) (hb : b ≤ 120) (hv : 10 ≤ 3*b) : Paid 10 229472479831508835 b 10 := by
-  by_cases h0 : b ≤ 8
-  · exact interval (lo := 4) (hi := 8) (l := 4) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h1 : b ≤ 106
-  · exact interval (lo := 9) (hi := 106) (l := 9) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 107) (hi := 120) (l := 50) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row10_11 (b : ℕ) (hb : b ≤ 120) (hv : 11 ≤ 3*b) : Paid 10 229472479831508835 b 11 := by
-  by_cases h0 : b ≤ 8
-  · exact interval (lo := 4) (hi := 8) (l := 4) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h1 : b ≤ 95
-  · exact interval (lo := 9) (hi := 95) (l := 9) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h2 : b ≤ 106
-  · exact interval (lo := 96) (hi := 106) (l := 49) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 107) (hi := 120) (l := 50) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row10_12 (b : ℕ) (hb : b ≤ 120) (hv : 12 ≤ 3*b) : Paid 10 229472479831508835 b 12 := by
-  by_cases h0 : b ≤ 8
-  · exact interval (lo := 4) (hi := 8) (l := 4) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h1 : b ≤ 86
-  · exact interval (lo := 9) (hi := 86) (l := 9) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h2 : b ≤ 95
-  · exact interval (lo := 87) (hi := 95) (l := 48) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h3 : b ≤ 106
-  · exact interval (lo := 96) (hi := 106) (l := 49) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 107) (hi := 120) (l := 50) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row10_13 (b : ℕ) (hb : b ≤ 120) (hv : 13 ≤ 3*b) : Paid 10 229472479831508835 b 13 := by
-  by_cases h0 : b ≤ 7
-  · exact interval (lo := 5) (hi := 7) (l := 4) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h1 : b ≤ 86
-  · exact interval (lo := 8) (hi := 86) (l := 32) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h2 : b ≤ 95
-  · exact interval (lo := 87) (hi := 95) (l := 48) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h3 : b ≤ 106
-  · exact interval (lo := 96) (hi := 106) (l := 49) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 107) (hi := 120) (l := 50) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row10_14 (b : ℕ) (hb : b ≤ 120) (hv : 14 ≤ 3*b) : Paid 10 229472479831508835 b 14 := by
-  by_cases h0 : b ≤ 7
-  · exact interval (lo := 5) (hi := 7) (l := 4) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h1 : b ≤ 86
-  · exact interval (lo := 8) (hi := 86) (l := 32) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h2 : b ≤ 95
-  · exact interval (lo := 87) (hi := 95) (l := 48) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h3 : b ≤ 106
-  · exact interval (lo := 96) (hi := 106) (l := 49) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 107) (hi := 120) (l := 50) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row10_15 (b : ℕ) (hb : b ≤ 120) (hv : 15 ≤ 3*b) : Paid 10 229472479831508835 b 15 := by
-  by_cases h0 : b ≤ 7
-  · exact interval (lo := 5) (hi := 7) (l := 4) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h1 : b ≤ 86
-  · exact interval (lo := 8) (hi := 86) (l := 32) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h2 : b ≤ 95
-  · exact interval (lo := 87) (hi := 95) (l := 48) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h3 : b ≤ 106
-  · exact interval (lo := 96) (hi := 106) (l := 49) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 107) (hi := 120) (l := 50) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row10_16 (b : ℕ) (hb : b ≤ 120) (hv : 16 ≤ 3*b) : Paid 10 229472479831508835 b 16 := by
-  by_cases h0 : b ≤ 7
-  · exact interval (lo := 6) (hi := 7) (l := 4) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h1 : b ≤ 86
-  · exact interval (lo := 8) (hi := 86) (l := 32) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h2 : b ≤ 95
-  · exact interval (lo := 87) (hi := 95) (l := 48) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h3 : b ≤ 106
-  · exact interval (lo := 96) (hi := 106) (l := 49) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 107) (hi := 120) (l := 50) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row10_17 (b : ℕ) (hb : b ≤ 120) (hv : 17 ≤ 3*b) : Paid 10 229472479831508835 b 17 := by
-  by_cases h0 : b ≤ 7
-  · exact interval (lo := 6) (hi := 7) (l := 4) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h1 : b ≤ 86
-  · exact interval (lo := 8) (hi := 86) (l := 32) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h2 : b ≤ 95
-  · exact interval (lo := 87) (hi := 95) (l := 48) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h3 : b ≤ 106
-  · exact interval (lo := 96) (hi := 106) (l := 49) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 107) (hi := 120) (l := 50) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row10_18 (b : ℕ) (hb : b ≤ 120) (hv : 18 ≤ 3*b) : Paid 10 229472479831508835 b 18 := by
-  by_cases h0 : b ≤ 7
-  · exact interval (lo := 6) (hi := 7) (l := 4) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h1 : b ≤ 86
-  · exact interval (lo := 8) (hi := 86) (l := 32) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h2 : b ≤ 95
-  · exact interval (lo := 87) (hi := 95) (l := 48) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h3 : b ≤ 106
-  · exact interval (lo := 96) (hi := 106) (l := 49) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 107) (hi := 120) (l := 50) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row10_19 (b : ℕ) (hb : b ≤ 120) (hv : 19 ≤ 3*b) : Paid 10 229472479831508835 b 19 := by
-  by_cases h0 : b ≤ 7
-  · exact interval (lo := 7) (hi := 7) (l := 4) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h1 : b ≤ 86
-  · exact interval (lo := 8) (hi := 86) (l := 32) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h2 : b ≤ 95
-  · exact interval (lo := 87) (hi := 95) (l := 48) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h3 : b ≤ 106
-  · exact interval (lo := 96) (hi := 106) (l := 49) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 107) (hi := 120) (l := 50) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row10_20 (b : ℕ) (hb : b ≤ 120) (hv : 20 ≤ 3*b) : Paid 10 229472479831508835 b 20 := by
-  by_cases h0 : b ≤ 86
-  · exact interval (lo := 7) (hi := 86) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h1 : b ≤ 95
-  · exact interval (lo := 87) (hi := 95) (l := 48) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h2 : b ≤ 106
-  · exact interval (lo := 96) (hi := 106) (l := 49) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 107) (hi := 120) (l := 50) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row10_21 (b : ℕ) (hb : b ≤ 120) (hv : 21 ≤ 3*b) : Paid 10 229472479831508835 b 21 := by
-  by_cases h0 : b ≤ 86
-  · exact interval (lo := 7) (hi := 86) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h1 : b ≤ 95
-  · exact interval (lo := 87) (hi := 95) (l := 48) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h2 : b ≤ 106
-  · exact interval (lo := 96) (hi := 106) (l := 49) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 107) (hi := 120) (l := 50) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row10_22 (b : ℕ) (hb : b ≤ 120) (hv : 22 ≤ 3*b) : Paid 10 229472479831508835 b 22 := by
-  by_cases h0 : b ≤ 86
-  · exact interval (lo := 8) (hi := 86) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h1 : b ≤ 95
-  · exact interval (lo := 87) (hi := 95) (l := 48) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h2 : b ≤ 106
-  · exact interval (lo := 96) (hi := 106) (l := 49) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 107) (hi := 120) (l := 50) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row10_23 (b : ℕ) (hb : b ≤ 120) (hv : 23 ≤ 3*b) : Paid 10 229472479831508835 b 23 := by
-  by_cases h0 : b ≤ 86
-  · exact interval (lo := 8) (hi := 86) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h1 : b ≤ 95
-  · exact interval (lo := 87) (hi := 95) (l := 48) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h2 : b ≤ 106
-  · exact interval (lo := 96) (hi := 106) (l := 49) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 107) (hi := 120) (l := 50) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row10_24 (b : ℕ) (hb : b ≤ 120) (hv : 24 ≤ 3*b) : Paid 10 229472479831508835 b 24 := by
-  by_cases h0 : b ≤ 86
-  · exact interval (lo := 8) (hi := 86) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h1 : b ≤ 95
-  · exact interval (lo := 87) (hi := 95) (l := 48) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h2 : b ≤ 106
-  · exact interval (lo := 96) (hi := 106) (l := 49) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 107) (hi := 120) (l := 50) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row10_25 (b : ℕ) (hb : b ≤ 120) (hv : 25 ≤ 3*b) : Paid 10 229472479831508835 b 25 := by
-  by_cases h0 : b ≤ 86
-  · exact interval (lo := 9) (hi := 86) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h1 : b ≤ 95
-  · exact interval (lo := 87) (hi := 95) (l := 48) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h2 : b ≤ 106
-  · exact interval (lo := 96) (hi := 106) (l := 49) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 107) (hi := 120) (l := 50) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row10_26 (b : ℕ) (hb : b ≤ 120) (hv : 26 ≤ 3*b) : Paid 10 229472479831508835 b 26 := by
-  by_cases h0 : b ≤ 86
-  · exact interval (lo := 9) (hi := 86) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h1 : b ≤ 95
-  · exact interval (lo := 87) (hi := 95) (l := 48) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h2 : b ≤ 106
-  · exact interval (lo := 96) (hi := 106) (l := 49) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 107) (hi := 120) (l := 50) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row10_27 (b : ℕ) (hb : b ≤ 120) (hv : 27 ≤ 3*b) : Paid 10 229472479831508835 b 27 := by
-  by_cases h0 : b ≤ 86
-  · exact interval (lo := 9) (hi := 86) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h1 : b ≤ 95
-  · exact interval (lo := 87) (hi := 95) (l := 48) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h2 : b ≤ 106
-  · exact interval (lo := 96) (hi := 106) (l := 49) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 107) (hi := 120) (l := 50) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row10_28 (b : ℕ) (hb : b ≤ 120) (hv : 28 ≤ 3*b) : Paid 10 229472479831508835 b 28 := by
-  by_cases h0 : b ≤ 86
-  · exact interval (lo := 10) (hi := 86) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h1 : b ≤ 95
-  · exact interval (lo := 87) (hi := 95) (l := 48) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h2 : b ≤ 106
-  · exact interval (lo := 96) (hi := 106) (l := 49) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 107) (hi := 120) (l := 50) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row10_29 (b : ℕ) (hb : b ≤ 120) (hv : 29 ≤ 3*b) : Paid 10 229472479831508835 b 29 := by
-  by_cases h0 : b ≤ 86
-  · exact interval (lo := 10) (hi := 86) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h1 : b ≤ 95
-  · exact interval (lo := 87) (hi := 95) (l := 48) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h2 : b ≤ 106
-  · exact interval (lo := 96) (hi := 106) (l := 49) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 107) (hi := 120) (l := 50) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row10_30 (b : ℕ) (hb : b ≤ 120) (hv : 30 ≤ 3*b) : Paid 10 229472479831508835 b 30 := by
-  by_cases h0 : b ≤ 86
-  · exact interval (lo := 10) (hi := 86) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h1 : b ≤ 95
-  · exact interval (lo := 87) (hi := 95) (l := 48) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  by_cases h2 : b ≤ 106
-  · exact interval (lo := 96) (hi := 106) (l := 49) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 107) (hi := 120) (l := 50) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row10_31 (b : ℕ) (hb : b ≤ 120) (hv : 31 ≤ 3*b) : Paid 10 229472479831508835 b 31 := by
-  by_cases h0 : b ≤ 60
-  · exact interval (lo := 11) (hi := 60) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 61) (hi := 120) (l := 52) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row10_32 (b : ℕ) (hb : b ≤ 120) (hv : 32 ≤ 3*b) : Paid 10 229472479831508835 b 32 := by
-  by_cases h0 : b ≤ 60
-  · exact interval (lo := 11) (hi := 60) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 61) (hi := 120) (l := 52) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row10_33 (b : ℕ) (hb : b ≤ 120) (hv : 33 ≤ 3*b) : Paid 10 229472479831508835 b 33 := by
-  by_cases h0 : b ≤ 60
-  · exact interval (lo := 11) (hi := 60) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 61) (hi := 120) (l := 52) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row10_34 (b : ℕ) (hb : b ≤ 120) (hv : 34 ≤ 3*b) : Paid 10 229472479831508835 b 34 := by
-  by_cases h0 : b ≤ 60
-  · exact interval (lo := 12) (hi := 60) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 61) (hi := 120) (l := 52) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row10_35 (b : ℕ) (hb : b ≤ 120) (hv : 35 ≤ 3*b) : Paid 10 229472479831508835 b 35 := by
-  by_cases h0 : b ≤ 60
-  · exact interval (lo := 12) (hi := 60) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 61) (hi := 120) (l := 52) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row10_36 (b : ℕ) (hb : b ≤ 120) (hv : 36 ≤ 3*b) : Paid 10 229472479831508835 b 36 := by
-  by_cases h0 : b ≤ 60
-  · exact interval (lo := 12) (hi := 60) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 61) (hi := 120) (l := 52) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row10_37 (b : ℕ) (hb : b ≤ 120) (hv : 37 ≤ 3*b) : Paid 10 229472479831508835 b 37 := by
-  by_cases h0 : b ≤ 60
-  · exact interval (lo := 13) (hi := 60) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 61) (hi := 120) (l := 52) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row10_38 (b : ℕ) (hb : b ≤ 120) (hv : 38 ≤ 3*b) : Paid 10 229472479831508835 b 38 := by
-  by_cases h0 : b ≤ 60
-  · exact interval (lo := 13) (hi := 60) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 61) (hi := 120) (l := 52) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row10_39 (b : ℕ) (hb : b ≤ 120) (hv : 39 ≤ 3*b) : Paid 10 229472479831508835 b 39 := by
-  by_cases h0 : b ≤ 60
-  · exact interval (lo := 13) (hi := 60) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 61) (hi := 120) (l := 52) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row10_40 (b : ℕ) (hb : b ≤ 120) (hv : 40 ≤ 3*b) : Paid 10 229472479831508835 b 40 := by
-  by_cases h0 : b ≤ 60
-  · exact interval (lo := 14) (hi := 60) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 61) (hi := 120) (l := 52) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row10_41 (b : ℕ) (hb : b ≤ 120) (hv : 41 ≤ 3*b) : Paid 10 229472479831508835 b 41 := by
+  · exact interval (lo := 7) (hi := 21) (l := 4) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  exact interval (lo := 22) (hi := 120) (l := 31) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row9_20 (b : ℕ) (hb : b ≤ 120) (hv : 20 ≤ 3*b) : Paid 9 229472478411275283 b 20 := by
+  exact interval (lo := 7) (hi := 120) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row9_21 (b : ℕ) (hb : b ≤ 120) (hv : 21 ≤ 3*b) : Paid 9 229472478411275283 b 21 := by
+  exact interval (lo := 7) (hi := 120) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row9_22 (b : ℕ) (hb : b ≤ 120) (hv : 22 ≤ 3*b) : Paid 9 229472478411275283 b 22 := by
+  exact interval (lo := 8) (hi := 120) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row9_23 (b : ℕ) (hb : b ≤ 120) (hv : 23 ≤ 3*b) : Paid 9 229472478411275283 b 23 := by
+  exact interval (lo := 8) (hi := 120) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row9_24 (b : ℕ) (hb : b ≤ 120) (hv : 24 ≤ 3*b) : Paid 9 229472478411275283 b 24 := by
+  exact interval (lo := 8) (hi := 120) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row9_25 (b : ℕ) (hb : b ≤ 120) (hv : 25 ≤ 3*b) : Paid 9 229472478411275283 b 25 := by
+  exact interval (lo := 9) (hi := 120) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row9_26 (b : ℕ) (hb : b ≤ 120) (hv : 26 ≤ 3*b) : Paid 9 229472478411275283 b 26 := by
+  exact interval (lo := 9) (hi := 120) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row9_27 (b : ℕ) (hb : b ≤ 120) (hv : 27 ≤ 3*b) : Paid 9 229472478411275283 b 27 := by
+  exact interval (lo := 9) (hi := 120) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row9_28 (b : ℕ) (hb : b ≤ 120) (hv : 28 ≤ 3*b) : Paid 9 229472478411275283 b 28 := by
+  exact interval (lo := 10) (hi := 120) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row9_29 (b : ℕ) (hb : b ≤ 120) (hv : 29 ≤ 3*b) : Paid 9 229472478411275283 b 29 := by
+  exact interval (lo := 10) (hi := 120) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row9_30 (b : ℕ) (hb : b ≤ 120) (hv : 30 ≤ 3*b) : Paid 9 229472478411275283 b 30 := by
+  exact interval (lo := 10) (hi := 120) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row9_31 (b : ℕ) (hb : b ≤ 120) (hv : 31 ≤ 3*b) : Paid 9 229472478411275283 b 31 := by
+  exact interval (lo := 11) (hi := 120) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row9_32 (b : ℕ) (hb : b ≤ 120) (hv : 32 ≤ 3*b) : Paid 9 229472478411275283 b 32 := by
+  exact interval (lo := 11) (hi := 120) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row9_33 (b : ℕ) (hb : b ≤ 120) (hv : 33 ≤ 3*b) : Paid 9 229472478411275283 b 33 := by
+  exact interval (lo := 11) (hi := 120) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row9_34 (b : ℕ) (hb : b ≤ 120) (hv : 34 ≤ 3*b) : Paid 9 229472478411275283 b 34 := by
+  exact interval (lo := 12) (hi := 120) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row9_35 (b : ℕ) (hb : b ≤ 120) (hv : 35 ≤ 3*b) : Paid 9 229472478411275283 b 35 := by
+  exact interval (lo := 12) (hi := 120) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row9_36 (b : ℕ) (hb : b ≤ 120) (hv : 36 ≤ 3*b) : Paid 9 229472478411275283 b 36 := by
+  exact interval (lo := 12) (hi := 120) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row9_37 (b : ℕ) (hb : b ≤ 120) (hv : 37 ≤ 3*b) : Paid 9 229472478411275283 b 37 := by
+  by_cases h0 : b ≤ 118
+  · exact interval (lo := 13) (hi := 118) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  exact interval (lo := 119) (hi := 120) (l := 51) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row9_38 (b : ℕ) (hb : b ≤ 120) (hv : 38 ≤ 3*b) : Paid 9 229472478411275283 b 38 := by
+  by_cases h0 : b ≤ 115
+  · exact interval (lo := 13) (hi := 115) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  exact interval (lo := 116) (hi := 120) (l := 51) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row9_39 (b : ℕ) (hb : b ≤ 120) (hv : 39 ≤ 3*b) : Paid 9 229472478411275283 b 39 := by
+  by_cases h0 : b ≤ 112
+  · exact interval (lo := 13) (hi := 112) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  exact interval (lo := 113) (hi := 120) (l := 51) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row9_40 (b : ℕ) (hb : b ≤ 120) (hv : 40 ≤ 3*b) : Paid 9 229472478411275283 b 40 := by
+  by_cases h0 : b ≤ 109
+  · exact interval (lo := 14) (hi := 109) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  exact interval (lo := 110) (hi := 120) (l := 51) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row9_41 (b : ℕ) (hb : b ≤ 120) (hv : 41 ≤ 3*b) : Paid 9 229472478411275283 b 41 := by
   exact interval (lo := 14) (hi := 120) (l := 53) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row10_42 (b : ℕ) (hb : b ≤ 120) (hv : 42 ≤ 3*b) : Paid 10 229472479831508835 b 42 := by
+private theorem row9_42 (b : ℕ) (hb : b ≤ 120) (hv : 42 ≤ 3*b) : Paid 9 229472478411275283 b 42 := by
   exact interval (lo := 14) (hi := 120) (l := 53) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row10_43 (b : ℕ) (hb : b ≤ 120) (hv : 43 ≤ 3*b) : Paid 10 229472479831508835 b 43 := by
+private theorem row9_43 (b : ℕ) (hb : b ≤ 120) (hv : 43 ≤ 3*b) : Paid 9 229472478411275283 b 43 := by
   exact interval (lo := 15) (hi := 120) (l := 53) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row10_44 (b : ℕ) (hb : b ≤ 120) (hv : 44 ≤ 3*b) : Paid 10 229472479831508835 b 44 := by
+private theorem row9_44 (b : ℕ) (hb : b ≤ 120) (hv : 44 ≤ 3*b) : Paid 9 229472478411275283 b 44 := by
   exact interval (lo := 15) (hi := 120) (l := 53) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row10_45 (b : ℕ) (hb : b ≤ 120) (hv : 45 ≤ 3*b) : Paid 10 229472479831508835 b 45 := by
+private theorem row9_45 (b : ℕ) (hb : b ≤ 120) (hv : 45 ≤ 3*b) : Paid 9 229472478411275283 b 45 := by
   exact interval (lo := 15) (hi := 120) (l := 53) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row10_46 (b : ℕ) (hb : b ≤ 120) (hv : 46 ≤ 3*b) : Paid 10 229472479831508835 b 46 := by
-  by_cases h0 : b ≤ 106
-  · exact interval (lo := 16) (hi := 106) (l := 53) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 107) (hi := 120) (l := 56) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row10_47 (b : ℕ) (hb : b ≤ 120) (hv : 47 ≤ 3*b) : Paid 10 229472479831508835 b 47 := by
-  by_cases h0 : b ≤ 106
-  · exact interval (lo := 16) (hi := 106) (l := 53) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 107) (hi := 120) (l := 56) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-private theorem row10_48 (b : ℕ) (hb : b ≤ 120) (hv : 48 ≤ 3*b) : Paid 10 229472479831508835 b 48 := by
-  by_cases h0 : b ≤ 106
-  · exact interval (lo := 16) (hi := 106) (l := 53) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
-  exact interval (lo := 107) (hi := 120) (l := 56) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row9_46 (b : ℕ) (hb : b ≤ 120) (hv : 46 ≤ 3*b) : Paid 9 229472478411275283 b 46 := by
+  by_cases h0 : b ≤ 119
+  · exact interval (lo := 16) (hi := 119) (l := 53) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  exact interval (lo := 120) (hi := 120) (l := 55) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row9_47 (b : ℕ) (hb : b ≤ 120) (hv : 47 ≤ 3*b) : Paid 9 229472478411275283 b 47 := by
+  by_cases h0 : b ≤ 116
+  · exact interval (lo := 16) (hi := 116) (l := 53) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  exact interval (lo := 117) (hi := 120) (l := 55) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row9_48 (b : ℕ) (hb : b ≤ 120) (hv : 48 ≤ 3*b) : Paid 9 229472478411275283 b 48 := by
+  by_cases h0 : b ≤ 114
+  · exact interval (lo := 16) (hi := 114) (l := 53) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  by_cases h1 : b ≤ 118
+  · exact interval (lo := 115) (hi := 118) (l := 55) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  exact interval (lo := 119) (hi := 120) (l := 56) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row10_3 (b : ℕ) (hb : b ≤ 120) (hv : 3 ≤ 3*b) : Paid 10 229473781150506218 b 3 := by
+  exact interval (lo := 1) (hi := 120) (l := 1) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row10_4 (b : ℕ) (hb : b ≤ 120) (hv : 4 ≤ 3*b) : Paid 10 229473781150506218 b 4 := by
+  by_cases h0 : b ≤ 68
+  · exact interval (lo := 2) (hi := 68) (l := 1) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  exact interval (lo := 69) (hi := 120) (l := 8) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row10_5 (b : ℕ) (hb : b ≤ 120) (hv : 5 ≤ 3*b) : Paid 10 229473781150506218 b 5 := by
+  by_cases h0 : b ≤ 39
+  · exact interval (lo := 2) (hi := 39) (l := 1) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  exact interval (lo := 40) (hi := 120) (l := 8) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row10_6 (b : ℕ) (hb : b ≤ 120) (hv : 6 ≤ 3*b) : Paid 10 229473781150506218 b 6 := by
+  by_cases h0 : b ≤ 26
+  · exact interval (lo := 2) (hi := 26) (l := 1) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  exact interval (lo := 27) (hi := 120) (l := 8) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row10_7 (b : ℕ) (hb : b ≤ 120) (hv : 7 ≤ 3*b) : Paid 10 229473781150506218 b 7 := by
+  by_cases h0 : b ≤ 81
+  · exact interval (lo := 3) (hi := 81) (l := 4) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  exact interval (lo := 82) (hi := 120) (l := 9) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row10_8 (b : ℕ) (hb : b ≤ 120) (hv : 8 ≤ 3*b) : Paid 10 229473781150506218 b 8 := by
+  by_cases h0 : b ≤ 65
+  · exact interval (lo := 3) (hi := 65) (l := 4) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  exact interval (lo := 66) (hi := 120) (l := 9) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row10_9 (b : ℕ) (hb : b ≤ 120) (hv : 9 ≤ 3*b) : Paid 10 229473781150506218 b 9 := by
+  by_cases h0 : b ≤ 55
+  · exact interval (lo := 3) (hi := 55) (l := 4) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  exact interval (lo := 56) (hi := 120) (l := 9) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row10_10 (b : ℕ) (hb : b ≤ 120) (hv : 10 ≤ 3*b) : Paid 10 229473781150506218 b 10 := by
+  by_cases h0 : b ≤ 48
+  · exact interval (lo := 4) (hi := 48) (l := 4) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  by_cases h1 : b ≤ 110
+  · exact interval (lo := 49) (hi := 110) (l := 9) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  exact interval (lo := 111) (hi := 120) (l := 50) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row10_11 (b : ℕ) (hb : b ≤ 120) (hv : 11 ≤ 3*b) : Paid 10 229473781150506218 b 11 := by
+  by_cases h0 : b ≤ 43
+  · exact interval (lo := 4) (hi := 43) (l := 4) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  by_cases h1 : b ≤ 98
+  · exact interval (lo := 44) (hi := 98) (l := 9) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  exact interval (lo := 99) (hi := 120) (l := 49) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row10_12 (b : ℕ) (hb : b ≤ 120) (hv : 12 ≤ 3*b) : Paid 10 229473781150506218 b 12 := by
+  by_cases h0 : b ≤ 38
+  · exact interval (lo := 4) (hi := 38) (l := 4) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  by_cases h1 : b ≤ 88
+  · exact interval (lo := 39) (hi := 88) (l := 9) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  exact interval (lo := 89) (hi := 120) (l := 48) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row10_13 (b : ℕ) (hb : b ≤ 120) (hv : 13 ≤ 3*b) : Paid 10 229473781150506218 b 13 := by
+  by_cases h0 : b ≤ 35
+  · exact interval (lo := 5) (hi := 35) (l := 4) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  exact interval (lo := 36) (hi := 120) (l := 31) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row10_14 (b : ℕ) (hb : b ≤ 120) (hv : 14 ≤ 3*b) : Paid 10 229473781150506218 b 14 := by
+  by_cases h0 : b ≤ 31
+  · exact interval (lo := 5) (hi := 31) (l := 4) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  exact interval (lo := 32) (hi := 120) (l := 31) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row10_15 (b : ℕ) (hb : b ≤ 120) (hv : 15 ≤ 3*b) : Paid 10 229473781150506218 b 15 := by
+  by_cases h0 : b ≤ 29
+  · exact interval (lo := 5) (hi := 29) (l := 4) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  exact interval (lo := 30) (hi := 120) (l := 31) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row10_16 (b : ℕ) (hb : b ≤ 120) (hv : 16 ≤ 3*b) : Paid 10 229473781150506218 b 16 := by
+  by_cases h0 : b ≤ 26
+  · exact interval (lo := 6) (hi := 26) (l := 4) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  exact interval (lo := 27) (hi := 120) (l := 31) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row10_17 (b : ℕ) (hb : b ≤ 120) (hv : 17 ≤ 3*b) : Paid 10 229473781150506218 b 17 := by
+  by_cases h0 : b ≤ 24
+  · exact interval (lo := 6) (hi := 24) (l := 4) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  exact interval (lo := 25) (hi := 120) (l := 31) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row10_18 (b : ℕ) (hb : b ≤ 120) (hv : 18 ≤ 3*b) : Paid 10 229473781150506218 b 18 := by
+  by_cases h0 : b ≤ 22
+  · exact interval (lo := 6) (hi := 22) (l := 4) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  exact interval (lo := 23) (hi := 120) (l := 31) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row10_19 (b : ℕ) (hb : b ≤ 120) (hv : 19 ≤ 3*b) : Paid 10 229473781150506218 b 19 := by
+  by_cases h0 : b ≤ 21
+  · exact interval (lo := 7) (hi := 21) (l := 4) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  exact interval (lo := 22) (hi := 120) (l := 31) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row10_20 (b : ℕ) (hb : b ≤ 120) (hv : 20 ≤ 3*b) : Paid 10 229473781150506218 b 20 := by
+  exact interval (lo := 7) (hi := 120) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row10_21 (b : ℕ) (hb : b ≤ 120) (hv : 21 ≤ 3*b) : Paid 10 229473781150506218 b 21 := by
+  exact interval (lo := 7) (hi := 120) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row10_22 (b : ℕ) (hb : b ≤ 120) (hv : 22 ≤ 3*b) : Paid 10 229473781150506218 b 22 := by
+  exact interval (lo := 8) (hi := 120) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row10_23 (b : ℕ) (hb : b ≤ 120) (hv : 23 ≤ 3*b) : Paid 10 229473781150506218 b 23 := by
+  exact interval (lo := 8) (hi := 120) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row10_24 (b : ℕ) (hb : b ≤ 120) (hv : 24 ≤ 3*b) : Paid 10 229473781150506218 b 24 := by
+  exact interval (lo := 8) (hi := 120) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row10_25 (b : ℕ) (hb : b ≤ 120) (hv : 25 ≤ 3*b) : Paid 10 229473781150506218 b 25 := by
+  exact interval (lo := 9) (hi := 120) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row10_26 (b : ℕ) (hb : b ≤ 120) (hv : 26 ≤ 3*b) : Paid 10 229473781150506218 b 26 := by
+  exact interval (lo := 9) (hi := 120) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row10_27 (b : ℕ) (hb : b ≤ 120) (hv : 27 ≤ 3*b) : Paid 10 229473781150506218 b 27 := by
+  exact interval (lo := 9) (hi := 120) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row10_28 (b : ℕ) (hb : b ≤ 120) (hv : 28 ≤ 3*b) : Paid 10 229473781150506218 b 28 := by
+  exact interval (lo := 10) (hi := 120) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row10_29 (b : ℕ) (hb : b ≤ 120) (hv : 29 ≤ 3*b) : Paid 10 229473781150506218 b 29 := by
+  exact interval (lo := 10) (hi := 120) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row10_30 (b : ℕ) (hb : b ≤ 120) (hv : 30 ≤ 3*b) : Paid 10 229473781150506218 b 30 := by
+  exact interval (lo := 10) (hi := 120) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row10_31 (b : ℕ) (hb : b ≤ 120) (hv : 31 ≤ 3*b) : Paid 10 229473781150506218 b 31 := by
+  exact interval (lo := 11) (hi := 120) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row10_32 (b : ℕ) (hb : b ≤ 120) (hv : 32 ≤ 3*b) : Paid 10 229473781150506218 b 32 := by
+  exact interval (lo := 11) (hi := 120) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row10_33 (b : ℕ) (hb : b ≤ 120) (hv : 33 ≤ 3*b) : Paid 10 229473781150506218 b 33 := by
+  exact interval (lo := 11) (hi := 120) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row10_34 (b : ℕ) (hb : b ≤ 120) (hv : 34 ≤ 3*b) : Paid 10 229473781150506218 b 34 := by
+  exact interval (lo := 12) (hi := 120) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row10_35 (b : ℕ) (hb : b ≤ 120) (hv : 35 ≤ 3*b) : Paid 10 229473781150506218 b 35 := by
+  exact interval (lo := 12) (hi := 120) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row10_36 (b : ℕ) (hb : b ≤ 120) (hv : 36 ≤ 3*b) : Paid 10 229473781150506218 b 36 := by
+  exact interval (lo := 12) (hi := 120) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row10_37 (b : ℕ) (hb : b ≤ 120) (hv : 37 ≤ 3*b) : Paid 10 229473781150506218 b 37 := by
+  by_cases h0 : b ≤ 118
+  · exact interval (lo := 13) (hi := 118) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  exact interval (lo := 119) (hi := 120) (l := 51) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row10_38 (b : ℕ) (hb : b ≤ 120) (hv : 38 ≤ 3*b) : Paid 10 229473781150506218 b 38 := by
+  by_cases h0 : b ≤ 115
+  · exact interval (lo := 13) (hi := 115) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  exact interval (lo := 116) (hi := 120) (l := 51) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row10_39 (b : ℕ) (hb : b ≤ 120) (hv : 39 ≤ 3*b) : Paid 10 229473781150506218 b 39 := by
+  by_cases h0 : b ≤ 111
+  · exact interval (lo := 13) (hi := 111) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  exact interval (lo := 112) (hi := 120) (l := 51) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row10_40 (b : ℕ) (hb : b ≤ 120) (hv : 40 ≤ 3*b) : Paid 10 229473781150506218 b 40 := by
+  by_cases h0 : b ≤ 108
+  · exact interval (lo := 14) (hi := 108) (l := 42) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  exact interval (lo := 109) (hi := 120) (l := 51) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row10_41 (b : ℕ) (hb : b ≤ 120) (hv : 41 ≤ 3*b) : Paid 10 229473781150506218 b 41 := by
+  exact interval (lo := 14) (hi := 120) (l := 53) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row10_42 (b : ℕ) (hb : b ≤ 120) (hv : 42 ≤ 3*b) : Paid 10 229473781150506218 b 42 := by
+  exact interval (lo := 14) (hi := 120) (l := 53) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row10_43 (b : ℕ) (hb : b ≤ 120) (hv : 43 ≤ 3*b) : Paid 10 229473781150506218 b 43 := by
+  exact interval (lo := 15) (hi := 120) (l := 53) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row10_44 (b : ℕ) (hb : b ≤ 120) (hv : 44 ≤ 3*b) : Paid 10 229473781150506218 b 44 := by
+  exact interval (lo := 15) (hi := 120) (l := 53) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row10_45 (b : ℕ) (hb : b ≤ 120) (hv : 45 ≤ 3*b) : Paid 10 229473781150506218 b 45 := by
+  exact interval (lo := 15) (hi := 120) (l := 53) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row10_46 (b : ℕ) (hb : b ≤ 120) (hv : 46 ≤ 3*b) : Paid 10 229473781150506218 b 46 := by
+  by_cases h0 : b ≤ 118
+  · exact interval (lo := 16) (hi := 118) (l := 53) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  exact interval (lo := 119) (hi := 120) (l := 55) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row10_47 (b : ℕ) (hb : b ≤ 120) (hv : 47 ≤ 3*b) : Paid 10 229473781150506218 b 47 := by
+  by_cases h0 : b ≤ 115
+  · exact interval (lo := 16) (hi := 115) (l := 53) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  exact interval (lo := 116) (hi := 120) (l := 55) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+private theorem row10_48 (b : ℕ) (hb : b ≤ 120) (hv : 48 ≤ 3*b) : Paid 10 229473781150506218 b 48 := by
+  by_cases h0 : b ≤ 113
+  · exact interval (lo := 16) (hi := 113) (l := 53) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  by_cases h1 : b ≤ 117
+  · exact interval (lo := 114) (hi := 117) (l := 55) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
+  exact interval (lo := 118) (hi := 120) (l := 56) (by omega) (by omega) (by decide) (by decide +kernel) (by decide +kernel)
 theorem proof : P0_9_8.c3 := by
   intro a tcap ha htcap hbox
   have hz : K1_13_8.zeroShape.plus a = a := by cases a; simp [K1_13_8.zeroShape,Shape.plus]
@@ -706,7 +604,7 @@ theorem proof : P0_9_8.c3 := by
     apply (physical_mono hm hv (peak_index _ _ _) (emptyOrder a)).trans
     exact hrows a.j (by omega) hj hd
   unfold P0_9.factorPrice
-  split
+  split_ifs with h7 h9
   · apply paid 7 _ (by omega)
     intro j hlo hhi hv
     interval_cases j
@@ -756,6 +654,55 @@ theorem proof : P0_9_8.c3 := by
     · exact row7_46 _ hb hv
     · exact row7_47 _ hb hv
     · exact row7_48 _ hb hv
+  · apply paid 9 _ (by omega)
+    intro j hlo hhi hv
+    interval_cases j
+    · exact row9_3 _ hb hv
+    · exact row9_4 _ hb hv
+    · exact row9_5 _ hb hv
+    · exact row9_6 _ hb hv
+    · exact row9_7 _ hb hv
+    · exact row9_8 _ hb hv
+    · exact row9_9 _ hb hv
+    · exact row9_10 _ hb hv
+    · exact row9_11 _ hb hv
+    · exact row9_12 _ hb hv
+    · exact row9_13 _ hb hv
+    · exact row9_14 _ hb hv
+    · exact row9_15 _ hb hv
+    · exact row9_16 _ hb hv
+    · exact row9_17 _ hb hv
+    · exact row9_18 _ hb hv
+    · exact row9_19 _ hb hv
+    · exact row9_20 _ hb hv
+    · exact row9_21 _ hb hv
+    · exact row9_22 _ hb hv
+    · exact row9_23 _ hb hv
+    · exact row9_24 _ hb hv
+    · exact row9_25 _ hb hv
+    · exact row9_26 _ hb hv
+    · exact row9_27 _ hb hv
+    · exact row9_28 _ hb hv
+    · exact row9_29 _ hb hv
+    · exact row9_30 _ hb hv
+    · exact row9_31 _ hb hv
+    · exact row9_32 _ hb hv
+    · exact row9_33 _ hb hv
+    · exact row9_34 _ hb hv
+    · exact row9_35 _ hb hv
+    · exact row9_36 _ hb hv
+    · exact row9_37 _ hb hv
+    · exact row9_38 _ hb hv
+    · exact row9_39 _ hb hv
+    · exact row9_40 _ hb hv
+    · exact row9_41 _ hb hv
+    · exact row9_42 _ hb hv
+    · exact row9_43 _ hb hv
+    · exact row9_44 _ hb hv
+    · exact row9_45 _ hb hv
+    · exact row9_46 _ hb hv
+    · exact row9_47 _ hb hv
+    · exact row9_48 _ hb hv
   · apply paid 10 _ ht
     intro j hlo hhi hv
     interval_cases j

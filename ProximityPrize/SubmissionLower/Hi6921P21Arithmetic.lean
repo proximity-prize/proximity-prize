@@ -27,7 +27,7 @@ open private debit_eq from ProximityPrize.SubmissionLower.Pack_K1_14_2_1Arithmet
 /-- Twice the signed volume minus the whole last-cutoff allowance is affine in height. -/
 private def widthBase (s : Shape) : ℤ :=
   ∑ q ∈ range (s.B + 1), (((min q s.J : ℕ) : ℤ) + 1) *
-    (2 * ((s.m : ℤ) * 180139 - (q : ℤ) * 131071) + min q s.J)
+    (2 * ((s.m : ℤ) * 180130 - (q : ℤ) * 131071) + min q s.J)
 
 open private widthSlope from ProximityPrize.SubmissionLower.Pack_K1_14_2_1Arithmetic
 
@@ -35,11 +35,11 @@ private theorem width_cast (h r : ℕ) (s : Shape) (q j : ℕ)
     (hh : h ≤ 131071) (hq : q ≤ s.B)
     (hw : s.B * (131071 - h) < cutoffCount h r s) :
     (rawWidth h r s q j : ℤ) =
-      (s.m : ℤ) * 180139 - 2 * (h : ℤ) * r + j - (q : ℤ) * (131071 - h) := by
+      (s.m : ℤ) * 180130 - 2 * (h : ℤ) * r + j - (q : ℤ) * (131071 - h) := by
   have hq' := (Nat.mul_le_mul_right (131071 - h) hq).trans hw.le
-  have hbuf : 2 * h * r ≤ s.m * 180139 := by unfold cutoffCount at hw; omega
+  have hbuf : 2 * h * r ≤ s.m * 180130 := by unfold cutoffCount at hw; omega
   unfold rawWidth cutoffCount at *
-  rw [Nat.cast_sub (by omega : q * (131071 - h) ≤ s.m * 180139 - 2 * h * r + j)]
+  rw [Nat.cast_sub (by omega : q * (131071 - h) ≤ s.m * 180130 - 2 * h * r + j)]
   push_cast [Nat.cast_sub hh, Nat.cast_sub hbuf]
   rfl
 
@@ -62,10 +62,10 @@ private theorem volume_eq (h r mode : ℕ) (s : Shape) (hh : h ≤ 131071)
       intro q hqr
       have hq : q ≤ s.B := Nat.le_of_lt_succ (mem_range.mp hqr)
       simp_rw [width_cast h r s q _ hh hq hw]
-      let a : ℤ := (s.m : ℤ) * 180139 - 2 * (h : ℤ) * r - (q : ℤ) * (131071 - h)
+      let a : ℤ := (s.m : ℤ) * 180130 - 2 * (h : ℤ) * r - (q : ℤ) * (131071 - h)
       let b : ℤ := 1 - 2 * (h : ℤ) * mode
       have hrow : ∀ j : ℕ,
-          (s.m : ℤ) * 180139 - 2 * (h : ℤ) * r + j - (q : ℤ) * (131071 - h) -
+          (s.m : ℤ) * 180130 - 2 * (h : ℤ) * r + j - (q : ℤ) * (131071 - h) -
             mode * (2 * (h : ℤ) * j) = a + b * j := by
         intro j
         dsimp [a, b]
@@ -76,7 +76,7 @@ private theorem volume_eq (h r mode : ℕ) (s : Shape) (hh : h ≤ 131071)
       dsimp [a, b]
       ring
 
-private def worstBase (s : Shape) : ℤ := (s.m : ℤ) * 180139 - (s.B : ℤ) * 131071
+private def worstBase (s : Shape) : ℤ := (s.m : ℤ) * 180130 - (s.B : ℤ) * 131071
 open private worstSlope from ProximityPrize.SubmissionLower.Pack_K1_14_2_1Arithmetic
 
 private def surplusBase (s : Shape) : ℤ := (triangle s.U : ℤ) * widthBase s - 2 * nodeCost s

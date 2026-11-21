@@ -24,7 +24,7 @@ def HeightBand.upper : HeightBand → ℕ
   | .first => 3554
   | .second => 8249
   | .third => 23999
-  | .fourth => 32932
+  | .fourth => 32950
 
 def HeightBand.ordinateCap : HeightBand → ℕ
   | .first => 12
@@ -47,23 +47,23 @@ def HeightBand.seedBank : HeightBand → Shape
 
 /-- The tested seed ceiling for each positive actual ordinate degree. -/
 def HeightBand.seedCap : HeightBand → ℕ → ℕ
-  | .first, 1 => 234
-  | .first, 2 => 226
-  | .first, 3 => 217
-  | .first, 4 => 207
-  | .first, 5 => 196
-  | .first, 6 => 183
-  | .first, 7 => 167
-  | .first, 8 => 146
-  | .first, 9 => 121
-  | .first, 10 => 91
-  | .first, 11 => 55
-  | .first, 12 => 15
-  | .second, 1 => 132
-  | .second, 2 => 128
-  | .second, 3 => 124
-  | .second, 4 => 119
-  | .second, 5 => 113
+  | .first, 1 => 243
+  | .first, 2 => 235
+  | .first, 3 => 226
+  | .first, 4 => 216
+  | .first, 5 => 206
+  | .first, 6 => 193
+  | .first, 7 => 178
+  | .first, 8 => 159
+  | .first, 9 => 135
+  | .first, 10 => 106
+  | .first, 11 => 72
+  | .first, 12 => 34
+  | .second, 1 => 136
+  | .second, 2 => 132
+  | .second, 3 => 127
+  | .second, 4 => 123
+  | .second, 5 => 117
   | .third, 1 => 49
   | .third, 2 => 46
   | .third, 3 => 42
@@ -158,7 +158,7 @@ private theorem seed_certificate (b : HeightBand) (e : ℕ)
     decide +kernel
 
 /-- Every high-overhead height belongs to a real band, including both end points. -/
-theorem exists_height_band {h : ℕ} (hlo : 2472 ≤ h) (hhi : h ≤ 32932) :
+theorem exists_height_band {h : ℕ} (hlo : 2472 ≤ h) (hhi : h ≤ 32950) :
     ∃ b : HeightBand, b.lower ≤ h ∧ h ≤ b.upper := by
   by_cases h₁ : h ≤ 3554
   · exact ⟨.first, hlo, h₁⟩

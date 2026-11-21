@@ -1026,7 +1026,7 @@ structure IndependentLift {u : Words} {T : TwoActive u} (R : Relation T) where
     Polynomial.C content * leftU R
   graphV : aeval ![Polynomial.X, 0, 0, seed, seed ^ p] V =
     Polynomial.C content * leftV R
-  original_height : 24534 ≤ T.height
+  original_height : 24529 ≤ T.height
 
 structure Puncture (deleted : Finset I) where
   N : ℕ
@@ -1084,7 +1084,7 @@ def Bank.s : Bank → ℕ
 def Bank.t : Bank → ℕ
   | .lowS => 7
   | .lowT => 13
-  | .symmetric => 8
+  | .symmetric => 9
   | .oneThree => 5
   | .threeOne => 10
   | .twoThree => 5
@@ -1096,7 +1096,7 @@ def Bank.b (b : Bank) : ℕ := b.t + 5 * (b.dT - 1)
 def Bank.E (b : Bank) : ℕ := b.a + b.b
 def Bank.M (b : Bank) : ℕ := (2 * 131071 - 1) * (b.E - 1) + 1
 def Bank.zeroFee (b : Bank) : ℕ := b.a + p * b.b
-def Bank.chartFee (b : Bank) : ℚ := b.E * ((131073 / 49068 : ℚ) * b.M) ^ 2
+def Bank.chartFee (b : Bank) : ℚ := b.E * ((131073 / 49059 : ℚ) * b.M) ^ 2
 
 def Bank.relationBounds (b : Bank) (H : ℕ) : Fin 4 → ℕ := ![131071 + H, 1, b.dS, b.dT]
 
@@ -1183,11 +1183,11 @@ open K21
 
 /-- Lower the X-height by e and remove those same e nodes. The finite
 monomial sums are affine on this native interval, including the shortest block. -/
-theorem bank_surplus (b : Bank) (h H e N : ℕ) (hh : 24534 ≤ h) (hmax : h ≤ 32932)
+theorem bank_surplus (b : Bank) (h H e N : ℕ) (hh : 24529 ≤ h) (hmax : h ≤ 32950)
     (hH : H + e = h) (hN : N + e = 262144) :
     N * (J 4 b.s b.t - J 3 (b.s - b.dS) (b.t - b.dT)) +
-      V (720555 - 131071 - H) 131071 4 (b.s - b.dS) (b.t - b.dT) <
-      V 720555 131071 5 b.s b.t := by
+      V (720519 - 131071 - H) 131071 4 (b.s - b.dS) (b.t - b.dT) <
+      V 720519 131071 5 b.s b.t := by
   cases b <;> norm_num [Bank.s, Bank.t, Bank.dS, Bank.dT, V, J, Finset.sum_range_succ,
     Nat.sub_sub] <;> omega
 
@@ -1232,7 +1232,7 @@ private theorem exists_kernel_outside {F E G : Type*} [Field F]
   omega
 
 abbrev Source (F : Type*) [Field F] (b : Bank) :=
-  filtered (F := F) (sourceWeights 131071) (sourceBounds 720555 5 b.s b.t)
+  filtered (F := F) (sourceWeights 131071) (sourceBounds 720519 5 b.s b.t)
 
 abbrev Multipliers (F : Type*) [Field F] (b : Bank) := JetSpace F 2 (b.s - b.dS) (b.t - b.dT)
 
@@ -1308,12 +1308,12 @@ private theorem local_finrank (i : Fin N) :
 
 private def nodeMap (i : Fin N) : Source F b →ₗ[F] LocalSpace D i :=
   (LinearMap.range (localMultiply D i)).mkQ.comp
-    (sourceToJet 720555 131071 5 b.s b.t 3 (D.x i) (D.first i) (D.firstSlope i) (D.second i) (D.secondSlope i))
+    (sourceToJet 720519 131071 5 b.s b.t 3 (D.x i) (D.first i) (D.firstSlope i) (D.second i) (D.secondSlope i))
 
 private theorem localContact (Q : Source F b) (i : Fin N) (hi : nodeMap D i Q = 0) :
     ∃ R : Multipliers F b, D.shifted i Q.val - D.shifted i L * R.val ∈
       restrictWeightedOrder contactWeight 4 := by
-  have hmem : sourceToJet 720555 131071 5 b.s b.t 3 (D.x i)
+  have hmem : sourceToJet 720519 131071 5 b.s b.t 3 (D.x i)
       (D.first i) (D.firstSlope i) (D.second i) (D.secondSlope i) Q ∈
       LinearMap.range (localMultiply D i) :=
     (Submodule.Quotient.mk_eq_zero _).mp hi
@@ -1322,23 +1322,23 @@ private theorem localContact (Q : Source F b) (i : Fin N) (hi : nodeMap D i Q = 
   rw [map_sub]
   exact sub_eq_zero.mpr (congrArg Subtype.val hR).symm
 
-theorem exists_quotient_source (h e : ℕ) (hmin : 24534 ≤ h) (hmax : h ≤ 32932)
+theorem exists_quotient_source (h e : ℕ) (hmin : 24529 ≤ h) (hmax : h ≤ 32950)
     (hH : H + e = h) (hN : N + e = 262144)
     (hdeg : ∀ j, L.weightedTotalDegree (sourceWeights 131071 j) = b.relationBounds H j) :
     ∃ Q : Source F b, ¬ L ∣ Q.val ∧ ∀ i, ∃ R : Multipliers F b,
       D.shifted i Q.val - D.shifted i L * R.val ∈ restrictWeightedOrder contactWeight 4 := by
-  have hfit : ∀ i, b.relationBounds H i ≤ sourceBounds 720555 5 b.s b.t i := by
+  have hfit : ∀ i, b.relationBounds H i ≤ sourceBounds 720519 5 b.s b.t i := by
     intro i
     cases b <;> fin_cases i <;>
       simp [Bank.relationBounds, Bank.s, Bank.t, Bank.dS, Bank.dT, sourceBounds] <;> omega
-  have hshift : (fun i => sourceBounds 720555 5 b.s b.t i - b.relationBounds H i) =
-      sourceBounds (720555 - 131071 - H) 4 (b.s-b.dS) (b.t-b.dT) := by
+  have hshift : (fun i => sourceBounds 720519 5 b.s b.t i - b.relationBounds H i) =
+      sourceBounds (720519 - 131071 - H) 4 (b.s-b.dS) (b.t-b.dT) := by
     funext i
     fin_cases i <;> simp [sourceBounds, Bank.relationBounds] <;> omega
-  let mult := filteredMul (sourceWeights 131071) (sourceBounds 720555 5 b.s b.t)
+  let mult := filteredMul (sourceWeights 131071) (sourceBounds 720519 5 b.s b.t)
     (b.relationBounds H) L D.nonzero hdeg hfit
   have hdimMult : Module.finrank F (LinearMap.range mult) =
-      V (720555 - 131071 - H) 131071 4 (b.s-b.dS) (b.t-b.dT) := by
+      V (720519 - 131071 - H) 131071 4 (b.s-b.dS) (b.t-b.dT) := by
     rw [LinearMap.finrank_range_of_inj
       (filteredMul_injective _ _ _ L D.nonzero hdeg hfit), hshift, source_filtered_finrank]
   have hdimLocal : Module.finrank F (∀ i : Fin N, LocalSpace D i) =
@@ -1634,9 +1634,9 @@ def correctOn (u : Words) {deleted : Finset I} (P : Puncture deleted)
 theorem nodes_injective : Function.Injective P.nodes :=
   ProximityPrize.Benchmark.IRSProfile.domain.injective.comp P.index.injective
 
-theorem relation_annihilates (hH : H ≤ 32932) (Q Q' : Polynomial K)
+theorem relation_annihilates (hH : H ≤ 32950) (Q Q' : Polynomial K)
     (hQ : Q.natDegree ≤ 131071) (hQ' : Q'.natDegree ≤ 131071)
-    (s t : K) (S : Finset (Fin P.N)) (hS : 180139 ≤ S.card) (hc : correctOn u P Q Q' s t S) :
+    (s t : K) (S : Finset (Fin P.N)) (hS : 180130 ≤ S.card) (hc : correctOn u P Q Q' s t S) :
     aeval (decoderImages Q Q' s t) D.L = 0 := by
   apply eq_zero_of_many_contacts S P.nodes nodes_injective 1
   · intro i hi
@@ -1652,11 +1652,11 @@ theorem relation_annihilates (hH : H ≤ 32932) (Q Q' : Polynomial K)
     have hd := decoder_eval_degree 131071 (131071+H) D.L hdeg Q Q' hQ hQ' s t
     omega
 
-theorem exists_two_decoder_source (h : ℕ) (hmin : 24534 ≤ h) (hmax : h ≤ 32932)
+theorem exists_two_decoder_source (h : ℕ) (hmin : 24529 ≤ h) (hmax : h ≤ 32950)
     (hH : H + deleted.card = h) :
     ∃ G : Source K b, ¬ D.L ∣ G.val ∧
       ∀ (Q Q' : Polynomial K), Q.natDegree ≤ 131071 → Q'.natDegree ≤ 131071 →
-        ∀ (s t : K) (S : Finset (Fin P.N)), 180139 ≤ S.card → correctOn u P Q Q' s t S →
+        ∀ (s t : K) (S : Finset (Fin P.N)), 180130 ≤ S.card → correctOn u P Q Q' s t S →
           aeval (decoderImages Q Q' s t) G.val = 0 := by
   obtain ⟨G, hnot, hnode⟩ := exists_quotient_source (asContactData D) h deleted.card hmin hmax hH P.size D.degrees
   refine ⟨G, hnot, ?_⟩
@@ -1667,7 +1667,7 @@ theorem exists_two_decoder_source (h : ℕ) (hmin : 24534 ≤ h) (hmax : h ≤ 3
     obtain ⟨R, hR⟩ := hnode i
     exact decoder_contact_multiplicity 4 _ _ _ _ _ s t Q Q' G.val D.L R.val
       (hc i hi).1 (hc i hi).2 hrel hR
-  · have hd := decoder_eval_degree 131071 720555 G.val
+  · have hd := decoder_eval_degree 131071 720519 G.val
       ((mem_filtered _ _ _).mp G.property 0) Q Q' hQ hQ' s t
     omega
 
@@ -1904,7 +1904,7 @@ theorem first_slice_nullity (u : Words) (T : TwoActive u) :
     T.top (by exact T.degreeSum) T.ab (T.active.trans_lt T.inactive)
     (by have := T.inactive; omega) T.level
 
-theorem plane_first_slice_nullity (u : Words) (T : TwoActive u) (hh : T.height ≤ 32932) :
+theorem plane_first_slice_nullity (u : Words) (T : TwoActive u) (hh : T.height ≤ 32950) :
     Module.finrank (PlaneField K) (LinearMap.ker
       ((planeSlice p node (u 0) (u 1) 131072 T.height).map
         (algebraMap (Seeds K) (PlaneField K))).mulVecLin) = 1 := by
@@ -1925,23 +1925,23 @@ theorem plane_first_slice_nullity (u : Words) (T : TwoActive u) (hh : T.height �
   exact hn
 
 theorem plane_stack_rank (u : Words) :
-    ((planeStack p node (u 0) (u 1) 49067 82005).map
+    ((planeStack p node (u 0) (u 1) 49058 82014).map
       (algebraMap (Seeds K) (PlaneField K))).rank = stackRank u := by
-  let A := planeStack p node (u 0) (u 1) 49067 82005
-  have hdeg (j : Fin 82006) (b : Fin 2 × Fin 49067) :
+  let A := planeStack p node (u 0) (u 1) 49058 82014
+  have hdeg (j : Fin 82015) (b : Fin 2 × Fin 49058) :
       (A.transpose j b).degreeOf 0 ≤ if b.1 = 0 then 1 else 0 :=
     syndrome_degree p node (u 0) (u 1) b.1 0 _
   have he := rank_graph p (by decide) (by decide) A.transpose hdeg
   rw [Matrix.transpose_map, Matrix.transpose_map, Matrix.rank_transpose, Matrix.rank_transpose] at he
-  change ((planeStack p node (u 0) (u 1) 49067 82005).map _).rank =
-    ((planeStack p node (u 0) (u 1) 49067 82005).map _).rank at he
+  change ((planeStack p node (u 0) (u 1) 49058 82014).map _).rank =
+    ((planeStack p node (u 0) (u 1) 49058 82014).map _).rank at he
   rw [graph_stack_map] at he
   exact he
 
 
-theorem plane_stack_degree (u : Words) (b : Fin 2 × Fin 49067) (j : Fin 82006)
+theorem plane_stack_degree (u : Words) (b : Fin 2 × Fin 49058) (j : Fin 82015)
     (i : Fin 2) :
-    (planeStack p node (u 0) (u 1) 49067 82005 b j).degreeOf i ≤
+    (planeStack p node (u 0) (u 1) 49058 82014 b j).degreeOf i ≤
       if b.1 = i then 1 else 0 :=
   syndrome_degree p node (u 0) (u 1) b.1 i _
 
@@ -2523,7 +2523,7 @@ theorem chart_cut_iff (γ : K) (hγ : γ ∈ Λ) (i : Fin P.N) :
     rw [h]
 
 theorem chart_agreements (γ : K) (hγ : γ ∈ Λ) :
-    180139 ≤ {i | MvPolynomial.eval (chart.point γ) (nodeCut u P chart.numerator chart.denominator i) = 0}.ncard := by
+    180130 ≤ {i | MvPolynomial.eval (chart.point γ) (nodeCut u P chart.numerator chart.denominator i) = 0}.ncard := by
   let M := F.mark γ (chart.subset hγ)
   have hsub : (indexedSupport P M.support : Set (Fin P.N)) ⊆
       {i | MvPolynomial.eval (chart.point γ) (nodeCut u P chart.numerator chart.denominator i) = 0} := by
@@ -3391,7 +3391,7 @@ theorem chart_count {u : Words} {deleted : Finset I} {P : Puncture deleted}
     (chart : TaylorChart u P F b Λ) : (Λ.card : ℚ) ≤ b.chartFee := by
   classical
   let S := Λ.image chart.point
-  let R : ℚ := (131073 / 49068 : ℚ) * b.M
+  let R : ℚ := (131073 / 49059 : ℚ) * b.M
   have hRbig : (262144 : ℚ) ≤ R := by
     cases b <;> norm_num [R, Bank.M, Bank.E, Bank.a, Bank.b, Bank.s, Bank.t, Bank.dS, Bank.dT]
   have hR : 1 ≤ R := (by norm_num : (1 : ℚ) ≤ 262144).trans hRbig
@@ -3403,17 +3403,17 @@ theorem chart_count {u : Words} {deleted : Finset I} {P : Puncture deleted}
   have hcard : S.card = Λ.card := Finset.card_image_of_injOn hinj
   let cuts := nodeCut u P chart.numerator chart.denominator
   have hratio (m : ℕ) (hm : m < 131072) :
-      (((Fintype.card (Fin P.N) - m) * b.M : ℕ) : ℚ) ≤ R * ((180139 - m : ℕ) : ℚ) := by
-    have hnat : (P.N - m) * 49068 ≤ 131073 * (180139 - m) := by omega
-    have hrat : ((P.N - m : ℕ) : ℚ) * 49068 ≤ 131073 * ((180139 - m : ℕ) : ℚ) := by
+      (((Fintype.card (Fin P.N) - m) * b.M : ℕ) : ℚ) ≤ R * ((180130 - m : ℕ) : ℚ) := by
+    have hnat : (P.N - m) * 49059 ≤ 131073 * (180130 - m) := by omega
+    have hrat : ((P.N - m : ℕ) : ℚ) * 49059 ≤ 131073 * ((180130 - m : ℕ) : ℚ) := by
       exact_mod_cast hnat
-    have hh : ((P.N - m : ℕ) : ℚ) ≤ (131073/49068 : ℚ) * ((180139 - m : ℕ) : ℚ) := by
+    have hh : ((P.N - m : ℕ) : ℚ) ≤ (131073/49059 : ℚ) * ((180130 - m : ℕ) : ℚ) := by
       linarith
     rw [Fintype.card_fin, Nat.cast_mul]
     exact (mul_le_mul_of_nonneg_right hh (by positivity : 0 ≤ (b.M : ℚ))).trans_eq (by dsimp [R]; ring)
   rw [← hcard]
   refine surface_count_with_terminal chart.equation chart.denominator chart.equation_ne cuts
-    (L := 131072) (A := 180139) (by decide) chart.equation_degree chart.cut_degree hR hratio S
+    (L := 131072) (A := 180130) (by decide) chart.equation_degree chart.cut_degree hR hratio S
     (fun x hx => ?_) (fun x hx => ?_) (fun J hJ => ?_)
   · obtain ⟨γ, hγ, rfl⟩ := Finset.mem_image.mp hx
     exact ⟨chart.on_equation γ hγ, chart.regular γ hγ⟩
@@ -3879,13 +3879,13 @@ private theorem bank_cancel (b : Bank) : 1 + (b.dT - 1) = b.dT := by cases b <;>
 
 theorem exists_annihilator {u : Words} {deleted : Finset I} {P : Puncture deleted}
     {b : Bank} {H : ℕ} (C : ContactInput u P b H) (h : ℕ)
-    (hmin : 24534 ≤ h) (hmax : h ≤ 32932) (hH : H + deleted.card = h)
+    (hmin : 24529 ≤ h) (hmax : h ≤ 32950) (hH : H + deleted.card = h)
     {Γ : Finset K} (F : Marks u deleted Γ) : Nonempty (Annihilator F b) := by
   obtain ⟨G, hG, hgAnn⟩ := exists_two_decoder_source C h hmin hmax hH
   let Q := scalarEliminant 5 G.val C.numerator C.denominator
-  have hne : Q ≠ 0 := scalarEliminant_ne_zero 720555 131071 5 b.s b.t
+  have hne : Q ≠ 0 := scalarEliminant_ne_zero 720519 131071 5 b.s b.t
     G.val C.L G.property hG C.numerator C.denominator C.denominator_ne C.linear C.primitive
-  obtain ⟨hY, hS, hT⟩ := polynomialView_source_coefficients 720555 131071 5 b.s b.t G.val G.property
+  obtain ⟨hY, hS, hT⟩ := polynomialView_source_coefficients 720519 131071 5 b.s b.t G.val G.property
   have hy : Q.weightedTotalDegree scalarWeightY ≤ 5 := by
     simpa [Q, scalarEliminant] using
       clearedEval_weight_bound scalarWeightY 5 5 1 1 0 (polynomialView G.val)
@@ -3902,7 +3902,7 @@ theorem exists_annihilator {u : Words} {deleted : Finset I} {P : Puncture delete
   intro γ hγ
   let M := F.mark γ hγ
   let S := indexedSupport P M.support
-  have hS : 180139 ≤ S.card := by
+  have hS : 180130 ≤ S.card := by
     rw [indexedSupport_card P M.support (F.survives γ hγ)]
     exact M.agreement
   have hd := mark_degree M
@@ -3910,7 +3910,7 @@ theorem exists_annihilator {u : Words} {deleted : Finset I} {P : Puncture delete
     Polynomial.natDegree_map_le.trans hd
   have hcorrect := correctOn_mark P M
   have hrel := relation_annihilates C (by omega) _ _ hd hd' γ (γ ^ p) S hS hcorrect
-  exact scalarEliminant_annihilates 720555 131071 5 b.s b.t G.val C.L G.property
+  exact scalarEliminant_annihilates 720519 131071 5 b.s b.t G.val C.L G.property
     C.numerator C.denominator C.linear _ _ γ (γ^p) hrel
     (hgAnn _ _ hd hd' γ (γ^p) S hS hcorrect)
 
@@ -3985,7 +3985,7 @@ def c1 : Prop :=
 its actual bank, and its exact formal contact with the original words. -/
 def c2 : Prop :=
   ∀ (u : Words) (T : TwoActive u) (R : Relation T) (D : Reduction u T R),
-    columnRank D.U D.V = 4 → T.height ≤ 32932 →
+    columnRank D.U D.V = 4 → T.height ≤ 32950 →
     ∀ (_L : IndependentLift R) (P : Puncture (fixedNodes R)),
       ∃ b, Nonempty (ContactInput u P b D.height)
 
@@ -4026,7 +4026,7 @@ theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) : K21.c11 := by
   classical
   rcases Γ.eq_empty_or_nonempty with rfl | ⟨γ, hγ⟩
   · simp
-  have hmax : T.height ≤ 32932 := by
+  have hmax : T.height ≤ 32950 := by
     unfold TwoActive.height
     have := T.nullitySum
     have := T.degreeSum
@@ -4328,7 +4328,7 @@ def c1 : Prop :=
 and the two parameter degrees of the received-pencil combination. -/
 def c2 : Prop :=
   ∀ (u : Words) (T : TwoActive u) (R : Relation T) (D : Reduction u T R),
-    T.height ≤ 32932 →
+    T.height ≤ 32950 →
     ∀ (A : IndependentLift R) (B : ReducedPair D A) (P : Puncture (fixedNodes R)),
       Nonempty (PlaneOutput u P D.height B.U B.V)
 
@@ -4427,41 +4427,41 @@ theorem of_children (h1 : c1) (h2 : c2) : K21_11.c1 := by
   intro u front T R D _ hr _
   classical
   let h := T.height
-  let s := 49067 - h
-  have hBalance : 49067 + h + nullity u = 82006 ∧ h ≤ 32932 ∧ h < 49067 :=
+  let s := 49058 - h
+  have hBalance : 49058 + h + nullity u = 82015 ∧ h ≤ 32950 ∧ h < 49058 :=
     Native6921Balance (nullity u) T.a T.b T.c
       T.top T.degreeSum T.nullitySum (by have := front.1; omega)
   obtain ⟨hbal, hhi, hL⟩ := hBalance
-  have hsum : h + s = 49067 := by omega
+  have hsum : h + s = 49058 := by omega
   have hs : 16135 ≤ s := by omega
   have hSlice := plane_first_slice_nullity u T hhi
   obtain ⟨Q, hQne, hQ, hPrim⟩ := plane_generator _ (by rw [hSlice]; decide)
-  let M := planeStack p node (u 0) (u 1) 49067 82005
-  let W := K1_6.shifts (planePair Q) 49067 s
-  have hRank : (M.map (algebraMap (Seeds K) (PlaneField K))).rank + s = 2 * 49067 := by
+  let M := planeStack p node (u 0) (u 1) 49058 82014
+  let W := K1_6.shifts (planePair Q) 49058 s
+  have hRank : (M.map (algebraMap (Seeds K) (PlaneField K))).rank + s = 2 * 49058 := by
     rw [plane_stack_rank u, K21.actual_stackRank u]
     omega
   have hker : W.transpose * M = 0 :=
-    shifts_annihilate p node (u 0) (u 1) h 49067 s 82005 hsum Q hQ
-  obtain ⟨hMP, hattain⟩ := h1 K h 49067 s Q hsum (by omega) hQne hPrim
+    shifts_annihilate p node (u 0) (u 1) h 49058 s 82014 hsum Q hQ
+  obtain ⟨hMP, hattain⟩ := h1 K h 49058 s Q hsum (by omega) hQne hPrim
   have hprod (b i : Fin 2) :
-      s * blockDegree Q b i ≤ if b = i then h else 49067 := by
+      s * blockDegree Q b i ≤ if b = i then h else 49058 := by
     by_cases hd : blockDegree Q b i = 0
     · simp [hd]
     obtain ⟨rows, hdet⟩ := hattain b i (Nat.pos_of_ne_zero hd)
-    have hb := h2 K 49067 82006 s M W (by omega) (by omega) hRank hker
+    have hb := h2 K 49058 82015 s M W (by omega) (by omega) hRank hker
       (plane_stack_degree u) hMP b i rows
     rw [hdet] at hb
-    simpa only [show 49067 - s = h by omega] using hb
+    simpa only [show 49058 - s = h by omega] using hb
   have h00 : blockDegree Q 0 0 ≤ 2 := by
     apply Nat.le_of_lt_succ
     exact degree_lt_of_product s _ 3 h (by simpa using hprod 0 0) (by omega)
   have h01 : blockDegree Q 0 1 ≤ 3 := by
     apply Nat.le_of_lt_succ
-    exact degree_lt_of_product s _ 4 49067 (by simpa using hprod 0 1) (by omega)
+    exact degree_lt_of_product s _ 4 49058 (by simpa using hprod 0 1) (by omega)
   have h10 : blockDegree Q 1 0 ≤ 3 := by
     apply Nat.le_of_lt_succ
-    exact degree_lt_of_product s _ 4 49067 (by simpa using hprod 1 0) (by omega)
+    exact degree_lt_of_product s _ 4 49058 (by simpa using hprod 1 0) (by omega)
   have h11 : blockDegree Q 1 1 ≤ 2 := by
     apply Nat.le_of_lt_succ
     exact degree_lt_of_product s _ 3 h (by simpa using hprod 1 1) (by omega)
@@ -4479,16 +4479,16 @@ theorem of_children (h1 : c1) (h2 : c2) : K21_11.c1 := by
       · exact h10
     exact graph_ne_zero p (by decide) _ hne (hdeg.trans_lt (by decide)) (congrFun hz j)
   obtain ⟨c, hc, hgraphQ⟩ := graph_content u T R Q hQ hgraph
-  have hlo : 24534 ≤ T.height := by
+  have hlo : 24529 ≤ T.height := by
     by_contra! hh
-    change h < 24534 at hh
+    change h < 24529 at hh
     apply exclude_affine D p (by decide) hr Q c hc hgraphQ
     · exact Nat.lt_one_iff.mp
         (degree_lt_of_product s _ 1 h (by simpa using hprod 0 0) (by omega))
     · exact Nat.le_of_lt_succ
-        (degree_lt_of_product s _ 2 49067 (by simpa using hprod 0 1) (by omega))
+        (degree_lt_of_product s _ 2 49058 (by simpa using hprod 0 1) (by omega))
     · exact Nat.le_of_lt_succ
-        (degree_lt_of_product s _ 2 49067 (by simpa using hprod 1 0) (by omega))
+        (degree_lt_of_product s _ 2 49058 (by simpa using hprod 1 0) (by omega))
     · exact Nat.lt_one_iff.mp
         (degree_lt_of_product s _ 1 h (by simpa using hprod 1 1) (by omega))
   refine ⟨{

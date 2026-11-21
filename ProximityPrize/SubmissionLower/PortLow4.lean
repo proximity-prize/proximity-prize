@@ -32,11 +32,11 @@ def asOldPole {Γ s} (P : P0_9.PoleData Γ s) : K1_13.PoleData Γ s where
   regular := P.regular
   residue := P.residue
 
-abbrev firstMixedOrder : ℕ := 7048000
-abbrev secondMixedOrder : ℕ := 2382000
+abbrev firstMixedOrder : ℕ := 7003000
+abbrev secondMixedOrder : ℕ := 2337000
 
-abbrev firstCut : ℕ := 5000 * P0.agreement - firstMixedOrder
-abbrev secondCut : ℕ := 5000 * P0.agreement - secondMixedOrder
+abbrev firstCut : ℕ := 5000 * 180130 - firstMixedOrder
+abbrev secondCut : ℕ := 5000 * 180130 - secondMixedOrder
 abbrev bankRank : ℕ := 2450646728375256245627
 
 /-- Seed motion spends at most 7800 even on repeated poles. The raw quotient
@@ -748,17 +748,17 @@ private theorem sum_weight {d t N : ℕ} (ht : t ≤ N) (hend : d ≤ 7800 * t)
 private theorem benchmark_budget :
     (∑ j : Fin (70000 + 70000), columnWeight (m := 70000) (n := 70000) j) + 49070 * 41522 ≤
       (∑ i : Fin (70000 + 70000), weight (firstMixedOrder + secondMixedOrder) i) + 49069 := by
-  have hF : (∑ i : Fin 70000, weight firstMixedOrder i) = 3187775200 := by
-    rw [sum_weight (t := 904) (by decide) (by decide)
+  have hF : (∑ i : Fin 70000, weight firstMixedOrder i) = 3147220600 := by
+    rw [sum_weight (t := 898) (by decide) (by decide)
       (by intro i hi; simp only [firstMixedOrder]; omega)]
     decide
-  have hG : (∑ i : Fin 70000, weight secondMixedOrder i) = 364905000 := by
-    rw [sum_weight (t := 306) (by decide) (by decide)
+  have hG : (∑ i : Fin 70000, weight secondMixedOrder i) = 351270000 := by
+    rw [sum_weight (t := 300) (by decide) (by decide)
       (by intro i hi; simp only [secondMixedOrder]; omega)]
     decide
   have hFG : (∑ i : Fin (70000 + 70000), weight (firstMixedOrder + secondMixedOrder) i) =
-      5705029200 := by
-    rw [sum_weight (t := 1209) (by decide) (by decide)
+      5596696600 := by
+    rw [sum_weight (t := 1198) (by decide) (by decide)
       (by intro i hi; simp only [firstMixedOrder, secondMixedOrder]; omega)]
     decide
   rw [Fin.sum_univ_add, hFG]
@@ -1062,9 +1062,9 @@ private theorem coeff_contact (F : Polynomial Geom[X]) (x : Geom) (r : ℕ)
 /-- Each surviving parameter coefficient must vanish by contact at the selected hits. -/
 private theorem line_coeff_zero (w : I → K) (H res T : Geom[X]) (t r : ℕ) (Q : Row 3)
     (hT : T.natDegree ≤ 131071) (hQ : RawCut t Q) (hcontact : RawContact r w H res Q)
-    (A : Finset I) (hA : A.card = 180139)
+    (A : Finset I) (hA : A.card = 180130)
     (hhit : ∀ i ∈ A, (H * T + res).eval (embed (node i)) = embed (w i))
-    (V : Geom[X]) (hV : V.natDegree ≤ 2) (j : ℕ) (hj : t + 49070 * j < r * 180139) :
+    (V : Geom[X]) (hV : V.natDegree ≤ 2) (j : ℕ) (hj : t + 49070 * j < r * 180130) :
     (line Q T (locator (fun i => embed (node i)) A * V)).coeff j = 0 := by
   classical
   let x (i : I) : Geom := embed (node i)
@@ -1214,10 +1214,10 @@ private theorem translate_map (Q : Row 3) (T : Geom[X]) :
 /-- Locator multiplicity in the raw quotient jets at one regular marked seed. -/
 theorem raw_locator_order (w : I → K) (H res T : Geom[X]) (t k : ℕ) (Q : Row 3)
     (hT : T.natDegree ≤ 131071)
-    (hhits : ∃ A : Finset I, 180139 ≤ A.card ∧
+    (hhits : ∃ A : Finset I, 180130 ≤ A.card ∧
       ∀ i ∈ A, (H * T + res).eval (embed (node i)) = embed (w i))
     (hc : RawContact 5000 w H res Q) (hQ : RawCut t Q)
-    (hcut : t + 49070 * k < 5000 * 180139) :
+    (hcut : t + 49070 * k < 5000 * 180130) :
     LowerOrder (MvPolynomial.map inclX Q) (trajectory T) (k + 1) := by
   obtain ⟨B, hB, hhits⟩ := hhits
   obtain ⟨A, hAB, hA⟩ := Finset.exists_subset_card_eq hB
@@ -1279,7 +1279,7 @@ private theorem mixedOrder_iff_coeff {F : GenericRow} {z : GenericX}
 private theorem fixed_seed_order (h2 : K1_13_4_3.c2)
     {w Γ s} (hw : P0_9.Messages w Γ s) (P : PoleData Γ s) (L : ResidueChart P)
     {box t F} (hF : Source w P L box t F) {γ} (hγ : γ ∈ Γ)
-    (k : ℕ) (hk : t + 49070 * k < 5000 * 180139) :
+    (k : ℕ) (hk : t + 49070 * k < 5000 * 180130) :
     LowerOrder (atSeed (inclConst (P.z γ)) (toGeneric F))
       (trajectory (extend (s γ))) (k + 1) := by
   let res := residueAt L.numerator L.denominator (P.z γ)
@@ -1287,9 +1287,9 @@ private theorem fixed_seed_order (h2 : K1_13_4_3.c2)
   obtain ⟨T, hT, hST⟩ := L.quotient γ hγ
   change extend (s γ) = P.H * T + res at hST
   obtain ⟨A, hA, hhits⟩ := hw.hits γ hγ
-  have hhit : ∃ B : Finset I, 180139 ≤ B.card ∧
+  have hhit : ∃ B : Finset I, 180130 ≤ B.card ∧
       ∀ i ∈ B, (P.H * T + res).eval (embed (node i)) = embed (w i) := by
-    refine ⟨A, hA, fun i hi => ?_⟩
+    refine ⟨A, Nat.le_trans (by decide) hA, fun i hi => ?_⟩
     rw [← hST, extend, Polynomial.eval_map, Polynomial.eval₂_at_apply, hhits i hi]
   have hcontact := rawContact_of_restore 5000 w P.H res (P.z γ) (box.b + box.j) F Q
     P.nodes hF.2.2.1 hrestore
@@ -1301,7 +1301,7 @@ private theorem fixed_seed_order (h2 : K1_13_4_3.c2)
 private theorem source_order (h1 : K1_13_4_3.c1) (h2 : K1_13_4_3.c2)
     {w Γ s} (hw : P0_9.Messages w Γ s) (P : PoleData Γ s) (L : ResidueChart P)
     {box t F} (hF : Source w P L box t F) {γ} (hγ : γ ∈ Γ)
-    {d : ℕ} (hd : t + d ≤ 5000 * 180139) :
+    {d : ℕ} (hd : t + d ≤ 5000 * 180130) :
     MixedOrder (toGeneric F) (inclConst (P.z γ)) (trajectory (extend (s γ))) d := by
   set z := inclConst (P.z γ)
   set y := trajectory (extend (s γ))
@@ -1315,7 +1315,7 @@ private theorem source_order (h1 : K1_13_4_3.c1) (h2 : K1_13_4_3.c2)
   have hdis : ∀ i, i ∉ a.support ∨ i ∉ b.support := by
     intro i
     cases i <;> simp [a, b, Finsupp.mem_support_iff]
-  have hlt : t + 7800 * m none + 49070 * m.some.degree < 5000 * 180139 := by
+  have hlt : t + 7800 * m none + 49070 * m.some.degree < 5000 * 180130 := by
     change 7800 * m none + 49070 * m.some.degree < d at hm
     omega
   have hD := h1 w Γ s P L box t F hF (m none)
@@ -1369,8 +1369,8 @@ private theorem source_orders (w : I → K) (Γ : Finset K) (s : K → K[X])
       obtain ⟨t, F, a, hF, ht, rfl⟩ := hQ
       apply mixedHasse_order
       apply source_order h1 h2 hw P L hF hγ
-      change t + mixedWeight a ≤ 5000 * 180139 - 2382000 at ht
-      change t + (2382000 + mixedWeight a) ≤ 5000 * 180139
+      change t + mixedWeight a ≤ 5000 * 180130 - 2337000 at ht
+      change t + (2337000 + mixedWeight a) ≤ 5000 * 180130
       omega
     | zero =>
       exact mixedOrder_iff_coeff.mpr (fun _ _ => by simp [toGeneric])

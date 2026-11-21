@@ -998,7 +998,7 @@ theorem threefold_pieces_capacity {w Γ s} (C : Pieces Γ) (h : Messages w Γ s)
 private theorem proper_capacity {w Γ s} {x : Shape} (C : Pieces Γ) (h : Messages w Γ s)
     (hc : C.curves s) (hb : 32 * C.total ≤ curveMass32 x)
     (hn : 32 * C.n ≤ componentMass32 x) :
-    C.union.card ≤ ceilDiv (82005 * curveMass32 x) (32 * 46597) +
+    C.union.card ≤ ceilDiv (82014 * curveMass32 x) (32 * 46588) +
       ceilDiv (componentMass32 x) 32 := by
   have hcap := P0_9_6.pieces_curve_capacity C h hc
   unfold ceilDiv
@@ -1039,7 +1039,7 @@ theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) : P0_9_7.c2 := by
   have hsumI := Finset.card_union_le C.union F.union
   let p := (shape f).chamber
   let h := fatChart (shape f)
-  change Γ.card ≤ ceilDiv (82005 * curveMass32 (shape f)) (32 * 46597) +
+  change Γ.card ≤ ceilDiv (82014 * curveMass32 (shape f)) (32 * 46588) +
     ceilDiv (componentMass32 (shape f)) 32 + 20 * p.b * h.b ^ 2 +
     5 * physicalDegree * p.b * h.b + 1
   have hreserveC : C.union.card ≤ 5 * physicalDegree * p.b * h.b := by
@@ -3935,7 +3935,7 @@ private theorem choose_section {w Γ s} (hm : P0_9.Messages w Γ s) {H : Shape} 
     (hr : ∀ γ ∈ Γ, r.asIdeal ≤ jetPointIdeal (jetPoint (extend (s γ)))) :
     ∃ (F : Jets) (selected : Finset JetPoint), Supported H F ∧ F ∉ r.asIdeal ∧
       (∀ y ∈ selected, r.asIdeal ≤ jetPointIdeal y ∧ MvPolynomial.eval y F = 0) ∧
-      46597 * Γ.card ≤ 82005 * selected.card + 46597 := by
+      46588 * Γ.card ≤ 82014 * selected.card + 46588 := by
   classical
   let proper := (univ : Finset I).filter (fun i => ∃ γ ∈ Γ, (s γ).eval (node i) ≠ w i)
   let hits (i : I) := Γ.filter (fun γ => (s γ).eval (node i) = w i)
@@ -4004,7 +4004,7 @@ theorem of_children (h1 : c1) (h2 : c2) : P0_9_7.c3 := by
   have hsections (r : PrimeSpectrum Jets) :
       ∃ (F : Jets) (selected : Finset JetPoint), Supported (P0_9_7.fatChart (shape f)) F ∧ F ∉ r.asIdeal ∧
         (∀ y ∈ selected, r.asIdeal ≤ jetPointIdeal y ∧ MvPolynomial.eval y F = 0) ∧
-        46597 * (piece r).card ≤ 82005 * selected.card + 46597 :=
+        46588 * (piece r).card ≤ 82014 * selected.card + 46588 :=
     choose_section (hm.mono (filter_subset _ _)) C
       (fun γ hγ => hC (s γ) (hm.degree γ (mem_filter.mp hγ).1)
         (hOn γ (mem_filter.mp hγ).1).1 (hOn γ (mem_filter.mp hγ).1).2)
@@ -4026,17 +4026,17 @@ theorem of_children (h1 : c1) (h2 : c2) : P0_9_7.c3 := by
   have hCount := sparse_sections f P Q hbP hbQ R (fun r hr => (hR r hr).1)
     (shape f).chamber ⟨shape_chamber f, hf.2.1⟩ linear singlePoint hLinear
   rw [sum_congr rfl hOne, sum_const, smul_eq_mul, Nat.mul_one] at hCount
-  have hsum : 46597 * Γ.card ≤ 82005 * (∑ r ∈ R, (selected r).card) + 46597 * R.card := calc
-    _ ≤ 46597 * (∑ r ∈ R, (piece r).card) := Nat.mul_le_mul_left _ hcover
-    _ = ∑ r ∈ R, 46597 * (piece r).card := mul_sum ..
-    _ ≤ ∑ r ∈ R, (82005 * (selected r).card + 46597) := sum_le_sum fun r _ => hFee r
+  have hsum : 46588 * Γ.card ≤ 82014 * (∑ r ∈ R, (selected r).card) + 46588 * R.card := calc
+    _ ≤ 46588 * (∑ r ∈ R, (piece r).card) := Nat.mul_le_mul_left _ hcover
+    _ = ∑ r ∈ R, 46588 * (piece r).card := mul_sum ..
+    _ ≤ ∑ r ∈ R, (82014 * (selected r).card + 46588) := sum_le_sum fun r _ => hFee r
     _ = _ := by rw [sum_add_distrib, ← mul_sum, sum_const, smul_eq_mul, Nat.mul_comm R.card]
   change Γ.card ≤ ceilDiv
-    (82005 * mixed32 (shape f).chamber lowerBox lowerBox (P0_9_7.fatChart (shape f)) +
-      46597 * mixed32 (shape f).chamber lowerBox lowerBox (shape f).chamber)
-    (32 * 46597 * threshold)
-  rw [Nat.mul_right_comm 32 46597 threshold]
-  exact weighted_ceil (32 * threshold) 82005 46597 (Nat.mul_pos (Nat.mul_pos (by decide) (by decide)) (by decide))
+    (82014 * mixed32 (shape f).chamber lowerBox lowerBox (P0_9_7.fatChart (shape f)) +
+      46588 * mixed32 (shape f).chamber lowerBox lowerBox (shape f).chamber)
+    (32 * 46588 * threshold)
+  rw [Nat.mul_right_comm 32 46588 threshold]
+  exact weighted_ceil (32 * threshold) 82014 46588 (Nat.mul_pos (Nat.mul_pos (by decide) (by decide)) (by decide))
     hsum hDegree hCount
 
 end

@@ -22,7 +22,7 @@ private theorem fat : c1 := by
 private theorem empty_admissible : c2 := by
   intro s hs
   simp only [emptyThresholds,List.mem_cons,List.not_mem_nil,or_false] at hs
-  rcases hs with rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl
+  rcases hs with rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl
   all_goals unfold availableMass; simp only [sum_eq]; decide +kernel
 
 private theorem oneMass4 : availableMass oneStart ⟨0,4,0⟩ (oneOrder ⟨0,4,0⟩ - 1) < P0_9.layerNeed := by
