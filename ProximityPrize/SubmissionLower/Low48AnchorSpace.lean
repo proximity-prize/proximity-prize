@@ -1,4 +1,5 @@
 import ProximityPrize.SubmissionLower.PortLowBase
+import ProximityPrize.SubmissionLower.Low48Geometry
 
 set_option Elab.async false
 
@@ -61,7 +62,7 @@ theorem cap_of_grade {s t : ℕ} (ht : t ≤ 49) (hts : t ≤ s) (h : s ≤ grad
 def AnchorEligible (u : JetVariable 3 →₀ ℕ) : Prop :=
   u.some.degree ≤ 121 ∧ u.some.weight (fun i => i.val) ≤ 49 ∧ u (some 3) ≤ 13 ∧
     u.some.degree ≤ gradeLimit (u (some 1) + u (some 2) + u (some 3)) ∧
-    u.weight (differentialWeight 133437) ≤ 90 * 179944 - 1
+    u.weight (differentialWeight 133412) ≤ 90 * 179925 - 1
 
 noncomputable def anchorSpace : Submodule Geom (DifferentialPolynomial Geom 3) :=
   MvPolynomial.restrictSupport Geom {u | AnchorEligible u}

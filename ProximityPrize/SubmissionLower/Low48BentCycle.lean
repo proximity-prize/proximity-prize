@@ -1,4 +1,5 @@
 import ProximityPrize.SubmissionLower.Fast077
+import ProximityPrize.SubmissionLower.Low48PriceTotal
 
 set_option autoImplicit false
 set_option Elab.async false

@@ -1,4 +1,5 @@
 import ProximityPrize.SubmissionLower.GoldBranch6N8
+import ProximityPrize.SubmissionLower.FrontCore82219Model
 set_option Elab.async false
 set_option autoImplicit true
 section

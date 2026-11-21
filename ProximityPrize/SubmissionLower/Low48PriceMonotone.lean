@@ -1,4 +1,5 @@
 import ProximityPrize.SubmissionLower.Low48Price
+import ProximityPrize.SubmissionLower.Low48FatCount
 set_option Elab.async false
 section
 namespace Low48PriceMonotone

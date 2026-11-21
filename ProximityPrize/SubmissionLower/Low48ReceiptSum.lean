@@ -1,6 +1,7 @@
 import ProximityPrize.SubmissionLower.Low48ReceiptBase
 import ProximityPrize.SubmissionLower.Low48AnchorSpace
 import Mathlib.Algebra.BigOperators.Intervals
+import ProximityPrize.SubmissionLower.Low48ReceiptGroup0
 
 set_option Elab.async false
 set_option maxHeartbeats 2000000

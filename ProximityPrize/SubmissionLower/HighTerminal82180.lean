@@ -1,4 +1,5 @@
 import ProximityPrize.SubmissionLower.HighBanks82180
+import ProximityPrize.SubmissionLower.FrontCases82180
 
 set_option Elab.async false
 set_option maxRecDepth 18000

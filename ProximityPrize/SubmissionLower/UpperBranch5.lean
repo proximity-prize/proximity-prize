@@ -1,5 +1,6 @@
 import ProximityPrize.SubmissionLower.GoldBranch6N4
 import ProximityPrize.SubmissionLower.UpperBase
+import ProximityPrize.SubmissionLower.Low48GeometryFinish
 set_option Elab.async false
 set_option autoImplicit true
 section

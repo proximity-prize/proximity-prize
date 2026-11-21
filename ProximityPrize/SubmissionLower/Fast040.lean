@@ -6,6 +6,7 @@ import Mathlib.RingTheory.Artinian.Algebra
 import Mathlib.RingTheory.DedekindDomain.Factorization
 import Mathlib.RingTheory.Localization.NormTrace
 import ProximityPrize.SubmissionLower.Fast035
+import ProximityPrize.SubmissionLower.Fast042
 set_option Elab.async false
 set_option autoImplicit true
 section

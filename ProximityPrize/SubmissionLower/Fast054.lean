@@ -1,5 +1,6 @@
 import ProximityPrize.SubmissionLower.Fast050
 import ProximityPrize.SubmissionLower.Fast051
+import ProximityPrize.SubmissionLower.Fast059
 set_option Elab.async false
 set_option autoImplicit true
 section

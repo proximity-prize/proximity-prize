@@ -1,4 +1,5 @@
 import ProximityPrize.SubmissionLower.Fast054
+import ProximityPrize.SubmissionLower.Low48AnchorSpace
 
 set_option Elab.async false
 

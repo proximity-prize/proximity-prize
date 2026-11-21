@@ -1,5 +1,6 @@
 import ProximityPrize.SubmissionLower.PortHighFinish
 import ProximityPrize.SubmissionLower.UpperBase
+import ProximityPrize.SubmissionLower.FrontAssembly82200
 set_option Elab.async false
 set_option autoImplicit true
 section

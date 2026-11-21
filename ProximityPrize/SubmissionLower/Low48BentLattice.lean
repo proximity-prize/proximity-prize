@@ -1,4 +1,5 @@
 import ProximityPrize.SubmissionLower.PortLow7
+import ProximityPrize.SubmissionLower.Low48BentCycleBound
 
 set_option autoImplicit false
 namespace Low48BentLattice

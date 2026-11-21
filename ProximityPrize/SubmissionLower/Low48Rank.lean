@@ -22,9 +22,9 @@ theorem origin_rank : Module.finrank Geom (LinearMap.range (anchorLocal 0 0)) �
 
 theorem exists_anchor (w : I → K) :
     ∃ P : Row 4, P ≠ 0 ∧ InBox (shape P) ⟨121,49,13⟩ ∧
-      differentialWeightedDegree 133437 ((MvPolynomial.optionEquivRight Geom (Fin 4)).symm P) <
-        90 * 179944 ∧
-      ∀ (S : K[X]) (T : Finset I), S.natDegree ≤ 133437 → 179944 ≤ T.card →
+      differentialWeightedDegree 133412 ((MvPolynomial.optionEquivRight Geom (Fin 4)).symm P) <
+        90 * 179925 ∧
+      ∀ (S : K[X]) (T : Finset I), S.natDegree ≤ 133412 → 179925 ≤ T.card →
         (∀ i ∈ T, S.eval (node i) = w i) → atJet P (extend S) = 0 :=
   Low48Anchor.exists_anchor origin_rank w
 

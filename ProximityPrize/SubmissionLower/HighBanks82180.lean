@@ -1,4 +1,5 @@
 import ProximityPrize.SubmissionLower.GoldBranch7N2
+import ProximityPrize.SubmissionLower.Protocol82180
 
 set_option Elab.async false
 set_option maxRecDepth 18000

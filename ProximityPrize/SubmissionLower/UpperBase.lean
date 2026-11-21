@@ -1,5 +1,6 @@
 import ProximityPrize.SubmissionLower.Fast077
 import ProximityPrize.SubmissionLower.RungSplit
+import ProximityPrize.SubmissionLower.GoldBranch6N5
 set_option Elab.async false
 set_option autoImplicit true
 section

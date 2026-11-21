@@ -1,4 +1,5 @@
 import ProximityPrize.SubmissionLower.PortBase
+import ProximityPrize.SubmissionLower.ListProofA
 set_option Elab.async false
 set_option autoImplicit true
 section

@@ -1,4 +1,5 @@
 import ProximityPrize.SubmissionLower.Low48BentLattice
+import ProximityPrize.SubmissionLower.Low48BentCycleChart
 
 set_option autoImplicit false
 

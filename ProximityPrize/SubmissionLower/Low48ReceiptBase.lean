@@ -1,4 +1,5 @@
 import ProximityPrize.SubmissionLower.RankRows82190
+import ProximityPrize.SubmissionLower.Low48Anchor
 
 set_option Elab.async false
 namespace Low48Receipt

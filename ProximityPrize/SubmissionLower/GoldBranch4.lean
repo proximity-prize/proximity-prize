@@ -1,4 +1,5 @@
 import ProximityPrize.SubmissionLower.SilverBase
+import ProximityPrize.SubmissionLower.HighCore82219ScheduleData
 set_option Elab.async false
 set_option autoImplicit true
 section

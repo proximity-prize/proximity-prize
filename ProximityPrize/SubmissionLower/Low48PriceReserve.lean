@@ -1,4 +1,5 @@
 import ProximityPrize.SubmissionLower.Low48PriceCaps
+import ProximityPrize.SubmissionLower.Low48PriceMass
 
 set_option Elab.async false
 set_option maxHeartbeats 2000000
@@ -128,9 +129,9 @@ private theorem r1_3 : fatPrice ⟨23,3,1⟩ ≤ oneReserve := by decide +kernel
 private theorem r1_4 : fatPrice ⟨21,4,1⟩ ≤ oneReserve := by decide +kernel
 private theorem r1_5 : fatPrice ⟨18,5,1⟩ ≤ oneReserve := by decide +kernel
 private theorem r1_6 : fatPrice ⟨13,6,1⟩ ≤ oneReserve := by decide +kernel
-private theorem r1_7 : fatPrice ⟨7,7,1⟩ ≤ oneReserve := by decide +kernel
+private theorem r1_7 : fatPrice ⟨6,7,1⟩ ≤ oneReserve := by decide +kernel
 private theorem r2_6 : fatPrice ⟨13,6,2⟩ ≤ twoReserve := by decide +kernel
-private theorem r2_7 : fatPrice ⟨7,7,2⟩ ≤ twoReserve := by decide +kernel
+private theorem r2_7 : fatPrice ⟨6,7,2⟩ ≤ twoReserve := by decide +kernel
 theorem proof : Charges := by
   intro ⟨b, j, t⟩ ha hb
   have hjt : 3 * t ≤ j := ha.2.1
@@ -145,14 +146,14 @@ theorem proof : Charges := by
     · exact (fatPrice_widen (y := ⟨21,4,1⟩) ⟨hb.2.2.1 le_rfl, rfl, rfl⟩ hjt).trans r1_4
     · exact (fatPrice_widen (y := ⟨18,5,1⟩) ⟨hb.2.2.2.1 le_rfl, rfl, rfl⟩ hjt).trans r1_5
     · exact (fatPrice_widen (y := ⟨13,6,1⟩) ⟨hb.2.2.2.2.1 le_rfl, rfl, rfl⟩ hjt).trans r1_6
-    · exact (fatPrice_widen (y := ⟨7,7,1⟩) ⟨hb.2.2.2.2.2 le_rfl, rfl, rfl⟩ hjt).trans r1_7
+    · exact (fatPrice_widen (y := ⟨6,7,1⟩) ⟨hb.2.2.2.2.2 le_rfl, rfl, rfl⟩ hjt).trans r1_7
   · intro ht
     change t = 2 at ht
     subst t
     have hj : j = 6 ∨ j = 7 := by omega
     rcases hj with rfl | rfl
     · exact (fatPrice_widen (y := ⟨13,6,2⟩) ⟨hb.2.2.2.2.1 le_rfl, rfl, rfl⟩ hjt).trans r2_6
-    · exact (fatPrice_widen (y := ⟨7,7,2⟩) ⟨hb.2.2.2.2.2 le_rfl, rfl, rfl⟩ hjt).trans r2_7
+    · exact (fatPrice_widen (y := ⟨6,7,2⟩) ⟨hb.2.2.2.2.2 le_rfl, rfl, rfl⟩ hjt).trans r2_7
 
 #print axioms proof
 end Low48PriceReserve

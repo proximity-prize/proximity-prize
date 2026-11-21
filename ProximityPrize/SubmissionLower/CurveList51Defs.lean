@@ -1,4 +1,5 @@
 import ProximityPrize.SubmissionLower.Numeric6Defs
+import ProximityPrize.SubmissionLower.HighCore82219Terminal
 
 set_option Elab.async false
 set_option maxRecDepth 20000
