@@ -2121,6 +2121,24 @@ section
 namespace P1_7_1_3_3
 open P1_7_1_3 (blockEstimate momentEstimate)
 set_option maxRecDepth 4000
+theorem moment1043_235 : momentEstimate 1043 235 = 33710825496 := by
+  change blockEstimate 1043 235 235 1278 = 33710825496
+  refine appendBlock 1152 126 1387 33540780424 170045072 ?_
+  refine appendBlock 960 192 1195 31290830721 2249949703 ?_
+  refine appendBlock 768 192 1003 25136594525 6154236196 ?_
+  refine appendBlock 576 192 811 15933247773 9203346752 ?_
+  refine appendBlock 384 192 619 6803850205 9129397568 ?_
+  refine appendBlock 192 192 427 1078030064 5725820141 ?_
+  rfl
+theorem moment1058_225 : momentEstimate 1058 225 = 34123764741 := by
+  change blockEstimate 1058 225 225 1283 = 34123764741
+  refine appendBlock 1152 131 1377 33930464733 193300008 ?_
+  refine appendBlock 960 192 1185 31557098306 2373366427 ?_
+  refine appendBlock 768 192 993 25214951080 6342147226 ?_
+  refine appendBlock 576 192 801 15956483208 9258467872 ?_
+  refine appendBlock 384 192 609 6852143720 9104339488 ?_
+  refine appendBlock 192 192 417 1096002224 5756141496 ?_
+  rfl
 theorem moment1072_239 : momentEstimate 1072 239 = 37305519000 := by
   change blockEstimate 1072 239 239 1311 = 37305519000
   refine appendBlock 1152 159 1391 36961641040 343877960 ?_
@@ -2145,6 +2163,17 @@ theorem moment1183_249 : momentEstimate 1183 249 = 52867790342 := by
   refine appendBlock 576 192 825 20051804250 13307044000 ?_
   refine appendBlock 384 192 633 8177848250 11873956000 ?_
   refine appendBlock 192 192 441 1245770224 6932078026 ?_
+  rfl
+theorem moment1307_273 : momentEstimate 1307 273 = 78245537261 := by
+  change blockEstimate 1307 273 273 1580 = 78245537261
+  refine appendBlock 1536 44 1809 78235443067 10094194 ?_
+  refine appendBlock 1344 192 1617 76909230331 1326212736 ?_
+  refine appendBlock 1152 192 1425 71012066432 5897163899 ?_
+  refine appendBlock 960 192 1233 58877842812 12134223620 ?_
+  refine appendBlock 768 192 1041 42054010460 16823832352 ?_
+  refine appendBlock 576 192 849 24295860028 17758150432 ?_
+  refine appendBlock 384 192 657 9482074140 14813785888 ?_
+  refine appendBlock 192 192 465 1394340080 8087734060 ?_
   rfl
 theorem moment1324_279 : momentEstimate 1324 279 = 82958819253 := by
   change blockEstimate 1324 279 279 1603 = 82958819253
@@ -2192,6 +2221,19 @@ theorem moment1550_329 : momentEstimate 1550 329 = 156562227172 := by
   refine appendBlock 576 192 905 33216006670 28081537440 ?_
   refine appendBlock 384 192 713 11977349230 21238657440 ?_
   refine appendBlock 192 192 521 1685489072 10291860158 ?_
+  rfl
+theorem moment1587_334 : momentEstimate 1587 334 = 170894624907 := by
+  change blockEstimate 1587 334 334 1921 = 170894624907
+  refine appendBlock 1920 1 2254 170894623320 1587 ?_
+  refine appendBlock 1728 192 2062 169976636416 917986904 ?_
+  refine appendBlock 1536 192 1870 164130204232 5846432184 ?_
+  refine appendBlock 1344 192 1678 149995495333 14134708899 ?_
+  refine appendBlock 1152 192 1486 126511683360 23483811973 ?_
+  refine appendBlock 960 192 1294 96300750880 30210932480 ?_
+  refine appendBlock 768 192 1102 64039811360 32260939520 ?_
+  refine appendBlock 576 192 910 34471049760 29568761600 ?_
+  refine appendBlock 384 192 718 12336651040 22134398720 ?_
+  refine appendBlock 192 192 526 1729820400 10606830640 ?_
   rfl
 end P1_7_1_3_3
 end
@@ -2330,6 +2372,37 @@ namespace P1_7_1_3_5
 open P1_7_1_3 (blockEstimate block_append momentEstimate)
 set_option maxRecDepth 12000
 set_option maxHeartbeats 10000000
+theorem moment4714 : momentEstimate 4714 997 = 13307662181427 := by
+  change blockEstimate 4714 997 997 5711 = 13307662181427
+  refine block_append (a := 5376) (b := 335) (next := 6373) (x := 13293190894919) (y := 14471286508)
+    ?_ (by rfl) (by decide) (by decide) (by decide)
+  refine block_append (a := 4992) (b := 384) (next := 5989) (x := 13171216668327) (y := 121974226592)
+    ?_ (by rfl) (by decide) (by decide) (by decide)
+  refine block_append (a := 4608) (b := 384) (next := 5605) (x := 12836550788780) (y := 334665879547)
+    ?_ (by rfl) (by decide) (by decide) (by decide)
+  refine block_append (a := 4224) (b := 384) (next := 5221) (x := 12212427175383) (y := 624123613397)
+    ?_ (by rfl) (by decide) (by decide) (by decide)
+  refine block_append (a := 3840) (b := 384) (next := 4837) (x := 11257616482002) (y := 954810693381)
+    ?_ (by rfl) (by decide) (by decide) (by decide)
+  refine block_append (a := 3456) (b := 384) (next := 4453) (x := 9974418830209) (y := 1283197651793)
+    ?_ (by rfl) (by decide) (by decide) (by decide)
+  refine block_append (a := 3072) (b := 384) (next := 4069) (x := 8441569360833) (y := 1532849469376)
+    ?_ (by rfl) (by decide) (by decide) (by decide)
+  refine block_append (a := 2688) (b := 384) (next := 3685) (x := 6771639337985) (y := 1669930022848)
+    ?_ (by rfl) (by decide) (by decide) (by decide)
+  refine block_append (a := 2304) (b := 384) (next := 3301) (x := 5077648477249) (y := 1693990860736)
+    ?_ (by rfl) (by decide) (by decide) (by decide)
+  refine block_append (a := 1920) (b := 384) (next := 2917) (x := 3472616494209) (y := 1605031983040)
+    ?_ (by rfl) (by decide) (by decide) (by decide)
+  refine block_append (a := 1536) (b := 384) (next := 2533) (x := 2069563104449) (y := 1403053389760)
+    ?_ (by rfl) (by decide) (by decide) (by decide)
+  refine block_append (a := 1152) (b := 384) (next := 2149) (x := 981508023553) (y := 1088055080896)
+    ?_ (by rfl) (by decide) (by decide) (by decide)
+  refine block_append (a := 768) (b := 384) (next := 1765) (x := 313686788800) (y := 667821234753)
+    ?_ (by rfl) (by decide) (by decide) (by decide)
+  refine block_append (a := 384) (b := 384) (next := 1381) (x := 42102996320) (y := 271583792480)
+    ?_ (by rfl) (by decide) (by decide) (by decide)
+  rfl
 theorem moment5798 : momentEstimate 5798 1223 = 30381132426145 := by
   change blockEstimate 5798 1223 1223 7021 = 30381132426145
   refine block_append (a := 6912) (b := 109) (next := 8135) (x := 30380486284103) (y := 646142042)
