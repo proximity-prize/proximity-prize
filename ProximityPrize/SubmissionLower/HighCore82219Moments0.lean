@@ -1,4 +1,5 @@
-import ProximityPrize.SubmissionLower.UpperBranch1
+import ProximityPrize.SubmissionLower.GoldBranch7N1
+import ProximityPrize.SubmissionLower.HighCore82219Source
 
 set_option Elab.async false
 set_option autoImplicit true
@@ -6,274 +7,296 @@ set_option maxRecDepth 18000
 
 namespace HighCore82219BankProof
 
-open P1_7_1_3 (momentEstimate blockEstimate block_append)
-
+open P1_7_1_3 (momentEstimate)
+open P1_7_1_3_2 (moment_from_blocks)
+open scoped P1_7_1_3_2
 set_option maxHeartbeats 14000000
 
-private theorem p83_18_18 : blockEstimate 83 18 18 101 = 0x15f0f2 := by decide +kernel
+open private r1A from ProximityPrize.SubmissionLower.GoldBranch7N1
+open private r2A from ProximityPrize.SubmissionLower.GoldBranch7N1
+open private r3A from ProximityPrize.SubmissionLower.GoldBranch7N1
+open private r4A from ProximityPrize.SubmissionLower.GoldBranch7N1
+open private r5A from ProximityPrize.SubmissionLower.GoldBranch7N1
+open private r6A from ProximityPrize.SubmissionLower.GoldBranch7N1
+open private r7A from ProximityPrize.SubmissionLower.GoldBranch7N1
+open private r8A from ProximityPrize.SubmissionLower.GoldBranch7N1
+open private r9A from ProximityPrize.SubmissionLower.GoldBranch7N1
+open private r10A from ProximityPrize.SubmissionLower.GoldBranch7N1
+open private r11A from ProximityPrize.SubmissionLower.GoldBranch7N1
+open private r12A from ProximityPrize.SubmissionLower.GoldBranch7N1
+open private r13A from ProximityPrize.SubmissionLower.GoldBranch7N1
+open private r14A from ProximityPrize.SubmissionLower.GoldBranch7N1
+open private r15A from ProximityPrize.SubmissionLower.GoldBranch7N1
+open private r16A from ProximityPrize.SubmissionLower.GoldBranch7N1
+open private r17A from ProximityPrize.SubmissionLower.GoldBranch7N1
+open private r18A from ProximityPrize.SubmissionLower.GoldBranch7N1
+open private r19A from ProximityPrize.SubmissionLower.GoldBranch7N1
+open private r20A from ProximityPrize.SubmissionLower.GoldBranch7N1
+open private r21A from ProximityPrize.SubmissionLower.GoldBranch7N1
+open private r22A from ProximityPrize.SubmissionLower.GoldBranch7N1
+open private r23A from ProximityPrize.SubmissionLower.GoldBranch7N1
+open private r24A from ProximityPrize.SubmissionLower.GoldBranch7N1
+open private r25A from ProximityPrize.SubmissionLower.GoldBranch7N1
 
+theorem moment15_3 : momentEstimate 15 3 = 2194 := r1A
 
+theorem moment28_4 : momentEstimate 28 4 = 17031 := r2A
 
-theorem moment83_18 : momentEstimate 83 18 = 0x15f0f2 := p83_18_18
+theorem moment29_6 : momentEstimate 29 6 = 24733 := r3A
 
-private theorem p101_22_22 : blockEstimate 101 22 22 123 = 0x2f6f2a := by decide +kernel
+theorem moment47_10 : momentEstimate 47 10 = 156979 := r4A
 
+theorem moment53_9 : momentEstimate 53 9 = 211909 := r5A
 
+theorem moment75_16 : momentEstimate 75 16 = 957077 := r6A
 
-theorem moment101_22 : momentEstimate 101 22 = 0x2f6f2a := p101_22_22
+theorem moment89_15 : momentEstimate 89 15 = 0x17e10a := r7A
 
-private theorem p111_24_24 : blockEstimate 111 24 24 135 = 0x4451ef := by decide +kernel
+theorem moment101_22 : momentEstimate 101 22 = 0x2f6f2a := r8A
 
+theorem moment105_23 : momentEstimate 105 23 = 0x3777f9 := r9A
 
+theorem moment108_24 : momentEstimate 108 24 = 0x3e9e8f := r10A
 
-theorem moment111_24 : momentEstimate 111 24 = 0x4451ef := p111_24_24
+theorem moment111_24 : momentEstimate 111 24 = 0x4451ef := r11A
 
-private theorem p119_26_26 : blockEstimate 119 26 26 145 = 0x5a8245 := by decide +kernel
+theorem moment119_26 : momentEstimate 119 26 = 0x5a8245 := r12A
 
+theorem moment123_27 : momentEstimate 123 27 = 0x67700d := rfl
 
+theorem moment125_27 : momentEstimate 125 27 = 0x6ce383 := r13A
 
-theorem moment119_26 : momentEstimate 119 26 = 0x5a8245 := p119_26_26
+theorem moment130_29 : momentEstimate 130 29 = 0x822d2c := r14A
 
-private theorem p126_27_27 : blockEstimate 126 27 27 153 = 0x6fafa5 := by decide +kernel
+theorem moment134_30 : momentEstimate 134 30 = 0x931387 := rfl
 
+theorem moment137_30 : momentEstimate 137 30 = 0x9dd5af := r15A
 
+theorem moment141_24 : momentEstimate 141 24 = 0x91e8ba := r16A
 
-theorem moment126_27 : momentEstimate 126 27 = 0x6fafa5 := p126_27_27
+theorem moment141_31 : momentEstimate 141 31 = 0xb15384 := r17A
 
-private theorem p134_29_29 : blockEstimate 134 29 29 163 = 0x8f605a := by decide +kernel
+theorem moment147_32 : momentEstimate 147 32 = 0xcf7010 := r18A
 
+theorem moment149_33 : momentEstimate 149 33 = 0xdda994 := r19A
 
+theorem moment150_33 : momentEstimate 150 33 = 0xe271e9 := r20A
 
-theorem moment134_29 : momentEstimate 134 29 = 0x8f605a := p134_29_29
+theorem moment158_34 : momentEstimate 158 34 = 0x11160fc := r21A
 
-private theorem p151_33_33 : blockEstimate 151 33 33 184 = 0xe74c1b := by decide +kernel
+theorem moment159_35 : momentEstimate 159 35 = 0x11d1f9e := r22A
 
+theorem moment160_34 : momentEstimate 160 34 = 0x11c9279 := rfl
 
+theorem moment173_32 : momentEstimate 173 32 = 0x15c66e5 := r23A
 
-theorem moment151_33 : momentEstimate 151 33 = 0xe74c1b := p151_33_33
+theorem moment197_43 : momentEstimate 197 43 = 0x294fec6 := r24A
 
-private theorem p153_34_34 : blockEstimate 153 34 34 187 = 0xf6b69e := by decide +kernel
+theorem moment226_50 : momentEstimate 226 50 = 0x47e88b5 := r25A
 
+theorem moment235_50 : momentEstimate 235 50 = 0x517adc3 := by
+  exact moment_from_blocks [⟨220,0x4cb36f8⟩, ⟨65,0x4c76cb⟩]
+    ⟨(by decide +kernel), (by decide +kernel), trivial⟩
+    rfl rfl
 
+theorem moment270_60 : momentEstimate 270 60 = 0x921d91e := by
+  exact moment_from_blocks [⟨220,0x7a85c99⟩, ⟨110,0x1797c85⟩]
+    ⟨(by decide +kernel), (by decide +kernel), trivial⟩
+    rfl rfl
 
-theorem moment153_34 : momentEstimate 153 34 = 0xf6b69e := p153_34_34
+theorem moment294_65 : momentEstimate 294 65 = 0xcc1a54f := by
+  exact moment_from_blocks [⟨220,0x9b91fd2⟩, ⟨139,0x308857d⟩]
+    ⟨(by decide +kernel), (by decide +kernel), trivial⟩
+    rfl rfl
 
-private theorem p169_38_38 : blockEstimate 169 38 38 207 = 0x170ad54 := by decide +kernel
-
-
-
-theorem moment169_38 : momentEstimate 169 38 = 0x170ad54 := p169_38_38
-
-private theorem p179_39_39 : blockEstimate 179 39 39 215 = 0x1c3cefe := by decide +kernel
-private theorem p179_39_254 : blockEstimate 179 39 254 3 = 1247 := by decide +kernel
-
-private theorem s179_39_39_218 : blockEstimate 179 39 39 218 = 0x1c3d3dd :=
-  block_append (B := 179) (J := 39) (start := 39) (next := 254)
-    (a := 215) (b := 3) (n := 218) (x := 0x1c3cefe) (y := 1247) (z := 0x1c3d3dd)
-    p179_39_39 p179_39_254 rfl rfl rfl
-
-theorem moment179_39 : momentEstimate 179 39 = 0x1c3d3dd := s179_39_39_218
-
-private theorem p181_40_40 : blockEstimate 181 40 40 215 = 0x1dd2539 := by decide +kernel
-private theorem p181_40_255 : blockEstimate 181 40 255 6 = 6079 := by decide +kernel
-
-private theorem s181_40_40_221 : blockEstimate 181 40 40 221 = 0x1dd3cf8 :=
-  block_append (B := 181) (J := 40) (start := 40) (next := 255)
-    (a := 215) (b := 6) (n := 221) (x := 0x1dd2539) (y := 6079) (z := 0x1dd3cf8)
-    p181_40_40 p181_40_255 rfl rfl rfl
-
-theorem moment181_40 : momentEstimate 181 40 = 0x1dd3cf8 := s181_40_40_221
-
-private theorem p194_42_42 : blockEstimate 194 42 42 215 = 0x267840b := by decide +kernel
-private theorem p194_42_257 : blockEstimate 194 42 257 21 = 174819 := by decide +kernel
-
-private theorem s194_42_42_236 : blockEstimate 194 42 42 236 = 0x26a2eee :=
-  block_append (B := 194) (J := 42) (start := 42) (next := 257)
-    (a := 215) (b := 21) (n := 236) (x := 0x267840b) (y := 174819) (z := 0x26a2eee)
-    p194_42_42 p194_42_257 rfl rfl rfl
-
-theorem moment194_42 : momentEstimate 194 42 = 0x26a2eee := s194_42_42_236
-
-private theorem p223_49_49 : blockEstimate 223 49 49 215 = 0x40b7288 := by decide +kernel
-private theorem p223_49_264 : blockEstimate 223 49 264 57 = 0x320fe3 := by decide +kernel
-
-private theorem s223_49_49_272 : blockEstimate 223 49 49 272 = 0x43d826b :=
-  block_append (B := 223) (J := 49) (start := 49) (next := 264)
-    (a := 215) (b := 57) (n := 272) (x := 0x40b7288) (y := 0x320fe3) (z := 0x43d826b)
-    p223_49_49 p223_49_264 rfl rfl rfl
-
-theorem moment223_49 : momentEstimate 223 49 = 0x43d826b := s223_49_49_272
-
-private theorem p233_50_50 : blockEstimate 233 50 50 215 = 0x49ecaa2 := by decide +kernel
-private theorem p233_50_265 : blockEstimate 233 50 265 68 = 0x55b9c3 := by decide +kernel
-
-private theorem s233_50_50_283 : blockEstimate 233 50 50 283 = 0x4f48465 :=
-  block_append (B := 233) (J := 50) (start := 50) (next := 265)
-    (a := 215) (b := 68) (n := 283) (x := 0x49ecaa2) (y := 0x55b9c3) (z := 0x4f48465)
-    p233_50_50 p233_50_265 rfl rfl rfl
-
-theorem moment233_50 : momentEstimate 233 50 = 0x4f48465 := s233_50_50_283
-
-private theorem p248_55_55 : blockEstimate 248 55 55 215 = 0x5c739b3 := by decide +kernel
-private theorem p248_55_270 : blockEstimate 248 55 270 88 = 0xbac300 := by decide +kernel
-
-private theorem s248_55_55_303 : blockEstimate 248 55 55 303 = 0x681fcb3 :=
-  block_append (B := 248) (J := 55) (start := 55) (next := 270)
-    (a := 215) (b := 88) (n := 303) (x := 0x5c739b3) (y := 0xbac300) (z := 0x681fcb3)
-    p248_55_55 p248_55_270 rfl rfl rfl
-
-theorem moment248_55 : momentEstimate 248 55 = 0x681fcb3 := s248_55_55_303
-
-private theorem p263_59_59 : blockEstimate 263 59 59 215 = 0x6f6726d := by decide +kernel
-private theorem p263_59_274 : blockEstimate 263 59 274 107 = 0x15334c8 := by decide +kernel
-
-private theorem s263_59_59_322 : blockEstimate 263 59 59 322 = 0x849a735 :=
-  block_append (B := 263) (J := 59) (start := 59) (next := 274)
-    (a := 215) (b := 107) (n := 322) (x := 0x6f6726d) (y := 0x15334c8) (z := 0x849a735)
-    p263_59_59 p263_59_274 rfl rfl rfl
-
-theorem moment263_59 : momentEstimate 263 59 = 0x849a735 := s263_59_59_322
-
-private theorem p267_58_58 : blockEstimate 267 58 58 215 = 0x72289d3 := by decide +kernel
-private theorem p267_58_273 : blockEstimate 267 58 273 110 = 0x17354b5 := by decide +kernel
-
-private theorem s267_58_58_325 : blockEstimate 267 58 58 325 = 0x895de88 :=
-  block_append (B := 267) (J := 58) (start := 58) (next := 273)
-    (a := 215) (b := 110) (n := 325) (x := 0x72289d3) (y := 0x17354b5) (z := 0x895de88)
-    p267_58_58 p267_58_273 rfl rfl rfl
-
-theorem moment267_58 : momentEstimate 267 58 = 0x895de88 := s267_58_58_325
-
-private theorem p291_64_64 : blockEstimate 291 64 64 215 = 0x9282f7c := by decide +kernel
-private theorem p291_64_279 : blockEstimate 291 64 279 140 = 0x30a85ec := by decide +kernel
-
-private theorem s291_64_64_355 : blockEstimate 291 64 64 355 = 0xc32b568 :=
-  block_append (B := 291) (J := 64) (start := 64) (next := 279)
-    (a := 215) (b := 140) (n := 355) (x := 0x9282f7c) (y := 0x30a85ec) (z := 0xc32b568)
-    p291_64_64 p291_64_279 rfl rfl rfl
-
-theorem moment291_64 : momentEstimate 291 64 = 0xc32b568 := s291_64_64_355
-
-private theorem p346_77_77 : blockEstimate 346 77 77 215 = 0xe3ca6ec := by decide +kernel
-private theorem p346_77_292 : blockEstimate 346 77 292 208 = 0xa40e994 := by decide +kernel
-
-private theorem s346_77_77_423 : blockEstimate 346 77 77 423 = 0x187d9080 :=
-  block_append (B := 346) (J := 77) (start := 77) (next := 292)
-    (a := 215) (b := 208) (n := 423) (x := 0xe3ca6ec) (y := 0xa40e994) (z := 0x187d9080)
-    p346_77_77 p346_77_292 rfl rfl rfl
-
-theorem moment346_77 : momentEstimate 346 77 = 0x187d9080 := s346_77_77_423
-
-private theorem p351_80_80 : blockEstimate 351 80 80 215 = 0xee8ff18 := by decide +kernel
-private theorem p351_80_295 : blockEstimate 351 80 295 215 = 0xb7f3cd4 := by decide +kernel
-private theorem p351_80_510 : blockEstimate 351 80 510 1 = 351 := by decide +kernel
-
-private theorem s351_80_295_216 : blockEstimate 351 80 295 216 = 0xb7f3e33 :=
-  block_append (B := 351) (J := 80) (start := 295) (next := 510)
-    (a := 215) (b := 1) (n := 216) (x := 0xb7f3cd4) (y := 351) (z := 0xb7f3e33)
-    p351_80_295 p351_80_510 rfl rfl rfl
-
-private theorem s351_80_80_431 : blockEstimate 351 80 80 431 = 0x1a683d4b :=
-  block_append (B := 351) (J := 80) (start := 80) (next := 295)
-    (a := 215) (b := 216) (n := 431) (x := 0xee8ff18) (y := 0xb7f3e33) (z := 0x1a683d4b)
-    p351_80_80 s351_80_295_216 rfl rfl rfl
-
-theorem moment351_80 : momentEstimate 351 80 = 0x1a683d4b := s351_80_80_431
-
-private theorem p369_82_82 : blockEstimate 369 82 82 215 = 0x107c4163 := by decide +kernel
-private theorem p369_82_297 : blockEstimate 369 82 297 215 = 0xf17ddc2 := by decide +kernel
-private theorem p369_82_512 : blockEstimate 369 82 512 21 = 340369 := by decide +kernel
-
-private theorem s369_82_297_236 : blockEstimate 369 82 297 236 = 0xf1d0f53 :=
-  block_append (B := 369) (J := 82) (start := 297) (next := 512)
-    (a := 215) (b := 21) (n := 236) (x := 0xf17ddc2) (y := 340369) (z := 0xf1d0f53)
-    p369_82_297 p369_82_512 rfl rfl rfl
-
-private theorem s369_82_82_451 : blockEstimate 369 82 82 451 = 0x1f9950b6 :=
-  block_append (B := 369) (J := 82) (start := 82) (next := 297)
-    (a := 215) (b := 236) (n := 451) (x := 0x107c4163) (y := 0xf1d0f53) (z := 0x1f9950b6)
-    p369_82_82 s369_82_297_236 rfl rfl rfl
-
-theorem moment369_82 : momentEstimate 369 82 = 0x1f9950b6 := s369_82_82_451
-
-private theorem p409_90_90 : blockEstimate 409 90 90 215 = 0x147f67f5 := by decide +kernel
-private theorem p409_90_305 : blockEstimate 409 90 305 215 = 0x1a139b0d := by decide +kernel
-private theorem p409_90_520 : blockEstimate 409 90 520 69 = 0xa80f27 := by decide +kernel
-
-private theorem s409_90_305_284 : blockEstimate 409 90 305 284 = 0x1abbaa34 :=
-  block_append (B := 409) (J := 90) (start := 305) (next := 520)
-    (a := 215) (b := 69) (n := 284) (x := 0x1a139b0d) (y := 0xa80f27) (z := 0x1abbaa34)
-    p409_90_305 p409_90_520 rfl rfl rfl
-
-private theorem s409_90_90_499 : blockEstimate 409 90 90 499 = 0x2f3b1229 :=
-  block_append (B := 409) (J := 90) (start := 90) (next := 305)
-    (a := 215) (b := 284) (n := 499) (x := 0x147f67f5) (y := 0x1abbaa34) (z := 0x2f3b1229)
-    p409_90_90 s409_90_305_284 rfl rfl rfl
-
-theorem moment409_90 : momentEstimate 409 90 = 0x2f3b1229 := s409_90_90_499
-
-private theorem p439_98_98 : blockEstimate 439 98 98 215 = 0x17d80547 := by decide +kernel
-private theorem p439_98_313 : blockEstimate 439 98 313 215 = 0x24fc1588 := by decide +kernel
-private theorem p439_98_528 : blockEstimate 439 98 528 107 = 0x27852f1 := by decide +kernel
-
-private theorem s439_98_313_322 : blockEstimate 439 98 313 322 = 0x27746879 :=
-  block_append (B := 439) (J := 98) (start := 313) (next := 528)
-    (a := 215) (b := 107) (n := 322) (x := 0x24fc1588) (y := 0x27852f1) (z := 0x27746879)
-    p439_98_313 p439_98_528 rfl rfl rfl
-
-private theorem s439_98_98_537 : blockEstimate 439 98 98 537 = 0x3f4c6dc0 :=
-  block_append (B := 439) (J := 98) (start := 98) (next := 313)
-    (a := 215) (b := 322) (n := 537) (x := 0x17d80547) (y := 0x27746879) (z := 0x3f4c6dc0)
-    p439_98_98 s439_98_313_322 rfl rfl rfl
-
-theorem moment439_98 : momentEstimate 439 98 = 0x3f4c6dc0 := s439_98_98_537
-
-private theorem p491_103_103 : blockEstimate 491 103 103 215 = 0x1cd64e3a := by decide +kernel
-private theorem p491_103_318 : blockEstimate 491 103 318 215 = 0x3824db56 := by decide +kernel
-private theorem p491_103_533 : blockEstimate 491 103 533 164 = 0x93c1919 := by decide +kernel
-
-private theorem s491_103_318_379 : blockEstimate 491 103 318 379 = 0x4160f46f :=
-  block_append (B := 491) (J := 103) (start := 318) (next := 533)
-    (a := 215) (b := 164) (n := 379) (x := 0x3824db56) (y := 0x93c1919) (z := 0x4160f46f)
-    p491_103_318 p491_103_533 rfl rfl rfl
-
-private theorem s491_103_103_594 : blockEstimate 491 103 103 594 = 0x5e3742a9 :=
-  block_append (B := 491) (J := 103) (start := 103) (next := 318)
-    (a := 215) (b := 379) (n := 594) (x := 0x1cd64e3a) (y := 0x4160f46f) (z := 0x5e3742a9)
-    p491_103_103 s491_103_318_379 rfl rfl rfl
-
-theorem moment491_103 : momentEstimate 491 103 = 0x5e3742a9 := s491_103_103_594
-
-private theorem p502_114_114 : blockEstimate 502 114 114 215 = 0x1efcb313 := by decide +kernel
-private theorem p502_114_329 : blockEstimate 502 114 329 215 = 0x4101d085 := by decide +kernel
-private theorem p502_114_544 : blockEstimate 502 114 544 186 = 0xd6a2631 := by decide +kernel
-
-private theorem s502_114_329_401 : blockEstimate 502 114 329 401 = 0x4e6bf6b6 :=
-  block_append (B := 502) (J := 114) (start := 329) (next := 544)
-    (a := 215) (b := 186) (n := 401) (x := 0x4101d085) (y := 0xd6a2631) (z := 0x4e6bf6b6)
-    p502_114_329 p502_114_544 rfl rfl rfl
-
-private theorem s502_114_114_616 : blockEstimate 502 114 114 616 = 0x6d68a9c9 :=
-  block_append (B := 502) (J := 114) (start := 114) (next := 329)
-    (a := 215) (b := 401) (n := 616) (x := 0x1efcb313) (y := 0x4e6bf6b6) (z := 0x6d68a9c9)
-    p502_114_114 s502_114_329_401 rfl rfl rfl
-
-theorem moment502_114 : momentEstimate 502 114 = 0x6d68a9c9 := s502_114_114_616
-
-private theorem p523_114_114 : blockEstimate 523 114 114 215 = 0x20dfe05b := by decide +kernel
-private theorem p523_114_329 : blockEstimate 523 114 329 215 = 0x49220e59 := by decide +kernel
-private theorem p523_114_544 : blockEstimate 523 114 544 207 = 0x12cc8c51 := by decide +kernel
-
-private theorem s523_114_329_422 : blockEstimate 523 114 329 422 = 0x5bee9aaa :=
-  block_append (B := 523) (J := 114) (start := 329) (next := 544)
-    (a := 215) (b := 207) (n := 422) (x := 0x49220e59) (y := 0x12cc8c51) (z := 0x5bee9aaa)
-    p523_114_329 p523_114_544 rfl rfl rfl
-
-private theorem s523_114_114_637 : blockEstimate 523 114 114 637 = 0x7cce7b05 :=
-  block_append (B := 523) (J := 114) (start := 114) (next := 329)
-    (a := 215) (b := 422) (n := 637) (x := 0x20dfe05b) (y := 0x5bee9aaa) (z := 0x7cce7b05)
-    p523_114_114 s523_114_329_422 rfl rfl rfl
-
-theorem moment523_114 : momentEstimate 523 114 = 0x7cce7b05 := s523_114_114_637
+theorem moment296_66 : momentEstimate 296 66 = 0xd30a80f := by
+  exact moment_from_blocks [⟨220,0x9f464f2⟩, ⟨142,0x33c431d⟩]
+    ⟨(by decide +kernel), (by decide +kernel), trivial⟩
+    rfl rfl
+
+theorem moment299_66 : momentEstimate 299 66 = 0xd9f9f46 := by
+  exact moment_from_blocks [⟨220,0xa2ae13f⟩, ⟨145,0x374be07⟩]
+    ⟨(by decide +kernel), (by decide +kernel), trivial⟩
+    rfl rfl
+
+theorem moment306_68 : momentEstimate 306 68 = 0xf032b8c := by
+  exact moment_from_blocks [⟨220,0xadb2093⟩, ⟨154,0x4280af9⟩]
+    ⟨(by decide +kernel), (by decide +kernel), trivial⟩
+    rfl rfl
+
+theorem moment324_73 : momentEstimate 324 73 = 0x130a6f27 := by
+  exact moment_from_blocks [⟨220,0xcac1258⟩, ⟨177,0x65e5ccf⟩]
+    ⟨(by decide +kernel), (by decide +kernel), trivial⟩
+    rfl rfl
+
+theorem moment327_73 : momentEstimate 327 73 = 0x139cbdb4 := by
+  exact moment_from_blocks [⟨220,0xce62fd0⟩, ⟨180,0x6b68de4⟩]
+    ⟨(by decide +kernel), (by decide +kernel), trivial⟩
+    rfl rfl
+
+theorem moment341_75 : momentEstimate 341 75 = 0x16e7d3b2 := by
+  exact moment_from_blocks [⟨220,0xe2cbd21⟩, ⟨196,0x8bb1691⟩]
+    ⟨(by decide +kernel), (by decide +kernel), trivial⟩
+    rfl rfl
+
+theorem moment347_75 : momentEstimate 347 75 = 0x18392b4c := by
+  exact moment_from_blocks [⟨220,0xea2eba9⟩, ⟨202,0x9963fa3⟩]
+    ⟨(by decide +kernel), (by decide +kernel), trivial⟩
+    rfl rfl
+
+theorem moment359_81 : momentEstimate 359 81 = 0x1ca909eb := by
+  exact moment_from_blocks [⟨220,0x103bc5ee⟩, ⟨220,0xc6d43fd⟩]
+    ⟨(by decide +kernel), (by decide +kernel), trivial⟩
+    rfl rfl
+
+theorem moment362_81 : momentEstimate 362 81 = 0x1d6fb003 := by
+  exact moment_from_blocks [⟨220,0x1079a22e⟩, ⟨220,0xcf603f5⟩, ⟨3,2528⟩]
+    ⟨(by decide +kernel), (by decide +kernel), (by decide +kernel), trivial⟩
+    rfl rfl
+
+theorem moment362_82 : momentEstimate 362 82 = 0x1db6eefa := by
+  exact moment_from_blocks [⟨220,0x10953e8c⟩, ⟨220,0xd219e1d⟩, ⟨4,4689⟩]
+    ⟨(by decide +kernel), (by decide +kernel), (by decide +kernel), trivial⟩
+    rfl rfl
+
+theorem moment385_84 : momentEstimate 385 84 = 0x24e31c52 := by
+  exact moment_from_blocks [⟨220,0x12af598f⟩, ⟨220,0x12265cdf⟩, ⟨29,878052⟩]
+    ⟨(by decide +kernel), (by decide +kernel), (by decide +kernel), trivial⟩
+    rfl rfl
+
+theorem moment386_85 : momentEstimate 386 85 = 0x25892b87 := by
+  exact moment_from_blocks [⟨220,0x12e20d53⟩, ⟨220,0x1296e6bc⟩, ⟨31,0x103778⟩]
+    ⟨(by decide +kernel), (by decide +kernel), (by decide +kernel), trivial⟩
+    rfl rfl
+
+theorem moment480_101 : momentEstimate 480 101 = 0x564a51c0 := by
+  exact moment_from_blocks [⟨220,0x1cff6c77⟩, ⟨220,0x335db15d⟩, ⟨141,0x5ed33ec⟩]
+    ⟨(by decide +kernel), (by decide +kernel), (by decide +kernel), trivial⟩
+    rfl rfl
+
+theorem moment485_102 : momentEstimate 485 102 = 0x59e3ed8b := by
+  exact moment_from_blocks [⟨220,0x1d93ebb8⟩, ⟨220,0x3593f298⟩, ⟨147,0x6bc0f3b⟩]
+    ⟨(by decide +kernel), (by decide +kernel), (by decide +kernel), trivial⟩
+    rfl rfl
+
+theorem moment489_103 : momentEstimate 489 103 = 0x5cfd94a5 := by
+  exact moment_from_blocks [⟨220,0x1e1184e2⟩, ⟨220,0x377640d9⟩, ⟨152,0x775ceea⟩]
+    ⟨(by decide +kernel), (by decide +kernel), (by decide +kernel), trivial⟩
+    rfl rfl
+
+theorem moment495_104 : momentEstimate 495 104 = 0x616d5567 := by
+  exact moment_from_blocks [⟨220,0x1ebe53fc⟩, ⟨220,0x3a1d2877⟩, ⟨159,0x891d8f4⟩]
+    ⟨(by decide +kernel), (by decide +kernel), (by decide +kernel), trivial⟩
+    rfl rfl
+
+theorem moment498_104 : momentEstimate 498 104 = 0x6355595b := by
+  exact moment_from_blocks [⟨220,0x1f04c4ea⟩, ⟨220,0x3b3aa7e8⟩, ⟨162,0x915ec89⟩]
+    ⟨(by decide +kernel), (by decide +kernel), (by decide +kernel), trivial⟩
+    rfl rfl
+
+theorem moment499_105 : momentEstimate 499 105 = 0x64b8343e := by
+  exact moment_from_blocks [⟨220,0x1f3c9d48⟩, ⟨220,0x3c0f771b⟩, ⟨164,0x96c1fdb⟩]
+    ⟨(by decide +kernel), (by decide +kernel), (by decide +kernel), trivial⟩
+    rfl rfl
+
+theorem moment535_112 : momentEstimate 535 112 = 0x84679137 := (inferInstance : P1_7_1_3_2.ExactMoment 535 112 2221379895).eq_moment
+
+theorem moment543_114 : momentEstimate 543 114 = 0x8cc85625 := by
+  exact moment_from_blocks [⟨220,0x24788777⟩, ⟨220,0x51f9c5b2⟩, ⟨217,0x165608fc⟩]
+    ⟨(by decide +kernel), (by decide +kernel), (by decide +kernel), trivial⟩
+    rfl rfl
+
+theorem moment565_119 : momentEstimate 565 119 = 0xa5555e6d := by
+  exact moment_from_blocks [⟨220,0x272d1ae6⟩, ⟨220,0x5e143828⟩, ⟨220,0x20086329⟩, ⟨24,763958⟩]
+    ⟨(by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), trivial⟩
+    rfl rfl
+
+theorem moment572_120 : momentEstimate 572 120 = 0xad1e0c80 := (inferInstance : P1_7_1_3_2.ExactMoment 572 120 2904427648).eq_moment
+
+theorem moment591_125 : momentEstimate 591 125 = 0xc672a1cc := by
+  exact moment_from_blocks [⟨220,0x2a646c05⟩, ⟨220,0x6d20e136⟩, ⟨220,0x2e64b90f⟩, ⟨56,0x889b82⟩]
+    ⟨(by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), trivial⟩
+    rfl rfl
+
+theorem moment593_135 : momentEstimate 593 135 = 0xd4e9369b := by
+  exact moment_from_blocks [⟨220,0x2b9099aa⟩, ⟨220,0x74654dd8⟩, ⟨220,0x3403966d⟩, ⟨68,0xefb8ac⟩]
+    ⟨(by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), trivial⟩
+    rfl rfl
+
+theorem moment596_126 : momentEstimate 596 126 = 0xcd26d8f5 := by
+  exact moment_from_blocks [⟨220,0x2afe9109⟩, ⟨220,0x7001134e⟩, ⟨220,0x316e7c86⟩, ⟨62,0xb8b818⟩]
+    ⟨(by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), trivial⟩
+    rfl rfl
+
+theorem moment609_128 : momentEstimate 609 128 = 0xde912dc3 := (inferInstance : P1_7_1_3_2.ExactMoment 609 128 3734056387).eq_moment
+
+theorem moment615_137 : momentEstimate 615 137 = 0xf2191e37 := by
+  exact moment_from_blocks [⟨220,0x2df7bc00⟩, ⟨220,0x800fa4da⟩, ⟨220,0x41bec627⟩, ⟨92,0x252f736⟩]
+    ⟨(by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), trivial⟩
+    rfl rfl
+
+theorem moment640_135 : momentEstimate 640 135 = 0x1100a07c3 := by
+  exact moment_from_blocks [⟨220,0x305156d2⟩, ⟨220,0x8a70a1b8⟩, ⟨220,0x50ac7f0f⟩, ⟨115,0x49b902a⟩]
+    ⟨(by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), trivial⟩
+    rfl rfl
+
+theorem moment671_142 : momentEstimate 671 142 = 0x14954ceae := by
+  exact moment_from_blocks [⟨220,0x341dc6ac⟩, ⟨220,0x9e9cca68⟩, ⟨220,0x6b9da33b⟩, ⟨153,0xafc9a5f⟩]
+    ⟨(by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), trivial⟩
+    rfl rfl
+
+theorem moment716_150 : momentEstimate 716 150 = 0x1a74a03e8 := by
+  exact moment_from_blocks [⟨220,0x39691313⟩, ⟨220,0xbb8c0396⟩, ⟨220,0x96f209fa⟩, ⟨206,0x1b62e345⟩]
+    ⟨(by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), trivial⟩
+    rfl rfl
+
+theorem moment724_153 : momentEstimate 724 153 = 0x1bd78704c := by
+  exact moment_from_blocks [⟨220,0x3a7655a4⟩, ⟨220,0xc234a95a⟩, ⟨220,0xa0b79b34⟩, ⟨217,0x2015d61a⟩]
+    ⟨(by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), trivial⟩
+    rfl rfl
+
+theorem moment726_153 : momentEstimate 726 153 = 0x1c16ef1c7 := (inferInstance : P1_7_1_3_2.ExactMoment 726 153 7540240839).eq_moment
+
+theorem moment740_167 : momentEstimate 740 167 = 0x1ff6e1863 := (inferInstance : P1_7_1_3_2.ExactMoment 740 167 8580372579).eq_moment
+
+theorem moment792_167 : momentEstimate 792 167 = 0x27c2e15db := (inferInstance : P1_7_1_3_2.ExactMoment 792 167 10673329627).eq_moment
+
+theorem moment806_170 : momentEstimate 806 170 = 0x2aa645c9f := by
+  exact moment_from_blocks [⟨220,0x44117832⟩, ⟨220,0xfd43e416⟩, ⟨220,0x102ba3dec⟩, ⟨220,0x62d3416b⟩, ⟨96,0x3818100⟩]
+    ⟨(by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), trivial⟩
+    rfl rfl
+
+theorem moment813_172 : momentEstimate 813 172 = 0x2c405b86b := by
+  exact moment_from_blocks [⟨220,0x44e5bc21⟩, ⟨220,0x103076e5e⟩, ⟨220,0x10c878fd6⟩, ⟨220,0x6afafe0e⟩, ⟨105,0x4960008⟩]
+    ⟨(by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), trivial⟩
+    rfl rfl
+
+theorem moment846_188 : momentEstimate 846 188 = 0x35e195e5b := by
+  exact moment_from_blocks [⟨220,0x48e4f909⟩, ⟨220,0x124bdd574⟩, ⟨220,0x14574b80c⟩, ⟨220,0x9c8b3a02⟩, ⟨154,0xe769dd0⟩]
+    ⟨(by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), trivial⟩
+    rfl rfl
+
+theorem moment883_197 : momentEstimate 883 197 = 0x401d0f0c6 := (inferInstance : P1_7_1_3_2.ExactMoment 883 197 17210339526).eq_moment
+
+theorem moment926_195 : momentEstimate 926 195 = 0x4a1c95ad2 := (inferInstance : P1_7_1_3_2.ExactMoment 926 195 19894196946).eq_moment
+
+theorem moment942_212 : momentEstimate 942 212 = 0x538e63a35 := by
+  exact moment_from_blocks [⟨220,0x53640897⟩, ⟨220,0x174ccc78c⟩, ⟨220,0x1dc082c0c⟩, ⟨220,0x1406330e2⟩, ⟨220,0x5382c0d9⟩, ⟨54,0xc74c4b⟩]
+    ⟨(by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), trivial⟩
+    rfl rfl
+
+theorem moment944_199 : momentEstimate 944 199 = 0x5018948c9 := by
+  exact moment_from_blocks [⟨220,0x538ab6a2⟩, ⟨220,0x169b32378⟩, ⟨220,0x1c808eb38⟩, ⟨220,0x1310a5186⟩, ⟨220,0x4ad0b19b⟩, ⟨43,0x678056⟩]
+    ⟨(by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), trivial⟩
+    rfl rfl
+
+theorem moment968_204 : momentEstimate 968 204 = 0x5884788a7 := (inferInstance : P1_7_1_3_2.ExactMoment 968 204 23761225895).eq_moment
+
+theorem moment1072_239 : momentEstimate 1072 239 = 0x8af950b98 := P1_7_1_3_3.moment1072_239
+
+theorem moment1076_242 : momentEstimate 1076 242 = 0x8e03abac2 := by
+  exact moment_from_blocks [⟨220,0x61c336f9⟩, ⟨220,0x1e5932313⟩, ⟨220,0x2c3b57d52⟩, ⟨220,0x26dcdda3c⟩, ⟨220,0x13431265a⟩, ⟨218,0x332fe2ce⟩]
+    ⟨(by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), trivial⟩
+    rfl rfl
 
 end HighCore82219BankProof

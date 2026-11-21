@@ -4,145 +4,44 @@ set_option Elab.async false
 set_option maxRecDepth 16000
 set_option maxHeartbeats 4000000
 
-namespace Compact50PriceTableOne6
 open K1_13 (Shape InBox)
 open K1_13_8 (Valid)
 open Final50Price (fullCap)
 open Final50PriceCaps (Band start)
-open Final50PriceTableBase (Covered covered_mono)
+open Final50PriceTableBase (Covered)
+
+namespace Compact50PriceTableOne6
 open Compact50Cover (PaidBatch tilesOf checks checks_join apply_batches)
-
-namespace Top1
-
-private def batch0 : PaidBatch .one6 1 := ⟨[
-  .rectangle 1 3 123 8 22,
-  .rectangle 3 9 123 13 21,
-  .rectangle 5 14 123 24 46,
-  .rectangle 9 25 66 46 42,
-  .rectangle 67 25 123 35 53,
-  .rectangle 67 36 123 46 61], by decide +kernel⟩
-
-private def batches : List (PaidBatch .one6 1) := [batch0]
-private abbrev tiles := tilesOf batches
-
-private theorem index3 : checks tiles 123 3 44 = true := by decide +kernel
-private theorem covers : checks tiles 123 3 44 = true :=
-  index3
-
-theorem exact (a : Shape) (ha : Valid a) (ht : a.t = 1)
-    (hb : a.b ≤ 123) (hj : a.j ≤ 46) : Covered 2 .one6 a := by
-  have hi := ha.2.1
-  exact apply_batches covers a ha ht hb (by omega) (by omega)
-
-end Top1
-
-namespace Top2
-
-private def batch0 : PaidBatch .one6 2 := ⟨[
-  .rectangle 2 6 123 16 49,
-  .rectangle 6 17 123 26 45,
-  .rectangle 9 27 66 46 42,
-  .rectangle 67 27 123 36 54,
-  .rectangle 67 37 123 46 62], by decide +kernel⟩
-
-private def batches : List (PaidBatch .one6 2) := [batch0]
-private abbrev tiles := tilesOf batches
-
-private theorem index6 : checks tiles 123 6 41 = true := by decide +kernel
-private theorem covers : checks tiles 123 6 41 = true :=
-  index6
-
-theorem exact (a : Shape) (ha : Valid a) (ht : a.t = 2)
-    (hb : a.b ≤ 123) (hj : a.j ≤ 46) : Covered 3 .one6 a := by
-  have hi := ha.2.1
-  exact apply_batches covers a ha ht hb (by omega) (by omega)
-
-end Top2
-
-namespace Top3
-
-private def batch0 : PaidBatch .one6 3 := ⟨[
-  .rectangle 3 9 123 18 41,
-  .rectangle 7 19 123 27 44,
-  .rectangle 10 28 66 46 43,
-  .rectangle 67 28 123 37 56,
-  .rectangle 67 38 123 46 62], by decide +kernel⟩
-
-private def batches : List (PaidBatch .one6 3) := [batch0]
-private abbrev tiles := tilesOf batches
-
-private theorem index9 : checks tiles 123 9 38 = true := by decide +kernel
-private theorem covers : checks tiles 123 9 38 = true :=
-  index9
-
-theorem exact (a : Shape) (ha : Valid a) (ht : a.t = 3)
-    (hb : a.b ≤ 123) (hj : a.j ≤ 46) : Covered 4 .one6 a := by
-  have hi := ha.2.1
-  exact apply_batches covers a ha ht hb (by omega) (by omega)
-
-end Top3
-
-namespace Top4
-
-private def batch0 : PaidBatch .one6 4 := ⟨[
-  .rectangle 4 12 123 20 38,
-  .rectangle 7 21 123 29 47,
-  .rectangle 10 30 66 46 42,
-  .rectangle 67 30 123 38 56,
-  .rectangle 67 39 123 46 62], by decide +kernel⟩
-
-private def batches : List (PaidBatch .one6 4) := [batch0]
-private abbrev tiles := tilesOf batches
-
-private theorem index12 : checks tiles 123 12 35 = true := by decide +kernel
-private theorem covers : checks tiles 123 12 35 = true :=
-  index12
-
-theorem exact (a : Shape) (ha : Valid a) (ht : a.t = 4)
-    (hb : a.b ≤ 123) (hj : a.j ≤ 46) : Covered 5 .one6 a := by
-  have hi := ha.2.1
-  exact apply_batches covers a ha ht hb (by omega) (by omega)
-
-end Top4
-
-namespace Top5
-
-private def batch0 : PaidBatch .one6 5 := ⟨[
-  .rectangle 5 15 123 22 37,
-  .rectangle 8 23 123 30 46,
-  .rectangle 11 31 67 46 43,
-  .rectangle 68 31 123 38 54,
-  .rectangle 68 39 123 46 63], by decide +kernel⟩
-
-private def batches : List (PaidBatch .one6 5) := [batch0]
-private abbrev tiles := tilesOf batches
-
-private theorem index15 : checks tiles 123 15 32 = true := by decide +kernel
-private theorem covers : checks tiles 123 15 32 = true :=
-  index15
-
-theorem exact (a : Shape) (ha : Valid a) (ht : a.t = 5)
-    (hb : a.b ≤ 123) (hj : a.j ≤ 46) : Covered 6 .one6 a := by
-  have hi := ha.2.1
-  exact apply_batches covers a ha ht hb (by omega) (by omega)
-
-end Top5
 
 namespace Top6
 
-private def batch0 : PaidBatch .one6 6 := ⟨[
-  .rectangle 6 18 123 32 67,
-  .rectangle 11 33 123 46 75], by decide +kernel⟩
+private def batch0 : PaidBatch .one 6 := ⟨[
+  .rectangle 6 18 63 32 35,
+  .rectangle 6 33 63 47 40,
+  .rectangle 64 18 92 32 50,
+  .rectangle 64 33 92 47 58,
+  .rectangle 93 18 107 25 35,
+  .rectangle 93 26 107 32 40], by decide +kernel⟩
+private def batch1 : PaidBatch .one 6 := ⟨[
+  .rectangle 93 33 107 40 49,
+  .rectangle 93 41 107 47 54,
+  .rectangle 108 18 121 25 39,
+  .rectangle 108 26 121 32 45,
+  .rectangle 108 33 121 40 55,
+  .rectangle 108 41 121 47 61], by decide +kernel⟩
 
-private def batches : List (PaidBatch .one6 6) := [batch0]
+private def batches : List (PaidBatch .one 6) := [batch0, batch1]
 private abbrev tiles := tilesOf batches
 
-private theorem index18 : checks tiles 123 18 29 = true := by decide +kernel
-private theorem covers : checks tiles 123 18 29 = true :=
-  index18
+private theorem index18 : checks tiles 121 18 8 = true := by decide +kernel
+private theorem index26 : checks tiles 121 26 8 = true := by decide +kernel
+private theorem index34 : checks tiles 121 34 8 = true := by decide +kernel
+private theorem index42 : checks tiles 121 42 6 = true := by decide +kernel
+private theorem covers : checks tiles 121 18 30 = true :=
+  (checks_join (checks_join (checks_join index18 index26) index34) index42)
 
 theorem exact (a : Shape) (ha : Valid a) (ht : a.t = 6)
-    (hb : a.b ≤ 123) (hj : a.j ≤ 46) : Covered 7 .one6 a := by
+    (hb : a.b ≤ 121) (hj : a.j ≤ 47) : Covered 7 .one a := by
   have hi := ha.2.1
   exact apply_batches covers a ha ht hb (by omega) (by omega)
 
@@ -150,19 +49,33 @@ end Top6
 
 namespace Top7
 
-private def batch0 : PaidBatch .one6 7 := ⟨[
-  .rectangle 7 21 123 33 61,
-  .rectangle 12 34 123 46 74], by decide +kernel⟩
+private def batch0 : PaidBatch .one 7 := ⟨[
+  .rectangle 7 21 35 47 49,
+  .rectangle 36 21 64 34 35,
+  .rectangle 36 35 64 47 39,
+  .rectangle 65 21 93 34 49,
+  .rectangle 65 35 93 47 56,
+  .rectangle 94 21 107 34 56], by decide +kernel⟩
+private def batch1 : PaidBatch .one 7 := ⟨[
+  .rectangle 94 35 107 41 49,
+  .rectangle 94 42 107 47 53,
+  .rectangle 108 21 121 27 39,
+  .rectangle 108 28 121 34 47,
+  .rectangle 108 35 121 41 55,
+  .rectangle 108 42 121 47 60], by decide +kernel⟩
 
-private def batches : List (PaidBatch .one6 7) := [batch0]
+private def batches : List (PaidBatch .one 7) := [batch0, batch1]
 private abbrev tiles := tilesOf batches
 
-private theorem index21 : checks tiles 123 21 26 = true := by decide +kernel
-private theorem covers : checks tiles 123 21 26 = true :=
-  index21
+private theorem index21 : checks tiles 121 21 8 = true := by decide +kernel
+private theorem index29 : checks tiles 121 29 8 = true := by decide +kernel
+private theorem index37 : checks tiles 121 37 8 = true := by decide +kernel
+private theorem index45 : checks tiles 121 45 3 = true := by decide +kernel
+private theorem covers : checks tiles 121 21 27 = true :=
+  (checks_join (checks_join (checks_join index21 index29) index37) index45)
 
 theorem exact (a : Shape) (ha : Valid a) (ht : a.t = 7)
-    (hb : a.b ≤ 123) (hj : a.j ≤ 46) : Covered 8 .one6 a := by
+    (hb : a.b ≤ 121) (hj : a.j ≤ 47) : Covered 8 .one a := by
   have hi := ha.2.1
   exact apply_batches covers a ha ht hb (by omega) (by omega)
 
@@ -170,19 +83,30 @@ end Top7
 
 namespace Top8
 
-private def batch0 : PaidBatch .one6 8 := ⟨[
-  .rectangle 8 24 123 35 60,
-  .rectangle 12 36 123 46 70], by decide +kernel⟩
+private def batch0 : PaidBatch .one 8 := ⟨[
+  .rectangle 8 24 36 47 44,
+  .rectangle 37 24 64 35 32,
+  .rectangle 37 36 64 47 39,
+  .rectangle 65 24 93 35 46,
+  .rectangle 65 36 93 47 55,
+  .rectangle 94 24 121 35 59], by decide +kernel⟩
+private def batch1 : PaidBatch .one 8 := ⟨[
+  .rectangle 94 36 107 41 48,
+  .rectangle 94 42 107 47 54,
+  .rectangle 108 36 121 41 54,
+  .rectangle 108 42 121 47 61], by decide +kernel⟩
 
-private def batches : List (PaidBatch .one6 8) := [batch0]
+private def batches : List (PaidBatch .one 8) := [batch0, batch1]
 private abbrev tiles := tilesOf batches
 
-private theorem index24 : checks tiles 123 24 23 = true := by decide +kernel
-private theorem covers : checks tiles 123 24 23 = true :=
-  index24
+private theorem index24 : checks tiles 121 24 8 = true := by decide +kernel
+private theorem index32 : checks tiles 121 32 8 = true := by decide +kernel
+private theorem index40 : checks tiles 121 40 8 = true := by decide +kernel
+private theorem covers : checks tiles 121 24 24 = true :=
+  (checks_join (checks_join index24 index32) index40)
 
 theorem exact (a : Shape) (ha : Valid a) (ht : a.t = 8)
-    (hb : a.b ≤ 123) (hj : a.j ≤ 46) : Covered 9 .one6 a := by
+    (hb : a.b ≤ 121) (hj : a.j ≤ 47) : Covered 9 .one a := by
   have hi := ha.2.1
   exact apply_batches covers a ha ht hb (by omega) (by omega)
 
@@ -190,19 +114,27 @@ end Top8
 
 namespace Top9
 
-private def batch0 : PaidBatch .one6 9 := ⟨[
-  .rectangle 9 27 123 36 57,
-  .rectangle 13 37 123 46 68], by decide +kernel⟩
+private def batch0 : PaidBatch .one 9 := ⟨[
+  .rectangle 9 27 65 47 53,
+  .rectangle 66 27 93 37 45,
+  .rectangle 66 38 93 47 52,
+  .rectangle 94 27 121 37 58,
+  .rectangle 94 38 107 47 60,
+  .rectangle 108 38 121 42 54], by decide +kernel⟩
+private def batch1 : PaidBatch .one 9 := ⟨[
+  .rectangle 108 43 121 47 59], by decide +kernel⟩
 
-private def batches : List (PaidBatch .one6 9) := [batch0]
+private def batches : List (PaidBatch .one 9) := [batch0, batch1]
 private abbrev tiles := tilesOf batches
 
-private theorem index27 : checks tiles 123 27 20 = true := by decide +kernel
-private theorem covers : checks tiles 123 27 20 = true :=
-  index27
+private theorem index27 : checks tiles 121 27 8 = true := by decide +kernel
+private theorem index35 : checks tiles 121 35 8 = true := by decide +kernel
+private theorem index43 : checks tiles 121 43 5 = true := by decide +kernel
+private theorem covers : checks tiles 121 27 21 = true :=
+  (checks_join (checks_join index27 index35) index43)
 
 theorem exact (a : Shape) (ha : Valid a) (ht : a.t = 9)
-    (hb : a.b ≤ 123) (hj : a.j ≤ 46) : Covered 10 .one6 a := by
+    (hb : a.b ≤ 121) (hj : a.j ≤ 47) : Covered 10 .one a := by
   have hi := ha.2.1
   exact apply_batches covers a ha ht hb (by omega) (by omega)
 
@@ -210,20 +142,27 @@ end Top9
 
 namespace Top10
 
-private def batch0 : PaidBatch .one6 10 := ⟨[
-  .rectangle 10 30 66 46 47,
-  .rectangle 67 30 123 38 57,
-  .rectangle 67 39 123 46 65], by decide +kernel⟩
+private def batch0 : PaidBatch .one 10 := ⟨[
+  .rectangle 10 30 65 47 48,
+  .rectangle 66 30 93 38 43,
+  .rectangle 66 39 93 47 51,
+  .rectangle 94 30 121 38 55,
+  .rectangle 94 39 107 47 59,
+  .rectangle 108 39 121 43 55], by decide +kernel⟩
+private def batch1 : PaidBatch .one 10 := ⟨[
+  .rectangle 108 44 121 47 58], by decide +kernel⟩
 
-private def batches : List (PaidBatch .one6 10) := [batch0]
+private def batches : List (PaidBatch .one 10) := [batch0, batch1]
 private abbrev tiles := tilesOf batches
 
-private theorem index30 : checks tiles 123 30 17 = true := by decide +kernel
-private theorem covers : checks tiles 123 30 17 = true :=
-  index30
+private theorem index30 : checks tiles 121 30 8 = true := by decide +kernel
+private theorem index38 : checks tiles 121 38 8 = true := by decide +kernel
+private theorem index46 : checks tiles 121 46 2 = true := by decide +kernel
+private theorem covers : checks tiles 121 30 18 = true :=
+  (checks_join (checks_join index30 index38) index46)
 
 theorem exact (a : Shape) (ha : Valid a) (ht : a.t = 10)
-    (hb : a.b ≤ 123) (hj : a.j ≤ 46) : Covered 11 .one6 a := by
+    (hb : a.b ≤ 121) (hj : a.j ≤ 47) : Covered 11 .one a := by
   have hi := ha.2.1
   exact apply_batches covers a ha ht hb (by omega) (by omega)
 
@@ -231,18 +170,27 @@ end Top10
 
 namespace Top11
 
-private def batch0 : PaidBatch .one6 11 := ⟨[
-  .rectangle 11 33 123 46 77], by decide +kernel⟩
+private def batch0 : PaidBatch .one 11 := ⟨[
+  .rectangle 11 33 66 47 45,
+  .rectangle 67 33 94 40 44,
+  .rectangle 67 41 94 47 49,
+  .rectangle 95 33 121 40 56,
+  .rectangle 95 41 108 47 56,
+  .rectangle 109 41 115 47 60], by decide +kernel⟩
+private def batch1 : PaidBatch .one 11 := ⟨[
+  .rectangle 116 41 121 44 55,
+  .rectangle 116 45 121 47 57], by decide +kernel⟩
 
-private def batches : List (PaidBatch .one6 11) := [batch0]
+private def batches : List (PaidBatch .one 11) := [batch0, batch1]
 private abbrev tiles := tilesOf batches
 
-private theorem index33 : checks tiles 123 33 14 = true := by decide +kernel
-private theorem covers : checks tiles 123 33 14 = true :=
-  index33
+private theorem index33 : checks tiles 121 33 8 = true := by decide +kernel
+private theorem index41 : checks tiles 121 41 7 = true := by decide +kernel
+private theorem covers : checks tiles 121 33 15 = true :=
+  (checks_join index33 index41)
 
 theorem exact (a : Shape) (ha : Valid a) (ht : a.t = 11)
-    (hb : a.b ≤ 123) (hj : a.j ≤ 46) : Covered 12 .one6 a := by
+    (hb : a.b ≤ 121) (hj : a.j ≤ 47) : Covered 12 .one a := by
   have hi := ha.2.1
   exact apply_batches covers a ha ht hb (by omega) (by omega)
 
@@ -250,62 +198,27 @@ end Top11
 
 namespace Top12
 
-private def batch0 : PaidBatch .one6 12 := ⟨[
-  .rectangle 12 36 123 46 70], by decide +kernel⟩
+private def batch0 : PaidBatch .one 12 := ⟨[
+  .rectangle 12 36 66 47 41,
+  .rectangle 67 36 94 47 56,
+  .rectangle 95 36 108 41 48,
+  .rectangle 95 42 108 47 55,
+  .rectangle 109 36 121 41 54,
+  .rectangle 109 42 121 47 61], by decide +kernel⟩
 
-private def batches : List (PaidBatch .one6 12) := [batch0]
+private def batches : List (PaidBatch .one 12) := [batch0]
 private abbrev tiles := tilesOf batches
 
-private theorem index36 : checks tiles 123 36 11 = true := by decide +kernel
-private theorem covers : checks tiles 123 36 11 = true :=
-  index36
+private theorem index36 : checks tiles 121 36 8 = true := by decide +kernel
+private theorem index44 : checks tiles 121 44 4 = true := by decide +kernel
+private theorem covers : checks tiles 121 36 12 = true :=
+  (checks_join index36 index44)
 
 theorem exact (a : Shape) (ha : Valid a) (ht : a.t = 12)
-    (hb : a.b ≤ 123) (hj : a.j ≤ 46) : Covered 13 .one6 a := by
+    (hb : a.b ≤ 121) (hj : a.j ≤ 47) : Covered 13 .one a := by
   have hi := ha.2.1
   exact apply_batches covers a ha ht hb (by omega) (by omega)
 
 end Top12
 
-namespace Top13
-
-private def batch0 : PaidBatch .one6 13 := ⟨[
-  .rectangle 13 39 123 46 64], by decide +kernel⟩
-
-private def batches : List (PaidBatch .one6 13) := [batch0]
-private abbrev tiles := tilesOf batches
-
-private theorem index39 : checks tiles 123 39 8 = true := by decide +kernel
-private theorem covers : checks tiles 123 39 8 = true :=
-  index39
-
-theorem exact (a : Shape) (ha : Valid a) (ht : a.t = 13)
-    (hb : a.b ≤ 123) (hj : a.j ≤ 46) : Covered 14 .one6 a := by
-  have hi := ha.2.1
-  exact apply_batches covers a ha ht hb (by omega) (by omega)
-
-end Top13
-
-theorem price (top : ℕ) (htop : top ≤ 14) (a : Shape) (ha : Valid a)
-    (hc : InBox ((start .one6).plus a) (fullCap top)) : Covered top .one6 a := by
-  change 2+a.b ≤ 125 ∧ 6+a.j ≤ 52 ∧ 1+a.t ≤ top at hc
-  obtain ⟨hb,hj,ht⟩ := hc
-  have ht0 := ha.1
-  have hb' : a.b ≤ 123 := by omega
-  have hj' : a.j ≤ 46 := by omega
-  have casesTop : a.t = 1 ∨ a.t = 2 ∨ a.t = 3 ∨ a.t = 4 ∨ a.t = 5 ∨ a.t = 6 ∨ a.t = 7 ∨ a.t = 8 ∨ a.t = 9 ∨ a.t = 10 ∨ a.t = 11 ∨ a.t = 12 ∨ a.t = 13 := by omega
-  rcases casesTop with ht1 | ht2 | ht3 | ht4 | ht5 | ht6 | ht7 | ht8 | ht9 | ht10 | ht11 | ht12 | ht13
-  · exact covered_mono (Top1.exact a ha ht1 hb' hj') (by omega) htop
-  · exact covered_mono (Top2.exact a ha ht2 hb' hj') (by omega) htop
-  · exact covered_mono (Top3.exact a ha ht3 hb' hj') (by omega) htop
-  · exact covered_mono (Top4.exact a ha ht4 hb' hj') (by omega) htop
-  · exact covered_mono (Top5.exact a ha ht5 hb' hj') (by omega) htop
-  · exact covered_mono (Top6.exact a ha ht6 hb' hj') (by omega) htop
-  · exact covered_mono (Top7.exact a ha ht7 hb' hj') (by omega) htop
-  · exact covered_mono (Top8.exact a ha ht8 hb' hj') (by omega) htop
-  · exact covered_mono (Top9.exact a ha ht9 hb' hj') (by omega) htop
-  · exact covered_mono (Top10.exact a ha ht10 hb' hj') (by omega) htop
-  · exact covered_mono (Top11.exact a ha ht11 hb' hj') (by omega) htop
-  · exact covered_mono (Top12.exact a ha ht12 hb' hj') (by omega) htop
-  · exact covered_mono (Top13.exact a ha ht13 hb' hj') (by omega) htop
 end Compact50PriceTableOne6

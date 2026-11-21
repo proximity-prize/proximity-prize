@@ -27,6 +27,41 @@ def c2 : Prop :=
     (∀ i j, (M i j).natDegree ≤ if i.1 = 0 then 1 else p) →
     PrimitiveVector.IsPrimitive (maximalMinors W) →
     ∀ rows : Fin s → (Fin 2 × Fin L), (maximalMinors W rows).natDegree ≤ L * (p + 1) - s
+theorem of_children (h1 : c1) (h2 : c2) : K1.c6 := by
+  intro u front T R moving saturated Γ bad normal
+  let P (b : Fin 2) : Bivar := Principal.assemble (fun j => R.coefficients (b, j))
+  let s := 49193 - T.height
+  have hsDef : s = 49193 - T.height := rfl
+  have hP : ∀ b, (P b).natDegree ≤ T.height := R.x_degree
+  have hBalance : 49193 + T.height + nullity u = 81880 ∧ T.height ≤ 32680 ∧ T.height < 49193 :=
+    Strata.native_minimal_relation_degree (nullity u) T.a T.b T.c
+      T.top T.degreeSum T.nullitySum (by have := front.1; omega)
+  have hSum : T.height + s = 49193 := by omega
+  have hs : 16513 ≤ s := by omega
+  have hRank : GenericLayer.genericRank (twoBlock u) + s = 2 * 49193 := by
+    change stackRank u + s = _
+    rw [K1.actual_stackRank u]
+    omega
+  have hCoordinates : pairCoordinates P T.height = R.coefficients := by
+    funext i
+    exact Principal.assemble_coeff (fun j => R.coefficients (i.1, j)) i.2
+  have hPrim : PrimitiveVector.IsPrimitive (pairCoordinates P T.height) := by
+    rw [hCoordinates]
+    exact R.primitive
+  have hKernel := certificate_shifts_annihilate R s hSum
+  obtain ⟨hMinors, H, hH, rows, hRows⟩ :=
+    h1 K T.height 49193 s P hSum (by omega) hP hPrim
+  have hBound := h2 K 49193 81880 s p (twoBlock u) (shifts P 49193 s)
+    (by norm_num [Native.p]) hRank hKernel
+    (stacked_entry_natDegree p node (u 0) (u 1) 49193 81879) hMinors rows
+  rw [hRows] at hBound
+  have hProduct : 16513 * H ≤ s * H := Nat.mul_le_mul_right H hs
+  have hCeiling : 49193 * (p + 1) = 104815841607762 := by norm_num [Native.p]
+  have hCap : H ≤ 6347474207 := by omega
+  apply normal_growth_count R _ moving saturated Γ bad normal
+  intro i
+  rw [← hCoordinates]
+  exact (hH i.1 i.2.val).trans hCap
 end K1_6
 end
 section
@@ -2379,6 +2414,9 @@ def g : Row 4 := (separant^[b.r]) f
 def sigma : GeoJets := toGeneric (separant b.g)
 def member : GeoJets := toGeneric (membershipTest b.g)
 def next : GeoJets := toGeneric (nextTest b.g)
+def Simple : Prop := cycleLength (divisorIdeal b.surface (membershipTest b.g))
+  b.curve b.divisor.isPrime = 1
+def weight : ℕ := by classical exact if b.Simple then 1 else 2
 def Contains (p : JetPoint) : Prop :=
   b.curve ≤ RingHom.ker (MvPolynomial.eval p) ∧ MvPolynomial.eval p b.sigma ≠ 0
 def graph : GeoJets5 :=
@@ -2393,6 +2431,11 @@ def onGraph : GeoJets5 →+* b.Local :=
       (b.localMap (MvPolynomial.C (-(4 : GeoField)⁻¹) * toGeneric (partialFlow b.g)) *
         IsLocalization.Away.invSelf b.sigma)
       (fun i => b.localMap (MvPolynomial.X i)))
+def localCurve : Ideal b.Local := b.curve.map b.localMap
+def regularEval (p : JetPoint) (h : b.Contains p) : b.Local →+* GeoField :=
+  IsLocalization.Away.lift b.sigma (isUnit_iff_ne_zero.mpr h.2)
+def liftedEval (p : JetPoint) (h : b.Contains p) : GeoJets5 →+* GeoField :=
+  (b.regularEval p h).comp b.onGraph
 end Branch
 def OldBox {n : ℕ} (old : Fin 4 → Fin n) (p : Shape)
     (D : MvPolynomial (Fin n) GeoField) : Prop :=
@@ -2404,6 +2447,20 @@ def Box5 (p : Shape) (d : ℕ) (D : GeoJets5) : Prop :=
   OldBox Fin.castSucc p D ∧ ∀ m ∈ D.support, m (Fin.last 4) ≤ d
 def graphBox (p : Shape) : Shape :=
   ⟨max p.b (p.j + 1), p.j + 1, min (p.t + 1) ((p.j + 1) / 3)⟩
+def budget4 (p : Shape) : ℕ :=
+  mixed32 p cutterBox (chart (taylorLength + 1) p) (chart (taylorLength + 2) p)
+def budget5 (p : Shape) : ℕ :=
+  let a := liftedChart (taylorLength + 1) p
+  let b := liftedChart (taylorLength + 2) p
+  mixed32 p cutterBox a b + (taylorLength + 1) * mixed32 p cutterBox (graphBox p) b +
+    (taylorLength + 2) * mixed32 p cutterBox (graphBox p) a
+def Slice4 {f Q l} (b : Branch f Q l) (T : Finset JetPoint) : Prop :=
+  T.card ≤ 1 ∨ ∃ D, Box4 (chart (taylorLength + 2) (shape f).chamber) D ∧
+    D ∉ b.curve ∧ ∀ p ∈ T, MvPolynomial.eval p D = 0
+def Slice5 {f Q l} (b : Branch f Q l) (T : Finset JetPoint) : Prop :=
+  T.card ≤ 1 ∨ ∃ D, Box5 (liftedChart (taylorLength + 2) (shape f).chamber)
+      (taylorLength + 2) D ∧ b.onGraph D ∉ b.localCurve ∧
+    ∀ p ∈ T, ∀ h : b.Contains p, b.liftedEval p h D = 0
 def Chart4 {f Q l} (b : Branch f Q l) : Prop :=
   let p := (shape f).chamber
   Box4 (chart (taylorLength + 1) p) b.member ∧
@@ -2411,6 +2468,17 @@ def Chart4 {f Q l} (b : Branch f Q l) : Prop :=
     ∀ x a : K, ∃ D, Box4 (chart (taylorLength + 2) p) D ∧
       ∀ S : K[X], S.natDegree ≤ 133671 → b.Contains (actualPoint (extend S)) →
         (MvPolynomial.eval (actualPoint (extend S)) D = 0 ↔ S.eval x = a)
+def Chart5 {f Q l} (b : Branch f Q l) : Prop :=
+  let p := (shape f).chamber
+  Box5 (graphBox p) 1 b.graph ∧
+    ∃ E H,
+      Box5 (liftedChart (taylorLength + 1) p) (taylorLength + 1) E ∧
+      Associated (b.onGraph E) (b.localMap b.member) ∧
+      Box5 (liftedChart (taylorLength + 2) p) (taylorLength + 2) H ∧
+      Associated (b.onGraph H) (b.localMap b.next) ∧
+      ∀ x a : K, ∃ D, Box5 (liftedChart (taylorLength + 2) p) (taylorLength + 2) D ∧
+        ∀ S : K[X], S.natDegree ≤ 133671 → ∀ h : b.Contains (actualPoint (extend S)),
+          (b.liftedEval (actualPoint (extend S)) h D = 0 ↔ S.eval x = a)
 end
 end K1_13_6_2
 end
@@ -2425,8 +2493,83 @@ theorem actualPoint_injective : Function.Injective actualPoint := by
   intro S T h
   have h₀ := congrFun h (0 : Fin 4)
   exact genericCoeffs_injective (by simpa [actualPoint, jet, hasseDeriv_zero'] using h₀)
+private theorem eval_actualPoint (S : Geom[X]) (P : Row 4) :
+    MvPolynomial.eval (actualPoint S) (toGeneric P) = genericCoeffs (atJet P S) := by
+  rw [toGeneric, MvPolynomial.eval_map]
+  change MvPolynomial.eval₂ genericCoeffs (⇑genericCoeffs ∘ jet S) P = _
+  rw [← MvPolynomial.eval₂_comp]
+  rfl
+theorem branch_of_mixed {f Q l S} (h : MixedMark f Q l S) :
+    ∃ b : Branch f Q l, b.Contains (actualPoint S) := by
+  obtain ⟨surf, r, hz, hE, C, hC, hP, hterminal⟩ := h
+  have hr : MvPolynomial.eval (actualPoint S) (toGeneric (separant ((separant^[r]) f))) ≠ 0 := by
+    rw [eval_actualPoint]
+    exact fun hzero => hz.regular (genericCoeffs_injective (by simpa using hzero))
+  have hc : toGeneric (separant ((separant^[r]) f)) ∉ C := fun hmem => hr (hP hmem)
+  let b : Branch f Q l :=
+    ⟨surf, r, hz.base, hz.high, hz.chart, hz.invariant, hE, C, hC, hc, hterminal⟩
+  exact ⟨b, hP, hr⟩
 namespace Branch
 variable {f Q : Row 4} {l : ℕ}
+theorem eq_of_surface_curve {b c : Branch f Q l} (hs : b.surface = c.surface)
+    (hc : b.curve = c.curve) : b = c := by
+  have order (d e : Branch f Q l) (h : d.surface = e.surface) : ¬ d.r < e.r := by
+    intro hlt
+    have hmem := e.chart.2.1 (d.r + 1) (by omega)
+    rw [← h, Function.iterate_succ_apply'] at hmem
+    exact d.chart.2.2 hmem
+  have hr : b.r = c.r := Nat.le_antisymm (Nat.le_of_not_gt (order c b hs.symm))
+    (Nat.le_of_not_gt (order b c hs))
+  cases b
+  cases c
+  cases hs
+  cases hr
+  cases hc
+  rfl
+theorem next_proper (b : Branch f Q l) (h : b.Simple) : b.next ∉ b.curve :=
+  b.terminal.resolve_left (fun hne => hne h)
+theorem next_actual (b : Branch f Q l) {S : Geom[X]} (h : b.Contains (actualPoint S))
+    (hd : S.natDegree ≤ 133671) : MvPolynomial.eval (actualPoint S) b.next = 0 := by
+  have hs : b.surface ≤ b.curve := le_trans le_sup_left b.divisor.le
+  have hg : toGeneric b.g ∈ b.surface := b.chart.2.1 b.r le_rfl
+  have hzero : MvPolynomial.eval (actualPoint S) (toGeneric b.g) = 0 := h.1 (hs hg)
+  rw [eval_actualPoint] at hzero
+  have he : atJet b.g S = 0 := genericCoeffs_injective (by simpa using hzero)
+  rw [next, eval_actualPoint, (eval_membership_tests _ _ he hd).2, map_zero]
+theorem localMap_mem_localCurve_iff (b : Branch f Q l) (P : GeoJets) :
+    b.localMap P ∈ b.localCurve ↔ P ∈ b.curve := by
+  change algebraMap GeoJets b.Local P ∈ b.curve.map (algebraMap GeoJets b.Local) ↔ _
+  rw [IsLocalization.algebraMap_mem_map_algebraMap_iff (Submonoid.powers b.sigma) b.Local]
+  constructor
+  · rintro ⟨m, ⟨n, rfl⟩, hm⟩
+    exact (b.divisor.isPrime.mem_or_mem hm).resolve_left
+      (fun hpow => b.regularCurve (b.divisor.isPrime.mem_of_pow_mem n hpow))
+  · intro hP
+    exact ⟨1, (Submonoid.powers b.sigma).one_mem, by simpa using hP⟩
+theorem regularEval_localMap (b : Branch f Q l) (p : JetPoint) (h : b.Contains p) (P : GeoJets) :
+    b.regularEval p h (b.localMap P) = MvPolynomial.eval p P := by
+  exact IsLocalization.Away.lift_eq b.sigma _ _
+theorem lifted_proper_of_nonzero (b : Branch f Q l) (p : JetPoint) (h : b.Contains p)
+    {D : GeoJets5} (hn : b.liftedEval p h D ≠ 0) : b.onGraph D ∉ b.localCurve := by
+  have hk : b.localCurve ≤ RingHom.ker (b.regularEval p h) := by
+    apply Ideal.map_le_iff_le_comap.mpr
+    intro P hP
+    change b.regularEval p h (b.localMap P) = 0
+    rw [regularEval_localMap]
+    exact h.1 hP
+  exact fun hm => hn (hk hm)
+theorem lifted_proper_of_associated (b : Branch f Q l) {D : GeoJets5} {P : GeoJets}
+    (hD : Associated (b.onGraph D) (b.localMap P)) (hP : P ∉ b.curve) :
+    b.onGraph D ∉ b.localCurve := by
+  intro hmem
+  exact hP ((b.localMap_mem_localCurve_iff _).mp (b.localCurve.mem_of_dvd hD.dvd hmem))
+theorem lifted_zero_of_associated (b : Branch f Q l) {D : GeoJets5} {P : GeoJets}
+    (hD : Associated (b.onGraph D) (b.localMap P)) {p : JetPoint} (h : b.Contains p)
+    (hP : MvPolynomial.eval p P = 0) : b.liftedEval p h D = 0 := by
+  obtain ⟨u, hu⟩ := hD
+  have hm := congrArg (b.regularEval p h) hu
+  rw [map_mul, regularEval_localMap, hP, mul_eq_zero] at hm
+  exact hm.resolve_right (IsUnit.ne_zero (IsUnit.map (b.regularEval p h) u.isUnit))
 end Branch
 def Demand (A : Finset K) (s : K → K[X]) (T : Finset K) : Prop := by
   classical
@@ -2447,6 +2590,173 @@ theorem maximal_demand (A : Finset K) (s : K → K[X]) (hA : A.Nonempty) :
   intro x a ha
   exact hmax _ (Finset.mem_filter.mpr ⟨Finset.mem_powerset.mpr (Finset.filter_subset _ _),
     Or.inr ⟨x, a, ha, rfl⟩⟩)
+end
+end K1_13_6_2
+end
+section
+namespace K1_13_6_2
+noncomputable section
+open Polynomial K1 K1_13 K1_13_6
+open scoped BigOperators
+def c1 : Prop :=
+  ∀ f Q l, SmallFactor f → ∀ b : Branch f Q l, Chart4 b
+def c2 : Prop :=
+  ∀ f Q l, SmallFactor f → ∀ b : Branch f Q l, Chart5 b
+def c3 : Prop :=
+  ∀ f Q l, SmallFactor f → ¬ f ∣ Q → InBox (shape Q) cutterBox → 0 < l →
+    ∀ (F : Finset (Branch f Q l)) (T : Branch f Q l → Finset JetPoint),
+      (∀ b ∈ F, Box4 (chart (taylorLength + 1) (shape f).chamber) b.member ∧
+        (∀ p ∈ T b, b.Contains p) ∧ Slice4 b (T b)) →
+      32 * l * (∑ b ∈ F, b.weight * (T b).card) ≤ budget4 (shape f).chamber
+def c4 : Prop :=
+  ∀ f Q l, SmallFactor f → ¬ f ∣ Q → InBox (shape Q) cutterBox → 0 < l →
+    ∀ (F : Finset (Branch f Q l)) (T : Branch f Q l → Finset JetPoint),
+      (∀ b ∈ F, Box5 (graphBox (shape f).chamber) 1 b.graph ∧
+        (∃ E, Box5 (liftedChart (taylorLength + 1) (shape f).chamber) (taylorLength + 1) E ∧
+          Associated (b.onGraph E) (b.localMap b.member)) ∧
+        (∀ p ∈ T b, b.Contains p) ∧ Slice5 b (T b)) →
+      32 * l * (∑ b ∈ F, b.weight * (T b).card) ≤ budget5 (shape f).chamber
+theorem of_children (h4chart : c1) (h5chart : c2) (h4budget : c3) (h5budget : c4) :
+    K1_13_6.c2 := by
+  classical
+  intro Γ s f Q l input
+  let point (γ : K) := actualPoint (extend (s γ))
+  let marked := Γ.filter (fun γ => MixedMark f Q l (extend (s γ)))
+  let assign (γ : marked) : Branch f Q l :=
+    Classical.choose (branch_of_mixed (Finset.mem_filter.mp γ.property).2)
+  let branches := marked.attach.image assign
+  let labels (b : Branch f Q l) :=
+    marked.filter (fun γ => ∃ h : γ ∈ marked, assign ⟨γ, h⟩ = b)
+  have label_sub (b : Branch f Q l) : labels b ⊆ Γ :=
+    (Finset.filter_subset _ _).trans (Finset.filter_subset _ _)
+  have contains_label (b : Branch f Q l) (γ : K) (hγ : γ ∈ labels b) :
+      b.Contains (point γ) := by
+    obtain ⟨h, rfl⟩ := (Finset.mem_filter.mp hγ).2
+    exact Classical.choose_spec (branch_of_mixed (Finset.mem_filter.mp h).2)
+  have labels_nonempty (b : Branch f Q l) (hb : b ∈ branches) : (labels b).Nonempty := by
+    obtain ⟨γ, _, rfl⟩ := Finset.mem_image.mp hb
+    exact ⟨γ.val, Finset.mem_filter.mpr ⟨γ.property, γ.property, rfl⟩⟩
+  have available (b : Branch f Q l) : ∃ T ⊆ labels b,
+      (b.Simple → T = labels b) ∧
+      (b ∈ branches → ¬ b.Simple → 0 < T.card ∧ CurveSections (labels b) s T.card ∧
+        Demand (labels b) s T) := by
+    by_cases hs : b.Simple
+    · exact ⟨labels b, Finset.Subset.rfl, fun _ => rfl, fun _ hn => (hn hs).elim⟩
+    by_cases hb : b ∈ branches
+    · obtain ⟨T, hsub, hd⟩ := maximal_demand (labels b) s (labels_nonempty b hb)
+      exact ⟨T, hsub, fun h => (hs h).elim, fun _ _ => hd⟩
+    · exact ⟨∅, Finset.empty_subset _, fun h => (hs h).elim, fun h _ => (hb h).elim⟩
+  choose demanded demand_sub demand_simple demand_multiple using available
+  let points (b : Branch f Q l) := (demanded b).image point
+  have points_card (b : Branch f Q l) : (points b).card = (demanded b).card := by
+    apply Finset.card_image_of_injOn
+    intro γ hγ δ hδ heq
+    exact input.distinct (label_sub b (demand_sub b hγ)) (label_sub b (demand_sub b hδ))
+      (Polynomial.map_injective embed embed.injective (actualPoint_injective heq))
+  have points_on (b : Branch f Q l) (p : JetPoint) (hp : p ∈ points b) : b.Contains p := by
+    obtain ⟨γ, hγ, rfl⟩ := Finset.mem_image.mp hp
+    exact contains_label b γ (demand_sub b hγ)
+  have points_next (b : Branch f Q l) (p : JetPoint) (hp : p ∈ points b) :
+      MvPolynomial.eval p b.next = 0 := by
+    obtain ⟨γ, hγ, rfl⟩ := Finset.mem_image.mp hp
+    apply b.next_actual (contains_label b γ (demand_sub b hγ))
+    simpa only [Polynomial.natDegree_map] using input.degree γ (label_sub b (demand_sub b hγ))
+  have fitQ : InBox (shape Q) cutterBox :=
+    ⟨input.box.1.trans (by decide), input.box.2⟩
+  have bound4 := h4budget f Q l input.small input.proper fitQ input.positive branches points
+    (by
+      intro b hb
+      obtain ⟨hmember, hnext, hvalue⟩ := h4chart f Q l input.small b
+      refine ⟨hmember, points_on b, ?_⟩
+      by_cases hs : b.Simple
+      · exact Or.inr ⟨b.next, hnext, b.next_proper hs, points_next b⟩
+      rcases (demand_multiple b hb hs).2.2 with hone | ⟨x, a, hwit, heq⟩
+      · exact Or.inl (by rw [points_card, hone])
+      obtain ⟨D, hD, hEval⟩ := hvalue x a
+      obtain ⟨δ, hδ, hδvalue⟩ := hwit
+      have hδon := contains_label b δ hδ
+      have hproper : D ∉ b.curve := fun hmem =>
+        hδvalue ((hEval _ (input.degree δ (label_sub b hδ)) hδon).mp (hδon.1 hmem))
+      refine Or.inr ⟨D, hD, hproper, ?_⟩
+      intro p hp
+      obtain ⟨γ, hγ, rfl⟩ := Finset.mem_image.mp hp
+      have hvalueγ := (Finset.mem_filter.mp (heq ▸ hγ)).2
+      exact (hEval _ (input.degree γ (label_sub b (demand_sub b hγ)))
+        (contains_label b γ (demand_sub b hγ))).mpr hvalueγ)
+  have bound5 := h5budget f Q l input.small input.proper fitQ input.positive branches points
+    (by
+      intro b hb
+      obtain ⟨hgraph, E, H, hE, hEeq, hH, hHeq, hvalue⟩ := h5chart f Q l input.small b
+      refine ⟨hgraph, ⟨E, hE, hEeq⟩, points_on b, ?_⟩
+      by_cases hs : b.Simple
+      · exact Or.inr ⟨H, hH, b.lifted_proper_of_associated hHeq (b.next_proper hs),
+          fun p hp hon => b.lifted_zero_of_associated hHeq hon (points_next b p hp)⟩
+      rcases (demand_multiple b hb hs).2.2 with hone | ⟨x, a, hwit, heq⟩
+      · exact Or.inl (by rw [points_card, hone])
+      obtain ⟨D, hD, hEval⟩ := hvalue x a
+      obtain ⟨δ, hδ, hδvalue⟩ := hwit
+      have hδon := contains_label b δ hδ
+      refine Or.inr ⟨D, hD, b.lifted_proper_of_nonzero (point δ) hδon ?_, ?_⟩
+      · exact fun hzero => hδvalue ((hEval _ (input.degree δ (label_sub b hδ)) hδon).mp hzero)
+      · intro p hp hon
+        obtain ⟨γ, hγ, rfl⟩ := Finset.mem_image.mp hp
+        have hvalueγ := (Finset.mem_filter.mp (heq ▸ hγ)).2
+        exact (hEval _ (input.degree γ (label_sub b (demand_sub b hγ))) hon).mpr hvalueγ)
+  let simple := branches.filter Branch.Simple
+  let multiple := branches.filter (fun b => ¬ b.Simple)
+  let e := multiple.equivFin
+  let C : Pieces Γ :=
+    { n := multiple.card
+      piece := fun i => labels (e.symm i).val
+      subset := fun i => label_sub (e.symm i).val
+      degree := fun i => (demanded (e.symm i).val).card }
+  let B := simple.biUnion labels
+  have hmultiple (i : Fin C.n) := Finset.mem_filter.mp (e.symm i).property
+  refine ⟨C, B,
+    fun i => (demand_multiple _ (hmultiple i).1 (hmultiple i).2).2.1,
+    fun i => (demand_multiple _ (hmultiple i).1 (hmultiple i).2).1, ?_, ?_⟩
+  · intro γ hγ hm
+    have hmark : γ ∈ marked := Finset.mem_filter.mpr ⟨hγ, hm⟩
+    let b := assign ⟨γ, hmark⟩
+    have hb : b ∈ branches := Finset.mem_image.mpr ⟨_, Finset.mem_attach _ _, rfl⟩
+    have hlabel : γ ∈ labels b := Finset.mem_filter.mpr ⟨hmark, hmark, rfl⟩
+    by_cases hs : b.Simple
+    · exact Finset.mem_union_right _ (Finset.mem_biUnion.mpr
+        ⟨b, Finset.mem_filter.mpr ⟨hb, hs⟩, hlabel⟩)
+    have hbm : b ∈ multiple := Finset.mem_filter.mpr ⟨hb, hs⟩
+    apply Finset.mem_union_left _
+    refine Finset.mem_biUnion.mpr ⟨e ⟨b, hbm⟩, Finset.mem_univ _, ?_⟩
+    change γ ∈ labels (e.symm (e ⟨b, hbm⟩)).val
+    simpa only [Equiv.symm_apply_apply] using hlabel
+  · have htotal : C.total = ∑ b ∈ multiple, (demanded b).card := by
+      calc
+        C.total = ∑ b : multiple, (demanded b.val).card :=
+          Equiv.sum_comp e.symm (fun b : multiple => (demanded b.val).card)
+        _ = _ := by
+          rw [Finset.univ_eq_attach]
+          exact Finset.sum_attach multiple (fun b => (demanded b).card)
+    have hsimple : (∑ b ∈ simple, b.weight * (points b).card) =
+        ∑ b ∈ simple, (labels b).card := by
+      apply Finset.sum_congr rfl
+      intro b hb
+      have hs := (Finset.mem_filter.mp hb).2
+      rw [points_card, demand_simple b hs, Branch.weight, ite_eq_left hs, one_mul]
+    have hmult : (∑ b ∈ multiple, b.weight * (points b).card) = 2 * C.total := by
+      rw [htotal, Finset.mul_sum]
+      apply Finset.sum_congr rfl
+      intro b hb
+      have hs := (Finset.mem_filter.mp hb).2
+      rw [points_card, Branch.weight, ite_eq_right hs]
+    have hpart : (∑ b ∈ simple, b.weight * (points b).card) +
+        (∑ b ∈ multiple, b.weight * (points b).card) =
+        ∑ b ∈ branches, b.weight * (points b).card :=
+      Finset.sum_filter_add_sum_filter_not _ _ _
+    have hB : B.card ≤ ∑ b ∈ simple, (labels b).card := Finset.card_biUnion_le
+    have hpay : 2 * C.total + B.card ≤ ∑ b ∈ branches, b.weight * (points b).card := by
+      rw [← hpart, hsimple, hmult, Nat.add_comm (∑ b ∈ simple, (labels b).card)]
+      exact Nat.add_le_add_left hB _
+    change _ ≤ min (budget4 (shape f).chamber) (budget5 (shape f).chamber)
+    exact (Nat.mul_le_mul_left (32 * l) hpay).trans (le_min bound4 bound5)
 end
 end K1_13_6_2
 end
@@ -2481,11 +2791,14 @@ namespace K1_13_6_2_3
 noncomputable section
 open K1_13 K1_13_6 K1_13_6_2
 open scoped BigOperators
+lemma anchor_box {f : Row 4} (hf : SmallFactor f) : ChamberBox (shape f).chamber :=
+  ⟨(K1_13_7_1.shape_chamber f).1, (K1_13_7_1.shape_chamber f).2, hf.2.1⟩
 lemma chart_box (L : ℕ) (p : Shape) (hL : 0 < L) : ChamberBox (chart L p) := by
   refine ⟨(K1_13_7_1.chart_chamber L p).1, (K1_13_7_1.chart_chamber L p).2, ?_⟩
   unfold chart
   have h : 3 ≤ 2 * L * (p.j - 3) + L + 3 := by omega
   exact lt_min (by omega) (Nat.div_pos h (by decide))
+lemma cutter_box : ChamberBox cutterBox := ⟨by decide, by decide, by decide⟩
 lemma generic_box {P : Row 4} {p : Shape} (hP : InBox (shape P) p) : Box4 p (toGeneric P) := by
   intro m hm
   have hm' := MvPolynomial.support_map_subset genericCoeffs P hm
@@ -2543,6 +2856,12 @@ lemma surface_dimension {f Q : Row 4} (hf : toGeneric f ≠ 0)
   change dimension S + 1 = dimension P at h
   change dimension P + 1 = 4 at hPdim
   omega
+lemma curve_dimension {f Q l} (b : Branch f Q l) (h : dimension b.surface = 2) :
+    dimension b.curve = 1 := by
+  have := b.base.isPrime
+  have hdim := MvPolynomial.principalCut_natDegree_affineHilbertPolynomial_add_one b.proper b.divisor
+  change dimension b.curve + 1 = dimension b.surface at hdim
+  omega
 lemma positive_length {J P : Ideal GeoJets} (hP : J.IsMinimalPrime P) :
     0 < cycleLength J P hP.isPrime ∧ cycleLength J P hP.isPrime ≠ ⊤ := by
   have := hP.isPrime
@@ -2567,6 +2886,29 @@ lemma weight_cast {J P : Ideal GeoJets} (hP : J.IsMinimalPrime P) :
   rw [localWeight, dite_eq_left hP.isPrime, ENat.natCast_toNat (positive_length hP).2]
 lemma weight_pos {J P : Ideal GeoJets} (hP : J.IsMinimalPrime P) : 0 < localWeight J P := by
   exact ENat.natCast_lt_natCast.mp ((weight_cast hP).symm ▸ (positive_length hP).1)
+lemma branch_weight_le {f Q l} (b : Branch f Q l) :
+    b.weight ≤ localWeight (divisorIdeal b.surface (membershipTest b.g)) b.curve := by
+  have hcast : (localWeight (divisorIdeal b.surface (membershipTest b.g)) b.curve : ℕ∞) =
+      cycleLength (divisorIdeal b.surface (membershipTest b.g)) b.curve b.divisor.isPrime :=
+    weight_cast b.divisor
+  have hpos : 0 < localWeight (divisorIdeal b.surface (membershipTest b.g)) b.curve := weight_pos b.divisor
+  by_cases hs : b.Simple
+  · simpa [Branch.weight, hs] using (Nat.succ_le_of_lt hpos)
+  · rw [Branch.weight, ite_eq_right hs]
+    have hne : localWeight (divisorIdeal b.surface (membershipTest b.g)) b.curve ≠ 1 := by
+      intro h
+      apply hs
+      exact hcast.symm.trans (by rw [h]; norm_num)
+    omega
+lemma same_member {f Q l} {b c : Branch f Q l} (h : b.surface = c.surface) : b.member = c.member := by
+  have order (d e : Branch f Q l) (heq : d.surface = e.surface) : ¬ d.r < e.r := by
+    intro hlt
+    have hmem := e.chart.2.1 (d.r + 1) (by omega)
+    rw [← heq, Function.iterate_succ_apply'] at hmem
+    exact d.chart.2.2 hmem
+  have hr : b.r = c.r := Nat.le_antisymm (Nat.le_of_not_gt (order c b h.symm))
+    (Nat.le_of_not_gt (order b c h))
+  simp only [Branch.member, Branch.g, hr]
 lemma point_injective : Function.Injective pointIdeal := by
   intro x y heq
   funext i
@@ -2668,6 +3010,213 @@ private lemma chamber_plus {x y : Shape} (hx : ChamberBox x) (hy : ChamberBox y)
   refine ⟨Nat.add_le_add hx₁ hy₁, ?_, Nat.add_pos_left hx₃ _⟩
   change 3 * (x.t + y.t) ≤ x.j + y.j
   omega
+private lemma polarize_congr {A B : Shape → ℚ} (h : ∀ p, ChamberBox p → A p = B p)
+    {boxes : List Shape} (hboxes : ∀ q ∈ boxes, ChamberBox q) {p : Shape}
+    (hp : ChamberBox p) : polarize A boxes p = polarize B boxes p := by
+  induction boxes generalizing p with
+  | nil => exact h p hp
+  | cons q boxes ih =>
+    have hq := hboxes q List.mem_cons_self
+    have hr := fun r hr => hboxes r (List.mem_cons_of_mem _ hr)
+    simp only [polarize, ih hr (chamber_plus hp hq), ih hr hp]
+private lemma ambient_degree (h : c1) {p q r s : Shape}
+    (hp : ChamberBox p) (hq : ChamberBox q) (hr : ChamberBox r) (hs : ChamberBox s) :
+    mixedDegree (⊥ : Ideal GeoJets) [p,q,r,s] ≤ (mixed32 p q r s : ℚ) / 32 := by
+  have hb : ChamberBox ⟨3, 3, 1⟩ := ⟨by decide, by decide, by decide⟩
+  have hboxes : ∀ u ∈ [p,q,r,s], ChamberBox u := by
+    intro u hu
+    simp only [List.mem_cons, List.not_mem_nil, or_false] at hu
+    rcases hu with rfl | rfl | rfl | rfl
+    · exact hp
+    · exact hq
+    · exact hr
+    · exact hs
+  unfold mixedDegree
+  change polarize (capCoeff ⊥ 4) [p,q,r,s] ⟨3,3,1⟩ / (2 : ℚ)^4 ≤ _
+  rw [polarize_congr h hboxes hb]
+  let n := difference (difference (difference (difference volume32 p) q) r) s ⟨0,0,0⟩
+  have hpoly : polarize (fun x => 16 * (volume32 x : ℚ) / 32) [p,q,r,s] ⟨3,3,1⟩ /
+      (2 : ℚ)^4 = (n : ℚ) / 32 := by
+    simp only [n, polarize, difference, volume32, Shape.plus]
+    push_cast
+    ring
+  rw [hpoly]
+  have hn : n ≤ (n.toNat : ℤ) := by omega
+  apply div_le_div_of_nonneg_right _ (by norm_num)
+  exact_mod_cast hn
+private lemma point_minimal {J : Ideal GeoJets} (hJ : dimension J = 0)
+    (x : JetPoint) (hx : J ≤ pointIdeal x) : J.IsMinimalPrime (pointIdeal x) := by
+  have : Module.Finite GeoField (GeoJets ⧸ J) :=
+    MvPolynomial.natDegree_affineHilbertPolynomial_eq_zero_iff.mp hJ
+  have : IsArtinianRing (GeoJets ⧸ J) := IsArtinianRing.of_finite GeoField _
+  have : Ring.KrullDimLE 0 (GeoJets ⧸ J) := isArtinianRing_iff_krullDimLE_zero.mp ‹_›
+  have hp := point_prime x
+  change pointIdeal x ∈ J.minimalPrimes
+  rw [Ideal.minimalPrimes_eq_comap]
+  refine ⟨(pointIdeal x).map (Ideal.Quotient.mk J), ?_, Ideal.comap_map_mk hx⟩
+  have := Ideal.isPrime_map_quotientMk_of_isPrime hx
+  exact Ideal.mem_minimalPrimes_of_krullDimLE_zero _
+private lemma proper_slice_card (h2 : c2) (h3 : c3) {C : Ideal GeoJets} (hC : C.IsPrime)
+    (hdim : dimension C = 1) {s : Shape} (hs : ChamberBox s)
+    {D : GeoJets} (hD : Box4 s D) (hproper : D ∉ C) (T : Finset JetPoint)
+    (hT : ∀ x ∈ T, C ≤ pointIdeal x ∧ MvPolynomial.eval x D = 0) :
+    (T.card : ℚ) ≤ mixedDegree C [s] := by
+  classical
+  let J := C ⊔ Ideal.span {D}
+  have hreg := regular_cut hC hproper
+  have hJ : dimension J = 0 := by
+    have hdrop := cut_dimension hreg
+    change dimension J ≤ dimension C - 1 at hdrop
+    omega
+  have hmin (x : JetPoint) (hx : x ∈ T) : J.IsMinimalPrime (pointIdeal x) :=
+    point_minimal hJ x (sup_le (hT x hx).1 ((pointIdeal x).span_singleton_le_iff_mem.mpr (hT x hx).2))
+  calc
+    (T.card : ℚ) = ∑ _x ∈ T, (1 : ℚ) := by simp
+    _ ≤ ∑ x ∈ T, (localWeight J (pointIdeal x) : ℚ) * mixedDegree (pointIdeal x) [] := by
+      apply Finset.sum_le_sum
+      intro x hx
+      rw [point_degree, mul_one]
+      exact_mod_cast Nat.succ_le_of_lt (weight_pos (hmin x hx))
+    _ = ∑ P ∈ T.image pointIdeal, (localWeight J P : ℚ) * mixedDegree P [] :=
+      (Finset.sum_image (f := fun P => (localWeight J P : ℚ) * mixedDegree P [])
+        point_injective.injOn).symm
+    _ ≤ mixedDegree J [] := h3 J [] (by simp) (by simp [hJ]) _ (by
+      intro P hP
+      obtain ⟨x, hx, rfl⟩ := Finset.mem_image.mp hP
+      exact hmin x hx)
+    _ ≤ mixedDegree C [s] := h2 C s [] hs (by simp) (by simp [hdim]) D hD hreg
+private lemma slice_card (h2 : c2) (h3 : c3) {f Q l} (b : Branch f Q l)
+    (hdim : dimension b.curve = 1) (T : Finset JetPoint)
+    (hT : ∀ x ∈ T, b.Contains x) (hS : Slice4 b T) :
+    (T.card : ℚ) ≤ mixedDegree b.curve [chart (taylorLength + 2) (shape f).chamber] := by
+  classical
+  let s := chart (taylorLength + 2) (shape f).chamber
+  have hs : ChamberBox s := chart_box _ _ (by decide)
+  rcases hS with hone | ⟨D, hD, hproper, hzero⟩
+  · by_cases hemp : T = ∅
+    · rw [hemp]
+      simpa using h3 b.curve [s] (by simpa using hs) (by simp [hdim]) ∅ (by simp)
+    · obtain ⟨x, hx⟩ := Finset.nonempty_iff_ne_empty.mpr hemp
+      have hsingle : T = {x} := by
+        symm
+        apply Finset.eq_of_subset_of_card_le (Finset.singleton_subset_iff.mpr hx)
+        simpa using hone
+      obtain ⟨D, hD, hproper, hzero⟩ := point_proper_section hdim hs x (hT x hx).1
+      exact proper_slice_card h2 h3 b.divisor.isPrime hdim hs hD hproper T (by
+        intro y hy
+        have hxy : y = x := by simpa [hsingle] using hy
+        exact ⟨(hT y hy).1, by rw [hxy]; exact hzero⟩)
+  · exact proper_slice_card h2 h3 b.divisor.isPrime hdim hs hD hproper T
+      (fun x hx => ⟨(hT x hx).1, hzero x hx⟩)
+private lemma surface_slice_sum (h2 : c2) (h3 : c3) {f Q l} (ref : Branch f Q l)
+    (hdim : dimension ref.surface = 2) (F : Finset (Branch f Q l))
+    (T : Branch f Q l → Finset JetPoint) (hF : ∀ b ∈ F, b.surface = ref.surface)
+    (hmember : Box4 (chart (taylorLength + 1) (shape f).chamber) ref.member)
+    (hT : ∀ b ∈ F, (∀ x ∈ T b, b.Contains x) ∧ Slice4 b (T b)) :
+    (∑ b ∈ F, ((b.weight * (T b).card : ℕ) : ℚ)) ≤
+      mixedDegree ref.surface [chart (taylorLength + 1) (shape f).chamber,
+        chart (taylorLength + 2) (shape f).chamber] := by
+  classical
+  let p := chart (taylorLength + 1) (shape f).chamber
+  let s := chart (taylorLength + 2) (shape f).chamber
+  have hp : ChamberBox p := chart_box _ _ (by decide)
+  have hs : ChamberBox s := chart_box _ _ (by decide)
+  let J := ref.surface ⊔ Ideal.span {ref.member}
+  have hcut (b) (hb : b ∈ F) : divisorIdeal b.surface (membershipTest b.g) = J := by
+    change b.surface ⊔ Ideal.span {b.member} = J
+    rw [hF b hb, same_member (hF b hb)]
+  have hreg := regular_cut ref.base.isPrime ref.proper
+  have hJdim : dimension J ≤ 1 := (cut_dimension hreg).trans (by simp [hdim])
+  calc
+    _ ≤ ∑ b ∈ F, (localWeight J b.curve : ℚ) * mixedDegree b.curve [s] := by
+      apply Finset.sum_le_sum
+      intro b hb
+      have hdimB := curve_dimension b ((hF b hb).symm ▸ hdim)
+      have hS := slice_card h2 h3 b hdimB (T b) (hT b hb).1 (hT b hb).2
+      have hW := (hcut b hb) ▸ branch_weight_le b
+      push_cast
+      exact (mul_le_mul_of_nonneg_right (by exact_mod_cast hW) (Nat.cast_nonneg _)).trans
+        (mul_le_mul_of_nonneg_left hS (Nat.cast_nonneg _))
+    _ = ∑ P ∈ F.image Branch.curve, (localWeight J P : ℚ) * mixedDegree P [s] :=
+      (Finset.sum_image (f := fun P => (localWeight J P : ℚ) * mixedDegree P [s]) (fun b hb c hc heq =>
+        Branch.eq_of_surface_curve ((hF b hb).trans (hF c hc).symm) heq)).symm
+    _ ≤ mixedDegree J [s] := h3 J [s] (by simpa using hs) (by simpa using hJdim) _ (by
+      intro P hP
+      obtain ⟨b, hb, rfl⟩ := Finset.mem_image.mp hP
+      exact hcut b hb ▸ b.divisor)
+    _ ≤ mixedDegree ref.surface [p,s] :=
+      h2 ref.surface p [s] hp (by simpa using hs) (by simp [hdim]) ref.member hmember hreg
+theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) : K1_13_6_2.c3 := by
+  classical
+  intro f Q l hf hproper hQ _ F T hT
+  let p := (shape f).chamber
+  let r := chart (taylorLength + 1) p
+  let s := chart (taylorLength + 2) p
+  have hp : ChamberBox p := anchor_box hf
+  have hr : ChamberBox r := chart_box _ _ (by decide)
+  have hs : ChamberBox s := chart_box _ _ (by decide)
+  have hboxes : ∀ q ∈ [r,s], ChamberBox q := by
+    intro q hq
+    simp only [List.mem_cons, List.not_mem_nil, or_false] at hq
+    exact hq.elim (fun h => h ▸ hr) (fun h => h ▸ hs)
+  let J := intersectionIdeal f Q
+  let H : Ideal GeoJets := Ideal.span {toGeneric f}
+  have hpair := K1_13_7_1.proper_generic f Q hf.1 hproper
+  have hf0 : toGeneric f ≠ 0 := by
+    intro hz
+    exact hf.1.ne_zero (K1_13_7_1.toGeneric_injective (hz.trans (map_zero _).symm))
+  have hregF : IsLeftRegular (Ideal.Quotient.mk (⊥ : Ideal GeoJets) (toGeneric f)) :=
+    regular_cut (by infer_instance) (by simpa using hf0)
+  have hregQ := pair_regular f Q hpair
+  have hH : dimension H ≤ 3 := by
+    simpa [H, dimension_bot] using cut_dimension hregF
+  have hJ : dimension J ≤ 2 := by
+    rw [show J = H ⊔ Ideal.span {toGeneric Q} from intersection_eq f Q]
+    have hdrop : dimension (H ⊔ Ideal.span {toGeneric Q}) ≤ dimension H - 1 := cut_dimension hregQ
+    exact hdrop.trans (by omega)
+  let surfaces := F.image Branch.surface
+  let fiber (P : Ideal GeoJets) := F.filter (fun b => b.surface = P)
+  let cost (b : Branch f Q l) : ℚ := ((b.weight * (T b).card : ℕ) : ℚ)
+  have hsurface (P : Ideal GeoJets) (hP : P ∈ surfaces) :
+      J.IsMinimalPrime P ∧ l ≤ localWeight J P ∧
+      (∑ b ∈ fiber P, cost b) ≤ mixedDegree P [r,s] := by
+    obtain ⟨ref, href, rfl⟩ := Finset.mem_image.mp hP
+    have hl : (l : ℕ∞) ≤ (localWeight J ref.surface : ℕ∞) := by
+      rw [weight_cast ref.base]
+      exact ref.high
+    refine ⟨ref.base, ENat.natCast_le_natCast.mp hl, ?_⟩
+    exact surface_slice_sum h2 h3 ref (surface_dimension hf0 hpair ref.base) _ T
+      (fun _ hb => (Finset.mem_filter.mp hb).2) (hT ref href).1
+      (fun b hb => (hT b (Finset.mem_filter.mp hb).1).2)
+  have hcalc : (l : ℚ) * (∑ b ∈ F, cost b) ≤ (budget4 p : ℚ) / 32 := by
+    calc
+      _ = ∑ P ∈ surfaces, (l : ℚ) * ∑ b ∈ fiber P, cost b := by
+        rw [← Finset.mul_sum]
+        congr 1
+        exact (Finset.sum_fiberwise_of_maps_to (fun _ hb => Finset.mem_image_of_mem _ hb) cost).symm
+      _ ≤ ∑ P ∈ surfaces, (localWeight J P : ℚ) * mixedDegree P [r,s] := by
+        apply Finset.sum_le_sum
+        intro P hP
+        obtain ⟨_, hl, hsum⟩ := hsurface P hP
+        have hnonneg : 0 ≤ ∑ b ∈ fiber P, cost b := Finset.sum_nonneg (fun _ _ => Nat.cast_nonneg _)
+        exact (mul_le_mul_of_nonneg_right (by exact_mod_cast hl) hnonneg).trans
+          (mul_le_mul_of_nonneg_left hsum (Nat.cast_nonneg _))
+      _ ≤ mixedDegree J [r,s] := h3 J [r,s] hboxes (by simpa using hJ) surfaces
+        (fun P hP => (hsurface P hP).1)
+      _ ≤ mixedDegree H [cutterBox,r,s] := by
+        rw [show J = H ⊔ Ideal.span {toGeneric Q} from intersection_eq f Q]
+        exact h2 H cutterBox [r,s] cutter_box hboxes (by simpa using hH) _ (generic_box hQ) hregQ
+      _ ≤ mixedDegree (⊥ : Ideal GeoJets) [p,cutterBox,r,s] := by
+        rw [show H = (⊥ : Ideal GeoJets) ⊔ Ideal.span {toGeneric f} by simp [H]]
+        apply h2 _ p [cutterBox,r,s] hp _ (by simp) _ _ hregF
+        · intro q hq
+          exact (List.mem_cons.mp hq).elim (fun h => h ▸ cutter_box) (hboxes q)
+        · exact generic_box ⟨le_max_left _ _, le_rfl, le_rfl⟩
+      _ ≤ _ := ambient_degree h1 hp cutter_box hr hs
+  have hfinal := (le_div_iff₀ (by norm_num : (0 : ℚ) < 32)).mp hcalc
+  rw [mul_comm _ (32 : ℚ), ← mul_assoc] at hfinal
+  dsimp only [cost, p] at hfinal
+  exact_mod_cast hfinal
 end
 end K1_13_6_2_3
 end
@@ -3054,6 +3603,21 @@ theorem jet_bound (w : Fin 4 → ℕ) (Δ : ℕ)
   | succ n ih =>
     simpa only [jetNumerator, Nat.add_mul, one_mul, Nat.add_assoc] using
       step_bound w Δ hshift hB hg ih (2 * n)
+private theorem iterate_bound (w : Fin 4 → ℕ) (f : Row 4) (r : ℕ) :
+    W w ((separant^[r]) f) ≤ W w f := by
+  induction r with
+  | zero => exact le_rfl
+  | succ r ih =>
+    rw [Function.iterate_succ_apply']
+    exact (weightedTotalDegree_pderiv_le w 3 _).trans ih
+theorem branch_box {f Q l} (b : Branch f Q l) : InBox (shape b.g) (shape f).chamber := by
+  refine ⟨?_, ?_, ?_⟩
+  · change b.g.totalDegree ≤ max f.totalDegree (indexDegree f)
+    exact (by simpa only [Branch.g, weightedTotalDegree_one] using iterate_bound 1 f b.r :
+      b.g.totalDegree ≤ f.totalDegree).trans (le_max_left _ _)
+  · simpa only [Shape.chamber, shape, indexDegree_eq, Branch.g] using iterate_bound Fin.val f b.r
+  · simpa only [Shape.chamber, shape, Branch.g, weightedTotalDegree_piSingle] using
+      iterate_bound (Pi.single 3 1) f b.r
 theorem oldBox_of_fits {P : GeoJets} {p : Shape} (h : GeoFits P p) : Box4 p P := by
   intro m hm
   have h₁ := le_weightedTotalDegree (1 : Fin 4 → ℕ) hm
@@ -3216,6 +3780,12 @@ open K1_13 K1_13_6 K1_13_6_2
 open scoped BigOperators
 abbrev Exponent := Fin 5 →₀ ℕ
 abbrev Boxes := Fin 5 → Shape × ℕ
+def boxes (p : Shape) (i : Fin 5) : Shape × ℕ :=
+  if i = 0 then (p, 0) else
+  if i = 1 then (cutterBox, 0) else
+  if i = 2 then (graphBox p, 1) else
+  if i = 3 then (liftedChart (taylorLength + 1) p, taylorLength + 1)
+  else (liftedChart (taylorLength + 2) p, taylorLength + 2)
 def Chamber (p : Shape) : Prop := p.j ≤ p.b ∧ 3 * p.t ≤ p.j
 def Allowed (a : Shape × ℕ) (m : Exponent) : Prop :=
   (∑ i : Fin 4, m i.castSucc) ≤ a.1.b ∧
@@ -3290,6 +3860,8 @@ def DivisorBound : Prop :=
 def oldEmbedding : GeoJets →+* GeoJets5 :=
   (MvPolynomial.rename Fin.castSucc).toRingHom
 def cylinder (P : Ideal GeoJets) : Ideal GeoJets5 := P.map oldEmbedding
+def graphLift {f Q l} (b : Branch f Q l) (P : Ideal GeoJets) : Ideal GeoJets5 :=
+  (P.map b.localMap).comap b.onGraph
 def pointIdeal (z : Fin 5 → GeoField) : Ideal GeoJets5 :=
   RingHom.ker (MvPolynomial.eval z)
 end
@@ -3509,6 +4081,9 @@ def padded (g : Row 4) (k i : ℕ) : Row 5 :=
 theorem padded_last (g : Row 4) (k : ℕ) : padded g k (k + 4) = numerator g k := by
   rw [padded, dite_eq_right (by omega : ¬ k + 4 < 4)]
   simp [denominator]
+theorem generic_rawGraph {f Q l} (b : Branch f Q l) :
+    generic5 (rawGraph b.g) = b.graph := by
+  simp [rawGraph, Branch.graph, Branch.sigma, toGeneric, MvPolynomial.map_rename, map_ofNat]
 end
 end K1_13_6_2_2
 end
@@ -3517,10 +4092,45 @@ namespace K1_13_6_2_2
 noncomputable section
 open Polynomial K1 K1_13 K1_13_6 K1_13_6_2
 open scoped BigOperators
+def c1 : Prop :=
+  ∀ f Q l, SmallFactor f → ∀ b : Branch f Q l,
+    let p := (shape f).chamber
+    Box5 (graphBox p) 1 b.graph ∧
+      ∀ k : ℕ, Box5 (liftedChart (k + 5) p) (k + 5) (generic5 (denominator b.g k)) ∧
+        ∀ i ≤ k + 4, Box5 (liftedChart (k + 5) p) (k + 5) (generic5 (padded b.g k i))
+def c2 : Prop :=
+  ∀ f Q l, ∀ (b : Branch f Q l) (k : ℕ),
+    b.onGraph (generic5 (numerator b.g k)) * b.localMap b.sigma ^ (k + 8) =
+      b.localMap (toGeneric (jetNumerator b.g (k + 4)))
 variable {f Q : Row 4} {l : ℕ}
 @[simp] private theorem onGraph_C (b : Branch f Q l) (a : GeoField) :
     b.onGraph (MvPolynomial.C a) = b.localMap (MvPolynomial.C a) := by
   simp [Branch.onGraph]
+theorem onGraph_lift4 (b : Branch f Q l) (P : Row 4) :
+    b.onGraph (generic5 (lift4 P)) = b.localMap (toGeneric P) := by
+  let lift := (MvPolynomial.rename Fin.castSucc : GeoJets →ₐ[GeoField] GeoJets5).toRingHom
+  have h : b.onGraph.comp lift = b.localMap := by
+    apply MvPolynomial.ringHom_ext
+    · intro a
+      simp [lift]
+    · intro i
+      simp [lift, Branch.onGraph]
+  rw [MvPolynomial.map_rename]
+  exact DFunLike.congr_fun h (toGeneric P)
+theorem denominator_onGraph (b : Branch f Q l) (k : ℕ) :
+    b.onGraph (generic5 (denominator b.g k)) = b.localMap b.sigma ^ k := by
+  simp only [denominator, map_pow, onGraph_lift4, Branch.sigma]
+private theorem numerator_associated (h : c2) (b : Branch f Q l) (k : ℕ) :
+    Associated (b.onGraph (generic5 (numerator b.g k)))
+      (b.localMap (toGeneric (jetNumerator b.g (k+4)))) := by
+  rw [← h f Q l b k]
+  exact associated_mul_unit_right _ _ (IsLocalization.Away.algebraMap_pow_isUnit b.sigma (k+8))
+private theorem eval_const (b : Branch f Q l) (p : JetPoint) (h : b.Contains p) (a : GeoField) :
+    b.liftedEval p h (MvPolynomial.C a) = a := by
+  simp [Branch.liftedEval, b.regularEval_localMap]
+private theorem eval_denominator (b : Branch f Q l) (p : JetPoint) (h : b.Contains p) (k : ℕ) :
+    b.liftedEval p h (generic5 (denominator b.g k)) = MvPolynomial.eval p b.sigma ^ k := by
+  simp [Branch.liftedEval, denominator_onGraph, b.regularEval_localMap]
 private abbrev ordinary (T : Geom[X]) (i : ℕ) : GeoField :=
   genericCoeffs ((derivative (R := Geom))^[i] T)
 private theorem ordinary_eq_hasse (T : Geom[X]) (i : ℕ) :
@@ -3530,6 +4140,48 @@ private theorem ordinary_eq_hasse (T : Geom[X]) (i : ℕ) :
   rw [coeff_iterate_derivative, Polynomial.coeff_C_mul, hasseDeriv_coeff,
     Nat.descFactorial_eq_factorial_mul_choose]
   simp only [nsmul_eq_mul, Nat.cast_mul, mul_assoc]
+private theorem eval_padded (h2 : c2) (b : Branch f Q l) {T : Geom[X]}
+    (h : b.Contains (actualPoint T)) (k i : ℕ) (hi : i ≤ k + 4) :
+    b.liftedEval (actualPoint T) h (generic5 (padded b.g k i)) =
+      ordinary T i * MvPolynomial.eval (actualPoint T) b.sigma ^ k := by
+  by_cases hi4 : i < 4
+  · rw [padded, dite_eq_left hi4]
+    simp only [map_mul, MvPolynomial.map_C, eval_const, eval_denominator]
+    have he : b.liftedEval (actualPoint T) h (generic5 (lift4 (MvPolynomial.X ⟨i, hi4⟩))) =
+        genericCoeffs (hasseDeriv i T) := by
+      change b.regularEval (actualPoint T) h (b.onGraph (generic5 (lift4 (MvPolynomial.X _)))) = _
+      rw [onGraph_lift4, b.regularEval_localMap]
+      simp [toGeneric, actualPoint, jet]
+    rw [he]
+    unfold ordinary
+    rw [ordinary_eq_hasse, map_mul]
+  · rw [padded, dite_eq_right hi4]
+    simp only [map_mul, eval_denominator]
+    let j := i - 4
+    have hj : j + 4 = i := by dsimp only [j]; omega
+    have hjk : j ≤ k := by omega
+    have hg : atJet b.g T = 0 := K1_13_6_1.mem_markIdeal.mp
+      (h.1 ((le_trans le_sup_left b.divisor.le) (b.chart.2.1 b.r le_rfl)))
+    let s := MvPolynomial.eval (actualPoint T) b.sigma
+    let e := b.regularEval (actualPoint T) h
+    have he := congrArg e (h2 f Q l b j)
+    simp only [map_mul, map_pow, e, b.regularEval_localMap] at he
+    change b.liftedEval (actualPoint T) h (generic5 (numerator b.g j)) * s ^ (j+8) =
+      MvPolynomial.eval (actualPoint T) (toGeneric (jetNumerator b.g (j+4))) at he
+    have hEval (P : Row 4) :
+        MvPolynomial.eval (actualPoint T) (toGeneric P) = genericCoeffs (atJet P T) :=
+      (MvPolynomial.map_eval genericCoeffs (jet T) P).symm
+    rw [hEval, eval_jetNumerator _ _ hg, map_mul, map_pow, hj] at he
+    have hs : genericCoeffs (atJet (separant b.g) T) = s := (hEval _).symm
+    rw [hs, show 2*i = j + (j+8) by omega, pow_add s j (j+8)] at he
+    have hnum : b.liftedEval (actualPoint T) h (generic5 (numerator b.g j)) =
+        ordinary T i * s ^ j := by
+      apply mul_right_cancel₀ (pow_ne_zero (j+8) h.2)
+      exact he.trans (show s ^ j * s ^ (j+8) * ordinary T i =
+        (ordinary T i * s ^ j) * s ^ (j+8) by ac_rfl)
+    change b.liftedEval (actualPoint T) h (generic5 (numerator b.g j)) * s ^ (k-j) =
+      ordinary T i * s ^ k
+    rw [hnum, mul_assoc, ← pow_add, Nat.add_sub_of_le hjk]
 private abbrev const : Geom →+* GeoField := genericCoeffs.comp Polynomial.C
 private abbrev centre : GeoField := genericCoeffs Polynomial.X
 private def taylorScalar (x : Geom) (i : ℕ) : GeoField :=
@@ -3546,6 +4198,30 @@ private theorem factorial_ne_zero {i : ℕ} (hi : i < K1.p) : (i.factorial : Geo
         ((CharP.cast_eq_zero_iff GeoField K1.p (i+1)).mp hz))
     simpa only [Nat.factorial_succ, Nat.cast_mul] using
       mul_ne_zero he (ih (Nat.lt_of_succ_lt hi))
+private theorem eval_taylor (T : Geom[X]) (hT : T.natDegree < taylorLength) (x : Geom) :
+    (∑ i ∈ Finset.range taylorLength, taylorScalar x i * ordinary T i) = const (T.eval x) := by
+  have hd : (Polynomial.taylor centre (T.map const)).natDegree < taylorLength := by
+    rw [Polynomial.natDegree_taylor]
+    exact Polynomial.natDegree_map_le.trans_lt hT
+  rw [← Polynomial.eval_map_apply const x, ← Polynomial.taylor_eval_sub centre,
+    Polynomial.eval_eq_sum_range' hd]
+  apply Finset.sum_congr rfl
+  intro i hi
+  have hcent (P : Geom[X]) : (P.map const).eval centre = genericCoeffs P := by
+    rw [Polynomial.eval_map]
+    simpa only [Polynomial.eval₂_C_X] using
+      (Polynomial.hom_eval₂ P Polynomial.C genericCoeffs Polynomial.X).symm
+  rw [Polynomial.taylor_coeff, Polynomial.hasseDeriv_map, hcent]
+  have hord : ordinary T i = (i.factorial : GeoField) * genericCoeffs (hasseDeriv i T) := by
+    unfold ordinary
+    rw [ordinary_eq_hasse, map_mul, Polynomial.C_eq_natCast, map_natCast]
+  have hn : i < K1.p :=
+    (Finset.mem_range.mp hi).trans (by decide : taylorLength < K1.p)
+  rw [hord, taylorScalar]
+  calc
+    _ = ((i.factorial : GeoField)⁻¹ * (i.factorial : GeoField)) *
+          (genericCoeffs (hasseDeriv i T) * (const x - centre)^i) := by ring
+    _ = _ := by rw [inv_mul_cancel₀ (factorial_ne_zero hn), one_mul]
 private theorem box_C_mul {p : Shape} {d : ℕ} {P : GeoJets5} (hP : Box5 p d P)
     (a : GeoField) : Box5 p d (MvPolynomial.C a * P) := by
   have hsub : (MvPolynomial.C a * P).support ⊆ P.support := by
@@ -3578,6 +4254,59 @@ private theorem box_sub {p : Shape} {d : ℕ} {A B : GeoJets5}
     rcases Finset.mem_union.mp (hsub hm) with ha | hb
     · exact hA.2 m ha
     · exact hB.2 m hb
+private def valuePolynomial (g : Row 4) (k : ℕ) (x a : K) : GeoJets5 :=
+  (∑ i ∈ Finset.range taylorLength, MvPolynomial.C (taylorScalar (embed x) i) *
+      generic5 (padded g k i)) -
+    MvPolynomial.C (const (embed a)) * generic5 (denominator g k)
+private theorem value_section (h2 : c2) (b : Branch f Q l) (k : ℕ)
+    (hk : taylorLength ≤ k + 5) (x a : K) :
+    ∀ S : K[X], S.natDegree ≤ 133671 → ∀ h : b.Contains (actualPoint (extend S)),
+      b.liftedEval (actualPoint (extend S)) h (valuePolynomial b.g k x a) = 0 ↔ S.eval x = a := by
+  intro S hS h
+  let p := actualPoint (extend S)
+  let e := b.liftedEval p h
+  let s := MvPolynomial.eval p b.sigma
+  have hsum :
+      (∑ i ∈ Finset.range taylorLength,
+        e (MvPolynomial.C (taylorScalar (embed x) i) * generic5 (padded b.g k i))) =
+        const ((extend S).eval (embed x)) * s^k := by
+    have hdeg : (extend S).natDegree < taylorLength := by
+      rw [Polynomial.natDegree_map]
+      exact Nat.lt_succ_of_le hS
+    rw [← eval_taylor (extend S) hdeg (embed x), Finset.sum_mul]
+    apply Finset.sum_congr rfl
+    intro i hi
+    have hki : i ≤ k + 4 := by have := Finset.mem_range.mp hi; omega
+    simp only [map_mul, e, eval_const, p, eval_padded h2 b h k i hki, s, mul_assoc]
+  change e (valuePolynomial b.g k x a) = 0 ↔ _
+  unfold valuePolynomial
+  rw [map_sub, map_sum, hsum, map_mul, eval_const, eval_denominator]
+  change const ((extend S).eval (embed x)) * s^k - const (embed a) * s^k = 0 ↔ _
+  rw [Polynomial.eval_map_apply, ← sub_mul, mul_eq_zero,
+    or_iff_left (pow_ne_zero k h.2), sub_eq_zero]
+  exact ⟨fun he => embed.injective (const.injective he), fun he => congrArg (const.comp embed) he⟩
+theorem of_children (h1 : c1) (h2 : c2) : K1_13_6_2.c2 := by
+  intro f Q l hf b
+  obtain ⟨hg, hbox⟩ := h1 f Q l hf b
+  let k := taylorLength - 4
+  have hE := (hbox k).2 (k+4) le_rfl
+  have hH := (hbox (k+1)).2 ((k+1)+4) le_rfl
+  rw [padded_last] at hE hH
+  have hm := numerator_associated h2 b k
+  have hn := numerator_associated h2 b (k+1)
+  refine ⟨hg, generic5 (numerator b.g k), generic5 (numerator b.g (k+1)), hE, hm, hH, hn, ?_⟩
+  intro x a
+  refine ⟨valuePolynomial b.g (k+1) x a, ?_, value_section h2 b (k+1) (by decide) x a⟩
+  unfold valuePolynomial
+  apply box_sub
+  · apply box_sum
+    intro i hi
+    have hki : i ≤ k + 1 + 4 := by
+      have := Finset.mem_range.mp hi
+      dsimp only [k]
+      omega
+    exact box_C_mul ((hbox (k+1)).2 i hki) _
+  · exact box_C_mul (hbox (k+1)).1 _
 end
 end K1_13_6_2_2
 end
@@ -3669,6 +4398,76 @@ theorem old_section_box {P : Row 4} {p : Shape} (hP : InBox (shape P) p) :
       Finset.le_sup (f := fun m => m.sum (fun i n => i.val * n)) haP
     rw [Finsupp.sum_fintype _ _ (fun _ => Nat.mul_zero _)] at hindex
     exact hindex.trans hP.2.1
+theorem anchor_section_regular {f : Row 4} (hf : SmallFactor f) :
+    IsLeftRegular (Ideal.Quotient.mk (⊥ : Ideal GeoJets5) (oldEmbedding (toGeneric f))) := by
+  have hinj : Function.Injective genericCoeffs :=
+    (algebraMap GenericField GeoField).injective.comp (IsFractionRing.injective Geom[X] GenericField)
+  have hf5 : oldEmbedding (toGeneric f) ≠ 0 :=
+    (MvPolynomial.rename_injective _ (Fin.castSucc_injective 4)).ne
+      ((MvPolynomial.map_injective _ hinj).ne hf.1.ne_zero)
+  exact IsLeftCancelMulZero.mul_left_cancel_of_ne_zero (by
+    rw [ne_eq, Ideal.Quotient.eq_zero_iff_mem, Ideal.mem_bot]
+    exact hf5)
+end
+end K1_13_6_2_4
+end
+section
+namespace K1_13_6_2_4
+noncomputable section
+open K1_13_6 K1_13_6_2
+theorem chart_index_eq {f Q l} {b c : Branch f Q l} (h : b.surface = c.surface) :
+    b.r = c.r := by
+  have order (d e : Branch f Q l) (he : d.surface = e.surface) : ¬ d.r < e.r := by
+    intro hlt
+    have hmem := e.chart.2.1 (d.r + 1) (by omega)
+    rw [← he, Function.iterate_succ_apply'] at hmem
+    exact d.chart.2.2 hmem
+  exact Nat.le_antisymm (Nat.le_of_not_gt (order c b h.symm)) (Nat.le_of_not_gt (order b c h))
+theorem graphLift_same_chart {f Q l} {b c : Branch f Q l} (h : b.r = c.r)
+    (P : Ideal GeoJets) : graphLift b P = graphLift c P := by
+  cases b
+  cases c
+  cases h
+  rfl
+theorem membership_same_chart {f Q l} {b c : Branch f Q l} (h : b.r = c.r) (D : GeoJets5) :
+    Associated (b.onGraph D) (b.localMap b.member) ↔
+      Associated (c.onGraph D) (c.localMap c.member) := by
+  cases b
+  cases c
+  cases h
+  rfl
+theorem graph_on_old {f Q l} (b : Branch f Q l) :
+    b.onGraph.comp oldEmbedding = b.localMap := by
+  apply MvPolynomial.ringHom_ext
+  · intro a
+    simp [oldEmbedding, Branch.onGraph]
+  · intro i
+    simp [oldEmbedding, Branch.onGraph]
+theorem graphLift_comap {f Q l} (b : Branch f Q l) (P : Ideal GeoJets)
+    (hP : P.IsPrime) (hregular : b.sigma ∉ P) :
+    (graphLift b P).comap oldEmbedding = P := by
+  rw [graphLift, Ideal.comap_comap, graph_on_old]
+  ext D
+  change algebraMap GeoJets b.Local D ∈ P.map (algebraMap GeoJets b.Local) ↔ D ∈ P
+  rw [IsLocalization.algebraMap_mem_map_algebraMap_iff (Submonoid.powers b.sigma) b.Local]
+  constructor
+  · rintro ⟨m, ⟨n, rfl⟩, hm⟩
+    exact (hP.mem_or_mem hm).resolve_left (fun hpow => hregular (hP.mem_of_pow_mem n hpow))
+  · intro hD
+    exact ⟨1, (Submonoid.powers b.sigma).one_mem, by simpa using hD⟩
+theorem member_proper_on_graph {f Q l} (b : Branch f Q l) {E : GeoJets5}
+    (hE : Associated (b.onGraph E) (b.localMap b.member)) :
+    E ∉ graphLift b b.surface := by
+  intro hmem
+  have hlocal : b.localMap b.member ∈ b.surface.map b.localMap :=
+    (b.surface.map b.localMap).mem_of_dvd hE.dvd hmem
+  have hold : oldEmbedding b.member ∈ graphLift b b.surface := by
+    change b.onGraph (oldEmbedding b.member) ∈ b.surface.map b.localMap
+    rw [show b.onGraph (oldEmbedding b.member) = b.localMap b.member from
+      RingHom.congr_fun (graph_on_old b) _]
+    exact hlocal
+  have hcont := graphLift_comap b b.surface b.base.isPrime b.chart.2.2
+  exact b.proper (hcont ▸ hold)
 end
 end K1_13_6_2_4
 end
@@ -3679,6 +4478,28 @@ open K1_13 K1_13_6 K1_13_6_2
 open scoped BigOperators nonZeroDivisors
 def c1 : Prop := ProperCutComparison
 def c2 : Prop := CycleComparison
+def c3 : Prop :=
+  ∀ p : Shape, Chamber p →
+    32 * mixedDegree (boxes p) ⊥ Finset.univ ≤ (budget5 p : ℚ)
+def c4 : Prop :=
+  ∀ (f Q : Row 4), SmallFactor f → ¬ f ∣ Q →
+    let A := sectionIdeal ⊥ (oldEmbedding (toGeneric f))
+    let J := sectionIdeal A (oldEmbedding (toGeneric Q))
+    IsLeftRegular (Ideal.Quotient.mk A (oldEmbedding (toGeneric Q))) ∧
+    ∀ P : Ideal GeoJets, ∀ h : (intersectionIdeal f Q).IsMinimalPrime P,
+      OfDim (cylinder P) 3 ∧
+        ∃ hc : J.IsMinimalPrime (cylinder P),
+          cycleLength (intersectionIdeal f Q) P h.isPrime ≤ LengthAt J (cylinder P) hc.isPrime
+def c5 : Prop :=
+  ∀ {f Q l} (b : Branch f Q l) (E : GeoJets5),
+    (cylinder b.surface).IsPrime → OfDim (cylinder b.surface) 3 →
+    Associated (b.onGraph E) (b.localMap b.member) →
+    b.graph ∉ cylinder b.surface ∧
+    Component (cylinder b.surface) b.graph (graphLift b b.surface) 1 ∧
+    OfDim (graphLift b b.surface) 2 ∧
+    ∀ c : Branch f Q l, c.surface = b.surface →
+      Component (graphLift b b.surface) E (graphLift c c.curve) c.weight ∧
+      OfDim (graphLift c c.curve) 1
 theorem dim_le_after_section {P : Ideal GeoJets5} {D : GeoJets5} {d : ℕ}
     (hr : IsLeftRegular (Ideal.Quotient.mk P D)) (h : DimLE P (d + 1)) :
     DimLE (sectionIdeal P D) d := by
@@ -3703,12 +4524,191 @@ theorem divisor_bound (hcut : ProperCutComparison) (hcycle : CycleComparison) :
   exact (hcycle B hB (sectionIdeal P D) I (dim_le_after_section hr hdle) S C w hinj
     (fun a ha => ⟨(hcomp a ha).minimal, (hcomp a ha).length_le⟩)).trans
     (hcut B hB P I i hi hdle D hD hr)
+theorem last_caps (p : Shape) :
+    1 ≤ (boxes p 4).1.b ∧ 3 ≤ (boxes p 4).1.j ∧ 1 ≤ (boxes p 4).1.t ∧ 1 ≤ (boxes p 4).2 := by
+  let H := 4 + (taylorLength + 2 - 5) * (p.j - 2)
+  change 1 ≤ max _ H ∧ 3 ≤ H ∧ 1 ≤ min _ (H / 3) ∧ 1 ≤ taylorLength + 2
+  have hH : 4 ≤ H := Nat.le_add_right _ _
+  refine ⟨(by omega : 1 ≤ H).trans (le_max_right _ _), by omega, le_min ?_ (by omega), by decide⟩
+  omega
 private theorem chart_chamber (L : ℕ) (p : Shape) : Chamber (liftedChart L p) := by
   let H := 4 + (L - 5) * (p.j - 2)
   change H ≤ max _ H ∧ 3 * min _ (H / 3) ≤ H
   refine ⟨le_max_right _ _, ?_⟩
   have h := min_le_right (2 + (L - 5) * p.t) (H / 3)
   omega
+theorem boxes_admissible (p : Shape) (h : Chamber p) : Admissible (boxes p) := by
+  constructor
+  · intro i
+    fin_cases i
+    · exact h
+    · change 1650 ≤ 4013 ∧ 3 * 550 ≤ (1650 : ℕ)
+      decide
+    · change p.j + 1 ≤ max p.b (p.j + 1) ∧
+        3 * min (p.t + 1) ((p.j + 1) / 3) ≤ p.j + 1
+      have ht := min_le_right (p.t + 1) ((p.j + 1) / 3)
+      exact ⟨le_max_right _ _, by omega⟩
+    · exact chart_chamber _ _
+    · exact chart_chamber _ _
+  · intro v
+    refine ⟨4, ?_⟩
+    obtain ⟨hb, hj, ht, hd⟩ := last_caps p
+    change Allowed ((boxes p 4).1.scale 2, 2 * (boxes p 4).2) (Finsupp.single v 1)
+    apply allowed_coordinate
+    change 1 ≤ 2 * (boxes p 4).1.b ∧ 3 ≤ 2 * (boxes p 4).1.j ∧
+      1 ≤ 2 * (boxes p 4).1.t ∧ 1 ≤ 2 * (boxes p 4).2
+    omega
+private def liftedPoint {f Q l} (b : Branch f Q l) (p : JetPoint) : Fin 5 → GeoField := by
+  classical
+  exact if h : b.Contains p then fun i => b.liftedEval p h (MvPolynomial.X i)
+    else Fin.lastCases 0 p
+private theorem eval_liftedPoint {f Q l} (b : Branch f Q l) (p : JetPoint) (h : b.Contains p) :
+    MvPolynomial.eval (liftedPoint b p) = b.liftedEval p h := by
+  apply MvPolynomial.ringHom_ext
+  · intro a
+    simp [Branch.liftedEval, Branch.onGraph, Branch.regularEval_localMap]
+  · intro i
+    simp [liftedPoint, h]
+private theorem liftedPoint_old {f Q l} (b : Branch f Q l) (p : JetPoint) (h : b.Contains p)
+    (i : Fin 4) : liftedPoint b p i.castSucc = p i := by
+  simp [liftedPoint, h, Branch.liftedEval, Branch.onGraph, Branch.regularEval_localMap]
+private theorem liftedPoint_mem {f Q l} (b : Branch f Q l) (p : JetPoint) (h : b.Contains p) :
+    graphLift b b.curve ≤ pointIdeal (liftedPoint b p) := by
+  have hk : b.localCurve ≤ RingHom.ker (b.regularEval p h) := by
+    apply Ideal.map_le_iff_le_comap.mpr
+    intro P hP
+    change b.regularEval p h (b.localMap P) = 0
+    rw [Branch.regularEval_localMap]
+    exact h.1 hP
+  intro D hD
+  change MvPolynomial.eval (liftedPoint b p) D = 0
+  rw [eval_liftedPoint b p h]
+  exact hk hD
+private theorem bound_marks {f Q l} (hdiv : DivisorBound) {p : Shape}
+    (hB : Admissible (boxes p)) (b : Branch f Q l) (T : Finset JetPoint)
+    (hp : p = (shape f).chamber) (hT : ∀ y ∈ T, b.Contains y) (hSlice : Slice5 b T)
+    (hprime : (graphLift b b.curve).IsPrime) (hdim : OfDim (graphLift b b.curve) 1) :
+    (T.card : ℚ) ≤ mixedDegree (boxes p) (graphLift b b.curve) {4} := by
+  classical
+  subst p
+  let U := T.image (liftedPoint b)
+  have hcard : U.card = T.card := Finset.card_image_of_injOn (by
+    intro x hx y hy he
+    funext i
+    have hz := congrFun he i.castSucc
+    rwa [liftedPoint_old b x (hT x hx), liftedPoint_old b y (hT y hy)] at hz)
+  rw [← hcard]
+  apply point_bound hdiv _ hB (last_caps _) _ hprime hdim U
+  · intro z hz
+    obtain ⟨y, hy, rfl⟩ := Finset.mem_image.mp hz
+    exact liftedPoint_mem b y (hT y hy)
+  · rcases hSlice with hsingle | ⟨D, hD, hproper, hvanish⟩
+    · exact Or.inl (hcard ▸ hsingle)
+    · refine Or.inr ⟨D, hD, hproper, ?_⟩
+      intro z hz
+      obtain ⟨y, hy, rfl⟩ := Finset.mem_image.mp hz
+      rw [eval_liftedPoint b y (hT y hy)]
+      exact hvanish y hy (hT y hy)
+private theorem initial_bound (h1 : c1) (h2 : c2) (h4 : c4)
+    (f Q : Row 4) (l : ℕ) (hf : SmallFactor f) (hQ : ¬ f ∣ Q)
+    (hQbox : InBox (shape Q) cutterBox) (S : Finset (Ideal GeoJets))
+    (hS : ∀ P ∈ S, ∃ h : (intersectionIdeal f Q).IsMinimalPrime P,
+      (l : ℕ∞) ≤ cycleLength (intersectionIdeal f Q) P h.isPrime) :
+    (∀ P ∈ S, (cylinder P).IsPrime ∧ OfDim (cylinder P) 3) ∧
+      (l : ℚ) * (∑ P ∈ S, mixedDegree (boxes (shape f).chamber) (cylinder P) {2, 3, 4}) ≤
+        mixedDegree (boxes (shape f).chamber) ⊥ Finset.univ := by
+  classical
+  let p := (shape f).chamber
+  let B := boxes p
+  have hB := boxes_admissible p (K1_13_7_1.shape_chamber f)
+  let A := sectionIdeal ⊥ (oldEmbedding (toGeneric f))
+  let J := sectionIdeal A (oldEmbedding (toGeneric Q))
+  obtain ⟨hregQ, hAlgebra⟩ := h4 f Q hf hQ
+  have hregf := anchor_section_regular hf
+  have hboxf : Box5 p 0 (oldEmbedding (toGeneric f)) :=
+    old_section_box ⟨le_max_left _ _, le_rfl, le_rfl⟩
+  have hAdim : DimLE A 4 := dim_le_after_section hregf ambient_dim
+  have hJdim : DimLE J 3 := dim_le_after_section hregQ hAdim
+  have hgeom (P : Ideal GeoJets) (hP : P ∈ S) :
+      (cylinder P).IsPrime ∧ OfDim (cylinder P) 3 ∧
+        ∃ hc : J.IsMinimalPrime (cylinder P), (l : ℕ∞) ≤ LengthAt J (cylinder P) hc.isPrime := by
+    obtain ⟨h, hw⟩ := hS P hP
+    obtain ⟨hd, hc, hl⟩ := hAlgebra P h
+    exact ⟨hc.isPrime, hd, hc, hw.trans hl⟩
+  refine ⟨fun P hP => ⟨(hgeom P hP).1, (hgeom P hP).2.1⟩, ?_⟩
+  have hs := h2 B hB J {2, 3, 4} hJdim S cylinder (fun _ => l) cylinder_injective.injOn
+    (fun P hP => (hgeom P hP).2.2)
+  have hcutQ := h1 B hB A {2, 3, 4} 1 (by decide) hAdim
+    (oldEmbedding (toGeneric Q)) (old_section_box hQbox) hregQ
+  have hcutf := h1 B hB ⊥ {1, 2, 3, 4} 0 (by decide) ambient_dim
+    (oldEmbedding (toGeneric f)) hboxf hregf
+  have hall : (insert (0 : Fin 5) {1, 2, 3, 4} : Finset (Fin 5)) = Finset.univ := by decide
+  rw [hall] at hcutf
+  rw [Finset.mul_sum]
+  exact hs.trans (hcutQ.trans hcutf)
+theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) (h4 : c4) (h5 : c5) :
+    K1_13_6_2.c4 := by
+  classical
+  have hdiv := divisor_bound h1 h2
+  intro f Q l hf hproper hQ hl F T hF
+  let p := (shape f).chamber
+  have hp : Chamber p := K1_13_7_1.shape_chamber f
+  let B := boxes p
+  have hB : Admissible B := boxes_admissible p hp
+  let S := F.image Branch.surface
+  let fibre (P : Ideal GeoJets) := F.filter fun b => b.surface = P
+  let charge (b : Branch f Q l) : ℚ := (b.weight : ℚ) * (T b).card
+  obtain ⟨hZ, hsumZ⟩ := initial_bound h1 h2 h4 f Q l hf hproper hQ S (by
+    intro P hP
+    obtain ⟨b, _, rfl⟩ := Finset.mem_image.mp hP
+    exact ⟨b.base, b.high⟩)
+  have hfibre (P : Ideal GeoJets) (hP : P ∈ S) :
+      (∑ c ∈ fibre P, charge c) ≤ mixedDegree B (cylinder P) {2, 3, 4} := by
+    obtain ⟨b, hb, rfl⟩ := Finset.mem_image.mp hP
+    let G := graphLift b b.surface
+    let C (c : Branch f Q l) := graphLift c c.curve
+    obtain ⟨hboxG, ⟨E, hboxE, hE⟩, _, _⟩ := hF b hb
+    obtain ⟨hZprime, hZdim⟩ := hZ _ hP
+    obtain ⟨hproperG, hG, hGdim, hC⟩ := h5 b E hZprime hZdim hE
+    have hproperE := member_proper_on_graph b hE
+    have inj : Set.InjOn C (fibre b.surface : Set (Branch f Q l)) := by
+      intro c hc d hd he
+      have hcs := (Finset.mem_filter.mp hc).2
+      have hds := (Finset.mem_filter.mp hd).2
+      apply Branch.eq_of_surface_curve (hcs.trans hds.symm)
+      rw [← graphLift_comap c c.curve c.divisor.isPrime c.regularCurve,
+        ← graphLift_comap d d.curve d.divisor.isPrime d.regularCurve]
+      exact congrArg (Ideal.comap oldEmbedding) he
+    have hmarks : (∑ c ∈ fibre b.surface, charge c) ≤
+        ∑ c ∈ fibre b.surface, (c.weight : ℚ) * mixedDegree B (C c) {4} := by
+      apply Finset.sum_le_sum
+      intro c hc
+      obtain ⟨hcF, hcs⟩ := Finset.mem_filter.mp hc
+      obtain ⟨_, _, hon, hslice⟩ := hF c hcF
+      obtain ⟨hcomp, hdim⟩ := hC c hcs
+      exact mul_le_mul_of_nonneg_left
+        (bound_marks hdiv hB c (T c) rfl hon hslice hcomp.minimal.isPrime hdim)
+        (Nat.cast_nonneg _)
+    have hEbound := hdiv B hB G {4} 3 hG.minimal.isPrime (by decide) hGdim E hboxE hproperE
+      (fibre b.surface) C Branch.weight inj (fun c hc => (hC c (Finset.mem_filter.mp hc).2).1)
+    have hGbound := hdiv B hB (cylinder b.surface) {3, 4} 2 hZprime (by decide) hZdim
+      b.graph hboxG hproperG {G} id (fun _ => 1) (fun _ _ _ _ h => h) (by
+        intro P hP
+        obtain rfl := Finset.mem_singleton.mp hP
+        exact hG)
+    have hGbound' : mixedDegree B G {3, 4} ≤ mixedDegree B (cylinder b.surface) {2, 3, 4} := by
+      simpa only [Finset.sum_singleton, Nat.cast_one, one_mul, id_eq] using hGbound
+    exact hmarks.trans (hEbound.trans hGbound')
+  have hcharge : (∑ c ∈ F, charge c) ≤ ∑ P ∈ S, mixedDegree B (cylinder P) {2, 3, 4} := by
+    rw [← Finset.sum_fiberwise_of_maps_to (g := Branch.surface)
+      (fun b hb => Finset.mem_image_of_mem Branch.surface hb) charge]
+    exact Finset.sum_le_sum hfibre
+  have htotal := (mul_le_mul_of_nonneg_left hcharge (Nat.cast_nonneg l)).trans hsumZ
+  have hr : 32 * ((l : ℚ) * (∑ b ∈ F, charge b)) ≤ (budget5 p : ℚ) :=
+    (mul_le_mul_of_nonneg_left htotal (by norm_num)).trans (h3 p hp)
+  apply (Nat.cast_le (α := ℚ)).mp
+  push_cast
+  simpa only [charge, mul_assoc] using hr
 end
 end K1_13_6_2_4
 end
@@ -4600,6 +5600,23 @@ private theorem five_differences (p q g a b : Shape) (d e : ℕ) (x : Shape × �
   simp only [linearInterval, constantInterval, shapeShift, shapeDiff, sub_self, zero_mul,
     zero_add, Nat.cast_one, one_mul]
   ring
+theorem polarized_budget (p : Shape) :
+    (∑ J ∈ (Finset.univ : Finset (Fin 5)).powerset, (-1 : ℚ) ^ (5 - J.card) *
+      volumeProduct (sumCap (boxes p) (diagonal J))) ≤ (budget5 p : ℚ) := by
+  change alt (boxes p) Finset.univ volumeProduct ≤ _
+  have hu : (Finset.univ : Finset (Fin 5)) = insert 0 (insert 1 (insert 2 (insert 3 (insert 4 ∅)))) := by
+    decide
+  rw [hu, alt_insert _ (by decide), alt_insert _ (by decide), alt_insert _ (by decide),
+    alt_insert _ (by decide), alt_insert _ (by decide), alt_empty]
+  let a := liftedChart (taylorLength + 1) p
+  let b := liftedChart (taylorLength + 2) p
+  change capDiff (b, taylorLength + 2) (capDiff (a, taylorLength + 1)
+    (capDiff (graphBox p, 1) (capDiff (cutterBox, 0) (capDiff (p, 0) volumeProduct)))) _ ≤ _
+  rw [five_differences]
+  change _ ≤ ((mixed32 p cutterBox a b + (taylorLength + 1) * mixed32 p cutterBox (graphBox p) b +
+    (taylorLength + 2) * mixed32 p cutterBox (graphBox p) a : ℕ) : ℚ)
+  push_cast
+  gcongr <;> apply signed4_le
 end
 end K1_13_6_2_4_3
 end
@@ -5654,6 +6671,13 @@ theorem eq_of_grid {p q : Form} {N : ℕ}
     have hx' : (fun j => (t j : ℚ)) = x := funext hn
     rw [← hx']
     exact h t (fun j => Nat.le_add_right N (n j))
+theorem Represents.unique {p q : Form} {h : Grade → ℚ}
+    (hp : Represents p h) (hq : Represents q h) : p = q := by
+  obtain ⟨N, hN⟩ := hp
+  obtain ⟨M, hM⟩ := hq
+  exact eq_of_grid (N := max N M) (fun t ht =>
+    (hN t (fun j => (le_max_left N M).trans (ht j))).trans
+      (hM t (fun j => (le_max_right N M).trans (ht j))).symm)
 theorem squarefree_apply (I : Finset (Fin 5)) (i : Fin 5) :
     squarefree I i = if i ∈ I then 1 else 0 := by
   classical
@@ -5919,6 +6943,99 @@ private theorem four_ne_zero : (4 : GeoField) ≠ 0 := by
   intro hz
   have hd := (CharP.cast_eq_zero_iff GeoField K1.p 4).mp (by simpa using hz)
   exact (not_le_of_gt (show 4 < K1.p by decide)) (Nat.le_of_dvd (by decide) hd)
+private theorem graph_eq {f Q l} (b : Branch f Q l) :
+    b.graph = oldEmbedding (toGeneric (partialFlow b.g)) +
+      oldEmbedding (MvPolynomial.C (4 : GeoField) * b.sigma) * MvPolynomial.X (Fin.last 4) := by
+  simp [Branch.graph, oldEmbedding]
+private theorem graph_old {f Q l} (b : Branch f Q l) (D : GeoJets) :
+    b.onGraph (oldEmbedding D) = b.localMap D :=
+  RingHom.congr_fun (graph_on_old b) D
+private theorem onGraph_graph {f Q l} (b : Branch f Q l) : b.onGraph b.graph = 0 := by
+  rw [graph_eq, map_add, map_mul, graph_old, graph_old, map_mul]
+  have hx : b.onGraph (MvPolynomial.X (Fin.last 4)) =
+      b.localMap (MvPolynomial.C (-(4 : GeoField)⁻¹) * toGeneric (partialFlow b.g)) *
+        IsLocalization.Away.invSelf b.sigma := by
+    rw [Branch.onGraph, MvPolynomial.eval₂Hom_X', Fin.lastCases_last]
+  have hσ : b.localMap b.sigma * IsLocalization.Away.invSelf b.sigma = 1 :=
+    IsLocalization.Away.mul_invSelf b.sigma
+  have h4 : b.localMap (MvPolynomial.C (4 : GeoField)) *
+      b.localMap (MvPolynomial.C (-(4 : GeoField)⁻¹)) = -1 := by
+    rw [← map_mul, ← map_mul, mul_neg, mul_inv_cancel₀ four_ne_zero, map_neg, map_one, map_neg, map_one]
+  rw [hx, map_mul]
+  calc
+    _ = b.localMap (toGeneric (partialFlow b.g)) +
+        (b.localMap (MvPolynomial.C (4 : GeoField)) *
+          b.localMap (MvPolynomial.C (-(4 : GeoField)⁻¹))) *
+        (b.localMap b.sigma * IsLocalization.Away.invSelf b.sigma) *
+        b.localMap (toGeneric (partialFlow b.g)) := by ac_rfl
+    _ = 0 := by rw [h4, hσ, mul_one, neg_one_mul, add_neg_cancel]
+private theorem factor_onGraph {f Q l} (b : Branch f Q l) {A : Type*} [CommRing A]
+    (k : GeoJets5 →+* A) (hs : IsUnit (k (oldEmbedding b.sigma))) (hg : k b.graph = 0) :
+    k = (IsLocalization.Away.lift b.sigma (g := k.comp oldEmbedding) hs).comp b.onGraph := by
+  let φ : b.Local →+* A := IsLocalization.Away.lift b.sigma (g := k.comp oldEmbedding) hs
+  let ψ := φ.comp b.onGraph
+  have hold (D : GeoJets) : ψ (oldEmbedding D) = k (oldEmbedding D) := by
+    change φ (b.onGraph (oldEmbedding D)) = _
+    rw [graph_old]
+    exact IsLocalization.Away.lift_eq b.sigma hs D
+  have hψ : ψ b.graph = 0 := by simp [ψ, onGraph_graph]
+  change k = ψ
+  apply MvPolynomial.ringHom_ext
+  · intro a
+    simpa [oldEmbedding] using (hold (MvPolynomial.C a)).symm
+  · intro i
+    refine Fin.lastCases ?_ (fun j => ?_) i
+    · rw [graph_eq, map_add, map_mul] at hg hψ
+      rw [hold, hold] at hψ
+      have hμ : IsUnit (k (oldEmbedding (MvPolynomial.C (4 : GeoField) * b.sigma))) := by
+        rw [map_mul, map_mul]
+        exact ((isUnit_iff_ne_zero.mpr four_ne_zero).map
+          (k.comp (oldEmbedding.comp MvPolynomial.C))).mul hs
+      exact hμ.mul_right_inj.mp (add_left_cancel (hg.trans hψ.symm))
+    · simpa [oldEmbedding] using (hold (MvPolynomial.X j)).symm
+private theorem graphLift_prime {f Q l} (b : Branch f Q l) (P : Ideal GeoJets)
+    (hP : P.IsPrime) (hs : b.sigma ∉ P) : (graphLift b P).IsPrime := by
+  have hdis : Disjoint (↑(Submonoid.powers b.sigma) : Set GeoJets) P := by
+    refine Set.disjoint_left.mpr ?_
+    rintro _ ⟨n, rfl⟩ hn
+    exact hs (hP.mem_of_pow_mem n hn)
+  let : (P.map b.localMap).IsPrime :=
+    IsLocalization.isPrime_of_isPrime_disjoint (Submonoid.powers b.sigma) b.Local P hP hdis
+  exact Ideal.comap_isPrime b.onGraph _
+private theorem graphLift_contains_graph {f Q l} (b : Branch f Q l) (P : Ideal GeoJets) :
+    b.graph ∈ graphLift b P := by
+  change b.onGraph b.graph ∈ P.map b.localMap
+  rw [onGraph_graph]
+  exact Ideal.zero_mem _
+private theorem cylinder_le_graphLift {f Q l} (b : Branch f Q l) (P : Ideal GeoJets) :
+    cylinder P ≤ graphLift b P := by
+  rw [cylinder, Ideal.map_le_iff_le_comap, graphLift, Ideal.comap_comap, graph_on_old]
+  exact Ideal.le_comap_map
+private theorem prime_eq_graphLift {f Q l} (b : Branch f Q l) (T : Ideal GeoJets5)
+    (hT : T.IsPrime) (hs : oldEmbedding b.sigma ∉ T) (hg : b.graph ∈ T) :
+    T = graphLift b (T.comap oldEmbedding) := by
+  let := hT
+  let A := FractionRing (GeoJets5 ⧸ T)
+  let k := (algebraMap (GeoJets5 ⧸ T) A).comp (Ideal.Quotient.mk T)
+  have hk (x : GeoJets5) : k x = 0 ↔ x ∈ T := by
+    change algebraMap (GeoJets5 ⧸ T) A (Ideal.Quotient.mk T x) = 0 ↔ _
+    rw [map_eq_zero_iff _ (IsFractionRing.injective _ _), Ideal.Quotient.eq_zero_iff_mem]
+  have hs' : IsUnit (k (oldEmbedding b.sigma)) := isUnit_iff_ne_zero.mpr (mt (hk _).mp hs)
+  let φ : b.Local →+* A := IsLocalization.Away.lift b.sigma (g := k.comp oldEmbedding) hs'
+  have hφ : φ.comp b.localMap = k.comp oldEmbedding :=
+    IsLocalization.Away.lift_comp b.sigma hs'
+  have hker : (RingHom.ker φ).comap b.localMap = T.comap oldEmbedding := by
+    ext x
+    change φ (b.localMap x) = 0 ↔ oldEmbedding x ∈ T
+    rw [show φ (b.localMap x) = k (oldEmbedding x) from RingHom.congr_fun hφ x, hk]
+  rw [graphLift, ← hker]
+  have he : ((RingHom.ker φ).comap b.localMap).map b.localMap =
+      RingHom.ker φ := IsLocalization.map_under (Submonoid.powers b.sigma) b.Local _
+  rw [he]
+  ext D
+  change D ∈ T ↔ φ (b.onGraph D) = 0
+  exact (hk D).symm.trans (Iff.of_eq (congrArg (fun j : GeoJets5 →+* A => j D = 0)
+    (factor_onGraph b k hs' ((hk _).mpr hg))))
 private def substituteLast (x : GeoJets) : GeoJets5 →+* GeoJets :=
   MvPolynomial.eval₂Hom MvPolynomial.C (Fin.lastCases x MvPolynomial.X)
 private theorem substituteLast_old (x : GeoJets) :
@@ -5928,6 +7045,80 @@ private theorem substituteLast_old (x : GeoJets) :
     simp [substituteLast, oldEmbedding]
   · intro i
     simp [substituteLast, oldEmbedding]
+theorem graph_proper {f Q l} (b : Branch f Q l) :
+    b.graph ∉ cylinder b.surface := by
+  intro h
+  have hm (x : GeoJets) : substituteLast x b.graph ∈ b.surface := by
+    have hle : cylinder b.surface ≤ b.surface.comap (substituteLast x) := by
+      rw [cylinder, Ideal.map_le_iff_le_comap, Ideal.comap_comap, substituteLast_old, Ideal.comap_id]
+    exact hle h
+  have evalGraph (x : GeoJets) : substituteLast x b.graph =
+      toGeneric (partialFlow b.g) + (MvPolynomial.C (4 : GeoField) * b.sigma) * x := by
+    have ho (D : GeoJets) : substituteLast x (oldEmbedding D) = D :=
+      RingHom.congr_fun (substituteLast_old x) D
+    rw [graph_eq, map_add, map_mul, ho, ho]
+    rw [substituteLast, MvPolynomial.eval₂Hom_X', Fin.lastCases_last]
+  have h0 := hm 0
+  have h1 := hm 1
+  rw [evalGraph, mul_zero, add_zero] at h0
+  rw [evalGraph, mul_one] at h1
+  have hσ : MvPolynomial.C (4 : GeoField) * b.sigma ∈ b.surface :=
+    (b.surface.add_mem_iff_right h0).mp h1
+  have hu : IsUnit (MvPolynomial.C (4 : GeoField) : GeoJets) :=
+    (isUnit_iff_ne_zero.mpr four_ne_zero).map MvPolynomial.C
+  exact b.chart.2.2 ((b.base.isPrime.mem_or_mem hσ).resolve_left
+    (fun hc => b.base.isPrime.ne_top (b.surface.eq_top_of_isUnit_mem hc hu)))
+theorem graph_minimal {f Q l} (b : Branch f Q l) :
+    (sectionIdeal (cylinder b.surface) b.graph).IsMinimalPrime (graphLift b b.surface) := by
+  refine ⟨⟨graphLift_prime b b.surface b.base.isPrime b.chart.2.2,
+    sup_le (cylinder_le_graphLift b _) ((Ideal.span_singleton_le_iff_mem _).mpr
+      (graphLift_contains_graph b _))⟩, ?_⟩
+  intro T hT hTG
+  have hs : oldEmbedding b.sigma ∉ T := by
+    intro h
+    have hm : b.sigma ∈ (graphLift b b.surface).comap oldEmbedding := hTG h
+    rw [graphLift_comap b b.surface b.base.isPrime b.chart.2.2] at hm
+    exact b.chart.2.2 hm
+  have hg : b.graph ∈ T := hT.2 (Ideal.mem_sup_right (Ideal.mem_span_singleton_self _))
+  have hb : b.surface ≤ T.comap oldEmbedding :=
+    Ideal.map_le_iff_le_comap.mp (le_sup_left.trans hT.2)
+  rw [prime_eq_graphLift b T hT.1 hs hg]
+  exact Ideal.comap_mono (Ideal.map_mono hb)
+theorem member_minimal {f Q l} (b : Branch f Q l) {E : GeoJets5}
+    (hE : Associated (b.onGraph E) (b.localMap b.member)) :
+    (sectionIdeal (graphLift b b.surface) E).IsMinimalPrime (graphLift b b.curve) := by
+  have hSC : b.surface ≤ b.curve := le_sup_left.trans b.divisor.le
+  have hm : b.member ∈ b.curve := b.divisor.le (Ideal.mem_sup_right (Ideal.mem_span_singleton_self _))
+  refine ⟨⟨graphLift_prime b b.curve b.divisor.isPrime b.regularCurve,
+    sup_le (Ideal.comap_mono (Ideal.map_mono hSC)) ((Ideal.span_singleton_le_iff_mem _).mpr ?_)⟩, ?_⟩
+  · change b.onGraph E ∈ b.curve.map b.localMap
+    exact (b.curve.map b.localMap).mem_of_dvd hE.dvd' (Ideal.mem_map_of_mem _ hm)
+  · intro T hT hTC
+    let P := T.comap oldEmbedding
+    have hP : P.IsPrime := by
+      let := hT.1
+      exact Ideal.comap_isPrime oldEmbedding _
+    have hPC : P ≤ b.curve := by
+      have hle := Ideal.comap_mono (f := oldEmbedding) hTC
+      rwa [graphLift_comap b b.curve b.divisor.isPrime b.regularCurve] at hle
+    have hS : b.surface ≤ P :=
+      Ideal.map_le_iff_le_comap.mp ((cylinder_le_graphLift b _).trans (le_sup_left.trans hT.2))
+    have hreg : b.sigma ∉ P := fun h => b.regularCurve (hPC h)
+    have hEq : T = graphLift b P := prime_eq_graphLift b T hT.1 hreg
+      (hT.2 (Ideal.mem_sup_left (graphLift_contains_graph b _)))
+    have hEmem : E ∈ T := hT.2 (Ideal.mem_sup_right (Ideal.mem_span_singleton_self _))
+    rw [hEq] at hEmem
+    have hold : oldEmbedding b.member ∈ graphLift b P := by
+      change b.onGraph (oldEmbedding b.member) ∈ P.map b.localMap
+      rw [graph_old]
+      exact (P.map b.localMap).mem_of_dvd hE.dvd hEmem
+    have hmP : b.member ∈ P := by
+      have hh : b.member ∈ (graphLift b P).comap oldEmbedding := hold
+      rwa [graphLift_comap b P hP hreg] at hh
+    have hCP : b.curve ≤ P :=
+      b.divisor.2 ⟨hP, sup_le hS ((Ideal.span_singleton_le_iff_mem _).mpr hmP)⟩ hPC
+    rw [hEq]
+    exact Ideal.comap_mono (Ideal.map_mono hCP)
 end
 end K1_13_6_2_4_5
 end
@@ -5966,6 +7157,17 @@ private theorem diagonal_coeff (h1 : c1) (h2 : c2)
   simp only [F, mul_add, mul_one, Polynomial.coeff_add, ← mul_assoc, Polynomial.coeff_mul_X,
     Polynomial.coeff_mul_C, h5, add_zero, hcoeff, volumeProduct, a]
   ring
+theorem of_children (h1 : c1) (h2 : c2) : K1_13_6_2_4.c3 := by
+  intro p hp
+  have hB := (boxes_admissible p hp).1
+  unfold mixedDegree
+  simp only [Finset.card_univ, Fintype.card_fin]
+  rw [show (2 : ℚ) ^ 5 = 32 by norm_num, ← mul_div_assoc, mul_div_cancel_left₀ _ (by norm_num)]
+  change (∑ J ∈ (Finset.univ : Finset (Fin 5)).powerset, (-1 : ℚ) ^ (5 - J.card) *
+    (affineHilbertPolynomial (Ideal.comap
+      (monomialMap GeoField (diagonalExponents (boxes p) (diagonal J))) ⊥)).coeff 5) ≤ _
+  simp only [diagonal_coeff h1 h2 (boxes p) hB]
+  exact polarized_budget p
 end
 end K1_13_6_2_4_3
 end

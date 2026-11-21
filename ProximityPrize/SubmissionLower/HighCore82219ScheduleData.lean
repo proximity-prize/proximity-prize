@@ -1,6 +1,5 @@
 import ProximityPrize.SubmissionLower.HighCore82219Family
 import ProximityPrize.SubmissionLower.GoldBranch7N3
-import ProximityPrize.SubmissionLower.HighCore82268JointRankBase
 
 set_option Elab.async false
 set_option autoImplicit true
@@ -32,9 +31,10 @@ theorem stage_mem {b : Band} {i : ℕ} (hi : i < (stages b).length) :
   exact List.getElem_mem hi
 def laterCount (b : Band) := (stages b).length - 1
 def introIndices : Band → List ℕ
-  | .h2405 => [17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29]
-def stopIndex : Band → ℕ
-  | .h2405 => 1
+  | .h2367 => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]
+  | .h2395 => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+  | .h7773 => []
+def stopIndex (_ : Band) : ℕ := 0
 def introAccount (b : Band) (k : Fin 4) :
     List ℕ → (Fin 3 → ℕ) → (Fin 3 → ℕ) → ℕ
   | [], cap, old =>
@@ -86,67 +86,6 @@ def fixedFee (hi B J : ℕ) : ℕ :=
   let ap := mu + 2*lam*d*(B-1 : ℕ)
   let vp := min ap (lam*d*(2*J-1 : ℕ))
   (((B-J : ℕ) : ℚ)*vp + J*ap).ceil.toNat+B^2
-def jointRank (_ : Band) : Bool := true
-
-theorem jointRank_start (b : Band) (_h : jointRank b = true) : start b < 7773 := by
-  cases b <;> decide
-
-def rankTau : Band → ℚ
-  | .h2405 => (68169573/100000000)
-
-def rankPivot : Band → ℚ
-  | .h2405 => (1373845001477/25000000)
-
-end
-end HighCore82219_3
-end
-
-namespace HighCore82219JointRank
-open HighCore82219 (Band agreement blockLength degreeAt finish gap)
-open HighCore82219_3 (rankMass)
-open P1_7_4 (Mass)
-def lambdaDegree (b : Band) : ℚ := (blockLength : ℚ) / agreement * degreeAt (finish b)
-def mu (b : Band) : ℚ := ((blockLength-degreeAt (finish b) : ℕ) : ℚ) / gap (finish b)
-def capB (b : Band) : ℕ := (rankMass b 2).floor.toNat+2
-def capJ (b : Band) : ℕ := (rankMass b 1).floor.toNat+1
-
-def rankCharge (b : Band) (tau pivot : ℚ) : Mass :=
-  ![0, 4*lambdaDegree b*capB b*tau+mu b-4*lambdaDegree b*pivot,
-    4*lambdaDegree b*capJ b*(1-tau)+capB b, 0]
-
-def rankRounding (b : Band) (tau pivot : ℚ) : ℚ :=
-  rankCharge b tau pivot 1 + 2*rankCharge b tau pivot 2 + 2*lambdaDegree b*pivot^2 + 1
-
-end HighCore82219JointRank
-
-section
-namespace HighCore82219_3
-noncomputable section
-open HighCore82219 (Band K p agreement AnchorModel AnchoredFamily InBand degreeAt stages fees fullCutoff terminal curveUnit)
-open K1_14 (Shape)
-open K1_14_2 (ODE fixedAt)
-open K1_14_2_2 (ODECaps)
-open HighCore82268JointRank (splice)
-open HighCore82219JointRank (rankCharge rankRounding)
-
-def lossCount (b : Band) : ℕ := laterCount b + 1 + (if jointRank b then 1 else 0)
-
-def lossWeights (b : Band) (a h : ℕ → ℚ) : ℕ → Mass :=
-  if jointRank b then splice (stopIndex b) (rankCharge b (rankTau b) (rankPivot b)) (lossWeight b a h)
-  else lossWeight b a h
-
-def lossHistory (b : Band) : ℕ → Mass :=
-  if jointRank b then splice (stopIndex b) (rankMass b) (history b) else history b
-
-def lossOffset (b : Band) : ℚ :=
-  if jointRank b then rankRounding b (rankTau b) (rankPivot b) else 0
-
-def FixedCount : Prop :=
-  ∀ (b : Band) u del (M : AnchorModel u del) Γ (F : AnchoredFamily M Γ),
-    InBand b M.overhead → ∀ B J : ℕ, ODEGuard B J →
-    ∀ G : ODE, ODECaps G B J → ∀ T ⊆ Γ,
-    (∀ γ ∈ T, fixedAt G (F.scalar γ) = 0) → T.card ≤ fixedFee (finish b) B J
-
 def fixedBudget (b : Band) : ℕ :=
   let price (s : Shape) := fixedFee (finish b) s.B s.J
   ∑ i ∈ Finset.range (stages b).length,
@@ -173,7 +112,7 @@ structure ScheduleOK (b : Band) : Prop where
   content_small : (stageAt b 0).free.shape.U + (stageAt b 0).moving.shape.U < p
   rank_guard : ODEGuard (rankB b) (rankJ b)
   low_seed : (p+1)*initialCap b 2 + initialE b ≤ (fees b).lowSeed
-  low_jet : initialCap b 0 + (if jointRank b then 0 else fixedFee (finish b) (rankB b) (rankJ b)) ≤ (fees b).lowJet
+  low_jet : initialCap b 0 + fixedFee (finish b) (rankB b) (rankJ b) ≤ (fees b).lowJet
   fixed : fixedBudget b ≤ (fees b).fixedODE
   content : (p+1)*((stageAt b 0).free.shape.U + (stageAt b 0).moving.shape.U) ≤ (fees b).content
 structure RateOK (hi : ℕ) (a h : ℚ) : Prop where
@@ -184,16 +123,13 @@ structure RateOK (hi : ℕ) (a h : ℚ) : Prop where
 structure LossLedger (b : Band) : Prop where
   seed_small : seedLimit b < (p : ℚ)
   points : pointLimit b ≤ ((fees b).point : ℚ)
-  discount : (start b) < 7773 →
+  discount : (start b) < 7827 →
     ∃ a h : ℕ → ℚ,
       (∀ i ≤ laterCount b, RateOK (finish b) (a i) (h i) ∧
         min (seedLimit b) (dotQ (cutWeight b 0 i) (history b i)) ≤ a i) ∧
-      weightedBill (lossCount b) (lossWeights b a h) (lossHistory b) + seedLimit b + lossOffset b ≤
+      weightedBill (laterCount b+1) (lossWeight b a h) (history b) + seedLimit b ≤
         ((fees b).loss : ℚ)
-  rank_guard : jointRank b = true →
-    0 ≤ rankTau b ∧ rankTau b ≤ 1 ∧ 0 ≤ rankCharge b (rankTau b) (rankPivot b) 1 ∧
-      (rankMass b 2).floor.toNat + 2 < p
-  direct : 7773 ≤ (start b) → ((p+1 : ℕ) : ℚ) * seedLimit b ≤ ((fees b).loss : ℚ)
+  direct : 7827 ≤ (start b) → ((p+1 : ℕ) : ℚ) * seedLimit b ≤ ((fees b).loss : ℚ)
 
 end
 end HighCore82219_3

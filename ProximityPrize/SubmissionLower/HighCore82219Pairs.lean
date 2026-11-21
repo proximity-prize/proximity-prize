@@ -1,5 +1,5 @@
 import ProximityPrize.SubmissionLower.HighCore82219Source
-import ProximityPrize.SubmissionLower.HighCore82219StageReceipts
+import ProximityPrize.SubmissionLower.HighCore82229StageReceipts
 
 set_option Elab.async false
 set_option autoImplicit true

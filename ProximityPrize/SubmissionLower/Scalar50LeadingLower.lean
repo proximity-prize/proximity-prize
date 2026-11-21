@@ -3071,7 +3071,7 @@ private theorem gateScalar50LeadingLower_2 {top : Fin 1} : Scalar50LeadingLower.
 theorem lower_count {w Γ s} (h : Scalar50LeadingPrice.Messages w Γ s)
     (g : K1_13.Row 3) (hg : Scalar50LeadingPrice.LowerRow g)
     (hr : ∀ γ ∈ Γ, K1_13.atJet g (K1_13.extend (s γ)) = 0) :
-    Γ.card ≤ 2302614105857199 :=
+    Γ.card ≤ 2493026848761586 :=
   of_children (top := 0) gateScalar50LeadingLower_1 gateScalar50LeadingLower_2 w Γ s h g hg hr
 
 #print axioms lower_count

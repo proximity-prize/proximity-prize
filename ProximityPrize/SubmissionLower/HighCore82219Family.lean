@@ -1,5 +1,4 @@
 import ProximityPrize.SubmissionLower.HighCore82219Pairs
-import ProximityPrize.SubmissionLower.HighCore82219BankProof
 import ProximityPrize.SubmissionLower.HighCore82219Terminal
 import ProximityPrize.SubmissionLower.HighFamilyBase82180
 
@@ -95,6 +94,27 @@ end
 section
 namespace HighCore82219
 open HighCore82219 (K Band)
+abbrev PrefixFees := P1_7.PrefixFees
+structure PrefixBooks (b : Band) where
+  loss : Finset K
+  point : Finset K
+  lowSeed : Finset K
+  lowJet : Finset K
+  fixedODE : Finset K
+  content : Finset K
+  loss_le : loss.card ≤ (fees b).loss
+  point_le : point.card ≤ (fees b).point
+  lowSeed_le : lowSeed.card ≤ (fees b).lowSeed
+  lowJet_le : lowJet.card ≤ (fees b).lowJet
+  fixedODE_le : fixedODE.card ≤ (fees b).fixedODE
+  content_le : content.card ≤ (fees b).content
+noncomputable def PrefixBooks.union {b} (B : PrefixBooks b) : Finset K := by
+  classical exact B.loss ∪ B.point ∪ B.lowSeed ∪ B.lowJet ∪ B.fixedODE ∪ B.content
+private theorem union_le {A B : Finset K} {a b : ℕ} (ha : A.card ≤ a) (hb : B.card ≤ b) :
+    (A ∪ B).card ≤ a+b := (Finset.card_union_le _ _).trans (Nat.add_le_add ha hb)
+theorem PrefixBooks.card_union {b} (B : PrefixBooks b) : B.union.card ≤ (prefixFee b) := by
+  exact union_le (union_le (union_le (union_le (union_le B.loss_le B.point_le)
+    B.lowSeed_le) B.lowJet_le) B.fixedODE_le) B.content_le
 end HighCore82219
 end
 section
@@ -118,14 +138,13 @@ def MarkOn {u del} (M : AnchorModel u del) {Γ} (F : AnchoredFamily M Γ)
       (atX (F.scalar γ).derivative))
 structure PrefixInventory (b : Band) {u del} (M : AnchorModel u del) {Γ}
     (F : AnchoredFamily M Γ) {rows : Banks} (pairs : Pairs b M.overhead.toNat rows) where
-  books : Finset K
-  paid : books.card ≤ prefixFee b
+  books : PrefixBooks b
   parents : Finset Surface
   geometric : ∀ q ∈ parents, Parent q
   stage_pass : ∀ q ∈ parents, ∀ s (hs : s ∈ stages b), 0 < s.reserve →
     PairPass (pairs s hs) q
   terminal_pass : ∀ q ∈ parents, BankPass rows (terminal b).shape q
-  covers : ∀ γ ∈ Γ, γ ∈ books ∨ ∃ q ∈ parents, MarkOn M F q γ
+  covers : ∀ γ ∈ Γ, γ ∈ books.union ∨ ∃ q ∈ parents, MarkOn M F q γ
 def curveUnit (hi g : ℕ) : ℚ :=
   let d := degreeAt hi
   (2*(g : ℚ)-1) * (1 + 2*((HighCore82219.blockLength : ℚ)/agreement)*d) +
@@ -164,7 +183,7 @@ theorem grade_checked (b : Band) (i : Fin (grades b).length) :
     GradeOK (start b) (finish b) (terminal b).shape.U (retainedCap b) (i.val+1) ((grades b).get i) :=
   get_grade _ _ (grades_checked b) i
 theorem terminal_guards (b : Band) :
-    0 < (start b) ∧ (finish b) ≤ 33365 ∧ 0 < (terminal b).shape.m * agreement ∧
+    0 < (start b) ∧ (finish b) ≤ 33385 ∧ 0 < (terminal b).shape.m * agreement ∧
     (terminal b).shape.m * agreement < p ∧
     (terminal b).shape.B * (131071-(start b)) ≤ (terminal b).shape.m*agreement := by
   cases b <;> decide +kernel
@@ -264,7 +283,7 @@ private theorem weights {s d : ℕ} (hs : s ≤ d) (hd : d < agreement)
     _ ≤ (blockLength : ℚ) * ((d : ℚ) / agreement) :=
       mul_le_mul (by exact_mod_cast Nat.sub_le blockLength s) hfrac (by positivity) (by positivity)
     _ = density * d := by ring
-private theorem rho_at_endpoint {d : ℕ} (hl : 131071 ≤ d) (hh : d ≤ 164436) :
+private theorem rho_at_endpoint {d : ℕ} (hl : 131071 ≤ d) (hh : d ≤ 164456) :
     rho d ≤ density * d := by
   have hdA : d < agreement := hh.trans_lt (by decide)
   have hdN : d ≤ blockLength := hh.trans (by decide)
@@ -273,8 +292,8 @@ private theorem rho_at_endpoint {d : ℕ} (hl : 131071 ≤ d) (hh : d ≤ 164436
     have hp : (0 : ℚ) < ((agreement - d : ℕ) : ℚ) := by exact_mod_cast Nat.sub_pos_of_lt hdA
     apply (div_le_iff₀ hp).mpr
     rw [Nat.cast_sub hdN, Nat.cast_sub hdA.le]
-    change (262144 : ℚ) - d ≤ 17 * ((179925 : ℚ) - d)
-    have hQ : (d : ℚ) ≤ 164436 := by exact_mod_cast hh
+    change (262144 : ℚ) - d ≤ 17 * ((179915 : ℚ) - d)
+    have hQ : (d : ℚ) ≤ 164456 := by exact_mod_cast hh
     linarith only [hQ]
   have hDensity : 1 ≤ density := by
     apply (le_div_iff₀ (show (0 : ℚ) < (agreement : ℚ) by positivity)).mpr
@@ -292,7 +311,7 @@ private theorem taylorPower_cast {g : ℕ} (hg : 0 < g) :
   rfl
 private theorem regular_count {n g H d : ℕ} {U : Finset K} {s : K → Polynomial K} {w}
     (A : K1_14_2_4.RegularChart U s g H n) (hw : FixedWord w U s d)
-    (hg : 0 < g) (hl : 131071 ≤ d) (hh : d ≤ 164436) :
+    (hg : 0 < g) (hl : 131071 ≤ d) (hh : d ≤ 164456) :
     (U.card : ℚ) ≤ (2 * density * d * (taylorPower g : ℚ) + rho d) * H + 1 := by
   have hbound : 0 ≤ (2 * density * d * (taylorPower g : ℚ) + rho d) * (H : ℚ) := by
     unfold rho
@@ -368,7 +387,7 @@ theorem persistent_curve {b : HighCore82219.Band} {u del} (M : AnchorModel u del
       let m := F.mark γ (hT (hU hγ))
       exact ⟨m.bad.support, m.bad.agreement, m.scalar_hits⟩
   have hlo : 131071 ≤ d := Nat.le_add_right _ _
-  have hhi : d ≤ 164436 := by
+  have hhi : d ≤ 164456 := by
     have h := (HighCore82219.terminal_guards b).2.1
     dsimp [d, degreeAt, P1_7.degreeAt]
     omega
@@ -678,7 +697,7 @@ theorem band_invoice {b : Band} {w : ℕ} (hwlo : (start b) ≤ w) (hwhi : w ≤
       (scale (finish b)) := by
   obtain ⟨hlo, hhi, _, _, _⟩ := terminal_guards b
   have hdhi : degreeAt (finish b) < agreement := by
-    change 131071 + (finish b) < 179925
+    change 131071 + (finish b) < 179915
     omega
   have hd : 131071+w < agreement := (Nat.add_le_add_left hwhi _).trans_lt hdhi
   have hA : agreement ≤ blockLength := by decide
@@ -763,8 +782,7 @@ theorem persistent_count {b : Band} {u del} (M : AnchorModel u del)
   have hcount := count_cover hInv P1_7_7_3.proof (curve_scale_of_cut P1_7_7_3.proof) hword hchart hz Ps hPs hcover
   apply fee_of_bound hInv.scale_pos
   refine hcount.trans (add_le_add hsum ?_)
-  have hc : (Ps.card : ℚ) ≤ e := by exact_mod_cast hcard
-  exact mul_le_mul_of_nonneg_left hc (sq_nonneg (((scale (finish b) : ℕ) : ℚ)))
+  exact mul_le_mul_of_nonneg_left (Nat.cast_le.mpr hcard) (by positivity)
 end
 end HighCore82219
 end
@@ -933,6 +951,7 @@ noncomputable section
 open Polynomial
 open HighCore82219 (Band AnchorModel AnchoredFamily K)
 open K1_14 (Banks Equation SeedBound atMark graphEval)
+open K1_14_3 (ProjectedProduct)
 open K1_14_4 (seedDegree seedDegree_le_iff)
 def c1 : Prop :=
   ∀ (b : Band) u del (M : AnchorModel u del) Γ (F : AnchoredFamily M Γ),
@@ -945,7 +964,7 @@ def c2 : Prop :=
 def c3 : Prop :=
   ∀ (b : Band) u del (M : AnchorModel u del) Γ (F : AnchoredFamily M Γ),
     InBand b M.overhead → M.shift ∉ Γ → ∀ H, AdjacentChart M F H →
-    ((start b) < 7773 → CurveTariff b M F) →
+    ((start b) < 7827 → CurveTariff b M F) →
     ∀ rows, Source b M F rows → ∀ pairs : Pairs b M.overhead.toNat rows,
     Nonempty (PrefixInventory b M F pairs)
 def c4 : Prop :=
@@ -1000,8 +1019,28 @@ def HighStatement : Prop :=
     ((start b) : ℤ) ≤ M.overhead → M.overhead ≤ ((finish b) : ℤ) →
     Γ.card ≤ (prefixFee b) + (retainedCap b) + 1
 
-theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) (h4 : c4)
-    (h5 : c5) : HighCore82219.HighStatement := by
+def RetainedCountAt (b : Band) : Prop :=
+  ∀ u del (M : AnchorModel u del) Γ (F : AnchoredFamily M Γ),
+    InBand b M.overhead → M.shift ∉ Γ → ∀ H, AdjacentChart M F H →
+    ∀ C : ChartSource b M F, ∀ pairs : Pairs b M.overhead.toNat C.rows,
+    ∀ Q : PrefixInventory b M F pairs, ∀ f : Equation, Reduced f →
+    ProjectedProduct Q.parents f → ∀ T : Finset K, T ⊆ Γ →
+    (∀ γ ∈ T, atMark f (M.label γ) (F.scalar γ) = 0) →
+    T.card ≤ retainedCap b
+
+theorem legacy_retained (h5 : c5) (b : Band) (hb : b ≠ .h2367) :
+    RetainedCountAt b := by
+  intro u del M Γ F hw hshift H hH C pairs Q f hf hprod T hT hvanish
+  obtain ⟨hl, hu⟩ := window_nat hw
+  obtain ⟨i, he, hs⟩ := grade_of_rejections (b := b) hf.1 (by
+    intro x hE hv
+    have trace := trace_of_full C.source hw Q.geometric Q.terminal_pass hprod x
+    exact (HighCore82219Terminal.terminal_bounds b hb hl hu x).not_ge
+      (joint_loss hl hu x hf trace hE hv))
+  exact retained_count h5 M F hw hshift hH T hT f hf i he hs hvanish
+
+theorem of_children (h1 : CRTSourceExists) (h2 : c2) (h3 : c3)
+    (hRetained : ∀ b, RetainedCountAt b) : HighCore82219.HighStatement := by
   classical
   intro b u del M Γ F hlo hhi
   have hw : InBand b M.overhead := ⟨hlo,hhi⟩
@@ -1014,14 +1053,16 @@ theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) (h4 : c4)
     have herase : Γ.card - 1 ≤ regular.card := Finset.pred_card_le_card_erase
     omega
   obtain ⟨H,hH⟩ := FrontCore82219.adjacent_chart M G
-  obtain ⟨rows,src⟩ := h1 b u del M regular G hw hshift H hH
+  obtain ⟨C⟩ := h1 b u del M regular G hw hshift H hH
+  let rows := C.rows
+  have src : Source b M G rows := C.source
   obtain ⟨pairs⟩ := h2 b u del M regular G hw hshift rows src
   obtain ⟨Q⟩ := h3 b u del M regular G hw hshift H hH
     (fun _ => persistent_curve M G hw) rows src pairs
-  let keep := regular \ Q.books
+  let keep := regular \ Q.books.union
   have hk : keep ⊆ regular := Finset.sdiff_subset
   have hpaid : (regular \ keep).card ≤ (prefixFee b) := by
-    apply (Finset.card_le_card ?_).trans Q.paid
+    apply (Finset.card_le_card ?_).trans Q.books.card_union
     intro γ hγ
     obtain ⟨ha,hn⟩ := Finset.mem_sdiff.mp hγ
     by_contra hm
@@ -1036,12 +1077,7 @@ theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) (h4 : c4)
     obtain ⟨q,hq,_⟩ := cover γ hγ
     obtain ⟨f,hf⟩ := K1_14_3_7.proof Q.parents ⟨q,hq⟩ Q.geometric
     have hred : Reduced f := ⟨hf.positive, hf.primitive, hf.separable⟩
-    obtain ⟨hl,hu⟩ := window_nat hw
-    obtain ⟨i,he,hs⟩ := grade_of_rejections (b := b) hf.positive (by
-      intro x hE hv
-      have trace := trace_of_full src hw Q.geometric Q.terminal_pass hf x
-      exact (h4 b _ hl hu x).not_ge (joint_loss hl hu x hred trace hE hv))
-    apply retained_count h5 M G hw hshift hH keep hk f hred i he hs
+    apply hRetained b u del M regular G hw hshift H hH C pairs Q f hred hf keep hk
     intro η hη
     obtain ⟨q',hq',hon⟩ := cover η hη
     have hz := RingHom.mem_ker.mp (hon (hf.vanishes q' hq'))
@@ -1054,14 +1090,19 @@ end
 
 namespace HighCore82219
 
-theorem first_high_of_prefix_and_retained (hPrefix : c3) (hRetained : c5)
+theorem all_high_of_prefix_and_retained
+    (hSource : CRTSourceExists) (hPrefix : c3) (hRetained : ∀ b, RetainedCountAt b)
     {u del} (M : AnchorModel u del) {Γ} (F : AnchoredFamily M Γ)
-    (hl : 2405 ≤ M.overhead) (hu : M.overhead ≤ 2526) :
-    Γ.card ≤ 269280325386559022 := by
-  have h := of_children HighCore82219BankProof.interpolation_sources
+    (hl : 2354 ≤ M.overhead) (hu : M.overhead ≤ (heightCap : ℤ)) :
+    Γ.card ≤ 272316635316572668 := by
+  obtain ⟨b, hlo, hhi⟩ := height_cover (h := M.overhead.toNat) (by omega) (by omega)
+  have h := of_children hSource
     (fun b _ _ M _ F hb _ _ src => buffered_pairs b M F hb src)
-    hPrefix (fun b _ hl hu x => HighCore82219Terminal.terminal_bounds b hl hu x) hRetained
-    .h2405 u del M Γ F hl hu
-  exact h.trans (le_trans (accounting .h2405).1.le (accounting .h2405).2)
+    hPrefix hRetained
+    b u del M Γ F (by omega) (by omega)
+  have hb : prefixFee b + retainedCap b + 1 ≤ 272316635316572668 := by
+    exact (accounting b).1.le.trans (accounting b).2
+  exact h.trans hb
 
+#print axioms all_high_of_prefix_and_retained
 end HighCore82219

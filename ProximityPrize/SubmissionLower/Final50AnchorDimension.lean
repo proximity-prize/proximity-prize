@@ -4,7 +4,7 @@ set_option maxHeartbeats 3000000
 set_option maxRecDepth 16000
 
 namespace Final50AnchorDimension
-open Final50AnchorSpace Final50AnchorColumns
+open Low48AnchorSpace Final50AnchorColumns
 open K1_13 (Geom)
 open PolynomialDifferential ReedSolomon.HiddenDerivative
 open scoped BigOperators
@@ -13,12 +13,12 @@ open scoped BigOperators
 private abbrev Exponent := JetVariable 3 →₀ ℕ
 private def indexWeight (a b c : ℕ) : ℕ := a + 2 * b + 3 * c
 private def gradeCeiling (a b c : ℕ) : ℕ :=
-  min 125 (gradeLimit (a + b + c))
+  min 122 (gradeLimit (a + b + c))
 private def gradeSlots (a b c : ℕ) : ℕ :=
   gradeCeiling a b c + 1 - (a + b + c)
 private def firstWidth (a b c : ℕ) : ℕ :=
-  93 * 179925 - 133475 * gradeCeiling a b c + 2 * indexWeight a b c
-private def abscissaWidth (a b c j : ℕ) : ℕ := firstWidth a b c + 133475 * j
+  91 * 179915 - 133424 * gradeCeiling a b c + 2 * indexWeight a b c
+private def abscissaWidth (a b c j : ℕ) : ℕ := firstWidth a b c + 133424 * j
 private noncomputable def exponent (x v a b c : ℕ) : Exponent :=
   (Finsupp.equivFunOnFinite.symm ![v, a, b, c]).optionElim x
 @[simp] private theorem exponent_none (x v a b c : ℕ) : exponent x v a b c none = x := by
@@ -37,8 +37,8 @@ private theorem jet_weight (m : Fin 4 →₀ ℕ) (w : Fin 4 → ℕ) :
   simp [Finsupp.weight_apply, Finsupp.sum_fintype, Fin.sum_univ_succ, smul_eq_mul, add_assoc]
 private theorem eligible_exponent (x v a b c : ℕ) :
     ColumnEligible (exponent x v a b c) ↔
-      c ≤ 14 ∧ indexWeight a b c ≤ 52 ∧ v + (a + b + c) ≤ gradeCeiling a b c ∧
-        x + 133475 * (v + (a + b + c)) < 93 * 179925 + 2 * indexWeight a b c := by
+      c ≤ 13 ∧ indexWeight a b c ≤ 50 ∧ v + (a + b + c) ≤ gradeCeiling a b c ∧
+        x + 133424 * (v + (a + b + c)) < 91 * 179915 + 2 * indexWeight a b c := by
   unfold ColumnEligible jdeg jidx jdiff gradeCeiling indexWeight
   rw [Finsupp.degree_eq_weight_one, jet_weight, jet_weight]
   simp only [mul_one, Finsupp.some_apply, exponent_some, Matrix.cons_val_zero, le_min_iff]
@@ -46,26 +46,26 @@ private theorem eligible_exponent (x v a b c : ℕ) :
   have ht : ![v,a,b,c] (2 : Fin 4) = b := rfl
   have hf : ![v,a,b,c] (3 : Fin 4) = c := rfl
   rw [ht,hf,show ![a,b,c] (0 : Fin 3) = a by rfl]
-  change (v + a + b + c ≤ 125 ∧ v * 0 + a * 1 + b * 2 + c * 3 ≤ 52 ∧
-    c ≤ 14 ∧ v + a + b + c ≤ gradeLimit (a + b + c) ∧
-    x + 133475 * (v + a + b + c) < 93 * 179925 + 2 * (v * 0 + a * 1 + b * 2 + c * 3)) ↔ _
+  change (v + a + b + c ≤ 122 ∧ v * 0 + a * 1 + b * 2 + c * 3 ≤ 50 ∧
+    c ≤ 13 ∧ v + a + b + c ≤ gradeLimit (a + b + c) ∧
+    x + 133424 * (v + a + b + c) < 91 * 179915 + 2 * (v * 0 + a * 1 + b * 2 + c * 3)) ↔ _
   omega
 private theorem width_iff (a b c j x : ℕ) (hj : j ≤ gradeCeiling a b c) :
     x < abscissaWidth a b c j ↔
-      x + 133475 * (gradeCeiling a b c - j) < 93 * 179925 + 2 * indexWeight a b c := by
-  have hgrade : gradeCeiling a b c ≤ 125 := min_le_left _ _
+      x + 133424 * (gradeCeiling a b c - j) < 91 * 179915 + 2 * indexWeight a b c := by
+  have hgrade : gradeCeiling a b c ≤ 122 := min_le_left _ _
   unfold abscissaWidth firstWidth
   omega
 private abbrev Slot :=
-  Σ c : Fin 15, Σ b : Fin ((52 - 3 * c.val) / 2 + 1),
-    Σ a : Fin (52 - 3 * c.val - 2 * b.val + 1),
+  Σ c : Fin 14, Σ b : Fin ((50 - 3 * c.val) / 2 + 1),
+    Σ a : Fin (50 - 3 * c.val - 2 * b.val + 1),
       Σ j : Fin (gradeSlots a.val b.val c.val),
         Fin (abscissaWidth a.val b.val c.val j.val)
 private abbrev Eligible := {u : Exponent // ColumnEligible u}
 private theorem slot_bounds (c b a j x : ℕ) :
-    (c < 15 ∧ b < (52 - 3 * c) / 2 + 1 ∧ a < 52 - 3 * c - 2 * b + 1 ∧
+    (c < 14 ∧ b < (50 - 3 * c) / 2 + 1 ∧ a < 50 - 3 * c - 2 * b + 1 ∧
       j < gradeSlots a b c ∧ x < abscissaWidth a b c j) ↔
-    (c ≤ 14 ∧ indexWeight a b c ≤ 52 ∧ j + (a + b + c) ≤ gradeCeiling a b c ∧
+    (c ≤ 13 ∧ indexWeight a b c ≤ 50 ∧ j + (a + b + c) ≤ gradeCeiling a b c ∧
       x < abscissaWidth a b c j) := by
   unfold indexWeight gradeSlots
   omega
@@ -136,32 +136,32 @@ private theorem sumRange_eq_fin (f : ℕ → ℕ) (n : ℕ) :
   rw [Fin.sum_univ_eq_sum_range, sumRange_eq]
 private def tripleCount (a b c : ℕ) : ℕ :=
   let n := gradeSlots a b c
-  n * firstWidth a b c + 133475 * (n * (n - 1) / 2)
+  n * firstWidth a b c + 133424 * (n * (n - 1) / 2)
 private theorem sum_abscissaWidth (a b c : ℕ) :
     (∑ j : Fin (gradeSlots a b c), abscissaWidth a b c j) = tripleCount a b c := by
   rw [Fin.sum_univ_eq_sum_range (abscissaWidth a b c)]
   simp [abscissaWidth, tripleCount, Finset.sum_add_distrib]
   rw [← Finset.mul_sum, Finset.sum_range_id]
 private def rowCount (b c : ℕ) : ℕ :=
-  sumRange (fun a => tripleCount a b c) (52 - 3 * c - 2 * b + 1)
+  sumRange (fun a => tripleCount a b c) (50 - 3 * c - 2 * b + 1)
 private def sliceCount (c : ℕ) : ℕ :=
-  sumRange (fun b => rowCount b c) ((52 - 3 * c) / 2 + 1)
-private theorem slot_card : Fintype.card Slot = sumRange sliceCount 15 := by
+  sumRange (fun b => rowCount b c) ((50 - 3 * c) / 2 + 1)
+private theorem slot_card : Fintype.card Slot = sumRange sliceCount 14 := by
   simp only [Slot, sliceCount, rowCount, Fintype.card_sigma, Fintype.card_fin, sumRange_eq_fin,
     sum_abscissaWidth]
-private def totals : List ℕ := [489877191793, 440817860943, 394211769516, 349463833181, 307337047138, 267223064367, 229898676839, 194742141370, 162542347490, 132662723577, 105909123353, 81633678665, 60656440431, 42316652644, 27451510213]
+private def totals : List ℕ := [438815468570, 393167503658, 349903287005, 308449553909, 269542199110, 232595454919, 198363512317, 166247433516, 137015113474, 110054310880, 86146758093, 64666776855, 46410281344, 30739400587]
 
-private theorem slice_value (i : Fin 15) : sliceCount i = totals[i.val]! := by
+private theorem slice_value (i : Fin 14) : sliceCount i = totals[i.val]! := by
   fin_cases i <;> decide +kernel
 
-private theorem totalCount : sumRange sliceCount 15 = 3286744061520 := by
+private theorem totalCount : sumRange sliceCount 14 = 2832117054237 := by
   rw [sumRange_eq_fin]
   calc
-    _ = ∑ c : Fin 15, totals[c.val]! := Finset.sum_congr rfl fun c _ => slice_value c
+    _ = ∑ c : Fin 14, totals[c.val]! := Finset.sum_congr rfl fun c _ => slice_value c
     _ = _ := by rw [← sumRange_eq_fin]; decide +kernel
 
 
-theorem eligible_card : Nonempty (Eligible ≃ Fin 3286744061520) := by
+theorem eligible_card : Nonempty (Eligible ≃ Fin 2832117054237) := by
   let e : Slot ≃ Eligible :=
     Equiv.ofBijective slotExponent ⟨slotExponent_injective, slotExponent_surjective⟩
   exact ⟨e.symm.trans ((Fintype.equivFin Slot).trans (finCongr (slot_card.trans totalCount)))⟩

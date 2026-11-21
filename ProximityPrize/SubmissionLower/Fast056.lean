@@ -4411,6 +4411,59 @@ private theorem topAt_coeff (S : Geom[X]) (f : Row 4) :
     (topAt S f).coeff (shape f).t = topLead f S := by
   rw [topAt, Polynomial.coeff_map, ← eval_anchorLead, atJet, anchorLead,
     Polynomial.leadingCoeff, topView_degree]
+theorem regular_derivative (f : Row 4) (S : Geom[X])
+    (hf : SmallFactor f) (hon : OnFactor f S) (hs : atJet (separant f) S = 0) :
+    ∃ j, 0 < j ∧ j < (shape f).t ∧
+      atJet ((separant^[j]) f) S = 0 ∧ atJet (separant ((separant^[j]) f)) S ≠ 0 := by
+  classical
+  let t := (shape f).t
+  let P := topAt S f
+  have hdeg : P.natDegree ≤ t := Polynomial.natDegree_map_le.trans_eq (topView_degree f)
+  have hnz : (derivative^[t] P).coeff 0 ≠ 0 := by
+    rw [coeff_iterate_derivative, Nat.zero_add, Nat.descFactorial_self, nsmul_eq_mul]
+    change (t.factorial : Geom[X]) * P.coeff t ≠ 0
+    rw [← map_natCast (Polynomial.C : Geom →+* Geom[X])]
+    exact mul_ne_zero (Polynomial.C_ne_zero.mpr
+      (factorial_cast_ne_zero (hf.2.2.1.2.2.trans_lt (by decide : 10 < K1.p))))
+      (by simpa only [P, t, topAt_coeff] using hon.2)
+  have hc : derivative^[t] P = Polynomial.C ((derivative^[t] P).coeff 0) :=
+    eq_C_of_natDegree_le_zero ((natDegree_iterate_derivative _ _).trans
+      (by omega : P.natDegree - t ≤ 0))
+  have he (k : ℕ) : atJet ((separant^[k]) f) S =
+      (derivative^[k] P).eval (jet S (3 : Fin 4)) := by
+    rw [← eval_topAt]
+    congr 1
+    induction k with
+    | zero => rfl
+    | succ k ih =>
+      simp only [Function.iterate_succ_apply']
+      change (topView (separant ((separant^[k]) f))).map (MvPolynomial.eval (jet S)) = _
+      rw [topView_separant, ← derivative_map]
+      exact congrArg derivative ih
+  have hex : ∃ k, atJet ((separant^[k]) f) S ≠ 0 := by
+    refine ⟨t, ?_⟩
+    rw [he, hc, Polynomial.eval_C]
+    exact hnz
+  let k := Nat.find hex
+  have hk : atJet ((separant^[k]) f) S ≠ 0 := Nat.find_spec hex
+  have hkt : k ≤ t := Nat.find_min' hex (by
+    rw [he, hc, Polynomial.eval_C]
+    exact hnz)
+  have hk0 : k ≠ 0 := by
+    intro h
+    apply hk
+    simpa only [h, Function.iterate_zero_apply] using hon.1
+  have hk1 : k ≠ 1 := by
+    intro h
+    apply hk
+    simpa only [h, Function.iterate_one] using hs
+  have hprev : k - 1 + 1 = k := by omega
+  refine ⟨k - 1, by omega, by omega, ?_, ?_⟩
+  · exact not_ne_iff.mp (Nat.find_min hex (by omega : k - 1 < k))
+  · have he' : (separant^[k]) f = separant ((separant^[k - 1]) f) := by
+      conv_lhs => rw [← hprev]
+      rw [Function.iterate_succ_apply']
+    simpa only [he'] using hk
 theorem derivative_degree (f : Row 4) (j : ℕ) :
     (shape ((separant^[j]) f)).t ≤ (shape f).t - j := by
   rw [← topView_degree, ← topView_degree]
@@ -4477,6 +4530,23 @@ def IsolatedFat (P Q R : Row 3) (y : LowerPoint) : Prop :=
       localColength q (tripleIdeal P Q R) < ⊤
 def fatChart (x : Shape) : Shape :=
   if x.t = 1 then linearChart x.chamber else chart (taylorLength + 4) x.chamber
+def hypersurfacePrice (x : Shape) : ℕ :=
+  let p := x.chamber
+  let h := fatChart x
+  let big : Shape := ⟨35007, 12106, 0⟩
+  let cut : Shape :=
+    ⟨max (max h.b big.b) (max h.j (big.j + 1)), max h.j (big.j + 1), max 1 h.t⟩
+  ceilDiv (81879 * mixed32 p big cut h) (32 * 46594) +
+    ceilDiv (mixed32 p big cut p) 32 + 20 * p.b * h.b ^ 2 + 5 * 133671 * p.b * h.b + 1
+def singularPrice (x : Shape) : ℕ :=
+  let p := x.chamber
+  let h := fatChart x
+  if 1 < x.t then ceilDiv (4 * x.t * mixed32 p p h h) 32 + x.t * x.b ^ 2 + 1 else 0
+def highCurvePrice (x : Shape) : ℕ :=
+  let p := x.chamber
+  let h := fatChart x
+  let q : Shape := ⟨952630000, 322000000, 0⟩
+  ceilDiv (81879 * mixed32 p q q h + 46594 * mixed32 p q q p) (32 * 46594 * 293711590)
 def isolatedPrice : ℕ :=
   let q : Shape := ⟨952630000, 322000000, 0⟩
   ceilDiv (3 * q.j ^ 2 * (2 * q.b - q.j)) (4 * 41481 * (41481 - 33184 + 1) * 1037)
@@ -4593,6 +4663,15 @@ section
 namespace K1_13_7_2
 noncomputable section
 open Polynomial K1 K1_13 K1_13_6 K1_13_7
+def lowerBox : Shape := ⟨35007, 12106, 0⟩
+def cutBox (x : Shape) : Shape :=
+  let h := fatChart x
+  ⟨max (max h.b lowerBox.b) (max h.j (lowerBox.j + 1)),
+    max h.j (lowerBox.j + 1), max 1 h.t⟩
+def curveMass32 (x : Shape) : ℕ :=
+  mixed32 x.chamber lowerBox (cutBox x) (fatChart x)
+def componentMass32 (x : Shape) : ℕ :=
+  mixed32 x.chamber lowerBox (cutBox x) x.chamber
 def liftLower (q : Row 3) : Row 4 := MvPolynomial.rename Fin.castSucc q
 def lowerFlow (q : Row 3) : Row 4 := partialFlow (liftLower q)
 structure LiftedSurface (f : Row 4) (q : Row 3) (surface : Ideal GeoJets) : Prop where

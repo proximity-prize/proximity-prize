@@ -101,14 +101,12 @@ end
 
 namespace Final50PriceMonotone
 open K1_13 (Shape)
-open Final50Price (physicalPrice physicalPriceOld physicalPriceTilted physicalPriceActive physicalPriceWith)
+open Final50Price (physicalPrice physicalPriceOld physicalPriceTilted physicalPriceWith)
 
 theorem physicalPrice_le_old (x : Shape) (l K : ℕ) : physicalPrice x l K ≤ physicalPriceOld x l := by
   unfold physicalPrice
   split
-  · split
-    · exact (min_le_left _ _).trans (min_le_left _ _)
-    · exact min_le_left _ _
+  · exact min_le_left _ _
   · exact le_rfl
 
 private theorem with_anti (a : Shape) (s : ℕ) {l u : ℕ} (hl : 0 < l) (h : l ≤ u) :
@@ -124,11 +122,8 @@ theorem physicalPrice_anti (a : Shape) (K : ℕ) {l u : ℕ} (hl : 0 < l) (h : l
     exact Nat.add_le_add_right
       (Nat.add_le_add_right (K1_13_8.ceilDiv_anti _ hl h) _) _
   have hnew : physicalPriceTilted a u ≤ physicalPriceTilted a l := with_anti a _ hl h
-  have hactive : physicalPriceActive a u K ≤ physicalPriceActive a l K := with_anti a _ hl h
   unfold physicalPrice
   split
-  · split
-    · exact min_le_min (min_le_min hold hnew) hactive
-    · exact min_le_min hold hnew
+  · exact min_le_min hold hnew
   · exact hold
 end Final50PriceMonotone

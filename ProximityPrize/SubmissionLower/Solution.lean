@@ -1,7 +1,7 @@
-import ProximityPrize.SubmissionLower.Soundness82219
+import ProximityPrize.SubmissionLower.KoalaSoundness6951
 
 theorem ProximityPrize.Benchmark.candidate :
-    ProximityPrize.Benchmark.ProtocolClaim 6950 2892859073143766509 9223372036854774115 :=
-  Soundness82219.protocol
+    ProximityPrize.Benchmark.ProtocolClaim 6951 2893210916864619832 9223372036854662547 :=
+  KoalaSoundness6951.proof
 
 #print axioms ProximityPrize.Benchmark.candidate

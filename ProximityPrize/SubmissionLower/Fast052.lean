@@ -89,6 +89,18 @@ theorem cutComponent_curve {I : Ideal Ambient} {P : Jet} (hI : Active I)
   rw [hd] at hcut
   have hdegree : (MvPolynomial.affineHilbertPolynomial Q).natDegree = 1 := by omega
   rw [dim_eq_hilbert_degree Q, hdegree, Nat.cast_one]
+theorem mark_on_cut {u del} {M : AnchorModel u del} {Γ} {F : AnchoredFamily M Γ}
+    {I : Ideal Ambient} {P : Jet} {γ : K}
+    (hI : OnParent M F I γ) (hzero : jetAt P (M.label γ) (F.scalar γ) = 0) :
+    ∃ Q ∈ cutComponents I P, OnParent M F Q γ := by
+  let e := jetMarkHom (M.label γ) (F.scalar γ)
+  have hle : I ⊔ Ideal.span {toJet P} ≤ RingHom.ker e := by
+    apply sup_le hI
+    exact (Ideal.span_singleton_le_iff_mem _).mpr
+      (RingHom.mem_ker.mpr ((eval_toJet _ _ _).trans hzero))
+  have : (RingHom.ker e).IsPrime := RingHom.ker_isPrime e
+  obtain ⟨Q, hQ, hmark⟩ := Ideal.exists_minimalPrimes_le hle
+  exact ⟨Q, Ideal.mem_minimalPrimesFinset.mpr hQ, hmark⟩
 private def markEvaluation {Q : Ideal Ambient} {z : K} {S : Polynomial K}
     (h : OnJet Q z S) : CoordinateRing Q →ₐ[FX] FX :=
   Ideal.Quotient.liftₐ Q
@@ -113,6 +125,14 @@ private theorem seed_value_eq {Q : Ideal Ambient} [Q.IsPrime] (hQ : ConstantSeed
   have hvalue : markEvaluation h x = seedEmbedding z := markEvaluation_first h
   rw [hvalue] at hw
   simpa [Polynomial.IsRoot, Polynomial.aeval_def] using hw
+theorem same_label_on_constant {u del} {M : AnchorModel u del} {Γ}
+    {F : AnchoredFamily M Γ} {Q : Ideal Ambient} (hprime : Q.IsPrime) (hQ : ConstantSeed Q)
+    {γ δ : K} (hγ : OnParent M F Q γ) (hδ : OnParent M F Q δ) : γ = δ := by
+  have := hprime
+  apply K1_14_3.label_injective M
+  apply seedEmbedding.injective
+  apply (algebraMap FX (CoordinateRing Q)).injective
+  exact (seed_value_eq hQ hγ).trans (seed_value_eq hQ hδ).symm
 end
 end K1_14_2_2_7
 end
@@ -139,6 +159,43 @@ def c4 : Prop :=
   ∀ (s : Shape) (I : Ideal Ambient) (P : Jet),
     s.J ≤ s.B → Active I → RowCaps P s → toJet P ∉ I →
     (constantComponents I P).card ≤ dot (weight s 2) (sectionDegree I)
+theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) (h4 : c4) :
+    K1_14_2_2.c7 := by
+  classical
+  intro u del M Γ F s I P hshape hI hcaps hP
+  let marked (Q : Ideal Ambient) : Finset K := Γ.filter (OnParent M F Q)
+  let direct := (constantComponents I P).biUnion marked
+  have hcard : direct.card ≤ (constantComponents I P).card := by
+    change ((constantComponents I P).biUnion marked).card ≤ (constantComponents I P).card
+    have hsingle (Q : Ideal Ambient) (hQ : Q ∈ constantComponents I P) :
+        (marked Q).card ≤ 1 := by
+      obtain ⟨hcomp, hconst⟩ := Finset.mem_filter.mp hQ
+      apply Finset.card_le_one.mpr
+      intro γ hγ δ hδ
+      exact same_label_on_constant (cutComponent_curve hI hP hcomp).1 hconst
+        (Finset.mem_filter.mp hγ).2 (Finset.mem_filter.mp hδ).2
+    calc
+      _ ≤ ∑ Q ∈ constantComponents I P, (marked Q).card := Finset.card_biUnion_le
+      _ ≤ ∑ _Q ∈ constantComponents I P, 1 := Finset.sum_le_sum hsingle
+      _ = _ := by simp
+  let C : CutCover :=
+    ⟨direct, movingComponents I P, by
+      intro Q hQ
+      obtain ⟨hcomp, hmov⟩ := Finset.mem_filter.mp hQ
+      obtain ⟨hp, hdim⟩ := cutComponent_curve hI hP hcomp
+      exact ⟨hp, hdim, h1 Q hp hdim hmov⟩⟩
+  refine ⟨C, ?_, ?_⟩
+  · intro fee
+    fin_cases fee
+    · exact h2 s I P hshape hI hcaps hP
+    · exact h3 s I P hshape hI hcaps hP
+    · exact hcard.trans (h4 s I P hshape hI hcaps hP)
+  · intro γ hγ hparent hzero
+    obtain ⟨Q, hQ, hmark⟩ := mark_on_cut hparent hzero
+    by_cases hc : ConstantSeed Q
+    · exact Or.inl (Finset.mem_biUnion.mpr
+        ⟨Q, Finset.mem_filter.mpr ⟨hQ, hc⟩, Finset.mem_filter.mpr ⟨hγ, hmark⟩⟩)
+    · exact Or.inr ⟨Q, Finset.mem_filter.mpr ⟨hQ, hc⟩, hmark⟩
 end
 end K1_14_2_2_7
 end
@@ -4957,6 +5014,19 @@ theorem preIdeal_eq_ker (Q : Ideal Ambient) : preIdeal Q = RingHom.ker (preEval 
   apply Ideal.Quotient.eq_zero_iff_mem.mp
   have h := DFunLike.congr_fun (preEvalInverse_comp Q) r
   simpa only [RingHom.comp_apply, RingHom.mem_ker.mp hr, map_zero] using h.symm
+theorem preEval_surjective (Q : Ideal Ambient) : Function.Surjective (preEval Q) := by
+  let lift := Polynomial.eval₂RingHom preBase (preParameter 0)
+  have h : (preEval Q).comp lift = Polynomial.mapRingHom (Ideal.Quotient.mk Q) := by
+    apply Polynomial.ringHom_ext
+    · intro r
+      simpa only [RingHom.comp_apply, lift, Polynomial.coe_eval₂RingHom, Polynomial.eval₂_C,
+        Polynomial.coe_mapRingHom, Polynomial.map_C, quotientConstant] using
+        RingHom.congr_fun (preEval_preBase Q) r
+    · simp [lift, preParameter, preEval, parameterEval]
+  apply Function.Surjective.of_comp (f := preEval Q) (g := lift)
+  change Function.Surjective ((preEval Q).comp lift)
+  rw [h]
+  exact Polynomial.map_surjective _ Ideal.Quotient.mk_surjective
 private theorem preBase_comp : (algebraMap PreAmbient SeedAmbient).comp preBase = seedBase := by
   rw [seedBase, IsScalarTower.algebraMap_eq FX Seeds SeedField, MvPolynomial.algebraMap_def]
   exact RingHom.ext (MvPolynomial.map_map MvPolynomial.C _)
@@ -4966,6 +5036,33 @@ theorem preIdeal_map (Q : Ideal Ambient) :
     simp [preLine, preParameter, seedLine, generic]
   simp only [preIdeal, Ideal.map_sup, Ideal.map_map, preBase_comp, Ideal.map_span,
     Set.image_singleton, hline]
+def seedSliceMap (Q : Ideal Ambient) : Polynomial (Ambient ⧸ Q) →+* JetSeedSection Q :=
+  (Ideal.quotientMap (seedIdeal Q) (algebraMap PreAmbient SeedAmbient)
+    (Ideal.map_le_iff_le_comap.mp (preIdeal_map Q).le)).comp (preEvalInverse Q)
+private theorem seedSliceMap_comp (Q : Ideal Ambient) :
+    (seedSliceMap Q).comp (preEval Q) =
+      (Ideal.Quotient.mk (seedIdeal Q)).comp (algebraMap PreAmbient SeedAmbient) := by
+  rw [seedSliceMap, RingHom.comp_assoc, preEvalInverse_comp]
+  rfl
+theorem seedSliceMap_constant (Q : Ideal Ambient) (r : Ambient) :
+    seedSliceMap Q (Polynomial.C (Ideal.Quotient.mk Q r)) = seedRestrict Q r := by
+  have h := RingHom.congr_fun (seedSliceMap_comp Q) (preBase r)
+  change seedSliceMap Q (preEval Q (preBase r)) =
+    Ideal.Quotient.mk (seedIdeal Q) (algebraMap PreAmbient SeedAmbient (preBase r)) at h
+  have he := RingHom.congr_fun (preEval_preBase Q) r
+  change preEval Q (preBase r) = Polynomial.C (Ideal.Quotient.mk Q r) at he
+  rw [he, ← RingHom.comp_apply (algebraMap PreAmbient SeedAmbient) preBase, preBase_comp] at h
+  exact h
+theorem seedSlice_isLocalization (Q : Ideal Ambient) :
+    letI := (seedSliceMap Q).toAlgebra
+    IsLocalization (denominators.map (preEval Q)) (JetSeedSection Q) := by
+  let : Algebra (Polynomial (Ambient ⧸ Q)) (JetSeedSection Q) := (seedSliceMap Q).toAlgebra
+  let : IsLocalization denominators SeedAmbient :=
+    MvPolynomial.isLocalization (nonZeroDivisors Seeds) SeedField
+  refine IsLocalization.of_surjective denominators SeedAmbient (preEval Q)
+    (preEval_surjective Q) (Ideal.Quotient.mk (seedIdeal Q)) Ideal.Quotient.mk_surjective
+    (seedSliceMap_comp Q).symm ?_
+  rw [Ideal.mk_ker, ← preIdeal_eq_ker, preIdeal_map]
 private theorem preIdeal_comap (Q : Ideal Ambient) : (preIdeal Q).comap preBase = Q := by
   ext r
   rw [Ideal.mem_comap, preIdeal_eq_ker, RingHom.mem_ker]
@@ -5878,6 +5975,17 @@ private theorem specialize_shiftedWord {A : Type*} [CommRing A] (a : Seeds →+*
   induction t with
   | nil => rfl
   | cons i t ih => simp only [shiftedWord, partialWord, specialize_seedHasse_one, ih]
+theorem contact_of_shift {A : Type*} [CommRing A] (a : Seeds →+* A)
+    {h : ℕ} {rows : Banks} {s : Shape} {I : Ideal Ambient}
+    (hn : ∀ W W', W ≤ W' → rows s W ≤ rows s W')
+    (hshift : K1_14_3.SeedShift h rows s) (hv : bankVanishes rows s I)
+    {W r : ℕ} {P : Jet} (hcut : W + 2*h*r ≤ fullCutoff s) (hP : P ∈ rows s W) :
+    fibreContact (I.map (specializeJets a)) (specializeJets a (toJet P)) r := by
+  intro t ht
+  rw [← specialize_shiftedWord]
+  apply Ideal.mem_map_of_mem
+  exact hv _ (hn _ _ ((Nat.add_le_add_left (Nat.mul_le_mul_left _ ht) _).trans hcut)
+    (shift_word hshift hP t))
 end
 end K1_14_2_2_3
 end
@@ -6122,6 +6230,24 @@ def c2 : Prop :=
   ∀ I : Ideal Ambient, Active I → ¬ dual I →
     ∃ g : MvPolynomial (Fin 2) (JetImageField I),
       Prime g ∧ g.totalDegree < p ∧ I.map (imageFibreMap I) = Ideal.span {g}
+theorem of_children (h1 : c1) (h2 : c2) : K1_14_2_2.c3 := by
+  classical
+  intro h rows s I _ hactive hn hshift hv W r P hr hcut hP
+  by_cases hd : dual I
+  · have hc := contact_of_shift (algebraMap Seeds SeedField) hn hshift hv hcut hP
+    rw [← mapGenericJets_eq] at hc
+    exact clear_dual hd (h1 I hactive.prime hactive.jet_finite hd hactive.jet_lt _ r hr hc)
+  · obtain ⟨g, hg, hdeg, he⟩ := h2 I hactive hd
+    let _ : I.IsPrime := hactive.prime
+    let _ : (I.comap jetInclude).IsPrime := Ideal.IsPrime.comap jetInclude
+    let _ : CharP FX p := charP_of_injective_ringHom seedEmbedding.injective p
+    let _ : CharP (JetImageField I) p :=
+      charP_of_injective_ringHom ((jetImageMap I).comp MvPolynomial.C).injective p
+    apply clear_rank_one hactive.prime hd
+    have hc : fibreContact (I.map (imageFibreMap I)) (imageFibreMap I (toJet P)) r :=
+      contact_of_shift (jetImageMap I) hn hshift hv hcut hP
+    rw [he] at hc ⊢
+    exact divisor_contact hg hdeg hr hc
 end
 end K1_14_2_2_3
 end
@@ -6920,6 +7046,23 @@ private theorem parent_caps (h1 : c1) (h2 : c2) {I : Ideal Ambient}
   change G ∈ I.comap jetPlaneIncl
   rw [hi]
   exact Ideal.subset_span rfl
+theorem of_children (h1 : c1) (h2 : c2) : K1_14_2_2.c5 := by
+  classical
+  intro S hS hord hmix
+  have hchoose (I : Ideal Ambient) :
+      ∃ G : ODE, I ∈ S → ODECaps G (sectionDegree I 2) (sectionDegree I 1) ∧ fixedOn G I := by
+    by_cases hI : I ∈ S
+    · obtain ⟨G, hg⟩ := parent_caps h1 h2 (hS I hI).1 (hS I hI).2
+      exact ⟨G, fun _ => hg⟩
+    · exact ⟨1, fun h => (hI h).elim⟩
+  choose G hG using hchoose
+  have hprod : ODECaps (∏ I ∈ S, G I) (mass S 2) (mass S 1) :=
+    product_caps S G (fun I => sectionDegree I 2) (fun I => sectionDegree I 1)
+      (fun I hI => (hG I hI).1)
+  refine ⟨∏ I ∈ S, G I, ⟨hprod.1, hprod.2.1.trans hord, ?_⟩,
+    fun I hI => product_fixedOn hI G (hG I hI).2⟩
+  intro j i h
+  exact (hprod.2.2 j i h).trans hmix
 end
 end K1_14_2_2_5
 end
@@ -7173,6 +7316,10 @@ set_option maxSynthPendingDepth 8
 namespace K1_14_3_2_4
 noncomputable section
 open K1_14 K1_14_3 Polynomial
+def sliceIdeal (s : Slice) (I : Ideal Jet) : Ideal SectionJet :=
+  I.map sectionMap ⊔ Ideal.span (sectionEquations s)
+abbrev PairSection (P Q : Jet) (s : Slice) :=
+  SectionJet ⧸ sliceIdeal s (Ideal.span {P, Q})
 abbrev Plane := MvPolynomial (Fin 2) SectionField
 def parameter (i : Fin 4) : SectionField :=
   algebraMap (MvPolynomial (Fin 4) FX) SectionField (MvPolynomial.X i)
@@ -7207,8 +7354,11 @@ def sectionEval (s : Slice) : SectionJet →ₐ[SectionField] Plane where
     simp
 def sectionRow (s : Slice) (P : Jet) : Plane :=
   sectionEval s (sectionMap P)
+abbrev PlaneSection (F G : Plane) := Plane ⧸ Ideal.span {F, G}
 def univariate : SectionField[X] →ₐ[SectionField] Plane :=
   Polynomial.aeval (MvPolynomial.X 0)
+def BidegreeLE (F : Plane) (u b : ℕ) : Prop :=
+  F.degreeOf 0 ≤ u ∧ F.degreeOf 1 ≤ b
 end
 end K1_14_3_2_4
 end

@@ -15,7 +15,7 @@ open K1_13 (Row indexDegree)
 open K1_13_5 (NodeFamily)
 open K1_13 (Shape)
 open scoped BigOperators Polynomial
-abbrev lowBox : Shape := ⟨72, 21, 10⟩
+abbrev lowBox : Shape := ⟨72, 22, 10⟩
 abbrev graphBox (top : Fin 1) : Shape :=
   ⟨lowerWidth top, lowerIndex top + 1, (lowerIndex top + 1) / 2⟩
 def liftedBox (top : Fin 1) (L : ℕ) : Shape :=
@@ -49,7 +49,7 @@ def Whole (f : Row 3) : Prop :=
 
 -- Mixed volume coefficients in the support bounds of the contracted row.
 def mixedCoefficients (_ : Fin 1) : ℕ × ℕ × ℕ :=
-  (13236728694694, 64255222883913, 15925127)
+  (14430696638555, 65144258569982, 2061537116280)
 
 def mixedBudget (top : Fin 1) : ℕ :=
   let (b, j, r) := mixedCoefficients top
@@ -224,7 +224,7 @@ private theorem count_by_nodes {α ι : Type*} [Fintype ι] [DecidableEq ι] (T 
     _ ≤ ∑ _ : ι, d := Finset.sum_le_sum fun i _ => hcap i
     _ = Fintype.card ι * d := by simp
 theorem nodeCapacity_count {w Γ s d} (h : Messages w Γ s)
-    (hc : NodeCapacity w Γ s d) : 48854 * Γ.card ≤ 82219 * d + 48854 := by
+    (hc : NodeCapacity w Γ s d) : 48844 * Γ.card ≤ 82229 * d + 48844 := by
   classical
   by_cases hsmall : Γ.card ≤ 1
   · omega
@@ -235,7 +235,7 @@ theorem nodeCapacity_count {w Γ s d} (h : Messages w Γ s)
   let U : Finset I := Finset.univ \ persistent
   let hits (γ : K) : Finset I := Finset.univ.filter fun i => (s γ).eval (node i) = w i
   let supports (γ : K) : Finset U := (hits γ \ persistent).subtype (· ∈ U)
-  let a : ℕ := 179925 - persistent.card
+  let a : ℕ := 179915 - persistent.card
   let b : ℕ := 131071 - persistent.card
   have hU : Fintype.card U = 262144 - persistent.card := by
     rw [Fintype.card_coe]
@@ -289,24 +289,24 @@ theorem nodeCapacity_count {w Γ s d} (h : Messages w Γ s)
   have hincNat := count_by_nodes Γ supports hsize hcap
   let l : ℤ := Γ.card
   let x : ℤ := a
-  have hb : (b : ℤ) = x - 48854 := by
+  have hb : (b : ℤ) = x - 48844 := by
     dsimp [b, x, a]
-    push_cast [Nat.cast_sub hpN, Nat.cast_sub (hpN.trans (by decide : 131071 ≤ 179925))]
+    push_cast [Nat.cast_sub hpN, Nat.cast_sub (hpN.trans (by decide : 131071 ≤ 179915))]
     ring
-  have hu : (Fintype.card U : ℤ) = x + 82219 := by
+  have hu : (Fintype.card U : ℤ) = x + 82229 := by
     rw [hU]
     dsimp [x, a]
     push_cast [Nat.cast_sub (hpN.trans (by decide : 131071 ≤ 262144)),
-      Nat.cast_sub (hpN.trans (by decide : 131071 ≤ 179925))]
+      Nat.cast_sub (hpN.trans (by decide : 131071 ≤ 179915))]
     ring
-  have hinc' : l * x ≤ (x + 82219) * (d : ℤ) := by
+  have hinc' : l * x ≤ (x + 82229) * (d : ℤ) := by
     rw [← hu]
     dsimp only [l, x]
     exact_mod_cast hincNat
-  have hinc : (l - (d : ℤ)) * x ≤ 82219 * d := by nlinarith only [hinc']
+  have hinc : (l - (d : ℤ)) * x ≤ 82229 * d := by nlinarith only [hinc']
   by_contra! hbadNat
-  have hbad : 82219 * (d : ℤ) < (l - 1) * 48854 := by
-    have hc : 82219 * (d : ℤ) + 48854 < 48854 * l := by
+  have hbad : 82229 * (d : ℤ) < (l - 1) * 48844 := by
+    have hc : 82229 * (d : ℤ) + 48844 < 48844 * l := by
       dsimp only [l]
       exact_mod_cast hbadNat
     linarith only [hc]
@@ -315,11 +315,11 @@ theorem nodeCapacity_count {w Γ s d} (h : Messages w Γ s)
     dsimp [l]
     exact_mod_cast (show 0 < Γ.card by omega)
   have hk : 0 < l - (d : ℤ) := by linarith only [hbad, hd0]
-  have hcoef : 33365 * (d : ℤ) < (l - (d : ℤ)) * 48854 := by linarith only [hbad]
-  have hden : 0 < 82219 * 48854 - 33365 * x := by
-    have hle := mul_le_mul_of_nonneg_left hinc (by decide : (0 : ℤ) ≤ 33365)
-    have hlt := mul_lt_mul_of_pos_right hcoef (by decide : (0 : ℤ) < 82219)
-    have hpos : 0 < (l - (d : ℤ)) * (82219 * 48854 - 33365 * x) := by
+  have hcoef : 33385 * (d : ℤ) < (l - (d : ℤ)) * 48844 := by linarith only [hbad]
+  have hden : 0 < 82229 * 48844 - 33385 * x := by
+    have hle := mul_le_mul_of_nonneg_left hinc (by decide : (0 : ℤ) ≤ 33385)
+    have hlt := mul_lt_mul_of_pos_right hcoef (by decide : (0 : ℤ) < 82229)
+    have hpos : 0 < (l - (d : ℤ)) * (82229 * 48844 - 33385 * x) := by
       nlinarith only [hle, hlt]
     exact pos_of_mul_pos_right hpos hk.le
   have hdenNat : Fintype.card U * b < a * a := by
@@ -328,7 +328,7 @@ theorem nodeCapacity_count {w Γ s d} (h : Messages w Γ s)
       nlinarith only [hden]
     dsimp only [x] at hi
     exact_mod_cast hi
-  have hba : b ≤ a := Nat.sub_le_sub_right (by decide : 131071 ≤ 179925) _
+  have hba : b ≤ a := Nat.sub_le_sub_right (by decide : 131071 ≤ 179915) _
   have hj := Finset.card_mul_sq_sub_card_mul_le_of_inter_card_le
     Γ supports a b hba hdenNat hsize hpair
   have hjInt : l * ((a * a - Fintype.card U * b : ℕ) : ℤ) ≤
@@ -337,24 +337,24 @@ theorem nodeCapacity_count {w Γ s d} (h : Messages w Γ s)
     exact_mod_cast hj
   push_cast [Nat.cast_sub hba, Nat.cast_sub hdenNat.le] at hjInt
   rw [hu, hb] at hjInt
-  have hj' : (l - 1) * 82219 * 48854 ≤ (33365 * l + 48854) * x := by
+  have hj' : (l - 1) * 82229 * 48844 ≤ (33385 * l + 48844) * x := by
     nlinarith only [hjInt]
   have hle := mul_le_mul_of_nonneg_left hj' hk.le
   have hle' := mul_le_mul_of_nonneg_left hinc
-    (show 0 ≤ 33365 * l + 48854 by linarith only [hl0])
+    (show 0 ≤ 33385 * l + 48844 by linarith only [hl0])
   have hpos := mul_lt_mul_of_pos_left hbad
-    (show 0 < 82219 * l by linarith only [hl0])
+    (show 0 < 82229 * l by linarith only [hl0])
   nlinarith only [hle, hle', hpos]
 theorem nodeFamily_count {w Γ s} (C : NodeFamily w Γ s) (h : Messages w Γ s) :
-    48854 * C.labels.card ≤ 82219 * C.totalCap + 48854 * C.n := by
+    48844 * C.labels.card ≤ 82229 * C.totalCap + 48844 * C.n := by
   classical
   calc
-    48854 * C.labels.card ≤ 48854 * ∑ i, (C.part i).card :=
+    48844 * C.labels.card ≤ 48844 * ∑ i, (C.part i).card :=
       Nat.mul_le_mul_left _ Finset.card_biUnion_le
-    _ = ∑ i, 48854 * (C.part i).card := by rw [Finset.mul_sum]
-    _ ≤ ∑ i, (82219 * C.cap i + 48854) := by
+    _ = ∑ i, 48844 * (C.part i).card := by rw [Finset.mul_sum]
+    _ ≤ ∑ i, (82229 * C.cap i + 48844) := by
       exact Finset.sum_le_sum fun i _ => nodeCapacity_count (h.mono (C.sub i)) (C.localCapacity i)
-    _ = 82219 * C.totalCap + 48854 * C.n := by
+    _ = 82229 * C.totalCap + 48844 * C.n := by
       simp [NodeFamily.totalCap, Finset.sum_add_distrib, Finset.mul_sum, Nat.mul_comm]
 end
 end Scalar50LeadingLower
@@ -783,7 +783,7 @@ theorem factor_cover (g : Row 3) (hg : LowerRow g) :
       ∀ S : Geom[X], atJet g S = 0 →
         atJet q S = 0 ∨ ∃ i, RegularAt 2 (f i) S := by
   classical
-  obtain ⟨hg₀, hgt₀, hgi₀, hgw⟩ := hg
+  obtain ⟨hg₀, hgt₀, hgi₀, hgc, hgw⟩ := hg
   change g.totalDegree ≤ lowerWidth top at hgt₀
   change indexDegree g ≤ lowerIndex top at hgi₀
   let _ : StrongNormalizationMonoid (Row 3) := UniqueFactorizationMonoid.strongNormalizationMonoid
@@ -806,17 +806,15 @@ theorem factor_cover (g : Row 3) (hg : LowerRow g) :
     sum_weightedTotalDegree_le_of_prod_dvd w T id hg₀ hdvd
   have htop (a : Row 3) : c a = a.degreeOf 2 := view_degree a
   have hc : ∑ a ∈ T, c a ≤ lowerTop top := by
-    have hbound : g.weightedTotalDegree (fun i => i.val) ≤ lowerIndex top :=
-      (K1_13_1.indexDegree_eq g) ▸ hgi₀
-    have h : 2 * (∑ a ∈ T, c a) ≤ lowerIndex top := calc
-      _ = ∑ a ∈ T, (2 * c a) := Finset.mul_sum T c 2
-      _ ≤ ∑ a ∈ T, a.weightedTotalDegree (fun i => i.val) := by
-        apply Finset.sum_le_sum
-        intro a _
-        exact (Nat.le_add_left _ _).trans (view_coeff_weight (fun i => i.val) a (c a) le_rfl)
-      _ ≤ _ := (hsum _).trans hbound
-    unfold lowerTop
-    omega
+    obtain ⟨v, hv⟩ := hdvd
+    have hprod := Finset.prod_ne_zero_iff.mpr fun a ha => (hirr a ha).ne_zero
+    have hv₀ : v ≠ 0 := fun hz => hg₀ (by simp [hv, hz])
+    calc
+      _ = ∑ a ∈ T, a.degreeOf 2 := Finset.sum_congr rfl fun a _ => htop a
+      _ = (∏ a ∈ T, a).degreeOf 2 :=
+        (degreeOf_prod_eq T (fun a => a) (fun a ha => (hirr a ha).ne_zero)).symm
+      _ ≤ g.degreeOf 2 := by rw [hv, degreeOf_mul_eq hprod hv₀]; exact Nat.le_add_right _ _
+      _ ≤ _ := hgc
   have hr : lowerTop top < K1.p := by fin_cases top <;> decide
   have he₀ (a : Row 3) (ha : a ∈ T) : elimination a ≠ 0 := by
     have hca := (Finset.single_le_sum (fun i _ => Nat.zero_le (c i)) ha).trans hc
@@ -847,9 +845,7 @@ theorem factor_cover (g : Row 3) (hg : LowerRow g) :
     exact h
   have hqindex : indexDegree q ≤ firstIndex top := by
     rw [K1_13_1.indexDegree_eq] at hgi₀ ⊢
-    have hbudget : (2 : ℕ) * lowerTop top ≤ lowerIndex top := by
-      unfold lowerTop
-      omega
+    have hbudget : (2 : ℕ) * lowerTop top ≤ lowerIndex top := by fin_cases top <;> decide
     exact hq (fun i => i.val) (lowerIndex top) hgi₀ hbudget
   have hsub (d : Row 3 → ℕ) : (∑ i, d (f i)) ≤ ∑ a ∈ T, d a := by
     calc
@@ -1288,7 +1284,7 @@ private theorem roots_card_le {w Γ s} (h : Messages w Γ s) (u : Geom[X][X]) (h
   exact hb
 private theorem first_count {w Γ s} (h : Messages w Γ s)
     (q : Row 2) (hq : FirstRow top q) (hr : ∀ γ ∈ Γ, atJet q (extend (s γ)) = 0) :
-    48854 * Γ.card ≤ 82219 * (firstMixedBudget top) + 48854 * ((firstWidth top) * (firstWidth top)) := by
+    48844 * Γ.card ≤ 82229 * (firstMixedBudget top) + 48844 * ((firstWidth top) * (firstWidth top)) := by
   classical
   obtain ⟨n, f, u, hf, hu, hd, hc⟩ := Scalar50LeadingFirst.proof q hq
   let ordinary := Γ.filter fun γ => u.eval (extend (s γ)) = 0
@@ -1299,7 +1295,7 @@ private theorem first_count {w Γ s} (h : Messages w Γ s)
   obtain ⟨C, hC, hn, hcap⟩ := first_order_cover (h.mono (Δ := regular) (Finset.filter_subset _ _)) f hf
     (fun _ hγ => (Finset.mem_filter.mp hγ).2)
   have hr₁ := nodeFamily_count C (h.mono (Finset.filter_subset _ _))
-  have hr₁' : 48854 * regular.card ≤ 82219 * C.totalCap + 48854 * C.n :=
+  have hr₁' : 48844 * regular.card ≤ 82229 * C.totalCap + 48844 * C.n :=
     (Nat.mul_le_mul_left _ (Finset.card_le_card hC)).trans hr₁
   have covers : Γ ⊆ ordinary ∪ regular := by
     intro γ hγ
@@ -1315,7 +1311,7 @@ private theorem first_count {w Γ s} (h : Messages w Γ s)
       _ = _ := by rw [← Nat.mul_add, Nat.sub_add_cancel hw]
   omega
 private theorem proper_count {w Γ s} (C : ProperCover top w Γ s) (h : Messages w Γ s) :
-    48854 * Γ.card ≤ 48854 * mixedBudget top + (82219 + 2 * 48854) * (invariantBudget top) := by
+    48844 * Γ.card ≤ 48844 * mixedBudget top + (82229 + 2 * 48844) * (invariantBudget top) := by
   classical
   have hm := nodeFamily_count C.multiple h
   have hi := nodeFamily_count C.invariant h
@@ -1340,7 +1336,7 @@ theorem of_children (h1 : c1 top) (h2 : c2 top) : Scalar50LeadingPrice.c5 top :=
   have hproper := proper_count P hpmsg
   have hwmsg := h.mono (Δ := whole) (Finset.filter_subset _ _)
   obtain ⟨W, hW, hn, hcap⟩ := h2 w whole s hwmsg n f hf (fun _ hγ => (Finset.mem_filter.mp hγ).2)
-  have hwhole : 48854 * whole.card ≤ 82219 * W.totalCap + 48854 * W.n :=
+  have hwhole : 48844 * whole.card ≤ 82229 * W.totalCap + 48844 * W.n :=
     (Nat.mul_le_mul_left _ (Finset.card_le_card hW)).trans (nodeFamily_count W hwmsg)
   have covers : Γ ⊆ first ∪ proper ∪ whole := by
     intro γ hγ
@@ -1353,9 +1349,9 @@ theorem of_children (h1 : c1 top) (h2 : c2 top) : Scalar50LeadingPrice.c5 top :=
   have htotal := (Finset.card_le_card covers).trans
     ((Finset.card_union_le _ _).trans
       (Nat.add_le_add_right (Finset.card_union_le _ _) _))
-  have hnumeric : 82219 * (firstMixedBudget top) + 48854 * ((firstWidth top) * (firstWidth top)) +
-      (48854 * mixedBudget top + (82219 + 2 * 48854) * (invariantBudget top)) +
-      (82219 * (131071 * Scalar50LeadingPrice.lowerWidth top) + 48854 * Scalar50LeadingPrice.lowerWidth top) ≤ 48854 * lowerCap top := by
+  have hnumeric : 82229 * (firstMixedBudget top) + 48844 * ((firstWidth top) * (firstWidth top)) +
+      (48844 * mixedBudget top + (82229 + 2 * 48844) * (invariantBudget top)) +
+      (82229 * (131071 * Scalar50LeadingPrice.lowerWidth top) + 48844 * Scalar50LeadingPrice.lowerWidth top) ≤ 48844 * lowerCap top := by
     fin_cases top <;> decide
   omega
 end

@@ -122,6 +122,142 @@ private instance (s : Stage) : Decidable (GoodStage s) := by
 section
 set_option maxHeartbeats 0
 set_option maxRecDepth 16000
+private theorem cheapCert_0 : Certificate ⟨59,82,18,1899⟩ 0 0 := by
+  unfold Certificate
+  decide +kernel
+private theorem layeredCert_0 : Certificate ⟨136,190,40,8441⟩ 0 1 := by
+  unfold Certificate
+  decide +kernel
+private theorem cheapCert_1 : Certificate ⟨66,92,21,2076⟩ 1 0 := by
+  unfold Certificate
+  decide +kernel
+private theorem layeredCert_1 : Certificate ⟨150,210,44,9356⟩ 1 1 := by
+  unfold Certificate
+  decide +kernel
+private theorem cheapCert_2 : Certificate ⟨73,102,23,2261⟩ 2 0 := by
+  unfold Certificate
+  decide +kernel
+private theorem layeredCert_2 : Certificate ⟨164,229,48,10272⟩ 2 1 := by
+  unfold Certificate
+  decide +kernel
+private theorem cheapCert_3 : Certificate ⟨80,112,25,2455⟩ 3 0 := by
+  unfold Certificate
+  decide +kernel
+private theorem layeredCert_3 : Certificate ⟨178,249,52,11191⟩ 3 1 := by
+  unfold Certificate
+  decide +kernel
+private theorem cheapCert_5 : Certificate ⟨94,131,30,2824⟩ 5 0 := by
+  unfold Certificate
+  decide +kernel
+private theorem layeredCert_5 : Certificate ⟨213,298,62,12959⟩ 5 1 := by
+  unfold Certificate
+  decide +kernel
+private theorem cheapCert_8 : Certificate ⟨115,160,36,3401⟩ 8 0 := by
+  unfold Certificate
+  decide +kernel
+private theorem layeredCert_8 : Certificate ⟨262,366,77,15611⟩ 8 1 := by
+  unfold Certificate
+  decide +kernel
+private theorem cheapCert_12 : Certificate ⟨136,190,43,4204⟩ 12 0 := by
+  unfold Certificate
+  decide +kernel
+private theorem layeredCert_12 : Certificate ⟨325,454,96,19187⟩ 12 1 := by
+  unfold Certificate
+  decide +kernel
+private theorem cheapCert_18 : Certificate ⟨178,248,56,5332⟩ 18 0 := by
+  unfold Certificate
+  decide +kernel
+private theorem layeredCert_18 : Certificate ⟨409,572,121,24615⟩ 18 1 := by
+  unfold Certificate
+  decide +kernel
+private theorem cheapCert_28 : Certificate ⟨241,336,78,7235⟩ 28 0 := by
+  unfold Certificate
+  decide +kernel
+private theorem layeredCert_28 : Certificate ⟨570,797,169,33523⟩ 28 1 := by
+  unfold Certificate
+  decide +kernel
+private theorem cheapCert_42 : Certificate ⟨325,453,104,9976⟩ 42 0 := by
+  unfold Certificate
+  decide +kernel
+private theorem layeredCert_42 : Certificate ⟨759,1061,224,46271⟩ 42 1 := by
+  unfold Certificate
+  decide +kernel
 end
+private theorem stageConsChecked {s : Stage} {tail : List Stage}
+    (hs : GoodStage s) (ht : tail.all (fun t => decide (GoodStage t)) = true) :
+    (s :: tail).all (fun t => decide (GoodStage t)) = true := by
+  simpa only [List.all_cons, decide_eq_true hs, Bool.true_and] using ht
+private theorem check_stages : stages.all (fun s => decide (GoodStage s)) = true := by
+  refine stageConsChecked ?_ ?_
+  · exact ⟨cheapCert_0, layeredCert_0, by decide⟩
+  refine stageConsChecked ?_ ?_
+  · exact ⟨cheapCert_1, layeredCert_1, by decide⟩
+  refine stageConsChecked ?_ ?_
+  · exact ⟨cheapCert_2, layeredCert_2, by decide⟩
+  refine stageConsChecked ?_ ?_
+  · exact ⟨cheapCert_3, layeredCert_3, by decide⟩
+  refine stageConsChecked ?_ ?_
+  · exact ⟨cheapCert_5, layeredCert_5, by decide⟩
+  refine stageConsChecked ?_ ?_
+  · exact ⟨cheapCert_8, layeredCert_8, by decide⟩
+  refine stageConsChecked ?_ ?_
+  · exact ⟨cheapCert_12, layeredCert_12, by decide⟩
+  refine stageConsChecked ?_ ?_
+  · exact ⟨cheapCert_18, layeredCert_18, by decide⟩
+  refine stageConsChecked ?_ ?_
+  · exact ⟨cheapCert_28, layeredCert_28, by decide⟩
+  refine stageConsChecked ?_ ?_
+  · exact ⟨cheapCert_42, layeredCert_42, by decide⟩
+  rfl
+private theorem affine_positive {a b h : ℤ} (hlo : 2601 ≤ h) (hhi : h ≤ 3554)
+    (ha : 0 < a + 2601 * b) (hb : 0 < a + 3554 * b) : 0 < a + h * b := by
+  by_cases hb0 : 0 ≤ b
+  · nlinarith only [ha, mul_nonneg (sub_nonneg.mpr hlo) hb0]
+  · nlinarith only [hb, mul_nonneg (sub_nonneg.mpr hhi) (neg_nonneg.mpr (le_of_not_ge hb0))]
+private theorem test (h r mode : ℕ) (s : Shape) (hlo : 2601 ≤ h) (hhi : h ≤ 3554)
+    (hc : Certificate s r mode) :
+    s.B * (131071 - h) < cutoffCount h r s ∧
+      sourceDebit h s + mode * movingCeiling h s < rawVolume h r s := by
+  have hh : h ≤ 131071 := by omega
+  have hloI : (2601 : ℤ) ≤ (h : ℤ) := by exact_mod_cast hlo
+  have hhiI : (h : ℤ) ≤ 3554 := by exact_mod_cast hhi
+  obtain ⟨ha, hb, hc, hd⟩ := hc
+  have hw := affine_positive hloI hhiI ha hb
+  unfold worstBase worstSlope at hw
+  have hpos : (s.B : ℤ) * (131071 - (h : ℤ)) <
+      (s.m : ℤ) * 180265 - 2 * (h : ℤ) * r := by nlinarith only [hw]
+  have hbuf : 2 * h * r ≤ s.m * 180265 := by
+    have hn : 0 ≤ (s.B : ℤ) * (131071 - (h : ℤ)) := by
+      exact mul_nonneg (Int.natCast_nonneg _) (by omega)
+    have ht : 2 * (h : ℤ) * r ≤ (s.m : ℤ) * 180265 := by linarith only [hpos, hn]
+    exact_mod_cast ht
+  have hwidth : s.B * (131071 - h) < cutoffCount h r s := by
+    unfold cutoffCount
+    have ht : ((s.B * (131071 - h) : ℕ) : ℤ) <
+        ((s.m * 180265 - 2 * h * r : ℕ) : ℤ) := by
+      push_cast [Nat.cast_sub hh, Nat.cast_sub hbuf]
+      exact hpos
+    exact_mod_cast ht
+  have hs := affine_positive hloI hhiI hc hd
+  have heq := volume_eq h r mode s hh hwidth
+  unfold surplusBase surplusSlope at hs
+  refine ⟨hwidth, ?_⟩
+  have ht : ((sourceDebit h s + mode * movingCeiling h s : ℕ) : ℤ) <
+      (rawVolume h r s : ℤ) := by
+    rw [debit_eq]
+    push_cast
+    nlinarith only [hs, heq]
+  exact_mod_cast ht
+theorem native_tests {h : ℕ} (hlo : 2601 ≤ h) (hhi : h ≤ 3554) {s : Stage}
+    (hs : s ∈ stages) :
+    (s.cheap.B * (131071 - h) < cutoffCount h s.reserve s.cheap ∧
+      sourceDebit h s.cheap < rawVolume h s.reserve s.cheap) ∧
+    (s.layered.B * (131071 - h) < cutoffCount h s.reserve s.layered ∧
+      sourceDebit h s.layered + movingCeiling h s.layered < rawVolume h s.reserve s.layered) ∧
+    s.cheap.U < p := by
+  have hc : GoodStage s := of_decide_eq_true ((List.all_eq_true.mp check_stages) s hs)
+  obtain ⟨hcheap, hlayered, hseed⟩ := hc
+  exact ⟨by simpa using test h s.reserve 0 s.cheap hlo hhi hcheap,
+    by simpa using test h s.reserve 1 s.layered hlo hhi hlayered, hseed⟩
 end K1_14_2_1
 end

@@ -117,48 +117,48 @@ private theorem volume_eq (b : Bank) (h : ℕ) :
   simp only [width, rawVolume, moment, credit, jetSum, sum_mul, ← sum_add_distrib]
   refine sum_congr rfl fun q _ => sum_congr rfl fun k _ => sum_congr rfl fun l _ => ?_
   ring
-private theorem first_raw : rawVolume .first = 2808756546955348020 := by
-  change moment 6789 3788581 1 131071 0 = _
-  refine moment_eq 6789 3788581 1 131071 0 _ (by decide) ?_
-  change antidifference (slice 6789 3788581 1 131071 0) 1151 = _
-  have h0 : slice 6789 3788581 1 131071 0 0 = 707279419678880880 := by decide
-  have h1 : slice 6789 3788581 1 131071 0 1 = 706648029964691760 := by decide
-  have h2 : slice 6789 3788581 1 131071 0 2 = 706016683638432864 := by decide
-  have h3 : slice 6789 3788581 1 131071 0 3 = 705385380662356320 := by decide
-  have h4 : slice 6789 3788581 1 131071 0 4 = 704754120998714256 := by decide
+private theorem first_raw : rawVolume .first = 2808662087478223140 := by
+  change moment 6789 3775939 1 131071 0 = _
+  refine moment_eq 6789 3775939 1 131071 0 _ (by decide) ?_
+  change antidifference (slice 6789 3775939 1 131071 0) 1151 = _
+  have h0 : slice 6789 3775939 1 131071 0 0 = 707255794560098160 := by decide
+  have h1 : slice 6789 3775939 1 131071 0 1 = 706624425380562480 := by decide
+  have h2 : slice 6789 3775939 1 131071 0 2 = 705993099588957024 := by decide
+  have h3 : slice 6789 3775939 1 131071 0 3 = 705361817147533920 := by decide
+  have h4 : slice 6789 3775939 1 131071 0 4 = 704730578018545296 := by decide
   unfold antidifference
   rw [h0, h1, h2, h3, h4]
   decide
-private theorem second_raw : rawVolume .second = 2829830673664885167 := by
-  change moment 6820 2521167 1 131071 0 = _
-  refine moment_eq 6820 2521167 1 131071 0 _ (by decide) ?_
-  change antidifference (slice 6820 2521167 1 131071 0) 1151 = _
-  have h0 : slice 6820 2521167 1 131071 0 0 = 712550234107874448 := by decide
-  have h1 : slice 6820 2521167 1 131071 0 1 = 711914263078933728 := by decide
-  have h2 : slice 6820 2521167 1 131071 0 2 = 711278335437905376 := by decide
-  have h3 : slice 6820 2521167 1 131071 0 3 = 710642451147041520 := by decide
-  have h4 : slice 6820 2521167 1 131071 0 4 = 710006610168594288 := by decide
+private theorem second_raw : rawVolume .second = 2829290320015851434 := by
+  change moment 6820 2449244 1 131071 0 = _
+  refine moment_eq 6820 2449244 1 131071 0 _ (by decide) ?_
+  change antidifference (slice 6820 2449244 1 131071 0) 1151 = _
+  have h0 : slice 6820 2449244 1 131071 0 0 = 712415087063536896 := by decide
+  have h1 : slice 6820 2449244 1 131071 0 1 = 711779233502692080 := by decide
+  have h2 : slice 6820 2449244 1 131071 0 2 = 711143423329759632 := by decide
+  have h3 : slice 6820 2449244 1 131071 0 3 = 710507656506991680 := by decide
+  have h4 : slice 6820 2449244 1 131071 0 4 = 709871932996640352 := by decide
   unfold antidifference
   rw [h0, h1, h2, h3, h4]
   decide
 private theorem endpoint (b : Bank) :
-    targetRank b + 262144 * (70001 * b.nodeRank) + 2404 * extra b.box.b ≤
+    targetRank b + 262144 * (70001 * b.nodeRank) + 2353 * extra b.box.b ≤
       70001 * rawVolume b := by
   obtain ⟨_, _, hfirst, hsecond⟩ := bank_moments
   cases b
   · have he : extra Bank.first.box.b = 0x1cc973f372d9cdc := hfirst
-    have ha : (1 : ℕ) + 262144 * (70001 * 0x9bab8f5dfb7) + 2404 * 0x1cc973f372d9cdc ≤
-        70001 * 2808756546955348020 := by decide
+    have ha : (1 : ℕ) + 262144 * (70001 * 0x9bab8f5dfb7) + 2353 * 0x1cc973f372d9cdc ≤
+        70001 * 2808662087478223140 := by decide
     exact (congrArg₂ (fun x y : ℕ =>
-      targetRank Bank.first + 262144 * (70001 * Bank.first.nodeRank) + 2404 * x ≤ 70001 * y)
+      targetRank Bank.first + 262144 * (70001 * Bank.first.nodeRank) + 2353 * x ≤ 70001 * y)
       he first_raw).mpr ha
   · have he : extra Bank.second.box.b = 0x1d32fca954a0ef7 := hsecond
-    have ha : (1466863566769454252155 : ℕ) + 262144 * (70001 * 0x9bac59312df) +
-        2404 * 0x1d32fca954a0ef7 ≤ 70001 * 2829830673664885167 := by decide
+    have ha : (1435744580951965830001 : ℕ) + 262144 * (70001 * 0x9bac59312df) +
+        2353 * 0x1d32fca954a0ef7 ≤ 70001 * 2829290320015851434 := by decide
     exact (congrArg₂ (fun x y : ℕ =>
-      targetRank Bank.second + 262144 * (70001 * Bank.second.nodeRank) + 2404 * x ≤ 70001 * y)
+      targetRank Bank.second + 262144 * (70001 * Bank.second.nodeRank) + 2353 * x ≤ 70001 * y)
       he second_raw).mpr ha
-theorem budget (b : Bank) (h : ℕ) (hh : h ≤ 2404) :
+theorem budget (b : Bank) (h : ℕ) (hh : h ≤ 2353) :
     targetRank b + 262144 * (70001 * b.nodeRank) + h * poleDebit b.box ≤
       70001 * jetSum b.box.b (width b h) := by
   have he := endpoint b
@@ -183,7 +183,7 @@ private theorem simple_pole_bound : K1_13_4_2.c3 :=
 private theorem deformation_bound : K1_13_4_2.c4 :=
   K1_13_4_2_4.of_children K1_13_4_2_4_1.proof K1_13_4_2_4_2.proof
 private theorem rank_of_bounds (b : Bank) (w : I → K) {Γ s}
-    (P : PoleData Γ s) (L : ResidueChart P) (hh : P.H.natDegree ≤ 2404) :
+    (P : PoleData Γ s) (L : ResidueChart P) (hh : P.H.natDegree ≤ 2353) :
     HasRank w P L b.box (cut b) (targetRank b) := by
   classical
   obtain ⟨V, hV, hbox, hdimV⟩ := ambient b P.H.natDegree

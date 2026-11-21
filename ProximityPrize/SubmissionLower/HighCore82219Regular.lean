@@ -1,26 +1,9 @@
 import ProximityPrize.SubmissionLower.HighCore82219Family
-import ProximityPrize.SubmissionLower.HighCore82706Tangent
+import ProximityPrize.SubmissionLower.HighCore82219UpperCertificates
 
 set_option Elab.async false
 set_option autoImplicit true
 set_option maxRecDepth 18000
-
-namespace HighCore82219
-
-def asLooseModel {u del} (M : AnchorModel u del) : FrontCore82706.AnchorModel u del :=
-  { M with height_bound := M.height_bound.trans (by decide) }
-
-def asLooseFamily {u del} (M : AnchorModel u del) {Γ} (F : AnchoredFamily M Γ) :
-    FrontCore82706.AnchoredFamily (asLooseModel M) Γ where
-  scalar := F.scalar
-  distinct := F.distinct
-  mark γ hγ := by
-    let m := F.mark γ hγ
-    let B : P1.BadMarkAt HighCore82706.agreement u γ :=
-      { m.bad with agreement := (by decide : HighCore82706.agreement ≤ agreement).trans m.bad.agreement }
-    exact ⟨B, m.avoids_deleted, m.scalar_fixed, m.scalar_degree, m.scalar_hits, m.pole_unit, m.identity⟩
-
-end HighCore82219
 
 section
 set_option autoImplicit false
@@ -28,8 +11,7 @@ namespace HighCore82219_5
 noncomputable section
 open HighCore82219 (agreement blockLength)
 open HighCore82219 (degreeAt quotientOrder gap scale muNum lambdaNum properFee)
-open P1_7_8 (mu_cross lambda_cross)
-open HighCore82706Tangent (Input cutSeed cutVelocity cutOrdinate ratio_le_ceil)
+open HighCore82219Upper (Input cutSeed cutVelocity cutOrdinate ratio_le_ceil mu_cross lambda_cross)
 def nodeVelocity (J : Input) : ℕ := lambdaNum J.hi * quotientOrder J.lo
 def nodeReducedOrdinate (J : Input) : ℕ := muNum J.hi + (J.e-3)*nodeVelocity J
 def nodeSeed (J : Input) : ℕ := nodeVelocity J*J.v + 2*J.hi*muNum J.hi
@@ -154,8 +136,8 @@ theorem section_capacity {w T s d} (h : FixedWord w T s d) (hd : d < agreement) 
   have hx : agreement - d ≤ x := by dsimp [x]; omega
   have hnodes : nodes.card = x + HighCore82219.t := by
     rw [card_sdiff_of_subset (subset_univ common), card_univ, IRSProfile.card_index]
-    change 262144 - common.card = (179925 - common.card) + 82219
-    have hbound : common.card ≤ 179925 := hcommon.trans hd.le
+    change 262144 - common.card = (179915 - common.card) + 82229
+    have hbound : common.card ≤ 179915 := hcommon.trans hd.le
     omega
   have exists_trim (γ : K) : ∃ B : Finset I, γ ∈ T → B ⊆ hits γ \ common ∧ B.card = x := by
     by_cases hγ : γ ∈ T
@@ -210,10 +192,10 @@ open HighCore82219 (K I agreement blockLength node p)
 open HighCore82219 (FixedWord degreeAt gap scale muNum properFee flatFee)
 open K1_14 (Equation graphEval)
 open K1_14_4 (seedDegree)
-open HighCore82706Tangent (Input ResidueLift Factors ProperCurve ProperCover FlatSections
+open HighCore82219Upper (Input ResidueLift Factors ProperCurve ProperCover FlatSections
   card_le_cover componentMarks mem_componentMarks root_component
   ratio_le_ceil)
-open private persistent_le_degree from ProximityPrize.SubmissionLower.HighCore82706TangentDeps
+open private persistent_le_degree from ProximityPrize.SubmissionLower.HighCore82219UpperGeometry
 open scoped BigOperators
 private theorem restrict_word {word U scalar d} (hword : FixedWord word U scalar d)
     {V : Finset K} (hV : V ⊆ U) : FixedWord word V scalar d :=
@@ -384,10 +366,10 @@ set_option autoImplicit false
 namespace HighCore82219_5
 open HighCore82219 (p agreement start finish)
 open HighCore82219 (degreeAt quotientOrder window_nat terminal_guards grade_checked
-  asLooseModel asLooseFamily FixedWord)
-open HighCore82706Tangent (Input)
-def c1 : Prop := HighCore82706Tangent_3_1.c2
-def c2 : Prop := HighCore82706Tangent_3_2.c4
+  FixedWord)
+open HighCore82219Upper (Input)
+def c1 : Prop := HighCore82219Upper_3_1.c2
+def c2 : Prop := HighCore82219Upper_3_2.c4
 theorem of_children (inverse : c1) (profiles : c2) : HighCore82219.c5 := by
   intro b u del M Γ F hw hshift H hH i f hred he hlarge hpos hseed T hT hreg
   obtain ⟨hl, hu⟩ := window_nat hw
@@ -396,45 +378,44 @@ theorem of_children (inverse : c1) (profiles : c2) : HighCore82219.c5 := by
   have hell : 0 < quotientOrder M.overhead.toNat := by
     change 0 < 131071 - M.overhead.toNat
     omega
-  have hd : degreeAt (finish b) ≤ 164436 := Nat.add_le_add_left hhi 131071
-  have hgap₁ : degreeAt (finish b) < HighCore82706.agreement := hd.trans_lt (by decide)
+  have hd : degreeAt (finish b) ≤ 164456 := Nat.add_le_add_left hhi 131071
   have hgap₃ : degreeAt (finish b) < agreement := hd.trans_lt (by decide)
   have hfac : degreeAt (finish b) + 1 < p :=
-    (Nat.succ_le_of_lt hgap₁).trans_lt (by decide)
+    (Nat.succ_le_of_lt hgap₃).trans_lt (by decide)
   have hc := grade_checked b i
   rw [← he] at hc
   let J : Input := {
-    words := u, deleted := del, model := asLooseModel M, labels := Γ, family := asLooseFamily M F
+    words := u, deleted := del, model := M, labels := Γ, family := F
     shift_out := hshift, block := H, chart := hH, marks := T, marks_sub := hT
     f := f, regular := hreg, reduced := hred, sheets := hlarge, seed_pos := hpos
     v := ((HighCore82219.grades b).get i).seedCap, seed_bound := hseed
     lo := (start b), hi := (finish b), lower := hl, upper := hu, positive := h
-    quotient_pos := hell, agreement_gap := hgap₁, factorial_guard := hfac
+    quotient_pos := hell, agreement_gap := hgap₃, factorial_guard := hfac
     separant_guard := hc.separant, flat_guard := hc.flat }
-  have hweak := HighCore82706Tangent.fixed_word J (Finset.Subset.refl J.marks)
+  have hweak := HighCore82219Upper.fixed_word J (Finset.Subset.refl J.marks)
   have hword : FixedWord J.model.word J.marks J.family.scalar (degreeAt J.hi) :=
     ⟨hweak.distinct, hweak.degree, fun γ hγ => by
       let m := F.mark γ (hT hγ)
       exact ⟨m.bad.support, m.bad.agreement, m.scalar_hits⟩⟩
-  obtain ⟨B⟩ := HighCore82706Tangent_1.proof J
-  obtain ⟨D⟩ := HighCore82706Tangent_2.proof J B
-  have lift := HighCore82706Tangent_3_1.of_children HighCore82706Tangent_3_1_1.proof inverse
-  have mixed := HighCore82706Tangent_3_2.of_children HighCore82706Tangent_3_2_1.proof HighCore82706Tangent_3_2_2.proof
-    HighCore82706Tangent_3_2_3.proof profiles HighCore82706Tangent_3_2_5.proof HighCore82706Tangent_3_2_6.proof
-  have shorten := HighCore82706Tangent_3_3.of_children HighCore82706Tangent_3_3_1.proof HighCore82706Tangent_3_3_2.proof
-  obtain ⟨C⟩ := HighCore82706Tangent_3.of_children lift mixed shorten J B D
+  obtain ⟨B⟩ := HighCore82219Upper_1.proof J
+  obtain ⟨D⟩ := HighCore82219Upper_2.proof J B
+  have lift := HighCore82219Upper_3_1.of_children HighCore82219Upper_3_1_1.proof inverse
+  have mixed := HighCore82219Upper_3_2.of_children HighCore82219Upper_3_2_1.proof HighCore82219Upper_3_2_2.proof
+    HighCore82219Upper_3_2_3.proof profiles HighCore82219Upper_3_2_5.proof HighCore82219Upper_3_2_6.proof
+  have shorten := HighCore82219Upper_3_3.of_children HighCore82219Upper_3_3_1.proof HighCore82219Upper_3_3_2.proof
+  obtain ⟨C⟩ := HighCore82219Upper_3.of_children lift mixed shorten J B D
   apply count J hgap₃ hword C
   intro j
-  obtain ⟨E⟩ := HighCore82706Tangent_4.of_children HighCore82706Tangent_4_1.proof HighCore82706Tangent_4_2.proof J B D j
-  exact HighCore82706Tangent_5.of_children HighCore82706Tangent_5_1.proof HighCore82706Tangent_5_2.proof J B D j E
+  obtain ⟨E⟩ := HighCore82219Upper_4.of_children HighCore82219Upper_4_1.proof HighCore82219Upper_4_2.proof J B D j
+  exact HighCore82219Upper_5.of_children HighCore82219Upper_5_1.proof HighCore82219Upper_5_2.proof J B D j E
 end HighCore82219_5
 end
 
 namespace HighCore82219
 
 theorem tangent_count : c5 :=
-  HighCore82219_5.of_children HighCore82706_5_1.proof
-    (HighCore82706_5_2.of_children HighCore82706_5_2_1.proof HighCore82706_5_2_2.proof)
+  HighCore82219_5.of_children HighCore82219GeometryCert_1.proof
+    (HighCore82219GeometryCert_2.of_children HighCore82219GeometryCert_2_1.proof HighCore82219GeometryCert_2_2.proof)
 
 #print axioms tangent_count
 end HighCore82219

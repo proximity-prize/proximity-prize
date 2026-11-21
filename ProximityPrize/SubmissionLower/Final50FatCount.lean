@@ -29,9 +29,9 @@ def fatChart (x : Shape) : Shape :=
   if x.t = 1 then linearChart x.chamber else chart (taylorLength + 4) x.chamber
 def divisorBox : Shape :=
   ⟨commonBox.b + resultantBox.b / divisorOrder, commonBox.j + resultantBox.j / divisorOrder, 0⟩
-theorem divisorBox_eq : divisorBox = ⟨25266, 8451, 0⟩ := by
-  have hb : commonBox.b + resultantBox.b / divisorOrder = 25266 := by decide
-  have hj : commonBox.j + resultantBox.j / divisorOrder = 8451 := by decide
+theorem divisorBox_eq : divisorBox = ⟨24940, 8341, 0⟩ := by
+  have hb : commonBox.b + resultantBox.b / divisorOrder = 24940 := by decide
+  have hj : commonBox.j + resultantBox.j / divisorOrder = 8341 := by decide
   unfold divisorBox
   rw [hb, hj]
 def hypersurfacePrice (x : Shape) : ℕ :=
@@ -128,9 +128,9 @@ private theorem iter_mem_admissible {P : Lower} (hb : P.totalDegree ≤ resultan
     change fatOrder ≤ (m + Finsupp.single i a).degree at hord
     change residualOrder ≤ m.degree
     rw [map_add, Finsupp.degree_single] at hord
-    change a < 50082 at ha
-    change 54443 ≤ m.degree + a at hord
-    change 4362 ≤ m.degree
+    change a < 50954 at ha
+    change 55667 ≤ m.degree + a at hord
+    change 4714 ≤ m.degree
     omega
 private theorem proper_partial (P : Lower) (hP : P ≠ 0)
     (hb : P.totalDegree ≤ resultantBox.b) (hj : lowerIndex P ≤ resultantBox.j)
@@ -250,7 +250,7 @@ open private hasse_caps from ProximityPrize.SubmissionLower.Fast068
 open private support_mul_C_subset from ProximityPrize.SubmissionLower.Fast068
 private def thirdCuts (P Q : Row 3) : Submodule Geom (Row 3) where
   carrier := {R | LowerCaps R resultantBox.b resultantBox.j ∧
-    ∀ S : Geom[X], OrderAt P S 54443 → OrderAt Q S 4362 → OrderAt R S 596}
+    ∀ S : Geom[X], OrderAt P S 55667 → OrderAt Q S 4714 → OrderAt R S 645}
   zero_mem' := by
     constructor
     · simp [LowerCaps, indexDegree]
@@ -303,16 +303,16 @@ private theorem avoid_low {P Q : Row 3}
   classical
   let partials (F : Row 3) (d : ℕ) : Set (Row 3) :=
     {D | ∃ a, multiOrder a < d ∧ D = hassePartial a F}
-  let V := Submodule.span Geom (partials P 53848 ∪ partials Q 3767)
+  let V := Submodule.span Geom (partials P 55023 ∪ partials Q 4070)
   have hadm : V ≤ thirdCuts P Q := by
     apply Submodule.span_le.mpr
     rintro D (⟨a, ha, rfl⟩ | ⟨a, ha, rfl⟩)
     · refine ⟨hasse_caps a hp, ?_⟩
       intro S hPS _ m hm
-      exact (by omega : 596 ≤ 54443 - multiOrder a).trans (hasse_order P S a _ hPS m hm)
+      exact (by omega : 645 ≤ 55667 - multiOrder a).trans (hasse_order P S a _ hPS m hm)
     · refine ⟨hasse_caps a hq, ?_⟩
       intro S _ hQS m hm
-      exact (by omega : 596 ≤ 4362 - multiOrder a).trans (hasse_order Q S a _ hQS m hm)
+      exact (by omega : 645 ≤ 4714 - multiOrder a).trans (hasse_order Q S a _ hQS m hm)
   let bad := {p : Ideal Lower | p ∈ (pairIdeal P Q).minimalPrimes ∧
     ∃ q : PrimeSpectrum Lower, q.asIdeal = p ∧ localColength q (pairIdeal P Q) < (curveLength : ℕ∞)}
   have hf : bad.Finite :=
@@ -322,17 +322,17 @@ private theorem avoid_low {P Q : Row 3}
     obtain ⟨hmin, q, rfl, hsmall⟩ := hp'
     have hheight : q.asIdeal.height = 2 := pair_height hpq hmin
     by_contra! h
-    have hP : VanishesTo q (genericRow P) 53848 := by
-      exact K1_13_7_4_1.proof q P 53848 hheight fun a ha => h _ (Submodule.subset_span (Or.inl ⟨a, ha, rfl⟩))
-    have hQ : VanishesTo q (genericRow Q) 3767 := by
-      exact K1_13_7_4_1.proof q Q 3767 hheight fun a ha => h _ (Submodule.subset_span (Or.inr ⟨a, ha, rfl⟩))
+    have hP : VanishesTo q (genericRow P) 55023 := by
+      exact K1_13_7_4_1.proof q P 55023 hheight fun a ha => h _ (Submodule.subset_span (Or.inl ⟨a, ha, rfl⟩))
+    have hQ : VanishesTo q (genericRow Q) 4070 := by
+      exact K1_13_7_4_1.proof q Q 4070 hheight fun a ha => h _ (Submodule.subset_span (Or.inr ⟨a, ha, rfl⟩))
     have hrange : Ideal.span (Set.range ![genericRow P, genericRow Q]) = pairIdeal P Q := by
       simp only [pairIdeal, Matrix.range_cons, Matrix.range_empty, Set.union_empty,
         Set.singleton_union]
-    have hlarge := local_length 2 (Or.inl rfl) q ![genericRow P, genericRow Q] ![53848, 3767]
+    have hlarge := local_length 2 (Or.inl rfl) q ![genericRow P, genericRow Q] ![55023, 4070]
       hheight (hrange ▸ hmin)
       (by simp [Fin.forall_fin_two]) (by simpa [Fin.forall_fin_two] using And.intro hP hQ)
-    have hnum : (∏ i : Fin 2, (![53848, 3767] : Fin 2 → ℕ) i) = curveLength := by
+    have hnum : (∏ i : Fin 2, (![55023, 4070] : Fin 2 → ℕ) i) = curveLength := by
       rw [Fin.prod_univ_two]
       decide
     rw [hnum, hrange] at hlarge
@@ -353,11 +353,11 @@ theorem residual_strata (P Q : Row 3) (hpq : ProperLowerPair P Q)
   right
   let q := pointPrime (lowerPoint S)
   have hRub := hR.2 S hPS hQS
-  change OrderAt P S 54443 at hPS
-  change OrderAt Q S 4362 at hQS
-  have hp : VanishesTo q (genericRow P) 54443 := point_order hPS
-  have hq : VanishesTo q (genericRow Q) 4362 := point_order hQS
-  have hr : VanishesTo q (genericRow R) 596 := point_order hRub
+  change OrderAt P S 55667 at hPS
+  change OrderAt Q S 4714 at hQS
+  have hp : VanishesTo q (genericRow P) 55667 := point_order hPS
+  have hq : VanishesTo q (genericRow Q) 4714 := point_order hQS
+  have hr : VanishesTo q (genericRow R) 645 := point_order hRub
   have hle : tripleIdeal P Q R ≤ q.asIdeal := triple_le_iff.mpr
     ⟨vanishes_at_prime (by decide) hp, vanishes_at_prime (by decide) hq,
       vanishes_at_prime (by decide) hr⟩
@@ -400,10 +400,10 @@ theorem residual_strata (P Q : Row 3) (hpq : ProperLowerPair P Q)
     simp only [tripleIdeal, Matrix.range_cons, Matrix.range_empty, Set.union_empty,
       Set.singleton_union]
   have hlen := local_length 3 (Or.inr rfl) q ![genericRow P, genericRow Q, genericRow R]
-    ![54443, 4362, 596] hheight (hrange ▸ hmin) (by simp [Fin.forall_fin_succ])
+    ![55667, 4714, 645] hheight (hrange ▸ hmin) (by simp [Fin.forall_fin_succ])
     (by simpa [Fin.forall_fin_succ] using And.intro hp (And.intro hq hr))
   rw [hrange] at hlen
-  have hnum : (∏ i : Fin 3, (![54443, 4362, 596] : Fin 3 → ℕ) i) = pointLength := by
+  have hnum : (∏ i : Fin 3, (![55667, 4714, 645] : Fin 3 → ℕ) i) = pointLength := by
     rw [Fin.prod_univ_three]
     decide
   rwa [hnum] at hlen
@@ -569,7 +569,7 @@ open P0_9_7_1 (sparse_bound surface_sections)
 open private topAt eval_topAt topAt_coeff topView_separant from ProximityPrize.SubmissionLower.Fast056
 open private derivativeBox derivative_box from ProximityPrize.SubmissionLower.PortLow7
 private theorem regular_derivative (f : Row 4) (S : Geom[X])
-    (htop : (shape f).t < K1.p) (hon : OnFactor f S) (hs : atJet (separant f) S = 0) :
+    (htop : (shape f).t ≤ 13) (hon : OnFactor f S) (hs : atJet (separant f) S = 0) :
     ∃ j, 0 < j ∧ j < (shape f).t ∧
       atJet ((separant^[j]) f) S = 0 ∧ atJet (separant ((separant^[j]) f)) S ≠ 0 := by
   classical
@@ -581,7 +581,7 @@ private theorem regular_derivative (f : Row 4) (S : Geom[X])
     change (t.factorial : Geom[X]) * P.coeff t ≠ 0
     rw [← map_natCast (Polynomial.C : Geom →+* Geom[X])]
     exact mul_ne_zero (Polynomial.C_ne_zero.mpr
-      (factorial_cast_ne_zero htop))
+      (factorial_cast_ne_zero (htop.trans_lt (by decide : 13 < K1.p))))
       (by simpa only [P, t, topAt_coeff] using hon.2)
   have hc : derivative^[t] P = Polynomial.C ((derivative^[t] P).coeff 0) :=
     eq_C_of_natDegree_le_zero ((natDegree_iterate_derivative _ _).trans
@@ -623,11 +623,11 @@ private theorem chart_le (p : Shape) (hp : Chamber p) (ht : 1 < p.t) (hb : p.b �
     InBox (chart (K1_13.taylorLength + 4) (derivativeBox p))
       (chart (Final50Price.taylorLength + 4) p) := by
   obtain ⟨hjb, htj⟩ := hp
-  have hB : 1 + 267352 * (p.b - 1 - 1) ≤ 1 + 266960 * (p.b - 1) := by omega
+  have hB : 1 + 267352 * (p.b - 1 - 1) ≤ 1 + 266858 * (p.b - 1) := by omega
   have hJ : 267352 * (p.j - 3 - 3) + 133676 + 3 ≤
-      266960 * (p.j - 3) + 133480 + 3 := by omega
+      266858 * (p.j - 3) + 133429 + 3 := by omega
   have hT : 267352 * (p.t - 1 - 1) + 133676 + 1 ≤
-      266960 * (p.t - 1) + 133480 + 1 := by omega
+      266858 * (p.t - 1) + 133429 + 1 := by omega
   exact ⟨max_le_max hB hJ, hJ, min_le_min hT (Nat.div_le_div_right hJ)⟩
 private theorem exists_derivative_chart (f : Row 4) (he : FatEligible (shape f))
     (ht : 1 < (shape f).t) {j : ℕ} (hj : 0 < j) :
@@ -721,7 +721,7 @@ theorem proof : Final50FatCount.c1 := by
       ∃ j, 0 < j ∧ j < t ∧
         atJet ((separant^[j]) f) (extend (s γ)) = 0 ∧
         RegularAt ((separant^[j]) f) (extend (s γ)) :=
-    regular_derivative f _ (hf.2.2.1.2.2.trans_lt (by decide : 14 < K1.p)) (hmarks γ hγ).1 (Classical.not_not.mp (hmarks γ hγ).2)
+    regular_derivative f _ hf.2.2.1.2.2 (hmarks γ hγ).1 (Classical.not_not.mp (hmarks γ hγ).2)
   by_cases ht : 1 < t
   · let p := (shape f).chamber
     let h := chart (Final50Price.taylorLength + 4) p
@@ -1257,7 +1257,7 @@ theorem threefold_pieces_capacity {w Γ s} (C : Pieces Γ) (h : Messages w Γ s)
 private theorem proper_capacity {w Γ s} {x : Shape} (C : Pieces Γ) (h : Messages w Γ s)
     (hc : C.curves s) (hb : 32 * C.total ≤ curveMass32 x)
     (hn : 32 * C.n ≤ componentMass32 x) :
-    C.union.card ≤ ceilDiv (82219 * curveMass32 x) (32 * 46450) +
+    C.union.card ≤ ceilDiv (82229 * curveMass32 x) (32 * 46491) +
       ceilDiv (componentMass32 x) 32 := by
   have hcap := Final50FatPad.pieces_curve_capacity C h hc
   unfold ceilDiv
@@ -1295,7 +1295,7 @@ theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) : Final50FatCount.c2 := by
   have hsumI := Finset.card_union_le C.union F.union
   let p := (shape f).chamber
   let h := fatChart (shape f)
-  change Γ.card ≤ ceilDiv (82219 * curveMass32 (shape f)) (32 * 46450) +
+  change Γ.card ≤ ceilDiv (82229 * curveMass32 (shape f)) (32 * 46491) +
     ceilDiv (componentMass32 (shape f)) 32 + 20 * p.b * h.b ^ 2 +
     5 * physicalDegree * p.b * h.b + 1
   have hreserveC : C.union.card ≤ 5 * physicalDegree * p.b * h.b := by

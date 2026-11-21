@@ -24,6 +24,8 @@ abbrev node := IRSProfile.domain
 abbrev p := Native.p
 abbrev Frac := GenericLayer.GenericField K
 abbrev Bivar := Polynomial K[X]
+def BadFamily (u : Words) (Γ : Finset K) : Prop :=
+  ∀ γ ∈ Γ, IsMCA (AffineLineGenerator K) IRSProfile.baseCode γ u Native.radius
 structure BadMark (u : Words) (γ : K) where
   support : Finset I
   decoder : K[X]
@@ -33,15 +35,32 @@ structure BadMark (u : Words) (γ : K) where
   nonjoint : ¬ (ExtendsOn node (u 0) 131072 support ∧ ExtendsOn node (u 1) 131072 support)
 def ordinary (u : Words) := hankel node (u 0) (u 1) 49193 81879
 def twoBlock (u : Words) := stacked p node (u 0) (u 1) 49193 81879
+def firstRank (u : Words) := GenericLayer.genericRank (ordinary u)
 def stackRank (u : Words) := GenericLayer.genericRank (twoBlock u)
 def nullity (u : Words) := GenericLayer.genericNullity (twoBlock u)
 def Normal (u : Words) (γ : K) : Prop :=
   ((twoBlock u).map (evalRingHom γ)).rank = stackRank u
+def normalSlopes (u : Words) (Γ : Finset K) : Finset K := by
+  classical exact Γ.filter (Normal u)
+def abnormalSlopes (u : Words) (Γ : Finset K) : Finset K := by
+  classical exact Γ.filter (fun γ => ¬ Normal u γ)
+def TypeAtMostOne (u : Words) : Prop :=
+  Principal.TypeOneSyndromes node (u 0) (u 1) 131072 p
+def HomogeneousPrincipal (u : Words) : Prop :=
+  ∃ (a : ℕ) (g : Frac[X]), g ≠ 0 ∧ g.natDegree ≤ a ∧ a ≤ 81879 ∧
+    ∀ P : Frac[X], P.natDegree ≤ 81879 →
+      (((twoBlock u).map (algebraMap K[X] Frac)).mulVec (fun i => P.coeff i.val) = 0 ↔
+        ∃ Q : Frac[X], Q.natDegree ≤ 81879 - a ∧ P = g * Q)
 def coefficientStack (u : Words) : Matrix (Fin 4 × Fin 49193) (Fin 81880) K := fun i j =>
   if i.1 = 0 then syndrome node (u 0) (i.2.val + j.val) else
   if i.1 = 1 then syndrome node (u 1) (i.2.val + j.val) else
   if i.1 = 2 then syndrome node (u 0) (i.2.val + j.val) ^ p else
     syndrome node (u 1) (i.2.val + j.val) ^ p
+def ConstantKernel (u : Words) : Prop :=
+  stackRank u = (coefficientStack u).rank
+def FrontRemainder (u : Words) : Prop :=
+  16 < nullity u ∧ firstRank u = 49193 ∧ ¬ TypeAtMostOne u ∧
+    ¬ HomogeneousPrincipal u ∧ ¬ ConstantKernel u
 structure TwoActive (u : Words) where
   a : ℕ
   b : ℕ
@@ -70,6 +89,12 @@ def extendSeed (U : Bivar) : Frac[X] :=
   U.map (algebraMap K[X] Frac)
 def IsCommonGCD {F : Type} [Field F] (G U V : F[X]) : Prop :=
   G ≠ 0 ∧ G ∣ U ∧ G ∣ V ∧ ∀ H : F[X], H ∣ U → H ∣ V → H ∣ G
+def FixedLeftGCD {u : Words} {T : TwoActive u} (R : Relation T) : Prop :=
+  ∃ G : K[X], IsCommonGCD (G.map (algebraMap K Frac))
+    (extendSeed (leftU R)) (extendSeed (leftV R))
+def MovingGCD {u : Words} {T : TwoActive u} (R : Relation T) : Prop :=
+  ¬ FixedLeftGCD R ∧ ∃ G : Frac[X], G ≠ 0 ∧ G ∣ extendSeed (leftU R) ∧
+    G ∣ extendSeed (leftV R) ∧ (fixedNodes R).card < G.natDegree
 def InvalidLeft {u : Words} {T : TwoActive u} (R : Relation T) : Prop :=
   max (leftU R).natDegree (leftV R).natDegree < T.height ∨
     ∃ G : K[X], G ≠ 0 ∧ G.map Polynomial.C ∣ leftU R ∧ G.map Polynomial.C ∣ leftV R ∧
@@ -86,6 +111,8 @@ structure SaturatedAt {u : Words} {T : TwoActive u} (R : Relation T)
     IsCommonGCD (locator node errors) (atSlope (leftU R) γ) (atSlope (leftV R) γ)
   fixed_errors : ∀ i ∈ fixedNodes R, M.decoder.eval (node i) ≠ u 0 i + γ * u 1 i
   valid : ¬ InvalidLeft R
+def NormalSaturation {u : Words} {T : TwoActive u} (R : Relation T) : Prop :=
+  ∀ γ, Normal u γ → ∀ M : BadMark u γ, SaturatedAt R M
 def seed : Bivar := Polynomial.C (R := K[X]) (Polynomial.X (R := K))
 def liftX (P : K[X]) : Bivar := P.map Polynomial.C
 def twist : K →+* K := frobenius K p
@@ -150,6 +177,12 @@ structure RankThree (u : Words) (T : TwoActive u) (R : Relation T)
   output : Bivar
   output_degree : output.degree < (131072 + D.height : ℕ)
   nodes : relationOn u (fixedNodes R) (threeU a β) (threeV b α) output
+def Parallel {u T R D} (B : RankThree u T R D) : Prop :=
+  B.α = B.β
+def Nonparallel {u T R D} (B : RankThree u T R D) : Prop :=
+  B.α 0 * B.β 1 - B.α 1 * B.β 0 ≠ 0
+def UnitNorm {u T R D} (B : RankThree u T R D) : Prop :=
+  sixNorm B.a = sixNorm B.b
 structure AnchorModel (u : Words) (deleted : Finset I) where
   shift : K
   pencil₀ : K[X]
@@ -207,6 +240,220 @@ def highPrefix (w : ℤ) : ℕ :=
   else if w ≤ 8249 then 152632406338780469
   else if w ≤ 23999 then 173266420414027995
   else 200365480316570496
+def highRetained (w : ℤ) : ℕ :=
+  if w ≤ 3554 then 70121431814589308
+  else if w ≤ 8249 then 29823540840290282
+  else if w ≤ 23999 then 27620907358581545
+  else 34460974021760655
+end
+end K1
+end
+section
+set_option maxRecDepth 12000
+set_option backward.isDefEq.respectTransparency false
+namespace K1
+noncomputable section
+open Polynomial FrobeniusLocator ProximityPrize.Benchmark
+def c1 : Prop :=
+  ∀ u, FrontRemainder u → Nonempty (TwoActive u)
+def c2 : Prop :=
+  ∀ u Γ, nullity u ≤ 16 → BadFamily u Γ → Γ.card ≤ 181966665710181665
+def c3 : Prop :=
+  ∀ u Γ, firstRank u < 49193 → BadFamily u Γ → Γ.card ≤ 311336
+def c4 : Prop :=
+  ∀ u Γ, HomogeneousPrincipal u → BadFamily u Γ → Γ.card ≤ 733016280612825
+def c5 : Prop :=
+  ∀ u Γ, ConstantKernel u → BadFamily u Γ → Γ.card ≤ 174462242734040
+def c6 : Prop :=
+  ∀ u, FrontRemainder u → ∀ (T : TwoActive u) (R : Relation T),
+    MovingGCD R → NormalSaturation R → ∀ Γ, BadFamily u Γ → (∀ γ ∈ Γ, Normal u γ) →
+    Γ.card ≤ 1663952278519808
+def c7 : Prop :=
+  ∀ u, FrontRemainder u → ∀ (T : TwoActive u) (R : Relation T), NormalSaturation R
+def c8 : Prop :=
+  ∀ u, FrontRemainder u → ∀ (T : TwoActive u) (R : Relation T),
+    ¬ MovingGCD R → ¬ InvalidLeft R → NormalSaturation R →
+    (∃ γ, Normal u γ ∧ Nonempty (BadMark u γ)) →
+    ∃ D : Reduction u T R, columnRank D.U D.V = 4 ∨
+      ∃ B : RankThree u T R D, Nonparallel B ∨ Parallel B
+def c9 : Prop :=
+  ∀ u (T : TwoActive u) (R : Relation T) (D : Reduction u T R) (B : RankThree u T R D),
+    Parallel B → ¬ UnitNorm B → ∀ Γ, BadFamily u Γ → Γ.card ≤ 81880
+def c10 : Prop :=
+  ∀ u, FrontRemainder u → ∀ (T : TwoActive u) (R : Relation T)
+    (D : Reduction u T R) (B : RankThree u T R D),
+    NormalSaturation R → Nonparallel B → ∀ Γ, BadFamily u Γ → Γ.card ≤ 122010899393484555
+def c11 : Prop :=
+  ∀ u, FrontRemainder u → ∀ (T : TwoActive u) (R : Relation T) (D : Reduction u T R),
+    NormalSaturation R → columnRank D.U D.V = 4 →
+    ∀ Γ, BadFamily u Γ → (∀ γ ∈ Γ, Normal u γ) → Γ.card ≤ 98688882270415481
+def c12 : Prop :=
+  ∀ u, FrontRemainder u → ∀ (T : TwoActive u) (R : Relation T)
+    (D : Reduction u T R) (B : RankThree u T R D),
+    NormalSaturation R → Parallel B → UnitNorm B → ∀ Γ, BadFamily u Γ → (∀ γ ∈ Γ, Normal u γ) →
+    Γ.card ≤ 69631486557946 ∨
+      ∃ book : Finset K, book ⊆ Γ ∧ book.card ≤ 69631486557946 ∧
+        ∃ M : AnchorModel u (fixedNodes R), Nonempty (AnchoredFamily M (Γ \ book))
+def c13 : Prop :=
+  ∀ u deleted (M : AnchorModel u deleted) Γ, AnchoredFamily M Γ →
+    1 ≤ M.overhead → M.overhead ≤ 2600 →
+    Γ.card ≤ 222142013343379695 + 18512789806143368
+def c14 : Prop :=
+  ∀ u deleted (M : AnchorModel u deleted) Γ, AnchoredFamily M Γ →
+    2601 ≤ M.overhead → M.overhead ≤ 32680 →
+    Γ.card ≤ highPrefix M.overhead + highRetained M.overhead
+theorem bad_mark (u : Words) (Γ : Finset K) (hΓ : BadFamily u Γ) (γ : K) (hγ : γ ∈ Γ) :
+    Nonempty (BadMark u γ) := by
+  obtain ⟨S, hS, ⟨P, hP, he⟩, hn⟩ := Strata.native_IsMCA_badSlope u γ (hΓ γ hγ)
+  exact ⟨⟨S, P, hS, hP, he, hn⟩⟩
+theorem mem_normalSlopes {u : Words} {Γ : Finset K} {γ : K} :
+    γ ∈ normalSlopes u Γ ↔ γ ∈ Γ ∧ Normal u γ := by
+  classical exact Finset.mem_filter
+theorem normal_badFamily {u : Words} {Γ : Finset K} (hΓ : BadFamily u Γ) :
+    BadFamily u (normalSlopes u Γ) :=
+  fun γ hγ => hΓ γ (mem_normalSlopes.mp hγ).1
+theorem normal_on_normalSlopes {u : Words} {Γ : Finset K} :
+    ∀ γ ∈ normalSlopes u Γ, Normal u γ :=
+  fun _ hγ => (mem_normalSlopes.mp hγ).2
+theorem firstRank_le (u : Words) : firstRank u ≤ 49193 := by
+  simpa only [firstRank, GenericLayer.genericRank, Fintype.card_fin] using
+    Matrix.rank_le_card_height ((ordinary u).map (algebraMap K[X] Frac))
+theorem actual_stackRank (u : Words) : stackRank u = 81880 - nullity u := by
+  have h := GenericLayer.rank_add_nullity (twoBlock u)
+  simp only [Fintype.card_fin] at h
+  change stackRank u + nullity u = 81880 at h
+  omega
+theorem rank_exceptions (u : Words) (hu : FrontRemainder u) (Γ : Finset K) :
+    (abnormalSlopes u Γ).card ≤ 69631486279633 := by
+  classical
+  apply Strata.native_rank_exception_count node (u 0) (u 1) (nullity u)
+    (by have := hu.1; omega) (actual_stackRank u) hu.2.1
+  intro γ hγ
+  rw [← actual_stackRank u]
+  exact (Finset.mem_filter.mp hγ).2
+theorem add_rank_exceptions (u : Words) (hu : FrontRemainder u) (Γ : Finset K)
+    (b : ℕ) (hb : (normalSlopes u Γ).card ≤ b) :
+    Γ.card ≤ b + 69631486279633 := by
+  classical
+  rw [← Finset.card_filter_add_card_filter_not (s := Γ) (p := Normal u)]
+  exact Nat.add_le_add hb (rank_exceptions u hu Γ)
+theorem anchored_list_count {u deleted} (M : AnchorModel u deleted) (Γ : Finset K)
+    (F : AnchoredFamily M Γ) (hw : M.overhead ≤ 0) :
+    Γ.card ≤ 31911086374011223 := by
+  classical
+  obtain ⟨hfinite, hprice⟩ := Astra7.native_weighted_complete_list M.word
+  have hsub : Γ.image F.scalar ⊆ hfinite.toFinset := by
+    intro P hP
+    obtain ⟨γ, hγ, rfl⟩ := Finset.mem_image.mp hP
+    have mark := F.mark γ hγ
+    apply hfinite.mem_toFinset.mpr
+    constructor
+    · rcases mark.scalar_degree with hz | hd
+      · rw [hz, Polynomial.degree_zero]
+        exact WithBot.bot_lt_coe (131073 : ℕ)
+      · have hn : (F.scalar γ).natDegree < 131073 := by omega
+        exact Polynomial.degree_le_natDegree.trans_lt (by exact_mod_cast hn)
+    · apply mark.bad.agreement.trans
+      apply Finset.card_le_card
+      intro i hi
+      simp only [ReedSolomon.polynomialAgreementSet, Finset.mem_filter, Finset.mem_univ, true_and]
+      exact mark.scalar_hits i hi
+  calc
+    Γ.card = (Γ.image F.scalar).card := (Finset.card_image_of_injOn F.distinct).symm
+    _ ≤ hfinite.toFinset.card := Finset.card_le_card hsub
+    _ = _ := (Set.ncard_eq_toFinset_card _ hfinite).symm
+    _ ≤ 31911086374011223 := hprice
+theorem high_with_reserve (w : ℤ) :
+    highPrefix w + highRetained w + (69631486279633 + 69631486557946) + 1 ≤
+      234965717311168731 := by
+  unfold highPrefix highRetained
+  split_ifs <;> norm_num
+theorem normal_part_of_coherent (h12 : c12) (h13 : c13) (h14 : c14)
+    (u : Words) (hu : FrontRemainder u) (T : TwoActive u) (R : Relation T)
+    (D : Reduction u T R) (B : RankThree u T R D) (hsat : NormalSaturation R)
+    (hp : Parallel B) (hn : UnitNorm B)
+    (Γ : Finset K) (hΓ : BadFamily u Γ) :
+    Γ.card ≤ 240794066122360642 := by
+  classical
+  let N := normalSlopes u Γ
+  rcases h12 u hu T R D B hsat hp hn N (normal_badFamily hΓ) normal_on_normalSlopes with hcheap | ⟨book, hs, hb, M, ⟨F⟩⟩
+  · exact (add_rank_exceptions u hu Γ _ hcheap).trans (by norm_num)
+  · have htotal : Γ.card ≤ (N \ book).card + book.card + 69631486279633 :=
+      add_rank_exceptions u hu Γ _ (Finset.card_sdiff_add_card_eq_card hs).ge
+    have hwmax : M.overhead ≤ 32680 := by
+      have hh := M.height_bound
+      unfold AnchorModel.overhead
+      omega
+    by_cases hw₀ : M.overhead ≤ 0
+    · have hl := anchored_list_count M _ F hw₀
+      omega
+    by_cases hwL : M.overhead ≤ 2600
+    · have hl := h13 u _ M _ F (by omega) hwL
+      omega
+    · have hh := h14 u _ M _ F (by omega) hwmax
+      have hbnd := high_with_reserve M.overhead
+      omega
+theorem short_route_bound (h1 : c1) (h2 : c2) (h3 : c3) (h4 : c4) (h5 : c5) (h6 : c6)
+    (h7 : c7) (h8 : c8) (h9 : c9) (h10 : c10) (h11 : c11) (h12 : c12)
+    (h13 : c13) (h14 : c14) (u : Words) (Γ : Finset K) (hΓ : BadFamily u Γ) :
+    Γ.card ≤ 240794066122360642 := by
+  classical
+  by_cases hpref : nullity u ≤ 16
+  · exact (h2 u Γ hpref hΓ).trans (by norm_num)
+  by_cases hdef : firstRank u < 49193
+  · exact (h3 u Γ hdef hΓ).trans (by norm_num)
+  by_cases htype : TypeAtMostOne u
+  · exact (Native.native_type_one_MCA_count u htype Γ hΓ).trans
+      (by norm_num)
+  by_cases hprincipal : HomogeneousPrincipal u
+  · exact (h4 u Γ hprincipal hΓ).trans (by norm_num)
+  by_cases hconstant : ConstantKernel u
+  · exact (h5 u Γ hconstant hΓ).trans (by norm_num)
+  have hu : FrontRemainder u :=
+    ⟨Nat.lt_of_not_ge hpref, Nat.le_antisymm (firstRank_le u) (Nat.le_of_not_gt hdef),
+      htype, hprincipal, hconstant⟩
+  obtain ⟨T⟩ := h1 u hu
+  let R : Relation T := Strata.native_lemmaT_of_two_active_level u (nullity u)
+    T.a T.b T.c (by have := hu.1; omega) T.ab T.active T.inactive T.top T.degreeSum T.nullitySum T.level
+  have hsat := h7 u hu T R
+  by_cases hmoving : MovingGCD R
+  · have hmov := h6 u hu T R hmoving hsat (normalSlopes u Γ) (normal_badFamily hΓ)
+      normal_on_normalSlopes
+    have hwhole : Γ.card ≤ 1733583764799441 := add_rank_exceptions u hu Γ _ hmov
+    exact hwhole.trans (by norm_num)
+  by_cases hinvalid : InvalidLeft R
+  · have hempty : normalSlopes u Γ = ∅ := by
+      classical
+      apply Finset.eq_empty_iff_forall_notMem.mpr
+      intro γ hγ
+      obtain ⟨hγΓ, hnormal⟩ := mem_normalSlopes.mp hγ
+      obtain ⟨M⟩ := bad_mark u Γ hΓ γ hγΓ
+      exact (hsat γ hnormal M).valid hinvalid
+    exact (add_rank_exceptions u hu Γ 0 (by rw [hempty]; simp)).trans
+      (by norm_num)
+  by_cases hnormal : (normalSlopes u Γ).Nonempty
+  · obtain ⟨γ, hγ⟩ := hnormal
+    obtain ⟨hγΓ, hnγ⟩ := mem_normalSlopes.mp hγ
+    obtain ⟨D, hfour | ⟨B, hnp | hpar⟩⟩ := h8 u hu T R hmoving hinvalid hsat
+      ⟨γ, hnγ, bad_mark u Γ hΓ γ hγΓ⟩
+    · have hreg := h11 u hu T R D hsat hfour (normalSlopes u Γ) (normal_badFamily hΓ)
+        normal_on_normalSlopes
+      have hwhole : Γ.card ≤ 98758513756695114 := add_rank_exceptions u hu Γ _ hreg
+      have hfiled : Γ.card ≤ 124821996751784822 := hwhole.trans (by norm_num)
+      exact hfiled.trans (by norm_num)
+    · exact (h10 u hu T R D B hsat hnp Γ hΓ).trans (by norm_num)
+    · by_cases hn : UnitNorm B
+      · exact normal_part_of_coherent h12 h13 h14 u hu T R D B hsat hpar hn Γ hΓ
+      · exact (h9 u T R D B hpar hn Γ hΓ).trans (by norm_num)
+  · have he := Finset.not_nonempty_iff_eq_empty.mp hnormal
+    exact (add_rank_exceptions u hu Γ 0 (by rw [he]; simp)).trans
+      (by norm_num)
+theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) (h4 : c4) (h5 : c5) (h6 : c6)
+    (h7 : c7) (h8 : c8) (h9 : c9) (h10 : c10) (h11 : c11) (h12 : c12)
+    (h13 : c13) (h14 : c14) : Native.ScalarMCACap6915 := by
+  intro u Γ hΓ
+  exact (short_route_bound h1 h2 h3 h4 h5 h6 h7 h8 h9 h10 h11 h12 h13 h14 u Γ hΓ).trans
+    (by norm_num [Astra7.weightedMCAAllowance])
 end
 end K1
 end
@@ -282,6 +529,13 @@ structure Cover {n : ℕ} (Γ : Finset K) (s : K → K[X])
 def Contact (w : I → K) (P : Row 4) : Prop :=
   ∀ i (S : Geom[X]), S.eval (embed (node i)) = embed (w i) →
     (Polynomial.X - C (embed (node i))) ^ 3000 ∣ atJet P S
+def PrimaryRank (w : I → K) : Prop :=
+  ∃ e : Fin 1217307887288627271 → Row 4, LinearIndependent Geom e ∧
+    ∀ i, InBox (shape (e i)) ⟨4012, 1650, 550⟩ ∧
+      TrueWeightLE (e i) (3000 * 180265 - 1) ∧ Contact w (e i)
+def ProperCut (f : Row 4) (Γ : Finset K) (s : K → K[X]) (l : ℕ) : Prop :=
+  ∃ Q : Row 4, (¬ f ∣ Q) ∧ InBox (shape Q) ⟨4012, 1650, 550⟩ ∧
+    TrueWeightLE Q (3000 * 180265 - 1) ∧ ∀ γ ∈ Γ, OrderAt Q (extend (s γ)) l
 structure FatEquations where
   common : Row 3
   residual : Row 3
@@ -291,12 +545,18 @@ structure FatEquations where
   common_index : indexDegree common ≤ 2403
   residual_total : residual.totalDegree ≤ 952630000
   residual_index : indexDegree residual ≤ 322000000
+def FatEquations.holds (E : FatEquations) (S : Geom[X]) : Prop :=
+  atJet E.common S = 0 ∨ OrderAt E.residual S 41481
 def symbols (b j : ℕ) : ℕ :=
   ∑ z ∈ Finset.range (min b (j / 3) + 1),
   ∑ y ∈ Finset.range (min (b - z) ((j - 3*z) / 2) + 1),
   ∑ x ∈ Finset.range (min (b - z - y) (j - 3*z - 2*y) + 1), (b - z - y - x + 1)
 def remaining (b j : ℕ) : ℕ :=
   if b ≤ 4012 ∧ j ≤ 1650 then symbols (4012 - b) (1650 - j) else 0
+def LayerBudget {n : ℕ} (a : Fin n → Shape) (l : Fin n → ℕ) : Prop :=
+  26124168665121 ≤
+    ∑ k ∈ Finset.range (1 + (3000 * 180265 - 1) / 46597),
+      remaining (∑ i, (k + 1 - l i) * (a i).b) (∑ i, (k + 1 - l i) * (a i).j)
 def Shape.plus (p q : Shape) : Shape := ⟨p.b + q.b, p.j + q.j, p.t + q.t⟩
 def Shape.scale (p : Shape) (k : ℕ) : Shape := ⟨k*p.b, k*p.j, k*p.t⟩
 def Shape.chamber (p : Shape) : Shape := ⟨max p.b p.j, p.j, p.t⟩
@@ -349,6 +609,12 @@ def fatPrice (x : Shape) : ℕ :=
   let curves := ceilDiv (81879*mixed32 p q q h + 46594*mixed32 p q q p) (32*46594*293711590)
   let isolated := ceilDiv (3*q.j^2*(2*q.b - q.j)) (4*41481*(41481 - 33184 + 1)*1037)
   divisors + singular + curves + isolated
+theorem primary_layer_threshold :
+    ceilDiv 1217307887288627271 46597 = 26124168665121 := by decide
+theorem physical_price_corner :
+    physicalPrice ⟨120,48,10⟩ 58 = 222142013343379695 := by decide
+theorem fat_price_quadratic :
+    fatPrice ⟨2,6,2⟩ = 96034767423888601 := by decide
 end
 end K1_13
 end
@@ -357,6 +623,35 @@ namespace K1_13
 noncomputable section
 open Polynomial K1
 open scoped BigOperators
+def c1 : Prop :=
+  ∀ w Γ s, Messages w Γ s →
+    ∃ (n : ℕ) (g : Row 3) (f : Fin n → Row 4), Cover Γ s g f
+def c2 : Prop := ∀ w, PrimaryRank w
+def c3 : Prop :=
+  ∀ w Γ s, Messages w Γ s → PrimaryRank w →
+    ∀ n (g : Row 3) (f : Fin n → Row 4), Cover Γ s g f →
+      ∃ l : Fin n → ℕ, LayerBudget (fun i => shape (f i)) l ∧
+        ∀ i, 0 < l i → ProperCut (f i) Γ s (l i)
+def c4 : Prop :=
+  ∀ w Γ s, Messages w Γ s → PoleData Γ s →
+    ∃ (book : Finset K) (E : FatEquations), book.card ≤ 140000 ∧
+      ∀ γ ∈ Γ, γ ∉ book → E.holds (extend (s γ))
+def c5 : Prop :=
+  ∀ w Γ s, Messages w Γ s → ∀ g, LowerRow g →
+    (∀ γ ∈ Γ, atJet g (extend (s γ)) = 0) → Γ.card ≤ 18512789806000648
+def c6 : Prop :=
+  ∀ w Γ s, Messages w Γ s → ∀ f, SmallFactor f →
+    (∀ γ ∈ Γ, OnFactor f (extend (s γ))) →
+    ∀ l, 0 < l → ProperCut f Γ s l → Γ.card ≤ physicalPrice (shape f) l
+def c7 : Prop :=
+  ∀ w Γ s, Messages w Γ s → ∀ f, SmallFactor f →
+    (∀ γ ∈ Γ, OnFactor f (extend (s γ))) → FatEligible (shape f) →
+    ∀ E : FatEquations, (∀ γ ∈ Γ, E.holds (extend (s γ))) → Γ.card ≤ fatPrice (shape f)
+def c8 : Prop :=
+  ∀ n (a : Fin n → Shape) (l cost : Fin n → ℕ), Fits a → LayerBudget a l →
+    (∀ i, 0 < l i → cost i ≤ physicalPrice (a i) (l i)) →
+    (∀ i, FatEligible (a i) → cost i ≤ fatPrice (a i)) →
+    (∑ i, cost i) ≤ 222142013343379695
 theorem trim_divisor (P : Geom[X]) (hm : P.Monic) (h : ℕ) (hh : h ≤ P.natDegree) :
     ∃ H : Geom[X], H.Monic ∧ H.natDegree = h ∧ H ∣ P := by
   classical
@@ -368,6 +663,103 @@ theorem trim_divisor (P : Geom[X]) (hm : P.Monic) (h : ℕ) (hh : h ≤ P.natDeg
   obtain ⟨htle, htcard⟩ := Multiset.mem_powersetCard.mp ht
   exact ⟨_, monic_multisetProd_X_sub_C t, (natDegree_multiset_prod_X_sub_C_eq_card t).trans htcard,
     (t.prod_X_sub_C_dvd_iff_le_roots hm.ne_zero).mpr htle⟩
+theorem degree_at_height {u D Γ} (M : AnchorModel u D) (F : AnchoredFamily M Γ)
+    (γ : K) (hγ : γ ∈ Γ) : (F.scalar γ).natDegree ≤ 131071 + M.overhead.toNat := by
+  rcases (F.mark γ hγ).scalar_degree with h | h
+  · simp [h]
+  · omega
+theorem messages_of_anchor {u D Γ} (M : AnchorModel u D) (F : AnchoredFamily M Γ)
+    (hw : M.overhead ≤ 2600) : Messages M.word Γ F.scalar := by
+  refine ⟨F.distinct, ?_, ?_⟩
+  · intro γ hγ
+    have := degree_at_height M F γ hγ
+    omega
+  · intro γ hγ
+    let m := F.mark γ hγ
+    exact ⟨m.bad.support, m.bad.agreement, m.scalar_hits⟩
+theorem pole_of_anchor {u D Γ} (M : AnchorModel u D) (F : AnchoredFamily M Γ)
+    (lo : 1 ≤ M.overhead) (hi : M.overhead ≤ 2600) : Nonempty (PoleData Γ F.scalar) := by
+  have hmax : M.overhead.toNat ≤ (extend M.E).natDegree := by
+    rw [Polynomial.natDegree_map]
+    unfold AnchorModel.overhead
+    omega
+  obtain ⟨H, hm, hd, hdiv⟩ := trim_divisor _ (M.E_monic.map embed) _ hmax
+  let z := fun γ => embed (M.label γ)
+  have unit {P : K[X]} (hp : IsCoprime P M.E) : IsCoprime (extend P) H :=
+    (hp.map (Polynomial.mapRingHom embed)).of_isCoprime_of_dvd_right hdiv
+  have amp (γ : K) : extend (M.amplitude γ) = extend M.A₀ + C (z γ) * extend M.A₁ := by
+    simp [AnchorModel.amplitude, z]
+  refine ⟨⟨H, hm, ?_, ?_, ?_, z, ?_, extend M.factor, extend M.Q, extend M.A₀,
+    extend M.A₁, unit M.coprime_factor.symm, unit M.offset_reduced,
+    unit M.first_amplitude_unit, ?_, ?_⟩⟩
+  · rw [hd]
+    omega
+  · intro i hz
+    obtain ⟨U, hU⟩ := hdiv
+    have he : (extend M.E).eval (embed (node i)) ≠ 0 := by
+      rw [Polynomial.eval_map_apply]
+      exact (map_ne_zero embed).mpr (M.E_nodes i)
+    apply he
+    change (M.E.map embed).eval _ = 0
+    rw [hU, Polynomial.eval_mul, hz, zero_mul]
+  · intro γ hγ
+    rw [hd]
+    exact degree_at_height M F γ hγ
+  · intro a b hab
+    exact sub_left_inj.mp (embed.injective hab)
+  · intro γ hγ
+    rw [← amp]
+    exact unit (F.mark γ hγ).pole_unit
+  · intro γ hγ
+    have eqn := (F.mark γ hγ).identity
+    have orig : M.factor * M.amplitude γ * F.scalar γ + C (M.label γ) * M.Q =
+        M.E * M.decoder (F.mark γ hγ).bad := by rw [← eqn]; ring
+    have mapped := congrArg (Polynomial.map embed) orig
+    simp only [Polynomial.map_add, Polynomial.map_mul, Polynomial.map_C] at mapped
+    rw [← amp]
+    exact mapped ▸ hdiv.trans (dvd_mul_right _ _)
+theorem Messages.mono {w Γ s Δ} (h : Messages w Γ s) (hΔ : Δ ⊆ Γ) : Messages w Δ s :=
+  ⟨h.distinct.mono hΔ, fun γ hγ => h.degree γ (hΔ hγ), fun γ hγ => h.hits γ (hΔ hγ)⟩
+theorem ProperCut.mono {f Γ s l Δ} (h : ProperCut f Γ s l) (hΔ : Δ ⊆ Γ) :
+    ProperCut f Δ s l := by
+  obtain ⟨Q, hf, hbox, hw, hQ⟩ := h
+  exact ⟨Q, hf, hbox, hw, fun γ hγ => hQ γ (hΔ hγ)⟩
+theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) (h4 : c4)
+    (h5 : c5) (h6 : c6) (h7 : c7) (h8 : c8) : K1.c13 := by
+  classical
+  intro u D M Γ F lo hi
+  let s := F.scalar
+  have hmsg : Messages M.word Γ s := messages_of_anchor M F hi
+  obtain ⟨pole⟩ := pole_of_anchor M F lo hi
+  obtain ⟨n, g, f, cover⟩ := h1 _ _ _ hmsg
+  obtain ⟨l, layers, cut⟩ := h3 _ _ _ hmsg (h2 _) _ _ _ cover
+  obtain ⟨book, E, booked, hE⟩ := h4 _ _ _ hmsg pole
+  let low := Γ.filter (fun γ => atJet g (extend (s γ)) = 0)
+  have low_bound : low.card ≤ 18512789806000648 :=
+    h5 _ _ _ (hmsg.mono (Finset.filter_subset _ _)) _ cover.lower
+      (fun _ h => (Finset.mem_filter.mp h).2)
+  let pieces (i : Fin n) := Γ.filter (fun γ => γ ∉ book ∧ OnFactor (f i) (extend (s γ)))
+  have part_sub (i) : pieces i ⊆ Γ := Finset.filter_subset _ _
+  have on_part i : ∀ γ ∈ pieces i, OnFactor (f i) (extend (s γ)) :=
+    fun _ h => (Finset.mem_filter.mp h).2.2
+  have total := h8 n (fun i => shape (f i)) l (fun i => (pieces i).card) cover.fits layers
+    (fun i h => h6 _ _ _ (hmsg.mono (part_sub i)) _ (cover.factors i) (on_part i) _ h
+      ((cut i h).mono (part_sub i)))
+    (fun i h => h7 _ _ _ (hmsg.mono (part_sub i)) _ (cover.factors i) (on_part i) h E
+      (fun γ hγ => hE γ (part_sub i hγ) (Finset.mem_filter.mp hγ).2.1))
+  have covers : Γ ⊆ book ∪ low ∪ Finset.univ.biUnion pieces := by
+    intro γ hγ
+    by_cases hb : γ ∈ book
+    · exact Finset.mem_union_left _ (Finset.mem_union_left _ hb)
+    rcases cover.covers γ hγ with hg | ⟨i, hfi⟩
+    · exact Finset.mem_union_left _ (Finset.mem_union_right _ (Finset.mem_filter.mpr ⟨hγ, hg⟩))
+    · apply Finset.mem_union_right
+      exact Finset.mem_biUnion.mpr ⟨i, Finset.mem_univ _, Finset.mem_filter.mpr ⟨hγ, hb, hfi⟩⟩
+  calc
+    Γ.card ≤ _ := Finset.card_le_card covers
+    _ ≤ (book.card + low.card) + ∑ i, (pieces i).card :=
+      (Finset.card_union_le _ _).trans (Nat.add_le_add (Finset.card_union_le _ _) Finset.card_biUnion_le)
+    _ ≤ _ := by omega
 end
 end K1_13
 end
@@ -395,6 +787,7 @@ theorem sourceExponents_finite : sourceExponents.Finite := by
   | none => decide
   | some j =>
     exact (differentialWeight_some_pos_of_order_lt_degree (by decide : 3 < 133671) j).ne'
+def sourceColumns : Finset SourceExponent := sourceExponents_finite.toFinset
 def SourceSpace : Submodule Geom SourcePolynomial :=
   MvPolynomial.restrictSupport Geom sourceExponents
 instance : Module.Finite Geom SourceSpace :=
@@ -472,6 +865,48 @@ open scoped BigOperators
 open MvPolynomial (mem_support_iff)
 def toRow : SourcePolynomial ≃ₐ[Geom] Row 4 :=
   MvPolynomial.optionEquivRight Geom (Fin 4)
+private theorem weight_eq_sum (m : Fin 4 →₀ ℕ) (weight : Fin 4 → ℕ) :
+    m.weight weight = m.sum (fun i a => weight i * a) := by
+  simp only [Finsupp.weight_apply, smul_eq_mul, Nat.mul_comm]
+theorem row_bounds (Q : SourceSpace) :
+    InBox (shape (toRow Q.1)) ⟨4012, 1650, 550⟩ ∧
+    TrueWeightLE (toRow Q.1) (3000 * 180265 - 1) := by
+  classical
+  have h (m : Fin 4 →₀ ℕ) (hm : m ∈ (toRow Q.1).support) :
+      m.sum (fun _ a => a) ≤ 4012 ∧
+      m.sum (fun i a => i.val * a) ≤ 1650 ∧ m 3 ≤ 550 ∧
+      ((toRow Q.1).coeff m).natDegree + m.sum (fun i a => (133671 - i.val) * a) ≤
+        3000 * 180265 - 1 := by
+    let n := ((toRow Q.1).coeff m).natDegree
+    have hc : (Q.1).coeff (m.optionElim n) ≠ 0 := by
+      rw [← MvPolynomial.optionEquivRight_coeff_coeff]
+      change ((toRow Q.1).coeff m).coeff n ≠ 0
+      rw [Polynomial.coeff_natDegree, Polynomial.leadingCoeff_ne_zero]
+      exact mem_support_iff.mp hm
+    have supportBound : ∀ e ∈ Q.1.support, SourceEligible e := Q.2
+    obtain ⟨hb, hj, ht, hw⟩ := supportBound _ (mem_support_iff.mpr hc)
+    have jb : jetDegreeWeight (d := 3) = (fun v => v.elim 0 (fun _ => 1)) := by
+      funext v; cases v <;> rfl
+    have ji : jetDerivativeWeight (d := 3) = (fun v => v.elim 0 (fun i => i.val)) := by
+      funext v; cases v <;> rfl
+    have jw : differentialWeight (d := 3) 133671 =
+        (fun v => v.elim 1 (fun i => 133671 - i.val)) := by
+      funext v; cases v <;> rfl
+    rw [jb] at hb
+    rw [ji] at hj
+    rw [jw] at hw
+    change (m.optionElim n).weight (fun v => v.elim 0 (Pi.single (3 : Fin 4) (1 : ℕ))) ≤ 550 at ht
+    simp only [Finsupp.weight_optionElim, zero_mul, zero_add, one_mul] at hb hj ht hw
+    rw [Finsupp.weight_single_one_apply] at ht
+    rw [weight_eq_sum m (fun _ => 1)] at hb
+    rw [weight_eq_sum m (fun i => i.val)] at hj
+    rw [weight_eq_sum m (fun i => 133671 - i.val)] at hw
+    exact ⟨by simpa only [one_mul] using hb, hj, ht, hw⟩
+  refine ⟨⟨?_, ?_, ?_⟩, ?_⟩
+  · exact Finset.sup_le fun m hm => (h m hm).1
+  · exact Finset.sup_le fun m hm => (h m hm).2.1
+  · exact MvPolynomial.degreeOf_le_iff.mpr fun m hm => (h m hm).2.2.1
+  · exact fun m hm => (h m hm).2.2.2
 theorem atJet_toRow (Q : SourcePolynomial) (S : Geom[X]) :
     atJet (toRow Q) S = differentialSpecialization Q S := by
   let values : Option (Fin 4) → Geom[X] := fun v => v.elim Polynomial.X (jet S)
@@ -488,8 +923,43 @@ theorem atJet_toRow (Q : SourcePolynomial) (S : Geom[X]) :
     | some j => exact (differentialSpecialization_jet j S).symm
   rw [hhom] at h
   exact h
+theorem translate_mem_source (x y : Geom) (Q : SourceSpace) :
+    globalPointTranslation x y Q.1 ∈ SourceSpace := by
+  have preserve (wt : JetVariable 3 → ℕ) (B : ℕ)
+      (h : ∀ e ∈ Q.1.support, e.weight wt ≤ B) :
+      ∀ e ∈ (globalPointTranslation x y Q.1).support, e.weight wt ≤ B :=
+    MvPolynomial.mem_restrictWeightAtMost.mp
+      (globalPointTranslation_mem_restrictWeightAtMost (Nat.zero_le _) (Nat.zero_le _)
+        x y (MvPolynomial.mem_restrictWeightAtMost.mpr h))
+  have h : ∀ e ∈ Q.1.support, SourceEligible e :=
+    Q.2
+  exact fun e he =>
+    ⟨preserve jetDegreeWeight 4012 (fun t ht => (h t ht).1) e he,
+      preserve jetDerivativeWeight 1650 (fun t ht => (h t ht).2.1) e he,
+      preserve topWeight 550 (fun t ht => (h t ht).2.2.1) e he,
+      preserve (differentialWeight 133671) (3000 * 180265 - 1)
+        (fun t ht => (h t ht).2.2.2) e he⟩
 def nodeMap (x y : Geom) : SourceSpace →ₗ[Geom] Local :=
   (localConstraintAt 3000 x y).domRestrict SourceSpace
+def wordMap (w : I → K) : SourceSpace →ₗ[Geom] (I → Local) :=
+  LinearMap.pi fun i => nodeMap (embed (node i)) (embed (w i))
+private theorem pointContact {m : ℕ} (x y : Geom) (Q : SourcePolynomial) (S : Geom[X])
+    (hS : S.eval x = y) (hQ : SatisfiesLocalConstraints m x y Q) :
+    (Polynomial.X - Polynomial.C x) ^ m ∣ differentialSpecialization Q S := by
+  exact X_sub_C_pow_dvd_differentialSpecialization_of_contact Q S x y hS hQ
+theorem contact_of_word_kernel (w : I → K) (Q : SourceSpace) (hQ : wordMap w Q = 0) :
+    Contact w (toRow Q.1) := by
+  intro i S hS
+  rw [atJet_toRow]
+  have hi : SatisfiesLocalConstraints (d := 3) 3000 (embed (node i)) (embed (w i)) Q.1 := by
+    exact congrFun hQ i
+  have hd := pointContact (embed (node i)) (embed (w i)) Q.1 S hS hi
+  with_reducible exact hd
+theorem finrank_source : Module.finrank Geom SourceSpace = sourceColumns.card := by
+  have h : (↑sourceColumns : Set SourceExponent) = sourceExponents :=
+    Set.Finite.coe_toFinset sourceExponents_finite
+  rw [SourceSpace, ← h]
+  exact MvPolynomial.finrank_restrictSupport_finset (K := Geom) sourceColumns
 end
 end K1_13_2
 end
@@ -498,6 +968,7 @@ namespace K1_13_2
 noncomputable section
 open K1 K1_13 PolynomialDifferential ReedSolomon.HiddenDerivative
 open scoped BigOperators
+def c1 : Prop := 91427791847082602567 ≤ sourceColumns.card
 def c2 : Prop :=
   ∀ i : BlockIndex, ∀ power : Fin 11 → ℕ,
     Module.finrank Geom (LinearMap.range (originBlock i)) ≤ blockBound i power
@@ -575,6 +1046,74 @@ theorem origin_rank_le (power : BlockIndex → Fin 11 → ℕ) (h : c2) :
       exact (MvPolynomial.monomial_mem_restrictSupport Geom).mpr (Or.inl hi)
     exact ⟨⟨MvPolynomial.monomial e c, hm⟩, rfl⟩
   · exact Or.inl (high_monomial_vanishes e _ (Nat.le_of_not_gt hx))
+theorem node_range_le (x y : Geom) :
+    LinearMap.range (nodeMap x y) ≤ LinearMap.range (nodeMap 0 0) := by
+  rintro _ ⟨Q, rfl⟩
+  refine ⟨⟨globalPointTranslation x y Q.1, translate_mem_source x y Q⟩, ?_⟩
+  exact (localConstraintAt_eq_zero_globalPointTranslation (m := 3000) x y Q.1).symm
+theorem word_rank_le (w : I → K) {b : ℕ}
+    (h : Module.finrank Geom (LinearMap.range (nodeMap 0 0)) ≤ b) :
+    Module.finrank Geom (LinearMap.range (wordMap w)) ≤ 262144 * b := by
+  let nmap (i : I) := nodeMap (embed (node i)) (embed (w i))
+  let B (i : I) := LinearMap.range (nmap i)
+  let f : SourceSpace →ₗ[Geom] (∀ i, B i) := LinearMap.pi fun i => (nmap i).rangeRestrict
+  let g : (∀ i, B i) →ₗ[Geom] (I → Local) :=
+    LinearMap.pi fun i => (B i).subtype.comp (LinearMap.proj i)
+  have hw : wordMap w = g.comp f := rfl
+  rw [hw]
+  calc
+    Module.finrank Geom (LinearMap.range (g.comp f)) ≤
+        Module.finrank Geom (LinearMap.range g) :=
+      Submodule.finrank_mono (LinearMap.range_comp_le_range f g)
+    _ ≤ Module.finrank Geom (∀ i, B i) := g.finrank_range_le
+    _ = ∑ i, Module.finrank Geom (B i) := Module.finrank_pi_fintype Geom
+    _ ≤ ∑ _ : I, b := Finset.sum_le_sum fun i _ =>
+      (Submodule.finrank_mono (node_range_le (embed (node i)) (embed (w i)))).trans h
+    _ = 262144 * b := by simp [I, FrobeniusLocator.Native.I, ProximityPrize.Benchmark.IRSProfile.Index]
+private theorem surplus {r k n : ℕ}
+    (hr : r ≤ 262144 * 344125686492134) (hn : 91427791847082602567 ≤ n)
+    (he : r + k = n) : 1217307887288627271 ≤ k := by
+  omega
+private theorem map_independent_family {V W : Type*} [AddCommGroup V] [Module Geom V]
+    [AddCommGroup W] [Module Geom W] {n : ℕ} (f : V →ₗ[Geom] W)
+    (hf : Function.Injective f) (P : W → Prop) (hP : ∀ x, P (f x))
+    (hn : n ≤ Module.finrank Geom V) :
+    ∃ e : Fin n → W, LinearIndependent Geom e ∧ ∀ i, P (e i) := by
+  obtain ⟨e, he⟩ := exists_linearIndependent_of_le_finrank hn
+  exact ⟨f ∘ e, he.map' f (LinearMap.ker_eq_bot_of_injective hf), fun i => hP (e i)⟩
+private theorem family_of_kernel (w : I → K) {n : ℕ}
+    (hker : n ≤ Module.finrank Geom (LinearMap.ker (wordMap w))) :
+    ∃ e : Fin n → Row 4, LinearIndependent Geom e ∧
+      ∀ i, InBox (shape (e i)) ⟨4012, 1650, 550⟩ ∧
+        TrueWeightLE (e i) (3000 * 180265 - 1) ∧ Contact w (e i) := by
+  let liftRow : LinearMap.ker (wordMap w) →ₗ[Geom] Row 4 :=
+    toRow.toLinearMap.comp (SourceSpace.subtype.comp (LinearMap.ker (wordMap w)).subtype)
+  have hinj : Function.Injective liftRow := by
+    intro a b hab
+    apply Subtype.ext
+    apply Subtype.ext
+    exact toRow.injective hab
+  let admissible (P : Row 4) := InBox (shape P) ⟨4012, 1650, 550⟩ ∧
+    TrueWeightLE P (3000 * 180265 - 1) ∧ Contact w P
+  have hrows (Q : LinearMap.ker (wordMap w)) : admissible (liftRow Q) := by
+    obtain ⟨hbox, hwt⟩ := row_bounds Q.1
+    have hk : wordMap w Q.1 = 0 := (LinearMap.mem_ker (f := wordMap w)).mp Q.2
+    have hcont := contact_of_word_kernel w Q.1 hk
+    have happly : liftRow Q = toRow Q.1.1 := rfl
+    rw [happly]
+    exact ⟨hbox, hwt, hcont⟩
+  have h := map_independent_family (V := LinearMap.ker (wordMap w)) (W := Row 4)
+    (n := n) liftRow hinj admissible hrows hker
+  simpa only [admissible] using h
+theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) : K1_13.c2 := by
+  intro w
+  obtain ⟨power, hpower⟩ := h3
+  have hlocal := (origin_rank_le power h2).trans hpower
+  have hglobal := word_rank_le w hlocal
+  have hsource : 91427791847082602567 ≤ Module.finrank Geom SourceSpace := by
+    rw [finrank_source]
+    exact h1
+  exact family_of_kernel w (surplus hglobal hsource (wordMap w).finrank_range_add_finrank_ker)
 end
 end K1_13_2
 end

@@ -1,6 +1,5 @@
-import ProximityPrize.SubmissionLower.HighCore82219Data
-import ProximityPrize.SubmissionLower.HighCore82219Model
-import ProximityPrize.SubmissionLower.GoldBranch7N1
+import ProximityPrize.SubmissionLower.FrontCore82219Model
+import ProximityPrize.SubmissionLower.HighBankCore
 
 set_option Elab.async false
 set_option autoImplicit true
@@ -65,11 +64,31 @@ def SourceExists : Prop :=
     InBand b M.overhead → M.shift ∉ Γ → ∀ H, AdjacentChart M F H →
     ∃ rows : Banks, Source b M F rows
 
-theorem source
+def crtWord {u del} (M : AnchorModel u del) : I → L :=
+  fun i => algebraMap K L (M.word i)
+
+structure ChartSource (b : Band) {u del} (M : AnchorModel u del) {Γ}
+    (F : AnchoredFamily M Γ) where
+  poles : PoleData M.overhead.toNat
+  crt : CRTLift poles
+  node_avoids : ∀ i k, (poles.block i).eval (nodeL k) ≠ 0
+  residues : ∀ γ ∈ Γ, MarkResidues poles (M.label γ) (F.scalar γ)
+  source : Source b M F (evaluated crt (crtWord M))
+
+abbrev ChartSource.rows {b u del} {M : AnchorModel u del} {Γ} {F : AnchoredFamily M Γ}
+    (C : ChartSource b M F) : Banks :=
+  evaluated C.crt (crtWord M)
+
+def CRTSourceExists : Prop :=
+  ∀ (b : Band) u del (M : AnchorModel u del) Γ (F : AnchoredFamily M Γ),
+    InBand b M.overhead → M.shift ∉ Γ → ∀ H, AdjacentChart M F H →
+    Nonempty (ChartSource b M F)
+
+theorem source_for_crt
     (hnodes : ∀ (b : Band) (t : Bank), Listed b t → nodeRows t.shape = t.nodeRows)
     (hmoment : ∀ (b : Band) (t : Bank), Listed b t →
       groupedPoleMoment t.shape.B t.shape.J ≤ t.poleMoment ∧ t.shape.B < K1.p) :
-    SourceExists := by
+    CRTSourceExists := by
   intro b u del M Γ F hband _ H hH
   have hlocal := P1_7_1_1.of_children P1_7_1_1_1.proof P1_7_1_1_2.proof
   let h := M.overhead.toNat
@@ -81,8 +100,8 @@ theorem source
   have hchar : h < K1.p := hhi.trans_lt (by decide)
   obtain ⟨D, _, hnode, hres⟩ := FrontCore82219.chart_poles M F H hH
   obtain ⟨Crt⟩ := P0_10_1.crt_lift D
-  let word : I → L := fun i => algebraMap K L (M.word i)
-  refine ⟨evaluated Crt word, ⟨?_, ?_, ?_, ?_, ?_, ?_⟩⟩
+  let word := crtWord M
+  refine ⟨⟨D, Crt, hnode, hres, ⟨?_, ?_, ?_, ?_, ?_, ?_⟩⟩⟩
   · intro t _ t' _ hm hB hJ hU W W' hW
     exact evaluated_mono Crt word hm hB hJ hU hW
   · intro t _ W hW P hP γ hγ
@@ -122,6 +141,16 @@ theorem source
         ∑ w ∈ Finset.range (W+1), Module.finrank FX (evaluated Crt word t.shape w)
     omega
 
+theorem source
+    (hnodes : ∀ b t, Listed b t → nodeRows t.shape = t.nodeRows)
+    (hmoment : ∀ b t, Listed b t →
+      groupedPoleMoment t.shape.B t.shape.J ≤ t.poleMoment ∧ t.shape.B < K1.p) :
+    SourceExists := by
+  intro b u del M Γ F hw hshift H hH
+  obtain ⟨C⟩ := source_for_crt hnodes hmoment b u del M Γ F hw hshift H hH
+  exact ⟨C.rows, C.source⟩
+
+#print axioms source_for_crt
 #print axioms source
 end
 end HighCore82219
