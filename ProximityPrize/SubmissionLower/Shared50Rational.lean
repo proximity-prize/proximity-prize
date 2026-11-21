@@ -161,7 +161,5 @@ theorem clear_denominators (R : FractionJet) :
   ext m
   simp [MvPolynomial.mem_support_iff, MvPolynomial.coeff_C_mul, hi]
 
-#print axioms clear_denominators
-#print axioms independent_fraction
 end
 end Shared50Rational

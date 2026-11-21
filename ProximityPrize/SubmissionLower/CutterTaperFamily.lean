@@ -75,6 +75,5 @@ theorem primary_family (A D : ℕ) (hA : 0<A) (hD : 3<D) (hBudget : D*4012 ≤ 3
   exact ⟨hbox,hweight,hJets,contact_of_word_kernel w Q.1 (LinearMap.mem_ker.mp Q.2)⟩
 
 
-#print axioms primary_family
 end
 end CutterTaperTheta

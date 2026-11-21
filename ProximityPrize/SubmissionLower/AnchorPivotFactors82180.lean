@@ -101,5 +101,4 @@ theorem basis_ok (i : Fin 8) : Sound (basisData i) (basisPoly i) := by
   · exact spec6
   · exact spec7
 
-#print axioms basis_ok
 end AnchorPivot82180

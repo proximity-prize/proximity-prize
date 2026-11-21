@@ -421,9 +421,6 @@ theorem shear_order_of_desc_eq_zero (u δ : ℕ) (hδ : δ ≤ u + 1)
   refine contact_of_desc_eq_zero u δ hchar _ ?_ _ (by omega)
   rw [← intertwine_desc, hx, map_zero]
 
-#print axioms shear_order_of_desc_eq_zero
-#print axioms desc_upper
-#print axioms desc_order
 
 end Jet
 

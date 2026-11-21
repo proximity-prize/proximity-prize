@@ -80,6 +80,5 @@ theorem weighted_degree_mul (w : σ → ℕ) {f g : MvPolynomial σ F} (hf : f �
   rw [← record_degree w (f*g), map_mul,
     Polynomial.natDegree_mul (record_ne_zero w hf) (record_ne_zero w hg), record_degree, record_degree]
 
-#print axioms weighted_degree_mul
 end
 end SplitCut.Rect

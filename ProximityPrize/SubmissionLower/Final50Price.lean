@@ -8,25 +8,25 @@ open K1_13 (Geom extend Row Shape shape Fits InBox Contact chart liftedChart mix
   OnFactor FatEligible OrderAt indexDegree)
 open scoped BigOperators Polynomial
 
-abbrev agreement : ℕ := 179905
-abbrev errors : ℕ := 82239
-abbrev physicalDegree : ℕ := 133448
+abbrev agreement : ℕ := 179895
+abbrev errors : ℕ := 82249
+abbrev physicalDegree : ℕ := 133461
 abbrev taylorLength : ℕ := physicalDegree + 1
 abbrev incidenceGap : ℕ := agreement - physicalDegree
-abbrev anchorCutoff : ℕ := 93 * agreement - 1 + 52
+abbrev anchorCutoff : ℕ := 96 * agreement - 1 + 53
 abbrev primaryCutoff : ℕ := 3000 * agreement - 1
 abbrev primaryBox : Shape := ⟨4012, 1650, 550⟩
-abbrev layerNeed : ℕ := 22403222113791
+abbrev layerNeed : ℕ := 21882148517720
 abbrev layerWidth : ℕ := agreement - physicalDegree + 3
 def TrueWeightLE {n : ℕ} (P : Row n) (D : ℕ) : Prop :=
   ∀ m ∈ P.support, (P.coeff m).natDegree +
     m.sum (fun i a => (physicalDegree - i.val) * a) ≤ D
-def fullCap (top : ℕ) : Shape := ⟨125, 52, top⟩
+def fullCap (top : ℕ) : Shape := ⟨129, 53, top⟩
 def Fits (top : ℕ) {n : ℕ} (a : Fin n → Shape) : Prop :=
-  (∀ i, K1_13_8.Valid (a i)) ∧ (∑ i, (a i).b) ≤ 125 ∧ (∑ i, (a i).j) ≤ 52 ∧
+  (∀ i, K1_13_8.Valid (a i)) ∧ (∑ i, (a i).b) ≤ 129 ∧ (∑ i, (a i).j) ≤ 53 ∧
     (∑ i, (a i).t) ≤ top
-def lowerWidth (top : ℕ) : ℕ := 125 - top
-def lowerIndex (top : ℕ) : ℕ := 52 - 3 * top
+def lowerWidth (top : ℕ) : ℕ := 129 - top
+def lowerIndex (top : ℕ) : ℕ := 53 - 3 * top
 def lowerTop (top : ℕ) : ℕ := lowerIndex top / 2
 def LowerRow (top : ℕ) (g : Row 3) : Prop :=
   g ≠ 0 ∧ g.totalDegree ≤ lowerWidth top ∧ indexDegree g ≤ lowerIndex top ∧
@@ -48,27 +48,27 @@ def LayerBudget {n : ℕ} (a : Fin n → Shape) (l : Fin n → ℕ) : Prop :=
   layerNeed ≤ ∑ r ∈ Finset.range (1 + primaryCutoff / layerWidth),
     remaining (∑ i, (r + 1 - l i) * (a i).b) (∑ i, (r + 1 - l i) * (a i).j)
 abbrev FatEquations := P3_6.FatEquations
-abbrev fatOrder : ℕ := 53178
-abbrev divisorOrder : ℕ := 48817
+abbrev fatOrder : ℕ := 51281
+abbrev divisorOrder : ℕ := 46920
 abbrev isolatedOrder : ℕ := 596
 abbrev commonBox := P3_6.commonBox
 abbrev resultantBox := P3_6.resultantBox
 def lowerCap : ℕ → ℕ
-  | 0 => 22258212026003248
-  | 1 => 19914652156004755
-  | 2 => 17690054217600253
-  | 3 => 15586159007729913
-  | 4 => 13605491615199925
-  | 5 => 11749888854712210
-  | 6 => 10021785058608165
-  | 7 => 8423101210093614
-  | 8 => 6956192938405237
-  | 9 => 5623053137790453
-  | 10 => 4425971195945761
-  | 11 => 3366999252493415
-  | 12 => 2448373323358719
-  | 13 => 1672191719667549
-  | 14 => 1040650363547452
+  | 0 => 23930401392725149
+  | 1 => 21454708270294411
+  | 2 => 19102115390656673
+  | 3 => 16875231295156450
+  | 4 => 14775815868443004
+  | 5 => 12806375271598402
+  | 6 => 10968765063395655
+  | 7 => 9265401313568048
+  | 8 => 7698222761850621
+  | 9 => 6269568084037649
+  | 10 => 4981446299168383
+  | 11 => 3836131795003951
+  | 12 => 2835690559733903
+  | 13 => 1982346207488182
+  | 14 => 1278207976956624
   | _ => 0
 def Holds (E : FatEquations) (S : Geom[X]) : Prop :=
   atJet E.common S = 0 ∨ OrderAt E.residual S fatOrder

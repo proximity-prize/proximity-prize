@@ -342,7 +342,7 @@ private theorem spend_le {ι : Type*} [DecidableEq ι] [Fintype ι] {l : ι → 
           Nat.mul_le_mul_right _ (Nat.sub_le_sub_left (hs i hi) _)
     _ = ∑ i ∈ z ∪ s, (d - l i) * f i := (Finset.sum_union hdisj).symm
     _ ≤ _ := Finset.sum_le_sum_of_subset (Finset.subset_univ _)
-private theorem mass_le {n : ℕ} {a : Fin n → Shape} {l : Fin n → ℕ}
+theorem mass_le {n : ℕ} {a : Fin n → Shape} {l : Fin n → ℕ}
     (hlayers : LayerBudget a l) {z s : Finset (Fin n)} {q : Shape} {L : ℕ}
     (hz : ∀ i ∈ z, l i = 0) (hs : ∀ i ∈ s, l i ≤ L)
     (hdisj : Disjoint z s) (hq : InBox q (shapeSum a z)) :
@@ -350,7 +350,7 @@ private theorem mass_le {n : ℕ} {a : Fin n → Shape} {l : Fin n → ℕ}
   refine hlayers.trans (Finset.sum_le_sum fun k _ => remaining_anti ?_ ?_)
   · exact spend_le (fun i => (a i).b) hz hs hdisj hq.1
   · exact spend_le (fun i => (a i).j) hz hs hdisj hq.2.1
-private theorem retained_cost {ι : Type*} {a : ι → Shape} {cost : ι → ℕ}
+theorem retained_cost {ι : Type*} {a : ι → Shape} {cost : ι → ℕ}
     {z : Finset ι} (ha : ∀ i, Valid (a i)) (hbox : RetainedBox (shapeSum a z))
     (hfat : ∀ i, FatEligible (a i) → cost i ≤ fatPrice (a i)) :
     (∑ i ∈ z, cost i) ≤
@@ -512,7 +512,7 @@ private theorem signed_rotate (p q r s : Shape) :
     signedMixed p q r s = signedMixed q r s p := by
   simp only [signedMixed, difference, volume32, Shape.plus, Nat.cast_add, Nat.cast_zero]
   ring
-private theorem chamber_coords (p : Shape) (h : Chamber p) :
+theorem chamber_coords (p : Shape) (h : Chamber p) :
     (p.b : ℤ) = (↑(p.b - p.j) : ℤ) + ↑(p.j - 3 * p.t) + 3 * p.t ∧
     (p.j : ℤ) = (↑(p.j - 3 * p.t) : ℤ) + 3 * p.t := by
   obtain ⟨hb, hj⟩ := h
@@ -1396,10 +1396,6 @@ def sliceEval : (s : Slice) → Ambient →+* Plane (SliceField s)
   | .jets => mapGenericJets
 abbrev SliceQuotient (s : Slice) (I : Ideal Ambient) :=
   CoordinateRing (I.map (sliceEval s))
-abbrev PlaneQuotient {F : Type} [Field F] (P Q : Plane F) :=
-  CoordinateRing (Ideal.span {P, Q})
-def BidegreeLE {F : Type} [Field F] (P : Plane F) (a b : ℕ) : Prop :=
-  P.degreeOf 0 ≤ a ∧ P.degreeOf 1 ≤ b
 end
 end K1_14_2_2_2_5
 end
@@ -3085,9 +3081,9 @@ private def signedWidth (h : ℤ) (q j : ℕ) : ℤ :=
   (fullShape.m : ℤ)*180265 + j - q*131071 + h * widthSlope q j
 def supportSum (f : ℕ → ℕ → ℤ) : ℤ :=
   intShapeSum (fun q j => if 0 < signedWidth 3555 q j then f q j else 0)
-private def supportBase : ℤ :=
+def supportBase : ℤ :=
   (triangle fullShape.U : ℤ) * supportSum (signedWidth 3555)
-private def supportSlope : ℤ :=
+def supportSlope : ℤ :=
   (triangle fullShape.U : ℤ) * supportSum widthSlope
 def nodeDebitOf (s : Shape) : ℕ :=
   triangle s.U * 262144 * shapeSum s (fun q i => s.m + min q s.J - (q+2*i))
@@ -4513,7 +4509,7 @@ theorem factor_mem {f Q : Row 4} {surface : Ideal GeoJets}
     (hZ : (intersectionIdeal f Q).IsMinimalPrime surface) :
     toGeneric f ∈ surface :=
   hZ.le (Ideal.subset_span (Set.mem_insert _ _))
-private theorem one_surface (h1 : c1) (h2 : c2) (h3 : c3)
+theorem one_surface (h1 : c1) (h2 : c2) (h3 : c3)
     {Γ s f Q l surface} (input : CutInput Γ s f Q l)
     (hZ : (intersectionIdeal f Q).IsMinimalPrime surface) (active : HasMark Γ s surface) :
     ∃ P, SurfaceCut f Q surface P ∧

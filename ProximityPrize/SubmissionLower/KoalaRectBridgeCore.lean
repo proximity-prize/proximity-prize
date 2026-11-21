@@ -93,6 +93,5 @@ theorem rectLoss {h : ℕ} (hpos : 0 < h) (hraw : h ≤ 131070) (hchar : h < K1.
     area U * shapeSum s (fun q j => top+j-q*(131071-h)) at htotal
   omega
 
-#print axioms rectLoss
 end
 end KoalaRect

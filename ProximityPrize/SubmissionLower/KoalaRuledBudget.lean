@@ -132,6 +132,5 @@ theorem graph_budget (J : Input) {B : ResidueLift J} (D : Factors J B) {v w : â„
   rw [graphDegree_eq_mixed J.e v w he]
   exact graphCut_mixed_bound J D ha hb hc haxis hg hreg hdimG
 
-#print axioms graph_budget
 end
 end SplitCut.Rect

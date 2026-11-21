@@ -108,11 +108,11 @@ theorem active_charge (D : Data Γ s f Q l S) (input : CutInput Γ s f Q l)
   simpa only [orderCost,Nat.cast_mul,Nat.cast_sum,Nat.cast_ofNat] using hh
 
 def auxiliaryCap (x : Shape) : ℕ :=
-  ceilDiv (82239*auxCurves32 x + 2*46457*auxPoints32 x) (32*46457)
+  ceilDiv (82249*auxCurves32 x + 2*46434*auxPoints32 x) (32*46434)
 def continuedCap (x : Shape) : ℕ :=
-  ceilDiv ((82239+2*46457)*membershipDegree x) 46457
+  ceilDiv ((82249+2*46434)*membershipDegree x) 46434
 def surfaceCap (x : Shape) : ℕ :=
-  2*(133448*x.b*primaryBox.b)
+  2*(133461*x.b*primaryBox.b)
 
 private theorem charge_le {x : Shape} {l a c d n scale budget O : ℕ}
     (hl : 0<l) (hs : 0<scale)
@@ -165,11 +165,9 @@ theorem additive_le {x : Shape} {l a c d : ℕ} (hl : 0<l)
     _ = _ := by
       unfold Final50SharedPrice.additiveBase auxiliaryCap continuedCap surfaceCap
         auxCurves32 auxPoints32 membershipDegree
-      simp only [Final50Price.errors, show Final50Price.incidenceGap = 46457 by decide, Final50Price.physicalDegree,
+      simp only [Final50Price.errors, show Final50Price.incidenceGap = 46434 by decide, Final50Price.physicalDegree,
         Nat.mul_comm, Nat.mul_left_comm, Nat.mul_assoc]
       omega
 
-#print axioms physical_bound
-#print axioms additive_le
 end
 end Shared50TallyOld

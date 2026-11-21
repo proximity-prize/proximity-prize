@@ -225,5 +225,3 @@ theorem surfaces {a b c h j r : ℕ} (ha : 0<a) (hb : 0<b) (hc : 0<c)
 
 end
 end SplitCut.BoxDegree
-#print axioms SplitCut.BoxDegree.surface
-#print axioms SplitCut.BoxDegree.surfaces

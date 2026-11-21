@@ -417,9 +417,6 @@ end P1
 end
 section
 namespace P1
-theorem high_with_reserve (b : HighBand) :
-    b.row.prefixFee + b.row.retained + 1 + anchorFee + rankFee ≤ scalarCap := by
-  cases b <;> decide
 end P1
 end
 section

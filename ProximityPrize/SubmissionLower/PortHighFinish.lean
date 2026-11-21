@@ -10,25 +10,6 @@ open P0 (AnchorModel AnchoredFamily K highPrefix)
 open P0_10 (BufferedPair BankVanishes freeShape movingShape fullShape MarkOn band TerminalDivisibility)
 open K1_14 (Banks Equation)
 open K1_14_3 (Surface Parent ProjectedProduct)
-def SurfacePass {w : ℤ} {rows : Banks} {i : Fin 2} (pair : BufferedPair w rows i)
-    (q : Surface) : Prop :=
-  BankVanishes rows (freeShape w i) q ∧
-  BankVanishes rows (movingShape w i) q ∧ K1_14_3R.compatible pair.free pair.moving q
-structure RetainedCover {u del} (M : AnchorModel u del) {Γ} (F : AnchoredFamily M Γ)
-    {rows : Banks} (pairs : ∀ i : Fin 2, BufferedPair M.overhead rows i) where
-  kept : Finset K
-  subset : kept ⊆ Γ
-  paid : (Γ \ kept).card ≤ highPrefix M.overhead
-  parents : Finset Surface
-  geometric : ∀ q ∈ parents, Parent q
-  initial : ∀ q ∈ parents, (pairs 0).free ∈ q.asIdeal ∧ (pairs 0).moving ∈ q.asIdeal
-  survives : ∀ q ∈ parents, SurfacePass (pairs 1) q
-  terminal : ∀ q ∈ parents, BankVanishes rows (fullShape M.overhead) q
-  covers : ∀ γ ∈ kept, ∃ q ∈ parents, MarkOn M F q γ
-  equation : Equation
-  projected : ProjectedProduct parents equation
-  y_bound : equation.natDegree ≤ (band M.overhead).yBound
-  divides : TerminalDivisibility M.overhead rows equation
 end
 end P0_10R
 namespace P0_10R.Bridge

@@ -73,12 +73,6 @@ theorem get_grade {lo hi fullU cap : ℕ} (gs : List Grade) (e : ℕ)
       simpa only [Nat.zero_add] using hall.1
     · have h := ih (e+1) hall.2 ⟨j, by simpa using hj⟩
       simpa only [List.get_cons_succ, Nat.succ_add, Nat.add_succ] using h
-theorem grade_of_literals {lo hi fullU cap e v U D m price : ℕ}
-    (hU : U ≤ fullU) (hD : singularDegree e v = D) (hDp : D < p)
-    (hm : e * degreeAt hi + v = m) (hmp : m < p)
-    (hprice : wholePrice lo hi e v = price) (hle : price ≤ cap) :
-    GradeOK lo hi fullU cap e ⟨v,U⟩ :=
-  ⟨hU, hD.le.trans_lt hDp, hm.le.trans_lt hmp, hprice.le.trans hle⟩
 theorem sheets_le_price (lo hi e v : ℕ) : e ≤ wholePrice lo hi e v := by
   unfold wholePrice
   split
@@ -93,7 +87,6 @@ end
 section
 namespace HighFamily82180
 open Front82180 (K HighBand)
-abbrev PrefixFees := P1_7.PrefixFees
 abbrev fees := HighPrefix82180.book
 theorem fees_total (b : HighBand) :
     (fees b).loss + (fees b).point + (fees b).lowSeed + (fees b).lowJet +

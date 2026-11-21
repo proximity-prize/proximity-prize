@@ -276,15 +276,4 @@ private theorem sum_checked : sumChunk row 0 499 = 396610034658 := by
     join 0 8 491 8 499 2989340613 393620694045 396610034658 (by decide) (by decide) (by decide) rows0 tail8
   exact tail0
 
-theorem tapered_rank (x y : Geom) :
-    Module.finrank Geom
-      (LinearMap.range ((localConstraintAt 3000 x y).domRestrict
-        (TaperNormalize.space cap))) ≤ 343903138965692 := by
-  have h : 396610034658 ≤ ∑ i : BlockIndex, tailSaving i := by
-    have t := fastSavings_le (J := 600) (by decide)
-    rw [← sumChunk_eq_fastSavings, sum_checked] at t
-    exact t
-  exact rank_le x y h
-
-#print axioms tapered_rank
 end TaperBudget

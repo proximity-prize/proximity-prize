@@ -6859,9 +6859,6 @@ variable {k G : Type} [Field k] [Field G]
 def cutIdeal (f : k →+* G) (I : Ideal (Four k)) (x : Four k) (s : G) :
     Ideal (Four G) :=
   I.map (extendScalars f) ⊔ Ideal.span {extendScalars f x - scalar s}
-private abbrev offsetMap (I : Ideal (Four k)) (x : Four k) :
-    k[X] →+* (Four k ⧸ I) :=
-  (aeval (R := k) (Ideal.Quotient.mk I x)).toRingHom
 end
 end K1_14_3R_3_1_2_2
 end

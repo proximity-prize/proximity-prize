@@ -136,7 +136,6 @@ theorem local_of_children (hLocal : P1_7_1_1.c1) (hBasis : P1_7_1_1.c2) : LocalT
 theorem local_tests : LocalTests :=
   local_of_children P1_7_1_1_1.proof P1_7_1_1_2.proof
 
-#print axioms local_tests
 
 end
 end KoalaRectPole

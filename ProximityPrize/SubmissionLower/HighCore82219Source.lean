@@ -150,7 +150,5 @@ theorem source
   obtain ⟨C⟩ := source_for_crt hnodes hmoment b u del M Γ F hw hshift H hH
   exact ⟨C.rows, C.source⟩
 
-#print axioms source_for_crt
-#print axioms source
 end
 end HighCore82219

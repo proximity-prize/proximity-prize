@@ -10,8 +10,8 @@ open K1_13_4_4 (layerSpan)
 open K1_13_4_4_1 (Exponent)
 open Final50Fat (secondCut bankRank)
 open scoped BigOperators
-open private bank bankEval mem_bank K1_13_4_4_1.kernel_le boundary below_boundary independent_generic
-  from ProximityPrize.SubmissionLower.Fast050
+open K1_13_4_4_1 (bankEval mem_bank below_boundary independent_generic)
+open private bank K1_13_4_4_1.kernel_le boundary from ProximityPrize.SubmissionLower.Fast050
 open private K1_13_4_4_1.endpoint from ProximityPrize.SubmissionLower.Fast074
 set_option maxHeartbeats 1000000
 set_option backward.isDefEq.respectTransparency false
@@ -72,7 +72,7 @@ open Final50Fat (mixedWeight secondCut bankRank)
 open scoped Polynomial BigOperators
 open private line line_zero line_toGeneric transverse pow_dvd_of_coeff positive_jet_degree
   from ProximityPrize.SubmissionLower.Fast076
-def reserveCost (moving : Bool) : ℕ := if moving then 7131 else 48836
+def reserveCost (moving : Bool) : ℕ := if moving then 7170 else 48826
 def layerPower (e t : ℕ) : ℕ := 1 + (secondCut - t) / e
 theorem choose_coordinate {moving : Bool} {A : Finset GenericRow}
     (hA : FactorsFor moving A) {F f : GenericRow} (hF : F ≠ 0) (hcap : Caps secondBox F)
@@ -134,9 +134,9 @@ theorem factor_power (moving : Bool) (A : Finset GenericRow) (F : PhysicalRow) (
 set_option maxRecDepth 1024
 theorem factor_arithmetic :
     let T := 0x1de50d7332f37
-    48836 * 6820 * T / bankRank = 120 ∧ 48836 * 2300 * T / bankRank = 40 ∧
-      7131 * 6820 * T / bankRank = 17 ∧ 7131 * 2300 * T / bankRank = 5 ∧
-      7131 * 70000 * T / bankRank = 180 := by decide
+    48826 * 6820 * T / bankRank = 120 ∧ 48826 * 2300 * T / bankRank = 40 ∧
+      7170 * 6820 * T / bankRank = 17 ∧ 7170 * 2300 * T / bankRank = 5 ∧
+      7170 * 70000 * T / bankRank = 180 := by decide
 theorem resource_bound {e V d : ℕ} (he : 0 < e) (r : ℕ → ℕ)
     (hr : bankRank ≤ ∑ t ∈ Finset.range (secondCut + 1), r t)
     (hcap : ∀ t ≤ secondCut, r t ≤ topSlots 0)
@@ -172,8 +172,8 @@ theorem resource_bound {e V d : ℕ} (he : 0 < e) (r : ℕ → ℕ)
     _ = e * V * topSlots 0 := by ring
 theorem top_exclusion (r : ℕ → ℕ)
     (hr : bankRank ≤ ∑ t ∈ Finset.range (secondCut + 1), r t)
-    (h : ∀ t ≤ secondCut, r t ≤ topSlots (layerPower 7131 t)) : False := by
-  have hb := cutoff_sum_le (W := secondCut) (n := 1150) (by decide : 0 < 7131)
+    (h : ∀ t ≤ secondCut, r t ≤ topSlots (layerPower 7170 t)) : False := by
+  have hb := cutoff_sum_le (W := secondCut) (n := 1150) (by decide : 0 < 7170)
     r (fun k => topSlots (1 + k)) h (fun k hk => by
       have hk' : 1151 - (1 + k) = 0 := by omega
       simp [topSlots, hk'])
@@ -182,7 +182,7 @@ theorem top_exclusion (r : ℕ → ℕ)
     0x5535180af365254238 / 7800 at hs
   rw [Nat.mul_div_cancel_left _ (by decide : 0 < 7800)] at hs
   rw [hs] at hb
-  exact (not_le_of_gt (by decide : 7131 * (0x5535180af365254238 / 7800) < bankRank)) (hr.trans hb)
+  exact (not_le_of_gt (by decide : 7170 * (0x5535180af365254238 / 7800) < bankRank)) (hr.trans hb)
 end
 end Final50FatFactors
 end
@@ -289,7 +289,7 @@ private theorem excludes_top {Γ s} {w : I → K} {P : PoleData Γ s}
     (hb : ∀ t ≤ secondCut, ∃ u : Fin (r t) → GenericRow,
       LinearIndependent GenericX u ∧ ∀ i, u i ∈ layerSpan w P L t)
     (hdvd : ∀ t ≤ secondCut,
-      layerSpan w P L t ≤ multiples (factorProduct A ^ layerPower 7131 t)) :
+      layerSpan w P L t ≤ multiples (factorProduct A ^ layerPower 7170 t)) :
     ∀ f ∈ A, f.degreeOf (some 2) = 0 := by
   classical
   let v : SeedVar → ℕ := Pi.single (some 2) 1
@@ -302,7 +302,7 @@ private theorem excludes_top {Γ s} {w : I → K} {P : PoleData Γ s}
     have h := MvPolynomial.weightedTotalDegree_le_of_dvd v
       (mem_multiples.mp (hdvd t ht hR)) hRne
     rw [weighted_pow _ _ (product_ne_zero hA)] at h
-    have hle := Nat.mul_le_mul_left (layerPower 7131 t) (Nat.pos_of_ne_zero hn)
+    have hle := Nat.mul_le_mul_left (layerPower 7170 t) (Nat.pos_of_ne_zero hn)
     rw [Nat.mul_one] at hle
     simpa only [v, MvPolynomial.weightedTotalDegree_piSingle] using hle.trans h
   intro f hf
@@ -368,4 +368,3 @@ end
 end Final50FatFactors
 end
 
-#print axioms Final50FatFactors.proof

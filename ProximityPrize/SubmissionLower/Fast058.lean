@@ -3993,7 +3993,7 @@ def natEntry (t j : ℕ) : ℕ :=
   else 0
 def natGrade (t : ℕ) : ℕ := rangeSum (natEntry t) 283
 def natChunk (lo len : ℕ) : ℕ := rangeSum (fun t => natGrade (lo + t)) len
-private theorem rangeSum_append (f : ℕ → ℕ) (a b : ℕ) :
+theorem rangeSum_append (f : ℕ → ℕ) (a b : ℕ) :
     rangeSum f (a + b) = rangeSum f a + rangeSum (fun k => f (a + k)) b := by
   induction b with
   | zero => simp [rangeSum]

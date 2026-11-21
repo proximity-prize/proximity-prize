@@ -159,6 +159,5 @@ theorem rectPhysical_bound (h : ℕ) (word : I → L) (s : Shape) (W : ℕ) (U :
   have hr := (LinearMap.range f).finrank_le.trans htarget
   omega
 
-#print axioms rectPhysical_bound
 end
 end KoalaRect

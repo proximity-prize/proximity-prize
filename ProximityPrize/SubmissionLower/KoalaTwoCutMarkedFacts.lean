@@ -22,22 +22,5 @@ theorem marked_cutoffs (J : Input) (B : ResidueLift J) (D : Factors J B) :
     obtain ⟨hm, hp⟩ := mem_componentMarks.mp hγ
     exact mark_secondCut J B D hm hp
 
-theorem marked_first_zeroLocus (J : Input) (B : ResidueLift J) (D : Factors J B)
-    (v w : ℕ) {γ : K} (hγ : γ ∈ componentMarks J D.proper) :
-    point J v w γ ∈ MvPolynomial.zeroLocus FX ((firstIdeal J B D).comap (projectJet J v w)) :=
-  (mark_on_iff J v w γ _).mpr (proper_first_mark (marked_cutoffs J B D) hγ)
-
-theorem marked_second_zeroLocus (J : Input) (B : ResidueLift J) (D : Factors J B)
-    (v w : ℕ) {γ : K} (hγ : γ ∈ componentMarks J D.proper) {Q : Ideal JetRing}
-    (hQ : point J v w γ ∈ MvPolynomial.zeroLocus FX (Q.comap (projectJet J v w))) :
-    point J v w γ ∈ MvPolynomial.zeroLocus FX
-      ((Q ⊔ Ideal.span {second J B}).comap (projectJet J v w)) := by
-  apply (mark_on_iff J v w γ _).mpr
-  refine sup_le ((mark_on_iff J v w γ Q).mp hQ) ((Ideal.span_singleton_le_iff_mem _).mpr ?_)
-  exact RingHom.mem_ker.mpr ((marked_cutoffs J B D).second_zero γ hγ)
-
 end SplitCut.TwoCut
 
-#print axioms SplitCut.TwoCut.marked_cutoffs
-#print axioms SplitCut.TwoCut.marked_first_zeroLocus
-#print axioms SplitCut.TwoCut.marked_second_zeroLocus

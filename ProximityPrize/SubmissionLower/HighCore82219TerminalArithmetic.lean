@@ -263,7 +263,7 @@ open HighCore82219 (agreement)
 open K1_14 (Shape)
 open private twice_sum_linear from ProximityPrize.SubmissionLower.Pack_K1_14_2_1Arithmetic
 export P1_7_6 (lt_linearEnd)
-private theorem width_eq_cast (s : Shape) (h q j t : ℕ) (hh : h ≤ 131071) :
+theorem width_eq_cast (s : Shape) (h q j t : ℕ) (hh : h ≤ 131071) :
     width s h q j t = (↑(s.m*agreement+j : ℕ) : ℤ) -
       (↑(2*h*t+(131071-h)*q : ℕ) : ℤ) := by
   simp only [width, Nat.cast_add, Nat.cast_mul, Nat.cast_sub hh, Nat.cast_ofNat]

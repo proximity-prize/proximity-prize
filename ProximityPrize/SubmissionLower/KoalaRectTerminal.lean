@@ -29,9 +29,9 @@ theorem reject_shape {u del Γ} {M : AnchorModel u del} {F : AnchoredFamily M Γ
   let h := M.overhead.toNat
   let t := terminal .h2367
   obtain ⟨hl, hu⟩ := window_nat hw
-  have hl' : 2378 ≤ h := hl
-  have hu' : h ≤ 2465 := hu
-  have hpos : 0 < h := lt_of_lt_of_le (by decide : 0 < 2378) hl'
+  have hl' : 2391 ≤ h := hl
+  have hu' : h ≤ 2490 := hu
+  have hpos : 0 < h := lt_of_lt_of_le (by decide : 0 < 2391) hl'
   have hraw : h ≤ 131070 := hu'.trans (by decide)
   have hchar : h < K1.p := hu'.trans_lt (by decide)
   obtain ⟨_, _, hA, hsmall, hwidth⟩ := terminal_guards .h2367
@@ -85,6 +85,5 @@ theorem paid_degrees {u del Γ} {M : AnchorModel u del} {F : AnchoredFamily M Γ
       (fun r => slots_reversed r hside (Nat.le_of_not_ge hor) hlo hhi hdegree)
       (rect_bounds_swap hl hu he hfull.le)
 
-#print axioms paid_degrees
 end
 end KoalaRect

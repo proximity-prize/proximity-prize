@@ -64,4 +64,3 @@ theorem mono {a b c x y z : ℕ} (ha : a≤x) (hb : b≤y) (hc : c≤z) :
 
 end
 end SplitCut.BoxDegree
-#print axioms SplitCut.BoxDegree.lift_box

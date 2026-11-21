@@ -2375,11 +2375,11 @@ def c5 : Prop :=
 def c6 : Prop :=
   ∀ f Q : Row 4, SmallFactor f → ¬ f ∣ Q → InBox (shape Q) ⟨4012, 1650, 550⟩ →
     CutCycle f Q
-private def CurveSource (f Q : Row 4) (l : ℕ) (P : JetIdeal) : Prop :=
+def CurveSource (f Q : Row 4) (l : ℕ) (P : JetIdeal) : Prop :=
   ∃ (surface : JetIdeal) (r : ℕ) (hz : (intersectionIdeal f Q).IsMinimalPrime surface),
     (l : ℕ∞) ≤ cycleLength (intersectionIdeal f Q) surface hz.isPrime ∧
     CanonicalChart f surface r ∧ SimpleCut ((separant^[r]) f) surface P
-private def FamilyCase (f Q : Row 4) (l : ℕ) (A : CoeffIdeal) : Prop :=
+def FamilyCase (f Q : Row 4) (l : ℕ) (A : CoeffIdeal) : Prop :=
   (dimension A = 1 ∧ CurveSource f Q l (freshImage A)) ∨
   (dimension A = 2 ∧ (intersectionIdeal f Q).IsMinimalPrime (freshImage A))
 private theorem canonical_unique {f : Row 4} {surface : JetIdeal} {r t : ℕ}
@@ -2416,7 +2416,7 @@ private theorem surface_sum {f Q : Row 4} (hc : CutCycle f Q) (T : Finset JetIde
       have h1 := cycleWeight_ge hc hz (hc.local_bound P hz).2.1
       exact le_mul_of_one_le_left (affineDegree_nonneg P) (by exact_mod_cast h1)
     _ ≤ _ := hc.weighted_degree
-private theorem curve_sum {f Q : Row 4} {l : ℕ} (hc : CutCycle f Q)
+theorem curve_sum {f Q : Row 4} {l : ℕ} (hc : CutCycle f Q)
     (T : Finset JetIdeal) (hT : ∀ P ∈ T, CurveSource f Q l P) :
     (l : ℚ) * (∑ P ∈ T, affineDegree P) ≤ (membershipDegree (shape f) : ℕ) := by
   classical
@@ -2484,7 +2484,7 @@ private theorem curve_sum {f Q : Row 4} {l : ℕ} (hc : CutCycle f Q)
     _ ≤ (b : ℚ) * (((shape f).b * cutterBox.b : ℕ) : ℚ) :=
       mul_le_mul_of_nonneg_left hc.weighted_degree (by positivity)
     _ = _ := by simp only [membershipDegree, Nat.cast_mul, b]; ring
-private theorem family_of_mark (h1 : c1) (h2 : c2) (h3 : c3)
+theorem family_of_mark (h1 : c1) (h2 : c2) (h3 : c3)
     {Γ : Finset K} {s : K → K[X]} {f Q : Row 4} {l : ℕ}
     (input : CutInput Γ s f Q l) (hc : CutCycle f Q)
     {γ : K} (hγ : γ ∈ Γ) (hmark : ContinuedMark f Q l (extend (s γ))) :
@@ -3504,7 +3504,7 @@ private theorem jet_zero_nonzero {R : CoeffIdeal} (D : FreshCurve R) {n : ℕ} (
   rw [hi, Polynomial.hasseDeriv_zero']
   change (Polynomial.eval₂RingHom D.includeOld D.center) D.polynomial ≠ 0
   exact fun h => D.monic.ne_zero (D.independent (h.trans (map_zero _).symm))
-private theorem height_comparison (h5 : c5) (h6 : c6) {R : CoeffIdeal} (D : FreshCurve R)
+theorem height_comparison (h5 : c5) (h6 : c6) {R : CoeffIdeal} (D : FreshCurve R)
     (hdiv : PrincipalDivisors GeoField D.Fresh) :
     2 * tupleHeight GeoField D.Fresh D.coefficients ≤
       133671 * tupleHeight GeoField D.Fresh (ratios (D.jets (n := 4)) 0) := by
@@ -5685,7 +5685,7 @@ theorem oldEval_jetLinear (P : JetIdeal) [P.IsPrime] {U : (JetField P)[X]}
   simp only [Polynomial.hasseDeriv_monomial, Polynomial.eval_monomial, map_mul, oldEval,
     MvPolynomial.eval₂Hom_C, MvPolynomial.eval₂Hom_X', map_natCast, map_pow]
   ring
-private theorem fresh_le_source {f Q g : Row 4} {P : JetIdeal} [P.IsPrime]
+theorem fresh_le_source {f Q g : Row 4} {P : JetIdeal} [P.IsPrime]
     {U : (JetField P)[X]} (h : Integrated f Q g P U) :
     freshImage (coefficientKernel (componentConstants P) U) ≤ P := by
   have hmap : (oldEval P U).comp (MvPolynomial.map geomConstants) =
@@ -5821,7 +5821,7 @@ private theorem eval₂_scale {k K σ : Type*} [Field k] [Field K] [Fintype σ]
     simp only [mul_pow, Finset.prod_mul_distrib, Finset.prod_pow_eq_pow_sum,
       ← Finsupp.degree_eq_sum, hdeg]]
   ring
-private theorem eval_scale_zero {k σ : Type*} [Field k] [Fintype σ]
+theorem eval_scale_zero {k σ : Type*} [Field k] [Fintype σ]
     (x : σ → k) (t : k) {p : MvPolynomial σ k} {n : ℕ}
     (hp : p.IsHomogeneous n) (hx : eval x p = 0) : eval (fun i ↦ t * x i) p = 0 :=
   (eval₂_scale (RingHom.id k) x t hp).trans (mul_eq_zero_of_right _ hx)
@@ -5877,7 +5877,7 @@ private theorem finite_chart_coordinates {k K σ : Type*} [Field k] [Field K] [A
   apply h.mem_range_algHom_of_minpoly_splits (K := k) _ (Algebra.ofId k K)
   simpa only [Algebra.algebraMap_self, Polynomial.map_id] using
     IsAlgClosed.splits (minpoly k (x j))
-private theorem polynomial_value_ne_zero {k K σ : Type*} [Field k] [Field K] [Fintype σ]
+theorem polynomial_value_ne_zero {k K σ : Type*} [Field k] [Field K] [Fintype σ]
     (f : Polynomial k →+* K) (hf : Function.Injective f) (d : σ → ℕ) (hd : Function.Injective d)
     (a : σ → k) {i : σ} (hi : a i ≠ 0) :
     (∑ j : σ, f Polynomial.X ^ d j * f (Polynomial.C (a j))) ≠ 0 := by
@@ -6068,7 +6068,7 @@ private theorem dim_lt_of_prime_lt {P J : JetIdeal} (hP : P.IsPrime) (hJ : J.IsP
     change dimension T + 1 = dimension P at hd
     omega
   exact lt_of_le_of_lt (natDegree_affineHilbertPolynomial_le_of_le hle) hlt'
-private theorem classify {f Q g : Row 4} {surface P J : JetIdeal} (hp : P.IsPrime)
+theorem classify {f Q g : Row 4} {surface P J : JetIdeal} (hp : P.IsPrime)
     (hJ : J.IsPrime) (hS : (intersectionIdeal f Q).IsMinimalPrime surface)
     (hCycle : ∀ T, (intersectionIdeal f Q).IsMinimalPrime T → dimension T = 2)
     (hsource : P = surface ∨ SimpleCut g surface P) (hcontain : intersectionIdeal f Q ≤ J)
@@ -6466,7 +6466,7 @@ def c3 : Prop :=
   ∀ I : Ideal FreshCoeffRing,
     NoBoundaryZero I (jetLinear genericArgument 0) →
     ValueReduction I (jetLinear genericArgument 0)
-private def jetAlg : GeoJets →ₐ[GeoField] FreshCoeffRing :=
+def jetAlg : GeoJets →ₐ[GeoField] FreshCoeffRing :=
   aeval (fun i : Fin 4 ↦ jetLinear genericArgument i.val)
 theorem jetAlg_apply (p : GeoJets) : jetAlg p = freshJetMap p := rfl
 private def jetQuot (A : CoeffIdeal) :

@@ -11,8 +11,8 @@ open P0_9_8 (symbol_count)
 open Final50Price (layerNeed)
 open Final50PriceLayer (layerTerm layerCount)
 open scoped BigOperators
-open private P3_6_8.shapeSum P3_6_8.shapeSum_empty P3_6_8.shapeSum_valid_or_empty P3_6_8.spend_le
-  P3_6_8_1.sumBelow P3_6_8_1.term P3_6_8_1.mass_eq P3_6_8_1.extend
+open P3_6_8_1 (sumBelow)
+open private P3_6_8.shapeSum P3_6_8.shapeSum_empty P3_6_8.shapeSum_valid_or_empty P3_6_8.spend_le P3_6_8_1.term P3_6_8_1.mass_eq P3_6_8_1.extend
   from ProximityPrize.SubmissionLower.GoldBranch6N8
 
 
@@ -224,5 +224,4 @@ theorem no_cut_shape {n : ℕ} (a : Fin n → Shape) (l : Fin n → ℕ)
     change (r.t ≤ 2)
     omega
 
-#print axioms no_cut_shape
 end Final50PriceRetained

@@ -246,4 +246,3 @@ theorem inverseOrdinate_axis (J : Input) (hf : EquationAxis z J.f s) {r k : ℕ}
 end
 end KoalaRectTaylor
 
-#print axioms KoalaRectTaylor.inverseOrdinate_axis

@@ -126,13 +126,13 @@ def degreeCap : ℕ → ℕ
 
 def charge (b j t : ℕ) : ℕ :=
   match t, j with
-  | 1, 3 => 16134172369732502
-  | 1, 4 => 27316190336551897
-  | 1, 5 => 41254742263085612
-  | 1, 6 => 47596490173374667
-  | 1, 7 => 41894803915252695
-  | 2, 6 => if b ≤ 11 then 126258668247061106 else 169922241534105837
-  | 2, 7 => 165116552226664301
+  | 1, 3 => 16501552670860878
+  | 1, 4 => 28094873359840834
+  | 1, 5 => 42519075367271737
+  | 1, 6 => 49097136154047103
+  | 1, 7 => 43238236495066495
+  | 2, 6 => if b ≤ 6 then 75965195419107675 else if b ≤ 11 then 130245870501792300 else if b ≤ 13 then 152519255545335898 else 175215881615097912
+  | 2, 7 => if b ≤ 5 then 137738665506187659 else 170357050644059833
   | _, _ => 0
 
 theorem linear_3 : fatPrice ⟨25,3,1⟩ ≤ charge 25 3 1 := by decide +kernel
@@ -140,9 +140,23 @@ theorem linear_4 : fatPrice ⟨22,4,1⟩ ≤ charge 22 4 1 := by decide +kernel
 theorem linear_5 : fatPrice ⟨19,5,1⟩ ≤ charge 19 5 1 := by decide +kernel
 theorem linear_6 : fatPrice ⟨15,6,1⟩ ≤ charge 15 6 1 := by decide +kernel
 theorem linear_7 : fatPrice ⟨9,7,1⟩ ≤ charge 9 7 1 := by decide +kernel
-theorem quadratic_small : fatPrice ⟨11,6,2⟩ ≤ charge 11 6 2 := by decide +kernel
-theorem quadratic_large : fatPrice ⟨15,6,2⟩ ≤ charge 15 6 2 := by decide +kernel
-theorem quadratic_7 : fatPrice ⟨9,7,2⟩ ≤ charge 9 7 2 := by decide +kernel
+theorem quadratic_6a : fatPrice ⟨6,6,2⟩ ≤ charge 6 6 2 := by decide +kernel
+theorem quadratic_6b : fatPrice ⟨11,6,2⟩ ≤ charge 11 6 2 := by decide +kernel
+theorem quadratic_6c : fatPrice ⟨13,6,2⟩ ≤ charge 13 6 2 := by decide +kernel
+theorem quadratic_6d : fatPrice ⟨15,6,2⟩ ≤ charge 15 6 2 := by decide +kernel
+theorem quadratic_7a : fatPrice ⟨5,7,2⟩ ≤ charge 5 7 2 := by decide +kernel
+theorem quadratic_7b : fatPrice ⟨9,7,2⟩ ≤ charge 9 7 2 := by decide +kernel
+
+theorem charge6 (b : ℕ) (hb : b ≤ 15) :
+    (b ≤ 6 ∧ charge b 6 2 = charge 6 6 2) ∨ (7 ≤ b ∧ b ≤ 11 ∧ charge b 6 2 = charge 11 6 2) ∨
+    (12 ≤ b ∧ b ≤ 13 ∧ charge b 6 2 = charge 13 6 2) ∨ (14 ≤ b ∧ charge b 6 2 = charge 15 6 2) := by
+  interval_cases b <;> simp [charge]
+
+theorem charge7 (b : ℕ) :
+    (b ≤ 5 ∧ charge b 7 2 = charge 5 7 2) ∨ (6 ≤ b ∧ charge b 7 2 = charge 9 7 2) := by
+  by_cases h : b ≤ 5
+  · exact Or.inl ⟨h, by simp [charge, h]⟩
+  · exact Or.inr ⟨by omega, by simp [charge, h]⟩
 
 theorem single (x : Shape) (hv : Valid x) (hj : x.j ≤ 7) (hb : x.b ≤ degreeCap x.j) :
     fatPrice x ≤ charge x.b x.j x.t := by
@@ -161,15 +175,19 @@ theorem single (x : Shape) (hv : Valid x) (hj : x.j ≤ 7) (hb : x.b ≤ degreeC
     · exact (fatPrice_widen (x := ⟨b,7,1⟩) (y := ⟨9,7,1⟩) ⟨hb, rfl, rfl⟩ hindex).trans linear_7
   · have hcases : j = 6 ∨ j = 7 := by omega
     rcases hcases with rfl | rfl
-    · by_cases hsmall : b ≤ 11
-      · simpa only [charge, ite_eq_left hsmall, ite_eq_left (le_refl 11)] using
-          (fatPrice_widen (x := ⟨b,6,2⟩) (y := ⟨11,6,2⟩) ⟨hsmall, rfl, rfl⟩ hindex).trans quadratic_small
-      · simpa only [charge, ite_eq_right hsmall, ite_eq_right (by decide : ¬ 15 ≤ 11)] using
-          (fatPrice_widen (x := ⟨b,6,2⟩) (y := ⟨15,6,2⟩) ⟨hb, rfl, rfl⟩ hindex).trans quadratic_large
-    · exact (fatPrice_widen (x := ⟨b,7,2⟩) (y := ⟨9,7,2⟩) ⟨hb, rfl, rfl⟩ hindex).trans quadratic_7
+    · change b ≤ 15 at hb
+      rcases charge6 b hb with ⟨h1, e⟩ | ⟨_, h1, e⟩ | ⟨_, h1, e⟩ | ⟨_, e⟩
+      · rw [e]; exact (fatPrice_widen (x := ⟨b,6,2⟩) (y := ⟨6,6,2⟩) ⟨h1, rfl, rfl⟩ hindex).trans quadratic_6a
+      · rw [e]; exact (fatPrice_widen (x := ⟨b,6,2⟩) (y := ⟨11,6,2⟩) ⟨h1, rfl, rfl⟩ hindex).trans quadratic_6b
+      · rw [e]; exact (fatPrice_widen (x := ⟨b,6,2⟩) (y := ⟨13,6,2⟩) ⟨h1, rfl, rfl⟩ hindex).trans quadratic_6c
+      · rw [e]; exact (fatPrice_widen (x := ⟨b,6,2⟩) (y := ⟨15,6,2⟩) ⟨hb, rfl, rfl⟩ hindex).trans quadratic_6d
+    · change b ≤ 9 at hb
+      rcases charge7 b with ⟨h1, e⟩ | ⟨_, e⟩
+      · rw [e]; exact (fatPrice_widen (x := ⟨b,7,2⟩) (y := ⟨5,7,2⟩) ⟨h1, rfl, rfl⟩ hindex).trans quadratic_7a
+      · rw [e]; exact (fatPrice_widen (x := ⟨b,7,2⟩) (y := ⟨9,7,2⟩) ⟨hb, rfl, rfl⟩ hindex).trans quadratic_7b
 
 theorem pair_width (j k cap : ℕ) (hjk : 3 ≤ j ∧ 3 ≤ k ∧ j + k ≤ 7)
-    (hcap : (j + k = 6 ∧ (cap = 11 ∨ cap = 15)) ∨ (j + k = 7 ∧ cap = 9))
+    (hcap : (j + k = 6 ∧ (cap = 6 ∨ cap = 11 ∨ cap = 13 ∨ cap = 15)) ∨ (j + k = 7 ∧ (cap = 5 ∨ cap = 9)))
     (b c : ℕ) (hb : j ≤ 3 * b) (hc : k ≤ 3 * c) (hbc : b + c ≤ cap) :
     fatPrice ⟨b,j,1⟩ + fatPrice ⟨c,k,1⟩ ≤ charge cap (j + k) 2 := by
   have hbmax : b ≤ 15 := by omega
@@ -190,15 +208,22 @@ theorem pair (b c j k : ℕ) (hj : 3 ≤ j) (hk : 3 ≤ k) (hjk : j + k ≤ 7)
     fatPrice ⟨b,j,1⟩ + fatPrice ⟨c,k,1⟩ ≤ charge (b+c) (j+k) 2 := by
   have hcases : j + k = 6 ∨ j + k = 7 := by omega
   rcases hcases with h | h
-  · by_cases hs : b + c ≤ 11
-    · have hh := pair_width j k 11 ⟨hj, hk, hjk⟩ (Or.inl ⟨h, Or.inl rfl⟩) b c hb hc hs
-      simpa only [h, charge, ite_eq_left hs, ite_eq_left (le_refl 11)] using hh
-    · have h14 : b + c ≤ 15 := by simpa only [h, degreeCap] using hbc
-      have hh := pair_width j k 15 ⟨hj, hk, hjk⟩ (Or.inl ⟨h, Or.inr rfl⟩) b c hb hc h14
-      simpa only [h, charge, ite_eq_right hs, ite_eq_right (by decide : ¬ 15 ≤ 11)] using hh
-  · have h7 : b + c ≤ 9 := by simpa only [h, degreeCap] using hbc
-    have hh := pair_width j k 9 ⟨hj, hk, hjk⟩ (Or.inr ⟨h, rfl⟩) b c hb hc h7
-    simpa only [h, charge] using hh
+  · have h15 : b + c ≤ 15 := by simpa only [h, degreeCap] using hbc
+    rcases charge6 (b+c) h15 with ⟨h1, e⟩ | ⟨_, h1, e⟩ | ⟨_, h1, e⟩ | ⟨_, e⟩
+    · have hh := pair_width j k 6 ⟨hj, hk, hjk⟩ (Or.inl ⟨h, by decide⟩) b c hb hc h1
+      rw [h] at hh ⊢; rw [e]; exact hh
+    · have hh := pair_width j k 11 ⟨hj, hk, hjk⟩ (Or.inl ⟨h, by decide⟩) b c hb hc h1
+      rw [h] at hh ⊢; rw [e]; exact hh
+    · have hh := pair_width j k 13 ⟨hj, hk, hjk⟩ (Or.inl ⟨h, by decide⟩) b c hb hc h1
+      rw [h] at hh ⊢; rw [e]; exact hh
+    · have hh := pair_width j k 15 ⟨hj, hk, hjk⟩ (Or.inl ⟨h, by decide⟩) b c hb hc h15
+      rw [h] at hh ⊢; rw [e]; exact hh
+  · have h9 : b + c ≤ 9 := by simpa only [h, degreeCap] using hbc
+    rcases charge7 (b+c) with ⟨h1, e⟩ | ⟨_, e⟩
+    · have hh := pair_width j k 5 ⟨hj, hk, hjk⟩ (Or.inr ⟨h, by decide⟩) b c hb hc h1
+      rw [h] at hh ⊢; rw [e]; exact hh
+    · have hh := pair_width j k 9 ⟨hj, hk, hjk⟩ (Or.inr ⟨h, by decide⟩) b c hb hc h9
+      rw [h] at hh ⊢; rw [e]; exact hh
 
 /-- Reserve for the whole family of retained factors. -/
 theorem family (n : ℕ) (a : Fin n → Shape) (hv : ∀ i, Valid (a i))
@@ -232,7 +257,4 @@ theorem family (n : ℕ) (a : Fin n → Shape) (hv : ∀ i, Valid (a i))
     rw [h0, h1]
     simpa only [← ha0, ← ha1] using hh
 
-#print axioms single
-#print axioms pair
-#print axioms family
 end Final50FatReserve

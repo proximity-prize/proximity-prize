@@ -100,5 +100,3 @@ theorem proper_fit {J : Input} {B : ResidueLift J} (D : Factors J B) {v w : ℕ}
 
 end
 end SplitCut.RootSurface
-#print axioms SplitCut.RootSurface.cutoff_proper
-#print axioms SplitCut.RootSurface.proper_fit

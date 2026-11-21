@@ -96,4 +96,3 @@ theorem coeff_jetToRect (p : JetRing) (m : Fin 4 →₀ ℕ) :
 end
 end KoalaRectTaylor
 
-#print axioms KoalaRectTaylor.coeff_jetToRect

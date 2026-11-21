@@ -214,7 +214,7 @@ theorem stable_node {J : Input} {v w : ℕ} (M : MarkCompression J v w)
       exact (HighCore82219Upper_3_2.mark_C J γ _).trans (M.atMarks γ (C₀.sub hγ))
 
 theorem compress_good (J : Input) (v w : ℕ) (_he : 7 ≤ J.e) (he : J.e ≤ 21)
-    (hv : v ≤ 445) (hw : w ≤ 445) (hhi : J.hi ≤ 2465)
+    (hv : v ≤ 445) (hw : w ≤ 445) (hhi : J.hi ≤ 2490)
     (haxis : ∀ i, (J.f.coeff i).degreeOf 0 ≤ v ∧ (J.f.coeff i).degreeOf 1 ≤ w) :
     ∃ U : Finset K, U ⊆ J.marks ∧ (J.marks \ U).card ≤ (p+1)*(v+w+256) ∧
       ∀ (B : ResidueLift J) (D : Factors J B) (C₀ : CurveMarks J B D), C₀.marks ⊆ U →
@@ -229,4 +229,3 @@ theorem compress_good (J : Input) (v w : ℕ) (_he : 7 ≤ J.e) (he : J.e ≤ 21
 end
 end SplitCut.Compression
 
-#print axioms SplitCut.Compression.compress_good

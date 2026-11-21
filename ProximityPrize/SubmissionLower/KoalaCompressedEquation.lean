@@ -165,4 +165,3 @@ theorem compressed_polynomial {α : Type*} [Finite α] (S : α → F[X]) (z : α
 end
 end SplitCut.Compression
 
-#print axioms SplitCut.Compression.compressed_polynomial

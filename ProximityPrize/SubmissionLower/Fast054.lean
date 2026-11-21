@@ -2493,7 +2493,7 @@ theorem actualPoint_injective : Function.Injective actualPoint := by
   intro S T h
   have h₀ := congrFun h (0 : Fin 4)
   exact genericCoeffs_injective (by simpa [actualPoint, jet, hasseDeriv_zero'] using h₀)
-private theorem eval_actualPoint (S : Geom[X]) (P : Row 4) :
+theorem eval_actualPoint (S : Geom[X]) (P : Row 4) :
     MvPolynomial.eval (actualPoint S) (toGeneric P) = genericCoeffs (atJet P S) := by
   rw [toGeneric, MvPolynomial.eval_map]
   change MvPolynomial.eval₂ genericCoeffs (⇑genericCoeffs ∘ jet S) P = _
@@ -3044,7 +3044,7 @@ private lemma ambient_degree (h : c1) {p q r s : Shape}
   have hn : n ≤ (n.toNat : ℤ) := by omega
   apply div_le_div_of_nonneg_right _ (by norm_num)
   exact_mod_cast hn
-private lemma point_minimal {J : Ideal GeoJets} (hJ : dimension J = 0)
+lemma point_minimal {J : Ideal GeoJets} (hJ : dimension J = 0)
     (x : JetPoint) (hx : J ≤ pointIdeal x) : J.IsMinimalPrime (pointIdeal x) := by
   have : Module.Finite GeoField (GeoJets ⧸ J) :=
     MvPolynomial.natDegree_affineHilbertPolynomial_eq_zero_iff.mp hJ
@@ -3056,7 +3056,7 @@ private lemma point_minimal {J : Ideal GeoJets} (hJ : dimension J = 0)
   refine ⟨(pointIdeal x).map (Ideal.Quotient.mk J), ?_, Ideal.comap_map_mk hx⟩
   have := Ideal.isPrime_map_quotientMk_of_isPrime hx
   exact Ideal.mem_minimalPrimes_of_krullDimLE_zero _
-private lemma proper_slice_card (h2 : c2) (h3 : c3) {C : Ideal GeoJets} (hC : C.IsPrime)
+lemma proper_slice_card (h2 : c2) (h3 : c3) {C : Ideal GeoJets} (hC : C.IsPrime)
     (hdim : dimension C = 1) {s : Shape} (hs : ChamberBox s)
     {D : GeoJets} (hD : Box4 s D) (hproper : D ∉ C) (T : Finset JetPoint)
     (hT : ∀ x ∈ T, C ≤ pointIdeal x ∧ MvPolynomial.eval x D = 0) :
@@ -3085,7 +3085,7 @@ private lemma proper_slice_card (h2 : c2) (h3 : c3) {C : Ideal GeoJets} (hC : C.
       obtain ⟨x, hx, rfl⟩ := Finset.mem_image.mp hP
       exact hmin x hx)
     _ ≤ mixedDegree C [s] := h2 C s [] hs (by simp) (by simp [hdim]) D hD hreg
-private lemma slice_card (h2 : c2) (h3 : c3) {f Q l} (b : Branch f Q l)
+lemma slice_card (h2 : c2) (h3 : c3) {f Q l} (b : Branch f Q l)
     (hdim : dimension b.curve = 1) (T : Finset JetPoint)
     (hT : ∀ x ∈ T, b.Contains x) (hS : Slice4 b T) :
     (T.card : ℚ) ≤ mixedDegree b.curve [chart (taylorLength + 2) (shape f).chamber] := by
@@ -3108,7 +3108,7 @@ private lemma slice_card (h2 : c2) (h3 : c3) {f Q l} (b : Branch f Q l)
         exact ⟨(hT y hy).1, by rw [hxy]; exact hzero⟩)
   · exact proper_slice_card h2 h3 b.divisor.isPrime hdim hs hD hproper T
       (fun x hx => ⟨(hT x hx).1, hzero x hx⟩)
-private lemma surface_slice_sum (h2 : c2) (h3 : c3) {f Q l} (ref : Branch f Q l)
+lemma surface_slice_sum (h2 : c2) (h3 : c3) {f Q l} (ref : Branch f Q l)
     (hdim : dimension ref.surface = 2) (F : Finset (Branch f Q l))
     (T : Branch f Q l → Finset JetPoint) (hF : ∀ b ∈ F, b.surface = ref.surface)
     (hmember : Box4 (chart (taylorLength + 1) (shape f).chamber) ref.member)
@@ -3370,7 +3370,7 @@ private theorem sum_affine (a d : ℚ) (n : ℕ) :
 private def slice (W C : ℕ) : ℚ :=
   ((C : ℚ) + 1 - (W : ℚ) / 2) *
     ((W / 2 : ℕ) + (1 : ℚ)) * ((W / 2 : ℕ) + (1 : ℚ) + (W % 2 : ℕ))
-private theorem slice_count (W C : ℕ) (h : W ≤ C) :
+theorem slice_count (W C : ℕ) (h : W ≤ C) :
     (∑ y ∈ range (W / 2 + 1), ∑ x ∈ range (W - 2 * y + 1),
       ((C - (y + x) + 1 : ℕ) : ℚ)) = slice W C := by
   calc
@@ -3461,7 +3461,7 @@ private def pairedSum (b j n : ℚ) : ℚ :=
   n * f 0 + n * (n - 1) / 2 * (f 1 - f 0) +
     n * (n - 1) * (n - 2) / 6 * (f 2 - 2 * f 1 + f 0) +
     n * (n - 1) * (n - 2) * (n - 3) / 24 * (f 3 - 3 * f 2 + 3 * f 1 - f 0)
-private theorem paired_sum (b j : ℚ) (n : ℕ) :
+theorem paired_sum (b j : ℚ) (n : ℕ) :
     (∑ i ∈ range n, pair b j i) = pairedSum b j n := by
   induction n with
   | zero => simp [pairedSum]
@@ -3923,7 +3923,7 @@ theorem coordinate_box {a : K1_13.Shape × ℕ}
   · rw [MvPolynomial.support_X, Finset.mem_singleton] at hX
     exact hX ▸ allowed_coordinate h i
   · exact box5_iff.mp (constant_box a (z i)) m hC
-private theorem eval_surjective (z : Fin 5 → GeoField) :
+theorem eval_surjective (z : Fin 5 → GeoField) :
     Function.Surjective (MvPolynomial.eval z) :=
   fun a => ⟨MvPolynomial.C a, MvPolynomial.eval_C _⟩
 private theorem pointIdeal_injective : Function.Injective pointIdeal := by
@@ -3934,7 +3934,7 @@ private theorem pointIdeal_injective : Function.Injective pointIdeal := by
   have hy := RingHom.mem_ker.mp (h ▸ hx : _ ∈ pointIdeal y)
   rw [map_sub, MvPolynomial.eval_X, MvPolynomial.eval_C, sub_eq_zero] at hy
   exact hy.symm
-private theorem point_degree (B : Boxes) (z : Fin 5 → GeoField) :
+theorem point_degree (B : Boxes) (z : Fin 5 → GeoField) :
     mixedDegree B (pointIdeal z) ∅ = 1 := by
   let A := diagonalExponents B (fun _ => 1)
   let φ := (MvPolynomial.aeval z).comp (MvPolynomial.monomialMap GeoField A)
@@ -3959,7 +3959,7 @@ theorem one_le_length {J C : Ideal GeoJets5} (h : J.IsMinimalPrime C) :
     exact ne_top_of_le_ne_top (IsLocalRing.maximalIdeal.isMaximal A).ne_top hle
   let : Nontrivial (A ⧸ J.map (algebraMap GeoJets5 A)) := Ideal.Quotient.nontrivial_iff.mpr hne
   exact Order.one_le_iff_ne_zero.mpr Module.length_pos.ne'
-private theorem point_component {C : Ideal GeoJets5} (hprime : C.IsPrime) (hdim : OfDim C 1)
+theorem point_component {C : Ideal GeoJets5} (hprime : C.IsPrime) (hdim : OfDim C 1)
     {z : Fin 5 → GeoField} (hz : C ≤ pointIdeal z) {D : GeoJets5} (hproper : D ∉ C)
     (hD : MvPolynomial.eval z D = 0) : Component C D (pointIdeal z) 1 := by
   let := hprime
@@ -4120,12 +4120,12 @@ theorem onGraph_lift4 (b : Branch f Q l) (P : Row 4) :
 theorem denominator_onGraph (b : Branch f Q l) (k : ℕ) :
     b.onGraph (generic5 (denominator b.g k)) = b.localMap b.sigma ^ k := by
   simp only [denominator, map_pow, onGraph_lift4, Branch.sigma]
-private theorem numerator_associated (h : c2) (b : Branch f Q l) (k : ℕ) :
+theorem numerator_associated (h : c2) (b : Branch f Q l) (k : ℕ) :
     Associated (b.onGraph (generic5 (numerator b.g k)))
       (b.localMap (toGeneric (jetNumerator b.g (k+4)))) := by
   rw [← h f Q l b k]
   exact associated_mul_unit_right _ _ (IsLocalization.Away.algebraMap_pow_isUnit b.sigma (k+8))
-private theorem eval_const (b : Branch f Q l) (p : JetPoint) (h : b.Contains p) (a : GeoField) :
+theorem eval_const (b : Branch f Q l) (p : JetPoint) (h : b.Contains p) (a : GeoField) :
     b.liftedEval p h (MvPolynomial.C a) = a := by
   simp [Branch.liftedEval, b.regularEval_localMap]
 private theorem eval_denominator (b : Branch f Q l) (p : JetPoint) (h : b.Contains p) (k : ℕ) :
@@ -4140,7 +4140,7 @@ private theorem ordinary_eq_hasse (T : Geom[X]) (i : ℕ) :
   rw [coeff_iterate_derivative, Polynomial.coeff_C_mul, hasseDeriv_coeff,
     Nat.descFactorial_eq_factorial_mul_choose]
   simp only [nsmul_eq_mul, Nat.cast_mul, mul_assoc]
-private theorem eval_padded (h2 : c2) (b : Branch f Q l) {T : Geom[X]}
+theorem eval_padded (h2 : c2) (b : Branch f Q l) {T : Geom[X]}
     (h : b.Contains (actualPoint T)) (k i : ℕ) (hi : i ≤ k + 4) :
     b.liftedEval (actualPoint T) h (generic5 (padded b.g k i)) =
       ordinary T i * MvPolynomial.eval (actualPoint T) b.sigma ^ k := by
@@ -4222,14 +4222,14 @@ private theorem eval_taylor (T : Geom[X]) (hT : T.natDegree < taylorLength) (x :
     _ = ((i.factorial : GeoField)⁻¹ * (i.factorial : GeoField)) *
           (genericCoeffs (hasseDeriv i T) * (const x - centre)^i) := by ring
     _ = _ := by rw [inv_mul_cancel₀ (factorial_ne_zero hn), one_mul]
-private theorem box_C_mul {p : Shape} {d : ℕ} {P : GeoJets5} (hP : Box5 p d P)
+theorem box_C_mul {p : Shape} {d : ℕ} {P : GeoJets5} (hP : Box5 p d P)
     (a : GeoField) : Box5 p d (MvPolynomial.C a * P) := by
   have hsub : (MvPolynomial.C a * P).support ⊆ P.support := by
     intro m hm
     rw [MvPolynomial.mem_support_iff, MvPolynomial.coeff_C_mul] at hm
     exact MvPolynomial.mem_support_iff.mpr (right_ne_zero_of_mul hm)
   exact ⟨fun m hm => hP.1 m (hsub hm), fun m hm => hP.2 m (hsub hm)⟩
-private theorem box_sum {α : Type*} {p : Shape} {d : ℕ} (I : Finset α) (P : α → GeoJets5)
+theorem box_sum {α : Type*} {p : Shape} {d : ℕ} (I : Finset α) (P : α → GeoJets5)
     (hP : ∀ i ∈ I, Box5 p d (P i)) : Box5 p d (∑ i ∈ I, P i) := by
   classical
   have hsub m (hm : m ∈ (∑ i ∈ I, P i).support) : ∃ i ∈ I, m ∈ (P i).support :=
@@ -4241,7 +4241,7 @@ private theorem box_sum {α : Type*} {p : Shape} {d : ℕ} (I : Finset α) (P : 
   · intro m hm
     obtain ⟨i, hi, hmi⟩ := hsub m hm
     exact (hP i hi).2 m hmi
-private theorem box_sub {p : Shape} {d : ℕ} {A B : GeoJets5}
+theorem box_sub {p : Shape} {d : ℕ} {A B : GeoJets5}
     (hA : Box5 p d A) (hB : Box5 p d B) : Box5 p d (A - B) := by
   classical
   have hsub := MvPolynomial.support_sub (Fin 5) A B
@@ -4258,7 +4258,7 @@ private def valuePolynomial (g : Row 4) (k : ℕ) (x a : K) : GeoJets5 :=
   (∑ i ∈ Finset.range taylorLength, MvPolynomial.C (taylorScalar (embed x) i) *
       generic5 (padded g k i)) -
     MvPolynomial.C (const (embed a)) * generic5 (denominator g k)
-private theorem value_section (h2 : c2) (b : Branch f Q l) (k : ℕ)
+theorem value_section (h2 : c2) (b : Branch f Q l) (k : ℕ)
     (hk : taylorLength ≤ k + 5) (x a : K) :
     ∀ S : K[X], S.natDegree ≤ 133671 → ∀ h : b.Contains (actualPoint (extend S)),
       b.liftedEval (actualPoint (extend S)) h (valuePolynomial b.g k x a) = 0 ↔ S.eval x = a := by
@@ -4562,17 +4562,17 @@ private def liftedPoint {f Q l} (b : Branch f Q l) (p : JetPoint) : Fin 5 → Ge
   classical
   exact if h : b.Contains p then fun i => b.liftedEval p h (MvPolynomial.X i)
     else Fin.lastCases 0 p
-private theorem eval_liftedPoint {f Q l} (b : Branch f Q l) (p : JetPoint) (h : b.Contains p) :
+theorem eval_liftedPoint {f Q l} (b : Branch f Q l) (p : JetPoint) (h : b.Contains p) :
     MvPolynomial.eval (liftedPoint b p) = b.liftedEval p h := by
   apply MvPolynomial.ringHom_ext
   · intro a
     simp [Branch.liftedEval, Branch.onGraph, Branch.regularEval_localMap]
   · intro i
     simp [liftedPoint, h]
-private theorem liftedPoint_old {f Q l} (b : Branch f Q l) (p : JetPoint) (h : b.Contains p)
+theorem liftedPoint_old {f Q l} (b : Branch f Q l) (p : JetPoint) (h : b.Contains p)
     (i : Fin 4) : liftedPoint b p i.castSucc = p i := by
   simp [liftedPoint, h, Branch.liftedEval, Branch.onGraph, Branch.regularEval_localMap]
-private theorem liftedPoint_mem {f Q l} (b : Branch f Q l) (p : JetPoint) (h : b.Contains p) :
+theorem liftedPoint_mem {f Q l} (b : Branch f Q l) (p : JetPoint) (h : b.Contains p) :
     graphLift b b.curve ≤ pointIdeal (liftedPoint b p) := by
   have hk : b.localCurve ≤ RingHom.ker (b.regularEval p h) := by
     apply Ideal.map_le_iff_le_comap.mpr
@@ -4584,7 +4584,7 @@ private theorem liftedPoint_mem {f Q l} (b : Branch f Q l) (p : JetPoint) (h : b
   change MvPolynomial.eval (liftedPoint b p) D = 0
   rw [eval_liftedPoint b p h]
   exact hk hD
-private theorem bound_marks {f Q l} (hdiv : DivisorBound) {p : Shape}
+theorem bound_marks {f Q l} (hdiv : DivisorBound) {p : Shape}
     (hB : Admissible (boxes p)) (b : Branch f Q l) (T : Finset JetPoint)
     (hp : p = (shape f).chamber) (hT : ∀ y ∈ T, b.Contains y) (hSlice : Slice5 b T)
     (hprime : (graphLift b b.curve).IsPrime) (hdim : OfDim (graphLift b b.curve) 1) :
@@ -4609,7 +4609,7 @@ private theorem bound_marks {f Q l} (hdiv : DivisorBound) {p : Shape}
       obtain ⟨y, hy, rfl⟩ := Finset.mem_image.mp hz
       rw [eval_liftedPoint b y (hT y hy)]
       exact hvanish y hy (hT y hy)
-private theorem initial_bound (h1 : c1) (h2 : c2) (h4 : c4)
+theorem initial_bound (h1 : c1) (h2 : c2) (h4 : c4)
     (f Q : Row 4) (l : ℕ) (hf : SmallFactor f) (hQ : ¬ f ∣ Q)
     (hQbox : InBox (shape Q) cutterBox) (S : Finset (Ideal GeoJets))
     (hS : ∀ P ∈ S, ∃ h : (intersectionIdeal f Q).IsMinimalPrime P,
@@ -5708,7 +5708,7 @@ private theorem homogeneous_colon {σ : Type} (s : σ → Fin 5)
     weightedDecomposition.decompose'_apply GeoField (slotWeight s) a t
   rw [hp, ← component_mul_of_grade s hg a t]
   exact weightedHomogeneousComponent_mem_of_mem _ _ hJ ha _
-private theorem gradedIdeal_colon {B : Boxes} {P Q : Ideal GeoJets5} {g : SlotRing B}
+theorem gradedIdeal_colon {B : Boxes} {P Q : Ideal GeoJets5} {g : SlotRing B}
     {e : Grade} (hg : g ∈ piece (slot B) e)
     (h : ∀ a : GeoJets5, a * taggedMap B g ∈ P ↔ a ∈ Q) :
     (gradedIdeal B P).colon {g} = gradedIdeal B Q := by

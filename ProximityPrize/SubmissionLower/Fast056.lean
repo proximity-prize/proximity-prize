@@ -1374,7 +1374,7 @@ private theorem initial_eq (s : Fin 4013) (j : Fin 4650) (hs : 2510 ≤ s.val) :
     (3000 - (s.val : ℤ) - ((j.val : ℤ) - 1650)) = _
   rw [min_eq_right (show (1650 : ℤ) ≤ s.val by omega), flag, hn]
   congr 1 <;> ring
-private theorem old_eq (n j : ℤ) (hj : 0 ≤ j) : oldCount (flag n j) = active j := by
+theorem old_eq (n j : ℤ) (hj : 0 ≤ j) : oldCount (flag n j) = active j := by
   have hcap (u : ℤ) (hu : u ≤ 1650) : cappedCount 1650 u 550 = denominator u := by
     change cumulative 1650 u - cumulative 1099 (u - 1653) = denominator u
     rw [cumulative_denominator 1650 u (by decide) hu]

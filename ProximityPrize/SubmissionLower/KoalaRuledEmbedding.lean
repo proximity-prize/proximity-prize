@@ -132,7 +132,5 @@ theorem diagonal_piece (I : Ideal (Ring F)) (a b c n : ℕ) :
     exact hx
   exact (LinearEquiv.ofBijective L hL).finrank_eq
 
-#print axioms lift_diagonal
-#print axioms diagonal_piece
 end
 end SplitCut.Rect

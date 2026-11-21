@@ -184,6 +184,5 @@ theorem count (D : Data Γ s f Q l S) (input : CutInput Γ s f Q l)
       rw [hkind] at hcap
       exact hcap
 
-#print axioms count
 end
 end Shared50TallyNew

@@ -74,32 +74,6 @@ theorem row_of_native {s : Source} {W : ℕ} {Q : DifferentialPolynomial K 2}
     rw [show P = MvPolynomial.optionEquivRight Geom (Fin 3) Q' from rfl,
       specialize, ← map_differentialSpecialization, hf, Polynomial.map_zero]
 
-theorem exists_row_with_top {A R : ℕ} (s : Source) (hs : ShapeOK s)
-    (hw : s.m ≤ s.m*A - N*s.B) (surplus : Surplus A s R) (rank : RankCertificate A s R)
-    (w : Node → K) : ∃ P : Row 3, P ≠ 0 ∧ P.totalDegree ≤ s.B ∧ K1_13.indexDegree P ≤ s.J ∧
-      P.degreeOf 2 ≤ s.C ∧
-      (∀ m ∈ P.support, (P.coeff m).natDegree + m.sum (fun i a => (N-i.val)*a) < s.m*A) ∧
-      ∀ f ∈ close A w, atJet P (extend f) = 0 := by
-  have horig : originRank A s ≤ R := by
-    rcases rank with h | ⟨cut,hcut,htail,hpre⟩
-    · exact h
-    · exact (CJ0_1.proof A s cut hs hw hcut htail).trans hpre
-  have hr := (CJ0_2.proof A s hs hw w).trans (Nat.mul_le_mul_left n horig)
-  have hdim := source_dimension A s hs hw
-  unfold Surplus at surplus
-  have hsmall : stackRank A s w < Fintype.card (ColumnIndex A s) := by omega
-  obtain ⟨Q,hQ,hwt,hloc⟩ := interpolant hs hw w hsmall
-  obtain ⟨P,hP,hB,hJ,hC,hweight,hroot⟩ := row_of_native hQ hwt
-  exact ⟨P,hP,hB,hJ,hC,hweight,fun f hf => hroot f (specializes hwt hloc f hf)⟩
-
-theorem exists_row {A R : ℕ} (s : Source) (hs : ShapeOK s)
-    (hw : s.m ≤ s.m*A - N*s.B) (surplus : Surplus A s R) (rank : RankCertificate A s R)
-    (w : Node → K) : ∃ P : Row 3, P ≠ 0 ∧ P.totalDegree ≤ s.B ∧ K1_13.indexDegree P ≤ s.J ∧
-      (∀ m ∈ P.support, (P.coeff m).natDegree + m.sum (fun i a => (N-i.val)*a) < s.m*A) ∧
-      ∀ f ∈ close A w, atJet P (extend f) = 0 := by
-  obtain ⟨P,hP,hB,hJ,_,hw',hz⟩ := exists_row_with_top s hs hw surplus rank w
-  exact ⟨P,hP,hB,hJ,hw',hz⟩
-
 theorem close_data {A : ℕ} {w : Node → K} {f : K[X]} (h : f ∈ close A w) :
     f.natDegree ≤ N ∧ ∃ T : Finset Node, A ≤ T.card ∧ ∀ i ∈ T, f.eval (node i) = w i := by
   refine ⟨?_, ReedSolomon.polynomialAgreementSet node w f, h.2, fun _ hi => (Finset.mem_filter.mp hi).2⟩
@@ -135,8 +109,5 @@ theorem list_of_indexed {A cap : ℕ} (hA : k ≤ A) (room : cap+1 ≤ Fintype.c
   have := bound w Γ s inj close'
   omega
 
-#print axioms exists_row
-#print axioms exists_row_with_top
-#print axioms list_of_indexed
 end
 end ScalarRootRows

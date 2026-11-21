@@ -97,6 +97,3 @@ theorem value_at_mark (J : Input) (B : ResidueLift J) (γ : K) (hγ : γ ∈ J.m
 end
 end SplitCut.LocalModel
 
-#print axioms SplitCut.LocalModel.model_map
-#print axioms SplitCut.LocalModel.model_of_inverse
-#print axioms SplitCut.LocalModel.value_at_mark

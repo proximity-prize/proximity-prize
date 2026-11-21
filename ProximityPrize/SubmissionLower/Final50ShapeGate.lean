@@ -12,27 +12,26 @@ open TaperColumns (jetColumns jetExponents)
 open TaperMoments (gradeCap)
 open scoped BigOperators
 open Finset
-open private K1_13_2_2_3.cappedColumns K1_13_2_2_3.mem_cappedColumns K1_13_2_2_3.capped_card
-  from ProximityPrize.SubmissionLower.Fast068
+open K1_13_2_2_3 (cappedColumns mem_cappedColumns capped_card)
 open K1_13_2_2_3 (cappedColumns mem_cappedColumns capped_card)
 open private sumGrade sumOld from ProximityPrize.SubmissionLower.PrimaryTaperColumns
 
 def fits (r : ℕ) (m : JetExp) : Prop :=
-  m.weight gradeWeight ≤ r*60 ∧ m.weight oldWeight ≤ r*25 ∧ m 3 ≤ r*6
+  m.weight gradeWeight ≤ r*61 ∧ m.weight oldWeight ≤ r*24 ∧ m 3 ≤ r*7
 
 noncomputable instance (r : ℕ) (m : JetExp) : Decidable (fits r m) := by unfold fits; infer_instance
 
 noncomputable def width (r : ℕ) : ℕ := (jetColumns.filter (fits r)).card
 
-def bound (r : ℕ) : ℕ := min 4013 (r*60+1)
-def start (k : ℕ) : ℕ := 64*k
+def bound (r : ℕ) : ℕ := min 4013 (r*61+1)
+def start (k : ℕ) : ℕ := 4*k
 def stop (r k : ℕ) : ℕ := min (bound r) (start (k+1))
-def chunks (r : ℕ) : ℕ := (bound r + 63) / 64
+def chunks (r : ℕ) : ℕ := (bound r + 3) / 4
 
 def padGrade (r k : ℕ) : ℕ :=
   min (gradeCap (start k)) (gradeCap (stop r k-1))
 
-def index (r : ℕ) : ℕ := min 1650 (r*25)
+def index (r : ℕ) : ℕ := min 1650 (r*24)
 
 private theorem grade_le {r k q : ℕ} (hlo : start k ≤ q) (hhi : q < stop r k) :
     padGrade r k ≤ gradeCap q := by
@@ -43,7 +42,7 @@ private theorem grade_le {r k q : ℕ} (hlo : start k ≤ q) (hhi : q < stop r k
 
 private noncomputable def grid (r : ℕ) : Finset (Σ _ : ℕ, ℕ × JetExp) :=
   (range (chunks r)).sigma fun k => (Ico (start k) (stop r k)).product
-    (cappedColumns (padGrade r k) (index r) (r*6))
+    (cappedColumns (padGrade r k) (index r) (r*7))
 
 private noncomputable def pad (r : ℕ) (x : Σ _ : ℕ, ℕ × JetExp) : JetExp :=
   x.2.2 + Finsupp.single 0 (x.2.1 - padGrade r x.1)
@@ -80,9 +79,9 @@ theorem map_mem {r : ℕ} {x : Σ _ : ℕ, ℕ × JetExp} (hx : x ∈ grid r) :
   dsimp only at eB eJ eOther hl hh
   have hgrade : m.weight gradeWeight = padGrade r k := by exact_mod_cast hg
   have hindex : m.weight oldWeight ≤ index r := by exact_mod_cast hi
-  have htop : m 3 ≤ r*6 := by exact_mod_cast ht
+  have htop : m 3 ≤ r*7 := by exact_mod_cast ht
   have hD := (grade_le hl hh).trans (min_le_right _ _ : gradeCap q ≤ TaperBudget.cap q)
-  have hb : q ≤ 4012 ∧ q ≤ r*60 := by
+  have hb : q ≤ 4012 ∧ q ≤ r*61 := by
     unfold stop bound at hh
     omega
   apply Finset.mem_filter.mpr
@@ -119,7 +118,7 @@ private theorem pad_injective (r : ℕ) : Set.InjOn (pad r) (grid r : Set (Σ _ 
   rfl
 
 def block (r k : ℕ) : ℤ :=
-  ((stop r k-start k : ℕ) : ℤ) * cappedCount (padGrade r k) (index r) (r*6)
+  ((stop r k-start k : ℕ) : ℤ) * cappedCount (padGrade r k) (index r) (r*7)
 
 def compute (r : ℕ) : ℤ := ∑ k ∈ range (chunks r), block r k
 
@@ -129,11 +128,11 @@ theorem grid_eq (r : ℕ) : ((grid r).card : ℤ) = compute r := by
   apply sum_congr rfl
   intro k _
   change (((Ico (start k) (stop r k)).product
-    (cappedColumns (padGrade r k) (index r) (r*6))).card : ℤ) = block r k
+    (cappedColumns (padGrade r k) (index r) (r*7))).card : ℤ) = block r k
   have hcard := Finset.card_product (Ico (start k) (stop r k))
-    (cappedColumns (padGrade r k) (index r) (r*6))
+    (cappedColumns (padGrade r k) (index r) (r*7))
   change ((Ico (start k) (stop r k)).product
-    (cappedColumns (padGrade r k) (index r) (r*6))).card = _ at hcard
+    (cappedColumns (padGrade r k) (index r) (r*7))).card = _ at hcard
   rw [hcard, Nat.card_Ico, Nat.cast_mul, capped_card K1_13_2_2_2.proof]
   rfl
 
@@ -148,7 +147,7 @@ theorem width_le (r : ℕ) : width r ≤ Final50Price.symbolCount := by
   rw [← jet_count]
   exact card_le_card (filter_subset _ _)
 
-theorem width_full (r : ℕ) (hr : 92 ≤ r) : width r = Final50Price.symbolCount := by
+theorem width_full (r : ℕ) (hr : 79 ≤ r) : width r = Final50Price.symbolCount := by
   unfold width
   rw [filter_true_of_mem, jet_count]
   intro m hm
@@ -179,86 +178,150 @@ theorem intPrefix_add (f : ℕ → ℤ) (a b : ℕ) :
   | zero => simp [intPrefix]
   | succ b ih => rw [Nat.add_succ, intPrefix, ih, intPrefix, add_assoc]
 
-private theorem part0 : intPrefix (fun i => rowLoss (0+i)) 7 = 2847561416346 := by decide +kernel
+private theorem part0 : intPrefix (fun i => rowLoss (0+i)) 3 = 1220420898039 := by decide +kernel
 
-private theorem part7 : intPrefix (fun i => rowLoss (7+i)) 7 = 2845169148870 := by decide +kernel
+private theorem part3 : intPrefix (fun i => rowLoss (3+i)) 3 = 1220377992214 := by decide +kernel
 
-theorem part14 : intPrefix (fun i => rowLoss (14+i)) 7 = 2831592953132 := by decide +kernel
+private theorem part6 : intPrefix (fun i => rowLoss (6+i)) 3 = 1220159780418 := by decide +kernel
 
-theorem part21 : intPrefix (fun i => rowLoss (21+i)) 7 = 2789695783148 := by decide +kernel
+theorem part9 : intPrefix (fun i => rowLoss (9+i)) 3 = 1219520189847 := by decide +kernel
 
-theorem part28 : intPrefix (fun i => rowLoss (28+i)) 7 = 2694035513036 := by decide +kernel
+theorem part12 : intPrefix (fun i => rowLoss (12+i)) 3 = 1218101403920 := by decide +kernel
 
-theorem part35 : intPrefix (fun i => rowLoss (35+i)) 7 = 2510867945576 := by decide +kernel
+theorem part15 : intPrefix (fun i => rowLoss (15+i)) 3 = 1215433861274 := by decide +kernel
 
-theorem part42 : intPrefix (fun i => rowLoss (42+i)) 7 = 2198146136942 := by decide +kernel
+theorem part18 : intPrefix (fun i => rowLoss (18+i)) 3 = 1210936257027 := by decide +kernel
 
-theorem part49 : intPrefix (fun i => rowLoss (49+i)) 7 = 1705518666002 := by decide +kernel
+theorem part21 : intPrefix (fun i => rowLoss (21+i)) 3 = 1203915541221 := by decide +kernel
 
-theorem part56 : intPrefix (fun i => rowLoss (56+i)) 7 = 974496625064 := by decide +kernel
+theorem part24 : intPrefix (fun i => rowLoss (24+i)) 3 = 1193566920717 := by decide +kernel
 
-theorem part63 : intPrefix (fun i => rowLoss (63+i)) 7 = 169003912251 := by decide +kernel
+theorem part27 : intPrefix (fun i => rowLoss (27+i)) 3 = 1178973856930 := by decide +kernel
 
-theorem part70 : intPrefix (fun i => rowLoss (70+i)) 7 = 53197576283 := by decide +kernel
+theorem part30 : intPrefix (fun i => rowLoss (30+i)) 3 = 1159108068468 := by decide +kernel
 
-theorem part77 : intPrefix (fun i => rowLoss (77+i)) 7 = 36300626368 := by decide +kernel
+theorem part33 : intPrefix (fun i => rowLoss (33+i)) 3 = 1132829528151 := by decide +kernel
 
-theorem part84 : intPrefix (fun i => rowLoss (84+i)) 7 = 31448894158 := by decide +kernel
+theorem part36 : intPrefix (fun i => rowLoss (36+i)) 3 = 1098886466282 := by decide +kernel
+
+theorem part39 : intPrefix (fun i => rowLoss (39+i)) 3 = 1055915367122 := by decide +kernel
+
+theorem part42 : intPrefix (fun i => rowLoss (42+i)) 3 = 1002440972673 := by decide +kernel
+
+theorem part45 : intPrefix (fun i => rowLoss (45+i)) 3 = 936876278601 := by decide +kernel
+
+private theorem part48 : intPrefix (fun i => rowLoss (48+i)) 3 = 857522538651 := by decide +kernel
+
+theorem part51 : intPrefix (fun i => rowLoss (51+i)) 3 = 762569259862 := by decide +kernel
+
+theorem part54 : intPrefix (fun i => rowLoss (54+i)) 3 = 650094207726 := by decide +kernel
+
+theorem part57 : intPrefix (fun i => rowLoss (57+i)) 3 = 518063400687 := by decide +kernel
+
+theorem part60 : intPrefix (fun i => rowLoss (60+i)) 3 = 364442005867 := by decide +kernel
+
+theorem part63 : intPrefix (fun i => rowLoss (63+i)) 3 = 190538249674 := by decide +kernel
+
+theorem part66 : intPrefix (fun i => rowLoss (66+i)) 3 = 42516881189 := by decide +kernel
+
+theorem part69 : intPrefix (fun i => rowLoss (69+i)) 3 = 1838782459 := by decide +kernel
+
+theorem part72 : intPrefix (fun i => rowLoss (72+i)) 3 = 917601919 := by decide +kernel
+
+theorem part75 : intPrefix (fun i => rowLoss (75+i)) 3 = 654282687 := by decide +kernel
 
 set_option maxRecDepth 10000 in
-theorem computed_loss : intPrefix rowLoss 91 = Final50SharedPrice.slopeLoss := by
+theorem computed_loss : intPrefix rowLoss 78 = Final50SharedPrice.slopeLoss := by
   have h0 : intPrefix rowLoss 0 = 0 := rfl
-  have h7 : intPrefix rowLoss 7 = 2847561416346 := by
-    rw [show (7 : ℕ) = 0+7 by decide,intPrefix_add,h0,part0]
+  have h3 : intPrefix rowLoss 3 = 1220420898039 := by
+    rw [show (3 : ℕ) = 0+3 by decide,intPrefix_add,h0,part0]
     rfl
-  have h14 : intPrefix rowLoss 14 = 5692730565216 := by
-    rw [show (14 : ℕ) = 7+7 by decide,intPrefix_add,h7,part7]
+  have h6 : intPrefix rowLoss 6 = 2440798890253 := by
+    rw [show (6 : ℕ) = 3+3 by decide,intPrefix_add,h3,part3]
     rfl
-  have h21 : intPrefix rowLoss 21 = 8524323518348 := by
-    rw [show (21 : ℕ) = 14+7 by decide,intPrefix_add,h14,part14]
+  have h9 : intPrefix rowLoss 9 = 3660958670671 := by
+    rw [show (9 : ℕ) = 6+3 by decide,intPrefix_add,h6,part6]
     rfl
-  have h28 : intPrefix rowLoss 28 = 11314019301496 := by
-    rw [show (28 : ℕ) = 21+7 by decide,intPrefix_add,h21,part21]
+  have h12 : intPrefix rowLoss 12 = 4880478860518 := by
+    rw [show (12 : ℕ) = 9+3 by decide,intPrefix_add,h9,part9]
     rfl
-  have h35 : intPrefix rowLoss 35 = 14008054814532 := by
-    rw [show (35 : ℕ) = 28+7 by decide,intPrefix_add,h28,part28]
+  have h15 : intPrefix rowLoss 15 = 6098580264438 := by
+    rw [show (15 : ℕ) = 12+3 by decide,intPrefix_add,h12,part12]
     rfl
-  have h42 : intPrefix rowLoss 42 = 16518922760108 := by
-    rw [show (42 : ℕ) = 35+7 by decide,intPrefix_add,h35,part35]
+  have h18 : intPrefix rowLoss 18 = 7314014125712 := by
+    rw [show (18 : ℕ) = 15+3 by decide,intPrefix_add,h15,part15]
     rfl
-  have h49 : intPrefix rowLoss 49 = 18717068897050 := by
-    rw [show (49 : ℕ) = 42+7 by decide,intPrefix_add,h42,part42]
+  have h21 : intPrefix rowLoss 21 = 8524950382739 := by
+    rw [show (21 : ℕ) = 18+3 by decide,intPrefix_add,h18,part18]
     rfl
-  have h56 : intPrefix rowLoss 56 = 20422587563052 := by
-    rw [show (56 : ℕ) = 49+7 by decide,intPrefix_add,h49,part49]
+  have h24 : intPrefix rowLoss 24 = 9728865923960 := by
+    rw [show (24 : ℕ) = 21+3 by decide,intPrefix_add,h21,part21]
     rfl
-  have h63 : intPrefix rowLoss 63 = 21397084188116 := by
-    rw [show (63 : ℕ) = 56+7 by decide,intPrefix_add,h56,part56]
+  have h27 : intPrefix rowLoss 27 = 10922432844677 := by
+    rw [show (27 : ℕ) = 24+3 by decide,intPrefix_add,h24,part24]
     rfl
-  have h70 : intPrefix rowLoss 70 = 21566088100367 := by
-    rw [show (70 : ℕ) = 63+7 by decide,intPrefix_add,h63,part63]
+  have h30 : intPrefix rowLoss 30 = 12101406701607 := by
+    rw [show (30 : ℕ) = 27+3 by decide,intPrefix_add,h27,part27]
     rfl
-  have h77 : intPrefix rowLoss 77 = 21619285676650 := by
-    rw [show (77 : ℕ) = 70+7 by decide,intPrefix_add,h70,part70]
+  have h33 : intPrefix rowLoss 33 = 13260514770075 := by
+    rw [show (33 : ℕ) = 30+3 by decide,intPrefix_add,h30,part30]
     rfl
-  have h84 : intPrefix rowLoss 84 = 21655586303018 := by
-    rw [show (84 : ℕ) = 77+7 by decide,intPrefix_add,h77,part77]
+  have h36 : intPrefix rowLoss 36 = 14393344298226 := by
+    rw [show (36 : ℕ) = 33+3 by decide,intPrefix_add,h33,part33]
     rfl
-  have h91 : intPrefix rowLoss 91 = 21687035197176 := by
-    rw [show (91 : ℕ) = 84+7 by decide,intPrefix_add,h84,part84]
+  have h39 : intPrefix rowLoss 39 = 15492230764508 := by
+    rw [show (39 : ℕ) = 36+3 by decide,intPrefix_add,h36,part36]
     rfl
-  exact h91
-
+  have h42 : intPrefix rowLoss 42 = 16548146131630 := by
+    rw [show (42 : ℕ) = 39+3 by decide,intPrefix_add,h39,part39]
+    rfl
+  have h45 : intPrefix rowLoss 45 = 17550587104303 := by
+    rw [show (45 : ℕ) = 42+3 by decide,intPrefix_add,h42,part42]
+    rfl
+  have h48 : intPrefix rowLoss 48 = 18487463382904 := by
+    rw [show (48 : ℕ) = 45+3 by decide,intPrefix_add,h45,part45]
+    rfl
+  have h51 : intPrefix rowLoss 51 = 19344985921555 := by
+    rw [show (51 : ℕ) = 48+3 by decide,intPrefix_add,h48,part48]
+    rfl
+  have h54 : intPrefix rowLoss 54 = 20107555181417 := by
+    rw [show (54 : ℕ) = 51+3 by decide,intPrefix_add,h51,part51]
+    rfl
+  have h57 : intPrefix rowLoss 57 = 20757649389143 := by
+    rw [show (57 : ℕ) = 54+3 by decide,intPrefix_add,h54,part54]
+    rfl
+  have h60 : intPrefix rowLoss 60 = 21275712789830 := by
+    rw [show (60 : ℕ) = 57+3 by decide,intPrefix_add,h57,part57]
+    rfl
+  have h63 : intPrefix rowLoss 63 = 21640154795697 := by
+    rw [show (63 : ℕ) = 60+3 by decide,intPrefix_add,h60,part60]
+    rfl
+  have h66 : intPrefix rowLoss 66 = 21830693045371 := by
+    rw [show (66 : ℕ) = 63+3 by decide,intPrefix_add,h63,part63]
+    rfl
+  have h69 : intPrefix rowLoss 69 = 21873209926560 := by
+    rw [show (69 : ℕ) = 66+3 by decide,intPrefix_add,h66,part66]
+    rfl
+  have h72 : intPrefix rowLoss 72 = 21875048709019 := by
+    rw [show (72 : ℕ) = 69+3 by decide,intPrefix_add,h69,part69]
+    rfl
+  have h75 : intPrefix rowLoss 75 = 21875966310938 := by
+    rw [show (75 : ℕ) = 72+3 by decide,intPrefix_add,h72,part72]
+    rfl
+  have h78 : intPrefix rowLoss 78 = 21876620593625 := by
+    rw [show (78 : ℕ) = 75+3 by decide,intPrefix_add,h75,part75]
+    rfl
+  exact h78
 
 theorem loss_bound (N : ℕ) :
     (∑ i ∈ range N, (Final50Price.symbolCount - width (i+1))) ≤ Final50SharedPrice.slopeLoss := by
   let f : ℕ → ℕ := fun i => Final50Price.symbolCount - width (i+1)
   change (∑ i ∈ range N, f i) ≤ _
-  have hzero (i : ℕ) (hi : 91 ≤ i) : f i = 0 := by
+  have hzero (i : ℕ) (hi : 78 ≤ i) : f i = 0 := by
     dsimp [f]
     rw [width_full (i+1) (by omega),Nat.sub_self]
-  rw [K1_13_8.sum_range_min N 91 hzero]
-  refine (sum_le_sum_of_subset (range_mono (min_le_right N 91))).trans ?_
+  rw [K1_13_8.sum_range_min N 78 hzero]
+  refine (sum_le_sum_of_subset (range_mono (min_le_right N 78))).trans ?_
   have row (i : ℕ) : (f i : ℤ) ≤ rowLoss i := by
     unfold f rowLoss
     rw [Int.ofNat_sub (width_le _),fastRow_eq]
@@ -267,6 +330,5 @@ theorem loss_bound (N : ℕ) :
   rw [Nat.cast_sum, ← computed_loss, intPrefix_eq]
   exact sum_le_sum fun i _ => row i
 
-#print axioms loss_bound
 
 end Final50ShapeGate

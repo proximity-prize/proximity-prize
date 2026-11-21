@@ -256,4 +256,3 @@ theorem represented_of_transition (J : Input) (B : ResidueLift J) (D : Factors J
 end
 end KoalaRectTaylor
 
-#print axioms KoalaRectTaylor.represented_of_transition

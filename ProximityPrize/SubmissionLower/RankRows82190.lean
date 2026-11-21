@@ -94,5 +94,4 @@ theorem count_bound (rows : List Row) (d s : ℕ) (g : ℤ)
   simpa only [Fintype.card_fin] using
     ((Nat.add_le_add_left hc (Module.finrank Geom (LinearMap.range (blockAt d s g)))).trans_eq hd)
 
-#print axioms count_bound
 end RankRows82190

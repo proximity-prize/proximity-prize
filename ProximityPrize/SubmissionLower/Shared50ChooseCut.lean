@@ -130,6 +130,5 @@ theorem exists_cut {w Γ s} (hm : Final50Price.Messages w Γ s)
   have hmin := minimal_pair hf hind hdata.height hdata.contains (mem_of_order hres hGo)
   exact ⟨hmin,hGo,cycleLength_ge_order hdata.height hdata.contains hGo⟩
 
-#print axioms exists_cut
 end
 end Shared50ChooseCut

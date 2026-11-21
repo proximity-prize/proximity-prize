@@ -7228,7 +7228,7 @@ theorem reducedProduct_escapes_prime {A : Type} [CommRing A] [Algebra Geom A]
       hP.mul_notMem (hP.mul_notMem (hP.mul_notMem hu0 hu1)
         (fun h => hd (hP.mem_of_pow_mem 2 h))) ht
     exact hn (by simpa using h')
-private def half (A : Type) [CommRing A] [Algebra Geom A] : A[X] :=
+def half (A : Type) [CommRing A] [Algebra Geom A] : A[X] :=
   C (algebraMap Geom A ((2 : Geom)⁻¹))
 theorem two_mul_half (A : Type) [CommRing A] [Algebra Geom A] :
     (2 : A[X]) * half A = 1 := by

@@ -44,5 +44,4 @@ theorem first_order_price {A w s Q₁} (hA : AgreementOK A) (hs : ShapeOK s) (hQ
   rw [← show T₁.card + T₀.card = T.card from card_filter_add_card_filter_not .., Nat.cast_add]
   linarith only [p₁,hp₀]
 
-#print axioms first_order_price
 end CurveListRectangularRoots

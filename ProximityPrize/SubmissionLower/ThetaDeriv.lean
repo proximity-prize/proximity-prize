@@ -46,7 +46,6 @@ theorem mkDerivation_mem_order (ω : σ → ℕ) (c : ℕ) (f : σ → MvPolynom
     (monomial_mem_restrictWeightedOrder ω _ _ _).mpr (Or.inl le_rfl)
   exact restrictWeightedOrder_anti ω (by omega) (mul_mem_restrictWeightedOrder hm (hf i))
 
-#print axioms mkDerivation_mem_order
 
 /-- Polynomials all of whose monomials have weight at most `a`. -/
 noncomputable def upper (ω : σ → ℕ) (a : ℤ) : Submodule R (MvPolynomial σ R) :=
@@ -104,6 +103,5 @@ theorem mkDerivation_mem_upper (ω : σ → ℕ) (c : ℤ) (f : σ → MvPolynom
     monomial_mem_upper ω _ _ le_rfl
   exact upper_mono ω (by omega) (mul_mem_upper hm (hf i))
 
-#print axioms mkDerivation_mem_upper
 
 end ThetaDeriv

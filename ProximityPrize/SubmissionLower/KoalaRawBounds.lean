@@ -162,6 +162,3 @@ theorem padded_num {J : Input} (B : ResidueLift J) {v w r j : ℕ}
 
 end
 end SplitCut.Raw
-#print axioms SplitCut.Raw.root
-#print axioms SplitCut.Raw.num
-#print axioms SplitCut.Raw.padded_num

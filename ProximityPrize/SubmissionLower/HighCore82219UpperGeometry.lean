@@ -54,8 +54,8 @@ theorem section_capacity {w T s d} (h : FixedWord w T s d) (hd : d < agreement) 
   have hx : agreement - d ≤ x := by dsimp [x]; omega
   have hnodes : nodes.card = x + (P1.blockLength - HighCore82219.agreement) := by
     rw [card_sdiff_of_subset (subset_univ common), card_univ, IRSProfile.card_index]
-    change 262144 - common.card = (179905 - common.card) + 82239
-    have hbound : common.card ≤ 179905 := hcommon.trans hd.le
+    change 262144 - common.card = (179895 - common.card) + 82249
+    have hbound : common.card ≤ 179895 := hcommon.trans hd.le
     omega
   have exists_trim (γ : K) : ∃ B : Finset I, γ ∈ T → B ⊆ hits γ \ common ∧ B.card = x := by
     by_cases hγ : γ ∈ T

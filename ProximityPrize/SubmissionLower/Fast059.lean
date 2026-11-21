@@ -1651,7 +1651,7 @@ private def numerator (L : ℕ) (g : Row 4) (i : TaylorIndex) : Row 4 :=
   else
     MvPolynomial.C (Polynomial.C (↑i.val.factorial : Geom)⁻¹) *
       (separant g ^ (2 * (L - i.val)) * jetNumerator g i.val)
-private def taylorChart (L : ℕ) (g : Row 4) : TaylorChart where
+def taylorChart (L : ℕ) (g : Row 4) : TaylorChart where
   denom := toGeneric (denominator L g)
   numerator i := toGeneric (numerator L g i)
   initial i := by

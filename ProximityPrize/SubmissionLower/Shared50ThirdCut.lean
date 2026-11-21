@@ -243,7 +243,5 @@ theorem count {Γ : Finset K} {s : K → K[X]} {w : I → K} {f Q : Row 4} {l : 
   have hl := input.positive
   omega
 
-#print axioms cover
-#print axioms count
 end
 end Shared50ThirdCut

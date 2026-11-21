@@ -13,19 +13,6 @@ open private HighCore82219Upper_3_3_1.mark_biform HighCore82219Upper_5_1.marked_
   HighCore82219Upper_2.jet HighCore82219Upper_2.jet_poly HighCore82219Upper_3.oldDenominator_eq
   from ProximityPrize.SubmissionLower.HighCore82219UpperGeometry
 
-theorem omitted_at_mark (J : Input) (B : ResidueLift J) (γ : K) (hγ : γ ∈ J.marks)
-    {r : ℕ} (hr : J.ell < r) (hp : r < p) : markPoint J γ (oldNumerator J B r) = 0 := by
-  obtain ⟨T, hT, hcoef⟩ := HighCore82219Upper_2.marked_quotient J B γ hγ
-  change markPoint J γ (C (MvPolynomial.optionEquivLeft FX (Fin 2) (quotientNumerator J B r))) = 0
-  rw [HighCore82219Upper_3_3_1.mark_biform,
-    HighCore82219Upper_5_1.marked_coefficient J B γ hγ T hcoef hp]
-  have hz : HighCore82219Upper_2.jet (algebraMap L[X] FX T) r = 0 := by
-    rw [HighCore82219Upper_2.jet_poly _ hp]
-    apply coeff_eq_zero_of_natDegree_lt
-    rw [natDegree_taylor]
-    exact natDegree_map_le.trans_lt (hT.trans_lt hr)
-  rw [hz, mul_zero]
-
 theorem open_nonmem {J : Input} {B : ResidueLift J} (P : Ideal JetRing) [P.IsPrime]
     (ho : openFactor J B ∉ P) (r : ℕ) :
     jetSeparant J.f ∉ P ∧ oldDenominator J B r ∉ P ∧ jetDenominator J B r ∉ P := by
@@ -74,5 +61,3 @@ theorem relative_cutoff_stable {J : Input} {B : ResidueLift J} {D : Factors J B}
 end
 end SplitCut.StableFlow
 
-#print axioms SplitCut.StableFlow.omitted_at_mark
-#print axioms SplitCut.StableFlow.relative_cutoff_stable

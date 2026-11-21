@@ -994,7 +994,7 @@ private theorem finrank_finset_sup_le {ι V : Type*} [AddCommGroup V] [Module Ge
     rw [Finset.sup_insert, Finset.sum_insert hi]
     exact (Submodule.finrank_add_le_finrank_add_finrank (p i) (s.sup p)).trans
       (Nat.add_le_add_left ih _)
-private theorem finrank_of_column_cover {ι : Type*} [Fintype ι]
+theorem finrank_of_column_cover {ι : Type*} [Fintype ι]
     (f : SourcePolynomial →ₗ[Geom] Local) (p : ι → Submodule Geom Local)
     [∀ i, Module.Finite Geom (p i)] (bound : ι → ℕ)
     (hcol : ∀ e ∈ sourceExponents, ∀ c, f (MvPolynomial.monomial e c) = 0 ∨

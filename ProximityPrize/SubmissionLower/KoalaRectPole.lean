@@ -184,7 +184,6 @@ theorem pole_bound {h : ℕ} (hpos : 0 < h) (hchar : h < K1.p) {D : PoleData h}
   change d ≤ poleDebit h s U + Module.finrank L B
   omega
 
-#print axioms pole_bound
 
 end
 end KoalaRectPole

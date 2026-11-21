@@ -79,5 +79,4 @@ theorem node_rank (x y : Geom) :
   unfold localRank
   omega
 
-#print axioms node_rank
 end CutterTaperTheta

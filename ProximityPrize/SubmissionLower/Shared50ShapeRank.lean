@@ -162,7 +162,5 @@ theorem exists_polynomial {w Γ s} (hm : Final50Price.Messages w Γ s)
     rw [← fraction_geometric,hQ,map_mul,toGeometric,MvPolynomial.map_C,hasse_C_mul]
     exact P.mul_mem_left _ (ho P hP a ha)
 
-#print axioms bank_layers
-#print axioms exists_polynomial
 end
 end Shared50ShapeRank

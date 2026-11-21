@@ -130,6 +130,5 @@ theorem graph_degree {g : Ring F} (hg : g ≠ 0) (hv : g.degreeOf 1 = 0)
     change (Nat.factorial 2 : ℚ)*M = 2*M
     norm_num [Nat.factorial]
 
-#print axioms graph_degree
 end
 end SplitCut.Rect

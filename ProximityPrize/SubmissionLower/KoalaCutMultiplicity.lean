@@ -261,5 +261,3 @@ theorem simple_saturation {J P : Ideal (MvPolynomial σ F)} [P.IsPrime]
 end
 end SplitCut.CutMultiplicity
 
-#print axioms SplitCut.CutMultiplicity.coefficient_budget
-#print axioms SplitCut.CutMultiplicity.simple_saturation

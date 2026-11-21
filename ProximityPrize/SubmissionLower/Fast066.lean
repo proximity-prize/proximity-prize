@@ -268,10 +268,10 @@ def c2 : Prop :=
   ∀ (B : Boxes), Admissible B →
     ∀ (P : Ideal GeoJets5) (I : Finset (Fin 5)), P.IsPrime →
       DimLE P I.card → 0 ≤ mixedDegree B P I
-private theorem dim_mono {J Q : Ideal GeoJets5} {d : ℕ} (hJQ : J ≤ Q) (hJ : DimLE J d) :
+theorem dim_mono {J Q : Ideal GeoJets5} {d : ℕ} (hJQ : J ≤ Q) (hJ : DimLE J d) :
     DimLE Q d :=
   (ringKrullDim_le_of_surjective _ (Ideal.Quotient.factor_surjective hJQ)).trans hJ
-private theorem mixed_step (hadd : c1) {B : Boxes} (hB : Admissible B) {I : Finset (Fin 5)}
+theorem mixed_step (hadd : c1) {B : Boxes} (hB : Admissible B) {I : Finset (Fin 5)}
     {J Q : Ideal GeoJets5} (hJ : DimLE J I.card) {a : GeoJets5}
     (ha : ∀ x, x * a ∈ J ↔ x ∈ Q) :
     mixedDegree B J I = mixedDegree B (sectionIdeal J a) I + mixedDegree B Q I := by
@@ -314,7 +314,7 @@ private theorem mixed_step (hadd : c1) {B : Boxes} (hB : Admissible B) {I : Fins
   apply Finset.sum_congr rfl
   intro U _
   rw [hdiag U, mul_add]
-private theorem local_step {H J Q P : Ideal GeoJets5} (hHJ : H ≤ J) (hQ : Q.IsPrime)
+theorem local_step {H J Q P : Ideal GeoJets5} (hHJ : H ≤ J) (hQ : Q.IsPrime)
     {a : GeoJets5} (ha : ∀ x, x * a ∈ J ↔ x ∈ Q) (hP : H.IsMinimalPrime P) :
     LengthAt J P hP.isPrime =
       (if Q = P then 1 else 0) + LengthAt (sectionIdeal J a) P hP.isPrime := by
@@ -358,7 +358,7 @@ private theorem length_top (P : Ideal GeoJets5) (hP : P.IsPrime) :
   change Module.length A (A ⧸ (⊤ : Ideal GeoJets5).map (algebraMap GeoJets5 A)) = 0
   rw [Ideal.map_top]
   exact Module.length_eq_zero
-private theorem cycleBudget (hadd : c1) (hpos : c2) {B : Boxes} (hB : Admissible B)
+theorem cycleBudget (hadd : c1) (hpos : c2) {B : Boxes} (hB : Admissible B)
     {H : Ideal GeoJets5} {I : Finset (Fin 5)} (hH : DimLE H I.card)
     {ι : Type} (S : Finset ι) {C : ι → Ideal GeoJets5}
     (hinj : Set.InjOn C (S : Set ι)) (hp : ∀ a ∈ S, H.IsMinimalPrime (C a))
@@ -1876,7 +1876,7 @@ noncomputable section
 open K1_13_6 K1_13_6_2 K1_13_6_2_4 K1_13_6_2_4_2_2 MvPolynomial
 section Coefficients
 variable {σ τ k R : Type} [Field k] [CommRing R] [Algebra k R]
-private def coefficientMap (f : MvPolynomial σ k →ₐ[k] MvPolynomial τ R)
+def coefficientMap (f : MvPolynomial σ k →ₐ[k] MvPolynomial τ R)
     (u : τ →₀ ℕ) : MvPolynomial σ k →ₗ[k] R :=
   ((lcoeff R u).restrictScalars k).comp f.toLinearMap
 theorem coefficientMap_monomial
@@ -3700,7 +3700,7 @@ private theorem polarize_zero (boxes : List Shape) (p : Shape) :
   induction boxes generalizing p with
   | nil => rfl
   | cons r boxes ih => simp only [polarize, ih, sub_self]
-private theorem mixed_step (hupper : c1) {J Q : Ideal GeoJets} {a : GeoJets}
+theorem mixed_step (hupper : c1) {J Q : Ideal GeoJets} {a : GeoJets}
     (ha : a ∉ J) (hQ : Q.IsPrime) (hann : ∀ x : GeoJets, x * a ∈ J ↔ x ∈ Q)
     {boxes : List Shape} (hb : ∀ q ∈ boxes, Chamber q) (hsmall : boxes.length ≤ 2)
     (hd : dimension J ≤ boxes.length) :

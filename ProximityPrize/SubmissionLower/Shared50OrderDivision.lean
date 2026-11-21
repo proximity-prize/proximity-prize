@@ -207,6 +207,4 @@ theorem vanishesTo_of_pow_mul_hasse [PerfectField K] (P : Ideal Jet) [P.IsPrime]
 
 end
 
-#print axioms vanishesTo_of_pow_mul_hasse
-#print axioms vanishesTo_of_pow_mul
 end Shared50OrderDivision

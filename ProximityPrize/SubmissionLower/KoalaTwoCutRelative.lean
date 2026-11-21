@@ -91,13 +91,13 @@ theorem repeated_count (J : Input) (B : ResidueLift J) (D : Factors J B) (v w : 
   obtain ⟨δ,hδ,hval⟩ := PointCount.curve_degree_nat (‹(eIdeal J v w P).IsPrime›.ne_top) hDim
   have hword' : FixedWord J.model.word U J.family.scalar (degreeAt J.hi) :=
     ⟨hword.distinct.mono hSub, fun γ hγ => hword.degree γ (hSub hγ), fun γ hγ => hword.hits γ (hSub hγ)⟩
-  have hD : degreeAt J.hi ≤ 133536 := by rw [hhi]; decide
-  have hL : L ≤ 128693 := by dsimp [L]; rw [hlo]; decide
-  have hmin : 128606 ≤ J.ell := by
-    have hu : J.w ≤ 2465 := J.upper.trans_eq (hhi.trans (by decide))
-    change 128606 ≤ 131071 - J.w
+  have hD : degreeAt J.hi ≤ 133561 := by rw [hhi]; decide
+  have hL : L ≤ 128680 := by dsimp [L]; rw [hlo]; decide
+  have hmin : 128581 ≤ J.ell := by
+    have hu : J.w ≤ 2490 := J.upper.trans_eq (hhi.trans (by decide))
+    change 128581 ≤ 131071 - J.w
     omega
-  have hk : k ≤ 4930 := liftIndex_le (hhi.le.trans (by decide)) _ _
+  have hk : k ≤ 4980 := liftIndex_le (hhi.le.trans (by decide)) _ _
   have h₀ : J.ell ≤ L := Nat.sub_le_sub_left J.lower _
   have hCuts (x : I) (hfail : ∃ γ ∈ U, (J.family.scalar γ).eval (node x) ≠ J.model.word x) :
       (U.filter fun γ => (J.family.scalar γ).eval (node x) = J.model.word x).card ≤
@@ -130,7 +130,5 @@ theorem repeated_count (J : Input) (B : ResidueLift J) (D : Factors J B) (v w : 
   rw [hval]
   exact_mod_cast hC
 
-#print axioms relative_count
-#print axioms repeated_count
 end
 end SplitCut.TwoCut

@@ -88,6 +88,5 @@ theorem gap (hLG : ∀ a, L a ⊓ G (a + 1) = ⊥)
   rw [hLG] at hbot
   exact shifted_injective hL M hinj R δ hM _ q hlR hq ((Submodule.mem_bot k).mp hbot)
 
-#print axioms gap
 
 end ThetaGap

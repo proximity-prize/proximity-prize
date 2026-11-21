@@ -235,6 +235,5 @@ theorem cover_of_anchor {Γ : Finset K} {s : K → K[X]} (P : Row 4)
     exact ⟨j, by rw [hj, OnFactor, ← eval_anchorLead]; exact ⟨hqS, hqlead⟩⟩
 end FactorCover
 
-#print axioms cover_of_anchor
 end
 end Euler50GeoCover

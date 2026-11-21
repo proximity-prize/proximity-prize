@@ -14,7 +14,7 @@ open HighCore82219 (Bank debit)
 open K1_14 (Shape shapeSum triangle)
 open private twice_sum_linear from ProximityPrize.SubmissionLower.Pack_K1_14_2_1Arithmetic
 open private row rising level sum_rising sum_level tailSum tailSum_eq from ProximityPrize.SubmissionLower.SilverBase
-private theorem agreement_cast : (agreement : ℤ) = 179905 := rfl
+private theorem agreement_cast : (agreement : ℤ) = 179895 := rfl
 def cut (s : Shape) (r lo mode : ℕ) : ℕ :=
   min (s.B+1) ((cutoffCount lo r s - 1 - (2*lo*mode-1)*s.J) / (131071-lo) + 1)
 private def tailLength (s : Shape) (r lo mode q : ℕ) : ℕ :=

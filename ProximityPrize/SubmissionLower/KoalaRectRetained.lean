@@ -47,7 +47,7 @@ theorem persistent_at_cap {b : Band} {u del} (M : AnchorModel u del)
   have h2w : 2*w ≤ d := by
     have hh := (height_guards b).2
     dsimp only [d]
-    change finish b ≤ 33405 at hh
+    change finish b ≤ 33425 at hh
     omega
   have hInv := band_invoice hwlo hwhi e v
   have hdp : d < K1.p := hInv.degree.trans (by decide)
@@ -127,6 +127,5 @@ theorem retained_of_price (hbank : P3_7_1.BankOK (terminal .h2367)) (hPrice : Re
   exact hPrice u del M Γ F hw hshift H hH C pairs Q f hf hprod (by omega) he
     (Nat.pos_of_ne_zero hz) haxes T hT hr
 
-#print axioms retained_of_price
 end
 end KoalaRect

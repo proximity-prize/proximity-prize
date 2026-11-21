@@ -20,10 +20,6 @@ open K1_11_2_2 (interpolant parameterNode nodeValue parameterNode_interpolant
 open private degreeOf_le_of_dvd from ProximityPrize.SubmissionLower.Fast072
 open private no_pair_one_one_of_graph native_column_rank from ProximityPrize.SubmissionLower.Fast070
 open private transfer_at from ProximityPrize.SubmissionLower.Fast068
-private theorem degree_lt_of_product (s d m b : ℕ) (hd : s * d ≤ b) (hm : b < s * m) :
-    d < m := by
-  by_contra! h
-  exact (not_lt_of_ge ((Nat.mul_le_mul_left s h).trans hd)) hm
 end
 end P3_4
 end

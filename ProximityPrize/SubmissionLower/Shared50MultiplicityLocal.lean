@@ -203,22 +203,6 @@ theorem length_max_power [IsDomain R] [IsLocalRing R] [UniqueFactorizationMonoid
       higher_mod_left hm (n+1), length_mod_left hm hu hn, triangle]
     simp only [Nat.cast_add]
 
-theorem triangle_eq_choose (n : ℕ) : triangle n = (n+1).choose 2 := by
-  induction n with
-  | zero => decide
-  | succ n ih =>
-    have hc : (n+1+1).choose 2 = (n+1).choose 1 + (n+1).choose 2 :=
-      Nat.choose_succ_succ (n+1) 1
-    rw [triangle, ih, hc, Nat.choose_one_right]
-    exact Nat.add_comm _ _
-
-/-- The power-quotient length is the number of two-variable monomials below the cutoff. -/
-theorem length_max_power_choose [IsDomain R] [IsLocalRing R] [UniqueFactorizationMonoid R]
-    [IsNoetherianRing R] (hm2 : (maximalIdeal R).spanFinrank = 2) (n : ℕ) :
-    Module.length R (R ⧸ (maximalIdeal R)^n) = ((n+1).choose 2 : ℕ) := by
-  change quotientLength ((maximalIdeal R)^n) = ((n+1).choose 2 : ℕ)
-  rw [length_max_power hm2 n, triangle_eq_choose]
-
 theorem triangle_add (a b : ℕ) : triangle (a+b) = triangle a + triangle b + a*b := by
   induction b with
   | zero => simp [triangle]
@@ -284,6 +268,4 @@ theorem length_ge_product [IsDomain R] [IsLocalRing R] [UniqueFactorizationMonoi
 
 end
 
-#print axioms length_max_power_choose
-#print axioms length_ge_product
 end Shared50Multiplicity

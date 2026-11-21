@@ -6187,7 +6187,7 @@ private theorem LinearCover.curve_count {T s d e b w} (C : LinearCover T s d e b
   have hstrict := Nat.mul_lt_mul_of_pos_right hfactor hδ
   change gap * U.card ≤ 81879 * δ + gap at hcount
   omega
-private theorem LinearCover.surface_count {T s d e b w} (C : LinearCover T s d e b)
+theorem LinearCover.surface_count {T s d e b w} (C : LinearCover T s d e b)
     {U : Finset K} (hU : U ⊆ T) (hword : FixedWord w U s d) (hd : d < 180265)
     (P : Ideal (LinearRing d e b)) (hP : P.IsPrime)
     (hdim : (affineHilbertPolynomial P).natDegree = 2)

@@ -759,7 +759,7 @@ theorem lineRows_finite (s : ℕ) (g : ℤ) (b c : ℕ) :
     (lineRows s g b c).Finite :=
   (Finsupp.finite_of_degree_le (residualDegree s)).subset fun _ he => Nat.le_of_eq he.1
 variable {s : ℕ} {g : ℤ} {b c : ℕ}
-private theorem column_coeff (m : Column s g) (e : Exponent) :
+theorem column_coeff (m : Column s g) (e : Exponent) :
     (lineMap s g b c (oldBasis s g m)).coeff e =
       if e 2 = c then
         if e 1 = b then
