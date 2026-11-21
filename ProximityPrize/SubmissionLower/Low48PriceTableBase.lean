@@ -31,4 +31,30 @@ theorem point {top : ℕ} {k : Band} {a : Shape} {b j t l : ℕ}
   cases a
   subst_vars
   exact (physicalPrice_anti _ hl hlo).trans hbill
+abbrev RectangleClaim (top : ℕ) (k : Band) (bl jl bh jh t : ℕ) : Prop :=
+  ∀ {a : Shape}, bl ≤ a.b → jl ≤ a.j → a.b ≤ bh → a.j ≤ jh → a.t = t → 3 * a.t ≤ a.j →
+    physicalPrice a (order k a) ≤ allowance top k a.j
+
+abbrev PointClaim (top : ℕ) (k : Band) (b j t : ℕ) : Prop :=
+  ∀ {a : Shape}, b ≤ a.b → j ≤ a.j → a.b ≤ b → a.j ≤ j → a.t = t →
+    physicalPrice a (order k a) ≤ allowance top k a.j
+
+/-- Apply a rectangle receipt after checking its closed numerical inequalities. -/
+theorem rectangleBound {top : ℕ} {k : Band} {bl jl bh jh t l : ℕ} (hl : 0 < l := by decide)
+    (hlo : l ≤ order k ⟨bl,jl,0⟩ := by decide +kernel)
+    (hbill : physicalPriceOld ⟨bh,jh,t⟩ l ≤ allowance top k jl := by decide +kernel)
+    {a : Shape} (h₁ : bl ≤ a.b) (h₂ : jl ≤ a.j) (h₃ : a.b ≤ bh) (h₄ : a.j ≤ jh)
+    (ht : a.t = t) (ha : 3 * a.t ≤ a.j) :
+    physicalPrice a (order k a) ≤ allowance top k a.j :=
+  oldRectangle h₁ h₂ h₃ h₄ ht ha hl hlo hbill
+
+/-- Apply a singleton receipt with the same endpoint hypotheses as a rectangle. -/
+theorem pointBound {top : ℕ} {k : Band} {b j t l : ℕ} (hl : 0 < l := by decide)
+    (hlo : l ≤ order k ⟨b,j,t⟩ := by decide +kernel)
+    (hbill : physicalPrice ⟨b,j,t⟩ l ≤ allowance top k j := by decide +kernel)
+    {a : Shape} (h₁ : b ≤ a.b) (h₂ : j ≤ a.j) (h₃ : a.b ≤ b) (h₄ : a.j ≤ j)
+    (ht : a.t = t) :
+    physicalPrice a (order k a) ≤ allowance top k a.j :=
+  point (Nat.le_antisymm h₃ h₁) (Nat.le_antisymm h₄ h₂) ht hl hlo hbill
+
 end Low48PriceTableBase

@@ -8,13 +8,13 @@ open K1 (I K)
 open K1_13 (Geom)
 open K1_13_4 hiding firstOrder secondOrder firstCut secondCut mixedWeight Necessary MixedOrder PairOrders CommonPair
 open scoped Polynomial BigOperators
-abbrev firstOrder : ℕ := 6099820
-abbrev secondOrder : ℕ := 3348204
-abbrev firstCut : ℕ := 5000 * 179944 - firstOrder
-abbrev secondCut : ℕ := 5000 * 179944 - secondOrder
-abbrev bankRank : ℕ := 1443676871454462878785
+abbrev firstOrder : ℕ := 5957547
+abbrev secondOrder : ℕ := 3218717
+abbrev firstCut : ℕ := 5000 * 179915 - firstOrder
+abbrev secondCut : ℕ := 5000 * 179915 - secondOrder
+abbrev bankRank : ℕ := 1436964933336965375967
 def mixedWeight (a : SeedVar →₀ ℕ) : ℕ :=
-  7098 * a none + 48875 * a.some.degree
+  7065 * a none + 48846 * a.some.degree
 theorem mixedWeight_add (a b : SeedVar →₀ ℕ) :
     mixedWeight (a + b) = mixedWeight a + mixedWeight b := by
   simp only [mixedWeight, Finsupp.add_apply, Finsupp.some_add, map_add, Nat.mul_add]
@@ -39,9 +39,9 @@ open K1_13_4 hiding firstOrder secondOrder firstCut secondCut mixedWeight Necess
 open P0_9_4 (clear_denominators)
 open scoped Polynomial BigOperators
 structure Messages (w : I → K) (Γ : Finset K) (s : K → K[X]) : Prop where
-  hits : ∀ γ ∈ Γ, ∃ T : Finset I, 179944 ≤ T.card ∧ ∀ i ∈ T, (s γ).eval (node i) = w i
+  hits : ∀ γ ∈ Γ, ∃ T : Finset I, 179915 ≤ T.card ∧ ∀ i ∈ T, (s γ).eval (node i) = w i
 def c1 : Prop :=
-  ∀ w Γ s (P : PoleData Γ s) (L : ResidueChart P), P.H.natDegree ≤ 2366 →
+  ∀ w Γ s (P : PoleData Γ s) (L : ResidueChart P), P.H.natDegree ≤ 2355 →
     (∃ F, F ≠ 0 ∧ Source w P L firstBox firstCut F) ∧
     HasRank w P L secondBox secondCut bankRank
 def c2 : Prop :=
@@ -50,21 +50,21 @@ def c2 : Prop :=
     ∃ G, G ∈ Necessary w P L ∧ Nonempty (CommonPair (toGeneric F) (toGeneric G))
 def c3 : Prop :=
   ∀ w Γ s, Messages w Γ s →
-    ∀ (P : PoleData Γ s) (L : ResidueChart P), P.H.natDegree ≤ 2366 →
+    ∀ (P : PoleData Γ s) (L : ResidueChart P), P.H.natDegree ≤ 2355 →
       (∀ F, Source w P L firstBox firstCut F → ∀ γ ∈ Γ,
         MixedOrder (toGeneric F) (inclConst (P.z γ)) (trajectory (extend (s γ))) firstOrder) ∧
       (∀ G ∈ Necessary w P L, ∀ γ ∈ Γ,
         MixedOrder (toGeneric G) (inclConst (P.z γ)) (trajectory (extend (s γ))) secondOrder)
 
-abbrev fatOrder : ℕ := 58872
+abbrev fatOrder : ℕ := 55566
 def Holds (E : P3_6.FatEquations) (S : K1_13.Geom[X]) : Prop :=
   K1_13.atJet E.common S = 0 ∨ K1_13.OrderAt E.residual S fatOrder
 
 def Equations : Prop :=
   ∀ (w : I → K) (Γ : Finset K) (s : K → K[X]),
-    (∀ γ ∈ Γ, (s γ).natDegree ≤ 133437) →
-    (∀ γ ∈ Γ, ∃ T : Finset I, 179944 ≤ T.card ∧ ∀ i ∈ T, (s γ).eval (node i) = w i) →
-    ∀ P : K1_13.PoleData Γ s, P.H.natDegree ≤ 2366 →
+    (∀ γ ∈ Γ, (s γ).natDegree ≤ 133426) →
+    (∀ γ ∈ Γ, ∃ T : Finset I, 179915 ≤ T.card ∧ ∀ i ∈ T, (s γ).eval (node i) = w i) →
+    ∀ P : K1_13.PoleData Γ s, P.H.natDegree ≤ 2355 →
     ∃ (book : Finset K1.K) (E : P3_6.FatEquations), book.card ≤ 140000 ∧
       ∀ γ ∈ Γ, γ ∉ book → Holds E (K1_13.extend (s γ))
 end

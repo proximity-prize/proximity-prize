@@ -1,4 +1,4 @@
-import ProximityPrize.SubmissionLower.Primary82170
+import ProximityPrize.SubmissionLower.Low48PrimaryPivot
 import ProximityPrize.SubmissionLower.GoldBranch6N8
 
 set_option Elab.async false
@@ -14,13 +14,13 @@ open MvPolynomial (mem_support_iff)
 open scoped BigOperators
 open private weight_eq_sum map_independent_family from ProximityPrize.SubmissionLower.PortLowBase
 
-abbrev agreement : ℕ := 179944
-abbrev physicalDegree : ℕ := 133437
+abbrev agreement : ℕ := 179915
+abbrev physicalDegree : ℕ := 133426
 abbrev primaryBox : Shape := ⟨4012, 1650, 550⟩
 abbrev primaryCutoff : ℕ := 3000 * agreement - 1
-abbrev sourceRank : ℕ := 1051461617084569337
+abbrev sourceRank : ℕ := 1068050204647380784
 abbrev layerWidth : ℕ := agreement - physicalDegree + 3
-abbrev layerNeed : ℕ := 22607216019879
+abbrev layerNeed : ℕ := 22972773910509
 
 def TrueWeightLE {n : ℕ} (P : Row n) (D : ℕ) : Prop :=
   ∀ m ∈ P.support, (P.coeff m).natDegree +
@@ -105,8 +105,8 @@ def wordMap (w : I → K) : SourceSpace →ₗ[Geom] (I → Local) :=
   (P3_6_2.wordMap w).comp (Submodule.inclusion included)
 
 theorem word_rank (w : I → K) :
-    Module.finrank Geom (LinearMap.range (wordMap w)) ≤ 262144 * 344122366652253 :=
-  (LinearMap.finrank_range_comp_le_left _ _).trans (P3_6_2.word_rank_le w Primary82170.origin_rank)
+    Module.finrank Geom (LinearMap.range (wordMap w)) ≤ 262144 * 343964087710797 :=
+  (LinearMap.finrank_range_comp_le_left _ _).trans (P3_6_2.word_rank_le w Low48PrimaryPivot.origin_rank)
 
 theorem contact_of_word_kernel (w : I → K) (Q : SourceSpace) (hQ : wordMap w Q = 0) :
     Contact w (toRow Q.1) :=
@@ -124,7 +124,7 @@ open scoped BigOperators
 open private Column P0_9_2.exponent coordinates coordinates_exponent P0_9_2.exponent_coordinates scaled_sum
   from ProximityPrize.SubmissionLower.PortLowBase
 private def width (a b c f : ℕ) : ℕ :=
-  539832000 + b + 2 * c + 3 * f - 133437 * (a + b + c + f)
+  539745000 + b + 2 * c + 3 * f - 133426 * (a + b + c + f)
 private def tuples : Finset Column :=
   (range 551).sigma fun f =>
     (range ((1650 - 3 * f) / 2 + 1)).sigma fun c =>
@@ -147,19 +147,19 @@ private theorem card_columns : sourceColumns.card = tuples.card := by
     ⟨P0_9_2.exponent, coordinates, coordinates_exponent, P0_9_2.exponent_coordinates⟩
   exact (Finset.card_equiv e (fun t => (mem_columns t).symm)).symm
 private def widthInt (a b c f : ℤ) : ℤ :=
-  539832000 + b + 2 * c + 3 * f - 133437 * (a + b + c + f)
+  539745000 + b + 2 * c + 3 * f - 133426 * (a + b + c + f)
 private theorem cast_width (a b c f : ℕ) (h : a + b + c + f ≤ 4012) :
     (width a b c f : ℤ) = widthInt a b c f := by
-  have hpos : 133437 * (a + b + c + f) ≤ 539832000 + b + 2 * c + 3 * f := by omega
+  have hpos : 133426 * (a + b + c + f) ≤ 539745000 + b + 2 * c + 3 * f := by omega
   simp [width, widthInt, Nat.cast_sub hpos]
 private def prefixA (b c f n : ℤ) : ℤ :=
-  n * (2 * widthInt 0 b c f - 133437 * (n - 1))
+  n * (2 * widthInt 0 b c f - 133426 * (n - 1))
 private def doubleA (b c f : ℤ) : ℤ :=
   prefixA b c f (4013 - b - c - f)
 private def prefixB (c f n : ℤ) : ℤ :=
   let p := 4013 - c - f
-  let q := 2 * widthInt 0 0 c f - 133437 * (p - 1)
-  let r := 2 - 133437
+  let q := 2 * widthInt 0 0 c f - 133426 * (p - 1)
+  let r := 2 - 133426
   6 * n * p * q + 3 * n * (n - 1) * (p * r - q) - n * (n - 1) * (2 * n - 1) * r
 private def twelveB (c f : ℤ) : ℤ :=
   prefixB c f (1651 - 2 * c - 3 * f)
@@ -241,11 +241,11 @@ private theorem sum_eq_evaluate (g : ℕ → ℤ) (n : ℕ) :
 
 set_option maxRecDepth 10000 in
 set_option maxHeartbeats 3000000 in
-private theorem evaluate_closedC : evaluate closedC 551 = 26283189686622560573472 := by
+private theorem evaluate_closedC : evaluate closedC 551 = 26276017539889886270976 := by
   rfl
 
-theorem exact_source_columns : sourceColumns.card = 91261075300772779769 := by
-  have h : 288 * (tuples.card : ℤ) = 26283189686622560573472 := by
+theorem exact_source_columns : sourceColumns.card = 91236172013506549552 := by
+  have h : 288 * (tuples.card : ℤ) = 26276017539889886270976 := by
     rw [card_tuples_int, mul_sum]
     calc
       _ = ∑ f ∈ range 551, closedC f :=
@@ -278,7 +278,7 @@ private theorem family_of_kernel (w : I → K) {n : ℕ}
   have h := map_independent_family (V := LinearMap.ker (wordMap w)) (W := Row 4)
     (n := n) liftRow hinj admissible hrows hker
   simpa only [admissible] using h
-/-- Independent primary rows for every received word at height at most 2366. -/
+/-- Independent primary rows for every received word at height at most 2355. -/
 theorem primary_family (w : I → K) :
     ∃ e : Fin sourceRank → Row 4, LinearIndependent Geom e ∧
       ∀ i, InBox (shape (e i)) primaryBox ∧

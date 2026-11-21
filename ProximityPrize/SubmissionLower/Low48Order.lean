@@ -643,14 +643,14 @@ export Low48OrderProof (requiredOrder)
 export Low48OrderProof_1 (order_of_contact)
 
 theorem messages_of_family {cap u del Γ} (M : P1.ModelAt cap u del)
-    (F : P1.FamilyAt agreement M Γ) (hh : M.overhead ≤ 2366) :
+    (F : P1.FamilyAt agreement M Γ) (hh : M.overhead ≤ 2355) :
     Messages M.word Γ F.scalar := by
   refine ⟨?_, ?_⟩
   · intro γ hγ
     obtain hz | hd := (F.mark γ hγ).scalar_degree
     · simp [hz]
     · change ((F.scalar γ).natDegree : ℤ) ≤ (131072 : ℤ) - 1 + M.overhead at hd
-      change (F.scalar γ).natDegree ≤ 133437
+      change (F.scalar γ).natDegree ≤ 133426
       omega
   · intro γ hγ
     let m := F.mark γ hγ

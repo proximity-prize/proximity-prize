@@ -33,88 +33,61 @@ private theorem triangle_diff (x n : ℕ) :
       rw [hx, triangle_succ]
       omega
 
-private theorem fee_plateau (r : Row) :
-    ∑ j ∈ range 54, fee (50+j) r = triangle (fee 50 r) - triangle (fee 104 r) := by
-  have heq (j : ℕ) : fee (50+j) r = fee 50 r - j := by unfold fee; omega
-  simp_rw [heq]
-  rw [triangle_diff, ← heq]
-
-private def plateau : Finset ℕ := (range 54).image (fun j => 50+j)
 private def stages (d : ℕ) : Finset ℕ :=
-  if d = 49 then insert d plateau
-  else if extra d < 122 then {d, extra d, extra d + 1} else {d}
+  insert d ((range (copies d)).image fun j => extra d + j)
 
 private def inStage (d s : ℕ) : Prop :=
-  s = d ∨ (if d = 49 then 50 ≤ s ∧ s < 104
-    else extra d < 122 ∧ (s = extra d ∨ s = extra d + 1))
+  s = d ∨ (extra d ≤ s ∧ s < extra d + copies d)
 
 private instance (d s : ℕ) : Decidable (inStage d s) := by
   unfold inStage
-  split <;> infer_instance
-
-private theorem in_plateau (s : ℕ) : s ∈ plateau ↔ 50 ≤ s ∧ s < 104 := by
-  unfold plateau
-  rw [mem_image]
-  constructor
-  · rintro ⟨j, hj, rfl⟩
-    rw [mem_range] at hj
-    omega
-  · intro hs
-    exact ⟨s-50, mem_range.mpr (by omega), by omega⟩
+  infer_instance
 
 private theorem in_stages (d s : ℕ) : s ∈ stages d ↔ inStage d s := by
   unfold stages inStage
-  split_ifs with h he
-  · rw [mem_insert, in_plateau]
-  · simp [he]
-  · simp [he]
+  rw [mem_insert, mem_image]
+  refine or_congr_right ⟨?_, ?_⟩
+  · rintro ⟨j, hj, rfl⟩
+    rw [mem_range] at hj
+    omega
+  · intro h
+    exact ⟨s - extra d, mem_range.mpr (by omega), by omega⟩
 
-private theorem stages_eq (d : ℕ) (hd : d < 50) :
-    (range 122).filter (fun s => cap s = d) = stages d := by
-  have h : (List.range 50).all (fun j =>
-      (List.range 122).all (fun s => decide (cap s = j ↔ inStage j s))) = true := by
+private theorem stages_eq (d : ℕ) (hd : d < 51) :
+    (range 124).filter (fun s => cap s = d) = stages d := by
+  have checked : (List.range 51).all (fun j =>
+      (List.range 124).all (fun s => decide (cap s = j ↔ inStage j s))) = true := by
     decide +kernel
+  have room : (List.range 51).all (fun j => decide (extra j + copies j ≤ 124)) = true := by
+    decide +kernel
+  have hl := of_decide_eq_true (List.all_eq_true.mp room d (List.mem_range.mpr hd))
   ext s
   rw [mem_filter, mem_range, in_stages]
-  by_cases hs : s < 122
-  · refine ⟨fun hc => ?_, fun hc => ?_⟩
-    · exact (of_decide_eq_true
-        (List.all_eq_true.mp (List.all_eq_true.mp h d (List.mem_range.mpr hd)) s
-          (List.mem_range.mpr hs))).mp hc.2
-    · exact ⟨hs, (of_decide_eq_true
-        (List.all_eq_true.mp (List.all_eq_true.mp h d (List.mem_range.mpr hd)) s
-          (List.mem_range.mpr hs))).mpr hc⟩
-  · have hx : extra d < 122 → extra d + 1 < 122 := by
-      have hv : (List.range 50).all
-          (fun j => decide (extra j < 122 → extra j + 1 < 122)) = true := by
-        decide +kernel
-      exact of_decide_eq_true (List.all_eq_true.mp hv d (List.mem_range.mpr hd))
-    simp [hs, inStage]
-    split_ifs <;> omega
+  by_cases hs : s < 124
+  · have he := of_decide_eq_true (List.all_eq_true.mp
+      (List.all_eq_true.mp checked d (List.mem_range.mpr hd)) s (List.mem_range.mpr hs))
+    simp only [hs, true_and]
+    exact he
+  · unfold inStage
+    simp only [hs, false_and, false_iff]
+    omega
 
-private theorem extra_lt_gt (d : ℕ) (hd : d < 50) (he : extra d < 122) : d < extra d := by
-  have h : (List.range 50).all (fun j => decide (extra j < 122 → j < extra j)) = true := by
-    decide +kernel
-  exact of_decide_eq_true (List.all_eq_true.mp h d (List.mem_range.mpr hd)) he
-
-private theorem sum_stage_fee (d : ℕ) (hd : d < 50) (r : Row) :
+private theorem sum_stage_fee (d : ℕ) (hd : d < 51) (r : Row) :
     ∑ s ∈ stages d, fee s r = price d r := by
+  have checked : (List.range 51).all (fun j => decide (j < extra j)) = true := by decide +kernel
+  have hlt := of_decide_eq_true (List.all_eq_true.mp checked d (List.mem_range.mpr hd))
+  have hnot : d ∉ (range (copies d)).image (fun j => extra d + j) := by
+    rw [mem_image]
+    rintro ⟨j, _, hj⟩
+    omega
+  have hf : Set.InjOn (fun j : ℕ => extra d+j) (↑(range (copies d))) := by
+    intro a _ b _ hab
+    exact Nat.add_left_cancel hab
+  have heq (j : ℕ) : fee (extra d+j) r = fee (extra d) r - j := by unfold fee; omega
   unfold stages price
-  split_ifs with h he
-  · subst d
-    rw [sum_insert (by rw [in_plateau]; omega : 49 ∉ plateau)]
-    unfold plateau
-    have hf : Set.InjOn (fun j : ℕ => 50+j) (↑(range 54)) := by
-      intro a _ b _ hab
-      exact Nat.add_left_cancel hab
-    rw [sum_image hf, fee_plateau]
-  · have hx := extra_lt_gt d hd he
-    have hleft : d ∉ ({extra d, extra d + 1} : Finset ℕ) := by
-      simp only [mem_insert, mem_singleton]
-      omega
-    have hright : extra d ∉ ({extra d + 1} : Finset ℕ) := by simp
-    rw [sum_insert hleft, sum_insert hright, sum_singleton]
-  · rw [sum_singleton, Nat.add_zero]
+  rw [sum_insert hnot, sum_image hf]
+  simp_rw [heq]
+  rw [triangle_diff]
 
 private theorem exchange (st : Finset ℕ) (rows : List Row) :
     (∑ s ∈ st, ((rows.map (fee s)).sum)) =
@@ -125,12 +98,12 @@ private theorem exchange (st : Finset ℕ) (rows : List Row) :
     simp only [List.map_cons, List.sum_cons, Finset.sum_add_distrib, ih]
 
 theorem sum_fees (rows : ℕ → List Row) :
-    (∑ s : Fin 122, ((rows (cap s)).map (fee s)).sum) =
-      ∑ d : Fin 50, ((rows d).map (price d)).sum := by
-  rw [Fin.sum_univ_eq_sum_range (fun s => ((rows (cap s)).map (fee s)).sum) 122,
-    Fin.sum_univ_eq_sum_range (fun d => ((rows d).map (price d)).sum) 50]
+    (∑ s : Fin 124, ((rows (cap s)).map (fee s)).sum) =
+      ∑ d : Fin 51, ((rows d).map (price d)).sum := by
+  rw [Fin.sum_univ_eq_sum_range (fun s => ((rows (cap s)).map (fee s)).sum) 124,
+    Fin.sum_univ_eq_sum_range (fun d => ((rows d).map (price d)).sum) 51]
   calc
-    _ = ∑ s ∈ range 122, ∑ d ∈ range 50,
+    _ = ∑ s ∈ range 124, ∑ d ∈ range 51,
           if cap s = d then ((rows d).map (fee s)).sum else 0 := by
         apply sum_congr rfl
         intro s hs
@@ -140,7 +113,7 @@ theorem sum_fees (rows : ℕ → List Row) :
           simp [Ne.symm hne]
         · intro he
           exact (he (mem_range.mpr (Nat.lt_succ_of_le (cap_le_index s)))).elim
-    _ = ∑ d ∈ range 50, ((rows d).map (price d)).sum := by
+    _ = ∑ d ∈ range 51, ((rows d).map (price d)).sum := by
         rw [sum_comm]
         apply sum_congr rfl
         intro d hd

@@ -111,16 +111,16 @@ theorem differentialWeight_eq : differentialWeight (d := 3) physicalDegree =
 section FactorCover
 open MvPolynomial UniqueFactorizationMonoid
 private theorem lower_of_anchor (P : Row 4) (hP : P ≠ 0)
-    (hbox : InBox (shape P) ⟨121, 49, 13⟩) (hw : TrueWeightLE P anchorCutoff) :
+    (hbox : InBox (shape P) ⟨123, 50, 13⟩) (hw : TrueWeightLE P anchorCutoff) :
     LowerRow (shape P).t (anchorLead P) := by
   refine ⟨anchorLead_ne hP, ?_, ?_, ?_⟩
   · have hb := (Low48GeometryLead.lead_degree P hP).trans hbox.1
-    change (anchorLead P).totalDegree + (shape P).t ≤ 121 at hb
-    change (anchorLead P).totalDegree ≤ 121 - (shape P).t
+    change (anchorLead P).totalDegree + (shape P).t ≤ 123 at hb
+    change (anchorLead P).totalDegree ≤ 123 - (shape P).t
     omega
   · have hj := (Low48GeometryLead.lead_index P hP).trans hbox.2.1
-    change indexDegree (anchorLead P) + 3 * (shape P).t ≤ 49 at hj
-    change indexDegree (anchorLead P) ≤ 49 - 3 * (shape P).t
+    change indexDegree (anchorLead P) + 3 * (shape P).t ≤ 50 at hj
+    change indexDegree (anchorLead P) ≤ 50 - 3 * (shape P).t
     omega
   · intro m hm
     obtain ⟨u, hu, hc, h⟩ := anchorLead_term P m hm
@@ -129,7 +129,7 @@ private theorem lower_of_anchor (P : Row 4) (hP : P ≠ 0)
     apply (Nat.add_le_add_left _ _).trans (hw u hu)
     simpa only [Finsupp.weight_apply, smul_eq_mul, Nat.mul_comm, Fin.val_castSucc] using hle
 private theorem factor_small {P f : Row 4} (hP : P ≠ 0)
-    (hbox : InBox (shape P) ⟨121, 49, 13⟩) (hw : TrueWeightLE P anchorCutoff)
+    (hbox : InBox (shape P) ⟨123, 50, 13⟩) (hw : TrueWeightLE P anchorCutoff)
     (hf : Irreducible f) (ht : 0 < (shape f).t) (hd : f ∣ P) : SmallFactor f := by
   refine ⟨hf, ht, ⟨?_, ?_, ?_⟩, ?_⟩
   · have h := weightedTotalDegree_le_of_dvd (1 : Fin 4 → ℕ) hd hP
@@ -147,7 +147,7 @@ private theorem factor_small {P f : Row 4} (hP : P ≠ 0)
     exact (trueWeight_iff f).mpr
       ((weightedTotalDegree_le_of_dvd _ hd' hP').trans ((trueWeight_iff P).mp hw))
 theorem cover_of_anchor {Γ : Finset K} {s : K → K[X]} (P : Row 4)
-    (hP : P ≠ 0) (hbox : InBox (shape P) ⟨121, 49, 13⟩)
+    (hP : P ≠ 0) (hbox : InBox (shape P) ⟨123, 50, 13⟩)
     (hw : TrueWeightLE P anchorCutoff)
     (hz : ∀ γ ∈ Γ, atJet P (extend (s γ)) = 0) :
     ∃ (top : ℕ) (n : ℕ) (g : Row 3) (f : Fin n → Row 4), top ≤ 13 ∧ Cover top Γ s g f := by

@@ -8,38 +8,52 @@ open PolynomialDifferential ReedSolomon.HiddenDerivative
 
 /-- The total jet degree limit for a fixed number of differentiated factors. -/
 def gradeLimit (t : ℕ) : ℕ :=
-  if t ≤ 30 then 121 else if t ≤ 32 then 119 else if t ≤ 34 then 117
-  else if t ≤ 36 then 115 else if t ≤ 39 then 113 else if t ≤ 41 then 111
-  else if t ≤ 43 then 109 else if t ≤ 45 then 107 else if t ≤ 47 then 105
-  else 103
+  if t ≤ 31 then 123
+  else if t ≤ 33 then 122
+  else if t ≤ 35 then 120
+  else if t ≤ 37 then 118
+  else if t ≤ 39 then 116
+  else if t ≤ 41 then 114
+  else if t ≤ 43 then 112
+  else if t ≤ 45 then 110
+  else if t ≤ 47 then 108
+  else if t ≤ 49 then 106
+  else 104
 
 /-- The differentiated factor limit at total jet degree `s`. -/
 def cap (s : ℕ) : ℕ :=
-  min s (if s ≤ 103 then 49 else if s ≤ 105 then 47 else if s ≤ 107 then 45
-    else if s ≤ 109 then 43 else if s ≤ 111 then 41 else if s ≤ 113 then 39
-    else if s ≤ 115 then 36 else if s ≤ 117 then 34 else if s ≤ 119 then 32
-    else 30)
+  min s (if s ≤ 104 then 50
+  else if s ≤ 106 then 49
+  else if s ≤ 108 then 47
+  else if s ≤ 110 then 45
+  else if s ≤ 112 then 43
+  else if s ≤ 114 then 41
+  else if s ≤ 116 then 39
+  else if s ≤ 118 then 37
+  else if s ≤ 120 then 35
+  else if s ≤ 122 then 33
+  else 31)
 
 theorem cap_le_grade (s : ℕ) : cap s ≤ s := min_le_left _ _
 
-theorem cap_le_index (s : ℕ) : cap s ≤ 49 := by
+theorem cap_le_index (s : ℕ) : cap s ≤ 50 := by
   unfold cap
   apply (min_le_right _ _).trans
   split_ifs <;> decide
 
-private theorem gradeLimit_tail {t : ℕ} (ht : 47 < t) : gradeLimit t = 103 := by
+private theorem gradeLimit_tail {t : ℕ} (ht : 49 < t) : gradeLimit t = 104 := by
   unfold gradeLimit
   split_ifs <;> omega
 
 theorem gradeLimit_antitone : Antitone gradeLimit := by
   apply antitone_nat_of_succ_le
   intro n
-  by_cases hn : n < 48
-  · have steps : ∀ t : Fin 48, gradeLimit (t.val + 1) ≤ gradeLimit t.val := by decide +kernel
+  by_cases hn : n < 50
+  · have steps : ∀ t : Fin 50, gradeLimit (t.val + 1) ≤ gradeLimit t.val := by decide +kernel
     exact steps ⟨n, hn⟩
-  · rw [gradeLimit_tail (show 47 < n by omega), gradeLimit_tail (show 47 < n+1 by omega)]
+  · rw [gradeLimit_tail (show 49 < n by omega), gradeLimit_tail (show 49 < n+1 by omega)]
 
-theorem cap_of_grade {s t : ℕ} (ht : t ≤ 49) (hts : t ≤ s) (h : s ≤ gradeLimit t) :
+theorem cap_of_grade {s t : ℕ} (ht : t ≤ 50) (hts : t ≤ s) (h : s ≤ gradeLimit t) :
     t ≤ cap s := by
   have limit {n : ℕ} (hn : gradeLimit (n + 1) < s) : t ≤ n := by
     by_contra! hbad
@@ -48,25 +62,31 @@ theorem cap_of_grade {s t : ℕ} (ht : t ≤ 49) (hts : t ≤ s) (h : s ≤ grad
   apply le_min hts
   split_ifs
   · exact ht
-  · apply limit; change 103 < s; omega
-  · apply limit; change 105 < s; omega
-  · apply limit; change 107 < s; omega
-  · apply limit; change 109 < s; omega
-  · apply limit; change 111 < s; omega
-  · apply limit; change 113 < s; omega
-  · apply limit; change 115 < s; omega
-  · apply limit; change 117 < s; omega
-  · apply limit; change 119 < s; omega
+  · apply limit; change 104 < s; omega
+  · apply limit; change 106 < s; omega
+  · apply limit; change 108 < s; omega
+  · apply limit; change 110 < s; omega
+  · apply limit; change 112 < s; omega
+  · apply limit; change 114 < s; omega
+  · apply limit; change 116 < s; omega
+  · apply limit; change 118 < s; omega
+  · apply limit; change 120 < s; omega
+  · apply limit; change 122 < s; omega
 
 def AnchorEligible (u : JetVariable 3 →₀ ℕ) : Prop :=
-  u.some.degree ≤ 121 ∧ u.some.weight (fun i => i.val) ≤ 49 ∧ u (some 3) ≤ 13 ∧
+  u.some.degree ≤ 123 ∧ u.some.weight (fun i => i.val) ≤ 50 ∧ u (some 3) ≤ 13 ∧
     u.some.degree ≤ gradeLimit (u (some 1) + u (some 2) + u (some 3)) ∧
-    u.weight (differentialWeight 133437) ≤ 90 * 179944 - 1
+    u.weight (differentialWeight 133426) ≤ 92 * 179915 + 50 - 1
+
+def SourceEligible (u : JetVariable 3 →₀ ℕ) : Prop :=
+  u.some.degree ≤ 123 ∧ u.some.weight (fun i => i.val) ≤ 50 ∧ u (some 3) ≤ 13 ∧
+    u.some.degree ≤ gradeLimit (u (some 1) + u (some 2) + u (some 3)) ∧
+    u.weight (differentialWeight 133426) ≤ 92 * 179915 + u.some.weight (fun i => i.val) - 1
 
 noncomputable def anchorSpace : Submodule Geom (DifferentialPolynomial Geom 3) :=
   MvPolynomial.restrictSupport Geom {u | AnchorEligible u}
 
 noncomputable def anchorLocal (x y : Geom) : anchorSpace →ₗ[Geom] LocalPolynomial Geom 3 :=
-  (localConstraintAt 90 x y).domRestrict _
+  (localConstraintAt 92 x y).domRestrict _
 
 end Low48AnchorSpace

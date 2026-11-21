@@ -2,9 +2,8 @@ import ProximityPrize.SubmissionLower.RankRows82190
 
 namespace Low48RankCore
 open K1_13 (Geom)
-open K1_13_1_1 (Form bandSpace bandCount backShift targetOrder orderCutoff bandSpace_finite finrank_bandSpace)
+open K1_13_1_1 (Form bandSpace bandCount backShift targetOrder bandSpace_finite finrank_bandSpace)
 open AnchorPivot82180 (encode)
-open RankRows82190 (accept)
 open MvPolynomial
 open scoped BigOperators
 open private band_mono from ProximityPrize.SubmissionLower.RankRows82190
@@ -12,19 +11,24 @@ open private independent from ProximityPrize.SubmissionLower.AnchorPivotRank8218
 
 abbrev Row := RankRows82190.Row
 
-noncomputable def blockAt (d s : ℕ) (g : ℤ) : bandSpace d (-g) 49 13 →ₗ[Geom] Form :=
-  ((weightedTruncation targetOrder (orderCutoff s g).toNat).comp
+def orderCutoff92 (s : ℕ) (g : ℤ) : ℤ := 92 - (s : ℤ) - g
+
+private def accept (s : ℕ) (g : ℤ) (r : Row) : Bool :=
+  decide (-g ≤ (r.index : ℤ) ∧ (orderCutoff92 s g).toNat ≤ r.ord)
+
+noncomputable def blockAt (d s : ℕ) (g : ℤ) : bandSpace d (-g) 50 13 →ₗ[Geom] Form :=
+  ((weightedTruncation targetOrder (orderCutoff92 s g).toNat).comp
     backShift.toLinearMap).domRestrict _
 
 def good (d : ℕ) (r : Row) : Bool :=
   let x := r.bounds
-  decide (x.deg = d ∧ r.index ≤ x.lo ∧ x.hi ≤ 49 ∧ x.top ≤ 13 ∧ r.ord ≤ x.ord ∧ x.tag = r.tag)
+  decide (x.deg = d ∧ r.index ≤ x.lo ∧ x.hi ≤ 50 ∧ x.top ≤ 13 ∧ r.ord ≤ x.ord ∧ x.tag = r.tag)
 
 def gradeFee (s : ℕ) (rows : List Row) : ℕ :=
-  (rows.map (fun r => 90 + r.index - (s + r.ord))).sum
+  (rows.map (fun r => 92 + r.index - (s + r.ord))).sum
 
 def covers (d : ℕ) (rows : List Row) : Prop :=
-  ∀ i : Fin 50, bandCount d (i.val : ℤ) 49 13 ≤
+  ∀ i : Fin 51, bandCount d (i.val : ℤ) 50 13 ≤
     (rows.filter (fun r => decide (i.val ≤ r.index))).length
 
 private theorem row_kernel (d s : ℕ) (g : ℤ) (r : Row) (hv : good d r = true)
@@ -35,7 +39,7 @@ private theorem row_kernel (d s : ℕ) (g : ℤ) (r : Row) (hv : good d r = true
   obtain ⟨hl',ho'⟩ := of_decide_eq_true ha
   have hb := r.sound.band
   rw [hd] at hb
-  let w : bandSpace d (-g) 49 13 := ⟨r.form,
+  let w : bandSpace d (-g) 50 13 := ⟨r.form,
     band_mono (hl'.trans (Int.ofNat_le.mpr hl)) (by exact_mod_cast hh) ht hb⟩
   have hw : w ∈ LinearMap.ker (blockAt d s g) := by
     apply (weightedTruncation_eq_zero_iff _ _ _).mpr
@@ -48,7 +52,7 @@ theorem count_bound (rows : List Row) (d s : ℕ) (g : ℤ)
     (good : ∀ r ∈ rows, good d r = true)
     (sorted : rows.Pairwise fun a b => a.tag < b.tag) :
     Module.finrank Geom (LinearMap.range (blockAt d s g)) + (rows.filter (accept s g)).length ≤
-      bandCount d (-g) 49 13 := by
+      bandCount d (-g) 50 13 := by
   classical
   let use := rows.filter (accept s g)
   have memb (i : Fin use.length) : use.get i ∈ rows ∧ accept s g (use.get i) = true :=
@@ -59,9 +63,9 @@ theorem count_bound (rows : List Row) (d s : ℕ) (g : ℤ)
   have h (i : Fin use.length) := row_kernel d s g (use.get i) (good _ (memb i).1) (memb i).2
   let w (i : Fin use.length) := Classical.choose (h i)
   let embed : LinearMap.ker (blockAt d s g) →ₗ[Geom] Polynomial Geom :=
-    encode.toLinearMap.comp ((bandSpace d (-g) 49 13).subtype.comp (LinearMap.ker (blockAt d s g)).subtype)
+    encode.toLinearMap.comp ((bandSpace d (-g) 50 13).subtype.comp (LinearMap.ker (blockAt d s g)).subtype)
   have hw := independent embed w _ hmono.injective (fun i => (Classical.choose_spec (h i)).2)
-  let : Module.Finite Geom (bandSpace d (-g) 49 13) := bandSpace_finite _ _ _ _
+  let : Module.Finite Geom (bandSpace d (-g) 50 13) := bandSpace_finite _ _ _ _
   have hc := hw.fintype_card_le_finrank
   have hd := (blockAt d s g).finrank_range_add_finrank_ker
   rw [finrank_bandSpace] at hd
@@ -70,7 +74,7 @@ theorem count_bound (rows : List Row) (d s : ℕ) (g : ℤ)
 
 
 private def charge (s : ℕ) (g : ℤ) (r : Row) : ℕ :=
-  if -g ≤ (r.index : ℤ) ∧ r.ord < (orderCutoff s g).toNat then 1 else 0
+  if -g ≤ (r.index : ℤ) ∧ r.ord < (orderCutoff92 s g).toNat then 1 else 0
 
 private theorem filter_split (s : ℕ) (g : ℤ) (rows : List Row) :
     (rows.filter (fun r => decide (-g ≤ (r.index : ℤ)))).length =
@@ -78,39 +82,39 @@ private theorem filter_split (s : ℕ) (g : ℤ) (rows : List Row) :
   induction rows with
   | nil => rfl
   | cons r rows ih =>
-    by_cases hi : -g ≤ (r.index : ℤ) <;> by_cases ho : (orderCutoff s g).toNat ≤ r.ord <;>
+    by_cases hi : -g ≤ (r.index : ℤ) <;> by_cases ho : (orderCutoff92 s g).toNat ≤ r.ord <;>
       simp [hi,ho,accept,charge,lt_iff_not_ge,ih,Nat.add_assoc,Nat.add_comm,Nat.add_left_comm]
 
 private theorem coverage_at {d : ℕ} {rows : List Row} (hc : covers d rows)
-    (g : ℤ) (hg : -49 ≤ g) :
-    bandCount d (-g) 49 13 ≤ (rows.filter (fun r => decide (-g ≤ (r.index : ℤ)))).length := by
-  let i : Fin 50 := ⟨(-g).toNat,by omega⟩
+    (g : ℤ) (hg : -50 ≤ g) :
+    bandCount d (-g) 50 13 ≤ (rows.filter (fun r => decide (-g ≤ (r.index : ℤ)))).length := by
+  let i : Fin 51 := ⟨(-g).toNat,by omega⟩
   have hn (c f : ℕ) : max (0 : ℤ) (-g - 2*c - 3*f) =
       max 0 ((i.val : ℤ) - 2*c - 3*f) := by dsimp [i]; omega
-  have hh : bandCount d (-g) 49 13 = bandCount d (i.val : ℤ) 49 13 := by
+  have hh : bandCount d (-g) 50 13 = bandCount d (i.val : ℤ) 50 13 := by
     simp only [bandCount,hn]
   have he (r : Row) : (-g ≤ (r.index : ℤ)) ↔ (i.val ≤ r.index) := by dsimp [i]; omega
   simp_rw [hh,he]
   exact hc i
 
 private theorem charge_offsets (s : ℕ) (r : Row) :
-    (∑ i : Fin 139, charge s ((i.val : ℤ) - 49) r) ≤ 90 + r.index - (s + r.ord) := by
-  rw [Fin.sum_univ_eq_sum_range (fun i : ℕ => charge s ((i : ℤ) - 49) r)]
+    (∑ i : Fin 142, charge s ((i.val : ℤ) - 50) r) ≤ 92 + r.index - (s + r.ord) := by
+  rw [Fin.sum_univ_eq_sum_range (fun i : ℕ => charge s ((i : ℤ) - 50) r)]
   unfold charge
   rw [Finset.sum_boole]
-  have hs : (Finset.range 139).filter (fun i : ℕ => -((i : ℤ) - 49) ≤ r.index ∧
-      r.ord < (orderCutoff s ((i : ℤ) - 49)).toNat) ⊆
-      Finset.Ico (49 - r.index) (139 - (s + r.ord)) := by
+  have hs : (Finset.range 142).filter (fun i : ℕ => -((i : ℤ) - 50) ≤ r.index ∧
+      r.ord < (orderCutoff92 s ((i : ℤ) - 50)).toNat) ⊆
+      Finset.Ico (50 - r.index) (142 - (s + r.ord)) := by
     intro i hi
     obtain ⟨_,a,b⟩ := Finset.mem_filter.mp hi
-    unfold orderCutoff at b
+    unfold orderCutoff92 at b
     exact Finset.mem_Ico.mpr ⟨by omega,by omega⟩
   have h := Finset.card_le_card hs
   rw [Nat.card_Ico] at h
   exact h.trans (by omega)
 
 private theorem list_charge_offsets (s : ℕ) (rows : List Row) :
-    (∑ i : Fin 139, (rows.map (charge s ((i.val : ℤ) - 49))).sum) ≤ gradeFee s rows := by
+    (∑ i : Fin 142, (rows.map (charge s ((i.val : ℤ) - 50))).sum) ≤ gradeFee s rows := by
   induction rows with
   | nil => simp [gradeFee]
   | cons r rows ih =>
@@ -120,12 +124,12 @@ private theorem list_charge_offsets (s : ℕ) (rows : List Row) :
 /-- Sum the individual rank charges once per pivot across all offsets of one grade. -/
 theorem grade_bound (s d : ℕ) (rows : List Row) (hg : ∀ r ∈ rows, good d r = true)
     (hs : rows.Pairwise fun a b => a.tag < b.tag) (hc : covers d rows) :
-    (∑ i : Fin 139, Module.finrank Geom (LinearMap.range (blockAt d s ((i.val : ℤ) - 49)))) ≤
+    (∑ i : Fin 142, Module.finrank Geom (LinearMap.range (blockAt d s ((i.val : ℤ) - 50)))) ≤
       gradeFee s rows := by
-  apply le_trans (Finset.sum_le_sum (g := fun i : Fin 139 =>
-    (rows.map (charge s ((i.val : ℤ) - 49))).sum) ?_) (list_charge_offsets s rows)
+  apply le_trans (Finset.sum_le_sum (g := fun i : Fin 142 =>
+    (rows.map (charge s ((i.val : ℤ) - 50))).sum) ?_) (list_charge_offsets s rows)
   intro i _
-  let g := (i.val : ℤ) - 49
+  let g := (i.val : ℤ) - 50
   have h := count_bound rows d s g hg hs
   have u := coverage_at hc g (by dsimp [g]; omega)
   rw [filter_split s g rows] at u

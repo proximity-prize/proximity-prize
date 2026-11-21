@@ -8,7 +8,7 @@ abbrev Row := RankRows82190.Row
 
 def good (d : ℕ) (r : Row) : Bool :=
   let x := r.bounds
-  decide (x.deg = d ∧ r.index ≤ x.lo ∧ x.hi ≤ 49 ∧ x.top ≤ 13 ∧ r.ord ≤ x.ord ∧ x.tag = r.tag)
+  decide (x.deg = d ∧ r.index ≤ x.lo ∧ x.hi ≤ 50 ∧ x.top ≤ 13 ∧ r.ord ≤ x.ord ∧ x.tag = r.tag)
 
 /-- Leading exponents of the nine factors, in the order of `AnchorPivot82190.allData`. -/
 private def pivot (i : Fin 9) : AnchorPivot82180.E :=
@@ -18,22 +18,42 @@ private def pivot (i : Fin 9) : AnchorPivot82180.E :=
 private abbrev E := AnchorPivot82180.E
 private abbrev Factor := RankRows82190.Factor
 
-/-- The low 4 bits select a factor and the next 4 bits give its multiplicity.
-  If the multiplicity field is zero, the next 6 bits give the multiplicity. -/
-private def readFactors : ℕ → ℕ → List Factor × ℕ
-  | 0, bits => ([], bits)
-  | n+1, bits =>
-    let i : Fin 9 := ⟨(bits % 16) % 9, Nat.mod_lt _ (by decide)⟩
-    let k := bits / 16 % 16
-    let rest := bits / 256
-    let (fs, tail) := readFactors n (if k = 0 then rest / 64 else rest)
-    ((i, if k = 0 then rest % 64 else k) :: fs, tail)
+/-- The most frequent sets of factor indices have a 4-bit code. -/
+private def commonIndices : ℕ → List (Fin 9)
+  | 0 => [2]
+  | 1 => [7]
+  | 2 => []
+  | 3 => [0,3,6]
+  | 4 => [3,6,7]
+  | 5 => [0,3,5,6]
+  | 6 => [3,7]
+  | 7 => [2,7]
+  | 8 => [2,4,7]
+  | 9 => [6,7]
+  | 10 => [3,6]
+  | 11 => [3,5,6,7]
+  | 12 => [0,3,5,6,8]
+  | 13 => [0,3]
+  | 14 => [0,3,6,7]
+  | _ => []
 
-/-- Read the 3-bit factor count at the start of each row. -/
+private def readMultiplicities : List (Fin 9) → ℕ → List Factor × ℕ
+  | [], bits => ([], bits)
+  | i :: is, bits =>
+    let small := bits % 8
+    let rest := bits / 8
+    let (more, tail) := readMultiplicities is (if small = 0 then rest / 64 else rest)
+    ((i, if small = 0 then rest % 64 else small) :: more, tail)
+
 private def readSchedules : ℕ → ℕ → List (List Factor)
   | 0, _ => []
   | n+1, bits =>
-    let (fs, rest) := readFactors (bits % 8) (bits / 8)
+    let code := bits % 16
+    let rest := bits / 16
+    let indices := if code = 15 then
+      (List.finRange 9).filter (fun i => (rest % 512).testBit i.val)
+      else commonIndices code
+    let (fs, rest) := readMultiplicities indices (if code = 15 then rest / 512 else rest)
     fs :: readSchedules n rest
 
 private def pivots (d i : ℕ) : List E :=
@@ -57,25 +77,28 @@ private def decodeRow (e : E) (fs : List Factor) : Row :=
 def decode (d i start n data : ℕ) : List Row :=
   ((pivots d i).drop start).zipWith decodeRow (readSchedules n data)
 
-def fee (s : ℕ) (r : Row) : ℕ := 90 + r.index - (s + r.ord)
+def fee (s : ℕ) (r : Row) : ℕ := 92 + r.index - (s + r.ord)
 def triangle (n : ℕ) : ℕ := n * (n+1) / 2
 
 def extra (d : ℕ) : ℕ :=
   match d with
-  | 47 => 104
-  | 45 => 106
-  | 43 => 108
-  | 41 => 110
-  | 39 => 112
-  | 36 => 114
-  | 34 => 116
-  | 32 => 118
-  | 30 => 120
-  | _ => 122
+  | 50 => 51
+  | 49 => 105
+  | 47 => 107
+  | 45 => 109
+  | 43 => 111
+  | 41 => 113
+  | 39 => 115
+  | 37 => 117
+  | 35 => 119
+  | 33 => 121
+  | 31 => 123
+  | _ => 124
+
+def copies (d : ℕ) : ℕ := min (124 - extra d) (if d = 50 then 54 else 2)
 
 def price (d : ℕ) (r : Row) : ℕ :=
-  fee d r + (if d = 49 then triangle (fee 50 r) - triangle (fee 104 r)
-    else if extra d < 122 then fee (extra d) r + fee (extra d + 1) r else 0)
+  fee d r + (triangle (fee (extra d) r) - triangle (fee (extra d + copies d) r))
 
 def checkRows (d i upper lower : ℕ) : List Row → Bool
   | [] => true
@@ -115,7 +138,7 @@ structure Chunk (d : ℕ) where
 def witness48 (d i start lo hi n total bits : ℕ)
     (checked : checkRows d i hi lo (decode d i start n bits) = true ∧
       (decode d i start n bits).length = n ∧
-      ((decode d i start n bits).map (price d)).sum = total) : Chunk d :=
+      ((decode d i start n bits).map (price d)).sum = total := by decide +kernel) : Chunk d :=
   ⟨i, lo, hi, n, total, decode d i start n bits, checked.1, checked.2.1, checked.2.2⟩
 
 

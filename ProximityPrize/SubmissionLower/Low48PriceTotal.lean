@@ -35,9 +35,9 @@ private theorem bellman_of_budget (top : ℕ) (r : Shape) (cap : ℕ) (order : S
     (hprice : ∀ a, Valid a → InBox (r.plus a) (fullCap top) →
       physicalPrice a (order a) ≤ indexBudget r cap a.j) :
     Bellman top r cap := by
-  let B := fun y : Shape => indexBudget r cap (49 - r.j - y.j)
+  let B := fun y : Shape => indexBudget r cap (50 - r.j - y.j)
   refine ⟨B, order, ?_, fun x hx hb => ⟨hpos x, horders x hx hb⟩, ?_⟩
-  · change cap * (49 - r.j - 0) / (49 - r.j) ≤ cap
+  · change cap * (50 - r.j - 0) / (50 - r.j) ≤ cap
     rw [Nat.sub_zero]
     exact Nat.div_le_of_le_mul (by rw [Nat.mul_comm])
   · intro y a _ ha hbox
@@ -48,13 +48,13 @@ private theorem bellman_of_budget (top : ℕ) (r : Shape) (cap : ℕ) (order : S
         (Nat.add_le_add_left (Nat.le_add_left a.t y.t) _).trans hbox.2.2⟩
     have hl := hmono (a := a) (x := x) (Nat.le_add_left _ _) (Nat.le_add_left _ _)
     have hfee := (physicalPrice_anti a (hpos a) hl).trans (hprice a ha hb)
-    have hidx : r.j + (y.j + a.j) ≤ 49 := hbox.2.1
-    have hbalance : a.j + (49 - r.j - x.j) = 49 - r.j - y.j := by
-      change a.j + (49 - r.j - (y.j + a.j)) = 49 - r.j - y.j
+    have hidx : r.j + (y.j + a.j) ≤ 50 := hbox.2.1
+    have hbalance : a.j + (50 - r.j - x.j) = 50 - r.j - y.j := by
+      change a.j + (50 - r.j - (y.j + a.j)) = 50 - r.j - y.j
       omega
     apply (Nat.add_le_add_right hfee (B x)).trans
-    have hdiv : cap * a.j / (49 - r.j) + cap * (49 - r.j - x.j) / (49 - r.j) ≤
-        (cap * a.j + cap * (49 - r.j - x.j)) / (49 - r.j) :=
+    have hdiv : cap * a.j / (50 - r.j) + cap * (50 - r.j - x.j) / (50 - r.j) ≤
+        (cap * a.j + cap * (50 - r.j - x.j)) / (50 - r.j) :=
       Nat.div_add_div_le_add_div
     rw [← Nat.mul_add, hbalance] at hdiv
     exact hdiv
