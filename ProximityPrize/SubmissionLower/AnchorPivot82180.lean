@@ -30,12 +30,12 @@ noncomputable def encode : Form →ₐ[Geom] Polynomial Geom :=
 theorem encode_mon (e : E) : encode (mon e) = Polynomial.X ^ e.key := by
   simp [mon, encode, E.key, ← pow_mul, ← pow_add]
 
-theorem mono_band {e : E} {d lo hi top : ℕ} (hd : e.deg = d)
+private theorem mono_band {e : E} {d lo hi top : ℕ} (hd : e.deg = d)
     (hl : lo ≤ e.index) (hh : e.index ≤ hi) (ht : e.f ≤ top) :
     mon e ∈ bandSpace d lo hi top := by
   apply monomial_band e.a e.b e.c e.f hd <;> first | exact ht | exact_mod_cast hl | exact_mod_cast hh
 
-theorem mono_order (e : E) : mon e ∈ restrictWeightedOrder targetOrder e.order := by
+private theorem mono_order (e : E) : mon e ∈ restrictWeightedOrder targetOrder e.order := by
   have h := mul_mem_restrictWeightedOrder (mul_mem_restrictWeightedOrder
     (mul_mem_restrictWeightedOrder (pow_mem_restrictWeightedOrder (capX 0) e.a)
       (pow_mem_restrictWeightedOrder (capX 1) e.b)) (pow_mem_restrictWeightedOrder (capX 2) e.c))
@@ -68,7 +68,7 @@ private theorem poly_order {o : ℕ} (xs : List Term)
     obtain ⟨hp,hr⟩ := h
     exact add_mem (zsmul_mem (restrictWeightedOrder_anti _ (of_decide_eq_true hp) (mono_order t.2)) _) (ih hr)
 
-theorem encoded_degree_le {b : ℕ} (xs : List Term)
+private theorem encoded_degree_le {b : ℕ} (xs : List Term)
     (h : xs.all (fun t => decide (t.2.key ≤ b)) = true) : (encode (poly xs)).degree ≤ (b : ℕ) := by
   induction xs with
   | nil => simp [poly]

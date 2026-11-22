@@ -1,0 +1,5 @@
+-- Adapted from the pinned peer revision d3db79e374b16bebd9780b96f1c1fe0c156679bc, HighCore82229FirstBandMoments.lean.
+import ProximityPrize.SubmissionLower.Peer653High53Moment3850_812
+import ProximityPrize.SubmissionLower.Peer653High53Moment4863_1027
+import ProximityPrize.SubmissionLower.Peer653High53Moment6431_1364
+import ProximityPrize.SubmissionLower.Peer653High53Moment6667_1405

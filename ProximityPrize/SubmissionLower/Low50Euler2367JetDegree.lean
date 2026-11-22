@@ -9,11 +9,11 @@ namespace EulerJetDegree
 
 variable {R : Type*} [CommRing R]
 
-def signedChoose (D i k : ℕ) : R :=
+private def signedChoose (D i k : ℕ) : R :=
   ∑ r ∈ Finset.range (i + 1),
     (-1 : R) ^ r * (D-r).choose (i-r) * k.choose r
 
-theorem signedChoose_step (D i k : ℕ) :
+private theorem signedChoose_step (D i k : ℕ) :
     signedChoose (R := R) D (i+1) (k+1) =
       signedChoose D (i+1) k - signedChoose (D-1) i k := by
   unfold signedChoose
@@ -34,7 +34,7 @@ theorem signedChoose_step (D i k : ℕ) :
   rw [h]
   ring
 
-theorem signedChoose_eq {D i k : ℕ} (h : k ≤ D) :
+private theorem signedChoose_eq {D i k : ℕ} (h : k ≤ D) :
     signedChoose (R := R) D i k = ((D-k).choose i : R) := by
   induction k generalizing D i with
   | zero =>
@@ -57,6 +57,11 @@ theorem signedChoose_eq {D i k : ℕ} (h : k ≤ D) :
 noncomputable def euler (D i : ℕ) (f : R[X]) : R[X] :=
   ∑ r ∈ Finset.range (i+1),
     C ((-1 : R) ^ r * (D-r).choose (i-r)) * (X^r * hasseDeriv r f)
+
+theorem euler_add (D i : ℕ) (f g : R[X]) :
+    euler D i (f+g) = euler D i f + euler D i g := by
+  unfold euler
+  simp only [map_add, mul_add, Finset.sum_add_distrib]
 
 theorem coeff_euler {D i k : ℕ} (f : R[X]) (hk : k ≤ D) :
     (euler D i f).coeff k = ((D-k).choose i : R) * f.coeff k := by
@@ -121,7 +126,7 @@ private theorem bounded_mul {W a b : ℕ} {F G : (R[X])[X]}
   rw [← hsum, Nat.mul_add]
   omega
 
-theorem bounded_const {W b : ℕ} {f : R[X]} (h : f.natDegree ≤ b) :
+private theorem bounded_const {W b : ℕ} {f : R[X]} (h : f.natDegree ≤ b) :
     Bounded W b (C f) := by
   intro j
   by_cases h0 : j = 0

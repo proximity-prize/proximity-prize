@@ -7,7 +7,7 @@ namespace SplitCut.StableNode
 
 open Polynomial
 
-theorem splitTrailing {R : Type*} [CommRing R] (P : R[X]) :
+private theorem splitTrailing {R : Type*} [CommRing R] (P : R[X]) :
     ∃ Q : R[X], P = X ^ P.natTrailingDegree * Q ∧
       Q.coeff 0 = P.coeff P.natTrailingDegree := by
   obtain ⟨Q, hQ⟩ := (X_pow_dvd_iff.mpr fun _ h =>
@@ -20,7 +20,7 @@ theorem splitTrailing {R : Type*} [CommRing R] (P : R[X]) :
 noncomputable def substitute {R : Type*} [CommRing R] (s : R[X]) : Polynomial R[X] →+* R[X] :=
   eval₂RingHom (eval₂RingHom C s) X
 
-theorem eval_substitute_zero {R : Type*} [CommRing R] (s : R[X])
+private theorem eval_substitute_zero {R : Type*} [CommRing R] (s : R[X])
     (Q : Polynomial R[X]) : (substitute s Q).eval 0 = (Q.coeff 0).eval (s.eval 0) := by
   change evalRingHom (0 : R) (Q.eval₂ (eval₂RingHom C s) X) = _
   rw [hom_eval₂]

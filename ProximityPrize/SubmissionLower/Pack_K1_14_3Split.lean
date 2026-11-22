@@ -12,38 +12,6 @@ namespace K1_14_3
 noncomputable section
 open K1 K1_14 Polynomial
 open scoped BigOperators Classical
-def c1 : Prop :=
-  ∀ (h : ℕ) (rows : Banks) (i : Fin 4), 3555 ≤ h → h ≤ 32680 →
-    (∀ s ∈ [cheapShape i, layeredShape i],
-      (∀ W, ∀ P ∈ rows s W, RowCaps P s) ∧
-      LeadingFilter h rows s ∧ SeedShift h rows s ∧ RankFloor h rows s) →
-    Nonempty (BufferedPair h rows i)
-def c2 : Prop :=
-  ∀ u del (M : AnchorModel u del) Γ (F : AnchoredFamily M Γ) (P Q : Jet),
-    P ≠ 0 → Q ≠ 0 → RowCaps P (cheapShape 0) → RowCaps Q (layeredShape 0) →
-    NoMovingCommon P Q →
-    (∀ γ ∈ Γ, jetAt P (M.label γ) (F.scalar γ) = 0 ∧
-      jetAt Q (M.label γ) (F.scalar γ) = 0) →
-    Nonempty (InitialCover M F)
-def c3 : Prop :=
-  ∀ (h : ℕ) (rows : Banks) (s : Shape) (q : Surface),
-    0 < h → s.m*180265 < p → Parent q → SeedShift h rows s → BankVanishes rows s q →
-    ∀ W < s.m*180265, ∀ P ∈ rows s W, OrderAt q P (contactPower h s W)
-def c4 : Prop :=
-  ∀ (h : ℕ) (rows : Banks) (i : Fin 4) (B : BufferedPair h rows i)
-    (qs : Finset Surface),
-    (∀ q ∈ qs, Parent q ∧ Compatible B.cheap B.layered q ∧
-      OrderAt q B.cheap (reserve i + 1) ∧ OrderAt q B.layered (reserve i + 1)) →
-    MassCap qs (seedMassCap i) (ordinateMassCap i) (mixedMassCap i)
-def c5 : Prop :=
-  ∀ u del (M : AnchorModel u del) Γ (F : AnchoredFamily M Γ),
-    3555 ≤ M.overhead → M.overhead ≤ 32680 →
-    ∀ (rows : Banks), JetSource M F rows →
-    ∀ (pairs : ∀ i : Fin 4, BufferedPair M.overhead.toNat rows i)
-      (i : Fin 5) (q : Surface), Parent q → ¬ PassStage rows pairs i q →
-    ∃ C : SeedCover, (C.curve.totalDegree : ℚ) ≤ cutDegree (cutShape i) {q} ∧
-      (C.points.card : ℚ) ≤ constantDegree (cutShape i) {q} ∧
-      ∀ γ ∈ Γ, MarkOn M F q γ → C.Covers (M.label γ)
 def c6 : Prop :=
   ∀ u del (M : AnchorModel u del) Γ (F : AnchoredFamily M Γ) (d b j : ℕ),
     2 ≤ d → d < 180265 → 180265^2 ≤ 262144*d → 2 ≤ b → b < p → 1 ≤ j → j ≤ b →
@@ -53,12 +21,6 @@ def c6 : Prop :=
 def c7 : Prop :=
   ∀ qs : Finset Surface, qs.Nonempty → (∀ q ∈ qs, Parent q) →
     ∃ f : Equation, ProjectedProduct qs f
-def c8 : Prop :=
-  ∀ (h : ℕ) (rows : Banks), 3555 ≤ h → h ≤ 32680 →
-    (∀ W, ∀ P ∈ rows fullShape W, RowCaps P fullShape) →
-    LeadingFilter h rows fullShape → RankFloor h rows fullShape →
-    ∃ W < fullShape.m*180265, ∃ P ∈ rows fullShape W, P ≠ 0 ∧
-      P.leadingCoeff.natDegree < 5 * (contactPower h fullShape W - P.natDegree)
 private theorem pair_membership {w : ℤ} (hw : 3555 ≤ w) (i : Fin 4) {s : Shape}
     (hs : s ∈ [cheapShape i, layeredShape i]) : s ∈ scheduled w := by
   have hn : ¬ w ≤ 3554 := by omega
@@ -68,13 +30,6 @@ private theorem pair_membership {w : ℤ} (hw : 3555 ≤ w) (i : Fin 4) {s : Sha
 private theorem full_membership {w : ℤ} (hw : 3555 ≤ w) : fullShape ∈ scheduled w := by
   have hn : ¬ w ≤ 3554 := by omega
   simp [scheduled, hn, fullShape]
-theorem source_data {u del} {M : AnchorModel u del} {Γ}
-    {F : AnchoredFamily M Γ} {rows : Banks} (h : JetSource M F rows) {s : Shape}
-    (hs : s ∈ scheduled M.overhead) :
-    (∀ W, ∀ P ∈ rows s W, RowCaps P s) ∧
-    LeadingFilter M.overhead.toNat rows s ∧ SeedShift M.overhead.toNat rows s ∧
-    RankFloor M.overhead.toNat rows s :=
-  ⟨h.shape s hs, h.leading s hs, h.shift s hs, h.floor_bound s hs⟩
 private theorem buffered_power (h : ℕ) (hl : 3555 ≤ h) (hu : h ≤ 32680)
     (i : Fin 4) (s : Shape) (hs : s ∈ [cheapShape i, layeredShape i]) :
     reserveCutoff h s i < s.m*180265 ∧ contactPower h s (reserveCutoff h s i) = reserve i+1 := by
@@ -92,31 +47,6 @@ private theorem buffered_power (h : ℕ) (hl : 3555 ≤ h) (hu : h ≤ 32680)
     omega
   · rw [contactPower, hdiff, Nat.mul_div_cancel_left _ (by omega)]
     omega
-private theorem paired_mass_of_test (contact : c3) (massBound : c4) {u del}
-    {M : AnchorModel u del} {Γ} {F : AnchoredFamily M Γ} {rows : Banks}
-    (hJ : JetSource M F rows) (hl : 3555 ≤ M.overhead) (hu : M.overhead ≤ 32680)
-    (pairs : ∀ i : Fin 4, BufferedPair M.overhead.toNat rows i)
-    (i : Fin 4) (S : Finset Surface) (hS : ∀ q ∈ S, Parent q)
-    (hpass : ∀ q ∈ S, PassStage rows pairs i.castSucc q) :
-    MassCap S (seedMassCap i) (ordinateMassCap i) (mixedMassCap i) := by
-  apply massBound _ _ i (pairs i) S
-  intro q hq
-  have hP : BankVanishes rows (cheapShape i) q ∧ BankVanishes rows (layeredShape i) q ∧
-      Compatible (pairs i).cheap (pairs i).layered q := by
-    simpa only [PassStage, Fin.val_castSucc, dite_eq_left i.isLt] using hpass q hq
-  have hcontact (s : Shape) (hs : s ∈ [cheapShape i, layeredShape i])
-      (hv : BankVanishes rows s q) (P : Jet)
-      (hP : P ∈ rows s (reserveCutoff M.overhead.toNat s i)) : OrderAt q P (reserve i+1) := by
-    have hp : s.m*180265 < p := by
-      simp at hs
-      rcases hs with rfl | rfl <;> fin_cases i <;> decide
-    have hw := buffered_power M.overhead.toNat (by omega) (by omega) i s hs
-    rw [← hw.2]
-    exact contact _ rows s q (by omega) hp (hS q hq)
-      (hJ.shift s (pair_membership hl i hs)) hv _ hw.1 P hP
-  exact ⟨hS q hq, hP.2.2,
-    hcontact _ (by simp) hP.1 _ (pairs i).cheap_mem,
-    hcontact _ (by simp) hP.2.1 _ (pairs i).layered_mem⟩
 private theorem terminal_shape_data {w : ℤ} (hw : 3555 ≤ w) :
     terminalShape w ∈ scheduled w ∧ (terminalShape w).m = fullShape.m ∧
       (terminalShape w).B = fullShape.B ∧ (terminalShape w).J = fullShape.J ∧
@@ -209,148 +139,6 @@ private theorem paid_complement (ode : c6) {u del}
       have hf := endpoint_fees M.overhead hl
       change _ ≤ highPrefix M.overhead
       omega
-theorem split_terminal_divisibility {w : ℤ} {rows : Banks} {f : Equation}
-    (hm : (band w).multiplicity = fullShape.m)
-    (hsub : ∀ W, rows (terminalShape w) W ≤ rows fullShape W)
-    (hfull : ∀ W < fullShape.m * 180265, ∀ P ∈ rows fullShape W, P ≠ 0 →
-      f ^ (contactPower w.toNat fullShape W - P.natDegree) ∣ P.leadingCoeff) :
-    TerminalDivisibility w rows f := by
-  intro W hW P hP hn
-  rw [hm] at hW
-  rw [terminal_power hm]
-  exact hfull W hW P (hsub W hP) hn
-theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) (h4 : c4) (h5 : c5)
-    (h6 : c6) (h7 : c7) (h8 : c8) : K1_14.c3 := by
-  classical
-  intro u del M Γ F hl hu _H _chart rows hJ
-  let w := M.overhead
-  let h := w.toNat
-  have hln : 3555 ≤ h := by dsimp [h, w]; omega
-  have hun : h ≤ 32680 := by dsimp [h, w]; omega
-  let pairs (i : Fin 4) : BufferedPair h rows i :=
-    Classical.choice (h1 h rows i hln hun (fun s hs => source_data hJ (pair_membership hl i hs)))
-  obtain ⟨initial⟩ := h2 u del M Γ F (pairs 0).cheap (pairs 0).layered
-    (pairs 0).cheap_ne (pairs 0).layered_ne (pairs 0).cheap_caps (pairs 0).layered_caps
-    (pairs 0).no_moving (by
-      intro γ hγ
-      exact ⟨hJ.necessary _ (pair_membership hl 0 (by simp))
-        _ (buffered_power h hln hun 0 (cheapShape 0) (by simp)).1 _ (pairs 0).cheap_mem γ hγ,
-        hJ.necessary _ (pair_membership hl 0 (by simp))
-        _ (buffered_power h hln hun 0 (layeredShape 0) (by simp)).1 _ (pairs 0).layered_mem γ hγ⟩)
-  let next (i : Fin 5) (S : Finset Surface) := S.filter (PassStage rows pairs i)
-  let S₀ := initial.parents
-  let S₁ := next 1 S₀
-  let S₂ := next 2 S₁
-  let S₃ := next 3 S₂
-  let S₄ := next 4 S₃
-  have s₁ : S₁ ⊆ S₀ := Finset.filter_subset _ _
-  have s₂ : S₂ ⊆ S₁ := Finset.filter_subset _ _
-  have s₃ : S₃ ⊆ S₂ := Finset.filter_subset _ _
-  have s₄ : S₄ ⊆ S₃ := Finset.filter_subset _ _
-  have hg₀ : ∀ q ∈ S₀, Parent q := initial.geometric
-  have hg₁ : ∀ q ∈ S₁, Parent q := fun q hq => hg₀ q (s₁ hq)
-  have hg₂ : ∀ q ∈ S₂, Parent q := fun q hq => hg₁ q (s₂ hq)
-  have hg₃ : ∀ q ∈ S₃, Parent q := fun q hq => hg₂ q (s₃ hq)
-  have hg₄ : ∀ q ∈ S₄, Parent q := fun q hq => hg₃ q (s₄ hq)
-  have m₁ := paired_mass_of_test h3 h4 hJ hl hu pairs 1 S₁ hg₁
-    (fun q hq => (Finset.mem_filter.mp hq).2)
-  have m₂ := paired_mass_of_test h3 h4 hJ hl hu pairs 2 S₂ hg₂
-    (fun q hq => (Finset.mem_filter.mp hq).2)
-  have m₃ := paired_mass_of_test h3 h4 hJ hl hu pairs 3 S₃ hg₃
-    (fun q hq => (Finset.mem_filter.mp hq).2)
-  have step (i : Fin 5) (S : Finset Surface) (hS : ∀ q ∈ S, Parent q) :
-      ∃ C : SeedCover, (C.curve.totalDegree : ℚ) ≤ cutDegree (cutShape i) (S \ next i S) ∧
-        (C.points.card : ℚ) ≤ constantDegree (cutShape i) (S \ next i S) ∧
-        ∀ γ ∈ Γ, (∃ q ∈ S \ next i S, MarkOn M F q γ) → C.Covers (M.label γ) := by
-    apply combine_cut_covers
-    intro q hq
-    obtain ⟨hq₀, hfail⟩ := Finset.mem_sdiff.mp hq
-    apply h5 u del M Γ F hl hu rows hJ pairs i q (hS q hq₀)
-    exact fun pass => hfail (Finset.mem_filter.mpr ⟨hq₀, pass⟩)
-  obtain ⟨C₁, d₁, e₁, cov₁⟩ := step 1 S₀ hg₀
-  obtain ⟨C₂, d₂, e₂, cov₂⟩ := step 2 S₁ hg₁
-  obtain ⟨C₃, d₃, e₃, cov₃⟩ := step 3 S₂ hg₂
-  obtain ⟨C₄, d₄, e₄, cov₄⟩ := step 4 S₃ hg₃
-  let C : Fin 4 → SeedCover := ![C₁,C₂,C₃,C₄]
-  let lost := joinCovers Finset.univ C
-  have hd : (lost.curve.totalDegree : ℚ) ≤ 7830019781/144 := by
-    have hd' : (lost.curve.totalDegree : ℚ) ≤
-        ∑ i : Fin 4, ((C i).curve.totalDegree : ℚ) := by exact_mod_cast joinCovers_degree .univ C
-    rw [Fin.sum_univ_four] at hd'
-    exact (hd'.trans (add_le_add (add_le_add (add_le_add d₁ d₂) d₃) d₄)).trans
-      (moving_loss_bound s₁ s₂ s₃ s₄ initial.masses m₁ m₂ m₃)
-  have he : (lost.points.card : ℚ) ≤ 26769366519 := by
-    have he' : (lost.points.card : ℚ) ≤
-        ∑ i : Fin 4, ((C i).points.card : ℚ) := by exact_mod_cast joinCovers_points .univ C
-    rw [Fin.sum_univ_four] at he'
-    exact (he'.trans (add_le_add (add_le_add (add_le_add e₁ e₂) e₃) e₄)).trans
-      (constant_loss_bound s₁ s₂ s₃ s₄ initial.masses.mixed initial.jetMass)
-  let kept := Γ.filter (fun γ => ∃ q ∈ S₄, MarkOn M F q γ)
-  have hcover : ∀ γ ∈ Γ, (∃ q ∈ S₀, MarkOn M F q γ) →
-      γ ∈ kept ∨ lost.Covers (M.label γ) := by
-    rintro γ hγ ⟨q, hq₀, hm⟩
-    by_cases hq₁ : q ∈ S₁
-    · by_cases hq₂ : q ∈ S₂
-      · by_cases hq₃ : q ∈ S₃
-        · by_cases hq₄ : q ∈ S₄
-          · exact Or.inl (Finset.mem_filter.mpr ⟨hγ,q,hq₄,hm⟩)
-          · exact Or.inr (joinCovers_covers (i := (3 : Fin 4)) (Finset.mem_univ _)
-              (cov₄ γ hγ ⟨q, Finset.mem_sdiff.mpr ⟨hq₃,hq₄⟩,hm⟩))
-        · exact Or.inr (joinCovers_covers (i := (2 : Fin 4)) (Finset.mem_univ _)
-            (cov₃ γ hγ ⟨q, Finset.mem_sdiff.mpr ⟨hq₂,hq₃⟩,hm⟩))
-      · exact Or.inr (joinCovers_covers (i := (1 : Fin 4)) (Finset.mem_univ _)
-          (cov₂ γ hγ ⟨q, Finset.mem_sdiff.mpr ⟨hq₁,hq₂⟩,hm⟩))
-    · exact Or.inr (joinCovers_covers (i := (0 : Fin 4)) (Finset.mem_univ _)
-        (cov₁ γ hγ ⟨q, Finset.mem_sdiff.mpr ⟨hq₀,hq₁⟩,hm⟩))
-  have hdNat : lost.curve.totalDegree ≤ 54375137 := by
-    have ht : (lost.curve.totalDegree : ℚ) < (54375138 : ℕ) :=
-      hd.trans_lt (by norm_num)
-    have hn : lost.curve.totalDegree < 54375138 := by exact_mod_cast ht
-    omega
-  have heNat : lost.points.card ≤ 26769366519 := by exact_mod_cast he
-  have hprefix := paid_complement h6 hl hu initial lost hdNat heNat kept hcover
-  by_cases hkept : kept.Nonempty
-  · have hne : S₄.Nonempty := by
-      obtain ⟨γ, hγ⟩ := hkept
-      obtain ⟨q, hq, _⟩ := (Finset.mem_filter.mp hγ).2
-      exact ⟨q, hq⟩
-    obtain ⟨f, hf⟩ := h7 S₄ hne hg₄
-    have hs := full_membership hl
-    have hcontacts (W : ℕ) (hw : W < fullShape.m*180265) (P : Jet)
-        (hP : P ∈ rows fullShape W) :
-        ∀ q ∈ S₄, OrderAt q P (contactPower h fullShape W) := by
-      intro q hq
-      have ht : BankVanishes rows fullShape q := by
-        have hpass : PassStage rows pairs 4 q := (Finset.mem_filter.mp hq).2
-        unfold PassStage at hpass
-        split at hpass
-        · rename_i hi
-          exact ((by decide : ¬ (4 : Fin 5).val < 4) hi).elim
-        · exact hpass
-      exact h3 h rows fullShape q (by omega) (by decide) (hg₄ q hq)
-        (hJ.shift _ hs) ht W hw P hP
-    obtain ⟨W₀, hw₀, P₀, hp₀, hn₀, hlead⟩ := h8 h rows hln hun
-      (hJ.shape _ hs) (hJ.leading _ hs) (hJ.floor_bound _ hs)
-    have hfour : f.natDegree ≤ 4 := by
-      by_contra! hlarge
-      have hdvd := hf.divides_leading P₀ _ hn₀ (hcontacts W₀ hw₀ P₀ hp₀)
-      have hdeg := natDegree_le_of_dvd hdvd (leadingCoeff_ne_zero.mpr hn₀)
-      rw [natDegree_pow, mul_comm] at hdeg
-      exact (not_le_of_gt hlead) ((Nat.mul_le_mul_right _ hlarge).trans hdeg)
-    obtain ⟨ht, hm, hb, hj, hU, hy⟩ := terminal_shape_data hl
-    refine Or.inr ⟨kept, Finset.filter_subset _ _, hprefix, f,
-      ⟨hf.positive, hy.symm ▸ hfour, hf.primitive, hf.separable⟩, ?_, ?_⟩
-    · apply split_terminal_divisibility (w := w) hm
-      · exact fun W => hJ.nested _ ht _ hs hm hb hj hU W W le_rfl
-      · intro W hW P hP hn
-        exact hf.divides_leading P _ hn (hcontacts W hW P hP)
-    · intro γ hg
-      obtain ⟨q, hq, hmark⟩ := (Finset.mem_filter.mp hg).2
-      have hz := RingHom.mem_ker.mp (hmark (hf.vanishes q hq))
-      simpa [atMark, eval₂RingHom] using hz
-  · left
-    have hk := Finset.not_nonempty_iff_eq_empty.mp hkept
-    simpa only [hk, Finset.sdiff_empty] using hprefix
 end
 end K1_14_3
 end

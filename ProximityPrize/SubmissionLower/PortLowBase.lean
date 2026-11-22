@@ -237,6 +237,9 @@ private def exponent : Column → SourceExponent
   | ⟨f, c, b, a, x⟩ => Finsupp.equivFunOnFinite.symm (fun v => v.elim x ![a, b, c, f])
 private def coordinates (e : SourceExponent) : Column :=
   ⟨e (some 3), e (some 2), e (some 1), e (some 0), e none⟩
+private theorem coordinates_exponent (t : Column) : coordinates (exponent t) = t := by
+  rcases t with ⟨f, c, b, a, x⟩
+  simp [coordinates, exponent]
 private theorem exponent_coordinates (e : SourceExponent) : exponent (coordinates e) = e := by
   ext v
   cases v with
@@ -274,13 +277,6 @@ private theorem high_monomial_vanishes (e : SourceExponent) (c : Geom) (he : 300
     | some j => simp
   · exact (MvPolynomial.monomial_mem_restrictWeightedOrder _ _ _ _).mpr
       (Or.inl (by simpa only [Finsupp.weight_elim_one_zero] using he))
-private theorem origin_rank :
-    Module.finrank Geom (LinearMap.range (K1_13_2.nodeMap 0 0)) ≤ 344125686492134 := by
-  have hBlock := K1_13_2_2.of_children K1_13_2_2_1.proof K1_13_2_2_2.proof K1_13_2_2_3.proof
-    K1_13_2_2_4.proof K1_13_2_2_5.proof
-  obtain ⟨power, hp⟩ := K1_13_2_3.of_children K1_13_2_3_1.proof K1_13_2_3_2.proof
-    K1_13_2_3_3.proof K1_13_2_3_4.proof K1_13_2_3_5.proof K1_13_2_3_6.proof K1_13_2_3_7.proof
-  exact (K1_13_2.origin_rank_le power hBlock).trans hp
 private theorem map_independent_family {V W : Type*} [AddCommGroup V] [Module Geom V]
     [AddCommGroup W] [Module Geom W] {n : ℕ} (f : V →ₗ[Geom] W)
     (hf : Function.Injective f) (P : W → Prop) (hP : ∀ x, P (f x))
@@ -554,7 +550,7 @@ private def translateTop : Row 4 →+* Polynomial (Row 4) :=
     Polynomial.C (MvPolynomial.X i) + if i = 3 then Polynomial.X else 0
 private def topHasse (a : ℕ) (P : Row 4) : Row 4 :=
   (translateTop P).coeff a
-theorem translate_independent (m : Exponent) (c : Geom[X]) (hm : m 3 = 0) :
+private theorem translate_independent (m : Exponent) (c : Geom[X]) (hm : m 3 = 0) :
     translateTop (MvPolynomial.monomial m c) = Polynomial.C (MvPolynomial.monomial m c) := by
   rw [translateTop, MvPolynomial.eval₂Hom_monomial, MvPolynomial.monomial_eq, map_mul]
   simp only [RingHom.comp_apply]
@@ -567,7 +563,7 @@ theorem translate_independent (m : Exponent) (c : Geom[X]) (hm : m 3 = 0) :
     subst i
     exact (Finsupp.mem_support_iff.mp hi) hm
   simp [hne]
-theorem translate_top_pow_coeff (n a : ℕ) :
+private theorem translate_top_pow_coeff (n a : ℕ) :
     ((Polynomial.C (MvPolynomial.X (3 : Fin 4) : Row 4) + Polynomial.X) ^ n).coeff a =
       MvPolynomial.C (↑(n.choose a) : Geom[X]) * MvPolynomial.X 3 ^ (n - a) := by
   rw [add_comm, ← Polynomial.taylor_X_pow, Polynomial.taylor_coeff,
@@ -580,7 +576,7 @@ private theorem erase_top_add (u : Exponent) :
   · subst i
     simp
   · simp [Finsupp.erase_ne hi, Finsupp.single_eq_of_ne hi]
-theorem topHasse_monomial (a : ℕ) (u : Exponent) (c : Geom[X]) :
+private theorem topHasse_monomial (a : ℕ) (u : Exponent) (c : Geom[X]) :
     topHasse a (MvPolynomial.monomial u c) =
       MvPolynomial.monomial (u.erase 3 + Finsupp.single 3 (u 3 - a)) (↑((u 3).choose a) * c) := by
   have hu : MvPolynomial.monomial u c =
@@ -641,7 +637,7 @@ private theorem total_add_top (m : Exponent) (a : ℕ) :
   simpa only [one_mul] using sum_add_top (fun _ => 1) m a
 private def shiftHom (S : Geom[X]) : Row 4 →+* Row 4 :=
   MvPolynomial.eval₂Hom MvPolynomial.C (fun i => MvPolynomial.X i + MvPolynomial.C (jet S i))
-theorem translate_shift (S : Geom[X]) :
+private theorem translate_shift (S : Geom[X]) :
     translateTop.comp (shiftHom S) = (Polynomial.mapRingHom (shiftHom S)).comp translateTop := by
   apply MvPolynomial.ringHom_ext
   · intro c
@@ -669,7 +665,7 @@ private theorem topHasse_order (a d : ℕ) (P : Row 4) (S : Geom[X])
 private theorem topHasse_zero (P : Row 4) : topHasse 0 P = P := by
   ext m
   simp [topHasse_coeff]
-theorem coeff_X_mul_pow {R : Type*} [CommSemiring R]
+private theorem coeff_X_mul_pow {R : Type*} [CommSemiring R]
     (V W : Polynomial R) (a : ℕ) :
     ((Polynomial.X * V) ^ a * W).coeff a = (V.coeff 0) ^ a * W.coeff 0 := by
   rw [mul_pow, mul_assoc]

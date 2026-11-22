@@ -8,15 +8,15 @@ open K1_13 (Geom extend Row Shape shape Fits InBox Contact chart liftedChart mix
   OnFactor FatEligible OrderAt indexDegree)
 open scoped BigOperators Polynomial
 
-abbrev agreement : ℕ := 179905
-abbrev errors : ℕ := 82239
-abbrev physicalDegree : ℕ := 133448
+abbrev agreement : ℕ := 179925
+abbrev errors : ℕ := 82219
+abbrev physicalDegree : ℕ := 133475
 abbrev taylorLength : ℕ := physicalDegree + 1
 abbrev incidenceGap : ℕ := agreement - physicalDegree
 abbrev anchorCutoff : ℕ := 93 * agreement - 1 + 52
 abbrev primaryCutoff : ℕ := 3000 * agreement - 1
 abbrev primaryBox : Shape := ⟨4012, 1650, 550⟩
-abbrev layerNeed : ℕ := 22403222113791
+abbrev layerNeed : ℕ := 21700936415139
 abbrev layerWidth : ℕ := agreement - physicalDegree + 3
 def TrueWeightLE {n : ℕ} (P : Row n) (D : ℕ) : Prop :=
   ∀ m ∈ P.support, (P.coeff m).natDegree +
@@ -48,27 +48,27 @@ def LayerBudget {n : ℕ} (a : Fin n → Shape) (l : Fin n → ℕ) : Prop :=
   layerNeed ≤ ∑ r ∈ Finset.range (1 + primaryCutoff / layerWidth),
     remaining (∑ i, (r + 1 - l i) * (a i).b) (∑ i, (r + 1 - l i) * (a i).j)
 abbrev FatEquations := P3_6.FatEquations
-abbrev fatOrder : ℕ := 53178
-abbrev divisorOrder : ℕ := 48817
+abbrev fatOrder : ℕ := 54443
+abbrev divisorOrder : ℕ := 50082
 abbrev isolatedOrder : ℕ := 596
 abbrev commonBox := P3_6.commonBox
 abbrev resultantBox := P3_6.resultantBox
 def lowerCap : ℕ → ℕ
-  | 0 => 22258212026003248
-  | 1 => 19914652156004755
-  | 2 => 17690054217600253
-  | 3 => 15586159007729913
-  | 4 => 13605491615199925
-  | 5 => 11749888854712210
-  | 6 => 10021785058608165
-  | 7 => 8423101210093614
-  | 8 => 6956192938405237
-  | 9 => 5623053137790453
-  | 10 => 4425971195945761
-  | 11 => 3366999252493415
-  | 12 => 2448373323358719
-  | 13 => 1672191719667549
-  | 14 => 1040650363547452
+  | 0 => 22267217989967107
+  | 1 => 19922710021123903
+  | 2 => 17697212029034028
+  | 3 => 15592465639843513
+  | 4 => 13610996857672884
+  | 5 => 11754643336970546
+  | 6 => 10025840315429189
+  | 7 => 8426509625240942
+  | 8 => 6959007792353944
+  | 9 => 5625328567896128
+  | 10 => 4427762229003636
+  | 11 => 3368361778683017
+  | 12 => 2449364116440236
+  | 13 => 1672868421854010
+  | 14 => 1041071496231204
   | _ => 0
 def Holds (E : FatEquations) (S : Geom[X]) : Prop :=
   atJet E.common S = 0 ∨ OrderAt E.residual S fatOrder

@@ -5,13 +5,13 @@ set_option maxHeartbeats 1200000
 
 namespace Low49ActiveSplit
 
-theorem distribute {n al ah bl bh : ℕ} (ha : al ≤ ah) (hb : bl ≤ bh)
+private theorem distribute {n al ah bl bh : ℕ} (ha : al ≤ ah) (hb : bl ≤ bh)
     (hl : al + bl ≤ n) (hh : n ≤ ah + bh) :
     ∃ a b, a+b=n ∧ al≤a ∧ a≤ah ∧ bl≤b ∧ b≤bh := by
   let a := max al (n-bh)
   exact ⟨a,n-a,by dsimp [a]; omega⟩
 
-theorem distribute_under {n a b : ℕ} (h : n ≤ a+b)
+private theorem distribute_under {n a b : ℕ} (h : n ≤ a+b)
     (hp : a%2=0 ∨ b%2=0) :
     ∃ x y, x+y=n ∧ x≤a ∧ y≤b ∧ (x%2=0 ∨ y%2=0) := by
   rcases hp with ha|hb
@@ -20,7 +20,7 @@ theorem distribute_under {n a b : ℕ} (h : n ≤ a+b)
   · let y := min n b
     exact ⟨n-y,y,by dsimp [y]; omega⟩
 
-theorem distribute_over {n al ah bl bh : ℕ} (ha : al≤ah) (hb : bl≤bh)
+private theorem distribute_over {n al ah bl bh : ℕ} (ha : al≤ah) (hb : bl≤bh)
     (hl : al+bl≤n) (hh : n≤ah+bh) (he : ah%2=0 ∧ bh%2=0)
     (hp : al%2=0 ∨ bl%2=0) :
     ∃ x y, x+y=n ∧ al≤x ∧ x≤ah ∧ bl≤y ∧ y≤bh ∧ (x%2=0 ∨ y%2=0) := by
@@ -35,7 +35,7 @@ theorem distribute_over {n al ah bl bh : ℕ} (ha : al≤ah) (hb : bl≤bh)
   · obtain ⟨x,y,hx,ha,hxa,hb,hyb⟩ := distribute ha hb hl hh
     exact ⟨x,y,hx,ha,hxa,hb,hyb,by omega⟩
 
-theorem split_secondary {y z ja jb ta tb ca cb : ℕ}
+private theorem split_secondary {y z ja jb ta tb ca cb : ℕ}
     (hja : 3*ta≤ja ∧ 2*ca≤ja ∧ ca≤2*ta)
     (hjb : 3*tb≤jb ∧ 2*cb≤jb ∧ cb≤2*tb)
     (hev : ja%2=0 ∧ jb%2=0 ∧ ta%2=0 ∧ tb%2=0 ∧ ca%2=0 ∧ cb%2=0)

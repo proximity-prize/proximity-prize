@@ -48,7 +48,7 @@ private noncomputable def grid (r : ℕ) : Finset (Σ _ : ℕ, ℕ × JetExp) :=
 private noncomputable def pad (r : ℕ) (x : Σ _ : ℕ, ℕ × JetExp) : JetExp :=
   x.2.2 + Finsupp.single 0 (x.2.1 - padGrade r x.1)
 
-theorem pad_spec {r : ℕ} {x : Σ _ : ℕ, ℕ × JetExp} (hx : x ∈ grid r) :
+private theorem pad_spec {r : ℕ} {x : Σ _ : ℕ, ℕ × JetExp} (hx : x ∈ grid r) :
     (pad r x).weight gradeWeight = x.2.1 ∧
     (pad r x).weight oldWeight = x.2.2.weight oldWeight ∧
     (∀ i : Fin 4, i ≠ 0 → pad r x i = x.2.2 i) := by
@@ -70,7 +70,7 @@ theorem pad_spec {r : ℕ} {x : Σ _ : ℕ, ℕ × JetExp} (hx : x ∈ grid r) :
     omega
   · rw [sumOld,sumOld,hsucc 1 (by decide),hsucc 2 (by decide),hsucc 3 (by decide)]
 
-theorem map_mem {r : ℕ} {x : Σ _ : ℕ, ℕ × JetExp} (hx : x ∈ grid r) :
+private theorem map_mem {r : ℕ} {x : Σ _ : ℕ, ℕ × JetExp} (hx : x ∈ grid r) :
     pad r x ∈ jetColumns.filter (fits r) := by
   obtain ⟨k,q,m⟩ := x
   obtain ⟨hl,hh⟩ := mem_Ico.mp (mem_product.mp (mem_sigma.mp hx).2).1
@@ -123,7 +123,7 @@ def block (r k : ℕ) : ℤ :=
 
 def compute (r : ℕ) : ℤ := ∑ k ∈ range (chunks r), block r k
 
-theorem grid_eq (r : ℕ) : ((grid r).card : ℤ) = compute r := by
+private theorem grid_eq (r : ℕ) : ((grid r).card : ℤ) = compute r := by
   unfold grid compute
   rw [card_sigma,Nat.cast_sum]
   apply sum_congr rfl
@@ -144,11 +144,11 @@ theorem width_ge (r : ℕ) : compute r ≤ (width r : ℤ) := by
 private theorem jet_count : jetColumns.card = Final50Price.symbolCount := by
   exact_mod_cast TaperColumns.jet_card_eq.trans TaperColumns.sourceCount_eq
 
-theorem width_le (r : ℕ) : width r ≤ Final50Price.symbolCount := by
+private theorem width_le (r : ℕ) : width r ≤ Final50Price.symbolCount := by
   rw [← jet_count]
   exact card_le_card (filter_subset _ _)
 
-theorem width_full (r : ℕ) (hr : 92 ≤ r) : width r = Final50Price.symbolCount := by
+private theorem width_full (r : ℕ) (hr : 92 ≤ r) : width r = Final50Price.symbolCount := by
   unfold width
   rw [filter_true_of_mem, jet_count]
   intro m hm
@@ -173,7 +173,7 @@ theorem fastRow_eq (r : ℕ) : fastRow r = compute r := intPrefix_eq _ _
 
 def rowLoss (i : ℕ) : ℤ := (Final50Price.symbolCount : ℤ) - fastRow (i+1)
 
-theorem intPrefix_add (f : ℕ → ℤ) (a b : ℕ) :
+private theorem intPrefix_add (f : ℕ → ℤ) (a b : ℕ) :
     intPrefix f (a+b) = intPrefix f a + intPrefix (fun i => f (a+i)) b := by
   induction b with
   | zero => simp [intPrefix]
@@ -183,27 +183,27 @@ private theorem part0 : intPrefix (fun i => rowLoss (0+i)) 7 = 2847561416346 := 
 
 private theorem part7 : intPrefix (fun i => rowLoss (7+i)) 7 = 2845169148870 := by decide +kernel
 
-theorem part14 : intPrefix (fun i => rowLoss (14+i)) 7 = 2831592953132 := by decide +kernel
+private theorem part14 : intPrefix (fun i => rowLoss (14+i)) 7 = 2831592953132 := by decide +kernel
 
-theorem part21 : intPrefix (fun i => rowLoss (21+i)) 7 = 2789695783148 := by decide +kernel
+private theorem part21 : intPrefix (fun i => rowLoss (21+i)) 7 = 2789695783148 := by decide +kernel
 
-theorem part28 : intPrefix (fun i => rowLoss (28+i)) 7 = 2694035513036 := by decide +kernel
+private theorem part28 : intPrefix (fun i => rowLoss (28+i)) 7 = 2694035513036 := by decide +kernel
 
-theorem part35 : intPrefix (fun i => rowLoss (35+i)) 7 = 2510867945576 := by decide +kernel
+private theorem part35 : intPrefix (fun i => rowLoss (35+i)) 7 = 2510867945576 := by decide +kernel
 
-theorem part42 : intPrefix (fun i => rowLoss (42+i)) 7 = 2198146136942 := by decide +kernel
+private theorem part42 : intPrefix (fun i => rowLoss (42+i)) 7 = 2198146136942 := by decide +kernel
 
-theorem part49 : intPrefix (fun i => rowLoss (49+i)) 7 = 1705518666002 := by decide +kernel
+private theorem part49 : intPrefix (fun i => rowLoss (49+i)) 7 = 1705518666002 := by decide +kernel
 
-theorem part56 : intPrefix (fun i => rowLoss (56+i)) 7 = 974496625064 := by decide +kernel
+private theorem part56 : intPrefix (fun i => rowLoss (56+i)) 7 = 974496625064 := by decide +kernel
 
-theorem part63 : intPrefix (fun i => rowLoss (63+i)) 7 = 169003912251 := by decide +kernel
+private theorem part63 : intPrefix (fun i => rowLoss (63+i)) 7 = 169003912251 := by decide +kernel
 
-theorem part70 : intPrefix (fun i => rowLoss (70+i)) 7 = 53197576283 := by decide +kernel
+private theorem part70 : intPrefix (fun i => rowLoss (70+i)) 7 = 53197576283 := by decide +kernel
 
-theorem part77 : intPrefix (fun i => rowLoss (77+i)) 7 = 36300626368 := by decide +kernel
+private theorem part77 : intPrefix (fun i => rowLoss (77+i)) 7 = 36300626368 := by decide +kernel
 
-theorem part84 : intPrefix (fun i => rowLoss (84+i)) 7 = 31448894158 := by decide +kernel
+private theorem part84 : intPrefix (fun i => rowLoss (84+i)) 7 = 31448894158 := by decide +kernel
 
 set_option maxRecDepth 10000 in
 theorem computed_loss : intPrefix rowLoss 91 = Final50SharedPrice.slopeLoss := by

@@ -11,9 +11,9 @@ open TaperMoments
 open Finset
 open scoped BigOperators
 
-abbrev Moments := ℤ × ℤ × ℤ
+private abbrev Moments := ℤ × ℤ × ℤ
 private def combine (a b : Moments) : Moments := (a.1+b.1, a.2.1+b.2.1, a.2.2+b.2.2)
-def oneRow (q : ℕ) : Moments :=
+private def oneRow (q : ℕ) : Moments :=
   let d := gradeCap q
   let n := cumulative d 1650
   (n, (q : ℤ)*n, indexMoment d)
@@ -22,14 +22,14 @@ private def moments (lo : ℕ) : ℕ → Moments
   | 0 => (0,0,0)
   | n+1 => combine (moments lo n) (oneRow (lo+n))
 
-theorem moments_split (lo a b : ℕ) :
+private theorem moments_split (lo a b : ℕ) :
     moments lo (a+b) = combine (moments lo a) (moments (lo+a) b) := by
   induction b with
   | zero => simp [moments, combine]
   | succ b ih => rw [Nat.add_succ, moments, moments, ih, Nat.add_assoc]
                  simp only [combine, Int.add_assoc]
 
-theorem moments_eq (n : ℕ) :
+private theorem moments_eq (n : ℕ) :
     moments 0 n =
       (∑ q ∈ range n, cumulative (gradeCap q) 1650,
        ∑ q ∈ range n, (q : ℤ)*cumulative (gradeCap q) 1650,
@@ -39,131 +39,131 @@ theorem moments_eq (n : ℕ) :
   | succ n ih => simp only [moments, ih, sum_range_succ, oneRow, combine, Nat.zero_add]
 
 set_option profiler true in
-theorem chunk0 : moments 0 64 = (766480, 38630592, 1390701312) := by decide +kernel
+private theorem chunk0 : moments 0 64 = (766480, 38630592, 1390701312) := by decide +kernel
 set_option profiler true in
-theorem chunk64 : moments 64 64 = (10950160, 1151780032, 41464081152) := by decide +kernel
+private theorem chunk64 : moments 64 64 = (10950160, 1151780032, 41464081152) := by decide +kernel
 set_option profiler true in
-theorem chunk128 : moments 128 64 = (46692880, 7734564032, 278444305152) := by decide +kernel
+private theorem chunk128 : moments 128 64 = (46692880, 7734564032, 278444305152) := by decide +kernel
 set_option profiler true in
-theorem chunk192 : moments 192 64 = (124771856, 28444026048, 1023984937728) := by decide +kernel
+private theorem chunk192 : moments 192 64 = (124771856, 28444026048, 1023984937728) := by decide +kernel
 set_option profiler true in
-theorem chunk256 : moments 256 64 = (261964304, 76232176832, 2744358365952) := by decide +kernel
+private theorem chunk256 : moments 256 64 = (261964304, 76232176832, 2744358365952) := by decide +kernel
 set_option profiler true in
-theorem chunk320 : moments 320 64 = (475047440, 168345994432, 6060455799552) := by decide +kernel
+private theorem chunk320 : moments 320 64 = (475047440, 168345994432, 6060455799552) := by decide +kernel
 set_option profiler true in
-theorem chunk384 : moments 384 64 = (780798480, 326327424192, 11747787270912) := by decide +kernel
+private theorem chunk384 : moments 384 64 = (780798480, 326327424192, 11747787270912) := by decide +kernel
 set_option profiler true in
-theorem chunk448 : moments 448 64 = (1195994640, 576013378752, 20736481635072) := by decide +kernel
+private theorem chunk448 : moments 448 64 = (1195994640, 576013378752, 20736481635072) := by decide +kernel
 set_option profiler true in
-theorem chunk512 : moments 512 64 = (1737323150, 947484425540, 34107687955176) := by decide +kernel
+private theorem chunk512 : moments 512 64 = (1737323150, 947484425540, 34107687955176) := by decide +kernel
 set_option profiler true in
-theorem chunk576 : moments 576 64 = (2409438080, 1467615274816, 52604450412672) := by decide +kernel
+private theorem chunk576 : moments 576 64 = (2409438080, 1467615274816, 52604450412672) := by decide +kernel
 set_option profiler true in
-theorem chunk640 : moments 640 64 = (3172139904, 2134302060352, 75192145623168) := by decide +kernel
+private theorem chunk640 : moments 640 64 = (3172139904, 2134302060352, 75192145623168) := by decide +kernel
 set_option profiler true in
-theorem chunk704 : moments 704 64 = (3967085440, 2922016831296, 99952468547712) := by decide +kernel
+private theorem chunk704 : moments 704 64 = (3967085440, 2922016831296, 99952468547712) := by decide +kernel
 set_option profiler true in
-theorem chunk768 : moments 768 64 = (4735554768, 3790003814602, 124759121716032) := by decide +kernel
+private theorem chunk768 : moments 768 64 = (4735554768, 3790003814602, 124759121716032) := by decide +kernel
 set_option profiler true in
-theorem chunk832 : moments 832 64 = (5423001088, 4686152908112, 147460674889344) := by decide +kernel
+private theorem chunk832 : moments 832 64 = (5423001088, 4686152908112, 147460674889344) := by decide +kernel
 set_option profiler true in
-theorem chunk896 : moments 896 64 = (6008952320, 5576166392144, 167119091484288) := by decide +kernel
+private theorem chunk896 : moments 896 64 = (6008952320, 5576166392144, 167119091484288) := by decide +kernel
 set_option profiler true in
-theorem chunk960 : moments 960 64 = (6500007424, 6447136851280, 183844550043264) := by decide +kernel
+private theorem chunk960 : moments 960 64 = (6500007424, 6447136851280, 183844550043264) := by decide +kernel
 set_option profiler true in
-theorem chunk1024 : moments 1024 64 = (6904555008, 7289698404688, 197830022104704) := by decide +kernel
+private theorem chunk1024 : moments 1024 64 = (6904555008, 7289698404688, 197830022104704) := by decide +kernel
 set_option profiler true in
-theorem chunk1088 : moments 1088 64 = (7230983680, 8096632655184, 209281364108928) := by decide +kernel
+private theorem chunk1088 : moments 1088 64 = (7230983680, 8096632655184, 209281364108928) := by decide +kernel
 set_option profiler true in
-theorem chunk1152 : moments 1152 64 = (7487682048, 8862868689232, 218417317398144) := by decide +kernel
+private theorem chunk1152 : moments 1152 64 = (7487682048, 8862868689232, 218417317398144) := by decide +kernel
 set_option profiler true in
-theorem chunk1216 : moments 1216 64 = (7683038720, 9585483076944, 225469508216448) := by decide +kernel
+private theorem chunk1216 : moments 1216 64 = (7683038720, 9585483076944, 225469508216448) := by decide +kernel
 set_option profiler true in
-theorem chunk1280 : moments 1280 64 = (7825442304, 10263699872080, 230682447709824) := by decide +kernel
+private theorem chunk1280 : moments 1280 64 = (7825442304, 10263699872080, 230682447709824) := by decide +kernel
 set_option profiler true in
-theorem chunk1344 : moments 1344 64 = (7923281408, 10898890612048, 234313531926144) := by decide +kernel
+private theorem chunk1344 : moments 1344 64 = (7923281408, 10898890612048, 234313531926144) := by decide +kernel
 set_option profiler true in
-theorem chunk1408 : moments 1408 64 = (7984944640, 11494574317904, 236633041815168) := by decide +kernel
+private theorem chunk1408 : moments 1408 64 = (7984944640, 11494574317904, 236633041815168) := by decide +kernel
 set_option profiler true in
-theorem chunk1472 : moments 1472 64 = (8018820608, 12056417494352, 237924143228544) := by decide +kernel
+private theorem chunk1472 : moments 1472 64 = (8018820608, 12056417494352, 237924143228544) := by decide +kernel
 set_option profiler true in
-theorem chunk1536 : moments 1536 64 = (8033297920, 12592234129744, 238482886919808) := by decide +kernel
+private theorem chunk1536 : moments 1536 64 = (8033297920, 12592234129744, 238482886919808) := by decide +kernel
 set_option profiler true in
-theorem chunk1600 : moments 1600 64 = (8036764764, 13111984998411, 238618191883320) := by decide +kernel
+private theorem chunk1600 : moments 1600 64 = (8036764764, 13111984998411, 238618191883320) := by decide +kernel
 set_option profiler true in
-theorem chunk1664 : moments 1664 64 = (8036916864, 13626592542912, 238624178918400) := by decide +kernel
+private theorem chunk1664 : moments 1664 64 = (8036916864, 13626592542912, 238624178918400) := by decide +kernel
 set_option profiler true in
-theorem chunk1728 : moments 1728 64 = (8036916864, 14140955222208, 238624178918400) := by decide +kernel
+private theorem chunk1728 : moments 1728 64 = (8036916864, 14140955222208, 238624178918400) := by decide +kernel
 set_option profiler true in
-theorem chunk1792 : moments 1792 64 = (8036916864, 14655317901504, 238624178918400) := by decide +kernel
+private theorem chunk1792 : moments 1792 64 = (8036916864, 14655317901504, 238624178918400) := by decide +kernel
 set_option profiler true in
-theorem chunk1856 : moments 1856 64 = (8036916864, 15169680580800, 238624178918400) := by decide +kernel
+private theorem chunk1856 : moments 1856 64 = (8036916864, 15169680580800, 238624178918400) := by decide +kernel
 set_option profiler true in
-theorem chunk1920 : moments 1920 64 = (8036916864, 15684043260096, 238624178918400) := by decide +kernel
+private theorem chunk1920 : moments 1920 64 = (8036916864, 15684043260096, 238624178918400) := by decide +kernel
 set_option profiler true in
-theorem chunk1984 : moments 1984 64 = (8036916864, 16198405939392, 238624178918400) := by decide +kernel
+private theorem chunk1984 : moments 1984 64 = (8036916864, 16198405939392, 238624178918400) := by decide +kernel
 set_option profiler true in
-theorem chunk2048 : moments 2048 64 = (8036916864, 16712768618688, 238624178918400) := by decide +kernel
+private theorem chunk2048 : moments 2048 64 = (8036916864, 16712768618688, 238624178918400) := by decide +kernel
 set_option profiler true in
-theorem chunk2112 : moments 2112 64 = (8036916864, 17227131297984, 238624178918400) := by decide +kernel
+private theorem chunk2112 : moments 2112 64 = (8036916864, 17227131297984, 238624178918400) := by decide +kernel
 set_option profiler true in
-theorem chunk2176 : moments 2176 64 = (8036916864, 17741493977280, 238624178918400) := by decide +kernel
+private theorem chunk2176 : moments 2176 64 = (8036916864, 17741493977280, 238624178918400) := by decide +kernel
 set_option profiler true in
-theorem chunk2240 : moments 2240 64 = (8036916864, 18255856656576, 238624178918400) := by decide +kernel
+private theorem chunk2240 : moments 2240 64 = (8036916864, 18255856656576, 238624178918400) := by decide +kernel
 set_option profiler true in
-theorem chunk2304 : moments 2304 64 = (8036916864, 18770219335872, 238624178918400) := by decide +kernel
+private theorem chunk2304 : moments 2304 64 = (8036916864, 18770219335872, 238624178918400) := by decide +kernel
 set_option profiler true in
-theorem chunk2368 : moments 2368 64 = (8036916864, 19284582015168, 238624178918400) := by decide +kernel
+private theorem chunk2368 : moments 2368 64 = (8036916864, 19284582015168, 238624178918400) := by decide +kernel
 set_option profiler true in
-theorem chunk2432 : moments 2432 64 = (8036916864, 19798944694464, 238624178918400) := by decide +kernel
+private theorem chunk2432 : moments 2432 64 = (8036916864, 19798944694464, 238624178918400) := by decide +kernel
 set_option profiler true in
-theorem chunk2496 : moments 2496 64 = (8036916864, 20313307373760, 238624178918400) := by decide +kernel
+private theorem chunk2496 : moments 2496 64 = (8036916864, 20313307373760, 238624178918400) := by decide +kernel
 set_option profiler true in
-theorem chunk2560 : moments 2560 64 = (8036916864, 20827670053056, 238624178918400) := by decide +kernel
+private theorem chunk2560 : moments 2560 64 = (8036916864, 20827670053056, 238624178918400) := by decide +kernel
 set_option profiler true in
-theorem chunk2624 : moments 2624 64 = (8036916864, 21342032732352, 238624178918400) := by decide +kernel
+private theorem chunk2624 : moments 2624 64 = (8036916864, 21342032732352, 238624178918400) := by decide +kernel
 set_option profiler true in
-theorem chunk2688 : moments 2688 64 = (8036916864, 21856395411648, 238624178918400) := by decide +kernel
+private theorem chunk2688 : moments 2688 64 = (8036916864, 21856395411648, 238624178918400) := by decide +kernel
 set_option profiler true in
-theorem chunk2752 : moments 2752 64 = (8036916864, 22370758090944, 238624178918400) := by decide +kernel
+private theorem chunk2752 : moments 2752 64 = (8036916864, 22370758090944, 238624178918400) := by decide +kernel
 set_option profiler true in
-theorem chunk2816 : moments 2816 64 = (8036916864, 22885120770240, 238624178918400) := by decide +kernel
+private theorem chunk2816 : moments 2816 64 = (8036916864, 22885120770240, 238624178918400) := by decide +kernel
 set_option profiler true in
-theorem chunk2880 : moments 2880 64 = (8036916864, 23399483449536, 238624178918400) := by decide +kernel
+private theorem chunk2880 : moments 2880 64 = (8036916864, 23399483449536, 238624178918400) := by decide +kernel
 set_option profiler true in
-theorem chunk2944 : moments 2944 64 = (8036916864, 23913846128832, 238624178918400) := by decide +kernel
+private theorem chunk2944 : moments 2944 64 = (8036916864, 23913846128832, 238624178918400) := by decide +kernel
 set_option profiler true in
-theorem chunk3008 : moments 3008 64 = (8036916864, 24428208808128, 238624178918400) := by decide +kernel
+private theorem chunk3008 : moments 3008 64 = (8036916864, 24428208808128, 238624178918400) := by decide +kernel
 set_option profiler true in
-theorem chunk3072 : moments 3072 64 = (8036916864, 24942571487424, 238624178918400) := by decide +kernel
+private theorem chunk3072 : moments 3072 64 = (8036916864, 24942571487424, 238624178918400) := by decide +kernel
 set_option profiler true in
-theorem chunk3136 : moments 3136 64 = (8036916864, 25456934166720, 238624178918400) := by decide +kernel
+private theorem chunk3136 : moments 3136 64 = (8036916864, 25456934166720, 238624178918400) := by decide +kernel
 set_option profiler true in
-theorem chunk3200 : moments 3200 64 = (8036916864, 25971296846016, 238624178918400) := by decide +kernel
+private theorem chunk3200 : moments 3200 64 = (8036916864, 25971296846016, 238624178918400) := by decide +kernel
 set_option profiler true in
-theorem chunk3264 : moments 3264 64 = (8036916864, 26485659525312, 238624178918400) := by decide +kernel
+private theorem chunk3264 : moments 3264 64 = (8036916864, 26485659525312, 238624178918400) := by decide +kernel
 set_option profiler true in
-theorem chunk3328 : moments 3328 64 = (8036916864, 27000022204608, 238624178918400) := by decide +kernel
+private theorem chunk3328 : moments 3328 64 = (8036916864, 27000022204608, 238624178918400) := by decide +kernel
 set_option profiler true in
-theorem chunk3392 : moments 3392 64 = (8036916864, 27514384883904, 238624178918400) := by decide +kernel
+private theorem chunk3392 : moments 3392 64 = (8036916864, 27514384883904, 238624178918400) := by decide +kernel
 set_option profiler true in
-theorem chunk3456 : moments 3456 64 = (8036824068, 28028421231847, 238620534897480) := by decide +kernel
+private theorem chunk3456 : moments 3456 64 = (8036824068, 28028421231847, 238620534897480) := by decide +kernel
 set_option profiler true in
-theorem chunk3520 : moments 3520 64 = (8032072282, 28525854344641, 238435293889752) := by decide +kernel
+private theorem chunk3520 : moments 3520 64 = (8032072282, 28525854344641, 238435293889752) := by decide +kernel
 set_option profiler true in
-theorem chunk3584 : moments 3584 64 = (8014274720, 28975464060405, 237749878927968) := by decide +kernel
+private theorem chunk3584 : moments 3584 64 = (8014274720, 28975464060405, 237749878927968) := by decide +kernel
 set_option profiler true in
-theorem chunk3648 : moments 3648 64 = (7973908122, 29339703821282, 236215582648992) := by decide +kernel
+private theorem chunk3648 : moments 3648 64 = (7973908122, 29339703821282, 236215582648992) := by decide +kernel
 set_option profiler true in
-theorem chunk3712 : moments 3712 64 = (7901339158, 29578175247143, 233494884061632) := by decide +kernel
+private theorem chunk3712 : moments 3712 64 = (7901339158, 29578175247143, 233494884061632) := by decide +kernel
 set_option profiler true in
-theorem chunk3776 : moments 3776 64 = (7787486114, 29650119438357, 229285976439888) := by decide +kernel
+private theorem chunk3776 : moments 3776 64 = (7787486114, 29650119438357, 229285976439888) := by decide +kernel
 set_option profiler true in
-theorem chunk3840 : moments 3840 64 = (7622412918, 29509140942244, 223270472720592) := by decide +kernel
+private theorem chunk3840 : moments 3840 64 = (7622412918, 29509140942244, 223270472720592) := by decide +kernel
 set_option profiler true in
-theorem chunk3904 : moments 3904 64 = (7397254232, 29110514169461, 215184324234912) := by decide +kernel
+private theorem chunk3904 : moments 3904 64 = (7397254232, 29110514169461, 215184324234912) := by decide +kernel
 set_option profiler true in
-theorem chunk3968 : moments 3968 45 = (5029151191, 20065722297522, 145203741880200) := by decide +kernel
+private theorem chunk3968 : moments 3968 45 = (5029151191, 20065722297522, 145203741880200) := by decide +kernel
 
 private theorem join (lo n m next full : ℕ) (a b result : Moments)
     (hLen : n+m = full) (hStart : lo+n = next) (hValue : combine a b = result)

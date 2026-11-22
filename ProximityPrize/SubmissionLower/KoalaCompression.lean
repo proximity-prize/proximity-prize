@@ -87,7 +87,7 @@ theorem compress_matrix {α ι : Type*} [Finite α] [Fintype ι]
 
 open BoxDegree
 
-theorem card_exps (a b c : ℕ) : Fintype.card (exps a b c) = (a+1)*(b+1)*(c+1) := by
+private theorem card_exps (a b c : ℕ) : Fintype.card (exps a b c) = (a+1)*(b+1)*(c+1) := by
   rw [Fintype.card_congr (slots a b c)]
   simp [Nat.mul_assoc]
 
@@ -95,7 +95,7 @@ def evalRow {α : Type*} (S : α → F[X]) (z : α → Fin 2 → F)
     (g : α) (m : Exp) : F[X] :=
   S g ^ m none * Polynomial.C ((z g 0)^m (some 0) * (z g 1)^m (some 1))
 
-theorem eval_monomial_row {α : Type*} (S : α → F[X]) (z : α → Fin 2 → F)
+private theorem eval_monomial_row {α : Type*} (S : α → F[X]) (z : α → Fin 2 → F)
     (g : α) (m : Exp) (a : Rational F) :
     MvPolynomial.eval (fun i : Idx => i.elim (algebraMap F[X] (Rational F) (S g))
       (fun j => algebraMap F[X] (Rational F) (Polynomial.C (z g j)))) (monomial m a) =
@@ -171,11 +171,11 @@ theorem compress_box {α : Type*} [Finite α] (S : α → F[X]) (z : α → Fin 
 
 /-- Simple uniform compression guard for the active 69.50 grade range. -/
 theorem koala_guard {e v w d : ℕ} (he : e ≤ 21) (hv : v ≤ 445) (hw : w ≤ 445)
-    (hd : d ≤ 133536) :
+    (hd : d ≤ 133510) :
     Fintype.card (exps e (v+128) (w+128)) * (e*d) < (129*129)*2130706433 := by
   rw [card_exps]
   calc
-    (e+1)*(v+128+1)*(w+128+1)*(e*d) ≤ 22*574*574*(21*133536) := by
+    (e+1)*(v+128+1)*(w+128+1)*(e*d) ≤ 22*574*574*(21*133510) := by
       exact Nat.mul_le_mul (Nat.mul_le_mul (Nat.mul_le_mul (by omega) (by omega)) (by omega))
         (Nat.mul_le_mul he hd)
     _ < _ := by decide
