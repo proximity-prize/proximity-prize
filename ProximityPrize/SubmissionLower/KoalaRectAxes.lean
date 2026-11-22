@@ -35,7 +35,7 @@ theorem slots_reversed {u d actual : Fin 2 → ℕ} (r : ℕ)
     (by omega : d 0 + d 1 ≤ actual 1 + actual 0)
   simpa only [rectSlots, swap_zero, swap_one, Nat.mul_comm] using h
 
-theorem rect_bounds_swap {h E : ℕ} (hl : 2378 ≤ h) (hu : h ≤ 2465)
+theorem rect_bounds_swap {h E : ℕ} (hl : 2391 ≤ h) (hu : h ≤ 2490)
     (hel : 1 ≤ E) (heu : E ≤ 28) :
     let T := HighCore82219.terminal .h2367
     rectDebit h T.nodeRows T.poleMoment (swap (rectWitness E).U) <
@@ -45,7 +45,5 @@ theorem rect_bounds_swap {h E : ℕ} (hl : 2378 ≤ h) (hu : h ≤ 2465)
   rw [debit_swap, gain_swap]
   exact KoalaRectReceipts.rect_bounds hl hu hel heu
 
-#print axioms slots_reversed
-#print axioms rect_bounds_swap
 
 end KoalaRectAxes

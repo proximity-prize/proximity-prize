@@ -436,7 +436,7 @@ def c4 : Prop := ∃ p : BlockIndex → Powers, 9573892230 ≤ savingsSum w1 p
 def c5 : Prop := ∃ p : BlockIndex → Powers, 159735926601 ≤ savingsSum w2 p
 def c6 : Prop := ∃ p : BlockIndex → Powers, 100540921280 ≤ savingsSum w3 p
 def c7 : Prop := ∃ p : BlockIndex → Powers, 174062508216 ≤ savingsSum w4 p
-private theorem bound_le_baseline (i : BlockIndex) (p : Fin 11 → ℕ) :
+theorem bound_le_baseline (i : BlockIndex) (p : Fin 11 → ℕ) :
     blockBound i p ≤ baseline i := by
   have hz (F : Flag) : residualFlag F (fun _ => 0) = F := by
     cases F
@@ -505,7 +505,7 @@ private theorem baseline_budget_on (S : Finset BlockIndex)
 private def combine (p₁ p₂ p₃ p₄ : BlockIndex → Powers) (i : BlockIndex) : Powers :=
   if i.1.val < 2008 then p₁ i else if i.1.val < 3012 then p₂ i
   else if i.1.val < 3514 then p₃ i else p₄ i
-private theorem savings_parts (p₁ p₂ p₃ p₄ : BlockIndex → Powers) :
+theorem savings_parts (p₁ p₂ p₃ p₄ : BlockIndex → Powers) :
     savingsSum w1 p₁ + savingsSum w2 p₂ + savingsSum w3 p₃ + savingsSum w4 p₄ ≤
       ∑ i : BlockIndex, savings i (combine p₁ p₂ p₃ p₄ i) := by
   exact sum_four_le Finset.univ

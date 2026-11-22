@@ -92,7 +92,6 @@ theorem theta_rank {s : Set (Fin 4 →₀ ℕ)} (d l u R : ℤ)
   rw [he] at h
   exact h
 
-#print axioms theta_rank
 
 end Flag
 

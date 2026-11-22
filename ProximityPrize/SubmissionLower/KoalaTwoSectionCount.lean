@@ -101,8 +101,8 @@ theorem rect_price (incidence : TwoCutIncidence) : RectPrice := by
     obtain ⟨ht, hn⟩ := Finset.mem_sdiff.mp hγ
     exact P1_7.regular_of_resultant hf.1 (hr γ ht) (fun hz => hn (Finset.mem_filter.mpr ⟨ht,hz⟩))
   obtain ⟨hl, hu⟩ := window_nat hw
-  have hl' : 2378 ≤ M.overhead.toNat := hl
-  have hu' : M.overhead.toNat ≤ 2465 := hu
+  have hl' : 2391 ≤ M.overhead.toNat := hl
+  have hu' : M.overhead.toNat ≤ 2490 := hu
   let J : Input := {
     words := u, deleted := del, model := M, labels := Γ, family := F
     shift_out := hshift, block := H, chart := hH, marks := R
@@ -136,6 +136,5 @@ theorem rect_price (incidence : TwoCutIncidence) : RectPrice := by
       ac_rfl
     _ ≤ retainedCap .h2367 := hcharge
 
-#print axioms rect_price
 end
 end KoalaTwoSectionPrice

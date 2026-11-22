@@ -75,5 +75,3 @@ theorem relative_cut_points {I J : Ideal (Ring F)} [I.IsPrime] (hIJ : I ≤ J)
 end
 end SplitCut.Rect
 
-#print axioms SplitCut.Rect.relative_cut_coeff
-#print axioms SplitCut.Rect.relative_cut_points

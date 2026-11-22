@@ -140,7 +140,7 @@ theorem two_cut_count : KoalaTwoSectionPrice.TwoCutIncidence := by
   intro J B D hlo hhi he₀ he₁ hword v w hsum hpaid haxis
   have he : 4 ≤ J.e := by omega
   have hvw : v+w ≤ 445 := (hsum.trans hpaid).le.trans (KoalaTwoSectionPrice.paid_le he₀ he₁)
-  have hhi' : J.hi ≤ 2465 := hhi.le.trans (by decide)
+  have hhi' : J.hi ≤ 2490 := hhi.le.trans (by decide)
   obtain ⟨V,_,hbad,hGood⟩ := Compression.compress_good J v w he₀ he₁
     ((Nat.le_add_right v w).trans hvw) ((Nat.le_add_left w v).trans hvw) hhi' haxis
   let A := componentMarks J D.proper
@@ -180,6 +180,5 @@ theorem two_cut_count : KoalaTwoSectionPrice.TwoCutIncidence := by
       _ ≤ ((p+1)*J.e)*(2*(v+w)+256) :=
         Nat.mul_le_mul_right _ (Nat.le_mul_of_pos_right _ (by omega)))))
 
-#print axioms two_cut_count
 end
 end SplitCut.TwoCut

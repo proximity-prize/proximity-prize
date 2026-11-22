@@ -423,8 +423,8 @@ theorem mixedDegree_nonneg (B : Family) [∀ i, Finite (B i)] (h0 : ∀ i, 0 ∈
   rw [mixedDegree_eq B P I hp hdiag]
   exact div_nonneg (hpos _ (hd.trans_eq (squarefree_degree I).symm)) (by positivity)
 
-open private dim_mono local_step weight weight_eq length_top
-  from ProximityPrize.SubmissionLower.Fast066
+open K1_13_6_2_4_2 (dim_mono local_step)
+open private weight weight_eq length_top from ProximityPrize.SubmissionLower.Fast066
 
 private theorem mixed_step {B : Family} [∀ i, Finite (B i)] (h0 : ∀ i, 0 ∈ B i)
     (hcoords : ∀ v : Fin 5, ∃ i, Finsupp.single v 1 ∈ B i) {I : Finset (Fin 5)}

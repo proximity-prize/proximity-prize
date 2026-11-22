@@ -377,8 +377,8 @@ private theorem pencil_count {u : Words} (Γ : Finset K)
   have he := Finset.card_erase_add_one hr
   have hS : agreement ≤ S.card := (M r hr).agreement
   rw [Finset.card_sdiff_of_subset (Finset.subset_univ _), Finset.card_univ, IRSProfile.card_index] at hcard
-  change 179905 ≤ S.card at hS
-  change Γ.card ≤ 82240
+  change 179895 ≤ S.card at hS
+  change Γ.card ≤ 82250
   omega
 theorem proof : Front82200.c2 := by
   intro u hu T R D B _ hp hn Γ hΓ _

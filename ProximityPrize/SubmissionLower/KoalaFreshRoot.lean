@@ -141,4 +141,3 @@ theorem root_at_fresh_variable {R E : Type} [CommRing R] [Field E]
 
 end SplitCut.FreshRoot
 
-#print axioms SplitCut.FreshRoot.root_at_fresh_variable

@@ -105,5 +105,3 @@ theorem center_eval {E : Type} [CommRing E] (ι : Seeds →+* E) (y : E) (G : Fr
 end
 end SplitCut.Compression
 
-#print axioms SplitCut.Compression.translated_seed_bound
-#print axioms SplitCut.Compression.center_axis_bound

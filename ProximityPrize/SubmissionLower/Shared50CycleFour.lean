@@ -104,6 +104,5 @@ theorem bound_with_cut (h1 : K1_13_6_2_3.c1)
       · exact generic_box ⟨le_max_left _ _, le_rfl, le_rfl⟩
     _ ≤ _ := ambient_degree h1 hp hq hr hs
 
-#print axioms bound_with_cut
 end
 end Shared50CycleFour

@@ -38,30 +38,4 @@ def prefixTotal (b : HighBand) : ℕ :=
   let f := book b
   f.loss + f.point + f.lowSeed + f.lowJet + f.fixedODE + f.content
 
-def total : HighBand → ℕ
-  | .h2274 => 264421827535251154
-  | .h2294 => 225455414515823865
-  | .h7773 => 994249782152492
-
-theorem jet_exact (b : HighBand) :
-    initialCap b 0 + fixedFee (finish b) (rankB b) (rankJ b) = (book b).lowJet := by
-  rw [P3_7_3_3.initial_eq, (P3_7_3_3.rank_eq b).1, (P3_7_3_3.rank_eq b).2]
-  cases b <;> decide +kernel
-
-theorem fixed_exact (b : HighBand) : fixedBudget b = (book b).fixedODE := by
-  unfold fixedBudget stageAt
-  rw [sum_stages]
-  cases b <;> decide +kernel
-
-theorem total_exact (b : HighBand) : prefixTotal b + HighPrices82180.cap b + 1 = total b := by
-  cases b <;> decide +kernel
-
-/-- The six prefix charges, the retained-root charge and one extra slope fit in each band. -/
-theorem total_le (b : HighBand) : prefixTotal b + HighPrices82180.cap b + 1 ≤ 264421827535251154 := by
-  rw [total_exact]
-  cases b <;> decide +kernel
-
-#print axioms jet_exact
-#print axioms fixed_exact
-#print axioms total_le
 end HighPrefix82180

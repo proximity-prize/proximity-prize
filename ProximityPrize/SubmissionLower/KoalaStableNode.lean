@@ -75,4 +75,3 @@ theorem separating_coefficient {R A : Type*} [CommRing R] [CommRing A] [IsDomain
 
 end SplitCut.StableNode
 
-#print axioms SplitCut.StableNode.separating_coefficient

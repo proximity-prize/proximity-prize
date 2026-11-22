@@ -118,5 +118,4 @@ theorem rectCapacity_total (A h : ℕ) (s : Shape) (E : ℕ) (U d : Fin 2 → �
   have hq : q ≤ q*(131071-h) := by simpa using Nat.mul_le_mul_left q hk
   exact rectPosition_sum (s.m*A) (2*h) (q*(131071-h)) j ((q-j)/E) U d (hjq.trans hq) hh
 
-#print axioms rectCapacity_total
 end KoalaRect

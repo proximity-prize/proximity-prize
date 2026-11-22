@@ -226,7 +226,5 @@ theorem crt_chart {u del} (M : AnchorModel u del) {Γ} (F : AnchoredFamily M Γ)
   rw [P1_7_7.poleProduct, ← hD]
   exact common_recovers hw B hd hn (hmarks γ hγ)
 
-#print axioms adjacent_chart
-#print axioms crt_chart
 end
 end FrontCore82219

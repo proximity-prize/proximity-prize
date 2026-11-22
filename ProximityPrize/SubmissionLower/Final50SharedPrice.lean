@@ -10,8 +10,8 @@ open Final50Price (Messages SmallFactor ActiveFits ProperCut taylorLength primar
   physicalPrice physicalDegree errors incidenceGap tiltedFits tiltedSurface)
 open scoped Polynomial
 
-abbrev slope : Shape := ⟨60,25,6⟩
-abbrev slopeLoss : ℕ := 21687035197176
+abbrev slope : Shape := ⟨61,24,7⟩
+abbrev slopeLoss : ℕ := 21876620593625
 
 inductive Surface where
   | ordinary

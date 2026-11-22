@@ -999,7 +999,6 @@ def PlaneCaps (s : Slice) (B J U : ℕ) (F : Plane) : Prop :=
   | .ordinate => F.degreeOf 0 ≤ U ∧ F.degreeOf 1 ≤ J
   | .mixed => F.degreeOf 0 ≤ U ∧ F.degreeOf 1 ≤ B
   | .jets => F.totalDegree ≤ U
-abbrev PlaneQuotient (F G : Plane) := Plane ⧸ Ideal.span ({F, G} : Set Plane)
 end
 end K1_14_3_2_3
 end

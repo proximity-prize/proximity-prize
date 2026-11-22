@@ -272,7 +272,5 @@ theorem Data.pieces (D : Data Γ s f Q l S) (input : CutInput Γ s f Q l) :
       exact Nat.add_le_add_left hB _
     exact hpay
 
-#print axioms Data.pieces
-#print axioms Data.bent
 end
 end Shared50Tally

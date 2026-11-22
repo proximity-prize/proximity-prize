@@ -294,7 +294,3 @@ theorem hilbert_drop {F : Type*} [Field F] {I J : Ideal (Ring F)} (hIJ : I ≤ J
 
 end SplitCut.Rect
 
-#print axioms SplitCut.Rect.mul_monomial
-#print axioms SplitCut.Rect.mul_piece
-#print axioms SplitCut.Rect.ambient_rank
-#print axioms SplitCut.Rect.hilbert_drop

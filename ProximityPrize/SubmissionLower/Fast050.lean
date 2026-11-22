@@ -655,7 +655,7 @@ def c4 : Prop :=
 theorem rank_lt_of_le {V U : Submodule Geom PhysicalRow} [Module.Finite Geom V]
     (h : U ≤ V) : Module.rank Geom U < Cardinal.aleph0 :=
   (Submodule.rank_mono h).trans_lt (Module.rank_lt_aleph0 Geom ↥V)
-private theorem codim_inf_le (V U W : Submodule Geom PhysicalRow) [Module.Finite Geom V] :
+theorem codim_inf_le (V U W : Submodule Geom PhysicalRow) [Module.Finite Geom V] :
     codimIn V (U ⊓ W) ≤ codimIn V U + codimIn V W := by
   have he : (V ⊓ U) ⊓ (V ⊓ W) = V ⊓ (U ⊓ W) := by
     apply le_antisymm
@@ -676,7 +676,7 @@ private theorem codim_inf_le (V U W : Submodule Geom PhysicalRow) [Module.Finite
   have hsup := Submodule.finrank_mono hle
   unfold codimIn
   omega
-private theorem codim_finset_inf_le {ι : Type*} (V : Submodule Geom PhysicalRow)
+theorem codim_finset_inf_le {ι : Type*} (V : Submodule Geom PhysicalRow)
     [Module.Finite Geom V] (T : Finset ι) (U : ι → Submodule Geom PhysicalRow) (r : ℕ)
     (hr : ∀ i ∈ T, codimIn V (U i) ≤ r) :
     codimIn V (T.inf U) ≤ T.card * r := by
@@ -694,7 +694,7 @@ theorem codim_antitone (V : Submodule Geom PhysicalRow) [Module.Finite Geom V]
   Nat.sub_le_sub_left
     (Cardinal.toNat_le_toNat (Submodule.rank_mono (inf_le_inf_left V h))
       (rank_lt_of_le (show V ⊓ W ≤ V from inf_le_left))) _
-private theorem separable_rank (h3 : c3) {Γ s} (P : PoleData Γ s) (L : ResidueChart P)
+theorem separable_rank (h3 : c3) {Γ s} (P : PoleData Γ s) (L : ResidueChart P)
     (a : Shape) (V : Submodule Geom PhysicalRow) [hV : Module.Finite Geom V]
     (hcap : ∀ F ∈ V, Caps a F) (hsep : P.H.Separable) :
     codimIn V (poleCondition P L a (liftX P.H)) ≤ P.H.natDegree * poleDebit a := by
@@ -732,11 +732,11 @@ private theorem separable_rank (h3 : c3) {Γ s} (P : PoleData Γ s) (L : Residue
   have hdim := codim_finset_inf_le V T W (poleDebit a) hlocal
   rw [hcard] at hdim
   exact (codim_antitone V hsub).trans hdim
-private theorem dimension_of_debits {ambient kept required physical pole : ℕ}
+theorem dimension_of_debits {ambient kept required physical pole : ℕ}
     (hsize : required + physical + pole ≤ ambient)
     (hcodim : ambient - kept ≤ physical + pole) : required ≤ kept := by
   omega
-private theorem rank_of_bounds (h1 : c1) (h2 : c2) (h3 : c3) (h4 : c4)
+theorem rank_of_bounds (h1 : c1) (h2 : c2) (h3 : c3) (h4 : c4)
     (b : Bank) (w : I → K) {Γ s} (P : PoleData Γ s) (L : ResidueChart P) :
     HasRank w P L b.box b.cut b.targetRank := by
   classical
@@ -3850,7 +3850,7 @@ private theorem coeff_eq_zero_of_lowerOrder {F : Lower} {x : Fin 3 → GenericX}
     (K1_13_4.translate x F).coeff a = 0 := by
   by_contra hz
   exact (not_le_of_gt ha) (h a (MvPolynomial.mem_support_iff.mpr hz))
-private theorem mixedOrder_iff_coeff {F : GenericRow} {z : GenericX}
+theorem mixedOrder_iff_coeff {F : GenericRow} {z : GenericX}
     {y : Fin 3 → GenericX} {d : ℕ} :
     MixedOrder F z y d ↔
       ∀ a, mixedWeight a < d → (K1_13_4.translate (atPoint z y) F).coeff a = 0 := by
@@ -3861,13 +3861,13 @@ private theorem mixedOrder_iff_coeff {F : GenericRow} {z : GenericX}
   · intro h a ha
     by_contra! hlt
     exact (MvPolynomial.mem_support_iff.mp ha) (h a hlt)
-private theorem weight_add (a b : SeedVar →₀ ℕ) :
+theorem weight_add (a b : SeedVar →₀ ℕ) :
     mixedWeight (a + b) = mixedWeight a + mixedWeight b := by
   change 7800 * (a + b) none + 49196 * (a + b).some.degree =
     (7800 * a none + 49196 * a.some.degree) + (7800 * b none + 49196 * b.some.degree)
   simp only [Finsupp.add_apply, Finsupp.some_add, map_add, Nat.mul_add]
   ac_rfl
-private theorem fixed_seed_order (h2 : c2) (h3 : c3)
+theorem fixed_seed_order (h2 : c2) (h3 : c3)
     {w Γ s} (hw : Messages w Γ s) (P : PoleData Γ s) (L : ResidueChart P)
     {box t F} (hF : Source w P L box t F) {γ} (hγ : γ ∈ Γ)
     (k : ℕ) (hk : t + 49196 * k < 5000 * 180265) :
@@ -3888,7 +3888,7 @@ private theorem fixed_seed_order (h2 : c2) (h3 : c3)
   rw [hST]
   exact trueOrder_of_raw P.H res T (P.z γ) (box.b + box.j) (k + 1) F Q
     P.monic.ne_zero hrestore ho
-private theorem source_order (h1 : c1) (h2 : c2) (h3 : c3)
+theorem source_order (h1 : c1) (h2 : c2) (h3 : c3)
     {w Γ s} (hw : Messages w Γ s) (P : PoleData Γ s) (L : ResidueChart P)
     {box t F} (hF : Source w P L box t F) {γ} (hγ : γ ∈ Γ)
     {d : ℕ} (hd : t + d ≤ 5000 * 180265) :
@@ -3926,7 +3926,7 @@ private theorem source_order (h1 : c1) (h2 : c2) (h3 : c3)
   change (hasse a (K1_13_4.translate (atPoint z y) (toGeneric F))).coeff b = 0 at hcoef
   rw [coeff_partial_eq_of_disjoint _ _ _ hdis, hab] at hcoef
   exact hcoef
-private theorem mixedHasse_order (F : PhysicalRow) (a : SeedVar →₀ ℕ)
+theorem mixedHasse_order (F : PhysicalRow) (a : SeedVar →₀ ℕ)
     (z : GenericX) (y : Fin 3 → GenericX) (d : ℕ)
     (hF : MixedOrder (toGeneric F) z y (d + mixedWeight a)) :
     MixedOrder (toGeneric (mixedHasse a F)) z y d := by
@@ -5412,7 +5412,7 @@ private def multiples (D : GenericRow) : Submodule GenericX GenericRow :=
   (Ideal.span {D}).restrictScalars GenericX
 private theorem mem_multiples {F D : GenericRow} : F ∈ multiples D ↔ D ∣ F :=
   Ideal.mem_span_singleton
-private theorem has_nonzero_necessary {Γ s} {w : I → K} {P : PoleData Γ s}
+theorem has_nonzero_necessary {Γ s} {w : I → K} {P : PoleData Γ s}
     {L : ResidueChart P} (hr : HasRank w P L secondBox secondCut bankRank) :
     ∃ G : Necessary w P L, G ≠ 0 := by
   obtain ⟨e, he, hs⟩ := hr
@@ -5422,7 +5422,7 @@ private theorem has_nonzero_necessary {Γ s} {w : I → K} {P : PoleData Γ s}
     exact ⟨secondCut, e i, 0, hs i, by simp [mixedWeight], (mixedHasse_zero _).symm⟩
   refine ⟨⟨e i, hmem⟩, fun h => he.ne_zero i ?_⟩
   exact congrArg (fun Q : Necessary w P L => Q.val) h
-private theorem necessary_caps {Γ s} {w : I → K} {P : PoleData Γ s}
+theorem necessary_caps {Γ s} {w : I → K} {P : PoleData Γ s}
     {L : ResidueChart P} {Q : PhysicalRow} (hQ : Q ∈ Necessary w P L) :
     Caps secondBox (toGeneric Q) := by
   have hle : Necessary w P L ≤ ((capSpace secondBox).restrictScalars Geom).comap rowMap := by
@@ -5430,7 +5430,7 @@ private theorem necessary_caps {Γ s} {w : I → K} {P : PoleData Γ s}
     rintro _ ⟨t, F, a, hF, _, rfl⟩
     exact mem_capSpace.mpr (toGeneric_caps (mixedHasse_caps a F hF.1))
   exact mem_capSpace.mp (hle hQ)
-private theorem select_row {Γ s} {w : I → K} {P : PoleData Γ s} {L : ResidueChart P}
+theorem select_row {Γ s} {w : I → K} {P : PoleData Γ s} {L : ResidueChart P}
     {F : PhysicalRow} (hF : F ≠ 0) (hr : HasRank w P L secondBox secondCut bankRank) :
     ∃ G, G ∈ Necessary w P L ∧ G ≠ 0 ∧
       ∀ f : GenericRow, Irreducible f → f ∣ toGeneric F → f ∣ toGeneric G →
@@ -5467,7 +5467,7 @@ private theorem select_row {Γ s} {w : I → K} {P : PoleData Γ s} {L : Residue
     have hp' : p ∈ bad := Finset.mem_filter.mpr
       ⟨Multiset.mem_toFinset.mpr hp, Q, hQ, fun h => hn (hassoc.dvd_iff_dvd_left.mpr h)⟩
     exact hG (some ⟨p, hp'⟩) (mem_multiples.mpr (hassoc.dvd_iff_dvd_left.mp hdg))
-private theorem layer_divides (h2 : c2) {Γ s} {w : I → K} {P : PoleData Γ s}
+theorem layer_divides (h2 : c2) {Γ s} {w : I → K} {P : PoleData Γ s}
     {L : ResidueChart P} {moving : Bool} {A : Finset GenericRow} (hA : FactorsFor moving A)
     (hcommon : ∀ f ∈ A, ∀ Q ∈ Necessary w P L, f ∣ toGeneric Q)
     {t : ℕ} (ht : t ≤ secondCut) :
@@ -5487,7 +5487,7 @@ private theorem count_layer {Γ s} {w : I → K} {P : PoleData Γ s}
   have hspan : Submodule.span GenericX (Set.range e) ≤ layerSpan w P L t :=
     Submodule.span_le.mpr (by rintro _ ⟨i, rfl⟩; exact hs i)
   exact count_symbols a r e he (fun R hR => ⟨layerSpan_caps (hspan hR), hdeg R (hspan hR)⟩)
-private theorem product_ne_zero {moving : Bool} {A : Finset GenericRow} (hA : FactorsFor moving A) :
+theorem product_ne_zero {moving : Bool} {A : Finset GenericRow} (hA : FactorsFor moving A) :
     factorProduct A ≠ 0 :=
   Finset.prod_ne_zero_iff.mpr fun f hf => (hA.irreducible f hf).ne_zero
 private theorem weighted_pow (v : SeedVar → ℕ) (D : GenericRow) (hD : D ≠ 0) (n : ℕ) :
@@ -5498,7 +5498,7 @@ private theorem weighted_pow (v : SeedVar → ℕ) (D : GenericRow) (hD : D ≠ 
   | succ n ih =>
     rw [pow_succ, MvPolynomial.weightedTotalDegree_mul v _ _ (pow_ne_zero _ hD) hD,
       ih, Nat.succ_mul]
-private theorem weighted_resource {Γ s} {w : I → K} {P : PoleData Γ s} {L : ResidueChart P}
+theorem weighted_resource {Γ s} {w : I → K} {P : PoleData Γ s} {L : ResidueChart P}
     {e : ℕ} (he : 0 < e) {r : ℕ → ℕ} {D : GenericRow} (hD : D ≠ 0)
     (hr : bankRank ≤ ∑ t ∈ Finset.range (secondCut + 1), r t)
     (hb : ∀ t ≤ secondCut, ∃ u : Fin (r t) → GenericRow, LinearIndependent GenericX u ∧
@@ -5516,7 +5516,7 @@ private theorem weighted_resource {Γ s} {w : I → K} {P : PoleData Γ s} {L : 
     (mem_multiples.mp (hdvd t ht (hs i))) (hu.ne_zero i)
   rw [weighted_pow _ _ hD] at hm
   exact hm.trans (hcap (u i) (layerSpan_caps (hs i)))
-private theorem excludes_top {Γ s} {w : I → K} {P : PoleData Γ s}
+theorem excludes_top {Γ s} {w : I → K} {P : PoleData Γ s}
     {L : ResidueChart P} {r : ℕ → ℕ} {A : Finset GenericRow} (hA : FactorsFor true A)
     (hr : bankRank ≤ ∑ t ∈ Finset.range (secondCut + 1), r t)
     (hb : ∀ t ≤ secondCut, ∃ u : Fin (r t) → GenericRow,
@@ -6287,7 +6287,7 @@ private def bank {Γ s} (w : I → K) (P : PoleData Γ s) (L : ResidueChart P) (
   cutoff P.H.natDegree (t + polePower * P.H.natDegree) ⊓
   (⨅ i : I, K1_13_4_2.contactAt (embed (node i)) (embed (w i))) ⊓
   K1_13_4_2.poleCondition P L secondBox (liftX P.H)
-private theorem mem_bank {Γ s} (w : I → K) (P : PoleData Γ s) (L : ResidueChart P)
+theorem mem_bank {Γ s} (w : I → K) (P : PoleData Γ s) (L : ResidueChart P)
     (t : ℕ) (F : PhysicalRow) : F ∈ bank w P L t ↔ Source w P L secondBox t F := by
   simp only [bank, Submodule.mem_inf, Submodule.mem_comap, Submodule.restrictScalars_mem,
     rowMap_apply, mem_capSpace, caps_generic, Submodule.mem_iInf,
@@ -6354,7 +6354,7 @@ private def boundary (h t : ℕ) : PhysicalRow →ₗ[Geom] (K1_13_4_4_1.Exponen
     ((MvPolynomial.lcoeff Geom[X] m).restrictScalars Geom)
 theorem boundary_apply (h t : ℕ) (F : PhysicalRow) (m : K1_13_4_4_1.Exponent) :
     boundary h t F m = (F.coeff m).coeff (boundaryDegree h t m) := rfl
-private theorem below_boundary {h t : ℕ} {F : PhysicalRow}
+theorem below_boundary {h t : ℕ} {F : PhysicalRow}
     (hF : TrueCut h (t + polePower * h) F) (hz : boundary h t F = 0)
     (m : K1_13_4_4_1.Exponent) (hm : m ∈ F.support) :
     (F.coeff m).natDegree + weight h m < t + polePower * h := by
@@ -6366,7 +6366,7 @@ private theorem below_boundary {h t : ℕ} {F : PhysicalRow}
   have h := congrFun hz m
   rw [boundary_apply, ← heq, coeff_natDegree] at h
   exact (leadingCoeff_ne_zero.mpr (MvPolynomial.mem_support_iff.mp hm)) h
-private def bankEval {Γ s} (w : I → K) (P : PoleData Γ s) (L : ResidueChart P) (t : ℕ) :
+def bankEval {Γ s} (w : I → K) (P : PoleData Γ s) (L : ResidueChart P) (t : ℕ) :
     bank w P L t →ₗ[Geom] (K1_13_4_4_1.Exponent → Geom) :=
   (boundary P.H.natDegree t).comp (bank w P L t).subtype
 private theorem kernel_le {Γ s} (w : I → K) (P : PoleData Γ s) (L : ResidueChart P) (t : ℕ) :
@@ -6385,7 +6385,7 @@ private theorem kernel_le {Γ s} (w : I → K) (P : PoleData Γ s) (L : ResidueC
   intro F G he
   have heq := congrArg (fun Q : bank w P L t => Q.val) he
   exact Subtype.ext (Subtype.ext heq)
-private theorem independent_generic {ι : Type*} [Fintype ι] {h t : ℕ} (e : ι → PhysicalRow)
+theorem independent_generic {ι : Type*} [Fintype ι] {h t : ℕ} (e : ι → PhysicalRow)
     (hcut : ∀ i, TrueCut h (t + polePower * h) (e i))
     (he : LinearIndependent Geom (fun i => boundary h t (e i))) :
     LinearIndependent GenericX (fun i => toGeneric (e i)) := by

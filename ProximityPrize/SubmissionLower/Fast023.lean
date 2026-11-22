@@ -338,10 +338,10 @@ section
 namespace K1_14
 noncomputable section
 open K1 Polynomial
-private theorem terminal_mem (w : ℤ) : terminalShape w ∈ scheduled w := by
+theorem terminal_mem (w : ℤ) : terminalShape w ∈ scheduled w := by
   unfold scheduled
   split <;> simp
-private theorem terminal_width (w : ℤ) (hw : 2601 ≤ w) {q : ℕ}
+theorem terminal_width (w : ℤ) (hw : 2601 ≤ w) {q : ℕ}
     (hq : q ≤ (terminalShape w).B) :
     q * (131071 - w.toNat) ≤ (terminalShape w).m * 180265 := by
   calc

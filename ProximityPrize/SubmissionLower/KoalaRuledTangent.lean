@@ -156,6 +156,5 @@ theorem tangent_section_rect (J : Input) {B : ResidueLift J} (D : Factors J B) {
     apply Ideal.mem_span_singleton.mpr
     exact map_dvd jetToRect.toRingHom (map_dvd Polynomial.C ⟨_,D.product⟩)
 
-#print axioms tangent_section_rect
 end
 end SplitCut.Rect

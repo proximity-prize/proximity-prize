@@ -96,7 +96,5 @@ theorem graph_sat_budget (J : Input) {B : ResidueLift J} (D : Factors J B) {v w 
     exact hProper hmap
   exact saturation_surface_budget hSat hG (graph_budget J D hTangent he haxis)
 
-#print axioms graph_saturation
-#print axioms graph_sat_budget
 end
 end SplitCut.Rect

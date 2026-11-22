@@ -35,5 +35,4 @@ theorem all_ok (i : Fin 9) : Sound (allData i) (allPoly i) := by
   · exact spec7
   · exact spec8
 
-#print axioms all_ok
 end AnchorPivot82190

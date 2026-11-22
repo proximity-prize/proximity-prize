@@ -36,6 +36,5 @@ theorem t7 : chunk 1354 1658 = 288366984459 := by
 
 theorem total : chunk 1354 1658 = 288366984459 := t7
 
-#print axioms total
 
 end ThetaSum

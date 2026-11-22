@@ -140,7 +140,6 @@ theorem balanced_deformation {h : ℕ} (hh : 0 < h) (hp : h < K1.p)
     rw [liftAt_add _ _ _ _ _ (B 0).specialDen (B 1).specialDen,
       (B 0).specialLift, (B 1).specialLift, crtPolynomial, Fin.sum_univ_two]
 
-#print axioms balanced_deformation
 
 end
 end KoalaRectPole

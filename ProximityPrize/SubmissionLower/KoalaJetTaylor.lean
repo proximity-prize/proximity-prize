@@ -358,7 +358,3 @@ theorem model_center (T : Data E) (J : Input) (B : ResidueLift J) (y : E)
 end
 end SplitCut.JetTaylor
 
-#print axioms SplitCut.JetTaylor.numerator
-#print axioms SplitCut.JetTaylor.derivative_step
-#print axioms SplitCut.JetTaylor.model_constant
-#print axioms SplitCut.JetTaylor.model_center

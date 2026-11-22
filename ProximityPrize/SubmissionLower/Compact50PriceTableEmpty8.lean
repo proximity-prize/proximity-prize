@@ -1,3 +1,4 @@
+import ProximityPrize.SubmissionLower.LambdaC53TiltedPrice
 import ProximityPrize.SubmissionLower.Compact50Cover
 
 set_option Elab.async false
@@ -13,718 +14,711 @@ open Final50PriceTableBase (Covered covered_mono)
 open Compact50Cover (PaidBatch tilesOf checks checks_join apply_batches)
 
 namespace Top8
-
 private def batch0 : PaidBatch .empty 8 := ⟨[
-  .rectangle 8 24 66 38 39,
-  .rectangle 13 39 69 52 45,
-  .rectangle 67 32 96 38 44,
-  .rectangle 67 24 125 27 43,
-  .rectangle 67 28 125 31 44,
-  .rectangle 70 50 83 52 48], by decide +kernel⟩
+  .rectangle 8 24 102 31 37,
+  .rectangle 11 32 84 39 37,
+  .rectangle 14 40 86 47 44,
+  .rectangle 16 48 81 53 44,
+  .rectangle 82 48 94 51 47,
+  .rectangle 82 52 95 53 47], by decide +kernel⟩
 private def batch1 : PaidBatch .empty 8 := ⟨[
-  .rectangle 70 39 97 42 46,
-  .rectangle 70 43 97 45 46,
-  .rectangle 70 46 97 49 48,
-  .rectangle 84 50 90 52 48,
-  .rectangle 91 50 97 51 48,
-  .rectangle 91 52 97 52 48], by decide +kernel⟩
-private def batch2 : PaidBatch .empty 8 := ⟨[
-  .rectangle 97 32 125 35 46,
-  .rectangle 97 36 125 38 47,
-  .rectangle 98 51 101 51 48,
-  .rectangle 98 52 101 52 49,
-  .rectangle 98 43 104 45 48,
-  .rectangle 98 46 104 47 48], by decide +kernel⟩
-private def batch3 : PaidBatch .empty 8 := ⟨[
-  .rectangle 98 48 104 49 48,
-  .rectangle 98 50 104 50 48,
-  .rectangle 98 39 111 42 47,
-  .rectangle 102 51 102 51 48,
-  .rectangle 102 52 103 52 49,
-  .point 103 51 48], by decide +kernel⟩
-private def batch4 : PaidBatch .empty 8 := ⟨[
-  .point 104 51 48,
-  .point 104 52 49,
-  .point 105 50 48,
-  .rectangle 105 51 105 51 49,
-  .point 105 52 49,
-  .rectangle 105 49 106 49 48], by decide +kernel⟩
-private def batch5 : PaidBatch .empty 8 := ⟨[
-  .rectangle 105 48 108 48 48,
-  .rectangle 105 43 111 45 48,
-  .rectangle 105 46 111 46 48,
-  .rectangle 105 47 111 47 48,
-  .point 106 50 48,
-  .point 106 51 49], by decide +kernel⟩
-private def batch6 : PaidBatch .empty 8 := ⟨[
-  .point 106 52 49,
-  .rectangle 107 49 107 49 48,
-  .point 107 50 48,
-  .point 107 51 49,
-  .point 107 52 49,
-  .point 108 49 48], by decide +kernel⟩
-private def batch7 : PaidBatch .empty 8 := ⟨[
-  .point 108 50 48,
-  .point 108 51 49,
-  .point 108 52 49,
-  .rectangle 109 48 109 48 48,
-  .point 109 49 48,
-  .point 109 50 48], by decide +kernel⟩
-private def batch8 : PaidBatch .empty 8 := ⟨[
-  .point 109 51 49,
-  .point 109 52 49,
-  .point 110 48 48,
-  .point 110 49 48,
-  .point 110 50 48,
-  .point 110 51 49], by decide +kernel⟩
-private def batch9 : PaidBatch .empty 8 := ⟨[
-  .point 110 52 49,
-  .point 111 48 48,
-  .point 111 49 48,
-  .point 111 50 49,
-  .point 111 51 49,
-  .shared 111 52 49 ⟨.tilted, 1, 2, true, 190279405383064979⟩], by decide +kernel⟩
-private def batch10 : PaidBatch .empty 8 := ⟨[
-  .point 112 47 48,
-  .point 112 48 48,
-  .point 112 49 48,
-  .point 112 50 49,
-  .point 112 51 49,
-  .shared 112 52 49 ⟨.tilted, 1, 2, true, 191948292708869170⟩], by decide +kernel⟩
-private def batch11 : PaidBatch .empty 8 := ⟨[
-  .rectangle 112 46 113 46 48,
-  .rectangle 112 45 115 45 48,
-  .rectangle 112 41 118 42 48,
-  .rectangle 112 43 118 43 48,
-  .rectangle 112 44 118 44 48,
-  .rectangle 112 39 125 40 47], by decide +kernel⟩
-private def batch12 : PaidBatch .empty 8 := ⟨[
-  .point 113 47 48,
-  .point 113 48 48,
-  .point 113 49 48,
-  .point 113 50 49,
-  .shared 113 51 49 ⟨.tilted, 1, 1, false, 174401423622812259⟩,
-  .shared 113 52 49 ⟨.tilted, 1, 2, true, 193617180034673362⟩], by decide +kernel⟩
-private def batch13 : PaidBatch .empty 8 := ⟨[
-  .rectangle 114 46 114 46 48,
-  .point 114 47 48,
-  .point 114 48 48,
-  .point 114 49 48,
-  .point 114 50 49,
-  .shared 114 51 49 ⟨.tilted, 1, 2, true, 187868222859791335⟩], by decide +kernel⟩
-private def batch14 : PaidBatch .empty 8 := ⟨[
-  .shared 114 52 49 ⟨.tilted, 1, 2, true, 195286067360477554⟩,
-  .point 115 46 48,
-  .point 115 47 48,
-  .point 115 48 48,
-  .shared 115 49 48 ⟨.tilted, 1, 1, false, 164393478068631415⟩,
-  .shared 115 50 49 ⟨.tilted, 1, 1, false, 170823926669352973⟩], by decide +kernel⟩
-private def batch15 : PaidBatch .empty 8 := ⟨[
-  .shared 115 51 49 ⟨.tilted, 1, 2, true, 189470998752490048⟩,
-  .shared 115 52 49 ⟨.tilted, 1, 2, true, 196954954686281745⟩,
-  .rectangle 116 45 116 45 48,
-  .point 116 46 48,
-  .point 116 47 48,
-  .point 116 48 48], by decide +kernel⟩
-private def batch16 : PaidBatch .empty 8 := ⟨[
-  .point 116 49 49,
-  .shared 116 50 49 ⟨.tilted, 1, 1, false, 172241925980978960⟩,
-  .shared 116 51 49 ⟨.tilted, 1, 2, true, 191073774645188760⟩,
-  .shared 116 52 49 ⟨.tilted, 1, 2, true, 198623842012085937⟩,
-  .point 117 45 48,
-  .point 117 46 48], by decide +kernel⟩
-private def batch17 : PaidBatch .empty 8 := ⟨[
-  .point 117 47 48,
-  .point 117 48 48,
-  .point 117 49 49,
-  .shared 117 50 49 ⟨.tilted, 1, 1, false, 173659925292604947⟩,
-  .shared 117 51 49 ⟨.tilted, 1, 2, true, 192676550537887473⟩,
-  .shared 117 52 49 ⟨.tilted, 1, 2, true, 200292729337890129⟩], by decide +kernel⟩
-private def batch18 : PaidBatch .empty 8 := ⟨[
-  .point 118 45 48,
-  .point 118 46 48,
-  .point 118 47 48,
-  .shared 118 48 48 ⟨.tilted, 0, 1, false, 161989710900920662⟩,
-  .shared 118 49 49 ⟨.tilted, 0, 1, false, 168485015494285072⟩,
-  .shared 118 50 49 ⟨.tilted, 1, 1, false, 175077924604230934⟩], by decide +kernel⟩
-private def batch19 : PaidBatch .empty 8 := ⟨[
-  .shared 118 51 49 ⟨.tilted, 1, 2, true, 194279326430586185⟩,
-  .shared 118 52 49 ⟨.tilted, 1, 2, true, 201961616663694320⟩,
-  .rectangle 119 44 119 44 48,
-  .point 119 45 48,
-  .point 119 46 48,
-  .point 119 47 48], by decide +kernel⟩
-private def batch20 : PaidBatch .empty 8 := ⟨[
-  .shared 119 48 48 ⟨.tilted, 0, 1, false, 163300364827080531⟩,
-  .shared 119 49 49 ⟨.tilted, 0, 1, false, 169848861302836291⟩,
-  .shared 119 50 49 ⟨.tilted, 1, 1, false, 176495923915856921⟩,
-  .shared 119 51 49 ⟨.tilted, 1, 2, true, 195882102323284898⟩,
-  .shared 119 52 49 ⟨.tilted, 1, 2, true, 203630503989498512⟩,
-  .rectangle 119 43 122 43 48], by decide +kernel⟩
-private def batch21 : PaidBatch .empty 8 := ⟨[
-  .rectangle 119 41 125 41 48,
-  .rectangle 119 42 125 42 48,
-  .point 120 44 48,
-  .point 120 45 48,
-  .point 120 46 48,
-  .shared 120 47 48 ⟨.tilted, 0, 1, false, 158110300584066708⟩], by decide +kernel⟩
-private def batch22 : PaidBatch .empty 8 := ⟨[
-  .shared 120 48 48 ⟨.tilted, 0, 1, false, 164611018753240400⟩,
-  .shared 120 49 49 ⟨.tilted, 0, 1, false, 171212707111387510⟩,
-  .shared 120 50 49 ⟨.tilted, 0, 1, false, 177913923227482908⟩,
-  .shared 120 51 49 ⟨.tilted, 1, 2, true, 197484878215983610⟩,
-  .shared 120 52 49 ⟨.tilted, 1, 2, true, 205299391315302704⟩,
-  .point 121 44 48], by decide +kernel⟩
-private def batch23 : PaidBatch .empty 8 := ⟨[
-  .point 121 45 48,
-  .point 121 46 48,
-  .shared 121 47 48 ⟨.tilted, 0, 1, false, 159368724248518645⟩,
-  .shared 121 48 48 ⟨.tilted, 0, 1, false, 165921672679400269⟩,
-  .shared 121 49 49 ⟨.tilted, 0, 1, false, 172576552919938729⟩,
-  .shared 121 50 49 ⟨.tilted, 0, 2, true, 191331995764086029⟩], by decide +kernel⟩
-private def batch24 : PaidBatch .empty 8 := ⟨[
-  .shared 121 51 49 ⟨.tilted, 1, 2, true, 199087654108682323⟩,
-  .shared 121 52 49 ⟨.tilted, 1, 2, true, 206968278641106895⟩,
-  .point 122 44 48,
-  .point 122 45 48,
-  .point 122 46 48,
-  .shared 122 47 48 ⟨.tilted, 0, 1, false, 160627147912970582⟩], by decide +kernel⟩
-private def batch25 : PaidBatch .empty 8 := ⟨[
-  .shared 122 48 49 ⟨.tilted, 0, 1, false, 167232326605560138⟩,
-  .shared 122 49 49 ⟨.tilted, 0, 1, false, 173940398728489948⟩,
-  .shared 122 50 49 ⟨.tilted, 0, 2, true, 192869995807961787⟩,
-  .shared 122 51 49 ⟨.tilted, 1, 2, true, 200690430001381035⟩,
-  .shared 122 52 49 ⟨.tilted, 1, 2, true, 208637165966911087⟩,
-  .point 123 43 48], by decide +kernel⟩
-private def batch26 : PaidBatch .empty 8 := ⟨[
-  .point 123 44 48,
-  .point 123 45 48,
-  .shared 123 46 48 ⟨.tilted, 0, 1, false, 155333460105173827⟩,
-  .shared 123 47 48 ⟨.tilted, 0, 1, false, 161885571577422519⟩,
-  .shared 123 48 49 ⟨.tilted, 0, 1, false, 168542980531720007⟩,
-  .shared 123 49 49 ⟨.tilted, 0, 1, false, 175304244537041167⟩], by decide +kernel⟩
-private def batch27 : PaidBatch .empty 8 := ⟨[
-  .shared 123 50 49 ⟨.tilted, 0, 2, true, 194407995851837545⟩,
-  .shared 123 51 49 ⟨.tilted, 0, 2, true, 202293205894079748⟩,
-  .shared 123 52 49 ⟨.tilted, 1, 2, true, 210306053292715279⟩,
-  .point 124 43 48,
-  .point 124 44 48,
-  .point 124 45 48], by decide +kernel⟩
-private def batch28 : PaidBatch .empty 8 := ⟨[
-  .shared 124 46 48 ⟨.tilted, 0, 1, false, 156540615128601250⟩,
-  .shared 124 47 48 ⟨.tilted, 0, 1, false, 163143995241874456⟩,
-  .shared 124 48 49 ⟨.tilted, 0, 1, false, 169853634457879876⟩,
-  .shared 124 49 49 ⟨.tilted, 0, 1, false, 176668090345592386⟩,
-  .shared 124 50 49 ⟨.tilted, 0, 2, true, 195945995895713304⟩,
-  .shared 124 51 49 ⟨.tilted, 0, 2, true, 203895981786778460⟩], by decide +kernel⟩
-private def batch29 : PaidBatch .empty 8 := ⟨[
-  .shared 124 52 49 ⟨.tilted, 1, 2, true, 211974940618519470⟩,
-  .point 125 43 48,
-  .point 125 44 48,
-  .point 125 45 48,
-  .shared 125 46 48 ⟨.tilted, 0, 1, false, 157747770152028673⟩,
-  .shared 125 47 48 ⟨.tilted, 0, 1, false, 164402418906326393⟩], by decide +kernel⟩
-private def batch30 : PaidBatch .empty 8 := ⟨[
-  .shared 125 48 49 ⟨.tilted, 0, 1, false, 171164288384039745⟩,
-  .shared 125 49 49 ⟨.tilted, 0, 1, false, 178031936154143605⟩,
-  .shared 125 50 49 ⟨.tilted, 0, 2, true, 197483995939589062⟩,
-  .shared 125 51 49 ⟨.tilted, 0, 2, true, 205498757679477173⟩,
-  .shared 125 52 49 ⟨.tilted, 0, 2, true, 213643827944323662⟩], by decide +kernel⟩
+  .rectangle 85 32 117 36 43,
+  .rectangle 85 37 111 40 44,
+  .rectangle 87 41 106 43 44,
+  .rectangle 87 44 104 46 46,
+  .rectangle 87 47 100 49 47,
+  .rectangle 95 50 102 50 47], by decide +kernel⟩
+private def batch2 : PaidBatch .empty 8 := LambdaC53TiltedPrice.fastBatch [
+  .rectangle 95 51 100 51 47,
+  .rectangle 96 52 98 52 47,
+  .rectangle 96 53 97 53 47,
+  .rectangle 98 53 99 53 48,
+  .rectangle 99 52 101 52 48,
+  .point 100 53 48] (by decide +kernel)
+private def batch3 : PaidBatch .empty 8 := LambdaC53TiltedPrice.fastBatch [
+  .rectangle 101 47 109 47 47,
+  .rectangle 101 48 107 48 47,
+  .rectangle 101 49 104 49 47,
+  .point 101 51 47,
+  .point 101 53 48,
+  .point 102 51 47] (by decide +kernel)
+private def batch4 : PaidBatch .empty 8 := LambdaC53TiltedPrice.fastBatch [
+  .point 102 52 48,
+  .point 102 53 48,
+  .rectangle 103 24 129 29 42,
+  .rectangle 103 30 126 34 44,
+  .point 103 50 47,
+  .point 103 51 47] (by decide +kernel)
+private def batch5 : PaidBatch .empty 8 := LambdaC53TiltedPrice.fastBatch [
+  .point 103 52 48,
+  .point 103 53 48,
+  .point 104 50 47,
+  .point 104 51 47,
+  .point 104 52 48,
+  .point 104 53 48] (by decide +kernel)
+private def batch6 : PaidBatch .empty 8 := LambdaC53TiltedPrice.fastBatch [
+  .rectangle 105 44 111 45 47,
+  .rectangle 105 46 111 46 47,
+  .point 105 49 47,
+  .point 105 50 47,
+  .point 105 51 48,
+  .point 105 52 48] (by decide +kernel)
+private def batch7 : PaidBatch .empty 8 := LambdaC53TiltedPrice.fastBatch [
+  .point 105 53 48,
+  .point 106 49 47,
+  .point 106 50 47,
+  .point 106 51 48,
+  .point 106 52 48,
+  .shared 106 53 48 ⟨.tilted, 1, 2, true, 184728920096351113⟩] (by decide +kernel)
+private def batch8 : PaidBatch .empty 8 := LambdaC53TiltedPrice.fastBatch [
+  .rectangle 107 41 117 42 46,
+  .rectangle 107 43 114 44 47,
+  .point 107 49 47,
+  .point 107 50 47,
+  .point 107 51 48,
+  .point 107 52 48] (by decide +kernel)
+private def batch9 : PaidBatch .empty 8 := LambdaC53TiltedPrice.fastBatch [
+  .shared 107 53 48 ⟨.tilted, 1, 2, true, 186396125849347005⟩,
+  .point 108 48 47,
+  .point 108 49 47,
+  .point 108 50 47,
+  .point 108 51 48,
+  .shared 108 52 48 ⟨.tilted, 1, 2, true, 181059087208455956⟩] (by decide +kernel)
+private def batch10 : PaidBatch .empty 8 := LambdaC53TiltedPrice.fastBatch [
+  .shared 108 53 48 ⟨.tilted, 1, 2, true, 188063331602342897⟩,
+  .point 109 48 47,
+  .point 109 49 47,
+  .point 109 50 47,
+  .point 109 51 48,
+  .shared 109 52 48 ⟨.tilted, 1, 2, true, 182661531208708540⟩] (by decide +kernel)
+private def batch11 : PaidBatch .empty 8 := LambdaC53TiltedPrice.fastBatch [
+  .shared 109 53 48 ⟨.tilted, 1, 2, true, 189730537355338789⟩,
+  .point 110 47 47,
+  .point 110 48 47,
+  .point 110 49 47,
+  .point 110 50 47,
+  .point 110 51 48] (by decide +kernel)
+private def batch12 : PaidBatch .empty 8 := LambdaC53TiltedPrice.fastBatch [
+  .shared 110 52 48 ⟨.tilted, 1, 2, true, 184263975208961124⟩,
+  .shared 110 53 48 ⟨.tilted, 1, 2, true, 191397743108334681⟩,
+  .point 111 47 47,
+  .point 111 48 47,
+  .point 111 49 47,
+  .point 111 50 48] (by decide +kernel)
+private def batch13 : PaidBatch .empty 8 := LambdaC53TiltedPrice.fastBatch [
+  .shared 111 51 48 ⟨.tilted, 1, 2, true, 178777250714530947⟩,
+  .shared 111 52 48 ⟨.tilted, 1, 2, true, 185866419209213708⟩,
+  .shared 111 53 48 ⟨.tilted, 1, 2, true, 193064948861330573⟩,
+  .rectangle 112 37 129 38 46,
+  .rectangle 112 39 123 40 46,
+  .rectangle 112 45 114 45 47] (by decide +kernel)
+private def batch14 : PaidBatch .empty 8 := LambdaC53TiltedPrice.fastBatch [
+  .point 112 46 47,
+  .point 112 47 47,
+  .point 112 48 47,
+  .point 112 49 47,
+  .point 112 50 48,
+  .shared 112 51 48 ⟨.tilted, 1, 2, true, 180316215372774215⟩] (by decide +kernel)
+private def batch15 : PaidBatch .empty 8 := LambdaC53TiltedPrice.fastBatch [
+  .shared 112 52 48 ⟨.tilted, 1, 2, true, 187468863209466292⟩,
+  .shared 112 53 48 ⟨.tilted, 1, 2, true, 194732154614326465⟩,
+  .point 113 46 47,
+  .point 113 47 47,
+  .point 113 48 47,
+  .shared 113 49 47 ⟨.tilted, 1, 1, false, 163376524768429103⟩] (by decide +kernel)
+private def batch16 : PaidBatch .empty 8 := LambdaC53TiltedPrice.fastBatch [
+  .shared 113 50 48 ⟨.tilted, 1, 2, true, 174752902447319164⟩,
+  .shared 113 51 48 ⟨.tilted, 1, 2, true, 181855180031017483⟩,
+  .shared 113 52 48 ⟨.tilted, 1, 2, true, 189071307209718876⟩,
+  .shared 113 53 48 ⟨.tilted, 1, 2, true, 196399360367322357⟩,
+  .point 114 46 47,
+  .point 114 47 47] (by decide +kernel)
+private def batch17 : PaidBatch .empty 8 := LambdaC53TiltedPrice.fastBatch [
+  .point 114 48 47,
+  .shared 114 49 47 ⟨.tilted, 1, 1, false, 164744919885057922⟩,
+  .shared 114 50 48 ⟨.tilted, 1, 2, true, 176229670174287108⟩,
+  .shared 114 51 48 ⟨.tilted, 1, 2, true, 183394144689260751⟩,
+  .shared 114 52 48 ⟨.tilted, 1, 2, true, 190673751209971460⟩,
+  .shared 114 53 48 ⟨.tilted, 1, 2, true, 198066566120318249⟩] (by decide +kernel)
+private def batch18 : PaidBatch .empty 8 := LambdaC53TiltedPrice.fastBatch [
+  .rectangle 115 43 120 43 47,
+  .rectangle 115 44 117 44 47,
+  .point 115 45 47,
+  .point 115 46 47,
+  .point 115 47 47,
+  .shared 115 48 47 ⟨.tilted, 1, 1, false, 159464463095679568⟩] (by decide +kernel)
+private def batch19 : PaidBatch .empty 8 := LambdaC53TiltedPrice.fastBatch [
+  .shared 115 49 47 ⟨.tilted, 1, 2, true, 182101277380676361⟩,
+  .shared 115 50 48 ⟨.tilted, 1, 2, true, 177706437901255052⟩,
+  .shared 115 51 48 ⟨.tilted, 1, 2, true, 184933109347504019⟩,
+  .shared 115 52 48 ⟨.tilted, 1, 2, true, 192276195210224044⟩,
+  .shared 115 53 48 ⟨.tilted, 1, 2, true, 199733771873314141⟩,
+  .point 116 45 47] (by decide +kernel)
+private def batch20 : PaidBatch .empty 8 := LambdaC53TiltedPrice.fastBatch [
+  .point 116 46 47,
+  .point 116 47 47,
+  .shared 116 48 47 ⟨.tilted, 1, 1, false, 160777046617278896⟩,
+  .shared 116 49 48 ⟨.tilted, 1, 2, true, 172013957694004745⟩,
+  .shared 116 50 48 ⟨.tilted, 1, 2, true, 179183205628222996⟩,
+  .shared 116 51 48 ⟨.tilted, 1, 2, true, 186472074005747287⟩] (by decide +kernel)
+private def batch21 : PaidBatch .empty 8 := LambdaC53TiltedPrice.fastBatch [
+  .shared 116 52 48 ⟨.tilted, 1, 2, true, 193878639210476628⟩,
+  .shared 116 53 48 ⟨.tilted, 1, 2, true, 201400977626310033⟩,
+  .point 117 45 47,
+  .point 117 46 47,
+  .point 117 47 47,
+  .shared 117 48 47 ⟨.tilted, 1, 1, false, 162089630138878224⟩] (by decide +kernel)
+private def batch22 : PaidBatch .empty 8 := LambdaC53TiltedPrice.fastBatch [
+  .shared 117 49 48 ⟨.tilted, 1, 2, true, 173429810900431357⟩,
+  .shared 117 50 48 ⟨.tilted, 1, 2, true, 180659973355190940⟩,
+  .shared 117 51 48 ⟨.tilted, 1, 2, true, 188011038663990555⟩,
+  .shared 117 52 48 ⟨.tilted, 1, 2, true, 195481083210729212⟩,
+  .shared 117 53 48 ⟨.tilted, 1, 2, true, 203068183379305925⟩,
+  .rectangle 118 35 127 37 45] (by decide +kernel)
+private def batch23 : PaidBatch .empty 8 := LambdaC53TiltedPrice.fastBatch [
+  .rectangle 118 41 126 41 47,
+  .rectangle 118 42 123 42 47,
+  .point 118 44 47,
+  .point 118 45 47,
+  .point 118 46 47,
+  .shared 118 47 47 ⟨.tilted, 1, 1, false, 156699990298973476⟩] (by decide +kernel)
+private def batch24 : PaidBatch .empty 8 := LambdaC53TiltedPrice.fastBatch [
+  .shared 118 48 47 ⟨.tilted, 1, 1, false, 163402213660477552⟩,
+  .shared 118 49 48 ⟨.tilted, 1, 2, true, 174845664106857969⟩,
+  .shared 118 50 48 ⟨.tilted, 1, 2, true, 182136741082158884⟩,
+  .shared 118 51 48 ⟨.tilted, 1, 2, true, 189550003322233823⟩,
+  .shared 118 52 48 ⟨.tilted, 1, 2, true, 197083527210981796⟩,
+  .shared 118 53 48 ⟨.tilted, 1, 2, true, 204735389132301817⟩] (by decide +kernel)
+private def batch25 : PaidBatch .empty 8 := LambdaC53TiltedPrice.fastBatch [
+  .point 119 44 47,
+  .point 119 45 47,
+  .point 119 46 47,
+  .shared 119 47 47 ⟨.tilted, 1, 1, false, 157957884334935555⟩,
+  .shared 119 48 47 ⟨.tilted, 1, 1, false, 164714797182076880⟩,
+  .shared 119 49 48 ⟨.tilted, 1, 2, true, 176261517313284581⟩] (by decide +kernel)
+private def batch26 : PaidBatch .empty 8 := LambdaC53TiltedPrice.fastBatch [
+  .shared 119 50 48 ⟨.tilted, 1, 2, true, 183613508809126828⟩,
+  .shared 119 51 48 ⟨.tilted, 1, 2, true, 191088967980477091⟩,
+  .shared 119 52 48 ⟨.tilted, 1, 2, true, 198685971211234380⟩,
+  .shared 119 53 48 ⟨.tilted, 1, 2, true, 206402594885297709⟩,
+  .point 120 44 47,
+  .point 120 45 47] (by decide +kernel)
+private def batch27 : PaidBatch .empty 8 := LambdaC53TiltedPrice.fastBatch [
+  .point 120 46 47,
+  .shared 120 47 47 ⟨.tilted, 0, 1, false, 159215778370897635⟩,
+  .shared 120 48 47 ⟨.tilted, 1, 1, false, 166027380703676208⟩,
+  .shared 120 49 48 ⟨.tilted, 1, 2, true, 177677370519711193⟩,
+  .shared 120 50 48 ⟨.tilted, 1, 2, true, 185090276536094772⟩,
+  .shared 120 51 48 ⟨.tilted, 1, 2, true, 192627932638720359⟩] (by decide +kernel)
+private def batch28 : PaidBatch .empty 8 := LambdaC53TiltedPrice.fastBatch [
+  .shared 120 52 48 ⟨.tilted, 1, 2, true, 200288415211486964⟩,
+  .shared 120 53 48 ⟨.tilted, 1, 2, true, 208069800638293601⟩,
+  .point 121 43 47,
+  .point 121 44 47,
+  .point 121 45 47,
+  .shared 121 46 47 ⟨.tilted, 0, 1, false, 153726493410300556⟩] (by decide +kernel)
+private def batch29 : PaidBatch .empty 8 := LambdaC53TiltedPrice.fastBatch [
+  .shared 121 47 47 ⟨.tilted, 0, 1, false, 160473672406859714⟩,
+  .shared 121 48 47 ⟨.tilted, 1, 1, false, 167339964225275536⟩,
+  .shared 121 49 48 ⟨.tilted, 1, 2, true, 179093223726137805⟩,
+  .shared 121 50 48 ⟨.tilted, 1, 2, true, 186567044263062716⟩,
+  .shared 121 51 48 ⟨.tilted, 1, 2, true, 194166897296963627⟩,
+  .shared 121 52 48 ⟨.tilted, 1, 2, true, 201890859211739548⟩] (by decide +kernel)
+private def batch30 : PaidBatch .empty 8 := LambdaC53TiltedPrice.fastBatch [
+  .shared 121 53 48 ⟨.tilted, 1, 2, true, 209737006391289493⟩,
+  .point 122 43 47,
+  .point 122 44 47,
+  .point 122 45 47,
+  .shared 122 46 47 ⟨.tilted, 0, 1, false, 154930820070017630⟩,
+  .shared 122 47 47 ⟨.tilted, 0, 1, false, 161731566442821794⟩] (by decide +kernel)
+private def batch31 : PaidBatch .empty 8 := LambdaC53TiltedPrice.fastBatch [
+  .shared 122 48 48 ⟨.tilted, 0, 1, false, 168652547746874864⟩,
+  .shared 122 49 48 ⟨.tilted, 1, 2, true, 180509076932564417⟩,
+  .shared 122 50 48 ⟨.tilted, 1, 2, true, 188043811990030660⟩,
+  .shared 122 51 48 ⟨.tilted, 1, 2, true, 195705861955206895⟩,
+  .shared 122 52 48 ⟨.tilted, 1, 2, true, 203493303211992132⟩,
+  .shared 122 53 48 ⟨.tilted, 1, 2, true, 211404212144285385⟩] (by decide +kernel)
+private def batch32 : PaidBatch .empty 8 := LambdaC53TiltedPrice.fastBatch [
+  .point 123 43 47,
+  .point 123 44 47,
+  .point 123 45 47,
+  .shared 123 46 47 ⟨.tilted, 0, 1, false, 156135146729734704⟩,
+  .shared 123 47 47 ⟨.tilted, 0, 1, false, 162989460478783873⟩,
+  .shared 123 48 48 ⟨.tilted, 0, 2, true, 174459801495528424⟩] (by decide +kernel)
+private def batch33 : PaidBatch .empty 8 := LambdaC53TiltedPrice.fastBatch [
+  .shared 123 49 48 ⟨.tilted, 1, 2, true, 181924930138991029⟩,
+  .shared 123 50 48 ⟨.tilted, 1, 2, true, 189520579716998604⟩,
+  .shared 123 51 48 ⟨.tilted, 1, 2, true, 197244826613450163⟩,
+  .shared 123 52 48 ⟨.tilted, 1, 2, true, 205095747212244716⟩,
+  .shared 123 53 48 ⟨.tilted, 1, 2, true, 213071417897281277⟩,
+  .rectangle 124 39 129 39 46] (by decide +kernel)
+private def batch34 : PaidBatch .empty 8 := LambdaC53TiltedPrice.fastBatch [
+  .rectangle 124 40 129 40 47,
+  .point 124 42 47,
+  .point 124 43 47,
+  .point 124 44 47,
+  .shared 124 45 47 ⟨.tilted, 0, 1, false, 150555754578279362⟩,
+  .shared 124 46 47 ⟨.tilted, 0, 1, false, 157339473389451778⟩] (by decide +kernel)
+private def batch35 : PaidBatch .empty 8 := LambdaC53TiltedPrice.fastBatch [
+  .shared 124 47 47 ⟨.tilted, 0, 1, false, 164247354514745953⟩,
+  .shared 124 48 48 ⟨.tilted, 0, 2, true, 175816022592147696⟩,
+  .shared 124 49 48 ⟨.tilted, 1, 2, true, 183340783345417641⟩,
+  .shared 124 50 48 ⟨.tilted, 1, 2, true, 190997347443966548⟩,
+  .shared 124 51 48 ⟨.tilted, 1, 2, true, 198783791271693431⟩,
+  .shared 124 52 48 ⟨.tilted, 1, 2, true, 206698191212497300⟩] (by decide +kernel)
+private def batch36 : PaidBatch .empty 8 := LambdaC53TiltedPrice.fastBatch [
+  .shared 124 53 48 ⟨.tilted, 1, 2, true, 214738623650277169⟩,
+  .point 125 42 47,
+  .point 125 43 47,
+  .point 125 44 47,
+  .shared 125 45 47 ⟨.tilted, 0, 1, false, 151707635971143674⟩,
+  .shared 125 46 47 ⟨.tilted, 0, 1, false, 158543800049168852⟩] (by decide +kernel)
+private def batch37 : PaidBatch .empty 8 := LambdaC53TiltedPrice.fastBatch [
+  .shared 125 47 47 ⟨.tilted, 0, 1, false, 165505248550708032⟩,
+  .shared 125 48 48 ⟨.tilted, 0, 2, true, 177172243688766968⟩,
+  .shared 125 49 48 ⟨.tilted, 0, 2, true, 184756636551844253⟩,
+  .shared 125 50 48 ⟨.tilted, 1, 2, true, 192474115170934492⟩,
+  .shared 125 51 48 ⟨.tilted, 1, 2, true, 200322755929936699⟩,
+  .shared 125 52 48 ⟨.tilted, 1, 2, true, 208300635212749884⟩] (by decide +kernel)
+private def batch38 : PaidBatch .empty 8 := LambdaC53TiltedPrice.fastBatch [
+  .shared 125 53 48 ⟨.tilted, 1, 2, true, 216405829403273061⟩,
+  .point 126 42 47,
+  .point 126 43 47,
+  .point 126 44 47,
+  .shared 126 45 47 ⟨.tilted, 0, 1, false, 152859517364007985⟩,
+  .shared 126 46 47 ⟨.tilted, 0, 1, false, 159748126708885926⟩] (by decide +kernel)
+private def batch39 : PaidBatch .empty 8 := LambdaC53TiltedPrice.fastBatch [
+  .shared 126 47 47 ⟨.tilted, 0, 1, false, 166763142586670112⟩,
+  .shared 126 48 48 ⟨.tilted, 0, 2, true, 178528464785386240⟩,
+  .shared 126 49 48 ⟨.tilted, 0, 2, true, 186172489758270865⟩,
+  .shared 126 50 48 ⟨.tilted, 1, 2, true, 193950882897902436⟩,
+  .shared 126 51 48 ⟨.tilted, 1, 2, true, 201861720588179967⟩,
+  .shared 126 52 48 ⟨.tilted, 1, 2, true, 209903079213002468⟩] (by decide +kernel)
+private def batch40 : PaidBatch .empty 8 := LambdaC53TiltedPrice.fastBatch [
+  .shared 126 53 48 ⟨.tilted, 1, 2, true, 218073035156268953⟩,
+  .rectangle 127 30 129 33 44,
+  .rectangle 127 34 129 36 45,
+  .point 127 41 47,
+  .point 127 42 47,
+  .point 127 43 47] (by decide +kernel)
+private def batch41 : PaidBatch .empty 8 := LambdaC53TiltedPrice.fastBatch [
+  .shared 127 44 47 ⟨.tilted, 0, 1, false, 147199555951528444⟩,
+  .shared 127 45 47 ⟨.tilted, 0, 1, false, 154011398756872297⟩,
+  .shared 127 46 47 ⟨.tilted, 0, 1, false, 160952453368603000⟩,
+  .shared 127 47 47 ⟨.tilted, 0, 1, false, 168021036622632191⟩,
+  .shared 127 48 48 ⟨.tilted, 0, 2, true, 179884685882005512⟩,
+  .shared 127 49 48 ⟨.tilted, 0, 2, true, 187588342964697477⟩] (by decide +kernel)
+private def batch42 : PaidBatch .empty 8 := LambdaC53TiltedPrice.fastBatch [
+  .shared 127 50 48 ⟨.tilted, 1, 2, true, 195427650624870380⟩,
+  .shared 127 51 48 ⟨.tilted, 1, 2, true, 203400685246423235⟩,
+  .shared 127 52 48 ⟨.tilted, 1, 2, true, 211505523213255052⟩,
+  .shared 127 53 48 ⟨.tilted, 1, 2, true, 219740240909264845⟩,
+  .point 128 41 47,
+  .point 128 42 47] (by decide +kernel)
+private def batch43 : PaidBatch .empty 8 := LambdaC53TiltedPrice.fastBatch [
+  .point 128 43 47,
+  .shared 128 44 47 ⟨.tilted, 0, 1, false, 148300114186932236⟩,
+  .shared 128 45 47 ⟨.tilted, 0, 1, false, 155163280149736608⟩,
+  .shared 128 46 47 ⟨.tilted, 0, 1, false, 162156780028320074⟩,
+  .shared 128 47 47 ⟨.tilted, 0, 1, false, 169278930658594271⟩,
+  .shared 128 48 48 ⟨.tilted, 0, 2, true, 181240906978624784⟩] (by decide +kernel)
+private def batch44 : PaidBatch .empty 8 := LambdaC53TiltedPrice.fastBatch [
+  .shared 128 49 48 ⟨.tilted, 0, 2, true, 189004196171124089⟩,
+  .shared 128 50 48 ⟨.tilted, 0, 2, true, 196904418351838324⟩,
+  .shared 128 51 48 ⟨.tilted, 1, 2, true, 204939649904666503⟩,
+  .shared 128 52 48 ⟨.tilted, 1, 2, true, 213107967213507636⟩,
+  .shared 128 53 48 ⟨.tilted, 1, 2, true, 221407446662260737⟩,
+  .point 129 41 47] (by decide +kernel)
+private def batch45 : PaidBatch .empty 8 := LambdaC53TiltedPrice.fastBatch [
+  .point 129 42 47,
+  .point 129 43 47,
+  .shared 129 44 47 ⟨.tilted, 0, 1, false, 149400672422336028⟩,
+  .shared 129 45 47 ⟨.tilted, 0, 1, false, 156315161542600920⟩,
+  .shared 129 46 47 ⟨.tilted, 0, 1, false, 163361106688037148⟩,
+  .shared 129 47 47 ⟨.tilted, 0, 1, false, 170536824694556350⟩] (by decide +kernel)
+private def batch46 : PaidBatch .empty 8 := LambdaC53TiltedPrice.fastBatch [
+  .shared 129 48 48 ⟨.tilted, 0, 2, true, 182597128075244056⟩,
+  .shared 129 49 48 ⟨.tilted, 0, 2, true, 190420049377550701⟩,
+  .shared 129 50 48 ⟨.tilted, 0, 2, true, 198381186078806268⟩,
+  .shared 129 51 48 ⟨.tilted, 1, 2, true, 206478614562909771⟩,
+  .shared 129 52 48 ⟨.tilted, 1, 2, true, 214710411213760220⟩,
+  .shared 129 53 49 ⟨.tilted, 1, 2, true, 223074652415256629⟩] (by decide +kernel)
 
-private def batches : List (PaidBatch .empty 8) := [batch0, batch1, batch2, batch3, batch4, batch5, batch6, batch7, batch8, batch9, batch10, batch11, batch12, batch13, batch14, batch15, batch16, batch17, batch18, batch19, batch20, batch21, batch22, batch23, batch24, batch25, batch26, batch27, batch28, batch29, batch30]
+private def batches : List (PaidBatch .empty 8) := [batch0, batch1, batch2, batch3, batch4, batch5, batch6, batch7, batch8, batch9, batch10, batch11, batch12, batch13, batch14, batch15, batch16, batch17, batch18, batch19, batch20, batch21, batch22, batch23, batch24, batch25, batch26, batch27, batch28, batch29, batch30, batch31, batch32, batch33, batch34, batch35, batch36, batch37, batch38, batch39, batch40, batch41, batch42, batch43, batch44, batch45, batch46]
 private abbrev tiles := tilesOf batches
 
-private theorem index24 : checks tiles 125 24 8 = true := by decide +kernel
-theorem index32 : checks tiles 125 32 8 = true := by decide +kernel
-theorem index40 : checks tiles 125 40 8 = true := by decide +kernel
-private theorem index48 : checks tiles 125 48 5 = true := by decide +kernel
-private theorem covers : checks tiles 125 24 29 = true :=
-  checks_join index24 (checks_join index32 (checks_join index40 index48))
+private theorem index24 : checks tiles 129 24 10 = true := by decide +kernel
+private theorem index34 : checks tiles 129 34 10 = true := by decide +kernel
+theorem index44 : checks tiles 129 44 10 = true := by decide +kernel
+private theorem covers : checks tiles 129 24 30 = true :=
+  checks_join (checks_join (index24) index34) index44
 
 theorem exact (a : Shape) (ha : Valid a) (ht : a.t = 8)
-    (hb : a.b ≤ 125) (hj : a.j ≤ 52) : Covered 8 .empty a := by
+    (hb : a.b ≤ 129) (hj : a.j ≤ 53) : Covered 8 .empty a := by
   have hi := ha.2.1
   exact apply_batches covers a ha ht hb (by omega) (by omega)
 
 end Top8
 
 namespace Top9
-
 private def batch0 : PaidBatch .empty 9 := ⟨[
-  .rectangle 9 27 67 39 39,
-  .rectangle 14 40 69 52 45,
-  .rectangle 68 34 96 39 46,
-  .rectangle 68 27 125 30 44,
-  .rectangle 68 31 125 33 45,
-  .rectangle 70 47 83 52 48], by decide +kernel⟩
+  .rectangle 9 27 94 34 37,
+  .rectangle 12 35 78 42 37,
+  .rectangle 15 43 80 50 44,
+  .rectangle 17 51 85 53 44,
+  .rectangle 79 35 111 39 44,
+  .rectangle 79 40 103 43 44], by decide +kernel⟩
 private def batch1 : PaidBatch .empty 9 := ⟨[
-  .rectangle 70 40 97 43 46,
-  .rectangle 70 44 97 46 46,
-  .rectangle 84 50 90 52 48,
-  .rectangle 84 47 97 49 48,
-  .rectangle 91 50 97 51 48,
-  .rectangle 91 52 97 52 48], by decide +kernel⟩
-private def batch2 : PaidBatch .empty 9 := ⟨[
-  .rectangle 97 34 125 36 46,
-  .rectangle 97 37 125 39 47,
-  .rectangle 98 51 101 51 48,
-  .rectangle 98 52 101 52 49,
-  .rectangle 98 44 104 46 48,
-  .rectangle 98 47 104 48 48], by decide +kernel⟩
-private def batch3 : PaidBatch .empty 9 := ⟨[
-  .rectangle 98 49 104 49 48,
-  .rectangle 98 50 104 50 48,
-  .rectangle 98 40 111 41 47,
-  .rectangle 98 42 111 43 47,
-  .point 102 51 48,
-  .rectangle 102 52 102 52 49], by decide +kernel⟩
-private def batch4 : PaidBatch .empty 9 := ⟨[
-  .point 103 51 48,
-  .point 103 52 49,
-  .point 104 51 48,
-  .point 104 52 49,
-  .point 105 50 48,
-  .point 105 51 49], by decide +kernel⟩
-private def batch5 : PaidBatch .empty 9 := ⟨[
-  .point 105 52 49,
-  .rectangle 105 49 106 49 48,
-  .rectangle 105 48 108 48 48,
-  .rectangle 105 44 111 45 48,
-  .rectangle 105 46 111 46 48,
-  .rectangle 105 47 111 47 48], by decide +kernel⟩
-private def batch6 : PaidBatch .empty 9 := ⟨[
-  .point 106 50 48,
-  .point 106 51 49,
-  .point 106 52 49,
-  .point 107 49 48,
-  .point 107 50 48,
-  .point 107 51 49], by decide +kernel⟩
-private def batch7 : PaidBatch .empty 9 := ⟨[
-  .point 107 52 49,
-  .point 108 49 48,
-  .point 108 50 48,
-  .point 108 51 49,
-  .point 108 52 49,
-  .point 109 48 48], by decide +kernel⟩
-private def batch8 : PaidBatch .empty 9 := ⟨[
-  .point 109 49 48,
-  .point 109 50 48,
-  .point 109 51 49,
-  .point 109 52 49,
-  .point 110 48 48,
-  .point 110 49 48], by decide +kernel⟩
-private def batch9 : PaidBatch .empty 9 := ⟨[
-  .point 110 50 48,
-  .point 110 51 49,
-  .shared 110 52 49 ⟨.tilted, 1, 2, true, 191376705311646428⟩,
-  .point 111 48 48,
-  .point 111 49 48,
-  .point 111 50 49], by decide +kernel⟩
-private def batch10 : PaidBatch .empty 9 := ⟨[
-  .point 111 51 49,
-  .shared 111 52 49 ⟨.tilted, 1, 2, true, 193045592637450620⟩,
-  .point 112 47 48,
-  .point 112 48 48,
-  .point 112 49 48,
-  .point 112 50 49], by decide +kernel⟩
-private def batch11 : PaidBatch .empty 9 := ⟨[
-  .shared 112 51 49 ⟨.tilted, 1, 1, false, 177955175849552202⟩,
-  .shared 112 52 49 ⟨.tilted, 1, 2, true, 194714479963254811⟩,
-  .rectangle 112 46 113 46 48,
-  .rectangle 112 45 115 45 48,
-  .rectangle 112 40 118 41 47,
-  .rectangle 112 42 118 43 48], by decide +kernel⟩
-private def batch12 : PaidBatch .empty 9 := ⟨[
-  .rectangle 112 44 118 44 48,
-  .point 113 47 48,
-  .point 113 48 48,
-  .point 113 49 48,
-  .point 113 50 49,
-  .shared 113 51 49 ⟨.tilted, 1, 1, false, 179456150569333358⟩], by decide +kernel⟩
-private def batch13 : PaidBatch .empty 9 := ⟨[
-  .shared 113 52 49 ⟨.tilted, 1, 2, true, 196383367289059003⟩,
-  .point 114 46 48,
-  .point 114 47 48,
-  .point 114 48 48,
-  .shared 114 49 48 ⟨.tilted, 1, 1, false, 167543928428959587⟩,
-  .shared 114 50 49 ⟨.tilted, 1, 1, false, 174200883182648334⟩], by decide +kernel⟩
-private def batch14 : PaidBatch .empty 9 := ⟨[
-  .shared 114 51 49 ⟨.tilted, 1, 2, true, 195988839084515610⟩,
-  .shared 114 52 49 ⟨.tilted, 1, 2, true, 198052254614863195⟩,
-  .point 115 46 48,
-  .point 115 47 48,
-  .point 115 48 48,
-  .shared 115 49 48 ⟨.tilted, 1, 1, false, 168933390740313148⟩], by decide +kernel⟩
-private def batch15 : PaidBatch .empty 9 := ⟨[
-  .shared 115 50 49 ⟨.tilted, 1, 1, false, 175645620887873983⟩,
-  .shared 115 51 49 ⟨.tilted, 1, 2, true, 192027410263145935⟩,
-  .shared 115 52 49 ⟨.tilted, 1, 2, true, 199721141940667386⟩,
-  .rectangle 116 45 116 45 48,
-  .point 116 46 48,
-  .point 116 47 48], by decide +kernel⟩
-private def batch16 : PaidBatch .empty 9 := ⟨[
-  .point 116 48 48,
-  .point 116 49 49,
-  .shared 116 50 49 ⟨.tilted, 1, 1, false, 177090358593099633⟩,
-  .shared 116 51 49 ⟨.tilted, 1, 2, true, 193630186155844648⟩,
-  .shared 116 52 49 ⟨.tilted, 1, 2, true, 201390029266471578⟩,
-  .point 117 45 48], by decide +kernel⟩
-private def batch17 : PaidBatch .empty 9 := ⟨[
-  .point 117 46 48,
-  .point 117 47 48,
-  .shared 117 48 48 ⟨.tilted, 0, 1, false, 164993149073568072⟩,
-  .shared 117 49 49 ⟨.tilted, 1, 1, false, 171712315363020269⟩,
-  .shared 117 50 49 ⟨.tilted, 1, 1, false, 178535096298325282⟩,
-  .shared 117 51 49 ⟨.tilted, 1, 2, true, 195232962048543360⟩], by decide +kernel⟩
-private def batch18 : PaidBatch .empty 9 := ⟨[
-  .shared 117 52 49 ⟨.tilted, 1, 2, true, 203058916592275770⟩,
-  .point 118 45 48,
-  .point 118 46 48,
-  .point 118 47 48,
-  .shared 118 48 48 ⟨.tilted, 0, 1, false, 166328297611732961⟩,
-  .shared 118 49 49 ⟨.tilted, 0, 1, false, 173101777674373829⟩], by decide +kernel⟩
-private def batch19 : PaidBatch .empty 9 := ⟨[
-  .shared 118 50 49 ⟨.tilted, 1, 1, false, 179979834003550932⟩,
-  .shared 118 51 49 ⟨.tilted, 1, 2, true, 196835737941242073⟩,
-  .shared 118 52 49 ⟨.tilted, 1, 2, true, 204727803918079961⟩,
-  .rectangle 119 44 119 44 48,
-  .point 119 45 48,
-  .point 119 46 48], by decide +kernel⟩
-private def batch20 : PaidBatch .empty 9 := ⟨[
-  .point 119 47 48,
-  .shared 119 48 48 ⟨.tilted, 0, 1, false, 167663446149897851⟩,
-  .shared 119 49 49 ⟨.tilted, 0, 1, false, 174491239985727390⟩,
-  .shared 119 50 49 ⟨.tilted, 1, 1, false, 181424571708776581⟩,
-  .shared 119 51 49 ⟨.tilted, 1, 2, true, 198438513833940785⟩,
-  .shared 119 52 49 ⟨.tilted, 1, 2, true, 206396691243884153⟩], by decide +kernel⟩
-private def batch21 : PaidBatch .empty 9 := ⟨[
-  .rectangle 119 43 122 43 48,
-  .rectangle 119 40 125 41 48,
-  .rectangle 119 42 125 42 48,
-  .point 120 44 48,
-  .point 120 45 48,
-  .point 120 46 48], by decide +kernel⟩
-private def batch22 : PaidBatch .empty 9 := ⟨[
-  .shared 120 47 48 ⟨.tilted, 0, 1, false, 162224429017972727⟩,
-  .shared 120 48 48 ⟨.tilted, 0, 1, false, 168998594688062740⟩,
-  .shared 120 49 49 ⟨.tilted, 0, 1, false, 175880702297080950⟩,
-  .shared 120 50 49 ⟨.tilted, 0, 1, false, 182869309414002231⟩,
-  .shared 120 51 49 ⟨.tilted, 1, 2, true, 200041289726639498⟩,
-  .shared 120 52 49 ⟨.tilted, 1, 2, true, 208065578569688345⟩], by decide +kernel⟩
-private def batch23 : PaidBatch .empty 9 := ⟨[
-  .point 121 44 48,
-  .point 121 45 48,
-  .point 121 46 48,
-  .shared 121 47 48 ⟨.tilted, 0, 1, false, 163506225403632363⟩,
-  .shared 121 48 48 ⟨.tilted, 0, 1, false, 170333743226227630⟩,
-  .shared 121 49 49 ⟨.tilted, 0, 1, false, 177270164608434511⟩], by decide +kernel⟩
-private def batch24 : PaidBatch .empty 9 := ⟨[
-  .shared 121 50 49 ⟨.tilted, 0, 2, true, 193686912153563818⟩,
-  .shared 121 51 49 ⟨.tilted, 1, 2, true, 201644065619338210⟩,
-  .shared 121 52 49 ⟨.tilted, 1, 2, true, 209734465895492536⟩,
-  .point 122 44 48,
-  .point 122 45 48,
-  .point 122 46 48], by decide +kernel⟩
-private def batch25 : PaidBatch .empty 9 := ⟨[
-  .shared 122 47 48 ⟨.tilted, 0, 1, false, 164788021789292000⟩,
-  .shared 122 48 49 ⟨.tilted, 0, 1, false, 171668891764392519⟩,
-  .shared 122 49 49 ⟨.tilted, 0, 1, false, 178659626919788071⟩,
-  .shared 122 50 49 ⟨.tilted, 0, 2, true, 195224912197439576⟩,
-  .shared 122 51 49 ⟨.tilted, 1, 2, true, 203246841512036923⟩,
-  .shared 122 52 49 ⟨.tilted, 1, 2, true, 211403353221296728⟩], by decide +kernel⟩
-private def batch26 : PaidBatch .empty 9 := ⟨[
-  .point 123 43 48,
-  .point 123 44 48,
-  .point 123 45 48,
-  .shared 123 46 48 ⟨.tilted, 0, 1, false, 159247865279349442⟩,
-  .shared 123 47 48 ⟨.tilted, 0, 1, false, 166069818174951636⟩,
-  .shared 123 48 49 ⟨.tilted, 0, 1, false, 173004040302557409⟩], by decide +kernel⟩
-private def batch27 : PaidBatch .empty 9 := ⟨[
-  .shared 123 49 49 ⟨.tilted, 0, 1, false, 180049089231141632⟩,
-  .shared 123 50 49 ⟨.tilted, 0, 2, true, 196762912241315335⟩,
-  .shared 123 51 49 ⟨.tilted, 0, 2, true, 204849617404735635⟩,
-  .shared 123 52 49 ⟨.tilted, 1, 2, true, 213072240547100920⟩,
-  .point 124 43 48,
-  .point 124 44 48], by decide +kernel⟩
-private def batch28 : PaidBatch .empty 9 := ⟨[
-  .point 124 45 48,
-  .shared 124 46 48 ⟨.tilted, 0, 1, false, 160477271133187244⟩,
-  .shared 124 47 48 ⟨.tilted, 0, 1, false, 167351614560611273⟩,
-  .shared 124 48 49 ⟨.tilted, 0, 1, false, 174339188840722298⟩,
-  .shared 124 49 49 ⟨.tilted, 0, 1, false, 181438551542495192⟩,
-  .shared 124 50 49 ⟨.tilted, 0, 2, true, 198300912285191093⟩], by decide +kernel⟩
-private def batch29 : PaidBatch .empty 9 := ⟨[
-  .shared 124 51 49 ⟨.tilted, 0, 2, true, 206452393297434348⟩,
-  .shared 124 52 49 ⟨.tilted, 1, 2, true, 214741127872905111⟩,
-  .point 125 43 48,
-  .point 125 44 48,
-  .point 125 45 48,
-  .shared 125 46 48 ⟨.tilted, 0, 1, false, 161706676987025045⟩], by decide +kernel⟩
-private def batch30 : PaidBatch .empty 9 := ⟨[
-  .shared 125 47 48 ⟨.tilted, 0, 1, false, 168633410946270909⟩,
-  .shared 125 48 49 ⟨.tilted, 0, 1, false, 175674337378887188⟩,
-  .shared 125 49 49 ⟨.tilted, 0, 1, false, 182828013853848753⟩,
-  .shared 125 50 49 ⟨.tilted, 0, 2, true, 199838912329066851⟩,
-  .shared 125 51 49 ⟨.tilted, 0, 2, true, 208055169190133060⟩,
-  .shared 125 52 49 ⟨.tilted, 0, 2, false, 211902595722983489⟩], by decide +kernel⟩
+  .rectangle 81 44 99 47 46,
+  .rectangle 81 48 93 51 47,
+  .rectangle 86 52 94 53 47,
+  .rectangle 94 48 101 49 47,
+  .rectangle 94 50 101 50 47,
+  .rectangle 94 51 99 51 47], by decide +kernel⟩
+private def batch2 : PaidBatch .empty 9 := LambdaC53TiltedPrice.fastBatch [
+  .rectangle 95 27 126 32 43,
+  .rectangle 95 33 124 36 44,
+  .rectangle 95 52 97 52 47,
+  .rectangle 95 53 95 53 47,
+  .point 96 53 47,
+  .point 97 53 47] (by decide +kernel)
+private def batch3 : PaidBatch .empty 9 := LambdaC53TiltedPrice.fastBatch [
+  .rectangle 98 52 100 52 48,
+  .rectangle 98 53 98 53 48,
+  .point 99 53 48,
+  .rectangle 100 44 111 45 47,
+  .rectangle 100 46 106 47 47,
+  .point 100 51 47] (by decide +kernel)
+private def batch4 : PaidBatch .empty 9 := LambdaC53TiltedPrice.fastBatch [
+  .point 100 53 48,
+  .point 101 51 47,
+  .point 101 52 48,
+  .point 101 53 48,
+  .rectangle 102 48 106 48 47,
+  .rectangle 102 49 104 49 47] (by decide +kernel)
+private def batch5 : PaidBatch .empty 9 := LambdaC53TiltedPrice.fastBatch [
+  .point 102 50 47,
+  .point 102 51 47,
+  .point 102 52 48,
+  .point 102 53 48,
+  .point 103 50 47,
+  .point 103 51 47] (by decide +kernel)
+private def batch6 : PaidBatch .empty 9 := LambdaC53TiltedPrice.fastBatch [
+  .point 103 52 48,
+  .point 103 53 48,
+  .rectangle 104 40 120 41 46,
+  .rectangle 104 42 114 43 46,
+  .point 104 50 47,
+  .point 104 51 47] (by decide +kernel)
+private def batch7 : PaidBatch .empty 9 := LambdaC53TiltedPrice.fastBatch [
+  .point 104 52 48,
+  .point 104 53 48,
+  .point 105 49 47,
+  .point 105 50 47,
+  .point 105 51 48,
+  .point 105 52 48] (by decide +kernel)
+private def batch8 : PaidBatch .empty 9 := LambdaC53TiltedPrice.fastBatch [
+  .shared 105 53 48 ⟨.tilted, 1, 2, true, 186123567173488460⟩,
+  .point 106 49 47,
+  .point 106 50 47,
+  .point 106 51 48,
+  .point 106 52 48,
+  .shared 106 53 48 ⟨.tilted, 1, 2, true, 187790772926484352⟩] (by decide +kernel)
+private def batch9 : PaidBatch .empty 9 := LambdaC53TiltedPrice.fastBatch [
+  .rectangle 107 46 111 46 47,
+  .rectangle 107 47 108 47 47,
+  .point 107 48 47,
+  .point 107 49 47,
+  .point 107 50 47,
+  .point 107 51 48] (by decide +kernel)
+private def batch10 : PaidBatch .empty 9 := LambdaC53TiltedPrice.fastBatch [
+  .shared 107 52 48 ⟨.tilted, 1, 2, true, 182294768827328899⟩,
+  .shared 107 53 48 ⟨.tilted, 1, 2, true, 189457978679480244⟩,
+  .point 108 48 47,
+  .point 108 49 47,
+  .point 108 50 47,
+  .point 108 51 48] (by decide +kernel)
+private def batch11 : PaidBatch .empty 9 := LambdaC53TiltedPrice.fastBatch [
+  .shared 108 52 48 ⟨.tilted, 1, 2, true, 183897212827581483⟩,
+  .shared 108 53 48 ⟨.tilted, 1, 2, true, 191125184432476136⟩,
+  .point 109 47 47,
+  .point 109 48 47,
+  .point 109 49 47,
+  .point 109 50 47] (by decide +kernel)
+private def batch12 : PaidBatch .empty 9 := LambdaC53TiltedPrice.fastBatch [
+  .point 109 51 48,
+  .shared 109 52 48 ⟨.tilted, 1, 2, true, 185499656827834067⟩,
+  .shared 109 53 48 ⟨.tilted, 1, 2, true, 192792390185472028⟩,
+  .point 110 47 47,
+  .point 110 48 47,
+  .point 110 49 47] (by decide +kernel)
+private def batch13 : PaidBatch .empty 9 := LambdaC53TiltedPrice.fastBatch [
+  .shared 110 50 47 ⟨.tilted, 1, 2, true, 181336869653200248⟩,
+  .shared 110 51 48 ⟨.tilted, 1, 2, true, 179861180435518189⟩,
+  .shared 110 52 48 ⟨.tilted, 1, 2, true, 187102100828086651⟩,
+  .shared 110 53 48 ⟨.tilted, 1, 2, true, 194459595938467920⟩,
+  .point 111 47 47,
+  .point 111 48 47] (by decide +kernel)
+private def batch14 : PaidBatch .empty 9 := LambdaC53TiltedPrice.fastBatch [
+  .point 111 49 47,
+  .point 111 50 48,
+  .shared 111 51 48 ⟨.tilted, 1, 2, true, 181400145093761457⟩,
+  .shared 111 52 48 ⟨.tilted, 1, 2, true, 188704544828339235⟩,
+  .shared 111 53 48 ⟨.tilted, 1, 2, true, 196126801691463812⟩,
+  .rectangle 112 37 129 38 46] (by decide +kernel)
+private def batch15 : PaidBatch .empty 9 := LambdaC53TiltedPrice.fastBatch [
+  .rectangle 112 39 123 40 46,
+  .rectangle 112 44 116 44 47,
+  .rectangle 112 45 114 45 47,
+  .point 112 46 47,
+  .point 112 47 47,
+  .point 112 48 47] (by decide +kernel)
+private def batch16 : PaidBatch .empty 9 := LambdaC53TiltedPrice.fastBatch [
+  .shared 112 49 47 ⟨.tilted, 1, 1, false, 165212539328043418⟩,
+  .shared 112 50 48 ⟨.tilted, 1, 2, true, 175692293830799412⟩,
+  .shared 112 51 48 ⟨.tilted, 1, 2, true, 182939109752004725⟩,
+  .shared 112 52 48 ⟨.tilted, 1, 2, true, 190306988828591819⟩,
+  .shared 112 53 48 ⟨.tilted, 1, 2, true, 197794007444459704⟩,
+  .point 113 46 47] (by decide +kernel)
+private def batch17 : PaidBatch .empty 9 := LambdaC53TiltedPrice.fastBatch [
+  .point 113 47 47,
+  .point 113 48 47,
+  .shared 113 49 47 ⟨.tilted, 1, 1, false, 166591915084980536⟩,
+  .shared 113 50 48 ⟨.tilted, 1, 2, true, 177169061557767356⟩,
+  .shared 113 51 48 ⟨.tilted, 1, 2, true, 184478074410247993⟩,
+  .shared 113 52 48 ⟨.tilted, 1, 2, true, 191909432828844403⟩] (by decide +kernel)
+private def batch18 : PaidBatch .empty 9 := LambdaC53TiltedPrice.fastBatch [
+  .shared 113 53 48 ⟨.tilted, 1, 2, true, 199461213197455596⟩,
+  .point 114 46 47,
+  .point 114 47 47,
+  .point 114 48 47,
+  .shared 114 49 47 ⟨.tilted, 1, 1, false, 167971290841917654⟩,
+  .shared 114 50 48 ⟨.tilted, 1, 2, true, 178645829284735300⟩] (by decide +kernel)
+private def batch19 : PaidBatch .empty 9 := LambdaC53TiltedPrice.fastBatch [
+  .shared 114 51 48 ⟨.tilted, 1, 2, true, 186017039068491261⟩,
+  .shared 114 52 48 ⟨.tilted, 1, 2, true, 193511876829096987⟩,
+  .shared 114 53 48 ⟨.tilted, 1, 2, true, 201128418950451488⟩,
+  .rectangle 115 42 122 42 47,
+  .rectangle 115 43 119 43 47,
+  .point 115 45 47] (by decide +kernel)
+private def batch20 : PaidBatch .empty 9 := LambdaC53TiltedPrice.fastBatch [
+  .point 115 46 47,
+  .point 115 47 47,
+  .shared 115 48 47 ⟨.tilted, 1, 1, false, 162473545609422659⟩,
+  .shared 115 49 47 ⟨.tilted, 1, 1, false, 169350666598854772⟩,
+  .shared 115 50 48 ⟨.tilted, 1, 2, true, 180122597011703244⟩,
+  .shared 115 51 48 ⟨.tilted, 1, 2, true, 187556003726734529⟩] (by decide +kernel)
+private def batch21 : PaidBatch .empty 9 := LambdaC53TiltedPrice.fastBatch [
+  .shared 115 52 48 ⟨.tilted, 1, 2, true, 195114320829349571⟩,
+  .shared 115 53 48 ⟨.tilted, 1, 2, true, 202795624703447380⟩,
+  .point 116 45 47,
+  .point 116 46 47,
+  .point 116 47 47,
+  .shared 116 48 47 ⟨.tilted, 1, 1, false, 163796628867305039⟩] (by decide +kernel)
+private def batch22 : PaidBatch .empty 9 := LambdaC53TiltedPrice.fastBatch [
+  .shared 116 49 48 ⟨.tilted, 1, 2, true, 174231877506783314⟩,
+  .shared 116 50 48 ⟨.tilted, 1, 2, true, 181599364738671188⟩,
+  .shared 116 51 48 ⟨.tilted, 1, 2, true, 189094968384977797⟩,
+  .shared 116 52 48 ⟨.tilted, 1, 2, true, 196716764829602155⟩,
+  .shared 116 53 48 ⟨.tilted, 1, 2, true, 204462830456443272⟩,
+  .point 117 44 47] (by decide +kernel)
+private def batch23 : PaidBatch .empty 9 := LambdaC53TiltedPrice.fastBatch [
+  .point 117 45 47,
+  .point 117 46 47,
+  .shared 117 47 47 ⟨.tilted, 1, 1, false, 158250882274261731⟩,
+  .shared 117 48 47 ⟨.tilted, 1, 1, false, 165119712125187418⟩,
+  .shared 117 49 48 ⟨.tilted, 1, 2, true, 175647730713209926⟩,
+  .shared 117 50 48 ⟨.tilted, 1, 2, true, 183076132465639132⟩] (by decide +kernel)
+private def batch24 : PaidBatch .empty 9 := LambdaC53TiltedPrice.fastBatch [
+  .shared 117 51 48 ⟨.tilted, 1, 2, true, 190633933043221065⟩,
+  .shared 117 52 48 ⟨.tilted, 1, 2, true, 198319208829854739⟩,
+  .shared 117 53 48 ⟨.tilted, 1, 2, true, 206130036209439164⟩,
+  .point 118 44 47,
+  .point 118 45 47,
+  .point 118 46 47] (by decide +kernel)
+private def batch25 : PaidBatch .empty 9 := LambdaC53TiltedPrice.fastBatch [
+  .shared 118 47 47 ⟨.tilted, 1, 1, false, 159518795142481615⟩,
+  .shared 118 48 47 ⟨.tilted, 1, 1, false, 166442795383069798⟩,
+  .shared 118 49 48 ⟨.tilted, 1, 2, true, 177063583919636538⟩,
+  .shared 118 50 48 ⟨.tilted, 1, 2, true, 184552900192607076⟩,
+  .shared 118 51 48 ⟨.tilted, 1, 2, true, 192172897701464333⟩,
+  .shared 118 52 48 ⟨.tilted, 1, 2, true, 199921652830107323⟩] (by decide +kernel)
+private def batch26 : PaidBatch .empty 9 := LambdaC53TiltedPrice.fastBatch [
+  .shared 118 53 48 ⟨.tilted, 1, 2, true, 207797241962435056⟩,
+  .point 119 44 47,
+  .point 119 45 47,
+  .point 119 46 47,
+  .shared 119 47 47 ⟨.tilted, 1, 1, false, 160786708010701499⟩,
+  .shared 119 48 47 ⟨.tilted, 1, 1, false, 167765878640952177⟩] (by decide +kernel)
+private def batch27 : PaidBatch .empty 9 := LambdaC53TiltedPrice.fastBatch [
+  .shared 119 49 48 ⟨.tilted, 1, 2, true, 178479437126063150⟩,
+  .shared 119 50 48 ⟨.tilted, 1, 2, true, 186029667919575020⟩,
+  .shared 119 51 48 ⟨.tilted, 1, 2, true, 193711862359707601⟩,
+  .shared 119 52 48 ⟨.tilted, 1, 2, true, 201524096830359907⟩,
+  .shared 119 53 48 ⟨.tilted, 1, 2, true, 209464447715430948⟩,
+  .point 120 43 47] (by decide +kernel)
+private def batch28 : PaidBatch .empty 9 := LambdaC53TiltedPrice.fastBatch [
+  .point 120 44 47,
+  .point 120 45 47,
+  .shared 120 46 47 ⟨.tilted, 0, 1, false, 155146205487889207⟩,
+  .shared 120 47 47 ⟨.tilted, 0, 1, false, 162054620878921383⟩,
+  .shared 120 48 47 ⟨.tilted, 1, 1, false, 169088961898834557⟩,
+  .shared 120 49 48 ⟨.tilted, 1, 2, true, 179895290332489762⟩] (by decide +kernel)
+private def batch29 : PaidBatch .empty 9 := LambdaC53TiltedPrice.fastBatch [
+  .shared 120 50 48 ⟨.tilted, 1, 2, true, 187506435646542964⟩,
+  .shared 120 51 48 ⟨.tilted, 1, 2, true, 195250827017950869⟩,
+  .shared 120 52 48 ⟨.tilted, 1, 2, true, 203126540830612491⟩,
+  .shared 120 53 48 ⟨.tilted, 1, 2, true, 211131653468426840⟩,
+  .rectangle 121 41 126 41 47,
+  .point 121 43 47] (by decide +kernel)
+private def batch30 : PaidBatch .empty 9 := LambdaC53TiltedPrice.fastBatch [
+  .point 121 44 47,
+  .point 121 45 47,
+  .shared 121 46 47 ⟨.tilted, 0, 1, false, 156360070075838839⟩,
+  .shared 121 47 47 ⟨.tilted, 0, 1, false, 163322533747141267⟩,
+  .shared 121 48 47 ⟨.tilted, 1, 1, false, 170412045156716936⟩,
+  .shared 121 49 48 ⟨.tilted, 1, 2, true, 181311143538916374⟩] (by decide +kernel)
+private def batch31 : PaidBatch .empty 9 := LambdaC53TiltedPrice.fastBatch [
+  .shared 121 50 48 ⟨.tilted, 1, 2, true, 188983203373510908⟩,
+  .shared 121 51 48 ⟨.tilted, 1, 2, true, 196789791676194137⟩,
+  .shared 121 52 48 ⟨.tilted, 1, 2, true, 204728984830865075⟩,
+  .shared 121 53 48 ⟨.tilted, 1, 2, true, 212798859221422732⟩,
+  .point 122 43 47,
+  .point 122 44 47] (by decide +kernel)
+private def batch32 : PaidBatch .empty 9 := LambdaC53TiltedPrice.fastBatch [
+  .point 122 45 47,
+  .shared 122 46 47 ⟨.tilted, 0, 1, false, 157573934663788470⟩,
+  .shared 122 47 47 ⟨.tilted, 0, 1, false, 164590446615361151⟩,
+  .shared 122 48 48 ⟨.tilted, 0, 1, false, 171735128414599316⟩,
+  .shared 122 49 48 ⟨.tilted, 1, 2, true, 182726996745342986⟩,
+  .shared 122 50 48 ⟨.tilted, 1, 2, true, 190459971100478852⟩] (by decide +kernel)
+private def batch33 : PaidBatch .empty 9 := LambdaC53TiltedPrice.fastBatch [
+  .shared 122 51 48 ⟨.tilted, 1, 2, true, 198328756334437405⟩,
+  .shared 122 52 48 ⟨.tilted, 1, 2, true, 206331428831117659⟩,
+  .shared 122 53 48 ⟨.tilted, 1, 2, true, 214466064974418624⟩,
+  .point 123 42 47,
+  .point 123 43 47,
+  .point 123 44 47] (by decide +kernel)
+private def batch34 : PaidBatch .empty 9 := LambdaC53TiltedPrice.fastBatch [
+  .shared 123 45 47 ⟨.tilted, 0, 1, false, 151848214141041258⟩,
+  .shared 123 46 47 ⟨.tilted, 0, 1, false, 158787799251738102⟩,
+  .shared 123 47 47 ⟨.tilted, 0, 1, false, 165858359483581035⟩,
+  .shared 123 48 48 ⟨.tilted, 0, 2, true, 176487977981750069⟩,
+  .shared 123 49 48 ⟨.tilted, 1, 2, true, 184142849951769598⟩,
+  .shared 123 50 48 ⟨.tilted, 1, 2, true, 191936738827446796⟩] (by decide +kernel)
+private def batch35 : PaidBatch .empty 9 := LambdaC53TiltedPrice.fastBatch [
+  .shared 123 51 48 ⟨.tilted, 1, 2, true, 199867720992680673⟩,
+  .shared 123 52 48 ⟨.tilted, 1, 2, true, 207933872831370243⟩,
+  .shared 123 53 48 ⟨.tilted, 1, 2, true, 216133270727414516⟩,
+  .rectangle 124 39 129 39 46,
+  .rectangle 124 40 129 40 47,
+  .point 124 42 47] (by decide +kernel)
+private def batch36 : PaidBatch .empty 9 := LambdaC53TiltedPrice.fastBatch [
+  .point 124 43 47,
+  .point 124 44 47,
+  .shared 124 45 47 ⟨.tilted, 0, 1, false, 153009152558112880⟩,
+  .shared 124 46 47 ⟨.tilted, 0, 1, false, 160001663839687733⟩,
+  .shared 124 47 47 ⟨.tilted, 0, 1, false, 167126272351800919⟩,
+  .shared 124 48 48 ⟨.tilted, 0, 2, true, 177844199078369341⟩] (by decide +kernel)
+private def batch37 : PaidBatch .empty 9 := LambdaC53TiltedPrice.fastBatch [
+  .shared 124 49 48 ⟨.tilted, 1, 2, true, 185558703158196210⟩,
+  .shared 124 50 48 ⟨.tilted, 1, 2, true, 193413506554414740⟩,
+  .shared 124 51 48 ⟨.tilted, 1, 2, true, 201406685650923941⟩,
+  .shared 124 52 48 ⟨.tilted, 1, 2, true, 209536316831622827⟩,
+  .shared 124 53 48 ⟨.tilted, 1, 2, false, 215867340168069729⟩,
+  .rectangle 125 33 129 35 45] (by decide +kernel)
+private def batch38 : PaidBatch .empty 9 := LambdaC53TiltedPrice.fastBatch [
+  .rectangle 125 36 129 37 46,
+  .point 125 42 47,
+  .point 125 43 47,
+  .point 125 44 47,
+  .shared 125 45 47 ⟨.tilted, 0, 1, false, 154170090975184502⟩,
+  .shared 125 46 47 ⟨.tilted, 0, 1, false, 161215528427637365⟩] (by decide +kernel)
+private def batch39 : PaidBatch .empty 9 := LambdaC53TiltedPrice.fastBatch [
+  .shared 125 47 47 ⟨.tilted, 0, 1, false, 168394185220020803⟩,
+  .shared 125 48 48 ⟨.tilted, 0, 2, true, 179200420174988613⟩,
+  .shared 125 49 48 ⟨.tilted, 0, 2, true, 186974556364622822⟩,
+  .shared 125 50 48 ⟨.tilted, 1, 2, true, 194890274281382684⟩,
+  .shared 125 51 48 ⟨.tilted, 1, 2, true, 202945650309167209⟩,
+  .shared 125 52 48 ⟨.tilted, 1, 2, true, 211138760831875411⟩] (by decide +kernel)
+private def batch40 : PaidBatch .empty 9 := LambdaC53TiltedPrice.fastBatch [
+  .shared 125 53 48 ⟨.tilted, 1, 2, false, 214169474923915130⟩,
+  .point 126 42 47,
+  .point 126 43 47,
+  .shared 126 44 47 ⟨.tilted, 0, 1, false, 148368690382336437⟩,
+  .shared 126 45 47 ⟨.tilted, 0, 1, false, 155331029392256124⟩,
+  .shared 126 46 47 ⟨.tilted, 0, 1, false, 162429393015586996⟩] (by decide +kernel)
+private def batch41 : PaidBatch .empty 9 := LambdaC53TiltedPrice.fastBatch [
+  .shared 126 47 47 ⟨.tilted, 0, 1, false, 169662098088240687⟩,
+  .shared 126 48 48 ⟨.tilted, 0, 2, true, 180556641271607885⟩,
+  .shared 126 49 48 ⟨.tilted, 0, 2, true, 188390409571049434⟩,
+  .shared 126 50 48 ⟨.tilted, 1, 2, true, 196367042008350628⟩,
+  .shared 126 51 48 ⟨.tilted, 1, 2, true, 204484614967410477⟩,
+  .shared 126 52 48 ⟨.tilted, 1, 2, true, 212741204832127995⟩] (by decide +kernel)
+private def batch42 : PaidBatch .empty 9 := LambdaC53TiltedPrice.fastBatch [
+  .shared 126 53 48 ⟨.tilted, 1, 2, false, 215785241770993632⟩,
+  .rectangle 127 27 129 31 43,
+  .rectangle 127 32 129 35 45,
+  .point 127 41 47,
+  .point 127 42 47,
+  .point 127 43 47] (by decide +kernel)
+private def batch43 : PaidBatch .empty 9 := LambdaC53TiltedPrice.fastBatch [
+  .shared 127 44 47 ⟨.tilted, 0, 1, false, 149477824737922292⟩,
+  .shared 127 45 47 ⟨.tilted, 0, 1, false, 156491967809327746⟩,
+  .shared 127 46 47 ⟨.tilted, 0, 1, false, 163643257603536628⟩,
+  .shared 127 47 47 ⟨.tilted, 0, 1, false, 170930010956460571⟩,
+  .shared 127 48 48 ⟨.tilted, 0, 2, true, 181912862368227157⟩,
+  .shared 127 49 48 ⟨.tilted, 0, 2, true, 189806262777476046⟩] (by decide +kernel)
+private def batch44 : PaidBatch .empty 9 := LambdaC53TiltedPrice.fastBatch [
+  .shared 127 50 48 ⟨.tilted, 1, 2, true, 197843809735318572⟩,
+  .shared 127 51 48 ⟨.tilted, 1, 2, true, 206023579625653745⟩,
+  .shared 127 52 48 ⟨.tilted, 1, 2, true, 214343648832380579⟩,
+  .shared 127 53 48 ⟨.tilted, 1, 2, false, 217401008618072134⟩,
+  .point 128 41 47,
+  .point 128 42 47] (by decide +kernel)
+private def batch45 : PaidBatch .empty 9 := LambdaC53TiltedPrice.fastBatch [
+  .point 128 43 47,
+  .shared 128 44 47 ⟨.tilted, 0, 1, false, 150586959093508148⟩,
+  .shared 128 45 47 ⟨.tilted, 0, 1, false, 157652906226399368⟩,
+  .shared 128 46 47 ⟨.tilted, 0, 1, false, 164857122191486259⟩,
+  .shared 128 47 47 ⟨.tilted, 0, 1, false, 172197923824680455⟩,
+  .shared 128 48 48 ⟨.tilted, 0, 2, true, 183269083464846429⟩] (by decide +kernel)
+private def batch46 : PaidBatch .empty 9 := LambdaC53TiltedPrice.fastBatch [
+  .shared 128 49 48 ⟨.tilted, 0, 2, true, 191222115983902658⟩,
+  .shared 128 50 48 ⟨.tilted, 0, 2, true, 199320577462286516⟩,
+  .shared 128 51 48 ⟨.tilted, 1, 2, true, 207562544283897013⟩,
+  .shared 128 52 48 ⟨.tilted, 1, 2, false, 211601738699274159⟩,
+  .shared 128 53 48 ⟨.tilted, 1, 2, false, 219016775465150636⟩,
+  .point 129 41 47] (by decide +kernel)
+private def batch47 : PaidBatch .empty 9 := LambdaC53TiltedPrice.fastBatch [
+  .point 129 42 47,
+  .point 129 43 47,
+  .shared 129 44 47 ⟨.tilted, 0, 1, false, 151696093449094003⟩,
+  .shared 129 45 47 ⟨.tilted, 0, 1, false, 158813844643470990⟩,
+  .shared 129 46 47 ⟨.tilted, 0, 1, false, 166070986779435891⟩,
+  .shared 129 47 47 ⟨.tilted, 0, 1, false, 173465836692900339⟩] (by decide +kernel)
+private def batch48 : PaidBatch .empty 9 := LambdaC53TiltedPrice.fastBatch [
+  .shared 129 48 48 ⟨.tilted, 0, 2, true, 184625304561465701⟩,
+  .shared 129 49 48 ⟨.tilted, 0, 2, true, 192637969190329270⟩,
+  .shared 129 50 48 ⟨.tilted, 0, 2, true, 200797345189254460⟩,
+  .shared 129 51 48 ⟨.tilted, 1, 2, true, 209101508942140281⟩,
+  .shared 129 52 48 ⟨.tilted, 1, 2, false, 212446792179623053⟩,
+  .shared 129 53 49 ⟨.tilted, 1, 2, false, 220632542312229138⟩] (by decide +kernel)
 
-private def batches : List (PaidBatch .empty 9) := [batch0, batch1, batch2, batch3, batch4, batch5, batch6, batch7, batch8, batch9, batch10, batch11, batch12, batch13, batch14, batch15, batch16, batch17, batch18, batch19, batch20, batch21, batch22, batch23, batch24, batch25, batch26, batch27, batch28, batch29, batch30]
+private def batches : List (PaidBatch .empty 9) := [batch0, batch1, batch2, batch3, batch4, batch5, batch6, batch7, batch8, batch9, batch10, batch11, batch12, batch13, batch14, batch15, batch16, batch17, batch18, batch19, batch20, batch21, batch22, batch23, batch24, batch25, batch26, batch27, batch28, batch29, batch30, batch31, batch32, batch33, batch34, batch35, batch36, batch37, batch38, batch39, batch40, batch41, batch42, batch43, batch44, batch45, batch46, batch47, batch48]
 private abbrev tiles := tilesOf batches
 
-private theorem index27 : checks tiles 125 27 8 = true := by decide +kernel
-theorem index35 : checks tiles 125 35 8 = true := by decide +kernel
-private theorem index43 : checks tiles 125 43 8 = true := by decide +kernel
-private theorem index51 : checks tiles 125 51 2 = true := by decide +kernel
-private theorem covers : checks tiles 125 27 26 = true :=
-  checks_join index27 (checks_join index35 (checks_join index43 index51))
+private theorem index27 : checks tiles 129 27 10 = true := by decide +kernel
+private theorem index37 : checks tiles 129 37 10 = true := by decide +kernel
+theorem index47 : checks tiles 129 47 7 = true := by decide +kernel
+private theorem covers : checks tiles 129 27 27 = true :=
+  checks_join (checks_join (index27) index37) index47
 
 theorem exact (a : Shape) (ha : Valid a) (ht : a.t = 9)
-    (hb : a.b ≤ 125) (hj : a.j ≤ 52) : Covered 9 .empty a := by
+    (hb : a.b ≤ 129) (hj : a.j ≤ 53) : Covered 9 .empty a := by
   have hi := ha.2.1
   exact apply_batches covers a ha ht hb (by omega) (by omega)
 
 end Top9
-
-namespace Top10
-
-private def batch0 : PaidBatch .empty 10 := ⟨[
-  .rectangle 10 30 67 41 39,
-  .rectangle 14 42 69 52 45,
-  .rectangle 68 30 96 35 45,
-  .rectangle 68 36 96 41 46,
-  .rectangle 70 48 83 52 48,
-  .rectangle 70 42 97 44 46], by decide +kernel⟩
-private def batch1 : PaidBatch .empty 10 := ⟨[
-  .rectangle 70 45 97 47 48,
-  .rectangle 84 48 97 50 48,
-  .rectangle 84 51 97 52 48,
-  .rectangle 97 39 111 41 47,
-  .rectangle 97 30 125 32 46,
-  .rectangle 97 33 125 35 46], by decide +kernel⟩
-private def batch2 : PaidBatch .empty 10 := ⟨[
-  .rectangle 97 36 125 38 47,
-  .rectangle 98 50 101 50 48,
-  .rectangle 98 51 101 51 48,
-  .rectangle 98 52 101 52 49,
-  .rectangle 98 42 104 44 47,
-  .rectangle 98 45 104 47 48], by decide +kernel⟩
-private def batch3 : PaidBatch .empty 10 := ⟨[
-  .rectangle 98 48 104 48 48,
-  .rectangle 98 49 104 49 48,
-  .point 102 51 48,
-  .point 102 52 49,
-  .rectangle 102 50 103 50 48,
-  .point 103 51 48], by decide +kernel⟩
-private def batch4 : PaidBatch .empty 10 := ⟨[
-  .point 103 52 49,
-  .point 104 50 48,
-  .point 104 51 48,
-  .point 104 52 49,
-  .rectangle 105 49 105 49 48,
-  .point 105 50 48], by decide +kernel⟩
-private def batch5 : PaidBatch .empty 10 := ⟨[
-  .point 105 51 49,
-  .point 105 52 49,
-  .rectangle 105 47 108 47 48,
-  .rectangle 105 48 108 48 48,
-  .rectangle 105 42 111 43 47,
-  .rectangle 105 44 111 44 48], by decide +kernel⟩
-private def batch6 : PaidBatch .empty 10 := ⟨[
-  .rectangle 105 45 111 45 48,
-  .rectangle 105 46 111 46 48,
-  .point 106 49 48,
-  .point 106 50 48,
-  .point 106 51 49,
-  .point 106 52 49], by decide +kernel⟩
-private def batch7 : PaidBatch .empty 10 := ⟨[
-  .point 107 49 48,
-  .point 107 50 48,
-  .point 107 51 49,
-  .point 107 52 49,
-  .point 108 49 48,
-  .point 108 50 48], by decide +kernel⟩
-private def batch8 : PaidBatch .empty 10 := ⟨[
-  .point 108 51 49,
-  .point 108 52 49,
-  .point 109 48 48,
-  .point 109 49 48,
-  .point 109 50 48,
-  .point 109 51 49], by decide +kernel⟩
-private def batch9 : PaidBatch .empty 10 := ⟨[
-  .shared 109 52 49 ⟨.tilted, 1, 2, true, 202511204788214090⟩,
-  .rectangle 109 47 110 47 48,
-  .point 110 48 48,
-  .point 110 49 48,
-  .point 110 50 48,
-  .point 110 51 49], by decide +kernel⟩
-private def batch10 : PaidBatch .empty 10 := ⟨[
-  .shared 110 52 49 ⟨.tilted, 1, 2, true, 193538407202497774⟩,
-  .point 111 47 48,
-  .point 111 48 48,
-  .point 111 49 48,
-  .point 111 50 49,
-  .shared 111 51 49 ⟨.tilted, 1, 1, false, 180596830944543180⟩], by decide +kernel⟩
-private def batch11 : PaidBatch .empty 10 := ⟨[
-  .shared 111 52 49 ⟨.tilted, 1, 2, true, 195207294528301965⟩,
-  .point 112 47 48,
-  .point 112 48 48,
-  .point 112 49 48,
-  .point 112 50 49,
-  .shared 112 51 49 ⟨.tilted, 1, 1, false, 182122300276329357⟩], by decide +kernel⟩
-private def batch12 : PaidBatch .empty 10 := ⟨[
-  .shared 112 52 49 ⟨.tilted, 1, 2, true, 196876181854106157⟩,
-  .rectangle 112 46 113 46 48,
-  .rectangle 112 45 115 45 48,
-  .rectangle 112 42 118 43 48,
-  .rectangle 112 44 118 44 48,
-  .rectangle 112 39 125 40 47], by decide +kernel⟩
-private def batch13 : PaidBatch .empty 10 := ⟨[
-  .rectangle 112 41 125 41 48,
-  .point 113 47 48,
-  .point 113 48 48,
-  .point 113 49 48,
-  .point 113 50 49,
-  .shared 113 51 49 ⟨.tilted, 1, 1, false, 183647769608115534⟩], by decide +kernel⟩
-private def batch14 : PaidBatch .empty 10 := ⟨[
-  .shared 113 52 49 ⟨.tilted, 1, 2, true, 198545069179910349⟩,
-  .point 114 46 48,
-  .point 114 47 48,
-  .point 114 48 48,
-  .shared 114 49 48 ⟨.tilted, 1, 1, false, 171235825299031417⟩,
-  .shared 114 50 49 ⟨.tilted, 1, 1, false, 178151402568100456⟩], by decide +kernel⟩
-private def batch15 : PaidBatch .empty 10 := ⟨[
-  .shared 114 51 49 ⟨.tilted, 1, 2, true, 204023444563930005⟩,
-  .shared 114 52 49 ⟨.tilted, 1, 2, true, 200213956505714540⟩,
-  .point 115 46 48,
-  .point 115 47 48,
-  .point 115 48 48,
-  .shared 115 49 48 ⟨.tilted, 1, 1, false, 172647538440795356⟩], by decide +kernel⟩
-private def batch16 : PaidBatch .empty 10 := ⟨[
-  .shared 115 50 49 ⟨.tilted, 1, 1, false, 179619512994533805⟩,
-  .shared 115 51 49 ⟨.tilted, 1, 2, true, 194004178277922493⟩,
-  .shared 115 52 49 ⟨.tilted, 1, 2, true, 201882843831518732⟩,
-  .rectangle 116 45 116 45 48,
-  .point 116 46 48,
-  .point 116 47 48], by decide +kernel⟩
-private def batch17 : PaidBatch .empty 10 := ⟨[
-  .shared 116 48 48 ⟨.tilted, 0, 1, false, 167140504519275614⟩,
-  .shared 116 49 49 ⟨.tilted, 1, 1, false, 174059251582559295⟩,
-  .shared 116 50 49 ⟨.tilted, 1, 1, false, 181087623420967154⟩,
-  .shared 116 51 49 ⟨.tilted, 1, 2, true, 195606954170621205⟩,
-  .shared 116 52 49 ⟨.tilted, 1, 2, true, 203551731157322924⟩,
-  .point 117 45 48], by decide +kernel⟩
-private def batch18 : PaidBatch .empty 10 := ⟨[
-  .point 117 46 48,
-  .point 117 47 48,
-  .shared 117 48 48 ⟨.tilted, 0, 1, false, 168496781997053561⟩,
-  .shared 117 49 49 ⟨.tilted, 1, 1, false, 175470964724323234⟩,
-  .shared 117 50 49 ⟨.tilted, 1, 1, false, 182555733847400503⟩,
-  .shared 117 51 49 ⟨.tilted, 1, 2, true, 197209730063319918⟩], by decide +kernel⟩
-private def batch19 : PaidBatch .empty 10 := ⟨[
-  .shared 117 52 49 ⟨.tilted, 1, 2, true, 205220618483127115⟩,
-  .point 118 45 48,
-  .point 118 46 48,
-  .point 118 47 48,
-  .shared 118 48 48 ⟨.tilted, 0, 1, false, 169853059474831508⟩,
-  .shared 118 49 49 ⟨.tilted, 0, 1, false, 176882677866087173⟩], by decide +kernel⟩
-private def batch20 : PaidBatch .empty 10 := ⟨[
-  .shared 118 50 49 ⟨.tilted, 1, 1, false, 184023844273833852⟩,
-  .shared 118 51 49 ⟨.tilted, 1, 2, true, 198812505956018630⟩,
-  .shared 118 52 49 ⟨.tilted, 1, 2, false, 198635051414699746⟩,
-  .rectangle 119 44 119 44 48,
-  .point 119 45 48,
-  .point 119 46 48], by decide +kernel⟩
-private def batch21 : PaidBatch .empty 10 := ⟨[
-  .shared 119 47 48 ⟨.tilted, 0, 1, false, 164238234965567358⟩,
-  .shared 119 48 48 ⟨.tilted, 0, 1, false, 171209336952609455⟩,
-  .shared 119 49 49 ⟨.tilted, 0, 1, false, 178294391007851112⟩,
-  .shared 119 50 49 ⟨.tilted, 1, 1, false, 185491954700267201⟩,
-  .shared 119 51 49 ⟨.tilted, 1, 2, true, 200415281848717343⟩,
-  .shared 119 52 49 ⟨.tilted, 1, 2, false, 200218841272522169⟩], by decide +kernel⟩
-private def batch22 : PaidBatch .empty 10 := ⟨[
-  .rectangle 119 43 122 43 48,
-  .rectangle 119 42 125 42 48,
-  .point 120 44 48,
-  .point 120 45 48,
-  .point 120 46 48,
-  .shared 120 47 48 ⟨.tilted, 0, 1, false, 165540038400042731⟩], by decide +kernel⟩
-private def batch23 : PaidBatch .empty 10 := ⟨[
-  .shared 120 48 48 ⟨.tilted, 0, 1, false, 172565614430387402⟩,
-  .shared 120 49 49 ⟨.tilted, 0, 1, false, 179706104149615051⟩,
-  .shared 120 50 49 ⟨.tilted, 0, 1, false, 186960065126700550⟩,
-  .shared 120 51 49 ⟨.tilted, 1, 2, true, 202018057741416055⟩,
-  .shared 120 52 49 ⟨.tilted, 1, 2, false, 201802631130344592⟩,
-  .point 121 44 48], by decide +kernel⟩
-private def batch24 : PaidBatch .empty 10 := ⟨[
-  .point 121 45 48,
-  .point 121 46 48,
-  .shared 121 47 48 ⟨.tilted, 0, 1, false, 166841841834518104⟩,
-  .shared 121 48 48 ⟨.tilted, 0, 1, false, 173921891908165349⟩,
-  .shared 121 49 49 ⟨.tilted, 0, 1, false, 181117817291378990⟩,
-  .shared 121 50 49 ⟨.tilted, 0, 2, true, 195487026914817242⟩], by decide +kernel⟩
-private def batch25 : PaidBatch .empty 10 := ⟨[
-  .shared 121 51 49 ⟨.tilted, 1, 2, true, 203620833634114768⟩,
-  .shared 121 52 49 ⟨.tilted, 1, 2, false, 203386420988167015⟩,
-  .point 122 44 48,
-  .point 122 45 48,
-  .shared 122 46 48 ⟨.tilted, 0, 1, false, 161127400513318598⟩,
-  .shared 122 47 48 ⟨.tilted, 0, 1, false, 168143645268993477⟩], by decide +kernel⟩
-private def batch26 : PaidBatch .empty 10 := ⟨[
-  .shared 122 48 49 ⟨.tilted, 0, 1, false, 175278169385943296⟩,
-  .shared 122 49 49 ⟨.tilted, 0, 1, false, 182529530433142929⟩,
-  .shared 122 50 49 ⟨.tilted, 0, 2, true, 197025026958693000⟩,
-  .shared 122 51 49 ⟨.tilted, 1, 2, false, 198034184505028383⟩,
-  .shared 122 52 49 ⟨.tilted, 1, 2, false, 204970210845989438⟩,
-  .point 123 43 48], by decide +kernel⟩
-private def batch27 : PaidBatch .empty 10 := ⟨[
-  .point 123 44 48,
-  .point 123 45 48,
-  .shared 123 46 48 ⟨.tilted, 0, 1, false, 162375691525174815⟩,
-  .shared 123 47 48 ⟨.tilted, 0, 1, false, 169445448703468850⟩,
-  .shared 123 48 49 ⟨.tilted, 0, 1, false, 176634446863721243⟩,
-  .shared 123 49 49 ⟨.tilted, 0, 1, false, 183941243574906868⟩], by decide +kernel⟩
-private def batch28 : PaidBatch .empty 10 := ⟨[
-  .shared 123 50 49 ⟨.tilted, 0, 2, true, 198563027002568759⟩,
-  .shared 123 51 49 ⟨.tilted, 0, 2, false, 198902462925977304⟩,
-  .shared 123 52 49 ⟨.tilted, 1, 2, false, 206554000703811861⟩,
-  .point 124 43 48,
-  .point 124 44 48,
-  .point 124 45 48], by decide +kernel⟩
-private def batch29 : PaidBatch .empty 10 := ⟨[
-  .shared 124 46 48 ⟨.tilted, 0, 1, false, 163623982537031032⟩,
-  .shared 124 47 48 ⟨.tilted, 0, 1, false, 170747252137944223⟩,
-  .shared 124 48 49 ⟨.tilted, 0, 1, false, 177990724341499190⟩,
-  .shared 124 49 49 ⟨.tilted, 0, 1, false, 185352956716670807⟩,
-  .shared 124 50 49 ⟨.tilted, 0, 2, true, 200101027046444517⟩,
-  .shared 124 51 49 ⟨.tilted, 0, 2, false, 200427932257763481⟩], by decide +kernel⟩
-private def batch30 : PaidBatch .empty 10 := ⟨[
-  .shared 124 52 49 ⟨.tilted, 1, 2, false, 208137790561634284⟩,
-  .point 125 43 48,
-  .point 125 44 48,
-  .point 125 45 48,
-  .shared 125 46 48 ⟨.tilted, 0, 1, false, 164872273548887249⟩,
-  .shared 125 47 48 ⟨.tilted, 0, 1, false, 172049055572419596⟩], by decide +kernel⟩
-private def batch31 : PaidBatch .empty 10 := ⟨[
-  .shared 125 48 49 ⟨.tilted, 0, 1, false, 179347001819277137⟩,
-  .shared 125 49 49 ⟨.tilted, 0, 1, false, 186764669858434746⟩,
-  .shared 125 50 49 ⟨.tilted, 0, 2, true, 201639027090320275⟩,
-  .shared 125 51 49 ⟨.tilted, 0, 2, false, 201953401589549658⟩,
-  .shared 125 52 49 ⟨.tilted, 0, 2, false, 209721580419456707⟩], by decide +kernel⟩
-
-private def batches : List (PaidBatch .empty 10) := [batch0, batch1, batch2, batch3, batch4, batch5, batch6, batch7, batch8, batch9, batch10, batch11, batch12, batch13, batch14, batch15, batch16, batch17, batch18, batch19, batch20, batch21, batch22, batch23, batch24, batch25, batch26, batch27, batch28, batch29, batch30, batch31]
-private abbrev tiles := tilesOf batches
-
-private theorem index30 : checks tiles 125 30 8 = true := by decide +kernel
-private theorem index38 : checks tiles 125 38 8 = true := by decide +kernel
-theorem index46 : checks tiles 125 46 7 = true := by decide +kernel
-private theorem covers : checks tiles 125 30 23 = true :=
-  checks_join index30 (checks_join index38 index46)
-
-theorem exact (a : Shape) (ha : Valid a) (ht : a.t = 10)
-    (hb : a.b ≤ 125) (hj : a.j ≤ 52) : Covered 10 .empty a := by
-  have hi := ha.2.1
-  exact apply_batches covers a ha ht hb (by omega) (by omega)
-
-end Top10
 
 end Compact50PriceTableEmpty8

@@ -775,7 +775,7 @@ theorem top_affine (i j : Fin 3) {r : ℚ} (hr : 0 ≤ r) (b : ℚ) :
   rw [coeff_add_apply, coeff_eq_zero_of_totalDegree_lt hm', add_zero]
   exact hp m
 def baseDegree (B : Block) : Degree := Finsupp.weight coxWeight B.base
-private def profile (B : Block) : HilbertPoly :=
+def profile (B : Block) : HilbertPoly :=
   let (u,v,w) := baseDegree B
   rv (rootFree B).card (v₀ ∈ B.free) (v₁ ∈ B.free)
     (affine 1 1 0 (1-v)) (affine 0 0 0 (1+2*v-u))

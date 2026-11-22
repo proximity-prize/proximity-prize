@@ -111,11 +111,6 @@ theorem firstCut_mem_iff (J : Input) (B : ResidueLift J) (D : Factors J B)
     firstCut J B ∈ P ↔ Polynomial.C (HighCore82219Upper.cutoff J B) ∈ P :=
   numerator_mem_iff J B D hP hG hopen le_rfl
 
-theorem secondCut_mem_iff (J : Input) (B : ResidueLift J) (D : Factors J B)
-    {P : Ideal JetRing} (hP : P.IsPrime) (hG : graphIdeal J B D ≤ P) (hopen : openFactor J B ∉ P) :
-    secondCut J B ∈ P ↔ oldNumerator J B (J.ell + 2) ∈ P :=
-  numerator_mem_iff J B D hP hG hopen le_rfl
-
 theorem firstCut_agreement (J : Input) (B : ResidueLift J) (D : Factors J B)
     {S : RelativeSection (graphIdeal J B D) (jetDegree J (J.ell + 1))}
     (hS : S.affine = firstCut J B) : CutoffAgreement J B D S := by
@@ -137,50 +132,6 @@ theorem cutoff_regularities (J : Input) (B : ResidueLift J) (D : Factors J B) :
   rw [← hS]
   exact HighCore82219Upper_3_2_1.proof J B D S hAgree
 
-theorem firstCut_regular (J : Input) (B : ResidueLift J) (D : Factors J B) :
-    IsLeftRegular (Ideal.Quotient.mk (graphIdeal J B D) (firstCut J B)) :=
-  (cutoff_regularities J B D).2
-
-theorem rect_firstCut_regular (J : Input) (B : ResidueLift J) (D : Factors J B) :
-    IsLeftRegular (Ideal.Quotient.mk (rectIdeal (graphIdeal J B D)) (jetToRect (firstCut J B))) := by
-  let q := Ideal.Quotient.mk (graphIdeal J B D)
-  let f := q.comp jetToRect.symm.toRingHom
-  have hker : RingHom.ker f = rectIdeal (graphIdeal J B D) := by
-    ext s
-    exact Ideal.Quotient.eq_zero_iff_mem
-  apply HighCore82219Upper_3_2_1.regular_of_kernel f _ hker
-  change IsLeftRegular (q (jetToRect.symm (jetToRect (firstCut J B))))
-  rw [AlgEquiv.symm_apply_apply]
-  exact firstCut_regular J B D
-
-theorem diagonalBox_eq (J : Input) (v : Fin 2 → ℕ) (r : ℕ) :
-    diagonalBox J v r = SplitCut.Rect.diagonal (J.e-3) (max 1 (v 0)) (max 1 (v 1)) r := by
-  simp only [diagonalBox, SplitCut.Rect.diagonal, Nat.mul_comm r]
-
-theorem firstCut_diagonal (J : Input) (B : ResidueLift J) (D : Factors J B)
-    {v : Fin 2 → ℕ} (hv : ∀ z, EquationAxis z J.f (v z)) (he : 4 ≤ J.e) :
-    Represented (graphIdeal J B D)
-      (SplitCut.Rect.diagonal (J.e-3) (max 1 (v 0)) (max 1 (v 1))
-        (J.ell + 1 + diagonalPadding J.hi v)) (firstCut J B) := by
-  rw [← diagonalBox_eq]
-  exact represented_diagonal_hi he (numerator_section J B D hv le_rfl)
-
-theorem secondCut_diagonal (J : Input) (B : ResidueLift J) (D : Factors J B)
-    {v : Fin 2 → ℕ} (hv : ∀ z, EquationAxis z J.f (v z)) (he : 4 ≤ J.e) :
-    Represented (graphIdeal J B D)
-      (SplitCut.Rect.diagonal (J.e-3) (max 1 (v 0)) (max 1 (v 1))
-        (J.ell + 2 + diagonalPadding J.hi v)) (secondCut J B) := by
-  rw [← diagonalBox_eq]
-  exact represented_diagonal_hi he (numerator_section J B D hv le_rfl)
-
 end
 end KoalaRectTaylor
 
-#print axioms KoalaRectTaylor.mark_firstCut
-#print axioms KoalaRectTaylor.mark_secondCut
-#print axioms KoalaRectTaylor.secondCut_mem_iff
-#print axioms KoalaRectTaylor.firstCut_relative
-#print axioms KoalaRectTaylor.cutoff_regularities
-#print axioms KoalaRectTaylor.rect_firstCut_regular
-#print axioms KoalaRectTaylor.firstCut_diagonal
-#print axioms KoalaRectTaylor.secondCut_diagonal

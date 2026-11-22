@@ -130,7 +130,5 @@ theorem rectAmbient_volume (h : ℕ) (s : Shape) (W : ℕ) (U : Fin 2 → ℕ)
   rw [hsum]
   ring
 
-#print axioms rectTelescope
-#print axioms rectAmbient_volume
 end
 end KoalaRect

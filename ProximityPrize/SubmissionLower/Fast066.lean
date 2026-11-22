@@ -268,10 +268,10 @@ def c2 : Prop :=
   ∀ (B : Boxes), Admissible B →
     ∀ (P : Ideal GeoJets5) (I : Finset (Fin 5)), P.IsPrime →
       DimLE P I.card → 0 ≤ mixedDegree B P I
-private theorem dim_mono {J Q : Ideal GeoJets5} {d : ℕ} (hJQ : J ≤ Q) (hJ : DimLE J d) :
+theorem dim_mono {J Q : Ideal GeoJets5} {d : ℕ} (hJQ : J ≤ Q) (hJ : DimLE J d) :
     DimLE Q d :=
   (ringKrullDim_le_of_surjective _ (Ideal.Quotient.factor_surjective hJQ)).trans hJ
-private theorem mixed_step (hadd : c1) {B : Boxes} (hB : Admissible B) {I : Finset (Fin 5)}
+theorem mixed_step (hadd : c1) {B : Boxes} (hB : Admissible B) {I : Finset (Fin 5)}
     {J Q : Ideal GeoJets5} (hJ : DimLE J I.card) {a : GeoJets5}
     (ha : ∀ x, x * a ∈ J ↔ x ∈ Q) :
     mixedDegree B J I = mixedDegree B (sectionIdeal J a) I + mixedDegree B Q I := by
@@ -314,7 +314,7 @@ private theorem mixed_step (hadd : c1) {B : Boxes} (hB : Admissible B) {I : Fins
   apply Finset.sum_congr rfl
   intro U _
   rw [hdiag U, mul_add]
-private theorem local_step {H J Q P : Ideal GeoJets5} (hHJ : H ≤ J) (hQ : Q.IsPrime)
+theorem local_step {H J Q P : Ideal GeoJets5} (hHJ : H ≤ J) (hQ : Q.IsPrime)
     {a : GeoJets5} (ha : ∀ x, x * a ∈ J ↔ x ∈ Q) (hP : H.IsMinimalPrime P) :
     LengthAt J P hP.isPrime =
       (if Q = P then 1 else 0) + LengthAt (sectionIdeal J a) P hP.isPrime := by
@@ -358,7 +358,7 @@ private theorem length_top (P : Ideal GeoJets5) (hP : P.IsPrime) :
   change Module.length A (A ⧸ (⊤ : Ideal GeoJets5).map (algebraMap GeoJets5 A)) = 0
   rw [Ideal.map_top]
   exact Module.length_eq_zero
-private theorem cycleBudget (hadd : c1) (hpos : c2) {B : Boxes} (hB : Admissible B)
+theorem cycleBudget (hadd : c1) (hpos : c2) {B : Boxes} (hB : Admissible B)
     {H : Ideal GeoJets5} {I : Finset (Fin 5)} (hH : DimLE H I.card)
     {ι : Type} (S : Finset ι) {C : ι → Ideal GeoJets5}
     (hinj : Set.InjOn C (S : Set ι)) (hp : ∀ a ∈ S, H.IsMinimalPrime (C a))
@@ -1876,7 +1876,7 @@ noncomputable section
 open K1_13_6 K1_13_6_2 K1_13_6_2_4 K1_13_6_2_4_2_2 MvPolynomial
 section Coefficients
 variable {σ τ k R : Type} [Field k] [CommRing R] [Algebra k R]
-private def coefficientMap (f : MvPolynomial σ k →ₐ[k] MvPolynomial τ R)
+def coefficientMap (f : MvPolynomial σ k →ₐ[k] MvPolynomial τ R)
     (u : τ →₀ ℕ) : MvPolynomial σ k →ₗ[k] R :=
   ((lcoeff R u).restrictScalars k).comp f.toLinearMap
 theorem coefficientMap_monomial
@@ -3700,7 +3700,7 @@ private theorem polarize_zero (boxes : List Shape) (p : Shape) :
   induction boxes generalizing p with
   | nil => rfl
   | cons r boxes ih => simp only [polarize, ih, sub_self]
-private theorem mixed_step (hupper : c1) {J Q : Ideal GeoJets} {a : GeoJets}
+theorem mixed_step (hupper : c1) {J Q : Ideal GeoJets} {a : GeoJets}
     (ha : a ∉ J) (hQ : Q.IsPrime) (hann : ∀ x : GeoJets, x * a ∈ J ↔ x ∈ Q)
     {boxes : List Shape} (hb : ∀ q ∈ boxes, Chamber q) (hsmall : boxes.length ≤ 2)
     (hd : dimension J ≤ boxes.length) :
@@ -4191,25 +4191,6 @@ private theorem combine (f : ℕ → ℕ) (a b x y : ℕ)
     (ha : sumRange a f = x) (hb : sumRange b (fun i => f (i + a)) = y) :
     sumRange (a + b) f = x + y :=
   (sumRange_add a b f).trans (congrArg₂ Nat.add ha hb)
-theorem budgetTailG : sumRange 31 (fun i => fastGrade (i + 90)) = 342718 :=
-  combine _ 20 11 312724 29994 budgetG budgetH
-theorem budgetTailF : sumRange 46 (fun i => fastGrade (i + 75)) = 1033676 :=
-  combine _ 15 31 690958 342718 budgetF budgetTailG
-theorem budgetTailE : sumRange 59 (fun i => fastGrade (i + 62)) = 2125001 :=
-  combine _ 13 46 1091325 1033676 budgetE budgetTailF
-theorem budgetTailD : sumRange 72 (fun i => fastGrade (i + 49)) = 3777075 :=
-  combine _ 13 59 1652074 2125001 budgetD budgetTailE
-theorem budgetTailC : sumRange 85 (fun i => fastGrade (i + 36)) = 5992382 :=
-  combine _ 13 72 2215307 3777075 budgetC budgetTailD
-theorem budgetTailB : sumRange 101 (fun i => fastGrade (i + 20)) = 8573209 :=
-  combine _ 16 85 2580827 5992382 budgetB budgetTailC
-theorem budgetTailA : sumRange 121 (fun i => fastGrade (i + 0)) = 9199626 :=
-  combine _ 20 101 626417 8573209 budgetA budgetTailB
-theorem totalBudget_eq : totalBudget = 9199626 := by
-  unfold totalBudget
-  have h : gradeBudget = fastGrade := funext fun s => (fastGrade_eq s).symm
-  rw [h]
-  exact budgetTailA
 end K1_13_1_1
 end
 section

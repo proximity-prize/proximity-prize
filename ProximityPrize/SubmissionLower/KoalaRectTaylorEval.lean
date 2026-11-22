@@ -89,5 +89,3 @@ theorem node_zero_iff {J : Input} {B : ResidueLift J} {D : Factors J B}
 end
 end KoalaRectTaylor
 
-#print axioms KoalaRectTaylor.taylor_ratio
-#print axioms KoalaRectTaylor.node_zero_iff

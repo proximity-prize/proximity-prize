@@ -2391,25 +2391,25 @@ private theorem part0 : blockEstimate 10506 2218 2218 3072 = 38879167664736 := b
   have h2 := append h1 3754 768 12256198429024 2304 17917318340320 rfl rfl rfl rfl
   have h3 := append h2 4522 768 20961849324416 3072 38879167664736 rfl rfl rfl rfl
   exact h3
-private theorem part1 : blockEstimate 10506 2218 5290 3072 = 135349442891264 := by
+theorem part1 : blockEstimate 10506 2218 5290 3072 = 135349442891264 := by
   have h0 : blockEstimate 10506 2218 5290 768 = 28122400568192 := rfl
   have h1 := append h0 6058 768 33272605127552 1536 61395005695744 rfl rfl rfl rfl
   have h2 := append h1 6826 768 36412463002496 2304 97807468698240 rfl rfl rfl rfl
   have h3 := append h2 7594 768 37541974193024 3072 135349442891264 rfl rfl rfl rfl
   exact h3
-private theorem part2 : blockEstimate 10506 2218 8362 3072 = 121728680363516 := by
+theorem part2 : blockEstimate 10506 2218 8362 3072 = 121728680363516 := by
   have h0 : blockEstimate 10506 2218 8362 768 = 36661138699136 := rfl
   have h1 := append h0 9130 768 33769956520832 1536 70431095219968 rfl rfl rfl rfl
   have h2 := append h1 9898 768 28870580603797 2304 99301675823765 rfl rfl rfl rfl
   have h3 := append h2 10666 768 22427004539751 3072 121728680363516 rfl rfl rfl rfl
   exact h3
-private theorem part3 : blockEstimate 10506 2218 11434 3072 = 31498976875795 := by
+theorem part3 : blockEstimate 10506 2218 11434 3072 = 31498976875795 := by
   have h0 : blockEstimate 10506 2218 11434 768 = 15768359579110 := rfl
   have h1 := append h0 12202 768 9664895896493 1536 25433255475603 rfl rfl rfl rfl
   have h2 := append h1 12970 768 4686148763072 2304 30119404238675 rfl rfl rfl rfl
   have h3 := append h2 13738 768 1379572637120 3072 31498976875795 rfl rfl rfl rfl
   exact h3
-private theorem part4 : blockEstimate 10506 2218 14506 436 = 71892394141 := by
+theorem part4 : blockEstimate 10506 2218 14506 436 = 71892394141 := by
   have h0 : blockEstimate 10506 2218 14506 436 = 71892394141 := rfl
   exact h0
 theorem moment10506 : momentEstimate 10506 2218 = 327528160189452 := by

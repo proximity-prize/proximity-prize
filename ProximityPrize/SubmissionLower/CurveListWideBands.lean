@@ -44,7 +44,7 @@ private theorem cover {A : ℕ} {w : Node → K} {s : Source} (hC : 0 < s.C)
   · exact Or.inl hz
   · exact Or.inr (eliminate_root f ((mul_eq_zero.mp he).resolve_left hz) ((mul_eq_zero.mp hqf).resolve_left hz))
 
-private theorem lead_index {Q : Equation} (hq : Q ≠ 0) :
+theorem lead_index {Q : Equation} (hq : Q ≠ 0) :
     lead Q 1 + 2*lead Q 2 ≤ Q.weightedTotalDegree indexWeight := by
   have he := le_weightedTotalDegree (Fin.val : Fin 3 → ℕ)
     (MonomialOrder.degLex.degree_mem_support (jetView_ne_zero hq))
@@ -227,7 +227,5 @@ theorem refine_degree {A stop R V : ℕ} {s : Source} (hs : ShapeOK s)
         · exact Or.inr ⟨g,List.mem_cons_of_mem _ hg,hz⟩
       · exact Or.inr ⟨H,by simp,hh⟩
 
-#print axioms refine_index
-#print axioms refine_degree
 end
 end CurveListWideBands

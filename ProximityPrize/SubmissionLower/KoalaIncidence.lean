@@ -65,5 +65,3 @@ theorem weighted_cover (I : Ideal (MvPolynomial σ F)) (T : Finset α) (x : α �
 
 end
 end SplitCut.Incidence
-#print axioms SplitCut.Incidence.curve
-#print axioms SplitCut.Incidence.weighted_cover

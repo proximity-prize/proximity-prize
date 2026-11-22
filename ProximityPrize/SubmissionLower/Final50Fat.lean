@@ -13,7 +13,7 @@ open P0_9_4 (clear_denominators)
 open scoped Polynomial BigOperators
 open private eval_cleared order_cleared from ProximityPrize.SubmissionLower.GoldBranch6N4
 set_option maxRecDepth 2400 in
-/-- Equations for all pole families through height 2,377 at 179,905 agreements. -/
+/-- Equations for all pole families through height 2,390 at 179,895 agreements. -/
 theorem fat_equations : Equations := by
   have h1 := Final50FatBanks.proof
   have h2 := Final50FatFactors.proof
@@ -56,7 +56,7 @@ theorem fat_equations : Equations := by
   rcases hcover γ hγ hb with he | ho
   · exact Or.inl (eval_cleared mapQ _ he)
   · refine Or.inr (order_cleared mapR _ ?_)
-    have hres : LowerOrder R (trajectory (extend (s γ))) 53178 :=
+    have hres : LowerOrder R (trajectory (extend (s γ))) 51281 :=
       resultant_order (pad D.left J.a) (pad D.right J.b) (inclConst (P.z γ)) _
         J.degree_left.le J.degree_right.le ⟨mixedOrder_pad J.a ho.1, mixedOrder_pad J.b ho.2⟩
     exact hres
@@ -64,4 +64,3 @@ end
 end Final50Fat
 end
 
-#print axioms Final50Fat.fat_equations

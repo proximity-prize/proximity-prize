@@ -1,4 +1,4 @@
-import ProximityPrize.SubmissionLower.Numeric2Aux
+import ProximityPrize.SubmissionLower.CurveListPascalCache
 
 set_option Elab.async false
 set_option maxRecDepth 8000
@@ -49,9 +49,18 @@ theorem rank_of_coverage (S : Axes) (s : Source) (q u : ℕ)
   rw [h]
   exact Matrix.rank_submatrix_le _ _ _
 
+private def entryFast (r c : Jet) : ℤ :=
+  if c.b ≤ r.b ∧ c.c ≤ r.c ∧ r.a + (r.b-c.b) + (r.c-c.c) = c.a then
+    (-1 : ℤ)^(r.c-c.c) * (CurveListPascalCache.chooseFast c.a r.a : ℤ) *
+      (CurveListPascalCache.chooseFast (c.a-r.a) (r.b-c.b) : ℤ)
+  else 0
+
+private theorem entryFast_eq (r c : Jet) : entryFast r c = entryZ r c := by
+  simp only [entryFast, entryZ, CurveListPascalCache.chooseFast_eq]
+
 private def orientedEntry (S : Axes) (side : Bool) (q u i k b t : ℕ) : ℤ :=
-  if side then entryZ (S.point true q u b t) (S.point false q u i k)
-  else entryZ (S.point true q u i k) (S.point false q u b t)
+  if side then entryFast (S.point true q u b t) (S.point false q u i k)
+  else entryFast (S.point true q u i k) (S.point false q u b t)
 
 private def oriented (S : Axes) (side : Bool) (q u : ℕ) :
     Matrix (Axis S (!side) q u) (Axis S side q u) (ZMod CJ0.p) :=
@@ -61,9 +70,12 @@ theorem rank_oriented (S : Axes) (side : Bool) (q u : ℕ) : (oriented S side q 
   cases side
   · congr 1
     ext r c
+    simp only [oriented, orientedEntry, Bool.false_eq_true, ite_false, packet, entryFast_eq]
     exact entryZ_cast ..
   · exact (congrArg Matrix.rank (show oriented S true q u = (packet S q u).transpose by
-      ext r c; exact entryZ_cast ..)).trans (Matrix.rank_transpose _)
+      ext r c
+      simp only [oriented, orientedEntry, ite_true, packet, Matrix.transpose_apply, entryFast_eq]
+      exact entryZ_cast ..)).trans (Matrix.rank_transpose _)
 
 structure Witness where
   onRows : Bool

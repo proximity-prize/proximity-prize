@@ -69,4 +69,3 @@ theorem translated_coefficient {R A : Type*} [CommRing R] [CommRing A] [IsDomain
 end
 end SplitCut.StableNode
 
-#print axioms SplitCut.StableNode.translated_coefficient

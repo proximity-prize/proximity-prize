@@ -4304,12 +4304,12 @@ set_option maxRecDepth 12000
 set_option backward.isDefEq.respectTransparency false
 private abbrev Local := LocalPolynomial Geom 3
 private abbrev T : Local := MvPolynomial.X (localT 3)
-private def liftVar (j : Fin 4) : LocalVariable 3 := ![localE 3, localY 0, localY 1, localY 2] j
-private def liftPower (j : Fin 4) : ℕ := if j = 0 then 1 else j.val
-private def liftImage (j : Fin 4) : Local := T ^ liftPower j * MvPolynomial.X (liftVar j)
-private def liftJets : Form →ₐ[Geom] Local := bind₁ liftImage
-private theorem liftJets_X (j : Fin 4) : liftJets (MvPolynomial.X j) = liftImage j := bind₁_X_right _ _
-private theorem lift_value :
+def liftVar (j : Fin 4) : LocalVariable 3 := ![localE 3, localY 0, localY 1, localY 2] j
+def liftPower (j : Fin 4) : ℕ := if j = 0 then 1 else j.val
+def liftImage (j : Fin 4) : Local := T ^ liftPower j * MvPolynomial.X (liftVar j)
+def liftJets : Form →ₐ[Geom] Local := bind₁ liftImage
+theorem liftJets_X (j : Fin 4) : liftJets (MvPolynomial.X j) = liftImage j := bind₁_X_right _ _
+theorem lift_value :
     liftJets valueForm = unscaledLocalSubstitution 3 0 0 (MvPolynomial.X (some 0)) := by
   rw [unscaledLocalSubstitution_Y_zero]
   simp only [valueForm, map_add, map_sub, liftJets_X, localCorrection, Fin.sum_univ_three]
@@ -4324,22 +4324,22 @@ private theorem lift_order (j : Fin 4) :
     (pow_mem_restrictWeightedOrder (X_mem_restrictWeightedOrder _ _ (localContactWeight_T 3).ge)
       (liftPower j))
     (X_mem_restrictWeightedOrder _ _ le_rfl)
-private theorem value_hom :
+theorem value_hom :
     valueForm.IsWeightedHomogeneous (fun _ => (1 : ℕ)) 1 := by
   let h := isWeightedHomogeneous_X Geom (fun _ : Fin 4 => (1 : ℕ))
   exact (((h 0).add (h 1)).sub (h 2)).add (h 3)
-private theorem lift_value_order :
+theorem lift_value_order :
     liftJets valueForm ∈ restrictWeightedOrder (localContactWeight 3) 1 := by
   have h (j : Fin 4) :
       liftImage j ∈ restrictWeightedOrder (localContactWeight 3) 1 :=
     restrictWeightedOrder_anti _ (Nat.le_add_right 1 (targetOrder j)) (lift_order j)
   simpa only [valueForm, map_add, map_sub, liftJets_X] using
     (add_mem (sub_mem (add_mem (h 0) (h 1)) (h 2)) (h 3))
-private def postprocess (s : ℕ) (g : ℤ) : Form →ₗ[Geom] Local :=
+def postprocess (s : ℕ) (g : ℤ) : Form →ₗ[Geom] Local :=
   (projectLowContact 138).comp
     ((LinearMap.mulLeft Geom (T ^ (g + 48).toNat *
       (liftJets valueForm) ^ (s - residualDegree s))).comp liftJets.toLinearMap)
-private theorem postprocess_truncate (s : ℕ) (g : ℤ) (hg : -48 ≤ g) {P : Form}
+theorem postprocess_truncate (s : ℕ) (g : ℤ) (hg : -48 ≤ g) {P : Form}
     (hP : P.IsWeightedHomogeneous (fun _ => (1 : ℕ)) (residualDegree s)) :
     postprocess s g (weightedTruncation targetOrder (orderCutoff s g).toNat P) =
       postprocess s g P := by
@@ -4396,7 +4396,7 @@ private theorem project_monomial (cut : ℕ) (e : LocalVariable 3 →₀ ℕ) (a
     · subst v
       simp [coeff_projectLowContact, hc]
     · simp [coeff_projectLowContact, coeff_monomial, h]
-private theorem shift_projection (P : Local) :
+theorem shift_projection (P : Local) :
     T ^ 48 * projectLowContact 90 P = projectLowContact 138 (T ^ 48 * P) := by
   induction P using MvPolynomial.induction_on' with
   | monomial e a =>
@@ -4414,20 +4414,20 @@ private theorem shift_projection (P : Local) :
           fun h => he (hlt.mp h)
         simp [he, hnot]
   | add P Q hP hQ => simp only [map_add, mul_add, hP, hQ]
-private theorem jet_index_formula (m : Fin 4 →₀ ℕ) :
+theorem jet_index_formula (m : Fin 4 →₀ ℕ) :
     m.weight jetIndex = m 1 + 2 * m 2 + 3 * m 3 := by
   simp [Finsupp.weight_eq_sum, Fin.sum_univ_four, jetIndex, Nat.mul_comm]
-private def trimmed (u : JetVariable 3 →₀ ℕ) : Fin 4 →₀ ℕ :=
+def trimmed (u : JetVariable 3 →₀ ℕ) : Fin 4 →₀ ℕ :=
   u.some - Finsupp.single 0 (u.some.degree - residualDegree u.some.degree)
-private theorem trimmed_other (u : JetVariable 3 →₀ ℕ) (j : Fin 4) (h : j ≠ 0) :
+theorem trimmed_other (u : JetVariable 3 →₀ ℕ) (j : Fin 4) (h : j ≠ 0) :
     trimmed u j = u (some j) := by
   simp [trimmed, Ne.symm h]
-private theorem trimmed_id (u : JetVariable 3 →₀ ℕ) :
+theorem trimmed_id (u : JetVariable 3 →₀ ℕ) :
     (trimmed u).weight jetIndex = u.some.weight jetIndex := by
   rw [jet_index_formula, jet_index_formula]
   rw [trimmed_other u 1 (by decide), trimmed_other u 2 (by decide), trimmed_other u 3 (by decide)]
   simp
-private theorem trimmed_value_and_degree (u : JetVariable 3 →₀ ℕ) (hu : AnchorEligible u) :
+theorem trimmed_value_and_degree (u : JetVariable 3 →₀ ℕ) (hu : AnchorEligible u) :
     trimmed u 0 + (u.some.degree - residualDegree u.some.degree) = u (some 0) ∧
       (trimmed u).degree = residualDegree u.some.degree := by
   have htotal : u.some.degree = u (some 0) + u (some 1) + u (some 2) + u (some 3) := by
@@ -4442,7 +4442,7 @@ private theorem trimmed_value_and_degree (u : JetVariable 3 →₀ ℕ) (hu : An
       trimmed_other u 2 (by decide), trimmed_other u 3 (by decide)]
   simp only [residualDegree] at *
   omega
-private theorem trimmed_mem_band (u : JetVariable 3 →₀ ℕ) (hu : AnchorEligible u) :
+theorem trimmed_mem_band (u : JetVariable 3 →₀ ℕ) (hu : AnchorEligible u) :
     BandExponent (residualDegree u.some.degree) (-((u none : ℤ) - u.some.weight jetIndex))
       48 10 (trimmed u) := by
   refine ⟨(trimmed_value_and_degree u hu).2, ?_, ?_, ?_⟩
@@ -4452,7 +4452,7 @@ private theorem trimmed_mem_band (u : JetVariable 3 →₀ ℕ) (hu : AnchorElig
     exact_mod_cast hu.2.1
   · rw [trimmed_other u 3 (by decide)]
     exact hu.2.2.1
-private theorem backShift_hom (u : JetVariable 3 →₀ ℕ) (hu : AnchorEligible u) (a : Geom) :
+theorem backShift_hom (u : JetVariable 3 →₀ ℕ) (hu : AnchorEligible u) (a : Geom) :
     (backShift (monomial (trimmed u) a)).IsWeightedHomogeneous
       (fun _ => (1 : ℕ)) (residualDegree u.some.degree) := by
   have h := isWeightedHomogeneous_monomial (fun _ : Fin 4 => (1 : ℕ)) (trimmed u) a
@@ -4463,7 +4463,7 @@ private theorem backShift_hom (u : JetVariable 3 →₀ ℕ) (hu : AnchorEligibl
   split_ifs
   · exact value_hom
   · exact isWeightedHomogeneous_X _ _ _
-private theorem source_monomial_expr (u : JetVariable 3 →₀ ℕ) (a : Geom) :
+theorem source_monomial_expr (u : JetVariable 3 →₀ ℕ) (a : Geom) :
     monomial u a = MvPolynomial.C a * MvPolynomial.X none ^ u none *
       MvPolynomial.X (some 0) ^ u (some 0) * MvPolynomial.X (some 1) ^ u (some 1) *
       MvPolynomial.X (some 2) ^ u (some 2) * MvPolynomial.X (some 3) ^ u (some 3) := by
@@ -4471,12 +4471,12 @@ private theorem source_monomial_expr (u : JetVariable 3 →₀ ℕ) (a : Geom) :
   change _ * (_ * ∏ i : Fin 4, MvPolynomial.X (some i) ^ u (some i)) = _
   rw [Fin.prod_univ_four]
   ring
-private theorem form_monomial_expr (m : Fin 4 →₀ ℕ) (a : Geom) :
+theorem form_monomial_expr (m : Fin 4 →₀ ℕ) (a : Geom) :
     monomial m a = MvPolynomial.C a * MvPolynomial.X 0 ^ m 0 * MvPolynomial.X 1 ^ m 1 *
       MvPolynomial.X 2 ^ m 2 * MvPolynomial.X 3 ^ m 3 := by
   rw [monomial_eq, Finsupp.prod_fintype _ _ (fun _ => pow_zero _), Fin.prod_univ_four]
   ring
-private theorem shifted_substitution (u : JetVariable 3 →₀ ℕ) (hu : AnchorEligible u) (a : Geom) :
+theorem shifted_substitution (u : JetVariable 3 →₀ ℕ) (hu : AnchorEligible u) (a : Geom) :
     T ^ 48 * unscaledLocalSubstitution 3 0 0 (monomial u a) =
       T ^ (((u none : ℤ) - u.some.weight jetIndex) + 48).toNat *
         (liftJets valueForm) ^ (u.some.degree - residualDegree u.some.degree) *
@@ -4516,7 +4516,7 @@ private theorem shifted_substitution (u : JetVariable 3 →₀ ℕ) (hu : Anchor
       rw [← hpow, ← hv, pow_add]
       simp [liftImage, liftPower, liftVar, mul_pow]
       ring
-private theorem shifted_constraint_monomial (u : JetVariable 3 →₀ ℕ) (hu : AnchorEligible u)
+theorem shifted_constraint_monomial (u : JetVariable 3 →₀ ℕ) (hu : AnchorEligible u)
     (a : Geom) :
     let s := u.some.degree
     let g := (u none : ℤ) - u.some.weight jetIndex
@@ -4543,10 +4543,10 @@ theorem blockMap_eq_zero (s : ℕ) (g : ℤ) (h : 90 - (s : ℤ) ≤ g) :
   trivial
 private abbrev Block := Fin 121 × Fin 138
 private abbrev Image (b : Block) := LinearMap.range (blockMap b.1 (offset b.2))
-private def merge {ι : Type} [Fintype ι] {V : ι → Submodule Geom Form}
+def merge {ι : Type} [Fintype ι] {V : ι → Submodule Geom Form}
     (post : ι → Form →ₗ[Geom] Local) : (∀ i, V i) →ₗ[Geom] Local :=
   ∑ i, (post i).comp ((V i).subtype.comp (LinearMap.proj i))
-private theorem merge_single {ι : Type} [Fintype ι] [DecidableEq ι]
+theorem merge_single {ι : Type} [Fintype ι] [DecidableEq ι]
     {V : ι → Submodule Geom Form} (post : ι → Form →ₗ[Geom] Local) (i : ι) (v : V i) :
     merge post (Pi.single i v) = post i v := by
   rw [merge, LinearMap.sum_apply, Finset.sum_eq_single i]
@@ -4558,7 +4558,7 @@ private theorem merge_single {ι : Type} [Fintype ι] [DecidableEq ι]
   · simp
 private def assemble : (∀ b : Block, Image b) →ₗ[Geom] Local :=
   merge (fun b => postprocess b.1 (offset b.2))
-private theorem postprocess_mem_assemble (b : Block) (s : ℕ) (g : ℤ)
+theorem postprocess_mem_assemble (b : Block) (s : ℕ) (g : ℤ)
     (hs : (b.1 : ℕ) = s) (hg : offset b.2 = g)
     (q : bandSpace (residualDegree s) (-g) 48 10) :
     postprocess s g (blockMap s g q) ∈ LinearMap.range assemble := by
@@ -4566,7 +4566,7 @@ private theorem postprocess_mem_assemble (b : Block) (s : ℕ) (g : ℤ)
   subst g
   let v : Image b := ⟨blockMap b.1 (offset b.2) q, LinearMap.mem_range_self _ q⟩
   exact ⟨Pi.single b v, merge_single (fun j : Block => postprocess j.1 (offset j.2)) b v⟩
-private theorem shifted_monomial_mem_assemble (u : JetVariable 3 →₀ ℕ)
+theorem shifted_monomial_mem_assemble (u : JetVariable 3 →₀ ℕ)
     (hu : AnchorEligible u) (a : Geom) :
     T ^ 48 * localConstraintAt 90 0 0 (monomial u a) ∈ LinearMap.range assemble := by
   classical
@@ -4634,8 +4634,6 @@ def supportCount (s : Shape) (lo j r : ℕ) : ℕ :=
 def blockValue (s : Shape) (j r n : ℕ) (h : ℤ) : ℤ :=
   (n : ℤ) * (2*((s.m : ℤ)*180265+j) - (2*(j : ℤ)+n-1)*(131071-h) -
     4*((j : ℤ)+r)*h)
-def blockSlope (j r n : ℕ) : ℤ :=
-  (n : ℤ) * ((2*(j : ℤ)+n-1) - 4*((j : ℤ)+r))
 private def signedWidth (s : Shape) (h : ℤ) (q j r : ℕ) : ℤ :=
   (s.m : ℤ)*180265 + j - q*(131071-h) - 2*h*((j : ℤ)+r)
 private def width (s : Shape) (h q j r : ℕ) : ℕ :=
@@ -4706,12 +4704,6 @@ private theorem block_le (s : Shape) (v lo j r : ℕ) {h : ℕ} (hh : h ≤ 1310
     _ ≤ ∑ t ∈ range (s.B+1-j), term (j+t) :=
       sum_le_sum_of_subset_of_nonneg (range_mono hn) (by intros; positivity)
     _ = _ := (sum_Ico_eq_sum_range term j (s.B+1)).symm
-def weightedSum (s : Shape) (v : ℕ) (f : ℕ → ℕ → ℤ) : ℤ :=
-  ∑ j ∈ range (s.J+1), ∑ r ∈ range (s.U/v+1), (weight s v r : ℤ) * f j r
-def supportBase (s : Shape) (v lo : ℕ) : ℤ :=
-  weightedSum s v fun j r => blockValue s j r (supportCount s lo j r) lo
-def supportSlope (s : Shape) (v lo : ℕ) : ℤ :=
-  weightedSum s v fun j r => blockSlope j r (supportCount s lo j r)
 private def gain (s : Shape) (v h : ℕ) : ℕ :=
   shapeSum s fun q j => ∑ r ∈ range (s.U/v+1), weight s v r * width s h q j r
 private def nodeRow (k d : ℕ) : ℕ :=

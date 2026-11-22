@@ -4,6 +4,80 @@ set_option Elab.async false
 set_option maxRecDepth 40000
 set_option maxHeartbeats 0
 
+namespace LambdaTaperFast
+open TaperBudget (natOld rankNat natCell cap valuePower sumChunk rowSum sumRange)
+open K1_13_2_3_7 (countParts natKernel)
+open private removed from ProximityPrize.SubmissionLower.PrimaryTaperBudget
+
+private def target (d j h r : ℕ) (low atH : ℕ × ℕ) : ℕ :=
+  if r = 0 then 0 else
+  match low, atH, countParts (d-r) (h-3*r), countParts (d-r) (1650-j) with
+  | (c,e), (c',e'), (f,g), (k,l) => e+c'+g+k - (c+e'+f+l)
+
+private theorem old_split (a b c e c' e' f g k l : ℕ) :
+    (a+e-(b+c)) - (a+e'+f+l-(b+c'+g+k)) =
+      min (a+e-(b+c)) (e+c'+g+k-(c+e'+f+l)) := by omega
+
+private theorem target_eq (d j h r : ℕ) :
+    natOld d j - natKernel d j h r =
+      min (natOld d j) (target d j h r (countParts d (1650-j)) (countParts d h)) := by
+  rcases ht : countParts d 1651 with ⟨a,b⟩
+  rcases hl : countParts d (1650-j) with ⟨c,e⟩
+  by_cases hz : r = 0
+  · simp [natOld, natKernel, target, ht, hl, hz]
+  · rcases hh : countParts d h with ⟨c',e'⟩
+    rcases ha : countParts (d-r) (h-3*r) with ⟨f,g⟩
+    rcases hb : countParts (d-r) (1650-j) with ⟨k,l⟩
+    simpa only [natOld, natKernel, target, ht, hl, hh, ha, hb, hz, ite_false] using
+      old_split a b c e c' e' f g k l
+
+private def rankFast (d q j p : ℕ) (top : ℕ × ℕ) : ℕ :=
+  if q+j < 4650 then
+    let h := 4650-q-j
+    let low := countParts d (1650-j)
+    let atH := countParts d h
+    let old := top.1 + low.2 - (top.2 + low.1)
+    let a := target d j h (removed d q) low atH
+    if p = 0 then min old a
+    else min (min old a) (old - natKernel (d-p) j h (removed (d-p) q))
+  else 0
+
+private theorem rankFast_eq (d q j p : ℕ) :
+    rankFast d q j p (countParts d 1651) = rankNat d q j p := by
+  by_cases hq : q+j < 4650
+  · simp only [rankFast, rankNat, ite_eq_left hq]
+    change (if p = 0 then min (natOld d j) (target d j (4650-q-j) (removed d q)
+          (countParts d (1650-j)) (countParts d (4650-q-j)))
+      else min (min (natOld d j) (target d j (4650-q-j) (removed d q)
+          (countParts d (1650-j)) (countParts d (4650-q-j))))
+        (natOld d j - natKernel (d-p) j (4650-q-j) (removed (d-p) q))) = _
+    rw [← target_eq]
+    by_cases hp : p = 0
+    · simp [hp]
+    · simp only [ite_eq_right hp]
+      omega
+  · simp [rankFast, rankNat, hq]
+
+private def fastRow (J t : ℕ) : ℕ :=
+  let q := 3514+t
+  let d := cap q
+  let tc := countParts d 1651
+  let tb := countParts 1650 1651
+  sumRange (fun j => rankFast 1650 q j 0 tb - rankFast d q j (valuePower d q j) tc) J
+
+private theorem fastRow_eq (J t : ℕ) : fastRow J t = rowSum J t := by
+  unfold fastRow rowSum
+  apply congrArg (fun f : ℕ → ℕ => sumRange f J)
+  funext j
+  dsimp only [natCell]
+  simp only [rankFast_eq]
+
+private theorem fastRows (s n : ℕ) :
+    sumChunk (fastRow 600) s n = sumChunk (rowSum 600) s n := by
+  simp only [sumChunk, fastRow_eq]
+
+end LambdaTaperFast
+
 namespace TaperBudget
 
 open K1_13 (Geom)
@@ -14,131 +88,257 @@ open scoped BigOperators
 private abbrev row := rowSum 600
 
 set_option profiler true in
-private theorem rows0 : sumChunk row 0 8 = 2989340613 := by decide +kernel
+private theorem rows0 : sumChunk row 0 8 = 2989340613 := by
+  rw [← LambdaTaperFast.fastRows]
+  decide +kernel
 set_option profiler true in
-private theorem rows8 : sumChunk row 8 8 = 3064721710 := by decide +kernel
+private theorem rows8 : sumChunk row 8 8 = 3064721710 := by
+  rw [← LambdaTaperFast.fastRows]
+  decide +kernel
 set_option profiler true in
-private theorem rows16 : sumChunk row 16 8 = 3141001317 := by decide +kernel
+private theorem rows16 : sumChunk row 16 8 = 3141001317 := by
+  rw [← LambdaTaperFast.fastRows]
+  decide +kernel
 set_option profiler true in
-private theorem rows24 : sumChunk row 24 8 = 3221706942 := by decide +kernel
+private theorem rows24 : sumChunk row 24 8 = 3221706942 := by
+  rw [← LambdaTaperFast.fastRows]
+  decide +kernel
 set_option profiler true in
-private theorem rows32 : sumChunk row 32 8 = 3300717247 := by decide +kernel
+private theorem rows32 : sumChunk row 32 8 = 3300717247 := by
+  rw [← LambdaTaperFast.fastRows]
+  decide +kernel
 set_option profiler true in
-private theorem rows40 : sumChunk row 40 8 = 3381208680 := by decide +kernel
+private theorem rows40 : sumChunk row 40 8 = 3381208680 := by
+  rw [← LambdaTaperFast.fastRows]
+  decide +kernel
 set_option profiler true in
-private theorem rows48 : sumChunk row 48 8 = 3468350919 := by decide +kernel
+private theorem rows48 : sumChunk row 48 8 = 3468350919 := by
+  rw [← LambdaTaperFast.fastRows]
+  decide +kernel
 set_option profiler true in
-theorem rows56 : sumChunk row 56 8 = 3553901216 := by decide +kernel
+theorem rows56 : sumChunk row 56 8 = 3553901216 := by
+  rw [← LambdaTaperFast.fastRows]
+  decide +kernel
 set_option profiler true in
-theorem rows64 : sumChunk row 64 8 = 3641005048 := by decide +kernel
+theorem rows64 : sumChunk row 64 8 = 3641005048 := by
+  rw [← LambdaTaperFast.fastRows]
+  decide +kernel
 set_option profiler true in
-theorem rows72 : sumChunk row 72 8 = 3736730143 := by decide +kernel
+theorem rows72 : sumChunk row 72 8 = 3736730143 := by
+  rw [← LambdaTaperFast.fastRows]
+  decide +kernel
 set_option profiler true in
-theorem rows80 : sumChunk row 80 8 = 3831592054 := by decide +kernel
+theorem rows80 : sumChunk row 80 8 = 3831592054 := by
+  rw [← LambdaTaperFast.fastRows]
+  decide +kernel
 set_option profiler true in
-theorem rows88 : sumChunk row 88 8 = 3927238474 := by decide +kernel
+theorem rows88 : sumChunk row 88 8 = 3927238474 := by
+  rw [← LambdaTaperFast.fastRows]
+  decide +kernel
 set_option profiler true in
-theorem rows96 : sumChunk row 96 8 = 4032675047 := by decide +kernel
+theorem rows96 : sumChunk row 96 8 = 4032675047 := by
+  rw [← LambdaTaperFast.fastRows]
+  decide +kernel
 set_option profiler true in
-theorem rows104 : sumChunk row 104 8 = 4139011739 := by decide +kernel
+theorem rows104 : sumChunk row 104 8 = 4139011739 := by
+  rw [← LambdaTaperFast.fastRows]
+  decide +kernel
 set_option profiler true in
-theorem rows112 : sumChunk row 112 8 = 4244367622 := by decide +kernel
+theorem rows112 : sumChunk row 112 8 = 4244367622 := by
+  rw [← LambdaTaperFast.fastRows]
+  decide +kernel
 set_option profiler true in
-theorem rows120 : sumChunk row 120 8 = 4359842998 := by decide +kernel
+theorem rows120 : sumChunk row 120 8 = 4359842998 := by
+  rw [← LambdaTaperFast.fastRows]
+  decide +kernel
 set_option profiler true in
-theorem rows128 : sumChunk row 128 8 = 4479074534 := by decide +kernel
+theorem rows128 : sumChunk row 128 8 = 4479074534 := by
+  rw [← LambdaTaperFast.fastRows]
+  decide +kernel
 set_option profiler true in
-theorem rows136 : sumChunk row 136 8 = 4594535489 := by decide +kernel
+theorem rows136 : sumChunk row 136 8 = 4594535489 := by
+  rw [← LambdaTaperFast.fastRows]
+  decide +kernel
 set_option profiler true in
-theorem rows144 : sumChunk row 144 8 = 4719447871 := by decide +kernel
+theorem rows144 : sumChunk row 144 8 = 4719447871 := by
+  rw [← LambdaTaperFast.fastRows]
+  decide +kernel
 set_option profiler true in
-theorem rows152 : sumChunk row 152 8 = 4852262991 := by decide +kernel
+theorem rows152 : sumChunk row 152 8 = 4852262991 := by
+  rw [← LambdaTaperFast.fastRows]
+  decide +kernel
 set_option profiler true in
-theorem rows160 : sumChunk row 160 8 = 4977493749 := by decide +kernel
+theorem rows160 : sumChunk row 160 8 = 4977493749 := by
+  rw [← LambdaTaperFast.fastRows]
+  decide +kernel
 set_option profiler true in
-theorem rows168 : sumChunk row 168 8 = 5110525726 := by decide +kernel
+theorem rows168 : sumChunk row 168 8 = 5110525726 := by
+  rw [← LambdaTaperFast.fastRows]
+  decide +kernel
 set_option profiler true in
-theorem rows176 : sumChunk row 176 8 = 5256836096 := by decide +kernel
+theorem rows176 : sumChunk row 176 8 = 5256836096 := by
+  rw [← LambdaTaperFast.fastRows]
+  decide +kernel
 set_option profiler true in
-theorem rows184 : sumChunk row 184 8 = 5390743377 := by decide +kernel
+theorem rows184 : sumChunk row 184 8 = 5390743377 := by
+  rw [← LambdaTaperFast.fastRows]
+  decide +kernel
 set_option profiler true in
-theorem rows192 : sumChunk row 192 8 = 5529753127 := by decide +kernel
+theorem rows192 : sumChunk row 192 8 = 5529753127 := by
+  rw [← LambdaTaperFast.fastRows]
+  decide +kernel
 set_option profiler true in
-theorem rows200 : sumChunk row 200 8 = 5688594654 := by decide +kernel
+theorem rows200 : sumChunk row 200 8 = 5688594654 := by
+  rw [← LambdaTaperFast.fastRows]
+  decide +kernel
 set_option profiler true in
-theorem rows208 : sumChunk row 208 8 = 5829308790 := by decide +kernel
+theorem rows208 : sumChunk row 208 8 = 5829308790 := by
+  rw [← LambdaTaperFast.fastRows]
+  decide +kernel
 set_option profiler true in
-theorem rows216 : sumChunk row 216 8 = 5971489118 := by decide +kernel
+theorem rows216 : sumChunk row 216 8 = 5971489118 := by
+  rw [← LambdaTaperFast.fastRows]
+  decide +kernel
 set_option profiler true in
-theorem rows224 : sumChunk row 224 8 = 6141122417 := by decide +kernel
+theorem rows224 : sumChunk row 224 8 = 6141122417 := by
+  rw [← LambdaTaperFast.fastRows]
+  decide +kernel
 set_option profiler true in
-theorem rows232 : sumChunk row 232 8 = 6286108608 := by decide +kernel
+theorem rows232 : sumChunk row 232 8 = 6286108608 := by
+  rw [← LambdaTaperFast.fastRows]
+  decide +kernel
 set_option profiler true in
-theorem rows240 : sumChunk row 240 8 = 6431540425 := by decide +kernel
+theorem rows240 : sumChunk row 240 8 = 6431540425 := by
+  rw [← LambdaTaperFast.fastRows]
+  decide +kernel
 set_option profiler true in
-theorem rows248 : sumChunk row 248 8 = 6602041516 := by decide +kernel
+theorem rows248 : sumChunk row 248 8 = 6602041516 := by
+  rw [← LambdaTaperFast.fastRows]
+  decide +kernel
 set_option profiler true in
-theorem rows256 : sumChunk row 256 8 = 6751509822 := by decide +kernel
+theorem rows256 : sumChunk row 256 8 = 6751509822 := by
+  rw [← LambdaTaperFast.fastRows]
+  decide +kernel
 set_option profiler true in
-theorem rows264 : sumChunk row 264 8 = 6896640999 := by decide +kernel
+theorem rows264 : sumChunk row 264 8 = 6896640999 := by
+  rw [← LambdaTaperFast.fastRows]
+  decide +kernel
 set_option profiler true in
-theorem rows272 : sumChunk row 272 8 = 7063450232 := by decide +kernel
+theorem rows272 : sumChunk row 272 8 = 7063450232 := by
+  rw [← LambdaTaperFast.fastRows]
+  decide +kernel
 set_option profiler true in
-theorem rows280 : sumChunk row 280 8 = 7213806800 := by decide +kernel
+theorem rows280 : sumChunk row 280 8 = 7213806800 := by
+  rw [← LambdaTaperFast.fastRows]
+  decide +kernel
 set_option profiler true in
-theorem rows288 : sumChunk row 288 8 = 7354364209 := by decide +kernel
+theorem rows288 : sumChunk row 288 8 = 7354364209 := by
+  rw [← LambdaTaperFast.fastRows]
+  decide +kernel
 set_option profiler true in
-theorem rows296 : sumChunk row 296 8 = 7512114721 := by decide +kernel
+theorem rows296 : sumChunk row 296 8 = 7512114721 := by
+  rw [← LambdaTaperFast.fastRows]
+  decide +kernel
 set_option profiler true in
-theorem rows304 : sumChunk row 304 8 = 7658789195 := by decide +kernel
+theorem rows304 : sumChunk row 304 8 = 7658789195 := by
+  rw [← LambdaTaperFast.fastRows]
+  decide +kernel
 set_option profiler true in
-theorem rows312 : sumChunk row 312 8 = 7789842793 := by decide +kernel
+theorem rows312 : sumChunk row 312 8 = 7789842793 := by
+  rw [← LambdaTaperFast.fastRows]
+  decide +kernel
 set_option profiler true in
-theorem rows320 : sumChunk row 320 8 = 7932571009 := by decide +kernel
+theorem rows320 : sumChunk row 320 8 = 7932571009 := by
+  rw [← LambdaTaperFast.fastRows]
+  decide +kernel
 set_option profiler true in
-theorem rows328 : sumChunk row 328 8 = 8070335283 := by decide +kernel
+theorem rows328 : sumChunk row 328 8 = 8070335283 := by
+  rw [← LambdaTaperFast.fastRows]
+  decide +kernel
 set_option profiler true in
-theorem rows336 : sumChunk row 336 8 = 8185948289 := by decide +kernel
+theorem rows336 : sumChunk row 336 8 = 8185948289 := by
+  rw [← LambdaTaperFast.fastRows]
+  decide +kernel
 set_option profiler true in
-theorem rows344 : sumChunk row 344 8 = 8307233701 := by decide +kernel
+theorem rows344 : sumChunk row 344 8 = 8307233701 := by
+  rw [← LambdaTaperFast.fastRows]
+  decide +kernel
 set_option profiler true in
-theorem rows352 : sumChunk row 352 8 = 8429242212 := by decide +kernel
+theorem rows352 : sumChunk row 352 8 = 8429242212 := by
+  rw [← LambdaTaperFast.fastRows]
+  decide +kernel
 set_option profiler true in
-theorem rows360 : sumChunk row 360 8 = 8522803077 := by decide +kernel
+theorem rows360 : sumChunk row 360 8 = 8522803077 := by
+  rw [← LambdaTaperFast.fastRows]
+  decide +kernel
 set_option profiler true in
-theorem rows368 : sumChunk row 368 8 = 8615444240 := by decide +kernel
+theorem rows368 : sumChunk row 368 8 = 8615444240 := by
+  rw [← LambdaTaperFast.fastRows]
+  decide +kernel
 set_option profiler true in
-theorem rows376 : sumChunk row 376 8 = 8713859927 := by decide +kernel
+theorem rows376 : sumChunk row 376 8 = 8713859927 := by
+  rw [← LambdaTaperFast.fastRows]
+  decide +kernel
 set_option profiler true in
-theorem rows384 : sumChunk row 384 8 = 8777670653 := by decide +kernel
+theorem rows384 : sumChunk row 384 8 = 8777670653 := by
+  rw [← LambdaTaperFast.fastRows]
+  decide +kernel
 set_option profiler true in
-theorem rows392 : sumChunk row 392 8 = 8833672402 := by decide +kernel
+theorem rows392 : sumChunk row 392 8 = 8833672402 := by
+  rw [← LambdaTaperFast.fastRows]
+  decide +kernel
 set_option profiler true in
-theorem rows400 : sumChunk row 400 8 = 8899053394 := by decide +kernel
+theorem rows400 : sumChunk row 400 8 = 8899053394 := by
+  rw [← LambdaTaperFast.fastRows]
+  decide +kernel
 set_option profiler true in
-theorem rows408 : sumChunk row 408 8 = 8924421886 := by decide +kernel
+theorem rows408 : sumChunk row 408 8 = 8924421886 := by
+  rw [← LambdaTaperFast.fastRows]
+  decide +kernel
 set_option profiler true in
-theorem rows416 : sumChunk row 416 8 = 8935210038 := by decide +kernel
+theorem rows416 : sumChunk row 416 8 = 8935210038 := by
+  rw [← LambdaTaperFast.fastRows]
+  decide +kernel
 set_option profiler true in
-theorem rows424 : sumChunk row 424 8 = 8956971540 := by decide +kernel
+theorem rows424 : sumChunk row 424 8 = 8956971540 := by
+  rw [← LambdaTaperFast.fastRows]
+  decide +kernel
 set_option profiler true in
-theorem rows432 : sumChunk row 432 8 = 8934265132 := by decide +kernel
+theorem rows432 : sumChunk row 432 8 = 8934265132 := by
+  rw [← LambdaTaperFast.fastRows]
+  decide +kernel
 set_option profiler true in
-theorem rows440 : sumChunk row 440 8 = 8893651408 := by decide +kernel
+theorem rows440 : sumChunk row 440 8 = 8893651408 := by
+  rw [← LambdaTaperFast.fastRows]
+  decide +kernel
 set_option profiler true in
-theorem rows448 : sumChunk row 448 8 = 8853548727 := by decide +kernel
+theorem rows448 : sumChunk row 448 8 = 8853548727 := by
+  rw [← LambdaTaperFast.fastRows]
+  decide +kernel
 set_option profiler true in
-theorem rows456 : sumChunk row 456 8 = 8774993977 := by decide +kernel
+theorem rows456 : sumChunk row 456 8 = 8774993977 := by
+  rw [← LambdaTaperFast.fastRows]
+  decide +kernel
 set_option profiler true in
-theorem rows464 : sumChunk row 464 8 = 8671988451 := by decide +kernel
+theorem rows464 : sumChunk row 464 8 = 8671988451 := by
+  rw [← LambdaTaperFast.fastRows]
+  decide +kernel
 set_option profiler true in
-theorem rows472 : sumChunk row 472 8 = 8559112828 := by decide +kernel
+theorem rows472 : sumChunk row 472 8 = 8559112828 := by
+  rw [← LambdaTaperFast.fastRows]
+  decide +kernel
 set_option profiler true in
-theorem rows480 : sumChunk row 480 8 = 8411849481 := by decide +kernel
+theorem rows480 : sumChunk row 480 8 = 8411849481 := by
+  rw [← LambdaTaperFast.fastRows]
+  decide +kernel
 set_option profiler true in
-theorem rows488 : sumChunk row 488 8 = 8234559803 := by decide +kernel
+theorem rows488 : sumChunk row 488 8 = 8234559803 := by
+  rw [← LambdaTaperFast.fastRows]
+  decide +kernel
 set_option profiler true in
-theorem rows496 : sumChunk row 496 3 = 3036818172 := by decide +kernel
+theorem rows496 : sumChunk row 496 3 = 3036818172 := by
+  rw [← LambdaTaperFast.fastRows]
+  decide +kernel
 
 private theorem join (lo n m next full : ℕ) (a b result : ℕ)
     (hLen : n+m = full) (hStart : lo+n = next) (hValue : Nat.add a b = result)
@@ -276,15 +476,4 @@ private theorem sum_checked : sumChunk row 0 499 = 396610034658 := by
     join 0 8 491 8 499 2989340613 393620694045 396610034658 (by decide) (by decide) (by decide) rows0 tail8
   exact tail0
 
-theorem tapered_rank (x y : Geom) :
-    Module.finrank Geom
-      (LinearMap.range ((localConstraintAt 3000 x y).domRestrict
-        (TaperNormalize.space cap))) ≤ 343903138965692 := by
-  have h : 396610034658 ≤ ∑ i : BlockIndex, tailSaving i := by
-    have t := fastSavings_le (J := 600) (by decide)
-    rw [← sumChunk_eq_fastSavings, sum_checked] at t
-    exact t
-  exact rank_le x y h
-
-#print axioms tapered_rank
 end TaperBudget
