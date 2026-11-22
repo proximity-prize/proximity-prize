@@ -1,3 +1,4 @@
+import Mathlib.Algebra.MvPolynomial.NoZeroDivisors
 import ProximityPrize.SubmissionLower.KoalaRuledEmbedding
 import ProximityPrize.SubmissionLower.KoalaWeightedDegree
 

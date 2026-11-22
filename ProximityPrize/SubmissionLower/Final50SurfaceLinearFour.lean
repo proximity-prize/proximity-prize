@@ -33,7 +33,7 @@ theorem surface_eq_weights_of_signed (kind : Surface) (f : Shape) (b j t : ℤ)
   rw [hw]
   exact hn q
 
-theorem signed_four_linear (q p r s : Shape) :
+private theorem signed_four_linear (q p r s : Shape) :
     signedMixed q p r s = signedMixed ⟨1,0,0⟩ p r s*q.b +
       signedMixed ⟨0,1,0⟩ p r s*q.j + signedMixed ⟨0,0,1⟩ p r s*q.t := by
   simp only [signedMixed, difference, volume32, Shape.plus, Nat.cast_add, Nat.cast_zero,

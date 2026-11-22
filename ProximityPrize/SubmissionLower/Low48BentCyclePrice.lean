@@ -18,12 +18,12 @@ def integral (a : Cap) : ℤ := bentIntegral a.1.b a.1.j a.1.t a.2
 
 private def slots : List (Fin 5) := [0, 1, 2, 3, 4]
 
-theorem sublists_slots :
+private theorem sublists_slots :
     (↑(slots.sublists.map List.toFinset) : Multiset (Finset (Fin 5))) =
       (Finset.univ : Finset (Fin 5)).powerset.val := by
   decide
 
-theorem fold_cap (B : Fin 5 → Cap) (l : List (Fin 5)) (hl : l.Nodup) (acc : Cap) :
+private theorem fold_cap (B : Fin 5 → Cap) (l : List (Fin 5)) (hl : l.Nodup) (acc : Cap) :
     (l.map B).foldl addBent acc = Low48BentLattice.Add acc (Low48BentLattice.Sum l.toFinset B) := by
   induction l generalizing acc with
   | nil =>
@@ -35,11 +35,17 @@ theorem fold_cap (B : Fin 5 → Cap) (l : List (Fin 5)) (hl : l.Nodup) (acc : Ca
     simp [Low48BentLattice.Add, addBent, Low48BentLattice.Sum, Shape.plus,
       Finset.sum_insert (mt List.mem_toFinset.mp hi), Nat.add_assoc]
 
-theorem fold_charge {α : Type*} (f : α → ℤ) (l : List α) (a : ℤ) :
+private theorem fold_charge {α : Type*} (f : α → ℤ) (l : List α) (a : ℤ) :
     l.foldl (fun s x => s + f x) a = a + (l.map f).sum := by
   induction l generalizing a with
   | nil => simp
   | cons i l ih => simp [ih, add_assoc]
+
+private theorem cap_list (p : Shape) :
+    slots.map (caps p) = [(p, 0), (primaryBox, 0), Low48Price.bentGraph p,
+      Low48Price.bentLift (Low48Price.taylorLength - 4) p,
+      Low48Price.bentLift (Low48Price.taylorLength - 3) p] := by
+  rfl
 
 set_option maxHeartbeats 1000000 in
 private theorem ambient_list (B : Fin 5 → Cap) :
@@ -65,6 +71,33 @@ private theorem ambient_list (B : Fin 5 → Cap) :
         Multiset (Finset (Fin 5)))).sum = _
       rw [sublists_slots]
       rfl
+
+theorem ambient_price {p : Shape} (h : ∀ i, Chamber (caps p i)) :
+    (60 * 32 : ℚ) * mixedDegree (capFamily (caps p)) ⊥ Finset.univ ≤
+      (tiltedSurface p primaryBox : ℚ) := by
+  have hcoeff (a : Cap) (ha : Chamber a) :
+      (MvPolynomial.affineHilbertPolynomial
+        (Ideal.comap (MvPolynomial.monomialMap K1_13_6.GeoField (latticePoints a)) ⊥)).coeff 5 =
+      (integral a : ℚ) / 60 := by
+    change (MvPolynomial.affineHilbertPolynomial
+      (Ideal.comap (MvPolynomial.monomialMap K1_13_6.GeoField (latticePoints a)).toRingHom ⊥)).coeff 5 =
+      (integral a : ℚ) / 60
+    rw [Low48BentVolume.ambient_coeff a ha]
+    unfold integral
+    rw [Low48BentVolume.cast_price_integral a]
+  rw [mul_assoc, ambient_cap (caps p) h (fun a => (integral a : ℚ) / 60) hcoeff]
+  simp_rw [← mul_div_assoc]
+  rw [← Finset.sum_div, ← mul_div_assoc, mul_div_cancel_left₀ _ (by norm_num : (60 : ℚ) ≠ 0)]
+  have hnormalize := Low48BentPolarization.remove_baseline (caps p)
+  change (∑ J ∈ (Finset.univ : Finset (Fin 5)).powerset, (-1 : ℚ) ^ (5 - J.card) *
+      (integral (capSum (caps p) (positiveDiagonal J)) : ℚ)) = _ at hnormalize
+  rw [hnormalize]
+  unfold tiltedSurface
+  rw [← cap_list, ambient_list]
+  let q : ℤ := ∑ J ∈ (Finset.univ : Finset (Fin 5)).powerset, (-1 : ℤ) ^ (5 - J.card) *
+    integral (Low48BentLattice.Sum J (caps p))
+  have hq : q ≤ (q.toNat : ℤ) := by omega
+  exact_mod_cast hq
 
 end
 

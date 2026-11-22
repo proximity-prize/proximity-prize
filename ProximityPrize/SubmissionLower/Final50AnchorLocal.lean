@@ -21,15 +21,15 @@ section
 open MvPolynomial
 
 private def truncateX : DifferentialPolynomial Geom 3 →ₗ[Geom] DifferentialPolynomial Geom 3 :=
-  filterSupport (fun u => u none < 93)
+  filterSupport (fun u => u none < 99)
 private theorem origin_monomial_zero (u : JetVariable 3 →₀ ℕ) (a : Geom)
-    (hu : 93 ≤ u none) :
-    localConstraintAt 93 0 0 (monomial u a) = 0 := by
+    (hu : 99 ≤ u none) :
+    localConstraintAt 99 0 0 (monomial u a) = 0 := by
   have hm : (MvPolynomial.X none ^ u none * monomial (u.erase none) a :
       DifferentialPolynomial Geom 3) = monomial u a := by
     rw [MvPolynomial.X_pow_eq_monomial, MvPolynomial.monomial_mul_monomial, one_mul, Finsupp.single_add_erase]
   rw [← hm]
-  apply (satisfiesLocalConstraints_iff_coeff_eq_zero 93 0 0 _).mpr
+  apply (satisfiesLocalConstraints_iff_coeff_eq_zero 99 0 0 _).mpr
   intro e he
   rw [map_mul, map_pow, unscaledLocalSubstitution, bind₁_X_right]
   simp only [unscaledLocalImage, MvPolynomial.C_0, zero_add, MvPolynomial.X_pow_eq_monomial]
@@ -39,26 +39,26 @@ private theorem origin_monomial_zero (u : JetVariable 3 →₀ ℕ) (a : Geom)
   change u none ≤ e (localT 3) → False
   omega
 private theorem origin_truncateX (Q : DifferentialPolynomial Geom 3) :
-    localConstraintAt 93 0 0 (truncateX Q) = localConstraintAt 93 0 0 Q := by
+    localConstraintAt 99 0 0 (truncateX Q) = localConstraintAt 99 0 0 Q := by
   rw [Q.as_sum]
   simp only [map_sum]
   apply Finset.sum_congr rfl
   intro u _
   have hfilter : truncateX (monomial u (Q.coeff u)) =
-      if u none < 93 then monomial u (Q.coeff u) else 0 := by
+      if u none < 99 then monomial u (Q.coeff u) else 0 := by
     ext v
     rw [truncateX, coeff_filterSupport]
     by_cases h : u = v
     · subst v
-      by_cases hx : u none < 93 <;> simp [hx]
-    · by_cases hx : u none < 93 <;> simp [hx, MvPolynomial.coeff_monomial, h]
+      by_cases hx : u none < 99 <;> simp [hx]
+    · by_cases hx : u none < 99 <;> simp [hx, MvPolynomial.coeff_monomial, h]
   rw [hfilter]
   split
   · rfl
   · rw [map_zero, origin_monomial_zero _ _ (by omega)]
 
 private theorem centered {u v : JetVariable 3 →₀ ℕ}
-    (h : v ≤ u) (hu : WideEligible u) (hx : v none < 93) :
+    (h : v ≤ u) (hu : WideEligible u) (hx : v none < 99) :
     AnchorEligible v := by
   have hd : v.some.degree ≤ u.some.degree := by
     rw [Finsupp.degree_eq_sum, Finsupp.degree_eq_sum]
@@ -70,23 +70,23 @@ private theorem centered {u v : JetVariable 3 →₀ ℕ}
   have hsum := add_le_add (add_le_add (h (some 1)) (h (some 2))) (h (some 3))
   refine ⟨hd.trans hdeg,hi.trans hidx,(h _).trans ht,hd.trans (htail.trans (gradeLimit_antitone hsum)),?_⟩
   have hw := Finsupp.weight_le_weight
-    (w := fun j : Fin 4 => 133448 - j.val) (w' := fun _ => 133448)
+    (w := fun j : Fin 4 => 133484 - j.val) (w' := fun _ => 133484)
     (fun j => Nat.sub_le _ _) v.some
-  have he : v.some.weight (fun _ => 133448) = 133448 * v.some.degree := by
+  have he : v.some.weight (fun _ => 133484) = 133484 * v.some.degree := by
     simp only [Finsupp.weight_apply, Finsupp.degree_apply, Finsupp.sum, smul_eq_mul,
       Finset.mul_sum, Nat.mul_comm]
   rw [he] at hw
-  have hweight : differentialWeight (d := 3) 133448 =
-      fun j => j.elim 1 (fun i => 133448 - i.val) := by
+  have hweight : differentialWeight (d := 3) 133484 =
+      fun j => j.elim 1 (fun i => 133484 - i.val) := by
     funext j
     cases j <;> rfl
   rw [← Finsupp.optionElim_some v, hweight, Finsupp.weight_optionElim, one_mul]
   calc
-    _ ≤ 92 + 133448 * 125 :=
+    _ ≤ 98 + 133484 * 132 :=
       Nat.add_le_add (Nat.le_of_lt_succ hx)
         (hw.trans (Nat.mul_le_mul_left _ (hd.trans hdeg)))
     _ ≤ _ := by decide
-theorem centered_in_space (x y : Geom) (Q : wideSpace) :
+private theorem centered_in_space (x y : Geom) (Q : wideSpace) :
     truncateX (globalPointTranslation x y (Q : DifferentialPolynomial Geom 3)) ∈
       anchorSpace := by
   classical
@@ -104,12 +104,12 @@ theorem centered_in_space (x y : Geom) (Q : wideSpace) :
 theorem rank_at_point_le_origin (x y : Geom) :
     Module.finrank Geom (LinearMap.range (wideLocal x y)) ≤
       Module.finrank Geom (LinearMap.range (anchorLocal 0 0)) := by
-  have hpositive (j : JetVariable 3) : differentialWeight 133448 j ≠ 0 := by
+  have hpositive (j : JetVariable 3) : differentialWeight 133484 j ≠ 0 := by
     cases j with
     | none => decide
     | some j =>
       have hj := j.isLt
-      change 133448 - j.val ≠ 0
+      change 133484 - j.val ≠ 0
       omega
   have : Module.Finite Geom anchorSpace :=
     restrictSupport_finite <|
@@ -121,8 +121,8 @@ theorem rank_at_point_le_origin (x y : Geom) :
   have he : wideLocal x y = (anchorLocal 0 0).comp tr := by
     apply LinearMap.ext
     intro Q
-    change localConstraintAt 93 x y (Q : DifferentialPolynomial Geom 3) =
-      localConstraintAt 93 0 0 (truncateX (globalPointTranslation x y Q))
+    change localConstraintAt 99 x y (Q : DifferentialPolynomial Geom 3) =
+      localConstraintAt 99 0 0 (truncateX (globalPointTranslation x y Q))
     rw [origin_truncateX,localConstraintAt_eq_zero_globalPointTranslation]
   rw [he]
   exact LinearMap.finrank_range_comp_le_left _ _
@@ -130,22 +130,22 @@ theorem rank_at_point_le_origin (x y : Geom) :
 end
 
 theorem per_position (x y : Geom) :
-    Module.finrank Geom (LinearMap.range (wideLocal x y)) ≤ 12537864 :=
+    Module.finrank Geom (LinearMap.range (wideLocal x y)) ≤ 16564024 :=
   (rank_at_point_le_origin x y).trans Final50Rank.origin_rank
 
 theorem finiteWide : Module.Finite Geom wideSpace := by
-  have hpositive (j : JetVariable 3) : differentialWeight 133448 j ≠ 0 := by
+  have hpositive (j : JetVariable 3) : differentialWeight 133484 j ≠ 0 := by
     cases j with
     | none => decide
     | some j =>
       have hj := j.isLt
-      change 133448 - j.val ≠ 0
+      change 133484 - j.val ≠ 0
       omega
   exact MvPolynomial.restrictSupport_finite <|
     (Finsupp.finite_of_nat_weight_le _ hpositive _).subset fun _ hu => hu.2.2.2.2
 
 theorem shape_bound (Q : wideSpace) :
-    InBox (shape (MvPolynomial.optionEquivRight Geom (Fin 4) Q)) ⟨125, 52, 14⟩ := by
+    InBox (shape (MvPolynomial.optionEquivRight Geom (Fin 4) Q)) ⟨132, 55, 14⟩ := by
   classical
   let P : Row 4 := MvPolynomial.optionEquivRight Geom (Fin 4) Q
   have hQ := (MvPolynomial.mem_restrictSupport_iff Geom).mp Q.property
@@ -171,7 +171,7 @@ theorem shape_bound (Q : wideSpace) :
     simpa only [Finsupp.optionElim_apply_some] using hi.2.2.1
 
 theorem active_bound (Q : wideSpace) :
-    Low50Anchor.ActiveFits (MvPolynomial.optionEquivRight Geom (Fin 4) Q) 157 := by
+    Low50Anchor.ActiveFits (MvPolynomial.optionEquivRight Geom (Fin 4) Q) 165 := by
   classical
   let P : Row 4 := MvPolynomial.optionEquivRight Geom (Fin 4) Q
   intro m hm
@@ -189,7 +189,7 @@ theorem active_bound (Q : wideSpace) :
   have hweight : m.weight (fun i : Fin 4 => i.val) = m 1 + 2 * m 2 + 3 * m 3 := by
     rw [Finsupp.weight_eq_sum, Fin.sum_univ_four]
     simp [Nat.mul_comm, Nat.add_assoc]
-  change m.weight (fun i : Fin 4 => i.val) ≤ 52 at hw
+  change m.weight (fun i : Fin 4 => i.val) ≤ 55 at hw
   rw [hweight] at hw
   have hc := cap_of_grade (s := m.degree) (t := m 1 + m 2 + m 3)
     (by omega) (by omega) (by simpa [Finsupp.some_optionElim] using hl)
@@ -197,8 +197,8 @@ theorem active_bound (Q : wideSpace) :
   omega
 
 theorem rawWeight (Q : wideSpace) :
-    differentialWeightedDegree 133448 (Q : DifferentialPolynomial Geom 3) ≤
-      93 * 179905 - 1 + 52 := by
+    differentialWeightedDegree 133484 (Q : DifferentialPolynomial Geom 3) ≤
+      99 * 179886 - 1 + 55 := by
   rw [differentialWeightedDegree, MvPolynomial.weightedTotalDegree, Finset.sup_le_iff]
   exact fun m hm => (Q.property hm).2.2.2.2
 

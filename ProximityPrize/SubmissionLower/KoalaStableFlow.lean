@@ -1,5 +1,5 @@
 import ProximityPrize.SubmissionLower.KoalaJetTaylor
-import ProximityPrize.SubmissionLower.HighCore82219UpperCertificates
+import ProximityPrize.SubmissionLower.HighCore82258UpperCertificates
 import ProximityPrize.SubmissionLower.PortLow6
 
 set_option autoImplicit false
@@ -9,26 +9,26 @@ set_option backward.isDefEq.respectTransparency false
 namespace SplitCut.StableFlow
 noncomputable section
 
-open Polynomial HighCore82219Upper HighCore82219Upper_3 HighCore82219Upper_3_1
-open HighCore82219Upper_3_1_2 (seedMap sepAlong)
-open HighCore82219Upper_4 (SplitField geomRoots coeffDx point)
+open Polynomial HighCore82258Upper HighCore82258Upper_3 HighCore82258Upper_3_1
+open HighCore82258Upper_3_1_2 (seedMap sepAlong)
+open HighCore82258Upper_4 (SplitField geomRoots coeffDx point)
 open K1_14 (FX Seeds Equation)
 open K1_14_6_1 (flatten separant)
-open private HighCore82219Upper_3_1_1.flow HighCore82219Upper_3_1_1.flow_mul
-  HighCore82219Upper_3_1_1.flow_C HighCore82219Upper_3_1_1.coeffDiff_derivative
-  HighCore82219Upper_3_2_1.clear_velocity HighCore82219Upper_4_1.intDerivation
-  HighCore82219Upper_4_1.transportIntAlgebra HighCore82219Upper_4_1.transportIntAlgebra_apply
-  HighCore82219Upper_4_2.point_flatten HighCore82219Upper_2.factorial_ne_zero
-  from ProximityPrize.SubmissionLower.HighCore82219UpperGeometry
-open private HighCore82219GeometryCert_1.firstJet HighCore82219GeometryCert_1.firstJet_graph
-  HighCore82219GeometryCert_1.derivationOfJet HighCore82219GeometryCert_1.coeffDiff_C
-  HighCore82219GeometryCert_1.root_chain HighCore82219GeometryCert_1.jet_chain
-  HighCore82219GeometryCert_1.deriv_mul
-  from ProximityPrize.SubmissionLower.HighCore82219UpperCertificates
+open private HighCore82258Upper_3_1_1.flow HighCore82258Upper_3_1_1.flow_mul
+  HighCore82258Upper_3_1_1.flow_C HighCore82258Upper_3_1_1.coeffDiff_derivative
+  HighCore82258Upper_3_2_1.clear_velocity HighCore82258Upper_4_1.intDerivation
+  HighCore82258Upper_4_1.transportIntAlgebra HighCore82258Upper_4_1.transportIntAlgebra_apply
+  HighCore82258Upper_4_2.point_flatten HighCore82258Upper_2.factorial_ne_zero
+  from ProximityPrize.SubmissionLower.HighCore82258UpperGeometry
+open private HighCore82258GeometryCert_1.firstJet HighCore82258GeometryCert_1.firstJet_graph
+  HighCore82258GeometryCert_1.derivationOfJet HighCore82258GeometryCert_1.coeffDiff_C
+  HighCore82258GeometryCert_1.root_chain HighCore82258GeometryCert_1.jet_chain
+  HighCore82258GeometryCert_1.deriv_mul
+  from ProximityPrize.SubmissionLower.HighCore82258UpperCertificates
 open private P0_9_6_3.stable_of_simple_cut from ProximityPrize.SubmissionLower.PortLow6
 open private lift_derivation from ProximityPrize.SubmissionLower.Fast073
 
-abbrev action (f : Equation) : JetRing →+ JetRing := HighCore82219Upper_3_1_1.flow f
+abbrev action (f : Equation) : JetRing →+ JetRing := HighCore82258Upper_3_1_1.flow f
 
 theorem flow_mem_graph (J : Input) (B : ResidueLift J) (D : Factors J B) :
     ∀ N ∈ graphIdeal J B D, action J.f N ∈ graphIdeal J B D := by
@@ -61,11 +61,11 @@ theorem flow_mem_graph (J : Input) (B : ResidueLift J) (D : Factors J B) :
   intro N hN
   apply (hker _).mp
   exact congrArg TrivSqZeroExt.snd
-    (HighCore82219GeometryCert_1.firstJet_graph J B D ψ hp ht hs hg N hN)
+    (HighCore82258GeometryCert_1.firstJet_graph J B D ψ hp ht hs hg N hN)
 
 private def derivation (f : Equation) :=
-  HighCore82219Upper_4_1.intDerivation (action f) (fun x y => by
-    rw [HighCore82219Upper_3_1_1.flow_mul, mul_comm y])
+  HighCore82258Upper_4_1.intDerivation (action f) (fun x y => by
+    rw [HighCore82258Upper_3_1_1.flow_mul, mul_comm y])
 
 /-- Two consecutive zero cutoffs make a component of generic length one invariant. -/
 theorem stable_of_step {J : Input} {B : ResidueLift J} {D : Factors J B}
@@ -109,7 +109,7 @@ abbrev CurveField (P : Ideal JetRing) := FractionRing (JetRing ⧸ P)
 abbrev curveMap (P : Ideal JetRing) : JetRing →+* CurveField P :=
   (algebraMap (JetRing ⧸ P) (CurveField P)).comp (Ideal.Quotient.mk P)
 
-def scaledDerivation {E : Type} [Field E] (a : E) (d : E →+ E)
+private def scaledDerivation {E : Type} [Field E] (a : E) (d : E →+ E)
     (hd : ∀ x y, d (x*y) = x*d y + y*d x) : Derivation ℤ E E := by
   let d' : E →+ E := ⟨⟨fun x => a*d x, by rw [map_zero, mul_zero]⟩,
     fun x y => by
@@ -127,13 +127,13 @@ theorem differential_curve (f : Equation) (P : Ideal JetRing) [P.IsPrime]
   let A := JetRing ⧸ P
   let E := CurveField P
   let q := Ideal.Quotient.mk P
-  let ε := HighCore82219GeometryCert_1.firstJet f q
+  let ε := HighCore82258GeometryCert_1.firstJet f q
   let G := Ideal.Quotient.lift P ε (fun a ha => TrivSqZeroExt.ext
     (Ideal.Quotient.eq_zero_iff_mem.mpr ha) (Ideal.Quotient.eq_zero_iff_mem.mpr (hstable a ha)))
   have hG (a : A) : (G a).fst = a := by
     obtain ⟨g, rfl⟩ := Ideal.Quotient.mk_surjective a
     rfl
-  let d := HighCore82219GeometryCert_1.derivationOfJet G hG 1
+  let d := HighCore82258GeometryCert_1.derivationOfJet G hG 1
   let _ : Algebra.FormallyEtale A E := Algebra.FormallyEtale.of_isLocalization (nonZeroDivisors A)
   obtain ⟨D, hD⟩ := lift_derivation (A := A) (B := E) d
   let ev := curveMap P
@@ -153,22 +153,22 @@ theorem differential_curve (f : Equation) (P : Ideal JetRing) [P.IsPrime]
       exact D.leibniz x y), ?_⟩, rfl⟩
   intro s
   change (ev (jetSeparant f))⁻¹ * D (ev (C (C s))) = ev (C (C (coeffDx s)))
-  rw [hD', HighCore82219Upper_3_1_1.flow_C, HighCore82219GeometryCert_1.coeffDiff_C,
+  rw [hD', HighCore82258Upper_3_1_1.flow_C, HighCore82258GeometryCert_1.coeffDiff_C,
     Polynomial.derivative_C, map_zero, mul_zero, add_zero, map_mul, inv_mul_cancel_left₀ hsn]
 
 private def jetPoint {E : Type} [Field E] (T : JetTaylor.Data E) (y : E) : JetRing →+* E :=
   eval₂RingHom (eval₂RingHom T.ι y) (T.δ y)
 
-theorem jetPoint_C {E : Type} [Field E] (T : JetTaylor.Data E) (y : E) (q : Equation) :
+private theorem jetPoint_C {E : Type} [Field E] (T : JetTaylor.Data E) (y : E) (q : Equation) :
     jetPoint T y (C q) = q.eval₂ T.ι y := eval₂_C _ _
 
-theorem point_flatten_eval {E : Type} [Field E] (ι : Seeds →+* E) (y : E) (q : Equation) :
+private theorem point_flatten_eval {E : Type} [Field E] (ι : Seeds →+* E) (y : E) (q : Equation) :
     point ι y (flatten q) = q.eval₂ ι y := by
   change eval₂ ι y ((MvPolynomial.optionEquivLeft FX (Fin 2))
     ((MvPolynomial.optionEquivLeft FX (Fin 2)).symm q)) = _
   rw [AlgEquiv.apply_symm_apply]
 
-theorem jetPoint_chain {E : Type} [Field E] (T : JetTaylor.Data E) (y : E)
+private theorem jetPoint_chain {E : Type} [Field E] (T : JetTaylor.Data E) (y : E)
     (f : Equation) (hf : jetPoint T y (C f) = 0) :
     jetPoint T y (tangentEquation f) = 0 ∧
     (∀ p, jetPoint T y (jetSeparant f) * T.δ (jetPoint T y p) = jetPoint T y (action f p)) ∧
@@ -176,7 +176,7 @@ theorem jetPoint_chain {E : Type} [Field E] (T : JetTaylor.Data E) (y : E)
   let ev := jetPoint T y
   have hC (q : Equation) : T.δ (ev (C q)) =
       ev (C (coefficientDerivative q)) + ev velocity * ev (C q.derivative) := by
-    have hh := HighCore82219GeometryCert_1.root_chain T.δ (eval₂RingHom T.ι y)
+    have hh := HighCore82258GeometryCert_1.root_chain T.δ (eval₂RingHom T.ι y)
       (fun s => by simpa only [coe_eval₂RingHom, eval₂_C] using T.compatible s) q
     simpa only [jetPoint_C, show ev velocity = T.δ y from eval₂_X _ _,
       coe_eval₂RingHom, eval₂_X, ev] using hh
@@ -190,20 +190,20 @@ theorem jetPoint_chain {E : Type} [Field E] (T : JetTaylor.Data E) (y : E)
     have he : ev (C (coefficientDerivative f)) + ev velocity * ev (C f.derivative) = 0 := by
       rw [← hC, hf, map_zero]
     have h := congrArg T.δ he
-    simp only [map_add, map_zero, HighCore82219GeometryCert_1.deriv_mul, hC,
-      HighCore82219Upper_3_1_1.coeffDiff_derivative] at h
+    simp only [map_add, map_zero, HighCore82258GeometryCert_1.deriv_mul, hC,
+      HighCore82258Upper_3_1_1.coeffDiff_derivative] at h
     simp only [secondAlongVelocity, map_add, map_mul, map_pow, map_ofNat]
-    rw [HighCore82219Upper_3_1_1.coeffDiff_derivative]
+    rw [HighCore82258Upper_3_1_1.coeffDiff_derivative]
     linear_combination h
-  exact ⟨ht, HighCore82219GeometryCert_1.jet_chain T.δ ev f hC hx, hs⟩
+  exact ⟨ht, HighCore82258GeometryCert_1.jet_chain T.δ ev f hC hx, hs⟩
 
-theorem root_data (J : Input) (B : ResidueLift J) (D : Factors J B) :
+private theorem root_data (J : Input) (B : ResidueLift J) (D : Factors J B) :
     (generic D.proper).Separable ∧ D.proper.IsPrimitive := by
   have hd : D.proper ∣ J.f := ⟨_, D.product⟩
   exact ⟨J.reduced.2.2.of_dvd (Polynomial.map_dvd _ hd), isPrimitive_of_dvd J.reduced.2.1 hd⟩
 
-theorem graph_mem_of_roots (J : Input) (B : ResidueLift J) (D : Factors J B)
-    (T : JetTaylor.Data (SplitField D.proper)) (hι : T.ι = HighCore82219Upper_4.splitMap D.proper)
+private theorem graph_mem_of_roots (J : Input) (B : ResidueLift J) (D : Factors J B)
+    (T : JetTaylor.Data (SplitField D.proper)) (hι : T.ι = HighCore82258Upper_4.splitMap D.proper)
     (N : JetRing) (hroot : ∀ y ∈ geomRoots D.proper, jetPoint T y (C J.f) = 0)
     (hN : ∀ y ∈ geomRoots D.proper, jetPoint T y N = 0) : N ∈ graphIdeal J B D := by
   classical
@@ -214,7 +214,7 @@ theorem graph_mem_of_roots (J : Input) (B : ResidueLift J) (D : Factors J B)
   have hzero (y : SplitField D.proper) (hy : y ∈ geomRoots D.proper) : (generic q).aeval y = 0 := by
     let ev := jetPoint T y
     have ht : ev (C b + Polynomial.X*C a) = 0 := (jetPoint_chain T y J.f (hroot y hy)).1
-    have h := HighCore82219Upper_3_2_1.clear_velocity ev a b N ht
+    have h := HighCore82258Upper_3_2_1.clear_velocity ev a b N ht
     rw [map_mul, hN y hy, mul_zero] at h
     change (0 : SplitField D.proper) = jetPoint T y (C q) at h
     rw [jetPoint_C, hι] at h
@@ -242,7 +242,7 @@ theorem graph_mem_of_roots (J : Input) (B : ResidueLift J) (D : Factors J B)
     change Ideal.Quotient.mk I (tangentEquation J.f) = 0
     exact Ideal.Quotient.eq_zero_iff_mem.mpr (Ideal.subset_span (Set.mem_insert_of_mem _ (Set.mem_singleton _)))
   have hx := Ideal.Quotient.eq_zero_iff_mem.mp
-    ((HighCore82219Upper_3_2_1.clear_velocity (Ideal.Quotient.mk I) a b N ht).trans
+    ((HighCore82258Upper_3_2_1.clear_velocity (Ideal.Quotient.mk I) a b N ht).trans
       (Ideal.Quotient.eq_zero_iff_mem.mpr hCr))
   refine ⟨N.natDegree, ?_⟩
   rw [openFactor, mul_pow, mul_assoc]
@@ -257,8 +257,8 @@ theorem graph_derivative_step (J : Input) (B : ResidueLift J) (D : Factors J B) 
       ((2*r-1 : ℕ) : JetRing) * jetSeparant J.f * sepAlong J.f * oldNumerator J B r ∈
         graphIdeal J B D := by
   classical
-  obtain ⟨d⟩ := HighCore82219Upper_4_1.proof D.proper (root_data J B D).1
-  let ι := HighCore82219Upper_4.splitMap D.proper
+  obtain ⟨d⟩ := HighCore82258Upper_4_1.proof D.proper (root_data J B D).1
+  let ι := HighCore82258Upper_4.splitMap D.proper
   let T : JetTaylor.Data (SplitField D.proper) :=
     ⟨ι, d.split, fun s => by
       change d.split (algebraMap SeedField (SplitField D.proper) (algebraMap Seeds SeedField s)) = _
@@ -271,7 +271,7 @@ theorem graph_derivative_step (J : Input) (B : ResidueLift J) (D : Factors J B) 
     rw [jetPoint_C]
     change J.f.eval₂ ι y = 0
     rw [← point_flatten_eval]
-    rw [HighCore82219Upper_4_2.point_flatten, D.product, generic, Polynomial.map_mul, map_mul]
+    rw [HighCore82258Upper_4_2.point_flatten, D.product, generic, Polynomial.map_mul, map_mul]
     exact mul_eq_zero.mpr (Or.inl hz)
   apply graph_mem_of_roots J B D T rfl _ hf
   intro y hy
@@ -285,7 +285,7 @@ theorem graph_derivative_step (J : Input) (B : ResidueLift J) (D : Factors J B) 
     have hmap : Function.Injective (T.ι.comp liftSeeds) := hι.comp (MvPolynomial.map_injective _ hψ)
     exact (map_ne_zero_iff _ hmap).mpr B.denominator_ne
   have hfac (i : ℕ) (hi : i ≤ r+1) : (i.factorial : SplitField D.proper) ≠ 0 := by
-    have h := HighCore82219Upper_2.factorial_ne_zero (hi.trans_lt hp)
+    have h := HighCore82258Upper_2.factorial_ne_zero (hi.trans_lt hp)
     simpa only [map_natCast, map_zero] using (T.embed.injective.ne h)
   have hn (n : ℕ) : ev (oldNumerator J B n) = point T.ι y (quotientNumerator J B n) := by
     exact jetPoint_C T y _

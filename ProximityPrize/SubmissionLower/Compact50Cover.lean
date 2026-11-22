@@ -1,4 +1,5 @@
 import ProximityPrize.SubmissionLower.Final50PriceTableBase
+import ProximityPrize.SubmissionLower.Final54MixReceipt
 
 set_option Elab.async false
 set_option maxHeartbeats 1000000
@@ -14,6 +15,7 @@ open Final50PriceTableBase (Covered OldReceipt PointReceipt SharedReceipt
 /-- A price bound for a rectangle, or an exact price bound for a single shape. -/
 inductive Tile where
   | rectangle (widthLow indexLow widthHigh indexHigh order : ℕ)
+  | mixrect (widthLow indexLow widthHigh indexHigh order : ℕ)
   | point (width index order : ℕ)
   | shared (width index order : ℕ) (rate : Rate)
 
@@ -24,11 +26,12 @@ structure Rectangle where
   indexHigh : ℕ
 
 def Tile.bounds : Tile → Rectangle
-  | .rectangle b j B J _ => ⟨b,j,B,J⟩
+  | .rectangle b j B J _ | .mixrect b j B J _ => ⟨b,j,B,J⟩
   | .point b j _ | .shared b j _ _ => ⟨b,j,b,j⟩
 
 def Tile.Paid (k : Band) (t : ℕ) : Tile → Prop
   | .rectangle b j B J l => OldReceipt ((start k).t+t) k b j B J t l
+  | .mixrect b j B J l => Final54MixReceipt.MixReceipt ((start k).t+t) k b j B J t l
   | .point b j l => PointReceipt ((start k).t+t) k b j t l
   | .shared b j l u => k = .empty ∧ SharedReceipt t b j l u
 
@@ -48,7 +51,7 @@ abbrev PaidBatch (k : Band) (t : ℕ) := {tiles : List Tile // pays k t tiles = 
 def tilesOf {k : Band} {t : ℕ} (batches : List (PaidBatch k t)) : List Tile :=
   batches.flatMap Subtype.val
 
-theorem batches_pay {k : Band} {t : ℕ} (batches : List (PaidBatch k t)) :
+private theorem batches_pay {k : Band} {t : ℕ} (batches : List (PaidBatch k t)) :
     pays k t (tilesOf batches) = true := by
   induction batches with
   | nil => rfl
@@ -57,14 +60,15 @@ theorem batches_pay {k : Band} {t : ℕ} (batches : List (PaidBatch k t)) :
     rw [pays_append, head.property, ih]
     rfl
 
-def InRectangle (r : Rectangle) (width index : ℕ) : Prop :=
+private def InRectangle (r : Rectangle) (width index : ℕ) : Prop :=
   r.widthLow ≤ width ∧ width ≤ r.widthHigh ∧ r.indexLow ≤ index ∧ index ≤ r.indexHigh
 
-theorem tile_covered {tile : Tile} {k : Band} {t : ℕ} {a : Shape}
+private theorem tile_covered {tile : Tile} {k : Band} {t : ℕ} {a : Shape}
     (paid : tile.Paid k t) (bounds : InRectangle tile.bounds a.b a.j)
     (ht : a.t = t) (hi : 3 * a.t ≤ a.j) : Covered ((start k).t+t) k a := by
-  rcases tile with ⟨b,j,B,J,l⟩ | ⟨b,j,l⟩ | ⟨b,j,l,u⟩
+  rcases tile with ⟨b,j,B,J,l⟩ | ⟨b,j,B,J,l⟩ | ⟨b,j,l⟩ | ⟨b,j,l,u⟩
   · exact coveredRectangle paid bounds.1 bounds.2.2.1 bounds.2.1 bounds.2.2.2 ht hi
+  · exact Or.inl (Final54MixReceipt.mixRectangle paid bounds.1 bounds.2.2.1 bounds.2.1 bounds.2.2.2 ht hi)
   · obtain ⟨hb,hB,hj,hJ⟩ := bounds
     exact coveredPoint paid (Nat.le_antisymm hB hb) (Nat.le_antisymm hJ hj) ht hi
   · obtain ⟨rfl,h⟩ := paid
@@ -79,7 +83,7 @@ private def step (index firstMissing : ℕ) (tile : Tile) : ℕ :=
     max firstMissing (r.widthHigh+1)
   else firstMissing
 
-theorem step_cover {tile : Tile} {j first b : ℕ}
+private theorem step_cover {tile : Tile} {j first b : ℕ}
     (hFirst : first ≤ b) (h : b < step j first tile) : InRectangle tile.bounds b j := by
   dsimp only [step] at h
   split at h
@@ -88,7 +92,7 @@ theorem step_cover {tile : Tile} {j first b : ℕ}
     exact ⟨hb.trans hFirst, by omega, hj, hJ⟩
   · omega
 
-theorem fold_cover (tiles : List Tile) (j first b : ℕ)
+private theorem fold_cover (tiles : List Tile) (j first b : ℕ)
     (hFirst : first ≤ b) (h : b < tiles.foldl (step j) first) :
     ∃ tile ∈ tiles, InRectangle tile.bounds b j := by
   induction tiles generalizing first with
@@ -145,3 +149,49 @@ theorem apply_batches {k : Band} {t maxWidth first count : ℕ} {batches : List 
   apply_checked (batches_pay batches) hcover a ha ht hb hLeft hRight
 
 end Compact50Cover
+
+namespace Compact54TiltedBatch
+open K1_13 (Shape)
+open Final50Price (tiltedFits tiltedSurface)
+open Final50PriceCaps (Band start activeCap order allowance)
+open KoalaRetainedCut (contractedPrice cutPrice chamberHull residualBox)
+open Compact50Cover (Tile pays)
+
+theorem contracted_le_tilted (x h : Shape) (l active : ℕ) (hf : tiltedFits x) :
+    contractedPrice x h l active ≤
+      cutPrice x l (60*32) (tiltedSurface x.chamber (chamberHull (residualBox h l))) := by
+  simp only [contractedPrice, if_pos hf]
+  exact min_le_right _ _
+
+def Sufficient (k : Band) (t : ℕ) (tile : Tile) : Prop :=
+  match tile with
+  | .point b j l =>
+    let x : Shape := ⟨b,j,t⟩
+    0 < l ∧ l ≤ order k x ∧ tiltedFits x ∧
+      cutPrice x l (60*32) (tiltedSurface x.chamber (chamberHull (residualBox (start k) l))) ≤
+        allowance ((start k).t+t) k b j t
+  | other => other.Paid k t
+
+instance (k : Band) (t : ℕ) (tile : Tile) : Decidable (Sufficient k t tile) := by
+  cases tile <;> unfold Sufficient <;> infer_instance
+
+theorem sufficient_paid {k : Band} {t : ℕ} {tile : Tile}
+    (h : Sufficient k t tile) : tile.Paid k t := by
+  cases tile with
+  | point b j l =>
+    obtain ⟨hl,ho,hf,hprice⟩ := h
+    exact ⟨hl,ho,(contracted_le_tilted _ _ _ _ hf).trans hprice⟩
+  | rectangle => exact h
+  | mixrect => exact h
+  | shared => exact h
+
+def paysTilted (k : Band) (t : ℕ) (tiles : List Tile) : Bool :=
+  tiles.all (fun tile => decide (Sufficient k t tile))
+
+theorem pays_of_tilted {k : Band} {t : ℕ} {tiles : List Tile}
+    (h : paysTilted k t tiles = true) : pays k t tiles = true := by
+  apply List.all_eq_true.mpr
+  intro tile ht
+  exact decide_eq_true (sufficient_paid (of_decide_eq_true (List.all_eq_true.mp h tile ht)))
+
+end Compact54TiltedBatch

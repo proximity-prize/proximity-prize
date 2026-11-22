@@ -263,7 +263,7 @@ set_option autoImplicit false
 namespace K1_13_6_2_4_1_1
 open K1_13_6_2_4_1 MvPolynomial
 open scoped BigOperators
-theorem represents_cell_sum {σ : Type} [Fintype σ] (s : σ → Fin 5)
+private theorem represents_cell_sum {σ : Type} [Fintype σ] (s : σ → Fin 5)
     (b : σ →₀ ℕ) (A : Finset (σ →₀ ℕ)) (hA : ∀ a ∈ A, a ≤ b) :
     Represents (∑ u ∈ cells (b := b) A, cellForm s u) (fun t => sliceCount s A t) := by
   refine ⟨b.degree + 1, fun t ht => ?_⟩
@@ -302,7 +302,7 @@ def c1 : Prop :=
 def c2 : Prop :=
   ∀ (σ : Type) [Finite σ] (s : σ → Fin 5) (T : Finset (σ →₀ ℕ)),
     ∃ p : Form, Represents p (fun t => sliceCount s T t) ∧ TopNonnegative p
-theorem graded_footprint (σ : Type) [Finite σ] (s : σ → Fin 5)
+private theorem graded_footprint (σ : Type) [Finite σ] (s : σ → Fin 5)
     (J : Ideal (MvPolynomial σ GeoField)) (hJ : J.IsHomogeneous (piece s)) :
     ∃ T : Finset (σ →₀ ℕ), ∀ t : Grade, gradedHilbert s J t = sliceCount s T t := by
   let _ := Fintype.ofFinite σ
@@ -314,7 +314,7 @@ theorem graded_footprint (σ : Type) [Finite σ] (s : σ → Fin 5)
   refine ⟨T, fun t => ?_⟩
   rw [standard_piece_rank s m J hJ t, hstandard]
   rfl
-theorem form_of_rank (himage : c1) (hcounts : c2)
+private theorem form_of_rank (himage : c1) (hcounts : c2)
     {A : Fin 4 → Set Exponent} {B : Set Exponent} (hAB : admissible A B) (P : Ideal GeoJets) :
     ∃ p : Form, Represents p (fun t => (hilbertRank A B P (t 4) (fun i => t i.castSucc) : ℚ)) ∧
       TopNonnegative p := by
@@ -335,13 +335,13 @@ theorem form_of_rank (himage : c1) (hcounts : c2)
   refine ⟨p, ⟨N, fun t ht => ?_⟩, hp⟩
   exact (hN t ht).trans
     (congrArg (fun n : ℕ => (n : ℚ)) ((hT t).symm.trans (himage A B hAB P t)))
-theorem zero_mem_copies {S : Set Exponent} (h : 0 ∈ S) (n : ℕ) : 0 ∈ n • S := by
+private theorem zero_mem_copies {S : Set Exponent} (h : 0 ∈ S) (n : ℕ) : 0 ∈ n • S := by
   induction n with
   | zero => simp
   | succ n ih =>
     rw [succ_nsmul]
     simpa only [zero_add] using Set.add_mem_add ih h
-theorem finrank_of_contains_one {K R : Type} [Field K] [CommRing R] [Algebra K R]
+private theorem finrank_of_contains_one {K R : Type} [Field K] [CommRing R] [Algebra K R]
     (e : R ≃ₐ[K] K) (S : Submodule K R) (h : 1 ∈ S) :
     Module.finrank K S = 1 := by
   have htop : S = ⊤ := by
@@ -363,7 +363,7 @@ theorem finrank_of_contains_one {K R : Type} [Field K] [CommRing R] [Algebra K R
     _ = Module.finrank K R := finrank_top K R
     _ = Module.finrank K K := e.toLinearEquiv.finrank_eq
     _ = 1 := Module.finrank_self K
-theorem eval_piece_finrank {K : Type} [Field K] (y : Fin 4 → K)
+private theorem eval_piece_finrank {K : Type} [Field K] (y : Fin 4 → K)
     {T : Set Exponent} (hT : 0 ∈ T) :
     Module.finrank K ((restrictSupport K T).map
       (Ideal.Quotient.mkₐ K (RingHom.ker (eval y))).toLinearMap) = 1 := by
@@ -377,7 +377,7 @@ theorem eval_piece_finrank {K : Type} [Field K] (y : Fin 4 → K)
   have hm : 1 ∈ (restrictSupport K T).map q.toLinearMap :=
     Submodule.mem_map.mpr ⟨1, h1, q.map_one⟩
   exact finrank_of_contains_one e _ hm
-theorem point_hilbert {A : Fin 4 → Set Exponent} {B : Set Exponent} (hAB : admissible A B)
+private theorem point_hilbert {A : Fin 4 → Set Exponent} {B : Set Exponent} (hAB : admissible A B)
     (y : GeoPoint) (b : ℕ) (w : Grades) : hilbert A B (pointIdeal y) b w = 1 := by
   have hzero {S T : Set Exponent} (hs : 0 ∈ S) (ht : 0 ∈ T) : 0 ∈ S + T := by
     simpa only [zero_add] using Set.add_mem_add hs ht
@@ -427,7 +427,7 @@ noncomputable section
 open K1_13_6 K1_13_6_2_4_1 K1_13_7_1_1_1 K1_13_7_1_1_1_1 K1_13_7_1_1_1_2
 open MvPolynomial
 attribute [local instance] MvPolynomial.weightedGradedAlgebra
-theorem slotSupport_eq (A : Fin 4 → Set Exponent) (B : Set Exponent) :
+private theorem slotSupport_eq (A : Fin 4 → Set Exponent) (B : Set Exponent) :
     slotSupport A B = supportIn A B := by
   funext j
   refine Fin.lastCases ?_ (fun i => ?_) j
@@ -478,13 +478,13 @@ namespace K1_13_7_2_3_1_2_2
 noncomputable section
 open K1_13 K1_13_6 K1_13_6_2_3 K1_13_6_2_3_2 K1_13_7_1 MvPolynomial Filter
 open K1_13_6_2_3_2_5 (ray_top totalDegree_le_of_ray_degree deltas_top shapeSum_add shapeSum_step)
-def finiteMonomialOrder (σ : Type) [Finite σ] : MonomialOrder σ := by
+private def finiteMonomialOrder (σ : Type) [Finite σ] : MonomialOrder σ := by
   classical
   let _ : Fintype σ := Fintype.ofFinite σ
   let _ : LinearOrder σ := LinearOrder.lift' (Fintype.equivFin σ) (Fintype.equivFin σ).injective
   let _ : WellFoundedGT σ := Finite.to_wellFoundedGT
   exact MonomialOrder.degLex
-theorem form_of_cap {ι : Type} [Fintype ι] [DecidableEq ι] (s : ι → Shape)
+private theorem form_of_cap {ι : Type} [Fintype ι] [DecidableEq ι] (s : ι → Shape)
     (hs : ∀ i, Chamber (s i)) (J : Ideal GeoJets) (used : List ι) :
     let H := fun a => (supportRank J (capExponents (shapeSum s a)) : ℚ)
     ∃ F : MvPolynomial ι ℚ, (∀ᶠ a in atTop, eval (fun i => (a i : ℚ)) F = H a) ∧
@@ -569,15 +569,15 @@ set_option maxHeartbeats 1000000
 namespace K1_10_1_1
 noncomputable section
 open K1 K1_10 K1_10_1 K1_11 K1_11_2 MvPolynomial
-abbrev lift5 {F : Type*} [Field F] :=
+private abbrev lift5 {F : Type*} [Field F] :=
   Polynomial.toMvPolynomial (R := F) (0 : Fin 5)
-def pencil5 {F : Type*} [Field F] (z : Fin 5) (A : Fin 2 → Polynomial F) :
+private def pencil5 {F : Type*} [Field F] (z : Fin 5) (A : Fin 2 → Polynomial F) :
     MvPolynomial (Fin 5) F :=
   lift5 (A 0) + lift5 (A 1) * MvPolynomial.X z
-def output5 {F : Type*} [Field F] (O : Fin 2 → Fin 2 → Polynomial F) :
+private def output5 {F : Type*} [Field F] (O : Fin 2 → Fin 2 → Polynomial F) :
     MvPolynomial (Fin 5) F :=
   pencil5 3 (fun j => O j 0) + pencil5 3 (fun j => O j 1) * MvPolynomial.X 4
-theorem lift5_view (P : Polynomial K) :
+private theorem lift5_view (P : Polynomial K) :
     polynomialView (lift5 P) = Polynomial.C (liftOrdinary P) := by
   have h : (polynomialView (F := K)).toRingHom.comp (lift5 (F := K)).toRingHom =
       Polynomial.C.comp liftOrdinary := by
@@ -586,7 +586,7 @@ theorem lift5_view (P : Polynomial K) :
       simp [lift5, liftOrdinary, polynomialView, finSuccEquiv_apply]
     · simp [lift5, liftOrdinary, polynomialView_X]
   exact RingHom.congr_fun h P
-theorem planeRelation_eq (U V : Fin 2 → Polynomial K)
+private theorem planeRelation_eq (U V : Fin 2 → Polynomial K)
     (O : Fin 2 → Fin 2 → Polynomial K) :
     planeRelation U V O =
       pencil5 4 U * MvPolynomial.X 1 + pencil5 3 V * MvPolynomial.X 2 - output5 O := by
@@ -603,7 +603,7 @@ theorem planeRelation_eq (U V : Fin 2 → Polynomial K)
     lift5_view, h1, h2, h3, h4, denominator, numerator, pencil]
   ring
 variable {F : Type*} [Field F]
-theorem lift5_support (P : Polynomial F) (e : Fin 5 →₀ ℕ) :
+private theorem lift5_support (P : Polynomial F) (e : Fin 5 →₀ ℕ) :
     e ∈ (lift5 P).support ↔ ∃ n ∈ P.support, e = Finsupp.single 0 n := by
   classical
   let f : Unit → Fin 5 := fun _ => 0
@@ -625,7 +625,7 @@ theorem lift5_support (P : Polynomial F) (e : Fin 5 →₀ ℕ) :
     · simpa only [MvPolynomial.mem_support_iff, coeff_uniqueAlgEquiv_symm, Finsupp.single_eq_same,
         Polynomial.mem_support_iff] using hn
     · rw [Finsupp.mapDomain_single]
-theorem lift5_degree (P : Polynomial F) (i : Fin 5) :
+private theorem lift5_degree (P : Polynomial F) (i : Fin 5) :
     (lift5 P).degreeOf i = if i = 0 then P.natDegree else 0 := by
   rw [degreeOf_eq_sup]
   apply le_antisymm
@@ -644,7 +644,7 @@ theorem lift5_degree (P : Polynomial F) (i : Fin 5) :
         ⟨P.natDegree, Polynomial.natDegree_mem_support_of_nonzero hz, rfl⟩
       simpa using Finset.le_sup (f := fun e : Fin 5 →₀ ℕ => e 0) he
     · simp [hi]
-theorem pencil5_disjoint (A : Fin 2 → Polynomial F) {z : Fin 5} (hz : z ≠ 0) :
+private theorem pencil5_disjoint (A : Fin 2 → Polynomial F) {z : Fin 5} (hz : z ≠ 0) :
     Disjoint (lift5 (A 0)).support (lift5 (A 1) * MvPolynomial.X z).support := by
   apply Finset.disjoint_left.mpr
   intro e he he'
@@ -654,7 +654,7 @@ theorem pencil5_disjoint (A : Fin 2 → Polynomial F) {z : Fin 5} (hz : z ≠ 0)
   obtain ⟨m, _, rfl⟩ := (lift5_support (A 1) d).mp hd
   have h := congrArg (fun a : Fin 5 →₀ ℕ => a z) heq
   simp [Finsupp.add_apply, Ne.symm hz] at h
-theorem pencil5_ne (A : Fin 2 → Polynomial F) {z : Fin 5} (hz : z ≠ 0)
+private theorem pencil5_ne (A : Fin 2 → Polynomial F) {z : Fin 5} (hz : z ≠ 0)
     (hA : ∃ j, A j ≠ 0) : pencil5 z A ≠ 0 := by
   have hn (j : Fin 2) (hj : A j ≠ 0) : lift5 (A j) ≠ 0 := by
     intro h
@@ -668,13 +668,13 @@ theorem pencil5_ne (A : Fin 2 → Polynomial F) {z : Fin 5} (hz : z ≠ 0)
   fin_cases j
   · exact (support_nonempty.mpr (hn 0 hj)).mono Finset.subset_union_left
   · exact (support_nonempty.mpr (mul_ne_zero (hn 1 hj) (X_ne_zero z))).mono Finset.subset_union_right
-theorem pencil5_degree_x (A : Fin 2 → Polynomial F) {z : Fin 5} (hz : z ≠ 0) :
+private theorem pencil5_degree_x (A : Fin 2 → Polynomial F) {z : Fin 5} (hz : z ≠ 0) :
     (pencil5 z A).degreeOf 0 = max (A 0).natDegree (A 1).natDegree := by
   rw [pencil5, ← weightedTotalDegree_piSingle, weighted_add_of_disjoint _ _ _ (pencil5_disjoint A hz),
     weightedTotalDegree_piSingle, weightedTotalDegree_piSingle,
     degreeOf_mul_X_of_ne _ (Ne.symm hz)]
   simp [lift5_degree]
-theorem pencil5_degree_le (A : Fin 2 → Polynomial F) (i z : Fin 5) (d : ℕ)
+private theorem pencil5_degree_le (A : Fin 2 → Polynomial F) (i z : Fin 5) (d : ℕ)
     (hA : ∀ j, (A j).natDegree ≤ d) :
     (pencil5 z A).degreeOf i ≤ (if i = 0 then d else 0) + (if i = z then 1 else 0) := by
   have h (j : Fin 2) : (lift5 (A j)).degreeOf i ≤ if i = 0 then d else 0 := by
@@ -683,7 +683,7 @@ theorem pencil5_degree_le (A : Fin 2 → Polynomial F) (i z : Fin 5) (d : ℕ)
   refine (degreeOf_add_le i _ _).trans (max_le ?_ ?_)
   · exact (h 0).trans (Nat.le_add_right _ _)
   · exact (degreeOf_mul_le i _ _).trans (by rw [degreeOf_X]; exact Nat.add_le_add_right (h 1) _)
-theorem output5_degree_le (O : Fin 2 → Fin 2 → Polynomial F) (i : Fin 5) (d : ℕ)
+private theorem output5_degree_le (O : Fin 2 → Fin 2 → Polynomial F) (i : Fin 5) (d : ℕ)
     (hO : ∀ j l, (O j l).natDegree ≤ d) :
     (output5 O).degreeOf i ≤
       (if i = 0 then d else 0) + (if i = 3 then 1 else 0) + (if i = 4 then 1 else 0) := by
@@ -786,14 +786,14 @@ theorem parameterNode_nodeValue (x y a b c d : F) (U V : MvPolynomial (Fin 5) F)
     fin_cases i <;> simp [parameterNode]
   simp only [nodeValue, map_add, map_mul, ← AlgHom.comp_apply (parameterNode y) (parameterNode x), h]
   simp [pencil, parameterNode]
-theorem degreeOf_parameterNode_le (j : Fin 5) (x : F) (Q : MvPolynomial (Fin 5) F) :
+private theorem degreeOf_parameterNode_le (j : Fin 5) (x : F) (Q : MvPolynomial (Fin 5) F) :
     (parameterNode x Q).degreeOf j ≤ Q.degreeOf j := by
   rw [← weightedTotalDegree_piSingle j (parameterNode x Q), ← weightedTotalDegree_piSingle j Q]
   apply weightedTotalDegree_aeval_le_of_le
   intro i
   rw [weightedTotalDegree_piSingle]
   fin_cases i <;> simp [Pi.single_apply, degreeOf_X, eq_comm]
-theorem degreeOf_parameterNode_eq_zero (j : Fin 5) (x : F) (Q : MvPolynomial (Fin 5) F)
+private theorem degreeOf_parameterNode_eq_zero (j : Fin 5) (x : F) (Q : MvPolynomial (Fin 5) F)
     (h3 : j ≠ 3) (h4 : j ≠ 4) : (parameterNode x Q).degreeOf j = 0 := by
   have h := weightedTotalDegree_aeval_le_of_le (fun _ : Fin 5 => 0) (Pi.single j 1)
     (![C x, 0, 0, MvPolynomial.X 3, MvPolynomial.X 4] : Fin 5 → MvPolynomial (Fin 5) F) Q (by
@@ -804,7 +804,7 @@ theorem degreeOf_parameterNode_eq_zero (j : Fin 5) (x : F) (Q : MvPolynomial (Fi
     simp [weightedTotalDegree, Finsupp.weight_apply]
   rw [weightedTotalDegree_piSingle, hz] at h
   exact Nat.eq_zero_of_le_zero h
-theorem degreeOf_pencil_le (i j : Fin 5) (a b : F) :
+private theorem degreeOf_pencil_le (i j : Fin 5) (a b : F) :
     (pencil j a b).degreeOf i ≤ if i = j then 1 else 0 := by
   refine (degreeOf_add_le i _ _).trans (max_le ?_ ?_)
   · simp
@@ -839,14 +839,14 @@ theorem degreeOf_nodeValue_le (j : Fin 5) (x a b c d : F) (U V : MvPolynomial (F
       omega
     rw [degreeOf_parameterNode_eq_zero j x V h3 h4]
     simpa [h3, h4] using hp
-def liftCoordinate (f : Polynomial F) : MvPolynomial (Fin 5) F :=
+private def liftCoordinate (f : Polynomial F) : MvPolynomial (Fin 5) F :=
   Polynomial.aeval (MvPolynomial.X 0) f
-theorem parameterNode_liftCoordinate (x : F) (f : Polynomial F) :
+private theorem parameterNode_liftCoordinate (x : F) (f : Polynomial F) :
     parameterNode x (liftCoordinate f) = C (f.eval x) := by
   rw [liftCoordinate, ← Polynomial.aeval_algHom_apply (parameterNode x)]
   simp only [parameterNode, aeval_X, Matrix.cons_val_zero, Polynomial.aeval_def, algebraMap_eq]
   exact Polynomial.eval₂_at_apply _ _
-theorem degreeOf_liftCoordinate (j : Fin 5) (f : Polynomial F) :
+private theorem degreeOf_liftCoordinate (j : Fin 5) (f : Polynomial F) :
     (liftCoordinate f).degreeOf j ≤ f.natDegree * (MvPolynomial.X 0 : MvPolynomial (Fin 5) F).degreeOf j := by
   rw [liftCoordinate, Polynomial.aeval_def, Polynomial.eval₂_eq_sum, Polynomial.sum]
   refine (degreeOf_sum_le j _ _).trans (Finset.sup_le fun n hn => ?_)
@@ -892,7 +892,7 @@ private theorem partial_commute (i j : Fin 4) :
     ite_eq_right hij, ite_eq_right (Ne.symm hij), add_zero]
   rw [add_right_comm d (Finsupp.single i 1) (Finsupp.single j 1)]
   ring
-theorem reverse_seed_contact {q : Surface} {P : Jet} {k : ℕ}
+private theorem reverse_seed_contact {q : Surface} {P : Jet} {k : ℕ}
     {y v : SeedClosure} (hyv : OnSeedFibre q y v) (hk : k < p)
     (h : ∀ a b : ℕ, a + b < k → seedHasse 1 b (seedHasse 0 a P) ∈ q.asIdeal) :
     K1_14_2_6.HasSeedContact (RingHom.ker (K1_14_2_6.genericSeedPoint y v)) P k := by

@@ -23,7 +23,7 @@ private theorem amp_le (v : Fin 2 → K[X]) (j : Fin 2) :
   fin_cases j
   · exact le_max_left _ _
   · exact le_max_right _ _
-theorem amp_witness (v : Fin 2 → K[X]) (hc : IsCoprime (v 0) (v 1)) :
+private theorem amp_witness (v : Fin 2 → K[X]) (hc : IsCoprime (v 0) (v 1)) :
     ∃ j, v j ≠ 0 ∧ (v j).natDegree = amplitudeDegree (v 0) (v 1) := by
   by_cases hv : v 0 = 0
   · have h1 : v 1 ≠ 0 := by
@@ -159,12 +159,12 @@ private theorem column_dvd (n : ℕ) (f : Fin 2 → K[X]) (q : K[X])
     (hd : ∀ j, q ∣ f j) : liftX q ∣ column n f :=
   dvd_add ((Polynomial.mapRingHom Polynomial.C).map_dvd (hd 0))
     ((((Polynomial.mapRingHom Polynomial.C).map_dvd (hd 1))).mul_right _)
-theorem column_mul (a : K[X]) (n : ℕ) (f : Fin 2 → K[X]) :
+private theorem column_mul (a : K[X]) (n : ℕ) (f : Fin 2 → K[X]) :
     liftX a * (liftX (f 0) + seed ^ n * liftX (f 1)) =
       column n (fun j => a * f j) := by
   simp only [column, liftX, seed, Polynomial.map_mul, ← C_pow]
   ring
-def firstColumn (d : ℕ) (a : K[X]) (β : Fin 2 → K[X]) : Bivar :=
+private def firstColumn (d : ℕ) (a : K[X]) (β : Fin 2 → K[X]) : Bivar :=
   liftX a * (liftX (@Polynomial.map K K KS KS twist (β 0)) +
     seed ^ d * liftX (@Polynomial.map K K KS KS twist (β 1)))
 private theorem threeU_fun : threeU = firstColumn p := rfl
@@ -193,7 +193,7 @@ private theorem tight_pair {F : Type*} [Field F] (U V U' V' : F[X])
     _ = 1 := by rw [← hk,hab,one_mul]
 private def slice (P : Bivar) (n : ℕ) : K[X] :=
   ∑ j ∈ Finset.range (P.natDegree + 1), monomial j ((P.coeff j).coeff n)
-theorem slice_eval (P : Bivar) (n : ℕ) (x : K) :
+private theorem slice_eval (P : Bivar) (n : ℕ) (x : K) :
     (slice P n).eval x = (P.eval (C x)).coeff n := by
   rw [eval_eq_sum_range (C x)]
   simp only [slice, eval_finsetSum, eval_monomial, finsetSum_coeff, ← C_pow, coeff_mul_C]
@@ -201,14 +201,14 @@ private theorem slice_bound (P : Bivar) (n : ℕ) : (slice P n).natDegree ≤ P.
   apply natDegree_sum_le_of_forall_le
   intro i hi
   exact (natDegree_monomial_le _).trans (Nat.le_of_lt_succ (Finset.mem_range.mp hi))
-theorem select_four (d : ℕ) (hd : 1 < d) (r : Fin 2 → Fin 2 → K) (j l : Fin 2) :
+private theorem select_four (d : ℕ) (hd : 1 < d) (r : Fin 2 → Fin 2 → K) (j l : Fin 2) :
     ((C (r 0 0) + C (r 1 0)*Polynomial.X + C (r 0 1)*Polynomial.X^d +
       C (r 1 1)*Polynomial.X^(d+1)) : K[X]).coeff (j.val + d*l.val) = r j l := by
   fin_cases j <;> fin_cases l <;>
     simp only [coeff_add, coeff_C_mul_X, coeff_C_mul_X_pow, coeff_C, Nat.mul_zero,
       Nat.mul_one, Nat.zero_add, Nat.add_zero] <;>
     split_ifs <;> first | omega | simp_all
-theorem four_coeff (d : ℕ) (hd : 1 < d) (u v w z : Fin 2 → K) (j l : Fin 2) :
+private theorem four_coeff (d : ℕ) (hd : 1 < d) (u v w z : Fin 2 → K) (j l : Fin 2) :
     (((C (u 0) + C (u 1) * Polynomial.X ^ d) * (C (w 0) + Polynomial.X * C (w 1)) +
       (C (v 0) + C (v 1) * Polynomial.X) * (C (z 0) + Polynomial.X^d * C (z 1)) : K[X]).coeff
       (j.val + d*l.val)) = u l*w j + v j*z l := by
@@ -221,10 +221,10 @@ theorem four_coeff (d : ℕ) (hd : 1 < d) (u v w z : Fin 2 → K) (j l : Fin 2) 
     ring
   rw [hex]
   exact select_four d hd r j l
-theorem column_eval (d : ℕ) (f : Fin 2 → K[X]) (x : K) :
+private theorem column_eval (d : ℕ) (f : Fin 2 → K[X]) (x : K) :
     (column d f).eval (C x) = C ((f 0).eval x) + C ((f 1).eval x) * Polynomial.X^d := by
   simp only [column, liftX, eval_add, eval_mul, eval_C, eval_map_apply]
-theorem word_coeff (d : ℕ) (hd : 1 < d) (U V : Fin 2 → K[X]) (u : Words)
+private theorem word_coeff (d : ℕ) (hd : 1 < d) (U V : Fin 2 → K[X]) (u : Words)
     (i : I) (j l : Fin 2) :
     (U l).eval (node i) * u j i + (V j).eval (node i) * (u l i)^d =
     (((C ((U 0).eval (node i)) + C ((U 1).eval (node i)) * Polynomial.X^d) *
@@ -234,7 +234,7 @@ theorem word_coeff (d : ℕ) (hd : 1 < d) (U V : Fin 2 → K[X]) (u : Words)
         (j.val + d*l.val) :=
   (four_coeff d hd (fun l => (U l).eval (node i)) (fun j => (V j).eval (node i))
     (fun j => u j i) (fun l => (u l i)^d) j l).symm
-def relationAt (d : ℕ) (u : Words) (deleted : Finset I) (U V output : Bivar) : Prop :=
+private def relationAt (d : ℕ) (u : Words) (deleted : Finset I) (U V output : Bivar) : Prop :=
   ∀ i ∉ deleted,
     U.eval (C (node i)) * (C (u 0 i) + Polynomial.X (R := K) * C (u 1 i)) +
     V.eval (C (node i)) * (C (u 0 i ^ d) + Polynomial.X (R := K) ^ d * C (u 1 i ^ d)) =
@@ -368,7 +368,7 @@ open K1 K1_10 K1_11 MvPolynomial
 open K1_10_1 (Contacts denominator liftOrdinary numerator pencil planeRelation
   planeRelation_view relationBounds toScalarSource toScalarSource_atDecoder)
 open P0_6 (sourceCutoff)
-theorem eval_liftOrdinary (Q P : Polynomial K) (s t : K) :
+private theorem eval_liftOrdinary (Q P : Polynomial K) (s t : K) :
     aeval (scalarImages P s t) (liftOrdinary Q) = Q := by
   let φ : MvPolynomial (Fin 4) K →+* Polynomial K := (aeval (scalarImages P s t)).toRingHom
   have hh : φ.comp liftOrdinary = RingHom.id (Polynomial K) := by
