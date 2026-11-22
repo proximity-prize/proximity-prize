@@ -92,6 +92,8 @@ theorem chart {f Q : Row 4} {l : ℕ} (q : Shape) (ht : 1 ≤ (shape f).t)
   have h := Final50ActiveCycle.ordinary_chart ht b
   exact h
 
+#print axioms ordinary_budget
+#print axioms chart
 
 end
 end Shared50BentCaps

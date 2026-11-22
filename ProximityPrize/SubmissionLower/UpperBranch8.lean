@@ -1,5 +1,7 @@
 import Mathlib.Algebra.Order.Sub.Prod
-import ProximityPrize.SubmissionLower.LowerBase
+import ProximityPrize.SubmissionLower.GoldBranch6
+import ProximityPrize.SubmissionLower.PortLow5
+import ProximityPrize.SubmissionLower.PortLow7
 import ProximityPrize.SubmissionLower.UpperBase
 set_option Elab.async false
 set_option autoImplicit true
@@ -13,9 +15,6 @@ structure FixedWord (w : I → K) (T : Finset K) (s : K → K[X]) (d : ℕ) : Pr
   distinct : Set.InjOn s (T : Set K)
   degree : ∀ γ ∈ T, (s γ).natDegree ≤ d
   hits : ∀ γ ∈ T, ∃ B : Finset I, agreement ≤ B.card ∧ ∀ i ∈ B, (s γ).eval (node i) = w i
-theorem FixedWord.mono {w T s d} (h : FixedWord w T s d) {U : Finset K} (hU : U ⊆ T) :
-    FixedWord w U s d :=
-  ⟨h.distinct.mono hU, fun γ hγ => h.degree γ (hU hγ), fun γ hγ => h.hits γ (hU hγ)⟩
 open private incidence_arithmetic from ProximityPrize.SubmissionLower.PortHighBase
 theorem section_capacity {w T s d} (h : FixedWord w T s d) (hd : d < agreement) (cap : ℕ)
     (hsection : ∀ i : I, (∃ γ ∈ T, (s γ).eval (node i) ≠ w i) →
@@ -269,13 +268,6 @@ structure DifferentialProduct (J : Input) (B : ResidueLift J) (q : Equation) whe
       C (C (intoSeedClosure denominator)) *
         ∏ y ∈ genericRoots q,
           (Polynomial.X - C (reconstructed J B y))
-def FlatSections (J : Input) (q : Equation) : Prop :=
-  ∀ x : I, (∃ γ ∈ J.marks, rootOn J q γ ∧
-      (J.family.scalar γ).eval (node x) ≠ J.model.word x) →
-    ∃ g : Seeds, g ≠ 0 ∧ g.totalDegree ≤ seedDegree q ∧
-      ∀ γ ∈ J.marks, rootOn J q γ →
-        (J.family.scalar γ).eval (node x) = J.model.word x →
-          K1_14.graphEval (J.model.label γ) g = 0
 end
 end P1_7_8
 end
@@ -285,107 +277,6 @@ namespace P1_7_8
 noncomputable section
 open P1 (agreement blockLength)
 open P1_7 (degreeAt quotientOrder gap scale muNum lambdaNum ceilRatio properFee)
-theorem ratio_le_ceil {n d k : ℕ} (hd : 0 < d) (hk : d*k ≤ n) :
-    k ≤ ceilRatio n d := by
-  apply (Nat.le_div_iff_mul_le hd).mpr
-  exact (Nat.mul_comm d k ▸ hk).trans (Nat.le_add_right _ _)
-theorem mu_cross {A n d s : ℕ} (hA : A ≤ n) (hd : d ≤ A) (hs : s ≤ d) :
-    (A-d)*(n-s) ≤ (A-s)*(n-d) := by
-  have hsA := hs.trans hd
-  have hdn := hd.trans hA
-  have hsn := hsA.trans hA
-  have h : 0 ≤ ((d : ℤ)-s)*((n : ℤ)-A) :=
-    mul_nonneg (sub_nonneg.mpr (by exact_mod_cast hs)) (sub_nonneg.mpr (by exact_mod_cast hA))
-  apply Int.ofNat_le.mp
-  push_cast [Nat.cast_sub hd, Nat.cast_sub hsn, Nat.cast_sub hsA, Nat.cast_sub hdn]
-  nlinarith only [h]
-theorem lambda_cross {A n l s : ℕ} (hA : A ≤ n) (hl : l ≤ A) (hs : s ≤ A) :
-    A*(n-s)*(l-s) ≤ n*(A-s)*l := by
-  by_cases ht : s ≤ l
-  · have hsn := hs.trans hA
-    have h₁ : 0 ≤ (s : ℤ)*n*((A : ℤ)-l) := by
-      exact mul_nonneg (by positivity) (sub_nonneg.mpr (by exact_mod_cast hl))
-    have h₂ : 0 ≤ (s : ℤ)*A*((l : ℤ)-s) := by
-      exact mul_nonneg (by positivity) (sub_nonneg.mpr (by exact_mod_cast ht))
-    apply Int.ofNat_le.mp
-    push_cast [Nat.cast_sub hsn, Nat.cast_sub ht, Nat.cast_sub hs]
-    nlinarith only [h₁, h₂]
-  · simp [Nat.sub_eq_zero_of_le (Nat.le_of_lt (Nat.lt_of_not_ge ht))]
-def nodeVelocity (J : Input) : ℕ := lambdaNum J.hi * quotientOrder J.lo
-def nodeReducedOrdinate (J : Input) : ℕ := muNum J.hi + (J.e-3)*nodeVelocity J
-def nodeSeed (J : Input) : ℕ := nodeVelocity J*J.v + 2*J.hi*muNum J.hi
-def weightedSection (J : Input) (h t s : ℕ) : ℕ :=
-  nodeReducedOrdinate J*h + nodeVelocity J*t + nodeSeed J*s
-theorem incidence_weights (J : Input) (s : ℕ) (hs : s ≤ degreeAt J.hi) :
-    scale J.hi * (blockLength-s) ≤ (agreement-s) * muNum J.hi ∧
-    scale J.hi * (blockLength-s) * (J.ell-s) ≤ (agreement-s) * nodeVelocity J := by
-  have hAn : agreement ≤ blockLength := by decide
-  have hL : quotientOrder J.lo ≤ agreement :=
-    (Nat.sub_le _ _).trans (by decide : 131071 ≤ agreement)
-  have hr : J.ell-s ≤ quotientOrder J.lo-s := by
-    exact Nat.sub_le_sub_right (Nat.sub_le_sub_left J.lower _) _
-  have hMu := Nat.mul_le_mul_left agreement (mu_cross hAn J.agreement_gap.le hs)
-  have hLam := Nat.mul_le_mul_left (gap J.hi)
-    (lambda_cross hAn hL (hs.trans J.agreement_gap.le))
-  constructor
-  · unfold scale muNum gap
-    simpa only [Nat.mul_assoc, Nat.mul_left_comm, Nat.mul_comm] using hMu
-  · calc
-      _ ≤ scale J.hi * (blockLength-s) * (quotientOrder J.lo-s) :=
-        Nat.mul_le_mul_left _ hr
-      _ ≤ _ := by
-        unfold scale nodeVelocity lambdaNum
-        convert hLam using 1 <;> ring
-theorem scale_pos (J : Input) : 0 < scale J.hi :=
-  Nat.mul_pos (by decide) (Nat.sub_pos_of_lt J.agreement_gap)
-theorem unit_le_weight (J : Input) {h t s : ℕ} (hp : 0 < s) :
-    scale J.hi ≤ weightedSection J h t s := by
-  have hAn : agreement ≤ blockLength := by decide
-  have hm : scale J.hi ≤ muNum J.hi :=
-    Nat.mul_le_mul_left agreement (Nat.sub_le_sub_right hAn _)
-  have hw : 1 ≤ 2*J.hi := by
-    have := J.positive.trans_le J.upper
-    omega
-  have hn : muNum J.hi ≤ nodeSeed J := by
-    have H := Nat.mul_le_mul_right (muNum J.hi) hw
-    rw [Nat.one_mul] at H
-    exact H.trans (Nat.le_add_left _ _)
-  exact (hm.trans hn).trans
-    ((by simpa only [Nat.mul_one] using Nat.mul_le_mul_left (nodeSeed J) hp :
-      nodeSeed J ≤ nodeSeed J*s).trans (Nat.le_add_left _ _))
-theorem mix_to_fee (J : Input) {k : ℕ}
-    (h : scale J.hi*k ≤
-      weightedSection J (J.v*cutSeed J + J.v^2*cutVelocity J)
-        (2*J.e*J.v*cutSeed J + J.v^2*cutOrdinate J)
-        (J.e*cutSeed J + J.v*((2*J.e-2)*cutVelocity J + cutOrdinate J))) :
-    k ≤ properFee J.lo J.hi J.e J.v := by
-  have he : (J.e-3)+2 = J.e-1 := by have h : 3 ≤ J.e := J.sheets; omega
-  have he' : (2*J.e-2)+2 = 2*J.e := by have h : 3 ≤ J.e := J.sheets; omega
-  have hco : 2*cutVelocity J ≤ cutOrdinate J := by
-    have htwo : 2 ≤ J.e-1 := by have h : 3 ≤ J.e := J.sheets; omega
-    exact (by simpa only [Nat.mul_comm] using Nat.mul_le_mul_left (cutVelocity J) htwo :
-      2*cutVelocity J ≤ cutVelocity J*(J.e-1)).trans (Nat.le_add_left _ _)
-  let nA := muNum J.hi + nodeVelocity J*(J.e-1)
-  have hnA : nodeReducedOrdinate J + 2*nodeVelocity J = nA := by
-    unfold nodeReducedOrdinate
-    dsimp only [nA]
-    rw [← he]
-    ring
-  have hc : cutOrdinate J - 2*cutVelocity J + 2*cutVelocity J = cutOrdinate J :=
-    Nat.sub_add_cancel hco
-  unfold properFee
-  apply ratio_le_ceil (scale_pos J)
-  refine h.trans_eq ?_
-  change weightedSection J _ _ _ =
-    J.e*cutSeed J*nodeSeed J +
-      J.v*(nodeSeed J*((2*J.e-2)*cutVelocity J + cutOrdinate J) +
-        cutSeed J*((2*J.e-2)*nodeVelocity J + nA)) +
-      J.v^2*((cutOrdinate J - 2*cutVelocity J)*nodeVelocity J + nA*cutVelocity J)
-  generalize 2*J.e-2 = em at he' ⊢
-  generalize cutOrdinate J - 2*cutVelocity J = ac0 at hc ⊢
-  rw [← hnA, ← he', ← hc]
-  unfold weightedSection
-  ring
 end
 end P1_7_8
 end
@@ -404,11 +295,6 @@ abbrev Degree := ℕ × ℕ × ℕ
 def nefDegree (h t s : ℕ) : Degree := (h + 2*t, t, s)
 abbrev CoxVar := Fin 2 ⊕ (Fin 2 ⊕ Fin 3)
 abbrev Cox := MvPolynomial CoxVar FX
-def h₀ : CoxVar := .inl 0
-def h₁ : CoxVar := .inl 1
-def v₀ : CoxVar := .inr (.inl 0)
-def v₁ : CoxVar := .inr (.inl 1)
-def tᵢ (i : Fin 3) : CoxVar := .inr (.inr i)
 def coxWeight : CoxVar → Degree
   | .inl _ => (1, 0, 0)
   | .inr (.inl i) => (2*i.val, 1, 0)
@@ -433,9 +319,6 @@ structure RelativeSection (Q : Ideal JetRing) (d : Degree) where
 def RelativeSection.affine {Q : Ideal JetRing} {d : Degree}
     (S : RelativeSection Q d) : JetRing :=
   dehom S.finiteChart
-def RelativeSection.restrict {Q P : Ideal JetRing} {d : Degree} (h : Q ≤ P)
-    (S : RelativeSection Q d) : RelativeSection P d :=
-  { S with glue := h S.glue }
 def gradedPiece (Q : Ideal JetRing) (d : Degree) : Submodule FX (JetRing ⧸ Q) :=
   (MvPolynomial.weightedHomogeneousSubmodule FX coxWeight d).map
     (((Ideal.Quotient.mkₐ FX Q).comp dehom).toLinearMap)
@@ -482,14 +365,8 @@ def saturate (Q : Ideal JetRing) (g : JetRing) : Ideal JetRing where
     change g^n * (a * f) ∈ Q
     rw [show g^n * (a*f) = a * (g^n*f) by ring]
     exact Q.mul_mem_left _ hn
-theorem le_saturate (Q : Ideal JetRing) (g : JetRing) : Q ≤ saturate Q g := by
-  intro f hf
-  exact ⟨0, by simpa using hf⟩
 def graphIdeal (J : Input) (B : ResidueLift J) (D : Factors J B) : Ideal JetRing :=
   saturate (Ideal.span {Polynomial.C D.proper, tangentEquation J.f}) (openFactor J B)
-theorem proper_mem_graph (J : Input) (B : ResidueLift J) (D : Factors J B) :
-    Polynomial.C D.proper ∈ graphIdeal J B D :=
-  le_saturate _ _ (Ideal.subset_span (by simp))
 structure TangentSection (J : Input) {B : ResidueLift J} (D : Factors J B) where
   section_ : RelativeSection (rootIdeal D) (J.e, 1, J.v)
   affine_eq : section_.affine = tangentEquation J.f

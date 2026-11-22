@@ -18,7 +18,7 @@ def c2 : Prop :=
     (∀ P ∈ V, RowCaps s P) →
     (∀ P ∈ V, P ≠ 0 → k ≤ P.natDegree) →
     Module.finrank FX V ≤ triangle s.U * shapeSum s (fun _ j => if k ≤ j then 1 else 0)
-theorem last_cutoffs (d N j : ℕ) (hd : 0 < d) :
+private theorem last_cutoffs (d N j : ℕ) (hd : 0 < d) :
     (∑ W ∈ range N, if 1 + (N - 1 - W) / d ≤ j then 1 else 0) ≤ d * j := by
   have hfilter : (range N).filter (fun W => 1 + (N - 1 - W) / d ≤ j) =
       Ico (N - d * j) N := by
@@ -31,7 +31,7 @@ theorem last_cutoffs (d N j : ℕ) (hd : 0 < d) :
     · simp [hW]
   rw [← card_filter, hfilter, Nat.card_Ico]
   omega
-theorem sum_rank_le (rankBound : c2) (rows : Banks) (s : Shape) (h N : ℕ)
+private theorem sum_rank_le (rankBound : c2) (rows : Banks) (s : Shape) (h N : ℕ)
     (hh : 0 < h) (hcaps : ∀ W, ∀ P ∈ rows s W, RowCaps s P)
     (hpower : ∀ W < N, ∀ P ∈ rows s W, P ≠ 0 →
       1 + (N - 1 - W) / (2 * h) ≤ P.natDegree) :
@@ -89,14 +89,7 @@ private theorem bank_nonzero {u del} {M : AnchorModel u del} {Γ}
         (hz P (src.nested s hs s hs rfl rfl rfl le_rfl W _ hle hP))
     rw [hb, finrank_bot]
   omega
-theorem stage_shapes {w : ℤ} (hw : w ≤ 3554) {t : Stage} (ht : t ∈ stages) :
-    t.cheap ∈ scheduled w ∧ t.layered ∈ scheduled w := by
-  have he : scheduled w = stages.flatMap (fun s => [s.cheap, s.layered]) ++
-      [full, terminalShape w] := by rw [scheduled, ite_eq_left hw]; rfl
-  rw [he]
-  exact ⟨List.mem_append_left _ (List.mem_flatMap.mpr ⟨t, ht, by simp⟩),
-    List.mem_append_left _ (List.mem_flatMap.mpr ⟨t, ht, by simp⟩)⟩
-theorem split_row_degree_from_shifts (power : c1) (h N W : ℕ) (hh : 0 < h)
+private theorem split_row_degree_from_shifts (power : c1) (h N W : ℕ) (hh : 0 < h)
     (hW : W < N) {G P R : Jet} (hi : Irreducible G) (hv : 0 < G.natDegree)
     (hm : UsesSeed G) (hP : P ≠ 0) (hdiv : G ∣ P) {U : ℕ} (hp : U < p)
     (hseed : ∀ j i, ((P.coeff j).coeff i).totalDegree ≤ U) (hnR : R ≠ 0)
@@ -135,22 +128,6 @@ private theorem avoids_one {u del} {M : AnchorModel u del} {Γ} {F : AnchoredFam
   change _ ≤ _ + ∑ W ∈ range N, Module.finrank FX (rows s W) at hf
   change _ + movingCeiling h s < _ at hd
   omega
-theorem of_children (h1 : c1) (h2 : c2) : K1_14_2.c1 := by
-  intro u del M Γ F hlo hhi rows src t ht
-  have h : 0 < M.overhead.toNat := by omega
-  obtain ⟨hc, hl, hp⟩ := native_tests (h := M.overhead.toNat) (by omega) (by omega) ht
-  obtain ⟨hcs, hls⟩ := stage_shapes hhi ht
-  obtain ⟨P, hPm, hP⟩ := bank_nonzero src hcs t.reserve hc.1 hc.2
-  have hLn := bank_nonzero src hls t.reserve hl.1 (lt_of_le_of_lt (Nat.le_add_right _ _) hl.2)
-  have hseed (j i : ℕ) : ((P.coeff j).coeff i).totalDegree ≤ t.cheap.U := by
-    by_cases hz : ((P.coeff j).coeff i) = 0
-    · simp [hz]
-    · exact (src.shape _ hcs _ P hPm j i hz).2.2
-  obtain ⟨Q, hQm, hQ, havoid⟩ := exists_layered P hP _ hLn (fun G hi hd hv hm =>
-    avoids_one src h1 h2 h hls t.reserve hl.1 hl.2 hi hv hm hP hd hp hseed)
-  have hcut (s : Shape) : bufferedAt M.overhead t.reserve s =
-      cutoffCount M.overhead.toNat t.reserve s - 1 := by unfold bufferedAt cutoffCount; omega
-  exact ⟨P, (hcut _).symm ▸ hPm, Q, (hcut _).symm ▸ hQm, hP, hQ, havoid⟩
 end
 end K1_14_2_1
 end

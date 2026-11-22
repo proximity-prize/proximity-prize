@@ -13,7 +13,7 @@ private theorem map_syndrome {F E ι : Type} [Field F] [Field E]
     (x w : ι → F) (j : ℕ) :
     f (syndrome x w j) = syndrome (fun i => f (x i)) (fun i => f (w i)) j := by
   simp only [syndrome, weight, map_sum, map_mul, map_pow, map_inv₀, map_prod, map_sub]
-theorem generic_stacked_moment {F E ι : Type} [Field F] [Field E]
+private theorem generic_stacked_moment {F E ι : Type} [Field F] [Field E]
     [Fintype ι] [DecidableEq ι] (p : ℕ) [ExpChar F p]
     (node u v : ι → F) (hfixed : ∀ i, node i ^ p = node i)
     (φ : F[X] →+* E) (L t : ℕ) (b : Fin 2) (l : Fin L) (j : Fin (t + 1)) :
@@ -110,15 +110,6 @@ private theorem certificate_shifts_annihilate_generic {F E ι : Type} [Field F] 
   apply Strata.syndrome_eval_zero x (f.injective.comp hx) _ (k + L) _ hOutDegree
   have := j.isLt
   omega
-theorem certificate_shifts_annihilate {u : Words} {T : TwoActive u} (R : Relation T)
-    (s : ℕ) (hL : T.height + s = 49193) :
-    (shifts (fun b => Principal.assemble (fun j => R.coefficients (b, j))) 49193 s).transpose *
-      twoBlock u = 0 := by
-  have hsize : 131072 + (49192 + 1) + 81879 ≤ Fintype.card I := by
-    rw [IRSProfile.card_index]
-  exact certificate_shifts_annihilate_generic p node (u 0) (u 1) IRSProfile.domain.injective
-    Native.native_domain_fixed (algebraMap K[X] Frac) (IsFractionRing.injective K[X] Frac)
-    131072 T.height 49192 81879 s hL hsize R _ (fun _ => rfl)
 end K1_6
 end
 section
@@ -273,14 +264,6 @@ structure PaddedPair (F G : GenericRow) where
   total : (seedResultant (pad F a) (pad G b)).totalDegree ≤ 952630000
   index : lowerIndex (seedResultant (pad F a) (pad G b)) ≤ 322000000
   keeps_order : ∀ z y, PairOrders F G z y → PairOrders (pad F a) (pad G b) z y
-def LineOrder (F : GenericX[X][X]) (z : GenericX) (d : ℕ) : Prop :=
-  ∀ i j : ℕ, 7800 * i + 49196 * j < d →
-    ((F.comp (Polynomial.X + Polynomial.C (Polynomial.C z))).coeff i).coeff j = 0
-def LocalResultantBound : Prop :=
-  ∀ (F G : GenericX[X][X]) (z : GenericX), F.natDegree ≤ 70000 → G.natDegree ≤ 70000 →
-    Polynomial.resultant F G 70000 70000 ≠ 0 →
-    LineOrder F z firstOrder → LineOrder G z secondOrder →
-    Polynomial.X ^ 41481 ∣ Polynomial.resultant F G 70000 70000
 theorem native_degree_arithmetic :
     70000 * (6789 + 6820) = 952630000 ∧ 70000 * (2300 + 2300) = 322000000 ∧
     68 + 2 * 112 * 10 ≤ 6300 ∧ 23 + (2 * 3 + 1) * 112 ≤ 2403 := by
@@ -298,253 +281,13 @@ end
 section
 namespace K1_13_4
 noncomputable section
-open K1_13 Polynomial
-open scoped BigOperators
-set_option maxRecDepth 4000
-private def ray (v : Fin 3 → GenericX) : Lower →+* GenericX[X] :=
-  MvPolynomial.eval₂Hom C (fun i => C (v i) * Polynomial.X)
-private theorem ray_monomial (v : Fin 3 → GenericX) (a : Fin 3 →₀ ℕ) (c : GenericX) :
-    ray v (MvPolynomial.monomial a c) =
-      monomial a.degree (MvPolynomial.eval v (MvPolynomial.monomial a c)) := by
-  rw [← C_mul_X_pow_eq_monomial]
-  simp only [ray, MvPolynomial.eval₂Hom_monomial, MvPolynomial.eval_monomial, mul_pow,
-    Finsupp.prod]
-  rw [Finset.prod_mul_distrib, Finset.prod_pow_eq_pow_sum, Finsupp.degree_apply, ← mul_assoc]
-  simp only [map_mul, map_prod, map_pow]
-private theorem ray_coeff (v : Fin 3 → GenericX) (Q : Lower) (j : ℕ) :
-    (ray v Q).coeff j = MvPolynomial.eval v (MvPolynomial.homogeneousComponent j Q) := by
-  classical
-  induction Q using MvPolynomial.induction_on' with
-  | monomial a c =>
-    rw [ray_monomial, coeff_monomial,
-      MvPolynomial.homogeneousComponent_of_mem (MvPolynomial.isHomogeneous_monomial c rfl)]
-    by_cases h : a.degree = j
-    · simp [h]
-    · simp [h, Ne.symm h]
-  | add Q R hQ hR =>
-    rw [map_add, coeff_add, hQ, hR, map_add, map_add]
-private theorem line_translation (F : GenericRow) (z : GenericX) (y v : Fin 3 → GenericX) :
-    ((asSeedPoly F).map ((ray v).comp (translate y))).comp (Polynomial.X + C (C z)) =
-      (asSeedPoly (translate (atPoint z y) F)).map (ray v) := by
-  let e := (MvPolynomial.optionEquivLeft GenericX (Fin 3)).toRingHom
-  let left := (compRingHom (Polynomial.X + C (C z))).comp ((mapRingHom ((ray v).comp (translate y))).comp e)
-  let right := (mapRingHom (ray v)).comp (e.comp (translate (atPoint z y)))
-  have he : left = right := by
-    apply MvPolynomial.ringHom_ext
-    · intro r
-      simp [left, right, e, translate, ray]
-    · intro i
-      cases i <;>
-        simp [left, right, e, translate, ray, atPoint]
-  exact DFunLike.congr_fun he F
-private theorem line_order (F : GenericRow) (z : GenericX) (y v : Fin 3 → GenericX)
-    (d : ℕ) (hF : MixedOrder F z y d) :
-    LineOrder ((asSeedPoly F).map ((ray v).comp (translate y))) z d := by
-  intro i j h
-  rw [line_translation, coeff_map, ray_coeff]
-  suffices hc : MvPolynomial.homogeneousComponent j
-      ((asSeedPoly (translate (atPoint z y) F)).coeff i) = 0 by
-    rw [hc, map_zero]
-  apply MvPolynomial.homogeneousComponent_eq_zero'
-  intro a ha hj
-  have hmem : a.optionElim i ∈ (translate (atPoint z y) F).support := by
-    rw [← MvPolynomial.mem_support_coeff_optionEquivLeft]
-    exact ha
-  have hb := hF _ hmem
-  have hweight : mixedWeight (a.optionElim i) = 7800 * i + 49196 * j := by
-    change 7800 * a.optionElim i none + 49196 * (a.optionElim i).some.degree = _
-    rw [Finsupp.optionElim_apply_none, Finsupp.some_optionElim, hj]
-  rw [hweight] at hb
-  exact (Nat.not_lt_of_ge hb) h
-private theorem order_of_rays (Q : Lower) (y : Fin 3 → GenericX) (d : ℕ)
-    (h : ∀ v, Polynomial.X ^ d ∣ ray v (translate y Q)) :
-    LowerOrder Q y d := by
-  let _ : Infinite GenericX := Infinite.of_injective inclConst inclConst.injective
-  intro a ha
-  change d ≤ a.degree
-  by_contra! ha'
-  have hm : MvPolynomial.homogeneousComponent a.degree (translate y Q) = 0 := by
-    apply MvPolynomial.funext
-    intro v
-    rw [map_zero, ← ray_coeff]
-    exact (X_pow_dvd_iff (n := d) (f := ray v (translate y Q))).mp (h v) a.degree ha'
-  have hc := congrArg (fun P : Lower => P.coeff a) hm
-  simp [MvPolynomial.coeff_homogeneousComponent] at hc
-  exact (MvPolynomial.mem_support_iff.mp ha) hc
-private theorem line_resultant (F G : GenericRow) (y v : Fin 3 → GenericX) :
-    resultant ((asSeedPoly F).map ((ray v).comp (translate y)))
-      ((asSeedPoly G).map ((ray v).comp (translate y))) 70000 70000 =
-        ray v (translate y (seedResultant F G)) := by
-  unfold seedResultant
-  rw [resultant_map_map, RingHom.comp_apply]
-theorem lower_order_of_line (hLocal : LocalResultantBound) (F G : GenericRow) (z : GenericX)
-    (y : Fin 3 → GenericX) (hF : (asSeedPoly F).natDegree ≤ 70000)
-    (hG : (asSeedPoly G).natDegree ≤ 70000) (h : PairOrders F G z y) :
-    LowerOrder (seedResultant F G) y 41481 := by
-  apply order_of_rays
-  intro v
-  rw [← line_resultant F G y v]
-  let L := (ray v).comp (translate y)
-  by_cases hres : resultant ((asSeedPoly F).map L) ((asSeedPoly G).map L) 70000 70000 = 0
-  · change Polynomial.X ^ 41481 ∣
-      resultant ((asSeedPoly F).map L) ((asSeedPoly G).map L) 70000 70000
-    rw [hres]
-    exact dvd_zero (Polynomial.X ^ (41481 : ℕ) : GenericX[X])
-  · exact hLocal _ _ z (natDegree_map_le.trans hF) (natDegree_map_le.trans hG) hres
-      (line_order F z y v _ h.1) (line_order G z y v _ h.2)
-end
-end K1_13_4
-end
-section
-namespace K1_13_4
-noncomputable section
 open K1 K1_13
 open scoped Polynomial BigOperators
 def c1 : Prop :=
   ∀ Γ s (P : PoleData Γ s), Nonempty (ResidueChart P)
-def c2 : Prop :=
-  ∀ w Γ s (P : PoleData Γ s) (L : ResidueChart P),
-    (∃ F, F ≠ 0 ∧ Source w P L firstBox firstCut F) ∧
-    HasRank w P L secondBox secondCut 2561085868844197170227
-def c3 : Prop :=
-  ∀ w Γ s, Messages w Γ s → ∀ (P : PoleData Γ s) (L : ResidueChart P),
-    (∀ F, Source w P L firstBox firstCut F → ∀ γ ∈ Γ,
-      MixedOrder (toGeneric F) (inclConst (P.z γ)) (trajectory (extend (s γ))) firstOrder) ∧
-    (∀ G ∈ Necessary w P L, ∀ γ ∈ Γ,
-      MixedOrder (toGeneric G) (inclConst (P.z γ)) (trajectory (extend (s γ))) secondOrder)
-def c4 : Prop :=
-  ∀ w Γ s (P : PoleData Γ s) (L : ResidueChart P) (F : PhysicalRow),
-    F ≠ 0 → Caps firstBox F →
-    HasRank w P L secondBox secondCut 2561085868844197170227 →
-    ∃ G, G ∈ Necessary w P L ∧ Nonempty (CommonPair (toGeneric F) (toGeneric G))
-def c5 : Prop :=
-  ∀ (Γ : Finset K) (z : K → Geom) (S : K → Geom[X]), Function.Injective z →
-    ∀ (F G : GenericRow) (D : CommonPair F G),
-      (∀ γ ∈ Γ, PairOrders F G (inclConst (z γ)) (trajectory (S γ))) →
-      ∃ (book : Finset K) (Q : Lower), book.card ≤ 140000 ∧ Q ≠ 0 ∧
-        Q.totalDegree ≤ 6300 ∧ lowerIndex Q ≤ 2403 ∧
-        ∀ γ ∈ Γ, γ ∉ book → MvPolynomial.eval (trajectory (S γ)) Q = 0 ∨
-          PairOrders D.left D.right (inclConst (z γ)) (trajectory (S γ))
 def c6 : Prop :=
   ∀ F G : GenericRow, F ≠ 0 → G ≠ 0 → IsRelPrime F G →
     Caps firstBox F → Caps secondBox G → Nonempty (PaddedPair F G)
-def c7 : Prop := LocalResultantBound
-private theorem inclX_injective : Function.Injective inclX :=
-  IsFractionRing.injective Geom[X] GenericX
-private theorem clear_denominators (R : Lower) :
-    ∃ (d : Geom[X]) (Q : Row 3), d ≠ 0 ∧ Q.support = R.support ∧
-      MvPolynomial.map inclX Q = MvPolynomial.C (inclX d) * R := by
-  classical
-  let M := nonZeroDivisors (Geom[X])
-  let d := IsLocalization.commonDenom M R.support R.coeff
-  let num := IsLocalization.integerMultiple M R.support R.coeff
-  let Q : Row 3 := ∑ a : ↥R.support, MvPolynomial.monomial a.val (num a)
-  have hd : (d : Geom[X]) ≠ 0 := nonZeroDivisors.coe_ne_zero d
-  have hi : inclX (d : Geom[X]) ≠ 0 := (map_ne_zero_iff inclX inclX_injective).mpr hd
-  have hQ : MvPolynomial.map inclX Q = MvPolynomial.C (inclX d) * R := by
-    ext m
-    simp only [MvPolynomial.coeff_map, MvPolynomial.coeff_C_mul, Q, MvPolynomial.coeff_sum]
-    by_cases hm : m ∈ R.support
-    · let a : ↥R.support := ⟨m, hm⟩
-      rw [Finset.sum_eq_single_of_mem a (Finset.mem_univ a)]
-      · have hn := IsLocalization.map_integerMultiple M R.support R.coeff a
-        change inclX (num a) = (d : Geom[X]) • R.coeff a.val at hn
-        rw [Algebra.smul_def] at hn
-        simpa [a] using hn
-      · intro b _ hba
-        have hb : b.val ≠ m := fun h => hba (Subtype.ext h)
-        simp [MvPolynomial.coeff_monomial, hb]
-    · have hz : R.coeff m = 0 := by simpa [MvPolynomial.mem_support_iff] using hm
-      have hz' : (∑ a : ↥R.support,
-          (MvPolynomial.monomial a.val (num a) : Row 3).coeff m) = 0 := by
-        apply Finset.sum_eq_zero
-        intro a _
-        have ha : a.val ≠ m := fun h => hm (h ▸ a.property)
-        simp [MvPolynomial.coeff_monomial, ha]
-      rw [hz', hz, map_zero, mul_zero]
-  refine ⟨d, Q, hd, ?_, hQ⟩
-  rw [← MvPolynomial.support_map_of_injective Q inclX_injective, hQ]
-  ext m
-  simp [MvPolynomial.mem_support_iff, MvPolynomial.coeff_C_mul, hi]
-private theorem eval_cleared {Q : Row 3} {R : Lower} {d : Geom[X]}
-    (hQ : MvPolynomial.map inclX Q = MvPolynomial.C (inclX d) * R) (S : Geom[X])
-    (hR : MvPolynomial.eval (trajectory S) R = 0) : atJet Q S = 0 := by
-  have hcomm : inclX (atJet Q S) =
-      MvPolynomial.eval (trajectory S) (MvPolynomial.map inclX Q) := by
-    rw [atJet, MvPolynomial.eval_map]
-    exact MvPolynomial.eval₂_comp inclX (jet S) Q
-  apply inclX_injective
-  rw [map_zero, hcomm, hQ, map_mul, hR, mul_zero]
-private theorem map_shift (Q : Row 3) (S : Geom[X]) :
-    MvPolynomial.map inclX (shiftJet Q S) =
-      translate (trajectory S) (MvPolynomial.map inclX Q) := by
-  have hc : (MvPolynomial.map (σ := Fin 3) inclX).comp MvPolynomial.C =
-      MvPolynomial.C.comp inclX := by
-    apply RingHom.ext
-    intro x
-    simp
-  unfold K1_13.shiftJet
-  rw [MvPolynomial.eval₂_comp_left]
-  change _ = MvPolynomial.eval₂ MvPolynomial.C
-    (fun i => MvPolynomial.X i + MvPolynomial.C (trajectory S i)) (MvPolynomial.map inclX Q)
-  rw [MvPolynomial.eval₂_map, hc]
-  congr 1
-  funext i
-  simp [trajectory]
-private theorem order_cleared {Q : Row 3} {R : Lower} {d : Geom[X]}
-    (hQ : MvPolynomial.map inclX Q = MvPolynomial.C (inclX d) * R)
-    (S : Geom[X]) {m : ℕ} (hR : LowerOrder R (trajectory S) m) : OrderAt Q S m := by
-  have hs : MvPolynomial.map inclX (shiftJet Q S) =
-      MvPolynomial.C (inclX d) * translate (trajectory S) R := by
-    rw [map_shift, hQ, map_mul, translate, MvPolynomial.eval₂Hom_C]
-  intro a ha
-  apply hR
-  have hcoeff := congrArg (fun P : Lower => P.coeff a) hs
-  simp only [MvPolynomial.coeff_map, MvPolynomial.coeff_C_mul] at hcoeff
-  rw [MvPolynomial.mem_support_iff] at ha ⊢
-  intro hz
-  rw [hz, mul_zero] at hcoeff
-  exact ha (inclX_injective (hcoeff.trans (map_zero _).symm))
-theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) (h4 : c4)
-    (h5 : c5) (h6 : c6) (h7 : c7) : K1_13.c4 := by
-  intro w Γ s hw P
-  obtain ⟨L⟩ := h1 Γ s P
-  obtain ⟨⟨F, neF, hF⟩, rank2⟩ := h2 w Γ s P L
-  obtain ⟨vanishes1, vanishes2⟩ := h3 w Γ s hw P L
-  obtain ⟨G, hG, ⟨D⟩⟩ := h4 w Γ s P L F neF hF.1 rank2
-  have hOrders : ∀ γ ∈ Γ, PairOrders (toGeneric F) (toGeneric G)
-      (inclConst (P.z γ)) (trajectory (extend (s γ))) := fun γ hγ =>
-    ⟨vanishes1 F hF γ hγ, vanishes2 G hG γ hγ⟩
-  obtain ⟨book, Q, hcard, hQ, htQ, hiQ, hcover⟩ :=
-    h5 Γ P.z (fun γ => extend (s γ)) P.injective _ _ D hOrders
-  obtain ⟨J⟩ := h6 D.left D.right D.left_ne D.right_ne D.proper D.left_caps D.right_caps
-  let R := seedResultant (pad D.left J.a) (pad D.right J.b)
-  obtain ⟨dQ, Q', _, suppQ, mapQ⟩ := clear_denominators Q
-  obtain ⟨dR, R', _, suppR, mapR⟩ := clear_denominators R
-  have neQ : Q' ≠ 0 := by
-    intro h
-    rw [h, MvPolynomial.support_zero, eq_comm, MvPolynomial.support_eq_empty] at suppQ
-    exact hQ suppQ
-  have neR : R' ≠ 0 := by
-    intro h
-    rw [h, MvPolynomial.support_zero, eq_comm, MvPolynomial.support_eq_empty] at suppR
-    exact J.nonzero suppR
-  have totalQ : Q'.totalDegree ≤ 6300 := by
-    simpa only [MvPolynomial.totalDegree, suppQ] using htQ
-  have indexQ : indexDegree Q' ≤ 2403 := by
-    simpa only [K1_13.indexDegree, lowerIndex, suppQ] using hiQ
-  have totalR : R'.totalDegree ≤ 952630000 := by
-    have htR : R.totalDegree ≤ 952630000 := J.total
-    simpa only [MvPolynomial.totalDegree, suppR] using htR
-  have indexR : indexDegree R' ≤ 322000000 := by
-    have hiR : lowerIndex R ≤ 322000000 := J.index
-    simpa only [K1_13.indexDegree, lowerIndex, suppR] using hiR
-  refine ⟨book, ⟨Q', R', neQ, neR, totalQ, indexQ, totalR, indexR⟩, hcard, ?_⟩
-  intro γ hγ hb
-  rcases hcover γ hγ hb with he | ho
-  · exact Or.inl (eval_cleared mapQ _ he)
-  · refine Or.inr (order_cleared mapR _ ?_)
-    exact lower_order_of_line h7 _ _ _ _ J.degree_left.le J.degree_right.le (J.keeps_order _ _ ho)
 end
 end K1_13_4
 end
@@ -563,9 +306,6 @@ def Bank.box : Bank → Shape
 def Bank.cut : Bank → ℕ
   | .first => firstCut
   | .second => secondCut
-def Bank.targetRank : Bank → ℕ
-  | .first => 1
-  | .second => 2561085868844197170227
 def Bank.nodeRank : Bank → ℕ
   | .first => 10697571688375
   | .second => 10697783317215
@@ -577,7 +317,7 @@ def poleDebit (a : Shape) : ℕ :=
     (a.b + a.j - q) * gradeCount a q * (70001 + (a.b - q))
 def codimIn (V W : Submodule Geom PhysicalRow) : ℕ :=
   Module.finrank Geom V - Module.finrank Geom (V ⊓ W : Submodule Geom PhysicalRow)
-def backwardLinear (x v : Geom) : PhysicalRow →ₗ[Geom] PhysicalRow :=
+private def backwardLinear (x v : Geom) : PhysicalRow →ₗ[Geom] PhysicalRow :=
   (MvPolynomial.aeval (R := Geom[X]) (fun j : SeedVar =>
     if j = some 0 then
       MvPolynomial.X (some 0) + MvPolynomial.C (Polynomial.C v) -
@@ -590,7 +330,7 @@ def contactAt (x v : Geom) : Submodule Geom PhysicalRow :=
       Geom[X])}).restrictScalars Geom).comap
       (((MvPolynomial.lcoeff Geom[X] e).restrictScalars Geom).comp (backwardLinear x v))
 abbrev RawRow := MvPolynomial (Fin 3) GenericSeed[X]
-def restoreLinear {Γ s} (P : PoleData Γ s) (L : ResidueChart P) :
+private def restoreLinear {Γ s} (P : PoleData Γ s) (L : ResidueChart P) :
     PhysicalRow →ₗ[Geom] RawRow :=
   (MvPolynomial.aevalTower
     (((Algebra.ofId GenericSeed[X] RawRow).restrictScalars Geom).comp
@@ -630,12 +370,6 @@ set_option maxHeartbeats 700000
 noncomputable section
 open K1 K1_13 K1_13_4
 open scoped Polynomial BigOperators
-def c1 : Prop :=
-  ∀ (b : Bank) (h : ℕ), h ≤ 2600 →
-    ∃ V : Submodule Geom PhysicalRow, Module.Finite Geom V ∧
-      (∀ F ∈ V, Caps b.box F ∧ TrueCut h (b.cut + (b.box.b + b.box.j) * h) F) ∧
-      b.targetRank + 262144 * (70001 * b.nodeRank) + h * poleDebit b.box ≤
-        Module.finrank Geom V
 def c2 : Prop :=
   ∀ (b : Bank) (x v : Geom) (V : Submodule Geom PhysicalRow), Module.Finite Geom V →
     (∀ F ∈ V, Caps b.box F) →
@@ -652,10 +386,10 @@ def c4 : Prop :=
       IsConstantShift P P' → P'.H.natDegree = P.H.natDegree → P'.H.Separable →
       codimIn V (poleCondition P' L' a (liftX P'.H)) ≤ r) →
     codimIn V (poleCondition P L a (liftX P.H)) ≤ r
-theorem rank_lt_of_le {V U : Submodule Geom PhysicalRow} [Module.Finite Geom V]
+private theorem rank_lt_of_le {V U : Submodule Geom PhysicalRow} [Module.Finite Geom V]
     (h : U ≤ V) : Module.rank Geom U < Cardinal.aleph0 :=
   (Submodule.rank_mono h).trans_lt (Module.rank_lt_aleph0 Geom ↥V)
-theorem codim_inf_le (V U W : Submodule Geom PhysicalRow) [Module.Finite Geom V] :
+private theorem codim_inf_le (V U W : Submodule Geom PhysicalRow) [Module.Finite Geom V] :
     codimIn V (U ⊓ W) ≤ codimIn V U + codimIn V W := by
   have he : (V ⊓ U) ⊓ (V ⊓ W) = V ⊓ (U ⊓ W) := by
     apply le_antisymm
@@ -676,7 +410,7 @@ theorem codim_inf_le (V U W : Submodule Geom PhysicalRow) [Module.Finite Geom V]
   have hsup := Submodule.finrank_mono hle
   unfold codimIn
   omega
-theorem codim_finset_inf_le {ι : Type*} (V : Submodule Geom PhysicalRow)
+private theorem codim_finset_inf_le {ι : Type*} (V : Submodule Geom PhysicalRow)
     [Module.Finite Geom V] (T : Finset ι) (U : ι → Submodule Geom PhysicalRow) (r : ℕ)
     (hr : ∀ i ∈ T, codimIn V (U i) ≤ r) :
     codimIn V (T.inf U) ≤ T.card * r := by
@@ -689,12 +423,12 @@ theorem codim_finset_inf_le {ι : Type*} (V : Submodule Geom PhysicalRow)
     have hT := ih fun j hj => hr j (Finset.mem_insert_of_mem hj)
     exact (codim_inf_le V (U i) (T.inf U)).trans
       (by simpa only [add_comm] using Nat.add_le_add hi' hT)
-theorem codim_antitone (V : Submodule Geom PhysicalRow) [Module.Finite Geom V]
+private theorem codim_antitone (V : Submodule Geom PhysicalRow) [Module.Finite Geom V]
     {U W : Submodule Geom PhysicalRow} (h : U ≤ W) : codimIn V W ≤ codimIn V U :=
   Nat.sub_le_sub_left
     (Cardinal.toNat_le_toNat (Submodule.rank_mono (inf_le_inf_left V h))
       (rank_lt_of_le (show V ⊓ W ≤ V from inf_le_left))) _
-theorem separable_rank (h3 : c3) {Γ s} (P : PoleData Γ s) (L : ResidueChart P)
+private theorem separable_rank (h3 : c3) {Γ s} (P : PoleData Γ s) (L : ResidueChart P)
     (a : Shape) (V : Submodule Geom PhysicalRow) [hV : Module.Finite Geom V]
     (hcap : ∀ F ∈ V, Caps a F) (hsep : P.H.Separable) :
     codimIn V (poleCondition P L a (liftX P.H)) ≤ P.H.natDegree * poleDebit a := by
@@ -732,52 +466,10 @@ theorem separable_rank (h3 : c3) {Γ s} (P : PoleData Γ s) (L : ResidueChart P)
   have hdim := codim_finset_inf_le V T W (poleDebit a) hlocal
   rw [hcard] at hdim
   exact (codim_antitone V hsub).trans hdim
-theorem dimension_of_debits {ambient kept required physical pole : ℕ}
+private theorem dimension_of_debits {ambient kept required physical pole : ℕ}
     (hsize : required + physical + pole ≤ ambient)
     (hcodim : ambient - kept ≤ physical + pole) : required ≤ kept := by
   omega
-theorem rank_of_bounds (h1 : c1) (h2 : c2) (h3 : c3) (h4 : c4)
-    (b : Bank) (w : I → K) {Γ s} (P : PoleData Γ s) (L : ResidueChart P) :
-    HasRank w P L b.box b.cut b.targetRank := by
-  classical
-  obtain ⟨V, hV, hbox, hsize⟩ := h1 b P.H.natDegree P.small.2
-  let : Module.Finite Geom V := hV
-  have hcap : ∀ F ∈ V, Caps b.box F := fun F hF => (hbox F hF).1
-  let A : I → Submodule Geom PhysicalRow := fun i => contactAt (embed (node i)) (embed (w i))
-  let U : Submodule Geom PhysicalRow := ⨅ i, A i
-  let W : Submodule Geom PhysicalRow := poleCondition P L b.box (liftX P.H)
-  have hU : codimIn V U ≤ 262144 * (70001 * b.nodeRank) := by
-    have hA (i : I) (_ : i ∈ Finset.univ) : codimIn V (A i) ≤ 70001 * b.nodeRank :=
-      h2 b (embed (node i)) (embed (w i)) V hV hcap
-    have h := codim_finset_inf_le V (Finset.univ : Finset I) A (70001 * b.nodeRank) hA
-    have hc : (Finset.univ : Finset I).card = 262144 := Fintype.card_fin (2 ^ 18)
-    rw [hc, Finset.inf_univ_eq_iInf] at h
-    exact h
-  have hW : codimIn V W ≤ P.H.natDegree * poleDebit b.box := by
-    apply h4 Γ s P L b.box V _ hV
-    intro P' L' _ hdeg hsep
-    rw [← hdeg]
-    exact separable_rank h3 P' L' b.box V hcap hsep
-  have hdebit := (codim_inf_le V U W).trans (Nat.add_le_add hU hW)
-  let S : Submodule Geom PhysicalRow := V ⊓ (U ⊓ W)
-  have hdim : b.targetRank ≤ Module.finrank Geom S := dimension_of_debits hsize hdebit
-  obtain ⟨f, hf⟩ := exists_linearIndependent_of_le_finrank (R := Geom) (M := ↥S) hdim
-  let e : Fin b.targetRank → PhysicalRow := fun i => (f i).val
-  refine ⟨e, hf.map_injOn S.subtype Subtype.val_injective.injOn, ?_⟩
-  intro i
-  have hm := Submodule.mem_inf.mp (f i).property
-  have hUW : e i ∈ U ⊓ W := hm.2
-  have hb := hbox (e i) hm.1
-  refine ⟨hb.1, hb.2, ?_, (mem_poleCondition P L b.box _ _).mp (Submodule.mem_inf.mp hUW).2⟩
-  intro j
-  have hmem : e i ∈ A j := (Submodule.mem_iInf A).mp (Submodule.mem_inf.mp hUW).1 j
-  exact (mem_contactAt (embed (node j)) (embed (w j)) (e i)).mp hmem
-theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) (h4 : c4) : K1_13_4.c2 := by
-  intro w Γ s P L
-  refine ⟨?_, rank_of_bounds h1 h2 h3 h4 .second w P L⟩
-  obtain ⟨e, he, hsource⟩ := rank_of_bounds h1 h2 h3 h4 .first w P L
-  let i : Fin Bank.first.targetRank := ⟨0, by decide⟩
-  exact ⟨e i, he.ne_zero i, hsource i⟩
 end
 end K1_13_4_2
 end
@@ -959,7 +651,7 @@ section
 namespace K1_13_4_2_2_5
 set_option maxRecDepth 8192
 set_option maxHeartbeats 0
-theorem budgetHigh_total_add (s m n : ℕ) :
+private theorem budgetHigh_total_add (s m n : ℕ) :
     total s (m + n) = total s m + total (s + m) n := by
   induction n with
   | zero => simp [total]
@@ -968,110 +660,110 @@ theorem budgetHigh_total_add (s m n : ℕ) :
       total s m + (total (s + m) n + offsetTotal (s + m + n))
     rw [ih, Nat.add_assoc s m n, add_assoc]
 open scoped BigOperators
-theorem budgetHigh_total_chunks (s width count : ℕ) :
+private theorem budgetHigh_total_chunks (s width count : ℕ) :
     total s (count * width) = ∑ i ∈ Finset.range count, total (s + i * width) width := by
   induction count with
   | zero => simp [total]
   | succ count ih => rw [Nat.succ_mul, budgetHigh_total_add, Finset.sum_range_succ, ih]
-theorem budgetHigh_chunk2250 : total 2250 5 = 8045641830 :=
+private theorem budgetHigh_chunk2250 : total 2250 5 = 8045641830 :=
   by decide +kernel
-theorem budgetHigh_chunk2255 : total 2255 5 = 8012814530 :=
+private theorem budgetHigh_chunk2255 : total 2255 5 = 8012814530 :=
   by decide +kernel
-theorem budgetHigh_chunk2260 : total 2260 5 = 7979950150 :=
+private theorem budgetHigh_chunk2260 : total 2260 5 = 7979950150 :=
   by decide +kernel
-theorem budgetHigh_chunk2265 : total 2265 5 = 7947049635 :=
+private theorem budgetHigh_chunk2265 : total 2265 5 = 7947049635 :=
   by decide +kernel
-theorem budgetHigh_chunk2270 : total 2270 5 = 7914114845 :=
+private theorem budgetHigh_chunk2270 : total 2270 5 = 7914114845 :=
   by decide +kernel
-theorem budgetHigh_chunk2275 : total 2275 5 = 7881146740 :=
+private theorem budgetHigh_chunk2275 : total 2275 5 = 7881146740 :=
   by decide +kernel
-theorem budgetHigh_chunk2280 : total 2280 5 = 7848147165 :=
+private theorem budgetHigh_chunk2280 : total 2280 5 = 7848147165 :=
   by decide +kernel
-theorem budgetHigh_chunk2285 : total 2285 5 = 7815117095 :=
+private theorem budgetHigh_chunk2285 : total 2285 5 = 7815117095 :=
   by decide +kernel
-theorem budgetHigh_chunk2290 : total 2290 5 = 7782058360 :=
+private theorem budgetHigh_chunk2290 : total 2290 5 = 7782058360 :=
   by decide +kernel
-theorem budgetHigh_chunk2295 : total 2295 5 = 7748971950 :=
+private theorem budgetHigh_chunk2295 : total 2295 5 = 7748971950 :=
   by decide +kernel
-theorem budgetHigh_chunk2300 : total 2300 5 = 7715860865 :=
+private theorem budgetHigh_chunk2300 : total 2300 5 = 7715860865 :=
   by decide +kernel
-theorem budgetHigh_chunk2305 : total 2305 5 = 7682740840 :=
+private theorem budgetHigh_chunk2305 : total 2305 5 = 7682740840 :=
   by decide +kernel
-theorem budgetHigh_chunk2310 : total 2310 5 = 7649620815 :=
+private theorem budgetHigh_chunk2310 : total 2310 5 = 7649620815 :=
   by decide +kernel
-theorem budgetHigh_chunk2315 : total 2315 5 = 7616500790 :=
+private theorem budgetHigh_chunk2315 : total 2315 5 = 7616500790 :=
   by decide +kernel
-theorem budgetHigh_chunk2320 : total 2320 5 = 7583380765 :=
+private theorem budgetHigh_chunk2320 : total 2320 5 = 7583380765 :=
   by decide +kernel
-theorem budgetHigh_chunk2325 : total 2325 5 = 7550260740 :=
+private theorem budgetHigh_chunk2325 : total 2325 5 = 7550260740 :=
   by decide +kernel
-theorem budgetHigh_chunk2330 : total 2330 5 = 7517140715 :=
+private theorem budgetHigh_chunk2330 : total 2330 5 = 7517140715 :=
   by decide +kernel
-theorem budgetHigh_chunk2335 : total 2335 5 = 7484020690 :=
+private theorem budgetHigh_chunk2335 : total 2335 5 = 7484020690 :=
   by decide +kernel
-theorem budgetHigh_chunk2340 : total 2340 5 = 7450900665 :=
+private theorem budgetHigh_chunk2340 : total 2340 5 = 7450900665 :=
   by decide +kernel
-theorem budgetHigh_chunk2345 : total 2345 5 = 7417780640 :=
+private theorem budgetHigh_chunk2345 : total 2345 5 = 7417780640 :=
   by decide +kernel
-theorem budgetHigh_chunk2350 : total 2350 5 = 7384660615 :=
+private theorem budgetHigh_chunk2350 : total 2350 5 = 7384660615 :=
   by decide +kernel
-theorem budgetHigh_chunk2355 : total 2355 5 = 7351540590 :=
+private theorem budgetHigh_chunk2355 : total 2355 5 = 7351540590 :=
   by decide +kernel
-theorem budgetHigh_chunk2360 : total 2360 5 = 7318420565 :=
+private theorem budgetHigh_chunk2360 : total 2360 5 = 7318420565 :=
   by decide +kernel
-theorem budgetHigh_chunk2365 : total 2365 5 = 7285300540 :=
+private theorem budgetHigh_chunk2365 : total 2365 5 = 7285300540 :=
   by decide +kernel
-theorem budgetHigh_chunk2370 : total 2370 5 = 7252180515 :=
+private theorem budgetHigh_chunk2370 : total 2370 5 = 7252180515 :=
   by decide +kernel
-theorem budgetHigh_chunk2375 : total 2375 5 = 7219060490 :=
+private theorem budgetHigh_chunk2375 : total 2375 5 = 7219060490 :=
   by decide +kernel
-theorem budgetHigh_chunk2380 : total 2380 5 = 7185940465 :=
+private theorem budgetHigh_chunk2380 : total 2380 5 = 7185940465 :=
   by decide +kernel
-theorem budgetHigh_chunk2385 : total 2385 5 = 7152820440 :=
+private theorem budgetHigh_chunk2385 : total 2385 5 = 7152820440 :=
   by decide +kernel
-theorem budgetHigh_chunk2390 : total 2390 5 = 7119700415 :=
+private theorem budgetHigh_chunk2390 : total 2390 5 = 7119700415 :=
   by decide +kernel
-theorem budgetHigh_chunk2395 : total 2395 5 = 7086580390 :=
+private theorem budgetHigh_chunk2395 : total 2395 5 = 7086580390 :=
   by decide +kernel
-theorem budgetHigh_chunk2400 : total 2400 5 = 7053460365 :=
+private theorem budgetHigh_chunk2400 : total 2400 5 = 7053460365 :=
   by decide +kernel
-theorem budgetHigh_chunk2405 : total 2405 5 = 7020340340 :=
+private theorem budgetHigh_chunk2405 : total 2405 5 = 7020340340 :=
   by decide +kernel
-theorem budgetHigh_chunk2410 : total 2410 5 = 6987220315 :=
+private theorem budgetHigh_chunk2410 : total 2410 5 = 6987220315 :=
   by decide +kernel
-theorem budgetHigh_chunk2415 : total 2415 5 = 6954100290 :=
+private theorem budgetHigh_chunk2415 : total 2415 5 = 6954100290 :=
   by decide +kernel
-theorem budgetHigh_chunk2420 : total 2420 5 = 6920980265 :=
+private theorem budgetHigh_chunk2420 : total 2420 5 = 6920980265 :=
   by decide +kernel
-theorem budgetHigh_chunk2425 : total 2425 5 = 6887860240 :=
+private theorem budgetHigh_chunk2425 : total 2425 5 = 6887860240 :=
   by decide +kernel
-theorem budgetHigh_chunk2430 : total 2430 5 = 6854740215 :=
+private theorem budgetHigh_chunk2430 : total 2430 5 = 6854740215 :=
   by decide +kernel
-theorem budgetHigh_chunk2435 : total 2435 5 = 6821620190 :=
+private theorem budgetHigh_chunk2435 : total 2435 5 = 6821620190 :=
   by decide +kernel
-theorem budgetHigh_chunk2440 : total 2440 5 = 6788500165 :=
+private theorem budgetHigh_chunk2440 : total 2440 5 = 6788500165 :=
   by decide +kernel
-theorem budgetHigh_chunk2445 : total 2445 5 = 6755380140 :=
+private theorem budgetHigh_chunk2445 : total 2445 5 = 6755380140 :=
   by decide +kernel
-theorem budgetHigh_chunk2450 : total 2450 5 = 6722260115 :=
+private theorem budgetHigh_chunk2450 : total 2450 5 = 6722260115 :=
   by decide +kernel
-theorem budgetHigh_chunk2455 : total 2455 5 = 6689140090 :=
+private theorem budgetHigh_chunk2455 : total 2455 5 = 6689140090 :=
   by decide +kernel
-theorem budgetHigh_chunk2460 : total 2460 5 = 6656020065 :=
+private theorem budgetHigh_chunk2460 : total 2460 5 = 6656020065 :=
   by decide +kernel
-theorem budgetHigh_chunk2465 : total 2465 5 = 6622900040 :=
+private theorem budgetHigh_chunk2465 : total 2465 5 = 6622900040 :=
   by decide +kernel
-theorem budgetHigh_chunk2470 : total 2470 5 = 6589780015 :=
+private theorem budgetHigh_chunk2470 : total 2470 5 = 6589780015 :=
   by decide +kernel
-theorem budgetHigh_chunk2475 : total 2475 5 = 6556659990 :=
+private theorem budgetHigh_chunk2475 : total 2475 5 = 6556659990 :=
   by decide +kernel
-theorem budgetHigh_chunk2480 : total 2480 5 = 6523539965 :=
+private theorem budgetHigh_chunk2480 : total 2480 5 = 6523539965 :=
   by decide +kernel
-theorem budgetHigh_chunk2485 : total 2485 5 = 6490419940 :=
+private theorem budgetHigh_chunk2485 : total 2485 5 = 6490419940 :=
   by decide +kernel
-theorem budgetHigh_chunk2490 : total 2490 5 = 6457299915 :=
+private theorem budgetHigh_chunk2490 : total 2490 5 = 6457299915 :=
   by decide +kernel
-theorem budgetHigh_chunk2495 : total 2495 5 = 6424179890 :=
+private theorem budgetHigh_chunk2495 : total 2495 5 = 6424179890 :=
   by decide +kernel
 theorem window9 : total 2250 250 = 361775827400 := by
   rw [show 250 = 50 * 5 by decide, budgetHigh_total_chunks]
@@ -1090,105 +782,105 @@ theorem window9 : total 2250 250 = 361775827400 := by
     budgetHigh_chunk2470, budgetHigh_chunk2475, budgetHigh_chunk2480, budgetHigh_chunk2485,
     budgetHigh_chunk2490, budgetHigh_chunk2495]
   decide +kernel
-theorem budgetHigh_chunk2500 : total 2500 5 = 6391059865 :=
+private theorem budgetHigh_chunk2500 : total 2500 5 = 6391059865 :=
   by decide +kernel
-theorem budgetHigh_chunk2505 : total 2505 5 = 6357939840 :=
+private theorem budgetHigh_chunk2505 : total 2505 5 = 6357939840 :=
   by decide +kernel
-theorem budgetHigh_chunk2510 : total 2510 5 = 6324819815 :=
+private theorem budgetHigh_chunk2510 : total 2510 5 = 6324819815 :=
   by decide +kernel
-theorem budgetHigh_chunk2515 : total 2515 5 = 6291699790 :=
+private theorem budgetHigh_chunk2515 : total 2515 5 = 6291699790 :=
   by decide +kernel
-theorem budgetHigh_chunk2520 : total 2520 5 = 6258579765 :=
+private theorem budgetHigh_chunk2520 : total 2520 5 = 6258579765 :=
   by decide +kernel
-theorem budgetHigh_chunk2525 : total 2525 5 = 6225459740 :=
+private theorem budgetHigh_chunk2525 : total 2525 5 = 6225459740 :=
   by decide +kernel
-theorem budgetHigh_chunk2530 : total 2530 5 = 6192339715 :=
+private theorem budgetHigh_chunk2530 : total 2530 5 = 6192339715 :=
   by decide +kernel
-theorem budgetHigh_chunk2535 : total 2535 5 = 6159219690 :=
+private theorem budgetHigh_chunk2535 : total 2535 5 = 6159219690 :=
   by decide +kernel
-theorem budgetHigh_chunk2540 : total 2540 5 = 6126099665 :=
+private theorem budgetHigh_chunk2540 : total 2540 5 = 6126099665 :=
   by decide +kernel
-theorem budgetHigh_chunk2545 : total 2545 5 = 6092979640 :=
+private theorem budgetHigh_chunk2545 : total 2545 5 = 6092979640 :=
   by decide +kernel
-theorem budgetHigh_chunk2550 : total 2550 5 = 6059859615 :=
+private theorem budgetHigh_chunk2550 : total 2550 5 = 6059859615 :=
   by decide +kernel
-theorem budgetHigh_chunk2555 : total 2555 5 = 6026739590 :=
+private theorem budgetHigh_chunk2555 : total 2555 5 = 6026739590 :=
   by decide +kernel
-theorem budgetHigh_chunk2560 : total 2560 5 = 5993619565 :=
+private theorem budgetHigh_chunk2560 : total 2560 5 = 5993619565 :=
   by decide +kernel
-theorem budgetHigh_chunk2565 : total 2565 5 = 5960499540 :=
+private theorem budgetHigh_chunk2565 : total 2565 5 = 5960499540 :=
   by decide +kernel
-theorem budgetHigh_chunk2570 : total 2570 5 = 5927379515 :=
+private theorem budgetHigh_chunk2570 : total 2570 5 = 5927379515 :=
   by decide +kernel
-theorem budgetHigh_chunk2575 : total 2575 5 = 5894259490 :=
+private theorem budgetHigh_chunk2575 : total 2575 5 = 5894259490 :=
   by decide +kernel
-theorem budgetHigh_chunk2580 : total 2580 5 = 5861139465 :=
+private theorem budgetHigh_chunk2580 : total 2580 5 = 5861139465 :=
   by decide +kernel
-theorem budgetHigh_chunk2585 : total 2585 5 = 5828019440 :=
+private theorem budgetHigh_chunk2585 : total 2585 5 = 5828019440 :=
   by decide +kernel
-theorem budgetHigh_chunk2590 : total 2590 5 = 5794899415 :=
+private theorem budgetHigh_chunk2590 : total 2590 5 = 5794899415 :=
   by decide +kernel
-theorem budgetHigh_chunk2595 : total 2595 5 = 5761779390 :=
+private theorem budgetHigh_chunk2595 : total 2595 5 = 5761779390 :=
   by decide +kernel
-theorem budgetHigh_chunk2600 : total 2600 5 = 5728659365 :=
+private theorem budgetHigh_chunk2600 : total 2600 5 = 5728659365 :=
   by decide +kernel
-theorem budgetHigh_chunk2605 : total 2605 5 = 5695539340 :=
+private theorem budgetHigh_chunk2605 : total 2605 5 = 5695539340 :=
   by decide +kernel
-theorem budgetHigh_chunk2610 : total 2610 5 = 5662419315 :=
+private theorem budgetHigh_chunk2610 : total 2610 5 = 5662419315 :=
   by decide +kernel
-theorem budgetHigh_chunk2615 : total 2615 5 = 5629299290 :=
+private theorem budgetHigh_chunk2615 : total 2615 5 = 5629299290 :=
   by decide +kernel
-theorem budgetHigh_chunk2620 : total 2620 5 = 5596179265 :=
+private theorem budgetHigh_chunk2620 : total 2620 5 = 5596179265 :=
   by decide +kernel
-theorem budgetHigh_chunk2625 : total 2625 5 = 5563059240 :=
+private theorem budgetHigh_chunk2625 : total 2625 5 = 5563059240 :=
   by decide +kernel
-theorem budgetHigh_chunk2630 : total 2630 5 = 5529939215 :=
+private theorem budgetHigh_chunk2630 : total 2630 5 = 5529939215 :=
   by decide +kernel
-theorem budgetHigh_chunk2635 : total 2635 5 = 5496819190 :=
+private theorem budgetHigh_chunk2635 : total 2635 5 = 5496819190 :=
   by decide +kernel
-theorem budgetHigh_chunk2640 : total 2640 5 = 5463699165 :=
+private theorem budgetHigh_chunk2640 : total 2640 5 = 5463699165 :=
   by decide +kernel
-theorem budgetHigh_chunk2645 : total 2645 5 = 5430579140 :=
+private theorem budgetHigh_chunk2645 : total 2645 5 = 5430579140 :=
   by decide +kernel
-theorem budgetHigh_chunk2650 : total 2650 5 = 5397459115 :=
+private theorem budgetHigh_chunk2650 : total 2650 5 = 5397459115 :=
   by decide +kernel
-theorem budgetHigh_chunk2655 : total 2655 5 = 5364339090 :=
+private theorem budgetHigh_chunk2655 : total 2655 5 = 5364339090 :=
   by decide +kernel
-theorem budgetHigh_chunk2660 : total 2660 5 = 5331219065 :=
+private theorem budgetHigh_chunk2660 : total 2660 5 = 5331219065 :=
   by decide +kernel
-theorem budgetHigh_chunk2665 : total 2665 5 = 5298099040 :=
+private theorem budgetHigh_chunk2665 : total 2665 5 = 5298099040 :=
   by decide +kernel
-theorem budgetHigh_chunk2670 : total 2670 5 = 5264979015 :=
+private theorem budgetHigh_chunk2670 : total 2670 5 = 5264979015 :=
   by decide +kernel
-theorem budgetHigh_chunk2675 : total 2675 5 = 5231858990 :=
+private theorem budgetHigh_chunk2675 : total 2675 5 = 5231858990 :=
   by decide +kernel
-theorem budgetHigh_chunk2680 : total 2680 5 = 5198738965 :=
+private theorem budgetHigh_chunk2680 : total 2680 5 = 5198738965 :=
   by decide +kernel
-theorem budgetHigh_chunk2685 : total 2685 5 = 5165618940 :=
+private theorem budgetHigh_chunk2685 : total 2685 5 = 5165618940 :=
   by decide +kernel
-theorem budgetHigh_chunk2690 : total 2690 5 = 5132498915 :=
+private theorem budgetHigh_chunk2690 : total 2690 5 = 5132498915 :=
   by decide +kernel
-theorem budgetHigh_chunk2695 : total 2695 5 = 5099378890 :=
+private theorem budgetHigh_chunk2695 : total 2695 5 = 5099378890 :=
   by decide +kernel
-theorem budgetHigh_chunk2700 : total 2700 5 = 5066281874 :=
+private theorem budgetHigh_chunk2700 : total 2700 5 = 5066281874 :=
   by decide +kernel
-theorem budgetHigh_chunk2705 : total 2705 5 = 5033305546 :=
+private theorem budgetHigh_chunk2705 : total 2705 5 = 5033305546 :=
   by decide +kernel
-theorem budgetHigh_chunk2710 : total 2710 5 = 5000472624 :=
+private theorem budgetHigh_chunk2710 : total 2710 5 = 5000472624 :=
   by decide +kernel
-theorem budgetHigh_chunk2715 : total 2715 5 = 4967782796 :=
+private theorem budgetHigh_chunk2715 : total 2715 5 = 4967782796 :=
   by decide +kernel
-theorem budgetHigh_chunk2720 : total 2720 5 = 4935235749 :=
+private theorem budgetHigh_chunk2720 : total 2720 5 = 4935235749 :=
   by decide +kernel
-theorem budgetHigh_chunk2725 : total 2725 5 = 4902831171 :=
+private theorem budgetHigh_chunk2725 : total 2725 5 = 4902831171 :=
   by decide +kernel
-theorem budgetHigh_chunk2730 : total 2730 5 = 4870568749 :=
+private theorem budgetHigh_chunk2730 : total 2730 5 = 4870568749 :=
   by decide +kernel
-theorem budgetHigh_chunk2735 : total 2735 5 = 4838448171 :=
+private theorem budgetHigh_chunk2735 : total 2735 5 = 4838448171 :=
   by decide +kernel
-theorem budgetHigh_chunk2740 : total 2740 5 = 4806469124 :=
+private theorem budgetHigh_chunk2740 : total 2740 5 = 4806469124 :=
   by decide +kernel
-theorem budgetHigh_chunk2745 : total 2745 5 = 4774631296 :=
+private theorem budgetHigh_chunk2745 : total 2745 5 = 4774631296 :=
   by decide +kernel
 theorem window10 : total 2500 250 = 279004802200 := by
   rw [show 250 = 50 * 5 by decide, budgetHigh_total_chunks]
@@ -1207,25 +899,25 @@ theorem window10 : total 2500 250 = 279004802200 := by
     budgetHigh_chunk2720, budgetHigh_chunk2725, budgetHigh_chunk2730, budgetHigh_chunk2735,
     budgetHigh_chunk2740, budgetHigh_chunk2745]
   decide +kernel
-theorem budgetHigh_chunk2750 : total 2750 25 = 23400509839 :=
+private theorem budgetHigh_chunk2750 : total 2750 25 = 23400509839 :=
   by decide +kernel
-theorem budgetHigh_chunk2775 : total 2775 25 = 22625567261 :=
+private theorem budgetHigh_chunk2775 : total 2775 25 = 22625567261 :=
   by decide +kernel
-theorem budgetHigh_chunk2800 : total 2800 25 = 21867925464 :=
+private theorem budgetHigh_chunk2800 : total 2800 25 = 21867925464 :=
   by decide +kernel
-theorem budgetHigh_chunk2825 : total 2825 25 = 21127389136 :=
+private theorem budgetHigh_chunk2825 : total 2825 25 = 21127389136 :=
   by decide +kernel
-theorem budgetHigh_chunk2850 : total 2850 25 = 20403762964 :=
+private theorem budgetHigh_chunk2850 : total 2850 25 = 20403762964 :=
   by decide +kernel
-theorem budgetHigh_chunk2875 : total 2875 25 = 19696851636 :=
+private theorem budgetHigh_chunk2875 : total 2875 25 = 19696851636 :=
   by decide +kernel
-theorem budgetHigh_chunk2900 : total 2900 25 = 19006459839 :=
+private theorem budgetHigh_chunk2900 : total 2900 25 = 19006459839 :=
   by decide +kernel
-theorem budgetHigh_chunk2925 : total 2925 25 = 18332392261 :=
+private theorem budgetHigh_chunk2925 : total 2925 25 = 18332392261 :=
   by decide +kernel
-theorem budgetHigh_chunk2950 : total 2950 25 = 17674453589 :=
+private theorem budgetHigh_chunk2950 : total 2950 25 = 17674453589 :=
   by decide +kernel
-theorem budgetHigh_chunk2975 : total 2975 25 = 17032448511 :=
+private theorem budgetHigh_chunk2975 : total 2975 25 = 17032448511 :=
   by decide +kernel
 theorem window11 : total 2750 250 = 201167760500 := by
   rw [show 250 = 10 * 25 by decide, budgetHigh_total_chunks]
@@ -1234,25 +926,25 @@ theorem window11 : total 2750 250 = 201167760500 := by
     budgetHigh_chunk2850, budgetHigh_chunk2875, budgetHigh_chunk2900, budgetHigh_chunk2925,
     budgetHigh_chunk2950, budgetHigh_chunk2975]
   decide +kernel
-theorem budgetHigh_chunk3000 : total 3000 25 = 16406181714 :=
+private theorem budgetHigh_chunk3000 : total 3000 25 = 16406181714 :=
   by decide +kernel
-theorem budgetHigh_chunk3025 : total 3025 25 = 15795457886 :=
+private theorem budgetHigh_chunk3025 : total 3025 25 = 15795457886 :=
   by decide +kernel
-theorem budgetHigh_chunk3050 : total 3050 25 = 15200081714 :=
+private theorem budgetHigh_chunk3050 : total 3050 25 = 15200081714 :=
   by decide +kernel
-theorem budgetHigh_chunk3075 : total 3075 25 = 14619857886 :=
+private theorem budgetHigh_chunk3075 : total 3075 25 = 14619857886 :=
   by decide +kernel
-theorem budgetHigh_chunk3100 : total 3100 25 = 14054591089 :=
+private theorem budgetHigh_chunk3100 : total 3100 25 = 14054591089 :=
   by decide +kernel
-theorem budgetHigh_chunk3125 : total 3125 25 = 13504086011 :=
+private theorem budgetHigh_chunk3125 : total 3125 25 = 13504086011 :=
   by decide +kernel
-theorem budgetHigh_chunk3150 : total 3150 25 = 12968147339 :=
+private theorem budgetHigh_chunk3150 : total 3150 25 = 12968147339 :=
   by decide +kernel
-theorem budgetHigh_chunk3175 : total 3175 25 = 12446579761 :=
+private theorem budgetHigh_chunk3175 : total 3175 25 = 12446579761 :=
   by decide +kernel
-theorem budgetHigh_chunk3200 : total 3200 25 = 11939187964 :=
+private theorem budgetHigh_chunk3200 : total 3200 25 = 11939187964 :=
   by decide +kernel
-theorem budgetHigh_chunk3225 : total 3225 25 = 11445776636 :=
+private theorem budgetHigh_chunk3225 : total 3225 25 = 11445776636 :=
   by decide +kernel
 theorem window12 : total 3000 250 = 138379948000 := by
   rw [show 250 = 10 * 25 by decide, budgetHigh_total_chunks]
@@ -1261,25 +953,25 @@ theorem window12 : total 3000 250 = 138379948000 := by
     budgetHigh_chunk3100, budgetHigh_chunk3125, budgetHigh_chunk3150, budgetHigh_chunk3175,
     budgetHigh_chunk3200, budgetHigh_chunk3225]
   decide +kernel
-theorem budgetHigh_chunk3250 : total 3250 25 = 10966150464 :=
+private theorem budgetHigh_chunk3250 : total 3250 25 = 10966150464 :=
   by decide +kernel
-theorem budgetHigh_chunk3275 : total 3275 25 = 10500114136 :=
+private theorem budgetHigh_chunk3275 : total 3275 25 = 10500114136 :=
   by decide +kernel
-theorem budgetHigh_chunk3300 : total 3300 25 = 10047472339 :=
+private theorem budgetHigh_chunk3300 : total 3300 25 = 10047472339 :=
   by decide +kernel
-theorem budgetHigh_chunk3325 : total 3325 25 = 9608029761 :=
+private theorem budgetHigh_chunk3325 : total 3325 25 = 9608029761 :=
   by decide +kernel
-theorem budgetHigh_chunk3350 : total 3350 25 = 9181591089 :=
+private theorem budgetHigh_chunk3350 : total 3350 25 = 9181591089 :=
   by decide +kernel
-theorem budgetHigh_chunk3375 : total 3375 25 = 8767961011 :=
+private theorem budgetHigh_chunk3375 : total 3375 25 = 8767961011 :=
   by decide +kernel
-theorem budgetHigh_chunk3400 : total 3400 25 = 8366944214 :=
+private theorem budgetHigh_chunk3400 : total 3400 25 = 8366944214 :=
   by decide +kernel
-theorem budgetHigh_chunk3425 : total 3425 25 = 7978345386 :=
+private theorem budgetHigh_chunk3425 : total 3425 25 = 7978345386 :=
   by decide +kernel
-theorem budgetHigh_chunk3450 : total 3450 25 = 7601969214 :=
+private theorem budgetHigh_chunk3450 : total 3450 25 = 7601969214 :=
   by decide +kernel
-theorem budgetHigh_chunk3475 : total 3475 25 = 7237620386 :=
+private theorem budgetHigh_chunk3475 : total 3475 25 = 7237620386 :=
   by decide +kernel
 theorem window13 : total 3250 250 = 90256198000 := by
   rw [show 250 = 10 * 25 by decide, budgetHigh_total_chunks]
@@ -1288,25 +980,25 @@ theorem window13 : total 3250 250 = 90256198000 := by
     budgetHigh_chunk3350, budgetHigh_chunk3375, budgetHigh_chunk3400, budgetHigh_chunk3425,
     budgetHigh_chunk3450, budgetHigh_chunk3475]
   decide +kernel
-theorem budgetHigh_chunk3500 : total 3500 25 = 6885103589 :=
+private theorem budgetHigh_chunk3500 : total 3500 25 = 6885103589 :=
   by decide +kernel
-theorem budgetHigh_chunk3525 : total 3525 25 = 6544223511 :=
+private theorem budgetHigh_chunk3525 : total 3525 25 = 6544223511 :=
   by decide +kernel
-theorem budgetHigh_chunk3550 : total 3550 25 = 6214784839 :=
+private theorem budgetHigh_chunk3550 : total 3550 25 = 6214784839 :=
   by decide +kernel
-theorem budgetHigh_chunk3575 : total 3575 25 = 5896592261 :=
+private theorem budgetHigh_chunk3575 : total 3575 25 = 5896592261 :=
   by decide +kernel
-theorem budgetHigh_chunk3600 : total 3600 25 = 5589450464 :=
+private theorem budgetHigh_chunk3600 : total 3600 25 = 5589450464 :=
   by decide +kernel
-theorem budgetHigh_chunk3625 : total 3625 25 = 5293164136 :=
+private theorem budgetHigh_chunk3625 : total 3625 25 = 5293164136 :=
   by decide +kernel
-theorem budgetHigh_chunk3650 : total 3650 25 = 5007537964 :=
+private theorem budgetHigh_chunk3650 : total 3650 25 = 5007537964 :=
   by decide +kernel
-theorem budgetHigh_chunk3675 : total 3675 25 = 4732376636 :=
+private theorem budgetHigh_chunk3675 : total 3675 25 = 4732376636 :=
   by decide +kernel
-theorem budgetHigh_chunk3700 : total 3700 25 = 4467484839 :=
+private theorem budgetHigh_chunk3700 : total 3700 25 = 4467484839 :=
   by decide +kernel
-theorem budgetHigh_chunk3725 : total 3725 25 = 4212667261 :=
+private theorem budgetHigh_chunk3725 : total 3725 25 = 4212667261 :=
   by decide +kernel
 theorem window14 : total 3500 250 = 54843385500 := by
   rw [show 250 = 10 * 25 by decide, budgetHigh_total_chunks]
@@ -1315,25 +1007,25 @@ theorem window14 : total 3500 250 = 54843385500 := by
     budgetHigh_chunk3600, budgetHigh_chunk3625, budgetHigh_chunk3650, budgetHigh_chunk3675,
     budgetHigh_chunk3700, budgetHigh_chunk3725]
   decide +kernel
-theorem budgetHigh_chunk3750 : total 3750 25 = 3967728589 :=
+private theorem budgetHigh_chunk3750 : total 3750 25 = 3967728589 :=
   by decide +kernel
-theorem budgetHigh_chunk3775 : total 3775 25 = 3732473511 :=
+private theorem budgetHigh_chunk3775 : total 3775 25 = 3732473511 :=
   by decide +kernel
-theorem budgetHigh_chunk3800 : total 3800 25 = 3506706714 :=
+private theorem budgetHigh_chunk3800 : total 3800 25 = 3506706714 :=
   by decide +kernel
-theorem budgetHigh_chunk3825 : total 3825 25 = 3290232886 :=
+private theorem budgetHigh_chunk3825 : total 3825 25 = 3290232886 :=
   by decide +kernel
-theorem budgetHigh_chunk3850 : total 3850 25 = 3082856714 :=
+private theorem budgetHigh_chunk3850 : total 3850 25 = 3082856714 :=
   by decide +kernel
-theorem budgetHigh_chunk3875 : total 3875 25 = 2884382886 :=
+private theorem budgetHigh_chunk3875 : total 3875 25 = 2884382886 :=
   by decide +kernel
-theorem budgetHigh_chunk3900 : total 3900 25 = 2694616089 :=
+private theorem budgetHigh_chunk3900 : total 3900 25 = 2694616089 :=
   by decide +kernel
-theorem budgetHigh_chunk3925 : total 3925 25 = 2513361011 :=
+private theorem budgetHigh_chunk3925 : total 3925 25 = 2513361011 :=
   by decide +kernel
-theorem budgetHigh_chunk3950 : total 3950 25 = 2340422339 :=
+private theorem budgetHigh_chunk3950 : total 3950 25 = 2340422339 :=
   by decide +kernel
-theorem budgetHigh_chunk3975 : total 3975 25 = 2175604761 :=
+private theorem budgetHigh_chunk3975 : total 3975 25 = 2175604761 :=
   by decide +kernel
 theorem window15 : total 3750 250 = 30188385500 := by
   rw [show 250 = 10 * 25 by decide, budgetHigh_total_chunks]
@@ -1342,25 +1034,25 @@ theorem window15 : total 3750 250 = 30188385500 := by
     budgetHigh_chunk3850, budgetHigh_chunk3875, budgetHigh_chunk3900, budgetHigh_chunk3925,
     budgetHigh_chunk3950, budgetHigh_chunk3975]
   decide +kernel
-theorem budgetHigh_chunk4000 : total 4000 25 = 2018712964 :=
+private theorem budgetHigh_chunk4000 : total 4000 25 = 2018712964 :=
   by decide +kernel
-theorem budgetHigh_chunk4025 : total 4025 25 = 1869551636 :=
+private theorem budgetHigh_chunk4025 : total 4025 25 = 1869551636 :=
   by decide +kernel
-theorem budgetHigh_chunk4050 : total 4050 25 = 1727925464 :=
+private theorem budgetHigh_chunk4050 : total 4050 25 = 1727925464 :=
   by decide +kernel
-theorem budgetHigh_chunk4075 : total 4075 25 = 1593639136 :=
+private theorem budgetHigh_chunk4075 : total 4075 25 = 1593639136 :=
   by decide +kernel
-theorem budgetHigh_chunk4100 : total 4100 25 = 1466497339 :=
+private theorem budgetHigh_chunk4100 : total 4100 25 = 1466497339 :=
   by decide +kernel
-theorem budgetHigh_chunk4125 : total 4125 25 = 1346304761 :=
+private theorem budgetHigh_chunk4125 : total 4125 25 = 1346304761 :=
   by decide +kernel
-theorem budgetHigh_chunk4150 : total 4150 25 = 1232866089 :=
+private theorem budgetHigh_chunk4150 : total 4150 25 = 1232866089 :=
   by decide +kernel
-theorem budgetHigh_chunk4175 : total 4175 25 = 1125986011 :=
+private theorem budgetHigh_chunk4175 : total 4175 25 = 1125986011 :=
   by decide +kernel
-theorem budgetHigh_chunk4200 : total 4200 25 = 1025469214 :=
+private theorem budgetHigh_chunk4200 : total 4200 25 = 1025469214 :=
   by decide +kernel
-theorem budgetHigh_chunk4225 : total 4225 25 = 931120386 :=
+private theorem budgetHigh_chunk4225 : total 4225 25 = 931120386 :=
   by decide +kernel
 theorem window16 : total 4000 250 = 14338073000 := by
   rw [show 250 = 10 * 25 by decide, budgetHigh_total_chunks]
@@ -1369,25 +1061,25 @@ theorem window16 : total 4000 250 = 14338073000 := by
     budgetHigh_chunk4100, budgetHigh_chunk4125, budgetHigh_chunk4150, budgetHigh_chunk4175,
     budgetHigh_chunk4200, budgetHigh_chunk4225]
   decide +kernel
-theorem budgetHigh_chunk4250 : total 4250 25 = 842744214 :=
+private theorem budgetHigh_chunk4250 : total 4250 25 = 842744214 :=
   by decide +kernel
-theorem budgetHigh_chunk4275 : total 4275 25 = 760145386 :=
+private theorem budgetHigh_chunk4275 : total 4275 25 = 760145386 :=
   by decide +kernel
-theorem budgetHigh_chunk4300 : total 4300 25 = 683128589 :=
+private theorem budgetHigh_chunk4300 : total 4300 25 = 683128589 :=
   by decide +kernel
-theorem budgetHigh_chunk4325 : total 4325 25 = 611498511 :=
+private theorem budgetHigh_chunk4325 : total 4325 25 = 611498511 :=
   by decide +kernel
-theorem budgetHigh_chunk4350 : total 4350 25 = 545059839 :=
+private theorem budgetHigh_chunk4350 : total 4350 25 = 545059839 :=
   by decide +kernel
-theorem budgetHigh_chunk4375 : total 4375 25 = 483617261 :=
+private theorem budgetHigh_chunk4375 : total 4375 25 = 483617261 :=
   by decide +kernel
-theorem budgetHigh_chunk4400 : total 4400 25 = 426975464 :=
+private theorem budgetHigh_chunk4400 : total 4400 25 = 426975464 :=
   by decide +kernel
-theorem budgetHigh_chunk4425 : total 4425 25 = 374939136 :=
+private theorem budgetHigh_chunk4425 : total 4425 25 = 374939136 :=
   by decide +kernel
-theorem budgetHigh_chunk4450 : total 4450 25 = 327312964 :=
+private theorem budgetHigh_chunk4450 : total 4450 25 = 327312964 :=
   by decide +kernel
-theorem budgetHigh_chunk4475 : total 4475 25 = 283901636 :=
+private theorem budgetHigh_chunk4475 : total 4475 25 = 283901636 :=
   by decide +kernel
 theorem window17 : total 4250 250 = 5339323000 := by
   rw [show 250 = 10 * 25 by decide, budgetHigh_total_chunks]
@@ -1396,25 +1088,25 @@ theorem window17 : total 4250 250 = 5339323000 := by
     budgetHigh_chunk4350, budgetHigh_chunk4375, budgetHigh_chunk4400, budgetHigh_chunk4425,
     budgetHigh_chunk4450, budgetHigh_chunk4475]
   decide +kernel
-theorem budgetHigh_chunk4500 : total 4500 25 = 244509839 :=
+private theorem budgetHigh_chunk4500 : total 4500 25 = 244509839 :=
   by decide +kernel
-theorem budgetHigh_chunk4525 : total 4525 25 = 208942261 :=
+private theorem budgetHigh_chunk4525 : total 4525 25 = 208942261 :=
   by decide +kernel
-theorem budgetHigh_chunk4550 : total 4550 25 = 177003589 :=
+private theorem budgetHigh_chunk4550 : total 4550 25 = 177003589 :=
   by decide +kernel
-theorem budgetHigh_chunk4575 : total 4575 25 = 148498511 :=
+private theorem budgetHigh_chunk4575 : total 4575 25 = 148498511 :=
   by decide +kernel
-theorem budgetHigh_chunk4600 : total 4600 25 = 123231714 :=
+private theorem budgetHigh_chunk4600 : total 4600 25 = 123231714 :=
   by decide +kernel
-theorem budgetHigh_chunk4625 : total 4625 25 = 101007886 :=
+private theorem budgetHigh_chunk4625 : total 4625 25 = 101007886 :=
   by decide +kernel
-theorem budgetHigh_chunk4650 : total 4650 25 = 81631714 :=
+private theorem budgetHigh_chunk4650 : total 4650 25 = 81631714 :=
   by decide +kernel
-theorem budgetHigh_chunk4675 : total 4675 25 = 64907886 :=
+private theorem budgetHigh_chunk4675 : total 4675 25 = 64907886 :=
   by decide +kernel
-theorem budgetHigh_chunk4700 : total 4700 25 = 50641089 :=
+private theorem budgetHigh_chunk4700 : total 4700 25 = 50641089 :=
   by decide +kernel
-theorem budgetHigh_chunk4725 : total 4725 25 = 38636011 :=
+private theorem budgetHigh_chunk4725 : total 4725 25 = 38636011 :=
   by decide +kernel
 theorem window18 : total 4500 250 = 1239010500 := by
   rw [show 250 = 10 * 25 by decide, budgetHigh_total_chunks]
@@ -1423,25 +1115,25 @@ theorem window18 : total 4500 250 = 1239010500 := by
     budgetHigh_chunk4600, budgetHigh_chunk4625, budgetHigh_chunk4650, budgetHigh_chunk4675,
     budgetHigh_chunk4700, budgetHigh_chunk4725]
   decide +kernel
-theorem budgetHigh_chunk4750 : total 4750 25 = 28697339 :=
+private theorem budgetHigh_chunk4750 : total 4750 25 = 28697339 :=
   by decide +kernel
-theorem budgetHigh_chunk4775 : total 4775 25 = 20629761 :=
+private theorem budgetHigh_chunk4775 : total 4775 25 = 20629761 :=
   by decide +kernel
-theorem budgetHigh_chunk4800 : total 4800 25 = 14237964 :=
+private theorem budgetHigh_chunk4800 : total 4800 25 = 14237964 :=
   by decide +kernel
-theorem budgetHigh_chunk4825 : total 4825 25 = 9326636 :=
+private theorem budgetHigh_chunk4825 : total 4825 25 = 9326636 :=
   by decide +kernel
-theorem budgetHigh_chunk4850 : total 4850 25 = 5700464 :=
+private theorem budgetHigh_chunk4850 : total 4850 25 = 5700464 :=
   by decide +kernel
-theorem budgetHigh_chunk4875 : total 4875 25 = 3164136 :=
+private theorem budgetHigh_chunk4875 : total 4875 25 = 3164136 :=
   by decide +kernel
-theorem budgetHigh_chunk4900 : total 4900 25 = 1522339 :=
+private theorem budgetHigh_chunk4900 : total 4900 25 = 1522339 :=
   by decide +kernel
-theorem budgetHigh_chunk4925 : total 4925 25 = 579761 :=
+private theorem budgetHigh_chunk4925 : total 4925 25 = 579761 :=
   by decide +kernel
-theorem budgetHigh_chunk4950 : total 4950 25 = 141089 :=
+private theorem budgetHigh_chunk4950 : total 4950 25 = 141089 :=
   by decide +kernel
-theorem budgetHigh_chunk4975 : total 4975 25 = 11011 :=
+private theorem budgetHigh_chunk4975 : total 4975 25 = 11011 :=
   by decide +kernel
 theorem window19 : total 4750 250 = 84010500 := by
   rw [show 250 = 10 * 25 by decide, budgetHigh_total_chunks]
@@ -1456,18 +1148,18 @@ section
 namespace K1_13_4_2_2_5
 set_option maxRecDepth 8192
 set_option maxHeartbeats 0
-theorem lowCostShift (a d : ℤ) :
+private theorem lowCostShift (a d : ℤ) :
     cost (a + 2*d) = cost a + d*(a+1) + d^2 := by
   have h : (a+1)/2 + (a/2+1) = a+1 := by omega
   unfold cost
   rw [show (a+2*d+1)/2 = (a+1)/2+d by omega,
       show (a+2*d)/2 = a/2+d by omega]
   linear_combination d * h
-theorem lowCostOdd (x : ℤ) : cost (2*x-1) = x^2 := by
+private theorem lowCostOdd (x : ℤ) : cost (2*x-1) = x^2 := by
   unfold cost
   rw [show (2*x-1+1)/2 = x by omega, show (2*x-1)/2 = x-1 by omega]
   ring
-theorem lowRankBoth (k t : ℤ) :
+private theorem lowRankBoth (k t : ℤ) :
     shiftedRank true k t = columns k - (1151+k-t)^2 := by
   change columns k + cost (2300-k-2*(t-2*k-1)-(2*t-2301-k)) +
     cost (t-(t-2*k-1)-2*(2*t-2301-k)) - (1151-(t-2*k-1)-(2*t-2301-k))^2 = _
@@ -1475,7 +1167,7 @@ theorem lowRankBoth (k t : ℤ) :
       show t-(t-2*k-1)-2*(2*t-2301-k) = 2*(2*(1151+k-t))-1 by ring,
       lowCostOdd]
   ring
-theorem lowRankOneCol (k t : ℤ) :
+private theorem lowRankOneCol (k t : ℤ) :
     shiftedRank false k t = columns k - (1151+k-t)^2 + cost (linearPower k t-1) := by
   change columns k + cost (2300-k-2*0-(2*t-2301-k)) +
     cost (t-0-2*(2*t-2301-k)) - (1151-0-(2*t-2301-k))^2 = _
@@ -1484,7 +1176,7 @@ theorem lowRankOneCol (k t : ℤ) :
         unfold linearPower; ring, lowCostShift]
   unfold linearPower
   ring
-theorem lowRankOneEmpty (k t : ℤ) (hk : k ≤ 2300) :
+private theorem lowRankOneEmpty (k t : ℤ) (hk : k ≤ 2300) :
     shiftedRank false k t = cost t - cost (conicPower k t-1) := by
   change columns k + cost (2300-k-2*0-(2*t-2301-k)) +
     cost (t-0-2*(2*t-2301-k)) - (1151-0-(2*t-2301-k))^2 = _
@@ -1495,7 +1187,7 @@ theorem lowRankOneEmpty (k t : ℤ) (hk : k ≤ 2300) :
   unfold columns
   rw [max_eq_right (by omega)]
   ring
-theorem lowGain (z : ℤ) (hz : 0 ≤ z) :
+private theorem lowGain (z : ℤ) (hz : 0 ≤ z) :
     0 ≤ cost (z-1) ∧ (0 < cost (z-1) ↔ 2 ≤ z) := by
   unfold cost
   have ha : 0 ≤ (z-1+1)/2 := by omega
@@ -1506,7 +1198,7 @@ theorem lowGain (z : ℤ) (hz : 0 ≤ z) :
     · exact iff_of_true (mul_pos (by omega) (by omega)) h
     · rw [show (z-1+1)/2 = 0 by omega, zero_mul]
       omega
-theorem lowGainLtSq (d q : ℤ) (hd : d ≤ 0) (h : -d < 2*q) :
+private theorem lowGainLtSq (d q : ℤ) (hd : d ≤ 0) (h : -d < 2*q) :
     cost (d-1) < q^2 := by
   unfold cost
   have ha : 0 ≤ -((d-1+1)/2) := by omega
@@ -1517,7 +1209,7 @@ theorem lowGainLtSq (d q : ℤ) (hd : d ≤ 0) (h : -d < 2*q) :
   have h₁ := mul_le_mul_of_nonneg_right hl hb
   have h₂ := mul_lt_mul_of_pos_left hr hp
   nlinarith only [h₁, h₂]
-theorem lowShiftTest (k t : ℤ) (hk : k ≤ 2300) :
+private theorem lowShiftTest (k t : ℤ) (hk : k ≤ 2300) :
     (admissible (decide (0 < linearPower k t)) k t t ∧
       shiftedRank (decide (0 < linearPower k t)) k t < min (columns k) (cost t)) ↔
     2301+k ≤ 2*t ∧ t ≤ 2300 ∧ t ≤ k+1150 ∧ (2303+k ≤ 2*t ∨ 2*k+3 ≤ t) := by
@@ -1568,19 +1260,19 @@ theorem lowShiftTest (k t : ℤ) (hk : k ≤ 2300) :
         have hm := lowGain (conicPower k t) (by unfold conicPower; omega)
         unfold linearPower conicPower at *
         omega
-def lowBegin (k : ℕ) := max ((k+2302)/2) (min ((k+2304)/2) (2*k+3))
+private def lowBegin (k : ℕ) := max ((k+2302)/2) (min ((k+2304)/2) (2*k+3))
 private def lowEnd (k : ℕ) := min 2301 (k+1151)
-def lowMiddle (k : ℕ) := min (2*k+2) (lowEnd k)
-def lowMode (a b c t : ℕ) : Mode :=
+private def lowMiddle (k : ℕ) := min (2*k+2) (lowEnd k)
+private def lowMode (a b c t : ℕ) : Mode :=
   if t < a then .empty else if t < b then .shifted false
   else if t < c then .shifted true else .columns
-abbrev lowGood (k : ℕ) : Prop :=
+private abbrev lowGood (k : ℕ) : Prop :=
   k ≤ 2249 ∧ (lowBegin k ≤ 2301-k ∨ cost ((lowBegin k : ℤ)-1) < columns k) ∧
     columns k ≤ cost ((max (2301-k) (lowEnd k) : ℕ) : ℤ)
-theorem lowCostMono {a b : ℤ} (ha : 0 ≤ a) (hab : a ≤ b) : cost a ≤ cost b := by
+private theorem lowCostMono {a b : ℤ} (ha : 0 ≤ a) (hab : a ≤ b) : cost a ≤ cost b := by
   unfold cost
   exact mul_le_mul (by omega) (by omega) (by omega) (by omega)
-theorem lowMode_correct (k t : ℕ) (hg : lowGood k) (ht : 2301-k ≤ t) :
+private theorem lowMode_correct (k t : ℕ) (hg : lowGood k) (ht : 2301-k ≤ t) :
     chooseMode k t = lowMode (lowBegin k) (lowMiddle k) (lowEnd k) t := by
   obtain ⟨hk,hlo,hhi⟩ := hg
   unfold chooseMode
@@ -1614,19 +1306,19 @@ theorem lowMode_correct (k t : ℕ) (hg : lowGood k) (ht : 2301-k ≤ t) :
       have hb : ¬t < lowMiddle k := by unfold lowMiddle; omega
       simp [hle, lowMode, ha, hb, hc]
       omega
-def lowWidth (a b c t n : ℕ) : ℕ :=
+private def lowWidth (a b c t n : ℕ) : ℕ :=
   if t < a then min n ((a+1-t)/2)
   else if t < b then min n ((b+1-t)/2)
   else if t < c then min n ((c+1-t)/2)
   else n
-theorem lowWidth_le (a b c t n : ℕ) : lowWidth a b c t n ≤ n := by
+private theorem lowWidth_le (a b c t n : ℕ) : lowWidth a b c t n ≤ n := by
   unfold lowWidth
   split_ifs <;> omega
-theorem lowWidth_mem (a b c t n i : ℕ) (hi : i < n) :
+private theorem lowWidth_mem (a b c t n i : ℕ) (hi : i < n) :
     (lowMode a b c (t+2*i) = lowMode a b c t) ↔ i < lowWidth a b c t n := by
   unfold lowWidth lowMode
   split_ifs <;> simp_all <;> omega
-theorem lowEndpoint (k t : ℤ) (mode : Mode) (n w : ℕ)
+private theorem lowEndpoint (k t : ℤ) (mode : Mode) (n w : ℕ)
     (cut : ∀ i : ℕ, i < n → (chooseMode k (t+2*i) = mode ↔ i < w))
     (fuel lo hi : ℕ) (hl : lo < w) (hr : w ≤ hi) (hn : hi < n)
     (hspan : hi-lo ≤ 2^fuel) : endpoint k t mode fuel lo hi = w-1 := by
@@ -1646,7 +1338,7 @@ theorem lowEndpoint (k t : ℤ) (mode : Mode) (n w : ℕ)
       · rename_i h
         have hh := mt hm.mpr h
         apply ih <;> omega
-theorem lowLength (k t : ℤ) (mode : Mode) (n w : ℕ) (hn : 0 < n) (hcap : n ≤ 4096)
+private theorem lowLength (k t : ℤ) (mode : Mode) (n w : ℕ) (hn : 0 < n) (hcap : n ≤ 4096)
     (hw : w ≤ n) (hw₀ : 0 < w)
     (cut : ∀ i : ℕ, i < n → (chooseMode k (t+2*i) = mode ↔ i < w)) :
     runLength k t n mode = w := by
@@ -1662,14 +1354,14 @@ theorem lowLength (k t : ℤ) (mode : Mode) (n w : ℕ) (hn : 0 < n) (hcap : n �
     rw [lowEndpoint k t mode n w cut 12 0 (n-1) hw₀ (by omega) (by omega)
           (by change n-1-0 ≤ 4096; omega)]
     omega
-theorem lowAdmissible {k t : ℤ} {b : Bool} (h : chooseMode k t = .shifted b) :
+private theorem lowAdmissible {k t : ℤ} {b : Bool} (h : chooseMode k t = .shifted b) :
     admissible b k t t := by
   unfold chooseMode at h
   dsimp only at h
   split at h
   next hs => cases h; exact hs.1
   next => split at h <;> contradiction
-theorem lowValid {k l r : ℤ} {mode : Mode}
+private theorem lowValid {k l r : ℤ} {mode : Mode}
     (hl : chooseMode k l = mode) (hr : chooseMode k r = mode) : valid mode k l r := by
   cases mode with
   | columns | empty => trivial
@@ -1677,16 +1369,16 @@ theorem lowValid {k l r : ℤ} {mode : Mode}
     have h₁ := lowAdmissible hl
     have h₂ := lowAdmissible hr
     cases b <;> simp [admissible, valid] at h₁ h₂ ⊢ <;> tauto
-def lowNatCost (t : ℕ) := ((t+1)/2)*(t/2+1)
-def lowNatGain (t : ℕ) := (t/2)*((t+1)/2)
-def lowNatCol (k : ℕ) := 1324801 - lowNatCost (2300-k)
-def lowLin (n : ℕ) := n*(n-1)/2
-def lowSq (n : ℕ) := n*(n-1)*(2*n-1)/6
-theorem lowNatCost_eq (t : ℕ) : (lowNatCost t : ℤ) = cost t := by
+private def lowNatCost (t : ℕ) := ((t+1)/2)*(t/2+1)
+private def lowNatGain (t : ℕ) := (t/2)*((t+1)/2)
+private def lowNatCol (k : ℕ) := 1324801 - lowNatCost (2300-k)
+private def lowLin (n : ℕ) := n*(n-1)/2
+private def lowSq (n : ℕ) := n*(n-1)*(2*n-1)/6
+private theorem lowNatCost_eq (t : ℕ) : (lowNatCost t : ℤ) = cost t := by
   simp [lowNatCost, cost, Int.natCast_ediv]
-theorem lowNatGain_eq (t : ℕ) : (lowNatGain t : ℤ) = cost ((t : ℤ)-1) := by
+private theorem lowNatGain_eq (t : ℕ) : (lowNatGain t : ℤ) = cost ((t : ℤ)-1) := by
   simp [lowNatGain, cost, Int.natCast_ediv, show ((t : ℤ)-1)/2+1 = ((t : ℤ)+1)/2 by omega]
-theorem lowNatCol_eq (k : ℕ) (hk : k ≤ 2249) :
+private theorem lowNatCol_eq (k : ℕ) (hk : k ≤ 2249) :
     (lowNatCol k : ℤ) = columns k := by
   have hm := lowCostMono (a := ((2300-k : ℕ) : ℤ)) (b := 2300) (by positivity) (by omega)
   rw [← lowNatCost_eq] at hm
@@ -1694,24 +1386,24 @@ theorem lowNatCol_eq (k : ℕ) (hk : k ≤ 2249) :
   have hc : lowNatCost (2300-k) ≤ 1324801 := by omega
   simp [lowNatCol, columns, Nat.cast_sub hc, lowNatCost_eq,
     Nat.cast_sub (by omega : k ≤ 2300), max_eq_right (by omega : (0:ℤ) ≤ 2300-k)]
-theorem lowLin_eq (n : ℕ) (hn : 0 < n) : (lowLin n : ℤ) = linearSum n := by
+private theorem lowLin_eq (n : ℕ) (hn : 0 < n) : (lowLin n : ℤ) = linearSum n := by
   simp [lowLin, linearSum, Int.natCast_ediv, Nat.cast_sub (by omega : 1 ≤ n)]
-theorem lowSq_eq (n : ℕ) (hn : 0 < n) : (lowSq n : ℤ) = squareSum n := by
+private theorem lowSq_eq (n : ℕ) (hn : 0 < n) : (lowSq n : ℤ) = squareSum n := by
   simp [lowSq, squareSum, Int.natCast_ediv, Nat.cast_sub (by omega : 1 ≤ n),
     Nat.cast_sub (by omega : 1 ≤ 2*n)]
-theorem lowSumBoth (k t : ℤ) (n : ℕ) :
+private theorem lowSumBoth (k t : ℤ) (n : ℕ) :
     modeSum (.shifted true) k t n =
       (n : ℤ)*columns k - sumSquare (1151+k-t) (-2) n := by
   have h := lowRankBoth k t
   simp [modeSum, shiftedRank, linearAt, sumCost, sumSquare, linearPower, conicPower] at h ⊢
   linear_combination (n : ℤ) * h
-theorem lowSumOne (k t : ℤ) (n : ℕ) (hk : k ≤ 2300) :
+private theorem lowSumOne (k t : ℤ) (n : ℕ) (hk : k ≤ 2300) :
     modeSum (.shifted false) k t n =
       sumCost t 1 n - sumCost (conicPower k t-1) 2 n := by
   have h := lowRankOneEmpty k t hk
   simp [modeSum, shiftedRank, linearAt, sumCost, sumSquare, conicPower] at h ⊢
   linear_combination (n : ℤ) * h
-def lowCharge (mode : Mode) (k t w : ℕ) : ℤ :=
+private def lowCharge (mode : Mode) (k t w : ℕ) : ℤ :=
   let l := lowLin w
   let s := lowSq w
   let col := w*lowNatCol k
@@ -1725,7 +1417,7 @@ def lowCharge (mode : Mode) (k t w : ℕ) : ℤ :=
   | .shifted true =>
     let q := 1151+k-t
     ((col+4*q*l : ℕ) : ℤ) - ((w*q^2 + 4*s : ℕ) : ℤ)
-theorem lowCharge_eq (k t w : ℕ) (hk : k ≤ 2249) (hw : 0 < w)
+private theorem lowCharge_eq (k t w : ℕ) (hk : k ≤ 2249) (hw : 0 < w)
     (mode : Mode) (hm : chooseMode k t = mode) : modeSum mode k t w = lowCharge mode k t w := by
   cases mode with
   | columns => simp [lowCharge, modeSum, lowNatCol_eq k hk]
@@ -1745,14 +1437,14 @@ theorem lowCharge_eq (k t w : ℕ) (hk : k ≤ 2249) (hw : 0 < w)
       rw [lowSumBoth]
       simp [lowCharge, sumSquare, lowNatCol_eq k hk, lowLin_eq w hw, lowSq_eq w hw, Nat.cast_sub h]
       ring
-def lowParity (k a b c : ℕ) : ℕ → ℕ → ℕ → ℤ
+private def lowParity (k a b c : ℕ) : ℕ → ℕ → ℕ → ℤ
   | 0, _, n => (n : ℤ) * columns k
   | fuel+1, t, n =>
     if n = 0 then 0 else
       let mode := lowMode a b c t
       let w := lowWidth a b c t n
       lowCharge mode k t w + lowParity k a b c fuel (t+2*w) (n-w)
-theorem lowParity_eq (k : ℕ) (hg : lowGood k) (fuel t n : ℕ)
+private theorem lowParity_eq (k : ℕ) (hg : lowGood k) (fuel t n : ℕ)
     (ht : 2301-k ≤ t) (hcap : n ≤ 4096) :
     parityBound k fuel t n = lowParity k (lowBegin k) (lowMiddle k) (lowEnd k) fuel t n := by
   let a := lowBegin k
@@ -1782,10 +1474,10 @@ theorem lowParity_eq (k : ℕ) (hg : lowGood k) (fuel t n : ℕ)
       push_cast at tail
       simp only [parityBound, lowParity, ite_eq_right hn, hm, hw, ite_eq_left hv, hcharge]
       exact congrArg (_ + ·) tail
-abbrev lowGoodN (k : ℕ) : Prop :=
+private abbrev lowGoodN (k : ℕ) : Prop :=
   k ≤ 2249 ∧ (lowBegin k ≤ 2301-k ∨ lowNatCost (lowBegin k-1) < lowNatCol k) ∧
     lowNatCol k ≤ lowNatCost (max (2301-k) (lowEnd k))
-theorem lowGood_of_nat {k : ℕ} (h : lowGoodN k) : lowGood k := by
+private theorem lowGood_of_nat {k : ℕ} (h : lowGoodN k) : lowGood k := by
   obtain ⟨hk, hlo, hhi⟩ := h
   refine ⟨hk, ?_, ?_⟩
   · rcases hlo with hl | hl
@@ -1797,16 +1489,16 @@ theorem lowGood_of_nat {k : ℕ} (h : lowGoodN k) : lowGood k := by
       simpa only [Nat.cast_sub hab, Nat.cast_one] using hcast
   · have hcast : (lowNatCol k : ℤ) ≤ lowNatCost (max (2301-k) (lowEnd k)) := by exact_mod_cast hhi
     simpa only [lowNatCol_eq k hk, lowNatCost_eq] using hcast
-def lowStep (k : ℕ) (m : Mode) (u : ℕ) (next : ℕ → ℕ → ℤ) (t n : ℕ) : ℤ :=
+private def lowStep (k : ℕ) (m : Mode) (u : ℕ) (next : ℕ → ℕ → ℤ) (t n : ℕ) : ℤ :=
   if n = 0 then 0 else
   if t < u then
     let w := min n ((u+1-t)/2)
     if w = n then lowCharge m k t n
     else lowCharge m k t w + next (t+2*w) (n-w)
   else next t n
-theorem lowParity_zero (k a b c f t : ℕ) : lowParity k a b c f t 0 = 0 := by
+private theorem lowParity_zero (k a b c f t : ℕ) : lowParity k a b c f t 0 = 0 := by
   cases f <;> simp [lowParity]
-theorem lowStep_eq (k a b c t n u f : ℕ) (m : Mode) (next : ℕ → ℕ → ℤ)
+private theorem lowStep_eq (k a b c t n u f : ℕ) (m : Mode) (next : ℕ → ℕ → ℤ)
     (hm : t < u → lowMode a b c t = m)
     (hw : t < u → lowWidth a b c t n = min n ((u+1-t)/2))
     (skip : u ≤ t → lowParity k a b c (f+1) t n = next t n)
@@ -1822,43 +1514,43 @@ theorem lowStep_eq (k a b c t n u f : ℕ) (m : Mode) (next : ℕ → ℕ → �
     · rename_i h
       rw [tail _ (by omega)]
   · simpa only [lowStep, ite_eq_right hn, ite_eq_right hu] using skip (by omega)
-theorem lowLast (k a b c t n f : ℕ) (ha : a ≤ t) (hb : b ≤ t) (hc : c ≤ t) :
+private theorem lowLast (k a b c t n f : ℕ) (ha : a ≤ t) (hb : b ≤ t) (hc : c ≤ t) :
     lowParity k a b c (f+1) t n = lowCharge .columns k t n := by
   by_cases hn : n=0
   · simp [hn, lowCharge, lowParity_zero]
   · simp [lowParity, hn, lowMode, lowWidth, not_lt.mpr ha, not_lt.mpr hb,
       not_lt.mpr hc, lowParity_zero]
-def lowTwo (k c : ℕ) :=
+private def lowTwo (k c : ℕ) :=
   lowStep k (.shifted true) c (lowCharge .columns k)
-theorem lowTwo_eq (k a b c t n f : ℕ) (ha : a ≤ t) (hb : b ≤ t) :
+private theorem lowTwo_eq (k a b c t n f : ℕ) (ha : a ≤ t) (hb : b ≤ t) :
     lowParity k a b c (f+2) t n = lowTwo k c t n := by
   apply lowStep_eq
   · intro hc; simp [lowMode, not_lt.mpr ha, not_lt.mpr hb, hc]
   · intro hc; simp [lowWidth, not_lt.mpr ha, not_lt.mpr hb, hc]
   · exact lowLast k a b c t n (f+1) ha hb
   · intro w hc; exact lowLast _ _ _ _ _ _ f (by omega) (by omega) hc
-def lowOne (k b c : ℕ) := lowStep k (.shifted false) b (lowTwo k c)
-theorem lowOne_eq (k a b c t n f : ℕ) (ha : a ≤ t) :
+private def lowOne (k b c : ℕ) := lowStep k (.shifted false) b (lowTwo k c)
+private theorem lowOne_eq (k a b c t n f : ℕ) (ha : a ≤ t) :
     lowParity k a b c (f+3) t n = lowOne k b c t n := by
   apply lowStep_eq
   · intro hb; simp [lowMode, not_lt.mpr ha, hb]
   · intro hb; simp [lowWidth, not_lt.mpr ha, hb]
   · exact lowTwo_eq k a b c t n (f+1) ha
   · intro w hb; exact lowTwo_eq _ _ _ _ _ _ f (by omega) hb
-def lowFour (k a b c : ℕ) := lowStep k .empty a (lowOne k b c)
-theorem lowFour_eq (k a b c t n f : ℕ) :
+private def lowFour (k a b c : ℕ) := lowStep k .empty a (lowOne k b c)
+private theorem lowFour_eq (k a b c t n f : ℕ) :
     lowParity k a b c (f+4) t n = lowFour k a b c t n := by
   apply lowStep_eq
   · intro ha; simp [lowMode, ha]
   · intro ha; simp [lowWidth, ha]
   · exact lowOne_eq k a b c t n (f+1)
   · intro w ha; exact lowOne_eq _ _ _ _ _ _ f ha
-def lowOffset (k : ℕ) : ℤ :=
+private def lowOffset (k : ℕ) : ℤ :=
   if lowGoodN k then
     let a := lowBegin k; let b := lowMiddle k; let c := lowEnd k
     lowFour k a b c (2301-k) 1350 + lowFour k a b c (2302-k) 1350
   else offsetTotal k
-theorem lowOffset_eq (k : ℕ) : offsetTotal k = lowOffset k := by
+private theorem lowOffset_eq (k : ℕ) : offsetTotal k = lowOffset k := by
   unfold lowOffset
   split
   · rename_i hn
@@ -1874,10 +1566,10 @@ theorem lowOffset_eq (k : ℕ) : offsetTotal k = lowOffset k := by
         lowParity_eq k hg 8 (2302-k) 1350 (by omega) (by decide),
         lowFour_eq _ _ _ _ _ _ 4, lowFour_eq _ _ _ _ _ _ 4]
   · rfl
-def lowSum (s : ℕ) : ℕ → ℤ
+private def lowSum (s : ℕ) : ℕ → ℤ
   | 0 => 0
   | n+1 => lowSum s n + lowOffset (s+n)
-theorem lowSum_eq (s n : ℕ) : total s n = lowSum s n := by
+private theorem lowSum_eq (s n : ℕ) : total s n = lowSum s n := by
   induction n with
   | zero => rfl
   | succ n ih => simp only [total, lowSum, ih, lowOffset_eq]
@@ -1907,7 +1599,7 @@ open scoped BigOperators
 set_option maxHeartbeats 600000
 def tailPowers (q k : ℕ) (i : Fin 6) : ℕ :=
   if i = 0 ∨ i = 3 then 7299 - q - 3 * k else 0
-theorem gradeBound_tail (q : ℕ) :
+private theorem gradeBound_tail (q : ℕ) :
     gradeBound tailPowers q =
       ∑ k ∈ Finset.range (7300 - q), blockBound q (offset k) (tailPowers q k) := by
   symm
@@ -1950,7 +1642,7 @@ private theorem weightCost_spec (w : ℤ) :
   rw [quarterSquare_spec]
   have h : (w + 1) % 2 + w % 2 = 1 := by omega
   nlinarith only [h]
-theorem colength_eq_weightCost {a w : ℤ} (ha : a ≤ (w + 1) / 2) (hw : 0 ≤ w) :
+private theorem colength_eq_weightCost {a w : ℤ} (ha : a ≤ (w + 1) / 2) (hw : 0 ≤ w) :
     colength ⟨a, w⟩ = weightCost w := by
   have hu : 0 ≤ (w + 1) / 2 := by omega
   have huv : (w + 1) / 2 ≤ w := by omega
@@ -1975,7 +1667,7 @@ private theorem sum_powers (q k : ℕ) (f : Fin 6 → ℤ) :
     (∑ j, (tailPowers q k j : ℤ) * f j) =
       ((7299 - q - 3 * k : ℕ) : ℤ) * (f 0 + f 3) := by
   simp [Fin.sum_univ_succ, tailPowers, Fin.succ, mul_add]
-theorem tail_gain (k n t : ℤ) (hn : n = 0 ∨ t = n + 2 * k + 1) :
+private theorem tail_gain (k n t : ℤ) (hn : n = 0 ∨ t = n + 2 * k + 1) :
     triangular (2301 - 2 * n) - weightCost (2300 - k - 2 * n) - weightCost (2300 - 2 * n) -
         weightCost (t - n) =
       triangular 2301 - weightCost (2300 - k) - weightCost 2300 - weightCost t +
@@ -2002,9 +1694,9 @@ theorem tail_gain (k n t : ℤ) (hn : n = 0 ∨ t = n + 2 * k + 1) :
   norm_num only [Int.reduceMod] at hQ
   rw [ht] at hOP hO ⊢
   nlinarith only [hTP, hT, hPP, hP, hQP, hQ, hOP, hO, hN]
-def tailTerm (r k : ℕ) : ℕ :=
+private def tailTerm (r k : ℕ) : ℕ :=
   (weightCost ((r : ℤ) - k) - quarterSquare ((r - 1 - 3 * k : ℕ) : ℤ)).toNat
-theorem blockBound_tail_le (q k : ℕ) (hlo : 6790 ≤ q) (hhi : q ≤ 6820)
+private theorem blockBound_tail_le (q k : ℕ) (hlo : 6790 ≤ q) (hhi : q ≤ 6820)
     (hk : k < 7300 - q) :
     blockBound q (offset k) (tailPowers q k) ≤ tailTerm (7300 - q) k := by
   let n : ℤ := ((7299 - q - 3 * k : ℕ) : ℤ)
@@ -2071,10 +1763,10 @@ theorem blockBound_tail_le (q k : ℕ) (hlo : 6790 ≤ q) (hhi : q ≤ 6820)
         kernelLower (remainingDegree q (tailPowers q k)) (remainingFlag q (offset k) (tailPowers q k)) := by
       exact sub_le_sub_left ((le_max_right _ _).trans (le_max_right _ _)) _
     _ = weightCost t - quarterSquare n := by rw [hkernel]; ring
-def sumTerms (r : ℕ) : ℕ → ℕ
+private def sumTerms (r : ℕ) : ℕ → ℕ
   | 0 => 0
   | n + 1 => sumTerms r n + tailTerm r n
-theorem sum_tailTerm (r n : ℕ) :
+private theorem sum_tailTerm (r n : ℕ) :
     (∑ k ∈ Finset.range n, tailTerm r k) = sumTerms r n := by
   induction n with
   | zero => simp [sumTerms]
@@ -2089,42 +1781,42 @@ private theorem sum_prefix (n : ℕ) :
   | succ n ih => rw [Finset.sum_range_succ, ih, total]
 section
 set_option maxRecDepth 4096
-theorem tailRow510 : sumTerms 510 510 = 7456455 := by decide +kernel
-theorem tailRow509 : sumTerms 509 509 = 7412850 := by decide +kernel
-theorem tailRow508 : sumTerms 508 508 = 7369415 := by decide +kernel
-theorem tailRow507 : sumTerms 507 507 = 7326150 := by decide +kernel
-theorem tailRow506 : sumTerms 506 506 = 7283055 := by decide +kernel
-theorem tailRow505 : sumTerms 505 505 = 7240129 := by decide +kernel
-theorem tailRow504 : sumTerms 504 504 = 7197372 := by decide +kernel
-theorem tailRow503 : sumTerms 503 503 = 7154784 := by decide +kernel
-theorem tailRow502 : sumTerms 502 502 = 7112364 := by decide +kernel
-theorem tailRow501 : sumTerms 501 501 = 7070112 := by decide +kernel
-theorem tailRow500 : sumTerms 500 500 = 7028028 := by decide +kernel
-theorem tailRow499 : sumTerms 499 499 = 6986111 := by decide +kernel
-theorem tailRow498 : sumTerms 498 498 = 6944361 := by decide +kernel
-theorem tailRow497 : sumTerms 497 497 = 6902778 := by decide +kernel
-theorem tailRow496 : sumTerms 496 496 = 6861361 := by decide +kernel
-theorem tailRow495 : sumTerms 495 495 = 6820110 := by decide +kernel
-theorem tailRow494 : sumTerms 494 494 = 6779025 := by decide +kernel
-theorem tailRow493 : sumTerms 493 493 = 6738105 := by decide +kernel
-theorem tailRow492 : sumTerms 492 492 = 6697350 := by decide +kernel
-theorem tailRow491 : sumTerms 491 491 = 6656760 := by decide +kernel
-theorem tailRow490 : sumTerms 490 490 = 6616334 := by decide +kernel
-theorem tailRow489 : sumTerms 489 489 = 6576072 := by decide +kernel
-theorem tailRow488 : sumTerms 488 488 = 6535974 := by decide +kernel
-theorem tailRow487 : sumTerms 487 487 = 6496039 := by decide +kernel
-theorem tailRow486 : sumTerms 486 486 = 6456267 := by decide +kernel
-theorem tailRow485 : sumTerms 485 485 = 6416658 := by decide +kernel
-theorem tailRow484 : sumTerms 484 484 = 6377211 := by decide +kernel
-theorem tailRow483 : sumTerms 483 483 = 6337926 := by decide +kernel
-theorem tailRow482 : sumTerms 482 482 = 6298803 := by decide +kernel
-theorem tailRow481 : sumTerms 481 481 = 6259841 := by decide +kernel
-theorem tailRow480 : sumTerms 480 480 = 6221040 := by decide +kernel
+private theorem tailRow510 : sumTerms 510 510 = 7456455 := by decide +kernel
+private theorem tailRow509 : sumTerms 509 509 = 7412850 := by decide +kernel
+private theorem tailRow508 : sumTerms 508 508 = 7369415 := by decide +kernel
+private theorem tailRow507 : sumTerms 507 507 = 7326150 := by decide +kernel
+private theorem tailRow506 : sumTerms 506 506 = 7283055 := by decide +kernel
+private theorem tailRow505 : sumTerms 505 505 = 7240129 := by decide +kernel
+private theorem tailRow504 : sumTerms 504 504 = 7197372 := by decide +kernel
+private theorem tailRow503 : sumTerms 503 503 = 7154784 := by decide +kernel
+private theorem tailRow502 : sumTerms 502 502 = 7112364 := by decide +kernel
+private theorem tailRow501 : sumTerms 501 501 = 7070112 := by decide +kernel
+private theorem tailRow500 : sumTerms 500 500 = 7028028 := by decide +kernel
+private theorem tailRow499 : sumTerms 499 499 = 6986111 := by decide +kernel
+private theorem tailRow498 : sumTerms 498 498 = 6944361 := by decide +kernel
+private theorem tailRow497 : sumTerms 497 497 = 6902778 := by decide +kernel
+private theorem tailRow496 : sumTerms 496 496 = 6861361 := by decide +kernel
+private theorem tailRow495 : sumTerms 495 495 = 6820110 := by decide +kernel
+private theorem tailRow494 : sumTerms 494 494 = 6779025 := by decide +kernel
+private theorem tailRow493 : sumTerms 493 493 = 6738105 := by decide +kernel
+private theorem tailRow492 : sumTerms 492 492 = 6697350 := by decide +kernel
+private theorem tailRow491 : sumTerms 491 491 = 6656760 := by decide +kernel
+private theorem tailRow490 : sumTerms 490 490 = 6616334 := by decide +kernel
+private theorem tailRow489 : sumTerms 489 489 = 6576072 := by decide +kernel
+private theorem tailRow488 : sumTerms 488 488 = 6535974 := by decide +kernel
+private theorem tailRow487 : sumTerms 487 487 = 6496039 := by decide +kernel
+private theorem tailRow486 : sumTerms 486 486 = 6456267 := by decide +kernel
+private theorem tailRow485 : sumTerms 485 485 = 6416658 := by decide +kernel
+private theorem tailRow484 : sumTerms 484 484 = 6377211 := by decide +kernel
+private theorem tailRow483 : sumTerms 483 483 = 6337926 := by decide +kernel
+private theorem tailRow482 : sumTerms 482 482 = 6298803 := by decide +kernel
+private theorem tailRow481 : sumTerms 481 481 = 6259841 := by decide +kernel
+private theorem tailRow480 : sumTerms 480 480 = 6221040 := by decide +kernel
 end
-theorem tailTotal_next {n a b : ℕ} (hp : total n = a)
+private theorem tailTotal_next {n a b : ℕ} (hp : total n = a)
     (hr : sumTerms (510 - n) (510 - n) = b) : total (n + 1) = a + b :=
   congrArg₂ Nat.add hp hr
-theorem total_value : total 31 ≤ 211628840 := by
+private theorem total_value : total 31 ≤ 211628840 := by
   have h0 : total 0 = 0 := rfl
   have h1 : total 1 = 7456455 := tailTotal_next h0 tailRow510
   have h2 : total 2 = 14869305 := tailTotal_next h1 tailRow509
@@ -2214,13 +1906,13 @@ theorem high_monomial_vanishes (e : Exp) (c : Geom) (he : 5000 ≤ e none) :
   · apply (monomial_mem_restrictWeightedOrder _ _ _ _).mpr
     exact Or.inl (by simpa only [Finsupp.weight_elim_one_zero] using he)
 def cappedRange (B : ℕ) : Submodule Geom Flat := LinearMap.range (origin.domRestrict (Capped B))
-def blockRange (i : ℕ × ℕ) : Submodule Geom Flat :=
+private def blockRange (i : ℕ × ℕ) : Submodule Geom Flat :=
   LinearMap.range (originBlock i.1 i.2)
 private instance (i : ℕ × ℕ) : Module.Finite Geom (blockRange i) :=
   Module.Finite.range (originBlock i.1 i.2)
 private def pairs (B : ℕ) : Finset (ℕ × ℕ) :=
   (Finset.range (B + 1)) ×ˢ (Finset.range 7300)
-theorem range_cover (B : ℕ) : cappedRange B ≤ (pairs B).sup blockRange := by
+private theorem range_cover (B : ℕ) : cappedRange B ≤ (pairs B).sup blockRange := by
   classical
   intro P hP
   obtain ⟨Q, rfl⟩ := LinearMap.mem_range.mp hP
@@ -2340,19 +2032,19 @@ private theorem encode_basis (q k : ℕ) (e : blockExponents q k) :
 local notation "T" => (MvPolynomial.X (none : Option (Fin 3)) : Flat)
 private def y (j : Fin 3) : Flat := MvPolynomial.X (some j)
 private def scaledImage : Fin 3 → Flat := ![y 0, T * y 1, T ^ 2 * y 2]
-theorem scaled_plane_zero :
+private theorem scaled_plane_zero :
     bind₁ scaledImage (planeImage 0) = shearImage (some 0) := by
   simp [planeImage, scaledImage, shearImage, y]
-theorem scaled_plane_one : bind₁ scaledImage (planeImage 1) = T * y 1 := by
+private theorem scaled_plane_one : bind₁ scaledImage (planeImage 1) = T * y 1 := by
   simp [planeImage, scaledImage]
-theorem scaled_plane_two : bind₁ scaledImage (planeImage 2) = T ^ 2 * y 2 := by
+private theorem scaled_plane_two : bind₁ scaledImage (planeImage 2) = T ^ 2 * y 2 := by
   simp [planeImage, scaledImage]
 private theorem bind_monomial_one {σ τ : Type*} [Fintype σ]
     (f : σ → MvPolynomial τ Geom) (e : σ →₀ ℕ) :
     bind₁ f (monomial e 1) = ∏ j, f j ^ e j := by
   rw [bind₁_monomial, C_1, one_mul]
   exact Finsupp.prod_fintype e (fun j n => f j ^ n) (fun _ => pow_zero _)
-theorem source_monomial (e : Exp) :
+private theorem source_monomial (e : Exp) :
     shear (monomial e 1) = T ^ e none *
       (shearImage (some 0) ^ e (some 0) * y 1 ^ e (some 1) * y 2 ^ e (some 2)) := by
   rw [shear, bind_monomial_one, Fintype.prod_option, Fin.prod_univ_three]
@@ -2387,7 +2079,7 @@ private theorem shifted_monomial (q k : ℕ) (e : blockExponents q k) :
         (shearImage (some 0) ^ e.val (some 0) * y 1 ^ e.val (some 1) * y 2 ^ e.val (some 2)) := by
       ring
     _ = _ := by rw [hT, hA]; ring
-theorem shifted_shear (q k : ℕ) (p : Block q k) :
+private theorem shifted_shear (q k : ℕ) (p : Block q k) :
     T ^ (-offset k).toNat * shear (p : Flat) =
       T ^ (offset k).toNat * shearImage (some 0) ^ removed q *
         bind₁ scaledImage (bind₁ planeImage (encode q k p : Plane)) := by
@@ -2407,7 +2099,7 @@ theorem shifted_shear (q k : ℕ) (p : Block q k) :
     rw [encode_basis, coe_basisRestrictSupport_apply]
     exact shifted_monomial q k e
   exact LinearMap.congr_fun h p
-def planeWeight : Fin 3 → ℕ := ![2, 0, 1]
+private def planeWeight : Fin 3 → ℕ := ![2, 0, 1]
 private def scaledWeight (j : Fin 3) : ℕ := planeWeight j + 1
 private theorem weight_scaled (e : PlaneExp) :
     e.weight scaledWeight = e.weight planeWeight + e.weight (fun _ => 1) := by
@@ -2444,7 +2136,7 @@ private theorem order_of_t_power_mul {n m : ℕ} {p : Flat}
   simp only [map_add, Finsupp.weight_single, contactWeight, Option.elim_none,
     smul_eq_mul, mul_one] at hh ⊢
   omega
-theorem planeImage_grade (j : Fin 3) :
+private theorem planeImage_grade (j : Fin 3) :
     (planeImage j).IsWeightedHomogeneous (fun _ : Fin 3 => 1) 1 := by
   have h (i : Fin 3) := isWeightedHomogeneous_X Geom (fun _ : Fin 3 => (1 : ℕ)) i
   by_cases hj : j = 0
@@ -2511,25 +2203,25 @@ open MvPolynomial
 open scoped Polynomial BigOperators
 set_option maxHeartbeats 600000
 set_option backward.isDefEq.respectTransparency false
-abbrev JetRow := MvPolynomial (Fin 3) Geom[X]
+private abbrev JetRow := MvPolynomial (Fin 3) Geom[X]
 private def seedView : PhysicalRow ≃ₐ[Geom[X]] JetRow[X] :=
   optionEquivLeft _ _
 private def toRow : Flat ≃ₐ[Geom] JetRow := optionEquivRight _ _
 private def seedCoeff (n : ℕ) : PhysicalRow →ₗ[Geom] JetRow :=
   (Polynomial.lcoeff JetRow n).restrictScalars Geom ∘ₗ seedView.toLinearMap.restrictScalars Geom
-def flatCoeff (n : ℕ) : PhysicalRow →ₗ[Geom] Flat :=
+private def flatCoeff (n : ℕ) : PhysicalRow →ₗ[Geom] Flat :=
   toRow.symm.toLinearMap ∘ₗ seedCoeff n
-theorem seedCoeff_apply (n : ℕ) (F : PhysicalRow) (e : PlaneExp) :
+private theorem seedCoeff_apply (n : ℕ) (F : PhysicalRow) (e : PlaneExp) :
     (seedCoeff n F).coeff e = F.coeff (e.optionElim n) :=
   optionEquivLeft_coeff_coeff Geom[X] F n e
-theorem flatCoeff_apply (n : ℕ) (F : PhysicalRow) (e : Exp) :
+private theorem flatCoeff_apply (n : ℕ) (F : PhysicalRow) (e : Exp) :
     (flatCoeff n F).coeff e = (F.coeff (e.some.optionElim n)).coeff (e none) := by
   have h := optionEquivRight_coeff_coeff (flatCoeff n F) e.some (e none)
   rw [Finsupp.optionElim_some] at h
   change ((toRow (toRow.symm (seedCoeff n F))).coeff e.some).coeff (e none) = _ at h
   rw [AlgEquiv.apply_symm_apply, seedCoeff_apply] at h
   exact h.symm
-theorem coeff_mem_capped {b : Bank} {F : PhysicalRow} (hF : Caps b.box F) (n : ℕ) :
+private theorem coeff_mem_capped {b : Bank} {F : PhysicalRow} (hF : Caps b.box F) (n : ℕ) :
     flatCoeff n F ∈ Capped b.box.b := by
   intro e he
   change e ∈ (flatCoeff n F).support at he
@@ -2559,7 +2251,7 @@ theorem coeff_mem_capped {b : Bank} {F : PhysicalRow} (hF : Caps b.box F) (n : �
   · exact (congrArg (Finsupp.weight gradeWeight) heq).symm.le.trans ((hg (e none)).le.trans hb)
   · exact (congrArg (Finsupp.weight indexWeight) heq).symm.le.trans ((hi (e none)).le.trans hj)
   · simpa using ht
-theorem seedCoeff_eq_zero {b : Bank} {F : PhysicalRow} (hF : Caps b.box F)
+private theorem seedCoeff_eq_zero {b : Bank} {F : PhysicalRow} (hF : Caps b.box F)
     {n : ℕ} (hn : 70000 < n) :
     seedCoeff n F = 0 := by
   have hdeg : (seedView F).natDegree ≤ 70000 := by
@@ -2567,7 +2259,7 @@ theorem seedCoeff_eq_zero {b : Bank} {F : PhysicalRow} (hF : Caps b.box F)
   exact Polynomial.coeff_eq_zero_of_natDegree_lt (hdeg.trans_lt hn)
 private def normalize (x v : Geom) : Flat →ₐ[Geom] Flat :=
   globalPointTranslation (d := 2) x v
-theorem normalize_mem_capped {B : ℕ} {Q : Flat} (h : Q ∈ Capped B) (x v : Geom) :
+private theorem normalize_mem_capped {B : ℕ} {Q : Flat} (h : Q ∈ Capped B) (x v : Geom) :
     normalize x v Q ∈ Capped B := by
   have preserve (w : Option (Fin 3) → ℕ) (a : ℕ)
       (hQ : ∀ e ∈ Q.support, e.weight w ≤ a) :
@@ -2585,25 +2277,25 @@ theorem normalize_mem_capped {B : ℕ} {Q : Flat} (h : Q ∈ Capped B) (x v : Ge
   exact ⟨preserve gradeWeight B (fun t ht => (h ht).1) e he,
     preserve indexWeight 2300 (fun t ht => (h ht).2.1) e he,
     htop e ▸ preserve topWeight 1150 (fun t ht => (htop t).symm ▸ (h ht).2.2) e he⟩
-def backwardImage {ι : Type*} (x v : Geom)
+private def backwardImage {ι : Type*} (x v : Geom)
     (y : Fin 3 → MvPolynomial ι Geom[X]) (j : Fin 3) : MvPolynomial ι Geom[X] :=
   if j = 0 then
     y 0 + C (Polynomial.C v) -
       C (Polynomial.C x - Polynomial.X) * y 1 -
       C ((Polynomial.C x - Polynomial.X) ^ 2) * y 2
   else y j
-def jetBackward (x v : Geom) : JetRow →ₐ[Geom[X]] JetRow :=
+private def jetBackward (x v : Geom) : JetRow →ₐ[Geom[X]] JetRow :=
   aeval (backwardImage x v MvPolynomial.X)
-def fullBackward (x v : Geom) : PhysicalRow →ₐ[Geom[X]] PhysicalRow :=
+private def fullBackward (x v : Geom) : PhysicalRow →ₐ[Geom[X]] PhysicalRow :=
   aeval (fun j => j.elim (MvPolynomial.X none)
     (backwardImage x v (fun i => MvPolynomial.X (some i))))
-theorem fullBackward_apply (x v : Geom) (F : PhysicalRow) :
+private theorem fullBackward_apply (x v : Geom) (F : PhysicalRow) :
     fullBackward x v F = backwardShift x v F := by
   rw [fullBackward, aeval_def, MvPolynomial.algebraMap_eq, backwardShift]
   apply congrArg (fun a => eval₂ C a F)
   funext j
   cases j <;> simp [backwardImage]
-theorem seedView_backward (x v : Geom) :
+private theorem seedView_backward (x v : Geom) :
     seedView.toAlgHom.comp (fullBackward x v) =
       (Polynomial.mapAlgHom (jetBackward x v)).comp seedView.toAlgHom := by
   apply algHom_ext
@@ -2616,7 +2308,7 @@ theorem seedView_backward (x v : Geom) :
       simp [seedView, fullBackward, jetBackward, backwardImage, optionEquivLeft_X_some,
         optionEquivLeft_C]
     · simp [seedView, fullBackward, jetBackward, backwardImage, hj, optionEquivLeft_X_some]
-theorem seedCoeff_backward (x v : Geom) (F : PhysicalRow) (n : ℕ) :
+private theorem seedCoeff_backward (x v : Geom) (F : PhysicalRow) (n : ℕ) :
     seedCoeff n (backwardShift x v F) = jetBackward x v (seedCoeff n F) := by
   have h := DFunLike.congr_fun (seedView_backward x v) F
   have he : seedView (fullBackward x v F) =
@@ -2624,9 +2316,9 @@ theorem seedCoeff_backward (x v : Geom) (F : PhysicalRow) (n : ℕ) :
   rw [fullBackward_apply] at he
   change (seedView (backwardShift x v F)).coeff n = jetBackward x v ((seedView F).coeff n)
   rw [he, Polynomial.coeff_mapAlgHom_apply]
-def taylorRows (x : Geom) : JetRow →ₐ[Geom] JetRow :=
+private def taylorRows (x : Geom) : JetRow →ₐ[Geom] JetRow :=
   mapAlgHom (Polynomial.taylorAlgHom x)
-theorem normalize_shear (x v : Geom) :
+private theorem normalize_shear (x v : Geom) :
     toRow.toAlgHom.comp (shear.comp (normalize x v)) =
       (taylorRows x).comp (((jetBackward x v).restrictScalars Geom).comp toRow.toAlgHom) := by
   apply algHom_ext
@@ -2642,7 +2334,7 @@ theorem normalize_shear (x v : Geom) :
     fin_cases j <;>
       (simp [normalize, shear, toRow, taylorRows, shearImage, jetBackward, backwardImage,
         Polynomial.taylor_X, Polynomial.taylor_C, h₁, h₂]; try ring)
-theorem node_coeff (x v : Geom) (F : PhysicalRow) (n : ℕ) (e : PlaneExp) :
+private theorem node_coeff (x v : Geom) (F : PhysicalRow) (n : ℕ) (e : PlaneExp) :
     (toRow (shear (normalize x v (flatCoeff n F)))).coeff e =
       Polynomial.taylor x ((backwardShift x v F).coeff (e.optionElim n)) := by
   have h := DFunLike.congr_fun (normalize_shear x v) (flatCoeff n F)
@@ -2651,12 +2343,12 @@ theorem node_coeff (x v : Geom) (F : PhysicalRow) (n : ℕ) (e : PlaneExp) :
   rw [AlgEquiv.apply_symm_apply, ← seedCoeff_backward] at h
   rw [h, taylorRows, mapAlgHom_apply, coeff_map, seedCoeff_apply]
   rfl
-theorem contactWeight_eq (e : PlaneExp) (i : ℕ) :
+private theorem contactWeight_eq (e : PlaneExp) (i : ℕ) :
     (e.optionElim i).weight contactWeight = i + 3 * e 0 := by
   unfold contactWeight
   rw [Finsupp.weight_optionElim, Finsupp.weight_single_index, one_mul,
     smul_eq_mul, Nat.mul_comm (e 0)]
-theorem mem_contact_of_origin_eq_zero {b : Bank} {x v : Geom} {F : PhysicalRow}
+private theorem mem_contact_of_origin_eq_zero {b : Bank} {x v : Geom} {F : PhysicalRow}
     (hcap : Caps b.box F) (h : ∀ n : Fin 70001, origin (normalize x v (flatCoeff n F)) = 0) :
     F ∈ contactAt x v := by
   apply (mem_contactAt x v F).mpr
@@ -2694,7 +2386,7 @@ theorem mem_contact_of_origin_eq_zero {b : Bank} {x v : Geom} {F : PhysicalRow}
       change toRow.symm (seedCoeff (e none) F) = 0
       rw [hz, map_zero]
     simp [hz']
-def nodeInput (b : Bank) (x v : Geom) (V : Submodule Geom PhysicalRow)
+private def nodeInput (b : Bank) (x v : Geom) (V : Submodule Geom PhysicalRow)
     (hcap : ∀ F ∈ V, Caps b.box F) (n : Fin 70001) : V →ₗ[Geom] Capped b.box.b :=
   ((normalize x v).toLinearMap ∘ₗ flatCoeff n ∘ₗ V.subtype).codRestrict _
     (fun F => normalize_mem_capped (coeff_mem_capped (hcap F F.2) n) x v)
@@ -2755,7 +2447,7 @@ def c5 : Prop :=
 def c6 : Prop :=
   ∃ p : ℕ → ℕ → Powers,
     (∑ j ∈ Finset.range 1790, gradeBound p (5000 + j)) ≤ 364983426528
-theorem plane_rank_le (h1 : c1) (h2 : c2) {q k : ℕ} (hq : q < 6821) (hk : k < 7300)
+private theorem plane_rank_le (h1 : c1) (h2 : c2) {q k : ℕ} (hq : q < 6821) (hk : k < 7300)
     (p : Powers) :
     Module.finrank Geom (LinearMap.range (planeContact q (offset k))) ≤ blockBound q (offset k) p := by
   let f := planeContact q (offset k)
@@ -2789,7 +2481,7 @@ theorem plane_rank_le (h1 : c1) (h2 : c2) {q k : ℕ} (hq : q < 6821) (hk : k < 
           (kernelLower (remainingDegree q p) (remainingFlag q (offset k) p))) := by
     omega
   simpa using Int.toNat_le_toNat hbound
-theorem join_windows {a m n r s : ℕ}
+private theorem join_windows {a m n r s : ℕ}
     (h₁ : ∃ p : ℕ → ℕ → Powers, (∑ j ∈ Finset.range m, gradeBound p (a + j)) ≤ r)
     (h₂ : ∃ p : ℕ → ℕ → Powers, (∑ j ∈ Finset.range n, gradeBound p (a + m + j)) ≤ s) :
     ∃ p : ℕ → ℕ → Powers, (∑ j ∈ Finset.range (m + n), gradeBound p (a + j)) ≤ r + s := by
@@ -2813,7 +2505,7 @@ theorem join_windows {a m n r s : ℕ}
   simp only [← Nat.add_assoc]
   rw [hsecond]
   exact Nat.add_le_add hp₁ hp₂
-theorem bank_bound (h3 : c3) (h4 : c4) (h5 : c5) (h6 : c6) (b : Bank) :
+private theorem bank_bound (h3 : c3) (h4 : c4) (h5 : c5) (h6 : c6) (b : Bank) :
     ∃ p : ℕ → ℕ → Powers, (∑ q ∈ Finset.range (b.box.b + 1), gradeBound p q) ≤ b.nodeRank := by
   unfold c3 at h3
   have h34 := join_windows (a := 0) (m := 1151) (n := 1149)
@@ -2877,9 +2569,9 @@ set_option maxHeartbeats 800000
 set_option maxRecDepth 12000
 open K1 K1_13 K1_13_4 Polynomial
 open scoped Polynomial BigOperators
-def contactError (S : Geom[X]) (x v : Geom) : Geom[X] :=
+private def contactError (S : Geom[X]) (x v : Geom) : Geom[X] :=
   S - Polynomial.C v + (Polynomial.C x - Polynomial.X) * hasseDeriv 1 S + (Polynomial.C x - Polynomial.X) ^ 2 * hasseDeriv 2 S
-theorem contactError_dvd (S : Geom[X]) (x v : Geom) (h : S.eval x = v) :
+private theorem contactError_dvd (S : Geom[X]) (x v : Geom) (h : S.eval x = v) :
     (Polynomial.X - Polynomial.C x) ^ 3 ∣ contactError S x v := by
   have ht := map_dvd (Polynomial.taylorAlgHom (-x)).toRingHom
     (X_pow_succ_dvd_taylor_sub_C_sub_movingHasseSum_of_eval_eq 2 h)
@@ -2903,7 +2595,7 @@ theorem jet_restore (H res T : Geom[X]) (i : Fin 3) :
   rw [hj]
   change hasseDeriv i.val (H * T + res) = hasseDeriv i.val res + hasseDeriv i.val (H * T)
   rw [LinearMap.map_add, add_comm]
-theorem eval_restoreJets (H res T : Geom[X]) (F : Row 3) :
+private theorem eval_restoreJets (H res T : Geom[X]) (F : Row 3) :
     atJet (restoreJets H res F) T = atJet F (H * T + res) := by
   have heval : (MvPolynomial.eval (jet T)).comp (restoreJets H res) =
       MvPolynomial.eval (jet (H * T + res)) := by
@@ -2915,7 +2607,7 @@ theorem eval_restoreJets (H res T : Geom[X]) (F : Row 3) :
         MvPolynomial.eval_C, map_sum, apply_ite, map_mul, MvPolynomial.eval_X, map_zero]
       exact (jet_restore H res T i).symm
   exact DFunLike.congr_fun heval F
-theorem physicalContact_eval (F : PhysicalRow) (m : ℕ) (x v z : Geom) (S : Geom[X])
+private theorem physicalContact_eval (F : PhysicalRow) (m : ℕ) (x v z : Geom) (S : Geom[X])
     (hF : ∀ a : SeedVar →₀ ℕ, (Polynomial.X - Polynomial.C x) ^ (m - 3 * a (some 0)) ∣
       (backwardShift x v F).coeff a) (hS : S.eval x = v) :
     (Polynomial.X - Polynomial.C x) ^ m ∣ atJet (atSeed (Polynomial.C z) F) S := by
@@ -2987,7 +2679,7 @@ open scoped BigOperators
 set_option maxHeartbeats 900000
 def quarter (w : ℤ) : ℤ := w ^ 2 / 4
 private def cost (w : ℤ) : ℤ := quarter (w + 1)
-theorem twice_triangle (w : ℤ) : 2 * triangular w = w * (w + 1) := by
+private theorem twice_triangle (w : ℤ) : 2 * triangular w = w * (w + 1) := by
   unfold triangular
   apply Int.mul_ediv_cancel_of_dvd
   rcases (show w % 2 = 0 ∨ w % 2 = 1 by omega) with h | h
@@ -3010,12 +2702,12 @@ theorem quarter_spec (w : ℤ) : 4 * quarter w = w ^ 2 - w % 2 := by
            _ = _ := by ring
     rw [he, h]
     omega
-theorem cost_spec (w : ℤ) : 4 * cost w = w ^ 2 + 2 * w + w % 2 := by
+private theorem cost_spec (w : ℤ) : 4 * cost w = w ^ 2 + 2 * w + w % 2 := by
   unfold cost
   rw [quarter_spec]
   have h : (w + 1) % 2 + w % 2 = 1 := by omega
   nlinarith only [h]
-theorem colength_eq_cost {a w : ℤ} (ha : a ≤ (w + 1) / 2) (hw : 0 ≤ w) :
+private theorem colength_eq_cost {a w : ℤ} (ha : a ≤ (w + 1) / 2) (hw : 0 ≤ w) :
     colength ⟨a, w⟩ = cost w := by
   have hu : 0 ≤ (w + 1) / 2 := by omega
   have huv : (w + 1) / 2 ≤ w := by omega
@@ -3036,7 +2728,7 @@ theorem colength_eq_cost {a w : ℤ} (ha : a ≤ (w + 1) / 2) (hw : 0 ≤ w) :
     rw [he] at h₁ h₃ ⊢
     conv at h₃ => rhs; rw [hw]
     nlinarith only [h₁, h₂, h₃]
-theorem linear_gain (k a t : ℤ) (ha : a = 0 ∨ t = a + 2 * k + 1) :
+private theorem linear_gain (k a t : ℤ) (ha : a = 0 ∨ t = a + 2 * k + 1) :
     triangular (2301 - 2 * a) - cost (2300 - k - 2 * a) - cost (2300 - 2 * a) -
         cost (t - a) =
       triangular 2301 - cost (2300 - k) - cost 2300 - cost t + quarter a := by
@@ -3062,7 +2754,7 @@ theorem linear_gain (k a t : ℤ) (ha : a = 0 ∨ t = a + 2 * k + 1) :
   norm_num only [Int.reduceMod] at hQ
   rw [ht] at hOP hO ⊢
   nlinarith only [hTP, hT, hPP, hP, hQP, hQ, hOP, hO, hA]
-theorem conic_gain (u : ℤ) :
+private theorem conic_gain (u : ℤ) :
     triangular (6 * u - 1) - cost (4 * u - 1) - cost (6 * u - 2) -
       cost (4 * u - 1) = u ^ 2 := by
   have hT := twice_triangle (6 * u - 1)
@@ -3082,7 +2774,7 @@ def rankTerm (r k : ℕ) : ℤ :=
   if 0 < conicExp r k then
     columns k - (max 0 (conicParameter r k)) ^ 2
   else quarter ((r : ℤ) - k + 1) - quarter (max 0 (linearExp r k))
-theorem columnCount_eq {q k : ℕ} (hq : 5000 ≤ q) (hk : k < 2300) :
+private theorem columnCount_eq {q k : ℕ} (hq : 5000 ≤ q) (hk : k < 2300) :
     columnCount q (offset k) = columns k := by
   have hd : residualDegree q = 2300 := min_eq_right (by omega)
   have harg : min (2300 : ℤ) (-offset k - 1) = 2300 - k - 1 := by unfold offset; omega
@@ -3101,9 +2793,9 @@ private theorem sum_powers (r k : ℕ) (f : Fin 6 → ℤ) :
     (∑ j, (powers r k j : ℤ) * f j) =
       ((linearExp r k).toNat : ℤ) * (f 0 + f 3) + ((conicExp r k).toNat : ℤ) * f 5 := by
   simp [Fin.sum_univ_succ, powers, Fin.succ, mul_add, add_assoc]
-theorem square_mono {x y : ℤ} (hx : 0 ≤ x) (hxy : x ≤ y) : x ^ 2 ≤ y ^ 2 := by
+private theorem square_mono {x y : ℤ} (hx : 0 ≤ x) (hxy : x ≤ y) : x ^ 2 ≤ y ^ 2 := by
   nlinarith only [mul_nonneg (show 0 ≤ y - x by omega) (show 0 ≤ y + x by omega)]
-theorem conic_term_nonneg {r k : ℕ} (hk : k < 2300) (hb : 0 < conicExp r k) :
+private theorem conic_term_nonneg {r k : ℕ} (hk : k < 2300) (hb : 0 < conicExp r k) :
     0 ≤ columns k - (max 0 (conicParameter r k)) ^ 2 := by
   let u := max 0 (conicParameter r k)
   have hu : 0 ≤ 2 * u := by dsimp [u]; omega
@@ -3249,15 +2941,15 @@ theorem partial_C [DecidableEq σ] (a : σ →₀ ℕ) (c : R) :
     hasse a (C c) = if a = 0 then C c else 0 := by
   classical
   simp [hasse, taylor, coeff_C, eq_comm]
-def CoeffSplit (F : MvPolynomial σ R) (a b : σ →₀ ℕ) : Prop :=
+private def CoeffSplit (F : MvPolynomial σ R) (a b : σ →₀ ℕ) : Prop :=
   (F.coeff (a + b) = 0 → (hasse a F).coeff b = 0) ∧
     ((∀ i, i ∉ a.support ∨ i ∉ b.support) →
       (hasse a F).coeff b = F.coeff (a + b))
-theorem add_mem_support_iff {a b : σ →₀ ℕ} {i : σ} :
+private theorem add_mem_support_iff {a b : σ →₀ ℕ} {i : σ} :
     i ∈ (a + b).support ↔ i ∈ a.support ∨ i ∈ b.support := by
   simp only [Finsupp.mem_support_iff, Finsupp.add_apply]
   omega
-theorem sub_single_add [DecidableEq σ] {a b : σ →₀ ℕ} {i : σ}
+private theorem sub_single_add [DecidableEq σ] {a b : σ →₀ ℕ} {i : σ}
     (ha : i ∈ a.support) :
     (a - Finsupp.single i 1) + b = a + b - Finsupp.single i 1 := by
   have hle : Finsupp.single i 1 ≤ a := by
@@ -3268,7 +2960,7 @@ theorem sub_single_add [DecidableEq σ] {a b : σ →₀ ℕ} {i : σ}
     _ = (a - Finsupp.single i 1 + Finsupp.single i 1) + b := by ac_rfl
     _ = a + b := by rw [tsub_add_cancel_of_le hle]
     _ = _ := (tsub_add_cancel_of_le (hle.trans le_self_add)).symm
-theorem coeffSplit_mul_X (F : MvPolynomial σ R)
+private theorem coeffSplit_mul_X (F : MvPolynomial σ R)
     (hF : ∀ a b, CoeffSplit F a b) (i : σ) (a b : σ →₀ ℕ) :
     CoeffSplit (F * MvPolynomial.X i) a b := by
   classical
@@ -3299,7 +2991,7 @@ theorem coeffSplit_mul_X (F : MvPolynomial σ R)
       exact ⟨fun hz => (hF _ _).1 ((congrArg F.coeff hsub).trans hz),
         fun hd => ((hF _ _).2 (hb' hd)).trans (congrArg F.coeff hsub)⟩
     · simp [ha, hb]
-theorem coeffSplit_monomial (m : σ →₀ ℕ) (c : R) (a b : σ →₀ ℕ) :
+private theorem coeffSplit_monomial (m : σ →₀ ℕ) (c : R) (a b : σ →₀ ℕ) :
     CoeffSplit (monomial m c) a b := by
   classical
   refine MvPolynomial.induction_on_monomial (motive := fun F => ∀ a b, CoeffSplit F a b)
@@ -3396,10 +3088,10 @@ namespace K1_13_4_2_2_6
 open K1_13_4_2_2 Finset
 open scoped BigOperators
 set_option maxHeartbeats 1000000
-def affineSquares (a b : ℤ) (n : ℕ) : ℤ :=
+private def affineSquares (a b : ℤ) (n : ℕ) : ℤ :=
   let N : ℤ := n
   (6 * N * a^2 + 6 * a*b * N*(N-1) + b^2 * N*(N-1)*(2*N-1)) / 6
-theorem sum_affineSquares (a b : ℤ) (n : ℕ) :
+private theorem sum_affineSquares (a b : ℤ) (n : ℕ) :
     (∑ k ∈ range n, (a + b * (k : ℤ))^2) = affineSquares a b n := by
   have h (n : ℕ) : 6 * (∑ k ∈ range n, (a+b*(k : ℤ))^2) =
       6 * (n : ℤ) * a^2 + 6*a*b*n*((n : ℤ)-1) + b^2*n*((n : ℤ)-1)*(2*(n : ℤ)-1) := by
@@ -3411,9 +3103,9 @@ theorem sum_affineSquares (a b : ℤ) (n : ℕ) :
   dsimp [affineSquares]
   rw [← h n]
   omega
-def affineQuarters (a b : ℤ) (n : ℕ) : ℤ :=
+private def affineQuarters (a b : ℤ) (n : ℕ) : ℤ :=
   (affineSquares a b n - ((n : ℤ) + a % 2) / 2) / 4
-theorem sum_affineQuarters (a b : ℤ) (n : ℕ) (hb : b % 2 = 1) :
+private theorem sum_affineQuarters (a b : ℤ) (n : ℕ) (hb : b % 2 = 1) :
     (∑ k ∈ range n, quarter (a + b * (k : ℤ))) = affineQuarters a b n := by
   have hmod (k : ℕ) : (a + b * (k : ℤ)) % 2 = (a + (k : ℤ)) % 2 := by
     rw [Int.add_emod a, Int.mul_emod, hb, one_mul]
@@ -3433,14 +3125,14 @@ theorem sum_affineQuarters (a b : ℤ) (n : ℕ) (hb : b % 2 = 1) :
     rw [sum_sub_distrib, sum_affineSquares, hpar]
   unfold affineQuarters
   omega
-theorem sum_split_at {f : ℕ → ℤ} {m n : ℕ} (h : m ≤ n) :
+private theorem sum_split_at {f : ℕ → ℤ} {m n : ℕ} (h : m ≤ n) :
     (∑ k ∈ range n, f k) =
       (∑ k ∈ range m, f k) + ∑ k ∈ range (n-m), f (m+k) := by
   simpa only [Nat.add_sub_of_le h, Nat.add_comm] using sum_range_add f m (n-m)
-def conicCut (r : ℕ) : ℕ := ((2*(r : ℤ)-2299) / 3).toNat
+private def conicCut (r : ℕ) : ℕ := ((2*(r : ℤ)-2299) / 3).toNat
 private def lineCut (r : ℕ) : ℕ := (r+1)/3
-def zeroCut (r : ℕ) : ℕ := min (conicCut r) (((r : ℤ)-1149)/2).toNat
-def gradeValue (r : ℕ) : ℤ :=
+private def zeroCut (r : ℕ) : ℕ := min (conicCut r) (((r : ℤ)-1149)/2).toNat
+private def gradeValue (r : ℕ) : ℤ :=
   let c := conicCut r
   let z := zeroCut r
   let a := lineCut r
@@ -3448,7 +3140,7 @@ def gradeValue (r : ℕ) : ℤ :=
     affineSquares (2*(z : ℤ)+1151-r) 2 (c-z) +
     (affineQuarters ((r : ℤ)+1-c) (-1) (r-c) -
       affineQuarters ((r : ℤ)-1-3*c) (-3) (a-c))
-theorem sum_rankTerm (r : ℕ) (hr : r ≤ 2300) :
+private theorem sum_rankTerm (r : ℕ) (hr : r ≤ 2300) :
     (∑ k ∈ range r, rankTerm r k) = gradeValue r := by
   let c := conicCut r
   let a := lineCut r
@@ -3545,130 +3237,130 @@ private theorem sum_prefix (n : ℕ) :
   induction n with
   | zero => simp [total]
   | succ n ih => rw [sum_range_succ, ih, total]
-def gradeWindow (s : ℕ) : ℕ → ℤ
+private def gradeWindow (s : ℕ) : ℕ → ℤ
   | 0 => 0
   | n+1 => gradeWindow s n + gradeValue (2300-(s+n))
-theorem total_add_window (s n : ℕ) :
+private theorem total_add_window (s n : ℕ) :
     total (s+n) = total s + gradeWindow s n := by
   induction n with
   | zero => simp [gradeWindow]
   | succ n ih => rw [Nat.add_succ, total, gradeWindow, ih, add_assoc]
-theorem total_window_value (s n : ℕ) (a b : ℤ)
+private theorem total_window_value (s n : ℕ) (a b : ℤ)
     (hs : total s = a) (hn : gradeWindow s n = b) : total (s+n) = a+b := by
   rw [total_add_window, hs, hn]
-theorem total_to_32 : total 32 = 18649302073 :=
+private theorem total_to_32 : total 32 = 18649302073 :=
   total_window_value 0 32 0 18649302073 rfl (by decide +kernel)
-theorem total_to_64 : total 64 = 36632681586 :=
+private theorem total_to_64 : total 64 = 36632681586 :=
   total_window_value 32 32 18649302073 17983379513 total_to_32 (by decide +kernel)
-theorem total_to_96 : total 96 = 53962710528 :=
+private theorem total_to_96 : total 96 = 53962710528 :=
   total_window_value 64 32 36632681586 17330028942 total_to_64 (by decide +kernel)
-theorem total_to_128 : total 128 = 70651960889 :=
+private theorem total_to_128 : total 128 = 70651960889 :=
   total_window_value 96 32 53962710528 16689250361 total_to_96 (by decide +kernel)
-theorem total_to_160 : total 160 = 86713004658 :=
+private theorem total_to_160 : total 160 = 86713004658 :=
   total_window_value 128 32 70651960889 16061043769 total_to_128 (by decide +kernel)
-theorem total_to_192 : total 192 = 102158413824 :=
+private theorem total_to_192 : total 192 = 102158413824 :=
   total_window_value 160 32 86713004658 15445409166 total_to_160 (by decide +kernel)
-theorem total_to_224 : total 224 = 117000760377 :=
+private theorem total_to_224 : total 224 = 117000760377 :=
   total_window_value 192 32 102158413824 14842346553 total_to_192 (by decide +kernel)
-theorem total_to_256 : total 256 = 131252616306 :=
+private theorem total_to_256 : total 256 = 131252616306 :=
   total_window_value 224 32 117000760377 14251855929 total_to_224 (by decide +kernel)
-theorem total_to_288 : total 288 = 144926553600 :=
+private theorem total_to_288 : total 288 = 144926553600 :=
   total_window_value 256 32 131252616306 13673937294 total_to_256 (by decide +kernel)
-theorem total_to_320 : total 320 = 158035144249 :=
+private theorem total_to_320 : total 320 = 158035144249 :=
   total_window_value 288 32 144926553600 13108590649 total_to_288 (by decide +kernel)
-theorem total_to_352 : total 352 = 170590960242 :=
+private theorem total_to_352 : total 352 = 170590960242 :=
   total_window_value 320 32 158035144249 12555815993 total_to_320 (by decide +kernel)
-theorem total_to_384 : total 384 = 182606573568 :=
+private theorem total_to_384 : total 384 = 182606573568 :=
   total_window_value 352 32 170590960242 12015613326 total_to_352 (by decide +kernel)
-theorem total_to_416 : total 416 = 194094556217 :=
+private theorem total_to_416 : total 416 = 194094556217 :=
   total_window_value 384 32 182606573568 11487982649 total_to_384 (by decide +kernel)
-theorem total_to_448 : total 448 = 205067480178 :=
+private theorem total_to_448 : total 448 = 205067480178 :=
   total_window_value 416 32 194094556217 10972923961 total_to_416 (by decide +kernel)
-theorem total_to_480 : total 480 = 215537917440 :=
+private theorem total_to_480 : total 480 = 215537917440 :=
   total_window_value 448 32 205067480178 10470437262 total_to_448 (by decide +kernel)
-theorem total_to_512 : total 512 = 225518439993 :=
+private theorem total_to_512 : total 512 = 225518439993 :=
   total_window_value 480 32 215537917440 9980522553 total_to_480 (by decide +kernel)
-theorem total_to_544 : total 544 = 235021619826 :=
+private theorem total_to_544 : total 544 = 235021619826 :=
   total_window_value 512 32 225518439993 9503179833 total_to_512 (by decide +kernel)
-theorem total_to_576 : total 576 = 244060028928 :=
+private theorem total_to_576 : total 576 = 244060028928 :=
   total_window_value 544 32 235021619826 9038409102 total_to_544 (by decide +kernel)
-theorem total_to_608 : total 608 = 252646239289 :=
+private theorem total_to_608 : total 608 = 252646239289 :=
   total_window_value 576 32 244060028928 8586210361 total_to_576 (by decide +kernel)
-theorem total_to_640 : total 640 = 260792822898 :=
+private theorem total_to_640 : total 640 = 260792822898 :=
   total_window_value 608 32 252646239289 8146583609 total_to_608 (by decide +kernel)
-theorem total_to_672 : total 672 = 268512351744 :=
+private theorem total_to_672 : total 672 = 268512351744 :=
   total_window_value 640 32 260792822898 7719528846 total_to_640 (by decide +kernel)
-theorem total_to_704 : total 704 = 275817397817 :=
+private theorem total_to_704 : total 704 = 275817397817 :=
   total_window_value 672 32 268512351744 7305046073 total_to_672 (by decide +kernel)
-theorem total_to_736 : total 736 = 282720533106 :=
+private theorem total_to_736 : total 736 = 282720533106 :=
   total_window_value 704 32 275817397817 6903135289 total_to_704 (by decide +kernel)
-theorem total_to_768 : total 768 = 289234329600 :=
+private theorem total_to_768 : total 768 = 289234329600 :=
   total_window_value 736 32 282720533106 6513796494 total_to_736 (by decide +kernel)
-theorem total_to_800 : total 800 = 295371359289 :=
+private theorem total_to_800 : total 800 = 295371359289 :=
   total_window_value 768 32 289234329600 6137029689 total_to_768 (by decide +kernel)
-theorem total_to_832 : total 832 = 301144194162 :=
+private theorem total_to_832 : total 832 = 301144194162 :=
   total_window_value 800 32 295371359289 5772834873 total_to_800 (by decide +kernel)
-theorem total_to_864 : total 864 = 306565406208 :=
+private theorem total_to_864 : total 864 = 306565406208 :=
   total_window_value 832 32 301144194162 5421212046 total_to_832 (by decide +kernel)
-theorem total_to_896 : total 896 = 311647567417 :=
+private theorem total_to_896 : total 896 = 311647567417 :=
   total_window_value 864 32 306565406208 5082161209 total_to_864 (by decide +kernel)
-theorem total_to_928 : total 928 = 316403249778 :=
+private theorem total_to_928 : total 928 = 316403249778 :=
   total_window_value 896 32 311647567417 4755682361 total_to_896 (by decide +kernel)
-theorem total_to_960 : total 960 = 320845025280 :=
+private theorem total_to_960 : total 960 = 320845025280 :=
   total_window_value 928 32 316403249778 4441775502 total_to_928 (by decide +kernel)
-theorem total_to_992 : total 992 = 324985465913 :=
+private theorem total_to_992 : total 992 = 324985465913 :=
   total_window_value 960 32 320845025280 4140440633 total_to_960 (by decide +kernel)
-theorem total_to_1024 : total 1024 = 328837143666 :=
+private theorem total_to_1024 : total 1024 = 328837143666 :=
   total_window_value 992 32 324985465913 3851677753 total_to_992 (by decide +kernel)
-theorem total_to_1056 : total 1056 = 332412630528 :=
+private theorem total_to_1056 : total 1056 = 332412630528 :=
   total_window_value 1024 32 328837143666 3575486862 total_to_1024 (by decide +kernel)
-theorem total_to_1088 : total 1088 = 335724498489 :=
+private theorem total_to_1088 : total 1088 = 335724498489 :=
   total_window_value 1056 32 332412630528 3311867961 total_to_1056 (by decide +kernel)
-theorem total_to_1120 : total 1120 = 338785319538 :=
+private theorem total_to_1120 : total 1120 = 338785319538 :=
   total_window_value 1088 32 335724498489 3060821049 total_to_1088 (by decide +kernel)
-theorem total_to_1152 : total 1152 = 341607665664 :=
+private theorem total_to_1152 : total 1152 = 341607665664 :=
   total_window_value 1120 32 338785319538 2822346126 total_to_1120 (by decide +kernel)
-theorem total_to_1184 : total 1184 = 344204093457 :=
+private theorem total_to_1184 : total 1184 = 344204093457 :=
   total_window_value 1152 32 341607665664 2596427793 total_to_1152 (by decide +kernel)
-theorem total_to_1216 : total 1216 = 346586981097 :=
+private theorem total_to_1216 : total 1216 = 346586981097 :=
   total_window_value 1184 32 344204093457 2382887640 total_to_1184 (by decide +kernel)
-theorem total_to_1248 : total 1248 = 348768370824 :=
+private theorem total_to_1248 : total 1248 = 348768370824 :=
   total_window_value 1216 32 346586981097 2181389727 total_to_1216 (by decide +kernel)
-theorem total_to_1280 : total 1280 = 350759955353 :=
+private theorem total_to_1280 : total 1280 = 350759955353 :=
   total_window_value 1248 32 348768370824 1991584529 total_to_1248 (by decide +kernel)
-theorem total_to_1312 : total 1312 = 352573077873 :=
+private theorem total_to_1312 : total 1312 = 352573077873 :=
   total_window_value 1280 32 350759955353 1813122520 total_to_1280 (by decide +kernel)
-theorem total_to_1344 : total 1344 = 354218732048 :=
+private theorem total_to_1344 : total 1344 = 354218732048 :=
   total_window_value 1312 32 352573077873 1645654175 total_to_1312 (by decide +kernel)
-theorem total_to_1376 : total 1376 = 355707562017 :=
+private theorem total_to_1376 : total 1376 = 355707562017 :=
   total_window_value 1344 32 354218732048 1488829969 total_to_1344 (by decide +kernel)
-theorem total_to_1408 : total 1408 = 357049862393 :=
+private theorem total_to_1408 : total 1408 = 357049862393 :=
   total_window_value 1376 32 355707562017 1342300376 total_to_1376 (by decide +kernel)
-theorem total_to_1440 : total 1440 = 358255578264 :=
+private theorem total_to_1440 : total 1440 = 358255578264 :=
   total_window_value 1408 32 357049862393 1205715871 total_to_1408 (by decide +kernel)
-theorem total_to_1472 : total 1472 = 359334305193 :=
+private theorem total_to_1472 : total 1472 = 359334305193 :=
   total_window_value 1440 32 358255578264 1078726929 total_to_1440 (by decide +kernel)
-theorem total_to_1504 : total 1504 = 360295289217 :=
+private theorem total_to_1504 : total 1504 = 360295289217 :=
   total_window_value 1472 32 359334305193 960984024 total_to_1472 (by decide +kernel)
-theorem total_to_1536 : total 1536 = 361147426848 :=
+private theorem total_to_1536 : total 1536 = 361147426848 :=
   total_window_value 1504 32 360295289217 852137631 total_to_1504 (by decide +kernel)
-theorem total_to_1568 : total 1568 = 361899265073 :=
+private theorem total_to_1568 : total 1568 = 361899265073 :=
   total_window_value 1536 32 361147426848 751838225 total_to_1536 (by decide +kernel)
-theorem total_to_1600 : total 1600 = 362559001353 :=
+private theorem total_to_1600 : total 1600 = 362559001353 :=
   total_window_value 1568 32 361899265073 659736280 total_to_1568 (by decide +kernel)
-theorem total_to_1632 : total 1632 = 363134483624 :=
+private theorem total_to_1632 : total 1632 = 363134483624 :=
   total_window_value 1600 32 362559001353 575482271 total_to_1600 (by decide +kernel)
-theorem total_to_1664 : total 1664 = 363633210297 :=
+private theorem total_to_1664 : total 1664 = 363633210297 :=
   total_window_value 1632 32 363134483624 498726673 total_to_1632 (by decide +kernel)
-theorem total_to_1696 : total 1696 = 364062330257 :=
+private theorem total_to_1696 : total 1696 = 364062330257 :=
   total_window_value 1664 32 363633210297 429119960 total_to_1664 (by decide +kernel)
-theorem total_to_1728 : total 1728 = 364428642864 :=
+private theorem total_to_1728 : total 1728 = 364428642864 :=
   total_window_value 1696 32 364062330257 366312607 total_to_1696 (by decide +kernel)
-theorem total_to_1760 : total 1760 = 364738597953 :=
+private theorem total_to_1760 : total 1760 = 364738597953 :=
   total_window_value 1728 32 364428642864 309955089 total_to_1728 (by decide +kernel)
-theorem total_to_1790 : total 1790 = 364983426528 :=
+private theorem total_to_1790 : total 1790 = 364983426528 :=
   total_window_value 1760 30 364738597953 244828575 total_to_1760 (by decide +kernel)
-theorem total_value : total 1790 ≤ 364983426528 :=
+private theorem total_value : total 1790 ≤ 364983426528 :=
   total_to_1790.le
 theorem proof : K1_13_4_2_2.c6 := by
   refine ⟨fun q => powers (7300-q), Int.ofNat_le.mp ?_⟩
@@ -3684,13 +3376,13 @@ namespace K1_13_4_3
 noncomputable section
 open K1 K1_13 K1_13_4
 open scoped Polynomial BigOperators
-def linearJets (H : Geom[X]) (i : Fin 3) : Lower :=
+private def linearJets (H : Geom[X]) (i : Fin 3) : Lower :=
   ∑ j : Fin 3, if j.val ≤ i.val then
     MvPolynomial.C (inclX (Polynomial.hasseDeriv (i.val - j.val) H)) * MvPolynomial.X j
   else 0
 private def substitute (g : Fin 3 → Lower) : Lower →+* Lower :=
   MvPolynomial.eval₂Hom MvPolynomial.C g
-theorem inverse_linearJets (H : Geom[X]) (hH : H ≠ 0) :
+private theorem inverse_linearJets (H : Geom[X]) (hH : H ≠ 0) :
     ∃ g : Fin 3 → Lower, (∀ i, (g i).IsHomogeneous 1) ∧
       (substitute g).comp (substitute (linearJets H)) = RingHom.id Lower := by
   let a := inclX H
@@ -3735,7 +3427,7 @@ theorem inverse_linearJets (H : Geom[X]) (hH : H ≠ 0) :
       · simpa [Fin.sum_univ_three, a, g] using h₀
       · simpa [Fin.sum_univ_three, a, b, g] using h₁
       · simpa [Fin.sum_univ_three, a, b, c, g] using h₂
-theorem subst_preserves_order (F : Lower) (g : Fin 3 → Lower) (d : ℕ)
+private theorem subst_preserves_order (F : Lower) (g : Fin 3 → Lower) (d : ℕ)
     (hg : ∀ i, (g i).IsHomogeneous 1) (hF : ∀ a ∈ F.support, d ≤ a.degree) :
     ∀ a ∈ (substitute g F).support, d ≤ a.degree := by
   intro a ha
@@ -3753,7 +3445,7 @@ theorem subst_preserves_order (F : Lower) (g : Fin 3 → Lower) (d : ℕ)
   by_contra hz
   have hab : a.degree = b.degree := (DFunLike.congr_fun Finsupp.degree_eq_weight_one a).trans (hh hz)
   exact (not_le_of_gt hlt) (hab ▸ hF b hb)
-theorem restore_translate (H res T : Geom[X]) (F : Row 3) :
+private theorem restore_translate (H res T : Geom[X]) (F : Row 3) :
     K1_13_4.translate (trajectory T) (MvPolynomial.map inclX (restoreJets H res F)) =
       substitute (linearJets H)
         (K1_13_4.translate (trajectory (H * T + res)) (MvPolynomial.map inclX F)) := by
@@ -3786,7 +3478,7 @@ theorem restore_translate (H res T : Geom[X]) (F : Row 3) :
       rw [hsum, jet_restore, map_add, map_add]
       abel
   exact DFunLike.congr_fun h F
-theorem atSeed_map (z : Geom) (F : PhysicalRow) :
+private theorem atSeed_map (z : Geom) (F : PhysicalRow) :
     MvPolynomial.map inclX (atSeed (Polynomial.C z) F) =
       atSeed (inclConst z) (toGeneric F) := by
   have hconst : inclX (Polynomial.C z) = inclConst z :=
@@ -3827,150 +3519,17 @@ namespace K1_13_4_3
 noncomputable section
 open K1 K1_13 K1_13_4
 open scoped Polynomial
-def c1 : Prop :=
-  ∀ w Γ s (P : PoleData Γ s) (L : ResidueChart P) box t F,
-    Source w P L box t F → ∀ i,
-      Source w P L box (t + 7800 * i) (clearedSeed P.H i F)
 def c2 : Prop :=
   ∀ w Γ s (P : PoleData Γ s) (L : ResidueChart P) box t F,
     Source w P L box t F → ∀ γ ∈ Γ,
       ∃ Q : Row 3, RawCut t Q ∧
         restoreAt P.H (residueAt L.numerator L.denominator (P.z γ)) (P.z γ) F =
           MvPolynomial.C (P.H ^ (box.b + box.j)) * Q
-def c3 : Prop :=
-  ∀ (w : I → K) (H res T : Geom[X]) (t k : ℕ) (Q : Row 3),
-    T.natDegree ≤ 131071 →
-    (∃ A : Finset I, 180265 ≤ A.card ∧
-      ∀ i ∈ A, (H * T + res).eval (embed (node i)) = embed (w i)) →
-    RawContact 5000 w H res Q → RawCut t Q →
-    t + 49196 * k < 5000 * 180265 →
-    LowerOrder (MvPolynomial.map inclX Q) (trajectory T) (k + 1)
 private theorem coeff_eq_zero_of_lowerOrder {F : Lower} {x : Fin 3 → GenericX}
     {d : ℕ} (h : LowerOrder F x d) (a : Fin 3 →₀ ℕ) (ha : a.degree < d) :
     (K1_13_4.translate x F).coeff a = 0 := by
   by_contra hz
   exact (not_le_of_gt ha) (h a (MvPolynomial.mem_support_iff.mpr hz))
-theorem mixedOrder_iff_coeff {F : GenericRow} {z : GenericX}
-    {y : Fin 3 → GenericX} {d : ℕ} :
-    MixedOrder F z y d ↔
-      ∀ a, mixedWeight a < d → (K1_13_4.translate (atPoint z y) F).coeff a = 0 := by
-  constructor
-  · intro h a ha
-    by_contra hz
-    exact (not_le_of_gt ha) (h a (MvPolynomial.mem_support_iff.mpr hz))
-  · intro h a ha
-    by_contra! hlt
-    exact (MvPolynomial.mem_support_iff.mp ha) (h a hlt)
-theorem weight_add (a b : SeedVar →₀ ℕ) :
-    mixedWeight (a + b) = mixedWeight a + mixedWeight b := by
-  change 7800 * (a + b) none + 49196 * (a + b).some.degree =
-    (7800 * a none + 49196 * a.some.degree) + (7800 * b none + 49196 * b.some.degree)
-  simp only [Finsupp.add_apply, Finsupp.some_add, map_add, Nat.mul_add]
-  ac_rfl
-theorem fixed_seed_order (h2 : c2) (h3 : c3)
-    {w Γ s} (hw : Messages w Γ s) (P : PoleData Γ s) (L : ResidueChart P)
-    {box t F} (hF : Source w P L box t F) {γ} (hγ : γ ∈ Γ)
-    (k : ℕ) (hk : t + 49196 * k < 5000 * 180265) :
-    LowerOrder (atSeed (inclConst (P.z γ)) (toGeneric F))
-      (trajectory (extend (s γ))) (k + 1) := by
-  let res := residueAt L.numerator L.denominator (P.z γ)
-  obtain ⟨Q, hQ, hrestore⟩ := h2 w Γ s P L box t F hF γ hγ
-  obtain ⟨T, hT, hST⟩ := L.quotient γ hγ
-  change extend (s γ) = P.H * T + res at hST
-  obtain ⟨A, hA, hhits⟩ := hw.hits γ hγ
-  have hhit : ∃ B : Finset I, 180265 ≤ B.card ∧
-      ∀ i ∈ B, (P.H * T + res).eval (embed (node i)) = embed (w i) := by
-    refine ⟨A, hA, fun i hi => ?_⟩
-    rw [← hST, extend, Polynomial.eval_map, Polynomial.eval₂_at_apply, hhits i hi]
-  have hcontact := rawContact_of_restore 5000 w P.H res (P.z γ) (box.b + box.j) F Q
-    P.nodes hF.2.2.1 hrestore
-  have ho := h3 w P.H res T t k Q hT hhit hcontact hQ hk
-  rw [hST]
-  exact trueOrder_of_raw P.H res T (P.z γ) (box.b + box.j) (k + 1) F Q
-    P.monic.ne_zero hrestore ho
-theorem source_order (h1 : c1) (h2 : c2) (h3 : c3)
-    {w Γ s} (hw : Messages w Γ s) (P : PoleData Γ s) (L : ResidueChart P)
-    {box t F} (hF : Source w P L box t F) {γ} (hγ : γ ∈ Γ)
-    {d : ℕ} (hd : t + d ≤ 5000 * 180265) :
-    MixedOrder (toGeneric F) (inclConst (P.z γ)) (trajectory (extend (s γ))) d := by
-  set z := inclConst (P.z γ)
-  set y := trajectory (extend (s γ))
-  apply mixedOrder_iff_coeff.mpr
-  intro m hm
-  let a : SeedVar →₀ ℕ := Finsupp.single none (m none)
-  let b : SeedVar →₀ ℕ := m.some.optionElim 0
-  have hab : a + b = m := by
-    ext i
-    cases i <;> simp [a, b]
-  have hdis : ∀ i, i ∉ a.support ∨ i ∉ b.support := by
-    intro i
-    cases i <;> simp [a, b, Finsupp.mem_support_iff]
-  have hlt : t + 7800 * m none + 49196 * m.some.degree < 5000 * 180265 := by
-    change 7800 * m none + 49196 * m.some.degree < d at hm
-    omega
-  have hD := h1 w Γ s P L box t F hF (m none)
-  have ho := fixed_seed_order h2 h3 hw P L hD hγ m.some.degree hlt
-  have hc := coeff_eq_zero_of_lowerOrder ho m.some (Nat.lt_succ_self _)
-  change (K1_13_4.translate y (atSeed z (toGeneric (clearedSeed P.H (m none) F)))).coeff m.some = 0 at hc
-  have hmap :
-      K1_13_4.translate y (atSeed z (toGeneric (clearedSeed P.H (m none) F))) =
-        MvPolynomial.C (inclX (P.H ^ (3 * m none))) *
-          K1_13_4.translate y (atSeed z (toGeneric (mixedHasse a F))) := by
-    simp [clearedSeed, toGeneric, a, atSeed, K1_13_4.translate]
-  rw [hmap, MvPolynomial.coeff_C_mul] at hc
-  have hn : inclX (P.H ^ (3 * m none)) ≠ 0 :=
-    (map_ne_zero_iff _ (IsFractionRing.injective Geom[X] GenericX)).mpr (pow_ne_zero _ P.monic.ne_zero)
-  have hcoef := (mul_eq_zero.mp hc).resolve_left hn
-  rw [translate_atSeed, coeff_atSeed_zero, ← partial_eq_mixedHasse, toGeneric, map_partial,
-    translate_partial] at hcoef
-  change (hasse a (K1_13_4.translate (atPoint z y) (toGeneric F))).coeff b = 0 at hcoef
-  rw [coeff_partial_eq_of_disjoint _ _ _ hdis, hab] at hcoef
-  exact hcoef
-theorem mixedHasse_order (F : PhysicalRow) (a : SeedVar →₀ ℕ)
-    (z : GenericX) (y : Fin 3 → GenericX) (d : ℕ)
-    (hF : MixedOrder (toGeneric F) z y (d + mixedWeight a)) :
-    MixedOrder (toGeneric (mixedHasse a F)) z y d := by
-  apply mixedOrder_iff_coeff.mpr
-  intro b hb
-  have hlt : mixedWeight (a + b) < d + mixedWeight a := by rw [weight_add]; omega
-  have hz := mixedOrder_iff_coeff.mp hF _ hlt
-  rw [← partial_eq_mixedHasse, toGeneric, map_partial, translate_partial]
-  exact coeff_partial_eq_zero _ _ _ hz
-theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) : K1_13_4.c3 := by
-  intro w Γ s hw P L
-  constructor
-  · intro F hF γ hγ
-    exact source_order h1 h2 h3 hw P L hF hγ (by decide)
-  · intro G hG γ hγ
-    let z := inclConst (P.z γ)
-    let y := trajectory (extend (s γ))
-    change MixedOrder (toGeneric G) z y secondOrder
-    change G ∈ Submodule.span Geom _ at hG
-    induction hG using Submodule.span_induction with
-    | mem Q hQ =>
-      obtain ⟨t, F, a, hF, ht, rfl⟩ := hQ
-      apply mixedHasse_order
-      apply source_order h1 h2 h3 hw P L hF hγ
-      change t + mixedWeight a ≤ 5000 * 180265 - 2769994 at ht
-      change t + (2769994 + mixedWeight a) ≤ 5000 * 180265
-      omega
-    | zero =>
-      exact mixedOrder_iff_coeff.mpr (fun _ _ => by simp [toGeneric])
-    | add Q R _ _ hQ hR =>
-      exact mixedOrder_iff_coeff.mpr (fun a ha => by
-        simp only [toGeneric, map_add, AddMonoidAlgebra.coeff_add, Finsupp.add_apply]
-        exact (congrArg₂ (· + ·)
-          (mixedOrder_iff_coeff.mp hQ a ha) (mixedOrder_iff_coeff.mp hR a ha)).trans (add_zero 0))
-    | smul c Q _ hQ =>
-      apply mixedOrder_iff_coeff.mpr
-      intro a ha
-      have hsmul : c • Q = MvPolynomial.C (Polynomial.C c) * Q := by
-        rw [Algebra.smul_def]
-        rfl
-      rw [hsmul]
-      simp only [toGeneric, map_mul, MvPolynomial.map_C, K1_13_4.translate, MvPolynomial.eval₂Hom_C,
-        MvPolynomial.coeff_C_mul]
-      exact mul_eq_zero.mpr (Or.inr (mixedOrder_iff_coeff.mp hQ a ha))
 end
 end K1_13_4_3
 end
@@ -4056,33 +3615,6 @@ theorem caps_seed (H : Geom[X]) (i : ℕ) (F : PhysicalRow) (box : Shape)
     intro b hb
     exact (Nat.le_add_left ..).trans
       ((MvPolynomial.monomial_le_degreeOf none (support_seed hb)).trans hU)
-theorem trueCut_seed (H : Geom[X]) (i t : ℕ) (F : PhysicalRow)
-    (hH : H.natDegree ≤ 2600) (hF : TrueCut H.natDegree t F) :
-    TrueCut H.natDegree (t + 7800 * i) (clearedSeed H i F) := by
-  intro b hb
-  obtain ⟨u, hu⟩ := coeff_scalar F i b
-  have hbefore := hF _ (support_seed hb)
-  let w : SeedVar → ℕ := fun j => j.elim 0 (fun k => 131071 + H.natDegree - k.val)
-  have hw (a : SeedVar →₀ ℕ) :
-      a.sum (fun j e => j.elim 0 (fun k => (131071 + H.natDegree - k.val) * e)) =
-        Finsupp.weight w a := by
-    rw [Finsupp.weight_apply]
-    congr 1
-    funext j e
-    cases j <;> simp [w, Nat.mul_comm]
-  rw [hw, weight_shift w rfl] at hbefore
-  rw [hw]
-  have hcoeff : ((clearedSeed H i F).coeff b).natDegree ≤
-      (H ^ (3 * i)).natDegree + (F.coeff (Finsupp.single none i + b)).natDegree := by
-    simp only [clearedSeed, ← partial_eq_mixedHasse, MvPolynomial.coeff_C_mul, hu]
-    exact Polynomial.natDegree_mul_le.trans
-      (Nat.add_le_add_left (Polynomial.natDegree_mul_C_le _ _) _)
-  have hp' : (H ^ (3 * i)).natDegree ≤ 7800 * i := by
-    calc
-      _ ≤ (3 * i) * H.natDegree := Polynomial.natDegree_pow_le
-      _ ≤ (3 * i) * 2600 := Nat.mul_le_mul_left _ hH
-      _ = 7800 * i := by ring
-  omega
 private def back (x v : Geom) : PhysicalRow →+* PhysicalRow :=
   MvPolynomial.eval₂Hom MvPolynomial.C (fun j =>
     if j = some 0 then
@@ -4090,10 +3622,10 @@ private def back (x v : Geom) : PhysicalRow →+* PhysicalRow :=
         MvPolynomial.C (Polynomial.C x - Polynomial.X) * MvPolynomial.X (some 1) -
         MvPolynomial.C ((Polynomial.C x - Polynomial.X) ^ 2) * MvPolynomial.X (some 2)
     else MvPolynomial.X j)
-theorem back_C (x v : Geom) (p : Geom[X]) :
+private theorem back_C (x v : Geom) (p : Geom[X]) :
     back x v (MvPolynomial.C p) = MvPolynomial.C p := by
   simp [back]
-theorem back_seedTaylor (x v : Geom) :
+private theorem back_seedTaylor (x v : Geom) :
     (Polynomial.mapRingHom (back x v)).comp seedTaylor = seedTaylor.comp (back x v) := by
   apply MvPolynomial.ringHom_ext
   · intro c
@@ -4106,7 +3638,7 @@ theorem back_seedTaylor (x v : Geom) :
       · subst j
         simp [back]
       · simp [back, h]
-theorem back_divisibility (H : Geom[X]) (i m : ℕ) (x v : Geom) (F : PhysicalRow)
+private theorem back_divisibility (H : Geom[X]) (i m : ℕ) (x v : Geom) (F : PhysicalRow)
     (hF : ∀ b : SeedVar →₀ ℕ, (Polynomial.X - Polynomial.C x) ^ (m - 3 * b (some 0)) ∣
       (back x v F).coeff b) (b : SeedVar →₀ ℕ) :
     (Polynomial.X - Polynomial.C x) ^ (m - 3 * b (some 0)) ∣
@@ -4176,7 +3708,7 @@ open K1 (K)
 open K1_13 K1_13_4 K1_13_4_2
 open scoped Polynomial BigOperators
 private abbrev Jets (R : Type*) [CommRing R] := MvPolynomial (Fin 3) R
-def affineJet {R : Type*} [CommRing R] (u v : Fin 3 → R) (i : Fin 3) : Jets R :=
+private def affineJet {R : Type*} [CommRing R] (u v : Fin 3 → R) (i : Fin 3) : Jets R :=
   ![MvPolynomial.C (v 0) + MvPolynomial.C (u 0) * MvPolynomial.X 0,
     MvPolynomial.C (v 1) + MvPolynomial.C (u 1) * MvPolynomial.X 0 +
       MvPolynomial.C (u 0) * MvPolynomial.X 1,
@@ -4184,13 +3716,13 @@ def affineJet {R : Type*} [CommRing R] (u v : Fin 3 → R) (i : Fin 3) : Jets R 
       MvPolynomial.C (u 1) * MvPolynomial.X 1 + MvPolynomial.C (u 0) * MvPolynomial.X 2] i
 private def affine {R : Type*} [CommRing R] (u v : Fin 3 → R) : Jets R →+* Jets R :=
   MvPolynomial.eval₂Hom MvPolynomial.C (affineJet u v)
-theorem recover_jet {R : Type*} [CommRing R] {u r : R} (hr : r * u = 1)
+private theorem recover_jet {R : Type*} [CommRing R] {u r : R} (hr : r * u = 1)
     (x p : Jets R) :
     p + MvPolynomial.C u * (MvPolynomial.C r * (x - p)) = x := by
   rw [← mul_assoc (MvPolynomial.C u) (MvPolynomial.C r), ← map_mul, mul_comm u r,
     hr, map_one, one_mul]
   ring
-theorem affine_injective {R : Type*} [CommRing R] (u v : Fin 3 → R)
+private theorem affine_injective {R : Type*} [CommRing R] (u v : Fin 3 → R)
     (hu : IsUnit (u 0)) : Function.Injective (affine u v) := by
   obtain ⟨r, hr⟩ := isUnit_iff_exists_inv'.mp hu
   let k₀ : Jets R := MvPolynomial.C (v 0)
@@ -4220,7 +3752,7 @@ private theorem map_affine {R S : Type*} [CommRing R] [CommRing S] (f : R →+* 
     simp [affine]
   · intro i
     fin_cases i <;> simp [affine, affineJet]
-theorem affine_dvd_iff {R : Type*} [CommRing R] (t : R) (n : ℕ)
+private theorem affine_dvd_iff {R : Type*} [CommRing R] (t : R) (n : ℕ)
     (u v : Fin 3 → R) (hu : IsCoprime t (u 0)) (G : Jets R) :
     MvPolynomial.C t ^ n ∣ affine u v G ↔ MvPolynomial.C t ^ n ∣ G := by
   let I : Ideal R := Ideal.span {t ^ n}
@@ -4236,16 +3768,16 @@ theorem affine_dvd_iff {R : Type*} [CommRing R] (t : R) (n : ℕ)
   simp only [RingHom.comp_apply] at hmap
   simp only [← map_pow, MvPolynomial.C_dvd_iff_map_hom_eq_zero f _ hf, hmap]
   exact (injective_iff_map_eq_zero' _).mp (affine_injective (f ∘ u) (f ∘ v) hu') _
-theorem hasse_two_mul_linear {R : Type*} [CommRing R] (x : R) (u : R[X]) :
+private theorem hasse_two_mul_linear {R : Type*} [CommRing R] (x : R) (u : R[X]) :
     Polynomial.hasseDeriv 2 ((Polynomial.X - Polynomial.C x) * u) =
       Polynomial.hasseDeriv 1 u + (Polynomial.X - Polynomial.C x) * Polynomial.hasseDeriv 2 u := by
   rw [Polynomial.hasseDeriv_mul]
   simp [show 2 = 1 + 1 from rfl, Finset.Nat.antidiagonal_succ,
     Polynomial.hasseDeriv_X, Polynomial.hasseDeriv_C, Polynomial.hasseDeriv_one,
     add_comm]
-def jetCoeffs (u : GenericSeed[X]) (i : Fin 3) : GenericSeed[X] :=
+private def jetCoeffs (u : GenericSeed[X]) (i : Fin 3) : GenericSeed[X] :=
   Polynomial.hasseDeriv i.val u
-theorem restore_eq_canonical {Γ s} (P : PoleData Γ s) (L : ResidueChart P)
+private theorem restore_eq_canonical {Γ s} (P : PoleData Γ s) (L : ResidueChart P)
     (α : Geom) (z₀ : GenericSeed) (u v : GenericSeed[X])
     (hH : liftX P.H = localPole α * u)
     (hres : genericResidue L.numerator L.denominator = Polynomial.C z₀ + localPole α * v)
@@ -4275,13 +3807,13 @@ theorem restore_eq_canonical {Γ s} (P : PoleData Γ s) (L : ResidueChart P)
 private theorem eval_lift (p : Geom[X]) (α : Geom) :
     (liftX p).eval (algebraMap Geom GenericSeed α) = algebraMap Geom GenericSeed (p.eval α) := by
   exact Polynomial.eval_map_apply (algebraMap Geom GenericSeed) α
-theorem eval_ne_of_coprime {p H : Geom[X]} {α : Geom} (hc : IsCoprime p H)
+private theorem eval_ne_of_coprime {p H : Geom[X]} {α : Geom} (hc : IsCoprime p H)
     (hroot : H.IsRoot α) : p.eval α ≠ 0 := by
   obtain ⟨u, v, hu⟩ := hc
   intro hp
   have h := congrArg (Polynomial.evalRingHom α) hu
   simp [hp, show H.eval α = 0 from hroot] at h
-theorem fractional_center {Γ s} (P : PoleData Γ s) (L : ResidueChart P) (α : Geom)
+private theorem fractional_center {Γ s} (P : PoleData Γ s) (L : ResidueChart P) (α : Geom)
     (hroot : P.H.IsRoot α) :
     ∃ N D : Geom[X], D ≠ 0 ∧ N.natDegree ≤ 1 ∧ D.natDegree ≤ 1 ∧
       (genericResidue L.numerator L.denominator).eval (algebraMap Geom GenericSeed α) =
@@ -4349,28 +3881,28 @@ open scoped Polynomial PowerSeries
 abbrev RawCoeff := GenericSeed[X]
 abbrev Restored := MvPolynomial (Fin 3) RawCoeff
 def seed : GenericSeed := algebraMap Geom[X] GenericSeed Polynomial.X
-def seedExpansion : Geom[X] →+* PowerSeries GenericSeed :=
+private def seedExpansion : Geom[X] →+* PowerSeries GenericSeed :=
   Polynomial.eval₂RingHom (PowerSeries.C.comp (algebraMap Geom GenericSeed))
     (PowerSeries.C seed + PowerSeries.X)
-theorem constant_seedExpansion :
+private theorem constant_seedExpansion :
     PowerSeries.constantCoeff.comp seedExpansion = algebraMap Geom[X] GenericSeed := by
   apply Polynomial.ringHom_ext
   · intro a
     simp [seedExpansion, IsScalarTower.algebraMap_apply Geom Geom[X] GenericSeed]
   · simp [seedExpansion, seed]
-theorem seedExpansion_units (p : nonZeroDivisors Geom[X]) :
+private theorem seedExpansion_units (p : nonZeroDivisors Geom[X]) :
     IsUnit (seedExpansion p.val) := by
   rw [PowerSeries.isUnit_iff_constantCoeff]
   change IsUnit ((PowerSeries.constantCoeff.comp seedExpansion) p.val)
   rw [constant_seedExpansion]
   exact isUnit_iff_ne_zero.mpr ((map_ne_zero_iff _ (IsFractionRing.injective Geom[X] GenericSeed)).2
     (nonZeroDivisors.coe_ne_zero p))
-def seedFieldExpansion : GenericSeed →+* PowerSeries GenericSeed :=
+private def seedFieldExpansion : GenericSeed →+* PowerSeries GenericSeed :=
   IsLocalization.lift seedExpansion_units
-theorem seedFieldExpansion_apply (p : Geom[X]) :
+private theorem seedFieldExpansion_apply (p : Geom[X]) :
     seedFieldExpansion (algebraMap Geom[X] GenericSeed p) = seedExpansion p :=
   IsLocalization.lift_eq seedExpansion_units p
-theorem constant_seedFieldExpansion :
+private theorem constant_seedFieldExpansion :
     PowerSeries.constantCoeff.comp seedFieldExpansion = RingHom.id GenericSeed := by
   apply IsLocalization.ringHom_ext (nonZeroDivisors Geom[X])
   exact RingHom.ext fun p => by
@@ -4437,7 +3969,7 @@ namespace K1_13_4_2_2_5
 open K1_13_4_2_2
 open scoped BigOperators
 set_option maxHeartbeats 600000
-theorem twice_triangular (w : ℤ) : 2 * triangular w = w * (w + 1) := by
+private theorem twice_triangular (w : ℤ) : 2 * triangular w = w * (w + 1) := by
   unfold triangular
   apply Int.mul_ediv_cancel_of_dvd
   rcases (show w % 2 = 0 ∨ w % 2 = 1 by omega) with h | h
@@ -4445,7 +3977,7 @@ theorem twice_triangular (w : ℤ) : 2 * triangular w = w * (w + 1) := by
     exact dvd_mul_of_dvd_left (by rw [hw]; exact dvd_mul_right _ _) _
   · have hw : w + 1 = 2 * (w / 2 + 1) := by omega
     exact dvd_mul_of_dvd_right (show (2 : ℤ) ∣ w + 1 from ⟨w / 2 + 1, hw⟩) w
-theorem cost_quarter (w : ℤ) : cost w = (w + 1) ^ 2 / 4 := by
+private theorem cost_quarter (w : ℤ) : cost w = (w + 1) ^ 2 / 4 := by
   have h : 4 * cost w = (w + 1) ^ 2 - (w + 1) % 2 := by
     unfold cost
     rcases (show w % 2 = 0 ∨ w % 2 = 1 by omega) with h | h
@@ -4479,7 +4011,7 @@ private theorem colength_cost {a w : ℤ} (ha : a ≤ (w + 1) / 2) (hw : 0 ≤ w
   · have h' : (w + 1) / 2 = w / 2 + 1 := by omega
     rw [h'] at h₁ ⊢
     nlinarith only [h₁, h₂]
-theorem even_degree (s : ℤ) :
+private theorem even_degree (s : ℤ) :
     triangular (2 * s + 1) - cost (2 * s) = (s + 1) ^ 2 := by
   have h := twice_triangular (2 * s + 1)
   unfold cost
@@ -4508,9 +4040,9 @@ private theorem columns_eq (q k : ℕ) (hq : 2300 ≤ q) :
     rw [show 2300 - (k : ℤ) - 1 + 2 = 2300 - k + 1 by ring]
   · have hneg : (2300 - (k : ℤ) - 1) < 0 := by omega
     simp [cumulative, hneg, max_eq_left (show 2300 - (k : ℤ) ≤ 0 by omega), cost]
-theorem cost_nonneg {w : ℤ} (hw : 0 ≤ w) : 0 ≤ cost w := by
+private theorem cost_nonneg {w : ℤ} (hw : 0 ≤ w) : 0 ≤ cost w := by
   exact mul_nonneg (by omega) (by omega)
-theorem columns_nonneg {k : ℤ} (hk : 0 ≤ k) : 0 ≤ columns k := by
+private theorem columns_nonneg {k : ℤ} (hk : 0 ≤ k) : 0 ≤ columns k := by
   let w := max 0 (2300 - k)
   have h₀ : 0 ≤ w := le_max_left _ _
   have h₁ : w ≤ 2300 := max_le (by omega) (by omega)
@@ -4519,7 +4051,7 @@ theorem columns_nonneg {k : ℤ} (hk : 0 ≤ k) : 0 ≤ columns k := by
   have h := mul_le_mul (show (w + 1) / 2 ≤ 1151 by omega)
     (show w / 2 + 1 ≤ 1151 by omega) (show 0 ≤ w / 2 + 1 by omega) (by omega)
   omega
-theorem product_drop {a b a' b' s : ℤ} (hab : a ≤ b) (hb : b ≤ 1151)
+private theorem product_drop {a b a' b' s : ℤ} (hab : a ≤ b) (hb : b ≤ 1151)
     (hb₀ : 0 ≤ b) (ha' : 0 ≤ a') (hb' : 0 ≤ b') (hs₀ : 0 ≤ s) (hs₁ : s ≤ 1150)
     (hra : a - s ≤ a') (hrb : b - s ≤ b') :
     a * b - a' * b' ≤ 1324801 - (1151 - s) ^ 2 := by
@@ -4531,7 +4063,7 @@ theorem product_drop {a b a' b' s : ℤ} (hab : a ≤ b) (hb : b ≤ 1151)
     have h' := mul_nonneg ha' hb'
     have h'' := mul_nonneg hs₀ (show 0 ≤ 1151 - s by omega)
     nlinarith only [h, h', h'']
-theorem shifted_nonneg {k n m t : ℤ} (hk : 0 ≤ k) (hn : 0 ≤ n) (hm : 0 ≤ m)
+private theorem shifted_nonneg {k n m t : ℤ} (hk : 0 ≤ k) (hn : 0 ≤ n) (hm : 0 ≤ m)
     (hs : n + m ≤ 1150) (hP : 0 ≤ 2300 - k - 2 * n - m) (hO : 0 ≤ t - n - 2 * m) :
     0 ≤ columns k + cost (2300 - k - 2 * n - m) + cost (t - n - 2 * m) -
       (1151 - n - m) ^ 2 := by
@@ -4568,7 +4100,7 @@ private theorem product_sum (n m : ℕ) (f : Fin 6 → ℤ) :
     (∑ i, (product n m i : ℤ) * f i) =
       (n : ℤ) * (f 0 + f 3) + (m : ℤ) * f 5 := by
   simp [Fin.sum_univ_succ, product, Fin.succ, mul_add, add_assoc]
-theorem flag_formula {q k : ℕ} (hq : 2300 ≤ q) :
+private theorem flag_formula {q k : ℕ} (hq : 2300 ≤ q) :
     initialFlag q (offset k) =
       ![⟨0, 2300 - (k : ℤ)⟩, ⟨1150, 2300⟩, ⟨0, planeOrder q (offset k)⟩] := by
   have hd : residualDegree q = 2300 := min_eq_right hq
@@ -4577,7 +4109,7 @@ theorem flag_formula {q k : ℕ} (hq : 2300 ≤ q) :
   dsimp only
   rw [hd, h]
   norm_num
-theorem bound_by_kernel {q k : ℕ} (t : ℤ) (ht : planeOrder q (offset k) = t)
+private theorem bound_by_kernel {q k : ℕ} (t : ℤ) (ht : planeOrder q (offset k) = t)
     (hpos : 0 < t) (p : Powers) (r : ℤ) (hr : 0 ≤ r)
     (h : columnCount q (offset k) -
       max 0 (max (kernelLower (residualDegree q) (initialFlag q (offset k)))
@@ -4689,7 +4221,6 @@ namespace K1_13_4_4
 noncomputable section
 open K1 K1_13 K1_13_4
 open scoped BigOperators
-abbrev bankRank : ℕ := 2561085868844197170227
 def layerSpan {Γ s} (w : I → K) (P : PoleData Γ s) (L : ResidueChart P)
     (t : ℕ) : Submodule GenericX GenericRow :=
   Submodule.span GenericX {R | ∃ F, Source w P L secondBox t F ∧ toGeneric F = R}
@@ -4699,8 +4230,6 @@ structure FactorsFor (moving : Bool) (A : Finset GenericRow) : Prop where
   jets : ∀ f ∈ A, 0 < jetTotal f
   seed : ∀ f ∈ A, if moving then 0 < seedDegree f else seedDegree f = 0
 def factorProduct (A : Finset GenericRow) : GenericRow := ∏ f ∈ A, f
-def reserveCost (moving : Bool) : ℕ := if moving then 7800 else 49196
-def layerPower (e t : ℕ) : ℕ := 1 + (secondCut - t) / e
 def topSlots (a : ℕ) : ℕ := 70001 * 5671 * (1151 - a)^2
 end
 end K1_13_4_4
@@ -4730,7 +4259,7 @@ private theorem pureEval_section {F : GenericRow} (hF : jetTotal F = 0) :
       exact (MvPolynomial.degreeOf_le_weightedTotalDegree
         (fun i : SeedVar => i.elim 0 (fun _ => 1)) (some j) (show 0 < 1 by decide) F).trans_eq hF
   · rfl
-theorem asSeedPoly_pureSeed (p : GenericX[X]) :
+private theorem asSeedPoly_pureSeed (p : GenericX[X]) :
     asSeedPoly (pureSeed p) = p.map MvPolynomial.C := by
   let e := (MvPolynomial.optionEquivLeft GenericX (Fin 3)).toRingHom
   let l := e.comp (Polynomial.eval₂RingHom MvPolynomial.C (MvPolynomial.X none))
@@ -4760,121 +4289,6 @@ private theorem caps_of_dvd {a : Shape} {F Q : GenericRow} (hF : F ≠ 0)
   · simpa only [seedDegree, MvPolynomial.weightedTotalDegree_piSingle] using
       (MvPolynomial.weightedTotalDegree_le_of_dvd (Pi.single (none : SeedVar) 1) hQ hF).trans
         (by simpa only [seedDegree, MvPolynomial.weightedTotalDegree_piSingle] using hCap.2.2.2)
-theorem factor_pair
-    (F G : GenericRow) (hF : F ≠ 0) (hG : G ≠ 0)
-    (hFCap : Caps firstBox F) (hGCap : Caps secondBox G)
-    (hfixed : ∀ A, FactorsFor false A → (∀ f ∈ A, f ∣ F ∧ f ∣ G) →
-      jetTotal (factorProduct A) ≤ 68 ∧ jetIndex (factorProduct A) ≤ 23)
-    (hmoving : ∀ A, FactorsFor true A → (∀ f ∈ A, f ∣ F ∧ f ∣ G) →
-      jetTotal (factorProduct A) ≤ 10 ∧ jetIndex (factorProduct A) ≤ 3 ∧
-      seedDegree (factorProduct A) ≤ 112 ∧ ∀ f ∈ A, f.degreeOf (some 2) = 0) :
-    Nonempty (CommonPair F G) := by
-  classical
-  let _ : StrongNormalizationMonoid GenericRow :=
-    UniqueFactorizationMonoid.strongNormalizationMonoid
-  let _ : GCDMonoid GenericRow := UniqueFactorizationMonoid.toGCDMonoid GenericRow
-  let g := gcd F G
-  have hg : g ≠ 0 := gcd_ne_zero_of_left hF
-  let N := UniqueFactorizationMonoid.normalizedFactors g
-  let A := N.toFinset
-  let pureFactors := A.filter (fun f => jetTotal f = 0)
-  let jetFactors := A.filter (fun f => ¬ jetTotal f = 0)
-  let fixed := jetFactors.filter (fun f => seedDegree f = 0)
-  let moving := jetFactors.filter (fun f => ¬ seedDegree f = 0)
-  let powCount : GenericRow → ℕ := N.count
-  let pure : GenericX[X] := ∏ f ∈ pureFactors, (pureEval f) ^ powCount f
-  have hpure : pureSeed pure = ∏ f ∈ pureFactors, f ^ powCount f := by
-    let φ : GenericX[X] →+* GenericRow :=
-      Polynomial.eval₂RingHom MvPolynomial.C (MvPolynomial.X none)
-    change φ (∏ f ∈ pureFactors, (pureEval f) ^ powCount f) = _
-    rw [map_prod]
-    refine Finset.prod_congr rfl fun f hf => ?_
-    rw [map_pow]
-    exact congrArg (fun R => R ^ powCount f)
-      (pureEval_section (Finset.mem_filter.mp hf).2)
-  let D := pureSeed pure * (∏ f ∈ fixed, f ^ powCount f) * (∏ f ∈ moving, f ^ powCount f)
-  have hD : Associated D g := by
-    suffices D = N.prod by
-      rw [this]
-      exact UniqueFactorizationMonoid.prod_normalizedFactors hg
-    change pureSeed pure * (∏ f ∈ fixed, f ^ powCount f) *
-      (∏ f ∈ moving, f ^ powCount f) = _
-    rw [hpure, mul_assoc]
-    unfold fixed moving
-    rw [Finset.prod_filter_mul_prod_filter_not]
-    unfold pureFactors jetFactors
-    rw [Finset.prod_filter_mul_prod_filter_not]
-    exact (Finset.prod_multiset_count N).symm
-  have hDne : D ≠ 0 := ne_zero_of_dvd_ne_zero hg hD.dvd
-  have hDF : D ∣ F := hD.dvd.trans (gcd_dvd_left F G)
-  have hDG : D ∣ G := hD.dvd.trans (gcd_dvd_right F G)
-  obtain ⟨F', hF'⟩ := hDF
-  obtain ⟨G', hG'⟩ := hDG
-  have hl : F' ≠ 0 := right_ne_zero_of_mul (hF' ▸ hF)
-  have hr : G' ≠ 0 := right_ne_zero_of_mul (hG' ▸ hG)
-  have hrel : IsRelPrime F' G' := by
-    intro d hdF hdG
-    have hdF' : D * d ∣ F := hF' ▸ mul_dvd_mul_left D hdF
-    have hdG' : D * d ∣ G := hG' ▸ mul_dvd_mul_left D hdG
-    have hd := (dvd_gcd hdF' hdG').trans hD.symm.dvd
-    apply isUnit_of_dvd_one
-    exact (mul_dvd_mul_iff_left hDne).mp (by simpa only [mul_one] using hd)
-  have hcommon (f : GenericRow) (hf : f ∈ A) : f ∣ F ∧ f ∣ G := by
-    have hfg : f ∣ g := UniqueFactorizationMonoid.dvd_of_mem_normalizedFactors
-      (Multiset.mem_toFinset.mp hf)
-    exact ⟨hfg.trans (gcd_dvd_left F G), hfg.trans (gcd_dvd_right F G)⟩
-  have hmake (b : Bool) (B : Finset GenericRow) (hBA : B ⊆ A)
-      (hj : ∀ f ∈ B, 0 < jetTotal f)
-      (hs : ∀ f ∈ B, if b then 0 < seedDegree f else seedDegree f = 0) :
-      FactorsFor b B := by
-    refine ⟨?_, ?_, hj, hs⟩
-    · intro f hf q hq hne hassoc
-      exact hne (UniqueFactorizationMonoid.mem_normalizedFactors_eq_of_associated
-        (Multiset.mem_toFinset.mp (hBA hf)) (Multiset.mem_toFinset.mp (hBA hq)) hassoc)
-    · intro f hf
-      exact UniqueFactorizationMonoid.irreducible_of_normalized_factor _
-        (Multiset.mem_toFinset.mp (hBA hf))
-  have hfixedA : fixed ⊆ A := (Finset.filter_subset _ _).trans (Finset.filter_subset _ _)
-  have hmovingA : moving ⊆ A := (Finset.filter_subset _ _).trans (Finset.filter_subset _ _)
-  have hfix := hmake false fixed hfixedA
-    (fun _ hf => Nat.pos_of_ne_zero (Finset.mem_filter.mp (Finset.mem_filter.mp hf).1).2)
-    (fun _ hf => (Finset.mem_filter.mp hf).2)
-  have hmov := hmake true moving hmovingA
-    (fun _ hf => Nat.pos_of_ne_zero (Finset.mem_filter.mp (Finset.mem_filter.mp hf).1).2)
-    (fun _ hf => Nat.pos_of_ne_zero (Finset.mem_filter.mp hf).2)
-  obtain ⟨hft, hfi⟩ := hfixed fixed hfix (fun f hf => hcommon f (hfixedA hf))
-  obtain ⟨hmt, hmi, hms, hlow⟩ := hmoving moving hmov (fun f hf => hcommon f (hmovingA hf))
-  have hpureF : pureSeed pure ∣ F :=
-    (show pureSeed pure ∣ D by
-      exact ⟨_, mul_assoc _ _ _⟩).trans ⟨F', hF'⟩
-  have hpure_ne : pure ≠ 0 := by
-    intro hz
-    apply hDne
-    simp [D, hz, pureSeed]
-  refine ⟨{
-    fixed := fixed
-    moving := moving
-    pure := pure
-    exponent := powCount
-    left := F'
-    right := G'
-    pure_ne := hpure_ne
-    pure_degree := (pure_degree_le hF hpureF).trans (hFCap.2.2.2.trans (by decide))
-    fixed_kind := fun f hf => ⟨hfix.irreducible f hf, hfix.jets f hf, hfix.seed f hf⟩
-    moving_kind := fun f hf => ⟨hmov.irreducible f hf, hmov.jets f hf, hmov.seed f hf, hlow f hf⟩
-    fixed_total := hft
-    fixed_index := hfi
-    moving_total := hmt
-    moving_index := hmi
-    moving_seed := hms
-    left_eq := hF'
-    right_eq := hG'
-    left_ne := hl
-    right_ne := hr
-    proper := hrel
-    left_caps := caps_of_dvd hF hFCap ⟨D, hF'.trans (mul_comm _ _)⟩
-    right_caps := caps_of_dvd hG hGCap ⟨D, hG'.trans (mul_comm _ _)⟩
-  }⟩
 end
 end K1_13_4_4
 end
@@ -4928,16 +4342,16 @@ theorem mixedHasse_zero (F : PhysicalRow) : mixedHasse 0 F = F := by
   change (shift F).coeff 0 = F
   rw [← hev]
   exact DFunLike.congr_fun hcomp F
-abbrev IncrementRow := MvPolynomial SeedVar PhysicalRow
-def CoeffBound (v : SeedVar → ℕ) (d : ℕ) (R : IncrementRow) : Prop :=
+private abbrev IncrementRow := MvPolynomial SeedVar PhysicalRow
+private def CoeffBound (v : SeedVar → ℕ) (d : ℕ) (R : IncrementRow) : Prop :=
   ∀ a, R.coeff a ∈ MvPolynomial.restrictWeightedDegree v d
-theorem coeffBound_mul {v : SeedVar → ℕ} {d e : ℕ} {R S : IncrementRow}
+private theorem coeffBound_mul {v : SeedVar → ℕ} {d e : ℕ} {R S : IncrementRow}
     (hR : CoeffBound v d R) (hS : CoeffBound v e S) : CoeffBound v (d + e) (R * S) := by
   classical
   intro a
   rw [MvPolynomial.coeff_mul]
   exact Submodule.sum_mem _ fun b _ => MvPolynomial.mul_mem_restrictWeightedDegree (hR b.1) (hS b.2)
-theorem coeffBound_C {v : SeedVar → ℕ} {d : ℕ} {F : PhysicalRow}
+private theorem coeffBound_C {v : SeedVar → ℕ} {d : ℕ} {F : PhysicalRow}
     (hF : F ∈ MvPolynomial.restrictWeightedDegree v d) :
     CoeffBound v d (MvPolynomial.C F) := by
   classical
@@ -4946,7 +4360,7 @@ theorem coeffBound_C {v : SeedVar → ℕ} {d : ℕ} {F : PhysicalRow}
   split
   · exact hF
   · exact Submodule.zero_mem _
-theorem coeffBound_pow {v : SeedVar → ℕ} {d : ℕ} {R : IncrementRow}
+private theorem coeffBound_pow {v : SeedVar → ℕ} {d : ℕ} {R : IncrementRow}
     (hR : CoeffBound v d R) (n : ℕ) : CoeffBound v (n * d) (R ^ n) := by
   induction n with
   | zero =>
@@ -4957,7 +4371,7 @@ theorem coeffBound_pow {v : SeedVar → ℕ} {d : ℕ} {R : IncrementRow}
   | succ n ih =>
     rw [pow_succ, Nat.succ_mul]
     exact coeffBound_mul ih hR
-theorem coeffBound_prod {ι : Type*} {v : SeedVar → ℕ} (s : Finset ι)
+private theorem coeffBound_prod {ι : Type*} {v : SeedVar → ℕ} (s : Finset ι)
     (d : ι → ℕ) (R : ι → IncrementRow) (h : ∀ i ∈ s, CoeffBound v (d i) (R i)) :
     CoeffBound v (∑ i ∈ s, d i) (∏ i ∈ s, R i) := by
   classical
@@ -5021,14 +4435,14 @@ open K1_13_4
 open scoped BigOperators
 set_option maxHeartbeats 650000
 private abbrev Exponent := SeedVar →₀ ℕ
-def slotTuples (a : ℕ) : Finset (ℕ × ℕ × ℕ × ℕ) :=
+private def slotTuples (a : ℕ) : Finset (ℕ × ℕ × ℕ × ℕ) :=
   (Finset.Ico a 1151).biUnion (fun k =>
     (Finset.range (2301 - 2*k)).biUnion (fun j =>
       (Finset.range (6821 - k - j)).biUnion (fun i =>
         (Finset.range 70001).image (fun z => (k, j, i, z)))))
 private def slotExponent (q : ℕ × ℕ × ℕ × ℕ) : Exponent :=
   Finsupp.equivFunOnFinite.symm (fun i => i.elim q.2.2.2 (![q.2.2.1, q.2.1, q.1] ·))
-theorem sum_value_choices {k : ℕ} (hk : k ≤ 1150) :
+private theorem sum_value_choices {k : ℕ} (hk : k ≤ 1150) :
     (∑ j ∈ Finset.range (2301 - 2*k), (6821 - k - j)) = (2301 - 2*k) * 5671 := by
   let n := 2301 - 2*k
   have hpair : (∑ j ∈ Finset.range n, (6821 - k - j)) +
@@ -5048,13 +4462,13 @@ theorem sum_value_choices {k : ℕ} (hk : k ≤ 1150) :
   change s + s = n * 5671 + n * 5671 at hpair
   change s = n * 5671
   omega
-theorem sum_odds (n : ℕ) : (∑ k ∈ Finset.range n, (2*k + 1)) = n^2 := by
+private theorem sum_odds (n : ℕ) : (∑ k ∈ Finset.range n, (2*k + 1)) = n^2 := by
   induction n with
   | zero => simp
   | succ n ih =>
     rw [Finset.sum_range_succ, ih]
     ring
-theorem sum_index_choices (a : ℕ) :
+private theorem sum_index_choices (a : ℕ) :
     (∑ k ∈ Finset.Ico a 1151, (2301 - 2*k)) = (1151 - a)^2 := by
   rw [Finset.sum_Ico_eq_sum_range]
   let n := 1151 - a
@@ -5112,7 +4526,7 @@ private theorem exponent_mem {a : ℕ} {R : GenericRow} (hR : Caps secondBox R)
     cases i with
     | none => simp [slotExponent]
     | some i => fin_cases i <;> simp [slotExponent]
-theorem rank_le_coeffs {σ 𝕜 : Type*} [Field 𝕜]
+private theorem rank_le_coeffs {σ 𝕜 : Type*} [Field 𝕜]
     (A : Finset (σ →₀ ℕ)) {r : ℕ} (e : Fin r → MvPolynomial σ 𝕜)
     (he : LinearIndependent 𝕜 e)
     (h : ∀ R ∈ Submodule.span 𝕜 (Set.range e), R ≠ 0 → ∃ m ∈ A, R.coeff m ≠ 0) :
@@ -5161,7 +4575,7 @@ private theorem total_add (s m n : ℕ) : total s (m + n) = total s m + total (s
     change total s (m + n) + offsetTotal (s + (m + n)) =
       total s m + (total (s + m) n + offsetTotal (s + m + n))
     rw [ih, Nat.add_assoc s m n, add_assoc]
-theorem total_windows (s width n : ℕ) :
+private theorem total_windows (s width n : ℕ) :
     total s (n * width) = ∑ i ∈ Finset.range n, total (s + i * width) width := by
   induction n with
   | zero => simp [total]
@@ -5213,40 +4627,7 @@ theorem cutoff_sum_le {W e n : ℕ} (he : 0 < e) (r q : ℕ → ℕ)
         apply hz
         apply (Nat.le_div_iff_mul_le he).mpr
         exact Nat.le_of_not_gt (fun hlt => ht (Finset.mem_range.mpr hlt))
-theorem resource_bound {e V d : ℕ} (he : 0 < e) (r : ℕ → ℕ)
-    (hr : bankRank ≤ ∑ t ∈ Finset.range (secondCut + 1), r t)
-    (hcap : ∀ t ≤ secondCut, r t ≤ topSlots 0)
-    (hspend : ∀ t ≤ secondCut, r t ≠ 0 → layerPower e t * d ≤ V) :
-    d ≤ e * V * topSlots 0 / bankRank := by
-  by_cases hd : d = 0
-  · simp [hd]
-  have hd' : 0 < d := Nat.pos_of_ne_zero hd
-  let q (k : ℕ) := if k < V / d then topSlots 0 else 0
-  have hb := cutoff_sum_le (W := secondCut) (n := V / d) he r q
-    (fun t ht => by
-      by_cases hn : r t = 0
-      · simp [hn]
-      have hle := (Nat.le_div_iff_mul_le hd').mpr (hspend t ht hn)
-      have hlt : (secondCut - t) / e < V / d := by
-        unfold layerPower at hle
-        omega
-      simpa [q, hlt] using hcap t ht)
-    (fun k hk => ite_eq_right (Nat.not_lt.mpr hk))
-  have hc : (∑ k ∈ Finset.range (V / d), q k) = (V / d) * topSlots 0 := by
-    have hsum : (∑ k ∈ Finset.range (V / d), q k) =
-        ∑ _ ∈ Finset.range (V / d), topSlots 0 :=
-      Finset.sum_congr rfl fun k hk => ite_eq_left (Finset.mem_range.mp hk)
-    rw [hsum]
-    simp
-  rw [hc] at hb
-  apply (Nat.le_div_iff_mul_le (by decide : 0 < bankRank)).mpr
-  calc
-    d * bankRank ≤ d * (e * (V / d * topSlots 0)) :=
-      Nat.mul_le_mul_left d (hr.trans hb)
-    _ = (e * topSlots 0) * (V / d * d) := by ring
-    _ ≤ (e * topSlots 0) * V := Nat.mul_le_mul_left _ (Nat.div_mul_le_self _ _)
-    _ = e * V * topSlots 0 := by ring
-theorem sum_squares (n : ℕ) :
+private theorem sum_squares (n : ℕ) :
     6 * (∑ k ∈ Finset.range n, (n - k)^2) = n * (n + 1) * (2 * n + 1) := by
   induction n with
   | zero => simp
@@ -5273,15 +4654,6 @@ theorem slot_constants :
       have h := sum_squares 1150
       omega
     rw [hsquare]
-theorem top_exclusion (r : ℕ → ℕ)
-    (hr : bankRank ≤ ∑ t ∈ Finset.range (secondCut + 1), r t)
-    (h : ∀ t ≤ secondCut, r t ≤ topSlots (layerPower 7800 t)) : False := by
-  have hb := cutoff_sum_le (W := secondCut) (n := 1150) (by decide : 0 < 7800)
-    r (fun k => topSlots (1 + k)) h (fun k hk => by
-      have hk' : 1151 - (1 + k) = 0 := by omega
-      simp [topSlots, hk'])
-  rw [slot_constants.2] at hb
-  exact (not_le_of_gt native_factor_arithmetic.2.2.2.2.2) (hr.trans hb)
 end K1_13_4_4
 end
 section
@@ -5318,7 +4690,7 @@ private theorem clearedTest_apply {a : Shape} {q : ℕ}
     (F : PhysicalRow) :
     clearedTest w p F = ∑ c, w c • p F c := by
   simp [clearedTest, LinearMap.sum_apply]
-theorem coeff_test_zero_iff {a : Shape} {q : ℕ} {α : Geom}
+private theorem coeff_test_zero_iff {a : Shape} {q : ℕ} {α : Geom}
     {F : PhysicalRow} {G : RawRow} {D : Geom[X]} (hD : D ≠ 0)
     (w : JetCoeff a q → Geom) (p : PhysicalRow →ₗ[Geom] (JetCoeff a q → Geom[X]))
     (hp : ∀ c, (p F c).natDegree ≤ 70000 + (a.b - q) ∧
@@ -5347,7 +4719,7 @@ theorem coeff_test_zero_iff {a : Shape} {q : ℕ} {α : Geom}
   have hne : algebraMap Geom[X] GenericSeed D ≠ 0 :=
     (map_ne_zero_iff _ (IsFractionRing.injective Geom[X] GenericSeed)).2 hD
   simp [pow_ne_zero _ hne]
-theorem codim_le_test_finrank {E : Type*} [AddCommGroup E] [Module Geom E]
+private theorem codim_le_test_finrank {E : Type*} [AddCommGroup E] [Module Geom E]
     [Module.Finite Geom E] (V W : Submodule Geom PhysicalRow) [Module.Finite Geom V]
     (f : V →ₗ[Geom] E) (hker : LinearMap.ker f = W.comap V.subtype) :
     codimIn V W ≤ Module.finrank Geom E := by
@@ -5397,86 +4769,10 @@ noncomputable section
 open K1 K1_13 K1_13_4
 open scoped BigOperators
 set_option maxRecDepth 1024
-def c1 : Prop :=
-  ∀ w Γ s (P : PoleData Γ s) (L : ResidueChart P),
-    HasRank w P L secondBox secondCut bankRank →
-    ∃ r : ℕ → ℕ, bankRank ≤ ∑ t ∈ Finset.range (secondCut + 1), r t ∧
-      ∀ t ≤ secondCut, ∃ e : Fin (r t) → GenericRow,
-        LinearIndependent GenericX e ∧ ∀ i, e i ∈ layerSpan w P L t
-def c2 : Prop :=
-  ∀ (moving : Bool) (A : Finset GenericRow) (F : PhysicalRow) (t : ℕ),
-    FactorsFor moving A → Caps secondBox F → t ≤ secondCut →
-    (∀ f ∈ A, ∀ a, t + mixedWeight a ≤ secondCut → f ∣ toGeneric (mixedHasse a F)) →
-    factorProduct A ^ layerPower (reserveCost moving) t ∣ toGeneric F
 private def multiples (D : GenericRow) : Submodule GenericX GenericRow :=
   (Ideal.span {D}).restrictScalars GenericX
 private theorem mem_multiples {F D : GenericRow} : F ∈ multiples D ↔ D ∣ F :=
   Ideal.mem_span_singleton
-theorem has_nonzero_necessary {Γ s} {w : I → K} {P : PoleData Γ s}
-    {L : ResidueChart P} (hr : HasRank w P L secondBox secondCut bankRank) :
-    ∃ G : Necessary w P L, G ≠ 0 := by
-  obtain ⟨e, he, hs⟩ := hr
-  let i : Fin bankRank := ⟨0, by decide⟩
-  have hmem : e i ∈ Necessary w P L := by
-    apply Submodule.subset_span
-    exact ⟨secondCut, e i, 0, hs i, by simp [mixedWeight], (mixedHasse_zero _).symm⟩
-  refine ⟨⟨e i, hmem⟩, fun h => he.ne_zero i ?_⟩
-  exact congrArg (fun Q : Necessary w P L => Q.val) h
-theorem necessary_caps {Γ s} {w : I → K} {P : PoleData Γ s}
-    {L : ResidueChart P} {Q : PhysicalRow} (hQ : Q ∈ Necessary w P L) :
-    Caps secondBox (toGeneric Q) := by
-  have hle : Necessary w P L ≤ ((capSpace secondBox).restrictScalars Geom).comap rowMap := by
-    apply Submodule.span_le.mpr
-    rintro _ ⟨t, F, a, hF, _, rfl⟩
-    exact mem_capSpace.mpr (toGeneric_caps (mixedHasse_caps a F hF.1))
-  exact mem_capSpace.mp (hle hQ)
-theorem select_row {Γ s} {w : I → K} {P : PoleData Γ s} {L : ResidueChart P}
-    {F : PhysicalRow} (hF : F ≠ 0) (hr : HasRank w P L secondBox secondCut bankRank) :
-    ∃ G, G ∈ Necessary w P L ∧ G ≠ 0 ∧
-      ∀ f : GenericRow, Irreducible f → f ∣ toGeneric F → f ∣ toGeneric G →
-        ∀ Q ∈ Necessary w P L, f ∣ toGeneric Q := by
-  classical
-  let N := Necessary w P L
-  let _ : StrongNormalizationMonoid GenericRow :=
-    UniqueFactorizationMonoid.strongNormalizationMonoid
-  let bad := (UniqueFactorizationMonoid.normalizedFactors (toGeneric F)).toFinset.filter
-    (fun f => ∃ Q ∈ N, ¬ f ∣ toGeneric Q)
-  let sub : Option ↥bad → Submodule Geom N
-    | none => ⊥
-    | some f => ((multiples f.val).restrictScalars Geom).comap (rowMap.comp N.subtype)
-  have hproper (i : Option ↥bad) : sub i ≠ ⊤ := by
-    cases i with
-    | none =>
-      obtain ⟨Q, hQ⟩ := has_nonzero_necessary hr
-      intro h
-      have hm : Q ∈ sub none := h ▸ Submodule.mem_top
-      exact hQ ((Submodule.mem_bot Geom).mp hm)
-    | some f =>
-      obtain ⟨Q, hQ, hnd⟩ := (Finset.mem_filter.mp f.property).2
-      intro h
-      have hm : (⟨Q, hQ⟩ : N) ∈ sub (some f) := h ▸ Submodule.mem_top
-      exact hnd (mem_multiples.mp hm)
-  obtain ⟨G, hG⟩ := Submodule.exists_forall_notMem_of_forall_ne_top
-    (ι := Option ↥bad) (K := Geom) (M := N) sub hproper
-  refine ⟨G.val, G.property, ?_, fun f hf hdf hdg Q hQ => ?_⟩
-  · intro h
-    exact hG none ((Submodule.mem_bot Geom).mpr (Subtype.ext h))
-  · by_contra hn
-    obtain ⟨p, hp, hassoc⟩ :=
-      UniqueFactorizationMonoid.exists_mem_normalizedFactors_of_dvd (toGeneric_ne_zero hF) hf hdf
-    have hp' : p ∈ bad := Finset.mem_filter.mpr
-      ⟨Multiset.mem_toFinset.mpr hp, Q, hQ, fun h => hn (hassoc.dvd_iff_dvd_left.mpr h)⟩
-    exact hG (some ⟨p, hp'⟩) (mem_multiples.mpr (hassoc.dvd_iff_dvd_left.mp hdg))
-theorem layer_divides (h2 : c2) {Γ s} {w : I → K} {P : PoleData Γ s}
-    {L : ResidueChart P} {moving : Bool} {A : Finset GenericRow} (hA : FactorsFor moving A)
-    (hcommon : ∀ f ∈ A, ∀ Q ∈ Necessary w P L, f ∣ toGeneric Q)
-    {t : ℕ} (ht : t ≤ secondCut) :
-    layerSpan w P L t ≤ multiples (factorProduct A ^ layerPower (reserveCost moving) t) := by
-  apply Submodule.span_le.mpr
-  rintro _ ⟨F, hF, rfl⟩
-  apply mem_multiples.mpr (h2 moving A F t hA hF.1 ht ?_)
-  intro f hf a ha
-  exact hcommon f hf _ (Submodule.subset_span ⟨t, F, a, hF, ha, rfl⟩)
 private theorem count_layer {Γ s} {w : I → K} {P : PoleData Γ s}
     {L : ResidueChart P} {a r t : ℕ}
     (hb : ∃ e : Fin r → GenericRow, LinearIndependent GenericX e ∧
@@ -5487,9 +4783,6 @@ private theorem count_layer {Γ s} {w : I → K} {P : PoleData Γ s}
   have hspan : Submodule.span GenericX (Set.range e) ≤ layerSpan w P L t :=
     Submodule.span_le.mpr (by rintro _ ⟨i, rfl⟩; exact hs i)
   exact count_symbols a r e he (fun R hR => ⟨layerSpan_caps (hspan hR), hdeg R (hspan hR)⟩)
-theorem product_ne_zero {moving : Bool} {A : Finset GenericRow} (hA : FactorsFor moving A) :
-    factorProduct A ≠ 0 :=
-  Finset.prod_ne_zero_iff.mpr fun f hf => (hA.irreducible f hf).ne_zero
 private theorem weighted_pow (v : SeedVar → ℕ) (D : GenericRow) (hD : D ≠ 0) (n : ℕ) :
     (D ^ n).weightedTotalDegree v = n * D.weightedTotalDegree v := by
   induction n with
@@ -5498,103 +4791,6 @@ private theorem weighted_pow (v : SeedVar → ℕ) (D : GenericRow) (hD : D ≠ 
   | succ n ih =>
     rw [pow_succ, MvPolynomial.weightedTotalDegree_mul v _ _ (pow_ne_zero _ hD) hD,
       ih, Nat.succ_mul]
-theorem weighted_resource {Γ s} {w : I → K} {P : PoleData Γ s} {L : ResidueChart P}
-    {e : ℕ} (he : 0 < e) {r : ℕ → ℕ} {D : GenericRow} (hD : D ≠ 0)
-    (hr : bankRank ≤ ∑ t ∈ Finset.range (secondCut + 1), r t)
-    (hb : ∀ t ≤ secondCut, ∃ u : Fin (r t) → GenericRow, LinearIndependent GenericX u ∧
-      ∀ i, u i ∈ layerSpan w P L t)
-    (hcount : ∀ t ≤ secondCut, r t ≤ topSlots 0)
-    (hdvd : ∀ t ≤ secondCut, layerSpan w P L t ≤ multiples (D ^ layerPower e t))
-    (v : SeedVar → ℕ) (V : ℕ)
-    (hcap : ∀ R : GenericRow, Caps secondBox R → R.weightedTotalDegree v ≤ V) :
-    D.weightedTotalDegree v ≤ e * V * topSlots 0 / bankRank := by
-  apply resource_bound he r hr hcount
-  intro t ht hne
-  obtain ⟨u, hu, hs⟩ := hb t ht
-  let i : Fin (r t) := ⟨0, Nat.pos_of_ne_zero hne⟩
-  have hm := MvPolynomial.weightedTotalDegree_le_of_dvd v
-    (mem_multiples.mp (hdvd t ht (hs i))) (hu.ne_zero i)
-  rw [weighted_pow _ _ hD] at hm
-  exact hm.trans (hcap (u i) (layerSpan_caps (hs i)))
-theorem excludes_top {Γ s} {w : I → K} {P : PoleData Γ s}
-    {L : ResidueChart P} {r : ℕ → ℕ} {A : Finset GenericRow} (hA : FactorsFor true A)
-    (hr : bankRank ≤ ∑ t ∈ Finset.range (secondCut + 1), r t)
-    (hb : ∀ t ≤ secondCut, ∃ u : Fin (r t) → GenericRow,
-      LinearIndependent GenericX u ∧ ∀ i, u i ∈ layerSpan w P L t)
-    (hdvd : ∀ t ≤ secondCut,
-      layerSpan w P L t ≤ multiples (factorProduct A ^ layerPower 7800 t)) :
-    ∀ f ∈ A, f.degreeOf (some 2) = 0 := by
-  classical
-  let v : SeedVar → ℕ := Pi.single (some 2) 1
-  have hzero : (factorProduct A).weightedTotalDegree v = 0 := by
-    by_contra hn
-    apply top_exclusion r hr
-    intro t ht
-    apply count_layer (hb t ht)
-    intro R hR hRne
-    have h := MvPolynomial.weightedTotalDegree_le_of_dvd v
-      (mem_multiples.mp (hdvd t ht hR)) hRne
-    rw [weighted_pow _ _ (product_ne_zero hA)] at h
-    have hle := Nat.mul_le_mul_left (layerPower 7800 t) (Nat.pos_of_ne_zero hn)
-    rw [Nat.mul_one] at hle
-    simpa only [v, MvPolynomial.weightedTotalDegree_piSingle] using hle.trans h
-  intro f hf
-  have hfd : f ∣ factorProduct A := Finset.dvd_prod_of_mem id hf
-  have h := (MvPolynomial.weightedTotalDegree_le_of_dvd v hfd (product_ne_zero hA)).trans_eq hzero
-  simpa only [v, MvPolynomial.weightedTotalDegree_piSingle, Nat.le_zero] using h
-theorem of_children (h1 : c1) (h2 : c2) : K1_13_4.c4 := by
-  classical
-  intro w Γ s P L F hF hFCaps hRank
-  obtain ⟨r, hr, hb⟩ := h1 w Γ s P L hRank
-  have hcount : ∀ t ≤ secondCut, r t ≤ topSlots 0 := fun t ht =>
-    count_layer (hb t ht) (fun _ _ _ => Nat.zero_le _)
-  obtain ⟨G, hG, hGne, hchoose⟩ := select_row hF hRank
-  have hdiv (moving : Bool) (A : Finset GenericRow) (hA : FactorsFor moving A)
-      (hcomm : ∀ f ∈ A, f ∣ toGeneric F ∧ f ∣ toGeneric G) :
-      ∀ t ≤ secondCut, layerSpan w P L t ≤
-        multiples (factorProduct A ^ layerPower (reserveCost moving) t) :=
-    fun _ ht => layer_divides h2 hA
-      (fun f hf => hchoose f (hA.irreducible f hf) (hcomm f hf).1 (hcomm f hf).2) ht
-  have hbound (moving : Bool) (A : Finset GenericRow) (hA : FactorsFor moving A)
-      (hcomm : ∀ f ∈ A, f ∣ toGeneric F ∧ f ∣ toGeneric G)
-      (v : SeedVar → ℕ) (V : ℕ)
-      (hc : ∀ R : GenericRow, Caps secondBox R → R.weightedTotalDegree v ≤ V) :
-      (factorProduct A).weightedTotalDegree v ≤ reserveCost moving * V * topSlots 0 / bankRank :=
-    weighted_resource (by cases moving <;> decide) (product_ne_zero hA) hr hb hcount
-      (hdiv moving A hA hcomm) v V hc
-  have hbcap (R : GenericRow) (h : Caps secondBox R) : jetTotal R ≤ 6820 := h.1
-  have hjcap (R : GenericRow) (h : Caps secondBox R) : jetIndex R ≤ 2300 := h.2.1
-  have hscap (R : GenericRow) (h : Caps secondBox R) :
-      R.weightedTotalDegree (Pi.single (none : SeedVar) 1) ≤ 70000 := by
-    rw [MvPolynomial.weightedTotalDegree_piSingle]
-    exact h.2.2.2
-  obtain ⟨bF, jF, bM, jM, sM, _⟩ := native_factor_arithmetic
-  refine ⟨G, hG, factor_pair _ _ (toGeneric_ne_zero hF) (toGeneric_ne_zero hGne)
-    (toGeneric_caps hFCaps) (necessary_caps hG) ?_ ?_⟩
-  · intro A hA hcomm
-    have hbt := hbound false A hA hcomm _ _ hbcap
-    have hji := hbound false A hA hcomm _ _ hjcap
-    change jetTotal _ ≤ _ at hbt
-    change jetIndex _ ≤ _ at hji
-    have hbt' : jetTotal (factorProduct A) ≤ 68 := by
-      simpa only [reserveCost, Bool.false_eq_true, ite_false, slot_constants.1, bF] using hbt
-    have hji' : jetIndex (factorProduct A) ≤ 23 := by
-      simpa only [reserveCost, Bool.false_eq_true, ite_false, slot_constants.1, jF] using hji
-    exact ⟨hbt', hji'⟩
-  · intro A hA hcomm
-    have hbt := hbound true A hA hcomm _ _ hbcap
-    have hji := hbound true A hA hcomm _ _ hjcap
-    have hse := hbound true A hA hcomm _ _ hscap
-    change jetTotal _ ≤ _ at hbt
-    change jetIndex _ ≤ _ at hji
-    rw [MvPolynomial.weightedTotalDegree_piSingle] at hse
-    have hbt' : jetTotal (factorProduct A) ≤ 10 := by
-      simpa only [reserveCost, ite_true, slot_constants.1, bM] using hbt
-    have hji' : jetIndex (factorProduct A) ≤ 3 := by
-      simpa only [reserveCost, ite_true, slot_constants.1, jM] using hji
-    have hse' : seedDegree (factorProduct A) ≤ 112 := by
-      simpa only [seedDegree, reserveCost, ite_true, slot_constants.1, sM] using hse
-    exact ⟨hbt', hji', hse', excludes_top hA hr hb (hdiv true A hA hcomm)⟩
 end
 end K1_13_4_4
 end
@@ -5707,7 +4903,7 @@ theorem cumulative_eq {q w : ℤ} (hw : 0 ≤ w) (hq : w ≤ 2 * q) :
     cumulative q w = capCount q w := by
   rw [cumulative, ite_eq_right (not_lt.mpr hw), min_eq_left hq, capCount, weightCost_eq_square]
   ring_nf
-theorem capCount_step {q w : ℤ} (hw : 0 ≤ w) (hq : w + 1 ≤ 2 * q) :
+private theorem capCount_step {q w : ℤ} (hw : 0 ≤ w) (hq : w + 1 ≤ 2 * q) :
     capCount q w ≤ capCount q (w + 1) := by
   have hW := weightCost_step (w + 1)
   have hT : triangular (max 0 (w + 1 - q)) - triangular (max 0 (w - q)) =
@@ -5755,7 +4951,7 @@ private theorem moments (len : ℕ) :
   | succ len ih =>
     simp only [Finset.sum_range_succ, Nat.cast_succ]
     exact ⟨by nlinarith only [ih.1], by nlinarith only [ih.2]⟩
-theorem cost_progression (a b x : ℤ) :
+private theorem cost_progression (a b x : ℤ) :
     cost (a + 2 * b * x) = cost a + b * (a + 1) * x + b ^ 2 * x ^ 2 := by
   have hs : (a + 1) / 2 + (a / 2 + 1) = a + 1 := by omega
   have he : 2 * b * x = 2 * (b * x) := by ring
@@ -5764,10 +4960,10 @@ theorem cost_progression (a b x : ℤ) :
   unfold cost
   rw [h₁, h₂]
   linear_combination (b * x) * hs
-theorem const_sum (a : ℤ) (len : ℕ) :
+private theorem const_sum (a : ℤ) (len : ℕ) :
     (∑ _i ∈ Finset.range len, a) = (len : ℤ) * a := by
   simp
-theorem quadratic_sum (a b c : ℤ) (len : ℕ) :
+private theorem quadratic_sum (a b c : ℤ) (len : ℕ) :
     (∑ i ∈ Finset.range len, (a + b * (i : ℤ) + c * (i : ℤ) ^ 2)) =
       (len : ℤ) * a + b * linearSum len + c * squareSum len := by
   have h₁ : linearSum len = ∑ i ∈ Finset.range len, (i : ℤ) := by
@@ -5779,22 +4975,22 @@ theorem quadratic_sum (a b c : ℤ) (len : ℕ) :
     have h := (moments len).2
     omega
   simp only [Finset.sum_add_distrib, const_sum, Finset.mul_sum, h₁, h₂]
-theorem sumCost_eq (a b : ℤ) (len : ℕ) :
+private theorem sumCost_eq (a b : ℤ) (len : ℕ) :
     sumCost a b len = ∑ i ∈ Finset.range len, cost (a + 2 * b * i) := by
   simp_rw [cost_progression]
   exact (quadratic_sum _ _ _ _).symm
-theorem sumSquare_eq (a b : ℤ) (len : ℕ) :
+private theorem sumSquare_eq (a b : ℤ) (len : ℕ) :
     sumSquare a b len = ∑ i ∈ Finset.range len, (a + b * i) ^ 2 := by
   have h (i : ℕ) : (a + b * (i : ℤ)) ^ 2 = a ^ 2 + (2 * a * b) * i + b ^ 2 * (i : ℤ) ^ 2 :=
     by ring
   simp_rw [h]
   exact (quadratic_sum _ _ _ _).symm
-def modeRank (mode : Mode) (k t : ℤ) : ℤ :=
+private def modeRank (mode : Mode) (k t : ℤ) : ℤ :=
   match mode with
   | .columns => columns k
   | .empty => cost t
   | .shifted both => shiftedRank both k t
-theorem modeSum_eq (mode : Mode) (k start : ℤ) (len : ℕ) :
+private theorem modeSum_eq (mode : Mode) (k start : ℤ) (len : ℕ) :
     modeSum mode k start len = ∑ i ∈ Finset.range len, modeRank mode k (start + 2 * i) := by
   cases mode with
   | columns => exact (const_sum _ _).symm
@@ -5818,7 +5014,7 @@ theorem modeSum_eq (mode : Mode) (k start : ℤ) (len : ℕ) :
 private def contact (k : ℕ) (t : ℤ) : ℤ :=
   let q := (7300 - (k : ℤ) - t).toNat
   blockBound q (offset k) (powers q k)
-theorem contact_le {k : ℕ} {mode : Mode} {l r t : ℤ}
+private theorem contact_le {k : ℕ} {mode : Mode} {l r t : ℤ}
     (ha : valid mode k l r) (hl : l ≤ t) (hr : t ≤ r)
     (hpos : 0 < t) (hmax : t ≤ 5000 - (k : ℤ)) :
     contact k t ≤ modeRank mode k t := by
@@ -5830,7 +5026,7 @@ theorem contact_le {k : ℕ} {mode : Mode} {l r t : ℤ}
   | columns => exact block_columns hq
   | empty => exact block_empty hq ht hpos
   | shifted both => exact block_shifted hq ht hpos (admissible_point ha hl hr)
-theorem parity_sound (k fuel : ℕ) (start : ℤ) (len : ℕ) (hpos : 0 < start)
+private theorem parity_sound (k fuel : ℕ) (start : ℤ) (len : ℕ) (hpos : 0 < start)
     (hmax : ∀ i : ℕ, i < len → start + 2 * i ≤ 5000 - (k : ℤ)) :
     (∑ i ∈ Finset.range len, contact k (start + 2 * i)) ≤ parityBound k fuel start len := by
   have width_bound (n : ℕ) (mode : Mode) (s : ℤ) : runLength k s n mode ≤ n := by
@@ -5880,7 +5076,7 @@ theorem parity_sound (k fuel : ℕ) (start : ℤ) (len : ℕ) (hpos : 0 < start)
         congr 1
         push_cast
         ring
-theorem sum_by_parity (f : ℕ → ℤ) (len : ℕ) :
+private theorem sum_by_parity (f : ℕ → ℤ) (len : ℕ) :
     (∑ i ∈ Finset.range len, f i) = (∑ i ∈ Finset.range ((len + 1) / 2), f (2 * i)) +
       ∑ i ∈ Finset.range (len / 2), f (2 * i + 1) := by
   induction len with
@@ -5896,7 +5092,7 @@ theorem sum_by_parity (f : ℕ → ℤ) (len : ℕ) :
         show len.succ / 2 = len / 2 + 1 by omega, Finset.sum_range_succ (fun i => f (2 * i + 1)),
         show 2 * (len / 2) + 1 = len by omega]
       abel
-theorem offset_sound {k : ℕ} (hk : k < 5000) :
+private theorem offset_sound {k : ℕ} (hk : k < 5000) :
     (∑ j ∈ Finset.range 2700, (blockBound (2300 + j) (offset k) (powers (2300 + j) k) : ℤ)) ≤
       offsetTotal k := by
   let len := min 2700 (5000 - k)
@@ -5933,7 +5129,7 @@ theorem offset_sound {k : ℕ} (hk : k < 5000) :
       parity_sound k 8 start ((len + 1) / 2) hpos (by intros; dsimp [start]; omega)
   · simpa only [Nat.cast_mul, Nat.cast_add, Nat.cast_ofNat, Nat.cast_one, add_assoc, add_left_comm, add_comm] using
       parity_sound k 8 (start + 1) (len / 2) (by omega) (by intros; dsimp [start]; omega)
-theorem total_sum (n : ℕ) :
+private theorem total_sum (n : ℕ) :
     total 0 n = ∑ k ∈ Finset.range n, offsetTotal k := by
   induction n with
   | zero => simp [total]
@@ -5972,9 +5168,9 @@ abbrev Exp := Fin 3 →₀ ℕ
 abbrev Jets (R : Type*) [CommRing R] := MvPolynomial (Fin 3) R
 def grade (e : Exp) : ℕ := e 0 + e 1 + e 2
 def weight (e : Exp) : ℕ := e 1 + 2 * e 2
-def Below (d e : Exp) : Prop :=
+private def Below (d e : Exp) : Prop :=
   grade d = grade e ∧ weight d ≤ weight e ∧ d 2 ≤ e 2
-theorem below_add {d e f g : Exp} (h₁ : Below d e) (h₂ : Below f g) :
+private theorem below_add {d e f g : Exp} (h₁ : Below d e) (h₂ : Below f g) :
     Below (d + f) (e + g) := by
   obtain ⟨h₁, h₂', h₃⟩ := h₁
   obtain ⟨h₄, h₅, h₆⟩ := h₂
@@ -5986,7 +5182,7 @@ theorem below_add {d e f g : Exp} (h₁ : Below d e) (h₂ : Below f g) :
 @[simp] theorem canonical_X {R : Type*} [CommRing R] (t : R) (i : Fin 3) :
     canonical t (MvPolynomial.X i) = canonicalJet t i :=
   MvPolynomial.eval₂Hom_X' _ _ _
-theorem jet_support {R : Type*} [CommRing R] (t : R) (i : Fin 3)
+private theorem jet_support {R : Type*} [CommRing R] (t : R) (i : Fin 3)
     {d : Exp} (hd : d ∈ (canonicalJet t i).support) :
     Below d (Finsupp.single i 1) := by
   classical
@@ -6046,7 +5242,7 @@ theorem map_canonical {R S : Type*} [CommRing R] [CommRing S] (f : R →+* S) (t
 private def scale {R : Type*} [CommRing R] (t : R) (n : ℕ) : K1_13_4_2_3_1.Jets R →+* K1_13_4_2_3_1.Jets R :=
   MvPolynomial.eval₂Hom MvPolynomial.C
     (fun i => MvPolynomial.C (t ^ (n - i.val)) * MvPolynomial.X i)
-theorem scale_coeff {R : Type*} [CommRing R] (t : R) (n : ℕ) (G : K1_13_4_2_3_1.Jets R)
+private theorem scale_coeff {R : Type*} [CommRing R] (t : R) (n : ℕ) (G : K1_13_4_2_3_1.Jets R)
     (e : Exp) :
     (scale t n G).coeff e = t ^ ((n - 0) * e 0 + (n - 1) * e 1 + (n - 2) * e 2) * G.coeff e := by
   classical
@@ -6068,7 +5264,7 @@ theorem scale_coeff {R : Type*} [CommRing R] (t : R) (n : ℕ) (G : K1_13_4_2_3_
         subst d
         simp [k, mul_comm]
       · simp
-theorem scale_canonical {R : Type*} [CommRing R] (t : R) (G : K1_13_4_2_3_1.Jets R) :
+private theorem scale_canonical {R : Type*} [CommRing R] (t : R) (G : K1_13_4_2_3_1.Jets R) :
     scale t 2 (canonical t G) = canonical 1 (scale t 3 G) := by
   have h : (scale t 2).comp (canonical t) = (canonical 1).comp (scale t 3) := by
     apply MvPolynomial.ringHom_ext
@@ -6077,7 +5273,7 @@ theorem scale_canonical {R : Type*} [CommRing R] (t : R) (G : K1_13_4_2_3_1.Jets
     · intro i
       fin_cases i <;> simp [canonicalJet, scale, pow_succ] <;> ring
   exact DFunLike.congr_fun h G
-theorem canonical_one_dvd_iff {R : Type*} [CommRing R] (r : R) (G : K1_13_4_2_3_1.Jets R) :
+private theorem canonical_one_dvd_iff {R : Type*} [CommRing R] (r : R) (G : K1_13_4_2_3_1.Jets R) :
     MvPolynomial.C r ∣ canonical 1 G ↔ MvPolynomial.C r ∣ G := by
   let inv : K1_13_4_2_3_1.Jets R →+* K1_13_4_2_3_1.Jets R := MvPolynomial.eval₂Hom MvPolynomial.C
     ![MvPolynomial.X 0, MvPolynomial.X 1 - MvPolynomial.X 0,
@@ -6247,7 +5443,7 @@ def restored {Γ s} (P : PoleData Γ s) (L : ResidueChart P) : PhysicalRow →+*
       (restoredJet P L))
 theorem restored_apply {Γ s} (P : PoleData Γ s) (L : ResidueChart P) (F : PhysicalRow) :
     restored P L F = restore P L F := rfl
-theorem caps_generic (F : PhysicalRow) :
+private theorem caps_generic (F : PhysicalRow) :
     Caps secondBox (toGeneric F) ↔ Caps secondBox F := by
   have hs : (toGeneric F).support = F.support :=
     MvPolynomial.support_map_of_injective F (IsFractionRing.injective Geom[X] GenericX)
@@ -6287,7 +5483,7 @@ private def bank {Γ s} (w : I → K) (P : PoleData Γ s) (L : ResidueChart P) (
   cutoff P.H.natDegree (t + polePower * P.H.natDegree) ⊓
   (⨅ i : I, K1_13_4_2.contactAt (embed (node i)) (embed (w i))) ⊓
   K1_13_4_2.poleCondition P L secondBox (liftX P.H)
-theorem mem_bank {Γ s} (w : I → K) (P : PoleData Γ s) (L : ResidueChart P)
+private theorem mem_bank {Γ s} (w : I → K) (P : PoleData Γ s) (L : ResidueChart P)
     (t : ℕ) (F : PhysicalRow) : F ∈ bank w P L t ↔ Source w P L secondBox t F := by
   simp only [bank, Submodule.mem_inf, Submodule.mem_comap, Submodule.restrictScalars_mem,
     rowMap_apply, mem_capSpace, caps_generic, Submodule.mem_iInf,
@@ -6352,9 +5548,9 @@ private def boundaryDegree (h t : ℕ) (m : K1_13_4_4_1.Exponent) : ℕ :=
 private def boundary (h t : ℕ) : PhysicalRow →ₗ[Geom] (K1_13_4_4_1.Exponent → Geom) :=
   LinearMap.pi fun m => (Polynomial.lcoeff Geom (boundaryDegree h t m)).comp
     ((MvPolynomial.lcoeff Geom[X] m).restrictScalars Geom)
-theorem boundary_apply (h t : ℕ) (F : PhysicalRow) (m : K1_13_4_4_1.Exponent) :
+private theorem boundary_apply (h t : ℕ) (F : PhysicalRow) (m : K1_13_4_4_1.Exponent) :
     boundary h t F m = (F.coeff m).coeff (boundaryDegree h t m) := rfl
-theorem below_boundary {h t : ℕ} {F : PhysicalRow}
+private theorem below_boundary {h t : ℕ} {F : PhysicalRow}
     (hF : TrueCut h (t + polePower * h) F) (hz : boundary h t F = 0)
     (m : K1_13_4_4_1.Exponent) (hm : m ∈ F.support) :
     (F.coeff m).natDegree + weight h m < t + polePower * h := by
@@ -6366,7 +5562,7 @@ theorem below_boundary {h t : ℕ} {F : PhysicalRow}
   have h := congrFun hz m
   rw [boundary_apply, ← heq, coeff_natDegree] at h
   exact (leadingCoeff_ne_zero.mpr (MvPolynomial.mem_support_iff.mp hm)) h
-def bankEval {Γ s} (w : I → K) (P : PoleData Γ s) (L : ResidueChart P) (t : ℕ) :
+private def bankEval {Γ s} (w : I → K) (P : PoleData Γ s) (L : ResidueChart P) (t : ℕ) :
     bank w P L t →ₗ[Geom] (K1_13_4_4_1.Exponent → Geom) :=
   (boundary P.H.natDegree t).comp (bank w P L t).subtype
 private theorem kernel_le {Γ s} (w : I → K) (P : PoleData Γ s) (L : ResidueChart P) (t : ℕ) :
@@ -6385,7 +5581,7 @@ private theorem kernel_le {Γ s} (w : I → K) (P : PoleData Γ s) (L : ResidueC
   intro F G he
   have heq := congrArg (fun Q : bank w P L t => Q.val) he
   exact Subtype.ext (Subtype.ext heq)
-theorem independent_generic {ι : Type*} [Fintype ι] {h t : ℕ} (e : ι → PhysicalRow)
+private theorem independent_generic {ι : Type*} [Fintype ι] {h t : ℕ} (e : ι → PhysicalRow)
     (hcut : ∀ i, TrueCut h (t + polePower * h) (e i))
     (he : LinearIndependent Geom (fun i => boundary h t (e i))) :
     LinearIndependent GenericX (fun i => toGeneric (e i)) := by
@@ -6424,53 +5620,6 @@ theorem independent_generic {ι : Type*} [Fintype ι] {h t : ℕ} (e : ι → Ph
     · have hh := hlt i hi
       omega
   omega
-theorem telescope
-    (endpoint : ∀ Γ s (P : PoleData Γ s) (L : ResidueChart P) (F : PhysicalRow),
-      (∀ m ∈ F.support, (F.coeff m).natDegree + weight P.H.natDegree m <
-        polePower * P.H.natDegree) →
-      (MvPolynomial.C (K1_13_4.liftX P.H)) ^ polePower ∣ restore P L F → F = 0) :
-    K1_13_4_4.c1 := by
-  classical
-  intro w Γ s P L hr
-  let r (t : ℕ) := Module.finrank Geom (bankEval w P L t).range
-  refine ⟨r, ?_, fun t _ => ?_⟩
-  · have hzero : (bankEval w P L 0).ker = ⊥ := by
-      apply LinearMap.ker_eq_bot'.mpr
-      intro F hz
-      have hsrc := (mem_bank w P L _ _).mp F.property
-      refine Subtype.ext (endpoint Γ s P L F.val (fun m hm => ?_) hsrc.2.2.2)
-      simpa only [Nat.zero_add] using below_boundary hsrc.2.1 hz m hm
-    have hsum (t : ℕ) : Module.finrank Geom (bank w P L t) ≤
-        ∑ v ∈ Finset.range (t + 1), r v := by
-      induction t with
-      | zero =>
-        have h := LinearMap.finrank_range_add_finrank_ker
-          (K := Geom) (V := bank w P L 0) (V₂ := K1_13_4_4_1.Exponent → Geom) (bankEval w P L 0)
-        rw [hzero, finrank_bot, Nat.add_zero] at h
-        simpa only [Nat.zero_add, Finset.sum_range_one] using h.ge
-      | succ t ih =>
-        have h := LinearMap.finrank_range_add_finrank_ker
-          (K := Geom) (V := bank w P L (t + 1)) (V₂ := K1_13_4_4_1.Exponent → Geom) (bankEval w P L (t + 1))
-        rw [Finset.sum_range_succ, ← h, add_comm]
-        exact Nat.add_le_add (le_trans (kernel_le w P L t) ih) le_rfl
-    obtain ⟨e, he, hmem⟩ := hr
-    have hi : LinearIndependent Geom
-        (fun i => (⟨e i, (mem_bank w P L _ _).mpr (hmem i)⟩ : bank w P L secondCut)) :=
-      LinearIndependent.of_comp (bank w P L secondCut).subtype he
-    exact (by simpa only [Fintype.card_fin] using hi.fintype_card_le_finrank :
-      bankRank ≤ Module.finrank Geom (bank w P L secondCut)).trans (hsum secondCut)
-  · let b := Module.finBasis Geom (bankEval w P L t).range
-    choose e he using fun i : Fin (r t) => LinearMap.mem_range.mp (b i).property
-    have hsrc (i : Fin (r t)) : Source w P L secondBox t (e i).val :=
-      (mem_bank w P L _ _).mp (e i).property
-    refine ⟨fun i => toGeneric (e i).val,
-      independent_generic (fun i => (e i).val) (fun i => (hsrc i).2.1) ?_,
-      fun i => Submodule.subset_span ⟨(e i).val, hsrc i, rfl⟩⟩
-    have h : LinearIndependent Geom (fun i => (b i).val) :=
-      b.linearIndependent.map' (bankEval w P L t).range.subtype
-        (LinearMap.ker_eq_bot.mpr Subtype.val_injective)
-    have heq : (fun i => boundary P.H.natDegree t (e i).val) = fun i => (b i).val := funext he
-    rwa [heq]
 end
 end K1_13_4_4_1
 end
@@ -6535,69 +5684,6 @@ theorem count_seed_roots (Γ : Finset K) (z : K → Geom) (hz : Function.Injecti
   change x ∈ B.image e at hx
   obtain ⟨γ, hγ, rfl⟩ := Finset.mem_image.mp hx
   exact (Polynomial.mem_roots hp).mpr (mem_seedBook.mp hγ).2
-private theorem mixedWeight_add (a b : SeedVar →₀ ℕ) :
-    mixedWeight (a + b) = mixedWeight a + mixedWeight b := by
-  change 7800 * (a + b) none + 49196 * (a + b).some.degree =
-    (7800 * a none + 49196 * a.some.degree) + (7800 * b none + 49196 * b.some.degree)
-  simp only [Finsupp.add_apply, Finsupp.some_add, map_add]
-  omega
-private theorem mixedWeight_pos {a : SeedVar →₀ ℕ} (ha : a ≠ 0) : 0 < mixedWeight a := by
-  by_contra! h
-  change 7800 * a none + 49196 * a.some.degree ≤ 0 at h
-  have hn : a none = 0 := by omega
-  have hd : a.some.degree = 0 := by omega
-  have hs := (Finsupp.degree_eq_zero_iff _).mp hd
-  apply ha
-  ext i
-  cases i with
-  | none => simpa using hn
-  | some i => simpa using DFunLike.congr_fun hs i
-private theorem order_cancel_coeff (A B : GenericRow) (d : ℕ) (hA : A.coeff 0 ≠ 0)
-    (hAB : ∀ a, mixedWeight a < d → (A * B).coeff a = 0) :
-    ∀ a, mixedWeight a < d → B.coeff a = 0 := by
-  classical
-  suffices h : ∀ n a, mixedWeight a = n → n < d → B.coeff a = 0 by
-    exact fun a ha => h _ a rfl ha
-  intro n
-  induction n using Nat.strong_induction_on with
-  | h n ih =>
-    intro a ha hd
-    have hab := hAB a (ha.symm ▸ hd)
-    rw [MvPolynomial.coeff_mul, Finset.sum_eq_single_of_mem (0, a) (by simp)] at hab
-    · exact (mul_eq_zero.mp hab).resolve_left hA
-    · intro b hb hbne
-      have hs := Finset.HasAntidiagonal.mem_antidiagonal.mp hb
-      have hb₁ : b.1 ≠ 0 := by
-        intro hz
-        apply hbne
-        exact Prod.ext hz (by simpa [hz] using hs)
-      have hw := mixedWeight_add b.1 b.2
-      rw [hs, ha] at hw
-      have hpos := mixedWeight_pos hb₁
-      rw [ih (mixedWeight b.2) (by omega) b.2 rfl (by omega), mul_zero]
-private theorem translated_const (F : GenericRow) (z : GenericX) (y : Fin 3 → GenericX) :
-    (translate (atPoint z y) F).coeff 0 = MvPolynomial.eval (atPoint z y) F := by
-  let e : GenericRow →+* GenericX := MvPolynomial.eval (fun _ => 0)
-  have he : e.comp (K1_13_4.translate (atPoint z y)) = MvPolynomial.eval (atPoint z y) := by
-    apply MvPolynomial.ringHom_ext
-    · intro x
-      simp [e, K1_13_4.translate]
-    · intro i
-      simp [e, K1_13_4.translate]
-  rw [← MvPolynomial.constantCoeff_eq, ← MvPolynomial.eval_zero']
-  exact DFunLike.congr_fun he F
-theorem mixedOrder_cancel (A B : GenericRow) (z : GenericX) (y : Fin 3 → GenericX) (d : ℕ)
-    (hA : MvPolynomial.eval (atPoint z y) A ≠ 0) (h : MixedOrder (A * B) z y d) :
-    MixedOrder B z y d := by
-  intro a ha
-  by_contra! hlt
-  refine (MvPolynomial.mem_support_iff.mp ha) (order_cancel_coeff
-    (translate (atPoint z y) A) (translate (atPoint z y) B) d ?_ ?_ a hlt)
-  · rwa [translated_const]
-  · intro b hb
-    rw [← map_mul]
-    by_contra hne
-    exact (Nat.not_lt_of_ge (h b (MvPolynomial.mem_support_iff.mpr hne))) hb
 theorem actual_resultant_ne_zero {F G : GenericRow} (hF : Irreducible F)
     (hdeg : 0 < seedDegree F) (hrel : IsRelPrime F G) :
     actualSeedResultant F G ≠ 0 := by
@@ -6652,21 +5738,21 @@ namespace K1_13_4_2_3_2
 noncomputable section
 open K1_13 K1_13_4 K1_13_4_2 K1_13_4_2_3
 open scoped Polynomial BigOperators
-abbrev SourceExp := SeedVar →₀ ℕ
+private abbrev SourceExp := SeedVar →₀ ℕ
 private abbrev JetExp := Fin 3 →₀ ℕ
 private abbrev seedMap : Geom[X] →+* GenericSeed := algebraMap _ _
-abbrev constMap : Geom →+* GenericSeed := algebraMap _ _
-theorem seedMap_C (x : Geom) : seedMap (Polynomial.C x) = constMap x :=
+private abbrev constMap : Geom →+* GenericSeed := algebraMap _ _
+private theorem seedMap_C (x : Geom) : seedMap (Polynomial.C x) = constMap x :=
   (IsScalarTower.algebraMap_apply Geom Geom[X] GenericSeed x).symm
 private def grade (m : SourceExp) : ℕ :=
   m (some 0) + m (some 1) + m (some 2)
-def shiftedExp (m : SourceExp) (k : ℕ) : JetExp :=
+private def shiftedExp (m : SourceExp) (k : ℕ) : JetExp :=
   Finsupp.single 0 k + Finsupp.single 1 (m (some 1)) + Finsupp.single 2 (m (some 2))
-theorem shiftedExp_coords (m : SourceExp) (k : ℕ) :
+private theorem shiftedExp_coords (m : SourceExp) (k : ℕ) :
     shiftedExp m k 0 = k ∧ shiftedExp m k 1 = m (some 1) ∧
       shiftedExp m k 2 = m (some 2) := by
   simp [shiftedExp, Finsupp.add_apply]
-theorem exponent_grade (a : Shape) (q : ℕ) (c : Slot a q) :
+private theorem exponent_grade (a : Shape) (q : ℕ) (c : Slot a q) :
     exponent a q c 0 + exponent a q c 1 + exponent a q c 2 = q := by
   have h₂ : c.1.val ≤ q :=
     (Nat.le_of_lt_succ c.1.isLt).trans (min_le_left _ _)
@@ -6693,9 +5779,9 @@ private theorem support_bounds {a : Shape} {F : PhysicalRow} (hF : Caps a F)
     (MvPolynomial.monomial_le_degreeOf _ hm).trans hF.2.2.2⟩
   · simpa [grade, jetTotal] using hB.trans hF.1
   · simpa [jetIndex, Nat.mul_comm] using hJ.trans hF.2.1
-def seedTerm (z : GenericSeed) (m : SourceExp) (k : ℕ) : GenericSeed :=
+private def seedTerm (z : GenericSeed) (m : SourceExp) (k : ℕ) : GenericSeed :=
   (seedMap Polynomial.X) ^ m none * z ^ (m (some 0) - k) * (m (some 0)).choose k
-theorem centered_monomial (z : GenericSeed) (m : SourceExp) (P : Geom[X]) :
+private theorem centered_monomial (z : GenericSeed) (m : SourceExp) (P : Geom[X]) :
     centered z (MvPolynomial.monomial m P) =
       ∑ k ∈ Finset.range (m (some 0) + 1),
         MvPolynomial.monomial (shiftedExp m k)
@@ -6723,7 +5809,7 @@ theorem centered_monomial (z : GenericSeed) (m : SourceExp) (P : Geom[X]) :
       simp only [seedTerm, map_mul, map_pow, map_natCast]
       ring
     _ = _ := by rw [MvPolynomial.C_mul_monomial, mul_one]
-theorem centered_coeff (z : GenericSeed) (F : PhysicalRow) (e : JetExp) :
+private theorem centered_coeff (z : GenericSeed) (F : PhysicalRow) (e : JetExp) :
     (centered z F).coeff e =
       ∑ m ∈ F.support, ∑ k ∈ Finset.range (m (some 0) + 1),
         if shiftedExp m k = e then
@@ -6731,7 +5817,7 @@ theorem centered_coeff (z : GenericSeed) (F : PhysicalRow) (e : JetExp) :
         else 0 := by
   nth_rw 1 [F.as_sum]
   simp only [map_sum, centered_monomial, MvPolynomial.coeff_sum, MvPolynomial.coeff_monomial]
-theorem centered_admissible (z : GenericSeed) {a : Shape} {F : PhysicalRow}
+private theorem centered_admissible (z : GenericSeed) {a : Shape} {F : PhysicalRow}
     (hF : Caps a F) (e : JetExp) (he : e ∈ (centered z F).support) : admissible a e := by
   classical
   by_contra ha
@@ -6749,11 +5835,11 @@ theorem centered_admissible (z : GenericSeed) {a : Shape} {F : PhysicalRow}
   have hk' : k ≤ m (some 0) := Nat.le_of_lt_succ (Finset.mem_range.mp hk)
   unfold grade at hB
   exact ⟨by omega, hJ, hT⟩
-def clearedFactor (a : Shape) (N D : Geom[X]) (m : SourceExp) (k : ℕ) :
+private def clearedFactor (a : Shape) (N D : Geom[X]) (m : SourceExp) (k : ℕ) :
     Geom[X] :=
   Polynomial.C ((m (some 0)).choose k : Geom) * Polynomial.X ^ m none *
     N ^ (m (some 0) - k) * D ^ (a.b - grade m)
-def clearedMonomial (a : Shape) (α : Geom) (N D : Geom[X]) (i : ℕ)
+private def clearedMonomial (a : Shape) (α : Geom) (N D : Geom[X]) (i : ℕ)
     (e : JetExp) (m : SourceExp) : Geom[X] →ₗ[Geom] Geom[X] := by
   classical
   exact ∑ k ∈ Finset.range (m (some 0) + 1),
@@ -6766,7 +5852,7 @@ private def cleared (a : Shape) (α : Geom) (N D : Geom[X]) (q : Fin (a.b + 1)) 
   LinearMap.pi fun c =>
     (Finsupp.lsum Geom (clearedMonomial a α N D c.1.val (exponent a q.val c.2))).comp
       (AddMonoidAlgebra.coeffLinearEquiv Geom).toLinearMap
-theorem cleared_apply (a : Shape) (α : Geom) (N D : Geom[X])
+private theorem cleared_apply (a : Shape) (α : Geom) (N D : Geom[X])
     (q : Fin (a.b + 1)) (F : PhysicalRow) (c : JetCoeff a q.val) :
     cleared a α N D q F c =
       ∑ m ∈ F.support, ∑ k ∈ Finset.range (m (some 0) + 1),
@@ -6785,7 +5871,7 @@ theorem cleared_apply (a : Shape) (α : Geom) (N D : Geom[X])
   apply Finset.sum_congr rfl
   intro k _
   by_cases h : shiftedExp m k = exponent a q.val c.2 <;> simp [h]
-theorem grade_sub {a : Shape} {q : ℕ} {c : Slot a q} {m : SourceExp} {k : ℕ}
+private theorem grade_sub {a : Shape} {q : ℕ} {c : Slot a q} {m : SourceExp} {k : ℕ}
     (hB : grade m ≤ a.b) (hk : k ≤ m (some 0))
     (he : shiftedExp m k = exponent a q c) :
     a.b - q = (m (some 0) - k) + (a.b - grade m) := by
@@ -6795,7 +5881,7 @@ theorem grade_sub {a : Shape} {q : ℕ} {c : Slot a q} {m : SourceExp} {k : ℕ}
   rw [h₀, h₁, h₂] at h
   unfold grade at *
   omega
-theorem cleared_degree {a : Shape} {α : Geom} {N D : Geom[X]}
+private theorem cleared_degree {a : Shape} {α : Geom} {N D : Geom[X]}
     (hN : N.natDegree ≤ 1) (hD : D.natDegree ≤ 1) {F : PhysicalRow} (hF : Caps a F)
     (q : Fin (a.b + 1)) (c : JetCoeff a q.val) :
     (cleared a α N D q F c).natDegree ≤ 70000 + (a.b - q.val) := by
@@ -6824,7 +5910,7 @@ theorem cleared_degree {a : Shape} {α : Geom} {N D : Geom[X]}
         exact (Polynomial.natDegree_C_mul_le _ _).trans (Polynomial.natDegree_X_pow_le _)
       _ ≤ _ := by omega
   next => simp
-theorem map_clearedFactor (a : Shape) {N D : Geom[X]} (hD : seedMap D ≠ 0)
+private theorem map_clearedFactor (a : Shape) {N D : Geom[X]} (hD : seedMap D ≠ 0)
     (m : SourceExp) (k q : ℕ)
     (hq : a.b - q = (m (some 0) - k) + (a.b - grade m)) :
     seedMap (clearedFactor a N D m k) =
@@ -6832,7 +5918,7 @@ theorem map_clearedFactor (a : Shape) {N D : Geom[X]} (hD : seedMap D ≠ 0)
   simp only [clearedFactor, seedTerm, map_mul, map_pow, map_natCast, hq, pow_add,
     div_pow]
   field_simp [pow_ne_zero _ hD]
-theorem map_cleared {a : Shape} {α : Geom} {N D : Geom[X]} (hD : seedMap D ≠ 0)
+private theorem map_cleared {a : Shape} {α : Geom} {N D : Geom[X]} (hD : seedMap D ≠ 0)
     {F : PhysicalRow} (hF : Caps a F) (q : Fin (a.b + 1)) (c : JetCoeff a q.val) :
     seedMap (cleared a α N D q F c) =
       seedMap D ^ (a.b - q.val) *
@@ -6876,7 +5962,7 @@ open scoped Polynomial
 theorem shiftedBlock_monic {H : Geom[X]} (hm : H.Monic) (hp : 0 < H.natDegree)
     (ε : Geom) : (shiftedBlock H ε).Monic :=
   hm.add_of_left (degree_C_le.trans_lt (natDegree_pos_iff_degree_pos.mp hp))
-theorem derivative_ne_zero {Γ s} (P : PoleData Γ s) : P.H.derivative ≠ 0 := by
+private theorem derivative_ne_zero {Γ s} (P : PoleData Γ s) : P.H.derivative ≠ 0 := by
   let : CharP Geom K1.p := charP_of_injective_ringHom embed.injective K1.p
   have hcast : (P.H.natDegree : Geom) ≠ 0 := by
     intro hz
@@ -6894,14 +5980,14 @@ theorem derivative_ne_zero {Γ s} (P : PoleData Γ s) : P.H.derivative ≠ 0 := 
   apply hcast
   rw [← hn, Nat.cast_add, Nat.cast_one]
   exact he
-theorem amplitude_ne_zero {Γ s} (P : PoleData Γ s) {A : Geom[X]}
+private theorem amplitude_ne_zero {Γ s} (P : PoleData Γ s) {A : Geom[X]}
     (h : IsCoprime A P.H) : A ≠ 0 := by
   rintro rfl
   exact not_isUnit_of_natDegree_pos _ P.small.1 (isCoprime_zero_left.mp h)
-def forbiddenRootShifts (H A : Geom[X]) : Finset Geom := by
+private def forbiddenRootShifts (H A : Geom[X]) : Finset Geom := by
   classical
   exact A.roots.toFinset.image (fun x => -H.eval x)
-theorem coprime_shift {H A : Geom[X]} (hA : A ≠ 0) {ε : Geom}
+private theorem coprime_shift {H A : Geom[X]} (hA : A ≠ 0) {ε : Geom}
     (hε : ε ∉ forbiddenRootShifts H A) :
     IsCoprime A (shiftedBlock H ε) := by
   classical
@@ -6976,9 +6062,9 @@ private theorem sum_powers (q k : ℕ) (f : Fin 6 → ℤ) :
   simp [powers]
 private def removed (q k : ℕ) : ℤ :=
   if k < 2300 then capCount q (2299 - k) else 0
-def earlyTerm (q k : ℕ) : ℤ :=
+private def earlyTerm (q k : ℕ) : ℤ :=
   capCount q 2300 - removed q k
-theorem column_eq {q k : ℕ} (hlo : 1151 ≤ q) (hhi : q ≤ 2300) :
+private theorem column_eq {q k : ℕ} (hlo : 1151 ≤ q) (hhi : q ≤ 2300) :
     columnCount q (offset k) = earlyTerm q k := by
   have hd : residualDegree q = q := min_eq_left hhi
   have harg : min (2300 : ℤ) (-offset k - 1) = 2299 - k := by unfold offset; omega
@@ -6986,7 +6072,7 @@ theorem column_eq {q k : ℕ} (hlo : 1151 ≤ q) (hhi : q ≤ 2300) :
   by_cases hk : k < 2300
   · rw [ite_eq_left hk, cumulative_eq (by omega) (by omega)]
   · rw [ite_eq_right hk, cumulative, ite_eq_left (by omega)]
-theorem earlyTerm_nonneg {q k : ℕ} (hq : 1151 ≤ q) : 0 ≤ earlyTerm q k := by
+private theorem earlyTerm_nonneg {q k : ℕ} (hq : 1151 ≤ q) : 0 ≤ earlyTerm q k := by
   rw [earlyTerm, sub_nonneg, removed]
   by_cases hk : k < 2300
   · rw [ite_eq_left hk, show (2299 : ℤ) - k = ((2299 - k : ℕ) : ℤ) by omega]
@@ -7008,14 +6094,14 @@ private theorem block_le {q k : ℕ} {r : ℤ} (hr : 0 ≤ r)
   · simpa using hr
   · have h' := Int.toNat_le_toNat h
     exact (Int.ofNat_le.mpr h').trans_eq (Int.toNat_of_nonneg hr)
-theorem block_le_early {q k : ℕ} (hlo : 1151 ≤ q) (hhi : q ≤ 2300) :
+private theorem block_le_early {q k : ℕ} (hlo : 1151 ≤ q) (hhi : q ≤ 2300) :
     (blockBound q (offset k) (powers q k) : ℤ) ≤ earlyTerm q k := by
   apply block_le (earlyTerm_nonneg hlo)
   rw [column_eq hlo hhi]
   exact sub_le_self _ (le_max_left _ _)
-def lateTerm (q t : ℤ) : ℤ :=
+private def lateTerm (q t : ℤ) : ℤ :=
   if t ≤ q then weightCost t else triangular (q + 1) - weightCost (2 * q - t + 1)
-theorem block_le_late {q j : ℕ} (hlo : 1151 ≤ q) (hhi : q ≤ 2300) (hj : j < 2300) :
+private theorem block_le_late {q j : ℕ} (hlo : 1151 ≤ q) (hhi : q ≤ 2300) (hj : j < 2300) :
     (blockBound q (offset (5000 - q + j)) (powers q (5000 - q + j)) : ℤ) ≤ lateTerm q (2300 - j) := by
   let k := 5000 - q + j
   let t : ℤ := 2300 - j
@@ -7065,7 +6151,7 @@ theorem block_le_late {q j : ℕ} (hlo : 1151 ≤ q) (hhi : q ≤ 2300) (hj : j 
     exact add_nonneg (sub_nonneg.mpr (triangular_mono (by omega) (by omega))) (weightCost_nonneg (by omega))
   · rw [hterm, ← hnet]
     exact sub_le_sub_left ((le_max_right _ _).trans (le_max_right _ _)) _
-theorem sum_early (q : ℕ) (hhi : q ≤ 2300) :
+private theorem sum_early (q : ℕ) (hhi : q ≤ 2300) :
     6 * (∑ k ∈ range (5000 - q), earlyTerm q k) =
       6 * (5000 - (q : ℤ)) * capCount q 2300 - weightPrefix 2300 + triPrefix (2300 - q) := by
   have hr : (∑ k ∈ range (5000 - q), removed q k) = ∑ k ∈ range 2300, capCount q k := by
@@ -7092,7 +6178,7 @@ theorem sum_early (q : ℕ) (hhi : q ≤ 2300) :
   simp only [earlyTerm, sum_sub_distrib, sum_const, card_range, nsmul_eq_mul, hr]
   rw [mul_sub, hc, show ((5000 - q : ℕ) : ℤ) = 5000 - q by omega]
   ring
-theorem sum_late (q : ℕ) (hhi : q ≤ 2300) :
+private theorem sum_late (q : ℕ) (hhi : q ≤ 2300) :
     6 * (∑ j ∈ range 2300, lateTerm q (2300 - j)) =
       6 * (2300 - (q : ℤ)) * triangular ((q : ℤ) + 1) + weightPrefix (2 * (q : ℤ) - 2300) := by
   have hr : (∑ j ∈ range 2300, lateTerm q (2300 - j)) =
@@ -7186,7 +6272,7 @@ def c2 : Prop :=
         (M.map (evalRingHom ε)).mulVecLin v = 0 ↔
           (MvPolynomial.C (liftX (shiftedBlock H ε))) ^ n ∣
             restoreWith (shiftedBlock H ε) (residueAtShift N D ε) (∑ j, v j • F j)
-theorem rank_at_zero_le {E : Type*} [Field E] [Infinite E] {k m : ℕ}
+private theorem rank_at_zero_le {E : Type*} [Field E] [Infinite E] {k m : ℕ}
     (M : Matrix (Fin k) (Fin m) E[X]) (bad : Finset E) (r : ℕ)
     (h : ∀ ε ∉ bad, (M.map (evalRingHom ε)).rank ≤ r) :
     (M.map (evalRingHom 0)).rank ≤ r := by
@@ -7227,7 +6313,7 @@ theorem rank_at_zero_le {E : Type*} [Field E] [Infinite E] {k m : ℕ}
   change (T.map (evalRingHom ε)).rank ≤ _ at hr
   rw [Matrix.rank_of_det_ne_zero ht, Fintype.card_fin] at hr
   exact hr.trans (h ε hε.1)
-theorem residue_unique {Γ : Finset K1.K} {s : K1.K → K1.K[X]}
+private theorem residue_unique {Γ : Finset K1.K} {s : K1.K → K1.K[X]}
     (P : PoleData Γ s) (L : ResidueChart P) {N : ShiftSeed[X]} {D : ShiftSeed}
     (h : RegularResidue P.H P.c P.q P.a₀ P.a₁ N D 0) :
     residueAtShift N D 0 = genericResidue L.numerator L.denominator := by
@@ -7254,7 +6340,7 @@ theorem residue_unique {Γ : Finset K1.K} {s : K1.K → K1.K[X]}
   by_contra hz
   exact (not_le_of_gt ((natDegree_sub_le _ _).trans_lt (max_lt hRdeg hSdeg)))
     (natDegree_le_of_dvd hsub hz)
-theorem codim_eq_rank (V W : Submodule Geom PhysicalRow) [Module.Finite Geom V]
+private theorem codim_eq_rank (V W : Submodule Geom PhysicalRow) [Module.Finite Geom V]
     {k m : ℕ} (B : Module.Basis (Fin m) Geom V) (M : Matrix (Fin k) (Fin m) Geom)
     (h : ∀ v, M.mulVecLin v = 0 ↔ (B.equivFun.symm v : PhysicalRow) ∈ W) :
     codimIn V W = M.rank := by
@@ -7271,7 +6357,7 @@ theorem codim_eq_rank (V W : Submodule Geom PhysicalRow) [Module.Finite Geom V]
   rw [hrange, ← Matrix.rank, hker, ← hk] at hd
   unfold codimIn
   omega
-theorem restore_eq {Γ : Finset K1.K} {s : K1.K → K1.K[X]}
+private theorem restore_eq {Γ : Finset K1.K} {s : K1.K → K1.K[X]}
     (P : PoleData Γ s) (L : ResidueChart P) (F : PhysicalRow) :
     restore P L F = restoreWith P.H (genericResidue L.numerator L.denominator) F := rfl
 theorem of_children (h1 : c1) (h2 : c2) : K1_13_4_2.c4 := by
@@ -7326,158 +6412,12 @@ namespace K1_13_4_5
 noncomputable section
 open K1 K1_13 K1_13_4
 open scoped Polynomial BigOperators
-def c1 : Prop :=
-  ∀ f : GenericRow, Irreducible f → 0 < jetTotal f → jetTotal f ≤ 10 →
-    0 < seedDegree f → f.degreeOf (some 2) = 0 →
-    ∃ g : GenericRow, IsRelPrime f g ∧ seedDegree g ≤ seedDegree f ∧
-      jetTotal g ≤ jetTotal f ∧ jetIndex g ≤ jetIndex f + 1 ∧
-      ∀ (z : Geom) (S : Geom[X]),
-        MvPolynomial.eval (atPoint (inclConst z) (trajectory S)) f = 0 →
-        MvPolynomial.eval (atPoint (inclConst z) (trajectory S)) g = 0
 def c2 : Prop :=
   ∀ F G : GenericRow,
     (actualSeedResultant F G).totalDegree ≤
       seedDegree G * jetTotal F + seedDegree F * jetTotal G ∧
     lowerIndex (actualSeedResultant F G) ≤
       seedDegree G * jetIndex F + seedDegree F * jetIndex G
-private theorem moving_lower (h1 : c1) (h2 : c2) (f : GenericRow)
-    (hf : Irreducible f) (hb : 0 < jetTotal f) (ht : jetTotal f ≤ 10)
-    (hu : 0 < seedDegree f) (htop : f.degreeOf (some 2) = 0) :
-    ∃ q : Lower, q ≠ 0 ∧ q.totalDegree ≤ 2 * seedDegree f * jetTotal f ∧
-      lowerIndex q ≤ (2 * jetIndex f + 1) * seedDegree f ∧
-      ∀ (z : Geom) (S : Geom[X]),
-        MvPolynomial.eval (atPoint (inclConst z) (trajectory S)) f = 0 →
-        MvPolynomial.eval (trajectory S) q = 0 := by
-  obtain ⟨g, hrel, hgu, hgb, hgj, htraj⟩ := h1 f hf hb ht hu htop
-  obtain ⟨htot, hind⟩ := h2 f g
-  refine ⟨actualSeedResultant f g, actual_resultant_ne_zero hf hu hrel, ?_, ?_, fun z S hz =>
-    actual_resultant_vanishes hu hz (htraj z S hz)⟩
-  · calc
-      _ ≤ seedDegree f * jetTotal f + seedDegree f * jetTotal f :=
-        htot.trans (Nat.add_le_add (Nat.mul_le_mul_right _ hgu) (Nat.mul_le_mul_left _ hgb))
-      _ = _ := by ring
-  · calc
-      _ ≤ seedDegree f * jetIndex f + seedDegree f * (jetIndex f + 1) :=
-        hind.trans (Nat.add_le_add (Nat.mul_le_mul_right _ hgu) (Nat.mul_le_mul_left _ hgj))
-      _ = _ := by ring
-private theorem total_prod {ι : Type*} (s : Finset ι) (q : ι → Lower)
-    (hn : ∀ i ∈ s, q i ≠ 0) :
-    (∏ i ∈ s, q i).totalDegree = ∑ i ∈ s, (q i).totalDegree := by
-  simp only [← MvPolynomial.weightedTotalDegree_one]
-  exact MvPolynomial.weightedTotalDegree_prod _ s q hn
-private theorem index_prod {ι : Type*} (s : Finset ι) (q : ι → Lower)
-    (hn : ∀ i ∈ s, q i ≠ 0) :
-    lowerIndex (∏ i ∈ s, q i) = ∑ i ∈ s, lowerIndex (q i) := by
-  simp only [lowerIndex_eq_weighted]
-  exact MvPolynomial.weightedTotalDegree_prod _ s q hn
-private theorem eval_prod_factor_ne_zero {ι : Type*} {s : Finset ι} {q : ι → Lower}
-    {y : Fin 3 → GenericX} (hq : MvPolynomial.eval y (∏ i ∈ s, q i) ≠ 0)
-    {i : ι} (hi : i ∈ s) : MvPolynomial.eval y (q i) ≠ 0 :=
-  (Finset.prod_ne_zero_iff.mp (by simpa only [map_prod] using hq)) i hi
-theorem of_children (h1 : c1) (h2 : c2) : K1_13_4.c5 := by
-  classical
-  intro Γ z S hzinj F G D hOrders
-  have fix_ne (f : GenericRow) (hf : f ∈ D.fixed) : f ≠ 0 :=
-    (D.fixed_kind f hf).1.ne_zero
-  have mov_ne (f : GenericRow) (hf : f ∈ D.moving) : f ≠ 0 :=
-    (D.moving_kind f hf).1.ne_zero
-  have mov_total : (∑ f ∈ D.moving, jetTotal f) ≤ 10 := by
-    simpa only [jetTotal, MvPolynomial.weightedTotalDegree_prod _ _ _ mov_ne]
-      using D.moving_total
-  have mov_index : (∑ f ∈ D.moving, jetIndex f) ≤ 3 := by
-    simpa only [jetIndex, MvPolynomial.weightedTotalDegree_prod _ _ _ mov_ne]
-      using D.moving_index
-  have mov_seed : (∑ f ∈ D.moving, seedDegree f) ≤ 112 := by
-    simpa only [seedDegree, MvPolynomial.degreeOf_prod_eq _ _ mov_ne] using D.moving_seed
-  have seed_le (f : GenericRow) (hf : f ∈ D.moving) : seedDegree f ≤ 112 :=
-    (Finset.single_le_sum (fun _ _ => Nat.zero_le _) hf).trans mov_seed
-  choose! q qn qt qi qe using
-    (fun f hf => fixed_lower f (fix_ne f hf) (D.fixed_kind f hf).2.2)
-  have exists_moving (f : GenericRow) (hf : f ∈ D.moving) :=
-    moving_lower h1 h2 f (D.moving_kind f hf).1 (D.moving_kind f hf).2.1
-      ((Finset.single_le_sum (fun _ _ => Nat.zero_le _) hf).trans mov_total)
-      (D.moving_kind f hf).2.2.1 (D.moving_kind f hf).2.2.2
-  choose! r rn rt ri re using exists_moving
-  let P : Lower := ∏ f ∈ D.fixed, q f
-  let R : Lower := ∏ f ∈ D.moving, r f
-  have Pn : P ≠ 0 := Finset.prod_ne_zero_iff.mpr qn
-  have Rn : R ≠ 0 := Finset.prod_ne_zero_iff.mpr rn
-  have Pt : P.totalDegree ≤ 68 := by
-    change (∏ f ∈ D.fixed, q f).totalDegree ≤ 68
-    rw [total_prod _ _ qn]
-    calc
-      _ = ∑ f ∈ D.fixed, jetTotal f := Finset.sum_congr rfl qt
-      _ ≤ _ := by
-        simpa only [jetTotal, MvPolynomial.weightedTotalDegree_prod _ _ _ fix_ne]
-          using D.fixed_total
-  have Pi : lowerIndex P ≤ 23 := by
-    change lowerIndex (∏ f ∈ D.fixed, q f) ≤ 23
-    rw [index_prod _ _ qn]
-    calc
-      _ = ∑ f ∈ D.fixed, jetIndex f := Finset.sum_congr rfl qi
-      _ ≤ _ := by
-        simpa only [jetIndex, MvPolynomial.weightedTotalDegree_prod _ _ _ fix_ne]
-          using D.fixed_index
-  have Rt : R.totalDegree ≤ 2 * 112 * 10 := by
-    change (∏ f ∈ D.moving, r f).totalDegree ≤ 2 * 112 * 10
-    rw [total_prod _ _ rn]
-    calc
-      _ ≤ ∑ f ∈ D.moving, (2 * 112) * jetTotal f :=
-        Finset.sum_le_sum fun f hf => (rt f hf).trans
-          (Nat.mul_le_mul_right _ (Nat.mul_le_mul_left _ (seed_le f hf)))
-      _ ≤ _ := by rw [← Finset.mul_sum]; exact Nat.mul_le_mul_left _ mov_total
-  have Ri : lowerIndex R ≤ (2 * 3 + 1) * 112 := by
-    change lowerIndex (∏ f ∈ D.moving, r f) ≤ (2 * 3 + 1) * 112
-    rw [index_prod _ _ rn]
-    calc
-      _ ≤ ∑ f ∈ D.moving, ((2 * 112) * jetIndex f + seedDegree f) := by
-        apply Finset.sum_le_sum
-        intro f hf
-        refine (ri f hf).trans ?_
-        rw [Nat.add_mul, one_mul, Nat.mul_right_comm 2]
-        exact Nat.add_le_add_right
-          (Nat.mul_le_mul_right _ (Nat.mul_le_mul_left _ (seed_le f hf))) _
-      _ ≤ _ := by
-        rw [Finset.sum_add_distrib, ← Finset.mul_sum]
-        have hh := Nat.mul_le_mul_left (2 * 112) mov_index
-        omega
-  let book := seedBook Γ z D.pure
-  have hbook : book.card ≤ 140000 :=
-    (count_seed_roots Γ z hzinj D.pure D.pure_ne).trans D.pure_degree
-  refine ⟨book, P * R, hbook, mul_ne_zero Pn Rn, ?_, ?_, ?_⟩
-  · simp only [← MvPolynomial.weightedTotalDegree_one] at Pt Rt ⊢
-    rw [MvPolynomial.weightedTotalDegree_mul _ _ _ Pn Rn]
-    exact (Nat.add_le_add Pt Rt).trans native_degree_arithmetic.2.2.1
-  · simp only [lowerIndex_eq_weighted] at Pi Ri ⊢
-    rw [MvPolynomial.weightedTotalDegree_mul _ _ _ Pn Rn]
-    exact (Nat.add_le_add Pi Ri).trans native_degree_arithmetic.2.2.2
-  · intro γ hγ hnot
-    let a := inclConst (z γ)
-    let y := trajectory (S γ)
-    change MvPolynomial.eval y (P * R) = 0 ∨ PairOrders D.left D.right a y
-    by_cases hn : MvPolynomial.eval y (P * R) = 0
-    · exact Or.inl hn
-    rw [map_mul] at hn
-    have hfixed (f : GenericRow) (hf : f ∈ D.fixed) :
-        MvPolynomial.eval (atPoint a y) f ≠ 0 := by
-      rw [qe f hf]
-      exact eval_prod_factor_ne_zero (left_ne_zero_of_mul hn) hf
-    have hmoving (f : GenericRow) (hf : f ∈ D.moving) :
-        MvPolynomial.eval (atPoint a y) f ≠ 0 := by
-      intro h0
-      exact (eval_prod_factor_ne_zero (right_ne_zero_of_mul hn) hf) (re f hf _ _ h0)
-    have hp : D.pure.eval a ≠ 0 := fun he => hnot (mem_seedBook.mpr ⟨hγ, he⟩)
-    let A := pureSeed D.pure * (∏ f ∈ D.fixed, f ^ D.exponent f) *
-      (∏ f ∈ D.moving, f ^ D.exponent f)
-    have hA : MvPolynomial.eval (atPoint a y) A ≠ 0 := by
-      simp only [A, map_mul, map_prod, map_pow, pure_eval]
-      exact mul_ne_zero (mul_ne_zero hp (Finset.prod_ne_zero_iff.mpr
-        fun f hf => pow_ne_zero _ (hfixed f hf))) (Finset.prod_ne_zero_iff.mpr
-        fun f hf => pow_ne_zero _ (hmoving f hf))
-    refine Or.inr ⟨mixedOrder_cancel A D.left a y _ hA ?_,
-      mixedOrder_cancel A D.right a y _ hA ?_⟩
-    · simpa only [A, ← D.left_eq] using (hOrders γ hγ).1
-    · simpa only [A, ← D.right_eq] using (hOrders γ hγ).2
 end
 end K1_13_4_5
 end
@@ -7495,14 +6435,10 @@ open scoped BigOperators
   cases b <;> rfl
 @[simp] theorem box_top (b : Bank) : b.box.t = 1150 := by
   cases b <;> rfl
-theorem cut_large (b : Bank) : 131071 * b.box.b ≤ b.cut + 1 := by
-  cases b <;> decide
 def jetSum {M : Type*} [AddCommMonoid M] (B : ℕ) (f : ℕ → ℕ → ℕ → M) : M :=
   ∑ q ∈ Finset.range (B + 1), ∑ k ∈ Finset.range (min q 1150 + 1),
     ∑ l ∈ Finset.range (min (q - k) (2300 - 2 * k) + 1), f q k l
 def rawBase (b : Bank) : ℕ := b.cut + 1 - 131071 * b.box.b
-def width (b : Bank) (h q k l : ℕ) : ℕ :=
-  rawBase b + 131071 * (b.box.b - q) + (l + 2 * k) + (2300 + (b.box.b - q)) * h
 end K1_13_4_2_1
 end
 section
@@ -7511,22 +6447,6 @@ set_option maxSynthPendingDepth 8
 namespace K1_14_3R_3
 noncomputable section
 open K1 K1_14 K1_14_3 Polynomial
-def cutIdeal (q : Surface) (P : Jet) : Ideal Jet :=
-  q.asIdeal ⊔ Ideal.span {P}
-def seedInclusion : Seeds →+* Jet :=
-  (Polynomial.C : Equation →+* Jet).comp Polynomial.C
-def seedIdeal (R : Ideal Jet) : Ideal Seeds :=
-  R.comap seedInclusion
-def IsCutCurve (R : Ideal Jet) : Prop :=
-  R.IsPrime ∧ ringKrullDim (Jet ⧸ R) = 1
-def HasSeedEquation (R : Ideal Jet) (f : Seeds) : Prop :=
-  f ≠ 0 ∧ seedIdeal R = Ideal.span {f}
-def seedPointEval (t : FX × FX) : Seeds →+* FX :=
-  MvPolynomial.eval ![t.1, t.2]
-def HasSeedPoint (R : Ideal Jet) (t : FX × FX) : Prop :=
-  seedIdeal R = RingHom.ker (seedPointEval t)
-def markPoint (z : K) : FX × FX :=
-  (seedEmbedding z, seedEmbedding z ^ p)
 inductive Line where
   | seed
   | jet
@@ -7539,10 +6459,6 @@ def lineEquation : Line → SectionJet
     let y : SectionJet := C (R := Polynomial SectionSeeds) (Polynomial.X (R := SectionSeeds))
     let v : SectionJet := Polynomial.X (R := Polynomial SectionSeeds)
     y + sectionScalar 1 * v - sectionScalar 3
-abbrev LineSection (I : Ideal Jet) (l : Line) :=
-  SectionJet ⧸ (I.map sectionMap ⊔ Ideal.span {lineEquation l})
-def lineLength (I : Ideal Jet) (l : Line) : ℕ :=
-  Module.finrank SectionField (LineSection I l)
 end
 end K1_14_3R_3
 end
@@ -7550,11 +6466,6 @@ section
 namespace K1_13_3
 noncomputable section
 open Polynomial K1 K1_13
-abbrev terminal : ℕ := 3000 * 180265 - 1
-abbrev layerWidth : ℕ := 46597
-abbrev sourceRank : ℕ := 1217307887288627271
-def requiredOrder (T : ℕ) : ℕ :=
-  (terminal - T) / layerWidth + 1
 def BankRow (w : I → K) (T : ℕ) (P : Row 4) : Prop :=
   InBox (shape P) ⟨4012, 1650, 550⟩ ∧ TrueWeightLE P T ∧ Contact w P
 abbrev Symbol := MvPolynomial (Fin 4) Geom

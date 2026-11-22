@@ -1381,6 +1381,16 @@ theorem locator_dvd_of_eval_zero (x : ι → F) (hx : Function.Injective x)
     obtain ⟨i,hi,rfl⟩ := Multiset.mem_map.mp ha
     exact (Polynomial.mem_roots hP).mpr (hz i hi)
   exact (Principal.locator_splits x S).dvd_of_roots_le_roots (locator_monic x S).ne_zero hroots
+theorem bounded_locator_quotient (x : ι → F) (S : Finset ι) (P : F[X]) (t : ℕ)
+    (hS : S.card≤t) (hP : P.natDegree≤t) (hdiv : locator x S∣P) :
+    ∃ Q : F[X], Q.degree<(t-S.card+1 : ℕ) ∧ P=locator x S*Q := by
+  obtain ⟨Q,hQ⟩ := hdiv
+  refine ⟨Q,?_,hQ⟩
+  by_cases hq : Q=0
+  · simp [hq]
+  have hd := natDegree_mul (locator_monic x S).ne_zero hq
+  rw [← hQ,locator_natDegree] at hd
+  exact degree_le_natDegree.trans_lt (by exact_mod_cast (show Q.natDegree<t-S.card+1 by omega))
 end
 end FrobeniusLocator.Strata
 end
@@ -1507,28 +1517,6 @@ end FrobeniusLocator.Strata
 end
 section
 set_option backward.isDefEq.respectTransparency false
-set_option maxHeartbeats 1000000
-namespace FrobeniusLocator.Strata
-noncomputable section
-open Polynomial Finset Matrix
-open scoped BigOperators
-variable {F ι : Type} [Field F] [DecidableEq F] [Fintype ι] [DecidableEq ι]
-end
-end FrobeniusLocator.Strata
-end
-section
-set_option backward.isDefEq.respectTransparency false
-set_option maxHeartbeats 1000000
-namespace FrobeniusLocator.Strata
-noncomputable section
-open Polynomial Finset Matrix
-open scoped BigOperators
-variable {F β : Type} [Field F] [DecidableEq F] [Fintype β]
-end
-end FrobeniusLocator.Strata
-end
-section
-set_option backward.isDefEq.respectTransparency false
 namespace FrobeniusLocator.Strata
 noncomputable section
 open Polynomial Finset Matrix
@@ -1548,9 +1536,6 @@ theorem generic_relation_line_of_level (p : ℕ) (x u v : ι → F)
 theorem relation_degree_nullity_balance (m L t r a b c : ℕ)
     (hm : m=L+t) (hc : c≤m) (hsum : a+b+c=2*m+2) (hr : r+a+b=2*t+2) :
     L+(m+1-c)+r=t+1 := by omega
-theorem native_minimal_relation_degree (r a b c : ℕ) (hc : c≤131072)
-    (hsum : a+b+c=262146) (hr : r+a+b=163760) (hr7 : 7≤r) :
-    49193+(131073-c)+r=81880 ∧ 131073-c≤32680 ∧ 131073-c<49193 := by omega
 end
 end FrobeniusLocator.Strata
 end
@@ -1989,31 +1974,6 @@ end FrobeniusLocator.Strata
 end
 section
 set_option backward.isDefEq.respectTransparency false
-set_option maxHeartbeats 2000000
-namespace FrobeniusLocator.Strata
-noncomputable section
-open Finset Matrix MvPolynomial
-open scoped BigOperators
-variable {F row τ : Type} [Field F] [Fintype row] [DecidableEq row]
-end
-end FrobeniusLocator.Strata
-end
-section
-set_option backward.isDefEq.respectTransparency false
-set_option maxHeartbeats 1000000
-namespace FrobeniusLocator.Strata
-noncomputable section
-open Finset Matrix
-open scoped BigOperators
-variable {F row col : Type} [Field F] [Fintype row] [Fintype col] [DecidableEq col]
-section Ring
-variable {R : Type} [CommRing R] {r : ℕ}
-end Ring
-end
-end FrobeniusLocator.Strata
-end
-section
-set_option backward.isDefEq.respectTransparency false
 namespace K1_3
 noncomputable section
 open Polynomial Matrix Finset FrobeniusLocator
@@ -2255,38 +2215,6 @@ end
 section
 set_option backward.isDefEq.respectTransparency false
 set_option maxHeartbeats 1000000
-namespace FrobeniusLocator.Strata
-noncomputable section
-open Finset Matrix MvPolynomial
-open scoped BigOperators
-variable {F ι : Type} [Field F] [DecidableEq F] [Fintype ι] [DecidableEq ι]
-end
-end FrobeniusLocator.Strata
-end
-section
-set_option backward.isDefEq.respectTransparency false
-namespace FrobeniusLocator.Strata
-noncomputable section
-open Finset Matrix
-open scoped BigOperators
-variable {F row : Type} [Field F] [Fintype row]
-end
-end FrobeniusLocator.Strata
-end
-section
-set_option backward.isDefEq.respectTransparency false
-set_option maxHeartbeats 1000000
-namespace FrobeniusLocator.Strata
-noncomputable section
-open Finset Matrix MvPolynomial
-open scoped BigOperators
-variable {F ν : Type} [Field F]
-end
-end FrobeniusLocator.Strata
-end
-section
-set_option backward.isDefEq.respectTransparency false
-set_option maxHeartbeats 1000000
 namespace FrobeniusLocator.Principal
 noncomputable section
 open Polynomial Finset Matrix
@@ -2408,38 +2336,6 @@ theorem extract_moving_certificate_for_basis (φ : F[X] →+* K) (hφ : Function
     H d q hd rfl B coeffs hdegree' hspec hnofixed hshift
 end
 end FrobeniusLocator.Principal
-end
-section
-set_option backward.isDefEq.respectTransparency false
-namespace FrobeniusLocator.Strata
-noncomputable section
-open Finset Matrix MvPolynomial
-open scoped BigOperators
-variable {F ν : Type} [Field F]
-end
-end FrobeniusLocator.Strata
-end
-section
-set_option backward.isDefEq.respectTransparency false
-set_option maxHeartbeats 2000000
-namespace FrobeniusLocator.Strata
-noncomputable section
-open Finset Matrix MvPolynomial
-open scoped BigOperators
-variable {F ν row : Type} [Field F] [Fintype row] [DecidableEq row]
-end
-end FrobeniusLocator.Strata
-end
-section
-set_option backward.isDefEq.respectTransparency false
-set_option maxHeartbeats 1000000
-namespace FrobeniusLocator.Strata
-noncomputable section
-open Polynomial Finset Matrix
-open scoped BigOperators
-variable {F row : Type} [Field F] [Fintype row]
-end
-end FrobeniusLocator.Strata
 end
 section
 set_option backward.isDefEq.respectTransparency false
@@ -2635,20 +2531,6 @@ namespace FrobeniusLocator.Strata
 noncomputable section
 open Polynomial Finset Matrix
 open scoped BigOperators
-variable {F row : Type} [Field F] [Fintype row]
-section Parameter
-variable {ν : Type} {t : ℕ}
-end Parameter
-end
-end FrobeniusLocator.Strata
-end
-section
-set_option backward.isDefEq.respectTransparency false
-set_option maxHeartbeats 1000000
-namespace FrobeniusLocator.Strata
-noncomputable section
-open Polynomial Finset Matrix
-open scoped BigOperators
 variable {F ι : Type} [Field F] [Fintype ι] [DecidableEq ι]
 theorem certificate_specializes (p : ℕ) [ExpChar F p] (x u v : ι → F) (k H : ℕ)
     (Crt : PolynomialRelationCertificate p x u v k H) (γ : F) :
@@ -2764,33 +2646,12 @@ end
 end FrobeniusLocator.Strata
 end
 section
-namespace Sol1.C50
-noncomputable section
-open Code LinearCode CoreDefinitions
-variable {K I A : Type} [Field K] [Fintype K] [Fintype I]
-  [AddCommGroup A] [Module K A]
-end
-end Sol1.C50
-end
-section
-namespace Sol1.C64
-open Polynomial Code LinearCode CoreDefinitions
-noncomputable section
-set_option maxRecDepth 10000
-set_option maxHeartbeats 0
-variable {F K I : Type} [Field F] [Field K]
-variable [Fintype I]
-end
-end Sol1.C64
-end
-section
 namespace Sol1.C64
 open Polynomial Code LinearCode CoreDefinitions
 open ProximityPrize.Benchmark
 noncomputable section
 set_option maxRecDepth 10000
 set_option maxHeartbeats 0
-abbrev Base := KoalaBear.Field
 abbrev K := IRSProfile.Field
 abbrev I := IRSProfile.Index
 abbrev NativePair := Fin 2 → I → Fin IRSProfile.interleaving → K
@@ -2810,7 +2671,6 @@ namespace Sol1.C42
 noncomputable section
 open ProximityPrize.Benchmark
 open scoped NNReal
-def queryRadius : ℝ≥0 := claimedRadius 81879 262144
 theorem claimedError_pow_100 (s : ℕ) :
     (claimedError s) ^ 100 = 1 / (2 : ℝ≥0) ^ s := by
   unfold claimedError
@@ -2818,8 +2678,6 @@ theorem claimedError_pow_100 (s : ℕ) :
   have hex : -((s : ℝ) / 100) * ((100 : ℕ) : ℝ) = -(s : ℝ) := by norm_num
   rw [hex, NNReal.rpow_neg, NNReal.rpow_natCast]
   simp only [one_div]
-theorem query_admissible : queryRadius ∈ Set.Ioo (0 : ℝ≥0) IRSProfile.minRelativeDistance := by
-  constructor <;> norm_num [queryRadius, claimedRadius, IRSProfile.minRelativeDistance]
 end
 end Sol1.C42
 end
@@ -2860,7 +2718,6 @@ open Polynomial Finset Matrix CoreDefinitions Code
 open ProximityPrize.Benchmark
 local instance decidableNativeMCA (P : Prop) : Decidable P := Classical.propDecidable P
 local instance nonzeroNativeMCA : NeZero (131072 : ℕ) := ⟨by norm_num⟩
-def radius : ℝ := (claimedRadius 81879 262144 : ℝ)
 end
 end FrobeniusLocator.Native
 end
@@ -2875,24 +2732,7 @@ open ProximityPrize.Benchmark
 open FrobeniusLocator.Principal
 local instance decidableNativePrincipal (P : Prop) : Decidable P := Classical.propDecidable P
 local instance nonzeroNativePrincipal : NeZero (131072 : ℕ) := ⟨by norm_num⟩
-theorem native_IsMCA_badSlope (U : Fin 2 → I → K) (γ : K)
-    (hγ : IsMCA (AffineLineGenerator K) IRSProfile.baseCode γ U radius) :
-    BadSlope IRSProfile.domain (U 0) (U 1) 131072 180265 γ := by
-  change IsMCA (AffineLineGenerator K) (ReedSolomon.code IRSProfile.domain 131072)
-    γ U radius at hγ
-  apply isMCA_implies_badSlope IRSProfile.domain U 131072 180265 radius ?_ γ hγ
-  intro T hT
-  norm_num [IRSProfile.card_index, radius, claimedRadius] at hT ⊢
-  exact hT
-theorem native_type_one_MCA_count (U : Fin 2 → I → K)
-    (htype : TypeOneSyndromes IRSProfile.domain (U 0) (U 1) 131072 p)
-    (Γ : Finset K) (hΓ : ∀ γ ∈ Γ,
-      IsMCA (AffineLineGenerator K) IRSProfile.baseCode γ U radius) : Γ.card ≤ 1 := by
-  apply type_one_bad_count IRSProfile.domain IRSProfile.domain.injective
-    (U 0) (U 1) 131072 180265 p
-    (by norm_num only [IRSProfile.card_index]) (by norm_num [p]) htype Γ
-  intro γ hγ
-  exact native_IsMCA_badSlope U γ (hΓ γ hγ)
+theorem native_principal_budget : 733014149906392 ≤ 243069641737383864 := by norm_num
 end
 end FrobeniusLocator.Native
 end
@@ -2905,44 +2745,6 @@ open Polynomial Finset Matrix CoreDefinitions Code
 open ProximityPrize.Benchmark
 local instance nativeStrataDecidable (P : Prop) : Decidable P := Classical.propDecidable P
 local instance nativeStrataNonzero : NeZero (131072 : ℕ) := ⟨by norm_num⟩
-theorem native_IsMCA_badSlope (U : Fin 2 → Native.I → Native.K) (γ : Native.K)
-    (hmca : IsMCA (AffineLineGenerator Native.K) IRSProfile.baseCode γ U Native.radius) :
-    Principal.BadSlope IRSProfile.domain (U 0) (U 1) 131072 180265 γ := by
-  change IsMCA (AffineLineGenerator Native.K) (ReedSolomon.code IRSProfile.domain 131072)
-    γ U Native.radius at hmca
-  apply Principal.isMCA_implies_badSlope IRSProfile.domain U 131072 180265 Native.radius ?_ γ hmca
-  intro T hT
-  norm_num [IRSProfile.card_index,Native.radius,claimedRadius] at hT ⊢
-  exact hT
-end
-end FrobeniusLocator.Strata
-end
-section
-set_option backward.isDefEq.respectTransparency false
-namespace FrobeniusLocator.Strata
-noncomputable section
-open Polynomial Matrix
-open ProximityPrize.Benchmark
-theorem native_relation_height_fits_field (H : ℕ) (hH : H≤32680) :
-    (2*H+2)*Native.p<Fintype.card Native.K := by
-  change (2*H+2)*2130706433<Fintype.card KoalaBear.Ext6
-  rw [KoalaBear.card_ext6]
-  have hle := Nat.mul_le_mul_right 2130706433 (show 2*H+2≤2*32680+2 by omega)
-  exact hle.trans_lt (by norm_num)
-def native_lemmaT_of_two_active_level (U : Fin 2 → Native.I → Native.K)
-    (r a b c : ℕ) (hr7 : 7≤r) (ha : a≤b) (hb : b≤81879) (hc : 81879<c)
-    (hcm : c≤131072) (hsum : a+b+c=262146) (hr : r+a+b=163760)
-    (hHF : HasLevelHilbertFunction
-      (fun b j => algebraMap Native.K[X] (GenericLayer.GenericField Native.K)
-        (Principal.parameterSyndromes Native.p IRSProfile.domain (U 0) (U 1) b j)) 131072 a b c) :
-    PolynomialRelationCertificate Native.p IRSProfile.domain (U 0) (U 1) 131072 (131073-c) := by
-  have hH := (native_minimal_relation_degree r a b c hcm hsum hr hr7).2.1
-  have hline := generic_relation_line_of_level Native.p IRSProfile.domain (U 0) (U 1)
-    131072 a b c hcm hsum ha (by omega) (by omega) hHF
-  exact polynomialRelationCertificate_of_nullity_one Native.p (by norm_num [Native.p])
-    IRSProfile.domain (U 0) (U 1) IRSProfile.domain.injective Native.native_domain_fixed
-    131072 131072 (131073-c) (by rw [IRSProfile.card_index]) (by omega)
-    (native_relation_height_fits_field _ hH) hline
 end
 end FrobeniusLocator.Strata
 end

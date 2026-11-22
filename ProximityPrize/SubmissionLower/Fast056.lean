@@ -3,21 +3,6 @@ import ProximityPrize.SubmissionLower.Fast052
 set_option Elab.async false
 set_option autoImplicit true
 section
-namespace K1_13_1_1
-set_option maxRecDepth 30000
-set_option Elab.async false
-set_option maxHeartbeats 4000000
-open private activeNatCount_eq sumRange_prefix innerSlice_eq sumToCap_eq sumRange_suffix
-  sumRange_congr sumRange_zero natLine_zero from ProximityPrize.SubmissionLower.SoloK1_13_1_1ArithmeticLogic
-private theorem sumStep (f : ℕ → ℕ) (n a b : ℕ)
-    (ha : sumRange n f = a) (hb : f n = b) :
-    sumRange (n + 1) f = a + b :=
-  (show sumRange (n + 1) f = sumRange n f + f n from rfl).trans (congrArg₂ Nat.add ha hb)
-private def gradeFrom (i : ℕ) : ℕ := fastGrade (i + 62)
-end K1_13_1_1
-end
-section
-set_option Elab.async false
 namespace K1_13_2_3_3
 open K1_13_2 K1_13_2_3 Finset
 open K1_13_2_3_1 (denPrefix denPrefix_of_nonpos)
@@ -31,7 +16,7 @@ private def target (n j : ℤ) : ℤ :=
     denominator ((removed n - 1) - 1 - j) -
     denominator ((removed n - 2) - 1 - j) -
     denominator ((removed n - 3) - 1 - j)
-theorem cumulative_denominator (d u : ℤ) (hd : 2 ≤ d) (hu : u ≤ d) :
+private theorem cumulative_denominator (d u : ℤ) (hd : 2 ≤ d) (hu : u ≤ d) :
     cumulative d u = denominator u :=
   (cumulative_eq_small d u hd (by omega)).trans (smallCount_eq_denominator d u hu)
 private theorem initial_eq (s : Fin 4013) (j : Fin 4650) (hs : 2510 ≤ s.val) :
@@ -41,7 +26,7 @@ private theorem initial_eq (s : Fin 4013) (j : Fin 4650) (hs : 2510 ≤ s.val) :
     (3000 - (s.val : ℤ) - ((j.val : ℤ) - 1650)) = _
   rw [min_eq_right (show (1650 : ℤ) ≤ s.val by omega), flag, hn]
   congr 1 <;> ring
-theorem old_eq (n j : ℤ) (hj : 0 ≤ j) : oldCount (flag n j) = active j := by
+private theorem old_eq (n j : ℤ) (hj : 0 ≤ j) : oldCount (flag n j) = active j := by
   have hcap (u : ℤ) (hu : u ≤ 1650) : cappedCount 1650 u 550 = denominator u := by
     change cumulative 1650 u - cumulative 1099 (u - 1653) = denominator u
     rw [cumulative_denominator 1650 u (by decide) hu]
@@ -49,7 +34,7 @@ theorem old_eq (n j : ℤ) (hj : 0 ≤ j) : oldCount (flag n j) = active j := by
   change cappedCount 1650 1650 550 - cappedCount 1650 (min 1650 (1650 - j - 1)) 550 = _
   rw [min_eq_right (by omega), hcap 1650 (by decide), hcap (1650 - j - 1) (by omega), active,
     show 1650 - j - 1 = 1649 - j by ring]
-theorem target_original (n j : ℤ) (hn₁ : 638 ≤ n) (hn₂ : n ≤ 2140) :
+private theorem target_original (n j : ℤ) (hn₁ : 638 ≤ n) (hn₂ : n ≤ 2140) :
     targetCount (flag n j) =
       cumulative 1650 (n - 1 - j) -
       cumulative (1650 - removed n) ((n - 3 * removed n) - 1 - j) -
@@ -61,7 +46,7 @@ theorem target_original (n j : ℤ) (hn₁ : 638 ≤ n) (hn₂ : n ≤ 2140) :
   rw [show n - j - 1 = n - 1 - j by ring,
     show n - 1 - j - 3 * removed n = (n - 3 * removed n) - 1 - j by ring,
     show 1650 - j - 1 = 1649 - j by ring]
-theorem target_eq (n j : ℤ) (hn₁ : 638 ≤ n) (hn₂ : n ≤ 2140) (hj : 0 ≤ j) :
+private theorem target_eq (n j : ℤ) (hn₁ : 638 ≤ n) (hn₂ : n ≤ 2140) (hj : 0 ≤ j) :
     targetCount (flag n j) = target n j := by
   have hr : 160 ≤ removed n ∧ removed n ≤ 535 := by unfold removed; omega
   have hd : 2 ≤ 1650 - removed n := by omega
@@ -79,9 +64,9 @@ theorem target_eq (n j : ℤ) (hn₁ : 638 ≤ n) (hn₂ : n ≤ 2140) (hj : 0 �
       show 1649 - j - (1650 - removed n) - 3 = (removed n - 3) - 1 - j by ring]
   rw [hres, target]
   ring
-theorem active_nonneg (j : ℤ) (hj : 0 ≤ j) : 0 ≤ active j :=
+private theorem active_nonneg (j : ℤ) (hj : 0 ≤ j) : 0 ≤ active j :=
   sub_nonneg.mpr (denominator_mono_to _ _ (by omega) (by decide))
-theorem target_nonneg (n j : ℤ) (hn₁ : 638 ≤ n) (hn₂ : n ≤ 2140)
+private theorem target_nonneg (n j : ℤ) (hn₁ : 638 ≤ n) (hn₂ : n ≤ 2140)
     (hj : 0 ≤ j) (hjn : j < n) : 0 ≤ target n j := by
   by_cases hn : n ≤ 1650
   ·
@@ -114,7 +99,7 @@ theorem target_nonneg (n j : ℤ) (hn₁ : 638 ≤ n) (hn₂ : n ≤ 2140)
         K1_13_2_3.cumulative_mono (1650 - removed n).toNat
     have h₂ := hm (show (n - 3 * removed n) - 1 - j ≤ 1649 - j by unfold removed; omega)
     omega
-def packedCuts : List ℕ :=
+private def packedCuts : List ℕ :=
   [1884877150839,1492194651746,942438537804,1570711722551,1492155854371,
    1560874277390,922171043323,780298540519,1471922525652,778910935489,
    778910390703,1488933185949,1466373428620,1471742129531,1466015503722,
@@ -125,7 +110,7 @@ def packedCuts : List ℕ :=
    146601559140,292630437979,1170521474132,1170450030668,141872603205,
    69827855423,70901579832,558482097203,279206961197,554118418472,
    69260558371,34495008799]
-def lowOnes : ℕ → ℕ → ℕ
+private def lowOnes : ℕ → ℕ → ℕ
   | 0, _ => 0
   | k + 1, bits => bits % 2 + lowOnes k (bits / 2)
 private def cut (n : ℕ) : ℕ :=
@@ -136,7 +121,7 @@ private def upper (n j : ℕ) : ℤ :=
   if j < cut n then active j else if j < n then target n j else 0
 private theorem cast_toNat_le {x y : ℤ} (hy : 0 ≤ y) (hxy : x ≤ y) :
     (x.toNat : ℤ) ≤ y := by omega
-theorem block_le_upper (s : Fin 4013) (j : Fin 4650) (hs : 2510 ≤ s.val) :
+private theorem block_le_upper (s : Fin 4013) (j : Fin 4650) (hs : 2510 ≤ s.val) :
     (baseline (s, j) : ℤ) ≤ upper (offsets s.val) j.val := by
   let n := offsets s.val
   have hn₁ : 638 ≤ n := by dsimp [n, offsets]; omega
@@ -173,29 +158,29 @@ theorem block_le_upper (s : Fin 4013) (j : Fin 4650) (hs : 2510 ≤ s.val) :
   · have horder : (initialFlag (s,j)).order ≤ 0 := by rw [hf]; change (n : ℤ) - j.val ≤ 0; omega
     have hcut : ¬ j.val < cut n := by omega
     simp [baseline, blockBound, horder, upper, hcut, hj]
-def activePrefix (j : ℤ) : ℤ :=
+private def activePrefix (j : ℤ) : ℤ :=
   j * (24 * denominator 1650) - denPrefix 1650 + denPrefix (1650 - j)
-def targetTail (n j : ℤ) : ℤ :=
+private def targetTail (n j : ℤ) : ℤ :=
   smallPrefix 1650 (n - j) - denPrefix ((n - 3 * removed n) - j) -
     denPrefix ((removed n - 1) - j) -
     denPrefix ((removed n - 2) - j) -
     denPrefix ((removed n - 3) - j)
-theorem activePrefix_step (j : ℤ) : activePrefix (j + 1) - activePrefix j = 24 * active j := by
+private theorem activePrefix_step (j : ℤ) : activePrefix (j + 1) - activePrefix j = 24 * active j := by
   unfold activePrefix active
   linear_combination (norm := ring_nf) -prefix_offset_step 1650 j
-theorem targetTail_step (n j : ℤ) :
+private theorem targetTail_step (n j : ℤ) :
     targetTail n j - targetTail n (j + 1) = 24 * target n j := by
   unfold targetTail target
   linear_combination (norm := ring_nf) smallPrefix_offset_step 1650 n j -
     prefix_offset_step (n - 3 * removed n) j - prefix_offset_step (removed n - 1) j -
     prefix_offset_step (removed n - 2) j - prefix_offset_step (removed n - 3) j
-theorem targetTail_end (n : ℕ) : targetTail n n = 0 := by
+private theorem targetTail_end (n : ℕ) : targetTail n n = 0 := by
   simp only [targetTail, sub_self, smallPrefix_of_nonpos 1650 0 (by decide) (by decide),
     denPrefix_of_nonpos ((n : ℤ) - 3 * removed n - n) (by unfold removed; omega),
     denPrefix_of_nonpos (removed n - 1 - n) (by unfold removed; omega),
     denPrefix_of_nonpos (removed n - 2 - n) (by unfold removed; omega),
     denPrefix_of_nonpos (removed n - 3 - n) (by unfold removed; omega)]
-def rowBudget (n : ℕ) : ℤ := activePrefix (cut n) + targetTail n (cut n)
+private def rowBudget (n : ℕ) : ℤ := activePrefix (cut n) + targetTail n (cut n)
 private theorem scaled_sum (f p : ℤ → ℤ) (h : ∀ j, p (j + 1) - p j = 24 * f j)
     (a : ℤ) (n : ℕ) : 24 * (∑ j ∈ range n, f (a + j)) = p (a + n) - p a := by
   induction n with
@@ -203,7 +188,7 @@ private theorem scaled_sum (f p : ℤ → ℤ) (h : ∀ j, p (j + 1) - p j = 24 
   | succ n ih =>
     rw [sum_range_succ, mul_add, ih, Nat.cast_succ, ← h, ← add_assoc]
     ring
-theorem sum_upper (n : ℕ) (hn : n ≤ 4650) :
+private theorem sum_upper (n : ℕ) (hn : n ≤ 4650) :
     24 * (∑ j ∈ range 4650, upper n j) = rowBudget n := by
   let c := cut n
   have hc : c ≤ n := min_le_left _ _
@@ -260,12 +245,12 @@ private theorem total_add (start a b : ℕ) :
 section
 set_option maxRecDepth 50000
 set_option maxHeartbeats 0
-theorem check₀ : total 0 256 = 366834691880448 := by decide +kernel
-theorem check₁ : total 256 256 = 0xdc3ec39aa670 := by decide +kernel
-theorem check₂ : total 512 256 = 0x849854bf9218 := by decide +kernel
-theorem check₃ : total 768 256 = 77485223947464 := by decide +kernel
-theorem check₄ : total 1024 256 = 34445829248736 := by decide +kernel
-theorem check₅ : total 1280 223 = 0x9dd6637e808 := by decide +kernel
+private theorem check₀ : total 0 256 = 366834691880448 := by decide +kernel
+private theorem check₁ : total 256 256 = 0xdc3ec39aa670 := by decide +kernel
+private theorem check₂ : total 512 256 = 0x849854bf9218 := by decide +kernel
+private theorem check₃ : total 768 256 = 77485223947464 := by decide +kernel
+private theorem check₄ : total 1024 256 = 34445829248736 := by decide +kernel
+private theorem check₅ : total 1280 223 = 0x9dd6637e808 := by decide +kernel
 end
 private theorem total_check : total 0 1503 = 877564171950648 := by
   calc
@@ -406,7 +391,7 @@ theorem rightForm_grade (a h : Shape) : rightForm a h ∈ grade (0, 1) := by
   intro m _
   exact (isWeightedHomogeneous_X (Coeff a h) weight
     (Sum.inr ⟨boxExponent m.val, boxExponent_mem h m⟩ : Generator a h)).C_mul _
-theorem box_monomial {k : Type} [CommRing k] {p : Shape} (m : SectionIndex p) :
+private theorem box_monomial {k : Type} [CommRing k] {p : Shape} (m : SectionIndex p) :
     (∏ i : Fin 4, (MvPolynomial.X i : MvPolynomial (Fin 4) k) ^ (m i).val) =
       monomial (boxExponent m) 1 := by
   have he : Finsupp.indicator Finset.univ (fun i _ => (m i).val) = boxExponent m := by
@@ -446,17 +431,17 @@ theorem mem_relations_of_dehom_eq_zero {surface : Ideal GeoJets} {a h : Shape}
     {d : ℕ × ℕ} {f : BigradedPolynomial a h} (hm : f ∈ grade d)
     (hf : dehom surface a h f = 0) : f ∈ relations surface a h :=
   Ideal.mem_homogeneousCore_of_homogeneous_of_mem ⟨d, hm⟩ hf
-def boxAt (a h : Shape) (d : ℕ × ℕ) : Shape :=
+private def boxAt (a h : Shape) (d : ℕ × ℕ) : Shape :=
   (a.scale d.1).plus (h.scale d.2)
-theorem boxAt_add (a h : Shape) (s t : ℕ × ℕ) :
+private theorem boxAt_add (a h : Shape) (s t : ℕ × ℕ) :
     boxAt a h (s + t) = (boxAt a h s).plus (boxAt a h t) := by
   cases a
   cases h
   simp [boxAt, Shape.scale, Shape.plus, Nat.add_mul, add_assoc, add_left_comm]
-theorem boxAt_chamber {a h : Shape} (ha : Chamber a) (hh : Chamber h)
+private theorem boxAt_chamber {a h : Shape} (ha : Chamber a) (hh : Chamber h)
     (d : ℕ × ℕ) : Chamber (boxAt a h d) :=
   chamber_plus (K1_13_6_1_4_2.chamber_scale ha d.1) (K1_13_6_1_4_2.chamber_scale hh d.2)
-theorem boxAt_zero (a h : Shape) :
+private theorem boxAt_zero (a h : Shape) :
     latticeIndices (boxAt a h 0) = {0} := by
   have hz : boxAt a h 0 = ⟨0, 0, 0⟩ := by simp [boxAt, Shape.scale, Shape.plus]
   rw [hz]
@@ -469,13 +454,13 @@ theorem boxAt_zero (a h : Shape) :
     exact congrFun he i
   · rintro rfl
     rfl
-theorem boxAt_left (a h : Shape) : boxAt a h (1, 0) = a := by
+private theorem boxAt_left (a h : Shape) : boxAt a h (1, 0) = a := by
   cases a
   simp [boxAt, Shape.plus, Shape.scale]
-theorem boxAt_right (a h : Shape) : boxAt a h (0, 1) = h := by
+private theorem boxAt_right (a h : Shape) : boxAt a h (0, 1) = h := by
   cases h
   simp [boxAt, Shape.plus, Shape.scale]
-theorem exponent_mem_box {a h : Shape} (ha : Chamber a) (hh : Chamber h)
+private theorem exponent_mem_box {a h : Shape} (ha : Chamber a) (hh : Chamber h)
     (d : Generator a h →₀ ℕ) :
     Finsupp.weight generatorExponent d ∈ latticeIndices (boxAt a h (Finsupp.weight weight d)) := by
   have hplus (u v : ℕ × ℕ) : latticeIndices (boxAt a h (u + v)) =
@@ -529,7 +514,7 @@ private theorem exponent_lift {a h : Shape} (ha : Chamber a) (hh : Chamber h)
     refine ⟨d + Finsupp.single (Sum.inl ⟨v, hv⟩) 1, ?_, ?_⟩
     · (rw [map_add, hd, Finsupp.weight_single]; rfl)
     · (rw [map_add, hdu, Finsupp.weight_single, one_nsmul]; rfl)
-theorem dehom_monomial (surface : Ideal GeoJets) (a h : Shape)
+private theorem dehom_monomial (surface : Ideal GeoJets) (a h : Shape)
     (d : Generator a h →₀ ℕ) (c : Coeff a h) :
     dehom surface a h (monomial d c) =
       Ideal.Quotient.mk (extendIdeal surface a h) (monomial (Finsupp.weight generatorExponent d) c) := by
@@ -590,7 +575,7 @@ theorem sectionCoord_surjective (p : Shape) : Function.Surjective (sectionCoord 
   refine ⟨⟨m, hm⟩, Subtype.ext ?_⟩
   ext i
   exact congrFun he i
-theorem homogeneous_sum {k ι : Type} [Field k] {I : Ideal (MvPolynomial (Fin 4) k)}
+private theorem homogeneous_sum {k ι : Type} [Field k] {I : Ideal (MvPolynomial (Fin 4) k)}
     {a h : Shape} (d : ℕ × ℕ) (s : Finset ι) (w : ι → k) (x : ι → Affine I)
     (hx : ∀ i, x i ∈ box I a h d) (y : Affine I) (hy : y ∈ box I a h d)
     (heq : y = ∑ i ∈ s, w i • x i) :
@@ -651,7 +636,7 @@ def affineBaseChange (surface : Ideal GeoJets) (a h : Shape) :
     Base surface →ₐ[GeoField] SurfaceRing surface a h :=
   Ideal.quotientMapₐ _ (MvPolynomial.mapAlgHom (Algebra.ofId GeoField (Coeff a h)))
     Ideal.le_comap_map
-theorem affineBaseChange_mk (surface : Ideal GeoJets) (a h : Shape) (q : GeoJets) :
+private theorem affineBaseChange_mk (surface : Ideal GeoJets) (a h : Shape) (q : GeoJets) :
     affineBaseChange surface a h (Ideal.Quotient.mk surface q) =
       Ideal.Quotient.mk (extendIdeal surface a h)
         (MvPolynomial.map (algebraMap GeoField (Coeff a h)) q) := rfl
@@ -780,7 +765,7 @@ def c2 : Prop :=
     ∀ (u : σ → A) (v : τ → A), u i = 1 → v j = 1 →
     (∑ m, t (Sum.inl m) * f (u m)) = 0 →
     (∑ m, t (Sum.inr m) * f (v m)) = 0 → False
-theorem no_boundary_point (h1 : c1) (h2 : c2)
+private theorem no_boundary_point (h1 : c1) (h2 : c2)
     (surface : Ideal GeoJets) [surface.IsPrime] (a h : Shape)
     (hdim : ringKrullDim (Base surface) = 2) (e : latticeIndices a × latticeIndices h)
     {E : Type} [Field E] [Algebra (Coeff a h) E] [Algebra GeoField E]
@@ -925,7 +910,7 @@ namespace K1_13_6_1_4_2_1_2_2_1
 noncomputable section
 open K1_13 K1_13_6 K1_13_6_1_4_2 K1_13_6_1_4_2_1_1
   K1_13_6_1_4_2_1_2 K1_13_6_1_4_2_1_2_2
-theorem away_fraction {k R F : Type*} [CommRing k] [CommRing R] [Field F]
+private theorem away_fraction {k R F : Type*} [CommRing k] [CommRing R] [Field F]
     [Algebra k R] [Algebra k F] (b x : R) (g : R →ₐ[k] F) (hb : g b ≠ 0) :
     IsLocalization.Away.liftAlgHom (S := Localization.Away b) b (f := g) hb.isUnit
       (IsLocalization.mk' (Localization.Away b) x ⟨b, Submonoid.mem_powers b⟩) =
@@ -937,7 +922,7 @@ theorem away_fraction {k R F : Type*} [CommRing k] [CommRing R] [Field F]
   apply (eq_div_iff hb).2
   simpa only [map_mul, hf] using
     congrArg f (IsLocalization.mk'_spec (Localization.Away b) x ⟨b, Submonoid.mem_powers b⟩)
-theorem evaluate_adjoin {k R K L E ι : Type*}
+private theorem evaluate_adjoin {k R K L E ι : Type*}
     [CommRing k] [CommRing R] [CommRing K] [Field L] [Field E]
     [Algebra k R] [Algebra k K] [Algebra k L] [Algebra k E]
     (j : R →ₐ[k] L) (hj : Function.Injective j)
@@ -1092,7 +1077,7 @@ theorem homogeneous_colon {k α β : Type} [CommRing k]
 section Noetherian
 variable {k α β : Type} [Field k] [Fintype α] [Fintype β]
 private abbrev P := MvPolynomial (α ⊕ β) k
-theorem chart_pow_dvd_monomial (d : α ⊕ β →₀ ℕ) (r : k) (n : ℕ)
+private theorem chart_pow_dvd_monomial (d : α ⊕ β →₀ ℕ) (r : k) (n : ℕ)
     (hleft : Fintype.card α * n < (Finsupp.weight weight d).1)
     (hright : Fintype.card β * n < (Finsupp.weight weight d).2) :
     ∃ x : α, ∃ y : β, (chart x y : P (k := k)) ^ n ∣ monomial d r := by
@@ -1129,7 +1114,7 @@ theorem chart_pow_dvd_monomial (d : α ⊕ β →₀ ℕ) (r : k) (n : ℕ)
   rw [chart, mul_pow, X_pow_eq_monomial, X_pow_eq_monomial, monomial_mul_monomial,
     one_mul, ← show t = _ from rfl, monomial_mul_monomial, one_mul,
     add_comm t, tsub_add_cancel_of_le ht]
-theorem uniform_chart_power (I K : Ideal (P (k := k) (α := α) (β := β)))
+private theorem uniform_chart_power (I K : Ideal (P (k := k) (α := α) (β := β)))
     (hlocal : ∀ x : α, ∀ y : β, ∀ p ∈ K, ∃ n : ℕ, chart x y ^ n * p ∈ I) :
     ∃ n : ℕ, ∀ x : α, ∀ y : β, ∀ p ∈ K, chart x y ^ n * p ∈ I := by
   classical
@@ -1233,7 +1218,7 @@ private def degree : (Bool →₀ ℕ) →+ ℕ × ℕ where
   map_zero' := rfl
   map_add' _ _ := rfl
 private theorem degree_apply (d : Bool →₀ ℕ) : degree d = (d false, d true) := rfl
-theorem degree_injective : Function.Injective degree := by
+private theorem degree_injective : Function.Injective degree := by
   intro u v hv
   ext b
   cases b
@@ -1247,11 +1232,11 @@ private theorem degree_weight {α β : Type} (d : α ⊕ β →₀ ℕ) :
     intro v n
     cases v <;> simp [degree_apply, block, weight, Finsupp.weight_single]
   exact DFunLike.congr_fun h d
-def homogenize {k B α β : Type} [CommRing k] [CommRing B] [Algebra k B]
+private def homogenize {k B α β : Type} [CommRing k] [CommRing B] [Algebra k B]
     (f : MvPolynomial (α ⊕ β) k →ₐ[k] B) :
     MvPolynomial (α ⊕ β) k →ₐ[k] MvPolynomial Bool B :=
   aeval fun v => monomial (Finsupp.single (block v) 1) (f (MvPolynomial.X v))
-theorem coeff_homogenize {k B α β : Type} [CommRing k] [CommRing B] [Algebra k B]
+private theorem coeff_homogenize {k B α β : Type} [CommRing k] [CommRing B] [Algebra k B]
     (f : MvPolynomial (α ⊕ β) k →ₐ[k] B) (p : MvPolynomial (α ⊕ β) k) (b : Bool →₀ ℕ) :
     (homogenize f p).coeff b = f (weightedHomogeneousComponent weight (degree b) p) := by
   classical
@@ -1292,16 +1277,16 @@ private def model (k : Type) [CommRing k] (a h : Shape) :
     MvPolynomial (Generator a h) k →ₐ[k] MvPolynomial Target k :=
   aeval fun v => MvPolynomial.X (Sum.inl (block v)) *
     jetInclude k (monomial (generatorExponent v) 1)
-def targetIdeal (k : Type) [CommRing k] [Algebra GeoField k]
+private def targetIdeal (k : Type) [CommRing k] [Algebra GeoField k]
     (surface : Ideal GeoJets) : Ideal (MvPolynomial Target k) :=
   surface.map ((jetInclude k).toRingHom.comp (MvPolynomial.map (algebraMap GeoField k)))
 def modelRelations (k : Type) [CommRing k] [Algebra GeoField k]
     (surface : Ideal GeoJets) (a h : Shape) : Ideal (MvPolynomial (Generator a h) k) :=
   (targetIdeal k surface).comap (model k a h).toRingHom
-def affineEval {k : Type} [CommRing k] (I : Ideal (MvPolynomial (Fin 4) k)) (a h : Shape) :
+private def affineEval {k : Type} [CommRing k] (I : Ideal (MvPolynomial (Fin 4) k)) (a h : Shape) :
     MvPolynomial (Generator a h) k →ₐ[k] (MvPolynomial (Fin 4) k ⧸ I) :=
   (Ideal.Quotient.mkₐ _ _).comp (aeval fun v => monomial (generatorExponent v) 1)
-theorem homogeneous_core_eq_model {k : Type} [CommRing k]
+private theorem homogeneous_core_eq_model {k : Type} [CommRing k]
     (I : Ideal (MvPolynomial (Fin 4) k)) (a h : Shape) :
     ((RingHom.ker (affineEval I a h).toRingHom).homogeneousCore grade).toIdeal =
       (I.map (jetInclude k).toRingHom).comap (model k a h).toRingHom := by
@@ -1367,7 +1352,7 @@ private theorem model_map {k L : Type} [CommRing k] [CommRing L] (g : k →+* L)
     simp [model, MvPolynomial.algebraMap_eq]
   · intro i
     simp [model, jetInclude, MvPolynomial.map_rename]
-theorem targetIdeal_map {k L : Type} [CommRing k] [CommRing L]
+private theorem targetIdeal_map {k L : Type} [CommRing k] [CommRing L]
     [Algebra GeoField k] [Algebra GeoField L] (g : k →+* L)
     (hg : g.comp (algebraMap GeoField k) = algebraMap GeoField L) (surface : Ideal GeoJets) :
     (targetIdeal k surface).map (MvPolynomial.map g) = targetIdeal L surface := by
@@ -1431,7 +1416,7 @@ theorem modelRelations_polynomial (τ : Type) (surface : Ideal GeoJets) (a h : S
   ext p
   simp only [Ideal.mem_comap, MvPolynomial.mem_map_C_iff, MvPolynomial.coeff_map]
   rfl
-theorem comap_of_localization {A B A' B' : Type} [CommRing A] [CommRing B]
+private theorem comap_of_localization {A B A' B' : Type} [CommRing A] [CommRing B]
     [CommRing A'] [CommRing B'] [Algebra A A'] [Algebra B B']
     (g : A →+* B) (h : A' →+* B') (M : Submonoid A)
     [IsLocalization M A'] [IsLocalization (M.map g) B']
@@ -1483,7 +1468,7 @@ namespace K1_13_6_1_4_2_1_2_2_2
 noncomputable section
 open Algebra MvPolynomial
 open scoped BigOperators
-theorem boundary_trdeg {k A E : Type} [Field k] [CommRing A] [IsDomain A]
+private theorem boundary_trdeg {k A E : Type} [Field k] [CommRing A] [IsDomain A]
     [Algebra k A] [Algebra.FiniteType k A] [Field E] [Algebra k E]
     (hdim : trdeg k A ≤ 2) (b : A) (hb : b ≠ 0) (f : A →ₐ[k] E) (hfb : f b = 0) :
     trdeg k (A ⧸ RingHom.ker f) ≤ 1 := by
@@ -1508,7 +1493,7 @@ private def blockLift {D I J : Type} [CommRing D] [Fintype I] [DecidableEq I]
     (i : I) (tag : {m : I // m ≠ i} → J) (w : I → D) (m : I) : MvPolynomial J D :=
   if hm : m ≠ i then MvPolynomial.X (tag ⟨m, hm⟩)
   else -∑ x, MvPolynomial.X (tag x) * C (w x)
-theorem eval_blockLift {D E I J : Type} [CommRing D] [CommRing E]
+private theorem eval_blockLift {D E I J : Type} [CommRing D] [CommRing E]
     [Fintype I] [DecidableEq I]
     (f : D →+* E) (z : J → E) (i : I) (tag : {m : I // m ≠ i} → J)
     (w : I → D) (p : I → E) (hw : f (w i) = 1)
@@ -1592,46 +1577,46 @@ def c2 : Prop :=
     ∀ (x : latticeIndices a) (y : latticeIndices h) (p : BigradedPolynomial a h),
       p * rightForm a h ∈ firstCut surface a h →
       ∃ n : ℕ, chart x y ^ n * p ∈ firstCut surface a h
-theorem dehom_mul_left (surface : Ideal GeoJets) (a h : Shape)
+private theorem dehom_mul_left (surface : Ideal GeoJets) (a h : Shape)
     (p : BigradedPolynomial a h) :
     dehom surface a h (p * leftForm a h) =
       leftMul surface a h (dehom surface a h p) := by
   rw [map_mul, dehom_left, leftMul, LinearMap.mulLeft_apply]
   exact mul_comm (dehom surface a h p)
     (Ideal.Quotient.mk (extendIdeal surface a h) (leftSection a h))
-theorem dehom_mul_right (surface : Ideal GeoJets) (a h : Shape)
+private theorem dehom_mul_right (surface : Ideal GeoJets) (a h : Shape)
     (p : BigradedPolynomial a h) :
     dehom surface a h (p * rightForm a h) =
       rightMul surface a h (dehom surface a h p) := by
   rw [map_mul, dehom_right, rightMul, LinearMap.mulLeft_apply]
   exact mul_comm (dehom surface a h p)
     (Ideal.Quotient.mk (extendIdeal surface a h) (rightSection a h))
-theorem muls_commute (surface : Ideal GeoJets) (a h : Shape)
+private theorem muls_commute (surface : Ideal GeoJets) (a h : Shape)
     (x : SurfaceRing surface a h) :
     rightMul surface a h (leftMul surface a h x) =
       leftMul surface a h (rightMul surface a h x) := by
   simp only [leftMul, rightMul, LinearMap.mulLeft_apply]
   exact mul_left_comm _ _ x
-theorem lift_piece (surface : Ideal GeoJets) {a h : Shape}
+private theorem lift_piece (surface : Ideal GeoJets) {a h : Shape}
     (ha : FullChamber a) (hh : FullChamber h) {i j : ℕ}
     {w : SurfaceRing surface a h} (hw : w ∈ biPiece surface a h i j) :
     ∃ p : BigradedPolynomial a h, p ∈ grade (i, j) ∧ dehom surface a h p = w := by
   rw [← dehom_grade surface ha.1 hh.1] at hw
   exact hw
-theorem dehom_mem_piece (surface : Ideal GeoJets) {a h : Shape}
+private theorem dehom_mem_piece (surface : Ideal GeoJets) {a h : Shape}
     (ha : FullChamber a) (hh : FullChamber h) {i j : ℕ}
     {p : BigradedPolynomial a h} (hp : p ∈ grade (i, j)) :
     dehom surface a h p ∈ biPiece surface a h i j := by
   rw [← dehom_grade surface ha.1 hh.1]
   exact ⟨p, hp, rfl⟩
-theorem firstCut_homogeneous (surface : Ideal GeoJets) (a h : Shape) :
+private theorem firstCut_homogeneous (surface : Ideal GeoJets) (a h : Shape) :
     (firstCut surface a h).IsHomogeneous grade := by
   unfold firstCut
   apply (relations_homogeneous surface a h).sup
   apply Ideal.homogeneous_span
   rintro _ ⟨⟩
   exact ⟨(1, 0), leftForm_grade a h⟩
-theorem exists_high_intersection (h2 : c2) (surface : Ideal GeoJets) (a h : Shape)
+private theorem exists_high_intersection (h2 : c2) (surface : Ideal GeoJets) (a h : Shape)
     (hs : surface.IsPrime) (hd : ringKrullDim (GeoJets ⧸ surface) = 2)
     (ha : FullChamber a) (hh : FullChamber h) :
     ∃ N : ℕ, ∀ i j : ℕ, N ≤ i → N ≤ j →
@@ -1724,13 +1709,13 @@ private def coordinate {γ : Type} (b : Shape) (i : latticeIndices b → γ)
   if hm : m ∈ boxMonomials (b.scale 6) then
     MvPolynomial.X (i ⟨boxExponent m, boxExponent_mem b ⟨m, hm⟩⟩)
   else 0
-def integralForm {γ τ : Type} (b : Shape) (i : latticeIndices b → γ)
+private def integralForm {γ τ : Type} (b : Shape) (i : latticeIndices b → γ)
     (j : SectionIndex (b.scale 6) → τ) : MvPolynomial γ (MvPolynomial τ GeoField) :=
   ∑ m ∈ boxMonomials (b.scale 6), C (MvPolynomial.X (j m)) *
     MvPolynomial.map C (coordinate b i m)
-abbrev leftIntegral (a h : Shape) : IntegralForms a h := integralForm a Sum.inl Sum.inl
-abbrev rightIntegral (a h : Shape) : IntegralForms a h := integralForm h Sum.inr Sum.inr
-theorem integralForm_map {γ τ : Type} (b : Shape) (i : latticeIndices b → γ)
+private abbrev leftIntegral (a h : Shape) : IntegralForms a h := integralForm a Sum.inl Sum.inl
+private abbrev rightIntegral (a h : Shape) : IntegralForms a h := integralForm h Sum.inr Sum.inr
+private theorem integralForm_map {γ τ : Type} (b : Shape) (i : latticeIndices b → γ)
     (j : SectionIndex (b.scale 6) → τ) :
     let P := MvPolynomial τ GeoField
     let F := FractionRing P
@@ -1745,7 +1730,7 @@ theorem integralForm_map {γ τ : Type} (b : Shape) (i : latticeIndices b → γ
   apply Finset.sum_congr rfl
   intro m _
   simp [coordinate, m.property]
-theorem coordinate_covers {γ : Type} (b : Shape) (i : latticeIndices b → γ)
+private theorem coordinate_covers {γ : Type} (b : Shape) (i : latticeIndices b → γ)
     (y : latticeIndices b) : ∃ m ∈ boxMonomials (b.scale 6), coordinate b i m = MvPolynomial.X (i y) := by
   have hy : (fun j => y.val j) ∈ exponents (b.scale 6) := y.property
   rw [exponents_eq_image] at hy
@@ -1854,241 +1839,241 @@ namespace K1_13_2_3_6
 section
 set_option maxRecDepth 50000
 set_option maxHeartbeats 0
-def rowsA_grade3012 : List (List ℕ) :=
+private def rowsA_grade3012 : List (List ℕ) :=
   [[8791654400,13086490624,8724414464,6576865280,6543310848,4395761664,4362207232,
     2214690816,50429952,2214592704,4345299136,33554624,25166016,16777408,12583104,
     4194496,6442451136,160,2147483800,2147483792,140,134,130,6442451072,112,108,102,
     98,6442451040,80,76,70,66,2147483712,54,50,2147483696,38,34,32,26,24,18,16,
     12,6,2]]
-theorem rowsA_grade3012_checked :
+private theorem rowsA_grade3012_checked :
     rowsA_grade3012.length = 1 ∧ fits 3012 rowsA_grade3012 = true ∧
       value 3012 rowsA_grade3012 = 56171069 := by
   refine ⟨rfl, ?_, ?_⟩
   · decide +kernel
   · decide +kernel
-def rowsA_grade3013 : List (List ℕ) :=
+private def rowsA_grade3013 : List (List ℕ) :=
   [[0,8791654400,13086490624,6576930816,8724348928,4395827200,6543245312,4362207232,
     67207168,2197913600,2214592704,2197815488,2181038272,25166016,16777408,6291648,
     8589934784,160,2147483800,2147483792,140,134,129,6442451072,112,108,102,97,
     6442451040,80,76,70,65,2147483712,54,49,2147483696,38,33,32,25,24,17,16,12,
     6,1]]
-theorem rowsA_grade3013_checked :
+private theorem rowsA_grade3013_checked :
     rowsA_grade3013.length = 1 ∧ fits 3013 rowsA_grade3013 = true ∧
       value 3013 rowsA_grade3013 = 55575093 := by
   refine ⟨rfl, ?_, ?_⟩
   · decide +kernel
   · decide +kernel
-def rowsA_grade3014 : List (List ℕ) :=
+private def rowsA_grade3014 : List (List ℕ) :=
   [[0,10939138048,10939006976,8724414464,6576865280,6543310848,4395761664,4362207232,
     67207168,2197913600,2214592704,2197815488,2181038272,25166016,16777408,8388800,
     2097344,8589934784,160,2147483800,144,140,136,132,8589934720,108,104,100,
     8589934688,76,72,68,4294967360,52,4294967344,36,2147483680,2147483672,16,12,8,
     4]]
-theorem rowsA_grade3014_checked :
+private theorem rowsA_grade3014_checked :
     rowsA_grade3014.length = 1 ∧ fits 3014 rowsA_grade3014 = true ∧
       value 3014 rowsA_grade3014 = 56103008 := by
   refine ⟨rfl, ?_, ?_⟩
   · decide +kernel
   · decide +kernel
-def rowsA_grade3015 : List (List ℕ) :=
+private def rowsA_grade3015 : List (List ℕ) :=
   [[0,10939138048,13086490624,6576930816,8724348928,6543310848,2248278016,6509690880,
     67207168,2197913600,2214592704,2197815488,33554624,2172649664,12583104,6291648,
     8589934784,2147483808,2147483800,144,140,136,131,8589934720,108,104,99,
     8589934688,76,72,67,4294967360,51,4294967344,35,2147483680,2147483672,16,12,8,
     3]]
-theorem rowsA_grade3015_checked :
+private theorem rowsA_grade3015_checked :
     rowsA_grade3015.length = 1 ∧ fits 3015 rowsA_grade3015 = true ∧
       value 3015 rowsA_grade3015 = 56895847 := by
   refine ⟨rfl, ?_, ?_⟩
   · decide +kernel
   · decide +kernel
-def rowsA_grade3016 : List (List ℕ) :=
+private def rowsA_grade3016 : List (List ℕ) :=
   [[2147483648,10939138048,10939006976,8724414464,6576865280,6543310848,4395761664,
     4362207232,50462720,2197913600,2214592704,2197815488,2181038272,25166016,16777408,
     8388800,10737418432,160,2147483800,2147483792,140,134,130,6442451072,112,108,102,
     98,6442451040,80,76,70,66,2147483712,54,50,2147483696,38,34,32,26,24,18,16,
     12,6,2]]
-theorem rowsA_grade3016_checked :
+private theorem rowsA_grade3016_checked :
     rowsA_grade3016.length = 1 ∧ fits 3016 rowsA_grade3016 = true ∧
       value 3016 rowsA_grade3016 = 56371788 := by
   refine ⟨rfl, ?_, ?_⟩
   · decide +kernel
   · decide +kernel
-def rowsA_grade3017 : List (List ℕ) :=
+private def rowsA_grade3017 : List (List ℕ) :=
   [[2147483648,10939138048,10939006976,10871898112,4429381632,8690794496,2248278016,
     4362207232,50462720,67207168,2197913600,67109056,4345299136,33554624,25166016,
     16777408,12583104,4194496,10737418432,160,2147483800,2147483792,140,134,129,
     6442451072,112,108,102,97,6442451040,80,76,70,65,2147483712,54,49,2147483696,
     38,33,32,25,24,17,16,12,6,1]]
-theorem rowsA_grade3017_checked :
+private theorem rowsA_grade3017_checked :
     rowsA_grade3017.length = 1 ∧ fits 3017 rowsA_grade3017 = true ∧
       value 3017 rowsA_grade3017 = 57063697 := by
   refine ⟨rfl, ?_, ?_⟩
   · decide +kernel
   · decide +kernel
-def rowsA_grade3018 : List (List ℕ) :=
+private def rowsA_grade3018 : List (List ℕ) :=
   [[4294967296,10939138048,10939006976,8724414464,6576865280,6543310848,2248278016,
     6509690880,50462720,2197913600,2214592704,2197815488,2181038272,25166016,16777408,
     6291648,12884902080,160,2147483800,144,140,136,132,8589934720,108,104,100,
     8589934688,76,72,68,4294967360,52,4294967344,36,2147483680,2147483672,16,12,8,
     4]]
-theorem rowsA_grade3018_checked :
+private theorem rowsA_grade3018_checked :
     rowsA_grade3018.length = 1 ∧ fits 3018 rowsA_grade3018 = true ∧
       value 3018 rowsA_grade3018 = 56668144 := by
   refine ⟨rfl, ?_, ?_⟩
   · decide +kernel
   · decide +kernel
-def rowsA_grade3019 : List (List ℕ) :=
+private def rowsA_grade3019 : List (List ℕ) :=
   [[4294967296,10939138048,10939006976,10871898112,4429381632,8690794496,2248278016,
     4362207232,50462720,4345397248,67109056,2197815488,2181038272,25166016,16777408,
     8388800,2097344,10737418432,2147483808,2147483800,144,140,136,131,8589934720,108,
     104,99,8589934688,76,72,67,4294967360,51,4294967344,35,2147483680,2147483672,16,
     12,8,3]]
-theorem rowsA_grade3019_checked :
+private theorem rowsA_grade3019_checked :
     rowsA_grade3019.length = 1 ∧ fits 3019 rowsA_grade3019 = true ∧
       value 3019 rowsA_grade3019 = 57382107 := by
   refine ⟨rfl, ?_, ?_⟩
   · decide +kernel
   · decide +kernel
-def rowsA_grade3020 : List (List ℕ) :=
+private def rowsA_grade3020 : List (List ℕ) :=
   [[4294967296,13086621696,10939006976,8724414464,4429381632,8690794496,67305472,
     100794368,6509690880,50462720,2197913600,2214592704,2197815488,33554624,2172649664,
     12583104,6291648,12884902080,160,2147483800,2147483792,140,134,130,6442451072,112,
     108,102,98,6442451040,80,76,70,66,2147483712,54,50,2147483696,38,34,32,26,
     24,18,16,12,6,2]]
-theorem rowsA_grade3020_checked :
+private theorem rowsA_grade3020_checked :
     rowsA_grade3020.length = 1 ∧ fits 3020 rowsA_grade3020 = true ∧
       value 3020 rowsA_grade3020 = 58013970 := by
   refine ⟨rfl, ?_, ?_⟩
   · decide +kernel
   · decide +kernel
-def rowsA_grade3021 : List (List ℕ) :=
+private def rowsA_grade3021 : List (List ℕ) :=
   [[6442450944,10939138048,10939006976,10871898112,4429381632,6543310848,67305472,
     2248278016,4362207232,50462720,2197913600,98560,67109056,2197815488,2181038272,
     25166016,16777408,8388800,2097344,12884902080,160,2147483800,2147483792,140,134,
     129,6442451072,112,108,102,97,6442451040,80,76,70,65,2147483712,54,49,
     2147483696,38,33,32,25,24,17,16,12,6,1]]
-theorem rowsA_grade3021_checked :
+private theorem rowsA_grade3021_checked :
     rowsA_grade3021.length = 1 ∧ fits 3021 rowsA_grade3021 = true ∧
       value 3021 rowsA_grade3021 = 57706514 := by
   refine ⟨rfl, ?_, ?_⟩
   · decide +kernel
   · decide +kernel
-def rowsA_grade3022 : List (List ℕ) :=
+private def rowsA_grade3022 : List (List ℕ) :=
   [[6442450944,13086621696,8791523328,10871898112,4429381632,8690794496,67305472,
     100794368,4362207232,2197946368,50429952,98560,98496,67109056,2197815488,33554624,
     25166016,16777408,12583104,4194496,15032385728,160,2147483800,144,140,136,132,
     8589934720,108,104,100,8589934688,76,72,68,4294967360,52,4294967344,36,
     2147483680,2147483672,16,12,8,4]]
-theorem rowsA_grade3022_checked :
+private theorem rowsA_grade3022_checked :
     rowsA_grade3022.length = 1 ∧ fits 3022 rowsA_grade3022 = true ∧
       value 3022 rowsA_grade3022 = 58257555 := by
   refine ⟨rfl, ?_, ?_⟩
   · decide +kernel
   · decide +kernel
-def rowsA_grade3023 : List (List ℕ) :=
+private def rowsA_grade3023 : List (List ℕ) :=
   [[8589934592,13086621696,8791523328,10871898112,4429381632,6543310848,67305472,
     100794368,6509690880,2197946368,2147582208,67109056,2197815488,2181038272,25166016,
     16777408,8388800,15032385728,2147483808,2147483800,144,140,136,131,8589934720,108,
     104,99,8589934688,76,72,67,4294967360,51,4294967344,35,2147483680,2147483672,16,
     12,8,3]]
-theorem rowsA_grade3023_checked :
+private theorem rowsA_grade3023_checked :
     rowsA_grade3023.length = 1 ∧ fits 3023 rowsA_grade3023 = true ∧
       value 3023 rowsA_grade3023 = 57679792 := by
   refine ⟨rfl, ?_, ?_⟩
   · decide +kernel
   · decide +kernel
-def rowsA_grade3024 : List (List ℕ) :=
+private def rowsA_grade3024 : List (List ℕ) :=
   [[8589934592,13086621696,8791523328,13019381760,2281897984,8690794496,67305472,
     100794368,4362207232,2197946368,50429952,2147582208,2197815488,2181038272,25166016,
     16777408,12583104,2097344,15032385728,160,2147483800,2147483792,140,134,130,
     6442451072,112,108,102,98,6442451040,80,76,70,66,2147483712,54,50,2147483696,
     38,34,32,26,24,18,16,12,6,2]]
-theorem rowsA_grade3024_checked :
+private theorem rowsA_grade3024_checked :
     rowsA_grade3024.length = 1 ∧ fits 3024 rowsA_grade3024 = true ∧
       value 3024 rowsA_grade3024 = 58493504 := by
   refine ⟨rfl, ?_, ?_⟩
   · decide +kernel
   · decide +kernel
-def rowsA_grade3025 : List (List ℕ) :=
+private def rowsA_grade3025 : List (List ℕ) :=
   [[8589934592,15234105344,8791523328,10871898112,2281897984,8690794496,2214789120,
     6509690880,2197946368,2147582208,67109120,2197815488,33554624,2172649664,12583104,
     6291648,193,15032385728,160,2147483800,2147483792,140,134,129,6442451072,112,108,
     102,97,6442451040,80,76,70,65,2147483712,54,49,2147483696,38,33,32,25,24,17,
     16,12,6,1]]
-theorem rowsA_grade3025_checked :
+private theorem rowsA_grade3025_checked :
     rowsA_grade3025.length = 1 ∧ fits 3025 rowsA_grade3025 = true ∧
       value 3025 rowsA_grade3025 = 59069395 := by
   refine ⟨rfl, ?_, ?_⟩
   · decide +kernel
   · decide +kernel
-def rowsA_grade3026 : List (List ℕ) :=
+private def rowsA_grade3026 : List (List ℕ) :=
   [[10737418240,13086621696,8791523328,13019381760,2281897984,6543310848,2214789120,
     100794368,4362207232,2197946368,2147582208,67109120,50331904,50331840,2181038272,
     25166016,16777408,8388800,196,17179869376,160,2147483800,144,140,136,132,
     8589934720,108,104,100,8589934688,76,72,68,4294967360,52,4294967344,36,
     2147483680,2147483672,16,12,8,4]]
-theorem rowsA_grade3026_checked :
+private theorem rowsA_grade3026_checked :
     rowsA_grade3026.length = 1 ∧ fits 3026 rowsA_grade3026 = true ∧
       value 3026 rowsA_grade3026 = 58930449 := by
   refine ⟨rfl, ?_, ?_⟩
   · decide +kernel
   · decide +kernel
-def rowsA_grade3027 : List (List ℕ) :=
+private def rowsA_grade3027 : List (List ℕ) :=
   [[10737418240,15234105344,6644039680,13019381760,2281897984,8690794496,2214789120,
     4362207232,4345430016,2147582208,67109120,2197815488,33554624,25166016,16777408,
     12583104,200,195,15032385728,2147483808,2147483800,144,140,136,131,8589934720,
     108,104,99,8589934688,76,72,67,4294967360,51,4294967344,35,2147483680,
     2147483672,16,12,8,3]]
-theorem rowsA_grade3027_checked :
+private theorem rowsA_grade3027_checked :
     rowsA_grade3027.length = 1 ∧ fits 3027 rowsA_grade3027 = true ∧
       value 3027 rowsA_grade3027 = 59459098 := by
   refine ⟨rfl, ?_, ?_⟩
   · decide +kernel
   · decide +kernel
-def rowsA_grade3028 : List (List ℕ) :=
+private def rowsA_grade3028 : List (List ℕ) :=
   [[12884901888,13086621696,8791523328,10871898112,100925440,2281897984,6543310848,
     2214789120,6509690880,2197946368,33685504,98560,67109120,50331904,50331840,
     2181038272,25166016,16777408,8388800,198,194,15032385728,160,2147483800,2147483792,
     140,134,130,6442451072,112,108,102,98,6442451040,80,76,70,66,2147483712,54,
     50,2147483696,38,34,32,26,24,18,16,12,6,2]]
-theorem rowsA_grade3028_checked :
+private theorem rowsA_grade3028_checked :
     rowsA_grade3028.length = 1 ∧ fits 3028 rowsA_grade3028 = true ∧
       value 3028 rowsA_grade3028 = 59274138 := by
   refine ⟨rfl, ?_, ?_⟩
   · decide +kernel
   · decide +kernel
-def rowsA_grade3029 : List (List ℕ) :=
+private def rowsA_grade3029 : List (List ℕ) :=
   [[12884901888,15234105344,6644039680,13019381760,100925440,134414336,8690794496,
     2214789120,4362207232,2197946368,33685504,2147582208,2197815552,50331840,33554624,
     25166016,16777408,12583104,204,198,193,15032385728,160,2147483800,2147483792,140,
     134,129,6442451072,112,108,102,97,6442451040,80,76,70,65,2147483712,54,49,
     2147483696,38,33,32,25,24,17,16,12,6,1]]
-theorem rowsA_grade3029_checked :
+private theorem rowsA_grade3029_checked :
     rowsA_grade3029.length = 1 ∧ fits 3029 rowsA_grade3029 = true ∧
       value 3029 rowsA_grade3029 = 59729025 := by
   refine ⟨rfl, ?_, ?_⟩
   · decide +kernel
   · decide +kernel
-def rowsA_grade3030 : List (List ℕ) :=
+private def rowsA_grade3030 : List (List ℕ) :=
   [[12884901888,17381588992,4496556032,13019381760,100925440,134414336,8690794496,
     2214789120,6509690880,2197946368,131328,98560,67109120,2197815552,2181038272,
     25166016,12583104,204,200,196,17179869376,160,2147483800,144,140,136,132,
     8589934720,108,104,100,8589934688,76,72,68,4294967360,52,4294967344,36,
     2147483680,2147483672,16,12,8,4]]
-theorem rowsA_grade3030_checked :
+private theorem rowsA_grade3030_checked :
     rowsA_grade3030.length = 1 ∧ fits 3030 rowsA_grade3030 = true ∧
       value 3030 rowsA_grade3030 = 60419416 := by
   refine ⟨rfl, ?_, ?_⟩
   · decide +kernel
   · decide +kernel
-def rowsA_grade3031 : List (List ℕ) :=
+private def rowsA_grade3031 : List (List ℕ) :=
   [[15032385536,15234105344,6644039680,13019381760,100925440,134414336,6543310848,
     4362272768,4362207232,2197946368,33685504,2147582208,2197815552,2181038272,25166016,
     16777408,208,204,200,195,15032385728,2147483808,2147483800,144,140,136,131,
     8589934720,108,104,99,8589934688,76,72,67,4294967360,51,4294967344,35,
     2147483680,2147483672,16,12,8,3]]
-theorem rowsA_grade3031_checked :
+private theorem rowsA_grade3031_checked :
     rowsA_grade3031.length = 1 ∧ fits 3031 rowsA_grade3031 = true ∧
       value 3031 rowsA_grade3031 = 60143148 := by
   refine ⟨rfl, ?_, ?_⟩
@@ -2151,16 +2136,16 @@ set_option maxRecDepth 10000
 set_option maxHeartbeats 2000000
 open K1_13_2_3
 open private rowLoop rowScore unpack from ProximityPrize.SubmissionLower.Numeric5Certificate
-def denE (x : Nat) : Nat :=
+private def denE (x : Nat) : Nat :=
   let q := Nat.add (Nat.mul 2 x) 15
   let t := Nat.add (Nat.mul q x) 30
   Nat.div (Nat.add (Nat.mul t x) 25) 72
-def triE (x : Nat) : Nat :=
+private def triE (x : Nat) : Nat :=
   let q := Nat.add (Nat.mul 2 x) 9
   let t := Nat.add (Nat.mul q x) 10
   Nat.div (Nat.add (Nat.mul t x) 3) 24
-theorem divE_helper (y z k : Nat) (hk : k < 36) (h : z = 36*y+k) : y/2 = z/72 := by omega
-theorem denE_residue (q r : Nat) (hr : r < 6) :
+private theorem divE_helper (y z k : Nat) (hk : k < 36) (h : z = 36*y+k) : y/2 = z/72 := by omega
+private theorem denE_residue (q r : Nat) (hr : r < 6) :
     (q * (q * (12*q+21+6*r) + 11+r*(7+r)) + 2+r*(r+1)) / 2 =
       denE (6*q+r+1) := by
   change _ = (((2*(6*q+r+1)+15)*(6*q+r+1)+30)*(6*q+r+1)+25)/72
@@ -2171,26 +2156,26 @@ theorem denE_residue (q r : Nat) (hr : r < 6) :
   · apply divE_helper _ _ 9 (by decide); ring
   · apply divE_helper _ _ 8 (by decide); ring
   · apply divE_helper _ _ 25 (by decide); ring
-theorem denE_eq (u : Nat) : denFast u = denE u := by
+private theorem denE_eq (u : Nat) : denFast u = denE u := by
   cases u with
   | zero => rfl
   | succ n =>
     simp only [denFast, Nat.beq_eq_true_eq, Nat.succ_ne_zero, ite_false, Nat.succ_sub_one]
     have e : 6*(n/6) + n%6 + 1 = n+1 := by omega
     simpa only [e] using denE_residue (n/6) (n%6) (Nat.mod_lt _ (by decide))
-theorem denE_period (q v : Nat) : denE (12*q+v) =
+private theorem denE_period (q v : Nat) : denE (12*q+v) =
     denE v + (48*q^3 + (12*v+30)*q^2 + (v^2+5*v+5)*q) := by
   change (((2*(12*q+v)+15)*(12*q+v)+30)*(12*q+v)+25) / 72 = (((2*v+15)*v+30)*v+25) / 72 + _
   rw [show (((2*(12*q+v)+15)*(12*q+v)+30)*(12*q+v)+25) = (((2*v+15)*v+30)*v+25)
       + 72*(48*q^3 + (12*v+30)*q^2 + (v^2+5*v+5)*q) by ring,
     Nat.add_mul_div_left _ _ (by decide)]
-theorem triE_period (q v : Nat) : triE (12*q+v) =
+private theorem triE_period (q v : Nat) : triE (12*q+v) =
     triE v + (144*q^3 + (36*v+54)*q^2 + (3*v^2+9*v+5)*q) := by
   change (((2*(12*q+v)+9)*(12*q+v)+10)*(12*q+v)+3) / 24 = (((2*v+9)*v+10)*v+3) / 24 + _
   rw [show (((2*(12*q+v)+9)*(12*q+v)+10)*(12*q+v)+3) = (((2*v+9)*v+10)*v+3)
       + 24*(144*q^3 + (36*v+54)*q^2 + (3*v^2+9*v+5)*q) by ring,
     Nat.add_mul_div_left _ _ (by decide)]
-theorem triE_eq (u : Nat) : denFast u + denFast (u-1) + denFast (u-2) = triE u := by
+private theorem triE_eq (u : Nat) : denFast u + denFast (u-1) + denFast (u-2) = triE u := by
   simp only [denE_eq]
   match u with
   | 0 => rfl
@@ -2203,9 +2188,9 @@ theorem triE_eq (u : Nat) : denFast u + denFast (u-1) + denFast (u-2) = triE u :
     rw [show 12*q+r+2-1 = 12*q+(r+1) by omega, show 12*q+r+2-2 = 12*q+r by omega,
       Nat.add_assoc (12*q) r 2, denE_period, denE_period, denE_period, triE_period]
     linear_combination e
-def shortE (d v : Nat) : Nat :=
+private def shortE (d v : Nat) : Nat :=
   Nat.sub (denE v) (triE (Nat.sub v (Nat.add d 1)))
-theorem shortE_eq (d v : Nat) (h₂ : v ≤ 2*d+3) (h₃ : v ≤ 3*d+1) :
+private theorem shortE_eq (d v : Nat) (h₂ : v ≤ 2*d+3) (h₃ : v ≤ 3*d+1) :
     cumFast d v = shortE d v := by
   by_cases hd : v ≤ d+1
   · simp only [cumFast, hd, ite_true, shortE, denE_eq v]
@@ -2220,17 +2205,17 @@ theorem shortE_eq (d v : Nat) (h₂ : v ≤ 2*d+3) (h₃ : v ≤ 3*d+1) :
       Nat.add_zero, shortE, denE_eq v]
     change denE v - _ = denE v - triE (v-(d+1))
     rw [ht]
-theorem cutDiagE (d v r : Nat) (hr : r ≤ d) (hv : v ≤ d-r+1) :
+private theorem cutDiagE (d v r : Nat) (hr : r ≤ d) (hv : v ≤ d-r+1) :
     cutFast d v r = denE v := by
   simp only [cutFast, Nat.not_lt.mpr hr, ite_false, cumFast, hv, ite_true, denE_eq v]
-theorem cutShortE (d v r : Nat) (hr : r ≤ d) (h₂ : v ≤ 2*(d-r)+3)
+private theorem cutShortE (d v r : Nat) (hr : r ≤ d) (h₂ : v ≤ 2*(d-r)+3)
     (h₃ : v ≤ 3*(d-r)+1) : cutFast d v r = shortE (d-r) v := by
   simp only [cutFast, Nat.not_lt.mpr hr, ite_false, shortE_eq _ _ h₂ h₃]
-def gradeBaseE (s j r : Nat) : Nat :=
+private def gradeBaseE (s j r : Nat) : Nat :=
   let o := Nat.sub 4650 (Nat.add s j)
   Nat.sub (Nat.add 125576826 (denE (Nat.sub o (Nat.mul 3 r))))
     (Nat.add (denE o) (shortE (Nat.sub 1650 r) (Nat.sub 1650 j)))
-def gradeSaveE (s j a b c baseR : Nat) : Nat :=
+private def gradeSaveE (s j a b c baseR : Nat) : Nat :=
   let bc := Nat.add b c
   let dc := Nat.mul 3 c
   let d := Nat.sub 1650 (Nat.add (Nat.add a b) dc)
@@ -2241,7 +2226,7 @@ def gradeSaveE (s j a b c baseR : Nat) : Nat :=
   let k := Nat.sub (Nat.add (shortE d u) (denE (Nat.sub o (Nat.mul 3 r))))
     (Nat.add (shortE d o) (shortE (Nat.sub d r) l))
   Nat.sub (Nat.sub k (Nat.sub k 30000000)) (gradeBaseE s j baseR)
-theorem gradeSaveE_eq (s j a b c : Nat) (hs : 2680 ≤ s) (hs' : s ≤ 2847)
+private theorem gradeSaveE_eq (s j a b c : Nat) (hs : 2680 ≤ s) (hs' : s ≤ 2847)
     (hj : 390 ≤ j) (hj' : j ≤ 573) (hdia : 3137 ≤ s+j) (hdiag : 3594 ≤ s+2*j)
     (ha : a ≤ 192) (hb : b ≤ 96) (hc : c ≤ 384) :
     certifiedSaving s j ⟨a,b,c⟩ = gradeSaveE s j a b c ((4649-s)/4+1) := by
@@ -2281,10 +2266,10 @@ theorem gradeSaveE_eq (s j a b c : Nat) (hs : 2680 ≤ s) (hs' : s ≤ 2847)
   change (kFast d l u o r - (kFast d l u o r-30000000)) - _ = _
   rw [eK]
   rfl
-def boundedSaveE (s j a b c br : Nat) : Nat :=
+private def boundedSaveE (s j a b c br : Nat) : Nat :=
   bif Nat.ble a 192 && Nat.ble b 96 && Nat.ble c 384 then gradeSaveE s j a b c br
   else certifiedSaving s j ⟨a,b,c⟩
-theorem boundedSaveE_eq (s j a b c : Nat) (hs : 2680 ≤ s) (hs' : s ≤ 2847)
+private theorem boundedSaveE_eq (s j a b c : Nat) (hs : 2680 ≤ s) (hs' : s ≤ 2847)
     (hj : 390 ≤ j) (hj' : j ≤ 573) (hdia : 3137 ≤ s+j) (hdiag : 3594 ≤ s+2*j) :
     certifiedSaving s j ⟨a,b,c⟩ = boundedSaveE s j a b c ((4649-s)/4+1) := by
   unfold boundedSaveE
@@ -2293,13 +2278,13 @@ theorem boundedSaveE_eq (s j a b c : Nat) (hs : 2680 ≤ s) (hs' : s ≤ 2847)
   | true =>
     simp only [Bool.and_eq_true, Nat.ble_eq] at e
     exact gradeSaveE_eq s j a b c hs hs' hj hj' hdia hdiag e.1.1 e.1.2 e.2
-def gradeLoopE (s br : Nat) : Nat → Nat → Nat → Nat
+private def gradeLoopE (s br : Nat) : Nat → Nat → Nat → Nat
   | 0, _, _ => 0
   | n+1, j, p =>
       Nat.add (boundedSaveE s j (Nat.mod p 512) (Nat.mod (Nat.div p 512) 512)
                  (Nat.mod (Nat.div p 262144) 1024) br)
         (gradeLoopE s br n (Nat.add j 1) (Nat.div p 268435456))
-theorem gradeLoopE_eq (s n j p : Nat) (hs : 2680 ≤ s) (hs' : s ≤ 2847)
+private theorem gradeLoopE_eq (s n j p : Nat) (hs : 2680 ≤ s) (hs' : s ≤ 2847)
     (hj : 390 ≤ j) (hj' : j+n ≤ 574) (hdia : 3137 ≤ s+j) (hdiag : 3594 ≤ s+2*j) :
     rowLoop s n j p = gradeLoopE s ((4649-s)/4+1) n j p := by
   induction n generalizing j p with
@@ -2308,12 +2293,12 @@ theorem gradeLoopE_eq (s n j p : Nat) (hs : 2680 ≤ s) (hs' : s ≤ 2847)
     simp only [rowLoop, gradeLoopE, unpack, boundedSaveE_eq _ _ _ _ _ hs hs' hj (by omega) hdia hdiag,
       ih (j+1) _ (by omega) (by omega) (by omega) (by omega)]
     rfl
-def rowE (s : Nat) (r : Row) : Nat :=
+private def rowE (s : Nat) (r : Row) : Nat :=
   if 2680 ≤ s ∧ s ≤ 2847 ∧ 390 ≤ r.first ∧ r.first+r.count ≤ 574 ∧
       3137 ≤ s+r.first ∧ 3594 ≤ s+2*r.first ∧ s+r.first+r.count ≤ 3420 then
     gradeLoopE s ((4649-s)/4+1) r.count r.first r.packed
   else rowScore s r
-theorem rowE_eq (s : Nat) (r : Row) : rowScore s r = rowE s r := by
+private theorem rowE_eq (s : Nat) (r : Row) : rowScore s r = rowE s r := by
   unfold rowE
   split
   · rename_i h
@@ -2323,506 +2308,506 @@ theorem rowE_eq (s : Nat) (r : Row) : rowScore s r = rowE s r := by
     rw [rowScore, ite_eq_left guard]
     exact gradeLoopE_eq _ _ _ _ hs hs' hj hj' hdia hdiag
   · rfl
-def batchE : Nat → List Row → Nat
+private def batchE : Nat → List Row → Nat
   | _, [] => 0
   | s, r :: rs => Nat.add (rowE s r) (batchE (Nat.add s 1) rs)
-theorem batchE_eq (s : Nat) (rs : List Row) : batchScore s rs = batchE s rs := by
+private theorem batchE_eq (s : Nat) (rs : List Row) : batchScore s rs = batchE s rs := by
   induction rs generalizing s with
   | nil => rfl
   | cons r rs ih => simp only [batchScore, batchE, rowE_eq, ih]; rfl
-def rowsE_chunk000 : List Row := [
+private def rowsE_chunk000 : List Row := [
   ⟨457,117,0x400000100000020000003000000380000044000005000000600000068000008000000800000090000009800000c000000c000000c000000cc00000d8000010000001000000100000010c000011800001200000130000018000001800000180000018000001800000180000018c000019800001a000001b000001c000002000000200000020000002000000200000020c0000218000022000002300000240000024000002600000260000028000003000000300000030000003000000300000030000003000000300000030000003000000300000030c0000318000032000003300000340000034000003600000360000038000004000000400000040000004000000400000040000004000000400000040000004000000408000041800004200000430000044000004400000460000046000004800000480000048000004c000004c000004c000004c000004c00000600004060000406000040600004060000406000040600006060000606000060600006060000606000060600006060000606000080600008060040006004000600600060060006006000⟩,
   ⟨457,116,0x80000018000002000000300000040000004800000600000060000006c00000800000088000009000000a000000c000000c000000c400000d000000e00000100000010000001040000110000012000001300000130000018000001800000180000018000001800000184000019000001a000001b000001b00000200000020000002000000200000020000002040000210000022000002300000230000024000002400000260000026000002800000300000030000003000000300000030000003000000300000030000003000000300000030400003100000320000033000003400000340000036000003600000360000040000004000000400000040000004000000400000040000004000000400000040000004000000410000042000004300000430000044000004600000460000046000004800000480000048000004c000004c000004c000004c000004c0000060000406000040600004060000406000040600006060000606000060600006060000606000060600006060000606000080600008060000806004000600600060060006006000⟩,
   ⟨456,116,0xc0000018000002400000340000040000004c0000060000006400000800000080000008c000009800000c000000c000000c000000c800000d800001000000100000010000001080000118000012000001300000140000018000001800000180000018000001800000188000019800001a000001b000001c00000200000020000002000000200000020000002080000218000022000002300000240000024000002600000260000026000002800000300000030000003000000300000030000003000000300000030000003000000300000030800003180000320000033000003400000340000036000003600000380000040000004000000400000040000004000000400000040000004000000400000040000004080000410000042000004300000440000044000004600000460000048000004800000480000048000004c000004c000004c000004c00000600004060000406000040600004060000406000060600006060000606000060600006060000606000060600006060000806000080600008060040006004000600600060060006006000⟩,
   ⟨456,116,0x400000100000020000003000000380000044000005000000600000068000008000000840000090000009800000c000000c000000c000000cc00000d8000010000001000000100000010c000011800001200000130000018000001800000180000018000001800000180000018c000019800001a000001b000001c000002000000200000020000002000000200000020c00002180000220000023000002400000240000026000002600000280000030000003000000300000030000003000000300000030000003000000300000030000003000000310000031800003300000330000034000003600000360000036000003800000400000040000004000000400000040000004000000400000040000004000000400000040c000041800004200000430000044000004400000460000046000004800000480000048000004c000004c000004c000004c000004c0000060000406000040600004060000406000060600006060000606000060600006060000606000060600006060000806000080600008060000806004000600600060060006006000⟩
 ]
-theorem rowsE_chunk000_length : rowsE_chunk000.length = 4 := rfl
+private theorem rowsE_chunk000_length : rowsE_chunk000.length = 4 := rfl
 set_option maxHeartbeats 0 in
 set_option maxRecDepth 50000 in
-theorem rowsE_chunk000_score : batchScore 2680 rowsE_chunk000 = 731242585 := by
+private theorem rowsE_chunk000_score : batchScore 2680 rowsE_chunk000 = 731242585 := by
   rw [batchE_eq]
   decide +kernel
-def rowsE_chunk004 : List Row := [
+private def rowsE_chunk004 : List Row := [
   ⟨456,115,0x80000018000002000000300000040000004800000600000060000006c00000800000088000009000000a000000c000000c000000c400000d000000e00000100000010000001040000110000012000001300000130000018000001800000180000018000001800000184000019000001a000001b000001b00000200000020000002000000200000020000002040000210000022000002300000230000024000002600000260000026000002800000300000030000003000000300000030000003000000300000030000003000000300000030800003100000320000033000003400000340000036000003600000360000040000004000000400000040000004000000400000040000004000000400000040000004040000410000042000004300000440000044000004600000460000048000004800000480000048000004c000004c000004c000004c0000050000006000040600004060000406000040600006060000606000060600006060000606000060600006060000606000080600008060000806004000600600060060006006000⟩,
   ⟨455,115,0xc0000018000002800000340000040000004c0000060000006400000800000080000008c000009800000c000000c000000c000000c800000d800001000000100000010000001080000118000012000001300000140000018000001800000180000018000001800000188000019800001a000001b000001c00000200000020000002000000200000020000002080000218000022000002300000240000024000002600000260000026000002800000300000030000003000000300000030000003000000300000030000003000000300000030c0000318000032000003300000340000034000003600000360000038000004000000400000040000004000000400000040000004000000400000040000004000000408000041800004200000430000044000004400000460000046000004800000480000048000004c000004c000004c000004c000004c0000060000406000040600004060000406000060600006060000606000060600006060000606000060600006060000806000080600008060000806004000600600060060006006000⟩,
   ⟨455,115,0x400000100000020000003000000380000044000006000000600000068000008000000840000090000009800000c000000c000000c000000d000000d8000010000001000000100000010c000011800001200000130000018000001800000180000018000001800000180000018c000019800001a000001b0000020000002000000200000020000002000000200000020c00002180000220000023000002400000240000026000002600000280000030000003000000300000030000003000000300000030000003000000300000030000003040000310000032000003300000330000034000003600000360000036000003800000400000040000004000000400000040000004000000400000040000004000000400000040c000041800004300000430000044000004600000460000046000004800000480000048000004c000004c000004c000004c000004c000006000040600004060000406000060600006060000606000060600006060000606000060600006060000806000080600008060000806004000600600060060006006000⟩,
   ⟨454,115,0x80000018000002400000300000040000004800000600000060000006c00000800000088000009000000c000000c000000c000000c800000d000000e00000100000010000001040000110000012000001300000140000018000001800000180000018000001800000184000019000001a000001b000001b00000200000020000002000000200000020000002040000210000022000002300000230000024000002600000260000026000002800000300000030000003000000300000030000003000000300000030000003000000300000030800003180000320000033000003400000340000036000003600000380000040000004000000400000040000004000000400000040000004000000400000040000004040000410000042000004300000440000044000004600000460000048000004800000480000048000004c000004c000004c000004c0000060000406000040600004060000606000060600006060000606000060600006060000606000060600008060000806000080600008060000806006000600600060060006006000⟩
 ]
-theorem rowsE_chunk004_length : rowsE_chunk004.length = 4 := rfl
+private theorem rowsE_chunk004_length : rowsE_chunk004.length = 4 := rfl
 set_option maxHeartbeats 0 in
 set_option maxRecDepth 50000 in
-theorem rowsE_chunk004_score : batchScore 2684 rowsE_chunk004 = 723671953 := by
+private theorem rowsE_chunk004_score : batchScore 2684 rowsE_chunk004 = 723671953 := by
   rw [batchE_eq]
   decide +kernel
-def rowsE_chunk008 : List Row := [
+private def rowsE_chunk008 : List Row := [
   ⟨454,114,0xc0000018000002800000340000040000004c0000060000006400000800000080000008c000009800000c000000c000000c000000cc00000d800001000000100000010000001080000118000012000001300000140000018000001800000180000018000001800000188000019800001a000001b000001c00000200000020000002000000200000020000002080000218000022000002300000240000024000002600000260000028000003000000300000030000003000000300000030000003000000300000030000003000000300000030c000031800003200000330000034000003400000360000036000003800000400000040000004000000400000040000004000000400000040000004000000400000240c000041800004200000430000044000004400000460000046000004800000480000048000004c000004c000004c000004c000004c000006000040600004060000406000060600006060000606000060600006060000606000060600006060000806000080600008060000806004000600600060060006006000⟩,
   ⟨454,114,0x40000010000002000000300000038000004400000600000060000006800000800000084000009000000a000000c000000c000000c400000d000000d80000100000010000001000000110000011800001200000130000018000001800000180000018000001800000180000018c000019800001a000001b0000020000002000000200000020000002000000200000020c000021800002200000230000024000002400000260000026000002800000300000030000003000000300000030000003000000300000030000003000000300000030400003100000320000033000003400000340000036000003600000360000038000004000000400000040000004000000400000040000004000000400000040000014000006410000042000004300000440000044000004600000460000048000004800000480000048000004c000004c000004c000004c000005000000600004060000406000060600006060000606000060600006060000606000060600006060000806000080600008060000806000080600600060060006006000⟩,
   ⟨453,114,0x80000018000002400000300000040000004800000600000060000007000000800000088000009000000c000000c000000c000000c800000d000000e00000100000010000001040000110000012000001300000140000018000001800000180000018000001800000184000019000001a000001b000001c0000020000002000000200000020000002000000204000021000002200000230000024000002400000260000026000002600000280000030000003000000300000030000003000000300000030000003000000300000030000003080000318000032000003300000340000034000003600000360000038000004000000400000040000004000000400000040000004000000400000040000004000004408000041800004200000430000044000004400000460000046000004800000480000048000004c000004c000004c000004c000004c000006000040600004060000606000060600006060000606000060600006060000606000060600008060000806000080600008060000806004000600600060060006006000⟩,
   ⟨453,113,0xc000001c000002800000340000040000004c0000060000006400000800000080000008c000009800000c000000c000000c000000cc00000d8000010000001000000100000010c0000118000012000001300000140000018000001800000180000018000001800000188000019800001a000001b000001c00000200000020000002000000200000020000002080000218000022000002300000240000024000002600000260000028000003000000300000030000003000000300000030000003000000300000030000003000000300000030c000031800003300000330000034000003400000360000036000003800000400000040000004000000400000040000004000000400000040000004000003400000840c000041800004200000430000044000004600000460000046000004800000480000048000004c000004c000004c000004c000004c00000600004060000606000060600006060000606000060600006060000606000060600008060000806000080600008060000806000080600600060060006006000⟩
 ]
-theorem rowsE_chunk008_length : rowsE_chunk008.length = 4 := rfl
+private theorem rowsE_chunk008_length : rowsE_chunk008.length = 4 := rfl
 set_option maxHeartbeats 0 in
 set_option maxRecDepth 50000 in
-theorem rowsE_chunk008_score : batchScore 2688 rowsE_chunk008 = 715960368 := by
+private theorem rowsE_chunk008_score : batchScore 2688 rowsE_chunk008 = 715960368 := by
   rw [batchE_eq]
   decide +kernel
-def rowsE_chunk012 : List Row := [
+private def rowsE_chunk012 : List Row := [
   ⟨452,114,0x40000010000002000000300000038000004400000600000060000006c00000800000084000009000000a000000c000000c000000c400000d000000d800001000000100000010000001100000118000013000001300000180000018000001800000180000018000001800000190000019800001a000001b00000200000020000002000000200000020000002000000210000021800002300000230000024000002400000260000026000002800000300000030000003000000300000030000003000000300000030000003000000300000030400003100000320000033000003400000340000036000003600000360000040000004000000400000040000004000000400000040000004000000400000240000064040000410000042000004300000440000044000004600000460000048000004800000480000048000004c000004c000004c000004c000006000040600004060000606000060600006060000606000060600006060000606000060600008060000806000080600008060000806006000600600060060006006000⟩,
   ⟨452,113,0x80000018000002400000300000040000004800000600000060000007000000800000088000009800000c000000c000000c000000c800000d000001000000100000010000001080000110000012000001300000140000018000001800000180000018000001800000184000019000001a000001b000001c00000200000020000002000000200000020000002080000210000022000002300000240000024000002600000260000026000002800000300000030000003000000300000030000003000000300000030000003000000300000030c000031800003200000330000034000003400000360000036000003800000400000040000004000000400000040000004000000400000040000014000006400000c408000041800004200000430000044000004400000460000046000004800000480000048000004c000004c000004c000004c000004c00000600004060000606000060600006060000606000060600006060000606000060600008060000806000080600008060000806000080600600060060006006000⟩,
   ⟨452,112,0xc000001c000002800000340000040000004c0000060000006800000800000080000008c000009800000c000000c000000c000000cc00000d8000010000001000000100000010c000011800001200000130000014000001800000180000018000001800000180000018c000019800001a000001b000001c000002000000200000020000002000000200000020c00002180000220000023000002400000240000026000002600000280000030000003000000300000030000003000000300000030000003000000300000030000003000000310000032000003300000330000034000003600000360000036000003800000400000040000004000000400000040000004000000400000040000044000008400000c410000041800004300000430000044000004600000460000046000004800000480000048000004c000004c000004c000004c00000500000060000606000060600006060000606000060600006060000606000060600008060000806000080600008060000806000080600600060060006006000⟩,
   ⟨451,113,0x40000014000002000000300000040000004400000600000060000006c00000800000084000009000000a000000c000000c000000c400000d000000e000001000000100000010400001100000118000013000001300000180000018000001800000180000018000001800000190000019800001b000001b000002000000200000020000002000000200000020400002100000220000023000002300000240000024000002600000260000028000003000000300000030000003000000300000030000003000000300000030000003000000308000031000003200000330000034000003400000360000036000003800000400000040000004000000400000040000004000000400000040000034000008400000c4000010410000042000004300000440000044000004600000460000048000004800000480000048000004c000004c000004c000004c00000600006060000606000060600006060000606000060600006060000606000080600008060000806000080600008060000806000080600600060060006006000⟩
 ]
-theorem rowsE_chunk012_length : rowsE_chunk012.length = 4 := rfl
+private theorem rowsE_chunk012_length : rowsE_chunk012.length = 4 := rfl
 set_option maxHeartbeats 0 in
 set_option maxRecDepth 50000 in
-theorem rowsE_chunk012_score : batchScore 2692 rowsE_chunk012 = 708053556 := by
+private theorem rowsE_chunk012_score : batchScore 2692 rowsE_chunk012 = 708053556 := by
   rw [batchE_eq]
   decide +kernel
-def rowsE_chunk016 : List Row := [
+private def rowsE_chunk016 : List Row := [
   ⟨451,112,0x80000018000002400000300000040000004800000600000064000007000000800000088000009800000c000000c000000c000000c800000d800001000000100000010000001080000110000012000001300000140000018000001800000180000018000001800000188000019000001a000001b000001c00000200000020000002000000200000020000002080000210000022000002300000240000024000002600000260000026000002800000300000030000003000000300000030000003000000300000030000003000000300000030c00003180000320000033000003400000340000036000003600000380000040000004000000400000040000004000000400000040000024000006400000c400001040c000041800004200000430000044000004600000460000046000004800000480000048000004c000004c000004c000004c000004c0000060000606000060600006060000606000060600006060000606000060600008060000806000080600008060000806000080600600060060006006000⟩,
   ⟨450,112,0x10000001c000002800000340000040000004c0000060000006800000800000080000008c000009800000c000000c000000c000000cc00000d8000010000001000000100000010c000011800001200000130000014000001800000180000018000001800000180000018c000019800001a000001b000001c000002000000200000020000002000000200000020c000021800002200000230000024000002400000260000026000002800000300000030000003000000300000030000003000000300000030000003000000300000030400003100000320000033000003400000340000036000003600000360000038000004000000400000040000004000000400000040000014000006400000c40000104000010410000042000004300000440000044000004600000460000048000004800000480000048000004c000004c000004c000004c00000600006060000606000060600006060000606000060600006060000606000080600008060000806000080600008060000806000080600600060060006006000⟩,
   ⟨450,112,0x80000014000002000000300000040000004400000600000060000006c00000800000084000009000000a000000c000000c000000c400000d000000e00000100000010000001040000110000012000001300000130000018000001800000180000018000001800000184000019000001a000001b000001b00000200000020000002000000200000020000002040000210000022000002300000230000024000002600000260000026000002800000300000030000003000000300000030000003000000300000030000003000000300000030800003180000320000033000003400000340000036000003600000380000040000004000000400000040000004000000400000040000044000008400000c4000010400001841800004200000430000044000004400000460000046000004800000480000048000004c000004c000004c000004c000004c0000060000606000060600006060000606000060600006060000606000080600008060000806000080600008060000806000080600600060060006006000⟩,
   ⟨450,111,0xc0000018000002400000300000040000004800000600000064000007000000800000088000009800000c000000c000000c000000c800000d800001000000100000010000001080000118000012000001300000140000018000001800000180000018000001800000188000019800001a000001b000001c00000200000020000002000000200000020000002080000218000022000002300000240000024000002600000260000026000003000000300000030000003000000300000030000003000000300000030000003000000300000030c0000318000032000003300000340000034000003600000360000038000004000000400000040000004000000400000040000034000008400000c4000010400001840c000041800004300000430000044000004600000460000046000004800000480000048000004c000004c000004c000004c0000060000606000060600006060000606000060600006060000606000080600008060000806000080600008060000806000080600600060060006006000⟩
 ]
-theorem rowsE_chunk016_length : rowsE_chunk016.length = 4 := rfl
+private theorem rowsE_chunk016_length : rowsE_chunk016.length = 4 := rfl
 set_option maxHeartbeats 0 in
 set_option maxRecDepth 50000 in
-theorem rowsE_chunk016_score : batchScore 2696 rowsE_chunk016 = 700130495 := by
+private theorem rowsE_chunk016_score : batchScore 2696 rowsE_chunk016 = 700130495 := by
   rw [batchE_eq]
   decide +kernel
-def rowsE_chunk020 : List Row := [
+private def rowsE_chunk020 : List Row := [
   ⟨449,112,0x40000010000001c000002800000340000040000004c0000060000006800000800000080000008c000009800000c000000c000000c000000cc00000d8000010000001000000100000010c000011800001200000130000014000001800000180000018000001800000180000018c000019800001a000001b0000020000002000000200000020000002000000200000020c00002180000220000023000002400000240000026000002600000280000030000003000000300000030000003000000300000030000003000000300000030000003040000310000032000003300000340000034000003600000360000036000004000000400000040000004000000400000040000024000006400000c400001040000104000018410000042000004300000440000044000004600000460000048000004800000480000048000004c000004c000004c000004c0000060000606000060600006060000606000060600006060000606000080600008060000806000080600008060000806000080600600060060006006000⟩,
   ⟨449,111,0x80000014000002000000300000040000004400000600000060000006c00000800000084000009000000a000000c000000c000000c400000d000000e00000100000010000001040000110000012000001300000130000018000001800000180000018000001800000184000019000001a000001b000001b000002000000200000020000002000000200000020400002100000220000023000002300000240000026000002600000260000028000003000000300000030000003000000300000030000003000000300000030000003000000308000031800003200000330000034000003400000360000036000003800000400000040000004000000400000040000014000006400000c400001040000104000018400001841800004200000430000044000004400000460000046000004800000480000048000004c000004c000004c000004c000004c000006000060600006060000606000060600006060000606000080600008060000806000080600008060000806000080600600060060006006000⟩,
   ⟨448,111,0xc0000018000002400000300000040000004800000600000064000007000000800000088000009800000c000000c000000c000000c800000d800001000000100000010000001080000118000012000001300000140000018000001800000180000018000001800000188000019800001a000001b000001c000002000000200000020000002000000200000020800002180000220000023000002400000240000026000002600000280000030000003000000300000030000003000000300000030000003000000300000030000003000000310000031800003300000330000034000003600000360000036000003800000400000040000004000000400000040000044000008400000c400001040000184000018410000042000004300000440000044000004600000460000048000004800000480000048000004c000004c000004c000004c0000060000606000060600006060000606000060600006060000806000080600008060000806000080600008060000806000080600600060060006006000⟩,
   ⟨448,111,0x40000010000001c00000300000034000004000000500000060000006800000800000080000008c000009800000c000000c000000c000000cc00000d8000010000001000000100000010c000011800001200000130000018000001800000180000018000001800000180000018c000019800001a000001b0000020000002000000200000020000002000000200000020c0000218000022000002300000240000024000002600000260000028000003000000300000030000003000000300000030000003000000300000030000003000000308000031000003200000330000034000003400000360000036000003800000400000040000004000000400000040000034000008400000c400001040000184000018400002041800004200000430000044000004400000460000046000004800000480000048000004c000004c000004c000004c000004c000006000060600006060000606000060600006060000806000080600008060000806000080600008060000806000080600600060060006006000⟩
 ]
-theorem rowsE_chunk020_length : rowsE_chunk020.length = 4 := rfl
+private theorem rowsE_chunk020_length : rowsE_chunk020.length = 4 := rfl
 set_option maxHeartbeats 0 in
 set_option maxRecDepth 50000 in
-theorem rowsE_chunk020_score : batchScore 2700 rowsE_chunk020 = 692205014 := by
+private theorem rowsE_chunk020_score : batchScore 2700 rowsE_chunk020 = 692205014 := by
   rw [batchE_eq]
   decide +kernel
-def rowsE_chunk024 : List Row := [
+private def rowsE_chunk024 : List Row := [
   ⟨448,110,0x80000014000002000000300000040000004400000600000060000006c00000800000084000009000000a000000c000000c000000c400000d000000e00000100000010000001040000110000012000001300000130000018000001800000180000018000001800000184000019000001a000001b000001b00000200000020000002000000200000020000002040000210000022000002300000240000024000002600000260000026000002800000300000030000003000000300000030000003000000300000030000003000000300000030c00003180000320000033000003400000340000036000003600000380000040000004000000400000040000024000006400000c4000010400001040000184000018400002041800004200000430000044000004600000460000046000004800000480000048000004c000004c000004c000004c000006000060600006060000606000060600006060000606000080600008060000806000080600008060000806000080600008060060006006000⟩,
   ⟨447,110,0xc0000018000002400000300000040000004c00000600000064000008000000800000088000009800000c000000c000000c000000c800000d800001000000100000010000001080000118000012000001300000140000018000001800000180000018000001800000188000019800001a000001b000001c0000020000002000000200000020000002000000208000021800002200000230000024000002400000260000026000002800000300000030000003000000300000030000003000000300000030000003000000300000030400003100000320000033000003300000340000036000003600000360000038000004000000400000040000014000006400000c40000104000010400001840000184000020410000042000004300000440000044000004600000460000048000004800000480000048000004c000004c000004c000004c000006000060600006060000606000060600006060000806000080600008060000806000080600008060000806000080600600060060006006000⟩,
   ⟨447,110,0x400000100000020000003000000340000044000005000000600000068000008000000800000090000009800000c000000c000000c000000cc00000d8000010000001000000100000010c000011800001200000130000018000001800000180000018000001800000180000018c000019800001a000001b00000200000020000002000000200000020000002000000210000021800002300000230000024000002400000260000026000002800000300000030000003000000300000030000003000000300000030000003000000300000030800003180000320000033000003400000340000036000003600000380000040000004000000400000040000044000008400000c4000010400001840000184000020400002041800004200000430000044000004400000460000046000004800000480000048000004c000004c000004c000004c000005000000600006060000606000060600006060000806000080600008060000806000080600008060000806000080600008060060006006000⟩,
   ⟨446,110,0x80000014000002000000300000040000004800000600000060000006c00000800000084000009000000a000000c000000c000000c400000d000000e00000100000010000001040000110000012000001300000140000018000001800000180000018000001800000184000019000001a000001b000001c00000200000020000002000000200000020000002080000210000022000002300000240000024000002600000260000026000002800000300000030000003000000300000030000003000000300000030000003000000300000030c0000318000032000003300000340000034000003600000360000038000004000000400000040000034000008400000c40000104000018400001840000204000020400002042000004300000440000044000004600000460000048000004800000480000048000004c000004c000004c000004c000006000060600006060000606000060600008060000806000080600008060000806000080600008060000806000080600600060060006006000⟩
 ]
-theorem rowsE_chunk024_length : rowsE_chunk024.length = 4 := rfl
+private theorem rowsE_chunk024_length : rowsE_chunk024.length = 4 := rfl
 set_option maxHeartbeats 0 in
 set_option maxRecDepth 50000 in
-theorem rowsE_chunk024_score : batchScore 2704 rowsE_chunk024 = 684283062 := by
+private theorem rowsE_chunk024_score : batchScore 2704 rowsE_chunk024 = 684283062 := by
   rw [batchE_eq]
   decide +kernel
-def rowsE_chunk028 : List Row := [
+private def rowsE_chunk028 : List Row := [
   ⟨446,109,0xc0000018000002400000300000040000004c0000060000006400000800000080000008c000009800000c000000c000000c000000c800000d800001000000100000010000001080000118000012000001300000140000018000001800000180000018000001800000188000019800001a000001b000001c000002000000200000020000002000000200000020c00002180000220000023000002400000240000026000002600000280000030000003000000300000030000003000000300000030000003000000300000030000003040000310000032000003300000340000034000003600000360000036000004000000400000040000024000006400000c40000104000010400001840000184000020400002041000004200000430000044000004400000460000046000004800000480000048000004c000004c000004c000004c000004c00000600006060000606000060600006060000806000080600008060000806000080600008060000806000080600600060060006006000⟩,
   ⟨446,109,0x400000100000020000003000000340000044000005000000600000068000008000000800000090000009800000c000000c000000c000000d000000d800001000000100000010000001100000118000012000001300000180000018000001800000180000018000001800000190000019800001b000001b000002000000200000020000002000000200000020400002100000220000023000002300000240000026000002600000260000028000003000000300000030000003000000300000030000003000000300000030000003000000308000031800003200000330000034000003400000360000036000003800000400000040000014000006400000c400001040000104000018400001840000204000020400002041800004200000430000044000004600000460000046000004800000480000048000004c000004c000004c000004c00000600006060000606000060600006060000806000080600008060000806000080600008060000806000080600008060060006006000⟩,
   ⟨445,109,0x80000018000002000000300000040000004800000600000060000006c00000800000088000009000000c000000c000000c000000c800000d000000e00000100000010000001040000110000012000001300000140000018000001800000180000018000001800000184000019000001a000001b000001c000002000000200000020000002000000200000020800002180000220000023000002400000240000026000002600000260000030000003000000300000030000003000000300000030000003000000300000030000003000000310000031800003300000330000034000003600000360000036000003800000400000040000044000008400000c400001040000184000018400002040000204000020400003042000004300000440000044000004600000460000048000004800000480000048000004c000004c000004c000004c00000600006060000606000060600008060000806000080600008060000806000080600008060000806000080600600060060006006000⟩,
   ⟨445,108,0xc0000018000002400000340000040000004c0000060000006400000800000080000008c000009800000c000000c000000c000000cc00000d8000010000001000000100000010c000011800001200000130000014000001800000180000018000001800000180000018c000019800001a000001b000001c000002000000200000020000002000000200000020c0000218000022000002300000240000024000002600000260000028000003000000300000030000003000000300000030000003000000300000030000003000000304000031000003200000330000034000003400000360000036000003800000400000040000034000008400000c400001040000184000018400002040000204000020400003040000304200000430000044000004400000460000046000004800000480000048000004c000004c000004c000004c00000500000060000606000060600008060000806000080600008060000806000080600008060000806000080600008060060006006000⟩
 ]
-theorem rowsE_chunk028_length : rowsE_chunk028.length = 4 := rfl
+private theorem rowsE_chunk028_length : rowsE_chunk028.length = 4 := rfl
 set_option maxHeartbeats 0 in
 set_option maxRecDepth 50000 in
-theorem rowsE_chunk028_score : batchScore 2708 rowsE_chunk028 = 676070898 := by
+private theorem rowsE_chunk028_score : batchScore 2708 rowsE_chunk028 = 676070898 := by
   rw [batchE_eq]
   decide +kernel
-def rowsE_chunk032 : List Row := [
+private def rowsE_chunk032 : List Row := [
   ⟨444,109,0x400000100000020000003000000380000044000005000000600000068000008000000840000090000009800000c000000c000000c400000d000000d80000100000010000001040000110000011800001300000130000018000001800000180000018000001800000184000019000001a000001b000001b00000200000020000002000000200000020000002040000210000022000002300000230000024000002600000260000026000002800000300000030000003000000300000030000003000000300000030000003000000300000030c00003180000320000033000003400000340000036000003600000380000040000024000006400000c4000010400001040000184000018400002040000204000020400003041800004300000430000044000004600000460000048000004800000480000048000004c000004c000004c000004c00000600006060000606000060600008060000806000080600008060000806000080600008060000806000080600600060060006006000⟩,
   ⟨444,108,0x80000018000002000000300000040000004800000600000060000006c00000800000088000009000000c000000c000000c000000c800000d000001000000100000010000001080000110000012000001300000140000018000001800000180000018000001800000188000019000001a000001b000001c0000020000002000000200000020000002000000208000021800002200000230000024000002400000260000026000002800000300000030000003000000300000030000003000000300000030000003000000300000030400003100000320000033000003300000340000036000003600000360000040000014000006400000c4000010400001040000184000018400002040000204000020400003040000304200000430000044000004400000460000046000004800000480000048000004c000004c000004c000004c000004c0000060000606000060600008060000806000080600008060000806000080600008060000806000080600008060060006006000⟩,
   ⟨444,107,0xc0000018000002400000340000040000004c0000060000006400000800000080000008c000009800000c000000c000000c000000cc00000d8000010000001000000100000010c000011800001200000130000014000001800000180000018000001800000180000018c000019800001a000001b0000020000002000000200000020000002000000200000020c000021800002200000230000024000002400000260000026000002800000300000030000003000000300000030000003000000300000030000003000000300000030800003180000320000033000003400000340000036000003600000380000040000044000008400000c4000010400001840000184000020400002040000204000030400003040000304200000430000044000004600000460000046000004800000480000048000004c000004c000004c000004c0000060000606000060600008060000806000080600008060000806000080600008060000806000080600008060060006006000⟩,
   ⟨443,108,0x40000010000002000000300000038000004400000600000060000006800000800000084000009000000a000000c000000c000000c400000d000000e00000100000010000001040000110000012000001300000130000018000001800000180000018000001800000184000019000001a000001b000001b00000200000020000002000000200000020000002040000210000022000002300000240000024000002600000260000026000002800000300000030000003000000300000030000003000000300000030000003000000300000030c0000318000032000003300000340000034000003600000360000038000004000008400000c40000104000018400001840000204000020400002040000304000030400003042000004300000440000044000004600000460000048000004800000480000048000004c000004c000004c000004c0000060000606000080600008060000806000080600008060000806000080600008060000806000080600600060060006006000⟩
 ]
-theorem rowsE_chunk032_length : rowsE_chunk032.length = 4 := rfl
+private theorem rowsE_chunk032_length : rowsE_chunk032.length = 4 := rfl
 set_option maxHeartbeats 0 in
 set_option maxRecDepth 50000 in
-theorem rowsE_chunk032_score : batchScore 2712 rowsE_chunk032 = 668032569 := by
+private theorem rowsE_chunk032_score : batchScore 2712 rowsE_chunk032 = 668032569 := by
   rw [batchE_eq]
   decide +kernel
-def rowsE_chunk036 : List Row := [
+private def rowsE_chunk036 : List Row := [
   ⟨443,107,0x80000018000002000000300000040000004800000600000060000007000000800000088000009800000c000000c000000c000000c800000d800001000000100000010000001080000118000012000001300000140000018000001800000180000018000001800000188000019800001a000001b000001c000002000000200000020000002000000200000020800002180000220000023000002400000240000026000002600000280000030000003000000300000030000003000000300000030000003000000300000030000003040000310000032000003300000340000034000003600000360000036000004000006400000c40000104000010400001840000184000020400002040000204000030400003040000304200000430000044000004400000460000046000004800000480000048000004c000004c000004c000004c0000060000606000060600008060000806000080600008060000806000080600008060000806000080600008060060006006000⟩,
   ⟨443,106,0xc0000018000002800000340000040000004c0000060000006400000800000080000008c000009800000c000000c000000c000000cc00000d8000010000001000000100000010c000011800001200000130000014000001800000180000018000001800000180000018c000019800001a000001b000002000000200000020000002000000200000020000002100000218000023000002300000240000024000002600000260000028000003000000300000030000003000000300000030000003000000300000030000003000000308000031800003200000330000034000003400000360000036000003800000400000c400001040000104000018400001840000204000020400002040000304000030400003040000304300000430000044000004600000460000048000004800000480000048000004c000004c000004c000004c000006000060600008060000806000080600008060000806000080600008060000806000080600008060060006006000⟩,
   ⟨442,107,0x40000010000002000000300000038000004400000600000060000006c00000800000084000009000000a000000c000000c000000c400000d000000e00000100000010000001040000110000012000001300000130000018000001800000180000018000001800000184000019000001a000001b000001b00000200000020000002000000200000020000002040000210000022000002300000240000024000002600000260000026000002800000300000030000003000000300000030000003000000300000030000003000000300000030c000031800003300000330000034000003600000360000036000003800000400000c40000104000018400001840000204000020400002040000304000030400003040000304200000430000044000004400000460000046000004800000480000048000004c000004c000004c000004c000004c000006000080600008060000806000080600008060000806000080600008060000806000080600008060060006006000⟩,
   ⟨442,106,0x80000018000002400000300000040000004800000600000064000007000000800000088000009800000c000000c000000c000000c800000d800001000000100000010000001080000118000012000001300000140000018000001800000180000018000001800000188000019800001a000001b000001c000002000000200000020000002000000200000020c0000218000022000002300000240000024000002600000260000028000003000000300000030000003000000300000030000003000000300000030000003000000304000031000003200000330000034000003400000360000036000003800000400000c400001040000184000018400002040000204000020400003040000304000030400003040000404200000430000044000004600000460000046000004800000480000048000004c000004c000004c000004c000006000080600008060000806000080600008060000806000080600008060000806000080600008060060006006000⟩
 ]
-theorem rowsE_chunk036_length : rowsE_chunk036.length = 4 := rfl
+private theorem rowsE_chunk036_length : rowsE_chunk036.length = 4 := rfl
 set_option maxHeartbeats 0 in
 set_option maxRecDepth 50000 in
-theorem rowsE_chunk036_score : batchScore 2716 rowsE_chunk036 = 659645900 := by
+private theorem rowsE_chunk036_score : batchScore 2716 rowsE_chunk036 = 659645900 := by
   rw [batchE_eq]
   decide +kernel
-def rowsE_chunk040 : List Row := [
+private def rowsE_chunk040 : List Row := [
   ⟨441,106,0xc000001c000002800000340000040000004c0000060000006800000800000080000008c000009800000c000000c000000c000000cc00000d8000010000001000000100000010c000011800001200000130000018000001800000180000018000001800000180000018c000019800001a000001b00000200000020000002000000200000020000002040000210000022000002300000230000024000002600000260000026000002800000300000030000003000000300000030000003000000300000030000003000000300000030c000031800003200000330000034000003400000360000036000003800000400001040000104000018400001840000204000020400002040000304000030400003040000304000040430000044000004400000460000046000004800000480000048000004c000004c000004c000004c000004c000006000080600008060000806000080600008060000806000080600008060000806000080600008060060006006000⟩,
   ⟨441,106,0x40000010000002000000300000040000004400000600000060000006c00000800000084000009000000a000000c000000c000000c400000d000000e00000100000010000001040000110000012000001300000130000018000001800000180000018000001800000184000019000001a000001b000001c000002000000200000020000002000000200000020800002180000220000023000002400000240000026000002600000260000030000003000000300000030000003000000300000030000003000000300000030000003040000310000032000003300000340000034000003600000360000036000004000010400001040000184000018400002040000204000020400003040000304000030400003040000404000040430000044000004400000460000046000004800000480000048000004c000004c000004c000004c000006000080600008060000806000080600008060000806000080600008060000806000080600008060060006006000⟩,
   ⟨441,105,0x80000018000002400000300000040000004800000600000064000007000000800000088000009800000c000000c000000c000000c800000d800001000000100000010000001080000118000012000001300000140000018000001800000180000018000001800000188000019800001a000001b000001c000002000000200000020000002000000200000020c00002180000220000023000002400000240000026000002600000280000030000003000000300000030000003000000300000030000003000000300000030000003080000318000032000003300000340000034000003600000360000038000004000010400001840000184000020400002040000204000030400003040000304000030400004040000404300000430000044000004600000460000048000004800000480000048000004c000004c000004c000004c00000600008060000806000080600008060000806000080600008060000806000080600008060060006006000⟩,
   ⟨440,105,0x10000001c000002800000340000040000004c0000060000006800000800000080000008c000009800000c000000c000000c000000cc00000d8000010000001000000100000010c0000118000012000001300000180000018000001800000180000018000001800000190000019800001b000001b00000200000020000002000000200000020000002040000210000022000002300000230000024000002600000260000026000002800000300000030000003000000300000030000003000000300000030000003000000300000030c000031800003200000330000034000003400000360000036000003800000400001840000184000020400002040000204000030400003040000304000030400004040000404000040430000044000004400000460000046000004800000480000048000004c000004c000004c000004c000005000000600008060000806000080600008060000806000080600008060000806000080600008060060006006000⟩
 ]
-theorem rowsE_chunk040_length : rowsE_chunk040.length = 4 := rfl
+private theorem rowsE_chunk040_length : rowsE_chunk040.length = 4 := rfl
 set_option maxHeartbeats 0 in
 set_option maxRecDepth 50000 in
-theorem rowsE_chunk040_score : batchScore 2720 rowsE_chunk040 = 651622799 := by
+private theorem rowsE_chunk040_score : batchScore 2720 rowsE_chunk040 = 651622799 := by
   rw [batchE_eq]
   decide +kernel
-def rowsE_chunk044 : List Row := [
+private def rowsE_chunk044 : List Row := [
   ⟨440,105,0x40000014000002000000300000040000004400000600000060000006c00000800000084000009000000a000000c000000c000000c400000d000000e00000100000010000001040000110000012000001300000140000018000001800000180000018000001800000188000019000001a000001b000001c000002000000200000020000002000000200000020800002180000220000023000002400000240000026000002600000280000030000003000000300000030000003000000300000030000003000000300000030000003040000310000032000003300000340000034000003600000360000038000004000010400001840000184000020400002040000204000030400003040000304000030400004040000404000040430000044000004600000460000046000004800000480000048000004c000004c000004c000004c00000600008060000806000080600008060000806000080600008060000806000080600008060060006006000⟩,
   ⟨440,104,0xc0000018000002400000300000040000004800000600000064000008000000800000088000009800000c000000c000000c000000c800000d80000100000010000001000000108000011800001200000130000014000001800000180000018000001800000180000018c000019800001a000001b000001c000002000000200000020000002000000200000020c0000218000022000002300000240000024000002600000260000028000003000000300000030000003000000300000030000003000000300000030000003000000308000031800003200000330000034000003400000360000036000003800000400001840000184000020400002040000204000030400003040000304000030400004040000404000040400004044000004400000460000046000004800000480000048000004c000004c000004c000004c000004c0000060000806000080600008060000806000080600008060000806000080600008060000806006000⟩,
   ⟨439,104,0x10000001c000003000000340000040000005000000600000068000008000000800000090000009800000c000000c000000c000000d000000d80000100000010000001000000110000011800001300000130000018000001800000180000018000001800000184000019000001a000001b000001b00000200000020000002000000200000020000002040000210000022000002300000240000024000002600000260000026000002800000300000030000003000000300000030000003000000300000030000003000000300000030c000031800003300000330000034000003600000360000036000003800000400001840000204000020400002040000304000030400003040000304000040400004040000404000040430000044000004400000460000046000004800000480000048000004c000004c000004c000004c00000600008060000806000080600008060000806000080600008060000806000080600008060060006006000⟩,
   ⟨439,104,0x80000014000002000000300000040000004800000600000060000006c00000800000084000009000000a000000c000000c000000c400000d000000e00000100000010000001040000110000012000001300000140000018000001800000180000018000001800000188000019800001a000001b000001c000002000000200000020000002000000200000020800002180000220000023000002400000240000026000002600000280000030000003000000300000030000003000000300000030000003000000300000030000003040000310000032000003300000340000034000003600000360000038000004000018400002040000204000020400003040000304000030400003040000404000040400004040000404000040430000044000004600000460000048000004800000480000048000004c000004c000004c000004c0000060000806000080600008060000806000080600008060000806000080600008060000c06006000⟩
 ]
-theorem rowsE_chunk044_length : rowsE_chunk044.length = 4 := rfl
+private theorem rowsE_chunk044_length : rowsE_chunk044.length = 4 := rfl
 set_option maxHeartbeats 0 in
 set_option maxRecDepth 50000 in
-theorem rowsE_chunk044_score : batchScore 2724 rowsE_chunk044 = 643218939 := by
+private theorem rowsE_chunk044_score : batchScore 2724 rowsE_chunk044 = 643218939 := by
   rw [batchE_eq]
   decide +kernel
-def rowsE_chunk048 : List Row := [
+private def rowsE_chunk048 : List Row := [
   ⟨438,104,0xc0000018000002400000300000040000004c0000060000006400000800000080000008c000009800000c000000c000000c000000cc00000d8000010000001000000100000010c000011800001200000130000014000001800000180000018000001800000180000018c000019800001a000001b00000200000020000002000000200000020000002000000210000021800002300000230000024000002600000260000026000002800000300000030000003000000300000030000003000000300000030000003000000300000030c000031800003200000330000034000003400000360000036000003800000400001840000204000020400002040000304000030400003040000304000040400004040000404000040400004044000004400000460000046000004800000480000048000004c000004c000004c000004c00000600008060000806000080600008060000806000080600008060000806000080600008060060006006000⟩,
   ⟨438,104,0x400000100000020000003000000340000044000005000000600000068000008000000840000090000009800000c000000c000000c400000d000000d80000100000010000001040000110000012000001300000130000018000001800000180000018000001800000184000019000001a000001b000001b000002000000200000020000002000000200000020400002100000220000023000002400000240000026000002600000260000030000003000000300000030000003000000300000030000003000000300000030000003040000310000032000003300000340000034000003600000360000036000004000018400002040000204000020400003040000304000030400003040000404000040400004040000404000040430000044000004600000460000046000004800000480000048000004c000004c000004c000004c0000060000806000080600008060000806000080600008060000806000080600008060000c06006000⟩,
   ⟨438,103,0x80000014000002000000300000040000004800000600000060000006c00000800000088000009000000c000000c000000c000000c800000d000001000000100000010000001080000110000012000001300000140000018000001800000180000018000001800000188000019800001a000001b000001c000002000000200000020000002000000200000020c0000218000022000002300000240000024000002600000260000028000003000000300000030000003000000300000030000003000000300000030000003000000308000031800003200000330000034000003400000360000036000003800000400002040000204000020400003040000304000030400003040000404000040400004040000404000040400004044000004400000460000046000004800000480000048000004c000004c000004c000004c000004c000006000080600008060000806000080600008060000806000080600008060000c060000c0⟩,
   ⟨437,103,0xc0000018000002400000300000040000004c0000060000006400000800000080000008c000009800000c000000c000000c000000cc00000d8000010000001000000100000010c000011800001200000130000014000001800000180000018000001800000180000018c000019800001a000001b00000200000020000002000000200000020000002040000210000022000002300000230000024000002600000260000026000002800000300000030000003000000300000030000003000000300000030000003000000300000030c000031800003200000330000034000003600000360000036000003800000400002040000204000030400003040000304000030400004040000404000040400004040000404000040400006044000004400000460000046000004800000480000048000004c000004c000004c000004c0000060000806000080600008060000806000080600008060000806000080600008060000c060000c0⟩
 ]
-theorem rowsE_chunk048_length : rowsE_chunk048.length = 4 := rfl
+private theorem rowsE_chunk048_length : rowsE_chunk048.length = 4 := rfl
 set_option maxHeartbeats 0 in
 set_option maxRecDepth 50000 in
-theorem rowsE_chunk048_score : batchScore 2728 rowsE_chunk048 = 634934112 := by
+private theorem rowsE_chunk048_score : batchScore 2728 rowsE_chunk048 = 634934112 := by
   rw [batchE_eq]
   decide +kernel
-def rowsE_chunk052 : List Row := [
+private def rowsE_chunk052 : List Row := [
   ⟨437,103,0x40000010000002000000300000038000004400000500000060000006800000800000084000009000000a000000c000000c000000c400000d000000e00000100000010000001040000110000012000001300000130000018000001800000180000018000001800000184000019000001a000001b000001c000002000000200000020000002000000200000020800002180000220000023000002400000240000026000002600000280000030000003000000300000030000003000000300000030000003000000300000030000003040000310000032000003300000340000034000003600000360000038000004000020400002040000204000030400003040000304000030400004040000404000040400004040000404000040400006044000004600000460000048000004800000480000048000004c000004c000004c000004c000006000080600008060000806000080600008060000806000080600008060000c060000c0⟩,
   ⟨437,102,0x80000018000002000000300000040000004800000600000060000006c00000800000088000009800000c000000c000000c000000c800000d800001000000100000010000001080000118000012000001300000140000018000001800000180000018000001800000188000019800001a000001b000001c000002000000200000020000002000000200000020c0000218000022000002300000240000024000002600000260000028000003000000300000030000003000000300000030000003000000300000030000003000000308000031800003200000330000034000003400000360000036000003800000400002040000204000030400003040000304000030400004040000404000040400004040000404000040400006044000004400000460000046000004800000480000048000004c000004c000004c000004c000006000080600008060000806000080600008060000806000080600008060000c060000c0⟩,
   ⟨436,102,0xc0000018000002400000340000040000004c0000060000006400000800000080000008c000009800000c000000c000000c000000cc00000d8000010000001000000100000010c000011800001200000130000018000001800000180000018000001800000180000018c000019800001b000001b000002000000200000020000002000000200000020400002100000220000023000002400000240000026000002600000260000028000003000000300000030000003000000300000030000003000000300000030000003000000310000031800003300000330000034000003600000360000036000004000020400002040000304000030400003040000304000040400004040000404000040400004040000404000060400006044000004600000460000046000004800000480000048000004c000004c000004c000004c00000600008060000806000080600008060000806000080600008060000c060000c060000c0⟩,
   ⟨436,102,0x40000010000002000000300000038000004400000600000060000006800000800000084000009000000a000000c000000c000000c400000d000000e00000100000010000001040000110000012000001300000130000018000001800000180000018000001800000184000019000001a000001b000001c00000200000020000002000000200000020000002080000218000022000002300000240000024000002600000260000028000003000000300000030000003000000300000030000003000000300000030000003000000304000031000003200000330000034000003400000360000036000003800000400002040000304000030400003040000304000040400004040000404000040400004040000404000060400006040000604400000460000046000004800000480000048000004c000004c000004c000004c000006000080600008060000806000080600008060000806000080600008060000c060000c0⟩
 ]
-theorem rowsE_chunk052_length : rowsE_chunk052.length = 4 := rfl
+private theorem rowsE_chunk052_length : rowsE_chunk052.length = 4 := rfl
 set_option maxHeartbeats 0 in
 set_option maxRecDepth 50000 in
-theorem rowsE_chunk052_score : batchScore 2732 rowsE_chunk052 = 626370242 := by
+private theorem rowsE_chunk052_score : batchScore 2732 rowsE_chunk052 = 626370242 := by
   rw [batchE_eq]
   decide +kernel
-def rowsE_chunk056 : List Row := [
+private def rowsE_chunk056 : List Row := [
   ⟨436,101,0x80000018000002000000300000040000004800000600000060000007000000800000088000009800000c000000c000000c000000c800000d80000100000010000001000000108000011800001200000130000014000001800000180000018000001800000180000018c000019800001a000001b000001c000002000000200000020000002000000200000020c000021800002200000230000024000002400000260000026000002800000300000030000003000000300000030000003000000300000030000003000000300000030c000031800003200000330000034000003400000360000036000003800000400002040000304000030400003040000304000040400004040000404000040400004040000404000060400006040000604400000460000046000004800000480000048000004c000004c000004c000004c00000600008060000806000080600008060000806000080600008060000c060000c0⟩,
   ⟨435,101,0xc0000018000002800000340000040000004c0000060000006800000800000080000008c000009800000c000000c000000c000000cc00000d8000010000001000000100000010c000011800001200000130000018000001800000180000018000001800000184000019000001a000001b000001b000002000000200000020000002000000200000020400002100000220000023000002400000240000026000002600000260000030000003000000300000030000003000000300000030000003000000300000030000003040000310000032000003300000340000034000003600000360000038000004000020400003040000304000030400003040000404000040400004040000404000040400004040000604000060400006044000004600000460000048000004800000480000048000004c000004c000004c000004c0000060000806000080600008060000806000080600008060000c060000c060000c0⟩,
   ⟨435,101,0x40000010000002000000300000038000004400000600000060000006c00000800000084000009000000a000000c000000c000000c400000d000000e00000100000010000001040000110000012000001300000140000018000001800000180000018000001800000188000019000001a000001b000001c00000200000020000002000000200000020000002080000218000022000002300000240000024000002600000260000028000003000000300000030000003000000300000030000003000000300000030000003000000308000031800003200000330000034000003400000360000036000003800000400003040000304000030400003040000404000040400004040000404000040400004040000604000060400006040000604400000460000046000004800000480000048000004c000004c000004c000004c0000060000806000080600008060000806000080600008060000c060000c060000c0⟩,
   ⟨435,100,0x80000018000002400000300000040000004800000600000064000007000000800000088000009800000c000000c000000c000000c800000d80000100000010000001000000108000011800001200000130000014000001800000180000018000001800000180000018c000019800001a000001b00000200000020000002000000200000020000002000000210000021800002300000230000024000002600000260000026000002800000300000030000003000000300000030000003000000300000030000003000000300000330c000031800003300000330000034000003600000360000036000004000030400003040000304000030400004040000404000040400004040000404000040400006040000604000060400006040000604600000460000046000004800000480000048000004c000004c000004c000004c0000060000806000080600008060000806000080600008060000c060000c0⟩
 ]
-theorem rowsE_chunk056_length : rowsE_chunk056.length = 4 := rfl
+private theorem rowsE_chunk056_length : rowsE_chunk056.length = 4 := rfl
 set_option maxHeartbeats 0 in
 set_option maxRecDepth 50000 in
-theorem rowsE_chunk056_score : batchScore 2736 rowsE_chunk056 = 618007945 := by
+private theorem rowsE_chunk056_score : batchScore 2736 rowsE_chunk056 = 618007945 := by
   rw [batchE_eq]
   decide +kernel
-def rowsE_chunk060 : List Row := [
+private def rowsE_chunk060 : List Row := [
   ⟨434,100,0xc000001c000002800000340000040000004c0000060000006800000800000080000008c000009800000c000000c000000c000000cc00000d80000100000010000001000000110000011800001300000130000018000001800000180000018000001800000184000019000001a000001b000001b00000200000020000002000000200000020000002080000210000022000002300000240000024000002600000260000028000003000000300000030000003000000300000030000003000000300000030000003000002304000031000003200000330000034000003400000360000036000003800000400003040000304000030400003040000404000040400004040000404000040400004040000604000060400006040000604000060460000046000004800000480000048000004c000004c000004c000004c0000060000806000080600008060000806000080600008060000c060000c060000c0⟩,
   ⟨434,100,0x40000010000002000000300000040000004400000600000060000006c00000800000084000009000000a000000c000000c000000c400000d000000e00000100000010000001080000110000012000001300000140000018000001800000180000018000001800000188000019800001a000001b000001c000002000000200000020000002000000200000020c0000218000022000002300000240000024000002600000260000028000003000000300000030000003000000300000030000003000000300000030000013000006308000031800003200000330000034000003400000360000036000003800000400003040000304000030400004040000404000040400004040000404000040400006040000604000060400006040000604000060460000046000004800000480000048000004c000004c000004c000004c000006000080600008060000806000080600008060000c060000c060000c0⟩,
   ⟨434,99,0x80000018000002400000300000040000004800000600000064000008000000800000088000009800000c000000c000000c000000cc00000d8000010000001000000100000010c000011800001200000130000014000001800000180000018000001800000180000018c000019800001a000001b00000200000020000002000000200000020000002040000210000022000002300000230000024000002600000260000026000002800000300000030000003000000300000030000003000000300000030000003000004300000831000003200000330000034000003400000360000036000003600000400003040000304000030400004040000404000040400004040000404000040400006040000604000060400006040000604000060460000046000004800000480000048000004c000004c000004c000004c000006000080600008060000806000080600008060000c060000c060000c0⟩,
   ⟨433,99,0x10000001c000002800000340000040000005000000600000068000008000000800000090000009800000c000000c000000c000000d000000d80000100000010000001040000110000012000001300000130000018000001800000180000018000001800000184000019000001a000001b000001c00000200000020000002000000200000020000002080000218000022000002300000240000024000002600000260000028000003000000300000030000003000000300000030000003000000300000030000033000008308000031800003200000330000034000003400000360000036000003800000400003040000304000040400004040000404000040400004040000404000060400006040000604000060400006040000604000060460000046000004800000480000048000004c000004c000004c000004c000006000080600008060000806000080600008060000c060000c060000c0⟩
 ]
-theorem rowsE_chunk060_length : rowsE_chunk060.length = 4 := rfl
+private theorem rowsE_chunk060_length : rowsE_chunk060.length = 4 := rfl
 set_option maxHeartbeats 0 in
 set_option maxRecDepth 50000 in
-theorem rowsE_chunk060_score : batchScore 2740 rowsE_chunk060 = 609536511 := by
+private theorem rowsE_chunk060_score : batchScore 2740 rowsE_chunk060 = 609536511 := by
   rw [batchE_eq]
   decide +kernel
-def rowsE_chunk064 : List Row := [
+private def rowsE_chunk064 : List Row := [
   ⟨433,99,0x40000014000002000000300000040000004400000600000060000006c00000800000084000009000000a000000c000000c000000c800000d000001000000100000010000001080000110000012000001300000140000018000001800000180000018000001800000188000019800001a000001b000001c000002000000200000020000002000000200000020c000021800002200000230000024000002400000260000026000002800000300000030000003000000300000030000003000000300000030000023000006300000c30c000031800003200000330000034000003600000360000036000003800000400003040000304000040400004040000404000040400004040000404000060400006040000604000060400006040000604000060460000048000004800000480000048000004c000004c000004c000004c00000600008060000806000080600008060000c060000c060000c0⟩,
   ⟨433,98,0xc0000018000002400000300000040000004c0000060000006400000800000080000008c000009800000c000000c000000c000000cc00000d8000010000001000000100000010c000011800001200000130000018000001800000180000018000001800000180000018c000019800001b000001b0000020000002000000200000020000002000000204000021000002200000230000024000002400000260000026000002600000300000030000003000000300000030000003000000300000030000013000006300000c3000010310000032000003300000340000034000003600000360000038000004000030400003040000404000040400004040000404000040400004040000604000060400006040000604000060400006040000604600000460000048000004800000480000040060004c000004c000004c00000600008060000806000080600008060000c060000c060000c0⟩,
   ⟨432,99,0x40000010000001c00000300000034000004400000500000060000006800000800000084000009000000a000000c000000c000000c400000d000000e00000100000010000001040000110000012000001300000130000018000001800000180000018000001800000184000019000001a000001b000001c0000020000002000000200000020000002000000208000021800002200000230000024000002400000260000026000002800000300000030000003000000300000030000003000000300000030000043000008300000c30800003180000320000033000003400000340000036000003600000380000040000304000040400004040000404000040400004040000404000060400006040000604000060400006040000604000060400006040030004004000400400040040004006000400600040060004006000400600060000806000080600008060000c060000c060000c060000c0⟩,
   ⟨432,98,0x80000014000002000000300000040000004800000600000060000006c00000800000088000009000000c000000c000000c000000c800000d80000100000010000001000000108000011800001200000130000014000001800000180000018000001800000180000018c000019800001a000001b000001c000002000000200000020000002000000200000021000002180000230000023000002400000260000026000002600000280000030000003000000300000030000003000000300000030000033000008300000c300001030c00003180000330000033000003400000360000036000003600000400003040000404000040400004040000404000040400004040000604000060400006040000604000060400006040000604000060400300040030004004000400400040040004006000400600040060004006000600008060000806000080600008060000c060000c060000c0⟩
 ]
-theorem rowsE_chunk064_length : rowsE_chunk064.length = 4 := rfl
+private theorem rowsE_chunk064_length : rowsE_chunk064.length = 4 := rfl
 set_option maxHeartbeats 0 in
 set_option maxRecDepth 50000 in
-theorem rowsE_chunk064_score : batchScore 2744 rowsE_chunk064 = 601260122 := by
+private theorem rowsE_chunk064_score : batchScore 2744 rowsE_chunk064 = 601260122 := by
   rw [batchE_eq]
   decide +kernel
-def rowsE_chunk068 : List Row := [
+private def rowsE_chunk068 : List Row := [
   ⟨431,98,0xc0000018000002400000300000040000004c0000060000006400000800000080000008c000009800000c000000c000000c000000cc00000d8000010000001000000100000010c000011800001200000130000018000001800000180000018000001800000180000019000001a000001b000001b000002000000200000020000002000000200000020400002100000220000023000002400000240000026000002600000280000030000003000000300000030000003000000300000030000023000006300000c300001030000103100000320000033000003400000340000036000003600000380000040000304000040400004040000404000040400004040000404000060400006040000604000060400006040000604000060400006040030004004000400400040040004006000400600040060004006000400800060000806000080600008060000c060000c060000c060000c0⟩,
   ⟨431,98,0x40000010000002000000300000038000004400000500000060000006800000800000084000009000000a000000c000000c000000c400000d000000e00000100000010000001040000110000012000001300000140000018000001800000180000018000001800000188000019000001a000001b000001c000002000000200000020000002000000200000020c0000218000022000002300000240000024000002600000260000028000003000000300000030000003000000300000030000013000006300000c3000010300001030c0000318000032000003300000340000034000003600000360000038000004000040400004040000404000040400004040000404000060400006040000604000060400006040000604000060400006040030004003000400400040040004004000400600040060004006000400600060000806000080600008060000c060000c060000c060000c0⟩,
   ⟨431,97,0x80000018000002000000300000040000004800000600000060000006c00000800000088000009800000c000000c000000c000000c800000d80000100000010000001000000108000011800001200000130000014000001800000180000018000001800000180000018c000019800001a000001b000002000000200000020000002000000200000020400002100000220000023000002300000240000026000002600000260000028000003000000300000030000003000000300000030000043000008300000c30000103000018310000032000003300000340000034000003600000360000038000004000040400004040000404000040400004040000404000060400006040000604000060400006040000604000060400006040000804003000400400040040004004000400600040060004006000400600040080006000080600008060000c060000c060000c060000c0⟩,
   ⟨430,97,0xc0000018000002400000340000040000004c0000060000006400000800000080000008c000009800000c000000c000000c000000cc00000d8000010000001000000100000010c000011800001200000130000018000001800000180000018000001800000184000019000001a000001b000001b00000200000020000002000000200000020000002080000218000022000002300000240000024000002600000260000028000003000000300000030000003000000300000030000033000008300000c300001030000183000018318000032000003300000340000034000003600000360000038000004000040400004040000404000040400004040000604000060400006040000604000060400006040000604000060400008040030004004000400400040040004004000400600040060004006000400600040080006000080600008060000c060000c060000c060000c0⟩
 ]
-theorem rowsE_chunk068_length : rowsE_chunk068.length = 4 := rfl
+private theorem rowsE_chunk068_length : rowsE_chunk068.length = 4 := rfl
 set_option maxHeartbeats 0 in
 set_option maxRecDepth 50000 in
-theorem rowsE_chunk068_score : batchScore 2748 rowsE_chunk068 = 593509954 := by
+private theorem rowsE_chunk068_score : batchScore 2748 rowsE_chunk068 = 593509954 := by
   rw [batchE_eq]
   decide +kernel
-def rowsE_chunk072 : List Row := [
+private def rowsE_chunk072 : List Row := [
   ⟨430,97,0x40000010000002000000300000038000004400000600000060000006c00000800000084000009000000a000000c000000c000000c400000d000000e00000100000010000001040000110000012000001300000140000018000001800000180000018000001800000188000019800001a000001b000001c000002000000200000020000002000000200000020c000021800002200000230000024000002400000260000026000002800000300000030000003000000300000030000023000006300000c30000103000010300001830c000031800003300000330000034000003600000360000036000004000040400004040000404000040400004040000404000060400006040000604000060400006040000604000060400006040000804003000400400040040004004000400600040060004006000400600040080006000080600008060000c060000c060000c060000c0⟩,
   ⟨430,96,0x80000018000002000000300000040000004800000600000064000007000000800000088000009800000c000000c000000c000000c800000d8000010000001000000100000010c000011800001200000130000014000001800000180000018000001800000180000018c000019800001a000001b0000020000002000000200000020000002000000204000021000002200000230000024000002400000260000026000002600000300000030000003000000300000030000013000006300000c300001030000103000018300001831000003200000330000034000003400000360000036000003800000400004040000404000040400004040000404000060400006040000604000060400006040000604000060400006040000804003000400400040040004004000400600040060004006000400600040080004008000600008060000c060000c060000c060000c0⟩,
   ⟨429,96,0xc0000018000002800000340000040000004c0000060000006800000800000080000008c000009800000c000000c000000c000000cc00000d80000100000010000001000000110000011800001300000130000018000001800000180000018000001800000184000019000001a000001b000001c0000020000002000000200000020000002000000208000021800002200000230000024000002400000260000026000002800000300000030000003000000300000030000043000008300000c30000103000018300001830000203180000320000033000003400000340000036000003600000380000040000404000040400004040000404000060400006040000604000060400006040000604000060400006040000804000080400300040040004004000400400040060004006000400600040060004008000600008060000c060000c060000c060000c060000c0⟩,
   ⟨429,96,0x40000010000002000000300000038000004400000600000060000006c00000800000084000009000000a000000c000000c000000c400000d000000e00000100000010000001080000110000012000001300000140000018000001800000180000018000001800000188000019800001a000001b000001c000002000000200000020000002000000200000020c00002180000230000023000002400000260000026000002600000280000030000003000000300000030000033000008300000c300001030000183000018300002031000003200000330000034000003400000360000036000003800000400004040000404000040400004040000604000060400006040000604000060400006040000604000060400008040000804003000400400040040004004000400600040060004006000400600040080004008000600008060000c060000c060000c060000c0⟩
 ]
-theorem rowsE_chunk072_length : rowsE_chunk072.length = 4 := rfl
+private theorem rowsE_chunk072_length : rowsE_chunk072.length = 4 := rfl
 set_option maxHeartbeats 0 in
 set_option maxRecDepth 50000 in
-theorem rowsE_chunk072_score : batchScore 2752 rowsE_chunk072 = 585586498 := by
+private theorem rowsE_chunk072_score : batchScore 2752 rowsE_chunk072 = 585586498 := by
   rw [batchE_eq]
   decide +kernel
-def rowsE_chunk076 : List Row := [
+private def rowsE_chunk076 : List Row := [
   ⟨429,95,0x80000018000002400000300000040000004800000600000064000007000000800000088000009800000c000000c000000c000000cc00000d8000010000001000000100000010c0000118000012000001300000180000018000001800000180000018000001800000190000019800001b000001b000002000000200000020000002000000200000020400002100000220000023000002400000240000026000002600000280000030000003000000300000030000023000006300000c300001030000103000018300001830000203180000320000033000003400000340000036000003600000380000040000404000040400004040000404000060400006040000604000060400006040000604000060400006040000804000080400400040040004004000400400040060004006000400600040060004008000600008060000c060000c060000c060000c0⟩,
   ⟨429,94,0xc000001c000002800000340000040000004c00000600000068000008000000800000090000009800000c000000c000000c400000d000000d80000100000010000001040000110000012000001300000130000018000001800000180000018000001800000184000019000001a000001b000001c000002000000200000020000002000000200000020c0000218000022000002300000240000024000002600000260000028000003000000300000030000013000006300000c300001030000103000018300001830000203000020318000032000003300000340000036000003600000360000040000404000040400004040000404000060400006040000604000060400006040000604000060400006040000804000080400300040040004004000400400040060004006000400600040060004008000400800060000c060000c060000c060000c0⟩,
   ⟨428,95,0x40000014000002000000300000040000004400000600000060000006c00000800000084000009000000a000000c000000c000000c800000d00000100000010000001000000108000011800001200000130000014000001800000180000018000001800000180000018c000019800001a000001b000002000000200000020000002000000200000020000002100000220000023000002300000240000026000002600000260000028000003000000300000030000043000008300000c300001030000183000018300002030000203100000320000033000003400000340000036000003600000380000040000404000040400004040000604000060400006040000604000060400006040000604000060400008040000804000080400400040040004004000400600040060004006000400600040060004008000400800060000c060000c060000c060000c0⟩,
   ⟨428,94,0x80000018000002400000300000040000004c0000060000006400000800000080000008c000009800000c000000c000000c000000cc00000d8000010000001000000100000010c000011800001200000130000018000001800000180000018000001800000184000019000001a000001b000001b00000200000020000002000000200000020000002080000218000022000002300000240000024000002600000260000028000003000000300000030000033000008300000c300001030000183000018300002030000203000020318000032000003300000340000034000003600000360000038000004000040400004040000604000060400006040000604000060400006040000604000060400008040000804000080400300040040004004000400400040060004006000400600040060004008000400800060000c060000c060000c060000c0⟩
 ]
-theorem rowsE_chunk076_length : rowsE_chunk076.length = 4 := rfl
+private theorem rowsE_chunk076_length : rowsE_chunk076.length = 4 := rfl
 set_option maxHeartbeats 0 in
 set_option maxRecDepth 50000 in
-theorem rowsE_chunk076_score : batchScore 2756 rowsE_chunk076 = 577439256 := by
+private theorem rowsE_chunk076_score : batchScore 2756 rowsE_chunk076 = 577439256 := by
   rw [batchE_eq]
   decide +kernel
-def rowsE_chunk080 : List Row := [
+private def rowsE_chunk080 : List Row := [
   ⟨428,93,0x10000001c00000300000034000004000000500000060000006800000800000084000009000000a000000c000000c000000c400000d000000e00000100000010000001040000110000012000001300000140000018000001800000180000018000001800000188000019800001a000001b000001c000002000000200000020000002000000200000020c000021800002200000230000024000002400000260000026000002800000300000030000023000006300000c3000010300001030000183000018300002030000203000020318000033000003300000340000036000003600000380000040000404000040400004040000604000060400006040000604000060400006040000604000060400008040000804000080400400040040004004000400600040060004006000400600040080004008000400800060000c060000c060000c0⟩,
   ⟨427,94,0x40000014000002000000300000040000004800000600000060000006c00000800000088000009000000c000000c000000c000000c800000d80000100000010000001000000108000011800001200000130000014000001800000180000018000001800000180000018c000019800001a000001b0000020000002000000200000020000002000000204000021000002200000230000024000002400000260000026000002600000300000030000013000006300000c3000010300001030000183000018300002030000203000020310000032000003300000340000034000003600000360000038000004000040400004040000604000060400006040000604000060400006040000604000060400008040000804000080400400040040004004000400400040060004006000400600040060004008000400800060000c060000c060000c060000c0⟩,
   ⟨427,93,0xc0000018000002400000300000040000004c0000060000006400000800000080000008c000009800000c000000c000000c000000cc00000d8000010000001000000100000010c000011800001200000130000018000001800000180000018000001800000184000019000001a000001b000001c0000020000002000000200000020000002000000208000021800002200000230000024000002400000260000026000002800000300000030000043000008300000c3000010300001830000183000020300002030000203000030318000032000003300000340000036000003600000360000040000404000040400006040000604000060400006040000604000060400006040000604000080400008040000804000080400400040040004004000400600040060004006000400600040080004008000400800060000c060000c060000c0⟩,
   ⟨427,93,0x40000010000002000000300000034000004400000500000060000006800000800000084000009000000a000000c000000c000000c400000d000000e00000100000010000001040000110000012000001300000140000018000001800000180000018000001800000188000019800001a000001b000001c000002000000200000020000002000000200000020c00002180000230000023000002400000260000026000002600000280000030000033000008300000c3000010300001830000183000020300002030000203000030300003032000003300000340000034000003600000360000038000004000040400006040000604000060400006040000604000060400006040000604000080400008040000804000080400400040040004004000400600040060004006000400600040060004008000400800060000c060000c060000c0⟩
 ]
-theorem rowsE_chunk080_length : rowsE_chunk080.length = 4 := rfl
+private theorem rowsE_chunk080_length : rowsE_chunk080.length = 4 := rfl
 set_option maxHeartbeats 0 in
 set_option maxRecDepth 50000 in
-theorem rowsE_chunk080_score : batchScore 2760 rowsE_chunk080 = 569591105 := by
+private theorem rowsE_chunk080_score : batchScore 2760 rowsE_chunk080 = 569591105 := by
   rw [batchE_eq]
   decide +kernel
-def rowsE_chunk084 : List Row := [
+private def rowsE_chunk084 : List Row := [
   ⟨426,93,0x80000014000002000000300000040000004800000600000060000007000000800000088000009800000c000000c000000c000000c800000d8000010000001000000100000010c000011800001200000130000014000001800000180000018000001800000180000018c000019800001a000001b000002000000200000020000002000000200000020400002100000220000023000002400000240000026000002600000280000030000023000006300000c30000103000010300001830000183000020300002030000203000030300003032000003300000340000034000003600000360000038000004000040400006040000604000060400006040000604000060400006040000604000080400008040000804000080400400040040004004000400600040060004006000400600040080004008000400800060000c060000c060000c0⟩,
   ⟨426,92,0xc0000018000002400000340000040000004c0000060000006400000800000080000008c000009800000c000000c000000c000000cc00000d80000100000010000001000000110000011800001300000130000018000001800000180000018000001800000184000019000001a000001b000001c00000200000020000002000000200000020000002080000218000022000002300000240000024000002600000260000028000003000006300000c300001030000103000018300001830000203000020300002030000303000030318000033000003300000340000036000003600000360000040000404000060400006040000604000060400006040000604000060400006040000804000080400008040000804004000400400040040004006000400600040060004006000400800040080004008000400800060000c060000c0⟩,
   ⟨426,92,0x40000010000002000000300000038000004400000600000060000006c00000800000084000009000000a000000c000000c000000c400000d000000e00000100000010000001080000110000012000001300000140000018000001800000180000018000001800000188000019800001a000001b000001c00000200000020000002000000200000020000002100000220000023000002300000240000026000002600000260000028000003000008300000c30000103000018300001830000203000020300002030000303000030300003032000003300000340000034000003600000360000038000004000060400006040000604000060400006040000604000060400006040000804000080400008040000804000080400400040040004004000400600040060004006000400600040080004008000400800060000c060000c0⟩,
   ⟨425,92,0x80000018000002000000300000040000004800000600000064000007000000800000088000009800000c000000c000000c000000c800000d8000010000001000000100000010c000011800001200000130000018000001800000180000018000001800000180000019000001a000001b000001b00000200000020000002000000200000020000002080000218000022000002300000240000024000002600000260000028000003000008300000c300001030000183000018300002030000203000020300003030000303000030300003032000003300000340000036000003600000360000040000604000060400006040000604000060400006040000604000060400008040000804000080400008040000804004000400400040040004006000400600040060004006000400800040080004008000400800060000c060000c0⟩
 ]
-theorem rowsE_chunk084_length : rowsE_chunk084.length = 4 := rfl
+private theorem rowsE_chunk084_length : rowsE_chunk084.length = 4 := rfl
 set_option maxHeartbeats 0 in
 set_option maxRecDepth 50000 in
-theorem rowsE_chunk084_score : batchScore 2764 rowsE_chunk084 = 562101687 := by
+private theorem rowsE_chunk084_score : batchScore 2764 rowsE_chunk084 = 562101687 := by
   rw [batchE_eq]
   decide +kernel
-def rowsE_chunk088 : List Row := [
+private def rowsE_chunk088 : List Row := [
   ⟨425,91,0xc0000018000002800000340000040000004c0000060000006800000800000080000008c000009800000c000000c000000c000000d000000d80000100000010000001040000110000012000001300000130000018000001800000180000018000001800000188000019000001a000001b000001c000002000000200000020000002000000200000020c000021800002200000230000024000002400000260000026000002800000300000c300001030000103000018300001830000203000020300002030000303000030300003032000003300000340000034000003600000360000038000004000060400006040000604000060400006040000604000060400006040000804000080400008040000804000080400400040040004006000400600040060004006000400600040080004008000400800060000c060000c0⟩,
   ⟨425,91,0x40000010000002000000300000038000004400000600000060000006c00000800000084000009000000a000000c000000c000000c800000d00000100000010000001000000108000011800001200000130000014000001800000180000018000001800000180000018c000019800001a000001b0000020000002000000200000020000002000000204000021000002200000230000024000002400000260000026000002600000300000c3000010300001030000183000018300002030000203000020300003030000303000030300003032000003300000340000034000003600000360000038000004000060400006040000604000060400006040000604000060400008040000804000080400008040000804004000400400040040004006000400600040060004006000400800040080004008000400800060000c0⟩,
   ⟨424,91,0x8000001800000240000030000004000000480000060000006400000800000080000008c000009800000c000000c000000c000000cc00000d8000010000001000000100000010c000011800001200000130000018000001800000180000018000001800000184000019000001a000001b000001c0000020000002000000200000020000002000000208000021800002200000230000024000002400000260000026000002800000300000c300001030000183000018300002030000203000020300003030000303000030300003030000403300000330000034000003600000360000036000004000060400006040000604000060400006040000604000060400008040000804000080400008040000804000080400400040040004006000400600040060004006000400600040080004008000400800060000c060000c0⟩,
   ⟨424,90,0xc000001c000002800000340000040000004c00000600000068000008000000800000090000009800000c000000c000000c400000d000000e00000100000010000001040000110000012000001300000140000018000001800000180000018000001800000188000019800001a000001b000001c000002000000200000020000002000000200000020c0000218000023000002300000240000026000002600000260000028000003000010300001830000183000020300002030000203000030300003030000303000030300004030000403300000340000034000003600000360000038000004000060400006040000604000060400006040000604000080400008040000804000080400008040000804004000400400040040004006000400600040060004006000400800040080004008000400800060000c0⟩
 ]
-theorem rowsE_chunk088_length : rowsE_chunk088.length = 4 := rfl
+private theorem rowsE_chunk088_length : rowsE_chunk088.length = 4 := rfl
 set_option maxHeartbeats 0 in
 set_option maxRecDepth 50000 in
-theorem rowsE_chunk088_score : batchScore 2768 rowsE_chunk088 = 554093546 := by
+private theorem rowsE_chunk088_score : batchScore 2768 rowsE_chunk088 = 554093546 := by
   rw [batchE_eq]
   decide +kernel
-def rowsE_chunk092 : List Row := [
+private def rowsE_chunk092 : List Row := [
   ⟨424,90,0x40000010000002000000300000040000004400000600000060000006c00000800000088000009000000c000000c000000c000000c800000d80000100000010000001000000108000011800001200000130000014000001800000180000018000001800000180000018c000019800001a000001b00000200000020000002000000200000020000002040000210000022000002300000240000024000002600000260000028000003000010300001030000183000018300002030000203000020300003030000303000030300003030000403200000330000034000003400000360000036000003800000400006040000604000060400006040000604000060400008040000804000080400008040000804000080400400040040004006000400600040060004006000400800040080004008000400800060000c0⟩,
   ⟨423,90,0x80000018000002400000300000040000004c0000060000006400000800000080000008c000009800000c000000c000000c000000cc00000d8000010000001000000100000010c000011800001300000130000018000001800000180000018000001800000184000019000001a000001b000001c000002000000200000020000002000000200000020c0000218000022000002300000240000024000002600000260000028000003000010300001830000183000020300002030000203000030300003030000303000030300004030000403300000340000034000003600000360000038000004000060400006040000604000060400006040000604000080400008040000804000080400008040000804004000400400040040004006000400600040060004006000400800040080004008000400800060000c0⟩,
   ⟨423,89,0x10000001c00000300000034000004000000500000060000006800000800000084000009000000a000000c000000c000000c400000d000000e00000100000010000001040000110000012000001300000140000018000001800000180000018000001800000188000019800001a000001b000001c000002000000200000020000002000000200000021000002200000230000023000002400000260000026000002600000280000030000183000018300002030000203000020300003030000303000030300003030000403000040300004033000003400000340000036000003600000380000040000604000060400006040000604000060400008040000804000080400008040000804000080400400040040004004000400600040060004006000400600040080004008000400800040080004008000⟩,
   ⟨423,89,0x40000014000002000000300000040000004800000600000060000006c00000800000088000009800000c000000c000000c000000c800000d8000010000001000000100000010c0000118000012000001300000140000018000001800000180000018000001800000190000019800001b000001b000002000000200000020000002000000200000020800002180000220000023000002400000240000026000002600000280000030000183000018300002030000203000020300003030000303000030300003030000403000040300004032000003300000340000036000003600000360000040000604000060400006040000604000060400008040000804000080400008040000804000080400008040040004004000400600040060004006000400600040060004008000400800040080004008000⟩
 ]
-theorem rowsE_chunk092_length : rowsE_chunk092.length = 4 := rfl
+private theorem rowsE_chunk092_length : rowsE_chunk092.length = 4 := rfl
 set_option maxHeartbeats 0 in
 set_option maxRecDepth 50000 in
-theorem rowsE_chunk092_score : batchScore 2772 rowsE_chunk092 = 546359698 := by
+private theorem rowsE_chunk092_score : batchScore 2772 rowsE_chunk092 = 546359698 := by
   rw [batchE_eq]
   decide +kernel
-def rowsE_chunk096 : List Row := [
+private def rowsE_chunk096 : List Row := [
   ⟨422,89,0xc0000018000002400000300000040000004c0000060000006400000800000080000008c000009800000c000000c000000c000000cc00000d80000100000010000001000000110000012000001300000130000018000001800000180000018000001800000184000019000001a000001b000001c000002000000200000020000002000000200000020c00002180000220000023000002400000240000026000002600000280000030000183000018300002030000203000020300003030000303000030300003030000403000040300004033000003400000340000036000003600000380000040000604000060400006040000604000060400008040000804000080400008040000804000080400400040040004004000400600040060004006000400600040080004008000400800040080004008000⟩,
   ⟨422,89,0x40000010000002000000300000034000004400000500000060000006800000800000084000009000000a000000c000000c000000c400000d000000e0000010000001000000108000011000001200000130000014000001800000180000018000001800000180000018c000019800001a000001b000002000000200000020000002000000200000020400002100000220000023000002400000240000026000002600000280000030000183000018300002030000203000020300003030000303000030300003030000403000040300004030000403300000340000034000003600000360000038000004000060400006040000604000060400008040000804000080400008040000804000080400008040040004004000400600040060004006000400600040080004008000400800040080004008000⟩,
   ⟨421,89,0x80000014000002000000300000040000004800000600000060000007000000800000088000009800000c000000c000000c000000c800000d8000010000001000000100000010c000011800001200000130000018000001800000180000018000001800000184000019000001a000001b000001b000002000000200000020000002000000200000020800002180000220000023000002400000240000026000002600000280000030000183000020300002030000203000030300003030000303000030300004030000403000040300004033000003400000340000036000003600000380000040000604000060400006040000604000080400008040000804000080400008040000804000080400400040040004004000400600040060004006000400600040080004008000400800040080004008000⟩,
   ⟨421,88,0xc0000018000002400000340000040000004c0000060000006800000800000080000008c000009800000c000000c000000c000000d000000d80000100000010000001040000110000012000001300000130000018000001800000180000018000001800000188000019800001a000001b000001c000002000000200000020000002000000200000020c0000218000023000002300000240000026000002600000260000028000003000020300002030000203000030300003030000303000030300004030000403000040300004030000403300000340000034000003600000360000038000004000060400006040000604000080400008040000804000080400008040000804000080400008040040004004000400600040060004006000400600040080004008000400800040080004008000⟩
 ]
-theorem rowsE_chunk096_length : rowsE_chunk096.length = 4 := rfl
+private theorem rowsE_chunk096_length : rowsE_chunk096.length = 4 := rfl
 set_option maxHeartbeats 0 in
 set_option maxRecDepth 50000 in
-theorem rowsE_chunk096_score : batchScore 2776 rowsE_chunk096 = 538913988 := by
+private theorem rowsE_chunk096_score : batchScore 2776 rowsE_chunk096 = 538913988 := by
   rw [batchE_eq]
   decide +kernel
-def rowsE_chunk100 : List Row := [
+private def rowsE_chunk100 : List Row := [
   ⟨420,89,0x40000010000002000000300000038000004400000600000060000006c00000800000084000009000000a000000c000000c000000c800000d00000100000010000001000000108000011800001200000130000014000001800000180000018000001800000180000018c000019800001a000001b000002000000200000020000002000000200000020400002100000220000023000002400000240000026000002600000280000030000183000020300002030000203000030300003030000303000030300004030000403000040300004030000403300000340000036000003600000360000040000604000060400006040000604000080400008040000804000080400008040000804000080400400040040004006000400600040060004006000400600040080004008000400800040080004008000⟩,
   ⟨420,88,0x80000018000002000000300000040000004800000600000064000007000000800000088000009800000c000000c000000c000000cc00000d8000010000001000000100000010c000011800001200000130000018000001800000180000018000001800000184000019000001a000001b000001c000002000000200000020000002000000200000020c0000218000022000002300000240000024000002600000260000028000003000020300002030000203000030300003030000303000030300004030000403000040300004030000403000040340000034000003600000360000038000004000060400006040000604000080400008040000804000080400008040000804000080400008040040004004000400600040060004006000400600040080004008000400800040080004008000⟩,
   ⟨420,87,0xc0000018000002800000340000040000004c00000600000068000008000000800000090000009800000c000000c000000c400000d000000e00000100000010000001040000110000012000001300000140000018000001800000180000018000001800000188000019800001a000001b000001c0000020000002000000200000020000002000000210000022000002300000240000024000002600000260000026000003000020300002030000203000030300003030000303000030300004030000403000040300004030000403000040330000034000003400000360000036000003800000400006040000604000080400008040000804000080400008040000804000080400008040040004004000400600040060004006000400600040080004008000400800040080004008000⟩,
   ⟨419,88,0x40000010000002000000300000040000004400000600000060000006c00000800000088000009000000c000000c000000c000000c800000d800001000000100000010000001080000118000012000001300000140000018000001800000180000018000001800000190000019800001b000001b00000200000020000002000000200000020000002080000218000022000002300000240000024000002600000260000028000003000020300002030000303000030300003030000303000040300004030000403000040300004030000403000060340000034000003600000360000038000004000060400006040000804000080400008040000804000080400008040000804000080400008040040004004000400600040060004006000400600040080004008000400800040080004008000⟩
 ]
-theorem rowsE_chunk100_length : rowsE_chunk100.length = 4 := rfl
+private theorem rowsE_chunk100_length : rowsE_chunk100.length = 4 := rfl
 set_option maxHeartbeats 0 in
 set_option maxRecDepth 50000 in
-theorem rowsE_chunk100_score : batchScore 2780 rowsE_chunk100 = 530896644 := by
+private theorem rowsE_chunk100_score : batchScore 2780 rowsE_chunk100 = 530896644 := by
   rw [batchE_eq]
   decide +kernel
-def rowsE_chunk104 : List Row := [
+private def rowsE_chunk104 : List Row := [
   ⟨419,87,0x8000001800000240000030000004000000480000060000006400000800000080000008c000009800000c000000c000000c000000cc00000d80000100000010000001000000110000011800001300000130000018000001800000180000018000001800000184000019000001a000001b000001c000002000000200000020000002000000200000020c000021800002200000230000024000002600000260000026000002800000300002030000203000030300003030000303000030300004030000403000040300004030000403000040300006034000003400000360000036000003800000400006040000604000080400008040000804000080400008040000804000080400008040040004004000400600040060004006000400600040080004008000400800040080004008000⟩,
   ⟨418,87,0xc000001c00000280000034000004000000500000060000006800000800000084000009000000a000000c000000c000000c400000d000000e0000010000001000000104000011000001200000130000014000001800000180000018000001800000180000018c000019800001a000001b00000200000020000002000000200000020000002040000210000022000002300000240000024000002600000260000028000003000020300002030000303000030300003030000303000040300004030000403000040300004030000403000060300006034000003600000360000036000004000060400006040000804000080400008040000804000080400008040000804000080400008040040004006000400600040060004006000400600040080004008000400800040080004008000⟩,
   ⟨418,87,0x40000014000002000000300000040000004800000600000060000006c00000800000088000009800000c000000c000000c000000c800000d8000010000001000000100000010c000011800001200000130000018000001800000180000018000001800000184000019000001a000001b000001b0000020000002000000200000020000002000000208000021800002200000230000024000002400000260000026000002800000300002030000303000030300003030000303000040300004030000403000040300004030000403000060300006034000003400000360000036000003800000400006040000804000080400008040000804000080400008040000804000080400008040040004004000400600040060004006000400600040080004008000400800040080004008000⟩,
   ⟨417,87,0x80000018000002400000300000040000004c0000060000006400000800000080000008c000009800000c000000c000000c000000cc00000d80000100000010000001040000110000012000001300000130000018000001800000180000018000001800000188000019800001a000001b000001c000002000000200000020000002000000200000020c000021800002300000230000024000002600000260000026000002800000300003030000303000030300003030000403000040300004030000403000040300004030000603000060300006034000003400000360000036000004000060400008040000804000080400008040000804000080400008040000804000080400008040040004006000400600040060004006000400600040080004008000400800040080004008000⟩
 ]
-theorem rowsE_chunk104_length : rowsE_chunk104.length = 4 := rfl
+private theorem rowsE_chunk104_length : rowsE_chunk104.length = 4 := rfl
 set_option maxHeartbeats 0 in
 set_option maxRecDepth 50000 in
-theorem rowsE_chunk104_score : batchScore 2784 rowsE_chunk104 = 523119238 := by
+private theorem rowsE_chunk104_score : batchScore 2784 rowsE_chunk104 = 523119238 := by
   rw [batchE_eq]
   decide +kernel
-def rowsE_chunk108 : List Row := [
+private def rowsE_chunk108 : List Row := [
   ⟨417,86,0x10000001c00000300000034000004400000500000060000006800000800000084000009000000a000000c000000c000000c400000d000000e0000010000001000000108000011800001200000130000014000001800000180000018000001800000180000018c000019800001a000001b0000020000002000000200000020000002000000204000021000002200000230000024000002400000260000026000002800000300002030000303000030300003030000303000040300004030000403000040300004030000403000060300006030000603400000360000036000003800000400006040000804000080400008040000804000080400008040000804000080400008040040004004000400600040060004006000400600040080004008000400800040080004008000⟩,
   ⟨416,87,0x80000014000002000000300000040000004800000600000060000007000000800000088000009800000c000000c000000c000000cc00000d8000010000001000000100000010c000011800001200000130000018000001800000180000018000001800000184000019000001a000001b000001c000002000000200000020000002000000200000120c000021800002200000230000024000002400000260000026000002800000300003030000303000030300003030000403000040300004030000403000040300004030000603000060300006030000603400000360000036000003800000400008040000804000080400008040000804000080400008040000804000080400400040040004006000400600040060004006000400800040080004008000400800040080004008000⟩,
   ⟨416,86,0xc0000018000002400000300000040000004c0000060000006800000800000080000008c000009800000c000000c000000c000000d000000e00000100000010000001040000110000012000001300000140000018000001800000180000018000001800000188000019800001a000001b000001c000002000000200000020000002000000204000021000002200000230000024000002400000260000026000002800000300003030000303000030300003030000403000040300004030000403000040300004030000603000060300006030000603400000360000036000003600000400008040000804000080400008040000804000080400008040000804000080400008040040004006000400600040060004006000400600040080004008000400800040080004008000⟩,
   ⟨415,87,0x40000010000002000000300000038000004400000600000060000006c00000800000084000009000000a000000c000000c000000c800000d00000100000010000001000000108000011800001200000130000014000001800000180000018000001800000180000018c000019800001b000001b0000020000002000000200000020000002000003208000021800002200000230000024000002400000260000026000002800000300003030000303000030300004030000403000040300004030000403000040300006030000603000060300006030000603400000360000036000003800000400008040000804000080400008040000804000080400008040000804000080400400040040004006000400600040060004006000400800040080004008000400800040080004008000⟩
 ]
-theorem rowsE_chunk108_length : rowsE_chunk108.length = 4 := rfl
+private theorem rowsE_chunk108_length : rowsE_chunk108.length = 4 := rfl
 set_option maxHeartbeats 0 in
 set_option maxRecDepth 50000 in
-theorem rowsE_chunk108_score : batchScore 2788 rowsE_chunk108 = 515614985 := by
+private theorem rowsE_chunk108_score : batchScore 2788 rowsE_chunk108 = 515614985 := by
   rw [batchE_eq]
   decide +kernel
-def rowsE_chunk112 : List Row := [
+private def rowsE_chunk112 : List Row := [
   ⟨415,86,0x80000018000002000000300000040000004800000600000064000007000000800000088000009800000c000000c000000c000000cc00000d8000010000001000000100000010c000011800001300000130000018000001800000180000018000001800000184000019000001a000001b000001c000002000000200000020000002000002200000620c00002180000230000023000002400000260000026000002600000280000030000303000030300003030000403000040300004030000403000040300004030000603000060300006030000603000060340000036000003600000400008040000804000080400008040000804000080400008040000804000080400008040040004006000400600040060004006000400600040080004008000400800040080004008000⟩,
   ⟨414,86,0xc0000018000002800000340000040000004c00000600000068000008000000800000090000009800000c000000c000000c400000d000000e0000010000001000000104000011000001200000130000014000001800000180000018000001800000180000018c000019800001a000001b0000020000002000000200000020000012000006204000021000002200000230000024000002400000260000026000002800000300003030000303000030300004030000403000040300004030000403000040300006030000603000060300006030000603400000360000036000003800000400008040000804000080400008040000804000080400008040000804000080400400040040004006000400600040060004006000400800040080004008000400800040080004008000⟩,
   ⟨414,86,0x40000010000002000000300000038000004400000600000060000006c00000800000088000009000000c000000c000000c000000c800000d8000010000001000000100000010c000011800001200000130000018000001800000180000018000001800000184000019000001a000001b000001c000002000000200000020000002000004200000820800002180000220000023000002400000240000026000002600000280000030000303000030300004030000403000040300004030000403000040300006030000603000060300006030000603000060340000036000003600000380000040000804000080400008040000804000080400008040000804000080400008040040004006000400600040060004006000400800040080004008000400800040080004008000⟩,
   ⟨413,86,0x8000001800000240000030000004000000480000060000006400000800000080000008c000009800000c000000c000000c000000cc00000d80000100000010000001000000110000012000001300000130000018000001800000180000018000001800000188000019800001a000001b000001c000002000000200000020000032000008200000c21000002200000230000023000002400000260000026000002600000300003030000303000040300004030000403000040300004030000403000060300006030000603000060300006030000603000060360000036000003600000400008040000804000080400008040000804000080400008040000804000080400400040060004006000400600040060004006000400800040080004008000400800040080004008000⟩
 ]
-theorem rowsE_chunk112_length : rowsE_chunk112.length = 4 := rfl
+private theorem rowsE_chunk112_length : rowsE_chunk112.length = 4 := rfl
 set_option maxHeartbeats 0 in
 set_option maxRecDepth 50000 in
-theorem rowsE_chunk112_score : batchScore 2792 rowsE_chunk112 = 508070975 := by
+private theorem rowsE_chunk112_score : batchScore 2792 rowsE_chunk112 = 508070975 := by
   rw [batchE_eq]
   decide +kernel
-def rowsE_chunk116 : List Row := [
+private def rowsE_chunk116 : List Row := [
   ⟨413,85,0xc000001c00000280000034000004000000500000060000006800000800000084000009000000a000000c000000c000000c400000d000000e0000010000001000000108000011000001200000130000014000001800000180000018000001800000180000018c000019800001a000001b000002000000200000020000022000006200000c20800002100000220000023000002400000240000026000002600000280000030000303000030300004030000403000040300004030000403000040300006030000603000060300006030000603000060300006036000003600000380000040000804000080400008040000804000080400008040000804000080400008040040004006000400600040060004006000400800040080004008000400800040080004008000⟩,
   ⟨412,86,0x40000010000002000000300000040000004800000600000060000006c00000800000088000009800000c000000c000000c000000c800000d8000010000001000000100000010c000011800001200000130000018000001800000180000018000001800000184000019000001a000001b000001c00000200000020000012000006200000c200001020c00002180000220000023000002400000260000026000002600000280000030000303000040300004030000403000040300004030000403000060300006030000603000060300006030000603000060340000036000003600000400008040000804000080400008040000804000080400008040000804000080400400040060004006000400600040060004006000400800040080004008000400800040080004008000⟩,
   ⟨412,85,0x80000018000002400000300000040000004c0000060000006400000800000080000008c000009800000c000000c000000c000000d000000d80000100000010000001040000110000012000001300000140000018000001800000180000018000001800000188000019800001a000001b000001c00000200000020000042000008200000c20000102100000220000023000002400000240000026000002600000280000030000303000040300004030000403000040300004030000403000060300006030000603000060300006030000603000060300006036000003600000380000040000804000080400008040000804000080400008040000804000080400008040060004006000400600040060004006000400800040080004008000400800040080004008000⟩,
   ⟨412,84,0x10000001c00000300000034000004400000500000060000006800000800000084000009000000a000000c000000c000000c400000d00000100000010000001000000108000011800001200000130000014000001800000180000018000001800000180000018c000019800001b000001b00000200000020000032000008200000c20000102080000218000022000002300000240000024000002600000260000028000003000040300004030000403000040300004030000403000060300006030000603000060300006030000603000060300006030000803600000360000038000004000080400008040000804000080400008040000804000080400008040040004006000400600040060004006000400800040080004008000400800040080004008000⟩
 ]
-theorem rowsE_chunk116_length : rowsE_chunk116.length = 4 := rfl
+private theorem rowsE_chunk116_length : rowsE_chunk116.length = 4 := rfl
 set_option maxHeartbeats 0 in
 set_option maxRecDepth 50000 in
-theorem rowsE_chunk116_score : batchScore 2796 rowsE_chunk116 = 500320275 := by
+private theorem rowsE_chunk116_score : batchScore 2796 rowsE_chunk116 = 500320275 := by
   rw [batchE_eq]
   decide +kernel
-def rowsE_chunk120 : List Row := [
+private def rowsE_chunk120 : List Row := [
   ⟨411,85,0x40000014000002000000300000040000004800000600000060000007000000800000088000009800000c000000c000000c000000cc00000d8000010000001000000100000010c000011800001200000130000018000001800000180000018000001800000184000019000001a000001b000001c0000020000022000006200000c2000010200001020c0000218000023000002300000240000026000002600000260000030000303000040300004030000403000040300004030000403000060300006030000603000060300006030000603000060300006030000803600000380000040000804000080400008040000804000080400008040000804000080400008040060004006000400600040060004006000400800040080004008000400800040080004008000⟩,
   ⟨411,84,0xc0000018000002400000300000040000004c0000060000006800000800000080000008c000009800000c000000c000000c400000d000000e0000010000001000000104000011000001200000130000014000001800000180000018000001800000180000018c000019800001a000001b0000020000012000006200000c200001020000102000018210000022000002300000240000024000002600000260000028000003000040300004030000403000040300004030000403000060300006030000603000060300006030000603000060300006030000803600000360000038000004000080400008040000804000080400008040000804000080400008040040004006000400600040060004006000400800040080004008000400800040080004008000⟩,
   ⟨410,85,0x40000010000002000000300000038000004400000600000060000006c00000800000084000009000000a000000c000000c000000c800000d80000100000010000001000000108000011800001200000130000014000001800000180000018000001800000184000019000001a000001b000001c0000020000042000008200000c2000010200001820c0000218000022000002300000240000024000002600000260000028000003000040300004030000403000040300004030000603000060300006030000603000060300006030000603000060300008030000803600000360000040000804000080400008040000804000080400008040000804000080400400040060004006000400600040060004006000400800040080004008000400800040080004008000⟩,
   ⟨410,84,0x8000001800000200000030000004000000480000060000006400000700000080000008c000009800000c000000c000000c000000cc00000d80000100000010000001000000110000012000001300000130000018000001800000180000018000001800000188000019800001a000001b000001c000002000008200000c200001020000182000018210000022000002300000240000024000002600000260000028000003000040300004030000403000040300004030000603000060300006030000603000060300006030000603000060300008030000803000080360000038000004000080400008040000804000080400008040000804000080400008040060004006000400600040060004006000400800040080004008000400800040080004008000⟩
 ]
-theorem rowsE_chunk120_length : rowsE_chunk120.length = 4 := rfl
+private theorem rowsE_chunk120_length : rowsE_chunk120.length = 4 := rfl
 set_option maxHeartbeats 0 in
 set_option maxRecDepth 50000 in
-theorem rowsE_chunk120_score : batchScore 2800 rowsE_chunk120 = 492373720 := by
+private theorem rowsE_chunk120_score : batchScore 2800 rowsE_chunk120 = 492373720 := by
   rw [batchE_eq]
   decide +kernel
-def rowsE_chunk124 : List Row := [
+private def rowsE_chunk124 : List Row := [
   ⟨409,84,0xc0000018000002800000340000040000004c0000060000006800000800000080000009000000a000000c000000c000000c400000d000000e0000010000001000000108000011000001200000130000014000001800000180000018000001800000180000018c000019800001a000001b000002000006200000c200001020000102000018200001821800002200000230000024000002400000260000026000002800000300004030000403000040300004030000403000060300006030000603000060300006030000603000060300006030000803000080300008036000003800000400008040000804000080400008040000804000080400008040000c040060004006000400600040060004008000400800040080004008000400800040080004008000⟩,
   ⟨409,84,0x40000010000002000000300000038000004400000600000060000006c00000800000088000009000000c000000c000000c000000c800000d8000010000001000000100000010c000011800001200000130000018000001800000180000018000001800000184000019000001a000001b000001c00000200000c200001020000102000018200001820c00002180000220000023000002400000260000026000002600000280000030000403000040300004030000403000060300006030000603000060300006030000603000060300006030000803000080300008036000003800000400008040000804000080400008040000804000080400008040000c040060004006000400600040060004006000400800040080004008000400800040080004008000⟩,
   ⟨408,84,0x8000001800000240000030000004000000480000060000006400000800000080000008c000009800000c000000c000000c000000cc00000d80000100000010000001040000110000012000001300000140000018000001800000180000018000001800000188000019800001a000001b000002000008200000c20000102000018200001820000202100000220000023000002400000240000026000002600000280000030000403000040300004030000403000060300006030000603000060300006030000603000060300006030000803000080300008030000803600000380000040000804000080400008040000804000080400008040000c040000c040060004006000400600040060004008000400800040080004008000400800040080004008000⟩,
   ⟨408,83,0xc000001c00000280000034000004000000500000060000006800000800000084000009000000a000000c000000c000000c400000d000001000000100000010000001080000118000012000001300000140000018000001800000180000018000001800000190000019800001b000001b00000200000c200001020000182000018200002020000202180000220000023000002400000240000026000002600000280000030000403000040300004030000603000060300006030000603000060300006030000603000060300008030000803000080300008030000803600000400008040000804000080400008040000804000080400008040000c040060004006000400600040060004006000400800040080004008000400800040080004008000⟩
 ]
-theorem rowsE_chunk124_length : rowsE_chunk124.length = 4 := rfl
+private theorem rowsE_chunk124_length : rowsE_chunk124.length = 4 := rfl
 set_option maxHeartbeats 0 in
 set_option maxRecDepth 50000 in
-theorem rowsE_chunk124_score : batchScore 2804 rowsE_chunk124 = 485075901 := by
+private theorem rowsE_chunk124_score : batchScore 2804 rowsE_chunk124 = 485075901 := by
   rw [batchE_eq]
   decide +kernel
-def rowsE_chunk128 : List Row := [
+private def rowsE_chunk128 : List Row := [
   ⟨407,84,0x40000010000002000000300000040000004800000600000060000006c00000800000088000009800000c000000c000000c000000cc00000d8000010000001000000100000010c000011800001200000130000018000001800000180000018000001800000184000019000001a000001b000001c00000200001020000102000018200001820000202100000220000023000002300000240000026000002600000260000030000403000040300004030000403000060300006030000603000060300006030000603000060300006030000803000080300008030000803000080380000040000804000080400008040000804000080400008040000c040000c04006000400600040060004006000400800040080004008000400800040080004008000400c000⟩,
   ⟨407,83,0x80000018000002400000300000040000004c0000060000006400000800000080000008c000009800000c000000c000000c000000d000000e0000010000001000000104000011000001200000130000014000001800000180000018000001800000180000018c000019800001a000001b00000200001020000102000018200001820000202000020210000022000002300000240000024000002600000260000028000003000040300004030000403000060300006030000603000060300006030000603000060300006030000803000080300008030000803000080300008038000004000080400008040000804000080400008040000c040000c040060004006000400600040060004008000400800040080004008000400800040080004008000⟩,
   ⟨407,82,0x10000001c00000300000034000004400000500000060000006c00000800000084000009000000a000000c000000c000000c800000d80000100000010000001000000108000011800001200000130000014000001800000180000018000001800000184000019000001a000001b000001c0000020000102000018200001820000202000020200002021800002200000230000024000002600000260000026000002800000300004030000403000060300006030000603000060300006030000603000060300006030000803000080300008030000803000080300008030040004000080400008040000804000080400008040000c040000c040000c04006000400600040060004006000400800040080004008000400800040080004008000⟩,
   ⟨406,83,0x40000014000002000000300000040000004800000600000060000007000000800000088000009800000c000000c000000c000000cc00000d80000100000010000001000000110000011800001300000130000018000001800000180000018000001800000188000019800001a000001b000001c0000020000182000018200002020000202000020210000022000002300000240000024000002600000260000028000003000040300004030000603000060300006030000603000060300006030000603000060300008030000803000080300008030000803000080300008030040004000080400008040000804000080400008040000c040000c040060004006000400600040060004008000400800040080004008000400800040080004008000⟩
 ]
-theorem rowsE_chunk128_length : rowsE_chunk128.length = 4 := rfl
+private theorem rowsE_chunk128_length : rowsE_chunk128.length = 4 := rfl
 set_option maxHeartbeats 0 in
 set_option maxRecDepth 50000 in
-theorem rowsE_chunk128_score : batchScore 2808 rowsE_chunk128 = 477301420 := by
+private theorem rowsE_chunk128_score : batchScore 2808 rowsE_chunk128 = 477301420 := by
   rw [batchE_eq]
   decide +kernel
-def rowsE_chunk132 : List Row := [
+private def rowsE_chunk132 : List Row := [
   ⟨406,82,0xc0000018000002400000340000040000004c00000600000068000008000000800000090000009800000c000000c000000c400000d000000e0000010000001000000108000011000001200000130000014000001800000180000018000001800000180000018c000019800001b000001b0000020000102000018200001820000202000020200002021800002200000230000024000002400000260000026000002800000300004030000403000060300006030000603000060300006030000603000060300006030000803000080300008030000803000080300008030040004000080400008040000804000080400008040000c040000c040000c04006000400600040060004006000400800040080004008000400800040080004008000⟩,
   ⟨405,83,0x40000010000002000000300000038000004400000600000060000006c00000800000088000009000000c000000c000000c000000c800000d8000010000001000000100000010c000011800001200000130000018000001800000180000018000001800000184000019000001a000001b000001c000002000018200001820000202000020200002020000302180000230000023000002400000260000026000002600000300004030000403000060300006030000603000060300006030000603000060300006030000803000080300008030000803000080300008030000803004000400008040000804000080400008040000c040000c040000c04006000400600040060004006000400800040080004008000400800040080004008000400c000⟩,
   ⟨405,82,0x8000001800000200000030000004000000480000060000006400000800000080000008c000009800000c000000c000000c000000cc00000d80000100000010000001040000110000012000001300000140000018000001800000180000018000001800000188000019800001a000001b000002000018200001820000202000020200002020000302000030220000023000002400000240000026000002600000280000030000403000060300006030000603000060300006030000603000060300006030000803000080300008030000803000080300008030000803004000400008040000804000080400008040000c040000c040000c040000c04006000400600040060004008000400800040080004008000400800040080004008000⟩,
   ⟨404,82,0xc0000018000002800000340000040000004c0000060000006800000800000084000009000000a000000c000000c000000c400000d000000e0000010000001000000108000011800001200000130000014000001800000180000018000001800000180000319000001a000001b000001b000002000018200002020000202000020200003020000302180000220000023000002400000260000026000002600000280000030000603000060300006030000603000060300006030000603000060300008030000803000080300008030000803000080300008030040003004000400008040000804000080400008040000c040000c040000c04006000400600040060004006000400800040080004008000400800040080004008000400c000⟩
 ]
-theorem rowsE_chunk132_length : rowsE_chunk132.length = 4 := rfl
+private theorem rowsE_chunk132_length : rowsE_chunk132.length = 4 := rfl
 set_option maxHeartbeats 0 in
 set_option maxRecDepth 50000 in
-theorem rowsE_chunk132_score : batchScore 2812 rowsE_chunk132 = 469614928 := by
+private theorem rowsE_chunk132_score : batchScore 2812 rowsE_chunk132 = 469614928 := by
   rw [batchE_eq]
   decide +kernel
-def rowsE_chunk136 : List Row := [
+private def rowsE_chunk136 : List Row := [
   ⟨404,82,0x40000010000002000000300000040000004400000600000060000006c00000800000088000009800000c000000c000000c000000c800000d8000010000001000000100000010c000011800001200000130000018000001800000180000018000001800002188000019000001a000001b000001c00000200001820000202000020200002020000302000030220000023000002400000240000026000002600000280000030000403000060300006030000603000060300006030000603000060300006030000803000080300008030000803000080300008030000803004000300400040000804000080400008040000c040000c040000c040000c04006000400600040060004008000400800040080004008000400800040080004008000⟩,
   ⟨403,82,0x80000018000002400000300000040000004c0000060000006400000800000080000008c000009800000c000000c000000c000000d000000e0000010000001000000104000011000001200000130000014000001800000180000018000001800001180000618c000019800001a000001b00000200001820000202000020200002020000302000030200003022000002300000240000024000002600000260000028000003000060300006030000603000060300006030000603000060300006030000803000080300008030000803000080300008030000803004000300400040000804000080400008040000c040000c040000c040000c04006000400600040060004008000400800040080004008000400800040080004008000400c000⟩,
   ⟨403,81,0xc000001c00000280000034000004000000500000060000006800000800000084000009000000a000000c000000c000000c800000d00000100000010000001000000108000011800001200000130000018000001800000180000018000001800004184000019000001a000001b000001c0000020000202000020200002020000302000030200003021800002300000230000024000002600000260000026000003000060300006030000603000060300006030000603000060300006030000803000080300008030000803000080300008030000803000080300400030040004000080400008040000c040000c040000c040000c040000c0400600040060004006000400800040080004008000400800040080004008000400c000⟩,
   ⟨402,82,0x40000014000002000000300000040000004800000600000060000007000000800000088000009800000c000000c000000c000000cc00000d80000100000010000001000000110000011800001300000130000018000001800000180000018000031800008188000019800001a000001b000001c0000020000202000020200003020000302000030200003022000002300000240000024000002600000260000028000003000060300006030000603000060300006030000603000060300008030000803000080300008030000803000080300008030000803004000300400040000804000080400008040000c040000c040000c040000c04006000400600040060004008000400800040080004008000400800040080004008000400c000⟩
 ]
-theorem rowsE_chunk136_length : rowsE_chunk136.length = 4 := rfl
+private theorem rowsE_chunk136_length : rowsE_chunk136.length = 4 := rfl
 set_option maxHeartbeats 0 in
 set_option maxRecDepth 50000 in
-theorem rowsE_chunk136_score : batchScore 2816 rowsE_chunk136 = 462414700 := by
+private theorem rowsE_chunk136_score : batchScore 2816 rowsE_chunk136 = 462414700 := by
   rw [batchE_eq]
   decide +kernel
-def rowsE_chunk140 : List Row := [
+private def rowsE_chunk140 : List Row := [
   ⟨402,81,0x80000018000002400000300000040000004c0000060000006800000800000080000008c000009800000c000000c000000c400000d000000e0000010000001000000108000011000001200000130000014000001800000180000018000021800006180000c18c000019800001b000001b0000020000202000020200002020000302000030200003020000302200000230000024000002400000260000026000002800000300006030000603000060300006030000603000060300006030000803000080300008030000803000080300008030000803000080300400030040004000080400008040000c040000c040000c040000c040000c0400600040060004006000400800040080004008000400800040080004008000400c000⟩,
   ⟨402,80,0x10000001c00000300000038000004400000600000060000006c00000800000084000009000000c000000c000000c000000c800000d8000010000001000000100000010c00001180000120000013000001800000180000018000011800006180000c184000019000001a000001b000001c000002000020200002020000302000030200003020000302200000230000024000002400000260000026000002800000300006030000603000060300006030000603000060300006030000803000080300008030000803000080300008030000803000080300400030040003004000400008040000c040000c040000c040000c040000c04006000400600040060004008000400800040080004008000400800040080004008000⟩,
   ⟨401,81,0x8000001400000200000030000004000000480000060000006400000700000080000008c000009800000c000000c000000c000000cc00000d8000010000001000000104000011000001200000130000014000001800000180000018000041800008180000c18c000019800001a000001b000002000020200002020000302000030200003020000302000040220000023000002400000240000026000002600000280000030000603000060300006030000603000060300006030000803000080300008030000803000080300008030000803000080300008030040003004000400008040000c040000c040000c040000c040000c040000c0400600040060004008000400800040080004008000400800040080004008000400c000⟩,
   ⟨401,80,0xc0000018000002400000340000040000004c0000060000006800000800000084000009000000a000000c000000c000000c400000d000000e000001000000100000010800001180000120000013000001400000180000018000031800008180000c180001019000001a000001b000001c000002000020200003020000302000030200003020000402000040220000023000002400000260000026000002600000300006030000603000060300006030000603000060300008030000803000080300008030000803000080300008030000803000080300400030040003004000400008040000c040000c040000c040000c040000c0400600040060004006000400800040080004008000400800040080004008000400c000⟩
 ]
-theorem rowsE_chunk140_length : rowsE_chunk140.length = 4 := rfl
+private theorem rowsE_chunk140_length : rowsE_chunk140.length = 4 := rfl
 set_option maxHeartbeats 0 in
 set_option maxRecDepth 50000 in
-theorem rowsE_chunk140_score : batchScore 2820 rowsE_chunk140 = 454435309 := by
+private theorem rowsE_chunk140_score : batchScore 2820 rowsE_chunk140 = 454435309 := by
   rw [batchE_eq]
   decide +kernel
-def rowsE_chunk144 : List Row := [
+private def rowsE_chunk144 : List Row := [
   ⟨400,81,0x40000010000002000000300000038000004400000600000060000006c00000800000088000009800000c000000c000000c000000c800000d8000010000001000000100000010c0000118000012000001300000180000018000021800006180000c1800010188000019800001a000001b000001c00000200002020000302000030200003020000302000040200004023000002400000240000026000002600000280000030000603000060300006030000603000060300006030000803000080300008030000803000080300008030000803000080300008030040003004000400008040000c040000c040000c040000c040000c040000c0400600040060004008000400800040080004008000400800040080004008000400c000⟩,
   ⟨400,80,0x8000001800000200000030000004000000480000060000006400000800000080000008c000009800000c000000c000000c000000d000000e00000100000010000001040000110000012000001300000140000018000011800006180000c1800010180001018c000019800001a000001b00000200002020000302000030200003020000302000040200004022000002300000240000024000002600000260000028000003000060300006030000603000060300006030000803000080300008030000803000080300008030000803000080300008030040003004000300600040000c040000c040000c040000c040000c040000c0400600040060004006000400800040080004008000400800040080004008000400c000⟩,
   ⟨399,80,0xc000001800000280000034000004000000500000060000006800000800000084000009000000a000000c000000c000000c800000d000001000000100000010000001080000118000012000001300000180000018000041800008180000c1800010180001819000001a000001b000001c00000200003020000302000030200003020000402000040200004023000002400000240000026000002600000280000030000603000060300006030000603000060300008030000803000080300008030000803000080300008030000803000080300400030040003004000300600040000c040000c040000c040000c040000c040000c0400600040060004008000400800040080004008000400800040080004008000400c000⟩,
   ⟨399,80,0x40000010000002000000300000040000004800000600000060000006c00000800000088000009800000c000000c000000c000000cc00000d80000100000010000001000000110000012000001300000130000018000031800008180000c18000101800018188000019800001a000001b00000200003020000302000030200003020000402000040200004020000402300000240000024000002600000260000028000003000060300006030000603000060300008030000803000080300008030000803000080300008030000803000080300008030040003004000300600040000c040000c040000c040000c040000c040000c0400600040060004008000400800040080004008000400800040080004008000400c000⟩
 ]
-theorem rowsE_chunk144_length : rowsE_chunk144.length = 4 := rfl
+private theorem rowsE_chunk144_length : rowsE_chunk144.length = 4 := rfl
 set_option maxHeartbeats 0 in
 set_option maxRecDepth 50000 in
-theorem rowsE_chunk144_score : batchScore 2824 rowsE_chunk144 = 447436622 := by
+private theorem rowsE_chunk144_score : batchScore 2824 rowsE_chunk144 = 447436622 := by
   rw [batchE_eq]
   decide +kernel
-def rowsE_chunk148 : List Row := [
+private def rowsE_chunk148 : List Row := [
   ⟨398,80,0x80000018000002400000300000040000004c0000060000006400000800000080000008c000009800000c000000c000000c400000d000000e0000010000001000000108000011000001200000130000014000001800006180000c18000101800010180001819000001a000001b000001b00000200003020000302000030200003020000402000040200004022000002300000240000026000002600000260000030000603000060300006030000603000060300008030000803000080300008030000803000080300008030000803000080300400030040003004000300600040000c040000c040000c040000c040000c040000c040060004006000400800040080004008000400800040080004008000400c000400c000⟩,
   ⟨398,79,0xc000001c00000300000034000004400000600000060000006c00000800000084000009000000c000000c000000c000000c800000d8000010000001000000100000010c00001180000120000013000001800006180000c180001018000101800018180001819000001a000001b000001c0000020000302000030200003020000402000040200004020000402300000240000024000002600000260000028000003000060300006030000603000060300008030000803000080300008030000803000080300008030000803000080300008030040003004000300600040000c040000c040000c040000c040000c040000c0400600040060004008000400800040080004008000400800040080004008000400c000⟩,
   ⟨398,79,0x4000001400000200000030000004000000480000060000006400000700000080000008c000009800000c000000c000000c000000cc00000d8000010000001000000104000011000001200000130000014000001800008180000c18000101800018180001818c000019800001a000001b00000200003020000302000030200004020000402000040200004020000402300000240000024000002600000260000028000003000060300006030000603000080300008030000803000080300008030000803000080300008030000803000080300400030040003006000300600040000c040000c040000c040000c040000c040000c040060004006000400800040080004008000400800040080004008000400c000⟩,
   ⟨397,79,0xc0000018000002400000340000040000004c0000060000006800000800000080000009000000a000000c000000c000000c400000d000000e000001000000100000010800001180000120000013000001400000180000c180001018000181800018180002019000001a000001b000001c0000020000302000030200004020000402000040200004020000402300000230000024000002600000260000028000003000060300006030000603000080300008030000803000080300008030000803000080300008030000803000080300008030040003004000300600040000c040000c040000c040000c040000c040000c0400600040060004008000400800040080004008000400800040080004008000400c000⟩
 ]
-theorem rowsE_chunk148_length : rowsE_chunk148.length = 4 := rfl
+private theorem rowsE_chunk148_length : rowsE_chunk148.length = 4 := rfl
 set_option maxHeartbeats 0 in
 set_option maxRecDepth 50000 in
-theorem rowsE_chunk148_score : batchScore 2828 rowsE_chunk148 = 439961080 := by
+private theorem rowsE_chunk148_score : batchScore 2828 rowsE_chunk148 = 439961080 := by
   rw [batchE_eq]
   decide +kernel
-def rowsE_chunk152 : List Row := [
+private def rowsE_chunk152 : List Row := [
   ⟨397,78,0x10000002000000300000038000004400000600000060000006c00000800000088000009800000c000000c000000c000000c800000d8000010000001000000100000010c0000118000013000001300000180000c1800010180001018000181800018180002019800001a000001b00000200003020000302000030200004020000402000040200004020000402300000240000024000002600000260000028000003000060300006030000603000080300008030000803000080300008030000803000080300008030000803000080300400030040003006000300600040000c040000c040000c040000c040000c040000c040060004008000400800040080004008000400800040080004008000400c000⟩,
   ⟨396,79,0x8000001800000200000030000004000000480000060000006400000800000080000008c000009800000c000000c000000c000000d000000e0000010000001000000104000011000001200000130000014000001800010180001018000181800018180002018c000019800001b000001b00000200003020000302000040200004020000402000040200004020000402300000240000026000002600000260000030000603000060300006030000803000080300008030000803000080300008030000803000080300008030000803000080300400030040003006000300600040000c040000c040000c040000c040000c040060004006000400800040080004008000400800040080004008000400c000400c000⟩,
   ⟨396,78,0xc000001800000280000034000004000000500000060000006800000800000084000009000000a000000c000000c000000c800000d000001000000100000010000001080000118000012000001300000180000c1800010180001818000181800020180002019000001a000001b000001c0000020000302000040200004020000402000040200004020000402000060240000024000002600000260000028000003000060300006030000803000080300008030000803000080300008030000803000080300008030000803000080300400030040003006000300600040000c040000c040000c040000c040000c040000c040060004008000400800040080004008000400800040080004008000400c000⟩,
   ⟨395,79,0x40000010000002000000300000040000004400000600000060000006c00000800000088000009800000c000000c000000c000000cc00000d80000100000010000001000000110000012000001300000130000018000101800018180001818000201800020180002019800001a000001b00000200003020000402000040200004020000402000040200004020000602300000240000024000002600000260000028000003000060300008030000803000080300008030000803000080300008030000803000080300008030000803000080300400030060003006000300600040000c040000c040000c040000c040000c040060004008000400800040080004008000400800040080004008000400c000400c000⟩
 ]
-theorem rowsE_chunk152_length : rowsE_chunk152.length = 4 := rfl
+private theorem rowsE_chunk152_length : rowsE_chunk152.length = 4 := rfl
 set_option maxHeartbeats 0 in
 set_option maxRecDepth 50000 in
-theorem rowsE_chunk152_score : batchScore 2832 rowsE_chunk152 = 432578269 := by
+private theorem rowsE_chunk152_score : batchScore 2832 rowsE_chunk152 = 432578269 := by
   rw [batchE_eq]
   decide +kernel
-def rowsE_chunk156 : List Row := [
+private def rowsE_chunk156 : List Row := [
   ⟨395,78,0x80000018000002400000300000040000004c0000060000006400000800000080000008c000009800000c000000c000000c400000d000000e0000010000001000000108000011800001200000130000014000001800010180001818000181800020180002019000001a000001b000001c0000020000302000040200004020000402000040200004020000402000060230000024000002600000260000028000003000060300006030000803000080300008030000803000080300008030000803000080300008030000803000080300400030040003006000300600040000c040000c040000c040000c040000c040000c040060004008000400800040080004008000400800040080004008000400c000⟩,
   ⟨394,78,0xc000001c00000280000034000004400000500000060000006c00000800000084000009000000a000000c000000c000000c800000d8000010000001000000100000010c000011800001200000130000018000101800018180001818000201800020180002019800001a000001b000001c0000020000402000040200004020000402000040200004020000602000060240000024000002600000260000028000003000060300008030000803000080300008030000803000080300008030000803000080300008030000803000080300400030060003006000300600040000c040000c040000c040000c040000c040060004008000400800040080004008000400800040080004008000400c000400c000⟩,
   ⟨394,78,0x4000001400000200000030000004000000480000060000006000000700000080000008c000009800000c000000c000000c000000cc00000d80000100000010000001040000110000012000001300000140000018000181800018180002018000201800020180003019800001a000001b00000200004020000402000040200004020000402000040200006020000602000060240000026000002600000260000030000603000080300008030000803000080300008030000803000080300008030000803000080300008030000803004000300400030060003006000300600040000c040000c040000c040000c040000c04006000400800040080004008000400800040080004008000400c000400c000⟩,
   ⟨394,77,0x80000018000002400000300000040000004c0000060000006800000800000080000009000000a000000c000000c000000c400000d00000100000010000001000000108000011800001200000130000014000001800018180002018000201800020180003018000301a000001b000001c0000020000402000040200004020000402000040200006020000602000060240000024000002600000260000028000003000080300008030000803000080300008030000803000080300008030000803000080300008030000803004000300400030060003006000300600040000c040000c040000c040000c040000c040060004008000400800040080004008000400800040080004008000400c000⟩
 ]
-theorem rowsE_chunk156_length : rowsE_chunk156.length = 4 := rfl
+private theorem rowsE_chunk156_length : rowsE_chunk156.length = 4 := rfl
 set_option maxHeartbeats 0 in
 set_option maxRecDepth 50000 in
-theorem rowsE_chunk156_score : batchScore 2836 rowsE_chunk156 = 425251864 := by
+private theorem rowsE_chunk156_score : batchScore 2836 rowsE_chunk156 = 425251864 := by
   rw [batchE_eq]
   decide +kernel
-def rowsE_chunk160 : List Row := [
+private def rowsE_chunk160 : List Row := [
   ⟨393,77,0x10000001c00000300000038000004400000600000060000006c00000800000088000009800000c000000c000000c000000c800000d8000010000001000000100000210c000011800001300000130000018000181800018180002018000201800020180003019800001a000001b00000200004020000402000040200004020000402000040200006020000602000060240000024000002600000260000028000003000080300008030000803000080300008030000803000080300008030000803000080300008030000803004000300600030060003006000300600040000c040000c040000c040000c040000c04008000400800040080004008000400800040080004008000400c000400c000⟩,
   ⟨393,77,0x8000001400000200000030000004000000480000060000006400000800000080000008c000009800000c000000c000000c000000d000000e0000010000001000001104000011000001200000130000014000001800018180002018000201800020180003018000301a000001b000001c0000020000402000040200004020000402000040200006020000602000060200006024000002600000260000028000003000080300008030000803000080300008030000803000080300008030000803000080300008030000803004000300400030060003006000300600040000c040000c040000c040000c040000c040060004008000400800040080004008000400800040080004008000400c000⟩,
   ⟨392,77,0xc0000018000002400000340000040000004c0000060000006800000800000084000009000000a000000c000000c000000c800000d8000010000001000000100000410c000011800001200000130000018000181800020180002018000201800030180003018000301a000001b000001c0000020000402000040200004020000402000060200006020000602000060240000024000002600000260000028000003000080300008030000803000080300008030000803000080300008030000803000080300008030000c03004000300600030060003006000300600040000c040000c040000c040000c040000c04008000400800040080004008000400800040080004008000400c000400c000⟩,
   ⟨392,77,0x40000010000002000000300000040000004400000600000060000006c00000800000088000009800000c000000c000000c000000cc00000d80000100000010000031000008110000012000001300000140000018000201800020180002018000301800030180003019800001a000001b00000200004020000402000040200004020000602000060200006020000602000060240000026000002600000260000030000803000080300008030000803000080300008030000803000080300008030000803000080300008030000c0300400030060003006000300600040000c040000c040000c040000c040000c04006000400800040080004008000400800040080004008000400c000400c000⟩
 ]
-theorem rowsE_chunk160_length : rowsE_chunk160.length = 4 := rfl
+private theorem rowsE_chunk160_length : rowsE_chunk160.length = 4 := rfl
 set_option maxHeartbeats 0 in
 set_option maxRecDepth 50000 in
-theorem rowsE_chunk160_score : batchScore 2840 rowsE_chunk160 = 417952193 := by
+private theorem rowsE_chunk160_score : batchScore 2840 rowsE_chunk160 = 417952193 := by
   rw [batchE_eq]
   decide +kernel
-def rowsE_chunk164 : List Row := [
+private def rowsE_chunk164 : List Row := [
   ⟨391,77,0x80000018000002400000300000040000004c0000060000006400000800000080000008c000009800000c000000c000000c400000d000000e0000010000021000006108000011800001200000130000014000001800020180002018000201800030180003018000301a000001b000001c0000020000402000040200004020000402000060200006020000602000060200006024000002600000260000028000003000080300008030000803000080300008030000803000080300008030000803000080300008030000c03004000300600030060003006000300600040000c040000c040000c040000c040000c04008000400800040080004008000400800040080004008000400c000400c000⟩,
   ⟨391,76,0xc000001c00000280000034000004400000500000060000006c00000800000084000009000000c000000c000000c000000c800000d8000010000011000006100000c10c000011800001200000130000018000201800020180002018000301800030180003018000301a000001b0000020000402000040200004020000402000060200006020000602000060200006020000602400000260000026000002800000300008030000803000080300008030000803000080300008030000803000080300008030000c030000c03006000300600030060003006000300600040000c040000c040000c040000c04008000400800040080004008000400800040080004008000400c000400c000⟩,
   ⟨391,76,0x4000001000000200000030000004000000480000060000006000000700000080000008c000009800000c000000c000000c000000cc00000d80000100000410000081040000110000012000001300000140000018000201800020180003018000301800030180003019800001b000001b000002000040200004020000402000060200006020000602000060200006020000602400000260000026000002800000300008030000803000080300008030000803000080300008030000803000080300008030000c030000c03004000300600030060003006000300600040000c040000c040000c040000c040000c04008000400800040080004008000400800040080004008000400c000⟩,
@@ -2830,7 +2815,7 @@ def rowsE_chunk164 : List Row := [
 ]
 set_option maxHeartbeats 0 in
 set_option maxRecDepth 50000 in
-theorem rowsE_chunk164_score : batchScore 2844 rowsE_chunk164 = 410853595 := by
+private theorem rowsE_chunk164_score : batchScore 2844 rowsE_chunk164 = 410853595 := by
   rw [batchE_eq]
   decide +kernel
 def rowsE : List Row :=
@@ -2901,10 +2886,10 @@ private theorem initial_eq (i : BlockIndex) :
     initialFlag i = windowFlag i.1.val i.2.val := by
   simp only [initialFlag, windowFlag, offset]
   congr 1 <;> ring
-theorem residual_cubic (F : Flag) (k : ℕ) :
+private theorem residual_cubic (F : Flag) (k : ℕ) :
     residualFlag F (Powers.expand ⟨0, 0, k⟩) = cubicFlag F k := by
   simp [residualFlag_expand, cubicFlag]
-theorem rank_window (i : BlockIndex) (hi : w1.Contains i) (p : Fin 11 → ℕ) :
+private theorem rank_window (i : BlockIndex) (hi : w1.Contains i) (p : Fin 11 → ℕ) :
     blockBound i p =
       (oldCount (initialFlag i) -
         max 0 (max (kernelLower (initialFlag i))
@@ -2927,7 +2912,7 @@ theorem rank_window (i : BlockIndex) (hi : w1.Contains i) (p : Fin 11 → ℕ) :
   dsimp only
   rw [ite_eq_right ho, ha, min_eq_right]
   exact sub_le_self _ (le_max_left _ _)
-theorem savings_eq (i : BlockIndex) (hi : w1.Contains i) (k : ℕ) :
+private theorem savings_eq (i : BlockIndex) (hi : w1.Contains i) (k : ℕ) :
     savings i ⟨0, 0, k⟩ = cubicSavings i.1.val i.2.val k := by
   by_cases hk : k = 0
   · subst k
@@ -2941,7 +2926,7 @@ theorem savings_eq (i : BlockIndex) (hi : w1.Contains i) (k : ℕ) :
     cases initialFlag i
     simp [residualFlag]
   rw [hz, max_self, ← max_assoc, initial_eq]
-theorem rowSum_eq (s q code n : ℕ) :
+private theorem rowSum_eq (s q code n : ℕ) :
     rowSum s q code n = ∑ j : Fin n, entry s (q + j.val) (rowPower code j.val) := by
   induction n generalizing q code with
   | zero => simp [rowSum]
@@ -2952,7 +2937,7 @@ theorem rowSum_eq (s q code n : ℕ) :
     apply Finset.sum_congr rfl
     intro j _
     rw [show q + (j.val + 1) = q + 1 + j.val by omega]
-theorem rowsSum_eq (s : ℕ) (rows : List ℕ) :
+private theorem rowsSum_eq (s : ℕ) (rows : List ℕ) :
     rowsSum s rows =
       ∑ r : Fin rows.length, ∑ q : Fin 71,
         entry (s + r.val) q.val (rowPower (rows[r.val]) q.val) := by
@@ -2973,10 +2958,10 @@ theorem rowsSum_append (s : ℕ) (a b : List ℕ) :
   | nil => simp [rowsSum]
   | cons code rows ih =>
     simp [rowsSum, ih, Nat.add_assoc, Nat.add_left_comm, Nat.add_comm]
-def sample (n : ℕ) (hn : n ≤ 589) (a : Fin n × Fin 71) : BlockIndex :=
+private def sample (n : ℕ) (hn : n ≤ 589) (a : Fin n × Fin 71) : BlockIndex :=
   (⟨1419 + a.1.val, by have h := a.1.isLt; omega⟩,
     ⟨3000 + a.2.val - (1419 + a.1.val), by have h := a.2.isLt; omega⟩)
-def sampleEmbedding (n : ℕ) (hn : n ≤ 589) : Fin n × Fin 71 ↪ BlockIndex where
+private def sampleEmbedding (n : ℕ) (hn : n ≤ 589) : Fin n × Fin 71 ↪ BlockIndex where
   toFun := sample n hn
   inj' := by
     intro x y h
@@ -3002,7 +2987,7 @@ private theorem entry_eq (n : ℕ) (hn : n ≤ 589) (r : Fin n) (q : Fin 71) (k 
   · rw [ite_eq_left h, ite_eq_left (hw.mp h), savings_eq _ h]
     rfl
   · rw [ite_eq_right h, ite_eq_right (fun hj => h (hw.mpr hj))]
-theorem sum_le_univ {α β : Type} [Fintype α] [Fintype β]
+private theorem sum_le_univ {α β : Type} [Fintype α] [Fintype β]
     (f : α ↪ β) (v : β → ℕ) : (∑ a : α, v (f a)) ≤ ∑ b : β, v b := by
   rw [← Finset.sum_map]
   exact Finset.sum_le_sum_of_subset (Finset.subset_univ _)
@@ -3035,7 +3020,7 @@ theorem factorial_cast_ne_zero {n : ℕ} (h : n < K1.p) : (n.factorial : Geom) �
   intro hz
   have hp := CharP.char_is_prime_of_two_le Geom K1.p (by decide)
   exact (not_le_of_gt h) (hp.dvd_factorial.mp ((CharP.cast_eq_zero_iff Geom K1.p _).mp hz))
-theorem topView_X (i : Fin 4) :
+private theorem topView_X (i : Fin 4) :
     topView (MvPolynomial.X i) =
       if h : i = 3 then Polynomial.X else Polynomial.C (MvPolynomial.X (i.castPred h)) := by
   refine Fin.lastCases ?_ (fun j => ?_) i
@@ -3078,59 +3063,6 @@ private theorem topAt_coeff (S : Geom[X]) (f : Row 4) :
     (topAt S f).coeff (shape f).t = topLead f S := by
   rw [topAt, Polynomial.coeff_map, ← eval_anchorLead, atJet, anchorLead,
     Polynomial.leadingCoeff, topView_degree]
-theorem regular_derivative (f : Row 4) (S : Geom[X])
-    (hf : SmallFactor f) (hon : OnFactor f S) (hs : atJet (separant f) S = 0) :
-    ∃ j, 0 < j ∧ j < (shape f).t ∧
-      atJet ((separant^[j]) f) S = 0 ∧ atJet (separant ((separant^[j]) f)) S ≠ 0 := by
-  classical
-  let t := (shape f).t
-  let P := topAt S f
-  have hdeg : P.natDegree ≤ t := Polynomial.natDegree_map_le.trans_eq (topView_degree f)
-  have hnz : (derivative^[t] P).coeff 0 ≠ 0 := by
-    rw [coeff_iterate_derivative, Nat.zero_add, Nat.descFactorial_self, nsmul_eq_mul]
-    change (t.factorial : Geom[X]) * P.coeff t ≠ 0
-    rw [← map_natCast (Polynomial.C : Geom →+* Geom[X])]
-    exact mul_ne_zero (Polynomial.C_ne_zero.mpr
-      (factorial_cast_ne_zero (hf.2.2.1.2.2.trans_lt (by decide : 10 < K1.p))))
-      (by simpa only [P, t, topAt_coeff] using hon.2)
-  have hc : derivative^[t] P = Polynomial.C ((derivative^[t] P).coeff 0) :=
-    eq_C_of_natDegree_le_zero ((natDegree_iterate_derivative _ _).trans
-      (by omega : P.natDegree - t ≤ 0))
-  have he (k : ℕ) : atJet ((separant^[k]) f) S =
-      (derivative^[k] P).eval (jet S (3 : Fin 4)) := by
-    rw [← eval_topAt]
-    congr 1
-    induction k with
-    | zero => rfl
-    | succ k ih =>
-      simp only [Function.iterate_succ_apply']
-      change (topView (separant ((separant^[k]) f))).map (MvPolynomial.eval (jet S)) = _
-      rw [topView_separant, ← derivative_map]
-      exact congrArg derivative ih
-  have hex : ∃ k, atJet ((separant^[k]) f) S ≠ 0 := by
-    refine ⟨t, ?_⟩
-    rw [he, hc, Polynomial.eval_C]
-    exact hnz
-  let k := Nat.find hex
-  have hk : atJet ((separant^[k]) f) S ≠ 0 := Nat.find_spec hex
-  have hkt : k ≤ t := Nat.find_min' hex (by
-    rw [he, hc, Polynomial.eval_C]
-    exact hnz)
-  have hk0 : k ≠ 0 := by
-    intro h
-    apply hk
-    simpa only [h, Function.iterate_zero_apply] using hon.1
-  have hk1 : k ≠ 1 := by
-    intro h
-    apply hk
-    simpa only [h, Function.iterate_one] using hs
-  have hprev : k - 1 + 1 = k := by omega
-  refine ⟨k - 1, by omega, by omega, ?_, ?_⟩
-  · exact not_ne_iff.mp (Nat.find_min hex (by omega : k - 1 < k))
-  · have he' : (separant^[k]) f = separant ((separant^[k - 1]) f) := by
-      conv_lhs => rw [← hprev]
-      rw [Function.iterate_succ_apply']
-    simpa only [he'] using hk
 theorem derivative_degree (f : Row 4) (j : ℕ) :
     (shape ((separant^[j]) f)).t ≤ (shape f).t - j := by
   rw [← topView_degree, ← topView_degree]
@@ -3183,40 +3115,8 @@ def tripleIdeal (P Q R : Row 3) : Ideal Lower :=
 def localColength (q : PrimeSpectrum Lower) (J : Ideal Lower) : ℕ∞ :=
   let A := Localization.AtPrime q.asIdeal
   Module.length A (A ⧸ J.map (algebraMap Lower A))
-def HighCurve (P Q : Row 3) (y : LowerPoint) : Prop :=
-  ∃ q : PrimeSpectrum Lower,
-    q.asIdeal ∈ (pairIdeal P Q).minimalPrimes ∧ q.asIdeal.height = 2 ∧
-      q.asIdeal ≤ pointIdeal y ∧
-      293711590 ≤ localColength q (pairIdeal P Q) ∧
-      localColength q (pairIdeal P Q) < ⊤
-def IsolatedFat (P Q R : Row 3) (y : LowerPoint) : Prop :=
-  ∃ q : PrimeSpectrum Lower,
-    q.asIdeal = pointIdeal y ∧ q.asIdeal ∈ (tripleIdeal P Q R).minimalPrimes ∧
-      (↑(41481 * (41481 - 33184 + 1) * 1037 : ℕ) : ℕ∞) ≤
-        localColength q (tripleIdeal P Q R) ∧
-      localColength q (tripleIdeal P Q R) < ⊤
 def fatChart (x : Shape) : Shape :=
   if x.t = 1 then linearChart x.chamber else chart (taylorLength + 4) x.chamber
-def hypersurfacePrice (x : Shape) : ℕ :=
-  let p := x.chamber
-  let h := fatChart x
-  let big : Shape := ⟨35007, 12106, 0⟩
-  let cut : Shape :=
-    ⟨max (max h.b big.b) (max h.j (big.j + 1)), max h.j (big.j + 1), max 1 h.t⟩
-  ceilDiv (81879 * mixed32 p big cut h) (32 * 46594) +
-    ceilDiv (mixed32 p big cut p) 32 + 20 * p.b * h.b ^ 2 + 5 * 133671 * p.b * h.b + 1
-def singularPrice (x : Shape) : ℕ :=
-  let p := x.chamber
-  let h := fatChart x
-  if 1 < x.t then ceilDiv (4 * x.t * mixed32 p p h h) 32 + x.t * x.b ^ 2 + 1 else 0
-def highCurvePrice (x : Shape) : ℕ :=
-  let p := x.chamber
-  let h := fatChart x
-  let q : Shape := ⟨952630000, 322000000, 0⟩
-  ceilDiv (81879 * mixed32 p q q h + 46594 * mixed32 p q q p) (32 * 46594 * 293711590)
-def isolatedPrice : ℕ :=
-  let q : Shape := ⟨952630000, 322000000, 0⟩
-  ceilDiv (3 * q.j ^ 2 * (2 * q.b - q.j)) (4 * 41481 * (41481 - 33184 + 1) * 1037)
 end
 end K1_13_7
 end
@@ -3255,7 +3155,7 @@ private theorem degree_fin_three (e : Fin 3 →₀ ℕ) : e.degree = e 0 + e 1 +
   rw [Finsupp.degree_eq_sum, Fin.sum_univ_three, add_assoc]
 private theorem degree_fin_two (e : Fin 2 →₀ ℕ) : e.degree = e 0 + e 1 := by
   rw [Finsupp.degree_eq_sum, Fin.sum_univ_two]
-def capFibers (b m : ℕ) (hb : 2 * m ≤ b) :
+private def capFibers (b m : ℕ) (hb : 2 * m ≤ b) :
     cap b (2 * m) ≃ Σ z : Fin (m + 1),
       cappedDegreeExponents (Fin 2) 1 (b - z) (2 * (m - z)) where
   toFun e := by
@@ -3289,7 +3189,7 @@ def capFibers (b m : ℕ) (hb : 2 * m ≤ b) :
     apply Subtype.ext
     ext i
     fin_cases i <;> rfl
-theorem fiber_card (b m z : ℕ) (hb : 2 * m ≤ b) (hz : z ≤ m) :
+private theorem fiber_card (b m z : ℕ) (hb : 2 * m ≤ b) (hz : z ≤ m) :
     (cappedDegreeExponents (Fin 2) 1 (b - z) (2 * (m - z))).ncard =
       (2 * (m - z) + 1) * (b + 1 - m) := by
   have hc : 2 * (m - z) ≤ b - z := by omega
@@ -3297,7 +3197,7 @@ theorem fiber_card (b m z : ℕ) (hb : 2 * m ≤ b) (hz : z ≤ m) :
   have hfactor : 2 * (b - z) + 2 - 2 * (m - z) = (b + 1 - m) * 2 := by omega
   rw [hfactor, ← mul_assoc, ← mul_comm 2] at h
   exact Nat.eq_of_mul_eq_mul_left (show 0 < 2 by decide) h
-theorem sum_odd_reverse (m : ℕ) :
+private theorem sum_odd_reverse (m : ℕ) :
     (∑ z ∈ Finset.range (m + 1), (2 * (m - z) + 1)) = (m + 1) ^ 2 := by
   calc
     _ = ∑ z ∈ Finset.range (m + 1), (2 * z + 1) := by
@@ -3330,15 +3230,6 @@ section
 namespace K1_13_7_2
 noncomputable section
 open Polynomial K1 K1_13 K1_13_6 K1_13_7
-def lowerBox : Shape := ⟨35007, 12106, 0⟩
-def cutBox (x : Shape) : Shape :=
-  let h := fatChart x
-  ⟨max (max h.b lowerBox.b) (max h.j (lowerBox.j + 1)),
-    max h.j (lowerBox.j + 1), max 1 h.t⟩
-def curveMass32 (x : Shape) : ℕ :=
-  mixed32 x.chamber lowerBox (cutBox x) (fatChart x)
-def componentMass32 (x : Shape) : ℕ :=
-  mixed32 x.chamber lowerBox (cutBox x) x.chamber
 def liftLower (q : Row 3) : Row 4 := MvPolynomial.rename Fin.castSucc q
 def lowerFlow (q : Row 3) : Row 4 := partialFlow (liftLower q)
 structure LiftedSurface (f : Row 4) (q : Row 3) (surface : Ideal GeoJets) : Prop where
@@ -3390,8 +3281,6 @@ structure ActualFamily (f : Row 4) (P : Ideal CoeffRing) : Prop where
   dimension : 2 ≤ (MvPolynomial.affineHilbertPolynomial P).natDegree
   solves : ∀ i, (universalEval f).coeff i ∈ P
   regular : ∃ i, (universalEval (separant f)).coeff i ∉ P
-def IntegratedMark (f : Row 4) (S : Geom[X]) : Prop :=
-  ∃ P, ActualFamily f P ∧ P ≤ coefficientPointIdeal S
 def ThreefoldSections (Γ : Finset K) (s : K → K[X]) (d : ℕ) : Prop := by
   classical
   exact ∀ x a : K, (∃ γ ∈ Γ, (s γ).eval x ≠ a) →

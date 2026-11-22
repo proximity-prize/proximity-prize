@@ -21,7 +21,7 @@ private theorem weighted_pow (w : Fin 4 → ℕ) {P : Row 4} (h : P ≠ 0) (a : 
   | succ a ih =>
     rw [pow_succ,weightedTotalDegree_mul _ _ _ (pow_ne_zero _ h) h,ih,Nat.succ_mul]
 
-theorem valuation_factorization {f P : Row 4} (hf : f ≠ 0)
+private theorem valuation_factorization {f P : Row 4} (hf : f ≠ 0)
     (hpos : 0 < f.totalDegree) (hP : P ≠ 0) :
     ∃ a : ℕ, ∃ G : Row 4, P=f^a*G ∧ G≠0 ∧ ¬ f ∣ G := by
   have hm : FiniteMultiplicity f P := by
@@ -35,7 +35,7 @@ theorem valuation_factorization {f P : Row 4} (hf : f ≠ 0)
   obtain ⟨G,hG,hd⟩ := hm.exists_eq_pow_mul_and_not_dvd
   exact ⟨_,G,hG,fun h0 => hP (by rw [hG,h0,mul_zero]),hd⟩
 
-theorem weight_coord (i : Fin 3) (P : Row 4) :
+private theorem weight_coord (i : Fin 3) (P : Row 4) :
     coord (shape P) i =
       P.weightedTotalDegree (![fun _ : Fin 4 => 1,Fin.val,Pi.single 3 1] i) := by
   fin_cases i
@@ -130,5 +130,6 @@ theorem exists_cut {w Γ s} (hm : Final50Price.Messages w Γ s)
   have hmin := minimal_pair hf hind hdata.height hdata.contains (mem_of_order hres hGo)
   exact ⟨hmin,hGo,cycleLength_ge_order hdata.height hdata.contains hGo⟩
 
+#print axioms exists_cut
 end
 end Shared50ChooseCut

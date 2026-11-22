@@ -1,0 +1,280 @@
+import ProximityPrize.SubmissionLower.PortLowBase
+import Mathlib.RingTheory.MvPowerSeries.NoZeroDivisors
+import ProximityPrize.SubmissionLower.Final50GeoCover
+
+-- merged module KoalaRetainedCut
+section Merged_KoalaRetainedCut
+set_option autoImplicit false
+set_option Elab.async false
+
+namespace KoalaRetainedCut
+noncomputable section
+
+open K1_13 (Row Geom Shape shape InBox jet shiftJet atJet OrderAt indexDegree)
+open MvPolynomial
+open scoped Polynomial
+
+/-- Total Taylor order at the jet of the specified scalar polynomial. -/
+def contactOrder (P : Row 4) (S : Geom[X]) : ℕ∞ :=
+  ((shiftJet P S : Row 4) : MvPowerSeries (Fin 4) Geom[X]).order
+
+theorem orderAt_iff {P : Row 4} {S : Geom[X]} {d : ℕ} :
+    OrderAt P S d ↔ (d : ℕ∞) ≤ contactOrder P S := by
+  constructor
+  · intro h
+    apply MvPowerSeries.nat_le_order
+    intro m hm
+    rw [MvPolynomial.coeff_coe]
+    by_contra hnon
+    have hle := h m (MvPolynomial.mem_support_iff.mpr hnon)
+    change d ≤ Finsupp.degree m at hle
+    exact (Nat.not_lt_of_ge hle hm)
+  · intro h m hm
+    have he : MvPowerSeries.coeff m ((shiftJet P S : Row 4) :
+        MvPowerSeries (Fin 4) Geom[X]) ≠ 0 := by
+      rw [MvPolynomial.coeff_coe]
+      exact MvPolynomial.mem_support_iff.mp hm
+    exact_mod_cast h.trans (MvPowerSeries.order_le he)
+
+private def shifting (S : Geom[X]) : Row 4 →+* Row 4 :=
+  MvPolynomial.eval₂Hom MvPolynomial.C (fun i => MvPolynomial.X i + MvPolynomial.C (jet S i))
+
+theorem contactOrder_mul (H G : Row 4) (S : Geom[X]) :
+    contactOrder (H*G) S = contactOrder H S + contactOrder G S := by
+  unfold contactOrder
+  change ((shifting S (H*G) : Row 4) : MvPowerSeries (Fin 4) Geom[X]).order = _
+  rw [map_mul,MvPolynomial.coe_mul,MvPowerSeries.order_mul]
+  rfl
+
+theorem contactOrder_off {H : Row 4} {S : Geom[X]} (h : atJet H S ≠ 0) :
+    contactOrder H S = 0 := by
+  have het : (shiftJet H S).coeff 0 = atJet H S := by
+    change (MvPolynomial.constantCoeff.comp (shifting S)) H = MvPolynomial.eval (jet S) H
+    congr 1
+    ext <;> simp [shifting]
+  have hc : MvPowerSeries.coeff 0 ((shiftJet H S : Row 4) :
+      MvPowerSeries (Fin 4) Geom[X]) ≠ 0 := by simpa only [MvPolynomial.coeff_coe,het] using h
+  change ((shiftJet H S : Row 4) : MvPowerSeries (Fin 4) Geom[X]).order = 0
+  exact le_bot_iff.mp (by simpa using MvPowerSeries.order_le hc)
+
+theorem contactOrder_pow (H : Row 4) (S : Geom[X]) (v : ℕ) :
+    contactOrder (H^v) S = v * contactOrder H S := by
+  induction v with
+  | zero =>
+    rw [pow_zero, Nat.cast_zero, zero_mul, contactOrder_off]
+    simp [atJet]
+  | succ v ih =>
+    rw [pow_succ,contactOrder_mul,ih,Nat.cast_succ,add_mul,one_mul]
+
+/-- At a scalar with Taylor multiplicity at most e, division costs at most e per factor. -/
+theorem orderAt_quotient {H G : Row 4} {S : Geom[X]} {v e k : ℕ}
+    (he : contactOrder H S ≤ (e : ℕ∞)) (h : OrderAt (H^v*G) S k) :
+    OrderAt G S (k-v*e) := by
+  rw [orderAt_iff,contactOrder_mul,contactOrder_pow] at h
+  rw [orderAt_iff]
+  have hle := h.trans (add_le_add_left (mul_le_mul_right he (v : ℕ∞)) _)
+  by_cases htop : contactOrder G S = ⊤
+  · simp [htop]
+  · obtain ⟨g,hg⟩ := ENat.ne_top_iff_exists.mp htop
+    rw [← hg] at hle ⊢
+    have hk : k ≤ v*e+g := by exact_mod_cast hle
+    exact_mod_cast (by omega : k-v*e ≤ g)
+
+theorem orderAt_off_quotient {H G : Row 4} {S : Geom[X]} {v k : ℕ}
+    (hoff : atJet H S ≠ 0) (h : OrderAt (H^v*G) S k) : OrderAt G S k := by
+  simpa using orderAt_quotient (e := 0) (le_of_eq (contactOrder_off hoff)) h
+
+#print axioms orderAt_quotient
+#print axioms orderAt_off_quotient
+
+end
+end KoalaRetainedCut
+end Merged_KoalaRetainedCut
+
+set_option autoImplicit false
+set_option Elab.async false
+
+namespace KoalaRetainedCut
+noncomputable section
+
+open MvPolynomial
+open K1_13 (Row Geom Shape shape InBox OrderAt atJet extend embed indexDegree)
+open Final50Price (primaryBox primaryCutoff TrueWeightLE ActiveFits physicalDegree)
+open private translateTop topHasse topHasse_zero topHasse_coeff source_support sum_add_top
+  total_add_top apply_add_top erase_top_add topHasse_order exact_hasse_not_dvd
+  from ProximityPrize.SubmissionLower.PortLowBase
+open scoped Polynomial BigOperators
+
+/-- The primary box after extracting at least l copies of a retained product of shape h. -/
+def residualBox (h : Shape) (l : ℕ) : Shape :=
+  ⟨primaryBox.b-l*h.b, primaryBox.j-l*h.j, primaryBox.t-l*h.t⟩
+
+private theorem wdegree_pow (w : Fin 4 → ℕ) {H : Row 4} (hn : H ≠ 0) (k : ℕ) :
+    (H^k).weightedTotalDegree w = k*H.weightedTotalDegree w := by
+  induction k with
+  | zero => rw [pow_zero,zero_mul,← MvPolynomial.C_1,weightedTotalDegree_C]
+  | succ k ih => rw [pow_succ,weightedTotalDegree_mul _ _ _ (pow_ne_zero k hn) hn,ih,Nat.succ_mul]
+
+theorem residual_box {H G : Row 4} {v l : ℕ} (hv : l ≤ v)
+    (hH : H ≠ 0) (hG : G ≠ 0) (hb : InBox (shape (H^v*G)) primaryBox) :
+    InBox (shape G) (residualBox (shape H) l) := by
+  have bound (w : Fin 4 → ℕ) {cap : ℕ} (hc : (H^v*G).weightedTotalDegree w ≤ cap) :
+      G.weightedTotalDegree w ≤ cap - l*H.weightedTotalDegree w := by
+    rw [weightedTotalDegree_mul _ _ _ (pow_ne_zero v hH) hG,wdegree_pow _ hH] at hc
+    have hs := Nat.mul_le_mul_right (H.weightedTotalDegree w) hv
+    omega
+  have hb₁ : (H^v*G).totalDegree ≤ primaryBox.b := hb.1
+  have hb₂ : indexDegree (H^v*G) ≤ primaryBox.j := hb.2.1
+  have hb₃ : (H^v*G).degreeOf 3 ≤ primaryBox.t := hb.2.2
+  rw [← weightedTotalDegree_one] at hb₁
+  rw [K1_13_1.indexDegree_eq] at hb₂
+  rw [← weightedTotalDegree_piSingle] at hb₃
+  refine ⟨?_, ?_, ?_⟩
+  · change G.totalDegree ≤ primaryBox.b-l*H.totalDegree
+    simpa only [weightedTotalDegree_one] using bound (1 : Fin 4 → ℕ) hb₁
+  · change indexDegree G ≤ primaryBox.j-l*indexDegree H
+    simpa only [← K1_13_1.indexDegree_eq] using bound Fin.val hb₂
+  · change G.degreeOf 3 ≤ primaryBox.t-l*H.degreeOf 3
+    simpa only [weightedTotalDegree_piSingle] using bound (Pi.single (3 : Fin 4) 1) hb₃
+
+private theorem weight_of_factor {P G : Row 4} {D : ℕ} (hP : P ≠ 0) (hG : G ∣ P)
+    (hw : TrueWeightLE P D) : TrueWeightLE G D := by
+  let e := MvPolynomial.optionEquivRight Geom (Fin 4)
+  have hd := map_dvd e.symm.toRingHom hG
+  have hn : e.symm P ≠ 0 := fun h => hP (e.symm.injective (h.trans (map_zero _).symm))
+  exact (Final50GeoCover.trueWeight_iff G).mpr <|
+    (weightedTotalDegree_le_of_dvd _ hd hn).trans ((Final50GeoCover.trueWeight_iff P).mp hw)
+
+-- The next two support lemmas are the accepted Final50Order Hasse bounds.
+private theorem topHasse_bounds (box : Shape) (T a : ℕ) (P : Row 4)
+    (hb : InBox (shape P) box) (hw : TrueWeightLE P T) :
+    InBox (shape (topHasse a P)) box ∧ TrueWeightLE (topHasse a P) T := by
+  refine ⟨⟨?_, ?_, ?_⟩, ?_⟩
+  · change (topHasse a P).totalDegree ≤ box.b
+    apply Finset.sup_le
+    intro m hm
+    have hp := (MvPolynomial.le_totalDegree (source_support hm)).trans hb.1
+    rw [total_add_top] at hp
+    exact (Nat.le_add_right _ _).trans hp
+  · change indexDegree (topHasse a P) ≤ box.j
+    apply Finset.sup_le
+    intro m hm
+    have hp := (Finset.le_sup (f := fun u : Fin 4 →₀ ℕ => u.sum (fun i k => i.val * k))
+      (source_support hm)).trans hb.2.1
+    rw [sum_add_top Fin.val] at hp
+    exact (Nat.le_add_right _ _).trans hp
+  · change (topHasse a P).degreeOf 3 ≤ box.t
+    apply MvPolynomial.degreeOf_le_iff.mpr
+    intro m hm
+    have hp := (MvPolynomial.le_degreeOf_of_mem_support 3 (source_support hm)).trans hb.2.2
+    rw [apply_add_top] at hp
+    exact (Nat.le_add_right _ _).trans hp
+  · intro m hm
+    have hp := hw _ (source_support hm)
+    rw [sum_add_top (fun i => physicalDegree - i.val)] at hp
+    rw [topHasse_coeff]
+    have hc := Polynomial.natDegree_mul_le
+      (p := (↑((m 3 + a).choose a) : Geom[X])) (q := P.coeff (m + Finsupp.single 3 a))
+    rw [Polynomial.natDegree_natCast, zero_add] at hc
+    exact (Nat.add_le_add_right hc _).trans ((Nat.add_le_add_left (Nat.le_add_right _ _) _).trans hp)
+private theorem topHasse_one_not_dvd (f : Row 4) (hf : Irreducible f)
+    (hpos : 0 < f.degreeOf 3) (hsmall : f.degreeOf 3 < K1.p) : ¬ f ∣ topHasse 1 f := by
+  classical
+  have hdeg : (topHasse 1 f).degreeOf 3 ≤ f.degreeOf 3 - 1 := by
+    apply MvPolynomial.degreeOf_le_iff.mpr
+    intro m hm
+    have h := MvPolynomial.le_degreeOf_of_mem_support 3 (source_support hm)
+    rw [apply_add_top] at h
+    omega
+  have hnz : topHasse 1 f ≠ 0 := by
+    have hsup : 0 < f.support.sup (fun m => m (3 : Fin 4)) := by
+      rwa [← MvPolynomial.degreeOf_eq_sup]
+    obtain ⟨u, hu, htop⟩ := (Finset.le_sup_iff hsup).mp (le_refl _)
+    rw [← MvPolynomial.degreeOf_eq_sup] at htop
+    have hupos : 0 < u 3 := hpos.trans_le htop
+    have hult : u 3 < K1.p := (MvPolynomial.le_degreeOf_of_mem_support 3 hu).trans_lt hsmall
+    let m := u.erase 3 + Finsupp.single 3 (u 3 - 1)
+    have hsum : m + Finsupp.single 3 1 = u := by
+      dsimp [m]
+      rw [add_assoc, ← Finsupp.single_add, Nat.sub_add_cancel hupos, erase_top_add]
+    have hm : m 3 + 1 = u 3 := by
+      rw [← apply_add_top, hsum]
+    have hc : (↑(u 3) : Geom[X]) ≠ 0 := by
+      have : CharP Geom K1.p :=
+        charP_of_injective_ringHom (RingHom.injective embed) K1.p
+      intro hz
+      have hz' : (↑(u 3) : Geom) = 0 := by
+        simpa only [map_natCast, map_zero] using congrArg (Polynomial.evalRingHom (0 : Geom)) hz
+      exact (not_le_of_gt hult)
+        (Nat.le_of_dvd hupos ((CharP.cast_eq_zero_iff Geom K1.p _).mp hz'))
+    have hcoeff : (topHasse 1 f).coeff m ≠ 0 := by
+      rw [topHasse_coeff, hm, hsum, Nat.choose_one_right]
+      exact mul_ne_zero hc (MvPolynomial.mem_support_iff.mp hu)
+    intro hz
+    exact hcoeff (by rw [hz]; rfl)
+  rintro ⟨g, hg⟩
+  have hg0 : g ≠ 0 := by
+    intro h
+    exact hnz (by rw [hg, h, mul_zero])
+  have h := MvPolynomial.degreeOf_mul_eq (n := (3 : Fin 4)) hf.ne_zero hg0
+  rw [hg, h] at hdeg
+  omega
+
+/-- Strip the forced retained power before differentiating in the proper factor. -/
+theorem exists_divided_cut {P H f : Row 4} {k a l A : ℕ} (hP : P ≠ 0) (hH : H ≠ 0)
+    (hf : Irreducible f) (htop : 0 < f.degreeOf 3) (hchar : f.degreeOf 3 < K1.p)
+    (hc : IsRelPrime f H) (hl : l ≤ k-a)
+    (hb : InBox (shape P) primaryBox) (hw : TrueWeightLE P primaryCutoff)
+    (hactive : ActiveFits P A) (divH : H^k ∣ P) (divF : f^a ∣ P) (exactF : ¬ f^(a+1) ∣ P) :
+    ∃ Q : Row 4, (¬ f ∣ Q) ∧ InBox (shape Q) (residualBox (shape H) l) ∧
+      TrueWeightLE Q primaryCutoff ∧ ActiveFits Q A ∧
+      ∀ S : Geom[X], atJet H S ≠ 0 → OrderAt P S k → OrderAt Q S l := by
+  obtain ⟨G,rfl⟩ := divH
+  have hn : G ≠ 0 := right_ne_zero_of_mul hP
+  have hGb := residual_box (hl.trans (Nat.sub_le k a)) hH hn hb
+  have hGw := weight_of_factor hP (dvd_mul_left G (H^k)) hw
+  have hdiv : f^a ∣ G := hc.pow.dvd_of_dvd_mul_left divF
+  have hnext : ¬ f^(a+1) ∣ G := fun hd => exactF (hd.trans (dvd_mul_left G _))
+  have hnd := exact_hasse_not_dvd translateTop topHasse_zero f G a
+    (UniqueFactorizationMonoid.irreducible_iff_prime.mp hf)
+    (topHasse_one_not_dvd f hf htop hchar) hdiv hnext
+  obtain ⟨boxQ,weightQ⟩ := topHasse_bounds _ _ a G hGb hGw
+  have hactiveG : ActiveFits G A := (Final50GeoCover.activeFits_iff G A).mpr
+    ((weightedTotalDegree_le_of_dvd _ (dvd_mul_left G (H^k)) hP).trans
+      ((Final50GeoCover.activeFits_iff _ A).mp hactive))
+  have hactiveQ : ActiveFits (topHasse a G) A := by
+    intro m hm
+    have hh := hactiveG _ (source_support hm)
+    simp [Finsupp.add_apply] at hh
+    omega
+  refine ⟨topHasse a G,hnd,boxQ,weightQ,hactiveQ,?_⟩
+  intro S hS hPS m hm
+  have hor := orderAt_off_quotient hS hPS
+  exact hl.trans (topHasse_order a k G S hor m hm)
+
+/-- Exact availability for the retained product of distinct anchor factors. -/
+theorem retained_power_dvd {ι : Type*} [Fintype ι] [DecidableEq ι] (z : Finset ι)
+    (f : ι → Row 4) (hfi : ∀ i, Irreducible (f i))
+    (hdis : ∀ i j, i ≠ j → ¬ Associated (f i) (f j))
+    {P : Row 4} {k : ℕ} (hdiv : ∀ i ∈ z, f i ^ k ∣ P) : (∏ i ∈ z, f i)^k ∣ P := by
+  rw [← Finset.prod_pow]
+  apply Finset.prod_dvd_of_isRelPrime
+  · intro i _ j _ hij
+    exact ((hfi i).isRelPrime_iff_not_dvd.mpr
+      (fun hd => hdis i j hij ((hfi i).associated_of_dvd (hfi j) hd))).pow
+  · exact hdiv
+
+theorem prime_off_product {ι : Type*} [DecidableEq ι] (z : Finset ι)
+    (f : ι → Row 4) (hfi : ∀ i, Irreducible (f i))
+    (hdis : ∀ i j, i ≠ j → ¬ Associated (f i) (f j))
+    {i : ι} (hi : i ∉ z) : IsRelPrime (f i) (∏ j ∈ z, f j) := by
+  apply IsRelPrime.prod_right
+  intro j hj
+  exact (hfi i).isRelPrime_iff_not_dvd.mpr
+    (fun hd => hdis i j (fun eq => hi (eq ▸ hj)) ((hfi i).associated_of_dvd (hfi j) hd))
+
+#print axioms residual_box
+#print axioms exists_divided_cut
+#print axioms retained_power_dvd
+end
+end KoalaRetainedCut

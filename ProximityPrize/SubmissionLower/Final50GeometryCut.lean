@@ -66,7 +66,7 @@ open Final50Price (SmallFactor primaryBox)
 open Final50GeometryCut (CutInput)
 open P0_9_6_1 (SurfaceCut canonicalChart)
 open private lowHasse chart_cut derivative_proper box_charge box_cutter_charge from ProximityPrize.SubmissionLower.PortLow6
-theorem tangent_cut {f Q : Row 4} {surface : Ideal GeoJets}
+private theorem tangent_cut {f Q : Row 4} {surface : Ideal GeoJets}
     (hZ : (intersectionIdeal f Q).IsMinimalPrime surface) {v r : ℕ}
     (hf : SmallFactor f) (hproper : ¬ f ∣ Q) (hQbox : InBox (shape Q) primaryBox)
     (hv : 0 < v) (hvmax : v ≤ (shape f).b * primaryBox.b)
@@ -85,7 +85,7 @@ theorem tangent_cut {f Q : Row 4} {surface : Ideal GeoJets}
   have ht : 0 < (anchorBox f).t := hf.2.1
   have hj : 0 < (anchorBox f).j :=
     (by omega : 0 < 3 * (anchorBox f).t).trans_le (K1_13_7_1.shape_chamber f).2
-  have hfb : (shape f).b ≤ 129 := hf.2.2.1.1
+  have hfb : (shape f).b ≤ 132 := hf.2.2.1.1
   by_cases hr0 : r = 0
   · subst r
     have hvChar : v < K1.p :=
@@ -100,7 +100,7 @@ theorem tangent_cut {f Q : Row 4} {surface : Ideal GeoJets}
     have hgProper := derivative_proper hf.1 hf.2.1 r hrPos hg0
     have hgRel := K1_13_7_1.proper_generic f g hf.1 hgProper
     obtain ⟨hfg, w, hw, hwmax, hwlen⟩ := K1_13_6_1_3_1.proof f g Q surface hgRel hZ hgt
-    have hgb : (shape g).b ≤ 129 := (K1_13_7_1.derivative_in_box f r).1.trans hfb
+    have hgb : (shape g).b ≤ 132 := (K1_13_7_1.derivative_in_box f r).1.trans hfb
     have hwChar : w < K1.p :=
       (hwmax.trans (Nat.mul_le_mul hfb hgb)).trans_lt (by decide)
     have hcomm : intersectionIdeal g f = intersectionIdeal f g := by
@@ -113,7 +113,7 @@ theorem tangent_cut {f Q : Row 4} {surface : Ideal GeoJets}
       chart_cut hgf hgRel.symm hsep hi hw hwChar hwlen',
       tangent_box ht hj hGbox hAnchor w⟩
 open private topAt topAt_coeff eval_topAt topView_separant from ProximityPrize.SubmissionLower.Fast056
-theorem canonicalChart13 {f : Row 4} {surface : Ideal GeoJets} {S : Geom[X]}
+private theorem canonicalChart13 {f : Row 4} {surface : Ideal GeoJets} {S : Geom[X]}
     (htop : (shape f).t ≤ 14) (hon : OnFactor f S)
     (hfmem : toGeneric f ∈ surface) (hmark : surface ≤ markIdeal S) :
     ∃ r, CanonicalChart f surface r ∧
@@ -365,7 +365,7 @@ theorem cut_curves :
   have hf0 := toGeneric_ne_zero hf.1.ne_zero
   have hproper := proper_generic f Q hf.1 hq
   have hp : FullChamber (anchorBox f) := ⟨shape_chamber f, hf.2.1⟩
-  have hchart := full_chart taylorLength (show 0 < 133462 by decide) (anchorBox f)
+  have hchart := full_chart taylorLength (show 0 < 133485 by decide) (anchorBox f)
   refine ⟨curves, ?_, ?_, ?_, ?_⟩
   · intro surface hs C hC
     exact Finset.mem_biUnion.mpr ⟨surface, hs, Ideal.mem_minimalPrimesFinset.mpr hC⟩
@@ -418,7 +418,7 @@ theorem recover_curve :
     let hb := derivative_in_box f r
     ⟨hb.1.trans (le_max_left _ _), hb.2.1, hb.2.2⟩
   have hL : taylorLength ≤ K1.p := by
-    change 133462 ≤ 0x7f000001
+    change 133485 ≤ 0x7f000001
     decide
   let A := Γ.filter fun γ => C ≤ markIdeal (extend (s γ)) ∧ RegularAt g (extend (s γ))
   let B := Γ.filter fun γ => C ≤ markIdeal (extend (s γ)) ∧ ¬ RegularAt g (extend (s γ))
@@ -519,18 +519,18 @@ def c3 : Prop :=
       C.curves s ∧ D.surfaces s ∧ (∀ i, 0 < C.degree i) ∧ (∀ i, 0 < D.degree i) ∧
       (∀ γ ∈ Γ, ContinuedMark f Q l (extend (s γ)) → γ ∈ C.union ∪ D.union) ∧
       l * C.total ≤ membershipDegree (shape f) ∧
-      2 * D.total ≤ 133461 * (shape f).b * primaryBox.b
+      2 * D.total ≤ 133484 * (shape f).b * primaryBox.b
 private theorem eval_jetNumerator_zero (g : Row 4) (S : Geom[X])
     (hg : atJet g S = 0) (n : ℕ) (hS : S.natDegree < n) :
     atJet (jetNumerator g n) S = 0 := by
   rw [eval_jetNumerator _ _ hg, iterate_derivative_eq_zero hS, mul_zero]
 theorem eval_membership_tests (g : Row 4) (S : Geom[X])
-    (hg : atJet g S = 0) (hS : S.natDegree ≤ 133461) :
+    (hg : atJet g S = 0) (hS : S.natDegree ≤ 133484) :
     atJet (membershipTest g) S = 0 ∧ atJet (nextTest g) S = 0 :=
   ⟨eval_jetNumerator_zero g S hg taylorLength (Nat.lt_succ_of_le hS),
     eval_jetNumerator_zero g S hg (taylorLength + 1)
       ((Nat.lt_succ_of_le hS).trans (Nat.lt_succ_self _))⟩
-theorem highMark_cases {f Q l S} (hS : S.natDegree ≤ 133461)
+theorem highMark_cases {f Q l S} (hS : S.natDegree ≤ 133484)
     (hh : HighMark f Q l S) : MixedMark f Q l S ∨ ContinuedMark f Q l S := by
   obtain ⟨surface, r, hc⟩ := hh
   let g := (separant^[r]) f
@@ -550,9 +550,9 @@ private theorem le_ceil {n d count : ℕ} (hd : 0 < d) (h : count*d ≤ n) :
   exact (Nat.le_div_iff_mul_le hd).mpr (by omega)
 private def chargedPrice (x : Shape) (l scale budget : ℕ) : ℕ :=
   ceilDiv (ceilDiv budget scale +
-    ceilDiv ((82249 + 2 * 46434) * membershipDegree x) 46434) l +
-  2 * (133461 * x.b * primaryBox.b) +
-  ceilDiv (82249 * auxCurves32 x + 2 * 46434 * auxPoints32 x) (32 * 46434)
+    ceilDiv ((82258 + 2 * 46402) * membershipDegree x) 46402) l +
+  2 * (133484 * x.b * primaryBox.b) +
+  ceilDiv (82258 * auxCurves32 x + 2 * 46402 * auxPoints32 x) (32 * 46402)
 
 private theorem price_formula_old (x : Shape) (l : ℕ) :
     physicalPriceOld x l = chargedPrice x l 32 (surfaceNumerator32 x.chamber primaryBox) := by
@@ -564,7 +564,7 @@ private theorem price_formula_tilted (x : Shape) (l : ℕ) :
   simp only [physicalPriceTilted, Final50Price.physicalPriceWith, chargedPrice, auxCurves32, auxPoints32, membershipDegree, Nat.mul_assoc]
   rfl
 
-theorem assemble_charge (h1 : c1) (h3 : c3) {w Γ s f Q l scale budget}
+private theorem assemble_charge (h1 : c1) (h3 : c3) {w Γ s f Q l scale budget}
     (hm : Messages w Γ s) (input : CutInput Γ s f Q l)
     (hscale : 0 < scale) (h2 : MixedBound Γ s f Q l scale budget) :
     Γ.card ≤ chargedPrice (shape f) l scale budget := by
@@ -578,7 +578,7 @@ theorem assemble_charge (h1 : c1) (h3 : c3) {w Γ s f Q l scale budget}
   have cover : Γ ⊆ (A.union ∪ AB) ∪ (C.union ∪ CB) ∪ D.union ∪ F.union := by
     intro γ hγ
     by_cases hh : HighMark f Q l (extend (s γ))
-    · have hdeg : (extend (s γ)).natDegree ≤ 133461 := by
+    · have hdeg : (extend (s γ)).natDegree ≤ 133484 := by
         rw [Polynomial.natDegree_map]
         exact hm.degree γ hγ
       rcases highMark_cases hdeg hh with h | h
@@ -603,7 +603,7 @@ theorem assemble_charge (h1 : c1) (h3 : c3) {w Γ s f Q l scale budget}
           (Nat.add_le_add (Finset.card_union_le _ _) (Finset.card_union_le _ _)) _) _
   let x := shape f
   have aux_bound : aux ≤
-      ceilDiv (82249 * auxCurves32 x + 2*46434 * auxPoints32 x) (32*46434) := by
+      ceilDiv (82258 * auxCurves32 x + 2*46402 * auxPoints32 x) (32*46402) := by
     apply le_ceil (by decide)
     have hA' := pieces_curve_capacity A hm hA
     change 32 * A.total ≤ auxCurves32 x at haCurves
@@ -616,7 +616,7 @@ theorem assemble_charge (h1 : c1) (h3 : c3) {w Γ s f Q l scale budget}
     have h := (Nat.mul_le_mul_left (scale*l) hC').trans hcBudget
     simpa only [mixed, x, Nat.mul_assoc, Nat.mul_left_comm, Nat.mul_comm] using h
   have curve_bound : l * D.union.card ≤
-      ceilDiv ((82249 + 2*46434) * membershipDegree x) 46434 := by
+      ceilDiv ((82258 + 2*46402) * membershipDegree x) 46402 := by
     apply le_ceil (by decide)
     have hD' := Nat.mul_le_mul_left l (pieces_curve_capacity_integral D hm hD hdPos)
     change l * D.total ≤ membershipDegree x at hdBudget
@@ -626,13 +626,13 @@ theorem assemble_charge (h1 : c1) (h3 : c3) {w Γ s f Q l scale budget}
     omega
   have main_bound : mixed + D.union.card ≤
       ceilDiv (ceilDiv budget scale +
-        ceilDiv ((82249 + 2*46434) * membershipDegree x) 46434) l := by
+        ceilDiv ((82258 + 2*46402) * membershipDegree x) 46402) l := by
     apply le_ceil hl
     rw [Nat.add_mul, Nat.mul_comm mixed l, Nat.mul_comm D.union.card l]
     exact Nat.add_le_add mixed_bound curve_bound
-  have surface_bound : F.union.card ≤ 2*(133461*x.b*primaryBox.b) := by
+  have surface_bound : F.union.card ≤ 2*(133484*x.b*primaryBox.b) := by
     have hF' := pieces_surface_capacity F hm hF hfPos
-    change 2 * F.total ≤ 133461*x.b*primaryBox.b at hfBudget
+    change 2 * F.total ≤ 133484*x.b*primaryBox.b at hfBudget
     omega
   change Γ.card ≤ chargedPrice x l scale budget
   unfold chargedPrice
@@ -1089,7 +1089,7 @@ private theorem ordinary_eq_hasse (S : Geom[X]) (n : ℕ) :
   rw [coeff_iterate_derivative, Polynomial.coeff_C_mul, hasseDeriv_coeff,
     Nat.descFactorial_eq_factorial_mul_choose]
   simp only [nsmul_eq_mul, Nat.cast_mul, mul_assoc]
-theorem eval_generic (S : Geom[X]) (P : Row 4) :
+private theorem eval_generic (S : Geom[X]) (P : Row 4) :
     evalGeneric S (toGeneric P) = genericCoeffs (atJet P S) :=
   (MvPolynomial.map_eval genericCoeffs (jet S) P).symm
 private theorem generic_injective : Function.Injective genericCoeffs :=
@@ -1143,7 +1143,7 @@ private theorem eval_center (S : Geom[X]) : (S.map constants).eval center = gene
   · intro a
     simp [constants]
   · simp [center]
-theorem taylor_sum {S : Geom[X]} (hS : S.natDegree < taylorLength) (x : Geom) :
+private theorem taylor_sum {S : Geom[X]} (hS : S.natDegree < taylorLength) (x : Geom) :
     (∑ i : TaylorIndex, (constants x - center) ^ i.val * genericCoeffs (hasseDeriv i.val S)) =
       constants (S.eval x) := by
   let T := (S.map constants).taylor center
@@ -1160,7 +1160,7 @@ theorem taylor_sum {S : Geom[X]} (hS : S.natDegree < taylorLength) (x : Geom) :
   rw [taylor_coeff, hasseDeriv_map, eval_center, mul_comm]
 private def valueForm (x a : Geom) : AffineForm :=
   (-(constants a), fun i => (constants x - center) ^ i.val)
-theorem eval_value {C : TaylorChart} {S : Geom[X]}
+private theorem eval_value {C : TaylorChart} {S : Geom[X]}
     (h : C.Recovers S) (hd : S.natDegree < taylorLength) (x a : Geom) :
     evalGeneric S (C.pullback (valueForm x a)) = 0 ↔ S.eval x = a := by
   have evC (c : GeoField) : evalGeneric S (MvPolynomial.C c) = c := MvPolynomial.eval_C _
@@ -1407,13 +1407,13 @@ private def toBranch (b : Branch f Q l) : Chart b.g →+* b.Local :=
 @[simp] private theorem toBranch_incl (b : Branch f Q l) (P : Row 4) :
     toBranch b (incl b.g P) = b.localMap (toGeneric P) :=
   IsLocalization.Away.lift_eq _ _ _
-theorem toBranch_inv (b : Branch f Q l) :
+private theorem toBranch_inv (b : Branch f Q l) :
     toBranch b (invS b.g) = IsLocalization.Away.invSelf b.sigma := by
   apply (IsLocalization.Away.algebraMap_isUnit (S := b.Local) b.sigma).mul_left_cancel
   rw [IsLocalization.Away.mul_invSelf]
   have hm := congrArg (toBranch b) (S_mul_invS b.g)
   simpa only [S, map_mul, toBranch_incl, map_one, Branch.sigma, Branch.localMap] using hm
-theorem toBranch_graph (b : Branch f Q l) (P : Row 5) :
+private theorem toBranch_graph (b : Branch f Q l) (P : Row 5) :
     toBranch b (graphMap b.g P) = b.onGraph (generic5 P) := by
   have hold (U : Row 4) : toBranch b (graphMap b.g (lift4 U)) =
       b.onGraph (generic5 (lift4 U)) := by
@@ -1537,9 +1537,8 @@ open K1_13_6 (GeoField genericCoeffs toGeneric separant jetNumerator eval_jetNum
 open K1_13_6_2 (JetPoint GeoJets5 actualPoint)
 open K1_13_6_2_2 (lift4 generic5 numerator denominator padded padded_last)
 open scoped BigOperators
-open K1_13_6_2_2 (box_C_mul box_sum box_sub)
 open private ordinary ordinary_eq_hasse const centre taylorScalar factorial_ne_zero
-  from ProximityPrize.SubmissionLower.Fast054
+  box_C_mul box_sum box_sub from ProximityPrize.SubmissionLower.Fast054
 variable {f Q : Row 4} {l : ℕ}
 private theorem numerator_associated (b : Branch f Q l) (k : ℕ) :
     Associated (b.onGraph (generic5 (numerator b.g k)))
@@ -1652,7 +1651,7 @@ theorem proof : Final50GeometryCut_2.c1 := by
   intro f Q l hf b
   obtain ⟨hg, hbox⟩ := chart_support hf b
   let k := taylorLength - 4
-  have hfour : 4 ≤ taylorLength := (by decide : 4 ≤ 133462)
+  have hfour : 4 ≤ taylorLength := (by decide : 4 ≤ 133485)
   have hk : k + 4 = taylorLength := Nat.sub_add_cancel hfour
   have hk' : (k + 1) + 4 = taylorLength + 1 := by
     rw [Nat.add_right_comm, hk]
@@ -1666,7 +1665,7 @@ theorem proof : Final50GeometryCut_2.c1 := by
   refine ⟨hg, generic5 (numerator b.g k), generic5 (numerator b.g (k + 1)),
     hE, hm, hH, hn, ?_⟩
   intro x a
-  have hM : taylorLength ≤ K1.p := (by decide : 133462 ≤ 0x7f000001)
+  have hM : taylorLength ≤ K1.p := (by decide : 133485 ≤ 0x7f000001)
   have hlen : taylorLength ≤ (k + 1) + 5 := calc
     taylorLength ≤ taylorLength + 1 := Nat.le_succ _
     _ = (k + 1) + 4 := hk'.symm
@@ -2595,7 +2594,7 @@ private theorem member_minimal {f Q l} (b : Branch f Q l) {E : GeoJets5}
       b.divisor.2 ⟨hP, sup_le hS ((Ideal.span_singleton_le_iff_mem _).mpr hmP)⟩ hPC
     rw [hEq]
     exact Ideal.comap_mono (Ideal.map_mono hCP)
-theorem membership_length {f Q l} (b : Branch f Q l) {E : GeoJets5}
+private theorem membership_length {f Q l} (b : Branch f Q l) {E : GeoJets5}
     (hE : Associated (b.onGraph E) (b.localMap b.member)) :
     cycleLength (memberDiv b) b.curve b.divisor.isPrime ≤
       LengthAt (sectionIdeal (graphLift b b.surface) E) (graphLift b b.curve)
@@ -3048,7 +3047,7 @@ def c1 : Prop :=
 def c2 : Prop :=
   ∀ A : CoeffIdeal, A.IsPrime → (extendIdeal A).IsPrime → dimension A = 2 →
     FreshBirational A → ShortSupport A →
-    2 * affineDegree A ≤ 133461 * affineDegree (freshImage A)
+    2 * affineDegree A ≤ 133484 * affineDegree (freshImage A)
 private def CurveSource (f Q : Row 4) (l : ℕ) (P : JetIdeal) : Prop :=
   ∃ (surface : JetIdeal) (r : ℕ) (hz : (intersectionIdeal f Q).IsMinimalPrime surface),
     (l : ℕ∞) ≤ cycleLength (intersectionIdeal f Q) surface hz.isPrime ∧
@@ -3258,19 +3257,19 @@ theorem of_children (h1 : c1) (h2 : c2) : Final50GeometryCut.c3 := by
       intro P hp
       obtain ⟨A, hA, rfl⟩ := Finset.mem_image.mp hp
       exact hD A hA)
-    have hbound : (2 : ℚ) * (D.total : ℚ) ≤ 133461 * (((shape f).b * primaryBox.b : ℕ) : ℚ) := by
+    have hbound : (2 : ℚ) * (D.total : ℚ) ≤ 133484 * (((shape f).b * primaryBox.b : ℕ) : ℚ) := by
       calc
         _ ≤ 2 * (∑ P ∈ Td, affineDegree P) :=
           mul_le_mul_of_nonneg_left (piecesOf_le_degree (T := Td) (part := marksOn Γ s))
             (by positivity)
-        _ ≤ ∑ P ∈ Td, 133461 * affineDegree (freshImage P) := by
+        _ ≤ ∑ P ∈ Td, 133484 * affineDegree (freshImage P) := by
           rw [Finset.mul_sum]
           apply Finset.sum_le_sum
           intro P hP
           obtain ⟨ht, he⟩ := Finset.mem_filter.mp hP
           have hf := (hT P ht).1
           exact h2 P hf.prime hf.extended_prime he hf.birational (hT P ht).2.1
-        _ = 133461 * (∑ P ∈ Td.image freshImage, affineDegree P) := by
+        _ = 133484 * (∑ P ∈ Td.image freshImage, affineDegree P) := by
           rw [Finset.mul_sum, Finset.sum_image (fun P hP R hR h =>
             hinj (Finset.mem_filter.mp hP).1 (Finset.mem_filter.mp hR).1 h)]
         _ ≤ _ := mul_le_mul_of_nonneg_left hsum (by positivity)
@@ -3287,16 +3286,16 @@ set_option maxHeartbeats 1200000
 namespace Final50GeometryCut_3_1
 noncomputable section
 open K1_13 K1_13_6 K1_13_6_3 K1_13_6_3_2 Polynomial
-theorem old_weight {H : Row 4} {B : ℕ} (h : Final50Price.TrueWeightLE H B) :
+private theorem old_weight {H : Row 4} {B : ℕ} (h : Final50Price.TrueWeightLE H B) :
     TrueWeightLE H (2 * B) := by
   intro m hm
   have hpoint (i : Fin 4) :
       133671 - i.val ≤ 2 * (Final50Price.physicalDegree - i.val) := by
     have hi := i.isLt
-    change 133671 - i.val ≤ 2 * (133461 - i.val)
+    change 133671 - i.val ≤ 2 * (133484 - i.val)
     omega
   have hsum : m.sum (fun i a => (133671 - i.val) * a) ≤
-      2 * m.sum (fun i a => (133461 - i.val) * a) := by
+      2 * m.sum (fun i a => (133484 - i.val) * a) := by
     unfold Finsupp.sum
     rw [Finset.mul_sum]
     apply Finset.sum_le_sum
@@ -3304,7 +3303,7 @@ theorem old_weight {H : Row 4} {B : ℕ} (h : Final50Price.TrueWeightLE H B) :
     rw [← Nat.mul_assoc]
     exact Nat.mul_le_mul_right _ (hpoint i)
   have hnew := h m hm
-  change (H.coeff m).natDegree + m.sum (fun i a => (133461 - i.val) * a) ≤ B at hnew
+  change (H.coeff m).natDegree + m.sum (fun i a => (133484 - i.val) * a) ≤ B at hnew
   change (H.coeff m).natDegree + m.sum (fun i a => (133671 - i.val) * a) ≤ 2 * B
   omega
 open private iterate_zero_of_le differentialTaylor_degree rowAt_eval initial_dividedIterate
@@ -3406,3 +3405,6 @@ theorem proof (htilt : c2Tilted) (hactive : c2Active) : Final50Price.c6 :=
 
 end Final50GeometryCut
 
+#print axioms Final50GeometryCut.proof_old
+#print axioms Final50GeometryCut_2_3_1.proof
+#print axioms Final50GeometryCut_2_3_2.proof

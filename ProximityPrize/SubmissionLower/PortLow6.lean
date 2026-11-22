@@ -22,13 +22,6 @@ structure CutInput (Γ : Finset K) (s : K → K[X]) (f Q : Row 4) (l : ℕ) : Pr
   order : ∀ γ ∈ Γ, OrderAt Q (extend (s γ)) l
 def membershipTest (g : Row 4) : Row 4 := jetNumerator g taylorLength
 def nextTest (g : Row 4) : Row 4 := jetNumerator g (taylorLength + 1)
-def auxCurves32 (x : Shape) : ℕ :=
-  let p := x.chamber
-  let h := chart taylorLength p
-  mixed32 p primaryBox (primaryBox.plus (p.scale 4)) h + 2 * x.t * mixed32 p p p h
-def auxPoints32 (x : Shape) : ℕ :=
-  let p := x.chamber
-  mixed32 p primaryBox (primaryBox.plus (p.scale 4)) p + 2 * x.t * mixed32 p p p p
 end
 end P0_9_6
 end
@@ -210,13 +203,6 @@ open K1_13_6 (Pieces toGeneric
   separant jetNumerator HighMark divisorIdeal cycleLength eval_jetNumerator)
 open K1_13_6_1 (mem_markIdeal mark_curve)
 open scoped BigOperators
-def c1 : Prop :=
-  ∀ Γ s f Q l, CutInput Γ s f Q l →
-    ∃ (C : Pieces Γ) (B : Finset K),
-      C.curves s ∧
-      (∀ γ ∈ Γ, ¬ HighMark f Q l (extend (s γ)) → γ ∈ C.union ∪ B) ∧
-      32 * C.total ≤ auxCurves32 (shape f) ∧
-      32 * (B.card + C.n) ≤ 2 * auxPoints32 (shape f)
 end
 end P0_9_6
 end
@@ -355,7 +341,7 @@ private def numerator (L : ℕ) (g : Row 4) (i : Fin L) : Row 4 :=
   else
     MvPolynomial.C (Polynomial.C (↑i.val.factorial : Geom)⁻¹) *
       (separant g ^ (2 * (L - i.val)) * jetNumerator g i.val)
-def recoveryChart (L : ℕ) (g : Row 4) : TaylorChart L where
+private def recoveryChart (L : ℕ) (g : Row 4) : TaylorChart L where
   denom := toGeneric (denominator L g)
   numerator i := toGeneric (numerator L g i)
 private theorem numerator_bound {L : ℕ} (w : Fin 4 → ℕ) (Δ d₀ : ℕ)

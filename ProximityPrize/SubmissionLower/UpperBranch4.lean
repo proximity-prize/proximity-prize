@@ -240,15 +240,15 @@ theorem dotQ_scale_add (a h : ℚ) (v w x : Mass) :
   apply Finset.sum_congr rfl
   intro k _
   ring
-theorem running_nonneg (v : ℕ → Mass) (i : ℕ) (k : Fin 4) :
+private theorem running_nonneg (v : ℕ → Mass) (i : ℕ) (k : Fin 4) :
     0 ≤ running v i k := by
   induction i with
   | zero => exact le_rfl
   | succ i ih => exact ih.trans (le_max_left _ _)
-theorem jump_nonneg (v : ℕ → Mass) (i : ℕ) (k : Fin 4) :
+private theorem jump_nonneg (v : ℕ → Mass) (i : ℕ) (k : Fin 4) :
     0 ≤ running v (i+1) k - running v i k :=
   sub_nonneg.mpr (le_max_left _ _)
-theorem running_succ_dot (v : ℕ → Mass) (i : ℕ) (c : Mass) :
+private theorem running_succ_dot (v : ℕ → Mass) (i : ℕ) (c : Mass) :
     dotQ (running v (i+1)) c = dotQ (running v i) c +
       dotQ (fun k => running v (i+1) k - running v i k) c := by
   unfold dotQ
@@ -256,7 +256,7 @@ theorem running_succ_dot (v : ℕ → Mass) (i : ℕ) (c : Mass) :
   apply Finset.sum_congr rfl
   intro k _
   ring
-theorem pay_one (v : ℕ → Mass) (hist : ℕ → Mass) (i : ℕ)
+private theorem pay_one (v : ℕ → Mass) (hist : ℕ → Mass) (i : ℕ)
     {S T U : Finset (Ideal Ambient)} (hT : T ⊆ S) (hU : U ⊆ S \ T)
     (hcap : ∀ k, massQ S k ≤ hist i k) :
     dotQ (v i) (massQ U) + dotQ (running v (i+1)) (massQ T) ≤
@@ -330,10 +330,6 @@ def pairAt {b h rows} (pairs : P1_7.Pairs b h rows) (i : StageIndex b) :
 structure FixedRows {b h rows} (pairs : P1_7.Pairs b h rows) (i : StageIndex b) where
   free : FixedPart (pairAt pairs i).free (stageAt b i).free.shape
   moving : FixedPart (pairAt pairs i).moving (stageAt b i).moving.shape
-theorem fixed_zero {u del} {M : AnchorModel u del} {Γ} {F : AnchoredFamily M Γ}
-    {I : Ideal Ambient} {G : ODE} {γ : K} (hm : OnParent F I γ) (hG : fixedOn G I) :
-    K1_14_2.fixedAt G (F.scalar γ) = 0 := by
-  simpa only [K1_14_2_2.eval_fixed] using RingHom.mem_ker.mp (hm hG)
 theorem rank_equation (S : Finset (Ideal Ambient))
     (hS : ∀ I ∈ S, Active I ∧ ¬ dual I) {B J : ℕ}
     (hord : mass S 1 ≤ J) (hmix : mass S 2 ≤ B) :
@@ -350,89 +346,6 @@ theorem rank_equation (S : Finset (Ideal Ambient))
     (fun I => sectionDegree I 1) (fun I hI => (hG I hI).1)
   exact ⟨∏ I ∈ S, G I, ⟨hp.1, hp.2.1.trans hord, fun j i h => (hp.2.2 j i h).trans hmix⟩,
     fun I hI => K1_14_2_2_5.product_fixedOn hI G (hG I hI).2⟩
-private theorem mark_on_cut {I : Ideal Ambient} {P : Jet} {z : K} {S : K[X]}
-    (hI : OnJet I z S) (hzero : jetAt P z S = 0) :
-    ∃ Q ∈ cutComponents I P, OnJet Q z S := by
-  let e := jetMarkHom z S
-  have hle : I ⊔ Ideal.span {toJet P} ≤ RingHom.ker e := by
-    apply sup_le hI
-    exact (Ideal.span_singleton_le_iff_mem _).mpr
-      (RingHom.mem_ker.mpr ((eval_toJet _ _ _).trans hzero))
-  have : (RingHom.ker e).IsPrime := RingHom.ker_isPrime e
-  obtain ⟨Q, hQ, hmark⟩ := Ideal.exists_minimalPrimes_le hle
-  exact ⟨Q, Ideal.mem_minimalPrimesFinset.mpr hQ, hmark⟩
-theorem proper_cut {u del} {M : AnchorModel u del} {Γ} (F : AnchoredFamily M Γ)
-    (s : Shape) {I : Ideal Ambient} {P : Jet} (hs : s.J ≤ s.B) (hI : Active I)
-    (hcaps : RowCaps P s) (hprop : toJet P ∉ I) :
-    ∃ C : CutCover, (∀ fee, C.cost fee ≤ dot (weight s fee) (sectionDegree I)) ∧
-      ∀ γ ∈ Γ, OnParent F I γ → jetAt P (M.label γ) (F.scalar γ) = 0 →
-        γ ∈ C.direct ∨ ∃ Q ∈ C.curves, OnParent F Q γ := by
-  let marked (Q : Ideal Ambient) := Γ.filter (OnParent F Q)
-  let direct := (constantComponents I P).biUnion marked
-  have hcard : direct.card ≤ (constantComponents I P).card := by
-    have hsingle (Q : Ideal Ambient) (hQ : Q ∈ constantComponents I P) :
-        (marked Q).card ≤ 1 := by
-      obtain ⟨hcomp, hconst⟩ := Finset.mem_filter.mp hQ
-      let _ : Q.IsPrime := (cutComponent_curve hI hprop hcomp).1
-      apply Finset.card_le_one.mpr
-      intro γ hγ δ hδ
-      apply sub_left_inj.mp
-      apply seedEmbedding.injective
-      apply (algebraMap K1_14.FX (CoordinateRing Q)).injective
-      exact (seed_value_eq hconst (Finset.mem_filter.mp hγ).2).trans
-        (seed_value_eq hconst (Finset.mem_filter.mp hδ).2).symm
-    calc
-      _ ≤ ∑ Q ∈ constantComponents I P, (marked Q).card := Finset.card_biUnion_le
-      _ ≤ ∑ _ ∈ constantComponents I P, 1 := Finset.sum_le_sum hsingle
-      _ = _ := by simp
-  let C : CutCover :=
-    ⟨direct, movingComponents I P, by
-      intro Q hQ
-      obtain ⟨hcomp, hmov⟩ := Finset.mem_filter.mp hQ
-      obtain ⟨hp, hdim⟩ := cutComponent_curve hI hprop hcomp
-      exact ⟨hp, hdim, K1_14_2_2_7_1.proof Q hp hdim hmov⟩⟩
-  refine ⟨C, ?_, ?_⟩
-  · intro fee
-    fin_cases fee
-    · exact P0_10R.Bridge.cut_seed_mass s I P hs hI hcaps hprop
-    · exact P0_10R.Bridge.cut_ordinate_mass s I P hs hI hcaps hprop
-    · exact hcard.trans (P0_10R.Bridge.cut_constant_count s I P hs hI hcaps hprop)
-  · intro γ hγ hmark hzero
-    obtain ⟨Q, hQ, hQmark⟩ := mark_on_cut hmark hzero
-    by_cases ht : ConstantSeed Q
-    · exact Or.inl (Finset.mem_biUnion.mpr
-        ⟨Q, Finset.mem_filter.mpr ⟨hQ, ht⟩, Finset.mem_filter.mpr ⟨hγ, hQmark⟩⟩)
-    · exact Or.inr ⟨Q, Finset.mem_filter.mpr ⟨hQ, ht⟩, hQmark⟩
-theorem combined_cuts {u del} {M : AnchorModel u del} {Γ} {F : AnchoredFamily M Γ}
-    (A : Finset (Ideal Ambient)) (s : Shape) (hs : s.J ≤ s.B)
-    (ha : ∀ I ∈ A, Active I)
-    (hcut : ∀ I ∈ A, ∃ P : Jet, RowCaps P s ∧ toJet P ∉ I ∧
-      ∀ γ ∈ Γ, OnParent F I γ → jetAt P (M.label γ) (F.scalar γ) = 0) :
-    ∃ C : CutCover, (∀ fee, C.cost fee ≤ dot (weight s fee) (mass A)) ∧
-      ∀ γ ∈ Γ, (∃ I ∈ A, OnParent F I γ) → γ ∈ C.direct ∨ ∃ I ∈ C.curves, OnParent F I γ := by
-  have hex (I : Ideal Ambient) (hI : I ∈ A) :
-      ∃ C : CutCover, (∀ fee, C.cost fee ≤ dot (weight s fee) (sectionDegree I)) ∧
-        ∀ γ ∈ Γ, OnParent F I γ → γ ∈ C.direct ∨ ∃ Q ∈ C.curves, OnParent F Q γ := by
-    obtain ⟨P, hp, hprop, hzero⟩ := hcut I hI
-    obtain ⟨C, hc, hmarks⟩ := proper_cut F s hs (ha I hI) hp hprop
-    exact ⟨C, hc, fun γ hγ hm => hmarks γ hγ hm (hzero γ hγ hm)⟩
-  let C (I : Ideal Ambient) : CutCover :=
-    if hI : I ∈ A then Classical.choose (hex I hI) else emptyCut
-  have hC (I : Ideal Ambient) (hI : I ∈ A) :
-      (∀ fee, (C I).cost fee ≤ dot (weight s fee) (sectionDegree I)) ∧
-      ∀ γ ∈ Γ, OnParent F I γ → γ ∈ (C I).direct ∨ ∃ Q ∈ (C I).curves, OnParent F Q γ := by
-    simpa only [C, dite_eq_left hI] using Classical.choose_spec (hex I hI)
-  refine ⟨joinCuts A C, ?_, ?_⟩
-  · intro fee
-    calc
-      _ ≤ ∑ I ∈ A, (C I).cost fee := joinCuts_cost A C fee
-      _ ≤ ∑ I ∈ A, dot (weight s fee) (sectionDegree I) :=
-        Finset.sum_le_sum (fun I hI => (hC I hI).1 fee)
-      _ = _ := sum_dot _ _
-  · rintro γ hγ ⟨I, hI, hmark⟩
-    rcases (hC I hI).2 γ hγ hmark with hd | ⟨Q, hQ, hmark⟩
-    · exact Or.inl (Finset.mem_biUnion.mpr ⟨I, hI, hd⟩)
-    · exact Or.inr ⟨Q, Finset.mem_biUnion.mpr ⟨I, hI, hQ⟩, hmark⟩
 end
 end P1_7_4
 end
@@ -533,7 +446,7 @@ private theorem cancellation : K1_14_2_2_4.c3 :=
 private theorem sections : K1_14_2_2_4.c5 :=
   K1_14_2_2_4_5.of_children K1_14_2_2_4_5_1.proof K1_14_2_2_4_5_2.proof
     K1_14_2_2_4_5_3.proof K1_14_2_2_4_5_4.proof K1_14_2_2_4_5_5.proof
-theorem scaled_le_div {d m c : ℕ} (hd : 0 < d) (h : d * m ≤ c) :
+private theorem scaled_le_div {d m c : ℕ} (hd : 0 < d) (h : d * m ≤ c) :
     (m : ℚ) ≤ (c : ℚ) / (d : ℚ) := by
   apply (le_div_iff₀ (by exact_mod_cast hd : (0 : ℚ) < (d : ℚ))).mpr
   rw [mul_comm]
@@ -629,7 +542,7 @@ noncomputable section
 open P1_7_4 (pairMinSeed pairMinOrdinate cornerBound sharedBound)
 open K1_14 (Shape)
 open K1_14_2_2_4 (highCap highScale pairCap residualShape)
-theorem at_endpoints {F : ℕ → ℚ} {l x u : ℕ} {a b c M : ℚ}
+private theorem at_endpoints {F : ℕ → ℚ} {l x u : ℕ} {a b c M : ℚ}
     (hl : l ≤ x) (hu : x ≤ u) (ha : 0 ≤ a)
     (hF : ∀ y, l ≤ y → y ≤ u → F y = a * (y : ℚ)^2 + b * (y : ℚ) + c)
     (hL : F l ≤ M) (hU : F u ≤ M) : F x ≤ M := by
@@ -644,14 +557,14 @@ theorem at_endpoints {F : ℕ → ℚ} {l x u : ℕ} {a b c M : ℚ}
     linarith only [hU, hchord, h]
   · have h := mul_nonpos_of_nonpos_of_nonneg (le_of_not_ge hs) (sub_nonneg.mpr hl')
     linarith only [hL, hchord, h]
-def sectionBound (s t : Shape) (a b : ℚ) (k : Fin 4) (x z : ℕ) : ℚ :=
+private def sectionBound (s t : Shape) (a b : ℚ) (k : Fin 4) (x z : ℕ) : ℚ :=
   a * (highCap x z k : ℚ) + b * (pairCap (residualShape s x z) (residualShape t x z) k : ℚ)
-theorem cast_trapezoid (B C J E : ℕ) (hJ : J ≤ B) :
+private theorem cast_trapezoid (B C J E : ℕ) (hJ : J ≤ B) :
     ((B * E + C * J - J * E : ℕ) : ℚ) =
       (B : ℚ) * E + (C : ℚ) * J - (J : ℚ) * E := by
   have h := (Nat.mul_le_mul_right E hJ).trans (Nat.le_add_right (B * E) (C * J))
   simp only [Nat.cast_sub h, Nat.cast_add, Nat.cast_mul]
-theorem seed_endpoints (s t : Shape) {a b M : ℚ} (hb : 0 ≤ b)
+private theorem seed_endpoints (s t : Shape) {a b M : ℚ} (hb : 0 ≤ b)
     {x z : ℕ} (hz : z ≤ pairMinOrdinate s t) (hsJ : s.J ≤ s.B) (htJ : t.J ≤ t.B)
     (h0 : sectionBound s t a b 0 0 0 ≤ M)
     (hZ : sectionBound s t a b 0 0 (pairMinOrdinate s t) ≤ M)
@@ -717,7 +630,7 @@ private theorem ordinate_endpoints (s t : Shape) {a b M : ℚ} (hb : 0 ≤ b)
     Nat.cast_sub (hy.trans (min_le_left s.U t.U)),
     Nat.cast_sub (hy.trans (min_le_right s.U t.U))]
   ring
-theorem mixed_endpoints (s t : Shape) {a b M : ℚ} {x z : ℕ}
+private theorem mixed_endpoints (s t : Shape) {a b M : ℚ} {x z : ℕ}
     (hx : x ≤ pairMinSeed s t) (hz : z ≤ pairMinOrdinate s t)
     (hC : ∀ y, (y = 0 ∨ y = pairMinSeed s t) → ∀ w,
       (w = 0 ∨ w = pairMinOrdinate s t) → sectionBound s t a b 2 y w ≤ M) :
@@ -752,7 +665,7 @@ theorem mixed_endpoints (s t : Shape) {a b M : ℚ} {x z : ℕ}
   intro y _ hy
   rw [hform y z hy hz]
   ring
-theorem jet_endpoints (s t : Shape) {a b M : ℚ} (ha : 0 ≤ a) (hb : 0 ≤ b)
+private theorem jet_endpoints (s t : Shape) {a b M : ℚ} (ha : 0 ≤ a) (hb : 0 ≤ b)
     {x z : ℕ} (hx : x ≤ pairMinSeed s t)
     (h0 : sectionBound s t a b 3 0 0 ≤ M)
     (hX : sectionBound s t a b 3 (pairMinSeed s t) 0 ≤ M) :
@@ -767,7 +680,7 @@ theorem jet_endpoints (s t : Shape) {a b M : ℚ} (ha : 0 ≤ a) (hb : 0 ≤ b)
   simp only [Nat.cast_mul, Nat.cast_sub (hy.trans (min_le_left s.U t.U)),
     Nat.cast_sub (hy.trans (min_le_right s.U t.U))]
   ring
-theorem foldMax_ge {w : ℚ} (L : List ℚ) (init : ℚ)
+private theorem foldMax_ge {w : ℚ} (L : List ℚ) (init : ℚ)
     (h : w ≤ init ∨ w ∈ L) : w ≤ L.foldl max init := by
   induction L generalizing init with
   | nil => exact h.resolve_right List.not_mem_nil
@@ -778,10 +691,10 @@ theorem foldMax_ge {w : ℚ} (L : List ℚ) (init : ℚ)
     · rcases List.mem_cons.mp h with rfl | h
       · exact Or.inl (le_max_right _ _)
       · exact Or.inr h
-def ordinateCorners (s t : Shape) : List ℕ :=
+private def ordinateCorners (s t : Shape) : List ℕ :=
   [0, pairMinOrdinate s t, min (pairMinOrdinate s t) (s.B-s.J),
     min (pairMinOrdinate s t) (t.B-t.J)]
-theorem first_break_mem (s t : Shape) :
+private theorem first_break_mem (s t : Shape) :
     min (s.B-s.J) (t.B-t.J) ∈ ordinateCorners s t := by
   let c := min (s.B-s.J) (t.B-t.J)
   have hc : c ≤ pairMinOrdinate s t :=
@@ -827,7 +740,7 @@ end
 section
 namespace P1_7_4_2
 open P1_7_4 (pairedCap cornerBound)
-theorem le_foldMin (v : ℚ) (f : ℕ → ℚ) (L : List ℕ) (init : ℚ)
+private theorem le_foldMin (v : ℚ) (f : ℕ → ℚ) (L : List ℕ) (init : ℚ)
     (hi : v ≤ init) (h : ∀ j ∈ L, v ≤ f j) :
     v ≤ L.foldl (fun a j => min a (f j)) init := by
   induction L generalizing init with
@@ -997,7 +910,7 @@ theorem factorDegree_add {P Q : Jet} (hP : P ≠ 0) (hQ : Q ≠ 0) (j : Fin 3) :
   · exact jetDegree_mul hP hQ
   · exact natDegree_mul hP hQ
   · exact seedDegree_mul hP hQ
-theorem factorDegree_one (j : Fin 3) : factorDegree 1 j = 0 := by
+private theorem factorDegree_one (j : Fin 3) : factorDegree 1 j = 0 := by
   fin_cases j
   · exact jetDegree_C (1 : Equation) |>.trans natDegree_one
   · exact natDegree_one
@@ -1373,41 +1286,6 @@ theorem cast_mixed {b j a v : ℕ} (h : j ≤ b) (hv : v ≤ a) :
   rw [MvPolynomial.cappedDegreeMixedVolume_eq h hv, mix]
   push_cast
   rfl
-theorem section_bound {w : I → K} {T : Finset K} {s : K → K[X]} {d a v : ℕ}
-    (hw : FixedWord w T s d) (f : Row 2) (hf : Irreducible f) (hfpos : 0 < f.degreeOf 1)
-    (hreg : ∀ γ ∈ T, RegularAt 1 f (extend (s γ))) (ha : 0 < a) (hv : 0 < v)
-    (i : I) (hmiss : ∃ γ ∈ T, (s γ).eval (node i) ≠ w i)
-    (cut : MvPolynomial (Fin 2) CenterField)
-    (hcut : cut ∈ MvPolynomial.restrictCappedDegree (Fin 2) CenterField 1 a v)
-    (heval : ∀ γ ∈ T, MvPolynomial.aeval (marked (extend (s γ))) cut = 0 ↔
-      (s γ).eval (node i) = w i) :
-    (T.filter fun γ => (s γ).eval (node i) = w i).card ≤
-      MvPolynomial.cappedDegreeMixedVolume f.totalDegree (f.degreeOf 1) a v := by
-  classical
-  let x (γ : K) := marked (extend (s γ))
-  have hx : Set.InjOn x (T : Set K) := fun _ ha _ hb heq =>
-    hw.distinct ha hb (Polynomial.map_injective _ embed.injective (marked_injective heq))
-  have hroot (γ : K) (hγ : γ ∈ T) : MvPolynomial.aeval (x γ) (plane f) = 0 := by
-    dsimp only [x]
-    rw [aeval_plane, (hreg γ hγ).1, map_zero]
-  have hproper : cut ∉ Ideal.span {plane f} := by
-    obtain ⟨η, hη, hbad⟩ := hmiss
-    intro hmem
-    obtain ⟨q, hq⟩ := Ideal.mem_span_singleton.mp hmem
-    exact hbad ((heval η hη).mp (by rw [hq, map_mul, hroot η hη, zero_mul]))
-  let hits := T.filter fun γ => (s γ).eval (node i) = w i
-  have hplane : plane f ∈ MvPolynomial.restrictCappedDegree (Fin 2) CenterField 1
-      f.totalDegree (f.degreeOf 1) := by
-    intro m hm
-    have hm' := MvPolynomial.support_map_subset toCenter f hm
-    exact ⟨MvPolynomial.le_totalDegree hm', MvPolynomial.monomial_le_degreeOf 1 hm'⟩
-  have hc := capped_cut_card ha hv (plane_ne_zero hf.ne_zero) (plane_prime hf hfpos)
-    hplane hcut hproper (hits.image x) (by
-      intro z hz
-      obtain ⟨γ, hγ, rfl⟩ := Finset.mem_image.mp hz
-      obtain ⟨hγT, hγi⟩ := Finset.mem_filter.mp hγ
-      exact ⟨hroot γ hγT, (heval γ hγT).mpr hγi⟩)
-  rwa [Finset.card_image_of_injOn (hx.mono (Finset.filter_subset _ _))] at hc
 end
 end P1_7_4_3
 end
@@ -1425,7 +1303,7 @@ open K1_14 (seedEmbedding)
 open K1_14_3_6 (power totalCap topCap)
 open scoped BigOperators
 open private specialization_flatten eval_at_center from ProximityPrize.SubmissionLower.Fast073
-theorem solution_taylor {f : Row 2} {S : K[X]} {d : ℕ}
+private theorem solution_taylor {f : Row 2} {S : K[X]} {d : ℕ}
     (hd : d < p) (hS : RegularAt 1 f (extend S)) :
     MvPolynomial.aeval (marked (extend S)) (initialJetSeparant center (chart f)) ≠ 0 ∧
     ∀ j ≤ d, rationalTaylorCoefficient center (chart f) (marked (extend S)) j =
@@ -1459,7 +1337,7 @@ theorem solution_taylor {f : Row 2} {S : K[X]} {d : ℕ}
   intro hz
   exact (not_le_of_gt ((ht.trans hj).trans_lt hd))
     (Nat.le_of_dvd (by omega : 0 < i) ((CharP.cast_eq_zero_iff CenterField p i).mp hz))
-theorem short_numerator_bound (f : Row 2) {B J t : ℕ} (hJ : 0 < J)
+private theorem short_numerator_bound (f : Row 2) {B J t : ℕ} (hJ : 0 < J)
     (hB : f.totalDegree ≤ B) (hj : f.degreeOf 1 ≤ J) (j : Fin (t+1)) :
     commonTaylorNumerator center (chart f) (power t) j ∈
       MvPolynomial.restrictCappedDegree (Fin 2) CenterField 1 (totalCap t B) (topCap t B J) := by
@@ -1474,7 +1352,7 @@ theorem short_numerator_bound (f : Row 2) {B J t : ℕ} (hJ : 0 < J)
     ((MvPolynomial.degreeOf_le_totalDegree _ _).trans htot)
     ((degreeOf_commonTaylorNumerator_firstOrder_le center Q J (t+1) (power t) hτ hJ
       ((chart_top f).trans hj) j).trans (Nat.add_le_add_left (Nat.le_of_lt_succ j.isLt) _)))
-theorem short_denominator_bound (f : Row 2) {B J t : ℕ}
+private theorem short_denominator_bound (f : Row 2) {B J t : ℕ}
     (hB : f.totalDegree ≤ B) (hj : f.degreeOf 1 ≤ J) :
     initialJetSeparant center (chart f) ^ power t ∈
       MvPolynomial.restrictCappedDegree (Fin 2) CenterField 1 (totalCap t B) (topCap t B J) := by
@@ -1564,70 +1442,6 @@ open K1_14_2_2 (ODECaps)
 open K1_14_2_5 (clear_equation factor_cover)
 open K1_14_3_6 (totalCap topCap)
 open scoped BigOperators
-private theorem fixed_bound {w T s d B J} (hw : FixedWord w T s d) (guard : ODEGuard B J)
-    (G : ODE) (hG : ODECaps G B J) (hroot : ∀ γ ∈ T, fixedAt G (s γ) = 0)
-    (a v : ℚ) (hv : 0 ≤ v) (hva : v ≤ a)
-    (count : ∀ U ⊆ T, ∀ f : Row 2, Irreducible f → 0 < f.degreeOf 1 →
-      f.totalDegree ≤ B → f.degreeOf 1 ≤ J →
-      (∀ γ ∈ U, RegularAt 1 f (extend (s γ))) →
-      (U.card : ℚ) ≤ mix f.totalDegree (f.degreeOf 1) a v + 1) :
-    (T.card : ℚ) ≤ mix B J a v + (B^2 : ℕ) := by
-  classical
-  obtain ⟨q, hq, hb, hj, hsolve⟩ := clear_equation G hG.1 hG.2.1 hG.2.2
-  obtain ⟨A, R, hA, hAb, hAj, hR, hRd, hcover⟩ :=
-    factor_cover q hq guard.bmin guard.small hb hj
-  let ordinary := T.filter fun γ => R.eval (extend (s γ)) = 0
-  let reg (g : Row 2) := T.filter fun γ => RegularAt 1 g (extend (s γ))
-  have hord : ordinary.card ≤ B * (B - 1) := by
-    let v (γ : K) := extend (s γ)
-    have hinj : Set.InjOn v (ordinary : Set K) := fun _ ha _ hb he =>
-      hw.distinct (Finset.filter_subset _ _ ha) (Finset.filter_subset _ _ hb)
-        (Polynomial.map_injective embed embed.injective he)
-    have hcard : (ordinary.image v).card ≤ R.natDegree := by
-      apply Polynomial.card_le_degree_of_subset_roots
-      intro z hz
-      obtain ⟨γ, hγ, rfl⟩ := Finset.mem_image.mp hz
-      exact (Polynomial.mem_roots hR).mpr (Finset.mem_filter.mp hγ).2
-    rw [Finset.card_image_of_injOn hinj] at hcard
-    exact hcard.trans hRd
-  have htotal : T.card ≤ ordinary.card + ∑ g ∈ A, (reg g).card := by
-    have hsub : T ⊆ ordinary ∪ A.biUnion reg := by
-      intro γ hγ
-      rcases hcover _ (hsolve _ (hroot γ hγ)) with hr | ⟨g, ha, hr⟩
-      · exact Finset.mem_union_left _ (Finset.mem_filter.mpr ⟨hγ, hr⟩)
-      · exact Finset.mem_union_right _ (Finset.mem_biUnion.mpr
-          ⟨g, ha, Finset.mem_filter.mpr ⟨hγ, hr⟩⟩)
-    exact (Finset.card_le_card hsub).trans ((Finset.card_union_le _ _).trans
-      (Nat.add_le_add_left Finset.card_biUnion_le _))
-  have hnum : A.card ≤ B := by
-    calc
-      A.card = ∑ _ ∈ A, 1 := by simp
-      _ ≤ ∑ g ∈ A, g.totalDegree := Finset.sum_le_sum fun g hg =>
-        (hA g hg).2.trans_le (g.degreeOf_le_totalDegree 1)
-      _ ≤ B := hAb
-  have hlocal (f : Row 2) (hf : f ∈ A) :
-      ((reg f).card : ℚ) ≤ mix f.totalDegree (f.degreeOf 1) a v + 1 :=
-    count (reg f) (Finset.filter_subset _ _) f (hA f hf).1 (hA f hf).2
-      ((Finset.single_le_sum (fun g _ => Nat.zero_le g.totalDegree) hf).trans hAb)
-      ((Finset.single_le_sum (fun g _ => Nat.zero_le (g.degreeOf 1)) hf).trans hAj)
-      (fun γ hγ => (Finset.mem_filter.mp hγ).2)
-  have hreg : (∑ g ∈ A, ((reg g).card : ℚ)) ≤ mix B J a v + B := by
-    refine (Finset.sum_le_sum hlocal).trans ?_
-    simp only [mix_eq (MvPolynomial.degreeOf_le_totalDegree _ _), mix_eq guard.jb,
-      Finset.sum_add_distrib, ← Finset.sum_mul, Finset.sum_const, nsmul_eq_mul, mul_one]
-    have hbt : (∑ g ∈ A, (g.totalDegree : ℚ)) ≤ B := by exact_mod_cast hAb
-    have hjt : (∑ g ∈ A, (g.degreeOf 1 : ℚ)) ≤ J := by exact_mod_cast hAj
-    have hnr : (A.card : ℚ) ≤ B := by exact_mod_cast hnum
-    exact add_le_add (add_le_add (mul_le_mul_of_nonneg_right hbt hv)
-      (mul_le_mul_of_nonneg_right hjt (sub_nonneg.mpr hva))) hnr
-  have hbox : B * (B-1) + B = B^2 := by
-    calc
-      _ = B * ((B-1) + 1) := by rw [Nat.mul_add, Nat.mul_one]
-      _ = _ := by rw [Nat.sub_add_cancel ((by decide : 1 ≤ 2).trans guard.bmin), pow_two]
-  have hs : (T.card : ℚ) ≤ ordinary.card + ∑ g ∈ A, ((reg g).card : ℚ) := by exact_mod_cast htotal
-  have ho : (ordinary.card : ℚ) ≤ (B * (B-1) : ℕ) := by exact_mod_cast hord
-  have hboxQ : (↑(B * (B-1) : ℕ) : ℚ) + B = (B^2 : ℕ) := by exact_mod_cast hbox
-  linarith only [hs,ho,hreg,hboxQ]
 end
 end P1_7_4_3
 end

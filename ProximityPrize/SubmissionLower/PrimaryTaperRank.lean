@@ -1,4 +1,4 @@
-import ProximityPrize.SubmissionLower.Primary82170
+import ProximityPrize.SubmissionLower.PortLowBase
 
 set_option Elab.async false
 set_option maxHeartbeats 1200000
@@ -263,7 +263,7 @@ open private rank_zero_of_order_nonpos lower_le_kernel from ProximityPrize.Submi
 def initialFlag (i : BlockIndex) : Flag :=
   {K1_13_2.initialFlag i with degree := (residualDegree k i : ℤ)}
 
-theorem taper_active_range_le (i : BlockIndex) :
+private theorem taper_active_range_le (i : BlockIndex) :
     LinearMap.range (flagContact (activeFlag k i)) ≤
       LinearMap.range (flagContact (initialFlag k i)) := by
   rintro _ ⟨p, rfl⟩
@@ -338,11 +338,11 @@ def Eligible (cap : ℕ → ℕ) (e : SourceExponent) : Prop :=
 
 def space (cap : ℕ → ℕ) : Submodule Geom SourcePolynomial := restrictSupport Geom {e | Eligible cap e}
 
-theorem differentiated_eq (e : SourceExponent) :
+private theorem differentiated_eq (e : SourceExponent) :
     e.weight differentiated = e (some 1) + e (some 2) + e (some 3) := by
   simp [Finsupp.weight_eq_sum, Fintype.sum_option, Fin.sum_univ_four, differentiated]
 
-theorem translate_monomial {cap : ℕ → ℕ} (hc : Antitone cap)
+private theorem translate_monomial {cap : ℕ → ℕ} (hc : Antitone cap)
     (x y : Geom) (e : SourceExponent) (c : Geom) (he : Eligible cap e) :
     globalPointTranslation x y (monomial e c) ∈ space cap := by
   have preserve {w : JetVariable 3 → ℕ} {n : ℕ} (h : e.weight w ≤ n) :
@@ -423,10 +423,19 @@ theorem rank_le_of_blocks {cap : ℕ → ℕ} (hc : Antitone cap) (x y : Geom)
     exact Or.inr ⟨i, ⟨⟨_, hm⟩, rfl⟩⟩
   · exact Or.inl (high_monomial_vanishes _ _ (Nat.le_of_not_gt hx))
 
+theorem rank_le {cap : ℕ → ℕ} (hc : Antitone cap) (x y : Geom)
+    (power : BlockIndex → Fin 11 → ℕ) (h2 : K1_13_2_2.c2) (h3 : K1_13_2_2.c3)
+    (h4 : K1_13_2_2.c4) (h5 : K1_13_2_2.c5) :
+    Module.finrank Geom (LinearMap.range ((localConstraintAt 3000 x y).domRestrict (space cap))) ≤
+      ∑ i : BlockIndex, bound (cap i.1.val) i (power i) :=
+  rank_le_of_blocks hc x y _ (fun i => origin_block_rank_bound _ h2 h3 h4 h5 i (power i))
+
 theorem range_le_old (i : BlockIndex) :
     LinearMap.range (originBlock k i) ≤ LinearMap.range (K1_13_2.originBlock i) := by
   rintro _ ⟨p, rfl⟩
   exact ⟨⟨p.1, fun e he => (p.2 he).1⟩, rfl⟩
 
+#print axioms rank_le
+#print axioms range_le_old
 end
 end TaperNormalize

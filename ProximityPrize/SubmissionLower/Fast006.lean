@@ -13,7 +13,7 @@ set_option linter.style.haveILetI false
 section
 variable {R A B : Type} [CommRing R] [CommRing A] [IsDomain A] [CommRing B]
 variable (ρ : R[X] →+* A) (τ : R →+* B) (s : A →+* B)
-theorem independent_of_specialization (hw : ρ Polynomial.X ≠ 0)
+private theorem independent_of_specialization (hw : ρ Polynomial.X ≠ 0)
     (hs : s.comp ρ = τ.comp (Polynomial.evalRingHom 0)) {n : ℕ} (v : Fin n → A) :
     letI : Module R[X] A := Module.compHom A ρ
     letI : Module R B := Module.compHom B τ
@@ -146,7 +146,7 @@ theorem homogeneousEval_scaled (f : F →+* R) (g : MvPolynomial σ F) (x : σ �
   rw [← mul_assoc (f _), mul_assoc (f _ * ∏ i ∈ d.support, x i ^ d i),
     ← pow_add, Nat.add_sub_of_le hle]
 open Polynomial in
-theorem coeff_prod_at_sum {ι : Type} (s : Finset ι) (p : ι → R[X]) (n : ι → ℕ)
+private theorem coeff_prod_at_sum {ι : Type} (s : Finset ι) (p : ι → R[X]) (n : ι → ℕ)
     (h : ∀ i ∈ s, (p i).natDegree ≤ n i) :
     (∏ i ∈ s, p i).coeff (∑ i ∈ s, n i) = ∏ i ∈ s, (p i).coeff (n i) := by
   classical
@@ -301,7 +301,7 @@ section
 set_option autoImplicit false
 namespace K1_13_5_4_2_3
 noncomputable section
-theorem contract_sup_span_strictMono {R S : Type*}
+private theorem contract_sup_span_strictMono {R S : Type*}
     [CommRing R] [IsNoetherianRing R] [IsLocalRing R] [CommRing S] [Algebra R S]
     (M : Submonoid R) [IsLocalization M S] {a : R}
     (ha : a ∈ IsLocalRing.maximalIdeal R) (hu : IsUnit (algebraMap R S a)) :
@@ -336,7 +336,7 @@ theorem contract_sup_span_strictMono {R S : Type*}
       ((Ideal.span_singleton_le_iff_mem _).mpr
         (IsLocalRing.maximalIdeal_le_jacobson (⊥ : Ideal R) ha)) hcontain
   exact hJK.not_ge ((IsLocalization.under_le_under_iff M S).mp hback)
-theorem length_localization_le_length_cut {R S : Type*}
+private theorem length_localization_le_length_cut {R S : Type*}
     [CommRing R] [IsNoetherianRing R] [IsLocalRing R] [CommRing S] [Algebra R S]
     (M : Submonoid R) [IsLocalization M S] (I : Ideal R) {a : R}
     (ha : a ∈ IsLocalRing.maximalIdeal R) (hu : IsUnit (algebraMap R S a)) :
@@ -598,7 +598,7 @@ section
 set_option autoImplicit false
 namespace K1_13_6_1_4_3_3_1
 open Ideal
-theorem mul_mem_square_iff {R : Type*} [CommRing R] (I : Ideal R) (a x : R)
+private theorem mul_mem_square_iff {R : Type*} [CommRing R] (I : Ideal R) (a x : R)
     (hreg : ∀ y, a * y ∈ I → y ∈ I) :
     a * x ∈ I ⊔ span {a ^ 2} ↔ x ∈ I ⊔ span {a} := by
   constructor
@@ -682,17 +682,17 @@ variable {F L : Type*} [Field F] [Field L] [Algebra F L]
 private def project (φ : L →ₗ[F] F) (P : MvPolynomial (Fin 3) L) :
     MvPolynomial (Fin 3) F :=
   AddMonoidAlgebra.ofCoeff (Finsupp.mapRange φ (map_zero φ) P.coeff)
-theorem coeff_project (φ : L →ₗ[F] F) (P : MvPolynomial (Fin 3) L)
+private theorem coeff_project (φ : L →ₗ[F] F) (P : MvPolynomial (Fin 3) L)
     (m : Fin 3 →₀ ℕ) : (project φ P).coeff m = φ (P.coeff m) :=
   Finsupp.mapRange_apply (hf := map_zero φ)
-theorem project_mul (φ : L →ₗ[F] F) (P : MvPolynomial (Fin 3) F)
+private theorem project_mul (φ : L →ₗ[F] F) (P : MvPolynomial (Fin 3) F)
     (V : MvPolynomial (Fin 3) L) :
     project φ (MvPolynomial.map (algebraMap F L) P * V) = P * project φ V := by
   ext m
   simp only [coeff_project, coeff_mul, coeff_map, map_sum]
   refine Finset.sum_congr rfl fun z _ => ?_
   rw [← Algebra.smul_def, map_smul, smul_eq_mul]
-theorem project_total_le (φ : L →ₗ[F] F) (V : MvPolynomial (Fin 3) L) :
+private theorem project_total_le (φ : L →ₗ[F] F) (V : MvPolynomial (Fin 3) L) :
     (project φ V).totalDegree ≤ V.totalDegree := by
   refine Finset.sup_le fun m hm => le_totalDegree ?_
   rw [MvPolynomial.mem_support_iff, coeff_project] at hm
@@ -797,7 +797,7 @@ theorem localWeight_of_prime (I P : Ideal R) [hp : P.IsPrime] :
       Module.length (Localization.AtPrime P)
         (Localization.AtPrime P ⧸ I.map (algebraMap R (Localization.AtPrime P))) := by
   exact dite_eq_left hp
-theorem localWeight_step {J I Q P : Ideal R} {x : R}
+private theorem localWeight_step {J I Q P : Ideal R} {x : R}
     (hJI : J ≤ I) (hP : J.IsMinimalPrime P) (hQ : Q.IsPrime)
     (hcolon : (⊥ : Submodule R (R ⧸ I)).colon {I.mkQ x} = Q) :
     localWeight I P = (if P = Q then 1 else 0) + localWeight (I ⊔ Ideal.span {x}) P := by
@@ -882,7 +882,7 @@ namespace K1_13_7_2_1_2
 noncomputable section
 open Polynomial UniqueFactorizationMonoid
 open scoped Polynomial
-theorem monic_dvd_derivative_mul_of_dvd_pow {A : Type*} [CommRing A] [IsReduced A]
+private theorem monic_dvd_derivative_mul_of_dvd_pow {A : Type*} [CommRing A] [IsReduced A]
     {F g : A[X]} (hF : F.Monic) {n : ℕ} (h : F ∣ g ^ n) :
     F ∣ F.derivative * g := by
   classical
@@ -1008,7 +1008,7 @@ noncomputable section
 open MvPolynomial
 open scoped nonZeroDivisors
 attribute [local instance] MvPolynomial.algebraMvPolynomial
-theorem linear_cancel {R β : Type*} [CommRing R] (s : Finset β)
+private theorem linear_cancel {R β : Type*} [CommRing R] (s : Finset β)
     (w : β → R) (b : β) (hb : b ∈ s) (hu : IsUnit (w b)) (p : MvPolynomial β R)
     (hp : p * (∑ j ∈ s, C (w j) * X j) = 0) : p = 0 := by
   classical
@@ -1034,7 +1034,7 @@ theorem linear_cancel {R β : Type*} [CommRing R] (s : Finset β)
       (hcoef ▸ (hu.map (C (σ := {j // j ≠ b}))).mem_nonZeroDivisors)
   apply e.injective
   rw [map_zero, ← mul_right_mem_nonZeroDivisors_eq_zero_iff hregular, ← map_mul, hp, map_zero]
-theorem cancel_over_unit {R α β : Type*} [CommRing R] (l : MvPolynomial α R)
+private theorem cancel_over_unit {R α β : Type*} [CommRing R] (l : MvPolynomial α R)
     (s : Finset β) (w : β → R) (b : β) (hb : b ∈ s) (hu : IsUnit (w b))
     (p : MvPolynomial β (MvPolynomial α R))
     (hp : p * (∑ j ∈ s, C (C (w j)) * X j) ∈ Ideal.span {C l}) :
@@ -1249,7 +1249,7 @@ set_option autoImplicit false
 namespace K1_13_6_3_1_1
 noncomputable section
 open scoped TensorProduct
-theorem quotient_reduced_of_fiber {R S : Type*} [CommRing R] [CommRing S]
+private theorem quotient_reduced_of_fiber {R S : Type*} [CommRing R] [CommRing S]
     [Algebra R S] [Module.Flat R S] (q : Ideal R) [q.IsPrime]
     (h : IsReduced (S ⊗[R] q.ResidueField)) :
     IsReduced (S ⧸ q.map (algebraMap R S)) := by
@@ -1266,7 +1266,7 @@ variable {k E R S : Type*} [Field k] [Field E] [CommRing R] [CommRing S]
   [IsScalarTower k R S] [IsScalarTower k E S] [Algebra.IsPushout k R E S]
   [IsPurelyInseparable k E]
 include k E in
-theorem algebraMap_power (x : S) :
+private theorem algebraMap_power (x : S) :
     ∃ n > 0, ∃ y : R, algebraMap R S y = x ^ n := by
   let e := Algebra.IsPushout.equiv k R E S
   obtain ⟨n, hn, y, hy⟩ := IsPurelyInseparable.exists_pow_mem_range_tensorProduct (e.symm x)
@@ -1274,7 +1274,7 @@ theorem algebraMap_power (x : S) :
   simpa [Algebra.TensorProduct.algebraMap_apply, Algebra.IsPushout.equiv_tmul, e] using
     congrArg e hy
 include k E in
-theorem localization_at_contraction (P : Ideal S) [P.IsPrime]
+private theorem localization_at_contraction (P : Ideal S) [P.IsPrime]
     (q : Ideal R) [q.IsPrime] (hq : q = P.comap (algebraMap R S)) :
     IsLocalization (Algebra.algebraMapSubmonoid S q.primeCompl) (Localization.AtPrime P) := by
   let M := Algebra.algebraMapSubmonoid S q.primeCompl
@@ -1294,7 +1294,7 @@ theorem localization_at_contraction (P : Ideal S) [P.IsPrime]
   rw [hq, Ideal.mem_comap, hy]
   exact P.primeCompl.pow_mem hx _
 include k E in
-def localFiberEquiv (P : Ideal S) [P.IsPrime]
+private def localFiberEquiv (P : Ideal S) [P.IsPrime]
     (q : Ideal R) [q.IsPrime] (hq : q = P.comap (algebraMap R S)) :
     let L := Localization.AtPrime P
     S ⊗[R] q.ResidueField ≃+* L ⧸ (q.map (algebraMap R S)).map (algebraMap S L) := by
@@ -1346,7 +1346,7 @@ set_option backward.isDefEq.respectTransparency false
 namespace K1_14_2_2_7_4_1
 open scoped Polynomial
 open MvPolynomial
-theorem infinite_good_slopes {k A : Type} [Field k] [Infinite k]
+private theorem infinite_good_slopes {k A : Type} [Field k] [Infinite k]
     [CommRing A] [Algebra k A] (y v : A)
     (hvar : ¬ IsAlgebraic k y ∨ ¬ IsAlgebraic k v) :
     {t : k | ¬ IsAlgebraic k (y + algebraMap k A t * v)}.Infinite := by
@@ -1495,7 +1495,7 @@ def genericLine (x y : E) : MvPolynomial (Fin 3) M →+* MvPolynomial (Fin 2) E 
   MvPolynomial.eval₂Hom (MvPolynomial.C.comp (algebraMap M E))
     ![MvPolynomial.X 0, MvPolynomial.X 1,
       MvPolynomial.C x + MvPolynomial.X 0 * MvPolynomial.C y]
-theorem algebraic_of_specialization (x y : E) (P : MvPolynomial (Fin 3) M)
+private theorem algebraic_of_specialization (x y : E) (P : MvPolynomial (Fin 3) M)
     (hP : genericLine x y P = 0) (b : Fin 3 → M) (hb : MvPolynomial.eval b P ≠ 0) :
     IsAlgebraic M (x + algebraMap M E (b 0) * y) := by
   let f : MvPolynomial (Fin 3) M →+* M[X] :=
@@ -1809,7 +1809,7 @@ section
 namespace K1_13_6_1_3_2
 noncomputable section
 open IsLocalRing
-theorem dim_le_two {A : Type*} [CommRing A] [IsLocalRing A] [IsNoetherianRing A]
+private theorem dim_le_two {A : Type*} [CommRing A] [IsLocalRing A] [IsNoetherianRing A]
     {f q : A} (hf : f ∈ maximalIdeal A) (hq : q ∈ maximalIdeal A)
     (hlen : Order.coheight (Ideal.span ({f, q} : Set A)) ≠ ⊤) :
     ringKrullDim A ≤ 2 := by
@@ -1833,7 +1833,7 @@ theorem dim_le_two {A : Type*} [CommRing A] [IsLocalRing A] [IsNoetherianRing A]
     (show (({f, q} : Set A).ncard : ℕ∞) ≤ 2 by exact_mod_cast hcard)
   rw [← maximalIdeal_height_eq_ringKrullDim]
   exact WithBot.coe_le_coe.mpr hh
-theorem span_with {k V : Type*} [Field k] [AddCommGroup V] [Module k V]
+private theorem span_with {k V : Type*} [Field k] [AddCommGroup V] [Module k V]
     [FiniteDimensional k V] {x : V} (hx : x ≠ 0) (hdim : Module.finrank k V ≤ 2) :
     ∃ y : V, Submodule.span k ({x, y} : Set V) = ⊤ := by
   let U := Submodule.span k ({x} : Set V)
@@ -1850,7 +1850,7 @@ theorem span_with {k V : Type*} [Field k] [AddCommGroup V] [Module k V]
     Submodule.smul_mem _ _ (Submodule.subset_span (by simp))
   exact (Submodule.sub_mem_iff_left _ hy).mp
     ((Submodule.span_mono (by simp : ({x} : Set V) ⊆ {x, y})) hz)
-theorem maximalIdeal_span_pair {A : Type*} [CommRing A] [IsRegularLocalRing A]
+private theorem maximalIdeal_span_pair {A : Type*} [CommRing A] [IsRegularLocalRing A]
     {f : A} (hf : f ∈ maximalIdeal A) (hf2 : f ∉ maximalIdeal A ^ 2)
     (hdim : ringKrullDim A ≤ 2) :
     ∃ t : A, maximalIdeal A = Ideal.span {f, t} := by
@@ -1989,7 +1989,7 @@ private theorem firstOrder [Algebra.FormallySmooth k R]
     change (L (D₀ (x : R)) : S) + algebraMap K S (residue R x) = _
     dsimp only [L]
     rw [hD, Module.Basis.constr_basis, (residue_eq_zero_iff _).mpr x.2, map_zero, add_zero]
-theorem le_of_le_sup_sq {S : Type*} [CommRing S] (J I : Ideal S) (t : ℕ)
+private theorem le_of_le_sup_sq {S : Type*} [CommRing S] (J I : Ideal S) (t : ℕ)
     (hJ : J ^ t = ⊥) (h : J ≤ I ⊔ J ^ 2) : J ≤ I := by
   have step (s : ℕ) : J ^ (s + 1) ≤ I ⊔ J ^ (s + 1 + 1) := by
     calc
@@ -2007,7 +2007,7 @@ theorem le_of_le_sup_sq {S : Type*} [CommRing S] (J I : Ideal S) (t : ℕ)
       | succ s => exact ih.trans (sup_le le_sup_left (step s))
   simpa [hJ] using all t
 omit [IsLocalRing R] in
-theorem surj_of_augmentation {S K : Type*} [CommRing S] [CommRing K]
+private theorem surj_of_augmentation {S K : Type*} [CommRing S] [CommRing K]
     (f : R →+* S) (a : S →+* K) (I : Ideal R) (J : Ideal S) (t : ℕ)
     (hJ : J ^ t = ⊥) (hmap : I.map f = J)
     (ha : RingHom.ker a = J) (hs : Function.Surjective (a.comp f)) :
@@ -2105,7 +2105,7 @@ namespace K1_13_7_4_2_2
 noncomputable section
 open MvPolynomial IsLocalRing
 open scoped BigOperators
-abbrev Mono (n t : ℕ) := Σ j : Fin t, Sym (Fin n) j.val
+private abbrev Mono (n t : ℕ) := Σ j : Fin t, Sym (Fin n) j.val
 private def exponent {n t : ℕ} (a : Mono n t) : Fin n →₀ ℕ := a.2.val.toFinsupp
 private theorem exponent_degree {n t : ℕ} (a : Mono n t) :
     (exponent a).degree = a.1.val := by
@@ -2117,7 +2117,7 @@ private theorem exponent_injective (n t : ℕ) : Function.Injective (@exponent n
     ((congrArg Finsupp.degree h).trans (exponent_degree ⟨e, b⟩)))
   subst e
   exact congrArg (Sigma.mk d) (Subtype.ext (Multiset.toFinsupp.injective h))
-theorem card_mono (n t : ℕ) (ht : 0 < t) :
+private theorem card_mono (n t : ℕ) (ht : 0 < t) :
     Fintype.card (Mono n t) = (t + n - 1).choose n := by
   classical
   rw [Fintype.card_sigma]
@@ -2126,7 +2126,7 @@ theorem card_mono (n t : ℕ) (ht : 0 < t) :
   rw [Nat.sum_range_multichoose]
   congr 1
   omega
-theorem length_over_field (K : Type*) [Field K] (n t : ℕ) (ht : 0 < t) :
+private theorem length_over_field (K : Type*) [Field K] (n t : ℕ) (ht : 0 < t) :
     ((t + n - 1).choose n : ℕ∞) ≤ Module.length K (Jets K n t) := by
   classical
   let coeff (a : Mono n t) : Jets K n t →ₗ[K] K :=
@@ -2712,17 +2712,6 @@ theorem two_block_rank_exception_count (p : ℕ) [ExpChar F p]
   by_contra hn
   exact hΓ γ hγ (NormalFiber.rank_specializes _
     (IsFractionRing.injective F[X] (GenericLayer.GenericField F)) _ _ B γ hn)
-theorem native_rank_exception_count [ExpChar F 2130706433]
-    (x u v : ι → F) (r : ℕ) (hr7 : 7≤r)
-    (hr : GenericLayer.genericRank (stacked 2130706433 x u v 49193 81879)=81880-r)
-    (hfirst : GenericLayer.genericRank (hankel x u v 49193 81879)=49193)
-    (Γ : Finset F) (hΓ : ∀ γ∈Γ,
-      ((stacked 2130706433 x u v 49193 81879).map (evalRingHom γ)).rank ≠ 81880-r) :
-    Γ.card ≤ 69631486279633 := by
-  have hb := two_block_rank_exception_count 2130706433 x u v 49193 81879 r hr hfirst Γ hΓ
-  have hs : 81879+1-r-49193 ≤ 32680 := by omega
-  have hm := Nat.mul_le_mul_left 2130706433 hs
-  omega
 end
 end FrobeniusLocator.Strata
 end
@@ -2744,7 +2733,7 @@ private theorem transpose_mul_unitColumns {R row col pick : Type*}
   rw [Matrix.mulVec_single_one]
   rfl
 variable {E : Type*} [Field E] {r s : ℕ}
-theorem augmentation_det_ne_zero
+private theorem augmentation_det_ne_zero
     (C : Matrix (Fin r ⊕ Fin s) (Fin r) E)
     (W : Matrix (Fin r ⊕ Fin s) (Fin s) E)
     (hWC : W.transpose * C = 0)
@@ -2774,7 +2763,7 @@ theorem augmentation_det_ne_zero
     exact sub_eq_zero.mp (hker (u - v) (by rw [Matrix.mulVec_sub, huv, sub_self]))
   exact ((Matrix.isUnit_iff_isUnit_det A).mp
     (Matrix.mulVec_injective_iff_isUnit.mp hinj)).ne_zero
-theorem augmented_minor_cross
+private theorem augmented_minor_cross
     (C : Matrix (Fin r ⊕ Fin s) (Fin r) E)
     (W : Matrix (Fin r ⊕ Fin s) (Fin s) E)
     (hWC : W.transpose * C = 0)
@@ -2831,7 +2820,7 @@ theorem augmented_minor_cross
   rw [hdetB, ← hdetD]
   ring
 variable {F : Type*} [Field F]
-theorem augmented_det_degree
+private theorem augmented_det_degree
     (C : Matrix (Fin r ⊕ Fin s) (Fin r) F[X])
     (d : (Fin r ⊕ Fin s) → ℕ) (hpositive : ∀ i, 1 ≤ d i)
     (hdegree : ∀ i j, (C i j).natDegree ≤ d i)
@@ -2865,7 +2854,7 @@ theorem augmented_det_degree
   rw [Finset.sum_add_distrib, hsaving, Equiv.sum_comp σ d] at hsum
   have hprod := Polynomial.natDegree_prod_le Finset.univ (fun j => A (σ j) j)
   omega
-theorem map_augmentation (φ : F[X] →+* E)
+private theorem map_augmentation (φ : F[X] →+* E)
     (C : Matrix (Fin r ⊕ Fin s) (Fin r) F[X]) (rows : Fin s → (Fin r ⊕ Fin s)) :
     φ (Matrix.fromCols C (unitColumns rows)).det =
       (Matrix.fromCols (C.map φ) (unitColumns rows)).det := by

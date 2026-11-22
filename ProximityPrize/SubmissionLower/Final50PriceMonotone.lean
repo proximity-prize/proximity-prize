@@ -1,6 +1,6 @@
 import ProximityPrize.SubmissionLower.Final50Price
 set_option Elab.async false
-section
+section Top_Final50PriceMonotone
 namespace Final50PriceMonotone
 open K1_13 (Shape InBox chart liftedChart mixed32 ceilDiv)
 open K1_13_8_2 (Chamber mixed_mono)
@@ -44,7 +44,7 @@ private theorem graph_mono {x y : Shape} (h : InBox x y) :
     InBox (graphShape x) (graphShape y) := by
   obtain ⟨hb, hj, ht⟩ := h
   refine ⟨?_, ?_, ?_⟩ <;> dsimp [graphShape] <;> gcongr
-theorem surface_mono {p p' q : Shape} (hp : InBox p p') (hp' : Chamber p') (hq : Chamber q) :
+private theorem surface_mono {p p' q : Shape} (hp : InBox p p') (hp' : Chamber p') (hq : Chamber q) :
     Final50Price.surfaceNumerator32 p q ≤ Final50Price.surfaceNumerator32 p' q := by
   let L := Final50Price.taylorLength
   have hchart : mixed32 p q (chart (L+1) p) (chart (L+2) p) ≤
@@ -97,7 +97,7 @@ theorem physical_mono {x y : Shape} (h : InBox x y) (hx : 3 * x.t ≤ x.j)
     (Nat.add_le_add (ceil_mono (Nat.add_le_add (ceil_mono hs _) (ceil_mono hmain _)) l) hraw)
     (ceil_mono hgeom _)
 end Final50PriceMonotone
-end
+end Top_Final50PriceMonotone
 
 namespace Final50PriceMonotone
 open K1_13 (Shape)
@@ -111,7 +111,7 @@ theorem physicalPrice_le_old (x : Shape) (l K : ℕ) : physicalPrice x l K ≤ p
     · exact min_le_left _ _
   · exact le_rfl
 
-theorem with_anti (a : Shape) (s : ℕ) {l u : ℕ} (hl : 0 < l) (h : l ≤ u) :
+private theorem with_anti (a : Shape) (s : ℕ) {l u : ℕ} (hl : 0 < l) (h : l ≤ u) :
     physicalPriceWith a u s ≤ physicalPriceWith a l s := by
   unfold physicalPriceWith
   exact Nat.add_le_add_right

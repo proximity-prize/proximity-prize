@@ -1,4 +1,4 @@
-import ProximityPrize.SubmissionLower.HighCore82219UpperGeometry
+import ProximityPrize.SubmissionLower.HighCore82258UpperGeometry
 import ProximityPrize.SubmissionLower.KoalaRectSections
 
 set_option autoImplicit false
@@ -10,8 +10,8 @@ namespace KoalaRectTaylor
 noncomputable section
 
 open K1_14 (FX Equation)
-open HighCore82219Upper_3 (JetRing ordinate seedVar)
-open HighCore82219Upper_3_1 (velocity)
+open HighCore82258Upper_3 (JetRing ordinate seedVar)
+open HighCore82258Upper_3_1 (velocity)
 open MvPolynomial
 
 /-- Affine coordinates in the order ordinate, velocity, and the two seeds. -/
@@ -28,8 +28,8 @@ def jetAxes : Option (Option (Fin 2)) ≃ Fin 4 where
     · fin_cases i <;> rfl
   right_inv := by intro i; fin_cases i <;> rfl
 
-abbrev flatEq := (optionEquivLeft FX (Fin 2)).symm
-abbrev flatJet := (optionEquivLeft FX (Option (Fin 2))).symm
+private abbrev flatEq := (optionEquivLeft FX (Fin 2)).symm
+private abbrev flatJet := (optionEquivLeft FX (Option (Fin 2))).symm
 
 def jetToRect : JetRing ≃ₐ[FX] SplitCut.Rect.Ring FX :=
   ((Polynomial.mapAlgEquiv flatEq).trans flatJet).trans (renameEquiv FX jetAxes)
@@ -67,7 +67,7 @@ theorem jetToRect_C (f : Equation) :
 def seedExponent (m : Fin 4 →₀ ℕ) : Fin 2 →₀ ℕ :=
   Finsupp.equivFunOnFinite.symm (fun i => m i.succ.succ)
 
-theorem coeff_flat {σ : Type} (p : Polynomial (MvPolynomial σ FX)) (m : Option σ →₀ ℕ) :
+private theorem coeff_flat {σ : Type} (p : Polynomial (MvPolynomial σ FX)) (m : Option σ →₀ ℕ) :
     ((optionEquivLeft FX σ).symm p).coeff m = (p.coeff (m none)).coeff m.some := by
   have h := optionEquivLeft_coeff_coeff FX ((optionEquivLeft FX σ).symm p) (m none) m.some
   rw [AlgEquiv.apply_symm_apply, Finsupp.optionElim_some] at h
@@ -96,3 +96,4 @@ theorem coeff_jetToRect (p : JetRing) (m : Fin 4 →₀ ℕ) :
 end
 end KoalaRectTaylor
 
+#print axioms KoalaRectTaylor.coeff_jetToRect

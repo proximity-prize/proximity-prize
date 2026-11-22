@@ -34,6 +34,7 @@ theorem finite (a : Cap) : (latticePoints a).Finite := by
 
 instance (a : Cap) : Finite (latticePoints a) := (finite a).to_subtype
 
+
 theorem zero_mem (a : Cap) : 0 ∈ latticePoints a := by simp [coords]
 
 theorem lattice_add {a b : Cap} (ha : Chamber a) (hb : Chamber b) :

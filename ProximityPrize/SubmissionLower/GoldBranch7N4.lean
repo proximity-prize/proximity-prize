@@ -9,8 +9,6 @@ open K1_14 (Shape)
 open P3 (HighBand agreement)
 open P3_7 (Bank Test debit jointGain tested threshold seedThreshold)
 export P1_7_6 (orderEnd linearEnd Quad prefixProduct intervalProduct seedEnd yStart seedQuad scaledDebit)
-def width (s : Shape) (h q j t : ℕ) : ℤ :=
-  (s.m * agreement : ℕ) + (j : ℤ) - (131071 - (h : ℤ)) * q - 2 * (h : ℤ) * t
 def colEnd (s : Shape) (h t : ℕ) : ℕ :=
   linearEnd (2*h*t) (131071-h) (s.m*agreement) (s.B+1)
 def edgeShift (s : Shape) (h t : ℕ) : ℕ :=

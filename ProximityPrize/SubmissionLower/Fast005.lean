@@ -30,7 +30,7 @@ theorem finite_quotient {F B : Type} [Field F] [CommRing B] [IsDedekindDomain B]
   apply Ideal.krullDimLE_zero_quotient_iff_forall_minimalPrimes_isMaximal.2
   intro P hP
   exact hP.1.1.isMaximal (ne_bot_of_le_ne_bot hJ hP.1.2)
-theorem rank_quot_map {F M N : Type} [Field F] [AddCommGroup M] [Module F M]
+private theorem rank_quot_map {F M N : Type} [Field F] [AddCommGroup M] [Module F M]
     [AddCommGroup N] [Module F N] (g : M →ₗ[F] N) (hg : Function.Injective g)
     (U : Submodule F M) :
     Module.rank F (N ⧸ U.map g) = Module.rank F (N ⧸ g.range) + Module.rank F (M ⧸ U) := by
@@ -41,13 +41,13 @@ theorem rank_quot_map {F M N : Type} [Field F] [AddCommGroup M] [Module F M]
 variable {F A : Type} [Field F] [CommRing A] [IsDomain A] [Algebra F A]
 local notation "K" => FractionRing A
 local notation "B" => integralClosure A (FractionRing A)
-theorem range_mul_span {R S : Type} [CommRing R] [CommRing S] [Algebra R S]
+private theorem range_mul_span {R S : Type} [CommRing R] [CommRing S] [Algebra R S]
     (b : S) : (Algebra.lmul R S b).range = (Ideal.span {b} : Ideal S).restrictScalars R := by
   ext x
   change (∃ y, b * y = x) ↔ x ∈ Ideal.span {b}
   rw [Ideal.mem_span_singleton]
   exact exists_congr fun _ => eq_comm
-theorem conductor [Module.Finite A B] :
+private theorem conductor [Module.Finite A B] :
     ∃ d : A, d ≠ 0 ∧ ∀ b : B, d • b ∈ (Algebra.linearMap A B).range := by
   obtain ⟨s, hs⟩ := (Module.Finite.fg_top (R := A) (M := B))
   obtain ⟨d, hd⟩ := IsLocalization.exist_integer_multiples (nonZeroDivisors A) s
@@ -539,8 +539,6 @@ theorem kernel_line (A : Matrix c c K) (b : c → K) (hA : A.det ≠ 0)
   have heq := kernel_zero_of_free_zero A b hA _ hz hfree
   exact sub_eq_zero.mp heq
 variable {row : Type*}
-def pivot (M : Matrix row (Option c) K) (rows : c → row) : Matrix c c K :=
-  fun i j => M (rows i) (some j)
 end Field
 section Polynomial
 variable {F : Type*} [Field F]
@@ -560,16 +558,6 @@ theorem vector_natDegree_le (A : Matrix c c F[X]) (b : c → F[X])
       simpa only [Matrix.updateCol_self] using hb i
     · simpa only [Matrix.updateCol_ne hkj] using hA i k
 end Polynomial
-end
-end FrobeniusLocator.CofactorLine
-end
-section
-set_option backward.isDefEq.respectTransparency false
-namespace FrobeniusLocator.CofactorLine
-noncomputable section
-open Polynomial Matrix Finset
-open scoped BigOperators
-variable {F K row c : Type*} [Field F] [Field K] [Fintype c] [DecidableEq c]
 end
 end FrobeniusLocator.CofactorLine
 end
@@ -1022,16 +1010,6 @@ noncomputable section
 open Polynomial Matrix Finset
 open scoped BigOperators
 variable {F row extra col : Type*} [Field F] [Fintype col] [DecidableEq col]
-def append (M : Matrix row col F[X]) (E : Matrix extra col F) :
-    Matrix (row ⊕ extra) col F[X] :=
-  Sum.elim M (fun i j => C (E i j))
-theorem row_degree (M : Matrix row col F[X]) (E : Matrix extra col F)
-    (d : row → ℕ) (hdeg : ∀ i j, (M i j).natDegree ≤ d i) :
-    ∀ i j, (append M E i j).natDegree ≤ Sum.elim d (fun _ => 0) i := by
-  intro i j
-  cases i with
-  | inl i => exact hdeg i j
-  | inr i => simp [append]
 end
 end FrobeniusLocator.AppendConstants
 end
@@ -1052,18 +1030,6 @@ theorem rows_injective (B : RowBasis φ M r) : Function.Injective B.rows := by
   simp only [Matrix.submatrix_apply, hij]
 end
 end FrobeniusLocator.NormalFiber
-end
-section
-set_option backward.isDefEq.respectTransparency false
-namespace FrobeniusLocator.AppendConstants
-noncomputable section
-open Polynomial Matrix Finset
-open scoped BigOperators
-variable {F K row extra col : Type*} [Field F] [Field K]
-  [Fintype col] [DecidableEq col] [Fintype extra]
-variable {φ : F[X] →+* K} {M : Matrix row col F[X]} {r : ℕ}
-end
-end FrobeniusLocator.AppendConstants
 end
 section
 set_option backward.isDefEq.respectTransparency false
@@ -1160,13 +1126,6 @@ noncomputable section
 open Polynomial Matrix Finset
 open scoped BigOperators
 variable {K row col : Type*} [Field K] [Fintype col] [DecidableEq col]
-def functional (a : col → K) : (col → K) →ₗ[K] K where
-  toFun v := ∑ j, a j * v j
-  map_add' v w := by simp [mul_add, Finset.sum_add_distrib]
-  map_smul' c v := by simp [Finset.mul_sum, mul_left_comm, mul_assoc]
-def restriction (M : Matrix row col K) (a : col → K) :
-    LinearMap.ker M.mulVecLin →ₗ[K] K :=
-  (functional a).comp (LinearMap.ker M.mulVecLin).subtype
 end
 end FrobeniusLocator.AppendConstants
 end
@@ -1280,16 +1239,6 @@ theorem first_rows_independent_of_rank (φ : F[X] →+* K) (L : ℕ)
   exact hli
 end
 end FrobeniusLocator.NormalFiber
-end
-section
-set_option backward.isDefEq.respectTransparency false
-namespace FrobeniusLocator.CommonRoots
-noncomputable section
-open Polynomial Matrix Finset
-open scoped BigOperators
-variable {K row ι : Type*} [Field K] [DecidableEq ι]
-end
-end FrobeniusLocator.CommonRoots
 end
 section
 set_option backward.isDefEq.respectTransparency false
@@ -1939,69 +1888,6 @@ end
 end FrobeniusLocator.Principal
 end
 section
-namespace Sol1.C42
-open scoped BigOperators Matrix
-open Classical in
-theorem matrix_rank_le_sum_min_fibers
-    {E Row Col Block : Type*} [Field E] [Fintype Row] [Fintype Col] [Fintype Block]
-    (M : Matrix Row Col E) (rowBlock : Row → Block) (colBlock : Col → Block)
-    (hzero : ∀ i j, rowBlock i ≠ colBlock j → M i j = 0) :
-    M.rank ≤ ∑ b : Block, min
-      (Finset.univ.filter fun i ↦ rowBlock i = b).card
-      (Finset.univ.filter fun j ↦ colBlock j = b).card := by
-  classical
-  let part : Block → Matrix Row Col E := fun b i j ↦ if rowBlock i = b then M i j else 0
-  let stacked : Matrix (Block × Row) Col E := fun bi j ↦ part bi.1 bi.2 j
-  have hrecover : stacked.submatrix (fun i ↦ (rowBlock i, i)) id = M := by
-    ext i j
-    change (if rowBlock i = rowBlock i then M i j else 0) = M i j
-    simp
-  have hrow : ∀ b, (part b).rank ≤ (Finset.univ.filter fun i ↦ rowBlock i = b).card := by
-    intro b
-    apply Matrix.rank_le_card_of_support_subset
-    rw [Function.support_subset_iff']
-    intro i hi
-    have hne : rowBlock i ≠ b := by simpa using hi
-    funext j
-    change (if rowBlock i = b then M i j else 0) = 0
-    simp [hne]
-  have hcol : ∀ b, (part b).rank ≤ (Finset.univ.filter fun j ↦ colBlock j = b).card := by
-    intro b
-    rw [← Matrix.rank_transpose (part b)]
-    apply Matrix.rank_le_card_of_support_subset
-    rw [Function.support_subset_iff']
-    intro j hj
-    have hne : colBlock j ≠ b := by simpa using hj
-    funext i
-    change (if rowBlock i = b then M i j else 0) = 0
-    by_cases hi : rowBlock i = b
-    · rw [ite_eq_left hi]
-      apply hzero i j
-      intro heq
-      exact hne (heq.symm.trans hi)
-    · simp [hi]
-  calc
-    M.rank = (stacked.submatrix (fun i ↦ (rowBlock i, i)) id).rank := by rw [hrecover]
-    _ ≤ stacked.rank := Matrix.rank_submatrix_le _ _ _
-    _ ≤ ∑ b : Block, (part b).rank := Matrix.rank_prod_rows_le_sum stacked
-    _ ≤ ∑ b : Block, min
-        (Finset.univ.filter fun i ↦ rowBlock i = b).card
-        (Finset.univ.filter fun j ↦ colBlock j = b).card :=
-      Finset.sum_le_sum fun b _ ↦ le_min (hrow b) (hcol b)
-open Classical in
-theorem matrix_rank_le_sum_min_bounds
-    {E Row Col Block : Type*} [Field E] [Fintype Row] [Fintype Col] [Fintype Block]
-    (M : Matrix Row Col E) (rowBlock : Row → Block) (colBlock : Col → Block)
-    (r c : Block → ℕ)
-    (hzero : ∀ i j, rowBlock i ≠ colBlock j → M i j = 0)
-    (hr : ∀ b, (Finset.univ.filter fun i ↦ rowBlock i = b).card ≤ r b)
-    (hc : ∀ b, (Finset.univ.filter fun j ↦ colBlock j = b).card ≤ c b) :
-    M.rank ≤ ∑ b, min (r b) (c b) := by
-  exact (matrix_rank_le_sum_min_fibers M rowBlock colBlock hzero).trans
-    (Finset.sum_le_sum fun b _ ↦ min_le_min (hr b) (hc b))
-end Sol1.C42
-end
-section
 namespace Sol1.C52
 open scoped BigOperators Matrix
 noncomputable section
@@ -2022,72 +1908,8 @@ theorem rank_le_col_representatives
     exact Submodule.zero_mem _
   · rw [hj]
     exact Submodule.subset_span ⟨j,rfl⟩
-theorem rank_le_row_representatives
-    {F R C R' : Type*} [Field F] [Fintype C] [Fintype R']
-    (M : Matrix R C F) (rep : R' → R)
-    (h : ∀ r, M r = 0 ∨ ∃ j, M r = M (rep j)) :
-    M.rank ≤ (M.submatrix rep id).rank := by
-  classical
-  let hasRep (r : R) : Prop := ∃ j, M r = M (rep j)
-  let selector : Matrix R R' F := fun r j ↦
-    if hr : hasRep r then if j = hr.choose then 1 else 0 else 0
-  have hfactor : selector * M.submatrix rep id = M := by
-    ext r c
-    change (∑ j : R', selector r j * M (rep j) c) = M r c
-    by_cases hr : hasRep r
-    · simp only [selector, dite_eq_left hr]
-      rw [Finset.sum_eq_single hr.choose]
-      · simpa using congrFun hr.choose_spec c |>.symm
-      · intro b _ hb
-        simp [hb]
-      · simp
-    · have hz : M r = 0 := (h r).resolve_right hr
-      simp [selector, hr, congrFun hz c]
-  calc M.rank = (selector * M.submatrix rep id).rank := congrArg Matrix.rank hfactor.symm
-    _ ≤ (M.submatrix rep id).rank := Matrix.rank_mul_le_right _ _
-theorem rank_le_sum_min_dependent
-    {F B : Type*} [Field F] [Fintype B]
-    {R C : B → Type*} [∀ b, Fintype (R b)] [∀ b, Fintype (C b)]
-    (M : Matrix (Sigma R) (Sigma C) F)
-    (hzero : ∀ i j, i.1 ≠ j.1 → M i j = 0) :
-    M.rank ≤ ∑ b, min (Fintype.card (R b)) (Fintype.card (C b)) := by
-  classical
-  apply Sol1.C42.matrix_rank_le_sum_min_bounds M Sigma.fst Sigma.fst
-    (fun b ↦ Fintype.card (R b)) (fun b ↦ Fintype.card (C b)) hzero
-  · intro b
-    have he : {i : Sigma R // i.1 = b} ≃ R b :=
-      { toFun := fun i ↦ i.2 ▸ i.1.2
-        invFun := fun r ↦ ⟨⟨b,r⟩,rfl⟩
-        left_inv := by rintro ⟨⟨b',r⟩,h⟩; cases h; rfl
-        right_inv := fun _ ↦ rfl }
-    rw [← Fintype.card_subtype]
-    exact (Fintype.card_congr he).le
-  · intro b
-    have he : {i : Sigma C // i.1 = b} ≃ C b :=
-      { toFun := fun i ↦ i.2 ▸ i.1.2
-        invFun := fun c ↦ ⟨⟨b,c⟩,rfl⟩
-        left_inv := by rintro ⟨⟨b',c⟩,h⟩; cases h; rfl
-        right_inv := fun _ ↦ rfl }
-    rw [← Fintype.card_subtype]
-    exact (Fintype.card_congr he).le
 end
 end Sol1.C52
-end
-section
-namespace Sol1.C64
-noncomputable section
-variable {F K : Type*} [Field F] [Field K]
-end
-end Sol1.C64
-end
-section
-namespace Sol1.C64
-open Polynomial
-noncomputable section
-open scoped BigOperators
-variable {F K I : Type*} [Field F] [Field K]
-end
-end Sol1.C64
 end
 section
 set_option autoImplicit false

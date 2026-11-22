@@ -1,95 +1,8 @@
-import Mathlib.Algebra.AffineMonoid.Basic
-import Mathlib.Algebra.AffineMonoid.UniqueSums
-import Mathlib.Algebra.Azumaya.Basic
-import Mathlib.Algebra.BigOperators.Intervals
-import Mathlib.Algebra.DualNumber
-import Mathlib.Algebra.GCDMonoid.FinsetLemmas
-import Mathlib.Algebra.GroupWithZero.Submonoid.CancelMulZero
-import Mathlib.Algebra.Module.LocalizedModule.Exact
-import Mathlib.Algebra.Module.StablyFree.Basic
-import Mathlib.Algebra.MvPolynomial.Coeff
-import Mathlib.Algebra.MvPolynomial.Funext
-import Mathlib.Algebra.MvPolynomial.NoZeroDivisors
-import Mathlib.Algebra.Order.Monoid.Prod
-import Mathlib.Algebra.Order.Sub.Prod
-import Mathlib.Algebra.Polynomial.Basis
-import Mathlib.Algebra.Polynomial.Degree.Domain
-import Mathlib.Algebra.Polynomial.Degree.IsMonicOfDegree
-import Mathlib.Algebra.Polynomial.Degree.Lemmas
-import Mathlib.Algebra.Polynomial.Div
-import Mathlib.Algebra.Polynomial.Taylor
-import Mathlib.Algebra.Ring.IsFormallyReal
-import Mathlib.Algebra.TrivSqZeroExt.Ideal
-import Mathlib.Analysis.BoxIntegral.UnitPartition
-import Mathlib.Analysis.CStarAlgebra.CStarMatrix
-import Mathlib.Analysis.Convex.Intrinsic
-import Mathlib.Analysis.Convex.Measure
-import Mathlib.Analysis.Convex.Visible
-import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
-import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
-import Mathlib.Combinatorics.Nullstellensatz
-import Mathlib.Combinatorics.Pigeonhole
-import Mathlib.Data.ENat.BigOperators
-import Mathlib.Data.Finsupp.Interval
-import Mathlib.Data.Int.Interval
-import Mathlib.Data.Int.Star
-import Mathlib.Data.Matrix.ColumnRowPartitioned
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Basic
-import Mathlib.Data.Nat.Choose.Central
-import Mathlib.Data.Set.Card.Arithmetic
-import Mathlib.Data.Set.PowersetCard
-import Mathlib.Data.Sym.NatCard
-import Mathlib.FieldTheory.PurelyInseparable.Exponent
-import Mathlib.GroupTheory.CosetCover
-import Mathlib.LinearAlgebra.FreeModule.Norm
-import Mathlib.LinearAlgebra.Lagrange
-import Mathlib.LinearAlgebra.Matrix.Rank
-import Mathlib.LinearAlgebra.TensorProduct.Free
-import Mathlib.NumberTheory.FLT.MasonStothers
-import Mathlib.NumberTheory.FunctionField
-import Mathlib.NumberTheory.RatFunc.Ostrowski
-import Mathlib.RingTheory.Artinian.Algebra
-import Mathlib.RingTheory.DedekindDomain.AdicValuation
-import Mathlib.RingTheory.DedekindDomain.Factorization
-import Mathlib.RingTheory.Depth.Rees
-import Mathlib.RingTheory.Derivation.Basic
-import Mathlib.RingTheory.Etale.Weakly
-import Mathlib.RingTheory.Finiteness.Descent
-import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
-import Mathlib.RingTheory.Flat.Equalizer
-import Mathlib.RingTheory.Flat.TorsionFree
-import Mathlib.RingTheory.GradedAlgebra.Radical
-import Mathlib.RingTheory.Ideal.HasGoingUp
-import Mathlib.RingTheory.Ideal.IsPrincipalPowQuotient
-import Mathlib.RingTheory.Ideal.MinimalPrime.Localization
-import Mathlib.RingTheory.KrullDimension.LocalRing
-import Mathlib.RingTheory.LocalProperties.Reduced
-import Mathlib.RingTheory.LocalRing.Length
-import Mathlib.RingTheory.LocalRing.Quotient
-import Mathlib.RingTheory.Localization.NormTrace
-import Mathlib.RingTheory.MvPolynomial.Ideal
-import Mathlib.RingTheory.MvPolynomial.IrreducibleQuadratic
-import Mathlib.RingTheory.MvPolynomial.WeightedHomogeneous
-import Mathlib.RingTheory.OrderOfVanishing.Basic
-import Mathlib.RingTheory.Polynomial.DegreeLT
-import Mathlib.RingTheory.Polynomial.Radical
-import Mathlib.RingTheory.Polynomial.Resultant.Basic
-import Mathlib.RingTheory.Polynomial.UniversalFactorizationRing
-import Mathlib.RingTheory.PowerSeries.Inverse
-import Mathlib.RingTheory.RamificationInertia.Basic
-import Mathlib.RingTheory.Regular.Flat
-import Mathlib.RingTheory.RegularLocalRing.Polynomial
-import Mathlib.RingTheory.RingHom.Surjective
-import Mathlib.RingTheory.RingHom.Unramified
-import Mathlib.RingTheory.Smooth.Field
-import Mathlib.RingTheory.Spectrum.Prime.Homeomorph
-import Mathlib.RingTheory.TotallySplit
-import Mathlib.RingTheory.Valuation.AlgebraInstances
-import Mathlib.RingTheory.Valuation.Discrete.RankOne
-import Mathlib.RingTheory.Valuation.LocalSubring
-import Mathlib.Tactic
-import Mathlib.Topology.Algebra.MvPolynomial
+import Mathlib.RingTheory.MvPolynomial.Basic
+import Mathlib.RingTheory.Ideal.Quotient.Operations
+import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
+import Mathlib.Tactic.FinCases
+import Mathlib.Tactic.Ring
 
 set_option autoImplicit false
 set_option maxHeartbeats 900000
@@ -189,7 +102,7 @@ structure Section {F : Type*} [Field F] (I : Ideal (Ring F)) (d : Box) where
   inverse_bound : inverse ∈ space F (d.pad order)
   glue : X (0 : Fin 4)^order * finite - inverse ∈ I
 
-theorem shift_mem {F : Type*} [Field F] (m : Exp) (c : F) (f : Ring F)
+private theorem shift_mem {F : Type*} [Field F] (m : Exp) (c : F) (f : Ring F)
     (d k : Box) (hf : f ∈ space F d) (hm : ∀ n ∈ d.support, m+n ∈ k.support) :
     monomial m c * f ∈ space F k := by
   classical
@@ -294,3 +207,7 @@ theorem hilbert_drop {F : Type*} [Field F] {I J : Ideal (Ring F)} (hIJ : I ≤ J
 
 end SplitCut.Rect
 
+#print axioms SplitCut.Rect.mul_monomial
+#print axioms SplitCut.Rect.mul_piece
+#print axioms SplitCut.Rect.ambient_rank
+#print axioms SplitCut.Rect.hilbert_drop

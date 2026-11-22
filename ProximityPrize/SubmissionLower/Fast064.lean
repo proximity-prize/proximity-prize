@@ -34,21 +34,6 @@ private theorem valueCut_eval {S : K[X]} (hS : S.natDegree ≤ 133671) (x a : K)
     Algebra.algebraMap_self_apply]
   rw [heval, ← hmap]
   exact embed.injective.eq_iff
-private theorem coeffPoint_injOn {w Γ s} (h : Messages w Γ s) :
-    Set.InjOn (fun γ => coeffPoint (extend (s γ))) (Γ : Set K) := by
-  intro γ hγ η hη heq
-  apply h.distinct hγ hη
-  apply Polynomial.ext
-  intro j
-  by_cases hj : j < taylorLength
-  · exact embed.injective (by simpa [coeffPoint] using congrFun heq ⟨j, hj⟩)
-  · change ¬ j < 133672 at hj
-    rw [Polynomial.coeff_eq_zero_of_natDegree_lt (p := s γ) (by
-          have := h.degree γ hγ
-          omega),
-        Polynomial.coeff_eq_zero_of_natDegree_lt (p := s η) (by
-          have := h.degree η hη
-          omega)]
 private theorem nodeCapacity_of_sections {w Γ s d}
     (hcap : ∀ i : I, (∃ γ ∈ Γ, (s γ).eval (node i) ≠ w i) →
       (Γ.filter fun γ => (s γ).eval (node i) = w i).card ≤ d) :
@@ -61,66 +46,6 @@ private theorem nodeCapacity_of_sections {w Γ s d}
     apply hcap i
     by_contra! hall
     exact hi (mem_filter.mpr ⟨mem_univ _, hall⟩)
-private theorem zeroDim_count {w Γ s} (h : Messages w Γ s) (P : Ideal CoeffRing)
-    (hdim : (affineHilbertPolynomial P).natDegree = 0)
-    (hpoints : ∀ γ ∈ Γ, coeffPoint (extend (s γ)) ∈ zeroLocus Geom P) :
-    (Γ.card : ℚ) ≤ affineDegree P := by
-  classical
-  let A := Γ.image (fun γ => coeffPoint (extend (s γ)))
-  have hA : A.card = Γ.card := card_image_of_injOn (coeffPoint_injOn h)
-  have hsub : (A : Set _) ⊆ zeroLocus Geom P := by
-    intro y hy
-    obtain ⟨γ, hγ, rfl⟩ := mem_image.mp hy
-    exact hpoints γ hγ
-  obtain ⟨hfinite, hdegree⟩ :=
-    finite_zeroLocus_and_ncard_le_affineDegree (K := Geom) P hdim
-  have hn := Set.ncard_le_ncard hsub hfinite
-  rw [Set.ncard_coe_finset, hA] at hn
-  exact (Nat.cast_le.mpr hn).trans hdegree
-private theorem section_count {w Γ s} (h : Messages w Γ s) {P : Ideal CoeffRing}
-    (hP : P.IsPrime) (hpoints : ∀ γ ∈ Γ, coeffPoint (extend (s γ)) ∈ zeroLocus Geom P)
-    (x a : K) (hmiss : ∃ γ ∈ Γ, (s γ).eval x ≠ a)
-    {c : ℚ} (hc : 0 ≤ c)
-    (bound : ∀ (V : Finset K), V ⊆ Γ → ∀ (Q : Ideal CoeffRing), Q.IsPrime →
-      (affineHilbertPolynomial Q).natDegree + 1 = (affineHilbertPolynomial P).natDegree →
-      (∀ γ ∈ V, coeffPoint (extend (s γ)) ∈ zeroLocus Geom Q) →
-      (V.card : ℚ) ≤ c * affineDegree Q) :
-    ((Γ.filter fun γ => (s γ).eval x = a).card : ℚ) ≤ c * affineDegree P := by
-  classical
-  let prime := hP
-  let cut := valueCut x a
-  let Ps := (P ⊔ Ideal.span {cut}).minimalPrimesFinset
-  let U := Γ.filter fun γ => (s γ).eval x = a
-  let part (Q : Ideal CoeffRing) := U.filter fun γ => coeffPoint (extend (s γ)) ∈ zeroLocus Geom Q
-  have hproper : cut ∉ P := by
-    obtain ⟨γ, hγ, hv⟩ := hmiss
-    intro hm
-    exact hv ((valueCut_eval (h.degree γ hγ) x a).mp (hpoints γ hγ _ hm))
-  have hcover : U ⊆ Ps.biUnion part := by
-    intro γ hγ
-    obtain ⟨hγΓ, hv⟩ := mem_filter.mp hγ
-    have hp : coeffPoint (extend (s γ)) ∈ zeroLocus Geom (P ⊔ Ideal.span {cut}) :=
-      mem_zeroLocus_sup_span_singleton_iff.mpr
-        ⟨hpoints γ hγΓ, (valueCut_eval (h.degree γ hγΓ) x a).mpr hv⟩
-    obtain ⟨Q, hQ, hγQ⟩ := exists_retainedMinimalPrime_of_mem_zeroLocus _ 1 _ hp (by simp)
-    exact mem_biUnion.mpr ⟨Q, Ideal.mem_minimalPrimesFinset.mpr (Ideal.mem_retainedMinimalPrimes.mp hQ).1,
-      mem_filter.mpr ⟨hγ, hγQ⟩⟩
-  have hsum : U.card ≤ ∑ Q ∈ Ps, (part Q).card :=
-    (card_le_card hcover).trans card_biUnion_le
-  have hdeg : (∑ Q ∈ Ps, affineDegree Q) ≤ affineDegree P := by
-    simpa only [Ps, Nat.cast_one, one_mul] using
-      principalCut_sum_affineDegree_minimalPrimes_le hproper (valueCut_degree x a)
-  change (U.card : ℚ) ≤ c * affineDegree P
-  calc
-    _ ≤ ∑ Q ∈ Ps, ((part Q).card : ℚ) := by exact_mod_cast hsum
-    _ ≤ ∑ Q ∈ Ps, c * affineDegree Q := by
-      apply sum_le_sum
-      intro Q hQ
-      have hmin := Ideal.mem_minimalPrimesFinset.mp hQ
-      exact bound _ ((filter_subset _ _).trans (filter_subset _ _)) Q hmin.isPrime
-        (principalCut_natDegree_affineHilbertPolynomial_add_one hproper hmin)
-        (fun _ hγ => (mem_filter.mp hγ).2)
-    _ ≤ c * affineDegree P := by rw [← mul_sum]; exact mul_le_mul_of_nonneg_left hdeg hc
 private theorem curve_degree_nat (P : Ideal CoeffRing) (hP : P.IsPrime)
     (hdim : (affineHilbertPolynomial P).natDegree = 1) :
     ∃ δ : ℕ, 0 < δ ∧ affineDegree P = (δ : ℚ) := by
@@ -146,36 +71,6 @@ private theorem curve_degree_nat (P : Ideal CoeffRing) (hP : P.IsPrime)
     rw [hdiff] at hpos
     exact_mod_cast sub_pos.mp hpos
   exact ⟨m-n, Nat.sub_pos_of_lt hmn, hdiff.trans (Nat.cast_sub hmn.le).symm⟩
-private theorem curve_count {w Γ s} (h : Messages w Γ s) {P : Ideal CoeffRing}
-    (hP : P.IsPrime) (hdim : (affineHilbertPolynomial P).natDegree = 1)
-    (hpoints : ∀ γ ∈ Γ, coeffPoint (extend (s γ)) ∈ zeroLocus Geom P) :
-    (Γ.card : ℚ) ≤ 2 * affineDegree P := by
-  classical
-  obtain ⟨δ, hδ, hdeg⟩ := curve_degree_nat P hP hdim
-  have hcap : NodeCapacity w Γ s δ := by
-    apply nodeCapacity_of_sections
-    intro i hi
-    have hcount := section_count h hP hpoints (node i) (w i) hi (c := 1) zero_le_one
-      (fun V hV Q _ hQ hp => by
-        rw [one_mul]
-        exact zeroDim_count (h.mono hV) Q (by omega) hp)
-    rw [one_mul, hdeg] at hcount
-    exact_mod_cast hcount
-  have hcount := nodeCapacity_count h hcap
-  have hi : Γ.card ≤ 2 * δ := by omega
-  rw [hdeg]
-  exact_mod_cast hi
-theorem surface_nodeCapacity {w Γ s} {d : ℕ} (h : Messages w Γ s) {P : Ideal CoeffRing}
-    (hP : P.IsPrime) (hdim : (affineHilbertPolynomial P).natDegree = 2)
-    (hpoints : ∀ γ ∈ Γ, coeffPoint (extend (s γ)) ∈ zeroLocus Geom P)
-    (hd : 2 * affineDegree P ≤ (d : ℚ)) :
-    NodeCapacity w Γ s d := by
-  classical
-  apply nodeCapacity_of_sections
-  intro i hi
-  have hcount := section_count h hP hpoints (node i) (w i) hi (c := 2) (by norm_num)
-    (fun _ hV _ hQ hdimQ hp => curve_count (h.mono hV) hQ (by omega) hp)
-  exact_mod_cast hcount.trans hd
 end
 end K1_13_5_5
 end
@@ -186,58 +81,6 @@ namespace K1_13_5_5
 noncomputable section
 open K1 K1_13 K1_13_5 Finset MvPolynomial
 open scoped BigOperators Polynomial
-def c1 : Prop :=
-  ∀ f : Row 3, Irreducible f → 0 < f.degreeOf 2 → f.degreeOf 2 ≤ 24 →
-    TrueWeightLE f (90 * 180265 - 1) → Whole f →
-    ∃ P : Ideal CoeffRing, FreshChart P (freshRow f) (freshRow (separant f)) ∧
-      ∀ S : Geom[X], S.natDegree ≤ 133671 → RegularAt 2 f S →
-        coeffPoint S ∈ zeroLocus Geom P
-def c2 : Prop :=
-  ∀ (P : Ideal CoeffRing) (g d : FreshJetRing), FreshChart P g d →
-    (affineHilbertPolynomial P).natDegree = 2 ∧
-      2 * affineDegree P ≤ (133671 : ℚ) * (g.totalDegree : ℚ)
-private theorem freshRow_degree_le (f : Row 3) : (freshRow f).totalDegree ≤ f.totalDegree := by
-  unfold freshRow MvPolynomial.totalDegree
-  exact Finset.sup_mono (support_map_subset (algebraMap Geom[X] FreshField) f)
-theorem of_children (h1 : c1) (h2 : c2) : K1_13_5.c5 := by
-  classical
-  intro w Γ s hm n f hf hcover
-  let part (i : Fin n) := Γ.filter fun γ => RegularAt 2 (f i) (extend (s γ)) ∧ Whole (f i)
-  let cap (i : Fin n) := 133671 * (f i).totalDegree
-  have hsub (i : Fin n) : part i ⊆ Γ := filter_subset _ _
-  have hlocal (i : Fin n) : NodeCapacity w (part i) s (cap i) := by
-    by_cases hi : Whole (f i)
-    · have htop : (f i).degreeOf 2 ≤ 24 :=
-        (single_le_sum (f := fun j => (f j).degreeOf 2) (fun _ _ => Nat.zero_le _) (mem_univ i)).trans
-          hf.top
-      obtain ⟨P, hp, hall⟩ := h1 _ (hf.irreducible i) (hf.positive i) htop (hf.weight i) hi
-      obtain ⟨hdim, hdeg⟩ := h2 _ _ _ hp
-      apply surface_nodeCapacity (hm.mono (hsub i)) hp.prime hdim
-      · intro γ hγ
-        have hγΓ := hsub i hγ
-        exact hall _ (Polynomial.natDegree_map_le.trans (hm.degree γ hγΓ))
-          (mem_filter.mp hγ).2.1
-      · have hle : ((freshRow (f i)).totalDegree : ℚ) ≤ ((f i).totalDegree : ℚ) :=
-          Nat.cast_le.mpr (freshRow_degree_le (f i))
-        simpa only [cap, Nat.cast_mul, Nat.cast_ofNat] using
-          hdeg.trans (mul_le_mul_of_nonneg_left hle (by norm_num))
-    · have hempty : part i = ∅ := by simp [part, hi]
-      rw [hempty]
-      exact ⟨∅, by simp, by simp⟩
-  let C : NodeFamily w Γ s := ⟨n, part, cap, hsub, hlocal⟩
-  refine ⟨C, ?_, ?_, ?_⟩
-  · intro γ hγ
-    obtain ⟨i, hi, hwhole⟩ := hcover γ hγ
-    exact mem_biUnion.mpr ⟨i, mem_univ _, mem_filter.mpr ⟨hγ, hi, hwhole⟩⟩
-  · change n ≤ 120
-    calc
-      n = ∑ _i : Fin n, 1 := by simp
-      _ ≤ ∑ i, (f i).totalDegree := sum_le_sum fun i _ =>
-        (hf.positive i).trans_le (degreeOf_le_totalDegree _ _)
-      _ ≤ 120 := hf.total
-  · change (∑ i, 133671 * (f i).totalDegree) ≤ 133671 * 120
-    rw [← mul_sum]
-    exact Nat.mul_le_mul_left _ hf.total
 end
 end K1_13_5_5
 end
@@ -264,7 +107,7 @@ private def quotientTensor (I : Ideal (MvPolynomial σ F)) :
     (Ideal.quotientEquivAlg _ _ e ?_)
   exact ((Ideal.map_map (I := I) ι.toRingHom e.toRingHom).trans
     (congrArg (fun f => I.map f) hcomp)).symm
-theorem quotientTensor_tmul_one (I : Ideal (MvPolynomial σ F)) (p : MvPolynomial σ F) :
+private theorem quotientTensor_tmul_one (I : Ideal (MvPolynomial σ F)) (p : MvPolynomial σ F) :
     quotientTensor (E := E) I (1 ⊗ₜ[F] (Ideal.Quotient.mk I p)) =
       Ideal.Quotient.mk _ (MvPolynomial.map (algebraMap F E) p) := by
   simp [quotientTensor]
@@ -365,7 +208,7 @@ theorem freshIdeal_isPrime (P : Ideal CoeffRing) (hP : P.IsPrime) : (freshIdeal 
       rfl
     · simp
   exact hext ▸ hprime
-theorem dimension_le_of_recovery {F σ τ : Type*} [Field F] [Finite σ] [Finite τ]
+private theorem dimension_le_of_recovery {F σ τ : Type*} [Field F] [Finite σ] [Finite τ]
     {I : Ideal (MvPolynomial σ F)} {J : Ideal (MvPolynomial τ F)}
     {s : MvPolynomial σ F} {t : MvPolynomial τ F}
     (φ : (MvPolynomial σ F ⧸ I) →ₐ[F] (MvPolynomial τ F ⧸ J))
@@ -527,7 +370,7 @@ instance localizedWeightsCommRing (I : Ideal (MvPolynomial σ k)) (j : Fin n →
     CommRing (LocalizedWeights I j) :=
   @OreLocalization.instCommRing (WeightedRing (n := n) I) inferInstance
     (substitutedDenominators I j) inferInstance
-def locScalars (I : Ideal (MvPolynomial σ k)) (j : Fin n → σ) :
+private def locScalars (I : Ideal (MvPolynomial σ k)) (j : Fin n → σ) :
     S →+* LocalizedWeights I j :=
   IsLocalization.lift (M := (WeightRing k n)⁰)
     (g := (algebraMap _ (LocalizedWeights I j)).comp (substitute I j))
@@ -549,16 +392,16 @@ abbrev cutIdeal (I : Ideal (MvPolynomial σ k)) (j : Fin n → σ) :
   I.map (MvPolynomial.map (algebraMap k S)) ⊔ Ideal.span {genericCut (k := k) j}
 abbrev GenericSection (I : Ideal (MvPolynomial σ k)) (j : Fin n → σ) :=
   MvPolynomial σ S ⧸ cutIdeal (S := S) I j
-def coordToSection (I : Ideal (MvPolynomial σ k)) (j : Fin n → σ) :
+private def coordToSection (I : Ideal (MvPolynomial σ k)) (j : Fin n → σ) :
     (MvPolynomial σ k ⧸ I) →+* GenericSection (S := S) I j :=
   Ideal.Quotient.lift I ((Ideal.Quotient.mk _).comp (MvPolynomial.map (algebraMap k S)))
     (fun _p hp => Ideal.Quotient.eq_zero_iff_mem.mpr
       (show _ ∈ cutIdeal (S := S) I j from
         (le_sup_left : I.map _ ≤ cutIdeal (S := S) I j) (Ideal.mem_map_of_mem _ hp)))
-def weightsToSection (I : Ideal (MvPolynomial σ k)) (j : Fin n → σ) :
+private def weightsToSection (I : Ideal (MvPolynomial σ k)) (j : Fin n → σ) :
     WeightedRing (n := n) I →+* GenericSection (S := S) I j :=
   eval₂Hom (coordToSection I j) (fun i => algebraMap S _ (weight (k := k) (some i)))
-theorem weightsToSection_compat (I : Ideal (MvPolynomial σ k)) (j : Fin n → σ) :
+private theorem weightsToSection_compat (I : Ideal (MvPolynomial σ k)) (j : Fin n → σ) :
     (weightsToSection (S := S) I j).comp (substitute I j) =
       (algebraMap S (GenericSection (S := S) I j)).comp (algebraMap (WeightRing k n) S) := by
   apply MvPolynomial.ringHom_ext
@@ -592,7 +435,7 @@ private def localizedToSection (I : Ideal (MvPolynomial σ k)) (j : Fin n → σ
       change IsUnit (weightsToSection (S := S) I j (substitute I j r))
       rw [h]
       exact (IsLocalization.map_units S (⟨r, hr⟩ : (WeightRing k n)⁰)).map (algebraMap S _))
-theorem localizedToSection_scalar (I : Ideal (MvPolynomial σ k)) (j : Fin n → σ) :
+private theorem localizedToSection_scalar (I : Ideal (MvPolynomial σ k)) (j : Fin n → σ) :
     (localizedToSection (S := S) I j).comp (algebraMap S (LocalizedWeights I j)) =
       algebraMap S (GenericSection (S := S) I j) := by
   apply IsLocalization.ringHom_ext (M := (WeightRing k n)⁰)
@@ -601,11 +444,11 @@ theorem localizedToSection_scalar (I : Ideal (MvPolynomial σ k)) (j : Fin n →
   have h := DFunLike.congr_fun (weightsToSection_compat (S := S) I j) r
   simpa [RingHom.comp_apply, localizedWeights_scalar, localizedToSection,
     IsLocalization.lift_eq] using h
-def polynomialToLocalized (I : Ideal (MvPolynomial σ k)) (j : Fin n → σ) :
+private def polynomialToLocalized (I : Ideal (MvPolynomial σ k)) (j : Fin n → σ) :
     MvPolynomial σ S →+* LocalizedWeights I j :=
   eval₂Hom (algebraMap S _) (fun i => algebraMap (WeightedRing (n := n) I) _
     (C (Ideal.Quotient.mk I (MvPolynomial.X i))))
-theorem polynomialToLocalized_coeff (I : Ideal (MvPolynomial σ k)) (j : Fin n → σ) :
+private theorem polynomialToLocalized_coeff (I : Ideal (MvPolynomial σ k)) (j : Fin n → σ) :
     (polynomialToLocalized (S := S) I j).comp (MvPolynomial.map (algebraMap k S)) =
       (algebraMap (WeightedRing (n := n) I) _).comp (C.comp (Ideal.Quotient.mk I)) := by
   apply MvPolynomial.ringHom_ext
@@ -632,7 +475,7 @@ private def sectionToLocalized (I : Ideal (MvPolynomial σ k)) (j : Fin n → σ
       simp only [polynomialToLocalized, eval₂Hom_C, eval₂Hom_X', weight,
         localizedWeights_scalar, substitute, Option.elim_none, Option.elim_some,
         weightedOffset, map_sum, map_mul])
-theorem localized_left_inv (I : Ideal (MvPolynomial σ k)) (j : Fin n → σ) :
+private theorem localized_left_inv (I : Ideal (MvPolynomial σ k)) (j : Fin n → σ) :
     (sectionToLocalized (S := S) I j).comp (localizedToSection (S := S) I j) =
       RingHom.id (LocalizedWeights I j) := by
   apply IsLocalization.ringHom_ext (M := substitutedDenominators I j)
@@ -651,7 +494,7 @@ theorem localized_left_inv (I : Ideal (MvPolynomial σ k)) (j : Fin n → σ) :
     change polynomialToLocalized (S := S) I j (C (weight (k := k) (some i))) =
       algebraMap (WeightedRing (n := n) I) _ (MvPolynomial.X i)
     simp [polynomialToLocalized, localizedWeights_scalar, substitute]
-theorem localized_right_inv (I : Ideal (MvPolynomial σ k)) (j : Fin n → σ) :
+private theorem localized_right_inv (I : Ideal (MvPolynomial σ k)) (j : Fin n → σ) :
     (localizedToSection (S := S) I j).comp (sectionToLocalized (S := S) I j) =
       RingHom.id (GenericSection (S := S) I j) := by
   apply RingHom.ext
@@ -754,18 +597,18 @@ open MvPolynomial
 open scoped nonZeroDivisors
 variable {C₀ : ConstantSeeds} [Fact (Irreducible C₀)] {J g n}
 variable {R : PrimitiveRoot C₀ J g} (A : CoefficientChart R n)
-def graphWeights :
+private def graphWeights :
     WeightedRing (n := n) (chartBase A) →+* RationalWeightRing (ConstantSeedField C₀) n :=
   MvPolynomial.map (RingHom.kerLift (chartBaseMap A))
-theorem graphWeights_injective : Function.Injective (graphWeights A) :=
+private theorem graphWeights_injective : Function.Injective (graphWeights A) :=
   MvPolynomial.map_injective _ (RingHom.kerLift_injective (chartBaseMap A))
-theorem graphWeights_X (i : Fin n) :
+private theorem graphWeights_X (i : Fin n) :
     graphWeights A (MvPolynomial.X i) = MvPolynomial.X i :=
   MvPolynomial.map_X _ _
-theorem graphWeights_C (p : ChartBaseRing n) :
+private theorem graphWeights_C (p : ChartBaseRing n) :
     graphWeights A (C (Ideal.Quotient.mk (chartBase A) p)) = C (chartBaseMap A p) :=
   MvPolynomial.map_C _ _
-theorem graph_substitute :
+private theorem graph_substitute :
     (graphWeights A).comp (substitute (chartBase A) Sum.inr) =
       parameterEval (constToSeed C₀) A.coordinate := by
   apply MvPolynomial.ringHom_ext
@@ -901,7 +744,7 @@ def c2 : Prop :=
           (RationalWeightField (ConstantSeedField C₀) n) ∧
         Module.finrank (RationalWeightField (CoefficientField A.coordinate) n)
           (RationalWeightField (ConstantSeedField C₀) n) ≤ seedDegree A
-theorem transfer_rank {S B C F E : Type} [Field S] [CommRing B] [CommRing C]
+private theorem transfer_rank {S B C F E : Type} [Field S] [CommRing B] [CommRing C]
     [Field F] [Field E] [Algebra S B] [Algebra S C] [aF : Algebra S F] [aE : Algebra S E]
     (hC : Module.Finite S C) (f : C →ₐ[S] F) (hf : Function.Surjective f)
     (j : B →ₐ[S] E) (hj : Function.Injective j) (i : F →ₐ[S] E) {d : ℕ}
@@ -953,7 +796,7 @@ private theorem trdeg_fraction (k B : Type) [Field k] [CommRing B] [IsDomain B]
   let : Algebra.IsAlgebraic B (FractionRing B) :=
     (IsFractionRing.comap_isAlgebraic_iff (K := FractionRing B)).mpr inferInstance
   rw [← trdeg_add_eq k B, trdeg_eq_zero (R := B), add_zero]
-theorem trdeg_normalization {k B : Type} [Field k] [CommRing B] [IsDomain B]
+private theorem trdeg_normalization {k B : Type} [Field k] [CommRing B] [IsDomain B]
     [Algebra k B] {d : ℕ} (u : MvPolynomial (Fin d) k →ₐ[k] B)
     (hu : Function.Injective u) (hfin : u.Finite) : trdeg k B = d := by
   let P := MvPolynomial (Fin d) k
@@ -974,10 +817,10 @@ private theorem seed_trdeg (C₀ : ConstantSeeds) [hC : Fact (Irreducible C₀)]
     Nat.card_fin] at hdim
   rw [trdeg_fraction L B, trdeg_normalization u hu hfin]
   exact_mod_cast hdim
-theorem abscissaMap_constant {F E : Type} [Field F] [Field E] (f : F →+* E)
+private theorem abscissaMap_constant {F E : Type} [Field F] [Field E] (f : F →+* E)
     (a : F) : abscissaMap f (rationalConstant a) = rationalConstant (f a) := by
   simp [abscissaMap, IsFractionRing.map, IsLocalization.map_eq]
-theorem coefficient_trdeg {E : Type} [Field E] [Algebra L E] {n : ℕ}
+private theorem coefficient_trdeg {E : Type} [Field E] [Algebra L E] {n : ℕ}
     (a : Fin n → E) (h : Function.Injective (parameterEval (algebraMap L E) a)) :
     1 ≤ trdeg L (CoefficientField a) := by
   classical
@@ -1036,15 +879,15 @@ private theorem seed_finite (C₀ : ConstantSeeds) [Fact (Irreducible C₀)] {n 
   exact Algebra.finite_of_essFiniteType_of_isAlgebraic
 section RationalExtension
 attribute [local instance] Polynomial.algebra MvPolynomial.algebraMvPolynomial
-abbrev abscissaAlgebra {F E : Type} [Field F] [Field E] [Algebra F E] :
+private abbrev abscissaAlgebra {F E : Type} [Field F] [Field E] [Algebra F E] :
     Algebra (FractionRing F[X]) (FractionRing E[X]) :=
   FractionRing.liftAlgebra F[X] (FractionRing E[X])
 attribute [local instance] abscissaAlgebra
-abbrev weightAlgebra {F E : Type} [Field F] [Field E] [Algebra F E] {n : ℕ} :
+private abbrev weightAlgebra {F E : Type} [Field F] [Field E] [Algebra F E] {n : ℕ} :
     Algebra (RationalWeightField F n) (RationalWeightField E n) :=
   FractionRing.liftAlgebra (RationalWeightRing F n) (RationalWeightField E n)
 attribute [local instance] weightAlgebra
-theorem abscissa_algebraMap {F E : Type} [Field F] [Field E] [Algebra F E] :
+private theorem abscissa_algebraMap {F E : Type} [Field F] [Field E] [Algebra F E] :
     algebraMap (FractionRing F[X]) (FractionRing E[X]) = abscissaMap (algebraMap F E) := by
   apply IsFractionRing.ringHom_ext (A := F[X])
   intro p
@@ -1052,7 +895,7 @@ theorem abscissa_algebraMap {F E : Type} [Field F] [Field E] [Algebra F E] :
       (algebraMap F[X] (FractionRing F[X]) p) = _
   rw [IsFractionRing.lift_algebraMap, IsScalarTower.algebraMap_apply F[X] E[X] (FractionRing E[X])]
   simp [abscissaMap, IsFractionRing.map, IsLocalization.map_eq]
-def weightEmbedding {F E : Type} [Field F] [Field E] [Algebra F E] {n : ℕ}
+private def weightEmbedding {F E : Type} [Field F] [Field E] [Algebra F E] {n : ℕ}
     (p : SourceRing n →+* RationalWeightRing F n) (hp : Function.Injective p)
     (q : SourceRing n →+* RationalWeightRing E n) (hq : Function.Injective q)
     (h : (MvPolynomial.map (abscissaMap (algebraMap F E))).comp p = q) :
@@ -1078,7 +921,7 @@ def weightEmbedding {F E : Type} [Field F] [Field E] [Algebra F E] {n : ℕ}
   rw [IsFractionRing.lift_algebraMap, IsScalarTower.algebraMap_apply P Q E']
   rw [MvPolynomial.algebraMap_def, abscissa_algebraMap]
   exact congrArg (algebraMap Q E') (DFunLike.congr_fun h r)
-theorem weight_finite_rank {F E : Type} [Field F] [Field E] [Algebra F E]
+private theorem weight_finite_rank {F E : Type} [Field F] [Field E] [Algebra F E]
     [Module.Finite F E] (n : ℕ) :
     Module.Finite (RationalWeightField F n) (RationalWeightField E n) ∧
       Module.finrank (RationalWeightField F n) (RationalWeightField E n) =
@@ -1122,7 +965,7 @@ namespace K1_14_2_4_1_3_3
 noncomputable section
 open K1_14 K1_14_2 K1_14_2_4 K1_14_2_4_1 K1_14_2_4_1_3 MvPolynomial
 open scoped Polynomial
-theorem specialize_ordinate {n : ℕ} (P : FamilyEquation n) (t : Fin n → L) :
+private theorem specialize_ordinate {n : ℕ} (P : FamilyEquation n) (t : Fin n → L) :
     MvPolynomial.eval (algebraMap L SeedField ∘ t) (ordinateForm P) =
       ((specialize P t).map (algebraMap L[X] FX)).eval₂
         (algebraMap FX SeedField) (generic 1) := by
@@ -1160,7 +1003,7 @@ theorem specialize_ordinate {n : ℕ} (P : FamilyEquation n) (t : Fin n → L) :
   change P.eval₂ (v.comp (Polynomial.eval₂RingHom (MvPolynomial.map (algebraMap L FX))
     (MvPolynomial.C ξ))) (generic 1) = _
   rw [hX, Polynomial.eval₂_map, Polynomial.eval₂_map]
-theorem generic_ordinate_injective :
+private theorem generic_ordinate_injective :
     Function.Injective (Polynomial.eval₂RingHom (algebraMap FX SeedField) (generic 1)) := by
   let ι := (algebraMap Seeds SeedField).comp (Polynomial.toMvPolynomial (R := FX)
     (1 : Fin 2)).toRingHom
@@ -1325,7 +1168,7 @@ def c3 : Prop :=
   ∀ (C₀ : ConstantSeeds) [Fact (Irreducible C₀)] (J : Ideal RootAmbient) (g n : ℕ)
     (R : PrimitiveRoot C₀ J g) (A : CoefficientChart R n),
     0 < g → fieldDegree (mapSpare (coefficientRootInclusion A)) = seedDegree A
-theorem section_tower {k U V D E : Type} [Field k] [Field U] [Field V]
+private theorem section_tower {k U V D E : Type} [Field k] [Field U] [Field V]
     [CommRing D] [CommRing E] [Algebra k D] [Algebra k E]
     (e : D ≃+* U) (e' : E ≃+* V) (f : U →+* V)
     (h : e'.toRingHom.comp (algebraMap k E) =
@@ -1383,12 +1226,6 @@ noncomputable section
 open K1_13 K1_13_5_5 MvPolynomial
 open scoped BigOperators
 attribute [local instance] MvPolynomial.gradedAlgebra
-def c1 : Prop :=
-  ∀ (Q : Ideal CoeffRing) (L : Fin 2 → FreshJetRing),
-    Q.IsPrime → Q.IsHomogeneous (homogeneousSubmodule CoeffIndex Geom) →
-    (affineHilbertPolynomial Q).natDegree = 2 → FiniteJetPair L (jetImage (freshIdeal Q)) →
-    2 * affineDegree Q ≤
-      (133671 : ℚ) * (genericFiberDimension L (freshIdeal Q) : ℚ)
 def c2 : Prop :=
   ∀ (P : Ideal CoeffRing), P.IsPrime → (affineHilbertPolynomial P).natDegree = 2 →
     ∃ (n : ℕ) (Q : Fin n → Ideal CoeffRing),
@@ -1406,23 +1243,6 @@ def c3 : Prop :=
       FiniteJetPair L (jetImage (freshIdeal (infinityIdeal P))) ∧
       Module.Finite PairField (genericFiber L (freshIdeal (infinityIdeal P))) ∧
       genericFiberDimension L (freshIdeal (infinityIdeal P)) ≤ g.totalDegree
-theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) : K1_13_5_5.c2 := by
-  intro P g d hchart
-  have hdim := chart_dimension P g d hchart
-  refine ⟨hdim, ?_⟩
-  obtain ⟨n, Q, hQ, hdeg, hfiber⟩ := h2 P hchart.prime hdim
-  obtain ⟨L, hL, hfinite, hbudget⟩ := h3 P g d hchart
-  have hcurve (i : Fin n) : 2 * affineDegree (Q i) ≤
-      (133671 : ℚ) * (genericFiberDimension L (freshIdeal (Q i)) : ℚ) := by
-    obtain ⟨hi, hhom, hd⟩ := hQ i
-    have hle : jetImage (freshIdeal (infinityIdeal P)) ≤ jetImage (freshIdeal (Q i)) :=
-      Ideal.comap_mono (Ideal.map_mono hi.le)
-    exact h1 (Q i) L hi.isPrime hhom hd (hL.of_le hle)
-  have hsum := Finset.sum_le_sum (s := Finset.univ) (fun i _ => hcurve i)
-  rw [← Finset.mul_sum, ← Finset.mul_sum] at hsum
-  rw [hdeg]
-  refine hsum.trans (mul_le_mul_of_nonneg_left ?_ (by norm_num))
-  exact_mod_cast (hfiber L hfinite).trans hbudget
 end
 end K1_13_5_5_2
 end
@@ -1440,11 +1260,11 @@ private def seedImage (A : CoefficientChart R n) :
     IntermediateField L (ConstantSeedField C₀) :=
   letI : Algebra L (ConstantSeedField C₀) := (constToSeed C₀).toAlgebra
   IntermediateField.adjoin L (Set.range A.coordinate)
-abbrev ImageSeeds (A : CoefficientChart R n) := ↥(seedImage A)
-def imageBase (A : CoefficientChart R n) : L →+* ImageSeeds A :=
+private abbrev ImageSeeds (A : CoefficientChart R n) := ↥(seedImage A)
+private def imageBase (A : CoefficientChart R n) : L →+* ImageSeeds A :=
   let : Algebra L (ConstantSeedField C₀) := (constToSeed C₀).toAlgebra
   algebraMap L (ImageSeeds A)
-def chartCoordinate (A : CoefficientChart R n) (i : Fin n) : ImageSeeds A := by
+private def chartCoordinate (A : CoefficientChart R n) (i : Fin n) : ImageSeeds A := by
   let : Algebra L (ConstantSeedField C₀) := (constToSeed C₀).toAlgebra
   exact ⟨A.coordinate i, IntermediateField.subset_adjoin L _ ⟨i, rfl⟩⟩
 private def seedMap (A : CoefficientChart R n) :
@@ -1455,7 +1275,7 @@ private def chartEquation (A : CoefficientChart R n) : (SpareField (ImageSeeds A
   (A.equation.map (Polynomial.mapRingHom
     (MvPolynomial.eval₂Hom (imageBase A) (chartCoordinate A)))).map
       (algebraMap (ImageSeeds A)[X] (SpareField (ImageSeeds A)))
-theorem chartEquation_map (A : CoefficientChart R n) :
+private theorem chartEquation_map (A : CoefficientChart R n) :
     (chartEquation A).map (seedMap A) =
       Polynomial.C (insertConstant C₀ (A.scale : ConstantSeedField C₀)) * rootEquation R := by
   let : Algebra L (ConstantSeedField C₀) := (constToSeed C₀).toAlgebra
@@ -1485,7 +1305,7 @@ theorem chartEquation_map (A : CoefficientChart R n) :
       rw [show A.equation.map (Polynomial.mapRingHom v) = _ from A.generic_eq,
         Polynomial.map_mul, Polynomial.map_C]
       rfl
-theorem chartEquation_irreducible (A : CoefficientChart R n) :
+private theorem chartEquation_irreducible (A : CoefficientChart R n) :
     Irreducible (chartEquation A) := by
   let f := Polynomial.mapRingHom (seedMap A)
   let : IsLocalHom f :=
@@ -1497,7 +1317,7 @@ theorem chartEquation_irreducible (A : CoefficientChart R n) :
   rw [chartEquation_map, irreducible_isUnit_mul]
   · exact R.irreducible
   · exact (A.scale.isUnit.map (insertConstant C₀)).map Polynomial.C
-theorem rootEquation_degree (R : PrimitiveRoot C₀ J g) :
+private theorem rootEquation_degree (R : PrimitiveRoot C₀ J g) :
     (rootEquation R).natDegree = g :=
   (Polynomial.natDegree_map_eq_of_injective (IsFractionRing.injective _ _) _).trans R.degree
 private theorem chartEquation_degree (A : CoefficientChart R n) :
@@ -1505,17 +1325,17 @@ private theorem chartEquation_degree (A : CoefficientChart R n) :
   rw [← Polynomial.natDegree_map (p := chartEquation A) (seedMap A), chartEquation_map,
     Polynomial.natDegree_C_mul ((A.scale.isUnit.map (insertConstant C₀)).ne_zero),
     rootEquation_degree]
-def rootConstants (A : CoefficientChart R n) :
+private def rootConstants (A : CoefficientChart R n) :
     SpareField (ImageSeeds A) →+* RootField R :=
   (AdjoinRoot.of (rootEquation R)).comp (seedMap A)
-theorem rootConstants_base (A : CoefficientChart R n) :
+private theorem rootConstants_base (A : CoefficientChart R n) :
     (rootConstants A).comp (mapSpare (imageBase A)) = rootBase R := by
   let : Algebra L (ConstantSeedField C₀) := (constToSeed C₀).toAlgebra
   change (AdjoinRoot.of (rootEquation R)).comp
     ((mapSpare (seedImage A).val.toRingHom).comp (mapSpare (imageBase A))) = _
   rw [mapSpare_comp]
   rfl
-theorem polynomial_image_mem {E F : Type} [Field E] [Field F]
+private theorem polynomial_image_mem {E F : Type} [Field E] [Field F]
     (S : Subfield F) (f : E[X] →+* F) (hc : ∀ a, f (Polynomial.C a) ∈ S)
     (hx : f Polynomial.X ∈ S) (p : E[X]) : f p ∈ S := by
   induction p using Polynomial.induction_on' with
@@ -1523,7 +1343,7 @@ theorem polynomial_image_mem {E F : Type} [Field E] [Field F]
   | monomial n a =>
     rw [← Polynomial.C_mul_X_pow_eq_monomial, map_mul, map_pow]
     exact S.mul_mem (hc a) (S.pow_mem hx n)
-theorem rootConstants_mem (A : CoefficientChart R n) (x : SpareField (ImageSeeds A)) :
+private theorem rootConstants_mem (A : CoefficientChart R n) (x : SpareField (ImageSeeds A)) :
     rootConstants A x ∈ coefficientRoot A := by
   let : Algebra L (ConstantSeedField C₀) := (constToSeed C₀).toAlgebra
   let : Algebra FX (RootField R) := (rootBase R).toAlgebra
@@ -1558,7 +1378,7 @@ theorem rootConstants_mem (A : CoefficientChart R n) (x : SpareField (ImageSeeds
   obtain ⟨p, q, _, rfl⟩ := IsFractionRing.div_surjective (ImageSeeds A)[X] x
   rw [map_div₀]
   exact B.div_mem (hp p) (hp q)
-theorem coefficient_root_degree (A : CoefficientChart R n) :
+private theorem coefficient_root_degree (A : CoefficientChart R n) :
     ∃ j : SpareField (ImageSeeds A) →+* CoefficientRootField A,
       (coefficientRootInclusion A).comp j = rootConstants A ∧ fieldDegree j = g := by
   let : Algebra L (ConstantSeedField C₀) := (constToSeed C₀).toAlgebra
@@ -1798,7 +1618,7 @@ private theorem chart_domain {k σ : Type} [Field k] (Q : Ideal (MvPolynomial σ
       exact Ideal.Quotient.eq_zero_iff_mem.mp
         (hπH ▸ Ideal.Quotient.eq_zero_iff_mem.mpr ((show Q ≤ I from le_sup_left) hH))
   exact (Ideal.Quotient.isDomain_iff_prime I).2 (hI.symm ▸ RingHom.ker_isPrime ψ)
-theorem exists_coordinate {k σ : Type} [Field k] [Finite σ]
+private theorem exists_coordinate {k σ : Type} [Field k] [Finite σ]
     (Q : Ideal (MvPolynomial σ k)) (hdim : (affineHilbertPolynomial Q).natDegree ≠ 0) :
     ∃ i : σ, MvPolynomial.X i ∉ Q := by
   by_contra! hall
@@ -1859,13 +1679,6 @@ private theorem monic_chart_aux {k : Type} [Field k] {n : ℕ}
   have hn : (chartDirection Q i).natDegree = i.val :=
     Polynomial.natDegree_eq_of_le_of_coeff_ne_zero hle (by rw [hcoeffi]; exact one_ne_zero)
   exact ⟨i, hiQ, hdom, by rw [Polynomial.Monic, Polynomial.leadingCoeff, hn, hcoeffi], hle⟩
-theorem monic_chart (Q : Ideal CoeffRing) (hQ : Q.IsPrime)
-    (hhom : Q.IsHomogeneous (homogeneousSubmodule CoeffIndex Geom))
-    (hdim : (affineHilbertPolynomial Q).natDegree = 2) :
-    ∃ i : CoeffIndex, MvPolynomial.X i ∉ Q ∧ IsDomain (ChartRing Q i) ∧
-      (direction Q i).Monic ∧ (direction Q i).natDegree ≤ 133671 := by
-  obtain ⟨i, hi, hdom, hm, hd⟩ := monic_chart_aux Q hQ hhom (by rw [hdim]; decide)
-  exact ⟨i, hi, hdom, hm, hd.trans (Nat.le_of_lt_succ i.isLt)⟩
 end
 end K1_13_5_5_2_1
 end
@@ -1875,7 +1688,7 @@ noncomputable section
 open K1_13_5_5 K1_13_5_5_2
 open scoped Polynomial TensorProduct nonZeroDivisors
 set_option maxHeartbeats 1000000
-theorem reduce_polynomialPairMap {F A : Type} [Field F] [CommRing A] [Algebra F A]
+private theorem reduce_polynomialPairMap {F A : Type} [Field F] [CommRing A] [Algebra F A]
     (v w : A) (p : MvPolynomial (Fin 2) F) :
     (polynomialPairMap F v w p).map (Ideal.Quotient.mk (Ideal.span {v})) =
       (((MvPolynomial.uniqueAlgEquiv F (Fin 1))
@@ -1910,7 +1723,7 @@ theorem reduce_polynomialPairMap {F A : Type} [Field F] [CommRing A] [Algebra F 
   change MvPolynomial.eval₂ _ (fun _ : Fin 1 => _) _ = _
   rw [← MvPolynomial.eval₂_const_uniqueAlgEquiv]
   exact (Polynomial.eval₂_map _ _ _).symm
-theorem pin_bound_aux {F A : Type} [Field F] [CommRing A] [IsDomain A]
+private theorem pin_bound_aux {F A : Type} [Field F] [CommRing A] [IsDomain A]
     [Algebra F A] (v w : A)
     (hw : IsUnit (Ideal.Quotient.mk (Ideal.span {v}) w))
     (hinj : Function.Injective (polynomialPairMap F v w))
@@ -2013,7 +1826,7 @@ namespace K1_13_5_5_2_1
 noncomputable section
 open K1_13_5_5
 set_option backward.isDefEq.respectTransparency false
-theorem finrank_quotient_pow {A : Type} [CommRing A] [IsDomain A]
+private theorem finrank_quotient_pow {A : Type} [CommRing A] [IsDomain A]
     [Algebra FreshField A] (I : Ideal A) (hI : I.IsPrincipal) (hne : I ≠ ⊥)
     [Module.Finite FreshField (A ⧸ I)] (n : ℕ) :
     Module.Finite FreshField (A ⧸ I ^ n) ∧
@@ -2089,7 +1902,7 @@ abbrev CoeffRing := ParameterRing n ⧸ coefficientIdeal A
 abbrev CoeffFrac := FractionRing (CoeffRing A)
 def toCoeffFrac : ParameterRing n →+* CoeffFrac A :=
   (algebraMap (CoeffRing A) (CoeffFrac A)).comp (Ideal.Quotient.mk _)
-def quotientToSeed : CoeffRing A →+* ConstantSeedField C₀ :=
+private def quotientToSeed : CoeffRing A →+* ConstantSeedField C₀ :=
   RingHom.kerLift (parameterEval A)
 def coeffToSeed : CoeffFrac A →+* ConstantSeedField C₀ :=
   IsFractionRing.lift (g := quotientToSeed A) (RingHom.kerLift_injective (parameterEval A))
@@ -2133,10 +1946,10 @@ theorem parameterRoot_ker : RingHom.ker (parameterRoot A) = coefficientIdeal A :
   rw [← (coefficientRootInclusion A).injective.eq_iff, map_zero,
     ← RingHom.comp_apply, parameterRoot_inclusion, RingHom.comp_apply,
     ← (seedInRoot R).injective.eq_iff, map_zero]
-def quotientToRoot : CoeffRing A →+* CoefficientRootField A :=
+private def quotientToRoot : CoeffRing A →+* CoefficientRootField A :=
   Ideal.Quotient.lift _ (parameterRoot A)
     (fun _ h => RingHom.mem_ker.mp ((parameterRoot_ker A).symm ▸ h))
-theorem quotientToRoot_injective : Function.Injective (quotientToRoot A) := by
+private theorem quotientToRoot_injective : Function.Injective (quotientToRoot A) := by
       intro a b h
       obtain ⟨a, rfl⟩ := Ideal.Quotient.mk_surjective a
       obtain ⟨b, rfl⟩ := Ideal.Quotient.mk_surjective b
@@ -2163,7 +1976,7 @@ def primitiveEquation : EquationRing A :=
 def rawRoot : EquationRing A →+* CoefficientRootField A :=
   Polynomial.eval₂RingHom (Polynomial.eval₂RingHom (coeffToRoot A) (coefficientBase A abscissa))
     (coefficientOrdinate A)
-theorem equation_map :
+private theorem equation_map :
     (primitiveEquation A).map (Polynomial.mapRingHom (coeffToSeed A)) =
       Polynomial.C (Polynomial.C (A.scale : ConstantSeedField C₀)) * R.equation := by
   rw [primitiveEquation, Polynomial.map_map, Polynomial.mapRingHom_comp, ← A.generic_eq]
@@ -2181,10 +1994,10 @@ theorem equation_primitive : (primitiveEquation A).IsPrimitive := by
   rw [Polynomial.isUnit_iff_degree_eq_zero] at hm ⊢
   simpa only [i, Polynomial.coe_mapRingHom, Polynomial.degree_map_eq_of_injective
     (coeffToSeed A).injective] using hm
-def coeffXToSeedX : FractionRing (CoeffFrac A)[X] →+* ConstantSeedX C₀ :=
+private def coeffXToSeedX : FractionRing (CoeffFrac A)[X] →+* ConstantSeedX C₀ :=
   IsFractionRing.map (j := Polynomial.mapRingHom (coeffToSeed A))
     (Polynomial.map_injective _ (coeffToSeed A).injective)
-theorem coeffXToSeedX_apply (a : (CoeffFrac A)[X]) :
+private theorem coeffXToSeedX_apply (a : (CoeffFrac A)[X]) :
     coeffXToSeedX A (algebraMap _ (FractionRing (CoeffFrac A)[X]) a) =
       insertX C₀ (a.map (coeffToSeed A)) := by
   unfold coeffXToSeedX IsFractionRing.map
@@ -2192,7 +2005,7 @@ theorem coeffXToSeedX_apply (a : (CoeffFrac A)[X]) :
   rfl
 private abbrev genericEquation :=
   (primitiveEquation A).map (algebraMap (CoeffFrac A)[X] (FractionRing (CoeffFrac A)[X]))
-theorem genericEquation_map :
+private theorem genericEquation_map :
     (genericEquation A).map (coeffXToSeedX A) =
       Polynomial.C (insertConstant C₀ (A.scale : ConstantSeedField C₀)) * rootEquation R := by
   rw [Polynomial.map_map, show (coeffXToSeedX A).comp
@@ -2201,7 +2014,7 @@ theorem genericEquation_map :
     RingHom.ext (coeffXToSeedX_apply A), ← Polynomial.map_map,
     equation_map, Polynomial.map_mul, Polynomial.map_C]
   rfl
-theorem rawRoot_inclusion :
+private theorem rawRoot_inclusion :
     (coefficientRootInclusion A).comp (rawRoot A) =
       (AdjoinRoot.mk (rootEquation R)).comp
         (Polynomial.mapRingHom ((insertX C₀).comp (Polynomial.mapRingHom (coeffToSeed A)))) := by
@@ -2309,79 +2122,6 @@ private theorem trimmedValue_dvd {A : Type} [CommRing A] {f : A[X]}
     (s : Factorization f) : trimmedValue s ∣ f := by
   exact (Finset.prod_dvd_prod_of_dvd _ _ (fun i _ => pow_dvd_pow _ (min_le_left _ _))).trans
     (dvd_of_eq s.product_eq.symm)
-theorem full_square_dvd {A : Type} [CommRing A] {f : A[X]}
-    (s : Factorization f) : f ^ 2 ∣ (trimmedValue s) ^ 133671 := by
-  refine (dvd_of_eq (congrArg (fun g : A[X] => g ^ 2) s.product_eq)).trans ?_
-  rw [trimmedValue, ← Finset.prod_pow, ← Finset.prod_pow]
-  apply Finset.prod_dvd_prod_of_dvd
-  intro i _
-  rw [← pow_mul, ← pow_mul]
-  apply pow_dvd_pow
-  have hi := s.multiplicity_bounds i
-  by_cases h : s.multiplicity i ≤ 2
-  · rw [min_eq_left h]
-    omega
-  · rw [min_eq_right (by omega)]
-    omega
-private theorem eval_divisions {A B : Type} [CommRing A] [CommRing B]
-    (e : A[X] →+* B) {f : A[X]} (s : Factorization f) :
-    e (trimmedValue s) ∣ e f ∧ e f ^ 2 ∣ e (trimmedValue s) ^ 133671 := by
-  exact ⟨map_dvd e (trimmedValue_dvd s),
-    by simpa only [map_pow] using map_dvd e (full_square_dvd s)⟩
-theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) (h4 : c4) (h5 : c5)
-    (h6 : c6) : K1_13_5_5_2.c1 := by
-  intro Q L hQ hhom hdim hL
-  obtain ⟨i, hi, hchart, hmonic, hdegree⟩ := monic_chart Q hQ hhom hdim
-  let : IsDomain (ChartRing Q i) := hchart
-  obtain ⟨a, ha, ⟨s⟩⟩ := h2 (ChartRing Q i) (direction Q i) hmonic hdegree
-  obtain ⟨hdom, heval, hfinite, hcoeff⟩ := h1 Q i a hQ hhom hdim hi hchart ha
-  let : IsDomain (FreshOpen Q i a) := hdom
-  let : IsDomain (OpenRing Q i a) := IsLocalization.Away.isDomain _ ha
-  change Factorization (openDirection Q i a) at s
-  obtain ⟨q, hq0, hq, hqspan⟩ := h3 (OpenRing Q i a) (openDirection Q i a) s
-  let e : (OpenRing Q i a)[X] →+* FreshOpen Q i a := freshEval (OpenRing Q i a)
-  let x := e (openDirection Q i a)
-  let b := e (commonFactor s)
-  let d : Fin 3 → FreshOpen Q i a := fun j => e (q j)
-  have hx : x ≠ 0 := by
-    simpa only [e, x, openDirection, map_zero] using
-      heval.ne (hmonic.map (algebraMap _ (OpenRing Q i a))).ne_zero
-  have hb : b ≠ 0 := by
-    simpa only [e, b, map_zero] using heval.ne (commonFactor_monic s).ne_zero
-  have hd : d 0 ≠ 0 := by
-    simpa only [d, hq0, e, map_zero] using heval.ne (trimmedValue_monic s).ne_zero
-  have htrim : ∀ j, b * d j = e (Polynomial.hasseDeriv j.val (openDirection Q i a)) := by
-    intro j
-    exact (e.map_mul _ _).symm.trans (congrArg e (hq j))
-  have hspan : Ideal.span (Set.range d) = ⊤ := by
-    have hm := congrArg (Ideal.map e) hqspan
-    rwa [Ideal.map_top, Ideal.map_span, ← Set.range_comp] at hm
-  let : Module.Finite FreshField (PrincipalQuot x) := hfinite
-  have hdiv := eval_divisions e s
-  have hdeq : d 0 = e (trimmedValue s) := congrArg e hq0
-  rw [← hdeq] at hdiv
-  obtain ⟨hdfin, hlen⟩ := length_bound x (d 0) 133671 hx hd hdiv.1 hdiv.2
-  rw [← hcoeff]
-  have hlenQ : 2 * (Module.finrank FreshField (PrincipalQuot x) : ℚ) ≤
-      133671 * (Module.finrank FreshField (PrincipalQuot (d 0)) : ℚ) := by
-    exact_mod_cast hlen
-  by_cases hu : IsUnit (d 0)
-  · have hzero : Module.finrank FreshField (PrincipalQuot (d 0)) = 0 := by
-      have : Subsingleton (PrincipalQuot (d 0)) :=
-        Ideal.Quotient.subsingleton_iff.mpr (Ideal.span_singleton_eq_top.mpr hu)
-      exact Module.finrank_zero_of_subsingleton
-    exact hlenQ.trans (by rw [hzero, Nat.cast_zero, mul_zero]; positivity)
-  · obtain ⟨hk, hcomparison⟩ := h4 Q i a hQ hhom hdim hi hchart ha hdom b d hb htrim
-    obtain ⟨hpairfin, hrank⟩ := hcomparison L hL
-    have hL' : FiniteJetPair L (coneJetIdeal d) := hk ▸ hL
-    obtain ⟨M, w, hM, hMw, hinj, hw⟩ := h5 _ d L hd hu hspan hL'
-    obtain ⟨hwfin, hwRank⟩ := h6 _ d L M hL' hpairfin hM hinj
-    rw [hMw] at hwfin hwRank hinj
-    let : Module.Finite PairField (pairFiber (valuePairMap (d 0) w)) := hwfin
-    let : Module.Finite FreshField (PrincipalQuot (d 0)) := hdfin
-    have hbound := pin_bound (d 0) w hw hinj
-    rw [hwRank, hrank] at hbound
-    exact hlenQ.trans (mul_le_mul_of_nonneg_left (by exact_mod_cast hbound) (by norm_num))
 end
 end K1_13_5_5_2_1
 end
@@ -2418,7 +2158,7 @@ private theorem quotientTensor_tmul (I : Ideal (MvPolynomial σ k))
 private def piece [DecidableEq ι] (b : Module.Basis ι k E) (p : MvPolynomial σ E) (i : ι) :
     MvPolynomial σ k :=
   TensorProduct.equivFinsuppOfBasisLeft b ((MvPolynomial.algebraTensorAlgEquiv k E).symm p) i
-theorem coeff_piece [DecidableEq ι] (b : Module.Basis ι k E) (p : MvPolynomial σ E)
+private theorem coeff_piece [DecidableEq ι] (b : Module.Basis ι k E) (p : MvPolynomial σ E)
     (i : ι) (d : σ →₀ ℕ) : (piece b p i).coeff d = b.coord i (p.coeff d) := by
   let e := MvPolynomial.algebraTensorAlgEquiv (σ := σ) k E
   obtain ⟨t, rfl⟩ := e.surjective p
@@ -2433,7 +2173,7 @@ theorem coeff_piece [DecidableEq ι] (b : Module.Basis ι k E) (p : MvPolynomial
     simp only [hs, map_smul, Module.Basis.coord_apply, smul_eq_mul, mul_comm]
   | add t u ht hu =>
     simp only [map_add, AddMonoidAlgebra.coeff_add, Finsupp.add_apply, ht, hu]
-theorem mem_map_iff [DecidableEq ι] (b : Module.Basis ι k E)
+private theorem mem_map_iff [DecidableEq ι] (b : Module.Basis ι k E)
     (I : Ideal (MvPolynomial σ k)) (p : MvPolynomial σ E) :
     p ∈ I.map scalarMap ↔ ∀ i, piece b p i ∈ I := by
   let e := MvPolynomial.algebraTensorAlgEquiv (σ := σ) k E
@@ -2523,7 +2263,7 @@ private theorem boundary_map (I : Ideal (MvPolynomial σ k)) :
     rw [he]
     exact component_mem_boundary _ (Ideal.mem_map_of_mem _ hp)
       (Finset.sup_mono (support_map_subset (algebraMap k E) p))
-theorem mem_map_iff_vanishes [Finite σ] [IsAlgClosed k]
+private theorem mem_map_iff_vanishes [Finite σ] [IsAlgClosed k]
     (I : Ideal (MvPolynomial σ k)) [I.IsPrime] (p : MvPolynomial σ E) :
     p ∈ I.map scalarMap ↔
       ∀ x ∈ zeroLocus k I, eval ((algebraMap k E) ∘ x) p = 0 := by
@@ -2631,7 +2371,7 @@ def c2 : Prop :=
     (MvPolynomial.affineHilbertPolynomial I).natDegree = 2 →
     (∀ p, e (toFraction (FreshCoeffRing ⧸ I) (φ p)) = toFraction A (ψ p)) →
     Module.Finite PairField (pairFiber ψ) ∧ pairRank ψ = pairRank (A := FreshCoeffRing ⧸ I) φ
-theorem scale_fraction {F A : Type} [Field F] [CommRing A] [IsDomain A]
+private theorem scale_fraction {F A : Type} [Field F] [CommRing A] [IsDomain A]
     [Algebra F A] (b : A) (hb : b ≠ 0) :
     ∃ e : FractionRing A[X] ≃ₐ[F] FractionRing A[X], ∀ x : A,
       e (algebraMap A[X] _ (Polynomial.C x * Polynomial.X)) =
@@ -2667,7 +2407,7 @@ theorem scale_fraction {F A : Type} [Field F] [CommRing A] [IsDomain A]
   refine ⟨e.restrictScalars F, fun x => ?_⟩
   change f (j (Polynomial.C x * Polynomial.X)) = j _
   rw [hf, map_mul, hsC, hsX, ← mul_assoc, ← Polynomial.C_mul, mul_comm x b]
-theorem eval_hasse_sum {ι A B F : Type} [Fintype ι] [CommRing A] [CommRing B]
+private theorem eval_hasse_sum {ι A B F : Type} [Fintype ι] [CommRing A] [CommRing B]
     [CommRing F] (ρ : A →+* B) (γ : F →+* B) (x : F)
     (n : ι → ℕ) (v : ι → A) (j : ℕ) :
     Polynomial.eval₂RingHom ρ (γ x)
@@ -2687,7 +2427,7 @@ private theorem eval_linear {ι F B : Type} [Fintype ι] [Field F] [CommRing B] 
     Polynomial.algebraMap_apply, Finset.sum_mul]
   refine Finset.sum_congr rfl fun l _ => ?_
   ac_rfl
-theorem coeff_jet (Q : Ideal CoeffRing) (i : CoeffIndex) (a : ChartRing Q i)
+private theorem coeff_jet (Q : Ideal CoeffRing) (i : CoeffIndex) (a : ChartRing Q i)
     (j : Fin 3) :
     MvPolynomial.aeval (R := FreshField)
       (fun l => Polynomial.C (chartCoeff Q i a l) * Polynomial.X) (jetForm freshCenter j.val) =
@@ -2789,29 +2529,29 @@ private abbrev quotientMap : MvPolynomial (Fin n) SeedField →+* S A := Ideal.Q
 private abbrev scalarMap : SeedField →+* S A := algebraMap SeedField (S A)
 private abbrev sectionParameter : ParameterRing n →+* S A :=
   (quotientMap A).comp (MvPolynomial.map (algebraMap L SeedField))
-abbrev Denominators : Prop :=
+private abbrev Denominators : Prop :=
   ∀ q : ParameterRing n, q ∉ coefficientIdeal A → IsUnit (sectionParameter A q)
-def parameterQuotient : CoeffRing A →+* S A :=
+private def parameterQuotient : CoeffRing A →+* S A :=
   Ideal.Quotient.lift _ (sectionParameter A) fun _ h =>
     Ideal.Quotient.eq_zero_iff_mem.mpr (Ideal.mem_sup_left (Ideal.mem_map_of_mem _ h))
-def coeffToSection (h : Denominators A) : CoeffFrac A →+* S A :=
+private def coeffToSection (h : Denominators A) : CoeffFrac A →+* S A :=
   IsLocalization.lift (M := nonZeroDivisors (CoeffRing A)) (g := parameterQuotient A) fun d => by
     obtain ⟨q, hq⟩ := Ideal.Quotient.mk_surjective (d : CoeffRing A)
     rw [← hq]
     apply h
     exact fun hq' => (mem_nonZeroDivisors_iff_ne_zero.mp d.prop)
       (hq ▸ Ideal.Quotient.eq_zero_iff_mem.mpr hq')
-theorem coeffToSection_apply (h : Denominators A) (q : ParameterRing n) :
+private theorem coeffToSection_apply (h : Denominators A) (q : ParameterRing n) :
     coeffToSection A h (toCoeffFrac A q) = sectionParameter A q :=
   IsLocalization.lift_eq (M := nonZeroDivisors (CoeffRing A)) _ _
-def sectionX := scalarMap A (algebraMap FX SeedField abscissa)
-def rawSection (h : Denominators A) : Raw A →+* S A :=
+private def sectionX := scalarMap A (algebraMap FX SeedField abscissa)
+private def rawSection (h : Denominators A) : Raw A →+* S A :=
   Polynomial.eval₂RingHom
     (Polynomial.eval₂RingHom (Polynomial.eval₂RingHom (coeffToSection A h) (sectionX A))
       (scalarMap A (K1_14_2.generic 1))) (scalarMap A (K1_14_2.generic 0))
-def rawSpare : Raw A →+* T A :=
+private def rawSpare : Raw A →+* T A :=
   (algebraMap (E A)[X] (T A)).comp (Polynomial.mapRingHom (rawRoot A))
-abbrev RawSeed := MvPolynomial (Fin 2) L[X]
+private abbrev RawSeed := MvPolynomial (Fin 2) L[X]
 attribute [local instance] MvPolynomial.algebraMvPolynomial
 local instance : Algebra RawSeed SeedField :=
   ((algebraMap Seeds SeedField).comp (algebraMap RawSeed Seeds)).toAlgebra
@@ -2842,16 +2582,16 @@ private instance rawSeedFraction : IsFractionRing RawSeed SeedField := by
   rw [IsScalarTower.algebraMap_apply RawSeed Seeds SeedField, MvPolynomial.algebraMap_def,
     MvPolynomial.map_X]
   rfl
-def rawConstant : CoeffFrac A →+* Raw A :=
+private def rawConstant : CoeffFrac A →+* Raw A :=
   Polynomial.C.comp (Polynomial.C.comp Polynomial.C)
-def rawSeedCoeff : L[X] →+* Raw A :=
+private def rawSeedCoeff : L[X] →+* Raw A :=
   Polynomial.eval₂RingHom (R := L) (S := Raw A)
     ((rawConstant A).comp ((toCoeffFrac A).comp MvPolynomial.C))
     (Polynomial.C (Polynomial.C (Polynomial.X : (CoeffFrac A)[X])))
-def seedIntoRaw : RawSeed →+* Raw A :=
+private def seedIntoRaw : RawSeed →+* Raw A :=
   MvPolynomial.eval₂Hom (σ := Fin 2) (R := L[X]) (S₁ := Raw A) (rawSeedCoeff A)
     ![Polynomial.X, Polynomial.C Polynomial.X]
-theorem sectionSeed (h : Denominators A) :
+private theorem sectionSeed (h : Denominators A) :
     (rawSection A h).comp (seedIntoRaw A) =
       (scalarMap A).comp (algebraMap RawSeed SeedField) := by
   apply MvPolynomial.ringHom_ext
@@ -2870,7 +2610,7 @@ theorem sectionSeed (h : Denominators A) :
       using RingHom.congr_fun hc p
   · intro i
     fin_cases i <;> simp [seedIntoRaw, rawSection]
-theorem ordinate_eval {B : Type*} [CommRing B] (v : MvPolynomial (Fin n) SeedField →+* B)
+private theorem ordinate_eval {B : Type*} [CommRing B] (v : MvPolynomial (Fin n) SeedField →+* B)
     (p : FamilyEquation n) :
     v (ordinateForm p) =
       p.eval₂ (Polynomial.eval₂RingHom (v.comp (MvPolynomial.map (algebraMap L SeedField)))
@@ -2889,14 +2629,14 @@ theorem ordinate_eval {B : Type*} [CommRing B] (v : MvPolynomial (Fin n) SeedFie
       (Polynomial.eval₂RingHom (MvPolynomial.map (algebraMap L FX)) (MvPolynomial.C abscissa)
         Polynomial.X)) = _
     simp
-theorem primitive_eval {B : Type*} [CommRing B]
+private theorem primitive_eval {B : Type*} [CommRing B]
     (v : CoeffFrac A →+* B) (x y : B) :
     (primitiveEquation A).eval₂ (Polynomial.eval₂RingHom v x) y =
       A.equation.eval₂ (Polynomial.eval₂RingHom (v.comp (toCoeffFrac A)) x) y := by
   rw [primitiveEquation, Polynomial.eval₂_map]
   congr 1
   apply Polynomial.ringHom_ext <;> simp
-theorem rawSection_eq_zero (h : Denominators A) (q : Raw A)
+private theorem rawSection_eq_zero (h : Denominators A) (q : Raw A)
     (hq : rawSpare A q = 0) : rawSection A h q = 0 := by
   let v := Polynomial.eval₂RingHom (coeffToSection A h) (sectionX A)
   let y := scalarMap A (K1_14_2.generic 1)
@@ -2918,7 +2658,7 @@ theorem rawSection_eq_zero (h : Denominators A) (q : Raw A)
     simp only [hr, Polynomial.coe_eval₂RingHom, Polynomial.eval₂_mul, hp, zero_mul]
   change q.eval₂ (Polynomial.eval₂RingHom v y) _ = 0
   rw [Polynomial.eval₂_eq_eval_map, hz, Polynomial.eval_zero]
-def seedToTarget (h : Denominators A) (hne : Nontrivial (S A)) : SeedField →+* T A :=
+private def seedToTarget (h : Denominators A) (hne : Nontrivial (S A)) : SeedField →+* T A :=
   IsFractionRing.lift (g := (rawSpare A).comp (seedIntoRaw A)) (by
     apply (RingHom.injective_iff_ker_eq_bot _).mpr
     rw [RingHom.ker_eq_bot_iff_eq_zero]
@@ -2927,10 +2667,10 @@ def seedToTarget (h : Denominators A) (hne : Nontrivial (S A)) : SeedField →+*
     rw [← RingHom.comp_apply, sectionSeed] at hz
     exact ((scalarMap A).injective.comp (IsFractionRing.injective RawSeed SeedField))
       (hz.trans (map_zero ((scalarMap A).comp (algebraMap RawSeed SeedField))).symm))
-theorem seedToTarget_apply (h : Denominators A) (hne : Nontrivial (S A)) (p : RawSeed) :
+private theorem seedToTarget_apply (h : Denominators A) (hne : Nontrivial (S A)) (p : RawSeed) :
     seedToTarget A h hne (algebraMap RawSeed SeedField p) = rawSpare A (seedIntoRaw A p) :=
   IsFractionRing.lift_algebraMap (g := (rawSpare A).comp (seedIntoRaw A)) _ _
-theorem seedToTarget_ordinate (h : Denominators A) (hne : Nontrivial (S A)) :
+private theorem seedToTarget_ordinate (h : Denominators A) (hne : Nontrivial (S A)) :
     IsOrdinateMap (coefficientBase A) (coefficientOrdinate A) (seedToTarget A h hne) := by
   refine ⟨?_, ?_, ?_⟩
   · have hb : (seedToTarget A h hne).comp (algebraMap FX SeedField) =
@@ -2957,10 +2697,10 @@ theorem seedToTarget_ordinate (h : Denominators A) (hne : Nontrivial (S A)) :
     simp [seedIntoRaw, rawSpare, rawRoot, spareConstant]
   · rw [← rawSeed_X 0, seedToTarget_apply]
     simp [seedIntoRaw, rawSpare, spareVariable]
-def evalTarget (h : Denominators A) (hne : Nontrivial (S A)) :
+private def evalTarget (h : Denominators A) (hne : Nontrivial (S A)) :
     MvPolynomial (Fin n) SeedField →+* T A :=
   MvPolynomial.eval₂Hom (seedToTarget A h hne) (spareConstant (E A) ∘ coefficientCoordinate A)
-theorem evalTarget_parameter (h : Denominators A) (hne : Nontrivial (S A)) :
+private theorem evalTarget_parameter (h : Denominators A) (hne : Nontrivial (S A)) :
     (evalTarget A h hne).comp (MvPolynomial.map (algebraMap L SeedField)) =
       (spareConstant (E A)).comp (parameterRoot A) := by
   apply MvPolynomial.ringHom_ext
@@ -2969,7 +2709,7 @@ theorem evalTarget_parameter (h : Denominators A) (hne : Nontrivial (S A)) :
     rw [IsScalarTower.algebraMap_apply L FX SeedField, (seedToTarget_ordinate A h hne).1]
   · intro i
     simp [evalTarget, parameterRoot]
-def sectionToTarget (h : Denominators A) (hne : Nontrivial (S A)) : S A →+* T A :=
+private def sectionToTarget (h : Denominators A) (hne : Nontrivial (S A)) : S A →+* T A :=
   Ideal.Quotient.lift _ (evalTarget A h hne) (by
     apply (show _ ≤ RingHom.ker (evalTarget A h hne) from ?_)
     apply sup_le
@@ -2996,11 +2736,11 @@ def sectionToTarget (h : Denominators A) (hne : Nontrivial (S A)) : S A →+* T 
         apply Polynomial.ringHom_ext <;> simp
       rw [hx, ← Polynomial.hom_eval₂]
       exact (spareConstant (E A)).map_zero' ▸ congrArg (spareConstant (E A)) hr)
-theorem sectionToTarget_scalar (h : Denominators A) (hne : Nontrivial (S A)) :
+private theorem sectionToTarget_scalar (h : Denominators A) (hne : Nontrivial (S A)) :
     (sectionToTarget A h hne).comp (scalarMap A) = seedToTarget A h hne := by
   ext p
   exact MvPolynomial.eval₂Hom_C _ _ _
-theorem sectionToTarget_raw (h : Denominators A) (hne : Nontrivial (S A)) :
+private theorem sectionToTarget_raw (h : Denominators A) (hne : Nontrivial (S A)) :
     (sectionToTarget A h hne).comp (rawSection A h) = rawSpare A := by
   let e := sectionToTarget A h hne
   let b := seedToTarget A h hne
@@ -3039,7 +2779,7 @@ theorem sectionToTarget_raw (h : Denominators A) (hne : Nontrivial (S A)) :
     change e (scalarMap A (K1_14_2.generic 0)) = spareVariable (E A)
     rw [hs]
     exact ho.2.2
-theorem sectionToTarget_injective (h : Denominators A) (hne : Nontrivial (S A)) :
+private theorem sectionToTarget_injective (h : Denominators A) (hne : Nontrivial (S A)) :
     Function.Injective (sectionToTarget A h hne) := by
   rw [RingHom.injective_iff_ker_eq_bot, RingHom.ker_eq_bot_iff_eq_zero]
   intro s hs
@@ -3075,7 +2815,7 @@ theorem sectionToTarget_injective (h : Denominators A) (hne : Nontrivial (S A)) 
     rw [show sectionToTarget A h hne (quotientMap A f) = 0 from hs, zero_mul]
   rw [rawSection_eq_zero A h r hzero] at hmul
   exact ((IsLocalization.map_units SeedField ⟨a, ha⟩).map (scalarMap A)).mul_left_eq_zero.mp hmul
-theorem sectionToTarget_surjective (h : Denominators A) (hne : Nontrivial (S A))
+private theorem sectionToTarget_surjective (h : Denominators A) (hne : Nontrivial (S A))
     (hf : Module.Finite SeedField (S A)) : Function.Surjective (sectionToTarget A h hne) := by
   let e := sectionToTarget A h hne
   let : IsDomain (S A) := (sectionToTarget_injective A h hne).isDomain e
@@ -3232,7 +2972,7 @@ namespace K1_14_2_4_1_3_1
 noncomputable section
 open MvPolynomial K1_13_6_3_4 K1_14_2_4_1_3
 set_option maxHeartbeats 1000000
-theorem boundary_of_valueReduction {k σ : Type*} [Field k] [Finite σ]
+private theorem boundary_of_valueReduction {k σ : Type*} [Field k] [Finite σ]
     {I : Ideal (MvPolynomial σ k)} {f : MvPolynomial σ k} (hf : f.totalDegree ≤ 1)
     (hd : (affineHilbertPolynomial I).natDegree ≤ 1)
     (h : ValueReduction I (homogeneousComponent 1 f)) :
@@ -3324,7 +3064,7 @@ private theorem totalDegree_map_le (a : k →+* E) (p : MvPolynomial σ k) :
     (map a p).totalDegree ≤ p.totalDegree :=
   Finset.sup_mono (support_map_subset a p)
 variable [Algebra k E] [Algebra E F] [Algebra k F] [IsScalarTower k E F]
-theorem boundary_map_le (I : Ideal (MvPolynomial σ k)) :
+private theorem boundary_map_le (I : Ideal (MvPolynomial σ k)) :
     (boundaryIdeal I).map (map (algebraMap k E)) ≤ boundaryIdeal (extendedIdeal E I) := by
   apply Ideal.map_le_iff_le_comap.mpr
   apply Ideal.span_le.mpr
@@ -3395,7 +3135,7 @@ private theorem normalize [Fintype σ] [LinearOrder σ] [WellFoundedGT σ] [IsAl
   change (Algebra.ofId k F) (aeval b p) = 0
   rw [MvPolynomial.comp_aeval_apply, show (fun i => (Algebra.ofId k F) (b i)) = y from hb']
   exact hyB hp
-theorem point_of_prime [Fintype σ] [IsAlgClosed k]
+private theorem point_of_prime [Fintype σ] [IsAlgClosed k]
     (I : Ideal (MvPolynomial σ k)) (hI : I.IsPrime) :
     ∃ b : σ → k, b ∈ zeroLocus k I := by
   by_contra! h
@@ -3406,7 +3146,7 @@ theorem point_of_prime [Fintype σ] [IsAlgClosed k]
   apply hI.ne_top
   rw [← he]
   exact top_unique fun p _ b hb => False.elim hb
-theorem eval_combination [Fintype ι] (p : ι → MvPolynomial σ k) (w : ι → E)
+private theorem eval_combination [Fintype ι] (p : ι → MvPolynomial σ k) (w : ι → E)
     (hw : LinearIndependent k w) (b : σ → k)
     (h : (eval (algebraMap k E ∘ b))
       (∑ s, MvPolynomial.C (w s) * map (algebraMap k E) (p s)) = 0) :
@@ -3537,11 +3277,11 @@ def c2 : Prop :=
       genericFiberDimension L (freshIdeal I) =
         genericFiberDimension L (freshIdeal (cyclicCut I f)) +
         genericFiberDimension L (freshIdeal (cyclicAnnihilator I f))
-theorem affineDegree_eq_twice_coeff {I : Ideal CoeffRing}
+private theorem affineDegree_eq_twice_coeff {I : Ideal CoeffRing}
     (h : (affineHilbertPolynomial I).natDegree = 2) :
     affineDegree I = 2 * (affineHilbertPolynomial I).coeff 2 := by
   norm_num [affineDegree, Polynomial.leadingCoeff, h]
-theorem collect_top_factors (hHilbert : c1) (hFiber : c2) (I : Ideal CoeffRing) :
+private theorem collect_top_factors (hHilbert : c1) (hFiber : c2) (I : Ideal CoeffRing) :
     I.IsHomogeneous (homogeneousSubmodule CoeffIndex Geom) →
     (affineHilbertPolynomial I).natDegree ≤ 2 →
     ∃ (n : ℕ) (Q : Fin n → Ideal CoeffRing),
@@ -3598,7 +3338,7 @@ theorem collect_top_factors (hHilbert : c1) (hFiber : c2) (I : Ideal CoeffRing) 
         obtain ⟨hfiniteJ, hdimEq⟩ := hFiber I f L hfinite
         rw [hdimEq]
         exact (hboundJ L hfiniteJ).trans (Nat.le_add_right _ _)
-theorem minimalPrime_of_dim (I Q : Ideal CoeffRing) (hIQ : I ≤ Q)
+private theorem minimalPrime_of_dim (I Q : Ideal CoeffRing) (hIQ : I ≤ Q)
     (hQ : Q.IsPrime) (hdim : (affineHilbertPolynomial I).natDegree ≤ 2)
     (hQdim : (affineHilbertPolynomial Q).natDegree = 2) :
     Q ∈ I.minimalPrimes := by
@@ -3652,7 +3392,7 @@ private theorem eval_scale {k T σ : Type} [Field k] [CommRing T] [Algebra k T]
   change d.support.sum d = n at hdeg
   rw [hdeg]
   ac_rfl
-theorem scaled_kills {k T σ : Type} [Field k] [CommRing T] [Algebra k T]
+private theorem scaled_kills {k T σ : Type} [Field k] [CommRing T] [Algebra k T]
     {Q : Ideal (MvPolynomial σ k)} (hQ : Q.IsHomogeneous (homogeneousSubmodule σ k))
     (v : σ → T) (u : T) (h : ∀ p ∈ Q, aeval v p = 0) :
     ∀ p ∈ Q, aeval (fun j => u * v j) p = 0 := by
@@ -3662,7 +3402,7 @@ theorem scaled_kills {k T σ : Type} [Field k] [CommRing T] [Algebra k T]
   intro n _
   rw [eval_scale v u (homogeneousComponent_isHomogeneous _ _),
     h _ (homogeneousComponent_mem_of_mem hQ hp n), mul_zero]
-theorem scaled_extension_kills {k F T σ : Type} [Field k] [Field F] [CommRing T]
+private theorem scaled_extension_kills {k F T σ : Type} [Field k] [Field F] [CommRing T]
     [Algebra k F] [Algebra k T] [Algebra F T] [IsScalarTower k F T]
     {Q : Ideal (MvPolynomial σ k)} (hQ : Q.IsHomogeneous (homogeneousSubmodule σ k))
     (v : σ → T) (u : T) (h : ∀ p ∈ Q, aeval v p = 0) :
@@ -3687,7 +3427,7 @@ theorem scaled_extension_kills {k F T σ : Type} [Field k] [Field F] [CommRing T
   exact fun p hp => hle hp
 private abbrev chart {k σ : Type} [Field k] (Q : Ideal (MvPolynomial σ k)) (i : σ) :=
   MvPolynomial σ k ⧸ (Q ⊔ Ideal.span {MvPolynomial.X i - 1})
-def openCoeff {k F σ : Type} [Field k] [Field F] [Algebra k F]
+private def openCoeff {k F σ : Type} [Field k] [Field F] [Algebra k F]
     (Q : Ideal (MvPolynomial σ k)) (i : σ) (a : chart Q i) (j : σ) :
     F ⊗[k] Localization.Away a :=
   Algebra.TensorProduct.includeRight (R := k)
@@ -3973,20 +3713,20 @@ def chartProjection (Q : Ideal CoeffRing) (i : CoeffIndex) :
   MvPolynomial.aeval fun j : CoeffIndex =>
     (1 : FreshField) ⊗ₜ[Geom] (Ideal.Quotient.mk
       (Q ⊔ Ideal.span {MvPolynomial.X i - 1}) (MvPolynomial.X j) : ChartRing Q i)
-def tensorChartEquiv (Q : Ideal CoeffRing) (i : CoeffIndex) :
+private def tensorChartEquiv (Q : Ideal CoeffRing) (i : CoeffIndex) :
     FreshChartRing Q i ≃ₐ[FreshField]
       FreshCoeffRing ⧸ (freshIdeal Q ⊔ Ideal.span {MvPolynomial.X i - 1}) := by
   refine (quotientTensor (Q ⊔ Ideal.span {MvPolynomial.X i - 1})).trans ?_
   apply Ideal.quotientEquivAlgOfEq FreshField
   simp [freshIdeal, Ideal.map_sup, Ideal.map_span]
-theorem tensorChartEquiv_tmul (Q : Ideal CoeffRing) (i : CoeffIndex)
+private theorem tensorChartEquiv_tmul (Q : Ideal CoeffRing) (i : CoeffIndex)
     (c : FreshField) (p : CoeffRing) :
     tensorChartEquiv Q i (c ⊗ₜ[Geom]
       (Ideal.Quotient.mk (Q ⊔ Ideal.span {MvPolynomial.X i - 1}) p)) =
       c • Ideal.Quotient.mk _ (MvPolynomial.map (algebraMap Geom FreshField) p) := by
   simp only [tensorChartEquiv, AlgEquiv.trans_apply, quotientTensor_tmul, map_smul,
     Ideal.quotientEquivAlgOfEq_mk]
-theorem tensorChartEquiv_projection (Q : Ideal CoeffRing) (i : CoeffIndex)
+private theorem tensorChartEquiv_projection (Q : Ideal CoeffRing) (i : CoeffIndex)
     (p : FreshCoeffRing) :
     tensorChartEquiv Q i (chartProjection Q i p) = Ideal.Quotient.mk _ p := by
   have he : (tensorChartEquiv Q i).toAlgHom.comp (chartProjection Q i) =
@@ -3998,7 +3738,7 @@ theorem tensorChartEquiv_projection (Q : Ideal CoeffRing) (i : CoeffIndex)
       Ideal.Quotient.mk _ (MvPolynomial.X j)
     rw [tensorChartEquiv_tmul Q i, one_smul, MvPolynomial.map_X]
   exact AlgHom.congr_fun he p
-theorem eval_direction_sum {k F A σ : Type} [Field k] [Field F] [CommRing A]
+private theorem eval_direction_sum {k F A σ : Type} [Field k] [Field F] [CommRing A]
     [Algebra k F] [Algebra k A] [Fintype σ] (z : F) (d : σ → ℕ) (a : σ → A) :
     (Polynomial.eval₂RingHom Algebra.TensorProduct.includeRight.toRingHom
       (algebraMap F (F ⊗[k] A) z)) (∑ j, Polynomial.monomial (d j) (a j)) =
@@ -4009,7 +3749,7 @@ theorem eval_direction_sum {k F A σ : Type} [Field k] [Field F] [CommRing A]
   intro j _
   rw [Polynomial.coe_eval₂RingHom, Polynomial.eval₂_monomial, map_mul, aeval_C, aeval_X, map_pow]
   exact mul_comm _ _
-theorem chartValue_projection (Q : Ideal CoeffRing) (i : CoeffIndex) :
+private theorem chartValue_projection (Q : Ideal CoeffRing) (i : CoeffIndex) :
     chartProjection Q i freshValue = chartValue Q i := by
   have h : freshValue =
       ∑ j : CoeffIndex, MvPolynomial.C (freshCenter ^ j.val) * MvPolynomial.X j := by
@@ -4028,13 +3768,13 @@ theorem freshValue_not_mem (Q : Ideal CoeffRing) (i : CoeffIndex)
   apply (tensorChartEquiv Q i).injective
   rw [chartValue_eq, map_zero, Ideal.Quotient.eq_zero_iff_mem]
   exact Ideal.mem_sup_left h
-theorem chartClass_X_eq_one {k : Type} [Field k] {n : ℕ}
+private theorem chartClass_X_eq_one {k : Type} [Field k] {n : ℕ}
     (Q : Ideal (MvPolynomial (Fin n) k)) (i : Fin n) :
     (Ideal.Quotient.mk _ (MvPolynomial.X i) : CoefficientChart Q i) = 1 := by
   apply sub_eq_zero.mp
   rw [← map_one (Ideal.Quotient.mk _), ← map_sub, Ideal.Quotient.eq_zero_iff_mem]
   exact Ideal.mem_sup_right (Ideal.mem_span_singleton_self _)
-theorem chartDirection_coeff {k : Type} [Field k] {n : ℕ}
+private theorem chartDirection_coeff {k : Type} [Field k] {n : ℕ}
     (Q : Ideal (MvPolynomial (Fin n) k)) (i : Fin n) :
     (chartDirection Q i).coeff i.val = 1 := by
   classical
@@ -4061,14 +3801,14 @@ def principalQuotEquiv (e : A ≃ₐ[F] B) {x : A} {y : B} (h : e x = y) :
 @[simp]
 theorem principalQuotEquiv_mk (e : A ≃ₐ[F] B) {x : A} {y : B} (h : e x = y) (z : A) :
     principalQuotEquiv e h (Ideal.Quotient.mk _ z) = Ideal.Quotient.mk _ (e z) := rfl
-def principalDoubleQuotEquiv (I : Ideal A) (x : A) :
+private def principalDoubleQuotEquiv (I : Ideal A) (x : A) :
     PrincipalQuot (Ideal.Quotient.mk I x) ≃ₐ[F] A ⧸ (I ⊔ Ideal.span {x}) :=
   (Ideal.quotientEquivAlgOfEq F (show Ideal.span {Ideal.Quotient.mk I x} =
     (Ideal.span {x}).map (Ideal.Quotient.mkₐ F I) by
       rw [Ideal.map_span, Set.image_singleton, Ideal.Quotient.mkₐ_eq_mk])).trans
     (DoubleQuot.quotQuotEquivQuotSupₐ F I (Ideal.span {x}))
 @[simp]
-theorem principalDoubleQuotEquiv_mk (I : Ideal A) (x p : A) :
+private theorem principalDoubleQuotEquiv_mk (I : Ideal A) (x p : A) :
     principalDoubleQuotEquiv (F := F) I x (Ideal.Quotient.mk _ (Ideal.Quotient.mk I p)) =
       Ideal.Quotient.mk _ p := rfl
 end Principal
@@ -4101,7 +3841,7 @@ set_option maxHeartbeats 1000000
 set_option synthInstance.maxHeartbeats 120000
 section Localization
 variable {F A : Type} [CommRing F] [CommRing A] [Algebra F A]
-def quotientAwayUnitEquiv (v b : A)
+private def quotientAwayUnitEquiv (v b : A)
     (hb : IsUnit (Ideal.Quotient.mk (Ideal.span {v}) b)) :
     PrincipalQuot (algebraMap A (Localization.Away b) v) ≃ₐ[F] PrincipalQuot v := by
   let S := Localization.Away b
@@ -4142,7 +3882,7 @@ def quotientAwayUnitEquiv (v b : A)
     change r (g (algebraMap A S x)) = π (algebraMap A S x)
     rw [hg, hr]
 end Localization
-theorem freshEval_map {A B : Type} [CommRing A] [CommRing B]
+private theorem freshEval_map {A B : Type} [CommRing A] [CommRing B]
     [Algebra Geom A] [Algebra Geom B] (f : A →ₐ[Geom] B) (p : A[X]) :
     (Algebra.TensorProduct.map (AlgHom.id FreshField FreshField) f) (freshEval A p) =
       freshEval B (p.map f.toRingHom) := by
@@ -4153,7 +3893,7 @@ theorem freshEval_map {A B : Type} [CommRing A] [CommRing B]
       simp [freshEval, Polynomial.coe_eval₂RingHom, Algebra.TensorProduct.includeRight_apply]
     · simp [freshEval, Polynomial.coe_eval₂RingHom, Algebra.TensorProduct.algebraMap_apply]
   exact RingHom.congr_fun h p
-theorem tensorAwayMap {k F A : Type} [CommRing k] [CommRing F] [CommRing A]
+private theorem tensorAwayMap {k F A : Type} [CommRing k] [CommRing F] [CommRing A]
     [Algebra k F] [Algebra k A] (a : A) (x : F ⊗[k] A) :
     IsLocalization.Away.tensorProductEquivTMulRight k F a (Localization.Away a)
       ((Algebra.TensorProduct.map (AlgHom.id F F)
@@ -4303,13 +4043,13 @@ def c3 : Prop :=
       ∃ b : Closure (Ideal.span {g}), s b ≠ 0 ∧
         ∀ a : Closure (freshIdeal P), ∃ q : Closure (Ideal.span {g}), ∃ m : ℕ,
           s q = s b ^ m * a
-theorem closureW_ne_zero {K σ : Type} [Field K] (I : Ideal (MvPolynomial σ K))
+private theorem closureW_ne_zero {K σ : Type} [Field K] (I : Ideal (MvPolynomial σ K))
     (hI : I.IsPrime) : closureW I ≠ 0 := by
   intro hw
   have hm := (Ideal.Quotient.eq_zero_iff_mem).mp hw
   have hz : closureEval I (MvPolynomial.X none) = 0 := hm
   simp [closureEval] at hz
-theorem specialization_compat {σ : Type}
+private theorem specialization_compat {σ : Type}
     (L : Fin 2 → MvPolynomial σ FreshField) (I J : Ideal (MvPolynomial σ FreshField))
     (s : Closure I →ₐ[FreshField] (MvPolynomial σ FreshField ⧸ J))
     (hw : s (closureW I) = 0)
@@ -4328,7 +4068,7 @@ theorem specialization_compat {σ : Type}
   · intro r
     simpa [closurePairMap, α, β] using heval r
   · simpa [closurePairMap] using hw
-theorem recovery_compat
+private theorem recovery_compat
     (L : Fin 2 → FreshJetRing) (I : Ideal FreshJetRing) (J : Ideal FreshCoeffRing)
     (s : Closure I →ₐ[FreshField] Closure J) (hw : s (closureW I) = closureW J)
     (hc : ∀ f : FreshJetRing, s (closureLift I f) = closureLift J (freshProjection f)) :
@@ -4343,7 +4083,7 @@ theorem recovery_compat
   · intro r
     simpa [closurePairMap, α, β] using DFunLike.congr_fun hcomp r
   · simpa [closurePairMap] using hw
-theorem closure_rank_le_of_recovery {σ τ : Type}
+private theorem closure_rank_le_of_recovery {σ τ : Type}
     (L : Fin 2 → MvPolynomial σ FreshField) (L' : Fin 2 → MvPolynomial τ FreshField)
     (I : Ideal (MvPolynomial σ FreshField)) (J : Ideal (MvPolynomial τ FreshField))
     (hJ : (closureIdeal J).IsPrime) (t : Closure I →+* Closure J)
@@ -4355,7 +4095,7 @@ theorem closure_rank_le_of_recovery {σ τ : Type}
   unfold closureRank
   exact rank_le_of_recovery (R := Polynomial PairRing) (A := Closure I) (B := Closure J)
     (closurePairMap L I) (closurePairMap L' J) t hcomp b hb hrec n
-theorem generic_rank_bound (R K V : Type) [CommRing R] [IsDomain R]
+private theorem generic_rank_bound (R K V : Type) [CommRing R] [IsDomain R]
     [Field K] [Algebra R K] [IsFractionRing R K] [AddCommGroup V] [Module R V]
     (n : ℕ) (hrank : Module.rank R V ≤ (n : Cardinal)) :
     Module.Finite K (K ⊗[R] V) ∧ Module.finrank K (K ⊗[R] V) ≤ n := by
@@ -4434,7 +4174,7 @@ def c3 : Prop :=
     (∀ j : σ, MvPolynomial.X j ∈ (I ⊔ Ideal.span {MvPolynomial.X i}).radical) →
     affineHilbertPolynomial (I ⊔ Ideal.span {MvPolynomial.X i - 1}) =
       Polynomial.C (affineHilbertPolynomial I).leadingCoeff
-theorem sup_span_homogeneous {F σ : Type*} [Field F]
+private theorem sup_span_homogeneous {F σ : Type*} [Field F]
     {I : Ideal (MvPolynomial σ F)} {f : MvPolynomial σ F} {d : ℕ}
     (hI : I.IsHomogeneous (homogeneousSubmodule σ F)) (hf : f.IsHomogeneous d) :
     (I ⊔ Ideal.span {f}).IsHomogeneous (homogeneousSubmodule σ F) := by
@@ -4442,7 +4182,7 @@ theorem sup_span_homogeneous {F σ : Type*} [Field F]
   apply Ideal.homogeneous_span
   rintro _ ⟨⟩
   exact ⟨d, hf⟩
-theorem map_homogeneous {F E σ : Type*} [Field F] [Field E]
+private theorem map_homogeneous {F E σ : Type*} [Field F] [Field E]
     {I : Ideal (MvPolynomial σ F)} (f : F →+* E)
     (hI : I.IsHomogeneous (homogeneousSubmodule σ F)) :
     (I.map (MvPolynomial.map f)).IsHomogeneous (homogeneousSubmodule σ E) := by
@@ -4455,10 +4195,10 @@ theorem map_homogeneous {F E σ : Type*} [Field F] [Field E]
 private theorem linear_sum_homogeneous {F σ : Type} [Field F] [Fintype σ] (c : σ → F) :
     (∑ i : σ, MvPolynomial.C (c i) * MvPolynomial.X i).IsHomogeneous 1 :=
   (homogeneousSubmodule σ F 1).sum_mem fun i _ => isHomogeneous_C_mul_X _ i
-theorem freshValue_homogeneous : freshValue.IsHomogeneous 1 :=
+private theorem freshValue_homogeneous : freshValue.IsHomogeneous 1 :=
   linear_sum_homogeneous (fun i : CoeffIndex =>
     (i.val.choose 0 : FreshField) * freshCenter ^ (i.val - 0))
-theorem fixed_cut_dimension {Q : Ideal CoeffRing} (hQ : Q.IsPrime)
+private theorem fixed_cut_dimension {Q : Ideal CoeffRing} (hQ : Q.IsPrime)
     (hd : (affineHilbertPolynomial Q).natDegree = 2) {g : CoeffRing} (hg : g ∉ Q) :
     (affineHilbertPolynomial (Q ⊔ Ideal.span {g})).natDegree ≤ 1 := by
   simpa [hd] using
@@ -4486,7 +4226,7 @@ private theorem exists_homogeneous_lift (Q : Ideal CoeffRing) (i : CoeffIndex)
     rw [map_sum]
     simp only [map_mul, map_pow, hi, one_pow, one_mul]
     rw [← map_sum, sum_homogeneousComponent, hp]
-theorem denominator_unit (h1 : c1) (Q : Ideal CoeffRing) (i : CoeffIndex)
+private theorem denominator_unit (h1 : c1) (Q : Ideal CoeffRing) (i : CoeffIndex)
     (a : ChartRing Q i) (hQ : Q.IsPrime)
     (hhom : Q.IsHomogeneous (homogeneousSubmodule CoeffIndex Geom))
     (hd : (affineHilbertPolynomial Q).natDegree = 2) (ha : a ≠ 0) :
@@ -4587,7 +4327,7 @@ noncomputable section
 open K1_14 K1_14_2 K1_14_2_4 K1_14_2_4_1 K1_14_2_4_1_3 K1_13_6_3_4 MvPolynomial
 open scoped Polynomial
 set_option maxHeartbeats 1000000
-theorem parameter_regular {n : ℕ} (I : Ideal (ParameterRing n)) (hI : I.IsPrime)
+private theorem parameter_regular {n : ℕ} (I : Ideal (ParameterRing n)) (hI : I.IsPrime)
     (hd : (affineHilbertPolynomial I).natDegree ≤ 1) :
     RegularLinearCut (extendedIdeal (SliceField n) I) (coefficientCut n) := by
   let p : Option (Fin n) → ParameterRing n := fun i => i.elim (-1) MvPolynomial.X
@@ -4609,10 +4349,10 @@ private theorem independent_powers {k E : Type*} [Field k] [Field E] [Algebra k 
   have h' := (Polynomial.basisMonomials k).linearIndependent.map'
     (Polynomial.aeval x).toLinearMap (LinearMap.ker_eq_bot.mpr (transcendental_iff_injective.mp h))
   simpa [Function.comp_def, ← Polynomial.C_mul_X_pow_eq_monomial] using h'
-def xValue : FX := algebraMap L[X] FX Polynomial.X
+private def xValue : FX := algebraMap L[X] FX Polynomial.X
 private def ordinateWeight {a b : ℕ} (s : Fin a × Fin b) : SeedField :=
   algebraMap FX SeedField (xValue ^ s.2.val) * generic 1 ^ s.1.val
-theorem ordinateWeight_independent (a b : ℕ) :
+private theorem ordinateWeight_independent (a b : ℕ) :
     LinearIndependent L (ordinateWeight (a := a) (b := b)) := by
   have hx : Transcendental L xValue :=
     (transcendental_algebraMap_iff (IsFractionRing.injective L[X] FX)).2
@@ -4630,15 +4370,15 @@ theorem ordinateWeight_independent (a b : ℕ) :
       IsScalarTower.algebraMap_apply L FX SeedField, Finset.sum_mul, mul_assoc] using hc
   exact (Fintype.linearIndependent_iff.mp hX) (fun i => c (s.1, i))
     ((Fintype.linearIndependent_iff.mp hY) _ he s.1) s.2
-def xBound {n : ℕ} (f : FamilyEquation n) : ℕ :=
+private def xBound {n : ℕ} (f : FamilyEquation n) : ℕ :=
   (Finset.range (f.natDegree + 1)).sup (fun j => (f.coeff j).natDegree) + 1
-theorem lt_xBound {n : ℕ} (f : FamilyEquation n) {j : ℕ} (hj : j < f.natDegree + 1) :
+private theorem lt_xBound {n : ℕ} (f : FamilyEquation n) {j : ℕ} (hj : j < f.natDegree + 1) :
     (f.coeff j).natDegree < xBound f :=
   Nat.lt_succ_of_le (Finset.le_sup (f := fun j => (f.coeff j).natDegree) (Finset.mem_range.mpr hj))
-def gridCoefficient {n : ℕ} (f : FamilyEquation n)
+private def gridCoefficient {n : ℕ} (f : FamilyEquation n)
     (s : Fin (f.natDegree + 1) × Fin (xBound f)) : ParameterRing n :=
   (f.coeff s.1.val).coeff s.2.val
-theorem ordinateForm_sum {n : ℕ} (f : FamilyEquation n) :
+private theorem ordinateForm_sum {n : ℕ} (f : FamilyEquation n) :
     ordinateForm f = ∑ s : Fin (f.natDegree + 1) × Fin (xBound f),
       MvPolynomial.C (ordinateWeight s) * map (algebraMap L SeedField) (gridCoefficient f s) := by
   let χ : (ParameterRing n)[X] →+* ParameterGeometry n :=
@@ -4691,7 +4431,7 @@ theorem ordinateForm_sum {n : ℕ} (f : FamilyEquation n) :
   intro i _
   simp only [y, ← map_pow MvPolynomial.C, gridCoefficient, ordinateWeight, map_mul]
   ac_rfl
-theorem chart_grid_representation {C₀ : ConstantSeeds} [Fact (Irreducible C₀)] {J g n}
+private theorem chart_grid_representation {C₀ : ConstantSeeds} [Fact (Irreducible C₀)] {J g n}
     {R : PrimitiveRoot C₀ J g} (A : CoefficientChart R n) (i : Fin n) :
     MvPolynomial.X i ∈ coefficientIdeal A ∨
       ∃ s : Fin (A.equation.natDegree + 1) × Fin (xBound A.equation),
@@ -4707,7 +4447,7 @@ theorem chart_grid_representation {C₀ : ConstantSeeds} [Fact (Irreducible C₀
   · have hz : A.equation.coeff j = 0 := Polynomial.coeff_eq_zero_of_natDegree_lt (by omega)
     left
     simpa [hz] using h
-theorem chart_has_coefficient {C₀ : ConstantSeeds} [Fact (Irreducible C₀)] {J g n}
+private theorem chart_has_coefficient {C₀ : ConstantSeeds} [Fact (Irreducible C₀)] {J g n}
     {R : PrimitiveRoot C₀ J g} (A : CoefficientChart R n)
     (b : Fin n → L) (hb : b ∈ zeroLocus L (coefficientIdeal A)) :
     ∃ s : Fin (A.equation.natDegree + 1) × Fin (xBound A.equation),
@@ -4721,7 +4461,7 @@ theorem chart_has_coefficient {C₀ : ConstantSeeds} [Fact (Irreducible C₀)] {
   obtain ⟨ℓ, hℓ⟩ := coefficient_normalization A
   have hnorm := hb _ hℓ
   simp [aeval_eq_eval, hb0] at hnorm
-theorem chart_boundary_has_coefficient {C₀ : ConstantSeeds} [Fact (Irreducible C₀)] {J g n}
+private theorem chart_boundary_has_coefficient {C₀ : ConstantSeeds} [Fact (Irreducible C₀)] {J g n}
     {R : PrimitiveRoot C₀ J g} (A : CoefficientChart R n)
     (b : Fin n → L) (hb : b ∈ zeroLocus L (boundaryIdeal (coefficientIdeal A)))
     (h : ∀ s, eval b (homogeneousComponent 1 (gridCoefficient A.equation s)) = 0) :
@@ -4937,7 +4677,7 @@ private theorem quotientTensor_tmul (I : Ideal (MvPolynomial σ k))
 private def piece [DecidableEq ι] (b : Module.Basis ι k E) (p : MvPolynomial σ E) (i : ι) :
     MvPolynomial σ k :=
   TensorProduct.equivFinsuppOfBasisLeft b ((MvPolynomial.algebraTensorAlgEquiv k E).symm p) i
-theorem coeff_piece [DecidableEq ι] (b : Module.Basis ι k E) (p : MvPolynomial σ E)
+private theorem coeff_piece [DecidableEq ι] (b : Module.Basis ι k E) (p : MvPolynomial σ E)
     (i : ι) (d : σ →₀ ℕ) : (piece b p i).coeff d = b.coord i (p.coeff d) := by
   let e := MvPolynomial.algebraTensorAlgEquiv (σ := σ) k E
   obtain ⟨t, rfl⟩ := e.surjective p
@@ -4952,7 +4692,7 @@ theorem coeff_piece [DecidableEq ι] (b : Module.Basis ι k E) (p : MvPolynomial
     simp only [hs, map_smul, Module.Basis.coord_apply, smul_eq_mul, mul_comm]
   | add t u ht hu =>
     simp only [map_add, AddMonoidAlgebra.coeff_add, Finsupp.add_apply, ht, hu]
-theorem mem_map_iff [DecidableEq ι] (b : Module.Basis ι k E)
+private theorem mem_map_iff [DecidableEq ι] (b : Module.Basis ι k E)
     (I : Ideal (MvPolynomial σ k)) (p : MvPolynomial σ E) :
     p ∈ I.map scalarMap ↔ ∀ i, piece b p i ∈ I := by
   let e := MvPolynomial.algebraTensorAlgEquiv (σ := σ) k E
@@ -4979,7 +4719,7 @@ theorem mem_map_iff [DecidableEq ι] (b : Module.Basis ι k E)
     have hz : s (eI.symm (Ideal.Quotient.mk (I.map scalarMap) (e t))) = 0 :=
       Finsupp.ext h
     exact eI.symm.injective (s.injective (hz.trans (by simp)))
-theorem component_mem_map_infinity (I : Ideal (MvPolynomial σ k)) {p : MvPolynomial σ E}
+private theorem component_mem_map_infinity (I : Ideal (MvPolynomial σ k)) {p : MvPolynomial σ E}
     (hp : p ∈ I.map scalarMap) {n : ℕ} (hn : p.totalDegree ≤ n) :
     homogeneousComponent n p ∈ (infinityIdeal I).map scalarMap := by
   classical
@@ -5005,10 +4745,10 @@ theorem component_mem_map_infinity (I : Ideal (MvPolynomial σ k)) {p : MvPolyno
 end ScalarExtension
 section Specialization
 variable {K σ : Type} [Field K]
-def atW (w : MvPolynomial σ K) :
+private def atW (w : MvPolynomial σ K) :
     MvPolynomial (Option σ) K →ₐ[K] MvPolynomial σ K :=
   aeval (fun i => i.elim w MvPolynomial.X)
-theorem atW_monomial (w : MvPolynomial σ K) (d : Option σ →₀ ℕ) (r : K) :
+private theorem atW_monomial (w : MvPolynomial σ K) (d : Option σ →₀ ℕ) (r : K) :
     atW w (monomial d r) = w ^ (d none) * monomial d.some r := by
   rw [atW, aeval_monomial, algebraMap_eq, Finsupp.prod_option_index]
   · rw [monomial_eq (s := d.some) (a := r)]
@@ -5017,7 +4757,7 @@ theorem atW_monomial (w : MvPolynomial σ K) (d : Option σ →₀ ℕ) (r : K) 
   · simp
   · intros
     rw [pow_add]
-theorem atW_homogeneous {q : MvPolynomial (Option σ) K} {n : ℕ}
+private theorem atW_homogeneous {q : MvPolynomial (Option σ) K} {n : ℕ}
     (hq : q.IsHomogeneous n) :
     (atW 1 q).totalDegree ≤ n ∧ atW 0 q = homogeneousComponent n (atW 1 q) := by
   change q.IsWeightedHomogeneous (fun _ => 1) n at hq
@@ -5042,7 +4782,7 @@ theorem atW_homogeneous {q : MvPolynomial (Option σ) K} {n : ℕ}
       simp [hz, he]
     · have he : n ≠ d.some.degree := by omega
       simp [zero_pow hz, he]
-theorem eval_scaled {α B : Type} [CommRing B] [Algebra K B]
+private theorem eval_scaled {α B : Type} [CommRing B] [Algebra K B]
     (x : α → B) (t : B) {q : MvPolynomial α K} {n : ℕ} (hq : q.IsHomogeneous n) :
     aeval (fun i => t * x i) q = t ^ n * aeval x q := by
   change q.IsWeightedHomogeneous (fun _ => 1) n at hq
@@ -5055,7 +4795,7 @@ theorem eval_scaled {α B : Type} [CommRing B] [Algebra K B]
     simp only [Finsupp.prod, mul_pow, Finset.prod_mul_distrib, Finset.prod_pow_eq_pow_sum,
       Finsupp.degree_apply]
     ac_rfl
-theorem closureEval_homogeneous (I : Ideal (MvPolynomial σ K))
+private theorem closureEval_homogeneous (I : Ideal (MvPolynomial σ K))
     {q : MvPolynomial (Option σ) K} {n : ℕ} (hq : q.IsHomogeneous n) :
     closureEval I q = Polynomial.monomial n (Ideal.Quotient.mk I (atW 1 q)) := by
   let m : MvPolynomial σ K →ₐ[K] Polynomial (MvPolynomial σ K ⧸ I) :=
@@ -5073,7 +4813,7 @@ theorem closureEval_homogeneous (I : Ideal (MvPolynomial σ K))
   change Polynomial.X ^ n * Polynomial.C (Ideal.Quotient.mk I (atW 1 q)) = _
   exact (Polynomial.X_pow_mul_C (Ideal.Quotient.mk I (atW 1 q)) n).trans
     Polynomial.C_mul_X_pow_eq_monomial
-theorem closure_specialization (I J : Ideal (MvPolynomial σ K))
+private theorem closure_specialization (I J : Ideal (MvPolynomial σ K))
     (hcomponent : ∀ (f : MvPolynomial σ K) (n : ℕ), f ∈ I → f.totalDegree ≤ n →
       homogeneousComponent n f ∈ J) :
     ∃ s : Closure I →ₐ[K] (MvPolynomial σ K ⧸ J),
@@ -5125,7 +4865,7 @@ private theorem projection_homogeneous {f : FreshJetRing} {n : ℕ} (hf : f.IsHo
     exact linear_sum_homogeneous fun i : CoeffIndex =>
       (i.val.choose j.val : FreshField) * freshCenter ^ (i.val - j.val)
   simpa only [freshProjection, one_mul] using hf.aeval _ h
-theorem projection_top (g : FreshJetRing) :
+private theorem projection_top (g : FreshJetRing) :
     (freshProjection g).totalDegree ≤ g.totalDegree ∧
       homogeneousComponent g.totalDegree (freshProjection g) = freshProjection (topForm g) := by
   have hsum : freshProjection g = ∑ j ∈ Finset.range (g.totalDegree + 1),
@@ -5187,7 +4927,7 @@ theorem scaled_homogeneous {F B σ : Type} [Field F] [CommRing B] [Algebra F B]
   rw [← comp_aeval_apply d c p]
   change Polynomial.X ^ n * Polynomial.C (aeval d p) = _
   rw [Polynomial.X_pow_mul_C, Polynomial.C_mul_X_pow_eq_monomial]
-theorem scaled_coeff {F B σ : Type} [Field F] [CommRing B] [Algebra F B]
+private theorem scaled_coeff {F B σ : Type} [Field F] [CommRing B] [Algebra F B]
     (d : σ → B) (p : MvPolynomial σ F) (n : ℕ) :
     (scaled d p).coeff n = aeval d (homogeneousComponent n p) := by
   classical
@@ -5247,7 +4987,7 @@ theorem relation_on_value_plane {F B : Type} [Field F] [CommRing B] [IsDomain B]
     have hz' := congrArg (fun f : MvPolynomial (Fin m) F => f.coeff a) hz
     rw [finSuccEquiv_coeff_coeff, coeff_homogeneousComponent, ite_eq_left rfl] at hz'
     exact haq (by simpa using hz')
-theorem ideal_ne_bot_of_finite_pair {F : Type} [Field F]
+private theorem ideal_ne_bot_of_finite_pair {F : Type} [Field F]
     {I : Ideal (MvPolynomial (Fin 3) F)}
     (g : MvPolynomial (Fin 2) F →ₐ[F] MvPolynomial (Fin 3) F ⧸ I)
     (hg : g.Finite) : I ≠ ⊥ := by
@@ -5309,7 +5049,7 @@ private abbrev chart (I : Ideal (MvPolynomial σ k)) (i : σ) :
 private def piece (I : Ideal (MvPolynomial σ k)) (n : ℕ) :
     Submodule k (MvPolynomial σ k ⧸ I) :=
   (homogeneousSubmodule σ k n).map (Ideal.Quotient.mkₐ k I).toLinearMap
-theorem mem_piece {I : Ideal (MvPolynomial σ k)} {n : ℕ}
+private theorem mem_piece {I : Ideal (MvPolynomial σ k)} {n : ℕ}
     {z : MvPolynomial σ k ⧸ I} :
     z ∈ piece I n ↔ ∃ p : MvPolynomial σ k, p.IsHomogeneous n ∧
       Ideal.Quotient.mk I p = z :=
@@ -5317,7 +5057,7 @@ theorem mem_piece {I : Ideal (MvPolynomial σ k)} {n : ℕ}
 private instance [Finite σ] (I : Ideal (MvPolynomial σ k)) (n : ℕ) :
     Module.Finite k (piece I n) :=
   Module.Finite.of_fg ((homogeneousSubmodule_fg σ k n).map _)
-theorem piece_le_filtered (I : Ideal (MvPolynomial σ k)) (n : ℕ) :
+private theorem piece_le_filtered (I : Ideal (MvPolynomial σ k)) (n : ℕ) :
     piece I n ≤ quotientDegreeLE I n := by
   intro z hz
   obtain ⟨p, hp, rfl⟩ := mem_piece.mp hz
@@ -5336,7 +5076,7 @@ private theorem totalDegree_sub_component_le {p : MvPolynomial σ k} {n : ℕ}
   simp only [ite_eq_right hne, sub_zero] at hd
   exact Nat.le_of_lt_succ (lt_of_le_of_ne
     ((le_totalDegree (MvPolynomial.mem_support_iff.mpr hd)).trans hp) hne)
-theorem piece_finrank_succ [Finite σ] {I : Ideal (MvPolynomial σ k)}
+private theorem piece_finrank_succ [Finite σ] {I : Ideal (MvPolynomial σ k)}
     (hI : I.IsHomogeneous (homogeneousSubmodule σ k)) (n : ℕ) :
     Module.finrank k (piece I (n + 1)) + affineHilbertFunction I n =
       affineHilbertFunction I (n + 1) := by
@@ -5363,13 +5103,13 @@ theorem piece_finrank_succ [Finite σ] {I : Ideal (MvPolynomial σ k)}
   have h := Submodule.finrank_sup_add_finrank_inf_eq (quotientDegreeLE I n) (piece I (n + 1))
   rw [hsup, hinf, finrank_bot, add_zero] at h
   exact (add_comm _ _).trans h.symm
-theorem component_mul_X (i : σ) (p : MvPolynomial σ k) (m : ℕ) :
+private theorem component_mul_X (i : σ) (p : MvPolynomial σ k) (m : ℕ) :
     homogeneousComponent m (p * MvPolynomial.X i) =
       if 1 ≤ m then homogeneousComponent (m - 1) p * MvPolynomial.X i else 0 := by
   simpa only [← DirectSum.Decomposition.decompose'_eq, MvPolynomial.decomposition.decompose'_apply]
     using DirectSum.coe_decompose_mul_of_right_mem
       (homogeneousSubmodule σ k) m (a := p) (isHomogeneous_X k i)
-def mulPiece (I : Ideal (MvPolynomial σ k)) (i : σ) (n : ℕ) :
+private def mulPiece (I : Ideal (MvPolynomial σ k)) (i : σ) (n : ℕ) :
     piece I n →ₗ[k] piece I (n + 1) :=
   ((LinearMap.mulLeft k (Ideal.Quotient.mk I (MvPolynomial.X i))).domRestrict _).codRestrict _
     fun z => by
@@ -5377,13 +5117,13 @@ def mulPiece (I : Ideal (MvPolynomial σ k)) (i : σ) (n : ℕ) :
       change Ideal.Quotient.mk I (MvPolynomial.X i) * z.val ∈ piece I (n + 1)
       rw [← hpz, ← map_mul, mul_comm]
       exact mem_piece.mpr ⟨_, hp.mul (isHomogeneous_X k i), rfl⟩
-theorem mulPiece_mk (I : Ideal (MvPolynomial σ k)) (i : σ) {n : ℕ}
+private theorem mulPiece_mk (I : Ideal (MvPolynomial σ k)) (i : σ) {n : ℕ}
     {p : MvPolynomial σ k} (hp : p.IsHomogeneous n) :
     (mulPiece I i n ⟨Ideal.Quotient.mk I p, mem_piece.mpr ⟨p, hp, rfl⟩⟩).val =
       Ideal.Quotient.mk I (p * MvPolynomial.X i) := by
   change Ideal.Quotient.mk I (MvPolynomial.X i) * Ideal.Quotient.mk I p = _
   rw [mul_comm, map_mul]
-theorem mulPiece_eventually_surjective [Finite σ] {I : Ideal (MvPolynomial σ k)}
+private theorem mulPiece_eventually_surjective [Finite σ] {I : Ideal (MvPolynomial σ k)}
     (i : σ) (hI : I.IsHomogeneous (homogeneousSubmodule σ k))
     (hrad : ∀ j : σ, MvPolynomial.X j ∈ (I ⊔ Ideal.span {MvPolynomial.X i}).radical) :
     ∃ N : ℕ, ∀ n ≥ N, Function.Surjective (mulPiece I i n) := by
@@ -5409,7 +5149,7 @@ theorem mulPiece_eventually_surjective [Finite σ] {I : Ideal (MvPolynomial σ k
     Subtype.ext ?_⟩
   rw [mulPiece_mk I i (homogeneousComponent_isHomogeneous n q), ← hpz, ← hc, map_add,
     Ideal.Quotient.eq_zero_iff_mem.mpr (homogeneousComponent_mem_of_mem hI ha _), zero_add]
-theorem eventual_piece_finrank [Finite σ] {I : Ideal (MvPolynomial σ k)}
+private theorem eventual_piece_finrank [Finite σ] {I : Ideal (MvPolynomial σ k)}
     (hI : I.IsHomogeneous (homogeneousSubmodule σ k))
     (hd : (affineHilbertPolynomial I).natDegree = 1) :
     ∃ N : ℕ, ∀ n ≥ N,
@@ -5436,7 +5176,7 @@ theorem eventual_piece_finrank [Finite σ] {I : Ideal (MvPolynomial σ k)}
       (affineHilbertFunction I n : ℚ) = (affineHilbertFunction I (n + 1) : ℚ) := by
     exact_mod_cast piece_finrank_succ hI n
   linarith only [hs, hev]
-theorem homogeneous_chart_mem {I : Ideal (MvPolynomial σ k)} (i : σ)
+private theorem homogeneous_chart_mem {I : Ideal (MvPolynomial σ k)} (i : σ)
     (hI : I.IsHomogeneous (homogeneousSubmodule σ k)) {n : ℕ}
     (hcancel : ∀ m ≥ n, ∀ {q : MvPolynomial σ k}, q.IsHomogeneous m →
       q * MvPolynomial.X i ∈ I → q ∈ I)
@@ -5506,7 +5246,7 @@ private theorem homogeneous_representative (I : Ideal (MvPolynomial σ k)) (i : 
     rw [map_sum]
     simp only [map_mul, map_pow, hi, one_pow, one_mul]
     rw [← map_sum, sum_homogeneousComponent]
-theorem chart_hilbertFunction [Finite σ] {I : Ideal (MvPolynomial σ k)} (i : σ)
+private theorem chart_hilbertFunction [Finite σ] {I : Ideal (MvPolynomial σ k)} (i : σ)
     (hI : I.IsHomogeneous (homogeneousSubmodule σ k)) {n : ℕ}
     (hcancel : ∀ m ≥ n, ∀ {q : MvPolynomial σ k}, q.IsHomogeneous m →
       q * MvPolynomial.X i ∈ I → q ∈ I) :
@@ -5577,7 +5317,7 @@ open K1_13_5_5 K1_13_5_5_2 K1_13_5_5_2_3 MvPolynomial
 set_option backward.isDefEq.respectTransparency false
 set_option linter.style.haveILetI false
 set_option maxHeartbeats 800000
-theorem monic_image {R A : Type} [CommRing R] [IsDomain R] [CommRing A]
+private theorem monic_image {R A : Type} [CommRing R] [IsDomain R] [CommRing A]
     (ρ : R →+* A) (z : A) (p : Polynomial R) (hp : p.Monic) (hz : p.eval₂ ρ z = 0)
     (hs : Function.Surjective (Polynomial.eval₂RingHom ρ z)) :
     ρ.Finite ∧
@@ -5606,7 +5346,7 @@ theorem monic_image {R A : Type} [CommRing R] [IsDomain R] [CommRing A]
     refine (LinearMap.rank_le_of_surjective u hts).trans ?_
     rw [← (AdjoinRoot.powerBasis' hp).basis.mk_eq_rank'']
     simp
-theorem surjective_quotient {F D σ : Type} [CommRing F] [Semiring D]
+private theorem surjective_quotient {F D σ : Type} [CommRing F] [Semiring D]
     (I : Ideal (MvPolynomial σ F)) (s : D →+* (MvPolynomial σ F ⧸ I))
     (hc : ∀ c : F, ∃ t, s t = Ideal.Quotient.mk I (C c))
     (hx : ∀ i : σ, ∃ t, s t = Ideal.Quotient.mk I (MvPolynomial.X i)) : Function.Surjective s := by
@@ -5622,14 +5362,14 @@ theorem surjective_quotient {F D σ : Type} [CommRing F] [Semiring D]
       obtain ⟨u, hu⟩ := hp
       obtain ⟨v, hv⟩ := hx i
       exact ⟨u * v, by rw [map_mul, hu, hv, map_mul]⟩
-theorem eval₂_linear {R A : Type} [CommSemiring R] [CommSemiring A]
+private theorem eval₂_linear {R A : Type} [CommSemiring R] [CommSemiring A]
     (ρ : R →+* A) (z : A) (a b : R) :
     Polynomial.eval₂RingHom ρ z (Polynomial.C a + Polynomial.C b * Polynomial.X) =
       ρ a + ρ b * z := by
   change (Polynomial.C a + Polynomial.C b * Polynomial.X).eval₂ ρ z = _
   rw [Polynomial.eval₂_add, Polynomial.eval₂_mul, Polynomial.eval₂_C, Polynomial.eval₂_C,
     Polynomial.eval₂_X]
-theorem choose_direction {F : Type} [Field F] [Infinite F]
+private theorem choose_direction {F : Type} [Field F] [Infinite F]
     (g : MvPolynomial (Fin 3) F) (hg : 0 < g.totalDegree) :
     ∃ v : Fin 3 → F, v 0 ≠ 0 ∧ eval v (homogeneousComponent g.totalDegree g) ≠ 0 := by
   classical
@@ -5669,7 +5409,7 @@ private theorem coord (v : Fin 3 → FreshField) (hv : v 0 ≠ 0) (i : Fin 3) :
       mul_inv_cancel₀ hv, map_one, one_mul]
   · simp only [offsets, Fin.cons_succ, aeval_X, plane, direction, ← mul_assoc, ← map_mul]
     abel
-theorem coord_image {A : Type} [CommRing A] [Algebra FreshField A]
+private theorem coord_image {A : Type} [CommRing A] [Algebra FreshField A]
     (v : Fin 3 → FreshField) (hv : v 0 ≠ 0) (q : FreshJetRing →ₐ[FreshField] A)
     (i : Fin 3) :
     q (MvPolynomial.X i) =
@@ -5677,7 +5417,7 @@ theorem coord_image {A : Type} [CommRing A] [Algebra FreshField A]
         algebraMap FreshField A (v i) * q (direction v) := by
   have h := congrArg q (coord v hv i)
   simpa only [map_add, map_mul, comp_aeval_apply, ← algebraMap_eq, AlgHom.commutes] using h
-theorem top_finite (g : FreshJetRing) (v : Fin 3 → FreshField) (h0 : v 0 ≠ 0)
+private theorem top_finite (g : FreshJetRing) (v : Fin 3 → FreshField) (h0 : v 0 ≠ 0)
     (hv : eval v (topForm g) ≠ 0) :
     FiniteJetPair (plane v) (Ideal.span {topForm g}) := by
   let J : Ideal FreshJetRing := Ideal.span {topForm g}
@@ -5724,7 +5464,7 @@ theorem top_finite (g : FreshJetRing) (v : Fin 3 → FreshField) (h0 : v 0 ≠ 0
   change @RingHom.Finite PairRing A _ _ (jetPairMap (plane v) J).toRingHom
   rw [heq]
   exact (monic_image (A := A) ρ z p hp hz hsurj).1
-theorem closure_rank (g : FreshJetRing) (v : Fin 3 → FreshField) (h0 : v 0 ≠ 0)
+private theorem closure_rank (g : FreshJetRing) (v : Fin 3 → FreshField) (h0 : v 0 ≠ 0)
     (hv : eval v (topForm g) ≠ 0) :
     closureRank (plane v) (Ideal.span {g}) ≤ (g.totalDegree : Cardinal) := by
   let I : Ideal FreshJetRing := Ideal.span {g}
@@ -5844,13 +5584,13 @@ open K1_13_5_5 K1_13_5_5_2_1 MvPolynomial
 open scoped Polynomial
 set_option backward.isDefEq.respectTransparency false
 set_option maxHeartbeats 1000000
-theorem sumSMulX_homogeneous {k σ : Type} [Field k] (u : σ →₀ k) :
+private theorem sumSMulX_homogeneous {k σ : Type} [Field k] (u : σ →₀ k) :
     (sumSMulX u).IsHomogeneous 1 := by
   classical
   rw [sumSMulX, Finsupp.linearCombination_apply, Finsupp.sum]
   exact (homogeneousSubmodule σ k 1).sum_mem (fun i _ =>
     (homogeneousSubmodule σ k 1).smul_mem _ (isHomogeneous_X _ i))
-theorem sumSMulX_of_homogeneous {k σ : Type} [Field k]
+private theorem sumSMulX_of_homogeneous {k σ : Type} [Field k]
     {p : MvPolynomial σ k} (hp : p.IsHomogeneous 1) :
     ∃ u : σ →₀ k, sumSMulX u = p := by
   classical
@@ -5871,11 +5611,11 @@ theorem sumSMulX_of_homogeneous {k σ : Type} [Field k]
   change C (p.coeff v) * MvPolynomial.X _ = monomial v (p.coeff v)
   rw [C_mul_X_eq_monomial]
   exact congrArg (fun m => monomial m (p.coeff v)) (hx v hd).choose_spec
-theorem aeval_sumSMulX {k σ τ : Type} [Field k]
+private theorem aeval_sumSMulX {k σ τ : Type} [Field k]
     (y : σ → MvPolynomial τ k) (u : σ →₀ k) :
     aeval y (sumSMulX u) = Finsupp.linearCombination k y u := by
   simp [sumSMulX, Finsupp.linearCombination_apply, Finsupp.sum]
-def linearSubstitution {k σ : Type} [Field k]
+private def linearSubstitution {k σ : Type} [Field k]
     (e : (σ →₀ k) ≃ₗ[k] (σ →₀ k)) : MvPolynomial σ k ≃ₐ[k] MvPolynomial σ k := by
   let form (e : (σ →₀ k) ≃ₗ[k] (σ →₀ k)) (i : σ) := sumSMulX (e (Finsupp.single i 1))
   have hform (e : (σ →₀ k) ≃ₗ[k] (σ →₀ k)) (u : σ →₀ k) :
@@ -5990,7 +5730,7 @@ attribute [local instance] MvPolynomial.gradedAlgebra
 set_option autoImplicit false
 set_option maxHeartbeats 1000000
 set_option maxRecDepth 2000
-theorem boundaryIdeal_eq {k σ : Type*} [Field k]
+private theorem boundaryIdeal_eq {k σ : Type*} [Field k]
     {I : Ideal (MvPolynomial σ k)} (hI : I.IsHomogeneous (homogeneousSubmodule σ k)) :
     boundaryIdeal I = I := by
   apply le_antisymm
@@ -6003,7 +5743,7 @@ theorem boundaryIdeal_eq {k σ : Type*} [Field k]
     have hn : homogeneousComponent n p ∈ I := homogeneousComponent_mem_of_mem hI hp n
     have hh := homogeneousComponent_isHomogeneous n p
     exact Ideal.subset_span ⟨_, n, hn, hh.totalDegree_le, (homogeneousComponent_eq_self hh).symm⟩
-theorem chart_degree_zero {k σ : Type*} [Field k] [Finite σ] [LinearOrder σ]
+private theorem chart_degree_zero {k σ : Type*} [Field k] [Finite σ] [LinearOrder σ]
     [WellFoundedGT σ] (I : Ideal (MvPolynomial σ k))
     (hI : I.IsHomogeneous (homogeneousSubmodule σ k))
     (hd : (affineHilbertPolynomial I).natDegree ≤ 1) (i : σ) :
@@ -6027,7 +5767,7 @@ private theorem eval₂_scale {k L σ : Type*} [Field k] [Field L] [Fintype σ]
     simp only [mul_pow, Finset.prod_mul_distrib, Finset.prod_pow_eq_pow_sum,
       ← Finsupp.degree_eq_sum, hdeg]]
   ring
-theorem normalize_zero {k L σ : Type*} [Field k] [Field L] [Algebra k L] [Fintype σ]
+private theorem normalize_zero {k L σ : Type*} [Field k] [Field L] [Algebra k L] [Fintype σ]
     {I : Ideal (MvPolynomial σ k)} (hI : I.IsHomogeneous (homogeneousSubmodule σ k))
     {x : σ → L} (hx : x ∈ zeroLocus L I) {i : σ} (hi : x i ≠ 0) :
     (fun j => (x i)⁻¹ * x j) ∈ zeroLocus L (I ⊔ Ideal.span {MvPolynomial.X i - 1}) := by
@@ -6065,10 +5805,10 @@ private def freshEmbedding (k : Type*) [Field k] : k[X] →+* FreshClosure k :=
   (algebraMap (FractionRing k[X]) (FreshClosure k)).comp (algebraMap k[X] (FractionRing k[X]))
 private def oldEmbedding (k : Type*) [Field k] : k →+* FreshClosure k :=
   (algebraMap (FractionRing k[X]) (FreshClosure k)).comp (algebraMap k (FractionRing k[X]))
-def genericValue (k : Type*) [Field k] (n : ℕ) :
+private def genericValue (k : Type*) [Field k] (n : ℕ) :
     MvPolynomial (Fin n) (FractionRing k[X]) :=
   ∑ j : Fin n, C ((algebraMap k[X] (FractionRing k[X]) Polynomial.X) ^ j.val) * MvPolynomial.X j
-theorem eval_genericValue {k : Type*} [Field k] {n : ℕ} (a : Fin n → k) :
+private theorem eval_genericValue {k : Type*} [Field k] {n : ℕ} (a : Fin n → k) :
     aeval (oldEmbedding k ∘ a) (genericValue k n) =
       freshEmbedding k (∑ j : Fin n, Polynomial.monomial j.val (a j)) := by
   classical
@@ -6080,11 +5820,11 @@ theorem eval_genericValue {k : Type*} [Field k] {n : ℕ} (a : Fin n → k) :
     RingHom.comp_apply, map_pow]
   rw [← Polynomial.algebraMap_eq,
     ← IsScalarTower.algebraMap_apply k k[X] (FractionRing k[X]), mul_comm]
-theorem genericValue_homogeneous (k : Type*) [Field k] (n : ℕ) :
+private theorem genericValue_homogeneous (k : Type*) [Field k] (n : ℕ) :
     (genericValue k n).IsHomogeneous 1 :=
   (homogeneousSubmodule (Fin n) (FractionRing k[X]) 1).sum_mem fun j _ =>
     isHomogeneous_C_mul_X _ j
-theorem generic_no_zero {k : Type*} [Field k] [IsAlgClosed k] {n : ℕ}
+private theorem generic_no_zero {k : Type*} [Field k] [IsAlgClosed k] {n : ℕ}
     (I : Ideal (MvPolynomial (Fin n) k))
     (hI : I.IsHomogeneous (homogeneousSubmodule (Fin n) k))
     (hd : (affineHilbertPolynomial I).natDegree ≤ 1) (i : Fin n) :
@@ -6142,7 +5882,7 @@ namespace K1_13_6_3_5_3_1
 noncomputable section
 open MvPolynomial K1_13 K1_13_6 K1_13_6_3 K1_13_6_3_5_3
 open scoped Polynomial nonZeroDivisors
-theorem chart_baseChange {k E σ : Type} [Field k] [Field E] [Algebra k E]
+private theorem chart_baseChange {k E σ : Type} [Field k] [Field E] [Algebra k E]
     (R : Ideal (MvPolynomial σ k)) [R.IsPrime] [(scalarExtension (E := E) R).IsPrime]
     {a : σ} {z : E} (hz : Transcendental k z) (ha : MvPolynomial.X a ∉ R) :
     let H := scalarExtension (E := E) R
@@ -6218,7 +5958,7 @@ theorem chart_baseChange {k E σ : Type} [Field k] [Field E] [Algebra k E]
 private theorem genericCoeffs_injective : Function.Injective K1_13_6.genericCoeffs :=
   (algebraMap GenericField GeoField).injective.comp
     (IsFractionRing.injective Geom[X] GenericField)
-theorem freshArgument_transcendental [Algebra Geom GeoField]
+private theorem freshArgument_transcendental [Algebra Geom GeoField]
     (hc : algebraMap Geom GeoField = geomConstants) :
     Transcendental Geom genericArgument := by
   apply transcendental_iff_injective.mpr
@@ -6237,7 +5977,7 @@ theorem freshArgument_transcendental [Algebra Geom GeoField]
     Geom[X] →ₐ[Geom] GeoField).toRingHom
   rw [h]
   exact genericCoeffs_injective
-theorem monic_of_coefficients {n : ℕ} {L : Type} [Field L] [DecidableEq L]
+private theorem monic_of_coefficients {n : ℕ} {L : Type} [Field L] [DecidableEq L]
     (u : Fin n → L) (a : Fin n) (ha : u a = 1)
     (hz : ∀ i, a < i → u i = 0) :
     (Polynomial.ofFn n u).Monic ∧ (Polynomial.ofFn n u).natDegree < n := by
@@ -6251,7 +5991,7 @@ theorem monic_of_coefficients {n : ℕ} {L : Type} [Field L] [DecidableEq L]
     · exact Polynomial.ofFn_coeff_eq_zero_of_ge u (by omega)
   exact ⟨Polynomial.monic_of_natDegree_le_of_coeff_eq_one a.val hle (hcoeff.trans ha),
     hle.trans_lt a.isLt⟩
-theorem coefficientTuple_ofFn {n : ℕ} {F L : Type}
+private theorem coefficientTuple_ofFn {n : ℕ} {F L : Type}
     [Field F] [Field L] [DecidableEq F] (j : F →+* L) (u : Fin n → F) :
     coefficientTuple (N := n) j (Polynomial.ofFn n u) = j ∘ u := by
   funext i
@@ -6329,7 +6069,7 @@ theorem conePairMap_eq_comp {A : Type} [CommRing A] [Algebra FreshField A]
     (d : Fin 3 → A) (L : Fin 2 → FreshJetRing) :
     conePairMap d L = (jetInclusion d).comp (jetPairMap L (coneJetIdeal d)) :=
   rfl
-theorem finite_pair_injective {k : Type} [Field k]
+private theorem finite_pair_injective {k : Type} [Field k]
     {J : Ideal (MvPolynomial (Fin 3) k)}
     (g g' : MvPolynomial (Fin 2) k →ₐ[k] (MvPolynomial (Fin 3) k ⧸ J))
     (hg : g.Finite) (hg' : g'.Finite) (hi : Function.Injective g') :
@@ -6377,7 +6117,7 @@ theorem pairFiber_nontrivial {B : Type} [CommRing B] [IsDomain B] [Algebra Fresh
   exact mul_left_cancel₀ hc h
 def mapFinrank {R S : Type} [CommRing R] [CommRing S] (g : R →+* S) : ℕ :=
   @Module.finrank R S _ _ g.toAlgebra.toModule
-theorem mapFinrank_comp {R S T : Type}
+private theorem mapFinrank_comp {R S T : Type}
     [CommRing R] [CommRing S] [CommRing T] [IsDomain T]
     (g : R →+* S) (f : S →+* T) (hf : Function.Injective f) :
     mapFinrank (f.comp g) = mapFinrank g * mapFinrank f := by
@@ -6403,23 +6143,23 @@ open K1_13_5_5 K1_13_5_5_2_3 MvPolynomial
 open scoped BigOperators
 set_option backward.isDefEq.respectTransparency false
 set_option maxHeartbeats 800000
-def affineMap (P : Ideal CoeffRing) (g d : FreshJetRing) (h : FreshChart P g d) :
+private def affineMap (P : Ideal CoeffRing) (g d : FreshJetRing) (h : FreshChart P g d) :
     (FreshJetRing ⧸ Ideal.span {g}) →ₐ[FreshField] (FreshCoeffRing ⧸ freshIdeal P) :=
   Ideal.quotientMapₐ _ freshProjection h.image.ge
-def liftProjection :
+private def liftProjection :
     MvPolynomial (Option (Fin 3)) FreshField →ₐ[FreshField]
       MvPolynomial (Option CoeffIndex) FreshField :=
   aeval fun
     | none => MvPolynomial.X none
     | some i => rename some (freshProjection (MvPolynomial.X i))
-theorem liftProjection_rename (f : FreshJetRing) :
+private theorem liftProjection_rename (f : FreshJetRing) :
     liftProjection (rename some f) = rename some (freshProjection f) := by
   have he : liftProjection.comp (rename some) = (rename some).comp freshProjection := by
     apply MvPolynomial.algHom_ext
     intro i
     simp [liftProjection]
   exact DFunLike.congr_fun he f
-theorem scaled_linear_form {K σ : Type} [Field K] [Fintype σ]
+private theorem scaled_linear_form {K σ : Type} [Field K] [Fintype σ]
     (J : Ideal (MvPolynomial σ K)) (c : σ → K) :
     closureEval J (rename some (∑ a, C (c a) * MvPolynomial.X a)) =
       Polynomial.C (Ideal.Quotient.mk J (∑ a, C (c a) * MvPolynomial.X a)) * Polynomial.X := by
@@ -6429,12 +6169,12 @@ theorem scaled_linear_form {K σ : Type} [Field K] [Fintype σ]
   intro a _
   rw [← mul_assoc]
   rfl
-theorem scaled_jet (J : Ideal FreshCoeffRing) (i : Fin 3) :
+private theorem scaled_jet (J : Ideal FreshCoeffRing) (i : Fin 3) :
     closureEval J (rename some (freshProjection (MvPolynomial.X i))) =
       Polynomial.C (Ideal.Quotient.mk J (freshProjection (MvPolynomial.X i))) * Polynomial.X := by
   simp only [freshProjection, aeval_X, jetForm]
   exact scaled_linear_form J _
-theorem projection_commutes (P : Ideal CoeffRing) (g d : FreshJetRing)
+private theorem projection_commutes (P : Ideal CoeffRing) (g d : FreshJetRing)
     (h : FreshChart P g d) :
     (closureEval (freshIdeal P)).comp liftProjection =
       (Polynomial.mapAlgHom (affineMap P g d h)).comp (closureEval (Ideal.span {g})) := by
@@ -6445,7 +6185,7 @@ theorem projection_commutes (P : Ideal CoeffRing) (g d : FreshJetRing)
     simp [liftProjection, closureEval]
   | some i =>
     simpa [liftProjection, closureEval, affineMap] using scaled_jet (freshIdeal P) i
-theorem closure_project_le (P : Ideal CoeffRing) (g d : FreshJetRing)
+private theorem closure_project_le (P : Ideal CoeffRing) (g d : FreshJetRing)
     (h : FreshChart P g d) :
     closureIdeal (Ideal.span {g}) ≤ (closureIdeal (freshIdeal P)).comap liftProjection := by
   intro f hf
@@ -6458,22 +6198,22 @@ theorem closure_project_le (P : Ideal CoeffRing) (g d : FreshJetRing)
 private def chartMap (P : Ideal CoeffRing) (g d : FreshJetRing) (h : FreshChart P g d) :
     Closure (Ideal.span {g}) →ₐ[FreshField] Closure (freshIdeal P) :=
   Ideal.quotientMapₐ _ liftProjection (closure_project_le P g d h)
-def closureEmbed {K σ : Type} [Field K] (I : Ideal (MvPolynomial σ K)) :
+private def closureEmbed {K σ : Type} [Field K] (I : Ideal (MvPolynomial σ K)) :
     Closure I →ₐ[K] Polynomial (MvPolynomial σ K ⧸ I) :=
   Ideal.kerLiftAlg (closureEval I)
-theorem closureEmbed_injective {K σ : Type} [Field K] (I : Ideal (MvPolynomial σ K)) :
+private theorem closureEmbed_injective {K σ : Type} [Field K] (I : Ideal (MvPolynomial σ K)) :
     Function.Injective (closureEmbed I) :=
   Ideal.kerLiftAlg_injective _
-theorem embed_W {K σ : Type} [Field K] (I : Ideal (MvPolynomial σ K)) :
+private theorem embed_W {K σ : Type} [Field K] (I : Ideal (MvPolynomial σ K)) :
     closureEmbed I (closureW I) = Polynomial.monomial 1 1 := by
   change closureEval I (MvPolynomial.X none) = _
   simp only [closureEval, aeval_X, Polynomial.monomial_one_one_eq_X]
-theorem embed_var {K σ : Type} [Field K] (I : Ideal (MvPolynomial σ K)) (i : σ) :
+private theorem embed_var {K σ : Type} [Field K] (I : Ideal (MvPolynomial σ K)) (i : σ) :
     closureEmbed I (Ideal.Quotient.mk (closureIdeal I) (MvPolynomial.X (some i))) =
       Polynomial.monomial 1 (Ideal.Quotient.mk I (MvPolynomial.X i)) := by
   change closureEval I (MvPolynomial.X (some i)) = _
   simp only [closureEval, aeval_X, Polynomial.C_mul_X_eq_monomial]
-theorem embed_chartMap (P : Ideal CoeffRing) (g d : FreshJetRing)
+private theorem embed_chartMap (P : Ideal CoeffRing) (g d : FreshJetRing)
     (h : FreshChart P g d) (q : Closure (Ideal.span {g})) :
     closureEmbed (freshIdeal P) (chartMap P g d h q) =
       Polynomial.mapAlgHom (affineMap P g d h) (closureEmbed (Ideal.span {g}) q) := by
@@ -6499,7 +6239,7 @@ private theorem exists_homogeneous_lift {K σ : Type} [Field K]
     obtain ⟨p, m, hp⟩ := hf
     refine ⟨p * Ideal.Quotient.mk (closureIdeal I) (MvPolynomial.X (some i)), m + 1, ?_⟩
     simp only [map_mul, hp, embed_var, Polynomial.monomial_mul_monomial]
-theorem recover_of_variables {K σ : Type} [Field K] {A : Type} [CommRing A]
+private theorem recover_of_variables {K σ : Type} [Field K] {A : Type} [CommRing A]
     [Algebra K A] (J : Ideal (MvPolynomial σ K)) (s : A →ₐ[K] Closure J) (b : A)
     (hvars : ∀ i : Option σ, ∃ q : A, ∃ m : ℕ,
       s q = s b ^ m * Ideal.Quotient.mk (closureIdeal J) (MvPolynomial.X i)) :
@@ -6592,11 +6332,11 @@ noncomputable section
 open MvPolynomial K1_13_5_5 K1_13_5_5_2 K1_13_5_5_2_1
 open scoped Polynomial
 set_option maxHeartbeats 1000000
-theorem mapped_eval {F B σ : Type} [Field F] [CommRing B] [Algebra F B]
+private theorem mapped_eval {F B σ : Type} [Field F] [CommRing B] [Algebra F B]
     (x : σ → F) (p : MvPolynomial σ F) :
     aeval (fun i => algebraMap F B (x i)) p = algebraMap F B (eval x p) := by
   exact (comp_aeval_apply x (Algebra.ofId F B) p).symm
-theorem slope_unit {F A : Type} [Field F] [CommRing A] [Algebra F A]
+private theorem slope_unit {F A : Type} [Field F] [CommRing A] [Algebra F A]
     (d : Fin 3 → A) (hd : Ideal.span (Set.range d) = ⊤)
     (t : F) {p : MvPolynomial (Fin 3) F} {n : ℕ}
     (hp : p.IsHomogeneous n) (hrel : aeval d p = 0) (ht : eval ![0, t, 1] p ≠ 0) :
@@ -6634,7 +6374,7 @@ theorem slope_unit {F A : Type} [Field F] [CommRing A] [Algebra F A]
       fin_cases i <;> simp [h0, h1, h2])
   have hbad : π 1 = 0 := hle' (by rw [hd]; trivial)
   simp at hbad
-theorem eval_on_axis_ne_zero {F : Type} [Field F] [Infinite F]
+private theorem eval_on_axis_ne_zero {F : Type} [Field F] [Infinite F]
     {p : MvPolynomial (Fin 2) F} {n : ℕ}
     (hp : p.IsHomogeneous n) (hrest : (finSuccEquiv F 1 p).coeff 0 ≠ 0) :
     eval ![0, 1] p ≠ 0 := by
@@ -6652,7 +6392,7 @@ theorem eval_on_axis_ne_zero {F : Type} [Field F] [Infinite F]
   rw [hvx, aeval_eq_eval, aeval_eq_eval, hzero, mul_zero,
     eval_eq_eval_mv_eval', ← Polynomial.coeff_zero_eq_eval_zero, Polynomial.coeff_map] at he
   simpa using he
-theorem pin_injective {F A : Type} [Field F] [Infinite F] [CommRing A] [IsDomain A]
+private theorem pin_injective {F A : Type} [Field F] [Infinite F] [CommRing A] [IsDomain A]
     [Algebra F A] (v w : A) (hv : v ≠ 0) (hvu : ¬ IsUnit v)
     (hw : IsUnit (Ideal.Quotient.mk (Ideal.span {v}) w)) :
     Function.Injective (polynomialPairMap F v w) := by
@@ -6680,9 +6420,9 @@ theorem pin_injective {F A : Type} [Field F] [Infinite F] [CommRing A] [IsDomain
   have hunit : IsUnit (ρ w) := hw
   exact ((map_ne_zero (algebraMap F D)).2 (eval_on_axis_ne_zero hp hrest))
     ((hunit.pow n).mul_left_cancel (hr.trans (mul_zero _).symm))
-def pairForms (t : FreshField) : Fin 2 → FreshJetRing :=
+private def pairForms (t : FreshField) : Fin 2 → FreshJetRing :=
   ![MvPolynomial.X 0, MvPolynomial.X 1 - C t * MvPolynomial.X 2]
-theorem pairForms_homogeneous (t : FreshField) (i : Fin 2) :
+private theorem pairForms_homogeneous (t : FreshField) (i : Fin 2) :
     (pairForms t i).IsHomogeneous 1 := by
   fin_cases i
   · exact isHomogeneous_X FreshField 0
@@ -6690,14 +6430,14 @@ theorem pairForms_homogeneous (t : FreshField) (i : Fin 2) :
       ((isHomogeneous_C (Fin 3) t).mul (isHomogeneous_X FreshField 2))
 private def shear (t : FreshField) : Fin 3 → FreshJetRing :=
   ![MvPolynomial.X 1, MvPolynomial.X 2 + C t * MvPolynomial.X 0, MvPolynomial.X 0]
-theorem shear_homogeneous (t : FreshField) (i : Fin 3) :
+private theorem shear_homogeneous (t : FreshField) (i : Fin 3) :
     (shear t i).IsHomogeneous 1 := by
   fin_cases i
   · exact isHomogeneous_X FreshField 1
   · exact (isHomogeneous_X FreshField (2 : Fin 3)).add
       ((isHomogeneous_C (Fin 3) t).mul (isHomogeneous_X FreshField 0))
   · exact isHomogeneous_X FreshField 0
-theorem unit_leading_coeff (t : FreshField) {p : FreshJetRing} {n : ℕ}
+private theorem unit_leading_coeff (t : FreshField) {p : FreshJetRing} {n : ℕ}
     (hp : p.IsHomogeneous n) (ht : eval ![0, t, 1] p ≠ 0) :
     IsUnit (finSuccEquiv FreshField 2 (aeval (shear t) p)).leadingCoeff := by
   let q : FreshJetRing := aeval (shear t) p
@@ -6736,7 +6476,7 @@ theorem unit_leading_coeff (t : FreshField) {p : FreshJetRing} {n : ℕ}
   change IsUnit P.leadingCoeff
   rw [Polynomial.leadingCoeff, hdegree, htop]
   exact ht.isUnit.map C
-theorem finite_of_monic_root {R S : Type} [CommRing R] [CommRing S]
+private theorem finite_of_monic_root {R S : Type} [CommRing R] [CommRing S]
     (g : R →+* S) (z : S) (Q : R[X]) (hm : Q.Monic) (hQ : Q.eval₂ g z = 0)
     (hE : ∀ y : S, ∃ x : R[X], x.eval₂ g z = y) : g.Finite := by
   let f := AdjoinRoot.lift g z hQ
@@ -6747,7 +6487,7 @@ theorem finite_of_monic_root {R S : Type} [CommRing R] [CommRing S]
   rw [← AdjoinRoot.lift_comp_of hQ]
   exact RingHom.Finite.comp (RingHom.Finite.of_surjective f hf)
     (RingHom.finite_algebraMap.mpr hm.finite_adjoinRoot)
-theorem finite_chosen_pair {A : Type} [CommRing A] [Algebra FreshField A]
+private theorem finite_chosen_pair {A : Type} [CommRing A] [Algebra FreshField A]
     (d : Fin 3 → A) (t : FreshField) {p : FreshJetRing} {n : ℕ}
     (hp : p.IsHomogeneous n) (hrel : aeval d p = 0) (ht : eval ![0, t, 1] p ≠ 0) :
     FiniteJetPair (pairForms t) (coneJetIdeal d) := by
@@ -6868,11 +6608,11 @@ private theorem surface_trdeg {k σ : Type} [Field k] [Finite σ]
       u hfin hu, Nat.card_fin] using h
   rw [trdeg_fraction, trdeg_of_normalization u hu hfin, hn]
   rfl
-theorem trdeg_pair (k : Type) [Field k] :
+private theorem trdeg_pair (k : Type) [Field k] :
     trdeg k (FractionRing (MvPolynomial (Fin 2) k)) = 2 := by
   rw [trdeg_fraction]
   simp
-def localizedEquiv {P K A E : Type} [CommRing P] [Field K] [CommRing A] [Field E]
+private def localizedEquiv {P K A E : Type} [CommRing P] [Field K] [CommRing A] [Field E]
     [Algebra P K] [IsFractionRing P K] [Algebra P A] [Algebra A E] [IsFractionRing A E]
     [Algebra K E] [Algebra.IsAlgebraic K E]
     (h : ∀ p, algebraMap K E (algebraMap P K p) = algebraMap A E (algebraMap P A p)) :
@@ -6913,14 +6653,14 @@ private abbrev fiber {k P : Type} [CommRing k] [CommRing P] [Algebra k P]
     (φ : P →ₐ[k] A) : Type :=
   letI : Module P A := Module.compHom A φ.toRingHom
   K ⊗[P] A
-def fiberEquiv {k P K A : Type} [Field k] [CommRing P] [Field K] [Algebra k P]
+private def fiberEquiv {k P K A : Type} [Field k] [CommRing P] [Field K] [Algebra k P]
     [Algebra P K] [IsFractionRing P K] [CommRing A] [IsDomain A] [Algebra k A]
     (φ : P →ₐ[k] A) [Algebra K (FractionRing A)] [Algebra.IsAlgebraic K (FractionRing A)]
     (h : ∀ p, algebraMap K (FractionRing A) (algebraMap P K p) = toFraction A (φ p)) :
     fiber K φ ≃ₗ[K] FractionRing A := by
   letI : Algebra P A := φ.toRingHom.toAlgebra
   exact localizedEquiv h
-theorem fiber_zero {k P K A : Type} [Field k] [CommRing P] [Field K] [Algebra k P]
+private theorem fiber_zero {k P K A : Type} [Field k] [CommRing P] [Field K] [Algebra k P]
     [Algebra P K] [IsFractionRing P K] [CommRing A] [Algebra k A]
     (φ : P →ₐ[k] A) {p : P} (hp : p ≠ 0) (hz : φ p = 0) :
     Module.Finite K (fiber K φ) ∧ Module.finrank K (fiber K φ) = 0 := by
@@ -6943,7 +6683,7 @@ theorem fiber_zero {k P K A : Type} [Field k] [CommRing P] [Field K] [Algebra k 
     | add x y hx hy => rw [hx, hy, zero_add]
   let : Subsingleton (fiber K φ) := ⟨fun x y => (hzero x).trans (hzero y).symm⟩
   exact ⟨inferInstance, Module.finrank_zero_of_subsingleton⟩
-theorem finiteExtension {k K E : Type} [Field k] [Field K] [Field E]
+private theorem finiteExtension {k K E : Type} [Field k] [Field K] [Field E]
     [Algebra k K] [Algebra k E] [Algebra.EssFiniteType k E] (i : K →ₐ[k] E)
     (hK : trdeg k K = 2) (hE : trdeg k E = 2) :
     letI : Algebra K E := i.toRingHom.toAlgebra
@@ -6958,14 +6698,14 @@ theorem finiteExtension {k K E : Type} [Field k] [Field K] [Field E]
     rw [h, zero_add]
   let : Algebra.EssFiniteType K E := Algebra.EssFiniteType.of_comp k K E
   exact ⟨halg, Algebra.finite_of_essFiniteType_of_isAlgebraic⟩
-def pairEmbedding {k P K A : Type} [Field k] [CommRing P] [Field K]
+private def pairEmbedding {k P K A : Type} [Field k] [CommRing P] [Field K]
     [Algebra k P] [Algebra P K] [IsFractionRing P K] [Algebra k K] [IsScalarTower k P K]
     [CommRing A] [IsDomain A] [Algebra k A]
     {φ : P →ₐ[k] A} (hφ : Function.Injective φ) : K →ₐ[k] FractionRing A :=
   IsFractionRing.liftAlgHom
     (g := (IsScalarTower.toAlgHom k A (FractionRing A)).comp φ)
     ((IsFractionRing.injective A (FractionRing A)).comp hφ)
-theorem pairEmbedding_apply {k P K A : Type} [Field k] [CommRing P] [Field K]
+private theorem pairEmbedding_apply {k P K A : Type} [Field k] [CommRing P] [Field K]
     [Algebra k P] [Algebra P K] [IsFractionRing P K] [Algebra k K] [IsScalarTower k P K]
     [CommRing A] [IsDomain A] [Algebra k A] {φ : P →ₐ[k] A}
     (hφ : Function.Injective φ) (p : P) :
@@ -6973,7 +6713,7 @@ theorem pairEmbedding_apply {k P K A : Type} [Field k] [CommRing P] [Field K]
   unfold pairEmbedding
   rw [IsFractionRing.liftAlgHom_apply, IsFractionRing.lift_algebraMap]
   rfl
-theorem compareFibers {k P K B A : Type} [Field k] [CommRing P] [Field K]
+private theorem compareFibers {k P K B A : Type} [Field k] [CommRing P] [Field K]
     [Algebra k P] [Algebra P K] [IsFractionRing P K] [Algebra k K] [IsScalarTower k P K]
     [CommRing B] [IsDomain B] [Algebra k B] [Algebra.FiniteType k B]
     [CommRing A] [IsDomain A] [Algebra k A]
@@ -7027,7 +6767,7 @@ section Surface
 variable {k σ : Type} [Field k] [Finite σ]
 local notation "PairBase" => MvPolynomial (Fin 2) k
 local notation "PairFrac" => FractionRing (MvPolynomial (Fin 2) k)
-theorem compareSurfaceFibers
+private theorem compareSurfaceFibers
     (I : Ideal (MvPolynomial σ k)) [IsDomain (MvPolynomial σ k ⧸ I)]
     (A : Type) [CommRing A] [IsDomain A] [Algebra k A]
     (φ : PairBase →ₐ[k] (MvPolynomial σ k ⧸ I)) (ψ : PairBase →ₐ[k] A)
@@ -7053,7 +6793,7 @@ open scoped Polynomial
   value : R
   first : R
   second : R
-def jetMul {R : Type} [CommRing R] (x y : Jet R) : Jet R :=
+private def jetMul {R : Type} [CommRing R] (x y : Jet R) : Jet R :=
   ⟨x.value * y.value,
     x.first * y.value + x.value * y.first,
     x.second * y.value + 2 * x.first * y.first + x.value * y.second⟩
@@ -7092,11 +6832,11 @@ private def scalarJet {R : Type} [CommRing R] : R →* Jet R where
   map_mul' a b := by
     change ⟨a * b, 0, 0⟩ = jetMul ⟨a, 0, 0⟩ ⟨b, 0, 0⟩
     simp [jetMul]
-def valueHom {R : Type} [CommRing R] : Jet R →* R where
+private def valueHom {R : Type} [CommRing R] : Jet R →* R where
   toFun := Jet.value
   map_one' := rfl
   map_mul' _ _ := rfl
-def reducedPower {A : Type} [CommRing A] (g : A[X]) : ℕ → Jet A[X]
+private def reducedPower {A : Type} [CommRing A] (g : A[X]) : ℕ → Jet A[X]
   | 0 => 1
   | 1 => rawJet g
   | k + 2 =>
@@ -7104,7 +6844,7 @@ def reducedPower {A : Type} [CommRing A] (g : A[X]) : ℕ → Jet A[X]
       C ((k + 2 : ℕ) : A) * g * derivative g,
       C ((k + 2 : ℕ) : A) * C ((k + 1 : ℕ) : A) * derivative g ^ 2 +
         C ((k + 2 : ℕ) : A) * g * derivative (derivative g)⟩
-theorem reducedPower_value {A : Type} [CommRing A] (g : A[X]) (m : ℕ) :
+private theorem reducedPower_value {A : Type} [CommRing A] (g : A[X]) (m : ℕ) :
     (reducedPower g m).value = g ^ min m 2 := by
   match m with
   | 0 => exact (pow_zero g).symm
@@ -7112,7 +6852,7 @@ theorem reducedPower_value {A : Type} [CommRing A] (g : A[X]) (m : ℕ) :
   | k + 2 =>
     change g ^ 2 = g ^ min (k + 2) 2
     rw [min_eq_right (by omega)]
-theorem rawJet_pow {A : Type} [CommRing A] (g : A[X]) (m : ℕ) :
+private theorem rawJet_pow {A : Type} [CommRing A] (g : A[X]) (m : ℕ) :
     rawJet (g ^ m) = scalarJet (g ^ (m - 2)) * reducedPower g m := by
   match m with
   | 0 => simp [reducedPower]
@@ -7134,15 +6874,15 @@ theorem rawJet_pow {A : Type} [CommRing A] (g : A[X]) (m : ℕ) :
         derivative_pow_succ, pow_succ g k]
       simp only [Nat.cast_add, Nat.cast_one, Nat.cast_ofNat, map_add, map_one, map_ofNat]
       ring
-def reducedProduct {A : Type} [CommRing A] {f : A[X]}
+private def reducedProduct {A : Type} [CommRing A] {f : A[X]}
     (s : Factorization f) : Jet A[X] :=
   ∏ i, reducedPower (s.factor i) (s.multiplicity i)
-theorem reducedProduct_value {A : Type} [CommRing A] {f : A[X]}
+private theorem reducedProduct_value {A : Type} [CommRing A] {f : A[X]}
     (s : Factorization f) : (reducedProduct s).value = trimmedValue s := by
   change valueHom (∏ i, reducedPower (s.factor i) (s.multiplicity i)) = _
   rw [map_prod, trimmedValue]
   exact Finset.prod_congr rfl (fun i _ => reducedPower_value _ _)
-theorem rawJet_factorization {A : Type} [CommRing A] {f : A[X]}
+private theorem rawJet_factorization {A : Type} [CommRing A] {f : A[X]}
     (s : Factorization f) :
     rawJet f = scalarJet (commonFactor s) * reducedProduct s := by
   calc
@@ -7152,25 +6892,25 @@ theorem rawJet_factorization {A : Type} [CommRing A] {f : A[X]}
         reducedPower (s.factor i) (s.multiplicity i) :=
       Finset.prod_congr rfl (fun i _ => rawJet_pow _ _)
     _ = _ := by rw [Finset.prod_mul_distrib, commonFactor, map_prod, reducedProduct]
-theorem geom_cast_ne_zero {n : ℕ} (hpos : 0 < n) (hsmall : n < K1.p) :
+private theorem geom_cast_ne_zero {n : ℕ} (hpos : 0 < n) (hsmall : n < K1.p) :
     (n : Geom) ≠ 0 := by
   let _ : CharP Geom K1.p := charP_of_injective_ringHom embed.injective K1.p
   intro h
   exact (not_le_of_gt hsmall) (Nat.le_of_dvd hpos
     ((CharP.cast_eq_zero_iff Geom K1.p n).mp h))
-theorem isUnit_C_small {A : Type} [CommRing A] [Algebra Geom A]
+private theorem isUnit_C_small {A : Type} [CommRing A] [Algebra Geom A]
     {n : ℕ} (hpos : 0 < n) (hsmall : n ≤ 133671) : IsUnit (C (n : A)) := by
   let ι : Geom →+* A[X] := C.comp (algebraMap Geom A)
   have hu := (isUnit_iff_ne_zero.mpr (geom_cast_ne_zero hpos
     (hsmall.trans_lt (by decide : 133671 < K1.p)))).map ι
   simpa only [ι, RingHom.comp_apply, map_natCast] using hu
-theorem not_mem_of_coprime {R : Type} [CommRing R] {P : Ideal R}
+private theorem not_mem_of_coprime {R : Type} [CommRing R] {P : Ideal R}
     (hP : P ≠ ⊤) {x y : R} (hx : x ∈ P) (hxy : IsCoprime x y) : y ∉ P := by
   intro hy
   obtain ⟨a, b, hab⟩ := hxy
   exact hP ((Ideal.eq_top_iff_one P).mpr (hab ▸ P.add_mem (P.mul_mem_left a hx)
     (P.mul_mem_left b hy)))
-theorem reducedProduct_escapes_prime {A : Type} [CommRing A] [Algebra Geom A]
+private theorem reducedProduct_escapes_prime {A : Type} [CommRing A] [Algebra Geom A]
     {f : A[X]} (s : Factorization f) (P : Ideal A[X]) [hP : P.IsPrime]
     (hv : (reducedProduct s).value ∈ P) :
     (reducedProduct s).first ∉ P ∨ (reducedProduct s).second ∉ P := by
@@ -7228,16 +6968,16 @@ theorem reducedProduct_escapes_prime {A : Type} [CommRing A] [Algebra Geom A]
       hP.mul_notMem (hP.mul_notMem (hP.mul_notMem hu0 hu1)
         (fun h => hd (hP.mem_of_pow_mem 2 h))) ht
     exact hn (by simpa using h')
-def half (A : Type) [CommRing A] [Algebra Geom A] : A[X] :=
+private def half (A : Type) [CommRing A] [Algebra Geom A] : A[X] :=
   C (algebraMap Geom A ((2 : Geom)⁻¹))
-theorem two_mul_half (A : Type) [CommRing A] [Algebra Geom A] :
+private theorem two_mul_half (A : Type) [CommRing A] [Algebra Geom A] :
     (2 : A[X]) * half A = 1 := by
   let ι : Geom →+* A[X] := C.comp (algebraMap Geom A)
   have htwo := geom_cast_ne_zero (n := 2) (by decide) (by decide)
   have hh : (2 : Geom) * (2 : Geom)⁻¹ = 1 := mul_inv_cancel₀ htwo
   change (2 : A[X]) * ι ((2 : Geom)⁻¹) = 1
   simpa only [map_mul, map_ofNat, map_one] using congrArg ι hh
-theorem two_hasse {A : Type} [CommRing A] (f : A[X]) :
+private theorem two_hasse {A : Type} [CommRing A] (f : A[X]) :
     (2 : A[X]) * hasseDeriv 2 f = derivative (derivative f) := by
   simpa [Nat.factorial, nsmul_eq_mul, Function.iterate_succ_apply'] using
     congrFun (factorial_smul_hasseDeriv (R := A) 2) f
@@ -7318,59 +7058,6 @@ private theorem exponent_le_of_mem_translation_monomial
     exact Or.inl (by simp [w, Finsupp.weight_single_one_apply])
   have hh := globalPointTranslation_mem_restrictWeightAtMost (Nat.zero_le _) (Nat.zero_le _) x y h
   simpa only [w, Finsupp.weight_single_one_apply] using mem_restrictWeightAtMost.mp hh v hv
-theorem eligible_of_le {u v : JetVariable 3 →₀ ℕ}
-    (h : v ≤ u) (hu : AnchorEligible u) : AnchorEligible v := by
-  have hd : v.some.degree ≤ u.some.degree := by
-    rw [Finsupp.degree_eq_sum, Finsupp.degree_eq_sum]
-    exact Finset.sum_le_sum fun j _ => h (some j)
-  have hw (w : Fin 4 → ℕ) : v.some.weight w ≤ u.some.weight w := by
-    rw [Finsupp.weight_eq_sum, Finsupp.weight_eq_sum]
-    exact Finset.sum_le_sum fun j _ => Nat.mul_le_mul_right (w j) (h (some j))
-  have ht : v.weight (differentialWeight 133671) ≤ u.weight (differentialWeight 133671) := by
-    rw [Finsupp.weight_eq_sum, Finsupp.weight_eq_sum]
-    exact Finset.sum_le_sum fun j _ => Nat.mul_le_mul_right (differentialWeight 133671 j) (h j)
-  obtain ⟨hdeg, hi, hf, htail, hwgt⟩ := hu
-  have hcap : 48 - (u.some.degree - 113 + 1) / 2 ≤ 48 - (v.some.degree - 113 + 1) / 2 := by
-    omega
-  refine ⟨hd.trans hdeg, (hw _).trans hi, (h _).trans hf, ?_, ht.trans hwgt⟩
-  exact (add_le_add (add_le_add (h _) (h _)) (h _)).trans (htail.trans hcap)
-theorem translate_mem_anchorSpace (x y : Geom) (Q : anchorSpace) :
-    globalPointTranslation x y (Q : DifferentialPolynomial Geom 3) ∈ anchorSpace := by
-  classical
-  let f := globalPointTranslation (d := 3) x y
-  change f (Q : DifferentialPolynomial Geom 3) ∈ anchorSpace
-  rw [(Q : DifferentialPolynomial Geom 3).as_sum, map_sum]
-  refine Submodule.sum_mem _ fun u hu => ?_
-  change globalPointTranslation x y (monomial u _) ∈
-    restrictSupport Geom {v | AnchorEligible v}
-  apply (mem_restrictSupport_iff Geom).mpr
-  intro v hv
-  exact eligible_of_le (exponent_le_of_mem_translation_monomial x y u v _ hv) (Q.property hu)
-theorem rank_local_le_origin (x y : Geom) :
-    Module.finrank Geom (LinearMap.range (anchorLocal x y)) ≤
-      Module.finrank Geom (LinearMap.range (anchorLocal 0 0)) := by
-  have hpositive (j : JetVariable 3) : differentialWeight 133671 j ≠ 0 := by
-    cases j with
-    | none => decide
-    | some j =>
-      have hj := j.isLt
-      change 133671 - j.val ≠ 0
-      omega
-  have : Module.Finite Geom anchorSpace :=
-    restrictSupport_finite <|
-      (Finsupp.finite_of_nat_weight_le _ hpositive _).subset fun _ hu => hu.2.2.2.2
-  let tr : anchorSpace →ₗ[Geom] anchorSpace :=
-    ((globalPointTranslation x y).toLinearMap.domRestrict anchorSpace).codRestrict anchorSpace
-      (translate_mem_anchorSpace x y)
-  have h : anchorLocal x y = (anchorLocal 0 0).comp tr := by
-    apply LinearMap.ext
-    intro Q
-    change localConstraintAt 90 x y (Q : DifferentialPolynomial Geom 3) =
-      localConstraintAt 90 0 0 (globalPointTranslation x y Q)
-    exact localConstraintAt_eq_zero_globalPointTranslation (d := 3) (m := 90) x y
-      (Q : DifferentialPolynomial Geom 3)
-  rw [h]
-  exact LinearMap.finrank_range_comp_le_left (anchorLocal 0 0) tr
 end
 end K1_13_1_1
 end
