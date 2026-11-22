@@ -2,7 +2,6 @@ import ProximityPrize.SubmissionLower.HighCore82219PrefixHelpers
 import ProximityPrize.SubmissionLower.HighCore82219ScheduleData
 import ProximityPrize.SubmissionLower.HighCore82219Regular
 
-set_option Elab.async false
 set_option autoImplicit true
 set_option maxRecDepth 18000
 
@@ -606,6 +605,7 @@ structure FailureBooks {b u del} {M : AnchorModel u del} {Γ} (F : AnchoredFamil
   point_le : point.card ≤ (fees b).point
   covers : ∀ i ≤ laterCount b, ∀ γ ∈ Γ, ∀ I ∈ R.lost i,
     OnParent F I γ → γ ∈ point ∨ γ ∈ loss
+  covers_rank : b = .h2367 → ∀ γ ∈ Γ, ∀ I ∈ R.rankExit, OnParent F I γ → γ ∈ loss
 theorem properBin {b u del} {M : AnchorModel u del} {Γ} {F : AnchoredFamily M Γ}
     {rows : Banks} {pairs : HighCore82219.Pairs b M.overhead.toNat rows} (R : Process pairs)
     (src : Source b M F rows) (i : ℕ) :
@@ -636,10 +636,148 @@ theorem properBin {b u del} {M : AnchorModel u del} {Γ} {F : AnchoredFamily M �
   refine ⟨C, fun fee => ?_, hcover⟩
   rw [← dot_cast]
   exact (Nat.cast_le (α := ℚ)).mpr (hC fee)
+open Finset
+open HighCore82219 (Band degreeAt gap agreement blockLength)
+open P1_7_4 (massQ_nonneg rank_equation)
+open K1_14_2_2 (ODECaps dual)
+open High50Nonlinear (remainder bill_after_exit fixed_fee_quadratic charge)
+
+/- The coupled exit charge adapts GordoAR's PR655 (09dcdd22-b04c-4426-981f-d18163c6411e). -/
+def rankMarks {b : Band} {h rows} {pairs : HighCore82219.Pairs b h rows}
+    {u del} {M : AnchorModel u del} {Γ} (F : AnchoredFamily M Γ) (R : Process pairs) : Finset K :=
+  Γ.filter fun γ => ∃ I ∈ R.rankExit, OnParent F I γ
+
+theorem nat_le_floor_of_le {m : ℕ} {q : ℚ} (h : (m : ℚ) ≤ q) :
+    m ≤ q.floor.toNat := by
+  exact Int.toNat_le_toNat (Rat.le_floor_iff.mpr (by exact_mod_cast h))
+
+theorem after_exit {b u del} {M : AnchorModel u del} {Γ} {F : AnchoredFamily M Γ}
+    {rows} {pairs : HighCore82219.Pairs b M.overhead.toNat rows}
+    (R : Process pairs) (est : PairedMass) (src : HighCore82219.Source b M F rows)
+    (hw : InBand b M.overhead) (w : ℕ → Mass) :
+    (∑ i ∈ range (laterCount b+1), dotQ (w i) (massQ (R.lost i))) ≤
+      weightedBill (laterCount b+1) w (remainder (stopIndex b) (history b) (rankMass b) (massQ R.rankExit)) := by
+  let E := R.tested (stopIndex b)
+  let S := R.rankExit
+  have hS : S ⊆ E := Finset.filter_subset _ _
+  have hlate (i : ℕ) (hs : stopIndex b ≤ i) (hi : i < laterCount b+1) : R.live i ⊆ E \ S := by
+    have hsub : R.live i ⊆ R.live (stopIndex b) := by
+      induction hs with
+      | refl => exact Subset.refl _
+      | @step j _ ih => exact (R.next_sub (by omega)).trans (ih (by omega))
+    intro I hI
+    have hm := hsub hI
+    rw [Process.live, ite_eq_left R.sched.stop_le] at hm
+    obtain ⟨hE,hdual⟩ := mem_filter.mp hm
+    refine mem_sdiff.mpr ⟨hE, ?_⟩
+    intro he
+    exact (mem_filter.mp he).2 (hdual le_rfl)
+  refine bill_after_exit (laterCount b+1) (stopIndex b) w (history b) (rankMass b)
+    R.live R.lost E S (fun _ hi => R.next_sub (by omega)) (fun _ hi => R.lost_diff (by omega))
+    (fun _ hi k => R.cap_live est src hw (by omega) k) ?_ hlate ?_ hS (fun k =>
+      (Nat.cast_le (α := ℚ)).mpr
+        ((K1_14_2_2.mass_mono (R.tested_sub _) k).trans (R.init_mass k)))
+  · intro i hi
+    exact (Nat.not_lt_zero _ (show i < 0 from hi)).elim
+  · intro i hi
+    apply Finset.disjoint_left.mpr
+    intro I hI hs
+    have hm := (mem_sdiff.mp (R.lost_diff (by omega) hI)).1
+    exact (mem_sdiff.mp (hlate i (Nat.zero_le _) hi hm)).2 hs
+
+theorem reduce_bill {n stop : ℕ} (w hist : ℕ → Mass) (entry used real : Mass)
+    (h : ∀ k, used k ≤ real k) :
+    weightedBill n w (remainder stop hist entry real) ≤
+      weightedBill n w (remainder stop hist entry used) := by
+  unfold weightedBill
+  apply sum_le_sum
+  intro i _
+  apply dotQ_mono_mass (fun k => sub_nonneg.mpr (le_max_left _ _))
+  intro k
+  unfold remainder
+  split
+  · exact sub_le_sub_left (h k) _
+  · exact min_le_min le_rfl (sub_le_sub_left (h k) _)
+
+/-- Count the rank exit and later cuts using their remaining section masses. -/
+theorem rank_and_loss_count {b : Band} {u del} {M : AnchorModel u del} {Γ} {rows}
+    {pairs : HighCore82219.Pairs b M.overhead.toNat rows}
+    (F : AnchoredFamily M Γ) (R : Process pairs) (est : PairedMass)
+    (src : HighCore82219.Source b M F rows) (hw : InBand b M.overhead) (hcount : FixedCount)
+    (hsmall : jointB b < p) (w : ℕ → Mass) (marks : ℕ → Finset K) (extra : ℕ → ℚ)
+    (hloc : ∀ i < laterCount b+1,
+      ((marks i).card : ℚ) ≤ dotQ (w i) (massQ (R.lost i)) + extra i)
+    (hextra : ∑ i ∈ range (laterCount b+1), extra i ≤ seedLimit b)
+    (hpay : JointBill b w) :
+    (((range (laterCount b+1)).biUnion marks ∪ rankMarks F R).card : ℚ) ≤ (fees b).loss := by
+  let S := R.rankExit
+  let B := max 2 (mass S 2)
+  let J := max 1 (min (mass S 1) B)
+  obtain ⟨G,hG,hzero⟩ := rank_equation S (fun _ hI => R.rank_geometry hI)
+    (J := mass S 1) (B := mass S 2) le_rfl le_rfl
+  have hBm : B ≤ mass S 2+2 := max_le (by omega) (by omega)
+  have hJm : J ≤ mass S 1+1 := max_le (by omega) ((min_le_left _ _).trans (by omega))
+  have hB₂ : 2 ≤ B := le_max_left _ _
+  have hJ₁ : 1 ≤ J := le_max_left _ _
+  have hJB : J ≤ B := max_le (by omega) (min_le_right _ _)
+  have hB : B ≤ jointB b := hBm.trans (Nat.add_le_add_right (nat_le_floor_of_le (R.rank_cap 2)) 2)
+  have hJ : J ≤ jointJ b := hJm.trans (Nat.add_le_add_right (nat_le_floor_of_le (R.rank_cap 1)) 1)
+  have degreeB : G.natDegree ≤ B := by
+    have htop : G.coeff G.natDegree ≠ 0 := by
+      rw [Polynomial.coeff_natDegree]
+      exact Polynomial.leadingCoeff_ne_zero.mpr hG.1
+    have hn : (G.coeff G.natDegree).coeff (G.coeff G.natDegree).natDegree ≠ 0 := by
+      rw [Polynomial.coeff_natDegree]
+      exact Polynomial.leadingCoeff_ne_zero.mpr htop
+    have hp := hG.2.2 _ _ hn
+    exact (Nat.le_add_left _ _).trans (hp.trans (le_max_right _ _))
+  have hcaps : ODECaps G B J := ⟨hG.1,
+    (le_min hG.2.1 degreeB).trans (le_max_right _ _),
+    fun j i hz => (hG.2.2 j i hz).trans (le_max_right _ _)⟩
+  have guard : ODEGuard B J := ⟨hB₂,hJ₁,hJB,hB.trans_lt hsmall⟩
+  have hcount' : (rankMarks F R).card ≤ fixedFee (finish b) B J :=
+    hcount b u del M Γ F hw B J guard G hcaps _ (filter_subset _ _)
+      (fun γ hγ => by
+        obtain ⟨I,hI,hm⟩ := (mem_filter.mp hγ).2
+        exact fixed_zero hm (hzero I hI))
+  have hl : 0 ≤ jointL b := by unfold jointL; positivity
+  have hm : 0 ≤ jointMu b := by unfold jointMu; positivity
+  have hfee : (fixedFee (finish b) B J : ℚ) ≤ charge (jointL b) (jointMu b) 0 0 0 B J := by
+    have h := fixed_fee_quadratic (jointL b) (jointMu b) hl hm hJB
+    have heq : 4*(jointL b)*B*J + (jointMu b)*J - 2*(jointL b)*(J : ℚ)^2 + (B : ℚ)^2+1 =
+        charge (jointL b) (jointMu b) 0 0 0 B J := by unfold charge; ring
+    dsimp only at h
+    rw [heq] at h
+    simpa only [fixedFee, jointL, jointMu, mul_assoc] using h
+  have hused : ∀ k : Fin 4, (![0,(J : ℚ)-1,(B : ℚ)-2,0] : Mass) k ≤ massQ S k := by
+    intro k
+    fin_cases k
+    · exact massQ_nonneg _ _
+    · change (J : ℚ)-1 ≤ (mass S 1 : ℚ)
+      have h : (J : ℚ) ≤ (mass S 1 : ℚ)+1 := by exact_mod_cast hJm
+      linarith only [h]
+    · change (B : ℚ)-2 ≤ (mass S 2 : ℚ)
+      have h : (B : ℚ) ≤ (mass S 2 : ℚ)+2 := by exact_mod_cast hBm
+      linarith only [h]
+    · exact massQ_nonneg _ _
+  let n := laterCount b+1
+  have hc : (((range n).biUnion marks ∪ rankMarks F R).card : ℚ) ≤
+      ((range n).biUnion marks).card + (rankMarks F R).card := by
+    exact_mod_cast card_union_le ((range n).biUnion marks) (rankMarks F R)
+  have hsum : (((range n).biUnion marks).card : ℚ) ≤ ∑ i ∈ range n, ((marks i).card : ℚ) := by
+    exact_mod_cast (card_biUnion_le : ((range n).biUnion marks).card ≤ ∑ i ∈ range n, (marks i).card)
+  have hloc' := sum_le_sum (fun i (hi : i ∈ range n) => hloc i (mem_range.mp hi))
+  rw [sum_add_distrib] at hloc'
+  have hr := (Nat.cast_le.mpr hcount').trans hfee
+  have hbill := (after_exit R est src hw w).trans (reduce_bill w (history b) (rankMass b) _ _ hused)
+  have hf := hpay B J hB₂ hJ₁ hB hJ
+  linarith only [hc,hsum,hloc',hr,hbill,hextra,hf]
+
 theorem failure_books {b u del} {M : AnchorModel u del} {Γ} {F : AnchoredFamily M Γ}
     {rows : Banks} {pairs : HighCore82219.Pairs b M.overhead.toNat rows} (R : Process pairs)
     (src : Source b M F rows) (hw : InBand b M.overhead) (est : PairedMass)
-    (ledger : LossLedger b) (tariff : (start b) < 7827 → CurveTariff b M F) :
+    (ledger : LossLedger b) (hcount : FixedCount)
+    (tariff : (start b) < 7880 → CurveTariff b M F) :
     Nonempty (FailureBooks F R) := by
   let n := laterCount b+1
   choose C hcost hcover using properBin R src
@@ -683,37 +821,50 @@ theorem failure_books {b u del} {M : AnchorModel u del} {Γ} {F : AnchoredFamily
   have hsum : (lost.card : ℚ) ≤ ∑ i ∈ Finset.range n, ((curveMarks F (C i)).card : ℚ) := by
     exact_mod_cast (Finset.card_biUnion_le : lost.card ≤
       ∑ i ∈ Finset.range n, (curveMarks F (C i)).card)
-  have loss_paid : (lost.card : ℚ) ≤ (fees b).loss := by
-    by_cases hd : (start b) < 7827
+  have per_bin (hd : start b < 7880) (a h : ℕ → ℚ)
+    (hrate : ∀ i ≤ laterCount b, RateOK (finish b) (a i) (h i) ∧
+      min (seedLimit b) (dotQ (cutWeight b 0 i) (history b i)) ≤ a i) (i : ℕ) (hi : i ∈ Finset.range n) :
+      ((curveMarks F (C i)).card : ℚ) ≤
+        dotQ (lossWeight b a h i) (massQ (R.lost i)) + (C i).cost 0 := by
+    have hi' : i ≤ laterCount b := Nat.le_of_lt_succ (Finset.mem_range.mp hi)
+    obtain ⟨rate, ha⟩ := hrate i hi'
+    have hloc : (C i).cost 0 ≤ dotQ (cutWeight b 0 i) (history b i) :=
+      (hcost i 0).trans (dotQ_mono_mass (cutWeight_nonneg b 0 i)
+        (fun k => (massQ_mono
+          (fun _ hI => (Finset.mem_sdiff.mp (fail i (Finset.mem_range.mp hi) hI)).1) k).trans
+            (caps i (Finset.mem_range.mp hi) k)))
+    have hr := rated_curve_count F (tariff hd) rate (C i) (hD i hi')
+      ((min_le_min le_rfl hloc).trans ha) (hp i hi')
+    have a0 : 0 ≤ a i := (show (0 : ℚ) ≤ ((p+1 : ℕ) : ℚ)/81 by positivity).trans rate.degree
+    calc
+      _ ≤ a i*((C i).cost 0 : ℚ) + h i*((C i).cost 1 : ℚ) + (C i).cost 0 := hr
+      _ ≤ a i*dotQ (cutWeight b 0 i) (massQ (R.lost i)) +
+            h i*dotQ (cutWeight b 1 i) (massQ (R.lost i)) + (C i).cost 0 :=
+        add_le_add (add_le_add (mul_le_mul_of_nonneg_left (hcost i 0) a0)
+          (mul_le_mul_of_nonneg_left (hcost i 1) rate.height)) le_rfl
+      _ = _ := by rw [dotQ_scale_add]; rfl
+  let paid := if b = .h2367 then lost ∪ rankMarks F R else lost
+  have loss_paid : (paid.card : ℚ) ≤ (fees b).loss := by
+    by_cases hj : b = .h2367
+    · have hd : start b < 7880 := by rw [hj]; decide
+      obtain ⟨a, h, hrate, hpay⟩ := ledger.discount hd
+      have hsmall : jointB b < p := by rw [hj]; decide +kernel
+      simp only [paid, if_pos hj]
+      exact rank_and_loss_count F R est src hw hcount hsmall (lossWeight b a h)
+        (fun i => curveMarks F (C i)) (fun i => (C i).cost 0)
+        (fun i hi => per_bin hd a h hrate i (Finset.mem_range.mpr hi)) sumD
+        (by simpa only [if_pos hj] using hpay)
+    simp only [paid, if_neg hj]
+    by_cases hd : (start b) < 7880
     · obtain ⟨a, h, hrate, hpay⟩ := ledger.discount hd
-      have per_bin (i : ℕ) (hi : i ∈ Finset.range n) :
-          ((curveMarks F (C i)).card : ℚ) ≤
-            dotQ (lossWeight b a h i) (massQ (R.lost i)) + (C i).cost 0 := by
-        have hi' : i ≤ laterCount b := Nat.le_of_lt_succ (Finset.mem_range.mp hi)
-        obtain ⟨rate, ha⟩ := hrate i hi'
-        have hloc : (C i).cost 0 ≤ dotQ (cutWeight b 0 i) (history b i) :=
-          (hcost i 0).trans (dotQ_mono_mass (cutWeight_nonneg b 0 i)
-            (fun k => (massQ_mono
-              (fun _ hI => (Finset.mem_sdiff.mp (fail i (Finset.mem_range.mp hi) hI)).1) k).trans
-                (caps i (Finset.mem_range.mp hi) k)))
-        have hr := rated_curve_count F (tariff hd) rate (C i) (hD i hi')
-          ((min_le_min le_rfl hloc).trans ha) (hp i hi')
-        have a0 : 0 ≤ a i := (show (0 : ℚ) ≤ ((p+1 : ℕ) : ℚ)/81 by positivity).trans rate.degree
-        calc
-          _ ≤ a i*((C i).cost 0 : ℚ) + h i*((C i).cost 1 : ℚ) + (C i).cost 0 := hr
-          _ ≤ a i*dotQ (cutWeight b 0 i) (massQ (R.lost i)) +
-                h i*dotQ (cutWeight b 1 i) (massQ (R.lost i)) + (C i).cost 0 :=
-            add_le_add (add_le_add (mul_le_mul_of_nonneg_left (hcost i 0) a0)
-              (mul_le_mul_of_nonneg_left (hcost i 1) rate.height)) le_rfl
-          _ = _ := by rw [dotQ_scale_add]; rfl
       calc
         _ ≤ ∑ i ∈ Finset.range n, ((curveMarks F (C i)).card : ℚ) := hsum
         _ ≤ ∑ i ∈ Finset.range n, (dotQ (lossWeight b a h i) (massQ (R.lost i)) +
-            ((C i).cost 0 : ℚ)) := Finset.sum_le_sum per_bin
+            ((C i).cost 0 : ℚ)) := Finset.sum_le_sum (per_bin hd a h hrate)
         _ ≤ weightedBill n (lossWeight b a h) (history b) + seedLimit b := by
           rw [Finset.sum_add_distrib]
           exact add_le_add (bill_bound n (lossWeight b a h) (history b) R.live R.lost next fail caps) sumD
-        _ ≤ _ := hpay
+        _ ≤ _ := by simpa only [if_neg hj] using hpay
     · calc
         _ ≤ ∑ i ∈ Finset.range n, ((curveMarks F (C i)).card : ℚ) := hsum
         _ ≤ ∑ i ∈ Finset.range n, ((p+1 : ℕ) : ℚ)*((C i).cost 0 : ℚ) :=
@@ -723,13 +874,22 @@ theorem failure_books {b u del} {M : AnchorModel u del} {Γ} {F : AnchoredFamily
           rw [← Finset.mul_sum]
           exact mul_le_mul_of_nonneg_left sumD (Nat.cast_nonneg _)
         _ ≤ _ := ledger.direct (Nat.le_of_not_gt hd)
-  refine ⟨⟨lost, points, (Nat.cast_le (α := ℚ)).mp loss_paid,
-    (Nat.cast_le (α := ℚ)).mp points_paid, ?_⟩⟩
-  intro i hi γ hγ I hI hm
-  have hr := Finset.mem_range.mpr (Nat.lt_succ_of_le hi)
-  rcases hcover i γ hγ ⟨I, hI, hm⟩ with hd | ⟨J, hJ, hj⟩
-  · exact Or.inl (Finset.mem_biUnion.mpr ⟨i, hr, hd⟩)
-  · exact Or.inr (Finset.mem_biUnion.mpr ⟨i, hr, mem_curveMarks (F := F) hγ hJ hj⟩)
+  refine ⟨⟨paid, points, (Nat.cast_le (α := ℚ)).mp loss_paid,
+    (Nat.cast_le (α := ℚ)).mp points_paid, ?_, ?_⟩⟩
+  · intro i hi γ hγ I hI hm
+    have hr := Finset.mem_range.mpr (Nat.lt_succ_of_le hi)
+    rcases hcover i γ hγ ⟨I, hI, hm⟩ with hd | ⟨J, hJ, hj⟩
+    · exact Or.inl (Finset.mem_biUnion.mpr ⟨i, hr, hd⟩)
+    · right
+      have hm' : γ ∈ lost := Finset.mem_biUnion.mpr ⟨i, hr, mem_curveMarks (F := F) hγ hJ hj⟩
+      by_cases hb : b = .h2367
+      · simpa only [paid, if_pos hb] using Finset.mem_union_left (rankMarks F R) hm'
+      · simpa only [paid, if_neg hb] using hm'
+  · intro hb γ hγ I hI hm
+    simp only [paid, if_pos hb]
+    apply Finset.mem_union_right
+    unfold rankMarks
+    exact Finset.mem_filter.mpr ⟨hγ, I, hI, hm⟩
 end
 end HighCore82219_3
 end
@@ -839,14 +999,14 @@ theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) (h4 : c4) : HighCore82219.c3 :
   let R : Process pairs :=
     ⟨sched, initial.parents, fixed, fun I hI => ⟨initial.active I hI, initial.height_two I hI⟩,
       initial.mass_bound⟩
-  obtain ⟨losses⟩ := failure_books R src hw paired_mass (h4 b) tariff
+  obtain ⟨losses⟩ := failure_books R src hw paired_mass (h4 b) h2 tariff
   obtain ⟨G, hgcap, hG⟩ := P1_7_4.rank_equation R.rankExit (fun _ hI => R.rank_geometry hI)
     (B := rankB b) (J := rankJ b) (floor_bound (R.rank_cap 1))
     (floor_bound (R.rank_cap 2))
   let seed := Γ.filter fun γ => initial.seed.Covers (M.label γ)
   let contents := Γ.filter fun γ => graphEval (M.label γ) initial.content = 0
   let ords := Γ.filter fun γ => atX (F.scalar γ) ∈ initial.ordinates
-  let rank := fixedMarks F G
+  let rank := if b = .h2367 then ∅ else fixedMarks F G
   have label_inj : Function.Injective M.label := fun _ _ h => sub_left_inj.mp h
   have hseed : seed.card ≤ (fees b).lowSeed := by
     have h := K1_14_3.seed_count (T := seed) label_inj.injOn initial.seed
@@ -866,12 +1026,15 @@ theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) (h4 : c4) : HighCore82219.c3 :
       (fun _ hγ => (Finset.mem_filter.mp hγ).2)
       (fun _ hγ _ hδ h => F.distinct (Finset.mem_filter.mp hγ).1 (Finset.mem_filter.mp hδ).1
         (K1_14_3.scalar_atX_injective h))).trans initial.ordinate_le
+  have hjet : (ords ∪ rank).card ≤ (fees b).lowJet := by
+    apply (Finset.card_union_le _ _).trans
+    apply (Nat.add_le_add hords ?_).trans sched.low_jet
+    by_cases hj : b = .h2367
+    · simp [rank, hj]
+    · simpa only [rank, if_neg hj] using fixed_paid h2 F hw sched.rank_guard hgcap
   let books : PrefixBooks b :=
     ⟨losses.loss, losses.point, seed, ords ∪ rank, fixedBook F R, contents,
-      losses.loss_le, losses.point_le, hseed,
-      ((Finset.card_union_le _ _).trans (Nat.add_le_add hords
-        (fixed_paid h2 F hw sched.rank_guard hgcap))).trans sched.low_jet,
-      fixed_book_paid h2 F hw R, hcontents⟩
+      losses.loss_le, losses.point_le, hseed, hjet, fixed_book_paid h2 F hw R, hcontents⟩
   have initial_mem (I : ↥R.final) : I.1 ∈ R.parents :=
     R.tested_sub _ (R.kept_sub _ (R.final_sub I.2))
   let toSurface (I : ↥R.final) : Surface := surfaceOf I.1 (R.geometry _ (initial_mem I)).1.prime
@@ -931,8 +1094,14 @@ theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) (h4 : c4) : HighCore82219.c3 :
     · have hclean : R.Clean I := fun j =>
         ⟨fun hj => forbid_fixed (mem_fixed_left F R j hγ (fixed_zero hm hj)),
           fun hj => forbid_fixed (mem_fixed_right F R j hγ (fixed_zero hm hj))⟩
-      have hnotRank : I ∉ R.rankExit := fun h => forbid_rank
-        (Finset.mem_filter.mpr ⟨hγ, fixed_zero hm (hG I h)⟩)
+      have hnotRank : I ∉ R.rankExit := by
+        intro h
+        by_cases hj : b = .h2367
+        · exact forbid_loss (Or.inr (losses.covers_rank hj γ hγ I h hm))
+        · apply forbid_rank
+          simp only [rank, if_neg hj]
+          unfold fixedMarks
+          exact Finset.mem_filter.mpr ⟨hγ, fixed_zero hm (hG I h)⟩
       have hnotLost : ∀ i ≤ laterCount b, I ∉ R.lost i := fun i hi h =>
         forbid_loss (losses.covers i hi γ hγ I h hm)
       let J : ↥R.final := ⟨I, R.retains hI hclean hnotRank hnotLost⟩
@@ -1368,7 +1537,7 @@ def persistentTop (d B J : ℕ) : ℚ :=
 theorem persistentTotal_nonneg (d B : ℕ) : 0 ≤ persistentTotal d B := by
   unfold persistentTotal siteRatio
   positivity
-theorem caps_weighted {d m B J : ℕ} (hl : 131071 ≤ d) (hh : d ≤ 164476)
+theorem caps_weighted {d m B J : ℕ} (hl : 131071 ≤ d) (hh : d ≤ 164496)
     (hm : m ≤ d) (hJ : 0 < J) :
     let t := max 1 (d-m)
     siteRatio m * totalCap t B ≤ persistentTotal d B ∧
@@ -1405,7 +1574,7 @@ theorem caps_weighted {d m B J : ℕ} (hl : 131071 ≤ d) (hh : d ≤ 164476)
       _ = (siteRatio m * t) * (2*J-1 : ℕ) := by push_cast; ring
       _ ≤ _ := mul_le_mul_of_nonneg_right hLambda (Nat.cast_nonneg _)
 theorem persistent_regular {w T s d B J} (hw : FixedWord w T s d)
-    (hl : 131071 ≤ d) (hh : d ≤ 164476) (hJ : 0 < J)
+    (hl : 131071 ≤ d) (hh : d ≤ 164496) (hJ : 0 < J)
     (f : Row 2) (hf : Irreducible f) (hfpos : 0 < f.degreeOf 1)
     (hb : f.totalDegree ≤ B) (hj : f.degreeOf 1 ≤ J)
     (hreg : ∀ γ ∈ T, RegularAt 1 f (extend (s γ))) :
@@ -1462,7 +1631,7 @@ theorem proof : HighCore82219_3.c2 := by
   intro b u del M Γ F hband B J guard G hG T hT hroot
   let d := degreeAt (finish b)
   have hdl : 131071 ≤ d := Nat.le_add_right _ _
-  have hdu : d ≤ 164476 := Nat.add_le_add_left (HighCore82219.terminal_guards b).2.1 131071
+  have hdu : d ≤ 164496 := Nat.add_le_add_left (HighCore82219.terminal_guards b).2.1 131071
   have hw : FixedWord M.word T F.scalar d := by
     refine ⟨F.distinct.mono hT, ?_, ?_⟩
     · intro γ hγ

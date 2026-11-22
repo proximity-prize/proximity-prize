@@ -1,6 +1,6 @@
 import ArkLib.ToMathlib.RingTheory.MvPolynomial.StandardMonomials
 import Mathlib.Algebra.MvPolynomial.NoZeroDivisors
-set_option Elab.async false
+import ProximityPrize.SubmissionLower.Fast064 -- serialize candidate build
 set_option autoImplicit true
 section
 set_option autoImplicit false

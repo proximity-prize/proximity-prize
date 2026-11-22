@@ -3,7 +3,6 @@ import Mathlib.RingTheory.Etale.Weakly
 import Mathlib.RingTheory.Flat.TorsionFree
 import Mathlib.RingTheory.TotallySplit
 import ProximityPrize.SubmissionLower.Fast014
-set_option Elab.async false
 set_option autoImplicit true
 section
 namespace Sol1.C42

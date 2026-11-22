@@ -1,4 +1,5 @@
 import ProximityPrize.SubmissionLower.ThetaSumDefs
+import ProximityPrize.SubmissionLower.ThetaSumData5 -- serialize candidate build
 
 /-! Kernel-checked chunks of the theta savings sum (generated; values from the exact ledger). -/
 

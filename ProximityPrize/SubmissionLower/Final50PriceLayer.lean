@@ -1,6 +1,6 @@
 import ProximityPrize.SubmissionLower.Final50Price
+import ProximityPrize.SubmissionLower.Final50PriceMonotone -- serialize candidate build
 
-set_option Elab.async false
 set_option maxHeartbeats 1500000
 namespace Final50PriceLayer
 open K1_13 (Shape)

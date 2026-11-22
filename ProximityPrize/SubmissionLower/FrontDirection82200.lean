@@ -1,6 +1,5 @@
 import ProximityPrize.SubmissionLower.FrontBranch5
 import ProximityPrize.SubmissionLower.FrontCases82200
-set_option Elab.async false
 set_option autoImplicit true
 section
 namespace Front82200Direction
@@ -448,7 +447,7 @@ theorem fixed_numerator (O : Offset F anchor) (W : K[X]) (hW : F.den = O.E * W)
     have hheight := F.height
     change F.U.natDegree + F.s + deleted.card ≤ heightCap at hheight
     have hmargin : k + heightCap ≤ agreement := by
-      change 164477 ≤ 179905
+      change 164497 ≤ 179895
       decide
     have hdeg : diff.natDegree ≤ max (l.natDegree + a.natDegree + P.natDegree)
         (r.natDegree + a.natDegree + P.natDegree) := by
@@ -504,10 +503,10 @@ theorem offset_of_anchor {u deleted} (F : Direction u deleted) (H : CrossLift F)
     change 0 < 131072
     decide
   have hagMargin : k + heightCap ≤ agreement := by
-    change 164477 ≤ 179905
+    change 164497 ≤ 179895
     decide
   have hdetMargin : k + 2 * heightCap ≤ blockLength := by
-    change 197882 ≤ 262144
+    change 197922 ≤ 262144
     decide
   have hpos : 0 < d := by dsimp only [d]; omega
   have hA1 : (F.A 1).natDegree ≤ F.s := le_max_right _ _

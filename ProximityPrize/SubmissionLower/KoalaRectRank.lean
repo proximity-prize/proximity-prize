@@ -1,7 +1,6 @@
 import ProximityPrize.SubmissionLower.KoalaRectPhysical
 import ProximityPrize.SubmissionLower.PortHighBase
 
-set_option Elab.async false
 set_option backward.isDefEq.respectTransparency false
 set_option maxSynthPendingDepth 16
 
@@ -130,7 +129,5 @@ theorem rectAmbient_volume (h : ℕ) (s : Shape) (W : ℕ) (U : Fin 2 → ℕ)
   rw [hsum]
   ring
 
-#print axioms rectTelescope
-#print axioms rectAmbient_volume
 end
 end KoalaRect

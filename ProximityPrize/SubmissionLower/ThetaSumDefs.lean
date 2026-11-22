@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import ProximityPrize.SubmissionLower.ThetaBlock -- serialize candidate build
 
 /-!
 Kernel-evaluated entries of the theta savings sum.

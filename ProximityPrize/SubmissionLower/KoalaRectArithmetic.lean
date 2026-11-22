@@ -1,8 +1,8 @@
 import ProximityPrize.SubmissionLower.HighCore82219Data
 import ProximityPrize.SubmissionLower.HighCore82219TerminalArithmetic
 import ProximityPrize.SubmissionLower.KoalaRectCharge
+import ProximityPrize.SubmissionLower.KoalaRectBridgeCore -- serialize candidate build
 
-set_option Elab.async false
 set_option autoImplicit true
 set_option maxRecDepth 18000
 
@@ -659,6 +659,5 @@ theorem strict_of_checks {lo h E : ℕ} {b : Bank} {v : RectArgs}
     blockSurplus_eq b (lo+1) E v hf hj he] at hc
   exact strict_of_first_difference hl hh (by omega) (by omega)
 
-#print axioms strict_of_checks
 
 end KoalaRectArithmetic

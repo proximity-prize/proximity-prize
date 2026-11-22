@@ -5,14 +5,13 @@ import ProximityPrize.SubmissionLower.ThetaSumTotal
 The theta savings of the primary blocks, summed over the strip of grades 1354..3011.
 -/
 
-set_option Elab.async false
 
 namespace ThetaSum
 open K1_13 hiding chart
 open K1_13_2 K1_13_2_2 K1_13_2_3 ThetaBlock
 open scoped BigOperators
-open private fastCum_eq oldCount_eq kernel_eq chart zero_residual blockBound_eq
-  from ProximityPrize.SubmissionLower.Fast060
+open K1_13_2_3_7 (fastCum_eq zero_residual blockBound_eq)
+open private oldCount_eq kernel_eq chart from ProximityPrize.SubmissionLower.Fast060
 
 theorem fastDen_eq' (u : ℤ) : fastDen u = K1_13_2_3_7.fastDen u := rfl
 
@@ -136,6 +135,5 @@ theorem total_le : 288366984459 ≤ ∑ i : BlockIndex, stripSave i := by
     (fun x : Fin 1658 × Fin 1647 => entry (1354 + x.1.val) x.2.val), Finset.univ_product_univ]
   exact (Finset.sum_le_sum fun x _ => entry_le x).trans (sum_embed_le embed stripSave)
 
-#print axioms total_le
 
 end ThetaSum

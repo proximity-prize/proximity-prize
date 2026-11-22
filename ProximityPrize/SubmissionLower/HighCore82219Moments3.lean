@@ -1,6 +1,5 @@
 import ProximityPrize.SubmissionLower.HighCore82219Moments2
 
-set_option Elab.async false
 set_option autoImplicit true
 set_option maxRecDepth 18000
 

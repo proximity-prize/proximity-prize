@@ -1,7 +1,6 @@
 import ProximityPrize.SubmissionLower.HighCore82219Family
 import ProximityPrize.SubmissionLower.HighCore82219UpperCertificates
 
-set_option Elab.async false
 set_option autoImplicit true
 set_option maxRecDepth 18000
 
@@ -136,8 +135,8 @@ theorem section_capacity {w T s d} (h : FixedWord w T s d) (hd : d < agreement) 
   have hx : agreement - d ≤ x := by dsimp [x]; omega
   have hnodes : nodes.card = x + HighCore82219.t := by
     rw [card_sdiff_of_subset (subset_univ common), card_univ, IRSProfile.card_index]
-    change 262144 - common.card = (179905 - common.card) + 82239
-    have hbound : common.card ≤ 179905 := hcommon.trans hd.le
+    change 262144 - common.card = (179895 - common.card) + 82249
+    have hbound : common.card ≤ 179895 := hcommon.trans hd.le
     omega
   have exists_trim (γ : K) : ∃ B : Finset I, γ ∈ T → B ⊆ hits γ \ common ∧ B.card = x := by
     by_cases hγ : γ ∈ T
@@ -378,7 +377,7 @@ theorem of_children (inverse : c1) (profiles : c2) : HighCore82219.c5 := by
   have hell : 0 < quotientOrder M.overhead.toNat := by
     change 0 < 131071 - M.overhead.toNat
     omega
-  have hd : degreeAt (finish b) ≤ 164476 := Nat.add_le_add_left hhi 131071
+  have hd : degreeAt (finish b) ≤ 164496 := Nat.add_le_add_left hhi 131071
   have hgap₃ : degreeAt (finish b) < agreement := hd.trans_lt (by decide)
   have hfac : degreeAt (finish b) + 1 < p :=
     (Nat.succ_le_of_lt hgap₃).trans_lt (by decide)
@@ -417,5 +416,4 @@ theorem tangent_count : c5 :=
   HighCore82219_5.of_children HighCore82219GeometryCert_1.proof
     (HighCore82219GeometryCert_2.of_children HighCore82219GeometryCert_2_1.proof HighCore82219GeometryCert_2_2.proof)
 
-#print axioms tangent_count
 end HighCore82219

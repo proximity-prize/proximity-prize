@@ -2,7 +2,6 @@ import ProximityPrize.SubmissionLower.Low48BentCycle
 import ProximityPrize.SubmissionLower.Final50GeometryCut
 
 set_option autoImplicit false
-set_option Elab.async false
 
 namespace Final50ActiveCycle
 
@@ -24,8 +23,8 @@ open K1_13_6_2_4_1 (positiveDiagonal)
 open MvPolynomial
 open scoped BigOperators Pointwise
 
-open private eval_surjective pointIdeal_injective point_component exists_coordinate_cut
-  from ProximityPrize.SubmissionLower.Fast054
+open K1_13_6_2_4 (eval_surjective point_component)
+open private pointIdeal_injective exists_coordinate_cut from ProximityPrize.SubmissionLower.Fast054
 open private liftedPoint eval_liftedPoint liftedPoint_old liftedPoint_mem
   from ProximityPrize.SubmissionLower.Final50GeometryCut
 

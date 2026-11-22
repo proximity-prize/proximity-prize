@@ -1,6 +1,6 @@
 import ProximityPrize.SubmissionLower.Low48BentCycle
+import ProximityPrize.SubmissionLower.Final50ActiveCycleBound -- serialize candidate build
 set_option autoImplicit false
-set_option Elab.async false
 namespace Low48BentCycle
 noncomputable section
 structure Doubled (R B : Family) : Prop where

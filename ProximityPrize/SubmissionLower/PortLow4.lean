@@ -1,5 +1,4 @@
 import ProximityPrize.SubmissionLower.PortLow5
-set_option Elab.async false
 set_option autoImplicit true
 section
 namespace P0_9_4
@@ -414,9 +413,9 @@ private def exponent (u i l k : ℕ) : SeedVar →₀ ℕ :=
   simp [exponent]
 @[simp] private theorem exponent_two (u i l k : ℕ) : exponent u i l k (some 2) = k := by
   simp [exponent]
-private def colExp {b : Bank} {h : ℕ} (c : Column b h) : SeedVar →₀ ℕ :=
+def colExp {b : Bank} {h : ℕ} (c : Column b h) : SeedVar →₀ ℕ :=
   exponent c.2.2.2.2.val (c.1.val - c.2.1.val - c.2.2.1.val) c.2.2.1.val c.2.1.val
-private def colX {b : Bank} {h : ℕ} (c : Column b h) : ℕ := c.2.2.2.1.val
+def colX {b : Bank} {h : ℕ} (c : Column b h) : ℕ := c.2.2.2.1.val
 private theorem column_injective (b : Bank) (h : ℕ) :
     Function.Injective (fun c : Column b h => (colExp c, colX c)) := by
   rintro ⟨q,k,l,x,u⟩ ⟨q',k',l',x',u'⟩ he

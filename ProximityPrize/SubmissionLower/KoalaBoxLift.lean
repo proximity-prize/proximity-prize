@@ -1,4 +1,5 @@
 import ProximityPrize.SubmissionLower.KoalaBoxDegree
+import ProximityPrize.SubmissionLower.KoalaRawBounds -- serialize candidate build
 
 set_option autoImplicit false
 namespace SplitCut.BoxDegree
@@ -41,8 +42,8 @@ private theorem lift_monomial (a b c n : ℕ) (m : Exp) (hm : m ∈ exps (a*n) (
       omega
     obtain ⟨p,hp,hd⟩ := ih _ hc
     let i : exps a b c := ⟨q,hq⟩
-    refine ⟨p * X i, ?_, (totalDegree_mul _ _).trans ?_⟩
-    · rw [map_mul, hp, show proj F a b c (X i) = monomial q 1 from aeval_X _ _,
+    refine ⟨p * MvPolynomial.X i, ?_, (totalDegree_mul _ _).trans ?_⟩
+    · rw [map_mul, hp, show proj F a b c (MvPolynomial.X i) = monomial q 1 from aeval_X _ _,
         monomial_mul_monomial, tsub_add_cancel_of_le hle, mul_one]
     · exact Nat.add_le_add hd (by simp)
 
@@ -64,4 +65,3 @@ theorem mono {a b c x y z : ℕ} (ha : a≤x) (hb : b≤y) (hc : c≤z) :
 
 end
 end SplitCut.BoxDegree
-#print axioms SplitCut.BoxDegree.lift_box

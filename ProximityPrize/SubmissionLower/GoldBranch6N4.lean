@@ -1,6 +1,5 @@
 import ProximityPrize.SubmissionLower.GoldBranch3
 import ProximityPrize.SubmissionLower.GoldBranch6
-set_option Elab.async false
 set_option autoImplicit true
 section
 namespace P3_6_4
@@ -424,9 +423,9 @@ private theorem coefficient_bound {k : Type*} [CommRing k]
   have hsmall : 48914 * l < weight (d + e) i - weight e j := by omega
   unfold weight at hweight hsmall
   omega
-private def columnWeight {m n : ℕ} (j : Fin (m + n)) : ℕ :=
+def columnWeight {m n : ℕ} (j : Fin (m + n)) : ℕ :=
   j.addCases (fun j : Fin m => weight firstOrder j) (fun j : Fin n => weight secondOrder j)
-private theorem sylvester_entry {k : Type*} [CommRing k]
+theorem sylvester_entry {k : Type*} [CommRing k]
     (F G : k[X][X]) (m n : ℕ)
     (hF : ∀ i l : ℕ, 6819 * i + 48914 * l < firstOrder → (F.coeff i).coeff l = 0)
     (hG : ∀ i l : ℕ, 6819 * i + 48914 * l < secondOrder → (G.coeff i).coeff l = 0)
@@ -445,7 +444,7 @@ private theorem sylvester_entry {k : Type*} [CommRing k]
     split_ifs with h
     · exact coefficient_bound F firstOrder secondOrder i j h.1 hF
     · exact dvd_zero _
-private theorem det_bound {k : Type*} [CommRing k] {N D : ℕ}
+theorem det_bound {k : Type*} [CommRing k] {N D : ℕ}
     (M : Matrix (Fin N) (Fin N) k[X]) (row col : Fin N → ℕ)
     (hM : ∀ i j, (Polynomial.X : k[X]) ^ power (row i - col j) ∣ M i j)
     (hbudget : (∑ j, col j) + 48914 * D ≤ (∑ i, row i) + 48913) :
@@ -466,7 +465,7 @@ private theorem det_bound {k : Type*} [CommRing k] {N D : ℕ}
     omega
   have hD : D ≤ ∑ j, a j := by omega
   exact dvd_mul_of_dvd_right ((pow_dvd_pow _ hD).trans hprod) _
-private theorem sum_weight {d t N : ℕ} (ht : t ≤ N) (hend : d ≤ 6819 * t)
+theorem sum_weight {d t N : ℕ} (ht : t ≤ N) (hend : d ≤ 6819 * t)
     (hbefore : ∀ i < t, 6819 * i ≤ d) :
     (∑ i : Fin N, weight d i) = t * d - 6819 * (t * (t - 1) / 2) := by
   rw [Fin.sum_univ_eq_sum_range]
@@ -490,7 +489,7 @@ private theorem sum_weight {d t N : ℕ} (ht : t ≤ N) (hend : d ≤ 6819 * t)
       _ = _ := by simp [Nat.mul_comm]
   rw [Finset.sum_range_id] at hsum
   omega
-private theorem benchmark_budget :
+theorem benchmark_budget :
     (∑ j : Fin (70000 + 70000), columnWeight (m := 70000) (n := 70000) j) + 48914 * 69360 ≤
       (∑ i : Fin (70000 + 70000), weight (firstOrder + secondOrder) i) + 48913 := by
   have hF : (∑ i : Fin 70000, weight firstOrder i) = 0xaea36c7d := by
@@ -509,7 +508,7 @@ private theorem benchmark_budget :
   rw [Fin.sum_univ_add, hFG]
   simp only [columnWeight, Fin.addCases_left, Fin.addCases_right, hF, hG]
   decide
-private theorem resultant_bound
+theorem resultant_bound
     (F G : GenericX[X][X]) (z : GenericX) {m n D : ℕ} (hF : F.natDegree ≤ m) (hG : G.natDegree ≤ n)
     (hFO : ∀ i l : ℕ, 6819 * i + 48914 * l < firstOrder →
       ((F.taylor (C z)).coeff i).coeff l = 0)

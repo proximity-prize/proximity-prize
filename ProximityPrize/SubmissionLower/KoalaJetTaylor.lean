@@ -1,4 +1,5 @@
 import ProximityPrize.SubmissionLower.HighCore82219UpperGeometry
+import ProximityPrize.SubmissionLower.KoalaTwoCutRelative -- serialize candidate build
 
 set_option autoImplicit false
 set_option maxHeartbeats 1600000
@@ -357,8 +358,3 @@ theorem model_center (T : Data E) (J : Input) (B : ResidueLift J) (y : E)
     exact (h (Finset.mem_range.mpr (by omega))).elim
 end
 end SplitCut.JetTaylor
-
-#print axioms SplitCut.JetTaylor.numerator
-#print axioms SplitCut.JetTaylor.derivative_step
-#print axioms SplitCut.JetTaylor.model_constant
-#print axioms SplitCut.JetTaylor.model_center

@@ -1,6 +1,5 @@
 import ProximityPrize.SubmissionLower.Fast022
 import ProximityPrize.SubmissionLower.PortFoundation
-set_option Elab.async false
 set_option autoImplicit true
 section
 namespace CJ0
@@ -417,9 +416,6 @@ end P1
 end
 section
 namespace P1
-theorem high_with_reserve (b : HighBand) :
-    b.row.prefixFee + b.row.retained + 1 + anchorFee + rankFee ≤ scalarCap := by
-  cases b <;> decide
 end P1
 end
 section

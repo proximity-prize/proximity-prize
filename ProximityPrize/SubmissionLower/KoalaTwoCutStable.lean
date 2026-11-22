@@ -90,8 +90,8 @@ theorem stable_count (J : Input) (B : ResidueLift J) (D : Factors J B) (v w : �
   obtain ⟨δ,hδ,hval⟩ := PointCount.curve_degree_nat (‹(eIdeal J v w P).IsPrime›.ne_top) hDim
   have hw : FixedWord J.model.word U J.family.scalar (degreeAt J.hi) :=
     ⟨hword.distinct.mono hSub, fun γ hγ => hword.degree γ (hSub hγ), fun γ hγ => hword.hits γ (hSub hγ)⟩
-  have hD : degreeAt J.hi ≤ 133536 := by rw [hhi]; decide
-  have hL : 128606 ≤ L := by dsimp [L]; rw [hlo]; decide
+  have hD : degreeAt J.hi ≤ 133561 := by rw [hhi]; decide
+  have hL : 128581 ≤ L := by dsimp [L]; rw [hlo]; decide
   have hCuts (x : I) (hFail : ∃ γ ∈ U, (J.family.scalar γ).eval (node x) ≠ J.model.word x) :
       (U.filter fun γ => (J.family.scalar γ).eval (node x) = J.model.word x).card ≤ 129*δ := by
     obtain ⟨g,hg,hn,hits⟩ := hGood B D C hTU hs x hFail
@@ -105,6 +105,5 @@ theorem stable_count (J : Input) (B : ResidueLift J) (D : Factors J B) (v w : �
   rw [hval]
   exact_mod_cast hC
 
-#print axioms stable_count
 end
 end SplitCut.TwoCut

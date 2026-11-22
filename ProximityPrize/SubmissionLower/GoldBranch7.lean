@@ -1,7 +1,6 @@
 import ProximityPrize.SubmissionLower.UpperBranch3
 import ProximityPrize.SubmissionLower.UpperBranch5
 import ProximityPrize.SubmissionLower.UpperBranch7
-set_option Elab.async false
 set_option autoImplicit true
 section
 namespace P3_7

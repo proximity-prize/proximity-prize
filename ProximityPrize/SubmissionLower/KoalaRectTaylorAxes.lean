@@ -1,7 +1,7 @@
 import ProximityPrize.SubmissionLower.KoalaRectJetCoords
+import ProximityPrize.SubmissionLower.KoalaRuledBudget -- serialize candidate build
 
 set_option autoImplicit false
-set_option Elab.async false
 set_option maxHeartbeats 800000
 set_option backward.isDefEq.respectTransparency false
 
@@ -245,5 +245,3 @@ theorem inverseOrdinate_axis (J : Input) (hf : EquationAxis z J.f s) {r k : ℕ}
 
 end
 end KoalaRectTaylor
-
-#print axioms KoalaRectTaylor.inverseOrdinate_axis

@@ -1,6 +1,6 @@
 import ProximityPrize.SubmissionLower.AnchorPivotFactors82180
+import ProximityPrize.SubmissionLower.AnchorPivotRank82180 -- serialize candidate build
 
-set_option Elab.async false
 set_option maxHeartbeats 1500000
 namespace AnchorPivot82190
 open AnchorPivot82180
@@ -35,5 +35,4 @@ theorem all_ok (i : Fin 9) : Sound (allData i) (allPoly i) := by
   · exact spec7
   · exact spec8
 
-#print axioms all_ok
 end AnchorPivot82190

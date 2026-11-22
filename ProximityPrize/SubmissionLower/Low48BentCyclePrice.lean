@@ -2,7 +2,6 @@ import ProximityPrize.SubmissionLower.Low48BentCycleCap
 import ProximityPrize.SubmissionLower.Low48BentPolarization
 
 set_option autoImplicit false
-set_option Elab.async false
 
 namespace Low48BentCycle
 

@@ -1,6 +1,5 @@
 import ProximityPrize.SubmissionLower.PortFrontB
 import ProximityPrize.SubmissionLower.RungSplit
-set_option Elab.async false
 set_option autoImplicit true
 section
 namespace P1_3

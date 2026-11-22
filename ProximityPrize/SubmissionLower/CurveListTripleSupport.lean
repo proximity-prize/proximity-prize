@@ -1,6 +1,5 @@
 import ProximityPrize.SubmissionLower.CurveListPairInterpolation
 
-set_option Elab.async false
 set_option maxRecDepth 8000
 set_option maxHeartbeats 2000000
 

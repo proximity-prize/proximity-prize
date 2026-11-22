@@ -4,7 +4,6 @@ import ProximityPrize.SubmissionLower.Shared50BentCaps
 import ProximityPrize.SubmissionLower.Final50SurfaceLinearFour
 import ProximityPrize.SubmissionLower.Final50SurfaceLinearFive
 
-set_option Elab.async false
 set_option maxHeartbeats 1500000
 set_option maxRecDepth 20000
 namespace Shared50TallyNew
@@ -184,6 +183,5 @@ theorem count (D : Data Γ s f Q l S) (input : CutInput Γ s f Q l)
       rw [hkind] at hcap
       exact hcap
 
-#print axioms count
 end
 end Shared50TallyNew

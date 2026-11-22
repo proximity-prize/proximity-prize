@@ -1,7 +1,6 @@
 import ProximityPrize.SubmissionLower.HighCore82219Source
 import ProximityPrize.SubmissionLower.HighCore82229StageReceipts
 
-set_option Elab.async false
 set_option autoImplicit true
 set_option maxRecDepth 18000
 
@@ -173,5 +172,4 @@ theorem buffered_pairs (b : Band) {u del} (M : AnchorModel u del) {Γ}
     HighCore82219Stages.stage_bounds b hs hl (hu'.trans (by decide))
   exact pair_of_tests src hh (by omega) hs wf sf cf wm sm
 
-#print axioms buffered_pairs
 end HighCore82219

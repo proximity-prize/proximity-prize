@@ -1,7 +1,6 @@
 import ProximityPrize.SubmissionLower.Fast072
 import ProximityPrize.SubmissionLower.Fast074
 import ProximityPrize.SubmissionLower.Fast076
-set_option Elab.async false
 set_option autoImplicit true
 section
 set_option autoImplicit false
@@ -18,7 +17,7 @@ def c2 : Prop :=
   ∀ (B : Boxes) (P : Ideal GeoJets5) (t : Grade), (∀ j, 0 < t j) → ∀ N : ℕ,
     gradedHilbert (slot B) (gradedIdeal B P) (N • t) =
       affineHilbertFunction (diagonalIdeal B P t) N
-private theorem top_coeff_mono {p q : Form} {a : Grade}
+theorem top_coeff_mono {p q : Form} {a : Grade}
     (hp : p.totalDegree ≤ a.degree) (hq : q.totalDegree ≤ a.degree)
     (h : TopNonnegative (p - q)) : q.coeff a ≤ p.coeff a := by
   have hd : (p - q).totalDegree ≤ a.degree :=
@@ -82,7 +81,7 @@ noncomputable section
 open K1_13_6 K1_13_6_2 K1_13_6_2_4 K1_13_6_2_4_1 MvPolynomial
 open scoped Pointwise
 attribute [local instance] MvPolynomial.weightedGradedAlgebra
-private theorem diagonal_add (B : Boxes) (s t : Grade) :
+theorem diagonal_add (B : Boxes) (s t : Grade) :
     diagonalExponents B (s + t : Grade) = diagonalExponents B s + diagonalExponents B t := by
   ext m
   constructor
@@ -104,7 +103,7 @@ private theorem diagonal_add (B : Boxes) (s t : Grade) :
       refine Finset.sum_congr rfl fun i _ => ?_
       simpa only [Fin.append_left, Fin.append_right] using
         (Fin.sum_univ_add (Fin.append (v i) (w i))).symm
-private theorem diagonal_zero (B : Boxes) : diagonalExponents B (0 : Grade) = 0 := by
+theorem diagonal_zero (B : Boxes) : diagonalExponents B (0 : Grade) = 0 := by
   ext m
   rw [Set.mem_zero]
   constructor
@@ -121,7 +120,7 @@ private theorem zero_mem_lattice (B : Boxes) (i : Fin 5) : 0 ∈ latticePoints (
   allowed_zero _
 private theorem zero_mem_diagonal (B : Boxes) (t : Grade) : 0 ∈ diagonalExponents B t :=
   ⟨fun _ _ => 0, fun i _ => zero_mem_lattice B i, by simp⟩
-private theorem generator_mem_diagonal {B : Boxes} (v : Generator B) :
+theorem generator_mem_diagonal {B : Boxes} (v : Generator B) :
     v.2.val ∈ diagonalExponents B (slotWeight (slot B) v) := by
   classical
   let a (i : Fin 5) : Exponent := if i = v.1 then v.2.val else 0
@@ -143,12 +142,12 @@ private theorem generator_mem_diagonal {B : Boxes} (v : Generator B) :
           simp [a, h]
         · simp
         · simp [a]
-private theorem tagged_monomial (B : Boxes) (d : Generator B →₀ ℕ) (c : GeoField) :
+theorem tagged_monomial (B : Boxes) (d : Generator B →₀ ℕ) (c : GeoField) :
     taggedMap B (monomial d c) =
       monomial (Finsupp.weight (fun v : Generator B => v.2.val) d) c := by
   rw [taggedMap, aeval_monomial, Finsupp.prod, Finsupp.weight_apply, Finsupp.sum]
   simp only [monomial_pow, one_pow, ← monomial_sum_one, algebraMap_eq, C_mul_monomial, mul_one]
-private theorem tagged_exponent_mem (B : Boxes) (d : Generator B →₀ ℕ) :
+theorem tagged_exponent_mem (B : Boxes) (d : Generator B →₀ ℕ) :
     Finsupp.weight (fun v : Generator B => v.2.val) d ∈
       diagonalExponents B (Finsupp.weight (slotWeight (slot B)) d) := by
   induction d using Finsupp.induction_linear with
@@ -161,7 +160,7 @@ private theorem tagged_exponent_mem (B : Boxes) (d : Generator B →₀ ℕ) :
         | succ n ih =>
             simpa only [succ_nsmul] using Set.add_mem_add ih (generator_mem_diagonal v)
       simpa only [Finsupp.weight_single, diagonal_nsmul] using hmem
-private theorem tagged_lift {B : Boxes} {g : Grade} {m : Exponent}
+theorem tagged_lift {B : Boxes} {g : Grade} {m : Exponent}
     (hm : m ∈ diagonalExponents B g) :
     ∃ a : SlotRing B, a ∈ piece (slot B) g ∧ taggedMap B a = monomial m 1 := by
   classical
@@ -175,7 +174,7 @@ private theorem tagged_lift {B : Boxes} {g : Grade} {m : Exponent}
     simp [unitGrade, Finsupp.single_apply]
   refine ⟨monomial d 1, isWeightedHomogeneous_monomial _ _ _ hg, ?_⟩
   simp only [tagged_monomial, d, map_sum, Finsupp.weight_single, one_smul, v]
-private theorem tagged_image (B : Boxes) (g : Grade) :
+theorem tagged_image (B : Boxes) (g : Grade) :
     (piece (slot B) g).map (taggedMap B).toLinearMap =
       restrictSupport GeoField (diagonalExponents B g) := by
   apply le_antisymm

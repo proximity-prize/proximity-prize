@@ -1,6 +1,5 @@
 import ProximityPrize.SubmissionLower.PrimaryTaperColumns
 
-set_option Elab.async false
 set_option maxRecDepth 30000
 set_option maxHeartbeats 0
 
@@ -322,5 +321,4 @@ theorem exact_columns (A D : ℕ) (hA : 0<A) (hD : 3<D) (hBudget : D*4012 ≤ 30
   push_cast at h
   omega
 
-#print axioms exact_columns
 end TaperColumns

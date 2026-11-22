@@ -1,6 +1,5 @@
 import ProximityPrize.SubmissionLower.GoldBranch6
 import ProximityPrize.SubmissionLower.PortLow7
-set_option Elab.async false
 set_option autoImplicit true
 section
 namespace P3_6_6
@@ -10,16 +9,6 @@ open P3 (K)
 open P3_6 (SmallFactor physicalDegree primaryBox primaryCutoff taylorLength TrueWeightLE)
 open K1_13 (Geom Row Shape shape extend InBox OnFactor OrderAt chart mixed32)
 open K1_13_6 (HighChart toGeneric markIdeal separant jetNumerator divisorIdeal cycleLength)
-structure CutInput (Γ : Finset K) (s : K → K[X]) (f Q : Row 4) (l : ℕ) : Prop where
-  distinct : Set.InjOn s (Γ : Set K)
-  degree : ∀ γ ∈ Γ, (s γ).natDegree ≤ physicalDegree
-  small : SmallFactor f
-  onFactor : ∀ γ ∈ Γ, OnFactor f (extend (s γ))
-  positive : 0 < l
-  proper : ¬ f ∣ Q
-  box : InBox (shape Q) primaryBox
-  weight : TrueWeightLE Q primaryCutoff
-  order : ∀ γ ∈ Γ, OrderAt Q (extend (s γ)) l
 def membershipTest (g : Row 4) : Row 4 := jetNumerator g taylorLength
 def nextTest (g : Row 4) : Row 4 := jetNumerator g (taylorLength + 1)
 def MixedMark (f Q : Row 4) (l : ℕ) (S : Geom[X]) : Prop :=
@@ -30,13 +19,6 @@ def MixedMark (f Q : Row 4) (l : ℕ) (S : Geom[X]) : Prop :=
         C ≤ markIdeal S ∧
         (cycleLength (divisorIdeal surface (membershipTest g)) C hc.isPrime ≠ 1 ∨
           toGeneric (nextTest g) ∉ C)
-def auxCurves32 (x : Shape) : ℕ :=
-  let p := x.chamber
-  let h := chart taylorLength p
-  mixed32 p primaryBox (primaryBox.plus (p.scale 4)) h + 2 * x.t * mixed32 p p p h
-def auxPoints32 (x : Shape) : ℕ :=
-  let p := x.chamber
-  mixed32 p primaryBox (primaryBox.plus (p.scale 4)) p + 2 * x.t * mixed32 p p p p
 end
 end P3_6_6
 end
@@ -95,8 +77,6 @@ variable {f Q : Row 4} {l : ℕ} (b : Branch f Q l)
 def g : Row 4 := (separant^[b.r]) f
 def sigma : GeoJets := toGeneric (separant b.g)
 def member : GeoJets := toGeneric (membershipTest b.g)
-def Contains (p : JetPoint) : Prop :=
-  b.curve ≤ RingHom.ker (MvPolynomial.eval p) ∧ MvPolynomial.eval p b.sigma ≠ 0
 def graph : GeoJets5 :=
   MvPolynomial.rename Fin.castSucc (toGeneric (partialFlow b.g)) +
     MvPolynomial.C (4 : GeoField) * MvPolynomial.rename Fin.castSucc b.sigma *
@@ -109,26 +89,7 @@ def onGraph : GeoJets5 →+* b.Local :=
       (b.localMap (MvPolynomial.C (-(4 : GeoField)⁻¹) * toGeneric (partialFlow b.g)) *
         IsLocalization.Away.invSelf b.sigma)
       (fun i => b.localMap (MvPolynomial.X i)))
-def localCurve : Ideal b.Local := b.curve.map b.localMap
-def regularEval (p : JetPoint) (h : b.Contains p) : b.Local →+* GeoField :=
-  IsLocalization.Away.lift b.sigma (isUnit_iff_ne_zero.mpr h.2)
-def liftedEval (p : JetPoint) (h : b.Contains p) : GeoJets5 →+* GeoField :=
-  (b.regularEval p h).comp b.onGraph
 end Branch
-def budget4 (p : Shape) : ℕ :=
-  mixed32 p primaryBox (chart (taylorLength + 1) p) (chart (taylorLength + 2) p)
-def budget5 (p : Shape) : ℕ :=
-  let a := liftedChart (taylorLength + 1) p
-  let b := liftedChart (taylorLength + 2) p
-  mixed32 p primaryBox a b + (taylorLength + 1) * mixed32 p primaryBox (graphBox p) b +
-    (taylorLength + 2) * mixed32 p primaryBox (graphBox p) a
-def Slice4 {f Q l} (b : Branch f Q l) (T : Finset JetPoint) : Prop :=
-  T.card ≤ 1 ∨ ∃ D, Box4 (chart (taylorLength + 2) (shape f).chamber) D ∧
-    D ∉ b.curve ∧ ∀ p ∈ T, MvPolynomial.eval p D = 0
-def Slice5 {f Q l} (b : Branch f Q l) (T : Finset JetPoint) : Prop :=
-  T.card ≤ 1 ∨ ∃ D, Box5 (liftedChart (taylorLength + 2) (shape f).chamber)
-      (taylorLength + 2) D ∧ b.onGraph D ∉ b.localCurve ∧
-    ∀ p ∈ T, ∀ h : b.Contains p, b.liftedEval p h D = 0
 end
 end P3_6_6_2
 end
@@ -179,10 +140,6 @@ open K1_13_6_2_1 (jet_fits oldBox_of_fits three_weights separant_pow_bound jet_b
 open K1_13_7_1 (Chamber GeoFits shape_chamber weight_X_le weight_const_mul_le)
 open scoped BigOperators
 local notation "W" => MvPolynomial.weightedTotalDegree
-private abbrev TaylorIndex := Fin taylorLength
-private structure TaylorChart where
-  denom : GeoJets
-  numerator : TaylorIndex → GeoJets
 end
 end P3_6_6_2
 end
@@ -297,11 +254,6 @@ open K1_13 (Row)
 open K1_13_6 (toGeneric divisorIdeal cycleLength)
 open K1_13_6_3 (CoeffIdeal JetIdeal)
 open P3_6_6 (membershipTest nextTest)
-structure SimpleCut (g : Row 4) (surface P : JetIdeal) : Prop where
-  proper : toGeneric (membershipTest g) ∉ surface
-  minimal : (divisorIdeal surface (membershipTest g)).IsMinimalPrime P
-  one : cycleLength (divisorIdeal surface (membershipTest g)) P minimal.isPrime = 1
-  next : toGeneric (nextTest g) ∈ P
 def ShortSupport (A : CoeffIdeal) : Prop :=
   ∀ i : Fin K1_13.taylorLength, P3_6.taylorLength ≤ i.val → MvPolynomial.X i ∈ A
 end

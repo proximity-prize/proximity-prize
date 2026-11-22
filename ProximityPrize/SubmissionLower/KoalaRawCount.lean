@@ -159,4 +159,3 @@ theorem proper_count (J : Input) (B : ResidueLift J) (D : Factors J B) (v w k : 
 
 end
 end SplitCut.RawCount
-#print axioms SplitCut.RawCount.proper_count

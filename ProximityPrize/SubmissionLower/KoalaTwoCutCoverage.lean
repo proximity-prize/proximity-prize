@@ -1,6 +1,7 @@
 import ProximityPrize.SubmissionLower.KoalaCutMultiplicity
 import ProximityPrize.SubmissionLower.KoalaPointCount
 import ProximityPrize.SubmissionLower.HighCore82219Family
+import ProximityPrize.SubmissionLower.KoalaTwoCutMarks -- serialize candidate build
 
 set_option autoImplicit false
 set_option maxHeartbeats 900000
@@ -14,36 +15,36 @@ open scoped BigOperators
 
 /-- The ordinary node incidence bound fits two copies of the second-cut quota
     for a repeated first-cut component. The common sites shorten its node curves. -/
-theorem repeated_tariff {s ell k L : ℕ} (hs : s ≤ 133536) (he₀ : 128606 ≤ ell)
-    (he₁ : ell ≤ L) (he₂ : L ≤ 128693) (hk : k ≤ 4930) :
-    (262144-s)*(ell-s+k) ≤ (179905-s)*(2*(L+2+k)) := by
-  have ha : s ≤ 179905 := by omega
+theorem repeated_tariff {s ell k L : ℕ} (hs : s ≤ 133561) (he₀ : 128581 ≤ ell)
+    (he₁ : ell ≤ L) (he₂ : L ≤ 128680) (hk : k ≤ 4980) :
+    (262144-s)*(ell-s+k) ≤ (179895-s)*(2*(L+2+k)) := by
+  have ha : s ≤ 179895 := by omega
   by_cases hse : s ≤ ell
-  · have hsmall : 179905*(ell-s+k) ≤ (179905-s)*(ell+k) := by
+  · have hsmall : 179895*(ell-s+k) ≤ (179895-s)*(ell+k) := by
       zify [hse, ha]
       nlinarith only [mul_nonneg (show (0 : ℤ) ≤ s by positivity)
-        (show (0 : ℤ) ≤ 179905-ell-k by omega)]
-    refine Nat.le_of_mul_le_mul_left ?_ (by decide : 0 < 179905)
+        (show (0 : ℤ) ≤ 179895-ell-k by omega)]
+    refine Nat.le_of_mul_le_mul_left ?_ (by decide : 0 < 179895)
     calc
-      179905*((262144-s)*(ell-s+k)) = (262144-s)*(179905*(ell-s+k)) := by ring
-      _ ≤ (262144-s)*((179905-s)*(ell+k)) := Nat.mul_le_mul_left _ hsmall
-      _ = (179905-s)*((262144-s)*(ell+k)) := by ring
-      _ ≤ (179905-s)*((179905*2)*(L+2+k)) :=
+      179895*((262144-s)*(ell-s+k)) = (262144-s)*(179895*(ell-s+k)) := by ring
+      _ ≤ (262144-s)*((179895-s)*(ell+k)) := Nat.mul_le_mul_left _ hsmall
+      _ = (179895-s)*((262144-s)*(ell+k)) := by ring
+      _ ≤ (179895-s)*((179895*2)*(L+2+k)) :=
         Nat.mul_le_mul_left _ (Nat.mul_le_mul (by omega) (by omega))
-      _ = 179905*((179905-s)*(2*(L+2+k))) := by ring
+      _ = 179895*((179895-s)*(2*(L+2+k))) := by ring
   · rw [Nat.sub_eq_zero_of_le (by omega : ell ≤ s), zero_add]
-    have hn : 262144-s ≤ 6*(179905-s) := by omega
+    have hn : 262144-s ≤ 6*(179895-s) := by omega
     calc
-      _ ≤ (6*(179905-s))*k := Nat.mul_le_mul_right _ hn
-      _ = (179905-s)*(6*k) := by ring
+      _ ≤ (6*(179895-s))*k := Nat.mul_le_mul_right _ hn
+      _ = (179895-s)*(6*k) := by ring
       _ ≤ _ := Nat.mul_le_mul_left _ (by omega)
 
-theorem stable_tariff {s L k : ℕ} (hs : s ≤ 133536) (hL : 128606 ≤ L) :
-    (262144-s)*129 ≤ (179905-s)*(L+2+k) := by
-  have hn : 262144-s ≤ 6*(179905-s) := by omega
+theorem stable_tariff {s L k : ℕ} (hs : s ≤ 133561) (hL : 128581 ≤ L) :
+    (262144-s)*129 ≤ (179895-s)*(L+2+k) := by
+  have hn : 262144-s ≤ 6*(179895-s) := by omega
   calc
-    _ ≤ (6*(179905-s))*129 := Nat.mul_le_mul_right _ hn
-    _ = (179905-s)*(6*129) := by ring
+    _ ≤ (6*(179895-s))*129 := Nat.mul_le_mul_right _ hn
+    _ = (179895-s)*(6*129) := by ring
     _ ≤ _ := Nat.mul_le_mul_left _ (by omega)
 
 open P1 (I K node)
@@ -51,9 +52,9 @@ open HighCore82219 (FixedWord agreement blockLength persistent_card_le section_i
 open P1_7_3 (persistentNodes)
 
 theorem repeated_marks {word : I → K} {U : Finset K} {S : K → Polynomial K} {d : ℕ}
-    (hword : FixedWord word U S d) (hd : d ≤ 133536)
-    {ell L k δ : ℕ} (he₀ : 128606 ≤ ell) (he₁ : ell ≤ L) (he₂ : L ≤ 128693)
-    (hk : k ≤ 4930) (hδ : 0 < δ)
+    (hword : FixedWord word U S d) (hd : d ≤ 133561)
+    {ell L k δ : ℕ} (he₀ : 128581 ≤ ell) (he₁ : ell ≤ L) (he₂ : L ≤ 128680)
+    (hk : k ≤ 4980) (hδ : 0 < δ)
     (hcuts : ∀ x : I, (∃ γ ∈ U, (S γ).eval (node x) ≠ word x) →
       (U.filter fun γ => (S γ).eval (node x) = word x).card ≤
         (ell-(persistentNodes word U S).card+k)*δ) :
@@ -63,9 +64,9 @@ theorem repeated_marks {word : I → K} {U : Finset K} {S : K → Polynomial K} 
   · let s := (persistentNodes word U S).card
     have hs := (persistent_card_le hword hlarge).trans hd
     have hh := repeated_tariff (s:=s) hs he₀ he₁ he₂ hk
-    have hpos : 0 < 179905-s := by omega
+    have hpos : 0 < 179895-s := by omega
     have h := section_incidence hword ((ell-s+k)*δ) hcuts
-    change (179905-s)*U.card ≤ (262144-s)*((ell-s+k)*δ) at h
+    change (179895-s)*U.card ≤ (262144-s)*((ell-s+k)*δ) at h
     refine Nat.le_of_mul_le_mul_left ?_ hpos
     rw [← mul_assoc]
     rw [← mul_assoc] at h
@@ -73,8 +74,8 @@ theorem repeated_marks {word : I → K} {U : Finset K} {S : K → Polynomial K} 
   · exact (show U.card ≤ 1 by omega).trans (Nat.succ_le_of_lt (Nat.mul_pos (by omega) hδ))
 
 theorem stable_marks {word : I → K} {U : Finset K} {S : K → Polynomial K} {d : ℕ}
-    (hword : FixedWord word U S d) (hd : d ≤ 133536)
-    {L k δ : ℕ} (hL : 128606 ≤ L) (hδ : 0 < δ)
+    (hword : FixedWord word U S d) (hd : d ≤ 133561)
+    {L k δ : ℕ} (hL : 128581 ≤ L) (hδ : 0 < δ)
     (hcuts : ∀ x : I, (∃ γ ∈ U, (S γ).eval (node x) ≠ word x) →
       (U.filter fun γ => (S γ).eval (node x) = word x).card ≤ 129*δ) :
     U.card ≤ (L+2+k)*δ := by
@@ -83,9 +84,9 @@ theorem stable_marks {word : I → K} {U : Finset K} {S : K → Polynomial K} {d
   · let s := (persistentNodes word U S).card
     have hs := (persistent_card_le hword hlarge).trans hd
     have hh := stable_tariff (s:=s) (k:=k) hs hL
-    have hpos : 0 < 179905-s := by omega
+    have hpos : 0 < 179895-s := by omega
     have h := section_incidence hword (129*δ) hcuts
-    change (179905-s)*U.card ≤ (262144-s)*(129*δ) at h
+    change (179895-s)*U.card ≤ (262144-s)*(129*δ) at h
     refine Nat.le_of_mul_le_mul_left ?_ hpos
     rw [← mul_assoc]
     rw [← mul_assoc] at h
@@ -143,9 +144,3 @@ theorem weighted_cover (I : Ideal (MvPolynomial σ F)) (T : Finset α) (x : α �
 
 end
 end SplitCut.TwoCutCoverage
-
-#print axioms SplitCut.TwoCutCoverage.repeated_tariff
-#print axioms SplitCut.TwoCutCoverage.stable_tariff
-#print axioms SplitCut.TwoCutCoverage.repeated_marks
-#print axioms SplitCut.TwoCutCoverage.stable_marks
-#print axioms SplitCut.TwoCutCoverage.weighted_cover

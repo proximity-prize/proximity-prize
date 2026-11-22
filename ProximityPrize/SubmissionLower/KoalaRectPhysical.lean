@@ -1,6 +1,6 @@
 import ProximityPrize.SubmissionLower.KoalaRectSource
+import ProximityPrize.SubmissionLower.KoalaRectCutoff -- serialize candidate build
 
-set_option Elab.async false
 set_option backward.isDefEq.respectTransparency false
 set_option maxHeartbeats 1200000
 set_option maxSynthPendingDepth 16
@@ -159,6 +159,5 @@ theorem rectPhysical_bound (h : ℕ) (word : I → L) (s : Shape) (W : ℕ) (U :
   have hr := (LinearMap.range f).finrank_le.trans htarget
   omega
 
-#print axioms rectPhysical_bound
 end
 end KoalaRect

@@ -1,5 +1,4 @@
 import ProximityPrize.SubmissionLower.Pack_K1_14_2_1Arithmetic
-set_option Elab.async false
 set_option autoImplicit true
 section
 set_option maxSynthPendingDepth 8

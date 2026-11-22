@@ -6,7 +6,7 @@ import Mathlib.RingTheory.Artinian.Algebra
 import Mathlib.RingTheory.DedekindDomain.Factorization
 import Mathlib.RingTheory.Localization.NormTrace
 import ProximityPrize.SubmissionLower.Fast035
-set_option Elab.async false
+import ProximityPrize.SubmissionLower.Fast050 -- serialize candidate build
 set_option autoImplicit true
 section
 namespace K1_14_3_4
@@ -280,7 +280,7 @@ theorem trueWeight_iff {n D : ℕ} (P : Row n) :
     have hb := h _ hu
     rw [Finsupp.weight_optionElim, one_mul] at hb
     simpa only [Finsupp.weight_apply, smul_eq_mul, Nat.mul_comm] using hb
-private theorem differentialWeight_eq : differentialWeight (d := 3) 133671 =
+theorem differentialWeight_eq : differentialWeight (d := 3) 133671 =
     fun v => v.elim 1 (fun i => 133671 - i.val) := by
   funext v
   cases v <;> rfl
@@ -486,7 +486,7 @@ end LeadingCoefficient
 section FactorCover
 open K1 K1_13 MvPolynomial UniqueFactorizationMonoid
 open scoped BigOperators Polynomial
-private theorem factor_small {P f : Row 4} (hP : P ≠ 0)
+theorem factor_small {P f : Row 4} (hP : P ≠ 0)
     (hbox : InBox (shape P) ⟨120, 48, 10⟩) (hw : TrueWeightLE P (90 * 180265 - 1))
     (hf : Irreducible f) (ht : 0 < (shape f).t) (hd : f ∣ P) : SmallFactor f := by
   refine ⟨hf, ht, ⟨?_, ?_, ?_⟩, ?_⟩

@@ -1,7 +1,7 @@
 import ProximityPrize.SubmissionLower.Fast062
 import ProximityPrize.SubmissionLower.Fast063
 import ProximityPrize.SubmissionLower.Fast064
-set_option Elab.async false
+import ProximityPrize.SubmissionLower.Fast068 -- serialize candidate build
 set_option autoImplicit true
 section
 set_option autoImplicit false
@@ -1465,10 +1465,6 @@ abbrev Over (σ : Type) := MvPolynomial σ SectionField
 private abbrev Free := {k : Fin 4 // k ≠ 2}
 def parameter (k : Fin 4) : SectionField :=
   algebraMap Parameters SectionField (MvPolynomial.X k)
-def fieldLine {σ : Type} (i j : σ) : Over σ :=
-  MvPolynomial.X i + C (parameter 0) * MvPolynomial.X j - C (parameter 2)
-def sliceIdeal {σ : Type} (P : Ideal (Raw σ)) (i j : σ) : Ideal (Over σ) :=
-  P.map (map (algebraMap FX SectionField)) ⊔ Ideal.span {fieldLine i j}
 attribute [local instance] MvPolynomial.algebraMvPolynomial
 end
 end K1_14_3R_3_3
@@ -1483,10 +1479,6 @@ open K1_14 K1_14_3 K1_14_3R_3 MvPolynomial
 open scoped BigOperators
 noncomputable section
 private abbrev Coord := Option (Option (Fin 2))
-private def seedCoord (i : Fin 2) : Coord := some (some i)
-private def nest (F : Type) [CommRing F] :
-    MvPolynomial Coord F ≃ₐ[F] Polynomial (Polynomial (MvPolynomial (Fin 2) F)) :=
-  (optionEquivLeft F (Option (Fin 2))).trans (Polynomial.mapAlgEquiv (optionEquivLeft F (Fin 2)))
 end
 end K1_14_3R_3_3
 end

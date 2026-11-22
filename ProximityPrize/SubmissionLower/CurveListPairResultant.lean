@@ -1,6 +1,6 @@
 import ProximityPrize.SubmissionLower.RungSplit
+import ProximityPrize.SubmissionLower.CurveListFiberBlock -- serialize candidate build
 
-set_option Elab.async false
 set_option maxRecDepth 8000
 set_option maxHeartbeats 2000000
 

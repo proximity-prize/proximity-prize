@@ -2,7 +2,6 @@ import ProximityPrize.SubmissionLower.AnchorPivotRank82180
 import ProximityPrize.SubmissionLower.AnchorNinth82190
 import ProximityPrize.SubmissionLower.AnchorBlock82190
 
-set_option Elab.async false
 set_option maxRecDepth 6000
 set_option maxHeartbeats 1200000
 
@@ -94,5 +93,4 @@ theorem count_bound (rows : List Row) (d s : ℕ) (g : ℤ)
   simpa only [Fintype.card_fin] using
     ((Nat.add_le_add_left hc (Module.finrank Geom (LinearMap.range (blockAt d s g)))).trans_eq hd)
 
-#print axioms count_bound
 end RankRows82190

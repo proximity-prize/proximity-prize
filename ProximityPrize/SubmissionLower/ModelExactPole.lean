@@ -1,7 +1,7 @@
 import ProximityPrize.SubmissionLower.Numeric2Aux
 import ProximityPrize.SubmissionLower.Fast040
+import ProximityPrize.SubmissionLower.Final50Fat -- serialize candidate build
 
-set_option Elab.async false
 namespace ModelExactPole
 noncomputable section
 open P1 (I K node)
@@ -78,7 +78,5 @@ theorem exists_pole {cap u D Γ A} (M : P1.ModelAt cap u D) (F : P1.FamilyAt A M
   exact exists_shifted M F 0 (dvd_zero _) (by omega : 1 ≤ M.overhead.toNat)
     (by omega) (by simpa only [extend, natDegree_map] using hmax) degree
 
-#print axioms exists_shifted
-#print axioms exists_pole
 end
 end ModelExactPole

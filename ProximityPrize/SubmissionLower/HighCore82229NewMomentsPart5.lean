@@ -1,6 +1,6 @@
 import ProximityPrize.SubmissionLower.UpperBranch1
+import ProximityPrize.SubmissionLower.HighCore82229NewMomentsPart4 -- serialize candidate build
 
-set_option Elab.async false
 set_option maxRecDepth 18000
 set_option maxHeartbeats 14000000
 

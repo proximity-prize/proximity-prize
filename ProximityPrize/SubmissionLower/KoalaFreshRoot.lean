@@ -140,5 +140,3 @@ theorem root_at_fresh_variable {R E : Type} [CommRing R] [Field E]
     ((substitute_degree φ G S he hd).trans_lt hp) ((substitute_eval _ S x).trans hroot)
 
 end SplitCut.FreshRoot
-
-#print axioms SplitCut.FreshRoot.root_at_fresh_variable

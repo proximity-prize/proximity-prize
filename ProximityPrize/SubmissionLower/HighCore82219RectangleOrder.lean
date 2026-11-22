@@ -1,4 +1,5 @@
 import Mathlib.Data.Nat.Basic
+import ProximityPrize.SubmissionLower.KoalaRectReceipts -- serialize candidate build
 
 namespace HighCore82219
 
@@ -48,6 +49,5 @@ theorem oriented_rect_capacity_le {u w a b lo hi r : ℕ}
   rw [hl]
   exact Nat.le_trans (Nat.mul_le_mul_left _ hr) (transfer_capacity hyx)
 
-#print axioms oriented_rect_capacity_le
 
 end HighCore82219

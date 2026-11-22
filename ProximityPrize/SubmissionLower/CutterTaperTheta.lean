@@ -1,7 +1,6 @@
 import ProximityPrize.SubmissionLower.PrimaryTaperRankData
 import ProximityPrize.SubmissionLower.ThetaPrimary
 
-set_option Elab.async false
 set_option maxHeartbeats 2400000
 
 namespace CutterTaperTheta
@@ -79,5 +78,4 @@ theorem node_rank (x y : Geom) :
   unfold localRank
   omega
 
-#print axioms node_rank
 end CutterTaperTheta

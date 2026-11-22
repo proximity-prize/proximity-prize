@@ -1,7 +1,6 @@
 import ProximityPrize.SubmissionLower.KoalaRectPosition
 import ProximityPrize.SubmissionLower.KoalaRectQuotient
 
-set_option Elab.async false
 set_option autoImplicit false
 set_option backward.isDefEq.respectTransparency false
 
@@ -72,6 +71,5 @@ theorem rectCutoff_finrank_le (A h : ℕ) (s : Shape) (E W : ℕ) (U d : Fin 2 �
     · simp [hn]
     · exact (natDegree_lt_iff_degree_lt hn).1 (Nat.lt_succ_of_le (hrow hp hn).2)
 
-#print axioms rectCutoff_finrank_le
 end
 end KoalaRect

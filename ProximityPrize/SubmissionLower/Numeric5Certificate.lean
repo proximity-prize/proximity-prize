@@ -1,5 +1,4 @@
 import ProximityPrize.SubmissionLower.Numeric5Defs
-set_option Elab.async false
 set_option autoImplicit true
 section
 namespace K1_13_2_3_5

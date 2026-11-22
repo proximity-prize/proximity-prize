@@ -1,6 +1,6 @@
 import ProximityPrize.SubmissionLower.Fast068
 import ProximityPrize.SubmissionLower.Fast071
-set_option Elab.async false
+import ProximityPrize.SubmissionLower.Fast074 -- serialize candidate build
 set_option autoImplicit true
 section
 set_option autoImplicit false
@@ -2572,7 +2572,7 @@ theorem specialized_dvd {Γ s} (P : PoleData Γ s) (L : ResidueChart P)
   rw [MvPolynomial.map_C, heA] at h
   change MvPolynomial.C (D.map e) ∣ _ at h
   rwa [heD] at h
-private def rawWeight (i : Fin 3) : ℕ := 131071 - i.val
+def rawWeight (i : Fin 3) : ℕ := 131071 - i.val
 def trueWeight (h : ℕ) (i : SeedVar) : ℕ :=
   i.elim 0 (fun j => 131071 + h - j.val)
 private theorem weight_eq_sum {σ : Type*} (m : σ →₀ ℕ) (w : σ → ℕ) :
@@ -4227,7 +4227,7 @@ theorem sum_reverse (d : ℤ) (n N : ℕ) (hn : n ≤ N) :
       have hk' := Finset.mem_range.mp hk
       congr 1
       omega
-private def gradeLimit (q : ℕ) : ℤ := (5000 - (q : ℤ)) * triangular ((q : ℤ) + 1)
+def gradeLimit (q : ℕ) : ℤ := (5000 - (q : ℤ)) * triangular ((q : ℤ) + 1)
 theorem grade_le_limit (q : ℕ) (hq : q < 1151) :
     (gradeBound fullPowers q : ℤ) ≤ gradeLimit q := by
   rw [gradeBound, Nat.cast_sum]
@@ -5008,7 +5008,7 @@ namespace K1_13_7_3_2
 noncomputable section
 open K1_13 K1_13_4 MvPolynomial UniqueFactorizationMonoid
 private abbrev Exponent := Fin 3 →₀ ℕ
-private abbrev iterPartial (i : Fin 3) (a : ℕ) (P : Lower) : Lower :=
+abbrev iterPartial (i : Fin 3) (a : ℕ) (P : Lower) : Lower :=
   (pderiv (R := GenericX) i)^[a] P
 private theorem natCast_ne_zero {n : ℕ} (hpos : 0 < n) (hn : n < K1.p) :
     (n : GenericX) ≠ 0 := by

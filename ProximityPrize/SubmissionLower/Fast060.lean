@@ -1,5 +1,5 @@
 import ProximityPrize.SubmissionLower.Fast058
-set_option Elab.async false
+import ProximityPrize.SubmissionLower.Fast062 -- serialize candidate build
 set_option autoImplicit true
 section
 namespace K1_13_2_3_6
@@ -2413,7 +2413,7 @@ private theorem fastDen_eq (u : ℤ) : fastDen u = denominator u := by
     constructor <;> nlinarith only [hq]
 theorem den_neg {u : ℤ} (h : u < 0) : denominator u = 0 := by
   simp only [denominator, ite_eq_left h]
-private theorem fastCum_eq (d u : ℤ) : fastCum d u = cumulative d u := by
+theorem fastCum_eq (d u : ℤ) : fastCum d u = cumulative d u := by
   by_cases hd : d < 0
   · simp [fastCum, cumulative, hd]
   by_cases hu : u < 0
@@ -2479,10 +2479,10 @@ private theorem residual_eq (d j h : ℤ) (v : ℕ) :
     residualFlag (chart d j h) (Powers.expand ⟨v, 0, 0⟩) = chart (d - v) j h := by
   rw [residualFlag_expand]
   simp [chart]
-private theorem zero_residual (F : Flag) : residualFlag F (fun _ => 0) = F := by
+theorem zero_residual (F : Flag) : residualFlag F (fun _ => 0) = F := by
   cases F
   simp [residualFlag]
-private theorem blockBound_eq (i : BlockIndex) (p : Fin 11 → ℕ)
+theorem blockBound_eq (i : BlockIndex) (p : Fin 11 → ℕ)
     (horder : 0 < (initialFlag i).order) (hu : (initialFlag i).upper ≤ 2999 - offset i) :
     blockBound i p = (oldCount (initialFlag i) -
       max 0 (max (kernelLower (initialFlag i)) (kernelLower (residualFlag (initialFlag i) p)))).toNat := by

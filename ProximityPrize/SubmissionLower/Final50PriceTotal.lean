@@ -2,7 +2,6 @@ import ProximityPrize.SubmissionLower.Compact50PriceTable
 import ProximityPrize.SubmissionLower.Final50PriceMass
 import ProximityPrize.SubmissionLower.Final50FatReserve
 
-set_option Elab.async false
 set_option maxHeartbeats 1600000
 namespace Final50PriceTotal
 open K1_13 (Shape InBox FatEligible)
@@ -38,17 +37,24 @@ theorem chooseBand (r : Shape) (hr : Valid r) (hx : Box r) : ∃ k, Admits k r :
     · exact ⟨.one7, by simp [Admits, start, InBox]; omega⟩
   · have hj' : j = 6 ∨ j = 7 := by omega
     rcases hj' with rfl | rfl
-    · by_cases hb : b ≤ 11
-      · exact ⟨.two6thin, by simp [Admits, start, InBox, hb]; omega⟩
-      · exact ⟨.two6wide, by simp [Admits, start, InBox]; omega⟩
-    · exact ⟨.two7, by simp [Admits, start, InBox]; omega⟩
+    · by_cases hb6 : b ≤ 6
+      · exact ⟨.two6a, by simp [Admits, start, InBox, hb6]; omega⟩
+      by_cases hb11 : b ≤ 11
+      · exact ⟨.two6b, by simp [Admits, start, InBox, hb11]; omega⟩
+      by_cases hb13 : b ≤ 13
+      · exact ⟨.two6c, by simp [Admits, start, InBox, hb13]; omega⟩
+      · exact ⟨.two6d, by simp [Admits, start, InBox]; omega⟩
+    · by_cases hb5 : b ≤ 5
+      · exact ⟨.two7a, by simp [Admits, start, InBox, hb5]; omega⟩
+      · exact ⟨.two7b, by simp [Admits, start, InBox]; omega⟩
 
 private theorem charge_eq {k : Band} {r : Shape} (h : Admits k r) :
     Final50FatReserve.charge r.b r.j r.t = reserve k := by
-  obtain ⟨hb,hj,ht,hsmall,_⟩ := h
+  obtain ⟨hb,hj,ht,h6a,h6b,h6c,h7a,_⟩ := h
   have hb' := hb.1
   rw [hj, ht]
-  cases k <;> simp [start, reserve, Final50FatReserve.charge] at * <;> omega
+  cases k <;> simp [start, reserve, Final50FatReserve.charge] at * <;>
+    (try split_ifs) <;> omega
 
 private theorem degree_bound {r : Shape} (hr : Valid r) (hx : Box r) :
     r.b ≤ Final50FatReserve.degreeCap r.j := by
@@ -87,12 +93,12 @@ private theorem retained_cost {ι : Type*} [DecidableEq ι] {a : ι → Shape} {
   exact ⟨(h.1.trans hbox.1).trans (by decide), (h.2.1.trans hbox.2.1).trans (by decide)⟩
 
 /-- Total cost of all factors in the low-height cover. -/
-theorem total (top : ℕ) (htop : top ≤ 14) (n : ℕ) (a : Fin n → Shape) (l cost : Fin n → ℕ)
+theorem total (top : ℕ) (htop : top ≤ 13) (n : ℕ) (a : Fin n → Shape) (l cost : Fin n → ℕ)
     (hfits : Fits top a) (hlayers : LayerBudget a l)
     (hphys : ∀ i, 0 < l i → ∀ k, Admits k (retainedShape a l) →
       cost i ≤ physicalPrice (a i) (l i) (activeCap k))
     (hshared : ∀ i m u, 0 < m → m ≤ l i → Final50SharedPrice.RateFits (a i) u →
-      cost i ≤ Final50SharedPrice.price (a i) m 157 u)
+      cost i ≤ Final50SharedPrice.price (a i) m 162 u)
     (hfat : ∀ i, FatEligible (a i) → cost i ≤ fatPrice (a i)) :
     (∑ i, cost i) ≤ factorCap top := by
   let z := Finset.univ.filter (fun i => l i = 0)
@@ -162,18 +168,18 @@ theorem total (top : ℕ) (htop : top ≤ 14) (n : ℕ) (a : Fin n → Shape) (l
     rcases Compact50PriceTable.price top htop k (a i) (ha i) hc with hold | ⟨u,m,he,hm,hmo,hu,hfee⟩
     · exact (hphys i hL k hk).trans
         ((physicalPrice_anti _ _ (Final50PriceCaps.order_pos k _) horder).trans hold)
-    · have hr : activeCap k = 157 := he ▸ (by decide : activeCap .empty = 157)
+    · have hr : activeCap k = 162 := he ▸ (by decide : activeCap .empty = 162)
       rw [hr] at hfee
       exact (hshared i m u hm (hmo.trans horder) hu).trans hfee
-  have hindex : (∑ i ∈ pos, (a i).j) ≤ 52 - q.j := by
+  have hindex : (∑ i ∈ pos, (a i).j) ≤ 53 - q.j := by
     have hh := (member_cap (s := pos) (Finset.Subset.rfl)).2.1
-    change q.j + (∑ i ∈ pos, (a i).j) ≤ 52 at hh
+    change q.j + (∑ i ∈ pos, (a i).j) ≤ 53 at hh
     omega
-  have hDen : 0 < 52 - q.j := by
+  have hDen : 0 < 53 - q.j := by
     have hh : q.j ≤ 7 := by cases k <;> decide
     omega
   let C := factorCap top - reserve k
-  let M := 52 - q.j
+  let M := 53 - q.j
   have fees (i : Fin n) (hi : i ∈ pos) : M*cost i ≤ C * (a i).j := by
     have h := Nat.mul_le_mul_left M (positive_fee i hi)
     change M * cost i ≤ M * (C * (a i).j / M) at h
@@ -193,5 +199,4 @@ theorem total (top : ℕ) (htop : top ≤ 14) (n : ℕ) (a : Fin n → Shape) (l
   dsimp [C] at hp
   omega
 
-#print axioms total
 end Final50PriceTotal

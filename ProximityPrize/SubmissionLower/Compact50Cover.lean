@@ -1,6 +1,5 @@
 import ProximityPrize.SubmissionLower.Final50PriceTableBase
 
-set_option Elab.async false
 set_option maxHeartbeats 1000000
 
 namespace Compact50Cover

@@ -1,6 +1,6 @@
 import ProximityPrize.SubmissionLower.KoalaRectReceipts
+import ProximityPrize.SubmissionLower.KoalaRectRetained -- serialize candidate build
 
-set_option Elab.async false
 set_option autoImplicit false
 set_option maxRecDepth 18000
 set_option maxHeartbeats 14000000
@@ -40,7 +40,7 @@ theorem ceilRatio_le_self (n d : ℕ) (hd : 0 < d) : ceilRatio n d ≤ n := by
     _ ≤ n*d+d := Nat.add_le_add_right (Nat.le_mul_of_pos_right n hd) d
     _ = (n+1)*d := by ring
 
-theorem liftIndex_le {hi : ℕ} (hhi : hi ≤ 2465) (v₀ v₁ : ℕ) : liftIndex hi v₀ v₁ ≤ 4930 := by
+theorem liftIndex_le {hi : ℕ} (hhi : hi ≤ 2490) (v₀ v₁ : ℕ) : liftIndex hi v₀ v₁ ≤ 4980 := by
   unfold liftIndex
   apply max_le (by decide)
   exact max_le ((ceilRatio_le_self _ _ (lt_of_lt_of_le Nat.zero_lt_one (le_max_left _ _))).trans (by omega))
@@ -131,6 +131,4 @@ theorem guards {e : ℕ} (hel : 3 ≤ e) (heu : e < 28) :
 theorem paid_le {e : ℕ} (hel : 7 ≤ e) (heu : e ≤ 21) : paidCap e ≤ 445 := by
   interval_cases e <;> decide
 
-#print axioms charge_le
-#print axioms guards
 end KoalaTwoSectionPrice

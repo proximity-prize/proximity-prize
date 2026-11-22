@@ -173,6 +173,3 @@ theorem chart_at_mark {J : Input} {B : ResidueLift J} {D : Factors J B}
 
 end
 end SplitCut.LocalModel
-
-#print axioms SplitCut.LocalModel.chart_to_curve
-#print axioms SplitCut.LocalModel.chart_at_mark

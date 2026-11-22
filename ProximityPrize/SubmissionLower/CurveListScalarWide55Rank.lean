@@ -1,6 +1,6 @@
 import ProximityPrize.SubmissionLower.CurveListScalarWide55Defs
+import ProximityPrize.SubmissionLower.Scalar50Wide55NextLower -- serialize candidate build
 
-set_option Elab.async false
 set_option maxRecDepth 20000
 set_option maxHeartbeats 8000000
 
@@ -10,7 +10,7 @@ open scoped BigOperators
 open CJ1 (total total_eq_sum)
 
 /-- Reinsert the column coordinates of each consecutive run of coefficients. -/
-def runs (xs : List (ℕ × ℕ × List ℤ)) : List (ℕ × ℕ × ℤ) :=
+private def runs (xs : List (ℕ × ℕ × List ℤ)) : List (ℕ × ℕ × ℤ) :=
   xs.flatMap fun (r, c, vs) => (vs.zipIdx c).map fun (w, j) => (r, j, w)
 
 /-- One run per row, with consecutive row coordinates starting at zero. -/
@@ -735,7 +735,7 @@ theorem split_grades (k : ℕ) : ∑ q ∈ range (6*k), grade q = ∑ j ∈ rang
         simpa only [Nat.mul_succ,group] using (sum_range_add grade (6*k) 6)
       _ = _ := by rw [ih,sum_range_succ]
 
-theorem rank_sum : (∑ q ∈ range 76, grade q) = 150778 := by
+private theorem rank_sum : (∑ q ∈ range 76, grade q) = 150778 := by
   have h0 : group 0 = 2870 := by decide +kernel
   have h1 : group 1 = 14103 := by decide +kernel
   have h2 : group 2 = 26266 := by decide +kernel
@@ -753,13 +753,4 @@ theorem rank_sum : (∑ q ∈ range 76, grade q) = 150778 := by
   simp only [sum_range_succ,sum_range_zero,zero_add]
   rw [h0, h1, h2, h3, h4, h5, h6, h7, h8, h9, h10, h11]
 
-theorem prefix_bound : prefixRank support 76 ≤ 150778 := by
-  change (∑ q ∈ range 76, ∑ u ∈ range (77-q), (blockMatrix support q ((u : ℤ)-22)).rank) ≤ _
-  calc
-    _ ≤ ∑ q ∈ range 76, ∑ u ∈ range (77-q), allowance q u :=
-      sum_le_sum fun q _ => sum_le_sum fun u _ => block q u
-    _ = ∑ q ∈ range 76, grade q := by simp only [grade,total_eq_sum]
-    _ ≤ 150778 := rank_sum.le.trans (by decide)
-
-#print axioms prefix_bound
 end CurveListScalarWide55

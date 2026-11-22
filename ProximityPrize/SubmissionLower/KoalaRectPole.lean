@@ -1,7 +1,6 @@
 import ProximityPrize.SubmissionLower.KoalaRectPoleBalance
 import ProximityPrize.SubmissionLower.KoalaRectPoleLocal
 
-set_option Elab.async false
 set_option autoImplicit false
 set_option backward.isDefEq.respectTransparency false
 set_option maxSynthPendingDepth 16
@@ -184,7 +183,6 @@ theorem pole_bound {h : ℕ} (hpos : 0 < h) (hchar : h < K1.p) {D : PoleData h}
   change d ≤ poleDebit h s U + Module.finrank L B
   omega
 
-#print axioms pole_bound
 
 end
 end KoalaRectPole

@@ -1,5 +1,5 @@
 import ProximityPrize.SubmissionLower.Fast015
-set_option Elab.async false
+import ProximityPrize.SubmissionLower.Fast022 -- serialize candidate build
 set_option autoImplicit true
 section
 namespace CJ0
@@ -178,8 +178,6 @@ private def indexRow (c : ℕ) := ∑ b ∈ bRange c, runLength c b * (b+2*c)
 private theorem box_index : (∑ j ∈ source180120.E, j.v) = ∑ c ∈ range 9, indexRow c := by
   simp only [source180120, fullBox, sum_sigma, indexRow, bRange, runLength, Jet.v, Jet.b, Jet.c,
     sum_const, card_range, smul_eq_mul]
-private theorem row8 : countRow 8 = 165 ∧ totalRow 8 = 5939 ∧ indexRow 8 = 2803 := by
-  decide
 end
 end CJ0
 end

@@ -15,7 +15,6 @@ import Mathlib.RingTheory.MvPolynomial.Ideal
 import Mathlib.RingTheory.Polynomial.Radical
 import Mathlib.RingTheory.RegularLocalRing.Polynomial
 import Mathlib.RingTheory.Smooth.Field
-set_option Elab.async false
 set_option autoImplicit true
 section
 set_option autoImplicit false

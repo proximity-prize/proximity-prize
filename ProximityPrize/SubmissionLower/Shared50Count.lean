@@ -3,7 +3,6 @@ import ProximityPrize.SubmissionLower.Shared50TallyNew
 import ProximityPrize.SubmissionLower.Shared50ThirdCut
 import ProximityPrize.SubmissionLower.Shared50Multiplicity
 
-set_option Elab.async false
 set_option maxHeartbeats 1700000
 set_option maxRecDepth 20000
 namespace Shared50Count
@@ -239,9 +238,9 @@ theorem proof : Final50SharedPrice.cShared := by
       omega
     omega
   have hSurface : d≤surfaceCap (shape f) := by
-    change F.union.card≤2*(133448*(shape f).b*primaryBox.b)
+    change F.union.card≤2*(133461*(shape f).b*primaryBox.b)
     have hF' := Final50GeometryCut.pieces_surface_capacity F hm hF hFP
-    change 2*F.total ≤ 133448*(shape f).b*primaryBox.b at hFB
+    change 2*F.total ≤ 133461*(shape f).b*primaryBox.b at hFB
     exact hF'.trans ((show 4*F.total=2*(2*F.total) by ring).le.trans
       (Nat.mul_le_mul_left 2 hFB))
   let weight (P : Ideal GeoJets) := if HighOrder f u.split P then (u.split+1)*l else l
@@ -251,6 +250,5 @@ theorem proof : Final50SharedPrice.cShared := by
   have hbase := Shared50TallyOld.additive_le hl hAux hCurve hSurface
   exact hCard.trans (final_fee u hold hbase hLow)
 
-#print axioms proof
 end
 end Shared50Count

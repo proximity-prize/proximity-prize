@@ -1,5 +1,6 @@
 import ProximityPrize.SubmissionLower.KoalaPointCount
 import ProximityPrize.SubmissionLower.HighCore82219Regular
+import ProximityPrize.SubmissionLower.KoalaRootSurface -- serialize candidate build
 
 set_option autoImplicit false
 set_option maxHeartbeats 500000
@@ -65,5 +66,3 @@ theorem weighted_cover (I : Ideal (MvPolynomial σ F)) (T : Finset α) (x : α �
 
 end
 end SplitCut.Incidence
-#print axioms SplitCut.Incidence.curve
-#print axioms SplitCut.Incidence.weighted_cover

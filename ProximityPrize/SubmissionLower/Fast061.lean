@@ -1,6 +1,5 @@
 import ProximityPrize.SubmissionLower.Fast058
 import ProximityPrize.SubmissionLower.Fast059
-set_option Elab.async false
 set_option autoImplicit true
 section
 namespace K1_13_2_3_5
@@ -1957,7 +1956,7 @@ theorem digits_and {f g : ℕ → ℕ} {n : ℕ}
   | succ n ih =>
     simp only [digits, and_digit (hf n (by omega)) (hg n (by omega))]
     rw [ih (fun i hi => hf i (by omega)) (fun i hi => hg i (by omega))]
-private def units (n : ℕ) := (radix ^ n - 1)/(radix-1)
+def units (n : ℕ) := (radix ^ n - 1)/(radix-1)
 theorem digits_const (c n : ℕ) : digits (fun _ => c) n = c * units n := by
   have h : (radix-1) * digits (fun _ => 1) n + 1 = radix^n := by
     induction n with
@@ -2179,7 +2178,7 @@ theorem minChecked {n a b A B : ℕ} {f g : ℕ → ℕ}
     _ = digits (fun i => f i-(f i-g i)) n := digits_congr (fun i _ => by
       change min (f i) (g i) = _; omega)
     _ = _ := by rw [digits_sub (fun _ _ => Nat.sub_le _ _), hd.val_eq, x.val_eq]
-private theorem sum_bound {n bound : ℕ} {f : ℕ → ℕ} (h : ∀ i < n, f i ≤ bound) :
+theorem sum_bound {n bound : ℕ} {f : ℕ → ℕ} (h : ∀ i < n, f i ≤ bound) :
     rangeSum f n ≤ n*bound := by
   induction n with
   | zero => simp [rangeSum]

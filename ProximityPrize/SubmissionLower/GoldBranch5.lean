@@ -1,4 +1,4 @@
 import ProximityPrize.SubmissionLower.FrontBranch12
 import ProximityPrize.SubmissionLower.FrontBranch5
-set_option Elab.async false
+import ProximityPrize.SubmissionLower.UpperBranch3 -- serialize candidate build
 set_option autoImplicit true

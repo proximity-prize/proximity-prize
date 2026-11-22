@@ -1,5 +1,6 @@
 import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
 import Mathlib.Tactic
+import ProximityPrize.SubmissionLower.Shared50Persistent -- serialize candidate build
 
 open scoped BigOperators
 
@@ -33,23 +34,6 @@ theorem exists_nonzero_overlap (s : Finset ι) (V M : ι → Submodule 𝕜 E)
   have hsup := (V i ⊔ M i).finrank_le
   omega
 
-/-- The second budget counts the high multiplicity part at a higher rate. -/
-theorem blended {low high old replacement : ℚ} {k : ℕ}
-    (hlow : low ≤ replacement)
-    (hold : low + (1 + (k : ℚ)) * high ≤ old) :
-    (1 + (k : ℚ)) * (low + high) ≤ old + (k : ℚ) * replacement := by
-  have hk : (0 : ℚ) ≤ k := by positivity
-  linarith only [hold, mul_le_mul_of_nonneg_left hlow hk]
-
-/-- Strict dominance in one support coordinate survives division by the largest factor power. -/
-theorem residual_slope {b f g r k s : ℕ}
-    (hf : s * b ≤ f) (hG : k * f + g ≤ r * b) :
-    g ≤ (r - s*k) * b := by
-  calc
-    g ≤ r*b - k*f := by omega
-    _ ≤ r*b - k*(s*b) := Nat.sub_le_sub_left (Nat.mul_le_mul_left _ hf) _
-    _ = (r-s*k)*b := by rw [Nat.sub_mul]; congr 1; ac_rfl
-
 theorem residual_order_pos {b f r k s : ℕ}
     (hr : 0 < r) (hf : s * b < f) (hG : k * f ≤ r * b) :
     0 < r - s*k := by
@@ -65,8 +49,4 @@ theorem residual_order_pos {b f r k s : ℕ}
   rw [← he] at hprod
   exact (not_lt_of_ge hG) ((Nat.mul_le_mul_right b hsr).trans_lt hprod)
 
-#print axioms exists_nonzero_overlap
-#print axioms blended
-#print axioms residual_slope
-#print axioms residual_order_pos
 end Shared50ShapeRankBase

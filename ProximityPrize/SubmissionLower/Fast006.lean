@@ -3,7 +3,6 @@ import Mathlib.Data.Matrix.ColumnRowPartitioned
 import Mathlib.NumberTheory.FLT.MasonStothers
 import Mathlib.RingTheory.Polynomial.Resultant.Basic
 import ProximityPrize.SubmissionLower.Fast005
-set_option Elab.async false
 set_option autoImplicit true
 section
 namespace K1_13_5_5_2_3

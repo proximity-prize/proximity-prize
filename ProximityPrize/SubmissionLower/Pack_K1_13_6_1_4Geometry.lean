@@ -4,7 +4,6 @@ import Mathlib.RingTheory.Polynomial.UniversalFactorizationRing
 import Mathlib.RingTheory.PowerSeries.Inverse
 import Mathlib.RingTheory.Regular.Flat
 import ProximityPrize.SubmissionLower.Fast017
-set_option Elab.async false
 set_option autoImplicit true
 section
 namespace K1_13_6

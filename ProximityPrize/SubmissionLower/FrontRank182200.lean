@@ -1,6 +1,5 @@
 import ProximityPrize.SubmissionLower.FrontBranch12
 import ProximityPrize.SubmissionLower.FrontCases82200
-set_option Elab.async false
 set_option autoImplicit true
 section
 set_option backward.isDefEq.respectTransparency false
@@ -81,10 +80,10 @@ theorem proof : Front82200.c1 := by
       IRSProfile.card_index] at h
     exact h.trans (Nat.sub_le_sub_left M.agreement blockLength)
   have hheight : T.height ≤ heightCap := relation_height_le hfront T
-  have hH : T.height < L := hheight.trans_lt (by change 33405 < 48833; decide)
+  have hH : T.height < L := hheight.trans_lt (by change 33425 < 48823; decide)
   have hfit : k + T.height ≤ M.support.card :=
     have hcap : k + heightCap ≤ agreement := by
-      change 164477 ≤ 179905
+      change 164497 ≤ 179895
       decide
     ((Nat.add_le_add_left hheight k).trans hcap).trans M.agreement
   have hfix (i : I) : frobenius K p (node i) = node i := Native.native_domain_fixed i

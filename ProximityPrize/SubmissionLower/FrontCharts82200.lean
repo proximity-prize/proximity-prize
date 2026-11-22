@@ -1,7 +1,6 @@
 import ProximityPrize.SubmissionLower.SilverBase
 import ProximityPrize.SubmissionLower.FrontCases82200
 
-set_option Elab.async false
 set_option autoImplicit false
 
 namespace Front82200_4

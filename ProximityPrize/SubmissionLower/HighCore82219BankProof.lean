@@ -1,7 +1,6 @@
 import ProximityPrize.SubmissionLower.HighCore82219Source
 import ProximityPrize.SubmissionLower.HighCore82229NewMoments
 
-set_option Elab.async false
 set_option autoImplicit true
 set_option maxRecDepth 18000
 
@@ -49,10 +48,10 @@ theorem stages_ok (b : Band) : StageOK (stages b) := by
     refine stages_cons (pass! 251,347,78,0x7322680000,0x18f6d6a4; nextMoment347_78) (pass! 1305,1815,383,0x3b9eea000000,0x442ac5ba92; nextMoment1815_383) ?_
     refine stages_cons (pass! 261,362,81,0x813b280000,0x1d6fb003; moment362_81) (pass! 1463,2035,429,0x53ea2df80000,0x6b96ecc888; nextMoment2035_429) ?_
     refine stages_cons (pass! 345,478,108,0x12b1e340000,0x59a98629; nextMoment478_108) (pass! 1607,2235,472,0x6f51ac300000,0x9cb2a062f8; nextMoment2235_472) ?_
-    refine stages_cons (pass! 377,522,118,0x185d2840000,0x7f6275d9; nextMoment522_118) (pass! 2257,3142,664,0x1348521240000,0x263b0eab16b; nextMoment3142_664) ?_
-    refine stages_cons (pass! 600,831,188,0x61d88780000,0x32de21d13; nextMoment831_188) (pass! 3490,4863,1027,0x47409d2380000,0xdb0e8041cee; nextMoment4863_1027) ?_
-    refine stages_cons (pass! 499,692,155,0x38015300000,0x185234383; nextMoment692_155) (pass! 2764,3850,812,0x235cb8ba00000,0x5601e71ab3f; nextMoment3850_812) ?_
-    refine stages_cons (pass! 812,1126,252,0xf04a9400000,0xa99a27482; moment1126_252) (pass! 4778,6667,1405,0xb6aa96ebc0000,0x304357eb723c; moment6667_1405) ?_
+    refine stages_cons (pass! 377,522,118,0x185d2840000,0x7f6275d9; nextMoment522_118) (pass! 2259,3142,664,0x1352184380000,0x263b0eab16b; nextMoment3142_664) ?_
+    refine stages_cons (pass! 600,831,188,0x61d88780000,0x32de21d13; nextMoment831_188) (pass! 3496,4863,1027,0x4786bafb80000,0xdb0e8041cee; nextMoment4863_1027) ?_
+    refine stages_cons (pass! 499,692,155,0x38015300000,0x185234383; nextMoment692_155) (pass! 2767,3850,812,0x2372addc00000,0x5601e71ab3f; nextMoment3850_812) ?_
+    refine stages_cons (pass! 812,1126,252,0xf04a9400000,0xa99a27482; moment1126_252) (pass! 4786,6667,1405,0xb759a72bc0000,0x304357eb723c; moment6667_1405) ?_
     exact stages_nil
   | h2395 =>
     rw [stages]
@@ -90,13 +89,8 @@ theorem listed_ok (b : Band) (t : Bank) (ht : Listed b t) : BankOK t := by
   · exact (stages_ok b s hs).2
   · exact ⟨(terminal_ok b).nodes, (terminal_ok b).moment⟩
 
-theorem interpolation_sources : SourceExists :=
-  source (fun b t ht => (listed_ok b t ht).nodes) (fun b t ht => (listed_ok b t ht).moment)
-
 theorem interpolation_sources_for_crt : CRTSourceExists :=
   source_for_crt (fun b t ht => (listed_ok b t ht).nodes)
     (fun b t ht => (listed_ok b t ht).moment)
 
-#print axioms interpolation_sources_for_crt
-#print axioms interpolation_sources
 end HighCore82219BankProof

@@ -1,4 +1,5 @@
 import ProximityPrize.SubmissionLower.Low49ActiveLattice
+import ProximityPrize.SubmissionLower.Low48BentCyclePrice -- serialize candidate build
 
 set_option autoImplicit false
 set_option maxHeartbeats 1400000

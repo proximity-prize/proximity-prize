@@ -1,6 +1,6 @@
 import ArkLib.Data.CodingTheory.HiddenDerivative.Interpolation.Symbolic.SourceColumn
 import Mathlib.Data.Int.Interval
-set_option Elab.async false
+import ProximityPrize.SubmissionLower.Fast006 -- serialize candidate build
 set_option autoImplicit true
 section
 namespace Sol1.C42

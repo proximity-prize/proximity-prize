@@ -1,6 +1,5 @@
 import ProximityPrize.SubmissionLower.PrimaryTaperMoments
 
-set_option Elab.async false
 set_option maxHeartbeats 2500000
 set_option maxRecDepth 20000
 

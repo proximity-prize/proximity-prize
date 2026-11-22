@@ -1,7 +1,6 @@
 import Mathlib.Algebra.MvPolynomial.Coeff
 import ProximityPrize.SubmissionLower.Fast029
 import ProximityPrize.SubmissionLower.Numeric2Aux
-set_option Elab.async false
 set_option autoImplicit true
 section
 set_option backward.isDefEq.respectTransparency false

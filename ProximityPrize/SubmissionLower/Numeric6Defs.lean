@@ -1,5 +1,5 @@
 import ProximityPrize.SubmissionLower.Numeric2Aux
-set_option Elab.async false
+import ProximityPrize.SubmissionLower.Fast042 -- serialize candidate build
 set_option autoImplicit true
 section
 namespace CJ6

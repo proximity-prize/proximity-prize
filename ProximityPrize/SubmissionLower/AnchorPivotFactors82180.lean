@@ -1,6 +1,5 @@
 import ProximityPrize.SubmissionLower.AnchorPivot82180
 
-set_option Elab.async false
 set_option maxHeartbeats 1500000
 namespace AnchorPivot82180
 open K1_13 (Geom)
@@ -101,5 +100,4 @@ theorem basis_ok (i : Fin 8) : Sound (basisData i) (basisPoly i) := by
   · exact spec6
   · exact spec7
 
-#print axioms basis_ok
 end AnchorPivot82180

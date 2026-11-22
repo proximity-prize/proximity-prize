@@ -1,7 +1,7 @@
 import ProximityPrize.SubmissionLower.Final50Order
 import Mathlib.RingTheory.Localization.Integer
+import ProximityPrize.SubmissionLower.Shared50TallyOld -- serialize candidate build
 
-set_option Elab.async false
 set_option maxHeartbeats 800000
 namespace Shared50Rational
 noncomputable section
@@ -161,7 +161,5 @@ theorem clear_denominators (R : FractionJet) :
   ext m
   simp [MvPolynomial.mem_support_iff, MvPolynomial.coeff_C_mul, hi]
 
-#print axioms clear_denominators
-#print axioms independent_fraction
 end
 end Shared50Rational

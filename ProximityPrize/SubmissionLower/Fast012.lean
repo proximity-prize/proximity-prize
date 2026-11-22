@@ -10,7 +10,6 @@ import ArkLib.Data.Polynomial.ResultantDegree
 import Mathlib.Data.Int.Star
 import ProximityPrize.SubmissionLower.Fast006
 import ProximityPrize.SubmissionLower.Fast008
-set_option Elab.async false
 set_option autoImplicit true
 section
 namespace Sol1.C42

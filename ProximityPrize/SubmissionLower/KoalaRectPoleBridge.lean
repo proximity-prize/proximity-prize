@@ -1,7 +1,6 @@
 import ProximityPrize.SubmissionLower.KoalaRectSource
 import ProximityPrize.SubmissionLower.KoalaRectPole
 
-set_option Elab.async false
 set_option autoImplicit false
 
 namespace KoalaRect
@@ -19,6 +18,5 @@ theorem rectPole_bound {h : ℕ} (hpos : 0 < h) (hchar : h < K1.p) {D : PoleData
         Module.finrank L (rectComplete Crt word s W U) :=
   KoalaRectPole.pole_bound hpos hchar Crt word s hs W U (seedSupport U) (fun _ hp => hp)
 
-#print axioms rectPole_bound
 
 end KoalaRect

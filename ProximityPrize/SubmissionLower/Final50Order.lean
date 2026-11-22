@@ -2,7 +2,6 @@ import ProximityPrize.SubmissionLower.Final50Price
 import ProximityPrize.SubmissionLower.CutterTaperFamily
 import ProximityPrize.SubmissionLower.PrimaryTaperActive
 
-set_option Elab.async false
 namespace Final50Order
 noncomputable section
 open K1_13 (Geom Row shape InBox Contact)
@@ -320,8 +319,9 @@ noncomputable section
 open Polynomial
 open Final50Order (TrueWeightLE physicalDegree primaryBox primaryCutoff)
 open K1_13 (Geom embed extend Row Shape shape InBox indexDegree)
-open private translateTop topHasse topHasse_coeff source_support sum_add_top total_add_top
-  apply_add_top erase_top_add topHasse_order topHasse_zero exact_hasse_not_dvd from ProximityPrize.SubmissionLower.PortLowBase
+open P0_9_3_2 (translateTop topHasse topHasse_coeff apply_add_top erase_top_add)
+open private source_support sum_add_top total_add_top topHasse_order topHasse_zero exact_hasse_not_dvd
+  from ProximityPrize.SubmissionLower.PortLowBase
 theorem topHasse_bounds (box : Shape) (T a : ℕ) (P : Row 4)
     (hb : InBox (shape P) box) (hw : TrueWeightLE P T) :
     InBox (shape (topHasse a P)) box ∧ TrueWeightLE (topHasse a P) T := by
@@ -652,14 +652,14 @@ export Final50OrderProof (BankRow requiredOrder)
 export Final50OrderProof_1 (order_of_contact)
 
 theorem messages_of_family {cap u del Γ} (M : P1.ModelAt cap u del)
-    (F : P1.FamilyAt agreement M Γ) (hh : M.overhead ≤ 2377) :
+    (F : P1.FamilyAt agreement M Γ) (hh : M.overhead ≤ 2390) :
     Messages M.word Γ F.scalar := by
   refine ⟨F.distinct, ?_, ?_⟩
   · intro γ hγ
     obtain hz | hd := (F.mark γ hγ).scalar_degree
     · simp [hz]
     · change ((F.scalar γ).natDegree : ℤ) ≤ (131072 : ℤ) - 1 + M.overhead at hd
-      change (F.scalar γ).natDegree ≤ 133448
+      change (F.scalar γ).natDegree ≤ 133461
       omega
   · intro γ hγ
     let m := F.mark γ hγ
@@ -677,7 +677,7 @@ theorem proper_layers_of_rank {w Γ s n} {f : Fin n → Row 4}
     Final50OrderProof_2.proof Final50OrderProof_3.proof
     hm hr hirr hpos htop hdiff
 
-/-- Supply the compact primary bank at height 2377. -/
+/-- Supply the compact primary bank at height 2390. -/
 theorem primary_rank (w : P3.I → K) : PrimaryRank w :=
   CutterTaperTheta.primary_family agreement physicalDegree (by decide) (by decide)
     (by decide) w (n := sourceRank) le_rfl

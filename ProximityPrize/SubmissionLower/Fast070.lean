@@ -2,7 +2,6 @@ import ProximityPrize.SubmissionLower.Fast063
 import ProximityPrize.SubmissionLower.Fast064
 import ProximityPrize.SubmissionLower.Fast065
 import ProximityPrize.SubmissionLower.Fast066
-set_option Elab.async false
 set_option autoImplicit true
 section
 set_option autoImplicit false
@@ -602,19 +601,6 @@ theorem totalBudget_eq_sum :
   apply Finset.sum_congr rfl
   intro s _
   rw [gradeBudget, sumRange_eq_fin]
-theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) : K1_13_1.c1 := by
-  intro x y
-  calc
-    _ ≤ Module.finrank Geom (LinearMap.range (K1_13_1.anchorLocal 0 0)) :=
-      rank_local_le_origin x y
-    _ ≤ ∑ s : Fin 121, ∑ r : Fin 138,
-        Module.finrank Geom (LinearMap.range (blockMap s (offset r))) := rank_origin_le_blocks
-    _ ≤ ∑ s : Fin 121, ∑ r : Fin 138, blockBudget s (offset r) := by
-      refine Finset.sum_le_sum fun s _ => Finset.sum_le_sum fun r _ => ?_
-      exact rank_block_le_budget h1 h2 h3 s (offset r) (Nat.le_of_lt_succ s.isLt)
-        (by unfold offset; omega)
-    _ = totalBudget := totalBudget_eq_sum.symm
-    _ = 9199626 := totalBudget_eq
 end
 end K1_13_1_1
 end
@@ -759,7 +745,7 @@ theorem lineRows_finite (s : ℕ) (g : ℤ) (b c : ℕ) :
     (lineRows s g b c).Finite :=
   (Finsupp.finite_of_degree_le (residualDegree s)).subset fun _ he => Nat.le_of_eq he.1
 variable {s : ℕ} {g : ℤ} {b c : ℕ}
-private theorem column_coeff (m : Column s g) (e : Exponent) :
+theorem column_coeff (m : Column s g) (e : Exponent) :
     (lineMap s g b c (oldBasis s g m)).coeff e =
       if e 2 = c then
         if e 1 = b then

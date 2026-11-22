@@ -307,8 +307,3 @@ theorem graph_derivative_step (J : Input) (B : ResidueLift J) (D : Factors J B) 
 
 end
 end SplitCut.StableFlow
-
-#print axioms SplitCut.StableFlow.flow_mem_graph
-#print axioms SplitCut.StableFlow.stable_of_step
-#print axioms SplitCut.StableFlow.differential_curve
-#print axioms SplitCut.StableFlow.graph_derivative_step

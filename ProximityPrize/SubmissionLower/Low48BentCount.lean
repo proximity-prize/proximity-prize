@@ -1,4 +1,5 @@
 import ProximityPrize.SubmissionLower.Low48BentLattice
+import ProximityPrize.SubmissionLower.Final50ActiveCycleChart -- serialize candidate build
 
 set_option autoImplicit false
 
@@ -7,8 +8,8 @@ open Finset
 open Low48BentLattice
 open K1_13_6_2_4 (Exponent)
 open scoped BigOperators
-open private slice slice_count evenSlice oddSlice sum_pair pairedSum paired_sum
-  from ProximityPrize.SubmissionLower.Fast054
+open K1_13_6_2_3_1 (slice_count paired_sum)
+open private slice evenSlice oddSlice sum_pair pairedSum from ProximityPrize.SubmissionLower.Fast054
 noncomputable section
 
 private def Slices (a : Cap) :=

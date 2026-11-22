@@ -1,6 +1,6 @@
 import ProximityPrize.SubmissionLower.Fast063
+import ProximityPrize.SubmissionLower.Shared50ShapeRank -- serialize candidate build
 
-set_option Elab.async false
 set_option maxHeartbeats 650000
 
 namespace Shared50OrderDivision
@@ -207,6 +207,4 @@ theorem vanishesTo_of_pow_mul_hasse [PerfectField K] (P : Ideal Jet) [P.IsPrime]
 
 end
 
-#print axioms vanishesTo_of_pow_mul_hasse
-#print axioms vanishesTo_of_pow_mul
 end Shared50OrderDivision

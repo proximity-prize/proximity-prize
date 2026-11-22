@@ -1,5 +1,6 @@
 import ProximityPrize.SubmissionLower.KoalaBoxLift
 import ArkLib.ToMathlib.RingTheory.Nullstellensatz.AgreementIncidence
+import ProximityPrize.SubmissionLower.KoalaRawNodes -- serialize candidate build
 
 set_option autoImplicit false
 set_option maxHeartbeats 900000
@@ -35,12 +36,6 @@ theorem curve_degree_nat {P : Ideal (MvPolynomial σ F)} (hP : P ≠ ⊤)
   refine ⟨affineHilbertFunction P (n+1)-affineHilbertFunction P n, by omega, ?_⟩
   rw [hd',Nat.cast_sub (by omega)]
   linarith
-
-theorem curve_degree {P : Ideal (MvPolynomial σ F)} (hP : P ≠ ⊤)
-    (hd : (affineHilbertPolynomial P).natDegree = 1) : 1 ≤ affineDegree P := by
-  obtain ⟨d,hd,he⟩ := curve_degree_nat hP hd
-  rw [he]
-  exact_mod_cast hd
 
 /-- A finite set of distinct marked points on a proper cut of an affine curve. -/
 theorem cut_points {P : Ideal (MvPolynomial σ F)} [P.IsPrime]
@@ -87,6 +82,3 @@ theorem cover (I : Ideal (MvPolynomial σ F)) {x : α → σ → E} (T : Finset 
 
 end
 end SplitCut.PointCount
-#print axioms SplitCut.PointCount.curve_degree
-#print axioms SplitCut.PointCount.cut_points
-#print axioms SplitCut.PointCount.cover

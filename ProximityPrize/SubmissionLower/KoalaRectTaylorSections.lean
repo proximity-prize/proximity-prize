@@ -1,8 +1,8 @@
 import ProximityPrize.SubmissionLower.KoalaRectTaylorCharts
 import ProximityPrize.SubmissionLower.HighCore82219UpperCertificates
+import ProximityPrize.SubmissionLower.KoalaRuledSaturated -- serialize candidate build
 
 set_option autoImplicit false
-set_option Elab.async false
 set_option maxHeartbeats 1200000
 set_option backward.isDefEq.respectTransparency false
 
@@ -388,33 +388,5 @@ theorem represented_diagonal {J : Input} {v : Fin 2 → ℕ} {r k : ℕ}
   · exact (Nat.add_le_add (Nat.mul_le_mul_left _ (le_max_right _ _)) (hseed 1)).trans_eq
       (Nat.add_mul _ _ _).symm
 
-def diagonalPadding (hi : ℕ) (v : Fin 2 → ℕ) : ℕ :=
-  max 1 (max ((2*hi) ⌈/⌉ max 1 (v 0)) ((2*hi) ⌈/⌉ max 1 (v 1)))
-
-theorem one_le_diagonalPadding (hi : ℕ) (v : Fin 2 → ℕ) :
-    1 ≤ diagonalPadding hi v := le_max_left _ _
-
-theorem seed_le_diagonalPadding (hi : ℕ) (v : Fin 2 → ℕ) (z : Fin 2) :
-    2*hi ≤ diagonalPadding hi v * max 1 (v z) := by
-  have hpos : 0 < max 1 (v z) := lt_of_lt_of_le Nat.zero_lt_one (le_max_left _ _)
-  have hceil : (2*hi) ⌈/⌉ max 1 (v z) ≤ diagonalPadding hi v :=
-    (show (2*hi) ⌈/⌉ max 1 (v z) ≤ _ from by
-      fin_cases z
-      · exact le_max_left _ _
-      · exact le_max_right _ _).trans (le_max_right _ _)
-  exact ((ceilDiv_le_iff_le_mul hpos).mp hceil).trans_eq (Nat.mul_comm _ _)
-
-theorem represented_diagonal_hi {J : Input} {v : Fin 2 → ℕ} {r : ℕ}
-    {Q : Ideal JetRing} {p : JetRing} (he : 4 ≤ J.e)
-    (h : Represented Q (taylorBox J v r) p) :
-    Represented Q (diagonalBox J v (r+diagonalPadding J.hi v)) p :=
-  represented_diagonal he (one_le_diagonalPadding _ _)
-    (fun z => (Nat.mul_le_mul_left _ J.upper).trans (seed_le_diagonalPadding _ _ z)) h
-
 end
 end KoalaRectTaylor
-
-#print axioms KoalaRectTaylor.sections
-#print axioms KoalaRectTaylor.taylor_agrees
-#print axioms KoalaRectTaylor.node_section
-#print axioms KoalaRectTaylor.represented_diagonal_hi

@@ -1,6 +1,6 @@
 import ProximityPrize.SubmissionLower.Numeric2Aux
+import ProximityPrize.SubmissionLower.FrontAssembly82200 -- serialize candidate build
 
-set_option Elab.async false
 set_option maxRecDepth 8000
 set_option maxHeartbeats 2000000
 

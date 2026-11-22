@@ -1,6 +1,5 @@
 import ProximityPrize.SubmissionLower.Primary82170
 
-set_option Elab.async false
 set_option maxHeartbeats 1200000
 set_option maxRecDepth 5000
 
@@ -423,19 +422,10 @@ theorem rank_le_of_blocks {cap : ℕ → ℕ} (hc : Antitone cap) (x y : Geom)
     exact Or.inr ⟨i, ⟨⟨_, hm⟩, rfl⟩⟩
   · exact Or.inl (high_monomial_vanishes _ _ (Nat.le_of_not_gt hx))
 
-theorem rank_le {cap : ℕ → ℕ} (hc : Antitone cap) (x y : Geom)
-    (power : BlockIndex → Fin 11 → ℕ) (h2 : K1_13_2_2.c2) (h3 : K1_13_2_2.c3)
-    (h4 : K1_13_2_2.c4) (h5 : K1_13_2_2.c5) :
-    Module.finrank Geom (LinearMap.range ((localConstraintAt 3000 x y).domRestrict (space cap))) ≤
-      ∑ i : BlockIndex, bound (cap i.1.val) i (power i) :=
-  rank_le_of_blocks hc x y _ (fun i => origin_block_rank_bound _ h2 h3 h4 h5 i (power i))
-
 theorem range_le_old (i : BlockIndex) :
     LinearMap.range (originBlock k i) ≤ LinearMap.range (K1_13_2.originBlock i) := by
   rintro _ ⟨p, rfl⟩
   exact ⟨⟨p.1, fun e he => (p.2 he).1⟩, rfl⟩
 
-#print axioms rank_le
-#print axioms range_le_old
 end
 end TaperNormalize

@@ -12,7 +12,6 @@ import ProximityPrize.SubmissionLower.HighCore82229NewMomentsPart9
 import ProximityPrize.SubmissionLower.HighCore82229NewMomentsPart10
 import ProximityPrize.SubmissionLower.HighCore82229NewMomentsPart11
 
-set_option Elab.async false
 set_option maxRecDepth 18000
 set_option maxHeartbeats 14000000
 

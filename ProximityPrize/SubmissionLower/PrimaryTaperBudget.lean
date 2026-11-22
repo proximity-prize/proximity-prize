@@ -1,6 +1,5 @@
 import ProximityPrize.SubmissionLower.PrimaryTaperRank
 
-set_option Elab.async false
 set_option maxHeartbeats 1200000
 set_option maxRecDepth 20000
 
@@ -38,9 +37,8 @@ def sumRange (f : ℕ → ℕ) : ℕ → ℕ
   | 0 => 0
   | n + 1 => sumRange f n + f n
 
-open K1_13_2_3_7 (fastCum signedKernel)
-open private chart oldCount_eq kernel_eq residual_eq zero_residual blockBound_eq
-  from ProximityPrize.SubmissionLower.Fast060
+open K1_13_2_3_7 (fastCum signedKernel zero_residual blockBound_eq)
+open private chart oldCount_eq kernel_eq residual_eq from ProximityPrize.SubmissionLower.Fast060
 open private residualDegree from ProximityPrize.SubmissionLower.PrimaryTaperRank
 
 def fastRank (d j : ℕ) (h : ℤ) (p : ℕ) : ℕ :=
@@ -174,8 +172,7 @@ theorem fastSavings_le {J : ℕ} (hJ : J ≤ 1136) :
 
 
 open K1_13_2_3_7 (countParts natKernel)
-open private countParts_eq partValue natKernel_signed
-  from ProximityPrize.SubmissionLower.Fast068
+open K1_13_2_3_7 (countParts_eq partValue natKernel_signed)
 
 def natOld (d j : ℕ) : ℕ :=
   let hi := countParts d 1651
@@ -268,8 +265,8 @@ theorem sumChunk_eq_fastSavings (J : ℕ) : sumChunk (rowSum J) 0 499 = fastSavi
   intro j _
   exact natCell_eq _ _
 
-open private combine baseline_budget_on sum_add_pointwise_eq bound_le_baseline savings_parts
-  from ProximityPrize.SubmissionLower.Fast022
+open K1_13_2_3 (bound_le_baseline savings_parts)
+open private combine baseline_budget_on sum_add_pointwise_eq from ProximityPrize.SubmissionLower.Fast022
 
 private def fees (p₁ p₂ p₃ : BlockIndex → Powers) (i : BlockIndex) : ℕ :=
   if i.1.val < 3514 then blockBound i (combine p₁ p₂ p₃ (fun _ => ⟨0,0,0⟩) i).expand
@@ -316,35 +313,4 @@ private theorem saved_by_fees (p₁ p₂ p₃ : BlockIndex → Powers) :
   rw [h₀, Nat.add_zero] at h
   exact (Nat.add_le_add_right h _).trans (saved_on Finset.univ p₁ p₂ p₃)
 
-theorem rank_le (x y : Geom) {S : ℕ} (hNum : S ≤ ∑ i : BlockIndex, tailSaving i) :
-    Module.finrank Geom
-      (LinearMap.range ((localConstraintAt 3000 x y).domRestrict
-        (TaperNormalize.space cap))) ≤ 344299749000350 - S := by
-  obtain ⟨p₁, hp₁⟩ := K1_13_2_3_4.proof
-  obtain ⟨p₂, hp₂⟩ := K1_13_2_3_5.proof
-  obtain ⟨p₃, hp₃⟩ := K1_13_2_3_6.proof
-  have h₂ := K1_13_2_2_2.proof
-  have h₃ := K1_13_2_2_3.proof
-  have h₄ := K1_13_2_2_4.proof
-  have h₅ := K1_13_2_2_5.proof
-  have hBlock := K1_13_2_2.of_children K1_13_2_2_1.proof h₂ h₃ h₄ h₅
-  have h :=
-    TaperNormalize.rank_le_of_blocks cap_antitone x y (fees p₁ p₂ p₃)
-      (fun i => by
-        have ho := Submodule.finrank_mono (TaperNormalize.range_le_old (cap i.1.val) i)
-        unfold fees
-        split
-        · exact ho.trans (hBlock i _)
-        · exact le_min (ho.trans (hBlock i _))
-            (TaperNormalize.origin_block_rank_bound _ h₂ h₃ h₄ h₅ i _))
-  apply h.trans
-  have hstatic := baseline_budget_on (Finset.univ : Finset BlockIndex) baseline_low
-    K1_13_2_3_1.proof K1_13_2_3_2.proof K1_13_2_3_3.proof
-  have hsave := saved_by_fees p₁ p₂ p₃
-  have hsum := sum_add_pointwise_eq Finset.univ (fees p₁ p₂ p₃)
-    (fun i => baseline i - fees p₁ p₂ p₃ i) baseline
-    (fun i _ => Nat.add_sub_of_le (fees_le_baseline p₁ p₂ p₃ i))
-  omega
-
-#print axioms rank_le
 end TaperBudget

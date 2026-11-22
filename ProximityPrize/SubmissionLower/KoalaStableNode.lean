@@ -1,5 +1,6 @@
 import Mathlib.Algebra.Polynomial.Div
 import Mathlib.Tactic
+import ProximityPrize.SubmissionLower.KoalaTwoCutMarkedFacts -- serialize candidate build
 
 set_option autoImplicit false
 
@@ -74,5 +75,3 @@ theorem separating_coefficient {R A : Type*} [CommRing R] [CommRing A] [IsDomain
     exact he.symm.trans ((congrArg ψ hLzero).trans ψ.map_zero)
 
 end SplitCut.StableNode
-
-#print axioms SplitCut.StableNode.separating_coefficient

@@ -3,7 +3,6 @@ import ProximityPrize.SubmissionLower.Shared50Persistent
 import ProximityPrize.SubmissionLower.Shared50ShapeRankBase
 import ProximityPrize.SubmissionLower.Final50ShapeGate
 
-set_option Elab.async false
 set_option maxRecDepth 40000
 set_option linter.style.haveILetI false
 set_option maxHeartbeats 1500000
@@ -162,7 +161,5 @@ theorem exists_polynomial {w Γ s} (hm : Final50Price.Messages w Γ s)
     rw [← fraction_geometric,hQ,map_mul,toGeometric,MvPolynomial.map_C,hasse_C_mul]
     exact P.mul_mem_left _ (ho P hP a ha)
 
-#print axioms bank_layers
-#print axioms exists_polynomial
 end
 end Shared50ShapeRank

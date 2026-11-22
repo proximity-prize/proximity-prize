@@ -1,6 +1,6 @@
 import ProximityPrize.SubmissionLower.Fast077
 import ProximityPrize.SubmissionLower.PortLowBase
-set_option Elab.async false
+import ProximityPrize.SubmissionLower.HighPrices82180 -- serialize candidate build
 set_option autoImplicit true
 section
 namespace P0_9_6

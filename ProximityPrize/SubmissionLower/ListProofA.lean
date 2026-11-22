@@ -1,5 +1,5 @@
 import ProximityPrize.SubmissionLower.PortHighBase
-set_option Elab.async false
+import ProximityPrize.SubmissionLower.PortHighFinish -- serialize candidate build
 set_option autoImplicit true
 section
 namespace CJ0

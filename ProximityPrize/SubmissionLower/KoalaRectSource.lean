@@ -1,6 +1,6 @@
 import ProximityPrize.SubmissionLower.UpperBranch1
+import ProximityPrize.SubmissionLower.HighCore82219Finish -- serialize candidate build
 
-set_option Elab.async false
 
 namespace KoalaRect
 noncomputable section

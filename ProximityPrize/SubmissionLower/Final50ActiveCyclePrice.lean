@@ -4,7 +4,6 @@ import ProximityPrize.SubmissionLower.Low49ActiveVolume
 import Mathlib.Algebra.MvPolynomial.Coeff
 
 set_option autoImplicit false
-set_option Elab.async false
 
 namespace Final50ActiveCycle
 noncomputable section

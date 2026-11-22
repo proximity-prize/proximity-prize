@@ -1,8 +1,8 @@
 import ProximityPrize.SubmissionLower.Final50Price
 import ProximityPrize.SubmissionLower.Final50FatPad
 import ProximityPrize.SubmissionLower.PortLow5
+import ProximityPrize.SubmissionLower.Final50ActiveCycleMixed -- serialize candidate build
 
-set_option Elab.async false
 set_option autoImplicit true
 section
 namespace Final50FatCount
@@ -29,9 +29,9 @@ def fatChart (x : Shape) : Shape :=
   if x.t = 1 then linearChart x.chamber else chart (taylorLength + 4) x.chamber
 def divisorBox : Shape :=
   ⟨commonBox.b + resultantBox.b / divisorOrder, commonBox.j + resultantBox.j / divisorOrder, 0⟩
-theorem divisorBox_eq : divisorBox = ⟨25759, 8618, 0⟩ := by
-  have hb : commonBox.b + resultantBox.b / divisorOrder = 25759 := by decide
-  have hj : commonBox.j + resultantBox.j / divisorOrder = 8618 := by decide
+theorem divisorBox_eq : divisorBox = ⟨26548, 8884, 0⟩ := by
+  have hb : commonBox.b + resultantBox.b / divisorOrder = 26548 := by decide
+  have hj : commonBox.j + resultantBox.j / divisorOrder = 8884 := by decide
   unfold divisorBox
   rw [hb, hj]
 def hypersurfacePrice (x : Shape) : ℕ :=
@@ -69,8 +69,9 @@ open K1_13_7 (LowerCaps ProperLowerPair)
 open K1_13_7_3 (inclX_injective support_toGeneric clear_denominators eval_toGeneric order_toGeneric
   order_cancel order_clear)
 open Final50Price (commonBox resultantBox fatOrder divisorOrder)
-open private K1_13_7_3_2.Exponent iterPartial source_support translate_iter exact_iter_not_dvd
-  exists_separant from ProximityPrize.SubmissionLower.Fast073
+open K1_13_7_3_2 (iterPartial)
+open private K1_13_7_3_2.Exponent source_support translate_iter exact_iter_not_dvd exists_separant
+  from ProximityPrize.SubmissionLower.Fast073
 open private caps_of_support ne_of_support caps_mul proper_clear from ProximityPrize.SubmissionLower.Fast073
 theorem exact_exponent {P f : Lower} (hf : Prime f)
     (hlow : K1_13_7_3.LowPowers P divisorOrder) :
@@ -128,8 +129,8 @@ theorem iter_mem_admissible {P : Lower} (hb : P.totalDegree ≤ resultantBox.b)
     change fatOrder ≤ (m + Finsupp.single i a).degree at hord
     change residualOrder ≤ m.degree
     rw [map_add, Finsupp.degree_single] at hord
-    change a < 48817 at ha
-    change 53178 ≤ m.degree + a at hord
+    change a < 46920 at ha
+    change 51281 ≤ m.degree + a at hord
     change 4362 ≤ m.degree
     omega
 theorem proper_partial (P : Lower) (hP : P ≠ 0)
@@ -250,7 +251,7 @@ open private hasse_caps from ProximityPrize.SubmissionLower.Fast068
 open private support_mul_C_subset from ProximityPrize.SubmissionLower.Fast068
 def thirdCuts (P Q : Row 3) : Submodule Geom (Row 3) where
   carrier := {R | LowerCaps R resultantBox.b resultantBox.j ∧
-    ∀ S : Geom[X], OrderAt P S 53178 → OrderAt Q S 4362 → OrderAt R S 596}
+    ∀ S : Geom[X], OrderAt P S 51281 → OrderAt Q S 4362 → OrderAt R S 596}
   zero_mem' := by
     constructor
     · simp [LowerCaps, indexDegree]
@@ -303,13 +304,13 @@ theorem avoid_low {P Q : Row 3}
   classical
   let partials (F : Row 3) (d : ℕ) : Set (Row 3) :=
     {D | ∃ a, multiOrder a < d ∧ D = hassePartial a F}
-  let V := Submodule.span Geom (partials P 52583 ∪ partials Q 3767)
+  let V := Submodule.span Geom (partials P 50686 ∪ partials Q 3767)
   have hadm : V ≤ thirdCuts P Q := by
     apply Submodule.span_le.mpr
     rintro D (⟨a, ha, rfl⟩ | ⟨a, ha, rfl⟩)
     · refine ⟨hasse_caps a hp, ?_⟩
       intro S hPS _ m hm
-      exact (by omega : 596 ≤ 53178 - multiOrder a).trans (hasse_order P S a _ hPS m hm)
+      exact (by omega : 596 ≤ 51281 - multiOrder a).trans (hasse_order P S a _ hPS m hm)
     · refine ⟨hasse_caps a hq, ?_⟩
       intro S _ hQS m hm
       exact (by omega : 596 ≤ 4362 - multiOrder a).trans (hasse_order Q S a _ hQS m hm)
@@ -322,17 +323,17 @@ theorem avoid_low {P Q : Row 3}
     obtain ⟨hmin, q, rfl, hsmall⟩ := hp'
     have hheight : q.asIdeal.height = 2 := pair_height hpq hmin
     by_contra! h
-    have hP : VanishesTo q (genericRow P) 52583 := by
-      exact K1_13_7_4_1.proof q P 52583 hheight fun a ha => h _ (Submodule.subset_span (Or.inl ⟨a, ha, rfl⟩))
+    have hP : VanishesTo q (genericRow P) 50686 := by
+      exact K1_13_7_4_1.proof q P 50686 hheight fun a ha => h _ (Submodule.subset_span (Or.inl ⟨a, ha, rfl⟩))
     have hQ : VanishesTo q (genericRow Q) 3767 := by
       exact K1_13_7_4_1.proof q Q 3767 hheight fun a ha => h _ (Submodule.subset_span (Or.inr ⟨a, ha, rfl⟩))
     have hrange : Ideal.span (Set.range ![genericRow P, genericRow Q]) = pairIdeal P Q := by
       simp only [pairIdeal, Matrix.range_cons, Matrix.range_empty, Set.union_empty,
         Set.singleton_union]
-    have hlarge := local_length 2 (Or.inl rfl) q ![genericRow P, genericRow Q] ![52583, 3767]
+    have hlarge := local_length 2 (Or.inl rfl) q ![genericRow P, genericRow Q] ![50686, 3767]
       hheight (hrange ▸ hmin)
       (by simp [Fin.forall_fin_two]) (by simpa [Fin.forall_fin_two] using And.intro hP hQ)
-    have hnum : (∏ i : Fin 2, (![52583, 3767] : Fin 2 → ℕ) i) = curveLength := by
+    have hnum : (∏ i : Fin 2, (![50686, 3767] : Fin 2 → ℕ) i) = curveLength := by
       rw [Fin.prod_univ_two]
       decide
     rw [hnum, hrange] at hlarge
@@ -353,9 +354,9 @@ theorem residual_strata (P Q : Row 3) (hpq : ProperLowerPair P Q)
   right
   let q := pointPrime (lowerPoint S)
   have hRub := hR.2 S hPS hQS
-  change OrderAt P S 53178 at hPS
+  change OrderAt P S 51281 at hPS
   change OrderAt Q S 4362 at hQS
-  have hp : VanishesTo q (genericRow P) 53178 := point_order hPS
+  have hp : VanishesTo q (genericRow P) 51281 := point_order hPS
   have hq : VanishesTo q (genericRow Q) 4362 := point_order hQS
   have hr : VanishesTo q (genericRow R) 596 := point_order hRub
   have hle : tripleIdeal P Q R ≤ q.asIdeal := triple_le_iff.mpr
@@ -400,10 +401,10 @@ theorem residual_strata (P Q : Row 3) (hpq : ProperLowerPair P Q)
     simp only [tripleIdeal, Matrix.range_cons, Matrix.range_empty, Set.union_empty,
       Set.singleton_union]
   have hlen := local_length 3 (Or.inr rfl) q ![genericRow P, genericRow Q, genericRow R]
-    ![53178, 4362, 596] hheight (hrange ▸ hmin) (by simp [Fin.forall_fin_succ])
+    ![51281, 4362, 596] hheight (hrange ▸ hmin) (by simp [Fin.forall_fin_succ])
     (by simpa [Fin.forall_fin_succ] using And.intro hp (And.intro hq hr))
   rw [hrange] at hlen
-  have hnum : (∏ i : Fin 3, (![53178, 4362, 596] : Fin 3 → ℕ) i) = pointLength := by
+  have hnum : (∏ i : Fin 3, (![51281, 4362, 596] : Fin 3 → ℕ) i) = pointLength := by
     rw [Fin.prod_univ_three]
     decide
   rwa [hnum] at hlen
@@ -623,11 +624,11 @@ theorem chart_le (p : Shape) (hp : Chamber p) (ht : 1 < p.t) (hb : p.b ≤ 60) :
     InBox (chart (K1_13.taylorLength + 4) (derivativeBox p))
       (chart (Final50Price.taylorLength + 4) p) := by
   obtain ⟨hjb, htj⟩ := hp
-  have hB : 1 + 267352 * (p.b - 1 - 1) ≤ 1 + 266906 * (p.b - 1) := by omega
+  have hB : 1 + 267352 * (p.b - 1 - 1) ≤ 1 + 266932 * (p.b - 1) := by omega
   have hJ : 267352 * (p.j - 3 - 3) + 133676 + 3 ≤
-      266906 * (p.j - 3) + 133453 + 3 := by omega
+      266932 * (p.j - 3) + 133466 + 3 := by omega
   have hT : 267352 * (p.t - 1 - 1) + 133676 + 1 ≤
-      266906 * (p.t - 1) + 133453 + 1 := by omega
+      266932 * (p.t - 1) + 133466 + 1 := by omega
   exact ⟨max_le_max hB hJ, hJ, min_le_min hT (Nat.div_le_div_right hJ)⟩
 theorem exists_derivative_chart (f : Row 4) (he : FatEligible (shape f))
     (ht : 1 < (shape f).t) {j : ℕ} (hj : 0 < j) :
@@ -1257,7 +1258,7 @@ theorem threefold_pieces_capacity {w Γ s} (C : Pieces Γ) (h : Messages w Γ s)
 theorem proper_capacity {w Γ s} {x : Shape} (C : Pieces Γ) (h : Messages w Γ s)
     (hc : C.curves s) (hb : 32 * C.total ≤ curveMass32 x)
     (hn : 32 * C.n ≤ componentMass32 x) :
-    C.union.card ≤ ceilDiv (82239 * curveMass32 x) (32 * 46457) +
+    C.union.card ≤ ceilDiv (82249 * curveMass32 x) (32 * 46434) +
       ceilDiv (componentMass32 x) 32 := by
   have hcap := Final50FatPad.pieces_curve_capacity C h hc
   unfold ceilDiv
@@ -1295,7 +1296,7 @@ theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) : Final50FatCount.c2 := by
   have hsumI := Finset.card_union_le C.union F.union
   let p := (shape f).chamber
   let h := fatChart (shape f)
-  change Γ.card ≤ ceilDiv (82239 * curveMass32 (shape f)) (32 * 46457) +
+  change Γ.card ≤ ceilDiv (82249 * curveMass32 (shape f)) (32 * 46434) +
     ceilDiv (componentMass32 (shape f)) 32 + 20 * p.b * h.b ^ 2 +
     5 * physicalDegree * p.b * h.b + 1
   have hreserveC : C.union.card ≤ 5 * physicalDegree * p.b * h.b := by
@@ -1525,7 +1526,7 @@ private theorem row_degree {R : Type*} [CommRing R]
   change _ ≤ (physicalDegree - i.val) * m i
   rw [Nat.mul_comm]
   exact natDegree_pow_le_of_le _ ((natDegree_hasseDeriv_le _ _).trans (Nat.sub_le_sub_right hU _))
-private theorem solves_fresh {f : Row 4} {P : Ideal GeoJets} [P.IsPrime]
+theorem solves_fresh {f : Row 4} {P : Ideal GeoJets} [P.IsPrime]
     (hs : toGeneric (separant f) ∉ P) (hw : Final50Price.TrueWeightLE f anchorCutoff)
     (hf : toGeneric f ∈ P) (hinv : Invariant f P)
     (hmem : toGeneric (Final50FatPad.membershipTest f) ∈ P)
@@ -1563,7 +1564,7 @@ private theorem solves_fresh {f : Row 4} {P : Ideal GeoJets} [P.IsPrime]
       (fun i : Fin 4 => hasseDeriv i.val U), mapRingHom_comp, hk, trajectory]
     simp only [coe_mapRingHom, hasseDeriv_map]
   rw [← hm, hz, Polynomial.map_zero]
-private def retunedEval {L : Type} [Field L] (k : Geom →+* L) (U : L[X]) :
+def retunedEval {L : Type} [Field L] (k : Geom →+* L) (U : L[X]) :
     Final50FatCount_2.CoeffRing →+* L :=
   MvPolynomial.eval₂Hom k (fun i : Fin Final50Price.taylorLength => U.coeff i.val)
 def forgetTail : K1_13_6_3.CoeffRing →ₐ[Geom] Final50FatCount_2.CoeffRing :=
@@ -1617,7 +1618,7 @@ theorem specializes_retuned {f : Row 4} {P : Ideal GeoJets} [P.IsPrime]
     (MvPolynomial.rename j Q) = 0 at hm
   rw [MvPolynomial.eval_rename] at hm
   exact hm
-private theorem map_universal {L : Type} [Field L] (k : Geom →+* L) (U : L[X])
+theorem map_universal {L : Type} [Field L] (k : Geom →+* L) (U : L[X])
     (hd : U.natDegree < Final50Price.taylorLength) (Q : Row 4) :
     (Final50FatCount_2.universalEval Q).map (retunedEval k U) = trajectory k Q U := by
   let e := retunedEval k U
@@ -1975,7 +1976,7 @@ theorem universal_degree :
   rw [universal_eq]
   have hlen : ¬ n < taylorLength := not_lt_of_ge (Nat.succ_le_of_lt hn)
   exact coeff_sum_above (m := taylorLength) MvPolynomial.X n hlen
-private theorem map_universal (A : CoeffIdeal) [A.IsPrime]
+theorem map_universal (A : CoeffIdeal) [A.IsPrime]
     [Algebra Geom (CoeffField A)]
     (hk : algebraMap Geom (CoeffField A) = (coefficientMap A).comp MvPolynomial.C)
     (R : Row 4) :
@@ -3075,8 +3076,9 @@ open K1_13_6_3_4 (boundaryIdeal boundaryChart NoBoundaryZero ValueReduction)
 open K1_13_7_2_5_4 (le_saturate)
 open Final50Price (taylorLength)
 open Final50FatCount_2_3 (CoeffIdeal FreshCoeffRing extendIdeal jetLinear freshJetMap)
-open private eval₂_scale eval_scale_zero map_boundary_generator linear_sum_homogeneous
-  finite_chart_coordinates polynomial_value_ne_zero from ProximityPrize.SubmissionLower.Fast053
+open K1_13_6_3_4 (eval_scale_zero polynomial_value_ne_zero)
+open private eval₂_scale map_boundary_generator linear_sum_homogeneous finite_chart_coordinates
+  from ProximityPrize.SubmissionLower.Fast053
 open private value_reduction from ProximityPrize.SubmissionLower.Fast053
 open private hilbert_le_shift degree_le_of_shift from ProximityPrize.SubmissionLower.Fast066
 private theorem jetLinear_homogeneous (a : GeoField) (r : ℕ) :
@@ -3647,5 +3649,3 @@ theorem proof : Final50Price.c7 :=
     Final50FatCount_3.proof
 
 end Final50FatCount
-
-#print axioms Final50FatCount.proof

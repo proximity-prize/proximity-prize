@@ -1,4 +1,5 @@
 import ProximityPrize.SubmissionLower.PortLow6
+import ProximityPrize.SubmissionLower.KoalaRelativeCut -- serialize candidate build
 
 set_option autoImplicit false
 set_option maxHeartbeats 1500000
@@ -260,6 +261,3 @@ theorem simple_saturation {J P : Ideal (MvPolynomial σ F)} [P.IsPrime]
 
 end
 end SplitCut.CutMultiplicity
-
-#print axioms SplitCut.CutMultiplicity.coefficient_budget
-#print axioms SplitCut.CutMultiplicity.simple_saturation

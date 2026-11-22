@@ -2,7 +2,6 @@ import ProximityPrize.SubmissionLower.Fast068
 import ProximityPrize.SubmissionLower.Fast069
 import ProximityPrize.SubmissionLower.Fast070
 import ProximityPrize.SubmissionLower.Fast071
-set_option Elab.async false
 set_option autoImplicit true
 section
 set_option autoImplicit false
@@ -2612,7 +2611,7 @@ private def clip {slot : Fin m → Fin k} {bad : Finset (Fin m →₀ ℕ)} {w :
       _ ≤ ∑ j ∈ Finset.univ.filter (fun j => slot j = i), limit bad j := Finset.sum_le_sum hle
       _ ≤ ∑ j, limit bad j := Finset.sum_le_sum_of_subset (Finset.filter_subset _ _)
     exact (Nat.not_succ_le_self _) ((hw i).trans hweight)
-private def join {slot : Fin m → Fin k} {bad : Finset (Fin m →₀ ℕ)} (w : Fin k → ℕ)
+def join {slot : Fin m → Fin k} {bad : Finset (Fin m →₀ ℕ)} (w : Fin k → ℕ)
     (x : Σ c : Cell slot bad, ∀ i, Fibre slot bad c i (w i)) : Standard slot bad w := by
   let ex (j : Fin m) : ℕ := (x.2 (slot j)).val ⟨j, rfl⟩
   refine ⟨Finsupp.equivFunOnFinite.symm ex, ?_, ?_⟩
@@ -2852,7 +2851,7 @@ theorem constants_value {k L : Type*} [Field k] [Field L] [Algebra k L]
   have hge := (V.valuation.one_le_val_iff ((_root_.map_ne_zero (algebraMap k L)).2 hc)).2
     ((V.valuation_le_one_iff _).2 hinv)
   exact le_antisymm hle hge
-private theorem linear_values {k L Γ : Type*} [Field k] [Field L] [Algebra k L]
+theorem linear_values {k L Γ : Type*} [Field k] [Field L] [Algebra k L]
     [LinearOrderedCommGroupWithZero Γ] (v : Valuation L Γ)
     (hc : ∀ c : k, c ≠ 0 → v (algebraMap k L c) = 1)
     {t : L} (ht : Transcendental k t) :

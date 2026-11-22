@@ -90,6 +90,7 @@ import Mathlib.RingTheory.Valuation.Discrete.RankOne
 import Mathlib.RingTheory.Valuation.LocalSubring
 import Mathlib.Tactic
 import Mathlib.Topology.Algebra.MvPolynomial
+import ProximityPrize.SubmissionLower.KoalaTwoSectionCount -- serialize candidate build
 
 set_option autoImplicit false
 set_option maxHeartbeats 900000
@@ -293,8 +294,3 @@ theorem hilbert_drop {F : Type*} [Field F] {I J : Ideal (Ring F)} (hIJ : I ≤ J
   exact (Nat.add_le_add_left hdim _).trans_eq he
 
 end SplitCut.Rect
-
-#print axioms SplitCut.Rect.mul_monomial
-#print axioms SplitCut.Rect.mul_piece
-#print axioms SplitCut.Rect.ambient_rank
-#print axioms SplitCut.Rect.hilbert_drop

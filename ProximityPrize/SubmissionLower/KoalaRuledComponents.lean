@@ -201,8 +201,5 @@ theorem graph_pure (φ : MvPolynomial σ F →ₐ[F] Ring F) (hφ : Function.Sur
     exact natDegree_affineHilbertPolynomial_le_of_le hP.le
   exact ⟨le_antisymm hupper hlower, fun P hP => hcomponents P (Ideal.mem_minimalPrimesFinset.mp hP)⟩
 
-#print axioms graph_pure
-#print axioms saturation_components
-#print axioms cut_pure
 end
 end SplitCut.Rect

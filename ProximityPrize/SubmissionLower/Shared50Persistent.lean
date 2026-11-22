@@ -1,5 +1,5 @@
 import ProximityPrize.SubmissionLower.Final50Order
-set_option Elab.async false
+import ProximityPrize.SubmissionLower.Shared50Rational -- serialize candidate build
 
 namespace Shared50Persistent
 noncomputable section
@@ -63,7 +63,5 @@ theorem local_order {Γ s R n} {P : Ideal GeoJets} [P.IsPrime] (hp : Persistent 
     (ho : ∀ γ ∈ Γ, OrderAt R (extend (s γ)) n) : VanishesTo P (toGeneric R) n :=
   K1_13_6_1_2_2.vanishesTo_of_hasse _ P n (fun a ha => derivative_mem hp hb ho a ha)
 
-#print axioms common_avoider
-#print axioms local_order
 end
 end Shared50Persistent

@@ -3,7 +3,6 @@ import ProximityPrize.SubmissionLower.Low48BentCycleCap
 import ProximityPrize.SubmissionLower.Low49ActiveSupport
 
 set_option autoImplicit false
-set_option Elab.async false
 
 namespace Final50ActiveCycle
 noncomputable section

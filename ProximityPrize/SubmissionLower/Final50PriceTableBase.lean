@@ -2,7 +2,6 @@ import ProximityPrize.SubmissionLower.Final50PriceMonotone
 import ProximityPrize.SubmissionLower.Final50PriceCaps
 import ProximityPrize.SubmissionLower.Final50SharedPrice
 
-set_option Elab.async false
 set_option maxHeartbeats 4000000
 namespace Final50PriceTableBase
 open K1_13 (Shape InBox)

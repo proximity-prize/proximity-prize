@@ -1,6 +1,5 @@
 import ProximityPrize.SubmissionLower.AnchorTopFactor
 
-set_option Elab.async false
 set_option maxRecDepth 10000
 set_option maxHeartbeats 1800000
 

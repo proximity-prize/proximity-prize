@@ -1,6 +1,5 @@
 import ProximityPrize.SubmissionLower.Fast029
 import ProximityPrize.SubmissionLower.Numeric6AuxCert
-set_option Elab.async false
 set_option autoImplicit true
 section
 namespace K1_14_2_1

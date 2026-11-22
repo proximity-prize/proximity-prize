@@ -1,5 +1,7 @@
 import ProximityPrize.SubmissionLower.Final50Price
-set_option Elab.async false
+import ProximityPrize.SubmissionLower.Final50GeoFinish -- serialize candidate build
+set_option Elab.async true
+
 section
 namespace Final50PriceMonotone
 open K1_13 (Shape InBox chart liftedChart mixed32 ceilDiv)

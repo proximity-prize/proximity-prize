@@ -1,5 +1,5 @@
 import ProximityPrize.SubmissionLower.PortBase
-set_option Elab.async false
+import ProximityPrize.SubmissionLower.PortLowBase -- serialize candidate build
 set_option autoImplicit true
 section
 set_option maxRecDepth 12000

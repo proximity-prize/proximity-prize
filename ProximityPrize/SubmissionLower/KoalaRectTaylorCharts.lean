@@ -2,7 +2,6 @@ import ProximityPrize.SubmissionLower.KoalaRectTaylorAxes
 import ProximityPrize.SubmissionLower.KoalaRectSectionAlgebra
 
 set_option autoImplicit false
-set_option Elab.async false
 set_option maxHeartbeats 1000000
 set_option backward.isDefEq.respectTransparency false
 
@@ -255,5 +254,3 @@ theorem represented_of_transition (J : Input) (B : ResidueLift J) (D : Factors J
 
 end
 end KoalaRectTaylor
-
-#print axioms KoalaRectTaylor.represented_of_transition

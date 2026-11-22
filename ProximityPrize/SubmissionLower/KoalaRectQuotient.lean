@@ -1,6 +1,6 @@
 import ProximityPrize.SubmissionLower.UpperBranch5
+import ProximityPrize.SubmissionLower.KoalaRectPosition -- serialize candidate build
 
-set_option Elab.async false
 set_option autoImplicit false
 set_option backward.isDefEq.respectTransparency false
 
@@ -124,8 +124,6 @@ theorem rank_rect_multiples_le (C : Submodule FX Equation) {g : Equation} (hg : 
     _ ≤ Module.rank FX B := rank_range_le m
     _ ≤ _ := by rw [← Module.finrank_eq_rank]; exact_mod_cast hB
 
-#print axioms axisDegree_pow
-#print axioms rank_rect_multiples_le
 
 end
 end KoalaRect

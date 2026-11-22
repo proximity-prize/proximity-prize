@@ -1,6 +1,6 @@
 import ProximityPrize.SubmissionLower.HighBankCore
+import ProximityPrize.SubmissionLower.HighCore82219Moment9318 -- serialize candidate build
 
-set_option Elab.async false
 set_option autoImplicit true
 
 -- Only the e-independent moment witnesses reused by the retargeted banks.

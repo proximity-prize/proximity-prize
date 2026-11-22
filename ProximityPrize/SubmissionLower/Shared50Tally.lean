@@ -3,7 +3,6 @@ import ProximityPrize.SubmissionLower.Shared50CycleBound
 import ProximityPrize.SubmissionLower.Shared50CycleFour
 import ProximityPrize.SubmissionLower.Shared50CycleLegacy
 
-set_option Elab.async false
 namespace Shared50Tally
 noncomputable section
 
@@ -272,7 +271,5 @@ theorem Data.pieces (D : Data Γ s f Q l S) (input : CutInput Γ s f Q l) :
       exact Nat.add_le_add_left hB _
     exact hpay
 
-#print axioms Data.pieces
-#print axioms Data.bent
 end
 end Shared50Tally

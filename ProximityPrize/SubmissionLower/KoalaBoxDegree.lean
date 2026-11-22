@@ -92,6 +92,7 @@ import Mathlib.RingTheory.Valuation.Discrete.RankOne
 import Mathlib.RingTheory.Valuation.LocalSubring
 import Mathlib.Tactic
 import Mathlib.Topology.Algebra.MvPolynomial
+import ProximityPrize.SubmissionLower.KoalaTwoSectionPrice -- serialize candidate build
 
 set_option autoImplicit false
 set_option maxHeartbeats 900000
@@ -225,5 +226,3 @@ theorem surfaces {a b c h j r : ℕ} (ha : 0<a) (hb : 0<b) (hc : 0<c)
 
 end
 end SplitCut.BoxDegree
-#print axioms SplitCut.BoxDegree.surface
-#print axioms SplitCut.BoxDegree.surfaces

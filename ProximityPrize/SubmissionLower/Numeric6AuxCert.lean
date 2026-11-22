@@ -1,5 +1,4 @@
 import ProximityPrize.SubmissionLower.Numeric6Defs
-set_option Elab.async false
 set_option autoImplicit true
 section
 namespace CJ6_1

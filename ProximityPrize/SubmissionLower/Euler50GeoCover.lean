@@ -1,6 +1,5 @@
 import ProximityPrize.SubmissionLower.Euler50Price
 
-set_option Elab.async false
 namespace Euler50GeoLead
 open K1_13 (Geom Row shape indexDegree)
 open K1_13_1 (topView topView_degree anchorLead anchorLead_ne indexDegree_eq)
@@ -235,6 +234,5 @@ theorem cover_of_anchor {Γ : Finset K} {s : K → K[X]} (P : Row 4)
     exact ⟨j, by rw [hj, OnFactor, ← eval_anchorLead]; exact ⟨hqS, hqlead⟩⟩
 end FactorCover
 
-#print axioms cover_of_anchor
 end
 end Euler50GeoCover

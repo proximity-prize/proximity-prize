@@ -1,6 +1,5 @@
 import ProximityPrize.SubmissionLower.CurveListTripleSupport
 
-set_option Elab.async false
 set_option maxRecDepth 8000
 set_option maxHeartbeats 2000000
 
@@ -60,6 +59,5 @@ theorem avoid {A V R : ℕ} {ι : Type*} [Fintype ι] {s : Source} (hs : ShapeOK
     simpa only [Finsupp.some_optionElim] using congrArg Finsupp.some hi
   exact i.property (heq ▸ hem)
 
-#print axioms avoid
 end
 end CurveListFiberBlock

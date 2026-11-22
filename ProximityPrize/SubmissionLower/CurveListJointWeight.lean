@@ -1,4 +1,5 @@
 import ProximityPrize.SubmissionLower.ListProofA
+import ProximityPrize.SubmissionLower.CurveListScalarWide55Defs -- serialize candidate build
 
 namespace CurveListJointWeight
 

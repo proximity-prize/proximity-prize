@@ -1,8 +1,8 @@
 import ProximityPrize.SubmissionLower.HighCore82219UpperGeometry
 import ProximityPrize.SubmissionLower.KoalaRectSections
+import ProximityPrize.SubmissionLower.KoalaRuledComponents -- serialize candidate build
 
 set_option autoImplicit false
-set_option Elab.async false
 set_option maxHeartbeats 600000
 set_option linter.unnecessarySeqFocus false
 
@@ -95,5 +95,3 @@ theorem coeff_jetToRect (p : JetRing) (m : Fin 4 →₀ ℕ) :
 
 end
 end KoalaRectTaylor
-
-#print axioms KoalaRectTaylor.coeff_jetToRect

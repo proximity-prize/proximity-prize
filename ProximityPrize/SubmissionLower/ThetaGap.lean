@@ -1,6 +1,7 @@
 import Mathlib.LinearAlgebra.Span.Basic
 import Mathlib.Algebra.Module.Submodule.Lattice
 import Mathlib.Tactic
+import ProximityPrize.SubmissionLower.PrimaryTaperRankData -- serialize candidate build
 
 /-!
 Two gradings with a common filtration: the gap lemma.
@@ -88,6 +89,5 @@ theorem gap (hLG : ∀ a, L a ⊓ G (a + 1) = ⊥)
   rw [hLG] at hbot
   exact shifted_injective hL M hinj R δ hM _ q hlR hq ((Submodule.mem_bot k).mp hbot)
 
-#print axioms gap
 
 end ThetaGap

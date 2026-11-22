@@ -1,7 +1,7 @@
 import ProximityPrize.SubmissionLower.Final50ActiveCycleBound
+import ProximityPrize.SubmissionLower.Final50FatCount -- serialize candidate build
 
 set_option autoImplicit false
-set_option Elab.async false
 
 namespace Shared50CycleBound
 
@@ -150,7 +150,6 @@ theorem bound_with_cut {R B : Family} [∀ i, Finite (B i)] (hB : Doubled R B)
       _ ≤ _ := mul_le_mul_of_nonneg_left (hfibre P hP) (Nat.cast_nonneg _)
   exact hcharge.trans hsumZ
 
-#print axioms bound_with_cut
 
 end
 

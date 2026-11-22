@@ -1,7 +1,6 @@
 import ProximityPrize.SubmissionLower.Fast064
 import ProximityPrize.SubmissionLower.Fast065
 import ProximityPrize.SubmissionLower.Fast067
-set_option Elab.async false
 set_option autoImplicit true
 section
 set_option backward.isDefEq.respectTransparency false
@@ -230,8 +229,8 @@ theorem natDen_eq (u : ℤ) : (natDen (u + 1).toNat : ℤ) = fastDen u := by
   simp only [natDen, fastDen, not_lt.mpr (Int.natCast_nonneg _), ite_false, Nat.cast_succ]
   change ((↑(u * (u * (2 * u + 21) + 66) / 72 : ℕ) : ℤ) + 1) = _
   simp only [Int.natCast_ediv, Nat.cast_mul, Nat.cast_add, Nat.cast_ofNat]
-private def partValue (ab : ℕ × ℕ) : ℤ := (ab.1 : ℤ) - ab.2
-private theorem countParts_eq (d : ℕ) (u : ℤ) :
+def partValue (ab : ℕ × ℕ) : ℤ := (ab.1 : ℤ) - ab.2
+theorem countParts_eq (d : ℕ) (u : ℤ) :
     partValue (countParts d (u + 1).toNat) = fastCum (d : ℤ) u := by
   by_cases hu : u < 0
   · simp [countParts, partValue, natDen, fastCum, hu, show (u + 1).toNat = 0 by omega]
@@ -290,7 +289,7 @@ theorem natKernel_eq (d j h r : ℕ) (hr : r ≤ d) :
     simp only [natKernel, eA, hz, ite_false, eC, eF, eK]
     simp only [partValue] at hA hC hF hK
     omega
-private theorem natKernel_signed (d j h r : ℕ) (hr : r ≤ d)
+theorem natKernel_signed (d j h r : ℕ) (hr : r ≤ d)
     (hz : ((h : ℤ) - 1 - (1650 - (j : ℤ)) + d < 0) ↔ r = 0)
     (hc : r ≠ 0 → min (d : ℤ) (((h : ℤ) - 1 - (1650 - (j : ℤ)) + d) / 4) + 1 = r) :
     natKernel d j h r = (signedKernel d j ((h : ℤ) - 1)).toNat := by
@@ -354,7 +353,7 @@ theorem natEntry_eq (t j : ℕ) (ht : t < 499) (hj : j < 283) : natEntry t j = e
     · have hz : v = 0 := by dsimp [v]; omega
       rw [ite_eq_right hp, ite_eq_left hz]
   · simp only [ite_eq_right hdiag]
-private def windowEmbed : Fin 499 × Fin 283 ↪ BlockIndex where
+def windowEmbed : Fin 499 × Fin 283 ↪ BlockIndex where
   toFun x := (⟨3514 + x.1.val, by have := x.1.isLt; omega⟩, x.2.castLE (by decide))
   inj' := by
     intro x y h
@@ -363,12 +362,12 @@ private def windowEmbed : Fin 499 × Fin 283 ↪ BlockIndex where
       change 3514 + x.1.val = 3514 + y.1.val at e
       omega
     · exact congrArg (fun i : BlockIndex => i.2.val) h
-private theorem rangeSum_eq (f : ℕ → ℕ) (n : ℕ) :
+theorem rangeSum_eq (f : ℕ → ℕ) (n : ℕ) :
     rangeSum f n = ∑ k ∈ Finset.range n, f k := by
   induction n with
   | zero => simp [rangeSum]
   | succ n ih => rw [rangeSum, Finset.sum_range_succ, ih]
-private theorem rangeSum_fin (f : ℕ → ℕ) (n : ℕ) :
+theorem rangeSum_fin (f : ℕ → ℕ) (n : ℕ) :
     rangeSum f n = ∑ k : Fin n, f k.val := by
   rw [rangeSum_eq, Fin.sum_univ_eq_sum_range]
 private theorem sum_embed_le {α β : Type*} [Fintype α] [Fintype β] (e : α ↪ β) (f : β → ℕ) :
@@ -2486,7 +2485,7 @@ private def slots (b j : ℕ) : Finset Slot :=
         Finset.range (b - z - y - x + 1))))
 def slotGrade (q : Slot) : ℕ := q.2.2.2 + q.2.2.1 + q.2.1 + q.1
 private def slotWeight (q : Slot) : ℕ := q.2.2.1 + 2 * q.2.1 + 3 * q.1
-private theorem mem_slots (q : Slot) (b j : ℕ) :
+theorem mem_slots (q : Slot) (b j : ℕ) :
     q ∈ slots b j ↔ slotGrade q ≤ b ∧ slotWeight q ≤ j := by
   rcases q with ⟨z, y, x, a⟩
   simp only [slots, Finset.mem_sigma, Finset.mem_range, slotGrade, slotWeight]
@@ -2815,7 +2814,7 @@ open K1_13 K1_13_2 K1_13_2_2
 open MvPolynomial PolynomialDifferential ReedSolomon.HiddenDerivative
 open scoped BigOperators
 private def residualDegree (i : BlockIndex) : ℕ := min i.1.val 1650
-private theorem active_degree (i : BlockIndex) :
+theorem active_degree (i : BlockIndex) :
     (activeFlag i).degree = (residualDegree i : ℤ) := by
   change min (i.1.val : ℤ) 1650 = ((min i.1.val 1650 : ℕ) : ℤ)
   omega
@@ -2872,15 +2871,15 @@ private theorem encode_basis (i : BlockIndex) (e : blockExponents i) :
     ((basisRestrictSupport Geom (blockExponents i)).constr_basis Geom (encodeColumn i) e)
 local notation "T" => (MvPolynomial.X (localT 3) : Local)
 local notation "E" => (MvPolynomial.X (localE 3) : Local)
-private def jetVar (j : Fin 3) : Local := MvPolynomial.X (localY j)
-private def valueImage : Local := unscaledLocalImage 3 0 0 (some 0)
+def jetVar (j : Fin 3) : Local := MvPolynomial.X (localY j)
+def valueImage : Local := unscaledLocalImage 3 0 0 (some 0)
 private def scaledImage : Fin 4 → Local :=
   ![T * E, T * jetVar 0, T ^ 2 * jetVar 1, T ^ 3 * jetVar 2]
-private def originSubst : SourcePolynomial →ₐ[Geom] Local := unscaledLocalSubstitution 3 0 0
-private theorem scaled_shear_zero : bind₁ scaledImage (shearImage 0) = valueImage := by
+def originSubst : SourcePolynomial →ₐ[Geom] Local := unscaledLocalSubstitution 3 0 0
+theorem scaled_shear_zero : bind₁ scaledImage (shearImage 0) = valueImage := by
   simp [shearImage, scaledImage, valueImage, unscaledLocalImage, localCorrection, Fin.sum_univ_three, jetVar]
   ring
-private theorem scaled_shear_succ (j : Fin 3) :
+theorem scaled_shear_succ (j : Fin 3) :
     bind₁ scaledImage (shearImage j.succ) = T ^ j.succ.val * jetVar j := by
   fin_cases j <;> simp [shearImage, scaledImage]
 private theorem bind_monomial_one {σ τ : Type*} [Fintype σ]
@@ -2888,7 +2887,7 @@ private theorem bind_monomial_one {σ τ : Type*} [Fintype σ]
     bind₁ f (monomial e 1) = ∏ j, f j ^ e j := by
   rw [bind₁_monomial, C_1, one_mul]
   exact Finsupp.prod_fintype e (fun j n => f j ^ n) (fun _ => pow_zero _)
-private theorem origin_monomial (e : SourceExponent) :
+theorem origin_monomial (e : SourceExponent) :
     originSubst (monomial e 1) = T ^ e none *
       (valueImage ^ e (some 0) * (jetVar 0) ^ e (some 1) * (jetVar 1) ^ e (some 2) * (jetVar 2) ^ e (some 3)) := by
   rw [originSubst, unscaledLocalSubstitution, bind_monomial_one, Fintype.prod_option, Fin.prod_univ_four]
@@ -2907,7 +2906,7 @@ private theorem stripped_monomial (i : BlockIndex) (e : SourceExponent) :
   change bind₁ scaledImage (shearImage 2) = T ^ 2 * jetVar 1 at h2
   change bind₁ scaledImage (shearImage 3) = T ^ 3 * jetVar 2 at h3
   simp [scaled_shear_zero, h1, h2, h3, stripped]
-private theorem shifted_origin_monomial (i : BlockIndex) (e : blockExponents i) :
+theorem shifted_origin_monomial (i : BlockIndex) (e : blockExponents i) :
     T ^ (-offset i).toNat * originSubst (monomial e.val 1) =
     T ^ (offset i).toNat * valueImage ^ removed i *
       bind₁ scaledImage (coordinateChange (monomial (stripped i e) 1)) := by
@@ -2932,7 +2931,7 @@ private theorem shifted_origin_monomial (i : BlockIndex) (e : blockExponents i) 
         (valueImage ^ e.val (some 0) * (jetVar 0) ^ e.val (some 1) *
           (jetVar 1) ^ e.val (some 2) * (jetVar 2) ^ e.val (some 3)) := by ring
     _ = _ := by rw [hT, hA]; ring
-private theorem shifted_origin (i : BlockIndex) (p : BlockSpace i) :
+theorem shifted_origin (i : BlockIndex) (p : BlockSpace i) :
     T ^ (-offset i).toNat * originSubst (p : SourcePolynomial) =
     T ^ (offset i).toNat * valueImage ^ removed i *
       bind₁ scaledImage (coordinateChange ((encode i p : oldSpace (activeFlag i)) : JetPoly)) := by
@@ -3058,9 +3057,9 @@ private def columns (w : Fin 4 → ℕ) (d u : ℤ) : Finset JetExp :=
 theorem mem_columns {w : Fin 4 → ℕ} {d u : ℤ} {e : JetExp} :
     e ∈ columns w d u ↔ (e.weight gradeWeight : ℤ) = d ∧ (e.weight w : ℤ) ≤ u :=
   (columns_finite w d u).mem_toFinset
-private def cappedColumns (w : Fin 4 → ℕ) (d u : ℤ) (r : ℕ) : Finset JetExp :=
+def cappedColumns (w : Fin 4 → ℕ) (d u : ℤ) (r : ℕ) : Finset JetExp :=
   (columns w d u).filter fun e => e 0 < r
-private theorem mem_cappedColumns {w : Fin 4 → ℕ} {d u : ℤ} {r : ℕ} {e : JetExp} :
+theorem mem_cappedColumns {w : Fin 4 → ℕ} {d u : ℤ} {r : ℕ} {e : JetExp} :
     e ∈ cappedColumns w d u r ↔
       (e.weight gradeWeight : ℤ) = d ∧ (e.weight w : ℤ) ≤ u ∧ e 0 < r := by
   simp only [cappedColumns, Finset.mem_filter, mem_columns, and_assoc]
@@ -3223,12 +3222,12 @@ noncomputable section
 private def top (k : ℕ) : JetExp := Finsupp.single 3 k
 def tailColumns (d u : ℤ) (k : ℕ) : Finset JetExp :=
   (cumulativeColumns d u).filter fun e => k ≤ e 3
-private def cappedColumns (d u cap : ℤ) : Finset JetExp :=
+def cappedColumns (d u cap : ℤ) : Finset JetExp :=
   (cumulativeColumns d u).filter fun e => (e 3 : ℤ) ≤ cap
 theorem mem_tailColumns {d u : ℤ} {k : ℕ} {e : JetExp} :
     e ∈ tailColumns d u k ↔ e ∈ cumulativeColumns d u ∧ k ≤ e 3 :=
   Finset.mem_filter
-private theorem mem_cappedColumns {d u cap : ℤ} {e : JetExp} :
+theorem mem_cappedColumns {d u cap : ℤ} {e : JetExp} :
     e ∈ cappedColumns d u cap ↔ e ∈ cumulativeColumns d u ∧ (e 3 : ℤ) ≤ cap :=
   Finset.mem_filter
 theorem weight_add_top (w : Fin 4 → ℕ) (e : JetExp) (k : ℕ) :
@@ -3274,7 +3273,7 @@ theorem card_sdiff_int {s t : Finset JetExp} (h : t ⊆ s) :
     ((s \ t).card : ℤ) = (s.card : ℤ) - (t.card : ℤ) := by
   have hc := Finset.card_sdiff_add_card_eq_card h
   omega
-private theorem capped_card (hc : CumulativeCount) (d u cap : ℤ) :
+theorem capped_card (hc : CumulativeCount) (d u cap : ℤ) :
     ((cappedColumns d u cap).card : ℤ) = cappedCount d u cap := by
   by_cases hcap : cap < 0
   · have hempty : cappedColumns d u cap = ∅ := by

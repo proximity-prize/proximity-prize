@@ -1,5 +1,4 @@
 import ProximityPrize.SubmissionLower.Fast049
-set_option Elab.async false
 set_option autoImplicit true
 section
 set_option backward.isDefEq.respectTransparency false
@@ -4342,7 +4341,7 @@ theorem jetEval_surjective : Function.Surjective jetEval := by
     fin_cases i <;> simp [jetEval, seedIncl]
   intro p
   exact ⟨seedIncl p, DFunLike.congr_fun he p⟩
-private def jetCut : SectionAmbient := MvPolynomial.X 3 - C (sliceParameter 2)
+def jetCut : SectionAmbient := MvPolynomial.X 3 - C (sliceParameter 2)
 theorem jetEval_ker :
     RingHom.ker jetEval.toRingHom = Ideal.span {jetCut, MvPolynomial.X 2 - C (sliceParameter 3)} := by
   let J : Ideal SectionAmbient := Ideal.span {jetCut, MvPolynomial.X 2 - C (sliceParameter 3)}
@@ -7313,8 +7312,6 @@ def sectionEval (s : Slice) : SectionJet →ₐ[SectionField] Plane where
 def sectionRow (s : Slice) (P : Jet) : Plane :=
   sectionEval s (sectionMap P)
 abbrev PlaneSection (F G : Plane) := Plane ⧸ Ideal.span {F, G}
-def BidegreeLE (F : Plane) (u b : ℕ) : Prop :=
-  F.degreeOf 0 ≤ u ∧ F.degreeOf 1 ≤ b
 end
 end K1_14_3_2_4
 end

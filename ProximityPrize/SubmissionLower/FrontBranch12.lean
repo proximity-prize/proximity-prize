@@ -1,6 +1,5 @@
 import ProximityPrize.SubmissionLower.PortHighFinish
 import ProximityPrize.SubmissionLower.RungSplit
-set_option Elab.async false
 set_option autoImplicit true
 section
 set_option maxRecDepth 12000

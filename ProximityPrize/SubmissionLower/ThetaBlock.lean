@@ -107,8 +107,6 @@ theorem block_rank (i : BlockIndex) (h1 : 2999 ≤ i.1.val + i.2.val)
     exact_mod_cast h
   exact h'.trans hf
 
-#print axioms flag_rank
-#print axioms block_rank
 
 end
 end ThetaBlock

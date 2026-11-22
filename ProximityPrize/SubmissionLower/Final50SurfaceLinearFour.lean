@@ -1,6 +1,6 @@
 import ProximityPrize.SubmissionLower.Final50SharedPrice
+import ProximityPrize.SubmissionLower.Shared50BentCaps -- serialize candidate build
 
-set_option Elab.async false
 set_option autoImplicit false
 set_option maxHeartbeats 900000
 
@@ -58,5 +58,4 @@ theorem surface_ordinary_eq_weights {f : Shape} (hf : Valid f) (q : Shape) :
   rw [signed_rotate, Int.toNat_of_nonneg (hnonneg u)]
   exact signed_four_linear u r s p
 
-#print axioms surface_ordinary_eq_weights
 end Final50SharedPrice

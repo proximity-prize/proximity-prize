@@ -27,7 +27,7 @@ import ProximityPrize.SubmissionLower.Fast042
 import ProximityPrize.SubmissionLower.Pack_K1_14_2_1Split
 import ProximityPrize.SubmissionLower.Pack_K1_14_2_2Split
 import ProximityPrize.SubmissionLower.SoloK1_13_1_1ArithmeticLogic
-set_option Elab.async false
+import ProximityPrize.SubmissionLower.Fast052 -- serialize candidate build
 set_option autoImplicit true
 section
 namespace K1_13_8
@@ -342,7 +342,7 @@ private theorem spend_le {ι : Type*} [DecidableEq ι] [Fintype ι] {l : ι → 
           Nat.mul_le_mul_right _ (Nat.sub_le_sub_left (hs i hi) _)
     _ = ∑ i ∈ z ∪ s, (d - l i) * f i := (Finset.sum_union hdisj).symm
     _ ≤ _ := Finset.sum_le_sum_of_subset (Finset.subset_univ _)
-private theorem mass_le {n : ℕ} {a : Fin n → Shape} {l : Fin n → ℕ}
+theorem mass_le {n : ℕ} {a : Fin n → Shape} {l : Fin n → ℕ}
     (hlayers : LayerBudget a l) {z s : Finset (Fin n)} {q : Shape} {L : ℕ}
     (hz : ∀ i ∈ z, l i = 0) (hs : ∀ i ∈ s, l i ≤ L)
     (hdisj : Disjoint z s) (hq : InBox q (shapeSum a z)) :
@@ -350,7 +350,7 @@ private theorem mass_le {n : ℕ} {a : Fin n → Shape} {l : Fin n → ℕ}
   refine hlayers.trans (Finset.sum_le_sum fun k _ => remaining_anti ?_ ?_)
   · exact spend_le (fun i => (a i).b) hz hs hdisj hq.1
   · exact spend_le (fun i => (a i).j) hz hs hdisj hq.2.1
-private theorem retained_cost {ι : Type*} {a : ι → Shape} {cost : ι → ℕ}
+theorem retained_cost {ι : Type*} {a : ι → Shape} {cost : ι → ℕ}
     {z : Finset ι} (ha : ∀ i, Valid (a i)) (hbox : RetainedBox (shapeSum a z))
     (hfat : ∀ i, FatEligible (a i) → cost i ≤ fatPrice (a i)) :
     (∑ i ∈ z, cost i) ≤
@@ -512,7 +512,7 @@ private theorem signed_rotate (p q r s : Shape) :
     signedMixed p q r s = signedMixed q r s p := by
   simp only [signedMixed, difference, volume32, Shape.plus, Nat.cast_add, Nat.cast_zero]
   ring
-private theorem chamber_coords (p : Shape) (h : Chamber p) :
+theorem chamber_coords (p : Shape) (h : Chamber p) :
     (p.b : ℤ) = (↑(p.b - p.j) : ℤ) + ↑(p.j - 3 * p.t) + 3 * p.t ∧
     (p.j : ℤ) = (↑(p.j - 3 * p.t) : ℤ) + 3 * p.t := by
   obtain ⟨hb, hj⟩ := h
@@ -1396,10 +1396,6 @@ def sliceEval : (s : Slice) → Ambient →+* Plane (SliceField s)
   | .jets => mapGenericJets
 abbrev SliceQuotient (s : Slice) (I : Ideal Ambient) :=
   CoordinateRing (I.map (sliceEval s))
-abbrev PlaneQuotient {F : Type} [Field F] (P Q : Plane F) :=
-  CoordinateRing (Ideal.span {P, Q})
-def BidegreeLE {F : Type} [Field F] (P : Plane F) (a b : ℕ) : Prop :=
-  P.degreeOf 0 ≤ a ∧ P.degreeOf 1 ≤ b
 end
 end K1_14_2_2_2_5
 end
@@ -3027,51 +3023,6 @@ end
 end K1_14_2_2_2_1
 end
 section
-namespace K1_13_1_1
-set_option maxRecDepth 30000
-set_option Elab.async false
-set_option maxHeartbeats 4000000
-theorem grade110 : fastGrade 110 = 5032 := by decide +kernel
-theorem grade111 : fastGrade 111 = 4448 := by decide +kernel
-theorem grade112 : fastGrade 112 = 3884 := by decide +kernel
-theorem grade113 : fastGrade 113 = 3384 := by decide +kernel
-theorem grade114 : fastGrade 114 = 2936 := by decide +kernel
-theorem grade115 : fastGrade 115 = 2520 := by decide +kernel
-theorem grade116 : fastGrade 116 = 2145 := by decide +kernel
-theorem grade117 : fastGrade 117 = 1825 := by decide +kernel
-theorem grade118 : fastGrade 118 = 1520 := by decide +kernel
-theorem grade119 : fastGrade 119 = 1270 := by decide +kernel
-theorem grade120 : fastGrade 120 = 1030 := by decide +kernel
-private theorem sumStep (f : ℕ → ℕ) (n a b : ℕ)
-    (ha : sumRange n f = a) (hb : f n = b) :
-    sumRange (n + 1) f = a + b :=
-  (show sumRange (n + 1) f = sumRange n f + f n from rfl).trans (congrArg₂ Nat.add ha hb)
-private def gradeFrom (i : ℕ) : ℕ := fastGrade (i + 110)
-theorem prefix110 : sumRange 1 gradeFrom = 5032 :=
-  sumStep gradeFrom 0 0 5032 rfl grade110
-theorem prefix111 : sumRange 2 gradeFrom = 9480 :=
-  sumStep gradeFrom 1 5032 4448 prefix110 grade111
-theorem prefix112 : sumRange 3 gradeFrom = 13364 :=
-  sumStep gradeFrom 2 9480 3884 prefix111 grade112
-theorem prefix113 : sumRange 4 gradeFrom = 16748 :=
-  sumStep gradeFrom 3 13364 3384 prefix112 grade113
-theorem prefix114 : sumRange 5 gradeFrom = 19684 :=
-  sumStep gradeFrom 4 16748 2936 prefix113 grade114
-theorem prefix115 : sumRange 6 gradeFrom = 22204 :=
-  sumStep gradeFrom 5 19684 2520 prefix114 grade115
-theorem prefix116 : sumRange 7 gradeFrom = 24349 :=
-  sumStep gradeFrom 6 22204 2145 prefix115 grade116
-theorem prefix117 : sumRange 8 gradeFrom = 26174 :=
-  sumStep gradeFrom 7 24349 1825 prefix116 grade117
-theorem prefix118 : sumRange 9 gradeFrom = 27694 :=
-  sumStep gradeFrom 8 26174 1520 prefix117 grade118
-theorem prefix119 : sumRange 10 gradeFrom = 28964 :=
-  sumStep gradeFrom 9 27694 1270 prefix118 grade119
-theorem budgetH : sumRange 11 (fun i => fastGrade (i + 110)) = 29994 :=
-  sumStep gradeFrom 10 28964 1030 prefix119 grade120
-end K1_13_1_1
-end
-section
 namespace K1_14_3_8
 open K1_14 K1_14_3 Finset
 open scoped BigOperators
@@ -3085,9 +3036,9 @@ private def signedWidth (h : ℤ) (q j : ℕ) : ℤ :=
   (fullShape.m : ℤ)*180265 + j - q*131071 + h * widthSlope q j
 def supportSum (f : ℕ → ℕ → ℤ) : ℤ :=
   intShapeSum (fun q j => if 0 < signedWidth 3555 q j then f q j else 0)
-private def supportBase : ℤ :=
+def supportBase : ℤ :=
   (triangle fullShape.U : ℤ) * supportSum (signedWidth 3555)
-private def supportSlope : ℤ :=
+def supportSlope : ℤ :=
   (triangle fullShape.U : ℤ) * supportSum widthSlope
 def nodeDebitOf (s : Shape) : ℕ :=
   triangle s.U * 262144 * shapeSum s (fun q i => s.m + min q s.J - (q+2*i))
@@ -4513,7 +4464,7 @@ theorem factor_mem {f Q : Row 4} {surface : Ideal GeoJets}
     (hZ : (intersectionIdeal f Q).IsMinimalPrime surface) :
     toGeneric f ∈ surface :=
   hZ.le (Ideal.subset_span (Set.mem_insert _ _))
-private theorem one_surface (h1 : c1) (h2 : c2) (h3 : c3)
+theorem one_surface (h1 : c1) (h2 : c2) (h3 : c3)
     {Γ s f Q l surface} (input : CutInput Γ s f Q l)
     (hZ : (intersectionIdeal f Q).IsMinimalPrime surface) (active : HasMark Γ s surface) :
     ∃ P, SurfaceCut f Q surface P ∧

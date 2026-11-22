@@ -1,7 +1,7 @@
 import ProximityPrize.SubmissionLower.Fast068
 import ProximityPrize.SubmissionLower.Fast069
 import ProximityPrize.SubmissionLower.Fast070
-set_option Elab.async false
+import ProximityPrize.SubmissionLower.Fast072 -- serialize candidate build
 set_option autoImplicit true
 section
 namespace K1_13_3
@@ -1754,7 +1754,7 @@ theorem jet_dimension (P : JetIdeal) [P.IsPrime] (hP : P.height = 2) :
   have hPdeg := principalCut_natDegree_affineHilbertPolynomial_add_one hgD hcut
   rw [Nat.card_fin] at hDdeg
   omega
-private def componentScalars (P : JetIdeal) : GeoField →+* JetField P :=
+def componentScalars (P : JetIdeal) : GeoField →+* JetField P :=
   (onComponent P).comp MvPolynomial.C
 def coefficientEval (P : JetIdeal) (U : (JetField P)[X]) :
     FreshCoeffRing →+* JetField P :=
@@ -3358,7 +3358,7 @@ private def slice (B c a d e k : ℤ) : ℤ :=
     (-12 * a + 6 * d + 2 * e * (6 * N - 3))
     (-4 * e)
     (2301 - 2 * k)
-private theorem sum_slice {B k : ℕ} (hB : 2300 ≤ B) (hk : k < 1151) (c a d e : ℤ) :
+theorem sum_slice {B k : ℕ} (hB : 2300 ≤ B) (hk : k < 1151) (c a d e : ℤ) :
     144 * (∑ l ∈ range (2300 - 2 * k + 1), ∑ r ∈ range (B - (k + l) + 1),
       (c + a * ((l : ℤ) + 2 * k) + d * (r : ℤ) + e * (r : ℤ) ^ 2)) =
       slice B c a d e k := by
@@ -3378,12 +3378,12 @@ private theorem sum_slice {B k : ℕ} (hB : 2300 ≤ B) (hk : k < 1151) (c a d e
   rw [hi, hlen]
   dsimp [N, C, cubicSum]
   ring
-private def antidifference (f : ℤ → ℤ) (n : ℤ) : ℤ :=
+def antidifference (f : ℤ → ℤ) (n : ℤ) : ℤ :=
   n * (120 * f 0 + (n - 1) * (60 * (f 1 - f 0) +
     (n - 2) * (20 * (f 2 - 2 * f 1 + f 0) +
       (n - 3) * (5 * (f 3 - 3 * f 2 + 3 * f 1 - f 0) +
         (n - 4) * (f 4 - 4 * f 3 + 6 * f 2 - 4 * f 1 + f 0)))))
-private theorem sum_slices (B c a d e : ℤ) (n : ℕ) :
+theorem sum_slices (B c a d e : ℤ) (n : ℕ) :
     120 * (∑ k ∈ range n, slice B c a d e k) =
       antidifference (slice B c a d e) n := by
   have hstep (x : ℤ) :
@@ -3406,13 +3406,13 @@ private theorem evaluate (B c a d e : ℕ) (hB : 2300 ≤ B) :
   rw [show (17280 : ℤ) = 120 * 144 by decide, mul_assoc, hs, sum_slices]
   exact congrArg (antidifference (slice B c a d e))
     (show ((1151 : ℕ) : ℤ) = 1151 from by decide)
-private theorem moment_eq (B c a d e value : ℕ) (hB : 2300 ≤ B)
+theorem moment_eq (B c a d e value : ℕ) (hB : 2300 ≤ B)
     (cert : antidifference (slice B c a d e) 1151 = 17280 * (value : ℤ)) :
     moment B c a d e = value := by
   have h := (evaluate B c a d e hB).trans cert
   omega
 set_option maxHeartbeats 300000 in
-private theorem bank_moments :
+theorem bank_moments :
     raw .first = 2823319580182079460 ∧ raw .second = 2845830394728456187 ∧
       extra 6789 = 129644787051371740 ∧ extra 6820 = 131501361258434295 := by
   have h₁ := moment_eq 6789 5737627 1 131071 0 2823319580182079460 (by decide) (by decide)
@@ -3707,7 +3707,7 @@ open Polynomial K1 K1_13 K1_13_4
 open scoped BigOperators
 set_option maxHeartbeats 1000000
 set_option backward.isDefEq.respectTransparency false
-private def Bound (d : ℕ) (F : RawRow) : Prop := ∀ m, (F.coeff m).natDegree ≤ d
+def Bound (d : ℕ) (F : RawRow) : Prop := ∀ m, (F.coeff m).natDegree ≤ d
 theorem bound_C {p : GenericSeed[X]} {d : ℕ} (hp : p.natDegree ≤ d) :
     Bound d (MvPolynomial.C p) := by
   classical
@@ -4128,7 +4128,7 @@ private theorem evaluateFresh_hasse (i : ℕ) :
   simp only [evaluateFresh, Polynomial.coe_eval₂RingHom, Polynomial.eval₂_monomial,
     map_mul, map_natCast, MvPolynomial.map_X, map_pow]
   ac_rfl
-private theorem evaluateFresh_row (R : Row 4) :
+theorem evaluateFresh_row (R : Row 4) :
     evaluateFresh (universalJets R) = freshJetMap (toGeneric R) := by
   change (evaluateFresh.comp universalJets) R =
     (freshJetMap.comp (MvPolynomial.map genericCoeffs)) R

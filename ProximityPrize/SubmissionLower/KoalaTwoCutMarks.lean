@@ -109,7 +109,5 @@ theorem lift_simple {P Q : Ideal JetRing} [P.IsPrime]
   obtain ⟨r,hr,hrp⟩ := hs p hq
   exact ⟨φ r, hr, by simpa only [map_mul] using (show φ (r*p) ∈ Q from hrp)⟩
 
-#print axioms point_injective
-#print axioms lift_simple
 end
 end SplitCut.TwoCut

@@ -1,5 +1,4 @@
 import ProximityPrize.SubmissionLower.Fast061
-set_option Elab.async false
 set_option autoImplicit true
 section
 set_option backward.isDefEq.respectTransparency false

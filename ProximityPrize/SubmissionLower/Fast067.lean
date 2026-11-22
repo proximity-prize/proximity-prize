@@ -1,7 +1,6 @@
 import ProximityPrize.SubmissionLower.Fast061
 import ProximityPrize.SubmissionLower.Fast062
 import ProximityPrize.SubmissionLower.Fast063
-set_option Elab.async false
 set_option autoImplicit true
 section
 set_option autoImplicit false
@@ -4675,7 +4674,7 @@ private theorem derivative_proper {f : Row 4} (hf : SmallFactor f) (j : ℕ)
   change ((separant^[j]) f).degreeOf 3 ≤ f.degreeOf 3 - j at h
   rw [hq, hd] at h
   omega
-private theorem one_piece (h1 : c1) (h2 : c2)
+theorem one_piece (h1 : c1) (h2 : c2)
     {w Γ s} (hm : Messages w Γ s) (f : Row 4) (hf : SmallFactor f) (j : ℕ)
     (hj : 0 < j)
     (hmarks : ∀ γ ∈ Γ, atJet f (extend (s γ)) = 0 ∧

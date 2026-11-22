@@ -1,6 +1,5 @@
 import ProximityPrize.SubmissionLower.CurveListJointWeight
 
-set_option Elab.async false
 set_option maxRecDepth 8000
 set_option maxHeartbeats 2000000
 
@@ -105,6 +104,5 @@ theorem interpolation_in_columns {A V R : ℕ} {s : Source} {ι : Type*} [Fintyp
   obtain ⟨Q,hQ,hQ',hwt,hloc,hsupp⟩ := exists_interpolant e hs hf hw w hsmall
   exact ⟨Q,hQ,hQ',specializes hwt hloc,hsupp⟩
 
-#print axioms interpolation_in_columns
 end
 end CurveListCornerSource

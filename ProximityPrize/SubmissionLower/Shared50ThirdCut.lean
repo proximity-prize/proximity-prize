@@ -1,7 +1,7 @@
 import ProximityPrize.SubmissionLower.Final50GeometryCut
 import ProximityPrize.SubmissionLower.Final50SharedPrice
+import ProximityPrize.SubmissionLower.Shared50TallyNew -- serialize candidate build
 
-set_option Elab.async false
 set_option autoImplicit false
 
 namespace Shared50ThirdCut
@@ -243,7 +243,5 @@ theorem count {Γ : Finset K} {s : K → K[X]} {w : I → K} {f Q : Row 4} {l : 
   have hl := input.positive
   omega
 
-#print axioms cover
-#print axioms count
 end
 end Shared50ThirdCut

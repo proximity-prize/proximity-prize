@@ -1,6 +1,6 @@
 import ProximityPrize.SubmissionLower.PrimaryTaperBudget
+import ProximityPrize.SubmissionLower.CutterTaperTheta -- serialize candidate build
 
-set_option Elab.async false
 set_option maxHeartbeats 1500000
 set_option maxRecDepth 20000
 

@@ -1,7 +1,7 @@
 import ProximityPrize.SubmissionLower.KoalaRectSections
+import ProximityPrize.SubmissionLower.KoalaRectTaylorAxes -- serialize candidate build
 
 set_option autoImplicit false
-set_option Elab.async false
 set_option maxHeartbeats 700000
 
 namespace SplitCut.Rect
@@ -141,6 +141,3 @@ def of_mem {p : Ring F} (hp : p ∈ space F d) : Section I d where
 end Section
 end
 end SplitCut.Rect
-
-#print axioms SplitCut.Rect.Section.mul
-#print axioms SplitCut.Rect.Section.add

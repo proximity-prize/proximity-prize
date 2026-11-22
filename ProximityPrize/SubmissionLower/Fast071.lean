@@ -2,7 +2,7 @@ import ProximityPrize.SubmissionLower.Fast064
 import ProximityPrize.SubmissionLower.Fast065
 import ProximityPrize.SubmissionLower.Fast066
 import ProximityPrize.SubmissionLower.Fast067
-set_option Elab.async false
+import ProximityPrize.SubmissionLower.Fast070 -- serialize candidate build
 set_option autoImplicit true
 section
 set_option autoImplicit false

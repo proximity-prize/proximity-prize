@@ -1,7 +1,6 @@
 import ProximityPrize.SubmissionLower.Final50SurfaceLinearFour
 import ProximityPrize.SubmissionLower.Low48BentSupport
 
-set_option Elab.async false
 set_option autoImplicit false
 set_option maxRecDepth 12000
 set_option maxHeartbeats 800000
@@ -928,5 +927,4 @@ theorem surface_tilted_eq_weights {f : Shape} (hf : Valid f) (ht : tiltedFits f)
   rw [Int.toNat_of_nonneg (hnonneg u)]
   exact signed_five_linear u _ _ _ _
 
-#print axioms surface_tilted_eq_weights
 end Final50SharedPrice

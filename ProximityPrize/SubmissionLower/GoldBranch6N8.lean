@@ -1,6 +1,6 @@
 import ProximityPrize.SubmissionLower.GoldBranch6
 import ProximityPrize.SubmissionLower.UpperBranch3
-set_option Elab.async false
+import ProximityPrize.SubmissionLower.FrontCore82219Model -- serialize candidate build
 set_option autoImplicit true
 section
 namespace P3_6_2
@@ -28,22 +28,6 @@ def SourceSpace : Submodule Geom SourcePolynomial :=
   MvPolynomial.restrictSupport Geom sourceExponents
 instance : Module.Finite Geom SourceSpace :=
   MvPolynomial.restrictSupport_finite sourceExponents_finite
-theorem translate_mem_source (x y : Geom) (Q : SourceSpace) :
-    globalPointTranslation x y Q.1 ∈ SourceSpace := by
-  have preserve (wt : JetVariable 3 → ℕ) (B : ℕ)
-      (h : ∀ e ∈ Q.1.support, e.weight wt ≤ B) :
-      ∀ e ∈ (globalPointTranslation x y Q.1).support, e.weight wt ≤ B :=
-    MvPolynomial.mem_restrictWeightAtMost.mp
-      (globalPointTranslation_mem_restrictWeightAtMost (Nat.zero_le _) (Nat.zero_le _)
-        x y (MvPolynomial.mem_restrictWeightAtMost.mpr h))
-  have h : ∀ e ∈ Q.1.support, SourceEligible e :=
-    Q.2
-  exact fun e he =>
-    ⟨preserve jetDegreeWeight 4012 (fun t ht => (h t ht).1) e he,
-      preserve jetDerivativeWeight 1650 (fun t ht => (h t ht).2.1) e he,
-      preserve topWeight 550 (fun t ht => (h t ht).2.2.1) e he,
-      preserve (differentialWeight 133344) (3000 * 179983 - 1)
-        (fun t ht => (h t ht).2.2.2) e he⟩
 def nodeMap (x y : Geom) : SourceSpace →ₗ[Geom] Local :=
   (localConstraintAt 3000 x y).domRestrict SourceSpace
 def wordMap (w : I → K) : SourceSpace →ₗ[Geom] (I → Local) :=
@@ -67,49 +51,6 @@ open K1_13_2 (SourceExponent Local toRow)
 open P3 (I K node)
 open scoped BigOperators
 open private high_monomial_vanishes origin_rank map_independent_family from ProximityPrize.SubmissionLower.PortLowBase
-theorem old_eligible (e : SourceExponent) (he : SourceEligible e)
-    (hx : e none < 3000) : K1_13_2.SourceEligible e := by
-  have hw := weight_le_add_mul_totalJetDegree 133671 e
-  change e.weight (differentialWeight 133671) ≤ e none + 133671 * e.weight jetDegreeWeight at hw
-  refine ⟨he.1, he.2.1, he.2.2.1, ?_⟩
-  have hb := he.1
-  omega
-private theorem node_range_le (x y : Geom) :
-    LinearMap.range (nodeMap x y) ≤ LinearMap.range (K1_13_2.nodeMap 0 0) := by
-  rintro _ ⟨Q, rfl⟩
-  let R := globalPointTranslation x y Q.1
-  have hR : R ∈ SourceSpace := translate_mem_source x y Q
-  change localConstraintAt 3000 x y Q.1 ∈ _
-  rw [localConstraintAt_eq_zero_globalPointTranslation]
-  change localConstraintAt 3000 0 0 R ∈ _
-  rw [congrArg (localConstraintAt 3000 0 0) R.as_sum, map_sum]
-  refine Submodule.sum_mem _ fun e he => ?_
-  by_cases hx : e none < 3000
-  · have hOld : e ∈ K1_13_2.sourceExponents := old_eligible e (hR he) hx
-    have hMono : MvPolynomial.monomial e (R.coeff e) ∈ K1_13_2.SourceSpace :=
-      (MvPolynomial.monomial_mem_restrictSupport Geom).mpr (Or.inl hOld)
-    exact ⟨⟨_, hMono⟩, rfl⟩
-  · rw [high_monomial_vanishes _ _ (Nat.le_of_not_gt hx)]
-    exact Submodule.zero_mem _
-theorem word_rank_le (w : I → K) {b : ℕ}
-    (h : Module.finrank Geom (LinearMap.range (K1_13_2.nodeMap 0 0)) ≤ b) :
-    Module.finrank Geom (LinearMap.range (wordMap w)) ≤ 262144 * b := by
-  let nmap (i : I) := nodeMap (embed (node i)) (embed (w i))
-  let B (i : I) := LinearMap.range (nmap i)
-  let f : SourceSpace →ₗ[Geom] (∀ i, B i) := LinearMap.pi fun i => (nmap i).rangeRestrict
-  let g : (∀ i, B i) →ₗ[Geom] (I → Local) :=
-    LinearMap.pi fun i => (B i).subtype.comp (LinearMap.proj i)
-  have hw : wordMap w = g.comp f := rfl
-  rw [hw]
-  calc
-    Module.finrank Geom (LinearMap.range (g.comp f)) ≤
-        Module.finrank Geom (LinearMap.range g) :=
-      Submodule.finrank_mono (LinearMap.range_comp_le_range f g)
-    _ ≤ Module.finrank Geom (∀ i, B i) := g.finrank_range_le
-    _ = ∑ i, Module.finrank Geom (B i) := Module.finrank_pi_fintype Geom
-    _ ≤ ∑ _ : I, b := Finset.sum_le_sum fun i _ =>
-      (Submodule.finrank_mono (node_range_le (embed (node i)) (embed (w i)))).trans h
-    _ = 262144 * b := by simp [I, FrobeniusLocator.Native.I, ProximityPrize.Benchmark.IRSProfile.Index]
 end
 end P3_6_2
 end
@@ -336,7 +277,7 @@ section
 namespace P3_6_8_1
 open K1_13_8 (fastRemaining zeroMass)
 open scoped BigOperators
-private def sumBelow (f : ℕ → ℕ) : ℕ → ℕ
+def sumBelow (f : ℕ → ℕ) : ℕ → ℕ
   | 0 => 0
   | n + 1 => sumBelow f n + f n
 private theorem sumBelow_eq (f : ℕ → ℕ) (n : ℕ) :
@@ -344,7 +285,7 @@ private theorem sumBelow_eq (f : ℕ → ℕ) (n : ℕ) :
   induction n with
   | zero => simp [sumBelow]
   | succ n ih => rw [sumBelow, Finset.sum_range_succ, ih]
-private theorem sumBelow_add (f : ℕ → ℕ) (m n : ℕ) :
+theorem sumBelow_add (f : ℕ → ℕ) (m n : ℕ) :
     sumBelow f (m + n) = sumBelow f m + sumBelow (fun k => f (m + k)) n := by
   induction n with
   | zero => simp [sumBelow]
@@ -394,21 +335,21 @@ private theorem shape_eq {x y : Shape}
   simp_all
 local notation "shape!" => shape_eq (by decide) (by decide) (by decide)
 private theorem divisorBox_eq : divisorBox = ⟨22994,7683,0⟩ := shape!
-private def divisorCut (h : Shape) : Shape :=
+def divisorCut (h : Shape) : Shape :=
   ⟨max (max h.b divisorBox.b) (max h.j (divisorBox.j + 1)),
     max h.j (divisorBox.j + 1), max 1 h.t⟩
-private def divisorFee (p h : Shape) (md mp : ℕ) : ℕ :=
+def divisorFee (p h : Shape) (md mp : ℕ) : ℕ :=
   ceilDiv (P3.t * md) (32 * incidenceGap) + ceilDiv mp 32 +
     20 * p.b * h.b ^ 2 + 5 * physicalDegree * p.b * h.b + 1
 private def singularFee (x : Shape) (ms : ℕ) : ℕ :=
   if 1 < x.t then ceilDiv (4 * x.t * ms) 32 + x.t * x.b ^ 2 + 1 else 0
-private def curveFee (mc mq : ℕ) : ℕ :=
+def curveFee (mc mq : ℕ) : ℕ :=
   let length := (fatOrder - isolatedOrder + 1) * (fatOrder - divisorOrder + 2 - isolatedOrder)
   ceilDiv (P3.t * mc + incidenceGap * mq) (32 * incidenceGap * length)
-private def isolatedFee : ℕ :=
+def isolatedFee : ℕ :=
   ceilDiv (3 * resultantBox.j ^ 2 * (2 * resultantBox.b - resultantBox.j))
     (4 * fatOrder * (fatOrder - divisorOrder + 1) * isolatedOrder)
-private theorem fatPrice_expand (x : Shape) :
+theorem fatPrice_expand (x : Shape) :
     fatPrice x =
       divisorFee x.chamber (fatChart x)
         (mixed32 x.chamber divisorBox (divisorCut (fatChart x)) (fatChart x))
@@ -477,10 +418,10 @@ namespace P3_6_8_3
 open K1_13_8 (zeroShape availableMass zeroMass fastRemaining)
 open K1_13_8_2 (Threshold)
 open scoped BigOperators
-private def sumBelow (f : ℕ → ℕ) : ℕ → ℕ
+def sumBelow (f : ℕ → ℕ) : ℕ → ℕ
   | 0 => 0
   | n + 1 => sumBelow f n + f n
-private theorem sumBelow_add (f : ℕ → ℕ) (m n : ℕ) :
+theorem sumBelow_add (f : ℕ → ℕ) (m n : ℕ) :
     sumBelow f (m + n) = sumBelow f m + sumBelow (fun k => f (m + k)) n := by
   induction n with
   | zero => simp [sumBelow]

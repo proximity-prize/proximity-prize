@@ -1,7 +1,6 @@
 import ProximityPrize.SubmissionLower.HighCore82219Family
 import ProximityPrize.SubmissionLower.UpperBranch4
 
-set_option Elab.async false
 set_option autoImplicit true
 set_option backward.isDefEq.respectTransparency false
 set_option maxSynthPendingDepth 12

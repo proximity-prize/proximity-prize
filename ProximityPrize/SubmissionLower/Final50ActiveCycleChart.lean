@@ -2,7 +2,6 @@ import ProximityPrize.SubmissionLower.Final50ActiveCycleCaps
 import ProximityPrize.SubmissionLower.Final50GeometryCut
 
 set_option autoImplicit false
-set_option Elab.async false
 
 namespace Final50ActiveCycle
 

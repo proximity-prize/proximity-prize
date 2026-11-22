@@ -1,5 +1,4 @@
 import ProximityPrize.SubmissionLower.Fast040
-set_option Elab.async false
 set_option autoImplicit true
 section
 namespace K1_13_1_1

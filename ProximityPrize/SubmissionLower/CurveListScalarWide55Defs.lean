@@ -1,6 +1,5 @@
 import ProximityPrize.SubmissionLower.CurveListSparsePackets
 
-set_option Elab.async false
 set_option maxRecDepth 20000
 set_option maxHeartbeats 4000000
 
