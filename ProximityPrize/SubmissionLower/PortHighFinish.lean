@@ -112,7 +112,7 @@ open private seed_chart toJet_C toJet_y toJet_v toJet_seed jetCoordinates fracti
   generic_C generic_Y generic_V seedGeneric_C from ProximityPrize.SubmissionLower.Fast069
 def surfaceOf (I : Ideal Ambient) (hI : I.IsPrime) : Surface :=
   ⟨I.comap toJet, hI.comap _⟩
-theorem fixed_chart (a b : SeedClosure) :
+private theorem fixed_chart (a b : SeedClosure) :
     (genericJetPoint a b).comp (toJet.comp fixedEmbedding) =
       seedGeneric.comp jetCoordinates.symm.toRingHom := by
   have hV : ((genericJetPoint a b).comp (toJet.comp fixedEmbedding)) (Polynomial.X (R := FX[X])) =
@@ -126,12 +126,12 @@ theorem fixed_chart (a b : SeedClosure) :
   apply Polynomial.ringHom_ext' _ hY
   ext x
   simp [fixedEmbedding, generic_C, toJet_C, genericJetPoint, seedGeneric_C]
-theorem surface_height {I : Ideal Ambient} (hI : I.IsPrime) (hh : I.height = 2) :
+private theorem surface_height {I : Ideal Ambient} (hI : I.IsPrime) (hh : I.height = 2) :
     (surfaceOf I hI).asIdeal.height = 2 := by
   change (I.comap toJet).height = 2
   rw [toJet_equiv]
   exact (ambientToJet.symm.height_comap I).trans hh
-theorem seed_side_of_active {I : Ideal Ambient} (hI : Active I) :
+private theorem seed_side_of_active {I : Ideal Ambient} (hI : Active I) :
     ∃ y v, K1_14_3.OnSeedFibre (surfaceOf I hI.prime) y v ∧
       IsSeparable SeedField y ∧ IsSeparable SeedField v := by
   obtain ⟨f, hf, hsep⟩ := @fibreHom mapGenericSeed _ seedMap I hI.prime
@@ -140,7 +140,7 @@ theorem seed_side_of_active {I : Ideal Ambient} (hI : Active I) :
   unfold K1_14_3.OnSeedFibre
   rw [← seed_chart, ← RingHom.comap_ker, seedPoint, hf]
   rfl
-theorem jet_side_transport {I : Ideal Ambient} (hI : I.IsPrime)
+private theorem jet_side_transport {I : Ideal Ambient} (hI : I.IsPrime)
     (a b : SeedClosure) (hjker : RingHom.ker (genericJetPoint a b) = I)
     (ha : IsSeparable SeedField a) (hb : IsSeparable SeedField b) :
     ∃ g : Jet →+* JetClosure,
@@ -200,71 +200,71 @@ end P0_10R.Bridge
 end
 section
 namespace P0_10R.Bridge
-theorem donor_2_1 : K1_14_2_2_7_2.c1 :=
+private theorem donor_2_1 : K1_14_2_2_7_2.c1 :=
   K1_14_2_2_7_2_1.proof
-theorem donor_2_2_1 : K1_14_2_2_7_2_2.c1 :=
+private theorem donor_2_2_1 : K1_14_2_2_7_2_2.c1 :=
   K1_14_2_2_7_2_2_1.proof
-theorem donor_2_2_2 : K1_14_2_2_7_2_2.c2 :=
+private theorem donor_2_2_2 : K1_14_2_2_7_2_2.c2 :=
   K1_14_2_2_7_2_2_2.proof
-theorem donor_2_2_3 : K1_14_2_2_7_2_2.c3 :=
+private theorem donor_2_2_3 : K1_14_2_2_7_2_2.c3 :=
   K1_14_2_2_7_2_2_3.proof
-theorem donor_2_2 : K1_14_2_2_7_2.c2 :=
+private theorem donor_2_2 : K1_14_2_2_7_2.c2 :=
   K1_14_2_2_7_2_2.of_children donor_2_2_1 donor_2_2_2 donor_2_2_3
-theorem donor_2_3 : K1_14_2_2_7_2.c3 :=
+private theorem donor_2_3 : K1_14_2_2_7_2.c3 :=
   K1_14_2_2_7_2_3.proof
-theorem donor_2_4 : K1_14_2_2_7_2.c4 :=
+private theorem donor_2_4 : K1_14_2_2_7_2.c4 :=
   K1_14_2_2_7_2_4.proof
-theorem donor_2_5 : K1_14_2_2_7_2.c5 :=
+private theorem donor_2_5 : K1_14_2_2_7_2.c5 :=
   K1_14_2_2_7_2_5.proof
 theorem cut_seed_mass : K1_14_2_2_7.c2 :=
   K1_14_2_2_7_2.of_children donor_2_1 donor_2_2 donor_2_3 donor_2_4 donor_2_5
-theorem donor_3_1 : K1_14_2_2_7_3.c1 :=
+private theorem donor_3_1 : K1_14_2_2_7_3.c1 :=
   K1_14_2_2_7_3_1.proof
-theorem donor_3_2 : K1_14_2_2_7_3.c2 :=
+private theorem donor_3_2 : K1_14_2_2_7_3.c2 :=
   K1_14_2_2_7_3_2.proof
-theorem donor_3_3_1_1 : K1_14_2_2_7_3_3_1.c1 :=
+private theorem donor_3_3_1_1 : K1_14_2_2_7_3_3_1.c1 :=
   K1_14_2_2_7_3_3_1_1.proof
-theorem donor_3_3_1_2 : K1_14_2_2_7_3_3_1.c2 :=
+private theorem donor_3_3_1_2 : K1_14_2_2_7_3_3_1.c2 :=
   K1_14_2_2_7_3_3_1_2.proof
-theorem donor_3_3_1_3 : K1_14_2_2_7_3_3_1.c3 :=
+private theorem donor_3_3_1_3 : K1_14_2_2_7_3_3_1.c3 :=
   K1_14_2_2_7_3_3_1_3.proof
-theorem donor_3_3_1_4 : K1_14_2_2_7_3_3_1.c4 :=
+private theorem donor_3_3_1_4 : K1_14_2_2_7_3_3_1.c4 :=
   K1_14_2_2_7_3_3_1_4.proof
-theorem donor_3_3_1 : K1_14_2_2_7_3_3.c1 :=
+private theorem donor_3_3_1 : K1_14_2_2_7_3_3.c1 :=
   K1_14_2_2_7_3_3_1.of_children donor_3_3_1_1 donor_3_3_1_2 donor_3_3_1_3 donor_3_3_1_4
-theorem donor_3_3_2 : K1_14_2_2_7_3_3.c2 :=
+private theorem donor_3_3_2 : K1_14_2_2_7_3_3.c2 :=
   K1_14_2_2_7_3_3_2.proof
-theorem donor_3_3 : K1_14_2_2_7_3.c3 :=
+private theorem donor_3_3 : K1_14_2_2_7_3.c3 :=
   K1_14_2_2_7_3_3.of_children donor_3_3_1 donor_3_3_2
 theorem cut_ordinate_mass : K1_14_2_2_7.c3 :=
   K1_14_2_2_7_3.of_children donor_3_1 donor_3_2 donor_3_3
-theorem donor_4_1 : K1_14_2_2_7_4.c1 :=
+private theorem donor_4_1 : K1_14_2_2_7_4.c1 :=
   K1_14_2_2_7_4_1.proof
-theorem donor_4_2 : K1_14_2_2_7_4.c2 :=
+private theorem donor_4_2 : K1_14_2_2_7_4.c2 :=
   K1_14_2_2_7_4_2.proof
-theorem donor_4_3 : K1_14_2_2_7_4.c3 :=
+private theorem donor_4_3 : K1_14_2_2_7_4.c3 :=
   K1_14_2_2_7_4_3.proof
-theorem donor_4_4_1 : K1_14_2_2_7_4_4.c1 :=
+private theorem donor_4_4_1 : K1_14_2_2_7_4_4.c1 :=
   K1_14_2_2_7_4_4_1.proof
-theorem donor_4_4_2 : K1_14_2_2_7_4_4.c2 :=
+private theorem donor_4_4_2 : K1_14_2_2_7_4_4.c2 :=
   K1_14_2_2_7_4_4_2.proof
-theorem donor_4_4_3 : K1_14_2_2_7_4_4.c3 :=
+private theorem donor_4_4_3 : K1_14_2_2_7_4_4.c3 :=
   K1_14_2_2_7_4_4_3.proof
-theorem donor_4_4_4 : K1_14_2_2_7_4_4.c4 :=
+private theorem donor_4_4_4 : K1_14_2_2_7_4_4.c4 :=
   K1_14_2_2_7_4_4_4.proof
-theorem donor_4_4_5 : K1_14_2_2_7_4_4.c5 :=
+private theorem donor_4_4_5 : K1_14_2_2_7_4_4.c5 :=
   K1_14_2_2_7_4_4_5.proof
-theorem donor_4_4_6 : K1_14_2_2_7_4_4.c6 :=
+private theorem donor_4_4_6 : K1_14_2_2_7_4_4.c6 :=
   K1_14_2_2_7_4_4_6.proof
-theorem donor_4_4_7_1 : K1_14_2_2_7_4_4_7.c1 :=
+private theorem donor_4_4_7_1 : K1_14_2_2_7_4_4_7.c1 :=
   K1_14_2_2_7_4_4_7_1.proof
-theorem donor_4_4_7_2 : K1_14_2_2_7_4_4_7.c2 :=
+private theorem donor_4_4_7_2 : K1_14_2_2_7_4_4_7.c2 :=
   K1_14_2_2_7_4_4_7_2.proof
-theorem donor_4_4_7 : K1_14_2_2_7_4_4.c7 :=
+private theorem donor_4_4_7 : K1_14_2_2_7_4_4.c7 :=
   K1_14_2_2_7_4_4_7.of_children donor_4_4_7_1 donor_4_4_7_2
-theorem donor_4_4_8 : K1_14_2_2_7_4_4.c8 :=
+private theorem donor_4_4_8 : K1_14_2_2_7_4_4.c8 :=
   K1_14_2_2_7_4_4_8.proof
-theorem donor_4_4 : K1_14_2_2_7_4.c4 :=
+private theorem donor_4_4 : K1_14_2_2_7_4.c4 :=
   K1_14_2_2_7_4_4.of_children
     donor_4_4_1 donor_4_4_2 donor_4_4_3 donor_4_4_4 donor_4_4_5 donor_4_4_6 donor_4_4_7 donor_4_4_8
 theorem cut_constant_count : K1_14_2_2_7.c4 :=
@@ -273,61 +273,61 @@ end P0_10R.Bridge
 end
 section
 namespace P0_10R.Bridge
-theorem donor_1_1_1 : K1_14_2_4_1_1.c1 :=
+private theorem donor_1_1_1 : K1_14_2_4_1_1.c1 :=
   K1_14_2_4_1_1_1.proof
-theorem donor_1_1_2 : K1_14_2_4_1_1.c2 :=
+private theorem donor_1_1_2 : K1_14_2_4_1_1.c2 :=
   K1_14_2_4_1_1_2.proof
 private theorem donor_1_1 : K1_14_2_4_1.c1 :=
   K1_14_2_4_1_1.of_children donor_1_1_1 donor_1_1_2
-theorem donor_1_2_1 : K1_14_2_4_1_2.c1 :=
+private theorem donor_1_2_1 : K1_14_2_4_1_2.c1 :=
   K1_14_2_4_1_2_1.proof
-theorem donor_1_2_2 : K1_14_2_4_1_2.c2 :=
+private theorem donor_1_2_2 : K1_14_2_4_1_2.c2 :=
   K1_14_2_4_1_2_2.proof
 private theorem donor_1_2 : K1_14_2_4_1.c2 :=
   K1_14_2_4_1_2.of_children donor_1_2_1 donor_1_2_2
-theorem donor_1_3_1 : K1_14_2_4_1_3.c1 :=
+private theorem donor_1_3_1 : K1_14_2_4_1_3.c1 :=
   K1_14_2_4_1_3_1.proof
-theorem donor_1_3_2_1 : K1_14_2_4_1_3_2.c1 :=
+private theorem donor_1_3_2_1 : K1_14_2_4_1_3_2.c1 :=
   K1_14_2_4_1_3_2_1.proof
-theorem donor_1_3_2_2 : K1_14_2_4_1_3_2.c2 :=
+private theorem donor_1_3_2_2 : K1_14_2_4_1_3_2.c2 :=
   K1_14_2_4_1_3_2_2.proof
-theorem donor_1_3_2 : K1_14_2_4_1_3.c2 :=
+private theorem donor_1_3_2 : K1_14_2_4_1_3.c2 :=
   K1_14_2_4_1_3_2.of_children donor_1_3_2_1 donor_1_3_2_2
-theorem donor_1_3_3_1 : K1_14_2_4_1_3_3.c1 :=
+private theorem donor_1_3_3_1 : K1_14_2_4_1_3_3.c1 :=
   K1_14_2_4_1_3_3_1.proof
-theorem donor_1_3_3_2 : K1_14_2_4_1_3_3.c2 :=
+private theorem donor_1_3_3_2 : K1_14_2_4_1_3_3.c2 :=
   K1_14_2_4_1_3_3_2.proof
-theorem donor_1_3_3_3 : K1_14_2_4_1_3_3.c3 :=
+private theorem donor_1_3_3_3 : K1_14_2_4_1_3_3.c3 :=
   K1_14_2_4_1_3_3_3.proof
-theorem donor_1_3_3 : K1_14_2_4_1_3.c3 :=
+private theorem donor_1_3_3 : K1_14_2_4_1_3.c3 :=
   K1_14_2_4_1_3_3.of_children donor_1_3_3_1 donor_1_3_3_2 donor_1_3_3_3
 private theorem donor_1_3 : K1_14_2_4_1.c3 :=
   K1_14_2_4_1_3.of_children donor_1_3_1 donor_1_3_2 donor_1_3_3
-theorem donor_1_4_1 : K1_14_2_4_1_4.c1 :=
+private theorem donor_1_4_1 : K1_14_2_4_1_4.c1 :=
   K1_14_2_4_1_4_1.proof
-theorem donor_1_4_2 : K1_14_2_4_1_4.c2 :=
+private theorem donor_1_4_2 : K1_14_2_4_1_4.c2 :=
   K1_14_2_4_1_4_2.proof
-theorem donor_1_4_3 : K1_14_2_4_1_4.c3 :=
+private theorem donor_1_4_3 : K1_14_2_4_1_4.c3 :=
   K1_14_2_4_1_4_3.proof
 private theorem donor_1_4 : K1_14_2_4_1.c4 :=
   K1_14_2_4_1_4.of_children donor_1_4_1 donor_1_4_2 donor_1_4_3
-theorem donor_1_5_1 : K1_14_2_4_1_5.c1 :=
+private theorem donor_1_5_1 : K1_14_2_4_1_5.c1 :=
   K1_14_2_4_1_5_1.proof
-theorem donor_1_5_2 : K1_14_2_4_1_5.c2 :=
+private theorem donor_1_5_2 : K1_14_2_4_1_5.c2 :=
   K1_14_2_4_1_5_2.proof
 private theorem donor_1_5 : K1_14_2_4_1.c5 :=
   K1_14_2_4_1_5.of_children donor_1_5_1 donor_1_5_2
-theorem donor_3_1_1 : K1_14_2_4_3_1.c1 :=
+private theorem donor_3_1_1 : K1_14_2_4_3_1.c1 :=
   K1_14_2_4_3_1_1.proof
-theorem donor_3_1_2 : K1_14_2_4_3_1.c2 :=
+private theorem donor_3_1_2 : K1_14_2_4_3_1.c2 :=
   K1_14_2_4_3_1_2.proof
-theorem donor_3_1_P0_10RBridgeRootDonors : K1_14_2_4_3.c1 :=
+private theorem donor_3_1_P0_10RBridgeRootDonors : K1_14_2_4_3.c1 :=
   K1_14_2_4_3_1.of_children donor_3_1_1 donor_3_1_2
-theorem donor_3_2_1 : K1_14_2_4_3_2.c1 :=
+private theorem donor_3_2_1 : K1_14_2_4_3_2.c1 :=
   K1_14_2_4_3_2_1.proof
-theorem donor_3_2_2 : K1_14_2_4_3_2.c2 :=
+private theorem donor_3_2_2 : K1_14_2_4_3_2.c2 :=
   K1_14_2_4_3_2_2.proof
-theorem donor_3_2_P0_10RBridgeRootDonors : K1_14_2_4_3.c2 :=
+private theorem donor_3_2_P0_10RBridgeRootDonors : K1_14_2_4_3.c2 :=
   K1_14_2_4_3_2.of_children donor_3_2_1 donor_3_2_2
 theorem root_embedding : K1_14_2_4.c3 :=
   K1_14_2_4_3.of_children donor_3_1_P0_10RBridgeRootDonors donor_3_2_P0_10RBridgeRootDonors
@@ -351,7 +351,7 @@ private theorem section_bound : K1_14_2_2_2.c4 :=
   K1_14_2_2_2_4.of_children K1_14_2_2_2_4_1.proof K1_14_2_2_2_4_2.proof K1_14_2_2_2_4_3.proof
 private theorem seed_projection : K1_14_2_2_2.c6 :=
   K1_14_2_2_2_6.of_children K1_14_2_2_2_6_1.proof K1_14_2_2_2_6_2.proof
-theorem height_le {I : Ideal Ambient} (hI : I.IsPrime)
+private theorem height_le {I : Ideal Ambient} (hI : I.IsPrime)
     (hdim : ringKrullDim (CoordinateRing I) = 2) : I.height ≤ 2 := by
   let x : PrimeSpectrum Ambient := ⟨I, hI⟩
   have hc : Order.coheight x = 2 := by

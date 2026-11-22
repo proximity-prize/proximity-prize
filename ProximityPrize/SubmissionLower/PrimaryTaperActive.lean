@@ -27,7 +27,7 @@ theorem of_jets {P : Row 4} (h : ∀ m ∈ P.support, m ∈ jetExponents) :
 
 private def weight : Fin 4 → ℕ := ![1,2,2,2]
 
-theorem weight_at (m : Fin 4 →₀ ℕ) :
+private theorem weight_at (m : Fin 4 →₀ ℕ) :
     m.weight weight = m 0 + 2*m 1 + 2*m 2 + 2*m 3 := by
   simp [weight, Finsupp.weight_eq_sum, Fin.sum_univ_four, smul_eq_mul, Nat.mul_comm]
 

@@ -50,7 +50,7 @@ noncomputable section
 open P1
 open scoped BigOperators
 open private sum_rows ceil_sq_div_eq from ProximityPrize.SubmissionLower.PortFrontB
-theorem jet_st : K1_10.jetDim 4 20 17 = 6981 := by
+private theorem jet_st : K1_10.jetDim 4 20 17 = 6981 := by
   let rows : Fin 4 → ℕ := ![3570, 2080, 1007, 324]
   unfold K1_10.jetDim
   calc
@@ -59,7 +59,7 @@ theorem jet_st : K1_10.jetDim 4 20 17 = 6981 := by
       intro i
       fin_cases i <;> decide
     _ = 6981 := by decide
-theorem jet_ts : K1_10.jetDim 4 17 20 = 6981 := by
+private theorem jet_ts : K1_10.jetDim 4 17 20 = 6981 := by
   let rows : Fin 4 → ℕ := ![3600, 2074, 992, 315]
   unfold K1_10.jetDim
   calc
@@ -68,7 +68,7 @@ theorem jet_ts : K1_10.jetDim 4 17 20 = 6981 := by
       intro i
       fin_cases i <;> decide
     _ = 6981 := by decide
-theorem local_st : K1_10.jetDim 3 19 16 = 3216 := by
+private theorem local_st : K1_10.jetDim 3 19 16 = 3216 := by
   let rows : Fin 3 → ℕ := ![1960, 950, 306]
   unfold K1_10.jetDim
   calc
@@ -77,7 +77,7 @@ theorem local_st : K1_10.jetDim 3 19 16 = 3216 := by
       intro i
       fin_cases i <;> decide
     _ = 3216 := by decide
-theorem local_ts : K1_10.jetDim 3 16 19 = 3216 := by
+private theorem local_ts : K1_10.jetDim 3 16 19 = 3216 := by
   let rows : Fin 3 → ℕ := ![1972, 944, 300]
   unfold K1_10.jetDim
   calc
@@ -115,8 +115,8 @@ abbrev Multipliers (F : Type*) [Field F] (bank : P1_3.Bank) :=
 variable {F : Type*} [Field F] {N : ℕ} {L : MvPolynomial (Fin 5) F}
 variable (bank : P1_3.Bank) (C : Contacts N L) {h : ℕ}
     (hdeg : ∀ j, L.weightedTotalDegree (sourceWeights 131071 j) = relationBounds h j)
-theorem first_sub_add (b : P1_3.Bank) : b.first - 1 + 1 = b.first := by cases b <;> rfl
-theorem second_sub_add (b : P1_3.Bank) : b.second - 1 + 1 = b.second := by cases b <;> rfl
+private theorem first_sub_add (b : P1_3.Bank) : b.first - 1 + 1 = b.first := by cases b <;> rfl
+private theorem second_sub_add (b : P1_3.Bank) : b.second - 1 + 1 = b.second := by cases b <;> rfl
 private def localMultiply (i : Fin N) : Multipliers F bank →ₗ[F] JetSpace F 3 bank.first bank.second where
   toFun Q := ⟨weightedTruncation contactWeight 4 (C.shifted i L * Q.val), by
     simpa only [first_sub_add, second_sub_add] using
@@ -276,10 +276,10 @@ open scoped Polynomial
 open private dx_degree dy_degree from ProximityPrize.SubmissionLower.Fast069
 open private clearPower separant taylorNumerator received nodeCut toGeneric_degree
   order_le_clearPower received_degree from ProximityPrize.SubmissionLower.Fast069
-theorem separant_degree {g : Row} (h : g.totalDegree ≤ 42) : (dy g).totalDegree ≤ 41 := by
+private theorem separant_degree {g : Row} (h : g.totalDegree ≤ 42) : (dy g).totalDegree ≤ 41 := by
   have := dy_degree g
   omega
-theorem flow_degree {g f : Row} {d : ℕ}
+private theorem flow_degree {g f : Row} {d : ℕ}
     (hg : g.totalDegree ≤ 42) (hf : f.totalDegree ≤ d) (hd : 0 < d) :
     (flow g f).totalDegree ≤ d + 41 := by
   have ha := separant_degree hg
@@ -312,11 +312,11 @@ private theorem numerator_degree {g : Row} (hg : g.totalDegree ≤ 42) (n : ℕ)
         (MvPolynomial.C ((2*n+1 : ℕ) : K[X]) : Row) (flow g (dy g))
       rw [totalDegree_C, zero_add] at hc
       omega
-theorem sep_pow_degree (g : Row) (hg : g.totalDegree ≤ 42) (a : ℕ) :
+private theorem sep_pow_degree (g : Row) (hg : g.totalDegree ≤ 42) (a : ℕ) :
     (separant g ^ a).totalDegree ≤ a * 41 :=
   (totalDegree_pow _ _).trans
     (Nat.mul_le_mul_left a ((toGeneric_degree _).trans (separant_degree hg)))
-theorem taylorNumerator_degree (g : Row) (hg : g.totalDegree ≤ 42) (x : K) :
+private theorem taylorNumerator_degree (g : Row) (hg : g.totalDegree ≤ 42) (x : K) :
     (taylorNumerator g x).totalDegree ≤ cutDegree := by
   unfold taylorNumerator
   apply (totalDegree_add _ _).trans
@@ -359,7 +359,7 @@ open private seedRow seedRow_degree regroup specialize specialize_regroup decode
   eval_specialize specialize_iterate specialize_pderiv from ProximityPrize.SubmissionLower.Fast069
 open private nodeCut eval_nodeCut from ProximityPrize.SubmissionLower.Fast069
 open private derivativeOrder_degree K1_10_2.eval_toGeneric from ProximityPrize.SubmissionLower.Fast069
-theorem regroup_degree {bank : P1_3.Bank} (A : ScalarSource bank) : (regroup A.poly).totalDegree ≤ 42 := by
+private theorem regroup_degree {bank : P1_3.Bank} (A : ScalarSource bank) : (regroup A.poly).totalDegree ≤ 42 := by
   classical
   have hsum : regroup A.poly =
       ∑ e ∈ A.poly.support, regroup (monomial e (A.poly.coeff e)) := by

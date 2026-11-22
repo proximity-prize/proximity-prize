@@ -1,5 +1,5 @@
 import ProximityPrize.SubmissionLower.KoalaRectTaylorCharts
-import ProximityPrize.SubmissionLower.HighCore82219UpperCertificates
+import ProximityPrize.SubmissionLower.HighCore82258UpperCertificates
 
 set_option autoImplicit false
 set_option Elab.async false
@@ -13,36 +13,36 @@ open P1 (I)
 open K1_14 (FX Equation Seeds)
 open K1_14_6 (Biform)
 open K1_14_6_1 (flatten cleared box)
-open HighCore82219Upper (Input ResidueLift Factors liftTaylor liftSeeds SeedConstants
+open HighCore82258Upper (Input ResidueLift Factors liftTaylor liftSeeds SeedConstants
   constantAbscissa inverseBlockCoeff ordinateTaylorNum)
-open HighCore82219Upper_3 (JetRing ordinate rootInJet graphIdeal proper_mem_graph
+open HighCore82258Upper_3 (JetRing ordinate rootInJet graphIdeal proper_mem_graph
   residueInJet jetDenominator oldDenominator oldNumerator le_saturate
   tangentEquation openFactor)
-open HighCore82219Upper_3_1 (jetSeparant velocityNumerator pureDegree pureDen pureOrdinate
+open HighCore82258Upper_3_1 (jetSeparant velocityNumerator pureDegree pureDen pureOrdinate
   embed_separant)
-open HighCore82219Upper_3_1_2 (finite reciprocal inverseEval mul_reciprocal)
-open HighCore82219Upper_3_3 (residueCut residueAtNode seedInJet wordAt prefixLength sectionIndex)
-open private HighCore82219Upper_3.inversePart HighCore82219Upper_3.inversePart_bound
-  HighCore82219Upper_3.oldDenominator_eq HighCore82219Upper_3_1.embed_C
-  HighCore82219Upper_3_1.pureOrdinate_bound HighCore82219Upper_3_1.root_degree
-  HighCore82219Upper_3_1.separant_glue
-  HighCore82219Upper_3_1.liftTaylor_box HighCore82219Upper_3_1.embed_oldNumerator
-  HighCore82219Upper_3_1.comparison_of_powers HighCore82219Upper_3_1.crt_comparison
-  HighCore82219Upper_3_1.shortQuotient
-  HighCore82219Upper_3_1_2.coord_transition HighCore82219Upper_3_1_2.inverseOrdinate
-  HighCore82219Upper_3_1_2.inverseOrdinate_bound
-  HighCore82219Upper_3_1_1.tangentIdeal HighCore82219Upper_3_1_1.comparison
-  HighCore82219Upper_3_3.residue_degree
-  from ProximityPrize.SubmissionLower.HighCore82219UpperGeometry
-open private HighCore82219GeometryCert_1.inverse_flow
-  from ProximityPrize.SubmissionLower.HighCore82219UpperCertificates
-open HighCore82219Upper_3 (inversePart inversePart_bound oldDenominator_eq)
-open HighCore82219Upper_3_1 (pureOrdinate_bound root_degree liftTaylor_box embed_oldNumerator
+open HighCore82258Upper_3_1_2 (finite reciprocal inverseEval mul_reciprocal)
+open HighCore82258Upper_3_3 (residueCut residueAtNode seedInJet wordAt prefixLength sectionIndex)
+open private HighCore82258Upper_3.inversePart HighCore82258Upper_3.inversePart_bound
+  HighCore82258Upper_3.oldDenominator_eq HighCore82258Upper_3_1.embed_C
+  HighCore82258Upper_3_1.pureOrdinate_bound HighCore82258Upper_3_1.root_degree
+  HighCore82258Upper_3_1.separant_glue
+  HighCore82258Upper_3_1.liftTaylor_box HighCore82258Upper_3_1.embed_oldNumerator
+  HighCore82258Upper_3_1.comparison_of_powers HighCore82258Upper_3_1.crt_comparison
+  HighCore82258Upper_3_1.shortQuotient
+  HighCore82258Upper_3_1_2.coord_transition HighCore82258Upper_3_1_2.inverseOrdinate
+  HighCore82258Upper_3_1_2.inverseOrdinate_bound
+  HighCore82258Upper_3_1_1.tangentIdeal HighCore82258Upper_3_1_1.comparison
+  HighCore82258Upper_3_3.residue_degree
+  from ProximityPrize.SubmissionLower.HighCore82258UpperGeometry
+open private HighCore82258GeometryCert_1.inverse_flow
+  from ProximityPrize.SubmissionLower.HighCore82258UpperCertificates
+open HighCore82258Upper_3 (inversePart inversePart_bound oldDenominator_eq)
+open HighCore82258Upper_3_1 (pureOrdinate_bound root_degree liftTaylor_box embed_oldNumerator
   comparison_of_powers crt_comparison shortQuotient embed_C separant_glue)
-open HighCore82219Upper_3_1_2 (coord_transition inverseOrdinate inverseOrdinate_bound)
-open HighCore82219Upper_3_1_1 (tangentIdeal comparison)
-open HighCore82219Upper_3_3 (residue_degree)
-open HighCore82219GeometryCert_1 (finite_flow inverse_flow)
+open HighCore82258Upper_3_1_2 (coord_transition inverseOrdinate inverseOrdinate_bound)
+open HighCore82258Upper_3_1_1 (tangentIdeal comparison)
+open HighCore82258Upper_3_3 (residue_degree)
+open HighCore82258GeometryCert_1 (finite_flow inverse_flow)
 open SplitCut.Rect (Box Section space)
 open scoped BigOperators
 
@@ -94,12 +94,12 @@ theorem jetToRect_C_mem_box {q : Equation} {d : Box}
   subst j
   simpa only [Polynomial.coeff_C_zero,Nat.mul_zero,Nat.add_zero] using hy
 
-theorem equation_nat_axis {z : Fin 2} (n : ℕ) :
+private theorem equation_nat_axis {z : Fin 2} (n : ℕ) :
     EquationAxis z (n : Equation) 0 := by
   rw [← map_natCast (Polynomial.C : Seeds →+* Equation),← map_natCast (MvPolynomial.C : FX →+* Seeds)]
   exact EquationAxis.scalar _
 
-theorem inverse_part_axis (J : Input) {v : Fin 2 → ℕ}
+private theorem inverse_part_axis (J : Input) {v : Fin 2 → ℕ}
     (hf : ∀ z, EquationAxis z J.f (v z)) (z : Fin 2) :
     EquationAxis z (inversePart J) (v z) := by
   have h1 : EquationAxis z (Polynomial.X*J.f.derivative) (v z) :=
@@ -116,7 +116,7 @@ theorem inverse_part_axis (J : Input) {v : Fin 2 → ℕ}
   rw [hneg]
   exact max_le (h1 i) (h2 i)
 
-theorem separant_section (J : Input) (B : ResidueLift J) (D : Factors J B)
+private theorem separant_section (J : Input) (B : ResidueLift J) (D : Factors J B)
     {v : Fin 2 → ℕ} (hf : ∀ z, EquationAxis z J.f (v z)) :
     Represented (graphIdeal J B D) ⟨J.e-2,0,v 0,v 1⟩ (jetSeparant J.f) := by
   have he : 3 ≤ J.e := J.sheets
@@ -134,16 +134,16 @@ theorem separant_section (J : Input) (B : ResidueLift J) (D : Factors J B)
         Polynomial.C (Polynomial.C (J.e : Seeds)) * Polynomial.C J.f := by
       rw [pow_one]
       exact @separant_glue Equation JetRing (@Polynomial.commRing Seeds inferInstance)
-        HighCore82219Upper_3.jetCommRing Polynomial.C Polynomial.X J.f.derivative
+        HighCore82258Upper_3.jetCommRing Polynomial.C Polynomial.X J.f.derivative
         (Polynomial.C (J.e : Seeds)) J.f
     rw [heq]
     exact (graphIdeal J B D).mul_mem_left _ hf'
 
-theorem pure_sep_room (J : Input) (r : ℕ) :
+private theorem pure_sep_room (J : Input) (r : ℕ) :
     (r-1)*(J.e-2) ≤ r*(J.e-1) :=
   Nat.mul_le_mul (Nat.sub_le r 1) (Nat.sub_le_sub_left (by decide : 1 ≤ 2) J.e)
 
-theorem pureDen_section (J : Input) (B : ResidueLift J) (D : Factors J B)
+private theorem pureDen_section (J : Input) (B : ResidueLift J) (D : Factors J B)
     {v : Fin 2 → ℕ} (hf : ∀ z, EquationAxis z J.f (v z)) (r : ℕ) :
     Represented (graphIdeal J B D) (pureBox J v r) (pureDen J r) := by
   have h := (separant_section J B D hf).pow (r-1)
@@ -155,12 +155,12 @@ theorem pureDen_section (J : Input) (B : ResidueLift J) (D : Factors J B)
   · exact Nat.mul_le_mul_right _ (Nat.sub_le _ _)
   · exact Nat.mul_le_mul_right _ (Nat.sub_le _ _)
 
-theorem ordinate_section (Q : Ideal JetRing) :
+private theorem ordinate_section (Q : Ideal JetRing) :
     Represented Q (⟨1,0,0,0⟩ : Box) ordinate := by
   apply represented_of_mem
   exact jetToRect_C_mem_box (by simp) EquationAxis.variableX EquationAxis.variableX
 
-theorem pureOrdinate_zero_section (J : Input) (B : ResidueLift J) (D : Factors J B)
+private theorem pureOrdinate_zero_section (J : Input) (B : ResidueLift J) (D : Factors J B)
     {v : Fin 2 → ℕ} (hf : ∀ z, EquationAxis z J.f (v z)) (r : ℕ) :
     Represented (graphIdeal J B D) (pureBox J v r) (pureOrdinate J r 0) := by
   have h := ((separant_section J B D hf).pow (r-1)).mul (ordinate_section (graphIdeal J B D))
@@ -172,7 +172,7 @@ theorem pureOrdinate_zero_section (J : Input) (B : ResidueLift J) (D : Factors J
   · simpa [pureBox,Box.add] using Nat.mul_le_mul_right (v 0) (Nat.sub_le r 1)
   · simpa [pureBox,Box.add] using Nat.mul_le_mul_right (v 1) (Nat.sub_le r 1)
 
-theorem pureOrdinate_section (J : Input) (B : ResidueLift J) (D : Factors J B)
+private theorem pureOrdinate_section (J : Input) (B : ResidueLift J) (D : Factors J B)
     {v : Fin 2 → ℕ} (hf : ∀ z, EquationAxis z J.f (v z)) {r i : ℕ} (hi : i ≤ r) :
     Represented (graphIdeal J B D) (pureBox J v r) (pureOrdinate J r i) := by
   cases i with
@@ -190,17 +190,17 @@ theorem pureOrdinate_section (J : Input) (B : ResidueLift J) (D : Factors J B)
     · exact coord_transition J hi (finite J B D) (reciprocal J B D) hd hδ
         (mul_reciprocal J B D) hc
 
-theorem seed_constant_axis {J : Input} {s : SeedConstants} (hs : s.totalDegree ≤ 2*J.w)
+private theorem seed_constant_axis {J : Input} {s : SeedConstants} (hs : s.totalDegree ≤ 2*J.w)
     (z : Fin 2) : (liftSeeds s).degreeOf z ≤ 2*J.w :=
   (MvPolynomial.degreeOf_le_totalDegree _ _).trans
     ((Finset.sup_mono (MvPolynomial.support_map_subset constantAbscissa s)).trans hs)
 
-theorem seed_section (J : Input) (Q : Ideal JetRing) {s : SeedConstants}
+private theorem seed_section (J : Input) (Q : Ideal JetRing) {s : SeedConstants}
     (hs : s.totalDegree ≤ 2*J.w) : Represented Q (residueBox J) (seedInJet s) :=
   represented_of_mem (jetToRect_C_mem_box (Polynomial.natDegree_C (liftSeeds s)).le
     (EquationAxis.C (seed_constant_axis hs 0)) (EquationAxis.C (seed_constant_axis hs 1)))
 
-theorem box_C_degree {p : Biform} {a s : ℕ} (hp : p ∈ box a s) :
+private theorem box_C_degree {p : Biform} {a s : ℕ} (hp : p ∈ box a s) :
     (MvPolynomial.optionEquivLeft FX (Fin 2) p).natDegree ≤ a := by
   apply Polynomial.natDegree_le_iff_coeff_eq_zero.mpr
   intro i hi
@@ -211,7 +211,7 @@ theorem box_C_degree {p : Biform} {a s : ℕ} (hp : p ∈ box a s) :
   have h := (MvPolynomial.mem_restrictBidegree.mp hp) _ (MvPolynomial.mem_support_iff.mpr hn)
   exact (not_le_of_gt hi) (by simpa using h.1)
 
-theorem box_C_axis {p : Biform} {a s : ℕ} (hp : p ∈ box a s) (z : Fin 2) :
+private theorem box_C_axis {p : Biform} {a s : ℕ} (hp : p ∈ box a s) (z : Fin 2) :
     EquationAxis z (MvPolynomial.optionEquivLeft FX (Fin 2) p) s := by
   intro i
   apply (MvPolynomial.degreeOf_le_totalDegree _ z).trans
@@ -222,7 +222,7 @@ theorem box_C_axis {p : Biform} {a s : ℕ} (hp : p ∈ box a s) (z : Fin 2) :
   change (Finsupp.optionElim i m).some.sum (fun _ n => n) ≤ s at h
   simpa only [Finsupp.some_optionElim] using h
 
-theorem residue_taylor_section (J : Input) (B : ResidueLift J) (Q : Ideal JetRing)
+private theorem residue_taylor_section (J : Input) (B : ResidueLift J) (Q : Ideal JetRing)
     (i : ℕ) : Represented Q (residueBox J) (rootInJet (liftTaylor B.numerator i)) := by
   have h := liftTaylor_box J B i
   exact represented_of_mem (jetToRect_C_mem_box (box_C_degree h)
@@ -247,7 +247,7 @@ theorem numerator_section (J : Input) (B : ResidueLift J) (D : Factors J B)
     simpa [taylorBox,Box.add,Nat.add_comm] using h
   · exact (pureDen_section J B D hf r).mul (residue_taylor_section J B (graphIdeal J B D) i)
 
-theorem compare_velocity (J : Input) (B : ResidueLift J) (D : Factors J B) (k : ℕ) :
+private theorem compare_velocity (J : Input) (B : ResidueLift J) (D : Factors J B) (k : ℕ) :
     jetSeparant J.f^(2*k+1)*velocityNumerator J.f k -
       rootInJet (cleared (flatten J.f) k)*jetSeparant J.f^k ∈ graphIdeal J B D := by
   have hle : tangentIdeal J.f ≤ graphIdeal J B D :=

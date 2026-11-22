@@ -13,9 +13,9 @@ open K1_13_6_2_4_1
 open scoped BigOperators
 noncomputable section
 
-def zeroDiagonal (s : Finset (Fin 5)) (i : Fin 5) : ℚ := if i ∈ s then 1 else 0
+private def zeroDiagonal (s : Finset (Fin 5)) (i : Fin 5) : ℚ := if i ∈ s then 1 else 0
 
-theorem zero_cube_prod (a : Grade) :
+private theorem zero_cube_prod (a : Grade) :
     (∑ J ∈ (univ : Finset (Fin 5)).powerset, (-1 : ℚ) ^ (5 - J.card) *
       ∏ j ∈ (univ : Finset (Fin 5)) \ J, (0 : ℚ) ^ a j) =
       ∏ j : Fin 5, ((1 : ℚ) - (0 : ℚ) ^ a j) := by
@@ -31,7 +31,7 @@ theorem zero_cube_prod (a : Grade) :
   · intro J _
     simp [Finset.card_sdiff_of_subset (Finset.subset_univ J)]
 
-theorem zero_cube_monomial (a : Grade) (r : ℚ) :
+private theorem zero_cube_monomial (a : Grade) (r : ℚ) :
     (∑ J ∈ (univ : Finset (Fin 5)).powerset, (-1 : ℚ) ^ (5 - J.card) *
       eval (zeroDiagonal J) (monomial a r)) =
       r * ∏ j : Fin 5, ((1 : ℚ) - (0 : ℚ) ^ a j) := by
@@ -45,7 +45,7 @@ theorem zero_cube_monomial (a : Grade) (r : ℚ) :
   rw [Finset.prod_ite_mem, Finset.univ_inter]
   ring
 
-theorem zero_cube_monomial_top {a : Grade} (ha : a.degree = 5) (r : ℚ) :
+private theorem zero_cube_monomial_top {a : Grade} (ha : a.degree = 5) (r : ℚ) :
     (∑ J ∈ (univ : Finset (Fin 5)).powerset, (-1 : ℚ) ^ (5 - J.card) *
       eval (zeroDiagonal J) (monomial a r)) =
       (monomial a r).coeff (squarefree univ) := by
@@ -65,7 +65,7 @@ theorem zero_cube_monomial_top {a : Grade} (ha : a.degree = 5) (r : ℚ) :
     rw [Finset.prod_eq_zero (mem_univ j) (by simp [hm]), mul_zero, coeff_monomial]
     exact (ite_eq_right (fun he => h he.ge)).symm
 
-theorem zero_cube (p : Form) :
+private theorem zero_cube (p : Form) :
     (∑ J ∈ (univ : Finset (Fin 5)).powerset, (-1 : ℚ) ^ (5 - J.card) *
       eval (zeroDiagonal J) (homogeneousComponent 5 p)) =
       p.coeff (squarefree univ) := by
@@ -81,7 +81,7 @@ theorem zero_cube (p : Form) :
     simp only [map_add, mul_add, Finset.sum_add_distrib]
     exact congrArg₂ (· + ·) hp hq
 
-def bend {R : Type*} [CommRing R] (b j t h : R) : R :=
+private def bend {R : Type*} [CommRing R] (b j t h : R) : R :=
   -576 * h ^ 5 + 160 * t ^ 2 * h ^ 3 - 480 * t ^ 3 * h ^ 2 + 540 * t ^ 4 * h
   + 960 * j * h ^ 4 - 320 * j * t * h ^ 3 + 960 * j * t ^ 2 * h ^ 2 - 1200 * j * t ^ 3 * h
   - 480 * j ^ 2 * h ^ 3 - 480 * j ^ 2 * t * h ^ 2 + 840 * j ^ 2 * t ^ 2 * h
@@ -93,7 +93,7 @@ def bend {R : Type*} [CommRing R] (b j t h : R) : R :=
 private def linear (caps : Fin 5 → Cap) (f : Cap → ℕ) : Form :=
   ∑ i : Fin 5, MvPolynomial.C (f (caps i) : ℚ) * MvPolynomial.X i
 
-theorem linear_homogeneous (caps : Fin 5 → Cap) (f : Cap → ℕ) :
+private theorem linear_homogeneous (caps : Fin 5 → Cap) (f : Cap → ℕ) :
     (linear caps f).IsHomogeneous 1 := by
   apply IsHomogeneous.sum
   intro i _
@@ -103,10 +103,10 @@ private def form (caps : Fin 5 → Cap) : Form :=
   bend (linear caps fun p => p.1.b) (linear caps fun p => p.1.j)
     (linear caps fun p => p.1.t) (linear caps Prod.snd)
 
-theorem nat_homogeneous (n : ℕ) : IsHomogeneous (n : Form) 0 := by
+private theorem nat_homogeneous (n : ℕ) : IsHomogeneous (n : Form) 0 := by
   simpa using (isHomogeneous_C (σ:=Fin 5) (n : ℚ))
 
-theorem form_homogeneous (caps : Fin 5 → Cap) : (form caps).IsHomogeneous 5 := by
+private theorem form_homogeneous (caps : Fin 5 → Cap) : (form caps).IsHomogeneous 5 := by
   unfold form bend
   generalize hb : linear caps (fun a => a.1.b) = b
   generalize hj : linear caps (fun a => a.1.j) = j
@@ -145,14 +145,14 @@ theorem form_homogeneous (caps : Fin 5 → Cap) : (form caps).IsHomogeneous 5 :=
   have partial4 := ((((partial3).add m17).add m18).sub m19).sub m20
   exact (partial4).add m21
 
-theorem evaluate_form (caps : Fin 5 → Cap) (w : Fin 5 → ℚ) :
+private theorem evaluate_form (caps : Fin 5 → Cap) (w : Fin 5 → ℚ) :
     eval w (form caps) =
       bend (∑ i : Fin 5, ((caps i).1.b : ℚ) * w i) (∑ i : Fin 5, ((caps i).1.j : ℚ) * w i)
         (∑ i : Fin 5, ((caps i).1.t : ℚ) * w i) (∑ i : Fin 5, ((caps i).2 : ℚ) * w i) := by
   simp only [form, bend, linear, map_add, map_sub, map_mul, map_pow, map_neg,
     map_ofNat, map_sum, eval_C, eval_X]
 
-theorem eval_zero_diagonal (caps : Fin 5 → Cap) (J : Finset (Fin 5)) :
+private theorem eval_zero_diagonal (caps : Fin 5 → Cap) (J : Finset (Fin 5)) :
     eval (zeroDiagonal J) (form caps) =
       (Low48Price.bentIntegral (Low48BentLattice.Sum J caps).1.b (Low48BentLattice.Sum J caps).1.j (Low48BentLattice.Sum J caps).1.t (Low48BentLattice.Sum J caps).2 : ℚ) := by
   classical
@@ -162,7 +162,7 @@ theorem eval_zero_diagonal (caps : Fin 5 → Cap) (J : Finset (Fin 5)) :
   push_cast
   rfl
 
-theorem eval_positive_diagonal (caps : Fin 5 → Cap) (J : Finset (Fin 5)) :
+private theorem eval_positive_diagonal (caps : Fin 5 → Cap) (J : Finset (Fin 5)) :
     let p := Low48BentLattice.Sum univ (fun i => Scale (positiveDiagonal J i) (caps i))
     eval (fun i => (positiveDiagonal J i : ℚ)) (form caps) =
       (Low48Price.bentIntegral p.1.b p.1.j p.1.t p.2 : ℚ) := by

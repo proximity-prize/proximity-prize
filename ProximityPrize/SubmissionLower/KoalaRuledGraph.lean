@@ -14,7 +14,7 @@ variable {F : Type*} [Field F]
 def Box.debit (d k : Box) : Box :=
   ⟨d.base-k.base, d.velocity-k.velocity, d.seed₀-k.seed₀, d.seed₁-k.seed₁⟩
 
-theorem debit_add (d k : Box) (h₀ : k.base ≤ d.base) (h₁ : k.velocity ≤ d.velocity)
+private theorem debit_add (d k : Box) (h₀ : k.base ≤ d.base) (h₁ : k.velocity ≤ d.velocity)
     (h₂ : k.seed₀ ≤ d.seed₀) (h₃ : k.seed₁ ≤ d.seed₁) :
     (d.debit k).add k = d := by
   cases d
@@ -23,7 +23,7 @@ theorem debit_add (d k : Box) (h₀ : k.base ≤ d.base) (h₁ : k.velocity ≤ 
 
 def volume (d : Box) : ℕ := (d.velocity+1)*(d.base+d.velocity+1)*(d.seed₀+1)*(d.seed₁+1)
 
-theorem graph_rank {g : Ring F} (hg : g ≠ 0) (hv : g.degreeOf 1 = 0)
+private theorem graph_rank {g : Ring F} (hg : g ≠ 0) (hv : g.degreeOf 1 = 0)
     {J : Ideal (Ring F)} (hJ : Ideal.span {g} ≤ J)
     {k d : Box} (S : Section (Ideal.span {g}) k) (hS : S.finite ∈ J)
     (hreg : IsLeftRegular (Ideal.Quotient.mk (Ideal.span {g}) S.finite))
@@ -44,7 +44,7 @@ theorem graph_rank {g : Ring F} (hg : g ≠ 0) (hv : g.degreeOf 1 = 0)
   push_cast at hdq hdkq hdropq
   linarith only [hdq, hdkq, hdropq]
 
-def volumePoly (a b c h t u v : ℚ) : ℚ[X] :=
+private def volumePoly (a b c h t u v : ℚ) : ℚ[X] :=
   (Polynomial.X+Polynomial.C (1-t)) *
     (Polynomial.C (a+1)*Polynomial.X+Polynomial.C (1-h-t)) *
     (Polynomial.C b*Polynomial.X+Polynomial.C (1-u)) *
@@ -57,7 +57,7 @@ private def difference (a b c y z w h t u v : ℚ) : ℚ[X] :=
 def mixedLead (a b c y z w h t u v : ℚ) : ℚ :=
   y*t*b*c + (z*c+w*b)*(t*(a+1)+h+t) + y*(u*c+v*b) + (a+1)*(z*v+w*u)
 
-theorem difference_expansion (a b c y z w h t u v : ℚ) :
+private theorem difference_expansion (a b c y z w h t u v : ℚ) :
     let R := difference a b c y z w h t u v
     let M := mixedLead a b c y z w h t u v
     R = Polynomial.C M*Polynomial.X^2 + Polynomial.C (R.eval 1-R.eval 0-M)*Polynomial.X +
@@ -68,7 +68,7 @@ theorem difference_expansion (a b c y z w h t u v : ℚ) :
   simp only [Polynomial.C_add, Polynomial.C_sub, Polynomial.C_mul, Polynomial.C_1, Polynomial.C_0]
   ring
 
-theorem volumePoly_eval (a b c h t u v q : ℚ) :
+private theorem volumePoly_eval (a b c h t u v q : ℚ) :
     (volumePoly a b c h t u v).eval q =
       (q-t+1)*((a+1)*q-h-t+1)*(b*q-u+1)*(c*q-v+1) := by
   unfold volumePoly

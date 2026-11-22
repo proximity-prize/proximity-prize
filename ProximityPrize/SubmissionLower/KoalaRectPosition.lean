@@ -23,7 +23,7 @@ def rectGrade (A h : ℕ) (s : Shape) (E : ℕ) (U d : Fin 2 → ℕ) (W j : ℕ
   let r := rectPower A h s W-j
   (gradeWidth (131071-h) s.B W j-r*E)*rectSlots U d r
 
-theorem rectGrade_sum (k B W j r E : ℕ) (U d : Fin 2 → ℕ) (hk : 0 < k) (he : 0 < E) :
+private theorem rectGrade_sum (k B W j r E : ℕ) (U d : Fin 2 → ℕ) (hk : 0 < k) (he : 0 < E) :
     (gradeWidth k B W j-r*E)*rectSlots U d r =
       ∑ q ∈ Ico j (B+1), if q*k ≤ W+j then rectKept U d ((q-j)/E) r else 0 := by
   have hq (q : ℕ) : q*k ≤ W+j ↔ q < (W+j)/k + 1 := by
@@ -43,7 +43,7 @@ theorem rectCapacity_eq (A h : ℕ) (s : Shape) (E : ℕ) (U d : Fin 2 → ℕ) 
   rw [rectCapacity, ← shapeSum_swap]
   exact sum_congr rfl fun j _ => rectGrade_sum _ _ _ _ _ _ _ _ hk he
 
-theorem rectPosition_sum (top step t j g : ℕ) (U d : Fin 2 → ℕ)
+private theorem rectPosition_sum (top step t j g : ℕ) (U d : Fin 2 → ℕ)
     (hj : j ≤ t) (hs : 0 < step) :
     (∑ W ∈ range top, if t ≤ W+j then rectKept U d g (1+(top-1-W)/step-j) else 0) +
     ((∑ a ∈ range g, (rectSlots U d a - rectSlots U d (a+1)) * (top+j-t-step*(j+a))) +

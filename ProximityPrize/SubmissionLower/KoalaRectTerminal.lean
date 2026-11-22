@@ -1,7 +1,7 @@
 import ProximityPrize.SubmissionLower.KoalaRectBridgeCore
 import ProximityPrize.SubmissionLower.KoalaRectAxes
-import ProximityPrize.SubmissionLower.HighCore82219Family
-import ProximityPrize.SubmissionLower.HighCore82219RectangleOrder
+import ProximityPrize.SubmissionLower.HighCore82258Family
+import ProximityPrize.SubmissionLower.HighCore82258RectangleOrder
 
 set_option Elab.async false
 set_option autoImplicit false
@@ -12,12 +12,12 @@ set_option backward.isDefEq.respectTransparency false
 
 namespace KoalaRect
 noncomputable section
-open Polynomial Finset HighCore82219 KoalaRectReceipts
+open Polynomial Finset HighCore82258 KoalaRectReceipts
 open K1_14 (Equation)
 open K1_14_3 (ProjectedProduct)
 open KoalaRectAxes
 
-theorem reject_shape {u del Γ} {M : AnchorModel u del} {F : AnchoredFamily M Γ}
+private theorem reject_shape {u del Γ} {M : AnchorModel u del} {F : AnchoredFamily M Γ}
     (hbank : P3_7_1.BankOK (terminal .h2367)) (hw : InBand .h2367 M.overhead) (C : ChartSource .h2367 M F)
     {pairs : Pairs .h2367 M.overhead.toNat C.rows}
     (Q : PrefixInventory .h2367 M F pairs) {f : Equation} (hf : Reduced f)
@@ -29,9 +29,9 @@ theorem reject_shape {u del Γ} {M : AnchorModel u del} {F : AnchoredFamily M Γ
   let h := M.overhead.toNat
   let t := terminal .h2367
   obtain ⟨hl, hu⟩ := window_nat hw
-  have hl' : 2378 ≤ h := hl
-  have hu' : h ≤ 2465 := hu
-  have hpos : 0 < h := lt_of_lt_of_le (by decide : 0 < 2378) hl'
+  have hl' : 2414 ≤ h := hl
+  have hu' : h ≤ 2535 := hu
+  have hpos : 0 < h := lt_of_lt_of_le (by decide : 0 < 2414) hl'
   have hraw : h ≤ 131070 := hu'.trans (by decide)
   have hchar : h < K1.p := hu'.trans_lt (by decide)
   obtain ⟨_, _, hA, hsmall, hwidth⟩ := terminal_guards .h2367
@@ -51,15 +51,15 @@ theorem paid_degrees {u del Γ} {M : AnchorModel u del} {F : AnchoredFamily M Γ
     {pairs : Pairs .h2367 M.overhead.toNat C.rows}
     (Q : PrefixInventory .h2367 M F pairs) {f : Equation} (hf : Reduced f)
     (hprod : ProjectedProduct Q.parents f) :
-    f.natDegree < 28 ∧ axisDegree f 0 + axisDegree f 1 ≤ paidCap f.natDegree := by
+    f.natDegree < 23 ∧ axisDegree f 0 + axisDegree f 1 ≤ paidCap f.natDegree := by
   obtain ⟨hl, hu⟩ := window_nat hw
   have he : 1 ≤ f.natDegree := hf.1
-  have hfull : f.natDegree < 28 := by
+  have hfull : f.natDegree < 23 := by
     by_contra! h
-    let T := rectWitness 28
+    let T := rectWitness 23
     refine reject_shape hbank hw C Q hf hprod h (by decide) T.U T.order
-      (witness_guards (by decide : 1 ≤ 28) (by decide)).2 ?_
-      (rect_bounds hl hu (by decide : 1 ≤ 28) (by decide))
+      (witness_guards (by decide : 1 ≤ 23) (by decide)).2 ?_
+      (rect_bounds hl hu (by decide : 1 ≤ 23) (by decide))
     intro r
     have h0 : T.order 0 = 0 := by decide
     have h1 : T.order 1 = 0 := by decide

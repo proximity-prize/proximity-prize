@@ -355,7 +355,7 @@ private def numerator (L : ℕ) (g : Row 4) (i : Fin L) : Row 4 :=
   else
     MvPolynomial.C (Polynomial.C (↑i.val.factorial : Geom)⁻¹) *
       (separant g ^ (2 * (L - i.val)) * jetNumerator g i.val)
-def recoveryChart (L : ℕ) (g : Row 4) : TaylorChart L where
+private def recoveryChart (L : ℕ) (g : Row 4) : TaylorChart L where
   denom := toGeneric (denominator L g)
   numerator i := toGeneric (numerator L g i)
 private theorem numerator_bound {L : ℕ} (w : Fin 4 → ℕ) (Δ d₀ : ℕ)

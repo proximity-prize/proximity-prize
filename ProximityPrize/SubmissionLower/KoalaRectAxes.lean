@@ -1,5 +1,5 @@
 import ProximityPrize.SubmissionLower.KoalaRectReceipts
-import ProximityPrize.SubmissionLower.HighCore82219RectangleOrder
+import ProximityPrize.SubmissionLower.HighCore82258RectangleOrder
 
 namespace KoalaRectAxes
 
@@ -31,15 +31,15 @@ theorem slots_reversed {u d actual : Fin 2 → ℕ} (r : ℕ)
     (horder : d 0 ≤ d 1) (hbalanced : d 1 ≤ d 0 + 1)
     (hsum : d 0 + d 1 ≤ actual 0 + actual 1) :
     rectSlots (swap u) actual r ≤ rectSlots (swap u) (swap d) r := by
-  have h := HighCore82219.oriented_rect_capacity_le (r := r) hsides hdegree horder hbalanced
+  have h := HighCore82258.oriented_rect_capacity_le (r := r) hsides hdegree horder hbalanced
     (by omega : d 0 + d 1 ≤ actual 1 + actual 0)
   simpa only [rectSlots, swap_zero, swap_one, Nat.mul_comm] using h
 
-theorem rect_bounds_swap {h E : ℕ} (hl : 2378 ≤ h) (hu : h ≤ 2465)
-    (hel : 1 ≤ E) (heu : E ≤ 28) :
-    let T := HighCore82219.terminal .h2367
+theorem rect_bounds_swap {h E : ℕ} (hl : 2414 ≤ h) (hu : h ≤ 2535)
+    (hel : 1 ≤ E) (heu : E ≤ 23) :
+    let T := HighCore82258.terminal .h2367
     rectDebit h T.nodeRows T.poleMoment (swap (rectWitness E).U) <
-      rectGain HighCore82219.agreement h T.shape E (swap (rectWitness E).U)
+      rectGain HighCore82258.agreement h T.shape E (swap (rectWitness E).U)
         (swap (rectWitness E).order) := by
   dsimp only
   rw [debit_swap, gain_swap]
