@@ -65,7 +65,7 @@ theorem ordinary_budget {p : Shape} (h : ∀ i, Chamber (caps p i)) :
     base_normalize, base_signed]
   exact_mod_cast (show signed p ≤ ((signed p).toNat : ℤ) by omega)
 
-theorem fits_sum (s : Finset (Fin 5)) (a : Fin 5 → Cap) (c : Fin 5 → ℕ)
+private theorem fits_sum (s : Finset (Fin 5)) (a : Fin 5 → Cap) (c : Fin 5 → ℕ)
     (h : ∀ i ∈ s, Fits (a i) (c i)) :
     Fits (Low48BentLattice.Sum s a) (∑ i ∈ s, c i) := by
   classical
@@ -78,7 +78,7 @@ theorem fits_sum (s : Finset (Fin 5)) (a : Fin 5 → Cap) (c : Fin 5 → ℕ)
     have hm := Low49ActiveLattice.fits_add (h i (Finset.mem_insert_self _ _)) hs
     simpa only [Low48BentLattice.Sum, Finset.sum_insert hi, Low48BentLattice.Add, Shape.plus] using hm
 
-theorem points_sum (s : Finset (Fin 5)) (a : Fin 5 → Cap) (c : Fin 5 → ℕ)
+private theorem points_sum (s : Finset (Fin 5)) (a : Fin 5 → Cap) (c : Fin 5 → ℕ)
     (h : ∀ i ∈ s, Fits (a i) (c i)) :
     (∑ i ∈ s, points (a i) (c i)) = points (Low48BentLattice.Sum s a) (∑ i ∈ s, c i) := by
   classical
@@ -90,9 +90,9 @@ theorem points_sum (s : Finset (Fin 5)) (a : Fin 5 → Cap) (c : Fin 5 → ℕ)
       Low49ActiveLattice.add (h i (Finset.mem_insert_self _ _)) (fits_sum s a c hs)]
     simp only [Low48BentLattice.Sum, Low48BentLattice.Add, Finset.sum_insert hi, Shape.plus]
 
-def clipSum (p : Shape) (K : ℕ) (t : Grade) : ℕ := ∑ i, t i * clips p K i
+private def clipSum (p : Shape) (K : ℕ) (t : Grade) : ℕ := ∑ i, t i * clips p K i
 
-theorem active_diagonal {p : Shape} {K : ℕ} (t : Grade)
+private theorem active_diagonal {p : Shape} {K : ℕ} (t : Grade)
     (h : ∀ i, Fits (caps p i) (clips p K i)) :
     diagonalExponents (activeFamily p K) t = points (capSum (caps p) t) (clipSum p K t) := by
   have h0 := (active_doubled h).double_zero
@@ -106,7 +106,7 @@ theorem active_diagonal {p : Shape} {K : ℕ} (t : Grade)
       exact point_scale _ _ (h i) _
     _ = _ := points_sum _ _ _ (fun i _ => fits_scale (h i) _)
 
-theorem fifth_difference (v : Fin 5 → ℚ) :
+private theorem fifth_difference (v : Fin 5 → ℚ) :
     (∑ J ∈ (Finset.univ : Finset (Fin 5)).powerset, (-1 : ℚ) ^ (5 - J.card) *
       (∑ i, (positiveDiagonal J i : ℚ) * v i)^5) = 120 * ∏ i, v i := by
   let f : Form := (∑ i : Fin 5, C (v i) * MvPolynomial.X i)^5
@@ -138,7 +138,7 @@ theorem fifth_difference (v : Fin 5 → ℚ) :
   simp [hsum', Finsupp.multinomial_eq, Finsupp.prod, hh, hu, Nat.multinomial,
     Finset.sum_const, Nat.factorial]
 
-theorem clips_prod (p : Shape) (K : ℕ) (ht : 3 ≤ p.t)
+private theorem clips_prod (p : Shape) (K : ℕ) (ht : 3 ≤ p.t)
     (h : ∀ i, Fits (caps p i) (clips p K i)) :
     (Final50Price.activeLoss (Final50Price.activeClips p K) : ℚ) =
       480 * ((∏ i, (clips p K i : ℚ)) -

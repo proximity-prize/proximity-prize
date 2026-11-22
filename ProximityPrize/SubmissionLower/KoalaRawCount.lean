@@ -11,11 +11,11 @@ open P1 (K I node)
 open K1_14 (FX)
 open K1_14_6 (Biform)
 open K1_14_6_1 (flatten)
-open HighCore82219Upper (Input ResidueLift Factors quotientNumerator componentMarks)
+open HighCore82258Upper (Input ResidueLift Factors quotientNumerator componentMarks)
 open P1_7_3 (persistentNodes hits_persistent)
-open HighCore82219Upper_3_3 (prefixLength FixedWeights)
-open HighCore82219 (FixedWord agreement degreeAt quotientOrder scale muNum)
-open HighCore82219_5 (nodeVelocity)
+open HighCore82258Upper_3_3 (prefixLength FixedWeights)
+open HighCore82258 (FixedWord agreement degreeAt quotientOrder scale muNum)
+open HighCore82258_5 (nodeVelocity)
 open scoped BigOperators
 
 abbrev firstDegree (J : Input) (k : ℕ) := 2*quotientOrder J.lo+1+k
@@ -23,7 +23,7 @@ abbrev weight (J : Input) (k : ℕ) := 2*nodeVelocity J+muNum J.hi*k
 abbrev rootDegree (J : Input) (v w : ℕ) :=
   2*(J.e*max 1 v*max 1 w+v*(J.e-1)*max 1 w+w*(J.e-1)*max 1 v)
 
-theorem diagonal_lift {J : Input} {v w k u : ℕ} (hk : 0<k)
+private theorem diagonal_lift {J : Input} {v w k u : ℕ} (hk : 0<k)
     (hv : 2*J.hi ≤ k*max 1 v) (hw : 2*J.hi ≤ k*max 1 w) {f : Biform}
     (hf : f ∈ space FX (1+u*(J.e-1)) (u*v+2*J.w) (u*w+2*J.w)) :
     ∃ p : MvPolynomial (exps (J.e-1) (max 1 v) (max 1 w)) FX,
@@ -39,13 +39,13 @@ theorem diagonal_lift {J : Input} {v w k u : ℕ} (hk : 0<k)
   · rw [Nat.mul_add, Nat.mul_comm (max 1 w) u, Nat.mul_comm (max 1 w) k]
     exact Nat.add_le_add (Nat.mul_le_mul_left _ (le_max_right _ _)) (hhi.trans hw)
 
-theorem lift_eval {J : Input} {a b c : ℕ} {f : Biform}
+private theorem lift_eval {J : Input} {a b c : ℕ} {f : Biform}
     {p : MvPolynomial (exps a b c) FX} (hp : proj FX a b c p = f) (γ : K) :
     aeval (RootSurface.liftPoint a b c J γ) p = Raw.ev J γ f := by
   rw [aeval_monomialPoint,hp]
   rfl
 
-theorem marked_curve (J : Input) (B : ResidueLift J) {v w k : ℕ} (hk : 0<k)
+private theorem marked_curve (J : Input) (B : ResidueLift J) {v w k : ℕ} (hk : 0<k)
     (hv : 2*J.hi ≤ k*max 1 v) (hw : 2*J.hi ≤ k*max 1 w)
     (hf : flatten J.f ∈ space FX J.e v w)
     (hword : FixedWord J.model.word J.marks J.family.scalar (degreeAt J.hi))
@@ -65,7 +65,7 @@ theorem marked_curve (J : Input) (B : ResidueLift J) {v w k : ℕ} (hk : 0<k)
   intro x hex
   let sites := persistentNodes J.model.word T J.family.scalar
   let r := J.ell-sites.card
-  obtain ⟨b,a,W⟩ := HighCore82219Upper_3_3_2.proof J sites x
+  obtain ⟨b,a,W⟩ := HighCore82258Upper_3_3_2.proof J sites x
   obtain ⟨p,hp,hpd⟩ := diagonal_lift hk hv hw (Raw.node_fit B sites x b a hf)
   have hnode (γ : K) (hγ : γ ∈ T) :
       aeval (RootSurface.liftPoint (J.e-1) (max 1 v) (max 1 w) J γ) p = 0 ↔
@@ -107,7 +107,7 @@ theorem proper_count (J : Input) (B : ResidueLift J) (D : Factors J B) (v w k : 
   have hpfit := RootSurface.proper_fit D hf
   have hnon : flatten D.proper ≠ 0 := by
     simpa only [flatten,map_ne_zero_iff _ (optionEquivLeft FX (Fin 2)).symm.injective] using
-      HighCore82219Upper_3_2.proper_ne_zero D
+      HighCore82258Upper_3_2.proper_ne_zero D
   have hsur := BoxDegree.surfaces ha hb hc hnon hpfit
   change ∑ P ∈ G.minimalPrimesFinset, affineDegree P ≤ (rootDegree J v w:ℚ) at hsur
   obtain ⟨p,hp,hpd⟩ := diagonal_lift hk hv hw (Raw.num B hf (J.ell+1))
@@ -116,13 +116,13 @@ theorem proper_count (J : Input) (B : ResidueLift J) (D : Factors J B) (v w k : 
     dsimp only [firstDegree]
     omega
   have hT (γ : K) (hγ : γ ∈ T) : y γ ∈ zeroLocus FX G :=
-    RootSurface.mark_on_root D (HighCore82219Upper.mem_componentMarks.mp hγ).2
+    RootSurface.mark_on_root D (HighCore82258Upper.mem_componentMarks.mp hγ).2
   have hcut (γ : K) (hγ : γ ∈ T) : aeval (y γ) p = 0 := by
     rw [lift_eval hp]
-    have hh := D.cutoff_at_marks γ (HighCore82219Upper.mem_componentMarks.mp hγ).1
+    have hh := D.cutoff_at_marks γ (HighCore82258Upper.mem_componentMarks.mp hγ).1
     change K1_14.atMark _ _ _ = 0 at hh
     rw [← K1_14_6_1.eval_flatten] at hh
-    simpa only [HighCore82219Upper.cutoff,flatten,AlgEquiv.symm_apply_apply] using hh
+    simpa only [HighCore82258Upper.cutoff,flatten,AlgEquiv.symm_apply_apply] using hh
   have hcomp (P : Ideal (MvPolynomial (exps a b c) FX)) (hP : P ∈ G.minimalPrimesFinset) :
       (scale J.hi:ℚ)*(T.filter (fun γ => y γ ∈ zeroLocus FX P)).card ≤
         ((weight J k:ℚ)*firstDegree J k)*affineDegree P := by
@@ -144,7 +144,7 @@ theorem proper_count (J : Input) (B : ResidueLift J) (D : Factors J B) (v w k : 
         have : Q.IsPrime := hm.isPrime
         have hqd := principalCut_natDegree_affineHilbertPolynomial_add_one hnd hm
         apply marked_curve J B hk hv hw hf hword hd (by omega)
-        · exact fun _ hγ => (HighCore82219Upper.mem_componentMarks.mp (Finset.mem_filter.mp (Finset.mem_filter.mp hγ).1).1).1
+        · exact fun _ hγ => (HighCore82258Upper.mem_componentMarks.mp (Finset.mem_filter.mp (Finset.mem_filter.mp hγ).1).1).1
         · exact fun _ hγ => (Finset.mem_filter.mp hγ).2)
     have hbez := principalCut_sum_affineDegree_minimalPrimes_le hnd hpd'
     calc

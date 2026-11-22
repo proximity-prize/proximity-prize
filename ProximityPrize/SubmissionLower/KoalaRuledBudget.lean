@@ -12,8 +12,8 @@ noncomputable section
 open MvPolynomial
 open K1_14 (FX)
 open K1_14_6_1 (flatten)
-open HighCore82219Upper (Input ResidueLift Factors)
-open HighCore82219Upper_3 (JetRing tangentEquation rootIdeal)
+open HighCore82258Upper (Input ResidueLift Factors)
+open HighCore82258Upper_3 (JetRing tangentEquation rootIdeal)
 open KoalaRectTaylor (jetToRect jetToRect_C)
 
 def inRect (I : Ideal JetRing) : Ideal (Ring FX) := I.comap jetToRect.symm.toRingHom
@@ -28,7 +28,7 @@ theorem rectRoot_ideal {J : Input} {B : ResidueLift J} (D : Factors J B) :
 def graphCut {J : Input} {B : ResidueLift J} (D : Factors J B) : Ideal (Ring FX) :=
   Ideal.span {rectRoot D} ⊔ Ideal.span {jetToRect (tangentEquation J.f)}
 
-theorem rect_tangent_regular {J : Input} {B : ResidueLift J} (D : Factors J B)
+private theorem rect_tangent_regular {J : Input} {B : ResidueLift J} (D : Factors J B)
     (hTangent : IsLeftRegular (Ideal.Quotient.mk (rootIdeal D) (tangentEquation J.f))) :
     IsLeftRegular (Ideal.Quotient.mk (Ideal.span {rectRoot D})
       (jetToRect (tangentEquation J.f))) := by
@@ -36,7 +36,7 @@ theorem rect_tangent_regular {J : Input} {B : ResidueLift J} (D : Factors J B)
   exact regular_comap jetToRect.symm.toRingHom (I := rootIdeal D)
     (jetToRect.symm_apply_apply (tangentEquation J.f)) hTangent
 
-theorem rectRoot_degrees {J : Input} {B : ResidueLift J} (D : Factors J B) {v w : ℕ}
+private theorem rectRoot_degrees {J : Input} {B : ResidueLift J} (D : Factors J B) {v w : ℕ}
     (haxis : ∀ i, (J.f.coeff i).degreeOf 0 ≤ v ∧ (J.f.coeff i).degreeOf 1 ≤ w) :
     (rectRoot D).degreeOf 1 = 0 ∧ ordinateWeight (rectRoot D) ≤ J.e ∧
       (rectRoot D).degreeOf 2 ≤ v ∧ (rectRoot D).degreeOf 3 ≤ w := by
@@ -49,7 +49,7 @@ theorem rectRoot_degrees {J : Input} {B : ResidueLift J} (D : Factors J B) {v w 
   exact ⟨Nat.eq_zero_of_le_zero hVel, by simpa only [Nat.mul_zero, Nat.add_zero] using hOrd,
     hSeed₀, hSeed₁⟩
 
-theorem mixedLead_root_mono (a b c h : ℕ) {y z s e v w : ℕ}
+private theorem mixedLead_root_mono (a b c h : ℕ) {y z s e v w : ℕ}
     (hy : y ≤ e) (hz : z ≤ v) (hs : s ≤ w) :
     2 * mixedLead a b c y z s h 1 v w ≤ 2 * mixedLead a b c e v w h 1 v w := by
   have hy' : (y : ℚ) ≤ (e : ℚ) := by exact_mod_cast hy
@@ -58,7 +58,7 @@ theorem mixedLead_root_mono (a b c h : ℕ) {y z s e v w : ℕ}
   unfold mixedLead
   gcongr
 
-theorem graphDegree_eq_mixed (e v w : ℕ) (he : 4 ≤ e) :
+private theorem graphDegree_eq_mixed (e v w : ℕ) (he : 4 ≤ e) :
     (KoalaTwoSectionPrice.graphDegree e v w : ℚ) =
       2 * mixedLead (e - 3 : ℕ) (max 1 v : ℕ) (max 1 w : ℕ) e v w (e - 2 : ℕ) 1 v w := by
   unfold KoalaTwoSectionPrice.graphDegree mixedLead
@@ -68,7 +68,7 @@ theorem graphDegree_eq_mixed (e v w : ℕ) (he : 4 ≤ e) :
     Nat.cast_sub (show 2 ≤ 2 * (e - 1) by omega)]
   ring
 
-theorem graphCut_mixed_bound (J : Input) {B : ResidueLift J} (D : Factors J B)
+private theorem graphCut_mixed_bound (J : Input) {B : ResidueLift J} (D : Factors J B)
     {a b c v w : ℕ} (ha : 0 < a) (hb : 0 < b) (hc : 0 < c)
     (haxis : ∀ i, (J.f.coeff i).degreeOf 0 ≤ v ∧ (J.f.coeff i).degreeOf 1 ≤ w)
     (hg : rectRoot D ≠ 0)
@@ -123,7 +123,7 @@ theorem graph_budget (J : Input) {B : ResidueLift J} (D : Factors J B) {v w : �
   have hc : 0 < c := lt_of_lt_of_le Nat.zero_lt_one (le_max_left _ _)
   have hg : rectRoot D ≠ 0 :=
     (map_ne_zero_iff jetToRect jetToRect.injective).mpr
-      (Polynomial.C_ne_zero.mpr (HighCore82219Upper_3_2.proper_ne_zero D))
+      (Polynomial.C_ne_zero.mpr (HighCore82258Upper_3_2.proper_ne_zero D))
   have hreg := rect_tangent_regular D hTangent
   have hproj : Function.Surjective (project FX a b c) := project_surjective hb hc
   obtain ⟨hdim, hcomp⟩ := graph_pure (project FX a b c) hproj hg hreg ht

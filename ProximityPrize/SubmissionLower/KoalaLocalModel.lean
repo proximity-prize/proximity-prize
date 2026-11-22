@@ -9,18 +9,18 @@ set_option backward.isDefEq.respectTransparency false
 namespace SplitCut.LocalModel
 noncomputable section
 
-open Polynomial Finset HighCore82219Upper HighCore82219Upper_3
-open HighCore82219Upper_4 (point modelValue crt blocks jet origin)
-open HighCore82219Upper_5_1 (constantLift valuePolynomial eval_denominator cleared_value marked_value)
-open HighCore82219Upper_3_1_2 (seedMap)
-open HighCore82219Upper_3_1 (jetSeparant)
+open Polynomial Finset HighCore82258Upper HighCore82258Upper_3
+open HighCore82258Upper_4 (point modelValue crt blocks jet origin)
+open HighCore82258Upper_5_1 (constantLift valuePolynomial eval_denominator cleared_value marked_value)
+open HighCore82258Upper_3_1_2 (seedMap)
+open HighCore82258Upper_3_1 (jetSeparant)
 open K1_14 (FX L Seeds Equation seedEmbedding)
 open K1_14_6 (Biform)
 open K1_14_6_1 (flatten separant markEval)
 open P1 (K I node)
-open private HighCore82219Upper_3_1_2.eval_coefficient HighCore82219Upper_3_3_1.mark_biform
-  HighCore82219Upper_2.factorial_ne_zero HighCore82219Upper_5_2.charFX
-  from ProximityPrize.SubmissionLower.HighCore82219UpperGeometry
+open private HighCore82258Upper_3_1_2.eval_coefficient HighCore82258Upper_3_3_1.mark_biform
+  HighCore82258Upper_2.factorial_ne_zero HighCore82258Upper_5_2.charFX
+  from ProximityPrize.SubmissionLower.HighCore82258UpperGeometry
 
 /-- The reconstructed polynomial on the open chart, with the only inverse
     supplied as the inverse of the product of residue and separant. -/
@@ -81,10 +81,10 @@ theorem value_at_mark (J : Input) (B : ResidueLift J) (γ : K) (hγ : γ ∈ J.m
       seedEmbedding ((J.family.scalar γ).eval (node x)) := by
   let ev := markEval (J.model.label γ) (J.family.scalar γ)
   have he := marked_value J B γ hγ
-  have hd : ev (HighCore82219Upper_5_1.denominator J B) ≠ 0 := he.1
+  have hd : ev (HighCore82258Upper_5_1.denominator J B) ≠ 0 := he.1
   have hb : ev (seedBiform B.denominator) ≠ 0 := by
     have h := hd
-    rw [HighCore82219Upper_5_1.denominator, eval_denominator, mul_ne_zero_iff] at h
+    rw [HighCore82258Upper_5_1.denominator, eval_denominator, mul_ne_zero_iff] at h
     exact h.1
   have hs : ev (separant (flatten J.f)) ≠ 0 := by
     rw [K1_14_6_1.eval_separant]

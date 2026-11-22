@@ -24,7 +24,7 @@ structure Cover (top : ℕ) {n : ℕ} (Γ : Finset K) (s : K → K[X])
   factors : ∀ i, SmallFactor (f i)
   different : ∀ i j, i ≠ j → ¬ Associated (f i) (f j)
   fits : Fits top (fun i => shape (f i))
-  active_budget : (∑ i, activeDegree (f i)) ≤ 157
+  active_budget : (∑ i, activeDegree (f i)) ≤ 165
   covers : ∀ γ ∈ Γ, K1_13.atJet g (extend (s γ)) = 0 ∨
     ∃ i, K1_13.OnFactor (f i) (extend (s γ))
 theorem trueWeight_iff {n D : ℕ} (P : Row n) :
@@ -60,16 +60,16 @@ theorem differentialWeight_eq : differentialWeight (d := 3) physicalDegree =
 section FactorCover
 open MvPolynomial UniqueFactorizationMonoid
 private theorem lower_of_anchor (P : Row 4) (hP : P ≠ 0)
-    (hbox : InBox (shape P) ⟨125, 52, 14⟩) (hw : TrueWeightLE P anchorCutoff) :
+    (hbox : InBox (shape P) ⟨132, 55, 14⟩) (hw : TrueWeightLE P anchorCutoff) :
     LowerRow (shape P).t (anchorLead P) := by
   refine ⟨anchorLead_ne hP, ?_, ?_, ?_⟩
   · have hb := (Euler50GeoLead.lead_degree P hP).trans hbox.1
-    change (anchorLead P).totalDegree + (shape P).t ≤ 125 at hb
-    change (anchorLead P).totalDegree ≤ 125 - (shape P).t
+    change (anchorLead P).totalDegree + (shape P).t ≤ 132 at hb
+    change (anchorLead P).totalDegree ≤ 132 - (shape P).t
     omega
   · have hj := (Euler50GeoLead.lead_index P hP).trans hbox.2.1
-    change indexDegree (anchorLead P) + 3 * (shape P).t ≤ 52 at hj
-    change indexDegree (anchorLead P) ≤ 52 - 3 * (shape P).t
+    change indexDegree (anchorLead P) + 3 * (shape P).t ≤ 55 at hj
+    change indexDegree (anchorLead P) ≤ 55 - 3 * (shape P).t
     omega
   · intro m hm
     obtain ⟨u, hu, hc, h⟩ := anchorLead_term P m hm
@@ -78,7 +78,7 @@ private theorem lower_of_anchor (P : Row 4) (hP : P ≠ 0)
     apply (Nat.add_le_add_left _ _).trans (hw u hu)
     simpa only [Finsupp.weight_apply, smul_eq_mul, Nat.mul_comm, Fin.val_castSucc] using hle
 private theorem factor_small {P f : Row 4} (hP : P ≠ 0)
-    (hbox : InBox (shape P) ⟨125, 52, 14⟩) (hw : TrueWeightLE P anchorCutoff)
+    (hbox : InBox (shape P) ⟨132, 55, 14⟩) (hw : TrueWeightLE P anchorCutoff)
     (hf : Irreducible f) (ht : 0 < (shape f).t) (hd : f ∣ P) : SmallFactor f := by
   refine ⟨hf, ht, ⟨?_, ?_, ?_⟩, ?_⟩
   · have h := weightedTotalDegree_le_of_dvd (1 : Fin 4 → ℕ) hd hP
@@ -96,8 +96,8 @@ private theorem factor_small {P f : Row 4} (hP : P ≠ 0)
     exact (trueWeight_iff f).mpr
       ((weightedTotalDegree_le_of_dvd _ hd' hP').trans ((trueWeight_iff P).mp hw))
 theorem cover_of_anchor {Γ : Finset K} {s : K → K[X]} (P : Row 4)
-    (hP : P ≠ 0) (hbox : InBox (shape P) ⟨125, 52, 14⟩)
-    (hw : TrueWeightLE P anchorCutoff) (hactive : ActiveFits P 157)
+    (hP : P ≠ 0) (hbox : InBox (shape P) ⟨132, 55, 14⟩)
+    (hw : TrueWeightLE P anchorCutoff) (hactive : ActiveFits P 165)
     (hz : ∀ γ ∈ Γ, atJet P (extend (s γ)) = 0) :
     ∃ (top : ℕ) (n : ℕ) (g : Row 3) (f : Fin n → Row 4), top ≤ 14 ∧ Cover top Γ s g f := by
   classical
@@ -129,9 +129,9 @@ theorem cover_of_anchor {Γ : Finset K} {s : K → K[X]} (P : Row 4)
     · have h := sum_weightedTotalDegree_le_of_prod_dvd (Pi.single (3 : Fin 4) 1) Finset.univ f hP hd
       simp only [weightedTotalDegree_piSingle] at h
       exact h
-  have hactive_sum : (∑ i, activeDegree (f i)) ≤ 157 :=
+  have hactive_sum : (∑ i, activeDegree (f i)) ≤ 165 :=
     (sum_weightedTotalDegree_le_of_prod_dvd (![1, 2, 2, 2] : Fin 4 → ℕ)
-      Finset.univ f hP hd).trans ((activeFits_iff P 157).mp hactive)
+      Finset.univ f hP hd).trans ((activeFits_iff P 165).mp hactive)
   refine ⟨(shape P).t, n, anchorLead P, f, hbox.2.2,
     ⟨lower_of_anchor P hP hbox hw, ?_, ?_, fit, hactive_sum, ?_⟩⟩
   · intro i

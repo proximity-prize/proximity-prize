@@ -57,7 +57,7 @@ private theorem shift_succ (n a : ℤ) :
     denPrefix ((n+1)-a) = denPrefix (n-a) + 24 * denominator (n-a) := by
   rw [show n+1-a = (n-a)+1 by ring, denPrefix_succ]
 
-def basePrefix (d u : ℤ) : ℤ :=
+private def basePrefix (d u : ℤ) : ℤ :=
   denPrefix u - denPrefix (u-(d+1)) - denPrefix (u-(d+2)) - denPrefix (u-(d+3)) +
   denPrefix (u-(2*d+3)) + denPrefix (u-(2*d+4)) + denPrefix (u-(2*d+5)) -
   denPrefix (u-(3*d+6))
@@ -66,7 +66,7 @@ def cumPrefix (d n : ℕ) : ℤ :=
   let u := min n (3*d+1)
   basePrefix d u + 24 * ((n-u : ℕ) : ℤ) * cumulative d (3*d)
 
-theorem basePrefix_succ (d n : ℕ) (hn : n ≤ 3*d) :
+private theorem basePrefix_succ (d n : ℕ) (hn : n ≤ 3*d) :
     basePrefix d ((n : ℤ)+1) = basePrefix d n + 24 * cumulative d n := by
   have hzn : ¬ (n : ℤ) < 0 := by omega
   have hzd : ¬ (d : ℤ) < 0 := by omega
@@ -114,7 +114,7 @@ theorem cumulative_prefix (d n : ℕ) :
 def indexMoment (d : ℕ) : ℤ :=
   24 * 1650 * cumulative d 1650 - cumPrefix d 1650
 
-theorem count_range_ge (v j : ℕ) :
+private theorem count_range_ge (v j : ℕ) :
     (∑ u ∈ range j, if v ≤ u then (1 : ℕ) else 0) = j-v := by
   have hset : (range j).filter (fun u => v ≤ u) = Ico v j := by
     ext x

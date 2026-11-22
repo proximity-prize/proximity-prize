@@ -7,8 +7,8 @@ namespace SplitCut.TwoCut
 
 open K1_14 (FX)
 open P1 (K)
-open HighCore82219Upper (Input ResidueLift Factors componentMarks mem_componentMarks)
-open HighCore82219Upper_3 (JetRing)
+open HighCore82258Upper (Input ResidueLift Factors componentMarks mem_componentMarks)
+open HighCore82258Upper_3 (JetRing)
 open KoalaRectTaylor (cutoff_regularities mark_firstCut mark_secondCut)
 
 theorem marked_cutoffs (J : Input) (B : ResidueLift J) (D : Factors J B) :

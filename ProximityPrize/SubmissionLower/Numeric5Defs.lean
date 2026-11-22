@@ -7,160 +7,8 @@ namespace CJ6_8
 open CJ6 (VectorDots belowSucc belowZero block_rank_le rank_of_dots)
 open CJ6.Fast
 set_option maxRecDepth 4096
-private def zeros (lo n : ℕ) : List Lane :=
-  (List.range' lo n).map fun a => ⟨a,0,0,0,0⟩
 local notation "v!" side "," q "," b "," l =>
   CJ6.Fast.vector b (buckets side q l) rfl rfl rfl (id (α := good side q l b) rfl)
-private def cap (q u r : ℕ) : Prop :=
-  (CJ0.blockMatrix CJ6.source q ((u : ℤ)-20)).rank ≤ r
-private theorem checked (q u : ℕ) (z : CJ1.Block) (hg : CJ6.Guard q u z)
-    (hd : CJ6.Dots q u z) : cap q u z.cap :=
-  (block_rank_le q u).trans (rank_of_dots hg hd)
-private def l1v0 : List Lane := zeros 42 10 ++ [⟨52,1,1,1,1⟩]
-private def l1v1 : List Lane := zeros 42 9 ++ [⟨51,2,1,1,1⟩,⟨52,0,0,0,0⟩]
-def l1v2 : List Lane := zeros 42 8 ++ [⟨50,4,1,1,1⟩,⟨51,3,1,31,0x7f000000⟩,⟨52,0,0,0,0⟩]
-def l1v3 : List Lane := zeros 42 7 ++ [⟨49,6,1,1,1⟩,⟨50,5,1,31,0x7f000000⟩,⟨51,3,1,31,0x7f000000⟩,⟨52,0,0,0,0⟩]
-private def z1 : CJ1.Block :=
-  ⟨.rightHigh, 16, [(1,0),(2,0),(4,0),(6,0)], [l1v0,l1v1,l1v2,l1v3].map (vectorData false 62 1)⟩
-private def b1 := bands [(0,54,9),(1,55,7),(2,56,5),(3,57,3),(4,58,1)]
-private theorem v1j0 : VectorDots 62 1 z1 0 := v! false, 62, b1, l1v0
-private theorem v1j1 : VectorDots 62 1 z1 1 := v! false, 62, b1, l1v1
-theorem v1j2 : VectorDots 62 1 z1 2 := v! false, 62, b1, l1v2
-theorem v1j3 : VectorDots 62 1 z1 3 := v! false, 62, b1, l1v3
-private theorem r1 : cap 62 1 16 :=
-  checked 62 1 z1 (by decide) (belowSucc (belowSucc (belowSucc (belowSucc belowZero v1j0) v1j1) v1j2) v1j3)
-private def l2v0 : List Lane := [⟨3,4,1,1,1⟩,⟨2,2,2,31,0x3f7fffeb7effffaf⟩,⟨1,1,2,12,3878385⟩,⟨0,0,2,31,0x3f7fe449fefec999⟩]
-private def l2v1 : List Lane := [⟨3,3,1,1,1⟩,⟨2,2,1,31,0x7effffd7⟩,⟨1,1,1,10,903⟩,⟨0,0,1,31,0x7effcc45⟩]
-private def z2 : CJ1.Block :=
-  ⟨.leftHigh, 18, [(3,0),(3,1)], [l2v0,l2v1].map (vectorData true 62 2)⟩
-private def b2 := bands [(53,62,1),(52,60,2),(51,58,3),(50,56,3),(49,54,3),(48,52,3),(47,50,3),(46,48,3),(45,46,3),(44,44,3),(43,43,2),(42,42,1)]
-private theorem v2j0 : VectorDots 62 2 z2 0 := v! true, 62, b2, l2v0
-private theorem v2j1 : VectorDots 62 2 z2 1 := v! true, 62, b2, l2v1
-private theorem r2 : cap 62 2 18 :=
-  checked 62 2 z2 (by decide) (belowSucc (belowSucc belowZero v2j0) v2j1)
-private def l3v0 : List Lane := zeros 43 9 ++ [⟨52,2,1,1,1⟩]
-private def z3 : CJ1.Block :=
-  ⟨.rightHigh, 9, [(2,0)], [l3v0].map (vectorData false 63 0)⟩
-private def b3 := bands [(0,55,9),(1,56,7),(2,57,5),(3,58,3),(4,59,1)]
-private theorem v3j0 : VectorDots 63 0 z3 0 := v! false, 63, b3, l3v0
-private theorem r3 : cap 63 0 9 :=
-  checked 63 0 z3 (by decide) (belowSucc belowZero v3j0)
-def l4v0 : List Lane := zeros 43 10 ++ [⟨53,1,1,1,1⟩]
-def l4v1 : List Lane := zeros 43 9 ++ [⟨52,2,1,1,1⟩,⟨53,0,0,0,0⟩]
-def l4v2 : List Lane := zeros 43 9 ++ [⟨52,3,1,1,1⟩,⟨53,0,0,0,0⟩]
-def l4v3 : List Lane := zeros 43 8 ++ [⟨51,4,1,1,1⟩,⟨52,0,0,0,0⟩,⟨53,0,0,0,0⟩]
-def l4v4 : List Lane := zeros 43 7 ++ [⟨50,6,1,1,1⟩,⟨51,5,1,31,0x7f000000⟩,⟨52,0,0,0,0⟩,⟨53,0,0,0,0⟩]
-def l4v5 : List Lane := zeros 43 6 ++ [⟨49,8,1,1,1⟩,⟨50,7,1,31,0x7f000000⟩,⟨51,5,1,31,0x7f000000⟩,⟨52,0,0,0,0⟩,⟨53,0,0,0,0⟩]
-def z4 : CJ1.Block :=
-  ⟨.rightHigh, 14, [(1,0),(2,0),(3,0),(4,0),(6,0),(8,0)], [l4v0,l4v1,l4v2,l4v3,l4v4,l4v5].map (vectorData false 63 1)⟩
-def b4 := bands [(0,56,8),(1,57,6),(2,58,4),(3,59,2)]
-theorem v4j0 : VectorDots 63 1 z4 0 := v! false, 63, b4, l4v0
-theorem v4j1 : VectorDots 63 1 z4 1 := v! false, 63, b4, l4v1
-theorem v4j2 : VectorDots 63 1 z4 2 := v! false, 63, b4, l4v2
-theorem v4j3 : VectorDots 63 1 z4 3 := v! false, 63, b4, l4v3
-theorem v4j4 : VectorDots 63 1 z4 4 := v! false, 63, b4, l4v4
-theorem v4j5 : VectorDots 63 1 z4 5 := v! false, 63, b4, l4v5
-private theorem r4 : cap 63 1 14 :=
-  checked 63 1 z4 (by decide) (belowSucc (belowSucc (belowSucc (belowSucc (belowSucc (belowSucc belowZero v4j0) v4j1) v4j2) v4j3) v4j4) v4j5)
-def l5v0 : List Lane := [⟨3,3,1,1,1⟩,⟨2,2,1,31,0x7effffd6⟩,⟨1,1,1,10,946⟩,⟨0,0,1,31,0x7effc893⟩]
-def z5 : CJ1.Block :=
-  ⟨.leftHigh, 15, [(3,0)], [l5v0].map (vectorData true 63 2)⟩
-def b5 := bands [(54,63,1),(53,61,2),(52,59,3),(51,57,3),(50,55,3),(49,53,3),(48,51,3),(47,49,3),(46,47,3),(45,45,3),(44,44,2),(43,43,1)]
-theorem v5j0 : VectorDots 63 2 z5 0 := v! true, 63, b5, l5v0
-private theorem r5 : cap 63 2 15 :=
-  checked 63 2 z5 (by decide) (belowSucc belowZero v5j0)
-def l6v0 : List Lane := zeros 44 9 ++ [⟨53,2,1,1,1⟩]
-def l6v1 : List Lane := zeros 44 8 ++ [⟨52,4,1,1,1⟩,⟨53,0,0,0,0⟩]
-def z6 : CJ1.Block :=
-  ⟨.rightHigh, 8, [(2,0),(4,0)], [l6v0,l6v1].map (vectorData false 64 0)⟩
-def b6 := bands [(0,57,8),(1,58,6),(2,59,4),(3,60,2)]
-theorem v6j0 : VectorDots 64 0 z6 0 := v! false, 64, b6, l6v0
-theorem v6j1 : VectorDots 64 0 z6 1 := v! false, 64, b6, l6v1
-private theorem r6 : cap 64 0 8 :=
-  checked 64 0 z6 (by decide) (belowSucc (belowSucc belowZero v6j0) v6j1)
-def l7v0 : List Lane := [⟨3,0,0,0,0⟩,⟨2,4,1,1,1⟩,⟨1,1,3,31,0x1fbffff4ff7fffd47effff55⟩,⟨0,0,3,14,0x43940b2e68⟩]
-def l7v1 : List Lane := [⟨3,0,0,0,0⟩,⟨2,3,1,1,1⟩,⟨1,1,2,31,0x3f7fffea7effffaa⟩,⟨0,0,2,12,4243320⟩]
-def l7v2 : List Lane := [⟨3,0,0,0,0⟩,⟨2,2,1,1,1⟩,⟨1,1,1,31,0x7effffd5⟩,⟨0,0,1,10,990⟩]
-def l7v3 : List Lane := [⟨3,3,1,1,1⟩,⟨2,0,0,0,0⟩,⟨1,1,1,31,0x7efffc4f⟩,⟨0,0,1,15,28380⟩]
-def z7 : CJ1.Block :=
-  ⟨.leftHigh, 12, [(2,0),(2,1),(2,2),(3,0)], [l7v0,l7v1,l7v2,l7v3].map (vectorData true 64 1)⟩
-def b7 := bands [(54,63,1),(53,61,2),(52,59,2),(51,57,2),(50,55,2),(49,53,2),(48,51,2),(47,49,2),(46,47,2),(45,45,2),(44,44,1)]
-theorem v7j0 : VectorDots 64 1 z7 0 := v! true, 64, b7, l7v0
-theorem v7j1 : VectorDots 64 1 z7 1 := v! true, 64, b7, l7v1
-theorem v7j2 : VectorDots 64 1 z7 2 := v! true, 64, b7, l7v2
-theorem v7j3 : VectorDots 64 1 z7 3 := v! true, 64, b7, l7v3
-private theorem r7 : cap 64 1 12 :=
-  checked 64 1 z7 (by decide) (belowSucc (belowSucc (belowSucc (belowSucc belowZero v7j0) v7j1) v7j2) v7j3)
-def l8v0 : List Lane := zeros 45 9 ++ [⟨54,2,1,1,1⟩]
-def l8v1 : List Lane := zeros 45 8 ++ [⟨53,4,1,1,1⟩,⟨54,0,0,0,0⟩]
-def l8v2 : List Lane := zeros 45 7 ++ [⟨52,6,1,1,1⟩,⟨53,0,0,0,0⟩,⟨54,0,0,0,0⟩]
-def z8 : CJ1.Block :=
-  ⟨.rightHigh, 7, [(2,0),(4,0),(6,0)], [l8v0,l8v1,l8v2].map (vectorData false 65 0)⟩
-def b8 := bands [(0,59,7),(1,60,5),(2,61,3),(3,62,1)]
-theorem v8j0 : VectorDots 65 0 z8 0 := v! false, 65, b8, l8v0
-theorem v8j1 : VectorDots 65 0 z8 1 := v! false, 65, b8, l8v1
-theorem v8j2 : VectorDots 65 0 z8 2 := v! false, 65, b8, l8v2
-private theorem r8 : cap 65 0 7 :=
-  checked 65 0 z8 (by decide) (belowSucc (belowSucc (belowSucc belowZero v8j0) v8j1) v8j2)
-def l9v0 : List Lane := [⟨2,3,1,1,1⟩,⟨1,1,2,31,0x3f7fffe9feffffa8⟩,⟨0,0,2,13,8859692⟩]
-def l9v1 : List Lane := [⟨2,2,1,1,1⟩,⟨1,1,1,31,0x7effffd4⟩,⟨0,0,1,11,1035⟩]
-def z9 : CJ1.Block :=
-  ⟨.leftHigh, 10, [(2,0),(2,1)], [l9v0,l9v1].map (vectorData true 65 1)⟩
-def b9 := bands [(55,64,1),(54,62,2),(53,60,2),(52,58,2),(51,56,2),(50,54,2),(49,52,2),(48,50,2),(47,48,2),(46,46,2),(45,45,1)]
-theorem v9j0 : VectorDots 65 1 z9 0 := v! true, 65, b9, l9v0
-theorem v9j1 : VectorDots 65 1 z9 1 := v! true, 65, b9, l9v1
-private theorem r9 : cap 65 1 10 :=
-  checked 65 1 z9 (by decide) (belowSucc (belowSucc belowZero v9j0) v9j1)
-def l10v0 : List Lane := zeros 46 9 ++ [⟨55,2,1,1,1⟩]
-def l10v1 : List Lane := zeros 46 8 ++ [⟨54,4,1,1,1⟩,⟨55,0,0,0,0⟩]
-def l10v2 : List Lane := zeros 46 7 ++ [⟨53,6,1,1,1⟩,⟨54,0,0,0,0⟩,⟨55,0,0,0,0⟩]
-def l10v3 : List Lane := zeros 46 6 ++ [⟨52,8,1,1,1⟩] ++ zeros 53 3
-def z10 : CJ1.Block :=
-  ⟨.rightHigh, 6, [(2,0),(4,0),(6,0),(8,0)], [l10v0,l10v1,l10v2,l10v3].map (vectorData false 66 0)⟩
-def b10 := bands [(0,61,6),(1,62,4),(2,63,2)]
-theorem v10j0 : VectorDots 66 0 z10 0 := v! false, 66, b10, l10v0
-theorem v10j1 : VectorDots 66 0 z10 1 := v! false, 66, b10, l10v1
-theorem v10j2 : VectorDots 66 0 z10 2 := v! false, 66, b10, l10v2
-theorem v10j3 : VectorDots 66 0 z10 3 := v! false, 66, b10, l10v3
-private theorem r10 : cap 66 0 6 :=
-  checked 66 0 z10 (by decide) (belowSucc (belowSucc (belowSucc (belowSucc belowZero v10j0) v10j1) v10j2) v10j3)
-def l11v0 : List Lane := [⟨2,2,1,1,1⟩,⟨1,1,1,31,0x7effffd3⟩,⟨0,0,1,11,1081⟩]
-def z11 : CJ1.Block :=
-  ⟨.leftHigh, 8, [(2,0)], [l11v0].map (vectorData true 66 1)⟩
-def b11 := bands [(56,65,1),(55,63,2),(54,61,2),(53,59,2),(52,57,2),(51,55,2),(50,53,2),(49,51,2),(48,49,2),(47,47,2),(46,46,1)]
-theorem v11j0 : VectorDots 66 1 z11 0 := v! true, 66, b11, l11v0
-private theorem r11 : cap 66 1 8 :=
-  checked 66 1 z11 (by decide) (belowSucc belowZero v11j0)
-def l12v0 : List Lane := [⟨2,0,0,0,0⟩,⟨1,3,1,1,1⟩,⟨0,0,3,31,0x1fbffff43f7fffd0feffff45⟩]
-def l12v1 : List Lane := [⟨2,0,0,0,0⟩,⟨1,2,1,1,1⟩,⟨0,0,2,31,0x3f7fffe8feffffa3⟩]
-def l12v2 : List Lane := [⟨2,0,0,0,0⟩,⟨1,1,1,1,1⟩,⟨0,0,1,31,0x7effffd2⟩]
-def l12v3 : List Lane := [⟨2,2,1,1,1⟩,⟨1,0,0,0,0⟩,⟨0,0,1,31,0x7efffbc8⟩]
-def z12 : CJ1.Block :=
-  ⟨.leftHigh, 5, [(1,0),(1,1),(1,2),(2,0)], [l12v0,l12v1,l12v2,l12v3].map (vectorData true 67 0)⟩
-def b12 := bands [(56,65,1),(55,63,1),(54,61,1),(53,59,1),(52,57,1),(51,55,1),(50,53,1),(49,51,1),(48,49,1),(47,47,1)]
-theorem v12j0 : VectorDots 67 0 z12 0 := v! true, 67, b12, l12v0
-theorem v12j1 : VectorDots 67 0 z12 1 := v! true, 67, b12, l12v1
-theorem v12j2 : VectorDots 67 0 z12 2 := v! true, 67, b12, l12v2
-theorem v12j3 : VectorDots 67 0 z12 3 := v! true, 67, b12, l12v3
-private theorem r12 : cap 67 0 5 :=
-  checked 67 0 z12 (by decide) (belowSucc (belowSucc (belowSucc (belowSucc belowZero v12j0) v12j1) v12j2) v12j3)
-def l13v0 : List Lane := [⟨1,2,1,1,1⟩,⟨0,0,2,31,0x3f7fffe87effffa1⟩]
-def l13v1 : List Lane := [⟨1,1,1,1,1⟩,⟨0,0,1,31,0x7effffd1⟩]
-def z13 : CJ1.Block :=
-  ⟨.leftHigh, 4, [(1,0),(1,1)], [l13v0,l13v1].map (vectorData true 68 0)⟩
-def b13 := bands [(57,66,1),(56,64,1),(55,62,1),(54,60,1),(53,58,1),(52,56,1),(51,54,1),(50,52,1),(49,50,1),(48,48,1)]
-theorem v13j0 : VectorDots 68 0 z13 0 := v! true, 68, b13, l13v0
-theorem v13j1 : VectorDots 68 0 z13 1 := v! true, 68, b13, l13v1
-private theorem r13 : cap 68 0 4 :=
-  checked 68 0 z13 (by decide) (belowSucc (belowSucc belowZero v13j0) v13j1)
-def l14v0 : List Lane := [⟨1,1,1,1,1⟩,⟨0,0,1,31,0x7effffd0⟩]
-def z14 : CJ1.Block :=
-  ⟨.leftHigh, 3, [(1,0)], [l14v0].map (vectorData true 69 0)⟩
-def b14 := bands [(58,67,1),(57,65,1),(56,63,1),(55,61,1),(54,59,1),(53,57,1),(52,55,1),(51,53,1),(50,51,1),(49,49,1)]
-theorem v14j0 : VectorDots 69 0 z14 0 := v! true, 69, b14, l14v0
-private theorem r14 : cap 69 0 3 :=
-  checked 69 0 z14 (by decide) (belowSucc belowZero v14j0)
-theorem proof : CJ6.c8 := ⟨r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, trivial⟩
 end CJ6_8
 end
 section
@@ -172,7 +20,7 @@ def shifted (F : Flag) (p : Powers) : Flag :=
     F.upper - (3 * (p.top : ℤ) + 3 * p.cubic),
     F.cap - ((p.top : ℤ) + p.cubic),
     F.order - (2 * (p.top : ℤ) + 3 * p.cubic)⟩
-theorem shifted_eq (F : Flag) (p : Powers) :
+private theorem shifted_eq (F : Flag) (p : Powers) :
     shifted F p = residualFlag F p.expand :=
   (residualFlag_expand F p).symm
 def discounted (s j : ℕ) (p : Powers) : ℕ :=
@@ -265,7 +113,7 @@ private theorem denFast_correct (n : ℕ) :
       linear_combination -h - q * twice_half r - (57+6*r) * twice_half q
     rw [heq]
     omega
-theorem denFast_sub (n k : ℕ) :
+private theorem denFast_sub (n k : ℕ) :
     (denFast (n - k) : ℤ) = denominator ((n : ℤ) - 1 - k) := by
   rw [denFast_correct]
   by_cases h : k ≤ n
@@ -279,7 +127,7 @@ private theorem cumulative_nonneg (d : ℕ) (u : ℤ) : 0 ≤ cumulative (d : �
   · simp [cumulative, h]
   · have hm := cumulative_mono d (show (-1 : ℤ) ≤ u by omega)
     simpa [cumulative] using hm
-theorem cumFast_correct (d u : ℕ) :
+private theorem cumFast_correct (d u : ℕ) :
     (cumFast d u : ℤ) = cumulative (d : ℤ) ((u : ℤ) - 1) := by
   by_cases h0 : u = 0
   · subst u
@@ -318,17 +166,17 @@ private theorem cumFast_clipped (d : ℕ) (u : ℤ) :
   by_cases h : 0 ≤ u
   · rw [Int.toNat_of_nonneg h]
   · simp [Int.toNat_of_nonpos (by omega : u ≤ 0), cumulative, show u - 1 < 0 by omega]
-theorem cutFast_correct (d r : ℕ) (u : ℤ) :
+private theorem cutFast_correct (d r : ℕ) (u : ℤ) :
     (cutFast d u.toNat r : ℤ) = cumulative ((d : ℤ) - r) (u - 1) := by
   unfold cutFast
   by_cases h : d < r
   · simp [h, cumulative, show (d : ℤ) - r < 0 by omega]
   · rw [ite_eq_right h, cumFast_clipped, Int.ofNat_sub (by omega : r ≤ d)]
 private def balance (F : Flag) : ℤ := F.order - 1 - F.lower + F.degree
-theorem capped_eq (d u f : ℤ) (hf : 0 ≤ f) (hu : u ≤ 3*f) :
+private theorem capped_eq (d u f : ℤ) (hf : 0 ≤ f) (hu : u ≤ 3*f) :
     cappedCount d u f = cumulative d u := by
   simp [cappedCount, not_lt.mpr hf, cumulative, show u - 3*(f+1) < 0 by omega]
-theorem kernel_formula (F : Flag) (hd : 0 ≤ F.degree) (hu : 0 ≤ F.upper)
+private theorem kernel_formula (F : Flag) (hd : 0 ≤ F.degree) (hu : 0 ≤ F.upper)
     (hc : 0 ≤ F.cap) (hcap : F.upper ≤ 3*F.cap) (hl : F.lower - 1 ≤ F.upper)
     (hb : 0 ≤ balance F) :
     let r := min F.degree (balance F / 4) + 1
@@ -355,8 +203,8 @@ private theorem kFast_correct (F : Flag) (d u r : ℕ) (hd : F.degree = d)
   have ht : F.order.toNat - 3*r = (F.order - 3*(r : ℤ)).toNat := by omega
   rw [ht, cutFast_correct]
   rw [show F.order - 3*(r : ℤ) - 1 = F.order - 1 - 3*r by ring]
-def fullFlag (s j : ℕ) : Flag := ⟨1650, 1650 - j, 1650, 550, 4650 - s - j⟩
-theorem originalK_correct (s j : ℕ) (_hs : 2008 ≤ s) (hsj : s+j ≤ 3419)
+private def fullFlag (s j : ℕ) : Flag := ⟨1650, 1650 - j, 1650, 550, 4650 - s - j⟩
+private theorem originalK_correct (s j : ℕ) (_hs : 2008 ≤ s) (hsj : s+j ≤ 3419)
     (hdiag : 3000 ≤ s+j) (hj : j ≤ 1062) :
     originalK s j = (kernelLower (fullFlag s j)).toNat := by
   let r := (4649-s)/4+1
@@ -373,7 +221,7 @@ theorem originalK_correct (s j : ℕ) (_hs : 2008 ≤ s) (hsj : s+j ≤ 3419)
   have hd : cumFast 1650 (4650-(s+j)) = denFast (4650-(s+j)) := by
     rw [cumFast, ite_eq_left (by omega)]
   simp only [originalK, kFast, hl, ho, hd, r, show cumFast 1650 1651 = 125576826 by decide]
-theorem full_enough (s j : ℕ) (hj : 322 ≤ j) :
+private theorem full_enough (s j : ℕ) (hj : 322 ≤ j) :
     30000000 ≤ oldCount (fullFlag s j) := by
   simp only [oldCount, fullFlag, min_eq_right (show (1650 : ℤ) - j - 1 ≤ 1650 by omega)]
   rw [capped_eq _ _ _ (by decide) (by decide),
@@ -382,7 +230,7 @@ theorem full_enough (s j : ℕ) (hj : 322 ≤ j) :
   change cumulative (1650 : ℤ) (1650 - j - 1) ≤ cumulative (1650 : ℤ) 1327 at hm
   have hn : (30000000 : ℤ) ≤ cumulative 1650 1650 - cumulative 1650 1327 := by decide
   omega
-theorem saving_arithmetic (full k k' : ℤ) (hf : 30000000 ≤ full) :
+private theorem saving_arithmetic (full k k' : ℤ) (hf : 30000000 ≤ full) :
     min 30000000 k'.toNat - k.toNat ≤
       (full - max 0 k).toNat - (full - max 0 (max k k')).toNat := by
   let m := min 30000000 k'.toNat

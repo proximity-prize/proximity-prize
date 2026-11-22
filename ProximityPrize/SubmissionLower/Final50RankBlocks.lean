@@ -20,16 +20,16 @@ open private liftJets liftJets_X lift_value liftImage liftPower liftVar lift_ord
 
 private abbrev Local := LocalPolynomial Geom 3
 private abbrev T : Local := MvPolynomial.X (localT 3)
-private def offset (i : Fin 145) : ℤ := (i : ℕ) - (52 : ℤ)
+private def offset (i : Fin 154) : ℤ := (i : ℕ) - (55 : ℤ)
 
-abbrev selectedBlock (s : ℕ) (g : ℤ) :=
+private abbrev selectedBlock (s : ℕ) (g : ℤ) :=
   Final50RankCore.blockAt (cap s) s g
 
 private def postprocess (s : ℕ) (g : ℤ) : Form →ₗ[Geom] Local :=
-  (projectLowContact 145).comp
-    ((LinearMap.mulLeft Geom (T ^ (g + 52).toNat *
+  (projectLowContact 154).comp
+    ((LinearMap.mulLeft Geom (T ^ (g + 55).toNat *
       (liftJets valueForm) ^ (s - cap s))).comp liftJets.toLinearMap)
-private theorem postprocess_truncate (s : ℕ) (g : ℤ) (hg : -52 ≤ g) {P : Form}
+private theorem postprocess_truncate (s : ℕ) (g : ℤ) (hg : -55 ≤ g) {P : Form}
     (hP : P.IsWeightedHomogeneous (fun _ => (1 : ℕ)) (cap s)) :
     postprocess s g (weightedTruncation targetOrder (Final50RankCore.orderCutoff s g).toNat P) =
       postprocess s g P := by
@@ -53,13 +53,13 @@ private theorem postprocess_truncate (s : ℕ) (g : ℤ) (hg : -52 ≤ g) {P : F
         simp [Nat.mul_add]
       rw [hw, hd]
       exact Nat.add_le_add_left (Nat.le_of_not_lt hl) d
-  have ht : (T ^ (g + 52).toNat) ∈
-      restrictWeightedOrder (localContactWeight 3) ((g + 52).toNat * 1) :=
+  have ht : (T ^ (g + 55).toNat) ∈
+      restrictWeightedOrder (localContactWeight 3) ((g + 55).toNat * 1) :=
     pow_mem_restrictWeightedOrder (X_mem_restrictWeightedOrder _ _ (localContactWeight_T 3).ge) _
   have hf := pow_mem_restrictWeightedOrder lift_value_order (s - d)
   have hh := mul_mem_restrictWeightedOrder (mul_mem_restrictWeightedOrder ht hf)
     (bind₁_mem_restrictWeightedOrder lift_order hH)
-  have hc : 145 ≤ ((g + 52).toNat * 1 + (s-d) * 1) + (d + cutoff) := by
+  have hc : 154 ≤ ((g + 55).toNat * 1 + (s-d) * 1) + (d + cutoff) := by
     have hd : d ≤ s := cap_le_grade s
     dsimp [cutoff, Final50RankCore.orderCutoff]
     omega
@@ -84,9 +84,9 @@ private theorem trimmed_value_and_degree (u : JetVariable 3 →₀ ℕ) (hu : An
       (trimmed u).degree = cap u.some.degree := by
   have htotal : u.some.degree = u (some 0) + u (some 1) + u (some 2) + u (some 3) := by
     simp [Finsupp.degree_eq_sum, Fin.sum_univ_four]
-  have hj : u (some 1) + u (some 2) + u (some 3) ≤ 52 := by
+  have hj : u (some 1) + u (some 2) + u (some 3) ≤ 55 := by
     have hi := hu.2.1
-    change u.some.weight jetIndex ≤ 52 at hi
+    change u.some.weight jetIndex ≤ 55 at hi
     rw [jet_index_formula] at hi
     simp only [Finsupp.some_apply] at hi
     omega
@@ -102,7 +102,7 @@ private theorem trimmed_value_and_degree (u : JetVariable 3 →₀ ℕ) (hu : An
   omega
 private theorem trimmed_mem_band (u : JetVariable 3 →₀ ℕ) (hu : AnchorEligible u) :
     BandExponent (cap u.some.degree) (-((u none : ℤ) - u.some.weight jetIndex))
-      52 14 (trimmed u) := by
+      55 14 (trimmed u) := by
   refine ⟨(trimmed_value_and_degree u hu).2, ?_, ?_, ?_⟩
   · rw [trimmed_id]
     omega
@@ -122,14 +122,14 @@ private theorem backShift_hom (u : JetVariable 3 →₀ ℕ) (hu : AnchorEligibl
   · exact value_hom
   · exact isWeightedHomogeneous_X _ _ _
 private theorem shifted_substitution (u : JetVariable 3 →₀ ℕ) (hu : AnchorEligible u) (a : Geom) :
-    T ^ 52 * unscaledLocalSubstitution 3 0 0 (monomial u a) =
-      T ^ (((u none : ℤ) - u.some.weight jetIndex) + 52).toNat *
+    T ^ 55 * unscaledLocalSubstitution 3 0 0 (monomial u a) =
+      T ^ (((u none : ℤ) - u.some.weight jetIndex) + 55).toNat *
         (liftJets valueForm) ^ (u.some.degree - cap u.some.degree) *
         liftJets (backShift (monomial (trimmed u) a)) := by
   have hi := hu.2.1
-  change u.some.weight jetIndex ≤ 52 at hi
-  let r := (((u none : ℤ) - u.some.weight jetIndex) + 52).toNat
-  have ht : r + u.some.weight jetIndex = u none + 52 := by dsimp [r]; omega
+  change u.some.weight jetIndex ≤ 55 at hi
+  let r := (((u none : ℤ) - u.some.weight jetIndex) + 55).toNat
+  have ht : r + u.some.weight jetIndex = u none + 55 := by dsimp [r]; omega
   rw [jet_index_formula] at ht
   simp only [Finsupp.some_apply] at ht
   have hv := (trimmed_value_and_degree u hu).1
@@ -148,12 +148,12 @@ private theorem shifted_substitution (u : JetVariable 3 →₀ ℕ) (hu : Anchor
     trimmed_other u 1 (by decide), trimmed_other u 2 (by decide), trimmed_other u 3 (by decide),
     liftJets_X]
   have hpow : T ^ r * T ^ u (some 1) * (T ^ 2) ^ u (some 2) * (T ^ 3) ^ u (some 3) =
-      T ^ (u none + 52) := by
+      T ^ (u none + 55) := by
     rw [← pow_mul, ← pow_mul, ← pow_add, ← pow_add, ← pow_add]
     congr 1
     omega
   calc
-    _ = T ^ (u none + 52) * MvPolynomial.C a * liftJets valueForm ^ u (some 0) *
+    _ = T ^ (u none + 55) * MvPolynomial.C a * liftJets valueForm ^ u (some 0) *
         MvPolynomial.X (localY (0 : Fin 3)) ^ u (some 1) *
         MvPolynomial.X (localY (1 : Fin 3)) ^ u (some 2) *
         MvPolynomial.X (localY (2 : Fin 3)) ^ u (some 3) := by rw [pow_add]; ring
@@ -162,20 +162,20 @@ private theorem shifted_substitution (u : JetVariable 3 →₀ ℕ) (hu : Anchor
       simp [liftImage, liftPower, liftVar, mul_pow]
       ring
 private theorem shift_projection (P : Local) :
-    T ^ 52 * projectLowContact 93 P = projectLowContact 145 (T ^ 52 * P) := by
+    T ^ 55 * projectLowContact 99 P = projectLowContact 154 (T ^ 55 * P) := by
   induction P using MvPolynomial.induction_on' with
   | monomial e a =>
-      have hmul : T ^ 52 * monomial e a = monomial (Finsupp.single (localT 3) 52 + e) a := by
+      have hmul : T ^ 55 * monomial e a = monomial (Finsupp.single (localT 3) 55 + e) a := by
         rw [MvPolynomial.X_pow_eq_monomial, monomial_mul_monomial, one_mul]
       rw [project_monomial, hmul, project_monomial]
-      have ho : localContactOrder 3 (Finsupp.single (localT 3) 52 + e) =
-          52 + localContactOrder 3 e := by
+      have ho : localContactOrder 3 (Finsupp.single (localT 3) 55 + e) =
+          55 + localContactOrder 3 e := by
         simp [localContactOrder, Finsupp.weight_single]
-      have hlt : localContactOrder 3 (Finsupp.single (localT 3) 52 + e) < 145 ↔
-          localContactOrder 3 e < 93 := by rw [ho]; omega
-      by_cases he : localContactOrder 3 e < 93
+      have hlt : localContactOrder 3 (Finsupp.single (localT 3) 55 + e) < 154 ↔
+          localContactOrder 3 e < 99 := by rw [ho]; omega
+      by_cases he : localContactOrder 3 e < 99
       · simp [he, hlt.mpr he, hmul]
-      · have hnot : ¬ localContactOrder 3 (Finsupp.single (localT 3) 52 + e) < 145 :=
+      · have hnot : ¬ localContactOrder 3 (Finsupp.single (localT 3) 55 + e) < 154 :=
           fun h => he (hlt.mp h)
         simp [he, hnot]
   | add P Q hP hQ => simp only [map_add, mul_add, hP, hQ]
@@ -183,20 +183,20 @@ private theorem shifted_constraint_monomial (u : JetVariable 3 →₀ ℕ) (hu :
     (a : Geom) :
     let s := u.some.degree
     let g := (u none : ℤ) - u.some.weight jetIndex
-    T ^ 52 * localConstraintAt 93 0 0 (monomial u a) =
+    T ^ 55 * localConstraintAt 99 0 0 (monomial u a) =
       postprocess s g (selectedBlock s g ⟨monomial (trimmed u) a,
         (monomial_mem_restrictSupport (R := Geom)).mpr (Or.inl (trimmed_mem_band u hu))⟩) := by
   dsimp only [localConstraintAt, LinearMap.comp_apply, AlgHom.toLinearMap_apply]
   rw [shift_projection, shifted_substitution u hu]
   have hi := hu.2.1
-  change u.some.weight jetIndex ≤ 52 at hi
+  change u.some.weight jetIndex ≤ 55 at hi
   let s := u.some.degree
   let g : ℤ := (u none : ℤ) - u.some.weight jetIndex
   let P := backShift (monomial (trimmed u) a)
   change postprocess s g P = postprocess s g
     (weightedTruncation targetOrder (Final50RankCore.orderCutoff s g).toNat P)
   exact (postprocess_truncate s g (by dsimp [g]; omega) (backShift_hom u hu a)).symm
-theorem selected_zero (s : ℕ) (g : ℤ) (h : 93 - (s : ℤ) ≤ g) :
+private theorem selected_zero (s : ℕ) (g : ℤ) (h : 99 - (s : ℤ) ≤ g) :
     selectedBlock s g = 0 := by
   apply LinearMap.ext
   intro q
@@ -204,13 +204,13 @@ theorem selected_zero (s : ℕ) (g : ℤ) (h : 93 - (s : ℤ) ≤ g) :
   have hcut : (Final50RankCore.orderCutoff s g).toNat = 0 := by unfold Final50RankCore.orderCutoff; omega
   rw [hcut, weightedTruncation_eq_zero_iff, restrictWeightedOrder_zero]
   trivial
-private abbrev Block := Fin 126 × Fin 145
+private abbrev Block := Fin 133 × Fin 154
 private abbrev Image (b : Block) := LinearMap.range (selectedBlock b.1 (offset b.2))
 private def assemble : (∀ b : Block, Image b) →ₗ[Geom] Local :=
   merge (fun b => postprocess b.1 (offset b.2))
 private theorem postprocess_mem_assemble (b : Block) (s : ℕ) (g : ℤ)
     (hs : (b.1 : ℕ) = s) (hg : offset b.2 = g)
-    (q : bandSpace (cap s) (-g) 52 14) :
+    (q : bandSpace (cap s) (-g) 55 14) :
     postprocess s g (selectedBlock s g q) ∈ LinearMap.range assemble := by
   subst s
   subst g
@@ -218,31 +218,31 @@ private theorem postprocess_mem_assemble (b : Block) (s : ℕ) (g : ℤ)
   exact ⟨Pi.single b v, merge_single (fun j : Block => postprocess j.1 (offset j.2)) b v⟩
 private theorem shifted_monomial_mem_assemble (u : JetVariable 3 →₀ ℕ)
     (hu : AnchorEligible u) (a : Geom) :
-    T ^ 52 * localConstraintAt 93 0 0 (monomial u a) ∈ LinearMap.range assemble := by
+    T ^ 55 * localConstraintAt 99 0 0 (monomial u a) ∈ LinearMap.range assemble := by
   classical
   let s := u.some.degree
   let g : ℤ := (u none : ℤ) - u.some.weight jetIndex
-  let q : bandSpace (cap s) (-g) 52 14 :=
+  let q : bandSpace (cap s) (-g) 55 14 :=
     ⟨monomial (trimmed u) a, (monomial_mem_restrictSupport (R := Geom)).mpr (Or.inl (trimmed_mem_band u hu))⟩
-  have hmono : T ^ 52 * localConstraintAt 93 0 0 (monomial u a) =
+  have hmono : T ^ 55 * localConstraintAt 99 0 0 (monomial u a) =
       postprocess s g (selectedBlock s g q) := shifted_constraint_monomial u hu a
   rw [hmono]
-  by_cases hg : g < 93
+  by_cases hg : g < 99
   · have hJ := hu.2.1
-    change u.some.weight jetIndex ≤ 52 at hJ
-    have hs : s < 126 := by exact Nat.lt_succ_of_le hu.1
-    have hr : (g + 52).toNat < 145 := by dsimp [g] at *; omega
-    let b : Block := (⟨s, hs⟩, ⟨(g + 52).toNat, hr⟩)
+    change u.some.weight jetIndex ≤ 55 at hJ
+    have hs : s < 133 := by exact Nat.lt_succ_of_le hu.1
+    have hr : (g + 55).toNat < 154 := by dsimp [g] at *; omega
+    let b : Block := (⟨s, hs⟩, ⟨(g + 55).toNat, hr⟩)
     have ho : offset b.2 = g := by dsimp [b, offset, g]; omega
     exact postprocess_mem_assemble b s g rfl ho q
   · rw [selected_zero s g (by omega), LinearMap.zero_apply, map_zero]
     exact Submodule.zero_mem _
 theorem origin_le_blocks :
     Module.finrank Geom (LinearMap.range (anchorLocal 0 0)) ≤
-      ∑ s : Fin 126, ∑ r : Fin 145,
-        Module.finrank Geom (LinearMap.range (Final50RankCore.blockAt (cap s) s ((r : ℕ) - (52 : ℤ)))) := by
+      ∑ s : Fin 133, ∑ r : Fin 154,
+        Module.finrank Geom (LinearMap.range (Final50RankCore.blockAt (cap s) s ((r : ℕ) - (55 : ℤ)))) := by
   classical
-  let shift := LinearMap.mulLeft Geom (T ^ 52)
+  let shift := LinearMap.mulLeft Geom (T ^ 55)
   have hshift : Function.Injective shift :=
     fun _ _ h => mul_left_cancel₀ (pow_ne_zero _ (MvPolynomial.X_ne_zero _)) h
   let shifted := shift.comp (anchorLocal 0 0)
@@ -252,11 +252,11 @@ theorem origin_le_blocks :
     exact (Submodule.equivMapOfInjective shift hshift _).finrank_eq.symm
   have hsub : LinearMap.range shifted ≤ LinearMap.range assemble := by
     rintro _ ⟨Q, rfl⟩
-    change shift (localConstraintAt 93 0 0 (Q : DifferentialPolynomial Geom 3)) ∈ _
+    change shift (localConstraintAt 99 0 0 (Q : DifferentialPolynomial Geom 3)) ∈ _
     rw [(Q : DifferentialPolynomial Geom 3).as_sum, map_sum, map_sum]
     exact Submodule.sum_mem _ fun u hu => shifted_monomial_mem_assemble u (Q.property hu) _
   have (b : Block) : Module.Finite Geom (Image b) := by
-    have : Module.Finite Geom (bandSpace (cap b.1) (-offset b.2) 52 14) :=
+    have : Module.Finite Geom (bandSpace (cap b.1) (-offset b.2) 55 14) :=
       restrictSupport_finite ((Finsupp.finite_of_degree_le _).subset fun _ he =>
         Nat.le_of_eq he.1)
     infer_instance

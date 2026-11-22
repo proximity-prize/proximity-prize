@@ -48,7 +48,7 @@ abbrev PaidBatch (k : Band) (t : ℕ) := {tiles : List Tile // pays k t tiles = 
 def tilesOf {k : Band} {t : ℕ} (batches : List (PaidBatch k t)) : List Tile :=
   batches.flatMap Subtype.val
 
-theorem batches_pay {k : Band} {t : ℕ} (batches : List (PaidBatch k t)) :
+private theorem batches_pay {k : Band} {t : ℕ} (batches : List (PaidBatch k t)) :
     pays k t (tilesOf batches) = true := by
   induction batches with
   | nil => rfl
@@ -57,10 +57,10 @@ theorem batches_pay {k : Band} {t : ℕ} (batches : List (PaidBatch k t)) :
     rw [pays_append, head.property, ih]
     rfl
 
-def InRectangle (r : Rectangle) (width index : ℕ) : Prop :=
+private def InRectangle (r : Rectangle) (width index : ℕ) : Prop :=
   r.widthLow ≤ width ∧ width ≤ r.widthHigh ∧ r.indexLow ≤ index ∧ index ≤ r.indexHigh
 
-theorem tile_covered {tile : Tile} {k : Band} {t : ℕ} {a : Shape}
+private theorem tile_covered {tile : Tile} {k : Band} {t : ℕ} {a : Shape}
     (paid : tile.Paid k t) (bounds : InRectangle tile.bounds a.b a.j)
     (ht : a.t = t) (hi : 3 * a.t ≤ a.j) : Covered ((start k).t+t) k a := by
   rcases tile with ⟨b,j,B,J,l⟩ | ⟨b,j,l⟩ | ⟨b,j,l,u⟩
@@ -79,7 +79,7 @@ private def step (index firstMissing : ℕ) (tile : Tile) : ℕ :=
     max firstMissing (r.widthHigh+1)
   else firstMissing
 
-theorem step_cover {tile : Tile} {j first b : ℕ}
+private theorem step_cover {tile : Tile} {j first b : ℕ}
     (hFirst : first ≤ b) (h : b < step j first tile) : InRectangle tile.bounds b j := by
   dsimp only [step] at h
   split at h
@@ -88,7 +88,7 @@ theorem step_cover {tile : Tile} {j first b : ℕ}
     exact ⟨hb.trans hFirst, by omega, hj, hJ⟩
   · omega
 
-theorem fold_cover (tiles : List Tile) (j first b : ℕ)
+private theorem fold_cover (tiles : List Tile) (j first b : ℕ)
     (hFirst : first ≤ b) (h : b < tiles.foldl (step j) first) :
     ∃ tile ∈ tiles, InRectangle tile.bounds b j := by
   induction tiles generalizing first with

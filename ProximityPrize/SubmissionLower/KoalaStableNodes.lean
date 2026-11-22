@@ -9,26 +9,26 @@ set_option backward.isDefEq.respectTransparency false
 namespace SplitCut.Compression
 noncomputable section
 
-open Polynomial HighCore82219Upper HighCore82219Upper_3
-open HighCore82219Upper_4 (point modelValue origin blocks)
-open HighCore82219Upper_3_1_2 (seedMap)
+open Polynomial HighCore82258Upper HighCore82258Upper_3
+open HighCore82258Upper_4 (point modelValue origin blocks)
+open HighCore82258Upper_3_1_2 (seedMap)
 open K1_14 (L FX Equation atMark seedEmbedding)
 open K1_14_6 (Biform)
 open K1_14_6_1 (flatten separant markEval)
 open P1 (K I node p)
 open StableFlow LocalModel
-open private HighCore82219Upper_3_1_2.eval_coefficient HighCore82219Upper_3_2.mark_C
-  HighCore82219Upper_3.seedBiform_image HighCore82219Upper_3_3_1.mark_biform
-  HighCore82219Upper_3_3.rootInJet_flatten
-  HighCore82219Upper_2.seed_at_mark HighCore82219Upper_2.factorial_ne_zero HighCore82219Upper_5_2.charFX
-  from ProximityPrize.SubmissionLower.HighCore82219UpperGeometry
+open private HighCore82258Upper_3_1_2.eval_coefficient HighCore82258Upper_3_2.mark_C
+  HighCore82258Upper_3.seedBiform_image HighCore82258Upper_3_3_1.mark_biform
+  HighCore82258Upper_3_3.rootInJet_flatten
+  HighCore82258Upper_2.seed_at_mark HighCore82258Upper_2.factorial_ne_zero HighCore82258Upper_5_2.charFX
+  from ProximityPrize.SubmissionLower.HighCore82258UpperGeometry
 
-theorem seed_fit {e v w : ℕ} (g : SeedConstants)
+private theorem seed_fit {e v w : ℕ} (g : SeedConstants)
     (hv : g.degreeOf 0 ≤ v) (hw : g.degreeOf 1 ≤ w) :
     seedBiform g ∈ BoxDegree.space FX e v w := by
   have he : seedBiform g = flatten (C (liftSeeds g)) := by
     apply (MvPolynomial.optionEquivLeft FX (Fin 2)).injective
-    rw [HighCore82219Upper_3.seedBiform_image]
+    rw [HighCore82258Upper_3.seedBiform_image]
     exact ((MvPolynomial.optionEquivLeft FX (Fin 2)).apply_symm_apply _).symm
   rw [he]
   apply SplitCut.Raw.root (by simp : (C (liftSeeds g)).natDegree ≤ e)
@@ -42,7 +42,7 @@ theorem seed_fit {e v w : ℕ} (g : SeedConstants)
     exact ⟨(h 0).trans hv,(h 1).trans hw⟩
   | succ i => simp
 
-theorem mark_seed_projection {J : Input} {B : ResidueLift J} {P : Ideal JetRing}
+private theorem mark_seed_projection {J : Input} {B : ResidueLift J} {P : Ideal JetRing}
     (γ : K) (ψ : Chart J B P →+* FX) (hψ : ψ.comp (chartPoint J B P) = (markPoint J γ).toRingHom) :
     ψ.comp (chartSeed J B P) = constantAbscissa.comp (evalSeedConstants (J.model.label γ)) := by
   apply RingHom.ext
@@ -51,10 +51,10 @@ theorem mark_seed_projection {J : Input} {B : ResidueLift J} {P : Ideal JetRing}
   calc
     _ = markPoint J γ (rootInJet (seedBiform g)) := RingHom.congr_fun hψ _
     _ = markEval (J.model.label γ) (J.family.scalar γ) (seedBiform g) :=
-      HighCore82219Upper_3_3_1.mark_biform J γ _
-    _ = _ := RingHom.congr_fun (HighCore82219Upper_2.seed_at_mark (J.model.label γ) (J.family.scalar γ)) g
+      HighCore82258Upper_3_3_1.mark_biform J γ _
+    _ = _ := RingHom.congr_fun (HighCore82258Upper_2.seed_at_mark (J.model.label γ) (J.family.scalar γ)) g
 
-theorem center_zero_on_curve {J : Input} {B : ResidueLift J} {D : Factors J B}
+private theorem center_zero_on_curve {J : Input} {B : ResidueLift J} {D : Factors J B}
     (C₀ : CurveMarks J B D) (G : FreshEquation L)
     (hs : ∀ q ∈ C₀.prime, action J.f q ∈ C₀.prime) (hG : C (centerEquation G) ∈ C₀.prime)
     (hw : G.natDegree + J.e*P1_7.degreeAt J.hi < p)
@@ -70,7 +70,7 @@ theorem center_zero_on_curve {J : Input} {B : ResidueLift J} {D : Factors J B}
   have hnon : ev (seedBiform B.denominator) ≠ 0 ∧ ev (separant (flatten J.f)) ≠ 0 := by
     apply mul_ne_zero_iff.mp
     rwa [chartProduct φ]
-  have hsep : HighCore82219Upper_3_1.jetSeparant J.f ∉ P := fun h =>
+  have hsep : HighCore82258Upper_3_1.jetSeparant J.f ∉ P := fun h =>
     C₀.regular (P.mul_mem_left _ h)
   obtain ⟨T, hT⟩ := differential_curve J.f P hsep hs
   have hpoint : ev = point T.ι y := by rw [hT]; exact root_point φ
@@ -80,7 +80,7 @@ theorem center_zero_on_curve {J : Input} {B : ResidueLift J} {D : Factors J B}
   have hf : point T.ι y (flatten J.f) = 0 := by
     rw [← hpoint]
     change φ (rootInJet (flatten J.f)) = 0
-    rw [HighCore82219Upper_3_3.rootInJet_flatten]
+    rw [HighCore82258Upper_3_3.rootInJet_flatten]
     have hprod : (C J.f : JetRing) = C D.proper * C (∏ j, D.flat j) :=
       (congrArg (fun q : Equation => (C q : JetRing)) D.product).trans (map_mul C _ _)
     rw [hprod]
@@ -99,14 +99,14 @@ theorem center_zero_on_curve {J : Input} {B : ResidueLift J} {D : Factors J B}
     have h := J.factorial_guard
     change 131071+J.hi+1 < p at h
     change r ≤ 131071 - J.w + 1 at hr
-    have hh := HighCore82219Upper_2.factorial_ne_zero (show r < p by omega)
+    have hh := HighCore82258Upper_2.factorial_ne_zero (show r < p by omega)
     simpa only [map_natCast, map_zero] using T.embed.injective.ne hh
   have hb : (blocks T.ι J).eval (origin T.ι) ≠ 0 := by
     rw [JetTaylor.eval_blocks T]
     have hb' : J.blockProduct ≠ 0 := mul_ne_zero J.chart.1.ne_zero J.chart.2.2.2.1.ne_zero
     exact (map_ne_zero_iff T.embed T.embed.injective).mpr
       ((map_ne_zero_iff (algebraMap L[X] FX) (IsFractionRing.injective L[X] FX)).mpr hb')
-  let : CharP FX p := HighCore82219Upper_5_2.charFX
+  let : CharP FX p := HighCore82258Upper_5_2.charFX
   let : CharP E p := charP_of_injective_ringHom T.embed.injective p
   let S := modelValue T.ι B y
   have hconst := JetTaylor.model_constant T J B y hf ha hsep' hfac hcut
@@ -118,10 +118,10 @@ theorem center_zero_on_curve {J : Input} {B : ResidueLift J} {D : Factors J B}
     change (G.map (mapRingHom (T.ι.comp liftSeeds))).eval₂ (evalRingHom y) (T.ι (MvPolynomial.C center)) = 0
     rw [← center_eval, hT]
     change (centerEquation G).eval₂ (seedMap φ) (φ ordinate) = 0
-    rw [← HighCore82219Upper_3_1_2.eval_coefficient φ]
+    rw [← HighCore82258Upper_3_1_2.eval_coefficient φ]
     exact zero _ hG
   have hz := FreshRoot.root_at_fresh_variable p (T.ι.comp liftSeeds) T.δ (origin T.ι)
-    G S T.center_one T.frozen hconst hY (HighCore82219Upper_4.model_width _ _ _ _) hw hroot
+    G S T.center_one T.frozen hconst hY (HighCore82258Upper_4.model_width _ _ _ _) hw hroot
   obtain ⟨ψ, hψ, hp, hmodel⟩ := chart_to_curve J B P C₀.regular T hT
   have hseed : ψ.comp (chartSeed J B P) = T.ι.comp liftSeeds := by
     rw [chartSeed, chartBiform, ← RingHom.comp_assoc, ← RingHom.comp_assoc, hp,
@@ -207,14 +207,14 @@ theorem stable_node {J : Input} {v w : ℕ} (M : MarkCompression J v w)
     · intro i
       exact ⟨center_axis_bound _ 0 _ (fun j k => (M.axes j k).1) i,
         center_axis_bound _ 1 _ (fun j k => (M.axes j k).2) i⟩
-    · rw [HighCore82219Upper_3_3.rootInJet_flatten]
+    · rw [HighCore82258Upper_3_3.rootInJet_flatten]
       exact hroot
     · intro γ hγ _
-      rw [HighCore82219Upper_3_3.rootInJet_flatten]
-      exact (HighCore82219Upper_3_2.mark_C J γ _).trans (M.atMarks γ (C₀.sub hγ))
+      rw [HighCore82258Upper_3_3.rootInJet_flatten]
+      exact (HighCore82258Upper_3_2.mark_C J γ _).trans (M.atMarks γ (C₀.sub hγ))
 
 theorem compress_good (J : Input) (v w : ℕ) (_he : 7 ≤ J.e) (he : J.e ≤ 21)
-    (hv : v ≤ 445) (hw : w ≤ 445) (hhi : J.hi ≤ 2465)
+    (hv : v ≤ 445) (hw : w ≤ 445) (hhi : J.hi ≤ 2535)
     (haxis : ∀ i, (J.f.coeff i).degreeOf 0 ≤ v ∧ (J.f.coeff i).degreeOf 1 ≤ w) :
     ∃ U : Finset K, U ⊆ J.marks ∧ (J.marks \ U).card ≤ (p+1)*(v+w+256) ∧
       ∀ (B : ResidueLift J) (D : Factors J B) (C₀ : CurveMarks J B D), C₀.marks ⊆ U →

@@ -66,19 +66,19 @@ open P0_9_4 (clear_denominators)
 open private inclX_injective coefficientDerivative coeff_coefficientDerivative
   dotted polynomialPoint eval_dotted eval_map_point degreeOf_le_of_support_subset
   dotted_weight seed_weight from ProximityPrize.SubmissionLower.PortLow4
-theorem small_cast_ne_zero (n : ℕ) (hpos : 0 < n) (hsmall : n ≤ 17) :
+private theorem small_cast_ne_zero (n : ℕ) (hpos : 0 < n) (hsmall : n ≤ 17) :
     (n : GenericX) ≠ 0 := by
   let : CharP GenericX K1.p := charP_of_injective_ringHom (inclConst.comp embed).injective K1.p
   intro hz
   have hlarge : 17 < K1.p := by decide
   exact (not_le_of_gt (hsmall.trans_lt hlarge))
     (Nat.le_of_dvd hpos ((CharP.cast_eq_zero_iff GenericX K1.p n).mp hz))
-theorem pderiv_moved {P : GenericRow} {i j k : SeedVar} (h : P.degreeOf k = 0) :
+private theorem pderiv_moved {P : GenericRow} {i j k : SeedVar} (h : P.degreeOf k = 0) :
     pderiv k (MvPolynomial.X j * pderiv i P) = pderiv k (MvPolynomial.X j : GenericRow) * pderiv i P := by
   have hzero : pderiv k (pderiv i P) = 0 :=
     pderiv_eq_zero_of_degreeOf_eq_zero (Nat.eq_zero_of_le_zero ((degreeOf_pderiv_le i k P).trans_eq h))
   rw [pderiv_mul, hzero, mul_zero, add_zero]
-theorem partial_not_dvd {f g : GenericRow} (i k : SeedVar) (a : GenericX)
+private theorem partial_not_dvd {f g : GenericRow} (i k : SeedVar) (a : GenericX)
     (hi : 0 < f.degreeOf i) (hsmall : f.degreeOf i ≤ 17) (hk : f.degreeOf k = 0)
     (ha : a ≠ 0) (hg : pderiv k g = C a * pderiv i f) : ¬ f ∣ g := by
   have hpartial : pderiv i f ≠ 0 :=
@@ -93,7 +93,7 @@ theorem partial_not_dvd {f g : GenericRow} (i k : SeedVar) (a : GenericX)
     exact hnonzero (by rw [← hg, hz, mul_zero])
   rw [← hg, degreeOf_mul_eq (ne_zero_of_degreeOf_ne_zero hi.ne') hq'] at hdegree
   omega
-theorem dotted_relPrime {f r : GenericRow} (hf : Irreducible f)
+private theorem dotted_relPrime {f r : GenericRow} (hf : Irreducible f)
     (hb : 0 < jetTotal f) (ht : jetTotal f ≤ 17) (htop : f.degreeOf (some 2) = 0)
     (hr : r.support ⊆ f.support) (a : GenericX) (ha : a ≠ 0) :
     IsRelPrime f (dotted r (C a * f)) := by

@@ -27,13 +27,13 @@ def Box (a : Cap) (c : ℕ) (D : GeoJets5) : Prop :=
 
 private def w : Fin 5 → ℕ := ![1,2,2,2,3]
 
-theorem w0 : w 0 = 1 := by decide
+private theorem w0 : w 0 = 1 := by decide
 private theorem w1 : w 1 = 2 := by decide
 private theorem w2 : w 2 = 2 := by decide
 private theorem w3 : w 3 = 2 := by decide
 private theorem w4 : w 4 = 3 := by decide
 
-theorem fits_weight {P : Row 4} {K : ℕ} :
+private theorem fits_weight {P : Row 4} {K : ℕ} :
     Fits P K ↔ P.weightedTotalDegree (w ∘ Fin.castSucc) ≤ K := by
   unfold Fits MvPolynomial.weightedTotalDegree
   rw [Finset.sup_le_iff]
@@ -65,7 +65,7 @@ theorem raw_pair {a : Cap} {c : ℕ} {m n : Exponent} (hm : Raw a c m) (hn : Raw
   unfold Active at hm' hn'
   omega
 
-theorem to_box {a : Cap} {P : Row 5} {c K : ℕ}
+private theorem to_box {a : Cap} {P : Row 5} {c K : ℕ}
     (h0 : Low48BentSupport.Box a (generic5 P))
     (hw : P.weightedTotalDegree w ≤ K) (hc : K+c≤a.1.b+a.1.j) :
     Box a c (generic5 P) := by

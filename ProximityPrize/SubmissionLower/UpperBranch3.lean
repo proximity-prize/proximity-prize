@@ -261,7 +261,7 @@ private theorem mapped_node_ne_center (x : K) : seedEmbedding x ≠ center := by
     ((IsFractionRing.injective L[X] FX) h.symm)
 set_option maxHeartbeats 800000 in
 set_option backward.isDefEq.respectTransparency false in
-theorem linear_interpolation_weights {E : Type} [Field E]
+private theorem linear_interpolation_weights {E : Type} [Field E]
     (nodes : I → E) (hnodesInj : Function.Injective nodes)
     (ξ : E) (hne : ∀ i, nodes i ≠ ξ)
     (sites : Finset I) (d t : ℕ) (hdt : d ≤ sites.card + t)
