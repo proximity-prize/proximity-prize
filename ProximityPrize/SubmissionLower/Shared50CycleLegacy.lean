@@ -1,5 +1,4 @@
 import ProximityPrize.SubmissionLower.Final50GeometryCut
-set_option Elab.async false
 
 namespace Shared50CycleLegacy
 noncomputable section
@@ -150,5 +149,6 @@ theorem bound_with_weights
   exact (mul_le_mul_of_nonneg_left (hcharge.trans hsumZ) (by norm_num)).trans
     (ambient_budget p hp)
 
+#print axioms bound_with_weights
 end
 end Shared50CycleLegacy

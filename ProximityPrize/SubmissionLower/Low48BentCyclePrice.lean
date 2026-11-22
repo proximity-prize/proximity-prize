@@ -2,7 +2,6 @@ import ProximityPrize.SubmissionLower.Low48BentCycleCap
 import ProximityPrize.SubmissionLower.Low48BentPolarization
 
 set_option autoImplicit false
-set_option Elab.async false
 
 namespace Low48BentCycle
 
@@ -18,12 +17,12 @@ def integral (a : Cap) : ℤ := bentIntegral a.1.b a.1.j a.1.t a.2
 
 private def slots : List (Fin 5) := [0, 1, 2, 3, 4]
 
-theorem sublists_slots :
+private theorem sublists_slots :
     (↑(slots.sublists.map List.toFinset) : Multiset (Finset (Fin 5))) =
       (Finset.univ : Finset (Fin 5)).powerset.val := by
   decide
 
-theorem fold_cap (B : Fin 5 → Cap) (l : List (Fin 5)) (hl : l.Nodup) (acc : Cap) :
+private theorem fold_cap (B : Fin 5 → Cap) (l : List (Fin 5)) (hl : l.Nodup) (acc : Cap) :
     (l.map B).foldl addBent acc = Low48BentLattice.Add acc (Low48BentLattice.Sum l.toFinset B) := by
   induction l generalizing acc with
   | nil =>
@@ -35,11 +34,12 @@ theorem fold_cap (B : Fin 5 → Cap) (l : List (Fin 5)) (hl : l.Nodup) (acc : Ca
     simp [Low48BentLattice.Add, addBent, Low48BentLattice.Sum, Shape.plus,
       Finset.sum_insert (mt List.mem_toFinset.mp hi), Nat.add_assoc]
 
-theorem fold_charge {α : Type*} (f : α → ℤ) (l : List α) (a : ℤ) :
+private theorem fold_charge {α : Type*} (f : α → ℤ) (l : List α) (a : ℤ) :
     l.foldl (fun s x => s + f x) a = a + (l.map f).sum := by
   induction l generalizing a with
   | nil => simp
   | cons i l ih => simp [ih, add_assoc]
+
 
 set_option maxHeartbeats 1000000 in
 private theorem ambient_list (B : Fin 5 → Cap) :
@@ -65,6 +65,7 @@ private theorem ambient_list (B : Fin 5 → Cap) :
         Multiset (Finset (Fin 5)))).sum = _
       rw [sublists_slots]
       rfl
+
 
 end
 

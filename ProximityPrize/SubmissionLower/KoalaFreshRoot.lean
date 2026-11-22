@@ -7,9 +7,9 @@ set_option maxHeartbeats 1000000
 namespace SplitCut.FreshRoot
 
 open Polynomial StableNode
-open HighCore82219Upper_4 (coeffDeriv coeff_coeffDeriv coeffDeriv_C coeffDeriv_X)
+open HighCore82258Upper_4 (coeffDeriv coeff_coeffDeriv coeffDeriv_C coeffDeriv_X)
 
-theorem derivative_constant {E : Type} [Field E] (δ : Derivation ℤ E E)
+private theorem derivative_constant {E : Type} [Field E] (δ : Derivation ℤ E E)
     {P : E[X]} (h : coeffDeriv δ P = 0) : coeffDeriv δ P.derivative = 0 := by
   apply Polynomial.ext
   intro i
@@ -88,7 +88,7 @@ theorem map_substitute {R E : Type} [CommRing R] [CommRing E] (φ : R →+* E)
     rw [eval₂_X, map_X, eval₂_X]
     rfl
 
-theorem substitute_degree {R E : Type} [CommRing R] [Field E] (φ : R →+* E)
+private theorem substitute_degree {R E : Type} [CommRing R] [Field E] (φ : R →+* E)
     (G : Polynomial R[X]) (S : E[X]) {e d : ℕ} (he : ∀ i, (G.coeff i).natDegree ≤ e)
     (hS : S.natDegree ≤ d) :
     (substitute S (G.map (mapRingHom φ))).natDegree ≤ G.natDegree + e*d := by
@@ -105,7 +105,7 @@ theorem substitute_degree {R E : Type} [CommRing R] [Field E] (φ : R →+* E)
     exact Nat.mul_le_mul (by dsimp only [Q]; rw [coeff_map, coe_mapRingHom]; exact natDegree_map_le.trans (he i)) hS
   exact natDegree_mul_le.trans (by rw [natDegree_X_pow]; omega)
 
-theorem substitute_constant {R E : Type} [CommRing R] [Field E] (φ : R →+* E)
+private theorem substitute_constant {R E : Type} [CommRing R] [Field E] (φ : R →+* E)
     (G : Polynomial R[X]) (S : E[X]) (δ : Derivation ℤ E E)
     (hφ : ∀ a, δ (φ a) = 0) (hS : coeffDeriv δ S = 0) :
     coeffDeriv δ (substitute S (G.map (mapRingHom φ))) = 0 := by
@@ -141,3 +141,4 @@ theorem root_at_fresh_variable {R E : Type} [CommRing R] [Field E]
 
 end SplitCut.FreshRoot
 
+#print axioms SplitCut.FreshRoot.root_at_fresh_variable

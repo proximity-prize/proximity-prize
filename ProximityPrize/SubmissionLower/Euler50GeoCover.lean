@@ -1,6 +1,5 @@
 import ProximityPrize.SubmissionLower.Euler50Price
 
-set_option Elab.async false
 namespace Euler50GeoLead
 open K1_13 (Geom Row shape indexDegree)
 open K1_13_1 (topView topView_degree anchorLead anchorLead_ne indexDegree_eq)
@@ -74,7 +73,7 @@ open private coeff_flatten anchorLead_term index_bounds from ProximityPrize.Subm
 def activeDegree (f : Row 4) : ℕ :=
   MvPolynomial.weightedTotalDegree (![1, 2, 2, 2] : Fin 4 → ℕ) f
 
-theorem activeWeight_at (m : Fin 4 →₀ ℕ) :
+private theorem activeWeight_at (m : Fin 4 →₀ ℕ) :
     m.weight (![1, 2, 2, 2] : Fin 4 → ℕ) = m 0 + 2*m 1 + 2*m 2 + 2*m 3 := by
   simp [Finsupp.weight_eq_sum, Fin.sum_univ_four, smul_eq_mul, Nat.mul_comm]
 
@@ -118,10 +117,6 @@ theorem trueWeight_iff {n D : ℕ} (P : Row n) :
     have hb := h _ hu
     rw [Finsupp.weight_optionElim, one_mul] at hb
     simpa only [Finsupp.weight_apply, smul_eq_mul, Nat.mul_comm] using hb
-theorem differentialWeight_eq : differentialWeight (d := 3) physicalDegree =
-    fun v => v.elim 1 (fun i => physicalDegree - i.val) := by
-  funext v
-  cases v <;> rfl
 section FactorCover
 open MvPolynomial UniqueFactorizationMonoid
 private theorem lower_of_anchor (P : Row 4) (hP : P ≠ 0)
@@ -235,5 +230,6 @@ theorem cover_of_anchor {Γ : Finset K} {s : K → K[X]} (P : Row 4)
     exact ⟨j, by rw [hj, OnFactor, ← eval_anchorLead]; exact ⟨hqS, hqlead⟩⟩
 end FactorCover
 
+#print axioms cover_of_anchor
 end
 end Euler50GeoCover

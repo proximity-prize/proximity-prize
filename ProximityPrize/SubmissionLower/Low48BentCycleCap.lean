@@ -1,9 +1,8 @@
-import ProximityPrize.SubmissionLower.Low48BentCycleBound
+import ProximityPrize.SubmissionLower.Low48BentCycle
 import ProximityPrize.SubmissionLower.Low48BentSupport
 import ProximityPrize.SubmissionLower.Low48Price
 
 set_option autoImplicit false
-set_option Elab.async false
 
 namespace Low48BentCycle
 
@@ -26,6 +25,7 @@ def capFamily (caps : Fin 5 → Cap) : Family := fun i => latticePoints (caps i)
 
 instance (caps : Fin 5 → Cap) (i : Fin 5) : Finite (capFamily caps i) :=
   inferInstanceAs (Finite (latticePoints (caps i)))
+
 
 open private generator_mem_diagonal from ProximityPrize.SubmissionLower.Low48BentCycle
 
@@ -109,20 +109,8 @@ theorem ambient_cap (caps : Fin 5 → Cap) (h : ∀ i, Chamber (caps i)) (v : Ca
   refine Finset.sum_congr rfl fun J _ => ?_
   rw [coeff_congr _ _ (diagonal_cap caps h _), hv _ (chamber_capSum caps h _)]
 
-def caps (p : Shape) : Fin 5 → Cap :=
-  ![(p, 0), (primaryBox, 0), graph p, lifted p (taylorLength - 4), lifted p (taylorLength - 3)]
 
-theorem caps_chamber {p : Shape} (hb : p.j ≤ p.b) (ht : 1 ≤ p.t) (hj : 3 * p.t + 3 ≤ p.j) :
-    ∀ i, Chamber (caps p i) := by
-  intro i
-  fin_cases i
-  · change Chamber (p, 0)
-    exact ⟨hb, show 3 * p.t ≤ p.j by omega, Nat.zero_le _⟩
-  · change 1650 ≤ 4012 ∧ 3 * 550 ≤ 1650 ∧ 2 * 0 ≤ (550 : ℕ)
-    decide
-  · exact Low48BentSupport.graph_chamber ht hj
-  · exact Low48BentSupport.lifted_chamber hb hj (by decide : 3 ≤ taylorLength - 4)
-  · exact Low48BentSupport.lifted_chamber hb hj (by decide : 3 ≤ taylorLength - 3)
+
 
 theorem old_section {q : Shape} {F : Row 4} (h : InBox (shape F) q) :
     Low48BentSupport.Box (q, 0) (oldEmbedding (toGeneric F)) := by

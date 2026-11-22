@@ -1,5 +1,4 @@
 import ProximityPrize.SubmissionLower.FrontBranch4
-set_option Elab.async false
 set_option autoImplicit true
 section
 set_option maxRecDepth 12000
@@ -14,18 +13,11 @@ export P0 (K I Words node p blockLength k Frac Bivar TypeAtMostOne coefficientBl
 abbrev Rung := P1.Rung
 abbrev target : Rung := ⟨179935,336731609,1073741824,2365,0x3a5b3ea2263e00a,8352383558747982⟩
 abbrev agreement := target.agreement
-abbrev radiusNumerator := target.numerator
-abbrev radiusDenominator := target.denominator
 abbrev t : ℕ := blockLength - agreement
 abbrev L : ℕ := agreement - k
 abbrev heightCap : ℕ := t + 1 - L - 2
-def queryRadius : ℝ≥0 := claimedRadius radiusNumerator radiusDenominator
-def radius : ℝ := queryRadius
-def BadFamily (u : Words) (Γ : Finset K) : Prop :=
-  ∀ γ ∈ Γ, IsMCA (AffineLineGenerator K) IRSProfile.baseCode γ u radius
 abbrev BadMarkAt := P1.BadMarkAt
 abbrev BadMark := BadMarkAt agreement
-def ordinary (u : Words) := hankel node (u 0) (u 1) L t
 def twoBlock (u : Words) := stacked p node (u 0) (u 1) L t
 def stackRank (u : Words) := GenericLayer.genericRank (twoBlock u)
 def nullity (u : Words) := GenericLayer.genericNullity (twoBlock u)
@@ -55,6 +47,21 @@ def fixedNodes {u : Words} {T : TwoActive u} (R : Relation T) : Finset I := by
   classical
   exact Finset.univ.filter fun i =>
     (leftU R).eval (C (node i)) = 0 ∧ (leftV R).eval (C (node i)) = 0
+def InvalidLeft {u : Words} {T : TwoActive u} (R : Relation T) : Prop :=
+  max (leftU R).natDegree (leftV R).natDegree < T.height ∨
+    ∃ G : K[X], G ≠ 0 ∧ G.map Polynomial.C ∣ leftU R ∧ G.map Polynomial.C ∣ leftV R ∧
+      ¬ G ∣ locator node Finset.univ
+structure SaturatedAt {u : Words} {T : TwoActive u} (R : Relation T)
+    {γ : K} (M : BadMark u γ) : Prop where
+  U_ne : atSlope (leftU R) γ ≠ 0
+  V_ne : atSlope (leftV R) γ ≠ 0
+  degree_eq : max (atSlope (leftU R) γ).natDegree (atSlope (leftV R) γ).natDegree =
+    T.height
+  gcd_errors : ∃ errors : Finset I,
+    (∀ i ∈ errors, M.decoder.eval (node i) ≠ u 0 i + γ * u 1 i) ∧
+    IsCommonGCD (locator node errors) (atSlope (leftU R) γ) (atSlope (leftV R) γ)
+  fixed_errors : ∀ i ∈ fixedNodes R, M.decoder.eval (node i) ≠ u 0 i + γ * u 1 i
+  valid : ¬ InvalidLeft R
 structure Reduction (u : Words) (T : TwoActive u) (R : Relation T) where
   U : Bivar
   V : Bivar
@@ -71,6 +78,23 @@ structure Reduction (u : Words) (T : TwoActive u) (R : Relation T) where
   output_degree : output.degree < (k + height : ℕ)
   deleted_error : ∀ γ, Normal u γ → ∀ M : BadMark u γ, ∀ i ∈ fixedNodes R,
     M.decoder.eval (node i) ≠ u 0 i + γ * u 1 i
+structure RankThree (u : Words) (T : TwoActive u) (R : Relation T)
+    (D : Reduction u T R) where
+  rank_eq : columnRank D.U D.V = 3
+  α : Fin 2 → K[X]
+  β : Fin 2 → K[X]
+  a : K[X]
+  b : K[X]
+  a_ne : a ≠ 0
+  b_ne : b ≠ 0
+  α_primitive : IsCoprime (α 0) (α 1)
+  β_primitive : IsCoprime (β 0) (β 1)
+  first_degree : a.natDegree + amplitudeDegree (β 0) (β 1) ≤ D.height
+  second_degree : b.natDegree + amplitudeDegree (α 0) (α 1) ≤ D.height
+  same_direction : sameDirection D.U D.V (threeU a β) (threeV b α)
+  output : Bivar
+  output_degree : output.degree < (k + D.height : ℕ)
+  nodes : relationOn u (fixedNodes R) (threeU a β) (threeV b α) output
 abbrev ModelAt := P1.ModelAt
 abbrev FamilyAt := @P1.FamilyAt
 abbrev ModelAt.overhead := @P1.ModelAt.overhead
@@ -79,7 +103,6 @@ abbrev AnchorModel := ModelAt heightCap
 abbrev AnchoredFamily {u deleted} (M : AnchorModel u deleted) := FamilyAt agreement M
 abbrev AnchorModel.overhead {u deleted} (M : AnchorModel u deleted) := ModelAt.overhead M
 abbrev AnchorModel.label {u deleted} (M : AnchorModel u deleted) := ModelAt.label M
-abbrev HighRow := P1.HighRow
 inductive HighBand where
   | h2366
   | h2380
@@ -125,51 +148,6 @@ inductive HighBand where
   | h24000
   | h28300
   | h32411
-def HighBand.row : HighBand → HighRow
-  | .h2366 => ⟨2366,2379,93115474939138867,0x2527a38f00982c1⟩
-  | .h2380 => ⟨2380,2399,86963514617499853,0x1fccf32e289515b⟩
-  | .h2400 => ⟨2400,2419,80141144427743360,0x1cdd60170fdc3a5⟩
-  | .h2420 => ⟨2420,2439,75622379684181559,0x1ba53a4844c18cf⟩
-  | .h2440 => ⟨2440,2449,0xec6c9a01c501b4,0x16f8c08dfd144a0⟩
-  | .h2450 => ⟨2450,2459,0xdf784c422b4446,95031637448831224⟩
-  | .h2460 => ⟨2460,2479,0xd400aa56489568,87684038095193899⟩
-  | .h2480 => ⟨2480,2499,0xc06b218c0e0594,73878593397754386⟩
-  | .h2500 => ⟨2500,2519,0xae37b01afebac5,0xe7a9e01bb2e1cb⟩
-  | .h2520 => ⟨2520,2529,0x97db23e85cf884,0xc76b58e77616e5⟩
-  | .h2530 => ⟨2530,2539,0x8f4bd87e5f1747,0xba123f2a591e67⟩
-  | .h2540 => ⟨2540,2549,0x87eccc7b933ab2,0xab638004c86172⟩
-  | .h2550 => ⟨2550,2559,0x815ca68fc615d8,0xa0c4961e9227e7⟩
-  | .h2560 => ⟨2560,2569,0x7b35caa13aa40d,0x94e4eee879f5fb⟩
-  | .h2570 => ⟨2570,2584,0x75e6d9cedc8b78,0x8b925e6d61c3ef⟩
-  | .h2585 => ⟨2585,2589,0x6e3d4eba25800e,0x7f9bedcfbffab2⟩
-  | .h2590 => ⟨2590,2599,0x6beedc13cf3fce,0x7b4364c3ac8d1e⟩
-  | .h2600 => ⟨2600,2600,0x67e2d7a116990b,0x742f5f37049655⟩
-  | .h2601 => ⟨2601,2610,0x5e7d279c5cee1e,0x7864caf748b232⟩
-  | .h2611 => ⟨2611,2620,0x5abc7f01347485,0x716683048d043d⟩
-  | .h2621 => ⟨2621,2639,0x576c6e6f8f6fa7,0x6a9e19368e944e⟩
-  | .h2640 => ⟨2640,2669,0x5249d9435f23f6,0x5eefb661488c92⟩
-  | .h2670 => ⟨2670,2699,0x49f59157b93a46,0x4f9b17715a306e⟩
-  | .h2700 => ⟨2700,2749,0x437a3712c2d445,0x442f4f0de3f4c6⟩
-  | .h2750 => ⟨2750,2799,0x3b336d17c1cb32,0x35272981f520f4⟩
-  | .h2800 => ⟨2800,2899,0x375dab361799d4,0x284ddeae93503a⟩
-  | .h2900 => ⟨2900,2949,0x2b6b6c50e8eb3d,7539989889497143⟩
-  | .h2950 => ⟨2950,2979,8777438934015614,6750022438537705⟩
-  | .h2980 => ⟨2980,2999,8232174646093835,6265299422480654⟩
-  | .h3000 => ⟨3000,3049,7920769328756114,5914027083230035⟩
-  | .h3050 => ⟨3050,3099,7233131619602069,5133838392304890⟩
-  | .h3100 => ⟨3100,3199,5780812131934959,4711544557140173⟩
-  | .h3200 => ⟨3200,3399,4609990374200773,0xd4775ea2351fc⟩
-  | .h3400 => ⟨3400,3554,0xc2cb28591a32b,0x91b1a34f0449e⟩
-  | .h3555 => ⟨3555,3999,0x7bd73fd4c6710,0x7cc99261b72f8⟩
-  | .h4000 => ⟨4000,4799,0x3c1dcb06bed3a,0x4e1e3a877504e⟩
-  | .h4800 => ⟨4800,7744,456991479392525,705676274027289⟩
-  | .h7745 => ⟨7745,7999,723244967547378,471048191238102⟩
-  | .h8000 => ⟨8000,14499,651486155753195,425841080879578⟩
-  | .h14500 => ⟨14500,21447,47471425797023,0x97983d103a57⟩
-  | .h21448 => ⟨21448,23999,21281850144313,78255348716729⟩
-  | .h24000 => ⟨24000,28299,19998784942889,63464881996079⟩
-  | .h28300 => ⟨28300,32410,18715989025685,51455234429739⟩
-  | .h32411 => ⟨32411,33345,3323301173093,58347874659230⟩
 end
 end P2
 end
@@ -321,115 +299,6 @@ open private exceptions specializeY yView_degree specializeY_eval specializeY_it
 open private centerPoint atCenter atCenter_degree K1_11_3.numerator numerator_degree K1_11_3.denominator
   eval_atCenter pderiv_atCenter numerator_eval_degree denominator_degree reconstruct
   natDegree_le_of_degree_lt_succ derivativeChart_degree from ProximityPrize.SubmissionLower.Fast072
-theorem assign {u : Words} {deleted : Finset I} {Γ : Finset K}
-    {F : Marks u deleted Γ} {b : Bank} (A : Annihilator F b) :
-    ∃ (exceptional : Finset K) (charts : Fin 5 → Finset K),
-      exceptional.card ≤ b.zeroFee ∧
-      (∀ γ ∈ Γ, γ ∈ exceptional ∨ ∃ j, γ ∈ charts j) ∧
-      ∀ j, ∃ hsub : charts j ⊆ Γ, ∀ γ (hγ : γ ∈ charts j),
-        SimpleRoot (derivativeChart A.Q j) (F.mark γ (hsub hγ)).decoder γ (γ ^ p) := by
-  classical
-  obtain ⟨exceptional, hfee, hex⟩ := exceptions A.Q A.nonzero p b.a b.b (by decide)
-    (by cases b <;> decide) A.degreeS A.degreeT Γ
-  have hassign (γ : K) (hγ : γ ∈ Γ) (hn : γ ∉ exceptional) :
-      ∃ j : Fin 5, SimpleRoot (derivativeChart A.Q j) (F.mark γ hγ).decoder γ (γ ^ p) := by
-    let f := specializeY A.Q γ (γ ^ p)
-    have hdeg : f.natDegree ≤ 5 :=
-      (Polynomial.natDegree_map_le).trans ((yView_degree A.Q).le.trans A.degreeY)
-    have hroot : f.IsRoot (F.mark γ hγ).decoder :=
-      (specializeY_eval A.Q _ γ (γ ^ p)).trans (A.vanishes γ hγ)
-    obtain ⟨j, hj, hz, hnz⟩ := exists_simple_derivative_at_root p 5 f
-      (hex γ hγ hn) hdeg (by decide) _ hroot
-    refine ⟨⟨j,hj⟩, ?_, ?_⟩
-    · rw [← specializeY_eval, specializeY_iterate]
-      exact hz
-    · rw [← specializeY_eval, specializeY_derivative, specializeY_iterate]
-      exact hnz
-  let charts (j : Fin 5) := Γ.filter fun γ =>
-    ∃ hγ : γ ∈ Γ, SimpleRoot (derivativeChart A.Q j) (F.mark γ hγ).decoder γ (γ ^ p)
-  refine ⟨exceptional, charts, hfee, ?_, ?_⟩
-  · intro γ hγ
-    by_cases he : γ ∈ exceptional
-    · exact Or.inl he
-    · obtain ⟨j,hj⟩ := hassign γ hγ he
-      exact Or.inr ⟨j, Finset.mem_filter.mpr ⟨hγ, hγ, hj⟩⟩
-  · intro j
-    refine ⟨fun _ hγ => (Finset.mem_filter.mp hγ).1, ?_⟩
-    intro γ hγ
-    obtain ⟨_, h⟩ := (Finset.mem_filter.mp hγ).2
-    exact h
-private theorem build_chart
-    {u : Words} {deleted : Finset I} (P : Puncture deleted)
-    {Γ : Finset K} (F : Marks u deleted Γ) (b : Bank)
-    (Λ : Finset K) (hsub : Λ ⊆ Γ) (hne : Λ.Nonempty)
-    (G : MvPolynomial (Fin 4) K) (hG : G.weightedTotalDegree scalarWeightTotal ≤ b.E)
-    (hroot : ∀ γ (hγ : γ ∈ Λ),
-      SimpleRoot G (F.mark γ (hsub hγ)).decoder γ (γ ^ p)) :
-    Nonempty (TaylorChart u P F b Λ) := by
-  classical
-  let point (γ : K) : Fin 3 → Frac := if h : γ ∈ Λ then
-    centerPoint (F.mark γ (hsub h)).decoder γ (γ ^ p) else fun _ => 0
-  have hpnt (γ : K) (hγ : γ ∈ Λ) :
-      point γ = centerPoint (F.mark γ (hsub hγ)).decoder γ (γ ^ p) := by
-    simp [point, hγ]
-  refine ⟨{
-    subset := hsub
-    equation := atCenter G
-    equation_ne := ?_
-    equation_degree := (atCenter_degree G).trans hG
-    numerator := K1_11_3.numerator G 131071
-    numerator_degree := numerator_degree _ _
-    denominator := K1_11_3.denominator G 131071
-    cut_degree := ?_
-    point := point
-    slope := fun γ hγ => by rw [hpnt γ hγ]; rfl
-    on_equation := fun γ hγ => by rw [hpnt γ hγ, eval_atCenter, (hroot γ hγ).1, map_zero]
-    regular := ?_
-    reconstruction := ?_ }⟩
-  · obtain ⟨γ, hγ⟩ := hne
-    have hn := (hroot γ hγ).2
-    intro hz
-    apply hn
-    apply (IsFractionRing.injective (Polynomial K) Frac)
-    rw [map_zero, ← eval_atCenter, ← pderiv_atCenter, hz, map_zero, map_zero]
-  · intro i
-    unfold nodeCut
-    apply (totalDegree_sub _ _).trans
-    apply max_le
-    · exact numerator_eval_degree K1_11_3_1.proof G 131071 b.E (by cases b <;> decide) hG _
-    · apply (totalDegree_mul _ _).trans
-      have ha : (C (σ := Fin 3) (algebraMap K Frac (u 0 (P.index i))) +
-          MvPolynomial.X 1 * C (algebraMap K Frac (u 1 (P.index i)))).totalDegree ≤ 1 := by
-        exact (totalDegree_add _ _).trans (max_le (by simp)
-          ((totalDegree_mul _ _).trans (by simp)))
-      exact Nat.add_le_add (denominator_degree G 131071 b.E hG) ha
-  · intro γ hγ
-    rw [hpnt γ hγ, K1_11_3.denominator, map_pow, eval_atCenter]
-    exact pow_ne_zero _ (fun h => (hroot γ hγ).2
-      ((IsFractionRing.injective (Polynomial K) Frac) (h.trans (map_zero _).symm)))
-  · intro γ hγ
-    rw [hpnt γ hγ]
-    apply reconstruct K1_11_3_2.proof
-    · exact natDegree_le_of_degree_lt_succ (F.mark γ (hsub hγ)).degree
-    · exact (hroot γ hγ).1
-    · intro n hn
-      have pp := CharP.char_is_prime_of_two_le K p (by decide)
-      intro hz
-      have hn' := pp.dvd_factorial.mp ((CharP.cast_eq_zero_iff K p _).mp hz)
-      exact (not_lt_of_ge (hn'.trans hn)) (by decide)
-theorem chart_cover {u : Words} {deleted : Finset I} (P : Puncture deleted)
-    {Γ : Finset K} {F : Marks u deleted Γ} {b : Bank} (A : Annihilator F b) :
-    ∃ (exceptional : Finset K) (charts : Fin 5 → Finset K),
-      exceptional.card ≤ b.zeroFee ∧
-      (∀ γ ∈ Γ, γ ∈ exceptional ∨ ∃ j, γ ∈ charts j) ∧
-      ∀ j, charts j = ∅ ∨ Nonempty (TaylorChart u P F b (charts j)) := by
-  obtain ⟨exceptional, charts, hfee, hcover, hcharts⟩ := assign A
-  refine ⟨exceptional, charts, hfee, hcover, fun j => ?_⟩
-  rcases (charts j).eq_empty_or_nonempty with he | hn
-  · exact Or.inl he
-  · obtain ⟨hsub, hroot⟩ := hcharts j
-    exact Or.inr (build_chart P F b (charts j) hsub hn (derivativeChart A.Q j)
-      ((derivativeChart_degree A.Q j).trans A.degreeTotal) hroot)
 end
 end P2_4
 end
@@ -634,20 +503,6 @@ private theorem contact_order_one_mem {σ : Type*} (v : σ → ℕ) (L : MvPolyn
   intro d hd
   apply Polynomial.coeff_eq_zero_of_lt_natTrailingDegree
   omega
-theorem mark_degree {u : Words} {γ : K} (M : BadMark u γ) :
-    M.decoder.natDegree ≤ 131071 := by
-  apply Polynomial.natDegree_le_of_degree_le
-  exact Order.le_of_lt_succ (show M.decoder.degree < (131072 : ℕ) from M.degree)
-theorem correctOn_mark {u : Words} {deleted : Finset I} (P : Puncture deleted)
-    {γ : K} (M : BadMark u γ) :
-    correctOn u P M.decoder (M.decoder.map twist) γ (γ ^ p) (indexedSupport P M.support) := by
-  intro i hi
-  have h := M.hits (P.index i) ((mem_indexedSupport P M.support i).mp hi)
-  refine ⟨h, ?_⟩
-  change (M.decoder.map twist).eval (node (P.index i)) =
-    u 0 (P.index i) ^ p + γ ^ p * u 1 (P.index i) ^ p
-  rw [Strata.eval_coefficient_map twist M.decoder _ (Native.native_domain_fixed (P.index i)), h]
-  simp only [map_add, map_mul, P0.twist, frobenius_def]
 private theorem bank_cancel (b : Bank) : 1 + (b.dT - 1) = b.dT := by cases b <;> rfl
 end
 end P2_4
@@ -665,105 +520,7 @@ open private ncard_inter_filter surface_count_with_terminal from ProximityPrize.
 open private seed_eq_of_mismatch from ProximityPrize.SubmissionLower.Fast065
 variable {u : Words} {deleted : Finset I} {P : Puncture deleted}
   {Γ Λ : Finset K} {F : Marks u deleted Γ} {b : Bank}
-private theorem pencil_bad_count (hsub : Λ ⊆ Γ) (P₀ P₁ : Polynomial K)
-    (h₀ : P₀.degree < (131072 : ℕ)) (h₁ : P₁.degree < (131072 : ℕ))
-    (pencil : ∀ γ (hγ : γ ∈ Λ),
-      (F.mark γ (hsub hγ)).decoder = P₀ + Polynomial.C γ * P₁) :
-    Λ.card ≤ P.N := by
-  classical
-  have mismatch (γ : Λ) :
-      ∃ i : Fin P.N,
-        (P₀.eval (P.nodes i) ≠ u 0 (P.index i) ∨ P₁.eval (P.nodes i) ≠ u 1 (P.index i)) ∧
-        P₀.eval (P.nodes i) + (γ : K) * P₁.eval (P.nodes i) =
-          u 0 (P.index i) + (γ : K) * u 1 (P.index i) := by
-    let M := F.mark γ (hsub γ.property)
-    obtain ⟨idx, hi, hm⟩ :
-        ∃ idx ∈ M.support, P₀.eval (node idx) ≠ u 0 idx ∨ P₁.eval (node idx) ≠ u 1 idx := by
-      by_contra hn
-      push Not at hn
-      exact M.nonjoint ⟨⟨P₀, h₀, fun j hj => (hn j hj).1⟩, ⟨P₁, h₁, fun j hj => (hn j hj).2⟩⟩
-    obtain ⟨i, rfl⟩ := (P.retained idx).mpr (F.survives γ (hsub γ.property) idx hi)
-    refine ⟨i, hm, ?_⟩
-    have hh := M.hits (P.index i) hi
-    change (F.mark (γ : K) (hsub γ.property)).decoder.eval (P.nodes i) = _ at hh
-    simpa only [pencil _ γ.property, Polynomial.eval_add, Polynomial.eval_mul,
-      Polynomial.eval_C] using hh
-  let f : Λ → Fin P.N := fun γ => Classical.choose (mismatch γ)
-  have hf : Function.Injective f := by
-    intro γ δ he
-    apply Subtype.ext
-    obtain ⟨hm, hγ⟩ := Classical.choose_spec (mismatch γ)
-    have hδ := (Classical.choose_spec (mismatch δ)).2
-    change f γ = f δ at he
-    change
-      (P₀.eval (P.nodes (f γ)) ≠ u 0 (P.index (f γ)) ∨
-        P₁.eval (P.nodes (f γ)) ≠ u 1 (P.index (f γ))) at hm
-    change P₀.eval (P.nodes (f γ)) + (γ : K) * P₁.eval (P.nodes (f γ)) =
-      u 0 (P.index (f γ)) + (γ : K) * u 1 (P.index (f γ)) at hγ
-    change P₀.eval (P.nodes (f δ)) + (δ : K) * P₁.eval (P.nodes (f δ)) =
-      u 0 (P.index (f δ)) + (δ : K) * u 1 (P.index (f δ)) at hδ
-    rw [← he] at hδ
-    exact seed_eq_of_mismatch (F := K) hγ hδ hm
-  simpa only [Fintype.card_coe, Fintype.card_fin] using Fintype.card_le_of_injective f hf
 variable (chart : TaylorChart u P F b Λ)
-theorem chart_cut_iff (γ : K) (hγ : γ ∈ Λ) (i : Fin P.N) :
-    MvPolynomial.eval (chart.point γ) (nodeCut u P chart.numerator chart.denominator i) = 0 ↔
-      (F.mark γ (chart.subset hγ)).decoder.eval (P.nodes i) =
-        u 0 (P.index i) + γ * u 1 (P.index i) := by
-  let val := MvPolynomial.eval (chart.point γ)
-  let x := algebraMap K Frac (P.nodes i)
-  change val (nodeCut u P chart.numerator chart.denominator i) = 0 ↔ _
-  have heval := Polynomial.eval_map_apply val (C x) (p := chart.numerator)
-  unfold nodeCut
-  change val (chart.numerator.eval (C x) - _) = 0 ↔ _
-  rw [map_sub, ← heval]
-  change (chart.numerator.map val).eval (val (C x)) - _ = 0 ↔ _
-  rw [show val (C x) = x by simp [val], show chart.numerator.map val = _ from chart.reconstruction γ hγ]
-  rw [Polynomial.eval_mul, Polynomial.eval_C, show x = algebraMap K Frac (P.nodes i) from rfl,
-    Polynomial.eval_map_apply, map_mul, map_add, map_mul]
-  simp only [val, eval_C, eval_X, chart.slope γ hγ]
-  rw [← map_mul, ← map_add, sub_eq_zero]
-  constructor
-  · intro h
-    exact (algebraMap K Frac).injective (mul_left_cancel₀ (chart.regular γ hγ) h)
-  · intro h
-    rw [h]
-theorem chart_persistent (J : Ideal (MvPolynomial (Fin 3) Frac)) (W : Finset K) (hW : W ⊆ Λ)
-    (hzero : ∀ γ ∈ W, chart.point γ ∈ zeroLocus Frac J)
-    (hpersist : 131072 ≤ {i | nodeCut u P chart.numerator chart.denominator i ∈ J}.ncard) :
-    W.card ≤ P.N := by
-  classical
-  let keep := Finset.univ.filter fun i => nodeCut u P chart.numerator chart.denominator i ∈ J
-  have hk : 131072 ≤ keep.card := by
-    rw [← Set.ncard_coe_finset]
-    exact hpersist.trans_eq (congrArg Set.ncard (by ext i; simp [keep]))
-  obtain ⟨S, hS, hcard⟩ := Finset.exists_subset_card_eq hk
-  let P₀ := Lagrange.interpolate S P.nodes (fun i => u 0 (P.index i))
-  let P₁ := Lagrange.interpolate S P.nodes (fun i => u 1 (P.index i))
-  have hinj : Set.InjOn P.nodes (S : Set (Fin P.N)) := nodes_injective.injOn
-  have hd₀ : P₀.degree < (131072 : ℕ) := by
-    simpa only [P₀, hcard] using Lagrange.degree_interpolate_lt (fun i => u 0 (P.index i)) hinj
-  have hd₁ : P₁.degree < (131072 : ℕ) := by
-    simpa only [P₁, hcard] using Lagrange.degree_interpolate_lt (fun i => u 1 (P.index i)) hinj
-  apply pencil_bad_count (P := P) (F := F) (fun _ hg => chart.subset (hW hg)) P₀ P₁ hd₀ hd₁
-  intro γ hγ
-  let M := F.mark γ (chart.subset (hW hγ))
-  apply Polynomial.eq_of_degrees_lt_of_eval_index_eq S hinj
-  · rw [hcard]
-    exact Polynomial.degree_le_natDegree.trans_lt
-      (WithBot.coe_lt_coe.mpr (Nat.lt_succ_of_le (mark_degree M)))
-  · rw [hcard]
-    have hm : (Polynomial.C γ * P₁).degree ≤ P₁.degree := by
-      refine (Polynomial.degree_mul_le _ _).trans ?_
-      simpa only [zero_add] using add_le_add_left (Polynomial.degree_C_le (a := γ)) P₁.degree
-    exact (Polynomial.degree_add_le _ _).trans_lt (max_lt hd₀ (hm.trans_lt hd₁))
-  · intro i hi
-    have hcut : nodeCut u P chart.numerator chart.denominator i ∈ J := (Finset.mem_filter.mp (hS hi)).2
-    have hz : MvPolynomial.eval (chart.point γ) (nodeCut u P chart.numerator chart.denominator i) = 0 :=
-      hzero γ hγ _ hcut
-    rw [Polynomial.eval_add, Polynomial.eval_mul, Polynomial.eval_C]
-    exact (chart_cut_iff chart γ (hW hγ) i).mp hz |>.trans (by
-      rw [Lagrange.eval_interpolate_at_node _ hinj hi, Lagrange.eval_interpolate_at_node _ hinj hi])
 end
 end P2_4
 end

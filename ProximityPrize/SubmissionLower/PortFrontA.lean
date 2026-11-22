@@ -1,28 +1,27 @@
 import ProximityPrize.SubmissionLower.PortBase
-set_option Elab.async false
 set_option autoImplicit true
 section
 set_option maxRecDepth 12000
 namespace P0_4
 noncomputable section
 open Polynomial P0
-theorem threeUAt_eq (q : ℕ) (a : K[X]) (β : Fin 2 → K[X]) :
+private theorem threeUAt_eq (q : ℕ) (a : K[X]) (β : Fin 2 → K[X]) :
     threeUAt q a β = K1_8.threeUAt q a β := by
   delta threeUAt K1_8.threeUAt P0.liftX K1.liftX P0.seed K1.seed P0.twist K1.twist P0.p K1.p
     P0.Bivar K1.Bivar P0.K K1.K
   rfl
-theorem relationOnAt_eq (q : ℕ) (u : Words) (S : Finset I) (U V W : Bivar) :
+private theorem relationOnAt_eq (q : ℕ) (u : Words) (S : Finset I) (U V W : Bivar) :
     relationOnAt q u S U V W = K1_8.relationOnAt q u S U V W := by
   delta relationOnAt K1_8.relationOnAt P0.node K1.node P0.Words K1.Words P0.I K1.I
     P0.Bivar K1.Bivar P0.K K1.K
   rfl
-theorem columnRankAt_eq (q : ℕ) (U V : Bivar) :
+private theorem columnRankAt_eq (q : ℕ) (U V : Bivar) :
     columnRankAt q U V = K1_8.columnRankAt q U V := by
   delta columnRankAt K1_8.columnRankAt P0.seed K1.seed P0.extendSeed K1.extendSeed
     P0.Bivar K1.Bivar P0.Frac K1.Frac P0.K K1.K
   rfl
 open private K1_8.threeUAt_native from ProximityPrize.SubmissionLower.Fast068
-theorem native_threeU :
+private theorem native_threeU :
     threeUAt P0.p = (P0.threeU : K[X] → (Fin 2 → K[X]) → Bivar) := by
   unfold threeUAt P0.threeU
   rfl

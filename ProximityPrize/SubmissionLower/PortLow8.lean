@@ -1,6 +1,5 @@
 import ProximityPrize.SubmissionLower.PortLowBase
 import ProximityPrize.SubmissionLower.RungFront
-set_option Elab.async false
 set_option autoImplicit true
 section
 namespace P0_9_8
@@ -76,48 +75,6 @@ section
 namespace P0_9_8_3
 open K1_13
 open K1_13_8_2 (Chamber mixed_mono)
-private theorem box_refl (x : Shape) : InBox x x := ⟨le_rfl, le_rfl, le_rfl⟩
-private theorem normalize_mono {x y : Shape} (h : InBox x y) :
-    InBox x.chamber y.chamber := ⟨max_le_max h.1 h.2.1, h.2.1, h.2.2⟩
-private theorem normalize_chamber (x : Shape) (h : 3 * x.t ≤ x.j) :
-    Chamber x.chamber := ⟨le_max_right _ _, h⟩
-private theorem plus_mono {x y u v : Shape} (h : InBox x y) (h' : InBox u v) :
-    InBox (x.plus u) (y.plus v) :=
-  ⟨Nat.add_le_add h.1 h'.1, Nat.add_le_add h.2.1 h'.2.1, Nat.add_le_add h.2.2 h'.2.2⟩
-private theorem plus_chamber {x y : Shape} (hx : Chamber x) (hy : Chamber y) :
-    Chamber (x.plus y) := by
-  exact ⟨Nat.add_le_add hx.1 hy.1, by simp only [Shape.plus, Nat.mul_add]; exact Nat.add_le_add hx.2 hy.2⟩
-private theorem scale_mono {x y : Shape} (h : InBox x y) (k : ℕ) :
-    InBox (x.scale k) (y.scale k) :=
-  ⟨Nat.mul_le_mul_left k h.1, Nat.mul_le_mul_left k h.2.1, Nat.mul_le_mul_left k h.2.2⟩
-private theorem scale_chamber {x : Shape} (hx : Chamber x) (k : ℕ) :
-    Chamber (x.scale k) :=
-  ⟨Nat.mul_le_mul_left k hx.1, by simpa [Shape.scale, Nat.mul_left_comm 3 k] using Nat.mul_le_mul_left k hx.2⟩
-theorem min_fits_index (a i : ℕ) : 3 * min a (i / 3) ≤ i := by
-  have h := min_le_right a (i / 3)
-  omega
-private theorem chart_chamber (L : ℕ) (x : Shape) : Chamber (chart L x) :=
-  ⟨le_max_right _ _, min_fits_index _ _⟩
-private theorem lifted_chamber (L : ℕ) (x : Shape) : Chamber (liftedChart L x) :=
-  ⟨le_max_right _ _, min_fits_index _ _⟩
-private theorem chart_mono (L : ℕ) {x y : Shape} (h : InBox x y) :
-    InBox (chart L x) (chart L y) := by
-  obtain ⟨hb, hj, ht⟩ := h
-  refine ⟨?_, ?_, ?_⟩ <;> dsimp [chart] <;> gcongr
-private theorem lifted_mono (L : ℕ) {x y : Shape} (h : InBox x y) :
-    InBox (liftedChart L x) (liftedChart L y) := by
-  obtain ⟨hb, hj, ht⟩ := h
-  refine ⟨?_, ?_, ?_⟩ <;> dsimp [liftedChart] <;> gcongr
-private def graphShape (p : Shape) : Shape :=
-  ⟨max p.b (p.j + 1), p.j + 1, min (p.t + 1) ((p.j + 1) / 3)⟩
-private theorem graph_chamber (x : Shape) : Chamber (graphShape x) :=
-  ⟨le_max_right _ _, min_fits_index _ _⟩
-private theorem graph_mono {x y : Shape} (h : InBox x y) :
-    InBox (graphShape x) (graphShape y) := by
-  obtain ⟨hb, hj, ht⟩ := h
-  refine ⟨?_, ?_, ?_⟩ <;> dsimp [graphShape] <;> gcongr
-private theorem ceil_mono {a b : ℕ} (h : a ≤ b) (l : ℕ) : ceilDiv a l ≤ ceilDiv b l :=
-  Nat.div_le_div_right (Nat.sub_le_sub_right (Nat.add_le_add_right h l) 1)
 end P0_9_8_3
 end
 section
@@ -142,7 +99,7 @@ private theorem scale_mono {x y : Shape} (h : InBox x y) (k : ℕ) :
 private theorem scale_chamber {x : Shape} (hx : Chamber x) (k : ℕ) :
     Chamber (x.scale k) :=
   ⟨Nat.mul_le_mul_left k hx.1, by simpa [Shape.scale, Nat.mul_left_comm 3 k] using Nat.mul_le_mul_left k hx.2⟩
-theorem min_fits_index (a i : ℕ) : 3 * min a (i / 3) ≤ i := by
+private theorem min_fits_index (a i : ℕ) : 3 * min a (i / 3) ≤ i := by
   have h := min_le_right a (i / 3)
   omega
 private theorem chart_chamber (L : ℕ) (x : Shape) : Chamber (chart L x) :=

@@ -1,16 +1,11 @@
 import ProximityPrize.SubmissionLower.Fast077
 import ProximityPrize.SubmissionLower.PortLow4
-set_option Elab.async false
 set_option autoImplicit true
 section
 namespace P0_6
 noncomputable section
 open P0 Polynomial
 abbrev sourceCutoff : ℕ := 4 * agreement - 1
-def quotientSurplus (n h : ℕ) : Prop :=
-  n * (K1_10.jetDim 4 16 16 - K1_10.jetDim 3 15 15) <
-    K1_10.sourceDim sourceCutoff 5 16 16 -
-      K1_10.sourceDim (sourceCutoff - (k - 1) - h) 4 15 15
 end
 end P0_6
 end
@@ -23,7 +18,7 @@ private theorem amp_le (v : Fin 2 → K[X]) (j : Fin 2) :
   fin_cases j
   · exact le_max_left _ _
   · exact le_max_right _ _
-theorem amp_witness (v : Fin 2 → K[X]) (hc : IsCoprime (v 0) (v 1)) :
+private theorem amp_witness (v : Fin 2 → K[X]) (hc : IsCoprime (v 0) (v 1)) :
     ∃ j, v j ≠ 0 ∧ (v j).natDegree = amplitudeDegree (v 0) (v 1) := by
   by_cases hv : v 0 = 0
   · have h1 : v 1 ≠ 0 := by
@@ -159,12 +154,12 @@ private theorem column_dvd (n : ℕ) (f : Fin 2 → K[X]) (q : K[X])
     (hd : ∀ j, q ∣ f j) : liftX q ∣ column n f :=
   dvd_add ((Polynomial.mapRingHom Polynomial.C).map_dvd (hd 0))
     ((((Polynomial.mapRingHom Polynomial.C).map_dvd (hd 1))).mul_right _)
-theorem column_mul (a : K[X]) (n : ℕ) (f : Fin 2 → K[X]) :
+private theorem column_mul (a : K[X]) (n : ℕ) (f : Fin 2 → K[X]) :
     liftX a * (liftX (f 0) + seed ^ n * liftX (f 1)) =
       column n (fun j => a * f j) := by
   simp only [column, liftX, seed, Polynomial.map_mul, ← C_pow]
   ring
-def firstColumn (d : ℕ) (a : K[X]) (β : Fin 2 → K[X]) : Bivar :=
+private def firstColumn (d : ℕ) (a : K[X]) (β : Fin 2 → K[X]) : Bivar :=
   liftX a * (liftX (@Polynomial.map K K KS KS twist (β 0)) +
     seed ^ d * liftX (@Polynomial.map K K KS KS twist (β 1)))
 private theorem threeU_fun : threeU = firstColumn p := rfl
@@ -193,7 +188,7 @@ private theorem tight_pair {F : Type*} [Field F] (U V U' V' : F[X])
     _ = 1 := by rw [← hk,hab,one_mul]
 private def slice (P : Bivar) (n : ℕ) : K[X] :=
   ∑ j ∈ Finset.range (P.natDegree + 1), monomial j ((P.coeff j).coeff n)
-theorem slice_eval (P : Bivar) (n : ℕ) (x : K) :
+private theorem slice_eval (P : Bivar) (n : ℕ) (x : K) :
     (slice P n).eval x = (P.eval (C x)).coeff n := by
   rw [eval_eq_sum_range (C x)]
   simp only [slice, eval_finsetSum, eval_monomial, finsetSum_coeff, ← C_pow, coeff_mul_C]
@@ -201,14 +196,14 @@ private theorem slice_bound (P : Bivar) (n : ℕ) : (slice P n).natDegree ≤ P.
   apply natDegree_sum_le_of_forall_le
   intro i hi
   exact (natDegree_monomial_le _).trans (Nat.le_of_lt_succ (Finset.mem_range.mp hi))
-theorem select_four (d : ℕ) (hd : 1 < d) (r : Fin 2 → Fin 2 → K) (j l : Fin 2) :
+private theorem select_four (d : ℕ) (hd : 1 < d) (r : Fin 2 → Fin 2 → K) (j l : Fin 2) :
     ((C (r 0 0) + C (r 1 0)*Polynomial.X + C (r 0 1)*Polynomial.X^d +
       C (r 1 1)*Polynomial.X^(d+1)) : K[X]).coeff (j.val + d*l.val) = r j l := by
   fin_cases j <;> fin_cases l <;>
     simp only [coeff_add, coeff_C_mul_X, coeff_C_mul_X_pow, coeff_C, Nat.mul_zero,
       Nat.mul_one, Nat.zero_add, Nat.add_zero] <;>
     split_ifs <;> first | omega | simp_all
-theorem four_coeff (d : ℕ) (hd : 1 < d) (u v w z : Fin 2 → K) (j l : Fin 2) :
+private theorem four_coeff (d : ℕ) (hd : 1 < d) (u v w z : Fin 2 → K) (j l : Fin 2) :
     (((C (u 0) + C (u 1) * Polynomial.X ^ d) * (C (w 0) + Polynomial.X * C (w 1)) +
       (C (v 0) + C (v 1) * Polynomial.X) * (C (z 0) + Polynomial.X^d * C (z 1)) : K[X]).coeff
       (j.val + d*l.val)) = u l*w j + v j*z l := by
@@ -221,10 +216,10 @@ theorem four_coeff (d : ℕ) (hd : 1 < d) (u v w z : Fin 2 → K) (j l : Fin 2) 
     ring
   rw [hex]
   exact select_four d hd r j l
-theorem column_eval (d : ℕ) (f : Fin 2 → K[X]) (x : K) :
+private theorem column_eval (d : ℕ) (f : Fin 2 → K[X]) (x : K) :
     (column d f).eval (C x) = C ((f 0).eval x) + C ((f 1).eval x) * Polynomial.X^d := by
   simp only [column, liftX, eval_add, eval_mul, eval_C, eval_map_apply]
-theorem word_coeff (d : ℕ) (hd : 1 < d) (U V : Fin 2 → K[X]) (u : Words)
+private theorem word_coeff (d : ℕ) (hd : 1 < d) (U V : Fin 2 → K[X]) (u : Words)
     (i : I) (j l : Fin 2) :
     (U l).eval (node i) * u j i + (V j).eval (node i) * (u l i)^d =
     (((C ((U 0).eval (node i)) + C ((U 1).eval (node i)) * Polynomial.X^d) *
@@ -234,7 +229,7 @@ theorem word_coeff (d : ℕ) (hd : 1 < d) (U V : Fin 2 → K[X]) (u : Words)
         (j.val + d*l.val) :=
   (four_coeff d hd (fun l => (U l).eval (node i)) (fun j => (V j).eval (node i))
     (fun j => u j i) (fun l => (u l i)^d) j l).symm
-def relationAt (d : ℕ) (u : Words) (deleted : Finset I) (U V output : Bivar) : Prop :=
+private def relationAt (d : ℕ) (u : Words) (deleted : Finset I) (U V output : Bivar) : Prop :=
   ∀ i ∉ deleted,
     U.eval (C (node i)) * (C (u 0 i) + Polynomial.X (R := K) * C (u 1 i)) +
     V.eval (C (node i)) * (C (u 0 i ^ d) + Polynomial.X (R := K) ^ d * C (u 1 i ^ d)) =
@@ -276,84 +271,9 @@ private theorem exists_kernel_outside {F E G : Type*} [Field F]
   have hf := LinearMap.finrank_range_add_finrank_ker f
   have hr := (LinearMap.range f).finrank_le
   omega
-abbrev Source (F : Type*) [Field F] :=
-  filtered (F := F) (sourceWeights 131071) (sourceBounds sourceCutoff 5 16 16)
 variable {F : Type*} [Field F] {N : ℕ} {L : MvPolynomial (Fin 5) F}
 variable (C : Contacts N L) {h : ℕ}
     (hdeg : ∀ j, L.weightedTotalDegree (sourceWeights 131071 j) = relationBounds h j)
-private def localMultiply (i : Fin N) : Multipliers F →ₗ[F] JetSpace F 3 16 16 where
-  toFun Q := ⟨weightedTruncation contactWeight 4 (C.shifted i L * Q.val), by
-    apply truncated_mul_mem_jet 2 15 15 1 1
-    · exact (contactShift_parameter_weights _ _ _ _ _ L).1.trans (le_of_eq (hdeg 2))
-    · exact (contactShift_parameter_weights _ _ _ _ _ L).2.trans (le_of_eq (hdeg 3))⟩
-  map_add' Q R := by apply Subtype.ext; simp [mul_add]
-  map_smul' a Q := by apply Subtype.ext; simp
-private abbrev LocalSpace (i : Fin N) :=
-  (JetSpace F 3 16 16) ⧸ LinearMap.range (localMultiply C hdeg i)
-private theorem local_finrank (i : Fin N) :
-    Module.finrank F (LocalSpace C hdeg i) = J 4 16 16 - J 3 15 15 := by
-  have hinj : Function.Injective (localMultiply C hdeg i) := by
-    apply LinearMap.ker_eq_bot.mp
-    apply LinearMap.ker_eq_bot'.mpr
-    intro Q hQ
-    by_contra hn
-    have hprod : weightedTruncation contactWeight 4 (C.shifted i L * Q.val) = 0 :=
-      congrArg (fun x : JetSpace F 3 16 16 => x.val) hQ
-    have horder := C.order_one i
-    change (contactLift contactWeight (C.shifted i L)).natTrailingDegree = 1 at horder
-    have hL : C.shifted i L ≠ 0 := by
-      intro hz
-      simp [hz] at horder
-    exact contact_product_not_high_order contactWeight 4 (C.shifted i L) Q.val
-      horder hL (fun hz => hn (Subtype.ext hz)) (jetSpace_support_bound _ _ _ Q)
-      ((weightedTruncation_eq_zero_iff _ _ _).mp hprod)
-  have hq := Submodule.finrank_quotient_add_finrank (LinearMap.range (localMultiply C hdeg i))
-  rw [LinearMap.finrank_range_of_inj hinj, jetSpace_finrank, jetSpace_finrank] at hq
-  change Module.finrank F (LocalSpace C hdeg i) + J 3 15 15 = J 4 16 16 at hq
-  omega
-private def nodeMap (i : Fin N) : Source F →ₗ[F] LocalSpace C hdeg i :=
-  (LinearMap.range (localMultiply C hdeg i)).mkQ.comp
-    (sourceToJet sourceCutoff 131071 5 16 16 3 (C.x i) (C.first i) (C.firstSlope i)
-      (C.second i) (C.secondSlope i))
-include hdeg in
-theorem quotientSource (hL : L ≠ 0) (hh : h ≤ 32766) (hs : P0_6.quotientSurplus N h) :
-    ∃ G : Source F, ¬ L ∣ G.val ∧ ∀ i, ∃ R : Multipliers F,
-      C.shifted i G.val - C.shifted i L * R.val ∈ restrictWeightedOrder contactWeight 4 := by
-  have hfit : ∀ j, relationBounds h j ≤ sourceBounds sourceCutoff 5 16 16 j := by
-    have hcapacity : 131071 + 32766 ≤ sourceCutoff := by decide
-    intro j
-    fin_cases j <;> simp [relationBounds, sourceBounds] <;> omega
-  have hshift : (fun j => sourceBounds sourceCutoff 5 16 16 j - relationBounds h j) =
-      sourceBounds (sourceCutoff - 131071 - h) 4 15 15 := by
-    funext j
-    fin_cases j <;> simp [sourceBounds, relationBounds] <;> omega
-  let mult := filteredMul (sourceWeights 131071) (sourceBounds sourceCutoff 5 16 16)
-    (relationBounds h) L hL hdeg hfit
-  have hmult : Module.finrank F (LinearMap.range mult) =
-      V (sourceCutoff - 131071 - h) 131071 4 15 15 := by
-    rw [LinearMap.finrank_range_of_inj (filteredMul_injective _ _ _ L hL hdeg hfit),
-      hshift, source_filtered_finrank]
-  letI (i : Fin N) : Module.Free F (LocalSpace C hdeg i) := Module.Free.of_divisionRing F _
-  letI : Module F (∀ i : Fin N, LocalSpace C hdeg i) := Pi.module _ _ _
-  have hlocal : Module.finrank F (∀ i : Fin N, LocalSpace C hdeg i) =
-      N * (J 4 16 16 - J 3 15 15) := by
-    rw [Module.finrank_pi_fintype]
-    simp only [local_finrank C hdeg, Finset.sum_const, Finset.card_univ, Fintype.card_fin, smul_eq_mul]
-  have hdim : Module.finrank F (∀ i : Fin N, LocalSpace C hdeg i) +
-      Module.finrank F (LinearMap.range mult) < Module.finrank F (Source F) := by
-    rw [hlocal, hmult, source_filtered_finrank]
-    change N * (J 4 16 16 - J 3 15 15) <
-      V sourceCutoff 131071 5 16 16 - V (sourceCutoff - 131071 - h) 131071 4 15 15 at hs
-    omega
-  obtain ⟨G, hG, hnot⟩ := exists_kernel_outside (G := ∀ i : Fin N, LocalSpace C hdeg i)
-    (LinearMap.pi (nodeMap C hdeg)) (LinearMap.range mult) hdim
-  refine ⟨G, (mem_filteredMul_range_iff _ _ _ L hL hdeg hfit G).not.mp hnot, ?_⟩
-  intro i
-  have hi : nodeMap C hdeg i G = 0 := congrFun hG i
-  obtain ⟨R, hR⟩ := (Submodule.Quotient.mk_eq_zero _).mp hi
-  refine ⟨R, (weightedTruncation_eq_zero_iff _ _ _).mp ?_⟩
-  rw [map_sub]
-  exact sub_eq_zero.mpr (congrArg Subtype.val hR).symm
 end
 end P0_6_1
 end
@@ -368,7 +288,7 @@ open K1 K1_10 K1_11 MvPolynomial
 open K1_10_1 (Contacts denominator liftOrdinary numerator pencil planeRelation
   planeRelation_view relationBounds toScalarSource toScalarSource_atDecoder)
 open P0_6 (sourceCutoff)
-theorem eval_liftOrdinary (Q P : Polynomial K) (s t : K) :
+private theorem eval_liftOrdinary (Q P : Polynomial K) (s t : K) :
     aeval (scalarImages P s t) (liftOrdinary Q) = Q := by
   let φ : MvPolynomial (Fin 4) K →+* Polynomial K := (aeval (scalarImages P s t)).toRingHom
   have hh : φ.comp liftOrdinary = RingHom.id (Polynomial K) := by

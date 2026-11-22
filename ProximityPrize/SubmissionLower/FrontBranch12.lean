@@ -1,6 +1,5 @@
 import ProximityPrize.SubmissionLower.PortHighFinish
 import ProximityPrize.SubmissionLower.RungSplit
-set_option Elab.async false
 set_option autoImplicit true
 section
 set_option maxRecDepth 12000
@@ -15,19 +14,12 @@ export P0 (K I Words node p blockLength k Frac Bivar TypeAtMostOne coefficientBl
 abbrev Rung := P1.Rung
 abbrev target : Rung := ⟨179983, 0x140f123d, 0x40000000, 2273, 0x3aa55b4097fdbda, 0x1aca8e8eb60a93⟩
 abbrev agreement := target.agreement
-abbrev radiusNumerator := target.numerator
-abbrev radiusDenominator := target.denominator
 abbrev lowCutoff : ℤ := target.lowEnd
 abbrev t : ℕ := blockLength - agreement
 abbrev L : ℕ := agreement - k
 abbrev heightCap : ℕ := t + 1 - L - 2
-def queryRadius : ℝ≥0 := claimedRadius radiusNumerator radiusDenominator
-def radius : ℝ := queryRadius
-def BadFamily (u : Words) (Γ : Finset K) : Prop :=
-  ∀ γ ∈ Γ, IsMCA (AffineLineGenerator K) IRSProfile.baseCode γ u radius
 abbrev BadMarkAt := P1.BadMarkAt
 abbrev BadMark := BadMarkAt agreement
-def ordinary (u : Words) := hankel node (u 0) (u 1) L t
 def twoBlock (u : Words) := stacked p node (u 0) (u 1) L t
 def stackRank (u : Words) := GenericLayer.genericRank (twoBlock u)
 def nullity (u : Words) := GenericLayer.genericNullity (twoBlock u)
@@ -169,23 +161,6 @@ structure PoleData (Γ : Finset K) (s : K → K[X]) where
   a₀_unit : IsCoprime a₀ H
   regular : ∀ γ ∈ Γ, IsCoprime (a₀ + C (z γ) * a₁) H
   residue : ∀ γ ∈ Γ, H ∣ c * (a₀ + C (z γ) * a₁) * extend (s γ) + C (z γ) * q
-def asOldPole {Γ s} (P : PoleData Γ s) : K1_13.PoleData Γ s where
-  H := P.H
-  monic := P.monic
-  small := ⟨P.small.1, P.small.2.trans (by decide)⟩
-  nodes := P.nodes
-  degree := P.degree
-  z := P.z
-  injective := P.injective
-  c := P.c
-  q := P.q
-  a₀ := P.a₀
-  a₁ := P.a₁
-  c_unit := P.c_unit
-  q_unit := P.q_unit
-  a₀_unit := P.a₀_unit
-  regular := P.regular
-  residue := P.residue
 end
 end P3
 end
@@ -228,7 +203,7 @@ private theorem eval_atSlope (P : Bivar) (a γ : K) :
     (atSlope P γ).eval a = (P.eval (C a)).eval γ := by
   simpa only [atSlope, Polynomial.coe_evalRingHom, Polynomial.eval_C] using
     (Polynomial.eval_map_apply (Polynomial.evalRingHom γ) (C a) (p := P))
-theorem atSlope_constant (G : K[X]) (γ : K) :
+private theorem atSlope_constant (G : K[X]) (γ : K) :
     atSlope (G.map C) γ = G := by
   rw [atSlope, Polynomial.map_map]
   have h : (Polynomial.evalRingHom γ).comp C = RingHom.id K := by
@@ -281,46 +256,6 @@ structure PolarData (u : Words) where
     (Q r s).eval (node i) =
       a.eval (node i) * twist ((pencil (A 0) (A 1) r).eval (node i)) * fold u s i -
       b.eval (node i) * (pencil (A 0) (A 1) s).eval (node i) * twist (fold u r i)
-private theorem polarData_of_set {u : Words} (S : Finset I) (height : ℕ)
-    (a b : K[X]) (A : Fin 2 → K[X]) (output : P0.Bivar)
-    (hh : height + S.card ≤ heightBound)
-    (hout : output.degree < (k + height : ℕ))
-    (hfirst : a.natDegree + amplitudeDegree (A 0) (A 1) ≤ height)
-    (hsecond : b.natDegree + amplitudeDegree (A 0) (A 1) ≤ height)
-    (hane : a ≠ 0) (hn : K1.sixNorm a ≠ K1.sixNorm b) (hA : IsCoprime (A 0) (A 1))
-    (hc : ∀ i ∉ S, CoefficientIdentities u a b A output i) : Nonempty (PolarData u) := by
-  classical
-  let g := locator node S
-  let v (j : ℕ) := g * seedCoeff output j
-  have hg : g.natDegree = S.card := locator_natDegree _ _
-  have hd (j : ℕ) : (v j).degree < (k + heightBound : ℕ) := by
-    have h := Strata.degree_mul_lt_add g (seedCoeff output j) g.natDegree
-      (k + height) le_rfl (seedCoeff_degree _ _ _ hout)
-    exact h.trans_le (by exact_mod_cast (show k + height + g.natDegree ≤ k + heightBound by omega))
-  have ha : (g * a).natDegree + amplitudeDegree (A 0) (A 1) ≤ heightBound := by
-    have h := natDegree_mul_le (p := g) (q := a)
-    omega
-  have hb : (g * b).natDegree + amplitudeDegree (A 0) (A 1) ≤ heightBound := by
-    have h := natDegree_mul_le (p := g) (q := b)
-    omega
-  have hgn : g ≠ 0 := (locator_monic node S).ne_zero
-  refine ⟨⟨g * a, g * b, A,
-    fun r s => pencil (pencil (v 0) (v 1) s) (pencil (v K1.p) (v (K1.p + 1)) s) (twist r),
-    mul_ne_zero hgn hane, ?_, hA, ha, hb, ?_, ?_⟩⟩
-  · intro h
-    rw [sixNorm_mul, sixNorm_mul] at h
-    exact hn (mul_left_cancel₀ (sixNorm_ne_zero hgn) h)
-  · intro r s
-    exact pencil_degree (pencil_degree (hd 0) (hd 1) s)
-      (pencil_degree (hd K1.p) (hd (K1.p + 1)) s) _
-  · intro r s i
-    by_cases hi : i ∈ S
-    · have hz : g.eval (node i) = 0 := locator_eval_zero node _ i hi
-      simp only [pencil, v, eval_mul, eval_add, eval_C, hz, zero_mul, mul_zero, add_zero, sub_zero]
-    obtain ⟨h0, h1, h2, h3⟩ := hc i hi
-    simp only [pencil, fold, v, eval_add, eval_mul, eval_C, h0, h1, h2, h3,
-      crossValue, map_add, map_mul]
-    ring
 end
 end P1_2
 end

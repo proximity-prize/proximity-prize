@@ -1,7 +1,6 @@
 import ProximityPrize.SubmissionLower.Fast072
 import ProximityPrize.SubmissionLower.Fast074
 import ProximityPrize.SubmissionLower.PortBase
-set_option Elab.async false
 set_option autoImplicit true
 section
 namespace P0_10
@@ -87,18 +86,26 @@ def MarkOn {u del} (M : AnchorModel u del) {Γ} (F : AnchoredFamily M Γ)
   q.asIdeal ≤ RingHom.ker
     (eval₂RingHom (eval₂RingHom (graphEval (M.label γ)) (atX (F.scalar γ)))
       (atX (F.scalar γ).derivative))
-def rawWidth (w : ℤ) (q j : ℕ) : ℕ :=
-  (band w).multiplicity * agreement + j - q * (131071 - w.toNat)
-def rawVolume (w : ℤ) : ℕ :=
-  triangle (band w).subbankSeeds * shapeSum (terminalShape w) (rawWidth w)
 def forcedPower (w : ℤ) (W j : ℕ) : ℕ :=
   1 + (fullCutoff (terminalShape w) - W) / (2 * w.toNat) - j
 def TerminalDivisibility (w : ℤ) (rows : Banks) (f : Equation) : Prop :=
   ∀ W < (band w).multiplicity * agreement, ∀ P ∈ rows (terminalShape w) W, P ≠ 0 →
     f ^ forcedPower w W P.natDegree ∣ P.leadingCoeff
-def curveFactor (d : ℕ) : ℕ := t / (agreement - d) + 1
-def singularDegree (w : ℤ) : ℕ :=
-  (2 * (band w).yBound - 1) * (band w).seedBound
+structure RetainedCover {u del} (M : AnchorModel u del) {Γ} (F : AnchoredFamily M Γ)
+    {rows : Banks} (pairs : ∀ i : Fin 2, BufferedPair M.overhead rows i) where
+  kept : Finset K
+  subset : kept ⊆ Γ
+  paid : (Γ \ kept).card ≤ highPrefix M.overhead
+  parents : Finset Surface
+  geometric : ∀ q ∈ parents, Parent q
+  initial : ∀ q ∈ parents, (pairs 0).free ∈ q.asIdeal ∧ (pairs 0).moving ∈ q.asIdeal
+  survives : ∀ q ∈ parents, PairPass (pairs 1) q
+  terminal : ∀ q ∈ parents, BankVanishes rows (fullShape M.overhead) q
+  covers : ∀ γ ∈ kept, ∃ q ∈ parents, MarkOn M F q γ
+  equation : Equation
+  projected : ProjectedProduct parents equation
+  y_bound : equation.natDegree ≤ (band M.overhead).yBound
+  divides : TerminalDivisibility M.overhead rows equation
 end
 end P0_10
 end
@@ -111,58 +118,6 @@ open K1_14 (L FX Seeds Equation Banks liftPoly graphEval atX atMark
   seedEmbedding SeedBound frobenius_coefficient_exception_count)
 open private resultant_degree derivative_seedBound from ProximityPrize.SubmissionLower.Fast023
 open scoped BigOperators
-theorem adjacent_chart {u del} (M : AnchorModel u del) {Γ} (F : AnchoredFamily M Γ) :
-    ∃ H, AdjacentChart M F H := by
-  let φ := algebraMap K L
-  let σ := frobenius L p
-  have hsmall : M.overhead.toNat ≤ (liftPoly M.E).natDegree := by
-    rw [liftPoly, natDegree_map]
-    unfold AnchorModel.overhead
-    omega
-  obtain ⟨H, hm, hdeg, hd⟩ := K1_14.trim _ _ hsmall
-  have hd' : H.map σ ∣ liftPoly (M.E.map twist) := by
-    change H.map σ ∣ liftPoly (M.E.map K1.twist)
-    rw [K1_14.twist_lift]
-    exact Polynomial.map_dvd σ hd
-  have hcop : IsCoprime H (H.map σ) := by
-    have ha := M.adjacent_coprime.map (Polynomial.mapRingHom φ)
-    exact (ha.of_isCoprime_of_dvd_left hd).of_isCoprime_of_dvd_right hd'
-  have hunit : IsCoprime (liftPoly (M.Q * M.factor * M.A₀)) H :=
-    (((M.offset_reduced.mul_left M.coprime_factor.symm).mul_left M.first_amplitude_unit).map
-      (Polynomial.mapRingHom φ)).of_isCoprime_of_dvd_right hd
-  refine ⟨H, hm, hdeg, hd, hm.map σ, (natDegree_map σ).trans hdeg, hd', hcop, ?_,
-    hunit, hunit.map (Polynomial.mapRingHom σ), ?_⟩
-  · intro i
-    have h₀ : H.eval (φ (node i)) ≠ 0 := by
-      intro hz
-      have hb : (liftPoly M.E).eval (φ (node i)) = 0 := by
-        obtain ⟨J, hj⟩ := hd
-        simp [hj, eval_mul, hz]
-      exact M.E_nodes i (φ.injective (by simpa [liftPoly, φ] using hb))
-    have hx : σ (φ (node i)) = φ (node i) := by
-      change φ (node i) ^ p = _
-      rw [← map_pow, FrobeniusLocator.Native.native_domain_fixed]
-    refine ⟨h₀, ?_⟩
-    rw [← hx, eval_map_apply]
-    exact (map_ne_zero σ).mpr h₀
-  · intro γ hγ
-    let z := M.label γ
-    let B := F.mark γ hγ
-    have ha : IsCoprime (liftPoly (M.factor * M.amplitude γ)) H :=
-      ((M.coprime_factor.symm.mul_left B.pole_unit).map
-        (Polynomial.mapRingHom φ)).of_isCoprime_of_dvd_right hd
-    have hid : M.E ∣ (M.factor * M.amplitude γ) * F.scalar γ + C z * M.Q :=
-      ⟨M.decoder B.bad, by rw [← B.identity]; ring⟩
-    have hres : H ∣ liftPoly (M.factor * M.amplitude γ) * liftPoly (F.scalar γ) +
-        C (φ z) * liftPoly M.Q := by
-      simpa only [liftPoly, Polynomial.map_add, Polynomial.map_mul, Polynomial.map_C]
-        using hd.trans (Polynomial.map_dvd φ hid)
-    have hfix : (liftPoly (F.scalar γ)).map σ = liftPoly (F.scalar γ) := by
-      rw [← K1_14.twist_lift]
-      exact congrArg liftPoly B.scalar_fixed
-    refine ⟨ha, ha.map (Polynomial.mapRingHom σ), hres, ?_⟩
-    simpa only [Polynomial.map_add, Polynomial.map_mul, Polynomial.map_C, hfix,
-      σ, frobenius_def] using (Polynomial.map_dvd σ hres)
 end
 end P0_10
 end
@@ -175,92 +130,6 @@ open K1_14 (FX Jet Equation shapeSum slots triangle SeedBound)
 open K1_14_4 (gradeWidth seedDegree seedDegree_le_iff seedDegree_pow rank_multiples_le)
 open private shapeSum_swap gradeWidth_card position_sum from ProximityPrize.SubmissionLower.Fast072
 open private gradeMap mem_filtered finrank_le_grades from ProximityPrize.SubmissionLower.Fast069
-private def gradeCapacity (w : ℤ) (W j : ℕ) : ℕ :=
-  let b := band w
-  gradeWidth (131071 - w.toNat) b.jetBound W j *
-    slots b.subbankSeeds (forcedPower w W j * (b.seedBound + 1))
-private def cutoffCapacity (w : ℤ) (W : ℕ) : ℕ :=
-  ∑ j ∈ range ((band w).vBound + 1), gradeCapacity w W j
-private theorem cutoffCapacity_eq (w : ℤ) (W : ℕ) (hk : 0 < 131071 - w.toNat) :
-    cutoffCapacity w W =
-      shapeSum (terminalShape w) (fun q j =>
-        if q * (131071 - w.toNat) ≤ W + j then
-          slots (band w).subbankSeeds (forcedPower w W j * ((band w).seedBound + 1))
-        else 0) := by
-  rw [← shapeSum_swap]
-  unfold cutoffCapacity
-  apply sum_congr rfl
-  intro j _
-  rw [gradeCapacity, gradeWidth_card _ _ _ _ hk, sum_mul]
-  apply sum_congr rfl
-  intro q _
-  split_ifs <;> simp
-theorem ranks_lt_gradeWidth {d j k B W : ℕ} (hk : 0 < k)
-    (hB : d + j ≤ B) (hW : (d + j) * k ≤ W + j) :
-    d < gradeWidth k B W j := by
-  have hd := (Nat.le_div_iff_mul_le hk).2 hW
-  unfold gradeWidth
-  omega
-theorem ranks_range_rank_at (k v B U s W j : ℕ) (e : ℕ → ℕ) (V : Submodule FX Jet)
-    {f : Equation} (hf : f ≠ 0) (hv : s + 1 ≤ seedDegree f)
-    (hk : 0 < k)
-    (hV : ∀ P ∈ V, P ≠ 0 →
-      P.natDegree ≤ v ∧
-      P.leadingCoeff.natDegree + P.natDegree ≤ B ∧
-      (P.leadingCoeff.natDegree + P.natDegree) * (k) ≤ W + P.natDegree ∧
-      SeedBound P.leadingCoeff U ∧
-      f ^ e P.natDegree ∣ P.leadingCoeff) :
-    Module.rank FX (gradeMap (F := FX) (A := Equation) V j).range ≤
-      (↑(gradeWidth k B W j * slots U (e j * (s + 1))) : Cardinal) := by
-  apply rank_multiples_le _ (pow_ne_zero (e j) hf)
-  · rw [seedDegree_pow hf]
-    exact Nat.mul_le_mul_left _ hv
-  · rintro c ⟨⟨P, hP⟩, rfl⟩ hc
-    change P.coeff j ≠ 0 at hc
-    obtain ⟨hpV, hd⟩ := mem_filtered.mp hP
-    have hp : P ≠ 0 := by
-      intro hz
-      exact hc (by simp [hz])
-    have hj : P.natDegree = j :=
-      le_antisymm (Nat.le_of_lt_succ ((natDegree_lt_iff_degree_lt hp).2 hd))
-        (le_natDegree_of_ne_zero hc)
-    obtain ⟨_, hB, hwidth, hseed, hdvd⟩ := hV P hpV hp
-    rw [hj] at hB hwidth hdvd
-    change (P.coeff j).natDegree < _ ∧ SeedBound (P.coeff j) _ ∧ _ ∣ P.coeff j
-    rw [← hj, coeff_natDegree, hj]
-    exact ⟨ranks_lt_gradeWidth hk hB hwidth, hseed, hdvd⟩
-theorem gradeMap_range_rank (w : ℤ) (W j : ℕ) (V : Submodule FX Jet)
-    {f : Equation} (hf : f ≠ 0) (hv : (band w).seedBound + 1 ≤ seedDegree f)
-    (hk : 0 < 131071 - w.toNat)
-    (hV : ∀ P ∈ V, P ≠ 0 →
-      P.natDegree ≤ (band w).vBound ∧
-      P.leadingCoeff.natDegree + P.natDegree ≤ (band w).jetBound ∧
-      (P.leadingCoeff.natDegree + P.natDegree) * (131071 - w.toNat) ≤ W + P.natDegree ∧
-      SeedBound P.leadingCoeff (band w).subbankSeeds ∧
-      f ^ forcedPower w W P.natDegree ∣ P.leadingCoeff) :
-    Module.rank FX (gradeMap (F := FX) (A := Equation) V j).range ≤
-      (↑(gradeCapacity w W j) : Cardinal) := by
-  exact ranks_range_rank_at (131071 - w.toNat) (band w).vBound (band w).jetBound
-    (band w).subbankSeeds (band w).seedBound W j (forcedPower w W) V hf hv hk hV
-theorem cutoff_finrank_le (w : ℤ) (W : ℕ) (V : Submodule FX Jet)
-    {f : Equation} (hf : f ≠ 0) (hv : (band w).seedBound + 1 ≤ seedDegree f)
-    (hk : 0 < 131071 - w.toNat)
-    (hV : ∀ P ∈ V, P ≠ 0 →
-      P.natDegree ≤ (band w).vBound ∧
-      P.leadingCoeff.natDegree + P.natDegree ≤ (band w).jetBound ∧
-      (P.leadingCoeff.natDegree + P.natDegree) * (131071 - w.toNat) ≤ W + P.natDegree ∧
-      SeedBound P.leadingCoeff (band w).subbankSeeds ∧
-      f ^ forcedPower w W P.natDegree ∣ P.leadingCoeff) :
-    Module.finrank FX V ≤ cutoffCapacity w W := by
-  unfold cutoffCapacity
-  refine finrank_le_grades (F := FX) (A := Equation) V (gradeCapacity w W)
-    ((band w).vBound + 1) ?_ ?_
-  · intro j
-    exact gradeMap_range_rank w W j V (f := f) hf hv hk hV
-  · intro P hp
-    by_cases hn : P = 0
-    · simp [hn]
-    · exact (natDegree_lt_iff_degree_lt hn).1 (Nat.lt_succ_of_le (hV P hp hn).1)
 end
 end P0_10
 end
@@ -274,9 +143,6 @@ structure FixedWord (w : I → K) (T : Finset K) (s : K → K[X]) (d : ℕ) : Pr
   distinct : Set.InjOn s (T : Set K)
   degree : ∀ γ ∈ T, (s γ).natDegree ≤ d
   hits : ∀ γ ∈ T, ∃ B : Finset I, agreement ≤ B.card ∧ ∀ i ∈ B, (s γ).eval (node i) = w i
-theorem FixedWord.mono {w T s d} (h : FixedWord w T s d) {U : Finset K} (hU : U ⊆ T) :
-    FixedWord w U s d :=
-  ⟨h.distinct.mono hU, fun γ hγ => h.degree γ (hU hγ), fun γ hγ => h.hits γ (hU hγ)⟩
 private theorem incidence_arithmetic (errors m x gap cap : ℕ)
     (hm : 0 < m) (hg : 0 < gap) (hx : gap ≤ x) (he : 0 < errors)
     (hsecond : (m*x)^2 ≤ (x+errors) * (m * (x + (m-1)*(x-gap))))
@@ -313,88 +179,6 @@ private theorem incidence_arithmetic (errors m x gap cap : ℕ)
         ring))
   have bigger := mul_lt_mul_of_pos_right hbad (Int.ofNat_lt.mpr he)
   nlinarith only [impossible, bigger]
-theorem section_capacity {w T s d} (h : FixedWord w T s d) (hd : d < agreement) (cap : ℕ)
-    (hsection : ∀ i : I, (∃ γ ∈ T, (s γ).eval (node i) ≠ w i) →
-      (T.filter fun γ => (s γ).eval (node i) = w i).card ≤ cap) :
-    (agreement - d) * T.card ≤ P0.t * cap + (agreement - d) := by
-  classical
-  by_cases hm : T.card ≤ 1
-  · have hb := Nat.mul_le_mul_left (agreement - d) hm
-    simp only [Nat.mul_one] at hb
-    omega
-  let hits (γ : K) : Finset I := univ.filter fun i => (s γ).eval (node i) = w i
-  let common : Finset I := univ.filter fun i => ∀ γ ∈ T, (s γ).eval (node i) = w i
-  let nodes : Finset I := univ \ common
-  have common_le (γ : K) (hγ : γ ∈ T) : common ⊆ hits γ := by
-    intro i hi
-    exact mem_filter.mpr ⟨mem_univ _, (mem_filter.mp hi).2 γ hγ⟩
-  have hit_count (γ : K) (hγ : γ ∈ T) : agreement ≤ (hits γ).card := by
-    obtain ⟨B, hB, hval⟩ := h.hits γ hγ
-    exact hB.trans (card_le_card fun i hi => mem_filter.mpr ⟨mem_univ _, hval i hi⟩)
-  have pair_count (a : K) (ha : a ∈ T) (b : K) (hb : b ∈ T) (hab : a ≠ b) :
-      (hits a ∩ hits b).card ≤ d := by
-    let P := s a - s b
-    have hp : P ≠ 0 := sub_ne_zero.mpr fun eq => hab (h.distinct ha hb eq)
-    refine (FrobeniusLocator.Strata.root_nodes_card_le node IRSProfile.domain.injective
-      P hp _ ?_).trans ((natDegree_sub_le _ _).trans (max_le (h.degree a ha) (h.degree b hb)))
-    intro i hi
-    change ((s a) - (s b)).eval (node i) = 0
-    rw [eval_sub, (mem_filter.mp (mem_inter.mp hi).1).2, (mem_filter.mp (mem_inter.mp hi).2).2,
-      sub_self]
-  obtain ⟨a, ha, b, hb, hab⟩ := one_lt_card.mp (by omega : 1 < T.card)
-  have hcommon : common.card ≤ d :=
-    (card_le_card (subset_inter (common_le a ha) (common_le b hb))).trans
-      (pair_count a ha b hb hab)
-  let x := agreement - common.card
-  let t := d - common.card
-  have ht : t = x - (agreement - d) := by dsimp [t, x]; omega
-  have hx : agreement - d ≤ x := by dsimp [x]; omega
-  have hnodes : nodes.card = x + P0.t := by
-    rw [card_sdiff_of_subset (subset_univ common), card_univ, IRSProfile.card_index]
-    change 262144 - common.card = (180217 - common.card) + 81927
-    have hbound : common.card ≤ 180217 := hcommon.trans hd.le
-    omega
-  have exists_trim (γ : K) : ∃ B : Finset I, γ ∈ T → B ⊆ hits γ \ common ∧ B.card = x := by
-    by_cases hγ : γ ∈ T
-    · have hc := hit_count γ hγ
-      have hsize : x ≤ (hits γ \ common).card := by
-        rw [card_sdiff_of_subset (common_le γ hγ)]
-        dsimp [x]
-        omega
-      obtain ⟨B, hB, hcard⟩ := exists_subset_card_eq hsize
-      exact ⟨B, fun _ => ⟨hB, hcard⟩⟩
-    · exact ⟨∅, fun h => (hγ h).elim⟩
-  choose B hB using exists_trim
-  have into_nodes (γ : K) (hγ : γ ∈ T) : B γ ⊆ nodes := by
-    intro i hi
-    exact mem_sdiff.mpr ⟨mem_univ _, (mem_sdiff.mp ((hB γ hγ).1 hi)).2⟩
-  have overlap (a : K) (ha : a ∈ T) (b : K) (hb : b ∈ T) (hab : a ≠ b) :
-      (B a ∩ B b).card ≤ t := by
-    have cover : (B a ∩ B b) ∪ common ⊆ hits a ∩ hits b := by
-      intro i hi
-      rcases mem_union.mp hi with hi | hi
-      · exact mem_inter.mpr ⟨(mem_sdiff.mp ((hB a ha).1 (mem_inter.mp hi).1)).1,
-          (mem_sdiff.mp ((hB b hb).1 (mem_inter.mp hi).2)).1⟩
-      · exact mem_inter.mpr ⟨common_le a ha hi, common_le b hb hi⟩
-    have disj : Disjoint (B a ∩ B b) common := disjoint_left.mpr fun i hi hi' =>
-      (mem_sdiff.mp (into_nodes a ha (mem_inter.mp hi).1)).2 hi'
-    have hc := (card_le_card cover).trans (pair_count a ha b hb hab)
-    rw [card_union_of_disjoint disj] at hc
-    dsimp [t]
-    omega
-  have occ_le (i : I) (hi : i ∈ nodes) : (T.filter fun γ => i ∈ B γ).card ≤ cap := by
-    have proper : ∃ γ ∈ T, (s γ).eval (node i) ≠ w i := by
-      by_contra! hc
-      exact (mem_sdiff.mp hi).2 (mem_filter.mpr ⟨mem_univ _, hc⟩)
-    refine (card_le_card ?_).trans (hsection i proper)
-    intro γ hγ
-    obtain ⟨hγ, hi⟩ := mem_filter.mp hγ
-    exact mem_filter.mpr ⟨hγ, (mem_filter.mp (mem_sdiff.mp ((hB γ hγ).1 hi)).1).2⟩
-  obtain ⟨second, first⟩ := occupancy T nodes B x t cap
-    (fun γ hγ => ⟨into_nodes γ hγ, (hB γ hγ).2⟩) overlap occ_le
-  rw [hnodes, ht] at second
-  rw [hnodes] at first
-  exact incidence_arithmetic P0.t _ _ _ _ (by omega) (by omega) hx (by decide) second first
 end
 end P0_10
 end
@@ -407,47 +191,6 @@ open K1_14_6 (LinearCover LinearRing ClosedField mixedDegree)
 open private card_le_sum_cover curve_degree_nat LinearCover.slice LinearCover.section
   LinearCover.cut_data LinearCover.zero_dim_count from ProximityPrize.SubmissionLower.Fast055
 open scoped BigOperators Polynomial
-private theorem curve_count {T s d e b w} (C : LinearCover T s d e b)
-    {U : Finset K} (hU : U ⊆ T) (hword : FixedWord w U s d) (hd : d < agreement)
-    (P : Ideal (LinearRing d e b)) (hP : P.IsPrime)
-    (hdim : (affineHilbertPolynomial P).natDegree = 1)
-    (hpoints : ∀ γ ∈ U, C.point γ ∈ zeroLocus ClosedField P) :
-    (U.card : ℚ) ≤ (curveFactor d : ℚ) * affineDegree P := by
-  classical
-  obtain ⟨δ, hδ, hδdeg⟩ := curve_degree_nat P hP hdim
-  have hsection (i : I) (hi : ∃ γ ∈ U, (s γ).eval (node i) ≠ w i) :
-      (U.filter fun γ => (s γ).eval (node i) = w i).card ≤ δ := by
-    let V := U.filter fun γ => (s γ).eval (node i) = w i
-    let Qs := LinearCover.section C P (node i) (w i)
-    obtain ⟨hsum, dims, degree⟩ := LinearCover.cut_data C hU hP hpoints hi
-    have hone (Q : Ideal (LinearRing d e b)) (hQ : Q ∈ Qs) :
-        ((LinearCover.slice C V Q).card : ℚ) ≤ affineDegree Q := by
-      have hQdim := (dims Q hQ).2
-      rw [hdim] at hQdim
-      exact LinearCover.zero_dim_count C ((filter_subset _ _).trans ((filter_subset _ _).trans hU))
-        Q (by omega) (fun _ hγ => (mem_filter.mp hγ).2)
-    have hsumQ : (V.card : ℚ) ≤ ∑ Q ∈ Qs, ((LinearCover.slice C V Q).card : ℚ) := by
-      exact_mod_cast hsum
-    have hbound := hsumQ.trans ((sum_le_sum hone).trans (degree.trans_eq hδdeg))
-    exact_mod_cast hbound
-  have hcount := section_capacity hword hd δ hsection
-  let gap := agreement - d
-  have hgap : 0 < gap := Nat.sub_pos_of_lt hd
-  have hfactor : P0.t < gap * curveFactor d := by
-    change P0.t < gap * (P0.t / gap + 1)
-    rw [Nat.mul_add, Nat.mul_one]
-    have heq := Nat.mod_add_div P0.t gap
-    have hr := Nat.mod_lt P0.t hgap
-    omega
-  suffices hcard : U.card ≤ curveFactor d * δ by
-    rw [hδdeg, ← Nat.cast_mul]
-    exact_mod_cast hcard
-  by_contra! hbad
-  have hstep := Nat.mul_le_mul_left gap (show curveFactor d * δ + 1 ≤ U.card by omega)
-  rw [Nat.mul_add, Nat.mul_one, ← Nat.mul_assoc] at hstep
-  have hstrict := Nat.mul_lt_mul_of_pos_right hfactor hδ
-  change gap * U.card ≤ P0.t * δ + gap at hcount
-  omega
 end
 end P0_10
 end
@@ -772,7 +515,7 @@ open K1_14_5 (nodeCost poleSlope)
 open Finset
 open scoped BigOperators
 open private nodeRow from ProximityPrize.SubmissionLower.Fast063
-def ValidCut (s : Shape) (v lo t : ℕ) : Prop :=
+private def ValidCut (s : Shape) (v lo t : ℕ) : Prop :=
   let k := cut s v lo t
   min t s.J ≤ k ∧ (k-1) * (131071-lo) + 2*lo*t < s.m*P0.agreement + (t - min t (s.U/v))
 private instance (s : Shape) (v lo t : ℕ) : Decidable (ValidCut s v lo t) := by
@@ -787,7 +530,7 @@ private def moments (s : Shape) (v i : ℕ) : ℕ × ℕ × ℕ :=
   let s₂ := n*(n-1)*(2*n-1)/6
   let last := if R < i then slots s.U (R*v) else 0
   ⟨a*n - b*s₁ + last, a*s₁ - b*s₂ + last*R, a*s₂ - b*s₁*s₁ + last*R*R⟩
-def MomentStep (s : Shape) (v r : ℕ) : Prop :=
+private def MomentStep (s : Shape) (v r : ℕ) : Prop :=
   let w := weight s v r
   let p := moments s v r
   let q := moments s v (r+1)
@@ -809,7 +552,7 @@ theorem Row.eq_of_check {x y : Row}
 def scan (f : ℕ → Row) (a : ℕ) : ℕ → Row
   | 0 => ⟨true, 0, 0⟩
   | n+1 => (scan f a n).add (f (a+n))
-theorem scan_add (f : ℕ → Row) (a n m : ℕ) :
+private theorem scan_add (f : ℕ → Row) (a n m : ℕ) :
     scan f a (n+m) = (scan f a n).add (scan f (a+n) m) := by
   induction m with
   | zero => cases scan f a n; simp [scan, Row.add]

@@ -1,5 +1,4 @@
 import ProximityPrize.SubmissionLower.UpperBranch7
-set_option Elab.async false
 set_option autoImplicit true
 section
 namespace P1_7_6
@@ -7,8 +6,6 @@ open Finset
 open K1_14 (Shape triangle)
 open P1 (HighBand agreement)
 open P1_7 (Bank Test debit jointGain tested threshold seedThreshold)
-def width (s : Shape) (h q j t : ℕ) : ℤ :=
-  (s.m * agreement : ℕ) + (j : ℤ) - (131071 - (h : ℤ)) * q - 2 * (h : ℤ) * t
 def orderEnd (s : Shape) (E v : ℕ) : ℕ :=
   if v = 0 then s.B/E+1 else min (s.B/E+1) (s.U/v+1)
 def linearEnd (base step bound cap : ℕ) : ℕ :=
@@ -50,21 +47,6 @@ open Finset
 open K1_14 (Shape shapeSum slots)
 open P1 (agreement)
 open P1_7 (Bank debit jointGain)
-theorem width_cast (s : Shape) (h q j t : ℕ) (hh : h ≤ 131071) :
-    (↑(s.m * agreement + j - q * (131071-h) - 2*h*t : ℕ) : ℤ) =
-      max 0 (width s h q j t) := by
-  rw [Nat.sub_sub]
-  have hd : (↑(131071-h : ℕ) : ℤ) = 131071 - h := Nat.cast_sub hh
-  have he : (↑(s.m*agreement+j : ℕ) : ℤ) - (↑(q*(131071-h)+2*h*t : ℕ) : ℤ) =
-      width s h q j t := by
-    simp only [width, Nat.cast_add, Nat.cast_mul, Nat.cast_ofNat, hd]
-    ring
-  generalize s.m*agreement+j = x at *
-  generalize q*(131071-h)+2*h*t = y at *
-  by_cases hxy : y ≤ x
-  · rw [Int.ofNat_sub hxy, he, max_eq_right (by omega)]
-  · have hz : x-y = 0 := Nat.sub_eq_zero_of_le (by omega)
-    rw [hz, Int.ofNat_zero, max_eq_left (by omega)]
 private theorem rise_of_convex {f : ℕ → ℤ} {lo h : ℕ}
     (hc : ∀ n < h, f (n+1) + f (n+1) ≤ f n + f (n+2))
     (hl : lo ≤ h) (hf : f lo ≤ f (lo+1)) :
@@ -108,65 +90,6 @@ private theorem sum_range_guard {f : ℕ → ℤ} (L R : ℕ)
   intro a ha hnot
   simp only [mem_range, lt_min_iff] at ha hnot
   exact hz a (by omega) ha
-private theorem position_phases (s : Shape) (h E v q j : ℕ) (hh : h ≤ 131071)
-    (he : 0 < E) (hq : q ≤ s.B) (hj : j ≤ q) :
-    let c := fun a => slots s.U (a*v)
-    let x := s.m*P1.agreement+j-q*(131071-h)
-    let g := (q-j)/E
-    let f := fun d a => (c (a+d) : ℤ)*max 0 (width s h q j (j+a))
-    (↑((∑ a ∈ range g, (c a - c (a+1))*(x-2*h*(j+a))) + c g*(x-2*h*(j+g)) : ℕ) : ℤ) =
-      (∑ a ∈ range (orderEnd s E v), if j+E*(a+0) ≤ q then f 0 a else 0) -
-      (∑ a ∈ range (orderEnd s E v), if j+E*(a+1) ≤ q then f 1 a else 0) := by
-  dsimp only
-  let g := (q-j)/E
-  let f := fun d a => (slots s.U ((a+d)*v) : ℤ)*max 0 (width s h q j (j+a))
-  have step (a : ℕ) : slots s.U ((a+1)*v) ≤ slots s.U (a*v) :=
-    slots_anti _ (Nat.mul_le_mul_right v (by omega))
-  have hdiff :
-      (↑((∑ a ∈ range g, (slots s.U (a*v) - slots s.U ((a+1)*v)) *
-          (s.m*P1.agreement+j-q*(131071-h)-2*h*(j+a))) +
-        slots s.U (g*v)*(s.m*P1.agreement+j-q*(131071-h)-2*h*(j+g)) : ℕ) : ℤ) =
-      (∑ a ∈ range (g+1), f 0 a) - ∑ a ∈ range g, f 1 a := by
-    rw [sum_range_succ, Nat.cast_add, Nat.cast_sum]
-    rw [show (∑ a ∈ range g, f 0 a) + f 0 g - (∑ a ∈ range g, f 1 a) =
-        ((∑ a ∈ range g, f 0 a) - (∑ a ∈ range g, f 1 a)) + f 0 g by ring,
-      ← sum_sub_distrib]
-    simp only [Nat.cast_mul, width_cast s h _ _ _ hh, f, Nat.add_zero]
-    have hs (a : ℕ) :
-        (↑(slots s.U (a*v) - slots s.U ((a+1)*v) : ℕ) : ℤ) =
-          (slots s.U (a*v) : ℤ) - slots s.U ((a+1)*v) := Int.ofNat_sub (step a)
-    simp only [hs, sub_mul]
-  rw [hdiff]
-  have hz (d a : ℕ) (ha : orderEnd s E v ≤ a) (hg : a+d ≤ g) : f d a = 0 := by
-    have hcap : g ≤ s.B/E := Nat.div_le_div_right (by omega)
-    have hab : a < s.B/E+1 := by omega
-    unfold orderEnd at ha
-    split at ha
-    · omega
-    · rename_i hv
-      have hlarge : s.U/v < a+d := by omega
-      have hout : s.U < (a+d)*v := by
-        by_contra! hm
-        exact (Nat.not_le_of_lt hlarge) ((Nat.le_div_iff_mul_le (Nat.pos_of_ne_zero hv)).2 hm)
-      simp [f, slots, Nat.not_le_of_lt hout]
-  have hdiv (a d : ℕ) : j+E*(a+d) ≤ q ↔ a+d ≤ g := by
-    rw [Nat.le_div_iff_mul_le he, Nat.mul_comm (a+d) E]
-    omega
-  rw [sum_range_guard (g+1) _ (fun a ha hb => hz 0 a ha (by omega)),
-    sum_range_guard g _ (fun a ha hb => hz 1 a ha (by omega))]
-  have hzero (a : ℕ) : j+E*a ≤ q ↔ a ≤ g := by simpa using hdiv a 0
-  simp only [hzero, Nat.add_zero, Nat.lt_succ_iff, Nat.add_one_le_iff, f]
-private theorem phaseQ_expand (s : Shape) (h E v d q : ℕ) :
-    (∑ j ∈ range (min q s.J+1), ∑ a ∈ range (orderEnd s E v),
-      if j+E*(a+d) ≤ q then (slots s.U ((a+d)*v) : ℤ)*max 0 (width s h q j (j+a)) else 0) =
-    ∑ j ∈ range (s.J+1), ∑ a ∈ range (orderEnd s E v),
-      if j+E*(a+d) ≤ q then (slots s.U ((a+d)*v) : ℤ)*max 0 (width s h q j (j+a)) else 0 := by
-  apply sum_subset (range_mono (Nat.succ_le_succ (min_le_right _ _)))
-  intro j hj hnot
-  simp only [mem_range, Nat.lt_succ_iff, le_min_iff] at hj hnot
-  apply sum_eq_zero
-  intro a _
-  rw [ite_eq_right (by omega)]
 private theorem diagonal (J R : ℕ) (f : ℕ → ℕ → ℤ) :
     (∑ j ∈ range (J+1), ∑ a ∈ range (R+1), f j a) =
       ∑ t ∈ range (J+R+1), ∑ a ∈ Ico (t-J) (min t R+1), f (t-a) a := by
@@ -280,7 +203,7 @@ def windowCubic (L R xLine yLine : Line) (b d : ℤ) : Cubic :=
   let k := Cubic.lines n m w
   ⟨6*f.c0+3*g.c0+b*d*k.c0, 6*f.c1+3*g.c1+b*d*k.c1,
     6*f.c2+3*g.c2+b*d*k.c2, 6*f.c3+3*g.c3+b*d*k.c3⟩
-theorem windowCubic_at (L R xLine yLine : Line) (b d a : ℤ) :
+private theorem windowCubic_at (L R xLine yLine : Line) (b d a : ℤ) :
     (windowCubic L R xLine yLine b d).at a =
       let n := R.at a-L.at a
       let x := xLine.at a+b*L.at a
@@ -298,7 +221,7 @@ theorem windowCubic_at (L R xLine yLine : Line) (b d a : ℤ) :
     ring
   simp only [f, g, k, Cubic.lines_at, Line.at, Line.sub, Line.shift, Line.addConst, Line.scale]
   ring
-theorem linePair_range (x y b d : ℤ) (n : ℕ) :
+private theorem linePair_range (x y b d : ℤ) (n : ℕ) :
     6*(∑ t ∈ range n, (x+b*t)*(y+d*t)) =
       6*(n : ℤ)*x*y+3*n*(n-1)*(d*x+b*y)+b*d*n*(n-1)*(2*n-1) := by
   induction n with
@@ -361,16 +284,16 @@ def Core.nonemptyEnd (C : Core) (x c : ℕ) : ℕ :=
   linearEnd (c+C.offset) (C.step+1) C.column (min C.cap (x-c))
 def Core.switchEnd (C : Core) (x c : ℕ) : ℕ :=
   linearEnd (x+C.offset) C.step (C.column+1) (C.nonemptyEnd x c)
-theorem lt_nonemptyEnd (C : Core) (x c a : ℕ) :
+private theorem lt_nonemptyEnd (C : Core) (x c a : ℕ) :
     a < C.nonemptyEnd x c ↔ a < C.cap ∧ a+c < min x (C.column-(C.offset+C.step*a)) := by
   rw [Core.nonemptyEnd, lt_linearEnd, lt_min_iff, lt_min_iff, Nat.add_mul, Nat.one_mul]
   omega
-theorem lt_switchEnd (C : Core) (x c a : ℕ) :
+private theorem lt_switchEnd (C : Core) (x c a : ℕ) :
     a < C.switchEnd x c ↔ a < C.nonemptyEnd x c ∧ x+C.offset+C.step*a ≤ C.column := by
   rw [Core.switchEnd, lt_linearEnd, Nat.lt_succ_iff]
 def cubicInterval (p : Quad) (q : Cubic) (l r : ℕ) : ℤ :=
   if l < r then prefixCubic p q r - if l = 0 then 0 else prefixCubic p q l else 0
-theorem cubicInterval_eq (p : Quad) (q : Cubic) (l r : ℕ) :
+private theorem cubicInterval_eq (p : Quad) (q : Cubic) (l r : ℕ) :
     cubicInterval p q l r = 60*(∑ a ∈ Ico l r, p.eval a*q.at a) := by
   unfold cubicInterval
   by_cases h : l < r

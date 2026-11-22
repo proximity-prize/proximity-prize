@@ -1,5 +1,5 @@
 import ProximityPrize.SubmissionLower.KoalaBoxDegree
-import ProximityPrize.SubmissionLower.HighCore82219UpperGeometry
+import ProximityPrize.SubmissionLower.HighCore82258UpperGeometry
 import ArkLib.ToMathlib.MvPolynomial.PDeriv
 
 set_option autoImplicit false
@@ -12,10 +12,10 @@ open MvPolynomial
 open K1_14 (FX Equation)
 open K1_14_6 (Biform)
 open K1_14_6_1 (flatten partialX separant tangent cleared)
-open HighCore82219Upper
+open HighCore82258Upper
 open SplitCut.BoxDegree
-open private HighCore82219Upper_3_1.seedBiform_box HighCore82219Upper_3_1.liftTaylor_box
-  HighCore82219Upper_3_3.residue_degree from ProximityPrize.SubmissionLower.HighCore82219UpperGeometry
+open private HighCore82258Upper_3_1.seedBiform_box HighCore82258Upper_3_1.liftTaylor_box
+  HighCore82258Upper_3_3.residue_degree from ProximityPrize.SubmissionLower.HighCore82258UpperGeometry
 
 theorem fit {f : Biform} {a b c : ℕ} : f ∈ space FX a b c ↔
     f.degreeOf none ≤ a ∧ f.degreeOf (some 0) ≤ b ∧ f.degreeOf (some 1) ≤ c := by
@@ -129,8 +129,8 @@ theorem num {J : Input} (B : ResidueLift J) {v w : ℕ}
   · have ho := ord (Nat.lt_of_lt_of_le (by decide : 0<3) J.sheets) hf
       (show i≤r by have := Finset.mem_range.mp hi; omega)
     simpa only [Nat.zero_add,Nat.add_comm (2*J.w)] using
-      mul_box (of_seed_box (HighCore82219Upper_3_1.seedBiform_box B.denominator_degree)) ho
-  · have hh := mul_box (box_pow (sep hf) (2*r-1)) (of_seed_box (HighCore82219Upper_3_1.liftTaylor_box J B i))
+      mul_box (of_seed_box (HighCore82258Upper_3_1.seedBiform_box B.denominator_degree)) ho
+  · have hh := mul_box (box_pow (sep hf) (2*r-1)) (of_seed_box (HighCore82258Upper_3_1.liftTaylor_box J B i))
     exact grow (show (2*r-1)*(J.e-1) ≤ 1+(2*r-1)*(J.e-1) by omega) le_rfl le_rfl (by simpa only [Nat.add_zero] using hh)
 
 theorem den {J : Input} (B : ResidueLift J) {v w : ℕ}
@@ -138,14 +138,14 @@ theorem den {J : Input} (B : ResidueLift J) {v w : ℕ}
     quotientDenominator J B r ∈
       space FX ((2*r-1)*(J.e-1)) ((2*r-1)*v+2*J.w) ((2*r-1)*w+2*J.w) := by
   simpa only [quotientDenominator,Nat.zero_add,Nat.add_comm (2*J.w)] using
-    mul_box (of_seed_box (HighCore82219Upper_3_1.seedBiform_box B.denominator_degree)) (box_pow (sep hf) (2*r-1))
+    mul_box (of_seed_box (HighCore82258Upper_3_1.seedBiform_box B.denominator_degree)) (box_pow (sep hf) (2*r-1))
 
 theorem residue {J : Input} (B : ResidueLift J) {v w : ℕ}
     (hf : flatten J.f ∈ space FX J.e v w) (r : ℕ) (x : P1.I) :
-    seedBiform (HighCore82219Upper_3_3.residueAtNode B x)*separant (flatten J.f)^(2*r-1) ∈
+    seedBiform (HighCore82258Upper_3_3.residueAtNode B x)*separant (flatten J.f)^(2*r-1) ∈
       space FX ((2*r-1)*(J.e-1)) ((2*r-1)*v+2*J.w) ((2*r-1)*w+2*J.w) := by
   simpa only [Nat.zero_add,Nat.add_comm (2*J.w)] using
-    mul_box (of_seed_box (HighCore82219Upper_3_1.seedBiform_box (HighCore82219Upper_3_3.residue_degree B x))) (box_pow (sep hf) (2*r-1))
+    mul_box (of_seed_box (HighCore82258Upper_3_1.seedBiform_box (HighCore82258Upper_3_3.residue_degree B x))) (box_pow (sep hf) (2*r-1))
 
 theorem padded_num {J : Input} (B : ResidueLift J) {v w r j : ℕ}
     (hf : flatten J.f ∈ space FX J.e v w) (hj : j≤r) :
@@ -162,3 +162,6 @@ theorem padded_num {J : Input} (B : ResidueLift J) {v w r j : ℕ}
 
 end
 end SplitCut.Raw
+#print axioms SplitCut.Raw.root
+#print axioms SplitCut.Raw.num
+#print axioms SplitCut.Raw.padded_num

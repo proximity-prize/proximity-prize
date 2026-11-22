@@ -1,5 +1,4 @@
 import ProximityPrize.SubmissionLower.Numeric2Aux
-set_option Elab.async false
 set_option autoImplicit true
 section
 namespace CJ6
@@ -69,9 +68,6 @@ theorem card_col (q u : ℕ) : Fintype.card (Col q u) = cols q u := by
   simp only [Col, Fintype.card_sigma, Fintype.card_fin, cols, total_eq_sum,
     Finset.sum_fin_eq_sum_range]
   exact Finset.sum_congr rfl fun i hi => by simp [Finset.mem_range.mp hi]
-theorem rank_le_nominal (q u : ℕ) : (packet q u).rank ≤ nominal q u := by
-  exact le_min ((packet q u).rank_le_card_height.trans_eq (card_row q u))
-    ((packet q u).rank_le_card_width.trans_eq (card_col q u))
 end CJ6
 end
 section
@@ -98,7 +94,7 @@ theorem digit_eval (F : ℕ[X]) (B n : ℕ) (h : F.eval 1 < B) :
       Nat.div_eq_of_lt h₀, zero_add, ih _ hd, coeff_divX]
 def signWeight (c w : ℕ) : ℕ :=
   if c % 2 = 0 then w else (CJ0.p - 1) * w
-theorem signWeight_cast (c w : ℕ) :
+private theorem signWeight_cast (c w : ℕ) :
     (signWeight c w : ZMod CJ0.p) = (-1)^c * (w : ZMod CJ0.p) := by
   have hp : ((CJ0.p-1 : ℕ) : ZMod CJ0.p) = -1 := by
     rw [Nat.cast_sub (by decide : 1 ≤ CJ0.p), ZMod.natCast_self, Nat.cast_one, zero_sub]
@@ -122,7 +118,7 @@ def factor (left : Bool) (x outA inA : ℕ) : ℕ :=
 theorem eval_piece (left : Bool) (outA inA pos w x : ℕ) :
     (piece left outA inA pos w).eval x = factor left x outA inA * (w * x^pos) := by
   cases left <;> simp [piece, slice, factor] <;> ring
-theorem fastChoose_eq (n k : ℕ) : CJ1.fastChoose n k = n.choose k :=
+private theorem fastChoose_eq (n k : ℕ) : CJ1.fastChoose n k = n.choose k :=
   (Nat.choose_eq_descFactorial_div_factorial n k).symm
 theorem coeff_entry (left : Bool) (q : ℕ) (o v : CJ0.Jet) (w : ℕ)
     (ho : o.q = q) (hv : v.q = q) :
@@ -194,7 +190,7 @@ def pack (left : Bool) (q : ℕ) : List Input → List Bucket
 def value (big : Bool) (f : ℕ → ℕ) : List Bucket → ℕ
   | [] => 0
   | (a,s,v)::bs => f a * (if big then v else s) + value big f bs
-theorem value_insert (big : Bool) (f : ℕ → ℕ) (a s v : ℕ) (bs : List Bucket) :
+private theorem value_insert (big : Bool) (f : ℕ → ℕ) (a s v : ℕ) (bs : List Bucket) :
     value big f (insert a s v bs) = f a * (if big then v else s) + value big f bs := by
   induction bs with
   | nil => simp [insert, value]
@@ -305,7 +301,7 @@ private theorem entryZ_cast (r c : CJ0.Jet) : (entryZ r c : ZMod CJ0.p) = CJ0.bl
 private def oriented (side : Bool) (q u : ℕ) :
     Matrix (Axis (!side) q u) (Axis side q u) (ZMod CJ0.p) :=
   fun r c => (orientedEntry side q u r.1 r.2 c.1 c.2 : ZMod CJ0.p)
-theorem oriented_rank (side : Bool) (q u : ℕ) :
+private theorem oriented_rank (side : Bool) (q u : ℕ) :
     (oriented side q u).rank = (packet q u).rank := by
   cases side
   · have he : oriented false q u = packet q u := by
@@ -321,14 +317,14 @@ theorem oriented_rank (side : Bool) (q u : ℕ) :
 private def vectors (q u : ℕ) (z : Block) :
     Matrix (Axis z.bank.onRows q u) (Fin z.free.length) (ZMod CJ0.p) :=
   fun c j => (z.coeff j c.1 c.2 : ZMod CJ0.p)
-theorem sum_axis {α : Type*} [AddCommMonoid α] (side : Bool) (q u : ℕ) (f : ℕ → ℕ → α) :
+private theorem sum_axis {α : Type*} [AddCommMonoid α] (side : Bool) (q u : ℕ) (f : ℕ → ℕ → α) :
     (∑ x : Axis side q u, f x.1 x.2) =
       total (fun i => total (f i) (fiber side q u i)) (outer side q) := by
   rw [← Finset.univ_sigma_univ, Finset.sum_sigma, total_eq_sum, ← Fin.sum_univ_eq_sum_range]
   apply Finset.sum_congr rfl
   intro i _
   rw [total_eq_sum, ← Fin.sum_univ_eq_sum_range]
-theorem mul_eq_dot (q u : ℕ) (z : Block) (r : Axis (!z.bank.onRows) q u)
+private theorem mul_eq_dot (q u : ℕ) (z : Block) (r : Axis (!z.bank.onRows) q u)
     (j : Fin z.free.length) :
     (oriented z.bank.onRows q u * vectors q u z) r j = (dot q u z j r.1 r.2 : ZMod CJ0.p) := by
   rw [Matrix.mul_apply, dot, ← sum_axis, Int.cast_sum]
@@ -371,7 +367,7 @@ def inputs (q u : ℕ) (z : Block) (j : ℕ) : List Input :=
     (fun i k => (point z.bank.onRows q u i k, z.coeff j i k))
 def outputs (q u : ℕ) (z : Block) : List CJ0.Jet :=
   axisList (outer (!z.bank.onRows) q) (fiber (!z.bank.onRows) q u) (point (!z.bank.onRows) q u)
-theorem dot_eq (q u : ℕ) (z : Block) (j i k : ℕ) :
+private theorem dot_eq (q u : ℕ) (z : Block) (j i k : ℕ) :
     dot q u z j i k = ((inputs q u z j).map (intTerm z.bank.onRows (point (!z.bank.onRows) q u i k))).sum := by
   rw [inputs, CJ6.Packed.sum_axis, dot]
   congr 1
@@ -402,15 +398,6 @@ structure Lane where
   n : ℕ
   width : ℕ
   digits : ℕ
-private def coeff (left : Bool) (q : ℕ) (ls : List Lane) (v : CJ0.Jet) : ℕ :=
-  match ls.find? (fun l => l.a == v.a) with
-  | none => 0
-  | some l =>
-    let t := CJ6.Packed.shift left q v.b
-    if t < l.pos then 0 else (l.digits >>> ((t-l.pos)*l.width)) % 2^l.width
-def vectorData (left : Bool) (q u : ℕ) (ls : List Lane) : List (List ℕ) :=
-  (List.range (outer left q)).map fun i =>
-    (List.range (fiber left q u i)).map fun k => coeff left q ls (point left q u i k)
 private def expand (w : ℕ) : ℕ → Bool → ℕ → ℕ × ℕ
   | 0, _, _ => (0,0)
   | n+1, odd, x =>
@@ -425,8 +412,6 @@ def bucket (left : Bool) (q : ℕ) (l : Lane) : CJ6.Packed.Bucket :=
 def buckets (left : Bool) (q : ℕ) (ls : List Lane) := ls.map (bucket left q)
 def good (left : Bool) (q : ℕ) (ls : List Lane) (bs : List CJ6.Packed.Band) : Prop :=
   bs.all (CJ6.Packed.checkBand left (buckets left q ls)) = true
-def bands (xs : List (ℕ × ℕ × ℕ)) : List CJ6.Packed.Band :=
-  xs.map fun (a,lo,n) => (a, List.range' lo n)
 end CJ6.Fast
 end
 section
@@ -450,7 +435,7 @@ private def ramp (s a b n : ℕ) :=
   let t := (b-a+s-1)/s
   let d := n-t
   d*(a+s*t-b) + s*triangle d
-theorem ramp_eq (s a b n : ℕ) (hs : s=1 ∨ s=2) :
+private theorem ramp_eq (s a b n : ℕ) (hs : s=1 ∨ s=2) :
     total (fun i => a+s*i-b) n = ramp s a b n := by
   let t := (b-a+s-1)/s
   have ht₀ : b ≤ a+s*t := by dsimp [t]; rcases hs with rfl|rfl <;> omega
@@ -471,11 +456,11 @@ theorem ramp_eq (s a b n : ℕ) (hs : s=1 ∨ s=2) :
         rcases hs with rfl|rfl <;> omega
       rw [hd, triangle_succ, Nat.add_mul, one_mul, Nat.mul_add, hv]
       omega
-def quickRows (q u : ℕ) :=
+private def quickRows (q u : ℕ) :=
   let a := u+2*q+1
   let n := q+1
   ramp 1 a 20 n + ramp 2 a (72+n) n - (ramp 2 a (20+n) n + ramp 1 a 72 n)
-theorem quickRows_eq (q u : ℕ) : rows q u = quickRows q u := by
+private theorem quickRows_eq (q u : ℕ) : rows q u = quickRows q u := by
   let a := u+2*q+1
   let n := q+1
   have summation (j : ℕ) (hj : j ≤ n) :
@@ -497,104 +482,31 @@ theorem quickRows_eq (q u : ℕ) : rows q u = quickRows q u := by
       ramp_eq 1 _ _ _ (Or.inl rfl), ramp_eq 2 _ _ _ (Or.inr rfl)] at eq
   change total (rowLen q u) n = ramp 1 a 20 n + ramp 2 a (72+n) n - (ramp 2 a (20+n) n + ramp 1 a 72 n)
   omega
-theorem cols_large (q u : ℕ) (hq : 20 ≤ q) : cols q u = cols 20 (min u 20) := by
+private theorem cols_large (q u : ℕ) (hq : 20 ≤ q) : cols q u = cols 20 (min u 20) := by
   unfold cols
   rw [min_eq_right hq]
   congr 1
   funext b
   unfold colLen colHi colLo
   omega
-def colTable (u : ℕ) : ℕ := (0x78777674726f6c68645f5a544e47403830271e140a >>> (8*u)) % 256
-theorem colTable_eq : ∀ u < 21, cols 20 u = colTable u :=
+private def colTable (u : ℕ) : ℕ := (0x78777674726f6c68645f5a544e47403830271e140a >>> (8*u)) % 256
+private theorem colTable_eq : ∀ u < 21, cols 20 u = colTable u :=
   (belowSucc (belowSucc (belowSucc (belowSucc (belowSucc (belowSucc (belowSucc (belowSucc (belowSucc (belowSucc (belowSucc (belowSucc (belowSucc (belowSucc (belowSucc (belowSucc (belowSucc (belowSucc (belowSucc (belowSucc (belowSucc (belowZero (P := fun u => cols 20 u = colTable u)) rfl) rfl) rfl) rfl) rfl) rfl) rfl) rfl) rfl) rfl) rfl) rfl) rfl) rfl) rfl) rfl) rfl) rfl) rfl) rfl) rfl)
-def quickCols (q u : ℕ) := if q < 20 then cols q u else colTable (min u 20)
-theorem quickCols_eq (q u : ℕ) : cols q u = quickCols q u := by
+private def quickCols (q u : ℕ) := if q < 20 then cols q u else colTable (min u 20)
+private theorem quickCols_eq (q u : ℕ) : cols q u = quickCols q u := by
   unfold quickCols
   split
   · rfl
   · exact (cols_large _ _ (by omega)).trans (colTable_eq _ (by omega))
-def quickGrade (q : ℕ) := total (fun u =>
+private def quickGrade (q : ℕ) := total (fun u =>
   boundIn q u (min (quickRows q u) (quickCols q u)) (cells q)) (72-q)
-theorem grade_eq_quick (q : ℕ) : grade q = quickGrade q := by
+private theorem grade_eq_quick (q : ℕ) : grade q = quickGrade q := by
   unfold grade quickGrade allowance nominal
   simp only [quickRows_eq, quickCols_eq]
 private theorem step {n s x y : ℕ} (hs : total grade n = s)
     (hx : quickGrade n = x) (hy : s + x = y) : total grade (n+1) = y := by
   rw [total, hs, grade_eq_quick, hx, hy]
 local notation "row!" p "," v => step p (x := v) rfl rfl
-private theorem s0 : total grade 0 = 0 := rfl
-theorem s1 : total grade 1 = 52 := row! s0,52
-theorem s2 : total grade 2 = 205 := row! s1,153
-theorem s3 : total grade 3 = 505 := row! s2,300
-theorem s4 : total grade 4 = 995 := row! s3,490
-theorem s5 : total grade 5 = 1715 := row! s4,720
-theorem s6 : total grade 6 = 2702 := row! s5,987
-theorem s7 : total grade 7 = 3990 := row! s6,1288
-theorem s8 : total grade 8 = 5610 := row! s7,1620
-theorem s9 : total grade 9 = 7590 := row! s8,1980
-theorem s10 : total grade 10 = 9955 := row! s9,2365
-theorem s11 : total grade 11 = 12685 := row! s10,2730
-theorem s12 : total grade 12 = 15760 := row! s11,3075
-theorem s13 : total grade 13 = 19120 := row! s12,3360
-theorem s14 : total grade 14 = 22708 := row! s13,3588
-theorem s15 : total grade 15 = 26470 := row! s14,3762
-theorem s16 : total grade 16 = 30355 := row! s15,3885
-theorem s17 : total grade 17 = 34315 := row! s16,3960
-theorem s18 : total grade 18 = 38305 := row! s17,3990
-theorem s19 : total grade 19 = 42283 := row! s18,3978
-theorem s20 : total grade 20 = 46210 := row! s19,3927
-theorem s21 : total grade 21 = 50050 := row! s20,3840
-theorem s22 : total grade 22 = 53770 := row! s21,3720
-theorem s23 : total grade 23 = 57370 := row! s22,3600
-theorem s24 : total grade 24 = 60850 := row! s23,3480
-theorem s25 : total grade 25 = 64210 := row! s24,3360
-theorem s26 : total grade 26 = 67450 := row! s25,3240
-theorem s27 : total grade 27 = 70570 := row! s26,3120
-theorem s28 : total grade 28 = 73570 := row! s27,3000
-theorem s29 : total grade 29 = 76450 := row! s28,2880
-theorem s30 : total grade 30 = 79210 := row! s29,2760
-theorem s31 : total grade 31 = 81850 := row! s30,2640
-theorem s32 : total grade 32 = 84370 := row! s31,2520
-theorem s33 : total grade 33 = 86770 := row! s32,2400
-theorem s34 : total grade 34 = 89051 := row! s33,2281
-theorem s35 : total grade 35 = 91214 := row! s34,2163
-theorem s36 : total grade 36 = 93260 := row! s35,2046
-theorem s37 : total grade 37 = 95191 := row! s36,1931
-theorem s38 : total grade 38 = 97009 := row! s37,1818
-theorem s39 : total grade 39 = 98716 := row! s38,1707
-theorem s40 : total grade 40 = 100315 := row! s39,1599
-theorem s41 : total grade 41 = 101809 := row! s40,1494
-theorem s42 : total grade 42 = 103201 := row! s41,1392
-theorem s43 : total grade 43 = 104495 := row! s42,1294
-theorem s44 : total grade 44 = 105694 := row! s43,1199
-theorem s45 : total grade 45 = 106802 := row! s44,1108
-theorem s46 : total grade 46 = 107822 := row! s45,1020
-theorem s47 : total grade 47 = 108759 := row! s46,937
-theorem s48 : total grade 48 = 109615 := row! s47,856
-theorem s49 : total grade 49 = 110395 := row! s48,780
-theorem s50 : total grade 50 = 111102 := row! s49,707
-theorem s51 : total grade 51 = 111740 := row! s50,638
-theorem s52 : total grade 52 = 112312 := row! s51,572
-theorem s53 : total grade 53 = 112823 := row! s52,511
-theorem s54 : total grade 54 = 113275 := row! s53,452
-theorem s55 : total grade 55 = 113673 := row! s54,398
-theorem s56 : total grade 56 = 114020 := row! s55,347
-theorem s57 : total grade 57 = 114320 := row! s56,300
-theorem s58 : total grade 58 = 114576 := row! s57,256
-theorem s59 : total grade 59 = 114793 := row! s58,217
-theorem s60 : total grade 60 = 114973 := row! s59,180
-theorem s61 : total grade 61 = 115121 := row! s60,148
-theorem s62 : total grade 62 = 115240 := row! s61,119
-theorem s63 : total grade 63 = 115334 := row! s62,94
-theorem s64 : total grade 64 = 115406 := row! s63,72
-theorem s65 : total grade 65 = 115460 := row! s64,54
-theorem s66 : total grade 66 = 115499 := row! s65,39
-theorem s67 : total grade 67 = 115526 := row! s66,27
-theorem s68 : total grade 68 = 115544 := row! s67,18
-theorem s69 : total grade 69 = 115555 := row! s68,11
-theorem s70 : total grade 70 = 115561 := row! s69,6
-theorem s71 : total grade 71 = 115564 := row! s70,3
-theorem budget : total grade 72 = 115565 := row! s71,1
 end CJ6
 end
 section
@@ -602,92 +514,6 @@ namespace CJ6
 open CJ6.Fast
 set_option maxRecDepth 4096
 local notation "v!" side "," q "," b "," l "," h => CJ6.Fast.vector b (buckets side q l) rfl rfl rfl h
-private def l1v0 : List Lane := [⟨9,9,2,30,0x942aaaac0000001⟩,⟨8,8,4,31,0x4a155556942aaab1fc00006e9d555b6⟩,⟨7,7,6,31,0x12855555ca155557c9155572a9555709a75568d69d5600b⟩,⟨6,6,8,31,0x4a155557bc8000097d000078fe0007abe8005b87f003490fe018175f40908a⟩,⟨5,5,10,31,0x12855555952aaaac3f800020fe00022779001ab00000fff7f007aa4000302de7b0fcf0bf84642c⟩,⟨4,4,12,31,0x4a155556e8d5555da75555e5f4000995f4007bdbc804d55fc026a8bf80fe099ec575303f997830fe65e0c1fd5ff12⟩,⟨3,3,14,31,0x12855555df400002de40002654aaad507f0023b1fc017325f40c14a00052d647f1dc505f4918a45f663448fe8aecaa7cb7ed6a00c242a⟩,⟨2,2,16,31,0x4a155556152aaab27b0000a054aab664a155f94be806ea27b03bebafa1abfe1fca07f3bcb345107fe1963ef55d54e207371adbe8c875c8444c9c6fdf140d⟩,⟨1,1,18,31,0x12855555aa555557a955558152aaade952aad9854aacb72000126fc00088f51fc357fb8011d53c0052081401482050047c71180dcdaac0257761c059eb51305f140c8167ad44⟩,⟨0,0,20,31,0x4a1555573d800008000000b2a55563900000d5200009a86a55af780002b7527f11a796fe6214cc01d6ca3007b0c1e01c32c6e05b1a33c1044add02936852c44baabb88975574149b429020895ba⟩]
-private def z1 : CJ1.Block where
-  bank := .leftHigh
-  cap := 109
-  free := [(9,1)]
-  vectors := [l1v0].map (vectorData true 35 17)
-private def b1 := bands [(33,34,2),(32,32,4),(31,31,5),(30,30,6),(29,29,7),(28,28,8),(27,27,9),(26,26,10),(25,25,10),(24,24,10),(23,23,9),(22,22,8),(21,21,7),(20,20,6),(19,19,5),(18,18,4),(17,17,3),(16,16,2),(15,15,1)]
-private theorem k1v0 : good true 35 l1v0 b1 := rfl
-private theorem v1j0 : CJ6.VectorDots 35 17 z1 0 := v! true, 35, b1, l1v0, k1v0
-theorem r1 : (CJ0.blockMatrix CJ6.source 35 ((17 : ℤ)-20)).rank ≤ 109 :=
-  (CJ6.block_rank_le 35 17).trans (CJ6.rank_of_dots (z := z1) (by decide) (CJ6.belowSucc CJ6.belowZero v1j0))
-private def l2v0 : List Lane := [⟨18,0,0,0,0⟩,⟨19,0,0,0,0⟩,⟨20,0,0,0,0⟩,⟨21,14,4,31,0x3fbfffff80000001ff000000⟩,⟨22,12,5,31,0x7efffff600000031fbffffe3f7ffffb80000006⟩,⟨23,10,6,31,0x1bfeffffb6fdffffb40000011c0000001fefffff2⟩,⟨24,8,7,31,0x1fbfffd70000002d00000105fdffff2bfbfffe00000000f00000014⟩,⟨25,6,8,31,0x2940000016bf7ffed7feffff5f000002940000016bf7fffe57efffff2⟩,⟨26,4,9,31,0x7efffe33fdfffc12000009d8000017a7effff2ffdfffd63fbffffe8000001500000006⟩,⟨27,2,10,31,0xe700000372fdffff07fbffef9ff7fff588000015000000143fbffffb3f7ffff97f000000⟩,⟨28,1,10,31,0x3f7fff5bfefffc7dfdfffc36000009c0000015000000000fdfffea5fbffff74000000480000002⟩,⟨29,0,10,31,0x5280000249000004fe0000000ff7fff2bfeffff2f000000460000009c0000001ff000000⟩,⟨30,0,9,31,0x7effffcafdfffe23fbfffa13f7fff938000003c000000f00000008ff7ffffdfefffffe⟩,⟨31,0,8,31,0x16000000e4000003a800000730000005bfbffffe3f7ffffa7efffffe⟩,⟨32,0,7,31,0x1fc000003f7ffffdfefffff2fdffffdbfbffffcbf7ffffdff000000⟩,⟨33,0,0,0,0⟩,⟨34,0,0,0,0⟩,⟨35,0,0,0,0⟩]
-private def l2v1 : List Lane := [⟨18,0,0,0,0⟩,⟨19,0,0,0,0⟩,⟨20,16,3,31,0x7f7fffff80000001⟩,⟨21,14,3,31,0x1fbffffb400000137effffef⟩,⟨22,12,5,31,0x7effffbf000001e9fbfffd67f7fffd080000057⟩,⟨23,10,6,31,0xdc7efffc7dfdfffe7600000ddbf7fffeafeffff39⟩,⟨24,8,7,31,0x1fbffe8d000002c100000a11fdfff2cbfbffe9a000000eb000000ff⟩,⟨25,6,8,31,0x18c000000063f7ff2fefefffc7d0000203000000d83f7ffe8ffeffff47⟩,⟨26,4,9,31,0x7effedf5fdffdf3200007b600000f187efff327fdffe16200000118000010a00000049⟩,⟨27,2,10,31,0x94800002118fdffe96bfbff46f7f7ffa50800010a000000e1dfbfffb4ff7fffa4fefffff5⟩,⟨28,1,10,31,0x3f7ff93c7effdc43fdffe028000078600000e3f7efffe5dfdffef9bfbfff9e4000003900000018⟩,⟨29,0,10,31,0x370000017fc000031fdfbfff65ff7ff654fefff741000003d40000072800000107efffff5⟩,⟨30,0,9,31,0x7efffdaffdffebebfbffc147f7ffbc88000034300000ac0000005ebf7fffdafeffffde⟩,⟨31,0,8,31,0xf0000009b00000279000004ce00000399fbfffe27f7fffb5feffffdf⟩,⟨32,0,7,31,0x1fbffffdbf7fffdffeffff5cfdfffe4bfbfffd73f7fffdffefffff6⟩,⟨33,0,0,0,0⟩,⟨34,0,0,0,0⟩,⟨35,0,0,0,0⟩]
-private def l2v2 : List Lane := [⟨18,0,0,0,0⟩,⟨19,18,2,31,0xff000000⟩,⟨20,16,2,31,0x3f7ffff680000013⟩,⟨21,14,3,31,0x1fbffffb40000068feffff56⟩,⟨22,12,5,31,0x7efffee3000008c9fbffeb73f7fff57800002ab⟩,⟨23,10,6,31,0x430feffec600000025e00005607f7ffe1b7efffa5c⟩,⟨24,8,7,31,0x1fbff875c00011d600003168fdff9d03fbff834c0000796000006e1⟩,⟨25,6,8,31,0x8611fbffd307f7fb5a5800000ba0000d07000003c03f7ff5907efffb20⟩,⟨26,4,9,31,0x7eff9b75fdff637200030318000503a7eff9dd7fdff43e20000189c000071f000001e1⟩,⟨27,2,10,31,0x34c98000b21dfdff4dbffbfbb76ff7fe80580006ef6000053d7fbffdc0bf7ffd9dfeffffb3⟩,⟨28,1,10,31,0x3f7fd8e6feff36d5fdff6b280002fee0000526a7effec51fdff96bdfbffdc9400001860000009c⟩,⟨29,0,10,31,0x141c00008a740001152bfbff99cbf7fc438feffcde900001bba00002d44000005b7effffb3⟩,⟨30,0,9,31,0x7efff24bfdff8a0bfbfe94c3f7fe8e7800016b70000424000002277f7ffefffeffff24⟩,⟨31,0,8,31,0x596000039940000ea180001c2500001433fbfff323f7ffe2d7effff30⟩,⟨32,0,7,31,0x1fbfffefff7fff3afefffc23fdfff5b3fbfff08ff7fff3afeffffbf⟩,⟨33,0,0,0,0⟩,⟨34,0,0,0,0⟩,⟨35,0,0,0,0⟩]
-private def l2v3 : List Lane := [⟨18,20,1,1,1⟩,⟨19,18,1,31,0x7effffed⟩,⟨20,16,2,31,0x3f7ffff6800000be⟩,⟨21,14,3,31,0x1fbffffb400000be7efffb8d⟩,⟨22,12,5,31,0x7efffc1800001f21fbffab14000012400000f04⟩,⟨23,10,6,31,0xfa47effb1b90000253800014b13f7fef1cfeffe2b9⟩,⟨24,8,7,31,0x1fbfe2acc0004e2a0000afc2fdfe2f93fbfe505c0002c1a0000221a⟩,⟨25,6,8,31,0x21841fbfec6e7f7ed13c800049f80003917000007803f7fc9e6feffe87d⟩,⟨26,4,9,31,0x7efe6570fdfdd142000d27e000131287efe14e9fdfce1920000cda00002300000008e3⟩,⟨27,2,10,31,0xdaf80002c1fcfdfc8533fbedec27f7fbf948002036000015b29fbff3e37f7ff4a0fefffe95⟩,⟨28,1,10,31,0x3f7f5bc6fefcc535fdfe0286000d6a40001554e7eff84a1fdfe220bfbff70840000777000002d8⟩,⟨29,0,10,31,0x5550000244dc00046319fbfdb4f7f7ef8d4feff326100008ae80000cc50000016c7efffe95⟩,⟨30,0,9,31,0x7effc55afdfe0a23fbfa0917f7fa3b480006d240001243000009063f7ffb30fefffc18⟩,⟨31,0,8,31,0x18100000f7800003ea60000777400005281fbffc227f7ff7d6fefffc65⟩,⟨32,0,7,31,0x1fbfffb8ff7ffca6feffef3ffdffd353fbffbcfff7ffca6fefffee3⟩,⟨33,0,0,0,0⟩,⟨34,0,0,0,0⟩,⟨35,0,0,0,0⟩]
-private def z2 : CJ1.Block where
-  bank := .rightHigh
-  cap := 104
-  free := [(17,0),(18,0),(19,0),(20,0)]
-  vectors := [l2v0,l2v1,l2v2,l2v3].map (vectorData false 38 14)
-private def b2 := bands [(0,19,20),(1,20,18),(2,21,16),(3,22,14),(4,23,12),(5,24,10),(6,25,8),(7,26,6),(8,27,4),(9,28,2)]
-private theorem k2v0 : good false 38 l2v0 b2 := rfl
-private theorem v2j0 : CJ6.VectorDots 38 14 z2 0 := v! false, 38, b2, l2v0, k2v0
-private theorem k2v1 : good false 38 l2v1 b2 := rfl
-private theorem v2j1 : CJ6.VectorDots 38 14 z2 1 := v! false, 38, b2, l2v1, k2v1
-private theorem k2v2 : good false 38 l2v2 b2 := rfl
-private theorem v2j2 : CJ6.VectorDots 38 14 z2 2 := v! false, 38, b2, l2v2, k2v2
-private theorem k2v3 : good false 38 l2v3 b2 := rfl
-private theorem v2j3 : CJ6.VectorDots 38 14 z2 3 := v! false, 38, b2, l2v3, k2v3
-theorem r2 : (CJ0.blockMatrix CJ6.source 38 ((14 : ℤ)-20)).rank ≤ 104 :=
-  (CJ6.block_rank_le 38 14).trans (CJ6.rank_of_dots (z := z2) (by decide) (CJ6.belowSucc (CJ6.belowSucc (CJ6.belowSucc (CJ6.belowSucc CJ6.belowZero v2j0) v2j1) v2j2) v2j3))
-theorem first {xs : List Cell} (h : Checks xs) : Checks (rows0 ++ xs) := ⟨r1, r2, h⟩
-end CJ6
-end
-section
-namespace CJ6
-def c1 : Prop := Checks rows1
-def c2 : Prop := Checks rows2
-def c3 : Prop := Checks rows3
-def c4 : Prop := Checks rows4
-def c5 : Prop := Checks rows5
-def c6 : Prop := Checks rows6
-def c7 : Prop := Checks rows7
-def c8 : Prop := Checks rows8
-theorem rank_bound (q u : ℕ) (xs : List Cell) (h : Checks xs) :
-    (CJ0.blockMatrix source q ((u : ℤ)-20)).rank ≤ boundIn q u (nominal q u) xs := by
-  induction xs with
-  | nil => exact (block_rank_le q u).trans (rank_le_nominal q u)
-  | cons x xs ih =>
-    rcases x with ⟨a,b,r⟩
-    obtain ⟨h₁,h₂⟩ := h
-    rw [boundIn]
-    split
-    · rename_i he
-      obtain ⟨rfl,rfl⟩ := he
-      exact h₁
-    · exact ih h₂
-theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) (h4 : c4)
-    (h5 : c5) (h6 : c6) (h7 : c7) (h8 : c8) : Cert := by
-  change (∑ q ∈ Finset.range 72, ∑ u ∈ Finset.range (72-q),
-    (CJ0.blockMatrix source q ((u : ℤ)-20)).rank) ≤ 115565
-  rw [← budget, CJ1.total_eq_sum]
-  apply Finset.sum_le_sum
-  intro q _
-  rw [grade, CJ1.total_eq_sum]
-  apply Finset.sum_le_sum
-  intro u _
-  apply rank_bound
-  unfold cells
-  split
-  · trivial
-  split
-  · exact CJ6.first h1
-  split
-  · exact h2
-  split
-  · exact h3
-  split
-  · exact h4
-  split
-  · exact h5
-  split
-  · exact h6
-  split
-  · exact h7
-  exact h8
 end CJ6
 end
 section
@@ -753,7 +579,7 @@ private theorem fastC_eq (d u : ℤ) : fastC d u = cumulative d u := by
     · simp (disch := omega) only [h₂, ite_false, hden, sub_zero]
 private def fastOld (d lower cap : ℤ) : ℤ :=
   fastC d (3 * cap) - fastC d (min (3 * cap) (lower - 1))
-theorem fastOld_eq (d lower cap order : ℤ) (hc : 0 ≤ cap) :
+private theorem fastOld_eq (d lower cap order : ℤ) (hc : 0 ≤ cap) :
     fastOld d lower cap = oldCount ⟨d, lower, 3 * cap, cap, order⟩ := by
   simp only [fastOld, fastC_eq, oldCount, cappedCount, not_lt.mpr hc, ite_false]
   have hz (u : ℤ) (h : u ≤ 3 * cap) :

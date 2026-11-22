@@ -1,13 +1,10 @@
 import ProximityPrize.SubmissionLower.PortFrontB
 import ProximityPrize.SubmissionLower.RungSplit
-set_option Elab.async false
 set_option autoImplicit true
 section
 namespace P1_3
 noncomputable section
 open P1 Polynomial
-def leftCoeff {u T R D} (B : RankThree u T R D) (l : Fin 2) : K[X] :=
-  B.a * (B.β l).map twist
 abbrev Plane := K1_10.Plane
 abbrev Adjugate := K1_10.Adjugate
 inductive Bank where
@@ -20,12 +17,6 @@ def Bank.second : Bank → ℕ
   | .st => 17
   | .ts => 20
 abbrev sourceCutoff : ℕ := 4 * agreement - 1
-def quotientSurplus (bank : Bank) (n h : ℕ) : Prop :=
-  n * (K1_10.jetDim 4 bank.first bank.second -
-      K1_10.jetDim 3 (bank.first - 1) (bank.second - 1)) <
-    K1_10.sourceDim sourceCutoff 5 bank.first bank.second -
-      K1_10.sourceDim (sourceCutoff - (k - 1) - h) 4
-        (bank.first - 1) (bank.second - 1)
 structure ScalarSource (bank : Bank) where
   poly : MvPolynomial (Fin 2) K1_10.SeedPoly
   nonzero : poly ≠ 0
@@ -50,7 +41,7 @@ noncomputable section
 open P1
 open scoped BigOperators
 open private sum_rows ceil_sq_div_eq from ProximityPrize.SubmissionLower.PortFrontB
-theorem jet_st : K1_10.jetDim 4 20 17 = 6981 := by
+private theorem jet_st : K1_10.jetDim 4 20 17 = 6981 := by
   let rows : Fin 4 → ℕ := ![3570, 2080, 1007, 324]
   unfold K1_10.jetDim
   calc
@@ -59,7 +50,7 @@ theorem jet_st : K1_10.jetDim 4 20 17 = 6981 := by
       intro i
       fin_cases i <;> decide
     _ = 6981 := by decide
-theorem jet_ts : K1_10.jetDim 4 17 20 = 6981 := by
+private theorem jet_ts : K1_10.jetDim 4 17 20 = 6981 := by
   let rows : Fin 4 → ℕ := ![3600, 2074, 992, 315]
   unfold K1_10.jetDim
   calc
@@ -68,7 +59,7 @@ theorem jet_ts : K1_10.jetDim 4 17 20 = 6981 := by
       intro i
       fin_cases i <;> decide
     _ = 6981 := by decide
-theorem local_st : K1_10.jetDim 3 19 16 = 3216 := by
+private theorem local_st : K1_10.jetDim 3 19 16 = 3216 := by
   let rows : Fin 3 → ℕ := ![1960, 950, 306]
   unfold K1_10.jetDim
   calc
@@ -77,7 +68,7 @@ theorem local_st : K1_10.jetDim 3 19 16 = 3216 := by
       intro i
       fin_cases i <;> decide
     _ = 3216 := by decide
-theorem local_ts : K1_10.jetDim 3 16 19 = 3216 := by
+private theorem local_ts : K1_10.jetDim 3 16 19 = 3216 := by
   let rows : Fin 3 → ℕ := ![1972, 944, 300]
   unfold K1_10.jetDim
   calc
@@ -108,15 +99,13 @@ open MvPolynomial K1_11
 open K1_10_1 (Contacts relationBounds)
 open P1_3 (sourceCutoff)
 open private exists_kernel_outside from ProximityPrize.SubmissionLower.PortFrontB
-abbrev Source (F : Type*) [Field F] (bank : P1_3.Bank) :=
-  filtered (F := F) (sourceWeights 131071) (sourceBounds sourceCutoff 5 bank.first bank.second)
 abbrev Multipliers (F : Type*) [Field F] (bank : P1_3.Bank) :=
   JetSpace F 2 (bank.first - 1) (bank.second - 1)
 variable {F : Type*} [Field F] {N : ℕ} {L : MvPolynomial (Fin 5) F}
 variable (bank : P1_3.Bank) (C : Contacts N L) {h : ℕ}
     (hdeg : ∀ j, L.weightedTotalDegree (sourceWeights 131071 j) = relationBounds h j)
-theorem first_sub_add (b : P1_3.Bank) : b.first - 1 + 1 = b.first := by cases b <;> rfl
-theorem second_sub_add (b : P1_3.Bank) : b.second - 1 + 1 = b.second := by cases b <;> rfl
+private theorem first_sub_add (b : P1_3.Bank) : b.first - 1 + 1 = b.first := by cases b <;> rfl
+private theorem second_sub_add (b : P1_3.Bank) : b.second - 1 + 1 = b.second := by cases b <;> rfl
 private def localMultiply (i : Fin N) : Multipliers F bank →ₗ[F] JetSpace F 3 bank.first bank.second where
   toFun Q := ⟨weightedTruncation contactWeight 4 (C.shifted i L * Q.val), by
     simpa only [first_sub_add, second_sub_add] using
@@ -150,51 +139,6 @@ private theorem local_finrank (i : Fin N) :
   change Module.finrank F (LocalSpace bank C hdeg i) + J 3 (bank.first - 1) (bank.second - 1) =
     J 4 bank.first bank.second at hq
   omega
-private def nodeMap (i : Fin N) : Source F bank →ₗ[F] LocalSpace bank C hdeg i :=
-  (LinearMap.range (localMultiply bank C hdeg i)).mkQ.comp
-    (sourceToJet sourceCutoff 131071 5 bank.first bank.second 3 (C.x i) (C.first i) (C.firstSlope i)
-      (C.second i) (C.secondSlope i))
-include hdeg in
-theorem quotientSource (hL : L ≠ 0) (hh : h ≤ 33327) (hs : P1_3.quotientSurplus bank N h) :
-    ∃ G : Source F bank, ¬ L ∣ G.val ∧ ∀ i, ∃ R : Multipliers F bank,
-      C.shifted i G.val - C.shifted i L * R.val ∈ restrictWeightedOrder contactWeight 4 := by
-  have hfit : ∀ j, relationBounds h j ≤ sourceBounds sourceCutoff 5 bank.first bank.second j := by
-    have hcapacity : 131071 + 33327 ≤ sourceCutoff := by decide
-    intro j
-    cases bank <;> fin_cases j <;> simp [relationBounds, sourceBounds, P1_3.Bank.first, P1_3.Bank.second] <;> omega
-  have hshift : (fun j => sourceBounds sourceCutoff 5 bank.first bank.second j - relationBounds h j) =
-      sourceBounds (sourceCutoff - 131071 - h) 4 (bank.first - 1) (bank.second - 1) := by
-    funext j
-    fin_cases j <;> simp [sourceBounds, relationBounds, Nat.sub_sub]
-    omega
-  let mult := filteredMul (sourceWeights 131071) (sourceBounds sourceCutoff 5 bank.first bank.second)
-    (relationBounds h) L hL hdeg hfit
-  have hmult : Module.finrank F (LinearMap.range mult) =
-      V (sourceCutoff - 131071 - h) 131071 4 (bank.first - 1) (bank.second - 1) := by
-    rw [LinearMap.finrank_range_of_inj (filteredMul_injective _ _ _ L hL hdeg hfit),
-      hshift, source_filtered_finrank]
-  let (i : Fin N) : Module.Free F (LocalSpace bank C hdeg i) := Module.Free.of_divisionRing F _
-  let : Module F (∀ i : Fin N, LocalSpace bank C hdeg i) := Pi.module _ _ _
-  have hlocal : Module.finrank F (∀ i : Fin N, LocalSpace bank C hdeg i) =
-      N * (J 4 bank.first bank.second - J 3 (bank.first - 1) (bank.second - 1)) := by
-    rw [Module.finrank_pi_fintype]
-    simp only [local_finrank bank C hdeg, Finset.sum_const, Finset.card_univ, Fintype.card_fin, smul_eq_mul]
-  have hdim : Module.finrank F (∀ i : Fin N, LocalSpace bank C hdeg i) +
-      Module.finrank F (LinearMap.range mult) < Module.finrank F (Source F bank) := by
-    rw [hlocal, hmult, source_filtered_finrank]
-    change N * (J 4 bank.first bank.second - J 3 (bank.first - 1) (bank.second - 1)) <
-      V sourceCutoff 131071 5 bank.first bank.second -
-        V (sourceCutoff - 131071 - h) 131071 4 (bank.first - 1) (bank.second - 1) at hs
-    omega
-  obtain ⟨G, hG, hnot⟩ := exists_kernel_outside (G := ∀ i : Fin N, LocalSpace bank C hdeg i)
-    (LinearMap.pi (nodeMap bank C hdeg)) (LinearMap.range mult) hdim
-  refine ⟨G, (mem_filteredMul_range_iff _ _ _ L hL hdeg hfit G).not.mp hnot, ?_⟩
-  intro i
-  have hi : nodeMap bank C hdeg i G = 0 := congrFun hG i
-  obtain ⟨R, hR⟩ := (Submodule.Quotient.mk_eq_zero _).mp hi
-  refine ⟨R, (weightedTruncation_eq_zero_iff _ _ _).mp ?_⟩
-  rw [map_sub]
-  exact sub_eq_zero.mpr (congrArg Subtype.val hR).symm
 end
 end P1_3_1
 end
@@ -276,10 +220,10 @@ open scoped Polynomial
 open private dx_degree dy_degree from ProximityPrize.SubmissionLower.Fast069
 open private clearPower separant taylorNumerator received nodeCut toGeneric_degree
   order_le_clearPower received_degree from ProximityPrize.SubmissionLower.Fast069
-theorem separant_degree {g : Row} (h : g.totalDegree ≤ 42) : (dy g).totalDegree ≤ 41 := by
+private theorem separant_degree {g : Row} (h : g.totalDegree ≤ 42) : (dy g).totalDegree ≤ 41 := by
   have := dy_degree g
   omega
-theorem flow_degree {g f : Row} {d : ℕ}
+private theorem flow_degree {g f : Row} {d : ℕ}
     (hg : g.totalDegree ≤ 42) (hf : f.totalDegree ≤ d) (hd : 0 < d) :
     (flow g f).totalDegree ≤ d + 41 := by
   have ha := separant_degree hg
@@ -312,11 +256,11 @@ private theorem numerator_degree {g : Row} (hg : g.totalDegree ≤ 42) (n : ℕ)
         (MvPolynomial.C ((2*n+1 : ℕ) : K[X]) : Row) (flow g (dy g))
       rw [totalDegree_C, zero_add] at hc
       omega
-theorem sep_pow_degree (g : Row) (hg : g.totalDegree ≤ 42) (a : ℕ) :
+private theorem sep_pow_degree (g : Row) (hg : g.totalDegree ≤ 42) (a : ℕ) :
     (separant g ^ a).totalDegree ≤ a * 41 :=
   (totalDegree_pow _ _).trans
     (Nat.mul_le_mul_left a ((toGeneric_degree _).trans (separant_degree hg)))
-theorem taylorNumerator_degree (g : Row) (hg : g.totalDegree ≤ 42) (x : K) :
+private theorem taylorNumerator_degree (g : Row) (hg : g.totalDegree ≤ 42) (x : K) :
     (taylorNumerator g x).totalDegree ≤ cutDegree := by
   unfold taylorNumerator
   apply (totalDegree_add _ _).trans
@@ -359,7 +303,7 @@ open private seedRow seedRow_degree regroup specialize specialize_regroup decode
   eval_specialize specialize_iterate specialize_pderiv from ProximityPrize.SubmissionLower.Fast069
 open private nodeCut eval_nodeCut from ProximityPrize.SubmissionLower.Fast069
 open private derivativeOrder_degree K1_10_2.eval_toGeneric from ProximityPrize.SubmissionLower.Fast069
-theorem regroup_degree {bank : P1_3.Bank} (A : ScalarSource bank) : (regroup A.poly).totalDegree ≤ 42 := by
+private theorem regroup_degree {bank : P1_3.Bank} (A : ScalarSource bank) : (regroup A.poly).totalDegree ≤ 42 := by
   classical
   have hsum : regroup A.poly =
       ∑ e ∈ A.poly.support, regroup (monomial e (A.poly.coeff e)) := by

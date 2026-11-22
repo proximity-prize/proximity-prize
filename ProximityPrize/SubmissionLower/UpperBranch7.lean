@@ -1,6 +1,6 @@
-import ProximityPrize.SubmissionLower.GoldBranch6N5
+import ProximityPrize.SubmissionLower.GoldBranch6
+import ProximityPrize.SubmissionLower.PortLow5
 import ProximityPrize.SubmissionLower.UpperBase
-set_option Elab.async false
 set_option autoImplicit true
 section
 namespace P1_7_7
@@ -126,7 +126,7 @@ section
 namespace P1_7_7
 open P1 (HighBand agreement blockLength)
 open P1_7 (degreeAt gap scale quotientOrder muNum lambdaNum ceilRatio persistentFee)
-theorem cross_ratio {A n d s : ℕ} (hn : A ≤ n) (hd : d ≤ A) (hs : s ≤ d) :
+private theorem cross_ratio {A n d s : ℕ} (hn : A ≤ n) (hd : d ≤ A) (hs : s ≤ d) :
     (A-d) * (n-s) ≤ (A-s) * (n-d) := by
   have h : 0 ≤ ((n : ℤ)-A) * ((d : ℤ)-s) :=
     mul_nonneg (sub_nonneg.mpr (Int.ofNat_le.mpr hn)) (sub_nonneg.mpr (Int.ofNat_le.mpr hs))
@@ -134,7 +134,7 @@ theorem cross_ratio {A n d s : ℕ} (hn : A ≤ n) (hd : d ≤ A) (hs : s ≤ d)
   push_cast [Int.ofNat_sub hd, Int.ofNat_sub (hs.trans hd), Int.ofNat_sub (hd.trans hn),
     Int.ofNat_sub (hs.trans (hd.trans hn))]
   nlinarith only [h]
-theorem order_ratio {A ell s : ℕ} (hell : ell ≤ A) :
+private theorem order_ratio {A ell s : ℕ} (hell : ell ≤ A) :
     A * (ell-s) ≤ (A-s) * ell := by
   by_cases hs : s ≤ ell
   · have h : 0 ≤ ((A : ℤ)-ell) * (s : ℤ) :=
@@ -199,7 +199,7 @@ open K1_14_6_2 (SourcePolynomial flatten eval_flatten)
 open private K1_14_6_2.flatten_bound factor_span_minimal comap_span_flatten positiveFactors_card_le
   positive_factor_at_root from ProximityPrize.SubmissionLower.Fast055
 open private closedPoint extendEquation extendEquation_eval from ProximityPrize.SubmissionLower.Fast055
-theorem regular_components {a b e v : ℕ} (ha : 0 < a) (hb : 0 < b)
+private theorem regular_components {a b e v : ℕ} (ha : 0 < a) (hb : 0 < b)
     (f : SourcePolynomial ClosedField) (hf : f ≠ 0) (he : f.natDegree ≤ e)
     (hv : ∀ j, (f.coeff j).totalDegree ≤ v) :
     ∃ Ps : Finset (Ideal (BoxRing a b)),
@@ -379,11 +379,6 @@ open P1 (AnchorModel AnchoredFamily HighBand I K agreement node p)
 open P1_7 (AdjacentChart GradeIndex InBand Reduced regularRoot grades scale)
 open K1_14 (Equation FX L SeedBound seedEmbedding)
 open scoped BigOperators
-def c1 : Prop :=
-  ∀ u del (M : AnchorModel u del) Γ (F : AnchoredFamily M Γ) (H : L[X]),
-    0 < M.overhead.toNat → AdjacentChart M F H →
-    ∃ C : CRTChart M.overhead.toNat, ∀ γ ∈ Γ,
-      C.Recovers (poleProduct H) (M.label γ) (F.scalar γ)
 def c2 : Prop :=
   ∀ (d w e v : ℕ), 0 < w → 2 * w ≤ d → d < p →
     ∀ (G : FX[X]), G.Monic → G.natDegree = 2 * w →
@@ -396,39 +391,6 @@ def c2 : Prop :=
       ∀ (C : CRTChart w), (∀ γ ∈ T, C.Recovers G (z γ) (S γ)) →
         ShortCharts d w e v word T z S
 def c3 : Prop := WeightedCut
-private theorem pole_data {u del} {M : AnchorModel u del} {Γ} {F : AnchoredFamily M Γ}
-    {H : L[X]} (h : AdjacentChart M F H) :
-    (poleProduct H).Monic ∧ (poleProduct H).natDegree = 2 * M.overhead.toNat ∧
-    (poleProduct H).eval (algebraMap L[X] FX Polynomial.X) ≠ 0 ∧
-    ∀ j : I, (poleProduct H).eval (seedEmbedding (node j)) ≠ 0 := by
-  obtain ⟨hm, hd, _, hm', hd', _, _, hn, _, _, _⟩ := h
-  let B := H * H.map (frobenius L p)
-  let incl := algebraMap L[X] FX
-  have hb : B.Monic := hm.mul hm'
-  have hdeg : B.natDegree = 2 * M.overhead.toNat := by
-    rw [show B = H * H.map (frobenius L p) from rfl,
-      Polynomial.natDegree_mul hm.ne_zero hm'.ne_zero, hd, hd']
-    omega
-  refine ⟨hb.map _, (hb.natDegree_map _).trans hdeg, ?_, ?_⟩
-  · have heval : (poleProduct H).eval (incl Polynomial.X) = incl B := by
-      rw [poleProduct, Polynomial.eval_map]
-      change B.eval₂ (incl.comp Polynomial.C) (incl Polynomial.X) = incl B
-      rw [← Polynomial.hom_eval₂, Polynomial.eval₂_C_X]
-    rw [heval]
-    exact (map_ne_zero_iff incl (IsFractionRing.injective L[X] FX)).mpr hb.ne_zero
-  · intro j
-    let x := algebraMap K L (node j)
-    have heval : (poleProduct H).eval (seedEmbedding (node j)) = incl (Polynomial.C (B.eval x)) := by
-      rw [poleProduct, Polynomial.eval_map]
-      change B.eval₂ (incl.comp Polynomial.C) ((incl.comp Polynomial.C) x) = _
-      rw [Polynomial.eval₂_hom]
-      rfl
-    have hval : B.eval x ≠ 0 := by
-      rw [show B = H * H.map (frobenius L p) from rfl, Polynomial.eval_mul]
-      exact mul_ne_zero (hn j).1 (hn j).2
-    rw [heval]
-    exact (map_ne_zero_iff incl (IsFractionRing.injective L[X] FX)).mpr
-      ((map_ne_zero_iff _ Polynomial.C_injective).mpr hval)
 end
 end P1_7_7
 end
@@ -452,13 +414,13 @@ private theorem det_degree {w : ℕ} (A : Matrix (Fin w) (Fin w) L[X])
     (∑ i : Fin w, (A (σ i) i).natDegree) ≤ ∑ _ : Fin w, 1 :=
       Finset.sum_le_sum fun i _ => hA _ _
     _ = w := by simp
-theorem affine_remainder {b : L[X]} (hb : b.Monic) (a₀ a₁ : L[X]) (j : ℕ) :
+private theorem affine_remainder {b : L[X]} (hb : b.Monic) (a₀ a₁ : L[X]) (j : ℕ) :
     (((a₀.map C + Polynomial.X (R := L) • a₁.map C) %ₘ b.map C).coeff j).natDegree ≤ 1 := by
   rw [add_modByMonic, smul_modByMonic, ← map_modByMonic C hb, ← map_modByMonic C hb,
     coeff_add, coeff_smul, coeff_map, coeff_map, smul_eq_mul]
   exact (natDegree_add_le _ _).trans (max_le (by simp) (by
     exact natDegree_mul_le.trans (by simp)))
-theorem bounded_solution {b : Polynomial L[X]} {w : ℕ}
+private theorem bounded_solution {b : Polynomial L[X]} {w : ℕ}
     (hb : b.Monic) (hd : b.natDegree = w) (a q : Polynomial L[X])
     (ha : ∀ i j, (K1_14_1_1.mulMatrix hb hd a i j).natDegree ≤ 1)
     (hq : ∀ j, (((-q) %ₘ b).coeff j).natDegree ≤ 1) :
@@ -604,51 +566,11 @@ open P1_7_7 (CRTChart box)
 open MvPolynomial (mem_restrictBidegree mem_restrictBidegree_mono mul_mem_restrictBidegree)
 open Polynomial
 open scoped Polynomial BigOperators
-set_option backward.isDefEq.respectTransparency false in
-private theorem chart_poles {u del} (M : AnchorModel u del) {Γ} (F : AnchoredFamily M Γ)
-    (H : L[X]) (hH : AdjacentChart M F H) :
-    ∃ D : PoleData M.overhead.toNat,
-      K1_14_1.poleProduct D = H * H.map (frobenius L p) ∧
-      ∀ γ ∈ Γ, MarkResidues D (M.label γ) (F.scalar γ) := by
-  let σ := frobenius L p
-  rcases hH with ⟨hm, hd, _, hm', hd', _, hcop, _, hdet, hdet', hmarks⟩
-  let A := liftPoly (M.factor * M.A₀)
-  let B := liftPoly (M.factor * M.A₁)
-  let Q := liftPoly M.Q
-  have hdet0 : IsCoprime (Q * A) H := by
-    simpa [Q, A, liftPoly, mul_assoc] using hdet
-  have hdet1 : IsCoprime (Q.map σ * A.map σ) (H.map σ) := by
-    simpa [Q, A, liftPoly, mul_assoc, σ, Polynomial.map_mul] using hdet'
-  let D : PoleData M.overhead.toNat :=
-    ⟨![H, H.map σ], ![Q, Q.map σ], ![A, A.map σ], ![B, B.map σ],
-      fun i => by fin_cases i <;> first | exact hm | exact hm',
-      fun i => by fin_cases i <;> first | exact hd | exact hd',
-      hcop, fun i => by fin_cases i <;> first | exact hdet0 | exact hdet1⟩
-  refine ⟨D, rfl, ?_⟩
-  · intro γ hγ i
-    let z := algebraMap K L (M.label γ)
-    have hz : liftPoly (M.factor * M.amplitude γ) = A + (@Polynomial.C L _) z * B := by
-      simp [A, B, z, P1.ModelAt.amplitude, liftPoly, mul_add, mul_left_comm]
-    obtain ⟨h₀, h₁, hr₀, hr₁⟩ := hmarks γ hγ
-    fin_cases i
-    · change IsCoprime (A + (@Polynomial.C L _) z * B) H ∧
-        H ∣ (A + (@Polynomial.C L _) z * B) * liftPoly (F.scalar γ) + (@Polynomial.C L _) z * Q
-      rw [← hz]
-      exact ⟨h₀, hr₀⟩
-    · have hσ : (liftPoly (M.factor * M.amplitude γ)).map σ =
-          A.map σ + (@Polynomial.C L _) (z^p) * B.map σ := by
-        rw [hz, Polynomial.map_add, Polynomial.map_mul, Polynomial.map_C]
-        rfl
-      change IsCoprime (A.map σ + (@Polynomial.C L _) (z^p) * B.map σ) (H.map σ) ∧
-        H.map σ ∣ (A.map σ + (@Polynomial.C L _) (z^p) * B.map σ) * liftPoly (F.scalar γ) +
-          (@Polynomial.C L _) (z^p) * Q.map σ
-      rw [← hσ]
-      exact ⟨h₁, hr₁⟩
-def constantEmbedding : L →+* FX :=
+private def constantEmbedding : L →+* FX :=
   (algebraMap L[X] FX).comp Polynomial.C
 private def embed (i : Fin 2) : L[X] →+* Biform :=
   eval₂RingHom (MvPolynomial.C.comp constantEmbedding) (MvPolynomial.X (some i))
-theorem embed_mem (i : Fin 2) {P : L[X]} {w : ℕ} (hP : P.natDegree ≤ w) :
+private theorem embed_mem (i : Fin 2) {P : L[X]} {w : ℕ} (hP : P.natDegree ≤ w) :
     embed i P ∈ box 0 w := by
   have hvar : (MvPolynomial.X (some i) : Biform) ∈ box 0 1 := by
     classical
@@ -670,7 +592,7 @@ theorem embed_mem (i : Fin 2) {P : L[X]} {w : ℕ} (hP : P.natDegree ≤ w) :
   have hprod := mul_mem_restrictBidegree hC hpow
   simpa [embed] using mem_restrictBidegree_mono hprod (by simp : 0 + 0 ≤ 0)
     (by simpa using hjw)
-theorem eval_embed (z : K) (S : K[X]) (i : Fin 2) :
+private theorem eval_embed (z : K) (S : K[X]) (i : Fin 2) :
     (MvPolynomial.eval (rootPoint z S)).comp (embed i) =
       constantEmbedding.comp (evalRingHom (seedPair z i)) := by
   apply Polynomial.ringHom_ext
@@ -678,12 +600,12 @@ theorem eval_embed (z : K) (S : K[X]) (i : Fin 2) :
     simp [embed, RingHom.comp_apply]
   · fin_cases i <;>
       simp [embed, RingHom.comp_apply, rootPoint, seedPair, seedEmbedding, constantEmbedding]
-def commonDen {w : ℕ} {D : PoleData w} (B : CRTLift D) : Biform :=
+private def commonDen {w : ℕ} {D : PoleData w} (B : CRTLift D) : Biform :=
   embed 0 (B.denominator 0) * embed 1 (B.denominator 1)
-def commonNum {w : ℕ} {D : PoleData w} (B : CRTLift D) : Biform[X] :=
+private def commonNum {w : ℕ} {D : PoleData w} (B : CRTLift D) : Biform[X] :=
   C (embed 1 (B.denominator 1)) * (B.numerator 0).map (embed 0) +
   C (embed 0 (B.denominator 0)) * (B.numerator 1).map (embed 1)
-theorem commonNum_degree {w : ℕ} (hw : 0 < w) {D : PoleData w} (B : CRTLift D) :
+private theorem commonNum_degree {w : ℕ} (hw : 0 < w) {D : PoleData w} (B : CRTLift D) :
     (commonNum B).natDegree < 2 * w := by
   have hN (i : Fin 2) : (B.numerator i).natDegree < 2 * w := by
     by_cases hz : B.numerator i = 0
@@ -695,12 +617,12 @@ theorem commonNum_degree {w : ℕ} (hw : 0 < w) {D : PoleData w} (B : CRTLift D)
   exact max_lt
     ((natDegree_C_mul_le _ _).trans_lt (natDegree_map_le.trans_lt (hN 0)))
     ((natDegree_C_mul_le _ _).trans_lt (natDegree_map_le.trans_lt (hN 1)))
-theorem commonDen_mem {w : ℕ} {D : PoleData w} (B : CRTLift D)
+private theorem commonDen_mem {w : ℕ} {D : PoleData w} (B : CRTLift D)
     (hd : ∀ i, (B.denominator i).natDegree ≤ w) :
     commonDen B ∈ box 0 (2 * w) := by
   simpa only [commonDen, Nat.zero_add, two_mul] using
     mul_mem_restrictBidegree (embed_mem 0 (hd 0)) (embed_mem 1 (hd 1))
-theorem commonNum_mem {w : ℕ} {D : PoleData w} (B : CRTLift D)
+private theorem commonNum_mem {w : ℕ} {D : PoleData w} (B : CRTLift D)
     (hd : ∀ i, (B.denominator i).natDegree ≤ w)
     (hn : ∀ i j, ((B.numerator i).coeff j).natDegree ≤ w) (j : ℕ) :
     (commonNum B).coeff j ∈ box 0 (2 * w) := by
@@ -762,14 +684,6 @@ private theorem common_recovers {w : ℕ} (hw : 0 < w) {D : PoleData w} (B : CRT
       ← Polynomial.C_mul, ← Polynomial.C_mul, hc₀, hc₁]
   rw [hL', ← hS, ← Polynomial.map_sub]
   exact Polynomial.map_dvd constantEmbedding (K1_14_1_2.markedLift_residue B hm)
-theorem proof : P1_7_7.c1 := by
-  intro u del M Γ F H hw hH
-  obtain ⟨D, hD, hmarks⟩ := chart_poles M F H hH
-  obtain ⟨B, hd, hn⟩ := bounded_crt D
-  refine ⟨commonChart hw B hd hn, ?_⟩
-  intro γ hγ
-  rw [P1_7_7.poleProduct, ← hD]
-  exact common_recovers hw B hd hn (hmarks γ hγ)
 end
 end P1_7_7_1
 end
@@ -779,7 +693,7 @@ namespace P1_7_7_2
 noncomputable section
 open Polynomial
 open scoped BigOperators
-theorem zero_of_zero_data {E ι : Type} [Field E] [Fintype ι]
+private theorem zero_of_zero_data {E ι : Type} [Field E] [Fintype ι]
     (nodes : ι → E) (hinj : Function.Injective nodes)
     (ξ : E) (hne : ∀ i, nodes i ≠ ξ) (sites : Finset ι)
     (d m r : ℕ) (hlen : d < m + sites.card + r)
@@ -818,7 +732,7 @@ theorem zero_of_zero_data {E ι : Type} [Field E] [Fintype ι]
       hinj (sub_left_inj.mp h)
     have hcard := FrobeniusLocator.Strata.root_nodes_card_le _ hshift R hRzero sites hroots
     omega
-theorem linear_pi_apply {E ι : Type} [Field E] [Fintype ι] [DecidableEq ι]
+private theorem linear_pi_apply {E ι : Type} [Field E] [Fintype ι] [DecidableEq ι]
     (L : (ι → E) →ₗ[E] E) (v : ι → E) :
     L v = ∑ i, L (Pi.single i 1) * v i := by
   calc
@@ -992,7 +906,7 @@ private theorem mapped_node_ne_center (x : K) : seedEmbedding x ≠ center := by
   intro h
   exact (Polynomial.X_ne_C (algebraMap K L x))
     ((IsFractionRing.injective L[X] FX) h.symm)
-theorem residue_coeff {w : ℕ} (C : CRTChart w)
+private theorem residue_coeff {w : ℕ} (C : CRTChart w)
     (G : FX[X]) (hm : G.Monic) (hd : G.natDegree = 2*w)
     {z : K} {S : K[X]} (h : C.Recovers G z S) (i : ℕ) :
     markEval z S (C.numerator.coeff i) =
@@ -1105,7 +1019,7 @@ namespace P1_7_7_3
 noncomputable section
 open MvPolynomial
 open scoped BigOperators
-theorem split_exponent {σ : Type*} {a b t : ℕ} {e : Option σ →₀ ℕ}
+private theorem split_exponent {σ : Type*} {a b t : ℕ} {e : Option σ →₀ ℕ}
     (he : e ∈ bidegreeExponents σ ((t + 1) * a) ((t + 1) * b)) :
     ∃ u ∈ bidegreeExponents σ a b, ∃ v ∈ bidegreeExponents σ (t * a) (t * b),
       u + v = e := by
@@ -1196,7 +1110,7 @@ variable {k σ : Type*} [Field k]
 def cutPower (P : Ideal (MvPolynomial σ k)) (q : MvPolynomial σ k) (i : ℕ) :
     Ideal (MvPolynomial σ k) :=
   P ⊔ Ideal.span {q ^ i}
-theorem mul_mem_cutPower_iff {P : Ideal (MvPolynomial σ k)} (hP : P.IsPrime)
+private theorem mul_mem_cutPower_iff {P : Ideal (MvPolynomial σ k)} (hP : P.IsPrime)
     {q : MvPolynomial σ k} (hq : q ∉ P) (i : ℕ) (x : MvPolynomial σ k) :
     q * x ∈ cutPower P q (i + 1) ↔ x ∈ cutPower P q i := by
   unfold cutPower
@@ -1217,7 +1131,7 @@ theorem mul_mem_cutPower_iff {P : Ideal (MvPolynomial σ k)} (hP : P.IsPrime)
     obtain ⟨c, rfl⟩ := Ideal.mem_span_singleton'.mp hv
     exact Submodule.mem_sup.mpr ⟨q * u, P.mul_mem_left _ hu, c * q ^ (i + 1),
       Ideal.mem_span_singleton'.mpr ⟨c, rfl⟩, by rw [pow_succ]; ring⟩
-theorem cutPower_succ_le_one (P : Ideal (MvPolynomial σ k))
+private theorem cutPower_succ_le_one (P : Ideal (MvPolynomial σ k))
     (q : MvPolynomial σ k) (i : ℕ) : cutPower P q (i + 1) ≤ cutPower P q 1 := by
   apply sup_le_sup_left
   apply (Ideal.span_singleton_le_iff_mem _).mpr
@@ -1279,7 +1193,7 @@ private theorem hilbert_step [Finite σ] {P : Ideal (MvPolynomial σ k)} (hP : P
   change Module.finrank k (quotientDegreeLE J₁ B) + Module.finrank k (LinearMap.ker project) =
     Module.finrank k (quotientDegreeLE J' B) at hproject
   omega
-theorem hilbert_power [Finite σ] {P : Ideal (MvPolynomial σ k)} (hP : P.IsPrime)
+private theorem hilbert_power [Finite σ] {P : Ideal (MvPolynomial σ k)} (hP : P.IsPrime)
     {q : MvPolynomial σ k} (hq : q ∉ P) (r N : ℕ) :
     r * affineHilbertFunction (cutPower P q 1) N ≤
       affineHilbertFunction (cutPower P q r) (N + r * q.totalDegree) := by
@@ -1339,7 +1253,7 @@ noncomputable section
 open MvPolynomial
 open P1_7_7 (BoxRing boxMap)
 open scoped BigOperators
-theorem cut_eq_of_sub_mem {R : Type*} [CommRing R] {P : Ideal R} {f g : R}
+private theorem cut_eq_of_sub_mem {R : Type*} [CommRing R] {P : Ideal R} {f g : R}
     (h : f - g ∈ P) : P ⊔ Ideal.span {f} = P ⊔ Ideal.span {g} := by
   apply le_antisymm <;> refine sup_le le_sup_left ((Ideal.span_singleton_le_iff_mem _).mpr ?_)
   · exact Submodule.mem_sup.mpr ⟨_, h, _, Ideal.mem_span_singleton_self g, sub_add_cancel _ _⟩
