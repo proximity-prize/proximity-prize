@@ -28,14 +28,14 @@ variable {Γ : Finset K} {s : K→K[X]} {f Q : Row 4} {l : ℕ} {S : Set (Ideal 
 def tally (D : Data Γ s f Q l S) (F : Finset (Branch f Q l)) : ℕ :=
   ∑ b∈F,b.weight*(D.points b).card
 
-theorem scale_limit {x y e : ℕ} (h : ∀ N>0, N*x ≤ N*y+e) : x≤y := by
+private theorem scale_limit {x y e : ℕ} (h : ∀ N>0, N*x ≤ N*y+e) : x≤y := by
   by_contra! hh
   have hb := h (e+1) (by omega)
   have hc := Nat.mul_le_mul_left (e+1) (show y+1≤x by omega)
   rw [Nat.mul_add,Nat.mul_one] at hc
   omega
 
-theorem power_box (G : Row 4) (N : ℕ) :
+private theorem power_box (G : Row 4) (N : ℕ) :
     InBox (shape (G^N)) ⟨N*(shape G).chamber.b+3,N*(shape G).j+3,N*(shape G).t+1⟩ := by
   refine ⟨?_,?_,?_⟩
   · have h := weightedTotalDegree_pow_le (1 : Fin 4→ℕ) G N
@@ -48,7 +48,7 @@ theorem power_box (G : Row 4) (N : ℕ) :
     simp only [weightedTotalDegree_piSingle] at h
     exact h.trans (Nat.le_add_right _ _)
 
-theorem power_order {P : Ideal GeoJets} [P.IsPrime] {G : Row 4} {n : ℕ}
+private theorem power_order {P : Ideal GeoJets} [P.IsPrime] {G : Row 4} {n : ℕ}
     (h : VanishesTo P (toGeneric G) n) (N : ℕ) : VanishesTo P (toGeneric (G^N)) (N*n) := by
   let L := Localization.AtPrime P
   change algebraMap GeoJets L (toGeneric (G^N)) ∈ IsLocalRing.maximalIdeal L^(N*n)
@@ -56,7 +56,7 @@ theorem power_order {P : Ideal GeoJets} [P.IsPrime] {G : Row 4} {n : ℕ}
   rw [map_pow,map_pow,Nat.mul_comm N n,pow_mul]
   exact Ideal.pow_mem_pow h _
 
-theorem four_count (D : Data Γ s f Q l S) (input : CutInput Γ s f Q l)
+private theorem four_count (D : Data Γ s f Q l S) (input : CutInput Γ s f Q l)
     (F : Finset (Branch f Q l)) (hF : F⊆D.branches) (G : Row 4) (hproper : ¬ f∣G)
     (n amount : ℕ) (hn : 0<n) (hv : K1_13_8.Valid (shape f))
     (hcut : ∀ b∈F, ∃ h : (intersectionIdeal f G).IsMinimalPrime b.surface,
@@ -120,7 +120,7 @@ theorem four_count (D : Data Γ s f Q l S) (input : CutInput Γ s f Q l)
   apply Nat.le_of_mul_le_mul_left _ (Nat.mul_pos (by decide : 0<32) hn)
   simpa only [Nat.mul_assoc,Nat.mul_comm,Nat.mul_left_comm] using hh
 
-theorem tilted_count (D : Data Γ s f Q l S) (input : CutInput Γ s f Q l)
+private theorem tilted_count (D : Data Γ s f Q l S) (input : CutInput Γ s f Q l)
     (F : Finset (Branch f Q l)) (hF : F⊆D.branches) (G : Row 4) (hproper : ¬ f∣G)
     (n amount : ℕ) (hn : 0<n) (htilt : Final50Price.tiltedFits (shape f))
     (hcut : ∀ b∈F, ∃ h : (intersectionIdeal f G).IsMinimalPrime b.surface,

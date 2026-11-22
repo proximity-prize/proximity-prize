@@ -12,10 +12,10 @@ noncomputable section
 open MvPolynomial Finset
 open K1_14 (FX seedEmbedding)
 open P1 (K I node)
-open HighCore82219 (FixedWord Band start finish degreeAt quotientOrder)
-open HighCore82219Upper (Input ResidueLift Factors componentMarks mem_componentMarks)
-open HighCore82219Upper_3 (JetRing graphIdeal markPoint openFactor)
-open HighCore82219Upper_3_3 (curveValue wordAt)
+open HighCore82258 (FixedWord Band start finish degreeAt quotientOrder)
+open HighCore82258Upper (Input ResidueLift Factors componentMarks mem_componentMarks)
+open HighCore82258Upper_3 (JetRing graphIdeal markPoint openFactor)
+open HighCore82258Upper_3_3 (curveValue wordAt)
 open KoalaRectTaylor (Represented EquationAxis equationAxis_iff jetToRect rectIdeal)
 open KoalaTwoSectionPrice (liftIndex liftIndex_spec liftIndex_le)
 open P1_7_3 (persistentNodes hits_persistent)
@@ -91,22 +91,22 @@ theorem repeated_count (J : Input) (B : ResidueLift J) (D : Factors J B) (v w : 
   obtain ⟨δ,hδ,hval⟩ := PointCount.curve_degree_nat (‹(eIdeal J v w P).IsPrime›.ne_top) hDim
   have hword' : FixedWord J.model.word U J.family.scalar (degreeAt J.hi) :=
     ⟨hword.distinct.mono hSub, fun γ hγ => hword.degree γ (hSub hγ), fun γ hγ => hword.hits γ (hSub hγ)⟩
-  have hD : degreeAt J.hi ≤ 133536 := by rw [hhi]; decide
-  have hL : L ≤ 128693 := by dsimp [L]; rw [hlo]; decide
-  have hmin : 128606 ≤ J.ell := by
-    have hu : J.w ≤ 2465 := J.upper.trans_eq (hhi.trans (by decide))
-    change 128606 ≤ 131071 - J.w
+  have hD : degreeAt J.hi ≤ 133606 := by rw [hhi]; decide
+  have hL : L ≤ 128657 := by dsimp [L]; rw [hlo]; decide
+  have hmin : 128536 ≤ J.ell := by
+    have hu : J.w ≤ 2535 := J.upper.trans_eq (hhi.trans (by decide))
+    change 128536 ≤ 131071 - J.w
     omega
-  have hk : k ≤ 4930 := liftIndex_le (hhi.le.trans (by decide)) _ _
+  have hk : k ≤ 5070 := liftIndex_le (hhi.le.trans (by decide)) _ _
   have h₀ : J.ell ≤ L := Nat.sub_le_sub_left J.lower _
   have hCuts (x : I) (hfail : ∃ γ ∈ U, (J.family.scalar γ).eval (node x) ≠ J.model.word x) :
       (U.filter fun γ => (J.family.scalar γ).eval (node x) = J.model.word x).card ≤
         (J.ell-sites.card+k)*δ := by
-    obtain ⟨b,a,W⟩ := HighCore82219Upper_3_3_2.proof J sites x
+    obtain ⟨b,a,W⟩ := HighCore82258Upper_3_3_2.proof J sites x
     let f := KoalaRectTaylor.nodeNumerator J B sites x b a
     have hNode (γ : K) (hγ : γ ∈ U) :
         markPoint J γ f = 0 ↔ (J.family.scalar γ).eval (node x) = J.model.word x := by
-      obtain ⟨ho,hcv⟩ := HighCore82219Upper_3_3_1.proof J B γ (hSub hγ)
+      obtain ⟨ho,hcv⟩ := HighCore82258Upper_3_3_1.proof J B γ (hSub hγ)
       have hG p (hp : p ∈ graphIdeal J B D) : markPoint J γ p = 0 :=
         RingHom.mem_ker.mp (hOn γ hγ (hGraph hp))
       have hs i (hi : i ∈ sites) :

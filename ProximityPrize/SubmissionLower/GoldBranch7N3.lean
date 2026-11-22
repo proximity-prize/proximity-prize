@@ -171,12 +171,12 @@ private theorem bank {hi r : ℕ} {s : Shape}
   ⟨⟨hb, hj, hjb, hbp⟩, hu, Nat.mul_pos hm (by decide), hr⟩
 local notation "bank!" => bank (by decide) (by decide) (by decide)
   (Nat.le_of_ble_eq_true rfl) (Nat.le_of_ble_eq_true rfl) (by decide) (Nat.le_of_ble_eq_true rfl)
-def StageChecks (hi : ℕ) (s : Stage) : Prop :=
+private def StageChecks (hi : ℕ) (s : Stage) : Prop :=
   s.reserve < p ∧ BankGuard hi s.reserve s.free.shape ∧ BankGuard hi s.reserve s.moving.shape
 private theorem checked {hi r : ℕ} {s : Stage} (he : s.reserve = r) (hs : r < p)
     (hf : BankGuard hi s.reserve s.free.shape) (hm : BankGuard hi s.reserve s.moving.shape) :
     StageChecks hi s := ⟨he ▸ hs, hf, hm⟩
-def TailChecks (hi : ℕ) (ss : List Stage) : Prop :=
+private def TailChecks (hi : ℕ) (ss : List Stage) : Prop :=
   ∀ s ∈ ss, 0 < s.reserve ∧ StageChecks hi s
 private theorem cons {hi r : ℕ} {s : Stage} {ss : List Stage}
     (he : s.reserve = r) (hp : 0 < r) (hs : StageChecks hi s) (ht : TailChecks hi ss) :
@@ -195,22 +195,22 @@ open P3_7_3 (stageAt initialCap initialE introIndices introAccount degreeVector 
 open P1_7_4 (cornerBound sharedBound pairMinSeed pairMinOrdinate)
 open K1_14 (Shape)
 open K1_14_2_2_4 (highCap highScale pairCap residualShape)
-def floorN (x : ℚ) : ℕ := x.floor.toNat
-theorem floorN_mono : Monotone floorN := by
+private def floorN (x : ℚ) : ℕ := x.floor.toNat
+private theorem floorN_mono : Monotone floorN := by
   intro a b h
   exact Int.toNat_le_toNat (Int.floor_mono h)
-theorem floorN_cast (n : ℕ) : floorN (n : ℚ) = n := by
+private theorem floorN_cast (n : ℕ) : floorN (n : ℚ) = n := by
   change ⌊(n : ℚ)⌋.toNat = n
   rw [Int.floor_natCast, Int.toNat_natCast]
-theorem floorN_max (a b : ℚ) :
+private theorem floorN_max (a b : ℚ) :
     floorN (max a b) = max (floorN a) (floorN b) :=
   floorN_mono.map_max
-theorem floorN_fold_max (xs : List ℚ) (a : ℚ) :
+private theorem floorN_fold_max (xs : List ℚ) (a : ℚ) :
     floorN (xs.foldl max a) = (xs.map floorN).foldl max (floorN a) := by
   induction xs generalizing a with
   | nil => rfl
   | cons x xs ih => simp only [List.foldl_cons, List.map_cons, ih, floorN_max]
-theorem floorN_add_div (x y d e : ℕ) (hd : d ≠ 0) (he : e ≠ 0) :
+private theorem floorN_add_div (x y d e : ℕ) (hd : d ≠ 0) (he : e ≠ 0) :
     floorN ((x : ℚ)/d + (y : ℚ)/e) = (x*e+y*d)/(d*e) := by
   have hd' : (d : ℚ) ≠ 0 := by exact_mod_cast hd
   have he' : (e : ℚ) ≠ 0 := by exact_mod_cast he
@@ -221,12 +221,12 @@ theorem floorN_add_div (x y d e : ℕ) (hd : d ≠ 0) (he : e ≠ 0) :
   change ⌊((x*e+y*d : ℕ) : ℚ)/(d*e : ℕ)⌋.toNat = _
   rw [Rat.floor_natCast_div_natCast]
   exact Int.toNat_natCast _
-def sharedNat (s t : Shape) (x z r m : ℕ) (square : Bool) (k : Fin 4) : ℕ :=
+private def sharedNat (s t : Shape) (x z r m : ℕ) (square : Bool) (k : Fin 4) : ℕ :=
   let n := m + 1 - r
   let d := if square || (k == 3) then n^2 else n
   let a := highScale r k
   (highCap x z k*d + pairCap (residualShape s x z) (residualShape t x z) k*a)/(a*d)
-theorem floorN_shared (s t : Shape) (x z r m : ℕ) (square : Bool) (k : Fin 4)
+private theorem floorN_shared (s t : Shape) (x z r m : ℕ) (square : Bool) (k : Fin 4)
     (hr : 0 < r) (hm : r ≤ m) :
     floorN (sharedBound s t x z r m square k) = sharedNat s t x z r m square k := by
   have hn : 0 < m+1-r := by omega
@@ -234,19 +234,19 @@ theorem floorN_shared (s t : Shape) (x z r m : ℕ) (square : Bool) (k : Fin 4)
   apply floorN_add_div
   · fin_cases k <;> exact (by first | exact hr.ne' | exact pow_ne_zero 2 hr.ne')
   · split <;> first | exact hn.ne' | exact pow_ne_zero 2 hn.ne'
-def cornerNat (s t : Shape) (r m : ℕ) (square : Bool) (k : Fin 4) : ℕ :=
+private def cornerNat (s t : Shape) (r m : ℕ) (square : Bool) (k : Fin 4) : ℕ :=
   let xs := [0, pairMinSeed s t]
   let zMax := pairMinOrdinate s t
   let zs := [0, zMax, min zMax (s.B-s.J), min zMax (t.B-t.J)]
   (xs.flatMap fun x => zs.map fun z => sharedNat s t x z r m square k).foldl max 0
-theorem floorN_corner (s t : Shape) (r m : ℕ) (square : Bool) (k : Fin 4)
+private theorem floorN_corner (s t : Shape) (r m : ℕ) (square : Bool) (k : Fin 4)
     (hr : 0 < r) (hm : r ≤ m) :
     floorN (cornerBound s t r m square k) = cornerNat s t r m square k := by
   unfold cornerBound cornerNat
   rw [floorN_fold_max, List.map_flatMap]
   simp only [List.map_map, Function.comp_def, floorN_shared _ _ _ _ _ _ _ _ hr hm]
   rfl
-theorem rank_at_zero (b : HighBand) :
+private theorem rank_at_zero (b : HighBand) :
     rankB b = initialCap b 2 ∧ rankJ b = initialCap b 1 := by
   change floorN (initialCap b 2 : ℚ) = _ ∧ floorN (initialCap b 1 : ℚ) = _
   exact ⟨floorN_cast _, floorN_cast _⟩
@@ -350,7 +350,7 @@ open P3 (HighBand p)
 open P3_7 (fees)
 open P3_7_3
 open P1_7_4 (dotQ_mono_mass)
-theorem foldl_le_entry (f : ℕ → ℚ) (xs : List ℕ) (a : ℚ) {j : ℕ}
+private theorem foldl_le_entry (f : ℕ → ℚ) (xs : List ℕ) (a : ℚ) {j : ℕ}
     (hj : j ∈ xs) : xs.foldl (fun z i => min z (f i)) a ≤ f j := by
   have floor (xs : List ℕ) (a : ℚ) : xs.foldl (fun z i => min z (f i)) a ≤ a := by
     induction xs generalizing a with
@@ -365,7 +365,7 @@ theorem foldl_le_entry (f : ℕ → ℚ) (xs : List ℕ) (a : ℚ) {j : ℕ}
 private def corner (b : HighBand) (i r : ℕ) (k : Fin 4) : ℚ :=
   let s := stageAt b i
   cornerBound s.free.shape s.moving.shape r (s.reserve+1) (decide (stopIndex b ≤ i)) k
-theorem stage_le_corner (b : HighBand) (i r : ℕ) (k : Fin 4)
+private theorem stage_le_corner (b : HighBand) (i r : ℕ) (k : Fin 4)
     (hp : 0 < r) (hr : r ≤ (stageAt b i).reserve + 1) :
     stageCap b i (decide (stopIndex b ≤ i)) k ≤ corner b i r k := by
   obtain ⟨j, rfl⟩ := Nat.exists_eq_succ_of_ne_zero hp.ne'
@@ -397,14 +397,14 @@ instance (b : HighBand) : Decidable (discounted b) := inferInstanceAs (Decidable
 def rates (b : HighBand) (xs : Receipt) : ℕ → Mass :=
   if discounted b then lossWeight b (degreeRate b xs) (heightRate b xs) else fun _ _ => 0
 def multiplier (b : HighBand) : ℚ := if discounted b then 1 else Q
-theorem multiplier_nonneg (b : HighBand) : 0 ≤ multiplier b := by
+private theorem multiplier_nonneg (b : HighBand) : 0 ≤ multiplier b := by
   unfold multiplier
   split
   · exact zero_le_one
   · exact Nat.cast_nonneg _
 def jump (v : ℕ → Mass) (i : ℕ) (c : Mass) : ℚ :=
   dot4 (fun k => running v (i+1) k - running v i k) c
-theorem jump_bound (v : ℕ → Mass) (i : ℕ) {c d : Mass} (h : ∀ k, c k ≤ d k) :
+private theorem jump_bound (v : ℕ → Mass) (i : ℕ) {c d : Mass} (h : ∀ k, c k ≤ d k) :
     dotQ (fun k => running v (i+1) k - running v i k) c ≤ jump v i d := by
   rw [jump, dot4_eq]
   exact dotQ_mono_mass (fun _ => sub_nonneg.mpr (le_max_left _ _)) h
@@ -445,7 +445,7 @@ private theorem RowOK.threshold {b : HighBand} {xs : Receipt} {i : ℕ}
   · exact h.cap1
   · exact h.cap2
   · exact h.cap3
-theorem history_le {b : HighBand} {xs : Receipt} {n : ℕ} (h : RowsOK b xs n)
+private theorem history_le {b : HighBand} {xs : Receipt} {n : ℕ} (h : RowsOK b xs n)
     {i : ℕ} (hi : i < n) (k : Fin 4) : history b i k ≤ cap b xs i k := by
   induction i with
   | zero => exact le_rfl
@@ -484,7 +484,7 @@ private theorem loss_le {b : HighBand} {xs : Receipt} {n : ℕ} (h : RowsOK b xs
     simp only [weightedBill, Finset.sum_range_succ, mul_add] at hprev ⊢
     rw [lossTotal, Nat.cast_add, add_div]
     linarith only [hprev, hstep]
-theorem zero_bill (n : ℕ) (m : ℕ → Mass) :
+private theorem zero_bill (n : ℕ) (m : ℕ → Mass) :
     weightedBill n (fun _ _ => 0) m = 0 := by
   have zero_running (i : ℕ) (k : Fin 4) : running (fun _ _ => 0) i k = 0 := by
     induction i with

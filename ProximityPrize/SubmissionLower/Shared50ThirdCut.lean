@@ -32,7 +32,7 @@ abbrev chartWidth (f : Row 4) : ℕ := (chart (taylorLength+2) (shape f).chamber
 def Marked (f Q : Row 4) (l : ℕ) (surfaces : Finset (Ideal GeoJets)) (S : Geom[X]) : Prop :=
   ∃ P ∈ surfaces, ∃ r, HighChart f Q l S P r
 
-theorem points_of_value {Γ : Finset K} {s : K → K[X]} {C : Ideal GeoJets}
+private theorem points_of_value {Γ : Finset K} {s : K → K[X]} {C : Ideal GeoJets}
     (prime : C.IsPrime) (hdim : dimension C = 1)
     (hinj : Set.InjOn s (Γ : Set K))
     (hC : ∀ γ ∈ Γ, C ≤ markIdeal (extend (s γ)))
@@ -69,7 +69,7 @@ theorem points_of_value {Γ : Finset K} {s : K → K[X]} {C : Ideal GeoJets}
   rw [Set.ncard_coe_finset, card_image_of_injOn (hpoint.mono (filter_subset _ _))] at hcard
   exact Nat.le_floor ((Nat.cast_le.mpr hcard).trans (hcount.trans hdeg))
 
-theorem curve_family {Γ : Finset K} {s : K → K[X]} {f Q R : Row 4} {l : ℕ}
+private theorem curve_family {Γ : Finset K} {s : K → K[X]} {f Q R : Row 4} {l : ℕ}
     (input : CutInput Γ s f Q l) {P C : Ideal GeoJets}
     (hP : (intersectionIdeal f Q).IsMinimalPrime P) (hR : toGeneric R ∉ P)
     (hC : (divisorIdeal P R).IsMinimalPrime C) :

@@ -169,17 +169,6 @@ theorem mem_fullBox {B J C : ℕ} (hBJ : J ≤ B) (hJC : 2*C ≤ J) (j : Jet) :
   rcases j with ⟨c, b, a⟩
   simp only [fullBox, mem_sigma, mem_range, Jet.q, Jet.v, Jet.c, Jet.b, Jet.a]
   omega
-private def runLength (c b : ℕ) := 63 - (b+c) + 1
-private def bRange (c : ℕ) := range (18 - 2*c + 1)
-private def countRow (c : ℕ) := ∑ b ∈ bRange c, runLength c b
-private def totalRow (c : ℕ) := ∑ b ∈ bRange c,
-  (runLength c b * (runLength c b - 1) / 2 + runLength c b * (b+c))
-private def indexRow (c : ℕ) := ∑ b ∈ bRange c, runLength c b * (b+2*c)
-private theorem box_index : (∑ j ∈ source180120.E, j.v) = ∑ c ∈ range 9, indexRow c := by
-  simp only [source180120, fullBox, sum_sigma, indexRow, bRange, runLength, Jet.v, Jet.b, Jet.c,
-    sum_const, card_range, smul_eq_mul]
-private theorem row8 : countRow 8 = 165 ∧ totalRow 8 = 5939 ∧ indexRow 8 = 2803 := by
-  decide
 end
 end CJ0
 end
@@ -205,22 +194,8 @@ abbrev L : ℕ := agreement - k
 abbrev frontLimit : ℕ := 16
 abbrev heightCap : ℕ := t + 1 - L - (frontLimit + 1)
 abbrev lowCutoff : ℤ := 2480
-abbrev radiusNumerator : ℕ := 335573291
-abbrev radiusDenominator : ℕ := 1073741824
-def queryRadius : ℝ≥0 := claimedRadius radiusNumerator radiusDenominator
-def radius : ℝ := queryRadius
-abbrev scalarCap : ℕ := 229652235871261455
-abbrev listCap : ℕ := 31973440934878498
-abbrev rankFee : ℕ := 69814727032823
-abbrev anchorFee : ℕ := 69814727311356
-def WeightedList : Prop :=
-  ∀ word : I → K,
-    let S := ReedSolomon.closePolynomialSet node word (k + 1) agreement
-    S.Finite ∧ S.ncard ≤ listCap
 abbrev Frac := GenericLayer.GenericField K
 abbrev Bivar := Polynomial K[X]
-def BadFamily (u : Words) (Γ : Finset K) : Prop :=
-  ∀ γ ∈ Γ, IsMCA (AffineLineGenerator K) IRSProfile.baseCode γ u radius
 structure BadMark (u : Words) (γ : K) where
   support : Finset I
   decoder : K[X]
@@ -235,10 +210,6 @@ def stackRank (u : Words) := GenericLayer.genericRank (twoBlock u)
 def nullity (u : Words) := GenericLayer.genericNullity (twoBlock u)
 def Normal (u : Words) (γ : K) : Prop :=
   ((twoBlock u).map (evalRingHom γ)).rank = stackRank u
-def normalSlopes (u : Words) (Γ : Finset K) : Finset K := by
-  classical exact Γ.filter (Normal u)
-def abnormalSlopes (u : Words) (Γ : Finset K) : Finset K := by
-  classical exact Γ.filter (fun γ => ¬ Normal u γ)
 def TypeAtMostOne (u : Words) : Prop :=
   Principal.TypeOneSyndromes node (u 0) (u 1) k p
 def HomogeneousPrincipal (u : Words) : Prop :=
@@ -287,12 +258,6 @@ def extendSeed (U : Bivar) : Frac[X] :=
   U.map (algebraMap K[X] Frac)
 def IsCommonGCD {F : Type} [Field F] (G U V : F[X]) : Prop :=
   G ≠ 0 ∧ G ∣ U ∧ G ∣ V ∧ ∀ H : F[X], H ∣ U → H ∣ V → H ∣ G
-def FixedLeftGCD {u : Words} {T : TwoActive u} (R : Relation T) : Prop :=
-  ∃ G : K[X], IsCommonGCD (G.map (algebraMap K Frac))
-    (extendSeed (leftU R)) (extendSeed (leftV R))
-def MovingGCD {u : Words} {T : TwoActive u} (R : Relation T) : Prop :=
-  ¬ FixedLeftGCD R ∧ ∃ G : Frac[X], G ≠ 0 ∧ G ∣ extendSeed (leftU R) ∧
-    G ∣ extendSeed (leftV R) ∧ (fixedNodes R).card < G.natDegree
 def InvalidLeft {u : Words} {T : TwoActive u} (R : Relation T) : Prop :=
   max (leftU R).natDegree (leftV R).natDegree < T.height ∨
     ∃ G : K[X], G ≠ 0 ∧ G.map Polynomial.C ∣ leftU R ∧ G.map Polynomial.C ∣ leftV R ∧
@@ -309,8 +274,6 @@ structure SaturatedAt {u : Words} {T : TwoActive u} (R : Relation T)
     IsCommonGCD (locator node errors) (atSlope (leftU R) γ) (atSlope (leftV R) γ)
   fixed_errors : ∀ i ∈ fixedNodes R, M.decoder.eval (node i) ≠ u 0 i + γ * u 1 i
   valid : ¬ InvalidLeft R
-def NormalSaturation {u : Words} {T : TwoActive u} (R : Relation T) : Prop :=
-  ∀ γ, Normal u γ → ∀ M : BadMark u γ, SaturatedAt R M
 def seed : Bivar := Polynomial.C (R := K[X]) (Polynomial.X (R := K))
 def liftX (P : K[X]) : Bivar := P.map Polynomial.C
 def twist : K →+* K := frobenius K p
@@ -382,12 +345,6 @@ structure RankThree (u : Words) (T : TwoActive u) (R : Relation T)
   output : Bivar
   output_degree : output.degree < (k + D.height : ℕ)
   nodes : relationOn u (fixedNodes R) (threeU a β) (threeV b α) output
-def Parallel {u T R D} (B : RankThree u T R D) : Prop :=
-  B.α = B.β
-def Nonparallel {u T R D} (B : RankThree u T R D) : Prop :=
-  B.α 0 * B.β 1 - B.α 1 * B.β 0 ≠ 0
-def UnitNorm {u T R D} (B : RankThree u T R D) : Prop :=
-  sixNorm B.a = sixNorm B.b
 structure AnchorModel (u : Words) (deleted : Finset I) where
   shift : K
   pencil₀ : K[X]
@@ -463,26 +420,6 @@ open Polynomial Code LinearCode CoreDefinitions ToyProblem
 open FrobeniusLocator ProximityPrize.Benchmark
 open Sol1.OneCount Sol1.FiniteRowProjection
 open scoped NNReal
-theorem support_threshold :
-    (Fintype.card I : ℝ) * (1 - radius) = (738168533 : ℝ) / 4096 := by
-  rw [IRSProfile.card_index]
-  norm_num [radius, queryRadius, claimedRadius]
-theorem agreement_of_threshold {s : ℕ}
-    (hs : (Fintype.card I : ℝ) * (1 - radius) ≤ s) : agreement ≤ s := by
-  rw [support_threshold] at hs
-  have hlt : (180216 : ℝ) < (738168533 : ℝ) / 4096 := by norm_num
-  have hn : 180216 < s := by exact_mod_cast hlt.trans_le hs
-  exact hn
-theorem bad_slope (u : Words) (γ : K)
-    (hγ : IsMCA (AffineLineGenerator K) IRSProfile.baseCode γ u radius) :
-    Principal.BadSlope node (u 0) (u 1) k agreement γ := by
-  let : NeZero k := ⟨by decide⟩
-  exact Principal.isMCA_implies_badSlope node u k agreement radius
-    (fun _ hT => agreement_of_threshold hT) γ hγ
-theorem bad_mark (u : Words) (Γ : Finset K) (hΓ : BadFamily u Γ) (γ : K) (hγ : γ ∈ Γ) :
-    Nonempty (BadMark u γ) := by
-  obtain ⟨S, hS, ⟨P, hP, he⟩, hn⟩ := bad_slope u γ (hΓ γ hγ)
-  exact ⟨⟨S, P, hS, hP, he, hn⟩⟩
 private theorem dyadic_mul {a i j x y u v z w e s : ℕ}
     (hi : a ^ i ≤ x * 2 ^ u) (hj : a ^ j ≤ y * 2 ^ v)
     (hc : x * y ≤ z * 2 ^ w) (he : i + j = e) (hs : u + v + w = s) :
@@ -496,232 +433,6 @@ private theorem dyadic_mul {a i j x y u v z w e s : ℕ}
     _ ≤ (z * 2 ^ w) * 2 ^ (u + v) := Nat.mul_le_mul_right _ hc
     _ = z * (2 ^ (u + v) * 2 ^ w) := by ac_rfl
     _ = z * 2 ^ (u + v + w) := congrArg (z * ·) (pow_add (2 : ℕ) (u + v) w).symm
-theorem complement_pow_1600 : (738168533 : ℕ) ^ 1600 ≤ 2 ^ 47135 := by
-  have h1 : (738168533 : ℕ) ^ 1 ≤ 738168533 * 2 ^ 0 := by decide
-  have h2 : (738168533 : ℕ) ^ 2 ≤ 0x78fd9196a06fd39 * 2 ^ 0 :=
-    dyadic_mul h1 h1 (z := 0x78fd9196a06fd39) (w := 0) (e := 2)
-      (s := 0) (by decide) (by decide) (by decide)
-  have h4 : (738168533 : ℕ) ^ 4 ≤ 0xe4bace9933b7b70 * 2 ^ 58 :=
-    dyadic_mul h2 h2 (z := 0xe4bace9933b7b70) (w := 58) (e := 4)
-      (s := 58) (by decide) (by decide) (by decide)
-  have h8 : (738168533 : ℕ) ^ 8 ≤ 0xcc5d4851c1794fe * 2 ^ 176 :=
-    dyadic_mul h4 h4 (z := 0xcc5d4851c1794fe) (w := 60) (e := 8)
-      (s := 176) (by decide) (by decide) (by decide)
-  have h16 : (738168533 : ℕ) ^ 16 ≤ 0xa324cd3fec2e007 * 2 ^ 412 :=
-    dyadic_mul h8 h8 (z := 0xa324cd3fec2e007) (w := 60) (e := 16)
-      (s := 412) (by decide) (by decide) (by decide)
-  have h24 : (738168533 : ℕ) ^ 24 ≤ 0x823cc603f4186ec * 2 ^ 648 :=
-    dyadic_mul h16 h8 (z := 0x823cc603f4186ec) (w := 60) (e := 24)
-      (s := 648) (by decide) (by decide) (by decide)
-  have h25 : (738168533 : ℕ) ^ 25 ≤ 0xb311c3afd2b98d1 * 2 ^ 677 :=
-    dyadic_mul h24 h1 (z := 0xb311c3afd2b98d1) (w := 29) (e := 25)
-      (s := 677) (by decide) (by decide) (by decide)
-  have h50 : (738168533 : ℕ) ^ 50 ≤ 0xfa83b1c6e73d977 * 2 ^ 1413 :=
-    dyadic_mul h25 h25 (z := 0xfa83b1c6e73d977) (w := 59) (e := 50)
-      (s := 1413) (by decide) (by decide) (by decide)
-  have h100 : (738168533 : ℕ) ^ 100 ≤ 0xf5257af7e8a99b2 * 2 ^ 2886 :=
-    dyadic_mul h50 h50 (z := 0xf5257af7e8a99b2) (w := 60) (e := 100)
-      (s := 2886) (by decide) (by decide) (by decide)
-  have h200 : (738168533 : ℕ) ^ 200 ≤ 0xeac0c2db4a0f1dd * 2 ^ 5832 :=
-    dyadic_mul h100 h100 (z := 0xeac0c2db4a0f1dd) (w := 60) (e := 200)
-      (s := 5832) (by decide) (by decide) (by decide)
-  have h400 : (738168533 : ℕ) ^ 400 ≤ 0xd744f55dc0a3d15 * 2 ^ 11724 :=
-    dyadic_mul h200 h200 (z := 0xd744f55dc0a3d15) (w := 60) (e := 400)
-      (s := 11724) (by decide) (by decide) (by decide)
-  have h800 : (738168533 : ℕ) ^ 800 ≤ 0xb504e6b6be8e15b * 2 ^ 23508 :=
-    dyadic_mul h400 h400 (z := 0xb504e6b6be8e15b) (w := 60) (e := 800)
-      (s := 23508) (by decide) (by decide) (by decide)
-  have h1600 : (738168533 : ℕ) ^ 1600 ≤ 0xffffdcacde2f7ff * 2 ^ 47075 :=
-    dyadic_mul h800 h800 (z := 0xffffdcacde2f7ff) (w := 59) (e := 1600)
-      (s := 47075) (by decide) (by decide) (by decide)
-  refine h1600.trans ?_
-  calc
-    0xffffdcacde2f7ff * 2 ^ 47075 ≤ 2 ^ 60 * 2 ^ 47075 :=
-      Nat.mul_le_mul_right _ (by decide)
-    _ = 2 ^ (60 + 47075) := (pow_add (2 : ℕ) 60 47075).symm
-    _ = 2 ^ 47135 := congrArg (fun e : ℕ => (2 : ℕ) ^ e) (by decide)
-theorem score_integer_cross :
-    (738168533 : ℕ) ^ 12800 * 2 ^ 6920 ≤ 1073741824 ^ 12800 := by
-  calc
-    (738168533 : ℕ) ^ 12800 * 2 ^ 6920 = (738168533 ^ 1600) ^ 8 * 2 ^ 6920 := by
-      rw [← pow_mul]
-    _ ≤ ((2 : ℕ) ^ 47135) ^ 8 * 2 ^ 6920 :=
-      Nat.mul_le_mul_right _ (Nat.pow_le_pow_left complement_pow_1600 8)
-    _ = (2 ^ 30) ^ 12800 := by
-      simp only [← pow_mul, ← pow_add]
-    _ = 1073741824 ^ 12800 := congrArg (fun b : ℕ => b ^ 12800) (by decide)
-theorem query_score : (1 - queryRadius) ^ IRSProfile.repetitions ≤ claimedError 6920 := by
-  have hcomplement : (1 - queryRadius : ℝ≥0) = 738168533 / 1073741824 := by
-    apply NNReal.coe_injective
-    have hr : queryRadius ≤ 1 := by
-      rw [← NNReal.coe_le_coe]
-      norm_num [queryRadius, claimedRadius]
-    rw [NNReal.coe_sub hr]
-    norm_num [queryRadius, claimedRadius]
-  change (1 - queryRadius) ^ 128 ≤ claimedError 6920
-  apply (pow_le_pow_iff_left₀ (by positivity) (by positivity) (by decide : (100 : ℕ) ≠ 0)).mp
-  rw [← pow_mul, Sol1.C42.claimedError_pow_100, hcomplement]
-  change ((738168533 : ℝ≥0) / 1073741824) ^ 12800 ≤ 1 / (2 : ℝ≥0) ^ 6920
-  rw [div_pow, div_le_div_iff₀ (by positivity) (by positivity), one_mul]
-  exact_mod_cast score_integer_cross
-theorem query_admissible : queryRadius ∈ Set.Ioo (0 : ℝ≥0) IRSProfile.minRelativeDistance := by
-  constructor <;> norm_num [queryRadius, claimedRadius, IRSProfile.minRelativeDistance]
-theorem finset_scalar_list_card_le (hlist : WeightedList) (w : I → K) (P : Finset (I → K))
-    (hP : ∀ f ∈ P, f ∈ scalarCode ∧ agreement ≤ agreementCard f w) : P.card ≤ listCap := by
-  classical
-  have : NeZero (k : ℕ) := ⟨by norm_num⟩
-  choose poly hdegree heval using fun f : P ↦
-    ReedSolomon.mem_code_iff_eval_of_ne_zero.mp (hP f.val f.property).1
-  have hinj : Function.Injective poly := by
-    intro f g hfg
-    apply Subtype.ext
-    funext i
-    calc
-      f.val i = (poly f).eval (IRSProfile.domain i) := (heval f i).symm
-      _ = (poly g).eval (IRSProfile.domain i) := by rw [hfg]
-      _ = g.val i := heval g i
-  let polys : Finset K[X] := Finset.univ.image poly
-  have hpolyscard : polys.card = P.card := by
-    dsimp [polys]
-    rw [Finset.card_image_of_injective _ hinj]
-    simp
-  have hpolys : (polys : Set K[X]) ⊆
-      ReedSolomon.closePolynomialSet node w (k + 1) agreement := by
-    intro q hq
-    obtain ⟨f,_hf,rfl⟩ := Finset.mem_image.mp hq
-    refine ⟨?_, ?_⟩
-    · have hd : (poly f).natDegree < (k + 1) := (hdegree f).trans (by norm_num)
-      exact (Polynomial.degree_le_natDegree).trans_lt (by exact_mod_cast hd)
-    · refine (hP f.val f.property).2.trans (Finset.card_le_card ?_)
-      intro i hi
-      apply (ReedSolomon.mem_polynomialAgreementSet node w (poly f) i).mpr
-      have hfw : f.val i = w i := by
-        simpa only [Finset.mem_filter, Finset.mem_univ, true_and] using hi
-      exact (heval f i).trans hfw
-  obtain ⟨hfinite,hbound⟩ := hlist w
-  have hcount := (Set.ncard_le_ncard hpolys hfinite).trans hbound
-  have hcount' : polys.card ≤ listCap := by simpa only [Set.ncard_coe_finset] using hcount
-  rwa [hpolyscard] at hcount'
-theorem list_projection_room : (listCap + 1) ^ 2 ≤ Fintype.card K :=
-  projection_room listCap (by decide)
-theorem finset_squared_list_card_le (hlist : WeightedList) (w : I → A16) (P : Finset (I → A16))
-    (hP : ∀ f ∈ P, f ∈ squaredCode ∧ agreement ≤ agreementCard f w) : P.card ≤ listCap := by
-  classical
-  let flattened := P.image flatten
-  have hflat : ∀ f ∈ flattened,
-      (∀ r : R16, (fun i ↦ f i r) ∈ scalarCode) ∧
-        agreement ≤ agreementCard f (flatten w) := by
-    intro f hf
-    obtain ⟨g,hg,rfl⟩ := Finset.mem_image.mp hf
-    obtain ⟨hcode,hagree⟩ := hP g hg
-    exact ⟨flatten_rows_mem g hcode,hagree.trans (flatten_agreement_le g w)⟩
-  have hcount := finset_vector_list_card_le scalarCode agreement listCap list_projection_room
-    (finset_scalar_list_card_le hlist) (flatten w) flattened hflat
-  have hcard : flattened.card = P.card := Finset.card_image_of_injective P flatten_injective
-  rwa [hcard] at hcount
-theorem close_agreement_ge (f w : I → A16)
-    (hd : (δᵣ(w,f) : ℝ) ≤ radius) : agreement ≤ agreementCard f w := by
-  classical
-  have hpos : 0 < Fintype.card I := by rw [IRSProfile.card_index]; decide
-  have hposR : (0 : ℝ) < Fintype.card I := by exact_mod_cast hpos
-  have hradius : radius =
-      1 - ((Fintype.card I : ℝ) * (1 - radius)) / Fintype.card I := by
-    rw [mul_comm, mul_div_cancel_right₀ _ hposR.ne']
-    ring
-  have hagree := (Code.relHammingDist_le_one_sub_div_iff hpos).mp
-    (show (δᵣ(w,f) : ℝ) ≤ 1 - ((Fintype.card I : ℝ) * (1 - radius)) / Fintype.card I by
-      rwa [← hradius])
-  have hcard : Code.agree f w ≤ agreementCard f w := by
-    unfold Code.agree agreementCard
-    apply Finset.card_le_card
-    intro i hi
-    simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hi ⊢
-    exact hi
-  exact (agreement_of_threshold hagree).trans hcard
-theorem squared_lambda_le (hlist : WeightedList) :
-    Code.Lambda (squaredCode : Set (I → A16)) radius ≤ (listCap : ℕ∞) := by
-  classical
-  apply Code.Lambda_le_iff_forall_encard_le.mpr
-  intro w
-  have hfinite : (Code.closeCodewordsRel (squaredCode : Set (I → A16)) w radius).Finite :=
-    Set.toFinite _
-  have hcard : hfinite.toFinset.card ≤ listCap := by
-    apply finset_squared_list_card_le hlist w hfinite.toFinset
-    intro f hf
-    obtain ⟨hcode,hclose⟩ := Code.mem_closeCodewordsRel_iff.mp (hfinite.mem_toFinset.mp hf)
-    exact ⟨hcode,close_agreement_ge f w hclose⟩
-  calc
-    (Code.closeCodewordsRel (squaredCode : Set (I → A16)) w radius).encard =
-        (hfinite.toFinset.card : ℕ∞) := hfinite.encard_eq_coe_toFinset_card
-    _ ≤ (listCap : ℕ∞) := by exact_mod_cast hcard
-def nativeBadSlopes (U : Sol1.C64.NativePair) : Finset K := by
-  classical
-  exact Finset.univ.filter fun γ => IsMCA (AffineLineGenerator K) IRSProfile.code γ U radius
-theorem native_cap_of_scalar_cap
-    (hscalar : ∀ u Γ, BadFamily u Γ → Γ.card ≤ scalarCap) (U : Sol1.C64.NativePair) :
-    (nativeBadSlopes U).card ≤ scalarCap := by
-  classical
-  apply Sol1.C64.restricted_interleaved_card_le IRSProfile.baseCode
-    (⊤ : ModuleCode I K K) radius scalarCap
-    (by rw [Sol1.C64.native_field_card]; decide)
-    (fun u _ Γ hΓ => hscalar u Γ hΓ) U (by simp) (nativeBadSlopes U)
-  intro γ hγ
-  change γ ∈ Finset.univ.filter (fun z => IsMCA (AffineLineGenerator K)
-    IRSProfile.code z U radius) at hγ
-  simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hγ
-  rw [Sol1.C64.native_code_eq] at hγ
-  exact hγ
-theorem mca_error_le_of_scalar_cap (hscalar : ∀ u Γ, BadFamily u Γ → Γ.card ≤ scalarCap) :
-    mcaError (AffineLineGenerator K) IRSProfile.code radius ≤
-      (scalarCap : ENNReal) / (Fintype.card K : ENNReal) := by
-  classical
-  refine iSup_le fun U => ?_
-  rw [SampleableType.prEvent_uniformSample_eq_ofReal]
-  change ENNReal.ofReal (((nativeBadSlopes U).card : ℝ) / Fintype.card K) ≤ _
-  calc
-    _ ≤ ENNReal.ofReal ((scalarCap : ℝ) / Fintype.card K) := by
-      apply ENNReal.ofReal_le_ofReal
-      exact div_le_div_of_nonneg_right (by exact_mod_cast native_cap_of_scalar_cap hscalar U)
-        (by positivity)
-    _ = _ := by
-      rw [ENNReal.ofReal_div_of_pos (by positivity), ENNReal.ofReal_natCast,
-        ENNReal.ofReal_natCast]
-private theorem error_budget :
-    (scalarCap + listCap) * 2 ^ 128 ≤ (2130706433 : ℕ) ^ 6 := by decide
-theorem gamma_error_le_of_scalar_cap (hlist : WeightedList)
-    (hscalar : ∀ u Γ, BadFamily u Γ → Γ.card ≤ scalarCap) :
-    ToyProblem.certifiedGammaError IRSProfile.code queryRadius ≤ reductionTarget := by
-  have hNat := ENat.toNat_le_of_le_natCast (squared_lambda_le hlist)
-  have hList :
-      ((Code.Lambda (squaredCode : Set (I → A16)) radius).toNat : ENNReal) /
-        (Fintype.card K : ENNReal) ≤ (listCap : ENNReal) / Fintype.card K :=
-    ENNReal.div_le_div_right (by exact_mod_cast hNat) _
-  have hreal : ((scalarCap + listCap : ℕ) : ℝ) / Fintype.card K ≤ (1 : ℝ) / 2 ^ 128 := by
-    apply (div_le_div_iff₀ (by positivity) (by positivity)).2
-    norm_num only [one_mul]
-    exact_mod_cast (Sol1.C64.native_field_card ▸ error_budget :
-      (scalarCap + listCap) * 2 ^ 128 ≤ Fintype.card K)
-  have hENN : ((scalarCap + listCap : ℕ) : ENNReal) / Fintype.card K ≤
-      (1 : ENNReal) / 2 ^ 128 := by
-    have h := ENNReal.ofReal_le_ofReal hreal
-    rw [ENNReal.ofReal_div_of_pos (by positivity), ENNReal.ofReal_natCast,
-      ENNReal.ofReal_natCast, ENNReal.ofReal_div_of_pos (by positivity)] at h
-    simpa using h
-  rw [← ENNReal.coe_le_coe, ToyProblem.coe_certifiedGammaError]
-  calc
-    _ ≤ (scalarCap : ENNReal) / Fintype.card K + (listCap : ENNReal) / Fintype.card K :=
-      add_le_add (mca_error_le_of_scalar_cap hscalar) hList
-    _ = ((scalarCap + listCap : ℕ) : ENNReal) / Fintype.card K := by
-      rw [← ENNReal.add_div, Nat.cast_add]
-    _ ≤ (1 : ENNReal) / 2 ^ 128 := hENN
-    _ = (reductionTarget : ENNReal) := by
-      norm_num [reductionTarget, ProximityGap.prizeThreshold]
-theorem protocol_claim_of_scalar_cap (hlist : WeightedList)
-    (hscalar : ∀ u Γ, BadFamily u Γ → Γ.card ≤ scalarCap) :
-    ProtocolClaim 6920 radiusNumerator radiusDenominator where
-  admissible := query_admissible
-  reduction := gamma_error_le_of_scalar_cap hlist hscalar
-  score := query_score
 end
 end P0
 end

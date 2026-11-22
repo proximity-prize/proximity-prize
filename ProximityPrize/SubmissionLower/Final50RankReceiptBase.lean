@@ -8,7 +8,7 @@ abbrev Row := RankRows82190.Row
 
 def good (d : ℕ) (r : Row) : Bool :=
   let x := r.bounds
-  decide (x.deg = d ∧ r.index ≤ x.lo ∧ x.hi ≤ 52 ∧ x.top ≤ 14 ∧ r.ord ≤ x.ord ∧ x.tag = r.tag)
+  decide (x.deg = d ∧ r.index ≤ x.lo ∧ x.hi ≤ 55 ∧ x.top ≤ 14 ∧ r.ord ≤ x.ord ∧ x.tag = r.tag)
 
 /-- Leading exponents of the nine factors, in the order of `AnchorPivot82190.allData`. -/
 private def pivot (i : Fin 9) : AnchorPivot82180.E :=
@@ -20,7 +20,7 @@ private abbrev Factor := RankRows82190.Factor
 
 /-- The low 4 bits select a factor and the next 4 bits give its multiplicity.
   If the multiplicity field is zero, the next 6 bits give the multiplicity. -/
-def readFactors : ℕ → ℕ → List Factor × ℕ
+private def readFactors : ℕ → ℕ → List Factor × ℕ
   | 0, bits => ([], bits)
   | n+1, bits =>
     let i : Fin 9 := ⟨(bits % 16) % 9, Nat.mod_lt _ (by decide)⟩
@@ -30,13 +30,13 @@ def readFactors : ℕ → ℕ → List Factor × ℕ
     ((i, if k = 0 then rest % 64 else k) :: fs, tail)
 
 /-- Read the 3-bit factor count at the start of each row. -/
-def readSchedules : ℕ → ℕ → List (List Factor)
+private def readSchedules : ℕ → ℕ → List (List Factor)
   | 0, _ => []
   | n+1, bits =>
     let (fs, rest) := readFactors (bits % 8) (bits / 8)
     fs :: readSchedules n rest
 
-def pivots (d i : ℕ) : List E :=
+private def pivots (d i : ℕ) : List E :=
   (List.range (min (min d 14) (i / 3) + 1)).flatMap fun f =>
     let lo := i - (d + 2*f)
     let hi := min (d-f) ((i-3*f)/2)
@@ -45,11 +45,11 @@ def pivots (d i : ℕ) : List E :=
       let b := i-2*c-3*f
       ⟨d-b-c-f, b, c, f⟩
 
-def subtractPivot (e : E) (f : Factor) : E :=
+private def subtractPivot (e : E) (f : Factor) : E :=
   let p := pivot f.1
   ⟨e.a-f.2*p.a, e.b-f.2*p.b, e.c-f.2*p.c, e.f-f.2*p.f⟩
 
-def decodeRow (e : E) (fs : List Factor) : Row :=
+private def decodeRow (e : E) (fs : List Factor) : Row :=
   let r := fs.foldl subtractPivot e
   let x := (monoData r).plus (RankRows82190.measure fs)
   ⟨x.tag, x.lo, x.ord, r, fs⟩
@@ -57,25 +57,40 @@ def decodeRow (e : E) (fs : List Factor) : Row :=
 def decode (d i start n data : ℕ) : List Row :=
   ((pivots d i).drop start).zipWith decodeRow (readSchedules n data)
 
-def fee (s : ℕ) (r : Row) : ℕ := 93 + r.index - (s + r.ord)
+def fee (s : ℕ) (r : Row) : ℕ := 99 + r.index - (s + r.ord)
 def triangle (n : ℕ) : ℕ := n * (n+1) / 2
 
-def extra : ℕ → ℕ
-  | 31 => 124
-  | 33 => 122
-  | 35 => 120
-  | 37 => 118
-  | 40 => 116
-  | 42 => 114
-  | 44 => 112
-  | 46 => 110
-  | 48 => 108
-  | 50 => 106
-  | _ => 126
+def stageRange : ℕ → ℕ × ℕ
+  | 33 => (132, 133)
+  | 34 => (131, 132)
+  | 35 => (130, 131)
+  | 36 => (129, 130)
+  | 37 => (128, 129)
+  | 38 => (127, 128)
+  | 39 => (126, 127)
+  | 40 => (125, 126)
+  | 41 => (124, 125)
+  | 42 => (123, 124)
+  | 43 => (122, 123)
+  | 44 => (121, 122)
+  | 45 => (120, 121)
+  | 46 => (119, 120)
+  | 47 => (118, 119)
+  | 48 => (117, 118)
+  | 49 => (116, 117)
+  | 50 => (115, 116)
+  | 51 => (114, 115)
+  | 52 => (113, 114)
+  | 53 => (112, 113)
+  | 54 => (111, 112)
+  | 55 => (56, 111)
+  | _ => (133, 133)
+
+def lateLo (d : ℕ) : ℕ := (stageRange d).1
+def lateHi (d : ℕ) : ℕ := (stageRange d).2
 
 def price (d : ℕ) (r : Row) : ℕ :=
-  if d = 52 then triangle (fee 52 r) - triangle (fee 106 r)
-  else fee d r + if extra d < 126 then fee (extra d) r + fee (extra d + 1) r else 0
+  fee d r + (triangle (fee (lateLo d) r) - triangle (fee (lateHi d) r))
 
 def checkRows (d i upper lower : ℕ) : List Row → Bool
   | [] => true

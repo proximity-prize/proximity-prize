@@ -217,7 +217,7 @@ private theorem valueCut_degree (x a : K) : (valueCut x a).totalDegree ≤ 1 := 
   intro i _
   simpa only [totalDegree_C, totalDegree_X, zero_add] using
     (totalDegree_mul (C (embed x ^ i.val)) (MvPolynomial.X i))
-theorem natDegree_bound {f : K[X]} (h : f.degree < k) : f.natDegree < k := by
+private theorem natDegree_bound {f : K[X]} (h : f.degree < k) : f.natDegree < k := by
   by_cases hz : f = 0
   · rw [hz, Polynomial.natDegree_zero]
     exact Nat.zero_lt_succ _
@@ -516,7 +516,7 @@ private theorem exponent_eq_iff (t h d l : ℕ) (e : LocalExponent) :
     · simp [exponent, rowJet, Jet.a, localT, localE, localAux, localY]
     · fin_cases j <;> simp [exponent, rowJet, Jet.b, Jet.c, localT, localE, localAux, localY]
 variable {F : Type*} [CommRing F]
-theorem origin_substitution (x a b c : ℕ) :
+private theorem origin_substitution (x a b c : ℕ) :
     unscaledLocalSubstitution 2 (0 : F) 0 (sourceMonomial x a ![b,c]) =
       ∑ h ∈ Finset.range (a+1), ∑ j ∈ Finset.range (a-h+1),
         monomial (exponent (x+h+j+2*(a-h-j)) h (b+j) (c+(a-h-j)))
@@ -667,7 +667,7 @@ abbrev OriginRow (s : Source) := Unit × LowContactIndex 2 s.m
 abbrev OriginCol (A : ℕ) (s : Source) := ColumnIndex A s
 private def origin (A : ℕ) (s : Source) : Matrix (OriginRow s) (OriginCol A s) (ZMod p) :=
   localConstraintMatrix s.m (fun _ : Unit => 0) (fun _ => 0) (column A s)
-theorem origin_entry {A s} (r : OriginRow s) (j : OriginCol A s) :
+private theorem origin_entry {A s} (r : OriginRow s) (j : OriginCol A s) :
     origin A s r j =
       if rowBalance r.2.val = colBalance j.2.val j.1.val then
         blockEntry (rowJet r.2.val) j.1.val else 0 := by
@@ -679,18 +679,18 @@ private structure InPrefix (s : Source) (cut q : ℕ) (g : ℤ) : Prop where
   grade : q < cut
   lower : -(s.J : ℤ) ≤ g
   upper : g + q < (s.m : ℤ)
-def blockIndex {s cut q g} (h : InPrefix s cut q g) : BlockIndex s cut :=
+private def blockIndex {s cut q g} (h : InPrefix s cut q g) : BlockIndex s cut :=
   ⟨⟨q, h.grade⟩, ⟨(g + s.J).toNat, by
     change (g + s.J).toNat < s.m+s.J-q
     have := h.lower
     have := h.upper
     omega⟩⟩
-theorem balance_blockIndex {s cut q g} (h : InPrefix s cut q g) :
+private theorem balance_blockIndex {s cut q g} (h : InPrefix s cut q g) :
     balance (blockIndex h) = g := by
   have := h.lower
   simp only [balance, blockIndex]
   omega
-theorem blockIndex_ext {s cut} {i j : BlockIndex s cut}
+private theorem blockIndex_ext {s cut} {i j : BlockIndex s cut}
     (hq : i.1.val = j.1.val) (hg : balance i = balance j) : i = j := by
   rcases i with ⟨qi, ui⟩
   rcases j with ⟨qj, uj⟩
@@ -699,7 +699,7 @@ theorem blockIndex_ext {s cut} {i j : BlockIndex s cut}
   have hoffset : ui = uj := Fin.ext (by simp only [balance] at hg; omega)
   subst uj
   rfl
-theorem row_mem {s : Source} (r : OriginRow s) :
+private theorem row_mem {s : Source} (r : OriginRow s) :
     rowJet r.2.val ∈ blockRows s.m (rowJet r.2.val).q (rowBalance r.2.val) := by
   let j := rowJet r.2.val
   have hcontact := r.2.property
@@ -716,7 +716,7 @@ theorem row_mem {s : Source} (r : OriginRow s) :
   rcases i with ⟨c,b,a⟩
   simp only [Finset.mem_sigma, Finset.mem_range, Finset.mem_singleton, Jet.q, Jet.a, Jet.b, Jet.c]
   omega
-theorem origin_support {A s cut} (hs : ShapeOK s) (htail : SilentTail s cut)
+private theorem origin_support {A s cut} (hs : ShapeOK s) (htail : SilentTail s cut)
     (r : OriginRow s) (j : OriginCol A s) (hn : origin A s r j ≠ 0) :
     (rowJet r.2.val).q = j.1.val.q ∧ rowBalance r.2.val = colBalance j.2.val j.1.val ∧
       InPrefix s cut j.1.val.q (colBalance j.2.val j.1.val) := by
@@ -746,26 +746,26 @@ theorem origin_support {A s cut} (hs : ShapeOK s) (htail : SilentTail s cut)
     omega
   · change (j.2.val : ℤ) - (c.b+2*c.c : ℕ) + (c.a+c.b+c.c : ℕ) < (s.m : ℤ)
     omega
-def activeRows (A : ℕ) (s : Source) : Finset (OriginRow s) :=
+private def activeRows (A : ℕ) (s : Source) : Finset (OriginRow s) :=
   localConstraintSupportedRows s.m (fun _ : Unit => (0 : ZMod p)) (fun _ => 0) (column A s)
-def activeCols (A : ℕ) (s : Source) : Finset (OriginCol A s) := by
+private def activeCols (A : ℕ) (s : Source) : Finset (OriginCol A s) := by
   classical
   exact Finset.univ.filter fun j => ∃ r, origin A s r j ≠ 0
-theorem active_row_inPrefix {A s cut} (hs : ShapeOK s) (htail : SilentTail s cut)
+private theorem active_row_inPrefix {A s cut} (hs : ShapeOK s) (htail : SilentTail s cut)
     (r : activeRows A s) :
     InPrefix s cut (rowJet r.val.2.val).q (rowBalance r.val.2.val) := by
   obtain ⟨j, hj⟩ := (mem_localConstraintSupportedRows_iff _ _ _ _ _).mp r.property
   obtain ⟨hq, hg, h⟩ := origin_support hs htail r.val j hj
   rwa [hq, hg]
-theorem active_col_inPrefix {A s cut} (hs : ShapeOK s) (htail : SilentTail s cut)
+private theorem active_col_inPrefix {A s cut} (hs : ShapeOK s) (htail : SilentTail s cut)
     (j : activeCols A s) :
     InPrefix s cut j.val.1.val.q (colBalance j.val.2.val j.val.1.val) := by
   classical
   obtain ⟨r, hr⟩ := (Finset.mem_filter.mp j.property).2
   exact (origin_support hs htail r j.val hr).2.2
-abbrev BlockRow {s cut} (i : BlockIndex s cut) : Type := ↥(blockRows s.m i.1.val (balance i))
-abbrev BlockCol {s cut} (i : BlockIndex s cut) : Type := ↥(blockCols s i.1.val (balance i))
-def rowRep {A s cut} (hs : ShapeOK s) (htail : SilentTail s cut) (r : activeRows A s) :
+private abbrev BlockRow {s cut} (i : BlockIndex s cut) : Type := ↥(blockRows s.m i.1.val (balance i))
+private abbrev BlockCol {s cut} (i : BlockIndex s cut) : Type := ↥(blockCols s i.1.val (balance i))
+private def rowRep {A s cut} (hs : ShapeOK s) (htail : SilentTail s cut) (r : activeRows A s) :
     Sigma (BlockRow (s := s) (cut := cut)) :=
   let h := active_row_inPrefix hs htail r
   ⟨blockIndex h, ⟨rowJet r.val.2.val, by
@@ -773,7 +773,7 @@ def rowRep {A s cut} (hs : ShapeOK s) (htail : SilentTail s cut) (r : activeRows
       blockRows s.m (rowJet r.val.2.val).q (balance (blockIndex h))
     rw [balance_blockIndex]
     exact row_mem r.val⟩⟩
-def colRep {A s cut} (hs : ShapeOK s) (htail : SilentTail s cut) (j : activeCols A s) :
+private def colRep {A s cut} (hs : ShapeOK s) (htail : SilentTail s cut) (j : activeCols A s) :
     Sigma (BlockCol (s := s) (cut := cut)) :=
   let h := active_col_inPrefix hs htail j
   ⟨blockIndex h, ⟨j.val.1.val, by
@@ -785,7 +785,7 @@ private def packet (s : Source) (cut : ℕ) :
     Matrix (Sigma (BlockRow (s := s) (cut := cut))) (Sigma (BlockCol (s := s) (cut := cut)))
       (ZMod p) :=
   Matrix.blockDiagonal' fun i => blockMatrix s i.1.val (balance i)
-theorem packet_entry {s cut} (r : Sigma (BlockRow (s := s) (cut := cut)))
+private theorem packet_entry {s cut} (r : Sigma (BlockRow (s := s) (cut := cut)))
     (c : Sigma (BlockCol (s := s) (cut := cut))) (h : r.1 = c.1) :
     packet s cut r c = blockEntry r.2.val c.2.val := by
   rcases r with ⟨i,r⟩
@@ -793,7 +793,7 @@ theorem packet_entry {s cut} (r : Sigma (BlockRow (s := s) (cut := cut)))
   change i = j at h
   subst j
   exact Matrix.blockDiagonal'_apply_eq _ _ _ _
-theorem origin_submatrix {A s cut} (hs : ShapeOK s) (htail : SilentTail s cut) :
+private theorem origin_submatrix {A s cut} (hs : ShapeOK s) (htail : SilentTail s cut) :
     (origin A s).submatrix (Subtype.val : activeRows A s → _) (Subtype.val : activeCols A s → _) =
       (packet s cut).submatrix (rowRep hs htail) (colRep hs htail) := by
   ext r c
@@ -813,13 +813,13 @@ theorem origin_submatrix {A s cut} (hs : ShapeOK s) (htail : SilentTail s cut) :
       exact hij (blockIndex_ext hq (hr.trans (hg.trans hc.symm)))
     rw [hz]
     exact (Matrix.blockDiagonal'_apply_ne _ _ _ hij).symm
-theorem origin_rank_eq_supported (A : ℕ) (s : Source) :
+private theorem origin_rank_eq_supported (A : ℕ) (s : Source) :
     (origin A s).rank =
       ((origin A s).submatrix (Subtype.val : activeRows A s → _) id).rank := by
   symm
   apply Matrix.rank_submatrix_eq_of_ne_zero_mem_range
   exact localConstraintMatrix_ne_zero_mem_range _ _ _ _
-theorem supported_rank_le (A : ℕ) (s : Source) :
+private theorem supported_rank_le (A : ℕ) (s : Source) :
     ((origin A s).submatrix (Subtype.val : activeRows A s → _) id).rank ≤
       ((origin A s).submatrix (Subtype.val : activeRows A s → _)
         (Subtype.val : activeCols A s → _)).rank := by
@@ -833,7 +833,7 @@ theorem supported_rank_le (A : ℕ) (s : Source) :
     change origin A s r.val j = 0
     by_contra hn
     exact hj (Finset.mem_filter.mpr ⟨Finset.mem_univ _, r.val, hn⟩)
-theorem packet_rank_le (s : Source) (cut : ℕ) : (packet s cut).rank ≤ prefixRank s cut := by
+private theorem packet_rank_le (s : Source) (cut : ℕ) : (packet s cut).rank ≤ prefixRank s cut := by
   calc
     (packet s cut).rank ≤ ∑ i : BlockIndex s cut, (blockMatrix s i.1.val (balance i)).rank :=
       rank_blockDiagonal_le (fun i : BlockIndex s cut => blockMatrix s i.1.val (balance i))
@@ -860,7 +860,7 @@ namespace CJ0_2
 noncomputable section
 open CJ0 MvPolynomial PolynomialDifferential ReedSolomon.HiddenDerivative
 open scoped BigOperators
-theorem lower_mem {s : Source} (hs : ShapeOK s) {c b a : ℕ}
+private theorem lower_mem {s : Source} (hs : ShapeOK s) {c b a : ℕ}
     (h : (⟨c, b, a⟩ : Jet) ∈ s.E) {a' : ℕ} (ha : a' ≤ a) :
     (⟨c, b, a'⟩ : Jet) ∈ s.E := by
   induction a with
@@ -875,10 +875,10 @@ theorem lower_mem {s : Source} (hs : ShapeOK s) {c b a : ℕ}
 private def sourceSpan (F : Type*) [Field F] (A : ℕ) (s : Source) :
     Submodule F (DifferentialPolynomial F 2) :=
   Submodule.span F (Set.range fun i : ColumnIndex A s => (column A s i).polynomial)
-theorem column_mem_sourceSpan {F : Type*} [Field F] {A : ℕ} {s : Source}
+private theorem column_mem_sourceSpan {F : Type*} [Field F] {A : ℕ} {s : Source}
     (i : ColumnIndex A s) : (column A s i).polynomial ∈ sourceSpan F A s :=
   Submodule.subset_span (Set.mem_range_self i)
-theorem translated_column_mem {F : Type*} [Field F] {A : ℕ} {s : Source}
+private theorem translated_column_mem {F : Type*} [Field F] {A : ℕ} {s : Source}
     (hs : ShapeOK s) (center received : F) (i : ColumnIndex A s) :
     globalPointTranslation center received (column A s i).polynomial ∈ sourceSpan F A s := by
   classical
@@ -952,7 +952,7 @@ private theorem constraint_matrix_map {R S ι κ : Type*} [CommRing R] [CommRing
   rw [← MvPolynomial.coeff_map, map_unscaledLocalSubstitution]
   simp [SourceColumn.polynomial]
 set_option maxHeartbeats 800000 in
-theorem native_origin_rank (A : ℕ) (s : Source) :
+private theorem native_origin_rank (A : ℕ) (s : Source) :
     (pointMatrix A s (0 : K) 0).rank ≤ originRank A s := by
   let φ : KoalaBear.Field →+* K := algebraMap KoalaBear.Field K
   let P := localConstraintMatrix s.m
@@ -969,7 +969,7 @@ theorem native_origin_rank (A : ℕ) (s : Source) :
     _ ≤ (P.map φ).rank := Matrix.rank_submatrix_le _ _ _
     _ ≤ P.rank := Matrix.rank_map_le φ P
     _ = _ := rfl
-theorem sum_const_card {ι : Type*} [Fintype ι] (r : ℕ) :
+private theorem sum_const_card {ι : Type*} [Fintype ι] (r : ℕ) :
     (∑ _ : ι, r) = Fintype.card ι * r := by
   simp
 theorem proof : CJ0.c2 := by
@@ -1099,7 +1099,7 @@ theorem initialSep_eval (G : Equation) (f : K[X]) :
     rw [initialSep, initialJetSeparant, initial, lifted, lifted, map_separant]
     rfl
   rw [he, initial_eval]
-theorem coeff_reconstruction (G : Equation) (u : Fin 3 → Geo) {L : ℕ} (i : Fin L) :
+private theorem coeff_reconstruction (G : Equation) (u : Fin 3 → Geo) {L : ℕ} (i : Fin L) :
     (rationalTaylorPolynomial center (lifted G) L u).coeff i.val =
       ∑ l : Fin L, ((Polynomial.X - Polynomial.C center) ^ l.val).coeff i.val *
         rationalTaylorCoefficient center (lifted G) u l.val := by
@@ -1107,7 +1107,7 @@ theorem coeff_reconstruction (G : Equation) (u : Fin 3 → Geo) {L : ℕ} (i : F
   apply Finset.sum_congr rfl
   intro l _
   rw [taylor_monomial, coeff_C_mul, map_neg, ← sub_eq_add_neg, mul_comm]
-theorem eval_coefficientNumerator (G : Equation) (u : Fin 3 → Geo)
+private theorem eval_coefficientNumerator (G : Equation) (u : Fin 3 → Geo)
     (h : MvPolynomial.eval u (initialSep G) ≠ 0) {L τ : ℕ}
     (hτ : TaylorExponentSufficient 2 L τ) (i : Fin L) :
     MvPolynomial.eval u (coefficientNumeratorAt G τ i) /
@@ -1128,7 +1128,7 @@ theorem chart_output (G : Equation) (P : InitialRing 2) (u : Fin 3 → Geo)
     (chart G P).output u i = (rationalTaylorPolynomial center (lifted G) k u).coeff i.val := by
   simp only [Chart.output, chart]
   exact eval_coefficientNumerator G u h (L := k) (τ := t) exponent_sufficient i
-theorem readJet_eq {L : ℕ} (P : Geo[X]) (hp : P.degree < L) (j : ℕ) :
+private theorem readJet_eq {L : ℕ} (P : Geo[X]) (hp : P.degree < L) (j : ℕ) :
     (∑ i : Fin L, (i.val.choose j : Geo) * center^(i.val-j) * P.coeff i.val) =
       (hasseDeriv j P).eval center := by
   rw [hasseDeriv_apply, ← Polynomial.sum_fin
@@ -1179,7 +1179,7 @@ open CJ0 PolynomialDifferential MvPolynomial
 open scoped BigOperators
 set_option maxHeartbeats 600000
 set_option maxRecDepth 4000
-theorem weighted_map_eq {σ R S : Type*} [CommSemiring R] [CommSemiring S]
+private theorem weighted_map_eq {σ R S : Type*} [CommSemiring R] [CommSemiring S]
     (φ : R →+* S) (hφ : Function.Injective φ) (w : σ → ℕ) (P : MvPolynomial σ R) :
     (MvPolynomial.map φ P).weightedTotalDegree w = P.weightedTotalDegree w := by
   unfold weightedTotalDegree
@@ -1187,12 +1187,12 @@ theorem weighted_map_eq {σ R S : Type*} [CommSemiring R] [CommSemiring S]
 theorem initial_weight (w : Fin 3 → ℕ) (G : Equation) :
     (initial G).weightedTotalDegree w = G.weightedTotalDegree (fun j => j.elim 0 w) := by
   rw [initial_eq_map, weighted_map_eq _ centerMap_injective, weightedTotalDegree_optionEquivRight]
-theorem lifted_weight (w : Option (Fin 3) → ℕ) (G : Equation) :
+private theorem lifted_weight (w : Option (Fin 3) → ℕ) (G : Equation) :
     (lifted G).weightedTotalDegree w = G.weightedTotalDegree w :=
   weighted_map_eq embed embed.injective w G
-theorem lifted_total (G : Equation) : jetTotalDegree (lifted G) = jetTotalDegree G :=
+private theorem lifted_total (G : Equation) : jetTotalDegree (lifted G) = jetTotalDegree G :=
   lifted_weight jetDegreeWeight G
-theorem lifted_top (G : Equation) :
+private theorem lifted_top (G : Equation) :
     jetDegree (lifted G) (Fin.last 2) = jetDegree G (Fin.last 2) := by
   simpa only [jetDegree, weightedTotalDegree_piSingle] using
     lifted_weight (Pi.single (some (Fin.last 2)) 1) G
@@ -1204,11 +1204,11 @@ theorem orderTwo_of_dvd {s : Source} {G Q : Equation} (hQ : OrderTwo s Q) (h : G
   have htop := weightedTotalDegree_le_of_dvd (Pi.single (some (Fin.last 2)) 1) h hQ.1
   rw [weightedTotalDegree_piSingle, weightedTotalDegree_piSingle] at htop
   exact htop.trans hQ.2.2.2
-theorem totalWeight_eq : (fun j : Option (Fin 3) => j.elim 0 (1 : Fin 3 → ℕ)) =
+private theorem totalWeight_eq : (fun j : Option (Fin 3) => j.elim 0 (1 : Fin 3 → ℕ)) =
     jetDegreeWeight := by
   funext j
   cases j <;> rfl
-theorem topWeight_eq : (fun j : Option (Fin 3) =>
+private theorem topWeight_eq : (fun j : Option (Fin 3) =>
     j.elim 0 (Pi.single (Fin.last 2) 1)) = Pi.single (some (Fin.last 2)) (1 : ℕ) := by
   funext j
   cases j <;> simp [Pi.single_apply]
@@ -1242,7 +1242,7 @@ theorem factor_count {Q : Equation} (F : FactorFamily Q) :
   calc
     F.count = ∑ _ : Fin F.count, (1 : ℕ) := by simp
     _ ≤ _ := Finset.sum_le_sum fun i _ => h i
-theorem degreeOf_top_of_index {P : InitialRing 2} {d : ℕ}
+private theorem degreeOf_top_of_index {P : InitialRing 2} {d : ℕ}
     (hP : P.weightedTotalDegree Fin.val ≤ d) : P.degreeOf (Fin.last 2) ≤ d / 2 := by
   classical
   apply degreeOf_le_iff.mpr
@@ -1255,7 +1255,7 @@ theorem degreeOf_top_of_index {P : InitialRing 2} {d : ℕ}
     simpa only [Fin.val_last, smul_eq_mul, Nat.mul_comm 2] using hsum
   have h := hweight.trans ((le_weightedTotalDegree Fin.val hm).trans hP)
   omega
-theorem coefficient_weight (G : Equation) {L τ : ℕ} (i : Fin L) (w : Fin 3 → ℕ) (d : ℕ)
+private theorem coefficient_weight (G : Equation) {L τ : ℕ} (i : Fin L) (w : Fin 3 → ℕ) (d : ℕ)
     (h : ∀ l : Fin L, (centeredNumeratorAt G τ l.val).weightedTotalDegree w ≤ d) :
     (coefficientNumeratorAt G τ i).weightedTotalDegree w ≤ d := by
   classical
@@ -1269,19 +1269,19 @@ theorem coefficient_weight (G : Equation) {L τ : ℕ} (i : Fin L) (w : Fin 3 �
 private theorem indexWeight_eq : Astra7.jetWeight 0 1 3 = CJ0.indexWeight := by
   funext i
   cases i <;> simp [Astra7.jetWeight, CJ0.indexWeight]
-theorem coeffWeight_eq : Astra7.coeffWeight 0 1 (2 + 1) = Fin.val := by
+private theorem coeffWeight_eq : Astra7.coeffWeight 0 1 (2 + 1) = Fin.val := by
   funext i
   simp [Astra7.coeffWeight]
-theorem lifted_index {s : Source} {G : Equation} (hG : OrderTwo s G) :
+private theorem lifted_index {s : Source} {G : Equation} (hG : OrderTwo s G) :
     (lifted G).weightedTotalDegree (Astra7.jetWeight 0 1 3) ≤ s.J := by
   rw [lifted_weight, indexWeight_eq]
   exact hG.2.2.1
-theorem sep_index {s : Source} {G : Equation} (hG : OrderTwo s G) :
+private theorem sep_index {s : Source} {G : Equation} (hG : OrderTwo s G) :
     (initialSep G).weightedTotalDegree Fin.val ≤ s.J - 2 := by
   simpa only [initialSep, coeffWeight_eq, zero_add, one_mul] using
     (Astra7.initialSeparant_weight 0 1 center (lifted G)).trans
       (Nat.sub_le_sub_right (lifted_index hG) (0 + 1 * 2))
-theorem centered_index {s : Source} (hs : ShapeOK s) {G : Equation}
+private theorem centered_index {s : Source} (hs : ShapeOK s) {G : Equation}
     (hG : OrderTwo s G) (l : Fin k) :
     (centeredNumerator G l).weightedTotalDegree Fin.val ≤ D s := by
   have hJ := hs.index_top
@@ -1293,7 +1293,7 @@ theorem centered_index {s : Source} (hs : ShapeOK s) {G : Equation}
   have hi : (centeredNumerator G l).weightedTotalDegree Fin.val ≤ t * (s.J - 2) + l.val := by
     simpa only [centeredNumeratorAt, coeffWeight_eq, zero_add, add_zero, one_mul] using h
   exact hi.trans (Nat.add_le_add_left hl _)
-theorem centered_total {s : Source} {G : Equation} (hG : OrderTwo s G) (l : Fin k) :
+private theorem centered_total {s : Source} {G : Equation} (hG : OrderTwo s G) (l : Fin k) :
     (centeredNumerator G l).totalDegree ≤ a₀ s := by
   apply (totalDegree_commonTaylorNumerator_le center (lifted G) (exponent_sufficient l)).trans
   rw [rationalTaylorCutDegreeBound, lifted_total]
@@ -1386,7 +1386,7 @@ local instance : StrongNormalizationMonoid Equation :=
   UniqueFactorizationMonoid.strongNormalizationMonoid
 local instance : StrongNormalizationMonoid (InitialRing 2) :=
   UniqueFactorizationMonoid.strongNormalizationMonoid
-def initialHom : Equation →+* InitialRing 2 :=
+private def initialHom : Equation →+* InitialRing 2 :=
   (MvPolynomial.aeval (fun j : Option (Fin 3) =>
     j.elim (MvPolynomial.C center) MvPolynomial.X)).toRingHom.comp (MvPolynomial.map embed)
 private theorem root_of_associated {G G' : Equation} {f : K[X]}
@@ -1490,7 +1490,7 @@ set_option maxRecDepth 4000
 private def coeffWeight {L : ℕ} (i : Fin L) : ℕ := i.val - 1
 private def jetWeight (L : ℕ) : Option (Fin L) → ℕ :=
   fun i => i.elim 0 coeffWeight
-theorem jetWeight_initial :
+private theorem jetWeight_initial :
     jetWeight 3 = Pi.single (some (Fin.last 2)) 1 := by
   funext i
   cases i with
@@ -1536,7 +1536,7 @@ private theorem residual_coeff_weight (L h : ℕ) (x : F) (Q : DifferentialPolyn
     Finsupp.weight_optionElim, zero_mul, zero_add, jetWeight_initial,
     weightedTotalDegree_piSingle] at hw
   exact hw.trans (Nat.add_le_add_left hQ h)
-theorem initial_coord_bound (l : ℕ) (hl : l < 3) :
+private theorem initial_coord_bound (l : ℕ) (hl : l < 3) :
     (MvPolynomial.X (⟨l, hl⟩ : Fin 3) : MvPolynomial (Fin 3) F).degreeOf (Fin.last 2) ≤ l - 1 := by
   rw [degreeOf_X]
   split
@@ -1545,7 +1545,7 @@ theorem initial_coord_bound (l : ℕ) (hl : l < 3) :
     change 2 = l at he'
     omega
   · exact Nat.zero_le _
-theorem rationalTaylor_top (x : F) (Q : DifferentialPolynomial F 2) {c : ℕ}
+private theorem rationalTaylor_top (x : F) (Q : DifferentialPolynomial F 2) {c : ℕ}
     (hc : 0 < c) (hQ : Q.degreeOf (some (Fin.last 2)) ≤ c) (l : ℕ) :
     (rationalTaylorNumerator x Q l).degreeOf (Fin.last 2) ≤
       (2 * (l - 2) - 1) * (c - 1) + (l - 1) := by
@@ -1572,7 +1572,7 @@ theorem rationalTaylor_top (x : F) (Q : DifferentialPolynomial F 2) {c : ℕ}
       simp only [degreeOf_neg, degreeOf_C, zero_add]
       apply hd.trans
       rw [hstep, Nat.add_mul, one_mul, hbudget, Nat.add_assoc]
-theorem commonTaylor_top (x : F) (Q : DifferentialPolynomial F 2) {c L τ : ℕ}
+private theorem commonTaylor_top (x : F) (Q : DifferentialPolynomial F 2) {c L τ : ℕ}
     (hc : 0 < c) (hQ : Q.degreeOf (some (Fin.last 2)) ≤ c) (hτ : TaylorExponentSufficient 2 L τ)
     (l : Fin L) :
     (commonTaylorNumerator x Q τ l.val).degreeOf (Fin.last 2) ≤ τ * (c - 1) + (l.val - 1) := by
@@ -1672,7 +1672,7 @@ theorem denom_mul_inv (T : Chart r) :
   IsLocalization.Away.mul_invSelf (Ideal.Quotient.mk (sourceIdeal T) T.denominator)
 def chartMap (T : Chart r) : CoeffRing →ₐ[Geo] ChartOpen T :=
   aeval fun i => localize T (T.numerator i) * invDenom T
-theorem in_zeroLocus {T : Chart r} {y : Fin (r+1) → Geo}
+private theorem in_zeroLocus {T : Chart r} {y : Fin (r+1) → Geo}
     (hy : y ∈ T.locus) : y ∈ zeroLocus Geo (sourceIdeal T) := by
   apply mem_zeroLocus_iff_le_ker_aeval.mpr
   apply (Ideal.span_singleton_le_iff_mem _).mpr
@@ -1702,7 +1702,7 @@ private theorem openEval_chartMap {T : Chart r} {y : Fin (r+1) → Geo} (hy : y 
     change openEval hy (chartMap T (MvPolynomial.X i)) = aeval (T.output y) (MvPolynomial.X i)
     rw [chartMap, aeval_X, map_mul, openEval_localize, hi, aeval_X, Chart.output, div_eq_mul_inv]
   exact DFunLike.congr_fun h q
-theorem eq_zero_of_openEval {T : Chart r} [(sourceIdeal T).IsPrime]
+private theorem eq_zero_of_openEval {T : Chart r} [(sourceIdeal T).IsPrime]
     (hD : T.denominator ∉ sourceIdeal T) {z : ChartOpen T}
     (hz : ∀ y (hy : y ∈ T.locus), openEval hy z = 0) : z = 0 := by
   obtain ⟨m, a, ha⟩ := IsLocalization.Away.surj
@@ -1745,10 +1745,10 @@ theorem imageIdeal_eq_ker (T : Chart r) [(sourceIdeal T).IsPrime]
     rw [← openEval_chartMap hy, hq, map_zero]
 private def jetForm (j : ℕ) : CoeffRing :=
   ∑ i : Fin k, C ((i.val.choose j : Geo) * center^(i.val-j)) * MvPolynomial.X i
-theorem eval_jetForm (y : Fin k → Geo) (j : ℕ) :
+private theorem eval_jetForm (y : Fin k → Geo) (j : ℕ) :
     eval y (jetForm j) = readJet y j := by
   simp [jetForm, readJet]
-theorem chartMap_recover (T : Chart r) (hT : ChartOK T) [(sourceIdeal T).IsPrime]
+private theorem chartMap_recover (T : Chart r) (hT : ChartOK T) [(sourceIdeal T).IsPrime]
     (hD : T.denominator ∉ sourceIdeal T) :
     (chartMap T).comp (aeval fun j : Fin (r+1) => jetForm j.val) = localize T := by
   apply MvPolynomial.algHom_ext
@@ -1804,7 +1804,7 @@ def c1 : Prop :=
 def c2 : Prop :=
   ∀ (a d e : ℕ), d ≤ a → 2 * e ≤ d →
     (Module.finrank Geo (bandSpace a d e) : ℚ) = bandCount a d e
-theorem quotientBand_add_finrank_le (T : Chart 2) (a d e b j c : ℕ)
+private theorem quotientBand_add_finrank_le (T : Chart 2) (a d e b j c : ℕ)
     (hn : T.equation ≠ 0) (hf : T.equation ∈ bandSpace b j c) :
     Module.finrank Geo (quotientBand T (a+b) (d+j) (e+c)) +
       Module.finrank Geo (bandSpace a d e) ≤
@@ -1831,11 +1831,11 @@ theorem quotientBand_add_finrank_le (T : Chart 2) (a d e b j c : ℕ)
   have hRank := F.finrank_range_add_finrank_ker
   rw [hF] at hRank
   exact (Nat.add_le_add_left (LinearMap.finrank_le_finrank_of_injective hG) _).trans_eq hRank
-def surfaceBound (a d e b j c : ℚ) : ℚ :=
+private def surfaceBound (a d e b j c : ℚ) : ℚ :=
   2 * e * (d-e) * b + e * (2*a-2*d+e) * j + (d-2*e) * (2*a-d) * c
 private abbrev indexDegree (P : InitialRing 2) : ℕ :=
   P.weightedTotalDegree Fin.val
-theorem band_difference (a d e b j c : ℚ) :
+private theorem band_difference (a d e b j c : ℚ) :
     ∃ u v : ℚ, ∀ x : ℚ,
       bandCount (x*a+j+2*c+b) (x*d+2*c+j) (x*e+c) -
         bandCount (x*a+j+2*c) (x*d+2*c) (x*e) =
@@ -1846,7 +1846,7 @@ theorem band_difference (a d e b j c : ℚ) :
   refine ⟨f 1 - f 0 - surfaceBound a d e b j c / 2, f 0, fun x => ?_⟩
   dsimp [f, bandCount, surfaceBound]
   ring
-theorem degree_le_of_quadratic
+private theorem degree_le_of_quadratic
     (I : Ideal CoeffRing) (hdim : (affineHilbertPolynomial I).natDegree = 2)
     (q u v : ℚ) (hle : ∀ᶠ m : ℕ in atTop,
       (affineHilbertPolynomial I).eval (m : ℚ) ≤ q * (m : ℚ)^2 + u * (m : ℚ) + v) :
@@ -1920,7 +1920,7 @@ private theorem shape_chamber (s : Source) (hs : ShapeOK s) :
     omega
   · have he : e s ≤ D s / 2 := min_le_right _ _
     omega
-theorem family_budget (s : Source) (hs : ShapeOK s) (F : Family 2) (hF : Family₂ s F)
+private theorem family_budget (s : Source) (hs : ShapeOK s) (F : Family 2) (hF : Family₂ s F)
     (hdeg : ∀ i, affineDegree (F.chart i).ideal ≤
       surfaceBound (a₀ s) (D s) (e s) (F.chart i).equation.totalDegree
         (indexDegree (F.chart i).equation)
@@ -2067,17 +2067,17 @@ namespace CJ0_4_2
 noncomputable section
 open CJ0 CJ0_4 MvPolynomial
 open scoped BigOperators
-abbrev BandExponents (a d e : ℕ) : Set (Fin 3 →₀ ℕ) :=
+private abbrev BandExponents (a d e : ℕ) : Set (Fin 3 →₀ ℕ) :=
   {u | u.degree ≤ a ∧ u.weight Fin.val ≤ d ∧ u (Fin.last 2) ≤ e}
 private theorem degree_fin_three (u : Fin 3 →₀ ℕ) :
     u.degree = u 0 + u 1 + u 2 := by
   rw [Finsupp.degree_eq_sum, Fin.sum_univ_three, add_assoc]
 private theorem degree_fin_two (u : Fin 2 →₀ ℕ) : u.degree = u 0 + u 1 := by
   rw [Finsupp.degree_eq_sum, Fin.sum_univ_two]
-theorem index_fin_three (u : Fin 3 →₀ ℕ) :
+private theorem index_fin_three (u : Fin 3 →₀ ℕ) :
     u.weight Fin.val = u 1 + 2 * u 2 := by
   simp [Finsupp.weight_eq_sum, Fin.sum_univ_three, Nat.mul_comm]
-def bandFibers (a d e : ℕ) (hda : d ≤ a) (hed : 2 * e ≤ d) :
+private def bandFibers (a d e : ℕ) (hda : d ≤ a) (hed : 2 * e ≤ d) :
     BandExponents a d e ≃ Σ z : Fin (e + 1),
       cappedDegreeExponents (Fin 2) 1 (a - z) (d - 2 * z) where
   toFun u := by
@@ -2133,7 +2133,7 @@ private theorem sum_widths (d e : ℕ) (hed : 2 * e ≤ d) :
         Finset.sum_range_id_mul_two, Nat.add_sub_cancel, ← Nat.mul_add]
       congr 1
       omega
-theorem two_mul_finrank_band (a d e : ℕ) (hda : d ≤ a) (hed : 2 * e ≤ d) :
+private theorem two_mul_finrank_band (a d e : ℕ) (hda : d ≤ a) (hed : 2 * e ≤ d) :
     2 * Module.finrank Geo (bandSpace a d e) = (e + 1) * (d + 1 - e) * (2 * a + 2 - d) := by
   rw [bandSpace, Module.finrank_eq_nat_card_basis (basisRestrictSupport Geo _),
     Nat.card_congr (bandFibers a d e hda hed), Nat.card_sigma, Finset.mul_sum]

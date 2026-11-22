@@ -9,11 +9,11 @@ namespace SplitCut.Rect
 noncomputable section
 open MvPolynomial
 open K1_14 (FX)
-open HighCore82219Upper (Input ResidueLift Factors)
-open HighCore82219Upper_3 (JetRing tangentEquation rootIdeal graphIdeal openFactor)
+open HighCore82258Upper (Input ResidueLift Factors)
+open HighCore82258Upper_3 (JetRing tangentEquation rootIdeal graphIdeal openFactor)
 open KoalaRectTaylor (jetToRect rectIdeal)
 
-theorem graphCut_eq {J : Input} {B : ResidueLift J} (D : Factors J B) :
+private theorem graphCut_eq {J : Input} {B : ResidueLift J} (D : Factors J B) :
     rectIdeal (Ideal.span {Polynomial.C D.proper, tangentEquation J.f}) = graphCut D := by
   let I : Ideal JetRing := Ideal.span {Polynomial.C D.proper, tangentEquation J.f}
   have hmap : rectIdeal I = I.map jetToRect.toRingEquiv := Ideal.comap_symm jetToRect.toRingEquiv
@@ -36,7 +36,7 @@ theorem graph_saturation {J : Input} {B : ResidueLift J} (D : Factors J B) (p : 
     ∃ n : ℕ, jetToRect.symm ((jetToRect s)^n * p) ∈ I
   simp only [hpow]
 
-theorem saturation_surface_budget {F σ : Type*} [Field F] [Finite σ]
+private theorem saturation_surface_budget {F σ : Type*} [Field F] [Finite σ]
     {I G : Ideal (MvPolynomial σ F)} {u : MvPolynomial σ F} {price : ℚ}
     (hSat : ∀ p, p ∈ G ↔ ∃ n : ℕ, u^n * p ∈ I) (hG : G ≠ ⊤)
     (hbase : (affineHilbertPolynomial I).natDegree ≤ 2 ∧

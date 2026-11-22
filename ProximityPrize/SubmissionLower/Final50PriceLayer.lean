@@ -26,7 +26,7 @@ theorem remaining_anti {b j b' j' : ℕ} (hb : b ≤ b') (hj : j ≤ j') :
     remaining b' j' ≤ remaining b j :=
   min_le_min_left _ (K1_13_8.remaining_anti hb hj)
 
-theorem layerTerm_le (r y : Shape) (L i : ℕ) : layerTerm r y L i ≤ fastLayer r y L i := by
+private theorem layerTerm_le (r y : Shape) (L i : ℕ) : layerTerm r y L i ≤ fastLayer r y L i := by
   unfold layerTerm fastLayer remaining
   split
   · exact min_le_left _ _

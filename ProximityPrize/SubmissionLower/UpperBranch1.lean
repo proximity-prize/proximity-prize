@@ -134,7 +134,7 @@ def c1 : Prop :=
               JetPolys (SeedFrac F)) ∣ forward H lift P
 private abbrev ScalarRow {h : ℕ} (s : Shape) (d : Fin (2*h) → Fin (poleRows s) → ℕ) :=
   Σ t : Fin (2*h), Σ r : Fin (poleRows s), Fin (triangle s.U + (s.U+1)*d t r)
-theorem scalarRow_card_le {h : ℕ} (s : Shape)
+private theorem scalarRow_card_le {h : ℕ} (s : Shape)
     (d : Fin (2*h) → Fin (poleRows s) → ℕ) (hd : ∀ t, (∑ r, d t r) ≤ groupedPoleMoment s.B s.J) :
     Fintype.card (ScalarRow s d) ≤ poleCredit h s + 2*h*(s.U+1)*groupedPoleMoment s.B s.J := by
   classical
@@ -322,9 +322,9 @@ theorem jet_bounds (s : Shape) (t : Offset s) (q : Grade s) (i : ℕ)
   unfold firstJet
   rw [le_min_iff]
   omega
-abbrev AllPivots (s : Shape) := Σ t : Offset s, Pivot s t
-abbrev AllLocalRows (s : Shape) := Σ q : Grade s, LocalRow s q.val
-def toLocal (s : Shape) (r : AllPivots s) : AllLocalRows s :=
+private abbrev AllPivots (s : Shape) := Σ t : Offset s, Pivot s t
+private abbrev AllLocalRows (s : Shape) := Σ q : Grade s, LocalRow s q.val
+private def toLocal (s : Shape) (r : AllPivots s) : AllLocalRows s :=
   let t := r.1
   let q := r.2.1
   let i := r.2.2.val
@@ -339,7 +339,7 @@ def toLocal (s : Shape) (r : AllPivots s) : AllLocalRows s :=
     dsimp [x, j, firstJet, outputLength] at *
     omega
   ⟨q, ⟨x, hrow⟩, ⟨j, Nat.lt_succ_of_le hj⟩⟩
-theorem toLocal_injective (s : Shape) : Function.Injective (toLocal s) := by
+private theorem toLocal_injective (s : Shape) : Function.Injective (toLocal s) := by
   rintro ⟨t, q, i⟩ ⟨t', q', i'⟩ h
   have hq : q = q' := congrArg Sigma.fst h
   have hx := congrArg (fun y : AllLocalRows s => y.2.1.val) h
@@ -356,7 +356,7 @@ theorem toLocal_injective (s : Shape) : Function.Injective (toLocal s) := by
   have hi : i = i' := Fin.ext (by omega)
   subst i'
   rfl
-theorem toLocal_surjective (s : Shape) : Function.Surjective (toLocal s) := by
+private theorem toLocal_surjective (s : Shape) : Function.Surjective (toLocal s) := by
   rintro ⟨q, x, j⟩
   have hq := q.isLt
   have hx := x.isLt
@@ -383,7 +383,7 @@ theorem toLocal_surjective (s : Shape) : Function.Surjective (toLocal s) := by
   · change t.val + (firstJet s t + i) - s.J = x.val
     omega
   · exact hji
-theorem allPivots_card (s : Shape) :
+private theorem allPivots_card (s : Shape) :
     Fintype.card (AllPivots s) = poleRows s := by
   classical
   rw [Fintype.card_congr (Equiv.ofBijective _ ⟨toLocal_injective s, toLocal_surjective s⟩)]
@@ -416,7 +416,7 @@ open Matrix
 open scoped BigOperators Matrix
 private def consecutive {R : Type} [Semiring R] (l m : ℕ) : Matrix (Fin m) (Fin m) R :=
   fun i j => ((l + j.val).choose i.val : R)
-theorem consecutive_det {R : Type} [CommRing R] (l m : ℕ) :
+private theorem consecutive_det {R : Type} [CommRing R] (l m : ℕ) :
     (consecutive (R := R) l m).det = 1 := by
   let L : Matrix (Fin m) (Fin m) R := fun i k =>
     if k.val ≤ i.val then (l.choose (i.val - k.val) : R) else 0
@@ -492,9 +492,9 @@ open K1_14 (Shape)
 open K1_14_1_7 (Grade)
 open P1_7_1 (columnCount pivotCount largestGradeSum offsetMoment)
 open scoped BigOperators Matrix Polynomial
-def minorGrade {s : Shape} {t : Offset s} (e : Pivot s t ↪ Column s t) : ℕ :=
+private def minorGrade {s : Shape} {t : Offset s} (e : Pivot s t ↪ Column s t) : ℕ :=
   (∑ r, (e r).1.val) - ∑ r : Pivot s t, r.1.val
-theorem minorGrade_le {s : Shape} {t : Offset s} (e : Pivot s t ↪ Column s t) :
+private theorem minorGrade_le {s : Shape} {t : Offset s} (e : Pivot s t ↪ Column s t) :
     minorGrade e ≤ offsetMoment s.B s.J t.val := by
   classical
   have hpivot : (∑ r : Pivot s t, r.1.val) =
@@ -530,7 +530,7 @@ theorem minorGrade_le {s : Shape} {t : Offset s} (e : Pivot s t ↪ Column s t) 
       rw [Fin.sum_univ_eq_sum_range (fun q => pivotCount s.B s.J t.val q) (s.B+1),
         Fin.sum_univ_eq_sum_range (fun q => columnCount s.B s.J t.val q * (q-k)) (s.B+1)]
       simp only [Nat.mul_comm (columnCount s.B s.J t.val _) (_ - _)]
-theorem minor_power {R : Type} [CommRing R] {s : Shape} {t : Offset s}
+private theorem minor_power {R : Type} [CommRing R] {s : Shape} {t : Offset s}
     (e : Pivot s t ↪ Column s t) (z : R) :
     ((poleMatrix s t z).submatrix id e).det =
       ((poleMatrix s t (1 : R)).submatrix id e).det * z ^ minorGrade e := by
@@ -555,7 +555,7 @@ theorem minor_power {R : Type} [CommRing R] {s : Shape} {t : Offset s}
       simp [poleMatrix, not_le_of_gt hi]
     rw [Finset.prod_eq_zero (Finset.mem_univ i) (hz z),
       Finset.prod_eq_zero (Finset.mem_univ i) (hz 1), zero_mul]
-theorem nonzero_minor {R : Type} [Field R] (s : Shape) (t : Offset s) (z : R) :
+private theorem nonzero_minor {R : Type} [Field R] (s : Shape) (t : Offset s) (z : R) :
     ∃ e : Pivot s t ↪ Column s t, ((poleMatrix s t z).submatrix id e).det ≠ 0 := by
   classical
   have h (q : Grade s) := pascal_minor R (firstJet s t) (columnCount s.B s.J t.val q.val)
@@ -678,24 +678,24 @@ open scoped BigOperators Matrix Polynomial
 open private taylor_seed_degree seedWeight_add window_sum from ProximityPrize.SubmissionLower.Fast065
 private def seedMap (F : Type) [Field F] (side : Fin 2) : F[X] →+* SeedFrac F :=
   (algebraMap (Seed F) (SeedFrac F)).comp (Polynomial.toMvPolynomial side).toRingHom
-def fractionSeedMap (F : Type) [Field F] (side : Fin 2) :
+private def fractionSeedMap (F : Type) [Field F] (side : Fin 2) :
     OneSeedFrac F →+* SeedFrac F :=
   IsFractionRing.lift (g := seedMap F side)
     ((IsFractionRing.injective (Seed F) (SeedFrac F)).comp
       (Polynomial.toMvPolynomial_injective side))
-theorem fractionSeedMap_polynomial {F : Type} [Field F] (side : Fin 2) (g : F[X]) :
+private theorem fractionSeedMap_polynomial {F : Type} [Field F] (side : Fin 2) (g : F[X]) :
     fractionSeedMap F side (algebraMap F[X] (OneSeedFrac F) g) =
       algebraMap (Seed F) (SeedFrac F) (g.toMvPolynomial side) := by
   rw [fractionSeedMap, IsFractionRing.lift_algebraMap]
   rfl
-theorem fractionSeedMap_scalar {F : Type} [Field F] (side : Fin 2) (a : F) :
+private theorem fractionSeedMap_scalar {F : Type} [Field F] (side : Fin 2) (a : F) :
     fractionSeedMap F side (algebraMap F (OneSeedFrac F) a) =
       algebraMap F (SeedFrac F) a := by
   rw [IsScalarTower.algebraMap_apply F F[X] (OneSeedFrac F), fractionSeedMap_polynomial]
   change algebraMap (Seed F) (SeedFrac F) ((Polynomial.C a).toMvPolynomial side) = _
   rw [Polynomial.toMvPolynomial_C]
   exact (IsScalarTower.algebraMap_apply F (Seed F) (SeedFrac F) a).symm
-theorem fractionSeedMap_residue {F : Type} [Field F] (side : Fin 2) (a b c : F) :
+private theorem fractionSeedMap_residue {F : Type} [Field F] (side : Fin 2) (a b c : F) :
     fractionSeedMap F side (oneResidue a b c) = residue side a b c := by
   simp only [oneResidue, residue, map_div₀, map_add, map_mul, fractionSeedMap_scalar,
     fractionSeedMap_polynomial, Polynomial.toMvPolynomial_X]
@@ -850,9 +850,9 @@ open K1_14_1_7 K1_14_1_7_2 P1_7_1_1
 open P1_7_1 (columnCount pivotCount)
 open scoped BigOperators Matrix Polynomial
 open private coeff_zeroGrade from ProximityPrize.SubmissionLower.Fast065
-abbrev JetIndex (s : Shape) (t : Offset s) (q : Grade s) :=
+private abbrev JetIndex (s : Shape) (t : Offset s) (q : Grade s) :=
   Fin (columnCount s.B s.J t.val q.val)
-theorem sum_embedding {A D M : Type} [Fintype A] [Fintype D] [AddCommMonoid M]
+private theorem sum_embedding {A D M : Type} [Fintype A] [Fintype D] [AddCommMonoid M]
     (e : A ↪ D) (f : D → M) (h : ∀ d, (∀ a, e a ≠ d) → f d = 0) :
     ∑ d, f d = ∑ a, f (e a) := by
   classical
@@ -861,7 +861,7 @@ theorem sum_embedding {A D M : Type} [Fintype A] [Fintype D] [AddCommMonoid M]
   apply Finset.sum_subset (Finset.subset_univ _)
   intro d _ hd
   exact h d fun a ha => hd (Finset.mem_map.mpr ⟨a, Finset.mem_univ _, ha⟩)
-theorem column_index (s : Shape) (t : Offset s) (q : Grade s) (j : ℕ)
+private theorem column_index (s : Shape) (t : Offset s) (q : Grade s) (j : ℕ)
     (hj : j ≤ min q.val s.J) (hfirst : firstJet s t ≤ j)
     (hx : t.val + j - s.J < s.B + s.J) :
     j - firstJet s t < columnCount s.B s.J t.val q.val := by
@@ -872,34 +872,34 @@ theorem column_index (s : Shape) (t : Offset s) (q : Grade s) (j : ℕ)
   change j - firstJet s t < min q.val (min s.J (s.B + 2*s.J - 1 - t.val)) + 1 -
     firstJet s t
   omega
-theorem columnCount_le (s : Shape) (t : Offset s) {q q' : Grade s}
+private theorem columnCount_le (s : Shape) (t : Offset s) {q q' : Grade s}
     (h : q.val ≤ q'.val) :
     columnCount s.B s.J t.val q.val ≤ columnCount s.B s.J t.val q'.val := by
   unfold columnCount
   exact Nat.sub_le_sub_right (Nat.add_le_add_right (min_le_min_right _ h) 1) _
-def gradeShift (s : Shape) (q : Grade s) : Shift s q ↪ Grade s where
+private def gradeShift (s : Shape) (q : Grade s) : Shift s q ↪ Grade s where
   toFun p := ⟨q.val + p.val, by
     have hq := q.isLt
     have hp := p.isLt
     omega⟩
   inj' _ _ h := Fin.ext (Nat.add_left_cancel (congrArg Fin.val h))
-def slotEmbedding (s : Shape) (t : Offset s) (q : Grade s) :
+private def slotEmbedding (s : Shape) (t : Offset s) (q : Grade s) :
     JetIndex s t q ↪ GradeSlot s q.val where
   toFun a := ⟨firstJet s t + a.val,
     Nat.lt_succ_of_le (jet_bounds s t q a.val a.isLt).1⟩
   inj' _ _ h := Fin.ext (Nat.add_left_cancel (congrArg Fin.val h))
-def translatedCoeff {F : Type} [Field F] {s : Shape}
+private def translatedCoeff {F : Type} [Field F] {s : Shape}
     (α : F) (z : SeedFrac F) (P : TrueSource F) (q : Grade s) (j x : ℕ) : SeedFrac F :=
   ∑ p : Shift s q,
     (((q.val - j + p.val).choose (q.val - j) : SeedFrac F) * z ^ p.val) *
       algebraMap (Seed F) (SeedFrac F) (inputTaylorCoeff α j (q.val - j + p.val) x P)
-theorem localSlots_coeff {F : Type} [Field F] (s : Shape)
+private theorem localSlots_coeff {F : Type} [Field F] (s : Shape)
     (α : F) (z : SeedFrac F) (P : TrueSource F) (q : Grade s) (j : GradeSlot s q.val)
     (x : ℕ) :
     (localSlots s α z P q j).coeff x = translatedCoeff α z P q j.val x := by
   simp only [localSlots, finsetSum_coeff, coeff_C_mul, coeff_map, inputOrdinate,
     translatedCoeff, inputTaylorCoeff_apply]
-theorem pivot_read {F : Type} [Field F] (s : Shape) (t : Offset s)
+private theorem pivot_read {F : Type} [Field F] (s : Shape) (t : Offset s)
     (α : F) (z : SeedFrac F) (P : TrueSource F) (q : Grade s)
     (i : Fin (pivotCount s.B s.J t.val q.val)) :
     (poleMatrix s t z *ᵥ
@@ -962,7 +962,7 @@ theorem pivot_read {F : Type} [Field F] (s : Shape) (t : Offset s)
       unfold poleMatrix
       exact ite_eq_right (fun h => hl h.1)
     simp only [f, hz, zero_mul]
-theorem coeff_read {F : Type} [Field F] (s : Shape) (t : Offset s)
+private theorem coeff_read {F : Type} [Field F] (s : Shape) (t : Offset s)
     (α : F) (z : SeedFrac F) (P : TrueSource F) (q : Grade s)
     (k : GradeSlot s q.val) (l : ℕ) (hl : l < s.B + s.J)
     (ht : t.val + q.val + k.val = l + s.J) :
@@ -1006,7 +1006,7 @@ theorem coeff_read {F : Type} [Field F] (s : Shape) (t : Offset s)
       change firstJet s t + (j.val - firstJet s t) = j.val
       omega
     · rfl
-theorem pascal_sum_zero {E : Type} [Field E] {a n h : ℕ}
+private theorem pascal_sum_zero {E : Type} [Field E] {a n h : ℕ}
     (hs : PascalSpans E a n h) (v : Fin n → E)
     (hv : ∀ r, (∑ j, pascal a n h r j * v j) = 0) (k : ℕ) (hk : k < h) :
     (∑ j : Fin n, ((a + j.val).choose k : E) * v j) = 0 := by
@@ -1141,13 +1141,13 @@ local notation "φ" => algebraMap F[X] K
 def leadingRows (Q : Matrix ι κ F[X]) (d : ι → ℕ) : Matrix ι κ F :=
   fun i j => (Q i j).coeff (d i)
 omit [Fintype ι] in
-theorem no_zero_row {Q : Matrix ι κ F[X]} {T : Matrix κ ι F[X]}
+private theorem no_zero_row {Q : Matrix ι κ F[X]} {T : Matrix κ ι F[X]}
     (h : Q * T = 1) (p : ι) : Q p ≠ 0 := by
   intro hp
   have hpp := congrFun (congrFun h p) p
   rw [Matrix.mul_apply, hp] at hpp
   simp at hpp
-theorem reduce_step (Q : Matrix ι κ F[X]) (T : Matrix κ ι F[X]) (d : ι → ℕ)
+private theorem reduce_step (Q : Matrix ι κ F[X]) (T : Matrix κ ι F[X]) (d : ι → ℕ)
     (hQT : Q * T = 1) (hdeg : ∀ r u, (Q r u).natDegree ≤ d r)
     (hbad : ¬ LinearIndependent F (leadingRows Q d).row) :
     ∃ (E : Matrix ι ι F[X]) (d' : ι → ℕ), IsUnit E.det ∧
@@ -1276,7 +1276,7 @@ variable {F ι κ : Type} [Field F] [Fintype ι] [DecidableEq ι] [Fintype κ]
 local notation "K" => P1_7_1_1.OneSeedFrac F
 local notation "φ" => algebraMap F[X] K
 omit [Fintype ι] in
-theorem coeff_weighted_prod {s : Finset ι} (p : ι → F[X]) (d : ι → ℕ)
+private theorem coeff_weighted_prod {s : Finset ι} (p : ι → F[X]) (d : ι → ℕ)
     (h : ∀ i ∈ s, (p i).natDegree ≤ d i) :
     (∏ i ∈ s, p i).coeff (∑ i ∈ s, d i) = ∏ i ∈ s, (p i).coeff (d i) := by
   induction s using Finset.induction_on with
@@ -1287,7 +1287,7 @@ theorem coeff_weighted_prod {s : Finset ι} (p : ι → F[X]) (d : ι → ℕ)
     · exact congrArg ((p i).coeff (d i) * ·) (ih fun j hj => h j (Finset.mem_insert_of_mem hj))
     · exact (Polynomial.natDegree_prod_le _ _).trans
         (Finset.sum_le_sum fun j hj => h j (Finset.mem_insert_of_mem hj))
-theorem exists_full_minor (B : Matrix ι κ F) (hB : LinearIndependent F B.row) :
+private theorem exists_full_minor (B : Matrix ι κ F) (hB : LinearIndependent F B.row) :
     ∃ e : ι ↪ κ, (B.submatrix id e).det ≠ 0 := by
   classical
   have hr : B.rank = Fintype.card ι := by
@@ -1318,7 +1318,7 @@ theorem exists_minor_of_degree_sum (Q : Matrix ι κ F[X]) (d : ι → ℕ)
     rw [coeff_weighted_prod _ d (fun i _ => hdeg i (e (σ i)))]
   have hne : (Q.submatrix id e).det.coeff (∑ r, d r) ≠ 0 := hcoeff.trans_ne he
   exact ⟨e, fun hz => hne (by rw [hz, Polynomial.coeff_zero]), Polynomial.le_natDegree_of_ne_zero hne⟩
-theorem det_rectangular_mul {R : Type} [CommRing R]
+private theorem det_rectangular_mul {R : Type} [CommRing R]
     (Q : Matrix ι κ R) (T : Matrix κ ι R) :
     (Q * T).det = ∑ f : ι → κ, (∏ j, T (f j) j) * (Q.submatrix id f).det := by
   classical
@@ -1333,7 +1333,7 @@ theorem det_rectangular_mul {R : Type} [CommRing R]
       intro f _
       simp only [Matrix.det_apply', Finset.mul_sum, Matrix.submatrix_apply, id_eq,
         Finset.prod_mul_distrib, mul_comm, mul_assoc]
-theorem scale_polynomial (Q : Matrix ι κ F[X]) (T : Matrix κ ι F[X])
+private theorem scale_polynomial (Q : Matrix ι κ F[X]) (T : Matrix κ ι F[X])
     (hQT : Q * T = 1) (t : K)
     (h : ∀ f : ι → κ, ∃ g : F[X], φ g = t * φ (Q.submatrix id f).det) :
     ∃ g : F[X], φ g = t := by
@@ -1408,12 +1408,12 @@ open K1_14 (Shape shapeSum)
 open P1_7_1 (nodeRows)
 open scoped BigOperators
 open private shape_sum_flip from ProximityPrize.SubmissionLower.Fast063
-def atNode (m J q j : ℕ) : ℕ := m + min q J - (q + 2*j)
-def twiceGrade (k i : ℕ) : ℕ :=
+private def atNode (m J q j : ℕ) : ℕ := m + min q J - (q + 2*j)
+private def twiceGrade (k i : ℕ) : ℕ :=
   k*(k+1) + (6*k+2)*i + 8*i*i
 def sixPerNode (k J : ℕ) : ℕ :=
   3*(J+1)*k*(k+1) + 3*(3*k+1)*J*(J+1) + 4*J*(J+1)*(2*J+1)
-theorem twice_descending (d : ℕ) :
+private theorem twice_descending (d : ℕ) :
     2 * (∑ i ∈ range d, (d-i)) = d*(d+1) := by
   induction d with
   | zero => simp
@@ -1421,7 +1421,7 @@ theorem twice_descending (d : ℕ) :
     rw [sum_range_succ']
     simp only [Nat.succ_sub_succ_eq_sub, Nat.sub_zero, mul_add, ih]
     ring
-theorem three_grade_sum (k J : ℕ) :
+private theorem three_grade_sum (k J : ℕ) :
     3 * (∑ i ∈ range (J+1), twiceGrade k i) = sixPerNode k J := by
   induction J with
   | zero => simp [twiceGrade, sixPerNode, mul_assoc]
@@ -1429,7 +1429,7 @@ theorem three_grade_sum (k J : ℕ) :
     rw [sum_range_succ, mul_add, ih]
     unfold twiceGrade sixPerNode
     ring
-theorem twice_at_derivative {m B J j : ℕ} (hm : 2*J ≤ m)
+private theorem twice_at_derivative {m B J j : ℕ} (hm : 2*J ≤ m)
     (hB : m+J ≤ B+1) (hj : j ≤ J) :
     2 * (∑ q ∈ Ico j (B+1), atNode m J q j) = twiceGrade (m-2*J) (J-j) := by
   let d := m - 2*j
@@ -1556,26 +1556,26 @@ private theorem product_sum (n a b : ℕ) :
     cases n with
     | zero => simp [productSum6, Nat.mul_assoc]
     | succ m => simp only [productSum6, Nat.succ_sub_one]; ring
-theorem count_sum (n : ℕ) :
+private theorem count_sum (n : ℕ) :
     6 * (∑ i ∈ range n, (i+1)) = 3*n*(n+1) := by
   induction n with
   | zero => simp
   | succ n ih => rw [sum_range_succ, Nat.mul_add, ih]; ring
-theorem sum_after (f : ℕ → ℕ) (N s : ℕ) (hz : ∀ q < s, f q = 0) :
+private theorem sum_after (f : ℕ → ℕ) (N s : ℕ) (hz : ∀ q < s, f q = 0) :
     (∑ q ∈ range N, f q) = ∑ i ∈ range (N-s), f (s+i) := by
   by_cases h : s ≤ N
   · conv_lhs => rw [← Nat.add_sub_of_le h, sum_range_add]
     rw [sum_eq_zero (fun q hq => hz q (mem_range.mp hq)), zero_add]
   · rw [Nat.sub_eq_zero_of_le (by omega : N ≤ s), sum_range_zero]
     exact sum_eq_zero fun q hq => hz q (by have := mem_range.mp hq; omega)
-theorem ramp_count (N a : ℕ) :
+private theorem ramp_count (N a : ℕ) :
     6 * (∑ q ∈ range N, ramp a q) = rampCount6 N a := by
   rw [sum_after (ramp a) N a (fun q hq => by unfold ramp; omega)]
   unfold rampCount6
   rw [← count_sum]
   congr 1
   exact sum_congr rfl fun i _ => by unfold ramp; omega
-theorem ramp_weight (N a : ℕ) :
+private theorem ramp_weight (N a : ℕ) :
     6 * (∑ q ∈ range N, q * ramp a q) = rampWeight6 N a := by
   rw [sum_after (fun q => q * ramp a q) N a
     (fun q hq => by rw [show ramp a q = 0 by unfold ramp; omega, mul_zero])]
@@ -1584,7 +1584,7 @@ theorem ramp_weight (N a : ℕ) :
   congr 1
   exact sum_congr rfl fun i _ => by
     rw [show ramp a (a+i) = 1+i by unfold ramp; omega]
-theorem ramp_excess (N k a : ℕ) :
+private theorem ramp_excess (N k a : ℕ) :
     6 * (∑ q ∈ range N, (q-k) * ramp a q) = rampExcess6 N k a := by
   let s := max (k+1) a
   have hs₁ : k+1 ≤ s := le_max_left _ _
@@ -1599,12 +1599,12 @@ theorem ramp_excess (N k a : ℕ) :
   congr 1
   exact sum_congr rfl fun i _ => by
     rw [show s+i-k = s-k+i by omega, show ramp a (s+i) = s+1-a+i by unfold ramp; omega]
-theorem column_row (B J t q : ℕ) :
+private theorem column_row (B J t q : ℕ) :
     columnCount B J t q + ramp (low J t + width B J t) q = ramp (low J t) q := by
   unfold columnCount ramp width low high
   dsimp only
   omega
-theorem pivot_row (B J t q : ℕ) :
+private theorem pivot_row (B J t q : ℕ) :
     pivotCount B J t q + ramp (low J t + peak B J t) q +
       ramp (edge B J t + 1 - peak B J t) q =
         ramp (low J t) q + ramp (edge B J t + 1) q := by
@@ -1627,7 +1627,7 @@ theorem pivot_row (B J t q : ℕ) :
   · by_cases hq' : q < e+1-h
     · omega
     · omega
-theorem pivot_volume (B J t : ℕ) (f stat : ℕ → ℕ)
+private theorem pivot_volume (B J t : ℕ) (f stat : ℕ → ℕ)
     (hs : ∀ a, stat a = 6 * (∑ q ∈ range (B+1), f q * ramp a q)) :
     6 * (∑ q ∈ range (B+1), f q * pivotCount B J t q) = pivotVolume6 B J t stat := by
   unfold pivotVolume6
@@ -1641,7 +1641,7 @@ theorem pivot_volume (B J t : ℕ) (f stat : ℕ → ℕ)
     simp only [← Nat.mul_add, pivot_row]
   simp only [sum_add_distrib] at heq
   omega
-theorem column_volume (B J t : ℕ) (f stat : ℕ → ℕ)
+private theorem column_volume (B J t : ℕ) (f stat : ℕ → ℕ)
     (hs : ∀ a, stat a = 6 * (∑ q ∈ range (B+1), f q * ramp a q)) :
     6 * (∑ q ∈ range (B+1), f q * columnCount B J t q) = columnVolume6 B J t stat := by
   unfold columnVolume6
@@ -1666,7 +1666,7 @@ theorem column_excess (B J t k : ℕ) :
     6 * (∑ q ∈ range (B+1), (q-k) * columnCount B J t q) = excess6 B J t k :=
   column_volume B J t (fun q => q-k) (rampExcess6 (B+1) k)
     (fun a => (ramp_excess (B+1) k a).symm)
-theorem threshold_le (B J t : ℕ) : threshold B J t ≤ B := by
+private theorem threshold_le (B J t : ℕ) : threshold B J t ≤ B := by
   dsimp only [threshold]
   split
   · exact Nat.sub_le _ _
@@ -1690,7 +1690,7 @@ theorem evaluate_eq (f : ℕ → ℕ) (n : ℕ) : evaluate f n = ∑ t ∈ range
   induction n with
   | zero => simp [evaluate]
   | succ n ih => rw [evaluate, sum_range_succ, ih]
-theorem offset_zero (B J t : ℕ) (ht : t < J) : offsetMoment B J t = 0 := by
+private theorem offset_zero (B J t : ℕ) (ht : t < J) : offsetMoment B J t = 0 := by
   have hp (q : ℕ) (hq : q ∈ range (B+1)) : pivotCount B J t q = columnCount B J t q := by
     have hq' := mem_range.mp hq
     have hc : columnCount B J t q ≤ t+1 := by
@@ -1736,7 +1736,7 @@ def CheckedBlocks (B J : ℕ) : ℕ → List (ℕ × ℕ) → Prop
   | _, [] => True
   | start, (length, total) :: rest =>
     blockEstimate B J start length = total ∧ CheckedBlocks B J (start + length) rest
-theorem block_total {B J : ℕ} (blocks : List (ℕ × ℕ)) (start : ℕ)
+private theorem block_total {B J : ℕ} (blocks : List (ℕ × ℕ)) (start : ℕ)
     (checked : CheckedBlocks B J start blocks) :
     blockEstimate B J start (blocks.map Prod.fst).sum = (blocks.map Prod.snd).sum := by
   induction blocks generalizing start with
@@ -2121,6 +2121,24 @@ section
 namespace P1_7_1_3_3
 open P1_7_1_3 (blockEstimate momentEstimate)
 set_option maxRecDepth 4000
+theorem moment1043_235 : momentEstimate 1043 235 = 33710825496 := by
+  change blockEstimate 1043 235 235 1278 = 33710825496
+  refine appendBlock 1152 126 1387 33540780424 170045072 ?_
+  refine appendBlock 960 192 1195 31290830721 2249949703 ?_
+  refine appendBlock 768 192 1003 25136594525 6154236196 ?_
+  refine appendBlock 576 192 811 15933247773 9203346752 ?_
+  refine appendBlock 384 192 619 6803850205 9129397568 ?_
+  refine appendBlock 192 192 427 1078030064 5725820141 ?_
+  rfl
+theorem moment1058_225 : momentEstimate 1058 225 = 34123764741 := by
+  change blockEstimate 1058 225 225 1283 = 34123764741
+  refine appendBlock 1152 131 1377 33930464733 193300008 ?_
+  refine appendBlock 960 192 1185 31557098306 2373366427 ?_
+  refine appendBlock 768 192 993 25214951080 6342147226 ?_
+  refine appendBlock 576 192 801 15956483208 9258467872 ?_
+  refine appendBlock 384 192 609 6852143720 9104339488 ?_
+  refine appendBlock 192 192 417 1096002224 5756141496 ?_
+  rfl
 theorem moment1072_239 : momentEstimate 1072 239 = 37305519000 := by
   change blockEstimate 1072 239 239 1311 = 37305519000
   refine appendBlock 1152 159 1391 36961641040 343877960 ?_
@@ -2145,6 +2163,17 @@ theorem moment1183_249 : momentEstimate 1183 249 = 52867790342 := by
   refine appendBlock 576 192 825 20051804250 13307044000 ?_
   refine appendBlock 384 192 633 8177848250 11873956000 ?_
   refine appendBlock 192 192 441 1245770224 6932078026 ?_
+  rfl
+theorem moment1307_273 : momentEstimate 1307 273 = 78245537261 := by
+  change blockEstimate 1307 273 273 1580 = 78245537261
+  refine appendBlock 1536 44 1809 78235443067 10094194 ?_
+  refine appendBlock 1344 192 1617 76909230331 1326212736 ?_
+  refine appendBlock 1152 192 1425 71012066432 5897163899 ?_
+  refine appendBlock 960 192 1233 58877842812 12134223620 ?_
+  refine appendBlock 768 192 1041 42054010460 16823832352 ?_
+  refine appendBlock 576 192 849 24295860028 17758150432 ?_
+  refine appendBlock 384 192 657 9482074140 14813785888 ?_
+  refine appendBlock 192 192 465 1394340080 8087734060 ?_
   rfl
 theorem moment1324_279 : momentEstimate 1324 279 = 82958819253 := by
   change blockEstimate 1324 279 279 1603 = 82958819253
@@ -2192,6 +2221,19 @@ theorem moment1550_329 : momentEstimate 1550 329 = 156562227172 := by
   refine appendBlock 576 192 905 33216006670 28081537440 ?_
   refine appendBlock 384 192 713 11977349230 21238657440 ?_
   refine appendBlock 192 192 521 1685489072 10291860158 ?_
+  rfl
+theorem moment1587_334 : momentEstimate 1587 334 = 170894624907 := by
+  change blockEstimate 1587 334 334 1921 = 170894624907
+  refine appendBlock 1920 1 2254 170894623320 1587 ?_
+  refine appendBlock 1728 192 2062 169976636416 917986904 ?_
+  refine appendBlock 1536 192 1870 164130204232 5846432184 ?_
+  refine appendBlock 1344 192 1678 149995495333 14134708899 ?_
+  refine appendBlock 1152 192 1486 126511683360 23483811973 ?_
+  refine appendBlock 960 192 1294 96300750880 30210932480 ?_
+  refine appendBlock 768 192 1102 64039811360 32260939520 ?_
+  refine appendBlock 576 192 910 34471049760 29568761600 ?_
+  refine appendBlock 384 192 718 12336651040 22134398720 ?_
+  refine appendBlock 192 192 526 1729820400 10606830640 ?_
   rfl
 end P1_7_1_3_3
 end
@@ -2330,6 +2372,37 @@ namespace P1_7_1_3_5
 open P1_7_1_3 (blockEstimate block_append momentEstimate)
 set_option maxRecDepth 12000
 set_option maxHeartbeats 10000000
+theorem moment4714 : momentEstimate 4714 997 = 13307662181427 := by
+  change blockEstimate 4714 997 997 5711 = 13307662181427
+  refine block_append (a := 5376) (b := 335) (next := 6373) (x := 13293190894919) (y := 14471286508)
+    ?_ (by rfl) (by decide) (by decide) (by decide)
+  refine block_append (a := 4992) (b := 384) (next := 5989) (x := 13171216668327) (y := 121974226592)
+    ?_ (by rfl) (by decide) (by decide) (by decide)
+  refine block_append (a := 4608) (b := 384) (next := 5605) (x := 12836550788780) (y := 334665879547)
+    ?_ (by rfl) (by decide) (by decide) (by decide)
+  refine block_append (a := 4224) (b := 384) (next := 5221) (x := 12212427175383) (y := 624123613397)
+    ?_ (by rfl) (by decide) (by decide) (by decide)
+  refine block_append (a := 3840) (b := 384) (next := 4837) (x := 11257616482002) (y := 954810693381)
+    ?_ (by rfl) (by decide) (by decide) (by decide)
+  refine block_append (a := 3456) (b := 384) (next := 4453) (x := 9974418830209) (y := 1283197651793)
+    ?_ (by rfl) (by decide) (by decide) (by decide)
+  refine block_append (a := 3072) (b := 384) (next := 4069) (x := 8441569360833) (y := 1532849469376)
+    ?_ (by rfl) (by decide) (by decide) (by decide)
+  refine block_append (a := 2688) (b := 384) (next := 3685) (x := 6771639337985) (y := 1669930022848)
+    ?_ (by rfl) (by decide) (by decide) (by decide)
+  refine block_append (a := 2304) (b := 384) (next := 3301) (x := 5077648477249) (y := 1693990860736)
+    ?_ (by rfl) (by decide) (by decide) (by decide)
+  refine block_append (a := 1920) (b := 384) (next := 2917) (x := 3472616494209) (y := 1605031983040)
+    ?_ (by rfl) (by decide) (by decide) (by decide)
+  refine block_append (a := 1536) (b := 384) (next := 2533) (x := 2069563104449) (y := 1403053389760)
+    ?_ (by rfl) (by decide) (by decide) (by decide)
+  refine block_append (a := 1152) (b := 384) (next := 2149) (x := 981508023553) (y := 1088055080896)
+    ?_ (by rfl) (by decide) (by decide) (by decide)
+  refine block_append (a := 768) (b := 384) (next := 1765) (x := 313686788800) (y := 667821234753)
+    ?_ (by rfl) (by decide) (by decide) (by decide)
+  refine block_append (a := 384) (b := 384) (next := 1381) (x := 42102996320) (y := 271583792480)
+    ?_ (by rfl) (by decide) (by decide) (by decide)
+  rfl
 theorem moment5798 : momentEstimate 5798 1223 = 30381132426145 := by
   change blockEstimate 5798 1223 1223 7021 = 30381132426145
   refine block_append (a := 6912) (b := 109) (next := 8135) (x := 30380486284103) (y := 646142042)

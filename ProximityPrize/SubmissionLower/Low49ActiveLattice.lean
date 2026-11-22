@@ -30,23 +30,23 @@ theorem finite (a : Cap) (c : ℕ) : (points a c).Finite :=
 
 instance (a : Cap) (c : ℕ) : Finite (points a c) := (finite a c).to_subtype
 
-theorem clipBound {u a h c b j p : ℕ}
+private theorem clipBound {u a h c b j p : ℕ}
     (hp : p = a - ((2*j-4*h)-(2*c-2*h)))
     (_hj : 4*h ≤ 2*j) (hc : 2*h ≤ 2*c) (hd : 2*c+2*h ≤ 2*j)
     (hu : u + a + h + p ≤ 2*b) :
     u + a + h ≤ 2*b ∧ u+2*a+3*h+2*c ≤ 2*b+2*j := by omega
 
-theorem join_threshold {ja jb ca cb h h' t : ℕ}
+private theorem join_threshold {ja jb ca cb h h' t : ℕ}
     (ha : 4*h≤2*ja ∧ 2*h≤2*ca) (hb : 4*h'≤2*jb ∧ 2*h'≤2*cb)
     (ht : h+h'=t) :
     (2*ja-4*h)+(2*jb-4*h')-((2*ca-2*h)+(2*cb-2*h')) =
       2*(ja+jb)-2*(ca+cb)-2*t := by omega
 
-theorem zero_fit {B J a h c u : ℕ}
+private theorem zero_fit {B J a h c u : ℕ}
     (hb : u+a+h≤B) (hc : u+2*a+3*h+c≤B+J) :
     u+a+h+(a-(J-c-2*h))≤B := by omega
 
-theorem split_zero {u a b ca cb : ℕ} (ha : a≤ca) (hb : b≤cb)
+private theorem split_zero {u a b ca cb : ℕ} (ha : a≤ca) (hb : b≤cb)
     (h : u+a+b≤ca+cb) :
     let v := min u (ca-a)
     v+(u-v)=u ∧ v+a≤ca ∧ u-v+b≤cb := by
