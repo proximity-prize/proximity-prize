@@ -15,7 +15,7 @@ open scoped ENat
 
 variable {R : Type} [CommRing R]
 
-abbrev quotientLength (I : Ideal R) : ℕ∞ := Module.length R (R ⧸ I)
+private abbrev quotientLength (I : Ideal R) : ℕ∞ := Module.length R (R ⧸ I)
 private abbrev single (x : R) : Ideal R := Ideal.span {x}
 
 private theorem length_step (I : Ideal R) (g : R) :
@@ -24,13 +24,13 @@ private theorem length_step (I : Ideal R) (g : R) :
     (Submodule.factor (le_sup_left : I ≤ I ⊔ single g))
     (quotientMul_injective I g) (Submodule.factor_surjective le_sup_left) (quotientMul_exact I g)
 
-theorem length_anti {I J : Ideal R} (h : I ≤ J) : quotientLength J ≤ quotientLength I :=
+private theorem length_anti {I J : Ideal R} (h : I ≤ J) : quotientLength J ≤ quotientLength I :=
   Module.length_le_of_surjective (Submodule.factor h) (Submodule.factor_surjective h)
 
 private theorem length_top : quotientLength (⊤ : Ideal R) = 0 := by
   exact Module.length_eq_zero
 
-theorem length_max [IsLocalRing R] : quotientLength (maximalIdeal R) = 1 := by
+private theorem length_max [IsLocalRing R] : quotientLength (maximalIdeal R) = 1 := by
   have : IsSimpleModule R (R ⧸ maximalIdeal R) :=
     isSimpleModule_iff_isCoatom.mpr (maximalIdeal.isMaximal R).1
   exact Module.length_eq_one _ _
@@ -43,7 +43,7 @@ private theorem decompose {m I : Ideal R} {u v z : R} (hm : m = single u ⊔ sin
   obtain ⟨b,hb,rfl⟩ := Ideal.mem_span_singleton_mul.mp hq
   exact ⟨a,ha,b,hb,hz⟩
 
-theorem nonprincipal_of_spanFinrank_two {m : Ideal R}
+private theorem nonprincipal_of_spanFinrank_two {m : Ideal R}
     (hr : m.spanFinrank = 2) (x : R) : m ≠ single x := by
   intro h
   have hh := Submodule.spanFinrank_span_le_ncard_of_finite (R := R) (Set.finite_singleton x)
@@ -51,7 +51,7 @@ theorem nonprincipal_of_spanFinrank_two {m : Ideal R}
   rw [← h, hr] at hh'
   omega
 
-theorem prime_parameters [IsDomain R] [IsLocalRing R] [UniqueFactorizationMonoid R]
+private theorem prime_parameters [IsDomain R] [IsLocalRing R] [UniqueFactorizationMonoid R]
     [IsNoetherianRing R] (hm2 : (maximalIdeal R).spanFinrank = 2) :
     ∃ u v : R, maximalIdeal R = single u ⊔ single v ∧ Prime u ∧ ¬ u ∣ v := by
   classical
@@ -91,7 +91,7 @@ theorem prime_parameters [IsDomain R] [IsLocalRing R] [UniqueFactorizationMonoid
       ((IsLocalRing.mem_maximalIdeal y).mpr h.2))
   exact ⟨u,v,hm,UniqueFactorizationMonoid.irreducible_iff_prime.mp huI,hnuv⟩
 
-theorem colon_power_left [IsDomain R] {m : Ideal R} {u v : R}
+private theorem colon_power_left [IsDomain R] {m : Ideal R} {u v : R}
     (hm : m = single u ⊔ single v) (hu : Prime u) (hn : ¬ u ∣ v) (n : ℕ) :
     (m^(n+1)).colon {u} = m^n := by
   have hum : u ∈ m := hm ▸ Ideal.mem_sup_left (Ideal.mem_span_singleton_self u)
@@ -126,7 +126,7 @@ theorem colon_power_left [IsDomain R] {m : Ideal R} {u v : R}
       rw [pow_succ]
       exact Ideal.mul_mem_mul hx hum
 
-theorem higher_mod_left {m : Ideal R} {u v : R} (hm : m = single u ⊔ single v) (n : ℕ) :
+private theorem higher_mod_left {m : Ideal R} {u v : R} (hm : m = single u ⊔ single v) (n : ℕ) :
     m^n ⊔ single u = single u ⊔ (single v)^n := by
   induction n with
   | zero => simp [Ideal.one_eq_top]
@@ -147,7 +147,7 @@ theorem higher_mod_left {m : Ideal R} {u v : R} (hm : m = single u ⊔ single v)
             le_sup_right
     · exact sup_le le_sup_right ((Ideal.pow_right_mono hv _).trans le_sup_left)
 
-theorem colon_power_mod_left [IsDomain R] {u v : R} (hu : Prime u) (hn : ¬ u ∣ v) (n : ℕ) :
+private theorem colon_power_mod_left [IsDomain R] {u v : R} (hu : Prime u) (hn : ¬ u ∣ v) (n : ℕ) :
     (single u ⊔ (single v)^(n+1)).colon {v} = single u ⊔ (single v)^n := by
   ext x
   rw [Submodule.mem_colon_singleton, smul_eq_mul]
@@ -173,7 +173,7 @@ theorem colon_power_mod_left [IsDomain R] {u v : R} (hu : Prime u) (hn : ¬ u �
     · apply Ideal.mem_sup_right
       exact Ideal.mem_span_singleton.mpr ⟨z,by rw [pow_succ]; ring⟩
 
-theorem length_mod_left [IsDomain R] [IsLocalRing R] {u v : R}
+private theorem length_mod_left [IsDomain R] [IsLocalRing R] {u v : R}
     (hm : maximalIdeal R = single u ⊔ single v) (hu : Prime u) (hn : ¬ u ∣ v) (n : ℕ) :
     quotientLength (single u ⊔ (single v)^n) = n := by
   induction n with
@@ -192,7 +192,7 @@ private def triangle : ℕ → ℕ
   | n+1 => triangle n + (n+1)
 
 /-- A two-dimensional regular local UFD has triangular maximal-ideal quotient lengths. -/
-theorem length_max_power [IsDomain R] [IsLocalRing R] [UniqueFactorizationMonoid R]
+private theorem length_max_power [IsDomain R] [IsLocalRing R] [UniqueFactorizationMonoid R]
     [IsNoetherianRing R] (hm2 : (maximalIdeal R).spanFinrank = 2) (n : ℕ) :
     quotientLength ((maximalIdeal R)^n) = triangle n := by
   obtain ⟨u,v,hm,hu,hn⟩ := prime_parameters hm2
@@ -203,14 +203,30 @@ theorem length_max_power [IsDomain R] [IsLocalRing R] [UniqueFactorizationMonoid
       higher_mod_left hm (n+1), length_mod_left hm hu hn, triangle]
     simp only [Nat.cast_add]
 
-theorem triangle_add (a b : ℕ) : triangle (a+b) = triangle a + triangle b + a*b := by
+private theorem triangle_eq_choose (n : ℕ) : triangle n = (n+1).choose 2 := by
+  induction n with
+  | zero => decide
+  | succ n ih =>
+    have hc : (n+1+1).choose 2 = (n+1).choose 1 + (n+1).choose 2 :=
+      Nat.choose_succ_succ (n+1) 1
+    rw [triangle, ih, hc, Nat.choose_one_right]
+    exact Nat.add_comm _ _
+
+/-- The power-quotient length is the number of two-variable monomials below the cutoff. -/
+theorem length_max_power_choose [IsDomain R] [IsLocalRing R] [UniqueFactorizationMonoid R]
+    [IsNoetherianRing R] (hm2 : (maximalIdeal R).spanFinrank = 2) (n : ℕ) :
+    Module.length R (R ⧸ (maximalIdeal R)^n) = ((n+1).choose 2 : ℕ) := by
+  change quotientLength ((maximalIdeal R)^n) = ((n+1).choose 2 : ℕ)
+  rw [length_max_power hm2 n, triangle_eq_choose]
+
+private theorem triangle_add (a b : ℕ) : triangle (a+b) = triangle a + triangle b + a*b := by
   induction b with
   | zero => simp [triangle]
   | succ b ih =>
     rw [Nat.add_succ, triangle, triangle, ih, Nat.mul_succ]
     omega
 
-theorem triangle_mul (a b : ℕ) :
+private theorem triangle_mul (a b : ℕ) :
     triangle (a+b+1) = triangle b + triangle a + (a+1)*(b+1) := by
   rw [triangle, triangle_add, Nat.add_mul, Nat.mul_add, one_mul, mul_one]
   omega
@@ -268,4 +284,6 @@ theorem length_ge_product [IsDomain R] [IsLocalRing R] [UniqueFactorizationMonoi
 
 end
 
+#print axioms length_max_power_choose
+#print axioms length_ge_product
 end Shared50Multiplicity

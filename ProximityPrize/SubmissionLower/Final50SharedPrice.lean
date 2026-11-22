@@ -10,8 +10,8 @@ open Final50Price (Messages SmallFactor ActiveFits ProperCut taylorLength primar
   physicalPrice physicalDegree errors incidenceGap tiltedFits tiltedSurface)
 open scoped Polynomial
 
-abbrev slope : Shape := ⟨61,24,7⟩
-abbrev slopeLoss : ℕ := 21876620593625
+abbrev slope : Shape := ⟨60,25,7⟩
+abbrev slopeLoss : ℕ := 21385097131841
 
 inductive Surface where
   | ordinary
@@ -70,7 +70,7 @@ instance (f : Shape) (u : Rate) : Decidable (RateFits f u) := by
   infer_instance
 
 
-theorem expression_line (w f : Shape) (r a : ℕ) (u t : Bool)
+private theorem expression_line (w f : Shape) (r a : ℕ) (u t : Bool)
     (hb : a*f.b ≤ r*slope.b) (hj : a*f.j ≤ r*slope.j) (ht : a*f.t ≤ r*slope.t) :
     expression w (deficit r a f) u t + a*expression w f u t = r*expression w slope u t := by
   have b := Nat.sub_add_cancel hb
@@ -83,7 +83,7 @@ theorem expression_line (w f : Shape) (r a : ℕ) (u t : Bool)
     <;> nlinarith only [congrArg (fun z => w.b*z) b, congrArg (fun z => w.b*z) j,
       congrArg (fun z => w.j*z) j, congrArg (fun z => w.t*z) j, congrArg (fun z => w.t*z) h]
 
-theorem affine_of_endpoints (p q s x y W r a : ℕ)
+private theorem affine_of_endpoints (p q s x y W r a : ℕ)
     (hp : 0 < p) (hb : a*q ≤ r*p)
     (h₀ : x ≤ W) (h₁ : (q : ℤ)*x-p*y ≤ (q-(s:ℤ)*p)*W) :
     (r : ℤ)*x-a*y ≤ (r-(s:ℤ)*a)*W := by
@@ -100,7 +100,7 @@ theorem affine_of_endpoints (p q s x y W r a : ℕ)
   rw [mul_comm, ident]
   exact add_nonneg hA hB
 
-theorem pivot_pos (i : Fin 3) : 0 < coord slope i := by fin_cases i <;> decide
+private theorem pivot_pos (i : Fin 3) : 0 < coord slope i := by fin_cases i <;> decide
 
 theorem rate_bound {f : Shape} {u : Rate} (hu : RateFits f u) (r a : ℕ)
     (hfit : ∀ i, a*coord f i ≤ r*coord slope i) (chooseWidth : Bool) :
@@ -144,6 +144,18 @@ theorem rate_bound {f : Shape} {u : Rate} (hu : RateFits f u) (r a : ℕ)
   rw [← Nat.cast_mul, ← Nat.cast_sub har, ← Nat.cast_mul] at hgoal
   exact_mod_cast hgoal
 
+
+theorem remainder_pos {f : Shape} {u : Rate} (hu : RateFits f u) {r a : ℕ}
+    (hr : 0 < r) (hfit : ∀ i, a*coord f i ≤ r*coord slope i) : 0 < r-u.split*a := by
+  obtain ⟨_,_,hs,_,_,_⟩ := hu
+  have hp := pivot_pos u.pivot
+  have hmark := hfit u.pivot
+  by_cases ha : a = 0
+  · simpa [ha] using hr
+  have hm := Nat.mul_lt_mul_of_pos_left hs (Nat.pos_of_ne_zero ha)
+  have h : u.split*a * coord slope u.pivot < r * coord slope u.pivot := by
+    simpa only [mul_left_comm,mul_assoc,mul_comm] using hm.trans_le hmark
+  exact Nat.sub_pos_of_lt (Nat.lt_of_mul_lt_mul_right h)
 
 theorem chamber_bound {f : Shape} {u : Rate} (hu : RateFits f u) (r a : ℕ)
     (hfit : ∀ i, a*coord f i ≤ r*coord slope i) (g : Shape)

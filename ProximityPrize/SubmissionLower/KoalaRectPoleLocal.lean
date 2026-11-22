@@ -50,7 +50,7 @@ theorem rect_combination {F ι : Type} [Field F] [Fintype ι]
   change v k • sourceCoeff (P k) j i a e = 0
   rw [he, smul_zero]
 
-theorem taylor_coordinate {F : Type} [Field F] (α : F) (P : TrueSource F)
+private theorem taylor_coordinate {F : Type} [Field F] (α : F) (P : TrueSource F)
     {U : Fin 2 → ℕ} (hP : RectSupport U P) (j i t : ℕ) (z : Fin 2) :
     (inputTaylorCoeff α j i t P).degreeOf z ≤ U z := by
   have hc (a : ℕ) : (((P.coeff j).coeff i).coeff a).degreeOf z ≤ U z := by
@@ -136,6 +136,7 @@ theorem local_of_children (hLocal : P1_7_1_1.c1) (hBasis : P1_7_1_1.c2) : LocalT
 theorem local_tests : LocalTests :=
   local_of_children P1_7_1_1_1.proof P1_7_1_1_2.proof
 
+#print axioms local_tests
 
 end
 end KoalaRectPole

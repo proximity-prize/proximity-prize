@@ -10,7 +10,7 @@ open MvPolynomial
 
 variable {F : Type*} [Field F] {σ : Type*} [Finite σ]
 
-theorem regular_avoids_minimal {R : Type*} [CommRing R] {I Q : Ideal R}
+private theorem regular_avoids_minimal {R : Type*} [CommRing R] {I Q : Ideal R}
     (hQ : Q ∈ I.minimalPrimes) {s : R} (hs : IsLeftRegular (Ideal.Quotient.mk I s)) :
     s ∉ Q := by
   rw [Ideal.minimalPrimes_eq_comap] at hQ
@@ -22,7 +22,7 @@ theorem regular_avoids_minimal {R : Type*} [CommRing R] {I Q : Ideal R}
   intro x hx
   exact (isLeftRegular_iff_right_eq_zero_of_mul.mp hs) x ((mul_comm _ _).trans hx)
 
-theorem pullback_cut {R A : Type*} [CommRing R] [CommRing A]
+private theorem pullback_cut {R A : Type*} [CommRing R] [CommRing A]
     (φ : R →+* A) (hφ : Function.Surjective φ) (I : Ideal A) {s : A} {u : R} (hu : φ u = s) :
     (I ⊔ Ideal.span {s}).comap φ = I.comap φ ⊔ Ideal.span {u} := by
   apply le_antisymm
@@ -201,5 +201,8 @@ theorem graph_pure (φ : MvPolynomial σ F →ₐ[F] Ring F) (hφ : Function.Sur
     exact natDegree_affineHilbertPolynomial_le_of_le hP.le
   exact ⟨le_antisymm hupper hlower, fun P hP => hcomponents P (Ideal.mem_minimalPrimesFinset.mp hP)⟩
 
+#print axioms graph_pure
+#print axioms saturation_components
+#print axioms cut_pure
 end
 end SplitCut.Rect

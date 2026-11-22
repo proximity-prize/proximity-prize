@@ -20,6 +20,7 @@ open Final50GeometryCut_2 (Branch)
 open Final50SharedPrice (Rate RateFits slope coord)
 open Shared50Tally (Data hasBranch)
 open Shared50TallyNew (tally)
+open private tilted_count from ProximityPrize.SubmissionLower.Shared50TallyNew
 open Shared50TallyOld (orderCost auxiliaryCap continuedCap surfaceCap)
 open Shared50Persistent (Persistent)
 open Finset
@@ -28,7 +29,7 @@ attribute [local instance] Classical.propDecidable
 open private continued_bound le_ceil from ProximityPrize.SubmissionLower.Final50GeometryCut
 open private eval_actualPoint genericCoeffs_injective from ProximityPrize.SubmissionLower.Final50GeometryCut
 
-theorem shape_valid {f : Row 4} (hf : SmallFactor f) : K1_13_8.Valid (shape f) := by
+private theorem shape_valid {f : Row 4} (hf : SmallFactor f) : K1_13_8.Valid (shape f) := by
   refine ⟨hf.2.1,(K1_13_7_1.shape_chamber f).2,?_⟩
   change K1_13.indexDegree f ≤ 3*f.totalDegree
   rw [K1_13_1.indexDegree_eq]
@@ -42,10 +43,10 @@ theorem shape_valid {f : Row 4} (hf : SmallFactor f) : K1_13_8.Valid (shape f) :
   exact (Finset.sum_le_sum (fun i _ => hw i)).trans
     (by rw [← Finset.mul_sum]; exact Nat.mul_le_mul_left _ hdeg)
 
-def HighOrder (f : Row 4) (k : ℕ) (P : Ideal GeoJets) : Prop :=
+private def HighOrder (f : Row 4) (k : ℕ) (P : Ideal GeoJets) : Prop :=
   ∃ h : P.IsPrime, @VanishesTo _ _ P h (toGeneric f) (k+1)
 
-theorem hasBranch_of_mixed {f Q l g S} (h : MixedMark f Q l g)
+private theorem hasBranch_of_mixed {f Q l g S} (h : MixedMark f Q l g)
     (hs : ∀ P, (∃ r, HighChart f Q l g P r) → P∈S) : hasBranch f Q l S g := by
   obtain ⟨surf,r,hz,hE,C,hC,hP,hterminal⟩ := h
   have hr : MvPolynomial.eval (actualPoint g) (toGeneric (separant ((separant^[r]) f))) ≠ 0 := by
@@ -55,7 +56,7 @@ theorem hasBranch_of_mixed {f Q l g S} (h : MixedMark f Q l g)
   let b : Branch f Q l := ⟨surf,r,hz.base,hz.high,hz.chart,hz.invariant,hE,C,hC,hc,hterminal⟩
   exact ⟨b,hs surf ⟨r,hz⟩,hP,hr⟩
 
-theorem high_weight {Γ s f Q l}
+private theorem high_weight {Γ s f Q l}
     (data : Data Γ s f Q l {P | Persistent Γ s P}) (input : CutInput Γ s f Q l)
     (k : ℕ) :
     ∀ b ∈ data.branches,
@@ -72,7 +73,7 @@ theorem high_weight {Γ s f Q l}
       (K1_13_7_1.proper_generic f Q input.small.1 input.proper) hf hQ
   · exact b.high
 
-theorem sum_weights {Γ s f Q l S} (data : Data Γ s f Q l S) (k : ℕ) :
+private theorem sum_weights {Γ s f Q l S} (data : Data Γ s f Q l S) (k : ℕ) :
     let high := data.branches.filter (fun b => HighOrder f k b.surface)
     let low := data.branches.filter (fun b => ¬HighOrder f k b.surface)
     orderCost data (fun P => if HighOrder f k P then (k+1)*l else l) =
@@ -97,7 +98,7 @@ theorem sum_weights {Γ s f Q l S} (data : Data Γ s f Q l S) (k : ℕ) :
     simp only [w,if_neg (Finset.mem_filter.mp hb).2]
   rw [hh,hl,Nat.add_comm]
 
-theorem count_low {w Γ s f Q l}
+private theorem count_low {w Γ s f Q l}
     (hm : Messages w Γ s) (data : Data Γ s f Q l {P | Persistent Γ s P})
     (input : CutInput Γ s f Q l) (u : Rate) (hu : RateFits (shape f) u) :
     tally data (data.branches.filter (fun b => ¬HighOrder f u.split b.surface)) ≤ u.amount := by
@@ -123,7 +124,38 @@ theorem count_low {w Γ s f Q l}
   exact Shared50TallyNew.count data input F (Finset.filter_subset _ _) G hproper u hu r a hn
     (shape_valid input.small) hbox (fun b hb=>hcut _ (memP b hb))
 
-theorem cover_split {w Γ s f Q l}
+/-- A proper cut of all persistent surfaces of the indicated anchor order. -/
+def TiltedCut {Γ : Finset K} {s : K → K[X]} (f : Row 4) (u : Rate) : Prop :=
+  ∀ (P : Finset (Ideal GeoJets)), (∀ p ∈ P, Persistent Γ s p) →
+    (∀ p ∈ P, Shared50ChooseCut.SuitableSurface f u.split p) →
+    ∃ (n : ℕ) (G : Row 4), 0 < n ∧ (¬ f ∣ G) ∧
+      (∀ p ∈ P, ∃ h : (intersectionIdeal f G).IsMinimalPrime p,
+        (n : ℕ∞) ≤ cycleLength (intersectionIdeal f G) p h.isPrime) ∧
+      Final50SharedPrice.surface .tilted (shape f) (shape G).chamber ≤ 1920 * u.amount * n
+
+private theorem count_low_tilted {Γ s f Q l}
+    (data : Data Γ s f Q l {P | Persistent Γ s P}) (input : CutInput Γ s f Q l)
+    (u : Rate) (ht : Final50Price.tiltedFits (shape f)) (cut : TiltedCut (Γ := Γ) (s := s) f u) :
+    tally data (data.branches.filter (fun b => ¬ HighOrder f u.split b.surface)) ≤ u.amount := by
+  classical
+  let F := data.branches.filter (fun b => ¬ HighOrder f u.split b.surface)
+  let P := F.image Branch.surface
+  have hp : ∀ p ∈ P, Persistent Γ s p := by
+    intro p hp
+    obtain ⟨b,hb,rfl⟩ := Finset.mem_image.mp hp
+    exact data.allowed b (Finset.mem_filter.mp hb).1
+  have hs : ∀ p ∈ P, Shared50ChooseCut.SuitableSurface f u.split p := by
+    intro p hp
+    obtain ⟨b,hb,rfl⟩ := Finset.mem_image.mp hp
+    refine ⟨b.base.isPrime, ?_, b.base.le (Ideal.subset_span (by simp)), ?_⟩
+    · exact pair_height (K1_13_6_3_6.toGeneric_ne_zero input.small.1.ne_zero)
+        (K1_13_7_1.proper_generic f Q input.small.1 input.proper) b.base
+    · exact fun hh => (Finset.mem_filter.mp hb).2 ⟨b.base.isPrime,hh⟩
+  obtain ⟨n,G,hn,hproper,horder,hrate⟩ := cut P hp hs
+  exact tilted_count data input F (Finset.filter_subset _ _) G hproper n u.amount hn ht
+    (fun b hb => horder b.surface (Finset.mem_image.mpr ⟨b,hb,rfl⟩)) hrate
+
+private theorem cover_split {w Γ s f Q l}
     (hm : Messages w Γ s) (input : CutInput Γ s f Q l) :
     ∃ U : Finset K, U.card ≤ Final50SharedPrice.nonsharedFee (shape f) l ∧
       ∀ γ∈Γ, MixedMark f Q l (extend (s γ)) → γ∈U ∨
@@ -169,23 +201,12 @@ private theorem final_fee {x : Shape} {l K aux curves surfaces L H : ℕ}
           (Nat.add_le_add hold (Nat.mul_le_mul_left _ hbase)) (Nat.mul_le_mul_left _ hlow)
     _ ≤ _ := Nat.le_add_right _ _
 
-theorem proof : Final50SharedPrice.cShared := by
+theorem cover_counts {w Γ s f Q l} (hm : Messages w Γ s)
+    (input : CutInput Γ s f Q l) (data : Data Γ s f Q l {P | Persistent Γ s P}) :
+    ∃ a c d : ℕ,
+      Γ.card ≤ a+c+d+tally data data.branches+Final50SharedPrice.nonsharedFee (shape f) l ∧
+      a ≤ auxiliaryCap (shape f) ∧ l*c ≤ continuedCap (shape f) ∧ d ≤ surfaceCap (shape f) := by
   classical
-  intro w Γ s hm f hf cap hcap hOn l hl hCut u hu
-  obtain ⟨Q,hproper,hbox,hweight,hQ,horder⟩ := hCut
-  have input : CutInput Γ s f Q l :=
-    ⟨hm.distinct,hm.degree,hf,hOn,hl,hproper,hbox,hweight,horder⟩
-  let data : Data Γ s f Q l {P | Persistent Γ s P} := Shared50Tally.build _
-  let low := data.branches.filter (fun b => ¬HighOrder f u.split b.surface)
-  let high := data.branches.filter (fun b => HighOrder f u.split b.surface)
-  let L := tally data low
-  let H := tally data high
-  have hLow : L≤u.amount := count_low hm data input u hu
-  have hSum : tally data data.branches = L+H := by
-    unfold L H low high tally
-    rw [Nat.add_comm]
-    exact (Finset.sum_filter_add_sum_filter_not data.branches
-      (fun b => HighOrder f u.split b.surface) _).symm
   obtain ⟨U,hU,hUC⟩ := cover_split hm input
   obtain ⟨A,B,hA,hAC,hAB,hAB'⟩ := Final50GeometryCut_1.proof Γ s f Q l input
   obtain ⟨C,E,hC,hEC,hCP,hCB⟩ := data.pieces input
@@ -207,12 +228,11 @@ theorem proof : Final50SharedPrice.cShared := by
       · exact Finset.mem_union_left _ (Finset.mem_union_right _ (hDF γ hγ h))
     · exact Finset.mem_union_left _ (Finset.mem_union_left _ (Finset.mem_union_left _
         (hAC γ hγ hh)))
-  have hM : C.union.card+E.card ≤ L+H := by
+  have hM : C.union.card+E.card ≤ tally data data.branches := by
     have hCC := Final50GeometryCut.pieces_curve_capacity_integral C hm hC hEC
     change 2*C.total+E.card≤tally data data.branches at hCB
-    rw [hSum] at hCB
     omega
-  have hCard : Γ.card ≤ a+c+d+(L+H)+Final50SharedPrice.nonsharedFee (shape f) l := by
+  have hCard : Γ.card ≤ a+c+d+tally data data.branches+Final50SharedPrice.nonsharedFee (shape f) l := by
     have h0 := Finset.card_le_card hCover
     have h1 := Finset.card_union_le (((A.union∪B)∪(C.union∪E))∪(D.union∪F.union)) U
     have h2 := Finset.card_union_le ((A.union∪B)∪(C.union∪E)) (D.union∪F.union)
@@ -239,11 +259,37 @@ theorem proof : Final50SharedPrice.cShared := by
       omega
     omega
   have hSurface : d≤surfaceCap (shape f) := by
-    change F.union.card≤2*(133461*(shape f).b*primaryBox.b)
+    change F.union.card≤2*(133484*(shape f).b*primaryBox.b)
     have hF' := Final50GeometryCut.pieces_surface_capacity F hm hF hFP
-    change 2*F.total ≤ 133461*(shape f).b*primaryBox.b at hFB
+    change 2*F.total ≤ 133484*(shape f).b*primaryBox.b at hFB
     exact hF'.trans ((show 4*F.total=2*(2*F.total) by ring).le.trans
       (Nat.mul_le_mul_left 2 hFB))
+  exact ⟨a,c,d,hCard,hAux,hCurve,hSurface⟩
+
+private theorem count_of_low {w Γ s} (hm : Messages w Γ s) (f : Row 4)
+    (hf : SmallFactor f) (cap : ℕ) (hcap : ActiveFits f cap)
+    (hOn : ∀ γ ∈ Γ, K1_13.OnFactor f (extend (s γ)))
+    (l : ℕ) (hl : 0 < l) (hCut : ProperCut f Γ s l) (u : Rate)
+    (bound : ∀ Q, CutInput Γ s f Q l → ∀ data : Data Γ s f Q l {P | Persistent Γ s P},
+      tally data (data.branches.filter (fun b => ¬ HighOrder f u.split b.surface)) ≤ u.amount) :
+    Γ.card ≤ Final50SharedPrice.price (shape f) l cap u := by
+  classical
+  obtain ⟨Q,hproper,hbox,hweight,hQ,horder⟩ := hCut
+  have input : CutInput Γ s f Q l :=
+    ⟨hm.distinct,hm.degree,hf,hOn,hl,hproper,hbox,hweight,horder⟩
+  let data : Data Γ s f Q l {P | Persistent Γ s P} := Shared50Tally.build _
+  let low := data.branches.filter (fun b => ¬HighOrder f u.split b.surface)
+  let high := data.branches.filter (fun b => HighOrder f u.split b.surface)
+  let L := tally data low
+  let H := tally data high
+  have hLow : L≤u.amount := bound Q input data
+  have hSum : tally data data.branches = L+H := by
+    unfold L H low high tally
+    rw [Nat.add_comm]
+    exact (Finset.sum_filter_add_sum_filter_not data.branches
+      (fun b => HighOrder f u.split b.surface) _).symm
+  obtain ⟨a,c,d,hCard,hAux,hCurve,hSurface⟩ := cover_counts hm input data
+  rw [hSum] at hCard
   let weight (P : Ideal GeoJets) := if HighOrder f u.split P then (u.split+1)*l else l
   have hW : l*(L+(u.split+1)*H) ≤ orderCost data weight := (sum_weights data u.split).ge
   have hold := Shared50TallyOld.physical_bound data input cap hcap hQ weight
@@ -251,5 +297,19 @@ theorem proof : Final50SharedPrice.cShared := by
   have hbase := Shared50TallyOld.additive_le hl hAux hCurve hSurface
   exact hCard.trans (final_fee u hold hbase hLow)
 
+/-- Count marks using a separate construction for the common tilted surface cut. -/
+theorem tilted_proof {w Γ s} (hm : Messages w Γ s) (f : Row 4) (hf : SmallFactor f)
+    (cap : ℕ) (hcap : ActiveFits f cap) (hOn : ∀ γ ∈ Γ, K1_13.OnFactor f (extend (s γ)))
+    (l : ℕ) (hl : 0 < l) (hCut : ProperCut f Γ s l) (u : Rate)
+    (ht : Final50Price.tiltedFits (shape f)) (cut : TiltedCut (Γ := Γ) (s := s) f u) :
+    Γ.card ≤ Final50SharedPrice.price (shape f) l cap u :=
+  count_of_low hm f hf cap hcap hOn l hl hCut u (fun _ input data => count_low_tilted data input u ht cut)
+
+theorem proof : Final50SharedPrice.cShared := by
+  intro w Γ s hm f hf cap hcap hOn l hl hCut u hu
+  exact count_of_low hm f hf cap hcap hOn l hl hCut u (fun _ input data => count_low hm data input u hu)
+
+#print axioms tilted_proof
+#print axioms proof
 end
 end Shared50Count

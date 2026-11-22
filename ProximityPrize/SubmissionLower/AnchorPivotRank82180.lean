@@ -117,4 +117,5 @@ theorem count_bound (rows : List Row) (s : ℕ) (g : ℤ)
   simpa only [Fintype.card_fin] using
     ((Nat.add_le_add_left hc (Module.finrank Geom (LinearMap.range (blockAt 48 s g)))).trans_eq hd)
 
+#print axioms count_bound
 end AnchorPivot82180

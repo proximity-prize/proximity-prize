@@ -93,7 +93,7 @@ private theorem scale_mono {x y : Shape} (h : InBox x y) (k : ℕ) :
 private theorem scale_chamber {x : Shape} (hx : Chamber x) (k : ℕ) :
     Chamber (x.scale k) :=
   ⟨Nat.mul_le_mul_left k hx.1, by simpa [Shape.scale, Nat.mul_left_comm 3 k] using Nat.mul_le_mul_left k hx.2⟩
-theorem min_fits_index (a i : ℕ) : 3 * min a (i / 3) ≤ i := by
+private theorem min_fits_index (a i : ℕ) : 3 * min a (i / 3) ≤ i := by
   have h := min_le_right a (i / 3)
   omega
 private theorem chart_chamber (L : ℕ) (x : Shape) : Chamber (chart L x) :=
@@ -142,7 +142,7 @@ private theorem scale_mono {x y : Shape} (h : InBox x y) (k : ℕ) :
 private theorem scale_chamber {x : Shape} (hx : Chamber x) (k : ℕ) :
     Chamber (x.scale k) :=
   ⟨Nat.mul_le_mul_left k hx.1, by simpa [Shape.scale, Nat.mul_left_comm 3 k] using Nat.mul_le_mul_left k hx.2⟩
-theorem min_fits_index (a i : ℕ) : 3 * min a (i / 3) ≤ i := by
+private theorem min_fits_index (a i : ℕ) : 3 * min a (i / 3) ≤ i := by
   have h := min_le_right a (i / 3)
   omega
 private theorem chart_chamber (L : ℕ) (x : Shape) : Chamber (chart L x) :=

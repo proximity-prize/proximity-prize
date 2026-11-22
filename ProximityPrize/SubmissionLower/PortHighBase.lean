@@ -87,18 +87,58 @@ def MarkOn {u del} (M : AnchorModel u del) {Γ} (F : AnchoredFamily M Γ)
   q.asIdeal ≤ RingHom.ker
     (eval₂RingHom (eval₂RingHom (graphEval (M.label γ)) (atX (F.scalar γ)))
       (atX (F.scalar γ).derivative))
+def ReducedEquation (w : ℤ) (f : Equation) : Prop :=
+  0 < f.natDegree ∧ f.natDegree ≤ (band w).yBound ∧ f.IsPrimitive ∧
+    (f.map (algebraMap Seeds (FractionRing Seeds))).Separable
 def rawWidth (w : ℤ) (q j : ℕ) : ℕ :=
   (band w).multiplicity * agreement + j - q * (131071 - w.toNat)
 def rawVolume (w : ℤ) : ℕ :=
   triangle (band w).subbankSeeds * shapeSum (terminalShape w) (rawWidth w)
+def subbankDebit (w : ℤ) : ℕ := sourceDebit w.toNat (terminalShape w)
 def forcedPower (w : ℤ) (W j : ℕ) : ℕ :=
   1 + (fullCutoff (terminalShape w) - W) / (2 * w.toNat) - j
 def TerminalDivisibility (w : ℤ) (rows : Banks) (f : Equation) : Prop :=
   ∀ W < (band w).multiplicity * agreement, ∀ P ∈ rows (terminalShape w) W, P ≠ 0 →
     f ^ forcedPower w W P.natDegree ∣ P.leadingCoeff
+def TerminalMass (w : ℤ) (f : Equation) : Prop :=
+  let b := band w
+  ∃ V : ℕ → Submodule FX Jet,
+    rawVolume w ≤ subbankDebit w +
+      ∑ W ∈ Finset.range (b.multiplicity * agreement), Module.finrank FX (V W) ∧
+    ∀ W < b.multiplicity * agreement, ∀ P ∈ V W, P ≠ 0 →
+      let j := P.natDegree
+      let i := P.leadingCoeff.natDegree
+      j ≤ b.vBound ∧ i + j ≤ b.jetBound ∧ (i + j) * (131071 - w.toNat) ≤ W + j ∧
+        SeedBound P.leadingCoeff b.subbankSeeds ∧ f ^ forcedPower w W j ∣ P.leadingCoeff
+def seedGain (w : ℤ) : ℕ :=
+  let b := band w
+  let U := b.subbankSeeds
+  let v := b.seedBound + 1
+  shapeSum (terminalShape w) fun q j => ∑ r ∈ Finset.range (U / v + 1),
+    (slots U (r * v) - slots U ((r + 1) * v)) * (rawWidth w q j - 2 * w.toNat * (j + r))
 def curveFactor (d : ℕ) : ℕ := t / (agreement - d) + 1
+def simplePrice (w : ℤ) : ℕ :=
+  let b := band w
+  let d := k - 1 + b.endpoint
+  let gap := agreement - d
+  (t * curveFactor d * K1_14_6.mixedDegree d b.yBound b.seedBound + (gap - 1)) / gap + b.yBound
 def singularDegree (w : ℤ) : ℕ :=
   (2 * (band w).yBound - 1) * (band w).seedBound
+structure RetainedCover {u del} (M : AnchorModel u del) {Γ} (F : AnchoredFamily M Γ)
+    {rows : Banks} (pairs : ∀ i : Fin 2, BufferedPair M.overhead rows i) where
+  kept : Finset K
+  subset : kept ⊆ Γ
+  paid : (Γ \ kept).card ≤ highPrefix M.overhead
+  parents : Finset Surface
+  geometric : ∀ q ∈ parents, Parent q
+  initial : ∀ q ∈ parents, (pairs 0).free ∈ q.asIdeal ∧ (pairs 0).moving ∈ q.asIdeal
+  survives : ∀ q ∈ parents, PairPass (pairs 1) q
+  terminal : ∀ q ∈ parents, BankVanishes rows (fullShape M.overhead) q
+  covers : ∀ γ ∈ kept, ∃ q ∈ parents, MarkOn M F q γ
+  equation : Equation
+  projected : ProjectedProduct parents equation
+  y_bound : equation.natDegree ≤ (band M.overhead).yBound
+  divides : TerminalDivisibility M.overhead rows equation
 end
 end P0_10
 end
@@ -163,6 +203,105 @@ theorem adjacent_chart {u del} (M : AnchorModel u del) {Γ} (F : AnchoredFamily 
     refine ⟨ha, ha.map (Polynomial.mapRingHom σ), hres, ?_⟩
     simpa only [Polynomial.map_add, Polynomial.map_mul, Polynomial.map_C, hfix,
       σ, frobenius_def] using (Polynomial.map_dvd σ hres)
+private theorem terminal_mem (w : ℤ) : terminalShape w ∈ scheduled w := by
+  simp [scheduled]
+private theorem terminal_width (w : ℤ) (hw : 2481 ≤ w) {q : ℕ}
+    (hq : q ≤ (terminalShape w).B) :
+    q * (131071 - w.toNat) ≤ (terminalShape w).m * agreement := by
+  calc
+    _ ≤ (terminalShape w).B * 128590 := Nat.mul_le_mul hq (by omega)
+    _ ≤ _ := by unfold terminalShape band; split_ifs <;> decide
+theorem terminalMass_of_source {u del} {M : AnchorModel u del} {Γ}
+    {F : AnchoredFamily M Γ} {rows : Banks} (hr : JetSource M F rows)
+    (hlo : 2481 ≤ M.overhead) {f : Equation}
+    (hd : TerminalDivisibility M.overhead rows f) : TerminalMass M.overhead f := by
+  let w := M.overhead
+  let s := terminalShape w
+  have hs := terminal_mem w
+  have htop : 0 < s.m * agreement := by
+    unfold s terminalShape band
+    split_ifs <;> decide
+  have hent : s.m * agreement - 1 + 1 = s.m * agreement := by omega
+  refine ⟨rows s, ?_, ?_⟩
+  · have h := hr.floor_bound s hs (s.m*agreement-1) (by omega) (by
+      intro q hq j _
+      have hq' : q * (131071 - M.overhead.toNat) ≤ s.m * agreement := terminal_width w hlo hq
+      rw [hent]
+      exact hq'.trans (Nat.le_add_right _ _))
+    rw [hent] at h
+    exact h
+  · intro W hW P hP hne
+    have hlc := leadingCoeff_ne_zero.mpr hne
+    have htopcoeff : (P.coeff P.natDegree).coeff P.leadingCoeff.natDegree ≠ 0 :=
+      leadingCoeff_ne_zero.mpr hlc
+    obtain ⟨hb, hj, _⟩ := hr.shape s hs W P hP _ _ htopcoeff
+    refine ⟨hj, hb, hr.leading s hs W P hP hne, ?_, hd W hW P hP hne⟩
+    intro i
+    by_cases h : P.leadingCoeff.coeff i = 0
+    · simp [h]
+    · exact (hr.shape s hs W P hP _ _ h).2.2
+theorem separant_certificate {w : ℤ} {f : Equation} (hf : ReducedEquation w f)
+    (hs : SeedBound f (band w).seedBound) :
+    ∃ Δ : Seeds, Δ ≠ 0 ∧ Δ.totalDegree ≤ singularDegree w ∧
+      ∀ (z : K) (S : K[X]), atMark f z S = 0 → atMark f.derivative z S = 0 →
+        graphEval z Δ = 0 := by
+  obtain ⟨hpos, hy, _, hsep⟩ := hf
+  let ι := algebraMap Seeds (FractionRing Seeds)
+  have hi := IsFractionRing.injective Seeds (FractionRing Seeds)
+  have hcop : IsCoprime (f.map ι) (f.derivative.map ι) := by
+    simpa only [Separable, ← derivative_map] using hsep
+  have hne := resultant_ne_zero _ _ hcop
+  rw [natDegree_map_eq_of_injective hi, natDegree_map_eq_of_injective hi,
+    resultant_map_map] at hne
+  refine ⟨f.resultant f.derivative, fun h => hne (by simp [h]), ?_, ?_⟩
+  · apply (resultant_degree hs (derivative_seedBound hs)).trans
+    apply Nat.mul_le_mul_right
+    have := natDegree_derivative_le f
+    omega
+  · intro z S hzero hder
+    obtain ⟨a, b, _, _, hbez⟩ := exists_mul_add_mul_eq_C_resultant f f.derivative
+      (le_refl _) (le_refl _) (Or.inl hpos.ne')
+    have ev := congrArg (eval₂RingHom (graphEval z) (atX S)) hbez
+    change f.eval₂ _ _ = 0 at hzero
+    change f.derivative.eval₂ _ _ = 0 at hder
+    simpa [eval₂_add, eval₂_mul, hzero, hder] using ev.symm
+theorem singular_degree_lt (w : ℤ) : singularDegree w < p := by
+  unfold singularDegree band
+  split_ifs <;> decide
+theorem singular_count {u del} (M : AnchorModel u del) {w : ℤ} {f : Equation}
+    (hf : ReducedEquation w f) (hs : SeedBound f (band w).seedBound)
+    (Γ : Finset K) (S : K → K[X])
+    (hroot : ∀ γ ∈ Γ, atMark f (M.label γ) (S γ) = 0)
+    (hsing : ∀ γ ∈ Γ, atMark f.derivative (M.label γ) (S γ) = 0) :
+    Γ.card ≤ (p+1)*singularDegree w := by
+  classical
+  obtain ⟨Δ, hne, hdegree, hz⟩ := separant_certificate hf hs
+  let emb : K ↪ FX :=
+    ⟨fun γ => seedEmbedding (M.label γ), fun a b h =>
+      sub_left_inj.mp (seedEmbedding.injective h)⟩
+  have hb := frobenius_coefficient_exception_count p (singularDegree w) (singularDegree w)
+    (by decide) Δ hne ((Δ.degreeOf_le_totalDegree 0).trans hdegree)
+    (singular_degree_lt w) ((Δ.degreeOf_le_totalDegree 1).trans hdegree)
+    (Γ.map emb) (by
+      intro x hx
+      obtain ⟨γ, hγ, rfl⟩ := Finset.mem_map.mp hx
+      exact hz _ _ (hroot γ hγ) (hsing γ hγ))
+  simpa only [Finset.card_map, Nat.add_mul, Nat.one_mul, Nat.add_comm (singularDegree w)]
+    using hb
+set_option maxRecDepth 12000 in
+theorem retained_price (w : ℤ) :
+    (p+1)*singularDegree w + simplePrice w = highRetained w := by
+  by_cases h₁ : w ≤ 3554
+  · simp only [singularDegree, simplePrice, band, highRetained, ite_eq_left h₁]
+    decide
+  by_cases h₂ : w ≤ 8249
+  · simp only [singularDegree, simplePrice, band, highRetained, ite_eq_right h₁, ite_eq_left h₂]
+    decide
+  by_cases h₃ : w ≤ 23999
+  · simp only [singularDegree, simplePrice, band, highRetained, ite_eq_right h₁, ite_eq_right h₂, ite_eq_left h₃]
+    decide
+  · simp only [singularDegree, simplePrice, band, highRetained, ite_eq_right h₁, ite_eq_right h₂, ite_eq_right h₃]
+    decide
 end
 end P0_10
 end
@@ -195,13 +334,42 @@ private theorem cutoffCapacity_eq (w : ℤ) (W : ℕ) (hk : 0 < 131071 - w.toNat
   apply sum_congr rfl
   intro q _
   split_ifs <;> simp
-theorem ranks_lt_gradeWidth {d j k B W : ℕ} (hk : 0 < k)
+theorem sum_cutoffCapacity_add_seedGain (w : ℤ) (hlo : 2481 ≤ w) (hhi : w ≤ 32766) :
+    (∑ W ∈ range ((band w).multiplicity * agreement), cutoffCapacity w W) + seedGain w =
+      rawVolume w := by
+  let b := band w
+  let k := 131071 - w.toNat
+  let top := b.multiplicity * agreement
+  have hk : 0 < k := by dsimp [k]; omega
+  have hs : 0 < 2 * w.toNat := by omega
+  have hswap (F : ℕ → ℕ → ℕ → ℕ) :
+      (∑ W ∈ range top, shapeSum (terminalShape w) (F W)) =
+        shapeSum (terminalShape w) (fun q j => ∑ W ∈ range top, F W q j) := by
+    unfold shapeSum
+    rw [sum_comm]
+    apply sum_congr rfl
+    intro q _
+    rw [sum_comm]
+  change (∑ W ∈ range top, cutoffCapacity w W) + seedGain w = rawVolume w
+  simp_rw [cutoffCapacity_eq w _ hk]
+  rw [hswap]
+  simp only [seedGain, rawVolume, shapeSum, ← sum_add_distrib, mul_sum]
+  apply sum_congr rfl
+  intro q _
+  apply sum_congr rfl
+  intro j hj
+  have hjq : j ≤ q := (Nat.le_of_lt_succ (mem_range.mp hj)).trans (min_le_left _ _)
+  have hjk : j ≤ q * k := hjq.trans (by
+    simpa using Nat.mul_le_mul_left q (show 1 ≤ k by omega))
+  exact position_sum top (2 * w.toNat) (q * k) j b.subbankSeeds (b.seedBound + 1)
+    hjk hs (by omega)
+private theorem ranks_lt_gradeWidth {d j k B W : ℕ} (hk : 0 < k)
     (hB : d + j ≤ B) (hW : (d + j) * k ≤ W + j) :
     d < gradeWidth k B W j := by
   have hd := (Nat.le_div_iff_mul_le hk).2 hW
   unfold gradeWidth
   omega
-theorem ranks_range_rank_at (k v B U s W j : ℕ) (e : ℕ → ℕ) (V : Submodule FX Jet)
+private theorem ranks_range_rank_at (k v B U s W j : ℕ) (e : ℕ → ℕ) (V : Submodule FX Jet)
     {f : Equation} (hf : f ≠ 0) (hv : s + 1 ≤ seedDegree f)
     (hk : 0 < k)
     (hV : ∀ P ∈ V, P ≠ 0 →
@@ -229,7 +397,7 @@ theorem ranks_range_rank_at (k v B U s W j : ℕ) (e : ℕ → ℕ) (V : Submodu
     change (P.coeff j).natDegree < _ ∧ SeedBound (P.coeff j) _ ∧ _ ∣ P.coeff j
     rw [← hj, coeff_natDegree, hj]
     exact ⟨ranks_lt_gradeWidth hk hB hwidth, hseed, hdvd⟩
-theorem gradeMap_range_rank (w : ℤ) (W j : ℕ) (V : Submodule FX Jet)
+private theorem gradeMap_range_rank (w : ℤ) (W j : ℕ) (V : Submodule FX Jet)
     {f : Equation} (hf : f ≠ 0) (hv : (band w).seedBound + 1 ≤ seedDegree f)
     (hk : 0 < 131071 - w.toNat)
     (hV : ∀ P ∈ V, P ≠ 0 →
@@ -261,6 +429,23 @@ theorem cutoff_finrank_le (w : ℤ) (W : ℕ) (V : Submodule FX Jet)
     by_cases hn : P = 0
     · simp [hn]
     · exact (natDegree_lt_iff_degree_lt hn).1 (Nat.lt_succ_of_le (hV P hp hn).1)
+theorem oversized_seed_loss (w : ℤ) (hlo : 2481 ≤ w) (hhi : w ≤ 32766)
+    (f : Equation) (hf : ReducedEquation w f) (hm : TerminalMass w f)
+    (hbad : ¬ SeedBound f (band w).seedBound) : seedGain w ≤ subbankDebit w := by
+  obtain ⟨V, hfloor, hrows⟩ := hm
+  have hne : f ≠ 0 := by
+    intro h
+    have hd := hf.1
+    simp [h] at hd
+  have hv : (band w).seedBound + 1 ≤ seedDegree f :=
+    Nat.succ_le_of_lt (Nat.lt_of_not_ge (fun h => hbad ((seedDegree_le_iff _ _).mp h)))
+  have hk : 0 < 131071 - w.toNat := by omega
+  have hceil :
+      (∑ W ∈ range ((band w).multiplicity * agreement), Module.finrank FX (V W)) ≤
+        ∑ W ∈ range ((band w).multiplicity * agreement), cutoffCapacity w W :=
+    sum_le_sum fun W hW => cutoff_finrank_le w W (V W) hne hv hk (hrows W (mem_range.mp hW))
+  have h := sum_cutoffCapacity_add_seedGain w hlo hhi
+  omega
 end
 end P0_10
 end
@@ -448,6 +633,70 @@ private theorem curve_count {T s d e b w} (C : LinearCover T s d e b)
   have hstrict := Nat.mul_lt_mul_of_pos_right hfactor hδ
   change gap * U.card ≤ P0.t * δ + gap at hcount
   omega
+private theorem surface_count {T s d e b w} (C : LinearCover T s d e b)
+    {U : Finset K} (hU : U ⊆ T) (hword : FixedWord w U s d) (hd : d < agreement)
+    (P : Ideal (LinearRing d e b)) (hP : P.IsPrime)
+    (hdim : (affineHilbertPolynomial P).natDegree = 2)
+    (hpoints : ∀ γ ∈ U, C.point γ ∈ zeroLocus ClosedField P) :
+    ((agreement - d : ℕ) : ℚ) * U.card ≤
+      P0.t * (curveFactor d : ℚ) * affineDegree P + ((agreement - d : ℕ) : ℚ) := by
+  classical
+  let r := (curveFactor d : ℚ) * affineDegree P
+  have hr : 0 ≤ r := mul_nonneg (Nat.cast_nonneg _) (affineDegree_nonneg P)
+  have hsection (i : I) (hi : ∃ γ ∈ U, (s γ).eval (node i) ≠ w i) :
+      (U.filter fun γ => (s γ).eval (node i) = w i).card ≤ ⌊r⌋₊ := by
+    apply (Nat.le_floor_iff hr).mpr
+    let V := U.filter fun γ => (s γ).eval (node i) = w i
+    let Qs := LinearCover.section C P (node i) (w i)
+    obtain ⟨hsum, dims, degree⟩ := LinearCover.cut_data C hU hP hpoints hi
+    have hone (Q : Ideal (LinearRing d e b)) (hQ : Q ∈ Qs) :
+        ((LinearCover.slice C V Q).card : ℚ) ≤ (curveFactor d : ℚ) * affineDegree Q := by
+      obtain ⟨hpr, hdimQ⟩ := dims Q hQ
+      rw [hdim] at hdimQ
+      have hVU : LinearCover.slice C V Q ⊆ U := (filter_subset _ _).trans (filter_subset _ _)
+      exact curve_count C (hVU.trans hU) (hword.mono hVU) hd Q hpr (by omega)
+        (fun _ hγ => (mem_filter.mp hγ).2)
+    have hsumQ : (V.card : ℚ) ≤ ∑ Q ∈ Qs, ((LinearCover.slice C V Q).card : ℚ) := by
+      exact_mod_cast hsum
+    refine hsumQ.trans ((sum_le_sum hone).trans ?_)
+    rw [← mul_sum]
+    exact mul_le_mul_of_nonneg_left degree (Nat.cast_nonneg _)
+  have hcount := section_capacity hword hd ⌊r⌋₊ hsection
+  have hcountQ : ((agreement - d : ℕ) : ℚ) * U.card ≤
+      P0.t * (⌊r⌋₊ : ℚ) + ((agreement - d : ℕ) : ℚ) := by exact_mod_cast hcount
+  have hfloor := mul_le_mul_of_nonneg_left (Nat.floor_le hr) (Nat.cast_nonneg P0.t)
+  simpa only [r, mul_assoc] using hcountQ.trans (add_le_add hfloor (le_refl _))
+theorem linearCover_count {T s d e b w} (C : LinearCover T s d e b)
+    (hword : FixedWord w T s d) (hd : d < agreement) :
+    (agreement - d) * T.card ≤ P0.t * curveFactor d * mixedDegree d e b + (agreement - d) * e := by
+  classical
+  let gap : ℕ := agreement - d
+  have hcover : T.card ≤ ∑ P ∈ C.components, (LinearCover.slice C T P).card := by
+    apply card_le_sum_cover
+    intro γ hγ
+    obtain ⟨P, hP, hpoint⟩ := C.covers γ hγ
+    exact ⟨P, hP, mem_filter.mpr ⟨hγ, hpoint⟩⟩
+  have hcoverQ : (T.card : ℚ) ≤ ∑ P ∈ C.components, ((LinearCover.slice C T P).card : ℚ) := by
+    exact_mod_cast hcover
+  have hone (P : Ideal (LinearRing d e b)) (hP : P ∈ C.components) :
+      (gap : ℚ) * ((LinearCover.slice C T P).card : ℚ) ≤
+        P0.t * (curveFactor d : ℚ) * affineDegree P + (gap : ℚ) :=
+    surface_count C (filter_subset _ _) (hword.mono (filter_subset _ _)) hd
+      P (C.is_prime P hP) (C.dimension P hP) (fun _ hγ => (mem_filter.mp hγ).2)
+  have hcount : (gap : ℚ) * T.card ≤
+      P0.t * (curveFactor d : ℚ) * (mixedDegree d e b : ℚ) + (gap : ℚ) * e := by
+    calc
+      _ ≤ (gap : ℚ) * ∑ P ∈ C.components, ((LinearCover.slice C T P).card : ℚ) :=
+        mul_le_mul_of_nonneg_left hcoverQ (Nat.cast_nonneg _)
+      _ = ∑ P ∈ C.components, (gap : ℚ) * ((LinearCover.slice C T P).card : ℚ) := mul_sum ..
+      _ ≤ ∑ P ∈ C.components, (P0.t * (curveFactor d : ℚ) * affineDegree P + (gap : ℚ)) :=
+        sum_le_sum hone
+      _ = P0.t * (curveFactor d : ℚ) * (∑ P ∈ C.components, affineDegree P) +
+          (gap : ℚ) * (C.components.card : ℚ) := by
+        rw [sum_add_distrib, ← mul_sum, sum_const, nsmul_eq_mul, mul_comm (C.components.card : ℚ)]
+      _ ≤ _ := add_le_add (mul_le_mul_of_nonneg_left C.degree_sum (by positivity))
+        (mul_le_mul_of_nonneg_left (Nat.cast_le.mpr C.component_count) (Nat.cast_nonneg _))
+  exact_mod_cast hcount
 end
 end P0_10
 end
@@ -457,6 +706,63 @@ noncomputable section
 open P0
 open K1_14 (Equation SeedBound atMark)
 open K1_14_6 (mixedDegree)
+theorem simple_count {u del} (M : AnchorModel u del) {Γ} (F : AnchoredFamily M Γ)
+    (hhi : M.overhead ≤ (heightCap : ℤ)) {f : Equation}
+    (hf : ReducedEquation M.overhead f) (hseed : SeedBound f (band M.overhead).seedBound)
+    (T : Finset K) (hT : T ⊆ Γ)
+    (hroots : ∀ γ ∈ T, atMark f (M.label γ) (F.scalar γ) = 0 ∧
+      atMark f.derivative (M.label γ) (F.scalar γ) ≠ 0) :
+    T.card ≤ simplePrice M.overhead := by
+  let w := M.overhead
+  let d := 131071 + (band w).endpoint
+  let e := (band w).yBound
+  let b := (band w).seedBound
+  have hend : w ≤ ((band w).endpoint : ℤ) := by
+    unfold band
+    split_ifs with hfirst hsecond hthird
+    · exact hfirst
+    · exact hsecond
+    · exact hthird
+    · exact hhi
+  have hd0 : 0 < d := by dsimp only [d]; omega
+  have hd : d < agreement := by
+    dsimp only [d, band]
+    split_ifs <;> decide
+  have hdp : d < p := hd.trans (by decide)
+  have hb0 : 0 < b := by
+    dsimp only [b, band]
+    split_ifs <;> decide
+  obtain ⟨hf0, hfe, hprimitive, hsep⟩ := hf
+  have hword : FixedWord M.word T F.scalar d := by
+    refine ⟨F.distinct.mono hT, ?_, ?_⟩
+    · intro γ hγ
+      rcases (F.mark γ (hT hγ)).scalar_degree with hzero | hdeg
+      · simp [hzero]
+      · have hcast : ((F.scalar γ).natDegree : ℤ) ≤ (d : ℤ) := by
+          dsimp only [d]
+          push_cast
+          exact hdeg.trans (add_le_add_right hend _)
+        exact_mod_cast hcast
+    · intro γ hγ
+      let m := F.mark γ (hT hγ)
+      exact ⟨m.bad.support, m.bad.agreement, m.scalar_hits⟩
+  have hlabel : Set.InjOn M.label (T : Set K) := by
+    intro γ _ η _ h
+    exact sub_left_inj.mp h
+  obtain ⟨C, hC⟩ := K1_14_6_1.proof d e b hd0 hdp f hf0 hfe hseed
+  obtain ⟨cover⟩ := K1_14_6_2.proof d e b hd0 hb0 f hf0 hfe hprimitive hsep hseed T M.label F.scalar
+    hlabel hroots C (fun γ hγ => hC _ _ (hword.degree γ hγ) (hroots γ hγ).1 (hroots γ hγ).2)
+  have hcount := linearCover_count cover hword hd
+  let gap := agreement - d
+  let total := P0.t * curveFactor d * mixedDegree d e b
+  have hgap : 0 < gap := Nat.sub_pos_of_lt hd
+  change gap * T.card ≤ total + gap * e at hcount
+  change T.card ≤ (total + (gap - 1)) / gap + e
+  have hmul : (T.card - e) * gap ≤ total + (gap - 1) := by
+    rw [Nat.sub_mul, Nat.mul_comm T.card, Nat.mul_comm e]
+    omega
+  have hdiv := (Nat.le_div_iff_mul_le hgap).mpr hmul
+  omega
 end
 end P0_10
 end
@@ -772,7 +1078,7 @@ open K1_14_5 (nodeCost poleSlope)
 open Finset
 open scoped BigOperators
 open private nodeRow from ProximityPrize.SubmissionLower.Fast063
-def ValidCut (s : Shape) (v lo t : ℕ) : Prop :=
+private def ValidCut (s : Shape) (v lo t : ℕ) : Prop :=
   let k := cut s v lo t
   min t s.J ≤ k ∧ (k-1) * (131071-lo) + 2*lo*t < s.m*P0.agreement + (t - min t (s.U/v))
 private instance (s : Shape) (v lo t : ℕ) : Decidable (ValidCut s v lo t) := by
@@ -787,7 +1093,7 @@ private def moments (s : Shape) (v i : ℕ) : ℕ × ℕ × ℕ :=
   let s₂ := n*(n-1)*(2*n-1)/6
   let last := if R < i then slots s.U (R*v) else 0
   ⟨a*n - b*s₁ + last, a*s₁ - b*s₂ + last*R, a*s₂ - b*s₁*s₁ + last*R*R⟩
-def MomentStep (s : Shape) (v r : ℕ) : Prop :=
+private def MomentStep (s : Shape) (v r : ℕ) : Prop :=
   let w := weight s v r
   let p := moments s v r
   let q := moments s v (r+1)
@@ -809,7 +1115,7 @@ theorem Row.eq_of_check {x y : Row}
 def scan (f : ℕ → Row) (a : ℕ) : ℕ → Row
   | 0 => ⟨true, 0, 0⟩
   | n+1 => (scan f a n).add (f (a+n))
-theorem scan_add (f : ℕ → Row) (a n m : ℕ) :
+private theorem scan_add (f : ℕ → Row) (a n m : ℕ) :
     scan f a (n+m) = (scan f a n).add (scan f (a+n) m) := by
   induction m with
   | zero => cases scan f a n; simp [scan, Row.add]

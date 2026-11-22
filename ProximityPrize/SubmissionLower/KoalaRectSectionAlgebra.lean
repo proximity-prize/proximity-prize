@@ -142,3 +142,5 @@ end Section
 end
 end SplitCut.Rect
 
+#print axioms SplitCut.Rect.Section.mul
+#print axioms SplitCut.Rect.Section.add

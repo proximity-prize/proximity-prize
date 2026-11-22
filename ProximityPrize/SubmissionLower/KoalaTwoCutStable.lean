@@ -14,9 +14,9 @@ open K1_14 (FX)
 open K1_14_6 (Biform)
 open K1_14_6_1 (flatten)
 open P1 (K I node)
-open HighCore82219 (FixedWord Band start finish degreeAt quotientOrder p)
-open HighCore82219Upper (Input ResidueLift Factors componentMarks)
-open HighCore82219Upper_3 (JetRing graphIdeal markPoint openFactor rootInJet CurveMarks oldNumerator)
+open HighCore82258 (FixedWord Band start finish degreeAt quotientOrder p)
+open HighCore82258Upper (Input ResidueLift Factors componentMarks)
+open HighCore82258Upper_3 (JetRing graphIdeal markPoint openFactor rootInJet CurveMarks oldNumerator)
 open KoalaRectTaylor (Represented EquationAxis jetToRect rectIdeal taylor_agrees)
 open KoalaTwoSectionPrice (liftIndex)
 
@@ -28,7 +28,7 @@ def GoodNodes (J : Input) (v w : ℕ) (T : Finset K) : Prop :=
         rootInJet g ∉ C.prime ∧ ∀ γ ∈ C.marks,
           (J.family.scalar γ).eval (node x) = J.model.word x → markPoint J γ (rootInJet g) = 0
 
-theorem small_node_box (J : Input) (v w : ℕ) (he : 4 ≤ J.e) (P : Ideal JetRing)
+private theorem small_node_box (J : Input) (v w : ℕ) (he : 4 ≤ J.e) (P : Ideal JetRing)
     {g : Biform} (hg : g ∈ BoxDegree.space FX J.e (v+128) (w+128)) :
     Represented P (box J v w 129) (rootInJet g) := by
   apply KoalaRectTaylor.represented_of_mem
@@ -90,8 +90,8 @@ theorem stable_count (J : Input) (B : ResidueLift J) (D : Factors J B) (v w : �
   obtain ⟨δ,hδ,hval⟩ := PointCount.curve_degree_nat (‹(eIdeal J v w P).IsPrime›.ne_top) hDim
   have hw : FixedWord J.model.word U J.family.scalar (degreeAt J.hi) :=
     ⟨hword.distinct.mono hSub, fun γ hγ => hword.degree γ (hSub hγ), fun γ hγ => hword.hits γ (hSub hγ)⟩
-  have hD : degreeAt J.hi ≤ 133561 := by rw [hhi]; decide
-  have hL : 128581 ≤ L := by dsimp [L]; rw [hlo]; decide
+  have hD : degreeAt J.hi ≤ 133606 := by rw [hhi]; decide
+  have hL : 128536 ≤ L := by dsimp [L]; rw [hlo]; decide
   have hCuts (x : I) (hFail : ∃ γ ∈ U, (J.family.scalar γ).eval (node x) ≠ J.model.word x) :
       (U.filter fun γ => (J.family.scalar γ).eval (node x) = J.model.word x).card ≤ 129*δ := by
     obtain ⟨g,hg,hn,hits⟩ := hGood B D C hTU hs x hFail
@@ -105,5 +105,6 @@ theorem stable_count (J : Input) (B : ResidueLift J) (D : Factors J B) (v w : �
   rw [hval]
   exact_mod_cast hC
 
+#print axioms stable_count
 end
 end SplitCut.TwoCut

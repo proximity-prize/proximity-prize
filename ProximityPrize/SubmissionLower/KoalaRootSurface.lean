@@ -1,6 +1,6 @@
 import ProximityPrize.SubmissionLower.KoalaBoxLift
 import ProximityPrize.SubmissionLower.KoalaPointCount
-import ProximityPrize.SubmissionLower.HighCore82219UpperGeometry
+import ProximityPrize.SubmissionLower.HighCore82258UpperGeometry
 
 set_option autoImplicit false
 set_option maxHeartbeats 500000
@@ -10,7 +10,7 @@ open MvPolynomial SplitCut.BoxDegree
 open K1_14 (FX Equation)
 open K1_14_6 (Biform rootPoint)
 open K1_14_6_1 (flatten)
-open HighCore82219Upper
+open HighCore82258Upper
 open scoped BigOperators
 abbrev x (J : Input) (γ : P1.K) := rootPoint (J.model.label γ) (J.family.scalar γ)
 abbrev liftPoint (a b c : ℕ) (J : Input) (γ : P1.K) :=
@@ -100,3 +100,5 @@ theorem proper_fit {J : Input} {B : ResidueLift J} (D : Factors J B) {v w : ℕ}
 
 end
 end SplitCut.RootSurface
+#print axioms SplitCut.RootSurface.cutoff_proper
+#print axioms SplitCut.RootSurface.proper_fit

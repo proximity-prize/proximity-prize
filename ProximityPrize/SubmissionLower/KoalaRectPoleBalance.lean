@@ -19,7 +19,7 @@ def Balanced {F : Type} [Field F] {h : ℕ} {H : F[X]} {lift : (SeedFrac F)[X]}
     (G : SimplePoles h H lift) : Prop :=
   ∃ e : Fin (2*h) ≃ Fin 2 × Fin h, ∀ t, G.side t = (e t).1
 
-theorem balanced_simple_poles {h : ℕ} (hlo : 0 < h) (hhi : h < K1.p) (D : PoleData h)
+private theorem balanced_simple_poles {h : ℕ} (hlo : 0 < h) (hhi : h < K1.p) (D : PoleData h)
     (lift : (SeedFrac GenericField)[X])
     (hcentre : ∀ i α, (genericBlock D i).eval α = 0 →
       ((D.constant i).map constGeneric).eval α ≠ 0 →
@@ -140,6 +140,7 @@ theorem balanced_deformation {h : ℕ} (hh : 0 < h) (hp : h < K1.p)
     rw [liftAt_add _ _ _ _ _ (B 0).specialDen (B 1).specialDen,
       (B 0).specialLift, (B 1).specialLift, crtPolynomial, Fin.sum_univ_two]
 
+#print axioms balanced_deformation
 
 end
 end KoalaRectPole

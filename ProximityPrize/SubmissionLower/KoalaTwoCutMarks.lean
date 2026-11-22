@@ -11,12 +11,12 @@ noncomputable section
 open MvPolynomial Finset
 open K1_14 (FX)
 open P1 (K I)
-open HighCore82219Upper (Input ResidueLift Factors componentMarks mem_componentMarks)
-open HighCore82219Upper_3 (JetRing graphIdeal markPoint openFactor seedVar rootIdeal tangentEquation)
-open HighCore82219Upper_3_2 (mark_regular cutoff_le_mark graph_le_prime)
+open HighCore82258Upper (Input ResidueLift Factors componentMarks mem_componentMarks)
+open HighCore82258Upper_3 (JetRing graphIdeal markPoint openFactor seedVar rootIdeal tangentEquation)
+open HighCore82258Upper_3_2 (mark_regular cutoff_le_mark graph_le_prime)
 open KoalaRectTaylor (jetToRect rectIdeal taylorNumerator)
 open scoped BigOperators
-open private HighCore82219Upper_3.mark_seed from ProximityPrize.SubmissionLower.HighCore82219UpperGeometry
+open private HighCore82258Upper_3.mark_seed from ProximityPrize.SubmissionLower.HighCore82258UpperGeometry
 
 abbrev axis (J : Input) (v w : ℕ) := (Rect.diagonal (J.e-3) (max 1 v) (max 1 w) 1).support
 abbrev projectRing (J : Input) (v w : ℕ) := Rect.project FX (J.e-3) (max 1 v) (max 1 w)
@@ -42,7 +42,7 @@ theorem point_injective (J : Input) (v w : ℕ) : Function.Injective (point J v 
   obtain ⟨q,hq⟩ := projectJet_surjective J v w (seedVar 0)
   have hh := congrArg (fun x : axis J v w → FX => MvPolynomial.aeval x q) he
   simp only [aeval_point, AlgHom.comp_apply, hq] at hh
-  rw [HighCore82219Upper_3.mark_seed, HighCore82219Upper_3.mark_seed] at hh
+  rw [HighCore82258Upper_3.mark_seed, HighCore82258Upper_3.mark_seed] at hh
   exact sub_left_inj.mp (K1_14.seedEmbedding.injective hh)
 
 theorem mark_on_iff (J : Input) (v w : ℕ) (γ : K) (Q : Ideal JetRing) :
@@ -109,5 +109,7 @@ theorem lift_simple {P Q : Ideal JetRing} [P.IsPrime]
   obtain ⟨r,hr,hrp⟩ := hs p hq
   exact ⟨φ r, hr, by simpa only [map_mul] using (show φ (r*p) ∈ Q from hrp)⟩
 
+#print axioms point_injective
+#print axioms lift_simple
 end
 end SplitCut.TwoCut

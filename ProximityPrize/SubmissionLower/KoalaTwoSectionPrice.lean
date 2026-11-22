@@ -6,7 +6,7 @@ set_option maxRecDepth 18000
 set_option maxHeartbeats 14000000
 
 namespace KoalaTwoSectionPrice
-open HighCore82219 (agreement start finish retainedCap)
+open HighCore82258 (agreement start finish retainedCap)
 open P1 (blockLength p)
 open P1_7 (ceilRatio degreeAt quotientOrder singularDegree singularFee)
 open KoalaRectReceipts (paidCap)
@@ -14,7 +14,7 @@ open KoalaRectReceipts (paidCap)
 def liftIndex (hi v₀ v₁ : ℕ) : ℕ :=
   max 1 (max (ceilRatio (2*hi) (max 1 v₀)) (ceilRatio (2*hi) (max 1 v₁)))
 
-theorem le_mul_ceilRatio (n d : ℕ) (hd : 0 < d) :
+private theorem le_mul_ceilRatio (n d : ℕ) (hd : 0 < d) :
     n ≤ d * ceilRatio n d := by
   have he := Nat.div_add_mod (n + (d-1)) d
   have hr := Nat.mod_lt (n + (d-1)) hd
@@ -31,7 +31,7 @@ theorem liftIndex_spec (hi v₀ v₁ : ℕ) :
   · exact (le_mul_ceilRatio _ _ (lt_of_lt_of_le Nat.zero_lt_one (le_max_left ..))).trans
       (Nat.mul_le_mul_left _ ((le_max_right ..).trans (le_max_right ..)))
 
-theorem ceilRatio_le_self (n d : ℕ) (hd : 0 < d) : ceilRatio n d ≤ n := by
+private theorem ceilRatio_le_self (n d : ℕ) (hd : 0 < d) : ceilRatio n d ≤ n := by
   change (n+(d-1))/d ≤ n
   apply Nat.le_of_lt_succ
   apply (Nat.div_lt_iff_lt_mul hd).mpr
@@ -40,7 +40,7 @@ theorem ceilRatio_le_self (n d : ℕ) (hd : 0 < d) : ceilRatio n d ≤ n := by
     _ ≤ n*d+d := Nat.add_le_add_right (Nat.le_mul_of_pos_right n hd) d
     _ = (n+1)*d := by ring
 
-theorem liftIndex_le {hi : ℕ} (hhi : hi ≤ 2490) (v₀ v₁ : ℕ) : liftIndex hi v₀ v₁ ≤ 4980 := by
+theorem liftIndex_le {hi : ℕ} (hhi : hi ≤ 2535) (v₀ v₁ : ℕ) : liftIndex hi v₀ v₁ ≤ 5070 := by
   unfold liftIndex
   apply max_le (by decide)
   exact max_le ((ceilRatio_le_self _ _ (lt_of_lt_of_le Nat.zero_lt_one (le_max_left _ _))).trans (by omega))
@@ -81,7 +81,7 @@ def charge (A lo hi e v₀ v₁ : ℕ) : ℕ :=
   properCharge A lo hi e v₀ v₁ +
     ceilRatio ((blockLength-A)*(p+1)*(v₀+v₁)) (A-degreeAt hi) + singularFee e (v₀+v₁) + e
 
-def GradeCheck (e : ℕ) : Prop :=
+private def GradeCheck (e : ℕ) : Prop :=
   ∀ a : Fin (paidCap e + 1),
     charge agreement (start .h2367) (finish .h2367) e a.val (paidCap e - a.val) ≤
       retainedCap .h2367
@@ -131,4 +131,6 @@ theorem guards {e : ℕ} (hel : 3 ≤ e) (heu : e < 28) :
 theorem paid_le {e : ℕ} (hel : 7 ≤ e) (heu : e ≤ 21) : paidCap e ≤ 445 := by
   interval_cases e <;> decide
 
+#print axioms charge_le
+#print axioms guards
 end KoalaTwoSectionPrice

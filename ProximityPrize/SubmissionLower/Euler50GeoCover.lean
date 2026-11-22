@@ -74,7 +74,7 @@ open private coeff_flatten anchorLead_term index_bounds from ProximityPrize.Subm
 def activeDegree (f : Row 4) : ℕ :=
   MvPolynomial.weightedTotalDegree (![1, 2, 2, 2] : Fin 4 → ℕ) f
 
-theorem activeWeight_at (m : Fin 4 →₀ ℕ) :
+private theorem activeWeight_at (m : Fin 4 →₀ ℕ) :
     m.weight (![1, 2, 2, 2] : Fin 4 → ℕ) = m 0 + 2*m 1 + 2*m 2 + 2*m 3 := by
   simp [Finsupp.weight_eq_sum, Fin.sum_univ_four, smul_eq_mul, Nat.mul_comm]
 
@@ -235,5 +235,6 @@ theorem cover_of_anchor {Γ : Finset K} {s : K → K[X]} (P : Row 4)
     exact ⟨j, by rw [hj, OnFactor, ← eval_anchorLead]; exact ⟨hqS, hqlead⟩⟩
 end FactorCover
 
+#print axioms cover_of_anchor
 end
 end Euler50GeoCover

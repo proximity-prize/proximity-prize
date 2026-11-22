@@ -134,7 +134,7 @@ def c1 : Prop :=
               JetPolys (SeedFrac F)) ∣ forward H lift P
 private abbrev ScalarRow {h : ℕ} (s : Shape) (d : Fin (2*h) → Fin (poleRows s) → ℕ) :=
   Σ t : Fin (2*h), Σ r : Fin (poleRows s), Fin (triangle s.U + (s.U+1)*d t r)
-theorem scalarRow_card_le {h : ℕ} (s : Shape)
+private theorem scalarRow_card_le {h : ℕ} (s : Shape)
     (d : Fin (2*h) → Fin (poleRows s) → ℕ) (hd : ∀ t, (∑ r, d t r) ≤ groupedPoleMoment s.B s.J) :
     Fintype.card (ScalarRow s d) ≤ poleCredit h s + 2*h*(s.U+1)*groupedPoleMoment s.B s.J := by
   classical
@@ -322,9 +322,9 @@ theorem jet_bounds (s : Shape) (t : Offset s) (q : Grade s) (i : ℕ)
   unfold firstJet
   rw [le_min_iff]
   omega
-abbrev AllPivots (s : Shape) := Σ t : Offset s, Pivot s t
-abbrev AllLocalRows (s : Shape) := Σ q : Grade s, LocalRow s q.val
-def toLocal (s : Shape) (r : AllPivots s) : AllLocalRows s :=
+private abbrev AllPivots (s : Shape) := Σ t : Offset s, Pivot s t
+private abbrev AllLocalRows (s : Shape) := Σ q : Grade s, LocalRow s q.val
+private def toLocal (s : Shape) (r : AllPivots s) : AllLocalRows s :=
   let t := r.1
   let q := r.2.1
   let i := r.2.2.val
@@ -339,7 +339,7 @@ def toLocal (s : Shape) (r : AllPivots s) : AllLocalRows s :=
     dsimp [x, j, firstJet, outputLength] at *
     omega
   ⟨q, ⟨x, hrow⟩, ⟨j, Nat.lt_succ_of_le hj⟩⟩
-theorem toLocal_injective (s : Shape) : Function.Injective (toLocal s) := by
+private theorem toLocal_injective (s : Shape) : Function.Injective (toLocal s) := by
   rintro ⟨t, q, i⟩ ⟨t', q', i'⟩ h
   have hq : q = q' := congrArg Sigma.fst h
   have hx := congrArg (fun y : AllLocalRows s => y.2.1.val) h
@@ -356,7 +356,7 @@ theorem toLocal_injective (s : Shape) : Function.Injective (toLocal s) := by
   have hi : i = i' := Fin.ext (by omega)
   subst i'
   rfl
-theorem toLocal_surjective (s : Shape) : Function.Surjective (toLocal s) := by
+private theorem toLocal_surjective (s : Shape) : Function.Surjective (toLocal s) := by
   rintro ⟨q, x, j⟩
   have hq := q.isLt
   have hx := x.isLt
@@ -383,7 +383,7 @@ theorem toLocal_surjective (s : Shape) : Function.Surjective (toLocal s) := by
   · change t.val + (firstJet s t + i) - s.J = x.val
     omega
   · exact hji
-theorem allPivots_card (s : Shape) :
+private theorem allPivots_card (s : Shape) :
     Fintype.card (AllPivots s) = poleRows s := by
   classical
   rw [Fintype.card_congr (Equiv.ofBijective _ ⟨toLocal_injective s, toLocal_surjective s⟩)]
@@ -416,7 +416,7 @@ open Matrix
 open scoped BigOperators Matrix
 private def consecutive {R : Type} [Semiring R] (l m : ℕ) : Matrix (Fin m) (Fin m) R :=
   fun i j => ((l + j.val).choose i.val : R)
-theorem consecutive_det {R : Type} [CommRing R] (l m : ℕ) :
+private theorem consecutive_det {R : Type} [CommRing R] (l m : ℕ) :
     (consecutive (R := R) l m).det = 1 := by
   let L : Matrix (Fin m) (Fin m) R := fun i k =>
     if k.val ≤ i.val then (l.choose (i.val - k.val) : R) else 0
@@ -492,9 +492,9 @@ open K1_14 (Shape)
 open K1_14_1_7 (Grade)
 open P1_7_1 (columnCount pivotCount largestGradeSum offsetMoment)
 open scoped BigOperators Matrix Polynomial
-def minorGrade {s : Shape} {t : Offset s} (e : Pivot s t ↪ Column s t) : ℕ :=
+private def minorGrade {s : Shape} {t : Offset s} (e : Pivot s t ↪ Column s t) : ℕ :=
   (∑ r, (e r).1.val) - ∑ r : Pivot s t, r.1.val
-theorem minorGrade_le {s : Shape} {t : Offset s} (e : Pivot s t ↪ Column s t) :
+private theorem minorGrade_le {s : Shape} {t : Offset s} (e : Pivot s t ↪ Column s t) :
     minorGrade e ≤ offsetMoment s.B s.J t.val := by
   classical
   have hpivot : (∑ r : Pivot s t, r.1.val) =
@@ -530,7 +530,7 @@ theorem minorGrade_le {s : Shape} {t : Offset s} (e : Pivot s t ↪ Column s t) 
       rw [Fin.sum_univ_eq_sum_range (fun q => pivotCount s.B s.J t.val q) (s.B+1),
         Fin.sum_univ_eq_sum_range (fun q => columnCount s.B s.J t.val q * (q-k)) (s.B+1)]
       simp only [Nat.mul_comm (columnCount s.B s.J t.val _) (_ - _)]
-theorem minor_power {R : Type} [CommRing R] {s : Shape} {t : Offset s}
+private theorem minor_power {R : Type} [CommRing R] {s : Shape} {t : Offset s}
     (e : Pivot s t ↪ Column s t) (z : R) :
     ((poleMatrix s t z).submatrix id e).det =
       ((poleMatrix s t (1 : R)).submatrix id e).det * z ^ minorGrade e := by
@@ -555,7 +555,7 @@ theorem minor_power {R : Type} [CommRing R] {s : Shape} {t : Offset s}
       simp [poleMatrix, not_le_of_gt hi]
     rw [Finset.prod_eq_zero (Finset.mem_univ i) (hz z),
       Finset.prod_eq_zero (Finset.mem_univ i) (hz 1), zero_mul]
-theorem nonzero_minor {R : Type} [Field R] (s : Shape) (t : Offset s) (z : R) :
+private theorem nonzero_minor {R : Type} [Field R] (s : Shape) (t : Offset s) (z : R) :
     ∃ e : Pivot s t ↪ Column s t, ((poleMatrix s t z).submatrix id e).det ≠ 0 := by
   classical
   have h (q : Grade s) := pascal_minor R (firstJet s t) (columnCount s.B s.J t.val q.val)
@@ -678,24 +678,24 @@ open scoped BigOperators Matrix Polynomial
 open private taylor_seed_degree seedWeight_add window_sum from ProximityPrize.SubmissionLower.Fast065
 private def seedMap (F : Type) [Field F] (side : Fin 2) : F[X] →+* SeedFrac F :=
   (algebraMap (Seed F) (SeedFrac F)).comp (Polynomial.toMvPolynomial side).toRingHom
-def fractionSeedMap (F : Type) [Field F] (side : Fin 2) :
+private def fractionSeedMap (F : Type) [Field F] (side : Fin 2) :
     OneSeedFrac F →+* SeedFrac F :=
   IsFractionRing.lift (g := seedMap F side)
     ((IsFractionRing.injective (Seed F) (SeedFrac F)).comp
       (Polynomial.toMvPolynomial_injective side))
-theorem fractionSeedMap_polynomial {F : Type} [Field F] (side : Fin 2) (g : F[X]) :
+private theorem fractionSeedMap_polynomial {F : Type} [Field F] (side : Fin 2) (g : F[X]) :
     fractionSeedMap F side (algebraMap F[X] (OneSeedFrac F) g) =
       algebraMap (Seed F) (SeedFrac F) (g.toMvPolynomial side) := by
   rw [fractionSeedMap, IsFractionRing.lift_algebraMap]
   rfl
-theorem fractionSeedMap_scalar {F : Type} [Field F] (side : Fin 2) (a : F) :
+private theorem fractionSeedMap_scalar {F : Type} [Field F] (side : Fin 2) (a : F) :
     fractionSeedMap F side (algebraMap F (OneSeedFrac F) a) =
       algebraMap F (SeedFrac F) a := by
   rw [IsScalarTower.algebraMap_apply F F[X] (OneSeedFrac F), fractionSeedMap_polynomial]
   change algebraMap (Seed F) (SeedFrac F) ((Polynomial.C a).toMvPolynomial side) = _
   rw [Polynomial.toMvPolynomial_C]
   exact (IsScalarTower.algebraMap_apply F (Seed F) (SeedFrac F) a).symm
-theorem fractionSeedMap_residue {F : Type} [Field F] (side : Fin 2) (a b c : F) :
+private theorem fractionSeedMap_residue {F : Type} [Field F] (side : Fin 2) (a b c : F) :
     fractionSeedMap F side (oneResidue a b c) = residue side a b c := by
   simp only [oneResidue, residue, map_div₀, map_add, map_mul, fractionSeedMap_scalar,
     fractionSeedMap_polynomial, Polynomial.toMvPolynomial_X]
@@ -850,9 +850,9 @@ open K1_14_1_7 K1_14_1_7_2 P1_7_1_1
 open P1_7_1 (columnCount pivotCount)
 open scoped BigOperators Matrix Polynomial
 open private coeff_zeroGrade from ProximityPrize.SubmissionLower.Fast065
-abbrev JetIndex (s : Shape) (t : Offset s) (q : Grade s) :=
+private abbrev JetIndex (s : Shape) (t : Offset s) (q : Grade s) :=
   Fin (columnCount s.B s.J t.val q.val)
-theorem sum_embedding {A D M : Type} [Fintype A] [Fintype D] [AddCommMonoid M]
+private theorem sum_embedding {A D M : Type} [Fintype A] [Fintype D] [AddCommMonoid M]
     (e : A ↪ D) (f : D → M) (h : ∀ d, (∀ a, e a ≠ d) → f d = 0) :
     ∑ d, f d = ∑ a, f (e a) := by
   classical
@@ -861,7 +861,7 @@ theorem sum_embedding {A D M : Type} [Fintype A] [Fintype D] [AddCommMonoid M]
   apply Finset.sum_subset (Finset.subset_univ _)
   intro d _ hd
   exact h d fun a ha => hd (Finset.mem_map.mpr ⟨a, Finset.mem_univ _, ha⟩)
-theorem column_index (s : Shape) (t : Offset s) (q : Grade s) (j : ℕ)
+private theorem column_index (s : Shape) (t : Offset s) (q : Grade s) (j : ℕ)
     (hj : j ≤ min q.val s.J) (hfirst : firstJet s t ≤ j)
     (hx : t.val + j - s.J < s.B + s.J) :
     j - firstJet s t < columnCount s.B s.J t.val q.val := by
@@ -872,34 +872,34 @@ theorem column_index (s : Shape) (t : Offset s) (q : Grade s) (j : ℕ)
   change j - firstJet s t < min q.val (min s.J (s.B + 2*s.J - 1 - t.val)) + 1 -
     firstJet s t
   omega
-theorem columnCount_le (s : Shape) (t : Offset s) {q q' : Grade s}
+private theorem columnCount_le (s : Shape) (t : Offset s) {q q' : Grade s}
     (h : q.val ≤ q'.val) :
     columnCount s.B s.J t.val q.val ≤ columnCount s.B s.J t.val q'.val := by
   unfold columnCount
   exact Nat.sub_le_sub_right (Nat.add_le_add_right (min_le_min_right _ h) 1) _
-def gradeShift (s : Shape) (q : Grade s) : Shift s q ↪ Grade s where
+private def gradeShift (s : Shape) (q : Grade s) : Shift s q ↪ Grade s where
   toFun p := ⟨q.val + p.val, by
     have hq := q.isLt
     have hp := p.isLt
     omega⟩
   inj' _ _ h := Fin.ext (Nat.add_left_cancel (congrArg Fin.val h))
-def slotEmbedding (s : Shape) (t : Offset s) (q : Grade s) :
+private def slotEmbedding (s : Shape) (t : Offset s) (q : Grade s) :
     JetIndex s t q ↪ GradeSlot s q.val where
   toFun a := ⟨firstJet s t + a.val,
     Nat.lt_succ_of_le (jet_bounds s t q a.val a.isLt).1⟩
   inj' _ _ h := Fin.ext (Nat.add_left_cancel (congrArg Fin.val h))
-def translatedCoeff {F : Type} [Field F] {s : Shape}
+private def translatedCoeff {F : Type} [Field F] {s : Shape}
     (α : F) (z : SeedFrac F) (P : TrueSource F) (q : Grade s) (j x : ℕ) : SeedFrac F :=
   ∑ p : Shift s q,
     (((q.val - j + p.val).choose (q.val - j) : SeedFrac F) * z ^ p.val) *
       algebraMap (Seed F) (SeedFrac F) (inputTaylorCoeff α j (q.val - j + p.val) x P)
-theorem localSlots_coeff {F : Type} [Field F] (s : Shape)
+private theorem localSlots_coeff {F : Type} [Field F] (s : Shape)
     (α : F) (z : SeedFrac F) (P : TrueSource F) (q : Grade s) (j : GradeSlot s q.val)
     (x : ℕ) :
     (localSlots s α z P q j).coeff x = translatedCoeff α z P q j.val x := by
   simp only [localSlots, finsetSum_coeff, coeff_C_mul, coeff_map, inputOrdinate,
     translatedCoeff, inputTaylorCoeff_apply]
-theorem pivot_read {F : Type} [Field F] (s : Shape) (t : Offset s)
+private theorem pivot_read {F : Type} [Field F] (s : Shape) (t : Offset s)
     (α : F) (z : SeedFrac F) (P : TrueSource F) (q : Grade s)
     (i : Fin (pivotCount s.B s.J t.val q.val)) :
     (poleMatrix s t z *ᵥ
@@ -962,7 +962,7 @@ theorem pivot_read {F : Type} [Field F] (s : Shape) (t : Offset s)
       unfold poleMatrix
       exact ite_eq_right (fun h => hl h.1)
     simp only [f, hz, zero_mul]
-theorem coeff_read {F : Type} [Field F] (s : Shape) (t : Offset s)
+private theorem coeff_read {F : Type} [Field F] (s : Shape) (t : Offset s)
     (α : F) (z : SeedFrac F) (P : TrueSource F) (q : Grade s)
     (k : GradeSlot s q.val) (l : ℕ) (hl : l < s.B + s.J)
     (ht : t.val + q.val + k.val = l + s.J) :
@@ -1006,7 +1006,7 @@ theorem coeff_read {F : Type} [Field F] (s : Shape) (t : Offset s)
       change firstJet s t + (j.val - firstJet s t) = j.val
       omega
     · rfl
-theorem pascal_sum_zero {E : Type} [Field E] {a n h : ℕ}
+private theorem pascal_sum_zero {E : Type} [Field E] {a n h : ℕ}
     (hs : PascalSpans E a n h) (v : Fin n → E)
     (hv : ∀ r, (∑ j, pascal a n h r j * v j) = 0) (k : ℕ) (hk : k < h) :
     (∑ j : Fin n, ((a + j.val).choose k : E) * v j) = 0 := by
@@ -1141,13 +1141,13 @@ local notation "φ" => algebraMap F[X] K
 def leadingRows (Q : Matrix ι κ F[X]) (d : ι → ℕ) : Matrix ι κ F :=
   fun i j => (Q i j).coeff (d i)
 omit [Fintype ι] in
-theorem no_zero_row {Q : Matrix ι κ F[X]} {T : Matrix κ ι F[X]}
+private theorem no_zero_row {Q : Matrix ι κ F[X]} {T : Matrix κ ι F[X]}
     (h : Q * T = 1) (p : ι) : Q p ≠ 0 := by
   intro hp
   have hpp := congrFun (congrFun h p) p
   rw [Matrix.mul_apply, hp] at hpp
   simp at hpp
-theorem reduce_step (Q : Matrix ι κ F[X]) (T : Matrix κ ι F[X]) (d : ι → ℕ)
+private theorem reduce_step (Q : Matrix ι κ F[X]) (T : Matrix κ ι F[X]) (d : ι → ℕ)
     (hQT : Q * T = 1) (hdeg : ∀ r u, (Q r u).natDegree ≤ d r)
     (hbad : ¬ LinearIndependent F (leadingRows Q d).row) :
     ∃ (E : Matrix ι ι F[X]) (d' : ι → ℕ), IsUnit E.det ∧
@@ -1276,7 +1276,7 @@ variable {F ι κ : Type} [Field F] [Fintype ι] [DecidableEq ι] [Fintype κ]
 local notation "K" => P1_7_1_1.OneSeedFrac F
 local notation "φ" => algebraMap F[X] K
 omit [Fintype ι] in
-theorem coeff_weighted_prod {s : Finset ι} (p : ι → F[X]) (d : ι → ℕ)
+private theorem coeff_weighted_prod {s : Finset ι} (p : ι → F[X]) (d : ι → ℕ)
     (h : ∀ i ∈ s, (p i).natDegree ≤ d i) :
     (∏ i ∈ s, p i).coeff (∑ i ∈ s, d i) = ∏ i ∈ s, (p i).coeff (d i) := by
   induction s using Finset.induction_on with
@@ -1287,7 +1287,7 @@ theorem coeff_weighted_prod {s : Finset ι} (p : ι → F[X]) (d : ι → ℕ)
     · exact congrArg ((p i).coeff (d i) * ·) (ih fun j hj => h j (Finset.mem_insert_of_mem hj))
     · exact (Polynomial.natDegree_prod_le _ _).trans
         (Finset.sum_le_sum fun j hj => h j (Finset.mem_insert_of_mem hj))
-theorem exists_full_minor (B : Matrix ι κ F) (hB : LinearIndependent F B.row) :
+private theorem exists_full_minor (B : Matrix ι κ F) (hB : LinearIndependent F B.row) :
     ∃ e : ι ↪ κ, (B.submatrix id e).det ≠ 0 := by
   classical
   have hr : B.rank = Fintype.card ι := by
@@ -1318,7 +1318,7 @@ theorem exists_minor_of_degree_sum (Q : Matrix ι κ F[X]) (d : ι → ℕ)
     rw [coeff_weighted_prod _ d (fun i _ => hdeg i (e (σ i)))]
   have hne : (Q.submatrix id e).det.coeff (∑ r, d r) ≠ 0 := hcoeff.trans_ne he
   exact ⟨e, fun hz => hne (by rw [hz, Polynomial.coeff_zero]), Polynomial.le_natDegree_of_ne_zero hne⟩
-theorem det_rectangular_mul {R : Type} [CommRing R]
+private theorem det_rectangular_mul {R : Type} [CommRing R]
     (Q : Matrix ι κ R) (T : Matrix κ ι R) :
     (Q * T).det = ∑ f : ι → κ, (∏ j, T (f j) j) * (Q.submatrix id f).det := by
   classical
@@ -1333,7 +1333,7 @@ theorem det_rectangular_mul {R : Type} [CommRing R]
       intro f _
       simp only [Matrix.det_apply', Finset.mul_sum, Matrix.submatrix_apply, id_eq,
         Finset.prod_mul_distrib, mul_comm, mul_assoc]
-theorem scale_polynomial (Q : Matrix ι κ F[X]) (T : Matrix κ ι F[X])
+private theorem scale_polynomial (Q : Matrix ι κ F[X]) (T : Matrix κ ι F[X])
     (hQT : Q * T = 1) (t : K)
     (h : ∀ f : ι → κ, ∃ g : F[X], φ g = t * φ (Q.submatrix id f).det) :
     ∃ g : F[X], φ g = t := by
@@ -1408,12 +1408,12 @@ open K1_14 (Shape shapeSum)
 open P1_7_1 (nodeRows)
 open scoped BigOperators
 open private shape_sum_flip from ProximityPrize.SubmissionLower.Fast063
-def atNode (m J q j : ℕ) : ℕ := m + min q J - (q + 2*j)
-def twiceGrade (k i : ℕ) : ℕ :=
+private def atNode (m J q j : ℕ) : ℕ := m + min q J - (q + 2*j)
+private def twiceGrade (k i : ℕ) : ℕ :=
   k*(k+1) + (6*k+2)*i + 8*i*i
 def sixPerNode (k J : ℕ) : ℕ :=
   3*(J+1)*k*(k+1) + 3*(3*k+1)*J*(J+1) + 4*J*(J+1)*(2*J+1)
-theorem twice_descending (d : ℕ) :
+private theorem twice_descending (d : ℕ) :
     2 * (∑ i ∈ range d, (d-i)) = d*(d+1) := by
   induction d with
   | zero => simp
@@ -1421,7 +1421,7 @@ theorem twice_descending (d : ℕ) :
     rw [sum_range_succ']
     simp only [Nat.succ_sub_succ_eq_sub, Nat.sub_zero, mul_add, ih]
     ring
-theorem three_grade_sum (k J : ℕ) :
+private theorem three_grade_sum (k J : ℕ) :
     3 * (∑ i ∈ range (J+1), twiceGrade k i) = sixPerNode k J := by
   induction J with
   | zero => simp [twiceGrade, sixPerNode, mul_assoc]
@@ -1429,7 +1429,7 @@ theorem three_grade_sum (k J : ℕ) :
     rw [sum_range_succ, mul_add, ih]
     unfold twiceGrade sixPerNode
     ring
-theorem twice_at_derivative {m B J j : ℕ} (hm : 2*J ≤ m)
+private theorem twice_at_derivative {m B J j : ℕ} (hm : 2*J ≤ m)
     (hB : m+J ≤ B+1) (hj : j ≤ J) :
     2 * (∑ q ∈ Ico j (B+1), atNode m J q j) = twiceGrade (m-2*J) (J-j) := by
   let d := m - 2*j
@@ -1556,26 +1556,26 @@ private theorem product_sum (n a b : ℕ) :
     cases n with
     | zero => simp [productSum6, Nat.mul_assoc]
     | succ m => simp only [productSum6, Nat.succ_sub_one]; ring
-theorem count_sum (n : ℕ) :
+private theorem count_sum (n : ℕ) :
     6 * (∑ i ∈ range n, (i+1)) = 3*n*(n+1) := by
   induction n with
   | zero => simp
   | succ n ih => rw [sum_range_succ, Nat.mul_add, ih]; ring
-theorem sum_after (f : ℕ → ℕ) (N s : ℕ) (hz : ∀ q < s, f q = 0) :
+private theorem sum_after (f : ℕ → ℕ) (N s : ℕ) (hz : ∀ q < s, f q = 0) :
     (∑ q ∈ range N, f q) = ∑ i ∈ range (N-s), f (s+i) := by
   by_cases h : s ≤ N
   · conv_lhs => rw [← Nat.add_sub_of_le h, sum_range_add]
     rw [sum_eq_zero (fun q hq => hz q (mem_range.mp hq)), zero_add]
   · rw [Nat.sub_eq_zero_of_le (by omega : N ≤ s), sum_range_zero]
     exact sum_eq_zero fun q hq => hz q (by have := mem_range.mp hq; omega)
-theorem ramp_count (N a : ℕ) :
+private theorem ramp_count (N a : ℕ) :
     6 * (∑ q ∈ range N, ramp a q) = rampCount6 N a := by
   rw [sum_after (ramp a) N a (fun q hq => by unfold ramp; omega)]
   unfold rampCount6
   rw [← count_sum]
   congr 1
   exact sum_congr rfl fun i _ => by unfold ramp; omega
-theorem ramp_weight (N a : ℕ) :
+private theorem ramp_weight (N a : ℕ) :
     6 * (∑ q ∈ range N, q * ramp a q) = rampWeight6 N a := by
   rw [sum_after (fun q => q * ramp a q) N a
     (fun q hq => by rw [show ramp a q = 0 by unfold ramp; omega, mul_zero])]
@@ -1584,7 +1584,7 @@ theorem ramp_weight (N a : ℕ) :
   congr 1
   exact sum_congr rfl fun i _ => by
     rw [show ramp a (a+i) = 1+i by unfold ramp; omega]
-theorem ramp_excess (N k a : ℕ) :
+private theorem ramp_excess (N k a : ℕ) :
     6 * (∑ q ∈ range N, (q-k) * ramp a q) = rampExcess6 N k a := by
   let s := max (k+1) a
   have hs₁ : k+1 ≤ s := le_max_left _ _
@@ -1599,12 +1599,12 @@ theorem ramp_excess (N k a : ℕ) :
   congr 1
   exact sum_congr rfl fun i _ => by
     rw [show s+i-k = s-k+i by omega, show ramp a (s+i) = s+1-a+i by unfold ramp; omega]
-theorem column_row (B J t q : ℕ) :
+private theorem column_row (B J t q : ℕ) :
     columnCount B J t q + ramp (low J t + width B J t) q = ramp (low J t) q := by
   unfold columnCount ramp width low high
   dsimp only
   omega
-theorem pivot_row (B J t q : ℕ) :
+private theorem pivot_row (B J t q : ℕ) :
     pivotCount B J t q + ramp (low J t + peak B J t) q +
       ramp (edge B J t + 1 - peak B J t) q =
         ramp (low J t) q + ramp (edge B J t + 1) q := by
@@ -1627,7 +1627,7 @@ theorem pivot_row (B J t q : ℕ) :
   · by_cases hq' : q < e+1-h
     · omega
     · omega
-theorem pivot_volume (B J t : ℕ) (f stat : ℕ → ℕ)
+private theorem pivot_volume (B J t : ℕ) (f stat : ℕ → ℕ)
     (hs : ∀ a, stat a = 6 * (∑ q ∈ range (B+1), f q * ramp a q)) :
     6 * (∑ q ∈ range (B+1), f q * pivotCount B J t q) = pivotVolume6 B J t stat := by
   unfold pivotVolume6
@@ -1641,7 +1641,7 @@ theorem pivot_volume (B J t : ℕ) (f stat : ℕ → ℕ)
     simp only [← Nat.mul_add, pivot_row]
   simp only [sum_add_distrib] at heq
   omega
-theorem column_volume (B J t : ℕ) (f stat : ℕ → ℕ)
+private theorem column_volume (B J t : ℕ) (f stat : ℕ → ℕ)
     (hs : ∀ a, stat a = 6 * (∑ q ∈ range (B+1), f q * ramp a q)) :
     6 * (∑ q ∈ range (B+1), f q * columnCount B J t q) = columnVolume6 B J t stat := by
   unfold columnVolume6
@@ -1666,7 +1666,7 @@ theorem column_excess (B J t k : ℕ) :
     6 * (∑ q ∈ range (B+1), (q-k) * columnCount B J t q) = excess6 B J t k :=
   column_volume B J t (fun q => q-k) (rampExcess6 (B+1) k)
     (fun a => (ramp_excess (B+1) k a).symm)
-theorem threshold_le (B J t : ℕ) : threshold B J t ≤ B := by
+private theorem threshold_le (B J t : ℕ) : threshold B J t ≤ B := by
   dsimp only [threshold]
   split
   · exact Nat.sub_le _ _
@@ -1690,7 +1690,7 @@ theorem evaluate_eq (f : ℕ → ℕ) (n : ℕ) : evaluate f n = ∑ t ∈ range
   induction n with
   | zero => simp [evaluate]
   | succ n ih => rw [evaluate, sum_range_succ, ih]
-theorem offset_zero (B J t : ℕ) (ht : t < J) : offsetMoment B J t = 0 := by
+private theorem offset_zero (B J t : ℕ) (ht : t < J) : offsetMoment B J t = 0 := by
   have hp (q : ℕ) (hq : q ∈ range (B+1)) : pivotCount B J t q = columnCount B J t q := by
     have hq' := mem_range.mp hq
     have hc : columnCount B J t q ≤ t+1 := by
@@ -1736,7 +1736,7 @@ def CheckedBlocks (B J : ℕ) : ℕ → List (ℕ × ℕ) → Prop
   | _, [] => True
   | start, (length, total) :: rest =>
     blockEstimate B J start length = total ∧ CheckedBlocks B J (start + length) rest
-theorem block_total {B J : ℕ} (blocks : List (ℕ × ℕ)) (start : ℕ)
+private theorem block_total {B J : ℕ} (blocks : List (ℕ × ℕ)) (start : ℕ)
     (checked : CheckedBlocks B J start blocks) :
     blockEstimate B J start (blocks.map Prod.fst).sum = (blocks.map Prod.snd).sum := by
   induction blocks generalizing start with
@@ -1756,6 +1756,327 @@ class ExactMoment (B J total : ℕ) : Prop where
 end P1_7_1_3_2
 end
 section
+set_option autoImplicit false
+
+namespace P1_7_1_3.Middle
+
+open Finset
+open scoped BigOperators
+
+private theorem count_cast (N a : ℕ) (ha : a ≤ N + 1) :
+    (rampCount6 N a : ℤ) =
+      3 * ((N : ℤ) - a) * ((N : ℤ) - a + 1) := by
+  by_cases hn : a ≤ N
+  · unfold rampCount6
+    push_cast [Nat.cast_sub hn]
+    <;> ring
+  · have he : a = N + 1 := by omega
+    subst a
+    simp [rampCount6, Nat.sub_eq_zero_of_le (Nat.le_succ N)]
+    <;> ring
+
+private theorem product_cast (n a b : ℕ) :
+    (productSum6 n a b : ℤ) =
+      6 * (n : ℤ) * a * b + 3 * ((a : ℤ) + b) * n * (n - 1) +
+        (n : ℤ) * (n - 1) * (2 * n - 1) := by
+  cases n with
+  | zero => simp [productSum6]
+  | succ n =>
+    simp only [productSum6, Nat.succ_sub_one]
+    push_cast
+    ring
+
+private theorem weight_cast (N a : ℕ) (ha : a ≤ N + 1) :
+    (rampWeight6 N a : ℤ) =
+      let d := (N : ℤ) - a
+      6 * d * a + 3 * ((a : ℤ) + 1) * d * (d - 1) + d * (d - 1) * (2 * d - 1) := by
+  by_cases hn : a ≤ N
+  · rw [rampWeight6, product_cast]
+    push_cast [Nat.cast_sub hn]
+    <;> ring
+  · have he : a = N + 1 := by omega
+    subst a
+    simp [rampWeight6, productSum6, Nat.sub_eq_zero_of_le (Nat.le_succ N)]
+    <;> ring
+
+private theorem middle_rank (N e C : ℕ) (he : e ≤ N) (hC : C ≤ e + 1) :
+    rampCount6 N 0 + rampCount6 N (e+1) -
+      (rampCount6 N C + rampCount6 N (e+1-C)) = 6*C*(e+1-C) := by
+  have h : rampCount6 N 0 + rampCount6 N (e+1) =
+      (rampCount6 N C + rampCount6 N (e+1-C)) + 6*C*(e+1-C) := by
+    apply Int.ofNat_inj.mp
+    push_cast
+    rw [count_cast N 0 (by omega), count_cast N (e+1) (by omega),
+        count_cast N C (by omega), count_cast N (e+1-C) (by omega)]
+    push_cast [Nat.cast_sub hC]
+    ring
+  rw [h, Nat.add_sub_cancel_left]
+
+private theorem middle_weight (N e C : ℕ) (he : e ≤ N) (hC : C ≤ e+1) (he0 : 1 ≤ e) :
+    rampWeight6 N 0 + rampWeight6 N (e+1) -
+      (rampWeight6 N C + rampWeight6 N (e+1-C)) = 3*(e-1)*C*(e+1-C) := by
+  have h : rampWeight6 N 0 + rampWeight6 N (e+1) =
+      (rampWeight6 N C + rampWeight6 N (e+1-C)) + 3*(e-1)*C*(e+1-C) := by
+    apply Int.ofNat_inj.mp
+    push_cast
+    rw [weight_cast N 0 (by omega), weight_cast N (e+1) (by omega),
+        weight_cast N C (by omega), weight_cast N (e+1-C) (by omega)]
+    push_cast [Nat.cast_sub hC, Nat.cast_sub he0]
+    ring
+  rw [h, Nat.add_sub_cancel_left]
+
+private theorem product_shift (n b C : ℕ) :
+    productSum6 n 1 (b+C) = productSum6 n 1 b + 3*C*n*(n+1) := by
+  cases n with
+  | zero => simp [productSum6]
+  | succ n => simp only [productSum6, Nat.succ_sub_one]; ring
+
+private theorem middle_excess (N e C : ℕ) (he : e ≤ N) (hC : C ≤ e) (hC0 : 0 < C) :
+    let k := N-e+(C-1)
+    rampExcess6 N k 0 - rampExcess6 N k C = 3*C*(e-C)*(e+1-C) := by
+  dsimp only
+  let k := N-e+(C-1)
+  change rampExcess6 N k 0 - rampExcess6 N k C = _
+  have hk : C ≤ k+1 := by dsimp [k]; omega
+  have hn : N-(k+1) = e-C := by dsimp [k]; omega
+  have hs : k+1+1 = (k+1+1-C)+C := by omega
+  unfold rampExcess6
+  rw [max_eq_left (Nat.zero_le (k+1)), max_eq_left hk]
+  dsimp only
+  rw [hn, show k+1-k=1 by omega, Nat.sub_zero]
+  conv_lhs =>
+    lhs
+    rw [hs]
+  rw [product_shift, Nat.add_sub_cancel_left,
+    show e-C+1=e+1-C by omega]
+
+private theorem twice_div_six (R u C : ℕ) :
+    let z := C * R * (2*u+C-1)
+    2 * ((3*z)/6) = z := by
+  dsimp only
+  let z := C * R * (2*u+C-1)
+  change 2 * ((3*z)/6) = z
+  have hz : z % 2 = 0 := by
+    by_cases hC : C % 2 = 0
+    · have hCR : (C*R) % 2 = 0 := by
+        rw [Nat.mul_mod, hC, zero_mul, Nat.zero_mod]
+      change ((C*R)*(2*u+C-1)) % 2 = 0
+      rw [Nat.mul_mod, hCR, zero_mul, Nat.zero_mod]
+    · have hodd : (2*u+C-1) % 2 = 0 := by omega
+      change ((C*R)*(2*u+C-1)) % 2 = 0
+      rw [Nat.mul_mod, hodd, mul_zero, Nat.zero_mod]
+  have he : 3*z = 6*(z/2) := by omega
+  rw [he, Nat.mul_div_cancel_left _ (by decide : 0 < 6)]
+  omega
+
+/-- Exact closed form on the chamber where the peak is the full width and the
+top-column cut stays on the plateau. -/
+theorem twice_offset (B J t : ℕ) (ht : J ≤ t)
+    (hmin : 2*(J+1)-1 ≤ edge B J t) (hmax : edge B J t ≤ B+1) :
+    let e := edge B J t
+    let C := J+1
+    2*offsetEstimate B J t = C*(e+1-C)*(2*(B+1-e)+C-1) := by
+  dsimp only
+  let e := edge B J t
+  let C := J+1
+  let R := C*(e+1-C)
+  let k := B+1-e+(C-1)
+  have hC0 : 0 < C := by dsimp [C]; omega
+  have hC : C ≤ e := by dsimp [C, e] at *; omega
+  have he0 : 1 ≤ e := by omega
+  have hlow : low J t = 0 := by unfold low; omega
+  have hhigh : high B J t = J := by
+    unfold high
+    apply min_eq_left
+    dsimp [e, edge] at hmin ⊢
+    omega
+  have hwidth : width B J t = C := by simp [width, hlow, hhigh, C]
+  have hpeak : peak B J t = C := by
+    unfold peak
+    rw [hwidth, hlow, Nat.sub_zero]
+    apply min_eq_left
+    change C ≤ (e+1)/2
+    dsimp [C, e] at *
+    omega
+  have hr : pivotRank6 B J t = 6*R := by
+    unfold pivotRank6 pivotVolume6
+    rw [hlow, hpeak]
+    simp only [Nat.zero_add]
+    simpa only [R, e, Nat.mul_assoc] using middle_rank (B+1) e C hmax (by omega)
+  have hw : pivotWeight6 B J t = 3*(e-1)*R := by
+    unfold pivotWeight6 pivotVolume6
+    rw [hlow, hpeak]
+    simp only [Nat.zero_add]
+    simpa only [R, e, Nat.mul_assoc] using middle_weight (B+1) e C hmax (by omega) he0
+  have hdiv : pivotRank6 B J t / 6 = R := by
+    rw [hr, Nat.mul_div_cancel_left _ (by decide)]
+  have hbranch : R ≤ C*(B+1-J) :=
+    Nat.mul_le_mul_left C (by dsimp [C, e] at *; omega)
+  have hroom : (R-1)/C = e-C := by
+    have hsum : R-1 = (C-1)+C*(e-C) := by
+      unfold R
+      rw [show e+1-C=e-C+1 by omega, Nat.mul_add, Nat.mul_one]
+      omega
+    rw [hsum, Nat.add_mul_div_left _ _ hC0, Nat.div_eq_of_lt (by omega : C-1<C), Nat.zero_add]
+  have hthreshold : threshold B J t = k := by
+    unfold threshold
+    rw [hdiv, hwidth, hhigh, if_pos hbranch, hroom]
+    unfold k
+    omega
+  have hex : excess6 B J t k = 3*(e-C)*R := by
+    unfold excess6 columnVolume6
+    rw [hlow, hwidth]
+    simp only [Nat.zero_add]
+    have h := middle_excess (B+1) e C hmax hC hC0
+    dsimp only at h
+    rw [show 3*(e-C)*R=3*C*(e-C)*(e+1-C) by unfold R; ring]
+    exact h
+  have heN : e ≤ B+1 := hmax
+  have hcast : ((B+1-e : ℕ) : ℤ) = (B : ℤ)+1-e := by
+    rw [Nat.cast_sub heN]
+    push_cast <;> rfl
+  have hnum : 6*R*k + 3*(e-C)*R = 3*(e-1)*R + 3*(R*(2*(B+1-e)+C-1)) := by
+    have hC1 : 1 ≤ C := hC0
+    apply Int.ofNat_inj.mp
+    push_cast [Nat.cast_sub hC, Nat.cast_sub he0,
+      Nat.cast_sub hC1, Nat.cast_sub (show 1 ≤ 2*(B+1-e)+C by omega)]
+    have hk : (k : ℤ) = ((B : ℤ)+1-e)+(C-1) := by
+      unfold k
+      push_cast [Nat.cast_sub hC1]
+      simp only [hcast]
+    rw [hk]
+    simp only [hcast]
+    ring
+  unfold offsetEstimate
+  rw [hthreshold]
+  dsimp only
+  rw [hr, hw, hex, hnum, Nat.add_sub_cancel_left]
+  change 2 * ((3 * (R * (2*(B+1-e)+C-1)))/6) =
+    R * (2*(B+1-e)+C-1)
+  exact twice_div_six (e+1-C) (B+1-e) C
+
+/-- Convert an arithmetic certificate on one middle block to the stock block
+interface. Head and tail certificates can still be combined with `block_append`. -/
+theorem block_of_middle {B J start len answer : ℕ}
+    (hzone : ∀ i < len, J ≤ start+i ∧
+      2*(J+1)-1 ≤ edge B J (start+i) ∧ edge B J (start+i) ≤ B+1)
+    (receipt : (∑ i ∈ range len,
+       (J+1)*(edge B J (start+i)+1-(J+1))*
+          (2*(B+1-edge B J (start+i))+(J+1)-1)) = 2*answer) :
+    blockEstimate B J start len = answer := by
+  have h : 2 * blockEstimate B J start len = 2 * answer := by
+    rw [blockEstimate, evaluate_eq, mul_sum, ← receipt]
+    apply sum_congr rfl
+    intro i hi
+    obtain ⟨ht, hmin, hmax⟩ := hzone i (mem_range.mp hi)
+    exact twice_offset B J (start+i) ht hmin hmax
+  omega
+
+end P1_7_1_3.Middle
+
+namespace P1_7_1_3.Middle
+
+open Finset
+open scoped BigOperators
+
+private theorem six_sum_quadratic (a d : ℤ) (n : ℕ) :
+    6 * (∑ i ∈ range n, (a - (i : ℤ)) * (d + 2 * (i : ℤ))) =
+      6 * n * a * d + 3 * (2 * a - d) * n * ((n : ℤ) - 1) -
+        2 * n * ((n : ℤ) - 1) * (2 * (n : ℤ) - 1) := by
+  induction n with
+  | zero => simp
+  | succ n ih =>
+    rw [sum_range_succ, mul_add, ih]
+    push_cast
+    ring
+
+/-- Twelve times the stock block estimate in the middle chamber. All
+subtractions in the closed form are integer subtractions. -/
+def closedBlock12 (B J start len : ℕ) : ℤ :=
+  let e : ℤ := edge B J start
+  let c : ℤ := (J : ℤ) + 1
+  let a := e + 1 - c
+  let d := 2 * ((B : ℤ) + 1 - e) + c - 1
+  let n : ℤ := len
+  c * (6 * n * a * d + 3 * (2 * a - d) * n * (n - 1) -
+    2 * n * (n - 1) * (2 * n - 1))
+
+private theorem middle_sum_eq {B J start len : ℕ}
+    (hzone : ∀ i < len, J ≤ start+i ∧
+      2*(J+1)-1 ≤ edge B J (start+i) ∧ edge B J (start+i) ≤ B+1) :
+    6 * ((∑ i ∈ range len,
+      (J+1)*(edge B J (start+i)+1-(J+1))*
+        (2*(B+1-edge B J (start+i))+(J+1)-1) : ℕ) : ℤ) =
+      closedBlock12 B J start len := by
+  let E : ℤ := edge B J start
+  let C : ℤ := (J : ℤ) + 1
+  let A := E + 1 - C
+  let D := 2 * ((B : ℤ) + 1 - E) + C - 1
+  have hsum :
+      ((∑ i ∈ range len,
+        (J+1)*(edge B J (start+i)+1-(J+1))*
+          (2*(B+1-edge B J (start+i))+(J+1)-1) : ℕ) : ℤ) =
+        ∑ i ∈ range len, C * ((A - (i : ℤ)) * (D + 2 * (i : ℤ))) := by
+    rw [Nat.cast_sum]
+    apply sum_congr rfl
+    intro i hi
+    let e := edge B J (start+i)
+    have hmin : 2*(J+1)-1 ≤ e := (hzone i (mem_range.mp hi)).2.1
+    have hmax : e ≤ B+1 := (hzone i (mem_range.mp hi)).2.2
+    have hpos : 0 < e := by omega
+    have heN : e + i = edge B J start := by
+      dsimp [e, edge] at hpos ⊢
+      omega
+    have heZ : (e : ℤ) = E - (i : ℤ) := by
+      have he' : (e : ℤ) + (i : ℤ) = E := by
+        change (e : ℤ) + (i : ℤ) = (edge B J start : ℤ)
+        exact_mod_cast heN
+      omega
+    change (((J+1)*(e+1-(J+1))*(2*(B+1-e)+(J+1)-1) : ℕ) : ℤ) = _
+    have hsub : J ≤ e := by omega
+    rw [show e+1-(J+1) = e-J by omega]
+    have hlast : 1 ≤ 2*(B+1-e)+(J+1) := by omega
+    push_cast [Nat.cast_sub hsub, Nat.cast_sub hlast, Nat.cast_sub hmax]
+    rw [heZ]
+    dsimp [A, C, D]
+    ring
+  rw [hsum, ← mul_sum]
+  calc
+    _ = C * (6 * ∑ i ∈ range len, (A - (i : ℤ)) * (D + 2 * (i : ℤ))) := by ring
+    _ = closedBlock12 B J start len := by
+      rw [six_sum_quadratic]
+      rfl
+
+/-- Check one closed integer equality instead of evaluating all middle offsets. -/
+theorem block_of_middle_closed {B J start len answer : ℕ}
+    (hzone : ∀ i < len, J ≤ start+i ∧
+      2*(J+1)-1 ≤ edge B J (start+i) ∧ edge B J (start+i) ≤ B+1)
+    (receipt : closedBlock12 B J start len = 12 * (answer : ℤ)) :
+    blockEstimate B J start len = answer := by
+  apply block_of_middle hzone
+  apply Int.ofNat_inj.mp
+  have h := (middle_sum_eq hzone).trans receipt
+  simp only [Nat.cast_mul, Nat.cast_ofNat]
+  linarith only [h]
+
+/-- A middle block can be verified from its endpoints. The receipt does
+not evaluate the block or construct its list of indices. -/
+theorem block_of_middle_endpoints {B J start len answer : ℕ}
+    (hstart : J ≤ start)
+    (hupper : edge B J start ≤ B+1)
+    (hlower : 2*(J+1)-1 ≤ edge B J (start+(len-1)))
+    (receipt : closedBlock12 B J start len = 12 * (answer : ℤ)) :
+    blockEstimate B J start len = answer := by
+  apply block_of_middle_closed (receipt := receipt)
+  intro i hi
+  unfold edge at hupper hlower ⊢
+  omega
+
+end P1_7_1_3.Middle
+
+end
+
+section
 namespace P1_7_1_3_2
 set_option maxRecDepth 4096
 scoped instance : ExactMoment 500 105 1700679003 where
@@ -1763,109 +2084,109 @@ scoped instance : ExactMoment 500 105 1700679003 where
     refine moment_from_blocks
       [(128,144037782),(128,567478208),(128,637814720),(128,319210721),
       (93,32137572)] ?_ rfl rfl
-    exact ⟨rfl, rfl, rfl, rfl, rfl, True.intro⟩
+    exact ⟨rfl, P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 501 105 1711611949 where
   eq_moment := by
     refine moment_from_blocks
       [(128,144393518),(128,569377728),(128,641450944),(128,323182467),
       (94,33207292)] ?_ rfl rfl
-    exact ⟨rfl, rfl, rfl, rfl, rfl, True.intro⟩
+    exact ⟨rfl, P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 521 117 2110154682 where
   eq_moment := by
     refine moment_from_blocks
       [(128,152229145),(128,646266176),(128,776764736),(128,455019674),
       (126,79874951)] ?_ rfl rfl
-    exact ⟨rfl, rfl, rfl, rfl, rfl, True.intro⟩
+    exact ⟨rfl, P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 523 117 2136298939 where
   eq_moment := by
     refine moment_from_blocks
       [(128,152944225),(128,650314048),(128,784679232),(128,464485709),
       (128,83875725)] ?_ rfl rfl
-    exact ⟨rfl, rfl, rfl, rfl, rfl, True.intro⟩
+    exact ⟨rfl, P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 535 112 2221379895 where
   eq_moment := by
     refine moment_from_blocks
       [(128,157045140),(128,658437440),(128,804697408),(128,501243104),
       (128,99930187),(7,26616)] ?_ rfl rfl
-    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
+    exact ⟨rfl, P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 546 113 2387645191 where
   eq_moment := by
     refine moment_from_blocks
       [(128,161023860),(128,683587776),(128,852621504),(128,560448099),
       (128,129579472),(19,384480)] ?_ rfl rfl
-    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
+    exact ⟨rfl, P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 547 109 2335147916 where
   eq_moment := by
     refine moment_from_blocks
       [(128,161134435),(128,671528000),(128,832828480),(128,546827594),
       (128,122589587),(16,239820)] ?_ rfl rfl
-    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
+    exact ⟨rfl, P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 552 116 2523691858 where
   eq_moment := by
     refine moment_from_blocks
       [(128,163284615),(128,705699072),(128,893558016),(128,605669194),
       (128,154329076),(28,1151885)] ?_ rfl rfl
-    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
+    exact ⟨rfl, P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 572 120 2904427648 where
   eq_moment := by
     refine moment_from_blocks
       [(128,170524574),(128,759701888),(128,997597568),(128,735310082),
       (128,234301265),(52,6992271)] ?_ rfl rfl
-    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
+    exact ⟨rfl, P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 577 129 3158702492 where
   eq_moment := by
     refine moment_from_blocks
       [(128,172350880),(128,798366400),(128,1074191040),(128,813443001),
       (128,286344633),(66,14006538)] ?_ rfl rfl
-    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
+    exact ⟨rfl, P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 578 117 2944634929 where
   eq_moment := by
     refine moment_from_blocks
       [(128,172608925),(128,761630528),(128,1002327872),(128,752644119),
       (128,247118139),(55,8305346)] ?_ rfl rfl
-    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
+    exact ⟨rfl, P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 578 129 3176332897 where
   eq_moment := by
     refine moment_from_blocks
       [(128,172708640),(128,800496320),(128,1078450880),(128,819433681),
       (128,290590600),(67,14652776)] ?_ rfl rfl
-    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
+    exact ⟨rfl, P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 580 119 3017027973 where
   eq_moment := by
     refine moment_from_blocks
       [(128,173369590),(128,772688640),(128,1023363840),(128,775246907),
       (128,262158826),(59,10200170)] ?_ rfl rfl
-    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
+    exact ⟨rfl, P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 591 124 3308696108 where
   eq_moment := by
     refine moment_from_blocks
       [(128,177354875),(128,812312000),(128,1101080000),(128,868637578),
       (128,328555618),(75,20756037)] ?_ rfl rfl
-    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
+    exact ⟨rfl, P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 597 126 3460443224 where
   eq_moment := by
     refine moment_from_blocks
       [(128,179505610),(128,831445632),(128,1139399296),(128,916997523),
       (128,365008090),(83,28087073)] ?_ rfl rfl
-    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
+    exact ⟨rfl, P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 598 125 3457603226 where
   eq_moment := by
     refine moment_from_blocks
       [(128,179861955),(128,830265408),(128,1136826432),(128,916910704),
       (128,365601387),(83,28137340)] ?_ rfl rfl
-    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
+    exact ⟨rfl, P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 607 139 3938005884 where
   eq_moment := by
     refine moment_from_blocks
       [(128,183083680),(128,891468085),(128,1268686720),(128,1061576997),
       (128,475434639),(106,57755763)] ?_ rfl rfl
-    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
+    exact ⟨rfl, rfl, P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 609 128 3734056387 where
   eq_moment := by
     refine moment_from_blocks
       [(128,183799200),(128,863305152),(128,1203584448),(128,1003805395),
       (128,434638067),(97,44924125)] ?_ rfl rfl
-    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
+    exact ⟨rfl, P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), rfl, rfl, rfl, True.intro⟩
 end P1_7_1_3_2
 end
 section
@@ -1876,109 +2197,109 @@ scoped instance : ExactMoment 612 121 3630535593 where
     refine moment_from_blocks
       [(128,184845250),(128,845461952),(128,1166277056),(128,975711462),
       (128,418227357),(93,40012516)] ?_ rfl rfl
-    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
+    exact ⟨rfl, P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 613 121 3649568203 where
   eq_moment := by
     refine moment_from_blocks
       [(128,185202954),(128,847523264),(128,1170337216),(128,981727130),
       (128,423442731),(94,41334908)] ?_ rfl rfl
-    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
+    exact ⟨rfl, P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 617 127 3870016120 where
   eq_moment := by
     refine moment_from_blocks
       [(128,186661280),(128,876941312),(128,1230311424),(128,1047177034),
       (128,473263516),(104,55661554)] ?_ rfl rfl
-    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
+    exact ⟨rfl, P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 621 139 4237643334 where
   eq_moment := by
     refine moment_from_blocks
       [(128,188092320),(128,922329405),(128,1331657600),(128,1154779018),
       (128,556283521),(120,84501470)] ?_ rfl rfl
-    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
+    exact ⟨rfl, rfl, P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 634 132 4351456177 where
   eq_moment := by
     refine moment_from_blocks
       [(128,192743200),(128,929702719),(128,1339363200),(128,1191222484),
       (128,599015438),(126,99409136)] ?_ rfl rfl
-    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
+    exact ⟨rfl, rfl, P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 662 139 5203785784 where
   eq_moment := by
     refine moment_from_blocks
       [(128,202760480),(128,1012708985),(128,1516072320),(128,1432350080),
       (128,830129570),(128,207552923),(33,2211426)] ?_ rfl rfl
-    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
+    exact ⟨rfl, rfl, P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 662 149 5491466699 where
   eq_moment := by
     refine moment_from_blocks
       [(128,202760480),(128,1040567045),(128,1591483200),(128,1514068800),
       (128,893654100),(128,244219046),(43,4714028)] ?_ rfl rfl
-    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
+    exact ⟨rfl, rfl, P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 665 139 5279846034 where
   eq_moment := by
     refine moment_from_blocks
       [(128,203833760),(128,1019322125),(128,1529566080),(128,1452725120),
       (128,852255965),(128,219295492),(36,2847492)] ?_ rfl rfl
-    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
+    exact ⟨rfl, rfl, P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 674 140 5543427992 where
   eq_moment := by
     refine moment_from_blocks
       [(128,207053600),(128,1042265009),(128,1578062976),(128,1522619520),
       (128,926834473),(128,260764188),(46,5828226)] ?_ rfl rfl
-    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
+    exact ⟨rfl, rfl, P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 675 140 5569859382 where
   eq_moment := by
     refine moment_from_blocks
       [(128,207411360),(128,1044476175),(128,1582584000),(128,1529450688),
       (128,934549636),(128,265178067),(47,6209456)] ?_ rfl rfl
-    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
+    exact ⟨rfl, rfl, P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 686 138 5800691370 where
   eq_moment := by
     refine moment_from_blocks
       [(128,211346720),(128,1062371996),(128,1615682624),(128,1586076736),
       (128,1007022200),(128,307734158),(56,10456936)] ?_ rfl rfl
-    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
+    exact ⟨rfl, rfl, P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 726 153 7540240839 where
   eq_moment := by
     refine moment_from_blocks
       [(128,225657120),(128,1196811466),(128,1928242624),(128,2015290816),
       (128,1469051275),(128,625151582),(111,80035956)] ?_ rfl rfl
-    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
+    exact ⟨rfl, rfl, P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 734 165 8281195601 where
   eq_moment := by
     refine moment_from_blocks
       [(128,228519200),(128,1244003969),(128,2067127616),(128,2199035200),
       (128,1649353090),(128,762657762),(128,130493632),(3,5132)] ?_ rfl rfl
-    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
+    exact ⟨rfl, rfl, P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 740 167 8580372579 where
   eq_moment := by
     refine moment_from_blocks
       [(128,230665760),(128,1262245730),(128,2113698048),(128,2266462464),
       (128,1726864884),(128,824321763),(128,155995520),(11,118410)] ?_ rfl rfl
-    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
+    exact ⟨rfl, rfl, P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 776 163 9809476816 where
   eq_moment := by
     refine moment_from_blocks
       [(128,243545120),(128,1337858951),(128,2261641344),(128,2502125696),
       (128,2055573998),(128,1110845387),(128,292335874),(43,5550446)] ?_ rfl rfl
-    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
+    exact ⟨rfl, rfl, P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 779 173 10401501082 where
   eq_moment := by
     refine moment_from_blocks
       [(128,244618400),(128,1366300947),(128,2364345408),(128,2642299968),
       (128,2192053949),(128,1223114534),(128,356838378),(56,11929498)] ?_ rfl rfl
-    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
+    exact ⟨rfl, rfl, P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 781 178 10721014375 where
   eq_moment := by
     refine moment_from_blocks
       [(128,245333920),(128,1380003801),(128,2416574464),(128,2715713536),
       (128,2266117448),(128,1285945362),(128,394514228),(63,16811616)] ?_ rfl rfl
-    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
+    exact ⟨rfl, rfl, P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 782 178 10765253509 where
   eq_moment := by
     refine moment_from_blocks
       [(128,245691680),(128,1382396018),(128,2421878592),(128,2723950400),
       (128,2277127269),(128,1296134164),(128,400457082),(64,17618304)] ?_ rfl rfl
-    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
+    exact ⟨rfl, rfl, P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), rfl, rfl, rfl, rfl, True.intro⟩
 end P1_7_1_3_2
 end
 section
@@ -1989,119 +2310,119 @@ scoped instance : ExactMoment 783 165 10192726271 where
     refine moment_from_blocks
       [(128,246049440),(128,1358944053),(128,2314921792),(128,2580096832),
       (128,2149468958),(128,1194949591),(128,338612451),(52,9683154)] ?_ rfl rfl
-    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
+    exact ⟨rfl, rfl, P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 784 164 10186247915 where
   eq_moment := by
     refine moment_from_blocks
       [(128,246407200),(128,1358949795),(128,2310908160),(128,2575837440),
       (128,2149048385),(128,1196318864),(128,339082164),(52,9695907)] ?_ rfl rfl
-    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
+    exact ⟨rfl, rfl, P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 792 167 10673329627 where
   eq_moment := by
     refine moment_from_blocks
       [(128,249269280),(128,1384644162),(128,2378713344),(128,2674608384),
       (128,2266006484),(128,1302457939),(128,400572546),(63,17057488)] ?_ rfl rfl
-    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
+    exact ⟨rfl, rfl, P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 808 165 11274483946 where
   eq_moment := by
     refine moment_from_blocks
       [(128,254993440),(128,1417586953),(128,2441347392),(128,2774516032),
       (128,2411430208),(128,1452816319),(128,490659052),(77,31134550)] ?_ rfl rfl
-    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
+    exact ⟨rfl, rfl, P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 821 188 13132884772 where
   eq_moment := by
     refine moment_from_blocks
       [(128,259644320),(128,1491434191),(128,2714935104),(128,3170131776),
       (128,2832620376),(128,1824571448),(128,743401218),(113,96146339)] ?_ rfl rfl
-    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
+    exact ⟨rfl, rfl, P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 822 188 13184443531 where
   eq_moment := by
     refine moment_from_blocks
       [(128,260002080),(128,1493853093),(128,2720414592),(128,3178707840),
       (128,2844287584),(128,1836656028),(128,751766439),(114,98755875)] ?_ rfl rfl
-    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
+    exact ⟨rfl, rfl, P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 825 173 12507204741 where
   eq_moment := by
     refine moment_from_blocks
       [(128,261075360),(128,1475597499),(128,2604081216),(128,3013173312),
       (128,2692456512),(128,1721466865),(128,667497478),(102,71856499)] ?_ rfl rfl
-    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
+    exact ⟨rfl, rfl, P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 828 189 13552061015 where
   eq_moment := by
     refine moment_from_blocks
       [(128,262148640),(128,1509721915),(128,2761675840),(128,3242628160),
       (128,2926662720),(128,1920285208),(128,810698549),(121,118239983)] ?_ rfl rfl
-    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
+    exact ⟨rfl, rfl, P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 853 192 15095933357 where
   eq_moment := by
     refine moment_from_blocks
       [(128,271092640),(128,1574237488),(128,2925089472),(128,3497431744),
       (128,3260273344),(128,2274160185),(128,1071003387),(128,221846864),
       (21,798233)] ?_ rfl rfl
-    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
+    exact ⟨rfl, rfl, P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 856 174 14142442253 where
   eq_moment := by
     refine moment_from_blocks
       [(128,272165920),(128,1551390955),(128,2775528000),(128,3277288000),
       (128,3045044800),(128,2111237198),(128,945222943),(128,164535408),
       (6,29029)] ?_ rfl rfl
-    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
+    exact ⟨rfl, rfl, P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 882 186 16399828679 where
   eq_moment := by
     refine moment_from_blocks
       [(128,281467680),(128,1635894932),(128,3030381376),(128,3664589632),
       (128,3514463040),(128,2598697640),(128,1325282868),(128,342290592),
       (44,6760919)] ?_ rfl rfl
-    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
+    exact ⟨rfl, rfl, P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 883 197 17210339526 where
   eq_moment := by
     refine moment_from_blocks
       [(128,281825440),(128,1653196253),(128,3135857472),(128,3828458304),
       (128,3690586944),(128,2749316070),(128,1446953881),(128,410568928),
       (56,13576234)] ?_ rfl rfl
-    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
+    exact ⟨rfl, rfl, P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 912 194 18868434791 where
   eq_moment := by
     refine moment_from_blocks
       [(128,292200480),(128,1720155840),(128,3271220160),(128,4041186240),
       (128,3993263040),(128,3133663239),(128,1774996188),(128,599346999),
       (82,42402605)] ?_ rfl rfl
-    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
+    exact ⟨rfl, rfl, P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 926 195 19894196946 where
   eq_moment := by
     refine moment_from_blocks
       [(128,297209120),(128,1755504711),(128,3358888064),(128,4179366016),
       (128,4177760384),(128,3356603776),(128,1974410087),(128,724289538),
       (97,70165250)] ?_ rfl rfl
-    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
+    exact ⟨rfl, rfl, P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 958 195 22186492210 where
   eq_moment := by
     refine moment_from_blocks
       [(128,308657440),(128,1833375943),(128,3537916032),(128,4461154432),
       (128,4562309248),(128,3841387932),(128,2439290735),(128,1036067666),
       (128,166331824),(1,958)] ?_ rfl rfl
-    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
+    exact ⟨rfl, rfl, P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), rfl, rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 960 205 23224363038 where
   eq_moment := by
     refine moment_from_blocks
       [(128,309372960),(128,1849612615),(128,3645738560),(128,4639706688),
       (128,4769648192),(128,4035677606),(128,2602917483),(128,1155992984),
       (128,215455408),(13,240542)] ?_ rfl rfl
-    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
+    exact ⟨rfl, rfl, P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), rfl, rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 968 204 23761225895 where
   eq_moment := by
     refine moment_from_blocks
       [(128,312235040),(128,1868238645),(128,3682311680),(128,4696645120),
       (128,4851146240),(128,4145818989),(128,2716742287),(128,1237702419),
       (128,249594080),(20,791395)] ?_ rfl rfl
-    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
+    exact ⟨rfl, rfl, P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), rfl, rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 996 207 26338011946 where
   eq_moment := by
     refine moment_from_blocks
       [(128,322252320),(128,1939676596),(128,3872068096),(128,5001777664),
       (128,5259072000),(128,4643951104),(128,3228690796),(128,1623238100),
       (128,435562624),(51,11722646)] ?_ rfl rfl
-    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
+    exact ⟨rfl, rfl, P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide), rfl, rfl, rfl, rfl, True.intro⟩
 end P1_7_1_3_2
 end
 section
@@ -2121,13 +2442,31 @@ section
 namespace P1_7_1_3_3
 open P1_7_1_3 (blockEstimate momentEstimate)
 set_option maxRecDepth 4000
+theorem moment1043_235 : momentEstimate 1043 235 = 33710825496 := by
+  change blockEstimate 1043 235 235 1278 = 33710825496
+  refine appendBlock 1152 126 1387 33540780424 170045072 ?_
+  refine appendBlock 960 192 1195 31290830721 2249949703 ?_
+  refine appendBlock 768 192 1003 25136594525 6154236196 ?_
+  refine appendBlock 576 192 811 15933247773 9203346752 ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide))
+  refine appendBlock 384 192 619 6803850205 9129397568 ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide))
+  refine appendBlock 192 192 427 1078030064 5725820141 ?_
+  rfl
+theorem moment1058_225 : momentEstimate 1058 225 = 34123764741 := by
+  change blockEstimate 1058 225 225 1283 = 34123764741
+  refine appendBlock 1152 131 1377 33930464733 193300008 ?_
+  refine appendBlock 960 192 1185 31557098306 2373366427 ?_
+  refine appendBlock 768 192 993 25214951080 6342147226 ?_
+  refine appendBlock 576 192 801 15956483208 9258467872 ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide))
+  refine appendBlock 384 192 609 6852143720 9104339488 ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide))
+  refine appendBlock 192 192 417 1096002224 5756141496 ?_
+  rfl
 theorem moment1072_239 : momentEstimate 1072 239 = 37305519000 := by
   change blockEstimate 1072 239 239 1311 = 37305519000
   refine appendBlock 1152 159 1391 36961641040 343877960 ?_
   refine appendBlock 960 192 1199 34016813735 2944827305 ?_
   refine appendBlock 768 192 1007 26874253340 7142560395 ?_
-  refine appendBlock 576 192 815 16810170140 10064083200 ?_
-  refine appendBlock 384 192 623 7095557660 9714612480 ?_
+  refine appendBlock 576 192 815 16810170140 10064083200 ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide))
+  refine appendBlock 384 192 623 7095557660 9714612480 ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide))
   refine appendBlock 192 192 431 1112776240 5982781420 ?_
   rfl
 end P1_7_1_3_3
@@ -2142,9 +2481,20 @@ theorem moment1183_249 : momentEstimate 1183 249 = 52867790342 := by
   refine appendBlock 1152 192 1401 50912668199 1886885733 ?_
   refine appendBlock 960 192 1209 44561140535 6351527664 ?_
   refine appendBlock 768 192 1017 33358848250 11202292285 ?_
-  refine appendBlock 576 192 825 20051804250 13307044000 ?_
-  refine appendBlock 384 192 633 8177848250 11873956000 ?_
+  refine appendBlock 576 192 825 20051804250 13307044000 ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide))
+  refine appendBlock 384 192 633 8177848250 11873956000 ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide))
   refine appendBlock 192 192 441 1245770224 6932078026 ?_
+  rfl
+theorem moment1307_273 : momentEstimate 1307 273 = 78245537261 := by
+  change blockEstimate 1307 273 273 1580 = 78245537261
+  refine appendBlock 1536 44 1809 78235443067 10094194 ?_
+  refine appendBlock 1344 192 1617 76909230331 1326212736 ?_
+  refine appendBlock 1152 192 1425 71012066432 5897163899 ?_
+  refine appendBlock 960 192 1233 58877842812 12134223620 ?_
+  refine appendBlock 768 192 1041 42054010460 16823832352 ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide))
+  refine appendBlock 576 192 849 24295860028 17758150432 ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide))
+  refine appendBlock 384 192 657 9482074140 14813785888 ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide))
+  refine appendBlock 192 192 465 1394340080 8087734060 ?_
   rfl
 theorem moment1324_279 : momentEstimate 1324 279 = 82958819253 := by
   change blockEstimate 1324 279 279 1603 = 82958819253
@@ -2152,9 +2502,9 @@ theorem moment1324_279 : momentEstimate 1324 279 = 82958819253 := by
   refine appendBlock 1344 192 1623 81186298503 1737893824 ?_
   refine appendBlock 1152 192 1431 74468147998 6718150505 ?_
   refine appendBlock 960 192 1239 61305370910 13162777088 ?_
-  refine appendBlock 768 192 1047 43522069150 17783301760 ?_
-  refine appendBlock 576 192 855 24990428190 18531640960 ?_
-  refine appendBlock 384 192 663 9674065310 15316362880 ?_
+  refine appendBlock 768 192 1047 43522069150 17783301760 ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide))
+  refine appendBlock 576 192 855 24990428190 18531640960 ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide))
+  refine appendBlock 384 192 663 9674065310 15316362880 ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide))
   refine appendBlock 192 192 471 1414708528 8259356782 ?_
   rfl
 end P1_7_1_3_3
@@ -2170,9 +2520,9 @@ theorem moment1443_329 : momentEstimate 1443 329 = 124373325152 := by
   refine appendBlock 1344 192 1673 116195234106 6689962012 ?_
   refine appendBlock 1152 192 1481 101913528837 14281705269 ?_
   refine appendBlock 960 192 1289 80203851750 21709677087 ?_
-  refine appendBlock 768 192 1097 54696504390 25507347360 ?_
-  refine appendBlock 576 192 905 30058963110 24637541280 ?_
-  refine appendBlock 384 192 713 10962633990 19096329120 ?_
+  refine appendBlock 768 192 1097 54696504390 25507347360 ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide))
+  refine appendBlock 576 192 905 30058963110 24637541280 ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide))
+  refine appendBlock 384 192 713 10962633990 19096329120 ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide))
   refine appendBlock 192 192 521 1557287664 9405346326 ?_
   rfl
 end P1_7_1_3_3
@@ -2187,11 +2537,24 @@ theorem moment1550_329 : momentEstimate 1550 329 = 156562227172 := by
   refine appendBlock 1536 192 1865 151827130107 4297752215 ?_
   refine appendBlock 1344 192 1673 140046559016 11780571091 ?_
   refine appendBlock 1152 192 1481 119303634670 20742924346 ?_
-  refine appendBlock 960 192 1289 91550555470 27753079200 ?_
-  refine appendBlock 768 192 1097 61297544110 30253011360 ?_
-  refine appendBlock 576 192 905 33216006670 28081537440 ?_
-  refine appendBlock 384 192 713 11977349230 21238657440 ?_
+  refine appendBlock 960 192 1289 91550555470 27753079200 ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide))
+  refine appendBlock 768 192 1097 61297544110 30253011360 ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide))
+  refine appendBlock 576 192 905 33216006670 28081537440 ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide))
+  refine appendBlock 384 192 713 11977349230 21238657440 ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide))
   refine appendBlock 192 192 521 1685489072 10291860158 ?_
+  rfl
+theorem moment1587_334 : momentEstimate 1587 334 = 170894624907 := by
+  change blockEstimate 1587 334 334 1921 = 170894624907
+  refine appendBlock 1920 1 2254 170894623320 1587 ?_
+  refine appendBlock 1728 192 2062 169976636416 917986904 ?_
+  refine appendBlock 1536 192 1870 164130204232 5846432184 ?_
+  refine appendBlock 1344 192 1678 149995495333 14134708899 ?_
+  refine appendBlock 1152 192 1486 126511683360 23483811973 ?_
+  refine appendBlock 960 192 1294 96300750880 30210932480 ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide))
+  refine appendBlock 768 192 1102 64039811360 32260939520 ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide))
+  refine appendBlock 576 192 910 34471049760 29568761600 ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide))
+  refine appendBlock 384 192 718 12336651040 22134398720 ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide))
+  refine appendBlock 192 192 526 1729820400 10606830640 ?_
   rfl
 end P1_7_1_3_3
 end
@@ -2206,10 +2569,10 @@ theorem moment1696_357 : momentEstimate 1696 357 = 222859445142 := by
   refine appendBlock 1536 192 1893 206080043635 12300204274 ?_
   refine appendBlock 1344 192 1701 183273702811 22806340824 ?_
   refine appendBlock 1152 192 1509 150498778521 32774924290 ?_
-  refine appendBlock 960 192 1317 112055621561 38443156960 ?_
-  refine appendBlock 768 192 1125 73011986905 39043634656 ?_
-  refine appendBlock 576 192 933 38435642361 34576344544 ?_
-  refine appendBlock 384 192 741 13394355737 25041286624 ?_
+  refine appendBlock 960 192 1317 112055621561 38443156960 ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide))
+  refine appendBlock 768 192 1125 73011986905 39043634656 ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide))
+  refine appendBlock 576 192 933 38435642361 34576344544 ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide))
+  refine appendBlock 384 192 741 13394355737 25041286624 ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide))
   refine appendBlock 192 192 549 1860418096 11533937641 ?_
   rfl
 theorem moment1725_359 : momentEstimate 1725 359 = 236367501665 := by
@@ -2218,11 +2581,11 @@ theorem moment1725_359 : momentEstimate 1725 359 = 236367501665 := by
   refine appendBlock 1728 192 2087 230432375753 5312322464 ?_
   refine appendBlock 1536 192 1895 216241362480 14191013273 ?_
   refine appendBlock 1344 192 1703 191077006410 25164356070 ?_
-  refine appendBlock 1152 192 1511 156007206090 35069800320 ?_
-  refine appendBlock 960 192 1319 115635625290 40371580800 ?_
-  refine appendBlock 768 192 1127 75058343370 40577281920 ?_
-  refine appendBlock 576 192 935 39371439690 35686903680 ?_
-  refine appendBlock 384 192 743 13670993610 25700446080 ?_
+  refine appendBlock 1152 192 1511 156007206090 35069800320 ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide))
+  refine appendBlock 960 192 1319 115635625290 40371580800 ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide))
+  refine appendBlock 768 192 1127 75058343370 40577281920 ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide))
+  refine appendBlock 576 192 935 39371439690 35686903680 ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide))
+  refine appendBlock 384 192 743 13670993610 25700446080 ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide))
   refine appendBlock 192 192 551 1895164272 11775829338 ?_
   rfl
 end P1_7_1_3_3
@@ -2255,25 +2618,25 @@ theorem moment7630 : momentEstimate 7630 1607 = 90974896361155 := by
   refine block_append (a := 5760) (b := 384) (next := 7367) (x := 70779064528730) (y := 5329654109652)
     ?_ (by rfl) (by decide) (by decide) (by decide)
   refine block_append (a := 5376) (b := 384) (next := 6983) (x := 64718252933210) (y := 6060811595520)
-    ?_ (by rfl) (by decide) (by decide) (by decide)
+    ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide)) (by decide) (by decide) (by decide)
   refine block_append (a := 4992) (b := 384) (next := 6599) (x := 58107703546202) (y := 6610549387008)
-    ?_ (by rfl) (by decide) (by decide) (by decide)
+    ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide)) (by decide) (by decide) (by decide)
   refine block_append (a := 4608) (b := 384) (next := 6215) (x := 51129516270170) (y := 6978187276032)
-    ?_ (by rfl) (by decide) (by decide) (by decide)
+    ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide)) (by decide) (by decide) (by decide)
   refine block_append (a := 4224) (b := 384) (next := 5831) (x := 43965791007578) (y := 7163725262592)
-    ?_ (by rfl) (by decide) (by decide) (by decide)
+    ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide)) (by decide) (by decide) (by decide)
   refine block_append (a := 3840) (b := 384) (next := 5447) (x := 36798627660890) (y := 7167163346688)
-    ?_ (by rfl) (by decide) (by decide) (by decide)
+    ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide)) (by decide) (by decide) (by decide)
   refine block_append (a := 3456) (b := 384) (next := 5063) (x := 29810126132570) (y := 6988501528320)
-    ?_ (by rfl) (by decide) (by decide) (by decide)
+    ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide)) (by decide) (by decide) (by decide)
   refine block_append (a := 3072) (b := 384) (next := 4679) (x := 23182386325082) (y := 6627739807488)
-    ?_ (by rfl) (by decide) (by decide) (by decide)
+    ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide)) (by decide) (by decide) (by decide)
   refine block_append (a := 2688) (b := 384) (next := 4295) (x := 17097508140890) (y := 6084878184192)
-    ?_ (by rfl) (by decide) (by decide) (by decide)
+    ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide)) (by decide) (by decide) (by decide)
   refine block_append (a := 2304) (b := 384) (next := 3911) (x := 11737591482458) (y := 5359916658432)
-    ?_ (by rfl) (by decide) (by decide) (by decide)
+    ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide)) (by decide) (by decide) (by decide)
   refine block_append (a := 1920) (b := 384) (next := 3527) (x := 7284736252250) (y := 4452855230208)
-    ?_ (by rfl) (by decide) (by decide) (by decide)
+    ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide)) (by decide) (by decide) (by decide)
   refine block_append (a := 1536) (b := 384) (next := 3143) (x := 3920679935360) (y := 3364056316890)
     ?_ (by rfl) (by decide) (by decide) (by decide)
   refine block_append (a := 1152) (b := 384) (next := 2759) (x := 1728687439392) (y := 2191992495968)
@@ -2307,17 +2670,17 @@ theorem moment4830 : momentEstimate 4830 1019 = 14637581938425 := by
   refine block_append (a := 3456) (b := 384) (next := 4475) (x := 10630093427205) (y := 1449057360860)
     ?_ (by rfl) (by decide) (by decide) (by decide)
   refine block_append (a := 3072) (b := 384) (next := 4091) (x := 8944530044805) (y := 1685563382400)
-    ?_ (by rfl) (by decide) (by decide) (by decide)
+    ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide)) (by decide) (by decide) (by decide)
   refine block_append (a := 2688) (b := 384) (next := 3707) (x := 7137965743365) (y := 1806564301440)
-    ?_ (by rfl) (by decide) (by decide) (by decide)
+    ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide)) (by decide) (by decide) (by decide)
   refine block_append (a := 2304) (b := 384) (next := 3323) (x := 5325911655045) (y := 1812054088320)
-    ?_ (by rfl) (by decide) (by decide) (by decide)
+    ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide)) (by decide) (by decide) (by decide)
   refine block_append (a := 1920) (b := 384) (next := 2939) (x := 3623878912005) (y := 1702032743040)
-    ?_ (by rfl) (by decide) (by decide) (by decide)
+    ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide)) (by decide) (by decide) (by decide)
   refine block_append (a := 1536) (b := 384) (next := 2555) (x := 2147378646405) (y := 1476500265600)
-    ?_ (by rfl) (by decide) (by decide) (by decide)
+    ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide)) (by decide) (by decide) (by decide)
   refine block_append (a := 1152) (b := 384) (next := 2171) (x := 1011921990405) (y := 1135456656000)
-    ?_ (by rfl) (by decide) (by decide) (by decide)
+    ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide)) (by decide) (by decide) (by decide)
   refine block_append (a := 768) (b := 384) (next := 1787) (x := 322478735040) (y := 689443255365)
     ?_ (by rfl) (by decide) (by decide) (by decide)
   refine block_append (a := 384) (b := 384) (next := 1403) (x := 43206276960) (y := 279272458080)
@@ -2330,6 +2693,37 @@ namespace P1_7_1_3_5
 open P1_7_1_3 (blockEstimate block_append momentEstimate)
 set_option maxRecDepth 12000
 set_option maxHeartbeats 10000000
+theorem moment4714 : momentEstimate 4714 997 = 13307662181427 := by
+  change blockEstimate 4714 997 997 5711 = 13307662181427
+  refine block_append (a := 5376) (b := 335) (next := 6373) (x := 13293190894919) (y := 14471286508)
+    ?_ (by rfl) (by decide) (by decide) (by decide)
+  refine block_append (a := 4992) (b := 384) (next := 5989) (x := 13171216668327) (y := 121974226592)
+    ?_ (by rfl) (by decide) (by decide) (by decide)
+  refine block_append (a := 4608) (b := 384) (next := 5605) (x := 12836550788780) (y := 334665879547)
+    ?_ (by rfl) (by decide) (by decide) (by decide)
+  refine block_append (a := 4224) (b := 384) (next := 5221) (x := 12212427175383) (y := 624123613397)
+    ?_ (by rfl) (by decide) (by decide) (by decide)
+  refine block_append (a := 3840) (b := 384) (next := 4837) (x := 11257616482002) (y := 954810693381)
+    ?_ (by rfl) (by decide) (by decide) (by decide)
+  refine block_append (a := 3456) (b := 384) (next := 4453) (x := 9974418830209) (y := 1283197651793)
+    ?_ (by rfl) (by decide) (by decide) (by decide)
+  refine block_append (a := 3072) (b := 384) (next := 4069) (x := 8441569360833) (y := 1532849469376)
+    ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide)) (by decide) (by decide) (by decide)
+  refine block_append (a := 2688) (b := 384) (next := 3685) (x := 6771639337985) (y := 1669930022848)
+    ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide)) (by decide) (by decide) (by decide)
+  refine block_append (a := 2304) (b := 384) (next := 3301) (x := 5077648477249) (y := 1693990860736)
+    ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide)) (by decide) (by decide) (by decide)
+  refine block_append (a := 1920) (b := 384) (next := 2917) (x := 3472616494209) (y := 1605031983040)
+    ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide)) (by decide) (by decide) (by decide)
+  refine block_append (a := 1536) (b := 384) (next := 2533) (x := 2069563104449) (y := 1403053389760)
+    ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide)) (by decide) (by decide) (by decide)
+  refine block_append (a := 1152) (b := 384) (next := 2149) (x := 981508023553) (y := 1088055080896)
+    ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide)) (by decide) (by decide) (by decide)
+  refine block_append (a := 768) (b := 384) (next := 1765) (x := 313686788800) (y := 667821234753)
+    ?_ (by rfl) (by decide) (by decide) (by decide)
+  refine block_append (a := 384) (b := 384) (next := 1381) (x := 42102996320) (y := 271583792480)
+    ?_ (by rfl) (by decide) (by decide) (by decide)
+  rfl
 theorem moment5798 : momentEstimate 5798 1223 = 30381132426145 := by
   change blockEstimate 5798 1223 1223 7021 = 30381132426145
   refine block_append (a := 6912) (b := 109) (next := 8135) (x := 30380486284103) (y := 646142042)
@@ -2349,19 +2743,19 @@ theorem moment5798 : momentEstimate 5798 1223 = 30381132426145 := by
   refine block_append (a := 4224) (b := 384) (next := 5447) (x := 22596200533050) (y := 2466713124000)
     ?_ (by rfl) (by decide) (by decide) (by decide)
   refine block_append (a := 3840) (b := 384) (next := 5063) (x := 19761577004346) (y := 2834623528704)
-    ?_ (by rfl) (by decide) (by decide) (by decide)
+    ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide)) (by decide) (by decide) (by decide)
   refine block_append (a := 3456) (b := 384) (next := 4679) (x := 16697645829690) (y := 3063931174656)
-    ?_ (by rfl) (by decide) (by decide) (by decide)
+    ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide)) (by decide) (by decide) (by decide)
   refine block_append (a := 3072) (b := 384) (next := 4295) (x := 13543020367674) (y := 3154625462016)
-    ?_ (by rfl) (by decide) (by decide) (by decide)
+    ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide)) (by decide) (by decide) (by decide)
   refine block_append (a := 2688) (b := 384) (next := 3911) (x := 10436313976890) (y := 3106706390784)
-    ?_ (by rfl) (by decide) (by decide) (by decide)
+    ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide)) (by decide) (by decide) (by decide)
   refine block_append (a := 2304) (b := 384) (next := 3527) (x := 7516140015930) (y := 2920173960960)
-    ?_ (by rfl) (by decide) (by decide) (by decide)
+    ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide)) (by decide) (by decide) (by decide)
   refine block_append (a := 1920) (b := 384) (next := 3143) (x := 4921111843386) (y := 2595028172544)
-    ?_ (by rfl) (by decide) (by decide) (by decide)
+    ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide)) (by decide) (by decide) (by decide)
   refine block_append (a := 1536) (b := 384) (next := 2759) (x := 2789842817850) (y := 2131269025536)
-    ?_ (by rfl) (by decide) (by decide) (by decide)
+    ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide)) (by decide) (by decide) (by decide)
   refine block_append (a := 1152) (b := 384) (next := 2375) (x := 1260670239264) (y := 1529172578586)
     ?_ (by rfl) (by decide) (by decide) (by decide)
   refine block_append (a := 768) (b := 384) (next := 1991) (x := 395846010560) (y := 864824228704)
@@ -2389,27 +2783,27 @@ private theorem part0 : blockEstimate 10506 2218 2218 3072 = 38879167664736 := b
   have h0 : blockEstimate 10506 2218 2218 768 = 752677759680 := rfl
   have h1 := append h0 2986 768 4908442151616 1536 5661119911296 rfl rfl rfl rfl
   have h2 := append h1 3754 768 12256198429024 2304 17917318340320 rfl rfl rfl rfl
-  have h3 := append h2 4522 768 20961849324416 3072 38879167664736 rfl rfl rfl rfl
+  have h3 := append h2 4522 768 20961849324416 3072 38879167664736 rfl rfl rfl (P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide))
   exact h3
-theorem part1 : blockEstimate 10506 2218 5290 3072 = 135349442891264 := by
-  have h0 : blockEstimate 10506 2218 5290 768 = 28122400568192 := rfl
-  have h1 := append h0 6058 768 33272605127552 1536 61395005695744 rfl rfl rfl rfl
-  have h2 := append h1 6826 768 36412463002496 2304 97807468698240 rfl rfl rfl rfl
-  have h3 := append h2 7594 768 37541974193024 3072 135349442891264 rfl rfl rfl rfl
+private theorem part1 : blockEstimate 10506 2218 5290 3072 = 135349442891264 := by
+  have h0 : blockEstimate 10506 2218 5290 768 = 28122400568192 := P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide)
+  have h1 := append h0 6058 768 33272605127552 1536 61395005695744 rfl rfl rfl (P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide))
+  have h2 := append h1 6826 768 36412463002496 2304 97807468698240 rfl rfl rfl (P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide))
+  have h3 := append h2 7594 768 37541974193024 3072 135349442891264 rfl rfl rfl (P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide))
   exact h3
-theorem part2 : blockEstimate 10506 2218 8362 3072 = 121728680363516 := by
-  have h0 : blockEstimate 10506 2218 8362 768 = 36661138699136 := rfl
-  have h1 := append h0 9130 768 33769956520832 1536 70431095219968 rfl rfl rfl rfl
+private theorem part2 : blockEstimate 10506 2218 8362 3072 = 121728680363516 := by
+  have h0 : blockEstimate 10506 2218 8362 768 = 36661138699136 := P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide)
+  have h1 := append h0 9130 768 33769956520832 1536 70431095219968 rfl rfl rfl (P1_7_1_3.Middle.block_of_middle_endpoints (by decide) (by decide) (by decide) (by decide))
   have h2 := append h1 9898 768 28870580603797 2304 99301675823765 rfl rfl rfl rfl
   have h3 := append h2 10666 768 22427004539751 3072 121728680363516 rfl rfl rfl rfl
   exact h3
-theorem part3 : blockEstimate 10506 2218 11434 3072 = 31498976875795 := by
+private theorem part3 : blockEstimate 10506 2218 11434 3072 = 31498976875795 := by
   have h0 : blockEstimate 10506 2218 11434 768 = 15768359579110 := rfl
   have h1 := append h0 12202 768 9664895896493 1536 25433255475603 rfl rfl rfl rfl
   have h2 := append h1 12970 768 4686148763072 2304 30119404238675 rfl rfl rfl rfl
   have h3 := append h2 13738 768 1379572637120 3072 31498976875795 rfl rfl rfl rfl
   exact h3
-theorem part4 : blockEstimate 10506 2218 14506 436 = 71892394141 := by
+private theorem part4 : blockEstimate 10506 2218 14506 436 = 71892394141 := by
   have h0 : blockEstimate 10506 2218 14506 436 = 71892394141 := rfl
   exact h0
 theorem moment10506 : momentEstimate 10506 2218 = 327528160189452 := by

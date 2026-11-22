@@ -30,7 +30,7 @@ theorem fraction_injective : Function.Injective toFraction :=
 theorem support_fraction (P : Row 4) : (toFraction P).support = P.support :=
   MvPolynomial.support_map_of_injective P (IsFractionRing.injective Geom[X] GenericField)
 
-theorem primitive_relation {ι : Type*} (s : Finset ι) (c : ι → Geom[X])
+private theorem primitive_relation {ι : Type*} (s : Finset ι) (c : ι → Geom[X])
     (e : ι → Row 4) (h : ∑ i ∈ s, c i • e i = 0)
     (hne : ∃ i ∈ s, c i ≠ 0) (x : Geom) :
     ∃ b : ι → Geom[X], (∑ i ∈ s, b i • e i = 0) ∧ ∃ i ∈ s, (b i).eval x ≠ 0 := by
@@ -161,5 +161,7 @@ theorem clear_denominators (R : FractionJet) :
   ext m
   simp [MvPolynomial.mem_support_iff, MvPolynomial.coeff_C_mul, hi]
 
+#print axioms clear_denominators
+#print axioms independent_fraction
 end
 end Shared50Rational

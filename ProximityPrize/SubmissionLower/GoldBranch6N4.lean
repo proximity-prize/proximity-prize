@@ -66,19 +66,19 @@ open P0_9_4 (clear_denominators)
 open private inclX_injective coefficientDerivative coeff_coefficientDerivative
   dotted polynomialPoint eval_dotted eval_map_point degreeOf_le_of_support_subset
   dotted_weight seed_weight from ProximityPrize.SubmissionLower.PortLow4
-theorem small_cast_ne_zero (n : ℕ) (hpos : 0 < n) (hsmall : n ≤ 17) :
+private theorem small_cast_ne_zero (n : ℕ) (hpos : 0 < n) (hsmall : n ≤ 17) :
     (n : GenericX) ≠ 0 := by
   let : CharP GenericX K1.p := charP_of_injective_ringHom (inclConst.comp embed).injective K1.p
   intro hz
   have hlarge : 17 < K1.p := by decide
   exact (not_le_of_gt (hsmall.trans_lt hlarge))
     (Nat.le_of_dvd hpos ((CharP.cast_eq_zero_iff GenericX K1.p n).mp hz))
-theorem pderiv_moved {P : GenericRow} {i j k : SeedVar} (h : P.degreeOf k = 0) :
+private theorem pderiv_moved {P : GenericRow} {i j k : SeedVar} (h : P.degreeOf k = 0) :
     pderiv k (MvPolynomial.X j * pderiv i P) = pderiv k (MvPolynomial.X j : GenericRow) * pderiv i P := by
   have hzero : pderiv k (pderiv i P) = 0 :=
     pderiv_eq_zero_of_degreeOf_eq_zero (Nat.eq_zero_of_le_zero ((degreeOf_pderiv_le i k P).trans_eq h))
   rw [pderiv_mul, hzero, mul_zero, add_zero]
-theorem partial_not_dvd {f g : GenericRow} (i k : SeedVar) (a : GenericX)
+private theorem partial_not_dvd {f g : GenericRow} (i k : SeedVar) (a : GenericX)
     (hi : 0 < f.degreeOf i) (hsmall : f.degreeOf i ≤ 17) (hk : f.degreeOf k = 0)
     (ha : a ≠ 0) (hg : pderiv k g = C a * pderiv i f) : ¬ f ∣ g := by
   have hpartial : pderiv i f ≠ 0 :=
@@ -93,7 +93,7 @@ theorem partial_not_dvd {f g : GenericRow} (i k : SeedVar) (a : GenericX)
     exact hnonzero (by rw [← hg, hz, mul_zero])
   rw [← hg, degreeOf_mul_eq (ne_zero_of_degreeOf_ne_zero hi.ne') hq'] at hdegree
   omega
-theorem dotted_relPrime {f r : GenericRow} (hf : Irreducible f)
+private theorem dotted_relPrime {f r : GenericRow} (hf : Irreducible f)
     (hb : 0 < jetTotal f) (ht : jetTotal f ≤ 17) (htop : f.degreeOf (some 2) = 0)
     (hr : r.support ⊆ f.support) (a : GenericX) (ha : a ≠ 0) :
     IsRelPrime f (dotted r (C a * f)) := by
@@ -424,9 +424,9 @@ private theorem coefficient_bound {k : Type*} [CommRing k]
   have hsmall : 48914 * l < weight (d + e) i - weight e j := by omega
   unfold weight at hweight hsmall
   omega
-def columnWeight {m n : ℕ} (j : Fin (m + n)) : ℕ :=
+private def columnWeight {m n : ℕ} (j : Fin (m + n)) : ℕ :=
   j.addCases (fun j : Fin m => weight firstOrder j) (fun j : Fin n => weight secondOrder j)
-theorem sylvester_entry {k : Type*} [CommRing k]
+private theorem sylvester_entry {k : Type*} [CommRing k]
     (F G : k[X][X]) (m n : ℕ)
     (hF : ∀ i l : ℕ, 6819 * i + 48914 * l < firstOrder → (F.coeff i).coeff l = 0)
     (hG : ∀ i l : ℕ, 6819 * i + 48914 * l < secondOrder → (G.coeff i).coeff l = 0)
@@ -445,7 +445,7 @@ theorem sylvester_entry {k : Type*} [CommRing k]
     split_ifs with h
     · exact coefficient_bound F firstOrder secondOrder i j h.1 hF
     · exact dvd_zero _
-theorem det_bound {k : Type*} [CommRing k] {N D : ℕ}
+private theorem det_bound {k : Type*} [CommRing k] {N D : ℕ}
     (M : Matrix (Fin N) (Fin N) k[X]) (row col : Fin N → ℕ)
     (hM : ∀ i j, (Polynomial.X : k[X]) ^ power (row i - col j) ∣ M i j)
     (hbudget : (∑ j, col j) + 48914 * D ≤ (∑ i, row i) + 48913) :
@@ -466,7 +466,7 @@ theorem det_bound {k : Type*} [CommRing k] {N D : ℕ}
     omega
   have hD : D ≤ ∑ j, a j := by omega
   exact dvd_mul_of_dvd_right ((pow_dvd_pow _ hD).trans hprod) _
-theorem sum_weight {d t N : ℕ} (ht : t ≤ N) (hend : d ≤ 6819 * t)
+private theorem sum_weight {d t N : ℕ} (ht : t ≤ N) (hend : d ≤ 6819 * t)
     (hbefore : ∀ i < t, 6819 * i ≤ d) :
     (∑ i : Fin N, weight d i) = t * d - 6819 * (t * (t - 1) / 2) := by
   rw [Fin.sum_univ_eq_sum_range]
@@ -490,7 +490,7 @@ theorem sum_weight {d t N : ℕ} (ht : t ≤ N) (hend : d ≤ 6819 * t)
       _ = _ := by simp [Nat.mul_comm]
   rw [Finset.sum_range_id] at hsum
   omega
-theorem benchmark_budget :
+private theorem benchmark_budget :
     (∑ j : Fin (70000 + 70000), columnWeight (m := 70000) (n := 70000) j) + 48914 * 69360 ≤
       (∑ i : Fin (70000 + 70000), weight (firstOrder + secondOrder) i) + 48913 := by
   have hF : (∑ i : Fin 70000, weight firstOrder i) = 0xaea36c7d := by
@@ -509,7 +509,7 @@ theorem benchmark_budget :
   rw [Fin.sum_univ_add, hFG]
   simp only [columnWeight, Fin.addCases_left, Fin.addCases_right, hF, hG]
   decide
-theorem resultant_bound
+private theorem resultant_bound
     (F G : GenericX[X][X]) (z : GenericX) {m n D : ℕ} (hF : F.natDegree ≤ m) (hG : G.natDegree ≤ n)
     (hFO : ∀ i l : ℕ, 6819 * i + 48914 * l < firstOrder →
       ((F.taylor (C z)).coeff i).coeff l = 0)

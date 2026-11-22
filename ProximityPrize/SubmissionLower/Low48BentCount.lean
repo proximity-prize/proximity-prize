@@ -7,8 +7,8 @@ open Finset
 open Low48BentLattice
 open K1_13_6_2_4 (Exponent)
 open scoped BigOperators
-open K1_13_6_2_3_1 (slice_count paired_sum)
-open private slice evenSlice oddSlice sum_pair pairedSum from ProximityPrize.SubmissionLower.Fast054
+open private slice slice_count evenSlice oddSlice sum_pair pairedSum paired_sum
+  from ProximityPrize.SubmissionLower.Fast054
 noncomputable section
 
 private def Slices (a : Cap) :=
@@ -54,7 +54,7 @@ private def slicesEquiv (a : Cap) (ha : Chamber a) : latticePoints a ≃ Slices 
     rcases s with ⟨⟨h, hh⟩, ⟨z, hz⟩, ⟨y, hy⟩, ⟨x, hx⟩, ⟨u, hu⟩⟩
     rfl
 
-theorem slice_even_raw (b j i : ℕ) (hi : 3 * i ≤ j) (hb : 2 * j ≤ b) :
+private theorem slice_even_raw (b j i : ℕ) (hi : 3 * i ≤ j) (hb : 2 * j ≤ b) :
     slice (2 * j - 3 * (2 * i)) (b - 2 * i) =
       evenSlice ((b : ℚ) / 2) j i := by
   have hW : 2 * j - 3 * (2 * i) = 2 * (j - 3 * i) := by omega
@@ -65,7 +65,7 @@ theorem slice_even_raw (b j i : ℕ) (hi : 3 * i ≤ j) (hb : 2 * j ≤ b) :
   push_cast [Nat.cast_sub hi, Nat.cast_sub hC]
   ring
 
-theorem slice_odd_raw (b j i : ℕ) (hi : 3 * i + 3 ≤ j) (hb : 2 * j ≤ b) :
+private theorem slice_odd_raw (b j i : ℕ) (hi : 3 * i + 3 ≤ j) (hb : 2 * j ≤ b) :
     slice (2 * j - 3 * (2 * i + 1)) (b - (2 * i + 1)) =
       oddSlice ((b : ℚ) / 2) j i := by
   have hW : 3 * (2 * i + 1) ≤ 2 * j := by omega

@@ -1,7 +1,7 @@
 import ProximityPrize.SubmissionLower.KoalaRectRetained
 import ProximityPrize.SubmissionLower.KoalaTwoSectionPrice
 import ProximityPrize.SubmissionLower.KoalaRawCount
-import ProximityPrize.SubmissionLower.HighCore82219Regular
+import ProximityPrize.SubmissionLower.HighCore82258Regular
 
 set_option Elab.async false
 set_option autoImplicit false
@@ -11,11 +11,11 @@ set_option backward.isDefEq.respectTransparency false
 
 namespace KoalaTwoSectionPrice
 noncomputable section
-open Polynomial Finset HighCore82219
+open Polynomial Finset HighCore82258
 open KoalaRect (RectPrice axisDegree axisDegree_le_iff seedBound_of_axis)
 open KoalaRectReceipts (paidCap)
 open K1_14 (atMark graphEval)
-open HighCore82219Upper (Input ResidueLift Factors componentMarks mem_componentMarks root_component ratio_le_ceil)
+open HighCore82258Upper (Input ResidueLift Factors componentMarks mem_componentMarks root_component ratio_le_ceil)
 
 def TwoCutIncidence : Prop :=
   ∀ (J : Input) (B : ResidueLift J) (D : Factors J B),
@@ -32,13 +32,13 @@ private theorem regular_count (incidence : TwoCutIncidence) (J : Input)
     J.marks.card ≤
       properCharge agreement J.lo J.hi J.e v₀ v₁ + flatFee J.hi J.v + J.e := by
   classical
-  have hweak := HighCore82219Upper.fixed_word J (Finset.Subset.refl J.marks)
+  have hweak := HighCore82258Upper.fixed_word J (Finset.Subset.refl J.marks)
   have hword : FixedWord J.model.word J.marks J.family.scalar (degreeAt J.hi) :=
     ⟨hweak.distinct, hweak.degree, fun γ hγ =>
       let m := J.family.mark γ (J.marks_sub hγ)
       ⟨m.bad.support, m.bad.agreement, m.scalar_hits⟩⟩
-  obtain ⟨B⟩ := HighCore82219Upper_1.proof J
-  obtain ⟨D⟩ := HighCore82219Upper_2.proof J B
+  obtain ⟨B⟩ := HighCore82258Upper_1.proof J
+  obtain ⟨D⟩ := HighCore82258Upper_2.proof J B
   let T := componentMarks J D.proper
   let U := fun j => componentMarks J (D.flat j)
   have hcov : J.marks ⊆ T ∪ univ.biUnion U := by
@@ -49,7 +49,7 @@ private theorem regular_count (incidence : TwoCutIncidence) (J : Input)
   have hp : T.card ≤ properCharge agreement J.lo J.hi J.e v₀ v₁ := by
     by_cases hsingle : singleCut J.e
     · rw [properCharge, if_pos hsingle]
-      apply ratio_le_ceil (HighCore82219_5.scale_pos J J.agreement_gap)
+      apply ratio_le_ceil (HighCore82258_5.scale_pos J J.agreement_gap)
       obtain ⟨hk,hv,hw⟩ := liftIndex_spec J.hi v₀ v₁
       let k := liftIndex J.hi v₀ v₁
       have hcount := SplitCut.RawCount.proper_count J B D v₀ v₁ k hk
@@ -57,17 +57,17 @@ private theorem regular_count (incidence : TwoCutIncidence) (J : Input)
         haxes hword J.agreement_gap
       refine hcount.trans_eq ?_
       simp only [SplitCut.RawCount.rootDegree, SplitCut.RawCount.firstDegree, SplitCut.RawCount.weight,
-        properBudget, surfaceDegree, HighCore82219_5.nodeVelocity,
-        HighCore82219.lambdaNum, HighCore82219.muNum, HighCore82219.gap, k]
+        properBudget, surfaceDegree, HighCore82258_5.nodeVelocity,
+        HighCore82258.lambdaNum, HighCore82258.muNum, HighCore82258.gap, k]
       ring
     · rw [properCharge, if_neg hsingle]
       unfold singleCut at hsingle
       exact incidence J B D hlo hhi (by omega) (by omega) hword v₀ v₁ hsum hpaid haxes
   have hf : (∑ j, (U j).card) ≤ flatFee J.hi J.v + J.e := by
-    apply HighCore82219_5.flat_count J J.agreement_gap hword D
+    apply HighCore82258_5.flat_count J J.agreement_gap hword D
     intro j
-    obtain ⟨E⟩ := HighCore82219Upper_4.of_children HighCore82219Upper_4_1.proof HighCore82219Upper_4_2.proof J B D j
-    exact HighCore82219Upper_5.of_children HighCore82219Upper_5_1.proof HighCore82219Upper_5_2.proof J B D j E
+    obtain ⟨E⟩ := HighCore82258Upper_4.of_children HighCore82258Upper_4_1.proof HighCore82258Upper_4_2.proof J B D j
+    exact HighCore82258Upper_5.of_children HighCore82258Upper_5_1.proof HighCore82258Upper_5_2.proof J B D j E
   calc
     J.marks.card ≤ T.card + (univ.biUnion U).card := (card_le_card hcov).trans (card_union_le _ _)
     _ ≤ properCharge agreement J.lo J.hi J.e v₀ v₁ +
@@ -90,19 +90,20 @@ theorem rect_price (incidence : TwoCutIncidence) : RectPrice := by
   have hbounds : ∀ i, (f.coeff i).degreeOf 0 ≤ v₀ ∧ (f.coeff i).degreeOf 1 ≤ v₁ :=
     fun i => ⟨(axisDegree_le_iff f 0 _).mp le_rfl i, (axisDegree_le_iff f 1 _).mp hv₁ i⟩
   have hseed := seedBound_of_axis haxes
-  obtain ⟨hsep, hflat⟩ := guards hel heu
+  have he28 : e < 28 := heu.trans (by decide : 23 < 28)
+  obtain ⟨hsep, hflat⟩ := guards hel he28
   let bad := T.filter fun γ => graphEval (M.label γ) (f.resultant f.derivative) = 0
   let R := T \ bad
   have hb : bad ⊆ T := Finset.filter_subset _ _
-  have hbad := FrontCore82219.resultant_count M hf hseed hsep bad
+  have hbad := FrontCore82258.resultant_count M hf hseed hsep bad
     (fun _ hγ => (Finset.mem_filter.mp hγ).2)
   have hreg : ∀ γ ∈ R, regularRoot f (M.label γ) (F.scalar γ) := by
     intro γ hγ
     obtain ⟨ht, hn⟩ := Finset.mem_sdiff.mp hγ
     exact P1_7.regular_of_resultant hf.1 (hr γ ht) (fun hz => hn (Finset.mem_filter.mpr ⟨ht,hz⟩))
   obtain ⟨hl, hu⟩ := window_nat hw
-  have hl' : 2391 ≤ M.overhead.toNat := hl
-  have hu' : M.overhead.toNat ≤ 2490 := hu
+  have hl' : 2414 ≤ M.overhead.toNat := hl
+  have hu' : M.overhead.toNat ≤ 2535 := hu
   let J : Input := {
     words := u, deleted := del, model := M, labels := Γ, family := F
     shift_out := hshift, block := H, chart := hH, marks := R
@@ -119,7 +120,7 @@ theorem rect_price (incidence : TwoCutIncidence) : RectPrice := by
   have hregular := regular_count incidence J rfl rfl hbounds hsum rfl
   have hpart := Finset.card_sdiff_add_card_eq_card hb
   have hcharge : charge agreement J.lo J.hi e v₀ v₁ ≤ retainedCap .h2367 :=
-    charge_le hel heu hsum
+    charge_le hel he28 hsum
   calc
     T.card = bad.card + J.marks.card := by
       change T.card = bad.card + R.card
@@ -136,5 +137,6 @@ theorem rect_price (incidence : TwoCutIncidence) : RectPrice := by
       ac_rfl
     _ ≤ retainedCap .h2367 := hcharge
 
+#print axioms rect_price
 end
 end KoalaTwoSectionPrice

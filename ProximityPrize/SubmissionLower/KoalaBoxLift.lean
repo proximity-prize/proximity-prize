@@ -6,7 +6,7 @@ noncomputable section
 open MvPolynomial
 variable {F : Type*} [Field F]
 
-def takeBox (m : Exp) (a b c : ℕ) : Exp :=
+private def takeBox (m : Exp) (a b c : ℕ) : Exp :=
   Finsupp.equivFunOnFinite.symm fun i : Idx => i.elim (min (m none) a)
     ![min (m (some 0)) b,min (m (some 1)) c]
 
@@ -64,3 +64,4 @@ theorem mono {a b c x y z : ℕ} (ha : a≤x) (hb : b≤y) (hc : c≤z) :
 
 end
 end SplitCut.BoxDegree
+#print axioms SplitCut.BoxDegree.lift_box

@@ -30,7 +30,7 @@ theorem fits_scale {a : Cap} {c : ℕ} (ha : Fits a c) (n : ℕ) :
     | simpa only [Scale,Shape.scale,Nat.mul_add,Nat.mul_left_comm n 2] using Nat.mul_le_mul_left n ht
     | simpa only [Scale,Shape.scale,Nat.mul_left_comm n 2] using Nat.mul_le_mul_left n hh
 
-theorem old_chamber {a : Cap} {c : ℕ} (ha : Fits a c) : Low48BentLattice.Chamber a := by
+private theorem old_chamber {a : Cap} {c : ℕ} (ha : Fits a c) : Low48BentLattice.Chamber a := by
   obtain ⟨hb,hj,hc,ht,hh,_⟩ := ha
   exact ⟨by omega,hj,by omega⟩
 
@@ -61,13 +61,13 @@ theorem point_scale (a : Cap) (c : ℕ) (ha : Fits a c) (n : ℕ) :
     cases a
     simp [Low48BentLattice.Add, Scale, Shape.scale, Shape.plus, Nat.succ_mul]
 
-def sumLoss (c n : ℚ) : ℚ :=
+private def sumLoss (c n : ℚ) : ℚ :=
   let f : ℚ→ℚ := fun h => sliceLoss (c-h)
   n*f 0+n*(n-1)/2*(f 1-f 0)+n*(n-1)*(n-2)/6*(f 2-2*f 1+f 0)+
     n*(n-1)*(n-2)*(n-3)/24*(f 3-3*f 2+3*f 1-f 0)+
     n*(n-1)*(n-2)*(n-3)*(n-4)/120*(f 4-4*f 3+6*f 2-4*f 1+f 0)
 
-theorem sum_loss (c : ℚ) (n : ℕ) :
+private theorem sum_loss (c : ℚ) (n : ℕ) :
     ∑ h ∈ range n, sliceLoss (c - h) = sumLoss c n := by
   induction n with
   | zero => simp [sumLoss]
@@ -103,13 +103,13 @@ private def coeff5 (c h : ℚ) : ℚ :=
     - (16/3) * c * h^4
     + (32/15) * h^5
 
-theorem sumLoss_eval (c h n : ℚ) :
+private theorem sumLoss_eval (c h n : ℚ) :
     sumLoss (n*c) (2*n*h+1) =
       coeff5 c h*n^5+coeff4 c h*n^4+coeff3 c h*n^3+coeff2 c h*n^2+coeff1 c h*n := by
   unfold sumLoss sliceLoss coeff1 coeff2 coeff3 coeff4 coeff5
   ring
 
-def lossPolynomial (c h : ℚ) : ℚ[X] :=
+private def lossPolynomial (c h : ℚ) : ℚ[X] :=
   Polynomial.C (coeff5 c h)*Polynomial.X^5+Polynomial.C (coeff4 c h)*Polynomial.X^4+
     Polynomial.C (coeff3 c h)*Polynomial.X^3+Polynomial.C (coeff2 c h)*Polynomial.X^2+
     Polynomial.C (coeff1 c h)*Polynomial.X^1

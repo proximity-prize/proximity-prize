@@ -44,7 +44,7 @@ theorem cutoff_dim (r : ℕ) : Module.finrank GenericField (cutoff r) = Final50S
   rw [(Submodule.comapSubtypeEquivOfLe hle).finrank_eq,finrank_restrictSupport_finset]
   rfl
 
-theorem hasse_add (a : Fin 4 →₀ ℕ) (P Q : GeoJets) :
+private theorem hasse_add (a : Fin 4 →₀ ℕ) (P Q : GeoJets) :
     hassePartial a (P+Q) = hassePartial a P + hassePartial a Q := by
   rw [← taylor_coeff, map_add, MvPolynomial.coeff_add, taylor_coeff,taylor_coeff]
 
@@ -53,7 +53,7 @@ private theorem hasse_zero (a : Fin 4 →₀ ℕ) :
   rw [← taylor_coeff, map_zero]
   simp
 
-theorem hasse_C_mul (a : Fin 4 →₀ ℕ) (c : GeoField) (P : GeoJets) :
+private theorem hasse_C_mul (a : Fin 4 →₀ ℕ) (c : GeoField) (P : GeoJets) :
     hassePartial a (MvPolynomial.C c * P) = MvPolynomial.C c * hassePartial a P := by
   rw [← taylor_coeff, map_mul]
   have h : taylorHom (MvPolynomial.C c : GeoJets) = MvPolynomial.C (MvPolynomial.C c) := by
@@ -162,5 +162,7 @@ theorem exists_polynomial {w Γ s} (hm : Final50Price.Messages w Γ s)
     rw [← fraction_geometric,hQ,map_mul,toGeometric,MvPolynomial.map_C,hasse_C_mul]
     exact P.mul_mem_left _ (ho P hP a ha)
 
+#print axioms bank_layers
+#print axioms exists_polynomial
 end
 end Shared50ShapeRank

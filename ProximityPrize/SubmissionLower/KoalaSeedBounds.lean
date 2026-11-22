@@ -10,24 +10,24 @@ noncomputable section
 
 open Polynomial
 open K1_14 (FX L Seeds Equation)
-open HighCore82219Upper (SeedConstants liftSeeds center)
+open HighCore82258Upper (SeedConstants liftSeeds center)
 
-def axisSpace (F : Type*) [Field F] (i : Fin 2) (d : ℕ) : Submodule F (SeedPoly F) :=
+private def axisSpace (F : Type*) [Field F] (i : Fin 2) (d : ℕ) : Submodule F (SeedPoly F) :=
   MvPolynomial.restrictSupport F {m | m i ≤ d}
 
-theorem axis_mem {F : Type*} [Field F] {i : Fin 2} {d : ℕ} {g : SeedPoly F} :
+private theorem axis_mem {F : Type*} [Field F] {i : Fin 2} {d : ℕ} {g : SeedPoly F} :
     g ∈ axisSpace F i d ↔ g.degreeOf i ≤ d := by
   exact (MvPolynomial.degreeOf_le_iff (f := g) (n := i)).symm
 
 variable {F R : Type*} [Field F] [CommRing R] [Algebra F R]
 
-def coeffSpace (M : Submodule F R) : Submodule F R[X] where
+private def coeffSpace (M : Submodule F R) : Submodule F R[X] where
   carrier := {P | ∀ j, P.coeff j ∈ M}
   zero_mem' := fun j => by rw [coeff_zero]; exact M.zero_mem
   add_mem' h₁ h₂ := fun j => by rw [coeff_add]; exact M.add_mem (h₁ j) (h₂ j)
   smul_mem' a _ hp := fun j => by rw [coeff_smul]; exact M.smul_mem a (hp j)
 
-theorem eval_mem (M : Submodule F R) {P : R[X]} (h : P ∈ coeffSpace M) (x : F) :
+private theorem eval_mem (M : Submodule F R) {P : R[X]} (h : P ∈ coeffSpace M) (x : F) :
     P.eval (algebraMap F R x) ∈ M := by
   rw [eval_eq_sum_range]
   apply M.sum_mem
@@ -35,7 +35,7 @@ theorem eval_mem (M : Submodule F R) {P : R[X]} (h : P ∈ coeffSpace M) (x : F)
   rw [← map_pow, mul_comm, ← Algebra.smul_def]
   exact M.smul_mem _ (h j)
 
-theorem taylor_mem (M : Submodule F R) {P : R[X]} (h : P ∈ coeffSpace M) (x : F) :
+private theorem taylor_mem (M : Submodule F R) {P : R[X]} (h : P ∈ coeffSpace M) (x : F) :
     taylor (algebraMap F R x) P ∈ coeffSpace M := by
   intro j
   rw [taylor_coeff]
@@ -105,3 +105,5 @@ theorem center_eval {E : Type} [CommRing E] (ι : Seeds →+* E) (y : E) (G : Fr
 end
 end SplitCut.Compression
 
+#print axioms SplitCut.Compression.translated_seed_bound
+#print axioms SplitCut.Compression.center_axis_bound

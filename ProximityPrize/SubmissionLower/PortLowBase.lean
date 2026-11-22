@@ -1,3 +1,4 @@
+/- Modified from public PR657. Removed obsolete rank budget checks. -/
 import ProximityPrize.SubmissionLower.Fast072
 import ProximityPrize.SubmissionLower.PortBase
 set_option Elab.async false
@@ -169,7 +170,7 @@ private noncomputable def exponent (x v a b c : ℕ) : Exponent :=
 @[simp] private theorem exponent_some (x v a b c : ℕ) (i : Fin 4) :
     exponent x v a b c (some i) = ![v, a, b, c] i := by
   simp [exponent]
-theorem exponent_coordinates (u : Exponent) :
+private theorem exponent_coordinates (u : Exponent) :
     exponent (u none) (u (some 0)) (u (some 1)) (u (some 2)) (u (some 3)) = u := by
   ext i
   cases i with
@@ -181,7 +182,7 @@ private theorem jet_weight (m : Fin 4 →₀ ℕ) (w : Fin 4 → ℕ) :
 private def sumRange (f : ℕ → ℕ) : ℕ → ℕ
   | 0 => 0
   | n + 1 => sumRange f n + f n
-theorem sumRange_eq (f : ℕ → ℕ) (n : ℕ) :
+private theorem sumRange_eq (f : ℕ → ℕ) (n : ℕ) :
     sumRange f n = ∑ i ∈ Finset.range n, f i := by
   induction n with
   | zero => simp [sumRange]
@@ -237,11 +238,20 @@ private def exponent : Column → SourceExponent
   | ⟨f, c, b, a, x⟩ => Finsupp.equivFunOnFinite.symm (fun v => v.elim x ![a, b, c, f])
 private def coordinates (e : SourceExponent) : Column :=
   ⟨e (some 3), e (some 2), e (some 1), e (some 0), e none⟩
-theorem exponent_coordinates (e : SourceExponent) : exponent (coordinates e) = e := by
+private theorem coordinates_exponent (t : Column) : coordinates (exponent t) = t := by
+  rcases t with ⟨f, c, b, a, x⟩
+  simp [coordinates, exponent]
+private theorem exponent_coordinates (e : SourceExponent) : exponent (coordinates e) = e := by
   ext v
   cases v with
   | none => simp [coordinates, exponent]
   | some j => fin_cases j <;> simp [coordinates, exponent]
+private theorem scaled_sum (k : ℤ) (g p : ℤ → ℤ)
+    (base : p 0 = 0) (step : ∀ t, p (t + 1) = p t + k * g t) (n : ℕ) :
+    k * (∑ i ∈ range n, g i) = p n := by
+  induction n with
+  | zero => simpa using base.symm
+  | succ n ih => rw [sum_range_succ, Nat.cast_succ, mul_add, ih, step]
 end
 end P0_9_2
 end
@@ -543,12 +553,12 @@ open Polynomial
 open P0_9 (SmallFactor ProperCut TrueWeightLE physicalDegree primaryBox primaryCutoff)
 open K1_13 (Geom embed extend Row shape InBox OrderAt indexDegree shiftJet jet)
 private abbrev Exponent := Fin 4 →₀ ℕ
-def translateTop : Row 4 →+* Polynomial (Row 4) :=
+private def translateTop : Row 4 →+* Polynomial (Row 4) :=
   MvPolynomial.eval₂Hom (Polynomial.C.comp MvPolynomial.C) fun i =>
     Polynomial.C (MvPolynomial.X i) + if i = 3 then Polynomial.X else 0
-def topHasse (a : ℕ) (P : Row 4) : Row 4 :=
+private def topHasse (a : ℕ) (P : Row 4) : Row 4 :=
   (translateTop P).coeff a
-theorem translate_independent (m : Exponent) (c : Geom[X]) (hm : m 3 = 0) :
+private theorem translate_independent (m : Exponent) (c : Geom[X]) (hm : m 3 = 0) :
     translateTop (MvPolynomial.monomial m c) = Polynomial.C (MvPolynomial.monomial m c) := by
   rw [translateTop, MvPolynomial.eval₂Hom_monomial, MvPolynomial.monomial_eq, map_mul]
   simp only [RingHom.comp_apply]
@@ -561,20 +571,20 @@ theorem translate_independent (m : Exponent) (c : Geom[X]) (hm : m 3 = 0) :
     subst i
     exact (Finsupp.mem_support_iff.mp hi) hm
   simp [hne]
-theorem translate_top_pow_coeff (n a : ℕ) :
+private theorem translate_top_pow_coeff (n a : ℕ) :
     ((Polynomial.C (MvPolynomial.X (3 : Fin 4) : Row 4) + Polynomial.X) ^ n).coeff a =
       MvPolynomial.C (↑(n.choose a) : Geom[X]) * MvPolynomial.X 3 ^ (n - a) := by
   rw [add_comm, ← Polynomial.taylor_X_pow, Polynomial.taylor_coeff,
     Polynomial.X_pow_eq_monomial, Polynomial.hasseDeriv_monomial]
   simp [Polynomial.eval_monomial]
-theorem erase_top_add (u : Exponent) :
+private theorem erase_top_add (u : Exponent) :
     u.erase 3 + Finsupp.single 3 (u 3) = u := by
   ext i
   by_cases hi : i = 3
   · subst i
     simp
   · simp [Finsupp.erase_ne hi, Finsupp.single_eq_of_ne hi]
-theorem topHasse_monomial (a : ℕ) (u : Exponent) (c : Geom[X]) :
+private theorem topHasse_monomial (a : ℕ) (u : Exponent) (c : Geom[X]) :
     topHasse a (MvPolynomial.monomial u c) =
       MvPolynomial.monomial (u.erase 3 + Finsupp.single 3 (u 3 - a)) (↑((u 3).choose a) * c) := by
   have hu : MvPolynomial.monomial u c =
@@ -587,9 +597,9 @@ theorem topHasse_monomial (a : ℕ) (u : Exponent) (c : Geom[X]) :
     Polynomial.coeff_C_mul, translate_top_pow_coeff, ← mul_assoc]
   rw [mul_comm (MvPolynomial.monomial (u.erase 3) c), MvPolynomial.C_mul_monomial,
     ← MvPolynomial.monomial_add_single]
-theorem apply_add_top (m : Exponent) (a : ℕ) :
+private theorem apply_add_top (m : Exponent) (a : ℕ) :
     (m + Finsupp.single 3 a : Exponent) 3 = m 3 + a := by simp
-theorem topHasse_coeff (a : ℕ) (P : Row 4) (m : Exponent) :
+private theorem topHasse_coeff (a : ℕ) (P : Row 4) (m : Exponent) :
     (topHasse a P).coeff m =
       ↑((m 3 + a).choose a) * P.coeff (m + Finsupp.single 3 a) := by
   classical
@@ -635,7 +645,7 @@ private theorem total_add_top (m : Exponent) (a : ℕ) :
   simpa only [one_mul] using sum_add_top (fun _ => 1) m a
 private def shiftHom (S : Geom[X]) : Row 4 →+* Row 4 :=
   MvPolynomial.eval₂Hom MvPolynomial.C (fun i => MvPolynomial.X i + MvPolynomial.C (jet S i))
-theorem translate_shift (S : Geom[X]) :
+private theorem translate_shift (S : Geom[X]) :
     translateTop.comp (shiftHom S) = (Polynomial.mapRingHom (shiftHom S)).comp translateTop := by
   apply MvPolynomial.ringHom_ext
   · intro c
@@ -663,7 +673,7 @@ private theorem topHasse_order (a d : ℕ) (P : Row 4) (S : Geom[X])
 private theorem topHasse_zero (P : Row 4) : topHasse 0 P = P := by
   ext m
   simp [topHasse_coeff]
-theorem coeff_X_mul_pow {R : Type*} [CommSemiring R]
+private theorem coeff_X_mul_pow {R : Type*} [CommSemiring R]
     (V W : Polynomial R) (a : ℕ) :
     ((Polynomial.X * V) ^ a * W).coeff a = (V.coeff 0) ^ a * W.coeff 0 := by
   rw [mul_pow, mul_assoc]

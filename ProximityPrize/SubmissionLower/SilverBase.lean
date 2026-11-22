@@ -55,6 +55,21 @@ def fixedNodes {u : Words} {T : TwoActive u} (R : Relation T) : Finset I := by
   classical
   exact Finset.univ.filter fun i =>
     (leftU R).eval (C (node i)) = 0 ∧ (leftV R).eval (C (node i)) = 0
+def InvalidLeft {u : Words} {T : TwoActive u} (R : Relation T) : Prop :=
+  max (leftU R).natDegree (leftV R).natDegree < T.height ∨
+    ∃ G : K[X], G ≠ 0 ∧ G.map Polynomial.C ∣ leftU R ∧ G.map Polynomial.C ∣ leftV R ∧
+      ¬ G ∣ locator node Finset.univ
+structure SaturatedAt {u : Words} {T : TwoActive u} (R : Relation T)
+    {γ : K} (M : BadMark u γ) : Prop where
+  U_ne : atSlope (leftU R) γ ≠ 0
+  V_ne : atSlope (leftV R) γ ≠ 0
+  degree_eq : max (atSlope (leftU R) γ).natDegree (atSlope (leftV R) γ).natDegree =
+    T.height
+  gcd_errors : ∃ errors : Finset I,
+    (∀ i ∈ errors, M.decoder.eval (node i) ≠ u 0 i + γ * u 1 i) ∧
+    IsCommonGCD (locator node errors) (atSlope (leftU R) γ) (atSlope (leftV R) γ)
+  fixed_errors : ∀ i ∈ fixedNodes R, M.decoder.eval (node i) ≠ u 0 i + γ * u 1 i
+  valid : ¬ InvalidLeft R
 structure Reduction (u : Words) (T : TwoActive u) (R : Relation T) where
   U : Bivar
   V : Bivar
@@ -71,6 +86,23 @@ structure Reduction (u : Words) (T : TwoActive u) (R : Relation T) where
   output_degree : output.degree < (k + height : ℕ)
   deleted_error : ∀ γ, Normal u γ → ∀ M : BadMark u γ, ∀ i ∈ fixedNodes R,
     M.decoder.eval (node i) ≠ u 0 i + γ * u 1 i
+structure RankThree (u : Words) (T : TwoActive u) (R : Relation T)
+    (D : Reduction u T R) where
+  rank_eq : columnRank D.U D.V = 3
+  α : Fin 2 → K[X]
+  β : Fin 2 → K[X]
+  a : K[X]
+  b : K[X]
+  a_ne : a ≠ 0
+  b_ne : b ≠ 0
+  α_primitive : IsCoprime (α 0) (α 1)
+  β_primitive : IsCoprime (β 0) (β 1)
+  first_degree : a.natDegree + amplitudeDegree (β 0) (β 1) ≤ D.height
+  second_degree : b.natDegree + amplitudeDegree (α 0) (α 1) ≤ D.height
+  same_direction : sameDirection D.U D.V (threeU a β) (threeV b α)
+  output : Bivar
+  output_degree : output.degree < (k + D.height : ℕ)
+  nodes : relationOn u (fixedNodes R) (threeU a β) (threeV b α) output
 abbrev ModelAt := P1.ModelAt
 abbrev FamilyAt := @P1.FamilyAt
 abbrev ModelAt.overhead := @P1.ModelAt.overhead

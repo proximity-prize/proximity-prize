@@ -1,7 +1,7 @@
 import ProximityPrize.SubmissionLower.KoalaRectCutoff
 import ProximityPrize.SubmissionLower.KoalaRectRank
 import ProximityPrize.SubmissionLower.KoalaRectPoleBridge
-import ProximityPrize.SubmissionLower.HighBankCore
+import ProximityPrize.SubmissionLower.GoldBranch7N1
 
 set_option Elab.async false
 set_option autoImplicit false
@@ -93,5 +93,6 @@ theorem rectLoss {h : ℕ} (hpos : 0 < h) (hraw : h ≤ 131070) (hchar : h < K1.
     area U * shapeSum s (fun q j => top+j-q*(131071-h)) at htotal
   omega
 
+#print axioms rectLoss
 end
 end KoalaRect

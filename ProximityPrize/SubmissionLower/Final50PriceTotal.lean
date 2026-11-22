@@ -1,3 +1,5 @@
+import ProximityPrize.SubmissionLower.KoalaRetainedAssembly
+import ProximityPrize.SubmissionLower.KoalaWeightedRate
 import ProximityPrize.SubmissionLower.Compact50PriceTable
 import ProximityPrize.SubmissionLower.Final50PriceMass
 import ProximityPrize.SubmissionLower.Final50FatReserve
@@ -6,11 +8,12 @@ set_option Elab.async false
 set_option maxHeartbeats 1600000
 namespace Final50PriceTotal
 open K1_13 (Shape InBox FatEligible)
+open KoalaRetainedCut (contractedPrice)
 open K1_13_8 (Valid zeroShape)
 open Final50PriceLayer (availableMass)
 open Final50Price (physicalPrice fatPrice)
 open Final50Price (layerNeed LayerBudget fullCap Fits)
-open Final50PriceCaps (factorCap Band reserve start indexBudget Admits activeCap)
+open Final50PriceCaps (factorCap Band reserve start pricingWeight pricingDenom Admits activeCap endWidth)
 open Final50PriceRetained (Box)
 open Final50PriceMonotone (physicalPrice_anti)
 open scoped BigOperators
@@ -21,40 +24,41 @@ open private P3_6_8.shapeSum P3_6_8.shapeSum_empty P3_6_8.shapeSum_insert P3_6_8
 def retainedShape {n : ℕ} (a : Fin n → Shape) (l : Fin n → ℕ) : Shape :=
   P3_6_8.shapeSum a (Finset.univ.filter fun i => l i = 0)
 
-theorem chooseBand (r : Shape) (hr : Valid r) (hx : Box r) : ∃ k, Admits k r := by
+private theorem chooseBand (r : Shape) (hr : Valid r) (hx : Box r) : ∃ k, Admits k r := by
   obtain ⟨b,j,t⟩ := r
   have ht : 1 ≤ t := hr.1
   have hjt : 3*t ≤ j := hr.2.1
   have hjb : j ≤ 3*b := hr.2.2
   have hj : j ≤ 7 := hx.2.1
-  have ht' : t = 1 ∨ t = 2 := by omega
-  rcases ht' with rfl | rfl
-  · have hj' : j = 3 ∨ j = 4 ∨ j = 5 ∨ j = 6 ∨ j = 7 := by omega
-    rcases hj' with rfl | rfl | rfl | rfl | rfl
-    · exact ⟨.one3, by simp [Admits, start, InBox]; omega⟩
-    · exact ⟨.one4, by simp [Admits, start, InBox]; omega⟩
-    · exact ⟨.one5, by simp [Admits, start, InBox]; omega⟩
-    · exact ⟨.one6, by simp [Admits, start, InBox]; omega⟩
-    · exact ⟨.one7, by simp [Admits, start, InBox]; omega⟩
-  · have hj' : j = 6 ∨ j = 7 := by omega
-    rcases hj' with rfl | rfl
-    · by_cases hb6 : b ≤ 6
-      · exact ⟨.two6a, by simp [Admits, start, InBox, hb6]; omega⟩
-      by_cases hb11 : b ≤ 11
-      · exact ⟨.two6b, by simp [Admits, start, InBox, hb11]; omega⟩
-      by_cases hb13 : b ≤ 13
-      · exact ⟨.two6c, by simp [Admits, start, InBox, hb13]; omega⟩
-      · exact ⟨.two6d, by simp [Admits, start, InBox]; omega⟩
-    · by_cases hb5 : b ≤ 5
-      · exact ⟨.two7a, by simp [Admits, start, InBox, hb5]; omega⟩
-      · exact ⟨.two7b, by simp [Admits, start, InBox]; omega⟩
+  have hB : b ≤ Final50FatReserve.degreeCap j := by
+    have hj0 : 3 ≤ j := by omega
+    interval_cases j <;> simp [Box, Final50FatReserve.degreeCap] at hx ⊢ <;> omega
+  have hcases : (j = 3 ∧ t = 1) ∨ (j = 4 ∧ t = 1) ∨ (j = 5 ∧ t = 1) ∨ (j = 6 ∧ t = 1) ∨ (j = 7 ∧ t = 1) ∨ (j = 6 ∧ t = 2) ∨ (j = 7 ∧ t = 2) := by omega
+  rcases hcases with ⟨rfl,rfl⟩ | ⟨rfl,rfl⟩ | ⟨rfl,rfl⟩ | ⟨rfl,rfl⟩ | ⟨rfl,rfl⟩ | ⟨rfl,rfl⟩ | ⟨rfl,rfl⟩
+  · by_cases h1 : b ≤ 1
+    · exact ⟨.one3, by simp [Admits, start, endWidth, InBox]; omega⟩
+    · exact ⟨.one3wide, by simp [Admits, start, endWidth, InBox, Final50FatReserve.degreeCap] at *; omega⟩
+  · exact ⟨.one4, by simp [Admits, start, endWidth, InBox, Final50FatReserve.degreeCap] at *; omega⟩
+  · exact ⟨.one5, by simp [Admits, start, endWidth, InBox, Final50FatReserve.degreeCap] at *; omega⟩
+  · exact ⟨.one6, by simp [Admits, start, endWidth, InBox, Final50FatReserve.degreeCap] at *; omega⟩
+  · exact ⟨.one7, by simp [Admits, start, endWidth, InBox, Final50FatReserve.degreeCap] at *; omega⟩
+  · by_cases h3 : b ≤ 3
+    · exact ⟨.two6thin, by simp [Admits, start, endWidth, InBox]; omega⟩
+    · by_cases h11 : b ≤ 11
+      · exact ⟨.two6thinwide, by simp [Admits, start, endWidth, InBox]; omega⟩
+      · by_cases h13 : b ≤ 13
+        · exact ⟨.two6wide, by simp [Admits, start, endWidth, InBox]; omega⟩
+        · exact ⟨.two6wider, by simp [Admits, start, endWidth, InBox, Final50FatReserve.degreeCap] at *; omega⟩
+  · by_cases h6 : b ≤ 6
+    · exact ⟨.two7, by simp [Admits, start, endWidth, InBox]; omega⟩
+    · exact ⟨.two7wide, by simp [Admits, start, endWidth, InBox, Final50FatReserve.degreeCap] at *; omega⟩
 
 private theorem charge_eq {k : Band} {r : Shape} (h : Admits k r) :
     Final50FatReserve.charge r.b r.j r.t = reserve k := by
-  obtain ⟨hb,hj,ht,h6a,h6b,h6c,h7a,_⟩ := h
+  obtain ⟨hb,hj,ht,hwidth,_⟩ := h
   have hb' := hb.1
   rw [hj, ht]
-  cases k <;> simp [start, reserve, Final50FatReserve.charge] at * <;>
+  cases k <;> simp [start, endWidth, reserve, Final50FatReserve.charge] at * <;>
     (try split_ifs) <;> omega
 
 private theorem degree_bound {r : Shape} (hr : Valid r) (hx : Box r) :
@@ -94,12 +98,12 @@ private theorem retained_cost {ι : Type*} [DecidableEq ι] {a : ι → Shape} {
   exact ⟨(h.1.trans hbox.1).trans (by decide), (h.2.1.trans hbox.2.1).trans (by decide)⟩
 
 /-- Total cost of all factors in the low-height cover. -/
-theorem total (top : ℕ) (htop : top ≤ 13) (n : ℕ) (a : Fin n → Shape) (l cost : Fin n → ℕ)
+theorem total (top : ℕ) (htop : top ≤ 14) (n : ℕ) (a : Fin n → Shape) (l cost : Fin n → ℕ)
     (hfits : Fits top a) (hlayers : LayerBudget a l)
-    (hphys : ∀ i, 0 < l i → ∀ k, Admits k (retainedShape a l) →
-      cost i ≤ physicalPrice (a i) (l i) (activeCap k))
-    (hshared : ∀ i m u, 0 < m → m ≤ l i → Final50SharedPrice.RateFits (a i) u →
-      cost i ≤ Final50SharedPrice.price (a i) m 162 u)
+    (hphys : ∀ i m, 0 < m → m ≤ l i → ∀ k, Admits k (retainedShape a l) →
+      cost i ≤ contractedPrice (a i) (start k) m (activeCap k))
+    (hshared : ∀ i m u, 0 < m → m ≤ l i → KoalaWeightedRate.Allowed (a i) u →
+      cost i ≤ Final50SharedPrice.price (a i) m 165 u)
     (hfat : ∀ i, FatEligible (a i) → cost i ≤ fatPrice (a i)) :
     (∑ i, cost i) ≤ factorCap top := by
   let z := Finset.univ.filter (fun i => l i = 0)
@@ -141,7 +145,7 @@ theorem total (top : ℕ) (htop : top ≤ 13) (n : ℕ) (a : Fin n → Shape) (l
       ⟨Nat.add_le_add_right hqr.1 _, Nat.add_le_add_right hqr.2.1 _, Nat.add_le_add_right hqr.2.2 _⟩
     exact P3_6_8.inBox_trans hle (P3_6_8.inBox_trans hb hall)
   have positive_fee (i : Fin n) (hi : i ∈ pos) :
-      cost i ≤ Final50PriceCaps.allowance top k (a i).j := by
+      cost i ≤ Final50PriceCaps.allowance top k (a i).b (a i).j (a i).t := by
     have hone : P3_6_8.shapeSum a {i} = a i := by
       rw [show ({i} : Finset (Fin n)) = insert i ∅ from rfl,
         P3_6_8.shapeSum_insert a (by simp),P3_6_8.shapeSum_empty]
@@ -166,33 +170,41 @@ theorem total (top : ℕ) (htop : top ≤ 13) (n : ℕ) (a : Fin n → Shape) (l
         exact (not_lt_of_ge (hmass.trans hmono)) h
     have hc := member_cap hsingle
     rw [hone] at hc
-    rcases Compact50PriceTable.price top htop k (a i) (ha i) hc with hold | ⟨u,m,he,hm,hmo,hu,hfee⟩
-    · exact (hphys i hL k hk).trans
-        ((physicalPrice_anti _ _ (Final50PriceCaps.order_pos k _) horder).trans hold)
-    · have hr : activeCap k = 162 := he ▸ (by decide : activeCap .empty = 162)
+    rcases Compact50PriceTable.price top htop k (a i) (ha i) hc with ⟨m,hm,hmo,hfee⟩ | ⟨u,m,he,hm,hmo,hu,hfee⟩
+    · exact (hphys i m hm (hmo.trans horder) k hk).trans hfee
+    · have hr : activeCap k = 165 := he ▸ (by decide : activeCap .empty = 165)
       rw [hr] at hfee
       exact (hshared i m u hm (hmo.trans horder) hu).trans hfee
-  have hindex : (∑ i ∈ pos, (a i).j) ≤ 53 - q.j := by
-    have hh := (member_cap (s := pos) (Finset.Subset.rfl)).2.1
-    change q.j + (∑ i ∈ pos, (a i).j) ≤ 53 at hh
+  have hfits_pos := member_cap (s := pos) (Finset.Subset.rfl)
+  have hwidth : (∑ i ∈ pos, (a i).b) ≤ 132 - q.b := by
+    have hh := hfits_pos.1
+    change q.b + (∑ i ∈ pos, (a i).b) ≤ 132 at hh
     omega
-  have hDen : 0 < 53 - q.j := by
-    have hh : q.j ≤ 7 := by cases k <;> decide
+  have hindex : (∑ i ∈ pos, (a i).j) ≤ 55 - q.j := by
+    have hh := hfits_pos.2.1
+    change q.j + (∑ i ∈ pos, (a i).j) ≤ 55 at hh
     omega
+  have hDen : 0 < pricingDenom k := by cases k <;> decide
+  have hweights : (∑ i ∈ pos, pricingWeight k (a i).b (a i).j (a i).t) ≤ pricingDenom k := by
+    by_cases he : k = .empty
+    · subst k
+      simpa only [pricingWeight, ↓reduceIte, show pricingDenom .empty = 352 by decide] using
+        KoalaAllocationWeight.sum_le htop a hfits pos
+    · simpa only [q, pricingWeight, pricingDenom, if_neg he] using hindex
   let C := factorCap top - reserve k
-  let M := 53 - q.j
-  have fees (i : Fin n) (hi : i ∈ pos) : M*cost i ≤ C * (a i).j := by
+  let M := pricingDenom k
+  have fees (i : Fin n) (hi : i ∈ pos) : M*cost i ≤ C * pricingWeight k (a i).b (a i).j (a i).t := by
     have h := Nat.mul_le_mul_left M (positive_fee i hi)
-    change M * cost i ≤ M * (C * (a i).j / M) at h
+    change M*cost i ≤ M*(C*pricingWeight k (a i).b (a i).j (a i).t / M) at h
     calc
-      M*cost i ≤ M*(C*(a i).j / M) := h
-      _ = (C*(a i).j / M)*M := Nat.mul_comm _ _
-      _ ≤ C*(a i).j := Nat.div_mul_le_self _ _
+      _ ≤ M*(C*pricingWeight k (a i).b (a i).j (a i).t / M) := h
+      _ = (C*pricingWeight k (a i).b (a i).j (a i).t / M)*M := Nat.mul_comm _ _
+      _ ≤ _ := Nat.div_mul_le_self _ _
   have hweighted : M * (∑ i ∈ pos, cost i) ≤ M*C := by
     rw [Finset.mul_sum, mul_comm M C]
     refine (Finset.sum_le_sum fees).trans ?_
     rw [← Finset.mul_sum]
-    exact Nat.mul_le_mul_left _ hindex
+    exact Nat.mul_le_mul_left _ hweights
   have hp : (∑ i ∈ pos, cost i) ≤ C := Nat.le_of_mul_le_mul_left hweighted hDen
   have hpartition : (∑ i ∈ z, cost i) + (∑ i ∈ pos, cost i) = ∑ i, cost i :=
     Finset.sum_filter_add_sum_filter_not _ _ _
@@ -200,4 +212,5 @@ theorem total (top : ℕ) (htop : top ≤ 13) (n : ℕ) (a : Fin n → Shape) (l
   dsimp [C] at hp
   omega
 
+#print axioms total
 end Final50PriceTotal

@@ -169,7 +169,7 @@ private theorem degreeOf_le_of_support_subset {P Q : GenericRow} (h : P.support 
   apply degreeOf_le_iff.mpr
   intro m hm
   exact le_degreeOf_of_mem_support i (h hm)
-theorem moved_weight (w : SeedVar → ℕ) (i j : SeedVar) (P : GenericRow) (d : ℕ)
+private theorem moved_weight (w : SeedVar → ℕ) (i j : SeedVar) (P : GenericRow) (d : ℕ)
     (h : w j ≤ w i + d) :
     (MvPolynomial.X j * pderiv i P).weightedTotalDegree w ≤ P.weightedTotalDegree w + d := by
   apply Finset.sup_le
@@ -414,9 +414,9 @@ private def exponent (u i l k : ℕ) : SeedVar →₀ ℕ :=
   simp [exponent]
 @[simp] private theorem exponent_two (u i l k : ℕ) : exponent u i l k (some 2) = k := by
   simp [exponent]
-def colExp {b : Bank} {h : ℕ} (c : Column b h) : SeedVar →₀ ℕ :=
+private def colExp {b : Bank} {h : ℕ} (c : Column b h) : SeedVar →₀ ℕ :=
   exponent c.2.2.2.2.val (c.1.val - c.2.1.val - c.2.2.1.val) c.2.2.1.val c.2.1.val
-def colX {b : Bank} {h : ℕ} (c : Column b h) : ℕ := c.2.2.2.1.val
+private def colX {b : Bank} {h : ℕ} (c : Column b h) : ℕ := c.2.2.2.1.val
 private theorem column_injective (b : Bank) (h : ℕ) :
     Function.Injective (fun c : Column b h => (colExp c, colX c)) := by
   rintro ⟨q,k,l,x,u⟩ ⟨q',k',l',x',u'⟩ he
@@ -467,7 +467,7 @@ private theorem column_li (b : Bank) (h : ℕ) :
   exact (Pi.basisFun Geom (Column b h)).linearIndependent
 private def space (b : Bank) (h : ℕ) : Submodule Geom PhysicalRow :=
   Submodule.span Geom (Set.range (column (b := b) (h := h)))
-theorem occurs_in_column {b : Bank} {h : ℕ} {F : PhysicalRow}
+private theorem occurs_in_column {b : Bank} {h : ℕ} {F : PhysicalRow}
     (hF : F ∈ space b h) {e : SeedVar →₀ ℕ} {x : ℕ} (hne : (F.coeff e).coeff x ≠ 0) :
     ∃ c : Column b h, colExp c = e ∧ colX c = x := by
   classical

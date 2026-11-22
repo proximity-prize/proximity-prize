@@ -186,3 +186,5 @@ end
 
 end Final50ActiveCycle
 
+#print axioms Final50ActiveCycle.proof
+#print axioms Final50ActiveCycle.bound

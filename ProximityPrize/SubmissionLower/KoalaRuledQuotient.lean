@@ -1,3 +1,4 @@
+import Mathlib.Algebra.MvPolynomial.NoZeroDivisors
 import ProximityPrize.SubmissionLower.KoalaRuledEmbedding
 import ProximityPrize.SubmissionLower.KoalaWeightedDegree
 
@@ -71,5 +72,6 @@ theorem root_piece_rank {g : Ring F} (hg : g ≠ 0) (hv : g.degreeOf 1 = 0)
   rw [LinearMap.range_domRestrict, ← hker, LinearMap.finrank_range_of_inj hinj] at hdim
   exact hdim
 
+#print axioms root_piece_rank
 end
 end SplitCut.Rect

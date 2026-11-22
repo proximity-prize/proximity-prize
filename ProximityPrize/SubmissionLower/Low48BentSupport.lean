@@ -35,6 +35,11 @@ theorem lifted_chamber {p : Shape} (hb : p.j ≤ p.b) (hj : 3 * p.t + 3 ≤ p.j)
   have hmin : min (1 + k) ((2 + k * p.t) / 2) ≤ (2 + k * p.t) / 2 := min_le_right _ _
   omega
 
+theorem raw_mem {a : Cap} {m : Exponent} (h : Allowed a m) : m ∈ latticePoints a := by
+  rw [coords]
+  unfold Allowed at h
+  omega
+
 theorem raw_add {a : Cap} {x y : Exponent} (hx : Allowed a x) (hy : Allowed a y) :
     x + y ∈ latticePoints a := by
   simp only [coords, Finsupp.add_apply]

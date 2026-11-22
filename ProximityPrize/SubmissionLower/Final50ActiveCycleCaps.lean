@@ -81,13 +81,13 @@ theorem lift_height (p : Shape) (ht : 3 ≤ p.t) (k : ℕ) :
   change min (1 + k) ((2 + k*p.t)/2) = k + 1
   omega
 
-theorem fit_clip (a : Cap) (ha : Chamber a) (m : ℕ)
+private theorem fit_clip (a : Cap) (ha : Chamber a) (m : ℕ)
     (hv : 2 * a.2 ≤ evenClip a.1 a.2 m) :
     Low49ActiveLattice.Fits a (evenClip a.1 a.2 m) := by
   obtain ⟨_, hb, hj, ht, he⟩ := clip_bounds a.1 a.2 m
   exact ⟨by have := ha.1; omega, ha.2.1, hj, by have := ha.2.2; omega, hv, he⟩
 
-theorem fit_lift (p : Shape) (K k : ℕ) (ht : 3 ≤ p.t)
+private theorem fit_lift (p : Shape) (K k : ℕ) (ht : 3 ≤ p.t)
     (h : Chamber (lifted p k)) (hv : 2 * (lifted p k).2 ≤ liftClip p K k) :
     Low49ActiveLattice.Fits (lifted p k) (liftClip p K k) := by
   have hh : evenClip (lifted p k).1 (lifted p k).2 (2 + k * (baseClip p K - 2)) =

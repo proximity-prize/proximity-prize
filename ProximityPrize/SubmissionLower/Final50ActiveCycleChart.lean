@@ -27,7 +27,7 @@ private theorem scalar_section {R : Family} {i : Fin 5} {D : GeoJets5}
   rw [MvPolynomial.mem_support_iff, MvPolynomial.coeff_C_mul] at hm
   exact h m (MvPolynomial.mem_support_iff.mpr fun hz => hm (mul_eq_zero_of_right _ hz))
 
-theorem sum_section {R : Family} {i : Fin 5} {ι : Type*} (S : Finset ι)
+private theorem sum_section {R : Family} {i : Fin 5} {ι : Type*} (S : Finset ι)
     (D : ι → GeoJets5) (h : ∀ j ∈ S, Section R i (D j)) :
     Section R i (∑ j ∈ S, D j) := by
   classical
@@ -35,7 +35,7 @@ theorem sum_section {R : Family} {i : Fin 5} {ι : Type*} (S : Finset ι)
   obtain ⟨j, hj, hjm⟩ := Finset.mem_biUnion.mp (support_sum hm)
   exact h j hj m hjm
 
-theorem sub_section {R : Family} {i : Fin 5} {D E : GeoJets5}
+private theorem sub_section {R : Family} {i : Fin 5} {D E : GeoJets5}
     (hD : Section R i D) (hE : Section R i E) : Section R i (D - E) := by
   intro m hm
   exact (Finset.mem_union.mp (MvPolynomial.support_sub (Fin 5) D E hm)).elim (hD m) (hE m)

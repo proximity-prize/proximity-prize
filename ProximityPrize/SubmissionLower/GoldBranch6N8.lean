@@ -28,6 +28,22 @@ def SourceSpace : Submodule Geom SourcePolynomial :=
   MvPolynomial.restrictSupport Geom sourceExponents
 instance : Module.Finite Geom SourceSpace :=
   MvPolynomial.restrictSupport_finite sourceExponents_finite
+theorem translate_mem_source (x y : Geom) (Q : SourceSpace) :
+    globalPointTranslation x y Q.1 ∈ SourceSpace := by
+  have preserve (wt : JetVariable 3 → ℕ) (B : ℕ)
+      (h : ∀ e ∈ Q.1.support, e.weight wt ≤ B) :
+      ∀ e ∈ (globalPointTranslation x y Q.1).support, e.weight wt ≤ B :=
+    MvPolynomial.mem_restrictWeightAtMost.mp
+      (globalPointTranslation_mem_restrictWeightAtMost (Nat.zero_le _) (Nat.zero_le _)
+        x y (MvPolynomial.mem_restrictWeightAtMost.mpr h))
+  have h : ∀ e ∈ Q.1.support, SourceEligible e :=
+    Q.2
+  exact fun e he =>
+    ⟨preserve jetDegreeWeight 4012 (fun t ht => (h t ht).1) e he,
+      preserve jetDerivativeWeight 1650 (fun t ht => (h t ht).2.1) e he,
+      preserve topWeight 550 (fun t ht => (h t ht).2.2.1) e he,
+      preserve (differentialWeight 133344) (3000 * 179983 - 1)
+        (fun t ht => (h t ht).2.2.2) e he⟩
 def nodeMap (x y : Geom) : SourceSpace →ₗ[Geom] Local :=
   (localConstraintAt 3000 x y).domRestrict SourceSpace
 def wordMap (w : I → K) : SourceSpace →ₗ[Geom] (I → Local) :=
@@ -51,6 +67,49 @@ open K1_13_2 (SourceExponent Local toRow)
 open P3 (I K node)
 open scoped BigOperators
 open private high_monomial_vanishes origin_rank map_independent_family from ProximityPrize.SubmissionLower.PortLowBase
+private theorem old_eligible (e : SourceExponent) (he : SourceEligible e)
+    (hx : e none < 3000) : K1_13_2.SourceEligible e := by
+  have hw := weight_le_add_mul_totalJetDegree 133671 e
+  change e.weight (differentialWeight 133671) ≤ e none + 133671 * e.weight jetDegreeWeight at hw
+  refine ⟨he.1, he.2.1, he.2.2.1, ?_⟩
+  have hb := he.1
+  omega
+private theorem node_range_le (x y : Geom) :
+    LinearMap.range (nodeMap x y) ≤ LinearMap.range (K1_13_2.nodeMap 0 0) := by
+  rintro _ ⟨Q, rfl⟩
+  let R := globalPointTranslation x y Q.1
+  have hR : R ∈ SourceSpace := translate_mem_source x y Q
+  change localConstraintAt 3000 x y Q.1 ∈ _
+  rw [localConstraintAt_eq_zero_globalPointTranslation]
+  change localConstraintAt 3000 0 0 R ∈ _
+  rw [congrArg (localConstraintAt 3000 0 0) R.as_sum, map_sum]
+  refine Submodule.sum_mem _ fun e he => ?_
+  by_cases hx : e none < 3000
+  · have hOld : e ∈ K1_13_2.sourceExponents := old_eligible e (hR he) hx
+    have hMono : MvPolynomial.monomial e (R.coeff e) ∈ K1_13_2.SourceSpace :=
+      (MvPolynomial.monomial_mem_restrictSupport Geom).mpr (Or.inl hOld)
+    exact ⟨⟨_, hMono⟩, rfl⟩
+  · rw [high_monomial_vanishes _ _ (Nat.le_of_not_gt hx)]
+    exact Submodule.zero_mem _
+theorem word_rank_le (w : I → K) {b : ℕ}
+    (h : Module.finrank Geom (LinearMap.range (K1_13_2.nodeMap 0 0)) ≤ b) :
+    Module.finrank Geom (LinearMap.range (wordMap w)) ≤ 262144 * b := by
+  let nmap (i : I) := nodeMap (embed (node i)) (embed (w i))
+  let B (i : I) := LinearMap.range (nmap i)
+  let f : SourceSpace →ₗ[Geom] (∀ i, B i) := LinearMap.pi fun i => (nmap i).rangeRestrict
+  let g : (∀ i, B i) →ₗ[Geom] (I → Local) :=
+    LinearMap.pi fun i => (B i).subtype.comp (LinearMap.proj i)
+  have hw : wordMap w = g.comp f := rfl
+  rw [hw]
+  calc
+    Module.finrank Geom (LinearMap.range (g.comp f)) ≤
+        Module.finrank Geom (LinearMap.range g) :=
+      Submodule.finrank_mono (LinearMap.range_comp_le_range f g)
+    _ ≤ Module.finrank Geom (∀ i, B i) := g.finrank_range_le
+    _ = ∑ i, Module.finrank Geom (B i) := Module.finrank_pi_fintype Geom
+    _ ≤ ∑ _ : I, b := Finset.sum_le_sum fun i _ =>
+      (Submodule.finrank_mono (node_range_le (embed (node i)) (embed (w i)))).trans h
+    _ = 262144 * b := by simp [I, FrobeniusLocator.Native.I, ProximityPrize.Benchmark.IRSProfile.Index]
 end
 end P3_6_2
 end
@@ -277,7 +336,7 @@ section
 namespace P3_6_8_1
 open K1_13_8 (fastRemaining zeroMass)
 open scoped BigOperators
-def sumBelow (f : ℕ → ℕ) : ℕ → ℕ
+private def sumBelow (f : ℕ → ℕ) : ℕ → ℕ
   | 0 => 0
   | n + 1 => sumBelow f n + f n
 private theorem sumBelow_eq (f : ℕ → ℕ) (n : ℕ) :
@@ -285,7 +344,7 @@ private theorem sumBelow_eq (f : ℕ → ℕ) (n : ℕ) :
   induction n with
   | zero => simp [sumBelow]
   | succ n ih => rw [sumBelow, Finset.sum_range_succ, ih]
-theorem sumBelow_add (f : ℕ → ℕ) (m n : ℕ) :
+private theorem sumBelow_add (f : ℕ → ℕ) (m n : ℕ) :
     sumBelow f (m + n) = sumBelow f m + sumBelow (fun k => f (m + k)) n := by
   induction n with
   | zero => simp [sumBelow]
@@ -335,21 +394,21 @@ private theorem shape_eq {x y : Shape}
   simp_all
 local notation "shape!" => shape_eq (by decide) (by decide) (by decide)
 private theorem divisorBox_eq : divisorBox = ⟨22994,7683,0⟩ := shape!
-def divisorCut (h : Shape) : Shape :=
+private def divisorCut (h : Shape) : Shape :=
   ⟨max (max h.b divisorBox.b) (max h.j (divisorBox.j + 1)),
     max h.j (divisorBox.j + 1), max 1 h.t⟩
-def divisorFee (p h : Shape) (md mp : ℕ) : ℕ :=
+private def divisorFee (p h : Shape) (md mp : ℕ) : ℕ :=
   ceilDiv (P3.t * md) (32 * incidenceGap) + ceilDiv mp 32 +
     20 * p.b * h.b ^ 2 + 5 * physicalDegree * p.b * h.b + 1
 private def singularFee (x : Shape) (ms : ℕ) : ℕ :=
   if 1 < x.t then ceilDiv (4 * x.t * ms) 32 + x.t * x.b ^ 2 + 1 else 0
-def curveFee (mc mq : ℕ) : ℕ :=
+private def curveFee (mc mq : ℕ) : ℕ :=
   let length := (fatOrder - isolatedOrder + 1) * (fatOrder - divisorOrder + 2 - isolatedOrder)
   ceilDiv (P3.t * mc + incidenceGap * mq) (32 * incidenceGap * length)
-def isolatedFee : ℕ :=
+private def isolatedFee : ℕ :=
   ceilDiv (3 * resultantBox.j ^ 2 * (2 * resultantBox.b - resultantBox.j))
     (4 * fatOrder * (fatOrder - divisorOrder + 1) * isolatedOrder)
-theorem fatPrice_expand (x : Shape) :
+private theorem fatPrice_expand (x : Shape) :
     fatPrice x =
       divisorFee x.chamber (fatChart x)
         (mixed32 x.chamber divisorBox (divisorCut (fatChart x)) (fatChart x))
@@ -357,15 +416,15 @@ theorem fatPrice_expand (x : Shape) :
       singularFee x (mixed32 x.chamber x.chamber (fatChart x) (fatChart x)) +
       curveFee (mixed32 x.chamber resultantBox resultantBox (fatChart x))
         (mixed32 x.chamber resultantBox resultantBox x.chamber) + isolatedFee := rfl
-def fromSlack (p : Shape) : Shape :=
+private def fromSlack (p : Shape) : Shape :=
   ⟨p.b + p.j + 3 * p.t, p.j + 3 * p.t, p.t⟩
-def degreeCoeff (p q r : Shape) : ℕ :=
+private def degreeCoeff (p q r : Shape) : ℕ :=
   16 * (p.j * q.j * r.t + p.j * q.t * r.j + p.t * q.j * r.j) +
   48 * (p.j * q.t * r.t + p.t * q.j * r.t + p.t * q.t * r.j) + 144 * p.t * q.t * r.t
-def degreePart (p q r s : Shape) : ℕ :=
+private def degreePart (p q r s : Shape) : ℕ :=
   p.b * degreeCoeff q r s + q.b * degreeCoeff p r s +
   r.b * degreeCoeff p q s + s.b * degreeCoeff p q r
-def indexPart (p q r s : Shape) : ℕ :=
+private def indexPart (p q r s : Shape) : ℕ :=
   24 * (p.j * q.j * r.j * s.t + p.j * q.j * r.t * s.j +
     p.j * q.t * r.j * s.j + p.t * q.j * r.j * s.j) +
   104 * (p.j * q.j * r.t * s.t + (p.j * q.t + p.t * q.j) * (r.j * s.t + r.t * s.j) +
@@ -373,7 +432,7 @@ def indexPart (p q r s : Shape) : ℕ :=
   312 * ((p.j * q.t + p.t * q.j) * r.t * s.t + p.t * q.t * (r.j * s.t + r.t * s.j)) +
   936 * p.t * q.t * r.t * s.t
 set_option maxHeartbeats 2000000 in
-theorem mixed_from_parts (p q r s : Shape) (d i : ℕ)
+private theorem mixed_from_parts (p q r s : Shape) (d i : ℕ)
     (hd : degreePart p q r s = d) (hi : indexPart p q r s = i) :
     mixed32 (fromSlack p) (fromSlack q) (fromSlack r) (fromSlack s) = d + i := by
   have h :
@@ -385,10 +444,10 @@ theorem mixed_from_parts (p q r s : Shape) (d i : ℕ)
     ring
   unfold mixed32
   rw [h, Int.toNat_natCast, hd, hi]
-abbrev divisorSlack : Shape := ⟨15311,7683,0⟩
-abbrev resultantSlack : Shape := ⟨0x2596a670,0x13315480,0⟩
-theorem isolated_value : isolatedFee = 0x4a9107dde10a := by decide
-theorem fee_of_parts {x h : Shape} {md mp mc mq divs singular curves cap : ℕ}
+private abbrev divisorSlack : Shape := ⟨15311,7683,0⟩
+private abbrev resultantSlack : Shape := ⟨0x2596a670,0x13315480,0⟩
+private theorem isolated_value : isolatedFee = 0x4a9107dde10a := by decide
+private theorem fee_of_parts {x h : Shape} {md mp mc mq divs singular curves cap : ℕ}
     (hx : x.chamber = x) (hh : fatChart x = h) (hc : divisorCut h = h)
     (hd : mixed32 x ⟨22994,7683,0⟩ h h = md)
     (hp : mixed32 x ⟨22994,7683,0⟩ h x = mp)
@@ -418,10 +477,10 @@ namespace P3_6_8_3
 open K1_13_8 (zeroShape availableMass zeroMass fastRemaining)
 open K1_13_8_2 (Threshold)
 open scoped BigOperators
-def sumBelow (f : ℕ → ℕ) : ℕ → ℕ
+private def sumBelow (f : ℕ → ℕ) : ℕ → ℕ
   | 0 => 0
   | n + 1 => sumBelow f n + f n
-theorem sumBelow_add (f : ℕ → ℕ) (m n : ℕ) :
+private theorem sumBelow_add (f : ℕ → ℕ) (m n : ℕ) :
     sumBelow f (m + n) = sumBelow f m + sumBelow (fun k => f (m + k)) n := by
   induction n with
   | zero => simp [sumBelow]
@@ -447,11 +506,11 @@ open P0_9_8 (indexBudget)
 open P3_6_8 (emptyOrder)
 open P3_6 (physicalPrice physicalDegree incidenceGap primaryBox surfaceNumerator32 taylorLength factorCap)
 def peak (b j : ℕ) : Shape := ⟨b, j, min 10 (j / 3)⟩
-def mainFee (x : Shape) : ℕ :=
+private def mainFee (x : Shape) : ℕ :=
   ceilDiv (surfaceNumerator32 x.chamber primaryBox) 32 +
     ceilDiv ((P3.t + 2 * incidenceGap) * x.b * primaryBox.b *
       (chart (taylorLength + 1) x.chamber).b) incidenceGap
-def auxFee (x : Shape) : ℕ :=
+private def auxFee (x : Shape) : ℕ :=
   let p := x.chamber
   let q := primaryBox
   let h := chart taylorLength p
@@ -463,7 +522,7 @@ def auxFee (x : Shape) : ℕ :=
 private theorem price_eq (x : Shape) (l : ℕ) :
     physicalPrice x l = ceilDiv (mainFee x) l + auxFee x := by
   simp only [physicalPrice, mainFee, auxFee, Nat.add_assoc]
-abbrev RowBound (b j : ℕ) : Prop :=
+private abbrev RowBound (b j : ℕ) : Prop :=
   physicalPrice (peak b j) (emptyOrder (peak b j)) ≤ indexBudget zeroShape factorCap j
 private theorem row (b j l main aux : ℕ)
     (horder : emptyOrder (peak b j) = l) (hmain : mainFee (peak b j) = main)
@@ -482,17 +541,17 @@ open K1_13_8 (availableMass availableMass_eq_sum availableMass_mono fastRemainin
   remaining_anti)
 open P0_9_8 (availableMass_anti_prefix oneOrder oneStart symbol_count)
 open scoped BigOperators
-def capacity (j L k : ℕ) : ℕ :=
+private def capacity (j L k : ℕ) : ℕ :=
   fastRemaining (k + 1) ((k + 1) * 3 + (k + 1 - L) * j)
-theorem capacity_anti (j L : ℕ) : Antitone (capacity j L) := by
+private theorem capacity_anti (j L : ℕ) : Antitone (capacity j L) := by
   intro a b hab
   simp only [capacity, ← symbol_count]
   exact remaining_anti (by omega) <|
     Nat.add_le_add (Nat.mul_le_mul_right 3 (by omega))
       (Nat.mul_le_mul_right j (by omega))
-def layerMass (j L s n : ℕ) : ℕ :=
+private def layerMass (j L s n : ℕ) : ℕ :=
   ∑ k ∈ Finset.range n, capacity j L (s + k)
-theorem add_block (width count rest : ℕ) {j L s n cap : ℕ}
+private theorem add_block (width count rest : ℕ) {j L s n cap : ℕ}
     (hw : width ≤ n) (hcount : capacity j L s ≤ count)
     (hrest : layerMass j L (s + width) (n - width) ≤ rest)
     (htotal : width * count + rest ≤ cap) : layerMass j L s n ≤ cap := by
@@ -508,7 +567,7 @@ theorem add_block (width count rest : ℕ) {j L s n cap : ℕ}
       _ = _ := by simp
   rw [hsplit]
   exact (Nat.add_le_add hblock hrest).trans htotal
-theorem bounded_block (width rest : ℕ) {j L s n cap : ℕ}
+private theorem bounded_block (width rest : ℕ) {j L s n cap : ℕ}
     (hw : width ≤ n) (hr : rest ≤ cap)
     (hcount : capacity j L s ≤ (cap - rest) / width)
     (hrest : layerMass j L (s + width) (n - width) ≤ rest) :
@@ -535,13 +594,13 @@ open private P0_9_8_5.box_refl P0_9_8_5.normalize_mono P0_9_8_5.normalize_chambe
   P0_9_8_5.graph_mono from ProximityPrize.SubmissionLower.PortLow8
 private def peak (j : ℕ) : Shape := ⟨119, j, min 9 (j / 3)⟩
 private def budget (j : ℕ) : ℕ := indexBudget oneStart (P3_6.factorCap - oneReserve) j
-abbrev PeakBound (j : ℕ) : Prop :=
+private abbrev PeakBound (j : ℕ) : Prop :=
   physicalPrice (peak j) (oneOrder (peak j)) ≤ budget j
-def mainFee (x : Shape) : ℕ :=
+private def mainFee (x : Shape) : ℕ :=
   ceilDiv (surfaceNumerator32 x.chamber primaryBox) 32 +
     ceilDiv ((P3.t + 2 * incidenceGap) * x.b * primaryBox.b *
       (chart (taylorLength + 1) x.chamber).b) incidenceGap
-def auxFee (x : Shape) : ℕ :=
+private def auxFee (x : Shape) : ℕ :=
   let p := x.chamber
   let q := primaryBox
   let h := chart taylorLength p
@@ -583,12 +642,12 @@ open P0_9_8 (twoStart indexBudget)
 open P3_6_8 (twoOrder twoReserve)
 open P3_6 (physicalPrice factorCap)
 private def budget (j : ℕ) : ℕ := indexBudget twoStart (factorCap - twoReserve) j
-def priceFromParts (f m₀ m₁ m₂ c₀ c₁ p₀ p₁ : ℕ) : ℕ :=
+private def priceFromParts (f m₀ m₁ m₂ c₀ c₁ p₀ p₁ : ℕ) : ℕ :=
   ceilDiv (ceilDiv (m₀ + 133346 * m₁ + 133347 * m₂) 32 +
     ceilDiv ((82161 + 2 * 46639) * 118 * 4012 * 31202965) 46639) 72 +
   2 * 133344 * 118 * 4012 +
   ceilDiv (82161 * (c₀ + 2 * f * c₁) + 93278 * (p₀ + 2 * f * p₁)) 1492448
-theorem row_le (lo j f m₀ m₁ m₂ c₀ c₁ p₀ p₁ price allowance : ℕ) :
+private theorem row_le (lo j f m₀ m₁ m₂ c₀ c₁ p₀ p₁ price allowance : ℕ) :
     let a : Shape := ⟨118, j, f⟩
     let p := a.chamber
     let q := P3_6.primaryBox
