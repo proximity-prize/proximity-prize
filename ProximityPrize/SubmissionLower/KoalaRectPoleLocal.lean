@@ -1,6 +1,6 @@
 import ProximityPrize.SubmissionLower.UpperBranch1
+import ProximityPrize.SubmissionLower.KoalaRectPoleBalance
 
-set_option Elab.async false
 set_option autoImplicit false
 set_option backward.isDefEq.respectTransparency false
 set_option maxSynthPendingDepth 16
@@ -50,7 +50,7 @@ theorem rect_combination {F ι : Type} [Field F] [Fintype ι]
   change v k • sourceCoeff (P k) j i a e = 0
   rw [he, smul_zero]
 
-theorem taylor_coordinate {F : Type} [Field F] (α : F) (P : TrueSource F)
+private theorem taylor_coordinate {F : Type} [Field F] (α : F) (P : TrueSource F)
     {U : Fin 2 → ℕ} (hP : RectSupport U P) (j i t : ℕ) (z : Fin 2) :
     (inputTaylorCoeff α j i t P).degreeOf z ≤ U z := by
   have hc (a : ℕ) : (((P.coeff j).coeff i).coeff a).degreeOf z ≤ U z := by

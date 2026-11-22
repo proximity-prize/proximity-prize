@@ -9,9 +9,9 @@ import ProximityPrize.SubmissionLower.Final50RankReceiptGroup35
 import ProximityPrize.SubmissionLower.Final50RankReceiptGroup40
 import ProximityPrize.SubmissionLower.Final50RankReceiptGroup45
 import ProximityPrize.SubmissionLower.Final50RankReceiptGroup50
+import ProximityPrize.SubmissionLower.Final50RankReceiptGroup55
 import ProximityPrize.SubmissionLower.Final50RankReceiptSum
 
-set_option Elab.async false
 set_option maxRecDepth 16000
 set_option maxHeartbeats 5000000
 
@@ -74,9 +74,71 @@ def rows : ℕ → List Row
   | 50 => rows50
   | 51 => rows51
   | 52 => rows52
+  | 53 => rows53
+  | 54 => rows54
+  | 55 => rows55
   | _ => []
 
-theorem rows_good (d : Fin 53) : ∀ r ∈ rows d, good d r = true := by
+private def expected : ℕ → ℕ
+  | 0 => 99
+  | 1 => 392
+  | 2 => 970
+  | 3 => 1920
+  | 4 => 3325
+  | 5 => 5264
+  | 6 => 7812
+  | 7 => 11040
+  | 8 => 15015
+  | 9 => 19800
+  | 10 => 25454
+  | 11 => 32032
+  | 12 => 39585
+  | 13 => 48160
+  | 14 => 57800
+  | 15 => 68460
+  | 16 => 80095
+  | 17 => 92660
+  | 18 => 106110
+  | 19 => 120400
+  | 20 => 135485
+  | 21 => 151242
+  | 22 => 167321
+  | 23 => 183388
+  | 24 => 199125
+  | 25 => 214230
+  | 26 => 228417
+  | 27 => 241416
+  | 28 => 252973
+  | 29 => 263130
+  | 30 => 271929
+  | 31 => 279480
+  | 32 => 285822
+  | 33 => 291060
+  | 34 => 295506
+  | 35 => 298985
+  | 36 => 301762
+  | 37 => 303703
+  | 38 => 305030
+  | 39 => 305646
+  | 40 => 305733
+  | 41 => 305226
+  | 42 => 304271
+  | 43 => 302831
+  | 44 => 301020
+  | 45 => 298826
+  | 46 => 296335
+  | 47 => 293556
+  | 48 => 290551
+  | 49 => 287347
+  | 50 => 283987
+  | 51 => 280510
+  | 52 => 276945
+  | 53 => 273339
+  | 54 => 269711
+  | 55 => 6481793
+  | _ => 0
+
+theorem rows_good (d : Fin 56) : ∀ r ∈ rows d, good d r = true := by
   fin_cases d
   · exact good0
   · exact good1
@@ -131,7 +193,10 @@ theorem rows_good (d : Fin 53) : ∀ r ∈ rows d, good d r = true := by
   · exact good50
   · exact good51
   · exact good52
-theorem rows_sorted (d : Fin 53) : (rows d).Pairwise (fun a b => a.tag < b.tag) := by
+  · exact good53
+  · exact good54
+  · exact good55
+theorem rows_sorted (d : Fin 56) : (rows d).Pairwise (fun a b => a.tag < b.tag) := by
   fin_cases d
   · exact sorted0
   · exact sorted1
@@ -186,8 +251,11 @@ theorem rows_sorted (d : Fin 53) : (rows d).Pairwise (fun a b => a.tag < b.tag) 
   · exact sorted50
   · exact sorted51
   · exact sorted52
-theorem rows_cover (d i : Fin 53) :
-    bandCount d (i.val : ℤ) 52 14 ≤ ((rows d).filter (fun r => decide (i.val ≤ r.index))).length := by
+  · exact sorted53
+  · exact sorted54
+  · exact sorted55
+theorem rows_cover (d i : Fin 56) :
+    bandCount d (i.val : ℤ) 55 14 ≤ ((rows d).filter (fun r => decide (i.val ≤ r.index))).length := by
   fin_cases d
   · exact mass0 i
   · exact mass1 i
@@ -242,64 +310,11 @@ theorem rows_cover (d i : Fin 53) :
   · exact mass50 i
   · exact mass51 i
   · exact mass52 i
+  · exact mass53 i
+  · exact mass54 i
+  · exact mass55 i
 
-private def expected : ℕ → ℕ
-  | 0 => 93
-  | 1 => 368
-  | 2 => 910
-  | 3 => 1800
-  | 4 => 3115
-  | 5 => 4928
-  | 6 => 7308
-  | 7 => 10320
-  | 8 => 14025
-  | 9 => 18480
-  | 10 => 23738
-  | 11 => 29848
-  | 12 => 36855
-  | 13 => 44800
-  | 14 => 53720
-  | 15 => 63570
-  | 16 => 74305
-  | 17 => 85880
-  | 18 => 98250
-  | 19 => 111370
-  | 20 => 124976
-  | 21 => 138744
-  | 22 => 152366
-  | 23 => 165550
-  | 24 => 178020
-  | 25 => 189516
-  | 26 => 199861
-  | 27 => 208890
-  | 28 => 216710
-  | 29 => 223360
-  | 30 => 228942
-  | 31 => 233492
-  | 32 => 237107
-  | 33 => 240690
-  | 34 => 241723
-  | 35 => 245442
-  | 36 => 243276
-  | 37 => 248092
-  | 38 => 242220
-  | 39 => 240840
-  | 40 => 247554
-  | 41 => 236652
-  | 42 => 246098
-  | 43 => 230853
-  | 44 => 243659
-  | 45 => 223789
-  | 46 => 240529
-  | 47 => 215777
-  | 48 => 236997
-  | 49 => 207103
-  | 50 => 233348
-  | 51 => 198024
-  | 52 => 4893981
-  | _ => 0
-
-theorem rows_price (d : Fin 53) :
+private theorem rows_price (d : Fin 56) :
     ((rows d).map (price d)).sum = expected d := by
   fin_cases d
   · exact total0
@@ -355,13 +370,16 @@ theorem rows_price (d : Fin 53) :
   · exact total50
   · exact total51
   · exact total52
+  · exact total53
+  · exact total54
+  · exact total55
 
 
 theorem total_fees :
-    (∑ s : Fin 126, ((rows (cap s)).map (fee s)).sum) = 12537864 := by
+    (∑ s : Fin 133, ((rows (cap s)).map (fee s)).sum) = 16564024 := by
   rw [sum_fees]
   simp_rw [rows_price]
-  rw [Fin.sum_univ_eq_sum_range expected 53]
+  rw [Fin.sum_univ_eq_sum_range expected 56]
   decide +kernel
 
 #print axioms rows_good

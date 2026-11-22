@@ -1,5 +1,5 @@
 import ProximityPrize.SubmissionLower.Fast068
-set_option Elab.async false
+import ProximityPrize.SubmissionLower.Fast074
 set_option autoImplicit true
 section
 set_option maxRecDepth 12000
@@ -39,7 +39,7 @@ private theorem type_one_bad_count_of_syndromes {F ι : Type}
     Γ.card ≤ 1 :=
   Principal.type_one_bad_count x hx u v k a p hk hp htype Γ hΓ
 variable {F ι : Type} [Field F] [Fintype ι] [DecidableEq ι]
-theorem coefficientKernel_annihilates (p : ℕ) (x u v : ι → F) (L t : ℕ)
+private theorem coefficientKernel_annihilates (p : ℕ) (x u v : ι → F) (L t : ℕ)
     (c : Fin (t + 1) → F) (hc : (coefficientBlocks p x u v L t).mulVec c = 0) :
     (stacked p x u v L t).mulVec (fun j => C (c j)) = 0 := by
   funext i

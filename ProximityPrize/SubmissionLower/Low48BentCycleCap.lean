@@ -3,7 +3,6 @@ import ProximityPrize.SubmissionLower.Low48BentSupport
 import ProximityPrize.SubmissionLower.Low48Price
 
 set_option autoImplicit false
-set_option Elab.async false
 
 namespace Low48BentCycle
 
@@ -26,6 +25,13 @@ def capFamily (caps : Fin 5 → Cap) : Family := fun i => latticePoints (caps i)
 
 instance (caps : Fin 5 → Cap) (i : Fin 5) : Finite (capFamily caps i) :=
   inferInstanceAs (Finite (latticePoints (caps i)))
+
+theorem doubled_caps (caps : Fin 5 → Cap)
+    (hlast : ∀ v : Fin 5, Allowed (caps 4) (Finsupp.single v 1)) :
+    Doubled (rawFamily caps) (capFamily caps) where
+  zero_mem i := by simp [rawFamily, Allowed]
+  pair_mem _ _ ha _ hb := Low48BentSupport.raw_add ha hb
+  last_coordinate := hlast
 
 open private generator_mem_diagonal from ProximityPrize.SubmissionLower.Low48BentCycle
 
@@ -123,6 +129,20 @@ theorem caps_chamber {p : Shape} (hb : p.j ≤ p.b) (ht : 1 ≤ p.t) (hj : 3 * p
   · exact Low48BentSupport.graph_chamber ht hj
   · exact Low48BentSupport.lifted_chamber hb hj (by decide : 3 ≤ taylorLength - 4)
   · exact Low48BentSupport.lifted_chamber hb hj (by decide : 3 ≤ taylorLength - 3)
+
+theorem caps_doubled {p : Shape} (hb : p.j ≤ p.b) (ht : 1 ≤ p.t) (hj : 3 * p.t + 3 ≤ p.j) :
+    Doubled (rawFamily (caps p)) (capFamily (caps p)) := by
+  apply doubled_caps
+  intro v
+  have hB : 1 ≤ p.b - 1 := by omega
+  have hJ : 1 ≤ p.j - 2 := by omega
+  let k := taylorLength - 3
+  have hk : 0 < k := by decide
+  have hb' : 1 ≤ 1 + k * (p.b - 1) := by omega
+  have hj' : 4 ≤ 4 + k * (p.j - 2) := by omega
+  have ht' : 2 ≤ 2 + k * p.t := by omega
+  have hd' : 1 ≤ min (1 + k) ((2 + k * p.t) / 2) := by omega
+  fin_cases v <;> simp [caps, lifted, Allowed, ← show k = taylorLength - 3 from rfl] <;> omega
 
 theorem old_section {q : Shape} {F : Row 4} (h : InBox (shape F) q) :
     Low48BentSupport.Box (q, 0) (oldEmbedding (toGeneric F)) := by

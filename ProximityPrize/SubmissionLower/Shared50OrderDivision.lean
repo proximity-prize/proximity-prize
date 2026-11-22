@@ -1,6 +1,6 @@
 import ProximityPrize.SubmissionLower.Fast063
+import ProximityPrize.SubmissionLower.Shared50TallyOld
 
-set_option Elab.async false
 set_option maxHeartbeats 650000
 
 namespace Shared50OrderDivision
@@ -11,12 +11,12 @@ open K1_13_6_1_2 (VanishesTo hassePartial multiOrder taylorHom taylor_coeff)
 open K1_13_6_1_2_2 (vanishesTo_of_hasse)
 open scoped Polynomial BigOperators
 
-def gradedLine {n : ℕ} {B : Type*} [CommRing B] :
+private def gradedLine {n : ℕ} {B : Type*} [CommRing B] :
     MvPolynomial (Fin n) B →+* (MvPolynomial (Fin n) B)[X] :=
   MvPolynomial.eval₂Hom (Polynomial.C.comp MvPolynomial.C)
     (fun i => Polynomial.C (MvPolynomial.X i) * Polynomial.X)
 
-theorem gradedLine_monomial {n : ℕ} {B : Type*} [CommRing B]
+private theorem gradedLine_monomial {n : ℕ} {B : Type*} [CommRing B]
     (a : Fin n →₀ ℕ) (b : B) :
     gradedLine (MvPolynomial.monomial a b) =
       Polynomial.monomial (multiOrder a) (MvPolynomial.monomial a b) := by
@@ -30,7 +30,7 @@ theorem gradedLine_monomial {n : ℕ} {B : Type*} [CommRing B]
     MvPolynomial.C_mul_monomial, mul_one]
   exact Polynomial.C_mul_X_pow_eq_monomial
 
-theorem gradedLine_coeff {n : ℕ} {B : Type*} [CommRing B]
+private theorem gradedLine_coeff {n : ℕ} {B : Type*} [CommRing B]
     (F : MvPolynomial (Fin n) B) (j : ℕ) (a : Fin n →₀ ℕ) :
     ((gradedLine F).coeff j).coeff a = if multiOrder a = j then F.coeff a else 0 := by
   classical
@@ -57,7 +57,7 @@ The coefficient of T^d records every Hasse coefficient of total order d. -/
 @[irreducible] private def expansion (P : Ideal (Jet)) : Jet →+* (Direction P)[X] :=
   gradedLine.comp ((MvPolynomial.map (Ideal.Quotient.mk P)).comp taylorHom)
 
-theorem expansion_coeff (P : Ideal (Jet)) (F : Jet) (j : ℕ)
+private theorem expansion_coeff (P : Ideal (Jet)) (F : Jet) (j : ℕ)
     (a : Fin n →₀ ℕ) : ((expansion P F).coeff j).coeff a =
       if multiOrder a = j then Ideal.Quotient.mk P (hassePartial a F) else 0 := by
   unfold expansion
@@ -69,7 +69,7 @@ private theorem hasse_zero (F : Jet) : hassePartial 0 F = F := by
     Finset.prod_const_one, mul_one]
   exact (MvPolynomial.as_sum F).symm
 
-theorem multiOrder_zero_iff (a : Fin n →₀ ℕ) : multiOrder a = 0 ↔ a = 0 := by
+private theorem multiOrder_zero_iff (a : Fin n →₀ ℕ) : multiOrder a = 0 ↔ a = 0 := by
   rw [multiOrder, Finsupp.sum_fintype _ _ (fun _ => rfl)]
   constructor
   · intro h
@@ -78,7 +78,7 @@ theorem multiOrder_zero_iff (a : Fin n →₀ ℕ) : multiOrder a = 0 ↔ a = 0 
   · rintro rfl
     simp
 
-theorem constant_expansion (P : Ideal (Jet)) (F : Jet) :
+private theorem constant_expansion (P : Ideal (Jet)) (F : Jet) :
     (expansion P F).coeff 0 = MvPolynomial.C (Ideal.Quotient.mk P F) := by
   classical
   ext a
@@ -87,7 +87,7 @@ theorem constant_expansion (P : Ideal (Jet)) (F : Jet) :
   · simp [h, hasse_zero]
   · simp [h, Ne.symm h, MvPolynomial.coeff_C]
 
-theorem X_pow_dvd_of_mem_pow (P : Ideal (Jet)) {F : Jet} {d : ℕ}
+private theorem X_pow_dvd_of_mem_pow (P : Ideal (Jet)) {F : Jet} {d : ℕ}
     (hF : F ∈ P^d) : (Polynomial.X : (Direction P)[X])^d ∣ expansion P F := by
   let T : (Direction P)[X] := Polynomial.X
   have hp : P.map (expansion P) ≤ Ideal.span {T} := by
@@ -103,7 +103,7 @@ theorem X_pow_dvd_of_mem_pow (P : Ideal (Jet)) {F : Jet} {d : ℕ}
   rw [Ideal.span_singleton_pow] at hh
   exact Ideal.mem_span_singleton.mp hh
 
-theorem le_trailing_iff_dvd {B : Type*} [CommRing B] {u : B[X]} (hu : u ≠ 0) (r : ℕ) :
+private theorem le_trailing_iff_dvd {B : Type*} [CommRing B] {u : B[X]} (hu : u ≠ 0) (r : ℕ) :
     Polynomial.X ^ r ∣ u ↔ r ≤ u.natTrailingDegree := by
   rw [Polynomial.X_pow_dvd_iff]
   constructor
@@ -112,7 +112,7 @@ theorem le_trailing_iff_dvd {B : Type*} [CommRing B] {u : B[X]} (hu : u ≠ 0) (
     exact Polynomial.coeff_natTrailingDegree_ne_zero.mpr hu (h _ hbad)
   · exact fun h i hi => Polynomial.coeff_eq_zero_of_lt_natTrailingDegree (hi.trans_le h)
 
-theorem X_pow_cancel_of_const_ne_zero {B : Type*} [CommRing B] [IsDomain B]
+private theorem X_pow_cancel_of_const_ne_zero {B : Type*} [CommRing B] [IsDomain B]
     {u v : B[X]} {r : ℕ} (hu : u.coeff 0 ≠ 0) (h : Polynomial.X^r ∣ u*v) :
     Polynomial.X^r ∣ v := by
   by_cases hv : v = 0
@@ -124,7 +124,7 @@ theorem X_pow_cancel_of_const_ne_zero {B : Type*} [CommRing B] [IsDomain B]
   rw [Polynomial.natTrailingDegree_mul hu0 hv, ht, zero_add] at hb
   exact (le_trailing_iff_dvd hv _).mpr hb
 
-theorem clear_local_denominator {A : Type*} [CommRing A] (P : Ideal A) [P.IsPrime]
+private theorem clear_local_denominator {A : Type*} [CommRing A] (P : Ideal A) [P.IsPrime]
     {F : A} {r : ℕ} (h : VanishesTo P F r) : ∃ q ∉ P, q*F ∈ P^r := by
   let L := Localization.AtPrime P
   change algebraMap A L F ∈ IsLocalRing.maximalIdeal L ^ r at h
@@ -132,7 +132,7 @@ theorem clear_local_denominator {A : Type*} [CommRing A] (P : Ideal A) [P.IsPrim
     IsLocalization.algebraMap_mem_map_algebraMap_iff P.primeCompl L] at h
   exact h
 
-theorem X_pow_dvd_of_vanishesTo (P : Ideal Jet) [P.IsPrime]
+private theorem X_pow_dvd_of_vanishesTo (P : Ideal Jet) [P.IsPrime]
     {F : Jet} {r : ℕ} (h : VanishesTo P F r) :
     (Polynomial.X : (Direction P)[X])^r ∣ expansion P F := by
 
@@ -150,7 +150,7 @@ theorem X_pow_dvd_of_vanishesTo (P : Ideal Jet) [P.IsPrime]
 
   exact @X_pow_cancel_of_const_ne_zero (Direction P) inferInstance inferInstance _ _ r hc hdiv
 
-theorem vanishesTo_of_X_pow_dvd [PerfectField K]
+private theorem vanishesTo_of_X_pow_dvd [PerfectField K]
     (P : Ideal (Jet)) [P.IsPrime] {F : Jet} {r : ℕ}
     (h : (Polynomial.X : (Direction P)[X])^r ∣ expansion P F) : VanishesTo P F r := by
   apply vanishesTo_of_hasse F P r
@@ -161,13 +161,13 @@ theorem vanishesTo_of_X_pow_dvd [PerfectField K]
   change Ideal.Quotient.mk P (hassePartial a F) = 0 at hc
   exact Ideal.Quotient.eq_zero_iff_mem.mp hc
 
-theorem trailing_pow {B : Type*} [CommRing B] [IsDomain B] {u : B[X]} (hu : u ≠ 0) (k : ℕ) :
+private theorem trailing_pow {B : Type*} [CommRing B] [IsDomain B] {u : B[X]} (hu : u ≠ 0) (k : ℕ) :
     (u^k).natTrailingDegree = k*u.natTrailingDegree := by
   induction k with
   | zero => simp
   | succ k ih => rw [pow_succ, Polynomial.natTrailingDegree_mul (pow_ne_zero _ hu) hu, ih, Nat.succ_mul]
 
-theorem X_pow_dvd_of_pow_mul {B : Type*} [CommRing B] [IsDomain B]
+private theorem X_pow_dvd_of_pow_mul {B : Type*} [CommRing B] [IsDomain B]
     {u v : B[X]} {s k r : ℕ} (hu : ¬ Polynomial.X^(s+1) ∣ u)
     (h : Polynomial.X^r ∣ u^k*v) : Polynomial.X^(r-s*k) ∣ v := by
   by_cases hv : v = 0

@@ -1,6 +1,6 @@
 import ArkLib.ToMathlib.RingTheory.MvPolynomial.StandardMonomials
 import Mathlib.Algebra.MvPolynomial.NoZeroDivisors
-set_option Elab.async false
+import ProximityPrize.SubmissionLower.Pack_K1_14_2_1Split
 set_option autoImplicit true
 section
 set_option autoImplicit false

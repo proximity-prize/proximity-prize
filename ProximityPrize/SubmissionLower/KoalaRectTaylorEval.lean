@@ -1,7 +1,6 @@
 import ProximityPrize.SubmissionLower.KoalaRectTaylorSections
 
 set_option autoImplicit false
-set_option Elab.async false
 set_option maxHeartbeats 600000
 
 namespace KoalaRectTaylor
@@ -9,19 +8,19 @@ noncomputable section
 
 open P1 (I)
 open K1_14 (FX)
-open HighCore82219Upper (Input ResidueLift Factors)
-open HighCore82219Upper_3 (JetRing graphIdeal jetDenominator oldDenominator oldNumerator
+open HighCore82258Upper (Input ResidueLift Factors)
+open HighCore82258Upper_3 (JetRing graphIdeal jetDenominator oldDenominator oldNumerator
   residueInJet openFactor)
-open HighCore82219Upper_3_3 (residueCut residueValue canonicalJet curveValue FixedWeights
+open HighCore82258Upper_3_3 (residueCut residueValue canonicalJet curveValue FixedWeights
   prefixLength prefixIndex sectionIndex wordAt)
-open private HighCore82219Upper_3.oldDenominator_eq
-  from ProximityPrize.SubmissionLower.HighCore82219UpperGeometry
-open HighCore82219Upper_3 (oldDenominator_eq)
+open private HighCore82258Upper_3.oldDenominator_eq
+  from ProximityPrize.SubmissionLower.HighCore82258UpperGeometry
+open HighCore82258Upper_3 (oldDenominator_eq)
 open scoped BigOperators
 
 variable {E : Type} [Field E] [Algebra FX E]
 
-theorem open_denominator {J : Input} {B : ResidueLift J} (φ : JetRing →ₐ[FX] E)
+private theorem open_denominator {J : Input} {B : ResidueLift J} (φ : JetRing →ₐ[FX] E)
     (hu : φ (openFactor J B) ≠ 0) (j : ℕ) :
     φ (residueInJet B * Polynomial.C J.f.derivative^j) ≠ 0 := by
   rw [openFactor,map_mul,mul_ne_zero_iff] at hu
@@ -41,7 +40,7 @@ theorem taylor_ratio {J : Input} {B : ResidueLift J} {D : Factors J B}
   rw [map_sub,map_mul,map_mul,sub_eq_zero,mul_comm (φ (oldDenominator J B j))] at h
   exact (div_eq_div_iff hd ho).mpr h
 
-theorem residue_ratio {J : Input} {B : ResidueLift J} (φ : JetRing →ₐ[FX] E)
+private theorem residue_ratio {J : Input} {B : ResidueLift J} (φ : JetRing →ₐ[FX] E)
     (hu : φ (openFactor J B) ≠ 0) (r : ℕ) (x : I) :
     φ (residueCut J B r x) / φ (jetDenominator J B r) = residueValue φ B x := by
   rw [residueValue]

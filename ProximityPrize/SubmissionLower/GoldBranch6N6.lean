@@ -1,6 +1,6 @@
 import ProximityPrize.SubmissionLower.GoldBranch6
 import ProximityPrize.SubmissionLower.PortLow7
-set_option Elab.async false
+import ProximityPrize.SubmissionLower.HighCore82258Family
 set_option autoImplicit true
 section
 namespace P3_6_6

@@ -1,6 +1,6 @@
 import ProximityPrize.SubmissionLower.UpperBranch5
+import ProximityPrize.SubmissionLower.KoalaRectPosition
 
-set_option Elab.async false
 set_option autoImplicit false
 set_option backward.isDefEq.respectTransparency false
 
@@ -46,16 +46,16 @@ theorem axisDegree_pow {f : Equation} (hf : f ≠ 0) (n : ℕ) (z : Fin 2) :
   | zero => simp [axisDegree]
   | succ n ih => rw [pow_succ, axisDegree_mul (pow_ne_zero _ hf) hf, ih, Nat.succ_mul]
 
-abbrev QuotientSlots (a : ℕ) (u : Fin 2 → ℕ) := Fin a × (∀ z : Fin 2, Fin (u z))
+private abbrev QuotientSlots (a : ℕ) (u : Fin 2 → ℕ) := Fin a × (∀ z : Fin 2, Fin (u z))
 
-def quotientExponent {a : ℕ} {u : Fin 2 → ℕ} (k : QuotientSlots a u) :
+private def quotientExponent {a : ℕ} {u : Fin 2 → ℕ} (k : QuotientSlots a u) :
     Option (Fin 2) →₀ ℕ :=
   Finsupp.equivFunOnFinite.symm (fun z => z.elim k.1.val (fun i => (k.2 i).val))
 
-def quotientSupport (a : ℕ) (u : Fin 2 → ℕ) : Finset (Option (Fin 2) →₀ ℕ) :=
+private def quotientSupport (a : ℕ) (u : Fin 2 → ℕ) : Finset (Option (Fin 2) →₀ ℕ) :=
   Finset.univ.image (quotientExponent (a := a) (u := u))
 
-theorem flatten_mem_quotientSupport {q : Equation} {a : ℕ} {u : Fin 2 → ℕ}
+private theorem flatten_mem_quotientSupport {q : Equation} {a : ℕ} {u : Fin 2 → ℕ}
     (hy : q.natDegree < a) (hu : ∀ z, axisDegree q z < u z) :
     flatten q ∈ restrictSupport FX (↑(quotientSupport a u) : Set (Option (Fin 2) →₀ ℕ)) := by
   apply (MvPolynomial.mem_restrictSupport_iff FX).mpr

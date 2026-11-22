@@ -2,6 +2,7 @@ import Mathlib.RingTheory.Derivation.Basic
 import Mathlib.RingTheory.Polynomial.DegreeLT
 import ArkLib.Data.Polynomial.ResultantDegree
 import Mathlib.Tactic
+import ProximityPrize.SubmissionLower.KoalaOpenChart
 
 set_option autoImplicit false
 set_option maxRecDepth 4096

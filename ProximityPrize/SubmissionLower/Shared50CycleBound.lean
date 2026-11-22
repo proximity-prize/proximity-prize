@@ -1,7 +1,7 @@
 import ProximityPrize.SubmissionLower.Final50ActiveCycleBound
+import ProximityPrize.SubmissionLower.Final50ActiveCycleMixed
 
 set_option autoImplicit false
-set_option Elab.async false
 
 namespace Shared50CycleBound
 

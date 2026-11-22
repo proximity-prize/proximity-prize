@@ -1,4 +1,5 @@
-import ProximityPrize.SubmissionLower.HighCore82219UpperGeometry
+import ProximityPrize.SubmissionLower.HighCore82258UpperGeometry
+import ProximityPrize.SubmissionLower.KoalaTwoCutRelative
 
 set_option autoImplicit false
 set_option maxHeartbeats 1600000
@@ -6,15 +7,15 @@ set_option maxHeartbeats 1600000
 namespace SplitCut.JetTaylor
 noncomputable section
 
-open Polynomial Finset HighCore82219Upper HighCore82219Upper_4
-open HighCore82219Upper_4_2 (divided divided_mul divided_sub divided_const_mul)
+open Polynomial Finset HighCore82258Upper HighCore82258Upper_4
+open HighCore82258Upper_4_2 (divided divided_mul divided_sub divided_const_mul)
 open K1_14 (L FX Seeds Equation)
 open K1_14_6 (Biform)
 open K1_14_6_1 (Dx flatten separant partialX cleared tangent)
 open private K1_14_6_1.partialX_C K1_14_6_1.partialX_mul_X from ProximityPrize.SubmissionLower.Fast055
-open private HighCore82219Upper_4.taylor_constant HighCore82219Upper_4_1.coeffDx_C
-  HighCore82219Upper_4_1.Dx_center HighCore82219Upper_4_1.coeffDx_liftSeeds
-  from ProximityPrize.SubmissionLower.HighCore82219UpperGeometry
+open private HighCore82258Upper_4.taylor_constant HighCore82258Upper_4_1.coeffDx_C
+  HighCore82258Upper_4_1.Dx_center HighCore82258Upper_4_1.coeffDx_liftSeeds
+  from ProximityPrize.SubmissionLower.HighCore82258UpperGeometry
 
 variable {E : Type} [Field E]
 
@@ -29,14 +30,14 @@ abbrev embed (T : Data E) : FX →+* E := T.ι.comp MvPolynomial.C
 
 theorem embed_derivative (T : Data E) (a : FX) : T.δ (T.embed a) = T.embed (Dx a) := by
   change T.δ (T.ι (MvPolynomial.C a)) = T.ι (MvPolynomial.C (Dx a))
-  rw [T.compatible, HighCore82219Upper_4_1.coeffDx_C]
+  rw [T.compatible, HighCore82258Upper_4_1.coeffDx_C]
 
 theorem center_one (T : Data E) : T.δ (origin T.ι) = 1 := by
   change T.δ (T.embed center) = 1
-  rw [T.embed_derivative, HighCore82219Upper_4_1.Dx_center, map_one]
+  rw [T.embed_derivative, HighCore82258Upper_4_1.Dx_center, map_one]
 
 theorem frozen (T : Data E) (s : SeedConstants) : T.δ (T.ι (liftSeeds s)) = 0 := by
-  rw [T.compatible, HighCore82219Upper_4_1.coeffDx_liftSeeds, map_zero]
+  rw [T.compatible, HighCore82258Upper_4_1.coeffDx_liftSeeds, map_zero]
 
 end Data
 
@@ -321,7 +322,7 @@ theorem model_constant (T : Data E) (J : Input) (B : ResidueLift J) (y : E)
     rw [hcut] at hn
     have h := (mul_eq_zero.mp hn.symm).resolve_left (mul_ne_zero ha (pow_ne_zero _ hs))
     exact (mul_eq_zero.mp h).resolve_left (inv_ne_zero (hfac _ le_rfl))
-  have hTaylor := HighCore82219Upper_4.taylor_constant T.δ (origin T.ι)
+  have hTaylor := HighCore82258Upper_4.taylor_constant T.δ (origin T.ι)
     (quotientValue T.ι B y) J.ell T.center_one hflat (fun i hi => hfac i (by omega))
   have ht : (∑ r ∈ range (J.ell+1), C (jet T.ι B y r) *
         ((Polynomial.X : E[X]) - C (origin T.ι)) ^ r) =

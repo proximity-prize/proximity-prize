@@ -1,6 +1,5 @@
 import ProximityPrize.SubmissionLower.Shared50MultiplicityLocal
 
-set_option Elab.async false
 set_option maxHeartbeats 750000
 
 namespace Shared50Multiplicity

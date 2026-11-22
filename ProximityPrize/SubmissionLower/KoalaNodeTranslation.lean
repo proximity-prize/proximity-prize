@@ -1,5 +1,6 @@
 import ProximityPrize.SubmissionLower.KoalaStableNode
 import Mathlib.Algebra.Polynomial.Taylor
+import ProximityPrize.SubmissionLower.KoalaFreshRoot
 
 set_option autoImplicit false
 set_option maxHeartbeats 1000000

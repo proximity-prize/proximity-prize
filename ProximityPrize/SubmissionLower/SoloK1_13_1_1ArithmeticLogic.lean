@@ -1,5 +1,4 @@
 import ProximityPrize.SubmissionLower.Fast040
-set_option Elab.async false
 set_option autoImplicit true
 section
 namespace K1_13_1_1
@@ -37,7 +36,7 @@ private theorem sumRange_suffix (n k : ℕ) (f : ℕ → ℕ) (hk : k ≤ n)
     sumRange n f = sumRange (n - k) (fun i => f (i + k)) := by
   conv_lhs => rw [← Nat.add_sub_of_le hk, sumRange_add]
   rw [sumRange_zero k f h, zero_add]
-theorem remainingCap_eq (n start cap : ℕ) (f : ℕ → ℕ) :
+private theorem remainingCap_eq (n start cap : ℕ) (f : ℕ → ℕ) :
     remainingCap f n start cap = cap - sumRange n (fun i => f (i + start)) := by
   induction n generalizing start cap with
   | zero => simp [remainingCap, sumRange]

@@ -1,7 +1,6 @@
 import ProximityPrize.SubmissionLower.KoalaRectPosition
 import ProximityPrize.SubmissionLower.KoalaRectQuotient
 
-set_option Elab.async false
 set_option autoImplicit false
 set_option backward.isDefEq.respectTransparency false
 

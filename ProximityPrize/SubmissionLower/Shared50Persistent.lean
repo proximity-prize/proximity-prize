@@ -1,5 +1,5 @@
 import ProximityPrize.SubmissionLower.Final50Order
-set_option Elab.async false
+import ProximityPrize.SubmissionLower.Shared50Rational
 
 namespace Shared50Persistent
 noncomputable section

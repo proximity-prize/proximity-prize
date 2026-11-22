@@ -2,7 +2,6 @@ import ProximityPrize.SubmissionLower.AnchorPivotRank82180
 import ProximityPrize.SubmissionLower.AnchorNinth82190
 import ProximityPrize.SubmissionLower.AnchorBlock82190
 
-set_option Elab.async false
 set_option maxRecDepth 6000
 set_option maxHeartbeats 1200000
 

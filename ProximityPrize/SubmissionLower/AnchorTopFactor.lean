@@ -1,6 +1,6 @@
 import ProximityPrize.SubmissionLower.Fast054
+import ProximityPrize.SubmissionLower.Wide50EulerPrimaryRank
 
-set_option Elab.async false
 
 /- The four-factor kernel argument is from the accepted KoalaBear proof.
    Multiplication by a power of the third derivative raises the old index by

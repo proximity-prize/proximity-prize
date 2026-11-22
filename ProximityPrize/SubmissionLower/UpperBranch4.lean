@@ -1,6 +1,5 @@
 import ProximityPrize.SubmissionLower.UpperBranch3
 import ProximityPrize.SubmissionLower.UpperBranch8
-set_option Elab.async false
 set_option autoImplicit true
 section
 namespace P1_7_4
@@ -240,15 +239,15 @@ theorem dotQ_scale_add (a h : ℚ) (v w x : Mass) :
   apply Finset.sum_congr rfl
   intro k _
   ring
-theorem running_nonneg (v : ℕ → Mass) (i : ℕ) (k : Fin 4) :
+private theorem running_nonneg (v : ℕ → Mass) (i : ℕ) (k : Fin 4) :
     0 ≤ running v i k := by
   induction i with
   | zero => exact le_rfl
   | succ i ih => exact ih.trans (le_max_left _ _)
-theorem jump_nonneg (v : ℕ → Mass) (i : ℕ) (k : Fin 4) :
+private theorem jump_nonneg (v : ℕ → Mass) (i : ℕ) (k : Fin 4) :
     0 ≤ running v (i+1) k - running v i k :=
   sub_nonneg.mpr (le_max_left _ _)
-theorem running_succ_dot (v : ℕ → Mass) (i : ℕ) (c : Mass) :
+private theorem running_succ_dot (v : ℕ → Mass) (i : ℕ) (c : Mass) :
     dotQ (running v (i+1)) c = dotQ (running v i) c +
       dotQ (fun k => running v (i+1) k - running v i k) c := by
   unfold dotQ
@@ -256,7 +255,7 @@ theorem running_succ_dot (v : ℕ → Mass) (i : ℕ) (c : Mass) :
   apply Finset.sum_congr rfl
   intro k _
   ring
-theorem pay_one (v : ℕ → Mass) (hist : ℕ → Mass) (i : ℕ)
+private theorem pay_one (v : ℕ → Mass) (hist : ℕ → Mass) (i : ℕ)
     {S T U : Finset (Ideal Ambient)} (hT : T ⊆ S) (hU : U ⊆ S \ T)
     (hcap : ∀ k, massQ S k ≤ hist i k) :
     dotQ (v i) (massQ U) + dotQ (running v (i+1)) (massQ T) ≤
@@ -533,7 +532,7 @@ private theorem cancellation : K1_14_2_2_4.c3 :=
 private theorem sections : K1_14_2_2_4.c5 :=
   K1_14_2_2_4_5.of_children K1_14_2_2_4_5_1.proof K1_14_2_2_4_5_2.proof
     K1_14_2_2_4_5_3.proof K1_14_2_2_4_5_4.proof K1_14_2_2_4_5_5.proof
-theorem scaled_le_div {d m c : ℕ} (hd : 0 < d) (h : d * m ≤ c) :
+private theorem scaled_le_div {d m c : ℕ} (hd : 0 < d) (h : d * m ≤ c) :
     (m : ℚ) ≤ (c : ℚ) / (d : ℚ) := by
   apply (le_div_iff₀ (by exact_mod_cast hd : (0 : ℚ) < (d : ℚ))).mpr
   rw [mul_comm]
@@ -629,7 +628,7 @@ noncomputable section
 open P1_7_4 (pairMinSeed pairMinOrdinate cornerBound sharedBound)
 open K1_14 (Shape)
 open K1_14_2_2_4 (highCap highScale pairCap residualShape)
-theorem at_endpoints {F : ℕ → ℚ} {l x u : ℕ} {a b c M : ℚ}
+private theorem at_endpoints {F : ℕ → ℚ} {l x u : ℕ} {a b c M : ℚ}
     (hl : l ≤ x) (hu : x ≤ u) (ha : 0 ≤ a)
     (hF : ∀ y, l ≤ y → y ≤ u → F y = a * (y : ℚ)^2 + b * (y : ℚ) + c)
     (hL : F l ≤ M) (hU : F u ≤ M) : F x ≤ M := by
@@ -644,14 +643,14 @@ theorem at_endpoints {F : ℕ → ℚ} {l x u : ℕ} {a b c M : ℚ}
     linarith only [hU, hchord, h]
   · have h := mul_nonpos_of_nonpos_of_nonneg (le_of_not_ge hs) (sub_nonneg.mpr hl')
     linarith only [hL, hchord, h]
-def sectionBound (s t : Shape) (a b : ℚ) (k : Fin 4) (x z : ℕ) : ℚ :=
+private def sectionBound (s t : Shape) (a b : ℚ) (k : Fin 4) (x z : ℕ) : ℚ :=
   a * (highCap x z k : ℚ) + b * (pairCap (residualShape s x z) (residualShape t x z) k : ℚ)
-theorem cast_trapezoid (B C J E : ℕ) (hJ : J ≤ B) :
+private theorem cast_trapezoid (B C J E : ℕ) (hJ : J ≤ B) :
     ((B * E + C * J - J * E : ℕ) : ℚ) =
       (B : ℚ) * E + (C : ℚ) * J - (J : ℚ) * E := by
   have h := (Nat.mul_le_mul_right E hJ).trans (Nat.le_add_right (B * E) (C * J))
   simp only [Nat.cast_sub h, Nat.cast_add, Nat.cast_mul]
-theorem seed_endpoints (s t : Shape) {a b M : ℚ} (hb : 0 ≤ b)
+private theorem seed_endpoints (s t : Shape) {a b M : ℚ} (hb : 0 ≤ b)
     {x z : ℕ} (hz : z ≤ pairMinOrdinate s t) (hsJ : s.J ≤ s.B) (htJ : t.J ≤ t.B)
     (h0 : sectionBound s t a b 0 0 0 ≤ M)
     (hZ : sectionBound s t a b 0 0 (pairMinOrdinate s t) ≤ M)
@@ -717,7 +716,7 @@ private theorem ordinate_endpoints (s t : Shape) {a b M : ℚ} (hb : 0 ≤ b)
     Nat.cast_sub (hy.trans (min_le_left s.U t.U)),
     Nat.cast_sub (hy.trans (min_le_right s.U t.U))]
   ring
-theorem mixed_endpoints (s t : Shape) {a b M : ℚ} {x z : ℕ}
+private theorem mixed_endpoints (s t : Shape) {a b M : ℚ} {x z : ℕ}
     (hx : x ≤ pairMinSeed s t) (hz : z ≤ pairMinOrdinate s t)
     (hC : ∀ y, (y = 0 ∨ y = pairMinSeed s t) → ∀ w,
       (w = 0 ∨ w = pairMinOrdinate s t) → sectionBound s t a b 2 y w ≤ M) :
@@ -752,7 +751,7 @@ theorem mixed_endpoints (s t : Shape) {a b M : ℚ} {x z : ℕ}
   intro y _ hy
   rw [hform y z hy hz]
   ring
-theorem jet_endpoints (s t : Shape) {a b M : ℚ} (ha : 0 ≤ a) (hb : 0 ≤ b)
+private theorem jet_endpoints (s t : Shape) {a b M : ℚ} (ha : 0 ≤ a) (hb : 0 ≤ b)
     {x z : ℕ} (hx : x ≤ pairMinSeed s t)
     (h0 : sectionBound s t a b 3 0 0 ≤ M)
     (hX : sectionBound s t a b 3 (pairMinSeed s t) 0 ≤ M) :
@@ -767,7 +766,7 @@ theorem jet_endpoints (s t : Shape) {a b M : ℚ} (ha : 0 ≤ a) (hb : 0 ≤ b)
   simp only [Nat.cast_mul, Nat.cast_sub (hy.trans (min_le_left s.U t.U)),
     Nat.cast_sub (hy.trans (min_le_right s.U t.U))]
   ring
-theorem foldMax_ge {w : ℚ} (L : List ℚ) (init : ℚ)
+private theorem foldMax_ge {w : ℚ} (L : List ℚ) (init : ℚ)
     (h : w ≤ init ∨ w ∈ L) : w ≤ L.foldl max init := by
   induction L generalizing init with
   | nil => exact h.resolve_right List.not_mem_nil
@@ -778,10 +777,10 @@ theorem foldMax_ge {w : ℚ} (L : List ℚ) (init : ℚ)
     · rcases List.mem_cons.mp h with rfl | h
       · exact Or.inl (le_max_right _ _)
       · exact Or.inr h
-def ordinateCorners (s t : Shape) : List ℕ :=
+private def ordinateCorners (s t : Shape) : List ℕ :=
   [0, pairMinOrdinate s t, min (pairMinOrdinate s t) (s.B-s.J),
     min (pairMinOrdinate s t) (t.B-t.J)]
-theorem first_break_mem (s t : Shape) :
+private theorem first_break_mem (s t : Shape) :
     min (s.B-s.J) (t.B-t.J) ∈ ordinateCorners s t := by
   let c := min (s.B-s.J) (t.B-t.J)
   have hc : c ≤ pairMinOrdinate s t :=
@@ -827,7 +826,7 @@ end
 section
 namespace P1_7_4_2
 open P1_7_4 (pairedCap cornerBound)
-theorem le_foldMin (v : ℚ) (f : ℕ → ℚ) (L : List ℕ) (init : ℚ)
+private theorem le_foldMin (v : ℚ) (f : ℕ → ℚ) (L : List ℕ) (init : ℚ)
     (hi : v ≤ init) (h : ∀ j ∈ L, v ≤ f j) :
     v ≤ L.foldl (fun a j => min a (f j)) init := by
   induction L generalizing init with
@@ -997,7 +996,7 @@ theorem factorDegree_add {P Q : Jet} (hP : P ≠ 0) (hQ : Q ≠ 0) (j : Fin 3) :
   · exact jetDegree_mul hP hQ
   · exact natDegree_mul hP hQ
   · exact seedDegree_mul hP hQ
-theorem factorDegree_one (j : Fin 3) : factorDegree 1 j = 0 := by
+private theorem factorDegree_one (j : Fin 3) : factorDegree 1 j = 0 := by
   fin_cases j
   · exact jetDegree_C (1 : Equation) |>.trans natDegree_one
   · exact natDegree_one
@@ -1425,7 +1424,7 @@ open K1_14 (seedEmbedding)
 open K1_14_3_6 (power totalCap topCap)
 open scoped BigOperators
 open private specialization_flatten eval_at_center from ProximityPrize.SubmissionLower.Fast073
-theorem solution_taylor {f : Row 2} {S : K[X]} {d : ℕ}
+private theorem solution_taylor {f : Row 2} {S : K[X]} {d : ℕ}
     (hd : d < p) (hS : RegularAt 1 f (extend S)) :
     MvPolynomial.aeval (marked (extend S)) (initialJetSeparant center (chart f)) ≠ 0 ∧
     ∀ j ≤ d, rationalTaylorCoefficient center (chart f) (marked (extend S)) j =
@@ -1459,7 +1458,7 @@ theorem solution_taylor {f : Row 2} {S : K[X]} {d : ℕ}
   intro hz
   exact (not_le_of_gt ((ht.trans hj).trans_lt hd))
     (Nat.le_of_dvd (by omega : 0 < i) ((CharP.cast_eq_zero_iff CenterField p i).mp hz))
-theorem short_numerator_bound (f : Row 2) {B J t : ℕ} (hJ : 0 < J)
+private theorem short_numerator_bound (f : Row 2) {B J t : ℕ} (hJ : 0 < J)
     (hB : f.totalDegree ≤ B) (hj : f.degreeOf 1 ≤ J) (j : Fin (t+1)) :
     commonTaylorNumerator center (chart f) (power t) j ∈
       MvPolynomial.restrictCappedDegree (Fin 2) CenterField 1 (totalCap t B) (topCap t B J) := by
@@ -1474,7 +1473,7 @@ theorem short_numerator_bound (f : Row 2) {B J t : ℕ} (hJ : 0 < J)
     ((MvPolynomial.degreeOf_le_totalDegree _ _).trans htot)
     ((degreeOf_commonTaylorNumerator_firstOrder_le center Q J (t+1) (power t) hτ hJ
       ((chart_top f).trans hj) j).trans (Nat.add_le_add_left (Nat.le_of_lt_succ j.isLt) _)))
-theorem short_denominator_bound (f : Row 2) {B J t : ℕ}
+private theorem short_denominator_bound (f : Row 2) {B J t : ℕ}
     (hB : f.totalDegree ≤ B) (hj : f.degreeOf 1 ≤ J) :
     initialJetSeparant center (chart f) ^ power t ∈
       MvPolynomial.restrictCappedDegree (Fin 2) CenterField 1 (totalCap t B) (topCap t B J) := by

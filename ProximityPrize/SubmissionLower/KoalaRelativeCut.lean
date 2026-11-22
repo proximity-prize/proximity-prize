@@ -1,5 +1,6 @@
 import ProximityPrize.SubmissionLower.KoalaRuledEmbedding
 import ProximityPrize.SubmissionLower.KoalaPointCount
+import ProximityPrize.SubmissionLower.KoalaRectTaylorEval
 
 set_option autoImplicit false
 set_option maxHeartbeats 900000

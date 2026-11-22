@@ -1,5 +1,5 @@
 import ProximityPrize.SubmissionLower.FrontBranch12
-set_option Elab.async false
+import ProximityPrize.SubmissionLower.FrontRank382200
 set_option autoImplicit true
 section
 namespace P3_6

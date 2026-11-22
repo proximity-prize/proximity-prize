@@ -2,7 +2,6 @@ import ProximityPrize.SubmissionLower.KoalaRectTaylorAxes
 import ProximityPrize.SubmissionLower.KoalaRectSectionAlgebra
 
 set_option autoImplicit false
-set_option Elab.async false
 set_option maxHeartbeats 1000000
 set_option backward.isDefEq.respectTransparency false
 
@@ -10,13 +9,13 @@ namespace KoalaRectTaylor
 noncomputable section
 
 open K1_14 (FX)
-open HighCore82219Upper (Input ResidueLift Factors)
-open HighCore82219Upper_3 (JetRing ordinate graphIdeal)
-open HighCore82219Upper_3_1 (velocity)
-open HighCore82219Upper_3_1_2 (finite reciprocal inverseEval seedMap mul_reciprocal clear_overlap)
-open private HighCore82219Upper_3_1_2.eval_coefficient HighCore82219Upper_3_1_2.scale_velocity
-  from ProximityPrize.SubmissionLower.HighCore82219UpperGeometry
-open HighCore82219Upper_3_1_2 (eval_coefficient scale_velocity)
+open HighCore82258Upper (Input ResidueLift Factors)
+open HighCore82258Upper_3 (JetRing ordinate graphIdeal)
+open HighCore82258Upper_3_1 (velocity)
+open HighCore82258Upper_3_1_2 (finite reciprocal inverseEval seedMap mul_reciprocal clear_overlap)
+open private HighCore82258Upper_3_1_2.eval_coefficient HighCore82258Upper_3_1_2.scale_velocity
+  from ProximityPrize.SubmissionLower.HighCore82258UpperGeometry
+open HighCore82258Upper_3_1_2 (eval_coefficient scale_velocity)
 open SplitCut.Rect (Box Section space)
 open scoped BigOperators
 
@@ -142,11 +141,11 @@ theorem pow (hp : Represented Q d p) (n : ℕ) :
 
 end Represented
 
-def reflected (p : JetRing) (a n : ℕ) : JetRing :=
+private def reflected (p : JetRing) (a n : ℕ) : JetRing :=
   ∑ j ∈ p.support, Polynomial.monomial j
     (Polynomial.C (MvPolynomial.C ((-1 : FX)^j)) * (p.coeff j).reflect (a+n-2*j))
 
-theorem reflected_coeff_in (p : JetRing) (a n j : ℕ) (hj : j ∈ p.support) :
+private theorem reflected_coeff_in (p : JetRing) (a n j : ℕ) (hj : j ∈ p.support) :
     (reflected p a n).coeff j =
       Polynomial.C (MvPolynomial.C ((-1 : FX)^j)) * (p.coeff j).reflect (a+n-2*j) := by
   classical
@@ -155,13 +154,13 @@ theorem reflected_coeff_in (p : JetRing) (a n j : ℕ) (hj : j ∈ p.support) :
   · intro i _ hi
     exact Polynomial.coeff_monomial_of_ne _ hi.symm
 
-theorem reflected_coeff_out (p : JetRing) (a n j : ℕ) (hj : j ∉ p.support) :
+private theorem reflected_coeff_out (p : JetRing) (a n j : ℕ) (hj : j ∉ p.support) :
     (reflected p a n).coeff j = 0 := by
   classical
   rw [reflected,Polynomial.finsetSum_coeff]
   exact Finset.sum_eq_zero fun i hi => Polynomial.coeff_monomial_of_ne _ (fun e => hj (e ▸ hi))
 
-theorem reflected_bound {p : JetRing} {d : Box} {n : ℕ}
+private theorem reflected_bound {p : JetRing} {d : Box} {n : ℕ}
     (hn : 2*d.velocity+ordinateWidth p ≤ n) (hv : p.natDegree ≤ d.velocity)
     (h₀ : JetAxis 0 p d.seed₀) (h₁ : JetAxis 1 p d.seed₁) :
     jetToRect (reflected p (d.base+2*d.velocity) n) ∈ space FX (d.pad n) := by
@@ -195,7 +194,7 @@ theorem reflected_bound {p : JetRing} {d : Box} {n : ℕ}
     dsimp [Box.pad,a] at *
     omega
 
-theorem reflected_eval {R : Type} [CommRing R] (φ : JetRing →+* R)
+private theorem reflected_eval {R : Type} [CommRing R] (φ : JetRing →+* R)
     (z : R) (hz : φ ordinate*z = 1) {p : JetRing} {a b n : ℕ}
     (hv : p.natDegree ≤ b) (hn : 2*b+ordinateWidth p ≤ n) :
     φ (reflected p a n) = (φ ordinate)^(a+n) * inverseEval φ z p := by
@@ -226,7 +225,7 @@ theorem reflected_eval {R : Type} [CommRing R] (φ : JetRing →+* R)
   rw [show ⅟y = z from rfl] at h
   rw [h]
 
-theorem transition_zero {R : Type} [CommRing R] (φ : JetRing →+* R)
+private theorem transition_zero {R : Type} [CommRing R] (φ : JetRing →+* R)
     {p q : JetRing} {u : R} {a n : ℕ}
     (hq : φ q = (φ ordinate)^(a+n)*u) (hp : φ p = (φ ordinate)^a*u) :
     φ (ordinate^n*p-q) = 0 := by

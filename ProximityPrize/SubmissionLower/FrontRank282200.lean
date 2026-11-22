@@ -1,6 +1,5 @@
 import ProximityPrize.SubmissionLower.FrontRank182200
 
-set_option Elab.async false
 set_option autoImplicit true
 section
 set_option backward.isDefEq.respectTransparency false
@@ -85,10 +84,10 @@ open Front82200 (Words k agreement amplitudeDegree)
 open K1_9 (K I node twist pencil fold map_eval_node pencil_natDegree pencil_degree
   degree_sub_lt eq_on_nodes sixNorm_mul sixNorm_twist sixNorm_ne_zero)
 open private all_card affine_zero residual fold_residual from ProximityPrize.SubmissionLower.Fast068
-theorem amp_natDegree_le {u : Words} (D : PolarData u) (z : K) :
+private theorem amp_natDegree_le {u : Words} (D : PolarData u) (z : K) :
     (D.amp z).natDegree ≤ amplitudeDegree (D.A 0) (D.A 1) :=
   pencil_natDegree ..
-theorem PolarData.amp_nonzero_at {u} (D : PolarData u) {r s : K}
+private theorem PolarData.amp_nonzero_at {u} (D : PolarData u) {r s : K}
     (hrs : r ≠ s) (i : I) : (D.amp r).eval (node i) ≠ 0 ∨ (D.amp s).eval (node i) ≠ 0 := by
   by_contra! hz
   obtain ⟨hr, hs⟩ := hz
@@ -101,7 +100,7 @@ theorem PolarData.amp_nonzero_at {u} (D : PolarData u) {r s : K}
   simp only [eval_add, eval_mul, h0, h1, mul_zero, add_zero, eval_one, zero_ne_one] at h
 private def PolarData.cross {u} (D : PolarData u) (r s : K) (P Q : K[X]) : K[X] :=
   D.a * (D.amp r).map twist * Q - D.b * D.amp s * P.map twist
-theorem PolarData.cross_degree {u} (D : PolarData u) (r s : K)
+private theorem PolarData.cross_degree {u} (D : PolarData u) (r s : K)
     {P Q : K[X]} (hP : P.degree < k) (hQ : Q.degree < k) :
     (D.cross r s P Q).degree < (k + heightBound : ℕ) := by
   have hl : (D.a * (D.amp r).map twist).natDegree ≤ heightBound :=
@@ -113,7 +112,7 @@ theorem PolarData.cross_degree {u} (D : PolarData u) (r s : K)
   exact degree_sub_lt
     (Strata.degree_mul_lt_add _ _ heightBound k hl hQ)
     (Strata.degree_mul_lt_add _ _ heightBound k hr (degree_map_le.trans_lt hP))
-theorem PolarData.decoder_identity {u} (D : PolarData u) (z : K)
+private theorem PolarData.decoder_identity {u} (D : PolarData u) (z : K)
     (S : Finset I) (P : K[X]) (hS : agreement ≤ S.card) (hP : P.degree < k)
     (hits : ∀ i ∈ S, P.eval (node i) = fold u z i) : D.cross z z P P = D.Q z z := by
   have hcard := (show k + heightBound ≤ agreement by decide).trans hS
@@ -121,7 +120,7 @@ theorem PolarData.decoder_identity {u} (D : PolarData u) (z : K)
   apply eq_on_nodes S _ _ ((D.cross_degree z z hP hP).trans_le hb) ((D.Q_degree z z).trans_le hb)
   intro i hi
   simp only [PolarData.cross, eval_sub, eval_mul, map_eval_node, hits i hi, D.nodes]
-def PolarData.subtract {u} (D : PolarData u) (P Q : K[X])
+private def PolarData.subtract {u} (D : PolarData u) (P Q : K[X])
     (hP : P.degree < k) (hQ : Q.degree < k) : PolarData (residual u P Q) where
   a := D.a
   b := D.b
@@ -137,7 +136,7 @@ def PolarData.subtract {u} (D : PolarData u) (P Q : K[X])
   nodes r s i := by
     simp only [eval_sub, D.nodes, PolarData.cross, eval_mul, map_eval_node, fold_residual, map_sub]
     ring
-theorem PolarData.offdiag_zero {u} (D : PolarData u) {r s : K}
+private theorem PolarData.offdiag_zero {u} (D : PolarData u) {r s : K}
     (hr : D.amp r ≠ 0) (hs : D.amp s ≠ 0) (hrr : D.Q r r = 0) (hss : D.Q s s = 0) :
     D.Q r s = 0 := by
   let E := D.amp s * (D.amp r).map twist
@@ -178,7 +177,7 @@ theorem PolarData.offdiag_zero {u} (D : PolarData u) {r s : K}
   simp only [sixNorm_mul, sixNorm_twist] at hN
   exact D.norms_ne (mul_right_cancel₀ (sixNorm_ne_zero hn)
     (mul_right_cancel₀ (sixNorm_ne_zero hne) hN.symm))
-theorem PolarData.zero_of_diagonal_zeros {u} (D : PolarData u) {r s : K}
+private theorem PolarData.zero_of_diagonal_zeros {u} (D : PolarData u) {r s : K}
     (hrs : r ≠ s) (hr : D.amp r ≠ 0) (hs : D.amp s ≠ 0)
     (hrr : D.Q r r = 0) (hss : D.Q s s = 0) (y z : K) : D.Q y z = 0 := by
   have hrs' := D.offdiag_zero hr hs hrr hss
@@ -199,7 +198,7 @@ theorem PolarData.zero_of_diagonal_zeros {u} (D : PolarData u) {r s : K}
   have h₂ : f s z = 0 := affine_zero (f s) id Function.injective_id hrs (right s)
     (by simp [f, hsr']) (by simp [f, hss]) z
   simpa only [eval_zero] using affine_zero (fun γ => f γ z) twist twist.injective hrs (left z) h₁ h₂ y
-theorem PolarData.decoder_zero {u} (D : PolarData u) (hQ : ∀ r s, D.Q r s = 0) (z : K)
+private theorem PolarData.decoder_zero {u} (D : PolarData u) (hQ : ∀ r s, D.Q r s = 0) (z : K)
     (S : Finset I) (P : K[X]) (hS : agreement ≤ S.card) (hP : P.degree < k)
     (hits : ∀ i ∈ S, P.eval (node i) = fold u z i) : P = 0 := by
   classical
@@ -316,7 +315,7 @@ private theorem coefficients {u : Words} {T : Front82200.TwoActive u} {R : Front
     exact B.nodes
   exact coefficientsAt P0.p (by decide) pow_eq_twist u (Front82200.fixedNodes R)
     B.a B.b B.α B.β B.output hp hnodes i hi
-theorem polarData_of_parallel {u : Words} {T : Front82200.TwoActive u} {R : Front82200.Relation T}
+private theorem polarData_of_parallel {u : Words} {T : Front82200.TwoActive u} {R : Front82200.Relation T}
     {D : Front82200.Reduction u T R} (B : Front82200.RankThree u T R D)
     (hu : Front82200.FrontRemainder u) (hp : Front82200.Parallel B) (hn : ¬ Front82200.UnitNorm B) :
     Nonempty (PolarData u) := by
@@ -377,8 +376,8 @@ private theorem pencil_count {u : Words} (Γ : Finset K)
   have he := Finset.card_erase_add_one hr
   have hS : agreement ≤ S.card := (M r hr).agreement
   rw [Finset.card_sdiff_of_subset (Finset.subset_univ _), Finset.card_univ, IRSProfile.card_index] at hcard
-  change 179905 ≤ S.card at hS
-  change Γ.card ≤ 82240
+  change 179886 ≤ S.card at hS
+  change Γ.card ≤ 82259
   omega
 theorem proof : Front82200.c2 := by
   intro u hu T R D B _ hp hn Γ hΓ _

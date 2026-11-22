@@ -1,7 +1,7 @@
 import ProximityPrize.SubmissionLower.Fast077
+import ProximityPrize.SubmissionLower.KoalaFractionContact
 
 set_option autoImplicit false
-set_option Elab.async false
 
 namespace Low48BentCycle
 

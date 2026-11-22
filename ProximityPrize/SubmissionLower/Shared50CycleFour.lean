@@ -1,5 +1,5 @@
 import ProximityPrize.SubmissionLower.Final50GeometryCut
-set_option Elab.async false
+import ProximityPrize.SubmissionLower.Shared50CycleBound
 
 namespace Shared50CycleFour
 noncomputable section

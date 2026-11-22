@@ -1,6 +1,6 @@
 import ProximityPrize.SubmissionLower.PortLowBase
+import ProximityPrize.SubmissionLower.FrontAssembly82200
 
-set_option Elab.async false
 
 namespace Primary82170
 

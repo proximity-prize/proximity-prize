@@ -1,6 +1,6 @@
 import ProximityPrize.SubmissionLower.GoldBranch6N8
+import ProximityPrize.SubmissionLower.Low48BentSupport
 
-set_option Elab.async false
 namespace Low48Price
 noncomputable section
 open P3 (I K node)

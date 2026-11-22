@@ -1,7 +1,6 @@
 import ProximityPrize.SubmissionLower.Final50Order
 import Mathlib.RingTheory.Localization.Integer
 
-set_option Elab.async false
 set_option maxHeartbeats 800000
 namespace Shared50Rational
 noncomputable section
@@ -30,7 +29,7 @@ theorem fraction_injective : Function.Injective toFraction :=
 theorem support_fraction (P : Row 4) : (toFraction P).support = P.support :=
   MvPolynomial.support_map_of_injective P (IsFractionRing.injective Geom[X] GenericField)
 
-theorem primitive_relation {ι : Type*} (s : Finset ι) (c : ι → Geom[X])
+private theorem primitive_relation {ι : Type*} (s : Finset ι) (c : ι → Geom[X])
     (e : ι → Row 4) (h : ∑ i ∈ s, c i • e i = 0)
     (hne : ∃ i ∈ s, c i ≠ 0) (x : Geom) :
     ∃ b : ι → Geom[X], (∑ i ∈ s, b i • e i = 0) ∧ ∃ i ∈ s, (b i).eval x ≠ 0 := by

@@ -14,12 +14,12 @@ open MvPolynomial
 open K1_14 (FX Seeds Equation)
 open K1_14_6 (Biform)
 open K1_14_6_1 (flatten partialX separant)
-open HighCore82219Upper (Input ResidueLift Factors)
-open HighCore82219Upper_3
-open HighCore82219Upper_3_1 (velocity)
+open HighCore82258Upper (Input ResidueLift Factors)
+open HighCore82258Upper_3
+open HighCore82258Upper_3_1 (velocity)
 open KoalaRectTaylor
-open private HighCore82219Upper_3.inversePart HighCore82219Upper_3.inversePart_bound
-  HighCore82219Upper_3.tangent_glue from ProximityPrize.SubmissionLower.HighCore82219UpperGeometry
+open private HighCore82258Upper_3.inversePart HighCore82258Upper_3.inversePart_bound
+  HighCore82258Upper_3.tangent_glue from ProximityPrize.SubmissionLower.HighCore82258UpperGeometry
 
 abbrev noVelocity (p : Biform) : Ring FX := rename (fun i => jetAxes (some i)) p
 
@@ -46,7 +46,7 @@ theorem embed_biform {p : Biform} {e v w : ℕ}
   obtain ⟨he,hv,hw⟩ := hp hj
   exact ⟨h1.le, by simpa [h0,h1] using he, h2.le.trans hv, h3.le.trans hw⟩
 
-theorem add_velocity {p : Ring FX} {e v w : ℕ} (hp : p ∈ space FX ⟨e,0,v,w⟩) :
+private theorem add_velocity {p : Ring FX} {e v w : ℕ} (hp : p ∈ space FX ⟨e,0,v,w⟩) :
     MvPolynomial.X (1 : Fin 4)*p ∈ space FX ⟨e,1,v,w⟩ := by
   classical
   intro m hm
@@ -64,24 +64,24 @@ theorem add_velocity {p : Ring FX} {e v w : ℕ} (hp : p ∈ space FX ⟨e,0,v,w
     Nat.zero_add]
   omega
 
-theorem pad_velocity {p : Ring FX} {e v w : ℕ} (hp : p ∈ space FX ⟨e+2,0,v,w⟩) :
+private theorem pad_velocity {p : Ring FX} {e v w : ℕ} (hp : p ∈ space FX ⟨e+2,0,v,w⟩) :
     p ∈ space FX ⟨e,1,v,w⟩ := by
   intro m hm
   obtain ⟨h1,h0,h2,h3⟩ := hp hm
   exact ⟨h1.trans (Nat.zero_le 1), h0, h2, h3⟩
 
-theorem inverse_axes (J : Input) {u v : ℕ}
+private theorem inverse_axes (J : Input) {u v : ℕ}
     (h : ∀ i, (J.f.coeff i).degreeOf 0 ≤ u ∧ (J.f.coeff i).degreeOf 1 ≤ v) :
-    ∀ i, ((HighCore82219Upper_3.inversePart J).coeff i).degreeOf 0 ≤ u ∧
-      ((HighCore82219Upper_3.inversePart J).coeff i).degreeOf 1 ≤ v := by
+    ∀ i, ((HighCore82258Upper_3.inversePart J).coeff i).degreeOf 0 ≤ u ∧
+      ((HighCore82258Upper_3.inversePart J).coeff i).degreeOf 1 ≤ v := by
   intro i
-  have hcoeff : (HighCore82219Upper_3.inversePart J).coeff i =
+  have hcoeff : (HighCore82258Upper_3.inversePart J).coeff i =
       MvPolynomial.C ((i : FX)-(J.e : FX)) * J.f.coeff i := by
     rw [map_sub, map_natCast, map_natCast]
     cases i with
-    | zero => simp [HighCore82219Upper_3.inversePart, neg_mul]
+    | zero => simp [HighCore82258Upper_3.inversePart, neg_mul]
     | succ n =>
-      simp only [HighCore82219Upper_3.inversePart, Polynomial.coeff_sub, Polynomial.coeff_C_mul,
+      simp only [HighCore82258Upper_3.inversePart, Polynomial.coeff_sub, Polynomial.coeff_C_mul,
         Polynomial.coeff_X_mul, Polynomial.coeff_derivative, Nat.cast_add, Nat.cast_one]
       ring
   rw [hcoeff]
@@ -105,7 +105,7 @@ theorem tangent_section_rect (J : Input) {B : ResidueLift J} (D : Factors J B) {
   let dy := J.f.derivative
   let p := (Polynomial.C dx : JetRing) + velocity * Polynomial.C dy
   let q := ordinate * (Polynomial.C dx : JetRing) +
-    velocity * Polynomial.C (HighCore82219Upper_3.inversePart J)
+    velocity * Polynomial.C (HighCore82258Upper_3.inversePart J)
   have hpos : 3 ≤ J.e := J.sheets
   have hf : flatten J.f ∈ SplitCut.BoxDegree.space FX J.e v w := SplitCut.Raw.root le_rfl haxis
   have hx : flatten dx = partialX (flatten J.f) := by simp [dx,flatten]
@@ -128,10 +128,10 @@ theorem tangent_section_rect (J : Input) {B : ResidueLift J} (D : Factors J B) {
   have hy₀ : jetToRect (Polynomial.C dy) ∈ space FX ⟨J.e-1,0,v,w⟩ := by
     rw [jetToRect_C, hy]
     exact embed_biform (SplitCut.Raw.sep hf)
-  have hy₁ : jetToRect (Polynomial.C (HighCore82219Upper_3.inversePart J)) ∈
+  have hy₁ : jetToRect (Polynomial.C (HighCore82258Upper_3.inversePart J)) ∈
       space FX ⟨J.e-1,0,v,w⟩ := by
     rw [jetToRect_C]
-    exact embed_biform (SplitCut.Raw.root (HighCore82219Upper_3.inversePart_bound J).1 (inverse_axes J haxis))
+    exact embed_biform (SplitCut.Raw.root (HighCore82258Upper_3.inversePart_bound J).1 (inverse_axes J haxis))
   refine ⟨⟨1, jetToRect p, jetToRect q, ?_, ?_, ?_⟩, rfl, rfl⟩
   · change jetToRect p ∈ space FX ⟨J.e-2+1,1,v,w⟩
     rw [e1]
@@ -140,14 +140,14 @@ theorem tangent_section_rect (J : Input) {B : ResidueLift J} (D : Factors J B) {
   · change jetToRect q ∈ space FX ⟨J.e-2+1,1,v,w⟩
     rw [e1]
     have hq : jetToRect q = jetToRect (ordinate * Polynomial.C dx) +
-        MvPolynomial.X (1 : Fin 4)*jetToRect (Polynomial.C (HighCore82219Upper_3.inversePart J)) := by
+        MvPolynomial.X (1 : Fin 4)*jetToRect (Polynomial.C (HighCore82258Upper_3.inversePart J)) := by
       simp only [q, map_add, map_mul, jetToRect_ordinate, jetToRect_velocity]
     rw [hq]
     exact Submodule.add_mem _ (pad_velocity (e2.symm ▸ hx₁)) (add_velocity hy₁)
   · rw [pow_one, ← jetToRect_ordinate, ← map_mul, ← map_sub]
     have he : ordinate * p - q =
         velocity * (Polynomial.C (Polynomial.C (J.e : Seeds)) * Polynomial.C J.f) := by
-      exact HighCore82219Upper_3.tangent_glue (A:=Equation) (B:=JetRing)
+      exact HighCore82258Upper_3.tangent_glue (A:=Equation) (B:=JetRing)
         (Polynomial.C : Equation →+* JetRing) (Polynomial.X : Equation)
         (Polynomial.C (J.e : Seeds)) J.f dy velocity (Polynomial.C dx)
     rw [he, map_mul, map_mul]

@@ -1,5 +1,6 @@
 import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
 import Mathlib.Tactic
+import ProximityPrize.SubmissionLower.Shared50Persistent
 
 open scoped BigOperators
 

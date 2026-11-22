@@ -1,8 +1,7 @@
 import ProximityPrize.SubmissionLower.Final50Price
-import ProximityPrize.SubmissionLower.CutterTaperFamily
+import ProximityPrize.SubmissionLower.Wide50EulerPrimaryFamily
 import ProximityPrize.SubmissionLower.PrimaryTaperActive
 
-set_option Elab.async false
 namespace Final50Order
 noncomputable section
 open K1_13 (Geom Row shape InBox Contact)
@@ -13,12 +12,18 @@ abbrev physicalDegree := Final50Price.physicalDegree
 abbrev agreement := Final50Price.agreement
 abbrev primaryBox := Final50Price.primaryBox
 abbrev primaryCutoff := Final50Price.primaryCutoff
-abbrev sourceRank := CutterTaperTheta.sourceRank agreement physicalDegree
+abbrev sourceRank := Wide50EulerPrimary.sourceRank agreement physicalDegree
 abbrev layerWidth := Final50Price.layerWidth
 abbrev layerNeed := Final50Price.layerNeed
 abbrev Messages := Final50Price.Messages
 abbrev ProperCut := Final50Price.ProperCut
 abbrev LayerBudget := @Final50Price.LayerBudget
+
+/-- Exact dimension supplied by the compact source and the uniform node rank cap. -/
+theorem sourceRank_eq : sourceRank = 993533597967758343 := by decide
+
+/-- The number of layers guaranteed by the stronger compact certificate. -/
+theorem certified_layers : sourceRank / layerWidth + 1 = 21410054907182 := by decide
 
 def PrimaryRank (w : I → K) : Prop :=
   ∃ e : Fin sourceRank → Row 4, LinearIndependent Geom e ∧
@@ -75,7 +80,7 @@ def c3 : Prop :=
       ∀ T ≤ primaryCutoff, ∃ e : Fin (r T) → Row 4,
         (∀ i, BankRow w T (e i)) ∧
         LinearIndependent Geom (fun i => symbolAt x (e i))
-theorem exists_availability (hc : c1) (hd : c2)
+private theorem exists_availability (hc : c1) (hd : c2)
     {w : I → K} {Γ : Finset K} {s : K → K[X]} (hm : Messages w Γ s)
     {f : Row 4} (hirr : Irreducible f) (hpos : 0 < (shape f).t) (htop : (shape f).t < K1.p) :
     ∃ l : ℕ, (∀ T ≤ primaryCutoff, ∀ P, BankRow w T P → f ^ (requiredOrder T - l) ∣ P) ∧
@@ -322,7 +327,7 @@ open Final50Order (TrueWeightLE physicalDegree primaryBox primaryCutoff)
 open K1_13 (Geom embed extend Row Shape shape InBox indexDegree)
 open private translateTop topHasse topHasse_coeff source_support sum_add_top total_add_top
   apply_add_top erase_top_add topHasse_order topHasse_zero exact_hasse_not_dvd from ProximityPrize.SubmissionLower.PortLowBase
-theorem topHasse_bounds (box : Shape) (T a : ℕ) (P : Row 4)
+private theorem topHasse_bounds (box : Shape) (T a : ℕ) (P : Row 4)
     (hb : InBox (shape P) box) (hw : TrueWeightLE P T) :
     InBox (shape (topHasse a P)) box ∧ TrueWeightLE (topHasse a P) T := by
   refine ⟨⟨?_, ?_, ?_⟩, ?_⟩
@@ -353,7 +358,7 @@ theorem topHasse_bounds (box : Shape) (T a : ℕ) (P : Row 4)
       (p := (↑((m 3 + a).choose a) : Geom[X])) (q := P.coeff (m + Finsupp.single 3 a))
     rw [Polynomial.natDegree_natCast, zero_add] at hc
     exact (Nat.add_le_add_right hc _).trans ((Nat.add_le_add_left (Nat.le_add_right _ _) _).trans hp)
-theorem topHasse_one_not_dvd (f : Row 4) (hf : Irreducible f)
+private theorem topHasse_one_not_dvd (f : Row 4) (hf : Irreducible f)
     (hpos : 0 < f.degreeOf 3) (hsmall : f.degreeOf 3 < K1.p) : ¬ f ∣ topHasse 1 f := by
   classical
   have hdeg : (topHasse 1 f).degreeOf 3 ≤ f.degreeOf 3 - 1 := by
@@ -536,7 +541,7 @@ private instance finiteBank (w : I → K) (T : ℕ) : Module.Finite Geom (bank w
   exact hzero (P - Q) hz
 private def bankEval (w : I → K) (x : Geom) (T : ℕ) : bank w T →ₗ[Geom] Symbol :=
   (symbolLinear x).comp (bank w T).subtype
-theorem mul_cutoff_iff (w : I → K) (x : Geom) (hx : ∀ i : I, x ≠ embed (node i))
+private theorem mul_cutoff_iff (w : I → K) (x : Geom) (hx : ∀ i : I, x ≠ embed (node i))
     (T : ℕ) (P : Row 4) :
     BankRow w (T + 1) (MvPolynomial.C (linearFactor x) * P) ↔ BankRow w T P := by
   rw [bankRow_iff, bankRow_iff, support_linear_mul]
@@ -558,7 +563,7 @@ theorem mul_cutoff_iff (w : I → K) (x : Geom) (hx : ∀ i : I, x ≠ embed (no
       isCoprime_X_sub_C_of_isUnit_sub (sub_ne_zero.mpr (hx i).symm).isUnit
     have hd : IsCoprime (linearFactor (embed (node i)) ^ m) (linearFactor x) := hc.pow_left
     exact hd.dvd_mul_left_iff
-theorem zero_cutoff_kernel (w : I → K) (x : Geom) :
+private theorem zero_cutoff_kernel (w : I → K) (x : Geom) :
     LinearMap.ker (bankEval w x 0) = ⊥ := by
   apply LinearMap.ker_eq_bot'.mpr
   intro P hP
@@ -580,7 +585,7 @@ theorem zero_cutoff_kernel (w : I → K) (x : Geom) :
   rw [← hQ, MvPolynomial.coeff_C_mul, natDegree_mul (linearFactor_ne x) hnz,
     linearFactor_degree] at h
   omega
-theorem kernel_finrank (w : I → K) (x : Geom) (hx : ∀ i : I, x ≠ embed (node i))
+private theorem kernel_finrank (w : I → K) (x : Geom) (hx : ∀ i : I, x ≠ embed (node i))
     (T : ℕ) : Module.finrank Geom (LinearMap.ker (bankEval w x (T + 1))) =
       Module.finrank Geom (bank w T) := by
   let L : bank w T →ₗ[Geom] (LinearMap.ker (bankEval w x (T + 1))) :=
@@ -652,14 +657,14 @@ export Final50OrderProof (BankRow requiredOrder)
 export Final50OrderProof_1 (order_of_contact)
 
 theorem messages_of_family {cap u del Γ} (M : P1.ModelAt cap u del)
-    (F : P1.FamilyAt agreement M Γ) (hh : M.overhead ≤ 2377) :
+    (F : P1.FamilyAt agreement M Γ) (hh : M.overhead ≤ 2413) :
     Messages M.word Γ F.scalar := by
   refine ⟨F.distinct, ?_, ?_⟩
   · intro γ hγ
     obtain hz | hd := (F.mark γ hγ).scalar_degree
     · simp [hz]
     · change ((F.scalar γ).natDegree : ℤ) ≤ (131072 : ℤ) - 1 + M.overhead at hd
-      change (F.scalar γ).natDegree ≤ 133448
+      change (F.scalar γ).natDegree ≤ 133484
       omega
   · intro γ hγ
     let m := F.mark γ hγ
@@ -677,9 +682,9 @@ theorem proper_layers_of_rank {w Γ s n} {f : Fin n → Row 4}
     Final50OrderProof_2.proof Final50OrderProof_3.proof
     hm hr hirr hpos htop hdiff
 
-/-- Supply the compact primary bank at height 2377. -/
+/-- Supply the compact primary bank at height 2413. -/
 theorem primary_rank (w : P3.I → K) : PrimaryRank w :=
-  CutterTaperTheta.primary_family agreement physicalDegree (by decide) (by decide)
+  Wide50EulerPrimary.primary_family agreement physicalDegree (by decide) (by decide)
     (by decide) w (n := sourceRank) le_rfl
 
 /-- A common evaluation point gives an independent symbol family at each cutoff. -/

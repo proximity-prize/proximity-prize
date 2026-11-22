@@ -3,7 +3,6 @@ import ProximityPrize.SubmissionLower.Shared50Persistent
 import ProximityPrize.SubmissionLower.Shared50ShapeRankBase
 import ProximityPrize.SubmissionLower.Final50ShapeGate
 
-set_option Elab.async false
 set_option maxRecDepth 40000
 set_option linter.style.haveILetI false
 set_option maxHeartbeats 1500000
@@ -44,7 +43,7 @@ theorem cutoff_dim (r : ℕ) : Module.finrank GenericField (cutoff r) = Final50S
   rw [(Submodule.comapSubtypeEquivOfLe hle).finrank_eq,finrank_restrictSupport_finset]
   rfl
 
-theorem hasse_add (a : Fin 4 →₀ ℕ) (P Q : GeoJets) :
+private theorem hasse_add (a : Fin 4 →₀ ℕ) (P Q : GeoJets) :
     hassePartial a (P+Q) = hassePartial a P + hassePartial a Q := by
   rw [← taylor_coeff, map_add, MvPolynomial.coeff_add, taylor_coeff,taylor_coeff]
 
@@ -53,7 +52,7 @@ private theorem hasse_zero (a : Fin 4 →₀ ℕ) :
   rw [← taylor_coeff, map_zero]
   simp
 
-theorem hasse_C_mul (a : Fin 4 →₀ ℕ) (c : GeoField) (P : GeoJets) :
+private theorem hasse_C_mul (a : Fin 4 →₀ ℕ) (c : GeoField) (P : GeoJets) :
     hassePartial a (MvPolynomial.C c * P) = MvPolynomial.C c * hassePartial a P := by
   rw [← taylor_coeff, map_mul]
   have h : taylorHom (MvPolynomial.C c : GeoJets) = MvPolynomial.C (MvPolynomial.C c) := by

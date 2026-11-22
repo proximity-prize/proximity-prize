@@ -1,5 +1,4 @@
 import ProximityPrize.SubmissionLower.UpperBranch2
-set_option Elab.async false
 set_option autoImplicit true
 section
 set_option autoImplicit false

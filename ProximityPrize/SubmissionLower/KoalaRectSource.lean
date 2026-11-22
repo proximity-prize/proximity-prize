@@ -1,6 +1,6 @@
 import ProximityPrize.SubmissionLower.UpperBranch1
+import ProximityPrize.SubmissionLower.HighCore82258Finish
 
-set_option Elab.async false
 
 namespace KoalaRect
 noncomputable section
@@ -98,15 +98,15 @@ theorem axisExponent_injective (U : Fin 2 → ℕ) : Function.Injective (axisExp
 open private trueWidth lt_trueWidth_iff trueWidth_eq_add seedWeight_eq Exponents monomialAt
   coeffAt_monomialAt from ProximityPrize.SubmissionLower.Fast065
 
-abbrev RectIndex (h : ℕ) (s : Shape) (W : ℕ) (U : Fin 2 → ℕ) :=
+private abbrev RectIndex (h : ℕ) (s : Shape) (W : ℕ) (U : Fin 2 → ℕ) :=
   Σ q : Fin (s.B + 1), Σ j : Fin (min q.val s.J + 1),
     Fin (trueWidth h s W q.val j.val) × AxisIndex U
 
-def rectExponents {h : ℕ} {s : Shape} {W : ℕ} {U : Fin 2 → ℕ}
+private def rectExponents {h : ℕ} {s : Shape} {W : ℕ} {U : Fin 2 → ℕ}
     (k : RectIndex h s W U) : Exponents :=
   (k.2.1.val, k.1.val - k.2.1.val, k.2.2.1.val, axisExponent k.2.2.2)
 
-theorem rectExponents_injective (h : ℕ) (s : Shape) (W : ℕ) (U : Fin 2 → ℕ) :
+private theorem rectExponents_injective (h : ℕ) (s : Shape) (W : ℕ) (U : Fin 2 → ℕ) :
     Function.Injective (rectExponents (h := h) (s := s) (W := W) (U := U)) := by
   rintro ⟨q, j, a, b⟩ ⟨q', j', a', b'⟩ he
   obtain ⟨hj, hi, ha, hb⟩ : j.val = j'.val ∧ q.val - j.val = q'.val - j'.val ∧
@@ -123,7 +123,7 @@ theorem rectExponents_injective (h : ℕ) (s : Shape) (W : ℕ) (U : Fin 2 → �
   subst b'
   rfl
 
-theorem rectExponents_exists {h : ℕ} {s : Shape} {W j i a : ℕ}
+private theorem rectExponents_exists {h : ℕ} {s : Shape} {W j i a : ℕ}
     {U : Fin 2 → ℕ} {e : Fin 2 →₀ ℕ} (hE : trueEligible h s W j i a e)
     (hU : ∀ z, e z ≤ U z) : ∃ k : RectIndex h s W U, rectExponents k = (j, i, a, e) := by
   obtain ⟨hq, hj, _, ha⟩ := hE
@@ -133,7 +133,7 @@ theorem rectExponents_exists {h : ℕ} {s : Shape} {W j i a : ℕ}
   let x : Fin (trueWidth h s W q.val v.val) := ⟨a, (lt_trueWidth_iff h s W _ _ _).mpr ha⟩
   exact ⟨⟨q, v, x, b⟩, by simp [rectExponents, q, v, x, hb]⟩
 
-def rectMonomial {h : ℕ} {s : Shape} {W : ℕ} {U : Fin 2 → ℕ}
+private def rectMonomial {h : ℕ} {s : Shape} {W : ℕ} {U : Fin 2 → ℕ}
     (hbox : U 0 + U 1 ≤ s.U) (k : RectIndex h s W U) : rectAmbient h s W U := by
   refine ⟨monomialAt (rectExponents k), ?_, ?_⟩
   · intro j i a e he
@@ -160,14 +160,14 @@ def rectMonomial {h : ℕ} {s : Shape} {W : ℕ} {U : Fin 2 → ℕ}
       exact Nat.le_of_lt_succ (k.2.2.2 z).isLt
     · exact (hz rfl).elim
 
-def rectCoordinates (h : ℕ) (s : Shape) (W : ℕ) (U : Fin 2 → ℕ) :
+private def rectCoordinates (h : ℕ) (s : Shape) (W : ℕ) (U : Fin 2 → ℕ) :
     rectAmbient h s W U →ₗ[L] (RectIndex h s W U → L) where
   toFun P k := coeffAt P (rectExponents k).1 (rectExponents k).2.1
     (rectExponents k).2.2.1 (rectExponents k).2.2.2
   map_add' P Q := by funext k; simp [coeffAt]
   map_smul' c P := by funext k; simp [coeffAt, Polynomial.coeff_smul]
 
-def rectCoordinateEquiv (h : ℕ) (s : Shape) (W : ℕ) (U : Fin 2 → ℕ)
+private def rectCoordinateEquiv (h : ℕ) (s : Shape) (W : ℕ) (U : Fin 2 → ℕ)
     (hbox : U 0 + U 1 ≤ s.U) : rectAmbient h s W U ≃ₗ[L] (RectIndex h s W U → L) := by
   classical
   refine LinearEquiv.ofBijective (rectCoordinates h s W U) ⟨?_, ?_⟩

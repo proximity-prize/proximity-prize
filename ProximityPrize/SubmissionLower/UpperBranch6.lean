@@ -1,5 +1,4 @@
 import ProximityPrize.SubmissionLower.UpperBranch7
-set_option Elab.async false
 set_option autoImplicit true
 section
 namespace P1_7_6
@@ -280,7 +279,7 @@ def windowCubic (L R xLine yLine : Line) (b d : ℤ) : Cubic :=
   let k := Cubic.lines n m w
   ⟨6*f.c0+3*g.c0+b*d*k.c0, 6*f.c1+3*g.c1+b*d*k.c1,
     6*f.c2+3*g.c2+b*d*k.c2, 6*f.c3+3*g.c3+b*d*k.c3⟩
-theorem windowCubic_at (L R xLine yLine : Line) (b d a : ℤ) :
+private theorem windowCubic_at (L R xLine yLine : Line) (b d a : ℤ) :
     (windowCubic L R xLine yLine b d).at a =
       let n := R.at a-L.at a
       let x := xLine.at a+b*L.at a
@@ -298,7 +297,7 @@ theorem windowCubic_at (L R xLine yLine : Line) (b d a : ℤ) :
     ring
   simp only [f, g, k, Cubic.lines_at, Line.at, Line.sub, Line.shift, Line.addConst, Line.scale]
   ring
-theorem linePair_range (x y b d : ℤ) (n : ℕ) :
+private theorem linePair_range (x y b d : ℤ) (n : ℕ) :
     6*(∑ t ∈ range n, (x+b*t)*(y+d*t)) =
       6*(n : ℤ)*x*y+3*n*(n-1)*(d*x+b*y)+b*d*n*(n-1)*(2*n-1) := by
   induction n with
@@ -361,16 +360,16 @@ def Core.nonemptyEnd (C : Core) (x c : ℕ) : ℕ :=
   linearEnd (c+C.offset) (C.step+1) C.column (min C.cap (x-c))
 def Core.switchEnd (C : Core) (x c : ℕ) : ℕ :=
   linearEnd (x+C.offset) C.step (C.column+1) (C.nonemptyEnd x c)
-theorem lt_nonemptyEnd (C : Core) (x c a : ℕ) :
+private theorem lt_nonemptyEnd (C : Core) (x c a : ℕ) :
     a < C.nonemptyEnd x c ↔ a < C.cap ∧ a+c < min x (C.column-(C.offset+C.step*a)) := by
   rw [Core.nonemptyEnd, lt_linearEnd, lt_min_iff, lt_min_iff, Nat.add_mul, Nat.one_mul]
   omega
-theorem lt_switchEnd (C : Core) (x c a : ℕ) :
+private theorem lt_switchEnd (C : Core) (x c a : ℕ) :
     a < C.switchEnd x c ↔ a < C.nonemptyEnd x c ∧ x+C.offset+C.step*a ≤ C.column := by
   rw [Core.switchEnd, lt_linearEnd, Nat.lt_succ_iff]
 def cubicInterval (p : Quad) (q : Cubic) (l r : ℕ) : ℤ :=
   if l < r then prefixCubic p q r - if l = 0 then 0 else prefixCubic p q l else 0
-theorem cubicInterval_eq (p : Quad) (q : Cubic) (l r : ℕ) :
+private theorem cubicInterval_eq (p : Quad) (q : Cubic) (l r : ℕ) :
     cubicInterval p q l r = 60*(∑ a ∈ Ico l r, p.eval a*q.at a) := by
   unfold cubicInterval
   by_cases h : l < r

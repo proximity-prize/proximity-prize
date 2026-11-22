@@ -1,6 +1,6 @@
 import ProximityPrize.SubmissionLower.GoldBranch6N8
+import ProximityPrize.SubmissionLower.KoalaRetainedCut
 
-set_option Elab.async false
 namespace Euler50Price
 noncomputable section
 open P3 (I K node)
@@ -8,14 +8,16 @@ open K1_13 (Geom extend Row Shape shape Fits InBox Contact chart liftedChart mix
   OnFactor FatEligible OrderAt indexDegree)
 open scoped BigOperators Polynomial
 
-abbrev agreement : ℕ := 179905
-abbrev errors : ℕ := 82239
+abbrev agreement : ℕ := 179925
+abbrev errors : ℕ := 82219
 abbrev physicalDegree : ℕ := 133438
 abbrev taylorLength : ℕ := physicalDegree + 1
 abbrev incidenceGap : ℕ := agreement - physicalDegree
 abbrev evaluatedAnchorCutoff : ℕ := 91 * agreement - 1
 abbrev anchorCutoff : ℕ := evaluatedAnchorCutoff + 50
 
+theorem anchorCutoff_lt_char : anchorCutoff < K1.p := by decide
+theorem anchorCutoff_double_lt_char : 2 * anchorCutoff + 3 < K1.p := by decide
 abbrev primaryCutoff : ℕ := 3000 * agreement - 1
 abbrev primaryBox : Shape := ⟨4012, 1650, 550⟩
 abbrev layerNeed : ℕ := 22449423186794

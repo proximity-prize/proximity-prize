@@ -3,7 +3,6 @@ import ProximityPrize.SubmissionLower.Shared50CycleBound
 import ProximityPrize.SubmissionLower.Shared50CycleFour
 import ProximityPrize.SubmissionLower.Shared50CycleLegacy
 
-set_option Elab.async false
 namespace Shared50Tally
 noncomputable section
 

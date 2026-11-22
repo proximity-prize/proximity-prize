@@ -1,6 +1,5 @@
 import ProximityPrize.SubmissionLower.FrontBranch12
 import ProximityPrize.SubmissionLower.FrontCases82200
-set_option Elab.async false
 set_option autoImplicit true
 section
 set_option backward.isDefEq.respectTransparency false
@@ -11,7 +10,7 @@ noncomputable section
 open Polynomial Matrix FrobeniusLocator Front82200
 open ProximityPrize.Benchmark
 open private eval_atSlope commonGCD_of_roots lift_dvd_atSlope from ProximityPrize.SubmissionLower.FrontBranch12
-theorem twoBlock_atSlope (u : Words) (γ : K) :
+private theorem twoBlock_atSlope (u : Words) (γ : K) :
     ((twoBlock u).map (evalRingHom γ)) =
       Strata.conjugateHankel (Strata.twoConjugations (frobenius K p))
         node (fun i => u 0 i + γ * u 1 i) L t := by
@@ -23,13 +22,13 @@ theorem twoBlock_atSlope (u : Words) (γ : K) :
     · exact iterateFrobenius_zero K p
     · exact iterateFrobenius_one K p
   rw [h]
-theorem rank_at_normal {u : Words} (T : TwoActive u) {γ : K} (hγ : Normal u γ) :
+private theorem rank_at_normal {u : Words} (T : TwoActive u) {γ : K} (hγ : Normal u γ) :
     ((twoBlock u).map (evalRingHom γ)).rank = L + T.height := by
   change _ = stackRank u at hγ
   rw [hγ, actual_stackRank]
   have h := relation_height_balance T
   omega
-theorem error_rank {u : Words} {γ : K} (M : BadMark u γ)
+private theorem error_rank {u : Words} {γ : K} (M : BadMark u γ)
     (E : Finset I) (hE : E.card ≤ t)
     (hEagree : ∀ i ∉ E, u 0 i + γ * u 1 i = M.decoder.eval (node i)) :
     ((twoBlock u).map (evalRingHom γ)).rank =
@@ -45,7 +44,7 @@ theorem error_rank {u : Words} {γ : K} (M : BadMark u γ)
   rw [Strata.conjugateErrors_two] at h
   rw [twoBlock_atSlope]
   exact h
-theorem valid_of_saturation {u : Words} {T : TwoActive u} (R : Relation T)
+private theorem valid_of_saturation {u : Words} {T : TwoActive u} (R : Relation T)
     (γ : K) (S : Finset I)
     (hdegree : max (atSlope (leftU R) γ).natDegree (atSlope (leftV R) γ).natDegree = T.height)
     (hG : IsCommonGCD (locator node S) (atSlope (leftU R) γ) (atSlope (leftV R) γ)) :
@@ -81,10 +80,10 @@ theorem proof : Front82200.c1 := by
       IRSProfile.card_index] at h
     exact h.trans (Nat.sub_le_sub_left M.agreement blockLength)
   have hheight : T.height ≤ heightCap := relation_height_le hfront T
-  have hH : T.height < L := hheight.trans_lt (by change 33405 < 48833; decide)
+  have hH : T.height < L := hheight.trans_lt (by change 33443 < 48814; decide)
   have hfit : k + T.height ≤ M.support.card :=
     have hcap : k + heightCap ≤ agreement := by
-      change 164477 ≤ 179905
+      change 164515 ≤ 179886
       decide
     ((Nat.add_le_add_left hheight k).trans hcap).trans M.agreement
   have hfix (i : I) : frobenius K p (node i) = node i := Native.native_domain_fixed i

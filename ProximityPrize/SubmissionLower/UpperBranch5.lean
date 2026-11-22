@@ -1,6 +1,6 @@
 import ProximityPrize.SubmissionLower.GoldBranch6N4
 import ProximityPrize.SubmissionLower.UpperBase
-set_option Elab.async false
+import ProximityPrize.SubmissionLower.KoalaLow6954
 set_option autoImplicit true
 section
 namespace P1_7_5

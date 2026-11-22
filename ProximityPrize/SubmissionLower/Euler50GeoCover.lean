@@ -1,6 +1,5 @@
 import ProximityPrize.SubmissionLower.Euler50Price
 
-set_option Elab.async false
 namespace Euler50GeoLead
 open K1_13 (Geom Row shape indexDegree)
 open K1_13_1 (topView topView_degree anchorLead anchorLead_ne indexDegree_eq)
@@ -74,7 +73,7 @@ open private coeff_flatten anchorLead_term index_bounds from ProximityPrize.Subm
 def activeDegree (f : Row 4) : ℕ :=
   MvPolynomial.weightedTotalDegree (![1, 2, 2, 2] : Fin 4 → ℕ) f
 
-theorem activeWeight_at (m : Fin 4 →₀ ℕ) :
+private theorem activeWeight_at (m : Fin 4 →₀ ℕ) :
     m.weight (![1, 2, 2, 2] : Fin 4 → ℕ) = m 0 + 2*m 1 + 2*m 2 + 2*m 3 := by
   simp [Finsupp.weight_eq_sum, Fin.sum_univ_four, smul_eq_mul, Nat.mul_comm]
 

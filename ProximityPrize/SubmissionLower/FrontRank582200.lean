@@ -1,6 +1,5 @@
 import ProximityPrize.SubmissionLower.FrontDirection82200
 import ProximityPrize.SubmissionLower.FrontCases82200
-set_option Elab.async false
 set_option autoImplicit true
 section
 set_option maxRecDepth 12000
@@ -93,7 +92,7 @@ private theorem plane_of_rankThree {u : Words} {T : TwoActive u} {R : Relation T
   · apply nodes_of_columns p (by decide) u (fixedNodes R) U V B.output
     have h := B.nodes
     rwa [relationOn_fun, left_eq, right_eq] at h
-theorem coprime_contents {u T R D} (B : RankThree u T R D)
+private theorem coprime_contents {u T R D} (B : RankThree u T R D)
     (P : K1_10.Plane u (fixedNodes R) D.height (leftCoeff B) (rightCoeff B)) :
     IsCoprime B.a B.b := by
   apply (gcd_isUnit_iff _ _).mp
@@ -103,7 +102,7 @@ theorem coprime_contents {u T R D} (B : RankThree u T R D)
   · intro j
     rw [rightCoeff, dvd_neg]
     exact (gcd_dvd_right B.a B.b).trans (dvd_mul_right _ _)
-theorem plane_height {u T R D} (B : RankThree u T R D)
+private theorem plane_height {u T R D} (B : RankThree u T R D)
     (P : K1_10.Plane u (fixedNodes R) D.height (leftCoeff B) (rightCoeff B))
     (par : Parallel B) (hdeg : B.b.natDegree = B.a.natDegree) :
     D.height = B.a.natDegree + amplitudeDegree (B.α 0) (B.α 1) := by
@@ -122,7 +121,7 @@ theorem plane_height {u T R D} (B : RankThree u T R D)
     exact natDegree_mul_le_of_le le_rfl (hA j)
   have hmax := max_le (max_le (hL 0) (hL 1)) (max_le (hR 0) (hR 1))
   exact le_antisymm (P.height_eq ▸ hmax) (hdeg ▸ B.second_degree)
-theorem plane_nodes {u T R D} (B : RankThree u T R D)
+private theorem plane_nodes {u T R D} (B : RankThree u T R D)
     (P : K1_10.Plane u (fixedNodes R) D.height (leftCoeff B) (rightCoeff B))
     (par : Parallel B) (x : I) (hx : x ∉ fixedNodes R) (i j : Fin 2) :
     (P.output j i).eval (node x) =
@@ -312,7 +311,7 @@ namespace Front82200_5
 noncomputable section
 open Polynomial Front82200 FrobeniusLocator
 open Front82200Direction (Regular excluded excluded_card_le cross_lift)
-theorem other_hits {u deleted} {M : AnchorModel u deleted} {γ δ : K} {S : K[X]}
+private theorem other_hits {u deleted} {M : AnchorModel u deleted} {γ δ : K} {S : K[X]}
     (m : AnchorMark M γ S) (n : AnchorMark M δ S) (i : I) (hi : i ∈ m.bad.support) :
     n.bad.decoder.eval (node i) = u 0 i + δ * u 1 i := by
   have hd := Finset.disjoint_left.mp m.avoids_deleted hi
@@ -324,7 +323,7 @@ theorem other_hits {u deleted} {M : AnchorModel u deleted} {γ δ : K} {S : K[X]
   apply sub_eq_zero.mp
   apply (mul_eq_zero.mp (show M.E.eval (node i) * _ = 0 from ?_)).resolve_left (M.E_nodes i)
   linear_combination h - h0 - (δ - M.shift) * h1
-theorem same_scalar_label {u deleted} {M : AnchorModel u deleted} {γ δ : K} {S : K[X]}
+private theorem same_scalar_label {u deleted} {M : AnchorModel u deleted} {γ δ : K} {S : K[X]}
     (m : AnchorMark M γ S) (n : AnchorMark M δ S) : γ = δ := by
   by_contra hne
   let V := (δ-γ)⁻¹ • (n.bad.decoder - m.bad.decoder)

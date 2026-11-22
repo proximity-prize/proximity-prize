@@ -1,5 +1,4 @@
 import ProximityPrize.SubmissionLower.Numeric5Defs
-set_option Elab.async false
 set_option autoImplicit true
 section
 namespace K1_13_2_3_5
@@ -12,7 +11,7 @@ structure Row where
   deriving Inhabited
 private def unpack (packed : ℕ) : Powers :=
   ⟨packed % 512, packed / 512 % 512, packed / 262144 % 1024⟩
-def powersAt : ℕ → ℕ → Powers
+private def powersAt : ℕ → ℕ → Powers
   | 0, packed => unpack packed
   | k + 1, packed => powersAt k (packed / 268435456)
 private def rowLoop (s : ℕ) : ℕ → ℕ → ℕ → ℕ
@@ -33,11 +32,11 @@ theorem batchScore_append (s : ℕ) (xs ys : List Row) :
   | cons x xs ih =>
     simp only [List.cons_append, batchScore, List.length_cons, ih]
     rw [show s + 1 + xs.length = s + (xs.length + 1) by omega, Nat.add_assoc]
-def rowPowers (r : Row) (j : ℕ) : Powers :=
+private def rowPowers (r : Row) (j : ℕ) : Powers :=
   powersAt (j - r.first) r.packed
-def assignment (start : ℕ) (rows : List Row) (i : BlockIndex) : Powers :=
+private def assignment (start : ℕ) (rows : List Row) (i : BlockIndex) : Powers :=
   rowPowers (rows[i.1.val - start]?.getD default) i.2.val
-theorem rowLoop_eq (s n j packed : ℕ) :
+private theorem rowLoop_eq (s n j packed : ℕ) :
     rowLoop s n j packed =
       ∑ k : Fin n, certifiedSaving s (j + k.val) (powersAt k.val packed) := by
   induction n generalizing j packed with
@@ -49,7 +48,7 @@ theorem rowLoop_eq (s n j packed : ℕ) :
     apply Finset.sum_congr rfl
     intro k _
     rw [show j + 1 + k.val = j + (k.val + 1) by omega]
-theorem rowScore_le (s : Fin 4013) (r : Row) :
+private theorem rowScore_le (s : Fin 4013) (r : Row) :
     rowScore s.val r ≤ ∑ j : Fin 4650,
       if w2.Contains (s,j) then savings (s,j) (rowPowers r j.val) else 0 := by
   unfold rowScore
@@ -75,7 +74,7 @@ theorem rowScore_le (s : Fin 4013) (r : Row) :
       rw [he]
       exact certifiedSaving_le _ _ hw
   · exact Nat.zero_le _
-theorem batchScore_eq (start : ℕ) (rows : List Row) :
+private theorem batchScore_eq (start : ℕ) (rows : List Row) :
     batchScore start rows = ∑ k : Fin rows.length, rowScore (start+k.val) (rows.get k) := by
   induction rows generalizing start with
   | nil => simp [batchScore]

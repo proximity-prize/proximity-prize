@@ -1,7 +1,6 @@
 import ProximityPrize.SubmissionLower.KoalaRectPoleBalance
 import ProximityPrize.SubmissionLower.KoalaRectPoleLocal
 
-set_option Elab.async false
 set_option autoImplicit false
 set_option backward.isDefEq.respectTransparency false
 set_option maxSynthPendingDepth 16
@@ -27,7 +26,7 @@ private abbrev Slots (U : Fin 2 → ℕ) (d : ℕ) (side : Fin 2) :=
 private def slotExponent {U : Fin 2 → ℕ} {d : ℕ} {side : Fin 2} (k : Slots U d side) : Exponent :=
   Finsupp.equivFunOnFinite.symm (fun z => (k z).val)
 
-theorem read_rect_window (F : Type) [Field F] (U : Fin 2 → ℕ) (d : ℕ) (side : Fin 2) :
+private theorem read_rect_window (F : Type) [Field F] (U : Fin 2 → ℕ) (d : ℕ) (side : Fin 2) :
     ∃ read : Seed F →ₗ[F] (Slots U d side → F),
       ∀ g, rectWindow U d side g → read g = 0 → g = 0 := by
   let read : Seed F →ₗ[F] (Slots U d side → F) :=
@@ -52,11 +51,11 @@ private theorem slots_card (U : Fin 2 → ℕ) (d : ℕ) (side : Fin 2) :
   simp only [Fintype.card_fin, Fin.prod_univ_two]
   fin_cases side <;> simp [otherBlock] <;> ring
 
-abbrev ScalarRows {h : ℕ} (s : Shape) (U : Fin 2 → ℕ)
+private abbrev ScalarRows {h : ℕ} (s : Shape) (U : Fin 2 → ℕ)
     (side : Fin (2*h) → Fin 2) (d : Fin (2*h) → Fin (poleRows s) → ℕ) :=
   Σ t : Fin (2*h), Σ r : Fin (poleRows s), Slots U (d t r) (side t)
 
-theorem scalar_rows_card_le {h : ℕ} {F : Type} [Field F] {H : F[X]}
+private theorem scalar_rows_card_le {h : ℕ} {F : Type} [Field F] {H : F[X]}
     {lift : (SeedFrac F)[X]} (G : SimplePoles h H lift) (hG : Balanced G) (s : Shape)
     (U : Fin 2 → ℕ) (d : Fin (2*h) → Fin (poleRows s) → ℕ)
     (hd : ∀ t, (∑ r, d t r) ≤ groupedPoleMoment s.B s.J) :

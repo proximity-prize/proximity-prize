@@ -1,7 +1,7 @@
 import ProximityPrize.SubmissionLower.Numeric2Aux
 import ProximityPrize.SubmissionLower.Fast040
+import ProximityPrize.SubmissionLower.Final50Fat
 
-set_option Elab.async false
 namespace ModelExactPole
 noncomputable section
 open P1 (I K node)

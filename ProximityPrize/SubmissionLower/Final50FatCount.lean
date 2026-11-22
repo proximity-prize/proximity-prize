@@ -1,8 +1,8 @@
 import ProximityPrize.SubmissionLower.Final50Price
 import ProximityPrize.SubmissionLower.Final50FatPad
 import ProximityPrize.SubmissionLower.PortLow5
+import ProximityPrize.SubmissionLower.Final50GeoFinish
 
-set_option Elab.async false
 set_option autoImplicit true
 section
 namespace Final50FatCount
@@ -29,9 +29,9 @@ def fatChart (x : Shape) : Shape :=
   if x.t = 1 then linearChart x.chamber else chart (taylorLength + 4) x.chamber
 def divisorBox : Shape :=
   ⟨commonBox.b + resultantBox.b / divisorOrder, commonBox.j + resultantBox.j / divisorOrder, 0⟩
-theorem divisorBox_eq : divisorBox = ⟨25759, 8618, 0⟩ := by
-  have hb : commonBox.b + resultantBox.b / divisorOrder = 25759 := by decide
-  have hj : commonBox.j + resultantBox.j / divisorOrder = 8618 := by decide
+theorem divisorBox_eq : divisorBox = ⟨27711, 9278, 0⟩ := by
+  have hb : commonBox.b + resultantBox.b / divisorOrder = 27711 := by decide
+  have hj : commonBox.j + resultantBox.j / divisorOrder = 9278 := by decide
   unfold divisorBox
   rw [hb, hj]
 def hypersurfacePrice (x : Shape) : ℕ :=
@@ -72,7 +72,7 @@ open Final50Price (commonBox resultantBox fatOrder divisorOrder)
 open private K1_13_7_3_2.Exponent iterPartial source_support translate_iter exact_iter_not_dvd
   exists_separant from ProximityPrize.SubmissionLower.Fast073
 open private caps_of_support ne_of_support caps_mul proper_clear from ProximityPrize.SubmissionLower.Fast073
-theorem exact_exponent {P f : Lower} (hf : Prime f)
+private theorem exact_exponent {P f : Lower} (hf : Prime f)
     (hlow : K1_13_7_3.LowPowers P divisorOrder) :
     ∃ a < divisorOrder, f ^ a ∣ P ∧ ¬ f ^ (a + 1) ∣ P := by
   classical
@@ -87,7 +87,7 @@ theorem exact_exponent {P f : Lower} (hf : Prime f)
   refine ⟨a, by omega, not_not.mp (Nat.find_min hex (by omega : a < Nat.find hex)), ?_⟩
   rw [ha]
   exact Nat.find_spec hex
-theorem index_weight (m : K1_13_7_3_2.Exponent) :
+private theorem index_weight (m : K1_13_7_3_2.Exponent) :
     Finsupp.weight (R := ℕ) (Fin.val : Fin 3 → ℕ) m = m.sum (fun i e => i.val * e) := by
   simp only [Finsupp.weight_apply, smul_eq_mul, Nat.mul_comm]
 private def admissible (P : Lower) : Submodule GenericX Lower where
@@ -112,7 +112,7 @@ private def admissible (P : Lower) : Submodule GenericX Lower where
     refine ⟨fun m hm => hQ.1 m (support_C_mul_le Q c hm), fun y hy m hm => ?_⟩
     rw [map_mul, show translate y (MvPolynomial.C c) = MvPolynomial.C c by simp [K1_13_4.translate]] at hm
     exact hQ.2 y hy m (support_C_mul_le (translate y Q) c hm)
-theorem iter_mem_admissible {P : Lower} (hb : P.totalDegree ≤ resultantBox.b)
+private theorem iter_mem_admissible {P : Lower} (hb : P.totalDegree ≤ resultantBox.b)
     (hj : lowerIndex P ≤ resultantBox.j) (i : Fin 3) {a : ℕ} (ha : a < divisorOrder) :
     iterPartial i a P ∈ admissible P := by
   refine ⟨fun m hm => ?_, fun y hy m hm => ?_⟩
@@ -128,11 +128,11 @@ theorem iter_mem_admissible {P : Lower} (hb : P.totalDegree ≤ resultantBox.b)
     change fatOrder ≤ (m + Finsupp.single i a).degree at hord
     change residualOrder ≤ m.degree
     rw [map_add, Finsupp.degree_single] at hord
-    change a < 48817 at ha
-    change 53178 ≤ m.degree + a at hord
-    change 4362 ≤ m.degree
+    change a < 44377 at ha
+    change 49090 ≤ m.degree + a at hord
+    change 4714 ≤ m.degree
     omega
-theorem proper_partial (P : Lower) (hP : P ≠ 0)
+private theorem proper_partial (P : Lower) (hP : P ≠ 0)
     (hb : P.totalDegree ≤ resultantBox.b) (hj : lowerIndex P ≤ resultantBox.j)
     (hlow : K1_13_7_3.LowPowers P divisorOrder) :
     ∃ Q : Lower, Q ≠ 0 ∧ Q.totalDegree ≤ resultantBox.b ∧
@@ -248,9 +248,9 @@ open Final50Price (resultantBox fatOrder)
 open scoped BigOperators
 open private hasse_caps from ProximityPrize.SubmissionLower.Fast068
 open private support_mul_C_subset from ProximityPrize.SubmissionLower.Fast068
-def thirdCuts (P Q : Row 3) : Submodule Geom (Row 3) where
+private def thirdCuts (P Q : Row 3) : Submodule Geom (Row 3) where
   carrier := {R | LowerCaps R resultantBox.b resultantBox.j ∧
-    ∀ S : Geom[X], OrderAt P S 53178 → OrderAt Q S 4362 → OrderAt R S 596}
+    ∀ S : Geom[X], OrderAt P S 49090 → OrderAt Q S 4714 → OrderAt R S 527}
   zero_mem' := by
     constructor
     · simp [LowerCaps, indexDegree]
@@ -292,9 +292,9 @@ def thirdCuts (P Q : Row 3) : Submodule Geom (Row 3) where
       change m ∈ (shiftHom S (MvPolynomial.C (Polynomial.C a) * R)).support at hm
       rw [map_mul, shiftHom, MvPolynomial.eval₂Hom_C] at hm
       exact hr S hp hq m (support_mul_C_subset _ _ hm)
-theorem local_length : K1_13_7_4.c2 :=
+private theorem local_length : K1_13_7_4.c2 :=
   K1_13_7_4_2.of_children K1_13_7_4_2_1.proof K1_13_7_4_2_2.proof
-theorem avoid_low {P Q : Row 3}
+private theorem avoid_low {P Q : Row 3}
     (hpq : ProperLowerPair P Q) (hp : LowerCaps P resultantBox.b resultantBox.j)
     (hq : LowerCaps Q resultantBox.b resultantBox.j) :
     ∃ R ∈ thirdCuts P Q, ∀ (q : PrimeSpectrum Lower),
@@ -303,16 +303,16 @@ theorem avoid_low {P Q : Row 3}
   classical
   let partials (F : Row 3) (d : ℕ) : Set (Row 3) :=
     {D | ∃ a, multiOrder a < d ∧ D = hassePartial a F}
-  let V := Submodule.span Geom (partials P 52583 ∪ partials Q 3767)
+  let V := Submodule.span Geom (partials P 48564 ∪ partials Q 4188)
   have hadm : V ≤ thirdCuts P Q := by
     apply Submodule.span_le.mpr
     rintro D (⟨a, ha, rfl⟩ | ⟨a, ha, rfl⟩)
     · refine ⟨hasse_caps a hp, ?_⟩
       intro S hPS _ m hm
-      exact (by omega : 596 ≤ 53178 - multiOrder a).trans (hasse_order P S a _ hPS m hm)
+      exact (by omega : 527 ≤ 49090 - multiOrder a).trans (hasse_order P S a _ hPS m hm)
     · refine ⟨hasse_caps a hq, ?_⟩
       intro S _ hQS m hm
-      exact (by omega : 596 ≤ 4362 - multiOrder a).trans (hasse_order Q S a _ hQS m hm)
+      exact (by omega : 527 ≤ 4714 - multiOrder a).trans (hasse_order Q S a _ hQS m hm)
   let bad := {p : Ideal Lower | p ∈ (pairIdeal P Q).minimalPrimes ∧
     ∃ q : PrimeSpectrum Lower, q.asIdeal = p ∧ localColength q (pairIdeal P Q) < (curveLength : ℕ∞)}
   have hf : bad.Finite :=
@@ -322,17 +322,17 @@ theorem avoid_low {P Q : Row 3}
     obtain ⟨hmin, q, rfl, hsmall⟩ := hp'
     have hheight : q.asIdeal.height = 2 := pair_height hpq hmin
     by_contra! h
-    have hP : VanishesTo q (genericRow P) 52583 := by
-      exact K1_13_7_4_1.proof q P 52583 hheight fun a ha => h _ (Submodule.subset_span (Or.inl ⟨a, ha, rfl⟩))
-    have hQ : VanishesTo q (genericRow Q) 3767 := by
-      exact K1_13_7_4_1.proof q Q 3767 hheight fun a ha => h _ (Submodule.subset_span (Or.inr ⟨a, ha, rfl⟩))
+    have hP : VanishesTo q (genericRow P) 48564 := by
+      exact K1_13_7_4_1.proof q P 48564 hheight fun a ha => h _ (Submodule.subset_span (Or.inl ⟨a, ha, rfl⟩))
+    have hQ : VanishesTo q (genericRow Q) 4188 := by
+      exact K1_13_7_4_1.proof q Q 4188 hheight fun a ha => h _ (Submodule.subset_span (Or.inr ⟨a, ha, rfl⟩))
     have hrange : Ideal.span (Set.range ![genericRow P, genericRow Q]) = pairIdeal P Q := by
       simp only [pairIdeal, Matrix.range_cons, Matrix.range_empty, Set.union_empty,
         Set.singleton_union]
-    have hlarge := local_length 2 (Or.inl rfl) q ![genericRow P, genericRow Q] ![52583, 3767]
+    have hlarge := local_length 2 (Or.inl rfl) q ![genericRow P, genericRow Q] ![48564, 4188]
       hheight (hrange ▸ hmin)
       (by simp [Fin.forall_fin_two]) (by simpa [Fin.forall_fin_two] using And.intro hP hQ)
-    have hnum : (∏ i : Fin 2, (![52583, 3767] : Fin 2 → ℕ) i) = curveLength := by
+    have hnum : (∏ i : Fin 2, (![48564, 4188] : Fin 2 → ℕ) i) = curveLength := by
       rw [Fin.prod_univ_two]
       decide
     rw [hnum, hrange] at hlarge
@@ -353,11 +353,11 @@ theorem residual_strata (P Q : Row 3) (hpq : ProperLowerPair P Q)
   right
   let q := pointPrime (lowerPoint S)
   have hRub := hR.2 S hPS hQS
-  change OrderAt P S 53178 at hPS
-  change OrderAt Q S 4362 at hQS
-  have hp : VanishesTo q (genericRow P) 53178 := point_order hPS
-  have hq : VanishesTo q (genericRow Q) 4362 := point_order hQS
-  have hr : VanishesTo q (genericRow R) 596 := point_order hRub
+  change OrderAt P S 49090 at hPS
+  change OrderAt Q S 4714 at hQS
+  have hp : VanishesTo q (genericRow P) 49090 := point_order hPS
+  have hq : VanishesTo q (genericRow Q) 4714 := point_order hQS
+  have hr : VanishesTo q (genericRow R) 527 := point_order hRub
   have hle : tripleIdeal P Q R ≤ q.asIdeal := triple_le_iff.mpr
     ⟨vanishes_at_prime (by decide) hp, vanishes_at_prime (by decide) hq,
       vanishes_at_prime (by decide) hr⟩
@@ -400,10 +400,10 @@ theorem residual_strata (P Q : Row 3) (hpq : ProperLowerPair P Q)
     simp only [tripleIdeal, Matrix.range_cons, Matrix.range_empty, Set.union_empty,
       Set.singleton_union]
   have hlen := local_length 3 (Or.inr rfl) q ![genericRow P, genericRow Q, genericRow R]
-    ![53178, 4362, 596] hheight (hrange ▸ hmin) (by simp [Fin.forall_fin_succ])
+    ![49090, 4714, 527] hheight (hrange ▸ hmin) (by simp [Fin.forall_fin_succ])
     (by simpa [Fin.forall_fin_succ] using And.intro hp (And.intro hq hr))
   rw [hrange] at hlen
-  have hnum : (∏ i : Fin 3, (![53178, 4362, 596] : Fin 3 → ℕ) i) = pointLength := by
+  have hnum : (∏ i : Fin 3, (![49090, 4714, 527] : Fin 3 → ℕ) i) = pointLength := by
     rw [Fin.prod_univ_three]
     decide
   rwa [hnum] at hlen
@@ -418,7 +418,7 @@ open K1_13_7 (Lower LowerCaps LowerPoint GeometricX genericRow localColength poi
 open K1_13_7_6
 open MvPolynomial (affineDegree_nonneg)
 open Final50Price (resultantBox fatOrder isolatedOrder)
-theorem isolated_fee {n w a b : ℕ} (hw : 0 < w) (hab : a ≤ b)
+private theorem isolated_fee {n w a b : ℕ} (hw : 0 < w) (hab : a ≤ b)
     (h : (n : ℚ) * w ≤ 6 * (a : ℚ) ^ 2 * ((b : ℚ) - a)) :
     n ≤ ceilDiv (3 * (2 * a) ^ 2 * (2 * b - 2 * a)) (4 * w) := by
   have hcost : n * w ≤ 6 * a ^ 2 * (b - a) := by
@@ -619,17 +619,17 @@ private theorem regular_derivative (f : Row 4) (S : Geom[X])
       conv_lhs => rw [← hprev]
       rw [Function.iterate_succ_apply']
     simpa only [he'] using hk
-theorem chart_le (p : Shape) (hp : Chamber p) (ht : 1 < p.t) (hb : p.b ≤ 60) :
+private theorem chart_le (p : Shape) (hp : Chamber p) (ht : 1 < p.t) (hb : p.b ≤ 60) :
     InBox (chart (K1_13.taylorLength + 4) (derivativeBox p))
       (chart (Final50Price.taylorLength + 4) p) := by
   obtain ⟨hjb, htj⟩ := hp
-  have hB : 1 + 267352 * (p.b - 1 - 1) ≤ 1 + 266906 * (p.b - 1) := by omega
+  have hB : 1 + 267352 * (p.b - 1 - 1) ≤ 1 + 266978 * (p.b - 1) := by omega
   have hJ : 267352 * (p.j - 3 - 3) + 133676 + 3 ≤
-      266906 * (p.j - 3) + 133453 + 3 := by omega
+      266978 * (p.j - 3) + 133489 + 3 := by omega
   have hT : 267352 * (p.t - 1 - 1) + 133676 + 1 ≤
-      266906 * (p.t - 1) + 133453 + 1 := by omega
+      266978 * (p.t - 1) + 133489 + 1 := by omega
   exact ⟨max_le_max hB hJ, hJ, min_le_min hT (Nat.div_le_div_right hJ)⟩
-theorem exists_derivative_chart (f : Row 4) (he : FatEligible (shape f))
+private theorem exists_derivative_chart (f : Row 4) (he : FatEligible (shape f))
     (ht : 1 < (shape f).t) {j : ℕ} (hj : 0 < j) :
     let g := (separant^[j]) f
     ∃ C : TaylorChart, C.Fits (chart (Final50Price.taylorLength + 4) (shape f).chamber) ∧
@@ -978,7 +978,7 @@ open private geometric_injective liftLower_ne_zero from ProximityPrize.Submissio
 open private local_length_one tangent_invariant from ProximityPrize.SubmissionLower.Fast070
 open private partialFlow_weight from ProximityPrize.SubmissionLower.Fast066
 open private local_generators from ProximityPrize.SubmissionLower.PortLow7
-theorem proper_lift {f : Row 4} (hf : Final50Price.SmallFactor f) {q : Row 3} (hq : q ≠ 0) :
+private theorem proper_lift {f : Row 4} (hf : Final50Price.SmallFactor f) {q : Row 3} (hq : q ≠ 0) :
     IsRelPrime (toGeneric f) (toGeneric (liftLower q)) := by
   apply (isRelPrime_iff_no_prime_factors (fun hz => hf.1.ne_zero
     (geometric_injective 4 (by simpa [toGeneric] using hz)))).mpr
@@ -998,7 +998,7 @@ theorem proper_lift {f : Row 4} (hf : Final50Price.SmallFactor f) {q : Row 3} (h
   have := hf.2.1
   change 0 < f.degreeOf 3 at this
   omega
-theorem reduced_divisor {b j : ℕ} (D : Row 3) (hD : D ≠ 0) (hcap : LowerCaps D b j) :
+private theorem reduced_divisor {b j : ℕ} (D : Row 3) (hD : D ≠ 0) (hcap : LowerCaps D b j) :
     ∃ q : Row 3, q ≠ 0 ∧ q ∣ D ∧ LowerCaps q b j ∧ Squarefree q ∧
       (∀ S : Polynomial Geom, atJet D S = 0 → atJet q S = 0) := by
   let : StrongNormalizationMonoid (Row 3) := UniqueFactorizationMonoid.strongNormalizationMonoid
@@ -1092,7 +1092,7 @@ private theorem numerator_bound (w : Fin 4 → ℕ) (Δ : ℕ)
     _ ≤ _ := by
       rw [Nat.sub_add_cancel j.isLt.le, Nat.mul_add, ← Nat.add_assoc]
       exact Nat.add_le_add_left (Nat.mul_le_mul_right Δ j.isLt.le) _
-theorem fatChart_support {g Q : Row 4} (hg : 0 < (shape g).t)
+private theorem fatChart_support {g Q : Row 4} (hg : 0 < (shape g).t)
     (h : ∀ (w : Fin 4 → ℕ) (Δ B : ℕ), (∀ i : Fin 3, w i.succ ≤ w i.castSucc + Δ) →
       w 3 ≤ B → W w g ≤ B →
       W w Q ≤ w 0 + Final50Price.taylorLength * (stride (topLinear g) * (B - w 3) + Δ)) :
@@ -1169,7 +1169,7 @@ theorem numerator_box {g : Row 4} (hg : 0 < (shape g).t) (i : Fin Final50Price.t
 theorem test_box {g : Row 4} (hg : 0 < (shape g).t) :
     InBox (shape (raw (topLinear g) g Final50Price.taylorLength)) (Final50FatCount.fatChart (shape g)) :=
   fatChart_support hg (fun w Δ _ hs h3 hB => raw_bound _ w Δ hs h3 hB _)
-theorem test_mem_iff (linear : Bool) (g : Row 4)
+private theorem test_mem_iff (linear : Bool) (g : Row 4)
     (hl : linear = true → separant (separant g) = 0)
     (surface : Ideal GeoJets) (hp : surface.IsPrime) (hr : toGeneric (separant g) ∉ surface) :
     toGeneric (raw linear g Final50Price.taylorLength) ∈ surface ↔ toGeneric (Final50FatPad.membershipTest g) ∈ surface := by
@@ -1254,10 +1254,10 @@ theorem threefold_pieces_capacity {w Γ s} (C : Pieces Γ) (h : Messages w Γ s)
     _ ≤ ∑ i, 8 * C.degree i := Finset.sum_le_sum fun i _ =>
       threefold_capacity (Final50Price.Messages.mono h (C.subset i)) (hc i) (hd i)
     _ = _ := by simp [Pieces.total, Finset.mul_sum]
-theorem proper_capacity {w Γ s} {x : Shape} (C : Pieces Γ) (h : Messages w Γ s)
+private theorem proper_capacity {w Γ s} {x : Shape} (C : Pieces Γ) (h : Messages w Γ s)
     (hc : C.curves s) (hb : 32 * C.total ≤ curveMass32 x)
     (hn : 32 * C.n ≤ componentMass32 x) :
-    C.union.card ≤ ceilDiv (82239 * curveMass32 x) (32 * 46457) +
+    C.union.card ≤ ceilDiv (82258 * curveMass32 x) (32 * 46402) +
       ceilDiv (componentMass32 x) 32 := by
   have hcap := Final50FatPad.pieces_curve_capacity C h hc
   unfold ceilDiv
@@ -1295,7 +1295,7 @@ theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) : Final50FatCount.c2 := by
   have hsumI := Finset.card_union_le C.union F.union
   let p := (shape f).chamber
   let h := fatChart (shape f)
-  change Γ.card ≤ ceilDiv (82239 * curveMass32 (shape f)) (32 * 46457) +
+  change Γ.card ≤ ceilDiv (82258 * curveMass32 (shape f)) (32 * 46402) +
     ceilDiv (componentMass32 (shape f)) 32 + 20 * p.b * h.b ^ 2 +
     5 * physicalDegree * p.b * h.b + 1
   have hreserveC : C.union.card ≤ 5 * physicalDegree * p.b * h.b := by
@@ -1326,23 +1326,23 @@ open K1_13_7_2_3 (ProperComponent)
 open Final50FatCount (fatChart divisorBox divisorBox_eq)
 open Final50FatCount_2 (ReducedCut FatTaylor cutBox)
 open scoped BigOperators
-theorem sparse_curve_bound : K1_13_7_2_3.c1 :=
+private theorem sparse_curve_bound : K1_13_7_2_3.c1 :=
   K1_13_7_2_3_1.of_children K1_13_7_2_3_1_1.proof
     (K1_13_7_2_3_1_2.of_children K1_13_7_2_3_1_2_1.proof K1_13_7_2_3_1_2_2.proof)
     K1_13_7_2_3_1_3.proof
-theorem sparse_section_bound : K1_13_7_2_3.c2 :=
+private theorem sparse_section_bound : K1_13_7_2_3.c2 :=
   K1_13_7_2_3_2.of_children K1_13_6_1_5_2_1.proof K1_13_6_1_5_2_2.proof
 private def cutter {f : Row 4} (q : Row 3) (T : FatTaylor f) (surface : Ideal GeoJets) : Row 4 := by
   classical
   exact if toGeneric T.test ∈ surface then lowerFlow q else T.test
-theorem cutter_fits {f : Row 4} {D q : Row 3} (hq : ReducedCut f D q)
+private theorem cutter_fits {f : Row 4} {D q : Row 3} (hq : ReducedCut f D q)
     (T : FatTaylor f) (surface : Ideal GeoJets) :
     GeoFits (toGeneric (cutter q T surface)) (cutBox (shape f)) := by
   classical
   by_cases h : toGeneric T.test ∈ surface
   · simpa [cutter, h] using flow_fits_cut hq
   · simpa [cutter, h] using test_fits_cut T
-theorem exists_marked_curve {f : Row 4} {D q : Row 3} {S : Geom[X]}
+private theorem exists_marked_curve {f : Row 4} {D q : Row 3} {S : Geom[X]}
     (hq : ReducedCut f D q) (T : FatTaylor f) (hd : S.natDegree ≤ Final50Price.physicalDegree)
     (hf : OnFactor f S) (hr : RegularAt f S) (hm : ProperMark f q T.test S) :
     ∃ C surface : Ideal GeoJets, LiftedSurface f q surface ∧
@@ -1362,7 +1362,7 @@ theorem exists_marked_curve {f : Row 4} {D q : Row 3} {S : Geom[X]}
     · simpa [cutter, h] using (chart_on_mark T hd hf.1 hr).2.1
   obtain ⟨C, hC, hCS⟩ := mark_curve hZS hvan
   exact ⟨C, surface, hZ, ⟨hZ.minimal.isPrime, (hq.simple surface hZ).1, hP, hC⟩, hCS⟩
-theorem curveSections_of_component (h2 : K1_13_7_2_3.c2)
+private theorem curveSections_of_component (h2 : K1_13_7_2_3.c2)
     {Γ : Finset K} {s : K → K[X]} {f : Row 4} (T : FatTaylor f)
     (hh : Chamber (fatChart (shape f))) (ht : 0 < (fatChart (shape f)).t)
     {surface C : Ideal GeoJets} {P : GeoJets} (hC : ProperComponent surface P C)
@@ -1566,10 +1566,10 @@ private theorem solves_fresh {f : Row 4} {P : Ideal GeoJets} [P.IsPrime]
 private def retunedEval {L : Type} [Field L] (k : Geom →+* L) (U : L[X]) :
     Final50FatCount_2.CoeffRing →+* L :=
   MvPolynomial.eval₂Hom k (fun i : Fin Final50Price.taylorLength => U.coeff i.val)
-def forgetTail : K1_13_6_3.CoeffRing →ₐ[Geom] Final50FatCount_2.CoeffRing :=
+private def forgetTail : K1_13_6_3.CoeffRing →ₐ[Geom] Final50FatCount_2.CoeffRing :=
   MvPolynomial.aeval (fun i : Fin K1_13.taylorLength =>
     if hi : i.val < Final50Price.taylorLength then MvPolynomial.X ⟨i.val, hi⟩ else 0)
-theorem retuned_dimension {L : Type} [Field L] (k : Geom →+* L) (U : L[X])
+private theorem retuned_dimension {L : Type} [Field L] (k : Geom →+* L) (U : L[X])
     (hd : U.natDegree < Final50Price.taylorLength) :
     (MvPolynomial.affineHilbertPolynomial (coefficientKernel k U)).natDegree ≤
     (MvPolynomial.affineHilbertPolynomial (RingHom.ker (retunedEval k U))).natDegree := by
@@ -1596,7 +1596,7 @@ theorem retuned_dimension {L : Type} [Field L] (k : Geom →+* L) (U : L[X])
   exact MvPolynomial.natDegree_affineHilbertPolynomial_le_of_injective
     (Ideal.quotientMapₐ A forgetTail le_rfl)
     (Ideal.quotientMap_injective (I := A) (f := forgetTail.toRingHom))
-theorem specializes_retuned {f : Row 4} {P : Ideal GeoJets} [P.IsPrime]
+private theorem specializes_retuned {f : Row 4} {P : Ideal GeoJets} [P.IsPrime]
     (hs : toGeneric (separant f) ∉ P) {S : Geom[X]}
     (hP : P ≤ markIdeal S) (hr : RegularAt f S) (hf : atJet f S = 0)
     (hd : S.natDegree ≤ physicalDegree) :
@@ -1715,7 +1715,7 @@ open P0_9_7_2_3 (whole_sum)
 open Final50FatCount (fatChart)
 open Final50FatCount_2 (CoeffRing FatTaylor)
 open scoped BigOperators
-theorem common_clearing {f : Row 4} (T : FatTaylor f) (g : FreshCoeffRing) :
+private theorem common_clearing {f : Row 4} (T : FatTaylor f) (g : FreshCoeffRing) :
     ∃ (u : GeoJets) (n : ℕ), ∀ A : CoeffIdeal, FreshChart f T A →
       g * freshJetMap (toGeneric T.denom) ^ n - freshJetMap u ∈ extendIdeal A := by
   let D := toGeneric T.denom
@@ -1766,7 +1766,7 @@ theorem fresh_birational {f : Row 4} {T : FatTaylor f} {A : CoeffIdeal}
     exact fun hz => h.denom (h.extended_prime.mem_of_pow_mem _ hz)
   · rw [map_pow]
     exact hu A h
-theorem original_mem {B : CoeffIdeal} (hB : B.IsPrime) {g : CoeffRing}
+private theorem original_mem {B : CoeffIdeal} (hB : B.IsPrime) {g : CoeffRing}
     (hg : MvPolynomial.map geomConstants g ∈ extendIdeal B) : g ∈ B := by
   rw [← hB.radical, ← vanishingIdeal_zeroLocus_eq_radical (K := Geom)]
   intro x hx
@@ -1866,7 +1866,7 @@ private theorem evaluateFresh_hasse (i : ℕ) :
   simp only [evaluateFresh, Polynomial.coe_eval₂RingHom, Polynomial.eval₂_monomial,
     map_mul, map_natCast, MvPolynomial.map_X, map_pow]
   ac_rfl
-theorem generic_eval :
+private theorem generic_eval :
     Polynomial.eval₂RingHom geomConstants genericArgument = genericCoeffs := by
   apply Polynomial.ringHom_ext
   · intro b
@@ -1894,7 +1894,7 @@ private theorem evaluateFresh_row (R : Row 4) :
   · intro i
     simpa only [RingHom.comp_apply, MvPolynomial.eval₂Hom_X', MvPolynomial.map_X,
       freshJetMap] using evaluateFresh_hasse i.val
-theorem evaluateFresh_mem {A : CoeffIdeal} (hA : A.IsPrime)
+private theorem evaluateFresh_mem {A : CoeffIdeal} (hA : A.IsPrime)
     (p : CoeffRing[X]) :
     evaluateFresh p ∈ extendIdeal A ↔ ∀ n, p.coeff n ∈ A := by
   constructor
@@ -1931,17 +1931,17 @@ theorem evaluateFresh_mem {A : CoeffIdeal} (hA : A.IsPrime)
     intro n _
     rw [evaluateFresh, Polynomial.coe_eval₂RingHom, Polynomial.eval₂_monomial]
     exact Ideal.mul_mem_right _ _ (Ideal.mem_map_of_mem _ (hp n))
-abbrev CoeffField (A : CoeffIdeal) := FractionRing (CoeffRing ⧸ A)
+private abbrev CoeffField (A : CoeffIdeal) := FractionRing (CoeffRing ⧸ A)
 private def coefficientMap (A : CoeffIdeal) :
     CoeffRing →+* CoeffField A :=
   (algebraMap (CoeffRing ⧸ A) (CoeffField A)).comp (Ideal.Quotient.mk A)
-theorem coefficientMap_zero_iff (A : CoeffIdeal) [A.IsPrime]
+private theorem coefficientMap_zero_iff (A : CoeffIdeal) [A.IsPrime]
     (a : CoeffRing) :
     coefficientMap A a = 0 ↔ a ∈ A := by
   change algebraMap (CoeffRing ⧸ A) (CoeffField A) (Ideal.Quotient.mk A a) = 0 ↔ _
   rw [map_eq_zero_iff _ (IsFractionRing.injective (CoeffRing ⧸ A) (CoeffField A)),
     Ideal.Quotient.eq_zero_iff_mem]
-def powerSum {m : ℕ} (a : Fin m → CoeffRing) :
+private def powerSum {m : ℕ} (a : Fin m → CoeffRing) :
     CoeffRing[X] :=
   ∑ j : Fin m, C (a j) * Polynomial.X ^ j.val
 private theorem coeff_sum {m : ℕ} (a : Fin m → CoeffRing) (n : ℕ) :
@@ -1955,20 +1955,20 @@ private theorem coeff_sum {m : ℕ} (a : Fin m → CoeffRing) (n : ℕ) :
       exact coeff_monomial_of_ne _ (fun he => hj (Fin.ext he.symm))
     · simp
   · exact Finset.sum_eq_zero fun j _ => coeff_monomial_of_ne _ (fun he => hn (he.symm ▸ j.isLt))
-theorem coeff_sum_at {m : ℕ} (a : Fin m → CoeffRing) (i : Fin m) :
+private theorem coeff_sum_at {m : ℕ} (a : Fin m → CoeffRing) (i : Fin m) :
     (powerSum a).coeff i.val = a i := by
   rw [coeff_sum, dite_eq_left i.isLt]
-theorem coeff_sum_above {m : ℕ} (a : Fin m → CoeffRing) (n : ℕ)
+private theorem coeff_sum_above {m : ℕ} (a : Fin m → CoeffRing) (n : ℕ)
     (hn : ¬ n < m) : (powerSum a).coeff n = 0 := by
   rw [coeff_sum, dite_eq_right hn]
-theorem universal_eq :
+private theorem universal_eq :
     universalPolynomial = powerSum (m := taylorLength) MvPolynomial.X :=
   rfl
-theorem universal_coeff (i : Fin taylorLength) :
+private theorem universal_coeff (i : Fin taylorLength) :
     universalPolynomial.coeff i.val = MvPolynomial.X i := by
   rw [universal_eq]
   exact coeff_sum_at (m := taylorLength) MvPolynomial.X i
-theorem universal_degree :
+private theorem universal_degree :
     universalPolynomial.natDegree ≤ physicalDegree := by
   apply natDegree_le_iff_coeff_eq_zero.mpr
   intro n hn
@@ -2051,7 +2051,7 @@ open Final50Price (taylorLength)
 open Final50FatCount_2 (FatTaylor ActualFamily)
 private def jetAlg : GeoJets →ₐ[GeoField] FreshCoeffRing :=
   aeval (fun i : Fin 4 => jetLinear genericArgument i.val)
-theorem dimension_of_recovery {A : CoeffIdeal} (hA : (extendIdeal A).IsPrime)
+private theorem dimension_of_recovery {A : CoeffIdeal} (hA : (extendIdeal A).IsPrime)
     (D : GeoJets) (N : Fin taylorLength → GeoJets)
     (hD : D ∉ freshImage A)
     (hN : ∀ i, MvPolynomial.X i * freshJetMap D - freshJetMap (N i) ∈ extendIdeal A) :
@@ -2154,7 +2154,7 @@ theorem valueCut_degree (x a : K) : (valueCut x a).totalDegree ≤ 1 := by
   simp only [totalDegree_C, Nat.max_zero]
   exact totalDegree_finsetSum_le (fun j _ =>
     (totalDegree_mul _ _).trans (by rw [totalDegree_C, totalDegree_X, zero_add]))
-theorem valueJet_eval {m : ℕ} {S : K[X]} {x : K} (h : S.natDegree < m) :
+private theorem valueJet_eval {m : ℕ} {S : K[X]} {x : K} (h : S.natDegree < m) :
     aeval (fun j : Fin m => (extend S).coeff j.val)
       (∑ j : Fin m, MvPolynomial.C ((j.val.choose 0 : Geom) * (embed x) ^ (j.val - 0)) *
         MvPolynomial.X j) = embed (S.eval x) := by
@@ -2429,7 +2429,7 @@ def c3 : Prop :=
     MvPolynomial.affineDegree A ≤ MvPolynomial.affineDegree (freshImage A) *
       ((fatChart (shape f)).b : ℚ) ^ 2
 open MvPolynomial
-theorem eq_of_le_of_dimension_two {P Q : JetIdeal} (hp : P.IsPrime) (hle : P ≤ Q)
+private theorem eq_of_le_of_dimension_two {P Q : JetIdeal} (hp : P.IsPrime) (hle : P ≤ Q)
     (hdP : dimension P = 2) (hdQ : 2 ≤ dimension Q) : P = Q := by
   by_contra hne
   have hn : ∃ x, x ∈ Q ∧ x ∉ P := by
@@ -2495,7 +2495,7 @@ private theorem family_of_mark (h1 : c1) {f : Row 4} (hf : SmallFactor f)
     exact Finset.mem_biUnion.mpr ⟨component,
       Finset.mem_filter.mpr ⟨Ideal.mem_minimalPrimesFinset.mpr hZ, ht⟩,
       Ideal.mem_minimalPrimesFinset.mpr hP⟩
-theorem sum_fresh_le (S : Finset CoeffIdeal) (V : Finset JetIdeal)
+private theorem sum_fresh_le (S : Finset CoeffIdeal) (V : Finset JetIdeal)
     (hinj : Set.InjOn freshImage (S : Set CoeffIdeal))
     (hV : ∀ A ∈ S, freshImage A ∈ V) :
     ∑ A ∈ S, affineDegree (freshImage A) ≤ ∑ P ∈ V, affineDegree P := by
@@ -2507,7 +2507,7 @@ theorem sum_fresh_le (S : Finset CoeffIdeal) (V : Finset JetIdeal)
   calc
     _ = ∑ P ∈ S.image freshImage, affineDegree P := (Finset.sum_image hinj).symm
     _ ≤ _ := Finset.sum_le_sum_of_subset_of_nonneg hsub (fun P _ _ => affineDegree_nonneg P)
-theorem mem_marks_of_le {Γ : Finset K} {s : K → K[X]} {A : CoeffIdeal} {γ : K}
+private theorem mem_marks_of_le {Γ : Finset K} {s : K → K[X]} {A : CoeffIdeal} {γ : K}
     (hγ : γ ∈ Γ) (hle : A ≤ coefficientPointIdeal (extend (s γ))) : γ ∈ marksOn Γ s A := by
   refine mem_marksOn.mpr ⟨hγ, ?_⟩
   intro g hg
@@ -2638,7 +2638,7 @@ open Final50FatCount_2_3 (CoeffIdeal FreshCoeffRing jetLinear extendIdeal freshJ
 open P0_9_7_2_3 (generic_ne_zero whole_dimension)
 open Final50FatCount_2_2 (chart_degree solves_fresh retunedEval map_universal)
 open private trajectory_at_component component_ne_zero from ProximityPrize.SubmissionLower.Fast066
-theorem whole_contraction {f : Row 4} (hf : Irreducible f) {P : JetIdeal}
+private theorem whole_contraction {f : Row 4} (hf : Irreducible f) {P : JetIdeal}
     (hP : (Ideal.span {toGeneric f}).IsMinimalPrime P) :
     contraction P = Ideal.span {f} := by
   let : P.IsPrime := hP.isPrime
@@ -2658,7 +2658,7 @@ theorem whole_contraction {f : Row 4} (hf : Irreducible f) {P : JetIdeal}
   exact hc.trans (le_antisymm
     (Ideal.span_singleton_le_span_singleton.mpr hassoc.dvd')
     (Ideal.span_singleton_le_span_singleton.mpr hassoc.dvd))
-theorem whole_invariant {f : Row 4} (hf : Irreducible f) {P : JetIdeal}
+private theorem whole_invariant {f : Row 4} (hf : Irreducible f) {P : JetIdeal}
     (hP : (Ideal.span {toGeneric f}).IsMinimalPrime P) : Invariant f P := by
   have hc := whole_contraction hf hP
   intro Q hQ
@@ -2671,10 +2671,10 @@ theorem whole_invariant {f : Row 4} (hf : Irreducible f) {P : JetIdeal}
   exact dvd_mul_right _ _
 private def componentScalars (P : JetIdeal) : GeoField →+* JetField P :=
   (onComponent P).comp MvPolynomial.C
-def sourceEval (P : JetIdeal) [P.IsPrime] (U : (JetField P)[X]) :
+private def sourceEval (P : JetIdeal) [P.IsPrime] (U : (JetField P)[X]) :
     FreshCoeffRing →+* JetField P :=
   MvPolynomial.eval₂Hom (componentScalars P) (fun j => U.coeff j.val)
-theorem eval_jet_sum {F L : Type*} [Field F] [Field L]
+private theorem eval_jet_sum {F L : Type*} [Field F] [Field L]
     (M : ℕ) (k : F →+* L) (x : F) {U : L[X]} (hd : U.natDegree < M) (i : ℕ) :
     (MvPolynomial.eval₂Hom k (fun j : Fin M => U.coeff j.val))
       (∑ j : Fin M, MvPolynomial.C ((j.val.choose i : F) * x ^ (j.val - i)) *
@@ -2689,7 +2689,7 @@ theorem eval_jet_sum {F L : Type*} [Field F] [Field L]
   simp only [hasseDeriv_monomial, eval_monomial, map_mul,
     MvPolynomial.eval₂Hom_C, MvPolynomial.eval₂Hom_X', map_natCast, map_pow]
   ring
-theorem sourceEval_jetLinear (P : JetIdeal) [P.IsPrime] {U : (JetField P)[X]}
+private theorem sourceEval_jetLinear (P : JetIdeal) [P.IsPrime] {U : (JetField P)[X]}
     (hd : U.natDegree < taylorLength) (i : ℕ) :
     sourceEval P U (jetLinear genericArgument i) =
       (hasseDeriv i U).eval (componentScalars P genericArgument) :=
@@ -2718,7 +2718,7 @@ private theorem fresh_le_source (P : JetIdeal) [P.IsPrime] {U : (JetField P)[X]}
   apply Ideal.Quotient.eq_zero_iff_mem.mp
   apply IsFractionRing.injective (GeoJets ⧸ P) (JetField P)
   exact hz.trans (map_zero _).symm
-theorem fresh_dimension_le (A : CoeffIdeal) : dimension (freshImage A) ≤ dimension A := by
+private theorem fresh_dimension_le (A : CoeffIdeal) : dimension (freshImage A) ≤ dimension A := by
   let φ : GeoJets →ₐ[GeoField] FreshCoeffRing :=
     MvPolynomial.aeval (fun i : Fin 4 => jetLinear genericArgument i.val)
   let ψ := Ideal.quotientMapₐ (extendIdeal A) φ
@@ -2783,7 +2783,7 @@ open Final50FatCount_2_3 (CoeffIdeal extendIdeal freshImage freshJetMap)
 open scoped BigOperators
 open private restrictVariables restrict_rename padded_hilbert from ProximityPrize.SubmissionLower.PortLow5
 private theorem length_le : taylorLength ≤ K1_13.taylorLength := by decide
-theorem drop_map {k E : Type*} [Field k] [Field E] (f : k →+* E)
+private theorem drop_map {k E : Type*} [Field k] [Field E] (f : k →+* E)
     {m n : ℕ} :
     (MvPolynomial.aeval (restrictVariables (k := E) (m := m) (n := n))).toRingHom.comp
         (MvPolynomial.map f) =
@@ -2794,7 +2794,7 @@ theorem drop_map {k E : Type*} [Field k] [Field E] (f : k →+* E)
     simp [RingHom.comp_apply]
   · intro i
     by_cases hi : i.val < m <;> simp [RingHom.comp_apply, restrictVariables, hi]
-theorem drop_sum {k : Type*} [Field k] {m n : ℕ} (h : m ≤ n) (c : ℕ → k) :
+private theorem drop_sum {k : Type*} [Field k] {m n : ℕ} (h : m ≤ n) (c : ℕ → k) :
     MvPolynomial.aeval (restrictVariables (m := m))
         (∑ i : Fin n, C (c i.val) * MvPolynomial.X i) =
       ∑ i : Fin m, C (c i.val) * MvPolynomial.X i := by
@@ -2819,12 +2819,12 @@ private def drop (k : Type) [Field k] :
   aeval restrictVariables
 private def pad (A : CoeffIdeal) : K1_13_6_3.CoeffIdeal :=
   A.comap (drop Geom)
-theorem pad_support (A : CoeffIdeal) : Final50FatPad.ShortSupport (pad A) := by
+private theorem pad_support (A : CoeffIdeal) : Final50FatPad.ShortSupport (pad A) := by
   intro i hi
   change drop Geom (MvPolynomial.X i) ∈ A
   rw [drop, aeval_X, restrictVariables, dite_eq_right (not_lt.mpr hi)]
   exact A.zero_mem
-theorem pad_extend (A : CoeffIdeal) :
+private theorem pad_extend (A : CoeffIdeal) :
     K1_13_6_3.extendIdeal (pad A) = (extendIdeal A).comap (drop GeoField) := by
   let B := K1_13_6_3.extendIdeal (pad A)
   let e := Fin.castLE length_le
@@ -2865,7 +2865,7 @@ theorem pad_extend (A : CoeffIdeal) :
       hrename (Ideal.mem_map_of_mem _ hp)
     exact Ideal.Quotient.eq_zero_iff_mem.mp
       ((DFunLike.congr_fun hq p).symm.trans (Ideal.Quotient.eq_zero_iff_mem.mpr hz))
-theorem drop_jet :
+private theorem drop_jet :
     (drop GeoField).toRingHom.comp K1_13_6_3.freshJetMap = freshJetMap := by
   apply MvPolynomial.ringHom_ext
   · intro c
@@ -2877,7 +2877,7 @@ theorem drop_jet :
     unfold drop K1_13_6_3.jetLinear Final50FatCount_2_3.jetLinear
     exact drop_sum (m := taylorLength) (n := K1_13.taylorLength) length_le
       (fun j => (j.choose i.val : GeoField) * genericArgument ^ (j - i.val))
-theorem drop_jet_apply (g : K1_13_6.GeoJets) :
+private theorem drop_jet_apply (g : K1_13_6.GeoJets) :
     drop GeoField (K1_13_6_3.freshJetMap g) = freshJetMap g :=
   DFunLike.congr_fun drop_jet g
 theorem proof : Final50FatCount_2_3.c2 := by
@@ -2969,15 +2969,15 @@ open Final50FatCount_2_3 (CoeffIdeal FreshCoeffRing extendIdeal)
 open private slopeMap formMap slopeMap_apply formMap_apply exists_parameters linearForm_homogeneous
   from ProximityPrize.SubmissionLower.Fast066
 open private backwardDifference_degree from ProximityPrize.SubmissionLower.Fast073
-def freshSlope (H : CoeffHyperplane) : FreshCoeffRing :=
+private def freshSlope (H : CoeffHyperplane) : FreshCoeffRing :=
   ∑ i : Fin taylorLength, MvPolynomial.C (geomConstants (H.slope i)) * MvPolynomial.X i
-theorem freshSlope_homogeneous (H : CoeffHyperplane) : (freshSlope H).IsHomogeneous 1 :=
+private theorem freshSlope_homogeneous (H : CoeffHyperplane) : (freshSlope H).IsHomogeneous 1 :=
   linearForm_homogeneous (fun i : Fin taylorLength ↦ geomConstants (H.slope i))
-theorem freshForm_eq (H : CoeffHyperplane) :
+private theorem freshForm_eq (H : CoeffHyperplane) :
     H.freshForm = MvPolynomial.C (geomConstants H.offset) + freshSlope H := by
   simp only [freshSlope, CoeffHyperplane.freshForm, CoeffHyperplane.form,
     map_add, map_sum, map_mul, MvPolynomial.map_C, MvPolynomial.map_X]
-theorem exists_slice (I J B : Ideal FreshCoeffRing) :
+private theorem exists_slice (I J B : Ideal FreshCoeffRing) :
     ∃ H : CoeffHyperplane,
       (∀ P ∈ associatedPrimes FreshCoeffRing (FreshCoeffRing ⧸ I), H.freshForm ∉ P) ∧
       (∀ P ∈ associatedPrimes FreshCoeffRing (FreshCoeffRing ⧸ J), H.freshForm ∉ P) ∧
@@ -2992,7 +2992,7 @@ theorem exists_slice (I J B : Ideal FreshCoeffRing) :
     rfl
   exact ⟨H, fun P hP ↦ hForm ▸ hp P hP, fun P hP ↦ hForm ▸ hq P hP,
     fun P hP hi ↦ hSlope ▸ hb P hP hi⟩
-theorem extend_cut (A : CoeffIdeal) (H : CoeffHyperplane) :
+private theorem extend_cut (A : CoeffIdeal) (H : CoeffHyperplane) :
     extendIdeal (cut A H.form) = cut (extendIdeal A) H.freshForm := by
   simp only [extendIdeal, cut, CoeffHyperplane.freshForm, Ideal.map_sup, Ideal.map_span,
     Set.image_singleton]
@@ -3005,7 +3005,7 @@ theorem regular_of_prime {B : Ideal FreshCoeffRing} (hB : B.IsPrime)
   let : B.IsPrime := hB
   exact IsLeftCancelMulZero.mul_left_cancel_of_ne_zero
     (mt Ideal.Quotient.eq_zero_iff_mem.mp hp)
-theorem next_slice (A : CoeffIdeal)
+private theorem next_slice (A : CoeffIdeal)
     (d : FreshCoeffRing) (hd : IsLeftRegular (Ideal.Quotient.mk (extendIdeal A) d))
     (hA : 0 < dimension A) :
     ∃ H : CoeffHyperplane,
@@ -3141,7 +3141,7 @@ private theorem noBoundaryZero_of_charts (A : CoeffIdeal)
   apply fresh_value_ne_zero hai
   rw [he]
   exact eval_scale_zero x ((x i)⁻¹) (jetLinear_homogeneous genericArgument 0) hval
-theorem boundary_mono {I J : Ideal FreshCoeffRing} (h : I ≤ J) :
+private theorem boundary_mono {I J : Ideal FreshCoeffRing} (h : I ≤ J) :
     boundaryIdeal I ≤ boundaryIdeal J := by
   apply Ideal.span_mono
   rintro _ ⟨p, n, hp, hdeg, rfl⟩
@@ -3414,7 +3414,7 @@ section
 open private K1_13_7_5_2.denominator from ProximityPrize.SubmissionLower.Fast072
 open private numerator P0_9_7_3_1.numerator_bound denominator_bound P0_9_7_3_1.coefficients_recover from ProximityPrize.SubmissionLower.PortLow7
 local notation "W" => MvPolynomial.weightedTotalDegree
-theorem coefficient_fits (f : Row 4) (ht : (shape f).t = 1) :
+private theorem coefficient_fits (f : Row 4) (ht : (shape f).t = 1) :
     let L := Final50Price.taylorLength
     let H := Final50Price.linearChart (shape f).chamber
     GeoFits (toGeneric (K1_13_7_5_2.denominator L f)) H ∧
@@ -3526,7 +3526,7 @@ open scoped BigOperators
 open private supported_C jetPoint_injective chart_section eval_chart_section weighted_ceil
   from ProximityPrize.SubmissionLower.Fast066
 open private choose_linear_cut from ProximityPrize.SubmissionLower.PortLow7
-theorem fat_chamber (p : Shape) : Chamber (Final50FatCount.fatChart p) := by
+private theorem fat_chamber (p : Shape) : Chamber (Final50FatCount.fatChart p) := by
   unfold Final50FatCount.fatChart
   split
   · let j := 3 + Final50Price.taylorLength * (p.chamber.j - 2)
@@ -3535,7 +3535,7 @@ theorem fat_chamber (p : Shape) : Chamber (Final50FatCount.fatChart p) := by
     have hj := min_le_right (Final50Price.taylorLength + 1) (j / 3)
     omega
   · exact chart_chamber _ _
-theorem fat_top (p : Shape) : 1 ≤ (Final50FatCount.fatChart p).t := by
+private theorem fat_top (p : Shape) : 1 ≤ (Final50FatCount.fatChart p).t := by
   unfold Final50FatCount.fatChart
   split
   · change 1 ≤ min (Final50Price.taylorLength + 1) ((3 + Final50Price.taylorLength * (p.chamber.j - 2)) / 3)
@@ -3544,7 +3544,7 @@ theorem fat_top (p : Shape) : 1 ≤ (Final50FatCount.fatChart p).t := by
     change 1 ≤ min (2 * L * (p.chamber.t - 1) + L + 1)
       ((2 * L * (p.chamber.j - 3) + L + 3) / 3)
     exact le_min (by omega) (by omega)
-theorem choose_section {w Γ s} (hm : Final50Price.Messages w Γ s) {H : Shape} (C : ValueChart H)
+private theorem choose_section {w Γ s} (hm : Final50Price.Messages w Γ s) {H : Shape} (C : ValueChart H)
     (hC : ∀ γ ∈ Γ, C.recovers (s γ)) {r : PrimeSpectrum Jets}
     (hr : ∀ γ ∈ Γ, r.asIdeal ≤ jetPointIdeal (jetPoint (extend (s γ)))) :
     ∃ (F : Jets) (selected : Finset JetPoint), Supported H F ∧ F ∉ r.asIdeal ∧

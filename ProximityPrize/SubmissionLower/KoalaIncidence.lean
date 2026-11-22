@@ -1,5 +1,6 @@
 import ProximityPrize.SubmissionLower.KoalaPointCount
-import ProximityPrize.SubmissionLower.HighCore82219Regular
+import ProximityPrize.SubmissionLower.HighCore82258Regular
+import ProximityPrize.SubmissionLower.KoalaRootSurface
 
 set_option autoImplicit false
 set_option maxHeartbeats 500000
@@ -7,9 +8,9 @@ namespace SplitCut.Incidence
 noncomputable section
 open P1 (K I node)
 open P1_7_3 (persistentNodes)
-open HighCore82219Upper (Input)
-open HighCore82219 (FixedWord agreement blockLength degreeAt scale muNum)
-open HighCore82219_5 (nodeVelocity)
+open HighCore82258Upper (Input)
+open HighCore82258 (FixedWord agreement blockLength degreeAt scale muNum)
+open HighCore82258_5 (nodeVelocity)
 open scoped BigOperators
 
 /-- The old occupancy lemma with a single ordinary affine degree on the curve.
@@ -32,10 +33,10 @@ theorem curve (J : Input) {T : Finset K}
       _ ≤ muNum J.hi*k := Nat.le_mul_of_pos_right _ hk
       _ ≤ (2*nodeVelocity J+muNum J.hi*k)*δ :=
         (Nat.le_add_left _ _).trans (Nat.le_mul_of_pos_right _ hδ)
-  have hs : s ≤ degreeAt J.hi := HighCore82219.persistent_card_le hword (by omega)
+  have hs : s ≤ degreeAt J.hi := HighCore82258.persistent_card_le hword (by omega)
   have hp : 0 < agreement-s := Nat.sub_pos_of_lt (hs.trans_lt hd)
-  obtain ⟨hm,hl⟩ := HighCore82219_5.incidence_weights J hd s hs
-  have H := HighCore82219.section_incidence hword ((2*(J.ell-s)+k)*δ) hc
+  obtain ⟨hm,hl⟩ := HighCore82258_5.incidence_weights J hd s hs
+  have H := HighCore82258.section_incidence hword ((2*(J.ell-s)+k)*δ) hc
   change (agreement-s)*T.card ≤ (blockLength-s)*((2*(J.ell-s)+k)*δ) at H
   refine Nat.le_of_mul_le_mul_left ?_ hp
   calc

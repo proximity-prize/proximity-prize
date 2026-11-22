@@ -1,5 +1,6 @@
 import ProximityPrize.SubmissionLower.KoalaRectTaylorEval
 import ProximityPrize.SubmissionLower.KoalaRuledEmbedding
+import ProximityPrize.SubmissionLower.KoalaTwoCutStable
 
 set_option autoImplicit false
 set_option maxHeartbeats 1000000
@@ -9,16 +10,16 @@ noncomputable section
 
 open P1 (K p)
 open K1_14 (FX)
-open HighCore82219Upper (Input ResidueLift Factors rootOn)
-open HighCore82219Upper_3 (JetRing RelativeSection graphIdeal jetDegree markPoint
+open HighCore82258Upper (Input ResidueLift Factors rootOn)
+open HighCore82258Upper_3 (JetRing RelativeSection graphIdeal jetDegree markPoint
   oldNumerator oldDenominator jetDenominator residueInJet openFactor rootIdeal tangentEquation)
-open HighCore82219Upper_3_2 (CutoffAgreement cutoff_le_mark graph_le_prime mark_regular)
-open private HighCore82219Upper_2.jet_poly
-  HighCore82219Upper_5_1.marked_coefficient HighCore82219Upper_3_3_1.mark_biform
-  HighCore82219Upper_3.oldDenominator_eq
-  HighCore82219Upper_3_1.represent_quotient
-  HighCore82219Upper_3_2_1.regular_of_kernel
-  from ProximityPrize.SubmissionLower.HighCore82219UpperGeometry
+open HighCore82258Upper_3_2 (CutoffAgreement cutoff_le_mark graph_le_prime mark_regular)
+open private HighCore82258Upper_2.jet_poly
+  HighCore82258Upper_5_1.marked_coefficient HighCore82258Upper_3_3_1.mark_biform
+  HighCore82258Upper_3.oldDenominator_eq
+  HighCore82258Upper_3_1.represent_quotient
+  HighCore82258Upper_3_2_1.regular_of_kernel
+  from ProximityPrize.SubmissionLower.HighCore82258UpperGeometry
 
 def firstCut (J : Input) (B : ResidueLift J) : JetRing :=
   taylorNumerator J B (J.ell + 1) (J.ell + 1)
@@ -39,12 +40,12 @@ theorem mark_open_ne_zero (J : Input) (B : ResidueLift J) {γ : K} (hγ : γ ∈
 theorem mark_oldNumerator_zero (J : Input) (B : ResidueLift J) {γ : K} (hγ : γ ∈ J.marks)
     {r : ℕ} (hell : J.ell < r) (hp : r < p) :
     markPoint J γ (oldNumerator J B r) = 0 := by
-  obtain ⟨T, hdegree, hT⟩ := HighCore82219Upper_2.marked_quotient J B γ hγ
-  rw [oldNumerator, HighCore82219Upper_3_3_1.mark_biform,
-    HighCore82219Upper_5_1.marked_coefficient J B γ hγ T hT hp,
-    HighCore82219Upper_2.jet_poly T hp]
-  have h : (Polynomial.taylor HighCore82219Upper.center
-      (T.map HighCore82219Upper.constantAbscissa)).coeff r = 0 := by
+  obtain ⟨T, hdegree, hT⟩ := HighCore82258Upper_2.marked_quotient J B γ hγ
+  rw [oldNumerator, HighCore82258Upper_3_3_1.mark_biform,
+    HighCore82258Upper_5_1.marked_coefficient J B γ hγ T hT hp,
+    HighCore82258Upper_2.jet_poly T hp]
+  have h : (Polynomial.taylor HighCore82258Upper.center
+      (T.map HighCore82258Upper.constantAbscissa)).coeff r = 0 := by
     apply Polynomial.coeff_eq_zero_of_natDegree_lt
     rw [Polynomial.natDegree_taylor]
     exact Polynomial.natDegree_map_le.trans_lt (hdegree.trans_lt hell)
@@ -73,7 +74,7 @@ theorem mark_secondCut (J : Input) (B : ResidueLift J) (D : Factors J B) {γ : K
     markPoint J γ (secondCut J B) = 0 :=
   mark_cutoff_zero J B D hγ hproper (by omega) (second_order_lt_char J)
 
-theorem denominator_notMem {J : Input} {B : ResidueLift J} {P : Ideal JetRing}
+private theorem denominator_notMem {J : Input} {B : ResidueLift J} {P : Ideal JetRing}
     (hP : P.IsPrime) (hopen : openFactor J B ∉ P) (n : ℕ) :
     residueInJet B * Polynomial.C J.f.derivative ^ n ∉ P := by
   have hB : residueInJet B ∉ P := fun hm => hopen (Ideal.mul_mem_right _ _ hm)
@@ -84,7 +85,7 @@ theorem denominator_notMem {J : Input} {B : ResidueLift J} {P : Ideal JetRing}
 theorem oldDenominator_notMem {J : Input} {B : ResidueLift J} {P : Ideal JetRing}
     (hP : P.IsPrime) (hopen : openFactor J B ∉ P) (j : ℕ) :
     oldDenominator J B j ∉ P := by
-  rw [HighCore82219Upper_3.oldDenominator_eq]
+  rw [HighCore82258Upper_3.oldDenominator_eq]
   exact denominator_notMem hP hopen _
 
 /-- The denominator comparison is valid on every prime of the regular graph. -/
@@ -108,7 +109,7 @@ theorem numerator_mem_iff (J : Input) (B : ResidueLift J) (D : Factors J B)
 
 theorem firstCut_mem_iff (J : Input) (B : ResidueLift J) (D : Factors J B)
     {P : Ideal JetRing} (hP : P.IsPrime) (hG : graphIdeal J B D ≤ P) (hopen : openFactor J B ∉ P) :
-    firstCut J B ∈ P ↔ Polynomial.C (HighCore82219Upper.cutoff J B) ∈ P :=
+    firstCut J B ∈ P ↔ Polynomial.C (HighCore82258Upper.cutoff J B) ∈ P :=
   numerator_mem_iff J B D hP hG hopen le_rfl
 
 theorem secondCut_mem_iff (J : Input) (B : ResidueLift J) (D : Factors J B)
@@ -126,7 +127,7 @@ theorem firstCut_agreement (J : Input) (B : ResidueLift J) (D : Factors J B)
 theorem firstCut_relative (J : Input) (B : ResidueLift J) (D : Factors J B) :
     ∃ S : RelativeSection (graphIdeal J B D) (jetDegree J (J.ell + 1)),
       S.affine = firstCut J B ∧ CutoffAgreement J B D S := by
-  obtain ⟨S, hS⟩ := HighCore82219Upper_3_1.represent_quotient HighCore82219GeometryCert_1.proof
+  obtain ⟨S, hS⟩ := HighCore82258Upper_3_1.represent_quotient HighCore82258GeometryCert_1.proof
     J B D (r := J.ell + 1) (j := J.ell + 1) le_rfl le_rfl
   exact ⟨S, hS, firstCut_agreement J B D hS⟩
 
@@ -135,7 +136,11 @@ theorem cutoff_regularities (J : Input) (B : ResidueLift J) (D : Factors J B) :
       IsLeftRegular (Ideal.Quotient.mk (graphIdeal J B D) (firstCut J B)) := by
   obtain ⟨S, hS, hAgree⟩ := firstCut_relative J B D
   rw [← hS]
-  exact HighCore82219Upper_3_2_1.proof J B D S hAgree
+  exact HighCore82258Upper_3_2_1.proof J B D S hAgree
+
+theorem tangent_regular (J : Input) (B : ResidueLift J) (D : Factors J B) :
+    IsLeftRegular (Ideal.Quotient.mk (rootIdeal D) (tangentEquation J.f)) :=
+  (cutoff_regularities J B D).1
 
 theorem firstCut_regular (J : Input) (B : ResidueLift J) (D : Factors J B) :
     IsLeftRegular (Ideal.Quotient.mk (graphIdeal J B D) (firstCut J B)) :=
@@ -148,7 +153,7 @@ theorem rect_firstCut_regular (J : Input) (B : ResidueLift J) (D : Factors J B) 
   have hker : RingHom.ker f = rectIdeal (graphIdeal J B D) := by
     ext s
     exact Ideal.Quotient.eq_zero_iff_mem
-  apply HighCore82219Upper_3_2_1.regular_of_kernel f _ hker
+  apply HighCore82258Upper_3_2_1.regular_of_kernel f _ hker
   change IsLeftRegular (q (jetToRect.symm (jetToRect (firstCut J B))))
   rw [AlgEquiv.symm_apply_apply]
   exact firstCut_regular J B D

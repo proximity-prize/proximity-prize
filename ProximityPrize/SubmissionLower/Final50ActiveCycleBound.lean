@@ -2,7 +2,6 @@ import ProximityPrize.SubmissionLower.Low48BentCycle
 import ProximityPrize.SubmissionLower.Final50GeometryCut
 
 set_option autoImplicit false
-set_option Elab.async false
 
 namespace Final50ActiveCycle
 
@@ -56,7 +55,7 @@ private theorem square_support {R B : Family} (hB : Doubled R B) {i : Fin 5} {D 
   obtain ⟨a, ha, b, hb, rfl⟩ := Finset.mem_add.mp (support_mul D D hm)
   exact hB.pair_mem i a (hD a ha) b (hD b hb)
 
-theorem constant_section {R B : Family} (hB : Doubled R B) (i : Fin 5) (a : GeoField) :
+private theorem constant_section {R B : Family} (hB : Doubled R B) (i : Fin 5) (a : GeoField) :
     Section R i (MvPolynomial.C a) := by
   classical
   intro m hm
@@ -65,7 +64,7 @@ theorem constant_section {R B : Family} (hB : Doubled R B) (i : Fin 5) (a : GeoF
   · rw [MvPolynomial.support_C, ite_eq_right ha, Finset.mem_singleton] at hm
     exact hm ▸ hB.zero_mem i
 
-theorem coordinate_section {R B : Family} (hB : Doubled R B)
+private theorem coordinate_section {R B : Family} (hB : Doubled R B)
     (z : Fin 5 → GeoField) (i : Fin 5) : Section R 4 (MvPolynomial.X i - MvPolynomial.C (z i)) := by
   intro m hm
   rcases Finset.mem_union.mp (MvPolynomial.support_sub _ _ _ hm) with hX | hC

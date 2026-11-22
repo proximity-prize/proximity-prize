@@ -1,0 +1,47 @@
+import ProximityPrize.SubmissionLower.Compact54Packed
+import ProximityPrize.SubmissionLower.Compact54TilesTwo6widerPart4
+
+set_option maxRecDepth 16000
+set_option maxHeartbeats 4000000
+
+namespace Compact50PriceTableTwo6wider
+open K1_13 (Shape InBox)
+open K1_13_8 (Valid)
+open Final50Price (fullCap)
+open Final50PriceCaps (Band start)
+open Final50PriceTableBase (Covered covered_mono)
+open Compact50Cover (PaidBatch tilesOf checks checks_join)
+
+namespace Top6
+private abbrev P := PaidBatch .two6wider 6
+private def p0 : List P := [⟨Compact54Packed.unpack [64899401753,30489086001,30457178169,30522755213,30523877517,30474668185], by decide +kernel⟩,⟨Compact54Packed.unpack [30272694425,13076441293,13076904141,30524983549,30290372861,13110184189], by decide +kernel⟩,⟨Compact54Packed.unpack [13110843645,12993276157,4403280125,4403544317,4403407129,4353077529], by decide +kernel⟩,⟨Compact54Packed.unpack [4319590681,24625433,24757529,24557857,24689953,7979297], by decide +kernel⟩,⟨Compact54Packed.unpack [7980320,24756516,41333033,41465129,24754473], by decide +kernel⟩,⟨Compact54Packed.unpack [41532712,41532716], by decide +kernel⟩]
+private def p1 : List P := [⟨Compact54Packed.unpack [58308912,13109717301,13110638901], by decide +kernel⟩,⟨Compact54Packed.unpack [12993399093,4403403061,4353138997,24422709,24554805,7844149], by decide +kernel⟩,⟨Compact54Packed.unpack [7910708,58308916,7909688], by decide +kernel⟩,⟨Compact54Packed.unpack [7910712,58308920,24553789], by decide +kernel⟩,⟨Compact54Packed.unpack [7908669,24686908,41531708], by decide +kernel⟩,⟨Compact54Packed.unpack [7980348,24685888,41530688], by decide +kernel⟩]
+private def p2 : List P := [⟨Compact54Packed.unpack [24756544,41263429,41461061,7907653,7908676], by decide +kernel⟩,⟨Compact54Packed.unpack [7909700,75085124], by decide +kernel⟩,⟨Compact54Packed.unpack [41462088,41530696], by decide +kernel⟩,⟨Compact54Packed.unpack [24756552,41462092,7976268], by decide +kernel⟩,⟨Compact54Packed.unpack [58308940,4403202385,4353003857], by decide +kernel⟩,⟨Compact54Packed.unpack [4319648081,24682833,58238288], by decide +kernel⟩]
+private def p3 : List P := [⟨Compact54Packed.unpack [75085136,7906644], by decide +kernel⟩,⟨Compact54Packed.unpack [41462100,41530708], by decide +kernel⟩,⟨Compact54Packed.unpack [24756564,24484185,24681817,24682840], by decide +kernel⟩,⟨Compact54Packed.unpack [41462104,41530712], by decide +kernel⟩,⟨Compact54Packed.unpack [24756568,58237276], by decide +kernel⟩,⟨Compact54Packed.unpack [91861340], by decide +kernel⟩]
+private def p4 : List P := [⟨Compact54Packed.unpack [41062753,41325921,24615265,41459040], by decide +kernel⟩,⟨Compact54Packed.unpack [24684896,58306912], by decide +kernel⟩,⟨Compact54Packed.unpack [24756576,58236260], by decide +kernel⟩,⟨Compact54Packed.unpack [7908708,75084132], by decide +kernel⟩,⟨Compact54Packed.unpack [7980388,75012456], by decide +kernel⟩,⟨Compact54Packed.unpack [7908712,75084136], by decide +kernel⟩]
+private def p5 : List P := [⟨Compact54Packed.unpack [7980392,13108726125,13109778797,13110765933,4402805101,4403265901], by decide +kernel⟩,⟨Compact54Packed.unpack [4353198445,24482157,24679789,41458028], by decide +kernel⟩,⟨Compact54Packed.unpack [41461100,41529708], by decide +kernel⟩,⟨Compact54Packed.unpack [41532780,41458032], by decide +kernel⟩,⟨Compact54Packed.unpack [41461104,41529712], by decide +kernel⟩,⟨Compact54Packed.unpack [41532784,24613237,24679796], by decide +kernel⟩]
+private def p6 : List P := [⟨Compact54Packed.unpack [58236276,24751476], by decide +kernel⟩,⟨Compact54Packed.unpack [75085172,7902584], by decide +kernel⟩,⟨Compact54Packed.unpack [75012472,7974264], by decide +kernel⟩,⟨Compact54Packed.unpack [91861368], by decide +kernel⟩,⟨Compact54Packed.unpack [41191805,41454973,58233212], by decide +kernel⟩,⟨Compact54Packed.unpack [41460092,41528700], by decide +kernel⟩]
+private def p7 : List P := [⟨Compact54Packed.unpack [58308988,24678784], by decide +kernel⟩,⟨Compact54Packed.unpack [75012480,7974272], by decide +kernel⟩,⟨Compact54Packed.unpack [91861376], by decide +kernel⟩,⟨Compact54Packed.unpack [91787652], by decide +kernel⟩,⟨Compact54Packed.unpack [7907716,75083140], by decide +kernel⟩,⟨Compact54Packed.unpack [24756612,4403329417,4319576457,24611209,7900552], by decide +kernel⟩]
+private def p8 : List P := [⟨Compact54Packed.unpack [91787656], by decide +kernel⟩,⟨Compact54Packed.unpack [7907720,75083144], by decide +kernel⟩,⟨Compact54Packed.unpack [24756616,58232204], by decide +kernel⟩,⟨Compact54Packed.unpack [58236300,24751500], by decide +kernel⟩,⟨Compact54Packed.unpack [75085196,24281489], by decide +kernel⟩,⟨Compact54Packed.unpack [24479121,7899537,58232208], by decide +kernel⟩]
+private def p9 : List P := [⟨Compact54Packed.unpack [41459088,41527696], by decide +kernel⟩,⟨Compact54Packed.unpack [75085200,7899540], by decide +kernel⟩,⟨Compact54Packed.unpack [91786644], by decide +kernel⟩,⟨Compact54Packed.unpack [7906708,75082132], by decide +kernel⟩,⟨Compact54Packed.unpack [41532820,41255321,24675737,7899544], by decide +kernel⟩,⟨Compact54Packed.unpack [91786648], by decide +kernel⟩]
+private def p10 : List P := [⟨Compact54Packed.unpack [7906712,75082136], by decide +kernel⟩,⟨Compact54Packed.unpack [41532824,41453980], by decide +kernel⟩,⟨Compact54Packed.unpack [75011484,7973276], by decide +kernel⟩,⟨Compact54Packed.unpack [91860380], by decide +kernel⟩,⟨Compact54Packed.unpack [7980444,75007392], by decide +kernel⟩,⟨Compact54Packed.unpack [58235296,24750496], by decide +kernel⟩]
+private def p11 : List P := [⟨Compact54Packed.unpack [91861408], by decide +kernel⟩,⟨Compact54Packed.unpack [13109512613,13110630821,4402735525,4403327397,4319574437,24609189], by decide +kernel⟩,⟨Compact54Packed.unpack [91784612], by decide +kernel⟩,⟨Compact54Packed.unpack [24681892,58303908], by decide +kernel⟩,⟨Compact54Packed.unpack [75085220,7898536], by decide +kernel⟩,⟨Compact54Packed.unpack [91785640], by decide +kernel⟩]
+private def p12 : List P := [⟨Compact54Packed.unpack [7905704,75081128], by decide +kernel⟩,⟨Compact54Packed.unpack [58309032,24213933,24477101], by decide +kernel⟩,⟨Compact54Packed.unpack [7897517,75007404], by decide +kernel⟩,⟨Compact54Packed.unpack [41458092,41526700], by decide +kernel⟩,⟨Compact54Packed.unpack [91861420], by decide +kernel⟩,⟨Compact54Packed.unpack [91783600], by decide +kernel⟩]
+private def p13 : List P := [⟨Compact54Packed.unpack [41458096,41526704], by decide +kernel⟩,⟨Compact54Packed.unpack [91861424], by decide +kernel⟩,⟨Compact54Packed.unpack [41253301,24673717,58229172], by decide +kernel⟩,⟨Compact54Packed.unpack [75010484,7972276], by decide +kernel⟩,⟨Compact54Packed.unpack [91859380], by decide +kernel⟩,⟨Compact54Packed.unpack [24756660,58229176], by decide +kernel⟩]
+private def p14 : List P := [⟨Compact54Packed.unpack [75010488,7972280], by decide +kernel⟩,⟨Compact54Packed.unpack [91859384], by decide +kernel⟩,⟨Compact54Packed.unpack [24756664,58228156], by decide +kernel⟩,⟨Compact54Packed.unpack [75009468,7971260], by decide +kernel⟩,⟨Compact54Packed.unpack [91858364], by decide +kernel⟩,⟨Compact54Packed.unpack [41532860,4403194305,4319572417,24607169], by decide +kernel⟩]
+private def p15 : List P := [⟨Compact54Packed.unpack [91782592], by decide +kernel⟩,⟨Compact54Packed.unpack [41457088,41525696], by decide +kernel⟩,⟨Compact54Packed.unpack [91860416], by decide +kernel⟩,⟨Compact54Packed.unpack [7980480,75005380], by decide +kernel⟩,⟨Compact54Packed.unpack [58233284,24748484], by decide +kernel⟩,⟨Compact54Packed.unpack [91859396], by decide +kernel⟩]
+private def p16 : List P := [⟨Compact54Packed.unpack [24756676,24146377,24409545,7895497,7896520], by decide +kernel⟩,⟨Compact54Packed.unpack [91783624], by decide +kernel⟩,⟨Compact54Packed.unpack [24680904,58302920], by decide +kernel⟩,⟨Compact54Packed.unpack [91861448], by decide +kernel⟩,⟨Compact54Packed.unpack [91781580], by decide +kernel⟩,⟨Compact54Packed.unpack [58233292,24748492], by decide +kernel⟩]
+private def p17 : List P := [⟨Compact54Packed.unpack [91859404], by decide +kernel⟩,⟨Compact54Packed.unpack [24756684,41120209,41383377,24672720], by decide +kernel⟩,⟨Compact54Packed.unpack [91783632], by decide +kernel⟩,⟨Compact54Packed.unpack [7903696,75079120], by decide +kernel⟩,⟨Compact54Packed.unpack [91861456], by decide +kernel⟩,⟨Compact54Packed.unpack [91781588], by decide +kernel⟩]
+private def p18 : List P := [⟨Compact54Packed.unpack [41456084,41524692], by decide +kernel⟩,⟨Compact54Packed.unpack [91859412], by decide +kernel⟩,⟨Compact54Packed.unpack [24756692,58227160], by decide +kernel⟩,⟨Compact54Packed.unpack [75008472,7970264], by decide +kernel⟩,⟨Compact54Packed.unpack [91857368], by decide +kernel⟩,⟨Compact54Packed.unpack [58309080], by decide +kernel⟩]
+private def batches : List P := p0 ++ p1 ++ p2 ++ p3 ++ p4 ++ p5 ++ p6 ++ p7 ++ p8 ++ p9 ++ p10 ++ p11 ++ p12 ++ p13 ++ p14 ++ p15 ++ p16 ++ p17 ++ p18
+private abbrev ts := tilesOf batches
+private theorem i18 : checks ts 118 18 8 = true := by decide +kernel
+private theorem i26 : checks ts 118 26 8 = true := by decide +kernel
+private theorem i34 : checks ts 118 34 8 = true := by decide +kernel
+private theorem i42 : checks ts 118 42 8 = true := by decide +kernel
+private theorem rows : checks ts 118 18 32 = true := checks_join i18 (checks_join i26 (checks_join i34 (i42)))
+theorem exact (a : Shape) (ha : Valid a) (ht : a.t=6) (hb : a.b≤118) (hj : a.j≤49) :
+    Covered 8 .two6wider a := Compact54Packed.coverAt (bs := batches) rows a ha ht hb hj
+end Top6
+
+end Compact50PriceTableTwo6wider

@@ -1,4 +1,5 @@
 import ProximityPrize.SubmissionLower.Low49ActiveLattice
+import ProximityPrize.SubmissionLower.Low48BentCyclePrice
 
 set_option autoImplicit false
 set_option maxHeartbeats 1400000
@@ -13,15 +14,15 @@ noncomputable section
 
 def missing (a : Cap) (c : ℕ) : Set Exponent := latticePoints a \ points a c
 
-def clipAt (c h : ℕ) : ℕ := 2*c-2*h
-def indexAt (a : Cap) (h : ℕ) : ℕ := 2*a.1.j-4*h
+private def clipAt (c h : ℕ) : ℕ := 2*c-2*h
+private def indexAt (a : Cap) (h : ℕ) : ℕ := 2*a.1.j-4*h
 private def degreeAt (a : Cap) (h : ℕ) : ℕ := 2*a.1.b-h
 
 private def Slices (a : Cap) (c : ℕ) :=
   Σ h : Fin (2*a.2+1), Σ r : Fin (clipAt c h.val), Σ z : Fin (r.val/2+1),
     Fin (r.val-2*z.val+1) × Fin (clipAt c h.val-r.val)
 
-theorem slices_ext {a : Cap} {c : ℕ} {s t : Slices a c}
+private theorem slices_ext {a : Cap} {c : ℕ} {s t : Slices a c}
     (hh : s.1.val=t.1.val) (hr : s.2.1.val=t.2.1.val)
     (hz : s.2.2.1.val=t.2.2.1.val) (hy : s.2.2.2.1.val=t.2.2.2.1.val)
     (hu : s.2.2.2.2.val=t.2.2.2.2.val) : s=t := by
@@ -35,7 +36,7 @@ theorem slices_ext {a : Cap} {c : ℕ} {s t : Slices a c}
   subst h' r' z' y' u'
   rfl
 
-theorem at_bounds {a : Cap} {c h : ℕ} (ha : Fits a c) (hh : h ≤ 2*a.2) :
+private theorem at_bounds {a : Cap} {c h : ℕ} (ha : Fits a c) (hh : h ≤ 2*a.2) :
     2*h ≤ 2*c ∧ 4*h ≤ 2*a.1.j ∧ h ≤ 2*a.1.b ∧
     2*clipAt c h ≤ indexAt a h ∧ clipAt c h ≤ 2*(2*a.1.t-2*h) ∧
     indexAt a h+clipAt c h ≤ degreeAt a h := by
@@ -138,7 +139,7 @@ private def slicesEquiv (a : Cap) (c : ℕ) (ha : Fits a c) : missing a c ≃ Sl
 
 open private sum_affine sum_pair from ProximityPrize.SubmissionLower.Fast054
 
-theorem middle_sum (r : ℕ) :
+private theorem middle_sum (r : ℕ) :
     (∑ z ∈ range (r/2+1), ((r-2*z+1 : ℕ) : ℚ)) =
       ((r/2 : ℕ)+1 : ℚ) * (((r+1 : ℕ) - (r/2 : ℕ) : ℕ) : ℚ) := by
   have h (z : ℕ) (hz : z ∈ range (r/2+1)) :
@@ -175,10 +176,10 @@ private theorem card_sum (a : Cap) (c : ℕ) (ha : Fits a c) :
 
 def sliceLoss (q : ℚ) : ℚ := q*(q+1)^2*(q+2)/3
 
-def pairedLoss (q i : ℚ) : ℚ :=
+private def pairedLoss (q i : ℚ) : ℚ :=
     (2*q-2*i)*(i+1)^2 + (2*q-2*i-1)*(i+1)*(i+2)
 
-theorem sum_paired_loss (q : ℚ) (n : ℕ) :
+private theorem sum_paired_loss (q : ℚ) (n : ℕ) :
     ∑ i ∈ range n, pairedLoss q i =
       pairedLoss q 0 * n + (pairedLoss q 1-pairedLoss q 0)*((n : ℚ)*(n-1)/2) +
       (pairedLoss q 2-2*pairedLoss q 1+pairedLoss q 0)*((n : ℚ)*(n-1)*(n-2)/6) +
@@ -191,7 +192,7 @@ theorem sum_paired_loss (q : ℚ) (n : ℕ) :
     unfold pairedLoss
     ring
 
-theorem sum_strip (q : ℕ) :
+private theorem sum_strip (q : ℕ) :
     (∑ r ∈ range (2*q), ((2*q-r : ℕ) : ℚ) *
       ((r/2 : ℕ)+1 : ℚ) * (((r+1 : ℕ) - (r/2 : ℕ) : ℕ) : ℚ)) = sliceLoss q := by
   rw [sum_pair]

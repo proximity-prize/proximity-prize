@@ -1,6 +1,6 @@
 import ProximityPrize.SubmissionLower.Final50ActiveCyclePrice
 import ProximityPrize.SubmissionLower.Final50ActiveCycleChart
-set_option Elab.async false
+import ProximityPrize.SubmissionLower.Shared50ChooseCut
 namespace Shared50BentCaps
 noncomputable section
 

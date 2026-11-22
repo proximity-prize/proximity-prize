@@ -1,7 +1,7 @@
 import ProximityPrize.SubmissionLower.KoalaRectJetCoords
+import ProximityPrize.SubmissionLower.KoalaRuledBudget
 
 set_option autoImplicit false
-set_option Elab.async false
 set_option maxHeartbeats 800000
 set_option backward.isDefEq.respectTransparency false
 
@@ -9,17 +9,17 @@ namespace KoalaRectTaylor
 noncomputable section
 
 open K1_14 (FX Equation Seeds)
-open HighCore82219Upper (Input)
-open HighCore82219Upper_3 (JetRing ordinate)
-open HighCore82219Upper_3_1 (coefficientDerivative jetCoeffDerivative jetSeparant
+open HighCore82258Upper (Input)
+open HighCore82258Upper_3 (JetRing ordinate)
+open HighCore82258Upper_3_1 (coefficientDerivative jetCoeffDerivative jetSeparant
   pureDen pureOrdinate secondAlongVelocity velocity velocityNumerator)
-open HighCore82219Upper_3_1_2 (clearedAction reciprocalNumerator reverseEquation sepAlong)
-open private HighCore82219Upper_3_1_1.coeff_coeffDiff HighCore82219Upper_3_1_1.coeff_lift
-  HighCore82219Upper_3_1.coefficientDerivative_zero HighCore82219Upper_3_1_2.inverseOrdinate
-  from ProximityPrize.SubmissionLower.HighCore82219UpperGeometry
-open HighCore82219Upper_3_1_1 (coeff_coeffDiff coeff_lift)
-open HighCore82219Upper_3_1 (coefficientDerivative_zero)
-open HighCore82219Upper_3_1_2 (inverseOrdinate)
+open HighCore82258Upper_3_1_2 (clearedAction reciprocalNumerator reverseEquation sepAlong)
+open private HighCore82258Upper_3_1_1.coeff_coeffDiff HighCore82258Upper_3_1_1.coeff_lift
+  HighCore82258Upper_3_1.coefficientDerivative_zero HighCore82258Upper_3_1_2.inverseOrdinate
+  from ProximityPrize.SubmissionLower.HighCore82258UpperGeometry
+open HighCore82258Upper_3_1_1 (coeff_coeffDiff coeff_lift)
+open HighCore82258Upper_3_1 (coefficientDerivative_zero)
+open HighCore82258Upper_3_1_2 (inverseOrdinate)
 open MvPolynomial (degreeOf degreeOf_le_iff degreeOf_add_le degreeOf_mul_le
   degreeOf_sum_le)
 
@@ -66,7 +66,7 @@ theorem mul (hp : EquationAxis z p s) (hq : EquationAxis z q t) :
   exact (degreeOf_sum_le _ _ _).trans (Finset.sup_le fun k _ =>
     (degreeOf_mul_le _ _ _).trans (Nat.add_le_add (hp k.1) (hq k.2)))
 
-theorem nat_add_one (i : ℕ) : (↑i + 1 : Seeds) =
+private theorem nat_add_one (i : ℕ) : (↑i + 1 : Seeds) =
     MvPolynomial.C ((i : FX) + 1) := by
   simp only [map_add, map_one, map_natCast]
 
@@ -169,18 +169,18 @@ variable {z : Fin 2} {f : Equation} {s : ℕ}
 theorem separant_axis (hf : EquationAxis z f s) : JetAxis z (jetSeparant f) s :=
   JetAxis.C hf.derivative
 
-theorem second_axis (hf : EquationAxis z f s) :
+private theorem second_axis (hf : EquationAxis z f s) :
     JetAxis z (secondAlongVelocity f) s := by
   have h1 := JetAxis.C hf.coeffDiff.coeffDiff
   have h2 := ((JetAxis.nat (z := z) 2).mul JetAxis.velocity).mul (JetAxis.C hf.derivative.coeffDiff)
   have h3 := (JetAxis.velocity.pow 2).mul (JetAxis.C hf.derivative.derivative)
   exact (h1.add (by simpa using h2)).add (by simpa using h3)
 
-theorem along_axis (hf : EquationAxis z f s) : JetAxis z (sepAlong f) s := by
+private theorem along_axis (hf : EquationAxis z f s) : JetAxis z (sepAlong f) s := by
   exact (JetAxis.C hf.derivative.coeffDiff).add
     (by simpa using (JetAxis.velocity (z := z)).mul (JetAxis.C hf.derivative.derivative))
 
-theorem action_axis (hf : EquationAxis z f s) {p : JetRing} {t : ℕ}
+private theorem action_axis (hf : EquationAxis z f s) {p : JetRing} {t : ℕ}
     (hp : JetAxis z p t) : JetAxis z (clearedAction f p) (s+t) := by
   have hx := hp.coeffDiff coefficientDerivative_zero (fun _ h => h.coeffDiff)
   have hy := hp.coeffDiff Polynomial.derivative_zero (fun _ h => h.derivative)

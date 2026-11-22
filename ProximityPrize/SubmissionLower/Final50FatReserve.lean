@@ -1,8 +1,8 @@
 import ProximityPrize.SubmissionLower.Final50Price
+import ProximityPrize.SubmissionLower.Final50PriceMass
 
 open scoped BigOperators
 
-set_option Elab.async false
 set_option maxHeartbeats 2000000
 set_option maxRecDepth 16000
 namespace Final50FatReserve
@@ -38,17 +38,17 @@ private theorem fatPrice_expand (x : Shape) :
       singularFee x (mixed32 x.chamber x.chamber (fatChart x) (fatChart x)) +
       curveFee (mixed32 x.chamber resultantBox resultantBox (fatChart x))
         (mixed32 x.chamber resultantBox resultantBox x.chamber) + isolatedFee := rfl
-theorem chamber_widen {x y : Shape} (h : TotalLE x y) :
+private theorem chamber_widen {x y : Shape} (h : TotalLE x y) :
     TotalLE x.chamber y.chamber :=
   ⟨max_le_max h.1 h.2.1.le, h.2⟩
-theorem chart_widen (L : ℕ) {x y : Shape} (h : TotalLE x y) :
+private theorem chart_widen (L : ℕ) {x y : Shape} (h : TotalLE x y) :
     TotalLE (chart L x) (chart L y) := by
   refine ⟨?_, by simp only [chart, h.2.1], by simp only [chart, h.2.1, h.2.2]⟩
   dsimp only [chart]
   rw [h.2.1]
   exact max_le_max
     (Nat.add_le_add_left (Nat.mul_le_mul_left _ (Nat.sub_le_sub_right h.1 _)) _) le_rfl
-theorem fatChart_widen {x y : Shape} (h : TotalLE x y) :
+private theorem fatChart_widen {x y : Shape} (h : TotalLE x y) :
     TotalLE (fatChart x) (fatChart y) := by
   have hp := chamber_widen h
   unfold fatChart
@@ -60,19 +60,19 @@ theorem fatChart_widen {x y : Shape} (h : TotalLE x y) :
     exact max_le_max
       (Nat.add_le_add_left (Nat.mul_le_mul_left _ (Nat.sub_le_sub_right hp.1 _)) _) le_rfl
   · exact chart_widen _ hp
-theorem cut_widen {h H : Shape} (hh : TotalLE h H) :
+private theorem cut_widen {h H : Shape} (hh : TotalLE h H) :
     TotalLE (divisorCut h) (divisorCut H) := by
   refine ⟨?_, by simp only [divisorCut, hh.2.1], by simp only [divisorCut, hh.2.2]⟩
   dsimp only [divisorCut]
   rw [hh.2.1]
   exact max_le_max (max_le_max hh.1 le_rfl) le_rfl
-theorem capped_index (b j t : ℕ) : IndexFits ⟨b, j, min t (j / 3)⟩ := by
+private theorem capped_index (b j t : ℕ) : IndexFits ⟨b, j, min t (j / 3)⟩ := by
   change 3 * min t (j / 3) ≤ j
   exact (Nat.mul_le_mul_left 3 (min_le_right _ _)).trans (by omega)
-theorem fatChart_index (x : Shape) : IndexFits (fatChart x) := by
+private theorem fatChart_index (x : Shape) : IndexFits (fatChart x) := by
   unfold fatChart
   split <;> exact capped_index _ _ _
-theorem cut_index {h : Shape} (hh : IndexFits h) : IndexFits (divisorCut h) := by
+private theorem cut_index {h : Shape} (hh : IndexFits h) : IndexFits (divisorCut h) := by
   change 3 * h.t ≤ h.j at hh
   change 3 * max 1 h.t ≤ max h.j (divisorBox.j + 1)
   rcases le_total 1 h.t with ht | ht
@@ -118,31 +118,55 @@ theorem fatPrice_widen {x y : Shape} (h : TotalLE x y) (hv : IndexFits x) :
 /-- Degree cap at each index of the retained product. -/
 def degreeCap : ℕ → ℕ
   | 3 => 25
-  | 4 => 22
-  | 5 => 19
-  | 6 => 15
-  | 7 => 9
+  | 4 => 23
+  | 5 => 20
+  | 6 => 16
+  | 7 => 10
   | _ => 0
 
 def charge (b j t : ℕ) : ℕ :=
   match t, j with
-  | 1, 3 => 16134172369732502
-  | 1, 4 => 27316190336551897
-  | 1, 5 => 41254742263085612
-  | 1, 6 => 47596490173374667
-  | 1, 7 => 41894803915252695
-  | 2, 6 => if b ≤ 11 then 126258668247061106 else 169922241534105837
-  | 2, 7 => 165116552226664301
+  | 1, 3 =>
+    if b ≤ 1 then 2343347415003976
+    else 16815154701363143
+  | 1, 4 => 30532279541963794
+  | 1, 5 => 46409127523914633
+  | 1, 6 => 54064306903674190
+  | 1, 7 => 48720018058055370
+  | 2, 6 =>
+    if b ≤ 3 then 78811583990757641
+    else if b ≤ 11 then 135278860228783795
+    else if b ≤ 13 then 158427079143371143
+    else 193964641150607994
+  | 2, 7 =>
+    if b ≤ 6 then 143089016514969561
+    else 194164445885822982
   | _, _ => 0
 
-theorem linear_3 : fatPrice ⟨25,3,1⟩ ≤ charge 25 3 1 := by decide +kernel
-theorem linear_4 : fatPrice ⟨22,4,1⟩ ≤ charge 22 4 1 := by decide +kernel
-theorem linear_5 : fatPrice ⟨19,5,1⟩ ≤ charge 19 5 1 := by decide +kernel
-theorem linear_6 : fatPrice ⟨15,6,1⟩ ≤ charge 15 6 1 := by decide +kernel
-theorem linear_7 : fatPrice ⟨9,7,1⟩ ≤ charge 9 7 1 := by decide +kernel
-theorem quadratic_small : fatPrice ⟨11,6,2⟩ ≤ charge 11 6 2 := by decide +kernel
-theorem quadratic_large : fatPrice ⟨15,6,2⟩ ≤ charge 15 6 2 := by decide +kernel
-theorem quadratic_7 : fatPrice ⟨9,7,2⟩ ≤ charge 9 7 2 := by decide +kernel
+private theorem price_3_1_1 : fatPrice ⟨1,3,1⟩ ≤ charge 1 3 1 := by
+  decide +kernel
+private theorem price_3_1_25 : fatPrice ⟨25,3,1⟩ ≤ charge 25 3 1 := by
+  decide +kernel
+private theorem price_4_1_23 : fatPrice ⟨23,4,1⟩ ≤ charge 23 4 1 := by
+  decide +kernel
+private theorem price_5_1_20 : fatPrice ⟨20,5,1⟩ ≤ charge 20 5 1 := by
+  decide +kernel
+private theorem price_6_1_16 : fatPrice ⟨16,6,1⟩ ≤ charge 16 6 1 := by
+  decide +kernel
+private theorem price_7_1_10 : fatPrice ⟨10,7,1⟩ ≤ charge 10 7 1 := by
+  decide +kernel
+private theorem price_6_2_3 : fatPrice ⟨3,6,2⟩ ≤ charge 3 6 2 := by
+  decide +kernel
+private theorem price_6_2_11 : fatPrice ⟨11,6,2⟩ ≤ charge 11 6 2 := by
+  decide +kernel
+private theorem price_6_2_13 : fatPrice ⟨13,6,2⟩ ≤ charge 13 6 2 := by
+  decide +kernel
+private theorem price_6_2_16 : fatPrice ⟨16,6,2⟩ ≤ charge 16 6 2 := by
+  decide +kernel
+private theorem price_7_2_6 : fatPrice ⟨6,7,2⟩ ≤ charge 6 7 2 := by
+  decide +kernel
+private theorem price_7_2_10 : fatPrice ⟨10,7,2⟩ ≤ charge 10 7 2 := by
+  decide +kernel
 
 theorem single (x : Shape) (hv : Valid x) (hj : x.j ≤ 7) (hb : x.b ≤ degreeCap x.j) :
     fatPrice x ≤ charge x.b x.j x.t := by
@@ -154,51 +178,84 @@ theorem single (x : Shape) (hv : Valid x) (hj : x.j ≤ 7) (hb : x.b ≤ degreeC
   rcases htop with rfl | rfl
   · have hcases : j = 3 ∨ j = 4 ∨ j = 5 ∨ j = 6 ∨ j = 7 := by omega
     rcases hcases with rfl | rfl | rfl | rfl | rfl
-    · exact (fatPrice_widen (x := ⟨b,3,1⟩) (y := ⟨25,3,1⟩) ⟨hb, rfl, rfl⟩ hindex).trans linear_3
-    · exact (fatPrice_widen (x := ⟨b,4,1⟩) (y := ⟨22,4,1⟩) ⟨hb, rfl, rfl⟩ hindex).trans linear_4
-    · exact (fatPrice_widen (x := ⟨b,5,1⟩) (y := ⟨19,5,1⟩) ⟨hb, rfl, rfl⟩ hindex).trans linear_5
-    · exact (fatPrice_widen (x := ⟨b,6,1⟩) (y := ⟨15,6,1⟩) ⟨hb, rfl, rfl⟩ hindex).trans linear_6
-    · exact (fatPrice_widen (x := ⟨b,7,1⟩) (y := ⟨9,7,1⟩) ⟨hb, rfl, rfl⟩ hindex).trans linear_7
+    · by_cases hs1 : b ≤ 1
+      · simpa [charge, hs1] using
+          (fatPrice_widen (x := ⟨b,3,1⟩) (y := ⟨1,3,1⟩) ⟨hs1, rfl, rfl⟩ hindex).trans price_3_1_1
+      · simpa [charge, hs1] using
+          (fatPrice_widen (x := ⟨b,3,1⟩) (y := ⟨25,3,1⟩) ⟨hb, rfl, rfl⟩ hindex).trans price_3_1_25
+    · exact (fatPrice_widen (x := ⟨b,4,1⟩) (y := ⟨23,4,1⟩) ⟨hb, rfl, rfl⟩ hindex).trans price_4_1_23
+    · exact (fatPrice_widen (x := ⟨b,5,1⟩) (y := ⟨20,5,1⟩) ⟨hb, rfl, rfl⟩ hindex).trans price_5_1_20
+    · exact (fatPrice_widen (x := ⟨b,6,1⟩) (y := ⟨16,6,1⟩) ⟨hb, rfl, rfl⟩ hindex).trans price_6_1_16
+    · exact (fatPrice_widen (x := ⟨b,7,1⟩) (y := ⟨10,7,1⟩) ⟨hb, rfl, rfl⟩ hindex).trans price_7_1_10
   · have hcases : j = 6 ∨ j = 7 := by omega
     rcases hcases with rfl | rfl
-    · by_cases hsmall : b ≤ 11
-      · simpa only [charge, ite_eq_left hsmall, ite_eq_left (le_refl 11)] using
-          (fatPrice_widen (x := ⟨b,6,2⟩) (y := ⟨11,6,2⟩) ⟨hsmall, rfl, rfl⟩ hindex).trans quadratic_small
-      · simpa only [charge, ite_eq_right hsmall, ite_eq_right (by decide : ¬ 15 ≤ 11)] using
-          (fatPrice_widen (x := ⟨b,6,2⟩) (y := ⟨15,6,2⟩) ⟨hb, rfl, rfl⟩ hindex).trans quadratic_large
-    · exact (fatPrice_widen (x := ⟨b,7,2⟩) (y := ⟨9,7,2⟩) ⟨hb, rfl, rfl⟩ hindex).trans quadratic_7
+    · by_cases hs3 : b ≤ 3
+      · simpa [charge, hs3] using
+          (fatPrice_widen (x := ⟨b,6,2⟩) (y := ⟨3,6,2⟩) ⟨hs3, rfl, rfl⟩ hindex).trans price_6_2_3
+      · by_cases hs11 : b ≤ 11
+        · simpa [charge, hs3, hs11] using
+            (fatPrice_widen (x := ⟨b,6,2⟩) (y := ⟨11,6,2⟩) ⟨hs11, rfl, rfl⟩ hindex).trans price_6_2_11
+        · by_cases hs13 : b ≤ 13
+          · simpa [charge, hs3, hs11, hs13] using
+              (fatPrice_widen (x := ⟨b,6,2⟩) (y := ⟨13,6,2⟩) ⟨hs13, rfl, rfl⟩ hindex).trans price_6_2_13
+          · simpa [charge, hs3, hs11, hs13] using
+              (fatPrice_widen (x := ⟨b,6,2⟩) (y := ⟨16,6,2⟩) ⟨hb, rfl, rfl⟩ hindex).trans price_6_2_16
+    · by_cases hs6 : b ≤ 6
+      · simpa [charge, hs6] using
+          (fatPrice_widen (x := ⟨b,7,2⟩) (y := ⟨6,7,2⟩) ⟨hs6, rfl, rfl⟩ hindex).trans price_7_2_6
+      · simpa [charge, hs6] using
+          (fatPrice_widen (x := ⟨b,7,2⟩) (y := ⟨10,7,2⟩) ⟨hb, rfl, rfl⟩ hindex).trans price_7_2_10
 
-theorem pair_width (j k cap : ℕ) (hjk : 3 ≤ j ∧ 3 ≤ k ∧ j + k ≤ 7)
-    (hcap : (j + k = 6 ∧ (cap = 11 ∨ cap = 15)) ∨ (j + k = 7 ∧ cap = 9))
+private def PairCap (j k cap : ℕ) : Prop :=
+  (j + k = 6 ∧ (cap = 3 ∨ cap = 11 ∨ cap = 13 ∨ cap = 16)) ∨
+  (j + k = 7 ∧ (cap = 6 ∨ cap = 10))
+
+private theorem pair_endpoints (j k cap : ℕ) (hjk : 3 ≤ j ∧ 3 ≤ k ∧ j + k ≤ 7)
+    (hcap : PairCap j k cap) :
+    ∀ b : Fin (cap+1), j ≤ 3 * b.val → k ≤ 3 * (cap-b.val) →
+      fatPrice ⟨b.val,j,1⟩ + fatPrice ⟨cap-b.val,k,1⟩ ≤ charge cap (j + k) 2 := by
+  unfold PairCap at hcap
+  have indices : (j = 3 ∧ k = 3) ∨ (j = 3 ∧ k = 4) ∨ (j = 4 ∧ k = 3) := by omega
+  rcases indices with ⟨rfl,rfl⟩ | ⟨rfl,rfl⟩ | ⟨rfl,rfl⟩
+  · have caps : cap = 3 ∨ cap = 11 ∨ cap = 13 ∨ cap = 16 := by omega
+    rcases caps with rfl | rfl | rfl | rfl <;> decide +kernel
+  · have caps : cap = 6 ∨ cap = 10 := by omega
+    rcases caps with rfl | rfl <;> decide +kernel
+  · have caps : cap = 6 ∨ cap = 10 := by omega
+    rcases caps with rfl | rfl <;> decide +kernel
+
+private theorem pair_width (j k cap : ℕ) (hjk : 3 ≤ j ∧ 3 ≤ k ∧ j + k ≤ 7)
+    (hcap : PairCap j k cap)
     (b c : ℕ) (hb : j ≤ 3 * b) (hc : k ≤ 3 * c) (hbc : b + c ≤ cap) :
     fatPrice ⟨b,j,1⟩ + fatPrice ⟨c,k,1⟩ ≤ charge cap (j + k) 2 := by
-  have hbmax : b ≤ 15 := by omega
-  have hc' : c ≤ cap - b := by omega
-  have h3j : IndexFits ⟨b,j,1⟩ := hjk.1
-  have h3k : IndexFits ⟨c,k,1⟩ := hjk.2.1
-  have hfee := fatPrice_widen (x := ⟨c,k,1⟩) (y := ⟨cap-b,k,1⟩) ⟨hc', rfl, rfl⟩ h3k
-  refine (Nat.add_le_add_left hfee _).trans ?_
-  have hj5 : j ≤ 4 := by omega
-  have hk5 : k ≤ 4 := by omega
-  have hc14 : cap ≤ 15 := by omega
-  interval_cases j <;> interval_cases k <;> interval_cases cap <;> interval_cases b <;>
-    first | omega | decide +kernel
+  have hc' : c ≤ cap-b := by omega
+  have hck : k ≤ 3 * (cap-b) := hc.trans (Nat.mul_le_mul_left 3 hc')
+  have hfee := fatPrice_widen (x := ⟨c,k,1⟩) (y := ⟨cap-b,k,1⟩) ⟨hc', rfl, rfl⟩ hjk.2.1
+  exact (Nat.add_le_add_left hfee _).trans
+    (pair_endpoints j k cap hjk hcap ⟨b, by omega⟩ hb hck)
 
 /-- Two top-one retained factors use the reserve for their total index and degree. -/
 theorem pair (b c j k : ℕ) (hj : 3 ≤ j) (hk : 3 ≤ k) (hjk : j + k ≤ 7)
     (hb : j ≤ 3 * b) (hc : k ≤ 3 * c) (hbc : b + c ≤ degreeCap (j+k)) :
     fatPrice ⟨b,j,1⟩ + fatPrice ⟨c,k,1⟩ ≤ charge (b+c) (j+k) 2 := by
-  have hcases : j + k = 6 ∨ j + k = 7 := by omega
-  rcases hcases with h | h
-  · by_cases hs : b + c ≤ 11
-    · have hh := pair_width j k 11 ⟨hj, hk, hjk⟩ (Or.inl ⟨h, Or.inl rfl⟩) b c hb hc hs
-      simpa only [h, charge, ite_eq_left hs, ite_eq_left (le_refl 11)] using hh
-    · have h14 : b + c ≤ 15 := by simpa only [h, degreeCap] using hbc
-      have hh := pair_width j k 15 ⟨hj, hk, hjk⟩ (Or.inl ⟨h, Or.inr rfl⟩) b c hb hc h14
-      simpa only [h, charge, ite_eq_right hs, ite_eq_right (by decide : ¬ 15 ≤ 11)] using hh
-  · have h7 : b + c ≤ 9 := by simpa only [h, degreeCap] using hbc
-    have hh := pair_width j k 9 ⟨hj, hk, hjk⟩ (Or.inr ⟨h, rfl⟩) b c hb hc h7
-    simpa only [h, charge] using hh
+  have indices : j + k = 6 ∨ j + k = 7 := by omega
+  rcases indices with h | h
+  · by_cases hs3 : b + c ≤ 3
+    · have paid := pair_width j k 3 ⟨hj,hk,hjk⟩ (by simp [PairCap, h]) b c hb hc hs3
+      simpa [charge, hs3, h] using paid
+    · by_cases hs11 : b + c ≤ 11
+      · have paid := pair_width j k 11 ⟨hj,hk,hjk⟩ (by simp [PairCap, h]) b c hb hc hs11
+        simpa [charge, hs3, hs11, h] using paid
+      · by_cases hs13 : b + c ≤ 13
+        · have paid := pair_width j k 13 ⟨hj,hk,hjk⟩ (by simp [PairCap, h]) b c hb hc hs13
+          simpa [charge, hs3, hs11, hs13, h] using paid
+        · have paid := pair_width j k 16 ⟨hj,hk,hjk⟩ (by simp [PairCap, h]) b c hb hc (by simpa only [h, degreeCap] using hbc)
+          simpa [charge, hs3, hs11, hs13, h] using paid
+  · by_cases hs6 : b + c ≤ 6
+    · have paid := pair_width j k 6 ⟨hj,hk,hjk⟩ (by simp [PairCap, h]) b c hb hc hs6
+      simpa [charge, hs6, h] using paid
+    · have paid := pair_width j k 10 ⟨hj,hk,hjk⟩ (by simp [PairCap, h]) b c hb hc (by simpa only [h, degreeCap] using hbc)
+      simpa [charge, hs6, h] using paid
 
 /-- Reserve for the whole family of retained factors. -/
 theorem family (n : ℕ) (a : Fin n → Shape) (hv : ∀ i, Valid (a i))
@@ -232,6 +289,7 @@ theorem family (n : ℕ) (a : Fin n → Shape) (hv : ∀ i, Valid (a i))
     rw [h0, h1]
     simpa only [← ha0, ← ha1] using hh
 
+#print axioms fatPrice_widen
 #print axioms single
 #print axioms pair
 #print axioms family

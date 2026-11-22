@@ -2,7 +2,6 @@ import ProximityPrize.SubmissionLower.Final50ActiveCycleChart
 import ProximityPrize.SubmissionLower.Final50ActiveCyclePrice
 
 set_option autoImplicit false
-set_option Elab.async false
 
 namespace Final50ActiveCycle
 

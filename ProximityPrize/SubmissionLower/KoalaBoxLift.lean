@@ -1,4 +1,5 @@
 import ProximityPrize.SubmissionLower.KoalaBoxDegree
+import ProximityPrize.SubmissionLower.KoalaRawBounds
 
 set_option autoImplicit false
 namespace SplitCut.BoxDegree
@@ -6,7 +7,7 @@ noncomputable section
 open MvPolynomial
 variable {F : Type*} [Field F]
 
-def takeBox (m : Exp) (a b c : ℕ) : Exp :=
+private def takeBox (m : Exp) (a b c : ℕ) : Exp :=
   Finsupp.equivFunOnFinite.symm fun i : Idx => i.elim (min (m none) a)
     ![min (m (some 0)) b,min (m (some 1)) c]
 
@@ -41,8 +42,8 @@ private theorem lift_monomial (a b c n : ℕ) (m : Exp) (hm : m ∈ exps (a*n) (
       omega
     obtain ⟨p,hp,hd⟩ := ih _ hc
     let i : exps a b c := ⟨q,hq⟩
-    refine ⟨p * X i, ?_, (totalDegree_mul _ _).trans ?_⟩
-    · rw [map_mul, hp, show proj F a b c (X i) = monomial q 1 from aeval_X _ _,
+    refine ⟨p * MvPolynomial.X i, ?_, (totalDegree_mul _ _).trans ?_⟩
+    · rw [map_mul, hp, show proj F a b c (MvPolynomial.X i) = monomial q 1 from aeval_X _ _,
         monomial_mul_monomial, tsub_add_cancel_of_le hle, mul_one]
     · exact Nat.add_le_add hd (by simp)
 

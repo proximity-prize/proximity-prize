@@ -1,6 +1,6 @@
 import ProximityPrize.SubmissionLower.PrimaryTaperBudget
+import ProximityPrize.SubmissionLower.Final50Price
 
-set_option Elab.async false
 set_option maxRecDepth 40000
 set_option maxHeartbeats 0
 
@@ -28,117 +28,117 @@ private theorem rows40 : sumChunk row 40 8 = 3381208680 := by decide +kernel
 set_option profiler true in
 private theorem rows48 : sumChunk row 48 8 = 3468350919 := by decide +kernel
 set_option profiler true in
-theorem rows56 : sumChunk row 56 8 = 3553901216 := by decide +kernel
+private theorem rows56 : sumChunk row 56 8 = 3553901216 := by decide +kernel
 set_option profiler true in
-theorem rows64 : sumChunk row 64 8 = 3641005048 := by decide +kernel
+private theorem rows64 : sumChunk row 64 8 = 3641005048 := by decide +kernel
 set_option profiler true in
-theorem rows72 : sumChunk row 72 8 = 3736730143 := by decide +kernel
+private theorem rows72 : sumChunk row 72 8 = 3736730143 := by decide +kernel
 set_option profiler true in
-theorem rows80 : sumChunk row 80 8 = 3831592054 := by decide +kernel
+private theorem rows80 : sumChunk row 80 8 = 3831592054 := by decide +kernel
 set_option profiler true in
-theorem rows88 : sumChunk row 88 8 = 3927238474 := by decide +kernel
+private theorem rows88 : sumChunk row 88 8 = 3927238474 := by decide +kernel
 set_option profiler true in
-theorem rows96 : sumChunk row 96 8 = 4032675047 := by decide +kernel
+private theorem rows96 : sumChunk row 96 8 = 4032675047 := by decide +kernel
 set_option profiler true in
-theorem rows104 : sumChunk row 104 8 = 4139011739 := by decide +kernel
+private theorem rows104 : sumChunk row 104 8 = 4139011739 := by decide +kernel
 set_option profiler true in
-theorem rows112 : sumChunk row 112 8 = 4244367622 := by decide +kernel
+private theorem rows112 : sumChunk row 112 8 = 4244367622 := by decide +kernel
 set_option profiler true in
-theorem rows120 : sumChunk row 120 8 = 4359842998 := by decide +kernel
+private theorem rows120 : sumChunk row 120 8 = 4359842998 := by decide +kernel
 set_option profiler true in
-theorem rows128 : sumChunk row 128 8 = 4479074534 := by decide +kernel
+private theorem rows128 : sumChunk row 128 8 = 4479074534 := by decide +kernel
 set_option profiler true in
-theorem rows136 : sumChunk row 136 8 = 4594535489 := by decide +kernel
+private theorem rows136 : sumChunk row 136 8 = 4594535489 := by decide +kernel
 set_option profiler true in
-theorem rows144 : sumChunk row 144 8 = 4719447871 := by decide +kernel
+private theorem rows144 : sumChunk row 144 8 = 4719447871 := by decide +kernel
 set_option profiler true in
-theorem rows152 : sumChunk row 152 8 = 4852262991 := by decide +kernel
+private theorem rows152 : sumChunk row 152 8 = 4852262991 := by decide +kernel
 set_option profiler true in
-theorem rows160 : sumChunk row 160 8 = 4977493749 := by decide +kernel
+private theorem rows160 : sumChunk row 160 8 = 4977493749 := by decide +kernel
 set_option profiler true in
-theorem rows168 : sumChunk row 168 8 = 5110525726 := by decide +kernel
+private theorem rows168 : sumChunk row 168 8 = 5110525726 := by decide +kernel
 set_option profiler true in
-theorem rows176 : sumChunk row 176 8 = 5256836096 := by decide +kernel
+private theorem rows176 : sumChunk row 176 8 = 5256836096 := by decide +kernel
 set_option profiler true in
-theorem rows184 : sumChunk row 184 8 = 5390743377 := by decide +kernel
+private theorem rows184 : sumChunk row 184 8 = 5390743377 := by decide +kernel
 set_option profiler true in
-theorem rows192 : sumChunk row 192 8 = 5529753127 := by decide +kernel
+private theorem rows192 : sumChunk row 192 8 = 5529753127 := by decide +kernel
 set_option profiler true in
-theorem rows200 : sumChunk row 200 8 = 5688594654 := by decide +kernel
+private theorem rows200 : sumChunk row 200 8 = 5688594654 := by decide +kernel
 set_option profiler true in
-theorem rows208 : sumChunk row 208 8 = 5829308790 := by decide +kernel
+private theorem rows208 : sumChunk row 208 8 = 5829308790 := by decide +kernel
 set_option profiler true in
-theorem rows216 : sumChunk row 216 8 = 5971489118 := by decide +kernel
+private theorem rows216 : sumChunk row 216 8 = 5971489118 := by decide +kernel
 set_option profiler true in
-theorem rows224 : sumChunk row 224 8 = 6141122417 := by decide +kernel
+private theorem rows224 : sumChunk row 224 8 = 6141122417 := by decide +kernel
 set_option profiler true in
-theorem rows232 : sumChunk row 232 8 = 6286108608 := by decide +kernel
+private theorem rows232 : sumChunk row 232 8 = 6286108608 := by decide +kernel
 set_option profiler true in
-theorem rows240 : sumChunk row 240 8 = 6431540425 := by decide +kernel
+private theorem rows240 : sumChunk row 240 8 = 6431540425 := by decide +kernel
 set_option profiler true in
-theorem rows248 : sumChunk row 248 8 = 6602041516 := by decide +kernel
+private theorem rows248 : sumChunk row 248 8 = 6602041516 := by decide +kernel
 set_option profiler true in
-theorem rows256 : sumChunk row 256 8 = 6751509822 := by decide +kernel
+private theorem rows256 : sumChunk row 256 8 = 6751509822 := by decide +kernel
 set_option profiler true in
-theorem rows264 : sumChunk row 264 8 = 6896640999 := by decide +kernel
+private theorem rows264 : sumChunk row 264 8 = 6896640999 := by decide +kernel
 set_option profiler true in
-theorem rows272 : sumChunk row 272 8 = 7063450232 := by decide +kernel
+private theorem rows272 : sumChunk row 272 8 = 7063450232 := by decide +kernel
 set_option profiler true in
-theorem rows280 : sumChunk row 280 8 = 7213806800 := by decide +kernel
+private theorem rows280 : sumChunk row 280 8 = 7213806800 := by decide +kernel
 set_option profiler true in
-theorem rows288 : sumChunk row 288 8 = 7354364209 := by decide +kernel
+private theorem rows288 : sumChunk row 288 8 = 7354364209 := by decide +kernel
 set_option profiler true in
-theorem rows296 : sumChunk row 296 8 = 7512114721 := by decide +kernel
+private theorem rows296 : sumChunk row 296 8 = 7512114721 := by decide +kernel
 set_option profiler true in
-theorem rows304 : sumChunk row 304 8 = 7658789195 := by decide +kernel
+private theorem rows304 : sumChunk row 304 8 = 7658789195 := by decide +kernel
 set_option profiler true in
-theorem rows312 : sumChunk row 312 8 = 7789842793 := by decide +kernel
+private theorem rows312 : sumChunk row 312 8 = 7789842793 := by decide +kernel
 set_option profiler true in
-theorem rows320 : sumChunk row 320 8 = 7932571009 := by decide +kernel
+private theorem rows320 : sumChunk row 320 8 = 7932571009 := by decide +kernel
 set_option profiler true in
-theorem rows328 : sumChunk row 328 8 = 8070335283 := by decide +kernel
+private theorem rows328 : sumChunk row 328 8 = 8070335283 := by decide +kernel
 set_option profiler true in
-theorem rows336 : sumChunk row 336 8 = 8185948289 := by decide +kernel
+private theorem rows336 : sumChunk row 336 8 = 8185948289 := by decide +kernel
 set_option profiler true in
-theorem rows344 : sumChunk row 344 8 = 8307233701 := by decide +kernel
+private theorem rows344 : sumChunk row 344 8 = 8307233701 := by decide +kernel
 set_option profiler true in
-theorem rows352 : sumChunk row 352 8 = 8429242212 := by decide +kernel
+private theorem rows352 : sumChunk row 352 8 = 8429242212 := by decide +kernel
 set_option profiler true in
-theorem rows360 : sumChunk row 360 8 = 8522803077 := by decide +kernel
+private theorem rows360 : sumChunk row 360 8 = 8522803077 := by decide +kernel
 set_option profiler true in
-theorem rows368 : sumChunk row 368 8 = 8615444240 := by decide +kernel
+private theorem rows368 : sumChunk row 368 8 = 8615444240 := by decide +kernel
 set_option profiler true in
-theorem rows376 : sumChunk row 376 8 = 8713859927 := by decide +kernel
+private theorem rows376 : sumChunk row 376 8 = 8713859927 := by decide +kernel
 set_option profiler true in
-theorem rows384 : sumChunk row 384 8 = 8777670653 := by decide +kernel
+private theorem rows384 : sumChunk row 384 8 = 8777670653 := by decide +kernel
 set_option profiler true in
-theorem rows392 : sumChunk row 392 8 = 8833672402 := by decide +kernel
+private theorem rows392 : sumChunk row 392 8 = 8833672402 := by decide +kernel
 set_option profiler true in
-theorem rows400 : sumChunk row 400 8 = 8899053394 := by decide +kernel
+private theorem rows400 : sumChunk row 400 8 = 8899053394 := by decide +kernel
 set_option profiler true in
-theorem rows408 : sumChunk row 408 8 = 8924421886 := by decide +kernel
+private theorem rows408 : sumChunk row 408 8 = 8924421886 := by decide +kernel
 set_option profiler true in
-theorem rows416 : sumChunk row 416 8 = 8935210038 := by decide +kernel
+private theorem rows416 : sumChunk row 416 8 = 8935210038 := by decide +kernel
 set_option profiler true in
-theorem rows424 : sumChunk row 424 8 = 8956971540 := by decide +kernel
+private theorem rows424 : sumChunk row 424 8 = 8956971540 := by decide +kernel
 set_option profiler true in
-theorem rows432 : sumChunk row 432 8 = 8934265132 := by decide +kernel
+private theorem rows432 : sumChunk row 432 8 = 8934265132 := by decide +kernel
 set_option profiler true in
-theorem rows440 : sumChunk row 440 8 = 8893651408 := by decide +kernel
+private theorem rows440 : sumChunk row 440 8 = 8893651408 := by decide +kernel
 set_option profiler true in
-theorem rows448 : sumChunk row 448 8 = 8853548727 := by decide +kernel
+private theorem rows448 : sumChunk row 448 8 = 8853548727 := by decide +kernel
 set_option profiler true in
-theorem rows456 : sumChunk row 456 8 = 8774993977 := by decide +kernel
+private theorem rows456 : sumChunk row 456 8 = 8774993977 := by decide +kernel
 set_option profiler true in
-theorem rows464 : sumChunk row 464 8 = 8671988451 := by decide +kernel
+private theorem rows464 : sumChunk row 464 8 = 8671988451 := by decide +kernel
 set_option profiler true in
-theorem rows472 : sumChunk row 472 8 = 8559112828 := by decide +kernel
+private theorem rows472 : sumChunk row 472 8 = 8559112828 := by decide +kernel
 set_option profiler true in
-theorem rows480 : sumChunk row 480 8 = 8411849481 := by decide +kernel
+private theorem rows480 : sumChunk row 480 8 = 8411849481 := by decide +kernel
 set_option profiler true in
-theorem rows488 : sumChunk row 488 8 = 8234559803 := by decide +kernel
+private theorem rows488 : sumChunk row 488 8 = 8234559803 := by decide +kernel
 set_option profiler true in
-theorem rows496 : sumChunk row 496 3 = 3036818172 := by decide +kernel
+private theorem rows496 : sumChunk row 496 3 = 3036818172 := by decide +kernel
 
 private theorem join (lo n m next full : ℕ) (a b result : ℕ)
     (hLen : n+m = full) (hStart : lo+n = next) (hValue : Nat.add a b = result)

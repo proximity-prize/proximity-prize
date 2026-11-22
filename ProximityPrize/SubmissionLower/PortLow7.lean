@@ -1,5 +1,4 @@
 import ProximityPrize.SubmissionLower.PortLow6
-set_option Elab.async false
 set_option autoImplicit true
 section
 namespace P0_9_7

@@ -1,5 +1,6 @@
 import ProximityPrize.SubmissionLower.KoalaBoxLift
 import ArkLib.ToMathlib.RingTheory.Nullstellensatz.AgreementIncidence
+import ProximityPrize.SubmissionLower.KoalaRawNodes
 
 set_option autoImplicit false
 set_option maxHeartbeats 900000

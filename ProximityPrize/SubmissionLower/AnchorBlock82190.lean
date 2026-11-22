@@ -1,5 +1,5 @@
 import ProximityPrize.SubmissionLower.AnchorTopFactor
-set_option Elab.async false
+import ProximityPrize.SubmissionLower.AnchorNinth82190
 set_option maxHeartbeats 1800000
 set_option backward.isDefEq.respectTransparency false
 namespace AnchorBlock82190

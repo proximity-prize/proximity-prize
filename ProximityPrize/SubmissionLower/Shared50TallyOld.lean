@@ -2,7 +2,6 @@ import ProximityPrize.SubmissionLower.Shared50Tally
 import ProximityPrize.SubmissionLower.Final50ActiveCycleMixed
 import ProximityPrize.SubmissionLower.Final50SharedPrice
 
-set_option Elab.async false
 set_option maxRecDepth 20000
 set_option maxHeartbeats 1200000
 namespace Shared50TallyOld
@@ -32,11 +31,11 @@ variable {Γ : Finset K} {s : K→K[X]} {f Q : Row 4} {l : ℕ} {S : Set (Ideal 
 def orderCost (D : Data Γ s f Q l S) (weight : Ideal GeoJets → ℕ) : ℕ :=
   ∑ b∈D.branches, weight b.surface * (b.weight*(D.points b).card)
 
-theorem eq_surface :
+private theorem eq_surface :
     surfaceNumerator32 (shape f).chamber primaryBox =
       min (budget4 (shape f).chamber) (budget5 (shape f).chamber) := rfl
 
-theorem four_budget (D : Data Γ s f Q l S) (input : CutInput Γ s f Q l)
+private theorem four_budget (D : Data Γ s f Q l S) (input : CutInput Γ s f Q l)
     (weight : Ideal GeoJets→ℕ)
     (hcut : ∀ b∈D.branches, (weight b.surface : ℕ∞) ≤
       cycleLength (intersectionIdeal f Q) b.surface b.base.isPrime) :
@@ -54,7 +53,7 @@ theorem four_budget (D : Data Γ s f Q l S) (input : CutInput Γ s f Q l)
   simp only [orderCost,Nat.cast_mul,Nat.cast_sum,Nat.cast_ofNat,mul_comm (32:ℚ)]
   simpa only [Nat.cast_mul,budget4] using hh
 
-theorem legacy_budget (D : Data Γ s f Q l S) (input : CutInput Γ s f Q l)
+private theorem legacy_budget (D : Data Γ s f Q l S) (input : CutInput Γ s f Q l)
     (weight : Ideal GeoJets→ℕ)
     (hcut : ∀ b∈D.branches, (weight b.surface : ℕ∞) ≤
       cycleLength (intersectionIdeal f Q) b.surface b.base.isPrime) :
@@ -64,7 +63,7 @@ theorem legacy_budget (D : Data Γ s f Q l S) (input : CutInput Γ s f Q l)
   apply (Nat.cast_le (α := ℚ)).mp
   simpa only [orderCost,Nat.cast_mul,Nat.cast_sum,Nat.cast_ofNat] using h
 
-theorem bent_budget (D : Data Γ s f Q l S) (input : CutInput Γ s f Q l)
+private theorem bent_budget (D : Data Γ s f Q l S) (input : CutInput Γ s f Q l)
     (weight : Ideal GeoJets→ℕ)
     (hcut : ∀ b∈D.branches, (weight b.surface : ℕ∞) ≤
       cycleLength (intersectionIdeal f Q) b.surface b.base.isPrime)
@@ -82,7 +81,7 @@ theorem bent_budget (D : Data Γ s f Q l S) (input : CutInput Γ s f Q l)
   apply (Nat.cast_le (α := ℚ)).mp
   simpa only [orderCost,Nat.cast_mul,Nat.cast_sum,Nat.cast_ofNat] using hh
 
-theorem active_charge (D : Data Γ s f Q l S) (input : CutInput Γ s f Q l)
+private theorem active_charge (D : Data Γ s f Q l S) (input : CutInput Γ s f Q l)
     (weight : Ideal GeoJets→ℕ)
     (hcut : ∀ b∈D.branches, (weight b.surface : ℕ∞) ≤
       cycleLength (intersectionIdeal f Q) b.surface b.base.isPrime)
@@ -108,11 +107,11 @@ theorem active_charge (D : Data Γ s f Q l S) (input : CutInput Γ s f Q l)
   simpa only [orderCost,Nat.cast_mul,Nat.cast_sum,Nat.cast_ofNat] using hh
 
 def auxiliaryCap (x : Shape) : ℕ :=
-  ceilDiv (82239*auxCurves32 x + 2*46457*auxPoints32 x) (32*46457)
+  ceilDiv (82258*auxCurves32 x + 2*46402*auxPoints32 x) (32*46402)
 def continuedCap (x : Shape) : ℕ :=
-  ceilDiv ((82239+2*46457)*membershipDegree x) 46457
+  ceilDiv ((82258+2*46402)*membershipDegree x) 46402
 def surfaceCap (x : Shape) : ℕ :=
-  2*(133448*x.b*primaryBox.b)
+  2*(133484*x.b*primaryBox.b)
 
 private theorem charge_le {x : Shape} {l a c d n scale budget O : ℕ}
     (hl : 0<l) (hs : 0<scale)
@@ -165,7 +164,7 @@ theorem additive_le {x : Shape} {l a c d : ℕ} (hl : 0<l)
     _ = _ := by
       unfold Final50SharedPrice.additiveBase auxiliaryCap continuedCap surfaceCap
         auxCurves32 auxPoints32 membershipDegree
-      simp only [Final50Price.errors, show Final50Price.incidenceGap = 46457 by decide, Final50Price.physicalDegree,
+      simp only [Final50Price.errors, show Final50Price.incidenceGap = 46402 by decide, Final50Price.physicalDegree,
         Nat.mul_comm, Nat.mul_left_comm, Nat.mul_assoc]
       omega
 

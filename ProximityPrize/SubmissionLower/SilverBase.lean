@@ -1,5 +1,4 @@
 import ProximityPrize.SubmissionLower.FrontBranch4
-set_option Elab.async false
 set_option autoImplicit true
 section
 set_option maxRecDepth 12000

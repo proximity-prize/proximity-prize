@@ -1,9 +1,8 @@
 import ProximityPrize.SubmissionLower.KoalaRectCutoff
 import ProximityPrize.SubmissionLower.KoalaRectRank
 import ProximityPrize.SubmissionLower.KoalaRectPoleBridge
-import ProximityPrize.SubmissionLower.HighBankCore
+import ProximityPrize.SubmissionLower.GoldBranch7N1
 
-set_option Elab.async false
 set_option autoImplicit false
 set_option backward.isDefEq.respectTransparency false
 

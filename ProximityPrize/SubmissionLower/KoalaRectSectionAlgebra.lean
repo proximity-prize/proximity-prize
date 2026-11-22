@@ -1,7 +1,7 @@
 import ProximityPrize.SubmissionLower.KoalaRectSections
+import ProximityPrize.SubmissionLower.KoalaRectTaylorAxes
 
 set_option autoImplicit false
-set_option Elab.async false
 set_option maxHeartbeats 700000
 
 namespace SplitCut.Rect
@@ -113,7 +113,7 @@ def add (S T : Section I d) : Section I d := by
   · exact (space F _).add_mem A.finite_bound B.finite_bound
   · exact (space F _).add_mem A.inverse_bound B.inverse_bound
   · have h := I.add_mem A.glue B.glue
-    change (X (0 : Fin 4)^n*S.finite-A.inverse) + (X (0 : Fin 4)^n*T.finite-B.inverse) ∈ I at h
+    change (MvPolynomial.X (0 : Fin 4)^n*S.finite-A.inverse) + (MvPolynomial.X (0 : Fin 4)^n*T.finite-B.inverse) ∈ I at h
     convert h using 1
     ring
 

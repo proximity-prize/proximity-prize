@@ -1,7 +1,6 @@
 import ProximityPrize.SubmissionLower.KoalaRectSource
 import ProximityPrize.SubmissionLower.KoalaRectPole
 
-set_option Elab.async false
 set_option autoImplicit false
 
 namespace KoalaRect

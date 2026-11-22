@@ -1,6 +1,6 @@
 import ProximityPrize.SubmissionLower.Fast050
 import ProximityPrize.SubmissionLower.Fast051
-set_option Elab.async false
+import ProximityPrize.SubmissionLower.Fast059
 set_option autoImplicit true
 section
 set_option backward.isDefEq.respectTransparency false
@@ -27,41 +27,6 @@ def c2 : Prop :=
     (∀ i j, (M i j).natDegree ≤ if i.1 = 0 then 1 else p) →
     PrimitiveVector.IsPrimitive (maximalMinors W) →
     ∀ rows : Fin s → (Fin 2 × Fin L), (maximalMinors W rows).natDegree ≤ L * (p + 1) - s
-theorem of_children (h1 : c1) (h2 : c2) : K1.c6 := by
-  intro u front T R moving saturated Γ bad normal
-  let P (b : Fin 2) : Bivar := Principal.assemble (fun j => R.coefficients (b, j))
-  let s := 49193 - T.height
-  have hsDef : s = 49193 - T.height := rfl
-  have hP : ∀ b, (P b).natDegree ≤ T.height := R.x_degree
-  have hBalance : 49193 + T.height + nullity u = 81880 ∧ T.height ≤ 32680 ∧ T.height < 49193 :=
-    Strata.native_minimal_relation_degree (nullity u) T.a T.b T.c
-      T.top T.degreeSum T.nullitySum (by have := front.1; omega)
-  have hSum : T.height + s = 49193 := by omega
-  have hs : 16513 ≤ s := by omega
-  have hRank : GenericLayer.genericRank (twoBlock u) + s = 2 * 49193 := by
-    change stackRank u + s = _
-    rw [K1.actual_stackRank u]
-    omega
-  have hCoordinates : pairCoordinates P T.height = R.coefficients := by
-    funext i
-    exact Principal.assemble_coeff (fun j => R.coefficients (i.1, j)) i.2
-  have hPrim : PrimitiveVector.IsPrimitive (pairCoordinates P T.height) := by
-    rw [hCoordinates]
-    exact R.primitive
-  have hKernel := certificate_shifts_annihilate R s hSum
-  obtain ⟨hMinors, H, hH, rows, hRows⟩ :=
-    h1 K T.height 49193 s P hSum (by omega) hP hPrim
-  have hBound := h2 K 49193 81880 s p (twoBlock u) (shifts P 49193 s)
-    (by norm_num [Native.p]) hRank hKernel
-    (stacked_entry_natDegree p node (u 0) (u 1) 49193 81879) hMinors rows
-  rw [hRows] at hBound
-  have hProduct : 16513 * H ≤ s * H := Nat.mul_le_mul_right H hs
-  have hCeiling : 49193 * (p + 1) = 104815841607762 := by norm_num [Native.p]
-  have hCap : H ≤ 6347474207 := by omega
-  apply normal_growth_count R _ moving saturated Γ bad normal
-  intro i
-  rw [← hCoordinates]
-  exact (hH i.1 i.2.val).trans hCap
 end K1_6
 end
 section
@@ -145,7 +110,7 @@ private theorem coeff_det_uniform {F : Type*} [Field F] {s : ℕ}
   simpa only [Finset.card_univ, Fintype.card_fin, Matrix.map_apply] using
     Polynomial.coeff_prod_of_natDegree_le (Finset.univ : Finset (Fin s))
       (fun i => A (σ i) i) H (fun i _ => hdegree (σ i) i)
-theorem shift_minors_height {F : Type} [Field F]
+private theorem shift_minors_height {F : Type} [Field F]
     (P : Fin 2 → F[X][X]) (h s : ℕ) (hdegree : ∀ b, (P b).natDegree ≤ h)
     (hprimitive : PrimitiveVector.IsPrimitive (pairCoordinates P h)) :
     ∃ H : ℕ, (∀ b j, ((P b).coeff j).natDegree ≤ H) ∧
@@ -273,1334 +238,6 @@ end K1_6_2
 end
 section
 namespace K1_13_1_1
-set_option maxRecDepth 30000
-set_option Elab.async false
-set_option maxHeartbeats 4000000
-theorem budgetGRangeAdd (a b : ℕ) (f : ℕ → ℕ) :
-    sumRange (a + b) f = sumRange a f + sumRange b (fun i => f (i + a)) :=
-  sumRange_add a b f
-theorem budgetGRangeJoin (f : ℕ → ℕ) (a b : ℕ) {x y : ℕ}
-    (ha : sumRange a f = x) (hb : sumRange b (fun i => f (i + a)) = y) :
-    sumRange (a + b) f = x + y :=
-  (budgetGRangeAdd a b f).trans (congrArg₂ Nat.add ha hb)
-theorem budgetGZeroTail (s start n : ℕ) (h : 138 ≤ s + start) :
-    sumRange n (fun i => fastBlock s (i + start)) = 0 := by
-  induction n with
-  | zero => rfl
-  | succ n ih =>
-    have hn : ¬ s + (n + start) < 138 := by omega
-    have hz : fastBlock s (n + start) = 0 := by simp only [fastBlock, ite_eq_right hn]
-    exact congrArg₂ Nat.add ih hz
-open private activeNatCount_eq sumRange_prefix sumRange_congr sumToCap_eq innerSlice_eq from ProximityPrize.SubmissionLower.SoloK1_13_1_1ArithmeticLogic
-theorem budgetGSucc (n : ℕ) (f : ℕ → ℕ) :
-    sumRange (n + 1) f = sumRange n f + f n := rfl
-theorem budgetGInterval (n lo hi : ℕ) :
-    sumRange n (fun i => if lo ≤ i ∧ i < hi then 1 else 0) = min n hi - lo := by
-  induction n with
-  | zero => simp [sumRange]
-  | succ n ih =>
-    rw [budgetGSucc, ih]
-    split <;> omega
-theorem budgetGTranspose (n m : ℕ) (f : ℕ → ℕ → ℕ) :
-    sumRange n (fun i => sumRange m (f i)) =
-      sumRange m (fun j => sumRange n (fun i => f i j)) := by
-  simp only [sumRange_eq_sum]
-  exact Finset.sum_comm
-def budgetGLower (k r o t : ℕ) : ℕ :=
-  max ((k - (r + 3 * (10 - t)) + 1) / 2) (2 * k + t + 1 - o)
-def budgetGUpper (k r t : ℕ) : ℕ :=
-  min (k + 1 - t) (2 * k + 1 + r - 3 * t)
-theorem budgetGRoom (a z t : ℕ) : t < a+1-z ↔ t ≤ a ∧ z ≤ a-t := by omega
-theorem budgetGCeilThird (k x v : ℕ) : (k-x+2)/3 ≤ v ↔ k ≤ x+3*v := by omega
-theorem budgetGCeilHalf (k x v : ℕ) : (k-x+1)/2 ≤ v ↔ k ≤ x+2*v := by omega
-theorem budgetGCell (k r o c t : ℕ) (hk : k ≤ 48) (hr : r ≤ 48)
-    (hc : c ≤ k) (ht : t < 11) :
-    t < natLine 48 (48 - r) o (48 - k) c ↔
-      budgetGLower k r o t ≤ c ∧ c < budgetGUpper k r t := by
-  have hf : 48 - r - (48 - k + 2 * min c 24) = k - (r + 2 * c) := by omega
-  have hk' : 48 - (48 - k) = k := by omega
-  have hp : 3 * 48 + 1 - (3 * (48 - k) + 2 * c + o) = 3 * k + 1 - (2 * c + o) := by omega
-  simp only [natLine, show min 48 10 = 10 by decide, hf, hk', hp, budgetGLower, budgetGUpper,
-    lt_min_iff, budgetGRoom, max_le_iff, budgetGCeilThird, budgetGCeilHalf, Nat.sub_le_iff_le_add]
-  omega
-def budgetGSlice (k r o : ℕ) : ℕ :=
-  sumRange 11 fun t => budgetGUpper k r t - budgetGLower k r o t
-theorem budgetGSliceEq (k r o : ℕ) (hk : k ≤ 48) (hr : r ≤ 48) :
-    sumRange (k + 1) (natLine 48 (48 - r) o (48 - k)) = budgetGSlice k r o := by
-  let line := natLine 48 (48 - r) o (48 - k)
-  have expand (c : ℕ) : line c =
-      sumRange 11 (fun t => if t < line c then 1 else 0) := by
-    have h : line c ≤ 11 := by
-      dsimp [line, natLine]
-      omega
-    simpa [Nat.min_eq_right h] using (budgetGInterval 11 0 (line c)).symm
-  calc
-    _ = sumRange (k + 1) (fun c => sumRange 11 (fun t => if t < line c then 1 else 0)) :=
-      sumRange_congr _ (fun c _ => expand c)
-    _ = sumRange 11 (fun t => sumRange (k + 1) (fun c => if t < line c then 1 else 0)) :=
-      budgetGTranspose _ _ _
-    _ = budgetGSlice k r o := by
-      apply sumRange_congr
-      intro t ht
-      have h := sumRange_congr (k + 1) (f := fun c => if t < line c then 1 else 0)
-        (g := fun c => if budgetGLower k r o t ≤ c ∧ c < budgetGUpper k r t then 1 else 0)
-        (fun c hc => by
-          have he : t < line c ↔ _ := budgetGCell k r o c t hk hr (by omega) ht
-          by_cases hz : t < line c
-          · rw [ite_eq_left hz, ite_eq_left (he.mp hz)]
-          · rw [ite_eq_right hz, ite_eq_right (mt he.mpr hz)])
-      rw [h, budgetGInterval, Nat.min_eq_right]
-      unfold budgetGUpper
-      omega
-def budgetGCheck (p : ℕ → Bool) : ℕ → Bool
-  | 0 => true
-  | n+1 => budgetGCheck p n && p n
-theorem budgetGChecked {p : ℕ → Bool} {n : ℕ} (ok : budgetGCheck p n = true)
-    (i : ℕ) (hi : i < n) : p i = true := by
-  induction n with
-  | zero => omega
-  | succ n ih =>
-    obtain ⟨hp, hn⟩ := Bool.and_eq_true_iff.mp ok
-    rcases Nat.lt_or_eq_of_le (Nat.le_of_lt_succ hi) with h | rfl
-    · exact ih hp h
-    · exact hn
-def budgetGBand (r : ℕ) : ℕ := (0xe1fe1ee1de1be18e14e0fe08e00df6deaddcdccdb9da4d8cd71d53d32d0dce5cb9c89c55c1dbe0b9fb59b0eabea69a0e9ae9488dd86c7f677a6f96725e65544bd42037e2d62291760be >>> (12*r)) % 4096
-def budgetGPair (t : ℕ) : ℕ := (0x60b11161c21272c32373d42484d53585e63696e73787d81868a8e9296999da0a3a6a9abaeb0b2b4b6b7b9babbbcbdbdbe >>> (8*t)) % 256
-theorem budgetGBandEq (r : ℕ) (hr : r < 49) :
-    activeNatCount 48 (48-r) 48 = budgetGBand r :=
-  of_decide_eq_true (budgetGChecked (p := fun i => decide
-    (activeNatCount 48 (48-i) 48 = budgetGBand i)) (n := 49) (by decide +kernel) r hr)
-theorem budgetGPairEq (k r : ℕ) (hk : k ≤ 48) (hr : r ≤ 48) :
-    natPairs 48 (48-r) (48-k) = budgetGPair (k-r) := by
-  have h : natPairs 48 (k-r) 0 = budgetGPair (k-r) :=
-    of_decide_eq_true (budgetGChecked (p := fun i => decide
-      (natPairs 48 i 0 = budgetGPair i)) (n := 49) (by decide +kernel) (k-r) (by omega))
-  rw [← h]
-  unfold natPairs
-  apply sumRange_congr
-  intro f _
-  rw [Nat.zero_add, show 48-r-(48-k+3*f) = k-r-3*f by omega]
-def budgetGPascal (r o : ℕ) : ℕ :=
-  min (budgetGBand r) (sumRange o fun i =>
-    let k := o-1-i
-    min (budgetGPair (k-r)) (budgetGSlice k r o))
-theorem budgetGPascalEq (s r : ℕ) (hs : 90 ≤ s) (hs' : s ≤ 109)
-    (h : s + r < 138) : fastPascal s r = budgetGPascal r (138-(s+r)) := by
-  let o := 138-(s+r)
-  have hd : residualDegree s = 48 := by unfold residualDegree; omega
-  have ho : o ≤ 48 := by dsimp [o]; omega
-  have hr : r ≤ 48 := by omega
-  have hh : min 48 (137-r) = 48 := by omega
-  unfold fastPascal
-  rw [hd, hh]
-  change sumToCap _ (49-(49-o)) (49-o) _ = budgetGPascal r o
-  rw [sumToCap_eq, show 49-(49-o) = o by omega, budgetGBandEq r (by omega)]
-  apply congrArg (min (budgetGBand r))
-  apply sumRange_congr
-  intro i hi
-  let k := o-1-i
-  have hk : k ≤ 48 := by dsimp [k]; omega
-  have hb : i + (49-o) ≤ 48 := by omega
-  have he : i + (49-o) = 48-k := by dsimp [k]; omega
-  rw [innerSlice_eq _ _ _ _ hb, he, budgetGPairEq k r hk hr,
-    show 48-(48-k) = k by omega, budgetGSliceEq k r o hk hr]
-def budgetGRamp₁ (x : ℕ) : ℕ := x * (x+1) / 2
-def budgetGRamp₂ (x : ℕ) : ℕ := ((x+1)/2) * (x/2+1)
-theorem budgetGRamp₁Step (x : ℕ) :
-    budgetGRamp₁ x = x + budgetGRamp₁ (x-1) := by
-  cases x with
-  | zero => rfl
-  | succ x =>
-    change (x+1)*(x+1+1)/2 = (x+1) + x*(x+1)/2
-    rw [show (x+1)*(x+1+1) = x*(x+1) + 2*(x+1) by ring]
-    omega
-theorem budgetGRamp₂Step (x : ℕ) :
-    budgetGRamp₂ x = x + budgetGRamp₂ (x-2) := by
-  obtain _ | _ | x := x
-  · rfl
-  · rfl
-  · change ((x+2+1)/2) * ((x+2)/2+1) = x+2 + ((x+1)/2)*(x/2+1)
-    rw [show (x+2+1)/2 = (x+1)/2+1 by omega, show (x+2)/2 = x/2+1 by omega]
-    simp only [Nat.add_mul, Nat.mul_add, Nat.one_mul, Nat.mul_one]
-    omega
-theorem budgetGRampSum (n x step : ℕ) (ramp : ℕ → ℕ)
-    (hs : ∀ a, ramp a = a + ramp (a-step)) :
-    sumRange n (fun i => x-step*i) = ramp x - ramp (x-step*n) := by
-  suffices h : sumRange n (fun i => x-step*i) + ramp (x-step*n) = ramp x by omega
-  induction n with
-  | zero => simp [sumRange]
-  | succ n ih =>
-    rw [budgetGSucc, Nat.mul_succ, ← Nat.sub_sub, Nat.add_assoc, ← hs, ih]
-theorem budgetGSumDiff (n : ℕ) (f g : ℕ → ℕ) (h : ∀ i < n, g i ≤ f i) :
-    sumRange n (fun i => f i-g i) = sumRange n f - sumRange n g := by
-  suffices hh : sumRange n (fun i => f i-g i) + sumRange n g = sumRange n f by omega
-  induction n with
-  | zero => rfl
-  | succ n ih =>
-    have hp := ih (fun i hi => h i (by omega))
-    have hn := h n (by omega)
-    simp only [budgetGSucc]
-    omega
-def budgetGCumulative (n d x : ℕ) : ℕ :=
-  (budgetGRamp₂ x - budgetGRamp₂ (x - 2*n)) -
-    (budgetGRamp₁ (x-(d+1)) - budgetGRamp₁ (x-(d+1)-n))
-theorem budgetGCumulativeEq (n d x : ℕ) (hn : n ≤ d+1) :
-    sumRange n (fun i => min (d+1-i) (x-2*i)) = budgetGCumulative n d x := by
-  let f := fun i => x-2*i
-  let g := fun i => x-(d+1)-i
-  have he := sumRange_congr (f := fun i => min (d+1-i) (x-2*i))
-    (g := fun i => f i-g i) n (fun i hi => by dsimp [f, g]; omega)
-  rw [he, budgetGSumDiff n f g (fun i hi => by dsimp [f,g]; omega)]
-  unfold f g budgetGCumulative
-  rw [budgetGRampSum n x 2 budgetGRamp₂ budgetGRamp₂Step]
-  simpa only [Nat.one_mul] using congrArg
-    (fun a => (budgetGRamp₂ x - budgetGRamp₂ (x-2*n))-a)
-    (budgetGRampSum n (x-(d+1)) 1 budgetGRamp₁ budgetGRamp₁Step)
-def budgetGFlagRow (n d : ℕ) (lo hi : ℤ) : ℕ :=
-  if hi < lo then 0 else
-    budgetGCumulative n d (hi+1).toNat - budgetGCumulative n d lo.toNat
-theorem budgetGIntervalDiff (a b l : ℤ) (h : l ≤ b) :
-    (min a b + 1 - max 0 l).toNat =
-      min (a+1).toNat (b+1).toNat - min (a+1).toNat l.toNat := by omega
-theorem budgetGFlagRowEq (n d : ℕ) (lo hi : ℤ) (hn : n ≤ d+1) :
-    sumRange n (fun i : ℕ => intervalSize (max 0 (lo-2*i))
-      (min ((d : ℤ)-i) (hi-2*i))) = budgetGFlagRow n d lo hi := by
-  unfold budgetGFlagRow
-  split
-  next hl =>
-    have h := sumRange_congr (f := fun i : ℕ => intervalSize (max 0 (lo-2*i))
-      (min ((d : ℤ)-i) (hi-2*i))) (g := fun _ => 0) n
-      (fun i _ => by unfold intervalSize; omega)
-    rw [h, sumRange_eq_sum]
-    simp
-  next hl =>
-    let top := fun i : ℕ => min (d+1-i) ((hi+1).toNat-2*i)
-    let bot := fun i : ℕ => min (d+1-i) (lo.toNat-2*i)
-    have h := sumRange_congr (f := fun i : ℕ => intervalSize (max 0 (lo-2*i))
-      (min ((d : ℤ)-i) (hi-2*i))) (g := fun i => top i - bot i) n
-      (fun i _ => by
-        unfold intervalSize
-        rw [budgetGIntervalDiff _ _ _ (by omega)]
-        have ha : ((d : ℤ)-i+1).toNat = d+1-i := by omega
-        have hb : (hi-2*(i : ℤ)+1).toNat = (hi+1).toNat-2*i := by omega
-        have hc : (lo-2*(i : ℤ)).toNat = lo.toNat-2*i := by omega
-        simp only [ha, hb, hc, top, bot])
-    rw [h, budgetGSumDiff n top bot (fun i _ => by dsimp [top, bot]; omega)]
-    exact congrArg₂ Nat.sub (budgetGCumulativeEq n d _ hn) (budgetGCumulativeEq n d _ hn)
-def budgetGFastBand (d : ℕ) (lo hi : ℤ) (top : ℕ) : ℕ :=
-  sumRange (min d top + 1) fun f =>
-    let h := hi-3*(f : ℤ)
-    budgetGFlagRow (min (d-f) (h/2).toNat+1) (d-f) (lo-3*f) h
-theorem budgetGFastBandEq (d : ℕ) (lo hi : ℤ) (top : ℕ) :
-    bandCount d lo hi top = budgetGFastBand d lo hi top := by
-  unfold bandCount budgetGFastBand
-  apply sumRange_congr
-  intro f hf
-  have hd : ((d-f : ℕ) : ℤ) = (d : ℤ)-f := by omega
-  rw [← budgetGFlagRowEq _ _ _ _ (by omega)]
-  apply sumRange_congr
-  intro c _
-  rw [hd, show lo - 2*(c : ℤ) - 3*f = lo-3*f-2*c by omega,
-    show hi - 2*(c : ℤ) - 3*f = hi-3*f-2*c by omega]
-theorem budgetGFlagRowZero (n d : ℕ) (lo hi : ℤ) (hh : hi < 0) :
-    budgetGFlagRow n d lo hi = 0 := by
-  unfold budgetGFlagRow
-  split
-  · rfl
-  · have hz : (hi+1).toNat = 0 := by omega
-    simp [hz, budgetGCumulative, budgetGRamp₁, budgetGRamp₂]
-def budgetGFastTarget (d : ℕ) (lo o : ℤ) : ℕ :=
-  sumRange (min (d+1) ((o.toNat+2)/3)) fun a =>
-    budgetGFlagRow (d-a+1) (d-a) (lo-d+a) (o-1-3*a)
-theorem budgetGFastTargetEq (d : ℕ) (lo o : ℤ) :
-    targetCount d lo o = budgetGFastTarget d lo o := by
-  unfold targetCount budgetGFastTarget
-  rw [← sumRange_prefix (d+1) (min (d+1) ((o.toNat+2)/3)) _ (by omega)
-    (fun a ha hd => budgetGFlagRowZero _ _ _ _ (by omega))]
-  apply sumRange_congr
-  intro a ha
-  have hd : ((d-a : ℕ) : ℤ) = (d : ℤ)-a := by omega
-  rw [← budgetGFlagRowEq _ _ _ _ (by omega), hd]
-def budgetGFlagCore (s d count : ℕ) (g : ℤ) (v : FactorPowers) : ℕ :=
-  if v.degree ≤ d ∧ v.maxIndex ≤ 48 ∧ v.maxTop ≤ 10 then
-    let d' := d - v.degree
-    let lo' := -g - (v.minIndex : ℤ)
-    let hi' := 48 - (v.maxIndex : ℤ)
-    let order' := orderCutoff s g - (v.minOrder : ℤ)
-    count - (budgetGFastBand d' lo' hi' (10-v.maxTop) - budgetGFastTarget d' lo' order')
-  else count
-def budgetGFlag (s : ℕ) (g : ℤ) (v : FactorPowers) : ℕ :=
-  let d := residualDegree s
-  budgetGFlagCore s d (budgetGFastBand d (-g) 48 10) g v
-theorem budgetGFlagCoreEq (s r : ℕ) (v : FactorPowers) (hs : 90 ≤ s) (hs' : s ≤ 109)
-    (hr : r ≤ 48) : budgetGFlag s (offset r) v = budgetGFlagCore s 48 (budgetGBand r) (offset r) v := by
-  have hd : residualDegree s = 48 := by unfold residualDegree; omega
-  have hl : (-(offset r)).toNat = 48-r := by unfold offset; omega
-  have hc := activeNatCount_eq 48 (-(offset r)) (48 : ℤ) (by decide)
-  rw [budgetGFastBandEq, hl] at hc
-  change budgetGFastBand 48 (-(offset r)) 48 10 = activeNatCount 48 (48-r) 48 at hc
-  rw [budgetGBandEq r (by omega)] at hc
-  change budgetGFlagCore s (residualDegree s) (budgetGFastBand (residualDegree s) (-(offset r)) 48 10) (offset r) v = _
-  rw [hd, hc]
-theorem budgetGFlagEq (s : ℕ) (g : ℤ) (v : FactorPowers) :
-    flagBound s g v = budgetGFlag s g v := by
-  simp only [flagBound, budgetGFlag, budgetGFlagCore, budgetGFastBandEq, budgetGFastTargetEq]
-def budgetGPack (f : ℕ → ℕ) : ℕ → ℕ
-  | 0 => 0
-  | n+1 => 16384 * budgetGPack f n + f n
-theorem budgetGPackCong (n : ℕ) {f g : ℕ → ℕ} (h : ∀ i < n, f i = g i) :
-    budgetGPack f n = budgetGPack g n := by
-  induction n with
-  | zero => rfl
-  | succ n ih => rw [budgetGPack, budgetGPack, ih (fun i hi => h i (by omega)), h n (by omega)]
-theorem budgetGPackScale (n c : ℕ) (f : ℕ → ℕ) :
-    budgetGPack (fun i => f i*c) n = budgetGPack f n*c := by
-  induction n with
-  | zero => simp [budgetGPack]
-  | succ n ih => simp only [budgetGPack, ih]; ring
-theorem budgetGPackAdd (n : ℕ) (f g : ℕ → ℕ) :
-    budgetGPack f n + budgetGPack g n = budgetGPack (fun i => f i+g i) n := by
-  induction n with
-  | zero => rfl
-  | succ n ih => simp only [budgetGPack]; omega
-theorem budgetGPackSub (n : ℕ) (f g : ℕ → ℕ) (h : ∀ i < n, g i ≤ f i) :
-    budgetGPack f n - budgetGPack g n = budgetGPack (fun i => f i-g i) n := by
-  suffices hx : budgetGPack (fun i => f i-g i) n + budgetGPack g n = budgetGPack f n by omega
-  rw [budgetGPackAdd]
-  apply budgetGPackCong n
-  intro i hi
-  exact Nat.sub_add_cancel (h i hi)
-theorem budgetGAndJoin (a b x y : ℕ) (hx : x < 16384) (hy : y < 16384) :
-    ((16384*a+x) &&& (16384*b+y)) = 16384*(a &&& b) + (x &&& y) := by
-  have hd : ((16384*a+x) &&& (16384*b+y)) / 16384 = a &&& b := by
-    change (_ &&& _) / 2^14 = _
-    rw [Nat.and_div_two_pow]
-    congr 1 <;> change _ / 16384 = _ <;> omega
-  have hm : ((16384*a+x) &&& (16384*b+y)) % 16384 = x &&& y := by
-    change (_ &&& _) % 2^14 = _
-    rw [Nat.and_mod_two_pow]
-    congr 1 <;> change _ % 16384 = _ <;> omega
-  omega
-theorem budgetGPackAnd (n : ℕ) (f g : ℕ → ℕ)
-    (hf : ∀ i < n, f i < 16384) (hg : ∀ i < n, g i < 16384) :
-    (budgetGPack f n &&& budgetGPack g n) = budgetGPack (fun i => f i &&& g i) n := by
-  induction n with
-  | zero => simp [budgetGPack]
-  | succ n ih =>
-    simp only [budgetGPack, budgetGAndJoin _ _ _ _ (hf n (by omega)) (hg n (by omega)),
-      ih (fun i hi => hf i (by omega)) (fun i hi => hg i (by omega))]
-theorem budgetGGuardBit (x : ℕ) (hx : x < 16384) :
-    (x &&& 8192) = x/8192*8192 := by
-  have hd : (x &&& 8192) / 8192 = x/8192 := by
-    change (_ &&& _) / 2^13 = _
-    rw [Nat.and_div_two_pow]
-    change x/8192 &&& 1 = _
-    rw [Nat.and_one_is_mod]
-    omega
-  have hm : (x &&& 8192) % 8192 = 0 := by
-    change (_ &&& _) % 2^13 = _
-    rw [Nat.and_mod_two_pow]
-    change _ &&& 0 = 0
-    simp
-  omega
-def budgetGSatWith (guard x y : ℕ) : ℕ :=
-  let z := guard + x - y
-  z &&& (((z &&& guard)/8192)*8191)
-theorem budgetGSatWithEq (n guard : ℕ) (hm : guard = budgetGPack (fun _ => 8192) n) (f g : ℕ → ℕ)
-    (hf : ∀ i < n, f i < 8192) (hg : ∀ i < n, g i < 8192) :
-    budgetGSatWith guard (budgetGPack f n) (budgetGPack g n) = budgetGPack (fun i => f i-g i) n := by
-  let z := fun i => 8192+f i-g i
-  let flag := fun i => z i / 8192
-  have hz (i : ℕ) (hi : i < n) : z i < 16384 := by
-    have := hf i hi; dsimp [z]; omega
-  have he : guard + budgetGPack f n - budgetGPack g n = budgetGPack z n := by
-    rw [hm, budgetGPackAdd, budgetGPackSub n _ _ (fun i hi => by have := hg i hi; omega)]
-  have hb : (budgetGPack z n &&& guard) = budgetGPack flag n*8192 := by
-    rw [hm, budgetGPackAnd n _ _ hz (fun _ _ => by decide), ← budgetGPackScale]
-    exact budgetGPackCong _ fun i hi => budgetGGuardBit _ (hz i hi)
-  unfold budgetGSatWith
-  dsimp only
-  rw [he, hb, Nat.mul_div_cancel _ (by decide : 0 < 8192), ← budgetGPackScale,
-    budgetGPackAnd n _ _ hz (fun i hi => by have := hz i hi; dsimp [flag]; omega)]
-  apply budgetGPackCong
-  intro i hi
-  have hfi := hf i hi
-  have hgi := hg i hi
-  by_cases h : g i ≤ f i
-  · have hu : flag i = 1 := by dsimp [flag,z]; omega
-    rw [hu]
-    change z i &&& 2^13-1 = _
-    rw [Nat.and_two_pow_sub_one_eq_mod]
-    change z i % 8192 = _
-    dsimp [z]
-    omega
-  · have hu : flag i = 0 := by dsimp [flag,z]; omega
-    simp [hu, Nat.sub_eq_zero_of_le (by omega : f i ≤ g i)]
-def budgetGSat := budgetGSatWith (8192*((16384^49-1)/16383))
-theorem budgetGSatEq (f g : ℕ → ℕ)
-    (hf : ∀ i < 49, f i < 8192) (hg : ∀ i < 49, g i < 8192) :
-    budgetGSat (budgetGPack f 49) (budgetGPack g 49) = budgetGPack (fun i => f i-g i) 49 :=
-  budgetGSatWithEq 49 _ (by decide +kernel) f g hf hg
-theorem budgetGPackTotal (n : ℕ) (f : ℕ → ℕ) :
-    budgetGPack f n % 16383 = sumRange n f % 16383 := by
-  induction n with
-  | zero => rfl
-  | succ n ih =>
-    rw [budgetGPack, budgetGSucc, Nat.add_mod (16384 * _) _ _, Nat.mul_mod,
-      show 16384 % 16383 = 1 by decide, Nat.one_mul, Nat.mod_mod, ih, ← Nat.add_mod]
-def budgetGPairVector (r : ℕ) : ℕ := (190*((16384^49-1)/16383)) - (0x400100080030010005001c008002800c0038010004c015006001b0078021009402800b003000d003800f4041011804b0140055016c060019806b01c407601f0081021c08c024809702740a202a00ad02cc0b8 >>> (14*r))
-theorem budgetGPairVectorEq (r : ℕ) (hr : r < 49) :
-    budgetGPairVector r = budgetGPack (fun k => budgetGPair (k-r)) 49 :=
-  of_decide_eq_true (budgetGChecked (p := fun r => decide
-    (budgetGPairVector r = budgetGPack (fun k => budgetGPair (k-r)) 49))
-    (n := 49) (by decide +kernel) r hr)
-theorem budgetGVecMin (f g : ℕ → ℕ)
-    (hf : ∀ i < 49, f i < 8192) (hg : ∀ i < 49, g i < 8192) :
-    budgetGPack f 49 - budgetGSat (budgetGPack f 49) (budgetGPack g 49) =
-      budgetGPack (fun i => min (f i) (g i)) 49 := by
-  rw [budgetGSatEq f g hf hg, budgetGPackSub 49 _ _ (fun i _ => Nat.sub_le _ _)]
-  exact budgetGPackCong _ fun i _ => by omega
-theorem budgetGPackZero (n : ℕ) : budgetGPack (fun _ => 0) n = 0 := by
-  induction n with
-  | zero => rfl
-  | succ n ih => simp [budgetGPack, ih]
-theorem budgetGPackSum (n : ℕ) (f : ℕ → ℕ → ℕ) :
-    sumRange n (fun t => budgetGPack (f t) 49) =
-    budgetGPack (fun k => sumRange n (fun t => f t k)) 49 := by
-  induction n with
-  | zero => simp only [sumRange]; exact (budgetGPackZero 49).symm
-  | succ n ih =>
-    rw [budgetGSucc, ih, budgetGPackAdd]
-    apply budgetGPackCong
-    intro k _
-    exact (budgetGSucc n (fun t => f t k)).symm
-theorem budgetGSumBound (n c : ℕ) (f : ℕ → ℕ) (h : ∀ i < n, f i ≤ c) :
-    sumRange n f ≤ n*c := by
-  induction n with
-  | zero => simp [sumRange]
-  | succ n ih =>
-    rw [budgetGSucc, Nat.succ_mul]
-    exact Nat.add_le_add (ih (fun i hi => h i (by omega))) (h n (by omega))
-def budgetGGrid (f : ℕ → ℕ → ℕ) : ℕ :=
-  budgetGPack (fun i => f (i/49) (i%49)) 539
-theorem budgetGGridCong {f g : ℕ → ℕ → ℕ}
-    (h : ∀ t < 11, ∀ k < 49, f t k = g t k) : budgetGGrid f = budgetGGrid g :=
-  budgetGPackCong _ fun i hi => h _ (by omega) _ (by omega)
-theorem budgetGPackAppend (a b : ℕ) (f : ℕ → ℕ) :
-    budgetGPack f (a+b) =
-      16384^b * budgetGPack f a + budgetGPack (fun i => f (a+i)) b := by
-  induction b with
-  | zero => simp [budgetGPack]
-  | succ b ih =>
-    rw [Nat.add_succ, budgetGPack, ih, budgetGPack, Nat.pow_succ]
-    ring
-theorem budgetGCollect (n : ℕ) (f : ℕ → ℕ → ℕ) :
-    budgetGPack (fun i => f (i/49) (i%49)) (49*n) % (16384^49-1) =
-      sumRange n (fun t => budgetGPack (f t) 49) % (16384^49-1) := by
-  induction n with
-  | zero => rfl
-  | succ n ih =>
-    rw [Nat.mul_succ, budgetGPackAppend, budgetGSucc]
-    have hc : budgetGPack (fun i => f ((49*n+i)/49) ((49*n+i)%49)) 49 =
-        budgetGPack (f n) 49 :=
-      budgetGPackCong _ fun i hi => by
-        simp only [Nat.mul_add_div (by decide : 0 < 49), Nat.div_eq_of_lt hi,
-          Nat.add_zero, Nat.mul_add_mod, Nat.mod_eq_of_lt hi]
-    rw [hc, Nat.add_mod (16384^49 * _) _ _, Nat.mul_mod,
-      show 16384^49 % (16384^49-1) = 1 by decide, Nat.one_mul, Nat.mod_mod, ih, ← Nat.add_mod]
-def budgetGOnes : ℕ := (16384^539-1)/16383
-def budgetGGuard : ℕ := budgetGOnes * 8192
-def budgetGEven : ℕ := budgetGOnes * 16382
-def budgetGGridSat := budgetGSatWith budgetGGuard
-theorem budgetGGridSatEq (f g : ℕ → ℕ → ℕ)
-    (hf : ∀ t < 11, ∀ k < 49, f t k < 8192) (hg : ∀ t < 11, ∀ k < 49, g t k < 8192) :
-    budgetGGridSat (budgetGGrid f) (budgetGGrid g) = budgetGGrid (fun t k => f t k-g t k) :=
-  budgetGSatWithEq 539 _ (by decide +kernel) _ _
-    (fun i hi => hf _ (by omega) _ (by omega)) (fun i hi => hg _ (by omega) _ (by omega))
-theorem budgetGGridAdd (f g : ℕ → ℕ → ℕ) :
-    budgetGGrid f + budgetGGrid g = budgetGGrid (fun t k => f t k+g t k) :=
-  budgetGPackAdd _ _ _
-theorem budgetGGridSub (f g : ℕ → ℕ → ℕ) (h : ∀ t < 11, ∀ k < 49, g t k ≤ f t k) :
-    budgetGGrid f - budgetGGrid g = budgetGGrid (fun t k => f t k-g t k) :=
-  budgetGPackSub _ _ _ (fun i hi => h _ (by omega) _ (by omega))
-theorem budgetGGridMin (f g : ℕ → ℕ → ℕ)
-    (hf : ∀ t < 11, ∀ k < 49, f t k < 8192) (hg : ∀ t < 11, ∀ k < 49, g t k < 8192) :
-    budgetGGrid f - budgetGGridSat (budgetGGrid f) (budgetGGrid g) =
-      budgetGGrid (fun t k => min (f t k) (g t k)) := by
-  rw [budgetGGridSatEq f g hf hg, budgetGGridSub _ _ (fun t _ k _ => Nat.sub_le _ _)]
-  exact budgetGGridCong fun t _ k _ => by omega
-theorem budgetGGridMax (f g : ℕ → ℕ → ℕ)
-    (hf : ∀ t < 11, ∀ k < 49, f t k < 8192) (hg : ∀ t < 11, ∀ k < 49, g t k < 8192) :
-    budgetGGrid f + budgetGGridSat (budgetGGrid g) (budgetGGrid f) =
-      budgetGGrid (fun t k => max (f t k) (g t k)) := by
-  rw [budgetGGridSatEq g f hg hf, budgetGGridAdd]
-  exact budgetGGridCong fun t _ k _ => by omega
-theorem budgetGBroadcast (x : ℕ) : budgetGOnes*x = budgetGGrid (fun _ _ => x) := by
-  have h : budgetGOnes = budgetGGrid (fun _ _ => 1) := by decide +kernel
-  rw [h]
-  unfold budgetGGrid
-  rw [← budgetGPackScale]
-  apply budgetGPackCong
-  intro i _
-  exact Nat.one_mul _
-theorem budgetGEvenDigit (x : ℕ) (hx : x < 64) : (x &&& 16382) = (x/2)*2 :=
-  of_decide_eq_true (budgetGChecked (p := fun x => decide ((x &&& 16382) = (x/2)*2))
-    (n := 64) (by decide +kernel) x hx)
-theorem budgetGGridHalf (f : ℕ → ℕ → ℕ) (hf : ∀ t < 11, ∀ k < 49, f t k < 64) :
-    (budgetGGrid f &&& budgetGEven)/2 = budgetGGrid (fun t k => f t k/2) := by
-  unfold budgetGEven
-  rw [budgetGBroadcast]
-  unfold budgetGGrid
-  rw [budgetGPackAnd 539 _ _ (fun i hi => by have := hf (i/49) (by omega) (i%49) (by omega); omega)
-    (fun _ _ => by change 16382 < 16384; decide)]
-  have he := budgetGPackCong (n := 539)
-    (f := fun i => f (i/49) (i%49) &&& 16382) (g := fun i => (f (i/49) (i%49)/2)*2)
-    (fun i hi => budgetGEvenDigit _ (hf _ (by omega) _ (by omega)))
-  rw [he, budgetGPackScale, Nat.mul_div_cancel _ (by decide : 0 < 2)]
-def budgetGColumnIndices : ℕ :=
-  ((16384^49 - 49*16384 + 48) / 16383^2) * ((16384^539-1) / (16384^49-1))
-def budgetGHeightIndices : ℕ :=
-  ((16384^539 - 11*16384^49 + 10) / (16384^49-1)^2) * ((16384^49-1) / 16383)
-def budgetGColumnLimit : ℕ := budgetGGridSat (budgetGColumnIndices + budgetGOnes) budgetGHeightIndices
-def budgetGDoubleColumn : ℕ := 2*budgetGColumnIndices + budgetGOnes
-def budgetGTripleHeight : ℕ := 3*budgetGHeightIndices
-def budgetGHalfBoundBase : ℕ := budgetGGridSat budgetGColumnIndices (3*(10*budgetGOnes-budgetGHeightIndices))
-def budgetGOrderBoundBase : ℕ := budgetGDoubleColumn + budgetGHeightIndices
-theorem budgetGColumnLimitEq : budgetGColumnLimit = budgetGGrid (fun t k => k+1-t) := by decide +kernel
-theorem budgetGDoubleColumnEq : budgetGDoubleColumn = budgetGGrid (fun _ k => 2*k+1) := by decide +kernel
-theorem budgetGTripleHeightEq : budgetGTripleHeight = budgetGGrid (fun t _ => 3*t) := by decide +kernel
-theorem budgetGHalfBoundBaseEq : budgetGHalfBoundBase = budgetGGrid (fun t k => k-3*(10-t)) := by decide +kernel
-theorem budgetGOrderBoundBaseEq : budgetGOrderBoundBase = budgetGGrid (fun t k => 2*k+t+1) := by decide +kernel
-def budgetGGridWidths (r o : ℕ) : ℕ :=
-  let upperTilt := budgetGGridSat (budgetGDoubleColumn + budgetGOnes*r) budgetGTripleHeight
-  let upper := budgetGColumnLimit - budgetGGridSat budgetGColumnLimit upperTilt
-  let lowerHalf := ((budgetGGridSat budgetGHalfBoundBase (budgetGOnes*r) + budgetGOnes) &&& budgetGEven)/2
-  let lowerOrder := budgetGGridSat budgetGOrderBoundBase (budgetGOnes*o)
-  budgetGGridSat upper (lowerHalf + budgetGGridSat lowerOrder lowerHalf)
-theorem budgetGGridWidthsEq (r o : ℕ) (hr : r ≤ 48) (ho : o ≤ 48) :
-    budgetGGridWidths r o = budgetGGrid (fun t k => budgetGUpper k r t-budgetGLower k r o t) := by
-  have one : budgetGOnes = budgetGGrid (fun _ _ => 1) := by decide +kernel
-  unfold budgetGGridWidths
-  dsimp only
-  rw [budgetGColumnLimitEq, budgetGDoubleColumnEq, budgetGTripleHeightEq, budgetGHalfBoundBaseEq, budgetGOrderBoundBaseEq,
-    budgetGBroadcast r, budgetGBroadcast o, one, budgetGGridAdd,
-    budgetGGridSatEq _ _ (fun t ht k hk => by omega) (fun t ht k hk => by omega),
-    budgetGGridMin _ _ (fun t ht k hk => by omega) (fun t ht k hk => by omega),
-    budgetGGridSatEq _ _ (fun t ht k hk => by omega) (fun t ht k hk => by omega),
-    budgetGGridAdd, budgetGGridHalf _ (fun t ht k hk => by omega),
-    budgetGGridSatEq _ _ (fun t ht k hk => by omega) (fun t ht k hk => by omega),
-    budgetGGridMax _ _ (fun t ht k hk => by omega) (fun t ht k hk => by omega),
-    budgetGGridSatEq _ _ (fun t ht k hk => by omega) (fun t ht k hk => by omega)]
-  apply budgetGGridCong
-  intro t ht k hk
-  dsimp [budgetGUpper, budgetGLower]
-  rw [show k-3*(10-t)-r = k-(r+3*(10-t)) by omega]
-theorem budgetGPackedBound (f : ℕ → ℕ) (h : ∀ k < 49, f k < 8192) :
-    budgetGPack f 49 < 16384^49-1 := by
-  have le (n : ℕ) (hn : n ≤ 49) : budgetGPack f n ≤ budgetGPack (fun _ => 8192) n := by
-    induction n with
-    | zero => exact Nat.le_refl _
-    | succ n ih =>
-      exact Nat.add_le_add (Nat.mul_le_mul_left 16384 (ih (by omega))) (Nat.le_of_lt (h n (by omega)))
-  exact Nat.lt_of_le_of_lt (le 49 (by decide)) (by decide +kernel)
-def budgetGVectorUncut (r o : ℕ) : ℕ :=
-  let a := budgetGGridWidths r o % (16384^49-1)
-  (a - budgetGSat a (budgetGPairVector r)) % 16383
-theorem budgetGVectorPascalEq (r o : ℕ) (hr : r ≤ 48) (ho : o ≤ 48) :
-    budgetGPascal r o = min (budgetGBand r) (budgetGVectorUncut r o) := by
-  let f := fun k => min (budgetGSlice k r o) (budgetGPair (k-r))
-  have hp (k : ℕ) : budgetGPair (k-r) < 256 := Nat.mod_lt _ (by decide)
-  have hw (k : ℕ) (hk : k < 49) : budgetGSlice k r o < 8192 := by
-    have hb := budgetGSumBound 11 49 (fun t => budgetGUpper k r t - budgetGLower k r o t)
-      (fun t _ => by dsimp only [budgetGUpper]; omega)
-    unfold budgetGSlice
-    omega
-  have hwv : budgetGGridWidths r o % (16384^49-1) = budgetGPack (fun k => budgetGSlice k r o) 49 := by
-    let width := fun t k => budgetGUpper k r t - budgetGLower k r o t
-    rw [budgetGGridWidthsEq r o hr ho]
-    change budgetGPack (fun i => width (i/49) (i%49)) (49*11) % (16384^49-1) = _
-    rw [budgetGCollect, budgetGPackSum]
-    exact Nat.mod_eq_of_lt (budgetGPackedBound _ hw)
-  have hsum : sumRange 49 f < 16383 := by
-    have hb := budgetGSumBound 49 255 f (fun k _ => by have := hp k; dsimp [f]; omega)
-    omega
-  have hv : budgetGVectorUncut r o = sumRange 49 f := by
-    unfold budgetGVectorUncut
-    dsimp only
-    rw [hwv, budgetGPairVectorEq r (by omega), budgetGVecMin _ _ hw (fun k _ => by have := hp k; omega)]
-    exact (budgetGPackTotal 49 f).trans (Nat.mod_eq_of_lt hsum)
-  have htail : sumRange 49 f = sumRange o f := by
-    apply sumRange_prefix 49 o f (by omega)
-    intro k hk _
-    have hh := budgetGSumBound 11 0 (fun t => budgetGUpper k r t - budgetGLower k r o t)
-      (fun t _ => by dsimp only [budgetGUpper, budgetGLower]; omega)
-    have hz : budgetGSlice k r o = 0 := by unfold budgetGSlice; omega
-    simp [f, hz]
-  rw [hv, htail]
-  apply congrArg (min (budgetGBand r))
-  have hrev : sumRange o (fun i => f (o-1-i)) = sumRange o f := by
-    simp only [sumRange_eq_sum]
-    exact Finset.sum_range_reflect f o
-  rw [← hrev]
-  apply sumRange_congr
-  intro i _
-  exact Nat.min_comm _ _
-def budgetGBlock (s r : ℕ) : ℕ :=
-  let p := min (budgetGBand r) (budgetGVectorUncut r (138-(s+r)))
-  match selectedFactors s (offset r) with
-  | none => p
-  | some v => min p (budgetGFlagCore s 48 (budgetGBand r) (offset r) v)
-theorem budgetGBlockEq (s r : ℕ) (hs : 90 ≤ s) (hs' : s ≤ 109)
-    (h : s + r < 138) : fastBlock s r = budgetGBlock s r := by
-  have hvec := budgetGVectorPascalEq r (138-(s+r)) (by omega) (by omega)
-  cases hv : selectedFactors s (offset r) <;>
-    simp [fastBlock, h, budgetGBlock, hv, budgetGPascalEq s r hs hs' h, budgetGFlagEq, hvec, fun v => budgetGFlagCoreEq s r v hs hs' (by omega)]
-theorem budgetGChunk (s a n : ℕ) (hs : 90 ≤ s) (hs' : s ≤ 109)
-    (h : s+a+n ≤ 138) :
-    sumRange n (fun i => fastBlock s (i+a)) = sumRange n (fun i => budgetGBlock s (i+a)) :=
-  sumRange_congr _ (fun i hi => budgetGBlockEq _ _ hs hs' (by omega))
-def budgetGGroupLen (s g : ℕ) : ℕ := min 4 (138-s-4*g)
-def budgetGGroupValue (table g : ℕ) : ℕ := (table >>> (14*g)) % 16384
-abbrev budgetGGroupFact (s table g : ℕ) : Prop :=
-  sumRange (budgetGGroupLen s g) (fun i => fastBlock s (i+4*g)) = budgetGGroupValue table g
-theorem budgetGReadGroups (s table : ℕ) (hs : 90 ≤ s) (hh : s ≤ 109)
-    (checks : budgetGCheck (fun g => decide
-      (sumRange (budgetGGroupLen s g) (fun i => budgetGBlock s (i+4*g)) = budgetGGroupValue table g))
-      ((138-s+3)/4) = true) : ∀ g < (138-s+3)/4, budgetGGroupFact s table g := by
-  intro g hg
-  apply (budgetGChunk s (4*g) (budgetGGroupLen s g) hs hh (by unfold budgetGGroupLen; omega)).trans
-  exact of_decide_eq_true (budgetGChecked (p := fun j => decide
-    (sumRange (budgetGGroupLen s j) (fun i => budgetGBlock s (i+4*j)) = budgetGGroupValue table j))
-    checks g hg)
-theorem budgetGRow90 : ∀ g < 12, budgetGGroupFact 90 0x3805103d022210146c82a58f9957d59f446bc733 g :=
-  budgetGReadGroups 90 0x3805103d022210146c82a58f9957d59f446bc733 (by decide) (by decide) (by decide +kernel)
-theorem budgetGBlocks90_00 :
-    sumRange 4 (fastBlock 90) = 1843 := budgetGRow90 0 (by decide)
-theorem budgetGBlocks90_04 :
-    sumRange 4 (fun i => fastBlock 90 (i + 4)) = 4527 := budgetGRow90 1 (by decide)
-theorem budgetGBlocks90_08 :
-    sumRange 4 (fun i => fastBlock 90 (i + 8)) = 6644 := budgetGRow90 2 (by decide)
-theorem budgetGBlocks90_12 :
-    sumRange 4 (fun i => fastBlock 90 (i + 12)) = 5621 := budgetGRow90 3 (by decide)
-theorem budgetGBlocks90_16 :
-    sumRange 4 (fun i => fastBlock 90 (i + 16)) = 3993 := budgetGRow90 4 (by decide)
-theorem budgetGBlocks90_20 :
-    sumRange 4 (fun i => fastBlock 90 (i + 20)) = 2710 := budgetGRow90 5 (by decide)
-theorem budgetGBlocks90_24 :
-    sumRange 4 (fun i => fastBlock 90 (i + 24)) = 1736 := budgetGRow90 6 (by decide)
-theorem budgetGBlocks90_28 :
-    sumRange 4 (fun i => fastBlock 90 (i + 28)) = 1029 := budgetGRow90 7 (by decide)
-theorem budgetGBlocks90_32 :
-    sumRange 4 (fun i => fastBlock 90 (i + 32)) = 546 := budgetGRow90 8 (by decide)
-theorem budgetGBlocks90_36 :
-    sumRange 4 (fun i => fastBlock 90 (i + 36)) = 244 := budgetGRow90 9 (by decide)
-theorem budgetGBlocks90_40 :
-    sumRange 4 (fun i => fastBlock 90 (i + 40)) = 81 := budgetGRow90 10 (by decide)
-theorem budgetGBlocks90_44 :
-    sumRange 4 (fun i => fastBlock 90 (i + 44)) = 14 := budgetGRow90 11 (by decide)
-theorem grade90 : fastGrade 90 = 28988 := by
-  have h8 := budgetGRangeJoin (fastBlock 90) 4 4 budgetGBlocks90_00 budgetGBlocks90_04
-  have h12 := budgetGRangeJoin (fastBlock 90) 8 4 h8 budgetGBlocks90_08
-  have h16 := budgetGRangeJoin (fastBlock 90) 12 4 h12 budgetGBlocks90_12
-  have h20 := budgetGRangeJoin (fastBlock 90) 16 4 h16 budgetGBlocks90_16
-  have h24 := budgetGRangeJoin (fastBlock 90) 20 4 h20 budgetGBlocks90_20
-  have h28 := budgetGRangeJoin (fastBlock 90) 24 4 h24 budgetGBlocks90_24
-  have h32 := budgetGRangeJoin (fastBlock 90) 28 4 h28 budgetGBlocks90_28
-  have h36 := budgetGRangeJoin (fastBlock 90) 32 4 h32 budgetGBlocks90_32
-  have h40 := budgetGRangeJoin (fastBlock 90) 36 4 h36 budgetGBlocks90_36
-  have h44 := budgetGRangeJoin (fastBlock 90) 40 4 h40 budgetGBlocks90_40
-  have h48 := budgetGRangeJoin (fastBlock 90) 44 4 h44 budgetGBlocks90_44
-  exact budgetGRangeJoin (fastBlock 90) 48 90 h48
-    (budgetGZeroTail 90 48 90 (by decide))
-theorem budgetGRow91 : ∀ g < 12, budgetGGroupFact 91 0x1c03903001c70de4600261ce3950f592146bc733 g :=
-  budgetGReadGroups 91 0x1c03903001c70de4600261ce3950f592146bc733 (by decide) (by decide) (by decide +kernel)
-theorem budgetGBlocks91_00 :
-    sumRange 4 (fastBlock 91) = 1843 := budgetGRow91 0 (by decide)
-theorem budgetGBlocks91_04 :
-    sumRange 4 (fun i => fastBlock 91 (i + 4)) = 4527 := budgetGRow91 1 (by decide)
-theorem budgetGBlocks91_08 :
-    sumRange 4 (fun i => fastBlock 91 (i + 8)) = 6433 := budgetGRow91 2 (by decide)
-theorem budgetGBlocks91_12 :
-    sumRange 4 (fun i => fastBlock 91 (i + 12)) = 5181 := budgetGRow91 3 (by decide)
-theorem budgetGBlocks91_16 :
-    sumRange 4 (fun i => fastBlock 91 (i + 16)) = 3641 := budgetGRow91 4 (by decide)
-theorem budgetGBlocks91_20 :
-    sumRange 4 (fun i => fastBlock 91 (i + 20)) = 2439 := budgetGRow91 5 (by decide)
-theorem budgetGBlocks91_24 :
-    sumRange 4 (fun i => fastBlock 91 (i + 24)) = 1536 := budgetGRow91 6 (by decide)
-theorem budgetGBlocks91_28 :
-    sumRange 4 (fun i => fastBlock 91 (i + 28)) = 889 := budgetGRow91 7 (by decide)
-theorem budgetGBlocks91_32 :
-    sumRange 4 (fun i => fastBlock 91 (i + 32)) = 455 := budgetGRow91 8 (by decide)
-theorem budgetGBlocks91_36 :
-    sumRange 4 (fun i => fastBlock 91 (i + 36)) = 192 := budgetGRow91 9 (by decide)
-theorem budgetGBlocks91_40 :
-    sumRange 4 (fun i => fastBlock 91 (i + 40)) = 57 := budgetGRow91 10 (by decide)
-theorem budgetGBlocks91_44 :
-    sumRange 3 (fun i => fastBlock 91 (i + 44)) = 7 := budgetGRow91 11 (by decide)
-theorem grade91 : fastGrade 91 = 27200 := by
-  have h8 := budgetGRangeJoin (fastBlock 91) 4 4 budgetGBlocks91_00 budgetGBlocks91_04
-  have h12 := budgetGRangeJoin (fastBlock 91) 8 4 h8 budgetGBlocks91_08
-  have h16 := budgetGRangeJoin (fastBlock 91) 12 4 h12 budgetGBlocks91_12
-  have h20 := budgetGRangeJoin (fastBlock 91) 16 4 h16 budgetGBlocks91_16
-  have h24 := budgetGRangeJoin (fastBlock 91) 20 4 h20 budgetGBlocks91_20
-  have h28 := budgetGRangeJoin (fastBlock 91) 24 4 h24 budgetGBlocks91_24
-  have h32 := budgetGRangeJoin (fastBlock 91) 28 4 h28 budgetGBlocks91_28
-  have h36 := budgetGRangeJoin (fastBlock 91) 32 4 h32 budgetGBlocks91_32
-  have h40 := budgetGRangeJoin (fastBlock 91) 36 4 h36 budgetGBlocks91_36
-  have h44 := budgetGRangeJoin (fastBlock 91) 40 4 h40 budgetGBlocks91_40
-  have h47 := budgetGRangeJoin (fastBlock 91) 44 3 h44 budgetGBlocks91_44
-  exact budgetGRangeJoin (fastBlock 91) 47 91 h47
-    (budgetGZeroTail 91 47 91 (by decide))
-theorem budgetGRow92 : ∀ g < 12, budgetGGroupFact 92 0xc02602501770be8548222ccee4a6d83046bc733 g :=
-  budgetGReadGroups 92 0xc02602501770be8548222ccee4a6d83046bc733 (by decide) (by decide) (by decide +kernel)
-theorem budgetGBlocks92_00 :
-    sumRange 4 (fastBlock 92) = 1843 := budgetGRow92 0 (by decide)
-theorem budgetGBlocks92_04 :
-    sumRange 4 (fun i => fastBlock 92 (i + 4)) = 4527 := budgetGRow92 1 (by decide)
-theorem budgetGBlocks92_08 :
-    sumRange 4 (fun i => fastBlock 92 (i + 8)) = 6192 := budgetGRow92 2 (by decide)
-theorem budgetGBlocks92_12 :
-    sumRange 4 (fun i => fastBlock 92 (i + 12)) = 4763 := budgetGRow92 3 (by decide)
-theorem budgetGBlocks92_16 :
-    sumRange 4 (fun i => fastBlock 92 (i + 16)) = 3310 := budgetGRow92 4 (by decide)
-theorem budgetGBlocks92_20 :
-    sumRange 4 (fun i => fastBlock 92 (i + 20)) = 2187 := budgetGRow92 5 (by decide)
-theorem budgetGBlocks92_24 :
-    sumRange 4 (fun i => fastBlock 92 (i + 24)) = 1352 := budgetGRow92 6 (by decide)
-theorem budgetGBlocks92_28 :
-    sumRange 4 (fun i => fastBlock 92 (i + 28)) = 762 := budgetGRow92 7 (by decide)
-theorem budgetGBlocks92_32 :
-    sumRange 4 (fun i => fastBlock 92 (i + 32)) = 375 := budgetGRow92 8 (by decide)
-theorem budgetGBlocks92_36 :
-    sumRange 4 (fun i => fastBlock 92 (i + 36)) = 148 := budgetGRow92 9 (by decide)
-theorem budgetGBlocks92_40 :
-    sumRange 4 (fun i => fastBlock 92 (i + 40)) = 38 := budgetGRow92 10 (by decide)
-theorem budgetGBlocks92_44 :
-    sumRange 2 (fun i => fastBlock 92 (i + 44)) = 3 := budgetGRow92 11 (by decide)
-theorem grade92 : fastGrade 92 = 25500 := by
-  have h8 := budgetGRangeJoin (fastBlock 92) 4 4 budgetGBlocks92_00 budgetGBlocks92_04
-  have h12 := budgetGRangeJoin (fastBlock 92) 8 4 h8 budgetGBlocks92_08
-  have h16 := budgetGRangeJoin (fastBlock 92) 12 4 h12 budgetGBlocks92_12
-  have h20 := budgetGRangeJoin (fastBlock 92) 16 4 h16 budgetGBlocks92_16
-  have h24 := budgetGRangeJoin (fastBlock 92) 20 4 h20 budgetGBlocks92_20
-  have h28 := budgetGRangeJoin (fastBlock 92) 24 4 h24 budgetGBlocks92_24
-  have h32 := budgetGRangeJoin (fastBlock 92) 28 4 h28 budgetGBlocks92_28
-  have h36 := budgetGRangeJoin (fastBlock 92) 32 4 h32 budgetGBlocks92_32
-  have h40 := budgetGRangeJoin (fastBlock 92) 36 4 h36 budgetGBlocks92_36
-  have h44 := budgetGRangeJoin (fastBlock 92) 40 4 h40 budgetGBlocks92_40
-  have h46 := budgetGRangeJoin (fastBlock 92) 44 2 h44 budgetGBlocks92_44
-  exact budgetGRangeJoin (fastBlock 92) 46 92 h46
-    (budgetGZeroTail 92 46 92 (by decide))
-theorem budgetGRow93 : ∀ g < 12, budgetGGroupFact 93 0x401801bc1310a2049f1e84bb8443d6f146bc733 g :=
-  budgetGReadGroups 93 0x401801bc1310a2049f1e84bb8443d6f146bc733 (by decide) (by decide) (by decide +kernel)
-theorem budgetGBlocks93_00 :
-    sumRange 4 (fastBlock 93) = 1843 := budgetGRow93 0 (by decide)
-theorem budgetGBlocks93_04 :
-    sumRange 4 (fun i => fastBlock 93 (i + 4)) = 4527 := budgetGRow93 1 (by decide)
-theorem budgetGBlocks93_08 :
-    sumRange 4 (fun i => fastBlock 93 (i + 8)) = 5873 := budgetGRow93 2 (by decide)
-theorem budgetGBlocks93_12 :
-    sumRange 4 (fun i => fastBlock 93 (i + 12)) = 4367 := budgetGRow93 3 (by decide)
-theorem budgetGBlocks93_16 :
-    sumRange 4 (fun i => fastBlock 93 (i + 16)) = 3000 := budgetGRow93 4 (by decide)
-theorem budgetGBlocks93_20 :
-    sumRange 4 (fun i => fastBlock 93 (i + 20)) = 1953 := budgetGRow93 5 (by decide)
-theorem budgetGBlocks93_24 :
-    sumRange 4 (fun i => fastBlock 93 (i + 24)) = 1183 := budgetGRow93 6 (by decide)
-theorem budgetGBlocks93_28 :
-    sumRange 4 (fun i => fastBlock 93 (i + 28)) = 648 := budgetGRow93 7 (by decide)
-theorem budgetGBlocks93_32 :
-    sumRange 4 (fun i => fastBlock 93 (i + 32)) = 305 := budgetGRow93 8 (by decide)
-theorem budgetGBlocks93_36 :
-    sumRange 4 (fun i => fastBlock 93 (i + 36)) = 111 := budgetGRow93 9 (by decide)
-theorem budgetGBlocks93_40 :
-    sumRange 4 (fun i => fastBlock 93 (i + 40)) = 24 := budgetGRow93 10 (by decide)
-theorem budgetGBlocks93_44 :
-    sumRange 1 (fun i => fastBlock 93 (i + 44)) = 1 := budgetGRow93 11 (by decide)
-theorem grade93 : fastGrade 93 = 23835 := by
-  have h8 := budgetGRangeJoin (fastBlock 93) 4 4 budgetGBlocks93_00 budgetGBlocks93_04
-  have h12 := budgetGRangeJoin (fastBlock 93) 8 4 h8 budgetGBlocks93_08
-  have h16 := budgetGRangeJoin (fastBlock 93) 12 4 h12 budgetGBlocks93_12
-  have h20 := budgetGRangeJoin (fastBlock 93) 16 4 h16 budgetGBlocks93_16
-  have h24 := budgetGRangeJoin (fastBlock 93) 20 4 h20 budgetGBlocks93_20
-  have h28 := budgetGRangeJoin (fastBlock 93) 24 4 h24 budgetGBlocks93_24
-  have h32 := budgetGRangeJoin (fastBlock 93) 28 4 h28 budgetGBlocks93_28
-  have h36 := budgetGRangeJoin (fastBlock 93) 32 4 h32 budgetGBlocks93_32
-  have h40 := budgetGRangeJoin (fastBlock 93) 36 4 h36 budgetGBlocks93_36
-  have h44 := budgetGRangeJoin (fastBlock 93) 40 4 h40 budgetGBlocks93_40
-  have h45 := budgetGRangeJoin (fastBlock 93) 44 1 h44 budgetGBlocks93_44
-  exact budgetGRangeJoin (fastBlock 93) 45 93 h45
-    (budgetGZeroTail 93 45 93 (by decide))
-theorem budgetGRow94 : ∀ g < 11, budgetGGroupFact 94 0xe01440f408884051b20a963e655a846bc733 g :=
-  budgetGReadGroups 94 0xe01440f408884051b20a963e655a846bc733 (by decide) (by decide) (by decide +kernel)
-theorem budgetGBlocks94_00 :
-    sumRange 4 (fastBlock 94) = 1843 := budgetGRow94 0 (by decide)
-theorem budgetGBlocks94_04 :
-    sumRange 4 (fun i => fastBlock 94 (i + 4)) = 4527 := budgetGRow94 1 (by decide)
-theorem budgetGBlocks94_08 :
-    sumRange 4 (fun i => fastBlock 94 (i + 8)) = 5544 := budgetGRow94 2 (by decide)
-theorem budgetGBlocks94_12 :
-    sumRange 4 (fun i => fastBlock 94 (i + 12)) = 3993 := budgetGRow94 3 (by decide)
-theorem budgetGBlocks94_16 :
-    sumRange 4 (fun i => fastBlock 94 (i + 16)) = 2710 := budgetGRow94 4 (by decide)
-theorem budgetGBlocks94_20 :
-    sumRange 4 (fun i => fastBlock 94 (i + 20)) = 1736 := budgetGRow94 5 (by decide)
-theorem budgetGBlocks94_24 :
-    sumRange 4 (fun i => fastBlock 94 (i + 24)) = 1029 := budgetGRow94 6 (by decide)
-theorem budgetGBlocks94_28 :
-    sumRange 4 (fun i => fastBlock 94 (i + 28)) = 546 := budgetGRow94 7 (by decide)
-theorem budgetGBlocks94_32 :
-    sumRange 4 (fun i => fastBlock 94 (i + 32)) = 244 := budgetGRow94 8 (by decide)
-theorem budgetGBlocks94_36 :
-    sumRange 4 (fun i => fastBlock 94 (i + 36)) = 81 := budgetGRow94 9 (by decide)
-theorem budgetGBlocks94_40 :
-    sumRange 4 (fun i => fastBlock 94 (i + 40)) = 14 := budgetGRow94 10 (by decide)
-theorem grade94 : fastGrade 94 = 22267 := by
-  have h8 := budgetGRangeJoin (fastBlock 94) 4 4 budgetGBlocks94_00 budgetGBlocks94_04
-  have h12 := budgetGRangeJoin (fastBlock 94) 8 4 h8 budgetGBlocks94_08
-  have h16 := budgetGRangeJoin (fastBlock 94) 12 4 h12 budgetGBlocks94_12
-  have h20 := budgetGRangeJoin (fastBlock 94) 16 4 h16 budgetGBlocks94_16
-  have h24 := budgetGRangeJoin (fastBlock 94) 20 4 h20 budgetGBlocks94_20
-  have h28 := budgetGRangeJoin (fastBlock 94) 24 4 h24 budgetGBlocks94_24
-  have h32 := budgetGRangeJoin (fastBlock 94) 28 4 h28 budgetGBlocks94_28
-  have h36 := budgetGRangeJoin (fastBlock 94) 32 4 h32 budgetGBlocks94_32
-  have h40 := budgetGRangeJoin (fastBlock 94) 36 4 h36 budgetGBlocks94_36
-  have h44 := budgetGRangeJoin (fastBlock 94) 40 4 h40 budgetGBlocks94_40
-  exact budgetGRangeJoin (fastBlock 94) 44 94 h44
-    (budgetGZeroTail 94 44 94 (by decide))
-theorem budgetGRow95 : ∀ g < 11, budgetGGroupFact 95 0x700e40c0071c379180098738e541046bc733 g :=
-  budgetGReadGroups 95 0x700e40c0071c379180098738e541046bc733 (by decide) (by decide) (by decide +kernel)
-theorem budgetGBlocks95_00 :
-    sumRange 4 (fastBlock 95) = 1843 := budgetGRow95 0 (by decide)
-theorem budgetGBlocks95_04 :
-    sumRange 4 (fun i => fastBlock 95 (i + 4)) = 4527 := budgetGRow95 1 (by decide)
-theorem budgetGBlocks95_08 :
-    sumRange 4 (fun i => fastBlock 95 (i + 8)) = 5136 := budgetGRow95 2 (by decide)
-theorem budgetGBlocks95_12 :
-    sumRange 4 (fun i => fastBlock 95 (i + 12)) = 3641 := budgetGRow95 3 (by decide)
-theorem budgetGBlocks95_16 :
-    sumRange 4 (fun i => fastBlock 95 (i + 16)) = 2439 := budgetGRow95 4 (by decide)
-theorem budgetGBlocks95_20 :
-    sumRange 4 (fun i => fastBlock 95 (i + 20)) = 1536 := budgetGRow95 5 (by decide)
-theorem budgetGBlocks95_24 :
-    sumRange 4 (fun i => fastBlock 95 (i + 24)) = 889 := budgetGRow95 6 (by decide)
-theorem budgetGBlocks95_28 :
-    sumRange 4 (fun i => fastBlock 95 (i + 28)) = 455 := budgetGRow95 7 (by decide)
-theorem budgetGBlocks95_32 :
-    sumRange 4 (fun i => fastBlock 95 (i + 32)) = 192 := budgetGRow95 8 (by decide)
-theorem budgetGBlocks95_36 :
-    sumRange 4 (fun i => fastBlock 95 (i + 36)) = 57 := budgetGRow95 9 (by decide)
-theorem budgetGBlocks95_40 :
-    sumRange 3 (fun i => fastBlock 95 (i + 40)) = 7 := budgetGRow95 10 (by decide)
-theorem grade95 : fastGrade 95 = 20722 := by
-  have h8 := budgetGRangeJoin (fastBlock 95) 4 4 budgetGBlocks95_00 budgetGBlocks95_04
-  have h12 := budgetGRangeJoin (fastBlock 95) 8 4 h8 budgetGBlocks95_08
-  have h16 := budgetGRangeJoin (fastBlock 95) 12 4 h12 budgetGBlocks95_12
-  have h20 := budgetGRangeJoin (fastBlock 95) 16 4 h16 budgetGBlocks95_16
-  have h24 := budgetGRangeJoin (fastBlock 95) 20 4 h20 budgetGBlocks95_20
-  have h28 := budgetGRangeJoin (fastBlock 95) 24 4 h24 budgetGBlocks95_24
-  have h32 := budgetGRangeJoin (fastBlock 95) 28 4 h28 budgetGBlocks95_28
-  have h36 := budgetGRangeJoin (fastBlock 95) 32 4 h32 budgetGBlocks95_32
-  have h40 := budgetGRangeJoin (fastBlock 95) 36 4 h36 budgetGBlocks95_36
-  have h43 := budgetGRangeJoin (fastBlock 95) 40 3 h40 budgetGBlocks95_40
-  exact budgetGRangeJoin (fastBlock 95) 43 95 h43
-    (budgetGZeroTail 95 43 95 (by decide))
-theorem budgetGRow96 : ∀ g < 11, budgetGGroupFact 96 0x3009809405dc2fa152088b33b927f46bc733 g :=
-  budgetGReadGroups 96 0x3009809405dc2fa152088b33b927f46bc733 (by decide) (by decide) (by decide +kernel)
-theorem budgetGBlocks96_00 :
-    sumRange 4 (fastBlock 96) = 1843 := budgetGRow96 0 (by decide)
-theorem budgetGBlocks96_04 :
-    sumRange 4 (fun i => fastBlock 96 (i + 4)) = 4527 := budgetGRow96 1 (by decide)
-theorem budgetGBlocks96_08 :
-    sumRange 4 (fun i => fastBlock 96 (i + 8)) = 4735 := budgetGRow96 2 (by decide)
-theorem budgetGBlocks96_12 :
-    sumRange 4 (fun i => fastBlock 96 (i + 12)) = 3310 := budgetGRow96 3 (by decide)
-theorem budgetGBlocks96_16 :
-    sumRange 4 (fun i => fastBlock 96 (i + 16)) = 2187 := budgetGRow96 4 (by decide)
-theorem budgetGBlocks96_20 :
-    sumRange 4 (fun i => fastBlock 96 (i + 20)) = 1352 := budgetGRow96 5 (by decide)
-theorem budgetGBlocks96_24 :
-    sumRange 4 (fun i => fastBlock 96 (i + 24)) = 762 := budgetGRow96 6 (by decide)
-theorem budgetGBlocks96_28 :
-    sumRange 4 (fun i => fastBlock 96 (i + 28)) = 375 := budgetGRow96 7 (by decide)
-theorem budgetGBlocks96_32 :
-    sumRange 4 (fun i => fastBlock 96 (i + 32)) = 148 := budgetGRow96 8 (by decide)
-theorem budgetGBlocks96_36 :
-    sumRange 4 (fun i => fastBlock 96 (i + 36)) = 38 := budgetGRow96 9 (by decide)
-theorem budgetGBlocks96_40 :
-    sumRange 2 (fun i => fastBlock 96 (i + 40)) = 3 := budgetGRow96 10 (by decide)
-theorem grade96 : fastGrade 96 = 19280 := by
-  have h8 := budgetGRangeJoin (fastBlock 96) 4 4 budgetGBlocks96_00 budgetGBlocks96_04
-  have h12 := budgetGRangeJoin (fastBlock 96) 8 4 h8 budgetGBlocks96_08
-  have h16 := budgetGRangeJoin (fastBlock 96) 12 4 h12 budgetGBlocks96_12
-  have h20 := budgetGRangeJoin (fastBlock 96) 16 4 h16 budgetGBlocks96_16
-  have h24 := budgetGRangeJoin (fastBlock 96) 20 4 h20 budgetGBlocks96_20
-  have h28 := budgetGRangeJoin (fastBlock 96) 24 4 h24 budgetGBlocks96_24
-  have h32 := budgetGRangeJoin (fastBlock 96) 28 4 h28 budgetGBlocks96_28
-  have h36 := budgetGRangeJoin (fastBlock 96) 32 4 h32 budgetGBlocks96_32
-  have h40 := budgetGRangeJoin (fastBlock 96) 36 4 h36 budgetGBlocks96_36
-  have h42 := budgetGRangeJoin (fastBlock 96) 40 2 h40 budgetGBlocks96_40
-  exact budgetGRangeJoin (fastBlock 96) 42 96 h42
-    (budgetGZeroTail 96 42 96 (by decide))
-theorem budgetGRow97 : ∀ g < 11, budgetGGroupFact 97 0x1006006f04c4288127c7a12ee10fd4574733 g :=
-  budgetGReadGroups 97 0x1006006f04c4288127c7a12ee10fd4574733 (by decide) (by decide) (by decide +kernel)
-theorem budgetGBlocks97_00 :
-    sumRange 4 (fastBlock 97) = 1843 := budgetGRow97 0 (by decide)
-theorem budgetGBlocks97_04 :
-    sumRange 4 (fun i => fastBlock 97 (i + 4)) = 4445 := budgetGRow97 1 (by decide)
-theorem budgetGBlocks97_08 :
-    sumRange 4 (fun i => fastBlock 97 (i + 8)) = 4349 := budgetGRow97 2 (by decide)
-theorem budgetGBlocks97_12 :
-    sumRange 4 (fun i => fastBlock 97 (i + 12)) = 3000 := budgetGRow97 3 (by decide)
-theorem budgetGBlocks97_16 :
-    sumRange 4 (fun i => fastBlock 97 (i + 16)) = 1953 := budgetGRow97 4 (by decide)
-theorem budgetGBlocks97_20 :
-    sumRange 4 (fun i => fastBlock 97 (i + 20)) = 1183 := budgetGRow97 5 (by decide)
-theorem budgetGBlocks97_24 :
-    sumRange 4 (fun i => fastBlock 97 (i + 24)) = 648 := budgetGRow97 6 (by decide)
-theorem budgetGBlocks97_28 :
-    sumRange 4 (fun i => fastBlock 97 (i + 28)) = 305 := budgetGRow97 7 (by decide)
-theorem budgetGBlocks97_32 :
-    sumRange 4 (fun i => fastBlock 97 (i + 32)) = 111 := budgetGRow97 8 (by decide)
-theorem budgetGBlocks97_36 :
-    sumRange 4 (fun i => fastBlock 97 (i + 36)) = 24 := budgetGRow97 9 (by decide)
-theorem budgetGBlocks97_40 :
-    sumRange 1 (fun i => fastBlock 97 (i + 40)) = 1 := budgetGRow97 10 (by decide)
-theorem grade97 : fastGrade 97 = 17862 := by
-  have h8 := budgetGRangeJoin (fastBlock 97) 4 4 budgetGBlocks97_00 budgetGBlocks97_04
-  have h12 := budgetGRangeJoin (fastBlock 97) 8 4 h8 budgetGBlocks97_08
-  have h16 := budgetGRangeJoin (fastBlock 97) 12 4 h12 budgetGBlocks97_12
-  have h20 := budgetGRangeJoin (fastBlock 97) 16 4 h16 budgetGBlocks97_16
-  have h24 := budgetGRangeJoin (fastBlock 97) 20 4 h20 budgetGBlocks97_20
-  have h28 := budgetGRangeJoin (fastBlock 97) 24 4 h24 budgetGBlocks97_24
-  have h32 := budgetGRangeJoin (fastBlock 97) 28 4 h28 budgetGBlocks97_28
-  have h36 := budgetGRangeJoin (fastBlock 97) 32 4 h32 budgetGBlocks97_32
-  have h40 := budgetGRangeJoin (fastBlock 97) 36 4 h36 budgetGBlocks97_36
-  have h41 := budgetGRangeJoin (fastBlock 97) 40 1 h40 budgetGBlocks97_40
-  exact budgetGRangeJoin (fastBlock 97) 41 97 h41
-    (budgetGZeroTail 97 41 97 (by decide))
-theorem budgetGRow98 : ∀ g < 10, budgetGGroupFact 98 0x3805103d022210146c82a58f8d4414733 g :=
-  budgetGReadGroups 98 0x3805103d022210146c82a58f8d4414733 (by decide) (by decide) (by decide +kernel)
-theorem budgetGBlocks98_00 :
-    sumRange 4 (fastBlock 98) = 1843 := budgetGRow98 0 (by decide)
-theorem budgetGBlocks98_04 :
-    sumRange 4 (fun i => fastBlock 98 (i + 4)) = 4357 := budgetGRow98 1 (by decide)
-theorem budgetGBlocks98_08 :
-    sumRange 4 (fun i => fastBlock 98 (i + 8)) = 3981 := budgetGRow98 2 (by decide)
-theorem budgetGBlocks98_12 :
-    sumRange 4 (fun i => fastBlock 98 (i + 12)) = 2710 := budgetGRow98 3 (by decide)
-theorem budgetGBlocks98_16 :
-    sumRange 4 (fun i => fastBlock 98 (i + 16)) = 1736 := budgetGRow98 4 (by decide)
-theorem budgetGBlocks98_20 :
-    sumRange 4 (fun i => fastBlock 98 (i + 20)) = 1029 := budgetGRow98 5 (by decide)
-theorem budgetGBlocks98_24 :
-    sumRange 4 (fun i => fastBlock 98 (i + 24)) = 546 := budgetGRow98 6 (by decide)
-theorem budgetGBlocks98_28 :
-    sumRange 4 (fun i => fastBlock 98 (i + 28)) = 244 := budgetGRow98 7 (by decide)
-theorem budgetGBlocks98_32 :
-    sumRange 4 (fun i => fastBlock 98 (i + 32)) = 81 := budgetGRow98 8 (by decide)
-theorem budgetGBlocks98_36 :
-    sumRange 4 (fun i => fastBlock 98 (i + 36)) = 14 := budgetGRow98 9 (by decide)
-theorem grade98 : fastGrade 98 = 16541 := by
-  have h8 := budgetGRangeJoin (fastBlock 98) 4 4 budgetGBlocks98_00 budgetGBlocks98_04
-  have h12 := budgetGRangeJoin (fastBlock 98) 8 4 h8 budgetGBlocks98_08
-  have h16 := budgetGRangeJoin (fastBlock 98) 12 4 h12 budgetGBlocks98_12
-  have h20 := budgetGRangeJoin (fastBlock 98) 16 4 h16 budgetGBlocks98_16
-  have h24 := budgetGRangeJoin (fastBlock 98) 20 4 h20 budgetGBlocks98_20
-  have h28 := budgetGRangeJoin (fastBlock 98) 24 4 h24 budgetGBlocks98_24
-  have h32 := budgetGRangeJoin (fastBlock 98) 28 4 h28 budgetGBlocks98_28
-  have h36 := budgetGRangeJoin (fastBlock 98) 32 4 h32 budgetGBlocks98_32
-  have h40 := budgetGRangeJoin (fastBlock 98) 36 4 h36 budgetGBlocks98_36
-  exact budgetGRangeJoin (fastBlock 98) 40 98 h40
-    (budgetGZeroTail 98 40 98 (by decide))
-theorem budgetGRow99 : ∀ g < 10, budgetGGroupFact 99 0x1c03903001c70de4600261ce324190733 g :=
-  budgetGReadGroups 99 0x1c03903001c70de4600261ce324190733 (by decide) (by decide) (by decide +kernel)
-theorem budgetGBlocks99_00 :
-    sumRange 4 (fastBlock 99) = 1843 := budgetGRow99 0 (by decide)
-theorem budgetGBlocks99_04 :
-    sumRange 4 (fun i => fastBlock 99 (i + 4)) = 4196 := budgetGRow99 1 (by decide)
-theorem budgetGBlocks99_08 :
-    sumRange 4 (fun i => fastBlock 99 (i + 8)) = 3634 := budgetGRow99 2 (by decide)
-theorem budgetGBlocks99_12 :
-    sumRange 4 (fun i => fastBlock 99 (i + 12)) = 2439 := budgetGRow99 3 (by decide)
-theorem budgetGBlocks99_16 :
-    sumRange 4 (fun i => fastBlock 99 (i + 16)) = 1536 := budgetGRow99 4 (by decide)
-theorem budgetGBlocks99_20 :
-    sumRange 4 (fun i => fastBlock 99 (i + 20)) = 889 := budgetGRow99 5 (by decide)
-theorem budgetGBlocks99_24 :
-    sumRange 4 (fun i => fastBlock 99 (i + 24)) = 455 := budgetGRow99 6 (by decide)
-theorem budgetGBlocks99_28 :
-    sumRange 4 (fun i => fastBlock 99 (i + 28)) = 192 := budgetGRow99 7 (by decide)
-theorem budgetGBlocks99_32 :
-    sumRange 4 (fun i => fastBlock 99 (i + 32)) = 57 := budgetGRow99 8 (by decide)
-theorem budgetGBlocks99_36 :
-    sumRange 3 (fun i => fastBlock 99 (i + 36)) = 7 := budgetGRow99 9 (by decide)
-theorem grade99 : fastGrade 99 = 15248 := by
-  have h8 := budgetGRangeJoin (fastBlock 99) 4 4 budgetGBlocks99_00 budgetGBlocks99_04
-  have h12 := budgetGRangeJoin (fastBlock 99) 8 4 h8 budgetGBlocks99_08
-  have h16 := budgetGRangeJoin (fastBlock 99) 12 4 h12 budgetGBlocks99_12
-  have h20 := budgetGRangeJoin (fastBlock 99) 16 4 h16 budgetGBlocks99_16
-  have h24 := budgetGRangeJoin (fastBlock 99) 20 4 h20 budgetGBlocks99_20
-  have h28 := budgetGRangeJoin (fastBlock 99) 24 4 h24 budgetGBlocks99_24
-  have h32 := budgetGRangeJoin (fastBlock 99) 28 4 h28 budgetGBlocks99_28
-  have h36 := budgetGRangeJoin (fastBlock 99) 32 4 h32 budgetGBlocks99_32
-  have h39 := budgetGRangeJoin (fastBlock 99) 36 3 h36 budgetGBlocks99_36
-  exact budgetGRangeJoin (fastBlock 99) 39 99 h39
-    (budgetGZeroTail 99 39 99 (by decide))
-theorem budgetGRow100 : ∀ g < 10, budgetGGroupFact 100 0xc02602501770be8548222ccea3efc733 g :=
-  budgetGReadGroups 100 0xc02602501770be8548222ccea3efc733 (by decide) (by decide) (by decide +kernel)
-theorem budgetGBlocks100_00 :
-    sumRange 4 (fastBlock 100) = 1843 := budgetGRow100 0 (by decide)
-theorem budgetGBlocks100_04 :
-    sumRange 4 (fun i => fastBlock 100 (i + 4)) = 4031 := budgetGRow100 1 (by decide)
-theorem budgetGBlocks100_08 :
-    sumRange 4 (fun i => fastBlock 100 (i + 8)) = 3306 := budgetGRow100 2 (by decide)
-theorem budgetGBlocks100_12 :
-    sumRange 4 (fun i => fastBlock 100 (i + 12)) = 2187 := budgetGRow100 3 (by decide)
-theorem budgetGBlocks100_16 :
-    sumRange 4 (fun i => fastBlock 100 (i + 16)) = 1352 := budgetGRow100 4 (by decide)
-theorem budgetGBlocks100_20 :
-    sumRange 4 (fun i => fastBlock 100 (i + 20)) = 762 := budgetGRow100 5 (by decide)
-theorem budgetGBlocks100_24 :
-    sumRange 4 (fun i => fastBlock 100 (i + 24)) = 375 := budgetGRow100 6 (by decide)
-theorem budgetGBlocks100_28 :
-    sumRange 4 (fun i => fastBlock 100 (i + 28)) = 148 := budgetGRow100 7 (by decide)
-theorem budgetGBlocks100_32 :
-    sumRange 4 (fun i => fastBlock 100 (i + 32)) = 38 := budgetGRow100 8 (by decide)
-theorem budgetGBlocks100_36 :
-    sumRange 2 (fun i => fastBlock 100 (i + 36)) = 3 := budgetGRow100 9 (by decide)
-theorem grade100 : fastGrade 100 = 14045 := by
-  have h8 := budgetGRangeJoin (fastBlock 100) 4 4 budgetGBlocks100_00 budgetGBlocks100_04
-  have h12 := budgetGRangeJoin (fastBlock 100) 8 4 h8 budgetGBlocks100_08
-  have h16 := budgetGRangeJoin (fastBlock 100) 12 4 h12 budgetGBlocks100_12
-  have h20 := budgetGRangeJoin (fastBlock 100) 16 4 h16 budgetGBlocks100_16
-  have h24 := budgetGRangeJoin (fastBlock 100) 20 4 h20 budgetGBlocks100_20
-  have h28 := budgetGRangeJoin (fastBlock 100) 24 4 h24 budgetGBlocks100_24
-  have h32 := budgetGRangeJoin (fastBlock 100) 28 4 h28 budgetGBlocks100_28
-  have h36 := budgetGRangeJoin (fastBlock 100) 32 4 h32 budgetGBlocks100_32
-  have h38 := budgetGRangeJoin (fastBlock 100) 36 2 h36 budgetGBlocks100_36
-  exact budgetGRangeJoin (fastBlock 100) 38 100 h38
-    (budgetGZeroTail 100 38 100 (by decide))
-theorem budgetGRow101 : ∀ g < 10, budgetGGroupFact 101 0x401801bc1310a2049f1e84bb63b88733 g :=
-  budgetGReadGroups 101 0x401801bc1310a2049f1e84bb63b88733 (by decide) (by decide) (by decide +kernel)
-theorem budgetGBlocks101_00 :
-    sumRange 4 (fastBlock 101) = 1843 := budgetGRow101 0 (by decide)
-theorem budgetGBlocks101_04 :
-    sumRange 4 (fun i => fastBlock 101 (i + 4)) = 3810 := budgetGRow101 1 (by decide)
-theorem budgetGBlocks101_08 :
-    sumRange 4 (fun i => fastBlock 101 (i + 8)) = 2998 := budgetGRow101 2 (by decide)
-theorem budgetGBlocks101_12 :
-    sumRange 4 (fun i => fastBlock 101 (i + 12)) = 1953 := budgetGRow101 3 (by decide)
-theorem budgetGBlocks101_16 :
-    sumRange 4 (fun i => fastBlock 101 (i + 16)) = 1183 := budgetGRow101 4 (by decide)
-theorem budgetGBlocks101_20 :
-    sumRange 4 (fun i => fastBlock 101 (i + 20)) = 648 := budgetGRow101 5 (by decide)
-theorem budgetGBlocks101_24 :
-    sumRange 4 (fun i => fastBlock 101 (i + 24)) = 305 := budgetGRow101 6 (by decide)
-theorem budgetGBlocks101_28 :
-    sumRange 4 (fun i => fastBlock 101 (i + 28)) = 111 := budgetGRow101 7 (by decide)
-theorem budgetGBlocks101_32 :
-    sumRange 4 (fun i => fastBlock 101 (i + 32)) = 24 := budgetGRow101 8 (by decide)
-theorem budgetGBlocks101_36 :
-    sumRange 1 (fun i => fastBlock 101 (i + 36)) = 1 := budgetGRow101 9 (by decide)
-theorem grade101 : fastGrade 101 = 12876 := by
-  have h8 := budgetGRangeJoin (fastBlock 101) 4 4 budgetGBlocks101_00 budgetGBlocks101_04
-  have h12 := budgetGRangeJoin (fastBlock 101) 8 4 h8 budgetGBlocks101_08
-  have h16 := budgetGRangeJoin (fastBlock 101) 12 4 h12 budgetGBlocks101_12
-  have h20 := budgetGRangeJoin (fastBlock 101) 16 4 h16 budgetGBlocks101_16
-  have h24 := budgetGRangeJoin (fastBlock 101) 20 4 h20 budgetGBlocks101_20
-  have h28 := budgetGRangeJoin (fastBlock 101) 24 4 h24 budgetGBlocks101_24
-  have h32 := budgetGRangeJoin (fastBlock 101) 28 4 h28 budgetGBlocks101_28
-  have h36 := budgetGRangeJoin (fastBlock 101) 32 4 h32 budgetGBlocks101_32
-  have h37 := budgetGRangeJoin (fastBlock 101) 36 1 h36 budgetGBlocks101_36
-  exact budgetGRangeJoin (fastBlock 101) 37 101 h37
-    (budgetGZeroTail 101 37 101 (by decide))
-theorem budgetGRow102 : ∀ g < 9, budgetGGroupFact 102 0xe01440f408884051b20a95380c733 g :=
-  budgetGReadGroups 102 0xe01440f408884051b20a95380c733 (by decide) (by decide) (by decide +kernel)
-theorem budgetGBlocks102_00 :
-    sumRange 4 (fastBlock 102) = 1843 := budgetGRow102 0 (by decide)
-theorem budgetGBlocks102_04 :
-    sumRange 4 (fun i => fastBlock 102 (i + 4)) = 3587 := budgetGRow102 1 (by decide)
-theorem budgetGBlocks102_08 :
-    sumRange 4 (fun i => fastBlock 102 (i + 8)) = 2709 := budgetGRow102 2 (by decide)
-theorem budgetGBlocks102_12 :
-    sumRange 4 (fun i => fastBlock 102 (i + 12)) = 1736 := budgetGRow102 3 (by decide)
-theorem budgetGBlocks102_16 :
-    sumRange 4 (fun i => fastBlock 102 (i + 16)) = 1029 := budgetGRow102 4 (by decide)
-theorem budgetGBlocks102_20 :
-    sumRange 4 (fun i => fastBlock 102 (i + 20)) = 546 := budgetGRow102 5 (by decide)
-theorem budgetGBlocks102_24 :
-    sumRange 4 (fun i => fastBlock 102 (i + 24)) = 244 := budgetGRow102 6 (by decide)
-theorem budgetGBlocks102_28 :
-    sumRange 4 (fun i => fastBlock 102 (i + 28)) = 81 := budgetGRow102 7 (by decide)
-theorem budgetGBlocks102_32 :
-    sumRange 4 (fun i => fastBlock 102 (i + 32)) = 14 := budgetGRow102 8 (by decide)
-theorem grade102 : fastGrade 102 = 11789 := by
-  have h8 := budgetGRangeJoin (fastBlock 102) 4 4 budgetGBlocks102_00 budgetGBlocks102_04
-  have h12 := budgetGRangeJoin (fastBlock 102) 8 4 h8 budgetGBlocks102_08
-  have h16 := budgetGRangeJoin (fastBlock 102) 12 4 h12 budgetGBlocks102_12
-  have h20 := budgetGRangeJoin (fastBlock 102) 16 4 h16 budgetGBlocks102_16
-  have h24 := budgetGRangeJoin (fastBlock 102) 20 4 h20 budgetGBlocks102_20
-  have h28 := budgetGRangeJoin (fastBlock 102) 24 4 h24 budgetGBlocks102_24
-  have h32 := budgetGRangeJoin (fastBlock 102) 28 4 h28 budgetGBlocks102_28
-  have h36 := budgetGRangeJoin (fastBlock 102) 32 4 h32 budgetGBlocks102_32
-  exact budgetGRangeJoin (fastBlock 102) 36 102 h36
-    (budgetGZeroTail 102 36 102 (by decide))
-theorem budgetGRow103 : ∀ g < 9, budgetGGroupFact 103 0x700e40c0071c379180098733ec733 g :=
-  budgetGReadGroups 103 0x700e40c0071c379180098733ec733 (by decide) (by decide) (by decide +kernel)
-theorem budgetGBlocks103_00 :
-    sumRange 4 (fastBlock 103) = 1843 := budgetGRow103 0 (by decide)
-theorem budgetGBlocks103_04 :
-    sumRange 4 (fun i => fastBlock 103 (i + 4)) = 3323 := budgetGRow103 1 (by decide)
-theorem budgetGBlocks103_08 :
-    sumRange 4 (fun i => fastBlock 103 (i + 8)) = 2439 := budgetGRow103 2 (by decide)
-theorem budgetGBlocks103_12 :
-    sumRange 4 (fun i => fastBlock 103 (i + 12)) = 1536 := budgetGRow103 3 (by decide)
-theorem budgetGBlocks103_16 :
-    sumRange 4 (fun i => fastBlock 103 (i + 16)) = 889 := budgetGRow103 4 (by decide)
-theorem budgetGBlocks103_20 :
-    sumRange 4 (fun i => fastBlock 103 (i + 20)) = 455 := budgetGRow103 5 (by decide)
-theorem budgetGBlocks103_24 :
-    sumRange 4 (fun i => fastBlock 103 (i + 24)) = 192 := budgetGRow103 6 (by decide)
-theorem budgetGBlocks103_28 :
-    sumRange 4 (fun i => fastBlock 103 (i + 28)) = 57 := budgetGRow103 7 (by decide)
-theorem budgetGBlocks103_32 :
-    sumRange 3 (fun i => fastBlock 103 (i + 32)) = 7 := budgetGRow103 8 (by decide)
-theorem grade103 : fastGrade 103 = 10741 := by
-  have h8 := budgetGRangeJoin (fastBlock 103) 4 4 budgetGBlocks103_00 budgetGBlocks103_04
-  have h12 := budgetGRangeJoin (fastBlock 103) 8 4 h8 budgetGBlocks103_08
-  have h16 := budgetGRangeJoin (fastBlock 103) 12 4 h12 budgetGBlocks103_12
-  have h20 := budgetGRangeJoin (fastBlock 103) 16 4 h16 budgetGBlocks103_16
-  have h24 := budgetGRangeJoin (fastBlock 103) 20 4 h20 budgetGBlocks103_20
-  have h28 := budgetGRangeJoin (fastBlock 103) 24 4 h24 budgetGBlocks103_24
-  have h32 := budgetGRangeJoin (fastBlock 103) 28 4 h28 budgetGBlocks103_28
-  have h35 := budgetGRangeJoin (fastBlock 103) 32 3 h32 budgetGBlocks103_32
-  exact budgetGRangeJoin (fastBlock 103) 35 103 h35
-    (budgetGZeroTail 103 35 103 (by decide))
-theorem budgetGRow104 : ∀ g < 9, budgetGGroupFact 104 0x3009809405dc2fa152088b2fc8733 g :=
-  budgetGReadGroups 104 0x3009809405dc2fa152088b2fc8733 (by decide) (by decide) (by decide +kernel)
-theorem budgetGBlocks104_00 :
-    sumRange 4 (fastBlock 104) = 1843 := budgetGRow104 0 (by decide)
-theorem budgetGBlocks104_04 :
-    sumRange 4 (fun i => fastBlock 104 (i + 4)) = 3058 := budgetGRow104 1 (by decide)
-theorem budgetGBlocks104_08 :
-    sumRange 4 (fun i => fastBlock 104 (i + 8)) = 2187 := budgetGRow104 2 (by decide)
-theorem budgetGBlocks104_12 :
-    sumRange 4 (fun i => fastBlock 104 (i + 12)) = 1352 := budgetGRow104 3 (by decide)
-theorem budgetGBlocks104_16 :
-    sumRange 4 (fun i => fastBlock 104 (i + 16)) = 762 := budgetGRow104 4 (by decide)
-theorem budgetGBlocks104_20 :
-    sumRange 4 (fun i => fastBlock 104 (i + 20)) = 375 := budgetGRow104 5 (by decide)
-theorem budgetGBlocks104_24 :
-    sumRange 4 (fun i => fastBlock 104 (i + 24)) = 148 := budgetGRow104 6 (by decide)
-theorem budgetGBlocks104_28 :
-    sumRange 4 (fun i => fastBlock 104 (i + 28)) = 38 := budgetGRow104 7 (by decide)
-theorem budgetGBlocks104_32 :
-    sumRange 2 (fun i => fastBlock 104 (i + 32)) = 3 := budgetGRow104 8 (by decide)
-theorem grade104 : fastGrade 104 = 9766 := by
-  have h8 := budgetGRangeJoin (fastBlock 104) 4 4 budgetGBlocks104_00 budgetGBlocks104_04
-  have h12 := budgetGRangeJoin (fastBlock 104) 8 4 h8 budgetGBlocks104_08
-  have h16 := budgetGRangeJoin (fastBlock 104) 12 4 h12 budgetGBlocks104_12
-  have h20 := budgetGRangeJoin (fastBlock 104) 16 4 h16 budgetGBlocks104_16
-  have h24 := budgetGRangeJoin (fastBlock 104) 20 4 h20 budgetGBlocks104_20
-  have h28 := budgetGRangeJoin (fastBlock 104) 24 4 h24 budgetGBlocks104_24
-  have h32 := budgetGRangeJoin (fastBlock 104) 28 4 h28 budgetGBlocks104_28
-  have h34 := budgetGRangeJoin (fastBlock 104) 32 2 h32 budgetGBlocks104_32
-  exact budgetGRangeJoin (fastBlock 104) 34 104 h34
-    (budgetGZeroTail 104 34 104 (by decide))
-theorem budgetGRow105 : ∀ g < 9, budgetGGroupFact 105 0x1006006f04c4288127c7a12bc4719 g :=
-  budgetGReadGroups 105 0x1006006f04c4288127c7a12bc4719 (by decide) (by decide) (by decide +kernel)
-theorem budgetGBlocks105_00 :
-    sumRange 4 (fastBlock 105) = 1817 := budgetGRow105 0 (by decide)
-theorem budgetGBlocks105_04 :
-    sumRange 4 (fun i => fastBlock 105 (i + 4)) = 2801 := budgetGRow105 1 (by decide)
-theorem budgetGBlocks105_08 :
-    sumRange 4 (fun i => fastBlock 105 (i + 8)) = 1953 := budgetGRow105 2 (by decide)
-theorem budgetGBlocks105_12 :
-    sumRange 4 (fun i => fastBlock 105 (i + 12)) = 1183 := budgetGRow105 3 (by decide)
-theorem budgetGBlocks105_16 :
-    sumRange 4 (fun i => fastBlock 105 (i + 16)) = 648 := budgetGRow105 4 (by decide)
-theorem budgetGBlocks105_20 :
-    sumRange 4 (fun i => fastBlock 105 (i + 20)) = 305 := budgetGRow105 5 (by decide)
-theorem budgetGBlocks105_24 :
-    sumRange 4 (fun i => fastBlock 105 (i + 24)) = 111 := budgetGRow105 6 (by decide)
-theorem budgetGBlocks105_28 :
-    sumRange 4 (fun i => fastBlock 105 (i + 28)) = 24 := budgetGRow105 7 (by decide)
-theorem budgetGBlocks105_32 :
-    sumRange 1 (fun i => fastBlock 105 (i + 32)) = 1 := budgetGRow105 8 (by decide)
-theorem grade105 : fastGrade 105 = 8843 := by
-  have h8 := budgetGRangeJoin (fastBlock 105) 4 4 budgetGBlocks105_00 budgetGBlocks105_04
-  have h12 := budgetGRangeJoin (fastBlock 105) 8 4 h8 budgetGBlocks105_08
-  have h16 := budgetGRangeJoin (fastBlock 105) 12 4 h12 budgetGBlocks105_12
-  have h20 := budgetGRangeJoin (fastBlock 105) 16 4 h16 budgetGBlocks105_16
-  have h24 := budgetGRangeJoin (fastBlock 105) 20 4 h20 budgetGBlocks105_20
-  have h28 := budgetGRangeJoin (fastBlock 105) 24 4 h24 budgetGBlocks105_24
-  have h32 := budgetGRangeJoin (fastBlock 105) 28 4 h28 budgetGBlocks105_28
-  have h33 := budgetGRangeJoin (fastBlock 105) 32 1 h32 budgetGBlocks105_32
-  exact budgetGRangeJoin (fastBlock 105) 33 105 h33
-    (budgetGZeroTail 105 33 105 (by decide))
-theorem budgetGRow106 : ∀ g < 8, budgetGGroupFact 106 0x3805103d022210146c827e86e6 g :=
-  budgetGReadGroups 106 0x3805103d022210146c827e86e6 (by decide) (by decide) (by decide +kernel)
-theorem budgetGBlocks106_00 :
-    sumRange 4 (fastBlock 106) = 1766 := budgetGRow106 0 (by decide)
-theorem budgetGBlocks106_04 :
-    sumRange 4 (fun i => fastBlock 106 (i + 4)) = 2554 := budgetGRow106 1 (by decide)
-theorem budgetGBlocks106_08 :
-    sumRange 4 (fun i => fastBlock 106 (i + 8)) = 1736 := budgetGRow106 2 (by decide)
-theorem budgetGBlocks106_12 :
-    sumRange 4 (fun i => fastBlock 106 (i + 12)) = 1029 := budgetGRow106 3 (by decide)
-theorem budgetGBlocks106_16 :
-    sumRange 4 (fun i => fastBlock 106 (i + 16)) = 546 := budgetGRow106 4 (by decide)
-theorem budgetGBlocks106_20 :
-    sumRange 4 (fun i => fastBlock 106 (i + 20)) = 244 := budgetGRow106 5 (by decide)
-theorem budgetGBlocks106_24 :
-    sumRange 4 (fun i => fastBlock 106 (i + 24)) = 81 := budgetGRow106 6 (by decide)
-theorem budgetGBlocks106_28 :
-    sumRange 4 (fun i => fastBlock 106 (i + 28)) = 14 := budgetGRow106 7 (by decide)
-theorem grade106 : fastGrade 106 = 7970 := by
-  have h8 := budgetGRangeJoin (fastBlock 106) 4 4 budgetGBlocks106_00 budgetGBlocks106_04
-  have h12 := budgetGRangeJoin (fastBlock 106) 8 4 h8 budgetGBlocks106_08
-  have h16 := budgetGRangeJoin (fastBlock 106) 12 4 h12 budgetGBlocks106_12
-  have h20 := budgetGRangeJoin (fastBlock 106) 16 4 h16 budgetGBlocks106_16
-  have h24 := budgetGRangeJoin (fastBlock 106) 20 4 h20 budgetGBlocks106_20
-  have h28 := budgetGRangeJoin (fastBlock 106) 24 4 h24 budgetGBlocks106_24
-  have h32 := budgetGRangeJoin (fastBlock 106) 28 4 h28 budgetGBlocks106_28
-  exact budgetGRangeJoin (fastBlock 106) 32 106 h32
-    (budgetGZeroTail 106 32 106 (by decide))
-theorem budgetGRow107 : ∀ g < 8, budgetGGroupFact 107 0x1c03903001c70de460024386a2 g :=
-  budgetGReadGroups 107 0x1c03903001c70de460024386a2 (by decide) (by decide) (by decide +kernel)
-theorem budgetGBlocks107_00 :
-    sumRange 4 (fastBlock 107) = 1698 := budgetGRow107 0 (by decide)
-theorem budgetGBlocks107_04 :
-    sumRange 4 (fun i => fastBlock 107 (i + 4)) = 2318 := budgetGRow107 1 (by decide)
-theorem budgetGBlocks107_08 :
-    sumRange 4 (fun i => fastBlock 107 (i + 8)) = 1536 := budgetGRow107 2 (by decide)
-theorem budgetGBlocks107_12 :
-    sumRange 4 (fun i => fastBlock 107 (i + 12)) = 889 := budgetGRow107 3 (by decide)
-theorem budgetGBlocks107_16 :
-    sumRange 4 (fun i => fastBlock 107 (i + 16)) = 455 := budgetGRow107 4 (by decide)
-theorem budgetGBlocks107_20 :
-    sumRange 4 (fun i => fastBlock 107 (i + 20)) = 192 := budgetGRow107 5 (by decide)
-theorem budgetGBlocks107_24 :
-    sumRange 4 (fun i => fastBlock 107 (i + 24)) = 57 := budgetGRow107 6 (by decide)
-theorem budgetGBlocks107_28 :
-    sumRange 3 (fun i => fastBlock 107 (i + 28)) = 7 := budgetGRow107 7 (by decide)
-theorem grade107 : fastGrade 107 = 7152 := by
-  have h8 := budgetGRangeJoin (fastBlock 107) 4 4 budgetGBlocks107_00 budgetGBlocks107_04
-  have h12 := budgetGRangeJoin (fastBlock 107) 8 4 h8 budgetGBlocks107_08
-  have h16 := budgetGRangeJoin (fastBlock 107) 12 4 h12 budgetGBlocks107_12
-  have h20 := budgetGRangeJoin (fastBlock 107) 16 4 h16 budgetGBlocks107_16
-  have h24 := budgetGRangeJoin (fastBlock 107) 20 4 h20 budgetGBlocks107_20
-  have h28 := budgetGRangeJoin (fastBlock 107) 24 4 h24 budgetGBlocks107_24
-  have h31 := budgetGRangeJoin (fastBlock 107) 28 3 h28 budgetGBlocks107_28
-  exact budgetGRangeJoin (fastBlock 107) 31 107 h31
-    (budgetGZeroTail 107 31 107 (by decide))
-theorem budgetGRow108 : ∀ g < 8, budgetGGroupFact 108 0xc02602501770be854820b4665 g :=
-  budgetGReadGroups 108 0xc02602501770be854820b4665 (by decide) (by decide) (by decide +kernel)
-theorem budgetGBlocks108_00 :
-    sumRange 4 (fastBlock 108) = 1637 := budgetGRow108 0 (by decide)
-theorem budgetGBlocks108_04 :
-    sumRange 4 (fun i => fastBlock 108 (i + 4)) = 2093 := budgetGRow108 1 (by decide)
-theorem budgetGBlocks108_08 :
-    sumRange 4 (fun i => fastBlock 108 (i + 8)) = 1352 := budgetGRow108 2 (by decide)
-theorem budgetGBlocks108_12 :
-    sumRange 4 (fun i => fastBlock 108 (i + 12)) = 762 := budgetGRow108 3 (by decide)
-theorem budgetGBlocks108_16 :
-    sumRange 4 (fun i => fastBlock 108 (i + 16)) = 375 := budgetGRow108 4 (by decide)
-theorem budgetGBlocks108_20 :
-    sumRange 4 (fun i => fastBlock 108 (i + 20)) = 148 := budgetGRow108 5 (by decide)
-theorem budgetGBlocks108_24 :
-    sumRange 4 (fun i => fastBlock 108 (i + 24)) = 38 := budgetGRow108 6 (by decide)
-theorem budgetGBlocks108_28 :
-    sumRange 2 (fun i => fastBlock 108 (i + 28)) = 3 := budgetGRow108 7 (by decide)
-theorem grade108 : fastGrade 108 = 6408 := by
-  have h8 := budgetGRangeJoin (fastBlock 108) 4 4 budgetGBlocks108_00 budgetGBlocks108_04
-  have h12 := budgetGRangeJoin (fastBlock 108) 8 4 h8 budgetGBlocks108_08
-  have h16 := budgetGRangeJoin (fastBlock 108) 12 4 h12 budgetGBlocks108_12
-  have h20 := budgetGRangeJoin (fastBlock 108) 16 4 h16 budgetGBlocks108_16
-  have h24 := budgetGRangeJoin (fastBlock 108) 20 4 h20 budgetGBlocks108_20
-  have h28 := budgetGRangeJoin (fastBlock 108) 24 4 h24 budgetGBlocks108_24
-  have h30 := budgetGRangeJoin (fastBlock 108) 28 2 h28 budgetGBlocks108_28
-  exact budgetGRangeJoin (fastBlock 108) 30 108 h30
-    (budgetGZeroTail 108 30 108 (by decide))
-theorem budgetGRow109 : ∀ g < 8, budgetGGroupFact 109 0x401801bc1310a2049f1d68601 g :=
-  budgetGReadGroups 109 0x401801bc1310a2049f1d68601 (by decide) (by decide) (by decide +kernel)
-theorem budgetGBlocks109_00 :
-    sumRange 4 (fastBlock 109) = 1537 := budgetGRow109 0 (by decide)
-theorem budgetGBlocks109_04 :
-    sumRange 4 (fun i => fastBlock 109 (i + 4)) = 1882 := budgetGRow109 1 (by decide)
-theorem budgetGBlocks109_08 :
-    sumRange 4 (fun i => fastBlock 109 (i + 8)) = 1183 := budgetGRow109 2 (by decide)
-theorem budgetGBlocks109_12 :
-    sumRange 4 (fun i => fastBlock 109 (i + 12)) = 648 := budgetGRow109 3 (by decide)
-theorem budgetGBlocks109_16 :
-    sumRange 4 (fun i => fastBlock 109 (i + 16)) = 305 := budgetGRow109 4 (by decide)
-theorem budgetGBlocks109_20 :
-    sumRange 4 (fun i => fastBlock 109 (i + 20)) = 111 := budgetGRow109 5 (by decide)
-theorem budgetGBlocks109_24 :
-    sumRange 4 (fun i => fastBlock 109 (i + 24)) = 24 := budgetGRow109 6 (by decide)
-theorem budgetGBlocks109_28 :
-    sumRange 1 (fun i => fastBlock 109 (i + 28)) = 1 := budgetGRow109 7 (by decide)
-theorem grade109 : fastGrade 109 = 5691 := by
-  have h8 := budgetGRangeJoin (fastBlock 109) 4 4 budgetGBlocks109_00 budgetGBlocks109_04
-  have h12 := budgetGRangeJoin (fastBlock 109) 8 4 h8 budgetGBlocks109_08
-  have h16 := budgetGRangeJoin (fastBlock 109) 12 4 h12 budgetGBlocks109_12
-  have h20 := budgetGRangeJoin (fastBlock 109) 16 4 h16 budgetGBlocks109_16
-  have h24 := budgetGRangeJoin (fastBlock 109) 20 4 h20 budgetGBlocks109_20
-  have h28 := budgetGRangeJoin (fastBlock 109) 24 4 h24 budgetGBlocks109_24
-  have h29 := budgetGRangeJoin (fastBlock 109) 28 1 h28 budgetGBlocks109_28
-  exact budgetGRangeJoin (fastBlock 109) 29 109 h29
-    (budgetGZeroTail 109 29 109 (by decide))
-private theorem sumStep (f : ℕ → ℕ) (n a b : ℕ)
-    (ha : sumRange n f = a) (hb : f n = b) :
-    sumRange (n + 1) f = a + b :=
-  (show sumRange (n + 1) f = sumRange n f + f n from rfl).trans (congrArg₂ Nat.add ha hb)
-private def gradeFrom (i : ℕ) : ℕ := fastGrade (i + 90)
-theorem prefix90 : sumRange 1 gradeFrom = 28988 :=
-  sumStep gradeFrom 0 0 28988 rfl grade90
-theorem prefix91 : sumRange 2 gradeFrom = 56188 :=
-  sumStep gradeFrom 1 28988 27200 prefix90 grade91
-private theorem prefix92 : sumRange 3 gradeFrom = 81688 :=
-  sumStep gradeFrom 2 56188 25500 prefix91 grade92
-theorem prefix93 : sumRange 4 gradeFrom = 105523 :=
-  sumStep gradeFrom 3 81688 23835 prefix92 grade93
-theorem prefix94 : sumRange 5 gradeFrom = 127790 :=
-  sumStep gradeFrom 4 105523 22267 prefix93 grade94
-theorem prefix95 : sumRange 6 gradeFrom = 148512 :=
-  sumStep gradeFrom 5 127790 20722 prefix94 grade95
-theorem prefix96 : sumRange 7 gradeFrom = 167792 :=
-  sumStep gradeFrom 6 148512 19280 prefix95 grade96
-theorem prefix97 : sumRange 8 gradeFrom = 185654 :=
-  sumStep gradeFrom 7 167792 17862 prefix96 grade97
-theorem prefix98 : sumRange 9 gradeFrom = 202195 :=
-  sumStep gradeFrom 8 185654 16541 prefix97 grade98
-theorem prefix99 : sumRange 10 gradeFrom = 217443 :=
-  sumStep gradeFrom 9 202195 15248 prefix98 grade99
-theorem prefix100 : sumRange 11 gradeFrom = 231488 :=
-  sumStep gradeFrom 10 217443 14045 prefix99 grade100
-theorem prefix101 : sumRange 12 gradeFrom = 244364 :=
-  sumStep gradeFrom 11 231488 12876 prefix100 grade101
-theorem prefix102 : sumRange 13 gradeFrom = 256153 :=
-  sumStep gradeFrom 12 244364 11789 prefix101 grade102
-theorem prefix103 : sumRange 14 gradeFrom = 266894 :=
-  sumStep gradeFrom 13 256153 10741 prefix102 grade103
-theorem prefix104 : sumRange 15 gradeFrom = 276660 :=
-  sumStep gradeFrom 14 266894 9766 prefix103 grade104
-theorem prefix105 : sumRange 16 gradeFrom = 285503 :=
-  sumStep gradeFrom 15 276660 8843 prefix104 grade105
-theorem prefix106 : sumRange 17 gradeFrom = 293473 :=
-  sumStep gradeFrom 16 285503 7970 prefix105 grade106
-theorem prefix107 : sumRange 18 gradeFrom = 300625 :=
-  sumStep gradeFrom 17 293473 7152 prefix106 grade107
-theorem prefix108 : sumRange 19 gradeFrom = 307033 :=
-  sumStep gradeFrom 18 300625 6408 prefix107 grade108
-theorem budgetG : sumRange 20 (fun i => fastGrade (i + 90)) = 312724 :=
-  sumStep gradeFrom 19 307033 5691 prefix108 grade109
-end K1_13_1_1
-end
-section
-namespace K1_13_1_1
 open K1_13 MvPolynomial
 open scoped BigOperators
 noncomputable section
@@ -1624,20 +261,20 @@ private def exponents (a b c f : ℕ) : Fin 4 →₀ ℕ :=
   Finsupp.equivFunOnFinite.symm ![a, b, c, f]
 @[simp] private theorem exponents_apply (a b c f : ℕ) (j : Fin 4) :
     exponents a b c f j = ![a, b, c, f] j := by simp [exponents]
-theorem exponents_coords (m : Fin 4 →₀ ℕ) :
+private theorem exponents_coords (m : Fin 4 →₀ ℕ) :
     exponents (m 0) (m 1) (m 2) (m 3) = m := by
   ext i
   fin_cases i <;> simp
-theorem interval_iff (lo hi : ℤ) (j : ℕ) :
+private theorem interval_iff (lo hi : ℤ) (j : ℕ) :
     j < intervalSize lo hi ↔ lo + (j : ℤ) ≤ hi := by
   unfold intervalSize
   omega
-abbrev BandSlots (d : ℕ) (lo hi : ℤ) (top : ℕ) :=
+private abbrev BandSlots (d : ℕ) (lo hi : ℤ) (top : ℕ) :=
   Σ f : Fin (min d top + 1),
     Σ c : Fin (min (d - f.val) ((hi - 3 * f.val) / 2).toNat + 1),
       Fin (intervalSize (max 0 (lo - 2 * c.val - 3 * f.val))
         (min ((d : ℤ) - f.val - c.val) (hi - 2 * c.val - 3 * f.val)))
-def bandEncoding (d : ℕ) (lo hi : ℤ) (top : ℕ) (p : BandSlots d lo hi top) :
+private def bandEncoding (d : ℕ) (lo hi : ℤ) (top : ℕ) (p : BandSlots d lo hi top) :
     {m : Fin 4 →₀ ℕ // BandExponent d lo hi top m} := by
   obtain ⟨f, c, j⟩ := p
   let lower : ℤ := max 0 (lo - 2 * c.val - 3 * f.val)
@@ -1657,7 +294,7 @@ def bandEncoding (d : ℕ) (lo hi : ℤ) (top : ℕ) (p : BandSlots d lo hi top)
   dsimp only [upper] at hj
   change lo - 2 * c.val - 3 * f.val ≤ lower at hlow
   omega
-theorem bandEncoding_bijective (d : ℕ) (lo hi : ℤ) (top : ℕ) :
+private theorem bandEncoding_bijective (d : ℕ) (lo hi : ℤ) (top : ℕ) :
     Function.Bijective (bandEncoding d lo hi top) := by
   constructor
   · rintro ⟨⟨f, hf⟩, ⟨c, hc⟩, ⟨j, hj⟩⟩ ⟨⟨f', hf'⟩, ⟨c', hc'⟩, ⟨j', hj'⟩⟩ h
@@ -1710,11 +347,11 @@ def TargetExponent (d : ℕ) (lo order : ℤ) (m : Fin 4 →₀ ℕ) : Prop :=
   m.degree = d ∧ lo ≤ (m.weight jetIndex : ℤ) ∧ (m.weight targetOrder : ℤ) < order
 def targetSpace (d : ℕ) (lo order : ℤ) : Submodule Geom Form :=
   restrictSupport Geom {m | TargetExponent d lo order m}
-abbrev TargetSlots (d : ℕ) (lo order : ℤ) :=
+private abbrev TargetSlots (d : ℕ) (lo order : ℤ) :=
   Σ a : Fin (d + 1), Σ f : Fin (d - a.val + 1),
     Fin (intervalSize (max 0 (lo - d + a.val - 2 * f.val))
       (min ((d : ℤ) - a.val - f.val) (order - 1 - 3 * a.val - 2 * f.val)))
-def targetEncoding (d : ℕ) (lo order : ℤ) (p : TargetSlots d lo order) :
+private def targetEncoding (d : ℕ) (lo order : ℤ) (p : TargetSlots d lo order) :
     {m : Fin 4 →₀ ℕ // TargetExponent d lo order m} := by
   obtain ⟨a, f, j⟩ := p
   let lower : ℤ := max 0 (lo - d + a.val - 2 * f.val)
@@ -1733,7 +370,7 @@ def targetEncoding (d : ℕ) (lo order : ℤ) (p : TargetSlots d lo order) :
   dsimp only [upper] at hj
   change lo - d + a.val - 2 * f.val ≤ lower at hlow
   omega
-theorem targetEncoding_bijective (d : ℕ) (lo order : ℤ) :
+private theorem targetEncoding_bijective (d : ℕ) (lo order : ℤ) :
     Function.Bijective (targetEncoding d lo order) := by
   constructor
   · rintro ⟨⟨a, ha⟩, ⟨f, hf⟩, ⟨j, hj⟩⟩ ⟨⟨a', ha'⟩, ⟨f', hf'⟩, ⟨j', hj'⟩⟩ h
@@ -1817,7 +454,7 @@ theorem backShift_index_order {Q : Form} {n : ℕ}
     change valueForm ∈ restrictWeightedOrder jetIndex 0
     simp
   · exact X_mem_restrictWeightedOrder _ _ le_rfl
-theorem coefficient_of_filter {p : (Fin 4 →₀ ℕ) → Prop} [DecidablePred p]
+private theorem coefficient_of_filter {p : (Fin 4 →₀ ℕ) → Prop} [DecidablePred p]
     {Q : Form} {e : Fin 4 →₀ ℕ} (h : e ∈ (filterSupport p Q).support) :
     p e ∧ e ∈ Q.support := by
   have hne := MvPolynomial.mem_support_iff.mp h
@@ -1952,13 +589,13 @@ private theorem monomial_band (a b c f : ℕ) {d top : ℕ} {lo hi : ℤ}
   rw [monomial_eq, Finsupp.prod_fintype _ _ (fun _ => pow_zero _), Fin.prod_univ_four,
     MvPolynomial.C_1, one_mul] at hm
   simpa [hval] using hm
-theorem x₀_band : x₀ ∈ bandSpace 1 0 0 0 := by
+private theorem x₀_band : x₀ ∈ bandSpace 1 0 0 0 := by
   simpa using monomial_band 1 0 0 0 (d := 1) (lo := 0) (hi := 0) (top := 0)
     (by decide) (by decide) (by decide) (by decide)
-theorem x₂_band : x₂ ∈ bandSpace 1 2 2 0 := by
+private theorem x₂_band : x₂ ∈ bandSpace 1 2 2 0 := by
   simpa using monomial_band 0 0 1 0 (d := 1) (lo := 2) (hi := 2) (top := 0)
     (by decide) (by decide) (by decide) (by decide)
-theorem quad_band : quad ∈ bandSpace 2 1 2 0 := by
+private theorem quad_band : quad ∈ bandSpace 2 1 2 0 := by
   have hm (a b c : ℕ) (h : a + b + c = 2) (hl : 1 ≤ b + 2 * c) (hh : b + 2 * c ≤ 2) :
       x₀ ^ a * x₁ ^ b * x₂ ^ c ∈ bandSpace 2 1 2 0 := by
     simpa using monomial_band a b c 0 (d := 2) (lo := 1) (hi := 2) (top := 0)
@@ -1967,7 +604,7 @@ theorem quad_band : quad ∈ bandSpace 2 1 2 0 := by
     (sub_mem (by simpa using hm 1 1 0 (by decide) (by decide) (by decide))
       (by simpa using hm 0 2 0 (by decide) (by decide) (by decide)))
     (by simpa using hm 1 0 1 (by decide) (by decide) (by decide))
-theorem cubic_band : cubic ∈ bandSpace 3 2 3 1 := by
+private theorem cubic_band : cubic ∈ bandSpace 3 2 3 1 := by
   have hm (a b c f : ℕ) (h : a + b + c + f = 3) (hl : 2 ≤ b + 2*c + 3*f)
       (hh : b + 2*c + 3*f ≤ 3) (hf : f ≤ 1) :
       x₀ ^ a * x₁ ^ b * x₂ ^ c * x₃ ^ f ∈ bandSpace 3 2 3 1 :=
@@ -2007,13 +644,13 @@ theorem flagFactor_mem_band (v : FactorPowers) :
     simp [FactorPowers.maxTop]
   rw [hd, hl, hh, ht] at h
   exact h
-def evaluateAtJetOne : Form →ₐ[Geom] Geom :=
+private def evaluateAtJetOne : Form →ₐ[Geom] Geom :=
   MvPolynomial.aeval (fun j : Fin 4 => if j = 1 then 1 else 0)
-theorem quad_ne_zero : quad ≠ 0 := by
+private theorem quad_ne_zero : quad ≠ 0 := by
   intro h
   have he := congrArg evaluateAtJetOne h
   simp [evaluateAtJetOne] at he
-theorem cubic_ne_zero : cubic ≠ 0 := by
+private theorem cubic_ne_zero : cubic ≠ 0 := by
   intro h
   have he := congrArg evaluateAtJetOne h
   simp [evaluateAtJetOne] at he
@@ -2023,7 +660,7 @@ theorem flagFactor_ne_zero (v : FactorPowers) : flagFactor v ≠ 0 :=
 private theorem capX (i : Fin 4) :
     MvPolynomial.X (R := Geom) i ∈ restrictWeightedOrder targetOrder (targetOrder i) :=
   X_mem_restrictWeightedOrder _ _ le_rfl
-theorem shift_quad_order : backShift quad ∈ restrictWeightedOrder targetOrder 2 := by
+private theorem shift_quad_order : backShift quad ∈ restrictWeightedOrder targetOrder 2 := by
   have h : backShift quad = x₁ * (x₀ + x₃) + ((x₀ + x₃) - x₂) * x₂ := by
     simp only [map_add, map_sub, map_mul, backShift_X_zero, backShift_X_of_ne 1 (by decide),
       backShift_X_of_ne 2 (by decide), pow_two]
@@ -2036,7 +673,7 @@ theorem shift_quad_order : backShift quad ∈ restrictWeightedOrder targetOrder 
     sub_mem (restrictWeightedOrder_anti _ (by decide) ha) (capX 2)
   exact add_mem (mul_mem_restrictWeightedOrder (capX 1) ha)
     (mul_mem_restrictWeightedOrder hb (capX 2))
-theorem shift_cubic_order : backShift cubic ∈ restrictWeightedOrder targetOrder 3 := by
+private theorem shift_cubic_order : backShift cubic ∈ restrictWeightedOrder targetOrder 3 := by
   let U := x₀ + x₃ - x₂
   have h : backShift cubic = -(x₁ ^ 2 * x₀) + 2 * (x₁ * U * x₃) + U ^ 2 * (x₃ + x₂) := by
     simp only [map_add, map_sub, map_mul, map_pow, map_ofNat, backShift_X_zero,
@@ -2191,17 +828,17 @@ open K1_13 MvPolynomial
 open scoped BigOperators
 noncomputable section
 set_option maxHeartbeats 1600000
-theorem coeff_projectJet (j : Fin 4) (k : ℕ) (P : Form) (e : Fin 4 →₀ ℕ) :
+private theorem coeff_projectJet (j : Fin 4) (k : ℕ) (P : Form) (e : Fin 4 →₀ ℕ) :
     (projectJet j k P).coeff e = if e j = k then P.coeff e else 0 :=
   coeff_filterSupport _ _ _
-theorem support_projectJet {j : Fin 4} {k : ℕ} {P : Form} {e : Fin 4 →₀ ℕ}
+private theorem support_projectJet {j : Fin 4} {k : ℕ} {P : Form} {e : Fin 4 →₀ ℕ}
     (he : e ∈ (projectJet j k P).support) : e j = k ∧ e ∈ P.support := by
   have hc := MvPolynomial.mem_support_iff.mp he
   rw [coeff_projectJet] at hc
   by_cases h : e j = k
   · simpa [h, MvPolynomial.mem_support_iff] using hc
   · simp [h] at hc
-theorem rank_le_projected_sum {V : Type*} [AddCommGroup V] [Module Geom V]
+private theorem rank_le_projected_sum {V : Type*} [AddCommGroup V] [Module Geom V]
     (j : Fin 4) (n : ℕ) (φ : V →ₗ[Geom] Form)
     (hb : ∀ v e, e ∈ (φ v).support → e j < n) :
     Module.finrank Geom (LinearMap.range φ) ≤
@@ -2241,7 +878,7 @@ theorem rank_le_projected_sum {V : Type*} [AddCommGroup V] [Module Geom V]
     _ = Module.finrank Geom (LinearMap.range π) := (LinearMap.finrank_range_of_inj hinj).symm
     _ = Module.finrank Geom (LinearMap.range collect) := by rw [hrange]
     _ ≤ _ := LinearMap.finrank_range_pi_le_sum _
-theorem degree_of_mem_blockMap {s : ℕ} {g : ℤ}
+private theorem degree_of_mem_blockMap {s : ℕ} {g : ℤ}
     (Q : bandSpace (residualDegree s) (-g) 48 10) {e : Fin 4 →₀ ℕ}
     (he : e ∈ (blockMap s g Q).support) : e.degree = residualDegree s := by
   have hQ : (Q : Form).IsWeightedHomogeneous (fun _ => (1 : ℕ)) (residualDegree s) := by
@@ -2414,9 +1051,6 @@ def g : Row 4 := (separant^[b.r]) f
 def sigma : GeoJets := toGeneric (separant b.g)
 def member : GeoJets := toGeneric (membershipTest b.g)
 def next : GeoJets := toGeneric (nextTest b.g)
-def Simple : Prop := cycleLength (divisorIdeal b.surface (membershipTest b.g))
-  b.curve b.divisor.isPrime = 1
-def weight : ℕ := by classical exact if b.Simple then 1 else 2
 def Contains (p : JetPoint) : Prop :=
   b.curve ≤ RingHom.ker (MvPolynomial.eval p) ∧ MvPolynomial.eval p b.sigma ≠ 0
 def graph : GeoJets5 :=
@@ -2431,11 +1065,6 @@ def onGraph : GeoJets5 →+* b.Local :=
       (b.localMap (MvPolynomial.C (-(4 : GeoField)⁻¹) * toGeneric (partialFlow b.g)) *
         IsLocalization.Away.invSelf b.sigma)
       (fun i => b.localMap (MvPolynomial.X i)))
-def localCurve : Ideal b.Local := b.curve.map b.localMap
-def regularEval (p : JetPoint) (h : b.Contains p) : b.Local →+* GeoField :=
-  IsLocalization.Away.lift b.sigma (isUnit_iff_ne_zero.mpr h.2)
-def liftedEval (p : JetPoint) (h : b.Contains p) : GeoJets5 →+* GeoField :=
-  (b.regularEval p h).comp b.onGraph
 end Branch
 def OldBox {n : ℕ} (old : Fin 4 → Fin n) (p : Shape)
     (D : MvPolynomial (Fin n) GeoField) : Prop :=
@@ -2447,20 +1076,6 @@ def Box5 (p : Shape) (d : ℕ) (D : GeoJets5) : Prop :=
   OldBox Fin.castSucc p D ∧ ∀ m ∈ D.support, m (Fin.last 4) ≤ d
 def graphBox (p : Shape) : Shape :=
   ⟨max p.b (p.j + 1), p.j + 1, min (p.t + 1) ((p.j + 1) / 3)⟩
-def budget4 (p : Shape) : ℕ :=
-  mixed32 p cutterBox (chart (taylorLength + 1) p) (chart (taylorLength + 2) p)
-def budget5 (p : Shape) : ℕ :=
-  let a := liftedChart (taylorLength + 1) p
-  let b := liftedChart (taylorLength + 2) p
-  mixed32 p cutterBox a b + (taylorLength + 1) * mixed32 p cutterBox (graphBox p) b +
-    (taylorLength + 2) * mixed32 p cutterBox (graphBox p) a
-def Slice4 {f Q l} (b : Branch f Q l) (T : Finset JetPoint) : Prop :=
-  T.card ≤ 1 ∨ ∃ D, Box4 (chart (taylorLength + 2) (shape f).chamber) D ∧
-    D ∉ b.curve ∧ ∀ p ∈ T, MvPolynomial.eval p D = 0
-def Slice5 {f Q l} (b : Branch f Q l) (T : Finset JetPoint) : Prop :=
-  T.card ≤ 1 ∨ ∃ D, Box5 (liftedChart (taylorLength + 2) (shape f).chamber)
-      (taylorLength + 2) D ∧ b.onGraph D ∉ b.localCurve ∧
-    ∀ p ∈ T, ∀ h : b.Contains p, b.liftedEval p h D = 0
 def Chart4 {f Q l} (b : Branch f Q l) : Prop :=
   let p := (shape f).chamber
   Box4 (chart (taylorLength + 1) p) b.member ∧
@@ -2468,17 +1083,6 @@ def Chart4 {f Q l} (b : Branch f Q l) : Prop :=
     ∀ x a : K, ∃ D, Box4 (chart (taylorLength + 2) p) D ∧
       ∀ S : K[X], S.natDegree ≤ 133671 → b.Contains (actualPoint (extend S)) →
         (MvPolynomial.eval (actualPoint (extend S)) D = 0 ↔ S.eval x = a)
-def Chart5 {f Q l} (b : Branch f Q l) : Prop :=
-  let p := (shape f).chamber
-  Box5 (graphBox p) 1 b.graph ∧
-    ∃ E H,
-      Box5 (liftedChart (taylorLength + 1) p) (taylorLength + 1) E ∧
-      Associated (b.onGraph E) (b.localMap b.member) ∧
-      Box5 (liftedChart (taylorLength + 2) p) (taylorLength + 2) H ∧
-      Associated (b.onGraph H) (b.localMap b.next) ∧
-      ∀ x a : K, ∃ D, Box5 (liftedChart (taylorLength + 2) p) (taylorLength + 2) D ∧
-        ∀ S : K[X], S.natDegree ≤ 133671 → ∀ h : b.Contains (actualPoint (extend S)),
-          (b.liftedEval (actualPoint (extend S)) h D = 0 ↔ S.eval x = a)
 end
 end K1_13_6_2
 end
@@ -2493,83 +1097,8 @@ theorem actualPoint_injective : Function.Injective actualPoint := by
   intro S T h
   have h₀ := congrFun h (0 : Fin 4)
   exact genericCoeffs_injective (by simpa [actualPoint, jet, hasseDeriv_zero'] using h₀)
-private theorem eval_actualPoint (S : Geom[X]) (P : Row 4) :
-    MvPolynomial.eval (actualPoint S) (toGeneric P) = genericCoeffs (atJet P S) := by
-  rw [toGeneric, MvPolynomial.eval_map]
-  change MvPolynomial.eval₂ genericCoeffs (⇑genericCoeffs ∘ jet S) P = _
-  rw [← MvPolynomial.eval₂_comp]
-  rfl
-theorem branch_of_mixed {f Q l S} (h : MixedMark f Q l S) :
-    ∃ b : Branch f Q l, b.Contains (actualPoint S) := by
-  obtain ⟨surf, r, hz, hE, C, hC, hP, hterminal⟩ := h
-  have hr : MvPolynomial.eval (actualPoint S) (toGeneric (separant ((separant^[r]) f))) ≠ 0 := by
-    rw [eval_actualPoint]
-    exact fun hzero => hz.regular (genericCoeffs_injective (by simpa using hzero))
-  have hc : toGeneric (separant ((separant^[r]) f)) ∉ C := fun hmem => hr (hP hmem)
-  let b : Branch f Q l :=
-    ⟨surf, r, hz.base, hz.high, hz.chart, hz.invariant, hE, C, hC, hc, hterminal⟩
-  exact ⟨b, hP, hr⟩
 namespace Branch
 variable {f Q : Row 4} {l : ℕ}
-theorem eq_of_surface_curve {b c : Branch f Q l} (hs : b.surface = c.surface)
-    (hc : b.curve = c.curve) : b = c := by
-  have order (d e : Branch f Q l) (h : d.surface = e.surface) : ¬ d.r < e.r := by
-    intro hlt
-    have hmem := e.chart.2.1 (d.r + 1) (by omega)
-    rw [← h, Function.iterate_succ_apply'] at hmem
-    exact d.chart.2.2 hmem
-  have hr : b.r = c.r := Nat.le_antisymm (Nat.le_of_not_gt (order c b hs.symm))
-    (Nat.le_of_not_gt (order b c hs))
-  cases b
-  cases c
-  cases hs
-  cases hr
-  cases hc
-  rfl
-theorem next_proper (b : Branch f Q l) (h : b.Simple) : b.next ∉ b.curve :=
-  b.terminal.resolve_left (fun hne => hne h)
-theorem next_actual (b : Branch f Q l) {S : Geom[X]} (h : b.Contains (actualPoint S))
-    (hd : S.natDegree ≤ 133671) : MvPolynomial.eval (actualPoint S) b.next = 0 := by
-  have hs : b.surface ≤ b.curve := le_trans le_sup_left b.divisor.le
-  have hg : toGeneric b.g ∈ b.surface := b.chart.2.1 b.r le_rfl
-  have hzero : MvPolynomial.eval (actualPoint S) (toGeneric b.g) = 0 := h.1 (hs hg)
-  rw [eval_actualPoint] at hzero
-  have he : atJet b.g S = 0 := genericCoeffs_injective (by simpa using hzero)
-  rw [next, eval_actualPoint, (eval_membership_tests _ _ he hd).2, map_zero]
-theorem localMap_mem_localCurve_iff (b : Branch f Q l) (P : GeoJets) :
-    b.localMap P ∈ b.localCurve ↔ P ∈ b.curve := by
-  change algebraMap GeoJets b.Local P ∈ b.curve.map (algebraMap GeoJets b.Local) ↔ _
-  rw [IsLocalization.algebraMap_mem_map_algebraMap_iff (Submonoid.powers b.sigma) b.Local]
-  constructor
-  · rintro ⟨m, ⟨n, rfl⟩, hm⟩
-    exact (b.divisor.isPrime.mem_or_mem hm).resolve_left
-      (fun hpow => b.regularCurve (b.divisor.isPrime.mem_of_pow_mem n hpow))
-  · intro hP
-    exact ⟨1, (Submonoid.powers b.sigma).one_mem, by simpa using hP⟩
-theorem regularEval_localMap (b : Branch f Q l) (p : JetPoint) (h : b.Contains p) (P : GeoJets) :
-    b.regularEval p h (b.localMap P) = MvPolynomial.eval p P := by
-  exact IsLocalization.Away.lift_eq b.sigma _ _
-theorem lifted_proper_of_nonzero (b : Branch f Q l) (p : JetPoint) (h : b.Contains p)
-    {D : GeoJets5} (hn : b.liftedEval p h D ≠ 0) : b.onGraph D ∉ b.localCurve := by
-  have hk : b.localCurve ≤ RingHom.ker (b.regularEval p h) := by
-    apply Ideal.map_le_iff_le_comap.mpr
-    intro P hP
-    change b.regularEval p h (b.localMap P) = 0
-    rw [regularEval_localMap]
-    exact h.1 hP
-  exact fun hm => hn (hk hm)
-theorem lifted_proper_of_associated (b : Branch f Q l) {D : GeoJets5} {P : GeoJets}
-    (hD : Associated (b.onGraph D) (b.localMap P)) (hP : P ∉ b.curve) :
-    b.onGraph D ∉ b.localCurve := by
-  intro hmem
-  exact hP ((b.localMap_mem_localCurve_iff _).mp (b.localCurve.mem_of_dvd hD.dvd hmem))
-theorem lifted_zero_of_associated (b : Branch f Q l) {D : GeoJets5} {P : GeoJets}
-    (hD : Associated (b.onGraph D) (b.localMap P)) {p : JetPoint} (h : b.Contains p)
-    (hP : MvPolynomial.eval p P = 0) : b.liftedEval p h D = 0 := by
-  obtain ⟨u, hu⟩ := hD
-  have hm := congrArg (b.regularEval p h) hu
-  rw [map_mul, regularEval_localMap, hP, mul_eq_zero] at hm
-  exact hm.resolve_right (IsUnit.ne_zero (IsUnit.map (b.regularEval p h) u.isUnit))
 end Branch
 def Demand (A : Finset K) (s : K → K[X]) (T : Finset K) : Prop := by
   classical
@@ -2590,173 +1119,6 @@ theorem maximal_demand (A : Finset K) (s : K → K[X]) (hA : A.Nonempty) :
   intro x a ha
   exact hmax _ (Finset.mem_filter.mpr ⟨Finset.mem_powerset.mpr (Finset.filter_subset _ _),
     Or.inr ⟨x, a, ha, rfl⟩⟩)
-end
-end K1_13_6_2
-end
-section
-namespace K1_13_6_2
-noncomputable section
-open Polynomial K1 K1_13 K1_13_6
-open scoped BigOperators
-def c1 : Prop :=
-  ∀ f Q l, SmallFactor f → ∀ b : Branch f Q l, Chart4 b
-def c2 : Prop :=
-  ∀ f Q l, SmallFactor f → ∀ b : Branch f Q l, Chart5 b
-def c3 : Prop :=
-  ∀ f Q l, SmallFactor f → ¬ f ∣ Q → InBox (shape Q) cutterBox → 0 < l →
-    ∀ (F : Finset (Branch f Q l)) (T : Branch f Q l → Finset JetPoint),
-      (∀ b ∈ F, Box4 (chart (taylorLength + 1) (shape f).chamber) b.member ∧
-        (∀ p ∈ T b, b.Contains p) ∧ Slice4 b (T b)) →
-      32 * l * (∑ b ∈ F, b.weight * (T b).card) ≤ budget4 (shape f).chamber
-def c4 : Prop :=
-  ∀ f Q l, SmallFactor f → ¬ f ∣ Q → InBox (shape Q) cutterBox → 0 < l →
-    ∀ (F : Finset (Branch f Q l)) (T : Branch f Q l → Finset JetPoint),
-      (∀ b ∈ F, Box5 (graphBox (shape f).chamber) 1 b.graph ∧
-        (∃ E, Box5 (liftedChart (taylorLength + 1) (shape f).chamber) (taylorLength + 1) E ∧
-          Associated (b.onGraph E) (b.localMap b.member)) ∧
-        (∀ p ∈ T b, b.Contains p) ∧ Slice5 b (T b)) →
-      32 * l * (∑ b ∈ F, b.weight * (T b).card) ≤ budget5 (shape f).chamber
-theorem of_children (h4chart : c1) (h5chart : c2) (h4budget : c3) (h5budget : c4) :
-    K1_13_6.c2 := by
-  classical
-  intro Γ s f Q l input
-  let point (γ : K) := actualPoint (extend (s γ))
-  let marked := Γ.filter (fun γ => MixedMark f Q l (extend (s γ)))
-  let assign (γ : marked) : Branch f Q l :=
-    Classical.choose (branch_of_mixed (Finset.mem_filter.mp γ.property).2)
-  let branches := marked.attach.image assign
-  let labels (b : Branch f Q l) :=
-    marked.filter (fun γ => ∃ h : γ ∈ marked, assign ⟨γ, h⟩ = b)
-  have label_sub (b : Branch f Q l) : labels b ⊆ Γ :=
-    (Finset.filter_subset _ _).trans (Finset.filter_subset _ _)
-  have contains_label (b : Branch f Q l) (γ : K) (hγ : γ ∈ labels b) :
-      b.Contains (point γ) := by
-    obtain ⟨h, rfl⟩ := (Finset.mem_filter.mp hγ).2
-    exact Classical.choose_spec (branch_of_mixed (Finset.mem_filter.mp h).2)
-  have labels_nonempty (b : Branch f Q l) (hb : b ∈ branches) : (labels b).Nonempty := by
-    obtain ⟨γ, _, rfl⟩ := Finset.mem_image.mp hb
-    exact ⟨γ.val, Finset.mem_filter.mpr ⟨γ.property, γ.property, rfl⟩⟩
-  have available (b : Branch f Q l) : ∃ T ⊆ labels b,
-      (b.Simple → T = labels b) ∧
-      (b ∈ branches → ¬ b.Simple → 0 < T.card ∧ CurveSections (labels b) s T.card ∧
-        Demand (labels b) s T) := by
-    by_cases hs : b.Simple
-    · exact ⟨labels b, Finset.Subset.rfl, fun _ => rfl, fun _ hn => (hn hs).elim⟩
-    by_cases hb : b ∈ branches
-    · obtain ⟨T, hsub, hd⟩ := maximal_demand (labels b) s (labels_nonempty b hb)
-      exact ⟨T, hsub, fun h => (hs h).elim, fun _ _ => hd⟩
-    · exact ⟨∅, Finset.empty_subset _, fun h => (hs h).elim, fun h _ => (hb h).elim⟩
-  choose demanded demand_sub demand_simple demand_multiple using available
-  let points (b : Branch f Q l) := (demanded b).image point
-  have points_card (b : Branch f Q l) : (points b).card = (demanded b).card := by
-    apply Finset.card_image_of_injOn
-    intro γ hγ δ hδ heq
-    exact input.distinct (label_sub b (demand_sub b hγ)) (label_sub b (demand_sub b hδ))
-      (Polynomial.map_injective embed embed.injective (actualPoint_injective heq))
-  have points_on (b : Branch f Q l) (p : JetPoint) (hp : p ∈ points b) : b.Contains p := by
-    obtain ⟨γ, hγ, rfl⟩ := Finset.mem_image.mp hp
-    exact contains_label b γ (demand_sub b hγ)
-  have points_next (b : Branch f Q l) (p : JetPoint) (hp : p ∈ points b) :
-      MvPolynomial.eval p b.next = 0 := by
-    obtain ⟨γ, hγ, rfl⟩ := Finset.mem_image.mp hp
-    apply b.next_actual (contains_label b γ (demand_sub b hγ))
-    simpa only [Polynomial.natDegree_map] using input.degree γ (label_sub b (demand_sub b hγ))
-  have fitQ : InBox (shape Q) cutterBox :=
-    ⟨input.box.1.trans (by decide), input.box.2⟩
-  have bound4 := h4budget f Q l input.small input.proper fitQ input.positive branches points
-    (by
-      intro b hb
-      obtain ⟨hmember, hnext, hvalue⟩ := h4chart f Q l input.small b
-      refine ⟨hmember, points_on b, ?_⟩
-      by_cases hs : b.Simple
-      · exact Or.inr ⟨b.next, hnext, b.next_proper hs, points_next b⟩
-      rcases (demand_multiple b hb hs).2.2 with hone | ⟨x, a, hwit, heq⟩
-      · exact Or.inl (by rw [points_card, hone])
-      obtain ⟨D, hD, hEval⟩ := hvalue x a
-      obtain ⟨δ, hδ, hδvalue⟩ := hwit
-      have hδon := contains_label b δ hδ
-      have hproper : D ∉ b.curve := fun hmem =>
-        hδvalue ((hEval _ (input.degree δ (label_sub b hδ)) hδon).mp (hδon.1 hmem))
-      refine Or.inr ⟨D, hD, hproper, ?_⟩
-      intro p hp
-      obtain ⟨γ, hγ, rfl⟩ := Finset.mem_image.mp hp
-      have hvalueγ := (Finset.mem_filter.mp (heq ▸ hγ)).2
-      exact (hEval _ (input.degree γ (label_sub b (demand_sub b hγ)))
-        (contains_label b γ (demand_sub b hγ))).mpr hvalueγ)
-  have bound5 := h5budget f Q l input.small input.proper fitQ input.positive branches points
-    (by
-      intro b hb
-      obtain ⟨hgraph, E, H, hE, hEeq, hH, hHeq, hvalue⟩ := h5chart f Q l input.small b
-      refine ⟨hgraph, ⟨E, hE, hEeq⟩, points_on b, ?_⟩
-      by_cases hs : b.Simple
-      · exact Or.inr ⟨H, hH, b.lifted_proper_of_associated hHeq (b.next_proper hs),
-          fun p hp hon => b.lifted_zero_of_associated hHeq hon (points_next b p hp)⟩
-      rcases (demand_multiple b hb hs).2.2 with hone | ⟨x, a, hwit, heq⟩
-      · exact Or.inl (by rw [points_card, hone])
-      obtain ⟨D, hD, hEval⟩ := hvalue x a
-      obtain ⟨δ, hδ, hδvalue⟩ := hwit
-      have hδon := contains_label b δ hδ
-      refine Or.inr ⟨D, hD, b.lifted_proper_of_nonzero (point δ) hδon ?_, ?_⟩
-      · exact fun hzero => hδvalue ((hEval _ (input.degree δ (label_sub b hδ)) hδon).mp hzero)
-      · intro p hp hon
-        obtain ⟨γ, hγ, rfl⟩ := Finset.mem_image.mp hp
-        have hvalueγ := (Finset.mem_filter.mp (heq ▸ hγ)).2
-        exact (hEval _ (input.degree γ (label_sub b (demand_sub b hγ))) hon).mpr hvalueγ)
-  let simple := branches.filter Branch.Simple
-  let multiple := branches.filter (fun b => ¬ b.Simple)
-  let e := multiple.equivFin
-  let C : Pieces Γ :=
-    { n := multiple.card
-      piece := fun i => labels (e.symm i).val
-      subset := fun i => label_sub (e.symm i).val
-      degree := fun i => (demanded (e.symm i).val).card }
-  let B := simple.biUnion labels
-  have hmultiple (i : Fin C.n) := Finset.mem_filter.mp (e.symm i).property
-  refine ⟨C, B,
-    fun i => (demand_multiple _ (hmultiple i).1 (hmultiple i).2).2.1,
-    fun i => (demand_multiple _ (hmultiple i).1 (hmultiple i).2).1, ?_, ?_⟩
-  · intro γ hγ hm
-    have hmark : γ ∈ marked := Finset.mem_filter.mpr ⟨hγ, hm⟩
-    let b := assign ⟨γ, hmark⟩
-    have hb : b ∈ branches := Finset.mem_image.mpr ⟨_, Finset.mem_attach _ _, rfl⟩
-    have hlabel : γ ∈ labels b := Finset.mem_filter.mpr ⟨hmark, hmark, rfl⟩
-    by_cases hs : b.Simple
-    · exact Finset.mem_union_right _ (Finset.mem_biUnion.mpr
-        ⟨b, Finset.mem_filter.mpr ⟨hb, hs⟩, hlabel⟩)
-    have hbm : b ∈ multiple := Finset.mem_filter.mpr ⟨hb, hs⟩
-    apply Finset.mem_union_left _
-    refine Finset.mem_biUnion.mpr ⟨e ⟨b, hbm⟩, Finset.mem_univ _, ?_⟩
-    change γ ∈ labels (e.symm (e ⟨b, hbm⟩)).val
-    simpa only [Equiv.symm_apply_apply] using hlabel
-  · have htotal : C.total = ∑ b ∈ multiple, (demanded b).card := by
-      calc
-        C.total = ∑ b : multiple, (demanded b.val).card :=
-          Equiv.sum_comp e.symm (fun b : multiple => (demanded b.val).card)
-        _ = _ := by
-          rw [Finset.univ_eq_attach]
-          exact Finset.sum_attach multiple (fun b => (demanded b).card)
-    have hsimple : (∑ b ∈ simple, b.weight * (points b).card) =
-        ∑ b ∈ simple, (labels b).card := by
-      apply Finset.sum_congr rfl
-      intro b hb
-      have hs := (Finset.mem_filter.mp hb).2
-      rw [points_card, demand_simple b hs, Branch.weight, ite_eq_left hs, one_mul]
-    have hmult : (∑ b ∈ multiple, b.weight * (points b).card) = 2 * C.total := by
-      rw [htotal, Finset.mul_sum]
-      apply Finset.sum_congr rfl
-      intro b hb
-      have hs := (Finset.mem_filter.mp hb).2
-      rw [points_card, Branch.weight, ite_eq_right hs]
-    have hpart : (∑ b ∈ simple, b.weight * (points b).card) +
-        (∑ b ∈ multiple, b.weight * (points b).card) =
-        ∑ b ∈ branches, b.weight * (points b).card :=
-      Finset.sum_filter_add_sum_filter_not _ _ _
-    have hB : B.card ≤ ∑ b ∈ simple, (labels b).card := Finset.card_biUnion_le
-    have hpay : 2 * C.total + B.card ≤ ∑ b ∈ branches, b.weight * (points b).card := by
-      rw [← hpart, hsimple, hmult, Nat.add_comm (∑ b ∈ simple, (labels b).card)]
-      exact Nat.add_le_add_left hB _
-    change _ ≤ min (budget4 (shape f).chamber) (budget5 (shape f).chamber)
-    exact (Nat.mul_le_mul_left (32 * l) hpay).trans (le_min bound4 bound5)
 end
 end K1_13_6_2
 end
@@ -2791,14 +1153,11 @@ namespace K1_13_6_2_3
 noncomputable section
 open K1_13 K1_13_6 K1_13_6_2
 open scoped BigOperators
-lemma anchor_box {f : Row 4} (hf : SmallFactor f) : ChamberBox (shape f).chamber :=
-  ⟨(K1_13_7_1.shape_chamber f).1, (K1_13_7_1.shape_chamber f).2, hf.2.1⟩
 lemma chart_box (L : ℕ) (p : Shape) (hL : 0 < L) : ChamberBox (chart L p) := by
   refine ⟨(K1_13_7_1.chart_chamber L p).1, (K1_13_7_1.chart_chamber L p).2, ?_⟩
   unfold chart
   have h : 3 ≤ 2 * L * (p.j - 3) + L + 3 := by omega
   exact lt_min (by omega) (Nat.div_pos h (by decide))
-lemma cutter_box : ChamberBox cutterBox := ⟨by decide, by decide, by decide⟩
 lemma generic_box {P : Row 4} {p : Shape} (hP : InBox (shape P) p) : Box4 p (toGeneric P) := by
   intro m hm
   have hm' := MvPolynomial.support_map_subset genericCoeffs P hm
@@ -2856,12 +1215,6 @@ lemma surface_dimension {f Q : Row 4} (hf : toGeneric f ≠ 0)
   change dimension S + 1 = dimension P at h
   change dimension P + 1 = 4 at hPdim
   omega
-lemma curve_dimension {f Q l} (b : Branch f Q l) (h : dimension b.surface = 2) :
-    dimension b.curve = 1 := by
-  have := b.base.isPrime
-  have hdim := MvPolynomial.principalCut_natDegree_affineHilbertPolynomial_add_one b.proper b.divisor
-  change dimension b.curve + 1 = dimension b.surface at hdim
-  omega
 lemma positive_length {J P : Ideal GeoJets} (hP : J.IsMinimalPrime P) :
     0 < cycleLength J P hP.isPrime ∧ cycleLength J P hP.isPrime ≠ ⊤ := by
   have := hP.isPrime
@@ -2886,29 +1239,6 @@ lemma weight_cast {J P : Ideal GeoJets} (hP : J.IsMinimalPrime P) :
   rw [localWeight, dite_eq_left hP.isPrime, ENat.natCast_toNat (positive_length hP).2]
 lemma weight_pos {J P : Ideal GeoJets} (hP : J.IsMinimalPrime P) : 0 < localWeight J P := by
   exact ENat.natCast_lt_natCast.mp ((weight_cast hP).symm ▸ (positive_length hP).1)
-lemma branch_weight_le {f Q l} (b : Branch f Q l) :
-    b.weight ≤ localWeight (divisorIdeal b.surface (membershipTest b.g)) b.curve := by
-  have hcast : (localWeight (divisorIdeal b.surface (membershipTest b.g)) b.curve : ℕ∞) =
-      cycleLength (divisorIdeal b.surface (membershipTest b.g)) b.curve b.divisor.isPrime :=
-    weight_cast b.divisor
-  have hpos : 0 < localWeight (divisorIdeal b.surface (membershipTest b.g)) b.curve := weight_pos b.divisor
-  by_cases hs : b.Simple
-  · simpa [Branch.weight, hs] using (Nat.succ_le_of_lt hpos)
-  · rw [Branch.weight, ite_eq_right hs]
-    have hne : localWeight (divisorIdeal b.surface (membershipTest b.g)) b.curve ≠ 1 := by
-      intro h
-      apply hs
-      exact hcast.symm.trans (by rw [h]; norm_num)
-    omega
-lemma same_member {f Q l} {b c : Branch f Q l} (h : b.surface = c.surface) : b.member = c.member := by
-  have order (d e : Branch f Q l) (heq : d.surface = e.surface) : ¬ d.r < e.r := by
-    intro hlt
-    have hmem := e.chart.2.1 (d.r + 1) (by omega)
-    rw [← heq, Function.iterate_succ_apply'] at hmem
-    exact d.chart.2.2 hmem
-  have hr : b.r = c.r := Nat.le_antisymm (Nat.le_of_not_gt (order c b h.symm))
-    (Nat.le_of_not_gt (order b c h))
-  simp only [Branch.member, Branch.g, hr]
 lemma point_injective : Function.Injective pointIdeal := by
   intro x y heq
   funext i
@@ -3010,213 +1340,6 @@ private lemma chamber_plus {x y : Shape} (hx : ChamberBox x) (hy : ChamberBox y)
   refine ⟨Nat.add_le_add hx₁ hy₁, ?_, Nat.add_pos_left hx₃ _⟩
   change 3 * (x.t + y.t) ≤ x.j + y.j
   omega
-private lemma polarize_congr {A B : Shape → ℚ} (h : ∀ p, ChamberBox p → A p = B p)
-    {boxes : List Shape} (hboxes : ∀ q ∈ boxes, ChamberBox q) {p : Shape}
-    (hp : ChamberBox p) : polarize A boxes p = polarize B boxes p := by
-  induction boxes generalizing p with
-  | nil => exact h p hp
-  | cons q boxes ih =>
-    have hq := hboxes q List.mem_cons_self
-    have hr := fun r hr => hboxes r (List.mem_cons_of_mem _ hr)
-    simp only [polarize, ih hr (chamber_plus hp hq), ih hr hp]
-private lemma ambient_degree (h : c1) {p q r s : Shape}
-    (hp : ChamberBox p) (hq : ChamberBox q) (hr : ChamberBox r) (hs : ChamberBox s) :
-    mixedDegree (⊥ : Ideal GeoJets) [p,q,r,s] ≤ (mixed32 p q r s : ℚ) / 32 := by
-  have hb : ChamberBox ⟨3, 3, 1⟩ := ⟨by decide, by decide, by decide⟩
-  have hboxes : ∀ u ∈ [p,q,r,s], ChamberBox u := by
-    intro u hu
-    simp only [List.mem_cons, List.not_mem_nil, or_false] at hu
-    rcases hu with rfl | rfl | rfl | rfl
-    · exact hp
-    · exact hq
-    · exact hr
-    · exact hs
-  unfold mixedDegree
-  change polarize (capCoeff ⊥ 4) [p,q,r,s] ⟨3,3,1⟩ / (2 : ℚ)^4 ≤ _
-  rw [polarize_congr h hboxes hb]
-  let n := difference (difference (difference (difference volume32 p) q) r) s ⟨0,0,0⟩
-  have hpoly : polarize (fun x => 16 * (volume32 x : ℚ) / 32) [p,q,r,s] ⟨3,3,1⟩ /
-      (2 : ℚ)^4 = (n : ℚ) / 32 := by
-    simp only [n, polarize, difference, volume32, Shape.plus]
-    push_cast
-    ring
-  rw [hpoly]
-  have hn : n ≤ (n.toNat : ℤ) := by omega
-  apply div_le_div_of_nonneg_right _ (by norm_num)
-  exact_mod_cast hn
-private lemma point_minimal {J : Ideal GeoJets} (hJ : dimension J = 0)
-    (x : JetPoint) (hx : J ≤ pointIdeal x) : J.IsMinimalPrime (pointIdeal x) := by
-  have : Module.Finite GeoField (GeoJets ⧸ J) :=
-    MvPolynomial.natDegree_affineHilbertPolynomial_eq_zero_iff.mp hJ
-  have : IsArtinianRing (GeoJets ⧸ J) := IsArtinianRing.of_finite GeoField _
-  have : Ring.KrullDimLE 0 (GeoJets ⧸ J) := isArtinianRing_iff_krullDimLE_zero.mp ‹_›
-  have hp := point_prime x
-  change pointIdeal x ∈ J.minimalPrimes
-  rw [Ideal.minimalPrimes_eq_comap]
-  refine ⟨(pointIdeal x).map (Ideal.Quotient.mk J), ?_, Ideal.comap_map_mk hx⟩
-  have := Ideal.isPrime_map_quotientMk_of_isPrime hx
-  exact Ideal.mem_minimalPrimes_of_krullDimLE_zero _
-private lemma proper_slice_card (h2 : c2) (h3 : c3) {C : Ideal GeoJets} (hC : C.IsPrime)
-    (hdim : dimension C = 1) {s : Shape} (hs : ChamberBox s)
-    {D : GeoJets} (hD : Box4 s D) (hproper : D ∉ C) (T : Finset JetPoint)
-    (hT : ∀ x ∈ T, C ≤ pointIdeal x ∧ MvPolynomial.eval x D = 0) :
-    (T.card : ℚ) ≤ mixedDegree C [s] := by
-  classical
-  let J := C ⊔ Ideal.span {D}
-  have hreg := regular_cut hC hproper
-  have hJ : dimension J = 0 := by
-    have hdrop := cut_dimension hreg
-    change dimension J ≤ dimension C - 1 at hdrop
-    omega
-  have hmin (x : JetPoint) (hx : x ∈ T) : J.IsMinimalPrime (pointIdeal x) :=
-    point_minimal hJ x (sup_le (hT x hx).1 ((pointIdeal x).span_singleton_le_iff_mem.mpr (hT x hx).2))
-  calc
-    (T.card : ℚ) = ∑ _x ∈ T, (1 : ℚ) := by simp
-    _ ≤ ∑ x ∈ T, (localWeight J (pointIdeal x) : ℚ) * mixedDegree (pointIdeal x) [] := by
-      apply Finset.sum_le_sum
-      intro x hx
-      rw [point_degree, mul_one]
-      exact_mod_cast Nat.succ_le_of_lt (weight_pos (hmin x hx))
-    _ = ∑ P ∈ T.image pointIdeal, (localWeight J P : ℚ) * mixedDegree P [] :=
-      (Finset.sum_image (f := fun P => (localWeight J P : ℚ) * mixedDegree P [])
-        point_injective.injOn).symm
-    _ ≤ mixedDegree J [] := h3 J [] (by simp) (by simp [hJ]) _ (by
-      intro P hP
-      obtain ⟨x, hx, rfl⟩ := Finset.mem_image.mp hP
-      exact hmin x hx)
-    _ ≤ mixedDegree C [s] := h2 C s [] hs (by simp) (by simp [hdim]) D hD hreg
-private lemma slice_card (h2 : c2) (h3 : c3) {f Q l} (b : Branch f Q l)
-    (hdim : dimension b.curve = 1) (T : Finset JetPoint)
-    (hT : ∀ x ∈ T, b.Contains x) (hS : Slice4 b T) :
-    (T.card : ℚ) ≤ mixedDegree b.curve [chart (taylorLength + 2) (shape f).chamber] := by
-  classical
-  let s := chart (taylorLength + 2) (shape f).chamber
-  have hs : ChamberBox s := chart_box _ _ (by decide)
-  rcases hS with hone | ⟨D, hD, hproper, hzero⟩
-  · by_cases hemp : T = ∅
-    · rw [hemp]
-      simpa using h3 b.curve [s] (by simpa using hs) (by simp [hdim]) ∅ (by simp)
-    · obtain ⟨x, hx⟩ := Finset.nonempty_iff_ne_empty.mpr hemp
-      have hsingle : T = {x} := by
-        symm
-        apply Finset.eq_of_subset_of_card_le (Finset.singleton_subset_iff.mpr hx)
-        simpa using hone
-      obtain ⟨D, hD, hproper, hzero⟩ := point_proper_section hdim hs x (hT x hx).1
-      exact proper_slice_card h2 h3 b.divisor.isPrime hdim hs hD hproper T (by
-        intro y hy
-        have hxy : y = x := by simpa [hsingle] using hy
-        exact ⟨(hT y hy).1, by rw [hxy]; exact hzero⟩)
-  · exact proper_slice_card h2 h3 b.divisor.isPrime hdim hs hD hproper T
-      (fun x hx => ⟨(hT x hx).1, hzero x hx⟩)
-private lemma surface_slice_sum (h2 : c2) (h3 : c3) {f Q l} (ref : Branch f Q l)
-    (hdim : dimension ref.surface = 2) (F : Finset (Branch f Q l))
-    (T : Branch f Q l → Finset JetPoint) (hF : ∀ b ∈ F, b.surface = ref.surface)
-    (hmember : Box4 (chart (taylorLength + 1) (shape f).chamber) ref.member)
-    (hT : ∀ b ∈ F, (∀ x ∈ T b, b.Contains x) ∧ Slice4 b (T b)) :
-    (∑ b ∈ F, ((b.weight * (T b).card : ℕ) : ℚ)) ≤
-      mixedDegree ref.surface [chart (taylorLength + 1) (shape f).chamber,
-        chart (taylorLength + 2) (shape f).chamber] := by
-  classical
-  let p := chart (taylorLength + 1) (shape f).chamber
-  let s := chart (taylorLength + 2) (shape f).chamber
-  have hp : ChamberBox p := chart_box _ _ (by decide)
-  have hs : ChamberBox s := chart_box _ _ (by decide)
-  let J := ref.surface ⊔ Ideal.span {ref.member}
-  have hcut (b) (hb : b ∈ F) : divisorIdeal b.surface (membershipTest b.g) = J := by
-    change b.surface ⊔ Ideal.span {b.member} = J
-    rw [hF b hb, same_member (hF b hb)]
-  have hreg := regular_cut ref.base.isPrime ref.proper
-  have hJdim : dimension J ≤ 1 := (cut_dimension hreg).trans (by simp [hdim])
-  calc
-    _ ≤ ∑ b ∈ F, (localWeight J b.curve : ℚ) * mixedDegree b.curve [s] := by
-      apply Finset.sum_le_sum
-      intro b hb
-      have hdimB := curve_dimension b ((hF b hb).symm ▸ hdim)
-      have hS := slice_card h2 h3 b hdimB (T b) (hT b hb).1 (hT b hb).2
-      have hW := (hcut b hb) ▸ branch_weight_le b
-      push_cast
-      exact (mul_le_mul_of_nonneg_right (by exact_mod_cast hW) (Nat.cast_nonneg _)).trans
-        (mul_le_mul_of_nonneg_left hS (Nat.cast_nonneg _))
-    _ = ∑ P ∈ F.image Branch.curve, (localWeight J P : ℚ) * mixedDegree P [s] :=
-      (Finset.sum_image (f := fun P => (localWeight J P : ℚ) * mixedDegree P [s]) (fun b hb c hc heq =>
-        Branch.eq_of_surface_curve ((hF b hb).trans (hF c hc).symm) heq)).symm
-    _ ≤ mixedDegree J [s] := h3 J [s] (by simpa using hs) (by simpa using hJdim) _ (by
-      intro P hP
-      obtain ⟨b, hb, rfl⟩ := Finset.mem_image.mp hP
-      exact hcut b hb ▸ b.divisor)
-    _ ≤ mixedDegree ref.surface [p,s] :=
-      h2 ref.surface p [s] hp (by simpa using hs) (by simp [hdim]) ref.member hmember hreg
-theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) : K1_13_6_2.c3 := by
-  classical
-  intro f Q l hf hproper hQ _ F T hT
-  let p := (shape f).chamber
-  let r := chart (taylorLength + 1) p
-  let s := chart (taylorLength + 2) p
-  have hp : ChamberBox p := anchor_box hf
-  have hr : ChamberBox r := chart_box _ _ (by decide)
-  have hs : ChamberBox s := chart_box _ _ (by decide)
-  have hboxes : ∀ q ∈ [r,s], ChamberBox q := by
-    intro q hq
-    simp only [List.mem_cons, List.not_mem_nil, or_false] at hq
-    exact hq.elim (fun h => h ▸ hr) (fun h => h ▸ hs)
-  let J := intersectionIdeal f Q
-  let H : Ideal GeoJets := Ideal.span {toGeneric f}
-  have hpair := K1_13_7_1.proper_generic f Q hf.1 hproper
-  have hf0 : toGeneric f ≠ 0 := by
-    intro hz
-    exact hf.1.ne_zero (K1_13_7_1.toGeneric_injective (hz.trans (map_zero _).symm))
-  have hregF : IsLeftRegular (Ideal.Quotient.mk (⊥ : Ideal GeoJets) (toGeneric f)) :=
-    regular_cut (by infer_instance) (by simpa using hf0)
-  have hregQ := pair_regular f Q hpair
-  have hH : dimension H ≤ 3 := by
-    simpa [H, dimension_bot] using cut_dimension hregF
-  have hJ : dimension J ≤ 2 := by
-    rw [show J = H ⊔ Ideal.span {toGeneric Q} from intersection_eq f Q]
-    have hdrop : dimension (H ⊔ Ideal.span {toGeneric Q}) ≤ dimension H - 1 := cut_dimension hregQ
-    exact hdrop.trans (by omega)
-  let surfaces := F.image Branch.surface
-  let fiber (P : Ideal GeoJets) := F.filter (fun b => b.surface = P)
-  let cost (b : Branch f Q l) : ℚ := ((b.weight * (T b).card : ℕ) : ℚ)
-  have hsurface (P : Ideal GeoJets) (hP : P ∈ surfaces) :
-      J.IsMinimalPrime P ∧ l ≤ localWeight J P ∧
-      (∑ b ∈ fiber P, cost b) ≤ mixedDegree P [r,s] := by
-    obtain ⟨ref, href, rfl⟩ := Finset.mem_image.mp hP
-    have hl : (l : ℕ∞) ≤ (localWeight J ref.surface : ℕ∞) := by
-      rw [weight_cast ref.base]
-      exact ref.high
-    refine ⟨ref.base, ENat.natCast_le_natCast.mp hl, ?_⟩
-    exact surface_slice_sum h2 h3 ref (surface_dimension hf0 hpair ref.base) _ T
-      (fun _ hb => (Finset.mem_filter.mp hb).2) (hT ref href).1
-      (fun b hb => (hT b (Finset.mem_filter.mp hb).1).2)
-  have hcalc : (l : ℚ) * (∑ b ∈ F, cost b) ≤ (budget4 p : ℚ) / 32 := by
-    calc
-      _ = ∑ P ∈ surfaces, (l : ℚ) * ∑ b ∈ fiber P, cost b := by
-        rw [← Finset.mul_sum]
-        congr 1
-        exact (Finset.sum_fiberwise_of_maps_to (fun _ hb => Finset.mem_image_of_mem _ hb) cost).symm
-      _ ≤ ∑ P ∈ surfaces, (localWeight J P : ℚ) * mixedDegree P [r,s] := by
-        apply Finset.sum_le_sum
-        intro P hP
-        obtain ⟨_, hl, hsum⟩ := hsurface P hP
-        have hnonneg : 0 ≤ ∑ b ∈ fiber P, cost b := Finset.sum_nonneg (fun _ _ => Nat.cast_nonneg _)
-        exact (mul_le_mul_of_nonneg_right (by exact_mod_cast hl) hnonneg).trans
-          (mul_le_mul_of_nonneg_left hsum (Nat.cast_nonneg _))
-      _ ≤ mixedDegree J [r,s] := h3 J [r,s] hboxes (by simpa using hJ) surfaces
-        (fun P hP => (hsurface P hP).1)
-      _ ≤ mixedDegree H [cutterBox,r,s] := by
-        rw [show J = H ⊔ Ideal.span {toGeneric Q} from intersection_eq f Q]
-        exact h2 H cutterBox [r,s] cutter_box hboxes (by simpa using hH) _ (generic_box hQ) hregQ
-      _ ≤ mixedDegree (⊥ : Ideal GeoJets) [p,cutterBox,r,s] := by
-        rw [show H = (⊥ : Ideal GeoJets) ⊔ Ideal.span {toGeneric f} by simp [H]]
-        apply h2 _ p [cutterBox,r,s] hp _ (by simp) _ _ hregF
-        · intro q hq
-          exact (List.mem_cons.mp hq).elim (fun h => h ▸ cutter_box) (hboxes q)
-        · exact generic_box ⟨le_max_left _ _, le_rfl, le_rfl⟩
-      _ ≤ _ := ambient_degree h1 hp cutter_box hr hs
-  have hfinal := (le_div_iff₀ (by norm_num : (0 : ℚ) < 32)).mp hcalc
-  rw [mul_comm _ (32 : ℚ), ← mul_assoc] at hfinal
-  dsimp only [cost, p] at hfinal
-  exact_mod_cast hfinal
 end
 end K1_13_6_2_3
 end
@@ -3329,7 +1452,7 @@ private def slices (b j t : ℕ) :=
   Σ z : Fin (2 * t + 1), Σ y : Fin ((2 * j - 3 * z.val) / 2 + 1),
     Σ x : Fin (2 * j - 3 * z.val - 2 * y.val + 1),
       Fin (2 * b - (z.val + y.val + x.val) + 1)
-def cap_slices (p : Shape) (hp : ChamberBox p) :
+private def cap_slices (p : Shape) (hp : ChamberBox p) :
     capExponents p ≃ slices p.b p.j p.t where
   toFun e := by
     have he := (cap_coords p e.val).mp e.property
@@ -3404,7 +1527,7 @@ private theorem slice_count (W C : ℕ) (h : W ≤ C) :
       push_cast
       rw [hW]
       ring
-theorem cap_count (p : Shape) (hp : ChamberBox p) :
+private theorem cap_count (p : Shape) (hp : ChamberBox p) :
     ((capExponents p).ncard : ℚ) =
       ∑ z ∈ range (2 * p.t + 1), slice (2 * p.j - 3 * z) (2 * p.b - z) := by
   classical
@@ -3429,7 +1552,7 @@ theorem cap_count (p : Shape) (hp : ChamberBox p) :
 private def evenSlice (b j i : ℚ) : ℚ := (j - 3 * i + 1) ^ 2 * (2 * b + 1 - j + i)
 private def oddSlice (b j i : ℚ) : ℚ :=
   (j - 3 * i - 1) * (j - 3 * i) * (2 * b + 3 / 2 - j + i)
-theorem slice_even (b j i : ℕ) (hi : 3 * i ≤ j) (hb : j ≤ b) :
+private theorem slice_even (b j i : ℕ) (hi : 3 * i ≤ j) (hb : j ≤ b) :
     slice (2 * j - 3 * (2 * i)) (2 * b - 2 * i) = evenSlice b j i := by
   have hW : 2 * j - 3 * (2 * i) = 2 * (j - 3 * i) := by omega
   have hC : 2 * i ≤ 2 * b := by omega
@@ -3438,7 +1561,7 @@ theorem slice_even (b j i : ℕ) (hi : 3 * i ≤ j) (hb : j ≤ b) :
     Nat.mul_mod_right, Nat.cast_zero, add_zero]
   push_cast [Nat.cast_sub hi, Nat.cast_sub hC]
   ring
-theorem slice_odd (b j i : ℕ) (hi : 3 * i + 3 ≤ j) (hb : j ≤ b) :
+private theorem slice_odd (b j i : ℕ) (hi : 3 * i + 3 ≤ j) (hb : j ≤ b) :
     slice (2 * j - 3 * (2 * i + 1)) (2 * b - (2 * i + 1)) = oddSlice b j i := by
   have hW : 3 * (2 * i + 1) ≤ 2 * j := by omega
   have hC : 2 * i + 1 ≤ 2 * b := by omega
@@ -3470,7 +1593,7 @@ private theorem paired_sum (b j : ℚ) (n : ℕ) :
     push_cast
     dsimp [pairedSum, pair, evenSlice, oddSlice]
     ring
-theorem count_formula (p : Shape) (hp : ChamberBox p) :
+private theorem count_formula (p : Shape) (hp : ChamberBox p) :
     ((capExponents p).ncard : ℚ) = pairedSum p.b p.j p.t + evenSlice p.b p.j p.t := by
   rw [cap_count p hp, sum_range_succ, sum_pair, slice_even _ _ _ hp.2.1 hp.1, ← paired_sum]
   congr 1
@@ -3603,21 +1726,6 @@ theorem jet_bound (w : Fin 4 → ℕ) (Δ : ℕ)
   | succ n ih =>
     simpa only [jetNumerator, Nat.add_mul, one_mul, Nat.add_assoc] using
       step_bound w Δ hshift hB hg ih (2 * n)
-private theorem iterate_bound (w : Fin 4 → ℕ) (f : Row 4) (r : ℕ) :
-    W w ((separant^[r]) f) ≤ W w f := by
-  induction r with
-  | zero => exact le_rfl
-  | succ r ih =>
-    rw [Function.iterate_succ_apply']
-    exact (weightedTotalDegree_pderiv_le w 3 _).trans ih
-theorem branch_box {f Q l} (b : Branch f Q l) : InBox (shape b.g) (shape f).chamber := by
-  refine ⟨?_, ?_, ?_⟩
-  · change b.g.totalDegree ≤ max f.totalDegree (indexDegree f)
-    exact (by simpa only [Branch.g, weightedTotalDegree_one] using iterate_bound 1 f b.r :
-      b.g.totalDegree ≤ f.totalDegree).trans (le_max_left _ _)
-  · simpa only [Shape.chamber, shape, indexDegree_eq, Branch.g] using iterate_bound Fin.val f b.r
-  · simpa only [Shape.chamber, shape, Branch.g, weightedTotalDegree_piSingle] using
-      iterate_bound (Pi.single 3 1) f b.r
 theorem oldBox_of_fits {P : GeoJets} {p : Shape} (h : GeoFits P p) : Box4 p P := by
   intro m hm
   have h₁ := le_weightedTotalDegree (1 : Fin 4 → ℕ) hm
@@ -3780,12 +1888,6 @@ open K1_13 K1_13_6 K1_13_6_2
 open scoped BigOperators
 abbrev Exponent := Fin 5 →₀ ℕ
 abbrev Boxes := Fin 5 → Shape × ℕ
-def boxes (p : Shape) (i : Fin 5) : Shape × ℕ :=
-  if i = 0 then (p, 0) else
-  if i = 1 then (cutterBox, 0) else
-  if i = 2 then (graphBox p, 1) else
-  if i = 3 then (liftedChart (taylorLength + 1) p, taylorLength + 1)
-  else (liftedChart (taylorLength + 2) p, taylorLength + 2)
 def Chamber (p : Shape) : Prop := p.j ≤ p.b ∧ 3 * p.t ≤ p.j
 def Allowed (a : Shape × ℕ) (m : Exponent) : Prop :=
   (∑ i : Fin 4, m i.castSucc) ≤ a.1.b ∧
@@ -3860,8 +1962,6 @@ def DivisorBound : Prop :=
 def oldEmbedding : GeoJets →+* GeoJets5 :=
   (MvPolynomial.rename Fin.castSucc).toRingHom
 def cylinder (P : Ideal GeoJets) : Ideal GeoJets5 := P.map oldEmbedding
-def graphLift {f Q l} (b : Branch f Q l) (P : Ideal GeoJets) : Ideal GeoJets5 :=
-  (P.map b.localMap).comap b.onGraph
 def pointIdeal (z : Fin 5 → GeoField) : Ideal GeoJets5 :=
   RingHom.ker (MvPolynomial.eval z)
 end
@@ -3904,7 +2004,7 @@ theorem allowed_coordinate {a : K1_13.Shape × ℕ}
     simp only [m, Finsupp.single_apply]
     split <;> decide
   exact ⟨hold.trans hb, hindex.trans hj, (hsingle _).trans ht, (hsingle _).trans hd⟩
-theorem constant_box (a : K1_13.Shape × ℕ) (s : GeoField) :
+private theorem constant_box (a : K1_13.Shape × ℕ) (s : GeoField) :
     Box5 a.1 a.2 (MvPolynomial.C s) := by
   classical
   apply box5_iff.mpr
@@ -3913,7 +2013,7 @@ theorem constant_box (a : K1_13.Shape × ℕ) (s : GeoField) :
   · simp [hs] at hm
   · rw [MvPolynomial.support_C, ite_eq_right hs, Finset.mem_singleton] at hm
     exact hm ▸ allowed_zero a
-theorem coordinate_box {a : K1_13.Shape × ℕ}
+private theorem coordinate_box {a : K1_13.Shape × ℕ}
     (h : 1 ≤ a.1.b ∧ 3 ≤ a.1.j ∧ 1 ≤ a.1.t ∧ 1 ≤ a.2)
     (z : Fin 5 → GeoField) (i : Fin 5) :
     Box5 a.1 a.2 (MvPolynomial.X i - MvPolynomial.C (z i)) := by
@@ -4081,9 +2181,6 @@ def padded (g : Row 4) (k i : ℕ) : Row 5 :=
 theorem padded_last (g : Row 4) (k : ℕ) : padded g k (k + 4) = numerator g k := by
   rw [padded, dite_eq_right (by omega : ¬ k + 4 < 4)]
   simp [denominator]
-theorem generic_rawGraph {f Q l} (b : Branch f Q l) :
-    generic5 (rawGraph b.g) = b.graph := by
-  simp [rawGraph, Branch.graph, Branch.sigma, toGeneric, MvPolynomial.map_rename, map_ofNat]
 end
 end K1_13_6_2_2
 end
@@ -4092,45 +2189,10 @@ namespace K1_13_6_2_2
 noncomputable section
 open Polynomial K1 K1_13 K1_13_6 K1_13_6_2
 open scoped BigOperators
-def c1 : Prop :=
-  ∀ f Q l, SmallFactor f → ∀ b : Branch f Q l,
-    let p := (shape f).chamber
-    Box5 (graphBox p) 1 b.graph ∧
-      ∀ k : ℕ, Box5 (liftedChart (k + 5) p) (k + 5) (generic5 (denominator b.g k)) ∧
-        ∀ i ≤ k + 4, Box5 (liftedChart (k + 5) p) (k + 5) (generic5 (padded b.g k i))
-def c2 : Prop :=
-  ∀ f Q l, ∀ (b : Branch f Q l) (k : ℕ),
-    b.onGraph (generic5 (numerator b.g k)) * b.localMap b.sigma ^ (k + 8) =
-      b.localMap (toGeneric (jetNumerator b.g (k + 4)))
 variable {f Q : Row 4} {l : ℕ}
 @[simp] private theorem onGraph_C (b : Branch f Q l) (a : GeoField) :
     b.onGraph (MvPolynomial.C a) = b.localMap (MvPolynomial.C a) := by
   simp [Branch.onGraph]
-theorem onGraph_lift4 (b : Branch f Q l) (P : Row 4) :
-    b.onGraph (generic5 (lift4 P)) = b.localMap (toGeneric P) := by
-  let lift := (MvPolynomial.rename Fin.castSucc : GeoJets →ₐ[GeoField] GeoJets5).toRingHom
-  have h : b.onGraph.comp lift = b.localMap := by
-    apply MvPolynomial.ringHom_ext
-    · intro a
-      simp [lift]
-    · intro i
-      simp [lift, Branch.onGraph]
-  rw [MvPolynomial.map_rename]
-  exact DFunLike.congr_fun h (toGeneric P)
-theorem denominator_onGraph (b : Branch f Q l) (k : ℕ) :
-    b.onGraph (generic5 (denominator b.g k)) = b.localMap b.sigma ^ k := by
-  simp only [denominator, map_pow, onGraph_lift4, Branch.sigma]
-private theorem numerator_associated (h : c2) (b : Branch f Q l) (k : ℕ) :
-    Associated (b.onGraph (generic5 (numerator b.g k)))
-      (b.localMap (toGeneric (jetNumerator b.g (k+4)))) := by
-  rw [← h f Q l b k]
-  exact associated_mul_unit_right _ _ (IsLocalization.Away.algebraMap_pow_isUnit b.sigma (k+8))
-private theorem eval_const (b : Branch f Q l) (p : JetPoint) (h : b.Contains p) (a : GeoField) :
-    b.liftedEval p h (MvPolynomial.C a) = a := by
-  simp [Branch.liftedEval, b.regularEval_localMap]
-private theorem eval_denominator (b : Branch f Q l) (p : JetPoint) (h : b.Contains p) (k : ℕ) :
-    b.liftedEval p h (generic5 (denominator b.g k)) = MvPolynomial.eval p b.sigma ^ k := by
-  simp [Branch.liftedEval, denominator_onGraph, b.regularEval_localMap]
 private abbrev ordinary (T : Geom[X]) (i : ℕ) : GeoField :=
   genericCoeffs ((derivative (R := Geom))^[i] T)
 private theorem ordinary_eq_hasse (T : Geom[X]) (i : ℕ) :
@@ -4140,48 +2202,6 @@ private theorem ordinary_eq_hasse (T : Geom[X]) (i : ℕ) :
   rw [coeff_iterate_derivative, Polynomial.coeff_C_mul, hasseDeriv_coeff,
     Nat.descFactorial_eq_factorial_mul_choose]
   simp only [nsmul_eq_mul, Nat.cast_mul, mul_assoc]
-private theorem eval_padded (h2 : c2) (b : Branch f Q l) {T : Geom[X]}
-    (h : b.Contains (actualPoint T)) (k i : ℕ) (hi : i ≤ k + 4) :
-    b.liftedEval (actualPoint T) h (generic5 (padded b.g k i)) =
-      ordinary T i * MvPolynomial.eval (actualPoint T) b.sigma ^ k := by
-  by_cases hi4 : i < 4
-  · rw [padded, dite_eq_left hi4]
-    simp only [map_mul, MvPolynomial.map_C, eval_const, eval_denominator]
-    have he : b.liftedEval (actualPoint T) h (generic5 (lift4 (MvPolynomial.X ⟨i, hi4⟩))) =
-        genericCoeffs (hasseDeriv i T) := by
-      change b.regularEval (actualPoint T) h (b.onGraph (generic5 (lift4 (MvPolynomial.X _)))) = _
-      rw [onGraph_lift4, b.regularEval_localMap]
-      simp [toGeneric, actualPoint, jet]
-    rw [he]
-    unfold ordinary
-    rw [ordinary_eq_hasse, map_mul]
-  · rw [padded, dite_eq_right hi4]
-    simp only [map_mul, eval_denominator]
-    let j := i - 4
-    have hj : j + 4 = i := by dsimp only [j]; omega
-    have hjk : j ≤ k := by omega
-    have hg : atJet b.g T = 0 := K1_13_6_1.mem_markIdeal.mp
-      (h.1 ((le_trans le_sup_left b.divisor.le) (b.chart.2.1 b.r le_rfl)))
-    let s := MvPolynomial.eval (actualPoint T) b.sigma
-    let e := b.regularEval (actualPoint T) h
-    have he := congrArg e (h2 f Q l b j)
-    simp only [map_mul, map_pow, e, b.regularEval_localMap] at he
-    change b.liftedEval (actualPoint T) h (generic5 (numerator b.g j)) * s ^ (j+8) =
-      MvPolynomial.eval (actualPoint T) (toGeneric (jetNumerator b.g (j+4))) at he
-    have hEval (P : Row 4) :
-        MvPolynomial.eval (actualPoint T) (toGeneric P) = genericCoeffs (atJet P T) :=
-      (MvPolynomial.map_eval genericCoeffs (jet T) P).symm
-    rw [hEval, eval_jetNumerator _ _ hg, map_mul, map_pow, hj] at he
-    have hs : genericCoeffs (atJet (separant b.g) T) = s := (hEval _).symm
-    rw [hs, show 2*i = j + (j+8) by omega, pow_add s j (j+8)] at he
-    have hnum : b.liftedEval (actualPoint T) h (generic5 (numerator b.g j)) =
-        ordinary T i * s ^ j := by
-      apply mul_right_cancel₀ (pow_ne_zero (j+8) h.2)
-      exact he.trans (show s ^ j * s ^ (j+8) * ordinary T i =
-        (ordinary T i * s ^ j) * s ^ (j+8) by ac_rfl)
-    change b.liftedEval (actualPoint T) h (generic5 (numerator b.g j)) * s ^ (k-j) =
-      ordinary T i * s ^ k
-    rw [hnum, mul_assoc, ← pow_add, Nat.add_sub_of_le hjk]
 private abbrev const : Geom →+* GeoField := genericCoeffs.comp Polynomial.C
 private abbrev centre : GeoField := genericCoeffs Polynomial.X
 private def taylorScalar (x : Geom) (i : ℕ) : GeoField :=
@@ -4198,30 +2218,6 @@ private theorem factorial_ne_zero {i : ℕ} (hi : i < K1.p) : (i.factorial : Geo
         ((CharP.cast_eq_zero_iff GeoField K1.p (i+1)).mp hz))
     simpa only [Nat.factorial_succ, Nat.cast_mul] using
       mul_ne_zero he (ih (Nat.lt_of_succ_lt hi))
-private theorem eval_taylor (T : Geom[X]) (hT : T.natDegree < taylorLength) (x : Geom) :
-    (∑ i ∈ Finset.range taylorLength, taylorScalar x i * ordinary T i) = const (T.eval x) := by
-  have hd : (Polynomial.taylor centre (T.map const)).natDegree < taylorLength := by
-    rw [Polynomial.natDegree_taylor]
-    exact Polynomial.natDegree_map_le.trans_lt hT
-  rw [← Polynomial.eval_map_apply const x, ← Polynomial.taylor_eval_sub centre,
-    Polynomial.eval_eq_sum_range' hd]
-  apply Finset.sum_congr rfl
-  intro i hi
-  have hcent (P : Geom[X]) : (P.map const).eval centre = genericCoeffs P := by
-    rw [Polynomial.eval_map]
-    simpa only [Polynomial.eval₂_C_X] using
-      (Polynomial.hom_eval₂ P Polynomial.C genericCoeffs Polynomial.X).symm
-  rw [Polynomial.taylor_coeff, Polynomial.hasseDeriv_map, hcent]
-  have hord : ordinary T i = (i.factorial : GeoField) * genericCoeffs (hasseDeriv i T) := by
-    unfold ordinary
-    rw [ordinary_eq_hasse, map_mul, Polynomial.C_eq_natCast, map_natCast]
-  have hn : i < K1.p :=
-    (Finset.mem_range.mp hi).trans (by decide : taylorLength < K1.p)
-  rw [hord, taylorScalar]
-  calc
-    _ = ((i.factorial : GeoField)⁻¹ * (i.factorial : GeoField)) *
-          (genericCoeffs (hasseDeriv i T) * (const x - centre)^i) := by ring
-    _ = _ := by rw [inv_mul_cancel₀ (factorial_ne_zero hn), one_mul]
 private theorem box_C_mul {p : Shape} {d : ℕ} {P : GeoJets5} (hP : Box5 p d P)
     (a : GeoField) : Box5 p d (MvPolynomial.C a * P) := by
   have hsub : (MvPolynomial.C a * P).support ⊆ P.support := by
@@ -4254,59 +2250,6 @@ private theorem box_sub {p : Shape} {d : ℕ} {A B : GeoJets5}
     rcases Finset.mem_union.mp (hsub hm) with ha | hb
     · exact hA.2 m ha
     · exact hB.2 m hb
-private def valuePolynomial (g : Row 4) (k : ℕ) (x a : K) : GeoJets5 :=
-  (∑ i ∈ Finset.range taylorLength, MvPolynomial.C (taylorScalar (embed x) i) *
-      generic5 (padded g k i)) -
-    MvPolynomial.C (const (embed a)) * generic5 (denominator g k)
-private theorem value_section (h2 : c2) (b : Branch f Q l) (k : ℕ)
-    (hk : taylorLength ≤ k + 5) (x a : K) :
-    ∀ S : K[X], S.natDegree ≤ 133671 → ∀ h : b.Contains (actualPoint (extend S)),
-      b.liftedEval (actualPoint (extend S)) h (valuePolynomial b.g k x a) = 0 ↔ S.eval x = a := by
-  intro S hS h
-  let p := actualPoint (extend S)
-  let e := b.liftedEval p h
-  let s := MvPolynomial.eval p b.sigma
-  have hsum :
-      (∑ i ∈ Finset.range taylorLength,
-        e (MvPolynomial.C (taylorScalar (embed x) i) * generic5 (padded b.g k i))) =
-        const ((extend S).eval (embed x)) * s^k := by
-    have hdeg : (extend S).natDegree < taylorLength := by
-      rw [Polynomial.natDegree_map]
-      exact Nat.lt_succ_of_le hS
-    rw [← eval_taylor (extend S) hdeg (embed x), Finset.sum_mul]
-    apply Finset.sum_congr rfl
-    intro i hi
-    have hki : i ≤ k + 4 := by have := Finset.mem_range.mp hi; omega
-    simp only [map_mul, e, eval_const, p, eval_padded h2 b h k i hki, s, mul_assoc]
-  change e (valuePolynomial b.g k x a) = 0 ↔ _
-  unfold valuePolynomial
-  rw [map_sub, map_sum, hsum, map_mul, eval_const, eval_denominator]
-  change const ((extend S).eval (embed x)) * s^k - const (embed a) * s^k = 0 ↔ _
-  rw [Polynomial.eval_map_apply, ← sub_mul, mul_eq_zero,
-    or_iff_left (pow_ne_zero k h.2), sub_eq_zero]
-  exact ⟨fun he => embed.injective (const.injective he), fun he => congrArg (const.comp embed) he⟩
-theorem of_children (h1 : c1) (h2 : c2) : K1_13_6_2.c2 := by
-  intro f Q l hf b
-  obtain ⟨hg, hbox⟩ := h1 f Q l hf b
-  let k := taylorLength - 4
-  have hE := (hbox k).2 (k+4) le_rfl
-  have hH := (hbox (k+1)).2 ((k+1)+4) le_rfl
-  rw [padded_last] at hE hH
-  have hm := numerator_associated h2 b k
-  have hn := numerator_associated h2 b (k+1)
-  refine ⟨hg, generic5 (numerator b.g k), generic5 (numerator b.g (k+1)), hE, hm, hH, hn, ?_⟩
-  intro x a
-  refine ⟨valuePolynomial b.g (k+1) x a, ?_, value_section h2 b (k+1) (by decide) x a⟩
-  unfold valuePolynomial
-  apply box_sub
-  · apply box_sum
-    intro i hi
-    have hki : i ≤ k + 1 + 4 := by
-      have := Finset.mem_range.mp hi
-      dsimp only [k]
-      omega
-    exact box_C_mul ((hbox (k+1)).2 i hki) _
-  · exact box_C_mul (hbox (k+1)).1 _
 end
 end K1_13_6_2_2
 end
@@ -4398,76 +2341,6 @@ theorem old_section_box {P : Row 4} {p : Shape} (hP : InBox (shape P) p) :
       Finset.le_sup (f := fun m => m.sum (fun i n => i.val * n)) haP
     rw [Finsupp.sum_fintype _ _ (fun _ => Nat.mul_zero _)] at hindex
     exact hindex.trans hP.2.1
-theorem anchor_section_regular {f : Row 4} (hf : SmallFactor f) :
-    IsLeftRegular (Ideal.Quotient.mk (⊥ : Ideal GeoJets5) (oldEmbedding (toGeneric f))) := by
-  have hinj : Function.Injective genericCoeffs :=
-    (algebraMap GenericField GeoField).injective.comp (IsFractionRing.injective Geom[X] GenericField)
-  have hf5 : oldEmbedding (toGeneric f) ≠ 0 :=
-    (MvPolynomial.rename_injective _ (Fin.castSucc_injective 4)).ne
-      ((MvPolynomial.map_injective _ hinj).ne hf.1.ne_zero)
-  exact IsLeftCancelMulZero.mul_left_cancel_of_ne_zero (by
-    rw [ne_eq, Ideal.Quotient.eq_zero_iff_mem, Ideal.mem_bot]
-    exact hf5)
-end
-end K1_13_6_2_4
-end
-section
-namespace K1_13_6_2_4
-noncomputable section
-open K1_13_6 K1_13_6_2
-theorem chart_index_eq {f Q l} {b c : Branch f Q l} (h : b.surface = c.surface) :
-    b.r = c.r := by
-  have order (d e : Branch f Q l) (he : d.surface = e.surface) : ¬ d.r < e.r := by
-    intro hlt
-    have hmem := e.chart.2.1 (d.r + 1) (by omega)
-    rw [← he, Function.iterate_succ_apply'] at hmem
-    exact d.chart.2.2 hmem
-  exact Nat.le_antisymm (Nat.le_of_not_gt (order c b h.symm)) (Nat.le_of_not_gt (order b c h))
-theorem graphLift_same_chart {f Q l} {b c : Branch f Q l} (h : b.r = c.r)
-    (P : Ideal GeoJets) : graphLift b P = graphLift c P := by
-  cases b
-  cases c
-  cases h
-  rfl
-theorem membership_same_chart {f Q l} {b c : Branch f Q l} (h : b.r = c.r) (D : GeoJets5) :
-    Associated (b.onGraph D) (b.localMap b.member) ↔
-      Associated (c.onGraph D) (c.localMap c.member) := by
-  cases b
-  cases c
-  cases h
-  rfl
-theorem graph_on_old {f Q l} (b : Branch f Q l) :
-    b.onGraph.comp oldEmbedding = b.localMap := by
-  apply MvPolynomial.ringHom_ext
-  · intro a
-    simp [oldEmbedding, Branch.onGraph]
-  · intro i
-    simp [oldEmbedding, Branch.onGraph]
-theorem graphLift_comap {f Q l} (b : Branch f Q l) (P : Ideal GeoJets)
-    (hP : P.IsPrime) (hregular : b.sigma ∉ P) :
-    (graphLift b P).comap oldEmbedding = P := by
-  rw [graphLift, Ideal.comap_comap, graph_on_old]
-  ext D
-  change algebraMap GeoJets b.Local D ∈ P.map (algebraMap GeoJets b.Local) ↔ D ∈ P
-  rw [IsLocalization.algebraMap_mem_map_algebraMap_iff (Submonoid.powers b.sigma) b.Local]
-  constructor
-  · rintro ⟨m, ⟨n, rfl⟩, hm⟩
-    exact (hP.mem_or_mem hm).resolve_left (fun hpow => hregular (hP.mem_of_pow_mem n hpow))
-  · intro hD
-    exact ⟨1, (Submonoid.powers b.sigma).one_mem, by simpa using hD⟩
-theorem member_proper_on_graph {f Q l} (b : Branch f Q l) {E : GeoJets5}
-    (hE : Associated (b.onGraph E) (b.localMap b.member)) :
-    E ∉ graphLift b b.surface := by
-  intro hmem
-  have hlocal : b.localMap b.member ∈ b.surface.map b.localMap :=
-    (b.surface.map b.localMap).mem_of_dvd hE.dvd hmem
-  have hold : oldEmbedding b.member ∈ graphLift b b.surface := by
-    change b.onGraph (oldEmbedding b.member) ∈ b.surface.map b.localMap
-    rw [show b.onGraph (oldEmbedding b.member) = b.localMap b.member from
-      RingHom.congr_fun (graph_on_old b) _]
-    exact hlocal
-  have hcont := graphLift_comap b b.surface b.base.isPrime b.chart.2.2
-  exact b.proper (hcont ▸ hold)
 end
 end K1_13_6_2_4
 end
@@ -4478,28 +2351,6 @@ open K1_13 K1_13_6 K1_13_6_2
 open scoped BigOperators nonZeroDivisors
 def c1 : Prop := ProperCutComparison
 def c2 : Prop := CycleComparison
-def c3 : Prop :=
-  ∀ p : Shape, Chamber p →
-    32 * mixedDegree (boxes p) ⊥ Finset.univ ≤ (budget5 p : ℚ)
-def c4 : Prop :=
-  ∀ (f Q : Row 4), SmallFactor f → ¬ f ∣ Q →
-    let A := sectionIdeal ⊥ (oldEmbedding (toGeneric f))
-    let J := sectionIdeal A (oldEmbedding (toGeneric Q))
-    IsLeftRegular (Ideal.Quotient.mk A (oldEmbedding (toGeneric Q))) ∧
-    ∀ P : Ideal GeoJets, ∀ h : (intersectionIdeal f Q).IsMinimalPrime P,
-      OfDim (cylinder P) 3 ∧
-        ∃ hc : J.IsMinimalPrime (cylinder P),
-          cycleLength (intersectionIdeal f Q) P h.isPrime ≤ LengthAt J (cylinder P) hc.isPrime
-def c5 : Prop :=
-  ∀ {f Q l} (b : Branch f Q l) (E : GeoJets5),
-    (cylinder b.surface).IsPrime → OfDim (cylinder b.surface) 3 →
-    Associated (b.onGraph E) (b.localMap b.member) →
-    b.graph ∉ cylinder b.surface ∧
-    Component (cylinder b.surface) b.graph (graphLift b b.surface) 1 ∧
-    OfDim (graphLift b b.surface) 2 ∧
-    ∀ c : Branch f Q l, c.surface = b.surface →
-      Component (graphLift b b.surface) E (graphLift c c.curve) c.weight ∧
-      OfDim (graphLift c c.curve) 1
 theorem dim_le_after_section {P : Ideal GeoJets5} {D : GeoJets5} {d : ℕ}
     (hr : IsLeftRegular (Ideal.Quotient.mk P D)) (h : DimLE P (d + 1)) :
     DimLE (sectionIdeal P D) d := by
@@ -4524,191 +2375,12 @@ theorem divisor_bound (hcut : ProperCutComparison) (hcycle : CycleComparison) :
   exact (hcycle B hB (sectionIdeal P D) I (dim_le_after_section hr hdle) S C w hinj
     (fun a ha => ⟨(hcomp a ha).minimal, (hcomp a ha).length_le⟩)).trans
     (hcut B hB P I i hi hdle D hD hr)
-theorem last_caps (p : Shape) :
-    1 ≤ (boxes p 4).1.b ∧ 3 ≤ (boxes p 4).1.j ∧ 1 ≤ (boxes p 4).1.t ∧ 1 ≤ (boxes p 4).2 := by
-  let H := 4 + (taylorLength + 2 - 5) * (p.j - 2)
-  change 1 ≤ max _ H ∧ 3 ≤ H ∧ 1 ≤ min _ (H / 3) ∧ 1 ≤ taylorLength + 2
-  have hH : 4 ≤ H := Nat.le_add_right _ _
-  refine ⟨(by omega : 1 ≤ H).trans (le_max_right _ _), by omega, le_min ?_ (by omega), by decide⟩
-  omega
 private theorem chart_chamber (L : ℕ) (p : Shape) : Chamber (liftedChart L p) := by
   let H := 4 + (L - 5) * (p.j - 2)
   change H ≤ max _ H ∧ 3 * min _ (H / 3) ≤ H
   refine ⟨le_max_right _ _, ?_⟩
   have h := min_le_right (2 + (L - 5) * p.t) (H / 3)
   omega
-theorem boxes_admissible (p : Shape) (h : Chamber p) : Admissible (boxes p) := by
-  constructor
-  · intro i
-    fin_cases i
-    · exact h
-    · change 1650 ≤ 4013 ∧ 3 * 550 ≤ (1650 : ℕ)
-      decide
-    · change p.j + 1 ≤ max p.b (p.j + 1) ∧
-        3 * min (p.t + 1) ((p.j + 1) / 3) ≤ p.j + 1
-      have ht := min_le_right (p.t + 1) ((p.j + 1) / 3)
-      exact ⟨le_max_right _ _, by omega⟩
-    · exact chart_chamber _ _
-    · exact chart_chamber _ _
-  · intro v
-    refine ⟨4, ?_⟩
-    obtain ⟨hb, hj, ht, hd⟩ := last_caps p
-    change Allowed ((boxes p 4).1.scale 2, 2 * (boxes p 4).2) (Finsupp.single v 1)
-    apply allowed_coordinate
-    change 1 ≤ 2 * (boxes p 4).1.b ∧ 3 ≤ 2 * (boxes p 4).1.j ∧
-      1 ≤ 2 * (boxes p 4).1.t ∧ 1 ≤ 2 * (boxes p 4).2
-    omega
-private def liftedPoint {f Q l} (b : Branch f Q l) (p : JetPoint) : Fin 5 → GeoField := by
-  classical
-  exact if h : b.Contains p then fun i => b.liftedEval p h (MvPolynomial.X i)
-    else Fin.lastCases 0 p
-private theorem eval_liftedPoint {f Q l} (b : Branch f Q l) (p : JetPoint) (h : b.Contains p) :
-    MvPolynomial.eval (liftedPoint b p) = b.liftedEval p h := by
-  apply MvPolynomial.ringHom_ext
-  · intro a
-    simp [Branch.liftedEval, Branch.onGraph, Branch.regularEval_localMap]
-  · intro i
-    simp [liftedPoint, h]
-private theorem liftedPoint_old {f Q l} (b : Branch f Q l) (p : JetPoint) (h : b.Contains p)
-    (i : Fin 4) : liftedPoint b p i.castSucc = p i := by
-  simp [liftedPoint, h, Branch.liftedEval, Branch.onGraph, Branch.regularEval_localMap]
-private theorem liftedPoint_mem {f Q l} (b : Branch f Q l) (p : JetPoint) (h : b.Contains p) :
-    graphLift b b.curve ≤ pointIdeal (liftedPoint b p) := by
-  have hk : b.localCurve ≤ RingHom.ker (b.regularEval p h) := by
-    apply Ideal.map_le_iff_le_comap.mpr
-    intro P hP
-    change b.regularEval p h (b.localMap P) = 0
-    rw [Branch.regularEval_localMap]
-    exact h.1 hP
-  intro D hD
-  change MvPolynomial.eval (liftedPoint b p) D = 0
-  rw [eval_liftedPoint b p h]
-  exact hk hD
-private theorem bound_marks {f Q l} (hdiv : DivisorBound) {p : Shape}
-    (hB : Admissible (boxes p)) (b : Branch f Q l) (T : Finset JetPoint)
-    (hp : p = (shape f).chamber) (hT : ∀ y ∈ T, b.Contains y) (hSlice : Slice5 b T)
-    (hprime : (graphLift b b.curve).IsPrime) (hdim : OfDim (graphLift b b.curve) 1) :
-    (T.card : ℚ) ≤ mixedDegree (boxes p) (graphLift b b.curve) {4} := by
-  classical
-  subst p
-  let U := T.image (liftedPoint b)
-  have hcard : U.card = T.card := Finset.card_image_of_injOn (by
-    intro x hx y hy he
-    funext i
-    have hz := congrFun he i.castSucc
-    rwa [liftedPoint_old b x (hT x hx), liftedPoint_old b y (hT y hy)] at hz)
-  rw [← hcard]
-  apply point_bound hdiv _ hB (last_caps _) _ hprime hdim U
-  · intro z hz
-    obtain ⟨y, hy, rfl⟩ := Finset.mem_image.mp hz
-    exact liftedPoint_mem b y (hT y hy)
-  · rcases hSlice with hsingle | ⟨D, hD, hproper, hvanish⟩
-    · exact Or.inl (hcard ▸ hsingle)
-    · refine Or.inr ⟨D, hD, hproper, ?_⟩
-      intro z hz
-      obtain ⟨y, hy, rfl⟩ := Finset.mem_image.mp hz
-      rw [eval_liftedPoint b y (hT y hy)]
-      exact hvanish y hy (hT y hy)
-private theorem initial_bound (h1 : c1) (h2 : c2) (h4 : c4)
-    (f Q : Row 4) (l : ℕ) (hf : SmallFactor f) (hQ : ¬ f ∣ Q)
-    (hQbox : InBox (shape Q) cutterBox) (S : Finset (Ideal GeoJets))
-    (hS : ∀ P ∈ S, ∃ h : (intersectionIdeal f Q).IsMinimalPrime P,
-      (l : ℕ∞) ≤ cycleLength (intersectionIdeal f Q) P h.isPrime) :
-    (∀ P ∈ S, (cylinder P).IsPrime ∧ OfDim (cylinder P) 3) ∧
-      (l : ℚ) * (∑ P ∈ S, mixedDegree (boxes (shape f).chamber) (cylinder P) {2, 3, 4}) ≤
-        mixedDegree (boxes (shape f).chamber) ⊥ Finset.univ := by
-  classical
-  let p := (shape f).chamber
-  let B := boxes p
-  have hB := boxes_admissible p (K1_13_7_1.shape_chamber f)
-  let A := sectionIdeal ⊥ (oldEmbedding (toGeneric f))
-  let J := sectionIdeal A (oldEmbedding (toGeneric Q))
-  obtain ⟨hregQ, hAlgebra⟩ := h4 f Q hf hQ
-  have hregf := anchor_section_regular hf
-  have hboxf : Box5 p 0 (oldEmbedding (toGeneric f)) :=
-    old_section_box ⟨le_max_left _ _, le_rfl, le_rfl⟩
-  have hAdim : DimLE A 4 := dim_le_after_section hregf ambient_dim
-  have hJdim : DimLE J 3 := dim_le_after_section hregQ hAdim
-  have hgeom (P : Ideal GeoJets) (hP : P ∈ S) :
-      (cylinder P).IsPrime ∧ OfDim (cylinder P) 3 ∧
-        ∃ hc : J.IsMinimalPrime (cylinder P), (l : ℕ∞) ≤ LengthAt J (cylinder P) hc.isPrime := by
-    obtain ⟨h, hw⟩ := hS P hP
-    obtain ⟨hd, hc, hl⟩ := hAlgebra P h
-    exact ⟨hc.isPrime, hd, hc, hw.trans hl⟩
-  refine ⟨fun P hP => ⟨(hgeom P hP).1, (hgeom P hP).2.1⟩, ?_⟩
-  have hs := h2 B hB J {2, 3, 4} hJdim S cylinder (fun _ => l) cylinder_injective.injOn
-    (fun P hP => (hgeom P hP).2.2)
-  have hcutQ := h1 B hB A {2, 3, 4} 1 (by decide) hAdim
-    (oldEmbedding (toGeneric Q)) (old_section_box hQbox) hregQ
-  have hcutf := h1 B hB ⊥ {1, 2, 3, 4} 0 (by decide) ambient_dim
-    (oldEmbedding (toGeneric f)) hboxf hregf
-  have hall : (insert (0 : Fin 5) {1, 2, 3, 4} : Finset (Fin 5)) = Finset.univ := by decide
-  rw [hall] at hcutf
-  rw [Finset.mul_sum]
-  exact hs.trans (hcutQ.trans hcutf)
-theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) (h4 : c4) (h5 : c5) :
-    K1_13_6_2.c4 := by
-  classical
-  have hdiv := divisor_bound h1 h2
-  intro f Q l hf hproper hQ hl F T hF
-  let p := (shape f).chamber
-  have hp : Chamber p := K1_13_7_1.shape_chamber f
-  let B := boxes p
-  have hB : Admissible B := boxes_admissible p hp
-  let S := F.image Branch.surface
-  let fibre (P : Ideal GeoJets) := F.filter fun b => b.surface = P
-  let charge (b : Branch f Q l) : ℚ := (b.weight : ℚ) * (T b).card
-  obtain ⟨hZ, hsumZ⟩ := initial_bound h1 h2 h4 f Q l hf hproper hQ S (by
-    intro P hP
-    obtain ⟨b, _, rfl⟩ := Finset.mem_image.mp hP
-    exact ⟨b.base, b.high⟩)
-  have hfibre (P : Ideal GeoJets) (hP : P ∈ S) :
-      (∑ c ∈ fibre P, charge c) ≤ mixedDegree B (cylinder P) {2, 3, 4} := by
-    obtain ⟨b, hb, rfl⟩ := Finset.mem_image.mp hP
-    let G := graphLift b b.surface
-    let C (c : Branch f Q l) := graphLift c c.curve
-    obtain ⟨hboxG, ⟨E, hboxE, hE⟩, _, _⟩ := hF b hb
-    obtain ⟨hZprime, hZdim⟩ := hZ _ hP
-    obtain ⟨hproperG, hG, hGdim, hC⟩ := h5 b E hZprime hZdim hE
-    have hproperE := member_proper_on_graph b hE
-    have inj : Set.InjOn C (fibre b.surface : Set (Branch f Q l)) := by
-      intro c hc d hd he
-      have hcs := (Finset.mem_filter.mp hc).2
-      have hds := (Finset.mem_filter.mp hd).2
-      apply Branch.eq_of_surface_curve (hcs.trans hds.symm)
-      rw [← graphLift_comap c c.curve c.divisor.isPrime c.regularCurve,
-        ← graphLift_comap d d.curve d.divisor.isPrime d.regularCurve]
-      exact congrArg (Ideal.comap oldEmbedding) he
-    have hmarks : (∑ c ∈ fibre b.surface, charge c) ≤
-        ∑ c ∈ fibre b.surface, (c.weight : ℚ) * mixedDegree B (C c) {4} := by
-      apply Finset.sum_le_sum
-      intro c hc
-      obtain ⟨hcF, hcs⟩ := Finset.mem_filter.mp hc
-      obtain ⟨_, _, hon, hslice⟩ := hF c hcF
-      obtain ⟨hcomp, hdim⟩ := hC c hcs
-      exact mul_le_mul_of_nonneg_left
-        (bound_marks hdiv hB c (T c) rfl hon hslice hcomp.minimal.isPrime hdim)
-        (Nat.cast_nonneg _)
-    have hEbound := hdiv B hB G {4} 3 hG.minimal.isPrime (by decide) hGdim E hboxE hproperE
-      (fibre b.surface) C Branch.weight inj (fun c hc => (hC c (Finset.mem_filter.mp hc).2).1)
-    have hGbound := hdiv B hB (cylinder b.surface) {3, 4} 2 hZprime (by decide) hZdim
-      b.graph hboxG hproperG {G} id (fun _ => 1) (fun _ _ _ _ h => h) (by
-        intro P hP
-        obtain rfl := Finset.mem_singleton.mp hP
-        exact hG)
-    have hGbound' : mixedDegree B G {3, 4} ≤ mixedDegree B (cylinder b.surface) {2, 3, 4} := by
-      simpa only [Finset.sum_singleton, Nat.cast_one, one_mul, id_eq] using hGbound
-    exact hmarks.trans (hEbound.trans hGbound')
-  have hcharge : (∑ c ∈ F, charge c) ≤ ∑ P ∈ S, mixedDegree B (cylinder P) {2, 3, 4} := by
-    rw [← Finset.sum_fiberwise_of_maps_to (g := Branch.surface)
-      (fun b hb => Finset.mem_image_of_mem Branch.surface hb) charge]
-    exact Finset.sum_le_sum hfibre
-  have htotal := (mul_le_mul_of_nonneg_left hcharge (Nat.cast_nonneg l)).trans hsumZ
-  have hr : 32 * ((l : ℚ) * (∑ b ∈ F, charge b)) ≤ (budget5 p : ℚ) :=
-    (mul_le_mul_of_nonneg_left htotal (by norm_num)).trans (h3 p hp)
-  apply (Nat.cast_le (α := ℚ)).mp
-  push_cast
-  simpa only [charge, mul_assoc] using hr
 end
 end K1_13_6_2_4
 end
@@ -4800,17 +2472,17 @@ def coefficientDiff {n : ℕ} (P : Row n) : Row n :=
   split_ifs with hm
   · rfl
   · rw [notMem_support_iff.mp hm, map_zero]
-theorem coefficientDiff_C {n : ℕ} (c : Geom[X]) :
+private theorem coefficientDiff_C {n : ℕ} (c : Geom[X]) :
     coefficientDiff (C c : Row n) = C (Polynomial.derivative c) := by
   classical
   ext m
   rw [coeff_coefficientDiff]
   by_cases hm : 0 = m <;> simp [coeff_C, hm]
-theorem coefficientDiff_add {n : ℕ} (P Q : Row n) :
+private theorem coefficientDiff_add {n : ℕ} (P Q : Row n) :
     coefficientDiff (P + Q) = coefficientDiff P + coefficientDiff Q := by
   ext m
   simp
-theorem coefficientDiff_mul_X {n : ℕ} (P : Row n) (j : Fin n) :
+private theorem coefficientDiff_mul_X {n : ℕ} (P : Row n) (j : Fin n) :
     coefficientDiff (P * MvPolynomial.X j) = coefficientDiff P * MvPolynomial.X j := by
   classical
   ext m
@@ -4956,7 +2628,7 @@ private theorem hilbert_difference (h1 : c1)
     simp only [sliceCount, hB, outside, Set.mem_ofPred_eq]
   rw [eqI, eqK]
   exact h1 slot A B hAB
-theorem read_cap (h1 : c1) (h2 : c2) (h3 : c3) (h4 : c4) (h5 : c5)
+private theorem read_cap (h1 : c1) (h2 : c2) (h3 : c3) (h4 : c4) (h5 : c5)
     {ι : Type} [Fintype ι] [DecidableEq ι] (shapes : ι → Shape) (J : Ideal GeoJets)
     (base : ι) (used : List ι) (hsh : ∀ i, ChamberBox (shapes i))
     (hb : base ∉ used) (hn : used.Nodup) (hd : dimension J ≤ used.length) :
@@ -5072,7 +2744,7 @@ theorem negQuarter_mul_four : negQuarter * (4 : Geom) = -1 := by
     exact (by decide : ¬ 4 % K1.p = 0) (Nat.dvd_iff_mod_eq_zero.mp hd)
   rw [negQuarter, neg_mul, inv_mul_cancel₀ h]
 abbrev q (g : Row 4) : Chart g := constants g (Polynomial.C negQuarter)
-theorem q_mul_four (g : Row 4) : q g * 4 = -1 := by
+private theorem q_mul_four (g : Row 4) : q g * 4 = -1 := by
   let e := (constants g).comp Polynomial.C
   change e negQuarter * 4 = -1
   calc
@@ -5080,7 +2752,7 @@ theorem q_mul_four (g : Row 4) : q g * 4 = -1 := by
     _ = e (negQuarter * 4) := (map_mul _ _ _).symm
     _ = _ := by rw [negQuarter_mul_four, map_neg, map_one]
 def W (g : Row 4) : Chart g := q g * incl g (partialFlow g) * invS g
-theorem four_mul_W (g : Row 4) : 4 * W g = -(incl g (partialFlow g) * invS g) := by
+private theorem four_mul_W (g : Row 4) : 4 * W g = -(incl g (partialFlow g) * invS g) := by
   unfold W
   calc
     _ = (q g * 4) * (incl g (partialFlow g) * invS g) := by ring
@@ -5102,20 +2774,20 @@ def graphMap (g : Row 4) : Row 5 →+* Chart g :=
     · intro i
       simp
   exact DFunLike.congr_fun h P
-def oldJet (g : Row 4) : Row 4 →+* Dual (Chart g) :=
+private def oldJet (g : Row 4) : Row 4 →+* Dual (Chart g) :=
   eval₂Hom (coefficientJet (constants g))
     (fun i => (incl g (MvPolynomial.X i),
       Fin.lastCases (4 * W g)
         (fun j : Fin 3 => (j.val + 1 : ℕ) * incl g (MvPolynomial.X j.succ)) i))
-theorem oldJet_C (g : Row 4) (a : Geom[X]) :
+private theorem oldJet_C (g : Row 4) (a : Geom[X]) :
     oldJet g (C a) = (constants g a, constants g (Polynomial.derivative a)) :=
   eval₂Hom_C _ _ _
-theorem oldJet_X (g : Row 4) (i : Fin 4) :
+private theorem oldJet_X (g : Row 4) (i : Fin 4) :
     oldJet g (MvPolynomial.X i) = (incl g (MvPolynomial.X i),
       Fin.lastCases (4 * W g)
         (fun j : Fin 3 => (j.val + 1 : ℕ) * incl g (MvPolynomial.X j.succ)) i) :=
   eval₂Hom_X' _ _ _
-theorem oldJet_fst (g P : Row 4) : (oldJet g P).fst = incl g P := by
+private theorem oldJet_fst (g P : Row 4) : (oldJet g P).fst = incl g P := by
   have h : (TrivSqZeroExt.fstHom (Chart g) (Chart g) (Chart g)).toRingHom.comp
       (oldJet g) = incl g := by
     apply MvPolynomial.ringHom_ext
@@ -5134,7 +2806,7 @@ private def localJet (g : Row 4) : Chart g →+* Dual (Chart g) :=
       exact IsLocalization.Away.algebraMap_isUnit _))
 @[simp] private theorem localJet_incl (g P : Row 4) :
     localJet g (incl g P) = oldJet g P := IsLocalization.Away.lift_eq _ _ _
-theorem localJet_fst (g : Row 4) (a : Chart g) : (localJet g a).fst = a := by
+private theorem localJet_fst (g : Row 4) (a : Chart g) : (localJet g a).fst = a := by
   have h : (TrivSqZeroExt.fstHom (Chart g) (Chart g) (Chart g)).toRingHom.comp
       (localJet g) = RingHom.id _ := by
     apply IsLocalization.ringHom_ext (Submonoid.powers (separant g))
@@ -5187,7 +2859,7 @@ theorem D_incl (g P : Row 4) : S g * D g (incl g P) = incl g (flowNumerator g P)
   have hm : S g * (incl g (partialFlow g) * invS g) = incl g (partialFlow g) := by
     rw [← mul_left_comm, S_mul_invS, mul_one]
   linear_combination -incl g (separant P) * hm
-theorem D_graphMap_X (g : Row 4) (i : Fin 4) :
+private theorem D_graphMap_X (g : Row 4) (i : Fin 4) :
     D g (graphMap g (MvPolynomial.X i.castSucc)) = (i.val + 1 : ℕ) * graphMap g (MvPolynomial.X i.succ) := by
   refine Fin.lastCases ?_ (fun j => ?_) i
   · change D g (graphMap g (MvPolynomial.X (Fin.last 3).castSucc)) =
@@ -5207,7 +2879,7 @@ theorem D_graphMap (g : Row 4) (P : Row 5) :
     ∑ i, D g (graphMap g (MvPolynomial.X i)) * graphMap g (pderiv i P) at h
   rw [h, Fin.sum_univ_castSucc, graphMap_X_last, ← add_assoc]
   simp only [D_graphMap_X, fixedFlow, map_add, map_sum, map_mul, map_natCast]
-theorem graph_zero (g : Row 4) : graphMap g (rawGraph g) = 0 := by
+private theorem graph_zero (g : Row 4) : graphMap g (rawGraph g) = 0 := by
   rw [rawGraph, map_add, map_mul, map_mul, graphMap_lift, graphMap_lift, graphMap_X_last,
     graphMap_C, map_ofNat]
   change incl g (partialFlow g) + 4 * S g * W g = 0
@@ -5220,11 +2892,11 @@ theorem graph_zero (g : Row 4) : graphMap g (rawGraph g) = 0 := by
   intro hv
   obtain ⟨i, _, hi⟩ := mem_vars_rename Fin.castSucc P hv
   exact Fin.castSucc_ne_last i hi
-theorem pderiv_graph (g : Row 4) :
+private theorem pderiv_graph (g : Row 4) :
     pderiv (Fin.last 4) (rawGraph g) = C (4 : Geom[X]) * lift4 (separant g) := by
   rw [rawGraph, map_add, pderiv_last_lift, zero_add, pderiv_mul, pderiv_C_mul,
     pderiv_last_lift, mul_zero, zero_mul, pderiv_X_self, mul_one, zero_add]
-theorem D_W (g : Row 4) : S g * D g (W g) = graphMap g (fifthFlow g) := by
+private theorem D_W (g : Row 4) : S g * D g (W g) = graphMap g (fifthFlow g) := by
   have h := congrArg (D g) (graph_zero g)
   rw [map_zero, D_graphMap, pderiv_graph, map_mul, graphMap_C, map_ofNat, graphMap_lift] at h
   change graphMap g (fixedFlow (rawGraph g)) + D g (W g) * (4 * S g) = 0 at h
@@ -5271,7 +2943,7 @@ namespace K1_13_6_2_4_2
 noncomputable section
 open K1_13 K1_13_6 K1_13_6_2 K1_13_6_2_4 MvPolynomial
 open scoped BigOperators
-theorem dim_le_of_integral_injective {R S : Type*} [CommRing R] [CommRing S]
+private theorem dim_le_of_integral_injective {R S : Type*} [CommRing R] [CommRing S]
     (f : R →+* S) (hf : f.IsIntegral) (hinj : Function.Injective f) :
     ringKrullDim R ≤ ringKrullDim S := by
   let : Algebra R S := f.toAlgebra
@@ -5292,7 +2964,7 @@ theorem hilbert_degree_le {σ : Type*} [Finite σ] {P : Ideal (MvPolynomial σ G
   rw [natDegree_affineHilbertPolynomial_eq_card_of_finite_of_injective g hfin hinj, Nat.card_fin]
   have hdim := (dim_le_of_integral_injective g.toRingHom hfin.to_isIntegral hinj).trans hd
   simpa [MvPolynomial.ringKrullDim_of_isNoetherianRing_of_finite, ringKrullDim_eq_zero_of_field] using hdim
-theorem zero_in_box (a : Shape × ℕ) : (0 : Exponent) ∈ latticePoints a := by
+private theorem zero_in_box (a : Shape × ℕ) : (0 : Exponent) ∈ latticePoints a := by
   change Allowed (a.1.scale 2, 2 * a.2) 0
   simp [Allowed]
 theorem diagonal_surjective {B : Boxes} (hB : Admissible B) {t : Fin 5 → ℕ}
@@ -5370,7 +3042,7 @@ private lemma polarize_congr {H G : Shape → ℚ} (h : ∀ p, ChamberBox p → 
     have hq := hboxes q List.mem_cons_self
     have hr := fun r hr => hboxes r (List.mem_cons_of_mem _ hr)
     simp only [polarize, ih hr (chamber_plus hp hq), ih hr hp]
-lemma polarize_sum {ι : Type*} (S : Finset ι) (w : ι → ℚ) (H : ι → Shape → ℚ)
+private lemma polarize_sum {ι : Type*} (S : Finset ι) (w : ι → ℚ) (H : ι → Shape → ℚ)
     (boxes : List Shape) (p : Shape) :
     polarize (fun x => ∑ i ∈ S, w i * H i x) boxes p =
       ∑ i ∈ S, w i * polarize (H i) boxes p := by
@@ -5395,7 +3067,7 @@ private lemma cap_dimension (J : Ideal GeoJets) {p : Shape} (hp : ChamberBox p) 
       dimension J :=
   MvPolynomial.natDegree_affineHilbertPolynomial_comap_of_surjective
     (capMap p) (capMap_surjective hp) J
-lemma mixed_zero_of_lt {J : Ideal GeoJets} {boxes : List Shape}
+private lemma mixed_zero_of_lt {J : Ideal GeoJets} {boxes : List Shape}
     (hboxes : ∀ p ∈ boxes, ChamberBox p) (hd : dimension J < boxes.length) :
     mixedDegree J boxes = 0 := by
   have hz (p : Shape) (hp : ChamberBox p) : capCoeff J boxes.length p = 0 :=
@@ -5468,7 +3140,7 @@ private lemma mixed_nonneg (h2 : c2) {P : Ideal GeoJets} (hP : P.IsPrime)
           (by norm_num)
       | cons q boxes =>
         exact h2 P (p :: q :: boxes) hP hboxes heq (by simp)
-lemma mixed_cycle (h1 : c1) (J : Ideal GeoJets) (boxes : List Shape)
+private lemma mixed_cycle (h1 : c1) (J : Ideal GeoJets) (boxes : List Shape)
     (hboxes : ∀ q ∈ boxes, ChamberBox q) (hd : dimension J ≤ boxes.length) :
     mixedDegree J boxes =
       ∑ P ∈ J.minimalPrimesFinset, (localWeight J P : ℚ) * mixedDegree P boxes := by
@@ -5497,7 +3169,7 @@ open scoped BigOperators
 def capPlus (x y : Shape × ℕ) : Shape × ℕ := (x.1.plus y.1, x.2 + y.2)
 def volumeProduct (x : Shape × ℕ) : ℚ := (volume32 x.1 : ℚ) * x.2
 def diagonal (J : Finset (Fin 5)) (i : Fin 5) : ℕ := if i ∈ J then 2 else 1
-theorem diagonal_sum_insert (w : Fin 5 → ℕ) {i : Fin 5} {J : Finset (Fin 5)}
+private theorem diagonal_sum_insert (w : Fin 5 → ℕ) {i : Fin 5} {J : Finset (Fin 5)}
     (hi : i ∉ J) :
     (∑ k, diagonal (insert i J) k * w k) =
       (∑ k, diagonal J k * w k) + w i := by
@@ -5510,7 +3182,7 @@ theorem diagonal_sum_insert (w : Fin 5 → ℕ) {i : Fin 5} {J : Finset (Fin 5)}
         simp [diagonal, hi, two_mul]
       · simp [diagonal, h]
     _ = _ := by simp [Finset.sum_add_distrib]
-theorem sumCap_insert (B : Boxes) {i : Fin 5} {J : Finset (Fin 5)} (hi : i ∉ J) :
+private theorem sumCap_insert (B : Boxes) {i : Fin 5} {J : Finset (Fin 5)} (hi : i ∉ J) :
     sumCap B (diagonal (insert i J)) = capPlus (sumCap B (diagonal J)) (B i) := by
   simp only [sumCap, capPlus, Shape.plus, diagonal_sum_insert _ hi]
 private def alt (B : Boxes) (s : Finset (Fin 5)) (F : Shape × ℕ → ℚ) : ℚ :=
@@ -5545,35 +3217,35 @@ private theorem alt_insert (B : Boxes) {s : Finset (Fin 5)} {i : Fin 5}
     pow_succ, sumCap_insert B (hJ J hJs)]
   simp only [Nat.add_sub_add_right, capDiff]
   ring
-def signed4 (p q r s : Shape) : ℤ :=
+private def signed4 (p q r s : Shape) : ℤ :=
   difference (difference (difference (difference volume32 p) q) r) s ⟨0, 0, 0⟩
 private theorem signed4_le (p q r s : Shape) : (signed4 p q r s : ℚ) ≤ mixed32 p q r s := by
   have h : signed4 p q r s ≤ ((signed4 p q r s).toNat : ℤ) := by omega
   exact_mod_cast h
-def shapeVolume (x : Shape) : ℚ := (volume32 x : ℚ)
-def shapeShift (a : Shape) (F : Shape → ℚ) (x : Shape) : ℚ := F (x.plus a)
-def shapeDiff (a : Shape) (F : Shape → ℚ) (x : Shape) : ℚ := F (x.plus a) - F x
-theorem shapeDiff_shift (a b : Shape) (F : Shape → ℚ) :
+private def shapeVolume (x : Shape) : ℚ := (volume32 x : ℚ)
+private def shapeShift (a : Shape) (F : Shape → ℚ) (x : Shape) : ℚ := F (x.plus a)
+private def shapeDiff (a : Shape) (F : Shape → ℚ) (x : Shape) : ℚ := F (x.plus a) - F x
+private theorem shapeDiff_shift (a b : Shape) (F : Shape → ℚ) :
     shapeDiff b (shapeShift a F) = shapeShift a (shapeDiff b F) := by
   funext x
   have h : (x.plus b).plus a = (x.plus a).plus b := by
     simp [Shape.plus, Nat.add_comm, Nat.add_left_comm]
   simp only [shapeDiff, shapeShift, h]
-def constantInterval (F : Shape → ℚ) (x : Shape × ℕ) : ℚ := F x.1
-def linearInterval (F : Shape → ℚ) (x : Shape × ℕ) : ℚ := F x.1 * x.2
-theorem capDiff_add (a : Shape × ℕ) (F G : Shape × ℕ → ℚ) :
+private def constantInterval (F : Shape → ℚ) (x : Shape × ℕ) : ℚ := F x.1
+private def linearInterval (F : Shape → ℚ) (x : Shape × ℕ) : ℚ := F x.1 * x.2
+private theorem capDiff_add (a : Shape × ℕ) (F G : Shape × ℕ → ℚ) :
     capDiff a (fun x => F x + G x) = fun x => capDiff a F x + capDiff a G x := by
   funext x
   unfold capDiff
   ring
-theorem capDiff_smul (a : Shape × ℕ) (d : ℚ) (F : Shape × ℕ → ℚ) :
+private theorem capDiff_smul (a : Shape × ℕ) (d : ℚ) (F : Shape × ℕ → ℚ) :
     capDiff a (fun x => d * F x) = fun x => d * capDiff a F x := by
   funext x
   unfold capDiff
   ring
-theorem capDiff_constantInterval (a : Shape) (d : ℕ) (F : Shape → ℚ) :
+private theorem capDiff_constantInterval (a : Shape) (d : ℕ) (F : Shape → ℚ) :
     capDiff (a, d) (constantInterval F) = constantInterval (shapeDiff a F) := rfl
-theorem capDiff_linearInterval (a : Shape) (d : ℕ) (F : Shape → ℚ) :
+private theorem capDiff_linearInterval (a : Shape) (d : ℕ) (F : Shape → ℚ) :
     capDiff (a, d) (linearInterval F) =
       fun x => linearInterval (shapeDiff a F) x + (d : ℚ) * constantInterval (shapeShift a F) x := by
   funext x
@@ -5581,7 +3253,7 @@ theorem capDiff_linearInterval (a : Shape) (d : ℕ) (F : Shape → ℚ) :
   ring
 set_option maxHeartbeats 2500000 in
 set_option maxRecDepth 4096 in
-theorem fourth_difference (p q r s : Shape) :
+private theorem fourth_difference (p q r s : Shape) :
     shapeDiff s (shapeDiff r (shapeDiff q (shapeDiff p shapeVolume))) =
       fun _ => (signed4 p q r s : ℚ) := by
   funext x
@@ -5600,23 +3272,6 @@ private theorem five_differences (p q g a b : Shape) (d e : ℕ) (x : Shape × �
   simp only [linearInterval, constantInterval, shapeShift, shapeDiff, sub_self, zero_mul,
     zero_add, Nat.cast_one, one_mul]
   ring
-theorem polarized_budget (p : Shape) :
-    (∑ J ∈ (Finset.univ : Finset (Fin 5)).powerset, (-1 : ℚ) ^ (5 - J.card) *
-      volumeProduct (sumCap (boxes p) (diagonal J))) ≤ (budget5 p : ℚ) := by
-  change alt (boxes p) Finset.univ volumeProduct ≤ _
-  have hu : (Finset.univ : Finset (Fin 5)) = insert 0 (insert 1 (insert 2 (insert 3 (insert 4 ∅)))) := by
-    decide
-  rw [hu, alt_insert _ (by decide), alt_insert _ (by decide), alt_insert _ (by decide),
-    alt_insert _ (by decide), alt_insert _ (by decide), alt_empty]
-  let a := liftedChart (taylorLength + 1) p
-  let b := liftedChart (taylorLength + 2) p
-  change capDiff (b, taylorLength + 2) (capDiff (a, taylorLength + 1)
-    (capDiff (graphBox p, 1) (capDiff (cutterBox, 0) (capDiff (p, 0) volumeProduct)))) _ ≤ _
-  rw [five_differences]
-  change _ ≤ ((mixed32 p cutterBox a b + (taylorLength + 1) * mixed32 p cutterBox (graphBox p) b +
-    (taylorLength + 2) * mixed32 p cutterBox (graphBox p) a : ℕ) : ℚ)
-  push_cast
-  gcongr <;> apply signed4_le
 end
 end K1_13_6_2_4_3
 end
@@ -5726,13 +3381,13 @@ private theorem gradedIdeal_colon {B : Boxes} {P Q : Ideal GeoJets5} {g : SlotRi
   change z ∈ (gradedIdeal B P).colon {g} ↔ z ∈ gradedIdeal B Q
   rw [Submodule.mem_colon_singleton, smul_eq_mul, mem_gradedIdeal_of_grade hzg,
     mem_gradedIdeal_of_grade hz, map_mul, h]
-theorem allowed_scaled {a : Shape × ℕ} {m : Exponent} (h : Allowed a m) :
+private theorem allowed_scaled {a : Shape × ℕ} {m : Exponent} (h : Allowed a m) :
     m ∈ latticePoints a := by
   obtain ⟨h₁, h₂, h₃, h₄⟩ := h
   change Allowed (a.1.scale 2, 2 * a.2) m
   simp only [Allowed, Shape.scale]
   exact ⟨by omega, by omega, by omega, by omega⟩
-theorem allowed_add_scaled {a : Shape × ℕ} {m n : Exponent}
+private theorem allowed_add_scaled {a : Shape × ℕ} {m n : Exponent}
     (hm : Allowed a m) (hn : Allowed a n) : m + n ∈ latticePoints a := by
   obtain ⟨hm₁, hm₂, hm₃, hm₄⟩ := hm
   obtain ⟨hn₁, hn₂, hn₃, hn₄⟩ := hn
@@ -5837,7 +3492,7 @@ theorem zero_mem_latticePoints (a : Shape × ℕ) : 0 ∈ latticePoints a := by
 theorem zero_mem_diagonalExponents (B : Boxes) (t : Fin 5 → ℕ) :
     0 ∈ diagonalExponents B t :=
   ⟨fun _ _ => 0, fun i _ => zero_mem_latticePoints (B i), by simp⟩
-theorem nsmul_monomial_preimage {S : Set Exponent} {n : ℕ} {m : Exponent}
+private theorem nsmul_monomial_preimage {S : Set Exponent} {n : ℕ} {m : Exponent}
     (hm : m ∈ n • S) :
     ∃ P : MvPolynomial S GeoField,
       P.totalDegree ≤ n ∧ monomialMap GeoField S P = monomial m 1 := by
@@ -5956,7 +3611,7 @@ private theorem le_shift {k : ℕ} (w : Fin k → ℕ) (i : Fin k) (n : ℕ) (j 
   · subst j
     simp [shift]
   · simp [shift, Function.update_of_ne h]
-theorem diff_congr {k : ℕ} {F G : (Fin k → ℕ) → ℚ} {T : ℕ}
+private theorem diff_congr {k : ℕ} {F G : (Fin k → ℕ) → ℚ} {T : ℕ}
     (h : ∀ w, (∀ i, T ≤ w i) → F w = G w)
     (dirs : List (Fin k)) (n : ℕ) (w : Fin k → ℕ) (hw : ∀ i, T ≤ w i) :
     diff F dirs n w = diff G dirs n w := by
@@ -5964,14 +3619,14 @@ theorem diff_congr {k : ℕ} {F G : (Fin k → ℕ) → ℚ} {T : ℕ}
   | nil => exact h w hw
   | cons i rest ih =>
     rw [diff, diff, ih w hw, ih (shift w i n) (fun j => (hw j).trans (le_shift w i n j))]
-theorem diff_sum {k r : ℕ} (F : Fin r → (Fin k → ℕ) → ℚ)
+private theorem diff_sum {k r : ℕ} (F : Fin r → (Fin k → ℕ) → ℚ)
     (dirs : List (Fin k)) (n : ℕ) (w : Fin k → ℕ) :
     diff (fun v => ∑ a, F a v) dirs n w = ∑ a, diff (F a) dirs n w := by
   induction dirs generalizing w with
   | nil => rfl
   | cons i rest ih =>
     simp only [diff, ih, Finset.sum_sub_distrib]
-theorem diff_prod {k : ℕ} (f : Fin k → ℕ → ℚ) (dirs : List (Fin k))
+private theorem diff_prod {k : ℕ} (f : Fin k → ℕ → ℚ) (dirs : List (Fin k))
     (hd : dirs.Nodup) (n : ℕ) (w : Fin k → ℕ) :
     diff (fun v => ∏ i, f i (v i)) dirs n w =
       ∏ i, if i ∈ dirs then f i (w i + n) - f i (w i) else f i (w i) := by
@@ -6001,7 +3656,7 @@ theorem diff_prod {k : ℕ} (f : Fin k → ℕ → ℚ) (dirs : List (Fin k))
       g w i * (∏ j ∈ s, g w j) = h i * (∏ j ∈ s, h j)
     rw [hs, hh, ← sub_mul]
     simp [g, h, shift, hi]
-theorem standard_diff_nonneg (h : c2) {k m : ℕ}
+private theorem standard_diff_nonneg (h : c2) {k m : ℕ}
     (slot : Fin m → Fin k) (bad : Finset (Fin m →₀ ℕ))
     (dirs : List (Fin k)) (hd : dirs.Nodup) :
     ∃ T : ℕ, ∀ n (w : Fin k → ℕ), (∀ i, T ≤ w i) →
@@ -6042,7 +3697,7 @@ private lemma monomial_preimage (S : Set (Fin 4 →₀ ℕ)) (n : ℕ) (e : Fin 
     refine ⟨f * MvPolynomial.X ⟨b, hb⟩, (totalDegree_mul _ _).trans ?_, ?_⟩
     · simpa only [totalDegree_X] using Nat.add_le_add_right hn 1
     · rw [map_mul, hf, monomialMap_X, MvPolynomial.monomial_mul_monomial, mul_one]
-theorem capPiece_scale (P : Ideal GeoJets) {p : Shape} (hp : ChamberBox p) (n : ℕ) :
+private theorem capPiece_scale (P : Ideal GeoJets) {p : Shape} (hp : ChamberBox p) (n : ℕ) :
     Module.finrank GeoField (capPiece P (p.scale n)) = affineHilbertFunction (capIdeal P p) n := by
   let I := capIdeal P p
   let g := Ideal.quotientMapₐ P (capMap p) (le_rfl : I ≤ capIdeal P p)
@@ -6067,7 +3722,7 @@ theorem capPiece_scale (P : Ideal GeoJets) {p : Shape} (hp : ChamberBox p) (n : 
         rw [hφ]⟩
   rw [← hmap]
   exact (Submodule.equivMapOfInjective _ hg V).finrank_eq.symm
-lemma capPiece_mono (P : Ideal GeoJets) {p q : Shape} (h : InBox p q) :
+private lemma capPiece_mono (P : Ideal GeoJets) {p q : Shape} (h : InBox p q) :
     Module.finrank GeoField (capPiece P p) ≤ Module.finrank GeoField (capPiece P q) := by
   have := restrictSupport_finite (R := GeoField) (Set.toFinite (capExponents q))
   have : Module.Finite GeoField (capPiece P q) := by unfold capPiece; infer_instance
@@ -6092,7 +3747,7 @@ private lemma sumShape_chamber {k : ℕ} (boxes : Fin k → Shape) (w : Fin k �
   · change 0 < ∑ j, w j * (boxes j).t
     exact (Nat.mul_pos hi (hb i).2.2).trans_le
       (Finset.single_le_sum (fun j _ => Nat.zero_le (w j * (boxes j).t)) (Finset.mem_univ i))
-lemma sumShape_shift {k : ℕ} (boxes : Fin k → Shape) (w : Fin k → ℕ) (i : Fin k) :
+private lemma sumShape_shift {k : ℕ} (boxes : Fin k → Shape) (w : Fin k → ℕ) (i : Fin k) :
     sumShape boxes (shift w i 1) = (sumShape boxes w).plus (boxes i) := by
   have h (a : Fin k → ℕ) :
       (∑ j, shift w i 1 j * a j) = (∑ j, w j * a j) + a i := by
@@ -6106,19 +3761,19 @@ lemma sumShape_shift {k : ℕ} (boxes : Fin k → Shape) (w : Fin k → ℕ) (i 
         · simp [shift, hj]
       _ = _ := by simp [Finset.sum_add_distrib]
   simp only [sumShape, Shape.plus, h]
-lemma sumShape_ray {k : ℕ} (boxes : Fin k → Shape) (w : Fin k → ℕ) (N T : ℕ) :
+private lemma sumShape_ray {k : ℕ} (boxes : Fin k → Shape) (w : Fin k → ℕ) (N T : ℕ) :
     sumShape boxes (fun i => N * w i + T) =
       ((sumShape boxes w).scale N).plus (sumShape boxes (fun _ => T)) := by
   simp only [sumShape, Shape.scale, Shape.plus, Nat.add_mul, Finset.sum_add_distrib,
     Nat.mul_assoc, Finset.mul_sum]
-lemma cast_ray_shift {k : ℕ} (w : Fin k → ℕ) (i : Fin k) (N T : ℕ) :
+private lemma cast_ray_shift {k : ℕ} (w : Fin k → ℕ) (i : Fin k) (N T : ℕ) :
     shift (fun j => N * w j + T) i N = fun j => N * shift w i 1 j + T := by
   funext j
   by_cases h : j = i
   · subst j
     simp [shift, Nat.mul_add, Nat.add_right_comm]
   · simp [shift, Function.update_of_ne h]
-lemma capPiece_ray_bounds {k : ℕ} (P : Ideal GeoJets) (boxes : Fin k → Shape)
+private lemma capPiece_ray_bounds {k : ℕ} (P : Ideal GeoJets) (boxes : Fin k → Shape)
     (w : Fin k → ℕ) (hp : ChamberBox (sumShape boxes w)) (T : ℕ) :
     ∃ C : ℕ, ∀ N,
       affineHilbertFunction (capIdeal P (sumShape boxes w)) N ≤
@@ -6144,7 +3799,7 @@ lemma capPiece_ray_bounds {k : ℕ} (P : Ideal GeoJets) (boxes : Fin k → Shape
     exact ⟨by simpa [Shape.scale, Shape.plus, Nat.add_mul] using Nat.add_le_add_left hb (N * p.b),
       by simpa [Shape.scale, Shape.plus, Nat.add_mul] using Nat.add_le_add_left hj (N * p.j),
       by simpa [Shape.scale, Shape.plus, Nat.add_mul] using Nat.add_le_add_left ht (N * p.t)⟩
-theorem diff_bounds {k : ℕ} (P : Ideal GeoJets) (boxes : Fin k → Shape)
+private theorem diff_bounds {k : ℕ} (P : Ideal GeoJets) (boxes : Fin k → Shape)
     (hb : ∀ i, ChamberBox (boxes i)) (d T : ℕ) (hd : dimension P ≤ d)
     (dirs : List (Fin k)) (w : Fin k → ℕ) (hw : ∃ i, 0 < w i) :
     ∃ L U : ℚ[X], L.natDegree ≤ d ∧ U.natDegree ≤ d ∧
@@ -6185,7 +3840,7 @@ theorem diff_bounds {k : ℕ} (P : Ideal GeoJets) (boxes : Fin k → Shape)
     · filter_upwards [he₁, he₀] with N a b
       simp only [diff, cast_ray_shift, Polynomial.eval_sub]
       exact ⟨sub_le_sub a.1 b.2, sub_le_sub a.2 b.1⟩
-lemma diff_polarize {k : ℕ} (boxes : Fin k → Shape) (H : Shape → ℚ)
+private lemma diff_polarize {k : ℕ} (boxes : Fin k → Shape) (H : Shape → ℚ)
     (dirs : List (Fin k)) (w : Fin k → ℕ) :
     diff (fun v => H (sumShape boxes v)) dirs 1 w =
       polarize H (dirs.map boxes) (sumShape boxes w) := by
@@ -6301,7 +3956,7 @@ private theorem capExponents_zero : capExponents ⟨0, 0, 0⟩ = 0 := by
     · change m 3 = 0; omega
   · rintro rfl
     simp
-theorem sum_add_step_mul {ι : Type} [Fintype ι] [DecidableEq ι] (a : ι → ℕ)
+private theorem sum_add_step_mul {ι : Type} [Fintype ι] [DecidableEq ι] (a : ι → ℕ)
     (i : ι) (f : ι → ℕ) :
     (∑ k, (a + step i) k * f k) = (∑ k, a k * f k) + f i := by
   simp only [Pi.add_apply, add_mul, Finset.sum_add_distrib]
@@ -6310,15 +3965,15 @@ theorem sum_add_step_mul {ι : Type} [Fintype ι] [DecidableEq ι] (a : ι → �
   · simp [step]
   · intro k hki
     simp [step, Pi.single_eq_of_ne hki]
-theorem shapeSum_add_step {ι : Type} [Fintype ι] [DecidableEq ι] (shapes : ι → Shape)
+private theorem shapeSum_add_step {ι : Type} [Fintype ι] [DecidableEq ι] (shapes : ι → Shape)
     (a : ι → ℕ) (i : ι) :
     shapeSum shapes (a + step i) = (shapeSum shapes a).plus (shapes i) := by
   simp only [shapeSum, Shape.plus, sum_add_step_mul]
-theorem exists_nonzero_slot {ι : Type} (a : ι → ℕ) (ha : a ≠ 0) :
+private theorem exists_nonzero_slot {ι : Type} (a : ι → ℕ) (ha : a ≠ 0) :
     ∃ i, a i ≠ 0 := by
   by_contra! h
   exact ha (funext h)
-theorem chamber_shapeSum {ι : Type} [Fintype ι] (shapes : ι → Shape)
+private theorem chamber_shapeSum {ι : Type} [Fintype ι] (shapes : ι → Shape)
     (hsh : ∀ i, ChamberBox (shapes i)) (a : ι → ℕ) (ha : a ≠ 0) :
     ChamberBox (shapeSum shapes a) := by
   refine ⟨Finset.sum_le_sum fun i _ => Nat.mul_le_mul_left (a i) (hsh i).1, ?_, ?_⟩
@@ -6380,7 +4035,7 @@ theorem ray_eval (P : MvPolynomial ι ℚ) (u v : ι → ℕ) (n : ℕ) :
     funext i
     simp [φ, Polynomial.aeval_def, mul_comm, add_comm]
   rw [he]
-theorem prod_top (f : ι → Polynomial ℚ) (e : ι →₀ ℕ)
+private theorem prod_top (f : ι → Polynomial ℚ) (e : ι →₀ ℕ)
     (h : ∀ i, (f i).natDegree ≤ 1) (s : Finset ι) :
     (∏ i ∈ s, f i ^ e i).natDegree ≤ ∑ i ∈ s, e i ∧
     (∏ i ∈ s, f i ^ e i).coeff (∑ i ∈ s, e i) = ∏ i ∈ s, (f i).coeff 1 ^ e i := by
@@ -6395,7 +4050,7 @@ theorem prod_top (f : ι → Polynomial ℚ) (e : ι →₀ ℕ)
     rw [Polynomial.coeff_mul_add_eq_of_natDegree_le hpow ih.1, ih.2]
     rw [show (f i ^ e i).coeff (e i) = (f i).coeff 1 ^ e i by
       simpa only [mul_one] using Polynomial.coeff_pow_of_natDegree_le (m := e i) (h i)]
-theorem affine_top (f : ι → Polynomial ℚ) (h : ∀ i, (f i).natDegree ≤ 1)
+private theorem affine_top (f : ι → Polynomial ℚ) (h : ∀ i, (f i).natDegree ≤ 1)
     (P : MvPolynomial ι ℚ) (d : ℕ) (hd : P.totalDegree ≤ d) :
     (MvPolynomial.aeval f P).coeff d =
       MvPolynomial.eval (fun i => (f i).coeff 1) (homogeneousComponent d P) := by
@@ -6456,11 +4111,11 @@ namespace K1_13_6_2_3_2_4
 noncomputable section
 open K1_13 K1_13_6 K1_13_6_2_3 K1_13_6_2_3_2 MvPolynomial
 open scoped BigOperators
-theorem weight_mapDomain {α β : Type} (f : α → β) (w : β → Fin 4 →₀ ℕ)
+private theorem weight_mapDomain {α β : Type} (f : α → β) (w : β → Fin 4 →₀ ℕ)
     (e : α →₀ ℕ) : Finsupp.weight w (e.mapDomain f) = Finsupp.weight (w ∘ f) e := by
   simp only [Finsupp.weight_apply]
   exact Finsupp.sum_mapDomain_index (fun _ => zero_smul _ _) (fun _ _ _ => add_smul ..)
-theorem unit_weight (p : Shape) (e : CapVar (fun _ : Unit => p) →₀ ℕ) :
+private theorem unit_weight (p : Shape) (e : CapVar (fun _ : Unit => p) →₀ ℕ) :
     Finsupp.weight (step ∘ capSlot (fun _ : Unit => p)) e = fun _ => e.degree := by
   have h : step ∘ capSlot (fun _ : Unit => p) = fun _ _ => (1 : ℕ) := by
     funext v i
@@ -6470,7 +4125,7 @@ theorem unit_weight (p : Shape) (e : CapVar (fun _ : Unit => p) →₀ ℕ) :
   rw [h, Finsupp.weight_apply, Finsupp.degree_apply]
   funext i
   simp [Finsupp.sum, Finset.sum_apply]
-theorem monomialMap_monomial_one (p : Shape) (e : capExponents p →₀ ℕ) :
+private theorem monomialMap_monomial_one (p : Shape) (e : capExponents p →₀ ℕ) :
     monomialMap GeoField (capExponents p) (monomial e 1) =
       monomial (Finsupp.weight Subtype.val e) 1 := by
   rw [monomialMap, aeval_monomial, map_one, one_mul, Finsupp.weight_apply]
@@ -6479,7 +4134,7 @@ theorem monomialMap_monomial_one (p : Shape) (e : capExponents p →₀ ℕ) :
   change (∏ i ∈ e.support, M (Multiplicative.ofAdd (e i • i.val))) =
     M (Multiplicative.ofAdd (∑ i ∈ e.support, e i • i.val))
   rw [ofAdd_sum, map_prod]
-theorem image_weight_degreeLE (p : Shape) (n : ℕ) :
+private theorem image_weight_degreeLE (p : Shape) (n : ℕ) :
     Finsupp.weight (fun i : capExponents p => i.val) '' {e | e.degree ≤ n} =
       productExponents (fun _ : Unit => p) (fun _ => n) := by
   classical
@@ -6503,7 +4158,7 @@ theorem image_weight_degreeLE (p : Shape) (n : ℕ) :
     rw [Finsupp.degree_mapDomain]
     rw [unit_weight] at hdegree
     exact (congrFun hdegree ()).le
-theorem map_restrictTotalDegree (p : Shape) (n : ℕ) :
+private theorem map_restrictTotalDegree (p : Shape) (n : ℕ) :
     (restrictTotalDegree (capExponents p) GeoField n).map
       (monomialMap GeoField (capExponents p)).toLinearMap =
       restrictSupport GeoField (productExponents (fun _ : Unit => p) (fun _ => n)) := by
@@ -6671,13 +4326,6 @@ theorem eq_of_grid {p q : Form} {N : ℕ}
     have hx' : (fun j => (t j : ℚ)) = x := funext hn
     rw [← hx']
     exact h t (fun j => Nat.le_add_right N (n j))
-theorem Represents.unique {p q : Form} {h : Grade → ℚ}
-    (hp : Represents p h) (hq : Represents q h) : p = q := by
-  obtain ⟨N, hN⟩ := hp
-  obtain ⟨M, hM⟩ := hq
-  exact eq_of_grid (N := max N M) (fun t ht =>
-    (hN t (fun j => (le_max_left N M).trans (ht j))).trans
-      (hM t (fun j => (le_max_right N M).trans (ht j))).symm)
 theorem squarefree_apply (I : Finset (Fin 5)) (i : Fin 5) :
     squarefree I i = if i ∈ I then 1 else 0 := by
   classical
@@ -6738,7 +4386,7 @@ theorem totalDegree_le_of_lines {p : Form} {d : ℕ}
   exact (mem_support_iff.mp ha) hcoeff
 theorem positiveDiagonal_apply (J : Finset (Fin 5)) (j : Fin 5) :
     positiveDiagonal J j = if j ∈ J then 2 else 1 := rfl
-theorem cube_prod (I : Finset (Fin 5)) (f : Fin 5 → ℚ) :
+private theorem cube_prod (I : Finset (Fin 5)) (f : Fin 5 → ℚ) :
     (∑ J ∈ I.powerset, (-1 : ℚ) ^ (I.card - J.card) * ∏ j ∈ J, f j) =
       ∏ j ∈ I, (f j - 1) := by
   classical
@@ -6756,7 +4404,7 @@ theorem cube_prod (I : Finset (Fin 5)) (f : Fin 5 → ℚ) :
   · intro J hJ
     simp [Finset.sdiff_sdiff_eq_self (Finset.mem_powerset.mp hJ),
       Finset.card_sdiff_of_subset (Finset.mem_powerset.mp hJ)]
-theorem cube_monomial (I : Finset (Fin 5)) (a : Grade) (r : ℚ) :
+private theorem cube_monomial (I : Finset (Fin 5)) (a : Grade) (r : ℚ) :
     (∑ J ∈ I.powerset, (-1 : ℚ) ^ (I.card - J.card) *
       eval (fun j => (positiveDiagonal J j : ℚ)) (monomial a r)) =
       r * ∏ j ∈ I, ((2 : ℚ) ^ a j - 1) := by
@@ -6769,7 +4417,7 @@ theorem cube_monomial (I : Finset (Fin 5)) (a : Grade) (r : ℚ) :
   simp_rw [he]
   rw [Finset.prod_ite_mem, Finset.univ_inter]
   ring
-theorem cube_monomial_top (I : Finset (Fin 5)) {a : Grade} (ha : a.degree = I.card)
+private theorem cube_monomial_top (I : Finset (Fin 5)) {a : Grade} (ha : a.degree = I.card)
     (r : ℚ) :
     (∑ J ∈ I.powerset, (-1 : ℚ) ^ (I.card - J.card) *
       eval (fun j => (positiveDiagonal J j : ℚ)) (monomial a r)) =
@@ -6909,7 +4557,7 @@ theorem lift_mul_mem_iff {ι : Type} {shapes : ι → Shape} {i : ι} {D : GeoJe
     split_ifs
     · exact (hD _).mpr (h _)
     · exact J.zero_mem
-theorem mem_cut_iff (J : Ideal GeoJets) (D x : GeoJets) :
+private theorem mem_cut_iff (J : Ideal GeoJets) (D x : GeoJets) :
     x ∈ cut J D ↔ ∃ r : GeoJets ⧸ J, Ideal.Quotient.mk J x = Ideal.Quotient.mk J D * r := by
   rw [show cut J D = Ideal.span {D} ⊔ J from sup_comm _ _, Ideal.mem_span_singleton_sup]
   constructor
@@ -6943,99 +4591,6 @@ private theorem four_ne_zero : (4 : GeoField) ≠ 0 := by
   intro hz
   have hd := (CharP.cast_eq_zero_iff GeoField K1.p 4).mp (by simpa using hz)
   exact (not_le_of_gt (show 4 < K1.p by decide)) (Nat.le_of_dvd (by decide) hd)
-private theorem graph_eq {f Q l} (b : Branch f Q l) :
-    b.graph = oldEmbedding (toGeneric (partialFlow b.g)) +
-      oldEmbedding (MvPolynomial.C (4 : GeoField) * b.sigma) * MvPolynomial.X (Fin.last 4) := by
-  simp [Branch.graph, oldEmbedding]
-private theorem graph_old {f Q l} (b : Branch f Q l) (D : GeoJets) :
-    b.onGraph (oldEmbedding D) = b.localMap D :=
-  RingHom.congr_fun (graph_on_old b) D
-private theorem onGraph_graph {f Q l} (b : Branch f Q l) : b.onGraph b.graph = 0 := by
-  rw [graph_eq, map_add, map_mul, graph_old, graph_old, map_mul]
-  have hx : b.onGraph (MvPolynomial.X (Fin.last 4)) =
-      b.localMap (MvPolynomial.C (-(4 : GeoField)⁻¹) * toGeneric (partialFlow b.g)) *
-        IsLocalization.Away.invSelf b.sigma := by
-    rw [Branch.onGraph, MvPolynomial.eval₂Hom_X', Fin.lastCases_last]
-  have hσ : b.localMap b.sigma * IsLocalization.Away.invSelf b.sigma = 1 :=
-    IsLocalization.Away.mul_invSelf b.sigma
-  have h4 : b.localMap (MvPolynomial.C (4 : GeoField)) *
-      b.localMap (MvPolynomial.C (-(4 : GeoField)⁻¹)) = -1 := by
-    rw [← map_mul, ← map_mul, mul_neg, mul_inv_cancel₀ four_ne_zero, map_neg, map_one, map_neg, map_one]
-  rw [hx, map_mul]
-  calc
-    _ = b.localMap (toGeneric (partialFlow b.g)) +
-        (b.localMap (MvPolynomial.C (4 : GeoField)) *
-          b.localMap (MvPolynomial.C (-(4 : GeoField)⁻¹))) *
-        (b.localMap b.sigma * IsLocalization.Away.invSelf b.sigma) *
-        b.localMap (toGeneric (partialFlow b.g)) := by ac_rfl
-    _ = 0 := by rw [h4, hσ, mul_one, neg_one_mul, add_neg_cancel]
-private theorem factor_onGraph {f Q l} (b : Branch f Q l) {A : Type*} [CommRing A]
-    (k : GeoJets5 →+* A) (hs : IsUnit (k (oldEmbedding b.sigma))) (hg : k b.graph = 0) :
-    k = (IsLocalization.Away.lift b.sigma (g := k.comp oldEmbedding) hs).comp b.onGraph := by
-  let φ : b.Local →+* A := IsLocalization.Away.lift b.sigma (g := k.comp oldEmbedding) hs
-  let ψ := φ.comp b.onGraph
-  have hold (D : GeoJets) : ψ (oldEmbedding D) = k (oldEmbedding D) := by
-    change φ (b.onGraph (oldEmbedding D)) = _
-    rw [graph_old]
-    exact IsLocalization.Away.lift_eq b.sigma hs D
-  have hψ : ψ b.graph = 0 := by simp [ψ, onGraph_graph]
-  change k = ψ
-  apply MvPolynomial.ringHom_ext
-  · intro a
-    simpa [oldEmbedding] using (hold (MvPolynomial.C a)).symm
-  · intro i
-    refine Fin.lastCases ?_ (fun j => ?_) i
-    · rw [graph_eq, map_add, map_mul] at hg hψ
-      rw [hold, hold] at hψ
-      have hμ : IsUnit (k (oldEmbedding (MvPolynomial.C (4 : GeoField) * b.sigma))) := by
-        rw [map_mul, map_mul]
-        exact ((isUnit_iff_ne_zero.mpr four_ne_zero).map
-          (k.comp (oldEmbedding.comp MvPolynomial.C))).mul hs
-      exact hμ.mul_right_inj.mp (add_left_cancel (hg.trans hψ.symm))
-    · simpa [oldEmbedding] using (hold (MvPolynomial.X j)).symm
-private theorem graphLift_prime {f Q l} (b : Branch f Q l) (P : Ideal GeoJets)
-    (hP : P.IsPrime) (hs : b.sigma ∉ P) : (graphLift b P).IsPrime := by
-  have hdis : Disjoint (↑(Submonoid.powers b.sigma) : Set GeoJets) P := by
-    refine Set.disjoint_left.mpr ?_
-    rintro _ ⟨n, rfl⟩ hn
-    exact hs (hP.mem_of_pow_mem n hn)
-  let : (P.map b.localMap).IsPrime :=
-    IsLocalization.isPrime_of_isPrime_disjoint (Submonoid.powers b.sigma) b.Local P hP hdis
-  exact Ideal.comap_isPrime b.onGraph _
-private theorem graphLift_contains_graph {f Q l} (b : Branch f Q l) (P : Ideal GeoJets) :
-    b.graph ∈ graphLift b P := by
-  change b.onGraph b.graph ∈ P.map b.localMap
-  rw [onGraph_graph]
-  exact Ideal.zero_mem _
-private theorem cylinder_le_graphLift {f Q l} (b : Branch f Q l) (P : Ideal GeoJets) :
-    cylinder P ≤ graphLift b P := by
-  rw [cylinder, Ideal.map_le_iff_le_comap, graphLift, Ideal.comap_comap, graph_on_old]
-  exact Ideal.le_comap_map
-private theorem prime_eq_graphLift {f Q l} (b : Branch f Q l) (T : Ideal GeoJets5)
-    (hT : T.IsPrime) (hs : oldEmbedding b.sigma ∉ T) (hg : b.graph ∈ T) :
-    T = graphLift b (T.comap oldEmbedding) := by
-  let := hT
-  let A := FractionRing (GeoJets5 ⧸ T)
-  let k := (algebraMap (GeoJets5 ⧸ T) A).comp (Ideal.Quotient.mk T)
-  have hk (x : GeoJets5) : k x = 0 ↔ x ∈ T := by
-    change algebraMap (GeoJets5 ⧸ T) A (Ideal.Quotient.mk T x) = 0 ↔ _
-    rw [map_eq_zero_iff _ (IsFractionRing.injective _ _), Ideal.Quotient.eq_zero_iff_mem]
-  have hs' : IsUnit (k (oldEmbedding b.sigma)) := isUnit_iff_ne_zero.mpr (mt (hk _).mp hs)
-  let φ : b.Local →+* A := IsLocalization.Away.lift b.sigma (g := k.comp oldEmbedding) hs'
-  have hφ : φ.comp b.localMap = k.comp oldEmbedding :=
-    IsLocalization.Away.lift_comp b.sigma hs'
-  have hker : (RingHom.ker φ).comap b.localMap = T.comap oldEmbedding := by
-    ext x
-    change φ (b.localMap x) = 0 ↔ oldEmbedding x ∈ T
-    rw [show φ (b.localMap x) = k (oldEmbedding x) from RingHom.congr_fun hφ x, hk]
-  rw [graphLift, ← hker]
-  have he : ((RingHom.ker φ).comap b.localMap).map b.localMap =
-      RingHom.ker φ := IsLocalization.map_under (Submonoid.powers b.sigma) b.Local _
-  rw [he]
-  ext D
-  change D ∈ T ↔ φ (b.onGraph D) = 0
-  exact (hk D).symm.trans (Iff.of_eq (congrArg (fun j : GeoJets5 →+* A => j D = 0)
-    (factor_onGraph b k hs' ((hk _).mpr hg))))
 private def substituteLast (x : GeoJets) : GeoJets5 →+* GeoJets :=
   MvPolynomial.eval₂Hom MvPolynomial.C (Fin.lastCases x MvPolynomial.X)
 private theorem substituteLast_old (x : GeoJets) :
@@ -7045,80 +4600,6 @@ private theorem substituteLast_old (x : GeoJets) :
     simp [substituteLast, oldEmbedding]
   · intro i
     simp [substituteLast, oldEmbedding]
-theorem graph_proper {f Q l} (b : Branch f Q l) :
-    b.graph ∉ cylinder b.surface := by
-  intro h
-  have hm (x : GeoJets) : substituteLast x b.graph ∈ b.surface := by
-    have hle : cylinder b.surface ≤ b.surface.comap (substituteLast x) := by
-      rw [cylinder, Ideal.map_le_iff_le_comap, Ideal.comap_comap, substituteLast_old, Ideal.comap_id]
-    exact hle h
-  have evalGraph (x : GeoJets) : substituteLast x b.graph =
-      toGeneric (partialFlow b.g) + (MvPolynomial.C (4 : GeoField) * b.sigma) * x := by
-    have ho (D : GeoJets) : substituteLast x (oldEmbedding D) = D :=
-      RingHom.congr_fun (substituteLast_old x) D
-    rw [graph_eq, map_add, map_mul, ho, ho]
-    rw [substituteLast, MvPolynomial.eval₂Hom_X', Fin.lastCases_last]
-  have h0 := hm 0
-  have h1 := hm 1
-  rw [evalGraph, mul_zero, add_zero] at h0
-  rw [evalGraph, mul_one] at h1
-  have hσ : MvPolynomial.C (4 : GeoField) * b.sigma ∈ b.surface :=
-    (b.surface.add_mem_iff_right h0).mp h1
-  have hu : IsUnit (MvPolynomial.C (4 : GeoField) : GeoJets) :=
-    (isUnit_iff_ne_zero.mpr four_ne_zero).map MvPolynomial.C
-  exact b.chart.2.2 ((b.base.isPrime.mem_or_mem hσ).resolve_left
-    (fun hc => b.base.isPrime.ne_top (b.surface.eq_top_of_isUnit_mem hc hu)))
-theorem graph_minimal {f Q l} (b : Branch f Q l) :
-    (sectionIdeal (cylinder b.surface) b.graph).IsMinimalPrime (graphLift b b.surface) := by
-  refine ⟨⟨graphLift_prime b b.surface b.base.isPrime b.chart.2.2,
-    sup_le (cylinder_le_graphLift b _) ((Ideal.span_singleton_le_iff_mem _).mpr
-      (graphLift_contains_graph b _))⟩, ?_⟩
-  intro T hT hTG
-  have hs : oldEmbedding b.sigma ∉ T := by
-    intro h
-    have hm : b.sigma ∈ (graphLift b b.surface).comap oldEmbedding := hTG h
-    rw [graphLift_comap b b.surface b.base.isPrime b.chart.2.2] at hm
-    exact b.chart.2.2 hm
-  have hg : b.graph ∈ T := hT.2 (Ideal.mem_sup_right (Ideal.mem_span_singleton_self _))
-  have hb : b.surface ≤ T.comap oldEmbedding :=
-    Ideal.map_le_iff_le_comap.mp (le_sup_left.trans hT.2)
-  rw [prime_eq_graphLift b T hT.1 hs hg]
-  exact Ideal.comap_mono (Ideal.map_mono hb)
-theorem member_minimal {f Q l} (b : Branch f Q l) {E : GeoJets5}
-    (hE : Associated (b.onGraph E) (b.localMap b.member)) :
-    (sectionIdeal (graphLift b b.surface) E).IsMinimalPrime (graphLift b b.curve) := by
-  have hSC : b.surface ≤ b.curve := le_sup_left.trans b.divisor.le
-  have hm : b.member ∈ b.curve := b.divisor.le (Ideal.mem_sup_right (Ideal.mem_span_singleton_self _))
-  refine ⟨⟨graphLift_prime b b.curve b.divisor.isPrime b.regularCurve,
-    sup_le (Ideal.comap_mono (Ideal.map_mono hSC)) ((Ideal.span_singleton_le_iff_mem _).mpr ?_)⟩, ?_⟩
-  · change b.onGraph E ∈ b.curve.map b.localMap
-    exact (b.curve.map b.localMap).mem_of_dvd hE.dvd' (Ideal.mem_map_of_mem _ hm)
-  · intro T hT hTC
-    let P := T.comap oldEmbedding
-    have hP : P.IsPrime := by
-      let := hT.1
-      exact Ideal.comap_isPrime oldEmbedding _
-    have hPC : P ≤ b.curve := by
-      have hle := Ideal.comap_mono (f := oldEmbedding) hTC
-      rwa [graphLift_comap b b.curve b.divisor.isPrime b.regularCurve] at hle
-    have hS : b.surface ≤ P :=
-      Ideal.map_le_iff_le_comap.mp ((cylinder_le_graphLift b _).trans (le_sup_left.trans hT.2))
-    have hreg : b.sigma ∉ P := fun h => b.regularCurve (hPC h)
-    have hEq : T = graphLift b P := prime_eq_graphLift b T hT.1 hreg
-      (hT.2 (Ideal.mem_sup_left (graphLift_contains_graph b _)))
-    have hEmem : E ∈ T := hT.2 (Ideal.mem_sup_right (Ideal.mem_span_singleton_self _))
-    rw [hEq] at hEmem
-    have hold : oldEmbedding b.member ∈ graphLift b P := by
-      change b.onGraph (oldEmbedding b.member) ∈ P.map b.localMap
-      rw [graph_old]
-      exact (P.map b.localMap).mem_of_dvd hE.dvd hEmem
-    have hmP : b.member ∈ P := by
-      have hh : b.member ∈ (graphLift b P).comap oldEmbedding := hold
-      rwa [graphLift_comap b P hP hreg] at hh
-    have hCP : b.curve ≤ P :=
-      b.divisor.2 ⟨hP, sup_le hS ((Ideal.span_singleton_le_iff_mem _).mpr hmP)⟩ hPC
-    rw [hEq]
-    exact Ideal.comap_mono (Ideal.map_mono hCP)
 end
 end K1_13_6_2_4_5
 end
@@ -7157,17 +4638,6 @@ private theorem diagonal_coeff (h1 : c1) (h2 : c2)
   simp only [F, mul_add, mul_one, Polynomial.coeff_add, ← mul_assoc, Polynomial.coeff_mul_X,
     Polynomial.coeff_mul_C, h5, add_zero, hcoeff, volumeProduct, a]
   ring
-theorem of_children (h1 : c1) (h2 : c2) : K1_13_6_2_4.c3 := by
-  intro p hp
-  have hB := (boxes_admissible p hp).1
-  unfold mixedDegree
-  simp only [Finset.card_univ, Fintype.card_fin]
-  rw [show (2 : ℚ) ^ 5 = 32 by norm_num, ← mul_div_assoc, mul_div_cancel_left₀ _ (by norm_num)]
-  change (∑ J ∈ (Finset.univ : Finset (Fin 5)).powerset, (-1 : ℚ) ^ (5 - J.card) *
-    (affineHilbertPolynomial (Ideal.comap
-      (monomialMap GeoField (diagonalExponents (boxes p) (diagonal J))) ⊥)).coeff 5) ≤ _
-  simp only [diagonal_coeff h1 h2 (boxes p) hB]
-  exact polarized_budget p
 end
 end K1_13_6_2_4_3
 end
