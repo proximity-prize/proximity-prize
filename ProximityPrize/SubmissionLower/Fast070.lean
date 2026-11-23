@@ -570,8 +570,77 @@ namespace K1_13_1_1
 open K1_13
 open scoped BigOperators
 noncomputable section
+def c2 : Prop :=
+  PascalEntries →
+    ∀ (s : ℕ) (g : ℤ), s ≤ 120 → -48 ≤ g → g < 90 - (s : ℤ) →
+      ∀ (b c : ℕ), b + c ≤ residualDegree s →
+        Module.finrank Geom (LinearMap.range
+          ((projectJet 2 c).comp ((projectJet 1 b).comp (blockMap s g)))) ≤
+          lineBound (residualDegree s) (-g) (orderCutoff s g) b c
 end
 end K1_13_1_1
+end
+section
+namespace K1_13_1_1_1
+open K1_13 K1_13_1_1 MvPolynomial
+open scoped BigOperators
+noncomputable section
+private def visible (m : Fin 4 →₀ ℕ) : Fin 4 →₀ ℕ :=
+  Finsupp.equivFunOnFinite.symm ![0, m 1, m 2, m 3]
+@[simp] private theorem visible_apply (m : Fin 4 →₀ ℕ) (j : Fin 4) :
+    visible m j = ![0, m 1, m 2, m 3] j := by simp [visible]
+end
+end K1_13_1_1_1
+end
+section
+namespace K1_13_1_1_2
+open K1_13 K1_13_1_1 MvPolynomial
+open scoped BigOperators
+noncomputable section
+private abbrev Exponent := Fin 4 →₀ ℕ
+private abbrev Column (s : ℕ) (g : ℤ) :=
+  {m : Exponent // BandExponent (residualDegree s) (-g) 48 10 m}
+private abbrev oldBasis (s : ℕ) (g : ℤ) :
+    Module.Basis (Column s g) Geom (bandSpace (residualDegree s) (-g) 48 10) :=
+  basisRestrictSupport Geom {m | BandExponent (residualDegree s) (-g) 48 10 m}
+private abbrev lineMap (s : ℕ) (g : ℤ) (b c : ℕ) :=
+  (projectJet 2 c).comp ((projectJet 1 b).comp (blockMap s g))
+variable {s : ℕ} {g : ℤ} {b c : ℕ}
+private theorem column_coeff (m : Column s g) (e : Exponent) :
+    (lineMap s g b c (oldBasis s g m)).coeff e =
+      if e 2 = c then
+        if e 1 = b then
+          if e.weight targetOrder < (orderCutoff s g).toNat then
+            (backShift (monomial m.val 1)).coeff e
+          else 0
+        else 0
+      else 0 := by
+  change (filterSupport (fun x => x 2 = c) (filterSupport (fun x => x 1 = b)
+    (weightedTruncation targetOrder (orderCutoff s g).toNat
+      (backShift ↑(oldBasis s g m))))).coeff e = _
+  have hmono : (oldBasis s g m : Form) = monomial m.val 1 :=
+    coe_basisRestrictSupport_apply (R := Geom) _ m
+  rw [coeff_filterSupport, coeff_filterSupport, coeff_weightedTruncation, hmono]
+end
+end K1_13_1_1_2
+end
+section
+namespace K1_13_1_1_3
+open K1_13 K1_13_1_1 MvPolynomial
+noncomputable section
+private def sliceColumn (d b cutoff c f : ℕ) : Form := by
+  classical
+  refine AddMonoidAlgebra.ofCoeff (Finsupp.onFinset
+    (Finsupp.finite_of_degree_le (σ := Fin 4) d).toFinset
+    (fun e => if e.degree = d ∧ e 1 = b ∧ e.weight targetOrder < cutoff then
+      pascalRowScale e * ((e 2).choose c : Geom) * ((e 3).choose f : Geom) else 0) ?_)
+  intro e h
+  simp only [Set.Finite.mem_toFinset, Set.mem_ofPred_eq]
+  by_cases he : e.degree = d
+  · exact he.le
+  · simp [he] at h
+end
+end K1_13_1_1_3
 end
 section
 namespace K1_13_7_5_3_3
@@ -2495,9 +2564,16 @@ set_option maxSynthPendingDepth 8
 namespace K1_14_3R_3_2_2
 noncomputable section
 open K1_14 K1_14_3 K1_14_3R_3_2 Polynomial
-open K1_14_3_2_4 (sectionEval sectionEval_ker sectionEval_surjective seedValues
+open K1_14_3_2_4 (sectionEval   seedValues
   ordinateValue derivativeValue)
-open K1_14_3_2_7 (four_ext scalar seedVar yVar vVar)
+open K1_14_3_2_7 ( scalar seedVar yVar vVar)
+private abbrev Plane := MvPolynomial (Fin 2) FurtherField
+private def values (jets : Bool) : Coordinates → Plane :=
+  if jets then fun i => i.elim (MvPolynomial.C (furtherParameter 1)) MvPolynomial.X
+  else fun i => i.elim (MvPolynomial.X 1) fun j =>
+    if j = 0 then MvPolynomial.C (furtherParameter 1) -
+      MvPolynomial.C (furtherParameter 0) * MvPolynomial.X 0
+    else MvPolynomial.X 0
 end
 end K1_14_3R_3_2_2
 end
@@ -2992,9 +3068,94 @@ section
 namespace K1_14_2_5
 noncomputable section
 open K1 K1_13 K1_13_5
-open K1_13_5_3 hiding exponent exponent_sufficient
+open K1_13_5_3 
 open Polynomial PolynomialDifferential
 open scoped BigOperators
+abbrev length : ℕ := K1_14_2.endpointDegree + 1
+abbrev power : ℕ := 2 * length - 5
+def chartTotal (B : ℕ) : ℕ := 1 + power * (B - 1)
+def chartTop (B J : ℕ) : ℕ := min (chartTotal B) (power * (J - 1) + (length - 1))
+private theorem exponent_sufficient : TaylorExponentSufficient 1 length power :=
+  taylorExponentSufficient_firstOrder_tight 134625
+private theorem specialization_flatten (f : Row 2) (S : Geom[X]) :
+    differentialSpecialization (flatten f) S = atJet f S := by
+  let x : Option (Fin 2) → Geom[X] := fun
+    | none => Polynomial.X
+    | some i => jet S i
+  have h := MvPolynomial.aeval_optionEquivRight_symm (R := Geom) x f
+  have hx : x none = Polynomial.X := rfl
+  have hj : (fun j => x (some j)) = jet S := rfl
+  rw [hx, hj, Polynomial.aeval_X_left] at h
+  rw [show (AlgHom.id Geom Geom[X]).toRingHom = RingHom.id (Geom[X]) from rfl,
+    MvPolynomial.map_id, MvPolynomial.aeval_eq_eval] at h
+  unfold flatten at *
+  unfold atJet differentialSpecialization
+  refine (AlgHom.congr_fun ?_ _).trans h
+  apply MvPolynomial.algHom_ext
+  intro v
+  rw [differentialSpecializationHom, MvPolynomial.aeval_X, MvPolynomial.aeval_X]
+  cases v <;> rfl
+private theorem chart_cut_agreement {f : Row 2} {S : Geom[X]} (hS : RegularAt 1 f S)
+    (hD : S.natDegree ≤ 134625) (x y : Geom) :
+    MvPolynomial.aeval (marked S)
+      (taylorAgreementEquation center (K1_13_5_3.chart f) length power (constants x) (constants y))
+      = 0 ↔ S.eval x = y := by
+  have hsol : differentialSpecialization (K1_13_5_3.chart f) (S.map constants) = 0 := by
+    rw [K1_13_5_3.chart, ← map_differentialSpecialization, specialization_flatten, hS.1, Polynomial.map_zero]
+  have hsf : differentialSpecialization (PolynomialDifferential.separant (flatten f) 1) S ≠ 0 := by
+    change differentialSpecialization
+      (MvPolynomial.pderiv (some 1) ((MvPolynomial.optionEquivRight Geom (Fin 2)).symm f)) S ≠ 0
+    rw [← MvPolynomial.optionEquivRight_symm_pderiv]
+    exact (specialization_flatten (MvPolynomial.pderiv 1 f) S).substr hS.2
+  have eval_at_center (P : Geom[X]) : (P.map constants).eval center = toCenter P := by
+    have h := marked_apply P 0
+    change (hasseDeriv 0 (P.map constants)).eval center = toCenter (hasseDeriv 0 P) at h
+    simpa only [Polynomial.hasseDeriv_zero'] using h
+  have hsep : jetEvaluation (PolynomialDifferential.separant (K1_13_5_3.chart f) (Fin.last 1))
+      center (marked S) ≠ 0 := by
+    change jetEvaluation (PolynomialDifferential.separant (K1_13_5_3.chart f) 1) center (marked S) ≠ 0
+    rw [marked, ← eval_differentialSpecialization, K1_13_5_3.chart, ← map_separant,
+      ← map_differentialSpecialization, eval_at_center]
+    exact fun he => hsf (toCenter_inj (he.trans (map_zero _).symm))
+  have hdeg : (S.map constants).degree < (length : WithBot ℕ) := by
+    have hb : (S.map constants).natDegree ≤ 134625 := Polynomial.natDegree_map_le.trans hD
+    exact Polynomial.degree_le_natDegree.trans_lt (by exact_mod_cast Nat.lt_succ_of_le hb)
+  have hcharG : CharP Geom K1.p := charP_of_injective_ringHom embed.injective K1.p
+  have : CharP CenterField K1.p := charP_of_injective_ringHom constants.injective K1.p
+  have hpiv : ∀ i : ℕ, 1 < i → i < length → (i.choose 1 : CenterField) ≠ 0 := by
+    intro i hi ht
+    rw [Nat.choose_one_right]
+    intro hz
+    have hp := Nat.le_of_dvd (by omega : 0 < i)
+      ((CharP.cast_eq_zero_iff CenterField K1.p i).mp hz)
+    change 2130706433 ≤ i at hp
+    change i < 134626 at ht
+    omega
+  rw [taylorAgreementEquation_eq_zero_iff center (K1_13_5_3.chart f) exponent_sufficient (marked S)
+      (by rwa [aeval_initialJetSeparant]) (constants x) (constants y)]
+  rw [marked, rationalTaylorPolynomial_polynomialJet center (K1_13_5_3.chart f) (S.map constants)
+    hsol hsep hdeg hpiv, Polynomial.eval_map_apply, constants.injective.eq_iff]
+private def nodeCut (w : I → K) (f : Row 2) (i : I) : MvPolynomial (Fin 2) CenterField :=
+  taylorAgreementEquation center (K1_13_5_3.chart f) length power
+    (constants (embed (node i))) (constants (embed (w i)))
+private theorem nodeCut_capped (w : I → K) (f : Row 2) {B J : ℕ}
+    (hB : f.totalDegree ≤ B) (hJ : f.degreeOf 1 ≤ J) (hJpos : 0 < J) (i : I) :
+    nodeCut w f i ∈ MvPolynomial.restrictCappedDegree (Fin 2) CenterField 1
+      (chartTotal B) (chartTop B J) := by
+  have ht : (nodeCut w f i).totalDegree ≤ chartTotal B := by
+    refine (totalDegree_taylorAgreementEquation_le center (K1_13_5_3.chart f)
+      exponent_sufficient _ _).trans ?_
+    exact Nat.add_le_add_left (Nat.mul_le_mul_left power
+      (Nat.sub_le_sub_right ((chart_degree f).trans hB) 1)) 1
+  refine mem_capped _ ht (le_min ((MvPolynomial.degreeOf_le_totalDegree _ _).trans ht) ?_)
+  exact degreeOf_taylorAgreementEquation_firstOrder_le center (K1_13_5_3.chart f) J
+    length power exponent_sufficient hJpos ((chart_top f).trans hJ) _ _
+private theorem nodeCut_vanishes {w : I → K} {f : Row 2} {S : K[X]}
+    (hreg : RegularAt 1 f (extend S)) (hD : S.natDegree ≤ 134625) (i : I) :
+    MvPolynomial.aeval (marked (extend S)) (nodeCut w f i) = 0 ↔
+      S.eval (node i) = w i := by
+  rw [nodeCut, chart_cut_agreement hreg (Polynomial.natDegree_map_le.trans hD),
+    Polynomial.eval_map_apply, embed.injective.eq_iff]
 end
 end K1_14_2_5
 end

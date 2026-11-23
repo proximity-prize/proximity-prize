@@ -22,6 +22,13 @@ structure CutInput (Γ : Finset K) (s : K → K[X]) (f Q : Row 4) (l : ℕ) : Pr
   order : ∀ γ ∈ Γ, OrderAt Q (extend (s γ)) l
 def membershipTest (g : Row 4) : Row 4 := jetNumerator g taylorLength
 def nextTest (g : Row 4) : Row 4 := jetNumerator g (taylorLength + 1)
+def auxCurves32 (x : Shape) : ℕ :=
+  let p := x.chamber
+  let h := chart taylorLength p
+  mixed32 p primaryBox (primaryBox.plus (p.scale 4)) h + 2 * x.t * mixed32 p p p h
+def auxPoints32 (x : Shape) : ℕ :=
+  let p := x.chamber
+  mixed32 p primaryBox (primaryBox.plus (p.scale 4)) p + 2 * x.t * mixed32 p p p p
 end
 end P0_9_6
 end
@@ -197,12 +204,19 @@ namespace P0_9_6
 noncomputable section
 open Polynomial
 open P0 (K)
-open P0_9 (physicalPrice primaryBox surfaceNumerator32 taylorLength)
+open P0_9 ( primaryBox  taylorLength)
 open K1_13 (Row Shape Geom extend atJet shape ceilDiv)
 open K1_13_6 (Pieces toGeneric
   separant jetNumerator HighMark divisorIdeal cycleLength eval_jetNumerator)
 open K1_13_6_1 (mem_markIdeal mark_curve)
 open scoped BigOperators
+def c1 : Prop :=
+  ∀ Γ s f Q l, CutInput Γ s f Q l →
+    ∃ (C : Pieces Γ) (B : Finset K),
+      C.curves s ∧
+      (∀ γ ∈ Γ, ¬ HighMark f Q l (extend (s γ)) → γ ∈ C.union ∪ B) ∧
+      32 * C.total ≤ auxCurves32 (shape f) ∧
+      32 * (B.card + C.n) ≤ 2 * auxPoints32 (shape f)
 end
 end P0_9_6
 end
@@ -658,11 +672,6 @@ open P0_9 (primaryBox)
 open P0_9_6 (membershipTest nextTest)
 open MvPolynomial
 open scoped BigOperators
-structure SimpleCut (g : Row 4) (surface P : JetIdeal) : Prop where
-  proper : toGeneric (membershipTest g) ∉ surface
-  minimal : (divisorIdeal surface (membershipTest g)).IsMinimalPrime P
-  one : cycleLength (divisorIdeal surface (membershipTest g)) P minimal.isPrime = 1
-  next : toGeneric (nextTest g) ∈ P
 structure CutCycle (f Q : Row 4) : Prop where
   local_bound : ∀ surface (hz : (intersectionIdeal f Q).IsMinimalPrime surface),
     dimension surface = 2 ∧ (1 : ℕ∞) ≤ cycleLength (intersectionIdeal f Q) surface hz.isPrime ∧

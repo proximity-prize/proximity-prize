@@ -6,7 +6,6 @@ section
 namespace P0_6
 noncomputable section
 open P0 Polynomial
-abbrev sourceCutoff : ℕ := 4 * agreement - 1
 end
 end P0_6
 end
@@ -255,8 +254,7 @@ set_option maxHeartbeats 800000
 namespace P0_6_1
 noncomputable section
 open MvPolynomial K1_11
-open K1_10_1 (Contacts Multipliers relationBounds)
-open P0_6 (sourceCutoff)
+open K1_10_1 (Contacts  relationBounds)
 private theorem exists_kernel_outside {F E G : Type*} [Field F]
     [AddCommGroup E] [Module F E] [Module.Finite F E]
     [AddCommGroup G] [Module F G] [Module.Finite F G]
@@ -287,8 +285,7 @@ namespace P0_6_1
 noncomputable section
 open K1 K1_10 K1_11 MvPolynomial
 open K1_10_1 (Contacts denominator liftOrdinary numerator pencil planeRelation
-  planeRelation_view relationBounds toScalarSource toScalarSource_atDecoder)
-open P0_6 (sourceCutoff)
+  planeRelation_view relationBounds toScalarSource )
 private theorem eval_liftOrdinary (Q P : Polynomial K) (s t : K) :
     aeval (scalarImages P s t) (liftOrdinary Q) = Q := by
   let φ : MvPolynomial (Fin 4) K →+* Polynomial K := (aeval (scalarImages P s t)).toRingHom

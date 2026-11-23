@@ -2,14 +2,12 @@ import ProximityPrize.SubmissionLower.Final50Price
 import ProximityPrize.SubmissionLower.PortLow7
 
 set_option Elab.async false
-section Top_Final50FatPad
+section
 namespace Final50FatPad
 noncomputable section
 open Polynomial Finset
 open P3 (K I node)
 open Final50Price (Messages taylorLength)
-def membershipTest (g : K1_13.Row 4) : K1_13.Row 4 :=
-  K1_13_6.jetNumerator g taylorLength
 open private occupancy from ProximityPrize.SubmissionLower.Fast055
 open private incidence_arithmetic from ProximityPrize.SubmissionLower.PortHighBase
 open K1_13_6 (CurveSections SurfaceSections Pieces)
@@ -141,7 +139,7 @@ theorem pieces_surface_capacity {w Γ s} (C : Pieces Γ) (h : Messages w Γ s)
     _ = _ := by simp [Pieces.total, mul_sum]
 end
 end Final50FatPad
-end Top_Final50FatPad
+end
 section
 set_option autoImplicit false
 set_option maxHeartbeats 1000000
@@ -153,137 +151,7 @@ open scoped Polynomial WithZero
 attribute [local instance] MvPolynomial.gradedAlgebra
 open private tupleHeight_le_of_inclusion finsum_weighted cone_eval_jets jet_zero_nonzero
   from ProximityPrize.SubmissionLower.Fast053
-def ShortSupport (A : CoeffIdeal) : Prop :=
-  ∀ i : Fin K1_13.taylorLength, Final50Price.taylorLength ≤ i.val → MvPolynomial.X i ∈ A
 
-private theorem principal_divisors : K1_13_6_3_5_3.c2 :=
-  K1_13_6_3_5_3_2.of_children K1_13_6_3_5_3_2_1.proof K1_13_6_3_5_3_2_2.proof
-private theorem projective_height : K1_13_6_3_5_3.c3 :=
-  K1_13_6_3_5_3_3.of_children K1_13_6_3_5_3_3_1.proof K1_13_6_3_5_3_3_2.proof
-    K1_13_6_3_5_3_3_3.proof K1_13_6_3_5_3_3_4.proof
-private theorem degree_of_support {R : CoeffIdeal} (D : FreshCurve R) (hs : ShortSupport R) :
-    D.polynomial.natDegree ≤ 133484 := by
-  by_contra h
-  let i : Fin taylorLength := ⟨D.polynomial.natDegree, Nat.lt_succ_iff.mpr D.degree_le⟩
-  have hi : Final50Price.taylorLength ≤ i.val := Nat.lt_of_not_ge h
-  have hx : (MvPolynomial.X i : FreshCoeffRing) ∈ extendIdeal R := by
-    change (MvPolynomial.X i : FreshCoeffRing) ∈ R.map (MvPolynomial.map geomConstants)
-    simpa only [MvPolynomial.map_X] using
-      Ideal.mem_map_of_mem (MvPolynomial.map geomConstants) (hs i hi)
-  rw [D.equation, coneIdeal, RingHom.mem_ker, coneEval, MvPolynomial.eval₂Hom_X'] at hx
-  change Polynomial.C (D.coefficients i) * Polynomial.X = 0 at hx
-  have hleading : D.coefficients i = 1 := by
-    change D.includeOld (D.polynomial.coeff D.polynomial.natDegree) = 1
-    rw [Polynomial.coeff_natDegree, D.monic.leadingCoeff, map_one]
-  rw [hleading, Polynomial.C_1, one_mul] at hx
-  exact Polynomial.X_ne_zero hx
-private theorem multiplicity_bound {m n : ℕ} (hm : m ≤ n) (hn : 2 ≤ n) :
-    2 * m ≤ n * min m 2 := by
-  by_cases h : m ≤ 2
-  · rw [min_eq_left h]
-    exact Nat.mul_le_mul_right _ hn
-  · rw [min_eq_right (by omega), Nat.mul_comm n 2]
-    exact Nat.mul_le_mul_left _ hm
-private theorem height_comparison {R : CoeffIdeal} (D : FreshCurve R)
-    (hshort : D.polynomial.natDegree ≤ 133484) (hdiv : PrincipalDivisors GeoField D.Fresh) :
-    2 * tupleHeight GeoField D.Fresh D.coefficients ≤
-      133484 * tupleHeight GeoField D.Fresh (ratios (D.jets (n := 4)) 0) := by
-  let : CharP D.Old K1.p := charP_of_injective_ringHom
-    ((algebraMap Geom D.Old).comp K1_13.embed).injective K1.p
-  have hdeg : D.polynomial.natDegree < taylorLength := Nat.lt_succ_iff.mpr D.degree_le
-  have hchar : D.polynomial.natDegree < K1.p := by
-    exact D.degree_le.trans_lt (by decide)
-  let B := factorsOfMonic D.monic hchar (by decide : 2 < K1.p)
-  let z := fun i => (B.factor i).eval₂ D.includeOld D.center
-  let r₃ := ratios (D.jets (n := 3)) 0
-  let r₄ := ratios (D.jets (n := 4)) 0
-  have hc₀ : genericArgument ≠ 0 := by
-    have hinj : Function.Injective genericCoeffs :=
-      (algebraMap GenericField GeoField).injective.comp
-        (IsFractionRing.injective Geom[X] GenericField)
-    simpa only [genericArgument, map_zero] using
-      hinj.ne (show (Polynomial.X : Geom[X]) ≠ 0 from Polynomial.X_ne_zero)
-  have hv (v : CurvePlace GeoField D.Fresh) :=
-    K1_13_6_3_5_3_6.proof D.Old D.Fresh D.includeOld D.center D.polynomial B v.value
-      taylorLength hdeg (v.on_constants _ hc₀) D.independent (K1_13_6_3_5_3_5.proof R D v)
-  have hcoeff : tupleHeight GeoField D.Fresh D.coefficients =
-      ∑ i, B.multiplicity i * ∑ᶠ v : CurvePlace GeoField D.Fresh, poleOrder v.value (z i) := by
-    have hp (v : CurvePlace GeoField D.Fresh) :
-        tuplePole v.value D.coefficients = ∑ i, B.multiplicity i * poleOrder v.value (z i) :=
-      (hv v).1
-    unfold tupleHeight
-    simp_rw [hp]
-    exact finsum_weighted _ _ (fun i => (hdiv (z i)).1)
-  have hjet : tupleHeight GeoField D.Fresh r₃ =
-      ∑ i, min (B.multiplicity i) 2 * ∑ᶠ v : CurvePlace GeoField D.Fresh, zeroOrder v.value (z i) := by
-    have hp (v : CurvePlace GeoField D.Fresh) :
-        tuplePole v.value r₃ = ∑ i, min (B.multiplicity i) 2 * zeroOrder v.value (z i) :=
-      (hv v).2
-    unfold tupleHeight
-    simp_rw [hp]
-    exact finsum_weighted _ _ (fun i => (hdiv (z i)).2.1)
-  have hmore : tupleHeight GeoField D.Fresh r₃ ≤ tupleHeight GeoField D.Fresh r₄ := by
-    apply tupleHeight_le_of_inclusion hdiv r₃ r₄ (Fin.castLE (by decide : 3 ≤ 4))
-    intro i
-    rfl
-  suffices hh : 2 * tupleHeight GeoField D.Fresh D.coefficients ≤
-      133484 * tupleHeight GeoField D.Fresh r₃ from
-    hh.trans (Nat.mul_le_mul_left _ hmore)
-  rw [hcoeff, hjet, Finset.mul_sum, Finset.mul_sum]
-  apply Finset.sum_le_sum
-  intro i _
-  rw [(hdiv (z i)).2.2.1, ← mul_assoc, ← mul_assoc]
-  apply Nat.mul_le_mul_right
-  exact multiplicity_bound ((B.le_degree i).trans hshort) (by decide)
-theorem boundary_degree (R : CoeffIdeal) (hR : R.IsPrime) (hprime : (extendIdeal R).IsPrime)
-    (hhom : R.IsHomogeneous (homogeneousSubmodule (Fin taylorLength) Geom))
-    (hdim : dimension R = 2) (hs : ShortSupport R) :
-    dimension (freshImage R) = 2 ∧
-      2 * affineDegree (extendIdeal R) ≤
-        133484 * (residueDegree freshJetMap (extendIdeal R) : ℚ) * affineDegree (freshImage R) := by
-  obtain ⟨D⟩ := K1_13_6_3_5_3_1.proof R hR hprime hhom hdim
-  have hdiv := principal_divisors GeoField D.Fresh D.freshCurve
-  have hshort := degree_of_support D hs
-  let u := D.coefficients
-  let v := D.jets (n := 4)
-  have hcone : extendIdeal R = coneIdeal GeoField u := D.equation
-  let i : Fin taylorLength := ⟨D.polynomial.natDegree, Nat.lt_succ_iff.mpr D.degree_le⟩
-  have hi : u i = 1 := by
-    simp [u, i, FreshCurve.coefficients, coefficientTuple, Polynomial.coeff_natDegree,
-      D.monic.leadingCoeff]
-  have hu : ratios u i = u := by funext j; simp [ratios, hi]
-  have hv₀ : v 0 ≠ 0 := jet_zero_nonzero D 0 rfl
-  have hgen : ratioField GeoField u i = ⊤ := by
-    rw [ratioField, hu]
-    exact D.generates
-  obtain ⟨hpositive, hsource⟩ :=
-    projective_height GeoField D.Fresh _ D.freshCurve hdiv u i (by simp [hi])
-  have hpos : 0 < tupleHeight GeoField D.Fresh u := by
-    rw [← hu]
-    exact hpositive.mp (by rw [hu]; exact D.nonconstant)
-  have hs : (tupleHeight GeoField D.Fresh u : ℚ) = affineDegree (extendIdeal R) := by
-    have h := (hsource (by simpa only [hu] using hpos)).2
-    rwa [hu, hgen, IntermediateField.finrank_top, Nat.cast_one, one_mul, ← hcone] at h
-  have hcmp := height_comparison D hshort hdiv
-  have hjpos : 0 < tupleHeight GeoField D.Fresh (ratios v 0) := by
-    change 2 * tupleHeight GeoField D.Fresh u ≤ 133484 * tupleHeight GeoField D.Fresh
-      (ratios v 0) at hcmp
-    omega
-  have himage : coneIdeal GeoField v = freshImage R := by
-    rw [freshImage, D.equation]
-    change RingHom.ker (coneEval GeoField v) =
-      (RingHom.ker (coneEval GeoField u)).comap freshJetMap
-    rw [RingHom.comap_ker, cone_eval_jets D]
-  have hrank := K1_13_6_3_5_3_4.proof GeoField D.Fresh _ _ u i v 0 freshJetMap (by simp [hi]) hv₀ hgen
-    (cone_eval_jets D)
-  rw [← hcone] at hrank
-  obtain ⟨hdim', ht⟩ := (projective_height GeoField D.Fresh _ D.freshCurve hdiv v 0 hv₀).2 hjpos
-  rw [himage, ← hrank] at ht
-  refine ⟨himage ▸ hdim', ?_⟩
-  have hcmp' : 2 * (tupleHeight GeoField D.Fresh u : ℚ) ≤
-      133484 * (tupleHeight GeoField D.Fresh (ratios v 0) : ℚ) := by exact_mod_cast hcmp
-  rw [hs, ht] at hcmp'
-  simpa only [mul_assoc] using hcmp'
 end
 end Final50FatPad
 end
@@ -294,94 +162,7 @@ namespace Final50FatPad
 noncomputable section
 open MvPolynomial K1_13_6 K1_13_6_3 K1_13_6_3_5
 attribute [local instance] MvPolynomial.gradedAlgebra
-private theorem boundary_support {A R : CoeffIdeal} (hs : ShortSupport A)
-    (hR : boundaryIdeal A ≤ R) : ShortSupport R := by
-  intro i hi
-  apply hR
-  apply Ideal.subset_span
-  refine ⟨MvPolynomial.X i, hs i hi, ?_⟩
-  rw [totalDegree_X]
-  exact homogeneousComponent_eq_self (isHomogeneous_X _ i)
-theorem padding (A : CoeffIdeal) (hA : A.IsPrime) (hAe : (extendIdeal A).IsPrime)
-    (hdim : dimension A = 2) (hbir : FreshBirational A) (hs : ShortSupport A) :
-    2 * affineDegree A ≤ 133484 * affineDegree (freshImage A) := by
-  classical
-  have h1 := K1_13_6_3_5_1.of_children K1_13_6_3_5_1_1.proof K1_13_6_3_5_1_2.proof
-  have h2 := K1_13_6_3_5_2.proof
-  have h4 := K1_13_6_3_5_4.proof
-  have h5 := K1_13_6_3_5_5.of_children K1_13_6_3_5_5_1.proof K1_13_6_3_5_5_2.proof
-    K1_13_6_3_5_5_3.proof K1_13_6_3_5_5_4.proof
-  let B := extendIdeal A
-  let C := freshImage A
-  let S := (boundaryIdeal B).minimalPrimesFinset
-  let T := (boundaryIdeal C).minimalPrimesFinset
-  let image (P : Ideal FreshCoeffRing) : JetIdeal := P.comap freshJetMap
-  let weight (P : Ideal FreshCoeffRing) : ℕ := boundaryWeight (boundaryIdeal B) P
-  let rank (P : Ideal FreshCoeffRing) : ℕ := residueDegree freshJetMap P
-  obtain ⟨hpoly, hdescend⟩ := h2 A hA
-  have hdimB : dimension B = 2 :=
-    (congrArg Polynomial.natDegree hpoly).trans hdim
-  have hdegree : affineDegree A = affineDegree B := by
-    change affineDegree A = affineDegree (extendIdeal A)
-    simp only [affineDegree, hpoly]
-  have hbirB : IsBirationalOn freshProjection B := hbir
-  obtain ⟨hdimC, hproject⟩ := h4 _ _ _ freshProjection freshProjection_linear B hAe hdimB hbirB
-  have hC : C.IsPrime := by
-    let _ : B.IsPrime := hAe
-    exact Ideal.IsPrime.comap freshJetMap
-  have hdimC' : dimension C = 2 := hdimC
-  have hheight (P : Ideal FreshCoeffRing) (hP : P ∈ S) :
-      dimension (image P) = 2 ∧
-      2 * affineDegree P ≤ 133484 * (rank P : ℚ) * affineDegree (image P) := by
-    have hp := Ideal.mem_minimalPrimesFinset.mp hP
-    obtain ⟨R, hR, rfl⟩ := hdescend P hp
-    obtain ⟨hd, hhom⟩ := (h1 _ _ A hA hdim).1 R hR
-    exact boundary_degree R hR.isPrime hp.isPrime hhom hd (boundary_support hs hR.le)
-  have hmaps (P : Ideal FreshCoeffRing) (hP : P ∈ S) : image P ∈ T := by
-    apply Ideal.mem_minimalPrimesFinset.mpr
-    exact hproject P (Ideal.mem_minimalPrimesFinset.mp hP) (hheight P hP).1
-  have hfibre (Q : JetIdeal) (hQ : Q ∈ T) :
-      (∑ P ∈ S.filter (fun P => image P = Q), weight P * rank P) ≤
-        boundaryWeight (boundaryIdeal C) Q := by
-    exact h5 _ _ _ freshProjection freshProjection_linear B hAe hbirB Q
-      (Ideal.mem_minimalPrimesFinset.mp hQ)
-  calc
-    2 * affineDegree A = 2 * ∑ P ∈ S, (weight P : ℚ) * affineDegree P := by
-      rw [hdegree, (h1 _ _ B hAe hdimB).2]
-    _ ≤ ∑ P ∈ S, 133484 * ((weight P * rank P : ℕ) : ℚ) * affineDegree (image P) := by
-      rw [Finset.mul_sum]
-      apply Finset.sum_le_sum
-      intro P hP
-      push_cast
-      calc
-        2 * ((weight P : ℚ) * affineDegree P) =
-            (weight P : ℚ) * (2 * affineDegree P) := by ring
-        _ ≤ (weight P : ℚ) * (133484 * (rank P : ℚ) * affineDegree (image P)) :=
-          mul_le_mul_of_nonneg_left (hheight P hP).2 (by positivity)
-        _ = _ := by ring
-    _ = ∑ Q ∈ T, ∑ P ∈ S.filter (fun P => image P = Q),
-        133484 * ((weight P * rank P : ℕ) : ℚ) * affineDegree (image P) :=
-      (Finset.sum_fiberwise_of_maps_to hmaps _).symm
-    _ ≤ ∑ Q ∈ T, 133484 * (boundaryWeight (boundaryIdeal C) Q : ℚ) * affineDegree Q := by
-      apply Finset.sum_le_sum
-      intro Q hQ
-      calc
-        _ = ∑ P ∈ S.filter (fun P => image P = Q),
-            133484 * ((weight P * rank P : ℕ) : ℚ) * affineDegree Q := by
-          apply Finset.sum_congr rfl
-          intro P hP
-          rw [(Finset.mem_filter.mp hP).2]
-        _ = 133484 * ((∑ P ∈ S.filter (fun P => image P = Q), weight P * rank P : ℕ) : ℚ) *
-            affineDegree Q := by
-          rw [Nat.cast_sum, Finset.mul_sum, Finset.sum_mul]
-        _ ≤ _ := mul_le_mul_of_nonneg_right
-          (mul_le_mul_of_nonneg_left (by exact_mod_cast hfibre Q hQ) (by positivity))
-          (affineDegree_nonneg Q)
-    _ = 133484 * affineDegree C := by
-      rw [(h1 _ _ C hC hdimC').2, Finset.mul_sum]
-      exact Finset.sum_congr rfl (fun _ _ => mul_assoc ..)
 end
 end Final50FatPad
 end
 
-#print axioms Final50FatPad.padding

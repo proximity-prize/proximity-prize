@@ -86,17 +86,9 @@ def I₁ (s : Source) := max s.J ((2*s.C-1)*s.J - 2*s.C^2)
 def a₁ (s : Source) := 1+t₁*(H s-1)
 def d₁ (s : Source) := min (a₁ s) (t₁*(I₁ s-1)+k-1)
 def R₁ (s : Source) := H s*d₁ s + I₁ s*a₁ s - I₁ s*d₁ s
-def chargeNumerator (A : ℕ) (s : Source) :=
-  errors A * (2*R₂ s + R₁ s) + gap A * (s.B + H s ^ 2)
-def L (A : ℕ) (s : Source) := (chargeNumerator A s + (gap A-1)) / gap A
 abbrev close (A : ℕ) (w : Node → K) := ReedSolomon.closePolynomialSet node w k A
 def ScalarList (A cap : ℕ) : Prop :=
   ∀ w : Node → K, (close A w).Finite ∧ (close A w).ncard ≤ cap
-def Main : Prop :=
-  ∀ (A : ℕ) (s : Source) (R : ℕ), AgreementOK A → ShapeOK s →
-    s.m ≤ s.m*A - N*s.B → Surplus A s R → RankCertificate A s R →
-    ScalarList A (L A s)
-def source180120 : Source := ⟨46, 63, 18, 8, fullBox 63 18 8⟩
 def indexWeight {r : ℕ} : JetVariable r → ℕ := fun j => j.elim 0 Fin.val
 def OrderTwo (s : Source) (Q : DifferentialPolynomial K 2) : Prop :=
   Q ≠ 0 ∧ jetTotalDegree Q ≤ s.B ∧ Q.weightedTotalDegree indexWeight ≤ s.J ∧
@@ -133,17 +125,8 @@ structure ChartOK {r} (T : Chart r) : Prop where
 structure Family (r : ℕ) where
   count : ℕ
   chart : Fin count → Chart r
-def inBand₂ (s : Source) (P : InitialRing 2) : Prop :=
-  P.totalDegree ≤ a₀ s ∧ P.weightedTotalDegree Fin.val ≤ D s ∧ P.degreeOf (Fin.last 2) ≤ e s
 def inBand₁ (s : Source) (P : InitialRing 1) : Prop :=
   P.totalDegree ≤ a₁ s ∧ P.degreeOf (Fin.last 1) ≤ d₁ s
-structure Family₂ (s : Source) (F : Family 2) : Prop where
-  count : F.count ≤ s.B
-  chart_ok : ∀ i, ChartOK (F.chart i)
-  total : (∑ i, (F.chart i).equation.totalDegree) ≤ s.B
-  index : (∑ i, (F.chart i).equation.weightedTotalDegree Fin.val) ≤ s.J
-  top : (∑ i, (F.chart i).equation.degreeOf (Fin.last 2)) ≤ s.C
-  bands : ∀ i, inBand₂ s (F.chart i).denominator ∧ ∀ j, inBand₂ s ((F.chart i).numerator j)
 structure Family₁ (s : Source) (F : Family 1) : Prop where
   count : F.count ≤ H s
   chart_ok : ∀ i, ChartOK (F.chart i)
@@ -205,12 +188,18 @@ structure BadMark (u : Words) (γ : K) where
   nonjoint : ¬ (ExtendsOn node (u 0) k support ∧ ExtendsOn node (u 1) k support)
 def ordinary (u : Words) := hankel node (u 0) (u 1) L t
 def twoBlock (u : Words) := stacked p node (u 0) (u 1) L t
+def firstRank (u : Words) := GenericLayer.genericRank (ordinary u)
 def stackRank (u : Words) := GenericLayer.genericRank (twoBlock u)
 def nullity (u : Words) := GenericLayer.genericNullity (twoBlock u)
 def Normal (u : Words) (γ : K) : Prop :=
   ((twoBlock u).map (evalRingHom γ)).rank = stackRank u
 def TypeAtMostOne (u : Words) : Prop :=
   Principal.TypeOneSyndromes node (u 0) (u 1) k p
+def HomogeneousPrincipal (u : Words) : Prop :=
+  ∃ (a : ℕ) (g : Frac[X]), g ≠ 0 ∧ g.natDegree ≤ a ∧ a ≤ t ∧
+    ∀ P : Frac[X], P.natDegree ≤ t →
+      (((twoBlock u).map (algebraMap K[X] Frac)).mulVec (fun i => P.coeff i.val) = 0 ↔
+        ∃ Q : Frac[X], Q.natDegree ≤ t - a ∧ P = g * Q)
 def coefficientBlocks {F ι : Type} [Field F] [Fintype ι] [DecidableEq ι]
     (p : ℕ) (x u v : ι → F) (l t : ℕ) : Matrix (Fin 4 × Fin l) (Fin (t + 1)) F :=
   fun i j =>
@@ -218,6 +207,12 @@ def coefficientBlocks {F ι : Type} [Field F] [Fintype ι] [DecidableEq ι]
     if i.1 = 1 then syndrome x v (i.2.val + j.val) else
     if i.1 = 2 then syndrome x u (i.2.val + j.val) ^ p else
       syndrome x v (i.2.val + j.val) ^ p
+abbrev coefficientStack (u : Words) := coefficientBlocks p node (u 0) (u 1) L t
+def ConstantKernel (u : Words) : Prop :=
+  stackRank u = (coefficientStack u).rank
+def FrontRemainder (u : Words) : Prop :=
+  frontLimit < nullity u ∧ firstRank u = L ∧ ¬ TypeAtMostOne u ∧
+    ¬ HomogeneousPrincipal u ∧ ¬ ConstantKernel u
 structure TwoActive (u : Words) where
   a : ℕ
   b : ℕ
@@ -246,22 +241,7 @@ def extendSeed (U : Bivar) : Frac[X] :=
   U.map (algebraMap K[X] Frac)
 def IsCommonGCD {F : Type} [Field F] (G U V : F[X]) : Prop :=
   G ≠ 0 ∧ G ∣ U ∧ G ∣ V ∧ ∀ H : F[X], H ∣ U → H ∣ V → H ∣ G
-def InvalidLeft {u : Words} {T : TwoActive u} (R : Relation T) : Prop :=
-  max (leftU R).natDegree (leftV R).natDegree < T.height ∨
-    ∃ G : K[X], G ≠ 0 ∧ G.map Polynomial.C ∣ leftU R ∧ G.map Polynomial.C ∣ leftV R ∧
-      ¬ G ∣ locator node Finset.univ
 def atSlope (P : Bivar) (γ : K) : K[X] := P.map (evalRingHom γ)
-structure SaturatedAt {u : Words} {T : TwoActive u} (R : Relation T)
-    {γ : K} (M : BadMark u γ) : Prop where
-  U_ne : atSlope (leftU R) γ ≠ 0
-  V_ne : atSlope (leftV R) γ ≠ 0
-  degree_eq : max (atSlope (leftU R) γ).natDegree (atSlope (leftV R) γ).natDegree =
-    T.height
-  gcd_errors : ∃ errors : Finset I,
-    (∀ i ∈ errors, M.decoder.eval (node i) ≠ u 0 i + γ * u 1 i) ∧
-    IsCommonGCD (locator node errors) (atSlope (leftU R) γ) (atSlope (leftV R) γ)
-  fixed_errors : ∀ i ∈ fixedNodes R, M.decoder.eval (node i) ≠ u 0 i + γ * u 1 i
-  valid : ¬ InvalidLeft R
 def seed : Bivar := Polynomial.C (R := K[X]) (Polynomial.X (R := K))
 def liftX (P : K[X]) : Bivar := P.map Polynomial.C
 def twist : K →+* K := frobenius K p
@@ -390,11 +370,6 @@ def highPrefix (w : ℤ) : ℕ :=
   else if w ≤ 8249 then 83625638374831363
   else if w ≤ 23999 then 88272853155571659
   else 94479354514532614
-def highRetained (w : ℤ) : ℕ :=
-  if w ≤ 3554 then 147341630862505162
-  else if w ≤ 8249 then 43002915371002194
-  else if w ≤ 23999 then 26524108968507199
-  else 39471880490774732
 end
 end P0
 end

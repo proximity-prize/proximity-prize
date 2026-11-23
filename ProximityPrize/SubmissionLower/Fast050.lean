@@ -268,13 +268,6 @@ theorem native_degree_arithmetic :
     70000 * (6789 + 6820) = 952630000 ∧ 70000 * (2300 + 2300) = 322000000 ∧
     68 + 2 * 112 * 10 ≤ 6300 ∧ 23 + (2 * 3 + 1) * 112 ≤ 2403 := by
   decide
-theorem native_factor_arithmetic :
-    let T := 525913765916471
-    let S := 2561085868844197170227
-    49196 * 6820 * T / S = 68 ∧ 49196 * 2300 * T / S = 23 ∧
-      7800 * 6820 * T / S = 10 ∧ 7800 * 2300 * T / S = 3 ∧
-      7800 * 70000 * T / S = 112 ∧ 1571799066189253395000 < S := by
-  decide
 end
 end K1_13_4
 end
@@ -306,6 +299,9 @@ def Bank.box : Bank → Shape
 def Bank.cut : Bank → ℕ
   | .first => firstCut
   | .second => secondCut
+def Bank.targetRank : Bank → ℕ
+  | .first => 1
+  | .second => 2561085868844197170227
 def Bank.nodeRank : Bank → ℕ
   | .first => 10697571688375
   | .second => 10697783317215

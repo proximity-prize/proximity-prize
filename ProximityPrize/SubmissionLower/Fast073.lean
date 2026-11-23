@@ -1722,6 +1722,12 @@ namespace K1_14_3_6
 noncomputable section
 open K1 K1_14 K1_14_3 K1_14_6 K1_13_5_3 Polynomial
 open scoped BigOperators
+def c1 : Prop :=
+  ∀ g : JetPlane, Irreducible g → 0 < g.natDegree →
+    ∃ f : K1_13.Row 2, f.totalDegree ≤ total g ∧ f.degreeOf 1 ≤ g.natDegree ∧
+      plane f ≠ 0 ∧ (Ideal.span {plane f}).IsPrime ∧
+      ∀ S : K[X], atScalar S g = 0 → atScalar S g.derivative ≠ 0 →
+        K1_13_5.RegularAt 1 f (K1_13.extend S)
 end
 end K1_14_3_6
 end

@@ -33,30 +33,6 @@ theorem surface_eq_weights_of_signed (kind : Surface) (f : Shape) (b j t : ℤ)
   rw [hw]
   exact hn q
 
-private theorem signed_four_linear (q p r s : Shape) :
-    signedMixed q p r s = signedMixed ⟨1,0,0⟩ p r s*q.b +
-      signedMixed ⟨0,1,0⟩ p r s*q.j + signedMixed ⟨0,0,1⟩ p r s*q.t := by
-  simp only [signedMixed, difference, volume32, Shape.plus, Nat.cast_add, Nat.cast_zero,
-    Nat.cast_one]
-  ring
 
-/-- The ordinary signed surface is linear in the cutter shape, including when
-its top coordinate is zero. -/
-theorem surface_ordinary_eq_weights {f : Shape} (hf : Valid f) (q : Shape) :
-    surface .ordinary f q = (weights .ordinary f).b*q.b + (weights .ordinary f).j*q.j +
-      (weights .ordinary f).t*q.t := by
-  let p := f.chamber
-  let r := chart (taylorLength+1) p
-  let s := chart (taylorLength+2) p
-  have hp : K1_13_8_2.Chamber p := ⟨le_max_right _ _,hf.2.1⟩
-  have hr : K1_13_8_2.Chamber r := K1_13_7_1.chart_chamber _ _
-  have hs : K1_13_8_2.Chamber s := K1_13_7_1.chart_chamber _ _
-  have hnonneg (u : Shape) : 0 ≤ signedMixed u r s p := signed_nonneg u r s p hr hs hp
-  refine surface_eq_weights_of_signed .ordinary f _ _ _ (hnonneg ⟨1,0,0⟩)
-    (hnonneg ⟨0,1,0⟩) (hnonneg ⟨0,0,1⟩) (fun u => ?_) q
-  change (↑(signedMixed p u r s).toNat : ℤ) = _
-  rw [signed_rotate, Int.toNat_of_nonneg (hnonneg u)]
-  exact signed_four_linear u r s p
 
-#print axioms surface_ordinary_eq_weights
 end Final50SharedPrice

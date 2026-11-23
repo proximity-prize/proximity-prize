@@ -4093,6 +4093,10 @@ private theorem lift_value_order :
     restrictWeightedOrder_anti _ (Nat.le_add_right 1 (targetOrder j)) (lift_order j)
   simpa only [valueForm, map_add, map_sub, liftJets_X] using
     (add_mem (sub_mem (add_mem (h 0) (h 1)) (h 2)) (h 3))
+private def postprocess (s : ℕ) (g : ℤ) : Form →ₗ[Geom] Local :=
+  (projectLowContact 138).comp
+    ((LinearMap.mulLeft Geom (T ^ (g + 48).toNat *
+      (liftJets valueForm) ^ (s - residualDegree s))).comp liftJets.toLinearMap)
 private theorem project_monomial (cut : ℕ) (e : LocalVariable 3 →₀ ℕ) (a : Geom) :
     projectLowContact cut (monomial e a) =
       if localContactOrder 3 e < cut then monomial e a else 0 := by
@@ -4146,11 +4150,6 @@ section
 namespace K1_14_5
 open K1_14 Finset
 open scoped BigOperators
-private theorem sum_arithmetic (n : ℕ) (a d : ℤ) :
-    (∑ t ∈ range n, (a - 2*d*(t : ℤ))) = (n : ℤ)*(a - d*((n : ℤ)-1)) := by
-  induction n with
-  | zero => simp
-  | succ n ih => rw [sum_range_succ, ih, Nat.cast_succ]; ring
 private theorem shape_sum_flip {M : Type} [AddCommMonoid M]
     (s : Shape) (f : ℕ → ℕ → M) :
     (∑ q ∈ range (s.B+1), ∑ j ∈ range (min q s.J+1), f q j) =
@@ -4175,58 +4174,6 @@ private theorem shape_sum_flip {M : Type} [AddCommMonoid M]
       ext q
       simp only [mem_filter, mem_range, mem_Ico]
       tauto
-private def nodeRow (k d : ℕ) : ℕ :=
-  let n := min k ((d+1)/2)
-  n*(d+1-n)
-private theorem nodeRow_eq_sum (k d : ℕ) :
-    (∑ i ∈ range k, (d-2*i)) = nodeRow k d := by
-  let n := min k ((d+1)/2)
-  have hnk : n ≤ k := Nat.min_le_left _ _
-  have hnd : n ≤ (d+1)/2 := Nat.min_le_right _ _
-  have hreduce : (∑ i ∈ range k, (d-2*i)) = ∑ i ∈ range n, (d-2*i) := by
-    symm
-    apply sum_subset (range_mono hnk)
-    intro i hi hni
-    simp only [mem_range, not_lt] at hi hni
-    have hi' : (d+1)/2 ≤ i := by unfold n at hni; omega
-    omega
-  have hcast : ((∑ i ∈ range n, (d-2*i) : ℕ) : ℤ) =
-      ∑ i ∈ range n, ((d : ℤ)-2*(i : ℤ)) := by
-    rw [Nat.cast_sum]
-    apply sum_congr rfl
-    intro i hi
-    have hit := mem_range.mp hi
-    rw [Nat.cast_sub (by omega : 2*i ≤ d)]
-    push_cast
-    rfl
-  have hclosed := sum_arithmetic n (d : ℤ) 1
-  simp only [mul_one, one_mul] at hclosed
-  have hn : n ≤ d+1 := by omega
-  apply Int.ofNat_inj.mp
-  rw [hreduce, hcast, hclosed]
-  change _ = (↑(n*(d+1-n)) : ℤ)
-  push_cast [Nat.cast_sub hn]
-  ring
-def nodeCost (s : Shape) : ℕ :=
-  triangle s.U * 262144 *
-    ∑ q ∈ range (s.B+1), nodeRow (min q s.J+1) (s.m+min q s.J-q)
-def poleSlope (s : Shape) : ℕ :=
-  2*(s.U+1) * ∑ q ∈ range (s.B+1), (min q s.J+1)*((s.B+s.J-q)*(s.B-q))
-private theorem debit_eq (s : Shape) (h : ℕ) :
-    sourceDebit h s = nodeCost s + h * poleSlope s := by
-  have hnode : shapeSum s (fun q i => s.m+min q s.J-(q+2*i)) =
-      ∑ q ∈ range (s.B+1), nodeRow (min q s.J+1) (s.m+min q s.J-q) := by
-    unfold shapeSum
-    apply sum_congr rfl
-    intro q _
-    simpa only [Nat.sub_sub] using nodeRow_eq_sum (min q s.J+1) (s.m+min q s.J-q)
-  have hpole : shapeSum s (fun q _ => (s.B+s.J-q)*(s.B-q)) =
-      ∑ q ∈ range (s.B+1), (min q s.J+1)*((s.B+s.J-q)*(s.B-q)) := by
-    unfold shapeSum
-    simp only [sum_const, card_range, Nat.nsmul_eq_mul]
-  unfold sourceDebit nodeCost poleSlope
-  rw [hnode, hpole]
-  ring
 end K1_14_5
 end
 section

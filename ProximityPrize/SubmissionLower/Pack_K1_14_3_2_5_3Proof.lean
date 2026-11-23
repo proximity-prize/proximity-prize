@@ -1,0 +1,16 @@
+import ProximityPrize.SubmissionLower.Fast042
+import ProximityPrize.SubmissionLower.Pack_K1_14_2_2_4Split
+set_option Elab.async false
+set_option autoImplicit true
+section
+set_option autoImplicit false
+set_option backward.isDefEq.respectTransparency false
+set_option maxHeartbeats 1000000
+set_option maxSynthPendingDepth 12
+namespace K1_14_3_2_5_3
+noncomputable section
+open K1_14 K1_14_3 K1_14_3_2_5 Polynomial
+open scoped nonZeroDivisors
+end
+end K1_14_3_2_5_3
+end

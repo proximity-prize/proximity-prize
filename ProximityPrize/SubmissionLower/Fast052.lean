@@ -569,8 +569,7 @@ private theorem X_bidegree (i : Option (Fin 2)) :
   cases i <;> simp [Finsupp.some_single_none, Finsupp.some_single_some]
 private theorem slicedY_bidegree : slicedY ∈ Bidegree 1 0 := by
   apply (Bidegree 1 0).sub_mem (C_bidegree _)
-  have h := mul_mem_restrictBidegree (C_bidegree (b := 0) (u := 0) (generic 0)) (X_bidegree none)
-  exact h
+  exact mul_mem_restrictBidegree (C_bidegree (b := 0) (u := 0) _) (X_bidegree none)
 private theorem pow_bidegree {f : CurvePoly SeedField} {b u : ℕ}
     (hf : f ∈ Bidegree b u) (i : ℕ) : f ^ i ∈ Bidegree (i * b) (i * u) := by
   induction i with
@@ -1693,7 +1692,7 @@ private theorem perturb_parameter {F A : Type} [Field F] [CommRing A] [IsDomain 
     simpa [n, hp.coeff_natDegree, add_comm] using hroot
   let S := Algebra.adjoin B {r}
   have hle : R ≤ S.restrictScalars F := Algebra.adjoin_le fun x hx =>
-    show x ∈ ((Algebra.adjoin B {r} : Subalgebra B A) : Set A) from Algebra.subset_adjoin hx
+    Algebra.subset_adjoin hx
   let : Algebra R S := (Subalgebra.inclusion hle).toAlgebra
   have : IsScalarTower R S A := IsScalarTower.of_algebraMap_eq fun _ => rfl
   have : Algebra.IsIntegral B S := Algebra.IsIntegral.adjoin
@@ -5992,29 +5991,6 @@ theorem clear_dual {I : Ideal Ambient} (hd : dual I) {m : ℕ} {P : Jet}
     exact (isUnit_iff_ne_zero.mpr hz).map MvPolynomial.C
   refine ⟨jetInclude s, hnot, ?_⟩
   simpa [hd, RingHom.ker_eq_comap_bot] using hmem
-theorem clear_rank_one {I : Ideal Ambient} (hp : I.IsPrime) (hd : ¬ dual I) {m : ℕ} {P : Jet}
-    (hf : imageFibreMap I (toJet P) ∈ (I.map (imageFibreMap I)) ^ m) :
-    orderOn I P m := by
-  classical
-  let _ : I.IsPrime := hp
-  have hj : (I.comap jetInclude).IsPrime := Ideal.IsPrime.comap jetInclude
-  let _ : Nontrivial (JetImageRing I) := Ideal.Quotient.nontrivial_iff.mpr hj.ne_top
-  let q : Seeds →+* JetImageRing I := Ideal.Quotient.mk (I.comap jetInclude)
-  have hq : Function.Surjective q := Ideal.Quotient.mk_surjective
-  have hclear := clear_denominators (A := JetImageRing I) q hq (I ^ m) (toJet P)
-  have hspec : specializeJets ((algebraMap (JetImageRing I) (JetImageField I)).comp q) =
-      imageFibreMap I := rfl
-  rw [hspec, Ideal.map_pow] at hclear
-  obtain ⟨s, hs, hmem⟩ := hclear hf
-  have hnot : jetInclude s ∉ I := fun hin =>
-    hs (Ideal.Quotient.eq_zero_iff_mem.mpr hin)
-  refine ⟨jetInclude s, hnot, ?_⟩
-  change jetInclude s * toJet P ∈ I ^ m ⊔
-    (if dual I then ⊥ else (I.comap jetPlaneIncl).map jetPlaneIncl)
-  rw [ite_eq_right hd, imageIdeal_eq]
-  change jetInclude s * toJet P ∈ I ^ m ⊔
-    (RingHom.ker (Ideal.Quotient.mk (I.comap jetInclude))).map jetInclude at hmem
-  rwa [Ideal.mk_ker] at hmem
 end
 end K1_14_2_2_3
 end
@@ -6022,89 +5998,6 @@ section
 namespace K1_14_2_2_3
 noncomputable section
 open K1 MvPolynomial
-private theorem natCast_ne_zero {A : Type*} [Field A] [CharP A p] {n : ℕ}
-    (hpos : 0 < n) (hn : n < p) : (n : A) ≠ 0 := by
-  intro hz
-  exact (not_le_of_gt hn) (Nat.le_of_dvd hpos ((CharP.cast_eq_zero_iff _ _ _).mp hz))
-private theorem exists_separant {A : Type*} [Field A] [CharP A p]
-    {g : MvPolynomial (Fin 2) A} (hg : Prime g) (hdeg : g.totalDegree < p) :
-    ∃ i : Fin 2, ¬ g ∣ pderiv i g := by
-  have hv : g.vars.Nonempty := by
-    by_contra! he
-    have heq := vars_eq_empty_iff_eq_C.mp he
-    have hn : g.coeff 0 ≠ 0 := by
-      intro hz
-      exact hg.ne_zero (by rw [heq, hz, map_zero])
-    exact hg.not_isUnit (heq ▸ (isUnit_iff_ne_zero.mpr hn).map C)
-  obtain ⟨i, hi⟩ := hv
-  have hpos := Nat.pos_of_ne_zero (mem_vars_iff_degreeOf_ne_zero.mp hi)
-  have hc : (g.degreeOf i : A) ≠ 0 :=
-    natCast_ne_zero hpos ((degreeOf_le_totalDegree g i).trans_lt hdeg)
-  have hn := pderiv_ne_zero_of_natCast_ne_zero i g hc
-  have hb := degreeOf_pderiv_le_sub_one i g
-  refine ⟨i, ?_⟩
-  rintro ⟨f, h⟩
-  have hf : f ≠ 0 := by
-    intro hf
-    exact hn (by rw [h, hf, mul_zero])
-  rw [h, degreeOf_mul_eq hg.ne_zero hf] at hb
-  omega
-private theorem iter_not_dvd {A : Type*} [Field A] [CharP A p] (i : Fin 2)
-    {g : MvPolynomial (Fin 2) A} (hg : Prime g) (hsep : ¬ g ∣ pderiv i g)
-    (a : ℕ) (ha : a < p) {f : MvPolynomial (Fin 2) A} (hf : ¬ g ∣ f) :
-    ¬ g ∣ (pderiv (R := A) i)^[a] (g ^ a * f) := by
-  induction a generalizing f with
-  | zero => simpa using hf
-  | succ a ih =>
-    let v := ((a + 1 : ℕ) : MvPolynomial (Fin 2) A) * (pderiv i g * f) + g * pderiv i f
-    have hstep : pderiv i (g ^ (a + 1) * f) = g ^ a * v := by
-      rw [pderiv_mul, pderiv_pow, Nat.add_sub_cancel, pow_succ g a]
-      dsimp only [v]
-      ring
-    have hu : IsUnit ((a + 1 : ℕ) : MvPolynomial (Fin 2) A) := by
-      rw [← map_natCast (C : A →+* MvPolynomial (Fin 2) A)]
-      exact (isUnit_iff_ne_zero.mpr (natCast_ne_zero (Nat.succ_pos a) ha)).map C
-    have hv : ¬ g ∣ v := by
-      intro hd
-      have hd' := (dvd_add_left (dvd_mul_right g (pderiv i f))).mp hd
-      exact (hg.dvd_or_dvd (hu.dvd_mul_left.mp hd')).elim hsep hf
-    rw [Function.iterate_succ_apply, hstep]
-    exact ih (Nat.lt_of_succ_lt ha) hv
-private theorem partialWord_replicate {A : Type*} [Field A] (f : MvPolynomial (Fin 2) A)
-    (i : Fin 2) (a : ℕ) :
-    partialWord f (List.replicate a i) = (pderiv (R := A) i)^[a] f := by
-  induction a with
-  | zero => rfl
-  | succ a ih =>
-    rw [List.replicate_succ, partialWord, ih, Function.iterate_succ_apply']
-theorem divisor_contact {A : Type*} [Field A] [CharP A p] {g f : MvPolynomial (Fin 2) A}
-    (hg : Prime g) (hdeg : g.totalDegree < p) {r : ℕ} (hr : r < p)
-    (hf : fibreContact (Ideal.span {g}) f r) :
-    f ∈ Ideal.span ({g} : Set (MvPolynomial (Fin 2) A)) ^ (r+1) := by
-  classical
-  rw [Ideal.span_singleton_pow, Ideal.mem_span_singleton]
-  by_contra hpow
-  obtain ⟨i, hi⟩ := exists_separant hg hdeg
-  have hex : ∃ n : ℕ, ¬ g ^ n ∣ f := ⟨r+1, hpow⟩
-  have hpos : 0 < Nat.find hex := by
-    by_contra! hn
-    have hz : Nat.find hex = 0 := by omega
-    exact Nat.find_spec hex (by simp [hz])
-  let a := Nat.find hex - 1
-  have ha : a+1 = Nat.find hex := Nat.sub_add_cancel hpos
-  have har : a ≤ r := by
-    have hle := Nat.find_min' hex hpow
-    omega
-  obtain ⟨u, he⟩ : g ^ a ∣ f :=
-    not_not.mp (Nat.find_min hex (by omega : a < Nat.find hex))
-  have hu : ¬ g ∣ u := by
-    rintro ⟨z, rfl⟩
-    apply Nat.find_spec hex
-    rw [← ha, he, pow_succ, ← mul_assoc]
-    exact dvd_mul_right _ _
-  have hd := hf (List.replicate a i) (by simpa using har)
-  rw [partialWord_replicate, he, Ideal.mem_span_singleton] at hd
-  exact iter_not_dvd i hg hi a (har.trans_lt hr) hu hd
 end
 end K1_14_2_2_3
 end
@@ -6119,10 +6012,6 @@ def c1 : Prop :=
     ∀ (f : FibreRing) (r : ℕ), r < p →
       fibreContact (I.map mapGenericJets) f r →
       f ∈ (I.map mapGenericJets) ^ (r+1)
-def c2 : Prop :=
-  ∀ I : Ideal Ambient, Active I → ¬ dual I →
-    ∃ g : MvPolynomial (Fin 2) (JetImageField I),
-      Prime g ∧ g.totalDegree < p ∧ I.map (imageFibreMap I) = Ideal.span {g}
 end
 end K1_14_2_2_3
 end
@@ -6134,236 +6023,7 @@ namespace K1_14_2_2_3_2
 noncomputable section
 open K1_14 K1_14_2 K1_14_2_2 K1_14_2_2_3
 open scoped Polynomial nonZeroDivisors
-private theorem presentation_jetInclude :
-    seedPresentation.toRingHom.comp jetInclude = MvPolynomial.C := by
-  apply MvPolynomial.ringHom_ext
-  · intro c
-    simp [jetInclude]
-  · intro i
-    change seedPresentation ((MvPolynomial.rename (Fin.natAdd 2)) (MvPolynomial.X i)) = _
-    rw [MvPolynomial.rename_X]
-    exact seedPresentation_jet i
-private theorem specialize_jetInclude {A : Type*} [CommRing A]
-    (q : Seeds →+* A) (s : Seeds) :
-    specializeJets q (jetInclude s) = MvPolynomial.C (q s) := by
-  have h := RingHom.congr_fun presentation_jetInclude s
-  change seedPresentation (jetInclude s) = MvPolynomial.C s at h
-  simp [specializeJets, h]
-private theorem specialize_ker {A : Type*} [CommRing A] (q : Seeds →+* A) :
-    RingHom.ker (specializeJets q) = (RingHom.ker q).map jetInclude := by
-  rw [specializeJets, ← RingHom.comap_ker, MvPolynomial.ker_map, ← presentation_jetInclude,
-    ← Ideal.map_map,
-    Ideal.comap_map_of_bijective seedPresentation.toRingHom seedPresentation.bijective]
-private theorem jetInclude_injective : Function.Injective jetInclude := by
-  intro a b h
-  apply MvPolynomial.C_injective (Fin 2) Seeds
-  exact (RingHom.congr_fun presentation_jetInclude a).symm.trans
-    ((congrArg seedPresentation.toRingHom h).trans (RingHom.congr_fun presentation_jetInclude b))
-def ordinateInImage (I : Ideal Ambient) : FX[X] →ₐ[FX] JetImageRing I :=
-  Polynomial.aeval (Ideal.Quotient.mk (I.comap jetInclude) (MvPolynomial.X 0))
-theorem ordinateInImage_injective {I : Ideal Ambient} (hI : Active I) :
-    Function.Injective (ordinateInImage I) := by
-  let u : FX[X] →+* Seeds :=
-    Polynomial.eval₂RingHom MvPolynomial.C (MvPolynomial.X 0)
-  have h : jetInclude.comp u = ordinateIncl := by
-    apply Polynomial.ringHom_ext
-    · intro c
-      simp [jetInclude, u, ordinateIncl]
-    · simp [jetInclude, u, ordinateIncl]
-  have hn : (ordinateInImage I).toRingHom = (Ideal.Quotient.mk _).comp u := by
-    apply Polynomial.ringHom_ext
-    · intro c
-      simp [ordinateInImage, u]
-      rfl
-    · simp [ordinateInImage, u]
-  apply (RingHom.injective_iff_ker_eq_bot _).mpr
-  rw [RingHom.ker_eq_bot_iff_eq_zero]
-  intro a ha
-  change (ordinateInImage I).toRingHom a = 0 at ha
-  rw [hn, RingHom.comp_apply, Ideal.Quotient.eq_zero_iff_mem] at ha
-  have hz : ((Ideal.Quotient.mk I).comp ordinateIncl) a = 0 := by
-    rw [← h]
-    exact Ideal.Quotient.eq_zero_iff_mem.mpr ha
-  exact hI.ordinate_dominant (hz.trans (map_zero _).symm)
-private theorem image_dimension_pos {I : Ideal Ambient} (hI : Active I)
-    [I.IsPrime] : 1 ≤ ringKrullDim (JetImageRing I) := by
-  let B := JetImageRing I
-  let : (I.comap jetInclude).IsPrime := Ideal.comap_isPrime jetInclude I
-  have hfield : ¬ IsField B := by
-    intro h
-    let : Field B := h.toField
-    let : Module.Finite FX B := finite_of_finite_type_of_isJacobsonRing FX B
-    exact Polynomial.not_finite (Module.Finite.of_injective
-      (ordinateInImage I).toLinearMap (ordinateInImage_injective hI))
-  obtain ⟨P, hP, _⟩ := (⊥ : Ideal B).exists_le_maximal bot_ne_top
-  let : P.IsPrime := hP.isPrime
-  have hne : (⊥ : Ideal B) ≠ P := fun h =>
-    hfield (Ring.isField_iff_maximal_bot.mpr (h.symm ▸ hP))
-  have hlt : (⊥ : Ideal B) < P := bot_lt_iff_ne_bot.mpr hne.symm
-  have hlo : 1 ≤ P.height := by
-    simpa [Ideal.height_bot] using Ideal.height_add_one_le_of_lt_of_isPrime hlt
-  exact (WithBot.coe_le_coe.mpr hlo).trans (Ideal.height_le_ringKrullDim_of_isPrime (I := P))
 attribute [local instance] MvPolynomial.algebraMvPolynomial
-private theorem imageIdeal_ne_bot {I : Ideal Ambient} (hI : Active I) (hd : ¬ dual I)
-    [I.IsPrime] : I.comap jetInclude ≠ ⊥ := by
-  intro hbot
-  let Q := I.map seedPresentation.toRingHom
-  have hbase : Q.comap MvPolynomial.C = I.comap jetInclude := by
-    rw [← presentation_jetInclude, ← Ideal.comap_comap,
-      Ideal.comap_map_of_bijective seedPresentation.toRingHom seedPresentation.bijective]
-  let S := (nonZeroDivisors Seeds).map (MvPolynomial.C (σ := Fin 2))
-  have hdisj : Disjoint (S : Set (MvPolynomial (Fin 2) Seeds))
-      (Q : Set (MvPolynomial (Fin 2) Seeds)) := by
-    rw [Set.disjoint_left]
-    rintro _ ⟨d, hd, rfl⟩ hm
-    have he : d ∈ Q.comap MvPolynomial.C := hm
-    rw [hbase, hbot] at he
-    exact nonZeroDivisors.ne_zero hd (Ideal.mem_bot.mp he)
-  have hproper := (IsLocalization.map_algebraMap_ne_top_iff_disjoint
-    (S := MvPolynomial (Fin 2) SeedField) _ Q).mpr hdisj
-  have he : Q.map (algebraMap (MvPolynomial (Fin 2) Seeds)
-      (MvPolynomial (Fin 2) SeedField)) = I.map mapGenericJets := by
-    rw [mapGenericJets_eq, specializeJets, ← Ideal.map_map]
-    rfl
-  rw [he] at hproper
-  let : Nontrivial (OverJets I) := Ideal.Quotient.nontrivial_iff.mpr hproper
-  let : Module.Finite SeedField (OverJets I) := hI.jet_finite
-  exact hd Module.finrank_pos
-private theorem parent_height_le {I : Ideal Ambient} (hI : Active I) [I.IsPrime] :
-    I.height ≤ 2 := by
-  let x : PrimeSpectrum Ambient := ⟨I, inferInstance⟩
-  have hc : Order.coheight x = 2 := by
-    have h := hI.dimension
-    rw [ringKrullDim_quotient] at h
-    change Order.krullDim (Set.Ici x) = 2 at h
-    rw [← Order.coheight_eq_krullDim_Ici] at h
-    exact WithBot.coe_injective h
-  have hd : ringKrullDim Ambient = 4 := by
-    simp [ringKrullDim_eq_zero_of_field]
-  have hh : (↑(Order.height x + Order.coheight x) : WithBot ℕ∞) ≤ ringKrullDim Ambient := by
-    rw [ringKrullDim, Order.krullDim_eq_iSup_height_add_coheight_of_nonempty]
-    exact WithBot.coe_le_coe.mpr (le_iSup (fun y : PrimeSpectrum Ambient =>
-      Order.height y + Order.coheight y) x)
-  rw [hc, ← x.height_eq_orderHeight, hd] at hh
-  have hh' : I.height + 2 ≤ (2 : ℕ∞) + 2 := WithBot.coe_le_coe.mp hh
-  exact (ENat.add_le_add_iff_right (by simp : (2 : ℕ∞) ≠ ⊤)).mp hh'
-theorem primeGenerator {I : Ideal Ambient} (hI : Active I) (hd : ¬ dual I) :
-    ∃ g : MvPolynomial (Fin 2) (JetImageField I),
-      Prime g ∧ I.map (imageFibreMap I) = Ideal.span {g} := by
-  let : I.IsPrime := hI.prime
-  let P := I.comap jetInclude
-  let : P.IsPrime := Ideal.comap_isPrime jetInclude I
-  let B := JetImageRing I
-  let D := MvPolynomial (Fin 2) B
-  let E := MvPolynomial (Fin 2) (JetImageField I)
-  let q : Seeds →+* B := Ideal.Quotient.mk P
-  let e : Ambient →+* D := specializeJets q
-  let a : D →+* E := algebraMap D E
-  let Q := I.map e
-  let J := I.map (imageFibreMap I)
-  let S := (nonZeroDivisors B).map (MvPolynomial.C (σ := Fin 2))
-  have he : Function.Surjective e :=
-    (MvPolynomial.map_surjective _ Ideal.Quotient.mk_surjective).comp seedPresentation.surjective
-  have hk : RingHom.ker e = P.map jetInclude := by
-    rw [specialize_ker, Ideal.mk_ker]
-  have hkle : RingHom.ker e ≤ I := by
-    rw [hk]
-    exact Ideal.map_comap_le
-  have hQcomap : Q.comap e = I := by
-    rw [Ideal.comap_map_of_surjective _ he, ← RingHom.ker_eq_comap_bot, sup_of_le_left hkle]
-  have hQa : J = Q.map a := by
-    change J = (I.map e).map a
-    rw [Ideal.map_map]
-    change I.map (specializeJets ((algebraMap B (JetImageField I)).comp q)) = I.map (a.comp e)
-    congr 1
-    apply RingHom.ext
-    intro f
-    change MvPolynomial.map ((algebraMap B (JetImageField I)).comp q) (seedPresentation f) =
-      MvPolynomial.map (algebraMap B (JetImageField I)) (MvPolynomial.map q (seedPresentation f))
-    rw [MvPolynomial.map_map]
-  have hQ : Q.IsPrime := Ideal.map_isPrime_of_surjective he hkle
-  have hS : Disjoint (S : Set D) (Q : Set D) := by
-    rw [Set.disjoint_left]
-    rintro _ ⟨d, hd, rfl⟩ hm
-    obtain ⟨s, rfl⟩ := Ideal.Quotient.mk_surjective (I := P) d
-    have hm' : jetInclude s ∈ Q.comap e := by
-      change specializeJets q (jetInclude s) ∈ Q
-      rwa [specialize_jetInclude]
-    rw [hQcomap] at hm'
-    exact nonZeroDivisors.ne_zero hd (Ideal.Quotient.eq_zero_iff_mem.mpr hm')
-  have hJ : J.IsPrime := by
-    rw [hQa]
-    exact IsLocalization.isPrime_of_isPrime_disjoint S E Q hQ hS
-  have hJa : J.comap a = Q := by
-    rw [hQa]
-    exact IsLocalization.under_map_of_isPrime_disjoint S E hQ hS
-  have ha : Function.Injective a :=
-    MvPolynomial.map_injective _ (IsFractionRing.injective B (JetImageField I))
-  have hJn : J ≠ ⊥ := by
-    intro hz
-    have hQ0 : Q = ⊥ := by
-      rw [← hJa, hz, Ideal.comap_bot_of_injective _ ha]
-    have hIker : RingHom.ker e = I := by
-      rw [RingHom.ker_eq_comap_bot, ← hQ0, hQcomap]
-    let eq : CoordinateRing I ≃+* D :=
-      (Ideal.quotEquivOfEq hIker.symm).trans (e.quotientKerEquivOfSurjective he)
-    have hdim := ringKrullDim_eq_of_ringEquiv (R := CoordinateRing I) (S := D) eq
-    rw [hI.dimension] at hdim
-    have hpoly := ringKrullDim_add_natCard_le_ringKrullDim_mvPolynomial (R := B) (Fin 2)
-    rw [Nat.card_fin, ← hdim] at hpoly
-    have hlo : (1 : WithBot ℕ∞) + 2 ≤ 2 :=
-      (add_le_add (image_dimension_pos hI) (le_refl (2 : WithBot ℕ∞))).trans hpoly
-    exact (by decide : ¬ (1 : WithBot ℕ∞) + 2 ≤ 2) hlo
-  have hk0 : (⊥ : Ideal Ambient) < RingHom.ker e := by
-    obtain ⟨d, hdP, hd0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot (imageIdeal_ne_bot hI hd)
-    apply bot_lt_iff_ne_bot.mpr
-    intro h
-    have hm := Ideal.mem_map_of_mem jetInclude hdP
-    rw [← hk, h, Ideal.mem_bot] at hm
-    exact hd0 (jetInclude_injective (hm.trans (map_zero _).symm))
-  let : UniqueFactorizationMonoid (JetImageField I) := PrincipalIdealRing.to_uniqueFactorizationMonoid
-  let : UniqueFactorizationMonoid E := MvPolynomial.uniqueFactorizationMonoid (Fin 2)
-  obtain ⟨g, hgJ, hg⟩ := Ideal.IsPrime.exists_mem_prime_of_ne_bot hJ hJn
-  refine ⟨g, hg, le_antisymm ?_ ((Ideal.span_singleton_le_iff_mem _).mpr hgJ)⟩
-  by_contra hn
-  let G : Ideal E := Ideal.span {g}
-  let K := (G.comap a).comap e
-  have hG : G.IsPrime := (Ideal.span_singleton_prime hg.ne_zero).mpr hg
-  have hK : K.IsPrime := Ideal.comap_isPrime e _
-  have hlt : G < J := lt_of_le_of_ne ((Ideal.span_singleton_le_iff_mem _).mpr hgJ)
-    (fun h => hn h.ge)
-  have hmap : StrictMono (Ideal.comap a) := by
-    intro U W h
-    have hinv (T : Ideal E) : (T.comap a).map a = T := IsLocalization.map_under S E T
-    exact lt_of_le_of_ne (Ideal.comap_mono h.le) fun hm =>
-      h.ne ((hinv U).symm.trans ((congrArg (Ideal.map a) hm).trans (hinv W)))
-  have he' : StrictMono (Ideal.comap e) := by
-    intro U W h
-    exact lt_of_le_of_ne (Ideal.comap_mono h.le)
-      (fun hm => h.ne (Ideal.comap_injective_of_surjective e he hm))
-  have hKI : K < I := by
-    rw [← hQcomap, ← hJa]
-    exact he' (hmap hlt)
-  have hbotG : (⊥ : Ideal E) < G :=
-    bot_lt_iff_ne_bot.mpr (Ideal.span_singleton_eq_bot.not.mpr hg.ne_zero)
-  have hkK : RingHom.ker e < K := by
-    rw [RingHom.ker_eq_comap_bot]
-    have h := hmap hbotG
-    change (⊥ : Ideal E).comap a < G.comap a at h
-    rw [Ideal.comap_bot_of_injective _ ha] at h
-    exact he' h
-  have : (RingHom.ker e).IsPrime := RingHom.ker_isPrime e
-  have h1 := Ideal.height_add_one_le_of_lt_of_isPrime hk0
-  have h2 := Ideal.height_add_one_le_of_lt_of_isPrime hkK
-  have h3 := Ideal.height_add_one_le_of_lt_of_isPrime hKI
-  have hlo : (3 : ℕ∞) ≤ I.height := calc
-    (3 : ℕ∞) = (⊥ : Ideal Ambient).height + 1 + 1 + 1 := by
-      rw [Ideal.height_bot]
-      decide
-    _ ≤ (RingHom.ker e).height + 1 + 1 := add_le_add (add_le_add h1 le_rfl) le_rfl
-    _ ≤ K.height + 1 := add_le_add h2 le_rfl
-    _ ≤ I.height := h3
-  exact (by decide : ¬ (3 : ℕ∞) ≤ 2) (hlo.trans (parent_height_le hI))
 end
 end K1_14_2_2_3_2
 end
@@ -7206,6 +6866,8 @@ def sectionEval (s : Slice) : SectionJet →ₐ[SectionField] Plane where
       (eval₂RingHom (MvPolynomial.eval₂Hom MvPolynomial.C (seedValues s)) (ordinateValue s))
       (derivativeValue s) (C (C (MvPolynomial.C k))) = MvPolynomial.C k
     simp
+def univariate : SectionField[X] →ₐ[SectionField] Plane :=
+  Polynomial.aeval (MvPolynomial.X 0)
 end
 end K1_14_3_2_4
 end

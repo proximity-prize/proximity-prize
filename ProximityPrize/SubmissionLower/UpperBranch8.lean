@@ -1,7 +1,5 @@
 import Mathlib.Algebra.Order.Sub.Prod
-import ProximityPrize.SubmissionLower.GoldBranch6
-import ProximityPrize.SubmissionLower.PortLow5
-import ProximityPrize.SubmissionLower.PortLow7
+import ProximityPrize.SubmissionLower.LowerBase
 import ProximityPrize.SubmissionLower.UpperBase
 set_option Elab.async false
 set_option autoImplicit true
@@ -11,93 +9,7 @@ noncomputable section
 open Polynomial Finset ProximityPrize.Benchmark
 open P1 (K I node agreement)
 open private occupancy from ProximityPrize.SubmissionLower.Fast055
-structure FixedWord (w : I → K) (T : Finset K) (s : K → K[X]) (d : ℕ) : Prop where
-  distinct : Set.InjOn s (T : Set K)
-  degree : ∀ γ ∈ T, (s γ).natDegree ≤ d
-  hits : ∀ γ ∈ T, ∃ B : Finset I, agreement ≤ B.card ∧ ∀ i ∈ B, (s γ).eval (node i) = w i
 open private incidence_arithmetic from ProximityPrize.SubmissionLower.PortHighBase
-theorem section_capacity {w T s d} (h : FixedWord w T s d) (hd : d < agreement) (cap : ℕ)
-    (hsection : ∀ i : I, (∃ γ ∈ T, (s γ).eval (node i) ≠ w i) →
-      (T.filter fun γ => (s γ).eval (node i) = w i).card ≤ cap) :
-    (agreement - d) * T.card ≤ P1.t * cap + (agreement - d) := by
-  classical
-  by_cases hm : T.card ≤ 1
-  · have hb := Nat.mul_le_mul_left (agreement - d) hm
-    simp only [Nat.mul_one] at hb
-    omega
-  let hits (γ : K) : Finset I := univ.filter fun i => (s γ).eval (node i) = w i
-  let common : Finset I := univ.filter fun i => ∀ γ ∈ T, (s γ).eval (node i) = w i
-  let nodes : Finset I := univ \ common
-  have common_le (γ : K) (hγ : γ ∈ T) : common ⊆ hits γ := by
-    intro i hi
-    exact mem_filter.mpr ⟨mem_univ _, (mem_filter.mp hi).2 γ hγ⟩
-  have hit_count (γ : K) (hγ : γ ∈ T) : agreement ≤ (hits γ).card := by
-    obtain ⟨B, hB, hval⟩ := h.hits γ hγ
-    exact hB.trans (card_le_card fun i hi => mem_filter.mpr ⟨mem_univ _, hval i hi⟩)
-  have pair_count (a : K) (ha : a ∈ T) (b : K) (hb : b ∈ T) (hab : a ≠ b) :
-      (hits a ∩ hits b).card ≤ d := by
-    let P := s a - s b
-    have hp : P ≠ 0 := sub_ne_zero.mpr fun eq => hab (h.distinct ha hb eq)
-    refine (FrobeniusLocator.Strata.root_nodes_card_le node IRSProfile.domain.injective
-      P hp _ ?_).trans ((natDegree_sub_le _ _).trans (max_le (h.degree a ha) (h.degree b hb)))
-    intro i hi
-    change ((s a) - (s b)).eval (node i) = 0
-    rw [eval_sub, (mem_filter.mp (mem_inter.mp hi).1).2, (mem_filter.mp (mem_inter.mp hi).2).2,
-      sub_self]
-  obtain ⟨a, ha, b, hb, hab⟩ := one_lt_card.mp (by omega : 1 < T.card)
-  have hcommon : common.card ≤ d :=
-    (card_le_card (subset_inter (common_le a ha) (common_le b hb))).trans
-      (pair_count a ha b hb hab)
-  let x := agreement - common.card
-  let t := d - common.card
-  have ht : t = x - (agreement - d) := by dsimp [t, x]; omega
-  have hx : agreement - d ≤ x := by dsimp [x]; omega
-  have hnodes : nodes.card = x + P1.t := by
-    rw [card_sdiff_of_subset (subset_univ common), card_univ, IRSProfile.card_index]
-    change 262144 - common.card = (179944 - common.card) + 82200
-    have hbound : common.card ≤ 179944 := hcommon.trans hd.le
-    omega
-  have exists_trim (γ : K) : ∃ B : Finset I, γ ∈ T → B ⊆ hits γ \ common ∧ B.card = x := by
-    by_cases hγ : γ ∈ T
-    · have hc := hit_count γ hγ
-      have hsize : x ≤ (hits γ \ common).card := by
-        rw [card_sdiff_of_subset (common_le γ hγ)]
-        dsimp [x]
-        omega
-      obtain ⟨B, hB, hcard⟩ := exists_subset_card_eq hsize
-      exact ⟨B, fun _ => ⟨hB, hcard⟩⟩
-    · exact ⟨∅, fun h => (hγ h).elim⟩
-  choose B hB using exists_trim
-  have into_nodes (γ : K) (hγ : γ ∈ T) : B γ ⊆ nodes := by
-    intro i hi
-    exact mem_sdiff.mpr ⟨mem_univ _, (mem_sdiff.mp ((hB γ hγ).1 hi)).2⟩
-  have overlap (a : K) (ha : a ∈ T) (b : K) (hb : b ∈ T) (hab : a ≠ b) :
-      (B a ∩ B b).card ≤ t := by
-    have cover : (B a ∩ B b) ∪ common ⊆ hits a ∩ hits b := by
-      intro i hi
-      rcases mem_union.mp hi with hi | hi
-      · exact mem_inter.mpr ⟨(mem_sdiff.mp ((hB a ha).1 (mem_inter.mp hi).1)).1,
-          (mem_sdiff.mp ((hB b hb).1 (mem_inter.mp hi).2)).1⟩
-      · exact mem_inter.mpr ⟨common_le a ha hi, common_le b hb hi⟩
-    have disj : Disjoint (B a ∩ B b) common := disjoint_left.mpr fun i hi hi' =>
-      (mem_sdiff.mp (into_nodes a ha (mem_inter.mp hi).1)).2 hi'
-    have hc := (card_le_card cover).trans (pair_count a ha b hb hab)
-    rw [card_union_of_disjoint disj] at hc
-    dsimp [t]
-    omega
-  have occ_le (i : I) (hi : i ∈ nodes) : (T.filter fun γ => i ∈ B γ).card ≤ cap := by
-    have proper : ∃ γ ∈ T, (s γ).eval (node i) ≠ w i := by
-      by_contra! hc
-      exact (mem_sdiff.mp hi).2 (mem_filter.mpr ⟨mem_univ _, hc⟩)
-    refine (card_le_card ?_).trans (hsection i proper)
-    intro γ hγ
-    obtain ⟨hγ, hi⟩ := mem_filter.mp hγ
-    exact mem_filter.mpr ⟨hγ, (mem_filter.mp (mem_sdiff.mp ((hB γ hγ).1 hi)).1).2⟩
-  obtain ⟨second, first⟩ := occupancy T nodes B x t cap
-    (fun γ hγ => ⟨into_nodes γ hγ, (hB γ hγ).2⟩) overlap occ_le
-  rw [hnodes, ht] at second
-  rw [hnodes] at first
-  exact incidence_arithmetic P1.t _ _ _ _ (by omega) (by omega) hx (by decide) second first
 end
 end P1_7_8
 end
@@ -276,7 +188,7 @@ set_option autoImplicit false
 namespace P1_7_8
 noncomputable section
 open P1 (agreement blockLength)
-open P1_7 (degreeAt quotientOrder gap scale muNum lambdaNum ceilRatio properFee)
+open P1_7 (degreeAt quotientOrder     ceilRatio )
 end
 end P1_7_8
 end

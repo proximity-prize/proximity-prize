@@ -3395,28 +3395,5 @@ end K1_13_7_2_3_2
 end
 section
 namespace K1_13_2_3_6
-private def rows : List (List ℕ) :=
-  rowsA ++ rowsB ++ rowsC ++ rowsD ++ rowsE ++ rowsF ++ rowsG ++ rowsH ++ rowsI ++ rowsJ ++ rowsK ++ rowsL ++ rowsM
-private theorem rows_length : rows.length = 502 := by
-  simp only [rows, List.length_append, checkA.1, checkB.1, checkC.1, checkD.1,
-    checkE.1, checkF.1, checkG.1, checkH.1, checkI.1, checkJ.1,
-    checkK.1, checkL.1, checkM.1, Nat.reduceAdd]
-private theorem rows_fit : fits 3012 rows = true := by
-  simp only [rows, fits_append, List.length_append, checkA.1, checkB.1, checkC.1, checkD.1,
-    checkE.1, checkF.1, checkG.1, checkH.1, checkI.1, checkJ.1,
-    checkK.1, checkL.1, checkA.2.1, checkB.2.1, checkC.2.1,
-    checkD.2.1, checkE.2.1, checkF.2.1, checkG.2.1, checkH.2.1, checkI.2.1,
-    checkJ.2.1, checkK.2.1, checkL.2.1, checkM.2.1, Nat.reduceAdd, Bool.true_and]
-private theorem rows_value : value 3012 rows = 100540921280 := by
-  simp only [rows, value_append, List.length_append, checkA.1, checkB.1, checkC.1, checkD.1,
-    checkE.1, checkF.1, checkG.1, checkH.1, checkI.1, checkJ.1,
-    checkK.1, checkL.1, checkA.2.2, checkB.2.2, checkC.2.2,
-    checkD.2.2, checkE.2.2, checkF.2.2, checkG.2.2, checkH.2.2, checkI.2.2,
-    checkJ.2.2, checkK.2.2, checkL.2.2, checkM.2.2, Nat.reduceAdd]
-theorem proof : K1_13_2_3.c6 := by
-  have hc := value_le_savingsSum 3012 rows (by decide)
-    (by rw [rows_length]) rows_fit
-  rw [rows_value] at hc
-  exact hc
 end K1_13_2_3_6
 end

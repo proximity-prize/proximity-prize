@@ -143,8 +143,6 @@ def poleCredit (h : ℕ) (s : Shape) : ℕ :=
   triangle s.U * (2*h) * shapeSum s (fun q _ => s.B+s.J-q)
 def physicalDebit (s : Shape) : ℕ :=
   triangle s.U * 262144 * shapeSum s (fun q i => s.m + min q s.J - (q + 2*i))
-def poleSeedDebit (h : ℕ) (s : Shape) : ℕ :=
-  2*h*(s.U+1)*shapeSum s (fun q _ => (s.B+s.J-q)*(s.B-q))
 def seedPair (z : K) : Fin 2 → L :=
   ![algebraMap K L z, (algebraMap K L z)^p]
 def residueAt {h} (D : PoleData h) (i : Fin 2) (z : L) : L[X] :=
@@ -1156,22 +1154,6 @@ namespace K1_14_1_7
 noncomputable section
 open K1 K1_14 K1_14_1 Polynomial
 open scoped BigOperators Polynomial
-def c1 : Prop :=
-  ∀ (F : Type) [Field F] (s : Shape) (q : Grade s),
-    ∃ rows : ZeroRows F s q.val, ZeroRowsValid s q.val rows
-def c2 : Prop :=
-  ∀ (F : Type) [Field F] (s : Shape) (H : F[X]) (lift : (SeedFrac F)[X])
-    (α : F) (side : Fin 2) (a b c : F),
-    H.eval α = 0 → H.derivative.eval α ≠ 0 → b ≠ 0 →
-    lift.eval (algebraMap F (SeedFrac F) α) = residue side a b c →
-    ∀ rows : (q : Grade s) → ZeroRows F s q.val,
-      (∀ q, ZeroRowsValid s q.val (rows q)) →
-      ∃ tests : (q : Grade s) → LocalRow s q.val → TrueSource F →ₗ[F] Seed F,
-        (∀ q r P, Shaped s P → SeedWindow s.U (s.B - q.val) side (tests q r P)) ∧
-        ∀ P, Shaped s P → (∀ q r, tests q r P = 0) →
-          (jetConstant ((Polynomial.X (R := SeedFrac F) -
-              Polynomial.C (algebraMap F (SeedFrac F) α)) ^ (s.B+s.J)) :
-            JetPolys (SeedFrac F)) ∣ forward H lift P
 def c4 : Prop :=
   ∀ {h : ℕ} {D : PoleData h} {Crt : CRTLift D} (E : RegularDeformation D Crt)
     (s : Shape) (ι : Type) [Fintype ι] (P : ι → Source),
@@ -1205,76 +1187,6 @@ private theorem poleTest_of_local {F : Type} [Field F] (s : Shape) {h : ℕ}
   unfold PoleTest
   rw [hprod, ← Finset.prod_pow, map_prod]
   exact hp
-private abbrev ScalarRow (h : ℕ) (s : Shape) :=
-  Σ _ : Fin (2*h), Σ q : Grade s,
-    LocalRow s q.val × Fin (triangle s.U + (s.U+1)*(s.B-q.val))
-private theorem shapeSum_fin (s : Shape) (g : ℕ → ℕ → ℕ) :
-    shapeSum s g = ∑ q : Grade s, ∑ j : GradeSlot s q.val, g q.val j.val := by
-  unfold shapeSum
-  rw [← Fin.sum_univ_eq_sum_range (fun q : ℕ =>
-    ∑ j ∈ Finset.range (min q s.J + 1), g q j)]
-  apply Finset.sum_congr rfl
-  intro q _
-  exact (Fin.sum_univ_eq_sum_range (g q.val) (min q.val s.J + 1)).symm
-private theorem scalarRow_card (h : ℕ) (s : Shape) :
-    Fintype.card (ScalarRow h s) = poleCredit h s + poleSeedDebit h s := by
-  let a : Grade s → ℕ := fun q => s.B+s.J-q.val
-  let b : Grade s → ℕ := fun q => s.B-q.val
-  let j : Grade s → ℕ := fun q => min q.val s.J + 1
-  change Fintype.card (ScalarRow h s) = _
-  simp only [Fintype.card_sigma, Fintype.card_prod, Fintype.card_fin,
-    Finset.sum_const, Finset.card_univ, nsmul_eq_mul]
-  change (2*h) * (∑ q : Grade s, (a q * j q) * (triangle s.U + (s.U+1)*b q)) = _
-  have hterm (q : Grade s) :
-      (a q * j q) * (triangle s.U + (s.U+1)*b q) =
-      triangle s.U * (∑ _ : GradeSlot s q.val, a q) +
-        (s.U+1) * (∑ _ : GradeSlot s q.val, a q * b q) := by
-    simp only [Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul]
-    change _ = triangle s.U * (j q * a q) + (s.U+1) * (j q * (a q * b q))
-    ring
-  simp_rw [hterm]
-  rw [Finset.sum_add_distrib, ← Finset.mul_sum, ← Finset.mul_sum]
-  unfold poleCredit poleSeedDebit
-  rw [shapeSum_fin, shapeSum_fin]
-  dsimp only [a, b]
-  ring
-private theorem simple_rank_le (h1 : c1) (h2 : c2)
-    {F ι : Type} [Field F] [Fintype ι] {h : ℕ} {H : F[X]} {lift : (SeedFrac F)[X]}
-    (G : SimplePoles h H lift) (s : Shape) (P : ι → TrueSource F)
-    (hP : ∀ k, Shaped s (P k)) {n : ℕ} (M : Matrix (Fin n) ι F)
-    (hM : ∀ v, M.mulVec v = 0 ↔ PoleTest s H lift (Fintype.linearCombination F P v)) :
-    M.rank ≤ poleCredit h s + poleSeedDebit h s := by
-  classical
-  choose rows hrows using h1 F s
-  have hlocal (t) := h2 F s H lift (G.root t) (G.side t) (G.a t) (G.b t) (G.c t)
-    (G.vanishes t) (G.simple t) (G.b_ne t) (G.centre t) rows hrows
-  choose tests hwindow htest using hlocal
-  have hread (t : Fin (2*h)) (q : Grade s) := seedWindow_read F s.U (s.B-q.val) (G.side t)
-  choose read hread using hread
-  let f : (ι → F) →ₗ[F] (ScalarRow h s → F) :=
-    LinearMap.pi fun r =>
-      ((LinearMap.proj r.2.2.2).comp (read r.1 r.2.1)).comp
-        ((tests r.1 r.2.1 r.2.2.1).comp (Fintype.linearCombination F P))
-  have hker : LinearMap.ker f ≤ LinearMap.ker M.mulVecLin := by
-    intro v hv
-    apply LinearMap.mem_ker.mpr
-    apply (hM v).mpr
-    apply poleTest_of_local s G
-    intro t
-    have hv' := shaped_combination hP v
-    apply htest t _ hv'
-    intro q r
-    apply hread t q _ (hwindow t q r _ hv')
-    funext k
-    exact congrFun (LinearMap.mem_ker.mp hv) ⟨t, q, r, k⟩
-  have hn := Submodule.finrank_mono hker
-  have hr : Module.finrank F (LinearMap.range f) ≤ poleCredit h s + poleSeedDebit h s := by
-    have hr := (LinearMap.range f).finrank_le
-    rwa [Module.finrank_pi, scalarRow_card] at hr
-  have hf := f.finrank_range_add_finrank_ker
-  have hm := M.mulVecLin.finrank_range_add_finrank_ker
-  unfold Matrix.rank
-  omega
 end
 end K1_14_1_7
 end
@@ -4425,6 +4337,18 @@ open K1_14 K1_14_3 Polynomial
 abbrev Plane (F : Type*) [Semiring F] := Polynomial (Polynomial F)
 def inner {R : Type*} [Semiring R] : Plane R := Polynomial.C (R := Polynomial R) (Polynomial.X (R := R))
 def outer {R : Type*} [Semiring R] : Plane R := Polynomial.X (R := Polynomial R)
+def parameter (i : Fin 4) : SectionField :=
+  algebraMap (MvPolynomial (Fin 4) FX) SectionField (MvPolynomial.X i)
+def parameterInPlane (i : Fin 4) : Plane SectionField := C (C (parameter i))
+def seedValues (k : Slice) : Fin 2 → Plane SectionField :=
+  match k with
+  | .seed => ![parameterInPlane 2, parameterInPlane 3]
+  | .ordinate | .mixed => ![parameterInPlane 2 - parameterInPlane 0 * inner, inner]
+  | .jets => ![inner, outer]
+def derivativeValue (k : Slice) : Plane SectionField :=
+  match k with
+  | .jets => parameterInPlane 3
+  | _ => outer
 def evalRow {F R : Type*} [CommRing F] [CommRing R] (a : F →+* R)
     (t : Fin 2 → R) (y v : R) : Polynomial (Polynomial (MvPolynomial (Fin 2) F)) →+* R :=
   eval₂RingHom (eval₂RingHom (MvPolynomial.eval₂Hom a t) y) v

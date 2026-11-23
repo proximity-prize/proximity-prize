@@ -1,28 +1,4 @@
-import ProximityPrize.SubmissionLower.Low48PrimaryPivotBaseline
-
--- merged module Low48PrimaryPivotRawChunks
-section Merged_Low48PrimaryPivotRawChunks
-set_option autoImplicit false
-
-namespace Low48PrimaryPivot.RawReceipt
-open K1_13_2_3
-
-def rawChunk (w : Window) (start count : ℕ) : ℕ :=
-  ((List.range' start count).map (rawAt w)).sum
-
-theorem joinRaw {w : Window} {start a b x y : ℕ}
-    (left : rawChunk w start a = x) (right : rawChunk w (start + a) b = y) :
-    rawChunk w start (a + b) = x + y := by
-  have happend : rawChunk w start (a + b) = rawChunk w start a + rawChunk w (start + a) b := by
-    unfold rawChunk
-    rw [← List.range'_append_1, List.map_append, List.sum_append]
-  exact happend.trans (congrArg₂ (· + ·) left right)
-
-theorem rawCompute_eq (w : Window) :
-    rawCompute w = rawChunk w w.offsetLo (w.offsetHi + 1 - w.offsetLo) := rfl
-
-end Low48PrimaryPivot.RawReceipt
-end Merged_Low48PrimaryPivotRawChunks
+import ProximityPrize.SubmissionLower.Low48PrimaryPivotRawChunks
 
 set_option autoImplicit false
 set_option Elab.async false
@@ -159,19 +135,6 @@ private theorem rawAt_fast (w : Window) (hg : 1650 ≤ w.gradeLo) (hl : 3000 ≤
   · have h := min_le_right w.gradeHi (w.diagonalHi+1-o)
     omega
 
-def fastChunk (w : Window) (start count : ℕ) : ℕ :=
-  ((List.range' start count).map (fastAt w)).sum
 
-theorem rawChunk_fast (w : Window) (start count : ℕ)
-    (hg : 1650 ≤ w.gradeLo) (hl : 3000 ≤ w.diagonalLo)
-    (hh : w.diagonalHi < 4650) (ho : start+count ≤ 3000) :
-    rawChunk w start count = fastChunk w start count := by
-  unfold rawChunk fastChunk
-  apply congrArg List.sum
-  apply List.map_congr_left
-  intro o h
-  have hr := List.mem_range'_1.mp h
-  exact rawAt_fast w hg hl hh o (by omega)
 
-#print axioms rawChunk_fast
 end Low48PrimaryPivot.RawReceipt

@@ -12,6 +12,12 @@ section
 namespace K1_13_1
 noncomputable section
 open K1_13 PolynomialDifferential ReedSolomon.HiddenDerivative
+def AnchorEligible (u : JetVariable 3 →₀ ℕ) : Prop :=
+  u.some.degree ≤ 120 ∧
+    u.some.weight (fun i => i.val) ≤ 48 ∧
+    u (some 3) ≤ 10 ∧
+    u (some 1) + u (some 2) + u (some 3) ≤ 48 - (u.some.degree - 113 + 1) / 2 ∧
+    u.weight (differentialWeight 133671) ≤ 90 * 180265 - 1
 end
 end K1_13_1
 end
@@ -176,6 +182,8 @@ section
 namespace K1_13_1_1
 open K1_13 K1_13_1 MvPolynomial PolynomialDifferential ReedSolomon.HiddenDerivative
 open scoped BigOperators
+def residualDegree (s : ℕ) : ℕ :=
+  min s (48 - (s - 113 + 1) / 2)
 def orderCutoff (s : ℕ) (g : ℤ) : ℤ := 90 - (s : ℤ) - g
 def jetIndex : Fin 4 → ℕ := Fin.val
 def targetOrder : Fin 4 → ℕ := ![3,0,1,2]
@@ -196,36 +204,41 @@ def bandCount (d : ℕ) (lo hi : ℤ) (top : ℕ) : ℕ :=
     sumRange (min (d - f) ((hi - 3 * f) / 2).toNat + 1) fun c =>
       intervalSize (max 0 (lo - 2 * c - 3 * f))
         (min ((d : ℤ) - f - c) (hi - 2 * c - 3 * f))
-def targetCount (d : ℕ) (lo order : ℤ) : ℕ :=
-  sumRange (d + 1) fun a =>
-    sumRange (d - a + 1) fun f =>
-      intervalSize (max 0 (lo - d + a - 2 * f))
-        (min ((d : ℤ) - a - f) (order - 1 - 3 * a - 2 * f))
+def lineBound (d : ℕ) (lo order : ℤ) (b c : ℕ) : ℕ :=
+  let fmin := max 0 ((lo - b - 2 * (min c 24 : ℕ) + 2) / 3)
+  let rowMin := max fmin (3 * (d : ℤ) - 3 * b - 2 * c - order + 1)
+  min (intervalSize fmin (min d 10)) (intervalSize rowMin ((d : ℤ) - b - c))
+def pairBound (d : ℕ) (lo : ℤ) (b : ℕ) : ℕ :=
+  sumRange (min d 10 + 1) fun f =>
+    intervalSize (max 0 ((lo - b - 3 * f + 1) / 2))
+      (min ((d : ℤ) - f) ((48 - 3 * f) / 2))
 structure FactorPowers where
   value : ℕ
   jetTwo : ℕ
   quad : ℕ
   cubic : ℕ
-def FactorPowers.degree (v : FactorPowers) : ℕ := v.value + v.jetTwo + 2 * v.quad + 3 * v.cubic
-def FactorPowers.minIndex (v : FactorPowers) : ℕ := 2 * v.jetTwo + v.quad + 2 * v.cubic
-def FactorPowers.maxIndex (v : FactorPowers) : ℕ := 2 * v.jetTwo + 2 * v.quad + 3 * v.cubic
-def FactorPowers.maxTop (v : FactorPowers) : ℕ := v.cubic
-def FactorPowers.minOrder (v : FactorPowers) : ℕ := v.jetTwo + 2 * v.quad + 3 * v.cubic
 noncomputable section
 abbrev Form := MvPolynomial (Fin 4) Geom
 def bandSpace (d : ℕ) (lo hi : ℤ) (f : ℕ) : Submodule Geom Form :=
   restrictSupport Geom {m | BandExponent d lo hi f m}
 def valueForm : Form := MvPolynomial.X 0 + MvPolynomial.X 1 - MvPolynomial.X 2 + MvPolynomial.X 3
-def flagFactor (v : FactorPowers) : Form :=
-  let x₀ : Form := MvPolynomial.X 0
-  let x₁ : Form := MvPolynomial.X 1
-  let x₂ : Form := MvPolynomial.X 2
-  let x₃ : Form := MvPolynomial.X 3
-  x₀ ^ v.value * x₂ ^ v.jetTwo *
-    (x₀ * x₁ - x₁ ^ 2 + x₀ * x₂) ^ v.quad *
-    (x₀ ^ 2 * x₃ + x₀ ^ 2 * x₂ - 2 * x₀ * x₁ * x₂ - x₀ * x₁ ^ 2 + x₁ ^ 3) ^ v.cubic
 def backShift : Form →ₐ[Geom] Form :=
   bind₁ fun j => if j = 0 then valueForm else MvPolynomial.X j
+def blockMap (s : ℕ) (g : ℤ) : bandSpace (residualDegree s) (-g) 48 10 →ₗ[Geom] Form :=
+  ((weightedTruncation targetOrder (orderCutoff s g).toNat).comp
+    backShift.toLinearMap).domRestrict _
+def projectJet (j : Fin 4) (k : ℕ) : Form →ₗ[Geom] Form :=
+  filterSupport fun m => m j = k
+def pascalRowScale (e : Fin 4 →₀ ℕ) : Geom :=
+  (-1 : Geom) ^ (e 2) / ∏ j : Fin 4, ((e j).factorial : Geom)
+def pascalColScale (m : Fin 4 →₀ ℕ) : Geom :=
+  (-1 : Geom) ^ (m 2) * ∏ j : Fin 4, ((m j).factorial : Geom)
+def PascalEntries : Prop :=
+  ∀ (m e : Fin 4 →₀ ℕ), m.degree = e.degree → m.degree ≤ 48 →
+    (backShift (monomial m 1)).coeff e =
+      pascalRowScale e * pascalColScale m *
+        ((e 1).choose (m 1) : Geom) * ((e 2).choose (m 2) : Geom) *
+          ((e 3).choose (m 3) : Geom)
 end
 end K1_13_1_1
 end

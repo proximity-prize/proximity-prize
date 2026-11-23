@@ -12,21 +12,12 @@ open K1_13 (Geom embed extend Row Shape shape InBox Fits Contact remaining
 open scoped BigOperators
 abbrev physicalDegree : ℕ := k - 1 + P0.lowCutoff.toNat
 abbrev taylorLength : ℕ := physicalDegree + 1
-abbrev incidenceGap : ℕ := agreement - physicalDegree
 abbrev anchorCutoff : ℕ := 90 * agreement - 1
 abbrev primaryCutoff : ℕ := 3000 * agreement - 1
 abbrev primaryBox : Shape := ⟨4012, 1650, 550⟩
-abbrev sourceRank : ℕ := 1274885048030345631
-abbrev layerWidth : ℕ := incidenceGap + 3
-abbrev layerNeed : ℕ := 27317599434965
 def TrueWeightLE {n : ℕ} (P : Row n) (D : ℕ) : Prop :=
   ∀ m ∈ P.support, (P.coeff m).natDegree +
     m.sum (fun i a => (physicalDegree - i.val) * a) ≤ D
-structure Messages (w : I → K) (Γ : Finset K) (s : K → K[X]) : Prop where
-  distinct : Set.InjOn s (Γ : Set K)
-  degree : ∀ γ ∈ Γ, (s γ).natDegree ≤ physicalDegree
-  hits : ∀ γ ∈ Γ, ∃ T : Finset I, agreement ≤ T.card ∧
-    ∀ i ∈ T, (s γ).eval (node i) = w i
 structure PoleData (Γ : Finset K) (s : K → K[X]) where
   H : Geom[X]
   monic : H.Monic
@@ -47,44 +38,9 @@ structure PoleData (Γ : Finset K) (s : K → K[X]) where
 def SmallFactor (f : Row 4) : Prop :=
   Irreducible f ∧ 0 < (shape f).t ∧ InBox (shape f) ⟨120, 48, 10⟩ ∧
     TrueWeightLE f anchorCutoff
-def LowerRow (g : Row 3) : Prop :=
-  g ≠ 0 ∧ g.totalDegree ≤ 120 ∧ K1_13.indexDegree g ≤ 48 ∧ TrueWeightLE g anchorCutoff
-structure Cover {n : ℕ} (Γ : Finset K) (s : K → K[X])
-    (g : Row 3) (f : Fin n → Row 4) : Prop where
-  lower : LowerRow g
-  factors : ∀ i, SmallFactor (f i)
-  different : ∀ i j, i ≠ j → ¬ Associated (f i) (f j)
-  fits : Fits (fun i => shape (f i))
-  covers : ∀ γ ∈ Γ, K1_13.atJet g (extend (s γ)) = 0 ∨
-    ∃ i, K1_13.OnFactor (f i) (extend (s γ))
-def PrimaryRank (w : I → K) : Prop :=
-  ∃ e : Fin sourceRank → Row 4, LinearIndependent Geom e ∧
-    ∀ i, InBox (shape (e i)) primaryBox ∧ TrueWeightLE (e i) primaryCutoff ∧ Contact w (e i)
-def ProperCut (f : Row 4) (Γ : Finset K) (s : K → K[X]) (l : ℕ) : Prop :=
-  ∃ Q : Row 4, (¬ f ∣ Q) ∧ InBox (shape Q) primaryBox ∧ TrueWeightLE Q primaryCutoff ∧
-    ∀ γ ∈ Γ, K1_13.OrderAt Q (extend (s γ)) l
 def linearChart (p : Shape) : Shape :=
   let i := 3 + taylorLength * (p.j - 2)
   ⟨max (1 + taylorLength * (p.b - 1)) i, i, min (taylorLength + 1) (i / 3)⟩
-def surfaceNumerator32 (p q : Shape) : ℕ :=
-  let L := taylorLength
-  let g : Shape := ⟨max p.b (p.j + 1), p.j + 1, min (p.t + 1) ((p.j + 1) / 3)⟩
-  let a := liftedChart (L + 1) p
-  let b := liftedChart (L + 2) p
-  min (mixed32 p q (chart (L + 1) p) (chart (L + 2) p))
-    (mixed32 p q a b + (L + 1) * mixed32 p q g b + (L + 2) * mixed32 p q g a)
-def physicalPrice (x : Shape) (l : ℕ) : ℕ :=
-  let p := x.chamber
-  let q := primaryBox
-  let h := chart taylorLength p
-  let numerator := ceilDiv (surfaceNumerator32 p q) 32 +
-    ceilDiv ((P0.t + 2 * incidenceGap) * x.b * q.b * (chart (taylorLength + 1) p).b)
-      incidenceGap
-  let auxBox := q.plus (p.scale 4)
-  let curves := mixed32 p q auxBox h + 2 * x.t * mixed32 p p p h
-  let points := mixed32 p q auxBox p + 2 * x.t * mixed32 p p p p
-  ceilDiv numerator l + 2 * physicalDegree * x.b * q.b +
-    ceilDiv (P0.t * curves + 2 * incidenceGap * points) (32 * incidenceGap)
 end
 end P0_9
 end
@@ -94,6 +50,12 @@ noncomputable section
 open K1_13 (Geom)
 open P0_9 (physicalDegree anchorCutoff)
 open PolynomialDifferential ReedSolomon.HiddenDerivative
+def AnchorEligible (u : JetVariable 3 →₀ ℕ) : Prop :=
+  u.some.degree ≤ 120 ∧
+    u.some.weight (fun i => i.val) ≤ 48 ∧
+    u (some 3) ≤ 10 ∧
+    u (some 1) + u (some 2) + u (some 3) ≤ 48 - (u.some.degree - 113 + 1) / 2 ∧
+    u.weight (differentialWeight physicalDegree) ≤ anchorCutoff
 end
 end P0_9_1
 end
@@ -104,6 +66,42 @@ open K1_13 (Geom)
 open PolynomialDifferential ReedSolomon.HiddenDerivative MvPolynomial
 open scoped BigOperators
 open private exponent_le_of_mem_translation_monomial from ProximityPrize.SubmissionLower.Fast064
+private def truncateX : DifferentialPolynomial Geom 3 →ₗ[Geom] DifferentialPolynomial Geom 3 :=
+  filterSupport (fun u => u none < 90)
+private theorem origin_monomial_zero (u : JetVariable 3 →₀ ℕ) (a : Geom)
+    (hu : 90 ≤ u none) :
+    localConstraintAt 90 0 0 (monomial u a) = 0 := by
+  have hm : (MvPolynomial.X none ^ u none * monomial (u.erase none) a :
+      DifferentialPolynomial Geom 3) = monomial u a := by
+    rw [MvPolynomial.X_pow_eq_monomial, monomial_mul_monomial, one_mul, Finsupp.single_add_erase]
+  rw [← hm]
+  apply (satisfiesLocalConstraints_iff_coeff_eq_zero 90 0 0 _).mpr
+  intro e he
+  rw [map_mul, map_pow, unscaledLocalSubstitution, bind₁_X_right]
+  simp only [unscaledLocalImage, C_0, zero_add, MvPolynomial.X_pow_eq_monomial]
+  rw [coeff_monomial_mul', ite_eq_right]
+  rw [Finsupp.single_le_iff]
+  rw [localContactOrder_eq] at he
+  change u none ≤ e (localT 3) → False
+  omega
+private theorem origin_truncateX (Q : DifferentialPolynomial Geom 3) :
+    localConstraintAt 90 0 0 (truncateX Q) = localConstraintAt 90 0 0 Q := by
+  rw [Q.as_sum]
+  simp only [map_sum]
+  apply Finset.sum_congr rfl
+  intro u _
+  have hfilter : truncateX (monomial u (Q.coeff u)) =
+      if u none < 90 then monomial u (Q.coeff u) else 0 := by
+    ext v
+    rw [truncateX, coeff_filterSupport]
+    by_cases h : u = v
+    · subst v
+      by_cases hx : u none < 90 <;> simp [hx]
+    · by_cases hx : u none < 90 <;> simp [hx, coeff_monomial, h]
+  rw [hfilter]
+  split
+  · rfl
+  · rw [map_zero, origin_monomial_zero _ _ (by omega)]
 end
 end P0_9_1
 end
@@ -115,6 +113,10 @@ open K1_13 (Geom)
 open PolynomialDifferential
 open scoped BigOperators
 private abbrev Exponent := JetVariable 3 →₀ ℕ
+private def gradeCeiling (a b c : ℕ) : ℕ :=
+  min 120 (113 + 2 * (48 - (a + b + c)))
+private def gradeSlots (a b c : ℕ) : ℕ :=
+  gradeCeiling a b c + 1 - (a + b + c)
 private noncomputable def exponent (x v a b c : ℕ) : Exponent :=
   (Finsupp.equivFunOnFinite.symm ![v, a, b, c]).optionElim x
 @[simp] private theorem exponent_none (x v a b c : ℕ) : exponent x v a b c none = x := by
@@ -122,6 +124,17 @@ private noncomputable def exponent (x v a b c : ℕ) : Exponent :=
 @[simp] private theorem exponent_some (x v a b c : ℕ) (i : Fin 4) :
     exponent x v a b c (some i) = ![v, a, b, c] i := by
   simp [exponent]
+private theorem jet_weight (m : Fin 4 →₀ ℕ) (w : Fin 4 → ℕ) :
+    m.weight w = m 0 * w 0 + m 1 * w 1 + m 2 * w 2 + m 3 * w 3 := by
+  simp [Finsupp.weight_apply, Finsupp.sum_fintype, Fin.sum_univ_succ, smul_eq_mul, add_assoc]
+private def sumRange (f : ℕ → ℕ) : ℕ → ℕ
+  | 0 => 0
+  | n + 1 => sumRange f n + f n
+private theorem sumRange_eq (f : ℕ → ℕ) (n : ℕ) :
+    sumRange f n = ∑ i ∈ Finset.range n, f i := by
+  induction n with
+  | zero => simp [sumRange]
+  | succ n ih => rw [sumRange, Finset.sum_range_succ, ih]
 end P0_9_1
 end
 section
@@ -191,13 +204,6 @@ private theorem high_monomial_vanishes (e : SourceExponent) (c : Geom) (he : 300
     | some j => simp
   · exact (MvPolynomial.monomial_mem_restrictWeightedOrder _ _ _ _).mpr
       (Or.inl (by simpa only [Finsupp.weight_elim_one_zero] using he))
-private theorem origin_rank :
-    Module.finrank Geom (LinearMap.range (K1_13_2.nodeMap 0 0)) ≤ 344125686492134 := by
-  have hBlock := K1_13_2_2.of_children K1_13_2_2_1.proof K1_13_2_2_2.proof K1_13_2_2_3.proof
-    K1_13_2_2_4.proof K1_13_2_2_5.proof
-  obtain ⟨power, hp⟩ := K1_13_2_3.of_children K1_13_2_3_1.proof K1_13_2_3_2.proof
-    K1_13_2_3_3.proof K1_13_2_3_4.proof K1_13_2_3_5.proof K1_13_2_3_6.proof K1_13_2_3_7.proof
-  exact (K1_13_2.origin_rank_le power hBlock).trans hp
 private theorem map_independent_family {V W : Type*} [AddCommGroup V] [Module Geom V]
     [AddCommGroup W] [Module Geom W] {n : ℕ} (f : V →ₗ[Geom] W)
     (hf : Function.Injective f) (P : W → Prop) (hP : ∀ x, P (f x))
@@ -212,7 +218,7 @@ section
 namespace P0_9_3
 noncomputable section
 open P0 (I K)
-open P0_9 (TrueWeightLE primaryBox primaryCutoff layerWidth)
+open P0_9 (TrueWeightLE primaryBox primaryCutoff )
 open K1_13 (Row InBox shape Contact)
 def BankRow (w : I → K) (T : ℕ) (P : Row 4) : Prop :=
   InBox (shape P) primaryBox ∧ TrueWeightLE P T ∧ Contact w P
@@ -224,7 +230,7 @@ namespace P0_9_3
 noncomputable section
 open Polynomial
 open P0 (I K node)
-open P0_9 (TrueWeightLE physicalDegree primaryBox primaryCutoff PrimaryRank sourceRank)
+open P0_9 (TrueWeightLE physicalDegree primaryBox primaryCutoff  )
 open K1_13 (Geom embed Row InBox shape indexDegree Contact jet atJet)
 open K1_13_3 (Symbol symbolAt)
 open scoped BigOperators
@@ -389,8 +395,8 @@ namespace P0_9_3
 noncomputable section
 open Polynomial
 open P0 (I K node agreement)
-open P0_9 (Messages SmallFactor ProperCut TrueWeightLE physicalDegree primaryBox
-  primaryCutoff layerWidth layerNeed sourceRank)
+open P0_9 ( SmallFactor  TrueWeightLE physicalDegree primaryBox
+  primaryCutoff   )
 open K1_13 (Geom embed extend Row shape InBox OrderAt indexDegree remaining)
 open K1_13_3 (symbolAt symbolIndex cofactor_rank)
 open scoped BigOperators
@@ -463,7 +469,7 @@ section
 namespace P0_9_3_2
 noncomputable section
 open Polynomial
-open P0_9 (SmallFactor ProperCut TrueWeightLE physicalDegree primaryBox primaryCutoff)
+open P0_9 (SmallFactor  TrueWeightLE physicalDegree primaryBox primaryCutoff)
 open K1_13 (Geom embed extend Row shape InBox OrderAt indexDegree shiftJet jet)
 private abbrev Exponent := Fin 4 →₀ ℕ
 private def translateTop : Row 4 →+* Polynomial (Row 4) :=

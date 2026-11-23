@@ -38,10 +38,19 @@ def FixedEquation {u del} {M : AnchorModel u del} {Γ} (F : AnchoredFamily M Γ)
     ∀ γ ∈ T, fixedAt G (F.scalar γ) = 0
 def fixedKeys : List (ℕ × ℕ) := (507836, 93976) :: shapes.map (fun s => (s.B, s.J))
 def endpointDegree : ℕ := 134625
+def fixedPrice (B J : ℕ) : ℕ :=
+  let d := endpointDegree
+  let t := 2*d-3
+  let a := 1+t*(B-1)
+  let v := min a (t*(J-1)+d)
+  let gap := 180265-d
+  (81879*((B-J)*v+J*a)+gap-1)/gap+B^2
+def fixedTotal : ℕ := (fixedKeys.map fun k => fixedPrice k.1 k.2).sum
 def directPrice : ℕ :=
   5980 + ((p+1)*1052972+19635660) + (p+1)*(shapes.map Shape.U).sum + 310966947964
 def lossSeedCap : ℕ := 220891211
 def lossYCap : ℕ := 4783514411
+def movingPrice : ℕ := 86954269798767161
 abbrev Ambient := MvPolynomial (Fin 4) FX
 abbrev RootAmbient := MvPolynomial (Fin 3) FX
 def rootSeeds : Seeds →+* RootAmbient :=
@@ -172,15 +181,18 @@ section
 namespace K1_14_2
 noncomputable section
 open K1 K1_14 Polynomial
+set_option maxRecDepth 12000 in
+private theorem ledger (w : ℤ) (hw : w ≤ 3554) :
+    directPrice + fixedTotal + movingPrice ≤ highPrefix w := by
+  have he : highPrefix w = 132117856182247703 := by simp [highPrefix, hw]
+  rw [he]
+  decide +kernel
 end
 end K1_14_2
 end
 section
 namespace K1_14_2_1
 open K1_14 K1_14_2
-def RowCaps (s : Shape) (P : Jet) : Prop :=
-  ∀ j i, ((P.coeff j).coeff i) ≠ 0 →
-    i + j ≤ s.B ∧ j ≤ s.J ∧ ((P.coeff j).coeff i).totalDegree ≤ s.U
 def cutoffCount (h r : ℕ) (s : Shape) : ℕ :=
   s.m * 180265 - 2 * h * r
 def rawWidth (h r : ℕ) (s : Shape) (q j : ℕ) : ℕ :=
@@ -408,12 +420,6 @@ structure InitialCover {u del} (M : AnchorModel u del) {Γ} (F : AnchoredFamily 
     seeds.Covers (M.label γ) ∨ atX (F.scalar γ) ∈ ordinates ∨
     fixedAt lowJet (F.scalar γ) = 0 ∨ fixedAt fixedCheap (F.scalar γ) = 0 ∨
     fixedAt fixedLayered (F.scalar γ) = 0 ∨ ∃ q ∈ parents, MarkOn M F q γ
-def odePrice (d b j : ℕ) : ℕ :=
-  let T := 2*d - 3
-  let a := 1 + T*(b-1)
-  let v := min a (T*(j-1)+d)
-  let gap := 180265-d
-  ((262144-d)*((b-j)*v+j*a) + (gap-1))/gap + b*(b-1)+b
 structure ProjectedProduct (qs : Finset Surface) (f : Equation) : Prop where
   positive : 0 < f.natDegree
   primitive : f.IsPrimitive
@@ -459,6 +465,10 @@ structure FixedPart (P : Jet) (s : Shape) where
 structure FixedPair {w rows i} (B : RowPair w rows i) where
   cheap : FixedPart B.cheap (stageAt i).cheap
   layered : FixedPart B.layered (stageAt i).layered
+def compatible (P Q : Jet) (I : Ideal Ambient) : Prop :=
+  ∀ f : Equation, Irreducible f → 0 < f.natDegree → C f ∣ P → C f ∣ Q →
+    rootIncl (toRoot f) ∈ I →
+    ∀ g a, K1_14_3.IsClearing f g a → toJet (K1_14_3.ordinaryCutter g) ∈ I
 def fixedOn (G : ODE) (I : Ideal Ambient) : Prop :=
   toJet (fixedIncl G) ∈ I
 abbrev SectionField := FractionRing (MvPolynomial (Fin 4) FX)
@@ -655,11 +665,6 @@ structure PreparedPair (P Q : Jet) where
     graphEval z seedContent = 0 ∨ fixedAt fixedCheap S = 0 ∨ fixedAt fixedLayered S = 0 ∨
       (jetAt cheap z S = 0 ∧ jetAt layered z S = 0) ∨
       ∃ f ∈ ordinary, atMark f z S = 0
-structure FourMassCap (qs : Finset Surface) (a c z e : ℚ) : Prop where
-  seed : mass qs .seed ≤ a
-  ordinate : mass qs .ordinate ≤ c
-  mixed : mass qs .mixed ≤ z
-  jets : mass qs .jets ≤ e
 end
 end K1_14_3_2
 end
@@ -727,20 +732,6 @@ theorem joinCovers_covers {ι : Type*} {I : Finset ι} {C : ι → SeedCover} {i
     rw [map_prod]
     exact Finset.prod_eq_zero hi h
   · exact Or.inr (Finset.mem_biUnion.mpr ⟨i, hi, h⟩)
-theorem endpoint_fees (w : ℤ) (hlo : 3555 ≤ w) :
-    (p+1)*(381269+812+2907) + 3019828 + 2891 +
-      odePrice (131071 + (band w).endpoint) 381269 60998 +
-      odePrice (131071 + (band w).endpoint) 63 14 +
-      odePrice (131071 + (band w).endpoint) 118 24 +
-      ((p+1)*54375137 + 26769366519) ≤ highPrefix w := by
-  have hnot : ¬ w ≤ 3554 := by omega
-  unfold band highPrefix
-  simp only [hnot, ite_false]
-  split_ifs <;> decide
-theorem endpoint_range (w : ℤ) (hlo : 3555 ≤ w) (hhi : w ≤ 32680) :
-    w ≤ (band w).endpoint ∧ 8249 ≤ (band w).endpoint ∧ (band w).endpoint ≤ 32680 := by
-  unfold band
-  split_ifs <;> norm_num at * <;> omega
 end
 end K1_14_3
 end
