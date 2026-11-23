@@ -113,7 +113,6 @@ open Polynomial
 open K1_14 (L FX Shape liftPoly triangle)
 open K1_14_1 K1_14_1_7 K1_14_1_7_3
 open P1 (K I)
-open P1_7 (Listed)
 open scoped BigOperators Polynomial
 open private poleTest_of_local from ProximityPrize.SubmissionLower.Fast065
 open private regular_deformation from ProximityPrize.SubmissionLower.PortHighBase
@@ -1756,327 +1755,6 @@ class ExactMoment (B J total : ℕ) : Prop where
 end P1_7_1_3_2
 end
 section
-set_option autoImplicit false
-
-namespace P1_7_1_3.Middle
-
-open Finset
-open scoped BigOperators
-
-private theorem count_cast (N a : ℕ) (ha : a ≤ N + 1) :
-    (rampCount6 N a : ℤ) =
-      3 * ((N : ℤ) - a) * ((N : ℤ) - a + 1) := by
-  by_cases hn : a ≤ N
-  · unfold rampCount6
-    push_cast [Nat.cast_sub hn]
-    <;> ring
-  · have he : a = N + 1 := by omega
-    subst a
-    simp [rampCount6, Nat.sub_eq_zero_of_le (Nat.le_succ N)]
-    <;> ring
-
-private theorem product_cast (n a b : ℕ) :
-    (productSum6 n a b : ℤ) =
-      6 * (n : ℤ) * a * b + 3 * ((a : ℤ) + b) * n * (n - 1) +
-        (n : ℤ) * (n - 1) * (2 * n - 1) := by
-  cases n with
-  | zero => simp [productSum6]
-  | succ n =>
-    simp only [productSum6, Nat.succ_sub_one]
-    push_cast
-    ring
-
-private theorem weight_cast (N a : ℕ) (ha : a ≤ N + 1) :
-    (rampWeight6 N a : ℤ) =
-      let d := (N : ℤ) - a
-      6 * d * a + 3 * ((a : ℤ) + 1) * d * (d - 1) + d * (d - 1) * (2 * d - 1) := by
-  by_cases hn : a ≤ N
-  · rw [rampWeight6, product_cast]
-    push_cast [Nat.cast_sub hn]
-    <;> ring
-  · have he : a = N + 1 := by omega
-    subst a
-    simp [rampWeight6, productSum6, Nat.sub_eq_zero_of_le (Nat.le_succ N)]
-    <;> ring
-
-private theorem middle_rank (N e C : ℕ) (he : e ≤ N) (hC : C ≤ e + 1) :
-    rampCount6 N 0 + rampCount6 N (e+1) -
-      (rampCount6 N C + rampCount6 N (e+1-C)) = 6*C*(e+1-C) := by
-  have h : rampCount6 N 0 + rampCount6 N (e+1) =
-      (rampCount6 N C + rampCount6 N (e+1-C)) + 6*C*(e+1-C) := by
-    apply Int.ofNat_inj.mp
-    push_cast
-    rw [count_cast N 0 (by omega), count_cast N (e+1) (by omega),
-        count_cast N C (by omega), count_cast N (e+1-C) (by omega)]
-    push_cast [Nat.cast_sub hC]
-    ring
-  rw [h, Nat.add_sub_cancel_left]
-
-private theorem middle_weight (N e C : ℕ) (he : e ≤ N) (hC : C ≤ e+1) (he0 : 1 ≤ e) :
-    rampWeight6 N 0 + rampWeight6 N (e+1) -
-      (rampWeight6 N C + rampWeight6 N (e+1-C)) = 3*(e-1)*C*(e+1-C) := by
-  have h : rampWeight6 N 0 + rampWeight6 N (e+1) =
-      (rampWeight6 N C + rampWeight6 N (e+1-C)) + 3*(e-1)*C*(e+1-C) := by
-    apply Int.ofNat_inj.mp
-    push_cast
-    rw [weight_cast N 0 (by omega), weight_cast N (e+1) (by omega),
-        weight_cast N C (by omega), weight_cast N (e+1-C) (by omega)]
-    push_cast [Nat.cast_sub hC, Nat.cast_sub he0]
-    ring
-  rw [h, Nat.add_sub_cancel_left]
-
-private theorem product_shift (n b C : ℕ) :
-    productSum6 n 1 (b+C) = productSum6 n 1 b + 3*C*n*(n+1) := by
-  cases n with
-  | zero => simp [productSum6]
-  | succ n => simp only [productSum6, Nat.succ_sub_one]; ring
-
-private theorem middle_excess (N e C : ℕ) (he : e ≤ N) (hC : C ≤ e) (hC0 : 0 < C) :
-    let k := N-e+(C-1)
-    rampExcess6 N k 0 - rampExcess6 N k C = 3*C*(e-C)*(e+1-C) := by
-  dsimp only
-  let k := N-e+(C-1)
-  change rampExcess6 N k 0 - rampExcess6 N k C = _
-  have hk : C ≤ k+1 := by dsimp [k]; omega
-  have hn : N-(k+1) = e-C := by dsimp [k]; omega
-  have hs : k+1+1 = (k+1+1-C)+C := by omega
-  unfold rampExcess6
-  rw [max_eq_left (Nat.zero_le (k+1)), max_eq_left hk]
-  dsimp only
-  rw [hn, show k+1-k=1 by omega, Nat.sub_zero]
-  conv_lhs =>
-    lhs
-    rw [hs]
-  rw [product_shift, Nat.add_sub_cancel_left,
-    show e-C+1=e+1-C by omega]
-
-private theorem twice_div_six (R u C : ℕ) :
-    let z := C * R * (2*u+C-1)
-    2 * ((3*z)/6) = z := by
-  dsimp only
-  let z := C * R * (2*u+C-1)
-  change 2 * ((3*z)/6) = z
-  have hz : z % 2 = 0 := by
-    by_cases hC : C % 2 = 0
-    · have hCR : (C*R) % 2 = 0 := by
-        rw [Nat.mul_mod, hC, zero_mul, Nat.zero_mod]
-      change ((C*R)*(2*u+C-1)) % 2 = 0
-      rw [Nat.mul_mod, hCR, zero_mul, Nat.zero_mod]
-    · have hodd : (2*u+C-1) % 2 = 0 := by omega
-      change ((C*R)*(2*u+C-1)) % 2 = 0
-      rw [Nat.mul_mod, hodd, mul_zero, Nat.zero_mod]
-  have he : 3*z = 6*(z/2) := by omega
-  rw [he, Nat.mul_div_cancel_left _ (by decide : 0 < 6)]
-  omega
-
-/-- Exact closed form on the chamber where the peak is the full width and the
-top-column cut stays on the plateau. -/
-theorem twice_offset (B J t : ℕ) (ht : J ≤ t)
-    (hmin : 2*(J+1)-1 ≤ edge B J t) (hmax : edge B J t ≤ B+1) :
-    let e := edge B J t
-    let C := J+1
-    2*offsetEstimate B J t = C*(e+1-C)*(2*(B+1-e)+C-1) := by
-  dsimp only
-  let e := edge B J t
-  let C := J+1
-  let R := C*(e+1-C)
-  let k := B+1-e+(C-1)
-  have hC0 : 0 < C := by dsimp [C]; omega
-  have hC : C ≤ e := by dsimp [C, e] at *; omega
-  have he0 : 1 ≤ e := by omega
-  have hlow : low J t = 0 := by unfold low; omega
-  have hhigh : high B J t = J := by
-    unfold high
-    apply min_eq_left
-    dsimp [e, edge] at hmin ⊢
-    omega
-  have hwidth : width B J t = C := by simp [width, hlow, hhigh, C]
-  have hpeak : peak B J t = C := by
-    unfold peak
-    rw [hwidth, hlow, Nat.sub_zero]
-    apply min_eq_left
-    change C ≤ (e+1)/2
-    dsimp [C, e] at *
-    omega
-  have hr : pivotRank6 B J t = 6*R := by
-    unfold pivotRank6 pivotVolume6
-    rw [hlow, hpeak]
-    simp only [Nat.zero_add]
-    simpa only [R, e, Nat.mul_assoc] using middle_rank (B+1) e C hmax (by omega)
-  have hw : pivotWeight6 B J t = 3*(e-1)*R := by
-    unfold pivotWeight6 pivotVolume6
-    rw [hlow, hpeak]
-    simp only [Nat.zero_add]
-    simpa only [R, e, Nat.mul_assoc] using middle_weight (B+1) e C hmax (by omega) he0
-  have hdiv : pivotRank6 B J t / 6 = R := by
-    rw [hr, Nat.mul_div_cancel_left _ (by decide)]
-  have hbranch : R ≤ C*(B+1-J) :=
-    Nat.mul_le_mul_left C (by dsimp [C, e] at *; omega)
-  have hroom : (R-1)/C = e-C := by
-    have hsum : R-1 = (C-1)+C*(e-C) := by
-      unfold R
-      rw [show e+1-C=e-C+1 by omega, Nat.mul_add, Nat.mul_one]
-      omega
-    rw [hsum, Nat.add_mul_div_left _ _ hC0, Nat.div_eq_of_lt (by omega : C-1<C), Nat.zero_add]
-  have hthreshold : threshold B J t = k := by
-    unfold threshold
-    rw [hdiv, hwidth, hhigh, if_pos hbranch, hroom]
-    unfold k
-    omega
-  have hex : excess6 B J t k = 3*(e-C)*R := by
-    unfold excess6 columnVolume6
-    rw [hlow, hwidth]
-    simp only [Nat.zero_add]
-    have h := middle_excess (B+1) e C hmax hC hC0
-    dsimp only at h
-    rw [show 3*(e-C)*R=3*C*(e-C)*(e+1-C) by unfold R; ring]
-    exact h
-  have heN : e ≤ B+1 := hmax
-  have hcast : ((B+1-e : ℕ) : ℤ) = (B : ℤ)+1-e := by
-    rw [Nat.cast_sub heN]
-    push_cast <;> rfl
-  have hnum : 6*R*k + 3*(e-C)*R = 3*(e-1)*R + 3*(R*(2*(B+1-e)+C-1)) := by
-    have hC1 : 1 ≤ C := hC0
-    apply Int.ofNat_inj.mp
-    push_cast [Nat.cast_sub hC, Nat.cast_sub he0,
-      Nat.cast_sub hC1, Nat.cast_sub (show 1 ≤ 2*(B+1-e)+C by omega)]
-    have hk : (k : ℤ) = ((B : ℤ)+1-e)+(C-1) := by
-      unfold k
-      push_cast [Nat.cast_sub hC1]
-      simp only [hcast]
-    rw [hk]
-    simp only [hcast]
-    ring
-  unfold offsetEstimate
-  rw [hthreshold]
-  dsimp only
-  rw [hr, hw, hex, hnum, Nat.add_sub_cancel_left]
-  change 2 * ((3 * (R * (2*(B+1-e)+C-1)))/6) =
-    R * (2*(B+1-e)+C-1)
-  exact twice_div_six (e+1-C) (B+1-e) C
-
-/-- Convert an arithmetic certificate on one middle block to the stock block
-interface. Head and tail certificates can still be combined with `block_append`. -/
-theorem block_of_middle {B J start len answer : ℕ}
-    (hzone : ∀ i < len, J ≤ start+i ∧
-      2*(J+1)-1 ≤ edge B J (start+i) ∧ edge B J (start+i) ≤ B+1)
-    (receipt : (∑ i ∈ range len,
-       (J+1)*(edge B J (start+i)+1-(J+1))*
-          (2*(B+1-edge B J (start+i))+(J+1)-1)) = 2*answer) :
-    blockEstimate B J start len = answer := by
-  have h : 2 * blockEstimate B J start len = 2 * answer := by
-    rw [blockEstimate, evaluate_eq, mul_sum, ← receipt]
-    apply sum_congr rfl
-    intro i hi
-    obtain ⟨ht, hmin, hmax⟩ := hzone i (mem_range.mp hi)
-    exact twice_offset B J (start+i) ht hmin hmax
-  omega
-
-end P1_7_1_3.Middle
-
-namespace P1_7_1_3.Middle
-
-open Finset
-open scoped BigOperators
-
-private theorem six_sum_quadratic (a d : ℤ) (n : ℕ) :
-    6 * (∑ i ∈ range n, (a - (i : ℤ)) * (d + 2 * (i : ℤ))) =
-      6 * n * a * d + 3 * (2 * a - d) * n * ((n : ℤ) - 1) -
-        2 * n * ((n : ℤ) - 1) * (2 * (n : ℤ) - 1) := by
-  induction n with
-  | zero => simp
-  | succ n ih =>
-    rw [sum_range_succ, mul_add, ih]
-    push_cast
-    ring
-
-/-- Twelve times the stock block estimate in the middle chamber. All
-subtractions in the closed form are integer subtractions. -/
-def closedBlock12 (B J start len : ℕ) : ℤ :=
-  let e : ℤ := edge B J start
-  let c : ℤ := (J : ℤ) + 1
-  let a := e + 1 - c
-  let d := 2 * ((B : ℤ) + 1 - e) + c - 1
-  let n : ℤ := len
-  c * (6 * n * a * d + 3 * (2 * a - d) * n * (n - 1) -
-    2 * n * (n - 1) * (2 * n - 1))
-
-private theorem middle_sum_eq {B J start len : ℕ}
-    (hzone : ∀ i < len, J ≤ start+i ∧
-      2*(J+1)-1 ≤ edge B J (start+i) ∧ edge B J (start+i) ≤ B+1) :
-    6 * ((∑ i ∈ range len,
-      (J+1)*(edge B J (start+i)+1-(J+1))*
-        (2*(B+1-edge B J (start+i))+(J+1)-1) : ℕ) : ℤ) =
-      closedBlock12 B J start len := by
-  let E : ℤ := edge B J start
-  let C : ℤ := (J : ℤ) + 1
-  let A := E + 1 - C
-  let D := 2 * ((B : ℤ) + 1 - E) + C - 1
-  have hsum :
-      ((∑ i ∈ range len,
-        (J+1)*(edge B J (start+i)+1-(J+1))*
-          (2*(B+1-edge B J (start+i))+(J+1)-1) : ℕ) : ℤ) =
-        ∑ i ∈ range len, C * ((A - (i : ℤ)) * (D + 2 * (i : ℤ))) := by
-    rw [Nat.cast_sum]
-    apply sum_congr rfl
-    intro i hi
-    let e := edge B J (start+i)
-    have hmin : 2*(J+1)-1 ≤ e := (hzone i (mem_range.mp hi)).2.1
-    have hmax : e ≤ B+1 := (hzone i (mem_range.mp hi)).2.2
-    have hpos : 0 < e := by omega
-    have heN : e + i = edge B J start := by
-      dsimp [e, edge] at hpos ⊢
-      omega
-    have heZ : (e : ℤ) = E - (i : ℤ) := by
-      have he' : (e : ℤ) + (i : ℤ) = E := by
-        change (e : ℤ) + (i : ℤ) = (edge B J start : ℤ)
-        exact_mod_cast heN
-      omega
-    change (((J+1)*(e+1-(J+1))*(2*(B+1-e)+(J+1)-1) : ℕ) : ℤ) = _
-    have hsub : J ≤ e := by omega
-    rw [show e+1-(J+1) = e-J by omega]
-    have hlast : 1 ≤ 2*(B+1-e)+(J+1) := by omega
-    push_cast [Nat.cast_sub hsub, Nat.cast_sub hlast, Nat.cast_sub hmax]
-    rw [heZ]
-    dsimp [A, C, D]
-    ring
-  rw [hsum, ← mul_sum]
-  calc
-    _ = C * (6 * ∑ i ∈ range len, (A - (i : ℤ)) * (D + 2 * (i : ℤ))) := by ring
-    _ = closedBlock12 B J start len := by
-      rw [six_sum_quadratic]
-      rfl
-
-/-- Check one closed integer equality instead of evaluating all middle offsets. -/
-theorem block_of_middle_closed {B J start len answer : ℕ}
-    (hzone : ∀ i < len, J ≤ start+i ∧
-      2*(J+1)-1 ≤ edge B J (start+i) ∧ edge B J (start+i) ≤ B+1)
-    (receipt : closedBlock12 B J start len = 12 * (answer : ℤ)) :
-    blockEstimate B J start len = answer := by
-  apply block_of_middle hzone
-  apply Int.ofNat_inj.mp
-  have h := (middle_sum_eq hzone).trans receipt
-  simp only [Nat.cast_mul, Nat.cast_ofNat]
-  linarith only [h]
-
-/-- A middle block can be verified from its endpoints. The receipt does
-not evaluate the block or construct its list of indices. -/
-theorem block_of_middle_endpoints {B J start len answer : ℕ}
-    (hstart : J ≤ start)
-    (hupper : edge B J start ≤ B+1)
-    (hlower : 2*(J+1)-1 ≤ edge B J (start+(len-1)))
-    (receipt : closedBlock12 B J start len = 12 * (answer : ℤ)) :
-    blockEstimate B J start len = answer := by
-  apply block_of_middle_closed (receipt := receipt)
-  intro i hi
-  unfold edge at hupper hlower ⊢
-  omega
-
-end P1_7_1_3.Middle
-
-end
-
-section
 namespace P1_7_1_3_2
 set_option maxRecDepth 4096
 scoped instance : ExactMoment 500 105 1700679003 where
@@ -2084,109 +1762,109 @@ scoped instance : ExactMoment 500 105 1700679003 where
     refine moment_from_blocks
       [(128,144037782),(128,567478208),(128,637814720),(128,319210721),
       (93,32137572)] ?_ rfl rfl
-    exact ⟨(by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), (by decide +kernel), (by decide +kernel), True.intro⟩
+    exact ⟨rfl, rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 501 105 1711611949 where
   eq_moment := by
     refine moment_from_blocks
       [(128,144393518),(128,569377728),(128,641450944),(128,323182467),
       (94,33207292)] ?_ rfl rfl
-    exact ⟨(by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), (by decide +kernel), (by decide +kernel), True.intro⟩
+    exact ⟨rfl, rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 521 117 2110154682 where
   eq_moment := by
     refine moment_from_blocks
       [(128,152229145),(128,646266176),(128,776764736),(128,455019674),
       (126,79874951)] ?_ rfl rfl
-    exact ⟨(by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), (by decide +kernel), (by decide +kernel), True.intro⟩
+    exact ⟨rfl, rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 523 117 2136298939 where
   eq_moment := by
     refine moment_from_blocks
       [(128,152944225),(128,650314048),(128,784679232),(128,464485709),
       (128,83875725)] ?_ rfl rfl
-    exact ⟨(by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), (by decide +kernel), (by decide +kernel), True.intro⟩
+    exact ⟨rfl, rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 535 112 2221379895 where
   eq_moment := by
     refine moment_from_blocks
       [(128,157045140),(128,658437440),(128,804697408),(128,501243104),
       (128,99930187),(7,26616)] ?_ rfl rfl
-    exact ⟨(by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), True.intro⟩
+    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 546 113 2387645191 where
   eq_moment := by
     refine moment_from_blocks
       [(128,161023860),(128,683587776),(128,852621504),(128,560448099),
       (128,129579472),(19,384480)] ?_ rfl rfl
-    exact ⟨(by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), True.intro⟩
+    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 547 109 2335147916 where
   eq_moment := by
     refine moment_from_blocks
       [(128,161134435),(128,671528000),(128,832828480),(128,546827594),
       (128,122589587),(16,239820)] ?_ rfl rfl
-    exact ⟨(by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), True.intro⟩
+    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 552 116 2523691858 where
   eq_moment := by
     refine moment_from_blocks
       [(128,163284615),(128,705699072),(128,893558016),(128,605669194),
       (128,154329076),(28,1151885)] ?_ rfl rfl
-    exact ⟨(by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), True.intro⟩
+    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 572 120 2904427648 where
   eq_moment := by
     refine moment_from_blocks
       [(128,170524574),(128,759701888),(128,997597568),(128,735310082),
       (128,234301265),(52,6992271)] ?_ rfl rfl
-    exact ⟨(by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), True.intro⟩
+    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 577 129 3158702492 where
   eq_moment := by
     refine moment_from_blocks
       [(128,172350880),(128,798366400),(128,1074191040),(128,813443001),
       (128,286344633),(66,14006538)] ?_ rfl rfl
-    exact ⟨(by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), True.intro⟩
+    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 578 117 2944634929 where
   eq_moment := by
     refine moment_from_blocks
       [(128,172608925),(128,761630528),(128,1002327872),(128,752644119),
       (128,247118139),(55,8305346)] ?_ rfl rfl
-    exact ⟨(by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), True.intro⟩
+    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 578 129 3176332897 where
   eq_moment := by
     refine moment_from_blocks
       [(128,172708640),(128,800496320),(128,1078450880),(128,819433681),
       (128,290590600),(67,14652776)] ?_ rfl rfl
-    exact ⟨(by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), True.intro⟩
+    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 580 119 3017027973 where
   eq_moment := by
     refine moment_from_blocks
       [(128,173369590),(128,772688640),(128,1023363840),(128,775246907),
       (128,262158826),(59,10200170)] ?_ rfl rfl
-    exact ⟨(by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), True.intro⟩
+    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 591 124 3308696108 where
   eq_moment := by
     refine moment_from_blocks
       [(128,177354875),(128,812312000),(128,1101080000),(128,868637578),
       (128,328555618),(75,20756037)] ?_ rfl rfl
-    exact ⟨(by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), True.intro⟩
+    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 597 126 3460443224 where
   eq_moment := by
     refine moment_from_blocks
       [(128,179505610),(128,831445632),(128,1139399296),(128,916997523),
       (128,365008090),(83,28087073)] ?_ rfl rfl
-    exact ⟨(by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), True.intro⟩
+    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 598 125 3457603226 where
   eq_moment := by
     refine moment_from_blocks
       [(128,179861955),(128,830265408),(128,1136826432),(128,916910704),
       (128,365601387),(83,28137340)] ?_ rfl rfl
-    exact ⟨(by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), True.intro⟩
+    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 607 139 3938005884 where
   eq_moment := by
     refine moment_from_blocks
       [(128,183083680),(128,891468085),(128,1268686720),(128,1061576997),
       (128,475434639),(106,57755763)] ?_ rfl rfl
-    exact ⟨(by decide +kernel), (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), True.intro⟩
+    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 609 128 3734056387 where
   eq_moment := by
     refine moment_from_blocks
       [(128,183799200),(128,863305152),(128,1203584448),(128,1003805395),
       (128,434638067),(97,44924125)] ?_ rfl rfl
-    exact ⟨(by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), True.intro⟩
+    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
 end P1_7_1_3_2
 end
 section
@@ -2197,109 +1875,109 @@ scoped instance : ExactMoment 612 121 3630535593 where
     refine moment_from_blocks
       [(128,184845250),(128,845461952),(128,1166277056),(128,975711462),
       (128,418227357),(93,40012516)] ?_ rfl rfl
-    exact ⟨(by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), True.intro⟩
+    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 613 121 3649568203 where
   eq_moment := by
     refine moment_from_blocks
       [(128,185202954),(128,847523264),(128,1170337216),(128,981727130),
       (128,423442731),(94,41334908)] ?_ rfl rfl
-    exact ⟨(by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), True.intro⟩
+    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 617 127 3870016120 where
   eq_moment := by
     refine moment_from_blocks
       [(128,186661280),(128,876941312),(128,1230311424),(128,1047177034),
       (128,473263516),(104,55661554)] ?_ rfl rfl
-    exact ⟨(by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), True.intro⟩
+    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 621 139 4237643334 where
   eq_moment := by
     refine moment_from_blocks
       [(128,188092320),(128,922329405),(128,1331657600),(128,1154779018),
       (128,556283521),(120,84501470)] ?_ rfl rfl
-    exact ⟨(by decide +kernel), (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), True.intro⟩
+    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 634 132 4351456177 where
   eq_moment := by
     refine moment_from_blocks
       [(128,192743200),(128,929702719),(128,1339363200),(128,1191222484),
       (128,599015438),(126,99409136)] ?_ rfl rfl
-    exact ⟨(by decide +kernel), (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), True.intro⟩
+    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 662 139 5203785784 where
   eq_moment := by
     refine moment_from_blocks
       [(128,202760480),(128,1012708985),(128,1516072320),(128,1432350080),
       (128,830129570),(128,207552923),(33,2211426)] ?_ rfl rfl
-    exact ⟨(by decide +kernel), (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), True.intro⟩
+    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 662 149 5491466699 where
   eq_moment := by
     refine moment_from_blocks
       [(128,202760480),(128,1040567045),(128,1591483200),(128,1514068800),
       (128,893654100),(128,244219046),(43,4714028)] ?_ rfl rfl
-    exact ⟨(by decide +kernel), (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), True.intro⟩
+    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 665 139 5279846034 where
   eq_moment := by
     refine moment_from_blocks
       [(128,203833760),(128,1019322125),(128,1529566080),(128,1452725120),
       (128,852255965),(128,219295492),(36,2847492)] ?_ rfl rfl
-    exact ⟨(by decide +kernel), (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), True.intro⟩
+    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 674 140 5543427992 where
   eq_moment := by
     refine moment_from_blocks
       [(128,207053600),(128,1042265009),(128,1578062976),(128,1522619520),
       (128,926834473),(128,260764188),(46,5828226)] ?_ rfl rfl
-    exact ⟨(by decide +kernel), (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), True.intro⟩
+    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 675 140 5569859382 where
   eq_moment := by
     refine moment_from_blocks
       [(128,207411360),(128,1044476175),(128,1582584000),(128,1529450688),
       (128,934549636),(128,265178067),(47,6209456)] ?_ rfl rfl
-    exact ⟨(by decide +kernel), (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), True.intro⟩
+    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 686 138 5800691370 where
   eq_moment := by
     refine moment_from_blocks
       [(128,211346720),(128,1062371996),(128,1615682624),(128,1586076736),
       (128,1007022200),(128,307734158),(56,10456936)] ?_ rfl rfl
-    exact ⟨(by decide +kernel), (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), True.intro⟩
+    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 726 153 7540240839 where
   eq_moment := by
     refine moment_from_blocks
       [(128,225657120),(128,1196811466),(128,1928242624),(128,2015290816),
       (128,1469051275),(128,625151582),(111,80035956)] ?_ rfl rfl
-    exact ⟨(by decide +kernel), (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), True.intro⟩
+    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 734 165 8281195601 where
   eq_moment := by
     refine moment_from_blocks
       [(128,228519200),(128,1244003969),(128,2067127616),(128,2199035200),
       (128,1649353090),(128,762657762),(128,130493632),(3,5132)] ?_ rfl rfl
-    exact ⟨(by decide +kernel), (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), True.intro⟩
+    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 740 167 8580372579 where
   eq_moment := by
     refine moment_from_blocks
       [(128,230665760),(128,1262245730),(128,2113698048),(128,2266462464),
       (128,1726864884),(128,824321763),(128,155995520),(11,118410)] ?_ rfl rfl
-    exact ⟨(by decide +kernel), (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), True.intro⟩
+    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 776 163 9809476816 where
   eq_moment := by
     refine moment_from_blocks
       [(128,243545120),(128,1337858951),(128,2261641344),(128,2502125696),
       (128,2055573998),(128,1110845387),(128,292335874),(43,5550446)] ?_ rfl rfl
-    exact ⟨(by decide +kernel), (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), True.intro⟩
+    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 779 173 10401501082 where
   eq_moment := by
     refine moment_from_blocks
       [(128,244618400),(128,1366300947),(128,2364345408),(128,2642299968),
       (128,2192053949),(128,1223114534),(128,356838378),(56,11929498)] ?_ rfl rfl
-    exact ⟨(by decide +kernel), (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), True.intro⟩
+    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 781 178 10721014375 where
   eq_moment := by
     refine moment_from_blocks
       [(128,245333920),(128,1380003801),(128,2416574464),(128,2715713536),
       (128,2266117448),(128,1285945362),(128,394514228),(63,16811616)] ?_ rfl rfl
-    exact ⟨(by decide +kernel), (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), True.intro⟩
+    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 782 178 10765253509 where
   eq_moment := by
     refine moment_from_blocks
       [(128,245691680),(128,1382396018),(128,2421878592),(128,2723950400),
       (128,2277127269),(128,1296134164),(128,400457082),(64,17618304)] ?_ rfl rfl
-    exact ⟨(by decide +kernel), (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), True.intro⟩
+    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
 end P1_7_1_3_2
 end
 section
@@ -2310,119 +1988,119 @@ scoped instance : ExactMoment 783 165 10192726271 where
     refine moment_from_blocks
       [(128,246049440),(128,1358944053),(128,2314921792),(128,2580096832),
       (128,2149468958),(128,1194949591),(128,338612451),(52,9683154)] ?_ rfl rfl
-    exact ⟨(by decide +kernel), (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), True.intro⟩
+    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 784 164 10186247915 where
   eq_moment := by
     refine moment_from_blocks
       [(128,246407200),(128,1358949795),(128,2310908160),(128,2575837440),
       (128,2149048385),(128,1196318864),(128,339082164),(52,9695907)] ?_ rfl rfl
-    exact ⟨(by decide +kernel), (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), True.intro⟩
+    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 792 167 10673329627 where
   eq_moment := by
     refine moment_from_blocks
       [(128,249269280),(128,1384644162),(128,2378713344),(128,2674608384),
       (128,2266006484),(128,1302457939),(128,400572546),(63,17057488)] ?_ rfl rfl
-    exact ⟨(by decide +kernel), (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), True.intro⟩
+    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 808 165 11274483946 where
   eq_moment := by
     refine moment_from_blocks
       [(128,254993440),(128,1417586953),(128,2441347392),(128,2774516032),
       (128,2411430208),(128,1452816319),(128,490659052),(77,31134550)] ?_ rfl rfl
-    exact ⟨(by decide +kernel), (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), True.intro⟩
+    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 821 188 13132884772 where
   eq_moment := by
     refine moment_from_blocks
       [(128,259644320),(128,1491434191),(128,2714935104),(128,3170131776),
       (128,2832620376),(128,1824571448),(128,743401218),(113,96146339)] ?_ rfl rfl
-    exact ⟨(by decide +kernel), (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), True.intro⟩
+    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 822 188 13184443531 where
   eq_moment := by
     refine moment_from_blocks
       [(128,260002080),(128,1493853093),(128,2720414592),(128,3178707840),
       (128,2844287584),(128,1836656028),(128,751766439),(114,98755875)] ?_ rfl rfl
-    exact ⟨(by decide +kernel), (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), True.intro⟩
+    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 825 173 12507204741 where
   eq_moment := by
     refine moment_from_blocks
       [(128,261075360),(128,1475597499),(128,2604081216),(128,3013173312),
       (128,2692456512),(128,1721466865),(128,667497478),(102,71856499)] ?_ rfl rfl
-    exact ⟨(by decide +kernel), (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), True.intro⟩
+    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 828 189 13552061015 where
   eq_moment := by
     refine moment_from_blocks
       [(128,262148640),(128,1509721915),(128,2761675840),(128,3242628160),
       (128,2926662720),(128,1920285208),(128,810698549),(121,118239983)] ?_ rfl rfl
-    exact ⟨(by decide +kernel), (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), True.intro⟩
+    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 853 192 15095933357 where
   eq_moment := by
     refine moment_from_blocks
       [(128,271092640),(128,1574237488),(128,2925089472),(128,3497431744),
       (128,3260273344),(128,2274160185),(128,1071003387),(128,221846864),
       (21,798233)] ?_ rfl rfl
-    exact ⟨(by decide +kernel), (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), True.intro⟩
+    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 856 174 14142442253 where
   eq_moment := by
     refine moment_from_blocks
       [(128,272165920),(128,1551390955),(128,2775528000),(128,3277288000),
       (128,3045044800),(128,2111237198),(128,945222943),(128,164535408),
       (6,29029)] ?_ rfl rfl
-    exact ⟨(by decide +kernel), (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), True.intro⟩
+    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 882 186 16399828679 where
   eq_moment := by
     refine moment_from_blocks
       [(128,281467680),(128,1635894932),(128,3030381376),(128,3664589632),
       (128,3514463040),(128,2598697640),(128,1325282868),(128,342290592),
       (44,6760919)] ?_ rfl rfl
-    exact ⟨(by decide +kernel), (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), True.intro⟩
+    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 883 197 17210339526 where
   eq_moment := by
     refine moment_from_blocks
       [(128,281825440),(128,1653196253),(128,3135857472),(128,3828458304),
       (128,3690586944),(128,2749316070),(128,1446953881),(128,410568928),
       (56,13576234)] ?_ rfl rfl
-    exact ⟨(by decide +kernel), (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), True.intro⟩
+    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 912 194 18868434791 where
   eq_moment := by
     refine moment_from_blocks
       [(128,292200480),(128,1720155840),(128,3271220160),(128,4041186240),
       (128,3993263040),(128,3133663239),(128,1774996188),(128,599346999),
       (82,42402605)] ?_ rfl rfl
-    exact ⟨(by decide +kernel), (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), True.intro⟩
+    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 926 195 19894196946 where
   eq_moment := by
     refine moment_from_blocks
       [(128,297209120),(128,1755504711),(128,3358888064),(128,4179366016),
       (128,4177760384),(128,3356603776),(128,1974410087),(128,724289538),
       (97,70165250)] ?_ rfl rfl
-    exact ⟨(by decide +kernel), (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), True.intro⟩
+    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 958 195 22186492210 where
   eq_moment := by
     refine moment_from_blocks
       [(128,308657440),(128,1833375943),(128,3537916032),(128,4461154432),
       (128,4562309248),(128,3841387932),(128,2439290735),(128,1036067666),
       (128,166331824),(1,958)] ?_ rfl rfl
-    exact ⟨(by decide +kernel), (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), True.intro⟩
+    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 960 205 23224363038 where
   eq_moment := by
     refine moment_from_blocks
       [(128,309372960),(128,1849612615),(128,3645738560),(128,4639706688),
       (128,4769648192),(128,4035677606),(128,2602917483),(128,1155992984),
       (128,215455408),(13,240542)] ?_ rfl rfl
-    exact ⟨(by decide +kernel), (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), True.intro⟩
+    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 968 204 23761225895 where
   eq_moment := by
     refine moment_from_blocks
       [(128,312235040),(128,1868238645),(128,3682311680),(128,4696645120),
       (128,4851146240),(128,4145818989),(128,2716742287),(128,1237702419),
       (128,249594080),(20,791395)] ?_ rfl rfl
-    exact ⟨(by decide +kernel), (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), True.intro⟩
+    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
 scoped instance : ExactMoment 996 207 26338011946 where
   eq_moment := by
     refine moment_from_blocks
       [(128,322252320),(128,1939676596),(128,3872068096),(128,5001777664),
       (128,5259072000),(128,4643951104),(128,3228690796),(128,1623238100),
       (128,435562624),(51,11722646)] ?_ rfl rfl
-    exact ⟨(by decide +kernel), (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), True.intro⟩
+    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, True.intro⟩
 end P1_7_1_3_2
 end
 section
@@ -2465,57 +2143,6 @@ namespace P1_7_1_3_5
 open P1_7_1_3 (blockEstimate block_append momentEstimate)
 set_option maxRecDepth 12000
 set_option maxHeartbeats 10000000
-theorem moment7630 : momentEstimate 7630 1607 = 90974896361155 := by
-  change blockEstimate 7630 1607 1607 9237 = 90974896361155
-  refine block_append (a := 9216) (b := 21) (next := 10823) (x := 90974889151880) (y := 7209275)
-    ?_ (by rfl) (by decide) (by decide) (by decide)
-  refine block_append (a := 8832) (b := 384) (next := 10439) (x := 90933246171384) (y := 41642980496)
-    ?_ (by rfl) (by decide) (by decide) (by decide)
-  refine block_append (a := 8448) (b := 384) (next := 10055) (x := 90676007819368) (y := 257238352016)
-    ?_ (by rfl) (by decide) (by decide) (by decide)
-  refine block_append (a := 8064) (b := 384) (next := 9671) (x := 90018888895448) (y := 657118923920)
-    ?_ (by rfl) (by decide) (by decide) (by decide)
-  refine block_append (a := 7680) (b := 384) (next := 9287) (x := 88797988516680) (y := 1220900378768)
-    ?_ (by rfl) (by decide) (by decide) (by decide)
-  refine block_append (a := 7296) (b := 384) (next := 8903) (x := 86876467979582) (y := 1921520537098)
-    ?_ (by rfl) (by decide) (by decide) (by decide)
-  refine block_append (a := 6912) (b := 384) (next := 8519) (x := 84157559470705) (y := 2718908508877)
-    ?_ (by rfl) (by decide) (by decide) (by decide)
-  refine block_append (a := 6528) (b := 384) (next := 8135) (x := 80576596867036) (y := 3580962603669)
-    ?_ (by rfl) (by decide) (by decide) (by decide)
-  refine block_append (a := 6144) (b := 384) (next := 7751) (x := 76108718638382) (y := 4467878228654)
-    ?_ (by rfl) (by decide) (by decide) (by decide)
-  refine block_append (a := 5760) (b := 384) (next := 7367) (x := 70779064528730) (y := 5329654109652)
-    ?_ (by rfl) (by decide) (by decide) (by decide)
-  refine block_append (a := 5376) (b := 384) (next := 6983) (x := 64718252933210) (y := 6060811595520)
-    ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel)) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-  refine block_append (a := 4992) (b := 384) (next := 6599) (x := 58107703546202) (y := 6610549387008)
-    ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel)) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-  refine block_append (a := 4608) (b := 384) (next := 6215) (x := 51129516270170) (y := 6978187276032)
-    ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel)) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-  refine block_append (a := 4224) (b := 384) (next := 5831) (x := 43965791007578) (y := 7163725262592)
-    ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel)) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-  refine block_append (a := 3840) (b := 384) (next := 5447) (x := 36798627660890) (y := 7167163346688)
-    ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel)) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-  refine block_append (a := 3456) (b := 384) (next := 5063) (x := 29810126132570) (y := 6988501528320)
-    ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel)) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-  refine block_append (a := 3072) (b := 384) (next := 4679) (x := 23182386325082) (y := 6627739807488)
-    ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel)) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-  refine block_append (a := 2688) (b := 384) (next := 4295) (x := 17097508140890) (y := 6084878184192)
-    ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel)) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-  refine block_append (a := 2304) (b := 384) (next := 3911) (x := 11737591482458) (y := 5359916658432)
-    ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel)) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-  refine block_append (a := 1920) (b := 384) (next := 3527) (x := 7284736252250) (y := 4452855230208)
-    ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel)) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-  refine block_append (a := 1536) (b := 384) (next := 3143) (x := 3920679935360) (y := 3364056316890)
-    ?_ (by rfl) (by decide) (by decide) (by decide)
-  refine block_append (a := 1152) (b := 384) (next := 2759) (x := 1728687439392) (y := 2191992495968)
-    ?_ (by rfl) (by decide) (by decide) (by decide)
-  refine block_append (a := 768) (b := 384) (next := 2375) (x := 534698127040) (y := 1193989312352)
-    ?_ (by rfl) (by decide) (by decide) (by decide)
-  refine block_append (a := 384) (b := 384) (next := 1991) (x := 69837188960) (y := 464860938080)
-    ?_ (by rfl) (by decide) (by decide) (by decide)
-  rfl
 end P1_7_1_3_5
 end
 section
@@ -2523,39 +2150,6 @@ namespace P1_7_1_3_5
 open P1_7_1_3 (blockEstimate block_append momentEstimate)
 set_option maxRecDepth 12000
 set_option maxHeartbeats 10000000
-theorem moment4830 : momentEstimate 4830 1019 = 14637581938425 := by
-  change blockEstimate 4830 1019 1019 5849 = 14637581938425
-  refine block_append (a := 5760) (b := 89) (next := 6779) (x := 14637286197088) (y := 295741337)
-    ?_ (by rfl) (by decide) (by decide) (by decide)
-  refine block_append (a := 5376) (b := 384) (next := 6395) (x := 14596549607568) (y := 40736589520)
-    ?_ (by rfl) (by decide) (by decide) (by decide)
-  refine block_append (a := 4992) (b := 384) (next := 6011) (x := 14404053579200) (y := 192496028368)
-    ?_ (by rfl) (by decide) (by decide) (by decide)
-  refine block_append (a := 4608) (b := 384) (next := 5627) (x := 13959602730553) (y := 444450848647)
-    ?_ (by rfl) (by decide) (by decide) (by decide)
-  refine block_append (a := 4224) (b := 384) (next := 5243) (x := 13195286240248) (y := 764316490305)
-    ?_ (by rfl) (by decide) (by decide) (by decide)
-  refine block_append (a := 3840) (b := 384) (next := 4859) (x := 12079150788065) (y := 1116135452183)
-    ?_ (by rfl) (by decide) (by decide) (by decide)
-  refine block_append (a := 3456) (b := 384) (next := 4475) (x := 10630093427205) (y := 1449057360860)
-    ?_ (by rfl) (by decide) (by decide) (by decide)
-  refine block_append (a := 3072) (b := 384) (next := 4091) (x := 8944530044805) (y := 1685563382400)
-    ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel)) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-  refine block_append (a := 2688) (b := 384) (next := 3707) (x := 7137965743365) (y := 1806564301440)
-    ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel)) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-  refine block_append (a := 2304) (b := 384) (next := 3323) (x := 5325911655045) (y := 1812054088320)
-    ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel)) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-  refine block_append (a := 1920) (b := 384) (next := 2939) (x := 3623878912005) (y := 1702032743040)
-    ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel)) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-  refine block_append (a := 1536) (b := 384) (next := 2555) (x := 2147378646405) (y := 1476500265600)
-    ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel)) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-  refine block_append (a := 1152) (b := 384) (next := 2171) (x := 1011921990405) (y := 1135456656000)
-    ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel)) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-  refine block_append (a := 768) (b := 384) (next := 1787) (x := 322478735040) (y := 689443255365)
-    ?_ (by rfl) (by decide) (by decide) (by decide)
-  refine block_append (a := 384) (b := 384) (next := 1403) (x := 43206276960) (y := 279272458080)
-    ?_ (by rfl) (by decide) (by decide) (by decide)
-  rfl
 end P1_7_1_3_5
 end
 section
@@ -2563,96 +2157,16 @@ namespace P1_7_1_3_5
 open P1_7_1_3 (blockEstimate block_append momentEstimate)
 set_option maxRecDepth 12000
 set_option maxHeartbeats 10000000
-theorem moment5798 : momentEstimate 5798 1223 = 30381132426145 := by
-  change blockEstimate 5798 1223 1223 7021 = 30381132426145
-  refine block_append (a := 6912) (b := 109) (next := 8135) (x := 30380486284103) (y := 646142042)
-    ?_ (by rfl) (by decide) (by decide) (by decide)
-  refine block_append (a := 6528) (b := 384) (next := 7751) (x := 30325030115447) (y := 55456168656)
-    ?_ (by rfl) (by decide) (by decide) (by decide)
-  refine block_append (a := 6144) (b := 384) (next := 7367) (x := 30076738077095) (y := 248292038352)
-    ?_ (by rfl) (by decide) (by decide) (by decide)
-  refine block_append (a := 5760) (b := 384) (next := 6983) (x := 29507898226563) (y := 568839850532)
-    ?_ (by rfl) (by decide) (by decide) (by decide)
-  refine block_append (a := 5376) (b := 384) (next := 6599) (x := 28518894167223) (y := 989004059340)
-    ?_ (by rfl) (by decide) (by decide) (by decide)
-  refine block_append (a := 4992) (b := 384) (next := 6215) (x := 27046179406579) (y := 1472714760644)
-    ?_ (by rfl) (by decide) (by decide) (by decide)
-  refine block_append (a := 4608) (b := 384) (next := 5831) (x := 25062913657050) (y := 1983265749529)
-    ?_ (by rfl) (by decide) (by decide) (by decide)
-  refine block_append (a := 4224) (b := 384) (next := 5447) (x := 22596200533050) (y := 2466713124000)
-    ?_ (by rfl) (by decide) (by decide) (by decide)
-  refine block_append (a := 3840) (b := 384) (next := 5063) (x := 19761577004346) (y := 2834623528704)
-    ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel)) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-  refine block_append (a := 3456) (b := 384) (next := 4679) (x := 16697645829690) (y := 3063931174656)
-    ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel)) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-  refine block_append (a := 3072) (b := 384) (next := 4295) (x := 13543020367674) (y := 3154625462016)
-    ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel)) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-  refine block_append (a := 2688) (b := 384) (next := 3911) (x := 10436313976890) (y := 3106706390784)
-    ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel)) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-  refine block_append (a := 2304) (b := 384) (next := 3527) (x := 7516140015930) (y := 2920173960960)
-    ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel)) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-  refine block_append (a := 1920) (b := 384) (next := 3143) (x := 4921111843386) (y := 2595028172544)
-    ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel)) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-  refine block_append (a := 1536) (b := 384) (next := 2759) (x := 2789842817850) (y := 2131269025536)
-    ?_ (P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel)) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-  refine block_append (a := 1152) (b := 384) (next := 2375) (x := 1260670239264) (y := 1529172578586)
-    ?_ (by rfl) (by decide) (by decide) (by decide)
-  refine block_append (a := 768) (b := 384) (next := 1991) (x := 395846010560) (y := 864824228704)
-    ?_ (by rfl) (by decide) (by decide) (by decide)
-  refine block_append (a := 384) (b := 384) (next := 1607) (x := 52412963680) (y := 343433046880)
-    ?_ (by rfl) (by decide) (by decide) (by decide)
-  rfl
 end P1_7_1_3_5
 end
 section
 namespace P1_7_1_3_6
 open P1_7_1_3 (blockEstimate block_append)
-theorem append {B J start a x : ℕ} (left : blockEstimate B J start a = x)
-    (next b y n z : ℕ) (hstart : start + a = next) (hlen : a + b = n) (hvalue : x + y = z)
-    (right : blockEstimate B J next b = y) :
-    blockEstimate B J start n = z :=
-  block_append left right hstart hlen hvalue
 end P1_7_1_3_6
 end
 section
 namespace P1_7_1_3_6
 open P1_7_1_3 (blockEstimate block_append momentEstimate)
 set_option maxRecDepth 8000
-private theorem part0 : blockEstimate 10506 2218 2218 3072 = 38879167664736 := by
-  have h0 : blockEstimate 10506 2218 2218 768 = 752677759680 := by decide +kernel
-  have h1 := append h0 2986 768 4908442151616 1536 5661119911296 rfl rfl rfl rfl
-  have h2 := append h1 3754 768 12256198429024 2304 17917318340320 rfl rfl rfl rfl
-  have h3 := append h2 4522 768 20961849324416 3072 38879167664736 rfl rfl rfl (P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel))
-  exact h3
-private theorem part1 : blockEstimate 10506 2218 5290 3072 = 135349442891264 := by
-  have h0 : blockEstimate 10506 2218 5290 768 = 28122400568192 := P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-  have h1 := append h0 6058 768 33272605127552 1536 61395005695744 rfl rfl rfl (P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel))
-  have h2 := append h1 6826 768 36412463002496 2304 97807468698240 rfl rfl rfl (P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel))
-  have h3 := append h2 7594 768 37541974193024 3072 135349442891264 rfl rfl rfl (P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel))
-  exact h3
-private theorem part2 : blockEstimate 10506 2218 8362 3072 = 121728680363516 := by
-  have h0 : blockEstimate 10506 2218 8362 768 = 36661138699136 := P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-  have h1 := append h0 9130 768 33769956520832 1536 70431095219968 rfl rfl rfl (P1_7_1_3.Middle.block_of_middle_endpoints (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel))
-  have h2 := append h1 9898 768 28870580603797 2304 99301675823765 rfl rfl rfl rfl
-  have h3 := append h2 10666 768 22427004539751 3072 121728680363516 rfl rfl rfl rfl
-  exact h3
-private theorem part3 : blockEstimate 10506 2218 11434 3072 = 31498976875795 := by
-  have h0 : blockEstimate 10506 2218 11434 768 = 15768359579110 := by decide +kernel
-  have h1 := append h0 12202 768 9664895896493 1536 25433255475603 rfl rfl rfl rfl
-  have h2 := append h1 12970 768 4686148763072 2304 30119404238675 rfl rfl rfl rfl
-  have h3 := append h2 13738 768 1379572637120 3072 31498976875795 rfl rfl rfl rfl
-  exact h3
-private theorem part4 : blockEstimate 10506 2218 14506 436 = 71892394141 := by
-  have h0 : blockEstimate 10506 2218 14506 436 = 71892394141 := by decide +kernel
-  exact h0
-theorem moment10506 : momentEstimate 10506 2218 = 327528160189452 := by
-  change blockEstimate 10506 2218 2218 12724 = 327528160189452
-  have h1 : blockEstimate 10506 2218 2218 6144 = 174228610556000 :=
-    block_append part0 part1 rfl rfl rfl
-  have h2 : blockEstimate 10506 2218 2218 9216 = 295957290919516 :=
-    block_append h1 part2 rfl rfl rfl
-  have h3 : blockEstimate 10506 2218 2218 12288 = 327456267795311 :=
-    block_append h2 part3 rfl rfl rfl
-  exact block_append h3 part4 rfl rfl rfl
 end P1_7_1_3_6
 end

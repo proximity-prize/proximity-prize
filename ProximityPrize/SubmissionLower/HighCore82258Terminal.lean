@@ -147,24 +147,5 @@ private theorem checks (b : Band) (hb : b ≠ .h2367) (x : Test b) :
   | none => exact hn
   | some i => exact grade_at _ _ _ _ hc i
 
-theorem terminal_bounds (b : Band) (hb : b ≠ .h2367) {h : ℕ} (hl : start b ≤ h) (hu : h ≤ finish b) (x : Test b) :
-    debit h (tested b x) <
-      jointGain h (tested b x).shape (threshold b x) (seedThreshold b x) := by
-  let t := tested b x
-  have hh0 : finish b < 131071 := by cases b <;> decide
-  have hh : h < 131071 := hu.trans_lt hh0
-  have hshape : t.shape.J = (terminal b).shape.J := by cases x <;> rfl
-  have hJ : t.shape.J ≤ 131071 - (start b + 1) := by
-    rw [hshape]
-    cases b <;> decide
-  have he : 0 < threshold b x := by cases x <;> exact Nat.succ_pos _
-  have hc := checks b hb x
-  change BlockChecks t.shape t.nodeRows t.poleMoment (start b) (threshold b x) (seedThreshold b x) at hc
-  unfold BlockChecks at hc
-  rw [blockSurplus_eq t (start b) _ _ (by omega) (by omega) he,
-    blockSurplus_eq t (start b+1) _ _ (by omega) hJ he] at hc
-  change debit h t < jointGain h t.shape (threshold b x) (seedThreshold b x)
-  exact strict_of_first_difference (b := t) hl hh (by omega) (by omega)
 
-#print axioms terminal_bounds
 end HighCore82258Terminal

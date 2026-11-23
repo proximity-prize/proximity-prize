@@ -88,18 +88,5 @@ theorem spec7 : Sound data7 (poly src7) := by
     rw [h]
     exact poly_order _ (by decide +kernel)
   · exact encoded_degree (b := 80064) ([(-1,⟨0,4,0,0⟩), (1,⟨1,2,1,0⟩), (1,⟨2,0,2,0⟩), (-1,⟨2,1,0,1⟩)]) (by decide) (by decide)
-def basisData : Fin 8 → Data := ![data0,data1,data2,data3,data4,data5,data6,data7]
-noncomputable def basisPoly : Fin 8 → Form := ![poly src0,poly src1,poly src2,poly src3,poly src4,poly src5,poly src6,poly src7]
-theorem basis_ok (i : Fin 8) : Sound (basisData i) (basisPoly i) := by
-  fin_cases i
-  · exact spec0
-  · exact spec1
-  · exact spec2
-  · exact spec3
-  · exact spec4
-  · exact spec5
-  · exact spec6
-  · exact spec7
 
-#print axioms basis_ok
 end AnchorPivot82180

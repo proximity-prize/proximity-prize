@@ -6,7 +6,7 @@ section
 namespace P1_7_3
 noncomputable section
 open K1 K1_14 K1_14_2 K1_14_2_4
-open K1_14_2_4_1 hiding chartResultant_proper
+open K1_14_2_4_1 
 open scoped Polynomial
 open private chartEvaluation from ProximityPrize.SubmissionLower.Fast055
 open private donor_1_1 donor_1_2 donor_1_3 donor_1_4 donor_1_5 from ProximityPrize.SubmissionLower.PortHighFinish
@@ -118,10 +118,6 @@ open K1_14_2_4 hiding specialize
 open Polynomial MvPolynomial Finset ProximityPrize.Benchmark
 open scoped BigOperators
 open private proper_section_card from ProximityPrize.SubmissionLower.Fast055
-structure FixedWord (w : I → K) (U : Finset K) (s : K → K[X]) (d : ℕ) : Prop where
-  distinct : Set.InjOn s (U : Set K)
-  degree : ∀ γ ∈ U, (s γ).natDegree ≤ d
-  hits : ∀ γ ∈ U, ∃ B : Finset I, agreement ≤ B.card ∧ ∀ i ∈ B, (s γ).eval (node i) = w i
 def persistentNodes (w : I → K) (U : Finset K) (s : K → K[X]) : Finset I := by
   classical
   exact univ.filter fun i => ∀ γ ∈ U, (s γ).eval (node i) = w i
@@ -433,7 +429,7 @@ section
 namespace P1_7_3
 noncomputable section
 open P1 (K p agreement blockLength AnchorModel AnchoredFamily)
-open P1_7 (InBand CurveTariff degreeAt gap curveUnit)
+open P1_7 (  degreeAt  )
 open K1_14_2_4 (taylorPower ordinateBound)
 open Finset
 open scoped Polynomial

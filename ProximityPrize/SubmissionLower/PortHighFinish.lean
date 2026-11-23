@@ -99,7 +99,7 @@ namespace P0_10R.Bridge
 noncomputable section
 open Polynomial
 open P0 (AnchorModel AnchoredFamily agreement p lowCutoff)
-open P0_10 (JetSource scheduled terminalShape fullShape fullCutoff)
+open P0_10 (  terminalShape fullShape fullCutoff)
 open K1_14 (Banks Shape Jet Equation Seeds FX seedHasse)
 open K1_14_2 (Ambient toJet FibreRing mapGenericSeed mapGenericJets eval_toJet generic)
 open K1_14_2_2 (Active dual)

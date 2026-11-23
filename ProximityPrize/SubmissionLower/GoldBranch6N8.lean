@@ -38,7 +38,7 @@ open K1_13 PolynomialDifferential ReedSolomon.HiddenDerivative
 open K1_13_2 (SourceExponent Local toRow)
 open P3 (I K node)
 open scoped BigOperators
-open private high_monomial_vanishes origin_rank map_independent_family from ProximityPrize.SubmissionLower.PortLowBase
+open private high_monomial_vanishes  map_independent_family from ProximityPrize.SubmissionLower.PortLowBase
 end
 end P3_6_2
 end
@@ -46,7 +46,7 @@ section
 namespace P3_6_3
 noncomputable section
 open P3 (I K)
-open P3_6 (TrueWeightLE primaryBox primaryCutoff layerWidth)
+open P3_6 (TrueWeightLE primaryBox  )
 open K1_13 (Row InBox shape Contact)
 def BankRow (w : I → K) (T : ℕ) (P : Row 4) : Prop :=
   InBox (shape P) primaryBox ∧ TrueWeightLE P T ∧ Contact w P
@@ -58,7 +58,7 @@ namespace P3_6_3_3
 noncomputable section
 open Polynomial
 open P3 (I K node)
-open P3_6 (TrueWeightLE physicalDegree primaryCutoff)
+open P3_6 (TrueWeightLE physicalDegree )
 open P3_6_3 (BankRow)
 open K1_13 (Geom embed Row InBox shape indexDegree Contact atJet)
 open K1_13_3 (Symbol symbolAt)
@@ -190,18 +190,15 @@ def emptyThresholds : List Threshold :=
     ⟨9, 7, 9⟩, ⟨22, 4, 8⟩, ⟨3, 7, 4⟩, ⟨4, 10, 22⟩,
     ⟨10, 28, 48⟩]
 def emptyOrder (a : Shape) : ℕ := orderFor a.b a.j emptyThresholds
-def RetainedBox (a : Shape) : Prop :=
-  a.b ≤ 20 ∧ a.j ≤ 6 ∧
-    (4 ≤ a.j → a.b ≤ 17) ∧ (5 ≤ a.j → a.b ≤ 14) ∧ (6 ≤ a.j → a.b ≤ 7)
 end P3_6_8
 end
 section
 namespace P3_6_8
 open K1_13 (Shape Fits InBox FatEligible remaining)
-open K1_13_8 (Valid zeroShape fullCap zeroMass availableMass layerTerm layerCount)
+open K1_13_8 (Valid zeroShape  zeroMass availableMass layerTerm layerCount)
 open K1_13_8_2 (orderFor)
 open P0_9_8 (oneStart twoStart oneOrder indexBudget symbol_count availableMass_anti_prefix
-  orderFor_select orderFor_mono oneOrder_pos oneOrder_mono)
+  orderFor_select orderFor_mono  )
 open P3_6 (factorCap)
 open scoped BigOperators
 private def shapeSum {ι : Type*} (a : ι → Shape) (s : Finset ι) : Shape :=
@@ -309,7 +306,7 @@ open K1_13_8 (Valid)
 open K1_13_8_4 (TotalLE IndexFits mixed_mono_total)
 open P3_6 (fatPrice linearChart taylorLength physicalDegree incidenceGap
   resultantBox commonBox fatOrder divisorOrder isolatedOrder)
-open P3_6_8 (RetainedBox oneReserve twoReserve)
+open P3_6_8 ( oneReserve twoReserve)
 private def fatChart (x : Shape) : Shape :=
   if x.t = 1 then linearChart x.chamber else chart (taylorLength + 4) x.chamber
 private abbrev divisorBox : Shape :=
@@ -513,12 +510,8 @@ namespace P3_6_8_6
 open K1_13 (Shape InBox chart liftedChart mixed32 ceilDiv)
 open K1_13_8_2 (Chamber mixed_mono)
 open P0_9_8 (oneStart oneOrder indexBudget)
-open P0_9_8_5 (ceil_mono)
 open P3_6 (physicalPrice physicalDegree incidenceGap primaryBox taylorLength surfaceNumerator32)
 open P3_6_8 (oneReserve)
-open private P0_9_8_5.box_refl P0_9_8_5.normalize_mono P0_9_8_5.normalize_chamber P0_9_8_5.plus_mono P0_9_8_5.plus_chamber P0_9_8_5.scale_mono
-  P0_9_8_5.scale_chamber P0_9_8_5.chart_chamber P0_9_8_5.lifted_chamber P0_9_8_5.chart_mono P0_9_8_5.lifted_mono P0_9_8_5.graphShape P0_9_8_5.graph_chamber
-  P0_9_8_5.graph_mono from ProximityPrize.SubmissionLower.PortLow8
 private def peak (j : ℕ) : Shape := ⟨119, j, min 9 (j / 3)⟩
 private def budget (j : ℕ) : ℕ := indexBudget oneStart (P3_6.factorCap - oneReserve) j
 private abbrev PeakBound (j : ℕ) : Prop :=
@@ -564,7 +557,7 @@ end
 section
 namespace P3_6_8_8
 open K1_13 (Shape InBox chart liftedChart mixed32 ceilDiv)
-open K1_13_8 (Valid fullCap)
+open K1_13_8 (Valid )
 open P0_9_8 (twoStart indexBudget)
 open P3_6_8 (twoOrder twoReserve)
 open P3_6 (physicalPrice factorCap)

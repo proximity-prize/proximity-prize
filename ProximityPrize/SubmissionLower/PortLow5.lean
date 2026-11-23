@@ -9,15 +9,6 @@ open P0_9 (TrueWeightLE anchorCutoff taylorLength)
 open K1_13 (Row Shape indexDegree)
 open K1_13_5 (NodeFamily lowBox liftedBox graphBox mixed3)
 open scoped BigOperators Polynomial
-structure SecondFactors {n : ℕ} (f : Fin n → Row 3) : Prop where
-  irreducible : ∀ i, Irreducible (f i)
-  positive : ∀ i, 0 < (f i).degreeOf 2
-  weight : ∀ i, TrueWeightLE (f i) anchorCutoff
-  total : (∑ i, (f i).totalDegree) ≤ 120
-  index : (∑ i, indexDegree (f i)) ≤ 48
-  top : (∑ i, (f i).degreeOf 2) ≤ 24
-def Whole (f : Row 3) : Prop :=
-  f ∣ K1_13_5.compatibilityNumerator f (taylorLength - 3)
 def mixedBudget : ℕ :=
   let a := liftedBox (taylorLength + 1)
   let b := liftedBox (taylorLength + 2)
@@ -123,7 +114,6 @@ open K1_13 (Geom embed Row atJet)
 open K1_13_5 (RegularAt separant compatibilityNumerator)
 open K1_13_5_5 K1_13_5_5_1
 open P0_9 (taylorLength physicalDegree TrueWeightLE anchorCutoff)
-open P0_9_5 (Whole)
 open scoped Polynomial
 open private evalRow coeffValue jetValue existsDerivation deriv_poly deriv_jet
   evalNumerator iterate_value from ProximityPrize.SubmissionLower.Fast071

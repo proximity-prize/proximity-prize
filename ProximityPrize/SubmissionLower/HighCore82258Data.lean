@@ -125,19 +125,10 @@ def cutoffCount (h r : ℕ) (s : Shape) : ℕ :=
 def rawWidth (h r : ℕ) (s : Shape) (q j : ℕ) : ℕ :=
   cutoffCount h r s + j - q * (131071 - h)
 
-def WidthGuard (h r : ℕ) (s : Shape) : Prop :=
-  s.B * (131071-h) < cutoffCount h r s
 
 def gain (h r : ℕ) (s : Shape) (mode : ℕ) : ℕ :=
   triangle s.U * shapeSum s (fun q j => rawWidth h r s q j - mode * (2 * h * j))
 
-theorem height_cover {h : ℕ} (lo : 2414 ≤ h) (hi : h ≤ heightCap) :
-    ∃ b, start b ≤ h ∧ h ≤ finish b := by
-  by_cases h0 : h ≤ 2535
-  · exact ⟨.h2367, lo, h0⟩
-  by_cases h1 : h ≤ 7772
-  · exact ⟨.h2395, by change 2536 ≤ h; omega, h1⟩
-  exact ⟨.h7773, by change 7773 ≤ h; omega, hi⟩
 
 theorem accounting (b : Band) :
     (fees b).loss + (fees b).point + (fees b).lowSeed + (fees b).lowJet +

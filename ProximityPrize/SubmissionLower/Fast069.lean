@@ -493,6 +493,8 @@ private theorem factorial_ne_zero {i : ℕ} (hi : i < p) : (i.factorial : FX) �
       intro h
       exact (not_le_of_gt hi) (Nat.le_of_dvd (Nat.succ_pos i) ((CharP.cast_eq_zero_iff FX p _).mp h))
     simpa only [Nat.factorial_succ, Nat.cast_mul] using mul_ne_zero hc (ih (Nat.lt_of_succ_lt hi))
+private def weight (x : K) (i : ℕ) : FX :=
+  (i.factorial : FX)⁻¹ * (seedEmbedding x - center)^i
 end
 end K1_14_2_4_2
 end
@@ -1457,6 +1459,16 @@ namespace K1_14_3R_3_3
 open K1_14 K1_14_3 MvPolynomial
 open scoped nonZeroDivisors
 noncomputable section
+abbrev Parameters := MvPolynomial (Fin 4) FX
+abbrev Raw (σ : Type) := MvPolynomial σ FX
+abbrev Over (σ : Type) := MvPolynomial σ SectionField
+private abbrev Free := {k : Fin 4 // k ≠ 2}
+def parameter (k : Fin 4) : SectionField :=
+  algebraMap Parameters SectionField (MvPolynomial.X k)
+def fieldLine {σ : Type} (i j : σ) : Over σ :=
+  MvPolynomial.X i + C (parameter 0) * MvPolynomial.X j - C (parameter 2)
+def sliceIdeal {σ : Type} (P : Ideal (Raw σ)) (i j : σ) : Ideal (Over σ) :=
+  P.map (map (algebraMap FX SectionField)) ⊔ Ideal.span {fieldLine i j}
 attribute [local instance] MvPolynomial.algebraMvPolynomial
 end
 end K1_14_3R_3_3
@@ -1470,6 +1482,14 @@ namespace K1_14_3R_3_3
 open K1_14 K1_14_3 K1_14_3R_3 MvPolynomial
 open scoped BigOperators
 noncomputable section
+private abbrev Coord := Option (Option (Fin 2))
+private def seedCoord (i : Fin 2) : Coord := some (some i)
+private def nest (F : Type) [CommRing F] :
+    MvPolynomial Coord F ≃ₐ[F] Polynomial (Polynomial (MvPolynomial (Fin 2) F)) :=
+  (optionEquivLeft F (Option (Fin 2))).trans (Polynomial.mapAlgEquiv (optionEquivLeft F (Fin 2)))
+private def rawIdeal (I : Ideal Jet) : Ideal (Raw Coord) :=
+  I.comap (nest FX).toRingHom
+private abbrev jetSlice (I : Ideal Jet) := sliceIdeal (rawIdeal I) (seedCoord 0) (seedCoord 1)
 end
 end K1_14_3R_3_3
 end
@@ -3089,8 +3109,6 @@ structure ScalarSource where
   total : ∀ e ∈ poly.support, e 1 + (poly.coeff e).totalDegree ≤ 37
 def ScalarSource.atLabel (A : ScalarSource) (γ : K) : MvPolynomial (Fin 2) K :=
   A.poly.map (MvPolynomial.eval ![γ, γ ^ p])
-def ScalarSource.atDecoder (A : ScalarSource) (γ : K) (P : K[X]) : K[X] :=
-  MvPolynomial.aeval ![Polynomial.X, P] (A.atLabel γ)
 def sourceDim (d b s t : ℕ) : ℕ :=
   ∑ i ∈ Finset.range (b + 1), ∑ j ∈ Finset.range (b + 1 - i),
     (d + 1 - 131071 * (i+j)) * (s+1-i) * (t+1-j)
@@ -3136,7 +3154,6 @@ set_option maxHeartbeats 800000
 namespace K1_10_1
 noncomputable section
 open MvPolynomial K1_11
-abbrev Multipliers (F : Type*) [Field F] := JetSpace F 2 15 15
 variable {F : Type*} [Field F] {N : ℕ} {L : MvPolynomial (Fin 5) F}
 structure Contacts (N : ℕ) (L : MvPolynomial (Fin 5) F) where
   x : Fin N → F
@@ -3856,63 +3873,6 @@ theorem seedDegree_pow {f : Equation} (hf : f ≠ 0) (n : ℕ) :
   induction n with
   | zero => simp [seedDegree]
   | succ n ih => rw [pow_succ, seedDegree_mul (pow_ne_zero _ hf) hf, ih, Nat.succ_mul]
-private theorem flatten_mem_bidegree {g : Equation} {a u : ℕ}
-    (ha : g.natDegree ≤ a) (hu : seedDegree g ≤ u) :
-    flatten g ∈ restrictBidegree (Fin 2) FX a u := by
-  rw [mem_restrictBidegree]
-  intro d hd
-  have hy : d none ≤ (flatten g).degreeOf none := by
-    rw [degreeOf_eq_sup]
-    exact Finset.le_sup (f := fun d : Option (Fin 2) →₀ ℕ => d none) hd
-  have hyeq := natDegree_optionEquivLeft FX (flatten g)
-  have hy' : d none ≤ g.natDegree := hy.trans_eq (by simpa [flatten] using hyeq.symm)
-  have hs := le_weightedTotalDegree (fun v : Option (Fin 2) ↦ v.elim 0 fun _ ↦ 1) hd
-  rw [Finsupp.weight_elim_zero_one, ← totalDegree_optionEquivRight] at hs
-  exact ⟨hy'.trans ha, hs.trans hu⟩
-theorem rank_multiples_le (C : Submodule FX Equation) {g : Equation} (hg : g ≠ 0)
-    {a U spent : ℕ} (hspent : spent ≤ seedDegree g)
-    (hC : ∀ c ∈ C, c ≠ 0 → c.natDegree < a ∧ SeedBound c U ∧ g ∣ c) :
-    Module.rank FX C ≤ (↑(a * slots U spent) : Cardinal) := by
-  have hquot : ∀ c ∈ C, c ≠ 0 → ∃ q : Equation,
-      c = g * q ∧ q.natDegree < a ∧ spent + seedDegree q ≤ U := by
-    intro c hc hn
-    obtain ⟨hY, hU, q, rfl⟩ := hC c hc hn
-    have hq : q ≠ 0 := right_ne_zero_of_mul hn
-    refine ⟨q, rfl, ?_, ?_⟩
-    · rw [Polynomial.natDegree_mul hg hq] at hY
-      omega
-    · have h := (seedDegree_le_iff _ _).mpr hU
-      rw [seedDegree_mul hg hq] at h
-      omega
-  by_cases h : 0 < a ∧ spent ≤ U
-  · let B := restrictBidegree (Fin 2) FX (a - 1) (U - spent)
-    let m : B →ₗ[FX] Equation :=
-      (LinearMap.mulLeft FX g).comp (flatten.symm.toLinearMap.comp B.subtype)
-    have hm : C ≤ LinearMap.range m := by
-      intro c hc
-      by_cases hn : c = 0
-      · rw [hn]
-        exact (LinearMap.range m).zero_mem
-      · obtain ⟨q, rfl, hq, hqU⟩ := hquot c hc hn
-        refine ⟨⟨flatten q, flatten_mem_bidegree (by omega) (by omega)⟩, ?_⟩
-        change g * flatten.symm (flatten q) = g * q
-        rw [AlgEquiv.symm_apply_apply]
-    have hB : Module.finrank FX B = a * slots U spent := by
-      rw [MvPolynomial.finrank_restrictBidegree, slots, ite_eq_left h.2]
-      simp [Nat.choose_two_right, triangle, Nat.mul_comm (U - spent + 2), show a - 1 + 1 = a by omega]
-    calc
-      _ ≤ Module.rank FX (LinearMap.range m) := Submodule.rank_mono hm
-      _ ≤ Module.rank FX B := rank_range_le m
-      _ = _ := by rw [← Module.finrank_eq_rank, hB]
-  · have hc : C = ⊥ := by
-      apply bot_unique
-      intro c hmem
-      rw [Submodule.mem_bot]
-      by_contra hn
-      obtain ⟨q, _, hq, hqU⟩ := hquot c hmem hn
-      exact h ⟨by omega, by omega⟩
-    rw [hc]
-    simp
 end
 end K1_14_4
 end

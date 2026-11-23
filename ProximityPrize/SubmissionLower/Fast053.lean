@@ -1,5 +1,5 @@
 import ProximityPrize.SubmissionLower.Fast050
-import ProximityPrize.SubmissionLower.Fast040
+import ProximityPrize.SubmissionLower.SoloK1_13_1_1ArithmeticLogic
 set_option Elab.async false
 set_option autoImplicit true
 section
@@ -217,6 +217,19 @@ end
 end K1_14_3_7
 end
 section
+namespace K1_13_1_1
+set_option maxRecDepth 30000
+set_option Elab.async false
+set_option maxHeartbeats 4000000
+private def bfPlane (r o : ℕ) : ℕ :=
+  let lo := 48 - (r : ℤ)
+  min (bandCount 48 lo 48 10)
+    (sumRange 49 fun b =>
+      min (pairBound 48 lo b) (sumRange (48 - b + 1) (lineBound 48 lo (o : ℤ) b)))
+private structure BfEvaluator where
+  get : ℕ → ℕ → ℕ
+  correct : ∀ r o, bfPlane r o = get r o
+end K1_13_1_1
 end
 section
 namespace K1_13_6_3
@@ -283,14 +296,6 @@ structure FreshModel (f : Row 4) (A : CoeffIdeal) : Prop where
 def cycleWeight (J P : JetIdeal) : ℕ := by
   classical
   exact if hp : P.IsPrime then (cycleLength J P hp).toNat else 0
-structure CutCycle (f Q : Row 4) : Prop where
-  local_bound : ∀ surface (hz : (intersectionIdeal f Q).IsMinimalPrime surface),
-    dimension surface = 2 ∧ (1 : ℕ∞) ≤ cycleLength (intersectionIdeal f Q) surface hz.isPrime ∧
-    cycleLength (intersectionIdeal f Q) surface hz.isPrime ≤ ((shape f).b * cutterBox.b : ℕ)
-  weighted_degree :
-    ∑ surface ∈ (intersectionIdeal f Q).minimalPrimesFinset,
-      (cycleWeight (intersectionIdeal f Q) surface : ℚ) * MvPolynomial.affineDegree surface
-      ≤ ((shape f).b * cutterBox.b : ℕ)
 end
 end K1_13_6_3
 end
@@ -506,6 +511,26 @@ namespace K1_13_6_3
 noncomputable section
 open K1 K1_13 K1_13_6 Polynomial MvPolynomial
 open scoped BigOperators
+def c1 : Prop :=
+  ∀ (f Q : Row 4) (surface : JetIdeal) (r : ℕ) (P : JetIdeal)
+    (hz : (intersectionIdeal f Q).IsMinimalPrime surface),
+    CanonicalChart f surface r →
+    cycleLength (intersectionIdeal f Q) surface hz.isPrime < (K1.p : ℕ∞) →
+    let g := (separant^[r]) f
+    Invariant g surface → SimpleCut g surface P → Invariant g P
+def c3 : Prop :=
+  (∀ (f Q : Row 4) (surface : JetIdeal) (r : ℕ) (P : JetIdeal) (hp : P.IsPrime)
+      (U : (JetField P)[X]),
+    (intersectionIdeal f Q).IsMinimalPrime surface →
+    (∀ T, (intersectionIdeal f Q).IsMinimalPrime T → dimension T = 2) →
+    let g := (separant^[r]) f
+    toGeneric (separant g) ∉ P → (P = surface ∨ SimpleCut g surface P) →
+    @Integrated f Q g P hp U →
+    let A := coefficientKernel (componentConstants P) U
+    FreshModel f A ∧
+      ((dimension A = 1 ∧ freshImage A = P ∧ SimpleCut g surface P) ∨
+        (dimension A = 2 ∧ (intersectionIdeal f Q).IsMinimalPrime (freshImage A)))) ∧
+  (∀ f : Row 4, Set.InjOn freshImage {A | A.IsPrime ∧ FreshRegular f A})
 def c4 : Prop :=
   ∀ A : CoeffIdeal, A.IsPrime → (extendIdeal A).IsPrime → dimension A = 1 →
     FreshBirational A → affineDegree A = affineDegree (freshImage A)
@@ -698,6 +723,14 @@ def c2 : Prop :=
     affineHilbertPolynomial (extendIdeal A) = affineHilbertPolynomial A ∧
     ∀ P, (boundaryIdeal (extendIdeal A)).IsMinimalPrime P →
       ∃ R, (boundaryIdeal A).IsMinimalPrime R ∧ extendIdeal R = P
+def c3 : Prop :=
+  ∀ R : CoeffIdeal, R.IsPrime → (extendIdeal R).IsPrime →
+    R.IsHomogeneous (homogeneousSubmodule (Fin K1_13.taylorLength) K1_13.Geom) →
+    dimension R = 2 →
+    dimension (freshImage R) = 2 ∧
+    2 * affineDegree (extendIdeal R) ≤
+      133671 * (residueDegree freshJetMap (extendIdeal R) : ℚ) *
+        affineDegree (freshImage R)
 def c4 : Prop :=
   ∀ (k σ τ : Type) [Field k] [Finite σ] [Finite τ]
     (φ : MvPolynomial τ k →ₐ[k] MvPolynomial σ k), IsLinearProjection φ →

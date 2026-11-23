@@ -6,6 +6,8 @@ section
 namespace P1_3
 noncomputable section
 open P1 Polynomial
+def leftCoeff {u T R D} (B : RankThree u T R D) (l : Fin 2) : K[X] :=
+  B.a * (B.β l).map twist
 abbrev Plane := K1_10.Plane
 abbrev Adjugate := K1_10.Adjugate
 inductive Bank where
@@ -17,7 +19,6 @@ def Bank.first : Bank → ℕ
 def Bank.second : Bank → ℕ
   | .st => 17
   | .ts => 20
-abbrev sourceCutoff : ℕ := 4 * agreement - 1
 structure ScalarSource (bank : Bank) where
   poly : MvPolynomial (Fin 2) K1_10.SeedPoly
   nonzero : poly ≠ 0
@@ -98,7 +99,6 @@ namespace P1_3_1
 noncomputable section
 open MvPolynomial K1_11
 open K1_10_1 (Contacts relationBounds)
-open P1_3 (sourceCutoff)
 open private exists_kernel_outside from ProximityPrize.SubmissionLower.PortFrontB
 abbrev Multipliers (F : Type*) [Field F] (bank : P1_3.Bank) :=
   JetSpace F 2 (bank.first - 1) (bank.second - 1)

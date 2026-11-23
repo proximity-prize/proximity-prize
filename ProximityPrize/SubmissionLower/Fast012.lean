@@ -9,12 +9,12 @@ import ArkLib.Data.Polynomial.Differential.OrderZeroPresentation
 import ArkLib.Data.Polynomial.ResultantDegree
 import Mathlib.Data.Int.Star
 import ProximityPrize.SubmissionLower.Fast006
-import ArkLib.Data.CodingTheory.HiddenDerivative.Interpolation.Symbolic.SourceColumn
-import Mathlib.Data.Int.Interval
+import ProximityPrize.SubmissionLower.Fast008
 set_option Elab.async false
 set_option autoImplicit true
 section
 namespace Sol1.C42
+def listCap : ℕ := 123935685281173519
 end Sol1.C42
 end
 section
@@ -2245,12 +2245,6 @@ namespace Sol1.Reciprocal
 noncomputable section
 open Polynomial Code LinearCode CoreDefinitions
 variable {F K I : Type} [Field F] [Field K] [Fintype K] [Fintype I]
-def liftedDomain (phi : F →+* K) (nodes : I ↪ F) : I ↪ K :=
-  nodes.trans ⟨phi, phi.injective⟩
-noncomputable def repeatedRS (phi : F →+* K) (nodes : I ↪ F) (k : ℕ) :
-    ModuleCode I K (Fin 8 → K) :=
-  Code.ModuleCode.moduleInterleavedCode K K (Fin 8) I
-    (ReedSolomon.code (liftedDomain phi nodes) k)
 end
 end Sol1.Reciprocal
 end

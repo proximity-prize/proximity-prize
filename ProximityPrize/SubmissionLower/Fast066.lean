@@ -33,6 +33,42 @@ def c2 : Prop :=
         (w : ℕ∞) ≤ localColength q (Ideal.span {f, g, h}) ∧
         localColength q (Ideal.span {f, g, h}) < ⊤) →
       (points.card : ℚ) * w ≤ D zeroPrime
+theorem of_children (h1 : c1) (h2 : c2) : K1_13_7.c6 := by
+  classical
+  intro P Q R hP hQ hR points hpoints
+  let f := genericRow P
+  let g := genericRow Q
+  let h := genericRow R
+  let D := chartDegree chartMap
+  have hcuts : ∀ t : Lower, t ∈ ({f, g, h} : Set Lower) →
+      ∃ L : MvPolynomial chartExponents GeometricX, chartMap L = t ∧ L.totalDegree ≤ 1 := by
+    intro t ht
+    simp only [Set.mem_insert_iff, Set.mem_singleton_iff] at ht
+    rcases ht with rfl | rfl | rfl
+    · exact chart_lift P hP
+    · exact chart_lift Q hQ
+    · exact chart_lift R hR
+  have hpay : ∀ t : Lower, t ∈ ({f, g, h} : Set Lower) →
+      ∀ p : PrimeSpectrum Lower, t ∉ p.asIdeal →
+        ∀ qs : Finset (PrimeSpectrum Lower),
+          (∀ q ∈ qs, q.asIdeal ∈ (cutIdeal p t).minimalPrimes) →
+          (∀ q ∈ qs, localColength q (cutIdeal p t) < ⊤) →
+          cutCost D p t qs ≤ D p := by
+    intro t ht p hp qs hmin hfin
+    obtain ⟨L, rfl, hL⟩ := hcuts t ht
+    exact h1 chartMap chartMap_surjective p L hL hp qs hmin hfin
+  have hpoints_cost := h2 f g h D
+    (fun q => affineDegree_nonneg (q.asIdeal.comap chartMap))
+    (fun y q hy => (chartDegree_eq_one chartMap chartMap_surjective y q hy).ge)
+    hpay points (41481 * (41481 - 33184 + 1) * 1037) hpoints
+  have hbound := hpoints_cost.trans chartDegree_bound
+  norm_num [totalCap, halfIndexCap] at hbound
+  have hprice : isolatedPrice = 344924340099310 := by
+    norm_num [isolatedPrice, ceilDiv]
+  rw [hprice]
+  by_contra! hlarge
+  have hlarge' : (344924340099311 : ℚ) ≤ points.card := by exact_mod_cast hlarge
+  linarith
 end
 end K1_13_7_6
 end
@@ -1960,6 +1996,12 @@ namespace K1_13_7_2
 noncomputable section
 open Polynomial K1 K1_13 K1_13_6 K1_13_7
 open scoped BigOperators
+def c4 : Prop :=
+  ∀ f : Row 4, SmallFactor f → ∀ surface : Ideal GeoJets, surface.IsPrime → surface.height = 2 →
+    toGeneric f ∈ surface → toGeneric (separant f) ∉ surface →
+    Invariant f surface → toGeneric (membershipTest f) ∈ surface →
+    ∀ S : Geom[X], surface ≤ markIdeal S → RegularAt f S → S.natDegree ≤ 133671 →
+      IntegratedMark f S
 private theorem genericCoeffs_injective : Function.Injective genericCoeffs :=
   (algebraMap GenericField GeoField).injective.comp (IsFractionRing.injective Geom[X] GenericField)
 theorem mem_markIdeal {P : Row 4} {S : Geom[X]} :
@@ -2610,6 +2652,15 @@ def c1 : Prop :=
   ∀ (f : Row 4) (P : Ideal GeoJets), P.IsPrime →
     toGeneric (separant f) ∉ P → Invariant f P →
     ∃ δ : Derivation Geom (ChartRing f P) (ChartRing f P), FollowsFlow f P δ
+def c2 : Prop :=
+  ∀ (f : Row 4) (P : Ideal GeoJets) (hp : P.IsPrime)
+    (hs : toGeneric (separant f) ∉ P),
+    TrueWeightLE f (90 * 180265 - 1) → toGeneric f ∈ P →
+    toGeneric (membershipTest f) ∈ P →
+    ∀ δ : Derivation Geom (ChartRing f P) (ChartRing f P),
+      FollowsFlow f P δ →
+      trajectory (componentConstants P) f
+        ((chartPolynomial f P).map (@genericLift f P hp hs)) = 0
 def c3 : Prop :=
   ∀ (P : Ideal GeoJets) (_hp : P.IsPrime) (U : (JetField P)[X]),
     P.height = 2 → U.natDegree < taylorLength →
@@ -4135,6 +4186,10 @@ theorem chamber_has_simplex {a : Shape} (ha : Chamber a) (ht : 0 < a.t) :
 end K1_13_7_2_3_2
 end
 section
+namespace K1_13_1_1
+end K1_13_1_1
+end
+section
 namespace K1_13_7_5
 noncomputable section
 open Polynomial Finset K1 K1_13 K1_13_7
@@ -5420,18 +5475,6 @@ set_option maxHeartbeats 1000000
 namespace K1_14_3_2_4
 noncomputable section
 open K1_14 K1_14_3 Polynomial
-private theorem sectionJet_ext {A : Type*} [CommRing A] [Algebra SectionField A]
-    {f g : SectionJet →ₐ[SectionField] A}
-    (ht : ∀ i, f (seedVar i) = g (seedVar i))
-    (hy : f ordinateVar = g ordinateVar)
-    (hv : f derivativeVar = g derivativeVar) : f = g := by
-  apply AlgHom.coe_ringHom_injective
-  refine Polynomial.ringHom_ext' ?_ hv
-  refine Polynomial.ringHom_ext' ?_ hy
-  apply MvPolynomial.ringHom_ext
-  · intro k
-    exact (f.commutes k).trans (g.commutes k).symm
-  · exact ht
 @[simp] private theorem eval_seedVar (s : Slice) (i : Fin 2) :
     sectionEval s (seedVar i) = seedValues s i := by
   simp [sectionEval, seedVar]
@@ -5441,83 +5484,9 @@ private theorem sectionJet_ext {A : Type*} [CommRing A] [Algebra SectionField A]
 @[simp] private theorem eval_derivativeVar (s : Slice) :
     sectionEval s derivativeVar = derivativeValue s := by
   simp [sectionEval, derivativeVar]
-private theorem scalar_eq (i : Fin 4) :
-    sectionScalar i = algebraMap SectionField SectionJet (parameter i) := rfl
 @[simp] private theorem eval_scalar (s : Slice) (i : Fin 4) :
     sectionEval s (sectionScalar i) = MvPolynomial.C (parameter i) :=
   (sectionEval s).commutes (parameter i)
-private def freeVariables (s : Slice) : Fin 2 → SectionJet :=
-  match s with
-  | .seed => ![ordinateVar, derivativeVar]
-  | .ordinate | .mixed => ![seedVar 1, derivativeVar]
-  | .jets => seedVar
-private def planeInclusion (s : Slice) : Plane →ₐ[SectionField] SectionJet :=
-  MvPolynomial.aeval (freeVariables s)
-theorem sectionEval_surjective (s : Slice) : Function.Surjective (sectionEval s) := by
-  have h : (sectionEval s).comp (planeInclusion s) = AlgHom.id _ _ := by
-    apply MvPolynomial.algHom_ext
-    intro i
-    fin_cases i <;> cases s <;>
-      simp [planeInclusion, freeVariables, seedValues, ordinateValue, derivativeValue]
-  intro r
-  exact ⟨planeInclusion s r, DFunLike.congr_fun h r⟩
-theorem sectionEval_ker (s : Slice) : RingHom.ker (sectionEval s) =
-    Ideal.span (sectionEquations s) := by
-  let I : Ideal SectionJet := Ideal.span (sectionEquations s)
-  let q := Ideal.Quotient.mkₐ SectionField I
-  change RingHom.ker (sectionEval s) = I
-  have hle : I ≤ RingHom.ker (sectionEval s) := by
-    apply Ideal.span_le.mpr
-    intro r hr
-    cases s <;>
-      simp only [sectionEquations, Set.mem_insert_iff, Set.mem_singleton_iff] at hr <;>
-      rcases hr with rfl | rfl <;>
-      simp [RingHom.mem_ker, seedValues, ordinateValue, derivativeValue]
-  have eq_cut (x y : SectionJet) (h : x - y ∈ sectionEquations s) : q x = q y := by
-    apply sub_eq_zero.mp
-    rw [← map_sub]
-    exact Ideal.Quotient.eq_zero_iff_mem.mpr (Ideal.subset_span h)
-  have eq_seedLeft (h : s = .ordinate ∨ s = .mixed) :
-      q (seedVar 0) =
-        algebraMap SectionField (SectionJet ⧸ I) (parameter 2) -
-          algebraMap SectionField (SectionJet ⧸ I) (parameter 0) * q (seedVar 1) := by
-    have he := eq_cut (seedVar 0 + sectionScalar 0 * seedVar 1) (sectionScalar 2) (by
-      rcases h with rfl | rfl <;> simp [sectionEquations, seedVar])
-    simp only [map_add, map_mul, scalar_eq, AlgHom.commutes] at he
-    exact eq_sub_of_add_eq he
-  have hcomp : (q.comp (planeInclusion s)).comp (sectionEval s) = q := by
-    apply sectionJet_ext
-    · intro i
-      fin_cases i <;> cases s <;>
-        simp [planeInclusion, freeVariables, seedValues]
-      · exact ((eq_cut _ _ (by simp [sectionEquations, seedVar]) :
-          q (seedVar 0) = q (sectionScalar 2)).trans (q.commutes _)).symm
-      · exact (eq_seedLeft (Or.inl rfl)).symm
-      · exact (eq_seedLeft (Or.inr rfl)).symm
-      · exact ((eq_cut _ _ (by simp [sectionEquations, seedVar]) :
-          q (seedVar 1) = q (sectionScalar 3)).trans (q.commutes _)).symm
-    · cases s <;>
-        simp [planeInclusion, freeVariables, ordinateValue]
-      · exact ((eq_cut _ _ (by simp [sectionEquations, ordinateVar]) :
-          q ordinateVar = q (sectionScalar 3)).trans (q.commutes _)).symm
-      · have he := eq_cut (ordinateVar + sectionScalar 1 * derivativeVar) (sectionScalar 3)
-          (by simp [sectionEquations, ordinateVar, derivativeVar])
-        simp only [map_add, map_mul, scalar_eq, AlgHom.commutes] at he
-        exact (eq_sub_of_add_eq he).symm
-      · exact ((eq_cut _ _ (by simp [sectionEquations, ordinateVar]) :
-          q ordinateVar = q (sectionScalar 2)).trans (q.commutes _)).symm
-    · cases s <;>
-        simp [planeInclusion, freeVariables, derivativeValue]
-      exact ((eq_cut _ _ (by simp [sectionEquations, derivativeVar]) :
-        q derivativeVar = q (sectionScalar 3)).trans (q.commutes _)).symm
-  refine le_antisymm ?_ hle
-  intro r hr
-  apply Ideal.Quotient.eq_zero_iff_mem.mp
-  have he : sectionEval s r = 0 := hr
-  change q r = 0
-  rw [← DFunLike.congr_fun hcomp r]
-  change q (planeInclusion s (sectionEval s r)) = 0
-  rw [he, map_zero, map_zero]
 end
 end K1_14_3_2_4
 end

@@ -103,10 +103,6 @@ def toScalarSource (Q : MvPolynomial (Fin 4) K1.K) (hn : Q ≠ 0)
       simp [Finsupp.sum_fintype, Fin.sum_univ_succ]
       omega
     omega
-theorem toScalarSource_atDecoder (Q : MvPolynomial (Fin 4) K1.K) (hn) (hy) (hs) (ht) (htot)
-    (γ : K1.K) (P : Polynomial K1.K) :
-    (toScalarSource Q hn hy hs ht htot).atDecoder γ P =
-      aeval (scalarImages P γ (γ ^ K1.p)) Q := group_eval Q P γ (γ ^ K1.p)
 end
 end K1_10_1
 end

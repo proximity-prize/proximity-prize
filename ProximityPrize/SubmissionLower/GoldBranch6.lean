@@ -9,18 +9,13 @@ open P3 (I K agreement)
 open K1_13 (Geom extend Row Shape shape InBox Fits Contact remaining chart liftedChart
   mixed32 ceilDiv atJet OrderAt indexDegree)
 open scoped BigOperators
-abbrev Messages := P3.Messages
 abbrev physicalDegree := P3.physicalDegree
 abbrev taylorLength : ℕ := physicalDegree + 1
 abbrev incidenceGap : ℕ := agreement - physicalDegree
-abbrev anchorCutoff : ℕ := 90 * agreement - 1
-abbrev primaryCutoff : ℕ := 3000 * agreement - 1
 abbrev primaryBox : Shape := P0_9.primaryBox
-abbrev layerWidth : ℕ := incidenceGap + 3
 def TrueWeightLE {n : ℕ} (P : Row n) (D : ℕ) : Prop :=
   ∀ m ∈ P.support, (P.coeff m).natDegree +
     m.sum (fun i a => (physicalDegree - i.val) * a) ≤ D
-abbrev lowerCap : ℕ := 0x417306f5c2a90f
 abbrev factorCap : ℕ := 0x32cdf437872295e
 abbrev commonBox : Shape := ⟨6245, 2022, 0⟩
 abbrev resultantBox : Shape := ⟨0x38c7faf0, 0x13315480, 0⟩
@@ -36,19 +31,6 @@ structure FatEquations where
   common_index : indexDegree common ≤ commonBox.j
   residual_total : residual.totalDegree ≤ resultantBox.b
   residual_index : indexDegree residual ≤ resultantBox.j
-def SmallFactor (f : Row 4) : Prop :=
-  Irreducible f ∧ 0 < (shape f).t ∧ InBox (shape f) ⟨120, 48, 10⟩ ∧
-    TrueWeightLE f anchorCutoff
-def LowerRow (g : Row 3) : Prop :=
-  g ≠ 0 ∧ g.totalDegree ≤ 120 ∧ K1_13.indexDegree g ≤ 48 ∧ TrueWeightLE g anchorCutoff
-structure Cover {n : ℕ} (Γ : Finset K) (s : K → K[X])
-    (g : Row 3) (f : Fin n → Row 4) : Prop where
-  lower : LowerRow g
-  factors : ∀ i, SmallFactor (f i)
-  different : ∀ i j, i ≠ j → ¬ Associated (f i) (f j)
-  fits : Fits (fun i => shape (f i))
-  covers : ∀ γ ∈ Γ, K1_13.atJet g (extend (s γ)) = 0 ∨
-    ∃ i, K1_13.OnFactor (f i) (extend (s γ))
 def linearChart (p : Shape) : Shape :=
   let i := 3 + taylorLength * (p.j - 2)
   ⟨max (1 + taylorLength * (p.b - 1)) i, i, min (taylorLength + 1) (i / 3)⟩

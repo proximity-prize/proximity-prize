@@ -54,14 +54,6 @@ theorem mul_box {a b c u v w : ℕ} {f g : MvPolynomial Idx F}
   rw [restrictSupport_add]
   exact Submodule.mul_mem_mul hf hg
 
-theorem scales (a b c n : ℕ) : n • exps a b c ⊆ exps (a*n) (b*n) (c*n) := by
-  induction n with
-  | zero =>
-    rw [zero_smul, Set.zero_subset]
-    exact ⟨by simp, by simp, by simp⟩
-  | succ n ih =>
-    rw [succ_nsmul]
-    exact (Set.add_subset_add ih subset_rfl).trans add_box
 
 theorem axis {a b c : ℕ} (ha : 0<a) (hb : 0<b) (hc : 0<c) (i : Idx) :
     Finsupp.single i 1 ∈ exps a b c := by
@@ -69,69 +61,9 @@ theorem axis {a b c : ℕ} (ha : 0<a) (hb : 0<b) (hc : 0<c) (i : Idx) :
   simp only [Set.mem_ofPred_eq, Finsupp.single_apply]
   split_ifs <;> omega
 
-abbrev proj (F : Type*) [Field F] (a b c : ℕ) := monomialMap F (exps a b c)
 
-theorem dim_add {a b c h j r n : ℕ} {g : MvPolynomial Idx F} (hg0 : g ≠ 0)
-    (hg : g ∈ space F h j r) (hh : h≤a*n) (hj : j≤b*n) (hr : r≤c*n) :
-    affineHilbertFunction ((Ideal.span {g}).comap (proj F a b c)) n +
-      (a*n-h+1)*(b*n-j+1)*(c*n-r+1) ≤ (a*n+1)*(b*n+1)*(c*n+1) := by
-  have hdim := affineHilbertFunction_comap_span_singleton_add_finrank_le (proj F a b c) hg0
-    (M := space F (a*n) (b*n) (c*n)) (M' := space F (a*n-h) (b*n-j) (c*n-r))
-    (fun _ hp => restrictSupport_mono F (scales a b c n)
-      (monomialMap_mem_restrictSupport_nsmul (show 0 ∈ exps a b c from
-        ⟨by simp, by simp, by simp⟩) hp)) fun p hp => by
-          simpa only [Nat.add_sub_cancel' hh, Nat.add_sub_cancel' hj,
-            Nat.add_sub_cancel' hr] using mul_box hg hp
-  simpa only [size] using hdim
 
-/-- Ordinary affine degree of a surface in the rectangular monomial embedding. -/
-theorem surface {a b c h j r : ℕ} (ha : 0<a) (hb : 0<b) (hc : 0<c)
-    {g : MvPolynomial Idx F} (hg0 : g ≠ 0) (hg : g ∈ space F h j r) :
-    affineDegree ((Ideal.span {g}).comap (proj F a b c)) ≤
-      (2*(h*b*c+j*a*c+r*a*b) : ℕ) := by
-  by_cases ht : Ideal.span {g} = ⊤
-  · rw [ht, Ideal.comap_top, affineDegree_top]
-    exact Nat.cast_nonneg _
-  have hs := natDegree_affineHilbertPolynomial_comap_span_singleton_add_one_of_surjective
-    (proj F a b c) (monomialMap_surjective (axis ha hb hc)) hg0 ht
-  have hdim : (affineHilbertPolynomial ((Ideal.span {g}).comap (proj F a b c))).natDegree = 2 := by
-    rw [show Nat.card Idx = 3 by simp [Idx,Nat.card_eq_fintype_card]] at hs
-    omega
-  let q₂ : ℚ := (h:ℚ)*b*c + (j:ℚ)*a*c + (r:ℚ)*a*b
-  let q₁ : ℚ := (a:ℚ)+(b:ℚ)+(c:ℚ) - (a*(1-(j:ℚ))*(1-(r:ℚ)) +
-    b*(1-(h:ℚ))*(1-(r:ℚ)) + c*(1-(h:ℚ))*(1-(j:ℚ)))
-  let q₀ : ℚ := 1 - (1-(h:ℚ))*(1-(j:ℚ))*(1-(r:ℚ))
-  let R : ℚ[X] := Polynomial.C q₂*Polynomial.X^2 + Polynomial.C q₁*Polynomial.X + Polynomial.C q₀
-  refine (affineDegree_le_of_eventually_affineHilbertFunction_le hdim
-    (R := R) Polynomial.natDegree_quadratic_le ?_).trans_eq ?_
-  · filter_upwards [eventually_ge_atTop (h+j+r)] with n hn
-    have hh : h ≤ a*n := (show h≤n by omega).trans (Nat.le_mul_of_pos_left _ ha)
-    have hj : j ≤ b*n := (show j≤n by omega).trans (Nat.le_mul_of_pos_left _ hb)
-    have hr : r ≤ c*n := (show r≤n by omega).trans (Nat.le_mul_of_pos_left _ hc)
-    have H := dim_add hg0 hg hh hj hr
-    have Hq : ((_ : ℕ) : ℚ) ≤ ((_ : ℕ) : ℚ) := Nat.cast_le.mpr H
-    push_cast [Nat.cast_sub hh, Nat.cast_sub hj, Nat.cast_sub hr] at Hq
-    have HR : R.eval (n:ℚ) =
-      ((a:ℚ)*n+1)*(b*n+1)*(c*n+1) - (a*n-h+1)*(b*n-j+1)*(c*n-r+1) := by
-      simp only [R,q₂,q₁,q₀,Polynomial.eval_add,Polynomial.eval_mul,Polynomial.eval_pow,
-        Polynomial.eval_X,Polynomial.eval_C]
-      push_cast
-      ring
-    rw [HR]
-    linarith only [Hq]
-  · have hh : R.coeff 2 = q₂ := by simp [R, Polynomial.coeff_C_mul, Polynomial.coeff_X_pow]
-    rw [hh]
-    norm_num [Nat.factorial,q₂] <;> ring
 
-/-- Total degree of the irreducible surfaces, including reducible root equations. -/
-theorem surfaces {a b c h j r : ℕ} (ha : 0<a) (hb : 0<b) (hc : 0<c)
-    {g : MvPolynomial Idx F} (hg0 : g ≠ 0) (hg : g ∈ space F h j r) :
-    ∑ Q ∈ ((Ideal.span {g}).comap (proj F a b c)).minimalPrimesFinset,
-      affineDegree Q ≤ (2*(h*b*c+j*a*c+r*a*b) : ℕ) :=
-  (sum_affineDegree_minimalPrimes_comap_span_singleton_le_of_surjective (proj F a b c)
-    (monomialMap_surjective (axis ha hb hc)) g).trans (surface ha hb hc hg0 hg)
 
 end
 end SplitCut.BoxDegree
-#print axioms SplitCut.BoxDegree.surface
-#print axioms SplitCut.BoxDegree.surfaces
