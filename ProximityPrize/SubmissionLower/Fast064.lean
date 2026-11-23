@@ -81,6 +81,16 @@ namespace K1_13_5_5
 noncomputable section
 open K1 K1_13 K1_13_5 Finset MvPolynomial
 open scoped BigOperators Polynomial
+def c1 : Prop :=
+  ∀ f : Row 3, Irreducible f → 0 < f.degreeOf 2 → f.degreeOf 2 ≤ 24 →
+    TrueWeightLE f (90 * 180265 - 1) → Whole f →
+    ∃ P : Ideal CoeffRing, FreshChart P (freshRow f) (freshRow (separant f)) ∧
+      ∀ S : Geom[X], S.natDegree ≤ 133671 → RegularAt 2 f S →
+        coeffPoint S ∈ zeroLocus Geom P
+def c2 : Prop :=
+  ∀ (P : Ideal CoeffRing) (g d : FreshJetRing), FreshChart P g d →
+    (affineHilbertPolynomial P).natDegree = 2 ∧
+      2 * affineDegree P ≤ (133671 : ℚ) * (g.totalDegree : ℚ)
 end
 end K1_13_5_5
 end
@@ -1226,6 +1236,12 @@ noncomputable section
 open K1_13 K1_13_5_5 MvPolynomial
 open scoped BigOperators
 attribute [local instance] MvPolynomial.gradedAlgebra
+def c1 : Prop :=
+  ∀ (Q : Ideal CoeffRing) (L : Fin 2 → FreshJetRing),
+    Q.IsPrime → Q.IsHomogeneous (homogeneousSubmodule CoeffIndex Geom) →
+    (affineHilbertPolynomial Q).natDegree = 2 → FiniteJetPair L (jetImage (freshIdeal Q)) →
+    2 * affineDegree Q ≤
+      (133671 : ℚ) * (genericFiberDimension L (freshIdeal Q) : ℚ)
 def c2 : Prop :=
   ∀ (P : Ideal CoeffRing), P.IsPrime → (affineHilbertPolynomial P).natDegree = 2 →
     ∃ (n : ℕ) (Q : Fin n → Ideal CoeffRing),

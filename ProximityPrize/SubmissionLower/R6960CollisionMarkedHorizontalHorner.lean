@@ -1,0 +1,157 @@
+import ProximityPrize.SubmissionLower.R6960CollisionMarkedGenericMeasure
+import ProximityPrize.SubmissionLower.R6960CollisionMarkedGenericCoordinates
+import ProximityPrize.SubmissionLower.R6960CollisionMarkedRootTransport
+
+set_option Elab.async false
+set_option maxRecDepth 18000
+set_option maxHeartbeats 3400000
+set_option backward.isDefEq.respectTransparency.types false
+
+namespace Lower6960.CollisionMarked
+noncomputable section
+open K1_14 (L)
+open MonicChart (Scalar ChartField)
+open RetainedCompression (Curve ordinate parameter view view_y view_z)
+open RetainedSurfaceClass (Crossing chartImage transition)
+open MarkedEvaluation (swapBase)
+open Polynomial Module LineEuler
+open scoped Polynomial Lower6960.MonicChart Lower6960.RetainedSurfaceClass
+open private Lower6960.MarkedEvaluation.swap_plane from ProximityPrize.SubmissionLower.R6960MarkedScalarAxis
+open private Lower6960.MonicChartProbes.planeMap_finite from ProximityPrize.SubmissionLower.R6960MonicChartProbes
+open private Lower6960.MonicChart.root_finrank from ProximityPrize.SubmissionLower.R6960MonicChartFrobenius
+
+variable {E : Type} [Field E] [original : Algebra ChartField E]
+
+@[instance_reducible] private def horizontalFieldAlgebra : Algebra ChartField E :=
+  ((algebraMap ChartField E).comp swapBase.toRingHom).toAlgebra
+
+private theorem horizontalSeedRoot (P : CurvatureSquares.Ordinate) (y : E)
+    (root : aeval y ((RetainedLinear.toSeed P).map (algebraMap Scalar[X] ChartField))=0) :
+    let : Algebra ChartField E := horizontalFieldAlgebra (E:=E)
+    aeval y ((RetainedLinear.toSeed (projectedRaw P)).map (algebraMap Scalar[X] ChartField))=0 := by
+  let k := algebraMap ChartField E
+  let j := algebraMap Scalar[X] ChartField
+  let c := Polynomial.mapRingHom (algebraMap L[X] Scalar)
+  let a := horizontalFieldAlgebra (E:=E)
+  let : Algebra ChartField E := a
+  have coordinate : (((k.comp swapBase.toRingHom).comp j).comp c).comp Bivariate.swap.toRingHom =
+      (k.comp j).comp c := by
+    apply RingHom.ext
+    intro p
+    have pmap (q : PlaneConstants.Plane L) :
+        MonicChartProbes.planeMap (false,false) q=j (c q) :=
+      DFunLike.congr_fun Lower6960.MonicChartProbes.planeMap_finite q
+    change k (swapBase (j (c (Bivariate.swap p))))=k (j (c p))
+    rw [←pmap,Lower6960.MarkedEvaluation.swap_plane,Bivariate.swap_swap_apply,pmap]
+  change (((P.map Bivariate.swap.toRingHom).map c).map j).eval₂ (k.comp swapBase.toRingHom) y=0
+  rw [eval₂_map,eval₂_map,eval₂_map,coordinate]
+  change ((P.map c).map j).eval₂ k y=0 at root
+  rwa [eval₂_map,eval₂_map] at root
+
+private theorem horizontalMinpolyDegree (b : PowerBasis ChartField E) :
+    let y := b.gen
+    let n := b.dim
+    let : Algebra ChartField E := horizontalFieldAlgebra (E:=E)
+    (minpoly ChartField y).natDegree=n := by
+  let y := b.gen
+  let n := b.dim
+  have oldInt : Algebra.IsIntegral ChartField E := by
+    let : FiniteDimensional ChartField E := b.finite
+    infer_instance
+  let mp := minpoly ChartField y
+  have md : mp.natDegree=n := b.natDegree_minpoly
+  let a := horizontalFieldAlgebra (E:=E)
+  let : Algebra ChartField E := a
+  have co : a.algebraMap.comp swapBase.symm.toRingHom =
+      (RingEquiv.refl E).toRingHom.comp original.algebraMap := by
+    apply RingHom.ext
+    intro x
+    change original.algebraMap (swapBase (swapBase.symm x))=original.algebraMap x
+    rw [swapBase.apply_symm_apply]
+  have eq : mp.map swapBase.symm.toRingHom=minpoly ChartField y :=
+    @minpoly.map_eq_of_equiv_equiv ChartField _ ChartField E E _ _ _ _ _ _
+      original a oldInt swapBase.symm (RingEquiv.refl E) co y
+  change (minpoly ChartField y).natDegree=n
+  rw [←eq]
+  exact (natDegree_map_eq_of_injective (f:=swapBase.symm.toRingHom) swapBase.symm.injective mp).trans md
+
+private theorem horner_of_degree
+    (Q : Scalar[X][X]) (v : ℕ) (pos : 0<Q.natDegree)
+    (width : ∀ i, (Q.coeff i).natDegree≤v) (y : E)
+    (root : aeval y (Q.map (algebraMap Scalar[X] ChartField))=0)
+    (mindeg : (minpoly ChartField y).natDegree=Q.natDegree) {n : ℕ}
+    (size : n=Q.natDegree)
+    (af : let : Algebra (Laurent Scalar) E := Horner.rationalLaurentAlgebra
+          Basis (Fin n) Scalar[X] (chartOrder (k:=Scalar) (E:=E) false))
+    (ai : let : Algebra (Laurent Scalar) E := Horner.rationalLaurentAlgebra
+          Basis (Fin n) Scalar[X] (chartOrder (k:=Scalar) (E:=E) true))
+    (t : ℕ)
+    (det : let : Algebra (Laurent Scalar) E := Horner.rationalLaurentAlgebra
+           (normalizedTransition af ai).det.degree=((-(t:ℤ):ℤ):WithBot ℤ)) :
+    t≤(Q.natDegree-1)*v := by
+  subst n
+  let : Algebra (Laurent Scalar) E := Horner.rationalLaurentAlgebra
+  obtain ⟨d,dd,cap⟩ := Horner.actual_horner_budget Q v pos width y root mindeg af ai
+  rw [det] at dd
+  have de : d=-(t:ℤ) := (WithBot.coe_injective dd).symm
+  rw [de,neg_neg,←Int.natCast_mul] at cap
+  exact_mod_cast cap
+
+local instance horizontalCrossRing (x z:L) : CommRing (Crossing E x z) :=
+  @Ideal.Quotient.commRing (RetainedSurfaceClass.Tor E) inferInstance
+    (RetainedSurfaceClass.axisIdeal E false x⊔RetainedSurfaceClass.axisIdeal E true z)
+
+/-- The horizontal determinant deficit measured on the selected original
+line is bounded by the parameter degree of the same ordinate equation. -/
+theorem actual_horizontal_horner
+    (f : Curve L[X]) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate) (hi : f.degreeOf ordinate<48)
+    (b : PowerBasis ChartField E)
+    (root : aeval b.gen ((RetainedLinear.toSeed (view f)).map (algebraMap Scalar[X] ChartField))=0)
+    (x z : L) (nx : x≠0) (nz : z≠0)
+    [IsReduced (Crossing E x z)] [FiniteDimensional L (Crossing E x z)]
+    (p : ℕ) [CharP L p] (small : finrank L (Crossing E x z)<p)
+    {m : ℕ} (xf : Basis (Fin m) L[X] (chartImage E false x false))
+    (xi : Basis (Fin m) L[X] (chartImage E false x true))
+    (t : ℕ) (dt : (transition E false x nx xf xi).det.degree=((-(t:ℤ):ℤ):WithBot ℤ)) :
+    t≤(f.degreeOf ordinate-1)*f.degreeOf parameter := by
+  let : FiniteDimensional ChartField E := b.finite
+  let : Algebra.IsSeparable ChartField E := MonicChartProbes.actual_separable f ir lo hi b root
+  let : Algebra Scalar[X] E := ((algebraMap ChartField E).comp (algebraMap Scalar[X] ChartField)).toAlgebra
+  let : IsScalarTower Scalar[X] ChartField E :=
+    IsScalarTower.of_algebraMap_eq (R:=Scalar[X]) (S:=ChartField) (A:=E) fun _=>rfl
+  have root' : aeval b.gen (RetainedLinear.toSeed (view f))=0 := by
+    rw [aeval_map_algebraMap] at root
+    exact root
+  have rank := Lower6960.MonicChart.root_finrank f ir lo b root'
+  have dim : b.dim=f.degreeOf ordinate := b.finrank.symm.trans rank
+  let Q := RetainedLinear.toSeed (projectedRaw (view f))
+  have deg : Q.natDegree=f.degreeOf ordinate :=
+    (RetainedLinear.toSeed_degree _).trans ((projectedRaw_degree _).trans (view_y f))
+  have pos : 0<Q.natDegree := by rw [deg]; omega
+  have width (i : ℕ) : (Q.coeff i).natDegree≤f.degreeOf parameter := by
+    change ((((projectedRaw (view f)).map (mapRingHom (RetainedLinear.incl L))).coeff i)).natDegree≤_
+    rw [coeff_map]
+    change (((projectedRaw (view f)).coeff i).map (RetainedLinear.incl L)).natDegree≤_
+    apply natDegree_map_le.trans
+    have h := (CurvatureSquares.coeff_caps (view f) i).2
+    rw [view_z] at h
+    change (Bivariate.swap ((view f).coeff i)).natDegree≤f.degreeOf parameter at h
+    rw [projectedRaw,coeff_map]
+    change (Bivariate.swap ((view f).coeff i)).natDegree≤f.degreeOf parameter
+    exact h
+  have fr := generic_measure_eq_native (E:=E) false x z nx nz p small xf xi t dt
+  rw [generic_algebra_horizontal] at fr
+  have hroot := horizontalSeedRoot (view f) b.gen root
+  let y := b.gen
+  have md := horizontalMinpolyDegree b
+  let : Algebra ChartField E := horizontalFieldAlgebra (E:=E)
+  let : Algebra (Laurent Scalar) E := Horner.rationalLaurentAlgebra
+  obtain ⟨af,ai,da⟩ := fr
+  have mindeg : (minpoly ChartField y).natDegree=Q.natDegree := md.trans (dim.trans deg.symm)
+  have cap := horner_of_degree Q (f.degreeOf parameter) pos width y
+    hroot mindeg (rank.trans deg.symm) af ai t da
+  rwa [deg] at cap
+
+#print axioms actual_horizontal_horner
+end
+end Lower6960.CollisionMarked

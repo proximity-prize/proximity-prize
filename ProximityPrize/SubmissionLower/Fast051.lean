@@ -1,4 +1,3 @@
-/- Modified from public PR657. Removed obsolete rank budget checks. -/
 import ArkLib.Data.CodingTheory.ReedSolomon.MutualCorrelatedAgreement.Johnson.Agreement
 import ArkLib.Data.Finset.PairwiseIntersection
 import Mathlib.Algebra.AffineMonoid.Basic
@@ -27,7 +26,7 @@ import Mathlib.Topology.Algebra.MvPolynomial
 import ProximityPrize.SubmissionLower.Fast042
 import ProximityPrize.SubmissionLower.Pack_K1_14_2_1Split
 import ProximityPrize.SubmissionLower.Pack_K1_14_2_2Split
-import ProximityPrize.SubmissionLower.Fast040
+import ProximityPrize.SubmissionLower.SoloK1_13_1_1ArithmeticLogic
 set_option Elab.async false
 set_option autoImplicit true
 section
@@ -35,7 +34,6 @@ namespace K1_13_8
 open K1_13
 open scoped BigOperators
 def zeroShape : Shape := ⟨0,0,0⟩
-def fullCap : Shape := ⟨120,48,10⟩
 def layerCount : ℕ := 1 + (3000 * 180265 - 1) / 46597
 def Valid (a : Shape) : Prop := 1 ≤ a.t ∧ 3 * a.t ≤ a.j ∧ a.j ≤ 3 * a.b
 def RetainedBox (a : Shape) : Prop :=
@@ -805,29 +803,6 @@ namespace K1_14_2_2_2
 noncomputable section
 open K1 K1_14 K1_14_2 K1_14_2_2 K1_14_3_2 Polynomial
 open scoped BigOperators Classical
-theorem ordinary_sum (D : Finset Equation) (x y : ℕ)
-    (hx : ∑ f ∈ D, ordinarySeedDegree f ≤ x) (hy : ∑ f ∈ D, f.natDegree ≤ y)
-    (k : Fin 4) :
-    (∑ f ∈ D, ordinaryBudget (ordinarySeedDegree f) f.natDegree k) ≤ ordinaryBudget x y k := by
-  fin_cases k
-  · exact hy
-  · exact hx
-  · change (∑ f ∈ D, 2 * ordinarySeedDegree f * f.natDegree) ≤ 2*x*y
-    calc
-      _ ≤ ∑ f ∈ D, 2 * ordinarySeedDegree f * y := by
-        apply Finset.sum_le_sum
-        intro f hf
-        exact Nat.mul_le_mul_left _ ((Finset.single_le_sum (fun _ _ => Nat.zero_le _) hf).trans hy)
-      _ = (2 * ∑ f ∈ D, ordinarySeedDegree f) * y := by rw [Finset.mul_sum, Finset.sum_mul]
-      _ ≤ _ := Nat.mul_le_mul_right _ (Nat.mul_le_mul_left _ hx)
-  · change (∑ f ∈ D, ordinarySeedDegree f * ordinarySeedDegree f) ≤ x*x
-    calc
-      _ ≤ ∑ f ∈ D, ordinarySeedDegree f * x := by
-        apply Finset.sum_le_sum
-        intro f hf
-        exact Nat.mul_le_mul_left _ ((Finset.single_le_sum (fun _ _ => Nat.zero_le _) hf).trans hx)
-      _ = (∑ f ∈ D, ordinarySeedDegree f) * x := (Finset.sum_mul _ _ _).symm
-      _ ≤ _ := Nat.mul_le_mul_right _ hx
 theorem length_le_mass {S : Finset (Ideal Ambient)} {I : Ideal Ambient} (hI : I ∈ S)
     (k : Fin 4) : sectionDegree I k ≤ mass S k :=
   Finset.single_le_sum (f := fun J => sectionDegree J k) (fun _ _ => Nat.zero_le _) hI
@@ -870,6 +845,10 @@ namespace K1_14_2_2_2
 noncomputable section
 open K1 K1_14 K1_14_2 K1_14_2_2 K1_14_3_2 Polynomial
 open scoped BigOperators Classical
+def c2 : Prop :=
+  ∀ f : Equation, Irreducible f → 0 < f.natDegree → f.natDegree < p →
+    ∃ g a, K1_14_3.IsClearing f g a ∧ ProperPair (C f) (K1_14_3.ordinaryCutter g) ∧
+      ∀ z S, atMark f z S = 0 → jetAt (K1_14_3.ordinaryCutter g) z S = 0
 def c3 : Prop :=
   ∀ P Q : Jet, ProperPair P Q →
     ∃ S : Finset (Ideal Ambient), ComponentsOn P Q S ∧
@@ -2313,57 +2292,6 @@ private theorem exists_fixedIncl (D : Jet) (h : ¬ UsesSeed D) : ∃ G : ODE, D 
   obtain hc := MvPolynomial.totalDegree_eq_zero_iff_eq_C.mp hzero
   rw [hc]
   simp [e]
-theorem extractOrdinary (P Q : Jet) (hP : P ≠ 0) (hQ : Q ≠ 0)
-    (hseed : ∀ b : Seeds, C (C b) ∣ P → IsUnit b)
-    (hord : ∀ D : Jet, Irreducible D → D ∣ P → D ∣ Q → D.natDegree = 0) :
-    ∃ (M : Multiset Equation) (L T : Jet), P = C M.prod * L ∧ Q = C M.prod * T ∧
-      ProperPair L T ∧ ∀ f ∈ M, Irreducible f ∧ 0 < f.natDegree := by
-  classical
-  revert Q
-  revert hP hseed
-  refine (wellFounded_dvdNotUnit (α := Jet)).induction
-    (C := fun P => P ≠ 0 → (∀ b : Seeds, C (C b) ∣ P → IsUnit b) →
-      ∀ Q : Jet, Q ≠ 0 →
-      (∀ D : Jet, Irreducible D → D ∣ P → D ∣ Q → D.natDegree = 0) →
-      ∃ (M : Multiset Equation) (L T : Jet), P = C M.prod * L ∧ Q = C M.prod * T ∧
-        ProperPair L T ∧ ∀ f ∈ M, Irreducible f ∧ 0 < f.natDegree) P ?_
-  intro P ih hP hseed Q hQ hord
-  by_cases h : ∃ D : Jet, Irreducible D ∧ D ∣ P ∧ D ∣ Q
-  · obtain ⟨D, hD, hDP, hDQ⟩ := h
-    let f := D.coeff 0
-    have hd : D = C f := eq_C_of_natDegree_eq_zero (hord D hD hDP hDQ)
-    have hf : Irreducible f := by
-      rw [hd] at hD
-      refine ⟨fun hu => hD.not_isUnit (isUnit_C.mpr hu), ?_⟩
-      intro a b hab
-      have he : (C f : Jet) = C a * C b := by rw [← C_mul, ← hab]
-      exact (hD.isUnit_or_isUnit he).imp isUnit_C.mp isUnit_C.mp
-    have hfpos : 0 < f.natDegree := by
-      by_contra! hzero
-      have hc := eq_C_of_natDegree_eq_zero (Nat.eq_zero_of_le_zero hzero)
-      have hdiv : C f ∣ P := hd ▸ hDP
-      rw [hc] at hdiv
-      apply hf.not_isUnit
-      rw [hc]
-      exact isUnit_C.mpr (hseed _ hdiv)
-    obtain ⟨P', hP'⟩ := hDP
-    obtain ⟨Q', hQ'⟩ := hDQ
-    have hP'0 : P' ≠ 0 := fun hz => hP (by simpa [hz] using hP')
-    have hQ'0 : Q' ≠ 0 := fun hz => hQ (by simpa [hz] using hQ')
-    have hPdiv : P' ∣ P := ⟨D, hP'.trans (mul_comm _ _)⟩
-    have hQdiv : Q' ∣ Q := ⟨D, hQ'.trans (mul_comm _ _)⟩
-    have hlt : DvdNotUnit P' P := ⟨hP'0, D, hD.not_isUnit, hP'.trans (mul_comm _ _)⟩
-    obtain ⟨M, L, T, hL, hT, hproper, hM⟩ :=
-      ih P' hlt hP'0 (fun b hb => hseed b (hb.trans hPdiv)) Q' hQ'0
-        (fun D hD hdP hdQ => hord D hD (hdP.trans hPdiv) (hdQ.trans hQdiv))
-    refine ⟨f ::ₘ M, L, T, ?_, ?_, hproper, ?_⟩
-    · rw [hP', hd, Multiset.prod_cons, C_mul, mul_assoc, ← hL]
-    · rw [hQ', hd, Multiset.prod_cons, C_mul, mul_assoc, ← hT]
-    · intro g hg
-      rcases Multiset.mem_cons.mp hg with rfl | hg
-      · exact ⟨hf, hfpos⟩
-      · exact hM g hg
-  · exact ⟨0,P,Q,by simp,by simp,⟨hP,hQ,fun D hD hdP hdQ => h ⟨D,hD,hdP,hdQ⟩⟩,by simp⟩
 end
 end K1_14_2_2_2_1
 end
@@ -2387,62 +2315,15 @@ private theorem seedContent_cap {P : Jet} {a : Seeds} {s : Shape}
     (hP : P ≠ 0) (h : RowCaps P s) (hd : C (C a) ∣ P) : a.totalDegree ≤ s.U := by
   have hu := ((rowCaps_iff _ _).mp (divisor_caps hP h hd)).2.2
   rwa [seedDegree_seed] at hu
-private theorem gcd_caps {F : Equation} {R : Jet} {s : Shape}
-    (hF : F ≠ 0) (hR : R ≠ 0) (h : RowCaps (C F * R) s) :
-    ordinarySeedDegree F ≤ s.U ∧ F.natDegree ≤ s.B ∧
-      RowCaps R (afterGcd s (ordinarySeedDegree F) F.natDegree) := by
-  have hC : (C F : Jet) ≠ 0 := C_ne_zero.mpr hF
-  obtain ⟨hB, hJ, hU⟩ := (rowCaps_iff _ _).mp h
-  rw [jetDegree_mul hC hR, jetDegree_C] at hB
-  rw [natDegree_mul hC hR, natDegree_C, zero_add] at hJ
-  rw [seedDegree_mul hC hR, seedDegree_C] at hU
-  have hJR : R.natDegree ≤ jetDegree R := by
-    have hv := leadingCoeff_ne_zero.mpr hR
-    have hc : (R.coeff R.natDegree).coeff R.leadingCoeff.natDegree ≠ 0 := by
-      rw [coeff_natDegree, coeff_natDegree]
-      exact leadingCoeff_ne_zero.mpr hv
-    have htop := (jetDegree_le _ _).mp le_rfl _ _ hc
-    omega
-  refine ⟨by omega, by omega, (rowCaps_iff _ _).mpr ?_⟩
-  change jetDegree R ≤ s.B - F.natDegree ∧
-    R.natDegree ≤ min s.J (s.B - F.natDegree) ∧ seedDegree R ≤ s.U - ordinarySeedDegree F
-  exact ⟨by omega, le_min hJ (by omega), by omega⟩
-private theorem multiset_prod_ne_zero (M : Multiset Equation) (hM : ∀ f ∈ M, f ≠ 0) :
-    M.prod ≠ 0 :=
-  Multiset.prod_ne_zero (fun he => hM 0 he rfl)
-private theorem distinct_le_degree [DecidableEq Equation] (d : Equation → ℕ) (h1 : d 1 = 0)
-    (hmul : ∀ {f g}, f ≠ 0 → g ≠ 0 → d (f * g) = d f + d g)
-    (M : Multiset Equation) (hM : ∀ f ∈ M, f ≠ 0) :
-    (∑ f ∈ M.toFinset, d f) ≤ d M.prod := by
-  induction M using Multiset.induction_on with
-  | empty => simp [h1]
-  | cons f M ih =>
-    have hrest : ∀ g ∈ M, g ≠ 0 := fun g hg => hM g (Multiset.mem_cons_of_mem hg)
-    rw [Multiset.prod_cons, hmul (hM f (by simp)) (multiset_prod_ne_zero M hrest),
-      Multiset.toFinset_cons]
-    by_cases hf : f ∈ M.toFinset
-    · rw [Finset.insert_eq_of_mem hf]
-      exact (ih hrest).trans (Nat.le_add_left _ _)
-    · rw [Finset.sum_insert hf]
-      exact Nat.add_le_add_left (ih hrest) _
-private theorem seed_degree_mul {f g : Equation} (hf : f ≠ 0) (hg : g ≠ 0) :
-    ordinarySeedDegree (f * g) = ordinarySeedDegree f + ordinarySeedDegree g := by
-  simpa only [← seedDegree_C, C_mul] using
-    seedDegree_mul (C_ne_zero.mpr hf) (C_ne_zero.mpr hg)
-private theorem atMark_prod_eq_zero {M : Multiset Equation} {z : K} {S : K[X]}
-    (h : atMark M.prod z S = 0) : ∃ f ∈ M, atMark f z S = 0 := by
-  let e := eval₂RingHom (graphEval z) (atX S)
-  change e M.prod = 0 at h
-  rw [map_multiset_prod] at h
-  exact Multiset.mem_map.mp (Multiset.prod_eq_zero_iff.mp h)
-private theorem jetAt_mul (z : K) (S : K[X]) (P Q : Jet) :
-    jetAt (P * Q) z S = jetAt P z S * jetAt Q z S :=
-  (markEval z S).map_mul P Q
-private theorem jetAt_ordinary (z : K) (S : K[X]) (f : Equation) :
-    jetAt (C f) z S = atMark f z S := by
-  simp [jetAt, atMark]
 end
 end K1_14_2_2_2_1
+end
+section
+namespace K1_13_1_1
+set_option maxRecDepth 30000
+set_option Elab.async false
+set_option maxHeartbeats 4000000
+end K1_13_1_1
 end
 section
 namespace K1_14_3_8
@@ -2747,10 +2628,8 @@ namespace K1_14_3R
 noncomputable section
 open K1 K1_14 K1_14_3 Polynomial
 open K1_14_2_1 (cutoffCount rawVolume movingCeiling)
-open private worstBase worstSlope surplusBase surplusSlope volume_eq debit_eq
+open private worstBase worstSlope surplusBase surplusSlope volume_eq 
   from ProximityPrize.SubmissionLower.Pack_K1_14_2_1Arithmetic
-open private bank_nonzero avoids_one from ProximityPrize.SubmissionLower.Pack_K1_14_2_1Split
-open private pair_membership from ProximityPrize.SubmissionLower.Pack_K1_14_3Split
 private def Certificate (s : Shape) (r mode : ℕ) : Prop :=
   0 < worstBase s + 3555 * worstSlope s r ∧
   0 < worstBase s + 32680 * worstSlope s r ∧
@@ -2762,6 +2641,9 @@ private def stageCheck (i : Fin 4) : Prop :=
 private instance (i : Fin 4) : Decidable (stageCheck i) := by
   unfold stageCheck Certificate
   infer_instance
+set_option maxHeartbeats 0 in
+set_option maxRecDepth 16000 in
+private theorem certificates : ∀ i : Fin 4, stageCheck i := by decide +kernel
 private theorem fixed_of_no_seed (G : Jet) (hn : ¬ K1_14_2.UsesSeed G) :
     G ∈ Set.range fixedEmbedding := by
   let ev := MvPolynomial.eval (fun _ : Fin 2 => (0 : FX))

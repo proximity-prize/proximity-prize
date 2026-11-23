@@ -299,105 +299,14 @@ private theorem natKernel_signed (d j h r : ℕ) (hr : r ≤ d)
   by_cases hzero : r = 0
   · rw [ite_eq_left hzero, ite_eq_left (hz.mpr hzero)]
   · rw [ite_eq_right hzero, ite_eq_right (fun h => hzero (hz.mp h)), hc hzero]
-private theorem clipped_savings (old original chosen : ℤ) :
-    (old - max 0 original).toNat - (old - max (max 0 original) chosen).toNat =
-      Nat.min old.toNat chosen.toNat - original.toNat := by
-  change _ = min old.toNat chosen.toNat - original.toNat
-  omega
-theorem natEntry_eq (t j : ℕ) (ht : t < 499) (hj : j < 283) : natEntry t j = entry t j := by
-  unfold natEntry entry
-  by_cases hdiag : 23 ≤ t + j ∧ t + j ≤ 656
-  · simp only [ite_eq_left hdiag]
-    let b := 1136 - t
-    let h := b - j
-    let v := b - 4 * j
-    have he : valuePower (3514 + t) j = v := by unfold valuePower v b; omega
-    rw [he]
-    change (if 4 * j < b then _ else _) = (if v = 0 then _ else _)
-    by_cases hp : 4 * j < b
-    · have hp' : v ≠ 0 := by dsimp [v]; omega
-      rw [ite_eq_left hp, ite_eq_right hp', clipped_savings]
-      have hB : b + t = 1136 := by dsimp [b]; omega
-      have hh : (h : ℤ) - 1 = 1135 - (t : ℤ) - j := by dsimp [h]; omega
-      have h₀ : (h : ℤ) - 1 - (1650 - (j : ℤ)) + 1650 = (b : ℤ) - 1 := by
-        dsimp [h]; omega
-      have h₁ : (h : ℤ) - 1 - (1650 - (j : ℤ)) + (↑(1650 - v : ℕ) : ℤ) = 4 * (j : ℤ) - 1 := by
-        dsimp [h, v]; omega
-      have hzero₀ : (↑h - 1 - (1650 - (j : ℤ)) + 1650 < 0) ↔ (b + 3) / 4 = 0 := by
-        rw [h₀]; omega
-      have hcut₀ : (b + 3) / 4 ≠ 0 →
-          min (1650 : ℤ) ((↑h - 1 - (1650 - (j : ℤ)) + 1650) / 4) + 1 = ↑((b + 3) / 4) := by
-        rw [h₀]; omega
-      have hn₀ : natKernel 1650 j h ((b + 3) / 4) =
-          (signedKernel 1650 j (1135 - (t : ℤ) - j)).toNat := by
-        simpa only [hh, Nat.cast_ofNat] using
-          natKernel_signed 1650 j h ((b + 3) / 4) (by omega) hzero₀ hcut₀
-      have hzero₁ : (↑h - 1 - (1650 - (j : ℤ)) + (↑(1650 - v : ℕ) : ℤ) < 0) ↔ j = 0 := by
-        rw [h₁]; omega
-      have hcut₁ : j ≠ 0 → min (↑(1650 - v : ℕ) : ℤ)
-          ((↑h - 1 - (1650 - (j : ℤ)) + (↑(1650 - v : ℕ) : ℤ)) / 4) + 1 = j := by
-        rw [h₁]; dsimp [v]; omega
-      have hd₁ : (↑(1650 - v : ℕ) : ℤ) = 1650 - (v : ℤ) := by dsimp [v]; omega
-      have hn₁ : natKernel (1650 - v) j h j =
-          (signedKernel (1650 - (v : ℤ)) j (1135 - (t : ℤ) - j)).toNat := by
-        simpa only [hh, hd₁] using
-          natKernel_signed (1650 - v) j h j (by dsimp [v]; omega) hzero₁ hcut₁
-      have hd := natDen_eq 1650
-      change (natDen 1651 : ℤ) = _ at hd
-      have hl := natDen_eq (1649 - (j : ℤ))
-      rw [show (1649 - (j : ℤ) + 1).toNat = 1650 - j by omega] at hl
-      have ho : natDen 1651 - natDen (1650 - j) =
-          (fastDen 1650 - fastDen (1649 - (j : ℤ))).toNat := by omega
-      change Nat.min (natDen 1651 - natDen (1650 - j)) (natKernel (1650 - v) j h j) -
-        natKernel 1650 j h ((b + 3) / 4) = _
-      rw [ho, hn₀, hn₁]
-    · have hz : v = 0 := by dsimp [v]; omega
-      rw [ite_eq_right hp, ite_eq_left hz]
-  · simp only [ite_eq_right hdiag]
-private def windowEmbed : Fin 499 × Fin 283 ↪ BlockIndex where
-  toFun x := (⟨3514 + x.1.val, by have := x.1.isLt; omega⟩, x.2.castLE (by decide))
-  inj' := by
-    intro x y h
-    apply Prod.ext <;> apply Fin.ext
-    · have e := congrArg (fun i : BlockIndex => i.1.val) h
-      change 3514 + x.1.val = 3514 + y.1.val at e
-      omega
-    · exact congrArg (fun i : BlockIndex => i.2.val) h
-private theorem rangeSum_eq (f : ℕ → ℕ) (n : ℕ) :
-    rangeSum f n = ∑ k ∈ Finset.range n, f k := by
-  induction n with
-  | zero => simp [rangeSum]
-  | succ n ih => rw [rangeSum, Finset.sum_range_succ, ih]
-private theorem rangeSum_fin (f : ℕ → ℕ) (n : ℕ) :
-    rangeSum f n = ∑ k : Fin n, f k.val := by
-  rw [rangeSum_eq, Fin.sum_univ_eq_sum_range]
 private theorem sum_embed_le {α β : Type*} [Fintype α] [Fintype β] (e : α ↪ β) (f : β → ℕ) :
     (∑ i : α, f (e i)) ≤ ∑ i : β, f i := calc
   _ = ∑ i ∈ Finset.univ.map e, f i := by rw [Finset.sum_map]
   _ ≤ _ := Finset.sum_le_sum_of_subset_of_nonneg (Finset.subset_univ _) (fun _ _ _ => Nat.zero_le _)
-theorem numeric_le_savings : natChunk 0 499 ≤ savingsSum w4 witness := by
-  unfold natChunk
-  simp only [zero_add, rangeSum_fin, natGrade]
-  rw [← Finset.sum_product Finset.univ Finset.univ
-    (fun x : Fin 499 × Fin 283 => natEntry x.1.val x.2.val), Finset.univ_product_univ]
-  calc
-    _ = ∑ x : Fin 499 × Fin 283,
-        if w4.Contains (windowEmbed x) then savings (windowEmbed x) (witness (windowEmbed x)) else 0 := by
-      apply Finset.sum_congr rfl
-      intro x _
-      rw [natEntry_eq _ _ x.1.isLt x.2.isLt]
-      exact entry_eq x.1 x.2 (windowEmbed x) rfl rfl
-    _ ≤ _ := sum_embed_le windowEmbed (fun i => if w4.Contains i then savings i (witness i) else 0)
 end K1_13_2_3_7
 end
 section
 namespace K1_13_2_3_7
-theorem proof : K1_13_2_3.c7 := by
-  refine ⟨witness, ?_⟩
-  calc
-    174062508216 ≤ 177382348097 := by decide
-    _ = natChunk 0 499 := numeric_total.symm
-    _ ≤ _ := numeric_le_savings
 end K1_13_2_3_7
 end
 section
@@ -1070,6 +979,43 @@ open Polynomial Finset Matrix
 open scoped BigOperators
 variable {F ι ν : Type} [Field F] [Fintype ι] [DecidableEq ι]
 local instance regularDataDecidable (P : Prop) : Decidable P := Classical.propDecidable P
+def RegularLocatorData (σ : ν → F →+* F) (x u v : ι → F)
+    (k m t : ℕ) (Γ : Finset (ν → F)) : Prop :=
+  ∀ z∈Γ,
+    Module.finrank F (LinearMap.ker ((affineLocator σ x u v (m-t) t).map
+      (MvPolynomial.eval₂Hom (RingHom.id F) z)).mulVecLin)=1 ∧
+    ∃ E : Finset ι, E.card=t ∧
+      ((affineLocator σ x u v (m-t) t).map (MvPolynomial.eval₂Hom (RingHom.id F) z)).mulVec
+        (fun j : Fin (t+1) => (locator x E).coeff j.val)=0 ∧
+      ¬(ExtendsOn x u k (Finset.univ\E) ∧ ExtendsOn x v k (Finset.univ\E))
+theorem regular_data_of_bad_slopes [Fintype ν] [DecidableEq ν]
+    (σ : ν → F →+* F) (x u v : ι → F) (hx : Function.Injective x)
+    (hfixed : ∀ b i, σ b (x i)=x i) (k A m L t : ℕ)
+    (hkm : k+m=Fintype.card ι) (hm : m=L+t) (hA : A=k+L) (hkA : k<A)
+    (Γ : Finset F) (hbad : ∀ γ∈Γ, Principal.BadSlope x u v k A γ)
+    (hnull : ∀ γ∈Γ, Module.finrank F (LinearMap.ker
+      (recurrenceMatrixAll (fun b j => σ b (syndrome x (fun i => u i+γ*v i) j)) m t).mulVecLin)=1) :
+    RegularLocatorData σ x u v k m t (Γ.image (fun γ b => σ b γ)) := by
+  intro z hz
+  obtain ⟨γ,hγ,rfl⟩ := Finset.mem_image.mp hz
+  have hM : (affineLocator σ x u v (m-t) t).map
+      (MvPolynomial.eval₂Hom (RingHom.id F) (fun b => σ b γ))=
+      recurrenceMatrixAll (fun b j => σ b (syndrome x (fun i => u i+γ*v i) j)) m t := by
+    rw [affineLocator_eval_slope,recurrenceMatrixAll_conjugate]
+  refine ⟨by rw [hM]; exact hnull γ hγ,?_⟩
+  obtain ⟨T,hT,⟨P,hP,hPv⟩,hTbad⟩ := Principal.bad_slope_exact x hx u v k A hkA γ (hbad γ hγ)
+  let E := Finset.univ\T
+  have hE : E.card=t := by
+    rw [Finset.card_sdiff_of_subset (Finset.subset_univ T),Finset.card_univ,hT]
+    omega
+  refine ⟨E,hE,?_,?_⟩
+  · rw [affineLocator_eval_slope]
+    apply conjugate_locator_annihilates σ x _ hx hfixed k (m-t) t (by omega) P hP E hE.le
+    intro i hi
+    have hiT : i∈T := by simpa only [E,Finset.mem_sdiff,Finset.mem_univ,true_and,not_not] using hi
+    exact (hPv i hiT).symm
+  · have hcomp : Finset.univ\E=T := by ext i; simp [E]
+    rwa [hcomp]
 end
 end FrobeniusLocator.Strata
 end

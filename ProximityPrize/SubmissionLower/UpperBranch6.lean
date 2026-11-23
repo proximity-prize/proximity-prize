@@ -6,7 +6,9 @@ namespace P1_7_6
 open Finset
 open K1_14 (Shape triangle)
 open P1 (HighBand agreement)
-open P1_7 (Bank Test debit jointGain tested threshold seedThreshold)
+open P1_7 (Bank Test debit  tested  )
+def width (s : Shape) (h q j t : ℕ) : ℤ :=
+  (s.m * agreement : ℕ) + (j : ℤ) - (131071 - (h : ℤ)) * q - 2 * (h : ℤ) * t
 def orderEnd (s : Shape) (E v : ℕ) : ℕ :=
   if v = 0 then s.B/E+1 else min (s.B/E+1) (s.U/v+1)
 def linearEnd (base step bound cap : ℕ) : ℕ :=
@@ -47,7 +49,22 @@ namespace P1_7_6
 open Finset
 open K1_14 (Shape shapeSum slots)
 open P1 (agreement)
-open P1_7 (Bank debit jointGain)
+open P1_7 (Bank debit )
+theorem width_cast (s : Shape) (h q j t : ℕ) (hh : h ≤ 131071) :
+    (↑(s.m * agreement + j - q * (131071-h) - 2*h*t : ℕ) : ℤ) =
+      max 0 (width s h q j t) := by
+  rw [Nat.sub_sub]
+  have hd : (↑(131071-h : ℕ) : ℤ) = 131071 - h := Nat.cast_sub hh
+  have he : (↑(s.m*agreement+j : ℕ) : ℤ) - (↑(q*(131071-h)+2*h*t : ℕ) : ℤ) =
+      width s h q j t := by
+    simp only [width, Nat.cast_add, Nat.cast_mul, Nat.cast_ofNat, hd]
+    ring
+  generalize s.m*agreement+j = x at *
+  generalize q*(131071-h)+2*h*t = y at *
+  by_cases hxy : y ≤ x
+  · rw [Int.ofNat_sub hxy, he, max_eq_right (by omega)]
+  · have hz : x-y = 0 := Nat.sub_eq_zero_of_le (by omega)
+    rw [hz, Int.ofNat_zero, max_eq_left (by omega)]
 private theorem rise_of_convex {f : ℕ → ℤ} {lo h : ℕ}
     (hc : ∀ n < h, f (n+1) + f (n+1) ≤ f n + f (n+2))
     (hl : lo ≤ h) (hf : f lo ≤ f (lo+1)) :
@@ -70,7 +87,6 @@ section
 namespace P1_7_6
 open Finset
 open K1_14 (Shape shapeSum slots triangle)
-open P1_7 (jointGain)
 private theorem slots_anti (U : ℕ) : Antitone (slots U) := by
   intro a b hab
   unfold slots
@@ -91,6 +107,65 @@ private theorem sum_range_guard {f : ℕ → ℤ} (L R : ℕ)
   intro a ha hnot
   simp only [mem_range, lt_min_iff] at ha hnot
   exact hz a (by omega) ha
+private theorem position_phases (s : Shape) (h E v q j : ℕ) (hh : h ≤ 131071)
+    (he : 0 < E) (hq : q ≤ s.B) (hj : j ≤ q) :
+    let c := fun a => slots s.U (a*v)
+    let x := s.m*P1.agreement+j-q*(131071-h)
+    let g := (q-j)/E
+    let f := fun d a => (c (a+d) : ℤ)*max 0 (width s h q j (j+a))
+    (↑((∑ a ∈ range g, (c a - c (a+1))*(x-2*h*(j+a))) + c g*(x-2*h*(j+g)) : ℕ) : ℤ) =
+      (∑ a ∈ range (orderEnd s E v), if j+E*(a+0) ≤ q then f 0 a else 0) -
+      (∑ a ∈ range (orderEnd s E v), if j+E*(a+1) ≤ q then f 1 a else 0) := by
+  dsimp only
+  let g := (q-j)/E
+  let f := fun d a => (slots s.U ((a+d)*v) : ℤ)*max 0 (width s h q j (j+a))
+  have step (a : ℕ) : slots s.U ((a+1)*v) ≤ slots s.U (a*v) :=
+    slots_anti _ (Nat.mul_le_mul_right v (by omega))
+  have hdiff :
+      (↑((∑ a ∈ range g, (slots s.U (a*v) - slots s.U ((a+1)*v)) *
+          (s.m*P1.agreement+j-q*(131071-h)-2*h*(j+a))) +
+        slots s.U (g*v)*(s.m*P1.agreement+j-q*(131071-h)-2*h*(j+g)) : ℕ) : ℤ) =
+      (∑ a ∈ range (g+1), f 0 a) - ∑ a ∈ range g, f 1 a := by
+    rw [sum_range_succ, Nat.cast_add, Nat.cast_sum]
+    rw [show (∑ a ∈ range g, f 0 a) + f 0 g - (∑ a ∈ range g, f 1 a) =
+        ((∑ a ∈ range g, f 0 a) - (∑ a ∈ range g, f 1 a)) + f 0 g by ring,
+      ← sum_sub_distrib]
+    simp only [Nat.cast_mul, width_cast s h _ _ _ hh, f, Nat.add_zero]
+    have hs (a : ℕ) :
+        (↑(slots s.U (a*v) - slots s.U ((a+1)*v) : ℕ) : ℤ) =
+          (slots s.U (a*v) : ℤ) - slots s.U ((a+1)*v) := Int.ofNat_sub (step a)
+    simp only [hs, sub_mul]
+  rw [hdiff]
+  have hz (d a : ℕ) (ha : orderEnd s E v ≤ a) (hg : a+d ≤ g) : f d a = 0 := by
+    have hcap : g ≤ s.B/E := Nat.div_le_div_right (by omega)
+    have hab : a < s.B/E+1 := by omega
+    unfold orderEnd at ha
+    split at ha
+    · omega
+    · rename_i hv
+      have hlarge : s.U/v < a+d := by omega
+      have hout : s.U < (a+d)*v := by
+        by_contra! hm
+        exact (Nat.not_le_of_lt hlarge) ((Nat.le_div_iff_mul_le (Nat.pos_of_ne_zero hv)).2 hm)
+      simp [f, slots, Nat.not_le_of_lt hout]
+  have hdiv (a d : ℕ) : j+E*(a+d) ≤ q ↔ a+d ≤ g := by
+    rw [Nat.le_div_iff_mul_le he, Nat.mul_comm (a+d) E]
+    omega
+  rw [sum_range_guard (g+1) _ (fun a ha hb => hz 0 a ha (by omega)),
+    sum_range_guard g _ (fun a ha hb => hz 1 a ha (by omega))]
+  have hzero (a : ℕ) : j+E*a ≤ q ↔ a ≤ g := by simpa using hdiv a 0
+  simp only [hzero, Nat.add_zero, Nat.lt_succ_iff, Nat.add_one_le_iff, f]
+private theorem phaseQ_expand (s : Shape) (h E v d q : ℕ) :
+    (∑ j ∈ range (min q s.J+1), ∑ a ∈ range (orderEnd s E v),
+      if j+E*(a+d) ≤ q then (slots s.U ((a+d)*v) : ℤ)*max 0 (width s h q j (j+a)) else 0) =
+    ∑ j ∈ range (s.J+1), ∑ a ∈ range (orderEnd s E v),
+      if j+E*(a+d) ≤ q then (slots s.U ((a+d)*v) : ℤ)*max 0 (width s h q j (j+a)) else 0 := by
+  apply sum_subset (range_mono (Nat.succ_le_succ (min_le_right _ _)))
+  intro j hj hnot
+  simp only [mem_range, Nat.lt_succ_iff, le_min_iff] at hj hnot
+  apply sum_eq_zero
+  intro a _
+  rw [ite_eq_right (by omega)]
 private theorem diagonal (J R : ℕ) (f : ℕ → ℕ → ℤ) :
     (∑ j ∈ range (J+1), ∑ a ∈ range (R+1), f j a) =
       ∑ t ∈ range (J+R+1), ∑ a ∈ Ico (t-J) (min t R+1), f (t-a) a := by

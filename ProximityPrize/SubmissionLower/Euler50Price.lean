@@ -11,30 +11,11 @@ open scoped BigOperators Polynomial
 abbrev agreement : ℕ := 179925
 abbrev physicalDegree : ℕ := 133438
 abbrev taylorLength : ℕ := physicalDegree + 1
-abbrev evaluatedAnchorCutoff : ℕ := 91 * agreement - 1
-abbrev anchorCutoff : ℕ := evaluatedAnchorCutoff + 50
 
-def TrueWeightLE {n : ℕ} (P : Row n) (D : ℕ) : Prop :=
-  ∀ m ∈ P.support, (P.coeff m).natDegree +
-    m.sum (fun i a => (physicalDegree - i.val) * a) ≤ D
-def fullCap (top : ℕ) : Shape := ⟨122, 50, top⟩
-def Fits (top : ℕ) {n : ℕ} (a : Fin n → Shape) : Prop :=
-  (∀ i, K1_13_8.Valid (a i)) ∧ (∑ i, (a i).b) ≤ 122 ∧ (∑ i, (a i).j) ≤ 50 ∧
-    (∑ i, (a i).t) ≤ top
-def lowerWidth (top : ℕ) : ℕ := 122 - top
-def lowerIndex (top : ℕ) : ℕ := 50 - 3 * top
-def LowerRow (top : ℕ) (g : Row 3) : Prop :=
-  g ≠ 0 ∧ g.totalDegree ≤ lowerWidth top ∧ indexDegree g ≤ lowerIndex top ∧
-    TrueWeightLE g anchorCutoff
-def SmallFactor (f : Row 4) : Prop :=
-  Irreducible f ∧ 0 < (shape f).t ∧ InBox (shape f) (fullCap 13) ∧ TrueWeightLE f anchorCutoff
 def ActiveFits (f : Row 4) (K : ℕ) : Prop :=
   ∀ m ∈ f.support, m 0 + 2*m 1 + 2*m 2 + 2*m 3 ≤ K
 
-abbrev symbolCount : ℕ := 406807694511
 
-/-- Bound a layer by the tapered ambient count and the residual rectangular count. -/
-def remaining (b j : ℕ) : ℕ := min symbolCount (K1_13.remaining b j)
 
 
 structure Messages (w : I → K) (Γ : Finset K) (s : K → K[X]) : Prop where
@@ -42,6 +23,8 @@ structure Messages (w : I → K) (Γ : Finset K) (s : K → K[X]) : Prop where
   degree : ∀ γ ∈ Γ, (s γ).natDegree ≤ physicalDegree
   hits : ∀ γ ∈ Γ, ∃ T : Finset I, agreement ≤ T.card ∧ ∀ i ∈ T, (s γ).eval (node i) = w i
 
+theorem Messages.mono {w Γ s Δ} (h : Messages w Γ s) (hΔ : Δ ⊆ Γ) : Messages w Δ s :=
+  ⟨h.distinct.mono hΔ, fun γ hγ => h.degree γ (hΔ hγ), fun γ hγ => h.hits γ (hΔ hγ)⟩
 
 abbrev BentCap := Shape × ℕ
 

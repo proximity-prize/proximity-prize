@@ -1,6 +1,6 @@
 import ProximityPrize.SubmissionLower.Final50Price
 set_option Elab.async false
-section Top_Final50PriceMonotone
+section
 namespace Final50PriceMonotone
 open K1_13 (Shape InBox chart liftedChart mixed32 ceilDiv)
 open K1_13_8_2 (Chamber mixed_mono)
@@ -97,7 +97,7 @@ theorem physical_mono {x y : Shape} (h : InBox x y) (hx : 3 * x.t ≤ x.j)
     (Nat.add_le_add (ceil_mono (Nat.add_le_add (ceil_mono hs _) (ceil_mono hmain _)) l) hraw)
     (ceil_mono hgeom _)
 end Final50PriceMonotone
-end Top_Final50PriceMonotone
+end
 
 namespace Final50PriceMonotone
 open K1_13 (Shape)

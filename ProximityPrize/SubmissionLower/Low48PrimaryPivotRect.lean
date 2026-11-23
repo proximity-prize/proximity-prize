@@ -1,5 +1,5 @@
 import ProximityPrize.SubmissionLower.Low48PrimaryPivotCore
-import ProximityPrize.SubmissionLower.PortLowBase
+import ProximityPrize.SubmissionLower.Primary82170
 import Mathlib.Data.Int.Interval
 import Mathlib.Algebra.BigOperators.Intervals
 

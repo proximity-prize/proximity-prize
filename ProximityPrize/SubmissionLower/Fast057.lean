@@ -12,8 +12,6 @@ namespace K1_14_3R
 noncomputable section
 open K1 K1_14 K1_14_3 Polynomial
 open scoped BigOperators Classical
-open private pair_membership full_membership buffered_power paid_complement
-  terminal_shape_data terminal_power from ProximityPrize.SubmissionLower.Pack_K1_14_3Split
 def c1 : Prop :=
   ∀ (q : Surface) (P : Jet) (k : ℕ), Parent q → k < p →
     (∀ a b : ℕ, a + b < k → seedHasse 1 b (seedHasse 0 a P) ∈ q.asIdeal) →
@@ -44,6 +42,12 @@ def curveIdeal (q : Surface) : Ideal SectionJet :=
 abbrev Curve (q : Surface) := SectionJet ⧸ curveIdeal q
 def toCurve (q : Surface) : SectionJet →ₐ[SectionField] Curve q :=
   Ideal.Quotient.mkₐ SectionField (curveIdeal q)
+def seedCoordinate (q : Surface) (i : Fin 2) : Curve q :=
+  toCurve q (K1_14_3_2_4.seedVar i)
+def ordinate (q : Surface) : Curve q :=
+  toCurve q K1_14_3_2_4.ordinateVar
+def derivative (q : Surface) : Curve q :=
+  toCurve q K1_14_3_2_4.derivativeVar
 section FunctionField
 variable (k : Type) {F : Type} [Field k] [Field F] [Algebra k F]
 def SeparatingParameter (t : F) : Prop :=
@@ -102,6 +106,9 @@ def lineIdeal (q : Surface) : Ideal LineJet :=
   q.asIdeal.map lineMap ⊔ Ideal.span
     {seedVar 0 + scalar (lineParam 0) * seedVar 1 - scalar (lineParam 1)}
 abbrev LineCurve (q : Surface) := LineJet ⧸ lineIdeal q
+def lineSeed (q : Surface) : LineCurve q := Ideal.Quotient.mk _ (seedVar 1)
+def lineOrdinate (q : Surface) : LineCurve q := Ideal.Quotient.mk _ yVar
+def lineDerivative (q : Surface) : LineCurve q := Ideal.Quotient.mk _ vVar
 def rationalMap {k F : Type} [Field k] [Field F] (f : k →+* F) :
     RatFunc k →+* RatFunc F :=
   RatFunc.mapRingHom (Polynomial.mapRingHom f)
@@ -116,6 +123,10 @@ structure RationalLineModel (K E k F : Type) [Field K] [Field E] [Field k] [Fiel
   seed : space t = algebraMap (RatFunc F) (RatFunc (RatFunc F)) (algebraMap F (RatFunc F) t')
   ordinate : space y = algebraMap (RatFunc F) (RatFunc (RatFunc F)) (algebraMap F (RatFunc F) y')
   derivative : space v = algebraMap (RatFunc F) (RatFunc (RatFunc F)) (algebraMap F (RatFunc F) v')
+abbrev LineModel (q : Surface) [IsDomain (Curve q)] [IsDomain (LineCurve q)] :=
+  RationalLineModel SectionField (FractionRing (Curve q)) LineField (FractionRing (LineCurve q))
+    (toFunction (seedCoordinate q 1)) (toFunction (ordinate q)) (toFunction (derivative q))
+    (toFunction (lineSeed q)) (toFunction (lineOrdinate q)) (toFunction (lineDerivative q))
 section Slope
 variable (k A : Type) [Field k] [CommRing A] [Algebra k A]
 abbrev SlopeRing :=
@@ -157,6 +168,8 @@ variable {k l F : Type} [Field k] [Field l] [Field F]
 @[simp] theorem rationalMap_variable (f : k →+* l) :
     rationalMap f RatFunc.X = RatFunc.X := by
   simp [← RatFunc.algebraMap_X]
+def rationalEquiv (i : k ≃+* l) : RatFunc k ≃+* RatFunc l :=
+  IsFractionRing.ringEquivOfRingEquiv (Polynomial.mapEquiv i)
 end RatFuncMap
 section Degree
 variable {k l F G : Type} [Field k] [Field l] [Field F] [Field G]
@@ -473,6 +486,16 @@ def quotientBaseChange (I : Ideal (MvPolynomial σ k)) :
     (Ideal.quotientEquivAlg (I.map i) _ e (by
       change _ = (I.map i).map e.toAlgHom.toRingHom
       rw [Ideal.map_map, hmap]))
+theorem quotientBaseChange_tmul (I : Ideal (MvPolynomial σ k)) (c : E) (p : MvPolynomial σ k) :
+    quotientBaseChange I (c ⊗ₜ[k] Ideal.Quotient.mk I p) =
+      c • Ideal.Quotient.mk (I.map (MvPolynomial.map (algebraMap k E)))
+        (MvPolynomial.map (algebraMap k E) p) := by
+  unfold quotientBaseChange
+  rw [AlgEquiv.trans_apply, Algebra.TensorProduct.tensorQuotientEquiv_apply_tmul]
+  change Ideal.Quotient.mk (I.map (MvPolynomial.map (algebraMap k E)))
+    (MvPolynomial.algebraTensorAlgEquiv k E (c ⊗ₜ[k] p)) = _
+  rw [MvPolynomial.algebraTensorAlgEquiv_tmul]
+  exact (Ideal.Quotient.mkₐ E _).toLinearMap.map_smul c _
 end
 end K1_14_3R_3_2
 end
@@ -1640,7 +1663,172 @@ noncomputable section
 open MvPolynomial TensorProduct
 open scoped TensorProduct nonZeroDivisors
 variable {k : Type} [Field k]
+private abbrev Params (k : Type) [Field k] := MvPolynomial (Fin 2) k
+private abbrev E (k : Type) [Field k] := FractionRing (Params k)
+private abbrev offset (k : Type) [Field k] : E k := algebraMap (Params k) (E k) (MvPolynomial.X 1)
+private theorem generic_injective {M : Type} [AddCommGroup M] [Module k M]
+    (f : M →ₗ[k] M) {z : E k ⊗[k] M}
+    (hz : f.baseChange (E k) z = offset k • z) : z = 0 := by
+  classical
+  let B := Params k
+  let b := Module.Free.chooseBasis k M
+  let e := b.baseChange (E k)
+  let s := (e.repr z).support
+  by_contra hnz
+  have hs : s.Nonempty := Finsupp.support_nonempty_iff.mpr (by simpa using hnz)
+  let d := IsLocalization.commonDenom B⁰ s (e.repr z)
+  let p := IsLocalization.integerMultiple B⁰ s (e.repr z)
+  have hmap i : algebraMap B (E k) (p i) = algebraMap B (E k) d.val * e.repr z i := by
+    rw [← Algebra.smul_def]
+    exact IsLocalization.map_integerMultiple B⁰ s (e.repr z) i
+  obtain ⟨j, _, hj⟩ := s.attach.exists_mem_eq_sup (by simpa using hs)
+    (fun i => degreeOf 1 (p i))
+  have hpj : p j ≠ 0 := by
+    intro hp
+    have hjmap := hmap j
+    rw [hp, map_zero] at hjmap
+    have hd : algebraMap B (E k) d.val ≠ 0 := by
+      simpa only [map_zero] using
+        (IsFractionRing.injective B (E k)).ne (mem_nonZeroDivisors_iff_ne_zero.mp d.prop)
+    exact (mul_ne_zero hd (Finsupp.mem_support_iff.mp j.prop)) hjmap.symm
+  let z' := algebraMap B (E k) d.val • z
+  have hsum : z' = ∑ i ∈ s.attach, algebraMap B (E k) (p i) • e i := by
+    simp only [z', hmap, mul_smul, ← Finset.smul_sum]
+    rw [Finset.sum_attach s (fun i => e.repr z i • e i)]
+    exact congrArg (fun y => algebraMap B (E k) d.val • y)
+      (by simpa only [Finsupp.linearCombination_apply, Finsupp.sum, s] using
+        (e.linearCombination_repr z).symm)
+  have hz' : f.baseChange (E k) z' = offset k • z' := by
+    rw [map_smul, hz, smul_comm]
+  have hpoly : (∑ i ∈ s.attach, p i * MvPolynomial.C (b.repr (f (b i)) j)) =
+      MvPolynomial.X 1 * p j := by
+    apply IsFractionRing.injective B (E k)
+    have hC (a : k) : algebraMap B (E k) (MvPolynomial.C a) = algebraMap k (E k) a :=
+      (IsScalarTower.algebraMap_apply k B (E k) a).symm
+    simp only [map_sum, map_mul, hmap, hC]
+    have hcoord := congrArg (fun v => e.repr v j) hz'
+    rw [show f.baseChange (E k) z' = f.baseChange (E k)
+      (∑ i ∈ s.attach, algebraMap B (E k) (p i) • e i) from congrArg _ hsum] at hcoord
+    simp only [map_sum, map_smul, Finsupp.finsetSum_apply, Finsupp.smul_apply, smul_eq_mul,
+      e, Module.Basis.baseChange_apply, LinearMap.baseChange_tmul,
+      Module.Basis.baseChange_repr_tmul, Algebra.smul_def, mul_one, z'] at hcoord
+    simpa only [hmap] using hcoord
+  have hle : degreeOf 1 (∑ i ∈ s.attach, p i * MvPolynomial.C (b.repr (f (b i)) j)) ≤
+      degreeOf 1 (p j) := by
+    refine (degreeOf_sum_le _ _ _).trans (Finset.sup_le fun i hi => ?_)
+    simpa only [degreeOf_C, add_zero] using (degreeOf_mul_le 1 (p i)
+      (MvPolynomial.C (b.repr (f (b i)) j))).trans (by simpa [← hj] using
+        (Finset.le_sup (f := fun i => degreeOf 1 (p i)) hi))
+  rw [hpoly, degreeOf_mul_eq (X_ne_zero _) hpj, degreeOf_X_self] at hle
+  omega
 variable {σ : Type}
+private abbrev Ambient (k σ : Type) [Field k] := MvPolynomial (Option σ) k
+private def seedSpace (J : Ideal (Ambient k σ)) (b : ℕ) : Submodule k (Ambient k σ ⧸ J) :=
+  Submodule.span k ((fun m => Ideal.Quotient.mk J (MvPolynomial.monomial m 1)) ''
+    {m : Option σ →₀ ℕ | m.some.degree ≤ b})
+theorem box_mono_jet (J : Ideal (Ambient k σ)) {a a' b : ℕ} (ha : a ≤ a') :
+    quotientBidegreeLE J a b ≤ quotientBidegreeLE J a' b := by
+  rintro x hx
+  obtain ⟨p, hp, rfl⟩ := mem_quotientBidegreeLE.mp hx
+  exact mem_quotientBidegreeLE.mpr ⟨p, mem_restrictBidegree_mono hp ha le_rfl, rfl⟩
+private theorem box_le_seedSpace (J : Ideal (Ambient k σ)) (a b : ℕ) :
+    quotientBidegreeLE J a b ≤ seedSpace J b := by
+  rw [quotientBidegreeLE, restrictBidegree, restrictSupport_eq_span, Submodule.map_span]
+  apply Submodule.span_mono
+  rintro x ⟨_, ⟨m, hm, rfl⟩, rfl⟩
+  exact ⟨m, (mem_bidegreeExponents.mp hm).2, rfl⟩
+private theorem exists_box_of_mem_seedSpace (J : Ideal (Ambient k σ)) {b : ℕ}
+    {x : Ambient k σ ⧸ J} (hx : x ∈ seedSpace J b) : ∃ a, x ∈ quotientBidegreeLE J a b := by
+  induction hx using Submodule.span_induction with
+  | mem y hy =>
+    obtain ⟨m, hm, rfl⟩ := hy
+    refine ⟨m none, mem_quotientBidegreeLE.mpr ⟨_, ?_, rfl⟩⟩
+    exact (monomial_mem_restrictSupport k).mpr (Or.inl (mem_bidegreeExponents.mpr ⟨le_rfl, hm⟩))
+  | zero => exact ⟨0, Submodule.zero_mem _⟩
+  | add x y _ _ hx hy =>
+    obtain ⟨a, hx⟩ := hx
+    obtain ⟨c, hy⟩ := hy
+    exact ⟨max a c, Submodule.add_mem _ (box_mono_jet J (le_max_left a c) hx)
+      (box_mono_jet J (le_max_right a c) hy)⟩
+  | smul c x _ hx =>
+    obtain ⟨a, hx⟩ := hx
+    exact ⟨a, Submodule.smul_mem _ c hx⟩
+private theorem seedSpace_stable (J : Ideal (Ambient k σ)) (b : ℕ) :
+    seedSpace J b ≤ (seedSpace J b).comap (LinearMap.mulLeft k (Ideal.Quotient.mk J (MvPolynomial.X none))) := by
+  apply Submodule.span_le.mpr
+  rintro _ ⟨m, hm, rfl⟩
+  change Ideal.Quotient.mk J (MvPolynomial.X none) *
+    Ideal.Quotient.mk J (MvPolynomial.monomial m 1) ∈ seedSpace J b
+  rw [mul_comm, ← map_mul, ← pow_one (MvPolynomial.X none : Ambient k σ), ← monomial_add_single]
+  refine Submodule.subset_span ⟨m + Finsupp.single none 1, ?_, rfl⟩
+  simpa [Finsupp.some_add] using hm
+private abbrev extended (J : Ideal (Ambient k σ)) : Ideal (Ambient (E k) σ) :=
+  J.map (MvPolynomial.map (algebraMap k (E k)))
+private theorem seedSpace_baseChange (J : Ideal (Ambient k σ)) (b : ℕ) :
+    ((seedSpace J b).baseChange (E k)).map
+      (K1_14_3R_3_2.quotientBaseChange J).toLinearMap = seedSpace (extended J) b := by
+  simp only [seedSpace, Submodule.baseChange_span, Submodule.map_span, Set.image_image]
+  congr 1
+  apply Set.image_congr
+  intro m _
+  change K1_14_3R_3_2.quotientBaseChange J
+    ((1 : E k) ⊗ₜ[k] Ideal.Quotient.mk J (MvPolynomial.monomial m 1)) = _
+  rw [K1_14_3R_3_2.quotientBaseChange_tmul, one_smul, MvPolynomial.map_monomial, map_one]
+theorem seedBound (J : Ideal (Ambient k σ)) (a b : ℕ) {x : Ambient (E k) σ ⧸ extended J}
+    (hx : Ideal.Quotient.mk (extended J) (MvPolynomial.X none - MvPolynomial.C (offset k)) * x ∈
+      quotientBidegreeLE (extended J) a b) : ∃ c, x ∈ quotientBidegreeLE (extended J) c b := by
+  let e := K1_14_3R_3_2.quotientBaseChange (E := E k) J
+  let W := seedSpace J b
+  let y := Ideal.Quotient.mk J (MvPolynomial.X none)
+  let y' := Ideal.Quotient.mk (extended J) (MvPolynomial.X none)
+  let f := LinearMap.mulLeft k y
+  let f' := W.mapQ W f (seedSpace_stable J b)
+  let π := W.mkQ.baseChange (E k)
+  have hker : LinearMap.ker π = W.baseChange (E k) := by
+    ext v
+    exact SetLike.ext_iff.mp (lTensor_mkQ (E k) W) v
+  have hbase : (W.baseChange (E k)).map e.toLinearMap = seedSpace (extended J) b :=
+    seedSpace_baseChange J b
+  have hcomm : e.toLinearMap.comp (f.baseChange (E k)) =
+      (LinearMap.mulLeft (E k) y').comp e.toLinearMap := by
+    apply AlgebraTensorModule.ext
+    intro c v
+    obtain ⟨p, rfl⟩ := Ideal.Quotient.mk_surjective (I := J) v
+    simp only [LinearMap.comp_apply, LinearMap.baseChange_tmul, LinearMap.mulLeft_apply,
+      AlgEquiv.toLinearMap_apply, f, y, ← map_mul, e, K1_14_3R_3_2.quotientBaseChange_tmul, y']
+    simp only [map_mul, MvPolynomial.map_X]
+    exact (Algebra.mul_smul_comm c _ _).symm
+  have hquot : (f'.baseChange (E k)).comp π = π.comp (f.baseChange (E k)) := by
+    apply AlgebraTensorModule.ext
+    intro c v
+    simp only [π, LinearMap.comp_apply, LinearMap.baseChange_tmul, f', Submodule.mkQ_apply,
+      Submodule.mapQ_apply]
+  let z := e.symm x
+  let u := f.baseChange (E k) z - offset k • z
+  have hu : e u = Ideal.Quotient.mk (extended J)
+      (MvPolynomial.X none - MvPolynomial.C (offset k)) * x := by
+    have hm := LinearMap.congr_fun hcomm z
+    change e (f.baseChange (E k) z) = y' * e z at hm
+    have hez : e z = x := e.apply_symm_apply x
+    rw [hez] at hm
+    simp only [u, map_sub, map_smul, hm, hez, sub_mul, y']
+    congr 1
+    exact Algebra.smul_def (offset k) x
+  have hz0 : π u = 0 := by
+    have hm := box_le_seedSpace (extended J) a b hx
+    rw [← hu, ← hbase] at hm
+    obtain ⟨w, hw, hew⟩ := Submodule.mem_map.mp hm
+    have hwu : w = u := e.injective hew
+    exact LinearMap.mem_ker.mp (hker.symm ▸ (hwu ▸ hw))
+  have heig : f'.baseChange (E k) (π z) = offset k • π z := by
+    have h := LinearMap.congr_fun hquot z
+    change f'.baseChange (E k) (π z) = π (f.baseChange (E k) z) at h
+    rw [h]
+    exact sub_eq_zero.mp (by simpa only [u, map_sub, map_smul] using hz0)
+  have hz : z ∈ W.baseChange (E k) := hker ▸ LinearMap.mem_ker.mpr (generic_injective f' heig)
+  apply exists_box_of_mem_seedSpace (extended J)
+  rw [← hbase]
+  exact Submodule.mem_map.mpr ⟨z, hz, e.apply_symm_apply x⟩
 end
 end K1_14_3R_3_2_4
 end
@@ -2106,10 +2294,57 @@ def c5 : Prop :=
       (∀ x : F, q.value (RatFunc.C x) ≤ 1) ∨ ∃ p : CurvePlace k F, GaussAt p q
 section PoleOrder
 variable {k F : Type} [Field k] [Field F] [Algebra k F]
+private theorem trunc_mono : Monotone (fun a : ℤᵐ⁰ => (WithZero.log a).toNat) := by
+  intro a b hab
+  by_cases ha : a = 0
+  · simp [ha]
+  · exact Int.toNat_le_toNat ((WithZero.log_le_log ha
+      (ne_of_gt ((WithZero.pos_iff_ne_zero.mpr ha).trans_le hab))).mpr hab)
+private theorem pole_mul (p : CurvePlace k F) (a b : F) :
+    poleOrder p.value (a * b) ≤ poleOrder p.value a + poleOrder p.value b := by
+  unfold poleOrder
+  obtain rfl | ha := eq_or_ne a 0
+  · simp
+  obtain rfl | hb := eq_or_ne b 0
+  · simp
+  rw [map_mul, WithZero.log_mul (by simpa using ha) (by simpa using hb)]
+  omega
 end PoleOrder
 section Pencil
 variable {k F : Type} [Field k] [Field F] [Algebra k F]
 local instance : Algebra (RatFunc k) (RatFunc F) := pencilAlgebra k (F := F)
+private def pencil (y v : F) : RatFunc F := RatFunc.C y + RatFunc.X * RatFunc.C v
+private theorem gauss_pencil {p : CurvePlace k F} {q : CurvePlace (RatFunc k) (RatFunc F)}
+    (h : GaussAt p q) (y v : F) :
+    poleOrder q.value (pencil y v) = max (poleOrder p.value y) (poleOrder p.value v) := by
+  let P : F[X] := Polynomial.C y + Polynomial.X * Polynomial.C v
+  have hP : algebraMap F[X] (RatFunc F) P = pencil y v := by
+    simp only [P, pencil, map_add, map_mul, RatFunc.algebraMap_C, RatFunc.algebraMap_X]
+  have hc0 : P.coeff 0 = y := by simp [P]
+  have hc1 : P.coeff 1 = v := by simp [P]
+  have hrest (i : ℕ) (hi : 2 ≤ i) : P.coeff i = 0 := by
+    obtain ⟨j, rfl⟩ := Nat.exists_eq_add_of_le hi
+    simp [P, add_comm]
+  have hmax : P.support.sup (fun i => p.value (P.coeff i)) = max (p.value y) (p.value v) := by
+    apply le_antisymm
+    · apply Finset.sup_le
+      intro i hi
+      by_cases h0 : i = 0
+      · simp [h0, hc0]
+      by_cases h1 : i = 1
+      · simp [h1, hc1]
+      · simp [hrest i (by omega)]
+    · apply max_le
+      · by_cases hy : y = 0
+        · simp [hy]
+        · exact hc0 ▸ (Finset.le_sup (f := fun i => p.value (P.coeff i))
+            (Polynomial.mem_support_iff.mpr (hc0.symm ▸ hy)))
+      · by_cases hv : v = 0
+        · simp [hv]
+        · exact hc1 ▸ (Finset.le_sup (f := fun i => p.value (P.coeff i))
+            (Polynomial.mem_support_iff.mpr (hc1.symm ▸ hv)))
+  unfold poleOrder
+  rw [← hP, h P, hmax, trunc_mono.map_max]
 end Pencil
 end
 end K1_14_3R_3_1_3

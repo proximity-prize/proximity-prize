@@ -7,7 +7,7 @@ namespace P1_7_4
 noncomputable section
 open Polynomial
 open P1 (HighBand K p agreement blockLength AnchorModel AnchoredFamily)
-open P1_7 (Stage stages terminal fullCutoff degreeAt gap fees curveUnit)
+open P1_7 (Stage stages terminal fullCutoff degreeAt  fees )
 open K1_14 (Shape Jet Seeds FX Banks atX jetAt seedHasse graphEval)
 open K1_14_2 (Ambient ODE OnJet)
 open K1_14_2_2 (Active Fits FixedPart ODECaps fixedOn mass sectionDegree weight dot)
@@ -52,7 +52,6 @@ theorem stage_mem {b : HighBand} {i : ℕ} (hi : i < (stages b).length) :
     stageAt b i ∈ stages b := by
   rw [stageAt, List.getElem?_eq_getElem hi]
   exact List.getElem_mem hi
-def laterCount (b : HighBand) := (stages b).length - 1
 def introIndices : HighBand → List ℕ
   | .h2370 | .h2390 | .h2420 | .h2440 => List.range' 1 11
   | .h2410 => List.range' 1 9 ++ [11]
@@ -97,48 +96,16 @@ def stageCap (b : HighBand) (i : ℕ) (square : Bool) : Mass :=
 def history (b : HighBand) : ℕ → Mass
   | 0 => fun k => initialCap b k
   | i+1 => capMin (history b i) (stageCap b (i+1) (decide (stopIndex b ≤ i+1)))
-def rankMass (b : HighBand) : Mass :=
-  if stopIndex b = 0 then history b 0
-  else capMin (history b (stopIndex b - 1)) (stageCap b (stopIndex b) false)
-def rankB (b : HighBand) : ℕ := (rankMass b 2).floor.toNat
-def rankJ (b : HighBand) : ℕ := (rankMass b 1).floor.toNat
 def envelope (s : Stage) : Shape :=
   let a := s.free.shape
   let b := s.moving.shape
   let j := max a.J b.J
   ⟨0, max (a.B-a.J) (b.B-b.J) + j, j, max a.U b.U⟩
-def cutShape (b : HighBand) (i : ℕ) : Shape :=
-  if i < laterCount b then envelope (stageAt b (i+1)) else (terminal b).shape
-def cutWeight (b : HighBand) (fee : Fin 3) (i : ℕ) : Mass :=
-  fun k => weight (cutShape b i) fee k
 def running (v : ℕ → Mass) : ℕ → Mass
   | 0 => fun _ => 0
   | i+1 => fun k => max (running v i k) (v i k)
 def weightedBill (n : ℕ) (v : ℕ → Mass) (hist : ℕ → Mass) : ℚ :=
   ∑ i ∈ Finset.range n, dotQ (fun k => running v (i+1) k - running v i k) (hist i)
-def seedLimit (b : HighBand) : ℚ :=
-  weightedBill (laterCount b+1) (cutWeight b 0) (history b)
-def pointLimit (b : HighBand) : ℚ :=
-  dotQ (running (cutWeight b 2) (laterCount b + 1))
-    ![(initialCap b 0 : ℚ), (initialCap b 1 : ℚ), (initialCap b 2 : ℚ), (initialE b : ℚ)]
-def lossWeight (b : HighBand) (a h : ℕ → ℚ) (i : ℕ) : Mass :=
-  fun k => a i * cutWeight b 0 i k + h i * cutWeight b 1 i k
-def fixedFee (hi B J : ℕ) : ℕ :=
-  let d := degreeAt hi
-  let q := gap hi
-  let a := 1 + (2*d-3)*(B-1)
-  let v := min a ((2*d-3)*(J-1)+d)
-  let published := ((blockLength-agreement)*((B-J)*v+J*a)+(q-1))/q+B^2
-  let lam : ℚ := (blockLength : ℚ) / agreement
-  let mu : ℚ := ((blockLength-d : ℕ) : ℚ) / q
-  let ap := mu + 2*lam*d*(B-1 : ℕ)
-  let vp := min ap (lam*d*(2*J-1 : ℕ))
-  let persistent := (((B-J : ℕ) : ℚ)*vp + J*ap).ceil.toNat+B^2
-  min published persistent
-def fixedBudget (b : HighBand) : ℕ :=
-  let price (s : Shape) := fixedFee b.row.hi s.B s.J
-  ∑ i ∈ Finset.range (stages b).length,
-    (price (stageAt b i).free.shape + price (stageAt b i).moving.shape)
 def OnParent {u del} {M : AnchorModel u del} {Γ} (F : AnchoredFamily M Γ)
     (I : Ideal Ambient) (γ : K) : Prop := OnJet I (M.label γ) (F.scalar γ)
 structure ODEGuard (B J : ℕ) : Prop where
@@ -146,46 +113,6 @@ structure ODEGuard (B J : ℕ) : Prop where
   jpos : 0 < J
   jb : J ≤ B
   small : B < p
-structure BankGuard (hi reserve : ℕ) (s : Shape) : Prop where
-  ode : ODEGuard s.B s.J
-  seed_small : s.U < p
-  pos : 0 < s.m * agreement
-  buffer : 2*hi*reserve ≤ fullCutoff s
-structure ScheduleOK (b : HighBand) : Prop where
-  stages_pos : 0 < (stages b).length
-  zero : (stageAt b 0).reserve = 0
-  later_pos : ∀ i < laterCount b, 0 < (stageAt b (i+1)).reserve
-  small_reserve : ∀ i < (stages b).length, (stageAt b i).reserve < p
-  stop_le : stopIndex b ≤ laterCount b
-  intro_pos : ∀ i ∈ introIndices b, 0 < i ∧ i < (stages b).length
-  intro_asc : (introIndices b).Pairwise (· < ·)
-  stage_guard : ∀ i < (stages b).length,
-    let s := stageAt b i
-    BankGuard b.row.hi s.reserve s.free.shape ∧ BankGuard b.row.hi s.reserve s.moving.shape
-  terminal_guard : BankGuard b.row.hi 0 (terminal b).shape
-  initial_small : ∀ k, initialCap b k < p
-  initial_e_ge : initialCap b 3 ≤ initialE b
-  content_small : (stageAt b 0).free.shape.U + (stageAt b 0).moving.shape.U < p
-  rank_guard : ODEGuard (rankB b) (rankJ b)
-  low_seed : (p+1)*initialCap b 2 + initialE b ≤ (fees b).lowSeed
-  low_jet : initialCap b 0 + fixedFee b.row.hi (rankB b) (rankJ b) ≤ (fees b).lowJet
-  fixed : fixedBudget b ≤ (fees b).fixedODE
-  content : (p+1)*((stageAt b 0).free.shape.U + (stageAt b 0).moving.shape.U) ≤ (fees b).content
-structure RateOK (hi : ℕ) (a h : ℚ) : Prop where
-  degree : ((p+1 : ℕ) : ℚ) / 80 ≤ a
-  height : 0 ≤ h
-  interpolation : ∀ g : ℕ, 0 < g → g ≤ 80 →
-    max 0 (1 - a*g/((p+1 : ℕ) : ℚ)) * curveUnit hi g ≤ h
-structure LossLedger (b : HighBand) : Prop where
-  seed_small : seedLimit b < (p : ℚ)
-  points : pointLimit b ≤ ((fees b).point : ℚ)
-  discount : b.row.lo < 7773 →
-    ∃ a h : ℕ → ℚ,
-      (∀ i ≤ laterCount b, RateOK b.row.hi (a i) (h i) ∧
-        min (seedLimit b) (dotQ (cutWeight b 0 i) (history b i)) ≤ a i) ∧
-      weightedBill (laterCount b+1) (lossWeight b a h) (history b) + seedLimit b ≤
-        ((fees b).loss : ℚ)
-  direct : 7773 ≤ b.row.lo → ((p+1 : ℕ) : ℚ) * seedLimit b ≤ ((fees b).loss : ℚ)
 structure InitialCover {u del} (M : AnchorModel u del) {Γ} (F : AnchoredFamily M Γ)
     (b : HighBand) (freeFixed movingFixed : ODE) where
   parents : Finset (Ideal Ambient)
@@ -295,12 +222,6 @@ theorem bill_bound (n : ℕ) (v hist : ℕ → Mass)
       rw [Finset.sum_range_succ, Finset.sum_range_succ]
       linarith
   exact (le_add_of_nonneg_right (dotQ_nonneg (running_nonneg v n) (massQ_nonneg _))).trans h
-theorem flat_bill (n : ℕ) (v : ℕ → Mass) (c : Mass) :
-    weightedBill n v (fun _ => c) = dotQ (running v n) c := by
-  induction n with
-  | zero => simp [weightedBill, running, dotQ]
-  | succ n ih =>
-    rw [weightedBill, Finset.sum_range_succ, ← weightedBill, ih, running_succ_dot]
 end
 end P1_7_4
 end
@@ -311,7 +232,7 @@ namespace P1_7_4
 noncomputable section
 open Polynomial
 open P1 (HighBand AnchorModel AnchoredFamily K p agreement)
-open P1_7 (Stage Listed Source InBand stages terminal fullCutoff buffered window_nat)
+open P1_7 (Stage    stages terminal fullCutoff buffered )
 open K1_14 (Shape Banks Jet Equation jetAt seedHasse seedEmbedding)
 open K1_14_2 (Ambient OnJet jetMarkHom toJet eval_toJet CoordinateRing SeedField
   JetSeedSection JetYSection ODE)
@@ -356,7 +277,6 @@ namespace P1_7_4
 noncomputable section
 open Polynomial
 open P1 (HighBand AnchorModel AnchoredFamily K p)
-open P1_7 (CurveTariff curveUnit)
 open K1_14 (Seeds graphEval)
 open K1_14_2 (Ambient OnJet SeedField RootSeedSection)
 open K1_14_2_2 (CutCover CurveGeometry)
@@ -365,46 +285,6 @@ open K1_14_2_3 (SeedSlice seedImage rootImage constantCoefficients DefinedOverCo
 open private on_root on_seed moving_graph_count seed_graph_count equal_image_degree
   union_card_le from ProximityPrize.SubmissionLower.Fast062
 open scoped BigOperators Classical
-def curveMarks {u del} {M : AnchorModel u del} {Γ} (F : AnchoredFamily M Γ) (C : CutCover) :
-    Finset K := C.curves.biUnion fun I => Γ.filter (OnParent F I)
-theorem mem_curveMarks {u del} {M : AnchorModel u del} {Γ} {F : AnchoredFamily M Γ}
-    {C : CutCover} {γ : K} (hγ : γ ∈ Γ) {I : Ideal Ambient} (hI : I ∈ C.curves)
-    (hm : OnParent F I γ) : γ ∈ curveMarks F C :=
-  Finset.mem_biUnion.mpr ⟨I, hI, Finset.mem_filter.mpr ⟨hγ, hm⟩⟩
-private theorem seed_slice {I : Ideal Ambient} (h : CurveGeometry I) : SeedSlice I :=
-  ⟨h.1, h.2.1, h.2.2.1, h.2.2.2.1⟩
-private theorem mark_graph {u del} {M : AnchorModel u del} {Γ} (F : AnchoredFamily M Γ)
-    {I : Ideal Ambient} {C : Seeds} (hC : seedImage I = Ideal.span {C}) :
-    ∀ z ∈ (Γ.filter (OnParent F I)).image M.label, graphEval z C = 0 := by
-  intro z hz
-  obtain ⟨γ, hγ, rfl⟩ := Finset.mem_image.mp hz
-  apply on_seed (Finset.mem_filter.mp hγ).2
-  rw [hC]
-  exact Ideal.mem_span_singleton_self C
-private theorem translated_card {u del} (M : AnchorModel u del) (T : Finset K) :
-    (T.image M.label).card = T.card :=
-  Finset.card_image_of_injective _ (fun _ _ hab => sub_left_inj.mp hab)
-private theorem direct_count {u del} {M : AnchorModel u del} {Γ} (F : AnchoredFamily M Γ)
-    {I : Ideal Ambient} {C : Seeds} (hC : C ≠ 0) (hI : seedImage I = Ideal.span {C})
-    (hp : C.totalDegree < p) :
-    (Γ.filter (OnParent F I)).card ≤ (p+1)*C.totalDegree := by
-  have h := seed_graph_count C hC hp ((Γ.filter (OnParent F I)).image M.label) (mark_graph F hI)
-  rwa [translated_card] at h
-theorem direct_curve_count {u del} {M : AnchorModel u del} {Γ}
-    (F : AnchoredFamily M Γ) (C : CutCover) (hp : C.cost 0 < p) :
-    ((curveMarks F C).card : ℚ) ≤ ((p+1 : ℕ) : ℚ)*(C.cost 0 : ℚ) := by
-  have hsum : ∑ I ∈ C.curves, seedLength I = C.cost 0 := rfl
-  have hcount (I : Ideal Ambient) (hI : I ∈ C.curves) :
-      (Γ.filter (OnParent F I)).card ≤ (p+1)*seedLength I := by
-    obtain ⟨f, hf, he, _, hd⟩ := K1_14_2_3_1.proof I (seed_slice (C.geometric I hI))
-    have hle : seedLength I ≤ C.cost 0 := hsum ▸ Finset.single_le_sum (fun _ _ => Nat.zero_le _) hI
-    exact (direct_count F hf.ne_zero he ((hd.trans hle).trans_lt hp)).trans
-      (Nat.mul_le_mul_left _ hd)
-  have h : (curveMarks F C).card ≤ (p+1)*C.cost 0 := calc
-    _ ≤ ∑ I ∈ C.curves, (Γ.filter (OnParent F I)).card := Finset.card_biUnion_le
-    _ ≤ ∑ I ∈ C.curves, (p+1)*seedLength I := Finset.sum_le_sum hcount
-    _ = _ := by rw [← Finset.mul_sum, hsum]
-  exact_mod_cast h
 end
 end P1_7_4
 end
@@ -416,7 +296,7 @@ namespace P1_7_4
 noncomputable section
 open Polynomial
 open P1 (HighBand K p AnchorModel AnchoredFamily)
-open P1_7 (InBand stages terminal Source CurveTariff PrefixBooks PrefixInventory fees)
+open P1_7 ( stages terminal   PrefixBooks PrefixInventory fees)
 open K1_14 (Jet Banks seedHasse jetAt atX graphEval)
 open K1_14_2 (Ambient ODE fixedAt)
 open K1_14_2_2 (FixedPart ODECaps fixedOn dual)
@@ -803,7 +683,7 @@ set_option maxHeartbeats 1200000
 namespace P1_7_4_1
 noncomputable section
 open P1 (K p HighBand AnchorModel AnchoredFamily)
-open P1_7_4 (stageAt initialCap initialE ScheduleOK InitialCover OnParent)
+open P1_7_4 (stageAt initialCap initialE  InitialCover OnParent)
 open K1_14 K1_14_2 K1_14_2_2 K1_14_2_2_2 K1_14_3_2 Polynomial
 open K1_14_3 (SeedCover joinCovers joinCovers_degree joinCovers_points joinCovers_covers)
 open scoped BigOperators Classical
@@ -1145,7 +1025,7 @@ set_option maxHeartbeats 1400000
 namespace P1_7_4_1
 noncomputable section
 open P1 (K p HighBand AnchorModel AnchoredFamily)
-open P1_7_4 (stageAt introIndices initialCap ScheduleOK introAccount introJump introWeight degreeVector)
+open P1_7_4 (stageAt introIndices initialCap  introAccount introJump introWeight degreeVector)
 open K1_14 K1_14_2 K1_14_2_2 K1_14_2_2_2 K1_14_3_2 Polynomial
 open K1_14_3 (NoMovingCommon)
 open K1_14_2_2_2_1 (jetDegree_C seedDegree_C)
@@ -1202,17 +1082,6 @@ open K1_14 (Shape)
 open K1_14_2_2_2 (afterGcd residualBudget ordinaryBudget)
 open K1_14_2_2_4 (highCap highScale pairCap residualShape)
 open P1_7_4 (sharedBound stageAt initialCap)
-private theorem sharedBound_zero (s t : Shape) (x z : ℕ) (k : Fin 4) :
-    sharedBound s t x z 1 1 false k =
-      ((residualBudget (afterGcd s x z) (afterGcd t x z) k + ordinaryBudget x z k : ℕ) : ℚ) := by
-  have hscale : highScale 1 k = 1 := by fin_cases k <;> rfl
-  have hdenom : (if false || (k == 3) then (1 + 1 - 1 : ℕ)^2 else 1 + 1 - 1) = 1 := by
-    split <;> rfl
-  simp only [sharedBound, hscale, hdenom, Nat.cast_one, div_one, Nat.cast_add]
-  exact add_comm _ _
-private theorem floor_bound {n : ℕ} {r : ℚ} (h : (n : ℚ) ≤ r) : n ≤ r.floor.toNat := by
-  have hi : (n : ℤ) ≤ r.floor := Rat.le_floor_iff.mpr (by exact_mod_cast h)
-  simpa using Int.toNat_le_toNat hi
 end P1_7_4_1_1
 end
 section
@@ -1270,7 +1139,6 @@ namespace P1_7_4_3
 noncomputable section
 open Polynomial Finset
 open P1 (K I node agreement)
-open P1_7_8 (FixedWord section_capacity)
 open K1_13 (Row extend embed)
 open K1_13_5 (RegularAt)
 open K1_13_5_3
@@ -1432,9 +1300,8 @@ namespace P1_7_4_3
 noncomputable section
 open Polynomial Finset
 open P1 (K I node p agreement blockLength HighBand AnchorModel AnchoredFamily)
-open P1_7 (degreeAt gap)
-open P1_7_4 (ODEGuard fixedFee)
-open P1_7_8 (FixedWord)
+open P1_7 (degreeAt )
+open P1_7_4 (ODEGuard )
 open K1_13 (Geom Row extend embed)
 open K1_13_5 (RegularAt)
 open K1_14_2 (ODE fixedAt)

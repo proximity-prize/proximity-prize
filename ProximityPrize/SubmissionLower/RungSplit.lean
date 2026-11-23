@@ -960,11 +960,6 @@ noncomputable section
 open Finset
 open CJ0 (ShapeOK mem_fullBox Jet fullBox Surplus AgreementOK SilentTail)
 open scoped BigOperators
-private theorem curve_johnson : CJ0.Main :=
-  CJ0.of_children CJ0_1.proof CJ0_2.proof
-    (CJ0_3.of_children CJ0_3_1.proof CJ0_3_2.proof)
-    (CJ0_4.of_children CJ0_4_1.proof CJ0_4_2.proof)
-    CJ0_5.proof CJ0_6.proof CJ0_7.proof CJ0_8.proof
 end
 end P1
 end

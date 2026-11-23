@@ -260,84 +260,6 @@ theorem sweep_eq (w : Window) (j lo n : ℕ) :
 #print axioms sweep_eq
 end Low48PrimaryPivot.Hinge
 
-namespace Low48PrimaryPivot.Hinge
-open K1_13_2_3
-
--- Raw-Nat kernel evaluator for `index` (no instance unfolding; Bool tests): same values, ~3.7x fewer kernel steps.
-def nmax (a b : Nat) : Nat := cond (Nat.ble a b) b a
-def nmin (a b : Nat) : Nat := cond (Nat.ble a b) a b
-def seriesN (a k n : Nat) : Nat := Nat.sub (Nat.mul n a) (Nat.mul k (Nat.div (Nat.mul n (Nat.sub n 1)) 2))
-def widthsN (a n : Nat) : Nat := Nat.div (Nat.sub (seriesN a 3 n) (Nat.div (Nat.add n (Nat.mod a 2)) 2)) 2
-def keepN (j q : Nat) : Nat :=
-  let b := Nat.sub (Nat.add q (Nat.mul 3 j)) 4950
-  let c := Nat.sub (Nat.add (Nat.mul 2 q) (Nat.mul 2 j)) 4950
-  let lo := nmax (Nat.sub (Nat.mul 2 b) (Nat.add j 2)) (Nat.div (Nat.sub (Nat.mul 2 (Nat.add b c)) j) 3)
-  let n := Nat.sub (nmin (nmin (Nat.add (Nat.div j 3) 1) (Nat.sub 1651 q)) (Nat.sub (Nat.add j 3) (Nat.mul 2 c))) lo
-  cond (Nat.beq n 0) 0
-    (Nat.sub (Nat.sub (widthsN (Nat.sub (Nat.add j 2) (Nat.mul 3 lo)) n)
-      (seriesN (Nat.sub b (Nat.mul 2 lo)) 2 (nmin n (Nat.sub (Nat.div (Nat.add b 1) 2) lo))))
-      (seriesN (Nat.sub c lo) 1 (nmin n (Nat.sub c lo))))
-def volumeN (w : Window) (j q : Nat) : Nat :=
-  Nat.sub (nmin (nmin (Nat.add j 3001) (Nat.sub 4651 w.offsetLo)) (Nat.add q w.gradeHi))
-    (nmax (Nat.sub 4650 w.offsetHi) (Nat.add q w.gradeLo))
-def sweepN (w : Window) (j tot lo : Nat) : Nat → Nat
-  | 0 => 0
-  | n+1 => Nat.add (sweepN w j tot lo n)
-      (Nat.mul (volumeN w j (Nat.add lo n)) (Nat.sub tot (keepN j (Nat.add lo n))))
-def indexN (w : Window) (j : Nat) : Nat :=
-  let lo := nmax (Nat.sub 4650 w.diagonalHi) (Nat.sub (Nat.sub 4651 w.offsetHi) w.gradeHi)
-  let hi := nmin (Nat.sub 4651 w.diagonalLo) (Nat.sub (nmin (Nat.add j 3001) (Nat.sub 4651 w.offsetLo)) w.gradeLo)
-  sweepN w j (widthsN (Nat.add j 2) (Nat.add (Nat.div j 3) 1)) lo (Nat.sub hi lo)
-
-theorem nmax_eq (a b : Nat) : nmax a b = max a b := by
-  unfold nmax
-  cases hb : Nat.ble a b
-  · have h : ¬ a ≤ b := fun h => by rw [Nat.ble_eq_true_of_le h] at hb; cases hb
-    show a = max a b
-    omega
-  · have h := Nat.le_of_ble_eq_true hb
-    show b = max a b
-    omega
-
-theorem nmin_eq (a b : Nat) : nmin a b = min a b := by
-  unfold nmin
-  cases hb : Nat.ble a b
-  · have h : ¬ a ≤ b := fun h => by rw [Nat.ble_eq_true_of_le h] at hb; cases hb
-    show b = min a b
-    omega
-  · have h := Nat.le_of_ble_eq_true hb
-    show a = min a b
-    omega
-
-theorem cond_beq_zero (n x y : Nat) : cond (Nat.beq n 0) x y = if n = 0 then x else y := by
-  cases n <;> rfl
-
-theorem seriesN_eq (a k n : Nat) : seriesN a k n = series a k n := rfl
-theorem widthsN_eq (a n : Nat) : widthsN a n = widths a n := rfl
-
-theorem keepN_eq (j q : Nat) : keepN j q = keep j q := by
-  unfold keepN keep
-  simp only [nmax_eq, nmin_eq, cond_beq_zero, seriesN_eq, widthsN_eq]
-  rfl
-
-theorem volumeN_eq (w : Window) (j q : Nat) : volumeN w j q = volume w j q := by
-  unfold volumeN volume
-  simp only [nmax_eq, nmin_eq]
-  rfl
-
-theorem sweepN_eq (w : Window) (j tot lo n : Nat) : sweepN w j tot lo n = sweep w j tot lo n := by
-  induction n with
-  | zero => rfl
-  | succ n ih =>
-    simp only [sweepN, sweep, ih, volumeN_eq, keepN_eq]
-    rfl
-
-theorem indexN_eq (w : Window) (j : Nat) : indexN w j = index w j := by
-  unfold indexN index
-  simp only [nmax_eq, nmin_eq, sweepN_eq, widthsN_eq]
-  rfl
-end Low48PrimaryPivot.Hinge
-
 namespace Low48PrimaryPivot
 open Finset K1_13_2_3
 open scoped BigOperators
@@ -469,7 +391,7 @@ private theorem rawIndex_eq_trim (w : Window) (j : ℕ) (hn : 0 ≤ startQ w) :
 
 def binAtFast (w : Window) (j : ℕ) : ℤ :=
   if (j : ℤ)+1 ≤ indexLo w then 0
-  else if 0 ≤ startQ w then (Hinge.indexN w j : ℤ) else trimIndex w j
+  else if 0 ≤ startQ w then (Hinge.index w j : ℤ) else trimIndex w j
 
 theorem binAtFast_eq (w : Window) (j : ℕ) : binAtFast w j = binAt w j := by
   unfold binAtFast
@@ -486,7 +408,6 @@ theorem binAtFast_eq (w : Window) (j : ℕ) : binAtFast w j = binAt w j := by
     rw [hz,zero_mul]
   · split
     · rename_i hn
-      rw [Hinge.indexN_eq]
       exact (rawIndex_eq_trim w j hn).trans (trimIndex_eq w j)
     · exact trimIndex_eq w j
 

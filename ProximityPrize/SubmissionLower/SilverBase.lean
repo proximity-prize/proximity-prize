@@ -14,11 +14,18 @@ export P0 (K I Words node p blockLength k Frac Bivar TypeAtMostOne coefficientBl
 abbrev Rung := P1.Rung
 abbrev target : Rung := ⟨179935,336731609,1073741824,2365,0x3a5b3ea2263e00a,8352383558747982⟩
 abbrev agreement := target.agreement
+abbrev radiusNumerator := target.numerator
+abbrev radiusDenominator := target.denominator
 abbrev t : ℕ := blockLength - agreement
 abbrev L : ℕ := agreement - k
 abbrev heightCap : ℕ := t + 1 - L - 2
+def queryRadius : ℝ≥0 := claimedRadius radiusNumerator radiusDenominator
+def radius : ℝ := queryRadius
+def BadFamily (u : Words) (Γ : Finset K) : Prop :=
+  ∀ γ ∈ Γ, IsMCA (AffineLineGenerator K) IRSProfile.baseCode γ u radius
 abbrev BadMarkAt := P1.BadMarkAt
 abbrev BadMark := BadMarkAt agreement
+def ordinary (u : Words) := hankel node (u 0) (u 1) L t
 def twoBlock (u : Words) := stacked p node (u 0) (u 1) L t
 def stackRank (u : Words) := GenericLayer.genericRank (twoBlock u)
 def nullity (u : Words) := GenericLayer.genericNullity (twoBlock u)
@@ -48,21 +55,6 @@ def fixedNodes {u : Words} {T : TwoActive u} (R : Relation T) : Finset I := by
   classical
   exact Finset.univ.filter fun i =>
     (leftU R).eval (C (node i)) = 0 ∧ (leftV R).eval (C (node i)) = 0
-def InvalidLeft {u : Words} {T : TwoActive u} (R : Relation T) : Prop :=
-  max (leftU R).natDegree (leftV R).natDegree < T.height ∨
-    ∃ G : K[X], G ≠ 0 ∧ G.map Polynomial.C ∣ leftU R ∧ G.map Polynomial.C ∣ leftV R ∧
-      ¬ G ∣ locator node Finset.univ
-structure SaturatedAt {u : Words} {T : TwoActive u} (R : Relation T)
-    {γ : K} (M : BadMark u γ) : Prop where
-  U_ne : atSlope (leftU R) γ ≠ 0
-  V_ne : atSlope (leftV R) γ ≠ 0
-  degree_eq : max (atSlope (leftU R) γ).natDegree (atSlope (leftV R) γ).natDegree =
-    T.height
-  gcd_errors : ∃ errors : Finset I,
-    (∀ i ∈ errors, M.decoder.eval (node i) ≠ u 0 i + γ * u 1 i) ∧
-    IsCommonGCD (locator node errors) (atSlope (leftU R) γ) (atSlope (leftV R) γ)
-  fixed_errors : ∀ i ∈ fixedNodes R, M.decoder.eval (node i) ≠ u 0 i + γ * u 1 i
-  valid : ¬ InvalidLeft R
 structure Reduction (u : Words) (T : TwoActive u) (R : Relation T) where
   U : Bivar
   V : Bivar
@@ -104,6 +96,7 @@ abbrev AnchorModel := ModelAt heightCap
 abbrev AnchoredFamily {u deleted} (M : AnchorModel u deleted) := FamilyAt agreement M
 abbrev AnchorModel.overhead {u deleted} (M : AnchorModel u deleted) := ModelAt.overhead M
 abbrev AnchorModel.label {u deleted} (M : AnchorModel u deleted) := ModelAt.label M
+abbrev HighRow := P1.HighRow
 inductive HighBand where
   | h2366
   | h2380
@@ -149,6 +142,51 @@ inductive HighBand where
   | h24000
   | h28300
   | h32411
+def HighBand.row : HighBand → HighRow
+  | .h2366 => ⟨2366,2379,93115474939138867,0x2527a38f00982c1⟩
+  | .h2380 => ⟨2380,2399,86963514617499853,0x1fccf32e289515b⟩
+  | .h2400 => ⟨2400,2419,80141144427743360,0x1cdd60170fdc3a5⟩
+  | .h2420 => ⟨2420,2439,75622379684181559,0x1ba53a4844c18cf⟩
+  | .h2440 => ⟨2440,2449,0xec6c9a01c501b4,0x16f8c08dfd144a0⟩
+  | .h2450 => ⟨2450,2459,0xdf784c422b4446,95031637448831224⟩
+  | .h2460 => ⟨2460,2479,0xd400aa56489568,87684038095193899⟩
+  | .h2480 => ⟨2480,2499,0xc06b218c0e0594,73878593397754386⟩
+  | .h2500 => ⟨2500,2519,0xae37b01afebac5,0xe7a9e01bb2e1cb⟩
+  | .h2520 => ⟨2520,2529,0x97db23e85cf884,0xc76b58e77616e5⟩
+  | .h2530 => ⟨2530,2539,0x8f4bd87e5f1747,0xba123f2a591e67⟩
+  | .h2540 => ⟨2540,2549,0x87eccc7b933ab2,0xab638004c86172⟩
+  | .h2550 => ⟨2550,2559,0x815ca68fc615d8,0xa0c4961e9227e7⟩
+  | .h2560 => ⟨2560,2569,0x7b35caa13aa40d,0x94e4eee879f5fb⟩
+  | .h2570 => ⟨2570,2584,0x75e6d9cedc8b78,0x8b925e6d61c3ef⟩
+  | .h2585 => ⟨2585,2589,0x6e3d4eba25800e,0x7f9bedcfbffab2⟩
+  | .h2590 => ⟨2590,2599,0x6beedc13cf3fce,0x7b4364c3ac8d1e⟩
+  | .h2600 => ⟨2600,2600,0x67e2d7a116990b,0x742f5f37049655⟩
+  | .h2601 => ⟨2601,2610,0x5e7d279c5cee1e,0x7864caf748b232⟩
+  | .h2611 => ⟨2611,2620,0x5abc7f01347485,0x716683048d043d⟩
+  | .h2621 => ⟨2621,2639,0x576c6e6f8f6fa7,0x6a9e19368e944e⟩
+  | .h2640 => ⟨2640,2669,0x5249d9435f23f6,0x5eefb661488c92⟩
+  | .h2670 => ⟨2670,2699,0x49f59157b93a46,0x4f9b17715a306e⟩
+  | .h2700 => ⟨2700,2749,0x437a3712c2d445,0x442f4f0de3f4c6⟩
+  | .h2750 => ⟨2750,2799,0x3b336d17c1cb32,0x35272981f520f4⟩
+  | .h2800 => ⟨2800,2899,0x375dab361799d4,0x284ddeae93503a⟩
+  | .h2900 => ⟨2900,2949,0x2b6b6c50e8eb3d,7539989889497143⟩
+  | .h2950 => ⟨2950,2979,8777438934015614,6750022438537705⟩
+  | .h2980 => ⟨2980,2999,8232174646093835,6265299422480654⟩
+  | .h3000 => ⟨3000,3049,7920769328756114,5914027083230035⟩
+  | .h3050 => ⟨3050,3099,7233131619602069,5133838392304890⟩
+  | .h3100 => ⟨3100,3199,5780812131934959,4711544557140173⟩
+  | .h3200 => ⟨3200,3399,4609990374200773,0xd4775ea2351fc⟩
+  | .h3400 => ⟨3400,3554,0xc2cb28591a32b,0x91b1a34f0449e⟩
+  | .h3555 => ⟨3555,3999,0x7bd73fd4c6710,0x7cc99261b72f8⟩
+  | .h4000 => ⟨4000,4799,0x3c1dcb06bed3a,0x4e1e3a877504e⟩
+  | .h4800 => ⟨4800,7744,456991479392525,705676274027289⟩
+  | .h7745 => ⟨7745,7999,723244967547378,471048191238102⟩
+  | .h8000 => ⟨8000,14499,651486155753195,425841080879578⟩
+  | .h14500 => ⟨14500,21447,47471425797023,0x97983d103a57⟩
+  | .h21448 => ⟨21448,23999,21281850144313,78255348716729⟩
+  | .h24000 => ⟨24000,28299,19998784942889,63464881996079⟩
+  | .h28300 => ⟨28300,32410,18715989025685,51455234429739⟩
+  | .h32411 => ⟨32411,33345,3323301173093,58347874659230⟩
 end
 end P2
 end
@@ -300,6 +338,115 @@ open private exceptions specializeY yView_degree specializeY_eval specializeY_it
 open private centerPoint atCenter atCenter_degree K1_11_3.numerator numerator_degree K1_11_3.denominator
   eval_atCenter pderiv_atCenter numerator_eval_degree denominator_degree reconstruct
   natDegree_le_of_degree_lt_succ derivativeChart_degree from ProximityPrize.SubmissionLower.Fast072
+theorem assign {u : Words} {deleted : Finset I} {Γ : Finset K}
+    {F : Marks u deleted Γ} {b : Bank} (A : Annihilator F b) :
+    ∃ (exceptional : Finset K) (charts : Fin 5 → Finset K),
+      exceptional.card ≤ b.zeroFee ∧
+      (∀ γ ∈ Γ, γ ∈ exceptional ∨ ∃ j, γ ∈ charts j) ∧
+      ∀ j, ∃ hsub : charts j ⊆ Γ, ∀ γ (hγ : γ ∈ charts j),
+        SimpleRoot (derivativeChart A.Q j) (F.mark γ (hsub hγ)).decoder γ (γ ^ p) := by
+  classical
+  obtain ⟨exceptional, hfee, hex⟩ := exceptions A.Q A.nonzero p b.a b.b (by decide)
+    (by cases b <;> decide) A.degreeS A.degreeT Γ
+  have hassign (γ : K) (hγ : γ ∈ Γ) (hn : γ ∉ exceptional) :
+      ∃ j : Fin 5, SimpleRoot (derivativeChart A.Q j) (F.mark γ hγ).decoder γ (γ ^ p) := by
+    let f := specializeY A.Q γ (γ ^ p)
+    have hdeg : f.natDegree ≤ 5 :=
+      (Polynomial.natDegree_map_le).trans ((yView_degree A.Q).le.trans A.degreeY)
+    have hroot : f.IsRoot (F.mark γ hγ).decoder :=
+      (specializeY_eval A.Q _ γ (γ ^ p)).trans (A.vanishes γ hγ)
+    obtain ⟨j, hj, hz, hnz⟩ := exists_simple_derivative_at_root p 5 f
+      (hex γ hγ hn) hdeg (by decide) _ hroot
+    refine ⟨⟨j,hj⟩, ?_, ?_⟩
+    · rw [← specializeY_eval, specializeY_iterate]
+      exact hz
+    · rw [← specializeY_eval, specializeY_derivative, specializeY_iterate]
+      exact hnz
+  let charts (j : Fin 5) := Γ.filter fun γ =>
+    ∃ hγ : γ ∈ Γ, SimpleRoot (derivativeChart A.Q j) (F.mark γ hγ).decoder γ (γ ^ p)
+  refine ⟨exceptional, charts, hfee, ?_, ?_⟩
+  · intro γ hγ
+    by_cases he : γ ∈ exceptional
+    · exact Or.inl he
+    · obtain ⟨j,hj⟩ := hassign γ hγ he
+      exact Or.inr ⟨j, Finset.mem_filter.mpr ⟨hγ, hγ, hj⟩⟩
+  · intro j
+    refine ⟨fun _ hγ => (Finset.mem_filter.mp hγ).1, ?_⟩
+    intro γ hγ
+    obtain ⟨_, h⟩ := (Finset.mem_filter.mp hγ).2
+    exact h
+private theorem build_chart
+    {u : Words} {deleted : Finset I} (P : Puncture deleted)
+    {Γ : Finset K} (F : Marks u deleted Γ) (b : Bank)
+    (Λ : Finset K) (hsub : Λ ⊆ Γ) (hne : Λ.Nonempty)
+    (G : MvPolynomial (Fin 4) K) (hG : G.weightedTotalDegree scalarWeightTotal ≤ b.E)
+    (hroot : ∀ γ (hγ : γ ∈ Λ),
+      SimpleRoot G (F.mark γ (hsub hγ)).decoder γ (γ ^ p)) :
+    Nonempty (TaylorChart u P F b Λ) := by
+  classical
+  let point (γ : K) : Fin 3 → Frac := if h : γ ∈ Λ then
+    centerPoint (F.mark γ (hsub h)).decoder γ (γ ^ p) else fun _ => 0
+  have hpnt (γ : K) (hγ : γ ∈ Λ) :
+      point γ = centerPoint (F.mark γ (hsub hγ)).decoder γ (γ ^ p) := by
+    simp [point, hγ]
+  refine ⟨{
+    subset := hsub
+    equation := atCenter G
+    equation_ne := ?_
+    equation_degree := (atCenter_degree G).trans hG
+    numerator := K1_11_3.numerator G 131071
+    numerator_degree := numerator_degree _ _
+    denominator := K1_11_3.denominator G 131071
+    cut_degree := ?_
+    point := point
+    slope := fun γ hγ => by rw [hpnt γ hγ]; rfl
+    on_equation := fun γ hγ => by rw [hpnt γ hγ, eval_atCenter, (hroot γ hγ).1, map_zero]
+    regular := ?_
+    reconstruction := ?_ }⟩
+  · obtain ⟨γ, hγ⟩ := hne
+    have hn := (hroot γ hγ).2
+    intro hz
+    apply hn
+    apply (IsFractionRing.injective (Polynomial K) Frac)
+    rw [map_zero, ← eval_atCenter, ← pderiv_atCenter, hz, map_zero, map_zero]
+  · intro i
+    unfold nodeCut
+    apply (totalDegree_sub _ _).trans
+    apply max_le
+    · exact numerator_eval_degree K1_11_3_1.proof G 131071 b.E (by cases b <;> decide) hG _
+    · apply (totalDegree_mul _ _).trans
+      have ha : (C (σ := Fin 3) (algebraMap K Frac (u 0 (P.index i))) +
+          MvPolynomial.X 1 * C (algebraMap K Frac (u 1 (P.index i)))).totalDegree ≤ 1 := by
+        exact (totalDegree_add _ _).trans (max_le (by simp)
+          ((totalDegree_mul _ _).trans (by simp)))
+      exact Nat.add_le_add (denominator_degree G 131071 b.E hG) ha
+  · intro γ hγ
+    rw [hpnt γ hγ, K1_11_3.denominator, map_pow, eval_atCenter]
+    exact pow_ne_zero _ (fun h => (hroot γ hγ).2
+      ((IsFractionRing.injective (Polynomial K) Frac) (h.trans (map_zero _).symm)))
+  · intro γ hγ
+    rw [hpnt γ hγ]
+    apply reconstruct K1_11_3_2.proof
+    · exact natDegree_le_of_degree_lt_succ (F.mark γ (hsub hγ)).degree
+    · exact (hroot γ hγ).1
+    · intro n hn
+      have pp := CharP.char_is_prime_of_two_le K p (by decide)
+      intro hz
+      have hn' := pp.dvd_factorial.mp ((CharP.cast_eq_zero_iff K p _).mp hz)
+      exact (not_lt_of_ge (hn'.trans hn)) (by decide)
+theorem chart_cover {u : Words} {deleted : Finset I} (P : Puncture deleted)
+    {Γ : Finset K} {F : Marks u deleted Γ} {b : Bank} (A : Annihilator F b) :
+    ∃ (exceptional : Finset K) (charts : Fin 5 → Finset K),
+      exceptional.card ≤ b.zeroFee ∧
+      (∀ γ ∈ Γ, γ ∈ exceptional ∨ ∃ j, γ ∈ charts j) ∧
+      ∀ j, charts j = ∅ ∨ Nonempty (TaylorChart u P F b (charts j)) := by
+  obtain ⟨exceptional, charts, hfee, hcover, hcharts⟩ := assign A
+  refine ⟨exceptional, charts, hfee, hcover, fun j => ?_⟩
+  rcases (charts j).eq_empty_or_nonempty with he | hn
+  · exact Or.inl he
+  · obtain ⟨hsub, hroot⟩ := hcharts j
+    exact Or.inr (build_chart P F b (charts j) hsub hn (derivativeChart A.Q j)
+      ((derivativeChart_degree A.Q j).trans A.degreeTotal) hroot)
 end
 end P2_4
 end
@@ -504,6 +651,20 @@ private theorem contact_order_one_mem {σ : Type*} (v : σ → ℕ) (L : MvPolyn
   intro d hd
   apply Polynomial.coeff_eq_zero_of_lt_natTrailingDegree
   omega
+theorem mark_degree {u : Words} {γ : K} (M : BadMark u γ) :
+    M.decoder.natDegree ≤ 131071 := by
+  apply Polynomial.natDegree_le_of_degree_le
+  exact Order.le_of_lt_succ (show M.decoder.degree < (131072 : ℕ) from M.degree)
+theorem correctOn_mark {u : Words} {deleted : Finset I} (P : Puncture deleted)
+    {γ : K} (M : BadMark u γ) :
+    correctOn u P M.decoder (M.decoder.map twist) γ (γ ^ p) (indexedSupport P M.support) := by
+  intro i hi
+  have h := M.hits (P.index i) ((mem_indexedSupport P M.support i).mp hi)
+  refine ⟨h, ?_⟩
+  change (M.decoder.map twist).eval (node (P.index i)) =
+    u 0 (P.index i) ^ p + γ ^ p * u 1 (P.index i) ^ p
+  rw [Strata.eval_coefficient_map twist M.decoder _ (Native.native_domain_fixed (P.index i)), h]
+  simp only [map_add, map_mul, P0.twist, frobenius_def]
 private theorem bank_cancel (b : Bank) : 1 + (b.dT - 1) = b.dT := by cases b <;> rfl
 end
 end P2_4
@@ -521,7 +682,105 @@ open private ncard_inter_filter surface_count_with_terminal from ProximityPrize.
 open private seed_eq_of_mismatch from ProximityPrize.SubmissionLower.Fast065
 variable {u : Words} {deleted : Finset I} {P : Puncture deleted}
   {Γ Λ : Finset K} {F : Marks u deleted Γ} {b : Bank}
+private theorem pencil_bad_count (hsub : Λ ⊆ Γ) (P₀ P₁ : Polynomial K)
+    (h₀ : P₀.degree < (131072 : ℕ)) (h₁ : P₁.degree < (131072 : ℕ))
+    (pencil : ∀ γ (hγ : γ ∈ Λ),
+      (F.mark γ (hsub hγ)).decoder = P₀ + Polynomial.C γ * P₁) :
+    Λ.card ≤ P.N := by
+  classical
+  have mismatch (γ : Λ) :
+      ∃ i : Fin P.N,
+        (P₀.eval (P.nodes i) ≠ u 0 (P.index i) ∨ P₁.eval (P.nodes i) ≠ u 1 (P.index i)) ∧
+        P₀.eval (P.nodes i) + (γ : K) * P₁.eval (P.nodes i) =
+          u 0 (P.index i) + (γ : K) * u 1 (P.index i) := by
+    let M := F.mark γ (hsub γ.property)
+    obtain ⟨idx, hi, hm⟩ :
+        ∃ idx ∈ M.support, P₀.eval (node idx) ≠ u 0 idx ∨ P₁.eval (node idx) ≠ u 1 idx := by
+      by_contra hn
+      push Not at hn
+      exact M.nonjoint ⟨⟨P₀, h₀, fun j hj => (hn j hj).1⟩, ⟨P₁, h₁, fun j hj => (hn j hj).2⟩⟩
+    obtain ⟨i, rfl⟩ := (P.retained idx).mpr (F.survives γ (hsub γ.property) idx hi)
+    refine ⟨i, hm, ?_⟩
+    have hh := M.hits (P.index i) hi
+    change (F.mark (γ : K) (hsub γ.property)).decoder.eval (P.nodes i) = _ at hh
+    simpa only [pencil _ γ.property, Polynomial.eval_add, Polynomial.eval_mul,
+      Polynomial.eval_C] using hh
+  let f : Λ → Fin P.N := fun γ => Classical.choose (mismatch γ)
+  have hf : Function.Injective f := by
+    intro γ δ he
+    apply Subtype.ext
+    obtain ⟨hm, hγ⟩ := Classical.choose_spec (mismatch γ)
+    have hδ := (Classical.choose_spec (mismatch δ)).2
+    change f γ = f δ at he
+    change
+      (P₀.eval (P.nodes (f γ)) ≠ u 0 (P.index (f γ)) ∨
+        P₁.eval (P.nodes (f γ)) ≠ u 1 (P.index (f γ))) at hm
+    change P₀.eval (P.nodes (f γ)) + (γ : K) * P₁.eval (P.nodes (f γ)) =
+      u 0 (P.index (f γ)) + (γ : K) * u 1 (P.index (f γ)) at hγ
+    change P₀.eval (P.nodes (f δ)) + (δ : K) * P₁.eval (P.nodes (f δ)) =
+      u 0 (P.index (f δ)) + (δ : K) * u 1 (P.index (f δ)) at hδ
+    rw [← he] at hδ
+    exact seed_eq_of_mismatch (F := K) hγ hδ hm
+  simpa only [Fintype.card_coe, Fintype.card_fin] using Fintype.card_le_of_injective f hf
 variable (chart : TaylorChart u P F b Λ)
+theorem chart_cut_iff (γ : K) (hγ : γ ∈ Λ) (i : Fin P.N) :
+    MvPolynomial.eval (chart.point γ) (nodeCut u P chart.numerator chart.denominator i) = 0 ↔
+      (F.mark γ (chart.subset hγ)).decoder.eval (P.nodes i) =
+        u 0 (P.index i) + γ * u 1 (P.index i) := by
+  let val := MvPolynomial.eval (chart.point γ)
+  let x := algebraMap K Frac (P.nodes i)
+  change val (nodeCut u P chart.numerator chart.denominator i) = 0 ↔ _
+  have heval := Polynomial.eval_map_apply val (C x) (p := chart.numerator)
+  unfold nodeCut
+  change val (chart.numerator.eval (C x) - _) = 0 ↔ _
+  rw [map_sub, ← heval]
+  change (chart.numerator.map val).eval (val (C x)) - _ = 0 ↔ _
+  rw [show val (C x) = x by simp [val], show chart.numerator.map val = _ from chart.reconstruction γ hγ]
+  rw [Polynomial.eval_mul, Polynomial.eval_C, show x = algebraMap K Frac (P.nodes i) from rfl,
+    Polynomial.eval_map_apply, map_mul, map_add, map_mul]
+  simp only [val, eval_C, eval_X, chart.slope γ hγ]
+  rw [← map_mul, ← map_add, sub_eq_zero]
+  constructor
+  · intro h
+    exact (algebraMap K Frac).injective (mul_left_cancel₀ (chart.regular γ hγ) h)
+  · intro h
+    rw [h]
+theorem chart_persistent (J : Ideal (MvPolynomial (Fin 3) Frac)) (W : Finset K) (hW : W ⊆ Λ)
+    (hzero : ∀ γ ∈ W, chart.point γ ∈ zeroLocus Frac J)
+    (hpersist : 131072 ≤ {i | nodeCut u P chart.numerator chart.denominator i ∈ J}.ncard) :
+    W.card ≤ P.N := by
+  classical
+  let keep := Finset.univ.filter fun i => nodeCut u P chart.numerator chart.denominator i ∈ J
+  have hk : 131072 ≤ keep.card := by
+    rw [← Set.ncard_coe_finset]
+    exact hpersist.trans_eq (congrArg Set.ncard (by ext i; simp [keep]))
+  obtain ⟨S, hS, hcard⟩ := Finset.exists_subset_card_eq hk
+  let P₀ := Lagrange.interpolate S P.nodes (fun i => u 0 (P.index i))
+  let P₁ := Lagrange.interpolate S P.nodes (fun i => u 1 (P.index i))
+  have hinj : Set.InjOn P.nodes (S : Set (Fin P.N)) := nodes_injective.injOn
+  have hd₀ : P₀.degree < (131072 : ℕ) := by
+    simpa only [P₀, hcard] using Lagrange.degree_interpolate_lt (fun i => u 0 (P.index i)) hinj
+  have hd₁ : P₁.degree < (131072 : ℕ) := by
+    simpa only [P₁, hcard] using Lagrange.degree_interpolate_lt (fun i => u 1 (P.index i)) hinj
+  apply pencil_bad_count (P := P) (F := F) (fun _ hg => chart.subset (hW hg)) P₀ P₁ hd₀ hd₁
+  intro γ hγ
+  let M := F.mark γ (chart.subset (hW hγ))
+  apply Polynomial.eq_of_degrees_lt_of_eval_index_eq S hinj
+  · rw [hcard]
+    exact Polynomial.degree_le_natDegree.trans_lt
+      (WithBot.coe_lt_coe.mpr (Nat.lt_succ_of_le (mark_degree M)))
+  · rw [hcard]
+    have hm : (Polynomial.C γ * P₁).degree ≤ P₁.degree := by
+      refine (Polynomial.degree_mul_le _ _).trans ?_
+      simpa only [zero_add] using add_le_add_left (Polynomial.degree_C_le (a := γ)) P₁.degree
+    exact (Polynomial.degree_add_le _ _).trans_lt (max_lt hd₀ (hm.trans_lt hd₁))
+  · intro i hi
+    have hcut : nodeCut u P chart.numerator chart.denominator i ∈ J := (Finset.mem_filter.mp (hS hi)).2
+    have hz : MvPolynomial.eval (chart.point γ) (nodeCut u P chart.numerator chart.denominator i) = 0 :=
+      hzero γ hγ _ hcut
+    rw [Polynomial.eval_add, Polynomial.eval_mul, Polynomial.eval_C]
+    exact (chart_cut_iff chart γ (hW hγ) i).mp hz |>.trans (by
+      rw [Lagrange.eval_interpolate_at_node _ hinj hi, Lagrange.eval_interpolate_at_node _ hinj hi])
 end
 end P2_4
 end
@@ -579,221 +838,6 @@ def terminal : HighBand → Bank
   | .h24000 => ⟨⟨30,42,6,207⟩,711983104,77331⟩
   | .h28300 => ⟨⟨30,42,6,207⟩,711983104,77331⟩
   | .h32411 => ⟨⟨8,11,1,55⟩,17039360,517⟩
-def subbank (b : HighBand) (g : Grade) : Bank :=
-  let t := terminal b
-  { t with shape := { t.shape with U := g.slots } }
-def grades : HighBand → List Grade
-  | .h2366 =>
-    [⟨403,178628, none⟩,⟨398,180297, none⟩,⟨392,181576, some 10⟩,⟨386,183191, some 13⟩,
-     ⟨380,185227, some 16⟩,⟨373,187019, some 19⟩,⟨366,189446, some 22⟩,⟨359,192743, some 25⟩,
-     ⟨351,196385, some 27⟩,⟨342,200852, some 30⟩,⟨333,208297, some 32⟩,⟨321,218538, some 34⟩,
-     ⟨307,231200, some 36⟩,⟨290,231200, some 37⟩,⟨271,231200, some 37⟩,⟨249,231200, some 36⟩,
-     ⟨226,231200, some 35⟩,⟨199,231200, some 33⟩,⟨170,231200, some 30⟩,⟨139,231200, some 26⟩,
-     ⟨106,231200, some 21⟩,⟨71,231200, some 14⟩,⟨33,231200, some 7⟩]
-  | .h2380 =>
-    [⟨378,191872, none⟩,⟨373,193603, none⟩,⟨367,194880, some 9⟩,⟨361,196538, some 12⟩,
-     ⟨355,198675, some 15⟩,⟨349,201431, some 18⟩,⟨342,204072, some 21⟩,⟨335,207757, some 23⟩,
-     ⟨327,211929, some 26⟩,⟨319,218423, some 28⟩,⟨309,226713, some 30⟩,⟨297,234728, some 32⟩,
-     ⟨284,234728, some 33⟩,⟨269,234728, some 34⟩,⟨251,234728, some 34⟩,⟨232,234728, some 34⟩,
-     ⟨210,234728, some 33⟩,⟨186,234728, some 31⟩,⟨160,234728, some 28⟩,⟨132,234728, some 25⟩,
-     ⟨102,234728, some 20⟩,⟨70,234728, some 14⟩,⟨36,234728, some 7⟩]
-  | .h2400 =>
-    [⟨364,188372, none⟩,⟨359,190039, none⟩,⟨353,191241, some 9⟩,⟨348,193679, some 12⟩,
-     ⟨342,195789, some 15⟩,⟨335,197622, some 17⟩,⟨329,201197, some 20⟩,⟨322,204962, some 22⟩,
-     ⟨314,209308, some 24⟩,⟨305,215045, some 27⟩,⟨295,224261, some 29⟩,⟨283,234728, some 30⟩,
-     ⟨269,234728, some 31⟩,⟨253,234728, some 32⟩,⟨235,234728, some 32⟩,⟨214,234728, some 31⟩,
-     ⟨191,234728, some 30⟩,⟨166,234728, some 27⟩,⟨139,234728, some 24⟩,⟨110,234728, some 20⟩,
-     ⟨78,234728, some 15⟩,⟨45,234728, some 9⟩,⟨9,234728, some 1⟩]
-  | .h2420 =>
-    [⟨358,186933, none⟩,⟨353,188574, none⟩,⟨347,189744, some 9⟩,⟨342,192163, some 12⟩,
-     ⟨336,194251, some 14⟩,⟨329,196062, some 17⟩,⟨323,199641, some 19⟩,⟨316,203427, some 22⟩,
-     ⟨308,207837, some 24⟩,⟨299,213746, some 26⟩,⟨289,223484, some 28⟩,⟨277,234728, some 29⟩,
-     ⟨263,234728, some 30⟩,⟨246,234728, some 31⟩,⟨227,234728, some 31⟩,⟨206,234728, some 30⟩,
-     ⟨183,234728, some 28⟩,⟨157,234728, some 26⟩,⟨129,234728, some 23⟩,⟨100,234728, some 18⟩,
-     ⟨67,234728, some 13⟩,⟨33,234728, some 6⟩]
-  | .h2440 =>
-    [⟨333,180191, none⟩,⟨328,181695, none⟩,⟨323,183568, some 8⟩,⟨318,185901, some 11⟩,
-     ⟨312,187895, some 13⟩,⟨306,190585, some 16⟩,⟨299,193211, some 18⟩,⟨292,197106, some 20⟩,
-     ⟨284,201833, some 22⟩,⟨276,209949, some 24⟩,⟨265,221356, some 26⟩,⟨252,234728, some 27⟩,
-     ⟨236,234728, some 27⟩,⟨218,234728, some 27⟩,⟨197,234728, some 27⟩,⟨174,234728, some 25⟩,
-     ⟨148,234728, some 23⟩,⟨120,234728, some 20⟩,⟨90,234728, some 15⟩,⟨58,234728, some 10⟩,
-     ⟨23,234728, some 4⟩]
-  | .h2450 =>
-    [⟨322,177369, none⟩,⟨317,178815, none⟩,⟨312,180635, some 8⟩,⟨307,182925, some 10⟩,
-     ⟨301,184871, some 13⟩,⟨295,187535, some 15⟩,⟨288,190151, some 17⟩,⟨281,194108, some 19⟩,
-     ⟨274,200243, some 21⟩,⟨265,207740, some 23⟩,⟨254,221212, some 24⟩,⟨240,234728, some 25⟩,
-     ⟨224,234728, some 26⟩,⟨204,234728, some 25⟩,⟨183,234728, some 25⟩,⟨158,234728, some 23⟩,
-     ⟨132,234728, some 20⟩,⟨103,234728, some 17⟩,⟨72,234728, some 12⟩,⟨38,234728, some 6⟩,
-     ⟨2,234728, some 0⟩]
-  | .h2460 =>
-    [⟨312,174980, none⟩,⟨307,176379, none⟩,⟨302,178158, some 8⟩,⟨296,179487, some 10⟩,
-     ⟨291,182330, some 12⟩,⟨285,184988, some 14⟩,⟨278,187619, some 17⟩,⟨271,191674, some 19⟩,
-     ⟨264,198098, some 20⟩,⟨255,206329, some 22⟩,⟨244,222653, some 23⟩,⟨229,234728, some 24⟩,
-     ⟨211,234728, some 24⟩,⟨191,234728, some 24⟩,⟨169,234728, some 23⟩,⟨144,234728, some 21⟩,
-     ⟨116,234728, some 18⟩,⟨86,234728, some 14⟩,⟨53,234728, some 9⟩,⟨19,234728, some 3⟩]
-  | .h2480 =>
-    [⟨292,169092, none⟩,⟨287,170354, none⟩,⟨282,172001, some 7⟩,⟨277,174142, some 9⟩,
-     ⟨272,176932, some 11⟩,⟨266,179548, some 13⟩,⟨260,183306, some 15⟩,⟨253,187623, some 17⟩,
-     ⟨245,193434, some 19⟩,⟨236,203436, some 20⟩,⟨224,225763, some 21⟩,⟨208,234728, some 22⟩,
-     ⟨189,234728, some 22⟩,⟨167,234728, some 21⟩,⟨142,234728, some 19⟩,⟨115,234728, some 16⟩,
-     ⟨85,234728, some 13⟩,⟨53,234728, some 8⟩,⟨18,234728, some 2⟩]
-  | .h2500 =>
-    [⟨278,142438, none⟩,⟨273,143455, none⟩,⟨269,145636, some 7⟩,⟨263,146611, some 9⟩,
-     ⟨258,148995, some 11⟩,⟨252,151245, some 13⟩,⟨246,154558, some 15⟩,⟨239,158480, some 16⟩,
-     ⟨231,164042, some 18⟩,⟨222,174640, some 19⟩,⟨209,201727, some 20⟩,⟨189,217087, some 20⟩,
-     ⟨166,217087, some 19⟩,⟨139,217087, some 17⟩,⟨110,217087, some 14⟩,⟨77,217087, some 11⟩,
-     ⟨42,217087, some 6⟩,⟨4,217087, some 0⟩]
-  | .h2520 =>
-    [⟨261,135659, none⟩,⟨257,137342, none⟩,⟨252,138587, some 6⟩,⟨247,140280, some 8⟩,
-     ⟨242,142575, some 10⟩,⟨236,144752, some 12⟩,⟨230,148067, some 13⟩,⟨223,152135, some 15⟩,
-     ⟨215,158308, some 16⟩,⟨206,168072, some 18⟩,⟨194,168072, some 18⟩,⟨181,168072, some 19⟩,
-     ⟨165,168072, some 19⟩,⟨147,168072, some 18⟩,⟨126,168072, some 17⟩,⟨104,168072, some 15⟩,
-     ⟨79,168072, some 12⟩,⟨53,168072, some 8⟩,⟨24,168072, some 3⟩]
-  | .h2530 =>
-    [⟨254,134061, none⟩,⟨250,135715, none⟩,⟨245,136925, some 6⟩,⟨240,138591, some 8⟩,
-     ⟨235,140876, some 10⟩,⟨229,143052, some 11⟩,⟨223,146421, some 13⟩,⟨216,150642, some 15⟩,
-     ⟨208,157293, some 16⟩,⟨199,168072, some 17⟩,⟨186,168072, some 18⟩,⟨172,168072, some 18⟩,
-     ⟨156,168072, some 18⟩,⟨137,168072, some 17⟩,⟨116,168072, some 15⟩,⟨93,168072, some 13⟩,
-     ⟨67,168072, some 10⟩,⟨40,168072, some 6⟩,⟨10,168072, some 1⟩]
-  | .h2540 =>
-    [⟨247,132249, none⟩,⟨243,133866, none⟩,⟨238,135030, some 6⟩,⟨233,136657, some 8⟩,
-     ⟨228,138915, some 9⟩,⟨222,141074, some 11⟩,⟨216,144474, some 13⟩,⟨209,148825, some 14⟩,
-     ⟨202,157361, some 15⟩,⟨191,168072, some 16⟩,⟨179,168072, some 17⟩,⟨164,168072, some 17⟩,
-     ⟨147,168072, some 17⟩,⟨127,168072, some 15⟩,⟨106,168072, some 14⟩,⟨82,168072, some 11⟩,
-     ⟨55,168072, some 8⟩,⟨27,168072, some 4⟩]
-  | .h2550 =>
-    [⟨240,130228, none⟩,⟨236,131797, none⟩,⟨231,132905, some 6⟩,⟨227,135395, some 7⟩,
-     ⟨221,136695, some 9⟩,⟨216,139842, some 11⟩,⟨210,143332, some 12⟩,⟨203,147908, some 14⟩,
-     ⟨195,155754, some 15⟩,⟨185,168072, some 16⟩,⟨172,168072, some 16⟩,⟨156,168072, some 16⟩,
-     ⟨138,168072, some 16⟩,⟨118,168072, some 14⟩,⟨96,168072, some 12⟩,⟨71,168072, some 10⟩,
-     ⟨44,168072, some 6⟩,⟨15,168072, some 2⟩]
-  | .h2560 =>
-    [⟨234,128826, none⟩,⟨230,130368, none⟩,⟨225,131442, some 5⟩,⟨220,132991, some 7⟩,
-     ⟨215,135200, some 9⟩,⟨210,138371, some 10⟩,⟨204,141934, some 12⟩,⟨197,146719, some 13⟩,
-     ⟨189,155329, some 14⟩,⟨178,168072, some 15⟩,⟨165,168072, some 16⟩,⟨149,168072, some 15⟩,
-     ⟨130,168072, some 15⟩,⟨109,168072, some 13⟩,⟨86,168072, some 11⟩,⟨61,168072, some 8⟩,
-     ⟨33,168072, some 4⟩,⟨3,168072, some 0⟩]
-  | .h2570 =>
-    [⟨228,127244, none⟩,⟨224,128750, none⟩,⟨219,129781, some 5⟩,⟨215,132239, some 7⟩,
-     ⟨209,133480, some 8⟩,⟨204,136660, some 10⟩,⟨198,140276, some 11⟩,⟨191,145254, some 13⟩,
-     ⟨183,154681, some 14⟩,⟨172,168072, some 15⟩,⟨158,168072, some 15⟩,⟨141,168072, some 14⟩,
-     ⟨122,168072, some 14⟩,⟨101,168072, some 12⟩,⟨77,168072, some 10⟩,⟨50,168072, some 7⟩,
-     ⟨22,168072, some 3⟩]
-  | .h2585 =>
-    [⟨219,124537, none⟩,⟨215,125976, none⟩,⟨211,127846, some 5⟩,⟨206,129327, some 7⟩,
-     ⟨201,131509, some 8⟩,⟨196,134739, some 10⟩,⟨190,138493, some 11⟩,⟨183,143877, some 12⟩,
-     ⟨175,155003, some 13⟩,⟨163,168072, some 14⟩,⟨148,168072, some 14⟩,⟨130,168072, some 13⟩,
-     ⟨110,168072, some 12⟩,⟨88,168072, some 10⟩,⟨63,168072, some 8⟩,⟨36,168072, some 4⟩,
-     ⟨6,168072, some 0⟩]
-  | .h2590 =>
-    [⟨217,124407, none⟩,⟨212,124959, none⟩,⟨208,126803, some 5⟩,⟨203,128254, some 6⟩,
-     ⟨199,131440, some 8⟩,⟨193,133624, some 9⟩,⟨187,137381, some 11⟩,⟨180,142839, some 12⟩,
-     ⟨172,154459, some 13⟩,⟨160,168072, some 14⟩,⟨145,168072, some 14⟩,⟨127,168072, some 13⟩,
-     ⟨107,168072, some 12⟩,⟨84,168072, some 10⟩,⟨58,168072, some 7⟩,⟨31,168072, some 4⟩,
-     ⟨1,168072, some 0⟩]
-  | .h2600 =>
-    [⟨211,122310, none⟩,⟨207,123694, none⟩,⟨203,125517, some 5⟩,⟨198,126943, some 6⟩,
-     ⟨193,129092, some 8⟩,⟨188,132338, some 9⟩,⟨182,136190, some 10⟩,⟨175,141952, some 12⟩,
-     ⟨167,155067, some 13⟩,⟨154,168072, some 13⟩,⟨138,168072, some 13⟩,⟨120,168072, some 12⟩,
-     ⟨99,168072, some 11⟩,⟨76,168072, some 9⟩,⟨50,168072, some 6⟩,⟨21,168072, some 2⟩]
-  | .h2601 =>
-    [⟨215,92904, none⟩,⟨211,93979, none⟩,⟨206,94683, some 5⟩,⟨202,96499, some 6⟩,
-     ⟨197,98156, some 8⟩,⟨191,99798, some 9⟩,⟨186,103558, some 11⟩,⟨179,107873, some 12⟩,
-     ⟨170,115979, some 13⟩,⟨157,139703, some 13⟩,⟨138,139703, some 13⟩,⟨117,139703, some 12⟩,
-     ⟨92,139703, some 10⟩,⟨64,139703, some 7⟩,⟨34,139703, some 4⟩,⟨1,139703, some 0⟩]
-  | .h2611 =>
-    [⟨210,91931, none⟩,⟨206,92983, none⟩,⟨201,93659, some 5⟩,⟨197,95465, some 6⟩,
-     ⟨192,97114, some 8⟩,⟨187,99610, some 9⟩,⟨181,102604, some 10⟩,⟨174,107153, some 12⟩,
-     ⟨165,116393, some 12⟩,⟨151,139703, some 13⟩,⟨132,139703, some 12⟩,⟨110,139703, some 11⟩,
-     ⟨84,139703, some 9⟩,⟨56,139703, some 6⟩,⟨25,139703, some 3⟩]
-  | .h2621 =>
-    [⟨205,90848, none⟩,⟨201,91872, none⟩,⟨196,92514, some 5⟩,⟨192,94301, some 6⟩,
-     ⟨187,95934, some 7⟩,⟨182,98438, some 9⟩,⟨176,101487, some 10⟩,⟨169,106263, some 11⟩,
-     ⟨160,116784, some 12⟩,⟨145,139703, some 12⟩,⟨126,139703, some 12⟩,⟨103,139703, some 10⟩,
-     ⟨77,139703, some 8⟩,⟨48,139703, some 5⟩,⟨16,139703, some 1⟩]
-  | .h2640 =>
-    [⟨196,88833, none⟩,⟨192,89803, none⟩,⟨188,91118, some 4⟩,⟨183,92128, some 6⟩,
-     ⟨179,94553, some 7⟩,⟨173,96245, some 8⟩,⟨167,99403, some 10⟩,⟨160,104673, some 11⟩,
-     ⟨151,118386, some 11⟩,⟨135,139703, some 11⟩,⟨114,139703, some 10⟩,⟨90,139703, some 9⟩,
-     ⟨63,139703, some 7⟩,⟨32,139703, some 3⟩]
-  | .h2670 =>
-    [⟨183,85767, none⟩,⟨179,86648, none⟩,⟨175,87882, some 4⟩,⟨171,89609, some 5⟩,
-     ⟨166,91198, some 7⟩,⟨161,93811, some 8⟩,⟨155,97277, some 9⟩,⟨148,103800, some 10⟩,
-     ⟨138,124332, some 10⟩,⟨119,139703, some 10⟩,⟨97,139703, some 9⟩,⟨71,139703, some 7⟩,
-     ⟨42,139703, some 4⟩,⟨10,139703, some 0⟩]
-  | .h2700 =>
-    [⟨172,83341, none⟩,⟨168,84152, none⟩,⟨164,85326, some 4⟩,⟨160,87017, some 5⟩,
-     ⟨155,88584, some 6⟩,⟨150,91280, some 7⟩,⟨144,95084, some 8⟩,⟨137,103355, some 9⟩,
-     ⟨125,134193, some 9⟩,⟨105,139703, some 9⟩,⟨81,139703, some 7⟩,⟨53,139703, some 5⟩,
-     ⟨22,139703, some 2⟩]
-  | .h2750 =>
-    [⟨156,79569, none⟩,⟨152,80258, none⟩,⟨149,82169, some 3⟩,⟨144,82951, some 4⟩,
-     ⟨140,85444, some 5⟩,⟨135,88401, some 6⟩,⟨129,93132, some 7⟩,⟨121,105297, some 8⟩,
-     ⟨105,139703, some 8⟩,⟨82,139703, some 6⟩,⟨56,139703, some 5⟩,⟨25,139703, some 2⟩]
-  | .h2800 =>
-    [⟨140,101308, none⟩,⟨137,103134, none⟩,⟨133,104407, some 3⟩,⟨129,106480, some 4⟩,
-     ⟨125,109860, some 5⟩,⟨120,114140, some 6⟩,⟨114,122192, some 6⟩,⟨105,136084, some 7⟩,
-     ⟨93,136084, some 7⟩,⟨79,136084, some 6⟩,⟨62,136084, some 5⟩,⟨42,136084, some 4⟩,
-     ⟨20,136084, some 1⟩]
-  | .h2900 =>
-    [⟨119,93873, none⟩,⟨116,95493, none⟩,⟨113,97830, some 2⟩,⟨109,99863, some 3⟩,
-     ⟨105,103569, some 4⟩,⟨100,109148, some 4⟩,⟨93,121313, some 5⟩,⟨84,121313, some 5⟩,
-     ⟨72,121313, some 5⟩,⟨57,121313, some 4⟩,⟨41,121313, some 3⟩,⟨22,121313, some 1⟩,
-     ⟨1,121313, some 0⟩]
-  | .h2950 =>
-    [⟨113,57650, none⟩,⟨110,58628, none⟩,⟨107,60073, some 2⟩,⟨103,61331, some 3⟩,
-     ⟨99,63734, some 4⟩,⟨94,67621, some 4⟩,⟨87,79989, some 5⟩,⟨75,82080, some 4⟩,
-     ⟨60,82080, some 4⟩,⟨43,82080, some 3⟩,⟨23,82080, some 1⟩,⟨0,82080, none⟩]
-  | .h2980 =>
-    [⟨109,56979, none⟩,⟨106,57946, none⟩,⟨102,58518, some 2⟩,⟨99,60684, some 3⟩,
-     ⟨95,63214, some 3⟩,⟨90,67608, some 4⟩,⟨82,82080, some 4⟩,⟨69,82080, some 4⟩,
-     ⟨54,82080, some 3⟩,⟨36,82080, some 2⟩,⟨15,82080, some 1⟩]
-  | .h3000 =>
-    [⟨106,56159, none⟩,⟨103,57096, none⟩,⟨100,58526, some 2⟩,⟨96,59789, some 3⟩,
-     ⟨92,62346, some 3⟩,⟨87,66998, some 4⟩,⟨79,82080, some 4⟩,⟨66,82080, some 4⟩,
-     ⟨50,82080, some 3⟩,⟨31,82080, some 2⟩,⟨10,82080, some 0⟩]
-  | .h3050 =>
-    [⟨99,54118, none⟩,⟨96,54975, none⟩,⟨93,56337, some 2⟩,⟨90,58553, some 2⟩,
-     ⟨86,61316, some 3⟩,⟨80,65558, some 3⟩,⟨71,82080, some 4⟩,⟨57,82080, some 3⟩,
-     ⟨40,82080, some 2⟩,⟨20,82080, some 1⟩]
-  | .h3100 =>
-    [⟨95,39227, none⟩,⟨92,39836, none⟩,⟨89,40830, some 2⟩,⟨86,42490, some 2⟩,
-     ⟨82,44643, some 3⟩,⟨76,48476, some 3⟩,⟨68,50872, some 3⟩,⟨58,50872, some 3⟩,
-     ⟨45,50872, some 3⟩,⟨29,50872, some 2⟩,⟨12,50872, some 0⟩]
-  | .h3200 =>
-    [⟨85,37292, none⟩,⟨82,37825, none⟩,⟨79,38774, some 1⟩,⟨76,40487, some 2⟩,
-     ⟨72,42980, some 2⟩,⟨66,50107, some 3⟩,⟨56,50872, some 3⟩,⟨44,50872, some 2⟩,
-     ⟨29,50872, some 1⟩,⟨12,50872, some 0⟩]
-  | .h3400 =>
-    [⟨70,33968, none⟩,⟨68,35116, none⟩,⟨65,36037, some 1⟩,⟨61,36994, some 1⟩,
-     ⟨57,40579, some 2⟩,⟨50,50872, some 2⟩,⟨37,50872, some 1⟩,⟨22,50872, some 1⟩,
-     ⟨4,50872, some 0⟩]
-  | .h3555 =>
-    [⟨65,14832, none⟩,⟨63,15336, none⟩,⟨60,15736, some 1⟩,⟨57,16649, some 1⟩,
-     ⟨52,18175, some 1⟩,⟨43,23288, some 1⟩,⟨30,23288, some 1⟩,⟨13,23288, some 0⟩]
-  | .h4000 =>
-    [⟨53,6533, none⟩,⟨50,6564, none⟩,⟨48,6948, some 0⟩,⟨45,7508, some 1⟩,
-     ⟨39,9673, some 1⟩,⟨25,12230, some 0⟩,⟨6,12230, some 0⟩]
-  | .h4800 =>
-    [⟨38,4203, none⟩,⟨36,4345, none⟩,⟨34,4682, some 0⟩,⟨30,5351, some 0⟩,
-     ⟨23,6001, some 0⟩,⟨13,6001, some 0⟩]
-  | .h7745 =>
-    [⟨26,919, none⟩,⟨24,946, none⟩,⟨22,946, none⟩,⟨19,946, none⟩,
-     ⟨14,946, none⟩,⟨8,946, none⟩]
-  | .h8000 =>
-    [⟨25,902, none⟩,⟨23,932, none⟩,⟨21,946, none⟩,⟨18,946, none⟩,
-     ⟨13,946, none⟩,⟨6,946, none⟩]
-  | .h14500 =>
-    [⟨18,252, none⟩,⟨17,282, none⟩,⟨14,289, none⟩,⟨11,289, none⟩,
-     ⟨5,289, none⟩]
-  | .h21448 =>
-    [⟨14,169, none⟩,⟨13,194, none⟩,⟨10,207, none⟩,⟨5,207, none⟩]
-  | .h24000 =>
-    [⟨13,164, none⟩,⟨12,189, none⟩,⟨9,207, none⟩,⟨4,207, none⟩]
-  | .h28300 =>
-    [⟨12,159, none⟩,⟨11,187, none⟩,⟨8,207, none⟩,⟨2,207, none⟩]
-  | .h32411 =>
-    [⟨13,47, none⟩,⟨12,55, none⟩,⟨9,55, none⟩,⟨4,55, none⟩]
 def stages : HighBand → List Stage
   | .h2366 =>
     [⟨0, ⟨⟨73,101,22,876⟩,12438470656,3108650⟩, ⟨⟨377,525,110,12520⟩,1587867287552,2061878340⟩⟩,
@@ -1467,30 +1511,8 @@ open K1_14 (L FX Seeds Equation Shape Jet Banks SeedBound liftPoly graphEval atX
   jetAt triangle slots shapeSum)
 open K1_14_3 (Surface Parent)
 open scoped BigOperators
-abbrev GradeIndex (b : HighBand) := Fin (grades b).length
-def Listed (b : HighBand) (t : Bank) : Prop :=
-  t = terminal b ∨ (∃ s ∈ stages b, t = s.free ∨ t = s.moving) ∨
-    ∃ i : GradeIndex b, t = subbank b ((grades b).get i)
 def fullCutoff (s : Shape) := s.m * agreement - 1
 def buffered (h r : ℕ) (s : Shape) := fullCutoff s - 2*h*r
-def debit (h : ℕ) (t : Bank) :=
-  triangle t.shape.U * t.nodeRows + 2*h*(t.shape.U+1)*t.poleMoment
-def RankFloor (h : ℕ) (t : Bank) (rows : Banks) : Prop :=
-  ∀ W < t.shape.m * agreement,
-    (∀ q ≤ t.shape.B, ∀ j ≤ min q t.shape.J, q * (131071-h) ≤ W+1+j) →
-    triangle t.shape.U * shapeSum t.shape (fun q j => W+1+j - q*(131071-h)) ≤
-      debit h t + ∑ w ∈ Finset.range (W+1), Module.finrank FX (rows t.shape w)
-structure Source (b : HighBand) {u del} (M : AnchorModel u del) {Γ}
-    (F : AnchoredFamily M Γ) (rows : Banks) : Prop where
-  nested : ∀ t, Listed b t → ∀ t', Listed b t' →
-    t.shape.m = t'.shape.m → t.shape.B = t'.shape.B → t.shape.J = t'.shape.J →
-    t.shape.U ≤ t'.shape.U → ∀ W W', W ≤ W' → rows t.shape W ≤ rows t'.shape W'
-  necessary : ∀ t, Listed b t → ∀ W < t.shape.m * agreement, ∀ P ∈ rows t.shape W,
-    ∀ γ ∈ Γ, jetAt P (M.label γ) (F.scalar γ) = 0
-  shape : ∀ t, Listed b t → ∀ W, ∀ P ∈ rows t.shape W, K1_14_3.RowCaps P t.shape
-  leading : ∀ t, Listed b t → K1_14_3.LeadingFilter M.overhead.toNat rows t.shape
-  shift : ∀ t, Listed b t → K1_14_3.SeedShift M.overhead.toNat rows t.shape
-  floor_bound : ∀ t, Listed b t → RankFloor M.overhead.toNat t rows
 structure BufferedPair (h : ℕ) (rows : Banks) (s : Stage) where
   free : Jet
   moving : Jet
@@ -1520,13 +1542,6 @@ structure PrefixInventory (b : HighBand) {u del} (M : AnchorModel u del) {Γ}
     PairPass (pairs s hs) q
   terminal_pass : ∀ q ∈ parents, BankPass rows (terminal b).shape q
   covers : ∀ γ ∈ Γ, γ ∈ books.union ∨ ∃ q ∈ parents, MarkOn M F q γ
-def contactPower (h : ℕ) (s : Shape) (W : ℕ) := 1 + (fullCutoff s - W)/(2*h)
-structure TerminalTrace (h : ℕ) (t : Bank) (rows : Banks) (f : Equation) : Prop where
-  floor_bound : RankFloor h t rows
-  shape : ∀ W, ∀ P ∈ rows t.shape W, K1_14_3.RowCaps P t.shape
-  leading : K1_14_3.LeadingFilter h rows t.shape
-  divides : ∀ W < t.shape.m * agreement, ∀ P ∈ rows t.shape W, P ≠ 0 →
-    f ^ (contactPower h t.shape W - P.natDegree) ∣ P.leadingCoeff
 end
 end P2_7
 end
@@ -1534,22 +1549,13 @@ section
 namespace P2_7_2
 open P2 (agreement)
 open K1_14 (Shape triangle shapeSum)
-def cutoffCount (h r : ℕ) (s : Shape) : ℕ :=
-  s.m * agreement - 2 * h * r
-def rawWidth (h r : ℕ) (s : Shape) (q j : ℕ) : ℕ :=
-  cutoffCount h r s + j - q * (131071 - h)
-def WidthGuard (h r : ℕ) (s : Shape) : Prop :=
-  s.B * (131071 - h) < cutoffCount h r s
-def gain (h r : ℕ) (s : Shape) (mode : ℕ) : ℕ :=
-  triangle s.U * shapeSum s (fun q j => rawWidth h r s q j - mode * (2 * h * j))
 end P2_7_2
 end
 section
 namespace P2_7_2_2
 open Finset
 open P2 (agreement)
-open P2_7 (Bank Stage debit)
-open P2_7_2 (cutoffCount rawWidth WidthGuard gain)
+open P2_7 (Bank Stage )
 open K1_14 (Shape shapeSum triangle)
 open private twice_sum_linear from ProximityPrize.SubmissionLower.Pack_K1_14_2_1Arithmetic
 private def row (x y z : ℤ) (q n : ℕ) : ℤ :=
@@ -1558,29 +1564,8 @@ private def rising (x y z : ℤ) (n : ℕ) : ℤ :=
   (n : ℤ)*((n : ℤ)+1)*(3*x+2*(y+z)*((n : ℤ)-1))
 private def level (x y z : ℤ) (J n : ℕ) : ℤ :=
   3*(n : ℤ)*((J : ℤ)+1)*(2*(x+(y+z)*J)+y*((n : ℤ)-1))
-private theorem sum_rising (x y z : ℤ) (n : ℕ) :
-    6*(∑ q ∈ range n, row x y z q (q+1)) = rising x y z n := by
-  induction n with
-  | zero => simp [rising]
-  | succ n ih =>
-    rw [sum_range_succ, mul_add, ih]
-    simp only [rising, row, Nat.cast_succ]
-    ring
-private theorem sum_level (x y z : ℤ) (J n : ℕ) :
-    6*(∑ i ∈ range n, row x y z (J+i) (J+1)) = level x y z J n := by
-  induction n with
-  | zero => simp [level]
-  | succ n ih =>
-    rw [sum_range_succ, mul_add, ih]
-    simp only [level, row, Nat.cast_succ, Nat.cast_add]
-    ring
 private def tailSum (f : ℕ → ℤ) (k : ℕ) : ℕ → ℤ
   | 0 => 0
   | n+1 => tailSum f k n + f (k+n)
-private theorem tailSum_eq (f : ℕ → ℤ) (k n : ℕ) :
-    tailSum f k n = ∑ i ∈ range n, f (k+i) := by
-  induction n with
-  | zero => simp [tailSum]
-  | succ n ih => rw [tailSum, sum_range_succ, ih]
 end P2_7_2_2
 end

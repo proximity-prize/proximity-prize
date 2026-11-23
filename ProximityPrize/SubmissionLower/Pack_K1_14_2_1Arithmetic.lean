@@ -17,44 +17,11 @@ private theorem twice_sum_linear (a b : ℤ) (n : ℕ) :
 private def nodeRow (k d : ℕ) : ℕ :=
   let n := min k ((d + 1) / 2)
   n * (d + 1 - n)
-private theorem nodeRow_eq (k d : ℕ) :
-    (∑ i ∈ range k, (d - 2 * i)) = nodeRow k d := by
-  let n := min k ((d + 1) / 2)
-  have hnk : n ≤ k := Nat.min_le_left _ _
-  have hnd : n ≤ (d + 1) / 2 := Nat.min_le_right _ _
-  have htrim : (∑ i ∈ range k, (d - 2 * i)) = ∑ i ∈ range n, (d - 2 * i) := by
-    symm
-    apply sum_subset (range_mono hnk)
-    intro i hik hi
-    have hik' := mem_range.mp hik
-    have hi' : n ≤ i := Nat.le_of_not_gt (fun h => hi (mem_range.mpr h))
-    dsimp [n] at hi'
-    omega
-  have hcast : ((∑ i ∈ range n, (d - 2 * i) : ℕ) : ℤ) =
-      ∑ i ∈ range n, ((d : ℤ) - 2 * (i : ℤ)) := by
-    rw [Nat.cast_sum]
-    apply sum_congr rfl
-    intro i hi
-    have hil := mem_range.mp hi
-    rw [Nat.cast_sub (by omega : 2 * i ≤ d)]
-    push_cast
-    rfl
-  have hlin := twice_sum_linear (d : ℤ) (-2) n
-  simp only [neg_mul, ← sub_eq_add_neg] at hlin
-  apply Int.ofNat_inj.mp
-  rw [htrim, hcast]
-  change _ = (↑(n * (d + 1 - n)) : ℤ)
-  push_cast [Nat.cast_sub (show n ≤ d + 1 by omega)]
-  nlinarith only [hlin]
 private def nodeCost (s : Shape) : ℕ :=
   triangle s.U * 262144 *
     ∑ q ∈ range (s.B + 1), nodeRow (min q s.J + 1) (s.m + min q s.J - q)
 private def poleSlope (s : Shape) : ℕ :=
   2 * (s.U + 1) * ∑ q ∈ range (s.B + 1), (min q s.J + 1) * ((s.B + s.J - q) * (s.B - q))
-private theorem debit_eq (s : Shape) (h : ℕ) : sourceDebit h s = nodeCost s + h * poleSlope s := by
-  unfold sourceDebit nodeCost poleSlope shapeSum
-  simp_rw [← Nat.sub_sub, nodeRow_eq, sum_const, card_range, Nat.nsmul_eq_mul]
-  ring
 private def widthBase (s : Shape) : ℤ :=
   ∑ q ∈ range (s.B + 1), (((min q s.J : ℕ) : ℤ) + 1) *
     (2 * ((s.m : ℤ) * 180265 - (q : ℤ) * 131071) + min q s.J)

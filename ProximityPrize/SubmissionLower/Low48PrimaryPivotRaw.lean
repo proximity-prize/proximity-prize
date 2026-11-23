@@ -1,4 +1,3 @@
-import ProximityPrize.SubmissionLower.Low48PrimaryRawFastSum
 import ProximityPrize.SubmissionLower.Low48PrimaryPivotRawWindow2Part0
 import ProximityPrize.SubmissionLower.Low48PrimaryPivotRawWindow2Part1
 import ProximityPrize.SubmissionLower.Low48PrimaryPivotRawWindow2Part2
@@ -14,64 +13,16 @@ import ProximityPrize.SubmissionLower.Low48PrimaryPivotRawWindow2Part11
 import ProximityPrize.SubmissionLower.Low48PrimaryPivotRawWindow2Part12
 import ProximityPrize.SubmissionLower.Low48PrimaryPivotRawWindow2Part13
 import ProximityPrize.SubmissionLower.Low48PrimaryPivotRawWindow2Part14
+import ProximityPrize.SubmissionLower.Low48PrimaryPivotRawWindow2Part15
 import ProximityPrize.SubmissionLower.Low48PrimaryPivotRawWindow3Part0
+import ProximityPrize.SubmissionLower.Low48PrimaryPivotRawWindow3Part1
 import ProximityPrize.SubmissionLower.Low48PrimaryPivotRawWindow3Part2
 import ProximityPrize.SubmissionLower.Low48PrimaryPivotRawWindow3Part3
 import ProximityPrize.SubmissionLower.Low48PrimaryPivotRawWindow3Part4
 import ProximityPrize.SubmissionLower.Low48PrimaryPivotRawWindow3Part5
 import ProximityPrize.SubmissionLower.Low48PrimaryPivotRawWindow3Part6
 import ProximityPrize.SubmissionLower.Low48PrimaryPivotRawWindow3Part7
-
--- merged module Low48PrimaryPivotRawWindow2Part15
-section Merged_Low48PrimaryPivotRawWindow2Part15
-set_option Elab.async false
-set_option maxHeartbeats 0
-set_option maxRecDepth 100000
-
-namespace Low48PrimaryPivot.RawReceipt
-open K1_13_2_3
-
-theorem raw2At1042 : rawChunk w2 1042 16 = 463246686475 :=
-  (Low48PrimaryPivot.RawClosed.rawChunk_closed w2 1042 16 (by decide) (by decide) (by decide) (by decide)).trans (by decide +kernel)
-theorem raw2At1058 : rawChunk w2 1058 5 = 138889514525 :=
-  (Low48PrimaryPivot.RawClosed.rawChunk_closed w2 1058 5 (by decide) (by decide) (by decide) (by decide)).trans (by decide +kernel)
-
-end Low48PrimaryPivot.RawReceipt
-end Merged_Low48PrimaryPivotRawWindow2Part15
-
--- merged module Low48PrimaryPivotRawWindow3Part1
-section Merged_Low48PrimaryPivotRawWindow3Part1
-set_option Elab.async false
-set_option maxHeartbeats 0
-set_option maxRecDepth 100000
-
-namespace Low48PrimaryPivot.RawReceipt
-open K1_13_2_3
-
-theorem raw3At71 : rawChunk w3 71 16 = 71706505086 :=
-  (Low48PrimaryPivot.RawClosed.rawChunk_closed w3 71 16 (by decide) (by decide) (by decide) (by decide)).trans (by decide +kernel)
-theorem raw3At87 : rawChunk w3 87 16 = 90535524189 :=
-  (Low48PrimaryPivot.RawClosed.rawChunk_closed w3 87 16 (by decide) (by decide) (by decide) (by decide)).trans (by decide +kernel)
-theorem raw3At103 : rawChunk w3 103 16 = 110728689777 :=
-  (Low48PrimaryPivot.RawClosed.rawChunk_closed w3 103 16 (by decide) (by decide) (by decide) (by decide)).trans (by decide +kernel)
-
-end Low48PrimaryPivot.RawReceipt
-end Merged_Low48PrimaryPivotRawWindow3Part1
-
--- merged module Low48PrimaryPivotRawWindow3Part8
-section Merged_Low48PrimaryPivotRawWindow3Part8
-set_option Elab.async false
-set_option maxHeartbeats 0
-set_option maxRecDepth 100000
-
-namespace Low48PrimaryPivot.RawReceipt
-open K1_13_2_3
-
-theorem raw3At407 : rawChunk w3 407 2 = 24696165031 :=
-  (Low48PrimaryPivot.RawClosed.rawChunk_closed w3 407 2 (by decide) (by decide) (by decide) (by decide)).trans (by decide +kernel)
-
-end Low48PrimaryPivot.RawReceipt
-end Merged_Low48PrimaryPivotRawWindow3Part8
+import ProximityPrize.SubmissionLower.Low48PrimaryPivotRawWindow3Part8
 
 set_option autoImplicit false
 set_option Elab.async false

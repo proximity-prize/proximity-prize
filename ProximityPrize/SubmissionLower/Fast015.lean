@@ -14,7 +14,13 @@ open ProximityPrize.Benchmark
 universe u
 variable {E : Type u} [Field E]
 abbrev NativeK := IRSProfile.Field
+abbrev NativeIndex := IRSProfile.Index
 local instance : DecidableEq NativeK := Classical.decEq NativeK
+open Classical in
+def NativeOrdinaryKList6915 : Prop :=
+  ∀ received : NativeIndex → NativeK,
+    (ReedSolomon.closePolynomialSet IRSProfile.domain received 131073 180265).Finite ∧
+      (ReedSolomon.closePolynomialSet IRSProfile.domain received 131073 180265).ncard ≤ listCap
 end
 end Sol1.C42
 end

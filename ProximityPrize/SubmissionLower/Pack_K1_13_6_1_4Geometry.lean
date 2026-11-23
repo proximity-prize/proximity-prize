@@ -11,16 +11,6 @@ namespace K1_13_6
 noncomputable section
 open Polynomial K1 K1_13
 open scoped BigOperators
-structure CutInput (Γ : Finset K) (s : K → K[X]) (f Q : Row 4) (l : ℕ) : Prop where
-  distinct : Set.InjOn s (Γ : Set K)
-  degree : ∀ γ ∈ Γ, (s γ).natDegree ≤ 133671
-  small : SmallFactor f
-  onFactor : ∀ γ ∈ Γ, OnFactor f (extend (s γ))
-  positive : 0 < l
-  proper : ¬ f ∣ Q
-  box : InBox (shape Q) ⟨4012, 1650, 550⟩
-  weight : TrueWeightLE Q (3000 * 180265 - 1)
-  order : ∀ γ ∈ Γ, OrderAt Q (extend (s γ)) l
 abbrev GenericField := FractionRing Geom[X]
 abbrev GeoField := AlgebraicClosure GenericField
 abbrev GeoJets := MvPolynomial (Fin 4) GeoField
@@ -90,7 +80,6 @@ def SurfaceSections (Γ : Finset K) (s : K → K[X]) (d : ℕ) : Prop := by
     ∃ C : Pieces H, H ⊆ C.union ∧ C.curves s ∧ (∀ i, 0 < C.degree i) ∧ C.total ≤ d
 def Pieces.surfaces {Γ : Finset K} (C : Pieces Γ) (s : K → K[X]) : Prop :=
   ∀ i, SurfaceSections (C.piece i) s (C.degree i)
-abbrev cutterBox : Shape := ⟨4013, 1650, 550⟩
 end
 end K1_13_6
 end

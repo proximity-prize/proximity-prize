@@ -37,6 +37,11 @@ def stackRank (u : Words) := GenericLayer.genericRank (twoBlock u)
 def nullity (u : Words) := GenericLayer.genericNullity (twoBlock u)
 def Normal (u : Words) (γ : K) : Prop :=
   ((twoBlock u).map (evalRingHom γ)).rank = stackRank u
+def coefficientStack (u : Words) : Matrix (Fin 4 × Fin 49193) (Fin 81880) K := fun i j =>
+  if i.1 = 0 then syndrome node (u 0) (i.2.val + j.val) else
+  if i.1 = 1 then syndrome node (u 1) (i.2.val + j.val) else
+  if i.1 = 2 then syndrome node (u 0) (i.2.val + j.val) ^ p else
+    syndrome node (u 1) (i.2.val + j.val) ^ p
 structure TwoActive (u : Words) where
   a : ℕ
   b : ℕ
@@ -63,24 +68,7 @@ def fixedNodes {u : Words} {T : TwoActive u} (R : Relation T) : Finset I := by
     (leftU R).eval (C (node i)) = 0 ∧ (leftV R).eval (C (node i)) = 0
 def extendSeed (U : Bivar) : Frac[X] :=
   U.map (algebraMap K[X] Frac)
-def IsCommonGCD {F : Type} [Field F] (G U V : F[X]) : Prop :=
-  G ≠ 0 ∧ G ∣ U ∧ G ∣ V ∧ ∀ H : F[X], H ∣ U → H ∣ V → H ∣ G
-def InvalidLeft {u : Words} {T : TwoActive u} (R : Relation T) : Prop :=
-  max (leftU R).natDegree (leftV R).natDegree < T.height ∨
-    ∃ G : K[X], G ≠ 0 ∧ G.map Polynomial.C ∣ leftU R ∧ G.map Polynomial.C ∣ leftV R ∧
-      ¬ G ∣ locator node Finset.univ
 def atSlope (P : Bivar) (γ : K) : K[X] := P.map (evalRingHom γ)
-structure SaturatedAt {u : Words} {T : TwoActive u} (R : Relation T)
-    {γ : K} (M : BadMark u γ) : Prop where
-  U_ne : atSlope (leftU R) γ ≠ 0
-  V_ne : atSlope (leftV R) γ ≠ 0
-  degree_eq : max (atSlope (leftU R) γ).natDegree (atSlope (leftV R) γ).natDegree =
-    T.height
-  gcd_errors : ∃ errors : Finset I,
-    (∀ i ∈ errors, M.decoder.eval (node i) ≠ u 0 i + γ * u 1 i) ∧
-    IsCommonGCD (locator node errors) (atSlope (leftU R) γ) (atSlope (leftV R) γ)
-  fixed_errors : ∀ i ∈ fixedNodes R, M.decoder.eval (node i) ≠ u 0 i + γ * u 1 i
-  valid : ¬ InvalidLeft R
 def seed : Bivar := Polynomial.C (R := K[X]) (Polynomial.X (R := K))
 def liftX (P : K[X]) : Bivar := P.map Polynomial.C
 def twist : K →+* K := frobenius K p
@@ -236,10 +224,6 @@ def InBox (x y : Shape) : Prop := x.b ≤ y.b ∧ x.j ≤ y.j ∧ x.t ≤ y.t
 def Fits {n : ℕ} (a : Fin n → Shape) : Prop :=
   (∀ i, 1 ≤ (a i).t ∧ 3 * (a i).t ≤ (a i).j ∧ (a i).j ≤ 3 * (a i).b) ∧
   (∑ i, (a i).b) ≤ 120 ∧ (∑ i, (a i).j) ≤ 48 ∧ (∑ i, (a i).t) ≤ 10
-structure Messages (w : I → K) (Γ : Finset K) (s : K → K[X]) : Prop where
-  distinct : Set.InjOn s (Γ : Set K)
-  degree : ∀ γ ∈ Γ, (s γ).natDegree ≤ 133671
-  hits : ∀ γ ∈ Γ, ∃ T : Finset I, 180265 ≤ T.card ∧ ∀ i ∈ T, (s γ).eval (node i) = w i
 structure PoleData (Γ : Finset K) (s : K → K[X]) where
   H : Geom[X]
   monic : H.Monic
@@ -467,24 +451,6 @@ open scoped BigOperators
 def c2 : Prop :=
   ∀ i : BlockIndex, ∀ power : Fin 11 → ℕ,
     Module.finrank Geom (LinearMap.range (originBlock i)) ≤ blockBound i power
-def c3 : Prop :=
-  ∃ power : BlockIndex → Fin 11 → ℕ, (∑ i, blockBound i (power i)) ≤ 344125686492134
-private theorem high_monomial_vanishes (e : SourceExponent) (c : Geom) (he : 3000 ≤ e none) :
-    localConstraintAt 3000 0 0 (MvPolynomial.monomial e c) = 0 := by
-  change MvPolynomial.weightedTruncation (localContactWeight 3) 3000
-    (MvPolynomial.bind₁ (unscaledLocalImage 3 0 0) (MvPolynomial.monomial e c)) = 0
-  apply (MvPolynomial.weightedTruncation_eq_zero_iff _ _ _).mpr
-  refine MvPolynomial.bind₁_mem_restrictWeightedOrder
-    (w := fun v : JetVariable 3 => v.elim 1 (fun _ => 0)) ?_ ?_
-  · intro v
-    cases v with
-    | none =>
-      simpa only [unscaledLocalImage, map_zero, zero_add, Option.elim_none] using
-        (MvPolynomial.X_mem_restrictWeightedOrder (R := Geom)
-          (localContactWeight 3) (localT 3) (m := 1) (by rfl))
-    | some j => simp
-  · exact (MvPolynomial.monomial_mem_restrictWeightedOrder _ _ _ _).mpr
-      (Or.inl (by simpa only [Finsupp.weight_elim_one_zero] using he))
 private theorem finrank_finset_sup_le {ι V : Type*} [AddCommGroup V] [Module Geom V]
     (p : ι → Submodule Geom V) [∀ i, Module.Finite Geom (p i)] (s : Finset ι) :
     Module.finrank Geom (s.sup p : Submodule Geom V) ≤ ∑ i ∈ s, Module.finrank Geom (p i) := by
@@ -495,52 +461,6 @@ private theorem finrank_finset_sup_le {ι V : Type*} [AddCommGroup V] [Module Ge
     rw [Finset.sup_insert, Finset.sum_insert hi]
     exact (Submodule.finrank_add_le_finrank_add_finrank (p i) (s.sup p)).trans
       (Nat.add_le_add_left ih _)
-private theorem finrank_of_column_cover {ι : Type*} [Fintype ι]
-    (f : SourcePolynomial →ₗ[Geom] Local) (p : ι → Submodule Geom Local)
-    [∀ i, Module.Finite Geom (p i)] (bound : ι → ℕ)
-    (hcol : ∀ e ∈ sourceExponents, ∀ c, f (MvPolynomial.monomial e c) = 0 ∨
-      ∃ i, f (MvPolynomial.monomial e c) ∈ p i)
-    (hbound : ∀ i, Module.finrank Geom (p i) ≤ bound i) :
-    Module.finrank Geom (LinearMap.range (f.domRestrict SourceSpace)) ≤ ∑ i, bound i := by
-  have cover : LinearMap.range (f.domRestrict SourceSpace) ≤ Finset.univ.sup p := by
-    intro L hL
-    obtain ⟨Q, hQ⟩ := LinearMap.mem_range.mp hL
-    rw [← hQ]
-    change f Q.1 ∈ Finset.univ.sup p
-    have expand := congrArg f Q.1.as_sum
-    rw [map_sum] at expand
-    rw [expand]
-    refine Submodule.sum_mem _ fun e he => ?_
-    rcases hcol e (Q.2 he) (Q.1.coeff e) with hzero | ⟨i, hi⟩
-    · rw [hzero]
-      exact Submodule.zero_mem _
-    · exact (Finset.le_sup (f := p) (Finset.mem_univ i)) hi
-  exact (Submodule.finrank_mono cover).trans
-    ((finrank_finset_sup_le p _).trans (Finset.sum_le_sum fun i _ => hbound i))
-theorem origin_rank_le (power : BlockIndex → Fin 11 → ℕ) (h : c2) :
-    Module.finrank Geom (LinearMap.range (nodeMap 0 0)) ≤ ∑ i, blockBound i (power i) := by
-  classical
-  let ranges : BlockIndex → Submodule Geom Local := fun i => LinearMap.range (originBlock i)
-  refine finrank_of_column_cover (localConstraintAt 3000 0 0) ranges
-    (fun i => blockBound i (power i)) ?_ (fun i => h i (power i))
-  intro e he c
-  by_cases hx : e none < 3000
-  · have he' : SourceEligible e := he
-    let grade := e.weight jetDegreeWeight
-    let idx := e.weight jetDerivativeWeight
-    have hb : grade ≤ 4012 := he'.1
-    have hj : idx ≤ 1650 := he'.2.1
-    let i : BlockIndex := (⟨grade, by omega⟩, ⟨e none + (1650 - idx), by omega⟩)
-    have hi : e ∈ blockExponents i := by
-      refine ⟨he', hx, rfl, ?_⟩
-      change (e none : ℤ) - idx = ((e none + (1650 - idx) : ℕ) : ℤ) - 1650
-      omega
-    refine Or.inr ⟨i, ?_⟩
-    have hm : MvPolynomial.monomial e c ∈ BlockSpace i := by
-      unfold BlockSpace
-      exact (MvPolynomial.monomial_mem_restrictSupport Geom).mpr (Or.inl hi)
-    exact ⟨⟨MvPolynomial.monomial e c, hm⟩, rfl⟩
-  · exact Or.inl (high_monomial_vanishes e _ (Nat.le_of_not_gt hx))
 end
 end K1_13_2
 end
