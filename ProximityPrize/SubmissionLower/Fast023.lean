@@ -65,8 +65,19 @@ def sourceDebit (h : ℕ) (s : Shape) : ℕ :=
 def terminalShape (w : ℤ) : Shape :=
   let b := band w
   ⟨b.multiplicity, b.jetBound, b.vBound, b.subbankSeeds⟩
+def rawWidth (w : ℤ) (q j : ℕ) : ℕ :=
+  (band w).multiplicity * 180265 + j - q * (131071 - w.toNat)
+def rawVolume (w : ℤ) : ℕ :=
+  triangle (band w).subbankSeeds * shapeSum (terminalShape w) (rawWidth w)
+def subbankDebit (w : ℤ) : ℕ := sourceDebit w.toNat (terminalShape w)
 def forcedPower (w : ℤ) (W j : ℕ) : ℕ :=
   1 + ((band w).multiplicity * 180265 - 1 - W) / (2 * w.toNat) - j
+def seedGain (w : ℤ) : ℕ :=
+  let b := band w
+  let U := b.subbankSeeds
+  let v := b.seedBound + 1
+  shapeSum (terminalShape w) fun q j => ∑ r ∈ Finset.range (U / v + 1),
+    (slots U (r*v) - slots U ((r+1)*v)) * (rawWidth w q j - 2*w.toNat*(j+r))
 def scheduled (w : ℤ) : List Shape :=
   let sub := terminalShape w
   if w ≤ 3554 then

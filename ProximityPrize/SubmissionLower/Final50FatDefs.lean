@@ -1,36 +1,36 @@
 import ProximityPrize.SubmissionLower.GoldBranch6N4
 
 set_option Elab.async false
-section Top_Final50FatDefs
+section
 namespace Final50Fat
 noncomputable section
 open K1 (I K)
 open K1_13 (Geom)
 open K1_13_4 hiding firstOrder secondOrder firstCut secondCut mixedWeight Necessary MixedOrder PairOrders CommonPair
 open scoped Polynomial BigOperators
-abbrev firstOrder : ℕ := 5798170
-abbrev secondOrder : ℕ := 2991921
-abbrev firstCut : ℕ := 5000 * 179886 - firstOrder
-abbrev secondCut : ℕ := 5000 * 179886 - secondOrder
-abbrev bankRank : ℕ := 1472355152501952209006
+abbrev firstOrder:ℕ:=5744205
+abbrev secondOrder:ℕ:=2919357
+abbrev firstCut:ℕ:=893635795
+abbrev secondCut:ℕ:=896460643
+abbrev bankRank:ℕ:=1482117971581948576741
 def mixedWeight (a : SeedVar →₀ ℕ) : ℕ :=
-  7239 * a none + 48817 * a.some.degree
+  7287*a none+48807*a.some.degree
 theorem mixedWeight_add (a b : SeedVar →₀ ℕ) :
-    mixedWeight (a + b) = mixedWeight a + mixedWeight b := by
-  simp only [mixedWeight, Finsupp.add_apply, Finsupp.some_add, map_add, Nat.mul_add]
+    mixedWeight (a+b)=mixedWeight a+mixedWeight b:=by
+  simp only [mixedWeight,Finsupp.add_apply,Finsupp.some_add,map_add,Nat.mul_add]
   ac_rfl
 def Necessary {Γ s} (w : I → K) (P : K1_13.PoleData Γ s) (L : ResidueChart P) :
     Submodule Geom PhysicalRow :=
   Submodule.span Geom {Q | ∃ t F a, Source w P L secondBox t F ∧
-    t + mixedWeight a ≤ secondCut ∧ Q = mixedHasse a F}
+    t+mixedWeight a≤secondCut ∧ Q=mixedHasse a F}
 def MixedOrder (F : GenericRow) (z : GenericX) (y : Fin 3 → GenericX) (d : ℕ) : Prop :=
-  ∀ a ∈ (translate (atPoint z y) F).support, d ≤ mixedWeight a
+  ∀ a ∈ (translate (atPoint z y) F).support,d≤mixedWeight a
 def PairOrders (F G : GenericRow) (z : GenericX) (y : Fin 3 → GenericX) : Prop :=
   MixedOrder F z y firstOrder ∧ MixedOrder G z y secondOrder
-abbrev CommonPair := P3_6_4.CommonPair
+abbrev CommonPair:=P3_6_4.CommonPair
 end
 end Final50Fat
-end Top_Final50FatDefs
+end
 section
 namespace Final50Fat
 noncomputable section
@@ -39,34 +39,34 @@ open K1_13_4 hiding firstOrder secondOrder firstCut secondCut mixedWeight Necess
 open P0_9_4 (clear_denominators)
 open scoped Polynomial BigOperators
 structure Messages (w : I → K) (Γ : Finset K) (s : K → K[X]) : Prop where
-  hits : ∀ γ ∈ Γ, ∃ T : Finset I, 179886 ≤ T.card ∧ ∀ i ∈ T, (s γ).eval (node i) = w i
+  hits : ∀ γ ∈ Γ, ∃ T:Finset I,179876≤T.card ∧ ∀ i ∈ T,(s γ).eval (node i)=w i
 def c1 : Prop :=
-  ∀ w Γ s (P : PoleData Γ s) (L : ResidueChart P), P.H.natDegree ≤ 2413 →
-    (∃ F, F ≠ 0 ∧ Source w P L firstBox firstCut F) ∧
+  ∀ w Γ s (P : PoleData Γ s) (L : ResidueChart P), P.H.natDegree ≤ 2429 →
+    (∃ F,F≠0 ∧ Source w P L firstBox firstCut F) ∧
     HasRank w P L secondBox secondCut bankRank
 def c2 : Prop :=
   ∀ w Γ s (P : PoleData Γ s) (L : ResidueChart P) (F : PhysicalRow),
-    F ≠ 0 → Caps firstBox F → HasRank w P L secondBox secondCut bankRank →
-    ∃ G, G ∈ Necessary w P L ∧ Nonempty (CommonPair (toGeneric F) (toGeneric G))
+    F≠0→Caps firstBox F→HasRank w P L secondBox secondCut bankRank →
+    ∃ G,G ∈ Necessary w P L ∧ Nonempty (CommonPair (toGeneric F) (toGeneric G))
 def c3 : Prop :=
   ∀ w Γ s, Messages w Γ s →
-    ∀ (P : PoleData Γ s) (L : ResidueChart P), P.H.natDegree ≤ 2413 →
+    ∀ (P : PoleData Γ s) (L : ResidueChart P), P.H.natDegree ≤ 2429 →
       (∀ F, Source w P L firstBox firstCut F → ∀ γ ∈ Γ,
         MixedOrder (toGeneric F) (inclConst (P.z γ)) (trajectory (extend (s γ))) firstOrder) ∧
       (∀ G ∈ Necessary w P L, ∀ γ ∈ Γ,
         MixedOrder (toGeneric G) (inclConst (P.z γ)) (trajectory (extend (s γ))) secondOrder)
 
-abbrev fatOrder : ℕ := 49090
+abbrev fatOrder:ℕ:=47151
 def Holds (E : P3_6.FatEquations) (S : K1_13.Geom[X]) : Prop :=
-  K1_13.atJet E.common S = 0 ∨ K1_13.OrderAt E.residual S fatOrder
+  K1_13.atJet E.common S=0 ∨ K1_13.OrderAt E.residual S fatOrder
 
 def Equations : Prop :=
   ∀ (w : I → K) (Γ : Finset K) (s : K → K[X]),
-    (∀ γ ∈ Γ, (s γ).natDegree ≤ 133484) →
-    (∀ γ ∈ Γ, ∃ T : Finset I, 179886 ≤ T.card ∧ ∀ i ∈ T, (s γ).eval (node i) = w i) →
-    ∀ P : K1_13.PoleData Γ s, P.H.natDegree ≤ 2413 →
+    (∀ γ ∈ Γ,(s γ).natDegree≤133500) →
+    (∀ γ ∈ Γ, ∃ T:Finset I,179876≤T.card ∧ ∀ i ∈ T,(s γ).eval (node i)=w i) →
+    ∀ P:K1_13.PoleData Γ s,P.H.natDegree≤2429 →
     ∃ (book : Finset K1.K) (E : P3_6.FatEquations), book.card ≤ 140000 ∧
-      ∀ γ ∈ Γ, γ ∉ book → Holds E (K1_13.extend (s γ))
+      ∀ γ ∈ Γ,γ ∉ book→Holds E (K1_13.extend (s γ))
 end
 end Final50Fat
 end

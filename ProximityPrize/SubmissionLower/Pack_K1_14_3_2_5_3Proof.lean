@@ -1,0 +1,4 @@
+import ProximityPrize.SubmissionLower.Fast042
+import ProximityPrize.SubmissionLower.Pack_K1_14_2_2_4Split
+set_option Elab.async false
+set_option autoImplicit true

@@ -37,6 +37,11 @@ def stackRank (u : Words) := GenericLayer.genericRank (twoBlock u)
 def nullity (u : Words) := GenericLayer.genericNullity (twoBlock u)
 def Normal (u : Words) (γ : K) : Prop :=
   ((twoBlock u).map (evalRingHom γ)).rank = stackRank u
+def coefficientStack (u : Words) : Matrix (Fin 4 × Fin 49193) (Fin 81880) K := fun i j =>
+  if i.1 = 0 then syndrome node (u 0) (i.2.val + j.val) else
+  if i.1 = 1 then syndrome node (u 1) (i.2.val + j.val) else
+  if i.1 = 2 then syndrome node (u 0) (i.2.val + j.val) ^ p else
+    syndrome node (u 1) (i.2.val + j.val) ^ p
 structure TwoActive (u : Words) where
   a : ℕ
   b : ℕ
@@ -314,7 +319,36 @@ def liftedChart (L : ℕ) (p : Shape) : Shape :=
 def linearChart (p : Shape) : Shape :=
   let i := 3 + taylorLength*(p.j - 2)
   ⟨max (1 + taylorLength*(p.b - 1)) i, i, min (taylorLength + 1) (i / 3)⟩
+def surfaceNumerator32 (p q : Shape) : ℕ :=
+  let L := taylorLength
+  let g : Shape := ⟨max p.b (p.j + 1), p.j + 1, min (p.t + 1) ((p.j + 1) / 3)⟩
+  let a := liftedChart (L+1) p
+  let b := liftedChart (L+2) p
+  min (mixed32 p q (chart (L+1) p) (chart (L+2) p))
+    (mixed32 p q a b + (L+1) * mixed32 p q g b + (L+2) * mixed32 p q g a)
+def physicalPrice (x : Shape) (l : ℕ) : ℕ :=
+  let p := x.chamber
+  let q : Shape := ⟨4013, 1650, 550⟩
+  let h := chart taylorLength p
+  let numerator := ceilDiv (surfaceNumerator32 p q) 32 +
+    ceilDiv ((81879 + 2*46594) * x.b * q.b * (chart (taylorLength+1) p).b) 46594
+  let auxBox := q.plus (p.scale 4)
+  let curves := mixed32 p q auxBox h + 2*x.t*mixed32 p p p h
+  let points := mixed32 p q auxBox p + 2*x.t*mixed32 p p p p
+  ceilDiv numerator l + 2*133671*x.b*q.b + ceilDiv (81879*curves + 2*46594*points) (32*46594)
 def FatEligible (x : Shape) : Prop := x.b ≤ 60 ∧ x.j ≤ 32
+def fatPrice (x : Shape) : ℕ :=
+  let p := x.chamber
+  let h := if x.t = 1 then linearChart p else chart (taylorLength + 4) p
+  let q : Shape := ⟨952630000, 322000000, 0⟩
+  let big : Shape := ⟨35007, 12106, 0⟩
+  let cut : Shape := ⟨max (max h.b big.b) (max h.j (big.j+1)), max h.j (big.j+1), max 1 h.t⟩
+  let divisors := ceilDiv (81879 * mixed32 p big cut h) (32*46594) +
+    ceilDiv (mixed32 p big cut p) 32 + 20*p.b*h.b^2 + 5*133671*p.b*h.b + 1
+  let singular := if 1 < x.t then ceilDiv (4*x.t*mixed32 p p h h) 32 + x.t*x.b^2+1 else 0
+  let curves := ceilDiv (81879*mixed32 p q q h + 46594*mixed32 p q q p) (32*46594*293711590)
+  let isolated := ceilDiv (3*q.j^2*(2*q.b - q.j)) (4*41481*(41481 - 33184 + 1)*1037)
+  divisors + singular + curves + isolated
 end
 end K1_13
 end

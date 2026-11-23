@@ -13,76 +13,76 @@ open K1_13_1 (anchorLead anchorLead_ne anchorLead_mul indexDegree_eq eval_anchor
 open scoped BigOperators Polynomial
 open private coeff_flatten anchorLead_term index_bounds from ProximityPrize.SubmissionLower.Fast040
 
-abbrev activeDegree := Euler50GeoCover.activeDegree
+abbrev activeDegree:=Euler50GeoCover.activeDegree
 
 theorem activeFits_iff (f : Row 4) (K : ℕ) : ActiveFits f K ↔ activeDegree f ≤ K :=
   Euler50GeoCover.activeFits_iff f K
 
 structure Cover (top : ℕ) {n : ℕ} (Γ : Finset K) (s : K → K[X])
-    (g : Row 3) (f : Fin n → Row 4) : Prop where
-  lower : LowerRow top g
-  factors : ∀ i, SmallFactor (f i)
-  different : ∀ i j, i ≠ j → ¬ Associated (f i) (f j)
-  fits : Fits top (fun i => shape (f i))
-  active_budget : (∑ i, activeDegree (f i)) ≤ 165
+    (g:Row 3) (f:Fin n→Row 4):Prop where
+  lower:LowerRow top g
+  factors : ∀ i,SmallFactor (f i)
+  different : ∀ i j,i≠j → ¬ Associated (f i) (f j)
+  fits:Fits top (fun i => shape (f i))
+  active_budget:(∑ i,activeDegree (f i))≤172
   covers : ∀ γ ∈ Γ, K1_13.atJet g (extend (s γ)) = 0 ∨
-    ∃ i, K1_13.OnFactor (f i) (extend (s γ))
+    ∃ i,K1_13.OnFactor (f i) (extend (s γ))
 theorem trueWeight_iff {n D : ℕ} (P : Row n) :
     TrueWeightLE P D ↔
       ((MvPolynomial.optionEquivRight Geom (Fin n)).symm P).weightedTotalDegree
-        (fun v => v.elim 1 (fun i => physicalDegree - i.val)) ≤ D := by
+        (fun v => v.elim 1 (fun i => physicalDegree - i.val))≤D:=by
   classical
-  rw [MvPolynomial.weightedTotalDegree, Finset.sup_le_iff]
+  rw [MvPolynomial.weightedTotalDegree,Finset.sup_le_iff]
   constructor
   · intro h u hu
     have hc : (P.coeff u.some).coeff (u none) ≠ 0 := by
-      rw [← coeff_flatten, Finsupp.optionElim_some]
+      rw [← coeff_flatten,Finsupp.optionElim_some]
       exact MvPolynomial.mem_support_iff.mp hu
     have hm : u.some ∈ P.support :=
       MvPolynomial.mem_support_iff.mpr (fun hz => hc (by simp [hz]))
-    have hi := Polynomial.le_natDegree_of_ne_zero hc
-    rw [← Finsupp.optionElim_some u, Finsupp.weight_optionElim, one_mul]
+    have hi:=Polynomial.le_natDegree_of_ne_zero hc
+    rw [← Finsupp.optionElim_some u,Finsupp.weight_optionElim,one_mul]
     apply (Nat.add_le_add_right hi _).trans
-    simpa only [Finsupp.weight_apply, smul_eq_mul, Nat.mul_comm] using h _ hm
+    simpa only [Finsupp.weight_apply,smul_eq_mul,Nat.mul_comm] using h _ hm
   · intro h m hm
-    let d := (P.coeff m).natDegree
+    let d:=(P.coeff m).natDegree
     have hc : (P.coeff m).coeff d ≠ 0 :=
       Polynomial.leadingCoeff_ne_zero.mpr (MvPolynomial.mem_support_iff.mp hm)
     have hu : m.optionElim d ∈ ((MvPolynomial.optionEquivRight Geom (Fin n)).symm P).support :=
       MvPolynomial.mem_support_iff.mpr (by rwa [coeff_flatten])
-    have hb := h _ hu
-    rw [Finsupp.weight_optionElim, one_mul] at hb
-    simpa only [Finsupp.weight_apply, smul_eq_mul, Nat.mul_comm] using hb
+    have hb:=h _ hu
+    rw [Finsupp.weight_optionElim,one_mul] at hb
+    simpa only [Finsupp.weight_apply,smul_eq_mul,Nat.mul_comm] using hb
 theorem differentialWeight_eq : differentialWeight (d := 3) physicalDegree =
-    fun v => v.elim 1 (fun i => physicalDegree - i.val) := by
+    fun v => v.elim 1 (fun i => physicalDegree - i.val):=by
   funext v
   cases v <;> rfl
 section FactorCover
 open MvPolynomial UniqueFactorizationMonoid
 private theorem lower_of_anchor (P : Row 4) (hP : P ≠ 0)
-    (hbox : InBox (shape P) ⟨132, 55, 14⟩) (hw : TrueWeightLE P anchorCutoff) :
-    LowerRow (shape P).t (anchorLead P) := by
+    (hbox:InBox (shape P) ⟨137,56,14⟩) (hw:TrueWeightLE P anchorCutoff) :
+    LowerRow (shape P).t (anchorLead P):=by
   refine ⟨anchorLead_ne hP, ?_, ?_, ?_⟩
   · have hb := (Euler50GeoLead.lead_degree P hP).trans hbox.1
-    change (anchorLead P).totalDegree + (shape P).t ≤ 132 at hb
-    change (anchorLead P).totalDegree ≤ 132 - (shape P).t
+    change (anchorLead P).totalDegree+(shape P).t≤137 at hb
+    change (anchorLead P).totalDegree≤137 - (shape P).t
     omega
   · have hj := (Euler50GeoLead.lead_index P hP).trans hbox.2.1
-    change indexDegree (anchorLead P) + 3 * (shape P).t ≤ 55 at hj
-    change indexDegree (anchorLead P) ≤ 55 - 3 * (shape P).t
+    change indexDegree (anchorLead P)+3*(shape P).t≤56 at hj
+    change indexDegree (anchorLead P)≤56 - 3*(shape P).t
     omega
   · intro m hm
-    obtain ⟨u, hu, hc, h⟩ := anchorLead_term P m hm
-    have hle := h (fun i => physicalDegree - i.val)
+    obtain ⟨u,hu,hc,h⟩:=anchorLead_term P m hm
+    have hle:=h (fun i => physicalDegree - i.val)
     rw [← hc]
     apply (Nat.add_le_add_left _ _).trans (hw u hu)
-    simpa only [Finsupp.weight_apply, smul_eq_mul, Nat.mul_comm, Fin.val_castSucc] using hle
+    simpa only [Finsupp.weight_apply,smul_eq_mul,Nat.mul_comm,Fin.val_castSucc] using hle
 private theorem factor_small {P f : Row 4} (hP : P ≠ 0)
-    (hbox : InBox (shape P) ⟨132, 55, 14⟩) (hw : TrueWeightLE P anchorCutoff)
-    (hf : Irreducible f) (ht : 0 < (shape f).t) (hd : f ∣ P) : SmallFactor f := by
-  refine ⟨hf, ht, ⟨?_, ?_, ?_⟩, ?_⟩
+    (hbox:InBox (shape P) ⟨137,56,14⟩) (hw:TrueWeightLE P anchorCutoff)
+    (hf:Irreducible f) (ht:0 < (shape f).t) (hd:f ∣ P):SmallFactor f:=by
+  refine ⟨hf,ht,⟨?_, ?_, ?_⟩, ?_⟩
   · have h := weightedTotalDegree_le_of_dvd (1 : Fin 4 → ℕ) hd hP
-    rw [weightedTotalDegree_one, weightedTotalDegree_one] at h
+    rw [weightedTotalDegree_one,weightedTotalDegree_one] at h
     exact h.trans hbox.1
   · have h := weightedTotalDegree_le_of_dvd (fun i => i.val) hd hP
     rw [← indexDegree_eq, ← indexDegree_eq] at h
@@ -91,35 +91,35 @@ private theorem factor_small {P f : Row 4} (hP : P ≠ 0)
     simp only [weightedTotalDegree_piSingle] at h
     exact h.trans hbox.2.2
   · let e := MvPolynomial.optionEquivRight Geom (Fin 4)
-    have hd' : e.symm f ∣ e.symm P := _root_.map_dvd e.symm hd
-    have hP' : e.symm P ≠ 0 := fun h => hP (e.symm.injective (h.trans (map_zero _).symm))
+    have hd' : e.symm f ∣ e.symm P:=_root_.map_dvd e.symm hd
+    have hP' : e.symm P≠0:=fun h => hP (e.symm.injective (h.trans (map_zero _).symm))
     exact (trueWeight_iff f).mpr
       ((weightedTotalDegree_le_of_dvd _ hd' hP').trans ((trueWeight_iff P).mp hw))
 theorem cover_of_anchor {Γ : Finset K} {s : K → K[X]} (P : Row 4)
-    (hP : P ≠ 0) (hbox : InBox (shape P) ⟨132, 55, 14⟩)
-    (hw : TrueWeightLE P anchorCutoff) (hactive : ActiveFits P 165)
-    (hz : ∀ γ ∈ Γ, atJet P (extend (s γ)) = 0) :
-    ∃ (top : ℕ) (n : ℕ) (g : Row 3) (f : Fin n → Row 4), top ≤ 14 ∧ Cover top Γ s g f := by
+    (hP:P≠0) (hbox:InBox (shape P) ⟨137,56,14⟩)
+    (hw:TrueWeightLE P anchorCutoff) (hactive:ActiveFits P 172)
+    (hz : ∀ γ ∈ Γ,atJet P (extend (s γ))=0) :
+    ∃ (top:ℕ) (n:ℕ) (g:Row 3) (f:Fin n→Row 4),top≤14 ∧ Cover top Γ s g f:=by
   classical
-  let _ : StrongNormalizationMonoid (Row 4) := UniqueFactorizationMonoid.strongNormalizationMonoid
-  let A := normalizedFactors P
-  let T := A.toFinset.filter fun q => 0 < (shape q).t
-  let n := Fintype.card ↥T
-  let e : Fin n ≃ ↥T := (Fintype.equivFin ↥T).symm
-  let f : Fin n → Row 4 := fun i => (e i).val
+  let _:StrongNormalizationMonoid (Row 4):=UniqueFactorizationMonoid.strongNormalizationMonoid
+  let A:=normalizedFactors P
+  let T:=A.toFinset.filter fun q => 0 < (shape q).t
+  let n:=Fintype.card ↥T
+  let e:Fin n ≃ ↥T:=(Fintype.equivFin ↥T).symm
+  let f:Fin n→Row 4:=fun i => (e i).val
   have hT : ∀ q ∈ T, q ∈ A ∧ 0 < (shape q).t := by
     intro q hq
     simpa [T] using hq
-  have hfi (i : Fin n) : f i ∈ A ∧ 0 < (shape (f i)).t := hT _ (e i).property
+  have hfi (i:Fin n):f i ∈ A ∧ 0 < (shape (f i)).t:=hT _ (e i).property
   have hd : (∏ i, f i) ∣ P := by
     have heq : (∏ i, f i) = ∏ q ∈ T, q := by
-      rw [show (∏ i, f i) = ∏ q : ↥T, q.val from e.prod_comp Subtype.val]
+      rw [show (∏ i,f i) = ∏ q : ↥T,q.val from e.prod_comp Subtype.val]
       exact Finset.prod_coe_sort T id
     rw [heq]
     exact ((Finset.prod_dvd_prod_of_subset T A.toFinset id (Finset.filter_subset _ _)).trans
       (Multiset.toFinset_prod_dvd_prod A)).trans (prod_normalizedFactors hP).dvd
   have fit : Fits (shape P).t (fun i => shape (f i)) := by
-    refine ⟨fun i => ⟨(hfi i).2, index_bounds (f i)⟩, ?_, ?_, ?_⟩
+    refine ⟨fun i => ⟨(hfi i).2,index_bounds (f i)⟩, ?_, ?_, ?_⟩
     · have h := sum_weightedTotalDegree_le_of_prod_dvd (1 : Fin 4 → ℕ) Finset.univ f hP hd
       simp only [weightedTotalDegree_one] at h
       exact h.trans hbox.1
@@ -129,11 +129,11 @@ theorem cover_of_anchor {Γ : Finset K} {s : K → K[X]} (P : Row 4)
     · have h := sum_weightedTotalDegree_le_of_prod_dvd (Pi.single (3 : Fin 4) 1) Finset.univ f hP hd
       simp only [weightedTotalDegree_piSingle] at h
       exact h
-  have hactive_sum : (∑ i, activeDegree (f i)) ≤ 165 :=
+  have hactive_sum : (∑ i, activeDegree (f i)) ≤ 172 :=
     (sum_weightedTotalDegree_le_of_prod_dvd (![1, 2, 2, 2] : Fin 4 → ℕ)
-      Finset.univ f hP hd).trans ((activeFits_iff P 165).mp hactive)
+      Finset.univ f hP hd).trans ((activeFits_iff P 172).mp hactive)
   refine ⟨(shape P).t, n, anchorLead P, f, hbox.2.2,
-    ⟨lower_of_anchor P hP hbox hw, ?_, ?_, fit, hactive_sum, ?_⟩⟩
+    ⟨lower_of_anchor P hP hbox hw, ?_, ?_,fit,hactive_sum, ?_⟩⟩
   · intro i
     exact factor_small hP hbox hw (irreducible_of_normalized_factor _ (hfi i).1)
       (hfi i).2 (dvd_of_mem_normalizedFactors (hfi i).1)
@@ -142,32 +142,32 @@ theorem cover_of_anchor {Γ : Finset K} {s : K → K[X]} (P : Row 4)
     apply e.injective
     exact Subtype.ext (mem_normalizedFactors_eq_of_associated (hfi i).1 (hfi j).1 hassoc)
   · intro γ hγ
-    let S := extend (s γ)
-    by_cases hg : atJet (anchorLead P) S = 0
+    let S:=extend (s γ)
+    by_cases hg:atJet (anchorLead P) S=0
     · exact Or.inl hg
     right
     have hSA : MvPolynomial.eval (jet S) A.prod = 0 := by
-      have hdiv := _root_.map_dvd (MvPolynomial.eval (jet S)) (prod_normalizedFactors hP).symm.dvd
+      have hdiv:=_root_.map_dvd (MvPolynomial.eval (jet S)) (prod_normalizedFactors hP).symm.dvd
       change atJet P S ∣ MvPolynomial.eval (jet S) A.prod at hdiv
-      rw [hz γ hγ, zero_dvd_iff] at hdiv
+      rw [hz γ hγ,zero_dvd_iff] at hdiv
       exact hdiv
-    rw [map_multiset_prod, Multiset.prod_eq_zero_iff, Multiset.mem_map] at hSA
-    obtain ⟨q, hq, hqS⟩ := hSA
+    rw [map_multiset_prod,Multiset.prod_eq_zero_iff,Multiset.mem_map] at hSA
+    obtain ⟨q,hq,hqS⟩:=hSA
     have hqlead : atJet (anchorLead q) S ≠ 0 := by
       intro hzero
-      obtain ⟨R, hR⟩ := dvd_of_mem_normalizedFactors hq
+      obtain ⟨R,hR⟩:=dvd_of_mem_normalizedFactors hq
       apply hg
-      rw [hR, anchorLead_mul, atJet, map_mul]
+      rw [hR,anchorLead_mul,atJet,map_mul]
       exact mul_eq_zero_of_left hzero _
     have hqt : 0 < (shape q).t := by
       by_contra! h
       apply hqlead
       rw [← atJet_eq_anchorLead_of_top_zero q S (Nat.eq_zero_of_le_zero h)]
       exact hqS
-    have hqT : q ∈ T := Finset.mem_filter.mpr ⟨Multiset.mem_toFinset.mpr hq, hqt⟩
-    let j := e.symm ⟨q, hqT⟩
-    have hj : f j = q := congrArg Subtype.val (e.apply_symm_apply ⟨q, hqT⟩)
-    exact ⟨j, by rw [hj, OnFactor, ← eval_anchorLead]; exact ⟨hqS, hqlead⟩⟩
+    have hqT:q ∈ T:=Finset.mem_filter.mpr ⟨Multiset.mem_toFinset.mpr hq,hqt⟩
+    let j:=e.symm ⟨q,hqT⟩
+    have hj:f j=q:=congrArg Subtype.val (e.apply_symm_apply ⟨q,hqT⟩)
+    exact ⟨j,by rw [hj,OnFactor, ← eval_anchorLead]; exact ⟨hqS,hqlead⟩⟩
 end FactorCover
 
 #print axioms cover_of_anchor

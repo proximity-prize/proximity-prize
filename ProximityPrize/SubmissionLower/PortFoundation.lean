@@ -205,12 +205,18 @@ structure BadMark (u : Words) (γ : K) where
   nonjoint : ¬ (ExtendsOn node (u 0) k support ∧ ExtendsOn node (u 1) k support)
 def ordinary (u : Words) := hankel node (u 0) (u 1) L t
 def twoBlock (u : Words) := stacked p node (u 0) (u 1) L t
+def firstRank (u : Words) := GenericLayer.genericRank (ordinary u)
 def stackRank (u : Words) := GenericLayer.genericRank (twoBlock u)
 def nullity (u : Words) := GenericLayer.genericNullity (twoBlock u)
 def Normal (u : Words) (γ : K) : Prop :=
   ((twoBlock u).map (evalRingHom γ)).rank = stackRank u
 def TypeAtMostOne (u : Words) : Prop :=
   Principal.TypeOneSyndromes node (u 0) (u 1) k p
+def HomogeneousPrincipal (u : Words) : Prop :=
+  ∃ (a : ℕ) (g : Frac[X]), g ≠ 0 ∧ g.natDegree ≤ a ∧ a ≤ t ∧
+    ∀ P : Frac[X], P.natDegree ≤ t →
+      (((twoBlock u).map (algebraMap K[X] Frac)).mulVec (fun i => P.coeff i.val) = 0 ↔
+        ∃ Q : Frac[X], Q.natDegree ≤ t - a ∧ P = g * Q)
 def coefficientBlocks {F ι : Type} [Field F] [Fintype ι] [DecidableEq ι]
     (p : ℕ) (x u v : ι → F) (l t : ℕ) : Matrix (Fin 4 × Fin l) (Fin (t + 1)) F :=
   fun i j =>
@@ -218,6 +224,12 @@ def coefficientBlocks {F ι : Type} [Field F] [Fintype ι] [DecidableEq ι]
     if i.1 = 1 then syndrome x v (i.2.val + j.val) else
     if i.1 = 2 then syndrome x u (i.2.val + j.val) ^ p else
       syndrome x v (i.2.val + j.val) ^ p
+abbrev coefficientStack (u : Words) := coefficientBlocks p node (u 0) (u 1) L t
+def ConstantKernel (u : Words) : Prop :=
+  stackRank u = (coefficientStack u).rank
+def FrontRemainder (u : Words) : Prop :=
+  frontLimit < nullity u ∧ firstRank u = L ∧ ¬ TypeAtMostOne u ∧
+    ¬ HomogeneousPrincipal u ∧ ¬ ConstantKernel u
 structure TwoActive (u : Words) where
   a : ℕ
   b : ℕ

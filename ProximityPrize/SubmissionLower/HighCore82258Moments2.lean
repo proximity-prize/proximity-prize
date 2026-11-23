@@ -3,105 +3,113 @@ import ProximityPrize.SubmissionLower.HighCore82258Moments1
 set_option Elab.async false
 set_option maxRecDepth 18000
 set_option maxHeartbeats 14000000
+set_option quotPrecheck false
 
 namespace HighCore82258BankProof
 open P1_7_1_3 (momentEstimate blockEstimate)
-open P1_7_1_3_2 (moment_from_blocks)
+open P1_7_1_3_6 (append)
 
-theorem moment1412_298 : momentEstimate 1412 298 = 0x1901657cf3 := by
-  exact moment_from_blocks [⟨220,0x85ca4bb9⟩, ⟨220,0x2f80c624d⟩, ⟨220,0x53deec90a⟩, ⟨220,0x60dd02fba⟩, ⟨220,0x562292fea⟩, ⟨220,0x36855c5aa⟩, ⟨220,0x14beb9b41⟩, ⟨170,0x21654554⟩]
-    ⟨(by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel),trivial⟩ rfl rfl
+private theorem b5843_1234_1234 : blockEstimate 5843 1234 1234 660 = 0x3bf19f9b33 := by decide +kernel
+private theorem b5843_1234_1894 : blockEstimate 5843 1234 1894 660 = 0x17620f0ba1c := by decide +kernel
+private theorem b5843_1234_2554 : blockEstimate 5843 1234 2554 660 = 0x32f9d81b60c := by decide +kernel
+private theorem b5843_1234_3214 : blockEstimate 5843 1234 3214 660 = 0x468c0b000cc := by decide +kernel
+private theorem b5843_1234_3874 : blockEstimate 5843 1234 3874 660 = 0x4fc8db5780c := by decide +kernel
+private theorem b5843_1234_4534 : blockEstimate 5843 1234 4534 660 = 0x4eb04921bcc := by decide +kernel
+private theorem b5843_1234_5194 : blockEstimate 5843 1234 5194 660 = 0x434254c61d6 := by decide +kernel
+private theorem b5843_1234_5854 : blockEstimate 5843 1234 5854 660 = 0x2f009d98898 := by decide +kernel
+private theorem b5843_1234_6514 : blockEstimate 5843 1234 6514 660 = 0x1987ab8f3d5 := by decide +kernel
+private theorem b5843_1234_7174 : blockEstimate 5843 1234 7174 660 = 0x8c1c8886ed := by decide +kernel
+private theorem b5843_1234_7834 : blockEstimate 5843 1234 7834 477 = 0xbf253282c := by decide +kernel
+private theorem s5843_1234_1234_1320 : blockEstimate 5843 1234 1234 1320 = 0x1b21290554f :=
+  append (B := 5843) (J := 1234) (start := 1234) (a := 660) (x := 0x3bf19f9b33)
+    b5843_1234_1234 1894 660 0x17620f0ba1c 1320 0x1b21290554f rfl rfl rfl b5843_1234_1894
+private theorem s5843_1234_2554_1320 : blockEstimate 5843 1234 2554 1320 = 0x7985e31b6d8 :=
+  append (B := 5843) (J := 1234) (start := 2554) (a := 660) (x := 0x32f9d81b60c)
+    b5843_1234_2554 3214 660 0x468c0b000cc 1320 0x7985e31b6d8 rfl rfl rfl b5843_1234_3214
+private theorem s5843_1234_3874_1320 : blockEstimate 5843 1234 3874 1320 = 0x9e7924793d8 :=
+  append (B := 5843) (J := 1234) (start := 3874) (a := 660) (x := 0x4fc8db5780c)
+    b5843_1234_3874 4534 660 0x4eb04921bcc 1320 0x9e7924793d8 rfl rfl rfl b5843_1234_4534
+private theorem s5843_1234_5194_1320 : blockEstimate 5843 1234 5194 1320 = 0x7242f25ea6e :=
+  append (B := 5843) (J := 1234) (start := 5194) (a := 660) (x := 0x434254c61d6)
+    b5843_1234_5194 5854 660 0x2f009d98898 1320 0x7242f25ea6e rfl rfl rfl b5843_1234_5854
+private theorem s5843_1234_6514_1320 : blockEstimate 5843 1234 6514 1320 = 0x22497417ac2 :=
+  append (B := 5843) (J := 1234) (start := 6514) (a := 660) (x := 0x1987ab8f3d5)
+    b5843_1234_6514 7174 660 0x8c1c8886ed 1320 0x22497417ac2 rfl rfl rfl b5843_1234_7174
+private theorem s5843_1234_1234_2640 : blockEstimate 5843 1234 1234 2640 = 0x94a70c20c27 :=
+  append (B := 5843) (J := 1234) (start := 1234) (a := 1320) (x := 0x1b21290554f)
+    s5843_1234_1234_1320 2554 1320 0x7985e31b6d8 2640 0x94a70c20c27 rfl rfl rfl s5843_1234_2554_1320
+private theorem s5843_1234_3874_2640 : blockEstimate 5843 1234 3874 2640 = 0x110bc16d7e46 :=
+  append (B := 5843) (J := 1234) (start := 3874) (a := 1320) (x := 0x9e7924793d8)
+    s5843_1234_3874_1320 5194 1320 0x7242f25ea6e 2640 0x110bc16d7e46 rfl rfl rfl s5843_1234_5194_1320
+private theorem s5843_1234_6514_1797 : blockEstimate 5843 1234 6514 1797 = 0x2308994a2ee :=
+  append (B := 5843) (J := 1234) (start := 6514) (a := 1320) (x := 0x22497417ac2)
+    s5843_1234_6514_1320 7834 477 0xbf253282c 1797 0x2308994a2ee rfl rfl rfl b5843_1234_7834
+private theorem s5843_1234_1234_5280 : blockEstimate 5843 1234 1234 5280 = 0x1a56322f8a6d :=
+  append (B := 5843) (J := 1234) (start := 1234) (a := 2640) (x := 0x94a70c20c27)
+    s5843_1234_1234_2640 3874 2640 0x110bc16d7e46 5280 0x1a56322f8a6d rfl rfl rfl s5843_1234_3874_2640
+private theorem s5843_1234_1234_7077 : blockEstimate 5843 1234 1234 7077 = 0x1c86bbc42d5b :=
+  append (B := 5843) (J := 1234) (start := 1234) (a := 5280) (x := 0x1a56322f8a6d)
+    s5843_1234_1234_5280 6514 1797 0x2308994a2ee 7077 0x1c86bbc42d5b rfl rfl rfl s5843_1234_6514_1797
+theorem moment5843_1234 : momentEstimate 5843 1234 = 0x1c86bbc42d5b := by
+  change blockEstimate 5843 1234 1234 7077 = 0x1c86bbc42d5b
+  exact s5843_1234_1234_7077
 
-theorem moment1443_329 : momentEstimate 1443 329 = 0x1cf53a5560 := by
-  exact moment_from_blocks [⟨220,0x891d3c1d⟩, ⟨220,0x31dcc1aad⟩, ⟨220,0x5c2fe278a⟩, ⟨220,0x6d4b1c03a⟩, ⟨220,0x6438375ea⟩, ⟨220,0x43b7f6bae⟩, ⟨220,0x1e334ebfc⟩, ⟨220,0x5464d4f4⟩, ⟨12,0x4744a⟩]
-    ⟨(by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel), (by decide +kernel),trivial⟩ rfl rfl
+private theorem b2041_430_430 : blockEstimate 2041 430 430 660 = 0x10a7b782fe := by decide +kernel
+private theorem b2041_430_1090 : blockEstimate 2041 430 1090 660 = 0x339a65babc := by decide +kernel
+private theorem b2041_430_1750 : blockEstimate 2041 430 1750 660 = 0x245b4c1c01 := by decide +kernel
+private theorem b2041_430_2410 : blockEstimate 2041 430 2410 491 = 0x432087e73 := by decide +kernel
+private theorem s2041_430_430_1320 : blockEstimate 2041 430 430 1320 = 0x44421d3dba :=
+  append (B := 2041) (J := 430) (start := 430) (a := 660) (x := 0x10a7b782fe)
+    b2041_430_430 1090 660 0x339a65babc 1320 0x44421d3dba rfl rfl rfl b2041_430_1090
+private theorem s2041_430_1750_1151 : blockEstimate 2041 430 1750 1151 = 0x288d549a74 :=
+  append (B := 2041) (J := 430) (start := 1750) (a := 660) (x := 0x245b4c1c01)
+    b2041_430_1750 2410 491 0x432087e73 1151 0x288d549a74 rfl rfl rfl b2041_430_2410
+private theorem s2041_430_430_2471 : blockEstimate 2041 430 430 2471 = 0x6ccf71d82e :=
+  append (B := 2041) (J := 430) (start := 430) (a := 1320) (x := 0x44421d3dba)
+    s2041_430_430_1320 1750 1151 0x288d549a74 2471 0x6ccf71d82e rfl rfl rfl s2041_430_1750_1151
+theorem moment2041_430 : momentEstimate 2041 430 = 0x6ccf71d82e := by
+  change blockEstimate 2041 430 430 2471 = 0x6ccf71d82e
+  exact s2041_430_430_2471
 
-private theorem part1550_329_0 : blockEstimate 1550 329 329 220 = 0x949658d1 := by decide +kernel
-private theorem part1550_329_1 : blockEstimate 1550 329 549 220 = 0x36c0900e1 := by decide +kernel
-private theorem part1550_329_2 : blockEstimate 1550 329 769 220 = 0x675b8049a := by decide +kernel
-private theorem part1550_329_3 : blockEstimate 1550 329 989 220 = 0x7ed48f22a := by decide +kernel
-private theorem part1550_329_4 : blockEstimate 1550 329 1209 220 = 0x7c1f7fcba := by decide +kernel
-private theorem part1550_329_5 : blockEstimate 1550 329 1429 220 = 0x5f8aaf58a := by decide +kernel
-private theorem part1550_329_6 : blockEstimate 1550 329 1649 220 = 0x344adf0aa := by decide +kernel
-private theorem part1550_329_7 : blockEstimate 1550 329 1869 220 = 0x103e74f26 := by decide +kernel
-private theorem part1550_329_8 : blockEstimate 1550 329 2089 119 = 0xcfd7d5a := by decide +kernel
-theorem moment1550_329 : momentEstimate 1550 329 = 0x2473d5ffe4 := by
-  exact moment_from_blocks [⟨220,0x949658d1⟩, ⟨220,0x36c0900e1⟩, ⟨220,0x675b8049a⟩, ⟨220,0x7ed48f22a⟩, ⟨220,0x7c1f7fcba⟩, ⟨220,0x5f8aaf58a⟩, ⟨220,0x344adf0aa⟩, ⟨220,0x103e74f26⟩, ⟨119,0xcfd7d5a⟩]
-    ⟨part1550_329_0, part1550_329_1, part1550_329_2, part1550_329_3, part1550_329_4, part1550_329_5, part1550_329_6, part1550_329_7, part1550_329_8,trivial⟩ rfl rfl
+private theorem b1150_242_242 : blockEstimate 1150 242 242 660 = 0x5a9a9f41c := by decide +kernel
+private theorem b1150_242_902 : blockEstimate 1150 242 902 660 = 0x55238c7df := by decide +kernel
+private theorem b1150_242_1562 : blockEstimate 1150 242 1562 72 = 0x233bd58 := by decide +kernel
+private theorem s1150_242_242_1320 : blockEstimate 1150 242 242 1320 = 0xafbe2bbfb :=
+  append (B := 1150) (J := 242) (start := 242) (a := 660) (x := 0x5a9a9f41c)
+    b1150_242_242 902 660 0x55238c7df 1320 0xafbe2bbfb rfl rfl rfl b1150_242_902
+private theorem s1150_242_242_1392 : blockEstimate 1150 242 242 1392 = 0xafe167953 :=
+  append (B := 1150) (J := 242) (start := 242) (a := 1320) (x := 0xafbe2bbfb)
+    s1150_242_242_1320 1562 72 0x233bd58 1392 0xafe167953 rfl rfl rfl b1150_242_1562
+theorem moment1150_242 : momentEstimate 1150 242 = 0xafe167953 := by
+  change blockEstimate 1150 242 242 1392 = 0xafe167953
+  exact s1150_242_242_1392
 
-private theorem part1696_357_0 : blockEstimate 1696 357 357 220 = 0xa43dfec9 := by decide +kernel
-private theorem part1696_357_1 : blockEstimate 1696 357 577 220 = 0x3e0fb7b3c := by decide +kernel
-private theorem part1696_357_2 : blockEstimate 1696 357 797 220 = 0x7bf3ea0be := by decide +kernel
-private theorem part1696_357_3 : blockEstimate 1696 357 1017 220 = 0x9fbec0aae := by decide +kernel
-private theorem part1696_357_4 : blockEstimate 1696 357 1237 220 = 0xa722cef9e := by decide +kernel
-private theorem part1696_357_5 : blockEstimate 1696 357 1457 220 = 0x922014f8e := by decide +kernel
-private theorem part1696_357_6 : blockEstimate 1696 357 1677 220 = 0x63c28fec3 := by decide +kernel
-private theorem part1696_357_7 : blockEstimate 1696 357 1897 220 = 0x30ce67a41 := by decide +kernel
-private theorem part1696_357_8 : blockEstimate 1696 357 2117 220 = 0xc26995d4 := by decide +kernel
-private theorem part1696_357_9 : blockEstimate 1696 357 2337 73 = 0x369d021 := by decide +kernel
-theorem moment1696_357 : momentEstimate 1696 357 = 0x33e3754396 := by
-  exact moment_from_blocks [⟨220,0xa43dfec9⟩, ⟨220,0x3e0fb7b3c⟩, ⟨220,0x7bf3ea0be⟩, ⟨220,0x9fbec0aae⟩, ⟨220,0xa722cef9e⟩, ⟨220,0x922014f8e⟩, ⟨220,0x63c28fec3⟩, ⟨220,0x30ce67a41⟩, ⟨220,0xc26995d4⟩, ⟨73,0x369d021⟩]
-    ⟨part1696_357_0, part1696_357_1, part1696_357_2, part1696_357_3, part1696_357_4, part1696_357_5, part1696_357_6, part1696_357_7, part1696_357_8, part1696_357_9,trivial⟩ rfl rfl
+private theorem b731_154_154 : blockEstimate 731 154 154 660 = 0x1a9e540b8 := by decide +kernel
+private theorem b731_154_814 : blockEstimate 731 154 814 225 = 0x23e29980 := by decide +kernel
+private theorem s731_154_154_885 : blockEstimate 731 154 154 885 = 0x1cdc7da38 :=
+  append (B := 731) (J := 154) (start := 154) (a := 660) (x := 0x1a9e540b8)
+    b731_154_154 814 225 0x23e29980 885 0x1cdc7da38 rfl rfl rfl b731_154_814
+theorem moment731_154 : momentEstimate 731 154 = 0x1cdc7da38 := by
+  change blockEstimate 731 154 154 885 = 0x1cdc7da38
+  exact s731_154_154_885
 
-private theorem part1725_359_0 : blockEstimate 1725 359 359 220 = 0xa75a08f5 := by decide +kernel
-private theorem part1725_359_1 : blockEstimate 1725 359 579 220 = 0x3f6f14385 := by decide +kernel
-private theorem part1725_359_2 : blockEstimate 1725 359 799 220 = 0x7f7b3ab38 := by decide +kernel
-private theorem part1725_359_3 : blockEstimate 1725 359 1019 220 = 0xa56bc2e78 := by decide +kernel
-private theorem part1725_359_4 : blockEstimate 1725 359 1239 220 = 0xaecce45b8 := by decide +kernel
-private theorem part1725_359_5 : blockEstimate 1725 359 1459 220 = 0x9b9e9f0f8 := by decide +kernel
-private theorem part1725_359_6 : blockEstimate 1725 359 1679 220 = 0x6dda2a9f6 := by decide +kernel
-private theorem part1725_359_7 : blockEstimate 1725 359 1899 220 = 0x389ee88a9 := by decide +kernel
-private theorem part1725_359_8 : blockEstimate 1725 359 2119 220 = 0x103cdd6de := by decide +kernel
-private theorem part1725_359_9 : blockEstimate 1725 359 2339 104 = 0x9c7730a := by decide +kernel
-theorem moment1725_359 : momentEstimate 1725 359 = 0x370899d961 := by
-  exact moment_from_blocks [⟨220,0xa75a08f5⟩, ⟨220,0x3f6f14385⟩, ⟨220,0x7f7b3ab38⟩, ⟨220,0xa56bc2e78⟩, ⟨220,0xaecce45b8⟩, ⟨220,0x9b9e9f0f8⟩, ⟨220,0x6dda2a9f6⟩, ⟨220,0x389ee88a9⟩, ⟨220,0x103cdd6de⟩, ⟨104,0x9c7730a⟩]
-    ⟨part1725_359_0, part1725_359_1, part1725_359_2, part1725_359_3, part1725_359_4, part1725_359_5, part1725_359_6, part1725_359_7, part1725_359_8, part1725_359_9,trivial⟩ rfl rfl
+private theorem b580_122_122 : blockEstimate 580 122 122 660 = 0xb71dc787 := by decide +kernel
+private theorem b580_122_782 : blockEstimate 580 122 782 42 = 0x3aa8e4 := by decide +kernel
+private theorem s580_122_122_702 : blockEstimate 580 122 122 702 = 0xb758706b :=
+  append (B := 580) (J := 122) (start := 122) (a := 660) (x := 0xb71dc787)
+    b580_122_122 782 42 0x3aa8e4 702 0xb758706b rfl rfl rfl b580_122_782
+theorem moment580_122 : momentEstimate 580 122 = 0xb758706b := by
+  change blockEstimate 580 122 122 702 = 0xb758706b
+  exact s580_122_122_702
 
-private theorem part1815_383_0 : blockEstimate 1815 383 383 220 = 0xb10080cd := by decide +kernel
-private theorem part1815_383_1 : blockEstimate 1815 383 603 220 = 0x43e4f2813 := by decide +kernel
-private theorem part1815_383_2 : blockEstimate 1815 383 823 220 = 0x8db58ac80 := by decide +kernel
-private theorem part1815_383_3 : blockEstimate 1815 383 1043 220 = 0xbd3d7c880 := by decide +kernel
-private theorem part1815_383_4 : blockEstimate 1815 383 1263 220 = 0xce4e9a480 := by decide +kernel
-private theorem part1815_383_5 : blockEstimate 1815 383 1483 220 = 0xc0e8e4080 := by decide +kernel
-private theorem part1815_383_6 : blockEstimate 1815 383 1703 220 = 0x9582eba84 := by decide +kernel
-private theorem part1815_383_7 : blockEstimate 1815 383 1923 220 = 0x59a1ff296 := by decide +kernel
-private theorem part1815_383_8 : blockEstimate 1815 383 2143 220 = 0x24c7dcb97 := by decide +kernel
-private theorem part1815_383_9 : blockEstimate 1815 383 2363 218 = 0x5a013f01 := by decide +kernel
-theorem moment1815_383 : momentEstimate 1815 383 = 0x442ac5ba92 := by
-  exact moment_from_blocks [⟨220,0xb10080cd⟩, ⟨220,0x43e4f2813⟩, ⟨220,0x8db58ac80⟩, ⟨220,0xbd3d7c880⟩, ⟨220,0xce4e9a480⟩, ⟨220,0xc0e8e4080⟩, ⟨220,0x9582eba84⟩, ⟨220,0x59a1ff296⟩, ⟨220,0x24c7dcb97⟩, ⟨218,0x5a013f01⟩]
-    ⟨part1815_383_0, part1815_383_1, part1815_383_2, part1815_383_3, part1815_383_4, part1815_383_5, part1815_383_6, part1815_383_7, part1815_383_8, part1815_383_9,trivial⟩ rfl rfl
+private theorem b318_70_70 : blockEstimate 318 70 70 388 = 0x115d6f33 := by decide +kernel
+theorem moment318_70 : momentEstimate 318 70 = 0x115d6f33 := by
+  change blockEstimate 318 70 70 388 = 0x115d6f33
+  exact b318_70_70
 
-private theorem part2034_430_0 : blockEstimate 2034 430 430 220 = 0xc87bf9c1 := by decide +kernel
-private theorem part2034_430_1 : blockEstimate 2034 430 650 220 = 0x4e3f4d3f4 := by decide +kernel
-private theorem part2034_430_2 : blockEstimate 2034 430 870 220 = 0xae80a0832 := by decide +kernel
-private theorem part2034_430_3 : blockEstimate 2034 430 1090 220 = 0xf6b22dc22 := by decide +kernel
-private theorem part2034_430_4 : blockEstimate 2034 430 1310 220 = 0x11cb25bb92 := by decide +kernel
-private theorem part2034_430_5 : blockEstimate 2034 430 1530 220 = 0x120812a682 := by decide +kernel
-private theorem part2034_430_6 : blockEstimate 2034 430 1750 220 = 0x1021e99cf2 := by decide +kernel
-private theorem part2034_430_7 : blockEstimate 2034 430 1970 220 = 0xc32470568 := by decide +kernel
-private theorem part2034_430_8 : blockEstimate 2034 430 2190 220 = 0x7738b7944 := by decide +kernel
-private theorem part2034_430_9 : blockEstimate 2034 430 2410 220 = 0x3514df015 := by decide +kernel
-private theorem part2034_430_10 : blockEstimate 2034 430 2630 220 = 0xb0b10df9 := by decide +kernel
-private theorem part2034_430_11 : blockEstimate 2034 430 2850 44 = 0xf10757 := by decide +kernel
-theorem moment2034_430 : momentEstimate 2034 430 = 0x6b9d823520 := by
-  exact moment_from_blocks [⟨220,0xc87bf9c1⟩, ⟨220,0x4e3f4d3f4⟩, ⟨220,0xae80a0832⟩, ⟨220,0xf6b22dc22⟩, ⟨220,0x11cb25bb92⟩, ⟨220,0x120812a682⟩, ⟨220,0x1021e99cf2⟩, ⟨220,0xc32470568⟩, ⟨220,0x7738b7944⟩, ⟨220,0x3514df015⟩, ⟨220,0xb0b10df9⟩, ⟨44,0xf10757⟩]
-    ⟨part2034_430_0, part2034_430_1, part2034_430_2, part2034_430_3, part2034_430_4, part2034_430_5, part2034_430_6, part2034_430_7, part2034_430_8, part2034_430_9, part2034_430_10, part2034_430_11,trivial⟩ rfl rfl
-
-private theorem part2035_429_0 : blockEstimate 2035 429 429 220 = 0xc8976cdd := by decide +kernel
-private theorem part2035_429_1 : blockEstimate 2035 429 649 220 = 0x4e4b225b2 := by decide +kernel
-private theorem part2035_429_2 : blockEstimate 2035 429 869 220 = 0xae7a415d6 := by decide +kernel
-private theorem part2035_429_3 : blockEstimate 2035 429 1089 220 = 0xf68ad9b26 := by decide +kernel
-private theorem part2035_429_4 : blockEstimate 2035 429 1309 220 = 0x11c7e61f76 := by decide +kernel
-private theorem part2035_429_5 : blockEstimate 2035 429 1529 220 = 0x12054da2c6 := by decide +kernel
-private theorem part2035_429_6 : blockEstimate 2035 429 1749 220 = 0x1020e42516 := by decide +kernel
-private theorem part2035_429_7 : blockEstimate 2035 429 1969 220 = 0xc3351d9bf := by decide +kernel
-private theorem part2035_429_8 : blockEstimate 2035 429 2189 220 = 0x7746c6985 := by decide +kernel
-private theorem part2035_429_9 : blockEstimate 2035 429 2409 220 = 0x351c17911 := by decide +kernel
-private theorem part2035_429_10 : blockEstimate 2035 429 2629 220 = 0xb0c8bb5c := by decide +kernel
-private theorem part2035_429_11 : blockEstimate 2035 429 2849 44 = 0xf125fa := by decide +kernel
-theorem moment2035_429 : momentEstimate 2035 429 = 0x6b96ecc888 := by
-  exact moment_from_blocks [⟨220,0xc8976cdd⟩, ⟨220,0x4e4b225b2⟩, ⟨220,0xae7a415d6⟩, ⟨220,0xf68ad9b26⟩, ⟨220,0x11c7e61f76⟩, ⟨220,0x12054da2c6⟩, ⟨220,0x1020e42516⟩, ⟨220,0xc3351d9bf⟩, ⟨220,0x7746c6985⟩, ⟨220,0x351c17911⟩, ⟨220,0xb0c8bb5c⟩, ⟨44,0xf125fa⟩]
-    ⟨part2035_429_0, part2035_429_1, part2035_429_2, part2035_429_3, part2035_429_4, part2035_429_5, part2035_429_6, part2035_429_7, part2035_429_8, part2035_429_9, part2035_429_10, part2035_429_11,trivial⟩ rfl rfl
-
+private theorem b154_33_33 : blockEstimate 154 33 33 187 = 0xf64733 := by decide +kernel
+theorem moment154_33 : momentEstimate 154 33 = 0xf64733 := by
+  change blockEstimate 154 33 33 187 = 0xf64733
+  exact b154_33_33
 
 end HighCore82258BankProof

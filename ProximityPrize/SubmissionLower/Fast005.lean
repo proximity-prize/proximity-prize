@@ -431,7 +431,41 @@ open Polynomial Finset Matrix
 open scoped BigOperators
 variable {F ι : Type*} [Field F] [Fintype ι] [DecidableEq ι]
 local instance decidableFullRank (P : Prop) : Decidable P := Classical.propDecidable P
+def Decodable (x : ι → F) (u v : ι → F) (k t : ℕ) (γ : F) : Prop :=
+  ∃ P : F[X], P.degree < k ∧
+    (Finset.univ.filter (fun i => u i + γ * v i ≠ P.eval (x i))).card ≤ t
+def minorPolynomial {row col : Type*} [Fintype col] [DecidableEq col]
+    (M : Matrix row col F[X]) (rows : col → row) : F[X] :=
+  Matrix.det (fun i j => M (rows i) j)
+theorem det_eval_eq {col : Type*} [Fintype col] [DecidableEq col]
+    (M : Matrix col col F[X]) (γ : F) :
+    M.det.eval γ = Matrix.det (fun i j => (M i j).eval γ) :=
+  (Polynomial.evalRingHom γ).map_det M
 variable (p : ℕ) [ExpChar F p]
+theorem decodable_implies_minor_root (x : ι → F) (hx : Function.Injective x)
+    (hfixed : ∀ i, x i ^ p = x i) (u v : ι → F)
+    (k L t : ℕ) (hsize : k + L + t ≤ Fintype.card ι)
+    (rows : Fin (t + 1) → Fin 2 × Fin L) (γ : F)
+    (hγ : Decodable x u v k t γ) :
+    (minorPolynomial (stacked p x u v L t) rows).eval γ = 0 := by
+  classical
+  obtain ⟨P, hP, hcard⟩ := hγ
+  let S := Finset.univ.filter (fun i => u i + γ * v i ≠ P.eval (x i))
+  have hS : S.card ≤ t := hcard
+  have hagree : ∀ i, i ∉ S → u i + γ * v i = P.eval (x i) := by
+    intro i hi
+    simpa only [S, Finset.mem_filter, Finset.mem_univ, true_and, not_not] using hi
+  have hk := locator_annihilates_stacked p x hx hfixed u v γ k L t hsize P hP S hS hagree
+  have hkm : (fun i j => ((stacked p x u v L t) (rows i) j).eval γ) *ᵥ
+      (fun j : Fin (t + 1) => (locator x S).coeff j.val) = 0 := by
+    funext i
+    exact congrFun hk (rows i)
+  have hc : (locator x S).coeff S.card = 1 := by
+    rw [← locator_natDegree x S]
+    exact (locator_monic x S).coeff_natDegree
+  rw [minorPolynomial, det_eval_eq (fun i j : Fin (t + 1) => stacked p x u v L t (rows i) j) γ]
+  exact Matrix.det_eq_zero_of_mulVec_eq_zero_of_mem_nonZeroDivisors hkm
+    (i := ⟨S.card, by omega⟩) (by simpa only [hc] using (one_mem (nonZeroDivisors F)))
 end
 end FrobeniusLocator
 end
@@ -539,6 +573,8 @@ theorem kernel_line (A : Matrix c c K) (b : c → K) (hA : A.det ≠ 0)
   have heq := kernel_zero_of_free_zero A b hA _ hz hfree
   exact sub_eq_zero.mp heq
 variable {row : Type*}
+def pivot (M : Matrix row (Option c) K) (rows : c → row) : Matrix c c K :=
+  fun i j => M (rows i) (some j)
 end Field
 section Polynomial
 variable {F : Type*} [Field F]
@@ -594,6 +630,29 @@ theorem exists_rows_det_ne_zero {row : Type*} [Fintype row] {m : ℕ} (A : Matri
     exact hli.comp e e.injective
   exact ((Matrix.isUnit_iff_isUnit_det _).mp
     (Matrix.linearIndependent_rows_iff_isUnit.mp hli')).ne_zero
+theorem exists_pivot_of_kernel_line {row : Type*} [Fintype row] {m : ℕ} (M : Matrix row (Option (Fin m)) K)
+    (E : Option (Fin m) → K) (hfree : E none ≠ 0)
+    (hline : ∀ v, M.mulVec v = 0 → ∃ a : K, v = a • E) :
+    ∃ rows : Fin m → row, (CofactorLine.pivot M rows).det ≠ 0 := by
+  let A : Matrix row (Fin m) K := fun i j => M i (some j)
+  obtain ⟨rows, hrows⟩ := exists_rows_det_ne_zero A (by
+    intro v hv
+    let v' : Option (Fin m) → K := fun j => match j with | none => 0 | some j => v j
+    have hv' : M.mulVec v' = 0 := by
+      funext i
+      change (∑ j : Option (Fin m), M i j * v' j) = 0
+      rw [Fintype.sum_option]
+      simpa only [v', mul_zero, add_zero, zero_add, A, Matrix.mulVec, dotProduct,
+        Pi.zero_apply] using congrFun hv i
+    obtain ⟨a, ha⟩ := hline v' hv'
+    have hscalar : a = 0 := by
+      have h := congrFun ha none
+      change 0 = a * E none at h
+      exact (mul_eq_zero.mp h.symm).resolve_right hfree
+    funext j
+    have h := congrFun ha (some j)
+    simpa only [v', hscalar, zero_smul, Pi.zero_apply] using h)
+  exact ⟨rows, hrows⟩
 theorem kernel_line_of_finrank {row col : Type*} [Fintype col]
     (M : Matrix row col K) (hnull : Module.finrank K (LinearMap.ker M.mulVecLin) = 1)
     (E : col → K) (hE : E ≠ 0) (hME : M.mulVec E = 0) :
@@ -1010,6 +1069,20 @@ noncomputable section
 open Polynomial Matrix Finset
 open scoped BigOperators
 variable {F row extra col : Type*} [Field F] [Fintype col] [DecidableEq col]
+def appendOver {K : Type*} [Field K] (M : Matrix row col K) (E : Matrix extra col K) :
+    Matrix (row ⊕ extra) col K := Sum.elim M E
+theorem appendOver_kernel {K : Type*} [Field K]
+    (M : Matrix row col K) (E : Matrix extra col K) (v : col → K) :
+    (appendOver M E).mulVec v = 0 ↔ M.mulVec v = 0 ∧ E.mulVec v = 0 := by
+  constructor
+  · intro h
+    exact ⟨funext (fun i => congrFun h (Sum.inl i)),
+      funext (fun i => congrFun h (Sum.inr i))⟩
+  · rintro ⟨hM, hE⟩
+    funext i
+    cases i with
+    | inl i => exact congrFun hM i
+    | inr i => exact congrFun hE i
 end
 end FrobeniusLocator.AppendConstants
 end
@@ -1126,6 +1199,45 @@ noncomputable section
 open Polynomial Matrix Finset
 open scoped BigOperators
 variable {K row col : Type*} [Field K] [Fintype col] [DecidableEq col]
+def functional (a : col → K) : (col → K) →ₗ[K] K where
+  toFun v := ∑ j, a j * v j
+  map_add' v w := by simp [mul_add, Finset.sum_add_distrib]
+  map_smul' c v := by simp [Finset.mul_sum, mul_left_comm, mul_assoc]
+def appendOne (M : Matrix row col K) (a : col → K) : Matrix (row ⊕ Unit) col K :=
+  appendOver M (fun _ => a)
+theorem appendOne_kernel (M : Matrix row col K) (a v : col → K) :
+    (appendOne M a).mulVec v = 0 ↔ M.mulVec v = 0 ∧ functional a v = 0 := by
+  rw [appendOne, appendOver_kernel]
+  constructor
+  · rintro ⟨hM, ha⟩
+    exact ⟨hM, congrFun ha ()⟩
+  · rintro ⟨hM, ha⟩
+    exact ⟨hM, funext (fun _ => ha)⟩
+def restriction (M : Matrix row col K) (a : col → K) :
+    LinearMap.ker M.mulVecLin →ₗ[K] K :=
+  (functional a).comp (LinearMap.ker M.mulVecLin).subtype
+def restrictionKernelEquiv (M : Matrix row col K) (a : col → K) :
+    LinearMap.ker (restriction M a) ≃ₗ[K]
+      LinearMap.ker (appendOne M a).mulVecLin where
+  toFun v := ⟨v.val.val, (appendOne_kernel M a _).mpr ⟨v.val.property, v.property⟩⟩
+  invFun v := ⟨⟨v.val, ((appendOne_kernel M a _).mp v.property).1⟩,
+    ((appendOne_kernel M a _).mp v.property).2⟩
+  left_inv v := rfl
+  right_inv v := rfl
+  map_add' v w := rfl
+  map_smul' c v := rfl
+theorem nullity_drop_one (M : Matrix row col K) (a : col → K)
+    (hactive : ∃ v : col → K, M.mulVec v = 0 ∧ functional a v ≠ 0) :
+    Module.finrank K (LinearMap.ker (appendOne M a).mulVecLin) + 1 =
+      Module.finrank K (LinearMap.ker M.mulVecLin) := by
+  have hne : restriction M a ≠ 0 := by
+    intro hzero
+    obtain ⟨v, hv, ha⟩ := hactive
+    apply ha
+    exact LinearMap.congr_fun hzero ⟨v, hv⟩
+  have h := Module.Dual.finrank_ker_add_one_of_ne_zero hne
+  rw [(restrictionKernelEquiv M a).finrank_eq] at h
+  exact h
 end
 end FrobeniusLocator.AppendConstants
 end

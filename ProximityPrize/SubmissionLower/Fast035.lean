@@ -27,6 +27,12 @@ structure ThresholdPair (i : Fin 4) (P Q : Jet) (r : ℕ) where
     OrderAt q P (reserve i + 1) → OrderAt q Q (reserve i + 1) →
     (∀ f ∈ heavy, C f ∉ q.asIdeal) →
     OrderAt q left (reserve i + 2 - r) ∧ OrderAt q right (reserve i + 2 - r)
+def residualSeed (f g : Shape) : ℚ :=
+  (f.B : ℚ) * g.J + (g.B : ℚ) * f.J - (f.J : ℚ) * g.J
+def residualOrdinate (f g : Shape) : ℚ :=
+  (f.U : ℚ) * g.J + (g.U : ℚ) * f.J
+def residualMixed (f g : Shape) : ℚ :=
+  (f.U : ℚ) * g.B + (g.U : ℚ) * f.B
 end
 end K1_14_3_4
 end
