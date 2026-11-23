@@ -569,8 +569,7 @@ private theorem X_bidegree (i : Option (Fin 2)) :
   cases i <;> simp [Finsupp.some_single_none, Finsupp.some_single_some]
 private theorem slicedY_bidegree : slicedY ∈ Bidegree 1 0 := by
   apply (Bidegree 1 0).sub_mem (C_bidegree _)
-  have h := mul_mem_restrictBidegree (C_bidegree (b := 0) (u := 0) (generic 0)) (X_bidegree none)
-  exact h
+  exact mul_mem_restrictBidegree (C_bidegree (b := 0) (u := 0) _) (X_bidegree none)
 private theorem pow_bidegree {f : CurvePoly SeedField} {b u : ℕ}
     (hf : f ∈ Bidegree b u) (i : ℕ) : f ^ i ∈ Bidegree (i * b) (i * u) := by
   induction i with
@@ -1693,7 +1692,7 @@ private theorem perturb_parameter {F A : Type} [Field F] [CommRing A] [IsDomain 
     simpa [n, hp.coeff_natDegree, add_comm] using hroot
   let S := Algebra.adjoin B {r}
   have hle : R ≤ S.restrictScalars F := Algebra.adjoin_le fun x hx =>
-    show x ∈ ((Algebra.adjoin B {r} : Subalgebra B A) : Set A) from Algebra.subset_adjoin hx
+    Algebra.subset_adjoin hx
   let : Algebra R S := (Subalgebra.inclusion hle).toAlgebra
   have : IsScalarTower R S A := IsScalarTower.of_algebraMap_eq fun _ => rfl
   have : Algebra.IsIntegral B S := Algebra.IsIntegral.adjoin
@@ -7206,6 +7205,10 @@ def sectionEval (s : Slice) : SectionJet →ₐ[SectionField] Plane where
       (eval₂RingHom (MvPolynomial.eval₂Hom MvPolynomial.C (seedValues s)) (ordinateValue s))
       (derivativeValue s) (C (C (MvPolynomial.C k))) = MvPolynomial.C k
     simp
+def sectionRow (s : Slice) (P : Jet) : Plane :=
+  sectionEval s (sectionMap P)
+def univariate : SectionField[X] →ₐ[SectionField] Plane :=
+  Polynomial.aeval (MvPolynomial.X 0)
 end
 end K1_14_3_2_4
 end

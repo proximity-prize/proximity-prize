@@ -1,3 +1,4 @@
+/- Modified from public PR657. Removed obsolete rank budget checks. -/
 import ArkLib.Data.CodingTheory.ReedSolomon.MutualCorrelatedAgreement.Johnson.Agreement
 import ArkLib.Data.Finset.PairwiseIntersection
 import Mathlib.Algebra.AffineMonoid.Basic
@@ -24,7 +25,7 @@ import Mathlib.RingTheory.RingHom.Unramified
 import Mathlib.RingTheory.Spectrum.Prime.Homeomorph
 import Mathlib.Topology.Algebra.MvPolynomial
 import ProximityPrize.SubmissionLower.Fast042
-import ProximityPrize.SubmissionLower.Fast040
+import ProximityPrize.SubmissionLower.SoloK1_13_1_1ArithmeticLogic
 set_option Elab.async false
 set_option autoImplicit true
 section
@@ -794,6 +795,10 @@ structure TaylorChart (d e b : ℕ) where
     MvPolynomial.restrictBidegree (Fin 2) FX (ordinateBound d e) (parameterBound d b)
   numerator_bound : ∀ x, numerator x ∈
     MvPolynomial.restrictBidegree (Fin 2) FX (ordinateBound d e) (parameterBound d b)
+def TaylorChart.Recovers {d e b} (C : TaylorChart d e b) (z : K) (S : K[X]) : Prop :=
+  let ev := MvPolynomial.eval (rootPoint z S)
+  ev C.denominator ≠ 0 ∧
+    ∀ x : K, ev (C.numerator x) = ev C.denominator * seedEmbedding (S.eval x)
 abbrev ClosedField := AlgebraicClosure FX
 abbrev ChartVariables (d e b : ℕ) :=
   ↥(MvPolynomial.bidegreeExponents (Fin 2) (ordinateBound d e) (parameterBound d b))
@@ -873,6 +878,123 @@ private theorem occupancy {α ι : Type*} [DecidableEq α] [DecidableEq ι]
   refine ⟨cs.trans (Nat.mul_le_mul_left _ second_le), ?_⟩
   rw [← first, ← smul_eq_mul, ← sum_const]
   exact sum_le_sum hocc
+private theorem incidence_arithmetic (m x gap cap : ℕ)
+    (hm : 0 < m) (hg : 0 < gap) (hx : gap ≤ x)
+    (hsecond : (m*x)^2 ≤ (x+81879) * (m * (x + (m-1)*(x-gap))))
+    (hfirst : m*x ≤ (x+81879)*cap) :
+    gap*m ≤ 81879*cap + gap := by
+  have hcancel : m*x^2 ≤ (x+81879) * (x + (m-1)*(x-gap)) := by
+    apply Nat.le_of_mul_le_mul_left _ hm
+    calc
+      _ = (m*x)^2 := by ring
+      _ ≤ _ := hsecond
+      _ = _ := by ring
+  have hM : ((m - 1 : ℕ) : ℤ) = (m : ℤ)-1 := Int.ofNat_sub (by omega)
+  have hX : ((x - gap : ℕ) : ℤ) = (x : ℤ)-gap := Int.ofNat_sub hx
+  have hcancelZ := Int.ofNat_le.mpr hcancel
+  push_cast [hM, hX] at hcancelZ
+  have hfirstZ := Int.ofNat_le.mpr hfirst
+  push_cast at hfirstZ
+  have secondZ : ((m : ℤ)*81879 - ((m : ℤ)-1)*gap)*x ≥
+      ((m : ℤ)-1)*81879*gap := by
+    nlinarith only [hcancelZ]
+  have firstZ : ((m : ℤ)-(cap : ℤ))*x ≤ (cap : ℤ)*81879 := by
+    nlinarith only [hfirstZ]
+  by_contra! h
+  have hbadZ : (81879 : ℤ)*cap + gap < (gap : ℤ)*m := by exact_mod_cast h
+  have hbad : (cap : ℤ)*81879 < ((m : ℤ)-1)*gap := by nlinarith only [hbadZ]
+  have hxpos : 0 < (x : ℤ) := by omega
+  have cmp : (m : ℤ)*81879 - ((m : ℤ)-1)*gap < ((m : ℤ)-(cap : ℤ))*81879 := by
+    linarith only [hbad]
+  have left := mul_lt_mul_of_pos_right cmp hxpos
+  have right := mul_le_mul_of_nonneg_right firstZ (by norm_num : (0 : ℤ) ≤ 81879)
+  have impossible := secondZ.trans_lt (left.trans_le (show
+      ((m : ℤ)-(cap : ℤ))*81879*x ≤ (cap : ℤ)*81879*81879 from by
+        convert right using 1
+        ring))
+  have bigger := mul_lt_mul_of_pos_right hbad (by norm_num : (0 : ℤ) < 81879)
+  nlinarith only [impossible, bigger]
+theorem section_capacity {w T s d} (h : FixedWord w T s d) (hd : d < 180265) (cap : ℕ)
+    (hsection : ∀ i : I, (∃ γ ∈ T, (s γ).eval (node i) ≠ w i) →
+      (T.filter fun γ => (s γ).eval (node i) = w i).card ≤ cap) :
+    (180265 - d) * T.card ≤ 81879 * cap + (180265 - d) := by
+  classical
+  by_cases hm : T.card ≤ 1
+  · have hb := Nat.mul_le_mul_left (180265 - d) hm
+    simp only [Nat.mul_one] at hb
+    omega
+  let hits (γ : K) : Finset I := univ.filter fun i => (s γ).eval (node i) = w i
+  let common : Finset I := univ.filter fun i => ∀ γ ∈ T, (s γ).eval (node i) = w i
+  let nodes : Finset I := univ \ common
+  have common_le (γ : K) (hγ : γ ∈ T) : common ⊆ hits γ := by
+    intro i hi
+    exact mem_filter.mpr ⟨mem_univ _, (mem_filter.mp hi).2 γ hγ⟩
+  have hit_count (γ : K) (hγ : γ ∈ T) : 180265 ≤ (hits γ).card := by
+    obtain ⟨B, hB, hval⟩ := h.hits γ hγ
+    exact hB.trans (card_le_card fun i hi => mem_filter.mpr ⟨mem_univ _, hval i hi⟩)
+  have pair_count (a : K) (ha : a ∈ T) (b : K) (hb : b ∈ T) (hab : a ≠ b) :
+      (hits a ∩ hits b).card ≤ d := by
+    let P := s a - s b
+    have hp : P ≠ 0 := sub_ne_zero.mpr fun eq => hab (h.distinct ha hb eq)
+    refine (FrobeniusLocator.Strata.root_nodes_card_le node IRSProfile.domain.injective
+      P hp _ ?_).trans ((natDegree_sub_le _ _).trans (max_le (h.degree a ha) (h.degree b hb)))
+    intro i hi
+    change ((s a) - (s b)).eval (node i) = 0
+    rw [eval_sub, (mem_filter.mp (mem_inter.mp hi).1).2, (mem_filter.mp (mem_inter.mp hi).2).2,
+      sub_self]
+  obtain ⟨a, ha, b, hb, hab⟩ := one_lt_card.mp (by omega : 1 < T.card)
+  have hcommon : common.card ≤ d :=
+    (card_le_card (subset_inter (common_le a ha) (common_le b hb))).trans
+      (pair_count a ha b hb hab)
+  let x := 180265 - common.card
+  let t := d - common.card
+  have ht : t = x - (180265 - d) := by dsimp [t, x]; omega
+  have hx : 180265 - d ≤ x := by dsimp [x]; omega
+  have hnodes : nodes.card = x + 81879 := by
+    rw [card_sdiff_of_subset (subset_univ common), card_univ, IRSProfile.card_index]
+    dsimp [x]
+    omega
+  have exists_trim (γ : K) : ∃ B : Finset I, γ ∈ T → B ⊆ hits γ \ common ∧ B.card = x := by
+    by_cases hγ : γ ∈ T
+    · have hc := hit_count γ hγ
+      have hsize : x ≤ (hits γ \ common).card := by
+        rw [card_sdiff_of_subset (common_le γ hγ)]
+        dsimp [x]
+        omega
+      obtain ⟨B, hB, hcard⟩ := exists_subset_card_eq hsize
+      exact ⟨B, fun _ => ⟨hB, hcard⟩⟩
+    · exact ⟨∅, fun h => (hγ h).elim⟩
+  choose B hB using exists_trim
+  have into_nodes (γ : K) (hγ : γ ∈ T) : B γ ⊆ nodes := by
+    intro i hi
+    exact mem_sdiff.mpr ⟨mem_univ _, (mem_sdiff.mp ((hB γ hγ).1 hi)).2⟩
+  have overlap (a : K) (ha : a ∈ T) (b : K) (hb : b ∈ T) (hab : a ≠ b) :
+      (B a ∩ B b).card ≤ t := by
+    have cover : (B a ∩ B b) ∪ common ⊆ hits a ∩ hits b := by
+      intro i hi
+      rcases mem_union.mp hi with hi | hi
+      · exact mem_inter.mpr ⟨(mem_sdiff.mp ((hB a ha).1 (mem_inter.mp hi).1)).1,
+          (mem_sdiff.mp ((hB b hb).1 (mem_inter.mp hi).2)).1⟩
+      · exact mem_inter.mpr ⟨common_le a ha hi, common_le b hb hi⟩
+    have disj : Disjoint (B a ∩ B b) common := disjoint_left.mpr fun i hi hi' =>
+      (mem_sdiff.mp (into_nodes a ha (mem_inter.mp hi).1)).2 hi'
+    have hc := (card_le_card cover).trans (pair_count a ha b hb hab)
+    rw [card_union_of_disjoint disj] at hc
+    dsimp [t]
+    omega
+  have occ_le (i : I) (hi : i ∈ nodes) : (T.filter fun γ => i ∈ B γ).card ≤ cap := by
+    have proper : ∃ γ ∈ T, (s γ).eval (node i) ≠ w i := by
+      by_contra! hc
+      exact (mem_sdiff.mp hi).2 (mem_filter.mpr ⟨mem_univ _, hc⟩)
+    refine (card_le_card ?_).trans (hsection i proper)
+    intro γ hγ
+    obtain ⟨hγ, hi⟩ := mem_filter.mp hγ
+    exact mem_filter.mpr ⟨hγ, (mem_filter.mp (mem_sdiff.mp ((hB γ hγ).1 hi)).1).2⟩
+  obtain ⟨second, first⟩ := occupancy T nodes B x t cap
+    (fun γ hγ => ⟨into_nodes γ hγ, (hB γ hγ).2⟩) overlap occ_le
+  rw [hnodes, ht] at second
+  rw [hnodes] at first
+  exact incidence_arithmetic _ _ _ _ (by omega) (by omega) hx second first
 end
 end K1_14_6
 end
@@ -881,6 +1003,19 @@ namespace K1_14_2_4
 noncomputable section
 open K1 K1_14 K1_14_2 Polynomial MvPolynomial Finset
 open scoped BigOperators
+def c1 : Prop :=
+  ∀ (T : Finset K) (z : K → K) (s : K → K[X]) (J : Ideal RootAmbient) (g H : ℕ),
+    0 < g → g ≤ 8 → SmallRootCurve J g H → Set.InjOn z (T : Set K) →
+    (∀ γ ∈ T, OnRoot J (z γ) (s γ)) →
+    ∃ U ⊆ T, (T \ U).card ≤ taylorPower g * H ∧
+      ∃ n : ℕ, Nonempty (RegularChart U s g H n)
+def c2 : Prop :=
+  ∀ (n d g : ℕ), 0 < d → d < p → 0 < g →
+    ∀ f : FamilyEquation n, FamilyDegree f g →
+    ∃ C : TaylorForms n (ordinateBound d g) (taylorPower d),
+      ∀ (t : Fin n → L) (S : K[X]), S.natDegree ≤ d →
+        (specialize f t).eval (liftPoly S) = 0 →
+        (specialize f t).derivative.eval (liftPoly S) ≠ 0 → C.Recovers t S
 def c3 : Prop :=
   ∀ (n a b Dparam Dy : ℕ), 0 < a → 0 < b →
     ∀ J : Ideal (SourceRing n), J.IsPrime →
@@ -932,6 +1067,134 @@ private theorem proper_section_card {σ : Type} [Finite σ]
       have := dim Q hQ
       omega
     simp [hB]
+private theorem regular_count {n U s g H w} (A : RegularChart U s g H n)
+    (hw : K1_14_6.FixedWord w U s endpointDegree)
+    (C : TaylorForms n (ordinateBound endpointDegree g) (taylorPower endpointDegree))
+    (hrec : ∀ γ ∈ U, C.Recovers (A.parameter γ) (s γ)) (hdegree : c3) :
+    (U.card : ℚ) ≤
+      (11697 / 6520 : ℚ) * ((taylorPower endpointDegree * (g * H) +
+        ordinateBound endpointDegree g * H : ℕ) : ℚ) + 1 := by
+  classical
+  let a := ordinateBound endpointDegree g
+  let b := taylorPower endpointDegree
+  let D := b * (g * H) + a * H
+  have ha : 0 < a := by simp [a, ordinateBound]
+  have hb : 0 < b := by decide
+  let P := linearIdeal a b A.source
+  let M := bidegreeMap (Fin n) FX a b
+  let v (γ : K) := markedPoint (A.parameter γ) (s γ)
+  let point (γ : K) := monomialPoint (bidegreeExponents (Fin n) a b) (v γ)
+  have hP : P.IsPrime := A.source_prime.comap M
+  let _ : P.IsPrime := hP
+  have hdim_eq : (affineHilbertPolynomial P).natDegree =
+      (affineHilbertPolynomial A.source).natDegree :=
+    natDegree_affineHilbertPolynomial_comap_bidegreeMap ha hb _
+  have hdim := hdim_eq.trans_le A.source_dim
+  have hdeg (h : (affineHilbertPolynomial P).natDegree = 1) : affineDegree P ≤ (D : ℚ) :=
+    hdegree n a b (g * H) H ha hb A.source A.source_prime (hdim_eq.symm.trans h) A.slices
+  have eval_linear (γ : K) (F : LinearRing n a b) :
+      MvPolynomial.aeval (point γ) F = MvPolynomial.aeval (v γ) (M F) := by
+    rw [show M = monomialMap FX (bidegreeExponents (Fin n) a b) from
+      bidegreeMap_eq_monomialMap a b]
+    exact aeval_monomialPoint _ _
+  have hpoints (γ : K) (hγ : γ ∈ U) : point γ ∈ zeroLocus FX P := by
+    intro F hF
+    rw [eval_linear]
+    exact A.lies_on γ hγ _ hF
+  have hinj : Set.InjOn point (U : Set K) := by
+    intro γ hγ η hη heq
+    have hv := (monomialPoint_injective (fun i =>
+      single_mem_bidegreeExponents ha hb i) : Function.Injective
+      (monomialPoint (E := FX) (bidegreeExponents (Fin n) a b))) heq
+    exact hw.distinct hγ hη (Polynomial.map_injective _ (algebraMap K L).injective
+      (IsFractionRing.injective L[X] FX (congrFun hv none)))
+  have hsection (i : I) (hmiss : ∃ γ ∈ U, (s γ).eval (node i) ≠ w i) :
+      (U.filter fun γ => (s γ).eval (node i) = w i).card ≤ D := by
+    let x := node i
+    let y := w i
+    let q := C.numerator x - MvPolynomial.C (seedEmbedding y) * C.denominator
+    have hq : q ∈ restrictBidegree (Fin n) FX a b := by
+      refine Submodule.sub_mem _ (C.numerator_bound x) ?_
+      rw [← MvPolynomial.smul_eq_C_mul]
+      exact Submodule.smul_mem _ _ C.denominator_bound
+    let Q := bidegreeLift q hq
+    have hcut (γ : K) (hγ : γ ∈ U) :
+        MvPolynomial.aeval (point γ) Q = 0 ↔ (s γ).eval x = y := by
+      have hr := hrec γ hγ
+      change MvPolynomial.aeval (v γ) C.denominator ≠ 0 ∧
+        (∀ x, MvPolynomial.aeval (v γ) (C.numerator x) =
+          MvPolynomial.aeval (v γ) C.denominator * seedEmbedding ((s γ).eval x)) at hr
+      rw [eval_linear, show M Q = q from bidegreeMap_bidegreeLift q hq]
+      dsimp only [q]
+      rw [map_sub, map_mul, MvPolynomial.aeval_C, Algebra.algebraMap_self_apply, hr.2 x,
+        sub_eq_zero, mul_comm (seedEmbedding y), mul_right_inj' hr.1]
+      exact seedEmbedding.injective.eq_iff
+    have hproper : Q ∉ P := by
+      obtain ⟨γ, hγ, hγmiss⟩ := hmiss
+      exact fun hQ => hγmiss ((hcut γ hγ).mp (hpoints γ hγ Q hQ))
+    refine proper_section_card _ point (hinj.mono (filter_subset _ _)) hproper
+      (totalDegree_bidegreeLift_le_one q hq) (fun γ hγ => ?_) hdim hdeg
+    obtain ⟨hγU, hγhit⟩ := mem_filter.mp hγ
+    exact mem_zeroLocus_sup_span_singleton_iff.mpr ⟨hpoints γ hγU, (hcut γ hγU).mpr hγhit⟩
+  have hcount := K1_14_6.section_capacity hw (by decide) D hsection
+  change 45640 * U.card ≤ 81879 * D + 45640 at hcount
+  have hcountQ : (45640 : ℚ) * (U.card : ℚ) ≤ 81879 * (D : ℚ) + 45640 := by
+    exact_mod_cast hcount
+  change (U.card : ℚ) ≤ (11697 / 6520 : ℚ) * (D : ℚ) + 1
+  linarith only [hcountQ]
+set_option maxHeartbeats 800000 in
+theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) : K1_14_2.c4 := by
+  intro u del M Γ F hM T hT J g H hg h8 hcurve hmarks
+  have hlabel : Set.InjOn M.label (T : Set K) := by
+    intro γ _ η _ h
+    exact sub_left_inj.mp h
+  obtain ⟨U, hU, hexc, n, ⟨A⟩⟩ :=
+    h1 T M.label F.scalar J g H hg h8 hcurve hlabel hmarks
+  have hw : K1_14_6.FixedWord M.word U F.scalar endpointDegree := by
+    refine ⟨F.distinct.mono (hU.trans hT), ?_, ?_⟩
+    · intro γ hγ
+      rcases (F.mark γ (hT (hU hγ))).scalar_degree with hzero | hd
+      · simp [hzero]
+      · have hc : ((F.scalar γ).natDegree : ℤ) ≤ (endpointDegree : ℤ) := by
+          change ((F.scalar γ).natDegree : ℤ) ≤ 134625
+          omega
+        exact_mod_cast hc
+    · intro γ hγ
+      let m := F.mark γ (hT (hU hγ))
+      exact ⟨m.bad.support, m.bad.agreement, m.scalar_hits⟩
+  obtain ⟨C, hreconstruct⟩ :=
+    h2 n endpointDegree g (by decide) (by decide) hg A.equation A.equation_degree
+  have hregular := regular_count A hw C
+    (fun γ hγ => hreconstruct _ _ (hw.degree γ hγ) (A.root γ hγ) (A.simple γ hγ)) h3
+  let b := taylorPower endpointDegree
+  have hsum : g + (g - 1) = taylorPower g := by unfold taylorPower; omega
+  have hmixed : b * (g * H) + ordinateBound endpointDegree g * H =
+      (b * taylorPower g + 1) * H := by
+    rw [← hsum]
+    dsimp [ordinateBound, b]
+    ring
+  rw [hmixed] at hregular
+  have hcast : (taylorPower g : ℚ) = 2 * (g : ℚ) - 1 := by
+    unfold taylorPower
+    rw [Nat.cast_sub (by omega)]
+    push_cast
+    ring
+  have hgQ : (1 : ℚ) ≤ (g : ℚ) := by exact_mod_cast hg
+  calc
+    (T.card : ℚ) = ((T \ U).card : ℚ) + (U.card : ℚ) := by
+      exact_mod_cast (card_sdiff_add_card_eq_card hU).symm
+    _ ≤ ((taylorPower g * H : ℕ) : ℚ) +
+        ((11697 / 6520 : ℚ) * (((b * taylorPower g + 1) * H : ℕ) : ℚ) + 1) :=
+      add_le_add (Nat.cast_le.mpr hexc) hregular
+    _ ≤ ((taylorPower g * H : ℕ) : ℚ) +
+        ((11697 / 6520 : ℚ) * (((b * taylorPower g + 1) * H : ℕ) : ℚ) + g) :=
+      add_le_add le_rfl (add_le_add le_rfl hgQ)
+    _ = rootPrice g H := by
+      unfold rootPrice
+      push_cast
+      rw [hcast]
+      dsimp only [b, taylorPower]
+      ring
 end
 end K1_14_2_4
 end
@@ -4967,6 +5230,66 @@ private theorem positive_factor_at_root {R E : Type*} [CommRing R] [IsDomain R]
   have hder : g.derivative = 0 := by
     rw [Polynomial.eq_C_of_natDegree_eq_zero hd, Polynomial.derivative_C]
   exact hreg (by rw [hq, Polynomial.derivative_mul]; simp [hder, hgz])
+theorem regularComponents {a c e b : ℕ} (ha : 0 < a) (hc : 0 < c)
+    (f : SourcePolynomial F) (hf : f ≠ 0) (he : f.natDegree ≤ e)
+    (hb : ∀ i, (f.coeff i).totalDegree ≤ b) :
+    ∃ Q : Finset (Ideal (MvPolynomial (bidegreeExponents (Fin 2) a c) F)),
+      (∀ P ∈ Q, P.IsPrime ∧ (affineHilbertPolynomial P).natDegree = 2) ∧
+      Q.card ≤ e ∧
+      (∑ P ∈ Q, affineDegree P) ≤ (e * c ^ 2 + 2 * b * a * c : ℕ) ∧
+      ∀ x : Option (Fin 2) → F, f.eval₂ (MvPolynomial.eval (x ∘ some)) (x none) = 0 →
+        f.derivative.eval₂ (MvPolynomial.eval (x ∘ some)) (x none) ≠ 0 →
+        ∃ P ∈ Q, monomialPoint (bidegreeExponents (Fin 2) a c) x ∈ zeroLocus F P := by
+  classical
+  let phi := bidegreeMap (Fin 2) F a c
+  let fs := ((factors f).filter (fun g => 0 < g.natDegree)).toFinset
+  let component := fun g : SourcePolynomial F => (Ideal.span {flatten g}).comap phi
+  let Q := fs.image component
+  have hminimal {g : SourcePolynomial F} (hg : g ∈ fs) :
+      component g ∈ ((Ideal.span {flatten f}).comap phi).minimalPrimes := by
+    have hfac := (Multiset.mem_filter.mp (Multiset.mem_toFinset.mp hg)).1
+    have h := Ideal.minimalPrimes_comap_of_surjective
+      (f := (optionEquivLeft F (Fin 2)).toRingHom)
+      (optionEquivLeft F (Fin 2)).surjective (factor_span_minimal hf hfac)
+    rw [comap_span_flatten, comap_span_flatten] at h
+    exact Ideal.minimalPrimes_comap_of_surjective (bidegreeMap_surjective ha hc) h
+  refine ⟨Q, ?_, Finset.card_image_le.trans ((positiveFactors_card_le f hf).trans he), ?_, ?_⟩
+  · intro P hP
+    obtain ⟨g, hg, rfl⟩ := Finset.mem_image.mp hP
+    have hp := (hminimal hg).isPrime
+    have hg0 := (prime_of_factor g
+      (Multiset.mem_filter.mp (Multiset.mem_toFinset.mp hg)).1).ne_zero
+    have hflat : flatten g ≠ 0 := by
+      simpa only [map_zero] using (flatten : SourcePolynomial F ≃ₐ[F] _).injective.ne hg0
+    have hproper : Ideal.span {flatten g} ≠ ⊤ := by
+      intro ht
+      exact hp.ne_top (by simp [component, ht])
+    exact ⟨hp, by
+      simpa [component, phi, Nat.card_eq_fintype_card] using
+        natDegree_affineHilbertPolynomial_comap_bidegreeMap_span_singleton ha hc hflat hproper⟩
+  · have hsub : Q ⊆ ((Ideal.span {flatten f}).comap phi).minimalPrimesFinset := by
+      intro P hP
+      obtain ⟨g, hg, rfl⟩ := Finset.mem_image.mp hP
+      exact Ideal.mem_minimalPrimesFinset.mpr (hminimal hg)
+    have hflat : flatten f ≠ 0 := by
+      simpa only [map_zero] using (flatten : SourcePolynomial F ≃ₐ[F] _).injective.ne hf
+    have hbound := affineDegree_comap_bidegreeMap_span_singleton_le ha hc hflat
+      (flatten_bound f he hb)
+    have hsum := sum_affineDegree_minimalPrimes_comap_bidegreeMap_span_singleton_le ha hc
+      (flatten f)
+    exact (Finset.sum_le_sum_of_subset_of_nonneg hsub (fun P _ _ => affineDegree_nonneg P)).trans
+      (hsum.trans (by simpa [phi, Nat.card_eq_fintype_card] using hbound))
+  · intro x hroot hreg
+    obtain ⟨g, hg, hd, hz⟩ := positive_factor_at_root f hf _ _ hroot hreg
+    refine ⟨component g, Finset.mem_image.mpr
+      ⟨g, Multiset.mem_toFinset.mpr (Multiset.mem_filter.mpr ⟨hg, hd⟩), rfl⟩, ?_⟩
+    change monomialPoint _ x ∈ zeroLocus F ((Ideal.span {flatten g}).comap phi)
+    rw [show phi = monomialMap F (bidegreeExponents (Fin 2) a c) from
+      bidegreeMap_eq_monomialMap a c,
+      monomialPoint_mem_zeroLocus_comap_iff (fun i => single_mem_bidegreeExponents ha hc i),
+      mem_zeroLocus_iff_le_ker_aeval, Ideal.span_singleton_le_iff_mem, RingHom.mem_ker]
+    change MvPolynomial.eval x (flatten g) = 0
+    rwa [eval_flatten]
 end
 end K1_14_6_2
 end
@@ -5401,6 +5724,19 @@ section
 namespace K1_14_6
 noncomputable section
 open K1 K1_14 Polynomial
+def c1 : Prop :=
+  ∀ d e b : ℕ, 0 < d → d < p → ∀ f : Equation,
+    0 < f.natDegree → f.natDegree ≤ e → SeedBound f b →
+    ∃ C : TaylorChart d e b, ∀ (z : K) (S : K[X]), S.natDegree ≤ d →
+      atMark f z S = 0 → atMark f.derivative z S ≠ 0 → C.Recovers z S
+def c2 : Prop :=
+  ∀ d e b : ℕ, 0 < d → 0 < b → ∀ f : Equation,
+    0 < f.natDegree → f.natDegree ≤ e → f.IsPrimitive →
+    (f.map (algebraMap Seeds (FractionRing Seeds))).Separable → SeedBound f b →
+    ∀ (T : Finset K) (z : K → K) (s : K → K[X]), Set.InjOn z (T : Set K) →
+      (∀ γ ∈ T, atMark f (z γ) (s γ) = 0 ∧ atMark f.derivative (z γ) (s γ) ≠ 0) →
+      ∀ C : TaylorChart d e b, (∀ γ ∈ T, C.Recovers (z γ) (s γ)) →
+        Nonempty (LinearCover T s d e b)
 end
 end K1_14_6
 end
@@ -5817,6 +6153,62 @@ private theorem extend_mem {P : Biform} {a c : ℕ}
   rw [mem_restrictBidegree] at hP ⊢
   intro m hm
   exact hP m (support_map_subset _ _ hm)
+private theorem eval_valueCut {d e b : ℕ} (C : TaylorChart d e b)
+    {z : K} {S : K[X]} (h : C.Recovers z S) (x a : K) :
+    MvPolynomial.eval (closedPoint z S)
+      (MvPolynomial.map ι (C.numerator x - seedEmbedding a • C.denominator)) = 0 ↔
+      S.eval x = a := by
+  obtain ⟨hD, hN⟩ := h
+  rw [closedPoint, eval_extend, map_sub, MvPolynomial.smul_eq_C_mul, map_mul,
+    MvPolynomial.eval_C, hN x]
+  rw [← map_zero ι, ι.injective.eq_iff, sub_eq_zero, mul_comm (seedEmbedding a),
+    mul_right_inj' hD]
+  exact seedEmbedding.injective.eq_iff
+theorem proof : K1_14_6.c2 := by
+  classical
+  intro d e b hd hb f hf0 hfe _hprimitive _hseparable hfseed T z s hz hroots C hC
+  let a := ordinateBound d e
+  let c := parameterBound d b
+  have ha : 0 < a := by simp [a, ordinateBound]
+  have hc : 0 < c := by
+    change 0 < taylorPower d * b
+    exact Nat.mul_pos (by unfold taylorPower; omega) hb
+  let F := extendEquation f
+  have hnat : F.natDegree = f.natDegree :=
+    Polynomial.natDegree_map_eq_of_injective (MvPolynomial.map_injective _ ι.injective) f
+  have hF : F ≠ 0 := Polynomial.ne_zero_of_natDegree_gt (by rw [hnat]; exact hf0)
+  have hcoeff : ∀ j, (F.coeff j).totalDegree ≤ b := by
+    intro j
+    change ((f.map (MvPolynomial.map ι)).coeff j).totalDegree ≤ b
+    rw [Polynomial.coeff_map]
+    exact (Finset.sup_mono (support_map_subset _ _)).trans (hfseed j)
+  obtain ⟨components, hdim, hcount, hsum, hcover⟩ :=
+    regularComponents ha hc F hF (hnat.trans_le hfe) hcoeff
+  let pt := fun γ => monomialPoint (bidegreeExponents (Fin 2) a c) (closedPoint (z γ) (s γ))
+  let sectionPoly := fun x y => MvPolynomial.map ι (C.numerator x - seedEmbedding y • C.denominator)
+  have hsection (x y : K) : sectionPoly x y ∈ restrictBidegree (Fin 2) ClosedField a c :=
+    extend_mem (Submodule.sub_mem _ (C.numerator_bound x)
+      (Submodule.smul_mem _ _ C.denominator_bound))
+  let cut := fun x y => bidegreeLift (sectionPoly x y) (hsection x y)
+  refine ⟨⟨pt, ?_, cut, fun x y => totalDegree_bidegreeLift_le_one _ _, ?_,
+    components, fun P hP => (hdim P hP).1, fun P hP => (hdim P hP).2, ?_, hcount, ?_⟩⟩
+  · intro γ hγ η hη hpt
+    have hcoords : closedPoint (z γ) (s γ) = closedPoint (z η) (s η) :=
+      monomialPoint_injective (fun i => single_mem_bidegreeExponents ha hc i) hpt
+    have hfirst := congrFun hcoords (some (0 : Fin 2))
+    change ι (seedEmbedding (z γ)) = ι (seedEmbedding (z η)) at hfirst
+    exact hz hγ hη (seedEmbedding.injective (ι.injective hfirst))
+  · intro γ hγ x y
+    change aeval (monomialPoint _ (closedPoint (z γ) (s γ))) (bidegreeLift _ _) = 0 ↔ _
+    rw [aeval_monomialPoint, ← bidegreeMap_eq_monomialMap, bidegreeMap_bidegreeLift]
+    exact eval_valueCut C (hC γ hγ) x y
+  · intro γ hγ
+    apply hcover (closedPoint (z γ) (s γ))
+    · rw [show F = extendEquation f from rfl, extendEquation_eval, (hroots γ hγ).1, map_zero]
+    · rw [show F.derivative = extendEquation f.derivative from Polynomial.derivative_map _ _,
+        extendEquation_eval]
+      simpa only [map_zero] using ι.injective.ne (hroots γ hγ).2
+  · exact hsum
 end
 end K1_14_6_2
 end

@@ -58,6 +58,10 @@ noncomputable def euler (D i : ℕ) (f : R[X]) : R[X] :=
   ∑ r ∈ Finset.range (i+1),
     C ((-1 : R) ^ r * (D-r).choose (i-r)) * (X^r * hasseDeriv r f)
 
+theorem euler_add (D i : ℕ) (f g : R[X]) :
+    euler D i (f+g) = euler D i f + euler D i g := by
+  unfold euler
+  simp only [map_add, mul_add, Finset.sum_add_distrib]
 
 theorem coeff_euler {D i k : ℕ} (f : R[X]) (hk : k ≤ D) :
     (euler D i f).coeff k = ((D-k).choose i : R) * f.coeff k := by

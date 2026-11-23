@@ -27,7 +27,7 @@ import Mathlib.Topology.Algebra.MvPolynomial
 import ProximityPrize.SubmissionLower.Fast042
 import ProximityPrize.SubmissionLower.Pack_K1_14_2_1Split
 import ProximityPrize.SubmissionLower.Pack_K1_14_2_2Split
-import ProximityPrize.SubmissionLower.Fast040
+import ProximityPrize.SubmissionLower.SoloK1_13_1_1ArithmeticLogic
 set_option Elab.async false
 set_option autoImplicit true
 section
@@ -145,6 +145,14 @@ section
 set_option maxRecDepth 8192
 set_option maxHeartbeats 0
 end
+set_option maxRecDepth 8192 in
+set_option maxHeartbeats 0 in
+private theorem retained_prices_finite :
+    ∀ (b : Fin 20) (j : Fin 7) (t : Fin 3),
+      let a : Shape := ⟨b.val, j.val, t.val⟩
+      Valid a → RetainedBox a →
+      fatPrice a ≤ (if a.t = 1 then 37000000000000000 else 48500000000000000) * a.t :=
+  by decide
 def layerTerm (r y : Shape) (L k : ℕ) : ℕ :=
   remaining ((k + 1) * r.b + (k + 1 - L) * y.b)
     ((k + 1) * r.j + (k + 1 - L) * y.j)
@@ -870,6 +878,10 @@ namespace K1_14_2_2_2
 noncomputable section
 open K1 K1_14 K1_14_2 K1_14_2_2 K1_14_3_2 Polynomial
 open scoped BigOperators Classical
+def c2 : Prop :=
+  ∀ f : Equation, Irreducible f → 0 < f.natDegree → f.natDegree < p →
+    ∃ g a, K1_14_3.IsClearing f g a ∧ ProperPair (C f) (K1_14_3.ordinaryCutter g) ∧
+      ∀ z S, atMark f z S = 0 → jetAt (K1_14_3.ordinaryCutter g) z S = 0
 def c3 : Prop :=
   ∀ P Q : Jet, ProperPair P Q →
     ∃ S : Finset (Ideal Ambient), ComponentsOn P Q S ∧
@@ -2441,6 +2453,16 @@ private theorem jetAt_mul (z : K) (S : K[X]) (P Q : Jet) :
 private theorem jetAt_ordinary (z : K) (S : K[X]) (f : Equation) :
     jetAt (C f) z S = atMark f z S := by
   simp [jetAt, atMark]
+private theorem jetAt_seed (z : K) (S : K[X]) (a : Seeds) :
+    jetAt (C (C a)) z S = graphEval z a := by
+  simp [jetAt]
+private theorem jetAt_fixed (z : K) (S : K[X]) (G : ODE) :
+    jetAt (fixedIncl G) z S = fixedAt G S := by
+  rw [← eval_toJet, eval_fixed]
+private theorem row_at_mark {P R : Jet} {G : ODE} {a : Seeds} {F : Equation}
+    (h : P = fixedIncl G * (C (C a) * (C F * R))) (z : K) (S : K[X]) :
+    jetAt P z S = fixedAt G S * (graphEval z a * (atMark F z S * jetAt R z S)) := by
+  rw [h, jetAt_mul, jetAt_mul, jetAt_mul, jetAt_fixed, jetAt_seed, jetAt_ordinary]
 end
 end K1_14_2_2_2_1
 end
@@ -2738,6 +2760,18 @@ def compatible (P Q : Jet) (q : Surface) : Prop :=
   ∀ f : Equation, Irreducible f → 0 < f.natDegree → C f ∣ P → C f ∣ Q →
     C f ∈ q.asIdeal → ∀ g a, IsClearing f g a →
       chainCutter g ∈ q.asIdeal
+def OrdinaryGraphs (P Q : Jet) (qs : Finset Surface) : Prop :=
+  ∀ f : Equation, Irreducible f → 0 < f.natDegree → f.natDegree < p →
+    C f ∣ P → C f ∣ Q →
+    ∃ g a, IsClearing f g a ∧ K1_14_3_2.ProperPair (C f) (chainCutter g) ∧
+      ∀ q ∈ qs, C f ∈ q.asIdeal → chainCutter g ∈ q.asIdeal
+def stagePass {h : ℕ} (rows : Banks) (pairs : ∀ i : Fin 4, BufferedPair h rows i)
+    (i : Fin 5) (q : Surface) : Prop :=
+  if hi : i.val < 4 then
+    let j : Fin 4 := ⟨i.val, hi⟩
+    BankVanishes rows (cheapShape j) q ∧ BankVanishes rows (layeredShape j) q ∧
+      compatible (pairs j).cheap (pairs j).layered q
+  else BankVanishes rows fullShape q
 end
 end K1_14_3R
 end
@@ -2762,6 +2796,9 @@ private def stageCheck (i : Fin 4) : Prop :=
 private instance (i : Fin 4) : Decidable (stageCheck i) := by
   unfold stageCheck Certificate
   infer_instance
+set_option maxHeartbeats 0 in
+set_option maxRecDepth 16000 in
+private theorem certificates : ∀ i : Fin 4, stageCheck i := by decide +kernel
 private theorem fixed_of_no_seed (G : Jet) (hn : ¬ K1_14_2.UsesSeed G) :
     G ∈ Set.range fixedEmbedding := by
   let ev := MvPolynomial.eval (fun _ : Fin 2 => (0 : FX))

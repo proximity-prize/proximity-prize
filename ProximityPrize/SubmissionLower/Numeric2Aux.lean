@@ -102,10 +102,16 @@ structure Rung where
   listBound : ℕ
 abbrev target : Rung := ⟨179944,336691697,1073741824,2369,0x3aca17061ce8c43,8491707658716571⟩
 abbrev agreement := target.agreement
+abbrev radiusNumerator := target.numerator
+abbrev radiusDenominator := target.denominator
 abbrev lowCutoff : ℤ := target.lowEnd
 abbrev t : ℕ := blockLength - agreement
 abbrev L : ℕ := agreement - k
 abbrev heightCap : ℕ := t + 1 - L - 2
+def queryRadius : ℝ≥0 := claimedRadius radiusNumerator radiusDenominator
+def radius : ℝ := queryRadius
+def BadFamily (u : Words) (Γ : Finset K) : Prop :=
+  ∀ γ ∈ Γ, IsMCA (AffineLineGenerator K) IRSProfile.baseCode γ u radius
 structure BadMarkAt (A : ℕ) (u : Words) (γ : K) where
   support : Finset I
   decoder : K[X]
@@ -114,7 +120,9 @@ structure BadMarkAt (A : ℕ) (u : Words) (γ : K) where
   hits : ∀ i ∈ support, decoder.eval (node i) = u 0 i + γ * u 1 i
   nonjoint : ¬ (ExtendsOn node (u 0) k support ∧ ExtendsOn node (u 1) k support)
 abbrev BadMark := BadMarkAt agreement
+def ordinary (u : Words) := hankel node (u 0) (u 1) L t
 def twoBlock (u : Words) := stacked p node (u 0) (u 1) L t
+def firstRank (u : Words) := GenericLayer.genericRank (ordinary u)
 def stackRank (u : Words) := GenericLayer.genericRank (twoBlock u)
 def nullity (u : Words) := GenericLayer.genericNullity (twoBlock u)
 def Normal (u : Words) (γ : K) : Prop :=
@@ -248,6 +256,9 @@ abbrev AnchoredFamily {u deleted} (M : AnchorModel u deleted) := FamilyAt agreem
 abbrev AnchorModel.overhead {u deleted} (M : AnchorModel u deleted) := ModelAt.overhead M
 abbrev AnchorModel.label {u deleted} (M : AnchorModel u deleted) := ModelAt.label M
 abbrev AnchorModel.amplitude {u deleted} (M : AnchorModel u deleted) := ModelAt.amplitude M
+abbrev AnchorModel.decoder {u deleted} (M : AnchorModel u deleted) {γ : K} (B : BadMark u γ) :=
+  ModelAt.decoder M B
+def listSource : CJ0.Source := ⟨53,72,21,10, CJ0.fullBox 72 21 10⟩
 structure HighRow where
   lo : ℕ
   hi : ℕ
@@ -438,6 +449,9 @@ def VectorDots (q u : ℕ) (z : Block) (j : ℕ) : Prop :=
   ∀ i < outer (!z.bank.onRows) q,
     ∀ k < fiber (!z.bank.onRows) q u i, dot q u z j i k % (CJ0.p : ℤ) = 0
 abbrev Cell := ℕ × ℕ × ℕ
+def Checks : List Cell → Prop
+  | [] => True
+  | (q,u,r)::xs => (CJ0.blockMatrix source q ((u : ℤ)-20)).rank ≤ r ∧ Checks xs
 def boundIn (q u d : ℕ) : List Cell → ℕ
   | [] => d
   | (a,b,r)::xs => if q = a ∧ u = b then r else boundIn q u d xs

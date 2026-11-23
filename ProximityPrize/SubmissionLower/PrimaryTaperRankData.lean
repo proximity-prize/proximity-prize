@@ -4,288 +4,6 @@ set_option Elab.async false
 set_option maxRecDepth 40000
 set_option maxHeartbeats 0
 
-namespace LambdaTaperFast
-open TaperBudget (natOld rankNat natCell cap valuePower sumChunk rowSum sumRange)
-open K1_13_2_3_7 (countParts natKernel)
-open private removed from ProximityPrize.SubmissionLower.PrimaryTaperBudget
-
-private def target (d j h r : ℕ) (low atH : ℕ × ℕ) : ℕ :=
-  if r = 0 then 0 else
-  match low, atH, countParts (d-r) (h-3*r), countParts (d-r) (1650-j) with
-  | (c,e), (c',e'), (f,g), (k,l) => e+c'+g+k - (c+e'+f+l)
-
-private theorem old_split (a b c e c' e' f g k l : ℕ) :
-    (a+e-(b+c)) - (a+e'+f+l-(b+c'+g+k)) =
-      min (a+e-(b+c)) (e+c'+g+k-(c+e'+f+l)) := by omega
-
-private theorem target_eq (d j h r : ℕ) :
-    natOld d j - natKernel d j h r =
-      min (natOld d j) (target d j h r (countParts d (1650-j)) (countParts d h)) := by
-  rcases ht : countParts d 1651 with ⟨a,b⟩
-  rcases hl : countParts d (1650-j) with ⟨c,e⟩
-  by_cases hz : r = 0
-  · simp [natOld, natKernel, target, ht, hl, hz]
-  · rcases hh : countParts d h with ⟨c',e'⟩
-    rcases ha : countParts (d-r) (h-3*r) with ⟨f,g⟩
-    rcases hb : countParts (d-r) (1650-j) with ⟨k,l⟩
-    simpa only [natOld, natKernel, target, ht, hl, hh, ha, hb, hz, ite_false] using
-      old_split a b c e c' e' f g k l
-
-private def rankFast (d q j p : ℕ) (top : ℕ × ℕ) : ℕ :=
-  if q+j < 4650 then
-    let h := 4650-q-j
-    let low := countParts d (1650-j)
-    let atH := countParts d h
-    let old := top.1 + low.2 - (top.2 + low.1)
-    let a := target d j h (removed d q) low atH
-    if p = 0 then min old a
-    else min (min old a) (old - natKernel (d-p) j h (removed (d-p) q))
-  else 0
-
-private theorem rankFast_eq (d q j p : ℕ) :
-    rankFast d q j p (countParts d 1651) = rankNat d q j p := by
-  by_cases hq : q+j < 4650
-  · simp only [rankFast, rankNat, ite_eq_left hq]
-    change (if p = 0 then min (natOld d j) (target d j (4650-q-j) (removed d q)
-          (countParts d (1650-j)) (countParts d (4650-q-j)))
-      else min (min (natOld d j) (target d j (4650-q-j) (removed d q)
-          (countParts d (1650-j)) (countParts d (4650-q-j))))
-        (natOld d j - natKernel (d-p) j (4650-q-j) (removed (d-p) q))) = _
-    rw [← target_eq]
-    by_cases hp : p = 0
-    · simp [hp]
-    · simp only [ite_eq_right hp]
-      omega
-  · simp [rankFast, rankNat, hq]
-
-private def fastRow (J t : ℕ) : ℕ :=
-  let q := 3514+t
-  let d := cap q
-  let tc := countParts d 1651
-  let tb := countParts 1650 1651
-  sumRange (fun j => rankFast 1650 q j 0 tb - rankFast d q j (valuePower d q j) tc) J
-
-private theorem fastRow_eq (J t : ℕ) : fastRow J t = rowSum J t := by
-  unfold fastRow rowSum
-  apply congrArg (fun f : ℕ → ℕ => sumRange f J)
-  funext j
-  dsimp only [natCell]
-  simp only [rankFast_eq]
-
-private theorem fastRows (s n : ℕ) :
-    sumChunk (fastRow 600) s n = sumChunk (rowSum 600) s n := by
-  simp only [sumChunk, fastRow_eq]
-
-
--- Bounded taper simplifications, proved for the 499 × 600 live rectangle.
-open K1_13_2_3_7 (natDen)
-
-private def debt (d n : ℕ) : ℕ :=
-  if n ≤ d+1 then 0 else natDen (n-d-1) + natDen (n-d-2) + natDen (n-d-3)
-
-private theorem parts_mid (d n : ℕ) (hd : 2 ≤ d) (hn : n ≤ 2*d+3) :
-    countParts d n = (natDen n, debt d n) := by
-  have hm : n ≤ 3*d+1 := by omega
-  have hmin : Nat.min n (3*d+1) = n := Nat.min_eq_left hm
-  unfold countParts debt
-  simp only [hmin]
-  by_cases hs : n ≤ d+1 <;> simp [hs, hn]
-
-private def targetSlim (d j h r low : ℕ) : ℕ :=
-  if r = 0 then 0 else natDen h + low - (natDen (h-3*r) + debt (d-r) (1650-j))
-
-private theorem targetSlim_eq (d j h r : ℕ) (hd : 2 ≤ d-r) (hm : 1651 ≤ 2*(d-r)+3)
-    (hh : h ≤ d+1) (hr : h-3*r ≤ d-r+1) :
-    target d j h r (countParts d (1650-j)) (countParts d h) =
-      targetSlim d j h r (debt d (1650-j)) := by
-  have hl := parts_mid d (1650-j) (by omega) (by omega)
-  have ha := parts_mid d h (by omega) (by omega)
-  have hb := parts_mid (d-r) (h-3*r) hd (by omega)
-  have hc := parts_mid (d-r) (1650-j) hd (by omega)
-  by_cases hz : r = 0
-  · simp [target, targetSlim, hz]
-  · simp only [target, targetSlim, if_neg hz, hl, ha, hb, hc, debt, if_pos hh, if_pos hr, Nat.add_zero]
-    omega
-
-private def rankSmall (d q j p : ℕ) (base : Bool) (oldHi topDebt : ℕ) : ℕ :=
-  let h := 4650-q-j
-  let loDebt := if base then 0 else debt d (1650-j)
-  let old := oldHi + loDebt - (topDebt + natDen (1650-j))
-  let cut := min old (targetSlim d j h (removed d q) loDebt)
-  if p = 0 then cut else min cut (old - natKernel (q+4*j-3000) j h j)
-
-private theorem rankSmall_eq (d q j p : ℕ) (base : Bool)
-    (hd : 1080 ≤ d) (hq : 3514 ≤ q) (hqj : q+j < 4650) (hh : 4650-q-j ≤ d+1)
-    (hb : base = true → d = 1650) (hpv : p ≠ 0 → p = valuePower d q j) :
-    rankSmall d q j p base (natDen 1651) (debt d 1651) =
-      rankFast d q j p (countParts d 1651) := by
-  let r := removed d q
-  let h := 4650-q-j
-  have hr : 2 ≤ d-r := by dsimp [r]; unfold removed; omega
-  have hm : 1651 ≤ 2*(d-r)+3 := by dsimp [r]; unfold removed; omega
-  have hr' : h-3*r ≤ d-r+1 := by change h ≤ d+1 at hh; omega
-  have hSlim := targetSlim_eq d j h r hr hm hh hr'
-  have ht := parts_mid d 1651 (by omega) (by omega)
-  have hl := parts_mid d (1650-j) (by omega) (by omega)
-  have hDebt : (if base then 0 else debt d (1650-j)) = debt d (1650-j) := by
-    cases base
-    · rfl
-    · rw [hb rfl]
-      simp [debt, show 1650-j ≤ 1650+1 by omega]
-  simp only [rankFast, if_pos hqj]
-  change rankSmall d q j p base (natDen 1651) (debt d 1651) =
-    (let low := countParts d (1650-j)
-     let old := (countParts d 1651).1 + low.2 - ((countParts d 1651).2 + low.1)
-     let a := target d j h r low (countParts d h)
-     if p = 0 then min old a else min (min old a) (old - natKernel (d-p) j h (removed (d-p) q)))
-  dsimp only
-  rw [hSlim, ht, hl]
-  unfold rankSmall
-  rw [hDebt]
-  by_cases hp : p = 0
-  · simp [hp, r, h]
-  · have hp' := hpv hp
-    unfold valuePower at hp'
-    have he : d-p = q+4*j-3000 := by omega
-    have he' : removed (d-p) q = j := by unfold removed; omega
-    have he'' : removed (q+4*j-3000) q = j := by unfold removed; omega
-    simp [hp, he, he', he'', r, h]
-
-private def compactRow (J t : ℕ) : ℕ :=
-  let q := 3514+t
-  let d := cap q
-  let hi := natDen 1651
-  let td := debt d 1651
-  sumRange (fun j => rankSmall 1650 q j 0 true hi 0 -
-    rankSmall d q j (valuePower d q j) false hi td) J
-
-private theorem exact_cell (t j : ℕ) (ht : t < 499) (hj : j < 600) :
-    rankSmall 1650 (3514+t) j 0 true (natDen 1651) 0 -
-      rankSmall (cap (3514+t)) (3514+t) j (valuePower (cap (3514+t)) (3514+t) j)
-        false (natDen 1651) (debt (cap (3514+t)) 1651) =
-    rankFast 1650 (3514+t) j 0 (countParts 1650 1651) -
-      rankFast (cap (3514+t)) (3514+t) j (valuePower (cap (3514+t)) (3514+t) j)
-        (countParts (cap (3514+t)) 1651) := by
-  have hqj : 3514+t+j < 4650 := by omega
-  have hc : 1080 ≤ cap (3514+t) := by unfold cap; split <;> omega
-  have hh : 4650-(3514+t)-j ≤ cap (3514+t)+1 := by unfold cap; split <;> omega
-  have hz : debt 1650 1651 = 0 := rfl
-  have hbase := rankSmall_eq 1650 (3514+t) j 0 true (by decide) (by omega) hqj
-    (by omega) (fun _ => rfl) (fun hp => False.elim (hp rfl))
-  rw [hz] at hbase
-  rw [hbase, rankSmall_eq (cap (3514+t)) (3514+t) j (valuePower (cap (3514+t)) (3514+t) j)
-    false hc (by omega) hqj hh (by intro hf; cases hf) (fun _ => rfl)]
-
-private theorem sumRange_congr {f g : ℕ → ℕ} {n : ℕ} (h : ∀ i < n, f i = g i) :
-    sumRange f n = sumRange g n := by
-  induction n with
-  | zero => rfl
-  | succ n ih =>
-    simp only [sumRange]
-    rw [h n (Nat.lt_succ_self n), ih (fun i hi => h i (Nat.lt_trans hi (Nat.lt_succ_self n)))]
-
-private theorem compactRows (s n : ℕ) (h : s+n ≤ 499) :
-    sumChunk (compactRow 600) s n = sumChunk (rowSum 600) s n := by
-  rw [← fastRows]
-  unfold sumChunk
-  apply sumRange_congr
-  intro i hi
-  unfold compactRow fastRow
-  apply sumRange_congr
-  intro j hj
-  exact exact_cell (s+i) j (by omega) hj
-
--- Cut the exact zero suffix of every live taper row.
-private def rowCut (q d : ℕ) : ℕ :=
-  max (4650-q-3*removed d q) (1649-(d-removed d q))
-
-private theorem den_mono : Monotone natDen := by
-  intro x y h
-  cases x with
-  | zero => exact Nat.zero_le _
-  | succ x =>
-    cases y with
-    | zero => omega
-    | succ y =>
-      have hxy : x ≤ y := Nat.le_of_succ_le_succ h
-      have h' : 2*x+21 ≤ 2*y+21 := by omega
-      simp only [natDen]
-      exact Nat.succ_le_succ (Nat.div_le_div_right (Nat.mul_le_mul hxy
-        (Nat.add_le_add_right (Nat.mul_le_mul hxy h') 66)))
-
-private abbrev TailGuard (d q s : ℕ) : Prop :=
-  removed d q ≠ 0 ∧ 4650-q-s ≤ 3*removed d q ∧ 1650-s ≤ d-removed d q+1 ∧
-    debt d 1651 + natDen (1650-s) + natDen (4650-q-s) ≤ natDen 1651
-
-private abbrev RowGuard (t : ℕ) : Prop :=
-  let q := 3514+t
-  let d := cap q
-  let s := rowCut q d
-  s ≤ 600 ∧ 3000+d ≤ q+4*s ∧ TailGuard 1650 q s ∧ TailGuard d q s
-
-private theorem rowGuards : (List.range 499).all (fun t => decide (RowGuard t)) = true := by
-  decide +kernel
-
-private theorem rowGuard (t : ℕ) (ht : t < 499) : RowGuard t :=
-  of_decide_eq_true (List.all_eq_true.mp rowGuards t (List.mem_range.mpr ht))
-
-private theorem rankTail (d q s j : ℕ) (base : Bool) (h : TailGuard d q s) (hs : s ≤ j) :
-    rankSmall d q j 0 base (natDen 1651) (debt d 1651) = natDen (4650-q-j) := by
-  obtain ⟨hr, hh, hn, hsum⟩ := h
-  have hh' : 4650-q-j ≤ 3*removed d q := by omega
-  have hn' : 1650-j ≤ d-removed d q+1 := by omega
-  have hn0 : 1650-j ≤ d+1 := by omega
-  have hm := den_mono (show 1650-j ≤ 1650-s by omega)
-  have hm' := den_mono (show 4650-q-j ≤ 4650-q-s by omega)
-  have hold : natDen (4650-q-j) ≤ natDen 1651 - (debt d 1651 + natDen (1650-j)) := by omega
-  have hl : debt d (1650-j) = 0 := by simp [debt, hn0]
-  have hl' : debt (d-removed d q) (1650-j) = 0 := by simp [debt, hn']
-  have hb : (if base then 0 else debt d (1650-j)) = 0 := by simp [hl]
-  simp only [rankSmall, targetSlim, hb, hr, hl', if_pos rfl, if_neg,
-    Nat.sub_eq_zero_of_le hh', show natDen 0 = 0 from rfl, Nat.add_zero, Nat.sub_zero]
-  exact min_eq_right hold
-
-private theorem prefix_of_zero_tail {f : ℕ → ℕ} {s n : ℕ} (hs : s ≤ n)
-    (hz : ∀ j, s ≤ j → j < n → f j = 0) : sumRange f s = sumRange f n := by
-  induction n with
-  | zero => rw [show s = 0 by omega]
-  | succ n ih =>
-    by_cases he : s = n+1
-    · rw [he]
-    · have hsn : s ≤ n := by omega
-      rw [show sumRange f (n+1) = sumRange f n + f n from rfl,
-        hz n hsn (Nat.lt_succ_self n), Nat.add_zero]
-      exact ih hsn (fun j hj hlt => hz j hj (Nat.lt_succ_of_lt hlt))
-
-private def clippedRow (t : ℕ) : ℕ := compactRow (rowCut (3514+t) (cap (3514+t))) t
-
-private theorem clippedRow_eq (t : ℕ) (ht : t < 499) : clippedRow t = compactRow 600 t := by
-  let q := 3514+t
-  let d := cap q
-  let s := rowCut q d
-  obtain ⟨hs, hp, hb, hd⟩ := rowGuard t ht
-  unfold clippedRow compactRow
-  dsimp only
-  apply prefix_of_zero_tail hs
-  intro j hj _
-  have hp' : valuePower d q j = 0 := by
-    show valuePower (cap (3514+t)) (3514+t) j = 0
-    unfold valuePower; omega
-  have hz : debt 1650 1651 = 0 := rfl
-  have hbase := rankTail 1650 q s j true hb hj
-  rw [hz] at hbase
-  rw [hp', hbase, rankTail d q s j false hd hj, Nat.sub_self]
-
-private theorem clippedRows (s n : ℕ) (h : s+n ≤ 499) :
-    sumChunk clippedRow s n = sumChunk (rowSum 600) s n := by
-  rw [← compactRows _ _ h]
-  unfold sumChunk
-  apply sumRange_congr
-  intro i hi
-  exact clippedRow_eq (s+i) (by omega)
-
-end LambdaTaperFast
-
 namespace TaperBudget
 
 open K1_13 (Geom)
@@ -295,194 +13,374 @@ open scoped BigOperators
 
 private abbrev row := rowSum 600
 
+open K1_13_2_3_7 (countParts natKernel natDen)
+
+-- Pass the row's high endpoint to each cell. The two clipping cases share
+-- that endpoint, and it cancels from the case in which the kernel is positive.
+private def plainRank (top low here inner innerLow : ℕ × ℕ) : ℕ :=
+  min (top.1 + low.2 - (top.2 + low.1))
+    (here.1 + inner.2 + innerLow.1 + low.2 -
+      (here.2 + inner.1 + innerLow.2 + low.1))
+
+private theorem plainRank_eq (top low here inner innerLow : ℕ × ℕ) :
+    plainRank top low here inner innerLow =
+      (top.1 + low.2 - (top.2 + low.1)) -
+        (top.1 + here.2 + inner.1 + innerLow.2 -
+          (top.2 + here.1 + inner.2 + innerLow.1)) := by
+  unfold plainRank
+  omega
+
+private def rowRank (d j h r : ℕ) (top : ℕ × ℕ) : ℕ :=
+  plainRank top (countParts d (1650 - j)) (natDen h, 0)
+    (natDen (h - 3 * r), 0) (countParts (d - r) (1650 - j))
+
+private theorem smallParts (d n : ℕ) (hn : n ≤ d + 1) :
+    countParts d n = (natDen n, 0) := by
+  have cut : n.min (3 * d + 1) = n := Nat.min_eq_left (by omega)
+  simp only [countParts, cut, hn, ite_true]
+
+private theorem rowRank_eq (d j h r : ℕ) (hr : r ≠ 0) (hh : h ≤ d + 1) :
+    rowRank d j h r (countParts d 1651) = natOld d j - natKernel d j h r := by
+  unfold rowRank
+  rw [plainRank_eq]
+  unfold natOld natKernel
+  cases countParts d 1651
+  cases countParts d (1650 - j)
+  rw [smallParts d h hh, smallParts (d-r) (h-3*r) (by omega)]
+  cases countParts (d - r) (1650 - j)
+  simp only [hr, if_false]
+
+private def cell (q d r : ℕ) (top : ℕ × ℕ) (j : ℕ) : ℕ :=
+  let h := 4650 - q - j
+  let p := valuePower d q j
+  let before := rowRank 1650 j h ((4653 - q) / 4) (countParts 1650 1651)
+  let plain := rowRank d j h r top
+  before - if p = 0 then plain else
+    let low := countParts d (1650 - j)
+    let other := natKernel (d - p) j h ((3003 + (d - p) - q) / 4)
+    min plain (top.1 + low.2 - (top.2 + low.1) - other)
+
+private theorem cell_eq (t j : ℕ) (ht : t < 499) (hj : j < 600) :
+    let q := 3514 + t
+    let d := cap q
+    cell q d ((3003 + d - q) / 4) (countParts d 1651) j = natCell t j := by
+  dsimp only
+  let q := 3514 + t
+  let d := cap q
+  let h := 4650 - q - j
+  let r := (3003 + d - q) / 4
+  let p := valuePower d q j
+  have hq : q + j < 4650 := by dsimp [q]; omega
+  have hrBefore : (4653 - q) / 4 ≠ 0 := by dsimp [q]; omega
+  have hcap : d = (131312 - 26 * q) / 25 := by
+    dsimp only [d]
+    rw [cap, if_neg (by dsimp [q]; omega)]
+  have hr : r ≠ 0 := by
+    dsimp only [r]
+    rw [hcap]
+    dsimp [q]
+    omega
+  have hSmallBefore : h ≤ 1650 + 1 := by dsimp [h, q]; omega
+  have hSmall : h ≤ d + 1 := by
+    rw [hcap]
+    dsimp [h, q]
+    omega
+  change cell q d r (countParts d 1651) j = rankNat 1650 q j 0 - rankNat d q j p
+  unfold cell rankNat
+  simp only [hq, if_true, Nat.sub_zero]
+  change (rowRank 1650 j h ((4653 - q) / 4) (countParts 1650 1651) - _) = _
+  rw [rowRank_eq _ _ _ _ hrBefore hSmallBefore, rowRank_eq _ _ _ _ hr hSmall]
+  change _ = (natOld 1650 j - max (natKernel 1650 j h ((4653 - q) / 4))
+    (natKernel 1650 j h ((4653 - q) / 4))) -
+    (natOld d j - max (natKernel d j h r)
+      (natKernel (d - p) j h ((3003 + (d - p) - q) / 4)))
+  rw [max_self]
+  change (_ - if p = 0 then _ else _) = _
+  by_cases hp : p = 0
+  · simp only [hp, ite_true, Nat.sub_zero]
+    dsimp only [r]
+    simp only [max_self]
+  · rw [if_neg hp]
+    change _ - min (natOld d j - natKernel d j h r)
+      (natOld d j - natKernel (d - p) j h ((3003 + (d - p) - q) / 4)) = _
+    omega
+
+private def fastRow (t : ℕ) : ℕ :=
+  let q := 3514 + t
+  let d := cap q
+  sumRange (cell q d ((3003 + d - q) / 4) (countParts d 1651)) 600
+
+private theorem sumRange_congr (f g : ℕ → ℕ) (n : ℕ)
+    (he : ∀ j < n, f j = g j) : sumRange f n = sumRange g n := by
+  induction n with
+  | zero => rfl
+  | succ n ih =>
+      rw [sumRange, sumRange, he n (by omega), ih (fun j hj => he j (by omega))]
+
+private theorem fastRow_eq (t : ℕ) (ht : t < 499) : fastRow t = row t := by
+  unfold fastRow row rowSum
+  apply sumRange_congr
+  intro j hj
+  exact cell_eq t j ht hj
+
+private theorem fastChunk_eq (lo n : ℕ) (hn : lo + n ≤ 499) :
+    sumChunk fastRow lo n = sumChunk row lo n := by
+  unfold sumChunk
+  apply sumRange_congr
+  intro j hj
+  exact fastRow_eq (lo + j) (by omega)
+
+set_option profiler true in
 private theorem rows0 : sumChunk row 0 8 = 2989340613 := by
-  rw [← LambdaTaperFast.clippedRows _ _ (by decide)]
+  rw [← fastChunk_eq 0 8 (by decide)]
   decide +kernel
+set_option profiler true in
 private theorem rows8 : sumChunk row 8 8 = 3064721710 := by
-  rw [← LambdaTaperFast.clippedRows _ _ (by decide)]
+  rw [← fastChunk_eq 8 8 (by decide)]
   decide +kernel
+set_option profiler true in
 private theorem rows16 : sumChunk row 16 8 = 3141001317 := by
-  rw [← LambdaTaperFast.clippedRows _ _ (by decide)]
+  rw [← fastChunk_eq 16 8 (by decide)]
   decide +kernel
+set_option profiler true in
 private theorem rows24 : sumChunk row 24 8 = 3221706942 := by
-  rw [← LambdaTaperFast.clippedRows _ _ (by decide)]
+  rw [← fastChunk_eq 24 8 (by decide)]
   decide +kernel
+set_option profiler true in
 private theorem rows32 : sumChunk row 32 8 = 3300717247 := by
-  rw [← LambdaTaperFast.clippedRows _ _ (by decide)]
+  rw [← fastChunk_eq 32 8 (by decide)]
   decide +kernel
+set_option profiler true in
 private theorem rows40 : sumChunk row 40 8 = 3381208680 := by
-  rw [← LambdaTaperFast.clippedRows _ _ (by decide)]
+  rw [← fastChunk_eq 40 8 (by decide)]
   decide +kernel
+set_option profiler true in
 private theorem rows48 : sumChunk row 48 8 = 3468350919 := by
-  rw [← LambdaTaperFast.clippedRows _ _ (by decide)]
+  rw [← fastChunk_eq 48 8 (by decide)]
   decide +kernel
-theorem rows56 : sumChunk row 56 8 = 3553901216 := by
-  rw [← LambdaTaperFast.clippedRows _ _ (by decide)]
+set_option profiler true in
+private theorem rows56 : sumChunk row 56 8 = 3553901216 := by
+  rw [← fastChunk_eq 56 8 (by decide)]
   decide +kernel
-theorem rows64 : sumChunk row 64 8 = 3641005048 := by
-  rw [← LambdaTaperFast.clippedRows _ _ (by decide)]
+set_option profiler true in
+private theorem rows64 : sumChunk row 64 8 = 3641005048 := by
+  rw [← fastChunk_eq 64 8 (by decide)]
   decide +kernel
-theorem rows72 : sumChunk row 72 8 = 3736730143 := by
-  rw [← LambdaTaperFast.clippedRows _ _ (by decide)]
+set_option profiler true in
+private theorem rows72 : sumChunk row 72 8 = 3736730143 := by
+  rw [← fastChunk_eq 72 8 (by decide)]
   decide +kernel
-theorem rows80 : sumChunk row 80 8 = 3831592054 := by
-  rw [← LambdaTaperFast.clippedRows _ _ (by decide)]
+set_option profiler true in
+private theorem rows80 : sumChunk row 80 8 = 3831592054 := by
+  rw [← fastChunk_eq 80 8 (by decide)]
   decide +kernel
-theorem rows88 : sumChunk row 88 8 = 3927238474 := by
-  rw [← LambdaTaperFast.clippedRows _ _ (by decide)]
+set_option profiler true in
+private theorem rows88 : sumChunk row 88 8 = 3927238474 := by
+  rw [← fastChunk_eq 88 8 (by decide)]
   decide +kernel
-theorem rows96 : sumChunk row 96 8 = 4032675047 := by
-  rw [← LambdaTaperFast.clippedRows _ _ (by decide)]
+set_option profiler true in
+private theorem rows96 : sumChunk row 96 8 = 4032675047 := by
+  rw [← fastChunk_eq 96 8 (by decide)]
   decide +kernel
-theorem rows104 : sumChunk row 104 8 = 4139011739 := by
-  rw [← LambdaTaperFast.clippedRows _ _ (by decide)]
+set_option profiler true in
+private theorem rows104 : sumChunk row 104 8 = 4139011739 := by
+  rw [← fastChunk_eq 104 8 (by decide)]
   decide +kernel
-theorem rows112 : sumChunk row 112 8 = 4244367622 := by
-  rw [← LambdaTaperFast.clippedRows _ _ (by decide)]
+set_option profiler true in
+private theorem rows112 : sumChunk row 112 8 = 4244367622 := by
+  rw [← fastChunk_eq 112 8 (by decide)]
   decide +kernel
-theorem rows120 : sumChunk row 120 8 = 4359842998 := by
-  rw [← LambdaTaperFast.clippedRows _ _ (by decide)]
+set_option profiler true in
+private theorem rows120 : sumChunk row 120 8 = 4359842998 := by
+  rw [← fastChunk_eq 120 8 (by decide)]
   decide +kernel
-theorem rows128 : sumChunk row 128 8 = 4479074534 := by
-  rw [← LambdaTaperFast.clippedRows _ _ (by decide)]
+set_option profiler true in
+private theorem rows128 : sumChunk row 128 8 = 4479074534 := by
+  rw [← fastChunk_eq 128 8 (by decide)]
   decide +kernel
-theorem rows136 : sumChunk row 136 8 = 4594535489 := by
-  rw [← LambdaTaperFast.clippedRows _ _ (by decide)]
+set_option profiler true in
+private theorem rows136 : sumChunk row 136 8 = 4594535489 := by
+  rw [← fastChunk_eq 136 8 (by decide)]
   decide +kernel
-theorem rows144 : sumChunk row 144 8 = 4719447871 := by
-  rw [← LambdaTaperFast.clippedRows _ _ (by decide)]
+set_option profiler true in
+private theorem rows144 : sumChunk row 144 8 = 4719447871 := by
+  rw [← fastChunk_eq 144 8 (by decide)]
   decide +kernel
-theorem rows152 : sumChunk row 152 8 = 4852262991 := by
-  rw [← LambdaTaperFast.clippedRows _ _ (by decide)]
+set_option profiler true in
+private theorem rows152 : sumChunk row 152 8 = 4852262991 := by
+  rw [← fastChunk_eq 152 8 (by decide)]
   decide +kernel
-theorem rows160 : sumChunk row 160 8 = 4977493749 := by
-  rw [← LambdaTaperFast.clippedRows _ _ (by decide)]
+set_option profiler true in
+private theorem rows160 : sumChunk row 160 8 = 4977493749 := by
+  rw [← fastChunk_eq 160 8 (by decide)]
   decide +kernel
-theorem rows168 : sumChunk row 168 8 = 5110525726 := by
-  rw [← LambdaTaperFast.clippedRows _ _ (by decide)]
+set_option profiler true in
+private theorem rows168 : sumChunk row 168 8 = 5110525726 := by
+  rw [← fastChunk_eq 168 8 (by decide)]
   decide +kernel
-theorem rows176 : sumChunk row 176 8 = 5256836096 := by
-  rw [← LambdaTaperFast.clippedRows _ _ (by decide)]
+set_option profiler true in
+private theorem rows176 : sumChunk row 176 8 = 5256836096 := by
+  rw [← fastChunk_eq 176 8 (by decide)]
   decide +kernel
-theorem rows184 : sumChunk row 184 8 = 5390743377 := by
-  rw [← LambdaTaperFast.clippedRows _ _ (by decide)]
+set_option profiler true in
+private theorem rows184 : sumChunk row 184 8 = 5390743377 := by
+  rw [← fastChunk_eq 184 8 (by decide)]
   decide +kernel
-theorem rows192 : sumChunk row 192 8 = 5529753127 := by
-  rw [← LambdaTaperFast.clippedRows _ _ (by decide)]
+set_option profiler true in
+private theorem rows192 : sumChunk row 192 8 = 5529753127 := by
+  rw [← fastChunk_eq 192 8 (by decide)]
   decide +kernel
-theorem rows200 : sumChunk row 200 8 = 5688594654 := by
-  rw [← LambdaTaperFast.clippedRows _ _ (by decide)]
+set_option profiler true in
+private theorem rows200 : sumChunk row 200 8 = 5688594654 := by
+  rw [← fastChunk_eq 200 8 (by decide)]
   decide +kernel
-theorem rows208 : sumChunk row 208 8 = 5829308790 := by
-  rw [← LambdaTaperFast.clippedRows _ _ (by decide)]
+set_option profiler true in
+private theorem rows208 : sumChunk row 208 8 = 5829308790 := by
+  rw [← fastChunk_eq 208 8 (by decide)]
   decide +kernel
-theorem rows216 : sumChunk row 216 8 = 5971489118 := by
-  rw [← LambdaTaperFast.clippedRows _ _ (by decide)]
+set_option profiler true in
+private theorem rows216 : sumChunk row 216 8 = 5971489118 := by
+  rw [← fastChunk_eq 216 8 (by decide)]
   decide +kernel
-theorem rows224 : sumChunk row 224 8 = 6141122417 := by
-  rw [← LambdaTaperFast.clippedRows _ _ (by decide)]
+set_option profiler true in
+private theorem rows224 : sumChunk row 224 8 = 6141122417 := by
+  rw [← fastChunk_eq 224 8 (by decide)]
   decide +kernel
-theorem rows232 : sumChunk row 232 8 = 6286108608 := by
-  rw [← LambdaTaperFast.clippedRows _ _ (by decide)]
+set_option profiler true in
+private theorem rows232 : sumChunk row 232 8 = 6286108608 := by
+  rw [← fastChunk_eq 232 8 (by decide)]
   decide +kernel
-theorem rows240 : sumChunk row 240 8 = 6431540425 := by
-  rw [← LambdaTaperFast.clippedRows _ _ (by decide)]
+set_option profiler true in
+private theorem rows240 : sumChunk row 240 8 = 6431540425 := by
+  rw [← fastChunk_eq 240 8 (by decide)]
   decide +kernel
-theorem rows248 : sumChunk row 248 8 = 6602041516 := by
-  rw [← LambdaTaperFast.clippedRows _ _ (by decide)]
+set_option profiler true in
+private theorem rows248 : sumChunk row 248 8 = 6602041516 := by
+  rw [← fastChunk_eq 248 8 (by decide)]
   decide +kernel
-theorem rows256 : sumChunk row 256 8 = 6751509822 := by
-  rw [← LambdaTaperFast.clippedRows _ _ (by decide)]
+set_option profiler true in
+private theorem rows256 : sumChunk row 256 8 = 6751509822 := by
+  rw [← fastChunk_eq 256 8 (by decide)]
   decide +kernel
-theorem rows264 : sumChunk row 264 8 = 6896640999 := by
-  rw [← LambdaTaperFast.clippedRows _ _ (by decide)]
+set_option profiler true in
+private theorem rows264 : sumChunk row 264 8 = 6896640999 := by
+  rw [← fastChunk_eq 264 8 (by decide)]
   decide +kernel
-theorem rows272 : sumChunk row 272 8 = 7063450232 := by
-  rw [← LambdaTaperFast.clippedRows _ _ (by decide)]
+set_option profiler true in
+private theorem rows272 : sumChunk row 272 8 = 7063450232 := by
+  rw [← fastChunk_eq 272 8 (by decide)]
   decide +kernel
-theorem rows280 : sumChunk row 280 8 = 7213806800 := by
-  rw [← LambdaTaperFast.clippedRows _ _ (by decide)]
+set_option profiler true in
+private theorem rows280 : sumChunk row 280 8 = 7213806800 := by
+  rw [← fastChunk_eq 280 8 (by decide)]
   decide +kernel
-theorem rows288 : sumChunk row 288 8 = 7354364209 := by
-  rw [← LambdaTaperFast.clippedRows _ _ (by decide)]
+set_option profiler true in
+private theorem rows288 : sumChunk row 288 8 = 7354364209 := by
+  rw [← fastChunk_eq 288 8 (by decide)]
   decide +kernel
-theorem rows296 : sumChunk row 296 8 = 7512114721 := by
-  rw [← LambdaTaperFast.clippedRows _ _ (by decide)]
+set_option profiler true in
+private theorem rows296 : sumChunk row 296 8 = 7512114721 := by
+  rw [← fastChunk_eq 296 8 (by decide)]
   decide +kernel
-theorem rows304 : sumChunk row 304 8 = 7658789195 := by
-  rw [← LambdaTaperFast.clippedRows _ _ (by decide)]
+set_option profiler true in
+private theorem rows304 : sumChunk row 304 8 = 7658789195 := by
+  rw [← fastChunk_eq 304 8 (by decide)]
   decide +kernel
-theorem rows312 : sumChunk row 312 8 = 7789842793 := by
-  rw [← LambdaTaperFast.clippedRows _ _ (by decide)]
+set_option profiler true in
+private theorem rows312 : sumChunk row 312 8 = 7789842793 := by
+  rw [← fastChunk_eq 312 8 (by decide)]
   decide +kernel
-theorem rows320 : sumChunk row 320 8 = 7932571009 := by
-  rw [← LambdaTaperFast.clippedRows _ _ (by decide)]
+set_option profiler true in
+private theorem rows320 : sumChunk row 320 8 = 7932571009 := by
+  rw [← fastChunk_eq 320 8 (by decide)]
   decide +kernel
-theorem rows328 : sumChunk row 328 8 = 8070335283 := by
-  rw [← LambdaTaperFast.clippedRows _ _ (by decide)]
+set_option profiler true in
+private theorem rows328 : sumChunk row 328 8 = 8070335283 := by
+  rw [← fastChunk_eq 328 8 (by decide)]
   decide +kernel
-theorem rows336 : sumChunk row 336 8 = 8185948289 := by
-  rw [← LambdaTaperFast.clippedRows _ _ (by decide)]
+set_option profiler true in
+private theorem rows336 : sumChunk row 336 8 = 8185948289 := by
+  rw [← fastChunk_eq 336 8 (by decide)]
   decide +kernel
-theorem rows344 : sumChunk row 344 8 = 8307233701 := by
-  rw [← LambdaTaperFast.clippedRows _ _ (by decide)]
+set_option profiler true in
+private theorem rows344 : sumChunk row 344 8 = 8307233701 := by
+  rw [← fastChunk_eq 344 8 (by decide)]
   decide +kernel
-theorem rows352 : sumChunk row 352 8 = 8429242212 := by
-  rw [← LambdaTaperFast.clippedRows _ _ (by decide)]
+set_option profiler true in
+private theorem rows352 : sumChunk row 352 8 = 8429242212 := by
+  rw [← fastChunk_eq 352 8 (by decide)]
   decide +kernel
-theorem rows360 : sumChunk row 360 8 = 8522803077 := by
-  rw [← LambdaTaperFast.clippedRows _ _ (by decide)]
+set_option profiler true in
+private theorem rows360 : sumChunk row 360 8 = 8522803077 := by
+  rw [← fastChunk_eq 360 8 (by decide)]
   decide +kernel
-theorem rows368 : sumChunk row 368 8 = 8615444240 := by
-  rw [← LambdaTaperFast.clippedRows _ _ (by decide)]
+set_option profiler true in
+private theorem rows368 : sumChunk row 368 8 = 8615444240 := by
+  rw [← fastChunk_eq 368 8 (by decide)]
   decide +kernel
-theorem rows376 : sumChunk row 376 8 = 8713859927 := by
-  rw [← LambdaTaperFast.clippedRows _ _ (by decide)]
+set_option profiler true in
+private theorem rows376 : sumChunk row 376 8 = 8713859927 := by
+  rw [← fastChunk_eq 376 8 (by decide)]
   decide +kernel
-theorem rows384 : sumChunk row 384 8 = 8777670653 := by
-  rw [← LambdaTaperFast.clippedRows _ _ (by decide)]
+set_option profiler true in
+private theorem rows384 : sumChunk row 384 8 = 8777670653 := by
+  rw [← fastChunk_eq 384 8 (by decide)]
   decide +kernel
-theorem rows392 : sumChunk row 392 8 = 8833672402 := by
-  rw [← LambdaTaperFast.clippedRows _ _ (by decide)]
+set_option profiler true in
+private theorem rows392 : sumChunk row 392 8 = 8833672402 := by
+  rw [← fastChunk_eq 392 8 (by decide)]
   decide +kernel
-theorem rows400 : sumChunk row 400 8 = 8899053394 := by
-  rw [← LambdaTaperFast.clippedRows _ _ (by decide)]
+set_option profiler true in
+private theorem rows400 : sumChunk row 400 8 = 8899053394 := by
+  rw [← fastChunk_eq 400 8 (by decide)]
   decide +kernel
-theorem rows408 : sumChunk row 408 8 = 8924421886 := by
-  rw [← LambdaTaperFast.clippedRows _ _ (by decide)]
+set_option profiler true in
+private theorem rows408 : sumChunk row 408 8 = 8924421886 := by
+  rw [← fastChunk_eq 408 8 (by decide)]
   decide +kernel
-theorem rows416 : sumChunk row 416 8 = 8935210038 := by
-  rw [← LambdaTaperFast.clippedRows _ _ (by decide)]
+set_option profiler true in
+private theorem rows416 : sumChunk row 416 8 = 8935210038 := by
+  rw [← fastChunk_eq 416 8 (by decide)]
   decide +kernel
-theorem rows424 : sumChunk row 424 8 = 8956971540 := by
-  rw [← LambdaTaperFast.clippedRows _ _ (by decide)]
+set_option profiler true in
+private theorem rows424 : sumChunk row 424 8 = 8956971540 := by
+  rw [← fastChunk_eq 424 8 (by decide)]
   decide +kernel
-theorem rows432 : sumChunk row 432 8 = 8934265132 := by
-  rw [← LambdaTaperFast.clippedRows _ _ (by decide)]
+set_option profiler true in
+private theorem rows432 : sumChunk row 432 8 = 8934265132 := by
+  rw [← fastChunk_eq 432 8 (by decide)]
   decide +kernel
-theorem rows440 : sumChunk row 440 8 = 8893651408 := by
-  rw [← LambdaTaperFast.clippedRows _ _ (by decide)]
+set_option profiler true in
+private theorem rows440 : sumChunk row 440 8 = 8893651408 := by
+  rw [← fastChunk_eq 440 8 (by decide)]
   decide +kernel
-theorem rows448 : sumChunk row 448 8 = 8853548727 := by
-  rw [← LambdaTaperFast.clippedRows _ _ (by decide)]
+set_option profiler true in
+private theorem rows448 : sumChunk row 448 8 = 8853548727 := by
+  rw [← fastChunk_eq 448 8 (by decide)]
   decide +kernel
-theorem rows456 : sumChunk row 456 8 = 8774993977 := by
-  rw [← LambdaTaperFast.clippedRows _ _ (by decide)]
+set_option profiler true in
+private theorem rows456 : sumChunk row 456 8 = 8774993977 := by
+  rw [← fastChunk_eq 456 8 (by decide)]
   decide +kernel
-theorem rows464 : sumChunk row 464 8 = 8671988451 := by
-  rw [← LambdaTaperFast.clippedRows _ _ (by decide)]
+set_option profiler true in
+private theorem rows464 : sumChunk row 464 8 = 8671988451 := by
+  rw [← fastChunk_eq 464 8 (by decide)]
   decide +kernel
-theorem rows472 : sumChunk row 472 8 = 8559112828 := by
-  rw [← LambdaTaperFast.clippedRows _ _ (by decide)]
+set_option profiler true in
+private theorem rows472 : sumChunk row 472 8 = 8559112828 := by
+  rw [← fastChunk_eq 472 8 (by decide)]
   decide +kernel
-theorem rows480 : sumChunk row 480 8 = 8411849481 := by
-  rw [← LambdaTaperFast.clippedRows _ _ (by decide)]
+set_option profiler true in
+private theorem rows480 : sumChunk row 480 8 = 8411849481 := by
+  rw [← fastChunk_eq 480 8 (by decide)]
   decide +kernel
-theorem rows488 : sumChunk row 488 8 = 8234559803 := by
-  rw [← LambdaTaperFast.clippedRows _ _ (by decide)]
+set_option profiler true in
+private theorem rows488 : sumChunk row 488 8 = 8234559803 := by
+  rw [← fastChunk_eq 488 8 (by decide)]
   decide +kernel
-theorem rows496 : sumChunk row 496 3 = 3036818172 := by
-  rw [← LambdaTaperFast.clippedRows _ _ (by decide)]
+set_option profiler true in
+private theorem rows496 : sumChunk row 496 3 = 3036818172 := by
+  rw [← fastChunk_eq 496 3 (by decide)]
   decide +kernel
 
 private theorem join (lo n m next full : ℕ) (a b result : ℕ)
@@ -621,15 +519,4 @@ private theorem sum_checked : sumChunk row 0 499 = 396610034658 := by
     join 0 8 491 8 499 2989340613 393620694045 396610034658 (by decide) (by decide) (by decide) rows0 tail8
   exact tail0
 
-theorem tapered_rank (x y : Geom) :
-    Module.finrank Geom
-      (LinearMap.range ((localConstraintAt 3000 x y).domRestrict
-        (TaperNormalize.space cap))) ≤ 343903138965692 := by
-  have h : 396610034658 ≤ ∑ i : BlockIndex, tailSaving i := by
-    have t := fastSavings_le (J := 600) (by decide)
-    rw [← sumChunk_eq_fastSavings, sum_checked] at t
-    exact t
-  exact rank_le x y h
-
-#print axioms tapered_rank
 end TaperBudget

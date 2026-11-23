@@ -3,22 +3,24 @@ import ProximityPrize.SubmissionLower.Compact50Cover
 
 set_option Elab.async false
 set_option maxRecDepth 16000
+set_option maxHeartbeats 4000000
 
 /-! The same paid-tile proposition as `Compact50Cover.Tile.Paid`, decided with the Horner tilted surface.
 Every price below is proved equal to its stock definition, so a batch checked here is a stock `PaidBatch`. -/
 namespace Compact54FastPrice
 noncomputable section
 open K1_13 (Shape ceilDiv)
+open K1_13_8_2 (Threshold orderFor)
 open Final50Price (tiltedFits tiltedSurface physicalPrice physicalPriceOld physicalPriceTilted
   physicalPriceActive physicalPriceWith tiltedSurfaceActive activeFitsPrice activeLoss activeClips primaryBox)
 open Final50SharedPrice (Surface Rate weights surface surfaceScale RateFits deficit coord slope expression
   additiveBase nonsharedFee price)
-open Final50PriceCaps (Band start order activeCap allowance)
+open Final50PriceCaps (Band start endWidth order thresholds activeCap allowance actualAllowance)
+open Final50PriceActualOrder (raised)
 open Compact50Cover (Tile PaidBatch pays)
-open Final50PriceTableBase (PointReceipt SharedReceipt)
+open Final50PriceTableBase (OldReceipt PointReceipt ExactPointReceipt SharedReceipt)
 open KoalaRetainedCut (contractedPrice chamberHull residualBox cutPrice fourSurface)
-open KoalaWeightedRate (Allowed Pays Fits RayBounds Envelope boxFee sepBox)
-open Final50PriceTableBase (OldReceipt)
+open KoalaWeightedRate (Pays Fits RayBounds Envelope boxFee sepBox)
 open private chargedPrice from ProximityPrize.SubmissionLower.Final50GeometryCut
 
 /-- `mixed32` in closed form: the fourth difference at the origin of the homogeneous quartic
@@ -168,17 +170,17 @@ private instance (f : Shape) (u : Rate) : Decidable (rateFitsFast f u) := by
 private theorem rateFitsFast_iff (f : Shape) (u : Rate) : rateFitsFast f u ↔ RateFits f u := by
   simp only [rateFitsFast,RateFits,weightsFast_eq]
 
-private def rayBoundsFast (p : Envelope) (x : Shape) (amount : ℕ) : Prop :=
+private def rayBoundsFast (p : Envelope) (unit : ℕ) (x : Shape) (amount : ℕ) : Prop :=
   let w := weightsFast .tilted x
   let scale := 1920*amount
-  KoalaWeightedRate.unit*w.b ≤ scale*p.coeff.b ∧
-    KoalaWeightedRate.unit*(w.b+w.j) ≤ scale*(p.coeff.b+p.coeff.j) ∧
-    KoalaWeightedRate.unit*(3*(w.b+w.j)+w.t) ≤ scale*(3*(p.coeff.b+p.coeff.j)+p.coeff.t) ∧
-    KoalaWeightedRate.unit*boxFee w (sepBox x) ≤ scale*p.sep
+  unit*w.b ≤ scale*p.coeff.b ∧
+    unit*(w.b+w.j) ≤ scale*(p.coeff.b+p.coeff.j) ∧
+    unit*(3*(w.b+w.j)+w.t) ≤ scale*(3*(p.coeff.b+p.coeff.j)+p.coeff.t) ∧
+    unit*boxFee w (sepBox x) ≤ scale*p.sep
 
 private def paysRayFast (p : Envelope) (x : Shape) (u : Rate) : Prop :=
   Fits p x ∧ u.kind = .tilted ∧ u.split = KoalaWeightedRate.split ∧ 0 < u.amount ∧ tiltedFits x ∧
-    rayBoundsFast p x u.amount
+    rayBoundsFast p KoalaWeightedRate.unit x u.amount
 
 private instance (p : Envelope) (x : Shape) (u : Rate) : Decidable (paysRayFast p x u) := by
   unfold paysRayFast rayBoundsFast Fits
@@ -187,15 +189,106 @@ private instance (p : Envelope) (x : Shape) (u : Rate) : Decidable (paysRayFast 
 private theorem paysRayFast_iff (p : Envelope) (x : Shape) (u : Rate) : paysRayFast p x u ↔ Pays p x u := by
   simp only [paysRayFast,rayBoundsFast,Pays,RayBounds,weightsFast_eq]
 
-private def allowedFast (x : Shape) (u : Rate) : Prop :=
-  rateFitsFast x u ∨ paysRayFast KoalaWeightedRate.first x u ∨ paysRayFast KoalaWeightedRate.second x u
+private def splitPaysFast (p : Envelope) (k unit : ℕ) (x : Shape) (u : Rate) : Prop :=
+  Fits p x ∧ u.kind = .tilted ∧ u.split = k ∧ 0 < k ∧ 0 < unit ∧ 0 < u.amount ∧
+    tiltedFits x ∧ rayBoundsFast p unit x u.amount
 
+private instance (p : Envelope) (k unit : ℕ) (x : Shape) (u : Rate) :
+    Decidable (splitPaysFast p k unit x u) := by
+  unfold splitPaysFast rayBoundsFast Fits
+  infer_instance
+
+private theorem splitPaysFast_iff (p : Envelope) (k unit : ℕ) (x : Shape) (u : Rate) :
+    splitPaysFast p k unit x u ↔ KoalaSplitRate.Pays p k unit x u := by
+  simp only [splitPaysFast, rayBoundsFast, KoalaSplitRate.Pays, KoalaSplitRate.RayBounds,
+    weightsFast_eq]
+
+private def allowedFast (x : Shape) (u : Rate) : Prop :=
+  (rateFitsFast x u ∨ paysRayFast KoalaWeightedRate.first x u) ∨
+  splitPaysFast KoalaAt2428Gate0.envelope KoalaAt2428Gate0.split KoalaAt2428Gate0.unit x u ∨
+  splitPaysFast KoalaAt2428Gate1.envelope KoalaAt2428Gate1.split KoalaAt2428Gate1.unit x u ∨
+  splitPaysFast KoalaAt2428Gate2.envelope KoalaAt2428Gate2.split KoalaAt2428Gate2.unit x u ∨
+  splitPaysFast KoalaAt2428Gate3.envelope KoalaAt2428Gate3.split KoalaAt2428Gate3.unit x u ∨
+  splitPaysFast KoalaAt2428Gate4.envelope KoalaAt2428Gate4.split KoalaAt2428Gate4.unit x u ∨
+  splitPaysFast KoalaAt2428Gate5.envelope KoalaAt2428Gate5.split KoalaAt2428Gate5.unit x u ∨
+  splitPaysFast KoalaAt2428Gate6.envelope KoalaAt2428Gate6.split KoalaAt2428Gate6.unit x u ∨
+  splitPaysFast KoalaAt2428Gate7.envelope KoalaAt2428Gate7.split KoalaAt2428Gate7.unit x u ∨
+  splitPaysFast KoalaAt2428Gate8.envelope KoalaAt2428Gate8.split KoalaAt2428Gate8.unit x u ∨
+  splitPaysFast KoalaAt2428Gate9.envelope KoalaAt2428Gate9.split KoalaAt2428Gate9.unit x u ∨
+  splitPaysFast KoalaAt2428Gate10.envelope KoalaAt2428Gate10.split KoalaAt2428Gate10.unit x u ∨
+  splitPaysFast KoalaAt2428Gate11.envelope KoalaAt2428Gate11.split KoalaAt2428Gate11.unit x u ∨
+  splitPaysFast KoalaAt2428Gate12.envelope KoalaAt2428Gate12.split KoalaAt2428Gate12.unit x u ∨
+  splitPaysFast KoalaAt2428Gate13.envelope KoalaAt2428Gate13.split KoalaAt2428Gate13.unit x u ∨
+  splitPaysFast KoalaAt2428Gate14.envelope KoalaAt2428Gate14.split KoalaAt2428Gate14.unit x u ∨
+  splitPaysFast KoalaAt2428Gate15.envelope KoalaAt2428Gate15.split KoalaAt2428Gate15.unit x u ∨
+  splitPaysFast KoalaAt2428Gate16.envelope KoalaAt2428Gate16.split KoalaAt2428Gate16.unit x u ∨
+  splitPaysFast KoalaAt2428Gate17.envelope KoalaAt2428Gate17.split KoalaAt2428Gate17.unit x u ∨
+  splitPaysFast KoalaAt2428Gate18.envelope KoalaAt2428Gate18.split KoalaAt2428Gate18.unit x u ∨
+  splitPaysFast KoalaAt2428Gate19.envelope KoalaAt2428Gate19.split KoalaAt2428Gate19.unit x u ∨
+  splitPaysFast KoalaAt2428Gate20.envelope KoalaAt2428Gate20.split KoalaAt2428Gate20.unit x u ∨
+  splitPaysFast KoalaAt2428Gate21.envelope KoalaAt2428Gate21.split KoalaAt2428Gate21.unit x u ∨
+  splitPaysFast KoalaAt2428Gate22.envelope KoalaAt2428Gate22.split KoalaAt2428Gate22.unit x u ∨
+  splitPaysFast KoalaAt2428Gate23.envelope KoalaAt2428Gate23.split KoalaAt2428Gate23.unit x u ∨
+  splitPaysFast KoalaAt2428Gate24.envelope KoalaAt2428Gate24.split KoalaAt2428Gate24.unit x u ∨
+  splitPaysFast KoalaAt2428Gate25.envelope KoalaAt2428Gate25.split KoalaAt2428Gate25.unit x u ∨
+  splitPaysFast KoalaAt2428Gate26.envelope KoalaAt2428Gate26.split KoalaAt2428Gate26.unit x u ∨
+  splitPaysFast KoalaAt2428Gate27.envelope KoalaAt2428Gate27.split KoalaAt2428Gate27.unit x u ∨
+  splitPaysFast KoalaAt2428Gate28.envelope KoalaAt2428Gate28.split KoalaAt2428Gate28.unit x u ∨
+  splitPaysFast KoalaAt2428Gate29.envelope KoalaAt2428Gate29.split KoalaAt2428Gate29.unit x u ∨
+  splitPaysFast KoalaAt2428Gate30.envelope KoalaAt2428Gate30.split KoalaAt2428Gate30.unit x u ∨
+  splitPaysFast KoalaAt2428Gate31.envelope KoalaAt2428Gate31.split KoalaAt2428Gate31.unit x u ∨
+  splitPaysFast KoalaAt2428Gate32.envelope KoalaAt2428Gate32.split KoalaAt2428Gate32.unit x u ∨
+  splitPaysFast KoalaAt2428Gate33.envelope KoalaAt2428Gate33.split KoalaAt2428Gate33.unit x u ∨
+  splitPaysFast KoalaAt2428Gate34.envelope KoalaAt2428Gate34.split KoalaAt2428Gate34.unit x u ∨
+  splitPaysFast KoalaAt2428Gate35.envelope KoalaAt2428Gate35.split KoalaAt2428Gate35.unit x u ∨
+  splitPaysFast KoalaAt2428Gate36.envelope KoalaAt2428Gate36.split KoalaAt2428Gate36.unit x u ∨
+  splitPaysFast KoalaAt2428Gate37.envelope KoalaAt2428Gate37.split KoalaAt2428Gate37.unit x u ∨
+  splitPaysFast KoalaAt2428Gate38.envelope KoalaAt2428Gate38.split KoalaAt2428Gate38.unit x u ∨
+  splitPaysFast KoalaAt2428Gate39.envelope KoalaAt2428Gate39.split KoalaAt2428Gate39.unit x u ∨
+  splitPaysFast KoalaAt2428Gate40.envelope KoalaAt2428Gate40.split KoalaAt2428Gate40.unit x u ∨
+  splitPaysFast KoalaAt2428Gate41.envelope KoalaAt2428Gate41.split KoalaAt2428Gate41.unit x u ∨
+  splitPaysFast KoalaAt2428Gate42.envelope KoalaAt2428Gate42.split KoalaAt2428Gate42.unit x u ∨
+  splitPaysFast KoalaAt2428Gate43.envelope KoalaAt2428Gate43.split KoalaAt2428Gate43.unit x u ∨
+  splitPaysFast KoalaAt2428Gate44.envelope KoalaAt2428Gate44.split KoalaAt2428Gate44.unit x u ∨
+  splitPaysFast KoalaAt2428Gate45.envelope KoalaAt2428Gate45.split KoalaAt2428Gate45.unit x u ∨
+  splitPaysFast KoalaAt2428Gate46.envelope KoalaAt2428Gate46.split KoalaAt2428Gate46.unit x u ∨
+  splitPaysFast KoalaAt2428Gate47.envelope KoalaAt2428Gate47.split KoalaAt2428Gate47.unit x u ∨
+  splitPaysFast KoalaAt2428Gate48.envelope KoalaAt2428Gate48.split KoalaAt2428Gate48.unit x u ∨
+  splitPaysFast KoalaAt2428Gate49.envelope KoalaAt2428Gate49.split KoalaAt2428Gate49.unit x u ∨
+  splitPaysFast KoalaAt2428Gate50.envelope KoalaAt2428Gate50.split KoalaAt2428Gate50.unit x u ∨
+  splitPaysFast KoalaAt2428Gate51.envelope KoalaAt2428Gate51.split KoalaAt2428Gate51.unit x u ∨
+  splitPaysFast KoalaAt2428Gate52.envelope KoalaAt2428Gate52.split KoalaAt2428Gate52.unit x u ∨
+  splitPaysFast KoalaAt2428Gate53.envelope KoalaAt2428Gate53.split KoalaAt2428Gate53.unit x u ∨
+  splitPaysFast KoalaAt2428Gate54.envelope KoalaAt2428Gate54.split KoalaAt2428Gate54.unit x u ∨
+  splitPaysFast KoalaAt2428Gate55.envelope KoalaAt2428Gate55.split KoalaAt2428Gate55.unit x u ∨
+  splitPaysFast KoalaAt2428Gate56.envelope KoalaAt2428Gate56.split KoalaAt2428Gate56.unit x u ∨
+  splitPaysFast KoalaAt2428Gate57.envelope KoalaAt2428Gate57.split KoalaAt2428Gate57.unit x u ∨
+  splitPaysFast KoalaAt2428Gate58.envelope KoalaAt2428Gate58.split KoalaAt2428Gate58.unit x u ∨
+  splitPaysFast KoalaAt2428Gate59.envelope KoalaAt2428Gate59.split KoalaAt2428Gate59.unit x u ∨
+  splitPaysFast KoalaAt2428Gate60.envelope KoalaAt2428Gate60.split KoalaAt2428Gate60.unit x u ∨
+  splitPaysFast KoalaAt2428Gate61.envelope KoalaAt2428Gate61.split KoalaAt2428Gate61.unit x u ∨
+  splitPaysFast KoalaAt2428Gate62.envelope KoalaAt2428Gate62.split KoalaAt2428Gate62.unit x u ∨
+  splitPaysFast KoalaAt2428Gate63.envelope KoalaAt2428Gate63.split KoalaAt2428Gate63.unit x u ∨
+  splitPaysFast KoalaAt2428Gate64.envelope KoalaAt2428Gate64.split KoalaAt2428Gate64.unit x u ∨
+  splitPaysFast KoalaAt2428Gate65.envelope KoalaAt2428Gate65.split KoalaAt2428Gate65.unit x u ∨
+  splitPaysFast KoalaAt2428Gate66.envelope KoalaAt2428Gate66.split KoalaAt2428Gate66.unit x u ∨
+  splitPaysFast KoalaAt2428Gate67.envelope KoalaAt2428Gate67.split KoalaAt2428Gate67.unit x u ∨
+  splitPaysFast KoalaAt2428Gate68.envelope KoalaAt2428Gate68.split KoalaAt2428Gate68.unit x u ∨
+  splitPaysFast KoalaAt2428Gate69.envelope KoalaAt2428Gate69.split KoalaAt2428Gate69.unit x u ∨
+  splitPaysFast KoalaAt2428Gate70.envelope KoalaAt2428Gate70.split KoalaAt2428Gate70.unit x u ∨
+  splitPaysFast KoalaAt2428Gate71.envelope KoalaAt2428Gate71.split KoalaAt2428Gate71.unit x u ∨
+  splitPaysFast KoalaAt2428Gate72.envelope KoalaAt2428Gate72.split KoalaAt2428Gate72.unit x u ∨
+  splitPaysFast KoalaAt2428Gate73.envelope KoalaAt2428Gate73.split KoalaAt2428Gate73.unit x u
+
+set_option synthInstance.maxSize 4096 in
 private instance (x : Shape) (u : Rate) : Decidable (allowedFast x u) := by
   unfold allowedFast
   infer_instance
 
-private theorem allowedFast_iff (x : Shape) (u : Rate) : allowedFast x u ↔ Allowed x u := by
-  simp only [allowedFast,Allowed,rateFitsFast_iff,paysRayFast_iff]
+private theorem allowedFast_iff (x : Shape) (u : Rate) :
+    allowedFast x u ↔ KoalaAt2428Rates.Allowed x u := by
+  simp only [allowedFast, KoalaAt2428Rates.Allowed, KoalaWeightedRate.Allowed, rateFitsFast_iff,
+    paysRayFast_iff, splitPaysFast_iff]
 
 private def additiveFast (x : Shape) (l : ℕ) : ℕ :=
   let p := x.chamber
@@ -219,19 +312,62 @@ private def sharedFast (x : Shape) (l K : ℕ) (u : Rate) : ℕ :=
 private theorem sharedFast_eq (x : Shape) (l K : ℕ) (u : Rate) : sharedFast x l K u = price x l K u := by
   simp only [sharedFast,price,physicalFast_eq,additiveFast_eq]
 
+/-- Check the requested order using the first threshold that pays it. -/
+private def supportsOrderIn (b j l : Nat) (qs : List Threshold) : Prop :=
+  l ≤ 1 ∨ qs.any (fun q => decide (l ≤ q.l ∧ q.b ≤ b ∧ q.j ≤ j)) = true
+
+private theorem supportsOrderIn_iff (b j l : Nat) (qs : List Threshold) :
+    supportsOrderIn b j l qs ↔ l ≤ orderFor b j qs := by
+  induction qs with
+  | nil => simp [supportsOrderIn, orderFor]
+  | cons q qs ih =>
+    rw [orderFor, le_max_iff, ← ih]
+    by_cases h : q.b ≤ b ∧ q.j ≤ j
+    · simp only [supportsOrderIn, List.any_cons, Bool.or_eq_true, decide_eq_true_eq, if_pos h]
+      tauto
+    · simp only [supportsOrderIn, List.any_cons, Bool.or_eq_true, decide_eq_true_eq, if_neg h]
+      tauto
+
+private def supportsOrder (k : Band) (x : Shape) (l : Nat) : Prop :=
+  supportsOrderIn x.b x.j l (thresholds k)
+
+private instance (k : Band) (x : Shape) (l : Nat) : Decidable (supportsOrder k x l) := by
+  unfold supportsOrder supportsOrderIn
+  infer_instance
+
+private theorem supportsOrder_iff (k : Band) (x : Shape) (l : Nat) :
+    supportsOrder k x l ↔ l ≤ order k x :=
+  supportsOrderIn_iff _ _ _ _
+
+private def exactPointFast (top : ℕ) (k : Band) (b j t l : ℕ) : Prop :=
+  0 < l ∧ supportsOrder k ⟨b,j,t⟩ l ∧
+    ∀ w : Fin 27, (start k).b ≤ w.val → w.val ≤ endWidth k → w.val + b ≤ 137 →
+      contractedFast ⟨b,j,t⟩ ⟨w.val,(start k).j,(start k).t⟩ (raised k b j t w.val l) (activeCap k) ≤
+        actualAllowance top k w.val b j t
+
+private instance (top : ℕ) (k : Band) (b j t l : ℕ) :
+    Decidable (exactPointFast top k b j t l) := by
+  unfold exactPointFast
+  infer_instance
+
+private theorem exactPointFast_iff (top : ℕ) (k : Band) (b j t l : ℕ) :
+    exactPointFast top k b j t l ↔ ExactPointReceipt top k b j t l := by
+  simp only [exactPointFast, ExactPointReceipt, contractedFast_eq, supportsOrder_iff]
+
 private def paidFast (k : Band) (t : ℕ) : Tile → Prop
   | .rectangle b j B J l =>
-    0 < l ∧ l ≤ order k ⟨b,j,0⟩ ∧ oldFast ⟨B,J,t⟩ l ≤ allowance ((start k).t+t) k b j t
+    0 < l ∧ supportsOrder k ⟨b,j,0⟩ l ∧ oldFast ⟨B,J,t⟩ l ≤ allowance ((start k).t+t) k b j t
   | .mixrect b j B J l =>
-    0 < l ∧ l ≤ order k ⟨b,j,0⟩ ∧ 0 < (Final54MixReceipt.hullOf k l).t ∧
+    0 < l ∧ supportsOrder k ⟨b,j,0⟩ l ∧ 0 < (Final54MixReceipt.hullOf k l).t ∧
       chargedFast ⟨B,J,t⟩ l 32 (fourFast (Shape.chamber ⟨B,J,t⟩) (Final54MixReceipt.hullOf k l)) ≤
         allowance ((start k).t+t) k b j t
   | .point b j l =>
-    0 < l ∧ l ≤ order k ⟨b,j,t⟩ ∧
-      contractedFast ⟨b,j,t⟩ (start k) l (activeCap k) ≤ allowance ((start k).t+t) k b j t
+    (0 < l ∧ supportsOrder k ⟨b,j,t⟩ l ∧
+      contractedFast ⟨b,j,t⟩ (start k) l (activeCap k) ≤ allowance ((start k).t+t) k b j t) ∨
+    exactPointFast ((start k).t+t) k b j t l
   | .shared b j l u =>
-    k = .empty ∧ 0 < l ∧ l ≤ order .empty ⟨b,j,t⟩ ∧ allowedFast ⟨b,j,t⟩ u ∧
-      sharedFast ⟨b,j,t⟩ l (activeCap .empty) u ≤ allowance t .empty b j t
+    0 < l ∧ supportsOrder k ⟨b,j,t⟩ l ∧ allowedFast ⟨b,j,t⟩ u ∧
+      sharedFast ⟨b,j,t⟩ l 172 u ≤ allowance ((start k).t+t) k b j t
 
 private instance (k : Band) (t : ℕ) (tile : Tile) : Decidable (paidFast k t tile) := by
   cases tile <;> unfold paidFast <;> infer_instance
@@ -239,11 +375,12 @@ private instance (k : Band) (t : ℕ) (tile : Tile) : Decidable (paidFast k t ti
 private theorem paidFast_iff (k : Band) (t : ℕ) (tile : Tile) : paidFast k t tile ↔ tile.Paid k t := by
   cases tile <;>
     simp only [paidFast, Tile.Paid, PointReceipt, SharedReceipt, OldReceipt, Final54MixReceipt.MixReceipt,
-      contractedFast_eq, allowedFast_iff, sharedFast_eq, oldFast_eq, cut_fast, fourFast_eq]
+      contractedFast_eq, exactPointFast_iff, allowedFast_iff, sharedFast_eq, oldFast_eq, cut_fast, fourFast_eq,
+      supportsOrder_iff]
 
 def paysFast (k : Band) (t : ℕ) (tiles : List Tile) : Bool := tiles.all fun x => decide (paidFast k t x)
 
-private theorem pays_of_fast (k : Band) (t : ℕ) (tiles : List Tile)
+theorem pays_of_fast (k : Band) (t : ℕ) (tiles : List Tile)
     (h : paysFast k t tiles = true) : pays k t tiles = true := by
   unfold paysFast at h
   unfold pays

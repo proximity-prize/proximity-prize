@@ -306,6 +306,9 @@ def Bank.box : Bank → Shape
 def Bank.cut : Bank → ℕ
   | .first => firstCut
   | .second => secondCut
+def Bank.targetRank : Bank → ℕ
+  | .first => 1
+  | .second => 2561085868844197170227
 def Bank.nodeRank : Bank → ℕ
   | .first => 10697571688375
   | .second => 10697783317215
@@ -6439,6 +6442,8 @@ def jetSum {M : Type*} [AddCommMonoid M] (B : ℕ) (f : ℕ → ℕ → ℕ → 
   ∑ q ∈ Finset.range (B + 1), ∑ k ∈ Finset.range (min q 1150 + 1),
     ∑ l ∈ Finset.range (min (q - k) (2300 - 2 * k) + 1), f q k l
 def rawBase (b : Bank) : ℕ := b.cut + 1 - 131071 * b.box.b
+def width (b : Bank) (h q k l : ℕ) : ℕ :=
+  rawBase b + 131071 * (b.box.b - q) + (l + 2 * k) + (2300 + (b.box.b - q)) * h
 end K1_13_4_2_1
 end
 section
@@ -6447,6 +6452,20 @@ set_option maxSynthPendingDepth 8
 namespace K1_14_3R_3
 noncomputable section
 open K1 K1_14 K1_14_3 Polynomial
+def cutIdeal (q : Surface) (P : Jet) : Ideal Jet :=
+  q.asIdeal ⊔ Ideal.span {P}
+def seedInclusion : Seeds →+* Jet :=
+  (Polynomial.C : Equation →+* Jet).comp Polynomial.C
+def seedIdeal (R : Ideal Jet) : Ideal Seeds :=
+  R.comap seedInclusion
+def HasSeedEquation (R : Ideal Jet) (f : Seeds) : Prop :=
+  f ≠ 0 ∧ seedIdeal R = Ideal.span {f}
+def seedPointEval (t : FX × FX) : Seeds →+* FX :=
+  MvPolynomial.eval ![t.1, t.2]
+def HasSeedPoint (R : Ideal Jet) (t : FX × FX) : Prop :=
+  seedIdeal R = RingHom.ker (seedPointEval t)
+def markPoint (z : K) : FX × FX :=
+  (seedEmbedding z, seedEmbedding z ^ p)
 inductive Line where
   | seed
   | jet
@@ -6459,6 +6478,10 @@ def lineEquation : Line → SectionJet
     let y : SectionJet := C (R := Polynomial SectionSeeds) (Polynomial.X (R := SectionSeeds))
     let v : SectionJet := Polynomial.X (R := Polynomial SectionSeeds)
     y + sectionScalar 1 * v - sectionScalar 3
+abbrev LineSection (I : Ideal Jet) (l : Line) :=
+  SectionJet ⧸ (I.map sectionMap ⊔ Ideal.span {lineEquation l})
+def lineLength (I : Ideal Jet) (l : Line) : ℕ :=
+  Module.finrank SectionField (LineSection I l)
 end
 end K1_14_3R_3
 end
@@ -6466,6 +6489,10 @@ section
 namespace K1_13_3
 noncomputable section
 open Polynomial K1 K1_13
+abbrev terminal : ℕ := 3000 * 180265 - 1
+abbrev layerWidth : ℕ := 46597
+def requiredOrder (T : ℕ) : ℕ :=
+  (terminal - T) / layerWidth + 1
 def BankRow (w : I → K) (T : ℕ) (P : Row 4) : Prop :=
   InBox (shape P) ⟨4012, 1650, 550⟩ ∧ TrueWeightLE P T ∧ Contact w P
 abbrev Symbol := MvPolynomial (Fin 4) Geom

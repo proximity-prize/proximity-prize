@@ -1,3 +1,4 @@
+/- Modified from public PR657. Removed obsolete rank budget checks. -/
 import ProximityPrize.SubmissionLower.Fast050
 import ProximityPrize.SubmissionLower.Fast051
 set_option Elab.async false
@@ -454,6 +455,85 @@ theorem backShift_index_order {Q : Form} {n : ℕ}
     change valueForm ∈ restrictWeightedOrder jetIndex 0
     simp
   · exact X_mem_restrictWeightedOrder _ _ le_rfl
+private theorem coefficient_of_filter {p : (Fin 4 →₀ ℕ) → Prop} [DecidablePred p]
+    {Q : Form} {e : Fin 4 →₀ ℕ} (h : e ∈ (filterSupport p Q).support) :
+    p e ∧ e ∈ Q.support := by
+  have hne := MvPolynomial.mem_support_iff.mp h
+  rw [coeff_filterSupport] at hne
+  by_cases he : p e
+  · simpa [he, MvPolynomial.mem_support_iff] using hne
+  · simp [he] at hne
+theorem rank_block_le_active (s : ℕ) (g : ℤ) (hg : g < 90 - (s : ℤ)) :
+    Module.finrank Geom (LinearMap.range (blockMap s g)) ≤
+      bandCount (residualDegree s) (-g) (activeIndex g) 10 := by
+  let d := residualDegree s
+  let B := bandSpace d (-g) 48 10
+  let A := bandSpace d (-g) (activeIndex g) 10
+  let cut := (90 - g).toNat
+  let retain := fun e : Fin 4 →₀ ℕ => e.weight jetIndex < cut
+  let project : B →ₗ[Geom] A := ((filterSupport retain).domRestrict B).codRestrict A (by
+    intro Q
+    apply (mem_restrictSupport_iff Geom).mpr
+    intro e he
+    have ⟨hret, hQ⟩ := coefficient_of_filter he
+    obtain ⟨hdeg, hlo, hhi, htop⟩ := Q.property hQ
+    refine ⟨hdeg, hlo, ?_, htop⟩
+    dsimp [activeIndex]
+    change e.weight jetIndex < cut at hret
+    dsimp [cut] at hret
+    omega)
+  let trunc := weightedTruncation (R := Geom) targetOrder (orderCutoff s g).toNat
+  let restricted := (trunc.comp backShift.toLinearMap).domRestrict A
+  have fac : blockMap s g = restricted.comp project := by
+    apply LinearMap.ext
+    intro Q
+    let P := filterSupport retain (Q : Form)
+    let H := filterSupport (fun e => ¬retain e) (Q : Form)
+    change trunc (backShift (Q : Form)) = trunc (backShift P)
+    have hsplit : P + H = (Q : Form) := filterSupport_add_filterSupport_not _ _
+    have hH : H.IsWeightedHomogeneous (fun _ => (1 : ℕ)) d := by
+      intro e he
+      have hmem : e ∈ H.support := MvPolynomial.mem_support_iff.mpr he
+      obtain ⟨_, hq⟩ := coefficient_of_filter hmem
+      rw [← Finsupp.degree_eq_weight_one]
+      exact (Q.property hq).1
+    have hI : H ∈ restrictWeightedOrder jetIndex cut := by
+      refine mem_restrictWeightedOrder.mpr fun e he => ?_
+      exact Nat.le_of_not_lt (coefficient_of_filter he).1
+    have hh := backShift_homogeneous hH
+    have hj := backShift_index_order hI
+    have hkill : trunc (backShift H) = 0 := by
+      apply (weightedTruncation_eq_zero_iff _ _ _).mpr
+      refine mem_restrictWeightedOrder.mpr fun e he => ?_
+      have hdeg := hh (MvPolynomial.mem_support_iff.mp he)
+      rw [← Finsupp.degree_eq_weight_one, degree_formula] at hdeg
+      have heI := mem_restrictWeightedOrder.mp hj e he
+      rw [jetIndex_formula] at heI
+      rw [targetOrder_formula]
+      have hd : d ≤ s := min_le_left _ _
+      dsimp [cut, orderCutoff] at *
+      omega
+    rw [← hsplit, map_add, map_add, hkill, add_zero]
+  have : Module.Finite Geom A := bandSpace_finite _ _ _ _
+  calc
+    _ = Module.finrank Geom (LinearMap.range (restricted.comp project)) := by rw [fac]
+    _ ≤ Module.finrank Geom (LinearMap.range restricted) :=
+      LinearMap.finrank_range_comp_le_left restricted project
+    _ ≤ Module.finrank Geom A := LinearMap.finrank_range_le restricted
+    _ = _ := finrank_bandSpace _ _ _ _
+theorem factorial_cast_ne_zero {n : ℕ} (hn : n ≤ 48) : (n.factorial : Geom) ≠ 0 := by
+  have : CharP Geom 2130706433 :=
+    charP_of_injective_algebraMap
+      (R := K1.K) (A := Geom) (algebraMap K1.K Geom).injective 2130706433
+  induction n with
+  | zero => simp
+  | succ n ih =>
+    rw [Nat.factorial_succ, Nat.cast_mul]
+    refine mul_ne_zero ?_ (ih (by omega))
+    intro h
+    have hd := (CharP.cast_eq_zero_iff Geom 2130706433 (n + 1)).mp h
+    have := Nat.le_of_dvd (Nat.succ_pos n) hd
+    omega
 end
 end K1_13_1_1
 end
@@ -674,6 +754,72 @@ private theorem smallContact_order {d : ℕ} {lo hi : ℤ} {top : ℕ} {order : 
   apply (weightedTruncation_eq_zero_iff _ _ _).mp
   have h := LinearMap.mem_ker.mp Q.property
   exact congrArg (fun P : targetSpace d lo order => (P : Form)) h
+theorem rank_block_le_flag (s : ℕ) (g : ℤ) (v : FactorPowers) :
+    Module.finrank Geom (LinearMap.range (blockMap s g)) ≤ flagBound s g v := by
+  let d := residualDegree s
+  let B := bandSpace d (-g) 48 10
+  have hB : Module.Finite Geom B := bandSpace_finite _ _ _ _
+  have hBdim : Module.finrank Geom B = bandCount d (-g) 48 10 := finrank_bandSpace _ _ _ _
+  unfold flagBound
+  dsimp only
+  by_cases h : v.degree ≤ d ∧ v.maxIndex ≤ 48 ∧ v.maxTop ≤ 10
+  · rw [ite_eq_left h]
+    let d' := d - v.degree
+    let lo' := -g - (v.minIndex : ℤ)
+    let hi' := 48 - (v.maxIndex : ℤ)
+    let top' := 10 - v.maxTop
+    let order' := orderCutoff s g - (v.minOrder : ℤ)
+    let W := bandSpace d' lo' hi' top'
+    let Target := targetSpace d' lo' order'
+    let small : W →ₗ[Geom] Target := smallContact d' lo' hi' top' order'
+    let V := LinearMap.ker small
+    have hW : Module.Finite Geom W := bandSpace_finite _ _ _ _
+    have hTarget : Module.Finite Geom Target := targetSpace_finite _ _ _
+    have hdim : Module.finrank Geom W = bandCount d' lo' hi' top' := finrank_bandSpace _ _ _ _
+    have hTdim : Module.finrank Geom Target = targetCount d' lo' order' := finrank_targetSpace _ _ _
+    have hsmall : Module.finrank Geom (LinearMap.range small) ≤ Module.finrank Geom Target :=
+      Submodule.finrank_le _
+    have hsum := small.finrank_range_add_finrank_ker
+    have hK : bandCount d' lo' hi' top' - targetCount d' lo' order' ≤
+        Module.finrank Geom V := by
+      change Module.finrank Geom (LinearMap.range small) + Module.finrank Geom V =
+        Module.finrank Geom W at hsum
+      omega
+    let multiply : W →ₗ[Geom] B :=
+      ((LinearMap.mulLeft Geom (flagFactor v)).domRestrict W).codRestrict B (by
+        intro Q
+        have hm := bandSpace_mul (flagFactor_mem_band v) Q.property
+        have hd : v.degree + d' = d := by dsimp [d']; omega
+        have hl : (v.minIndex : ℤ) + lo' = -g := by dsimp [lo']; omega
+        have hh : (v.maxIndex : ℤ) + hi' = 48 := by dsimp [hi']; omega
+        have ht : v.maxTop + top' = 10 := by dsimp [top']; omega
+        change flagFactor v * (Q : Form) ∈ bandSpace d (-g) 48 10
+        simpa only [hd, hl, hh, ht] using hm)
+    let embed : V →ₗ[Geom] LinearMap.ker (blockMap s g) :=
+      (multiply.domRestrict V).codRestrict (LinearMap.ker (blockMap s g)) (by
+        intro Q
+        apply LinearMap.mem_ker.mpr
+        change weightedTruncation targetOrder (orderCutoff s g).toNat
+          (backShift (flagFactor v * (Q : Form))) = 0
+        rw [map_mul]
+        apply (weightedTruncation_eq_zero_iff _ _ _).mpr
+        have hcut : (orderCutoff s g).toNat ≤ v.minOrder + order'.toNat := by
+          dsimp [order']; omega
+        exact restrictWeightedOrder_anti _ hcut
+          (mul_mem_restrictWeightedOrder (flagFactor_target_order v)
+            (smallContact_order (d := d') (lo := lo') (hi := hi') (top := top') (order := order') Q)))
+    have hinj : Function.Injective embed := by
+      intro P Q he
+      have he' : flagFactor v * (P : Form) = flagFactor v * (Q : Form) :=
+        congrArg (fun P : LinearMap.ker (blockMap s g) => (P : Form)) he
+      exact Subtype.ext (Subtype.ext (mul_left_cancel₀ (flagFactor_ne_zero v) he'))
+    have hr := LinearMap.finrank_range_le_sub_of_injective_ker (W := V) (blockMap s g) embed hinj
+    change _ ≤ bandCount d (-g) 48 10 - (bandCount d' lo' hi' top' - targetCount d' lo' order')
+    change Module.finrank Geom (LinearMap.range (blockMap s g)) ≤
+      Module.finrank Geom B - Module.finrank Geom V at hr
+    omega
+  · rw [ite_eq_right h, ← hBdim]
+    exact LinearMap.finrank_range_le (blockMap s g)
 end
 end K1_13_1_1
 end
@@ -683,6 +829,96 @@ open K1_13 MvPolynomial
 open scoped BigOperators
 noncomputable section
 set_option maxHeartbeats 1600000
+private theorem coeff_projectJet (j : Fin 4) (k : ℕ) (P : Form) (e : Fin 4 →₀ ℕ) :
+    (projectJet j k P).coeff e = if e j = k then P.coeff e else 0 :=
+  coeff_filterSupport _ _ _
+private theorem support_projectJet {j : Fin 4} {k : ℕ} {P : Form} {e : Fin 4 →₀ ℕ}
+    (he : e ∈ (projectJet j k P).support) : e j = k ∧ e ∈ P.support := by
+  have hc := MvPolynomial.mem_support_iff.mp he
+  rw [coeff_projectJet] at hc
+  by_cases h : e j = k
+  · simpa [h, MvPolynomial.mem_support_iff] using hc
+  · simp [h] at hc
+private theorem rank_le_projected_sum {V : Type*} [AddCommGroup V] [Module Geom V]
+    (j : Fin 4) (n : ℕ) (φ : V →ₗ[Geom] Form)
+    (hb : ∀ v e, e ∈ (φ v).support → e j < n) :
+    Module.finrank Geom (LinearMap.range φ) ≤
+      ∑ b : Fin n, Module.finrank Geom (LinearMap.range ((projectJet j b).comp φ)) := by
+  let π : LinearMap.range φ →ₗ[Geom] (Fin n → Form) :=
+    LinearMap.pi fun b : Fin n => (projectJet j b).comp (LinearMap.range φ).subtype
+  have hinj : Function.Injective π := by
+    intro Q R h
+    apply Subtype.ext
+    ext e
+    by_cases he : e j < n
+    · let b : Fin n := ⟨e j, he⟩
+      have heq := congrArg (fun f : Fin n → Form => (f b).coeff e) h
+      change (projectJet j (e j) Q).coeff e = (projectJet j (e j) R).coeff e at heq
+      simpa [coeff_projectJet] using heq
+    · obtain ⟨v, hv⟩ := Q.property
+      obtain ⟨w, hw⟩ := R.property
+      rw [← hv, ← hw]
+      have hzero (v : V) : (φ v).coeff e = 0 := by
+        by_contra hne
+        exact he (hb v e (MvPolynomial.mem_support_iff.mpr hne))
+      rw [hzero, hzero]
+  let collect := LinearMap.pi fun b : Fin n => (projectJet j b).comp φ
+  have hrange : LinearMap.range π = LinearMap.range collect := by
+    ext z
+    change (∃ Q, π Q = z) ↔ ∃ v, collect v = z
+    constructor
+    · rintro ⟨Q, rfl⟩
+      obtain ⟨v, hv⟩ := Q.property
+      refine ⟨v, ?_⟩
+      funext b
+      change projectJet j b (φ v) = projectJet j b (Q : Form)
+      rw [hv]
+    · rintro ⟨v, rfl⟩
+      exact ⟨φ.rangeRestrict v, rfl⟩
+  calc
+    _ = Module.finrank Geom (LinearMap.range π) := (LinearMap.finrank_range_of_inj hinj).symm
+    _ = Module.finrank Geom (LinearMap.range collect) := by rw [hrange]
+    _ ≤ _ := LinearMap.finrank_range_pi_le_sum _
+private theorem degree_of_mem_blockMap {s : ℕ} {g : ℤ}
+    (Q : bandSpace (residualDegree s) (-g) 48 10) {e : Fin 4 →₀ ℕ}
+    (he : e ∈ (blockMap s g Q).support) : e.degree = residualDegree s := by
+  have hQ : (Q : Form).IsWeightedHomogeneous (fun _ => (1 : ℕ)) (residualDegree s) := by
+    intro e he
+    rw [← Finsupp.degree_eq_weight_one]
+    exact (Q.property (MvPolynomial.mem_support_iff.mpr he)).1
+  have h := (backShift_homogeneous hQ).weightedTruncation targetOrder (orderCutoff s g).toNat
+  have hc := h (MvPolynomial.mem_support_iff.mp he)
+  rwa [← Finsupp.degree_eq_weight_one] at hc
+theorem rank_block_le_pascal (s : ℕ) (g : ℤ) (hg : g < 90 - (s : ℤ))
+    (hline : ∀ (b c : ℕ), b + c ≤ residualDegree s →
+      Module.finrank Geom (LinearMap.range
+        ((projectJet 2 c).comp ((projectJet 1 b).comp (blockMap s g)))) ≤
+        lineBound (residualDegree s) (-g) (orderCutoff s g) b c)
+    (hpair : ∀ b ≤ residualDegree s,
+      Module.finrank Geom (LinearMap.range ((projectJet 1 b).comp (blockMap s g))) ≤
+        pairBound (residualDegree s) (-g) b) :
+    Module.finrank Geom (LinearMap.range (blockMap s g)) ≤ pascalBound s g := by
+  let d := residualDegree s
+  refine le_min (rank_block_le_active s g hg) ?_
+  have h : Module.finrank Geom (LinearMap.range (blockMap s g)) ≤
+      ∑ b : Fin (d + 1),
+        Module.finrank Geom (LinearMap.range ((projectJet 1 b).comp (blockMap s g))) :=
+    rank_le_projected_sum 1 (d + 1) (blockMap s g) (fun Q e he => by
+      have := degree_of_mem_blockMap Q he
+      exact Nat.lt_succ_of_le ((Finsupp.le_degree 1 e).trans_eq this))
+  refine h.trans ?_
+  rw [sumRange_eq_fin]
+  refine Finset.sum_le_sum fun b _ => le_min (hpair b (Nat.le_of_lt_succ b.isLt)) ?_
+  have hs :=
+    rank_le_projected_sum 2 (d - b.val + 1) ((projectJet 1 b).comp (blockMap s g))
+      (fun Q e he => by
+        have ⟨hb, he'⟩ := support_projectJet he
+        have hd := degree_of_mem_blockMap Q he'
+        rw [degree_formula] at hd
+        omega)
+  refine hs.trans ?_
+  rw [sumRange_eq_fin]
+  exact Finset.sum_le_sum fun c _ => hline b c (by have := b.isLt; have := c.isLt; omega)
 end
 end K1_13_1_1
 end
@@ -814,6 +1050,14 @@ namespace Branch
 variable {f Q : Row 4} {l : ℕ} (b : Branch f Q l)
 def g : Row 4 := (separant^[b.r]) f
 def sigma : GeoJets := toGeneric (separant b.g)
+def member : GeoJets := toGeneric (membershipTest b.g)
+def next : GeoJets := toGeneric (nextTest b.g)
+def Contains (p : JetPoint) : Prop :=
+  b.curve ≤ RingHom.ker (MvPolynomial.eval p) ∧ MvPolynomial.eval p b.sigma ≠ 0
+def graph : GeoJets5 :=
+  MvPolynomial.rename Fin.castSucc (toGeneric (partialFlow b.g)) +
+    MvPolynomial.C (4 : GeoField) * MvPolynomial.rename Fin.castSucc b.sigma *
+      MvPolynomial.X (Fin.last 4)
 abbrev Local := Localization.Away b.sigma
 def localMap : GeoJets →+* b.Local := algebraMap GeoJets b.Local
 def onGraph : GeoJets5 →+* b.Local :=
@@ -833,6 +1077,13 @@ def Box5 (p : Shape) (d : ℕ) (D : GeoJets5) : Prop :=
   OldBox Fin.castSucc p D ∧ ∀ m ∈ D.support, m (Fin.last 4) ≤ d
 def graphBox (p : Shape) : Shape :=
   ⟨max p.b (p.j + 1), p.j + 1, min (p.t + 1) ((p.j + 1) / 3)⟩
+def Chart4 {f Q l} (b : Branch f Q l) : Prop :=
+  let p := (shape f).chamber
+  Box4 (chart (taylorLength + 1) p) b.member ∧
+    Box4 (chart (taylorLength + 2) p) b.next ∧
+    ∀ x a : K, ∃ D, Box4 (chart (taylorLength + 2) p) D ∧
+      ∀ S : K[X], S.natDegree ≤ 133671 → b.Contains (actualPoint (extend S)) →
+        (MvPolynomial.eval (actualPoint (extend S)) D = 0 ↔ S.eval x = a)
 end
 end K1_13_6_2
 end

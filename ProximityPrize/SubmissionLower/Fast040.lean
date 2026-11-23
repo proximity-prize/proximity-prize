@@ -12,6 +12,16 @@ section
 namespace K1_13_1
 noncomputable section
 open K1_13 PolynomialDifferential ReedSolomon.HiddenDerivative
+def AnchorEligible (u : JetVariable 3 →₀ ℕ) : Prop :=
+  u.some.degree ≤ 120 ∧
+    u.some.weight (fun i => i.val) ≤ 48 ∧
+    u (some 3) ≤ 10 ∧
+    u (some 1) + u (some 2) + u (some 3) ≤ 48 - (u.some.degree - 113 + 1) / 2 ∧
+    u.weight (differentialWeight 133671) ≤ 90 * 180265 - 1
+def anchorSpace : Submodule Geom (DifferentialPolynomial Geom 3) :=
+  MvPolynomial.restrictSupport Geom {u | AnchorEligible u}
+def anchorLocal (center received : Geom) : anchorSpace →ₗ[Geom] LocalPolynomial Geom 3 :=
+  (localConstraintAt 90 center received).domRestrict anchorSpace
 end
 end K1_13_1
 end
@@ -165,9 +175,25 @@ private theorem index_bounds (P : Row 4) :
         Finset.mul_sum, Nat.mul_comm]
     have hdeg : m.degree ≤ P.totalDegree := le_totalDegree hm
     exact hle.trans (he.trans_le (Nat.mul_le_mul_left 3 hdeg))
+private theorem fits_of_prod {n : ℕ} (P : Row 4) (hP : P ≠ 0)
+    (hbox : InBox (shape P) ⟨120, 48, 10⟩) (f : Fin n → Row 4)
+    (ht : ∀ i, 0 < (shape (f i)).t) (hd : (∏ i, f i) ∣ P) :
+    Fits (fun i => shape (f i)) := by
+  refine ⟨fun i => ⟨ht i, index_bounds (f i)⟩, ?_, ?_, ?_⟩
+  · have h := sum_weightedTotalDegree_le_of_prod_dvd (1 : Fin 4 → ℕ) Finset.univ f hP hd
+    simp only [weightedTotalDegree_one] at h
+    exact h.trans hbox.1
+  · have h := sum_weightedTotalDegree_le_of_prod_dvd (fun i => i.val) Finset.univ f hP hd
+    simp only [← indexDegree_eq] at h
+    exact h.trans hbox.2.1
+  · have h := sum_weightedTotalDegree_le_of_prod_dvd (Pi.single (3 : Fin 4) 1) Finset.univ f hP hd
+    simp only [weightedTotalDegree_piSingle] at h
+    exact h.trans hbox.2.2
 end FactorCover
 section Composition
 open K1_13
+def c1 : Prop :=
+  ∀ x y : Geom, Module.finrank Geom (LinearMap.range (anchorLocal x y)) ≤ 9199626
 end Composition
 end
 end K1_13_1
@@ -176,6 +202,10 @@ section
 namespace K1_13_1_1
 open K1_13 K1_13_1 MvPolynomial PolynomialDifferential ReedSolomon.HiddenDerivative
 open scoped BigOperators
+def residualDegree (s : ℕ) : ℕ :=
+  min s (48 - (s - 113 + 1) / 2)
+def offset (r : ℕ) : ℤ := (r : ℤ) - 48
+def activeIndex (g : ℤ) : ℤ := min 48 (89 - g)
 def orderCutoff (s : ℕ) (g : ℤ) : ℤ := 90 - (s : ℤ) - g
 def jetIndex : Fin 4 → ℕ := Fin.val
 def targetOrder : Fin 4 → ℕ := ![3,0,1,2]
@@ -201,6 +231,21 @@ def targetCount (d : ℕ) (lo order : ℤ) : ℕ :=
     sumRange (d - a + 1) fun f =>
       intervalSize (max 0 (lo - d + a - 2 * f))
         (min ((d : ℤ) - a - f) (order - 1 - 3 * a - 2 * f))
+def lineBound (d : ℕ) (lo order : ℤ) (b c : ℕ) : ℕ :=
+  let fmin := max 0 ((lo - b - 2 * (min c 24 : ℕ) + 2) / 3)
+  let rowMin := max fmin (3 * (d : ℤ) - 3 * b - 2 * c - order + 1)
+  min (intervalSize fmin (min d 10)) (intervalSize rowMin ((d : ℤ) - b - c))
+def pairBound (d : ℕ) (lo : ℤ) (b : ℕ) : ℕ :=
+  sumRange (min d 10 + 1) fun f =>
+    intervalSize (max 0 ((lo - b - 3 * f + 1) / 2))
+      (min ((d : ℤ) - f) ((48 - 3 * f) / 2))
+def pascalBound (s : ℕ) (g : ℤ) : ℕ :=
+  let d := residualDegree s
+  let lo := -g
+  let order := orderCutoff s g
+  min (bandCount d lo (activeIndex g) 10)
+    (sumRange (d + 1) fun b =>
+      min (pairBound d lo b) (sumRange (d - b + 1) (lineBound d lo order b)))
 structure FactorPowers where
   value : ℕ
   jetTwo : ℕ
@@ -211,6 +256,124 @@ def FactorPowers.minIndex (v : FactorPowers) : ℕ := 2 * v.jetTwo + v.quad + 2 
 def FactorPowers.maxIndex (v : FactorPowers) : ℕ := 2 * v.jetTwo + 2 * v.quad + 3 * v.cubic
 def FactorPowers.maxTop (v : FactorPowers) : ℕ := v.cubic
 def FactorPowers.minOrder (v : FactorPowers) : ℕ := v.jetTwo + 2 * v.quad + 3 * v.cubic
+def flagBound (s : ℕ) (g : ℤ) (v : FactorPowers) : ℕ :=
+  let d := residualDegree s
+  let count := bandCount d (-g) 48 10
+  if v.degree ≤ d ∧ v.maxIndex ≤ 48 ∧ v.maxTop ≤ 10 then
+    let d' := d - v.degree
+    let lo' := -g - (v.minIndex : ℤ)
+    let hi' := 48 - (v.maxIndex : ℤ)
+    let order' := orderCutoff s g - (v.minOrder : ℤ)
+    count - (bandCount d' lo' hi' (10 - v.maxTop) - targetCount d' lo' order')
+  else count
+def selectedFactors (s : ℕ) (g : ℤ) : Option FactorPowers :=
+  let choices : List (ℤ × FactorPowers) := match s with
+    | 55 => [(-13,⟨0,0,6,0⟩)]
+    | 56 => [(-14,⟨0,0,6,0⟩)]
+    | 57 => [(-15,⟨0,0,7,0⟩)]
+    | 58 => [(-16,⟨0,0,8,0⟩)]
+    | 59 => [(-17,⟨0,0,8,1⟩)]
+    | 60 => [(-18,⟨0,0,8,1⟩),(-17,⟨0,0,6,0⟩)]
+    | 61 => [(-19,⟨0,0,12,0⟩),(-18,⟨0,0,6,0⟩)]
+    | 62 => [(-20,⟨0,0,12,1⟩),(-19,⟨0,0,6,0⟩)]
+    | 63 => [(-21,⟨0,0,12,2⟩),(-20,⟨0,0,6,1⟩)]
+    | 64 => [(-22,⟨0,0,16,0⟩),(-21,⟨0,0,8,1⟩)]
+    | 65 => [(-23,⟨0,0,16,1⟩),(-22,⟨0,0,8,1⟩),(-21,⟨0,0,6,0⟩)]
+    | 66 => [(-24,⟨0,0,24,0⟩),(-23,⟨0,0,8,2⟩),(-22,⟨0,0,6,0⟩)]
+    | 67 => [(-24,⟨0,0,12,1⟩),(-23,⟨0,0,6,1⟩)]
+    | 68 => [(-25,⟨0,0,16,1⟩),(-24,⟨0,0,6,2⟩),(-23,⟨0,0,4,0⟩)]
+    | 69 => [(-26,⟨0,0,16,2⟩),(-25,⟨0,0,8,2⟩),(-24,⟨0,0,5,0⟩)]
+    | 70 => [(-26,⟨0,0,8,2⟩),(-25,⟨0,0,6,0⟩)]
+    | 71 => [(-27,⟨0,0,12,2⟩),(-26,⟨0,0,6,1⟩)]
+    | 72 => [(-27,⟨0,0,6,2⟩),(-26,⟨0,0,4,0⟩)]
+    | 73 => [(-28,⟨0,0,8,2⟩),(-27,⟨0,0,4,1⟩)]
+    | 74 => [(-29,⟨0,0,8,3⟩),(-28,⟨0,0,6,1⟩)]
+    | 75 => [(-29,⟨0,0,6,2⟩),(-28,⟨0,0,3,0⟩)]
+    | 76 => [(-30,⟨0,0,6,3⟩),(-29,⟨0,0,4,0⟩)]
+    | 77 => [(-30,⟨0,0,4,1⟩)]
+    | 78 => [(-31,⟨0,0,6,2⟩),(-30,⟨0,0,3,0⟩)]
+    | 79 => [(-32,⟨0,0,6,3⟩),(-31,⟨0,0,4,0⟩)]
+    | 80 => [(-32,⟨0,0,4,2⟩)]
+    | 81 => [(-33,⟨0,0,6,2⟩),(-32,⟨0,0,3,0⟩)]
+    | 82 => [(-33,⟨0,0,3,1⟩)]
+    | 83 => [(-34,⟨0,0,4,2⟩)]
+    | 84 => [(-34,⟨0,0,2,0⟩)]
+    | 85 => [(-35,⟨0,0,3,2⟩)]
+    | 87 => [(-36,⟨0,0,2,1⟩)]
+    | 89 => [(-37,⟨3,0,2,0⟩)]
+    | 93 => [(-39,⟨6,1,0,0⟩)]
+    | 94 => [(-39,⟨4,0,0,0⟩)]
+    | 95 => [(-40,⟨8,2,0,0⟩),(-39,⟨3,0,0,0⟩)]
+    | 96 => [(-40,⟨6,1,0,0⟩),(-39,⟨2,0,0,0⟩)]
+    | 97 => [(-41,⟨12,2,0,0⟩),(-40,⟨6,0,0,0⟩),(-39,⟨1,0,0,0⟩)]
+    | 98 => [(-41,⟨8,1,0,0⟩),(-40,⟨4,0,0,0⟩)]
+    | 99 => [(-42,⟨12,3,0,0⟩),(-41,⟨8,0,0,0⟩),(-40,⟨3,0,0,0⟩)]
+    | 100 => [(-42,⟨12,2,0,0⟩),(-41,⟨6,0,0,0⟩),(-40,⟨2,0,0,0⟩)]
+    | 101 =>
+      [(-43,⟨16,3,0,0⟩),(-42,⟨12,1,0,0⟩),(-41,⟨6,0,0,0⟩),
+       (-40,⟨1,0,0,0⟩)]
+    | 102 => [(-43,⟨12,2,0,0⟩),(-42,⟨8,0,0,0⟩),(-41,⟨4,0,0,0⟩)]
+    | 103 =>
+      [(-44,⟨16,4,0,0⟩),(-43,⟨12,1,0,0⟩),(-42,⟨8,0,0,0⟩),
+       (-41,⟨3,0,0,0⟩)]
+    | 104 =>
+      [(-44,⟨16,3,0,0⟩),(-43,⟨12,0,0,0⟩),(-42,⟨6,0,0,0⟩),
+       (-41,⟨2,0,0,0⟩)]
+    | 105 =>
+      [(-45,⟨16,4,0,0⟩),(-44,⟨16,2,0,0⟩),(-43,⟨12,0,0,0⟩),
+       (-42,⟨6,0,0,0⟩),(-41,⟨1,0,0,0⟩)]
+    | 106 =>
+      [(-45,⟨16,3,0,0⟩),(-44,⟨12,1,0,0⟩),(-43,⟨8,0,0,0⟩),
+       (-42,⟨4,0,0,0⟩)]
+    | 107 =>
+      [(-46,⟨24,6,0,0⟩),(-45,⟨16,2,0,0⟩),(-44,⟨12,0,0,0⟩),
+       (-43,⟨8,0,0,0⟩),(-42,⟨3,0,0,0⟩)]
+    | 108 =>
+      [(-46,⟨24,4,0,0⟩),(-45,⟨16,1,0,0⟩),(-44,⟨12,0,0,0⟩),
+       (-43,⟨6,0,0,0⟩),(-42,⟨2,0,0,0⟩)]
+    | 109 =>
+      [(-47,⟨24,6,0,0⟩),(-46,⟨17,0,0,0⟩),(-45,⟨16,0,0,0⟩),
+       (-44,⟨12,0,0,0⟩),(-43,⟨6,0,0,0⟩),(-42,⟨1,0,0,0⟩)]
+    | 110 =>
+      [(-47,⟨24,4,0,0⟩),(-46,⟨16,2,0,0⟩),(-45,⟨12,0,0,0⟩),
+       (-44,⟨8,0,0,0⟩),(-43,⟨4,0,0,0⟩)]
+    | 111 =>
+      [(-47,⟨24,4,0,0⟩),(-46,⟨16,1,0,0⟩),(-45,⟨12,0,0,0⟩),
+       (-44,⟨8,0,0,0⟩),(-43,⟨3,0,0,0⟩)]
+    | 112 =>
+      [(-48,⟨26,0,0,0⟩),(-47,⟨18,0,0,0⟩),(-46,⟨16,0,0,0⟩),
+       (-45,⟨12,0,0,0⟩),(-44,⟨6,0,0,0⟩),(-43,⟨2,0,0,0⟩)]
+    | 113 =>
+      [(-48,⟨25,0,0,0⟩),(-47,⟨17,0,0,0⟩),(-46,⟨16,0,0,0⟩),
+       (-45,⟨12,0,0,0⟩),(-44,⟨6,0,0,0⟩),(-43,⟨1,0,0,0⟩)]
+    | 114 =>
+      [(-48,⟨24,0,0,0⟩),(-47,⟨16,0,0,0⟩),(-46,⟨12,0,0,0⟩),
+       (-45,⟨8,0,0,0⟩),(-44,⟨3,0,0,0⟩)]
+    | 115 =>
+      [(-48,⟨22,0,0,0⟩),(-47,⟨16,0,0,0⟩),(-46,⟨12,0,0,0⟩),
+       (-45,⟨6,0,0,0⟩),(-44,⟨2,0,0,0⟩)]
+    | 116 =>
+      [(-48,⟨16,0,0,0⟩),(-47,⟨12,0,0,0⟩),(-46,⟨8,0,0,0⟩),
+       (-45,⟨4,0,0,0⟩)]
+    | 117 =>
+      [(-48,⟨16,0,0,0⟩),(-47,⟨12,0,0,0⟩),(-46,⟨8,0,0,0⟩),
+       (-45,⟨3,0,0,0⟩)]
+    | 118 =>
+      [(-48,⟨16,0,0,0⟩),(-47,⟨12,0,0,0⟩),(-46,⟨6,0,0,0⟩),
+       (-45,⟨1,0,0,0⟩)]
+    | 119 => [(-48,⟨12,0,0,0⟩),(-47,⟨8,0,0,0⟩),(-46,⟨4,0,0,0⟩)]
+    | 120 => [(-48,⟨12,0,0,0⟩),(-47,⟨6,0,0,0⟩),(-46,⟨2,0,0,0⟩)]
+    | _ => []
+  choices.lookup g
+def blockBudget (s : ℕ) (g : ℤ) : ℕ :=
+  if g < 90 - (s : ℤ) then
+    match selectedFactors s g with
+    | none => pascalBound s g
+    | some v => min (pascalBound s g) (flagBound s g v)
+  else 0
+def gradeBudget (s : ℕ) : ℕ :=
+  sumRange 138 fun r => blockBudget s (offset r)
+def totalBudget : ℕ := sumRange 121 gradeBudget
 noncomputable section
 abbrev Form := MvPolynomial (Fin 4) Geom
 def bandSpace (d : ℕ) (lo hi : ℤ) (f : ℕ) : Submodule Geom Form :=
@@ -226,6 +389,21 @@ def flagFactor (v : FactorPowers) : Form :=
     (x₀ ^ 2 * x₃ + x₀ ^ 2 * x₂ - 2 * x₀ * x₁ * x₂ - x₀ * x₁ ^ 2 + x₁ ^ 3) ^ v.cubic
 def backShift : Form →ₐ[Geom] Form :=
   bind₁ fun j => if j = 0 then valueForm else MvPolynomial.X j
+def blockMap (s : ℕ) (g : ℤ) : bandSpace (residualDegree s) (-g) 48 10 →ₗ[Geom] Form :=
+  ((weightedTruncation targetOrder (orderCutoff s g).toNat).comp
+    backShift.toLinearMap).domRestrict _
+def projectJet (j : Fin 4) (k : ℕ) : Form →ₗ[Geom] Form :=
+  filterSupport fun m => m j = k
+def pascalRowScale (e : Fin 4 →₀ ℕ) : Geom :=
+  (-1 : Geom) ^ (e 2) / ∏ j : Fin 4, ((e j).factorial : Geom)
+def pascalColScale (m : Fin 4 →₀ ℕ) : Geom :=
+  (-1 : Geom) ^ (m 2) * ∏ j : Fin 4, ((m j).factorial : Geom)
+def PascalEntries : Prop :=
+  ∀ (m e : Fin 4 →₀ ℕ), m.degree = e.degree → m.degree ≤ 48 →
+    (backShift (monomial m 1)).coeff e =
+      pascalRowScale e * pascalColScale m *
+        ((e 1).choose (m 1) : Geom) * ((e 2).choose (m 2) : Geom) *
+          ((e 3).choose (m 3) : Geom)
 end
 end K1_13_1_1
 end
@@ -233,5 +411,40 @@ section
 namespace K1_13_1_1
 set_option maxRecDepth 30000
 set_option maxHeartbeats 4000000
+def remainingCap (f : ℕ → ℕ) : (n start cap : ℕ) → ℕ
+  | 0, _, cap => cap
+  | n + 1, start, cap =>
+    if cap = 0 then 0 else remainingCap f n (start + 1) (cap - f start)
+def sumToCap (f : ℕ → ℕ) (n start cap : ℕ) : ℕ :=
+  cap - remainingCap f n start cap
+def activeNatCount (d lo hi : ℕ) : ℕ :=
+  sumRange (min (min d 10) (hi / 3) + 1) fun f =>
+    sumRange (min (d - f) ((hi - 3 * f) / 2) + 1) fun c =>
+      min (d - f - c) (hi - 2 * c - 3 * f) + 1 - (lo - (2 * c + 3 * f))
+def natLine (d lo o b c : ℕ) : ℕ :=
+  let fmin := (lo - (b + 2 * min c 24) + 2) / 3
+  let rowMin := max fmin (3 * d + 1 - (3 * b + 2 * c + o))
+  min (min d 10 + 1 - fmin) (d - b - c + 1 - rowMin)
+def natPairs (d lo b : ℕ) : ℕ :=
+  sumRange (min d 10 + 1) fun f =>
+    min (d - f) ((48 - 3 * f) / 2) + 1 - ((lo - (b + 3 * f) + 1) / 2)
+def fastPascal (s r : ℕ) : ℕ :=
+  let d := residualDegree s
+  let lo := 48 - r
+  let o := 138 - (s + r)
+  let hi := min 48 (137 - r)
+  let startB := d + 1 - o
+  sumToCap (fun b =>
+    let startC := 2 * (d - b) + 1 - o
+    sumToCap (natLine d lo o b) (d - b + 1 - startC) startC (natPairs d lo b))
+    (d + 1 - startB) startB (activeNatCount d lo hi)
+def fastBlock (s r : ℕ) : ℕ :=
+  if s + r < 138 then
+    match selectedFactors s (offset r) with
+    | none => fastPascal s r
+    | some v => min (fastPascal s r) (flagBound s (offset r) v)
+  else 0
+def fastGrade (s : ℕ) : ℕ :=
+  sumRange 138 (fastBlock s)
 end K1_13_1_1
 end

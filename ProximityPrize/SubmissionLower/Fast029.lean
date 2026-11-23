@@ -38,10 +38,19 @@ def FixedEquation {u del} {M : AnchorModel u del} {Γ} (F : AnchoredFamily M Γ)
     ∀ γ ∈ T, fixedAt G (F.scalar γ) = 0
 def fixedKeys : List (ℕ × ℕ) := (507836, 93976) :: shapes.map (fun s => (s.B, s.J))
 def endpointDegree : ℕ := 134625
+def fixedPrice (B J : ℕ) : ℕ :=
+  let d := endpointDegree
+  let t := 2*d-3
+  let a := 1+t*(B-1)
+  let v := min a (t*(J-1)+d)
+  let gap := 180265-d
+  (81879*((B-J)*v+J*a)+gap-1)/gap+B^2
+def fixedTotal : ℕ := (fixedKeys.map fun k => fixedPrice k.1 k.2).sum
 def directPrice : ℕ :=
   5980 + ((p+1)*1052972+19635660) + (p+1)*(shapes.map Shape.U).sum + 310966947964
 def lossSeedCap : ℕ := 220891211
 def lossYCap : ℕ := 4783514411
+def movingPrice : ℕ := 86954269798767161
 abbrev Ambient := MvPolynomial (Fin 4) FX
 abbrev RootAmbient := MvPolynomial (Fin 3) FX
 def rootSeeds : Seeds →+* RootAmbient :=
@@ -130,6 +139,15 @@ def SmallRootCurve (I : Ideal RootAmbient) (g H : ℕ) : Prop :=
       Module.finrank SeedField (RootSeedSection I) = C₀.totalDegree * g ∧
       Module.Finite SeedField (RootYSection I) ∧
       Module.finrank SeedField (RootYSection I) ≤ H
+def rootPrice (g H : ℕ) : ℚ :=
+  let t : ℚ := 2 * (g : ℚ) - 1
+  (t + (11697/6520 : ℚ) * (((2 * endpointDegree - 1 : ℕ) : ℚ)*t+1)) * H + g
+def RootTariff : Prop :=
+  ∀ u del (M : AnchorModel u del) Γ (F : AnchoredFamily M Γ),
+    M.overhead ≤ 3554 → ∀ T ⊆ Γ, ∀ I g H, 0 < g → g ≤ 8 →
+    SmallRootCurve I g H →
+    (∀ γ ∈ T, OnRoot I (M.label γ) (F.scalar γ)) →
+    (T.card : ℚ) ≤ rootPrice g H
 abbrev FibreRing := MvPolynomial (Fin 2) SeedField
 def mapGenericSeed : Ambient →+* FibreRing :=
   MvPolynomial.eval₂Hom (MvPolynomial.C.comp (algebraMap FX SeedField))
@@ -172,6 +190,13 @@ section
 namespace K1_14_2
 noncomputable section
 open K1 K1_14 Polynomial
+def c4 : Prop := RootTariff
+set_option maxRecDepth 12000 in
+private theorem ledger (w : ℤ) (hw : w ≤ 3554) :
+    directPrice + fixedTotal + movingPrice ≤ highPrefix w := by
+  have he : highPrefix w = 132117856182247703 := by simp [highPrefix, hw]
+  rw [he]
+  decide +kernel
 end
 end K1_14_2
 end
@@ -333,6 +358,8 @@ def fibrePoint (y v : SeedClosure) : Ideal FibreJet :=
     Polynomial.X (R := Polynomial SeedClosure) - C (C v)}
 def OrderAt (q : Surface) (P : Jet) (m : ℕ) : Prop :=
   ∀ y v, OnSeedFibre q y v → fibreRow P ∈ fibrePoint y v ^ m
+def BankVanishes (rows : Banks) (s : Shape) (q : Surface) : Prop :=
+  ∀ P ∈ rows s (s.m*180265 - 1), P ∈ q.asIdeal
 abbrev ClearedSeeds := MvPolynomial (Fin 2) L[X]
 abbrev ClearedEquation := Polynomial ClearedSeeds
 def liftEquation : ClearedEquation →+* Equation :=
@@ -346,6 +373,13 @@ def IsClearing (f : Equation) (g : ClearedEquation) (a : L[X]) : Prop :=
 def Compatible (P Q : Jet) (q : Surface) : Prop :=
   ∀ f : Equation, Irreducible f → 0 < f.natDegree → C f ∣ P → C f ∣ Q →
     C f ∈ q.asIdeal → ∀ g a, IsClearing f g a → ordinaryCutter g ∈ q.asIdeal
+def PassStage {h : ℕ} (rows : Banks) (pairs : ∀ i : Fin 4, BufferedPair h rows i)
+    (i : Fin 5) (q : Surface) : Prop :=
+  if hi : i.val < 4 then
+    let j : Fin 4 := ⟨i.val, hi⟩
+    BankVanishes rows (cheapShape j) q ∧ BankVanishes rows (layeredShape j) q ∧
+      Compatible (pairs j).cheap (pairs j).layered q
+  else BankVanishes rows fullShape q
 inductive Slice where
   | seed | ordinate | mixed | jets
 abbrev SectionField := FractionRing (MvPolynomial (Fin 4) FX)
@@ -379,6 +413,11 @@ structure MassCap (qs : Finset Surface) (a c z : ℚ) : Prop where
   seed : mass qs .seed ≤ a
   ordinate : mass qs .ordinate ≤ c
   mixed : mass qs .mixed ≤ z
+def cutDegree (s : Shape) (qs : Finset Surface) : ℚ :=
+  (s.U : ℚ) * mass qs .seed + ((s.B - s.J : ℕ) : ℚ) * mass qs .ordinate +
+    (s.J : ℚ) * mass qs .mixed
+def constantDegree (s : Shape) (qs : Finset Surface) : ℚ :=
+  (s.U : ℚ) * mass qs .mixed + (s.B : ℚ) * mass qs .jets
 structure SeedCover where
   curve : Seeds
   curve_ne : curve ≠ 0
@@ -433,6 +472,7 @@ open K1 K1_14 K1_14_2 Polynomial
 open scoped Classical
 def stageAt (i : Fin 10) : Stage :=
   stages.get ⟨i.val, by simp [stages]⟩
+def fullCutoff (s : Shape) : ℕ := s.m * 180265 - 1
 def RowCaps (P : Jet) (s : Shape) : Prop :=
   ∀ j i, (P.coeff j).coeff i ≠ 0 →
     i+j ≤ s.B ∧ j ≤ s.J ∧ ((P.coeff j).coeff i).totalDegree ≤ s.U
@@ -459,8 +499,22 @@ structure FixedPart (P : Jet) (s : Shape) where
 structure FixedPair {w rows i} (B : RowPair w rows i) where
   cheap : FixedPart B.cheap (stageAt i).cheap
   layered : FixedPart B.layered (stageAt i).layered
+def bankVanishes (rows : Banks) (s : Shape) (I : Ideal Ambient) : Prop :=
+  ∀ P ∈ rows s (fullCutoff s), toJet P ∈ I
+def compatible (P Q : Jet) (I : Ideal Ambient) : Prop :=
+  ∀ f : Equation, Irreducible f → 0 < f.natDegree → C f ∣ P → C f ∣ Q →
+    rootIncl (toRoot f) ∈ I →
+    ∀ g a, K1_14_3.IsClearing f g a → toJet (K1_14_3.ordinaryCutter g) ∈ I
+def pairTest {w rows i} (B : RowPair w rows i) (I : Ideal Ambient) : Prop :=
+  bankVanishes rows (stageAt i).cheap I ∧ bankVanishes rows (stageAt i).layered I ∧
+    compatible B.cheap B.layered I
 def fixedOn (G : ODE) (I : Ideal Ambient) : Prop :=
   toJet (fixedIncl G) ∈ I
+def stageTest {w rows} (pairs : ∀ i : Fin 10, RowPair w rows i)
+    (n : ℕ) (I : Ideal Ambient) : Prop :=
+  if hn : n < 10 then pairTest (pairs ⟨n, hn⟩) I else bankVanishes rows full I
+def cutShape (n : ℕ) : Shape :=
+  if hn : n < 10 then (stageAt ⟨n, hn⟩).layered else full
 abbrev SectionField := FractionRing (MvPolynomial (Fin 4) FX)
 abbrev SectionAmbient := MvPolynomial (Fin 4) SectionField
 def sliceParameter (i : Fin 4) : SectionField :=
@@ -515,6 +569,8 @@ def budget (n : ℕ) : Fin 4 → ℕ :=
   | 7 => ![170,6245,54168,776610]
   | 8 => ![145,5264,47174,606347]
   | _ => ![123,4633,40170,512888]
+def exitBudget (i : Fin 10) : Fin 4 → ℕ :=
+  if i.val = 4 then ![2533,93976,507836,1993744] else budget i.val
 def weight (s : Shape) (fee : Fin 3) : Fin 4 → ℕ :=
   ![![s.U, s.B-s.J, s.J, 0],
     ![0, s.U, 0, s.J],
@@ -577,9 +633,20 @@ theorem eval_fixed (z : K) (S : K[X]) (G : ODE) :
       simp [graphEval]
     rw [hc]
   rw [h]
+theorem dot_mono (w a b : Fin 4 → ℕ) (h : ∀ k, a k ≤ b k) : dot w a ≤ dot w b :=
+  Finset.sum_le_sum (fun k _ => Nat.mul_le_mul_left _ (h k))
 theorem mass_mono {S T : Finset (Ideal Ambient)} (h : S ⊆ T) (k : Fin 4) :
     mass S k ≤ mass T k :=
   Finset.sum_le_sum_of_subset_of_nonneg h (fun _ _ _ => Nat.zero_le _)
+theorem dot_mass_sdiff {S T : Finset (Ideal Ambient)} (h : T ⊆ S) (w : Fin 4 → ℕ) :
+    dot w (mass (S \ T)) + dot w (mass T) = dot w (mass S) := by
+  unfold dot
+  rw [← Finset.sum_add_distrib]
+  apply Finset.sum_congr rfl
+  intro k _
+  rw [← Nat.mul_add]
+  congr 1
+  exact Finset.sum_sdiff h
 theorem sum_union_le {α : Type*} (f : α → ℕ) (A B : Finset α) :
     (∑ a ∈ A ∪ B, f a) ≤ (∑ a ∈ A, f a) + ∑ a ∈ B, f a := by
   have h := Finset.sum_union_inter (f := f) (s₁ := A) (s₂ := B)
@@ -632,6 +699,10 @@ def markEval (z : K) (S : K[X]) : Jet →+* FX :=
   eval₂RingHom (eval₂RingHom (graphEval z) (atX S)) (atX S.derivative)
 def AtSurface (q : Surface) (z : K) (S : K[X]) : Prop :=
   q.asIdeal ≤ RingHom.ker (markEval z S)
+def TwoDimensional (qs : Finset Surface) : Prop :=
+  ∀ q ∈ qs, q.asIdeal.height = 2
+def ComponentsOn (P Q : Jet) (qs : Finset Surface) : Prop :=
+  ∀ q ∈ qs, q.asIdeal.height = 2 ∧ P ∈ q.asIdeal ∧ Q ∈ q.asIdeal
 structure PreparedPair (P Q : Jet) where
   seedContent : Seeds
   fixedCheap : JetPlane
@@ -660,6 +731,8 @@ structure FourMassCap (qs : Finset Surface) (a c z e : ℚ) : Prop where
   ordinate : mass qs .ordinate ≤ c
   mixed : mass qs .mixed ≤ z
   jets : mass qs .jets ≤ e
+def totalSectionDegree (qs : Finset Surface) (s : Slice) : ℕ :=
+  ∑ q ∈ qs, sectionDegree q s
 end
 end K1_14_3_2
 end
@@ -727,6 +800,13 @@ theorem joinCovers_covers {ι : Type*} {I : Finset ι} {C : ι → SeedCover} {i
     rw [map_prod]
     exact Finset.prod_eq_zero hi h
   · exact Or.inr (Finset.mem_biUnion.mpr ⟨i, hi, h⟩)
+theorem mass_sdiff {S T : Finset Surface} (h : T ⊆ S) (s : Slice) :
+    mass (S \ T) s = mass S s - mass T s := by
+  classical
+  apply eq_sub_of_add_eq
+  exact Finset.sum_sdiff h
+theorem mass_nonneg (S : Finset Surface) (s : Slice) : 0 ≤ mass S s :=
+  Finset.sum_nonneg (fun _ _ => Nat.cast_nonneg _)
 theorem endpoint_fees (w : ℤ) (hlo : 3555 ≤ w) :
     (p+1)*(381269+812+2907) + 3019828 + 2891 +
       odePrice (131071 + (band w).endpoint) 381269 60998 +
