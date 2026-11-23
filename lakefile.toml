@@ -8,7 +8,7 @@ autoImplicit = false
 [[require]]
 name = "Arklib"
 git = "https://github.com/Verified-zkEVM/ArkLib"
-rev = "34a834c61c859cc04205f5f43fd237cda8fb0da4"
+rev = "151fd2944b7b7948d73e6d06cc738db5a5660aa0"
 
 [[lean_lib]]
 name = "ProximityPrize"
