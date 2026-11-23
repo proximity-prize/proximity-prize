@@ -25,12 +25,6 @@ def fullCap (top : ℕ) : Shape := ⟨132, 55, top⟩
 def Fits (top : ℕ) {n : ℕ} (a : Fin n → Shape) : Prop :=
   (∀ i, K1_13_8.Valid (a i)) ∧ (∑ i, (a i).b) ≤ 132 ∧ (∑ i, (a i).j) ≤ 55 ∧
     (∑ i, (a i).t) ≤ top
-def lowerWidth (top : ℕ) : ℕ := 132 - top
-def lowerIndex (top : ℕ) : ℕ := 55 - 3 * top
-def lowerTop (top : ℕ) : ℕ := lowerIndex top / 2
-def LowerRow (top : ℕ) (g : Row 3) : Prop :=
-  g ≠ 0 ∧ g.totalDegree ≤ lowerWidth top ∧ indexDegree g ≤ lowerIndex top ∧
-    TrueWeightLE g anchorCutoff
 def SmallFactor (f : Row 4) : Prop :=
   Irreducible f ∧ 0 < (shape f).t ∧ InBox (shape f) (fullCap 14) ∧ TrueWeightLE f anchorCutoff
 def ActiveFits (f : Row 4) (K : ℕ) : Prop :=
@@ -201,17 +195,6 @@ def fatPrice (x : Shape) : ℕ :=
   let isolated := ceilDiv (3 * q.j^2 * (2 * q.b - q.j)) (4 * fatOrder * (fatOrder - divisorOrder + 1) * isolatedOrder)
   divisors + singular + curves + isolated
 
-def c5 (top : ℕ) : Prop :=
-  ∀ w Γ s, Messages w Γ s → ∀ g, LowerRow top g →
-    (∀ γ ∈ Γ, atJet g (extend (s γ)) = 0) → Γ.card ≤ lowerCap top
-def c6 : Prop :=
-  ∀ w Γ s, Messages w Γ s → ∀ f, SmallFactor f → ∀ K, ActiveFits f K →
-    (∀ γ ∈ Γ, OnFactor f (extend (s γ))) →
-    ∀ l, 0 < l → ProperCut f Γ s l → Γ.card ≤ physicalPrice (shape f) l K
-def c7 : Prop :=
-  ∀ w Γ s, Messages w Γ s → ∀ f, SmallFactor f →
-    (∀ γ ∈ Γ, OnFactor f (extend (s γ))) → FatEligible (shape f) →
-    ∀ E : FatEquations, (∀ γ ∈ Γ, Holds E (extend (s γ))) → Γ.card ≤ fatPrice (shape f)
 
 end
 end Final50Price

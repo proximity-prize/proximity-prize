@@ -5,7 +5,7 @@ set_option autoImplicit true
 section
 namespace P0_9_8
 open K1_13 (Shape InBox FatEligible)
-open K1_13_8 (Valid zeroShape fullCap availableMass)
+open K1_13_8 (Valid zeroShape  availableMass)
 open K1_13_8_2 (Threshold orderFor)
 abbrev oneStart : Shape := ⟨1, 3, 1⟩
 abbrev twoStart : Shape := ⟨2, 6, 2⟩
@@ -16,7 +16,7 @@ end
 section
 namespace P0_9_8
 open K1_13 (Shape InBox FatEligible remaining)
-open K1_13_8 (Valid zeroShape fullCap availableMass layerTerm)
+open K1_13_8 (Valid zeroShape  availableMass layerTerm)
 open K1_13_8_2 (Threshold orderFor)
 open scoped BigOperators
 theorem symbol_count : ∀ b j, remaining b j = K1_13_8.fastRemaining b j :=
@@ -64,12 +64,6 @@ theorem orderFor_mono {b b' j j' : ℕ} (hb : b ≤ b') (hj : j ≤ j') (ss : Li
       exact max_le_max le_rfl ih
     · rw [ite_eq_right h, max_eq_right (orderFor_select b j ss).1]
       exact ih.trans (le_max_right _ _)
-theorem oneOrder_pos (x : Shape) : 0 < oneOrder x := by
-  unfold oneOrder
-  split <;> omega
-theorem oneOrder_mono {x y : Shape} (h : x.j ≤ y.j) : oneOrder x ≤ oneOrder y := by
-  unfold oneOrder
-  split <;> split <;> omega
 end P0_9_8
 end
 section
@@ -82,48 +76,6 @@ section
 namespace P0_9_8_5
 open K1_13 (Shape InBox chart liftedChart mixed32 ceilDiv)
 open K1_13_8_2 (Chamber mixed_mono)
-open P0_9 (physicalPrice physicalDegree incidenceGap primaryBox taylorLength surfaceNumerator32)
-private theorem box_refl (x : Shape) : InBox x x := ⟨le_rfl, le_rfl, le_rfl⟩
-private theorem normalize_mono {x y : Shape} (h : InBox x y) :
-    InBox x.chamber y.chamber := ⟨max_le_max h.1 h.2.1, h.2.1, h.2.2⟩
-private theorem normalize_chamber (x : Shape) (h : 3 * x.t ≤ x.j) :
-    Chamber x.chamber := ⟨le_max_right _ _, h⟩
-private theorem plus_mono {x y u v : Shape} (h : InBox x y) (h' : InBox u v) :
-    InBox (x.plus u) (y.plus v) :=
-  ⟨Nat.add_le_add h.1 h'.1, Nat.add_le_add h.2.1 h'.2.1, Nat.add_le_add h.2.2 h'.2.2⟩
-private theorem plus_chamber {x y : Shape} (hx : Chamber x) (hy : Chamber y) :
-    Chamber (x.plus y) := by
-  exact ⟨Nat.add_le_add hx.1 hy.1, by simp only [Shape.plus, Nat.mul_add]; exact Nat.add_le_add hx.2 hy.2⟩
-private theorem scale_mono {x y : Shape} (h : InBox x y) (k : ℕ) :
-    InBox (x.scale k) (y.scale k) :=
-  ⟨Nat.mul_le_mul_left k h.1, Nat.mul_le_mul_left k h.2.1, Nat.mul_le_mul_left k h.2.2⟩
-private theorem scale_chamber {x : Shape} (hx : Chamber x) (k : ℕ) :
-    Chamber (x.scale k) :=
-  ⟨Nat.mul_le_mul_left k hx.1, by simpa [Shape.scale, Nat.mul_left_comm 3 k] using Nat.mul_le_mul_left k hx.2⟩
-private theorem min_fits_index (a i : ℕ) : 3 * min a (i / 3) ≤ i := by
-  have h := min_le_right a (i / 3)
-  omega
-private theorem chart_chamber (L : ℕ) (x : Shape) : Chamber (chart L x) :=
-  ⟨le_max_right _ _, min_fits_index _ _⟩
-private theorem lifted_chamber (L : ℕ) (x : Shape) : Chamber (liftedChart L x) :=
-  ⟨le_max_right _ _, min_fits_index _ _⟩
-private theorem chart_mono (L : ℕ) {x y : Shape} (h : InBox x y) :
-    InBox (chart L x) (chart L y) := by
-  obtain ⟨hb, hj, ht⟩ := h
-  refine ⟨?_, ?_, ?_⟩ <;> dsimp [chart] <;> gcongr
-private theorem lifted_mono (L : ℕ) {x y : Shape} (h : InBox x y) :
-    InBox (liftedChart L x) (liftedChart L y) := by
-  obtain ⟨hb, hj, ht⟩ := h
-  refine ⟨?_, ?_, ?_⟩ <;> dsimp [liftedChart] <;> gcongr
-private def graphShape (p : Shape) : Shape :=
-  ⟨max p.b (p.j + 1), p.j + 1, min (p.t + 1) ((p.j + 1) / 3)⟩
-private theorem graph_chamber (x : Shape) : Chamber (graphShape x) :=
-  ⟨le_max_right _ _, min_fits_index _ _⟩
-private theorem graph_mono {x y : Shape} (h : InBox x y) :
-    InBox (graphShape x) (graphShape y) := by
-  obtain ⟨hb, hj, ht⟩ := h
-  refine ⟨?_, ?_, ?_⟩ <;> dsimp [graphShape] <;> gcongr
-theorem ceil_mono {a b : ℕ} (h : a ≤ b) (l : ℕ) : ceilDiv a l ≤ ceilDiv b l :=
-  Nat.div_le_div_right (Nat.sub_le_sub_right (Nat.add_le_add_right h l) 1)
+open P0_9 ( physicalDegree  primaryBox taylorLength )
 end P0_9_8_5
 end

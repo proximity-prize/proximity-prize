@@ -15,6 +15,10 @@ namespace K1_14_3_2
 noncomputable section
 open K1 K1_14 K1_14_3 Polynomial
 open scoped BigOperators Classical
+def c1 : Prop :=
+  ∀ P Q : Jet, P ≠ 0 → Q ≠ 0 →
+    RowCaps P (cheapShape 0) → RowCaps Q (layeredShape 0) →
+    NoMovingCommon P Q → Nonempty (PreparedPair P Q)
 end
 end K1_14_3_2
 end
@@ -77,13 +81,6 @@ def yVar {R : Type} [CommRing R] : Four R :=
   Polynomial.C (R := (MvPolynomial (Fin 2) R)[X]) (Polynomial.X (R := MvPolynomial (Fin 2) R))
 def vVar {R : Type} [CommRing R] : Four R :=
   Polynomial.X (R := (MvPolynomial (Fin 2) R)[X])
-theorem four_ext {R T : Type} [CommRing R] [CommRing T] {f g : Four R →+* T}
-    (hc : ∀ a, f (scalar a) = g (scalar a))
-    (ht : ∀ i, f (seedVar i) = g (seedVar i))
-    (hy : f yVar = g yVar) (hv : f vVar = g vVar) : f = g := by
-  apply Polynomial.ringHom_ext' _ hv
-  apply Polynomial.ringHom_ext' _ hy
-  exact MvPolynomial.ringHom_ext hc ht
 def evaluate {R T : Type} [CommRing R] [CommRing T] (a : R →+* T)
     (t : Fin 2 → T) (y v : T) : Four R →+* T :=
   eval₂RingHom (eval₂RingHom (MvPolynomial.eval₂Hom a t) y) v
@@ -135,6 +132,11 @@ set_option maxSynthPendingDepth 8
 namespace K1_14_3_2_5
 noncomputable section
 open K1_14 K1_14_3 Polynomial
+def sectionParameter (i : Fin 4) : SectionField :=
+  algebraMap (MvPolynomial (Fin 4) FX) SectionField (MvPolynomial.X i)
+def seedLine : SectionSeeds :=
+  MvPolynomial.X 0 + MvPolynomial.C (sectionParameter 0) * MvPolynomial.X 1 -
+    MvPolynomial.C (sectionParameter 2)
 end
 end K1_14_3_2_5
 end
@@ -164,10 +166,6 @@ def sliceMap (s : Slice) : SectionJet →ₐ[SectionField] Plane :=
   Polynomial.aevalTower
     (Polynomial.aevalTower (MvPolynomial.aeval (seedCoordinates s)) (ordinateCoordinate s))
     (derivativeCoordinate s)
-structure PlaneProper (F G : Plane) : Prop where
-  left_ne : F ≠ 0
-  right_ne : G ≠ 0
-  no_common : ∀ D : Plane, Irreducible D → D ∣ F → ¬ D ∣ G
 end
 end K1_14_3_2_3
 end

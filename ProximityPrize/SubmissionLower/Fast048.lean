@@ -23,8 +23,7 @@ import Mathlib.RingTheory.KrullDimension.LocalRing
 import Mathlib.RingTheory.RingHom.Unramified
 import Mathlib.RingTheory.Spectrum.Prime.Homeomorph
 import Mathlib.Topology.Algebra.MvPolynomial
-import ProximityPrize.SubmissionLower.Fast042
-import ProximityPrize.SubmissionLower.Pack_K1_14_2_1Split
+import ProximityPrize.SubmissionLower.Pack_K1_14_3_2_7Proof
 set_option Elab.async false
 set_option autoImplicit true
 section
@@ -237,6 +236,51 @@ namespace K1_13_5_4
 noncomputable section
 open K1 K1_13 K1_13_5 Polynomial
 open scoped BigOperators
+def c4 : Prop :=
+  ∀ n (f : Fin n → Row 3), SecondFactors f →
+    (∀ i, (oldCut (f i)).totalDegree ≤
+      1 + (2 * (taylorLength + 1) - 7) * ((f i).totalDegree - 1)) →
+    ∀ C : Finset CoefficientIdeal,
+      (∀ Q ∈ C, ∃ i, ¬ Whole (f i) ∧ ActualSolutionCurve (f i) Q) →
+      ∃ d : CoefficientIdeal → ℕ,
+        (∀ Q ∈ C, 0 < d Q ∧ MvPolynomial.affineDegree Q ≤ (d Q : ℚ)) ∧
+          (∑ Q ∈ C, d Q) ≤ invariantBudget
+private theorem mem_properComponents {n : ℕ} {f : Fin n → Row 3} {i : Fin n}
+    {P : Ideal (GeoRow 3)} : (i, P) ∈ properComponents f ↔
+    ¬ Whole (f i) ∧ P ∈ (oldCutIdeal (f i)).retainedMinimalPrimes (genericRow (separant (f i))) := by
+  classical
+  simp only [properComponents, Finset.mem_biUnion, Finset.mem_univ, true_and]
+  constructor
+  · rintro ⟨k, hk⟩
+    by_cases hw : Whole (f k)
+    · simp [hw] at hk
+    · simp only [hw, ite_false] at hk
+      obtain ⟨P', hP', he⟩ := Finset.mem_image.mp hk
+      cases he
+      exact ⟨hw, hP'⟩
+  · rintro ⟨hw, hP⟩
+    exact ⟨i, by simpa only [hw, ite_false] using Finset.mem_image.mpr ⟨P, hP, rfl⟩⟩
+private theorem exists_properComponent {n : ℕ} {f : Fin n → Row 3}
+    (T : ∀ i, LiftedChart (f i)) {i : Fin n} {S : Geom[X]}
+    (hS : S.natDegree ≤ 133671) (hr : RegularAt 2 (f i) S) (hw : ¬ Whole (f i)) :
+    ∃ P, (i, P) ∈ properComponents f ∧ jetPoint S ∈ regularLocus (f i) P := by
+  have hzero : jetPoint S ∈ MvPolynomial.zeroLocus GeometricX (oldCutIdeal (f i)) := by
+    apply MvPolynomial.mem_zeroLocus_iff_le_ker_aeval.mpr
+    apply Ideal.span_le.mpr
+    intro g hg
+    simp only [Set.mem_insert_iff, Set.mem_singleton_iff] at hg
+    change g ∈ RingHom.ker (MvPolynomial.aeval (jetPoint S))
+    rw [RingHom.mem_ker]
+    change MvPolynomial.eval (jetPoint S) g = 0
+    rcases hg with rfl | rfl
+    · rw [eval_genericRow_at_point, hr.1, map_zero]
+    · rw [eval_genericRow_at_point, (T i).actual S hS hr |>.1, map_zero]
+  have hsep : MvPolynomial.eval (jetPoint S) (genericRow (separant (f i))) ≠ 0 := by
+    rw [eval_genericRow_at_point]
+    exact fun h => hr.2 ((map_eq_zero_iff genericCoeff genericCoeff_injective).mp h)
+  obtain ⟨P, hP, hy⟩ := MvPolynomial.exists_retainedMinimalPrime_of_mem_zeroLocus
+    (oldCutIdeal (f i)) (genericRow (separant (f i))) (jetPoint S) hzero hsep
+  exact ⟨P, mem_properComponents.mpr ⟨hw, hP⟩, ⟨hy, hsep⟩⟩
 end
 end K1_13_5_4
 end
@@ -776,6 +820,39 @@ private theorem ratio_image_degree {k σ τ : Type} [Field k] [Finite σ] [Finit
     have hprime' : (vanishingIdeal k {(fun i => y i ⟨x₀, hx₀⟩)}).IsPrime := inferInstance
     rw [hmax.eq_of_le hprime'.ne_top hpoint, affineDegree_point]
     exact hone
+private theorem separator_box {n : ℕ} {f : Fin n → Row 3} (hf : SecondFactors f)
+    (i : Fin n) : InLiftedBox (liftRow (genericRow (separant (f i)))) lowBox 0 := by
+  classical
+  intro a ha
+  rw [liftRow, support_rename_of_injective (Fin.castSucc_injective 3)] at ha
+  obtain ⟨b, hb, rfl⟩ := Finset.mem_image.mp ha
+  have hs : b ∈ (separant (f i)).support := support_map_subset _ _ hb
+  let m : Fin 3 →₀ ℕ := b + Finsupp.single 2 1
+  have hm : m ∈ (f i).support := by
+    rw [MvPolynomial.mem_support_iff, separant, coeff_pderiv] at hs
+    exact MvPolynomial.mem_support_iff.mpr (left_ne_zero_of_mul hs)
+  have hb₀ : m.degree ≤ lowBox.b :=
+    (le_totalDegree hm).trans ((Finset.single_le_sum (fun j _ => Nat.zero_le ((f j).totalDegree))
+      (Finset.mem_univ i)).trans hf.total)
+  have hj₀ : (m.sum fun j a => j.val * a) ≤ lowBox.j :=
+    (Finset.le_sup hm).trans ((Finset.single_le_sum (fun j _ => Nat.zero_le (indexDegree (f j)))
+      (Finset.mem_univ i)).trans hf.index)
+  have ht₀ : m 2 ≤ lowBox.t :=
+    (monomial_le_degreeOf 2 hm).trans ((Finset.single_le_sum
+      (fun j _ => Nat.zero_le ((f j).degreeOf 2)) (Finset.mem_univ i)).trans hf.top)
+  rw [Finsupp.degree_eq_sum, Fin.sum_univ_three] at hb₀
+  rw [Finsupp.sum_fintype _ _ (fun j => mul_zero j.val), Fin.sum_univ_three] at hj₀
+  have h0 : Finsupp.mapDomain Fin.castSucc b 0 = b 0 :=
+    Finsupp.mapDomain_apply_of_injective (Fin.castSucc_injective 3) b 0
+  have h1 : Finsupp.mapDomain Fin.castSucc b 1 = b 1 :=
+    Finsupp.mapDomain_apply_of_injective (Fin.castSucc_injective 3) b 1
+  have h2 : Finsupp.mapDomain Fin.castSucc b 2 = b 2 :=
+    Finsupp.mapDomain_apply_of_injective (Fin.castSucc_injective 3) b 2
+  have h3 : Finsupp.mapDomain Fin.castSucc b 3 = 0 :=
+    Finsupp.mapDomain_of_notMem_range b _ (fun ⟨j, hj⟩ => Fin.castSucc_ne_last j hj)
+  simp only [h0, h1, h2, h3, le_refl, and_true]
+  simp [m, Finsupp.add_apply] at hb₀ hj₀ ht₀
+  omega
 private theorem box_mono {B : GeoRow 4} {s t : Shape} {h k : ℕ}
     (hb : s.b ≤ t.b) (hj : s.j ≤ t.j) (ht : s.t ≤ t.t) (hh : h ≤ k)
     (hB : InLiftedBox B s h) : InLiftedBox B t k := by
@@ -2394,6 +2471,11 @@ namespace K1_13_5_4_3
 noncomputable section
 open K1_13 K1_13_5 K1_13_5_4 Polynomial
 open scoped BigOperators
+def c3 : Prop :=
+  ∀ (f : Row 3) (P : Ideal (GeoRow 3)),
+    Irreducible f → 0 < f.degreeOf 2 → ¬ Whole f →
+    P ∈ (oldCutIdeal f).retainedMinimalPrimes (genericRow (separant f)) →
+    (MvPolynomial.affineHilbertPolynomial P).natDegree = 1
 def c4 : Prop :=
   ∀ (f : Row 3) (P : Ideal (GeoRow 3)),
     P.IsPrime → genericRow (separant f) ∉ P →
@@ -3641,9 +3723,6 @@ theorem degreeOf_le_index (f : Row 2) : f.degreeOf 1 ≤ indexDegree f := by
       m.sum fun i a => i.val * a) hm).trans'
     rw [Finsupp.sum_fintype _ _ (by simp), Fin.sum_univ_two]
     simp
-abbrev exponent := 2 * taylorLength - 5
-theorem exponent_sufficient : TaylorExponentSufficient 1 taylorLength exponent := by
-  exact taylorExponentSufficient_firstOrder_tight 133671
 end
 end K1_13_5_3
 end
@@ -4878,6 +4957,9 @@ namespace K1_14_3_6
 noncomputable section
 open K1 K1_13 K1_14 K1_14_3 Polynomial
 open K1_13_5_3
+abbrev total := Bivariate.totalDegree (F := FX)
+def atScalar (S : K[X]) : JetPlane →+* FX :=
+  eval₂RingHom (evalRingHom (atX S)) (atX S.derivative)
 def power (d : ℕ) : ℕ := 2 * d - 3
 def totalCap (d b : ℕ) : ℕ := 1 + power d * (b - 1)
 def topCap (d b j : ℕ) : ℕ := min (totalCap d b) (power d * (j - 1) + d)

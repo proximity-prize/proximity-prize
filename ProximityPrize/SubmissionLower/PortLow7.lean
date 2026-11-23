@@ -5,10 +5,9 @@ section
 namespace P0_9_7
 noncomputable section
 open K1_13 (Shape chart ceilDiv mixed32)
-open P0_9 (linearChart taylorLength physicalDegree incidenceGap)
+open P0_9 (linearChart taylorLength physicalDegree )
 def fatChart (x : Shape) : Shape :=
   if x.t = 1 then linearChart x.chamber else chart (taylorLength + 4) x.chamber
-def divisorBox : Shape := ⟨6300 + 952630000 / 33184, 2403 + 322000000 / 33184, 0⟩
 end
 end P0_9_7
 end
@@ -60,7 +59,7 @@ open K1_13 (Geom Row Shape InBox shape mixed32)
 open K1_13_6 (GeoJets toGeneric separant)
 open K1_13_7_2 (evalTrajectory)
 open P0_9 (taylorLength physicalDegree)
-open P0_9_7 (fatChart divisorBox)
+open P0_9_7 (fatChart )
 structure FatTaylor (f : Row 4) where
   denom : Row 4
   numer : Fin taylorLength → Row 4
@@ -76,17 +75,6 @@ structure FatTaylor (f : Row 4) where
     evalTrajectory (separant f) S ≠ 0 →
     evalTrajectory denom S ≠ 0 ∧ evalTrajectory test S = 0 ∧
       ∀ i, evalTrajectory (numer i) S = evalTrajectory denom S * C (S.coeff i.val)
-abbrev CoeffRing := MvPolynomial (Fin taylorLength) Geom
-def universalPolynomial : CoeffRing[X] :=
-  ∑ i : Fin taylorLength, C (MvPolynomial.X i) * Polynomial.X ^ i.val
-def universalEval (f : Row 4) : CoeffRing[X] :=
-  MvPolynomial.eval₂ (Polynomial.mapRingHom (MvPolynomial.C : Geom →+* CoeffRing))
-    (fun i => hasseDeriv i.val universalPolynomial) f
-structure ActualFamily (f : Row 4) (P : Ideal CoeffRing) : Prop where
-  prime : P.IsPrime
-  dimension : 2 ≤ (MvPolynomial.affineHilbertPolynomial P).natDegree
-  solves : ∀ i, (universalEval f).coeff i ∈ P
-  regular : ∃ i, (universalEval (separant f)).coeff i ∉ P
 end
 end P0_9_7_2
 end
@@ -168,7 +156,7 @@ open K1_13_6 (GeoJets GeoField GenericField toGeneric genericCoeffs divisorIdeal
 open K1_13_6_3 (JetIdeal dimension geomConstants)
 open K1_13_7_2_5 (wholeComponents properComponents)
 open P0_9_7 (fatChart)
-open P0_9_7_2 (CoeffRing FatTaylor)
+open P0_9_7_2 ( FatTaylor)
 open scoped BigOperators
 private theorem generic_degree_le (g : Row 4) : (toGeneric g).totalDegree ≤ g.totalDegree := by
   rw [toGeneric, MvPolynomial.totalDegree_eq, MvPolynomial.totalDegree_eq]

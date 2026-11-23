@@ -8,6 +8,29 @@ namespace P0
 noncomputable section
 open Polynomial Matrix FrobeniusLocator ProximityPrize.Benchmark
 open scoped BigOperators
+theorem relation_height_balance {u : Words} (T : TwoActive u) :
+    L + T.height + nullity u = t + 1 := by
+  exact Strata.relation_degree_nullity_balance k L t (nullity u) T.a T.b T.c
+    (by decide) T.top T.degreeSum (by have := T.nullitySum; omega)
+theorem relation_height_le {u : Words} (hu : FrontRemainder u) (T : TwoActive u) :
+    T.height ≤ heightCap := by
+  have h := relation_height_balance T
+  have hr := hu.1
+  dsimp only [L, t, heightCap, blockLength, agreement, k, frontLimit] at h hr ⊢
+  omega
+def relation_of_two_active {u : Words} (hu : FrontRemainder u) (T : TwoActive u) :
+    Relation T := by
+  have hline := Strata.generic_relation_line_of_level p node (u 0) (u 1)
+    k T.a T.b T.c T.top T.degreeSum T.ab (T.active.trans_lt T.inactive)
+    ((show 1 ≤ t by decide).trans_lt T.inactive) T.level
+  have hH := relation_height_le hu T
+  apply Strata.polynomialRelationCertificate_of_nullity_one p (by decide)
+    node (u 0) (u 1) node.injective Native.native_domain_fixed
+    k k T.height (by rw [IRSProfile.card_index]; decide)
+    (hH.trans (by decide)) _ hline
+  rw [Sol1.C64.native_field_card]
+  exact (Nat.mul_le_mul_right p (show 2 * T.height + 2 ≤ 2 * heightCap + 2 by omega)).trans_lt
+    (by decide)
 private theorem type_one_bad_count_of_syndromes {F ι : Type}
     [Field F] [Fintype ι] [DecidableEq ι] (x u v : ι → F) (hx : Function.Injective x)
     (k a p : ℕ) (hk : k ≤ Fintype.card ι) (hp : 1 < p)

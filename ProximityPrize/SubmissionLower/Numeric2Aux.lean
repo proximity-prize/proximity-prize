@@ -102,10 +102,15 @@ structure Rung where
   listBound : ℕ
 abbrev target : Rung := ⟨179944,336691697,1073741824,2369,0x3aca17061ce8c43,8491707658716571⟩
 abbrev agreement := target.agreement
-abbrev lowCutoff : ℤ := target.lowEnd
+abbrev radiusNumerator := target.numerator
+abbrev radiusDenominator := target.denominator
 abbrev t : ℕ := blockLength - agreement
 abbrev L : ℕ := agreement - k
 abbrev heightCap : ℕ := t + 1 - L - 2
+def queryRadius : ℝ≥0 := claimedRadius radiusNumerator radiusDenominator
+def radius : ℝ := queryRadius
+def BadFamily (u : Words) (Γ : Finset K) : Prop :=
+  ∀ γ ∈ Γ, IsMCA (AffineLineGenerator K) IRSProfile.baseCode γ u radius
 structure BadMarkAt (A : ℕ) (u : Words) (γ : K) where
   support : Finset I
   decoder : K[X]
@@ -114,6 +119,7 @@ structure BadMarkAt (A : ℕ) (u : Words) (γ : K) where
   hits : ∀ i ∈ support, decoder.eval (node i) = u 0 i + γ * u 1 i
   nonjoint : ¬ (ExtendsOn node (u 0) k support ∧ ExtendsOn node (u 1) k support)
 abbrev BadMark := BadMarkAt agreement
+def ordinary (u : Words) := hankel node (u 0) (u 1) L t
 def twoBlock (u : Words) := stacked p node (u 0) (u 1) L t
 def stackRank (u : Words) := GenericLayer.genericRank (twoBlock u)
 def nullity (u : Words) := GenericLayer.genericNullity (twoBlock u)
@@ -143,21 +149,6 @@ def fixedNodes {u : Words} {T : TwoActive u} (R : Relation T) : Finset I := by
   classical
   exact Finset.univ.filter fun i =>
     (leftU R).eval (C (node i)) = 0 ∧ (leftV R).eval (C (node i)) = 0
-def InvalidLeft {u : Words} {T : TwoActive u} (R : Relation T) : Prop :=
-  max (leftU R).natDegree (leftV R).natDegree < T.height ∨
-    ∃ G : K[X], G ≠ 0 ∧ G.map Polynomial.C ∣ leftU R ∧ G.map Polynomial.C ∣ leftV R ∧
-      ¬ G ∣ locator node Finset.univ
-structure SaturatedAt {u : Words} {T : TwoActive u} (R : Relation T)
-    {γ : K} (M : BadMark u γ) : Prop where
-  U_ne : atSlope (leftU R) γ ≠ 0
-  V_ne : atSlope (leftV R) γ ≠ 0
-  degree_eq : max (atSlope (leftU R) γ).natDegree (atSlope (leftV R) γ).natDegree =
-    T.height
-  gcd_errors : ∃ errors : Finset I,
-    (∀ i ∈ errors, M.decoder.eval (node i) ≠ u 0 i + γ * u 1 i) ∧
-    IsCommonGCD (locator node errors) (atSlope (leftU R) γ) (atSlope (leftV R) γ)
-  fixed_errors : ∀ i ∈ fixedNodes R, M.decoder.eval (node i) ≠ u 0 i + γ * u 1 i
-  valid : ¬ InvalidLeft R
 structure Reduction (u : Words) (T : TwoActive u) (R : Relation T) where
   U : Bivar
   V : Bivar
@@ -248,6 +239,8 @@ abbrev AnchoredFamily {u deleted} (M : AnchorModel u deleted) := FamilyAt agreem
 abbrev AnchorModel.overhead {u deleted} (M : AnchorModel u deleted) := ModelAt.overhead M
 abbrev AnchorModel.label {u deleted} (M : AnchorModel u deleted) := ModelAt.label M
 abbrev AnchorModel.amplitude {u deleted} (M : AnchorModel u deleted) := ModelAt.amplitude M
+abbrev AnchorModel.decoder {u deleted} (M : AnchorModel u deleted) {γ : K} (B : BadMark u γ) :=
+  ModelAt.decoder M B
 structure HighRow where
   lo : ℕ
   hi : ℕ
@@ -297,50 +290,6 @@ inductive HighBand where
   | h24000
   | h28323
   | h32433
-def HighBand.row : HighBand → HighRow
-  | .h2370 => ⟨2370,2389,80495530196751944,0x28e2603a4656e54⟩
-  | .h2390 => ⟨2390,2409,0xf9469c19b9863c,0x21fe894e17f659f⟩
-  | .h2410 => ⟨2410,2419,0xee922aa6fec352,0x1eff8184d4a712c⟩
-  | .h2420 => ⟨2420,2439,0xd28aff6311d93c,0x1a52aa17a200c95⟩
-  | .h2440 => ⟨2440,2459,0xbeb8e493d358e1,0x16440d31f9520f1⟩
-  | .h2460 => ⟨2460,2479,0xadb5b5f73be6d7,88314402295386218⟩
-  | .h2480 => ⟨2480,2499,0x98613c34a8f326,75580977671294650⟩
-  | .h2500 => ⟨2500,2519,0x8847d91eac7fbf,0xe7d2adf917f50b⟩
-  | .h2520 => ⟨2520,2529,0x7b4912a16ade38,0xc93bdc41198359⟩
-  | .h2530 => ⟨2530,2539,0x75bb6a9f28f8fc,0xbe4d42573a1d57⟩
-  | .h2540 => ⟨2540,2549,0x7065eff66bf144,0xb1980d09f47784⟩
-  | .h2550 => ⟨2550,2559,0x6bfcd5ef169d7c,0xa7562d1ae58b34⟩
-  | .h2560 => ⟨2560,2569,0x67b6e230093f68,0x9d62cb6f698f1f⟩
-  | .h2570 => ⟨2570,2584,0x63dd572a4ca3e6,0x93bde56871940b⟩
-  | .h2585 => ⟨2585,2589,0x5eb6d2250b1503,0x86c08e98cac21c⟩
-  | .h2590 => ⟨2590,2599,0x5d1bb688d646a2,0x83265da321d05f⟩
-  | .h2600 => ⟨2600,2600,0x5a06673904a74f,0x7a6d993286262d⟩
-  | .h2601 => ⟨2601,2610,0x59b9e3dbbe7374,0x7a5c8387d06239⟩
-  | .h2611 => ⟨2611,2620,0x56d2daf9e81b62,0x727d26c0359ab2⟩
-  | .h2621 => ⟨2621,2639,0x546a03afc3ebfd,0x6dd9162595c015⟩
-  | .h2640 => ⟨2640,2669,0x4ea52c8664f159,0x6366dbc040862e⟩
-  | .h2670 => ⟨2670,2699,0x46e3fa6f4e6c0b,0x55627b039d421f⟩
-  | .h2700 => ⟨2700,2749,0x407e41254c3346,0x49ae7b6f42cb70⟩
-  | .h2750 => ⟨2750,2799,0x38389d07305818,0x39b81ba31578a8⟩
-  | .h2800 => ⟨2800,2899,0x316a41e4b3309d,0x2e14919bf19ff8⟩
-  | .h2900 => ⟨2900,2949,8872442622423809,9173807193376184⟩
-  | .h2950 => ⟨2950,2979,7987270307117438,7610274941597429⟩
-  | .h2980 => ⟨2980,2999,7538749239604091,6908034803302175⟩
-  | .h3000 => ⟨3000,3049,7276823856763379,6569338538207742⟩
-  | .h3050 => ⟨3050,3099,5747479670950418,5916768739855770⟩
-  | .h3100 => ⟨3100,3199,5245621618597394,5004749729248126⟩
-  | .h3200 => ⟨3200,3399,0xf8da1f5a11d37,0xd6d6924e7144a⟩
-  | .h3400 => ⟨3400,3554,0x8e07cbdfe181c,0x99c8040f438ad⟩
-  | .h3555 => ⟨3555,3999,0x75165f52b2eb6,0x716d568103f96⟩
-  | .h4000 => ⟨4000,4799,0x450c90e105601,0x42206b4855593⟩
-  | .h4800 => ⟨4800,7772,437785780857465,667070016592432⟩
-  | .h7773 => ⟨7773,7999,698804344963922,0xfaad6c38dfe1⟩
-  | .h8000 => ⟨8000,14499,640008163332508,0xfc080066b8fc⟩
-  | .h14500 => ⟨14500,21472,46894316540129,0x7ed9806efa33⟩
-  | .h21473 => ⟨21473,23999,21281848741227,74246611859481⟩
-  | .h24000 => ⟨24000,28322,19998787150510,62656060897488⟩
-  | .h28323 => ⟨28323,32432,18715990635494,51439696596499⟩
-  | .h32433 => ⟨32433,33327,3323299909641,56675196335681⟩
 end
 end P1
 end
@@ -375,7 +324,7 @@ end
 section
 namespace CJ1
 open scoped BigOperators
-open CJ0 (Jet blockRows blockCols blockMatrix source180120)
+open CJ0 (Jet blockRows blockCols blockMatrix )
 theorem total_eq_sum {α : Type*} [AddCommMonoid α] (f : ℕ → α) (n : ℕ) :
     total f n = ∑ i ∈ Finset.range n, f i := by
   induction n with
@@ -438,6 +387,9 @@ def VectorDots (q u : ℕ) (z : Block) (j : ℕ) : Prop :=
   ∀ i < outer (!z.bank.onRows) q,
     ∀ k < fiber (!z.bank.onRows) q u i, dot q u z j i k % (CJ0.p : ℤ) = 0
 abbrev Cell := ℕ × ℕ × ℕ
+def Checks : List Cell → Prop
+  | [] => True
+  | (q,u,r)::xs => (CJ0.blockMatrix source q ((u : ℤ)-20)).rank ≤ r ∧ Checks xs
 def boundIn (q u d : ℕ) : List Cell → ℕ
   | [] => d
   | (a,b,r)::xs => if q = a ∧ u = b then r else boundIn q u d xs

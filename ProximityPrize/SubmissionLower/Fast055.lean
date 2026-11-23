@@ -24,9 +24,16 @@ import Mathlib.RingTheory.RingHom.Unramified
 import Mathlib.RingTheory.Spectrum.Prime.Homeomorph
 import Mathlib.Topology.Algebra.MvPolynomial
 import ProximityPrize.SubmissionLower.Fast042
-import ProximityPrize.SubmissionLower.Fast040
+import ProximityPrize.SubmissionLower.SoloK1_13_1_1ArithmeticLogic
 set_option Elab.async false
 set_option autoImplicit true
+section
+namespace K1_13_1_1
+set_option maxRecDepth 30000
+set_option Elab.async false
+set_option maxHeartbeats 4000000
+end K1_13_1_1
+end
 section
 namespace K1_14_2_4
 noncomputable section
@@ -272,52 +279,6 @@ private theorem chartEvaluation {C₀ : ConstantSeeds} [Fact (Irreducible C₀)]
       Polynomial.eval₂_C, Polynomial.coe_mapRingHom, Polynomial.map_C, insertConstant] using
       DFunLike.congr_fun hc a
   · simpa [coefficientsAtX, chartBaseMap, parameterInclusion] using embed_abscissa C₀
-private theorem generic_separability {C₀ : ConstantSeeds} [Fact (Irreducible C₀)] {J g}
-    (R : PrimitiveRoot C₀ J g) (hg : 0 < g) (h8 : g ≤ 8) :
-    (R.equation.map (insertX C₀)).Separable := by
-  let F := R.equation.map (insertX C₀)
-  let : CharP (ConstantSeedX C₀) p :=
-    charP_of_injective_ringHom ((extendX C₀).comp seedEmbedding).injective p
-  have hdeg : F.natDegree = g :=
-    (Polynomial.natDegree_map_eq_of_injective
-      (IsFractionRing.injective (ConstantSeedField C₀)[X] (ConstantSeedX C₀)) _).trans R.degree
-  have hgc : (g : ConstantSeedX C₀) ≠ 0 := by
-    intro hz
-    have hp := (CharP.cast_eq_zero_iff (ConstantSeedX C₀) p g).mp hz
-    exact (not_le_of_gt (h8.trans_lt (by decide : 8 < p))) (Nat.le_of_dvd hg hp)
-  refine (Polynomial.separable_iff_derivative_ne_zero R.irreducible).mpr ?_
-  intro hd
-  have hz := congrArg (fun Q : (ConstantSeedX C₀)[X] => Q.coeff (g - 1)) hd
-  have hsucc : g - 1 + 1 = g := Nat.sub_add_cancel hg
-  have hcast : (↑(g - 1) + 1 : ConstantSeedX C₀) = (g : ConstantSeedX C₀) := by
-    simpa only [Nat.cast_add, Nat.cast_one] using
-      congrArg (fun k : ℕ => (k : ConstantSeedX C₀)) hsucc
-  rw [Polynomial.coeff_derivative, Polynomial.coeff_zero, hcast, hsucc] at hz
-  change F.coeff g * (g : ConstantSeedX C₀) = 0 at hz
-  rw [show F.coeff g = F.leadingCoeff by rw [← hdeg, Polynomial.coeff_natDegree]] at hz
-  exact (mul_ne_zero (Polynomial.leadingCoeff_ne_zero.mpr R.irreducible.ne_zero) hgc) hz
-theorem chartResultant_proper {C₀ : ConstantSeeds} [Fact (Irreducible C₀)] {J g n}
-    {R : PrimitiveRoot C₀ J g} (A : CoefficientChart R n) (hg : 0 < g) (h8 : g ≤ 8) :
-    parameterInclusion n (chartResultant A.equation g) ∉ chartBase A := by
-  let ev := (chartBaseMap A).comp (parameterInclusion n)
-  let F := R.equation.map (insertX C₀)
-  let a := insertConstant C₀ (A.scale : ConstantSeedField C₀)
-  have ha : IsUnit (Polynomial.C a) :=
-    (show IsUnit (A.scale : ConstantSeedField C₀) from A.scale.isUnit).map
-      (Polynomial.C.comp (insertConstant C₀))
-  have hFdeg : F.natDegree = g :=
-    (Polynomial.natDegree_map_eq_of_injective
-      (IsFractionRing.injective (ConstantSeedField C₀)[X] (ConstantSeedX C₀)) _).trans R.degree
-  have hG : (equationAtX A.equation).map ev = Polynomial.C a * F := by
-    rw [equationAtX, Polynomial.map_map, chartEvaluation A, ← Polynomial.map_map,
-      A.generic_eq, Polynomial.map_mul, Polynomial.map_C]
-    rfl
-  have hGdeg : (Polynomial.C a * F).natDegree = g :=
-    (Polynomial.natDegree_C_mul (isUnit_iff_ne_zero.mp (Polynomial.isUnit_C.mp ha))).trans hFdeg
-  have hsep := (generic_separability R hg h8).unit_mul ha
-  have hres := Polynomial.resultant_derivative_ne_zero_of_separable _ hsep
-  rw [hGdeg, ← hG, Polynomial.derivative_map, Polynomial.resultant_map_map] at hres
-  exact fun h => hres (RingHom.mem_ker.mp h)
 private def parameterEval {n : ℕ} (t : Fin n → L) : ParameterGeometry n →+* FX :=
   MvPolynomial.eval (algebraMap L FX ∘ t)
 private theorem liftEvaluation {n : ℕ} (t : Fin n → L) :
@@ -794,6 +755,10 @@ structure TaylorChart (d e b : ℕ) where
     MvPolynomial.restrictBidegree (Fin 2) FX (ordinateBound d e) (parameterBound d b)
   numerator_bound : ∀ x, numerator x ∈
     MvPolynomial.restrictBidegree (Fin 2) FX (ordinateBound d e) (parameterBound d b)
+def TaylorChart.Recovers {d e b} (C : TaylorChart d e b) (z : K) (S : K[X]) : Prop :=
+  let ev := MvPolynomial.eval (rootPoint z S)
+  ev C.denominator ≠ 0 ∧
+    ∀ x : K, ev (C.numerator x) = ev C.denominator * seedEmbedding (S.eval x)
 abbrev ClosedField := AlgebraicClosure FX
 abbrev ChartVariables (d e b : ℕ) :=
   ↥(MvPolynomial.bidegreeExponents (Fin 2) (ordinateBound d e) (parameterBound d b))
@@ -810,10 +775,6 @@ structure LinearCover (T : Finset K) (s : K → K[X]) (d e b : ℕ) where
   covers : ∀ γ ∈ T, ∃ P ∈ components, point γ ∈ MvPolynomial.zeroLocus ClosedField P
   component_count : components.card ≤ e
   degree_sum : ∑ P ∈ components, MvPolynomial.affineDegree P ≤ (mixedDegree d e b : ℚ)
-structure FixedWord (w : I → K) (T : Finset K) (s : K → K[X]) (d : ℕ) : Prop where
-  distinct : Set.InjOn s (T : Set K)
-  degree : ∀ γ ∈ T, (s γ).natDegree ≤ d
-  hits : ∀ γ ∈ T, ∃ B : Finset I, 180265 ≤ B.card ∧ ∀ i ∈ B, (s γ).eval (node i) = w i
 end
 end K1_14_6
 end
@@ -4381,12 +4342,6 @@ theorem eval_flatten (z : K) (S : K[X]) (f : Equation) :
     cases i <;> rfl]
   rw [optionEquivLeft_elim_eval, AlgEquiv.apply_symm_apply, Polynomial.eval_map]
   rfl
-theorem eval_separant (z : K) (S : K[X]) (f : Equation) :
-    markEval z S (separant (flatten f)) = atMark f.derivative z S := by
-  have h : separant (flatten f) = flatten f.derivative := by
-    apply (optionEquivLeft FX (Fin 2)).injective
-    rw [optionEquivLeft_pderiv_none, AlgEquiv.apply_symm_apply, AlgEquiv.apply_symm_apply]
-  rw [h, eval_flatten]
 private theorem eval_tangent (f P : Biform) (z : K) (S : K[X])
     (hf : markEval z S f = 0) :
     markEval z S (tangent f P) = markEval z S (separant f) * Dx (markEval z S P) := by
@@ -4871,102 +4826,6 @@ noncomputable section
 open MvPolynomial UniqueFactorizationMonoid
 open scoped Polynomial BigOperators
 variable {F : Type*} [Field F]
-abbrev SourcePolynomial (F : Type*) [Field F] := Polynomial (MvPolynomial (Fin 2) F)
-def flatten : SourcePolynomial F ≃ₐ[F] MvPolynomial (Option (Fin 2)) F :=
-  (optionEquivLeft F (Fin 2)).symm
-theorem eval_flatten (f : SourcePolynomial F) (x : Option (Fin 2) → F) :
-    MvPolynomial.eval x (flatten f) =
-      f.eval₂ (MvPolynomial.eval (x ∘ some)) (x none) := by
-  have hx : (fun i => Option.elim i (x none) (x ∘ some)) = x := by
-    funext i
-    cases i <;> rfl
-  rw [Polynomial.eval₂_eq_eval_map]
-  have h := optionEquivLeft_elim_eval F (Fin 2) (x ∘ some) (x none) (flatten f)
-  rw [hx, show optionEquivLeft F (Fin 2) (flatten f) = f from
-    (optionEquivLeft F (Fin 2)).apply_symm_apply f] at h
-  exact h
-private theorem flatten_bound (f : SourcePolynomial F) {e b : ℕ}
-    (he : f.natDegree ≤ e) (hb : ∀ i, (f.coeff i).totalDegree ≤ b) :
-    flatten f ∈ restrictBidegree (Fin 2) F e b := by
-  rw [mem_restrictBidegree]
-  intro m hm
-  have hc : (f.coeff (m none)).coeff m.some ≠ 0 := by
-    have hh := optionEquivLeft_coeff_some_coeff_none F (Fin 2) m (flatten f)
-    rw [show optionEquivLeft F (Fin 2) (flatten f) = f from
-      (optionEquivLeft F (Fin 2)).apply_symm_apply f] at hh
-    rw [hh]
-    exact MvPolynomial.mem_support_iff.mp hm
-  exact ⟨(Polynomial.le_natDegree_of_ne_zero fun h => hc (by simp [h])).trans he,
-    (le_totalDegree (MvPolynomial.mem_support_iff.mpr hc)).trans (hb _)⟩
-private theorem factor_span_minimal {R : Type*} [CommRing R] [IsDomain R]
-    [UniqueFactorizationMonoid R] {f g : R}
-    (hf : f ≠ 0) (hg : g ∈ factors f) :
-    Ideal.span {g} ∈ (Ideal.span {f}).minimalPrimes := by
-  have hp := prime_of_factor g hg
-  refine ⟨⟨Ideal.isPrime_span_singleton_of_prime hp, (Ideal.span_singleton_le_iff_mem _).mpr
-    (Ideal.mem_span_singleton.mpr (dvd_of_mem_factors hg))⟩, ?_⟩
-  intro Q hQ hle
-  have hfQ : f ∈ Q := hQ.2 (Ideal.subset_span (Set.mem_singleton f))
-  have hprod : (factors f).prod ∈ Q :=
-    ((Ideal.span_singleton_le_iff_mem _).mpr hfQ)
-      (Ideal.mem_span_singleton.mpr (factors_prod hf).dvd')
-  obtain ⟨q, hq, hqQ⟩ := (hQ.1.multiset_prod_mem_iff_exists_mem _).mp hprod
-  have hdiv : g ∣ q := Ideal.mem_span_singleton.mp (hle hqQ)
-  have hassoc := hp.associated_of_dvd (prime_of_factor q hq) hdiv
-  rw [Ideal.span_singleton_eq_span_singleton.mpr hassoc]
-  exact (Ideal.span_singleton_le_iff_mem _).mpr hqQ
-private theorem comap_span_flatten (f : SourcePolynomial F) :
-    (Ideal.span {f}).comap (optionEquivLeft F (Fin 2)).toRingHom =
-      Ideal.span {flatten f} := by
-  ext g
-  simp only [Ideal.mem_comap, Ideal.mem_span_singleton]
-  change f ∣ optionEquivLeft F (Fin 2) g ↔ flatten f ∣ g
-  constructor
-  · intro h
-    simpa only [AlgEquiv.symm_apply_apply, flatten] using
-      map_dvd (optionEquivLeft F (Fin 2)).symm h
-  · intro h
-    simpa only [AlgEquiv.apply_symm_apply, flatten] using
-      map_dvd (optionEquivLeft F (Fin 2)) h
-private theorem positiveDegrees_card_le {R : Type*} [Semiring R]
-    (fs : Multiset R[X]) :
-    (fs.filter (fun g => 0 < g.natDegree)).card ≤ (fs.map Polynomial.natDegree).sum := by
-  induction fs using Multiset.induction_on with
-  | empty => simp
-  | cons g fs ih =>
-    by_cases hg : 0 < g.natDegree <;> simp [hg] <;> omega
-private theorem positiveFactors_card_le [DecidableEq (SourcePolynomial F)]
-    (f : SourcePolynomial F) (hf : f ≠ 0) :
-    ((factors f).filter fun g => 0 < g.natDegree).toFinset.card ≤ f.natDegree := by
-  obtain ⟨u, hu⟩ := factors_prod hf
-  have hnz : (0 : SourcePolynomial F) ∉ factors f :=
-    fun hz => (prime_of_factor 0 hz).ne_zero rfl
-  have hdeg : ((factors f).prod).natDegree = f.natDegree := calc
-    _ = ((factors f).prod * (u : SourcePolynomial F)).natDegree := by
-      rw [Polynomial.natDegree_mul (Multiset.prod_ne_zero hnz) (Units.ne_zero u),
-        Polynomial.natDegree_coe_units, add_zero]
-    _ = _ := congrArg Polynomial.natDegree hu
-  exact (Multiset.toFinset_card_le _).trans <| (positiveDegrees_card_le _).trans_eq <|
-    (Polynomial.natDegree_multiset_prod _ hnz).symm.trans hdeg
-private theorem positive_factor_at_root {R E : Type*} [CommRing R] [IsDomain R]
-    [UniqueFactorizationMonoid R] [Field E]
-    (f : R[X]) (hf : f ≠ 0) (ev : R →+* E) (v : E)
-    (hroot : f.eval₂ ev v = 0) (hreg : f.derivative.eval₂ ev v ≠ 0) :
-    ∃ g ∈ factors f, 0 < g.natDegree ∧ g.eval₂ ev v = 0 := by
-  let ev' := Polynomial.eval₂RingHom ev v
-  obtain ⟨u, hu⟩ := factors_prod hf
-  change ev' f = 0 at hroot
-  rw [← hu, map_mul, mul_eq_zero] at hroot
-  have hz := hroot.resolve_right (Units.ne_zero (Units.map ev'.toMonoidHom u))
-  rw [map_multiset_prod, Multiset.prod_eq_zero_iff] at hz
-  obtain ⟨g, hg, hgz⟩ := Multiset.mem_map.mp hz
-  change g.eval₂ ev v = 0 at hgz
-  refine ⟨g, hg, Nat.pos_of_ne_zero ?_, hgz⟩
-  intro hd
-  obtain ⟨q, hq⟩ := dvd_of_mem_factors hg
-  have hder : g.derivative = 0 := by
-    rw [Polynomial.eq_C_of_natDegree_eq_zero hd, Polynomial.derivative_C]
-  exact hreg (by rw [hq, Polynomial.derivative_mul]; simp [hder, hgz])
 end
 end K1_14_6_2
 end
@@ -5310,90 +5169,6 @@ namespace K1_14_6_1
 noncomputable section
 open K1_14 K1_14_6 MvPolynomial
 local notation "Y" => MvPolynomial.X (R := FX) (none : Option (Fin 2))
-abbrev box (a b : ℕ) := restrictBidegree (Fin 2) FX a b
-private theorem flatten_bound {f : Equation} {e b : ℕ}
-    (he : f.natDegree ≤ e) (hb : SeedBound f b) : flatten f ∈ box e b := by
-  rw [mem_restrictBidegree]
-  intro m hm
-  have hc : m.some ∈ (f.coeff (m none)).support := by
-    rw [MvPolynomial.mem_support_iff] at hm ⊢
-    have h := optionEquivLeft_coeff_coeff FX (flatten f) (m none) m.some
-    simp only [AlgEquiv.apply_symm_apply, Finsupp.optionElim_some] at h
-    exact h.trans_ne hm
-  have hc' : f.coeff (m none) ≠ 0 := by
-    intro h
-    simp [h] at hc
-  exact ⟨(Polynomial.le_natDegree_of_ne_zero hc').trans he,
-    (le_totalDegree hc).trans (hb (m none))⟩
-private theorem partialX_bound {P : Biform} {a b : ℕ}
-    (hP : P ∈ box a b) : partialX P ∈ box a b := by
-  rw [mem_restrictBidegree] at hP ⊢
-  intro m hm
-  apply hP m
-  contrapose! hm
-  rw [notMem_support_iff] at hm ⊢
-  rw [coeff_partialX, hm, map_zero]
-private theorem separant_bound' {P : Biform} {a b : ℕ}
-    (hP : P ∈ box a b) : separant P ∈ box (a-1) b := by
-  rw [mem_restrictBidegree_iff_weightedTotalDegree_le] at hP ⊢
-  exact ⟨(weightedTotalDegree_pderiv_le_sub _ _ _).trans (Nat.sub_le_sub_right hP.1 1),
-    (weightedTotalDegree_pderiv_le _ _ _).trans hP.2⟩
-theorem separant_bound {f : Equation} {e b : ℕ}
-    (he : f.natDegree ≤ e) (hb : SeedBound f b) :
-    separant (flatten f) ∈ box (e-1) b :=
-  separant_bound' (flatten_bound he hb)
-private theorem tangent_bound {f P : Biform} {e b a c : ℕ}
-    (hf : f ∈ box e b) (hP : P ∈ box a c) (he : 0 < e) :
-    tangent f P ∈ box (a+(e-1)) (c+b) := by
-  have h1 := mul_mem_restrictBidegree (separant_bound' hf) (partialX_bound hP)
-  unfold tangent
-  apply (box _ _).sub_mem
-  · simpa only [Nat.add_comm] using h1
-  · by_cases ha : a = 0
-    · have hzero : P.degreeOf none = 0 := by
-        apply Nat.eq_zero_of_le_zero
-        apply degreeOf_le_iff.mpr
-        intro m hm
-        simpa only [ha] using ((mem_restrictBidegree.mp hP) m hm).1
-      rw [show pderiv none P = 0 from pderiv_eq_zero_of_degreeOf_eq_zero hzero, mul_zero]
-      exact (box _ _).zero_mem
-    · have h2 := mul_mem_restrictBidegree (partialX_bound hf) (separant_bound' hP)
-      rwa [show e+(a-1) = a+(e-1) by omega, Nat.add_comm b c] at h2
-theorem cleared_bound {f : Equation} {e b : ℕ} (he : 0 < e)
-    (hfe : f.natDegree ≤ e) (hb : SeedBound f b) (n : ℕ) :
-    cleared (flatten f) n ∈ box (1+(2*n+1)*(e-1)) ((2*n+1)*b) := by
-  have hf := flatten_bound hfe hb
-  induction n with
-  | zero =>
-    have h := (box _ _).neg_mem (partialX_bound hf)
-    simpa only [cleared, Nat.mul_zero, Nat.zero_add, Nat.one_mul, show 1+(e-1) = e by omega]
-      using h
-  | succ n ih =>
-    have ha := separant_bound' hf
-    have h1 := mul_mem_restrictBidegree ha (tangent_bound hf ih he)
-    have h2 := mul_mem_restrictBidegree (tangent_bound hf ha he) ih
-    have h2' := (box _ _).smul_mem (((2*n+1 : ℕ) : FX)) h2
-    rw [cleared]
-    apply (box _ _).sub_mem
-    · convert h1 using 2 <;> ring
-    · rw [mul_assoc]
-      rw [← MvPolynomial.smul_eq_C_mul]
-      convert h2' using 2 <;> ring
-theorem box_pow {P : Biform} {a b : ℕ} (hP : P ∈ box a b) (n : ℕ) :
-    P ^ n ∈ box (n*a) (n*b) := by
-  induction n with
-  | zero =>
-    simp only [pow_zero, Nat.zero_mul, mem_restrictBidegree]
-    simp [support_one]
-  | succ n ih =>
-    simpa only [pow_succ, Nat.succ_mul] using mul_mem_restrictBidegree ih hP
-theorem ordinate_mem : Y ∈ box 1 0 := by
-  classical
-  rw [mem_restrictBidegree, MvPolynomial.support_X]
-  intro m hm
-  rw [Finset.mem_singleton] at hm
-  subst m
-  simp
 end
 end K1_14_6_1
 end
@@ -5800,23 +5575,17 @@ private def closedPoint (z : K) (S : K[X]) : Option (Fin 2) → ClosedField :=
 private theorem eval_extend {σ : Type*} (x : σ → FX) (P : MvPolynomial σ FX) :
     MvPolynomial.eval (ι ∘ x) (MvPolynomial.map ι P) = ι (MvPolynomial.eval x P) := by
   rw [MvPolynomial.eval_map, MvPolynomial.eval₂_comp]
-private def extendEquation (f : Equation) : SourcePolynomial ClosedField :=
-  f.map (MvPolynomial.map ι)
-private theorem extendEquation_eval (f : Equation) (z : K) (S : K[X]) :
-    (extendEquation f).eval₂ (MvPolynomial.eval (closedPoint z S ∘ some))
-      (closedPoint z S none) = ι (atMark f z S) := by
-  change (f.map (MvPolynomial.map ι)).eval₂ _ (ι (atX S)) = _
-  rw [Polynomial.eval₂_map, atMark, Polynomial.hom_eval₂]
-  congr 1
-  apply RingHom.ext
-  intro g
-  exact eval_extend (rootPoint z S ∘ some) g
-private theorem extend_mem {P : Biform} {a c : ℕ}
-    (hP : P ∈ restrictBidegree (Fin 2) FX a c) :
-    MvPolynomial.map ι P ∈ restrictBidegree (Fin 2) ClosedField a c := by
-  rw [mem_restrictBidegree] at hP ⊢
-  intro m hm
-  exact hP m (support_map_subset _ _ hm)
+private theorem eval_valueCut {d e b : ℕ} (C : TaylorChart d e b)
+    {z : K} {S : K[X]} (h : C.Recovers z S) (x a : K) :
+    MvPolynomial.eval (closedPoint z S)
+      (MvPolynomial.map ι (C.numerator x - seedEmbedding a • C.denominator)) = 0 ↔
+      S.eval x = a := by
+  obtain ⟨hD, hN⟩ := h
+  rw [closedPoint, eval_extend, map_sub, MvPolynomial.smul_eq_C_mul, map_mul,
+    MvPolynomial.eval_C, hN x]
+  rw [← map_zero ι, ι.injective.eq_iff, sub_eq_zero, mul_comm (seedEmbedding a),
+    mul_right_inj' hD]
+  exact seedEmbedding.injective.eq_iff
 end
 end K1_14_6_2
 end

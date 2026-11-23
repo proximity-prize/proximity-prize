@@ -65,8 +65,6 @@ def sourceDebit (h : ℕ) (s : Shape) : ℕ :=
 def terminalShape (w : ℤ) : Shape :=
   let b := band w
   ⟨b.multiplicity, b.jetBound, b.vBound, b.subbankSeeds⟩
-def forcedPower (w : ℤ) (W j : ℕ) : ℕ :=
-  1 + ((band w).multiplicity * 180265 - 1 - W) / (2 * w.toNat) - j
 def scheduled (w : ℤ) : List Shape :=
   let sub := terminalShape w
   if w ≤ 3554 then
@@ -113,42 +111,6 @@ namespace K1_14
 noncomputable section
 open K1 Polynomial
 open scoped BigOperators
-private theorem det_degree {n b : ℕ} (A : Matrix (Fin n) (Fin n) Seeds)
-    (h : ∀ i j, (A i j).totalDegree ≤ b) : A.det.totalDegree ≤ n*b := by
-  classical
-  rw [Matrix.det_apply]
-  apply MvPolynomial.totalDegree_finsetSum_le
-  intro π _
-  have hp : (∏ i, A (π i) i).totalDegree ≤ n*b := by
-    apply (MvPolynomial.totalDegree_finsetProd _ _).trans
-    calc
-      _ ≤ ∑ _i : Fin n, b := Finset.sum_le_sum fun i _ => h (π i) i
-      _ = _ := by simp
-  rcases Int.units_eq_one_or (Equiv.Perm.sign π) with hh | hh <;> simpa [hh] using hp
-private theorem resultant_degree {m n b : ℕ} {f g : Equation}
-    (hf : SeedBound f b) (hg : SeedBound g b) :
-    (f.resultant g m n).totalDegree ≤ (m+n)*b := by
-  apply det_degree
-  intro i j
-  refine Fin.addCases ?_ ?_ j
-  · intro k
-    simp only [sylvester, Matrix.of_apply, Fin.addCases_left]
-    split
-    · apply hg
-    · simp
-  · intro k
-    simp only [sylvester, Matrix.of_apply, Fin.addCases_right]
-    split
-    · apply hf
-    · simp
-private theorem derivative_seedBound {f : Equation} {b : ℕ} (hf : SeedBound f b) :
-    SeedBound f.derivative b := by
-  intro i
-  rw [coeff_derivative]
-  have hc : (↑i + 1 : Seeds) = MvPolynomial.C (↑i + 1 : FX) := by simp
-  rw [hc]
-  apply (MvPolynomial.totalDegree_mul _ _).trans
-  simpa only [MvPolynomial.totalDegree_C, Nat.add_zero] using hf (i+1)
 end
 end K1_14
 end

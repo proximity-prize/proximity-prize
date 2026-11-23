@@ -238,6 +238,16 @@ end K1_6_2
 end
 section
 namespace K1_13_1_1
+set_option maxRecDepth 30000
+set_option Elab.async false
+set_option maxHeartbeats 4000000
+private def budgetGCheck (p : ℕ → Bool) : ℕ → Bool
+  | 0 => true
+  | n+1 => budgetGCheck p n && p n
+end K1_13_1_1
+end
+section
+namespace K1_13_1_1
 open K1_13 MvPolynomial
 open scoped BigOperators
 noncomputable section
@@ -246,9 +256,6 @@ set_option maxRecDepth 4000
 theorem jetIndex_formula (m : Fin 4 →₀ ℕ) :
     m.weight jetIndex = m 1 + 2 * m 2 + 3 * m 3 := by
   simp [Finsupp.weight_eq_sum, Fin.sum_univ_four, jetIndex, Nat.mul_comm]
-theorem targetOrder_formula (m : Fin 4 →₀ ℕ) :
-    m.weight targetOrder = 3 * m 0 + m 2 + 2 * m 3 := by
-  simp [Finsupp.weight_eq_sum, Fin.sum_univ_four, targetOrder, Nat.mul_comm]
 theorem degree_formula (m : Fin 4 →₀ ℕ) :
     m.degree = m 0 + m 1 + m 2 + m 3 := by
   simp [Finsupp.degree_eq_sum, Fin.sum_univ_four]
@@ -343,85 +350,6 @@ theorem finrank_bandSpace (d : ℕ) (lo hi : ℤ) (top : ℕ) :
   calc
     _ = Fintype.card (BandSlots d lo hi top) := Module.finrank_eq_card_basis (b.reindex e.symm)
     _ = _ := by simp only [BandSlots, bandCount, Fintype.card_sigma, Fintype.card_fin, sumRange_eq_fin]
-def TargetExponent (d : ℕ) (lo order : ℤ) (m : Fin 4 →₀ ℕ) : Prop :=
-  m.degree = d ∧ lo ≤ (m.weight jetIndex : ℤ) ∧ (m.weight targetOrder : ℤ) < order
-def targetSpace (d : ℕ) (lo order : ℤ) : Submodule Geom Form :=
-  restrictSupport Geom {m | TargetExponent d lo order m}
-private abbrev TargetSlots (d : ℕ) (lo order : ℤ) :=
-  Σ a : Fin (d + 1), Σ f : Fin (d - a.val + 1),
-    Fin (intervalSize (max 0 (lo - d + a.val - 2 * f.val))
-      (min ((d : ℤ) - a.val - f.val) (order - 1 - 3 * a.val - 2 * f.val)))
-private def targetEncoding (d : ℕ) (lo order : ℤ) (p : TargetSlots d lo order) :
-    {m : Fin 4 →₀ ℕ // TargetExponent d lo order m} := by
-  obtain ⟨a, f, j⟩ := p
-  let lower : ℤ := max 0 (lo - d + a.val - 2 * f.val)
-  let upper : ℤ := min ((d : ℤ) - a.val - f.val) (order - 1 - 3 * a.val - 2 * f.val)
-  let c := lower.toNat + j.val
-  have h0 : 0 ≤ lower := le_max_left _ _
-  have hj : lower + (j.val : ℤ) ≤ upper := (interval_iff _ _ _).mp j.isLt
-  have hc : (c : ℤ) = lower + j.val := by dsimp [c]; omega
-  have hlow := le_max_right (0 : ℤ) (lo - d + a.val - 2 * f.val)
-  have h : a.val + c + f.val ≤ d := by dsimp [upper] at hj; omega
-  refine ⟨exponents a (d - (a.val + c + f.val)) c f, ?_⟩
-  simp only [TargetExponent, degree_formula, jetIndex_formula, targetOrder_formula, exponents_apply]
-  change a.val + (d - (a.val + c + f.val)) + c + f.val = d ∧
-    lo ≤ (d - (a.val + c + f.val) + 2 * c + 3 * f.val : ℕ) ∧
-    (3 * a.val + c + 2 * f.val : ℕ) < order
-  dsimp only [upper] at hj
-  change lo - d + a.val - 2 * f.val ≤ lower at hlow
-  omega
-private theorem targetEncoding_bijective (d : ℕ) (lo order : ℤ) :
-    Function.Bijective (targetEncoding d lo order) := by
-  constructor
-  · rintro ⟨⟨a, ha⟩, ⟨f, hf⟩, ⟨j, hj⟩⟩ ⟨⟨a', ha'⟩, ⟨f', hf'⟩, ⟨j', hj'⟩⟩ h
-    have ea : a = a' := by
-      simpa [targetEncoding] using congrArg (fun m => m.val 0) h
-    have ef : f = f' := by
-      simpa [targetEncoding] using congrArg (fun m => m.val 3) h
-    subst a'
-    subst f'
-    have ej : j = j' := by
-      simpa [targetEncoding] using congrArg (fun m => m.val 2) h
-    subst j'
-    rfl
-  · intro m
-    obtain ⟨hd, hl, ho⟩ := m.property
-    let a := m.val 0
-    let b := m.val 1
-    let c := m.val 2
-    let f := m.val 3
-    rw [degree_formula] at hd
-    change a + b + c + f = d at hd
-    rw [jetIndex_formula] at hl
-    change lo ≤ (b + 2 * c + 3 * f : ℕ) at hl
-    rw [targetOrder_formula] at ho
-    change (3 * a + c + 2 * f : ℕ) < order at ho
-    have ha : a < d + 1 := by omega
-    have hf : f < d - a + 1 := by omega
-    let lower : ℤ := max 0 (lo - d + a - 2 * f)
-    let upper : ℤ := min ((d : ℤ) - a - f) (order - 1 - 3 * a - 2 * f)
-    let j := c - lower.toNat
-    have h0 : 0 ≤ lower := le_max_left _ _
-    have hc : lower.toNat + j = c := by
-      dsimp [lower, j]
-      omega
-    have hj : j < intervalSize lower upper := (interval_iff _ _ _).mpr (by
-      dsimp [upper] at *
-      omega)
-    refine ⟨⟨⟨a, ha⟩, ⟨f, hf⟩, ⟨j, hj⟩⟩, Subtype.ext ?_⟩
-    change exponents a (d - (a + (lower.toNat + j) + f)) (lower.toNat + j) f = m.val
-    rw [hc, show d - (a + c + f) = b by omega]
-    exact exponents_coords m.val
-theorem targetSpace_finite (d : ℕ) (lo order : ℤ) :
-    Module.Finite Geom (targetSpace d lo order) :=
-  restrictSupport_finite ((Finsupp.finite_of_degree_le d).subset fun _ h => Nat.le_of_eq h.1)
-theorem finrank_targetSpace (d : ℕ) (lo order : ℤ) :
-    Module.finrank Geom (targetSpace d lo order) = targetCount d lo order := by
-  let e := Equiv.ofBijective (targetEncoding d lo order) (targetEncoding_bijective d lo order)
-  let b := basisRestrictSupport Geom {m | TargetExponent d lo order m}
-  calc
-    _ = Fintype.card (TargetSlots d lo order) := Module.finrank_eq_card_basis (b.reindex e.symm)
-    _ = _ := by simp only [TargetSlots, targetCount, Fintype.card_sigma, Fintype.card_fin, sumRange_eq_fin]
 end
 end K1_13_1_1
 end
@@ -435,25 +363,6 @@ set_option maxHeartbeats 1000000
 theorem backShift_X_of_ne (j : Fin 4) (h : j ≠ 0) :
     backShift (MvPolynomial.X j) = MvPolynomial.X j := by
   simp [backShift, h]
-theorem backShift_homogeneous {Q : Form} {d : ℕ}
-    (hQ : Q.IsWeightedHomogeneous (fun _ => (1 : ℕ)) d) :
-    (backShift Q).IsWeightedHomogeneous (fun _ => (1 : ℕ)) d := by
-  apply hQ.bind₁
-  intro i
-  split_ifs
-  · let h := isWeightedHomogeneous_X Geom (fun _ : Fin 4 => (1 : ℕ))
-    exact (((h 0).add (h 1)).sub (h 2)).add (h 3)
-  · exact isWeightedHomogeneous_X _ _ _
-theorem backShift_index_order {Q : Form} {n : ℕ}
-    (hQ : Q ∈ restrictWeightedOrder jetIndex n) :
-    backShift Q ∈ restrictWeightedOrder jetIndex n := by
-  apply bind₁_mem_restrictWeightedOrder _ hQ
-  intro j
-  split_ifs with h
-  · subst j
-    change valueForm ∈ restrictWeightedOrder jetIndex 0
-    simp
-  · exact X_mem_restrictWeightedOrder _ _ le_rfl
 end
 end K1_13_1_1
 end
@@ -478,25 +387,10 @@ theorem bandSpace_mul {d e a b : ℕ} {lo hi low high : ℤ} {P Q : Form}
   · simpa only [map_add, Nat.cast_add] using add_le_add hlu hlv
   · simpa only [map_add, Nat.cast_add] using add_le_add hhu hhv
   · exact Nat.add_le_add htu htv
-private theorem bandSpace_pow {d f : ℕ} {lo hi : ℤ} {P : Form}
-    (hP : P ∈ bandSpace d lo hi f) (n : ℕ) :
-    P ^ n ∈ bandSpace (n * d) (n * lo) (n * hi) (n * f) := by
-  induction n with
-  | zero =>
-    simp only [pow_zero, Nat.cast_zero, zero_mul]
-    rw [← MvPolynomial.C_1, ← monomial_zero']
-    apply (monomial_mem_restrictSupport Geom).mpr
-    exact Or.inl (by simp [BandExponent])
-  | succ n ih =>
-    rw [pow_succ, Nat.succ_mul, Nat.succ_mul, Nat.cast_succ, add_mul, add_mul,
-      one_mul, one_mul]
-    exact bandSpace_mul ih hP
 private abbrev x₀ : Form := MvPolynomial.X 0
 private abbrev x₁ : Form := MvPolynomial.X 1
 private abbrev x₂ : Form := MvPolynomial.X 2
 private abbrev x₃ : Form := MvPolynomial.X 3
-private abbrev quad : Form := x₀ * x₁ - x₁ ^ 2 + x₀ * x₂
-private abbrev cubic : Form := x₀ ^ 2 * x₃ + x₀ ^ 2 * x₂ - 2 * x₀ * x₁ * x₂ - x₀ * x₁ ^ 2 + x₁ ^ 3
 private theorem monomial_band (a b c f : ℕ) {d top : ℕ} {lo hi : ℤ}
     (hd : a + b + c + f = d) (hlo : lo ≤ (b + 2 * c + 3 * f : ℕ))
     (hhi : (b + 2 * c + 3 * f : ℕ) ≤ hi) (hf : f ≤ top) :
@@ -510,128 +404,9 @@ private theorem monomial_band (a b c f : ℕ) {d top : ℕ} {lo hi : ℤ}
   rw [monomial_eq, Finsupp.prod_fintype _ _ (fun _ => pow_zero _), Fin.prod_univ_four,
     MvPolynomial.C_1, one_mul] at hm
   simpa [hval] using hm
-private theorem x₀_band : x₀ ∈ bandSpace 1 0 0 0 := by
-  simpa using monomial_band 1 0 0 0 (d := 1) (lo := 0) (hi := 0) (top := 0)
-    (by decide) (by decide) (by decide) (by decide)
-private theorem x₂_band : x₂ ∈ bandSpace 1 2 2 0 := by
-  simpa using monomial_band 0 0 1 0 (d := 1) (lo := 2) (hi := 2) (top := 0)
-    (by decide) (by decide) (by decide) (by decide)
-private theorem quad_band : quad ∈ bandSpace 2 1 2 0 := by
-  have hm (a b c : ℕ) (h : a + b + c = 2) (hl : 1 ≤ b + 2 * c) (hh : b + 2 * c ≤ 2) :
-      x₀ ^ a * x₁ ^ b * x₂ ^ c ∈ bandSpace 2 1 2 0 := by
-    simpa using monomial_band a b c 0 (d := 2) (lo := 1) (hi := 2) (top := 0)
-      (by simpa using h) (by exact_mod_cast hl) (by exact_mod_cast hh) (by decide)
-  exact add_mem
-    (sub_mem (by simpa using hm 1 1 0 (by decide) (by decide) (by decide))
-      (by simpa using hm 0 2 0 (by decide) (by decide) (by decide)))
-    (by simpa using hm 1 0 1 (by decide) (by decide) (by decide))
-private theorem cubic_band : cubic ∈ bandSpace 3 2 3 1 := by
-  have hm (a b c f : ℕ) (h : a + b + c + f = 3) (hl : 2 ≤ b + 2*c + 3*f)
-      (hh : b + 2*c + 3*f ≤ 3) (hf : f ≤ 1) :
-      x₀ ^ a * x₁ ^ b * x₂ ^ c * x₃ ^ f ∈ bandSpace 3 2 3 1 :=
-    monomial_band a b c f h (by exact_mod_cast hl) (by exact_mod_cast hh) hf
-  have h12 : x₀ * x₁ * x₂ ∈ bandSpace 3 2 3 1 := by
-    simpa using hm 1 1 1 0 (by decide) (by decide) (by decide) (by decide)
-  have h2 : 2 * x₀ * x₁ * x₂ ∈ bandSpace 3 2 3 1 := by
-    simpa [two_mul, add_mul] using add_mem h12 h12
-  have h001 : x₀ ^ 2 * x₃ ∈ bandSpace 3 2 3 1 := by
-    simpa using hm 2 0 0 1 (by decide) (by decide) (by decide) (by decide)
-  have h010 : x₀ ^ 2 * x₂ ∈ bandSpace 3 2 3 1 := by
-    simpa using hm 2 0 1 0 (by decide) (by decide) (by decide) (by decide)
-  have h020 : x₀ * x₁ ^ 2 ∈ bandSpace 3 2 3 1 := by
-    simpa using hm 1 2 0 0 (by decide) (by decide) (by decide) (by decide)
-  have h030 : x₁ ^ 3 ∈ bandSpace 3 2 3 1 := by
-    simpa using hm 0 3 0 0 (by decide) (by decide) (by decide) (by decide)
-  exact add_mem (sub_mem (sub_mem (add_mem h001 h010) h2) h020) h030
-theorem flagFactor_mem_band (v : FactorPowers) :
-    flagFactor v ∈ bandSpace v.degree v.minIndex v.maxIndex v.maxTop := by
-  have h := bandSpace_mul (bandSpace_mul (bandSpace_mul
-    (bandSpace_pow x₀_band v.value) (bandSpace_pow x₂_band v.jetTwo))
-    (bandSpace_pow quad_band v.quad)) (bandSpace_pow cubic_band v.cubic)
-  have hd : v.value * 1 + v.jetTwo * 1 + v.quad * 2 + v.cubic * 3 = v.degree := by
-    unfold FactorPowers.degree
-    omega
-  have hl : (v.value : ℤ) * 0 + (v.jetTwo : ℤ) * 2 + (v.quad : ℤ) * 1 + (v.cubic : ℤ) * 2 =
-      (v.minIndex : ℤ) := by
-    unfold FactorPowers.minIndex
-    push_cast
-    ring
-  have hh : (v.value : ℤ) * 0 + (v.jetTwo : ℤ) * 2 + (v.quad : ℤ) * 2 + (v.cubic : ℤ) * 3 =
-      (v.maxIndex : ℤ) := by
-    unfold FactorPowers.maxIndex
-    push_cast
-    ring
-  have ht : v.value * 0 + v.jetTwo * 0 + v.quad * 0 + v.cubic * 1 = v.maxTop := by
-    simp [FactorPowers.maxTop]
-  rw [hd, hl, hh, ht] at h
-  exact h
-private def evaluateAtJetOne : Form →ₐ[Geom] Geom :=
-  MvPolynomial.aeval (fun j : Fin 4 => if j = 1 then 1 else 0)
-private theorem quad_ne_zero : quad ≠ 0 := by
-  intro h
-  have he := congrArg evaluateAtJetOne h
-  simp [evaluateAtJetOne] at he
-private theorem cubic_ne_zero : cubic ≠ 0 := by
-  intro h
-  have he := congrArg evaluateAtJetOne h
-  simp [evaluateAtJetOne] at he
-theorem flagFactor_ne_zero (v : FactorPowers) : flagFactor v ≠ 0 :=
-  mul_ne_zero (mul_ne_zero (mul_ne_zero (pow_ne_zero _ (MvPolynomial.X_ne_zero _))
-    (pow_ne_zero _ (MvPolynomial.X_ne_zero _))) (pow_ne_zero _ quad_ne_zero)) (pow_ne_zero _ cubic_ne_zero)
 private theorem capX (i : Fin 4) :
     MvPolynomial.X (R := Geom) i ∈ restrictWeightedOrder targetOrder (targetOrder i) :=
   X_mem_restrictWeightedOrder _ _ le_rfl
-private theorem shift_quad_order : backShift quad ∈ restrictWeightedOrder targetOrder 2 := by
-  have h : backShift quad = x₁ * (x₀ + x₃) + ((x₀ + x₃) - x₂) * x₂ := by
-    simp only [map_add, map_sub, map_mul, backShift_X_zero, backShift_X_of_ne 1 (by decide),
-      backShift_X_of_ne 2 (by decide), pow_two]
-    unfold valueForm
-    ring
-  rw [h]
-  have ha : x₀ + x₃ ∈ restrictWeightedOrder targetOrder 2 :=
-    add_mem (restrictWeightedOrder_anti _ (by decide) (capX 0)) (capX 3)
-  have hb : (x₀ + x₃) - x₂ ∈ restrictWeightedOrder targetOrder 1 :=
-    sub_mem (restrictWeightedOrder_anti _ (by decide) ha) (capX 2)
-  exact add_mem (mul_mem_restrictWeightedOrder (capX 1) ha)
-    (mul_mem_restrictWeightedOrder hb (capX 2))
-private theorem shift_cubic_order : backShift cubic ∈ restrictWeightedOrder targetOrder 3 := by
-  let U := x₀ + x₃ - x₂
-  have h : backShift cubic = -(x₁ ^ 2 * x₀) + 2 * (x₁ * U * x₃) + U ^ 2 * (x₃ + x₂) := by
-    simp only [map_add, map_sub, map_mul, map_pow, map_ofNat, backShift_X_zero,
-      backShift_X_of_ne 1 (by decide), backShift_X_of_ne 2 (by decide), backShift_X_of_ne 3 (by decide)]
-    unfold valueForm U
-    ring
-  rw [h]
-  have hU : U ∈ restrictWeightedOrder targetOrder 1 :=
-    sub_mem (add_mem (restrictWeightedOrder_anti _ (by decide) (capX 0))
-      (restrictWeightedOrder_anti _ (by decide) (capX 3))) (capX 2)
-  have hmiddle : x₁ * U * x₃ ∈ restrictWeightedOrder targetOrder 3 :=
-    mul_mem_restrictWeightedOrder (mul_mem_restrictWeightedOrder (capX 1) hU) (capX 3)
-  have hlast : x₃ + x₂ ∈ restrictWeightedOrder targetOrder 1 :=
-    add_mem (restrictWeightedOrder_anti _ (by decide) (capX 3)) (capX 2)
-  exact add_mem
-    (add_mem (neg_mem (mul_mem_restrictWeightedOrder
-      (pow_mem_restrictWeightedOrder (capX 1) 2) (capX 0)))
-      (by simpa [two_mul] using add_mem hmiddle hmiddle))
-    (mul_mem_restrictWeightedOrder (pow_mem_restrictWeightedOrder hU 2) hlast)
-theorem flagFactor_target_order (v : FactorPowers) :
-    backShift (flagFactor v) ∈ restrictWeightedOrder targetOrder v.minOrder := by
-  have h₀ : backShift x₀ ∈ restrictWeightedOrder targetOrder 0 := by simp
-  have h₂ : backShift x₂ ∈ restrictWeightedOrder targetOrder 1 := by
-    rw [backShift_X_of_ne 2 (by decide)]
-    exact capX 2
-  have h := mul_mem_restrictWeightedOrder
-    (mul_mem_restrictWeightedOrder
-      (mul_mem_restrictWeightedOrder (pow_mem_restrictWeightedOrder h₀ v.value)
-        (pow_mem_restrictWeightedOrder h₂ v.jetTwo))
-      (pow_mem_restrictWeightedOrder shift_quad_order v.quad))
-    (pow_mem_restrictWeightedOrder shift_cubic_order v.cubic)
-  have ho : v.value * 0 + v.jetTwo * 1 + v.quad * 2 + v.cubic * 3 = v.minOrder := by
-    unfold FactorPowers.minOrder
-    omega
-  rw [ho] at h
-  simp only [flagFactor, map_pow, map_mul]
-  exact h
 end
 end K1_13_1_1
 end
@@ -640,40 +415,6 @@ namespace K1_13_1_1
 open K1_13 MvPolynomial
 noncomputable section
 set_option maxHeartbeats 1800000
-private def smallContact (d : ℕ) (lo hi : ℤ) (top : ℕ) (order : ℤ) :
-    bandSpace d lo hi top →ₗ[Geom] targetSpace d lo order :=
-  (((weightedTruncation targetOrder order.toNat).comp backShift.toLinearMap).domRestrict
-    (bandSpace d lo hi top)).codRestrict (targetSpace d lo order) (by
-      intro P
-      have hP := (mem_restrictSupport_iff Geom).mp P.property
-      have hdeg : (P : Form).IsWeightedHomogeneous (fun _ => (1 : ℕ)) d := by
-        intro m hm
-        rw [← Finsupp.degree_eq_weight_one]
-        exact (hP (MvPolynomial.mem_support_iff.mpr hm)).1
-      have horder : (P : Form) ∈ restrictWeightedOrder jetIndex lo.toNat := by
-        refine mem_restrictWeightedOrder.mpr fun m hm => ?_
-        have := (hP hm).2.1
-        omega
-      have hdeg' := backShift_homogeneous hdeg
-      have horder' := backShift_index_order horder
-      apply (mem_restrictSupport_iff Geom).mpr
-      intro e he
-      have hc := MvPolynomial.mem_support_iff.mp he
-      change (weightedTruncation targetOrder order.toNat (backShift P)).coeff e ≠ 0 at hc
-      rw [coeff_weightedTruncation] at hc
-      by_cases hb : e.weight targetOrder < order.toNat
-      · have hcoeff : (backShift P).coeff e ≠ 0 := by simpa [hb] using hc
-        have hd := hdeg' hcoeff
-        rw [← Finsupp.degree_eq_weight_one] at hd
-        have hi := mem_restrictWeightedOrder.mp horder' e (MvPolynomial.mem_support_iff.mpr hcoeff)
-        exact ⟨hd, by omega, by omega⟩
-      · simp [hb] at hc)
-private theorem smallContact_order {d : ℕ} {lo hi : ℤ} {top : ℕ} {order : ℤ}
-    (Q : LinearMap.ker (smallContact d lo hi top order)) :
-    backShift (Q : Form) ∈ restrictWeightedOrder targetOrder order.toNat := by
-  apply (weightedTruncation_eq_zero_iff _ _ _).mp
-  have h := LinearMap.mem_ker.mp Q.property
-  exact congrArg (fun P : targetSpace d lo order => (P : Form)) h
 end
 end K1_13_1_1
 end
@@ -814,6 +555,14 @@ namespace Branch
 variable {f Q : Row 4} {l : ℕ} (b : Branch f Q l)
 def g : Row 4 := (separant^[b.r]) f
 def sigma : GeoJets := toGeneric (separant b.g)
+def member : GeoJets := toGeneric (membershipTest b.g)
+def next : GeoJets := toGeneric (nextTest b.g)
+def Contains (p : JetPoint) : Prop :=
+  b.curve ≤ RingHom.ker (MvPolynomial.eval p) ∧ MvPolynomial.eval p b.sigma ≠ 0
+def graph : GeoJets5 :=
+  MvPolynomial.rename Fin.castSucc (toGeneric (partialFlow b.g)) +
+    MvPolynomial.C (4 : GeoField) * MvPolynomial.rename Fin.castSucc b.sigma *
+      MvPolynomial.X (Fin.last 4)
 abbrev Local := Localization.Away b.sigma
 def localMap : GeoJets →+* b.Local := algebraMap GeoJets b.Local
 def onGraph : GeoJets5 →+* b.Local :=
@@ -833,6 +582,13 @@ def Box5 (p : Shape) (d : ℕ) (D : GeoJets5) : Prop :=
   OldBox Fin.castSucc p D ∧ ∀ m ∈ D.support, m (Fin.last 4) ≤ d
 def graphBox (p : Shape) : Shape :=
   ⟨max p.b (p.j + 1), p.j + 1, min (p.t + 1) ((p.j + 1) / 3)⟩
+def Chart4 {f Q l} (b : Branch f Q l) : Prop :=
+  let p := (shape f).chamber
+  Box4 (chart (taylorLength + 1) p) b.member ∧
+    Box4 (chart (taylorLength + 2) p) b.next ∧
+    ∀ x a : K, ∃ D, Box4 (chart (taylorLength + 2) p) D ∧
+      ∀ S : K[X], S.natDegree ≤ 133671 → b.Contains (actualPoint (extend S)) →
+        (MvPolynomial.eval (actualPoint (extend S)) D = 0 ↔ S.eval x = a)
 end
 end K1_13_6_2
 end

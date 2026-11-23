@@ -13,27 +13,6 @@ def terminal : HighBand → Bank
   | .h2274 => ⟨⟨6600,9172,1952,211000⟩,0x1e372113d00000,0xae27f29bc6cc⟩
   | .h2294 => ⟨⟨7550,10506,2218,234728⟩,0x2cfea55aa80000,0x129e297a45c0c⟩
   | .h7773 => ⟨⟨124,173,32,946⟩,0xc4fd80000,22832869⟩
-def subbank (b : HighBand) (g : Grade) : Bank :=
-  let t := terminal b
-  { t with shape := { t.shape with U := g.slots } }
-def grades : HighBand → List Grade
-  | .h2274 =>
-    [⟨358,162873⟩,⟨353,164297⟩,⟨348,166033⟩,⟨342,167408⟩,
-     ⟨336,169216⟩,⟨330,171591⟩,⟨323,173880⟩,⟨316,177154⟩,
-     ⟨308,180959⟩,⟨300,187112⟩,⟨290,195637⟩,⟨277,211000⟩,
-     ⟨262,211000⟩,⟨244,211000⟩,⟨225,211000⟩,⟨202,211000⟩,
-     ⟨177,211000⟩,⟨150,211000⟩,⟨121,211000⟩,⟨89,211000⟩,
-     ⟨55,211000⟩,⟨19,211000⟩]
-  | .h2294 =>
-    [⟨330,179424⟩,⟨325,180915⟩,⟨320,182775⟩,⟨315,185099⟩,
-     ⟨309,187083⟩,⟨303,189769⟩,⟨296,192397⟩,⟨289,196316⟩,
-     ⟨281,201102⟩,⟨273,209391⟩,⟨262,221352⟩,⟨249,234728⟩,
-     ⟨233,234728⟩,⟨214,234728⟩,⟨193,234728⟩,⟨170,234728⟩,
-     ⟨144,234728⟩,⟨116,234728⟩,⟨85,234728⟩,⟨52,234728⟩,
-     ⟨17,234728⟩]
-  | .h7773 =>
-    [⟨25,886⟩,⟨23,913⟩,⟨21,946⟩,⟨18,946⟩,
-     ⟨13,946⟩,⟨7,946⟩]
 def stages : HighBand → List Stage
   | .h2274 =>
     [⟨0, ⟨⟨76,105,23,862⟩,0x345100000,3635193⟩, ⟨⟨359,499,105,11883⟩,0x14006680000,0x64b8343e⟩⟩,
@@ -157,30 +136,11 @@ open K1_14 (L FX Seeds Equation Shape Jet Banks SeedBound liftPoly graphEval atX
   jetAt triangle slots shapeSum)
 open K1_14_3 (Surface Parent)
 open scoped BigOperators
-def InBand (b : HighBand) (w : ℤ) : Prop := (b.row.lo : ℤ) ≤ w ∧ w ≤ (b.row.hi : ℤ)
-abbrev GradeIndex (b : HighBand) := Fin (grades b).length
-def Listed (b : HighBand) (t : Bank) : Prop :=
-  t = terminal b ∨ (∃ s ∈ stages b, t = s.free ∨ t = s.moving) ∨
-    ∃ i : GradeIndex b, t = subbank b ((grades b).get i)
+def asP1Model {u del} (M : AnchorModel u del) : P1.AnchorModel u del :=
+  { M with height_bound := M.height_bound.trans (by decide : P3.heightCap ≤ P1.heightCap) }
 def fullCutoff (s : Shape) := s.m * agreement - 1
 def buffered (h r : ℕ) (s : Shape) := fullCutoff s - 2*h*r
 abbrev debit := P1_7.debit
-def RankFloor (h : ℕ) (t : Bank) (rows : Banks) : Prop :=
-  ∀ W < t.shape.m * agreement,
-    (∀ q ≤ t.shape.B, ∀ j ≤ min q t.shape.J, q * (131071-h) ≤ W+1+j) →
-    triangle t.shape.U * shapeSum t.shape (fun q j => W+1+j - q*(131071-h)) ≤
-      debit h t + ∑ w ∈ Finset.range (W+1), Module.finrank FX (rows t.shape w)
-structure Source (b : HighBand) {u del} (M : AnchorModel u del) {Γ}
-    (F : AnchoredFamily M Γ) (rows : Banks) : Prop where
-  nested : ∀ t, Listed b t → ∀ t', Listed b t' →
-    t.shape.m = t'.shape.m → t.shape.B = t'.shape.B → t.shape.J = t'.shape.J →
-    t.shape.U ≤ t'.shape.U → ∀ W W', W ≤ W' → rows t.shape W ≤ rows t'.shape W'
-  necessary : ∀ t, Listed b t → ∀ W < t.shape.m * agreement, ∀ P ∈ rows t.shape W,
-    ∀ γ ∈ Γ, jetAt P (M.label γ) (F.scalar γ) = 0
-  shape : ∀ t, Listed b t → ∀ W, ∀ P ∈ rows t.shape W, K1_14_3.RowCaps P t.shape
-  leading : ∀ t, Listed b t → K1_14_3.LeadingFilter M.overhead.toNat rows t.shape
-  shift : ∀ t, Listed b t → K1_14_3.SeedShift M.overhead.toNat rows t.shape
-  floor_bound : ∀ t, Listed b t → RankFloor M.overhead.toNat t rows
 structure BufferedPair (h : ℕ) (rows : Banks) (s : Stage) where
   free : Jet
   moving : Jet
@@ -214,24 +174,6 @@ def curveUnit (hi g : ℕ) : ℚ :=
   let d := degreeAt hi
   (2*(g : ℚ)-1) * (1 + 2*((P3.blockLength : ℚ)/agreement)*d) +
     ((P3.blockLength - d : ℕ) : ℚ) / gap hi
-def CurveTariff (b : HighBand) {u del} (M : AnchorModel u del) {Γ}
-    (F : AnchoredFamily M Γ) : Prop :=
-  ∀ T ⊆ Γ, ∀ J g H, 0 < g → g ≤ 80 →
-    K1_14_2.SmallRootCurve J g H →
-    Module.finrank K1_14_2.SeedField (K1_14_2.RootSeedSection J) < p →
-    (∀ γ ∈ T, K1_14_2.OnRoot J (M.label γ) (F.scalar γ)) →
-    (T.card : ℚ) ≤ curveUnit b.row.hi g * H + g
-abbrev Test (b : HighBand) := Option (GradeIndex b)
-def tested (b : HighBand) : Test b → Bank
-  | none => terminal b
-  | some i => subbank b ((grades b).get i)
-def threshold (b : HighBand) : Test b → ℕ
-  | none => (grades b).length + 1
-  | some i => i.val + 1
-def seedThreshold (b : HighBand) : Test b → ℕ
-  | none => 0
-  | some i => ((grades b).get i).seedCap + 1
-def contactPower (h : ℕ) (s : Shape) (W : ℕ) := 1 + (fullCutoff s - W)/(2*h)
 def jointGain (h : ℕ) (s : Shape) (E v : ℕ) : ℕ :=
   shapeSum s fun q j =>
     let g := (q-j)/E
@@ -239,12 +181,6 @@ def jointGain (h : ℕ) (s : Shape) (E v : ℕ) : ℕ :=
     let c := fun a => slots s.U (a*v)
     (∑ a ∈ Finset.range g, (c a - c (a+1)) * (x - 2*h*(j+a))) +
       c g * (x - 2*h*(j+g))
-structure TerminalTrace (h : ℕ) (t : Bank) (rows : Banks) (f : Equation) : Prop where
-  floor_bound : RankFloor h t rows
-  shape : ∀ W, ∀ P ∈ rows t.shape W, K1_14_3.RowCaps P t.shape
-  leading : K1_14_3.LeadingFilter h rows t.shape
-  divides : ∀ W < t.shape.m * agreement, ∀ P ∈ rows t.shape W, P ≠ 0 →
-    f ^ (contactPower h t.shape W - P.natDegree) ∣ P.leadingCoeff
 end
 end P3_7
 end
@@ -269,10 +205,6 @@ open P3 (K I node p agreement blockLength AnchorModel AnchoredFamily)
 open K1_14_2_4 (taylorPower ordinateBound)
 open P1_7_3 (persistentNodes hits_persistent section_bounds regular_chart persistent_taylor)
 open Finset Polynomial ProximityPrize.Benchmark
-structure FixedWord (w : I → K) (U : Finset K) (s : K → K[X]) (d : ℕ) : Prop where
-  distinct : Set.InjOn s (U : Set K)
-  degree : ∀ γ ∈ U, (s γ).natDegree ≤ d
-  hits : ∀ γ ∈ U, ∃ B : Finset I, agreement ≤ B.card ∧ ∀ i ∈ B, (s γ).eval (node i) = w i
 end
 end P3_7
 end

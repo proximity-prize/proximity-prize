@@ -2630,6 +2630,26 @@ private theorem mapCoeffs_trajectory (k : Geom →+* F) (hk : ∀ a : Geom, (k a
       simp [trajectory]
     rw [map_mul, hXi, Derivation.leibniz, hf, hj]
     simp
+omit [Differential F] in
+private theorem degree_trajectory (k : Geom →+* F) {U : F[X]}
+    (hU : U.natDegree < taylorLength) (f : Row 3) {d : ℕ} (hf : TrueWeightLE f d) :
+    (trajectory k U f).natDegree ≤ d := by
+  classical
+  unfold trajectory
+  rw [MvPolynomial.coe_eval₂Hom, MvPolynomial.eval₂_eq]
+  apply natDegree_sum_le_of_forall_le
+  intro m hm
+  have hprod : (∏ i ∈ m.support, hasseDeriv i.val U ^ m i).natDegree ≤
+      m.sum (fun i e => (133671 - i.val) * e) := by
+    unfold Finsupp.sum
+    apply (natDegree_prod_le _ _).trans
+    apply Finset.sum_le_sum
+    intro i _
+    change ((hasseDeriv i.val U) ^ m i).natDegree ≤ (133671 - i.val) * m i
+    rw [Nat.mul_comm]
+    exact natDegree_pow_le_of_le _ ((natDegree_hasseDeriv_le U i.val).trans
+      (Nat.sub_le_sub_right (Nat.le_of_lt_succ hU) _))
+  exact (natDegree_mul_le_of_le natDegree_map_le hprod).trans (hf m hm)
 private theorem eq_zero_of_constant_coeffs [CharP F K1.p]
     (x : F) (hx : x′ = 1) (P : F[X]) (hP : P.natDegree < K1.p)
     (hconst : Differential.mapCoeffs P = 0) (hroot : P.eval x = 0) : P = 0 := by
@@ -4710,24 +4730,6 @@ end
 section
 namespace K1_13_2_3_5
 set_option maxRecDepth 5000
-private theorem lengthA : rowsA.length = 168 := rfl
-private theorem lengthB : rowsB.length = 168 := rfl
-private theorem lengthC : rowsC.length = 168 := rfl
-private theorem lengthD : rowsD.length = 168 := rfl
-private theorem lengthE : rowsE.length = 168 := rfl
-private theorem lengthF : rowsF.length = 164 := rfl
-private def allRows : List Row :=
-  rowsA ++ (rowsB ++ (rowsC ++ (rowsD ++ (rowsE ++ rowsF))))
-private theorem allRows_end : 2008 + allRows.length ≤ 4013 := by
-  simp only [allRows, List.length_append, lengthA, lengthB, lengthC, lengthD, lengthE, lengthF,
-    Nat.reduceAdd] <;> decide
-private theorem exact_total : batchScore 2008 allRows = 159735926601 := by
-  simp only [allRows, batchScore_append, lengthA, lengthB, lengthC, lengthD, lengthE,
-    Nat.reduceAdd, checkedA, checkedB, checkedC, checkedD, checkedE, checkedF]
-theorem proof : K1_13_2_3.c5 := by
-  obtain ⟨p, hp⟩ := certificate 2008 allRows allRows_end
-  rw [exact_total] at hp
-  exact ⟨p, hp⟩
 end K1_13_2_3_5
 end
 section

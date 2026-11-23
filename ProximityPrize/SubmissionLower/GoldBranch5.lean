@@ -1,0 +1,4 @@
+import ProximityPrize.SubmissionLower.FrontBranch12
+import ProximityPrize.SubmissionLower.FrontBranch5
+set_option Elab.async false
+set_option autoImplicit true

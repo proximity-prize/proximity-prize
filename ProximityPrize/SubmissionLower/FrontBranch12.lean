@@ -15,12 +15,19 @@ export P0 (K I Words node p blockLength k Frac Bivar TypeAtMostOne coefficientBl
 abbrev Rung := P1.Rung
 abbrev target : Rung := ⟨179983, 0x140f123d, 0x40000000, 2273, 0x3aa55b4097fdbda, 0x1aca8e8eb60a93⟩
 abbrev agreement := target.agreement
+abbrev radiusNumerator := target.numerator
+abbrev radiusDenominator := target.denominator
 abbrev lowCutoff : ℤ := target.lowEnd
 abbrev t : ℕ := blockLength - agreement
 abbrev L : ℕ := agreement - k
 abbrev heightCap : ℕ := t + 1 - L - 2
+def queryRadius : ℝ≥0 := claimedRadius radiusNumerator radiusDenominator
+def radius : ℝ := queryRadius
+def BadFamily (u : Words) (Γ : Finset K) : Prop :=
+  ∀ γ ∈ Γ, IsMCA (AffineLineGenerator K) IRSProfile.baseCode γ u radius
 abbrev BadMarkAt := P1.BadMarkAt
 abbrev BadMark := BadMarkAt agreement
+def ordinary (u : Words) := hankel node (u 0) (u 1) L t
 def twoBlock (u : Words) := stacked p node (u 0) (u 1) L t
 def stackRank (u : Words) := GenericLayer.genericRank (twoBlock u)
 def nullity (u : Words) := GenericLayer.genericNullity (twoBlock u)
@@ -50,21 +57,6 @@ def fixedNodes {u : Words} {T : TwoActive u} (R : Relation T) : Finset I := by
   classical
   exact Finset.univ.filter fun i =>
     (leftU R).eval (C (node i)) = 0 ∧ (leftV R).eval (C (node i)) = 0
-def InvalidLeft {u : Words} {T : TwoActive u} (R : Relation T) : Prop :=
-  max (leftU R).natDegree (leftV R).natDegree < T.height ∨
-    ∃ G : K[X], G ≠ 0 ∧ G.map Polynomial.C ∣ leftU R ∧ G.map Polynomial.C ∣ leftV R ∧
-      ¬ G ∣ locator node Finset.univ
-structure SaturatedAt {u : Words} {T : TwoActive u} (R : Relation T)
-    {γ : K} (M : BadMark u γ) : Prop where
-  U_ne : atSlope (leftU R) γ ≠ 0
-  V_ne : atSlope (leftV R) γ ≠ 0
-  degree_eq : max (atSlope (leftU R) γ).natDegree (atSlope (leftV R) γ).natDegree =
-    T.height
-  gcd_errors : ∃ errors : Finset I,
-    (∀ i ∈ errors, M.decoder.eval (node i) ≠ u 0 i + γ * u 1 i) ∧
-    IsCommonGCD (locator node errors) (atSlope (leftU R) γ) (atSlope (leftV R) γ)
-  fixed_errors : ∀ i ∈ fixedNodes R, M.decoder.eval (node i) ≠ u 0 i + γ * u 1 i
-  valid : ¬ InvalidLeft R
 structure Reduction (u : Words) (T : TwoActive u) (R : Relation T) where
   U : Bivar
   V : Bivar
@@ -140,11 +132,6 @@ noncomputable section
 open Polynomial
 open K1_13 (Geom embed extend)
 abbrev physicalDegree : ℕ := k - 1 + lowCutoff.toNat
-structure Messages (w : I → K) (Γ : Finset K) (s : K → K[X]) : Prop where
-  distinct : Set.InjOn s (Γ : Set K)
-  degree : ∀ γ ∈ Γ, (s γ).natDegree ≤ physicalDegree
-  hits : ∀ γ ∈ Γ, ∃ T : Finset I, agreement ≤ T.card ∧
-    ∀ i ∈ T, (s γ).eval (node i) = w i
 structure PoleData (Γ : Finset K) (s : K → K[X]) where
   H : Geom[X]
   monic : H.Monic
@@ -178,17 +165,6 @@ private def totalRow (c : ℕ) := ∑ b ∈ bRange c,
   (runLength c b * (runLength c b - 1) / 2 + runLength c b * (b+c))
 private def indexRow (c : ℕ) := ∑ b ∈ bRange c, runLength c b * (b+2*c)
 local notation "mom!" c "," n "," q "," v => countRow c = n ∧ totalRow c = q ∧ indexRow c = v
-private theorem r0 : mom! 0, 1302, 52346, 12250 := by decide
-private theorem r1 : mom! 1, 1178, 47424, 12388 := by decide
-private theorem r2 : mom! 2, 1054, 42483, 12240 := by decide
-private theorem r3 : mom! 3, 930, 37525, 11810 := by decide
-private theorem r4 : mom! 4, 806, 32552, 11102 := by decide
-private theorem r5 : mom! 5, 682, 27566, 10120 := by decide
-private theorem r6 : mom! 6, 558, 22569, 8868 := by decide
-private theorem r7 : mom! 7, 434, 17563, 7350 := by decide
-private theorem r8 : mom! 8, 310, 12550, 5570 := by decide
-private theorem r9 : mom! 9, 186, 7532, 3532 := by decide
-open private curve_johnson from ProximityPrize.SubmissionLower.RungSplit
 end
 end P3
 end
@@ -257,6 +233,46 @@ structure PolarData (u : Words) where
     (Q r s).eval (node i) =
       a.eval (node i) * twist ((pencil (A 0) (A 1) r).eval (node i)) * fold u s i -
       b.eval (node i) * (pencil (A 0) (A 1) s).eval (node i) * twist (fold u r i)
+private theorem polarData_of_set {u : Words} (S : Finset I) (height : ℕ)
+    (a b : K[X]) (A : Fin 2 → K[X]) (output : P0.Bivar)
+    (hh : height + S.card ≤ heightBound)
+    (hout : output.degree < (k + height : ℕ))
+    (hfirst : a.natDegree + amplitudeDegree (A 0) (A 1) ≤ height)
+    (hsecond : b.natDegree + amplitudeDegree (A 0) (A 1) ≤ height)
+    (hane : a ≠ 0) (hn : K1.sixNorm a ≠ K1.sixNorm b) (hA : IsCoprime (A 0) (A 1))
+    (hc : ∀ i ∉ S, CoefficientIdentities u a b A output i) : Nonempty (PolarData u) := by
+  classical
+  let g := locator node S
+  let v (j : ℕ) := g * seedCoeff output j
+  have hg : g.natDegree = S.card := locator_natDegree _ _
+  have hd (j : ℕ) : (v j).degree < (k + heightBound : ℕ) := by
+    have h := Strata.degree_mul_lt_add g (seedCoeff output j) g.natDegree
+      (k + height) le_rfl (seedCoeff_degree _ _ _ hout)
+    exact h.trans_le (by exact_mod_cast (show k + height + g.natDegree ≤ k + heightBound by omega))
+  have ha : (g * a).natDegree + amplitudeDegree (A 0) (A 1) ≤ heightBound := by
+    have h := natDegree_mul_le (p := g) (q := a)
+    omega
+  have hb : (g * b).natDegree + amplitudeDegree (A 0) (A 1) ≤ heightBound := by
+    have h := natDegree_mul_le (p := g) (q := b)
+    omega
+  have hgn : g ≠ 0 := (locator_monic node S).ne_zero
+  refine ⟨⟨g * a, g * b, A,
+    fun r s => pencil (pencil (v 0) (v 1) s) (pencil (v K1.p) (v (K1.p + 1)) s) (twist r),
+    mul_ne_zero hgn hane, ?_, hA, ha, hb, ?_, ?_⟩⟩
+  · intro h
+    rw [sixNorm_mul, sixNorm_mul] at h
+    exact hn (mul_left_cancel₀ (sixNorm_ne_zero hgn) h)
+  · intro r s
+    exact pencil_degree (pencil_degree (hd 0) (hd 1) s)
+      (pencil_degree (hd K1.p) (hd (K1.p + 1)) s) _
+  · intro r s i
+    by_cases hi : i ∈ S
+    · have hz : g.eval (node i) = 0 := locator_eval_zero node _ i hi
+      simp only [pencil, v, eval_mul, eval_add, eval_C, hz, zero_mul, mul_zero, add_zero, sub_zero]
+    obtain ⟨h0, h1, h2, h3⟩ := hc i hi
+    simp only [pencil, fold, v, eval_add, eval_mul, eval_C, h0, h1, h2, h3,
+      crossValue, map_add, map_mul]
+    ring
 end
 end P1_2
 end

@@ -391,11 +391,6 @@ def c1 : Prop :=
 def c2 : Prop :=
   ∀ A s, ShapeOK s → s.m ≤ s.m*A - N*s.B → ∀ w : Node → K,
     stackRank A s w ≤ n * originRank A s
-def c3 : Prop :=
-  ∀ s, ShapeOK s → ∀ Q, OrderTwo s Q →
-    ∃ F : Family 2, Family₂ s F ∧ CoversRegular F Q
-def c4 : Prop :=
-  ∀ s, ShapeOK s → ∀ F : Family 2, Family₂ s F → ImageDegrees F (R₂ s)
 def c5 : Prop :=
   ∀ s, ShapeOK s → ∀ Q, OrderTwo s Q →
     ∃ Q₁, OrderOne s Q₁ ∧ ∀ f : K[X], f.degree < k →
@@ -411,74 +406,6 @@ def c8 : Prop :=
     ∃ G : Polynomial K[X], G ≠ 0 ∧ G.natDegree ≤ H s*(H s-1) ∧
       ∀ f : K[X], f.degree < k → differentialSpecialization Q₁ f = 0 →
         ¬ RegularRoot Q₁ f → G.eval f = 0
-private theorem combine {u v b h r₂ r₁ x y z : ℕ}
-    (hx : v*x ≤ u*(2*r₂)+v*b) (hy : v*y ≤ u*r₁+v*h) (hz : z ≤ h*(h-1)) :
-    v*(x+y+z) ≤ u*(2*r₂+r₁)+v*(b+h^2) := by
-  have htail : h+h*(h-1) = h^2 := by
-    cases h with
-    | zero => rfl
-    | succ h => rw [Nat.succ_sub_one]; ring
-  calc
-    _ = v*x+v*y+v*z := by ring
-    _ ≤ (u*(2*r₂)+v*b)+(u*r₁+v*h)+v*(h*(h-1)) :=
-      Nat.add_le_add (Nat.add_le_add hx hy) (Nat.mul_le_mul_left v hz)
-    _ = _ := by rw [← htail]; ring
-theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) (h4 : c4)
-    (h5 : c5) (h6 : c6) (h7 : c7) (h8 : c8) : Main := by
-  classical
-  intro A s R hA hs hw hsur hcert w
-  have horig : originRank A s ≤ R := by
-    rcases hcert with h | ⟨cut, hcut, htail, hp⟩
-    · exact h
-    · exact (h1 A s cut hs hw hcut htail).trans hp
-  have hr := (h2 A s hs hw w).trans (Nat.mul_le_mul_left n horig)
-  have hdim := source_dimension A s hs hw
-  unfold Surplus at hsur
-  have hsmall : stackRank A s w < Fintype.card (ColumnIndex A s) := by omega
-  obtain ⟨Q, hQ, hwt, hloc⟩ := interpolant hs hw w hsmall
-  have hroot := specializes hwt hloc
-  obtain ⟨F₂, hF₂, hcover₂⟩ := h3 s hs Q hQ
-  obtain ⟨Q₁, hQ₁, hremain₁⟩ := h5 s hs Q hQ
-  obtain ⟨F₁, hF₁, hcover₁⟩ := h6 s hs Q₁ hQ₁
-  obtain ⟨G, hG, hGdeg, hordinary⟩ := h8 s hs Q₁ hQ₁
-  have hfin : (close A w).Finite :=
-    ReedSolomon.closePolynomialSet_finite node w (show k ≤ A from hA.gt_degree)
-  let T := hfin.toFinset
-  have hall (f : K[X]) (hf : f ∈ T) : f ∈ close A w := hfin.mem_toFinset.mp hf
-  let T₂ := T.filter (RegularRoot Q)
-  let rest := T.filter fun f => ¬ RegularRoot Q f
-  let T₁ := rest.filter (RegularRoot Q₁)
-  let T₀ := rest.filter fun f => ¬ RegularRoot Q₁ f
-  have h₂ (f) (hf : f ∈ T₂) := hall f (mem_filter.mp hf).1
-  have hrest (f) (hf : f ∈ rest) := hall f (mem_filter.mp hf).1
-  have h₁ (f) (hf : f ∈ T₁) := hrest f (mem_filter.mp hf).1
-  have hprice₂ := family_capacity (fun f hf => h₂ f hf) hA (Or.inr rfl) F₂ (h4 s hs F₂ hF₂)
-    (fun f hf => hcover₂ f (h₂ f hf).1 (mem_filter.mp hf).2)
-  have hprice₁ := family_capacity (fun f hf => h₁ f hf) hA (Or.inl rfl) F₁ (h7 s hs F₁ hF₁)
-    (fun f hf => hcover₁ f (h₁ f hf).1 (mem_filter.mp hf).2)
-  have p₂ : gap A*T₂.card ≤ errors A*(2*R₂ s) + gap A*F₂.count := by exact_mod_cast hprice₂
-  have p₁ : gap A*T₁.card ≤ errors A*R₁ s + gap A*F₁.count := by
-    simpa only [one_mul] using (show gap A*T₁.card ≤ errors A*(1*R₁ s) + gap A*F₁.count by
-      exact_mod_cast hprice₁)
-  have p₀ : T₀.card ≤ H s*(H s-1) := by
-    refine (Polynomial.card_le_degree_of_subset_roots (p := G) ?_).trans hGdeg
-    intro f hf
-    obtain ⟨hr', hsing₁⟩ := mem_filter.mp (show f ∈ T₀ from hf)
-    have hf' := hrest f hr'
-    exact (Polynomial.mem_roots hG).mpr (hordinary f hf'.1
-      (hremain₁ f hf'.1 (hroot f hf') (mem_filter.mp hr').2) hsing₁)
-  have hpart₂ : T₂.card + rest.card = T.card := card_filter_add_card_filter_not ..
-  have hpart₁ : T₁.card + T₀.card = rest.card := card_filter_add_card_filter_not ..
-  have hp : gap A*T.card ≤ chargeNumerator A s := by
-    rw [show T.card = T₂.card+T₁.card+T₀.card by omega]
-    apply combine _ _ p₀
-    · exact p₂.trans (Nat.add_le_add_left (Nat.mul_le_mul_left _ hF₂.count) _)
-    · exact p₁.trans (Nat.add_le_add_left (Nat.mul_le_mul_left _ hF₁.count) _)
-  refine ⟨hfin, ?_⟩
-  rw [Set.ncard_eq_toFinset_card _ hfin]
-  apply (Nat.le_div_iff_mul_le (Nat.sub_pos_of_lt hA.gt_degree)).2
-  rw [mul_comm]
-  exact hp.trans (Nat.le_add_right _ _)
 end
 end CJ0
 end
@@ -1003,17 +930,6 @@ def initialSep (G : Equation) : InitialRing 2 :=
   initialJetSeparant center (lifted G)
 def nativeJet (f : K[X]) : Fin 3 → Geo :=
   polynomialJet center (f.map embed)
-def centeredNumeratorAt (G : Equation) (τ l : ℕ) : InitialRing 2 :=
-  commonTaylorNumerator center (lifted G) τ l
-abbrev centeredNumerator (G : Equation) (l : Fin k) : InitialRing 2 :=
-  centeredNumeratorAt G t l.val
-def coefficientNumeratorAt (G : Equation) (τ : ℕ) {L : ℕ} (i : Fin L) : InitialRing 2 :=
-  ∑ l : Fin L, MvPolynomial.C (((Polynomial.X - Polynomial.C center) ^ l.val).coeff i.val) *
-    centeredNumeratorAt G τ l.val
-abbrev coefficientNumerator (G : Equation) (i : Fin k) : InitialRing 2 :=
-  coefficientNumeratorAt G t i
-def chart (G : Equation) (P : InitialRing 2) : Chart 2 :=
-  ⟨P, initialSep G ^ t, coefficientNumerator G⟩
 structure FactorFamily (Q : Equation) where
   count : ℕ
   source : Fin count → Equation
@@ -1038,11 +954,6 @@ open CJ0 Polynomial PolynomialDifferential
 open scoped BigOperators
 set_option maxHeartbeats 600000
 set_option maxRecDepth 4000
-theorem exponent_sufficient : TaylorExponentSufficient 2 k t := by
-  intro l
-  have hl := l.isLt
-  unfold t
-  omega
 theorem centerMap_injective : Function.Injective centerMap :=
   (algebraMap FX Geo).injective.comp (IsFractionRing.injective K[X] FX)
 theorem initial_eq_map (G : Equation) :
@@ -1099,35 +1010,6 @@ theorem initialSep_eval (G : Equation) (f : K[X]) :
     rw [initialSep, initialJetSeparant, initial, lifted, lifted, map_separant]
     rfl
   rw [he, initial_eval]
-private theorem coeff_reconstruction (G : Equation) (u : Fin 3 → Geo) {L : ℕ} (i : Fin L) :
-    (rationalTaylorPolynomial center (lifted G) L u).coeff i.val =
-      ∑ l : Fin L, ((Polynomial.X - Polynomial.C center) ^ l.val).coeff i.val *
-        rationalTaylorCoefficient center (lifted G) u l.val := by
-  rw [rationalTaylorPolynomial, centeredCoefficientPrefix, map_sum, finsetSum_coeff]
-  apply Finset.sum_congr rfl
-  intro l _
-  rw [taylor_monomial, coeff_C_mul, map_neg, ← sub_eq_add_neg, mul_comm]
-private theorem eval_coefficientNumerator (G : Equation) (u : Fin 3 → Geo)
-    (h : MvPolynomial.eval u (initialSep G) ≠ 0) {L τ : ℕ}
-    (hτ : TaylorExponentSufficient 2 L τ) (i : Fin L) :
-    MvPolynomial.eval u (coefficientNumeratorAt G τ i) /
-      MvPolynomial.eval u (initialSep G ^ τ) =
-      (rationalTaylorPolynomial center (lifted G) L u).coeff i.val := by
-  have hpow : MvPolynomial.eval u (initialSep G) ^ τ ≠ 0 := pow_ne_zero _ h
-  rw [coeff_reconstruction, coefficientNumeratorAt, map_sum, map_pow, Finset.sum_div]
-  apply Finset.sum_congr rfl
-  intro l _
-  rw [map_mul, MvPolynomial.eval_C, centeredNumeratorAt]
-  rw [← MvPolynomial.aeval_eq_eval (f := u),
-    aeval_commonTaylorNumerator center (lifted G) u (hτ l) h]
-  change _ * (MvPolynomial.eval u (initialSep G) ^ τ * _) /
-    MvPolynomial.eval u (initialSep G) ^ τ = _
-  field_simp
-theorem chart_output (G : Equation) (P : InitialRing 2) (u : Fin 3 → Geo)
-    (h : MvPolynomial.eval u (initialSep G) ≠ 0) (i : Fin k) :
-    (chart G P).output u i = (rationalTaylorPolynomial center (lifted G) k u).coeff i.val := by
-  simp only [Chart.output, chart]
-  exact eval_coefficientNumerator G u h (L := k) (τ := t) exponent_sufficient i
 private theorem readJet_eq {L : ℕ} (P : Geo[X]) (hp : P.degree < L) (j : ℕ) :
     (∑ i : Fin L, (i.val.choose j : Geo) * center^(i.val-j) * P.coeff i.val) =
       (hasseDeriv j P).eval center := by
@@ -1137,38 +1019,6 @@ private theorem readJet_eq {L : ℕ} (P : Geo[X]) (hp : P.degree < L) (j : ℕ) 
   intro i _
   rw [eval_monomial]
   ring
-theorem chart_recovers (G : Equation) (P : InitialRing 2) (u : Fin 3 → Geo)
-    (h : MvPolynomial.eval u (initialSep G) ≠ 0) (j : Fin 3) :
-    readJet ((chart G P).output u) j.val = u j := by
-  let U := rationalTaylorPolynomial center (lifted G) k u
-  have hout : (chart G P).output u = (fun i : Fin k => U.coeff i.val) := by
-    funext i
-    exact chart_output G P u h i
-  have he : readJet ((chart G P).output u) j.val = readJet (fun i => U.coeff i.val) j.val :=
-    congrArg (fun y : Fin k → Geo => readJet y j.val) hout
-  have hd : U.degree < k := degree_centeredCoefficientPrefix_lt _ _ _
-  have hj : readJet (fun i => U.coeff i.val) j.val = (hasseDeriv j.val U).eval center :=
-    readJet_eq (L := k) U hd j.val
-  refine he.trans (hj.trans ?_)
-  exact congrFun (polynomialJet_rationalTaylorPolynomial center (lifted G)
-    (by decide : 2 < k) u) j
-theorem chart_at_solution (G : Equation) (P : InitialRing 2) (f : K[X])
-    (hf : f.degree < k) (hg : differentialSpecialization G f = 0)
-    (hsep : MvPolynomial.eval (nativeJet f) (initialSep G) ≠ 0) :
-    (chart G P).output (nativeJet f) = coeffPoint f := by
-  have hsol : differentialSpecialization (lifted G) (f.map embed) = 0 := by
-    rw [lifted, ← map_differentialSpecialization, hg, Polynomial.map_zero]
-  have hsep' : jetEvaluation (separant (lifted G) (Fin.last 2)) center (nativeJet f) ≠ 0 := by
-    simpa only [initialSep, ← MvPolynomial.aeval_eq_eval, aeval_initialJetSeparant] using hsep
-  have hd : (f.map embed).degree < k := (Polynomial.degree_map_eq_of_injective embed.injective f) ▸ hf
-  let : CharP Geo p := charP_of_injective_ringHom embed.injective p
-  have hbin (i : ℕ) (hlo : 2 < i) (hhi : i < k) : (i.choose 2 : Geo) ≠ 0 :=
-    Sol1.C40Primitives.native_binomial_guard 2 le_rfl i hlo (Nat.lt_succ_of_lt hhi)
-  have hrec := rationalTaylorPolynomial_polynomialJet center (lifted G) (f.map embed)
-    hsol hsep' hd hbin
-  funext i
-  rw [chart_output G P (nativeJet f) hsep i, nativeJet, hrec, coeff_map]
-  rfl
 end
 end CJ0_3
 end
@@ -1255,82 +1105,12 @@ private theorem degreeOf_top_of_index {P : InitialRing 2} {d : ℕ}
     simpa only [Fin.val_last, smul_eq_mul, Nat.mul_comm 2] using hsum
   have h := hweight.trans ((le_weightedTotalDegree Fin.val hm).trans hP)
   omega
-private theorem coefficient_weight (G : Equation) {L τ : ℕ} (i : Fin L) (w : Fin 3 → ℕ) (d : ℕ)
-    (h : ∀ l : Fin L, (centeredNumeratorAt G τ l.val).weightedTotalDegree w ≤ d) :
-    (coefficientNumeratorAt G τ i).weightedTotalDegree w ≤ d := by
-  classical
-  apply mem_restrictWeightedDegree_iff_weightedTotalDegree_le.mp
-  rw [coefficientNumeratorAt]
-  apply Submodule.sum_mem
-  intro l _
-  apply mem_restrictWeightedDegree_iff_weightedTotalDegree_le.mpr
-  apply (weightedTotalDegree_mul_le _ _ _).trans
-  simpa only [weightedTotalDegree_C, zero_add] using h l
 private theorem indexWeight_eq : Astra7.jetWeight 0 1 3 = CJ0.indexWeight := by
   funext i
   cases i <;> simp [Astra7.jetWeight, CJ0.indexWeight]
 private theorem coeffWeight_eq : Astra7.coeffWeight 0 1 (2 + 1) = Fin.val := by
   funext i
   simp [Astra7.coeffWeight]
-private theorem lifted_index {s : Source} {G : Equation} (hG : OrderTwo s G) :
-    (lifted G).weightedTotalDegree (Astra7.jetWeight 0 1 3) ≤ s.J := by
-  rw [lifted_weight, indexWeight_eq]
-  exact hG.2.2.1
-private theorem sep_index {s : Source} {G : Equation} (hG : OrderTwo s G) :
-    (initialSep G).weightedTotalDegree Fin.val ≤ s.J - 2 := by
-  simpa only [initialSep, coeffWeight_eq, zero_add, one_mul] using
-    (Astra7.initialSeparant_weight 0 1 center (lifted G)).trans
-      (Nat.sub_le_sub_right (lifted_index hG) (0 + 1 * 2))
-private theorem centered_index {s : Source} (hs : ShapeOK s) {G : Equation}
-    (hG : OrderTwo s G) (l : Fin k) :
-    (centeredNumerator G l).weightedTotalDegree Fin.val ≤ D s := by
-  have hJ := hs.index_top
-  have hC := hs.top_pos
-  have hcap : 0 + 1 * 2 ≤ s.J := by omega
-  have h := Astra7.commonTaylor_weight 0 1 s.J k t center (lifted G)
-    exponent_sufficient hcap (lifted_index hG) l
-  have hl : l.val ≤ k - 1 := by have := l.isLt; omega
-  have hi : (centeredNumerator G l).weightedTotalDegree Fin.val ≤ t * (s.J - 2) + l.val := by
-    simpa only [centeredNumeratorAt, coeffWeight_eq, zero_add, add_zero, one_mul] using h
-  exact hi.trans (Nat.add_le_add_left hl _)
-private theorem centered_total {s : Source} {G : Equation} (hG : OrderTwo s G) (l : Fin k) :
-    (centeredNumerator G l).totalDegree ≤ a₀ s := by
-  apply (totalDegree_commonTaylorNumerator_le center (lifted G) (exponent_sufficient l)).trans
-  rw [rationalTaylorCutDegreeBound, lifted_total]
-  exact Nat.add_le_add_left (Nat.mul_le_mul_left _ (Nat.sub_le_sub_right hG.2.1 1)) _
-theorem denominator_band {s : Source} {G : Equation} (hG : OrderTwo s G) :
-    inBand₂ s (initialSep G ^ t) := by
-  have ht : (initialSep G).totalDegree ≤ s.B - 1 := by
-    apply (totalDegree_initialJetSeparant_le center (lifted G)).trans
-    rw [lifted_total]
-    exact Nat.sub_le_sub_right hG.2.1 1
-  have htop : (initialSep G).degreeOf (Fin.last 2) ≤ s.C - 1 := by
-    apply (degreeOf_initialJetSeparant_le center (lifted G)).trans
-    change jetDegree (lifted G) (Fin.last 2) - 1 ≤ s.C - 1
-    rw [lifted_top]
-    exact Nat.sub_le_sub_right hG.2.2.2 1
-  have hi : (initialSep G ^ t).weightedTotalDegree Fin.val ≤ D s :=
-    ((weightedTotalDegree_pow_le Fin.val _ _).trans
-      (Nat.mul_le_mul_left _ (sep_index hG))).trans (Nat.le_add_right _ _)
-  refine ⟨(totalDegree_pow _ _).trans ((Nat.mul_le_mul_left _ ht).trans ?_), hi, ?_⟩
-  · simpa only [a₀, Nat.add_comm] using Nat.le_add_right (t * (s.B - 1)) 1
-  · apply le_min
-    · exact (degreeOf_pow_le _ _ _).trans
-        ((Nat.mul_le_mul_left _ htop).trans (Nat.le_add_right _ _))
-    · exact degreeOf_top_of_index hi
-theorem numerator_band {s : Source} (hs : ShapeOK s) {G : Equation} (hG : OrderTwo s G)
-    (hTop : ∀ l, (centeredNumerator G l).degreeOf (Fin.last 2) ≤ t * (s.C - 1) + k - 2)
-    (i : Fin k) : inBand₂ s (coefficientNumerator G i) := by
-  have hi := coefficient_weight G (τ := t) i Fin.val (D s) (centered_index hs hG)
-  refine ⟨?_, hi, le_min ?_ (degreeOf_top_of_index hi)⟩
-  · rw [← weightedTotalDegree_one]
-    apply coefficient_weight (τ := t)
-    intro l
-    simpa only [weightedTotalDegree_one] using centered_total hG l
-  · rw [← weightedTotalDegree_piSingle]
-    apply coefficient_weight (τ := t)
-    intro l
-    simpa only [weightedTotalDegree_piSingle] using hTop l
 end
 end CJ0_3
 end
@@ -1342,38 +1122,6 @@ open scoped BigOperators
 set_option maxRecDepth 4000
 def c1 : Prop :=
   ∀ Q : Equation, Q ≠ 0 → Nonempty (FactorFamily Q)
-def c2 : Prop :=
-  ∀ s, ShapeOK s → ∀ G : Equation, OrderTwo s G → ∀ l : Fin k,
-    (centeredNumerator G l).degreeOf (Fin.last 2) ≤ t * (s.C - 1) + k - 2
-theorem of_children (h1 : c1) (h2 : c2) : CJ0.c3 := by
-  intro s hs Q hQ
-  obtain ⟨F⟩ := h1 Q hQ.1
-  let T : Family 2 := ⟨F.count, fun i => chart (F.source i) (F.equation i)⟩
-  have htotal := factor_weights hQ F
-  have hlocal (i : Fin F.count) := orderTwo_of_dvd hQ (F.source_dvd i)
-  refine ⟨T, ⟨(factor_count F).trans htotal.1, ?_, htotal.1, htotal.2.1, htotal.2.2, ?_⟩, ?_⟩
-  · intro i
-    refine ⟨F.irreducible i, fun hd => F.regular i ((F.irreducible i).prime.dvd_of_dvd_pow hd), ?_⟩
-    intro u hu j
-    apply chart_recovers
-    intro hz
-    exact hu.2 (by
-      change MvPolynomial.eval u (initialSep (F.source i) ^ t) = 0
-      rw [map_pow, hz, zero_pow (by decide : t ≠ 0)])
-  · intro i
-    simp only [T, chart]
-    refine ⟨denominator_band (hlocal i), ?_⟩
-    intro j
-    exact numerator_band (G := F.source i) hs (hlocal i) (h2 s hs (F.source i) (hlocal i)) j
-  · intro f hf hr
-    obtain ⟨i, hz, hp, hsep⟩ := F.covers f hr
-    refine ⟨i, ?_⟩
-    change coeffPoint f ∈ (chart (F.source i) (F.equation i)).imageSet
-    refine ⟨nativeJet f, ⟨hp, ?_⟩, ?_⟩
-    · change MvPolynomial.eval (nativeJet f) (initialSep (F.source i) ^ t) ≠ 0
-      rw [map_pow]
-      exact pow_ne_zero _ hsep
-    · exact chart_at_solution (F.source i) (F.equation i) f hf hz hsep
 end
 end CJ0_3
 end
@@ -1586,19 +1334,6 @@ private theorem commonTaylor_top (x : F) (Q : DifferentialPolynomial F 2) {c L �
   change d * (c - 1) + (l.val - 1) + (τ - d) * (c - 1) ≤ _
   rw [Nat.add_right_comm, ← Nat.add_mul, Nat.add_comm d (τ - d), he]
 end Field
-theorem proof : CJ0_3.c2 := by
-  intro s hs G hG l
-  have htop : (CJ0_3.lifted G).degreeOf (some (Fin.last 2)) ≤ s.C := by
-    change (MvPolynomial.map embed G).degreeOf (some (Fin.last 2)) ≤ s.C
-    have hGtop := hG.2.2.2
-    simp only [jetDegree, degreeOf_def] at hGtop
-    simp only [degreeOf_def]
-    exact (Multiset.count_le_of_le _ (degrees_map_le (p := G) (f := embed))).trans hGtop
-  have hb := commonTaylor_top center (CJ0_3.lifted G) hs.top_pos htop CJ0_3.exponent_sufficient l
-  have hl : l.val - 1 ≤ k - 2 := by have := l.isLt; omega
-  apply hb.trans
-  rw [Nat.add_sub_assoc (by decide : 2 ≤ k)]
-  exact Nat.add_le_add_left hl _
 end
 end CJ0_3_2
 end
@@ -1910,76 +1645,6 @@ private theorem chart_degree (h1 : c1) (h2 : c2)
     _ ≤ 2 * (surfaceBound a d e b j c / 2) :=
       degree_le_of_quadratic T.ideal hdim (surfaceBound a d e b j c / 2) u v hle
     _ = _ := by ring
-private theorem shape_chamber (s : Source) (hs : ShapeOK s) :
-    D s ≤ a₀ s ∧ 2 * e s ≤ D s := by
-  constructor
-  · have hC := hs.top_pos
-    have hJ := hs.index_top
-    have hB := hs.total_index
-    change 262137 * (s.J-2) + 131072 - 1 ≤ 1 + 262137 * (s.B-1)
-    omega
-  · have he : e s ≤ D s / 2 := min_le_right _ _
-    omega
-private theorem family_budget (s : Source) (hs : ShapeOK s) (F : Family 2) (hF : Family₂ s F)
-    (hdeg : ∀ i, affineDegree (F.chart i).ideal ≤
-      surfaceBound (a₀ s) (D s) (e s) (F.chart i).equation.totalDegree
-        (indexDegree (F.chart i).equation)
-        ((F.chart i).equation.degreeOf (Fin.last 2))) :
-    (∑ i, affineDegree (F.chart i).ideal) ≤ (R₂ s : ℚ) := by
-  obtain ⟨hda, hde⟩ := shape_chamber s hs
-  let a : ℚ := a₀ s
-  let d : ℚ := D s
-  let e₀ : ℚ := e s
-  have hdaQ : d ≤ a := by
-    change (D s : ℚ) ≤ (a₀ s : ℚ)
-    exact_mod_cast hda
-  have hdeQ : 2*e₀ ≤ d := by
-    change 2 * (e s : ℚ) ≤ (D s : ℚ)
-    exact_mod_cast hde
-  have heQ : 0 ≤ e₀ := Nat.cast_nonneg _
-  let u := 2 * e₀ * (d-e₀)
-  let v := e₀ * (2*a-2*d+e₀)
-  let w := (d-2*e₀) * (2*a-d)
-  have hu : 0 ≤ u := mul_nonneg (mul_nonneg (by norm_num) heQ) (by linarith)
-  have hv : 0 ≤ v := mul_nonneg heQ (by linarith)
-  have hw : 0 ≤ w := mul_nonneg (by linarith) (by linarith)
-  have hb : (∑ i, ((F.chart i).equation.totalDegree : ℚ)) ≤ (s.B : ℚ) := by
-    exact_mod_cast hF.total
-  have hj : (∑ i, (indexDegree (F.chart i).equation : ℚ)) ≤ (s.J : ℚ) := by
-    exact_mod_cast hF.index
-  have hc : (∑ i, ((F.chart i).equation.degreeOf (Fin.last 2) : ℚ)) ≤ (s.C : ℚ) := by
-    exact_mod_cast hF.top
-  have hD' : D s ≤ 2*a₀ s := by omega
-  have hJ' : s.J ≤ 2*s.B := by have := hs.total_index; omega
-  have he' : e s ≤ D s := by omega
-  have hC' : 2*s.C*e s ≤ s.C*D s + e s*s.J := by
-    calc
-      _ = s.C * (2*e s) := by ring
-      _ ≤ s.C*D s := Nat.mul_le_mul_left _ hde
-      _ ≤ _ := Nat.le_add_right _ _
-  calc
-    _ ≤ ∑ i, surfaceBound a d e₀ (F.chart i).equation.totalDegree
-        (indexDegree (F.chart i).equation)
-        ((F.chart i).equation.degreeOf (Fin.last 2)) := Finset.sum_le_sum fun i _ => hdeg i
-    _ = u * (∑ i, ((F.chart i).equation.totalDegree : ℚ)) +
-        v * (∑ i, (indexDegree (F.chart i).equation : ℚ)) +
-        w * (∑ i, ((F.chart i).equation.degreeOf (Fin.last 2) : ℚ)) := by
-      simp only [surfaceBound, u, v, w, Finset.mul_sum, Finset.sum_add_distrib]
-    _ ≤ u*s.B + v*s.J + w*s.C :=
-      add_le_add (add_le_add (mul_le_mul_of_nonneg_left hb hu) (mul_le_mul_of_nonneg_left hj hv))
-        (mul_le_mul_of_nonneg_left hc hw)
-    _ = (R₂ s : ℚ) := by
-      dsimp [u, v, w, a, d, e₀, R₂]
-      push_cast [Nat.cast_sub hD', Nat.cast_sub hJ', Nat.cast_sub he', Nat.cast_sub hC']
-      ring
-theorem of_children (h1 : c1) (h2 : c2) : CJ0.c4 := by
-  intro s hs F hF
-  have hg := fun i => image_geometry (F.chart i) (hF.chart_ok i)
-  refine ⟨fun i => (hg i).1, fun i => (hg i).2, family_budget s hs F hF ?_⟩
-  obtain ⟨hda, hde⟩ := shape_chamber s hs
-  intro i
-  exact chart_degree h1 h2 (F.chart i) (hF.chart_ok i) (hg i).2 (a₀ s) (D s) (e s)
-    hda hde (mem_bandSpace.mpr (hF.bands i).1) (fun j => mem_bandSpace.mpr ((hF.bands i).2 j))
 end
 end CJ0_4
 end

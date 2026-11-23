@@ -3883,22 +3883,6 @@ noncomputable section
 open K1 K1_14 K1_14_6 MvPolynomial
 open scoped Polynomial BigOperators
 local notation "Y" => MvPolynomial.X (R := FX) (none : Option (Fin 2))
-private abbrev incl := algebraMap L[X] FX
-private abbrev center : FX := incl Polynomial.X
-private theorem eval_center (S : K[X]) : (S.map seedEmbedding).eval center = atX S := by
-  rw [Polynomial.eval_map]
-  change S.eval₂ (incl.comp (Polynomial.C.comp (algebraMap K L))) (incl Polynomial.X) =
-    incl (S.map (algebraMap K L))
-  rw [← Polynomial.hom_eval₂, ← Polynomial.eval₂_map, Polynomial.eval₂_C_X]
-private theorem factorial_ne_zero {n : ℕ} (hn : n < p) : (n.factorial : FX) ≠ 0 := by
-  let : CharP FX p := charP_of_injective_ringHom seedEmbedding.injective p
-  induction n with
-  | zero => simp
-  | succ n ih =>
-    have hc : ((n+1 : ℕ) : FX) ≠ 0 := by
-      intro h
-      exact (not_le_of_gt hn) (Nat.le_of_dvd (Nat.succ_pos n) ((CharP.cast_eq_zero_iff FX p _).mp h))
-    simpa only [Nat.factorial_succ, Nat.cast_mul] using mul_ne_zero hc (ih (Nat.lt_of_succ_lt hn))
 end
 end K1_14_6_1
 end
