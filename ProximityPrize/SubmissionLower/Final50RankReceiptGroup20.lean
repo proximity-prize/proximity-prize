@@ -1,947 +1,551 @@
-import ProximityPrize.SubmissionLower.Final50RankReceiptBase
-
+/-
+Nine-factor witness construction adapted from public Proximity Prize peer
+submission 657, commit e07f14a81dfe2cf1bda985e67040ad4d31fe81ab.
+-/
+import ProximityPrize.SubmissionLower.Final50RankReceiptFast
 set_option Elab.async false
 set_option maxRecDepth 16000
 set_option maxHeartbeats 20000000
 
 namespace Final50RankReceipt
 open K1_13_1_1 (bandCount)
+open Final50RankReceipt renaming witnessFinal50Fast → w
 
-private def cert20_0 := witnessFinal50 20 54 0 60902 60902 1 99
-  0x0 (by decide +kernel)
-private def cert20_1 := witnessFinal50 20 53 0 70839 70901 2 198
-  0x0 (by decide +kernel)
-private def cert20_2 := witnessFinal50 20 52 0 80776 80901 4 393
-  0x11200 (by decide +kernel)
-private def cert20_3 := witnessFinal50 20 51 0 90713 90900 6 587
-  0x44812200 (by decide +kernel)
-private def cert20_4 := witnessFinal50 20 50 0 100650 100900 9 874
-  0x109112048812200 (by decide +kernel)
-private def cert20_5 := witnessFinal50 20 49 0 110587 110899 12 1160
-  0x2122240908a122048812200 (by decide +kernel)
-private def cert20_6 := witnessFinal50 20 48 0 120524 120899 16 1535
-  0x31242444812114244111122048812200 (by decide +kernel)
-private def cert20_7 := witnessFinal50 20 47 0 130461 130898 19 1810
-  0x624848891221424228488222244111122048812200 (by decide +kernel)
-private def cert20_8 := witnessFinal50 20 46 0 140398 140898 23 2174
-  0x824c4909122142422848822114444488222244111122048812200 (by decide +kernel)
-private def cert20_9 := witnessFinal50 20 45 0 150335 150897 26 2440
-  0x1049891231424428484509122114444488322444488222244111122048812200 (by decide +kernel)
-private def cert20_10 := witnessFinal50 20 44 0 160272 160897 30 2796
-  0x144a09123142442848451110a22114444488322444488322444488222244111122048812200 (by decide +kernel)
-private def cert20_11 := witnessFinal50 20 43 0 170209 170896 33 3057
-  0x289124142462848851110a22114444489908a322444488322444488322444488222244111122048812200 (by decide +kernel)
-private def cert20_12 := witnessFinal50 20 42 0 180146 180896 37 3407
-  0x309124142462888c51110a22114444c845191222244211322444488322444488322444488222244111122048812200 (by decide +kernel)
-private def cert20_13 := witnessFinal50 20 41 0 190083 190833 40 3666
-  0x125142482888c51110a2211464428c84519122224508991222244211322444488322444488322444488222244111122048812200 (by decide +kernel)
-private def cert20_14 := witnessFinal50 20 40 0 200020 200832 44 4014
-  0x125144482888c51110a3221464228c891142114844c8911122108991222244211322444488322444488322444488222244111122048812200 (by decide +kernel)
-private def cert20_15 := witnessFinal50 20 39 0 210019 210832 47 4249
-  0x24c2889051118a3231464428c84519142114844c8911122a450899122224421132244448842264488891064488891064488891044448822224409102440 (by decide +kernel)
-private def cert20_16 := witnessFinal50 20 38 0 220018 220769 50 4496
-  0x89451120a3231464428c8452110a42114844c8911522844c8911122148a11322444488422644888910844c89111220c89111220c891112208889104444881220488 (by decide +kernel)
-private def cert20_17 := witnessFinal50 20 37 0 230017 230768 52 4634
-  0x2251464828c8c51910a42214842290899152114a450899122224548a11322444488522844c89111221089912222442113224444883224444883224444882222441111220488 (by decide +kernel)
-private def cert20_18 := witnessFinal50 20 36 0 240016 240768 55 4857
-  0x44c28c9051918a4231484429084521152114a4508991222c4548a11322444488522844c8911122148a11322444488422644888910844c89111220c89111220c89111220888910444488 (by decide +kernel)
-private def cert20_19 := witnessFinal50 20 35 0 250015 250705 56 4902
-  0x325146482908c52110a42114a4429484529142264588a9142264488891622a4508991222244291422644888910a4508991222244211322444488422644888910644888910644888910444488 (by decide +kernel)
-private def cert20_20 := witnessFinal50 20 34 0 260014 260704 58 5032
-  0xc9452120a423148442948852908a5228458845311522844c8911622a4508991222244311522844c8911122148a11322444488522844c8911122108991222244211322444488322444488322444488 (by decide +kernel)
-private def cert20_21 := witnessFinal50 20 33 0 270013 270704 59 5057
-  0x64c2909052118a52314a4429484529162114c4548a11322e4588a9142264488891622a4508991222244311522844c8911122148a11322444488522844c8911122108991222244211322444488322444488 (by decide +kernel)
-private def cert20_22 := witnessFinal50 20 32 0 280012 280641 60 5098
-  0x425148482948c52910a52114c44298845311522845c8b11522844c8911722c4548a11322444488622a4508991222244311522844c8911122148a11322444488522844c8911122108991222244211322444488 (by decide +kernel)
-private def cert20_23 := witnessFinal50 20 31 0 290011 290640 60 5038
-  0x42514a482948c52910a62214c422988a9172114e4588a91422645c8b11522844c8911122e4588a91422644888910c4548a11322444488622a4508991222244291422644888910a4508991222244211322444488 (by decide +kernel)
-private def cert20_24 := witnessFinal50 20 30 0 300010 300640 61 5059
-  0x2130a52414a462988c53110a62114c45c845391622a4508c11722c4548a11322445c8b11522844c89111221c8b11522844c8911122188a91422644888910c4548a11322444488522844c8911122148a11322444488 (by decide +kernel)
-private def cert20_25 := witnessFinal50 20 29 0 310009 310577 60 4918
-  0x52514a482988c53110a62114e4429c845391622a4608b91622a4508991822e4588a9142264488891722c4548a11322444488722c4548a11322444488622a4508991222244311522844c8911122148a11322444488 (by decide +kernel)
-private def cert20_26 := witnessFinal50 20 28 0 320008 320576 60 4858
-  0x52514c482988c53110a72214e4229c8b1182115045c8b1152284608b91622a4508991223045c8b11522844c89111221c8b11522844c89111221c8b11522844c8911122188a91422644888910c4548a11322444488 (by decide +kernel)
-private def cert20_27 := witnessFinal50 20 27 0 330007 330576 59 4701
-  0xa4c2989053118a72314e4429c84539182115045c8b1152324608b91622a4508991822e4588a9142264488891822e4588a91422644888910e4588a91422644888910e4588a91422644888910c4548a11322444488 (by decide +kernel)
-private def cert20_28 := witnessFinal50 20 26 0 340006 340513 58 4564
-  0x189453120a72314e4429c8454110a82115045c8b11923045c8b1152284648c11722c4548a1132244608b91622a4508991222244411722c4548a11322444488722c4548a11322444488722c4548a11322444488 (by decide +kernel)
-private def cert20_29 := witnessFinal50 20 25 0 350005 350512 56 4334
-  0x62514e4829c8c53910a822150422a08b919211524608b91622a4648c11722c4548a1132324608b91622a450899122224608b91622a4508991222244411722c4548a11322444488722c4548a11322444488 (by decide +kernel)
-private def cert20_30 := witnessFinal50 20 24 0 360004 360512 55 4181
-  0xc4c29c9053918a823150442a08454119211524608b9162344648c11722c4548a11923045c8b11522844c8911923045c8b11522844c8911122208b91622a4508991222244411722c4548a11322444488 (by decide +kernel)
-private def cert20_31 := witnessFinal50 20 23 0 370003 370449 52 3882
-  0x72514e482a08c54110a821152442a4845491822e4688c91822e4588a91a2324608b91622a4508991923045c8b11522844c891112324608b91622a4508991222244411722c4548a11322444488 (by decide +kernel)
-private def cert20_32 := witnessFinal50 20 22 0 380002 380448 50 3660
-  0x1c9454120a823150442a48854908a9230468845511923045c8b11a2324608b91622a4508d11923045c8b11522844c8911923045c8b11522844c8911122248c11722c4548a11322444488 (by decide +kernel)
-private def cert20_33 := witnessFinal50 20 21 0 390001 390448 47 3349
-  0xe4c2a09054118a923152442a4845491a211544648c1172364688c91822e4588a91a2324608b91622a4508991a2324608b91622a450899122224648c11722c4548a11322444488 (by decide +kernel)
-private def cert20_34 := witnessFinal50 20 20 0 400000 400385 44 3062
-  0x825150482a48c54910a921154442a8845511923046c8d11923045c8b11b2344648c11722c4548a11a2324608b91622a450899122344648c11722c4548a11322444488 (by decide +kernel)
-private def cert20_35 := witnessFinal50 20 19 0 410000 410384 40 2690
-  0x825152482a48c54910aa22154422a88c91b211564688c91822e46c8d11923045c8b1152364688c91822e4588a9142264688c91822e4588a9142264488891 (by decide +kernel)
-private def cert20_36 := witnessFinal50 20 18 0 420000 420384 37 2391
-  0x4130a924152462a88c55110aa2115446c845591a2324608e11b2344648c11722c46c8d11923045c8b11522846c8d11923045c8b11522844c8911 (by decide +kernel)
-private def cert20_37 := witnessFinal50 20 17 0 430000 430321 33 2061
-  0x4928a924154462a88855108ab22156422ac8d11923846c8d11923045c8e11b2344648c11722c4548d91a2324608b91622a4508991 (by decide +kernel)
-private def cert20_38 := witnessFinal50 20 16 0 440000 440320 30 1800
-  0x249455120aa23154442ac8855908ab234470845611b2344648c11c2364688c91822e4588e11b2344648c11722c4548a11 (by decide +kernel)
-private def cert20_39 := witnessFinal50 20 15 0 450000 450320 27 1553
-  0x124c2a89055118ab23156442ac845591c2115846c8d11923a4708d91a2324608b91c2364688c91822e4588a91 (by decide +kernel)
-private def cert20_40 := witnessFinal50 20 14 0 460000 460257 24 1326
-  0xa25154482ac8c55910ab21158442b0845611b2344748e11b2344648c11d23846c8d11923045c8b11 (by decide +kernel)
-private def cert20_41 := witnessFinal50 20 13 0 470000 470256 21 1113
-  0x5128ab24156462ac8856110ac2115846c8e908ad23846c8d11923a4708d91a2324608b91 (by decide +kernel)
-private def cert20_42 := witnessFinal50 20 12 0 480000 480256 19 957
-  0x144c2ac9055918ac23158442b0845611d2115a4708d91a23c4748e11b2344648c11 (by decide +kernel)
-private def cert20_43 := witnessFinal50 20 11 0 490000 490193 16 774
-  0xb25156482b08c56110ac2115a442b4845691c2364788e91c2364688c91 (by decide +kernel)
-private def cert20_44 := witnessFinal50 20 10 0 500000 500192 14 644
-  0x2c9456120ac23158442b48856908ad238478845711d23846c8d11 (by decide +kernel)
-private def cert20_45 := witnessFinal50 20 9 0 510000 510192 12 524
-  0xb26158482b08c56918ad2215a422b48f108ae23a4708d91 (by decide +kernel)
-private def cert20_46 := witnessFinal50 20 8 0 520000 520129 10 416
-  0x309456120ad2315a442b48457110ae2115c4748e11 (by decide +kernel)
-private def cert20_47 := witnessFinal50 20 7 0 530000 530128 8 317
-  0xc2515a482b48c56910ae2215c422b88e91 (by decide +kernel)
-private def cert20_48 := witnessFinal50 20 6 0 540000 540128 7 260
-  0x184c2b49056918ae2315c442b8845711 (by decide +kernel)
-private def cert20_49 := witnessFinal50 20 5 0 550000 550065 5 178
-  0x6928ad2415c462b88857108a (by decide +kernel)
-private def cert20_50 := witnessFinal50 20 4 0 560000 560064 4 134
-  0xd2515c482b88c57110a (by decide +kernel)
-private def cert20_51 := witnessFinal50 20 3 0 570000 570064 3 94
-  0x1a4c2b89057118a (by decide +kernel)
-private def cert20_52 := witnessFinal50 20 2 0 580000 580001 2 59
-  0x389457120a (by decide +kernel)
-private def cert20_53 := witnessFinal50 20 1 0 590000 590000 1 28
-  0x7128a (by decide +kernel)
-private def cert20_54 := witnessFinal50 20 0 0 600000 600000 1 25
-  0x7130a (by decide +kernel)
-private def chunks20 : List (Chunk 20) := [
-  cert20_0,
-  cert20_1,
-  cert20_2,
-  cert20_3,
-  cert20_4,
-  cert20_5,
-  cert20_6,
-  cert20_7,
-  cert20_8,
-  cert20_9,
-  cert20_10,
-  cert20_11,
-  cert20_12,
-  cert20_13,
-  cert20_14,
-  cert20_15,
-  cert20_16,
-  cert20_17,
-  cert20_18,
-  cert20_19,
-  cert20_20,
-  cert20_21,
-  cert20_22,
-  cert20_23,
-  cert20_24,
-  cert20_25,
-  cert20_26,
-  cert20_27,
-  cert20_28,
-  cert20_29,
-  cert20_30,
-  cert20_31,
-  cert20_32,
-  cert20_33,
-  cert20_34,
-  cert20_35,
-  cert20_36,
-  cert20_37,
-  cert20_38,
-  cert20_39,
-  cert20_40,
-  cert20_41,
-  cert20_42,
-  cert20_43,
-  cert20_44,
-  cert20_45,
-  cert20_46,
-  cert20_47,
-  cert20_48,
-  cert20_49,
-  cert20_50,
-  cert20_51,
-  cert20_52,
-  cert20_53,
-  cert20_54]
-def rows20 := rowsFrom chunks20
 
-theorem good20 : ∀ r ∈ rows20, good 20 r = true := rowsFrom_good chunks20
+
+private def r20_0 : List (Chunk 20) := [
+  w 20 54 0 60902 60902 1 102 [],
+  w 20 53 0 70839 70901 2 204 [],
+  w 20 52 0 80776 80901 4 405 ["*<J"],
+  w 20 51 0 90713 90900 6 605 ["2%{LJ"]]
+
+private def r20_1 : List (Chunk 20) := [
+  w 20 50 0 100650 100900 9 901 ["0SL7Oij*R"],
+  w 20 49 0 110587 110899 12 1196 ["4z.O93$Q/pE^ss"],
+  w 20 48 0 120524 120899 16 1583 ["%2~k4~[n#bqNiLu&s522"],
+  w 20 47 0 130461 130898 19 1867 ["-TXVIEv{5w}OB?xvkjKmSBjWRR"]]
+
+private def r20_2 : List (Chunk 20) := [
+  w 20 46 0 140398 140898 23 2243 ["&o9]G3r!VpH(ME6BM,Q12V=^g@/t`Yo8:"],
+  w 20 45 0 150335 150897 26 2518 ["3Q00<'5jw6)|#SMJ7;MAp`o5l=V_RCQ/[rn!z4:"],
+  w 20 44 0 160272 160897 30 2886 ["(sy%oVH]`;s5DN?=89O1~UHz!|INf<tJL@}{)3?U%V|-)."],
+  w 20 43 0 170209 170896 33 3156 [":yj'lAy:~TGr:m<;y<TuS6L4$~J@8(F>=?t'KsGBzj<0ApQ+'Q>c"]]
+
+private def r20_3 : List (Chunk 20) := [
+  w 20 42 0 180146 180896 37 3518 ["%EB~kICm:_t#}#fg=2czEt0:Qgj%24*0GllJK[:4g.YEzm_>n^)`rV%_]J"],
+  w 20 41 0 190083 190833 40 3786 ["$>yMt0P_GWmxn%vm]rCFwE5cm+3sB@X*b_ky[O+M&`^FETaN_o~O2])pJJ]u2IU_"],
+  w 20 40 0 200020 200832 44 4146 ["QE[|fT+C$@-}cQ*qsw.+IUH034RaE-O0]96Mkn[45%2D3N||B|i<q!V:7&dKgXE.",":.7Ld"],
+  w 20 39 0 210019 210832 47 4390 ["dvI?h{g+rEUZ;_uVQ-[n~1ha^V~AMVVh{wsm4pc&2`mRF@b7>[0_zUB*G1Ab`Ob.","znI_}Cz_I68"]]
+
+private def r20_4 : List (Chunk 20) := [
+  w 20 38 0 220018 220769 50 4646 ["rJaRNq;<(-q.LQ4S[,%TT<M%(8ZpZ)PAuWZ]&t/%C$J`oh~Oy,>r;<T_X.Y=8u8!","$?cpqf%[^oZ/jdE>t"],
+  w 20 37 0 230017 230768 52 4790 ["m'mRPT,8U|D9]$tf=&BhP[rzsh7%:xBBSWGj6+0aop!R]+ZH_5T8'r!Lg>1Esz]c","Dn&@haueyZ/(*9jws=B}x"],
+  w 20 36 0 240016 240768 55 5022 ["HI,m'nRSQH/nxMNDMN@S`-O4zP#4yL2u+VAH3T7O5E0;llB#?A]?(PV6qXC]=Fh_","OL3yDn'7$.hO[QNVs7kdO&=<@r"],
+  w 20 35 0 250015 250705 56 5070 ["h&D?b|Z:[p:2%YA#8AE0}kw&qC,|2XJt(>g_,PyL)>Vagz6(_<ca@jM-:(ue'TE6","Nl4_)y++5|m^v(4t<[Rw5UJr6=I:C"]]
+
+private def r20_5 : List (Chunk 20) := [
+  w 20 34 0 260014 260704 58 5206 [">GAN%1d1~&#_0O}UT<mEQ#@,UG**tC_+C(X<ge[]S+Sgi<<v#Ht4/p@}/koFImuR","$[<B(Mxff?.Cp%ycwo#i^*&g^h(?[o)Ze"],
+  w 20 33 0 270013 270704 59 5234 ["(Fsh.T#tORq}4q~RwEH#m!{xVmpe7#;!Fe;^Nr',w1>Er>Nf=:^nlqOxVZ}Ie+9V","#i_]aS'4}ohM:>?Y{i.YTwzl{iHZ?zGl.=9o"],
+  w 20 32 0 280012 280641 60 5278 ["$~bRVANF1FnsATOcZMM;oyP3`)W(p}LMiGI%g|>ed8S!.}=(B+l):O.:mi3`eN;o","UmFk=t2X:>X*Tl{U9^XGm%xci4=G6FaC'{}U|"],
+  w 20 31 0 290011 290640 60 5218 ["W|}^#({2p<ZW?2EpH'Dk0xc30mo+@L{TdXRx|AXy!1xU@UHU7zXYzRTXc7h!0,1&","#V1$wq/hd2on/p04.{j6f4mR_pj3ob!Y1>q'KVp"]]
+
+private def r20_6 : List (Chunk 20) := [
+  w 20 30 0 300010 300640 61 5242 ["bjVY#n,*'WgT*u{Hi3E}-*wX+T9K9qud(@6{yDs44L{+o4M/.+.xW1En,<~R_o4s","Dw6s.:_&;`eq83@MS?Jx`]3a+~?~T}/1VPO-B><2"],
+  w 20 29 0 310009 310577 60 5098 ["*Q!RtK+uf`o%Bm.Lxcb4*Wc2A,HrCyJql!Op^9/5m@OW{PiaeNnH[o!GG6M{?{9&","'GxqeBdnWh:+8tl4;,~E6`7516c%{S,GzkV+Q.pj"],
+  w 20 28 0 320008 320576 60 5038 ["M6?8d#0.s;_7#p>GWW$#Pa2Tfk)NM0j<CJBr9cb&sKeAfzMFoG#yit7V)'E=>S}B","'Gxs<+8.xG*/kF@[`d21Xa0G7[zOPE7t~Zd]RKCz"],
+  w 20 27 0 330007 330576 59 4878 ["Q$p@=|au}-`kPj.sEI(RyoqH%xFKfz.[=wkcAkjF;u*Rm7+F{kXk%h38eP?w>4}2","a<WQyYwb02jxd+=zkH?o+mi=axC$(h&1xEzpgFB"]]
+
+private def r20_7 : List (Chunk 20) := [
+  w 20 26 0 340006 340513 58 4738 ["OCu|?[T@7FuVzt_q@4E58}t21Ad;)+R0@r5aaGNLC73C[5rm6|OA)ve,5ez<OXwZ","%A7<D/3q%ZJ+RU;ix(([w.v;%gs`6h'+B_:x<K"],
+  w 20 25 0 350005 350512 56 4502 ["?A0urAR22r-%VPoIiV14$17sd'+didv.O#1J;'Y*J4{=~vU`z3S}z2]n,N?7hLvw","#eduGqH%#0h4bi-Z~)?}o@Az3W<RK7YNh,5-"],
+  w 20 24 0 360004 360512 55 4346 ["&CP#9N3AH7(t$3B4c3REEE!]T#Eguo;w#LpODGBT;hO|Ug%ih/B#kg4/k%J~7-;>",").C9t=V)-;BMe.KVI:_o=N.mGdb[BP|T5("],
+  w 20 23 0 370003 370449 52 4038 ["ad?ZU|Q$Fj<bZD,ID+9rv6,./,u;*9l>Nv#7.f|1N@3t4_<!MW:NPHEqO(_a6P)F","3cC+0YP2;<~TgAT(4W'$`.qP[,BKB`"]]
+
+private def r20_8 : List (Chunk 20) := [
+  w 20 22 0 380002 380448 50 3810 ["q%[o(6BfOHms:6_Sg*fJV-kK||FZouohoywH-3bN~04Ac;o+TM<'[Kw*Edy;TnDB","%<>ZzN/_rplLR~gsrk0~:m;lm)j"],
+  w 20 21 0 390001 390448 47 3490 ["~X,qSBY<yd{eAB[EkrX:1T&WCvaI[t-4eIbq>,^#XMJOTN@&~bqN'&I@&,?rF_@!",")#ktt:U_edg4i:~Nk)y@x-g"],
+  w 20 20 0 400000 400385 44 3194 [":_^bV;iB/nL(olxN:*53/R$b/@5G:^bfZ_8ZH+AJy*o6ACu:_$/RPn~#125'_B#N","(.SaT45UkS0*@0l7Tj"],
+  w 20 19 0 410000 410384 40 2810 ["83>izE'Wbgn/BQp=sZ(uMZKFuI=T))OM8zi=i+-62x)h@FLo+-8)j#iG^EtM&d1?","X/<lU_#uK[Al"]]
+
+private def r20_9 : List (Chunk 20) := [
+  w 20 18 0 420000 420384 37 2502 ["TG<RbGmHhj5)xhvM+GH:7bXljuD}Z5WxH2?M;7FU^CX_diowWgnB,nBq8P[P%|np","KUp(a8m"],
+  w 20 17 0 430000 430321 33 2160 ["YvSp2j:p-Skm?]BB$4NMH1OcaCs]+R<Rh1UaY4o+uLp)[@1)nZT'qg'<6&)-c<KW","#"],
+  w 20 16 0 440000 440320 30 1890 ["#7Nb.I[&TQ8m;?<neIWT5%ZF<'~u1ghe|7%9~XNgNa|:DN@?*rLhmY<=M_q+"],
+  w 20 15 0 450000 450320 27 1634 ["z,:T'ns<&SQ]}?vphi[UD/WG/Ee3j]pYTti0_siM5~j0I]qGSg}LOh"]]
+
+private def r20_10 : List (Chunk 20) := [
+  w 20 14 0 460000 460257 24 1398 ["m,[7H~V5/iKKviza%ki6?k0B4$,Gu,/V`X`;R74qAcH]=Ob3h"],
+  w 20 13 0 470000 470256 21 1176 ["Zrfu%VL;pV0(X:T*}6OuY8nTX$V>uhkCUQuOUHhmKH1/"],
+  w 20 12 0 480000 480256 19 1014 [",U`658Jp0tw2V{xS*.4{nA/;9nFi:@+7%|L)Gj(#7"],
+  w 20 11 0 490000 490193 16 822 ["*ucqVYk}%2q42WaSQXX#0.Sw^bFQG.z['&)/"]]
+
+private def r20_11 : List (Chunk 20) := [
+  w 20 10 0 500000 500192 14 686 ["#^~Xtj?Jh~.kiKUK&rD2|LlA'8vkh&]X+"],
+  w 20 9 0 510000 510192 12 560 [">7#O'06cf|SpeVP*D|NY,n:gx^SFt"],
+  w 20 8 0 520000 520129 10 446 ["'d6STjrMVGuL8;/ysvX@HIH)]l"],
+  w 20 7 0 530000 530128 8 341 ["E%v|1&ZsSf#Cc~8d=PP`h"]]
+
+private def r20_12 : List (Chunk 20) := [
+  w 20 6 0 540000 540128 7 281 ["#Vs,?W.'dNW|4|tiGA+G"],
+  w 20 5 0 550000 550065 5 193 [",L0#q;O}^v:UT30"],
+  w 20 4 0 560000 560064 4 146 ["1S#XVE?_6m6]"],
+  w 20 3 0 570000 570064 3 103 ["9)&S{g:F<"]]
+
+private def r20_13 : List (Chunk 20) := [
+  w 20 2 0 580000 580001 2 65 ["Fs*7H4"],
+  w 20 1 0 590000 590000 1 31 ["Xi$"],
+  w 20 0 0 600000 600000 1 28 ["XjH"]]
+private def chunks20:List (Chunk 20):=r20_0 ++ r20_1 ++ r20_2 ++ r20_3 ++ r20_4 ++ r20_5 ++ r20_6 ++ r20_7 ++ r20_8 ++ r20_9 ++ r20_10 ++ r20_11 ++ r20_12 ++ r20_13
+def rows20:=rowsFrom chunks20
+
+theorem good20 : ∀ r ∈ rows20,good 20 r=true:=rowsFrom_good chunks20
 
 theorem sorted20 : rows20.Pairwise (fun a b => a.tag < b.tag) :=
   (rowsFrom_sorted_aux chunks20 0 (by decide +kernel)).1
 
-theorem mass20 (i : Fin 56) :
-    bandCount 20 (i.val : ℤ) 55 14 ≤ (rows20.filter (fun r => decide (i.val ≤ r.index))).length := by
-  change _ ≤ ((rowsFrom chunks20).filter _).length
+theorem mass20 (i : Fin 57) :
+    bandCount 20 (i.val:ℤ) 56 14≤(rows20.filter (fun r => decide (i.val≤r.index))).length:=by
+  change _≤((rowsFrom chunks20).filter _).length
   rw [mass_eq]
-  have h : (List.range 56).all
-      (fun j => decide (bandCount 20 (j : ℤ) 55 14 ≤ mass j chunks20)) = true := by
+  have h : (List.range 57).all
+      (fun j => decide (bandCount 20 (j:ℤ) 56 14≤mass j chunks20))=true:=by
     decide +kernel
   exact of_decide_eq_true (List.all_eq_true.mp h i.val (List.mem_range.mpr i.isLt))
 
-theorem total20 : (rows20.map (price 20)).sum = 135485 :=
+theorem total20 : (rows20.map (price 20)).sum = 140630 :=
   (total_eq chunks20).trans (by decide +kernel)
 
-private def cert21_0 := witnessFinal50 21 55 0 80840 80902 2 198
-  0x0 (by decide +kernel)
-private def cert21_1 := witnessFinal50 21 54 0 90777 90902 4 394
-  0x10200 (by decide +kernel)
-private def cert21_2 := witnessFinal50 21 53 0 100714 100901 6 587
-  0x44815200 (by decide +kernel)
-private def cert21_3 := witnessFinal50 21 52 0 110651 110901 9 875
-  0x8882112048812200 (by decide +kernel)
-private def cert21_4 := witnessFinal50 21 51 0 120588 120900 12 1160
-  0x2122240a88a122048812200 (by decide +kernel)
-private def cert21_5 := witnessFinal50 21 50 0 130525 130900 16 1536
-  0x21104424448121142440a892122048812200 (by decide +kernel)
-private def cert21_6 := witnessFinal50 21 49 0 140462 140899 20 1909
-  0x3124244481521424228488222244111122048812200 (by decide +kernel)
-private def cert21_7 := witnessFinal50 21 48 0 150399 150899 24 2271
-  0x311046248488912214242284881512116444488222244111122048812200 (by decide +kernel)
-private def cert21_8 := witnessFinal50 21 47 0 160336 160898 28 2632
-  0x412624848a98a12214242284882211444448815224444488222244111122048812200 (by decide +kernel)
-private def cert21_9 := witnessFinal50 21 46 0 170273 170898 32 2982
-  0x41104824c48918a1221424228488a8910b22114444488322444488322444488222244111122048812200 (by decide +kernel)
-private def cert21_10 := witnessFinal50 21 45 0 180210 180897 36 3335
-  0x51282455050918a122142422888851108a2222440a9108b322444488322444488322444488222244111122048812200 (by decide +kernel)
-private def cert21_11 := witnessFinal50 21 44 0 190147 190897 40 3676
-  0x51104a2449050918a122142a2462c88851108a222244c8451912222440a992322444488322444488322444488222244111122048812200 (by decide +kernel)
-private def cert21_12 := witnessFinal50 21 43 0 200084 200896 44 4023
-  0x6122aa2849050918a22314444288845111152221664228c8911122108991222244211322444488322444488322444488222244111122048812200 (by decide +kernel)
-private def cert21_13 := witnessFinal50 21 42 0 210021 210896 48 4359
-  0x6110424a2849050a8920b223144442888451910a32114644888911532116844c8911122108991222244211322444488322444488322444488222244111122048812200 (by decide +kernel)
-private def cert21_14 := witnessFinal50 21 41 0 220020 220833 51 4604
-  0x2ac2849451120a22314444285488c59910a3211464488a108a4226448889102a8490899122224421132244448842264488891064488891064488891044448822224409102440 (by decide +kernel)
-private def cert21_15 := witnessFinal50 21 40 0 230019 230832 54 4837
-  0x49850a8928b2241444628c8c51910a3211464454c885a108a42264488891522844c8911122148a11322444488422644888910844c89111220c89111220c891112208889104444881220488 (by decide +kernel)
-private def cert21_16 := witnessFinal50 21 39 0 240018 240832 57 5062
-  0x93088322514448285489059918a322146422908852108a422644888aa108b522844c8911122148a11322444488522844c89111221089912222442113224444883224444883224444882222441111220488 (by decide +kernel)
-private def cert21_17 := witnessFinal50 21 38 0 250017 250769 59 5196
-  0x2a24c2c89451920a323146442854c8c5a110a42114844c8a908a522844c89111222aa4948a11322444488522844c8911122148a11322444488422644888910844c89111220c89111220c89111220888910444488 (by decide +kernel)
-private def cert21_18 := witnessFinal50 21 37 0 260016 260768 61 5326
-  0x1130a152251664828c8c52118a4221484229088aa110b52114a4508991222c4548a11322444488622a4508991222244291422644888910a4508991222244211322444488422644888910644888910644888910444488 (by decide +kernel)
-private def cert21_19 := witnessFinal50 21 36 0 270015 270768 63 5440
-  0x44c220cc9451920a15324168462908852108a52214a422948a113222aa422d88a9142264488891622a4508991222244311522844c8911122148a11322444488522844c8911122108991222244211322444488322444488322444488 (by decide +kernel)
-private def cert21_20 := witnessFinal50 21 35 0 280014 280705 64 5479
-  0x152261664a2909052118a422142a8462d48852908a5228458845311522844c891115624c4548a11322444488622a4508991222244311522844c8911122148a11322444488522844c8911122108991222244211322444488322444488 (by decide +kernel)
-private def cert21_21 := witnessFinal50 21 34 0 290013 290704 65 5502
-  0x1930a15325168482908c52918a52214a4229488aa910b62114c4548a11322e4588a9142264488891722c4548a11322444488622a4508991222244311522844c8911122148a11322444488522844c8911122108991222244211322444488 (by decide +kernel)
-private def cert21_22 := witnessFinal50 21 33 0 300012 300704 66 5525
-  0xc98441a128a424142a8482d48c52910a52114c44298845311522844558845b91622a4508991222e4588a91422644888910e4588a91422644888910c4548a11322444488622a4508991222244291422644888910a4508991222244211322444488 (by decide +kernel)
-private def cert21_23 := witnessFinal50 21 32 0 310011 310641 66 5461
-  0x54c985a128a52414a462948850aa918b62214c422988a9172114e4588a9142264455c9391622a4508991222245c8b11522844c89111221c8b11522844c8911122188a91422644888910c4548a11322444488522844c8911122148a11322444488 (by decide +kernel)
-private def cert21_24 := witnessFinal50 21 31 0 320010 320640 66 5401
-  0x109850aa128b52414a462988c53110a62114c44558885b908a722c4548a11822e4588a9142264488c11722c4548a11322444488722c4548a11322444488722c4548a11322444488622a4508991222244311522844c8911122148a11322444488 (by decide +kernel)
-private def cert21_25 := witnessFinal50 21 30 0 330009 330640 66 5321
-  0x1098441a928a524142aa482d88c53110a62114e4429c845391622a4455c845c11722c4548a11323045c8b11522844c8911123045c8b11522844c89111221c8b11522844c89111221c8b11522844c8911122188a91422644888910c4548a11322444488 (by decide +kernel)
-private def cert21_26 := witnessFinal50 21 29 0 340008 340577 65 5182
-  0xaa130b52514c482988c53110a1562316e4429c8453916230422a08b91622a45088ac12822e4588a9142264488c11722c4548a11322444488822e4588a91422644888910e4588a91422644888910e4588a91422644888910c4548a11322444488 (by decide +kernel)
-private def cert21_27 := witnessFinal50 21 28 0 350007 350576 64 5023
-  0x526142aa4a2d89053118a72314e4429c84539115722170422a08b91622a4648c11722c4548a1132324608b91622a450899122224608b91622a4508991222244411722c4548a11322444488722c4548a11322444488722c4548a11322444488 (by decide +kernel)
-private def cert21_28 := witnessFinal50 21 27 0 360006 360576 63 4872
-  0xa4c220d89453120a1562416e4629c8853908a822150422a08b916222b0422e48c11722c4548a11923045c8b11522844c8911923045c8b11522844c8911122208b91622a4508991222244411722c4548a11322444488722c4548a11322444488 (by decide +kernel)
-private def cert21_29 := witnessFinal50 21 26 0 370005 370513 61 4638
-  0xaa930b62514e4829c8c53910a15723170442a08454117232422a48c11722c45488ac92923045c8b11522844c8c91822e4588a9142264488891923045c8b11522844c8911122208b91622a4508991222244411722c4548a11322444488 (by decide +kernel)
-private def cert21_30 := witnessFinal50 21 25 0 380004 380512 59 4416
-  0xc4c28558945b920a723150462a08854108a8222b0442e4845491822e4588d11923045c8b1152284688c91822e4588a9142264488c91822e4588a9142264488891124608b91622a4508991222244411722c4548a11322444488 (by decide +kernel)
-private def cert21_31 := witnessFinal50 21 24 0 390003 390512 57 4170
-  0x313088372514e482855c905c118a822150422a48854908a923045c88ac908ba2324608b91622a4688c91822e4588a9142264688c91822e4588a9142264488891923045c8b11522844c8911122248c11722c4548a11322444488 (by decide +kernel)
-private def cert21_32 := witnessFinal50 21 23 0 400002 400449 54 3881
-  0x558985b928a824150462a08850ac118b922152422a48c11a211544648c11722c445689511923045c8b1152284688c91822e4588a9142264488d11923045c8b11522844c8911122248c11722c4548a11322444488 (by decide +kernel)
-private def cert21_33 := witnessFinal50 21 22 0 410001 410448 51 3568
-  0xe4c2855c945c120a823152462a48854908a9222b2442e8845511923045c8d91a2324608b91622a46c8d11923045c8b11522844c8d11923045c8b11522844c891112344648c11722c4548a11322444488 (by decide +kernel)
-private def cert21_34 := witnessFinal50 21 21 0 420000 420448 48 3271
-  0x726110704a2a09050ac120b923152442a48455110aa211544648c1115a211764688c91822e4588d91a2324608b91622a4508d91a2324608b91622a450899122344648c11722c4548a11322444488 (by decide +kernel)
-private def cert21_35 := witnessFinal50 21 20 0 430000 430385 44 2895
-  0x157261704a2a49054918a922142b2462e88855108aa23246c845591a2324608b9115b2564688c91822e4588a91b2344648c11722c4548a1132364688c91822e4588a9142264488891 (by decide +kernel)
-private def cert21_36 := witnessFinal50 21 19 0 440000 440384 40 2539
-  0x826142b04a2e49054918aa23154442a884551115a22176422ac8d1192304708d91a2324608b91623846c8d11923045c8b11522846c8d11923045c8b11522844c8911 (by decide +kernel)
-private def cert21_37 := witnessFinal50 21 18 0 450000 450384 37 2254
-  0x41308839251524828564905d118aa22154422ac8855908ab23446488ad908bc2364688c91822e4708d91a2324608b91622a4708d91a2324608b91622a4508991 (by decide +kernel)
-private def cert21_38 := witnessFinal50 21 17 0 460000 460321 33 1938
-  0xac130b925154482a88c55110a15a23176442ac845591a238422b08d91a23246088ae12c2364688c91822e4588e11b2344648c11722c4548a11 (by decide +kernel)
-private def cert21_39 := witnessFinal50 21 16 0 470000 470320 30 1689
-  0x249850ac928ba24154462ac8c55910ab211564456c885e108ac2364688c91d23846c8d11923045c8e91c2364688c91822e4588a91 (by decide +kernel)
-private def cert21_40 := witnessFinal50 21 15 0 480000 480320 27 1456
-  0x124c220e89455120a15a24176462ac8855908ac22158422b08d91a222b8422f48e11b2344648c11d23846c8d11923045c8b11 (by decide +kernel)
-private def cert21_41 := witnessFinal50 21 14 0 490000 490257 24 1239
-  0x159261744a2ac9055918ab22142b6462f08856108ac236474845691c2364688c9115d25a4708d91a2324608b91 (by decide +kernel)
-private def cert21_42 := witnessFinal50 21 13 0 500000 500256 21 1038
-  0x5130a15a25176482ac8c56118ac22158422b088ae110bd2115a4708d91a23c4748e11b2344648c11 (by decide +kernel)
-private def cert21_43 := witnessFinal50 21 12 0 510000 510256 19 892
-  0x144c220ec9455920a15b24178462b08856108ad2215a422b48e11b222ba422f88e91c2364688c91 (by decide +kernel)
-private def cert21_44 := witnessFinal50 21 11 0 520000 520193 16 719
-  0x15a261764a2b09056118ac22142b8462f48856908ad238478845711d23846c8d11 (by decide +kernel)
-private def cert21_45 := witnessFinal50 21 10 0 530000 530192 14 597
-  0x2c9850ad928bc24158462b48c56910ad2115a44574885f108ae23a4708d91 (by decide +kernel)
-private def cert21_46 := witnessFinal50 21 9 0 540000 540192 12 486
-  0xb26110784a2b09050ae120bd2315a442b48457110ae2115c4748e11 (by decide +kernel)
-private def cert21_47 := witnessFinal50 21 8 0 550000 550129 10 384
-  0x56c985e128ad2415a462b48850ae918be2215c422b88e91 (by decide +kernel)
-private def cert21_48 := witnessFinal50 21 7 0 560000 560128 8 292
-  0xc26142b84a2f49056918ae2315c442b8845711 (by decide +kernel)
-private def cert21_49 := witnessFinal50 21 6 0 570000 570128 7 240
-  0x184c220f49456920a15d2417c462b88857108a (by decide +kernel)
-private def cert21_50 := witnessFinal50 21 5 0 580000 580065 5 163
-  0xae130bd2515c482b88c57110a (by decide +kernel)
-private def cert21_51 := witnessFinal50 21 4 0 590000 590064 4 122
-  0xd26142ba4a2f89057118a (by decide +kernel)
-private def cert21_52 := witnessFinal50 21 3 0 600000 600064 3 86
-  0x1a4c220f89457120a (by decide +kernel)
-private def cert21_53 := witnessFinal50 21 2 0 610000 610001 2 53
-  0x574985f128a (by decide +kernel)
-private def cert21_54 := witnessFinal50 21 1 0 620000 620000 1 25
-  0x7130a (by decide +kernel)
-private def cert21_55 := witnessFinal50 21 0 0 630000 630000 1 23
-  0x7130883 (by decide +kernel)
-private def chunks21 : List (Chunk 21) := [
-  cert21_0,
-  cert21_1,
-  cert21_2,
-  cert21_3,
-  cert21_4,
-  cert21_5,
-  cert21_6,
-  cert21_7,
-  cert21_8,
-  cert21_9,
-  cert21_10,
-  cert21_11,
-  cert21_12,
-  cert21_13,
-  cert21_14,
-  cert21_15,
-  cert21_16,
-  cert21_17,
-  cert21_18,
-  cert21_19,
-  cert21_20,
-  cert21_21,
-  cert21_22,
-  cert21_23,
-  cert21_24,
-  cert21_25,
-  cert21_26,
-  cert21_27,
-  cert21_28,
-  cert21_29,
-  cert21_30,
-  cert21_31,
-  cert21_32,
-  cert21_33,
-  cert21_34,
-  cert21_35,
-  cert21_36,
-  cert21_37,
-  cert21_38,
-  cert21_39,
-  cert21_40,
-  cert21_41,
-  cert21_42,
-  cert21_43,
-  cert21_44,
-  cert21_45,
-  cert21_46,
-  cert21_47,
-  cert21_48,
-  cert21_49,
-  cert21_50,
-  cert21_51,
-  cert21_52,
-  cert21_53,
-  cert21_54,
-  cert21_55]
-def rows21 := rowsFrom chunks21
 
-theorem good21 : ∀ r ∈ rows21, good 21 r = true := rowsFrom_good chunks21
+
+private def r21_0 : List (Chunk 21) := [
+  w 21 56 0 70903 70903 1 102 [],
+  w 21 55 0 80840 80902 2 204 [],
+  w 21 54 0 90777 90902 4 405 ["*<J"],
+  w 21 53 0 100714 100901 6 605 ["2%{LJ"]]
+
+private def r21_1 : List (Chunk 21) := [
+  w 21 52 0 110651 110901 9 901 ["0SL7Oij*R"],
+  w 21 51 0 120588 120900 12 1196 ["4z.O93$Q/pE^ss"],
+  w 21 50 0 130525 130900 16 1583 ["%2~k4~[n#bqNiLu&s522"],
+  w 21 49 0 140462 140899 20 1969 ["#!FgUHsH-V%^)7c|n2xCnY=w@!B"]]
+
+private def r21_2 : List (Chunk 21) := [
+  w 21 48 0 150399 150899 24 2342 ["#1OT.-{<fZ~R-G9|1(i:A5I~H&Ar|u9vum*"],
+  w 21 47 0 160336 160898 28 2716 ["CuhP>K29qxBpxAt}S-/IWRhjn'S8]N->(l'`-J)Gg"],
+  w 21 46 0 170273 170898 32 3077 ["G'6h,n1ek`8om.U;9u:/G%&M'&JkEk7Gl>#-jO.+8lO`K]u}*"],
+  w 21 45 0 180210 180897 36 3443 ["BQ`,6;,0w{V&[Q(}qY_gqEP6[kfjtfZA3&Vvi@r_N+VO]}vvmDuOjzHJ!"]]
+
+private def r21_3 : List (Chunk 21) := [
+  w 21 44 0 190147 190897 40 3795 [".;ST`U[)e=_w@*Jtf:t+%t{ifdhysMzNyb[mBugTs=Dr:;v}3}y:12sNtVa_Nrss"],
+  w 21 43 0 200084 200896 44 4155 ["r]Huj1CxOe<I.-]gq4nXG8!X/Y5a0K<su_4?th{X^Q&*f9vP)WYNLNS:|KE>}~,Z","%s*|Y4R"],
+  w 21 42 0 210021 210896 48 4502 ["_N'yGjif0eCdqjHWB^X4XC>vNgcgnd%<lJf+%wR1_d5^R/eCHiVLvlPB5-Yg_bv_","%zztW86~y3M`Pq3"],
+  w 21 41 0 220020 220833 51 4757 ["@CR@44:K9QL>wh,=A-.v|0?psDenb{Zg48+.?LO)$[$_!`+>Cq%OuCcm!=_765e{","p'qLA6^!yq#>otNTLPi"]]
+
+private def r21_4 : List (Chunk 21) := [
+  w 21 40 0 230019 230832 54 4999 ["_Ci?0*>AUw7AlFsTxHv_W^?+i6&0/AP[4,X@p]&Ws+{p[$1$F[=:Ty)h[I[b'Z^6","%%N<vL&Rq,xUZHLr/l*^]Fa?Mj"],
+  w 21 39 0 240018 240832 57 5232 ["3h*={HpIwA[hf-bKL2LI6B.r(EXZtIJo~Zy9B6cKI}$|?.4f'2P`{)7_y:GivPO_","-'#|b*9/:DXg$aV1<5Z=)%l`FXHE]M/H"],
+  w 21 38 0 250017 250769 59 5373 ["gc6<;};xv{>g#r>(9zQ-@UzpGSQ7$@cp$kkH9lN)Twya}cRh6L}9)5'F(8z.X{g:","#5!'/p.<._IR+/mp[C4ulKhG8?ag=Ilg;l-j"],
+  w 21 37 0 260016 260768 61 5509 ["[%_4jct7fIEE]:N|Bux(umF0W:+nVk.m#?*(q>Y.%QMLkz7$9txjw_':4]T]gF^6","(Ot~3SESl!@y*#.bc$q[0I;A{kV<c(8G-dc+fl-"]]
+
+private def r21_5 : List (Chunk 21) := [
+  w 21 36 0 270015 270768 63 5628 ["/&L[430IRdN1e(-IE!+lI_V7ST{RC;0o_Qx<t-Kn[T$Nh.)~Y!$m&8PaL2U5Y@to","$zS+glvM0@-B0Uh4'[/9^LA;P$nIklb4w`d}n8/plWf?&"],
+  w 21 35 0 280014 280705 64 5671 ["h5f>n1q:=B)F:C0nj/F?gl5HJ?I(5vXPcbX]ssu5}-`Oz6Hnn6Kf&|X~lnf_SzU&","DSJPp@vBjHcw~A6&I`MO6Ws=-Q:4!H^6>`++e&hDj?c/r"],
+  w 21 34 0 290013 290704 65 5697 ["pMDczS,e_A0E_pZZ}BJwX_g>1.aef$4?PH$.]yQVsp(+K2~b0~W5h:Cjow!m<tbw","99C6Wsh>GTqB<j#mtPCGx|i{ar,s)grgt$sf@;LpUDelQOr%"],
+  w 21 33 0 300012 300704 66 5722 ["7vbPt9+w@JXpP1-XR9(}cWPVG9,FNwC-;yT2D;+8)jGYY$#Y9}A{9MuvPVDc`+fF","1a5Lf463n9NzN1fexxWs]C{E1Rp$0n`ByZn3.nWv_E$1dsny[sR"]]
+
+private def r21_6 : List (Chunk 21) := [
+  w 21 32 0 310011 310641 66 5659 ["0RfFz.J<toa2O`6xW<ciGqbm2.eo'myzFX@_2)t~}Q,X/.;_1bH:hKJ=<KI[tH%w","6[t=p{qn5lea:q:=-]@<Dc7Q24D:5i*'&+qv%64,Gy)F6qYao8K"],
+  w 21 31 0 320010 320640 66 5599 ["$QAii9?HMz{g`'X>,'Ni[6;F,Rma0TO`chSL{.tRE1Pn!^,~=P~Oug#XZ??N_h>J","6[tE7FW25dIb&OpZ+!;@re{'z5hil[gh^|]_KB3p%/.e(ps;u;|"],
+  w 21 30 0 330009 330640 66 5518 [":.<ZZ*'5mtqj,FOBHT2mrf,'Hbn}w}V'L,P6)E>}ZD(8Ya(]8@8'`}IU~3h?^0^V","#fs}uPaAN?U/y+i0~yeXe`hKC6L`QgQF*cdsyPS(&Bj:'.,Hi2kW?5"],
+  w 21 29 0 340008 340577 65 5377 ["#UlZRjMqrbAHpBzBg|ZgO=T%zJ>Z{VJEB4ox~e;iG#@h3(7Xvjd>9~A/,TvnV/rw","%4HK]TTlKMtb,#*=0uPkz+?Xx&3=Qbeo[@I&)3nzCaS:$7?keGC"]]
+
+private def r21_7 : List (Chunk 21) := [
+  w 21 28 0 350007 350576 64 5215 ["?~EZQJ$j@>X)Aqe-gRNqQ_kHlPIcp0vG5<9<oXQ}Ayr{<Uqnm@wdoo&_.;w<lnnF","Flm?J!4?[+kX--xk9juP*FH]6W%.+cV%/Suw/`+f)LJxySKq<z"],
+  w 21 27 0 360006 360576 63 5060 ["/'w8YcM,FG@fjk`3?]dlu1Ico8GDy$G{QjSZ5Xtcjw*f43'YYA1JTI5&f#,^CUR{","&YT@GEL<AOa~G.@t***}Eb!R)r0~EQx.IFn%YUh6ViO%Co[_l="],
+  w 21 26 0 370005 370513 61 4821 ["~>_D`pnA.s*Bpku8GB]VY1~6Id9BUAPB>t%^y,LjmxHn`/M+z;v5i7Z{(HVj!e6Z","##og.^YO19B=]$+daV[+=SSk9|[e,/8X4|Jp6!S?&Z!NCr*"],
+  w 21 25 0 380004 380512 59 4593 ["IwsI'm!iZEc{6O?d5_w,)hvHrkZ$9a+Px(p.|h'QrIp'9N4I|d/0k#v:zt=qaxBZ","3HcL%Uuzw=!}yuH3;9r/yH2|ykz;;aG_Qn1D`wC8(n4"]]
+
+private def r21_8 : List (Chunk 21) := [
+  w 21 24 0 390003 390512 57 4340 [">Ys`X3Vs(ZqM?s*~L`K5hqRun'pP5s;F~j+R~QE5a|eN?m$Bk{ERygaR({NT3!/>",";'Am^6p?G'CI(1A006QeFGOuDY$Mmv,cln$MV2u>z3"],
+  w 21 23 0 400002 400449 54 4043 ["Nh|PPq>G),9aW86o.]yg:@i3{U.:jOUN'k/tLZ>d!UWJM'+G1f@>j`'-i'&KGq8!","*$Wp<DgpVuD!o(hWv<u<N5QLcHQ`so6x;XgA"],
+  w 21 22 0 410001 410448 51 3721 [")8OX;JmRy&.)Y1*Y/EM~Y?$[-epqq'edo,>`EOU^6&q>[`3D::qlUoifjpkaMScZ","3.u-t}`aK|8@GgPwz$SV+ea>2go1Hy%="],
+  w 21 21 0 420000 420448 48 3414 ["cf*[3.4f.~W*&e(-(e$~/4^`Rfl!e`Y`aP9L1tUtZ1X`dPNuMmHhoUf~#]mHe+<B","FZS%BUx/aL)-{!.aqU7*r~oTO/$&"]]
+
+private def r21_9 : List (Chunk 21) := [
+  w 21 20 0 430000 430385 44 3027 ["^?6ea2$+YG%n,!U&A'nxfJtFwnO2SdkYRM>m/<!gt=IE#u*#uHAQey`EB4E'}$NC","#J;-SsFIJ/tZ;<%Wcw{3gj"],
+  w 21 19 0 440000 440384 40 2659 ["U?msJl{I%sHZl-]!@vBwEz>;3zv6SYFIn=-P6RT#zVdm!h)s|i2G>OuuFU5DNgHK","&UJ3pA#m$&3CWuD"],
+  w 21 18 0 450000 450384 37 2364 ["Rg[2EQ1FbE{8E:%&Q/]BCWRC'u'-O~7I8F/@>9@sDi4wj`o1wN@3afLVrL5m!(0K","+fx{3~/P/Om"],
+  w 21 17 0 460000 460321 33 2037 ["~=CGGJ@skC@9F'-Zk3}Xpv|72Wj<Qc2de]ETB6h`Ll,Rob0t1%bzr2QM7'QS0Sg3",".Ke"]]
+
+private def r21_10 : List (Chunk 21) := [
+  w 21 16 0 470000 470320 30 1779 ["+U)p(&$!J>i9<(-WpSh#/)FFsCJ>V)lZ!vh.v))+2~jD@o+/e)tNT)XLDVT4YO"],
+  w 21 15 0 480000 480320 27 1536 ["6G`&5Z.C9UOwYA4%NvK%X>Bf:14!T$BsrtvwPq=cWT&2MF5:kt$#Q0WPoC"],
+  w 21 14 0 490000 490257 24 1311 ["(8*>u>iu6vuB:J4:jE-r7utrqwFA3]~uCL?H(Kq([:6T#Qwk{nk#"],
+  w 21 13 0 500000 500256 21 1101 ["&kNN0q]o1ZZ$t)'{]-XGwFJ-Plwtad8>t0YjKCTdZ/nk8{3"]]
+
+private def r21_11 : List (Chunk 21) := [
+  w 21 12 0 510000 510256 19 948 ["$M^(5p^+z0j3Nw]Y!Y~1Mu?zO](-*k(:<@Xw:+5WHsEi["],
+  w 21 11 0 520000 520193 16 767 ["gxE*QMmt5u:]]F$nne[M$xN]&&{|`Qon*eFnDK"],
+  w 21 10 0 530000 530192 14 639 [".l=c%#iI9z$^>+>:4$JBpIMAm`4HGod`Z3W"],
+  w 21 9 0 540000 540192 12 521 ["$D^Q$NnFYpu[ewN65q$e[:-fn%AYsGMp"]]
+
+private def r21_12 : List (Chunk 21) := [
+  w 21 8 0 550000 550129 10 414 ["1t{FVjd@tN_m|R7?*Y_DKJ5P*U`"],
+  w 21 7 0 560000 560128 8 316 ["#'Sj,!8(i/Y.*J@1|5't2L["],
+  w 21 6 0 570000 570128 7 260 ["&E8plH?IW|Kz/'.]>`CJ}"],
+  w 21 5 0 580000 580065 5 178 [",LJ?uu'-7-Z5XlP"]]
+
+private def r21_13 : List (Chunk 21) := [
+  w 21 4 0 590000 590064 4 134 ["1SJ_ufApRLN<"],
+  w 21 3 0 600000 600064 3 94 ["9)aVC|tLD"],
+  w 21 2 0 610000 610001 2 59 ["Ft$H1i"],
+  w 21 1 0 620000 620000 1 28 ["XjH"]]
+
+private def r21_14 : List (Chunk 21) := [
+  w 21 0 0 630000 630000 1 25 ["Xkm"]]
+private def chunks21:List (Chunk 21):=r21_0 ++ r21_1 ++ r21_2 ++ r21_3 ++ r21_4 ++ r21_5 ++ r21_6 ++ r21_7 ++ r21_8 ++ r21_9 ++ r21_10 ++ r21_11 ++ r21_12 ++ r21_13 ++ r21_14
+def rows21:=rowsFrom chunks21
+
+theorem good21 : ∀ r ∈ rows21,good 21 r=true:=rowsFrom_good chunks21
 
 theorem sorted21 : rows21.Pairwise (fun a b => a.tag < b.tag) :=
   (rowsFrom_sorted_aux chunks21 0 (by decide +kernel)).1
 
-theorem mass21 (i : Fin 56) :
-    bandCount 21 (i.val : ℤ) 55 14 ≤ (rows21.filter (fun r => decide (i.val ≤ r.index))).length := by
-  change _ ≤ ((rowsFrom chunks21).filter _).length
+theorem mass21 (i : Fin 57) :
+    bandCount 21 (i.val:ℤ) 56 14≤(rows21.filter (fun r => decide (i.val≤r.index))).length:=by
+  change _≤((rowsFrom chunks21).filter _).length
   rw [mass_eq]
-  have h : (List.range 56).all
-      (fun j => decide (bandCount 21 (j : ℤ) 55 14 ≤ mass j chunks21)) = true := by
+  have h : (List.range 57).all
+      (fun j => decide (bandCount 21 (j:ℤ) 56 14≤mass j chunks21))=true:=by
     decide +kernel
   exact of_decide_eq_true (List.all_eq_true.mp h i.val (List.mem_range.mpr i.isLt))
 
-theorem total21 : (rows21.map (price 21)).sum = 151242 :=
+theorem total21 : (rows21.map (price 21)).sum = 157140 :=
   (total_eq chunks21).trans (by decide +kernel)
 
-private def cert22_0 := witnessFinal50 22 55 0 110715 110902 6 592
-  0x0 (by decide +kernel)
-private def cert22_1 := witnessFinal50 22 54 0 120652 120902 9 880
-  0x8113204c810200 (by decide +kernel)
-private def cert22_2 := witnessFinal50 22 53 0 130589 130901 12 1163
-  0x131042240a9142050815200 (by decide +kernel)
-private def cert22_3 := witnessFinal50 22 52 0 140526 140901 16 1540
-  0x30226228448151342440a882122048812200 (by decide +kernel)
-private def cert22_4 := witnessFinal50 22 51 0 150463 150900 20 1912
-  0x1311106424448152042822848815144244129122048812200 (by decide +kernel)
-private def cert22_5 := witnessFinal50 22 50 0 160400 160900 25 2373
-  0x8982132144244481513116242284882510428248488141242440a892122048812200 (by decide +kernel)
-private def cert22_6 := witnessFinal50 22 49 0 170337 170899 29 2731
-  0x990883312424448a8890314214242284881514116444488352444488222244111122048812200 (by decide +kernel)
-private def cert22_7 := witnessFinal50 22 48 0 180274 180899 34 3177
-  0x84c10998a312424544c858910a1211424412888831412116444488151412644448825124444488222244111122048812200 (by decide +kernel)
-private def cert22_8 := witnessFinal50 22 47 0 190211 190898 38 3523
-  0x4cc441a093122a4240c50c50910a121142445450859108a2222441a88a142244444881422444448815224444488222244111122048812200 (by decide +kernel)
-private def cert22_9 := witnessFinal50 22 46 0 200148 200898 43 3957
-  0x626084d0520915133162462848850908a2521106282442c88451111220545048461912222441a892322444488322444488322444488222244111122048812200 (by decide +kernel)
-private def cert22_10 := witnessFinal50 22 45 0 210085 210897 47 4294
-  0x268220d448a98903144142462848850a8a18b22214442288889135214284422cc8911122054508999122224412912322444488322444488322444488222244111122048812200 (by decide +kernel)
-private def cert22_11 := witnessFinal50 22 44 0 220022 220897 52 4719
-  0x4130426a28544d058920a123144a6220c5048c59110a22114444545048861908a322444488351211628648c8911122050c91912222440a992322444488322444488322444488222244111122048812200 (by decide +kernel)
-private def cert22_12 := witnessFinal50 22 43 0 230021 230896 55 4951
-  0x26a220c5504818a28a124142a2882c88c51110a221146a6285088859908a322444488a8a1108c4226448889106a4490899122224421132244448842264488891064488891064488891044448822224409102440 (by decide +kernel)
-private def cert22_13 := witnessFinal50 22 42 0 240020 240896 59 5271
-  0xa2608544d458928a2541106282482c88c51110a15141231864428c8451912226a2442c50c845a113224444881514326844c8911122094c9211322444488422644888910844c89111220c89111220c891112208889104444881220488 (by decide +kernel)
-private def cert22_14 := witnessFinal50 22 41 0 250019 250833 61 5404
-  0xaa8903146142a28a2c89051118a35414284462cc8851908a3222a28444310845211322444489a9108b14424844c89111220510921132244448815424844c89111221089912222442113224444883224444883224444882222441111220488 (by decide +kernel)
-private def cert22_15 := witnessFinal50 22 40 0 260018 260832 64 5625
-  0x14611064aa220c5049459120a15141241864628c8851908a3512316286442d08452113224445450c8462914226448889106a64948a11322444488522844c8911122148a11322444488422644888910844c89111220c89111220c89111220888910444488 (by decide +kernel)
-private def cert22_16 := witnessFinal50 22 39 0 270017 270832 66 5739
-  0x4944c18a8a30b225146aa285089059918a322142a284463108852108a422644d488858a2108b522844c89111222a2884d48a1132244448825424a4508991222244291422644888910a4508991222244211322444488422644888910644888910644888910444488 (by decide +kernel)
-private def cert22_17 := witnessFinal50 22 38 0 280016 280769 68 5865
-  0x1512512082824c2c545049461920a323146a2482c50c8c5a110a421148445450c8862908a522844c8911353211628a4948a1132244448814524a45089912222440aa92522844c8911122148a11322444488522844c8911122108991222244211322444488322444488322444488 (by decide +kernel)
-private def cert22_18 := witnessFinal50 22 37 0 290015 290768 69 5888
-  0xa09308842512511082844a2cc9050a8a1120c423148442908451a9118b1442216a422948a113222a288423188a914226448889135424c4548a11322444488622a4508991222244311522844c8911122148a11322444488522844c8911122108991222244211322444488322444488 (by decide +kernel)
-private def cert22_19 := witnessFinal50 22 36 0 300014 300768 71 5994
-  0x44a260c545049861928a3512516286482d08c52110a151432318a442948452914226a6442c514845b11522844c89111514526c4548a1132244448825524c4548a11322444488622a4508991222244311522844c8911122148a11322444488522844c8911122108991222244211322444488 (by decide +kernel)
-private def cert22_20 := witnessFinal50 22 35 0 310013 310705 71 5930
-  0x2a44a24105089858a8a1128c4241484628d489058a2118b52214a4229488a8a2110c62114c4548a113226a8422c5189311522844c891112228c4988a914226448889102ac4988a91422644888910c4548a11322444488622a4508991222244291422644888910a4508991222244211322444488 (by decide +kernel)
-private def cert22_21 := witnessFinal50 22 34 0 320012 320704 72 5949
-  0x1422611084a44a221050c945a120a151432418a462948852908a353231628a442d884531152284454514846391622a45089912226aa49c8b11522844c89111221c8b11522844c89111221c8b11522844c8911122188a91422644888910c4548a11322444488522844c8911122148a11322444488 (by decide +kernel)
-private def cert22_22 := witnessFinal50 22 33 0 330011 330704 72 5869
-  0x32513062a2844c3109451a9128b1442416a462948850a8a2118c62214c422988a91354221628c422dc8b11522844c88a8a313722c4548a113224444892b12722c4548a11322444488722c4548a11322444488722c4548a11322444488622a4508991222244311522844c8911122148a11322444488 (by decide +kernel)
-private def cert22_23 := witnessFinal50 22 32 0 340010 340641 72 5805
-  0x1532512082864c2c5450c9462920a523146a6482c5148c5b110a62114c44545148863908a722c4548a11355211628e49c8b11522844c891114724e4588a914226448889102ae49c8b11522844c89111221c8b11522844c89111221c8b11522844c8911122188a91422644888910c4548a11322444488 (by decide +kernel)
-private def cert22_24 := witnessFinal50 22 31 0 350009 350640 71 5646
-  0x2864c221094c944420a2128b524142a288483188c53110a621146a8462c518885b908a722c45488a8a3108c822e4588a91422644d589411722c4548a1132244448c11722c4548a11322444488822e4588a91422644888910e4588a91422644888910e4588a91422644888910c4548a11322444488 (by decide +kernel)
-private def cert22_25 := witnessFinal50 22 30 0 360008 360640 71 5566
-  0x84a260c5450c9862928a353251628a482d88c53110a151452318e4429c8453916226aa442c51c845c11722c4548a111514727045c8b11522844c891125725045c8b11522844c8911122208b91622a4508991222244411722c4548a11322444488722c4548a11322444488722c4548a11322444488 (by decide +kernel)
-private def cert22_26 := witnessFinal50 22 29 0 370007 370577 69 5332
-  0xaa12890414426162a2884a3189053118a354241628c462dc8853908a7222a28c44320845411722c45489ab108b14825045c8b11522844c88a412822e4588a914226448889115825045c8b11522844c8911122208b91622a4508991222244411722c4548a11322444488722c4548a11322444488 (by decide +kernel)
-private def cert22_27 := witnessFinal50 22 28 0 380006 380576 68 5177
-  0x1442611084a84a2210514945b120a151452418e4629c8853908a355231628e442e0845411722c445451c846491822e4588a914226ae4a48c11722c4548a1132244648c11722c4548a11322444488923045c8b11522844c8911122208b91622a4508991222244411722c4548a11322444488 (by decide +kernel)
-private def cert22_28 := witnessFinal50 22 27 0 390005 390576 66 4931
-  0x14944c18a8a2130c625146a84a2c518905b918a722142a28c463208854108a822e44d588858a4108b923045c8b115222a2904e48c11722c4548a113224b04a48c11722c4548a1132244448c91822e4588a9142264488891124608b91622a4508991222244411722c4548a11322444488 (by decide +kernel)
-private def cert22_29 := witnessFinal50 22 26 0 400004 400513 64 4705
-  0x15525120828a4c2c545149463920a723146aa482c51c8c5c110a821150445451c8864908a923045c8b1135721162924a48c11722c4548a111492524608b91622a45089912222b24a48c11722c4548a11322444488923045c8b11522844c8911122248c11722c4548a11322444488 (by decide +kernel)
-private def cert22_30 := witnessFinal50 22 25 0 410003 410512 61 4392
-  0xa293088425525110828c4a2dc9050a8a3120c823150442a08451ab118b14822172422a48c117222a290423288c91822e4588a913582544648c11722c4548a1132344648c11722c4548a1132244448d11923045c8b11522844c8911122248c11722c4548a11322444488 (by decide +kernel)
-private def cert22_31 := witnessFinal50 22 24 0 420002 420512 59 4154
-  0xc4a260c545149863928a355251628e482e08c54110a1514723192442a48454918226ae442c524845d11923045c8b11151492744648c11722c4548a112592544648c11722c4548a1132244688c91822e4588a9142264488891144648c11722c4548a11322444488 (by decide +kernel)
-private def cert22_32 := witnessFinal50 22 23 0 430001 430449 55 3778
-  0x2ac4a24105189858a8a3128c8241504628d589058a4118b922152422a488a8a4110ca211544648c117226b0422c5289511923045c8b115222944a88c91822e4588a914226445689511923045c8b11522844c891112344648c11722c4548a11322444488 (by decide +kernel)
-private def cert22_33 := witnessFinal50 22 22 0 440000 440448 52 3477
-  0x1462611084ac4a221051c945c120a1514724192462a48854908a3572316292442e884551192304454524846591a2324608b916226b24ac8d11923045c8b11522846c8d11923045c8b11522844c8911b2344648c11722c4548a11322444488 (by decide +kernel)
-private def cert22_34 := witnessFinal50 22 21 0 450000 450448 48 3093
-  0x72513062a28c4c3209451ab128b14824172462a48850a8a4118ca22154422a88c913582216294422ec8d11923045c88a8a513b2344648c11722c454892d12b2344648c11722c4548a1132364688c91822e4588a9142264488891 (by decide +kernel)
-private def cert22_35 := witnessFinal50 22 20 0 460000 460385 44 2733
-  0x15725120828e4c2c5451c9464920a923146ae482c5248c5d110aa2115444545248865908ab2344648c1135921162964ac8d11923045c8b1114b2564688c91822e4588a914222b64ac8d11923045c8b11522844c8911 (by decide +kernel)
-private def cert22_36 := witnessFinal50 22 19 0 470000 470384 40 2393
-  0x1472611084ae4a2210520945c920a1514824194462a88855108a3582316294442ec845591a2324454528846611b2344648c117226b44b08d91a2324608b91622a4708d91a2324608b91622a4508991 (by decide +kernel)
-private def cert22_37 := witnessFinal50 22 18 0 480000 480384 37 2120
-  0x412898315147261924a28d5c9458a4920ba231544428545248c65910ab2115646889ac910b14b2117846c8d119230445452c9e11b2344648c11722c4496c9611b2344648c11722c4548a11 (by decide +kernel)
-private def cert22_38 := witnessFinal50 22 17 0 490000 490321 33 1820
-  0xac12890414826162a2904a3289055118a3582416294462ec8855908ab222a29444330845611b23446489ad108b14c25846c8d11923045c88a612c2364688c91822e4588a91 (by decide +kernel)
-private def cert22_39 := witnessFinal50 22 16 0 500000 500320 30 1583
-  0x5209844212c128884149251744828545249065918ab221564228d648c58a5910bc2115846c8d111514b2119a4708d91a23246089ad92d23846c8d11923045c8b11 (by decide +kernel)
-private def cert22_40 := witnessFinal50 22 15 0 510000 510320 27 1362
-  0x124a260c545209865128a3582516294482ec8c55910a1514a23198442b0845611b226b4442c530845e91c2364688c911514c27a4708d91a2324608b91 (by decide +kernel)
-private def cert22_41 := witnessFinal50 22 14 0 520000 520257 24 1157
-  0x1592512082924c2c545249465920ab23146b2482c52c8c5e110ac21158445452c8866908ad23846c8d1135b211629a4b48e11b2344648c11 (by decide +kernel)
-private def cert22_42 := witnessFinal50 22 13 0 530000 530256 21 968
-  0xa49308842592511082944a2ec9050a8a5120cc23158442b08451ad118b14c2217a422b48e11b222a298423388e91c2364688c91 (by decide +kernel)
-private def cert22_43 := witnessFinal50 22 12 0 540000 540256 19 830
-  0x144a260c545249865928a3592516296482f08c56110a1514b2319a442b4845691c226b6442c534845f11d23846c8d11 (by decide +kernel)
-private def cert22_44 := witnessFinal50 22 11 0 550000 550193 16 668
-  0x15a2512082944c2c545289466120ac23146b4482c5308c5e910ad2115a44545308867108ae23a4708d91 (by decide +kernel)
-private def cert22_45 := witnessFinal50 22 10 0 560000 560192 14 554
-  0x5289844212d12888414b2517848285452c9066918ad2215a4228d6c8c58a6910be2115c4748e11 (by decide +kernel)
-private def cert22_46 := witnessFinal50 22 9 0 570000 570192 12 450
-  0xb2513062a2944c3309451ad128b14c2417a462b48850a8a6118ce2215c422b88e91 (by decide +kernel)
-private def cert22_47 := witnessFinal50 22 8 0 580000 580129 10 355
-  0x56c944820a5930b1514b2519a482b48c51ad920b14d2317c442b8845711 (by decide +kernel)
-private def cert22_48 := witnessFinal50 22 7 0 590000 590128 8 270
-  0x14b2611084b64a2210530945e920a1514c2419c462b88857108a (by decide +kernel)
-private def cert22_49 := witnessFinal50 22 6 0 600000 600128 7 221
-  0x184a260c5452c9866928a35b251629a482f88c57110a (by decide +kernel)
-private def cert22_50 := witnessFinal50 22 5 0 610000 610065 5 150
-  0xae12890414c26162a2984a3389057118a (by decide +kernel)
-private def cert22_51 := witnessFinal50 22 4 0 620000 620064 4 112
-  0x14c2611084b84a2210534945f120a (by decide +kernel)
-private def cert22_52 := witnessFinal50 22 3 0 630000 630064 3 79
-  0x1a4a260c545309867128a (by decide +kernel)
-private def cert22_53 := witnessFinal50 22 2 0 640000 640001 2 49
-  0x574944820a6930b (by decide +kernel)
-private def cert22_54 := witnessFinal50 22 1 0 650000 650000 1 23
-  0xa6930884 (by decide +kernel)
-private def cert22_55 := witnessFinal50 22 0 0 660000 660000 1 22
-  0x7128983 (by decide +kernel)
-private def chunks22 : List (Chunk 22) := [
-  cert22_0,
-  cert22_1,
-  cert22_2,
-  cert22_3,
-  cert22_4,
-  cert22_5,
-  cert22_6,
-  cert22_7,
-  cert22_8,
-  cert22_9,
-  cert22_10,
-  cert22_11,
-  cert22_12,
-  cert22_13,
-  cert22_14,
-  cert22_15,
-  cert22_16,
-  cert22_17,
-  cert22_18,
-  cert22_19,
-  cert22_20,
-  cert22_21,
-  cert22_22,
-  cert22_23,
-  cert22_24,
-  cert22_25,
-  cert22_26,
-  cert22_27,
-  cert22_28,
-  cert22_29,
-  cert22_30,
-  cert22_31,
-  cert22_32,
-  cert22_33,
-  cert22_34,
-  cert22_35,
-  cert22_36,
-  cert22_37,
-  cert22_38,
-  cert22_39,
-  cert22_40,
-  cert22_41,
-  cert22_42,
-  cert22_43,
-  cert22_44,
-  cert22_45,
-  cert22_46,
-  cert22_47,
-  cert22_48,
-  cert22_49,
-  cert22_50,
-  cert22_51,
-  cert22_52,
-  cert22_53,
-  cert22_54,
-  cert22_55]
-def rows22 := rowsFrom chunks22
 
-theorem good22 : ∀ r ∈ rows22, good 22 r = true := rowsFrom_good chunks22
+
+private def r22_0 : List (Chunk 22) := [
+  w 22 56 0 100778 100903 4 407 [],
+  w 22 55 0 110715 110902 6 607 ["3w>|g"],
+  w 22 54 0 120652 120902 9 903 ["0+*V:U,3&"],
+  w 22 53 0 130589 130901 12 1197 ["@A?M+?L~hWK3?#6"]]
+
+private def r22_1 : List (Chunk 22) := [
+  w 22 52 0 140526 140901 16 1585 ["%*.XwKbKr:}D_fvTfWzu{"],
+  w 22 51 0 150463 150900 20 1970 ["9JND@x_LmBi+!)~1JrXPJfzw}i,mVcc"],
+  w 22 50 0 160400 160900 25 2446 ["/6el9V-4iyt+<Fk3yYM3S#oQF<'bR^I[N~6B"],
+  w 22 49 0 170337 170899 29 2816 ["#Vs)$kYE|->H:<I|Z1s+WjVEpX$iz48[]U[a4bt{cfZ>a]C&"]]
+
+private def r22_2 : List (Chunk 22) := [
+  w 22 48 0 180274 180899 34 3277 [",1RG;B6Bi&n-nS:IE^I:jiF!wod'czZ2kX,i03(rcYN>k9'N0aF7VkB"],
+  w 22 47 0 190211 190898 38 3635 [")IX?T;U@z.?H#3QM~6QYPZ;UwR!K{```5_|.%2&_dznNj]bKR%gg&B#o&>SZ5rh&","="],
+  w 22 46 0 200148 200898 43 4084 ["6x+rvw(FcwcvtyT<lS=I3fO(vTN@U?VGE.sNNeJjXhBh3|qBuDdNU`>xO/5{Rtpg","$Q)ZDd'4["],
+  w 22 45 0 210085 210897 47 4433 ["D#9tlC6,U`&sl^-o$H180_Jt_+tHl^+^2UwFUZjAweKQ5^W>*;yHZ;iSoXGEMe&R","0)wMAo9[B4#ojVtQOw2&"]]
+
+private def r22_3 : List (Chunk 22) := [
+  w 22 44 0 220022 220897 52 4873 ["e)Gz!fs+5QTYiWTbG;;j#=+:_)]bAiQQiYs]hl4>fyx8A73VKm'pX^^oFdr9d@0{","5;;n9I=5IOrDu^8On}``diA}V"],
+  w 22 43 0 230021 230896 55 5114 ["{y+6[/GMhJb/t4<3Mm<0ec}S)!H/CBid)GC#)k+n,kk$%V6^Ky#78N)8HaE?VAcs",",t.?Xh+pC,<+p[kg:c7_ykU21I~wSy|$N[MN"],
+  w 22 42 0 240020 240896 59 5446 ["PlhYYCcYB-t_%:!G!!ZA_(OrS^wI],D(^`A/@y')*:@Fot&wP~|PM|~C;$}}/^s{","(2[n+#=tXq)S[?$j1.&h[eZRVd-H$5N|wgY'27/gJI"],
+  w 22 41 0 250019 250833 61 5586 ["*p[NX*gPBtIsqxX#KAru<3K)WAiB/U#'N|s?QG2S94+xJ6+=iuC.a/X|861_H#$c","Zg15sPfJCuX},a-YJ,17<4Hcg,:`v!3wGk@Dvt!WV=^TtA;"]]
+
+private def r22_4 : List (Chunk 22) := [
+  w 22 40 0 260018 260832 64 5815 [".}(;`_*|j<MN0{/9mT<-}IgB1)xQidTTto)yZy[`qq4-g'7VH(DM(=hBaRAJ5R-w",";GuOU%f-xM,L@}D|uI%7-^;6X!KWDa&(>`^m1w;*nPL)`o~,J2m"],
+  w 22 39 0 270017 270832 66 5936 ["[^,=qt9mF9X&*$wX~*_mJwf#5GJ|j%8#1t:v#kj_>g_jW<:un2'cnE)ZL2:SryHc","s4%>fi(5Id(D,{a9VeW*.L?:I>0#2iEI0_lM?dDnXXe+B8X]Ug.Rb&OshAt"],
+  w 22 38 0 280016 280769 68 6068 ["F|>VB&nJXWsv1ZHo%G0Ds9tL^$~k1)pk*x?dy~&Dk$/])4;h4K5;=SBelwKsgFnw","#x}#P2cBlV}#<ibEPOP<1~e>xVb<6H-Nq]~iySxd}f4scN)lqFDiT9|9ZL%h0Y"],
+  w 22 37 0 290015 290768 69 6093 ["Up}:OkWxLB}M'.#m&85x)Ldpo?<T$!`bNquR4S?pb~E?PQJw@+mN{EH64Yxz=Je2","8/Pr@Lbm8XAh)>+.`H:0O2b=SksZw;:,}Zve(3(1CkWO$FGRlYTB_%&H8J0*#h3w","#"]]
+
+private def r22_5 : List (Chunk 22) := [
+  w 22 36 0 300014 300768 71 6206 ["%P'&)s5_neK5]ooWOw,DCNHg?Ly'`Vir+>.`MP={Sy'X`APE0d1`-#8K*!BxJtX2","T01~!Nls0]3RncM,y7vkBrN'(^Yz$oHLsN;A-3sZvW|S*d8a}ZV<XA.u{P.$`92c","AqB!R"],
+  w 22 35 0 310013 310705 71 6142 ["'I6f)-JDb(8}OsX->e!{ZrHU)i+XS?0P5a1-8z{+,cp<4f2~>sblJVe2(YAYC=*Z",",@%'7D(b;}Z(LRmG*A~-.Q;![XI35CejC-a[;UH:2w_JifCIb~(Q1i}ZnY8:w@Z_","5WF5Z"],
+  w 22 34 0 320012 320704 72 6163 ["iH=(Y/wKU@^)^NdE9MK|{3Hffl#HW7hgUsDS-w-mHPpX'TP=W)I>ML1nHC.rhS::","}ve7(!/.%$b'IU>$K<40/#]aEBqDm{6>>Y{1A(Ih6Mc]Qh/=Iz-V{#v.z-mqAq^3","&Q9^23Z"],
+  w 22 33 0 330011 330704 72 6084 ["Mh<e!l?GP}7`3yU)NzG}/q-er/?!|_rb$71P=$tA9r/jOaf0ky$^.be)4}5gVQzw","cL&_A)KSl@DyOtDbW/1.Lkh*t6F`]zqX=%w']`+@Sg`sZlSQH!M^zj5TE7D}Xw%G","zK,w(y!Yl"]]
+
+private def r22_6 : List (Chunk 22) := [
+  w 22 32 0 340010 340641 72 6020 ["Gk%^xvRz]AzkSt2gyO$R,%=0$zHfh0^jILgH;^*Y'$eYa,04Q8G@B:/OvMXVtg)&","g`)EJr7D.Q8yDl@%-lM|xE0R<WsHKr-s^b=y_S<~@C&v*KYA,s2ch7;QHZ;Y(}xv","/6L7@/fu"],
+  w 22 31 0 350009 350640 71 5857 ["*Km6hYLt#(CxjAl;n<j=NZ.bVG}gN)T3uXNNZr%#$eX%H|~jg+:P%q%{.,Z?]UB{","Jzb/9shJp,c[6Mt=xx~yhe+Y>,%,L+sziP:OAn%l)t~/il9OSV7KDt<_o3;[5kwx","#VtMHSiD"],
+  w 22 30 0 360008 360640 71 5778 ["|3?0/gunK/eEjw=PPjBp6Y.SX`alVEiMc_=zC>~wIaep#K0]wZI$gv'A~fJYb?Oo","0|PvA:YVEgzgO(W7&$;>uo,_^IYTM]R(#a{Mm}P^0sW*#9Y5|R<pww<,)/w`K@wk","0G#y^&2`6"],
+  w 22 29 0 370007 370577 69 5538 ["DBj)ON'a;dt*dZpT}Rs[Dak]zWqn7TgaUp)^@uB1`|tSVcJS6vPH}A&tG&PUnA0s","WLvEEJ.LdvN`4ZV4#jFvsZ~c798{4E<=FE3.T6Gw#XY+k9$UAcWi>f[Xm>4xd{9i","qk3bE"]]
+
+private def r22_7 : List (Chunk 22) := [
+  w 22 28 0 380006 380576 68 5379 ["ma/5V0fV@/bC!C.AVpP%}MLK'w:aCK%[5jGycv{~K6H`|hfelJ*T7~G(wV<!H#:{","925`*-IvPIg*Py;2,Nq9~a-|tjQXpN4},Ahoh+K|<>P+$g<-*ReRLB6~G^J4Ishm","%D<e"],
+  w 22 27 0 390005 390576 66 5128 ["xGf1zr0`fwumI:l3K|ar&HHM3{.o+:K6Bh?_@;i$HIcVZ9k^[PnZ6o$TdYDU^rIw",">y|f;%W{q]rF3fxIe)j?/~o<jy-Jo'8;r#51jCb*[G^M0kH3^27oG>}s1`qpXHm'","5dc"],
+  w 22 26 0 400004 400513 64 4896 ["fbT2NsYtx,WpiZ$t:J*w/$c)uUsPAPVO2]J}<U3dIKU=VGFKW]VKgl{(YVIF(CK_","A?JOUbQ*8v2f]T2%Gr~/Dh:ZTb~~XV{A0G&H5U#'e#X:Up9dhvlx3p^>-ie5eP"],
+  w 22 25 0 410003 410512 61 4573 ["B4m?o,]`,8tv538]EdA|^yYNbZo:cg^WF{80c]K%AX.r#8L'<Q)[<I;^&`F$d1$B","bfM1I+SFSOV).][brsI!I--h$gP<D~C(G_blh6|`|#}VuSFL4t|`GMSe8u"]]
+
+private def r22_8 : List (Chunk 22) := [
+  w 22 24 0 420002 420512 59 4330 ["&|jr?(/+Dct@Ci|PCUM]~Pn8[7o7+K?3g;J4CrhsN^f##?Drkt}TIP,SJC/OMCFk","#fEnZ&ruUl*rIq<xx6c[g].jJ?CsGX8F'R4>6mW+wC>A:^h2~g~@01.um"],
+  w 22 23 0 430001 430449 55 3942 ["|}WYiaF/K}w9G{/:3o%3r.K+Cx#w1PTn_7KH>*,/Hk)+fE`0=qzx|Dc{)3oX0;oJ","#3r8ha(lkPlI4l,P*K@);/'e5*}'e%1u]$Lu'P($>9;l,uhK7i"],
+  w 22 22 0 440000 440448 52 3631 ["s2fE8SDj(Ibt4~E+%-*V1yV`D62C;&3JYEc%{UEnwB]XV!?Oiq]w*?ND|C*(73e!","sBK0Dy-oW/PEBa&ghV*ip$sD{fmt/zI.Ov,p9VVb8q%g"],
+  w 22 21 0 450000 450448 48 3236 ["lret;|T^eQEeV;Q#05]2wy,)kQJ8h[2<5pNg(eS7AthD7/,=}v(U[mY8XhW%,P6#","#>?|Fszuy0zE)/^(f{;hoLaTa$?<~8Ex0v>D0%3ZE"]]
+
+private def r22_9 : List (Chunk 22) := [
+  w 22 20 0 460000 460385 44 2864 ["9u[kK=-z[Y)X5k~)B4n=Rsi%[,sWj.91,-pEcQ4&W_h1c*xYMa8^0lY2VT%hSFYp",";dFL<C*wgQ$Iy:tv@z6zvD#bGi8f1%Y'"],
+  w 22 19 0 470000 470384 40 2511 ["EQ(l@G%o~b0M$!XY,N4mAg&03tf#@d=0^Pq+D{Z]9Ms<%]@j35c9h{Z%VvJFI1%p","pf!Ds<n*'](m~S~JRiQM'@ZpY"],
+  w 22 18 0 480000 480384 37 2230 ["[y$CNVKze8xR3)*s1DO(!(Dq$3MIGd,2=0pJ@V?%,6lYm{I`;Ey-4AE}O#k+AcbO","-P2L->iYIb/HS`%Y25y8tT"],
+  w 22 17 0 490000 490321 33 1918 ["n=TC~$PbY0{s(1hDUy]uRS(apn^U9O6(/${6/A.O0a]bTwAn5$dTR?3|:_WJmGH;","$0yBOh^FW%aApM"]]
+
+private def r22_10 : List (Chunk 22) := [
+  w 22 16 0 500000 500320 30 1671 ["e8q,Ib3DFP;EN%,xF{2l.Qx8l8(J`b.8$0'2}qCg'SDN@z;$<sKw,rz:EXZ+{p`x","#WT1PLNQp"],
+  w 22 15 0 510000 510320 27 1442 ["HHa^MDJ;DouhF5G[kB{9z.~8TZN&|LQsXz2(Eu/K#bth:-/ITmUM>:^EtX6e;M|G","*`$6"],
+  w 22 14 0 520000 520257 24 1228 ["}-/~0_o.PoUZmv!e/=5.y*?!C2L7yYm?u,~/(`hq*$lUky(Z?kEJWfE4`c2<9O"],
+  w 22 13 0 530000 530256 21 1029 ["9c7Uos~OU-tD^!B/USic]T_f1hS'dk^r,wFG}'o+9{`)mib$e2-`Sd~/"]]
+
+private def r22_11 : List (Chunk 22) := [
+  w 22 12 0 540000 540256 19 886 ["Dewov`@G6]Jrrz7Gf%q_SQ}E@V;<Nr9Stg)j'0m!X}x><fs|M)IOW"],
+  w 22 11 0 550000 550193 16 715 ["#;DAC($35S#Sg,+KJ_q9XqJ,=9GbY$_t,{(D!I/ZpIA,krO"],
+  w 22 10 0 560000 560192 14 594 [")M1,n7~*&ocA(4EvO]QlJ0h4f(SZPEwBh_&~6c.v~O"],
+  w 22 9 0 570000 570192 12 485 ["&>@j>uHxoOQ:[<o9~11y';o}@IQNu6ZkRO-zSh"]]
+
+private def r22_12 : List (Chunk 22) := [
+  w 22 8 0 580000 580129 10 384 ["%5v8:=BA|tgggs>EvR>!>8wu#1P+*{W$+"],
+  w 22 7 0 590000 590128 8 292 ["(i_pD*7^R^74K0QOK}O/L]#5@aD"],
+  w 22 6 0 600000 600128 7 241 ["#$GB?ZU:<Dq'q6X+M$fGhHYW0"],
+  w 22 5 0 610000 610065 5 164 ["9>dT3YZyA2gM7U^'`0"]]
+
+private def r22_13 : List (Chunk 22) := [
+  w 22 4 0 620000 620064 4 122 ["-s0)0xs^!?7y/a"],
+  w 22 3 0 630000 630064 3 87 ["#yaQ%n%`@#pq"],
+  w 22 2 0 640000 640001 2 54 ["=RLb;TnX"],
+  w 22 1 0 650000 650000 1 25 ["0#k="]]
+
+private def r22_14 : List (Chunk 22) := [
+  w 22 0 0 660000 660000 1 24 ["#_Ha~"]]
+private def chunks22:List (Chunk 22):=r22_0 ++ r22_1 ++ r22_2 ++ r22_3 ++ r22_4 ++ r22_5 ++ r22_6 ++ r22_7 ++ r22_8 ++ r22_9 ++ r22_10 ++ r22_11 ++ r22_12 ++ r22_13 ++ r22_14
+def rows22:=rowsFrom chunks22
+
+theorem good22 : ∀ r ∈ rows22,good 22 r=true:=rowsFrom_good chunks22
 
 theorem sorted22 : rows22.Pairwise (fun a b => a.tag < b.tag) :=
   (rowsFrom_sorted_aux chunks22 0 (by decide +kernel)).1
 
-theorem mass22 (i : Fin 56) :
-    bandCount 22 (i.val : ℤ) 55 14 ≤ (rows22.filter (fun r => decide (i.val ≤ r.index))).length := by
-  change _ ≤ ((rowsFrom chunks22).filter _).length
+theorem mass22 (i : Fin 57) :
+    bandCount 22 (i.val:ℤ) 56 14≤(rows22.filter (fun r => decide (i.val≤r.index))).length:=by
+  change _≤((rowsFrom chunks22).filter _).length
   rw [mass_eq]
-  have h : (List.range 56).all
-      (fun j => decide (bandCount 22 (j : ℤ) 55 14 ≤ mass j chunks22)) = true := by
+  have h : (List.range 57).all
+      (fun j => decide (bandCount 22 (j:ℤ) 56 14≤mass j chunks22))=true:=by
     decide +kernel
   exact of_decide_eq_true (List.all_eq_true.mp h i.val (List.mem_range.mpr i.isLt))
 
-theorem total22 : (rows22.map (price 22)).sum = 167321 :=
+theorem total22 : (rows22.map (price 22)).sum = 174160 :=
   (total_eq chunks22).trans (by decide +kernel)
 
-private def cert23_0 := witnessFinal50 23 55 0 140590 140902 12 1180
-  0x0 (by decide +kernel)
-private def cert23_1 := witnessFinal50 23 54 0 150527 150902 16 1553
-  0x1022644c81322e40b113204c810200 (by decide +kernel)
-private def cert23_2 := witnessFinal50 23 53 0 160464 160901 20 1923
-  0x1310446444816104464508131042840a9142050815200 (by decide +kernel)
-private def cert23_3 := witnessFinal50 23 52 0 170401 170901 25 2384
-  0x1812310426228448151342e2284881615428268488151342440a882122048812200 (by decide +kernel)
-private def cert23_4 := witnessFinal50 23 51 0 180338 180900 30 2839
-  0x4cc11188a2122240a902152342822848815131062e24848825248448815144244129122048812200 (by decide +kernel)
-private def cert23_5 := witnessFinal50 23 50 0 190275 190900 35 3283
-  0xa048c44418990a212224544c818b90a121142441288215141362824848825134282484882510428248488141242440a892122048812200 (by decide +kernel)
-private def cert23_6 := witnessFinal50 23 49 0 200212 200899 40 3722
-  0x131130646428c4909154042a4622c50850908a1220944c418b8908b2222441a91524444448825144444488352444488222244111122048812200 (by decide +kernel)
-private def cert23_7 := witnessFinal50 23 48 0 210149 210899 45 4151
-  0x8a82232110626628c48a898890417314244284845091253042a28262305048459111220d44d0b9122222441a88224124444488151412644448825124444488222244111122048812200 (by decide +kernel)
-private def cert23_8 := witnessFinal50 23 47 0 220086 220898 50 4579
-  0x4c84c19198a4122a2280c548c858a18a1221424228944c44420b8910b22114444488352042a4822c50891111220d4510a112222244229142244444881422444448815224444488222244111122048812200 (by decide +kernel)
-private def cert23_9 := witnessFinal50 23 46 0 230023 230898 55 4995
-  0x42a088cc44189a0a1513212082e82848c50910a25113062a28264305048859108a222244d44c458b9108b322444488451042a4824cc891112209450499912222441a892322444488322444488322444488222244111122048812200 (by decide +kernel)
-private def cert23_10 := witnessFinal50 23 45 0 240022 240897 59 5315
-  0x266260c8d050a90a0315233162882848c5128990884171231644428884511135112062a4842c5088459912222441a8a08b17324644888910aa490891912222440a8a1133224444882522464488891064488891064488891044448822224409102440 (by decide +kernel)
-private def cert23_11 := witnessFinal50 23 44 0 250021 250897 63 5623
-  0x62a088d04418a899890417514248289484c18a8a0998c14123164442888451a8990b172221664228c89111228a2220c549048460a192322444488351412628648c8911122114490a192322444488143246448889102a648c89111220c89111220c891112208889104444881220488 (by decide +kernel)
-private def cert23_12 := witnessFinal50 23 43 0 260020 260896 66 5842
-  0x4d04c18a98a03152341628a28944cc4420b8920b2231444428d484818a9218b142221664228c891135142162e6422d089912222442a88a1524226844c89111220945089a1132244448835224844c89111221089912222442113224444883224444883224444882222441111220488 (by decide +kernel)
-private def cert23_13 := witnessFinal50 23 42 0 270019 270896 69 6047
-  0x20a821513412082ec2894c4c18a8a09a0c141241644628d44cc58b9118b3221464228c8a290883152412218286422d08991222244d45048460ba12422644888910aa24890c92113224444881514326844c8911122094c9211322444488422644888910844c89111220c89111220c89111220888910444488 (by decide +kernel)
-private def cert23_14 := witnessFinal50 23 41 0 280018 280833 71 6171
-  0x2a8280c504d44421289a0884171251644828d4c4818a9220b142231664428c8451a8a18b17322168422908991222aa428549088460a2124226448889106a2844c51092113224444884522428849089912222440a2124226448889102a84908991222244211322444488422644888910644888910644888910444488 (by decide +kernel)
-private def cert23_15 := witnessFinal50 23 40 0 290017 290832 73 6280
-  0xa2898325413062a2826a305049459a89a0b172241664628c8852298883152412318286442d08452113226a28244305d0845a914226448889155121162a4864d48a113224444882514326a45089912222441a992522844c8911122148a11322444488522844c8911122108991222244211322444488322444488322444488 (by decide +kernel)
-private def cert23_16 := witnessFinal50 23 39 0 300016 300832 75 6387
-  0x2482a0c545144820b8930b35412062a48a2c5089059918a35144162e6462d08852108a422aa628549088860a2108b522844c89113514221182ea4948a11322444488552244884948a113224444881514426a450899122224412a12522844c8911122148a11322444488522844c8911122108991222244211322444488322444488 (by decide +kernel)
-private def cert23_17 := witnessFinal50 23 38 0 310015 310769 76 6405
-  0x15124140848c220c945144420b9128b324148a8220c549049060a1918b4221484228d45048c60ba110b52114a450899155122162a4864230514929142264488891351432628a4948a113224444884532428a4948a1132244448814524a45089912222440aa92522844c8911122148a11322444488522844c8911122108991222244211322444488 (by decide +kernel)
-private def cert23_18 := witnessFinal50 23 37 0 320014 320768 77 6423
-  0xa09289842512413082a48c2c5089459a8a28b17324168462908852aa0a152422318288442d48452914226a28444305d4845b11522844c891155221162a4884d88a914226448889104a2884d88a914226448889106a84988a91422644888910c4548a11322444488622a4508991222244291422644888910a4508991222244211322444488 (by decide +kernel)
-private def cert23_19 := witnessFinal50 23 36 0 330013 330768 78 6424
-  0x8905418a8a092890517226166a2482410549049460a1920b423146a28248305d08c5a910a52114a455448c58a921910c1452116c4548a113226a28642305d89311522844c8911122aa6489149311522844c89111220545149b11522844c891112209549311522844c8911122188a91422644888910c4548a11322444488522844c8911122148a11322444488 (by decide +kernel)
-private def cert23_20 := witnessFinal50 23 35 0 340012 340705 78 6359
-  0x548905021209308842514125110a2e64a2d0905228920884152422418288462d48852908a3514223182ea442d88453115228455488858a922108c14624c4548a11322444d451098a312622a450899122224422a1214624c4548a1132244448814624c4548a1132244448815624c4548a11322444488622a4508991222244311522844c8911122148a11322444488 (by decide +kernel)
-private def cert23_21 := witnessFinal50 23 34 0 350011 350704 78 6274
-  0x508944c21291209841524126182864a2cd45049460ba120b52314a44295449058a921918c1452216c422988a913514322182ec422dc8b11522844c8aa9908b1524526e4588a91422644888912514526e4588a914226448889106aa49c8b11522844c89111221c8b11522844c89111221c8b11522844c8911122188a91422644888910c4548a11322444488 (by decide +kernel)
-private def cert23_22 := witnessFinal50 23 33 0 360010 360704 78 6196
-  0xc905418a8a112890517326166a4482410549089460a2120b523146a28448305d48c5b110a62114c455488c58a922110c1462116e4588a914226a28842305dc9391622a4508991222aa8489189391622a45089912222440a8a313722c4548a1132244448825624e4588a91422644888910e4588a91422644888910e4588a91422644888910c4548a11322444488 (by decide +kernel)
-private def cert23_23 := witnessFinal50 23 32 0 370009 370641 77 6032
-  0xa9920a042422611084a2844a22145d0945a920a4522411082a48648305148c5b110a621146a28646305d8885b908a722c4548aa9910b15245211828e49c8b11522844c89a8a29314724e4588a91422644888914552428e49c8b11522844c8911122051c9391622a45089912222440ab92722c4548a11322444488722c4548a11322444488722c4548a11322444488 (by decide +kernel)
-private def cert23_24 := witnessFinal50 23 31 0 380008 380640 76 5876
-  0x1432513084a6482610549089860a2128b3514225182ea482d88c53110a55224162a4884630518885b908a722c44d45108860bb908b822e4588a91422aa8422c549189c11722c4548a11322444945189c11722c4548a1132244448835625045c8b11522844c8911122208b91622a4508991222244411722c4548a11322444488722c4548a11322444488 (by decide +kernel)
-private def cert23_25 := witnessFinal50 23 30 0 390007 390640 75 5699
-  0x8482a0c5450c944828ba130b3532412082a4864a30514905b118a3514324182ec462dc8853908a722aa6462c549148860a3908b822e4588a913514521182f04a08b91622a45089915552448e4a08b91622a45089912222445451c9c11722c4548a1132244448825725045c8b11522844c8911122208b91622a4508991222244411722c4548a11322444488 (by decide +kernel)
-private def cert23_26 := witnessFinal50 23 29 0 400006 400577 73 5472
-  0xaa120a042432611084a2864a22145d4945b120a4532411082a48848305188c5b910a721146a28846305dc885c108a822e4588aaa110b1524621182904a08b91622a45089a8a31314825045c8b11522844c8911456242904a08b91622a45089912222440a412822e4588a914226448889102b04a08b91622a4508991222244411722c4548a11322444488 (by decide +kernel)
-private def cert23_27 := witnessFinal50 23 28 0 410005 410576 71 5221
-  0x2884a2610950904c20a921930c14525166a2864a305d8905b918a72214aa6482c549148c60a3910b82115045c89a8a2910c178211724608b91622a455548458a92393923045c8b11522844c8928a393923045c8b11522844c89111226ae4a48c11722c4548a11322444488923045c8b11522844c8911122248c11722c4548a11322444488 (by decide +kernel)
-private def cert23_28 := witnessFinal50 23 27 0 420004 420576 69 4985
-  0x2920a831514425120a2ea4c2cd50904820a922128c1462416e4628d45109060bb918b822150422a08aaa118b152462218290422e48c11722c44d45188460bc92923045c8b11522845558912412923045c8b11522844c8911151482724608b91622a450899122224412c12923045c8b11522844c8911122248c11722c4548a11322444488 (by decide +kernel)
-private def cert23_29 := witnessFinal50 23 26 0 430003 430513 66 4667
-  0x554905021221308842514425110a2ec4a2dc90522a12088415245241828e462e08854108a3514523182f0442e4845491822e455548858a923908c1492524608b91622a44d451c98a492923045c8b11522844c8a2b921492524608b91622a45089912222445249491822e4588a914226448889102b24a48c11722c4548a11322444488 (by decide +kernel)
-private def cert23_30 := witnessFinal50 23 25 0 440002 440512 63 4365
-  0x28a4a2610954904c20a922130c14625166a2884a305dc905c118a82214aa8482c549188c60a4110b92115246089a8a3110c179211744648c11722c455588458a92413a2324608b91622a4508928a413a2324608b91622a45089912226b04a88c91822e4588a9142264488891144648c11722c4548a11322444488 (by decide +kernel)
-private def cert23_31 := witnessFinal50 23 24 0 450001 450512 60 4038
-  0x62415062a28a4a24145d89859aa92090415245251828e482e08c51a8a2920c17823172442a484549155523162a48e4430524845d11923045c89a8a3908c17a2544648c11722c4548aab922492544648c11722c4548a113222a2924e88c91822e4588a91422644888912592544648c11722c4548a11322444488 (by decide +kernel)
-private def cert23_32 := witnessFinal50 23 23 0 460000 460449 56 3677
-  0x15624140848a4c221094514944428bb928b824148aa482210549189060a4118b9221524228d45188c60bc910ba211544648c1155622162a49042305289511923045c8b1135148262944a88c91822e4588a914228b0485289511923045c8b11522844c891114a2544648c11722c4548a11322444488 (by decide +kernel)
-private def cert23_33 := witnessFinal50 23 22 0 470000 470448 52 3288
-  0x1462513084ac482610549149860a3928b3514525182f0482e48c54910a55524162a48e4630524885d108aa23244d451c8860bd108bb2344648c11722aae422c549249d91a2324608b91622a44945249d91a2324608b91622a45089913592564688c91822e4588a9142264488891 (by decide +kernel)
-private def cert23_34 := witnessFinal50 23 21 0 480000 480448 48 2922
-  0x72415062a28c4a24145dc9859ab120904152462518290482e48c51a8a3120c17923174442a884551155623162a4904430528845d91a23246089a8a4108c17b2564688c91822e4588aac1224a2564688c91822e4588a914222a2944ec8d11923045c8b11522844c8911 (by decide +kernel)
-private def cert23_35 := witnessFinal50 23 20 0 490000 490385 44 2577
-  0x15724140848c4c221094518944428bc128b924148ac4822105491c9060a4918ba221544228d451c8c60bd110bb211564688c9155722162a492423052c9591a2324608b9135149262964ac8d11923045c8b115228b24852c9591a2324608b91622a4508991 (by decide +kernel)
-private def cert23_36 := witnessFinal50 23 19 0 500000 500384 40 2252
-  0x1472513084ae482610549189860a4128b3514625182f2482e88c55110a55624162a4904630528885d908ab23444d45208860bd908bc2364688c91822ab0422c549289e11b2344648c11722c44945289e11b2344648c11722c4548a11 (by decide +kernel)
-private def cert23_37 := witnessFinal50 23 18 0 510000 510384 37 1993
-  0x4120a831514725120a2f04c2cd5c904820a923928c149241744628d451c9060bd118bb22156422ac8aab918b152492218296422f08d91a23244d45248460be12c2364688c91822e45564912592c2364688c91822e4588a91 (by decide +kernel)
-private def cert23_38 := witnessFinal50 23 17 0 520000 520321 33 1708
-  0xac120a042472611084a28e4a22145e4945d120a4572411082a49048305288c5d910ab21146a29046305ec885e108ac2364688aac110b1524a21182984b08d91a23246089a8a51314c25846c8d11923045c8b11 (by decide +kernel)
-private def cert23_39 := witnessFinal50 23 16 0 530000 530320 30 1482
-  0x520944c212c1209841524726182924a2cd451c9460bd120bb23156442955c9058a924918c14b22178422b08d913514922182f8422f48e11b2344648aac908b1524b27a4708d91a2324608b91 (by decide +kernel)
-private def cert23_40 := witnessFinal50 23 15 0 540000 540320 27 1275
-  0x12482a0c54520944828bc930b3582412082a4904a30528905d918a3514824182f6462f08856108ac22ab0462c549288860a6108bd23846c8d113514a21182fa4b48e11b2344648c11 (by decide +kernel)
-private def cert23_41 := witnessFinal50 23 14 0 550000 550257 24 1081
-  0x1592414084904c221094520944428bd128bb24148b0482210549249060a5918bc221584228d45248c60be110bd2115a4708d9155922162a49642305349691c2364688c91 (by decide +kernel)
-private def cert23_42 := witnessFinal50 23 13 0 560000 560256 21 902
-  0xa49289842592413082a4904c305289459a8a4128c17b24178462b08852ac120b1524a2318298442f4845691c226a29444305f4845f11d23846c8d11 (by decide +kernel)
-private def cert23_43 := witnessFinal50 23 12 0 570000 570256 19 774
-  0x14482a0c54524944828bd130b3592412082a4924a3052c905e118a3514924182f8462f48856908ad22ab2462c5492c8860a6908be23a4708d91 (by decide +kernel)
-private def cert23_44 := witnessFinal50 23 11 0 580000 580193 16 622
-  0x15a2414084924c221094524944428bd928bc24148b2482210549289060a6118bd2215a4228d45288c60be910be2115c4748e11 (by decide +kernel)
-private def cert23_45 := witnessFinal50 23 10 0 590000 590192 14 514
-  0x528944c212d1209841524926182964a2cd45249460be120bd2315a44295649058a925918c14d2217c422b88e91 (by decide +kernel)
-private def cert23_46 := witnessFinal50 23 9 0 600000 600192 12 419
-  0xb2415062a2944a24145ec9859ad1209041524a2518298482f48c51a8a5120c17d2317c442b8845711 (by decide +kernel)
-private def cert23_47 := witnessFinal50 23 8 0 610000 610129 10 330
-  0x56c905021251308842514a25110a2f84a2f490522d1208841524b241829a462f88857108a (by decide +kernel)
-private def cert23_48 := witnessFinal50 23 7 0 620000 620128 8 250
-  0x14b2513084b6482610549289860a6128b3514a25182fa482f88c57110a (by decide +kernel)
-private def cert23_49 := witnessFinal50 23 6 0 630000 630128 7 206
-  0x18482a0c5452c944828be130b35b2412082a4964a30534905f118a (by decide +kernel)
-private def cert23_50 := witnessFinal50 23 5 0 640000 640065 5 139
-  0xae120a0424b2611084a2964a22145f4945f120a (by decide +kernel)
-private def cert23_51 := witnessFinal50 23 4 0 650000 650064 4 104
-  0x14c2513084b84826105492c9860a6928b (by decide +kernel)
-private def cert23_52 := witnessFinal50 23 3 0 660000 660064 3 74
-  0x1a482a0c54530944828be930b (by decide +kernel)
-private def cert23_53 := witnessFinal50 23 2 0 670000 670001 2 46
-  0x57490502126130884 (by decide +kernel)
-private def cert23_54 := witnessFinal50 23 1 0 680000 680000 1 22
-  0xa6928984 (by decide +kernel)
-private def cert23_55 := witnessFinal50 23 0 0 690000 690000 1 21
-  0x7120a83 (by decide +kernel)
-private def chunks23 : List (Chunk 23) := [
-  cert23_0,
-  cert23_1,
-  cert23_2,
-  cert23_3,
-  cert23_4,
-  cert23_5,
-  cert23_6,
-  cert23_7,
-  cert23_8,
-  cert23_9,
-  cert23_10,
-  cert23_11,
-  cert23_12,
-  cert23_13,
-  cert23_14,
-  cert23_15,
-  cert23_16,
-  cert23_17,
-  cert23_18,
-  cert23_19,
-  cert23_20,
-  cert23_21,
-  cert23_22,
-  cert23_23,
-  cert23_24,
-  cert23_25,
-  cert23_26,
-  cert23_27,
-  cert23_28,
-  cert23_29,
-  cert23_30,
-  cert23_31,
-  cert23_32,
-  cert23_33,
-  cert23_34,
-  cert23_35,
-  cert23_36,
-  cert23_37,
-  cert23_38,
-  cert23_39,
-  cert23_40,
-  cert23_41,
-  cert23_42,
-  cert23_43,
-  cert23_44,
-  cert23_45,
-  cert23_46,
-  cert23_47,
-  cert23_48,
-  cert23_49,
-  cert23_50,
-  cert23_51,
-  cert23_52,
-  cert23_53,
-  cert23_54,
-  cert23_55]
-def rows23 := rowsFrom chunks23
 
-theorem good23 : ∀ r ∈ rows23, good 23 r = true := rowsFrom_good chunks23
+
+private def r23_0 : List (Chunk 23) := [
+  w 23 56 0 130653 130903 9 913 [],
+  w 23 55 0 140590 140902 12 1205 ["%xiHF9eKFI$os"],
+  w 23 54 0 150527 150902 16 1592 ["$)^2_OA[?%1(j}|Cp_JB"],
+  w 23 53 0 160464 160901 20 1977 ["9J%W`7e(4RD&L?Cw1R!42x?SkgBzm@{"]]
+
+private def r23_1 : List (Chunk 23) := [
+  w 23 52 0 170401 170901 25 2451 ["j9bF}z5j>+PksUyj&~Y@`Q7Ah#3Oi(,ax[L[F"],
+  w 23 51 0 180338 180900 30 2924 ["8bmkA^wU[Q_RpbLaOIaDNH[/dTh83{-$AdAj?%-D[[*2@rZen(=)R2"],
+  w 23 50 0 190275 190900 35 3381 ["(bN]>#.Yt+/p.2u>D%S(!ao/ck4kKB!k{z(K)D)2+d9'rQX#^5_9EJ#TAgB"],
+  w 23 49 0 200212 200899 40 3838 ["._Met.+huuggDd_-Y:=Vb;4E42yNIdOq[I1Kp[GsH@uHJ%@KN|=)-wi#Vh?7.|tw",")z4~KaXmyHh("]]
+
+private def r23_2 : List (Chunk 23) := [
+  w 23 48 0 210149 210899 45 4280 [")2]?__olz!ad=6C5r]0Rt3KUx5+G[y?!;]pyP&VibEL,N];Jt5t8_g^Cb@|rmq)>","#&}XUG&MIs#.{%xg6{PKm"],
+  w 23 47 0 220086 220898 50 4725 ["~/x#PwjW3+)l:{S9o4R;j<=F'I?/[z!@#.%3x9%[%jH1e{RM~UKK;nPx]'nr%h}:","#!$l}93#eED@5-(w=En4>9R!7B.p@27AU"],
+  w 23 46 0 230023 230898 55 5155 ["Qcj,}$1VO@Ww8h>L[lj6]x&Sa4,AC|{,*ZtG5u<yaj2y@!3]*4qUZV_Hrq}$Z9Gg","4#|+j.gdiN%(NnMUb>T0P4830TaO=c3)?Q(DuQWNL"],
+  w 23 45 0 240022 240897 59 5488 ["ss~~^~CfbG({EX@[]Xa/'{1]T!s-c2p#')0*lW4oDS>5e^g#THJE.k$}K#6fp=u{","-5EIehmFH#<zi6ovk+XKr}hmHUi)/dUXjgb5DYu(hxan!9MXA<H[j(5"]]
+
+private def r23_3 : List (Chunk 23) := [
+  w 23 44 0 250021 250897 63 5807 ["J~(.$Nu#NsyC0u%~s`Jykfa'(H#SS&='j^[3$u8|sGx3MS[Ra@@i+q,3<ul#oTG>","U0a^dE9+.UI+b$(!xJ]gz8xd4CK:>J6Iy4;W)(|%V3{[g^E`?2uC'9>5$M"],
+  w 23 43 0 260020 260896 66 6036 ["M:Y@m,ZEOc}!b=)McSUPQ%_I,baGO;!pu`J>_Txor!'_xQk*`-r%7G4ml4{MY<uR","b&jK't[gnr;:(|~G,=M%+'&L7%E%ERRHt#R?MnJl;q+59[$PIQBM1$8Ce|f~Bl~Y","#)Y'E(l"],
+  w 23 42 0 270019 270896 69 6250 ["Y0TveZI``Bc6Jjtp8*{3AbdRZdEZPFFdl}dL4Su}zbQdu9q?$$ptR>>&f_s0sb7.","+*k=$Zrh>T>]aM45>rh@{qDgU0@LBjgxf35;|w0AoDCbq!rYcW|g_kGCDWLjGpB*","$.65I185zF."],
+  w 23 41 0 280018 280833 71 6380 [")f,<a^0_gZO.I6]He<~Rm-08NKW6@;$BDUfT3iqP~VTYCJ1tt%AbjdO>z<S'z`?.","*O=t6fH&MDk{?NpI?hMoiKNmN/%8Kpgw1Y}e?arbb=A7}yxE5Q#:DnZQCI(vx=us","*EY'S5f#zi}<D+y"]]
+
+private def r23_4 : List (Chunk 23) := [
+  w 23 40 0 290017 290832 73 6496 ["x4g)mAs/y'rcd6D9yPKSkJu8L^5ON:U}SZYw<U(2JVSm5YV#)#Z.KR.~7t)LmVHB","NJE9zlq[&:@KhPIy19aAj6[-}t5&nSrJLHZ7FUZ}E=!6=u0{jY'f0}#FZJ3+dL&U","M3<XU_0J'nOGC}C[FP"],
+  w 23 39 0 300016 300832 75 6609 ["hd<Xq1u/?JWAcp$-P3^0k(xQ]TX#,W1K;$~25z>R*mP%&{@?mfw=,_!bGD!TB^pN","pK@A(tZ&R3KjtLg.Rpnwh-s/Ul7ArjVt%e/&tc#=jyfZ^3/8PAO(ZJnlQU%6Rwod","&-/5iP|lQv=dHxO;W?5O9w>g8l8'"],
+  w 23 38 0 310015 310769 76 6629 ["kNV$Pi#0xwMTQONak]p%5]QOiv?M6tZ/)qh+aIfvn0n!$vma/]0%08ER8PfWr?UF","]{;7kUf*Nji7@LT/`Pz(WWBVd78+kR*9M'Wy$ndQI;*xN8r#z@[45,JRGXFMRpn%","#hz%1leQunh>/[+x%K3BDwY<d"],
+  w 23 37 0 320014 320768 77 6652 ["p8AU_yp2|?'i}:hpbq-[RAtx=c6puU'W/sbU|>&-4y9^wBQS,HGS=eBl9>nzAjeB","v.{j])dQ:S-)#;YU7XlM1O`$/JufL0)VXLQdpDMj4a{?<M|i69iXmDY'dv2QIJO&","fays)S5}&JidMV4&HU5s_C<{.9w=9-~e"]]
+
+private def r23_5 : List (Chunk 23) := [
+  w 23 36 0 330013 330768 78 6655 [")p>.s~C5plwrXVjo,]XtNA=36$>[!ugdmH{lJhnkDfKwEI(2[,b@>>%l[],6=@<2","gJMxic`[-V.<[@+6/bvY@MG=H}{;E+zkAUzb5xa?&xn'bdX)MMWn@r:V0L5(jr?s","(U<^lx9h20*k,a}2Ygv#!IDj3Gz3QHr,b_(V[/"],
+  w 23 35 0 340012 340705 78 6589 ["~D%%Zy/Ko.O]6)b5BD;tb&!CXiAz1(hK{t$[H'7QebPx8FR4$_-G]FR{Jx~?BNs*","1_olB'}P],!<z]o@N9RyedUt97y>LnX^wo/6E/@!B_7Z_XREw'as7j!K'QOJ#rH{","(4-y):KtW?/<Sx@<h.7GvSPvI{Mh7-Ud<"],
+  w 23 34 0 350011 350704 78 6506 ["G@OZcH>om/01417}BZJ,{KfaJ9q|){XXD'3`H+Z1d[=X?KVtVYIqs?`0IMT8!&(B","x{C>mq81NL^Ws>&dq@vHL&K`fOf7tKi&{-3e0[Ou.CF*g&x[vK]l`$jl*mGvQc)5","#E4]ad|:J/H7!1wd(nXg*7*9k>?fz]c^_J@{n"],
+  w 23 33 0 360010 360704 78 6427 ["s/+9X`L@s_}kIeb7C}%]=:@g[Mo?5HA3FQ5/qYm^%mj48OH?nS5W7Y@`&=h6St::","Y$,BP%/mjZF]s//]ZDp+;)-G/Mjrux*@lbFl~K_`<b)ruCNfJHPl@pOp;}IsXWOg","<hF]zpeU3{d~Q5zf$2-_NQG/ex@kgREvc^yHv}S"]]
+
+private def r23_6 : List (Chunk 23) := [
+  w 23 32 0 370009 370641 77 6259 ["BY>Dd4JsWeKq,(#O/={v>D2elbP?L/~x(Dq360>>AcEJr>tKH3Jpx=4Q5Q(nL+J:","?Ob'1L=<1Js['u{`0oK#.d{S2tY<j#M<@8`/aQnm^?e>bi-_wR5'+l3dkTfXuc*9","$0u+a?wl1,{C}L,`78ep`y9:KOTV$Yn]FH"],
+  w 23 31 0 380008 380640 76 6102 ["2)<,!w@H&FJ2z[*VuK?7^DV[EC6gBLfFgDZ{dr~R+E3^~6+qHT[uno?O`97p_j5g","R6&Z=l[Z&]-0CP6Ab?a8t-7:UR&/7{Y=r#p,S>pcu&2^u|c+3O#1)ou`^uVFH*8.","dwCmGpRxL{@!Mr@(<|Oy^4Y/0e{WX?4?5L"],
+  w 23 30 0 390007 390640 75 5921 ["Hi&3O>%[H!Lo4vPLCk4M{gYz2,)y4-h9!dx<9;'?Yp6XbRs=`{bAXT7V.Bp9|e{*","9-`p|wZa8>m&@iAhyN-EMv0{-c|L+TZk9X+-/&Bw2woe`YSXF[.vZ|7E^Td@^GeU","$;NlH29hYeuP?O7QYo)|K|0c<w_Mpzi4_aJj:"],
+  w 23 29 0 400006 400577 73 5687 ["X4~UrpxFL!YS#iI?b/T>RBxV69eOz+%4QKiB-3ma2LwM[kSXG_@jV<nQDvJ1?^Yw","C2Qnygwa,e3-*ca9For>k'Y9SM*Pun]iw_aQLI67I'c3U5J*)knxMMFlzHd5ax>y","5.-ddCm}}nBLZw*{4MlE9-oebsP4"]]
+
+private def r23_7 : List (Chunk 23) := [
+  w 23 28 0 410005 410576 71 5432 [".c_Mi9F[)?js(tWB5U:}mT|wNH4_*F3:ODW~.tj9`-2Q5%].?E9NEWgCUs}/:o/>","4>R#8b^UtVd-@NheyR@H9/[+Cg88zey;:4=X[yiqJr/<f4N4n7d/=sEl4}^N]]+Q","kxG}4XyH0l/NDJixjXPCp~c%u^7t"],
+  w 23 27 0 420004 420576 69 5189 ["6`SZU4lP@nD?.8YUyi93H@xagp$Cua_0B;j^z!Bv4Zvs/RkRoc|u%*7a7oh&m6us","F,UP-bPb3cgVtE1QUH|k7>1|gG/0{Y7]&]t@Ye#%!+bq?XMYab8w4Cb<jq`Mr5+W","&[{X9IGa{1^KAY%LJL+7=0}j-_,l"],
+  w 23 26 0 430003 430513 66 4861 ["pS6u&XLTm0occbvy`|xbLSW5r.-b5$j!ru_CL{nmE}^Tp3G=j2ct*iw+x&+Av40B","D0F.e0cehfNzO?$,T%L2a8gcbDl1O01-Fn>L&cT9Y}A_5(>/M~aXGh6v-,=el5!m","%xMmZW`}>))LtHu7D_Y"],
+  w 23 25 0 440002 440512 63 4552 ["}L^YjHmK7zCBg'fN}IDC/kVT^#NI{Gy`3Ga66`!:+*zfSD_m'o%JytR7#cXgpl-g","=jsZ'Ak!@`>dIxl2S__Z;Z)T79HN>`^H3Q,yXCV8D#mO72s!)/oHXJU6|3{),$1%","88m)q8wkfTmq0ze/"]]
+
+private def r23_8 : List (Chunk 23) := [
+  w 23 24 0 450001 450512 60 4215 ["'*E=QQ#v--y|UDZqp,5bj+O!`[Q}F$/X^F=dmU&ZJPS6*>lOoB$]PM.6_.,u}1FJ","w<YdsWLJ0SKeu|x~1weZbTb.CyYb5,wc%t84Y0;;[N<Ip);StSK]Tm4&tlvv]JYq","5ABb/C1aKCsdqx~"],
+  w 23 23 0 460000 460449 56 3841 ["h(.+A=O.C[wjCWBI?LsuxEfaum3*f@Xc~-vPs)B_FxT)Kc@x*_A.uY}=uY5;MG]B","Ktto>Wr7T[F3c5wqbg-3fh,^^+i[sV=;RmjBF`rjJZXNw!QzePdKeasWrk[IK#b_","6M4"],
+  w 23 22 0 470000 470448 52 3442 ["%}*JUm;UqQ.6$+lo[;yJvPX}bfxT]l|a{|6C:vQjvIQBL9H,A:WGMn+<|gLry,};","0O,)Pca{$S'ja[@h<f3oTr[L);]u23>h+`1Zvcpt-Y<FG9l#.uES&TS)e%{s|IC*"],
+  w 23 21 0 480000 480448 48 3063 ["K1|V,H~;}U=jZSI>ALO'W$#4P1:H$qD!B~ntXn.EV@M'GO_zy;{zS0-ELF~z&GMp",")l%Iik'0patP2Oy,mF4g88,-*iendP7Jiwmuee,Y^kiD}WYf_^le[)K[J^H"]]
+
+private def r23_9 : List (Chunk 23) := [
+  w 23 20 0 490000 490385 44 2705 ["KJ3aL`'AVB+LIE+4W[ZYT9)ohi`?gt$~p5w]DU>h0K(UTY._|m~jIz<eVxsRN-P|","5lIt-o!5+fT(Hq>!q#2ktS9uBMr&9@8[fbhZn>NdgT1*<9>:"],
+  w 23 19 0 500000 500384 40 2370 ["iXix,98X*nB4oo)3vE@_0SPNXMFG2t/4/0?!:zqgD=.7bl2:z_)t)s1{xw$SJBhh","#mTKDeZwkJ;:=5T/Jv~saUL(m/q-<N5fy0Xl^n9P04G"],
+  w 23 18 0 510000 510384 37 2101 ["O).V8uZ`vVg*7Y&Gzclu3:O5c>xqqv;&%yk$S8Zs$XC%'`'VFjGQ!o@`EYl>46HK",":]>@xfcvL,BKEi~G8J)zuI+I5BCP*j-ho[w:cF?"],
+  w 23 17 0 520000 520321 33 1803 ["'dn)I9/k.4s$H%9*oszfA[96(s@$J(qnD]_N*2V:4aTgVM.(J&A}8D['qEcUtgT;","Y&n_6.8z#t@z?dxq`,bEwgC6X8yJ"]]
+
+private def r23_10 : List (Chunk 23) := [
+  w 23 16 0 530000 530320 30 1570 ["<,,OTJ:q{v(XW1Z1DpN$#?WHjrt|v'3Hb*Tp(QVl`im/xFU|=]NblNzC74Sqq^lG","J;L|Nm)9_>0~$*R9_6FE`=d"],
+  w 23 15 0 540000 540320 27 1353 ["Z!h.bN.,hO6P)9u,KXJZkX[5Gsqu$ZM^iNmYH=IKNICL$=fPzF^Luy*?Jlf{NJgC","(`NA!L=-=t&1jX1W5mc7"],
+  w 23 14 0 550000 550257 24 1149 [";*3)~9ylSrE!{yrp/:Nnl5SQ[.2eC[xyAtRz=}tk?ynjiqtz5&P9;-~rl:x&C}*t","%6?sS`Tm>?N"],
+  w 23 13 0 560000 560256 21 963 ["jgTQ9HVFS0#TODJ?n:dG'`3Y7Ran+C?c%/}5;n=xj6eaG5M7>Tiy|v&lG=`G9m]|","pwhB"]]
+
+private def r23_11 : List (Chunk 23) := [
+  w 23 12 0 570000 570256 19 828 ["/7%])qKXx>E,UXUM*a'`imp{ppI&tuFqZX5JwQ>QNb9q_fCj#8vNb0W1NS;R`9J#","#8"],
+  w 23 11 0 580000 580193 16 666 ["SpVeP@9q3@`YWG^[zMUS;>P}rU+im5}Bg(|J>#?kEHMt*Fw^lj>iqT?'"],
+  w 23 10 0 590000 590192 14 554 ["#.ru7WSHFW|O'/5U6/bliw?k5)~8L=s#^E.ga.+>O2V/Y=zN#1?"],
+  w 23 9 0 600000 600192 12 452 ["#o8v$^-%uV>Nbs~}`j:!r6/5nMFTNo?t)NAJ}}eiZ&IJS3+'"]]
+
+private def r23_12 : List (Chunk 23) := [
+  w 23 8 0 610000 610129 10 356 ["'oUe!7,1P^l[DM%HrBLmMW4LF]r`dU<Z`!mwuDT"],
+  w 23 7 0 620000 620128 8 272 [".;(-7(%v:elz4j`?[KK4'.500$AkhFy&]"],
+  w 23 6 0 630000 630128 7 224 ["#r.8!y.lzBusj=y_6HZ1`k!NgduL;zX"],
+  w 23 5 0 640000 640065 5 151 ["'L:D(TI|N}&>9hf@L{@xWP"]]
+
+private def r23_13 : List (Chunk 23) := [
+  w 23 4 0 650000 650064 4 114 ["$jibf,?c1u~5A{gf98"],
+  w 23 3 0 660000 660064 3 81 ["KoYH4Q!'{)vcyPE"],
+  w 23 2 0 670000 670001 2 50 ["oXjW|lNN^"],
+  w 23 1 0 680000 680000 1 24 ["I!x7J"]]
+
+private def r23_14 : List (Chunk 23) := [
+  w 23 0 0 690000 690000 1 23 ["#_DpY"]]
+private def chunks23:List (Chunk 23):=r23_0 ++ r23_1 ++ r23_2 ++ r23_3 ++ r23_4 ++ r23_5 ++ r23_6 ++ r23_7 ++ r23_8 ++ r23_9 ++ r23_10 ++ r23_11 ++ r23_12 ++ r23_13 ++ r23_14
+def rows23:=rowsFrom chunks23
+
+theorem good23 : ∀ r ∈ rows23,good 23 r=true:=rowsFrom_good chunks23
 
 theorem sorted23 : rows23.Pairwise (fun a b => a.tag < b.tag) :=
   (rowsFrom_sorted_aux chunks23 0 (by decide +kernel)).1
 
-theorem mass23 (i : Fin 56) :
-    bandCount 23 (i.val : ℤ) 55 14 ≤ (rows23.filter (fun r => decide (i.val ≤ r.index))).length := by
-  change _ ≤ ((rowsFrom chunks23).filter _).length
+theorem mass23 (i : Fin 57) :
+    bandCount 23 (i.val:ℤ) 56 14≤(rows23.filter (fun r => decide (i.val≤r.index))).length:=by
+  change _≤((rowsFrom chunks23).filter _).length
   rw [mass_eq]
-  have h : (List.range 56).all
-      (fun j => decide (bandCount 23 (j : ℤ) 55 14 ≤ mass j chunks23)) = true := by
+  have h : (List.range 57).all
+      (fun j => decide (bandCount 23 (j:ℤ) 56 14≤mass j chunks23))=true:=by
     decide +kernel
   exact of_decide_eq_true (List.all_eq_true.mp h i.val (List.mem_range.mpr i.isLt))
 
-theorem total23 : (rows23.map (price 23)).sum = 183388 :=
+theorem total23 : (rows23.map (price 23)).sum = 191338 :=
   (total_eq chunks23).trans (by decide +kernel)
 
-private def cert24_0 := witnessFinal50 24 55 0 170465 170902 20 1960
-  0x0 (by decide +kernel)
-private def cert24_1 := witnessFinal50 24 54 0 180402 180902 25 2411
-  0x811322644c81322e45c81622645c81322e40b113204c810200 (by decide +kernel)
-private def cert24_2 := witnessFinal50 24 53 0 190339 190901 30 2863
-  0x4c411192322240b0822322e268508161342e20850816104464508131042840a9142050815200 (by decide +kernel)
-private def cert24_3 := witnessFinal50 24 52 0 200276 200901 36 3403
-  0x30246208cc8988a1120584c41999171142440b0aa231042e288488151342e2a84881615428268488151342440a882122048812200 (by decide +kernel)
-private def cert24_4 := witnessFinal50 24 51 0 210213 210900 41 3839
-  0x9982331044622884889163042a4685c4c458a08a122058544d8b8a883171242440b0a883152342e24848815131062e24848825248448815144244129122048812200 (by decide +kernel)
-private def cert24_5 := witnessFinal50 24 50 0 220150 220900 47 4362
-  0xa048cc11988a13214424544c818a99a172142422848816152062a4620c5c50458a0921220944d0b92a141242440b12a15141362824848825134282484882510428248488141242440a892122048812200 (by decide +kernel)
-private def cert24_6 := witnessFinal50 24 49 0 230087 230899 52 4782
-  0x13504662220c8c85189154042a4640c5c4c858a10a12114244944c418a8a11b171211644448816251064a4685c50499111220944c418b8a8932222441a91524444448825144444488352444488222244111122048812200 (by decide +kernel)
-private def cert24_7 := witnessFinal50 24 48 0 240024 240899 58 5290
-  0x1c091889833321426628544d018a9988b173142442848451298225231062e2842c5048459111220d44d0b9288b17224444488163544a2826c5c891111220d44d0b9122222441a88224124444488151412644448825124444488222244111122048812200 (by decide +kernel)
-private def cert24_8 := witnessFinal50 24 47 0 250023 250898 62 5599
-  0x4c45419990883233142ac08548c44820b8998b1431424428944cc18a8a1188c17122164422888891352046a4685c5048460a1122222441a898831725126284488889108a494910a1122222441a8a21422444448845228448888910284488889102a44888891044448822224409102440 (by decide +kernel)
-private def cert24_9 := witnessFinal50 24 46 0 260022 260898 67 5996
-  0x22e088c84c19998a1513114082a6642c5d050918a255044a46222105c50c58a0910b22114444d44c818b9290b17221166448889108a208d4504d8b8a113322444488451342e2a44cc8911122114410a9209332244448825141266448889106a248c89111220c89111220c891112208889104444881220488 (by decide +kernel)
-private def cert24_10 := witnessFinal50 24 45 0 270021 270897 70 6200
-  0x4c8541999888315116062a46424105c4d058a20a2513113082a28464305c48c59110a221146a808d48c458b8a0910c14221166448889145131062e4a242305cc91912222442a9352442e648c8911122114510b99232244448855248448c89111220545089991222244129123224444883224444883224444882222441111220488 (by decide +kernel)
-private def cert24_11 := witnessFinal50 24 44 0 280020 280897 74 6493
-  0x85c111989831513214082a6662c5d451288a832523211082e2882c5048c59110a3513112082e4a62c5c88859908a32244514c11a8a0988c17142211828648c89111221544d0b9291314324644888910aa2089490498a192322444488351412628648c8911122114490a192322444488143246448889102a648c89111220c89111220c89111220888910444488 (by decide +kernel)
-private def cert24_12 := witnessFinal50 24 43 0 290019 290896 76 6599
-  0x13315062a42c0c548cc4820b89a8b2513213082a28466305c49059118a35114066a4642c5c5048c60a1110b32114645144c44420b928910c1732116844c8911122aa408d490458b8a193422644888910aa2885c54c9a113224444886522a4844d08991222244128a1134226448889106a44908991222244211322444488422644888910644888910644888910444488 (by decide +kernel)
-private def cert24_13 := witnessFinal50 24 42 0 300018 300896 79 6793
-  0x62e08544cc5020a11a088425215064a46622105c51458a0920b3513212082e4a82c5c88c59910a321148a2260cd4504c860b8a1110c1432116844c891155131162e4a442305d09211322444488651046a4824c5d0921132244448845141262e849089912222442a89224324844c891112205450c9a1132244448825324844c8911122108991222244211322444488322444488322444488 (by decide +kernel)
-private def cert24_14 := witnessFinal50 24 41 0 310017 310833 80 6807
-  0x1531606282682610944cc4c20a8a11a0c17125166a4280cd48cc58b8a0920c142231664429144c84420b928918c1732216842290899155112066a4842c5c50c8460a2124226448889155141162e4a64c51092113224444887524a4844c5109211322444488351422628849089912222442291214424844c89111220510921132244448815424844c8911122108991222244211322444488322444488 (by decide +kernel)
-private def cert24_15 := witnessFinal50 24 40 0 320016 320832 82 6908
-  0x5105419298a831514134120a2e28c2cd44cc4820b92a8b1722416646291484c19a8a0998c171422318286442d084521155132162e4a444305d0845a9142264488b2888833524121182e2884d48a1132244448855141262e2a84d48a11322444488651242a4864d48a113224444882514326a45089912222441a992522844c8911122148a11322444488522844c8911122108991222244211322444488 (by decide +kernel)
-private def cert24_16 := witnessFinal50 24 39 0 330015 330832 83 6909
-  0x2462e0c545105020c3088335314064a2826822145c5049460a1120b4513311082e4a248305cc8c5a110a42114aa4240cd490c58b8a1910c1442116a450899155142162e4a642305d4929142264488891751146a4844c5d492914226448889108a2844c5d49291422644888910aa44891092914226448889102a2884d48a1132244448825424a4508991222244291422644888910a4508991222244211322444488 (by decide +kernel)
-private def cert24_17 := witnessFinal50 24 38 0 340014 340769 84 6920
-  0x15123160848a260c945104c20c0ab0b17225168a6260cd4504d060b8a1120c143231684429544cc58b929118c1742216a422948a1165211066a48244305c5108460a292522844c89115514121182e4a84c5149291422644888910ea2489490c98a292522844c89111220d450c98a292522844c8911122114c90a292522844c8911122051492914226448889102aa4948a11322444488522844c8911122148a11322444488 (by decide +kernel)
-private def cert24_18 := witnessFinal50 24 37 0 350013 350768 84 6836
-  0x1412415084a2462a10549144820b8a0930c3514412082e4a24a305cc905a118a55312066a4882c5c50c8c60a2110b52114a455450c58b929910c1752116c4548a11322ea428d49088460b8a293622a45089912222455450898b8aa93622a4508991222244329121524426c4548a113224444882514426c4548a1132244448835424c4548a11322444488622a4508991222244311522844c8911122148a11322444488 (by decide +kernel)
-private def cert24_19 := witnessFinal50 24 36 0 360012 360768 85 6834
-  0x1118b831514124140a3024c2210d448c502129228884171422518286482d145104420b929120c1742316a4429484532988833524123182e2884430514845b11522845545048860b92a108c17624c4548a11322445d448459a9219317624c4548a1132244448845143262ec4988a91422644888910aa6489149311522844c89111220545149b11522844c891112209549311522844c8911122188a91422644888910c4548a11322444488 (by decide +kernel)
-private def cert24_20 := witnessFinal50 24 35 0 370011 370705 84 6667
-  0x1522316084824a261094504904c28c0a8930c17325168a2462610d491458b8a1920c1442316a44295451058b929918c1752216c422988a91753146a48444305c5148460a312622a45089915514221182e4aa4c5189311522844c8911122ea4489491098a312622a45089912222441a8a21314624c4548a113224444884542428c4988a9142264488891028c4988a914226448889102ac4988a91422644888910c4548a11322444488 (by decide +kernel)
-private def cert24_21 := witnessFinal50 24 34 0 380010 380704 84 6584
-  0x1422415084a4462a1054904944828b8a1130c3514124120a2e4a44a305d0905a918a5512312086a48248305c5108c60a2910b62114c45545048c60b92a110c1762116e4588a91422ea2442cd490c8460b8a313722c4548a113224455450c98b8ab13722c4548a11322444488653242a48a4dc8b11522844c89111220945149b91622a45089912222441aa92722c4548a11322444488722c4548a11322444488722c4548a11322444488 (by decide +kernel)
-private def cert24_22 := witnessFinal50 24 33 0 390009 390704 83 6408
-  0x6462e0c54508905028c11308843522314084a4824a22145c50c9460a2120b4514124110a2e4a648305d48c5b110a62114ca2462210d49088c60b8a2910c1462116e4588a915514222182e4aa42305dc9391622a450899175221166a4884c5dc9391622a45089912222451451098bb92722c4548a113224444885542448c49c8b11522844c89111220545189b91622a450899122224412b12722c4548a11322444488722c4548a11322444488 (by decide +kernel)
-private def cert24_23 := witnessFinal50 24 32 0 400008 400641 82 6245
-  0x54c8c5821211289842514224130a302a44c305d0945a291189843524125182e28848305148c5b110a5514124182e4a846305d8885b908a722c45d448c59a921910c17146211828e49c8b115228455450c8460b92b1314724e4588a9142264488ba992252452628e49c8b11522844c89111220d451498a392722c4548a113224444884552428e49c8b11522844c8911122051c9391622a45089912222440ab92722c4548a11322444488 (by decide +kernel)
-private def cert24_24 := witnessFinal50 24 31 0 410007 410640 80 5996
-  0x1432415084a6462a1054908944828b8a1930c3514224120a2e4a64a305d4905b118a5522312086a48448305c5148c60a3110b72114e45545088c60b92a910c1772117045c8b11522ea4442cd49108460b8a393822e4588a914226455451098b8ab93822e4588a9142264488891654242a48c4e08b91622a4508991222244128a313822e4588a914226448889106ac4a08b91622a4508991222244411722c4548a11322444488 (by decide +kernel)
-private def cert24_25 := witnessFinal50 24 30 0 420006 420640 79 5824
-  0x8462e0c5450c905028c19308843532314084a4844a22145c5109460a2920b4514224110a2e4a848305d88c5b910a72114ca4462210d490c8c60b8a3110c1472117045c8b115514322182e4ac42305e09411722c4548a1175321166a48a4c5e09411722c4548a113224451451498bc12822e4588a91422644888910aaa4891c9411722c4548a113224444881514727045c8b11522844c8911122095c9411722c4548a11322444488 (by decide +kernel)
-private def cert24_26 := witnessFinal50 24 29 0 430005 430577 76 5503
-  0x1542316084864a26109450c904c28c0a9930c17525168a6462610d49089460b8a2920c1462316e4429545089060b92a918c17722170422a08b9175223166a48844305c51c8460a412822e4588a915514421182e4ae4c5209411722c4548a11322ea8489491898a412822e4588a914226448889135146262904a08b91622a450899122224422b1214825045c8b11522844c891112205209411722c4548a11322444488 (by decide +kernel)
-private def cert24_27 := witnessFinal50 24 28 0 440004 440576 74 5262
-  0x5109054212a118a841524325120a2e2884c30d450c904828b92a128c1762416e462954c8c4821a921920c17146231828e442e08454115514323182e4ac44305e0845c91822e4588ba9910b3524521182e2904e48c11722c4548a1155145262e2b04e48c11722c4548a1132244595490a92393923045c8b11522844c891112209451c9c91822e4588a914226448889106ae4a48c11722c4548a11322444488 (by decide +kernel)
-private def cert24_28 := witnessFinal50 24 27 0 450003 450576 71 4936
-  0xa462e0c54510905028c21308843542314084a4864a22145c5149460a3120b4514324110a2e4aa48305dc8c5c110a82114ca6462210d49108c60b8a3910c148211724608b915514422182e4ae42305e49491822e4588a9175421166a48c4c5e49491822e4588a914226451451898bc92923045c8b11522844c8911122aac489209491822e4588a914226448889102a2904e48c11722c4548a11322444488 (by decide +kernel)
-private def cert24_29 := witnessFinal50 24 26 0 460002 460513 68 4627
-  0x1552316084884a261094510904c28c0aa130c17625168a8462610d490c9460b8a3120c1472317044295450c9060b92b118c17822172422a48c1175323166a48a44305c5208460a492923045c8b115514521182e4b04c5249491822e4588a91422eaa489491c98a492923045c8b11522844c891135147262924a48c11722c4548a11322444488457242924a48c11722c4548a11322444488 (by decide +kernel)
-private def cert24_30 := witnessFinal50 24 25 0 470001 470512 64 4240
-  0x1452415084aa462a1054910944828b8a2930c3514424120a2e4aa4a305dc905c118a5542312086a48848305c51c8c60a4110b92115245545108c60b92b910c179211744648c11722ea8442cd49188460b8a493a2324608b91622a455451898b8ac93a2324608b91622a4508991656242a4904e88c91822e4588a9142264488891251482744648c11722c4548a11322444488 (by decide +kernel)
-private def cert24_31 := witnessFinal50 24 24 0 480000 480512 61 3926
-  0x3118b831514524140a30a4c2210d548c5021292212888517146251828e482d14510904428b92b120c17823172442a484532a1188843524523182e2904430524845d11923045545148860b92c108c17a2544648c11722c45d548459a9239317a2544648c11722c4548a1145147262f44a88c91822e4588a9142264488aab922492544648c11722c4548a11322444488 (by decide +kernel)
-private def cert24_32 := witnessFinal50 24 23 0 490000 490449 56 3479
-  0x15623160848a4a261094514904c28c0aa930c17725168aa462610d49109460b8a3920c148231724429545109060b92b918c17922174422a88c9175423166a48c44305c5248460a512a2324608b915514621182e4b24c5289511923045c8b11522eac489492098a512a2324608b91622a450899135148262944a88c91822e4588a9142264488891 (by decide +kernel)
-private def cert24_33 := witnessFinal50 24 22 0 500000 500448 52 3108
-  0x1462415084ac462a1054914944828b8a3130c3514524120a2e4ac4a305e0905c918a5552312086a48a48305c5208c60a4910ba2115445545148c60b92c110c17a211764688c91822eaa442cd491c8460b8a513b2344648c11722c455451c98b8ad13b2344648c11722c4548a11657242a4924ec8d11923045c8b11522844c8911 (by decide +kernel)
-private def cert24_34 := witnessFinal50 24 21 0 510000 510448 48 2759
-  0x72317062a28c482814618984421ab118a042524525110a2e28e4a30520905a28a29208851725724182f2462e88855108a6552311086a48c46305c5248860a5108bb2344648aa8a3110c1725921182f64ac8d11923045c8bab108b35248262f64ac8d11923045c8b115228a2904c5ec9591a2324608b91622a4508991 (by decide +kernel)
-private def cert24_35 := witnessFinal50 24 20 0 520000 520385 44 2427
-  0x15723160848c4a261094518904c28c0ab130c17825168ac462610d49149460b8a4120c149231744429545149060b92c118c17a22176422ac8d1175523166a48e44305c5288460a592b2344648c115514721182e4b44c52c9591a2324608b91622eae489492498a592b2344648c11722c4548a11 (by decide +kernel)
-private def cert24_36 := witnessFinal50 24 19 0 530000 530384 40 2120
-  0x1472415084ae462a1054918944828b8a3930c3514624120a2e4ae4a305e4905d118a5562312086a48c48305c5248c60a5110bb2115645545188c60b92c910c17b2117846c8d11922eac442cd49208460b8a593c2364688c91822e455452098b8ad93c2364688c91822e4588a91 (by decide +kernel)
-private def cert24_37 := witnessFinal50 24 18 0 540000 540384 37 1874
-  0x4118b831514724140a30e4c2210d5c8c50212923128885171482518292482d14518904428b92c120c17a23176442ac84532b1188843524723182e294443052c845e11b234455451c8860b92d108c17c25846c8d11923045d5c8459a9249317c25846c8d11923045c8b11 (by decide +kernel)
-private def cert24_38 := witnessFinal50 24 17 0 550000 550321 33 1602
-  0xac118b042472513084a28e4826146055c9860bc928b4572313086a48c4a305c5249060a5118bb2214aa28c48305c9648c60bd910bc2115846c8bab118b3524822182e29642305309611b2344648aa8a4108c1725b262984b08d91a2324608b91 (by decide +kernel)
-private def cert24_39 := witnessFinal50 24 16 0 560000 560320 30 1390
-  0x5209054212c118a841524725120a2e2904c30d451c904828b92c128c17a24176462955c8c4821a923920c1714a2318296442f08456115514723182e4b444305f0845e91c2364688bab910b3524921182e2984f48e11b2344648c11 (by decide +kernel)
-private def cert24_40 := witnessFinal50 24 15 0 570000 570320 27 1195
-  0x12462e0c54520905028c41308843582314084a48e4a22145c5249460a5120b4514724110a2e4b248305ec8c5e110ac2114cae462210d49208c60b8a5910c14c2117a4708d915514822182e4b642305f49691c2364688c91 (by decide +kernel)
-private def cert24_41 := witnessFinal50 24 14 0 580000 580257 24 1010
-  0x1592316084904a261094520904c28c0ac130c17a25168b0462610d491c9460b8a5120c14b2317844295451c9060b92d118c17c2217a422b48e1175723166a49244305c5308460a692d23846c8d11 (by decide +kernel)
-private def cert24_42 := witnessFinal50 24 13 0 590000 590256 21 844
-  0xa4920a842592315082a4904a24145c5249861a8a41209051725925182f6482f08c52ac1189043524824182e2964630530885e908ad22aa29046305c96c8860be908be23a4708d91 (by decide +kernel)
-private def cert24_43 := witnessFinal50 24 12 0 600000 600256 19 724
-  0x14462e0c54524905028c49308843592314084a4904a22145c5289460a5920b4514824110a2e4b448305f08c5e910ad2114cb0462210d49248c60b8a6110c14d2117c4748e11 (by decide +kernel)
-private def cert24_44 := witnessFinal50 24 11 0 610000 610193 16 580
-  0x15a2316084924a261094524904c28c0ac930c17b25168b2462610d49209460b8a5920c14c2317a4429545209060b92d918c17d2217c422b88e91 (by decide +kernel)
-private def cert24_45 := witnessFinal50 24 10 0 620000 620192 14 481
-  0x5289054212d118a841524925120a2e2944c30d4524904828b92d128c17c2417a46295648c4821a924920c1714c231829a442f8845711 (by decide +kernel)
-private def cert24_46 := witnessFinal50 24 9 0 630000 630192 12 392
-  0xb2317062a294482814628984421ad118a042524925110a2e2964a30530905a28a49208851725b24182fa462f88857108a (by decide +kernel)
-private def cert24_47 := witnessFinal50 24 8 0 640000 640129 10 308
-  0x56c8c5821251289842514a24130a302b44c305f0945a2d1189843524925182e29848305348c5f110a (by decide +kernel)
-private def cert24_48 := witnessFinal50 24 7 0 650000 650128 8 234
-  0x14b2415084b6462a1054928944828b8a5930c3514a24120a2e4b64a305f4905f118a (by decide +kernel)
-private def cert24_49 := witnessFinal50 24 6 0 660000 660128 7 193
-  0x18462e0c5452c905028c593088435b2314084a4944a22145c5309460a6920b (by decide +kernel)
-private def cert24_50 := witnessFinal50 24 5 0 670000 670065 5 130
-  0xae118b0424b2513084a2964826146056c9860be928b (by decide +kernel)
-private def cert24_51 := witnessFinal50 24 4 0 680000 680064 4 98
-  0x14c2415084b8462a105492c944828b8a6130c (by decide +kernel)
-private def cert24_52 := witnessFinal50 24 3 0 690000 690064 3 70
-  0x1a462e0c54530905028c6130884 (by decide +kernel)
-private def cert24_53 := witnessFinal50 24 2 0 700000 700001 2 44
-  0x5748c582126128984 (by decide +kernel)
-private def cert24_54 := witnessFinal50 24 1 0 710000 710000 1 21
-  0xa6920a84 (by decide +kernel)
-private def cert24_55 := witnessFinal50 24 0 0 720000 720000 1 20
-  0x7118b83 (by decide +kernel)
-private def chunks24 : List (Chunk 24) := [
-  cert24_0,
-  cert24_1,
-  cert24_2,
-  cert24_3,
-  cert24_4,
-  cert24_5,
-  cert24_6,
-  cert24_7,
-  cert24_8,
-  cert24_9,
-  cert24_10,
-  cert24_11,
-  cert24_12,
-  cert24_13,
-  cert24_14,
-  cert24_15,
-  cert24_16,
-  cert24_17,
-  cert24_18,
-  cert24_19,
-  cert24_20,
-  cert24_21,
-  cert24_22,
-  cert24_23,
-  cert24_24,
-  cert24_25,
-  cert24_26,
-  cert24_27,
-  cert24_28,
-  cert24_29,
-  cert24_30,
-  cert24_31,
-  cert24_32,
-  cert24_33,
-  cert24_34,
-  cert24_35,
-  cert24_36,
-  cert24_37,
-  cert24_38,
-  cert24_39,
-  cert24_40,
-  cert24_41,
-  cert24_42,
-  cert24_43,
-  cert24_44,
-  cert24_45,
-  cert24_46,
-  cert24_47,
-  cert24_48,
-  cert24_49,
-  cert24_50,
-  cert24_51,
-  cert24_52,
-  cert24_53,
-  cert24_54,
-  cert24_55]
-def rows24 := rowsFrom chunks24
 
-theorem good24 : ∀ r ∈ rows24, good 24 r = true := rowsFrom_good chunks24
+
+private def r24_0 : List (Chunk 24) := [
+  w 24 56 0 160528 160903 16 1618 [],
+  w 24 55 0 170465 170902 20 1995 ["&^NY[/KMa,M=/YiYh`']Yb:R"],
+  w 24 54 0 180402 180902 25 2469 [".oW}y>&3msD%ffHFd}*L#jT4(IJU8(xc{|GF"],
+  w 24 53 0 190339 190901 30 2939 ["$yN%S,eg?cs+&oOY>%Io5oo&AMhjGSj}A8hY#10or7!Nd@9KtPa:"]]
+
+private def r24_1 : List (Chunk 24) := [
+  w 24 52 0 200276 200901 36 3498 ["GaJIJ#<K%r2m/VKM_|+nz&#xKWuuYtnNcHG#o=Y2aossS}k=ry9I=YZ;%C&_=07w","#"],
+  w 24 51 0 210213 210900 41 3950 ["/Bcg~r9WL*iB6K4e7rgi*|LUmO|[71.0A4v57o8l%.sIsVF`-g~,j^{v{NTjlGpg","#:$e3~JbT{7II3A>aw:"],
+  w 24 50 0 220150 220900 47 4491 ["](t;uHW5tvCQbm*L5Bhc9Ls[`G3J>5Hz&(aQiTRe2AA5ERjYI+<J8VT<vHL/_~Wg","2HK{@goR[/T0}I}[M``iGwTQ"],
+  w 24 49 0 230087 230899 52 4928 ["Jj`LYo0e`r{@yH>047sMEr8kBWLGFke29-I02G]f[Q78wJmsR-8<2988r{GP;|uZ","=!~}'z:IqwCz9+[hoj0aN21!M:S'wz4>F>~p3SuZK>v"]]
+
+private def r24_2 : List (Chunk 24) := [
+  w 24 48 0 240024 240899 58 5453 ["[9e6*md3P%:d?j,wQ};sy&:XTR*.rIEs=q!`L)J<ep0dM4z{B,(|Q+=[AG6F>1ss","%QgY!Vzb4L6m.OEK.uz~r3prPxT5D'}]H!Xt#rfRqR~!DDMj8]=6PLXa"],
+  w 24 47 0 250023 250898 62 5776 ["1)xeSv&^71F+EaZ[W*Nm*jdH{ykTrfI7^4FWS|{SpUDZ9(>gCwNPx[~{Jl`^?`jN","hsr+)}X+iV3@ZR3Q|W<,|Z!uoE'wpN47CgR3Xuq_Y648@kg`GDgoi;cyxYjVBv11","$5n<i"],
+  w 24 46 0 260022 260898 67 6187 ["v>'V+a<vn{^x77NH0*[>fsDn`u*o&TC''}P'7>ztrx1nc)ngx)@U5S*ZzwOw42Yg","G|H1VN%?gY*'y71aQi#Rs5GaEe`1{Ay69197[jen8O=u([UsN$n;fE~DM)p7bDC^","$<+Asi&)LLgyEDV:"],
+  w 24 45 0 270021 270897 70 6402 ["lv]J1'pH%hzzZe(]s<'zzk0StjkBR<j{6_eP1KR<h~{4YNRk@RXWpwoARqfiwDX!","_J%#]+7o^4.gQV!^16y<<].ionfscE]Be~Hh2Yb]a'7<cb]l?E^b.lGLs'HM_12X","ern>^Dc]:^vS5NW3f$}VXI7;;+u!hr"]]
+
+private def r24_3 : List (Chunk 24) := [
+  w 24 44 0 280020 280897 74 6706 ["RTiy!ywDx5#6hOZ*m*%F|eXUYv;X:f~4IA'w}2M<uFPF'wJ?L.g(@e:/pT)AhLqB","]Nt+U8@v}dKtG;FhUNO]h,Y|TM`ti^hx$0>)bgq^=eidwryD0)x/58G?Mi[c8M3/","$Q_/ST7AkwM8hVX(/V)?I8b8~Rfj3SQV<`"],
+  w 24 43 0 290019 290896 76 6820 ["&>(q^|l_6[V,Gv:?uk$4qNUBVZj0sK)M8qqzyfs`>WR5ckeyti*tpQP_:Z*4/IU&","yR-7~=4z9$+mVq2doyBk]b5*LE'E<D/w|=/-C0+*;K(`zU2KFaO5fNIE/0*(^nJk","<b3c1H:MR/Qm5xr/Gyy#Q8PiI)ahN@Qek$QPa5G|+&mC"],
+  w 24 42 0 300018 300896 79 7022 ["|LHZKsV?h8ZP1|pB.TY[54!us}ChQ41.-u9^#_1nb9A{~zZfB{bUy]fcJV)h?lng","j^Vw'qr,g;9LS;T>)Rek-0HfZE_HAe5eA~fIR>dKIC_88uWtt.y)Q<XIEWk=yUNQ","%VYx:&3kZb|O}a/iqU_l;p&yzdZ||p6l?kaPY]^LonCrDXo6d%U"],
+  w 24 41 0 310017 310833 80 7041 ["u201Lvwda2r9/B;yjVy.i5gs4oa>=i_>dEx8&ZSEe*VD9-R/w2C'sXVM71y+v3|_","8IF$7Q3iRjKo%DX2)eT=/s|?I1SdS;L1a;/vz!]$4Q'%;!J=jmnnUKlr/X*XK954","jxr3|VJ^K^jqTS/y{K.T,(]S[rN`GH4rxm^:^lMtgj`R52aB<Azo("]]
+
+private def r24_4 : List (Chunk 24) := [
+  w 24 40 0 320016 320832 82 7148 ["Z1Vm_SHD]G5qutSCvL)&BFQ#-2V9hy%|R5$bdM8y{Aryqci:Me02K!nE]-(D^|/.","Q6xQ1E-NYb|]>rF/nnt(TcTc>CE-qDKn$UO3=kfk{#Gm0BKt=teIhinm|Aeuw#$B","&$CYwM~U82BPxmxC:6<3pWt>817U},zk(+b`7%?+'1>eV3nXD7;Q5jq?D"],
+  w 24 39 0 330015 330832 83 7151 [")Hq>d@UA=}_|q#XEKtdp*Cs{'X5TcD/I5`0x.ZwJ's)DCy'hz{xcK=<W-!3cN;~g","Z61F$tdNA}TAN1y&kl]O};2<ec|%.J9536#rftJdqc5uYP(b3JfXf'u/GDeEhb`#","VMI]65!g5>a{6)jRD:s#Gfk#QuWB_E&^Qmd!?^eb&}^T$Nx(c*6Ka!Oa~/!?8b'"],
+  w 24 38 0 340014 340769 84 7167 ["OJ%Uj@LQI|AW3Hk+YZI@f=|a8$b>?%]!FI9:beXU:-6]KlM%PWG>[,$eGnR'8=DB","#b&&5m<rvP-)%WfL{PDL^c'EiB9UK2V+CD$pbeFRN!vb0cy-(b1lDwxy.ey':;6r","8NzTk?5Y?*E8zx9@#:=o4Y%|!$xd.Cy(fxzrn8+Pd]8:^/!kY3U}7qpRwsi="],
+  w 24 37 0 350013 350768 84 7083 ["qb_77J:5asX&6r!;AbN&>20=XcU5msG;a7ht;M+4gz=Un|?4#Bk:&d<4IE|7=vq2","<PQ<wR][w<>oVc4&E)A23,$|ga5{TDF9;qyUhyU%W-(p0.Bi/YSB_,(k<*l1w)xf","f;K<TvW0IW8C[:S4,@v.RJ&X(oM*D#p+2dbXOZM3U9DT`]e{B9(^Y_'C`-G:mP47","#2*)"]]
+
+private def r24_5 : List (Chunk 24) := [
+  w 24 36 0 360012 360768 85 7082 ["3}oc9xcGj>B#?5oVvbQ2b;+%'tMC/cyc@?!Dg@O}~7r7i#Awr$@cm7D`R7-6Pzzw","Nimytz~8MdhV`F0=6jvCWi|wwkyi<<WQU^.?Fl+)PNN(OtkAQ-l=Vw|%Q*]!'o7o","BY6'KPC~}rmRmu-N2gx3BPpoU(V>DJ^E^T|`TsB;wBMeutT`)N[k+sowu)FPZ>8s","N]KbQ"],
+  w 24 35 0 370011 370705 84 6915 ["WKu^ph&3kv^w_`jt#m*v~IxQOGVnJ$$+)8d!*RZj!OQ8kc{a}1mOuv.hrmHa=)7o","T~H$A~xZS@Ho:gHAep;dS_!(}{j^oh'^C)2vP-%g739<%C/5rt`X<#kJ}rk+e0PO","TjzW~$)6+kLN2or'nqW!BH$({>cx?pjz}K3vTDLKaiXoU8y]h(1oJ=t2XSjOfNDx","+W5($0"],
+  w 24 34 0 380010 380704 84 6831 ["EhA-7.p$e65yMZgXKKq07gR7T^HRXCIeTFqi%aVK4f^]Ha4>yp_`AXLI{c:dhkw:","F_I1^n:v<FaGIOB^lqE2n(k7&P35C_Ff<%mqB3Pq]bT81TmGQPeo?q8%h*dj2ig/","*r{;or[N(E5Ygc.Kr+$+8A7xf8(INI={Xl,;[-;Yf_P$jRGTx9mh2jbc8`Dx-iG7","i_@ng38L"],
+  w 24 33 0 390009 390704 83 6650 ["lWUs*VVwa:&R<w}_;?LPi)HA$vC.rV'QLt21BrJLV6mzw1!8,ABMs`&xLDnWZX!J","o&,,n{/~YF.k~TivZ^uu{L0_4$REUt_E7|Fw$=rl9.7poxZWD7-LAh%$hwD?U0+!","k1gC.&&`Pnt0NI_b(7`uAD|04pc<+yR<~4h5CS}e@2D%9I'YMaaTl]<`lkhJH'(U","8&.R!Z*p"]]
+
+private def r24_6 : List (Chunk 24) := [
+  w 24 32 0 400008 400641 82 6487 ["'U1MZkxwAbcSpX<.lFX-e!.Est:!1U1aAs7b}S~iJM2;72Ramwg'316*J83$_q?_","J#NfF2+`sqjLF71c$:uzMqH&WS3]Q'>1>PKXrY1Ud'@F0N:]%Qw)<1#1M.d+V)>P","@(K9A9!KrHt,B'tJI4fK:Uzy&pV9phQ.i_WWih/A{'#*a'6>KE+uoIQGa|8Rrv'S","&{W="],
+  w 24 31 0 410007 410640 80 6231 ["&TcffPQ&u*373'U3XBT+3#9?+{%TRfdVA)j/IthR0GTWKwH/p-[QUX8tkT%T|uBJ","5q`dtH{G(d8j1Kq}kYs.ef#h{t'EM2(7GrJ'xL`.M?CZ)N@<NV18Lc:+fL#LN(`B",".syLQj9!1(lF8m<y5|XP~/[TQT0nBo9Plly&Fp''<[j@lwP8z63tTx44@2DS7zl0","4w25"],
+  w 24 30 0 420006 420640 79 6054 ["mo,_[QRLzuHL]Hl4wScy$kJ1u$[r0Q^Yok>zz8L^mW<1FoQ6h}9U2W!^?xDyp96J","?<z3lV#W;d-SQ@'fWp4*acO2xjYD6_)]%CjWIfz`5g?45gBJ|@buy@Wk(D<S4/Gi","}6+]4#?T=-o-/4BsJx+wJlZZV+}=ym+,iu6HWML*n!.;U<@`G!@Om78o:z*wtpRb","$kJ"],
+  w 24 29 0 430005 430577 76 5727 ["{|$:6Mp0H))d]3/9+p,ic[>:;9e,0b_3=r`5JGm3;#$}_wQR--6~#Cl_1?*wP)9w","t;0/3$]w0$y<D!q1k2M%JbrCyQMvq{j65%a_EgN&-puo-4/+OUzd'`cs6&78$^yU","8bC=<Y#a*hXsj.N?RK<;Oo)m)SIAUizhD%w8*<}:M]04SLU<Rmy{rx*GOc8D"]]
+
+private def r24_7 : List (Chunk 24) := [
+  w 24 28 0 440004 440576 74 5479 ["D>'IlNv_qtiZ7vV+RS'&iCW2+{Pwv}Q|/h0[suAKVdM81hVc5&OR.)roRCd7vSw*","{n2YLm@ATU+j^NCr#1{0ERr>))!~;aV4i-h!u(VR~W4bmw^c1O4{mk3>dQ6(&#nL","A)MFN)6$|+=FA?7^085z[x?gkwBTE_tl{jAv.UW{6:{gB/z]P'y3u!V(*6^"],
+  w 24 27 0 450003 450576 71 5142 ["Z}a-1N6.br6&b?}1z_k['BA3:wveTpEiL&_KMTxW0nHiR<W~PrA3<ChlE6:}YI$B","{EJcr:rXEsp7xm`L^^d.Q4&37!!pxIkAFE3rj18?44xwtYUS{YQpmDRDh<z7X5yS","#&o!)x7rD@^-<YbF%+tb'YudE(T5<V%83)iu.U1b<zL-,%NVajQY0(X"],
+  w 24 26 0 460002 460513 68 4827 ["Yl3uY%Q577:h8`UL{nVr1']H9!BKRPdcX}TD3*4g*D51JtfA@&9oea!gl/:{8zj6","@{#CPK,V[lP<Ydj/>!l'zq8+_AfM>%xIqiaED2JtGc~1a!d:j2ZZswrD=wJkiCoZ","(wb@{uXYjC.!%dZ^DiTZ5tVla)$UlyZe;NwpjLPQ?Yynu>;}"],
+  w 24 25 0 470001 470512 64 4427 ["un^wNxtFR'3kz3<:V[%}J&fl/&#d-jW1`hBK*$93|.pA^Q<N6.J1NFGTm(mfP6,R","m[/z<tx)ySF0RI;m3hOzP/Kar8b%LrUa0^YU&D|1[;9hHV?Is}<L!sjF41PSCTao","#hzH85_G`ver~%s]Xs@=g;%]zu#6K>y#zuRfqeR6M1fL"]]
+
+private def r24_8 : List (Chunk 24) := [
+  w 24 24 0 480000 480512 61 4102 ["&V46#?}2n]p8iUDSwd^;s]6(6J!^v?yGma#;<2[dEmvrNR}2v5e61XmGuNMSP+16","`9Xq]OcSqbVcXiSw_7*KPdN`O0K_.?1Lvw7BSozO9g^w^-'B~A2ORyP#EPr]N5(.","$Av{<fq(V#*getB2Qvola%;S7T44HA,VI;bg^A"],
+  w 24 23 0 490000 490449 56 3643 ["xIbXU-Gq<J}Rj=B{xn0<<TW(+>bj!mN09Y[-ZIK9,HFsqa^!Ll]q.2U6P1=XtTBS","#4^8rD|avN{56g4j?9*NC+z~5H;=WY'jThr9eYt%TUc10]%p3RhqJK>f!<X)=BIs","(bmZ+&d-cUeu3u/Nma?^23KIFx6Zk"],
+  w 24 22 0 500000 500448 52 3259 ["MFZRbmXm]LjJN{fBr0bj+:guQz4aQcTrBzBCht0B{KK8_9/)4{Vkhp,vxKxn(:v`","6x'8p;K+F6>(dnBf{R95@<.}}ETl9rtU@@5]37B<HT<JA'q:L:GzO5i%|hwU'Nq^","67J#FQ6N]j>y$z67vFG<yL"],
+  w 24 21 0 510000 510448 48 2896 ["0Oeo.uq>^tE/'c|j:6MNC[}noYgrK/!Qh0jsoHGOp=Si.(uNhRzGXvdMQDybSoq+","d>D-;<xKa.TxKG{->7z0;@pBDHLiTahy`=Ap3gdl)f?*2ZrHRnZ4<_C9{{!6P4W<","#G7rAb,;[Pwq{lZ"]]
+
+private def r24_9 : List (Chunk 24) := [
+  w 24 20 0 520000 520385 44 2555 ["0!$)?J,`<8/4.u|mF+QDhVx+eF$3~Fg/$)k=hY76vjBWqF21Gi)?^!Xi<spag)&S","!<`nLw;+5.4MoV9lozlrw$<:eb@`TyenJ^,.E8ux,f:eF}&Ry_=KN~&8aVciS':F","=^<Qw7"],
+  w 24 19 0 530000 530384 40 2235 ["_^.`v[g-6gRx/0U'`@':d}n[.{iSD[Y4C,X(7_*JM^==ob~5E.&C2ZA`Ed9Jw;$l","vVkp0MX]sKdP?T_o5n2(F,Qkl@[Nq3~X*g8*YWOiJ~HgB0V]&):TDZ41A('B7%P"],
+  w 24 18 0 540000 540384 37 1978 ["]f$g+yp|viyzZT&r-_3oj[5S|7E}?{R10yNS*F$hj6KsJ-XEqyh15;fS+LEDCMGx","Vhi>))owf6?g)=!@z!P+u{:1h/x!m{7R[dGF1oAqd~ak>$o3:Nu-6*gH"],
+  w 24 17 0 550000 550321 33 1697 ["eBhTds=Y6C)jrJXpw?sP-W?iH!A{qW]Wk6wqR@HYchcoO#CT<C5Jmno$h&Qu/*a+","+xC15[/I#xMrt*d4(57fImU[W//DRsyw%cK9q76Dy>|a^aiN"]]
+
+private def r24_10 : List (Chunk 24) := [
+  w 24 16 0 560000 560320 30 1475 ["?04&,r,[$'<tS.mnq^&K>b#hm*nnE`VQc/pv[UX!~w1)w${bBPs)}U+_cLtbTq4[","):6HNKt<}bfXe3]-r>(GbcQ+-!=ZOHA8u_n1e.4mkyB"],
+  w 24 15 0 570000 570320 27 1269 ["!]=!NL88kHOSrVP}1y|6y&CISC,|y(n78&eCo{4%_QI@5qDzcoxOT|`RmYUuCIWx","_}aY6{!&e/lGOfb<eK!]iteCA<l{QE8YF"],
+  w 24 14 0 580000 580257 24 1078 ["y2YU_m|=0ZJ6Us%)jI7A+i2^gNjveQ_|8!,NQJci@lN#Rq`>RaMfQSHG/'G~?<7G","$N2TKuC,RZOPQGYX_UdI904Y=AV"],
+  w 24 13 0 590000 590256 21 902 ["YD/[_B&6tIh9e}2T_?+V`SV[1fj}_'mvX@Jtf;Km/O1nLCmrX&rg3Yp2Cm1{-Bql","_!2-RQlZDf#Z_;4MY>CE"]]
+
+private def r24_11 : List (Chunk 24) := [
+  w 24 12 0 600000 600256 19 774 [">$v-8Z#b9NxVQr'Xns?mU7U$0j7=#4&%[NKzi%]TjL1g%$5{E7S=!_ZUM'?&0#['","RKgvy]54hpd"],
+  w 24 11 0 610000 610193 16 624 ["M^/<[Z#uF1Uuv1=u1l+0N7P:$]kh/>Ahy>[N2+RDx^pfg[u*r3Ej:Nl<:3!qa?0[","#jtaI"],
+  w 24 10 0 620000 620192 14 518 ["%gmwU&qY!7*y.6Tscy2AU284qOOzq9gE{1_G]mU/<z[jA88o}lm`8dp`0#44>Bt"],
+  w 24 9 0 630000 630192 12 422 ["%>}A9tG/%4tqm&FYV|`(+h.]cNL*pf4^tP|f#7nUK,7X(pl>?x5w]T"]]
+
+private def r24_12 : List (Chunk 24) := [
+  w 24 8 0 640000 640129 10 334 ["ttHr>VE3DVGXmq.s$,[d/zAkG#bc,<AiSv=ikh1]2:|Kk,T"],
+  w 24 7 0 650000 650128 8 254 ["`wvp*ge$=kX+1ra$lHS7]u'k%uOaw|@~r9c!CC/0"],
+  w 24 6 0 660000 660128 7 209 ["0F^AN/=$<-6zAI<s2CX/MBW2%V@-k)r_m"],
+  w 24 5 0 670000 670065 5 142 ["%U=kNA94syfWb_4naF`?z@&e@*n"]]
+
+private def r24_13 : List (Chunk 24) := [
+  w 24 4 0 680000 680064 4 107 ["^uXItN6{Lgz2~BYdnp'NM"],
+  w 24 3 0 690000 690064 3 76 ["KnM#^E+,;Q/,!~z"],
+  w 24 2 0 700000 700001 2 48 ["$?.51rq!WJw"],
+  w 24 1 0 710000 710000 1 23 ["I!tF&"]]
+
+private def r24_14 : List (Chunk 24) := [
+  w 24 0 0 720000 720000 1 22 ["#_A!5"]]
+private def chunks24:List (Chunk 24):=r24_0 ++ r24_1 ++ r24_2 ++ r24_3 ++ r24_4 ++ r24_5 ++ r24_6 ++ r24_7 ++ r24_8 ++ r24_9 ++ r24_10 ++ r24_11 ++ r24_12 ++ r24_13 ++ r24_14
+def rows24:=rowsFrom chunks24
+
+theorem good24 : ∀ r ∈ rows24,good 24 r=true:=rowsFrom_good chunks24
 
 theorem sorted24 : rows24.Pairwise (fun a b => a.tag < b.tag) :=
   (rowsFrom_sorted_aux chunks24 0 (by decide +kernel)).1
 
-theorem mass24 (i : Fin 56) :
-    bandCount 24 (i.val : ℤ) 55 14 ≤ (rows24.filter (fun r => decide (i.val ≤ r.index))).length := by
-  change _ ≤ ((rowsFrom chunks24).filter _).length
+theorem mass24 (i : Fin 57) :
+    bandCount 24 (i.val:ℤ) 56 14≤(rows24.filter (fun r => decide (i.val≤r.index))).length:=by
+  change _≤((rowsFrom chunks24).filter _).length
   rw [mass_eq]
-  have h : (List.range 56).all
-      (fun j => decide (bandCount 24 (j : ℤ) 55 14 ≤ mass j chunks24)) = true := by
+  have h : (List.range 57).all
+      (fun j => decide (bandCount 24 (j:ℤ) 56 14≤mass j chunks24))=true:=by
     decide +kernel
   exact of_decide_eq_true (List.all_eq_true.mp h i.val (List.mem_range.mpr i.isLt))
 
-theorem total24 : (rows24.map (price 24)).sum = 199125 :=
+theorem total24 : (rows24.map (price 24)).sum = 208338 :=
   (total_eq chunks24).trans (by decide +kernel)
+
 
 end Final50RankReceipt

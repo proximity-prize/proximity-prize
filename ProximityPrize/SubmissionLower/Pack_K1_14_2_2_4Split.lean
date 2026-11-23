@@ -70,6 +70,19 @@ private instance (s t : Shape) (d r M : ℕ) (k : Fin 4) :
     Decidable (checkNumerator s t d r M k) := by
   unfold checkNumerator
   split <;> infer_instance
+private def linearThreshold (i : Fin 10) (k : Fin 4) : ℕ :=
+  match i.val with
+  | 3 => ![1,1,1,2] k
+  | 4 => ![1,1,2,2] k
+  | _ => 1
+private def squareThreshold (i : Fin 10) (k : Fin 4) : ℕ :=
+  match i.val with
+  | 4 => ![1,1,3,2] k
+  | 5 => ![1,1,4,3] k
+  | 6 => ![1,1,5,5] k
+  | 7 => ![2,2,7,7] k
+  | 8 => ![3,3,11,10] k
+  | _ => ![5,5,15,14] k
 private def certificate (i : Fin 10) (square : Bool) (cap : Fin 4 → ℕ)
     (k : Fin 4) (r : ℕ) : Prop :=
   let s := (stageAt i).cheap
@@ -82,6 +95,18 @@ private instance (i : Fin 10) (square : Bool) (cap : Fin 4 → ℕ)
     (k : Fin 4) (r : ℕ) : Decidable (certificate i square cap k r) := by
   unfold certificate
   infer_instance
+set_option maxRecDepth 8000 in
+set_option maxHeartbeats 1000000 in
+private theorem linear_checked :
+    ∀ i : Fin 10, 0 < i.val → i.val ≤ 4 → ∀ k : Fin 4,
+      certificate i false (exitBudget i) k (linearThreshold i k) := by
+  decide +kernel
+set_option maxRecDepth 8000 in
+set_option maxHeartbeats 1000000 in
+private theorem square_checked :
+    ∀ i : Fin 10, 4 ≤ i.val → ∀ k : Fin 4,
+      certificate i true (budget i.val) k (squareThreshold i k) := by
+  decide +kernel
 end
 end K1_14_2_2_4
 end

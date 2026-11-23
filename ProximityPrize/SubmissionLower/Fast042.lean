@@ -15,6 +15,10 @@ namespace K1_14_3_2
 noncomputable section
 open K1 K1_14 K1_14_3 Polynomial
 open scoped BigOperators Classical
+def c1 : Prop :=
+  ∀ P Q : Jet, P ≠ 0 → Q ≠ 0 →
+    RowCaps P (cheapShape 0) → RowCaps Q (layeredShape 0) →
+    NoMovingCommon P Q → Nonempty (PreparedPair P Q)
 end
 end K1_14_3_2
 end
@@ -72,6 +76,8 @@ open K1_14 K1_14_3 Polynomial
 open scoped TensorProduct nonZeroDivisors
 abbrev Four (R : Type) [CommRing R] := Polynomial (Polynomial (MvPolynomial (Fin 2) R))
 def scalar {R : Type} [CommRing R] : R →+* Four R := C.comp (C.comp MvPolynomial.C)
+theorem scalar_eq_algebraMap {R : Type} [CommRing R] (a : R) :
+    scalar a = algebraMap R (Four R) a := rfl
 def seedVar {R : Type} [CommRing R] (i : Fin 2) : Four R := C (C (MvPolynomial.X i))
 def yVar {R : Type} [CommRing R] : Four R :=
   Polynomial.C (R := (MvPolynomial (Fin 2) R)[X]) (Polynomial.X (R := MvPolynomial (Fin 2) R))
@@ -135,6 +141,15 @@ set_option maxSynthPendingDepth 8
 namespace K1_14_3_2_5
 noncomputable section
 open K1_14 K1_14_3 Polynomial
+def sectionIdeal (q : Surface) (s : Slice) : Ideal SectionJet :=
+  q.asIdeal.map sectionMap ⊔ Ideal.span (sectionEquations s)
+abbrev SectionRing (q : Surface) (s : Slice) :=
+  SectionJet ⧸ sectionIdeal q s
+def sectionParameter (i : Fin 4) : SectionField :=
+  algebraMap (MvPolynomial (Fin 4) FX) SectionField (MvPolynomial.X i)
+def seedLine : SectionSeeds :=
+  MvPolynomial.X 0 + MvPolynomial.C (sectionParameter 0) * MvPolynomial.X 1 -
+    MvPolynomial.C (sectionParameter 2)
 end
 end K1_14_3_2_5
 end
@@ -164,6 +179,8 @@ def sliceMap (s : Slice) : SectionJet →ₐ[SectionField] Plane :=
   Polynomial.aevalTower
     (Polynomial.aevalTower (MvPolynomial.aeval (seedCoordinates s)) (ordinateCoordinate s))
     (derivativeCoordinate s)
+def planeMap (s : Slice) : Jet →+* Plane :=
+  (sliceMap s).toRingHom.comp sectionMap
 structure PlaneProper (F G : Plane) : Prop where
   left_ne : F ≠ 0
   right_ne : G ≠ 0
